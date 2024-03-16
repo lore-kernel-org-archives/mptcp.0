@@ -1,100 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0C346BA
-	for <mptcp@lists.linux.dev>; Sat, 16 Mar 2024 03:51:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167DF4C6D
+	for <mptcp@lists.linux.dev>; Sat, 16 Mar 2024 03:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710561100; cv=none; b=elvLDxX29m/JXgLWg7hpsL0KYSZKY2mIII2dgqLH/UopIkR5gmh7hjmh8SKAMUgqRoAEXsMDwmI+3UY/fL4udzHlgKdYE7FK45ccy2Vq8ANnRIev1I0KNRtH01KxIU6uCWKSxnOLutmsZ0R8iC5ECsvbnqUvZWkXjR4WU+Cqaek=
+	t=1710561421; cv=none; b=Unyta4akYxnZZbLEwDTC9e7uBgHV3GnVQIs6gRo9VLe4DEUBfdgsBRR1AwurjjoxYfBxZuMU1eDrKGcKKNtnk/c+V59+hyoyW148ZPsWANViwY10cISF+t+wGt8PGvFcUmPmu3si9WT9h+JA06keLCfI9N3FFhL8dodYz7171ak=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710561100; c=relaxed/simple;
-	bh=PHGgBhPAa+nMCpggIloVVILtYbouBO1V1vN7WmcEJjk=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=gGSaNyRlmFN/hIU7xWu0X31HSji1/uILDjRQOwTKyb87ul8DqEeJ57whFRpJKDD42fUdsgB7KlYRNb2dWpu7t2TslWJw+cp5wMdTOtWT+StxuXhHreZKHzbtgRqU5dXUiZktxJCbI3Z1IPt5dIdqeUHERcrWAOh+uXXZjnhVJ1s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kPOkvoRy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710561421; c=relaxed/simple;
+	bh=9+t9u85JkCA6ygPOaeRZ6kPZZcKKbTQjA0YarB8j4I4=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=M9/eBp46dUs5g3HhcQ7tMDXFjnLjUb+VvXSvxFGYx5rt5nlpeU0HB0isC2zc7W2dzr3kNQ0mP/P0YfbtJt2uIkAufqYr2mljqOZFrLpLZ0xWEYonyO/f2ob2tk4iSYNUggNLwPcdJtDG2RkyGJ76/G8B7dE1558cU5TFs5SeV8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR6GRoat; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kPOkvoRy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8191EC433C7;
-	Sat, 16 Mar 2024 03:51:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR6GRoat"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89A19C433F1;
+	Sat, 16 Mar 2024 03:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710561100;
-	bh=PHGgBhPAa+nMCpggIloVVILtYbouBO1V1vN7WmcEJjk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=kPOkvoRyt9zpcHpTboC6sy7HaADjP/JCUo5NsDQicYIZmVpSIEjjf8eKV9OvD9e+D
-	 +BCay/JjP7/J0U8qsWSAHSJFPSEUVUIZSsU3FWw5TS0I6/EdUZlroBFJXUaAnVnqOV
-	 8+z4uWHe1ssxqOgXZVNQmsoyUv9IIlUMDqK71R7FTJ0MSGylVuCY5UxO2SrrqDEaXX
-	 VuXeWfwKmw6/H6j87QL/HbcMZY1eGLABdHMpz3uZB/OqIbyZNSdwX/PcbayS00BSNl
-	 jF/YVCfAkWl6nraIf2C7h8WgMd3STYy4RFP07gOwhgzD/3+XvHZAsy7FKkX16FtaKz
-	 Sdo24DyhGHS+A==
+	s=k20201202; t=1710561420;
+	bh=9+t9u85JkCA6ygPOaeRZ6kPZZcKKbTQjA0YarB8j4I4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=QR6GRoatADcNQkkvkGLd2AwALZTJdlsT8GWvD84Jey9FoTCW+AFc27sf00y+V63m2
+	 OhBKIGGS9OHOuG1ArRA7JFpsZ/vyHK3xkhleGHZfA1n84lRvP5RDm5J9n30DQGXkKZ
+	 CipnKMVfvzuET9oqc8ZPPs85bUgtdYvrS3habOb3QaZ18/vdPyjMRJemlzsKRzhpvV
+	 HF3d9PEY91Q2RhP4H95SOLz2LaVwt+DiRxPeTaiuU1ZPcyn94ugwuA4RwJMg0qjLF+
+	 kzGscGhp5PPYCUkcXypXHqvmajD31jX2u3lz43VU67+4pxaW7MJA7gLk+KbqQnam2l
+	 FkVf7dsdGoK6Q==
+Date: Sat, 16 Mar 2024 11:56:55 +0800
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 9/9] selftests: mptcp: netlink: drop disable=SC2086
-Date: Sat, 16 Mar 2024 11:50:37 +0800
-Message-Id: <684b53f36e84de0281604d06045facde8b02a733.1710560839.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1710560839.git.tanggeliang@kylinos.cn>
-References: <cover.1710560839.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next 00/10] add helpers and vars in mptcp_lib.sh,
+ final
+Message-ID: <ZfUYhzbEdk0YGOi6@t480>
+References: <cover.1710121590.git.tanggeliang@kylinos.cn>
+ <d4ad6607-3a57-49cd-a0d6-de7f3ceb38c9@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d4ad6607-3a57-49cd-a0d6-de7f3ceb38c9@kernel.org>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-Now there are only a few of variables are not using double quotes.
-Modifying them, then "shellcheck disable=SC2086" can be dropped.
+On Wed, Mar 13, 2024 at 07:46:41PM +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 11/03/2024 02:48, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This is the last part for "add helpers and vars in mptcp_lib.sh" series,
+> > add endpoint operation helpers into mptcp_lib.sh.
+> 
+> Thank you for looking at that!
+> 
+> I just did a review, see my different replies.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+Thanks for your review. It's very useful. I just sent a v2, addressed all
+your comments.
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index b48476d73e9e..e4f5f1f9ab95 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -1,11 +1,6 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
--# Double quotes to prevent globbing and word splitting is recommended in new
--# code but we accept it, especially because there were too many before having
--# address all other issues detected by shellcheck.
--#shellcheck disable=SC2086
--
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
- ret=0
-@@ -20,14 +15,14 @@ optstring=hi
- while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
--		usage $0
-+		usage "$0"
- 		exit ${KSFT_PASS}
- 		;;
- 	"i")
- 		mptcp_lib_set_ip_mptcp
- 		;;
- 	"?")
--		usage $0
-+		usage "$0"
- 		exit ${KSFT_FAIL}
- 		;;
- 	esac
-@@ -40,7 +35,7 @@ err=$(mktemp)
- #shellcheck disable=SC2317
- cleanup()
- {
--	rm -f $err
-+	rm -f "${err}"
- 	mptcp_lib_ns_exit "${ns1}"
- }
- 
--- 
-2.40.1
+> 
+> In general, I think we should only add tests if they validate new code
+> path on the kernel side, e.g. new feature. Having more tests means more
+> code to maintain, a longer time to execute them, etc. Best to only add
+> "valuable" ones.
 
+I dropped them in v2.
+
+> 
+> > Geliang Tang (10):
+> >   selftests: mptcp: export ip_mptcp to mptcp_lib
+> >   selftests: mptcp: get support for limits
+> >   selftests: mptcp: id support for show_endpoints
+> >   selftests: mptcp: addr support for change_endpoint
+> >   selftests: mptcp: netlink: fix positions of newline
+> >   selftests: mptcp: netlink: add outputs for ip_mptcp
+> >   selftests: mptcp: add endpoint_ops API helper
+> >   selftests: mptcp: use mptcp_lib_endpoint_ops
+> >   selftests: mptcp: add ip_mptcp option for more scripts
+> 
+> I hope some people are going to validate that. I don't think our CI
+> should always run these tests with and without this new '-i' option.
+> 
+> Maybe once in a while, to validate the interface with 'ip mptcp' is
+> still OK? Do you plan to do this check periodically? e.g. before a new
+> version of 'iproute2'?
+
+Sure, I can check them in the future.
+
+Thanks,
+-Geliang
+
+> 
+> 
+> >   selftests: mptcp: netlink: drop disable=SC2086
+> > 
+> >  .../testing/selftests/net/mptcp/mptcp_join.sh | 108 ++-----
+> >  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 166 ++++++++++
+> >  .../selftests/net/mptcp/mptcp_sockopt.sh      |  34 ++-
+> >  .../testing/selftests/net/mptcp/pm_netlink.sh | 288 +++++++++++-------
+> >  .../selftests/net/mptcp/simult_flows.sh       |  14 +-
+> >  5 files changed, 401 insertions(+), 209 deletions(-)
+> > 
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
