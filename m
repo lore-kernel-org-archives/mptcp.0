@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D922139E
-	for <mptcp@lists.linux.dev>; Sun, 17 Mar 2024 00:59:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B15C7F6
+	for <mptcp@lists.linux.dev>; Sun, 17 Mar 2024 00:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710637146; cv=none; b=lo8WdFyzZLOENGmrML2+7NoAvpqXZWXKGgFTjyiw2SRMf0OB0QkY6rckYtbI5NTnGezLExHQHrVoE+4ZblvqPy6lCWKzDMaELUAcz673/IB9WanPcA+YqprTimiCtNENl23EqTfhAzXJRBJuAW7gPPBUxvYnbFrEVAZS7qiyHj0=
+	t=1710637147; cv=none; b=BafJKbmZ37TrOQx5GCwVhOzAZCY8++iJV2i1tvafv65siDBPWdIQ0LgRp+U3p7Imr31Qev1h3pNAIhcU5FIvAgaCJAFNXNlbjKpb+y80iaGqK9lGnRnj6I7sErrYqA8xPp1AXNC1OCBctkueCz1kh/CjvwSCE/qx2C1yUI+4C90=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710637146; c=relaxed/simple;
-	bh=cFVXoh2U/hplWRt91eDX6/DiWwZND6n4Nao9Qqb7VaQ=;
+	s=arc-20240116; t=1710637147; c=relaxed/simple;
+	bh=iBuE5PFHAhempNLhZElySC3uCzFVcmKs85JSCMnT5Fc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=ZdKkK993IOlxQoReAY5yWOri/vRA4ZyeQXBfEEJEykiHbz2/Cwn3UXbU//Duyn9MPIKLpBq+HbDwSSWSLOsfnJ3K+k7bAhd7q6OifzD5+rr7KmtfzIiSuX9+OCH6cvOTGjAbOr00bjq/bvsVL6xP/kOuzgFWhlp5odcU4CsL44w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YmZhf60M; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ZZjo1cv217RwPeIbIIFVJXhl0xfilkYqf9qDakcOjF3TaOazmxrwC+t0ECwd0YxGQXxUah11ElEHdQ7Bc4tkjmmSdqUkoJad9K+2LIcmfmrMHRTaXM9x67JgZaT62dxNH9SbZ8jQnATV2893aJmJTiMt9NQy6g98REUJWCRhMX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1k6tatO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YmZhf60M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1E9EC43390;
-	Sun, 17 Mar 2024 00:59:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1k6tatO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 407BFC433C7;
+	Sun, 17 Mar 2024 00:59:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710637145;
-	bh=cFVXoh2U/hplWRt91eDX6/DiWwZND6n4Nao9Qqb7VaQ=;
+	s=k20201202; t=1710637147;
+	bh=iBuE5PFHAhempNLhZElySC3uCzFVcmKs85JSCMnT5Fc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YmZhf60M9CsmfA6oX1nQYtrJg8tr4xr4UrhPKrhWDfZSgFbR9Efuk8am/rN5kzERH
-	 Z7JhqHpDjiAnFYGprDrANhglBy6vfSunuJIlqXs2l+0layZylZLOKXVGbCgH8sHKHd
-	 H6UjodUYf990LCdEUH8DMT7e97+XfQdAu115NpGmTM/l6bnWZUhQ0jvY7yK6UW7rpN
-	 8O14w9QU9RzSRhoNO7U/tSU8wWfPkGtT7ENP5dwZymBljt/iKnDjreiPYjTjyrcE99
-	 /yDd8EXOlQyPLEmwaLA6w7uHiCsNLuKhc2ZylRX8I3N7cJTYYFaBrErQlXO/sBjxFL
-	 FLtID19rABzDw==
+	b=P1k6tatOeJQq1+i/raTv2Cjs9psbN57wwnov5CRgpHaWkQhU+X7dt9tmI5tDI9n4R
+	 Lv7J9LuXzRYHctAFhit0oyu69ddYHo39+U8uS/JG/9kCr5aVpfkdIGFpvDp0OqM/pJ
+	 TFVFV5XnJ/Ki4DG+L6bqndZ5fYKnc/10HdLtPAPTPZEqX2sJz5+liK1pFLlf83PQ36
+	 g1hRiqWsVWz0aeHOxq4AeZqUv14sno/5PITbS3fWthlCi4MeqdGWJilx8KfkzbQMAq
+	 fJwIEnJv6G0nzB/vjgtAJ7j39/1PL0T2JrYQ5TmWY08vBp3Gi35IgxxsQStTpTw2+A
+	 JNkiLtUKitp0Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 07/12] selftests: mptcp: add get_endpoint helper
-Date: Sun, 17 Mar 2024 08:58:06 +0800
-Message-Id: <c845f5894ba4cd21bfd9e74af2cb59a191dabbda.1710636726.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 08/12] selftests: mptcp: add change_address helper
+Date: Sun, 17 Mar 2024 08:58:07 +0800
+Message-Id: <565780415a0be17de9118113b586cd49f841265a.1710636726.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1710636726.git.tanggeliang@kylinos.cn>
 References: <cover.1710636726.git.tanggeliang@kylinos.cn>
@@ -45,126 +45,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-All endpoints are showed in show_endpoints(). This patch adds another
-helper named get_endpoint() to show a specofic endpoint identified by
-the given address ID.
+The address that needs to change flags can only be identified by an address
+ID in change_endpoint() helper. This patch adds another helper named
+change_address(), its 2nd parameter is an IP address.
 
 Usage:
-	All endpoints - show_endpoints $ns
-	One endpoint - get_endpoint $ns $id
+	Address ID - change_endpoint $ns id $id $flags
+	IP address - change_address $ns $addr $flags
 
-Use this new helper in mptcp_join.sh and pm_netlink.sh to replace all
-'pm_nl_ctl get' commands.
+Use this new helper in pm_netlink.sh to replace all 'pm_nl_ctl set'
+commands.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 10 ++--------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 11 +++++++++++
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 12 ++++++------
- 3 files changed, 19 insertions(+), 14 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 13 +++++++++++++
+ tools/testing/selftests/net/mptcp/pm_netlink.sh |  4 ++--
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3d0051b57ecd..c06c1bd4d621 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -707,7 +707,6 @@ pm_nl_check_endpoint()
- 	local _port
- 	local dev
- 	local _id
--	local id
- 
- 	print_check "${msg}"
- 
-@@ -721,7 +720,6 @@ pm_nl_check_endpoint()
- 			shift
- 		elif [ $1 = "id" ]; then
- 			_id=$2
--			[ -n "$_id" ]; id="id $_id"
- 			shift
- 		elif [ $1 = "port" ]; then
- 			_port=$2
-@@ -731,16 +729,12 @@ pm_nl_check_endpoint()
- 		shift
- 	done
- 
--	if [ -z "$id" ]; then
-+	if [ -z "${_id}" ]; then
- 		test_fail "bad test - missing endpoint id"
- 		return
- 	fi
- 
--	if mptcp_lib_is_ip_mptcp; then
--		line=$(ip -n $ns mptcp endpoint show $id)
--	else
--		line=$(ip netns exec $ns ./pm_nl_ctl get $_id)
--	fi
-+	line=$(mptcp_lib_pm_nl_get_endpoint "${ns}" "${_id}")
- 	expected_line=$(mptcp_lib_format_endpoints \
- 		"${_id},${addr},${_flags//","/" "},${dev},${_port}")
- 	if [ "$line" = "$expected_line" ]; then
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 92b89f3a7605..d83a67922b17 100644
+index d83a67922b17..e26ef67e4ef1 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -577,3 +577,14 @@ mptcp_lib_format_endpoints() {
- 		fi
- 	done
+@@ -588,3 +588,16 @@ mptcp_lib_pm_nl_get_endpoint() {
+                ip netns exec "${ns}" ./pm_nl_ctl get "${id}"
+        fi
  }
 +
-+mptcp_lib_pm_nl_get_endpoint() {
-+       local ns=${1}
-+       local id=${2}
++mptcp_lib_pm_nl_change_address() {
++	local ns=${1}
++	local addr=${2}
++	local flags=${3}
 +
-+       if mptcp_lib_is_ip_mptcp; then
-+               ip -n "${ns}" mptcp endpoint show id "${id}"
-+       else
-+               ip netns exec "${ns}" ./pm_nl_ctl get "${id}"
-+       fi
++	if mptcp_lib_is_ip_mptcp; then
++		# shellcheck disable=SC2086 # blanks in flags, no double quote
++		ip -n "${ns}" mptcp endpoint change "${addr}" ${flags//","/" "}
++	else
++		ip netns exec "${ns}" ./pm_nl_ctl set "${addr}" flags "${flags}"
++	fi
 +}
 diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 95e393c95017..28c89b576d1f 100755
+index 28c89b576d1f..a42490885d88 100755
 --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
 +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -78,7 +78,7 @@ fi
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
--check "ip netns exec $ns1 ./pm_nl_ctl get 1" \
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 1" \
- 	"$(mptcp_lib_format_endpoints "1,10.0.1.1")" "simple add/get addr"
+@@ -178,11 +178,11 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" \
  
+ ip netns exec $ns1 ./pm_nl_ctl flush
+ ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1 flags subflow
+-ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags backup
++mptcp_lib_pm_nl_change_address "${ns1}" 10.0.1.1 backup
  check "ip netns exec $ns1 ./pm_nl_ctl dump" \
-@@ -88,25 +88,25 @@ check "ip netns exec $ns1 ./pm_nl_ctl dump" \
- 	"dump addrs"
- 
- ip netns exec $ns1 ./pm_nl_ctl del 2
--check "ip netns exec $ns1 ./pm_nl_ctl get 2" "" "simple del addr"
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 2" "" "simple del addr"
+ 	"$(mptcp_lib_format_endpoints "1,10.0.1.1,subflow backup")" \
+ 	"set flags (backup)"
+-ip netns exec $ns1 ./pm_nl_ctl set 10.0.1.1 flags nobackup
++mptcp_lib_pm_nl_change_address "${ns1}" 10.0.1.1 nobackup
  check "ip netns exec $ns1 ./pm_nl_ctl dump" \
- 	"$(mptcp_lib_format_endpoints "1,10.0.1.1" \
- 				      "3,10.0.1.3,signal backup")" \
- 	"dump addrs after del"
- 
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 2>/dev/null
--check "ip netns exec $ns1 ./pm_nl_ctl get 4" "" "duplicate addr"
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 4" "" "duplicate addr"
- 
- ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.4 flags signal
--check "ip netns exec $ns1 ./pm_nl_ctl get 4" \
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 4" \
- 	"$(mptcp_lib_format_endpoints "4,10.0.1.4,signal")" "id addr increment"
- 
- for i in $(seq 5 9); do
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.$i flags signal >/dev/null 2>&1
- done
--check "ip netns exec $ns1 ./pm_nl_ctl get 9" \
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 9" \
- 	"$(mptcp_lib_format_endpoints "9,10.0.1.9,signal")" "hard addr limit"
--check "ip netns exec $ns1 ./pm_nl_ctl get 10" "" "above hard addr limit"
-+check "mptcp_lib_pm_nl_get_endpoint ${ns1} 10" "" "above hard addr limit"
- 
- ip netns exec $ns1 ./pm_nl_ctl del 9
- for i in $(seq 10 255); do
+ 	"$(mptcp_lib_format_endpoints "1,10.0.1.1,subflow")" \
+ 	"          (nobackup)"
 -- 
 2.40.1
 
