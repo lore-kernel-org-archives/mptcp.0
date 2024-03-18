@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D32381B0
-	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 12:24:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E5F839856
+	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 12:26:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710764676; cv=none; b=M9le0YMYjnyHr/1UJeIrobMQRKSFKz8jBjxJ4cSMp5k1lgLCve1j6erAr/mTSPs5t+2+Irn/6Z38liYx37uXmyyOH8EzXC7mc1bEHwfgZTvEXaZ1Sy+HhkdkTtkbd+E7Y2Sj2RTJAdfr7LGXZXqoBzG5Ln3rbxeTfP9J/Km3wZM=
+	t=1710764771; cv=none; b=h70PRAWoRm3CeRQcqTtkNZt1KTucdBudOylCVzkgaiy7jiVH8UnhrHDEkKriWealFbQhFTwPJLU4yB866WFeLt9JHSoRJukjJnzSvR3QI5USOUV1DbS7PPni+4jAcF/fD7dO9IWznOfKgR9hi3yZ5rqbGguucNBGiI5Bs/R+39A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710764676; c=relaxed/simple;
-	bh=sg2nANy8CDC/JgNF0yeFsR1HNEAWu08PpIr/Vz5ZSBw=;
+	s=arc-20240116; t=1710764771; c=relaxed/simple;
+	bh=CiG4KW/HagUaO/6wPALfCTaU2bH1vFHxCQGtF5FEDq4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WmhPNFMoFIdNGFkrwIcA+EIh3Mn//Z0qIMcSEU1GRH5zsV1m8jHyc8tyMkD7dZti016PkqbCUsULxE2jAzv9YL04RJnsO51ioHp50zP61nonT+bYACb5Itx72L+83lFjDf4ErkUsbOLXIdIyEmCKQsBxPodg3e4nsBGe/hU4Rks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u/qtsq0m; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QxWhY67kkaM8M0g6JFH4mZMzHYCXP75zBjY7fo42/xZdX7VDU+qO20qWCY4cc3wAgusAkKhUDDQG9ZmGSZW4py89PWzof6K4EpOpzwJPjQrM8nxDg7htVW4ayY8ORWL5lsIu5qkn6ju0/9M1fMQgiRKdDYSGDymqsnOqZ3UvEy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dJBlnDAO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u/qtsq0m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FE59C43390;
-	Mon, 18 Mar 2024 12:24:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dJBlnDAO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0576EC433C7;
+	Mon, 18 Mar 2024 12:26:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710764675;
-	bh=sg2nANy8CDC/JgNF0yeFsR1HNEAWu08PpIr/Vz5ZSBw=;
+	s=k20201202; t=1710764770;
+	bh=CiG4KW/HagUaO/6wPALfCTaU2bH1vFHxCQGtF5FEDq4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u/qtsq0mXSSQyqtoC1YAi8Cc9j+S52jtcm6Jk70aKb4B7KngypbzPmyZsbZ7NIglz
-	 kJWv1vpykULY4U21mYj8yzW8aJhZwUFi+aV1IdKs7xisa4QQF/r3Dz7OsacxXz7/aL
-	 3epJHLl4X7TDNI+VcGHxb1eApLPSNEs3znXD1s1aotyZ8JbpMOIKicfcTk5fgHIbOo
-	 0cDzGGLxCo6K2KAbcsDnNK2bELKi/s1auycorEDeAUxjv4E4eLMV49rtICK7MUi7yl
-	 RORkl8chYQvf9UYuuBbVbLJ1rhLV9DDIyND/plWe/ijAEuMlaymd9tk5mqvSR+BhTN
-	 AhbeDNcY4iEsg==
-Message-ID: <8f0c34c9-1ac5-4f39-8633-dcc6a16743db@kernel.org>
-Date: Mon, 18 Mar 2024 13:24:33 +0100
+	b=dJBlnDAOQKSqE3nb7PC8fiHtwydf4gQsMmnK263MuFGhk0ZbwFM91HcqlJAQgmMft
+	 dD+I9WnWfKuon64wHOaEaxC2GzWxyDXfHvHI6e7Ht43Nfdf8or/IWAoHZsLd0Q/tKl
+	 9CxBFRtCNhWuOQMUkiPvlgMEuUhsj3/wYqA0cv96M3kxS8d80x0zTXOhzP3Q3Fw5Fe
+	 AQJYfI5DlFDbwIxXR6r+a7oQG4gyAnBAiMwzRf0crSeIZNjjj8rui8Lc97d9AeZr00
+	 18TanlCS8iB65Ex3HR6ldWFfnGZsyxB2IpZro1RyOz6QqCsNZz1AwM15brKfw2mUJd
+	 7++k5Sb1Z+RIQ==
+Message-ID: <c9893c4e-a8bf-4a69-87f1-def2cd968c40@kernel.org>
+Date: Mon, 18 Mar 2024 13:26:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 05/12] selftests: mptcp: export set_limits
- helper
+Subject: Re: [PATCH mptcp-next v3 06/12] selftests: mptcp: format endpoints
+ outputs
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710636726.git.tanggeliang@kylinos.cn>
- <766f66639975d46d12acc30bd672c8b34df3529b.1710636726.git.tanggeliang@kylinos.cn>
+ <cdc88da80150d3c9a6ad355795e797bb0663ca0f.1710636726.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <766f66639975d46d12acc30bd672c8b34df3529b.1710636726.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cdc88da80150d3c9a6ad355795e797bb0663ca0f.1710636726.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,22 +96,89 @@ Hi Geliang,
 On 17/03/2024 01:58, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch exports pm_nl_set_limits() helper into mptcp_lib.sh as a
-> public function named mptcp_lib_pm_nl_set_limits(). Then pm_nl_set_limits()
-> in mptcp_join.sh can be a wrapper of the public one.
+> The output formats of 'ip mptcp' commands are much different from that
+> of 'pm_nl_ctl' commands. This patch adds a new helper format_endpoints()
+> to format the outputs of 'ip mptcp' and 'pm_nl_ctl' with 'endpoints'
+> arguments to hide these differences.
 > 
-> Use this newly added helper to replace all 'pm_nl_ctl limits' commands in
-> scripts mptcp_sockopt.sh, pm_netlink.sh and simult_flows.sh.
+> This is useful for exporting endpoint ops into mptcp_lib.sh
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-Should this not be squashed with patch 10/12?
+(...)
 
-  [PATCH mptcp-next v3 10/12] selftests: mptcp: export more endpoint ops
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index d16b82f7e35a..92b89f3a7605 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -554,3 +554,26 @@ mptcp_lib_pm_nl_set_limits() {
+>  		ip netns exec "${ns}" ./pm_nl_ctl limits "${addrs}" "${subflows}"
+>  	fi
+>  }
+> +
+> +# format: <id>,<ip>,<flags>,<dev>
+> +mptcp_lib_format_endpoints() {
 
-Which could be named:
+Maybe best to use the same "mptcp_lib_pm_nl_" prefix?
 
-  selftests: mptcp: export pm_nl endpoint ops
+  mptcp_lib_pm_nl_format_endpoints
 
-WDYT?
+> +	local entry id ip flags dev port
+> +
+> +	for entry in "${@}"; do
+> +		IFS=, read -r id ip flags dev port <<< "${entry}"
+> +		if mptcp_lib_is_ip_mptcp; then
+> +			echo -n "${ip}"
+> +			[ -n "${port}" ] && echo -n " port ${port}"
+> +		        echo -n " id ${id}"
+
+There is a mix of tabs and spaces on this line here above.
+
+> +			[ -n "${flags}" ] && echo -n " ${flags}"
+> +			[ -n "${dev}" ] && echo -n " dev ${dev}"
+> +			echo " " # always a space at the end
+> +		else
+> +			echo -n "id ${id}"
+> +			echo -n " flags ${flags//" "/","}"
+> +			[ -n "${dev}" ] && echo -n " dev ${dev}"
+> +			echo -n " ${ip}"
+> +			[ -n "${port}" ] && echo " ${port}" || echo ""
+> +		fi
+> +	done
+> +}
+> diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> index d369096d0df8..95e393c95017 100755
+> --- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> +++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
+> @@ -78,29 +78,34 @@ fi
+>  ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.1
+>  ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.2 flags subflow dev lo
+>  ip netns exec $ns1 ./pm_nl_ctl add 10.0.1.3 flags signal,backup
+> -check "ip netns exec $ns1 ./pm_nl_ctl get 1" "id 1 flags  10.0.1.1" "simple add/get addr"
+> +check "ip netns exec $ns1 ./pm_nl_ctl get 1" \
+> +	"$(mptcp_lib_format_endpoints "1,10.0.1.1")" "simple add/get addr"
+
+If the name is too long, you can also add a simple helper:
+
+  format_endpoints() {
+      mptcp_lib_pm_nl_format_endpoints "${@}"
+  }
+
+So it might be easier to read:
+
+  check "ip netns exec $ns1 ./pm_nl_ctl get 1" \
+      "$(format_endpoints "1,10.0.1.1")" "simple add/get addr"
+
+
+Same for patch 7/12:
+
+  get_endpoint() {
+      mptcp_lib_pm_nl_get_endpoint "${@}"
+  }
+
+I think you can squash patch 6 and 7 together, no?
+
+(...)
 
 Cheers,
 Matt
