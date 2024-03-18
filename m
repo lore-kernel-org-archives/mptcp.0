@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92132C1B6
-	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 12:20:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13975A2A
+	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 12:21:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710764406; cv=none; b=RP0xxsbS3Oc1gBxr6xWNyU4gTuxy45BDdd6Es/rBCLM1h8QeN7FZ+19NQ4ocPEj6PjfvNM/29935KWGCQgf59Ya6iSwzJeGtmhRdG4O000W35T8VNsDUUjBT0Hzjv/Laz2BpU5nur2GlwG+0rce1FXwGjzGX1riKPjZxzisbugA=
+	t=1710764493; cv=none; b=PMtpE1QQSljCUxOjA0mpduslxDiTkN+97lhkmK6lb325PDlg9HozVGyQjfqxc9MKOM+9rQElvS242UVrugU7CBso62cJReXbzkv7JK/ol78gVQYY33Xb5geiUZ5NWc3NviCLdim/BUt7iUmNfNxubG3vXfm7CqwbPU8Q3hwJewg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710764406; c=relaxed/simple;
-	bh=si5upDIkCcgK7xiMxg7q/v8HZrF6MA6bz2fVpt0panw=;
+	s=arc-20240116; t=1710764493; c=relaxed/simple;
+	bh=vEwS3pcVuLRs1quvDgluoYfHkrD05LuOuoqElBtKptg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EhcfPaadBAdRXMpxNdiHM3ynBMhCfrxlGO/1kA51wgW3sP/951RG+0YlG/vU8pFUs+xibLPuFOuh8aNKSNUM+KKAFCGEgHIaotKE+WwI+PNd51PnDyE3U/yjC5g8JgKq8uPTAx0xZyuH6p9CUSJc57uPjUDtcFxFhUCQVyTykW8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSwOk14b; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ocxbNMp1eIvgb4AsNLhXJHsCo1Bq+UXbOLGXyIfh3qrSjhusSF5H3LSWrnwjHYmNxbbvILpUhtFzNF2tNKv3u35PX6MJV3WQtPc8bWZWA7R7Wsauf60BMtuiW20DoIT8iiXtfzCIi/zefZOLsVm2Y8VBo1LP93dzJitcDM3TmrQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRzGzJRX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSwOk14b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBC2C433F1;
-	Mon, 18 Mar 2024 12:20:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRzGzJRX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0574C433C7;
+	Mon, 18 Mar 2024 12:21:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710764406;
-	bh=si5upDIkCcgK7xiMxg7q/v8HZrF6MA6bz2fVpt0panw=;
+	s=k20201202; t=1710764492;
+	bh=vEwS3pcVuLRs1quvDgluoYfHkrD05LuOuoqElBtKptg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KSwOk14by/Ec07/UwaBapUsjXBk/zLYMiRb4eRCrQhB2Ej1sYjM+G3juCvhSWv/Pu
-	 Bfchb54yu/JMt/reWy9W0buTY2heCZoPWvjCXhhYaeXzRLrDkTzqOqsiIz0gZ148hU
-	 ElPvneG8znxjMALxWfK9Ra61b0kTq3tnRMVlcoYd773uZJXW7X6ipiAvQpmFMK0A0t
-	 Yk91rAwomN3ddggiT/3GjX3dxKG6tB1E9jJ3NrqntBPVyV5WvY5s2eGopaiKNVemj3
-	 JeEjaEkQKlUDtc4koK3Q8wSUn9z2aCdeFTF5lKemNVO5b3z+GIVuum46RZjW1dXRLG
-	 lvdPKtTEFWxMQ==
-Message-ID: <6228b1ff-e2a4-47e7-82b2-487108e02d97@kernel.org>
-Date: Mon, 18 Mar 2024 13:20:03 +0100
+	b=DRzGzJRXIYkOoUm6I2UdVbbLF/sLiy7PWuXe2U6KlVFO3V+03IyipwD/ePdxJC9Qv
+	 16vmFMPyuFOSVTcrDf43R/cWsgT34jN7+f1H/MrX3iFnXxaHeGxqh5zeksuFp7rMTn
+	 5ZGKoE3zxIZGcV2Ybi5YIFZEEcEg5w/rle+Sw4QW/xJDwBOYImvWlDl899RgI+gY7T
+	 kPvnP3QPBLSNvzcrD4r/nIp3gGRYGE/pZWIXNN2Dx6V6mYqEcXDoBleZvbqOs3zW3U
+	 H0h6WOFyOHVxR9hAnv5uA9ZU5n0IJfhIBgOSQ/4c5NbhLr58ZZSc79sCvMbyLtuev/
+	 n7oQcIyUHneyg==
+Message-ID: <d2e6ae8b-5f94-40d5-955c-aa14814f1acb@kernel.org>
+Date: Mon, 18 Mar 2024 13:21:30 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 00/12] add helpers and vars in mptcp_lib.sh,
- final
+Subject: Re: [PATCH mptcp-next v3 03/12] selftests: mptcp: format limits
+ outputs
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710636726.git.tanggeliang@kylinos.cn>
+ <e68af806417bea0a05ea4a9bd702a14024919420.1710636726.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,31 +87,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1710636726.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e68af806417bea0a05ea4a9bd702a14024919420.1710636726.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 17/03/2024 01:57, Geliang Tang wrote:
+On 17/03/2024 01:58, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v3:
->  - use check_output in pm_nl_check_endpoint.
->  - split #2 and #7 patches in v2.
->  - put "selftests: mptcp: join: fix dev in check_endpoint" into this
->    series too.
+> The output format of 'ip mptcp limits' command is much different from
+> that of 'pm_nl_ctl limits' command. This patch adds format_limits()
+> helper to format the outputs of these two commands to hide the
+> difference.
 > 
-> v2:
->  - address every Matt's commends in v1.
->  - depends on "selftests: mptcp: join: fix dev in check_endpoint"
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh  | 12 ++++++++++++
+>  tools/testing/selftests/net/mptcp/pm_netlink.sh |  8 ++++----
+>  2 files changed, 16 insertions(+), 4 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index ca01d949fad8..c402cc994902 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -520,3 +520,15 @@ mptcp_lib_set_ip_mptcp() {
+>  mptcp_lib_is_ip_mptcp() {
+>  	[ "${MPTCP_LIB_IP_MPTCP}" = "1" ]
+>  }
+> +
+> +mptcp_lib_format_limits() {
 
-Thank you for the new version!
+Do you need it to be in the lib if it is only used in one selftest? Same
+for the get_limits from patch 4/12. (Maybe you can even squash these 2
+patches together.)
 
-I already applied patch 1/12.
+If it is only used in pm_netlink.sh, you can also have a shorter
+function name:
 
-I have some suggestions, please see my other replies.
+  check "get_limits ${ns1}" "$(format_limits 0 2)" "defaults limits"
 
+And you don't even have to pass '${ns1}', as there is only one netns:
+
+  check "get_limits" "$(format_limits 0 2)" "defaults limits"
+
+WDYT?
+
+> +	local accept="${1}"
+> +	local subflows="${2}"
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		# with a space at the end
+> +		printf "add_addr_accepted %d subflows %d \n" "${accept}" "${subflows}"
+> +	else
+> +		printf "accept %d\nsubflows %d\n" "${accept}" "${subflows}"
+> +	fi
+> +}
 Cheers,
 Matt
 -- 
