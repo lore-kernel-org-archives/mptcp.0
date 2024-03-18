@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E16032C92
-	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 11:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92132C1B6
+	for <mptcp@lists.linux.dev>; Mon, 18 Mar 2024 12:20:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710759795; cv=none; b=Nf2EDTYqyqWahRrAQINeMI2fjpQYOpYCa5yrZ1w3K4JGo9H4rCLeArNaYuT4ArPov3G2XMbgZdOwFlGSWXVhdz41i0WNDrKP1BddjIR4sH6RFgFw/nEs1hKqw4h9lQiYfWI8KdaXwg8G7KZukajlMCgh3Xzu2kWmm4hugXdvdkI=
+	t=1710764406; cv=none; b=RP0xxsbS3Oc1gBxr6xWNyU4gTuxy45BDdd6Es/rBCLM1h8QeN7FZ+19NQ4ocPEj6PjfvNM/29935KWGCQgf59Ya6iSwzJeGtmhRdG4O000W35T8VNsDUUjBT0Hzjv/Laz2BpU5nur2GlwG+0rce1FXwGjzGX1riKPjZxzisbugA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710759795; c=relaxed/simple;
-	bh=lshEc1jav5rkjL56Rpw3/3DmfzYhMnixI8pFYIt2Wcs=;
+	s=arc-20240116; t=1710764406; c=relaxed/simple;
+	bh=si5upDIkCcgK7xiMxg7q/v8HZrF6MA6bz2fVpt0panw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PyAsH6jpMWNVrxAsVNt2sQ9dci4cq7MV7wJkJRPew/LY2PmKDoil1bUcu4AMUkR2fZECcvppl3PlF4DbTQMG4PE4/WziUwasS/AXL+OQ4luhUy6SOPNwRRCn0Po4SN3NtYKG4eiM93GF+galWbngmyJ57q2eEQ3/NkxSBCp3iM0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hgJh0Ejc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EhcfPaadBAdRXMpxNdiHM3ynBMhCfrxlGO/1kA51wgW3sP/951RG+0YlG/vU8pFUs+xibLPuFOuh8aNKSNUM+KKAFCGEgHIaotKE+WwI+PNd51PnDyE3U/yjC5g8JgKq8uPTAx0xZyuH6p9CUSJc57uPjUDtcFxFhUCQVyTykW8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KSwOk14b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hgJh0Ejc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FA51C433C7;
-	Mon, 18 Mar 2024 11:03:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KSwOk14b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FBC2C433F1;
+	Mon, 18 Mar 2024 12:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710759794;
-	bh=lshEc1jav5rkjL56Rpw3/3DmfzYhMnixI8pFYIt2Wcs=;
+	s=k20201202; t=1710764406;
+	bh=si5upDIkCcgK7xiMxg7q/v8HZrF6MA6bz2fVpt0panw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hgJh0EjcFK792org4/FdhNu+O+a1gsbnLzwqwtmHiMCh9p9H7S35HKwuo9deUm80W
-	 6GHr7J44bWmr3bHUN4RKe7Wskb/limHwlIGSpwEgunqFzuFRo5y7kYxCKDkAO5ISGV
-	 ng4h3kf/ywjOxtnH12Ts3C6GIsAuv9djn2mrMD25UflsxzlgGWnXdjMNQiDvYWSkGV
-	 atYCQZtA2U/3//zAuF5OkS6VW5HcXLdINAO9J7UIfipbI5uHwh/3OeQ9QRdIwzzbFz
-	 whpXc1kayYVb2UQrLXwNx7osZ3nJFK3k8LNrslZA+pJlMnG1mCaaZpeU3Kai7+1gV/
-	 rzkF1V25bQKbg==
-Message-ID: <562c4045-bd73-4f5c-8630-e2d44c548f26@kernel.org>
-Date: Mon, 18 Mar 2024 12:03:12 +0100
+	b=KSwOk14by/Ec07/UwaBapUsjXBk/zLYMiRb4eRCrQhB2Ej1sYjM+G3juCvhSWv/Pu
+	 Bfchb54yu/JMt/reWy9W0buTY2heCZoPWvjCXhhYaeXzRLrDkTzqOqsiIz0gZ148hU
+	 ElPvneG8znxjMALxWfK9Ra61b0kTq3tnRMVlcoYd773uZJXW7X6ipiAvQpmFMK0A0t
+	 Yk91rAwomN3ddggiT/3GjX3dxKG6tB1E9jJ3NrqntBPVyV5WvY5s2eGopaiKNVemj3
+	 JeEjaEkQKlUDtc4koK3Q8wSUn9z2aCdeFTF5lKemNVO5b3z+GIVuum46RZjW1dXRLG
+	 lvdPKtTEFWxMQ==
+Message-ID: <6228b1ff-e2a4-47e7-82b2-487108e02d97@kernel.org>
+Date: Mon, 18 Mar 2024 13:20:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 01/12] selftests: mptcp: join: fix dev in
- check_endpoint
+Subject: Re: [PATCH mptcp-next v3 00/12] add helpers and vars in mptcp_lib.sh,
+ final
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710636726.git.tanggeliang@kylinos.cn>
- <90aec2d19e5bc959eedbd8fe515bd6f3d81f7cb0.1710636726.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,42 +86,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <90aec2d19e5bc959eedbd8fe515bd6f3d81f7cb0.1710636726.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1710636726.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 17/03/2024 01:58, Geliang Tang wrote:
+On 17/03/2024 01:57, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> There's a bug in pm_nl_check_endpoint(), 'dev' didn't be parsed correctly.
-> If calling it in the 2nd test of endpoint_tests() too, it fails with an
-> error like this:
+> v3:
+>  - use check_output in pm_nl_check_endpoint.
+>  - split #2 and #7 patches in v2.
+>  - put "selftests: mptcp: join: fix dev in check_endpoint" into this
+>    series too.
 > 
->  creation  [FAIL] expected '10.0.2.2 id 2 subflow dev dev' \
->                      found '10.0.2.2 id 2 subflow dev ns2eth2'
-> 
-> The reason is '$2' should be set to 'dev', not '$1'. This patch fixes it.
+> v2:
+>  - address every Matt's commends in v1.
+>  - depends on "selftests: mptcp: join: fix dev in check_endpoint"
 
-Thank you for the fix.
+Thank you for the new version!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+I already applied patch 1/12.
 
-
-Now in our tree:
-
-New patches for t/upstream:
-- a17e802344ac: selftests: mptcp: join: fix dev in check_endpoint
-- Results: 99c0f9c30cff..fb4fd270fb40 (export-net)
-- Results: 73d1889e6078..f25339583887 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/86ab05597497b73a7c42c0bdbecb089c8dd30d73/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5e7deabc5e142114ef55e9ff014b2a4c6a22b96e/checks
+I have some suggestions, please see my other replies.
 
 Cheers,
 Matt
