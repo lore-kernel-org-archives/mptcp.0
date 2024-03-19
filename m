@@ -1,66 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07F0953804
-	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 08:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD369FBF0
+	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 16:58:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710836022; cv=none; b=iOaEnD9aSXb8gwu8bBy503ZI7dxWWsAyGa+0H97jrCHRzq6VzSpy1c8wPBUEWfmVEpVZGocvcGBhwExHdIQFB+RjU7BuelPNl0o9vl2UVsTPPHTtrzkm2Nj6Lkynyh49rqYdityxpzmegegRSII7K+nWNSCkAtq8se3eoU9k8sU=
+	t=1710867495; cv=none; b=MeOym9A4EC7YmakpPwTK2PwjsvA3fYKSx+HJ5N9wZM/p6uBfJeKpxmIl3JN532GtHCz6uO5A5uGmr6PExdbK+sIrpdLNE/HPg9hP4rnymD3RWxo7mB+8XvaSZcdofOEO6phcAf/JDkrAmXV/QyaO5W9W2ll8npJLieBL2b4VI9o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710836022; c=relaxed/simple;
-	bh=59qDRR1DBckDHBEHJOVy+JahhKimOxbxR9i8VIXw/js=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=Q0vqbVVRmy2sU3Xgp9cP/VmaQjlQVrh/yK8dncHOGSc201CnEYVZ2N9uuB9o7xjCtC8TGkuWUb2JH1+mYQ4hJk5MzVWiyjbCTmYIHSIJod93qy2c1vedlULP+m25uvBMw8heHpUHAK3zi24l6HuZaF3E1qkcF01nCjNjnEan1+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l2BRPcjA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710867495; c=relaxed/simple;
+	bh=QYOlc2jGoJiHG67OdJzHtIKXRBC4YDboB+haRC+rO+I=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=CaCmBM6V46NbvmXYgfKngv6lLKkGqtG5uD84g46RQN986u4ly8s3aMpE28oIXO7hEBaxSK/26LKfvVF+jRzq2VVGUEdD1i5+7QlZhtYeS0OtQBvgYykb9Liog8x1ysxHZZGLXY5uCU1cy8aYqOmeWbw9dpQ1ktyZnpUGNWrc440=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aseL56MZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l2BRPcjA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 748A6C433C7;
-	Tue, 19 Mar 2024 08:13:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aseL56MZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B462C433F1;
+	Tue, 19 Mar 2024 16:58:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710836021;
-	bh=59qDRR1DBckDHBEHJOVy+JahhKimOxbxR9i8VIXw/js=;
-	h=From:To:Cc:Subject:Date:From;
-	b=l2BRPcjAUnooFiWNLLXoSpmuGdJ9soABuc4G5YEOmWsyhU1mkpQFriEUTnIjF+Dy9
-	 cNcY92Fcsfu3G+3rd75nei/u0oUted1VNiKRkh5+p+4Lq6BRMUsVlI6TAbl9M/lg0n
-	 s6sjlhYGdfJi/SAjaKuAlKc3K8LhZYAZF9xJUN/WaHQfF69NeckJkEsCq/Egb4qDma
-	 EppSqM87wOI47QlBUO0z/J2zUiPSXohtYc8j/6wZ5r0v/xNKT7Lm7od87wLiaKA5nl
-	 qsPFh6VelP8jC3SavzQ2PCnyOM0+c3c/J1lkCIvFLiQcevTBA49iHv7FXpCTqvr+nl
-	 M18Ar6kt+py5Q==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: add get_endpoint helper"
-Date: Tue, 19 Mar 2024 16:13:35 +0800
-Message-Id: <1babce1397309da3dd9f581b9c4ee846fff23a36.1710835995.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
+	s=k20201202; t=1710867495;
+	bh=QYOlc2jGoJiHG67OdJzHtIKXRBC4YDboB+haRC+rO+I=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=aseL56MZKucx8RuV2msFaN7+UncFJg9v0tguKuWrNq/mVmO5oq3n+px0tS2Zx8wR2
+	 JIUzmegWjtMZbgJKJHN5LrQccrrHtDurDrSf/dqRuN6oYWj2IDXoqECPQmXUUv+DtG
+	 CXcwqI2ORcWHgcPqR7m0UpC6AFVV3XqxMycDVd8tFnWO1+hjsKsT7FrimjHdwEvOF4
+	 Z4et+iuNhH72G1+iwT1p533lI7E0wVGhX0WoUb0rbc2Zu/il2i5rNzEa6RwBkGVI/s
+	 vshiGgYrTqjZgr0yk7GlF/ob0eHpsHX3iUhxBWAUwOi5LMmrcbxGf3XBm4CqLJjuOL
+	 cowS6yyzjMhiw==
+Message-ID: <fd1ea981-22c2-4d09-b310-120fa20d5a6c@kernel.org>
+Date: Tue, 19 Mar 2024 17:58:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v4 0/9] add helpers and vars in mptcp_lib.sh,
+ final
+Content-Language: en-US
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1710832493.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1710832493.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Fix shellcheck errors.
+On 19/03/2024 08:16, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v4:
+>  - address every Matt's commends in v3.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 1 +
- 1 file changed, 1 insertion(+)
+Thank you for the new version. It looks good to me, just some details,
+mostly inconsistencies in the commit messages, I can fix that when
+applying the patches.
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 155847c720cf..2757378b1b13 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -71,6 +71,7 @@ format_endpoints() {
- }
- 
- get_endpoint() {
-+	# shellcheck disable=SC2317 # invoked indirectly
- 	mptcp_lib_pm_nl_get_endpoint "${ns1}" "${@}"
- }
- 
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Cheers,
+Matt
 -- 
-2.40.1
+Sponsored by the NGI0 Core fund.
 
