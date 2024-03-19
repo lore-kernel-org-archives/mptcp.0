@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 741192B9B3
-	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 17:01:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B18E439AC4
+	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 17:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867711; cv=none; b=GB06RsOfSweUHiXYdm6ZxKTHWcWfvVyE1VD52OUT2GekVNvVW7Dw6tzupasPZyvOTakH5ikruD/2ITJIRVC0/pyT/MEhHsqbZKXd9PQBy4UiXaxUI/y6VCYDQCuQvLsH3lvdivfmU9pEf78jc7xr9FC2cNywAED/U+5KOxv0Q4c=
+	t=1710870220; cv=none; b=DTLRFSfxpo1SDvhrWB35hSSJPI2wf/AnWcw3dWCq4NMT22X7PQedLZR+jYkc84FPqGw/kKhQuh/75RZv3uEjRatEf+HcW96S15ZKAL6UebEweQPiEMjrdTATmmS4m6z/8J3WIPkZrdRN/Y5gwBzN4ZCNsTc/sGLi5JMrhWUVh1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710867711; c=relaxed/simple;
-	bh=+Cou8BHB5jKGkbIOzD4GD0b32jKqu4F4Zr4+L3xqfWc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fHSLNDuclbT2u7Nb49oaYeyq95l22TRVYFad4WdfpnuznS0t2g4j7QdUzWet3zz8QQrWUrMLpHvgKh38exBDtis/dZ18Hygnj1lwJbWADeS7gdHQDtGApaYysBr4lmxDSLy+9+qVlu4ePlFckscY/ulGY1OzcXnvW1dzcx6CKWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbnmrbIK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710870220; c=relaxed/simple;
+	bh=2z52i2q9A9+hroebAExXRNSIFIqk0CoVrdrOUqgdXD0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=nimtjTFqByj6Wm7w5fcqQymcQANg2h6UaQ0GtbEG50hHvDoYqfzZet1SePfZFCrFj0fxhWkLF3GUc+2SVliZWiNxWBu88DSCwMv+LkQi/DnnPnER7lvZC0x0oiywubwDxitoZ5op9mU/OEk5SgNENcomFFLB92lbKPZytc50HKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0SvZcmt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbnmrbIK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB9A6C433F1;
-	Tue, 19 Mar 2024 17:01:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0SvZcmt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 790C5C433F1;
+	Tue, 19 Mar 2024 17:43:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710867711;
-	bh=+Cou8BHB5jKGkbIOzD4GD0b32jKqu4F4Zr4+L3xqfWc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KbnmrbIKVm1JxBWELqNwviHCtm1taMR0wwjIy9SKA7x4YqcTn5rVi3+fqGnJo+XKo
-	 QtXSUSZ7XGFBSN6fYEy9g8byFuDNJSPUJVr1bM1fd/DBGcvgJrbG5zbB8JgSnl0sl/
-	 XdMkRuqoYx4i9aEy6wnQBgdXAtOi5yhyYuh3De2N4sw2isaVlGHH3rIi21maQxJKrL
-	 su5gcFJW0wmV2D9ei6iGxd/keHR6ewBqGXXfMan+MkP4Ey1SrzQu1Qrdm8cIuWRHgJ
-	 ywiS2fxHhKyb34j19kdrU3qnM4aBn810eYlShykBaGjAb46PylSNYPdEkE9r+/9wew
-	 xPJ9bAKuD0+Ag==
-Message-ID: <3e0dcb65-d70e-48d0-bd61-8d752a6e922c@kernel.org>
-Date: Tue, 19 Mar 2024 18:01:48 +0100
+	s=k20201202; t=1710870220;
+	bh=2z52i2q9A9+hroebAExXRNSIFIqk0CoVrdrOUqgdXD0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=i0SvZcmt4C4ljRJ9og5oazC/m2+qJU0d43sWwTkUrwBSSHtNpb5gdNM0vc/ohoUGZ
+	 k65B6LM2SfzVcEJhMiHyX+K6/Txyp3YkoeKwsaxWsbCPIxEjitgJo4+lycXWw5f71g
+	 HzKItt1HyyEBZH+mUxTIkV2vnsDMVPTKsNuHCaa+mvh6v82tFvx1FD87WsoQvPOmdL
+	 3jSytYAs+jLsFRCDp20sa3hVKJ8/S9pNbYtKjD97RscomJSAsfnNa0HnSQt+SC3/QC
+	 DV75s/cJ9QZomJBYihiOTKkl2yTvsHDQBB8NDpjNG1EpRaXnlJJnpDncG/4tzGOEpF
+	 kUi9VsIwOseJQ==
+Message-ID: <e4bf1d50-655f-47b3-83a5-d37435dca9e3@kernel.org>
+Date: Tue, 19 Mar 2024 18:43:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 4/9] selftests: mptcp: add change_address
- helper
+Subject: Re: [PATCH mptcp-next v4 0/9] add helpers and vars in mptcp_lib.sh,
+ final
 Content-Language: en-US
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710832493.git.tanggeliang@kylinos.cn>
- <07d8d4f6ea1988bb56bca312c112deea1fd3e2c4.1710832493.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <fd1ea981-22c2-4d09-b310-120fa20d5a6c@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,30 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <07d8d4f6ea1988bb56bca312c112deea1fd3e2c4.1710832493.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fd1ea981-22c2-4d09-b310-120fa20d5a6c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 19/03/2024 08:16, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 19/03/2024 17:58, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> The address that needs to change flags can only be identified by an address
-> ID in change_endpoint() helper. This patch adds another helper named
-> change_address(), its 2nd parameter is an IP address.
+> On 19/03/2024 08:16, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v4:
+>>  - address every Matt's commends in v3.
 > 
-> Usage:
-> 	Address ID - change_endpoint $ns id $id $flags
-> 	IP address - change_address $ns $addr $flags
-
-It is confusing, there is no 'change_endpoint' helper.
-
+> Thank you for the new version. It looks good to me, just some details,
+> mostly inconsistencies in the commit messages, I can fix that when
+> applying the patches.
 > 
-> Use this new helper in pm_netlink.sh to replace all 'pm_nl_ctl set'
-> commands.
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-(...)
+Now in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- 75006cfc55e1: selftests: mptcp: export ip_mptcp to mptcp_lib
+- 47256e561ff7: selftests: mptcp: netlink: add 'limits' helpers
+- 7b7877974627: selftests: mptcp: add {get,format}_endpoint(s) helpers
+- d4812471cbd3: selftests: mptcp: netlink: add change_address helper
+- a0e3a3cbcc44: selftests: mptcp: join: update endpoint ops
+- 9affad23c8fb: selftests: mptcp: export pm_nl endpoint ops
+- 6686695dd7c4: selftests: mptcp: use pm_nl endpoint ops
+- 39b7f217cd25: selftests: mptcp: ip_mptcp option for more scripts
+- 68e20b601685: selftests: mptcp: netlink: drop disable=SC2086
+- Results: 2066a03d696e..eeea8900a12e (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2a74a8d35e784648fb7c4851019456f4d6c432b1/checks
 
 Cheers,
 Matt
