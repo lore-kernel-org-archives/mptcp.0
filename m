@@ -1,76 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32642210EC;
-	Mon, 18 Mar 2024 12:47:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E125051026
+	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 07:16:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710766061; cv=none; b=lkAtwHyzSORuMpMa05Xfu6yJPOh6rXlYyK3xDl/+zQPXMq/8GOLmkHJJoTpW2AS3RTjPAyogRDcmkxGnoK10cJECu3h+LT28WfL+l5c2o1Bv72l5/xxKoPPATs4lyN3clQbIy2IE/oq8Xo/pMe9yYgySK8nLiGTyQitYIorLkqM=
+	t=1710832582; cv=none; b=QLMlm1vlRFHlvzNbYafa9KodwZ1LnHFgxtuCeK5ZXj3Tdj8vOsSDgcAIyIAddoT2j4kmjSMSlC5tD3OuZJd01k0vXhFVEadSRwkKhb36WqPocOS9y/ge9R0Ag8i40Q885ErTVOFxnfibF0kXh5+dv/IW/D2PHVni9srcSceQDTA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710766061; c=relaxed/simple;
-	bh=IAavgjwG9/Sp67iqayo+f0gCAIYZtO5K2WA3YjasHuc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Io2+2bcza3En+1mh24UcT4sco0MJ/4KcnPMsRKaUTzjdniwZYsU1Bu3k5afFC2GjQuJ2xpJsW0WGOv7Sq0NGHuy/utAyY5Vf5i3CWlApPNnEroPlz+ow3LmlYnJcFtyoeChF3jtFK2BK2LwoArv72MVSkJCzC7RlHMQ3zkkyWqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mAqzdd6R; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1710832582; c=relaxed/simple;
+	bh=qdJkvHrhGPJO1FPgq3huUdF/jCap+ujSbg5dTPeplFM=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=TgxNPL034A/7s4QICf6B1oFo8MpWaqKrDtgx7KNqhv2YkH1LThAXBRu/H1ZHfdpmWr3NJYJ4aNuqOpk6LZ9J/hoXcXkSI197oV8iHCvgFaRr54ZPS6dOgAsX9fgHubM4lvbl0s1A0SV/lSBiU2t2LLXnLPdUsJ0m+EK61Sun1No=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KPObjBTO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mAqzdd6R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D1C0C433F1;
-	Mon, 18 Mar 2024 12:47:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KPObjBTO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DEF9C433C7;
+	Tue, 19 Mar 2024 07:16:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710766060;
-	bh=IAavgjwG9/Sp67iqayo+f0gCAIYZtO5K2WA3YjasHuc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=mAqzdd6R/vU2Nv0dkmdQywWtGgulP98Rw/ZEjYI+MfsUCh7OM9bqiaAzvpkthK7Sy
-	 h7brfiOiogtbnOTH7nmHqE2VVp2o6sjUTv4T1IMfnmpCLuT1efoRaOmUD2jR9beT22
-	 CAUJAJZ7Epbi6ab17jyTL9V3N8e6BxI57L9D6XiHkhDvWkgqrQPjzf/gvrONNG5VRa
-	 jvtpiXsa5oh27fqEbaNDgWOJthsdUsbYuHN3sJ93ql+s3tnOv/s9jIyOx8++Z/11+8
-	 XjzQbYoNwizZQ20MST827W/iodqoUkBhzo7fIQ+8YjLxkaeMcvRYEsrQwxSYOoxIJ2
-	 Dr8Ji/lSHg6Ww==
-Date: Mon, 18 Mar 2024 08:47:38 -0400
-From: Sasha Levin <sashal@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>, martineau@kernel.org,
-	davem@davemloft.net, edumazet@google.com, shuah@kernel.org,
-	netdev@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH AUTOSEL 6.7 14/23] selftests: mptcp: explicitly trigger
- the listener diag code-path
-Message-ID: <Zfg36tcGXUsZnJCh@sashalap>
-References: <20240311151217.317068-1-sashal@kernel.org>
- <20240311151217.317068-14-sashal@kernel.org>
- <afd248db-921f-4067-b917-a7ea3e807816@kernel.org>
+	s=k20201202; t=1710832581;
+	bh=qdJkvHrhGPJO1FPgq3huUdF/jCap+ujSbg5dTPeplFM=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KPObjBTOuLPCWn017hDHoM6t129dGCZY6xc2Z2ImkhLUf15BLNzq1mNMqg8VtAdG7
+	 k0QfePK2K0lqI5Sji3iGbH0vEHgqEyCd9M8tqe6p4PHm43jiUMtlIfNRxCcdH1WuJ1
+	 9/wZlMxdxtcKqCHRCcUwtYWcFXUpX1UTERkCIRk4ZnNaiffXwKzUcks/tamQe97h4R
+	 K2/RIK0drDaK/thHTzzQE1OxcIx7rs4vBMSuhkO/BBo4+5xJXSGvZJnIcSQCf3RWm7
+	 la9GZJ1n0DVTzi97c87t34RAghper4dnKoJ9jYzvFQUcCsp12Lo87nPxR5S1CFDQtR
+	 h9w8d9mOkn+QA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 0/9] add helpers and vars in mptcp_lib.sh, final
+Date: Tue, 19 Mar 2024 15:16:06 +0800
+Message-Id: <cover.1710832493.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <afd248db-921f-4067-b917-a7ea3e807816@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-On Mon, Mar 11, 2024 at 04:28:01PM +0100, Matthieu Baerts wrote:
->Hi Sasha,
->
->On 11/03/2024 16:11, Sasha Levin wrote:
->> From: Paolo Abeni <pabeni@redhat.com>
->>
->> [ Upstream commit b4b51d36bbaa3ddb93b3e1ca3a1ef0aa629d6521 ]
->
->Thank you for having backported this patch to v6.7 and v6.6 versions.
->But it looks like it depends on commit 9369777c2939 ("selftests: mptcp:
->add mptcp_lib_wait_local_port_listen") which is not in these versions.
->
->Because CIs will soon use the kselftests from the new v6.8, I think it
->is better to drop this patch from v6.7 and v6.6 versions.
->
->Cheers,
->Matt
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-I'll drop it, thanks.
+v4:
+ - address every Matt's commends in v3.
+
+v3:
+ - use check_output in pm_nl_check_endpoint.
+ - split #2 and #7 patches in v2.
+ - put "selftests: mptcp: join: fix dev in check_endpoint" into this
+   series too.
+
+v2:
+ - address every Matt's commends in v1.
+ - depends on "selftests: mptcp: join: fix dev in check_endpoint"
+
+This is the last part for "add helpers and vars in mptcp_lib.sh" series,
+add endpoint operation helpers into mptcp_lib.sh.
+
+Geliang Tang (9):
+  selftests: mptcp: export ip_mptcp to mptcp_lib
+  selftests: mptcp: add get_limits helper
+  selftests: mptcp: add get_endpoint helper
+  selftests: mptcp: add change_address helper
+  selftests: mptcp: join: update endpoint ops
+  selftests: mptcp: export pm_nl endpoint ops
+  selftests: mptcp: use pm_nl endpoint ops
+  selftests: mptcp: ip_mptcp option for more scripts
+  selftests: mptcp: netlink: drop disable=SC2086
+
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 147 ++-------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 128 ++++++++
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  34 +-
+ .../testing/selftests/net/mptcp/pm_netlink.sh | 294 +++++++++++-------
+ .../selftests/net/mptcp/simult_flows.sh       |  14 +-
+ 5 files changed, 366 insertions(+), 251 deletions(-)
 
 -- 
-Thanks,
-Sasha
+2.40.1
+
