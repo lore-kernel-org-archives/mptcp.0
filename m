@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85887FBF0
-	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 16:58:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96ACC1CD24
+	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 16:59:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867524; cv=none; b=MYDSVKNmeApCcxfZeU+XOdqIgZel0mwrnt7fG34hZyDBgfBRmr0wI892nKEfXwTOjC5MVQ1GUw7zsReNVdRl34lKf+BVr+jq6Uetfp9SFaRs2I6jyewAEbbHh+kglD2SShXWO4lDW3eICpkPEX7kHUg7h5YngF9vz45b8vyhJik=
+	t=1710867593; cv=none; b=jsRbeou5HTMWyr9oAV/nZvNUQfdpqSmHKmy3Qva15XlhQKf8IScEG7gPIGd+sEICaRY7jRXvNHGWDczEDN+Uycmbq/rij5xjWQnQxFn4MXvRbE6dsaJlQEF/OjJbfQAS/Ap908SvBNEgEUyfR7Z3HdIpSQR0KyTRCdnCpHFeFho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710867524; c=relaxed/simple;
-	bh=wbrXmYkOmsi5SkKPBzL3nolWvM18urAXG1jLjvMmOKs=;
+	s=arc-20240116; t=1710867593; c=relaxed/simple;
+	bh=vf1XWEjixrHtBkuy027CBhnYAA5HE9hHRFB5Tm6IWR8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gwLCmuTOi0FZ2nxeurBUWHurzkAcsiVk8NmOd3tVHn0ISAdy01nddRYE/rNhs0oarkaGM5TuOXA/QvJBs3LixdvbdO0JFUK2Gu9uZ6TnbWRTfeHC/WIAA3eTVzBJkYiB110vO+Z/2NwXAjlnDWxmU/omM8FMbBvyQQJoaJFue0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5qX0rLF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Lrt1dwQPLfqUl8LhgAT9HRysBMXDr0YE5FBQPDdGh1NEP/rJdLNk0orFyk9EjkgTQeE/ANglf2kjo0CaViA2bKrVTT3d5kYf9/jYHp9dZx1dTGK3jw40kdZp/oVfKcXsYeD4tpuxZdAWEDOAD0in/s3AuClvS+BmGT6aHHySH9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BTebx3LU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5qX0rLF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FC2C433C7;
-	Tue, 19 Mar 2024 16:58:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BTebx3LU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40371C433F1;
+	Tue, 19 Mar 2024 16:59:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710867524;
-	bh=wbrXmYkOmsi5SkKPBzL3nolWvM18urAXG1jLjvMmOKs=;
+	s=k20201202; t=1710867593;
+	bh=vf1XWEjixrHtBkuy027CBhnYAA5HE9hHRFB5Tm6IWR8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=O5qX0rLFBqBSPvhFs3QQIXOPyxRvzLjDi8DxMSPxg8s9Nt49RZ28HZZffFLs7nm36
-	 xZ9PQMxw5l+z9DlCn4EH5V+iJKgzxiudubWVAEkdmqjNY0EsjSBp0/6+eSGvdIb/Ew
-	 BW05plHkS1ch4VFEPLGwLsKUQeHu1b1I859mMPdPygl195P3d5Xsuq/SWlP1UOWYjv
-	 3JhxEFHWc2NWfIW45g/BS2rKllWdnTLiV4hZ/cWa6yOT1yJwtJHhu2ud9tdWAGkcnp
-	 KIeYfKqM7VEaC4+KB6SxzPlAUy1OvsnBETrX2O70pa8oDBPTQYRRqGbDCmzYTbzDok
-	 nfguTYy9cMvbg==
-Message-ID: <78267b29-7e11-4034-bc23-b8d4b94e93dd@kernel.org>
-Date: Tue, 19 Mar 2024 17:58:41 +0100
+	b=BTebx3LUcjrKcLVAWJjiL+HshpZ8gOYJI2Ey/8ZzRSL6XxCBrCzuTbGbwRZo+1usy
+	 aNESyg+mwrlLzDPtYpH+bCYABiXTdNkfACWPC0szGuPeN/2nQ6L8K1mBLaDM31JFAC
+	 9JerXhoiHGj8Zrjip20RFBhoJdN9ri8mgAygWBfG7j1kjoxm1r1gKzrzU8uVUb5KuF
+	 JathO13fGVd4meLYfOkIZrng5ScBaQbzAFDYFHwA+81G/NnF0CP1MlP1HtUXXf+sAm
+	 EBx9Ff2iMLZ+Mfmx6FDLV5AEfeAERCr8hpY+YNfmYyEH3vVpN1TppZJwb0tf43Kpjj
+	 g1ViTGe7/FOzg==
+Message-ID: <b02edbef-2910-4e50-b9ea-f236f262d2dc@kernel.org>
+Date: Tue, 19 Mar 2024 17:59:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/9] selftests: mptcp: add get_limits helper
+Subject: Re: [PATCH mptcp-next v4 3/9] selftests: mptcp: add get_endpoint
+ helper
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710832493.git.tanggeliang@kylinos.cn>
- <a624240c38553bfe25a88226a13e71e6642ac76e.1710832493.git.tanggeliang@kylinos.cn>
+ <95b2607b75ac0225a4bff3d863d786b7a0db999b.1710832493.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a624240c38553bfe25a88226a13e71e6642ac76e.1710832493.git.tanggeliang@kylinos.cn>
+In-Reply-To: <95b2607b75ac0225a4bff3d863d786b7a0db999b.1710832493.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,21 +96,80 @@ Hi Geliang,
 On 19/03/2024 08:16, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The output format of 'ip mptcp limits' command is much different from
-> that of 'pm_nl_ctl limits' command. This patch adds format_limits()
-> helper to format the outputs of these two commands to hide the
-> difference.
+> The output formats of 'ip mptcp' commands are much different from that
+> of 'pm_nl_ctl' commands. This patch adds a new helper format_endpoints()
+> to format the outputs of 'ip mptcp' and 'pm_nl_ctl' with 'endpoints'
+> arguments to hide these differences.
 > 
-> Just like set_limits() helper, add another one get_limits() to show the
-> limits.
+> All endpoints are showed in show_endpoints(). Here add another helper
+> named get_endpoint() to show a specofic endpoint identified by the given
 
-There is no 'set_limits()' helper.
+s/specofic/specific
 
-> Use these two helpers in pm_netlink.sh to replace all 'pm_nl_ctl limits'
-> commands and outputs.
+> address ID.
+> 
+> Usage:
+> 	All endpoints - show_endpoints $ns
+> 	One endpoint - get_endpoint $ns $id
+
+It is a bit confusing, you didn't add 'show_endpoints', maybe you are
+talking about 'pm_nl_show_endpoints' from mptcp_join.sh? But there is
+nothing about mptcp_lib_pm_nl_format_endpoints().
+
+> 
+> Use these two helpers in mptcp_join.sh and pm_netlink.sh to replace all
+> 'pm_nl_ctl get' commands and outputs of 'pm_nl_ctl dump/get'.
 
 (...)
 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index ca01d949fad8..ceb8f272c69d 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -520,3 +520,37 @@ mptcp_lib_set_ip_mptcp() {
+>  mptcp_lib_is_ip_mptcp() {
+>  	[ "${MPTCP_LIB_IP_MPTCP}" = "1" ]
+>  }
+> +
+> +# format: <id>,<ip>,<flags>,<dev>
+> +mptcp_lib_pm_nl_format_endpoints() {
+> +	local entry id ip flags dev port
+> +
+> +	for entry in "${@}"; do
+> +		IFS=, read -r id ip flags dev port <<< "${entry}"
+> +		if mptcp_lib_is_ip_mptcp; then
+> +			echo -n "${ip}"
+> +			[ -n "${port}" ] && echo -n " port ${port}"
+> +			echo -n " id ${id}"
+> +			[ -n "${flags}" ] && echo -n " ${flags}"
+> +			[ -n "${dev}" ] && echo -n " dev ${dev}"
+> +			echo " " # always a space at the end
+> +		else
+> +			echo -n "id ${id}"
+> +			echo -n " flags ${flags//" "/","}"
+> +			[ -n "${dev}" ] && echo -n " dev ${dev}"
+> +			echo -n " ${ip}"
+> +			[ -n "${port}" ] && echo " ${port}" || echo ""
+
+detail: maybe easier to read with:
+
+  [ -n "${port}" ] && echo -n " ${port}"
+  echo
+
+> +		fi
+> +	done
+> +}
+> +
+> +mptcp_lib_pm_nl_get_endpoint() {
+> +	local ns=${1}
+> +	local id=${2}
+> +
+> +	if mptcp_lib_is_ip_mptcp; then
+> +		ip -n "${ns}" mptcp endpoint show id "${id}"
+> +	else
+> +		ip netns exec "${ns}" ./pm_nl_ctl get "${id}"
+> +	fi
+> +}
 Cheers,
 Matt
 -- 
