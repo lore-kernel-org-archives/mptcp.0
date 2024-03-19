@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD369FBF0
-	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 16:58:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85887FBF0
+	for <mptcp@lists.linux.dev>; Tue, 19 Mar 2024 16:58:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710867495; cv=none; b=MeOym9A4EC7YmakpPwTK2PwjsvA3fYKSx+HJ5N9wZM/p6uBfJeKpxmIl3JN532GtHCz6uO5A5uGmr6PExdbK+sIrpdLNE/HPg9hP4rnymD3RWxo7mB+8XvaSZcdofOEO6phcAf/JDkrAmXV/QyaO5W9W2ll8npJLieBL2b4VI9o=
+	t=1710867524; cv=none; b=MYDSVKNmeApCcxfZeU+XOdqIgZel0mwrnt7fG34hZyDBgfBRmr0wI892nKEfXwTOjC5MVQ1GUw7zsReNVdRl34lKf+BVr+jq6Uetfp9SFaRs2I6jyewAEbbHh+kglD2SShXWO4lDW3eICpkPEX7kHUg7h5YngF9vz45b8vyhJik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710867495; c=relaxed/simple;
-	bh=QYOlc2jGoJiHG67OdJzHtIKXRBC4YDboB+haRC+rO+I=;
+	s=arc-20240116; t=1710867524; c=relaxed/simple;
+	bh=wbrXmYkOmsi5SkKPBzL3nolWvM18urAXG1jLjvMmOKs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CaCmBM6V46NbvmXYgfKngv6lLKkGqtG5uD84g46RQN986u4ly8s3aMpE28oIXO7hEBaxSK/26LKfvVF+jRzq2VVGUEdD1i5+7QlZhtYeS0OtQBvgYykb9Liog8x1ysxHZZGLXY5uCU1cy8aYqOmeWbw9dpQ1ktyZnpUGNWrc440=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aseL56MZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gwLCmuTOi0FZ2nxeurBUWHurzkAcsiVk8NmOd3tVHn0ISAdy01nddRYE/rNhs0oarkaGM5TuOXA/QvJBs3LixdvbdO0JFUK2Gu9uZ6TnbWRTfeHC/WIAA3eTVzBJkYiB110vO+Z/2NwXAjlnDWxmU/omM8FMbBvyQQJoaJFue0k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O5qX0rLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aseL56MZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B462C433F1;
-	Tue, 19 Mar 2024 16:58:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O5qX0rLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95FC2C433C7;
+	Tue, 19 Mar 2024 16:58:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710867495;
-	bh=QYOlc2jGoJiHG67OdJzHtIKXRBC4YDboB+haRC+rO+I=;
+	s=k20201202; t=1710867524;
+	bh=wbrXmYkOmsi5SkKPBzL3nolWvM18urAXG1jLjvMmOKs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aseL56MZKucx8RuV2msFaN7+UncFJg9v0tguKuWrNq/mVmO5oq3n+px0tS2Zx8wR2
-	 JIUzmegWjtMZbgJKJHN5LrQccrrHtDurDrSf/dqRuN6oYWj2IDXoqECPQmXUUv+DtG
-	 CXcwqI2ORcWHgcPqR7m0UpC6AFVV3XqxMycDVd8tFnWO1+hjsKsT7FrimjHdwEvOF4
-	 Z4et+iuNhH72G1+iwT1p533lI7E0wVGhX0WoUb0rbc2Zu/il2i5rNzEa6RwBkGVI/s
-	 vshiGgYrTqjZgr0yk7GlF/ob0eHpsHX3iUhxBWAUwOi5LMmrcbxGf3XBm4CqLJjuOL
-	 cowS6yyzjMhiw==
-Message-ID: <fd1ea981-22c2-4d09-b310-120fa20d5a6c@kernel.org>
-Date: Tue, 19 Mar 2024 17:58:12 +0100
+	b=O5qX0rLFBqBSPvhFs3QQIXOPyxRvzLjDi8DxMSPxg8s9Nt49RZ28HZZffFLs7nm36
+	 xZ9PQMxw5l+z9DlCn4EH5V+iJKgzxiudubWVAEkdmqjNY0EsjSBp0/6+eSGvdIb/Ew
+	 BW05plHkS1ch4VFEPLGwLsKUQeHu1b1I859mMPdPygl195P3d5Xsuq/SWlP1UOWYjv
+	 3JhxEFHWc2NWfIW45g/BS2rKllWdnTLiV4hZ/cWa6yOT1yJwtJHhu2ud9tdWAGkcnp
+	 KIeYfKqM7VEaC4+KB6SxzPlAUy1OvsnBETrX2O70pa8oDBPTQYRRqGbDCmzYTbzDok
+	 nfguTYy9cMvbg==
+Message-ID: <78267b29-7e11-4034-bc23-b8d4b94e93dd@kernel.org>
+Date: Tue, 19 Mar 2024 17:58:41 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/9] add helpers and vars in mptcp_lib.sh,
- final
+Subject: Re: [PATCH mptcp-next v4 2/9] selftests: mptcp: add get_limits helper
 Content-Language: en-US
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1710832493.git.tanggeliang@kylinos.cn>
+ <a624240c38553bfe25a88226a13e71e6642ac76e.1710832493.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1710832493.git.tanggeliang@kylinos.cn>
+In-Reply-To: <a624240c38553bfe25a88226a13e71e6642ac76e.1710832493.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,14 +95,20 @@ Hi Geliang,
 On 19/03/2024 08:16, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v4:
->  - address every Matt's commends in v3.
+> The output format of 'ip mptcp limits' command is much different from
+> that of 'pm_nl_ctl limits' command. This patch adds format_limits()
+> helper to format the outputs of these two commands to hide the
+> difference.
+> 
+> Just like set_limits() helper, add another one get_limits() to show the
+> limits.
 
-Thank you for the new version. It looks good to me, just some details,
-mostly inconsistencies in the commit messages, I can fix that when
-applying the patches.
+There is no 'set_limits()' helper.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Use these two helpers in pm_netlink.sh to replace all 'pm_nl_ctl limits'
+> commands and outputs.
+
+(...)
 
 Cheers,
 Matt
