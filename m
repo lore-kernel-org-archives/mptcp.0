@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB65426AEA
-	for <mptcp@lists.linux.dev>; Wed, 20 Mar 2024 12:37:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E026D3BBEA
+	for <mptcp@lists.linux.dev>; Wed, 20 Mar 2024 12:37:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1710938233; cv=none; b=ZZjoVBtHLXnA2KVkm5he6ax3wFF//uW2wwKFy7bTn7uv9azxWtGkzrQ2UEOoAkR0U3PnTkOeu2mqLPVGZUlBXo2sep3ZF6zd3JD5PEx4bMbG9BViMR+vqGSH4Kk4etHQP7MEp+qCRLXjk1ZN4SgoccghgpFeOwJyAFaxg9asWow=
+	t=1710938236; cv=none; b=O5+pIif4Kr4G5x8C64G9y0g6NQTumIk1k+YjEinULytoMFevJNbpmwqXJWDD5rle7mtZ2QibdxDXmRhuU9/VIjIovnLBxoqdxR10gqYyGDKkmMnD7SWGjsS2QYIAWuHAbkLICqcX3F2sug61XMoIhXVutvPkU/o4VkqhCajwKnI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1710938233; c=relaxed/simple;
-	bh=cupSuqX5M9K4AgQNSwKeGylrEJsU5vXKS/7HlqY/KdI=;
+	s=arc-20240116; t=1710938236; c=relaxed/simple;
+	bh=DbvUue7Hd5IAOkM+wy0uxjCf+YEJiA8Ntjlh/ZxmIC8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=vFrT1IwY1XRvUwOCsFTT/I5hoJ/Dn0KgIPnuFftQzBXk+d05R8UyllZP26eUpxEhC/S8by5PqB1pdTVzMuqRlK5iwd+tuHhlY2E6xLUdJeAJjO7MfuI5AscJL1ACRUHGDM5ITZSULLOAsU+4QxtpYelb3qUIHzXKwjz1kmTcA/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KOMdmL4e; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F+sUyUrquhCcX/VuR2F7CIWXUP8NHMORMulIeolINdjAJ1kDUf0FGQNjUj3JEN6iptvAZG0Of03ThwTSUhVrv5KpPE/QmkaAxbDUKuujOxjIAYw3ex6AsDggtxWJudsNSel0xQs2PAC/Qs7YpBgFBnZUwBujwkaYbqGguxGzBfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MCZ0gnVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KOMdmL4e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29F6FC433C7;
-	Wed, 20 Mar 2024 12:37:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MCZ0gnVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0589DC433F1;
+	Wed, 20 Mar 2024 12:37:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1710938233;
-	bh=cupSuqX5M9K4AgQNSwKeGylrEJsU5vXKS/7HlqY/KdI=;
+	s=k20201202; t=1710938235;
+	bh=DbvUue7Hd5IAOkM+wy0uxjCf+YEJiA8Ntjlh/ZxmIC8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KOMdmL4eO1UwM6hG6Eu1KitvWaOYDB47RHzNPpw7z0OYPjFZ//rYPmdOiEZWdxQ65
-	 1wD/LsYS6tCvl2YOX1xQCg0GHsdtcgcEhZOrJ5oGEDVAf9rE2p9B7VxJ4YDcuI03vo
-	 zaDoLOjVV9QywQu3lGe96OoBFYSdfqLuuyFKoT9tDIVvsu3XxB+golO27Y2R9qD2/E
-	 zhivKH2O82Vtom1un62F5RmunimH0wV8K+ds3uThD69p1Kx5naHmgaQ35FLsvMVhPp
-	 2XRXlz6ayKa1iBt7/MGhd1B3mAwRbeuc+dTeydNu0DYS9e1aqmhwHXMD6vs4JLtC8X
-	 SVZWvU/AhYCQg==
+	b=MCZ0gnVLk/PSblFOrsZEzQLxYfQkatNkP4iOFNStgNLywNHMh6fnVc+eoqXAP5NSS
+	 xQTufiSEBDnNAo5efDAdHVL+0rGQc90ESjmf98M+NoKV4DQqChgVf7B04cy/X2QMxT
+	 8RNspwtg6XXJxWIY/Dh+3cZF48Ct4dnHobeYd2N3SPP52pQ2rqrBdW1OrWCUOLX+oV
+	 H+XefjuH6rZHz0t2Z+czLkmP+PQgspZPXpSbdhIOYfUMh2ULgnXzLLD0LN/S+oywph
+	 96vFSaQnQgYBEs8QHjKbCRxHmEI03zalJ8O8MB/uaOUIUB8Dxnq7OfcOH4cRvsynEZ
+	 Tf9DOmFpd34Yw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/4] Squash to "selftests/bpf: Add bpf scheduler test" fix
-Date: Wed, 20 Mar 2024 20:37:02 +0800
-Message-Id: <afe585987759af38b2547056c93d5ae8a0b1f50a.1710938175.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/4] selftests/bpf: Add mptcp subflow prog
+Date: Wed, 20 Mar 2024 20:37:03 +0800
+Message-Id: <2e9900609e211a5b93cc682c5347035f8420bf93.1710938175.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1710938175.git.tanggeliang@kylinos.cn>
 References: <cover.1710938175.git.tanggeliang@kylinos.cn>
@@ -45,67 +45,95 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-BPF tests fail sometimes with "bytes != total_bytes" errors:
+Move Nicolas's patch into bpf selftests directory. This prog added a test
+that was adding a different mark (SO_MARK) on each subflow, and changing
+the TCP CC only on the first subflow.
 
- # test_default:PASS:sched_init:default 0 nsec
- # send_data:PASS:pthread_create 0 nsec
- # send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
- # default: 3041 ms
- # server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
- # send_data:FAIL:pthread_join thread_ret:-11test_default:PASS:has_bytes_sent addr_1 0 nsec
- # test_default:PASS:has_bytes_sent addr_2 0 nsec
- # close_netns:PASS:setns 0 nsec
-
-"bytes != total_bytes" is not a fatal error for BPF test, just print out
-the error info and skip it.
-
-This patch makes BPF tests stable.
-
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/76
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+ .../selftests/bpf/progs/mptcp_subflow.c       | 72 +++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_subflow.c
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 6e28215d7404..4c180839ff1d 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -362,8 +362,10 @@ static void *server(void *arg)
- 		bytes += nr_sent;
- 	}
- 
--	CHECK(bytes != total_bytes, "send", "%zd != %u nr_sent:%zd errno:%d\n",
--	      bytes, total_bytes, nr_sent, errno);
-+	if (bytes != total_bytes) {
-+		printf("FAIL:send %zd != %u nr_sent:%zd errno:%d\n",
-+		       bytes, total_bytes, nr_sent, errno);
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+new file mode 100644
+index 000000000000..1b49eaae4f77
+--- /dev/null
++++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+@@ -0,0 +1,72 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (c) 2024, Tessares SA. */
++/* Author: Nicolas Rybowski <nicolas.rybowski@tessares.net> */
++
++#include <asm/socket.h>	// SOL_SOCKET, SO_MARK, ...
++#include <linux/tcp.h>	// TCP_CONGESTION
++#include <linux/bpf.h>
++#include <bpf/bpf_helpers.h>
++#include "bpf_tcp_helpers.h"
++
++char _license[] SEC("license") = "GPL";
++
++#ifndef SOL_TCP
++#define SOL_TCP 6
++#endif
++
++#ifndef TCP_CA_NAME_MAX
++#define TCP_CA_NAME_MAX 16
++#endif
++
++char cc[TCP_CA_NAME_MAX] = "reno";
++
++/* Associate a subflow counter to each token */
++struct {
++	__uint(type, BPF_MAP_TYPE_HASH);
++	__uint(key_size, sizeof(__u32));
++	__uint(value_size, sizeof(__u32));
++	__uint(max_entries, 100);
++} mptcp_sf SEC(".maps");
++
++SEC("sockops")
++int mptcp_subflow(struct bpf_sock_ops *skops)
++{
++	__u32 init = 1, key, mark, *cnt;
++	struct mptcp_sock *msk;
++	struct bpf_sock *sk;
++	int err;
++
++	if (skops->op != BPF_SOCK_OPS_TCP_CONNECT_CB)
++		return 1;
++
++	sk = skops->sk;
++	if (!sk)
++		return 1;
++
++	msk = bpf_skc_to_mptcp_sock(sk);
++	if (!msk)
++		return 1;
++
++	key = msk->token;
++	cnt = bpf_map_lookup_elem(&mptcp_sf, &key);
++	if (cnt) {
++		/* A new subflow is added to an existing MPTCP connection */
++		__sync_fetch_and_add(cnt, 1);
++		mark = *cnt;
++	} else {
++		/* A new MPTCP connection is just initiated and this is its primary
++		 *  subflow
++		 */
++		bpf_map_update_elem(&mptcp_sf, &key, &init, BPF_ANY);
++		mark = init;
 +	}
- 
- done:
- 	if (fd >= 0)
-@@ -409,16 +411,18 @@ static void send_data(int lfd, int fd, char *msg)
- 
- 	delta_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
- 
--	CHECK(bytes != total_bytes, "recv", "%zd != %u nr_recv:%zd errno:%d\n",
--	      bytes, total_bytes, nr_recv, errno);
-+	if (bytes != total_bytes) {
-+		printf("FAIL:recv %zd != %u nr_recv:%zd errno:%d\n",
-+		       bytes, total_bytes, nr_recv, errno);
-+	}
- 
- 	printf("%s: %u ms\n", msg, delta_ms);
- 
- 	WRITE_ONCE(stop, 1);
- 
- 	pthread_join(srv_thread, &thread_ret);
--	CHECK(IS_ERR(thread_ret), "pthread_join", "thread_ret:%ld",
--	      PTR_ERR(thread_ret));
-+	if (IS_ERR(thread_ret))
-+		printf("FAIL:pthread_join thread_ret:%ld\n", PTR_ERR(thread_ret));
- }
- 
- #define ADDR_1	"10.0.1.1"
++
++	/* Set the mark of the subflow's socket to its apparition order */
++	err = bpf_setsockopt(skops, SOL_SOCKET, SO_MARK, &mark, sizeof(mark));
++	if (err < 0)
++		return 1;
++	if (mark == 1)
++		err = bpf_setsockopt(skops, SOL_TCP, TCP_CONGESTION, cc, TCP_CA_NAME_MAX);
++
++	return 1;
++}
 -- 
 2.40.1
 
