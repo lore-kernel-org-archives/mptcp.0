@@ -1,107 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D01312BEB1;
-	Mon, 25 Mar 2024 01:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D317A155741
+	for <mptcp@lists.linux.dev>; Mon, 25 Mar 2024 02:21:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711331789; cv=none; b=Kn0rTCSahUDmKMAiFuwYa+yv+vDJBYX9ay32lrCTebc88yjSqYlqmQG+YtssDX/3/vEwlYFoxIxJyAFVTVgsZQj/fzRxUVSZEoFztpmoljYGTsTXMeFdSRQB47VM4mEemWZZWSPlJ96r/5uSZSwN/X4NncOSLXMnfIcYGqOvPrc=
+	t=1711333287; cv=none; b=CTdjc832XiHdmkuX+zKtSK5B+kPYvb2MEBKT0B7a8L6SuaZcr5Ty94FnfF2Dqh8HzyMGH/6o5IpyLwUdzlkcP0ynYdQduLHIV9qp7RRTtr0S/7HuT3Z13NRAaPL8BJ9mJzDIU0VNfPqQXEXdJRCeitAXWyudoVQ6EEiL/UgypH4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711331789; c=relaxed/simple;
-	bh=icyO38cGeBzkpbCKm3zrjf9h1V8WBVmcoCFYROVh7Z8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=BQtMRZJNq1sjWmSAnAT8KswnattNK3UnAyRHqG0qEwaiMgmIf1rzFH1eOCp/gHDkAAKinChw0cGxvazpEZZPhqCyAxGios+zGZtW5ms8QH3vClm5mu/MWPhbPKrgLb2m5sXbYqOHaaRfF6xyjls0K/hzkdYEwXgV4GAXksgUhXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mB0PdNmX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711333287; c=relaxed/simple;
+	bh=5oE8+J/KtzDJLXO55yS+h7EpqBgp+ySEeVhvYo2hDJY=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=eynML8H5giIEFSFYHF1TV9rzRITl7YHTXGy5e55ZpfurttG2h6t34bChFGf3oQfn08fzLfSUa2daGM+UmfsIggQEIdWDWdBWURif7+nYlHSuBuGEidsfZKuETJCxgXh8+x8/webEeZ3a+esQvaIia1ba52H5lGpWYbvbBa/V9Ow=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BcsBrqz0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mB0PdNmX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3644FC433F1;
-	Mon, 25 Mar 2024 01:56:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BcsBrqz0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 835ADC433F1;
+	Mon, 25 Mar 2024 02:21:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711331789;
-	bh=icyO38cGeBzkpbCKm3zrjf9h1V8WBVmcoCFYROVh7Z8=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mB0PdNmXxm90+sZtId6K7tTuWrqCOrBG8+Bgo8gn7bsncZWopNzJnlXYk+qf2KLm9
-	 vq8XQ95FoEdtE25TT0OMmTnFy4pd57E7gPS178PL2OvEarNncyrutmfFSkXBliQRMU
-	 YiMVXXFJoyimL8oChmFSZ6norzfEGDTZ3fDK/QFDyYBmwIhleorUbkfDCI2+y98tLt
-	 hl2JfRlvvcaoY2QFncwkk6iBpqt5RJDKvaCSK1zfn6eN03Appn+zDoGoGnUMEMAUsi
-	 PAPXlAkCQAYsvA80s9hZp3ZXc7qQc0FImz/f36JTeWuyQ7Bdq4PW7QZQrey9yQ3xxF
-	 1a7YPM61udGKA==
+	s=k20201202; t=1711333287;
+	bh=5oE8+J/KtzDJLXO55yS+h7EpqBgp+ySEeVhvYo2hDJY=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=BcsBrqz0hP5+di/felJp1IG83y0Z0sDPGKSCmMuTb++FefIvtX85Vya7W/YVUsblk
+	 AWPHkHxSjiiWp/9SLJKk4nzJhs/4StAa2w7JdhlqOTPWtyBTzhhGaY249XxMXY+pwx
+	 GTmlqfqKwfMjIMadLchgOW2iBMnNZDjUSIC3o6QUgwqB6yX16amWpGop1fxwjkSV0I
+	 1Epef3RhLsFKKWIlq4Fif+jYlwQgoPL5W8P8Li9le+l5nKYn1y7gGiBX5vkqAlcnmI
+	 8AUeK/Y5pGOiTzjGwhvWNmlSKz9fcLFdkY872NSy3+lltimKerQxV+1WJN8hZqDtvS
+	 ImgihVabX7ZLg==
+Message-ID: <4895695fc99558fcf5446fc56f6e84d194567c61.camel@kernel.org>
+Subject: Re: CI: MPTCP BPF tests are now validated
 From: Geliang Tang <geliang@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH] selftests/bpf: Use start_server in bpf_tcp_ca
-Date: Mon, 25 Mar 2024 09:56:15 +0800
-Message-Id: <9926a79118db27dd6d91c4854db011c599cabd0e.1711331517.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 25 Mar 2024 10:21:23 +0800
+In-Reply-To: <d429bed2a6a8437c8e4705746943f8a2743a878c.camel@kernel.org>
+References: <47ca79ba-6212-42af-af25-46b6bdf94eb1@kernel.org>
+	 <Ze5kchd+9VNmQAwg@t480>
+	 <d429bed2a6a8437c8e4705746943f8a2743a878c.camel@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+XlU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLlP9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInMHcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL518p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucpVCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU23wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/PvX+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBBMBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvhG5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7Ad
+	WelP+0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcmBA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIPkNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0obpX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6VRORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJGBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTAQoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atDyyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhVc9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzxOwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4pa
+	Yt49pNvhcqLKMGNLPsX06OR4G+4ai0JTTzIlwVJXuo+uZRFQyuOaSmlSjEsiQ/WsGdhILldV35RiFKe/ojQNd4B4zREBe3xT+Sf5keyAmO/TG14tIOCoGJarkGImGgYltTTTM6rIk/wwo9FWshgKAmQyEEiSzHTSnXcGbalD3Do89YRmdG+5eP7HQfsG+VWdn8IH6qgIvSt8GOw6RfSP7omMXvXji1VrbWG4LOFYcsKTN+dGDhl8LmU0y44HejkCzYj/b28MvNTiRVfucrmZMGgI8L5A4ZwQ3Inv7jY13GZSvTb7PQIbqMcb1P3SqWJFodSwBg9oSw21b+T3aYG3z3MRCDXDlZAJONELx32rPMdBva8k+8L+K8gc7uNVH4jkMPkP9jPnVPx+2P2cKc7LXXedb/qQ3MuQINBGWKTg4BEADJxiOtR4SC7EHrUDVkp/pJCQC2wxNVEiJOas/q7H62BTSjXnXDc8yamb+HDO+Sncg9SrSRaXIh+bw9G3rvOiC2aQKB6EyIWKMcuDlD7GbkLJGRoPCA5nSfHSzht2PdNvbDizODhtBy8BOQA6Vb21XOb1k/hfD8Wy6OnvkA4Er61cf66BzXeTEFrvAIW+eUeoYTBAeOOc2m4Y0J28lXhoQftpNGV5DxH9HSQilQZxEyWkNj8oomVJ6Db7gSHre0odlt5ZdB7eCJik12aPIdK5W97adXrUDAclipsyYmZoC1oRkfUrHZ3aYVgabfC+EfoHnC3KhvekmEfxAPHydGcp80iqQJPjqneDJBOrk6Y51HDMNKg4HJfPV0kujgbF3Oie2MVTuJawiidafsAjP4r7oZTkP0N+jqRmf/wkPe4xkGQRu+L2GTknKtzLAOMAPSh38JqlReQ59G4JpCqLPr00sA9YN+XP+9vOHT9s4iOu2RKy2v4eVOAfEFLXq2JejUQfXZtzSrS/31ThMbfUmZsRi8CY3HRBAENX224Wcn6IsXj3K6lfYxImRKWGa
+	/4KviLias917DT/pjLw/hE8CYubEDpm6cYpHdeAEmsrt/9dMe6flzcNQZlCBgl9zuErP8Cwq8YNO4jN78vRlLLZ5sqgDTWtGWygi/SUj8AUQHyF677QARAQABiQI7BBgBCgAmFiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwwFCRLMAwAACgkQfnvtNTGKqCkpsw/2MuS0PVhl2iXs+MleEhnN1KjeSYaw+nLbRwd2SdXoVXBquPP9Bgb92T2XilcWObNwfVtD2eDz8eKf3e9aaWIzZRQ3E5BxiQSHXl6bDDNaWJB6I8dd5TW+QnBPLzvqxgLIoYn+2FQ0AtL0wpMOdcFg3Av8MEmMJk6s/AHkL8HselA3+4h8mgoK7yMSh601WGrQAFkrWabtynWxHrq4xGfyIPpq56e5ZFPEPd4Ou8wsagn+XEdjDof/QSSjJiIaenCdDiUYrx1jltLmSlN4gRxnlCBp6JYr/7GlJ9Gf26wk25pb9RD6xgMemYQHFgkUsqDulxoBit8g9e0Jlo0gwxvWWSKBJ83f22kKiMdtWIieq94KN8kqErjSXcpI8Etu8EZsuF7LArAPch/5yjltOR5NgbcZ1UBPIPzyPgcAmZlAQgpy5c2UBMmPzxco/A/JVp4pKX8elTc0pS8W7ne8mrFtG7JL0VQfdwNNn2R45VRf3Ag+0pLSLS7WOVQcB8UjwxqDC2t3tJymKmFUfIq8N1DsNrHkBxjs9m3r82qt64u5rBUH3GIO0MGxaI033P+Pq3BXyi1Ur7p0ufsjEj7QCbEAnCPBTSfFEQIBW4YLVPk76tBXdh9HsCwwsrGC2XBmi8ymA05tMAFVq7a2W+TO0tfEdfAX7IENcV87h2yAFBZkaA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-To simplify the code, use BPF selftests helper start_server() in
-bpf_tcp_ca.c instead of open-coding it. This helper is defined in
-network_helpers.c, and exported in network_helpers.h, which is already
-included in bpf_tcp_ca.c.
+On Thu, 2024-03-21 at 10:22 +0800, Geliang Tang wrote:
+> Hi Matt,
+>=20
+> On Mon, 2024-03-11 at 09:54 +0800, Geliang Tang wrote:
+> > Hi Matt,
+> >=20
+> > On Thu, Mar 07, 2024 at 02:59:14PM +0100, Matthieu Baerts wrote:
+> > > Hello,
+> > >=20
+> > > > From today, the CI is now validating MPTCP BPF tests!
+> >=20
+> > Great!
+> >=20
+> > >=20
+> > > To be able to do that, I got some help from Geliang (thanks!) to
+> > > update
+> > > the script used by the CI to launch these tests. I just did the
+> > > wiring
+> > > to run these tests in a new job, in parallel to the other ones,
+> > > and
+> > > it
+> > > seems working:
+> > >=20
+> > > https://github.com/multipath-tcp/mptcp_net-next/actions/runs/81868437=
+23
+> > >=20
+> > > Please tell me if there are anything wrong with that (results,
+> > > notifications, summary, etc.)
+> > >=20
+> > >=20
+> > > @Geliang: it looks like the "burst" test is unstable. Do you mind
+> > > looking at that please?
+> >=20
+> > Sure, I'll check it.
+>=20
+> I checked this. BPF tests fail sometimes with "bytes !=3D total_bytes"
+> errors. And the following patch can fix it:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c | 13 +------------
- 1 file changed, 1 insertion(+), 12 deletions(-)
+I finally resolve it. It's because "burst" emits EAGAIN in this case,
+we must handle it.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
-index a88e6e07e4f5..94cb22b01482 100644
---- a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
-+++ b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
-@@ -89,7 +89,7 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
- 
- 	WRITE_ONCE(stop, 0);
- 
--	lfd = socket(AF_INET6, SOCK_STREAM, 0);
-+	lfd = start_server(AF_INET6, SOCK_STREAM, NULL, 0, 0);
- 	if (!ASSERT_NEQ(lfd, -1, "socket"))
- 		return;
- 
-@@ -103,21 +103,10 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
- 	    settimeo(lfd, 0) || settimeo(fd, 0))
- 		goto done;
- 
--	/* bind, listen and start server thread to accept */
--	sa6.sin6_family = AF_INET6;
--	sa6.sin6_addr = in6addr_loopback;
--	err = bind(lfd, (struct sockaddr *)&sa6, addrlen);
--	if (!ASSERT_NEQ(err, -1, "bind"))
--		goto done;
--
- 	err = getsockname(lfd, (struct sockaddr *)&sa6, &addrlen);
- 	if (!ASSERT_NEQ(err, -1, "getsockname"))
- 		goto done;
- 
--	err = listen(lfd, 1);
--	if (!ASSERT_NEQ(err, -1, "listen"))
--		goto done;
--
- 	if (sk_stg_map) {
- 		err = bpf_map_update_elem(bpf_map__fd(sk_stg_map), &fd,
- 					  &expected_stg, BPF_NOEXIST);
--- 
-2.40.1
+New patch is here:
+https://patchwork.kernel.org/project/mptcp/patch/311e074a3ca0465bdc5e4c2283=
+e334bae5ccd306.1711296000.git.tanggeliang@kylinos.cn/
+
+Thanks,
+-Geliang
+
+>=20
+> https://patchwork.kernel.org/project/mptcp/patch/afe585987759af38b2547056=
+c93d5ae8a0b1f50a.1710938175.git.tanggeliang@kylinos.cn/
+>=20
+> Thanks,
+> -Geliang
+>=20
+> >=20
+> > Thanks,
+> > -Geliang
+> >=20
+> > >=20
+> > >=20
+> > > Cheers,
+> > > Matt
+> > > --=20
+> > > Sponsored by the NGI0 Core fund.
+> >=20
+>=20
 
