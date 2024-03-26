@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ABBB1CA96;
-	Tue, 26 Mar 2024 01:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 772641CAB5;
+	Tue, 26 Mar 2024 01:27:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711416429; cv=none; b=DlyiCtDxR/FkhjHpa4eFq2urkf22OXK3hrZFWAs0FXbkcVHLJ4ozXmXs+blrsqnA9Xf6y3tNNICtZB3xrn2+X04eIfEiWA09WmE97FEawIx9YRF+k4MFe0HOKuSf+7ocfqkOriGisf8ZRRvsFH+gs2HIjfJoUpFXZ26AUQPZ9JA=
+	t=1711416434; cv=none; b=cyM8S+PkpGE9ZBtLfkiFwNOCj0BS4drwTGe/9cTuD4BlMhe600MXzSBUzr8Dbb/dlQIAceUxuXQGADHXgYxIe4vae0oFy2cbtYmVIMII2izBtunlQ/xtHXNLEy468iM+GRvI03PFxPjsovxZS5vVXsOnZFqX0ZQyMD22gCqcVR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711416429; c=relaxed/simple;
-	bh=DtAEuz7DlUmdHV4GApnjMFRpP2OGvcT9EdC0I/cfJhw=;
+	s=arc-20240116; t=1711416434; c=relaxed/simple;
+	bh=18Zkt7T2hCAIqpvhlhF4CEGnn3A8qSQkf0zooCIBfCY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=AmOoqq2r34jsl640xMh/M3FTdO1Ms2HrJb5T3zRfZXvqISOyBMDnKq/SXcZNwtn/t/cyugUxRUCBYpQwJoDqDKxnIPkt0a9Oah32Ex/KAJ4J1YQ1psJqre25x5KcFKRcj7b5ySFrjvVIm1THZpShJoTg24tI5LC09VlKgenI9V0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ior7uqZy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=S0yWma9AzJEfQkkb+dhfL5M91xsyoXnU47tjwJKKfM6WzEZncXwphOX6s9HNz5n488PLUbB+J/MiUrBOhFQCIIYUaF9ud3alCuVj6AW7/zRuQ7M68fEuLgHiObVfHH0TdvVKYiesFE8RReLDw892EIcDTzRIYpHJx4aUG4QRhGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ANHc9Opp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ior7uqZy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6928C43390;
-	Tue, 26 Mar 2024 01:27:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ANHc9Opp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1524DC433F1;
+	Tue, 26 Mar 2024 01:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711416428;
-	bh=DtAEuz7DlUmdHV4GApnjMFRpP2OGvcT9EdC0I/cfJhw=;
+	s=k20201202; t=1711416434;
+	bh=18Zkt7T2hCAIqpvhlhF4CEGnn3A8qSQkf0zooCIBfCY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ior7uqZy0QE+7DgLTEUpWMFD/kLPJ6AkP1C6OdqvDGf1727n9NvFh1hjKsTot1U1D
-	 vndlOu3y9+IMO0eacJBJ0874CrRXCwFnRAOjDWZ4BR8Lmov1JEhzN6NB03VdifUY+l
-	 lbw+Wxg9lGyXRu4aPGl58oSYXN6KIT1YfgJ/Eq6LbWbUXSQiWd6dBSYVR+wWQYS3lv
-	 4Tv9hjEJleXcQD1bCEI1struqJbQmQeLAy7yQz9mS48MCT4EXhh3zYmgl2fDvDiQHL
-	 rQ49GtBh/uTQc0aT93Xee7XUnVvrFrC0pyGc26OCBJ82iClxNjtgpSAvZnWVppROSp
-	 EB83L05WC42TA==
+	b=ANHc9OppQ2eynGRdJ8/GhuMfJ5ZcZHuT/c/btgTIEbyrci6oE5s1uf8BELbwNpV/k
+	 0jkZQc00Xu9Hsh6v4wTXWDZx2C81YxwaqrAoONMVKFy6CGx3wbemcXSHQ2XBBONkXr
+	 iJWWf8nxK76vReOEv2mDJmUJ+mUe1HSpvzVPsnIu4rq1YD9dYAzlya4+EE3G8egj2g
+	 f7rQy1s7/yqiEobRtGOVLSUIx6zGfbTmPj8mEwFrmQB51YhX5B/TMq0Hwg/mr9m+E1
+	 1jJkVf14JSIWM/MnQUnvr+2kCTTkbNlf5qF2lGm++Un69h2puPUzCA1zlhFvoQ/THz
+	 jxrL/1LB6LVdg==
 From: Geliang Tang <geliang@kernel.org>
 To: Andrii Nakryiko <andrii@kernel.org>,
 	Eduard Zingerman <eddyz87@gmail.com>,
@@ -44,9 +44,9 @@ To: Andrii Nakryiko <andrii@kernel.org>,
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	bpf@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH bpf-next v3 1/2] Squash to "selftests/bpf: Use start_server in bpf_tcp_ca"
-Date: Tue, 26 Mar 2024 09:26:52 +0800
-Message-Id: <83239db116b07cfea62ce3a63604c5523b0f9670.1711415671.git.tanggeliang@kylinos.cn>
+Subject: [PATCH bpf-next v3 2/2] selftests/bpf: Use connect_fd_to_fd in bpf_tcp_ca
+Date: Tue, 26 Mar 2024 09:26:53 +0800
+Message-Id: <a024545b739d0046d15e6d5eab9e3aa7e21d6e18.1711415671.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1711415671.git.tanggeliang@kylinos.cn>
 References: <cover.1711415671.git.tanggeliang@kylinos.cn>
@@ -60,31 +60,58 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Please add these lines into commit log:
+To simplify the code, use BPF selftests helper connect_fd_to_fd() in
+bpf_tcp_ca.c instead of open-coding it. This helper is defined in
+network_helpers.c, and exported in network_helpers.h, which is already
+included in bpf_tcp_ca.c.
 
-'''
-settimeo(lfd, 0) is invoked in start_server() already, drop the
+settimeo(fd, 0) is invoked in connect_fd_to_fd() already, drop the
 duplicate one.
-'''
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c | 11 ++---------
+ 1 file changed, 2 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
-index 94cb22b01482..f44abb990804 100644
+index f44abb990804..3da3030c9365 100644
 --- a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
 +++ b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
-@@ -100,7 +100,7 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
+@@ -78,11 +78,9 @@ static void *server(void *arg)
+ 
+ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
+ {
+-	struct sockaddr_in6 sa6 = {};
+ 	ssize_t nr_recv = 0, bytes = 0;
+ 	int lfd = -1, fd = -1;
+ 	pthread_t srv_thread;
+-	socklen_t addrlen = sizeof(sa6);
+ 	void *thread_ret;
+ 	char batch[1500];
+ 	int err;
+@@ -99,12 +97,7 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
+ 		return;
  	}
  
- 	if (settcpca(lfd, tcp_ca) || settcpca(fd, tcp_ca) ||
--	    settimeo(lfd, 0) || settimeo(fd, 0))
-+	    settimeo(fd, 0))
+-	if (settcpca(lfd, tcp_ca) || settcpca(fd, tcp_ca) ||
+-	    settimeo(fd, 0))
+-		goto done;
+-
+-	err = getsockname(lfd, (struct sockaddr *)&sa6, &addrlen);
+-	if (!ASSERT_NEQ(err, -1, "getsockname"))
++	if (settcpca(lfd, tcp_ca) || settcpca(fd, tcp_ca))
  		goto done;
  
- 	err = getsockname(lfd, (struct sockaddr *)&sa6, &addrlen);
+ 	if (sk_stg_map) {
+@@ -115,7 +108,7 @@ static void do_test(const char *tcp_ca, const struct bpf_map *sk_stg_map)
+ 	}
+ 
+ 	/* connect to server */
+-	err = connect(fd, (struct sockaddr *)&sa6, addrlen);
++	err = connect_fd_to_fd(fd, lfd, 0);
+ 	if (!ASSERT_NEQ(err, -1, "connect"))
+ 		goto done;
+ 
 -- 
 2.40.1
 
