@@ -1,122 +1,139 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f51.google.com (mail-wm1-f51.google.com [209.85.128.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDABB14D711
-	for <mptcp@lists.linux.dev>; Wed, 27 Mar 2024 16:56:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2276C149C70
+	for <mptcp@lists.linux.dev>; Wed, 27 Mar 2024 17:00:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711558572; cv=none; b=gKkMU32I27BxwWlGRYZ5SBgCCBQ3t9mV4H5WRi39hLHchZZyxYgzvm/VuHJIt5DaFDG5ygfGnwryGE3HDEAlFPnxsJJEZpQl5wsgiEuAPLbCoNL79J6SMoxWQSQumnLOzovjpCP3NHOwv9qjs9UVt2tpUd4DbMQVjNRb7FaXq/w=
+	t=1711558833; cv=none; b=cx+oH3bMcM3I45CpJJh8X/ZeSBhq15ug1bGCHiu5KlR6hUmEYwwibhBCG8VKHV7QGhXUzk/bNOCMYGeecw6swoqrIcoyZ3RWhq2R/Qv7M157bYcpR9vytbdPk0zv62+CTnurNl+gNvmRctgur7F1q1IwvFf+DgmT/pQ6sU0vv7A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711558572; c=relaxed/simple;
-	bh=2v7aLHwG3xBNYzKIzJCv7AnZ5MRpT0U1cdtqi6Tzb+U=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=A1mxqXWIz11r6GzwH838sAMph5xp/ZA60g68ZoJr4Ed5vqn+BQqnMP7WBNt/JmDNH/uJo1NaaVlmiWofNerUhJlULQOma92hiymMKliL2EtmaxV4yUmPYVa9lPJawV4HynbwVIkTQvVBKsOGktW2CDpy+VTfxJL8C1xZTc/oYdA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=clZymOYN; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1711558833; c=relaxed/simple;
+	bh=J37ICIcDeIhSRv8OF2aSODi811JNXz0+B8VLSNUEPKI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=s7pD7cPfk3YA3Rl3U2ir7c/6XjcP2dlabzCgE0AxYbF30tSfispgRtQgR7jg9czDlkxhlUjW8RiqLXXJz0YDole5OKQ7o6G2v6rZwlCODJ4wLN2277BJYFYSt1Oeuvyj1VJBUWcoESzZQcuFy5sho1RRH33wZ/Zr7YeIBoBuw1o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=SG44gI91; arc=none smtp.client-ip=209.85.128.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="clZymOYN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1711558569;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=0grGr2vs7g8LZk25gVO01eJHrHioop+8opYOjWTngeo=;
-	b=clZymOYNe4emwBm4QrMOS3Wvvbeskf83MUvQPSJrWS7o3/SlUEN1QiawUpCXzW/IGlWnub
-	wRGRc2N5dh/1QxqUa5iDuuo5rSOVmUORu6l2xKAUisEzFaUYlYNFFKoiRJ/sCSLwc9JDgO
-	vj+2JTemUFMCCwhWicGLZDuhjVIsyzU=
-Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
- [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-663-SRZOHeNrO8y45za--JhhxQ-1; Wed, 27 Mar 2024 12:56:08 -0400
-X-MC-Unique: SRZOHeNrO8y45za--JhhxQ-1
-Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-341c35fb2eeso780776f8f.0
-        for <mptcp@lists.linux.dev>; Wed, 27 Mar 2024 09:56:08 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SG44gI91"
+Received: by mail-wm1-f51.google.com with SMTP id 5b1f17b1804b1-414a2679222so133745e9.1
+        for <mptcp@lists.linux.dev>; Wed, 27 Mar 2024 10:00:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1711558830; x=1712163630; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=rE6PANI0PKpDtDKb8HO4vaBnD1jO6J6fZqWjXbZEANc=;
+        b=SG44gI91gsfuTRooei8CflVIHB5V0NKBTPPFmJtC2PG1wShs7r54iaqLAc7shts8At
+         BltOxe9cqYlF4TtzwigSqQr0I0L14lknqBTCNk0BIKre5Zs+9kZPrMgoa7R6x5gBOoGR
+         YHsQPg2P7UD8P5fT1qDshIgQqKtmOYQlHMaTKvxCjFmYMDPztnzz0H5Z1ZMaL3pJWs2M
+         GpZ2qlC45RuVhF919pppbVwHeloHhmNsNLZuzeJWh4viuUPexXQbfmUiunwPQ/ZI/aVN
+         xgzd44Hi04ATsZXkDy6jdfAiP9q6wZwx8QZwwDnA4EJ2GdBi3TBFOsi6VHoLlw90VoH/
+         /naQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1711558567; x=1712163367;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0grGr2vs7g8LZk25gVO01eJHrHioop+8opYOjWTngeo=;
-        b=sHLO4K17yimFUV38LcG3mKthwaClqIfYxDAN3EYHRAElrN6DDSCtJaD3Kju01RIPum
-         vZ9Ay+/qhcC/3IK0JeiL211A90uWurvsgYRnnekAu6sGf256EUm6ijpCpaup+sLJtchU
-         fkqp/Z/6spESyDbfMpELhGgQrZHHwa3IPsHYifcxVU9ngzelhxkigu9SDgfXjV89cb9T
-         sVsW1fKYP2DBbfuepsDepgyp3PfhIOjkoe82mQbCWevGNexe8m3uBsY8xv996MxIVr6G
-         3aP15Uj19WZ8zI+psny/7NNfkvdlCm8o8kTFnf/7HhpOix9+0Rptp/UeAL34D2gEoKo5
-         H3lg==
-X-Forwarded-Encrypted: i=1; AJvYcCXgjf2MEOb38A5RuJ0OX9FzErvuTKzXLIw1C5FISgUoizUvTBfL/OdPRreTxSWkUXPV3+ijugsuyed/sOdKF39jWjckopU=
-X-Gm-Message-State: AOJu0Yy0MErGK0KUu6XkDPIM8XfDsL7fCDH1VzTCfscsNpoBUi5Us1xF
-	W1qtsNCIPF/YlaOthQhNrY3NvdEO1lPDfopIvze8ovXhq0IpGGsmfQ/X4HLXtpbw4UKrWkJICyi
-	z3dKy9YV77hnsbhDRCCOKTweFUyOwJOC/2l+VFSDeLJoU4sNIFXec
-X-Received: by 2002:a05:6000:1818:b0:341:e617:8f6d with SMTP id m24-20020a056000181800b00341e6178f6dmr343078wrh.7.1711558566939;
-        Wed, 27 Mar 2024 09:56:06 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IEzQKN1dAufZbQQUXLp6v3dofv6/SA+gzYRqZDhHX5s8KmiBqhQCEb+F7oRcTeE3/OX0GqXLg==
-X-Received: by 2002:a05:6000:1818:b0:341:e617:8f6d with SMTP id m24-20020a056000181800b00341e6178f6dmr343063wrh.7.1711558566579;
-        Wed, 27 Mar 2024 09:56:06 -0700 (PDT)
-Received: from gerbillo.redhat.com ([2a0d:3341:b0aa:8c10::f71])
-        by smtp.gmail.com with ESMTPSA id by9-20020a056000098900b00341e67a7a90sm802934wrb.19.2024.03.27.09.56.05
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 27 Mar 2024 09:56:06 -0700 (PDT)
-Message-ID: <8410a6f61e7a778117819ebeda667687353ffb21.camel@redhat.com>
-Subject: Re: mptcp splat
-From: Paolo Abeni <pabeni@redhat.com>
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>, Network Development
- <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, MPTCP Upstream
- <mptcp@lists.linux.dev>, Matthieu Baerts <matttbe@kernel.org>, Mat
- Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Martin
- KaFai Lau <martin.lau@kernel.org>
-Date: Wed, 27 Mar 2024 17:56:04 +0100
-In-Reply-To: <CAADnVQKCxxETthqDpcE1xMGwa5au8JuLr_49QuwemL7uBKfiVg@mail.gmail.com>
-References: <CAADnVQKCxxETthqDpcE1xMGwa5au8JuLr_49QuwemL7uBKfiVg@mail.gmail.com>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39)
+        d=1e100.net; s=20230601; t=1711558830; x=1712163630;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=rE6PANI0PKpDtDKb8HO4vaBnD1jO6J6fZqWjXbZEANc=;
+        b=gKOYQVPt3SYApPLx0BqDO9ULFJSBRVTmQFomo6UmEEWtH3ttiuYFLR+nNzQlibrTFt
+         y1TJc6Sw7gatQJCA0jPuiLL52LS3bugm/36Rf8iQ/C1xv6GcrZh40p1bO4DAUhFKQo/9
+         5GsCpP9r9Hk3IT/Lw/vRlYCdz4HALQ/VS3zyFAelTuV8hqqMhw8lLs/Q/ChBy1ZfABi4
+         89ibUXW1YZZt4O6PwzbQLmn/hfCOV7BeODUpm8KbY9q9aDXyIa0/xTKTzSg9mGlMwNqq
+         M/T1OX8xUfCDZw2qwZWglHhdOsS4dfdbL4TJJnrTohGfMQZGl7gwTEUKowMigddUXZ2A
+         5dMg==
+X-Forwarded-Encrypted: i=1; AJvYcCVy8wRN4DqoLB8LeDtnifgE+8PMYJIXgoOFblXMcVx2mN+NYsKwSDgnxMV1dB2nwHZ6r8Ic1J7cu4ynH7JoMZDMScxBkbM=
+X-Gm-Message-State: AOJu0YwdAUjejsTNav2YytkGGehq6n9kx01cxAvQ47JYQHIZ0nhyq6OY
+	rmRN/2ohGexdCdu6JJ+I3x47DVRfjdRAoVLPCuBfZNpVBQxbVeYT3BdF99K0G7Z7WM3c4PskTOp
+	tzKi9INQd4Bpu2/BTFx8FOmWa0Tk=
+X-Google-Smtp-Source: AGHT+IHhkloAX659y62N9Sgl+ZqyAfY8iq+7jOOX1+KAnA+tCvDhALQMxu4P9hoaXL1TLSv6AhIzTZxYoj35NB0egW8=
+X-Received: by 2002:a5d:64a2:0:b0:341:bd4c:f075 with SMTP id
+ m2-20020a5d64a2000000b00341bd4cf075mr375333wrp.16.1711558830159; Wed, 27 Mar
+ 2024 10:00:30 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+References: <CAADnVQKCxxETthqDpcE1xMGwa5au8JuLr_49QuwemL7uBKfiVg@mail.gmail.com>
+ <8410a6f61e7a778117819ebeda667687353ffb21.camel@redhat.com>
+In-Reply-To: <8410a6f61e7a778117819ebeda667687353ffb21.camel@redhat.com>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Wed, 27 Mar 2024 10:00:19 -0700
+Message-ID: <CAADnVQLj9bQDonRzJO5z2hMZ7kf6zdU-s6Cm_7_kj-wP3CiUSA@mail.gmail.com>
+Subject: Re: mptcp splat
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
+	MPTCP Upstream <mptcp@lists.linux.dev>, Matthieu Baerts <matttbe@kernel.org>, 
+	Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>, 
+	Martin KaFai Lau <martin.lau@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, 2024-03-27 at 09:43 -0700, Alexei Starovoitov wrote:
-> I ffwded bpf tree with the recent net fixes and caught this:
->=20
-> [   48.386337] WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430
-> subflow_data_ready+0x147/0x1c0
-> [   48.392012] Modules linked in: dummy bpf_testmod(O) [last unloaded:
-> bpf_test_no_cfi(O)]
-> [   48.396609] CPU: 32 PID: 3276 Comm: test_progs Tainted: G
-> O       6.8.0-12873-g2c43c33bfd23 #1014
-> #[   48.467143] Call Trace:
-> [   48.469094]  <TASK>
-> [   48.472159]  ? __warn+0x80/0x180
-> [   48.475019]  ? subflow_data_ready+0x147/0x1c0
-> [   48.478068]  ? report_bug+0x189/0x1c0
-> [   48.480725]  ? handle_bug+0x36/0x70
-> [   48.483061]  ? exc_invalid_op+0x13/0x60
-> [   48.485809]  ? asm_exc_invalid_op+0x16/0x20
-> [   48.488754]  ? subflow_data_ready+0x147/0x1c0
-> [   48.492159]  mptcp_set_rcvlowat+0x79/0x1d0
-> [   48.495026]  sk_setsockopt+0x6c0/0x1540
->=20
-> It doesn't reproduce all the time though.
-> Some race?
-> Known issue?
+On Wed, Mar 27, 2024 at 9:56=E2=80=AFAM Paolo Abeni <pabeni@redhat.com> wro=
+te:
+>
+> On Wed, 2024-03-27 at 09:43 -0700, Alexei Starovoitov wrote:
+> > I ffwded bpf tree with the recent net fixes and caught this:
+> >
+> > [   48.386337] WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430
+> > subflow_data_ready+0x147/0x1c0
+> > [   48.392012] Modules linked in: dummy bpf_testmod(O) [last unloaded:
+> > bpf_test_no_cfi(O)]
+> > [   48.396609] CPU: 32 PID: 3276 Comm: test_progs Tainted: G
+> > O       6.8.0-12873-g2c43c33bfd23 #1014
+> > #[   48.467143] Call Trace:
+> > [   48.469094]  <TASK>
+> > [   48.472159]  ? __warn+0x80/0x180
+> > [   48.475019]  ? subflow_data_ready+0x147/0x1c0
+> > [   48.478068]  ? report_bug+0x189/0x1c0
+> > [   48.480725]  ? handle_bug+0x36/0x70
+> > [   48.483061]  ? exc_invalid_op+0x13/0x60
+> > [   48.485809]  ? asm_exc_invalid_op+0x16/0x20
+> > [   48.488754]  ? subflow_data_ready+0x147/0x1c0
+> > [   48.492159]  mptcp_set_rcvlowat+0x79/0x1d0
+> > [   48.495026]  sk_setsockopt+0x6c0/0x1540
+> >
+> > It doesn't reproduce all the time though.
+> > Some race?
+> > Known issue?
+>
+> It was not known to me. Looks like something related to not so recent
+> changes (rcvlowat support).
+>
+> Definitely looks lie a race.
+>
+> If you could share more info about the running context and/or a full
+> decoded splat it could help, thanks!
 
-It was not known to me. Looks like something related to not so recent
-changes (rcvlowat support).
+This is just running bpf selftests in parallel:
+test_progs -j
 
-Definitely looks lie a race.
-
-If you could share more info about the running context and/or a full
-decoded splat it could help, thanks!
-
-Paolo
-
+The end of the splat:
+[   48.500075]  __bpf_setsockopt+0x6f/0x90
+[   48.503124]  bpf_sock_ops_setsockopt+0x3c/0x90
+[   48.506053]  bpf_prog_509ce5db2c7f9981_bpf_test_sockopt_int+0xb4/0x11b
+[   48.510178]  bpf_prog_dce07e362d941d2b_bpf_test_socket_sockopt+0x12b/0x1=
+32
+[   48.515070]  bpf_prog_348c9b5faaf10092_skops_sockopt+0x954/0xe86
+[   48.519050]  __cgroup_bpf_run_filter_sock_ops+0xbc/0x250
+[   48.523836]  tcp_connect+0x879/0x1160
+[   48.527239]  ? ktime_get_with_offset+0x8d/0x140
+[   48.531362]  tcp_v6_connect+0x50c/0x870
+[   48.534609]  ? mptcp_connect+0x129/0x280
+[   48.538483]  mptcp_connect+0x129/0x280
+[   48.542436]  __inet_stream_connect+0xce/0x370
+[   48.546664]  ? rcu_is_watching+0xd/0x40
+[   48.549063]  ? lock_release+0x1c4/0x280
+[   48.553497]  ? inet_stream_connect+0x22/0x50
+[   48.557289]  ? rcu_is_watching+0xd/0x40
+[   48.560430]  inet_stream_connect+0x36/0x50
+[   48.563604]  bpf_trampoline_6442491565+0x49/0xef
+[   48.567770]  ? security_socket_connect+0x34/0x50
+[   48.575400]  inet_stream_connect+0x5/0x50
+[   48.577721]  __sys_connect+0x63/0x90
+[   48.580189]  ? bpf_trace_run2+0xb0/0x1a0
+[   48.583171]  ? rcu_is_watching+0xd/0x40
+[   48.585802]  ? syscall_trace_enter+0xfb/0x1e0
+[   48.588836]  __x64_sys_connect+0x14/0x20
