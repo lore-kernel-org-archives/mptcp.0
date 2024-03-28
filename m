@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1690241C62
-	for <mptcp@lists.linux.dev>; Thu, 28 Mar 2024 09:50:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F58A651B6
+	for <mptcp@lists.linux.dev>; Thu, 28 Mar 2024 09:50:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711619418; cv=none; b=i8V2D2q1A5PMHpNa420cqI273l89A2HYlNUYZh5xWWRwoKPkA+uro71BBNRexPfKeXmIqRc5eCmrImh/yXGOdZhCfvnxiWPYvQC2+zB80uoXX5fkA58xf2hpqJhwUVRbBRPDlNegDhPxwBCrRZoHO7aj7dLJpRdKu2z4eI/eM7M=
+	t=1711619419; cv=none; b=BQLbJ6e2EQ5Nuzi4bxglRhxtJwc8MBWiX+TO7j0tWQSFbvOcXFs9YT4y/ucP7uslfDkyDtAsHAYJiIOqxQMo2SbzyUXEboG+di6NksVhAbhPcLEoyZpKQhajZ+hilsq5LYEH047DI7okkl0XXjIHBmAfoItKfZyRrgsSAHodWM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711619418; c=relaxed/simple;
-	bh=D2/dUDwilVlONZOzEIq3iHFXfvbYTJY6JtkMNKB6g/s=;
+	s=arc-20240116; t=1711619419; c=relaxed/simple;
+	bh=mMydanxeS5cvc1mWabkhJdwudCcA5dQTfN9DAPHrNRE=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=TP1auJT6sjiYPv0ve56gBcpPuGsNfuvYq9hlJWq6ybNIVcn0uDLMhL4MEuuiGaj/tbd1hrhJjXNamP+/WjCbQMemTUqMrABSZM4b4ouNqJwlmzQ5QDIr4dyr7DgiGmbUjTqqQ88JoThmnSLc+nFtq9MnSqgdEUgz64sfzYWNq+Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ULS5xkeQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gCMrXDHW9acLogaAqWb6rTXZYvAScAIyC6Xzf+yKyi1O2XNw641M5E4taCYm5MHNT1xJdZu6ms/JEbGpSg/ZpOtlmcwTR2BsNCHX29dy84eyNJDODbGfUi4qOSonO3JW8aQvTLSMde6OZ5CIVH7Q05qpKzzQgQLI1Xo6ABeV8bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZSYvddOp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ULS5xkeQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27E3BC433C7;
-	Thu, 28 Mar 2024 09:50:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZSYvddOp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 750BCC43394;
+	Thu, 28 Mar 2024 09:50:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711619418;
-	bh=D2/dUDwilVlONZOzEIq3iHFXfvbYTJY6JtkMNKB6g/s=;
+	s=k20201202; t=1711619419;
+	bh=mMydanxeS5cvc1mWabkhJdwudCcA5dQTfN9DAPHrNRE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ULS5xkeQZYpZUSi87vTEuTboEeC33DAxCH1PQC8IGX8EgbEBsd8T3f249IvKJNK12
-	 qj84Vg1mBy+qCHCYO1iKvj4Dn31Ng4sKiQSLFELVvGcp/J+WUSW38WAe30EwBbCtU0
-	 5Zk7x1N3Y9dIprsrHIqM/MRRp4UNo5pNzbso9pvbKuAZDZgDv3Jw9LNGcKe1pD/HC4
-	 hPhHBcyvrmEn/GonLcYd5H0chry+i2Go2vB/rYBSdK1DtuUpEczvS4XPa6ZxTlOgr9
-	 qumAk9JTiIKmpZJ28h75zipEY7AB45qXdF+5pv9AYzyqNxVT9VgLMB1FgpBbMsHNxT
-	 tZm2qIM1Eg6VQ==
+	b=ZSYvddOppRVnSN2TAxcywh7QbxFXu5PAkQUgwsFkGxY6TCdG12VL00Qp8Fr5VHWGr
+	 PmOqJwKd3ovxauz7CdBTxlbCBXxiLPRTbaCyeuxPSLdj3ufOEmmlf3a7ryLeJdV0R8
+	 EY/Dl958RN/vyHn7JjAUZl3iAtqpPQ0m5TjCrgKbWOFgvsDiadZ0j3W+S9i108zfns
+	 jn8gBKMGGSeBKTatsesFquHpRLXhhFZiZldjs8OqCd18XWjIe2QlAj1qI45lJJu0Ye
+	 sl5gj0zMMM2eSi0/PrOwBEomMORhdoXR8els0LozY3keqrbSG2JYTzoR4g8Q2vEac8
+	 80MYrS77D/6pg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 03/11] selftests/bpf: Refactor mptcpify test
-Date: Thu, 28 Mar 2024 17:50:00 +0800
-Message-Id: <6a192440f81845f7f8a42914a260e8df0c6b45b7.1711619108.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 04/11] selftests/bpf: Add MPTCP_BASE_TEST macro
+Date: Thu, 28 Mar 2024 17:50:01 +0800
+Message-Id: <0826f58a9667fa2a317345eaf7f60fd8fc8fa733.1711619108.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1711619108.git.tanggeliang@kylinos.cn>
 References: <cover.1711619108.git.tanggeliang@kylinos.cn>
@@ -45,101 +45,128 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch refactors mptcpify test, moves all test skeleton operations,
-__open_and_load, __attach and __destroy from run_mptcpify() into
-test_mptcpify().
-
-This prepares for the later unification of all MPTCP tests using a macro.
+This patch adds a macro MPTCP_BASE_TEST to unify all MPTCP tests.
+test_mptcp_sock() can be replaced by MPTCP_BASE_TEST(mptcp_sock),
+and test_mptcpify() can be replaced by MPTCP_BASE_TEST(mptcpify).
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 39 +++++++++----------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 93 +++++++------------
+ 1 file changed, 33 insertions(+), 60 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 4f0bcaf39886..cc91acfa3e52 100644
+index cc91acfa3e52..ac3886983ce1 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -279,61 +279,58 @@ static int verify_mptcpify(int server_fd, int client_fd)
- 	return err;
+@@ -209,37 +209,40 @@ static void run_mptcp_sock(int cgroup_fd, struct mptcp_sock *skel)
+ 	close(server_fd);
  }
  
--static int run_mptcpify(int cgroup_fd)
-+static void run_mptcpify(int cgroup_fd, struct mptcpify *skel)
+-static void test_mptcp_sock(void)
+-{
+-	struct nstoken *nstoken = NULL;
+-	struct mptcp_sock *sock_skel;
+-	int cgroup_fd, err;
+-
+-	cgroup_fd = test__join_cgroup("/mptcp");
+-	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+-		return;
+-
+-	sock_skel = mptcp_sock__open_and_load();
+-	if (!ASSERT_OK_PTR(sock_skel, "skel_open_load"))
+-		goto out;
+-
+-	err = mptcp_sock__attach(sock_skel);
+-	if (!ASSERT_OK(err, "skel_attach"))
+-		goto out;
+-
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
+-		goto fail;
+-
+-	run_mptcp_sock(cgroup_fd, sock_skel);
+-
+-fail:
+-	cleanup_netns(nstoken);
+-	mptcp_sock__destroy(sock_skel);
+-out:
+-	close(cgroup_fd);
++#define MPTCP_BASE_TEST(name)					\
++static void test_##name(void)					\
++{								\
++	struct nstoken *nstoken;				\
++	struct name *skel;					\
++	int cgroup_fd, err;					\
++								\
++	cgroup_fd = test__join_cgroup("/" #name);		\
++	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))	\
++		return;						\
++								\
++	skel = name##__open_and_load();				\
++	if (!ASSERT_OK_PTR(skel, "skel_open_load"))		\
++		goto out;					\
++								\
++	err = name##__attach(skel);				\
++	if (!ASSERT_OK(err, "skel_attach"))			\
++		goto out;					\
++								\
++	nstoken = create_netns();				\
++	if (!ASSERT_OK_PTR(nstoken, "create_netns"))		\
++		goto fail;					\
++								\
++	run_##name(cgroup_fd, skel);				\
++								\
++fail:								\
++	cleanup_netns(nstoken);					\
++	name##__destroy(skel);					\
++out:								\
++	close(cgroup_fd);					\
+ }
+ 
++MPTCP_BASE_TEST(mptcp_sock);
++
+ static void send_byte(int fd)
  {
- 	int server_fd, client_fd, err = 0;
+ 	char b = 0x55;
+@@ -302,37 +305,7 @@ static void run_mptcpify(int cgroup_fd, struct mptcpify *skel)
+ 	close(server_fd);
+ }
+ 
+-static void test_mptcpify(void)
+-{
+-	struct nstoken *nstoken = NULL;
 -	struct mptcpify *mptcpify_skel;
+-	int cgroup_fd;
+-	int err;
+-
+-	cgroup_fd = test__join_cgroup("/mptcpify");
+-	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+-		return;
 -
 -	mptcpify_skel = mptcpify__open_and_load();
 -	if (!ASSERT_OK_PTR(mptcpify_skel, "skel_open_load"))
--		return libbpf_get_error(mptcpify_skel);
+-		goto out;
 -
 -	err = mptcpify__attach(mptcpify_skel);
 -	if (!ASSERT_OK(err, "skel_attach"))
 -		goto out;
- 
- 	/* without MPTCP */
- 	server_fd = start_server(AF_INET, SOCK_STREAM, NULL, 0, 0);
--	if (!ASSERT_GE(server_fd, 0, "start_server")) {
--		err = -EIO;
--		goto out;
--	}
-+	if (!ASSERT_GE(server_fd, 0, "start_server"))
-+		return;
- 
- 	client_fd = connect_to_fd(server_fd, 0);
--	if (!ASSERT_GE(client_fd, 0, "connect to fd")) {
--		err = -EIO;
-+	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
- 		goto close_server;
--	}
- 
- 	send_byte(client_fd);
- 
- 	err = verify_mptcpify(server_fd, client_fd);
-+	ASSERT_OK(err, "verify_mptcpify");
- 
- 	close(client_fd);
- close_server:
- 	close(server_fd);
--out:
+-
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
+-		goto fail;
+-
+-	run_mptcpify(cgroup_fd, mptcpify_skel);
+-
+-fail:
+-	cleanup_netns(nstoken);
 -	mptcpify__destroy(mptcpify_skel);
--	return err;
- }
+-out:
+-	close(cgroup_fd);
+-}
++MPTCP_BASE_TEST(mptcpify);
  
- static void test_mptcpify(void)
- {
- 	struct nstoken *nstoken = NULL;
-+	struct mptcpify *mptcpify_skel;
- 	int cgroup_fd;
-+	int err;
- 
- 	cgroup_fd = test__join_cgroup("/mptcpify");
- 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
- 		return;
- 
-+	mptcpify_skel = mptcpify__open_and_load();
-+	if (!ASSERT_OK_PTR(mptcpify_skel, "skel_open_load"))
-+		goto out;
-+
-+	err = mptcpify__attach(mptcpify_skel);
-+	if (!ASSERT_OK(err, "skel_attach"))
-+		goto out;
-+
- 	nstoken = create_netns();
- 	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
- 		goto fail;
- 
--	ASSERT_OK(run_mptcpify(cgroup_fd), "run_mptcpify");
-+	run_mptcpify(cgroup_fd, mptcpify_skel);
- 
- fail:
- 	cleanup_netns(nstoken);
-+	mptcpify__destroy(mptcpify_skel);
-+out:
- 	close(cgroup_fd);
- }
- 
+ static const unsigned int total_bytes = 10 * 1024 * 1024;
+ static int stop, duration;
 -- 
 2.40.1
 
