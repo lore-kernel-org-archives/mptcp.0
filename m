@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3EFD2904
-	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 16:15:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D086F171A5
+	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 16:26:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711728947; cv=none; b=mAdyn4wCYGNyqXJd4r0SHpre66ZBq0+yWslpL6Wi0A1qs9VCgKQzrAQHXWglvCE64swPogz1pQaWLssXb51CkQekp2+NyFLHUfCQwynUt9YHMITJp/st6go3rSUS49ROlTlRZTtGLW6PmgqXkgpF5Abh5K7ZjETF8DIAzn29F+0=
+	t=1711729571; cv=none; b=t7hfbYH5FeNaCks2x71kL+3GAza8eVqNCp6PFt5wsWJ6Y76ZWpFejJWpLqCyA+sKm+O9YoJgudN8mxIUwrEqO7FbZiXuzv+LM4OpW1+MfJtWXZ3K4cfWs7wr7P+4CUJnaU3iV9IQeMptIBnfzJSbmMIp983+BVYjuU/PmwdglG0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711728947; c=relaxed/simple;
-	bh=hV2sGEkZwb/SoUANHngLruExoutV6mAtwNQuMfNwqCA=;
+	s=arc-20240116; t=1711729571; c=relaxed/simple;
+	bh=JbSqVSX1nT7FJzW553WqwIx2Q/MJlGfFFz6nID4cCFY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GD6CoVapdeGBoM34ns66cPVS0q4AO46Ww8laJb3rHkQtQhbWB+sK21jdldGlDgPqtuoJPRoUBNxSaOVHiUE/yJG6D9aXQH0ZpMgBr8p1PxPLVJI37th/bzUICMiU51eo/y+i6xJoox5zuk4ezhmqu1LVeW5NlUXCfB/Ru9Ha1SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UDdQ/iwc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=jztVbznilpCAjn3QMEBqQ17lrff7sJjdtdn7rwm7aFqTyC67XxvtsM97UjYZkkYxf5x8bXDGRX4DlPc7d+F5q2vR/xWde0goiX9H9lIB/upaghzPnoGkd88C4Uh9Jr1/x2To/TLaWWRSw8hSfPgULzRdlAFqnnBMe1oeVTE+OjU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jmWr7JV5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UDdQ/iwc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 680CFC433F1;
-	Fri, 29 Mar 2024 16:15:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jmWr7JV5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91C29C433C7;
+	Fri, 29 Mar 2024 16:26:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711728946;
-	bh=hV2sGEkZwb/SoUANHngLruExoutV6mAtwNQuMfNwqCA=;
+	s=k20201202; t=1711729571;
+	bh=JbSqVSX1nT7FJzW553WqwIx2Q/MJlGfFFz6nID4cCFY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UDdQ/iwccjwQIOmKWRl+EhwScjhH3oXG9YPFXvR9m19T/wPbxceyB6Y4uy4ReVUEB
-	 jEeD//hs/ch2wsIRjCp2LMxoGaCc4lQwQnEQgnFtSg0GydK3GYrb4+8VEME424lyGG
-	 wmrtY6ivUrZWG/lC+GayA16OJT6KSBLPS/k0obZPYd7ksgTC1ChEpmPtEMaKxeBG5P
-	 t8obF2f9Zq6hHJyE3iMWTwz9oNp8+E4EziDvbR7q92SUgrkTQnA5xEHcG42HZxNRh9
-	 JVquUSlJHfKIRjJ5lPpKd0ZbikCoPBFe+EXbrPfUIyAKrN38mphbl1ZhnhEiOFYuvx
-	 P8f3Wecu1hVVA==
-Message-ID: <d74027a8-fcb7-4dd5-b203-876858a75c49@kernel.org>
-Date: Fri, 29 Mar 2024 17:15:43 +0100
+	b=jmWr7JV5g2HLJjaQ6iUFK9TNH9CCgTCDvyCiqhoDEPoTAuoXa81nqhTYTVX7bvyn7
+	 pzJS4zl7tofbQE3Z1dP6BOscivzj9u2kBXvnSIJiAjpQTEAQpIb/NWa9nGhq7XK3u3
+	 QGxKlxir7xrA43MFFkqxJSzMvSyBMl7lljX1i5jVzitN7/7Xs5L/4rGCA9AKm+ujZ9
+	 AXzqc6BtyOuyko3uYLafwfSWE6lxpqtA+aCBNcZNrgv9TnpcEDdTJamtYPYYGbFGaz
+	 3ZJOetHz3qNIVTwnGEhYLa043IZ479vmDCGOd9n7NZOOP1zskomSrRCjnJA8sxD9oj
+	 CHv48Ok8jIymg==
+Message-ID: <0ce6427e-7f48-410e-8db5-444f3b49d74f@kernel.org>
+Date: Fri, 29 Mar 2024 17:26:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 3/3] selftests: mptcp: add last time actions
- tests
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add last time
+ actions tests"
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1711702915.git.tanggeliang@kylinos.cn>
- <5dd35f7df3332535dc938d1dfcc1c41ee7c717f0.1711702915.git.tanggeliang@kylinos.cn>
+References: <d177c05847edc56a2bbc56d904a18cee8011a1ef.1711713371.git.tanggeliang@kylinos.cn>
 Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -87,78 +86,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5dd35f7df3332535dc938d1dfcc1c41ee7c717f0.1711702915.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d177c05847edc56a2bbc56d904a18cee8011a1ef.1711713371.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 29/03/2024 10:07, Geliang Tang wrote:
+On 29/03/2024 12:56, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new helper chk_msk_info() to show the counters in
-> mptcp_info of the given infos, and check that the timestamps move
-> forward. Use it to show newly added last_data_sent, last_data_recv
-> and last_ack_recv in mptcp_info in diag.sh.
+> Update chk_msk_info with mptcp_lib_pr_fail.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/diag.sh | 24 +++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
+>  tools/testing/selftests/net/mptcp/diag.sh | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index bc97ab33a00e..6e865f95f85e 100755
+> index 6e865f95f85e..aa1cdfb176db 100755
 > --- a/tools/testing/selftests/net/mptcp/diag.sh
 > +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -200,6 +200,27 @@ chk_msk_cestab()
->  		 "${expected}" "${msg}" ""
->  }
->  
-> +chk_msk_info()
-> +{
-> +	local info
-> +
-> +	for info in "${@}"; do
-> +		local cnt1 cnt2 msg
-> +
-> +		cnt1=$(ss -N ${ns} -inmHM | mptcp_lib_get_info_value "$info" "$info")
+> @@ -211,12 +211,16 @@ chk_msk_info()
+>  		cnt2=$(ss -N ${ns} -inmHM | mptcp_lib_get_info_value "$info" "$info")
+>  		msg="....chk ${info:0:15}=$cnt1:$cnt2"
+>  		mptcp_lib_print_title "${msg}"
+> -		if [ "${cnt1}" -lt "${cnt2}" ]; then
+> +		if [ -z "${cnt1}" ] || [ -z "${cnt2}" ]; then
 
-Mmh, when there are many connections in parallel or a fallback to TCP,
-what are you going to look at? Would it not be better to restrict this
-test only when there is one connection ("after MPC handshake"), using a
-counter for the client side and one for the server side, using ss
-'[sd]port ${port}' filter?
+Here, you should have:
 
-Also, do you need 'ss -m' here?
+  if { [ -z "${cnt1}" ] || [ -z "${cnt2}" ]; } &&
+     ! mptcp_lib_expect_all_features; then
 
-> +		cnt2=$(ss -N ${ns} -inmHM | mptcp_lib_get_info_value "$info" "$info")
+Because our CI should fail if the failure is not available [1].
 
-Should you maybe wait half a second between the two call of 'ss', just
-to be sure data have been exchanged on very slow environments? By doing
-that, you can additionally check that the timestamps are different by at
-least 250ms, no?
+I understand that it means the test will fail if we don't use IPRoute2
+with your suggested patch, but that's normal: when applying this series,
+we can modify the CI docker image to include this support this new feature.
 
-> +		msg="....chk ${info:0:15}=$cnt1:$cnt2"
 
-${msg} is used in mptcp_lib_result_XXX(), which mean it is used as title
-for the subtest in the TAP format. This title should always have the
-same name in case of error or success for the same test. Here, the same
-test will always have a different name, that's not OK.
+[1] Because only our CI has SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1
 
-(It is also important to have different names for different subtests, so
-if the helper is used multiple time, you cannot just show '${info:0:15}'
-here)
-
-> +		mptcp_lib_print_title "${msg}"
-> +		if [ "${cnt1}" -lt "${cnt2}" ]; then
-> +			mptcp_lib_pr_ok
-> +			mptcp_lib_result_pass "${msg}"
-> +		else
-> +			mptcp_lib_pr_skip
+> +			mptcp_lib_pr_skip "Feature probably not supported"
 > +			mptcp_lib_result_skip "${msg}"
-
-(the fail part is missing, but I see you added it in a squash-to patch
-later, I will comment there).
+> +		elif [ "${cnt1}" -lt "${cnt2}" ]; then
+>  			mptcp_lib_pr_ok
+>  			mptcp_lib_result_pass "${msg}"
+>  		else
+> -			mptcp_lib_pr_skip
+> -			mptcp_lib_result_skip "${msg}"
+> +			mptcp_lib_pr_fail "expected $cnt1 < $cnt2"
+> +			mptcp_lib_result_fail "${msg}"
+> +			ret=${KSFT_FAIL}
+>  		fi
+>  	done
+>  }
 
 Cheers,
 Matt
