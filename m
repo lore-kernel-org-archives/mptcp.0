@@ -1,112 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FBE91C288;
-	Fri, 29 Mar 2024 14:51:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9CF413CAAD
+	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 15:01:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711723871; cv=none; b=Dti3HyqLaHK0d4CqJstC42wCFO4K/u6Q7lKr8yfMNEYpgEau9EHsgHbc/x4mwyPNJZELbSn7pEcGKaip1aifyHdNnSPdZBwYWN4cPMd0bW9TolJ5D5Z4DgwRSL3ekF6SI72/DFTafb+1iGsb/6rg+WE979ujz8+ZO9in8FHbVjw=
+	t=1711724474; cv=none; b=POQMa+Zcsh8D2dkyX+rRyLHeTLA62gDzeD7gpYT+twsWM5hAge5KhnZcCQKlWAr1XLJRXGiKJFQIhXsCwilj1FDdhd4JHgERMMo/txwJwjfCHqRtjE3T2ycyMslCX7XwyUUgGG65Qv0VCWkDnoUNqA4PGHoGBHzAAu//E+D9L6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711723871; c=relaxed/simple;
-	bh=p6bKSFEP4zGZYycN36toi+5UqTy9rKrRPNUigF912MA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hEhe0LN/VGCZ3akPhgNUgoVPyCuBY1i4thc7iquU2FWq1hqtTzAfBMNWiCJ7o3tWZZD9GxDds/2mTx8eO2jbkHmvMs1oJiuzjTNMyHPmPuBv/TrjwkKnOO8n3bQlGeZdirk0/VgPbaMr37/neHaFR1jzs2kT+F1Dn0BIcUaJRPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KE2IDlBa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711724474; c=relaxed/simple;
+	bh=yiOlyfxlqzvbat+m3KHgTwzmJCOjP8qDWHkA+EPCWl8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=laBsp2bVmrn2OdRAAwCrqf+tYEcLY47mJgeB9peCxr0BTXT0lk1xbH6ovMuIX+yb7DIcAHhe4eQ2NcnJRL5jHS1WqLSUuq9eQ86NyVx+kt3YKmM6QodD82SeMnndfY04YvbP/AnWDHZEQIzv3JwrI9JVB/2rYo+LqQ9xFDOpQKw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a23hTIHX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KE2IDlBa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB5AC43390;
-	Fri, 29 Mar 2024 14:51:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a23hTIHX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A43D8C43390;
+	Fri, 29 Mar 2024 15:01:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711723871;
-	bh=p6bKSFEP4zGZYycN36toi+5UqTy9rKrRPNUigF912MA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KE2IDlBajOeZFHKgq72qyYLgo3F/CifdixeiUqXCo09NgTIK0Sb769JZagg6kccSy
-	 om/lGw0oLBSHuyI3MAfRR72hg/DZIM6U8a2zFuBkEDePNjYvMAKIhk3cxvZtx8zAGi
-	 CXQjLS+ftAa6AAZM2EkiqW4htRsCX4t7ilITinW6hCeFu7uJiX+tEi4xzMUDkDfvtp
-	 vEJk+jHVnxmKFX2iuxGXu3ISpaLJ0SpntSUS2e2bSzyIpqs8x5+lqbFyRskFdCcWCF
-	 3AJykoCyvYfzyJBDt24+XeYEWHVO2suJZHVAt1PBjbf6tvZ9mSOAXfgXEdRHY4efYd
-	 Ncmr4KH8UHNtg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Geliang Tang <tanggeliang@kylinos.cn>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	"David S . Miller" <davem@davemloft.net>
-Subject: [PATCH 5.15.y] selftests: mptcp: diag: return KSFT_FAIL not test_cnt
-Date: Fri, 29 Mar 2024 15:51:05 +0100
-Message-ID: <20240329145105.1637785-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024032713-identity-slightly-586d@gregkh>
-References: <2024032713-identity-slightly-586d@gregkh>
+	s=k20201202; t=1711724474;
+	bh=yiOlyfxlqzvbat+m3KHgTwzmJCOjP8qDWHkA+EPCWl8=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=a23hTIHXnDFqLeNsyvBsXTweRgCNVy/XC5qDpdU9dEiVNtPTN+dehspwEVAMw9g02
+	 LFF2pUhmAp8rW5k+R9tW4Tr8wDyPb/FKfZImEIOCpW0g9YRwqr+KgvVv0LMR/aAQT9
+	 4Fqp/0B0yRoXTUk7g3dpDLzSogcs8vUR8PGQteh88LcWabkiA7lHfKJy6QLqmnoRm2
+	 mDQHGvfseUHyAsS/ed71BhmpTF0Fu+PCbkjTWwyUudNv+Hzgd0ZkEnyjFRF1/5uv7i
+	 1+LxV+cG3fgBZduTdKcA8hKt2ylpYhG7eX3x02e4JVaohWCReNgJJcDxveq2a21rpY
+	 LSUvuc/CNXrFQ==
+Message-ID: <1e67cc71-4487-40c6-9a15-370f5ad95dea@kernel.org>
+Date: Fri, 29 Mar 2024 16:01:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2328; i=matttbe@kernel.org; h=from:subject; bh=1CWB7pgE6SS9sV6vHVm59PijAn+MSrEr+qO/BB1X+c8=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmBtVZMAQlObfiHVGoHknc1f90YxbleVgV8LDcf LzSL/yivIiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZgbVWQAKCRD2t4JPQmmg c4lYEACs4ZRd2vCtZdq9SEGfxGlFnYBNQDrT38P9brGj49sZ7cWN7WoO/6NfqZ8B80IUiFsIgiT GmdS7/jBAekC8jDyXrc/81BKzNAcMIIioV0kG27KrFEI8t+7T53AHczA7D40ACgUbjEVekIoYBj 4hS+nzvfBO00Rolfx79ZV4aixzzLnFQ+Tu4qbr3HDKLboiKr4CS1Nr6a+bhK0RUqEXVKJfwVYoF dN9SMet7ZSYX5mvJx5MJD3JJkP3Qo7FuPHZXNToy9lXE1KjV0GWjQKpKa+EiwisMYY0FSuWIELm JeQVcjIp+NSTyie/LRs0WqNr/XhWkyDlgy++6WfJ1NLrAJ1lFn+Fg2jkf55g67gcLtnmE2qE8yt JhyWIWHAwee+vLqeAhSV/0Z+P6O+JTGybEQzYGCQPPh+ucLXX1E66jveCx1CZdvxxTGhyloQ0Jf HDyA2oEXac5FB+DNL3gnE4qVR6C96JVMaTGehhEPjZD13z0aa7TGGETh09t/EaimeC2zeGtYc2u 4feEdNJ/iCck+xm82J5bf3toI704rK1uo5zanl/0AbOJWBjRJAGssl7xg96RV0zOfv/1USfixcP fK/irRfnguQlzD9uDKXKUjtAmpZiMEFeNcuosAzwz2FGmV4LnIq48/THq8VArR0SO9VmHc5Ibc0 e0N7NmP2iXj50GA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH iproute2-next] ss: mptcp: print out last time counters
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <fd9e850f1e00691204f1dfebc63c01c6a4318c10.1711705327.git.geliang@kernel.org>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <fd9e850f1e00691204f1dfebc63c01c6a4318c10.1711705327.git.geliang@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-The test counter 'test_cnt' should not be returned in diag.sh, e.g. what
-if only the 4th test fail? Will do 'exit 4' which is 'exit ${KSFT_SKIP}',
-the whole test will be marked as skipped instead of 'failed'!
+On 29/03/2024 10:42, Geliang Tang wrote:
+> There new last time counters have been added in struct mptcp_info named
 
-So we should do ret=${KSFT_FAIL} instead.
+(I guess we can remove the "There" here above)
 
-Fixes: df62f2ec3df6 ("selftests/mptcp: add diag interface tests")
-Cc: stable@vger.kernel.org
-Fixes: 42fb6cddec3b ("selftests: mptcp: more stable diag tests")
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-(cherry picked from commit 45bcc0346561daa3f59e19a753cc7f3e08e8dff1)
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - Conflicts in diag.sh because the commit ce9902573652 ("selftests:
-   mptcp: diag: format subtests results in TAP") is not in v5.15 tree.
-   These conflicts were in the context for an unrelated feature.
- - Compared to the conflicts seen with the same patch in the v6.1 tree,
-   there was an extra one here in v5.15 because the commit f2ae0fa68e28
-   ("selftests/mptcp: add diag listen tests") is no the in this tree: it
-   moves the assignation of 'ret' in '__chk_nr()' under an extra check.
-   The conflict was easy to fix, simply by changing the value of 'ret'
-   from the previous location.
----
- tools/testing/selftests/net/mptcp/diag.sh | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> last_data_sent, last_data_recv and last_ack_recv into kernel in the commit
+> "mptcp: add last time fields in mptcp_info".
+> 
+> This patch prints out these counters into mptcp_stats output.
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 57a681107f73..a8178a9c1e10 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -53,7 +53,7 @@ __chk_nr()
- 	printf "%-50s" "$msg"
- 	if [ $nr != $expected ]; then
- 		echo "[ fail ] expected $expected found $nr"
--		ret=$test_cnt
-+		ret=${KSFT_FAIL}
- 	else
- 		echo "[  ok  ]"
- 	fi
-@@ -88,10 +88,10 @@ wait_msk_nr()
- 	printf "%-50s" "$msg"
- 	if [ $i -ge $timeout ]; then
- 		echo "[ fail ] timeout while expecting $expected max $max last $nr"
--		ret=$test_cnt
-+		ret=${KSFT_FAIL}
- 	elif [ $nr != $expected ]; then
- 		echo "[ fail ] expected $expected found $nr"
--		ret=$test_cnt
-+		ret=${KSFT_FAIL}
- 	else
- 		echo "[  ok  ]"
- 	fi
+Thank you for this patch!
+
+It looks good to me.
+
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Of course, we will need to wait for the kernel patch to be in our tree,
+then in net-next, before sending this one to IPRoute2 maintainers.
+
+(if the kernel structure doesn't change in between)
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
