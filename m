@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1403F36119
-	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 09:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D8C434CD5
+	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 09:07:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711703230; cv=none; b=nKJxUppo2ctRjWzV41uamsv8Vj8nii7dPuC8DtQJrbdfipnz8PS59UclCxkKls+hXV21af6cOYyA5VPOsk38a3xAFokW66dGod+mwErg6XHWYY4I24PiFZqO0bpUF271K3lGBhkG0I7UwG5GWgG8d9TsvlKmJiec+eZu60fr+T4=
+	t=1711703231; cv=none; b=qQS5430aRRxBqG2iOmW+bocPcooURrLpydQnsJUDWJMXXauDrKTyL0dL88+pUhkUqD0M4S0jxAbNHzOJXQRtU+N088xlOPS77MWG6JcUoOM0c0T6qOm4ljcIgsiboCHTly5qXCw3rAOmQ642o4F1n5uPvenTV8clp8KRmQ/QaEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711703230; c=relaxed/simple;
-	bh=hkoDZOuPqtAY3Wsi6VBhf7SUD+iXtlQ4gTo7nvgCfDE=;
+	s=arc-20240116; t=1711703231; c=relaxed/simple;
+	bh=vMMYevMUlNNQAJot//JBI5DCaZ77/LieHP9Ci+9MRmQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=eENfA3dmHWhzpFdX57C0AluLBZtvsOK7TjqETpUp91qGRiqd5ZPBQQQVDHfKip9XO7vTq586KX8tqtBWCH7d200PqPYlLxGN9XscMs/S7vjXGMwkpoEpUaN/y+i6XYjPx/xKCW+9ruMhD7hTxnlceSf/PVFfJT0QXmRod4IXofE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ytzk5x+o; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ukwVrY958JdDzUzz9RMCCzzybXRUzuwpZDDPne5E9y6bKYSCPVNZeZ9IH5kCooJzY3PP2+v1Z8G5FWpCjGvawhjW+rmKUTLkael2UMp1KOsdN8T07aXa3fVZQfuGXfnvTNg8bPNGtjmDAKDqI66Z+Fack3A7WNgSsZqOl3oq1cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZeG7Kan1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ytzk5x+o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA89BC433C7;
-	Fri, 29 Mar 2024 09:07:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZeG7Kan1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 367FDC433C7;
+	Fri, 29 Mar 2024 09:07:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711703229;
-	bh=hkoDZOuPqtAY3Wsi6VBhf7SUD+iXtlQ4gTo7nvgCfDE=;
+	s=k20201202; t=1711703231;
+	bh=vMMYevMUlNNQAJot//JBI5DCaZ77/LieHP9Ci+9MRmQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ytzk5x+ofXzH2xcfSsT1hNHNB8+tv12KyvU3o5z7NixiuonJfSDhaREIAUGNHDuC6
-	 vS0fTs8IYt18TAB1cFZ7bKlX+bv+DRYi7HUUJpVDsOjMWAh2w7Qvc/9ZkSKubV89nJ
-	 z3U8LuzZAsfgOYthCQfycYIY9t7rC9FBJ8CjSS99c0epx5eqEuxprt+BhD89XMy5X5
-	 SI52s/TNLl/OLW8NuNSp5vDqP2J4Jlv5/1QnTVLdRHaWBU/32afqjk4aqNzh7SpXvL
-	 acDFrRTZB2b/DpR5rt7qr9GBHk/M6O8qAteuHWHO8wqC8CBBT9P4jKJF4e3lis1QyI
-	 EBpYEVdFx1qVA==
+	b=ZeG7Kan1VuMCjd+BeEEFpt/Ncne9b9kP4HC1ZG4RUFyuwYWWSVmjbNz19D//ljSXY
+	 BnlRYhETbfcoOcqul6lE+lMtzY3t9wPYdqZeHP+NWfjYiBt1jN0VS43+H6kJ2gvLNR
+	 gU+qOIfFYQBEGKriyveZm73VHyPhXYTasNsxDL872qUeMBkEDQkBubCtHyqeavBF+8
+	 7ZVRNscPk7RiwKqqWgMBXnAT71TTIaO2L+qa54Xowx+PG6wyejx1T3crq3CTP1sfBV
+	 nuNhfeu3xQRKojoqv2K6yo1671V5mO4WlM38wg/X7fk9p6p0E2BZKwRNviMbElt09J
+	 DTD/iVsTGSW3g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 1/3] mptcp: add last time fields in mptcp_sock
-Date: Fri, 29 Mar 2024 17:06:59 +0800
-Message-Id: <83a26dc8e1049d8c4d047fecd9ba5f91c5e77af2.1711702915.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 2/3] mptcp: add last time fields in mptcp_info
+Date: Fri, 29 Mar 2024 17:07:00 +0800
+Message-Id: <f255cebcbb77caa3944c01c510d1e1bd62815a2d.1711702915.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1711702915.git.tanggeliang@kylinos.cn>
 References: <cover.1711702915.git.tanggeliang@kylinos.cn>
@@ -45,78 +45,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds "last time" fields last_data_sent, last_data_recv and
-last_ack_recv in struct mptcp_sock to record the last time data_sent,
-data_recv and ack_recv happened. They all are initialized as
-tcp_jiffies32 in __mptcp_init_sock(), but updated as tcp_jiffies32 too
-when data is sent in __subflow_push_pending(), data is received in
-__mptcp_move_skbs_from_subflow(), and ack is received in ack_update_msk().
+Similar to tcpi_last_data_sent, tcpi_last_data_recv and tcpi_last_ack_recv
+exposed with TCP, this patch exposes the last time "an action happened" for
+MPTCP in mptcp_info, named mptcpi_last_data_sent, mptcpi_last_data_recv and
+mptcpi_last_ack_recv, calculated in mptcp_diag_fill_info() as the time
+deltas between now and the newly added last time fields in mptcp_sock.
 
+Also add three reserved bytes in struct mptcp_info.
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/446
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/options.c  | 1 +
- net/mptcp/protocol.c | 7 +++++++
- net/mptcp/protocol.h | 3 +++
- 3 files changed, 11 insertions(+)
+ include/uapi/linux/mptcp.h | 4 ++++
+ net/mptcp/sockopt.c        | 5 +++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 5926955625cf..c0832df3b0a3 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -1069,6 +1069,7 @@ static void ack_update_msk(struct mptcp_sock *msk,
- 		__mptcp_snd_una_update(msk, new_snd_una);
- 		__mptcp_data_acked(sk);
- 	}
-+	msk->last_ack_recv = tcp_jiffies32;
- 	mptcp_data_unlock(sk);
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index 74cfe496891e..67d015df8893 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -58,6 +58,10 @@ struct mptcp_info {
+ 	__u64	mptcpi_bytes_received;
+ 	__u64	mptcpi_bytes_acked;
+ 	__u8	mptcpi_subflows_total;
++	__u8	reserved[3];
++	__u32	mptcpi_last_data_sent;
++	__u32	mptcpi_last_data_recv;
++	__u32	mptcpi_last_ack_recv;
+ };
  
- 	trace_ack_update_msk(mp_opt->data_ack,
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 556b3b95c537..43318aa5f991 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -706,6 +706,8 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
- 		}
- 	} while (more_data_avail);
+ /* MPTCP Reset reason codes, rfc8684 */
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index dcd1c76d2a3b..1e74851614e8 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -898,6 +898,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	struct sock *sk = (struct sock *)msk;
+ 	u32 flags = 0;
+ 	bool slow;
++	u32 now;
  
-+	if (moved > 0)
-+		msk->last_data_recv = tcp_jiffies32;
- 	*bytes += moved;
- 	return done;
+ 	memset(info, 0, sizeof(*info));
+ 
+@@ -942,6 +943,10 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_bytes_retrans = msk->bytes_retrans;
+ 	info->mptcpi_subflows_total = info->mptcpi_subflows +
+ 		__mptcp_has_initial_subflow(msk);
++	now = tcp_jiffies32;
++	info->mptcpi_last_data_sent = jiffies_to_msecs(now - msk->last_data_sent);
++	info->mptcpi_last_data_recv = jiffies_to_msecs(now - msk->last_data_recv);
++	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+ 	unlock_sock_fast(sk, slow);
  }
-@@ -1556,6 +1558,8 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
- 	err = copied;
- 
- out:
-+	if (err > 0)
-+		msk->last_data_sent = tcp_jiffies32;
- 	return err;
- }
- 
-@@ -2793,6 +2797,9 @@ static void __mptcp_init_sock(struct sock *sk)
- 	WRITE_ONCE(msk->allow_infinite_fallback, true);
- 	msk->recovery = false;
- 	msk->subflow_id = 1;
-+	msk->last_data_sent = tcp_jiffies32;
-+	msk->last_data_recv = tcp_jiffies32;
-+	msk->last_ack_recv = tcp_jiffies32;
- 
- 	mptcp_pm_data_init(msk);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 5a4538205fd6..3a3fed3642dd 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -282,6 +282,9 @@ struct mptcp_sock {
- 	u64		bytes_acked;
- 	u64		snd_una;
- 	u64		wnd_end;
-+	u32		last_data_sent;
-+	u32		last_data_recv;
-+	u32		last_ack_recv;
- 	unsigned long	timer_ival;
- 	u32		token;
- 	int		rmem_released;
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
 -- 
 2.40.1
 
