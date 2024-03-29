@@ -1,146 +1,118 @@
-Received: from out-176.mta1.migadu.com (out-176.mta1.migadu.com [95.215.58.176])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41B2D2577B
-	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 17:27:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 62CB53B2A6
+	for <mptcp@lists.linux.dev>; Fri, 29 Mar 2024 18:51:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711733281; cv=none; b=ehTNtSEJyjjvNUGNSj8ZD/bqlVFmuwSBQF6KuxWzhuwrMI+uHwj7RmekEkA/Rk26M1GLGFL3ZRilbH9BKNwRe/kyFN+LQIFA1aW7dGwaxqjKXnZbrXGuLoYgkZ7eCVvrYTlKNE3XvNlX8b+JoEX0jSKr02KWJ4c92Z2LVMjhbOg=
+	t=1711738266; cv=none; b=kM7DSJ2B3M9+ai9N6P9C4ifaCbTHTg0FMUWKcigsr4Gf13ZH6PtuWK1jiFujW+3uWULpmd1G8TGjVh/cqkUyanKXbTEco/T4Ct40pwHAZmw88+2bgxvMJfMtUT76P2Ny+hd5f8f6wK8Dw9lfJaGHgrCWK7FInc8LlteP0VIZ5JI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711733281; c=relaxed/simple;
-	bh=nQTMBVM9h3P6SRxuduu9kPwM2tvWrP784jEAFtEhKvc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r18RXBDOuCDcAUjnZCIqNoBAXeAHyLzXXbaahAp8JnfX9oAhKBz9l3ZJltFQX8cmwMr9tkn8w/YnOrgB/jw1ZHJVs8A0t6jUPHp8dhZHGdTmAM5+T473fO7q3HSWZzGEZ2JBvQobb9Fm15CieQ1PySnedebxpfHOD106Uza3Vm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DNfsq31B; arc=none smtp.client-ip=95.215.58.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1711738266; c=relaxed/simple;
+	bh=tcqWZa7vAgYqVfEKtTYMRoETyY0uk7xPdEJmlLmv2hU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=WrjcArYBZHLPx+kJ6TGoqnimZ9gZWQ7NePdgg5abgiufJO5cVnmRILDZLC5RLm+WweR2d7D5XL8/kr/5WJ88gQJi2ab3P2ovv3OOl8IF5NYbuhYZXZ1wF382vN8Mhj/Z51ZBKBg3S4uWZxyVvud9tH0O/y7KzsTIc007vlV8kvM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ghM3w2lS; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DNfsq31B"
-Message-ID: <4cb1511c-c623-497f-818e-a4d4614548ed@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1711733277;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ghM3w2lS"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1711738262;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=8PYHc7MlwNpEUgHmQDP0uqH3An6HOXRxolOUYaG+n6U=;
-	b=DNfsq31BKgJvFZgJeeXKf1F/Nnko0zkOnUY+XeoX1WUHD7dtDPAKJQSYb3QoaE4qvolM1E
-	8yl1/gRJlk9X4wsUyXCz0XkH8dzOneGIQnIdT1t1UQDAGLgsAJNpO7ZI8NDnyO6ztwKSfQ
-	jEvEppRZEk8G41WOjJmMsXQDju+1SAs=
-Date: Fri, 29 Mar 2024 10:27:47 -0700
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=W8dzUgdlpUNa2rUoysoERPwae2lgTaSmib26erqINq0=;
+	b=ghM3w2lS81wu6/kpZCwXP9t7E3npAAH+xxa19N7SXEKK/Pm3S3xegMM+a46hWo+MjgAlFj
+	FrQN8LS73bCN4abqd5NWiOcowsQ0osBj601Svl/KaQMrmWGWJ3yCdd1o5+7skSIX9PBSAQ
+	Xio8IXTECXZsXkjBLA8y4ZBGc3XPscI=
+Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
+ by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-210-ZTgBXhmTOfGzXh-REwQkxw-1; Fri,
+ 29 Mar 2024 14:50:58 -0400
+X-MC-Unique: ZTgBXhmTOfGzXh-REwQkxw-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9D3992804803;
+	Fri, 29 Mar 2024 18:50:57 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.119])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id C9A48492BC8;
+	Fri, 29 Mar 2024 18:50:55 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	mptcp@lists.linux.dev,
+	bpf@vger.kernel.org
+Subject: [PATCH net] mptcp: prevent BPF accessing lowat from a subflow socket.
+Date: Fri, 29 Mar 2024 19:50:36 +0100
+Message-ID: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] selftests/bpf: Handle EAGAIN in bpf_tcp_ca
-Content-Language: en-US
-To: Geliang Tang <geliang@kernel.org>
-Cc: bpf@vger.kernel.org, mptcp@lists.linux.dev,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <78a17486bd12d7afb4cce565d58dac3f15e55c49.1711620349.git.tanggeliang@kylinos.cn>
- <e6074193-7530-4c85-9429-9393e24c172d@linux.dev>
- <59b0295363548c115b65b4555d0f7484738f5bda.camel@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <59b0295363548c115b65b4555d0f7484738f5bda.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.9
 
-On 3/28/24 10:57 PM, Geliang Tang wrote:
-> Hi Martin,
-> 
-> On Thu, 2024-03-28 at 09:55 -0700, Martin KaFai Lau wrote:
->> On 3/28/24 3:23 AM, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> bpf_tcp_ca tests may emit EAGAIN sometimes. In that case, tests
->>> fail with
->>> "bytes != total_bytes" errors. Sending should continue, not break
->>> when
->>> errno is EAGAIN. This patch can make bpf_tcp_ca tests stable.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>    tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c | 4 ++--
->>>    1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
->>> b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
->>> index 077b107130f6..fbc219c2d53b 100644
->>> --- a/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
->>> +++ b/tools/testing/selftests/bpf/prog_tests/bpf_tcp_ca.c
->>> @@ -56,7 +56,7 @@ static void *server(void *arg)
->>>    	while (bytes < total_bytes && !READ_ONCE(stop)) {
->>>    		nr_sent = send(fd, &batch,
->>>    			       MIN(total_bytes - bytes,
->>> sizeof(batch)), 0);
->>> -		if (nr_sent == -1 && errno == EINTR)
->>> +		if (nr_sent == -1 && (errno == EINTR || errno ==
->>> EAGAIN))
->>
->> This is a non blocking socket. EAGAIN is hitting the timeout
->> situation?
->>
->> The default timeout is 3s and it has not been changed after the
->> recent
->> connect_fd_to_fd and start_server simplifications. I don't find bpf
->> CI failing
->> in this test in the last month also.
->>
->> I would prefer to fail after timeout instead of keep retrying. Do you
->> really hit
->> that in your environment for this specific bpf_tcp_ca test? There are
->> many tests
->> using this timeout value also.
-> 
-> This is the 2nd patch of "refactor mptcp bpf tests" series:
-> 
-> https://patchwork.kernel.org/project/mptcp/cover/cover.1711688054.git.tanggeliang@kylinos.cn/ >
-> I didn't get the mentioned EAGAIN errors in bpf_tcp_ca tests, but got
-> them in MPTCP BPF sched tests (see patch 1). MPTCP BPF sched tests (not
-> upstream yet) use the same sending and receiving functions as
-> bpf_tcp_ca tests (patch 15). So it makes sense to add this fix for
-> bpf_tcp_ca tests too.
+Alexei reported the following splat:
 
-It sounds like the EAGAIN is specific to mptcp sched test and is not due to a 
-timeout? Did you try to increase the timeout and see if it resolves the issue?
+ WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430 subflow_data_ready+0x147/0x1c0
+ Modules linked in: dummy bpf_testmod(O) [last unloaded: bpf_test_no_cfi(O)]
+ CPU: 32 PID: 3276 Comm: test_progs Tainted: GO       6.8.0-12873-g2c43c33bfd23
+ Call Trace:
+  <TASK>
+  mptcp_set_rcvlowat+0x79/0x1d0
+  sk_setsockopt+0x6c0/0x1540
+  __bpf_setsockopt+0x6f/0x90
+  bpf_sock_ops_setsockopt+0x3c/0x90
+  bpf_prog_509ce5db2c7f9981_bpf_test_sockopt_int+0xb4/0x11b
+  bpf_prog_dce07e362d941d2b_bpf_test_socket_sockopt+0x12b/0x132
+  bpf_prog_348c9b5faaf10092_skops_sockopt+0x954/0xe86
+  __cgroup_bpf_run_filter_sock_ops+0xbc/0x250
+  tcp_connect+0x879/0x1160
+  tcp_v6_connect+0x50c/0x870
+  mptcp_connect+0x129/0x280
+  __inet_stream_connect+0xce/0x370
+  inet_stream_connect+0x36/0x50
+  bpf_trampoline_6442491565+0x49/0xef
+  inet_stream_connect+0x5/0x50
+  __sys_connect+0x63/0x90
+  __x64_sys_connect+0x14/0x20
 
-afaik, there is no fix needed for the bpf_tcp_ca test. bpf CI expects the test 
-to finish. If the default 3s turns out to be too flaky for most tests, it could 
-be increased instead of loop testing EAGAIN because the bpf CI expects the test 
-to finish. However, so far I don't see this (i.e. 3s is too short) to be the 
-case from looking at one month old data in bpf CI.
+The root cause of the issue is that bpf allows accessing mptcp-level
+proto_ops from a tcp subflow scope.
 
+Fix the issue detecting the problematic call and preventing any action.
 
-> And here's another reason. I want to move these functions from
-> bpf_tcp_ca into network_helpers as public ones (patch 4), which can be
-> used by both bpf_tcp_ca and MPTCP BPF sched tests. So we must add this
-> fix to the public ones too.
+Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/482
+Fixes: 5684ab1a0eff ("mptcp: give rcvlowat some love")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/sockopt.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-Lets understand why mptcp sched test hits EAGAIN first.
-
-> 
-> Maybe the commit log of this patch needs to be updated. Or I should
-> send patches 2, 3 and 4 together to bpf-next?
-
-All selftests/bpf changes have to pass bpf CI. It is always a good idea to 
-target bpf-next to kick off the bpf CI to bar any surprise later when it got 
-merged into bpf-next.
-
-Unrelated, since we are in the mptcp bpf test, one thing needs to fix in 
-test_mptcpify(). The mptcpify test is upgrading a IPPROTO_TCP socket to 
-IPPROTO_MPTCP socket. This could break other tests when the test_progs is run in 
-parallel (test_progs "-j" which fork() to run prog_tests/* in parallel). It 
-could unexpectedly upgrade the tcp socket of another test. One option is to 
-limit the upgrade by checking the pid in the mptcpify.c bpf prog.
-
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index dcd1c76d2a3b..73fdf423de44 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1493,6 +1493,10 @@ int mptcp_set_rcvlowat(struct sock *sk, int val)
+ 	struct mptcp_subflow_context *subflow;
+ 	int space, cap;
+ 
++	/* bpf can land here with a wrong sk type */
++	if (sk->sk_protocol == IPPROTO_TCP)
++		return -EINVAL;
++
+ 	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
+ 		cap = sk->sk_rcvbuf >> 1;
+ 	else
+-- 
+2.43.2
 
