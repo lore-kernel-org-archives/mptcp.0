@@ -1,121 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB5010942;
-	Fri, 29 Mar 2024 19:53:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 261321C0DFC
+	for <mptcp@lists.linux.dev>; Sat, 30 Mar 2024 07:46:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711741988; cv=none; b=tSRYUhfsvrbFrIvVc2i2FkMfu21U0cWMTH6rvft3iY+BFMxzwZiAbpwoHt6TIfYMtYNHWk2GVSe1DTBRN8T+Ft3AZsd5ayB2Qj6iEcIZrPdexY5p/NSLGETC3pVi690XfuVoBvTOBi5onzmxfdew7M8BWKUozJZr954oBz2aff4=
+	t=1711784778; cv=none; b=qgThQEKd0hr0LXvIkrDpgq8bSjxxY8hXrYlTRv+aYzCbTLmo9MkG0JjWgsq+IbyAtBHeWhO1rIu9eu3o1Z8objwZLuhvGmB9FLN9qh1caMf493N7LU+AoCxsc3cg7tsPneqWT0BoKJyDc5WG1YQfG1Hd/uFPT/RZywiN78Hj8fo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711741988; c=relaxed/simple;
-	bh=hYQtK+VuVvgg8lPKFuE+XCfswrikJuLqP6/ufQ7d/Zc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lkaRzYd/TeGyPNHmQxBbAF1ozJLam3uOUzM6j7+VaRS5RNSYkkf1a+cSb8GzQ94gudXjAEXpwv9bSjKAF/NiPXGEII8nyTDMeuKZpd3w1FrtKQ1xYgAa7JxDNNZ5gqpZjrfDME/4FcRpQVBgfAZL2St9h8+wHDlU95jwd/rxCs0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=izfIS6r5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1711784778; c=relaxed/simple;
+	bh=6OBrgezxKGVurMeQPOQUhtRxV0Ab8DpH7z8xTUPi1a4=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=RVMOxIhpmE/TrtTgvyBFu+uvHRDqGdNHJvhpHsRLOaFfHOEpoz9UMqWaCkY9Do79R2HrToei+A2gh783MDVD6+Nk31rpyPNctmKs+QzTCgjzFZcpl0j+NSWil3dtl3QP9pxVFMxCuoas54hy1xAgv6+v9nMj00TD+Ah1hU0IQFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N/pWdJNn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="izfIS6r5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8603C433F1;
-	Fri, 29 Mar 2024 19:53:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N/pWdJNn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8A00C433C7;
+	Sat, 30 Mar 2024 07:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711741987;
-	bh=hYQtK+VuVvgg8lPKFuE+XCfswrikJuLqP6/ufQ7d/Zc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=izfIS6r5t8/x4rdeXFXlHXwMsJJbw+TZI4vbaTo8m+X69nsBEth/UgoYcgRpm0dem
-	 SBqPLIWdVFZvUYwHBOz/itAniKM8CFN4o6zRBAsCvU6/7cgmYmSDqBEuDxrsA5OO56
-	 W0/rVaRsYEhiqSyCLSExvDfnxmrQobrNtfDA12+mYTNFHza0y6POs36qkGXERlj9xy
-	 dDAIQEqp1+CMokROovkG7Qv348koI4o5weLFwd+uELWpIGV30bM1qjWpq4H9Jbx5FG
-	 A3N2/l1pZdL+iSkxDx13RZDxt+4jwBs0O3uG5rRNhCoMxhX2ZbImYzQ42wjcHAT4Wt
-	 2DubPdflwrsOw==
-Date: Fri, 29 Mar 2024 12:53:06 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: netdev@vger.kernel.org, Matthieu Baerts <matttbe@kernel.org>, 
-    Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    mptcp@lists.linux.dev, bpf@vger.kernel.org
-Subject: Re: [PATCH net] mptcp: prevent BPF accessing lowat from a subflow
- socket.
-In-Reply-To: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
-Message-ID: <2a68e09b-936c-447d-bfe8-bd043c94306c@kernel.org>
-References: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
+	s=k20201202; t=1711784777;
+	bh=6OBrgezxKGVurMeQPOQUhtRxV0Ab8DpH7z8xTUPi1a4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=N/pWdJNnThvx0wMz/4mt+evewwV/OWcBG6ESyIAbyBMUXSojGW8lcViFwa4+VDGCb
+	 SKDWToyA1B895o9tctPRZM0Ko9B9ZEafQdBHv9m/346F0d33vrTlCw9NW107/bjnw2
+	 pNixh+OrKwLq3ldl1RPjCzvAzzq3nBhAQemw7NxHSBu7p7WPDOxUysWJqrIBSGYelD
+	 O4o7ZAcVUmBUF00zHT202sjvGBieGNyTUGes7LfflydnOLVkraFXXZGLsbSIQv/gGa
+	 jiR3eKhnqBB5WydTwdYZPL3j0dwIJvp/7R1zZz56pW2gvdO+/VgAAqawd65Au/uYxM
+	 FgI2k+n2gqb9A==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/3] display "last time" actions info
+Date: Sat, 30 Mar 2024 15:46:07 +0800
+Message-Id: <cover.1711784619.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 
-On Fri, 29 Mar 2024, Paolo Abeni wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-> Alexei reported the following splat:
->
-> WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430 subflow_data_ready+0x147/0x1c0
-> Modules linked in: dummy bpf_testmod(O) [last unloaded: bpf_test_no_cfi(O)]
-> CPU: 32 PID: 3276 Comm: test_progs Tainted: GO       6.8.0-12873-g2c43c33bfd23
-> Call Trace:
->  <TASK>
->  mptcp_set_rcvlowat+0x79/0x1d0
->  sk_setsockopt+0x6c0/0x1540
->  __bpf_setsockopt+0x6f/0x90
->  bpf_sock_ops_setsockopt+0x3c/0x90
->  bpf_prog_509ce5db2c7f9981_bpf_test_sockopt_int+0xb4/0x11b
->  bpf_prog_dce07e362d941d2b_bpf_test_socket_sockopt+0x12b/0x132
->  bpf_prog_348c9b5faaf10092_skops_sockopt+0x954/0xe86
->  __cgroup_bpf_run_filter_sock_ops+0xbc/0x250
->  tcp_connect+0x879/0x1160
->  tcp_v6_connect+0x50c/0x870
->  mptcp_connect+0x129/0x280
->  __inet_stream_connect+0xce/0x370
->  inet_stream_connect+0x36/0x50
->  bpf_trampoline_6442491565+0x49/0xef
->  inet_stream_connect+0x5/0x50
->  __sys_connect+0x63/0x90
->  __x64_sys_connect+0x14/0x20
->
+v3:
+ - address Matt's comments for patch 3 (thanks)
+ - add "dport", "sleep", and mptcp_lib_expect_all_features.
 
-Thanks Paolo, change LGTM:
+v2:
+ - address Mat's comments for v1 (thanks)
+ - set msk->last_data_sent only if err > 0
+ - set last_data_recv in __mptcp_move_skbs_from_subflow
+ - add three reserved bytes after mptcpi_subflows_total
+ - move selftests from mptcp_join.sh to diag.sh and check that the
+timestamps move forward.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/446
 
+Geliang Tang (3):
+  mptcp: add last time fields in mptcp_sock
+  mptcp: add last time fields in mptcp_info
+  selftests: mptcp: add last time actions tests
 
-> The root cause of the issue is that bpf allows accessing mptcp-level
-> proto_ops from a tcp subflow scope.
+ include/uapi/linux/mptcp.h                |  4 ++++
+ net/mptcp/options.c                       |  1 +
+ net/mptcp/protocol.c                      |  7 ++++++
+ net/mptcp/protocol.h                      |  3 +++
+ net/mptcp/sockopt.c                       |  5 ++++
+ tools/testing/selftests/net/mptcp/diag.sh | 29 +++++++++++++++++++++++
+ 6 files changed, 49 insertions(+)
 
-What should we do about this root cause going forward? Does this fall on 
-the MPTCP subsystem to add special checks in places where proto_ops are 
-accessed via sk_socket? Or is there a more generic way to catch this?
+-- 
+2.40.1
 
-- Mat
-
-
->
-> Fix the issue detecting the problematic call and preventing any action.
->
-> Reported-by: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/482
-> Fixes: 5684ab1a0eff ("mptcp: give rcvlowat some love")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/sockopt.c | 4 ++++
-> 1 file changed, 4 insertions(+)
->
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index dcd1c76d2a3b..73fdf423de44 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -1493,6 +1493,10 @@ int mptcp_set_rcvlowat(struct sock *sk, int val)
-> 	struct mptcp_subflow_context *subflow;
-> 	int space, cap;
->
-> +	/* bpf can land here with a wrong sk type */
-> +	if (sk->sk_protocol == IPPROTO_TCP)
-> +		return -EINVAL;
-> +
-> 	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
-> 		cap = sk->sk_rcvbuf >> 1;
-> 	else
-> -- 
-> 2.43.2
->
->
