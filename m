@@ -1,134 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB5634EB24
-	for <mptcp@lists.linux.dev>; Mon,  1 Apr 2024 18:21:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707D31426F;
+	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1711995678; cv=none; b=JMAVdz+rszLjCUXpZdlzOFIwdL1Gyiuz7EVwXP1LQ/t3lrpWsR823M7rl3ceO/gdSNjETSGMfBkg63si0+lW8Zp9sABUlJSKKcF5lzEM9a54YGV1J5rzzEPLNE/lCYWTUsTKBOF0f3CSYQphiNHDozLThkOsEVQ6QtTY9gAdnNE=
+	t=1712031627; cv=none; b=SVlaNjThMVVBkfV3NLrCB8t6QPCvuKSVgqBcW3NreAz54pnM0TkbJZcjpisDT9+CUq95A20UwEu5VzHYAQSIKmXzV0DhY8Au15k/X3E37ReUX1InUTJbaY8TIVzcWQ+abRdpB3MIqCbSBQynIBSix+3oJSwbKoK0XDdSo+lnS80=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1711995678; c=relaxed/simple;
-	bh=2FIk2uM7abebrPLMaBh36oSSNoPtiSMSnCSgpq3n648=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=etO5oGrhzMjo/PiaGO3o+Dh9Nu1mvNAy4tREQomn1OuSNQJv3c9/UYEZjnlGjwwIPLnLwIGavJ2RhlAGPuVO+04A1XyGcpj7wpFOyK2br+OXgfDULCvl4JjuctLiiFjQ0hbN0QldnyQjoF7SMb7dp5kyEFe43AkVNQpt4xPji3A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUEKrk6A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712031627; c=relaxed/simple;
+	bh=vaCsj7gbd2rPFxIynoOdojDVOPNrn8BX8eepAklV8N8=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=KDewrQ57nCG8N30qvjNjSC1hVX5YBK7DfEPmd1Z6yBezem8DxJ4iBaHn+3PItTVzBH87DzN6JhL1uQi1lb+H3+fKyPV3XdOYZ9HQwZstXSt5CSc5hrfb8AuqxSyXtsqkPAPEqhUWL76uduFFYkS/VHmEC8aoz1b31tyn53DgUNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2xwB7vJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUEKrk6A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74D6EC433C7;
-	Mon,  1 Apr 2024 18:21:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2xwB7vJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DC6DC43394;
+	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1711995677;
-	bh=2FIk2uM7abebrPLMaBh36oSSNoPtiSMSnCSgpq3n648=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=PUEKrk6AMBXs3BzSz10fCfAKRkAh1k15vd2rvc8ESfuQw0GxhLZ3Qn97F+mMlWHrd
-	 FpVXnwjWDzZthAd288dqS/ViON6Hka0uY89csO9d9gDvQ5oLih1VPqS4cmp5VVGnGy
-	 5cZgl/qmCQJj50jovmjY05ZEJkuTF34d2GeC9JUDI+UbEO6fYJfdpk31Gd3XBHPCBW
-	 xk65BSYfxe71OfpN0AKWxgtccYEx1sgjOZOGwpYhYES8SQjWAd6Icztnk9Vz7Uam4i
-	 0tuknRudOHSBuWUFCvbPNFnWnkkR0ndwy4saBoXgGnRS8May9gN8f+M46Mi4fSvhJf
-	 Fgda4jA/3tL/w==
-Date: Mon, 1 Apr 2024 11:21:16 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 3/3] selftests: mptcp: add last time actions
- tests
-In-Reply-To: <b5a4e6d634ae8fd3e0710b02f57f0998a3da7df0.1711784619.git.tanggeliang@kylinos.cn>
-Message-ID: <5b22266f-922f-cfa3-f006-656262aa0351@kernel.org>
-References: <cover.1711784619.git.tanggeliang@kylinos.cn> <b5a4e6d634ae8fd3e0710b02f57f0998a3da7df0.1711784619.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1712031627;
+	bh=vaCsj7gbd2rPFxIynoOdojDVOPNrn8BX8eepAklV8N8=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=Y2xwB7vJpgTI2JEOa13r3a3JNeskiCGDc2u3ZTio50LSRG2vm9wWUFklIY8E8Pd1V
+	 WT3wiMOs9KIWxD9gNklNWtgcyjTfWa5DVCxbz/BORHEPpXQ0jZpWW2tZfxBE5H1VWl
+	 vBqR0L42MrK1+zfhmVFSM7xDs7hC0zGIY+DN/GwdXnGuBg1Ysk4aQxP2qImEoC1VI0
+	 TL36qpaDf8OnmUpxk2cfQJ4of4WFA1JqFV/e0BbUAJ/Sr/rsMQTPd+aRZYEJR/VgkL
+	 YX8YByJ/guTbdJaaAVedr21ustNYRNcV+zp00pu/Xdjc2jmULeV1ydGpnHKR1DFdZo
+	 TpvrEWD81s+oA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0C8E9D8BD16;
+	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] mptcp: prevent BPF accessing lowat from a subflow socket.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171203162704.30104.6455806082804107632.git-patchwork-notify@kernel.org>
+Date: Tue, 02 Apr 2024 04:20:27 +0000
+References: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
+In-Reply-To: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, mptcp@lists.linux.dev, bpf@vger.kernel.org
 
-On Sat, 30 Mar 2024, Geliang Tang wrote:
+Hello:
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> This patch adds a new helper chk_msk_info() to show the counters in
-> mptcp_info of the given infos, and check that the timestamps move
-> forward. Use it to show newly added last_data_sent, last_data_recv
-> and last_ack_recv in mptcp_info in diag.sh.
->
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> tools/testing/selftests/net/mptcp/diag.sh | 29 +++++++++++++++++++++++
-> 1 file changed, 29 insertions(+)
->
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index bc97ab33a00e..2f9f734015b4 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -200,6 +200,34 @@ chk_msk_cestab()
-> 		 "${expected}" "${msg}" ""
-> }
->
-> +chk_msk_info()
-> +{
-> +	local port="${1}"
-> +	local info
-> +
-> +	for info in "${@:2}"; do
-> +		local cnt1 cnt2 msg
-> +
-> +		cnt1=$(ss -N ${ns} -inHM dport ${port} | mptcp_lib_get_info_value "$info" "$info")
-> +		sleep 0.5
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Hi Geliang -
+On Fri, 29 Mar 2024 19:50:36 +0100 you wrote:
+> Alexei reported the following splat:
+> 
+>  WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430 subflow_data_ready+0x147/0x1c0
+>  Modules linked in: dummy bpf_testmod(O) [last unloaded: bpf_test_no_cfi(O)]
+>  CPU: 32 PID: 3276 Comm: test_progs Tainted: GO       6.8.0-12873-g2c43c33bfd23
+>  Call Trace:
+>   <TASK>
+>   mptcp_set_rcvlowat+0x79/0x1d0
+>   sk_setsockopt+0x6c0/0x1540
+>   __bpf_setsockopt+0x6f/0x90
+>   bpf_sock_ops_setsockopt+0x3c/0x90
+>   bpf_prog_509ce5db2c7f9981_bpf_test_sockopt_int+0xb4/0x11b
+>   bpf_prog_dce07e362d941d2b_bpf_test_socket_sockopt+0x12b/0x132
+>   bpf_prog_348c9b5faaf10092_skops_sockopt+0x954/0xe86
+>   __cgroup_bpf_run_filter_sock_ops+0xbc/0x250
+>   tcp_connect+0x879/0x1160
+>   tcp_v6_connect+0x50c/0x870
+>   mptcp_connect+0x129/0x280
+>   __inet_stream_connect+0xce/0x370
+>   inet_stream_connect+0x36/0x50
+>   bpf_trampoline_6442491565+0x49/0xef
+>   inet_stream_connect+0x5/0x50
+>   __sys_connect+0x63/0x90
+>   __x64_sys_connect+0x14/0x20
+> 
+> [...]
 
-With the loop structured this way, it sleeps 3 times. You could collect 
-the first timestamp for all three values (last_data_sent last_data_recv 
-last_ack_recv), then sleep once, then get all 3 "after" timestamps.
+Here is the summary with links:
+  - [net] mptcp: prevent BPF accessing lowat from a subflow socket.
+    https://git.kernel.org/netdev/net/c/fcf4692fa39e
 
-(Unless Matthieu doesn't care about the extra test time :) )
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-> +		cnt2=$(ss -N ${ns} -inHM dport ${port} | mptcp_lib_get_info_value "$info" "$info")
-> +		msg="....chk ${info}"
-> +		mptcp_lib_print_title "${msg}"
-> +		if { [ -z "${cnt1}" ] || [ -z "${cnt2}" ]; } &&
-> +		   ! mptcp_lib_expect_all_features; then
-> +			mptcp_lib_pr_skip "Feature probably not supported"
-> +			mptcp_lib_result_skip "${msg}"
-> +		elif [ "$((cnt1 + 500))" -lt "${cnt2}" ]; then
 
-Using 500 here is likely to make this test flaky - Matthieu had suggested 
-250ms as a way to make sure the value moved forward but would not be 
-sensitive to small changes in packet timing.
-
-Also please add a local "delta_ms" variable instead of the magic number 
-500.
-
-> +			mptcp_lib_pr_ok
-> +			mptcp_lib_result_pass "${msg}"
-> +		else
-> +			mptcp_lib_pr_fail "expected $((cnt1 + 500)) < $cnt2"
-
-Suggest rephrasing: "value of ${info} changed by $((cnt2 - cnt1))ms, 
-expected at least ${delta_ms}ms"
-
-- Mat
-
-> +			mptcp_lib_result_fail "${msg}"
-> +			ret=${KSFT_FAIL}
-> +		fi
-> +	done
-> +}
-> +
-> wait_connected()
-> {
-> 	local listener_ns="${1}"
-> @@ -233,6 +261,7 @@ echo "b" | \
-> 				127.0.0.1 >/dev/null &
-> wait_connected $ns 10000
-> chk_msk_nr 2 "after MPC handshake "
-> +chk_msk_info 10000 last_data_sent last_data_recv last_ack_recv
-> chk_msk_remote_key_nr 2 "....chk remote_key"
-> chk_msk_fallback_nr 0 "....chk no fallback"
-> chk_msk_inuse 2
-> -- 
-> 2.40.1
->
->
->
