@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 707D31426F;
-	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E5542175A9;
+	Tue,  2 Apr 2024 04:50:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712031627; cv=none; b=SVlaNjThMVVBkfV3NLrCB8t6QPCvuKSVgqBcW3NreAz54pnM0TkbJZcjpisDT9+CUq95A20UwEu5VzHYAQSIKmXzV0DhY8Au15k/X3E37ReUX1InUTJbaY8TIVzcWQ+abRdpB3MIqCbSBQynIBSix+3oJSwbKoK0XDdSo+lnS80=
+	t=1712033429; cv=none; b=cLGrEkpHuECwOF4l2Z5TwpYFE3uX4ec7wIYHFyHDK/Vsl0UrbuOFBiebK01a91bGMbRXDMyIVFcDP+QLUcCwRBCaTTL8Ou7nqVUOSWYNHtYyowW3diEwUmJA2+UFG4Dw39mn0SDsV0Jorom8/bqCCsue4jIkeZ6wPte8NRWmLtM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712031627; c=relaxed/simple;
-	bh=vaCsj7gbd2rPFxIynoOdojDVOPNrn8BX8eepAklV8N8=;
+	s=arc-20240116; t=1712033429; c=relaxed/simple;
+	bh=nHHWCjMhRh6CPqMNONkTsy8+0GPYXavAgdEu3JRVI/g=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=KDewrQ57nCG8N30qvjNjSC1hVX5YBK7DfEPmd1Z6yBezem8DxJ4iBaHn+3PItTVzBH87DzN6JhL1uQi1lb+H3+fKyPV3XdOYZ9HQwZstXSt5CSc5hrfb8AuqxSyXtsqkPAPEqhUWL76uduFFYkS/VHmEC8aoz1b31tyn53DgUNg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2xwB7vJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=FhScFzdgTKhIaE0gcsToFqYJLoklsQcRRpQFy3OW3Sg73ZM6xVuOA1OVCSQ4FD2uHfF/+mafP1ujt5OgbkfE9rYvVsRN6CM5fH4VKp7L1VlL+eVUXCjMLCa7jKebXb8xwmnUhXWFFm+wZIrU4lURX3zF/irRAnhsF53XitxYIdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+6UZRsF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2xwB7vJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 1DC6DC43394;
-	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+6UZRsF"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 633F5C433C7;
+	Tue,  2 Apr 2024 04:50:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712031627;
-	bh=vaCsj7gbd2rPFxIynoOdojDVOPNrn8BX8eepAklV8N8=;
+	s=k20201202; t=1712033428;
+	bh=nHHWCjMhRh6CPqMNONkTsy8+0GPYXavAgdEu3JRVI/g=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Y2xwB7vJpgTI2JEOa13r3a3JNeskiCGDc2u3ZTio50LSRG2vm9wWUFklIY8E8Pd1V
-	 WT3wiMOs9KIWxD9gNklNWtgcyjTfWa5DVCxbz/BORHEPpXQ0jZpWW2tZfxBE5H1VWl
-	 vBqR0L42MrK1+zfhmVFSM7xDs7hC0zGIY+DN/GwdXnGuBg1Ysk4aQxP2qImEoC1VI0
-	 TL36qpaDf8OnmUpxk2cfQJ4of4WFA1JqFV/e0BbUAJ/Sr/rsMQTPd+aRZYEJR/VgkL
-	 YX8YByJ/guTbdJaaAVedr21ustNYRNcV+zp00pu/Xdjc2jmULeV1ydGpnHKR1DFdZo
-	 TpvrEWD81s+oA==
+	b=E+6UZRsFmbiPaSUetiBItB0Zn5fYCxeGL7ZqJHo66GLbawfTMJMqlhqcY/o51dW7X
+	 RMWFrVDRPndjWyYoZytx6AY0ehmXFc+x0Msybhcp5tPWkTrHAwK65C4p05XX3IXLg1
+	 kBTlqaF7+Uzlt1/IrHMjRg4dhN9FZBO6wo8E7rqdypGIiB6Cxc78DVls0GNbWGd83s
+	 z3SJPbujicHzJt+qOA7+CSc+hm3BH9vinZsx2aKh+l1O21llSeO6/Kl0wIt5+BWH2D
+	 syPlTpFXk3AaKzkFrxoCX6+7+9Lb7IY996OZF9QP7AW7eL12FkHSS6n0deWfjvuE8+
+	 nloYTcjBexrjQ==
 Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 0C8E9D8BD16;
-	Tue,  2 Apr 2024 04:20:27 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 53179D9A158;
+	Tue,  2 Apr 2024 04:50:28 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,54 +37,44 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: prevent BPF accessing lowat from a subflow socket.
+Subject: Re: [PATCH net 0/2] mptcp: fix fallback MIB counter and wrong var in
+ selftests
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <171203162704.30104.6455806082804107632.git-patchwork-notify@kernel.org>
-Date: Tue, 02 Apr 2024 04:20:27 +0000
-References: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
-In-Reply-To: <d8cb7d8476d66cb0812a6e29cd1e626869d9d53e.1711738080.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, matttbe@kernel.org, martineau@kernel.org,
- geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, mptcp@lists.linux.dev, bpf@vger.kernel.org
+ <171203342833.12415.12309302923089138092.git-patchwork-notify@kernel.org>
+Date: Tue, 02 Apr 2024 04:50:28 +0000
+References: <20240329-upstream-net-20240329-fallback-mib-v1-0-324a8981da48@kernel.org>
+In-Reply-To: <20240329-upstream-net-20240329-fallback-mib-v1-0-324a8981da48@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ shuah@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ dcaratti@redhat.com, stable@vger.kernel.org, cpaasch@apple.com,
+ tanggeliang@kylinos.cn
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Fri, 29 Mar 2024 19:50:36 +0100 you wrote:
-> Alexei reported the following splat:
+On Fri, 29 Mar 2024 13:08:51 +0100 you wrote:
+> Here are two fixes related to MPTCP.
 > 
->  WARNING: CPU: 32 PID: 3276 at net/mptcp/subflow.c:1430 subflow_data_ready+0x147/0x1c0
->  Modules linked in: dummy bpf_testmod(O) [last unloaded: bpf_test_no_cfi(O)]
->  CPU: 32 PID: 3276 Comm: test_progs Tainted: GO       6.8.0-12873-g2c43c33bfd23
->  Call Trace:
->   <TASK>
->   mptcp_set_rcvlowat+0x79/0x1d0
->   sk_setsockopt+0x6c0/0x1540
->   __bpf_setsockopt+0x6f/0x90
->   bpf_sock_ops_setsockopt+0x3c/0x90
->   bpf_prog_509ce5db2c7f9981_bpf_test_sockopt_int+0xb4/0x11b
->   bpf_prog_dce07e362d941d2b_bpf_test_socket_sockopt+0x12b/0x132
->   bpf_prog_348c9b5faaf10092_skops_sockopt+0x954/0xe86
->   __cgroup_bpf_run_filter_sock_ops+0xbc/0x250
->   tcp_connect+0x879/0x1160
->   tcp_v6_connect+0x50c/0x870
->   mptcp_connect+0x129/0x280
->   __inet_stream_connect+0xce/0x370
->   inet_stream_connect+0x36/0x50
->   bpf_trampoline_6442491565+0x49/0xef
->   inet_stream_connect+0x5/0x50
->   __sys_connect+0x63/0x90
->   __x64_sys_connect+0x14/0x20
+> The first patch fixes when the MPTcpExtMPCapableFallbackACK MIB counter
+> is modified: it should only be incremented when a connection was using
+> MPTCP options, but then a fallback to TCP has been done. This patch also
+> checks the counter is not incremented by mistake during the connect
+> selftests. This counter was wrongly incremented since its introduction
+> in v5.7.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net] mptcp: prevent BPF accessing lowat from a subflow socket.
-    https://git.kernel.org/netdev/net/c/fcf4692fa39e
+  - [net,1/2] mptcp: don't account accept() of non-MPC client as fallback to TCP
+    https://git.kernel.org/netdev/net/c/7a1b3490f47e
+  - [net,2/2] selftests: mptcp: join: fix dev in check_endpoint
+    https://git.kernel.org/netdev/net/c/40061817d95b
 
 You are awesome, thank you!
 -- 
