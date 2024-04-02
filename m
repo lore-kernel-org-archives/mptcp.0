@@ -1,93 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A505414B062
-	for <mptcp@lists.linux.dev>; Tue,  2 Apr 2024 16:28:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1136315A4A8;
+	Tue,  2 Apr 2024 17:10:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712075330; cv=none; b=hgrb5LPztSCHWbYDet3xjEw9gQbIADa6EtBK5ZJDTpJm5lQmD8S7JZSiyMedHN/uyE8NZrojTB0quY+1iPZudFz8Ic/QTDnKOAcN9IaTyx+Jlyculv7de4Pp6ksCIuUzwxUiRjqzbgkjvj3ZyFyhMNIZYFMGHjOZ4TAxaxA6IsM=
+	t=1712077828; cv=none; b=GPdtYiN8+SOEbz+sDAah0qoXQoZZpuUyRO1VQwkiR8DJ4cN607MMJqQHB/ccSNsa0lsYtykx+ymxN5FVTOjlS0FxhsGMzYXNGZRZrEexJg8wmNkZ1HlHi3vQdbdn8Lp8c//IzK6b3dP4iy3cL9BcD4+exsXimHpjNVsxYKul6wQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712075330; c=relaxed/simple;
-	bh=oUdZ8QZAswlXWD3/77ZMtSbYfJnfzgeKBMMuEceBwLA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=IuPMRIZEjT4MDt+mQULwQVT2sJxPwSMH32a1Ib37DcuE/eJJyb6uR3oXc8Fi647O07BWQkdgYNyB0SNjFMOllZpId1Yi5gbWyvcpb+5ObPeqLqxDALGr0ryU4E90XHCcpqDHv3MPx72+EVy921i8koLsKCWcADilQsOCrYZcF5o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cNSbBc74; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712077828; c=relaxed/simple;
+	bh=nBxMIIz8oay+ZtVIDgtyL6CUJut3CqIwZJgq7e7ePD0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=TgKMZUYZk0rksUiouG1uTT69uoSGBK/JoA4Ioy2Qw5I2ejqWoT7ryKLeB/u5cmBOt81UvzSmUQAUJlXSCaoOMyltFXovnB3+6A0qQCBBCmnqjQ7jlfDabL0h/o8X4H7CVxSPya8bGKe/Ov+CmCl4lzE76DJCS+XuWCXNffg5ZlA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a3D5+iV5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cNSbBc74"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C043C43390;
-	Tue,  2 Apr 2024 16:28:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a3D5+iV5"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 93BF3C43394;
+	Tue,  2 Apr 2024 17:10:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712075330;
-	bh=oUdZ8QZAswlXWD3/77ZMtSbYfJnfzgeKBMMuEceBwLA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=cNSbBc74CpZmWuLSI3KcSBIyHrNDgdn9NoPMnEJlBaPhqHWcvYqKlK/8Eh2LFA3Cs
-	 wvHB54rHTIjsxC1T1X6sIt8IIsqONYzrbr5SgR/WJnw0d+39jgz+cW58eo76pi3t+t
-	 6gVYnTYClw4LDnOwJDynaM7ZYC8HaCaGtmzmhWZ6ckjpBR46EJ+GIs7yJvgeQCFoHi
-	 zCQ8LWEHw44DuGbZm+899y8asNQdnryHrHsyfs1enByciSB/S2PIANhd4uI4AN9Kf6
-	 ++1DLMNW9jpzBSoj+Amx8kLJltyaC9QxXDqQEKWcxiiyxTVfCUqEmw3EfW16e40xon
-	 bK2zhWomucGXQ==
-Date: Tue, 2 Apr 2024 09:28:49 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 0/2] display "last time" actions info
-In-Reply-To: <cover.1712062199.git.tanggeliang@kylinos.cn>
-Message-ID: <24ec2290-7304-75be-8f2b-0fda1695190c@kernel.org>
-References: <cover.1712062199.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1712077827;
+	bh=nBxMIIz8oay+ZtVIDgtyL6CUJut3CqIwZJgq7e7ePD0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=a3D5+iV5m9qimuxNTzmpY+ggLCaALB8U+sqEI1ENcAtOP1wcwwO1oqUMJ8hq3y4iq
+	 SjG6hClcBDy30dtAYpKEoHdnPUgqSjtNfoSKZqDqKsUfORx9TJ9JC9Q3QW7r4EO9qm
+	 HoBSyfEi6WWy9diBbbUPw81ng3tLr8IHOxYReZDGQh/XTp0YUr4WqoRUqjoI1+A2Ov
+	 lRbMIZ8S/JPTFgamuKxJWsMxqyfUJyUQ7epcYkRibB0ptQrtMEnWJoMEJgsVkzADh9
+	 zmLsitBbm69pBLBvwE6LhH4suv7SXGUzY+gGoI1z3qsB4s7PGEoF7HAp8kX89Re7o8
+	 AMY3zg18tIInw==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 7EC9ED9A14F;
+	Tue,  2 Apr 2024 17:10:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH bpf-next] selftests/bpf: Add pid limit for mptcpify prog
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171207782751.23966.17498315397998033703.git-patchwork-notify@kernel.org>
+Date: Tue, 02 Apr 2024 17:10:27 +0000
+References: <8987e2938e15e8ec390b85b5dcbee704751359dc.1712054986.git.tanggeliang@kylinos.cn>
+In-Reply-To: <8987e2938e15e8ec390b85b5dcbee704751359dc.1712054986.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>
+Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org,
+ daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
+ yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
+ sdf@google.com, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
+ tanggeliang@kylinos.cn, bpf@vger.kernel.org, mptcp@lists.linux.dev,
+ martin.lau@kernel.org
 
-On Tue, 2 Apr 2024, Geliang Tang wrote:
+Hello:
 
+This patch was applied to bpf/bpf-next.git (master)
+by Andrii Nakryiko <andrii@kernel.org>:
+
+On Tue,  2 Apr 2024 18:50:21 +0800 you wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> v5:
-> - merge the squash-to patch
-> - rename cnt1/2/3 as Matt suggested. (thanks)
+> 
+> In order to prevent mptcpify prog from affecting the running results
+> of other BPF tests, a pid limit was added to restrict it from only
+> modifying its own program.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> 
+> [...]
 
-v5 LGTM (with Matthieu's suggestions), thanks Geliang!
+Here is the summary with links:
+  - [bpf-next] selftests/bpf: Add pid limit for mptcpify prog
+    https://git.kernel.org/bpf/bpf-next/c/c07b4bcd5163
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
->
-> v4:
-> - address Mat's comments for v3 (thanks).
-> - merge patch 1 and patch 2 into one.
->
-> v3:
-> - address Matt's comments for patch 3 (thanks)
-> - add "dport", "sleep", and mptcp_lib_expect_all_features.
->
-> v2:
-> - address Mat's comments for v1 (thanks)
-> - set msk->last_data_sent only if err > 0
-> - set last_data_recv in __mptcp_move_skbs_from_subflow
-> - add three reserved bytes after mptcpi_subflows_total
-> - move selftests from mptcp_join.sh to diag.sh and check that the
-> timestamps move forward.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/446
->
-> Geliang Tang (2):
->  mptcp: add last time fields in mptcp_info
->  selftests: mptcp: test last time mptcp_info
->
-> include/uapi/linux/mptcp.h                |  4 ++
-> net/mptcp/options.c                       |  1 +
-> net/mptcp/protocol.c                      |  7 ++++
-> net/mptcp/protocol.h                      |  3 ++
-> net/mptcp/sockopt.c                       |  4 ++
-> tools/testing/selftests/net/mptcp/diag.sh | 51 +++++++++++++++++++++++
-> 6 files changed, 70 insertions(+)
->
-> -- 
-> 2.40.1
->
->
->
