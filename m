@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D592F3839A
-	for <mptcp@lists.linux.dev>; Tue,  2 Apr 2024 07:16:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D607238DFC
+	for <mptcp@lists.linux.dev>; Tue,  2 Apr 2024 07:16:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712042164; cv=none; b=hdVOIcQpap9LuYeeh4bTG2thZ4K+/O4pVa1LLyEz0lBVwGpgF/gnl8mDxJ6xFTQjTqVkG8sC3sRLG/0+37NyRDUgd6yUeRy0EHv2ZRHNnpY8CPycMjANRDmt6nIM90H/xRjifBEOC+LAfNKy50ZPJU3U0szgRNxNlv13B2FxNf0=
+	t=1712042165; cv=none; b=iufinUptjKgmwkRPQsb/Q0BbTdPJe8Qiaj0NsjvHjG+xBcMn5hDPFwzDX3quWilL2h2goW7xY0jt268NeyPcVZoJ61BaOT3Szuayid7nhFDY3PfPbu6U1vwUklRTbCtowD5cLFKmNAPv8ANNtl7++FdjPG1o/JmzICIOr/Y2cFo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712042164; c=relaxed/simple;
-	bh=2AX+Is4y3Wk3xT/v83nqHaYe/s/mHl2JO8mleHGsQ7c=;
+	s=arc-20240116; t=1712042165; c=relaxed/simple;
+	bh=ujos7wz/wPYZHup/NGzIMh3hJkNhEYi/Ko6EPG//BRo=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=JyLvb2hum0df5dv9BF93M9Xj+auh6HxSTEXqHsG+IZJ7fwtf7bFNtKwcFk3bzvh/qnfO4q1qBdejuuehfb3eeIqEP1HUihLteGpi7scjdkkGgkN+blP8C/2SS5xJiPKeBdx1Hpx+Sx9apuj6zWGTyPiNfjORTQ6cVWe03O8wRsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW3NxLwo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Tkz8iBgGBhxpLrVjKvZhPcXeojM1gKmx54dUWeKJebNfSa50b921Oyh2T2jDVjfcbNe+WlBcyfjSu8YudKZVCGvuVAqpsiJlkIZNhd/AvM79WbIRF64a1GrPofCB0IaO6xr8ZENtcPylT4Vtdh/79UCT81weK3VM1053uRFXAy4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDb/zNkh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW3NxLwo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 925EEC433C7;
-	Tue,  2 Apr 2024 07:16:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDb/zNkh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E16AAC43390;
+	Tue,  2 Apr 2024 07:16:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712042164;
-	bh=2AX+Is4y3Wk3xT/v83nqHaYe/s/mHl2JO8mleHGsQ7c=;
+	s=k20201202; t=1712042165;
+	bh=ujos7wz/wPYZHup/NGzIMh3hJkNhEYi/Ko6EPG//BRo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LW3NxLwojjJdAn0DwSPMZDH79oI9M/o3C5iofRG9uq82h1NfjFasCSVnWXoGT28se
-	 weYMG+LOqJzGjvyUrOBgeyddgRd7a5GMaJT+uGLnDcri7xqHy9vGRQouU3QfoxSafJ
-	 Fo2WWKLbHdOo9MoPZ3oUhwG0R6OaNpbq7/gT/wmBHjp+UNQvARhCc+yafMJpJFUC0+
-	 pGDKvJhbh1UVdFaPzC/2GrOeDRqeYBzBvINM9kTZ9C32dmn8oGoKRwUM2nn5QFmZ/U
-	 3U9z2fh0pk/dZFOzRnspdwPStkkgQvTi36ULej0TeIPKvS3L4Jf6xwuwylQTbDqO8X
-	 KcClIwaSNDRPA==
+	b=rDb/zNkh7oFo6gpgeVcsd8oRDoLyQZFo8QVt2x7cMBiJ7i3vUnQOmYHAedbLViO29
+	 UGys+ppklL76YMCcCxR8bxE7lJiT+jLOVf/gGJ6NqKk0rhgKiL0aVgdflo+tGdWY65
+	 jHlMcuAlTpgvFq2X3VSxoQfNsjHmcAELYK4LrA6Hf+GhSonNQEnXGWhk7D8LrLZ3Hw
+	 uoFMpW6C5OTAoX8gt530uMYagBg/AY0N1t0Vqv+m7u0kITlz3hYdL9bOn0qtSpAKvm
+	 hORo4E/Qvi7S/DcMDahn+asnd5p0u4Xs5bCfG/tl+opIDnyz56EJeX9O/7sNJ6BUjW
+	 Di9VKSSSu6AEA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 01/10] Squash to "selftests/bpf: Add bpf scheduler test" 1 nonblock
-Date: Tue,  2 Apr 2024 15:15:49 +0800
-Message-Id: <f0b66813ae8274e5653988d80d16171508f05796.1712042049.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 02/10] selftests/bpf: Add RUN_MPTCP_TEST macro
+Date: Tue,  2 Apr 2024 15:15:50 +0800
+Message-Id: <13d8499431364fa9b386db181b555ce5fa12e3df.1712042049.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1712042049.git.tanggeliang@kylinos.cn>
 References: <cover.1712042049.git.tanggeliang@kylinos.cn>
@@ -45,63 +45,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-BPF tests fail sometimes with "bytes != total_bytes" errors:
-
- # test_default:PASS:sched_init:default 0 nsec
- # send_data:PASS:pthread_create 0 nsec
- # send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
- # default: 3041 ms
- # server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
- # send_data:FAIL:pthread_join thread_ret:-11 \
-		test_default:PASS:has_bytes_sent addr_1 0 nsec
- # test_default:PASS:has_bytes_sent addr_2 0 nsec
- # close_netns:PASS:setns 0 nsec
-
-Here errno 11 is EAGAIN. This patch sets server socket to nonblock
-to fix this. It makes BPF tests stable.
+Each MPTCP subtest tests test__start_subtest(suffix), then invokes
+test_suffix(). It makes sense to add a new macro RUN_MPTCP_TEST to
+simpolify the code.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 6e28215d7404..d3d51aee440d 100644
+index d3d51aee440d..faa0dc37b78e 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -88,6 +88,16 @@ static void cleanup_netns(struct nstoken *nstoken)
- 	SYS_NOFAIL("ip netns del %s", NS_TEST);
+@@ -663,12 +663,16 @@ static void test_burst(void)
+ 	mptcp_bpf_burst__destroy(burst_skel);
  }
  
-+static int set_nonblock(int fd)
-+{
-+	int flags = fcntl(fd, F_GETFL);
++#define RUN_MPTCP_TEST(suffix)					\
++do {								\
++	if (test__start_subtest(#suffix))			\
++		test_##suffix();				\
++} while (0)
 +
-+	if (flags == -1)
-+		return -1;
-+
-+	return fcntl(fd, flags | O_NONBLOCK);
-+}
-+
- static int verify_tsk(int map_fd, int client_fd)
+ void test_mptcp(void)
  {
- 	int err, cfd = client_fd;
-@@ -466,6 +476,7 @@ static void test_default(void)
- 	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
- 	client_fd = connect_to_fd(server_fd, 0);
- 
-+	set_nonblock(server_fd);
- 	send_data(server_fd, client_fd, "default");
- 	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
- 	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
-@@ -639,6 +650,7 @@ static void test_burst(void)
- 	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
- 	client_fd = connect_to_fd(server_fd, 0);
- 
-+	set_nonblock(server_fd);
- 	send_data(server_fd, client_fd, "bpf_burst");
- 	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr 1");
- 	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr 2");
+-	if (test__start_subtest("base"))
+-		test_base();
+-	if (test__start_subtest("mptcpify"))
+-		test_mptcpify();
++	RUN_MPTCP_TEST(base);
++	RUN_MPTCP_TEST(mptcpify);
+ 	if (test__start_subtest("default"))
+ 		test_default();
+ 	if (test__start_subtest("first"))
 -- 
 2.40.1
 
