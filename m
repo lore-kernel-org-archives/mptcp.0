@@ -1,56 +1,56 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
+Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892A45B053
-	for <mptcp@lists.linux.dev>; Wed,  3 Apr 2024 07:32:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D817F5B200
+	for <mptcp@lists.linux.dev>; Wed,  3 Apr 2024 07:32:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712129531; cv=none; b=QVm/+hWX/yyjMkQfcICeQiWkr3HHsHKhZSVtS7zV/b3kIWRan3VLf1MCf8luLopUezapIfw+Z5fimNh70CCJF9KEg337APU9vtjwONpxx4JHr9iIL4a7EmQOnWXMGT9uIc1IGeiGERf93Z7MOG0H04DlPplaFU4NxCNNND/rQ3c=
+	t=1712129535; cv=none; b=tIBoWlMy3ju/VPTud0BxI9PCV+2/f81YmMIU7UBunLAxVVvLZCdjm/bD7K7aJ6Q64rLEqNJLehXP/gvCDgbx8Akrb/OZuxTHPF1Jz0dy9mmW4aGrpBilsIkHWpKA0yQ/JRCDztN7igzst8RgPIXaQanJS4YJWBJqi+Xy24NXEpw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712129531; c=relaxed/simple;
-	bh=nZjGJvKDiRnidQZDsfqPqJwS86EDVeil9dp10M83TYM=;
+	s=arc-20240116; t=1712129535; c=relaxed/simple;
+	bh=IsZoGu494mYsFp+yRAs9mWAA3Bbb4zXr2wZuxu1fFHw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=i5CA66zmMzqtRgprQvOaCn+SU7A8C0g9g0waMK26BHRs0Gam0ea8FJLZpNXlh1fYRDg3uvQC2t4HRaw45ft2vS/Arkza759WLtbQgu8DERSbR2rmenLCTShG141wHw/KP6toBVgdWGkeSgOJmDfrnx7aFpUX+MIJQuZW6EsF3Yk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D4MdkLKk; arc=none smtp.client-ip=209.85.214.178
+	 MIME-Version; b=sXF18CyNtr/KZmIKvOPtM7r4fkgh2jcPMeEYtf6EfhSmVheQlLTw25xBh0PvifmdDBQIh0eS2fT6PmfLHeAnuss1Y3ga7hV5ofi7OuYvIJZQtBMYn0slLguuxw1R61e+D+YiRMryYCjTJ7CSV9cfcYnFH6nULrpRzOUGuv4kxj8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VhEHstt/; arc=none smtp.client-ip=209.85.214.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D4MdkLKk"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-1def3340682so52329335ad.1
-        for <mptcp@lists.linux.dev>; Wed, 03 Apr 2024 00:32:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VhEHstt/"
+Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-1e2987e9d67so879475ad.1
+        for <mptcp@lists.linux.dev>; Wed, 03 Apr 2024 00:32:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712129529; x=1712734329; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1712129533; x=1712734333; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=TWKXTqXA1vRilrHfzBrQgWu1Kcy5RdJA5BEIQipNfAk=;
-        b=D4MdkLKkU2/iduxNkK84Egl99JoXiR9QBLGAfTcVQMR4o2LzFqndPwlR3KorknQF8Z
-         mQfrJrM7dQNJVsZY5LxHDidWqo5LA1zBzV6YyaofOxoLufstS47u7S7/CyDFYEc0aj2A
-         tiwB+DwKhyxVE656i8ZxTSaVeNY63GGk0SaA522WWzedfsTmX0vLpHZYnggjo72yUCtx
-         ohJdOHrZLOx9MjfPBNEQyQu+l9EuUbUM6GypzAA+MFkIXyxkFeb36Hx1T3UsLGhWC3nG
-         6E3/+Cz1wdrpnAc6zrPUiIcXoAbuCjrx6g195/qTLEl3R+hSnXbNm4FxCrDnXx+LVGnf
-         tT4g==
+        bh=YiHsi/wEPbGgCUdcVxoA8LtDKW3anP9WHfN2vpFLxYc=;
+        b=VhEHstt/eDGPpZQ7mLkAuk/gLqVyQoyJtWC60l+cfAna9IW0yE+ekYetvp2C60mhSI
+         9aOKaRKr5CBuR2JIc2LaV0KK9bIVW+5rarmJyDQOkzZihGu3JEMY6u1ZrRShdTJLG19K
+         GBluW0jvMcy+x8t9HpSWU4ioUyT5TY70w3pF3lEkpkwG9SBBCHRug7ADbe8+t7lPTmWi
+         vC5jyQd25s7+8F4CtSOFtbeUFalcOZEbASs4y1QMWdY7B76Arqoem/UZd2V4tBwMBhnn
+         lB7DxSwFilq6g103PdzRm22mTuLqkegsBuu95U+92joXwbAClqM0GOV7a9jVCpoXqw1c
+         eGQw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712129529; x=1712734329;
+        d=1e100.net; s=20230601; t=1712129533; x=1712734333;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=TWKXTqXA1vRilrHfzBrQgWu1Kcy5RdJA5BEIQipNfAk=;
-        b=SmVDixfnVDimwfNn3LOX5syJ7cUpzykU9rfRH3417U0Ew48wCMYakb7pKZMH/GRK9V
-         qaunK92FZosloKjrsYYoX6K7HLS8qX2GfToloDIRgYkrP9TL+CKEY0Qi35iPU+WHRY4N
-         p6RmKowBZThhJCHFi93NHUJfgMD+WpvKByeDdEWM1nZlvcxQNAe3kMULMgZP+fXSrKYU
-         00+BFBt044pyk0CLz+/iQuqxgydeazobiidXdHhLsuNC5wPanKvK/7fY5pImyYv6iftx
-         qc+6xRB9XRv0QWDSsSjdJm3BqeQ6U+uMx4s7823dKNeq3xRoTJxxoKlupAM4b0qVyAw3
-         V+gw==
-X-Gm-Message-State: AOJu0YyA8N3WHiqBachlPpPz1osTNt8HZ0xbxMP9AbXZ5nPxpBzBsGIA
-	d1tppS4azTsG3nGf6+6ixBds0Qa5CXJxXICk7YRrXi6Ytdz7bo6tjN3osqae
-X-Google-Smtp-Source: AGHT+IEvwa5td8d6L8Pc7yaILvDK52o3cnnRubM79JpbjiuY7MP3/vebjOecXXoJF/xYxgnK6dffqA==
-X-Received: by 2002:a17:902:ba8b:b0:1e2:44c7:b2af with SMTP id k11-20020a170902ba8b00b001e244c7b2afmr10226572pls.61.1712129528860;
-        Wed, 03 Apr 2024 00:32:08 -0700 (PDT)
+        bh=YiHsi/wEPbGgCUdcVxoA8LtDKW3anP9WHfN2vpFLxYc=;
+        b=WamBSp8NMsFxIqVnLMT9gBpCDiUiQKwSF+Rh27vDlxHE49m6QqXDWPfTDkJfZserPz
+         JRwnCLvBfq2F2fwz7PX7m83tK1bHvH4VMFw3mhsclKjK6nFZ3R9w9U8i/FcW6h/TBfPk
+         Bmi0Tr471qTmy4fz7dFgOr9mWto67efhnGDsmidWv2omSoYPVrtNERNIk3gOL6CZceH2
+         rNGIJmzmV22TKyRMti2l4CPW/66yP0Eneheo6zxX+xILyIlPnqPCcCjOPMHrg5TyWNRN
+         7TAEFzNxe2gUNCi0GT2RqGSVnVQIxf2IlrLvZCkMCWyLLkDqt0CG1reydDtRhU4phRNp
+         tZbQ==
+X-Gm-Message-State: AOJu0YwGvDIf3gLI08MW/yIJM/d9dyf9XdSjvzhlbt7DCb+zYJgX+IUL
+	XlDgRC0DcXYtdFsHNrjlajDvVmnSybytdz+Bco2ZVQCObtiocUwk
+X-Google-Smtp-Source: AGHT+IG7aZF0AeL6bAbhXIOKNF4i7QM4i74ovAlsm4ZYTppbqtDaNm5g6W+K9aE2BHPEhKx8atqrZQ==
+X-Received: by 2002:a17:902:db01:b0:1dd:8ed:997d with SMTP id m1-20020a170902db0100b001dd08ed997dmr2739641plx.3.1712129533124;
+        Wed, 03 Apr 2024 00:32:13 -0700 (PDT)
 Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
-        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001e03b2f7ab1sm12563067plg.92.2024.04.03.00.32.04
+        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001e03b2f7ab1sm12563067plg.92.2024.04.03.00.32.09
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 03 Apr 2024 00:32:08 -0700 (PDT)
+        Wed, 03 Apr 2024 00:32:12 -0700 (PDT)
 From: Jason Xing <kerneljasonxing@gmail.com>
 To: edumazet@google.com,
 	mhiramat@kernel.org,
@@ -67,9 +67,9 @@ Cc: mptcp@lists.linux.dev,
 	linux-trace-kernel@vger.kernel.org,
 	kerneljasonxing@gmail.com,
 	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next 2/6] rstreason: prepare for passive reset
-Date: Wed,  3 Apr 2024 15:31:40 +0800
-Message-Id: <20240403073144.35036-3-kerneljasonxing@gmail.com>
+Subject: [PATCH net-next 3/6] rstreason: prepare for active reset
+Date: Wed,  3 Apr 2024 15:31:41 +0800
+Message-Id: <20240403073144.35036-4-kerneljasonxing@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240403073144.35036-1-kerneljasonxing@gmail.com>
 References: <20240403073144.35036-1-kerneljasonxing@gmail.com>
@@ -83,341 +83,194 @@ Content-Transfer-Encoding: 8bit
 
 From: Jason Xing <kernelxing@tencent.com>
 
-Adjust the paramenter and support passing reason of reset which
-is for now NOT_SPECIFIED. No functional changes.
+Like what we did to passive reset:
+only passing possible reset reason in each active reset path.
+
+No functional changes.
 
 Signed-off-by: Jason Xing <kernelxing@tencent.com>
 ---
- include/net/request_sock.h |  3 ++-
- net/dccp/ipv4.c            | 10 ++++++----
- net/dccp/ipv6.c            | 10 ++++++----
- net/dccp/minisocks.c       |  3 ++-
- net/ipv4/tcp_ipv4.c        | 12 +++++++-----
- net/ipv4/tcp_minisocks.c   |  3 ++-
- net/ipv6/tcp_ipv6.c        | 15 +++++++++------
- net/mptcp/subflow.c        |  8 +++++---
- 8 files changed, 39 insertions(+), 25 deletions(-)
+ include/net/tcp.h     |  2 +-
+ net/ipv4/tcp.c        | 15 ++++++++++-----
+ net/ipv4/tcp_output.c |  2 +-
+ net/ipv4/tcp_timer.c  |  9 ++++++---
+ net/mptcp/protocol.c  |  4 +++-
+ net/mptcp/subflow.c   |  5 +++--
+ 6 files changed, 24 insertions(+), 13 deletions(-)
 
-diff --git a/include/net/request_sock.h b/include/net/request_sock.h
-index 004e651e6067..93f9fee7e52f 100644
---- a/include/net/request_sock.h
-+++ b/include/net/request_sock.h
-@@ -34,7 +34,8 @@ struct request_sock_ops {
- 	void		(*send_ack)(const struct sock *sk, struct sk_buff *skb,
- 				    struct request_sock *req);
- 	void		(*send_reset)(const struct sock *sk,
--				      struct sk_buff *skb);
-+				      struct sk_buff *skb,
-+				      int reason);
- 	void		(*destructor)(struct request_sock *req);
- 	void		(*syn_ack_timeout)(const struct request_sock *req);
- };
-diff --git a/net/dccp/ipv4.c b/net/dccp/ipv4.c
-index 44b033fe1ef6..628dd783e8f3 100644
---- a/net/dccp/ipv4.c
-+++ b/net/dccp/ipv4.c
-@@ -24,6 +24,7 @@
+diff --git a/include/net/tcp.h b/include/net/tcp.h
+index 6ae35199d3b3..2b9b9d3d8065 100644
+--- a/include/net/tcp.h
++++ b/include/net/tcp.h
+@@ -667,7 +667,7 @@ int tcp_fragment(struct sock *sk, enum tcp_queue tcp_queue,
+ void tcp_send_probe0(struct sock *);
+ int tcp_write_wakeup(struct sock *, int mib);
+ void tcp_send_fin(struct sock *sk);
+-void tcp_send_active_reset(struct sock *sk, gfp_t priority);
++void tcp_send_active_reset(struct sock *sk, gfp_t priority, int reason);
+ int tcp_send_synack(struct sock *);
+ void tcp_push_one(struct sock *, unsigned int mss_now);
+ void __tcp_send_ack(struct sock *sk, u32 rcv_nxt);
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index e767721b3a58..eacfe0012977 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -275,6 +275,7 @@
  #include <net/xfrm.h>
- #include <net/secure_seq.h>
- #include <net/netns/generic.h>
-+#include <net/rstreason.h>
- 
- #include "ackvec.h"
- #include "ccid.h"
-@@ -521,7 +522,8 @@ static int dccp_v4_send_response(const struct sock *sk, struct request_sock *req
- 	return err;
- }
- 
--static void dccp_v4_ctl_send_reset(const struct sock *sk, struct sk_buff *rxskb)
-+static void dccp_v4_ctl_send_reset(const struct sock *sk, struct sk_buff *rxskb,
-+				   int reason)
- {
- 	int err;
- 	const struct iphdr *rxiph;
-@@ -706,7 +708,7 @@ int dccp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
- 	return 0;
- 
- reset:
--	dccp_v4_ctl_send_reset(sk, skb);
-+	dccp_v4_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	kfree_skb(skb);
- 	return 0;
- }
-@@ -869,7 +871,7 @@ static int dccp_v4_rcv(struct sk_buff *skb)
- 		if (nsk == sk) {
- 			reqsk_put(req);
- 		} else if (dccp_child_process(sk, nsk, skb)) {
--			dccp_v4_ctl_send_reset(sk, skb);
-+			dccp_v4_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 			goto discard_and_relse;
- 		} else {
- 			sock_put(sk);
-@@ -909,7 +911,7 @@ static int dccp_v4_rcv(struct sk_buff *skb)
- 	if (dh->dccph_type != DCCP_PKT_RESET) {
- 		DCCP_SKB_CB(skb)->dccpd_reset_code =
- 					DCCP_RESET_CODE_NO_CONNECTION;
--		dccp_v4_ctl_send_reset(sk, skb);
-+		dccp_v4_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	}
- 
- discard_it:
-diff --git a/net/dccp/ipv6.c b/net/dccp/ipv6.c
-index ded07e09f813..d64f39e26e87 100644
---- a/net/dccp/ipv6.c
-+++ b/net/dccp/ipv6.c
-@@ -29,6 +29,7 @@
- #include <net/secure_seq.h>
- #include <net/netns/generic.h>
+ #include <net/ip.h>
  #include <net/sock.h>
 +#include <net/rstreason.h>
  
- #include "dccp.h"
- #include "ipv6.h"
-@@ -256,7 +257,8 @@ static void dccp_v6_reqsk_destructor(struct request_sock *req)
- 	kfree_skb(inet_rsk(req)->pktopts);
- }
- 
--static void dccp_v6_ctl_send_reset(const struct sock *sk, struct sk_buff *rxskb)
-+static void dccp_v6_ctl_send_reset(const struct sock *sk, struct sk_buff *rxskb,
-+				   int reason)
- {
- 	const struct ipv6hdr *rxip6h;
- 	struct sk_buff *skb;
-@@ -656,7 +658,7 @@ static int dccp_v6_do_rcv(struct sock *sk, struct sk_buff *skb)
- 	return 0;
- 
- reset:
--	dccp_v6_ctl_send_reset(sk, skb);
-+	dccp_v6_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- discard:
- 	if (opt_skb != NULL)
- 		__kfree_skb(opt_skb);
-@@ -762,7 +764,7 @@ static int dccp_v6_rcv(struct sk_buff *skb)
- 		if (nsk == sk) {
- 			reqsk_put(req);
- 		} else if (dccp_child_process(sk, nsk, skb)) {
--			dccp_v6_ctl_send_reset(sk, skb);
-+			dccp_v6_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 			goto discard_and_relse;
+ #include <linux/uaccess.h>
+ #include <asm/ioctls.h>
+@@ -2805,7 +2806,8 @@ void __tcp_close(struct sock *sk, long timeout)
+ 		/* Unread data was tossed, zap the connection. */
+ 		NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONCLOSE);
+ 		tcp_set_state(sk, TCP_CLOSE);
+-		tcp_send_active_reset(sk, sk->sk_allocation);
++		tcp_send_active_reset(sk, sk->sk_allocation,
++				      SK_RST_REASON_NOT_SPECIFIED);
+ 	} else if (sock_flag(sk, SOCK_LINGER) && !sk->sk_lingertime) {
+ 		/* Check zero linger _after_ checking for unread data. */
+ 		sk->sk_prot->disconnect(sk, 0);
+@@ -2879,7 +2881,8 @@ void __tcp_close(struct sock *sk, long timeout)
+ 		struct tcp_sock *tp = tcp_sk(sk);
+ 		if (READ_ONCE(tp->linger2) < 0) {
+ 			tcp_set_state(sk, TCP_CLOSE);
+-			tcp_send_active_reset(sk, GFP_ATOMIC);
++			tcp_send_active_reset(sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 			__NET_INC_STATS(sock_net(sk),
+ 					LINUX_MIB_TCPABORTONLINGER);
  		} else {
- 			sock_put(sk);
-@@ -801,7 +803,7 @@ static int dccp_v6_rcv(struct sk_buff *skb)
- 	if (dh->dccph_type != DCCP_PKT_RESET) {
- 		DCCP_SKB_CB(skb)->dccpd_reset_code =
- 					DCCP_RESET_CODE_NO_CONNECTION;
--		dccp_v6_ctl_send_reset(sk, skb);
-+		dccp_v6_ctl_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	}
- 
- discard_it:
-diff --git a/net/dccp/minisocks.c b/net/dccp/minisocks.c
-index 64d805b27add..251a57cf5822 100644
---- a/net/dccp/minisocks.c
-+++ b/net/dccp/minisocks.c
-@@ -15,6 +15,7 @@
- #include <net/sock.h>
- #include <net/xfrm.h>
- #include <net/inet_timewait_sock.h>
-+#include <net/rstreason.h>
- 
- #include "ackvec.h"
- #include "ccid.h"
-@@ -202,7 +203,7 @@ struct sock *dccp_check_req(struct sock *sk, struct sk_buff *skb,
- 	DCCP_SKB_CB(skb)->dccpd_reset_code = DCCP_RESET_CODE_TOO_BUSY;
- drop:
- 	if (dccp_hdr(skb)->dccph_type != DCCP_PKT_RESET)
--		req->rsk_ops->send_reset(sk, skb);
-+		req->rsk_ops->send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 
- 	inet_csk_reqsk_queue_drop(sk, req);
- out:
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 0d47b48f8cfd..1c8248abe37a 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -70,6 +70,7 @@
- #include <net/xfrm.h>
- #include <net/secure_seq.h>
- #include <net/busy_poll.h>
-+#include <net/rstreason.h>
- 
- #include <linux/inet.h>
- #include <linux/ipv6.h>
-@@ -723,7 +724,8 @@ static bool tcp_v4_ao_sign_reset(const struct sock *sk, struct sk_buff *skb,
-  *	Exception: precedence violation. We do not implement it in any case.
-  */
- 
--static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb)
-+static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
-+			      int reason)
- {
- 	const struct tcphdr *th = tcp_hdr(skb);
- 	struct {
-@@ -1933,7 +1935,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *skb)
- 	return 0;
- 
- reset:
--	tcp_v4_send_reset(rsk, skb);
-+	tcp_v4_send_reset(rsk, skb, SK_RST_REASON_NOT_SPECIFIED);
- discard:
- 	kfree_skb_reason(skb, reason);
- 	/* Be careful here. If this function gets more complicated and
-@@ -2278,7 +2280,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 		} else {
- 			drop_reason = tcp_child_process(sk, nsk, skb);
- 			if (drop_reason) {
--				tcp_v4_send_reset(nsk, skb);
-+				tcp_v4_send_reset(nsk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 				goto discard_and_relse;
- 			}
- 			sock_put(sk);
-@@ -2356,7 +2358,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
- bad_packet:
- 		__TCP_INC_STATS(net, TCP_MIB_INERRS);
- 	} else {
--		tcp_v4_send_reset(NULL, skb);
-+		tcp_v4_send_reset(NULL, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	}
- 
- discard_it:
-@@ -2407,7 +2409,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
- 		tcp_v4_timewait_ack(sk, skb);
- 		break;
- 	case TCP_TW_RST:
--		tcp_v4_send_reset(sk, skb);
-+		tcp_v4_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 		inet_twsk_deschedule_put(inet_twsk(sk));
- 		goto discard_it;
- 	case TCP_TW_SUCCESS:;
-diff --git a/net/ipv4/tcp_minisocks.c b/net/ipv4/tcp_minisocks.c
-index f0761f060a83..d2d42edb8140 100644
---- a/net/ipv4/tcp_minisocks.c
-+++ b/net/ipv4/tcp_minisocks.c
-@@ -22,6 +22,7 @@
- #include <net/tcp.h>
- #include <net/xfrm.h>
- #include <net/busy_poll.h>
-+#include <net/rstreason.h>
- 
- static bool tcp_in_window(u32 seq, u32 end_seq, u32 s_win, u32 e_win)
- {
-@@ -879,7 +880,7 @@ struct sock *tcp_check_req(struct sock *sk, struct sk_buff *skb,
- 		 * avoid becoming vulnerable to outside attack aiming at
- 		 * resetting legit local connections.
+@@ -2897,7 +2900,8 @@ void __tcp_close(struct sock *sk, long timeout)
+ 	if (sk->sk_state != TCP_CLOSE) {
+ 		if (tcp_check_oom(sk, 0)) {
+ 			tcp_set_state(sk, TCP_CLOSE);
+-			tcp_send_active_reset(sk, GFP_ATOMIC);
++			tcp_send_active_reset(sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 			__NET_INC_STATS(sock_net(sk),
+ 					LINUX_MIB_TCPABORTONMEMORY);
+ 		} else if (!check_net(sock_net(sk))) {
+@@ -3001,7 +3005,7 @@ int tcp_disconnect(struct sock *sk, int flags)
+ 		/* The last check adjusts for discrepancy of Linux wrt. RFC
+ 		 * states
  		 */
--		req->rsk_ops->send_reset(sk, skb);
-+		req->rsk_ops->send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	} else if (fastopen) { /* received a valid RST pkt */
- 		reqsk_fastopen_remove(sk, req, true);
- 		tcp_reset(sk, skb);
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index 8e9c59b6c00c..f143b658fb71 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -60,6 +60,7 @@
- #include <net/secure_seq.h>
- #include <net/hotdata.h>
- #include <net/busy_poll.h>
-+#include <net/rstreason.h>
- 
- #include <linux/proc_fs.h>
- #include <linux/seq_file.h>
-@@ -69,7 +70,8 @@
- 
- #include <trace/events/tcp.h>
- 
--static void	tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb);
-+static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
-+			      int reason);
- static void	tcp_v6_reqsk_send_ack(const struct sock *sk, struct sk_buff *skb,
- 				      struct request_sock *req);
- 
-@@ -1006,7 +1008,8 @@ static void tcp_v6_send_response(const struct sock *sk, struct sk_buff *skb, u32
- 	kfree_skb(buff);
- }
- 
--static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb)
-+static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
-+			      int reason)
- {
- 	const struct tcphdr *th = tcp_hdr(skb);
- 	struct ipv6hdr *ipv6h = ipv6_hdr(skb);
-@@ -1675,7 +1678,7 @@ int tcp_v6_do_rcv(struct sock *sk, struct sk_buff *skb)
- 	return 0;
- 
- reset:
--	tcp_v6_send_reset(sk, skb);
-+	tcp_v6_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- discard:
- 	if (opt_skb)
- 		__kfree_skb(opt_skb);
-@@ -1861,7 +1864,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 		} else {
- 			drop_reason = tcp_child_process(sk, nsk, skb);
- 			if (drop_reason) {
--				tcp_v6_send_reset(nsk, skb);
-+				tcp_v6_send_reset(nsk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 				goto discard_and_relse;
- 			}
- 			sock_put(sk);
-@@ -1937,7 +1940,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- bad_packet:
- 		__TCP_INC_STATS(net, TCP_MIB_INERRS);
- 	} else {
--		tcp_v6_send_reset(NULL, skb);
-+		tcp_v6_send_reset(NULL, skb, SK_RST_REASON_NOT_SPECIFIED);
+-		tcp_send_active_reset(sk, gfp_any());
++		tcp_send_active_reset(sk, gfp_any(), SK_RST_REASON_NOT_SPECIFIED);
+ 		WRITE_ONCE(sk->sk_err, ECONNRESET);
+ 	} else if (old_state == TCP_SYN_SENT)
+ 		WRITE_ONCE(sk->sk_err, ECONNRESET);
+@@ -4557,7 +4561,8 @@ int tcp_abort(struct sock *sk, int err)
+ 		smp_wmb();
+ 		sk_error_report(sk);
+ 		if (tcp_need_reset(sk->sk_state))
+-			tcp_send_active_reset(sk, GFP_ATOMIC);
++			tcp_send_active_reset(sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 		tcp_done(sk);
  	}
  
- discard_it:
-@@ -1992,7 +1995,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct sk_buff *skb)
- 		tcp_v6_timewait_ack(sk, skb);
- 		break;
- 	case TCP_TW_RST:
--		tcp_v6_send_reset(sk, skb);
-+		tcp_v6_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 		inet_twsk_deschedule_put(inet_twsk(sk));
- 		goto discard_it;
- 	case TCP_TW_SUCCESS:
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 1626dd20c68f..3b1c13136908 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -20,6 +20,8 @@
- #include <net/transp_v6.h>
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index e3167ad96567..18fbbad2028a 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3583,7 +3583,7 @@ void tcp_send_fin(struct sock *sk)
+  * was unread data in the receive queue.  This behavior is recommended
+  * by RFC 2525, section 2.17.  -DaveM
+  */
+-void tcp_send_active_reset(struct sock *sk, gfp_t priority)
++void tcp_send_active_reset(struct sock *sk, gfp_t priority, int reason)
+ {
+ 	struct sk_buff *skb;
+ 
+diff --git a/net/ipv4/tcp_timer.c b/net/ipv4/tcp_timer.c
+index d1ad20ce1c8c..7e7110bf3ea2 100644
+--- a/net/ipv4/tcp_timer.c
++++ b/net/ipv4/tcp_timer.c
+@@ -22,6 +22,7 @@
+ #include <linux/module.h>
+ #include <linux/gfp.h>
+ #include <net/tcp.h>
++#include <net/rstreason.h>
+ 
+ static u32 tcp_clamp_rto_to_user_timeout(const struct sock *sk)
+ {
+@@ -127,7 +128,8 @@ static int tcp_out_of_resources(struct sock *sk, bool do_reset)
+ 		    (!tp->snd_wnd && !tp->packets_out))
+ 			do_reset = true;
+ 		if (do_reset)
+-			tcp_send_active_reset(sk, GFP_ATOMIC);
++			tcp_send_active_reset(sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 		tcp_done(sk);
+ 		__NET_INC_STATS(sock_net(sk), LINUX_MIB_TCPABORTONMEMORY);
+ 		return 1;
+@@ -768,7 +770,7 @@ static void tcp_keepalive_timer (struct timer_list *t)
+ 				goto out;
+ 			}
+ 		}
+-		tcp_send_active_reset(sk, GFP_ATOMIC);
++		tcp_send_active_reset(sk, GFP_ATOMIC, SK_RST_REASON_NOT_SPECIFIED);
+ 		goto death;
+ 	}
+ 
+@@ -795,7 +797,8 @@ static void tcp_keepalive_timer (struct timer_list *t)
+ 		    icsk->icsk_probes_out > 0) ||
+ 		    (user_timeout == 0 &&
+ 		    icsk->icsk_probes_out >= keepalive_probes(tp))) {
+-			tcp_send_active_reset(sk, GFP_ATOMIC);
++			tcp_send_active_reset(sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 			tcp_write_err(sk);
+ 			goto out;
+ 		}
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3a1967bc7bad..836fd054eca4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -21,6 +21,7 @@
  #endif
  #include <net/mptcp.h>
+ #include <net/xfrm.h>
 +#include <net/rstreason.h>
-+
+ #include <asm/ioctls.h>
  #include "protocol.h"
  #include "mib.h"
+@@ -2565,7 +2566,8 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
  
-@@ -302,7 +304,7 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+ 		slow = lock_sock_fast(tcp_sk);
+ 		if (tcp_sk->sk_state != TCP_CLOSE) {
+-			tcp_send_active_reset(tcp_sk, GFP_ATOMIC);
++			tcp_send_active_reset(tcp_sk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 			tcp_set_state(tcp_sk, TCP_CLOSE);
+ 		}
+ 		unlock_sock_fast(tcp_sk, slow);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 3b1c13136908..a68d5d0f3e2a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -407,7 +407,7 @@ void mptcp_subflow_reset(struct sock *ssk)
+ 	/* must hold: tcp_done() could drop last reference on parent */
+ 	sock_hold(sk);
  
- 	dst_release(dst);
- 	if (!req->syncookie)
--		tcp_request_sock_ops.send_reset(sk, skb);
-+		tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	return NULL;
- }
- 
-@@ -369,7 +371,7 @@ static struct dst_entry *subflow_v6_route_req(const struct sock *sk,
- 
- 	dst_release(dst);
- 	if (!req->syncookie)
--		tcp6_request_sock_ops.send_reset(sk, skb);
-+		tcp6_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 	return NULL;
- }
- #endif
-@@ -899,7 +901,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	tcp_rsk(req)->drop_req = true;
- 	inet_csk_prepare_for_destroy_sock(child);
- 	tcp_done(child);
--	req->rsk_ops->send_reset(sk, skb);
-+	req->rsk_ops->send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
- 
- 	/* The last child reference will be released by the caller */
- 	return child;
+-	tcp_send_active_reset(ssk, GFP_ATOMIC);
++	tcp_send_active_reset(ssk, GFP_ATOMIC, SK_RST_REASON_NOT_SPECIFIED);
+ 	tcp_done(ssk);
+ 	if (!test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &mptcp_sk(sk)->flags))
+ 		mptcp_schedule_work(sk);
+@@ -1336,7 +1336,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			tcp_set_state(ssk, TCP_CLOSE);
+ 			while ((skb = skb_peek(&ssk->sk_receive_queue)))
+ 				sk_eat_skb(ssk, skb);
+-			tcp_send_active_reset(ssk, GFP_ATOMIC);
++			tcp_send_active_reset(ssk, GFP_ATOMIC,
++					      SK_RST_REASON_NOT_SPECIFIED);
+ 			WRITE_ONCE(subflow->data_avail, false);
+ 			return false;
+ 		}
 -- 
 2.37.3
 
