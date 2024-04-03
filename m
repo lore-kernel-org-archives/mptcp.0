@@ -1,211 +1,139 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1057417729
-	for <mptcp@lists.linux.dev>; Wed,  3 Apr 2024 02:21:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2176154BF9
+	for <mptcp@lists.linux.dev>; Wed,  3 Apr 2024 07:32:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712110917; cv=none; b=dRYKF0A1GtV4MFOfYoYeGOU66DxUcSpcTcTcS4QXA1H2Pq6PBfjUGiFbuReNLDHWLBCLN+zNbTaoLSn7g7uNuy4thl7AZq5gJbdNhiB8YunAY5O4M0tmPb/5nFXEkFOOFsjOAiWxo5Lbx7vxWjz46kNzSjRXfJreQMsKOsHyUCs=
+	t=1712129522; cv=none; b=dDT9wUNBGyzfzoxYBmvafu77s41jvLFMJE9TjXh/4fUzo+rvFqBdNqPZNZmtMa7JpAVyTDFBU1UJ/sVTvH1oZu4WRAM4yzYUA6+pfa5VMDpPjIGH8dOp10pJ2EhftaK78t0KihdvDiRFPzSFiTTzGczQU9iO8toZUxcWSNTftTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712110917; c=relaxed/simple;
-	bh=OZZ7OSHf1+nWeVqc4+NpA1DK+7ezp49wKEgQW9YiM5k=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tNSaUH7nQW3wjZ4f5o668N8A7qV+UnY0/dsueqO691n4MDLTxV74hp+HYx0Z8JJE5iv3IznukyeFvAgbgIpJHyYwsrSkHTT0xfv5FRo3ng7mQvuAYZWGBlu9Ux+yDa2uFi2a2tcGEHROftO4Dlt61JfNBrZSkLS7oKq54Y8bdyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaO+p9pS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712129522; c=relaxed/simple;
+	bh=IYGqofXTixcqgKsTRQdMNiZ655WhCgAGfO6FimJogF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=osI0P3VQGJZyoQQ3ymCHWwIfFv2Fca6x+VpV6J4OOOeIpPuteIn4Xnw8cBd5JJ+DgpUuOv8USOtkjnvcomcylpeuuOWtnWLUmPwWxJ2wTZJU2gUvvpKXGUxcYMB+FZKvbZFYCpBgwj+AR6EdpN5Ic0t2CfM9MiBdGGuuAJqrU1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KPOdAdfB; arc=none smtp.client-ip=209.85.210.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaO+p9pS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F604C433C7;
-	Wed,  3 Apr 2024 02:21:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712110916;
-	bh=OZZ7OSHf1+nWeVqc4+NpA1DK+7ezp49wKEgQW9YiM5k=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IaO+p9pSWgY/hkrMYiNapaWw07sM3aB6/cUj/KJa09WLxN6fDdjW+i6yOc2qcoatV
-	 VG5YTK5ffnBfk+s3Quz/pekQIoOlp7U8lq8iH6bHJ0qWxju6CxbP101k/kD3bq2jAo
-	 FN5a15Uu5E3tzGocMTvha03jrw34zoAbJnAnUKbTm7aBB2TZFNcJvX/gJCUMByzFlj
-	 Eikl1Z59PMk39iLwitZkp3NA/4auROtNEwdN7NtK7BPoLi/HDTNrzZSSPHuSUBFOKs
-	 4HO3eaueg+tB5gmf3s6xAvL3vxKJcSkvDiEx1DaqJXNw8OrzTyW5ONNIOkRAEWUiqG
-	 ZO0Jj9PTIW+cg==
-Message-ID: <693d06adab316872e68130afd47857a5b352ac0e.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v5 06/14] selftests/bpf: Add mptcp subflow
- example
-From: Geliang Tang <geliang@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Wed, 03 Apr 2024 10:21:52 +0800
-In-Reply-To: <4843ee1e-5983-34be-31a6-02b358616613@kernel.org>
-References: <cover.1711612876.git.tanggeliang@kylinos.cn>
-	 <e74823731ffc54c1512611c251cc6f7aa30d5926.1711612876.git.tanggeliang@kylinos.cn>
-	 <4843ee1e-5983-34be-31a6-02b358616613@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KPOdAdfB"
+Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-6e6c0098328so5207219b3a.3
+        for <mptcp@lists.linux.dev>; Wed, 03 Apr 2024 00:32:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712129520; x=1712734320; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=pNtMYAEo2tFm50CvZbzCEMtnb8xqmlnnhCu6vPSs0yE=;
+        b=KPOdAdfB5VRUivX1Ual+QylewZJsikaWq5jY0n4KbB3xmULDIeFfLQehonmvtreKAR
+         9tL3ULKv3DvLfKMRHQYX2PA7+P8RyMOj0ZyQPKwybbfWVxDV2oMlOvykkeJAFdKVEDyI
+         KedoCFS48Go6r+NLX0iqI99UijdoGK6FAHCo0alJPdvEk/eXaN5qEF+EQk61s/5Cpg3b
+         bVFcuJLRxAHswnl/PITbd1gFpJXkWAadC9aM/mlyxCz6oNVuRu/ARhWJRHhzpGXSlaF1
+         KiD7iiDtco1RPGEhXoHcpDMtNDqAbsniFLMDjOLVcxsIbnTXWXgWeAUlW1UHbUPFHYCK
+         aLZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712129520; x=1712734320;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=pNtMYAEo2tFm50CvZbzCEMtnb8xqmlnnhCu6vPSs0yE=;
+        b=Yt15oz+ltrye2bqUjZos/KuryIolPscy97k1V4fOfGFEJNfWW7xasRd6WQldPL4PmS
+         +TpECn6rINcdF8iEFrA8y7yBQBE63HY5DDXlEZRKYkcaMm526f61o8QApoC4sGWfz1ZH
+         jsWeQagUXxlHkNrowz9udgeYuArIMbv/kWlE2x3Y/hHLp4Em0SrEHcgE8JI2j08jSjVO
+         AOaTaqHuDwdcemaZiauF18PSP2NsGo3Ott4HiNAIBIIhe3DKeWB/sA1wqYI2j9Ev7RUm
+         fq0DGr6oFXqiB8Y3NIS+8y9cocdrh2jMuZ/DgyQngJjE05cr7nT9Bk+cBZctBRBIvh1I
+         kHKw==
+X-Gm-Message-State: AOJu0YxgBz+wNPXSTLvDvjkB6ZeNwVulLyY29pZVJ0KWyMafrIlobuB6
+	xPojkHpn/voihvGNifhnfSpmfKoPdw+0miKHKgy//FqLXPON4PfH
+X-Google-Smtp-Source: AGHT+IFjJ4YKli3gCiijcxM+vyWCFeOt2dMZheZQbq9K0r1XuLrzNH4ZMCiXy8XjIrGCQ3X0TtLUAA==
+X-Received: by 2002:a05:6a20:121e:b0:1a3:6404:7f0a with SMTP id v30-20020a056a20121e00b001a364047f0amr11815680pzf.50.1712129520346;
+        Wed, 03 Apr 2024 00:32:00 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.21])
+        by smtp.gmail.com with ESMTPSA id c2-20020a170902d48200b001e03b2f7ab1sm12563067plg.92.2024.04.03.00.31.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 03 Apr 2024 00:31:59 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	mhiramat@kernel.org,
+	mathieu.desnoyers@efficios.com,
+	rostedt@goodmis.org,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org
+Cc: mptcp@lists.linux.dev,
+	netdev@vger.kernel.org,
+	linux-trace-kernel@vger.kernel.org,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net-next 0/6]  Implement reset reason mechanism to detect
+Date: Wed,  3 Apr 2024 15:31:38 +0800
+Message-Id: <20240403073144.35036-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-04-01 at 10:06 -0700, Mat Martineau wrote:
-> On Thu, 28 Mar 2024, Geliang Tang wrote:
->=20
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> >=20
-> > Move Nicolas's patch into bpf selftests directory. This example
-> > added a
-> > test that was adding a different mark (SO_MARK) on each subflow,
-> > and
-> > changing the TCP CC only on the first subflow.
-> >=20
-> > This example shows how it is possible to:
-> >=20
-> > =C2=A0=C2=A0 Identify the parent msk of an MPTCP subflow.
-> > =C2=A0=C2=A0 Put different sockopt for each subflow of a same MPTCP
-> > connection.
-> >=20
-> > Here especially, we implemented two different behaviours:
-> >=20
-> > =C2=A0=C2=A0 A socket mark (SOL_SOCKET SO_MARK) is put on each subflow =
-of a
-> > same
-> > =C2=A0=C2=A0 MPTCP connection. The order of creation of the current sub=
-flow
-> > defines
-> > =C2=A0=C2=A0 its mark. The TCP CC algorithm of the very first subflow o=
-f an
-> > MPTCP
-> > =C2=A0=C2=A0 connection is set to "reno".
-> >=20
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/76
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->=20
-> Hi Geliang -
->=20
-> This patch (and patch 07/14) are listed as "New" in patchwork, while
-> the=20
-> rest of the series is superseded by "refactor mptcp bpf tests".
->=20
-> Do patches 6 and 7 of this series still need review? Are there any=20
-> dependencies on the "refactor bpf tests" series?
+From: Jason Xing <kernelxing@tencent.com>
 
-Hi Mat,
+In production, there are so many cases about why the RST skb is sent but
+we don't have a very convenient/fast method to detect the exact underlying
+reasons.
 
-I changed them as "Superseded" since v6 of this series has been sent
-out yesterday.
+RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
+and active kind (like tcp_send_active_reset()). The former can be traced
+carefully 1) in TCP, with the help of drop reasons, which is based on
+Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
+RFC 8684. The latter is relatively independent, which should be
+implemented on our own.
 
-Thanks,
--Geliang
+In this series, I focus on the fundamental implement mostly about how
+the rstreason mechnism and the detailed passive part works as an
+example, not including the active reset part. In future, we can go
+further and refine those NOT_SPECIFIED reasons.
 
->=20
->=20
-> Thanks,
-> Mat
->=20
->=20
-> > ---
-> > .../selftests/bpf/progs/mptcp_subflow.c=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
-=C2=A0 | 73
-> > +++++++++++++++++++
-> > 1 file changed, 73 insertions(+)
-> > create mode 100644
-> > tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> >=20
-> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > new file mode 100644
-> > index 000000000000..9553099ffd5f
-> > --- /dev/null
-> > +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > @@ -0,0 +1,73 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/* Copyright (c) 2020, Tessares SA. */
-> > +/* Copyright (c) 2024, Kylin Software */
-> > +/* Author: Nicolas Rybowski */
-> > +
-> > +#include <sys/socket.h> // SOL_SOCKET, SO_MARK, ...
-> > +#include <linux/tcp.h>=C2=A0 // TCP_CONGESTION
-> > +#include <linux/bpf.h>
-> > +#include <bpf/bpf_helpers.h>
-> > +#include "bpf_tcp_helpers.h"
-> > +
-> > +char _license[] SEC("license") =3D "GPL";
-> > +
-> > +#ifndef SOL_TCP
-> > +#define SOL_TCP 6
-> > +#endif
-> > +
-> > +#ifndef TCP_CA_NAME_MAX
-> > +#define TCP_CA_NAME_MAX 16
-> > +#endif
-> > +
-> > +char cc[TCP_CA_NAME_MAX] =3D "reno";
-> > +
-> > +/* Associate a subflow counter to each token */
-> > +struct {
-> > +	__uint(type, BPF_MAP_TYPE_HASH);
-> > +	__uint(key_size, sizeof(__u32));
-> > +	__uint(value_size, sizeof(__u32));
-> > +	__uint(max_entries, 100);
-> > +} mptcp_sf SEC(".maps");
-> > +
-> > +SEC("sockops")
-> > +int mptcp_subflow(struct bpf_sock_ops *skops)
-> > +{
-> > +	__u32 init =3D 1, key, mark, *cnt;
-> > +	struct mptcp_sock *msk;
-> > +	struct bpf_sock *sk;
-> > +	int err;
-> > +
-> > +	if (skops->op !=3D BPF_SOCK_OPS_TCP_CONNECT_CB)
-> > +		return 1;
-> > +
-> > +	sk =3D skops->sk;
-> > +	if (!sk)
-> > +		return 1;
-> > +
-> > +	msk =3D bpf_skc_to_mptcp_sock(sk);
-> > +	if (!msk)
-> > +		return 1;
-> > +
-> > +	key =3D msk->token;
-> > +	cnt =3D bpf_map_lookup_elem(&mptcp_sf, &key);
-> > +	if (cnt) {
-> > +		/* A new subflow is added to an existing MPTCP
-> > connection */
-> > +		__sync_fetch_and_add(cnt, 1);
-> > +		mark =3D *cnt;
-> > +	} else {
-> > +		/* A new MPTCP connection is just initiated and
-> > this is its primary
-> > +		 *=C2=A0 subflow
-> > +		 */
-> > +		bpf_map_update_elem(&mptcp_sf, &key, &init,
-> > BPF_ANY);
-> > +		mark =3D init;
-> > +	}
-> > +
-> > +	/* Set the mark of the subflow's socket to its apparition
-> > order */
-> > +	err =3D bpf_setsockopt(skops, SOL_SOCKET, SO_MARK, &mark,
-> > sizeof(mark));
-> > +	if (err < 0)
-> > +		return 1;
-> > +	if (mark =3D=3D 1)
-> > +		err =3D bpf_setsockopt(skops, SOL_TCP,
-> > TCP_CONGESTION, cc, TCP_CA_NAME_MAX);
-> > +
-> > +	return 1;
-> > +}
-> > --=20
-> > 2.40.1
-> >=20
-> >=20
-> >=20
->=20
+Here are some examples when tracing:
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
+<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
+        skaddr=x src=x dest=x state=x reason=NO_SOCKET
+
+[1]
+Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
+
+Note:
+It's based on top of https://patchwork.kernel.org/project/netdevbpf/list/?series=840182
+
+
+Jason Xing (6):
+  net: introduce rstreason to detect why the RST is sent
+  rstreason: prepare for passive reset
+  rstreason: prepare for active reset
+  tcp: support rstreason for passive reset
+  mptcp: support rstreason for passive reset
+  rstreason: make it work in trace world
+
+ include/net/request_sock.h |  3 +-
+ include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
+ include/net/tcp.h          |  2 +-
+ include/trace/events/tcp.h | 37 +++++++++++++--
+ net/dccp/ipv4.c            | 10 ++--
+ net/dccp/ipv6.c            | 10 ++--
+ net/dccp/minisocks.c       |  3 +-
+ net/ipv4/tcp.c             | 15 ++++--
+ net/ipv4/tcp_ipv4.c        | 14 +++---
+ net/ipv4/tcp_minisocks.c   |  3 +-
+ net/ipv4/tcp_output.c      |  4 +-
+ net/ipv4/tcp_timer.c       |  9 ++--
+ net/ipv6/tcp_ipv6.c        | 17 ++++---
+ net/mptcp/protocol.c       |  4 +-
+ net/mptcp/subflow.c        | 33 ++++++++++----
+ 15 files changed, 209 insertions(+), 48 deletions(-)
+ create mode 100644 include/net/rstreason.h
+
+-- 
+2.37.3
 
