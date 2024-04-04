@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E658086ACA
-	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 13:03:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6581A126F3C
+	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 13:03:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712235837; cv=none; b=nax+yoSyAiOcBq4pIteLCnleZAOZiAr89lXwTze4oqXIgSppnp1qnefPK8jlyp7Rt013HyeLaPNNK+05ohsWQl6iCJXhWtQb2CT+5Xspq/xDHT9+gzj6GC+lz+7Sby2g1B9vkayCtrce7HmA3VGbXgoCudaKvY0zAVmp9OvSFd0=
+	t=1712235838; cv=none; b=QDxfAiSO+Hqi8X6LxhlUM14bXhRR11KftWoz+hx9ZKp5dTYsLP6VjfFls5sWOXtEJa+lvT584PFCw/a0pjR7vM4s6P47OdPJ/8nQdWn2VnX+9xfVuDjnwzYSGGKwAJI5Edn7bRR2R72cLyR16BatPo579JTkmgxm4NWE4d0TL4s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712235837; c=relaxed/simple;
-	bh=wypyHMo6J5VAhOsJcmWPyZix3yqAdti89mNEUG6GFGg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=uSsUv/9ntmjqgMeWorRht+H7m/RfJA/qbBbDVdkEplw8llfs/wMUd0TV9GiTI0PPVliptGi7XQOluy31maL4ViskwC0dkeHO/Jir2BdHs0uFPuEAJrQoTVJq1AsCXEprFjbup46AN3yBe5OU1QHBvfRPeOiSuOB3PP0Snuc1XZE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CBPbd/nF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712235838; c=relaxed/simple;
+	bh=/Pc3wOJ+00tHqo8MDJm/cNhGbriSzwm6ucNRtr1wM7Y=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=Rg0cRv9PUyitKbUstAfyuw/C4fHQz+Lkm2wj+jFnpdxRgUJ6RvnATzeQ2wJC5e8EvSRU/XzJHKZFdycl1RnD5aYsxst/d0Bz2bzXx65CQDrc4dLyEtU8lo3JUAR8CYeZOfgGvJvKvKrx2wtZncW5Fvdcw+m/qxDrnbYCykM77fQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RI/CDzFg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CBPbd/nF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8773FC43394;
-	Thu,  4 Apr 2024 13:03:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RI/CDzFg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCC0C43390;
+	Thu,  4 Apr 2024 13:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712235836;
-	bh=wypyHMo6J5VAhOsJcmWPyZix3yqAdti89mNEUG6GFGg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=CBPbd/nFvGl9CMaSHCynrrxEFoKYHdZVR1OfmxZmcm3svgD+8Ciu07CJmrDKb3rab
-	 5kOrsDqskfUq71kZFyfKTScrgq9BNonoojkiS2PLP72lJLnoeHC97YRhNLzmWonqJ/
-	 FtVpsdc+5jYTztkBcXOypztoDJRE/HFfXYKD3FODjf3HzypDlgXKF6+tNkaOgWLEN1
-	 SA9t122PlgCrPtyqUUUo6W0JEcwHctxeSOApRPt/FfCtRsKCQYFDDv5ozBLEWcEes4
-	 SwGJXktFUaupHUpefl8jZR8b8DvIhqg/Vj9CwlwVWQtaV3t92zrzgyyKFsz4tqhtSP
-	 kif2yefeBP18A==
+	s=k20201202; t=1712235838;
+	bh=/Pc3wOJ+00tHqo8MDJm/cNhGbriSzwm6ucNRtr1wM7Y=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=RI/CDzFgaLo0h4h5o1X5EUv5ClrEyrz+QB0b2O/W5PjioxB22WcPnJk4/jtdqeb3f
+	 T1G2SEcMrb4pBXBmYftftYdStxvmrP573znVlCYd/uSykYXOxAKCzj2UXW8gl6Oaqt
+	 /Oew/28WP7TK5PxVTPoF/X+RJKHAQAjBzBc8mEhR0p2MLSDlYS/vPEODaw3OQYC4pm
+	 28g1vArEr/CfUt0XPxpIgZB/etP4G8zbRwhtGjiyujyE9FR3zYxiJSEP5/9oDmzZaM
+	 C1hPmvaODUrwGdsgAB+Ay6Jc2tMQ5nb5Ws95xRngIDlWz7XxT/tNq5FE3W7PDlEl97
+	 +AJ2YzRiB2DxA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 0/9] refactor mptcp bpf tests
-Date: Thu,  4 Apr 2024 21:03:02 +0800
-Message-Id: <cover.1712235379.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 1/9] selftests/bpf: Add RUN_MPTCP_TEST macro
+Date: Thu,  4 Apr 2024 21:03:03 +0800
+Message-Id: <3277d8309eb4f32fe8c26d0590e66c7da439c0f3.1712235379.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
+In-Reply-To: <cover.1712235379.git.tanggeliang@kylinos.cn>
+References: <cover.1712235379.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,45 +45,40 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v6:
-- drop patch 1 in v5 and rebased.
+Each MPTCP subtest tests test__start_subtest(suffix), then invokes
+test_suffix(). It makes sense to add a new macro RUN_MPTCP_TEST to
+simpolify the code.
 
-v5:
- - drop patch 5 in v4:
-  Squash to "selftests/bpf: Add bpf scheduler test" 4 cleanup
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++----
+ 1 file changed, 8 insertions(+), 4 deletions(-)
 
-v4:
- - add set_nonblock to make BPF tests stable.
- - split 'Squash to "selftests/bpf: Add bpf scheduler test"' into 4 patches.
-
-v3:
- - part 1, bpf schedulers.
-
-v2:
- - add two more helpers, send_single_byte and send_recv_data.
-
-Refactor mptcp bpf tests using newly added macros MPTCP_BASE_TEST,
-RUN_MPTCP_TEST and MPTCP_SCHED_TEST macro.
-
-Geliang Tang (9):
-  selftests/bpf: Add RUN_MPTCP_TEST macro
-  Squash to "selftests/bpf: Add bpf scheduler test" 1 verify
-  Squash to "selftests/bpf: Add bpf scheduler test" 2 time
-  selftests/bpf: Add MPTCP_SCHED_TEST macro
-  Squash to "selftests/bpf: Add bpf_first scheduler & test"
-  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
-  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
-  Squash to "selftests/bpf: Add bpf_red scheduler & test"
-  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 265 +++++-------------
- .../selftests/bpf/progs/mptcp_bpf_bkup.c      |   1 +
- .../selftests/bpf/progs/mptcp_bpf_burst.c     |   1 +
- .../selftests/bpf/progs/mptcp_bpf_first.c     |   1 +
- .../selftests/bpf/progs/mptcp_bpf_red.c       |   1 +
- .../selftests/bpf/progs/mptcp_bpf_rr.c        |   1 +
- 6 files changed, 77 insertions(+), 193 deletions(-)
-
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index cbdb15922949..c29c81239603 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -653,12 +653,16 @@ static void test_burst(void)
+ 	mptcp_bpf_burst__destroy(burst_skel);
+ }
+ 
++#define RUN_MPTCP_TEST(suffix)					\
++do {								\
++	if (test__start_subtest(#suffix))			\
++		test_##suffix();				\
++} while (0)
++
+ void test_mptcp(void)
+ {
+-	if (test__start_subtest("base"))
+-		test_base();
+-	if (test__start_subtest("mptcpify"))
+-		test_mptcpify();
++	RUN_MPTCP_TEST(base);
++	RUN_MPTCP_TEST(mptcpify);
+ 	if (test__start_subtest("default"))
+ 		test_default();
+ 	if (test__start_subtest("first"))
 -- 
 2.40.1
 
