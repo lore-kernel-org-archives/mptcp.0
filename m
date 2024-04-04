@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C5DE127B7D
-	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 17:50:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0DE8410962
+	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 17:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712253005; cv=none; b=PUSqeRdqm3ysFPKrdykqSXEuFCm+lP39IIj8R5aJeUJkYKpkabvptpSLDKgB5snpdw4Kjg7WupGi/hbTWmMNCQhZqZ3eEavugMuO3btAaoh1KE3ekkMBK69l5SmPnFEKPS38ICZ5IvUK+J/l3Bw4Q+P19aqA9oNt+8iBs2kCZfQ=
+	t=1712253038; cv=none; b=Puq44ZFYsScWz4tieTnsHAq+2gvLE5a4EIRbQxh3PMkbXRYYvCB8xmKqNhgsYcO6l0yHizGv+arI9IUL597oq/xJdVElpKlqE9vJpV8apR40Jac2YT0qWmsEpRNdvU7qUuLdl49yzto/kqnZypxYndrUAq+xrjx/PfUuOtht02I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712253005; c=relaxed/simple;
-	bh=S6nWyPFvGMW4NUTAWnIrh5TIWimZgoDoNPJWQtuyu9Y=;
+	s=arc-20240116; t=1712253038; c=relaxed/simple;
+	bh=lno5bKqBMWFSFXNQvquAg4kiULhu6V+2HOAmsQxViWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FlfMKu/D7VsOAABzNZ/AJOasgQQ1MMxkX7KpLxSoKbNtXs/5Ucq6wkJB26NdFgjPMGXqbmky6nYyNjsHSfQ35kvOSKKMGXSgMEOakp6x27NBnDns39VUZ/TB5DXwDACVHmN59g09SilmFc9RDmApmmrUEiafSwNK7gMClQUaM08=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lul7uX76; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZiQ52M36RiD8XE71ejkx7WXbtYjBcy6AyKfN38DVcOtjbahYLarMYbWmRyTTyBlJ5VlIjeG03xqms2j6Q/qNQCQuIkNAdxwqmf1bnMBn3KgqTYBU6Z2Ql6QjeW94VEL7kyquL5w2snfS6z4oagblRQwm8eNyxmzJaUAnj/NbvAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EXkYn2Rm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lul7uX76"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 561D3C433F1;
-	Thu,  4 Apr 2024 17:50:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EXkYn2Rm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C88B4C433F1;
+	Thu,  4 Apr 2024 17:50:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712253005;
-	bh=S6nWyPFvGMW4NUTAWnIrh5TIWimZgoDoNPJWQtuyu9Y=;
+	s=k20201202; t=1712253037;
+	bh=lno5bKqBMWFSFXNQvquAg4kiULhu6V+2HOAmsQxViWk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lul7uX76kdsIe/mAlXBfPFQnnOlE8/P1LJi2NsnvLfET1K2kbWFngGyM1biPjFgJ+
-	 G47ETBeYndvsIdU4L1idn4IT31wuh/bNEkR35HNeY4AgBjoJAC3cEuplP8m0POL/YE
-	 GWRxvsxUTcvzPVTfAmssoeDZNa8e0n8u3oYCNRB1WAvWwS4jw3YnGTIBN/aFBmJyQ5
-	 7Z3024T736g1gHX9t9BG0TYVAPX2E63245Y7S7Rv3JN/sIAzjJnNgjf215dt8/Jd0i
-	 sIQyrDBHRCDy7HkcPs2XNL6g9LfIJ3kV15Kc7j1hK+x60U7tdxDwevGISO6QUQNE7j
-	 8fzzkWsRcV67A==
-Message-ID: <8f5499c7-a5b5-43b2-805c-e09887472f06@kernel.org>
-Date: Thu, 4 Apr 2024 19:50:02 +0200
+	b=EXkYn2RmBtdO1Ps7aexK17XD6sOoRaCNMlVoh9eJbtq0t+ZlSwB1zUSt9UYwCypYQ
+	 san+1OcytlpCTtaoZqakzp/iHE8WSxlYib8bQvx+pLpGkfeF1Pl3uW+C6WPL069DeL
+	 Ug0br3WdYKrr3ghX3FPA1UUFH18PCHgKqoU7y2bUqqvFYFYLG1QSn+G8ltjeNIhqt3
+	 pUZ+14Wbn8bHcH7H/JXMWM7RTb/a8kJWIGDvlkLnd3OJ+4jSQezhJvliOQW0Z594K4
+	 V2IsoTxYgFb0klZHGcP1QY+w4PC3IyWkDdKo4N6+0ovadjULMYvmtgUPDPLQ3XGCxl
+	 0KzLqYKHOjmUw==
+Message-ID: <6770630c-295e-494a-ba7f-d2b80c056ecb@kernel.org>
+Date: Thu, 4 Apr 2024 19:50:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 2/9] Squash to "selftests/bpf: Add bpf
- scheduler test" 1 verify
+Subject: Re: [PATCH mptcp-next v6 3/9] Squash to "selftests/bpf: Add bpf
+ scheduler test" 2 time
+Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1712235379.git.tanggeliang@kylinos.cn>
- <266c39f2ef6f77d139b0abb015b255a0dfb2307c.1712235379.git.tanggeliang@kylinos.cn>
-Content-Language: en-GB
+ <b023adbf246022ec4b987c276f5848c438d882b0.1712235379.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <266c39f2ef6f77d139b0abb015b255a0dfb2307c.1712235379.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b023adbf246022ec4b987c276f5848c438d882b0.1712235379.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,118 +96,13 @@ Hi Geliang,
 On 04/04/2024 15:03, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Add send_data_and_verify helper.
+> Move time related code into send_data_and_verify.
 
-Please always add the reason, even if it is just a "to avoid duplicated
-code".
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/bpf/prog_tests/mptcp.c  | 40 ++++++++++++++-----
->  1 file changed, 30 insertions(+), 10 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index c29c81239603..e1114745da63 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -457,23 +457,44 @@ static int has_bytes_sent(char *addr)
->  	return system(cmd);
->  }
->  
-> -static void test_default(void)
-> +static void send_data_and_verify(char *msg, int addr1, int addr2)
->  {
->  	int server_fd, client_fd;
-> -	struct nstoken *nstoken;
->  
-> -	nstoken = sched_init("subflow", "default");
-> -	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
-> -		goto fail;
->  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-> +	if (!ASSERT_NEQ(server_fd, -1, "start_mptcp_server"))
-> +		return;
-> +
->  	client_fd = connect_to_fd(server_fd, 0);
-> +	if (!ASSERT_NEQ(client_fd, -1, "connect_to_fd"))
-> +		goto close_server;
->  
-> -	send_data(server_fd, client_fd, "default");
-> -	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
-> -	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
-> +	send_data(server_fd, client_fd, msg);
-> +
-> +	if (addr1)
+Please explain the reason. Now the time will be taken after having
+waited for the server to stop, the info is then different. It might be
+OK to do that, but then please explain.
 
-Maybe clearer to use booleans if you use addr1 and addr2 as such, no?
-
-> +		ASSERT_OK(has_bytes_sent(ADDR_1), "Should have bytes_sent on addr1");
-> +	else
-> +		ASSERT_GT(has_bytes_sent(ADDR_1), 0, "Shouldn't have bytes_sent on addr1");
-> +	if (addr2)
-> +		ASSERT_OK(has_bytes_sent(ADDR_2), "Should have bytes_sent on addr2");
-> +	else
-> +		ASSERT_GT(has_bytes_sent(ADDR_2), 0, "Shouldn't have bytes_sent on addr2");
-
-In case of error, will we directly understand from which scheduler the
-error is linked to? I understood that some BPF tests can be run in
-parallel, maybe we need a prefix to know which tests had an issue? Or
-maybe the prefix is not needed because these schedulers tests are
-executed in sequence and we print which one is being executed?
-
-In other words, what do you see if on purpose you create an error by
-inverting 'addr2' value for example in only one sched test, and you
-launch the tests with 'test_progs -j'?
-
->  
->  	close(client_fd);
-> +close_server:
->  	close(server_fd);
-> +}
-> +
-> +static void test_default(void)
-> +{
-> +	struct nstoken *nstoken;
-> +
-> +	nstoken = sched_init("subflow", "default");
-> +	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
-> +		goto fail;
-> +
-> +	send_data_and_verify("default", 1, 1);
-
-
-It is good to have such helper to reduce duplicated code, but having:
-
-  1, 1
-
-is really not clear, no?
-
-Maybe clearer (especially later if you use this a lot), to use macros?
-e.g. to have:
-
-  send_data_and_verify("default", USE_ADDR1, NO_ADDR2);
-
-or
-
-  send_data_and_verify("default", WITH_DATA, WITHOUT_DATA);
-
-(we might understand one is for addr1 and the other for addr2)
-
-WDYT? I don't know if it is clearer.
-
-> +
->  fail:
->  	cleanup_netns(nstoken);
->  }
-> @@ -663,8 +684,7 @@ void test_mptcp(void)
->  {
->  	RUN_MPTCP_TEST(base);
->  	RUN_MPTCP_TEST(mptcpify);
-> -	if (test__start_subtest("default"))
-> -		test_default();
-> +	RUN_MPTCP_TEST(default);
->  	if (test__start_subtest("first"))
->  		test_first();
->  	if (test__start_subtest("bkup"))
+(always add the reason why we need a patch, not just what you did)
 
 Cheers,
 Matt
