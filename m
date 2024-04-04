@@ -1,121 +1,144 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB8AA6CDBC
-	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 08:16:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 344145D734
+	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 10:55:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712218611; cv=none; b=dSzdN4KVfEJSAOHjYhGyNQp+R/uMzHfPxf41IbWZdRnt7fogZD7Um3Wv7OA1VTLpGTaZFSfFYnvf9DwTsBRGDEk7aqa9LZ8hUL6HCa1RHV8WCst4G11jZ03jIR1T8LRDzA0buE6Y1Sd0ir5GD4GiAGDmBRgz5QiGWHP6brUgmZo=
+	t=1712228143; cv=none; b=DPmFehQTySn7ZuaMtgusHyCtOygqq0GybCPznyUSrfeJVfNxyeTL24En9UNyWpXjeth9ELHLoMELyLAzOcoHPvNC6OB3M7Lg+SGrH786l3K0FuhjzmvpvgkvxuGFleUAT9zj0HpUsja+VFLJRxyMKnHXDeYjFM9uB1Hvnyn6iyI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712218611; c=relaxed/simple;
-	bh=on38X3gxRlR/1bjHtDEk7+NWERmR/5b4/+P3Ac8y+/w=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=JoS3j+S/dhLH+X9QlHkJw79KCldhw+NlSiKS/m2f8xEXtVKNvfdS/EbFyn25e7DiKTQ27ihJt/AoJT9tZuM6VH1vNWikABLPVNrs1Nq9ct6XKeEYUGjtpAFqSoIID2EXeEYLcX53qQAE8jJ9SmAzGxSr+Q8Y7KMXhWmd8ASfkmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DtnZf1yZ; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712228143; c=relaxed/simple;
+	bh=NeCOkHr2Vd1f3rsOVEkr47U7CjeaHRTe9IAJI0adKw0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B4tGP1ywZGd95M8B9Z20jObg/BkQ4wl/wIe1WBXweTxlMEFKSnGgNiK77UbcmjsQ3XXnFBM00ghxHj5gPYJ4mx8VuwEMi1aqlNQQR+G8sDQugdwTWaaFwcLfznKzt5J4BAm4d5SRfMeQdBe14CS/b52NVr4P/fjymKL3RKJFZ0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVvSsOpj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DtnZf1yZ"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-69936145586so634206d6.0
-        for <mptcp@lists.linux.dev>; Thu, 04 Apr 2024 01:16:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712218609; x=1712823409; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Z16q3MctzPlnyIU8Z4b5jlAomm8ZYVtx1Plpwp/Rb7o=;
-        b=DtnZf1yZb8x/vp+LXDGxjVvtFdkxAgEz8D7/6y0vWR2PJONOFvmUEUO6eLyZwlNoko
-         85lQsevllIp+LvQnAKnrGOLLNzz3CqSpiGBnDyRqEEj/QR9l2xUzV0DutCRwgQlmX2FT
-         KBFdli7H9UKc6POyDKtHyXqZc8jPgNLCPrhvl/jb2qmuvxcOKNnSBWajCiZh0kH2YJBz
-         Pbs8ajHhz464AtZ8nZIunp15rSGPfgY1PrFNKk0XAFiK5Uzjg/UAS8Nrg2ZAXhiT/b6f
-         GdKmox4fedCDGNACA5DtSRMuSKHktIVox/0b3kgLiE5oYsxXHnx2iTiVX55ZXwkUcUKV
-         fhDg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712218609; x=1712823409;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Z16q3MctzPlnyIU8Z4b5jlAomm8ZYVtx1Plpwp/Rb7o=;
-        b=gs35hcPxiswXu3vOzv0NeRvhI5Q8JAPcl+ZbxtjfGTwTNmFcRsN2JaNhdWI1R3KJPS
-         dzmfFGlq+1lIpFKMj89xxc6nnYOM9hBk2qKI+6hZVcUy/OEbq0ZVEdab8ws9l7b5Bc95
-         UciB5AFKI6BzH6TjBqND/isJRFk06fzD0q2FEoib9NyKYEKdsSKEcH98EXgBvlGuaVMA
-         MrEr4s4QfMv33Sgm92IUA6AYOorX6ABUrgKBV/wbTu6EuIFqYaQBQDKcrewDLE1ZAynw
-         0GKKKinHPkXtqIPiIEODfUhWUVpeKoeBpbD6xt570LxLAwj3lSc6HlJwOx3DblcchLf+
-         hhoA==
-X-Gm-Message-State: AOJu0Yw+hGFMveYaK6xgIFUNfcQH09hcAiuakZ9TJ1orr7NPPJubjUrc
-	0apg5LeivNW9jHpGNCy5Mp0vaZAiXJiXnel5ZSHR5FtC2DeQK9c=
-X-Google-Smtp-Source: AGHT+IEXE88FUkFebCmSrw66hLTpUcCEjtaWX/QhA65j1sAA6VW9vKhOassPCGy4keZOzT/oJnr2sQ==
-X-Received: by 2002:a05:6214:1cc7:b0:699:514:3046 with SMTP id g7-20020a0562141cc700b0069905143046mr2181615qvd.15.1712218608679;
-        Thu, 04 Apr 2024 01:16:48 -0700 (PDT)
-Received: from [127.0.0.1] ([40.76.117.206])
-        by smtp.gmail.com with ESMTPSA id eh22-20020a05622a579600b00430ac082732sm7472804qtb.70.2024.04.04.01.16.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 01:16:48 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jason Xing <kernelxing@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240404072047.11490-1-kerneljasonxing@gmail.com>
-References: <20240404072047.11490-1-kerneljasonxing@gmail.com>
-Subject: Re: [PATCH net-next 0/6] Implement reset reason mechanism to
- detect
-Message-ID: <481dbbe6-94ee-f8f1-7331-4c797af63b02@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 04 Apr 2024 08:16:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVvSsOpj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45965C43390;
+	Thu,  4 Apr 2024 10:55:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712228142;
+	bh=NeCOkHr2Vd1f3rsOVEkr47U7CjeaHRTe9IAJI0adKw0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SVvSsOpjE424ZmJu4li9DOHJf5hXQO1h3s9G11Haa7g9f0CyljaWw67gqmy8Mng4f
+	 yrWtnk41nYOMqtPu0z50cGPT7bs5ZPXcWMCPJafnhDDmRiPT5QC/GSdHR2k74wanC+
+	 D+bA5endsEuodMGrroeJw5izQOYagU+zc7mef3OBCMYx0RfhUbSnEFtbex02MlJOjK
+	 FQErS9czq8kz88FPD1zJRP7sxrHC5Zgiyy7l64TYfLa4knAj92Jw/KXiOCiY5/pwLo
+	 O/tzmMiHyaerB24Z95JphChyRL2lQ5g0dscy5vBcG+lrMYt03K/STOgDlDBXMOmT8q
+	 T1V1Relf+E99g==
+Message-ID: <51250875-3dcd-49be-af94-b918eb6ac27c@kernel.org>
+Date: Thu, 4 Apr 2024 12:55:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH bpf-next] selftests/bpf: Add pid limit for mptcpify prog
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <8987e2938e15e8ec390b85b5dcbee704751359dc.1712054986.git.tanggeliang@kylinos.cn>
+ <171207782751.23966.17498315397998033703.git-patchwork-notify@kernel.org>
+ <3cb9d44995621e0cf598146875706480e620dc57.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3cb9d44995621e0cf598146875706480e620dc57.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Jason,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 03/04/2024 03:00, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Tue, 2024-04-02 at 17:10 +0000, patchwork-bot+netdevbpf@kernel.org
+> wrote:
+>> Hello:
+>>
+>> This patch was applied to bpf/bpf-next.git (master)
+>> by Andrii Nakryiko <andrii@kernel.org>:
+>>
+>> On Tue,  2 Apr 2024 18:50:21 +0800 you wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> In order to prevent mptcpify prog from affecting the running
+>>> results
+>>> of other BPF tests, a pid limit was added to restrict it from only
+>>> modifying its own program.
+>>>
+>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>> Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+>>>
+>>> [...]
+>>
+>> Here is the summary with links:
+>>   - [bpf-next] selftests/bpf: Add pid limit for mptcpify prog
+>>     https://git.kernel.org/bpf/bpf-next/c/c07b4bcd5163
+>>
+>> You are awesome, thank you!
+> 
+> Please also merge this patch into our MPTCP export branch, since some
+> patches in our patchwork depond on it.
+> 
+> These two patches need to be merged too:
+> 
+> selftests/bpf: Use connect_fd_to_fd in bpf_tcp_ca
+> selftests/bpf: Drop settimeo in do_test
+> 
+> I changed the states of them all as "Queued" and delegated them to you
+> in our patchwork.
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8550992244
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6b1f99284a95
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D841302
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+I thought the bpf-next tree was synced with net-next every week, but no.
+So I just added them in our tree ('fixes for net-next', but that's
+temporally).
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
