@@ -1,40 +1,40 @@
-Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC04120B3E
-	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 05:54:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FFE443AB7
+	for <mptcp@lists.linux.dev>; Thu,  4 Apr 2024 06:03:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712210073; cv=none; b=FSydyzSzMNCAu/RqP+6eIwYe409txL6vawi09ebIjXcMweWg8O+nBx48Y2e3D8OfQiwUNGNzSUwMd0Qo6eey/RajxAx5N0AAewLNSNebU+8MTDRporueJQ0//jgK9rRGQO7QelSnDopjikvaXiWCow282z1WVizudhz5vNAgP9w=
+	t=1712210606; cv=none; b=M1m6WhhKk2mLjOp2ykh7mfuyTXDob2KYtaAAHGCkGs0gQzIfQNgHmI+EuL6tydI+aZD8sGJee+Fc5ilbN3uhXa0H4mMpFTKDuDgxB4fqRQkGCJTg4uSSiIsa+w4G3o+uY7OlY+VGFJc16eE/RBNo0TTSF6Z2CXi/cU8UMcRwmgM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712210073; c=relaxed/simple;
-	bh=V+m4qd+d1fefL6upImWHfPJTEUCXar+iulDGwua+gbk=;
+	s=arc-20240116; t=1712210606; c=relaxed/simple;
+	bh=lDjjUYnYOCDDCjKRppbWACBxT0WqyIjAB63wTMEYgL0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tI4c9AdzEqr9fCxGy5QWMfjZdhlLbQSAKlvxwbR4COe5ub0g4q+5YzNpMJC2s4G9Gy+O1F4n21u2xzgR9uLtTZ9jWY2YYkcnn5P7LX/r57s1oRwjXSP54q7IAys7Y8k00qkyLKufUr9j4aCpvLtHHQdtUgPOfmic0LT022sVKb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=nlzwsPEJ; arc=none smtp.client-ip=91.218.175.188
+	 In-Reply-To:Content-Type; b=GVk2ILlFSIqE0S43E0d82OTlOeRl4nI1rA0hdNoM7WcRL9RjTxuuTTFKIik/Je9XLwBIjcC9MQNAGgnal80K4fl5E8FvDg3MAAoQ7njP7J6rhA0fKe+fNlOCjeK4oetTdAK/j4aFNhX1qHdrEIp+tEi2SdXThByePH2j9ge6uFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=L0s5iKF6; arc=none smtp.client-ip=95.215.58.175
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="nlzwsPEJ"
-Message-ID: <042ced8c-d39f-4ff5-91a4-ad55f60eeeeb@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="L0s5iKF6"
+Message-ID: <c3db579d-78d3-4135-8fd8-58a17a4a4382@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712210068;
+	t=1712210601;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=Ccg4H4dntrS+7JRYdB3nAqpfOY+VAY2XeZ6Kzs0vzr0=;
-	b=nlzwsPEJKMZ4H6T976jfKkcx/eCJ+RWws+sE0iySNDYtiYU3AbzDBonj9oXn2WlDZPaNij
-	RfrOpqSXLOXYSIYKA6/iWMuhq1zQ2/zkscvL3VhQLOriSwze4fRgXnL5A1/McqGzt1CbWt
-	Puc5rI/KwumEx0Jad5bbYhWFr0YZEMw=
-Date: Wed, 3 Apr 2024 22:54:19 -0700
+	bh=HujBcmBKaGPA3mkWrsbFEDcr7+iQf+QjXFivfPNlR7o=;
+	b=L0s5iKF60/agAVK7GahlQ0applM83ySLdtU4bnwpYIYgLQCXeVeTT7o15czd1t7uniBJPA
+	3N4k1FLTrWPDZ4a8AXwugPOUJx83CdteFmnO6dLb4Lpuo9QkHM9A3z60lB37zC71PuLlA9
+	V3dX3R4z+QJnPWOj6gEs/hI7Ei/avqc=
+Date: Wed, 3 Apr 2024 23:03:09 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next 3/3] selftests/bpf: Export send_recv_data helper
+Subject: Re: [PATCH bpf-next 1/3] selftests/bpf: Export send_byte helper
 To: Geliang Tang <geliang@kernel.org>
 Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
  mptcp@lists.linux.dev, Andrii Nakryiko <andrii@kernel.org>,
@@ -45,11 +45,11 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
  Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
  Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
 References: <cover.1712039441.git.tanggeliang@kylinos.cn>
- <5a1d3a5e2e5318c237a390f8480b51471ed7a488.1712039441.git.tanggeliang@kylinos.cn>
+ <4daa40f84a7b9e506bb21c4dcbccdcf1db8fc750.1712039441.git.tanggeliang@kylinos.cn>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <5a1d3a5e2e5318c237a390f8480b51471ed7a488.1712039441.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4daa40f84a7b9e506bb21c4dcbccdcf1db8fc750.1712039441.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
@@ -57,101 +57,38 @@ X-Migadu-Flow: FLOW_OUT
 On 4/1/24 11:38 PM, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch extracts the code to send and receive data into a new
-> helper named send_recv_data() in network_helpers.c and export it
-> in network_helpers.h.
-> 
-> This helper will be used for MPTCP BPF selftests.
-
-It is good to see the codes can be reused for the mptcp selftests.
-
-What about the patches for the new mptcp tests? It is not included in this set 
-because it depends on other patches that have not been in the bpf-next yet? It 
-is not mentioned in the cover letter.
-
+> The helper send_byte is defined in mptcp.c, sk_lookup.c and tcp_rtt.c.
+> It makes sense to export it into network_helpers.h to let it can be
+> used for all BPF selftests.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->   tools/testing/selftests/bpf/network_helpers.c | 86 +++++++++++++++++++
->   tools/testing/selftests/bpf/network_helpers.h |  1 +
->   .../selftests/bpf/prog_tests/bpf_tcp_ca.c     | 82 +-----------------
->   3 files changed, 88 insertions(+), 81 deletions(-)
+>   tools/testing/selftests/bpf/network_helpers.c      |  9 +++++++++
+>   tools/testing/selftests/bpf/network_helpers.h      |  1 +
+>   tools/testing/selftests/bpf/prog_tests/mptcp.c     |  7 -------
+>   tools/testing/selftests/bpf/prog_tests/sk_lookup.c | 13 -------------
+>   tools/testing/selftests/bpf/prog_tests/tcp_rtt.c   |  7 -------
+>   5 files changed, 10 insertions(+), 27 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
-> index f2f8f7388d7c..9878d8072e7f 100644
+> index 6db27a9088e9..f2f8f7388d7c 100644
 > --- a/tools/testing/selftests/bpf/network_helpers.c
 > +++ b/tools/testing/selftests/bpf/network_helpers.c
-> @@ -506,3 +506,89 @@ int send_byte(int fd)
->   		return -1;
->   	return 0;
+> @@ -497,3 +497,12 @@ int get_socket_local_port(int sock_fd)
+>   
+>   	return -1;
 >   }
 > +
-> +struct send_recv_arg {
-> +	int		fd;
-> +	uint32_t	bytes;
-> +	int		stop;
-> +};
-> +
-> +static void *send_recv_server(void *arg)
+> +int send_byte(int fd)
 > +{
-> +	struct send_recv_arg *a = (struct send_recv_arg *)arg;
-> +	ssize_t nr_sent = 0, bytes = 0;
-> +	char batch[1500];
-> +	int err = 0, fd;
+> +	char b = 0x55;
 > +
-> +	fd = accept(a->fd, NULL, NULL);
-> +	while (fd == -1) {
-> +		if (errno == EINTR)
-> +			continue;
-> +		err = -errno;
-> +		goto done;
-> +	}
-> +
-> +	if (settimeo(fd, 0)) {
-> +		err = -errno;
-> +		goto done;
-> +	}
-> +
-> +	while (bytes < a->bytes && !READ_ONCE(a->stop)) {
-> +		nr_sent = send(fd, &batch,
-> +			       MIN(a->bytes - bytes, sizeof(batch)), 0);
-> +		if (nr_sent == -1 && errno == EINTR)
-> +			continue;
-> +		if (nr_sent == -1) {
-> +			err = -errno;
-> +			break;
-> +		}
-> +		bytes += nr_sent;
-> +	}
-> +
-> +	ASSERT_EQ(bytes, a->bytes, "send");
-> +
-> +done:
-> +	if (fd >= 0)
-> +		close(fd);
-> +	if (err) {
-> +		WRITE_ONCE(a->stop, 1);
-> +		return ERR_PTR(err);
-> +	}
-> +	return NULL;
+> +	if (!ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte"))
+> +		return -1;
+> +	return 0;
 > +}
-> +
-> +void send_recv_data(int lfd, int fd, uint32_t total_bytes)
-> +{
-> +	ssize_t nr_recv = 0, bytes = 0;
-> +	struct send_recv_arg arg = {
-> +		.fd	= lfd,
-> +		.bytes	= total_bytes,
-> +	};
-> +	pthread_t srv_thread;
-> +	void *thread_ret;
-> +	char batch[1500];
-> +	int err;
-> +
-> +	WRITE_ONCE(arg.stop, 0);
 
-nit. It is not needed now because stop is not a global variable which was reused 
-by multiple tests.
-
-Anyway, it has a conflict with the bpf-next tree and requires a re-spin.
+I think it is overkill to have a dedicated helper that only does the error 
+checking on the single syscall send/write. I would drop this patch and directly 
+use the syscall send/write instead.
 
