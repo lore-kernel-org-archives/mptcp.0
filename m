@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6207016D9D5;
-	Fri,  5 Apr 2024 10:52:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7832F1DFE4;
+	Fri,  5 Apr 2024 13:06:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712314379; cv=none; b=k5hRbaNmVOR3yIQoiXWoe30vBcyl42KCS8qiScnWHvD0ZhB6YDchJzFKc+CivYpUZXl5NyXoO4jNmbqMlgGc/wXT7KJwO0wigzkPzEfcXKwqmhV/fmgai9F3EIDq6BguQjdFl3cbJiRbo4uleAZvPFODHQFhnl9FAcDKo5wU7DI=
+	t=1712322396; cv=none; b=LeLOAC9EaPUi7Fu2vv2InEJVdu0S2ial6aThB0m94YTeyG29XDucWlMhQh4VtmDqdxICwgYsgBqqkxvXOUmft/+qZwbQqvf8iHJX80ezLJLRrhOCL4kIlXC3x8KqQyhEmpn+aB2BrnFNd78vmYvWjcsRo9Ziqn/UlMXcE3j4MeY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712314379; c=relaxed/simple;
-	bh=fgoj8mb7L9iIjajmasQSVS1V+GYnanZZ2dC6S1meCAs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ckJMu/1jNayXCsSHEBvIPR2KUASU5toMxPPFGNfCGiuz29ghjMSoSWqatmEJ8cciCgEw66Oknk9jq8KI0mosRCznK6aJG6KcnWY1IHUYEo6uFzPtkv1CBmGXnQPFErqooyv2on8lSLSIm7//fQz+7yC2NMC9Rh750SRzsi+dGtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbqyZprg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712322396; c=relaxed/simple;
+	bh=aiTtOgawA1gl+sKd/BL+KKsnX7hyyYugKZCpLonIlAk=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=necKBGHKqE4XQGjV5CAIZBTGx1cQYvI+uxgrBJJxZsLrTrCbbVna+pOrIHuvxN9ftCuUtWKYGHwdN4A6j+sel81PX0nQ2118EHQ5zgalyz19EXPXQr03bb5hyUvPheiIMlfTx8S53v3DsHisjT6xjEYQBuVJSkc7CN5Nlw9panw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j4I8sVlg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbqyZprg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 444E0C433C7;
-	Fri,  5 Apr 2024 10:52:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j4I8sVlg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D319C433F1;
+	Fri,  5 Apr 2024 13:06:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712314378;
-	bh=fgoj8mb7L9iIjajmasQSVS1V+GYnanZZ2dC6S1meCAs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hbqyZprgjdHYpN9ZXwzmxzj3feL/kC5fOzHQc1AfCkwK2OdoGpqe+aHKzwvvPDj3J
-	 uLdnXvIglqQoP9UYbKIHgUd+BAg6HfIvaOOPv8QP3ghKIlsbEYTBLgRDP3huiv03ce
-	 HgyBEgSkLvJB5QUlMLH66iTSeRFrrLUKjECTxdi+1LmFCn78byLzepphDWeB+Ocqhw
-	 9DRuzTbpX/KthsEMHSkZvQdM+3LF7T0yNqVUlNPPYiujhfeqIGPBImtq2rzcUg1as0
-	 /Z9+8DN5521lxqrzOsSlTjxTc0dJerUXA4k3g2QqoMmEyhnG4W12El0O/Lwr2LOOBC
-	 Ws7A8Kso6KW0w==
+	s=k20201202; t=1712322396;
+	bh=aiTtOgawA1gl+sKd/BL+KKsnX7hyyYugKZCpLonIlAk=;
+	h=From:Subject:Date:To:Cc:From;
+	b=j4I8sVlgrQ3jetssQjEvZ926rndqiioLxqiNtHYXfK1GV1hjwD4EBfbQAvpERTKsH
+	 XDoA+HdX1ovylqxGPDOeS1uSEVfhQZaiX8DP/14b/Uf2ZkVmT2W5BwChg2MF2tIaMr
+	 pmoluv2TrZb48BnvEpz8U1duOplkukiFmOoFwN+jiRtbfHFYcLTkoAy+ybnGjDK0rk
+	 axF+BeY6gALyi7pYSIC01mZKPG2X/1A1ZWNlcnloTKKANGNRCiK8XpGX3pkfLmvTTR
+	 axm06j/PTigcgp4klJwNzdnyjT26B+WKPbf/QINQ0mKDKSd81f8sXW5ZMzQ30Egm73
+	 uvL9qh8jgxj4A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 05 Apr 2024 12:52:15 +0200
-Subject: [PATCH net-next 11/11] selftests: mptcp: netlink: drop
- disable=SC2086
+Subject: [PATCH net-next 0/2] mptcp: add last time fields in mptcp_info
+Date: Fri, 05 Apr 2024 15:06:20 +0200
+Message-Id: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-0-52dc49453649@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,89 +37,64 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240405-upstream-net-next-20240405-mptcp-selftests-refactoring-v1-11-eabc9b960966@kernel.org>
-References: <20240405-upstream-net-next-20240405-mptcp-selftests-refactoring-v1-0-eabc9b960966@kernel.org>
-In-Reply-To: <20240405-upstream-net-next-20240405-mptcp-selftests-refactoring-v1-0-eabc9b960966@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAEz3D2YC/z2NwQrCMBBEf6Xs2YVNW6X6K9JDWje6YNKQrFIo/
+ XcXQQ9zeAzzZoPKRbjCpdmg8FuqLMnAHRqYHz7dGeVmDC21PfV0xFeuWthHTKyWVfFfxaxzxqe
+ viirRlikseJ6oO7mBaQgOzJoLB1m/j1f4OWDc9w9b+edaiwAAAA==
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
  Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Geliang Tang <tanggeliang@kylinos.cn>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1495; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=xlQkfbCL4ErvHSP5FwwmBIYPnN6FGH51Kb3aZGA8ojk=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmD9fmcHa6BiI0wi6rGAw8wxUcdYt3P3gbi4rnv
- pZoILgfM5eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZg/X5gAKCRD2t4JPQmmg
- cwneD/95yyx0OfnYUP9IrQ29KInbqFdl7JhdnjHOfWsBwn9kgblNW3kDztkzOGqNQCqBbMtMg4Q
- Yxh7Slbcq/nA5KvwNcvwtD/sntLL1vczQNK7tpheGwwbju/iAjxDLnUv+fhQtnPOG+oCWtNG4Q5
- noWvfNx9RAQzVgfp9TAOaZkqZSK6fkn5uppPDdet5eM45IAJGZZTWuyQuPcF0XxI9cMObnBlQlj
- 4PcsMOGtx46OQz5gm3dmJlMfVxnIdzdotlIZhUx4ojidKwm35ftWaBuxw8n+53tkH13oor5rujG
- peNnt5mLAlulFQLoLTETeagGwkV6Ski5AMzDvhOcaB8mB7ATTJME9pSGDcJ9jrUvkIdV6jZCPbu
- b/Qd9JyvuuqAz0C/2SPqfLBAfOVlCRr/LEcTtDbIXkjcNQoFNE8sWYlnMxNTl4Cb8M1BghCekup
- 8/KX0hpQW7vcFxHC4ic+hSMLnw/diUrhr4j6RV7jiTtCSwNYuB9QoPzJGQBAE2vS2ddbNicz6xC
- QlP8jXKkpyCa6VPRegrkdLhPiOpTkOcrMLiJXji1BOB3wctQ4Zq9bZucVXB249NtSyJ9WJLH/c0
- qhsplxn+AXFu4mTR/NuHd2ItS//H420JrDZbgtmiI/krE+ldfDleZPz55sRutUz3cbhF+4YdUdf
- zbNuAHCZSkOxFGQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1238; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aiTtOgawA1gl+sKd/BL+KKsnX7hyyYugKZCpLonIlAk=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmD/dYTs4Nh1M3Y3r9Yx3wcV7xGdpd2pup/0HIL
+ HFlecIH0z+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZg/3WAAKCRD2t4JPQmmg
+ c2UoD/9m56ReagBAujFA3sYu5/Z8OuB4jsQqPGMSSoHZpLzAlx8QacdEAsbVgLioaf3b1btSBoY
+ 09W4qNP8uwrLYx25BecWFoe+PzFsecCNjUtYgfCdMlQnt+sbbzpwgfgyELl0fFHsgNewI8VVqD2
+ Yxtv/A4VBB6MitPaS+QQ/MQD2j0pqOB/+lNZtd6c9PKkYzpyjxp6iWMlUfTbKIl8bLWZlp+/7lx
+ bheh5G9+wUtipZn6VpINqfxuVXOACFTILk5as97XeEE/xq9yMwchWqwa6w7kY6lzc7zRGx16W2g
+ i7x0BhMLfhpmQcFUNmwZL5MTgOs3O7C5TCYUiULeEA8JElFlYDvmppLI2knW2h2MeA1GfoiphSI
+ iADfUf0CW+surlAvS4F2MMVMFVaktJGCYfM/Mk//kFBrUU7+UrkX+booNvx6fkCXTjMSAEL6WeG
+ YWN0opPw4K5nJGC6/rMHnrwfOYtyilBffMHY28qW/vI2aaXmLakCEkexSiPolLjqB77ZhPIVsvg
+ w+VD+ApD5yKG9bgB9MSjDfJaYm3w9d9k/kBpcJJac9w6+wePpL0TlRE/4HWyCkxZLoA3yMgn+Pc
+ baTUNW2bTz7I44mT0VcO36MEvVA/6VQ6iJt05T/fmxZDO56T0k8AGKbwH/cSMAveeGRbu36LGN1
+ rynsFVEpFmsERFA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+These patches from Geliang add support for the "last time" field in
+MPTCP Info, and verify that the counters look valid.
 
-Now there are only a few of variables are not using double quotes.
-Modifying them, then "shellcheck disable=SC2086" can be dropped.
+Patch 1 adds these counters: last_data_sent, last_data_recv and
+last_ack_recv. They are available in the MPTCP Info, so exposed via
+getsockopt(MPTCP_INFO) and the Netlink Diag interface.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Patch 2 adds a test in diag.sh MPTCP selftest, to check that the
+counters have moved by at least 250ms, after having waited twice that
+time.
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/pm_netlink.sh | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+Geliang Tang (2):
+      mptcp: add last time fields in mptcp_info
+      selftests: mptcp: test last time mptcp_info
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_netlink.sh b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-index 4859fa85d9a0..2757378b1b13 100755
---- a/tools/testing/selftests/net/mptcp/pm_netlink.sh
-+++ b/tools/testing/selftests/net/mptcp/pm_netlink.sh
-@@ -1,11 +1,6 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
--# Double quotes to prevent globbing and word splitting is recommended in new
--# code but we accept it, especially because there were too many before having
--# address all other issues detected by shellcheck.
--#shellcheck disable=SC2086
--
- . "$(dirname "${0}")/mptcp_lib.sh"
- 
- ret=0
-@@ -20,14 +15,14 @@ optstring=hi
- while getopts "$optstring" option;do
- 	case "$option" in
- 	"h")
--		usage $0
-+		usage "$0"
- 		exit ${KSFT_PASS}
- 		;;
- 	"i")
- 		mptcp_lib_set_ip_mptcp
- 		;;
- 	"?")
--		usage $0
-+		usage "$0"
- 		exit ${KSFT_FAIL}
- 		;;
- 	esac
-@@ -40,7 +35,7 @@ err=$(mktemp)
- #shellcheck disable=SC2317
- cleanup()
- {
--	rm -f $err
-+	rm -f "${err}"
- 	mptcp_lib_ns_exit "${ns1}"
- }
- 
+ include/uapi/linux/mptcp.h                |  4 +++
+ net/mptcp/options.c                       |  1 +
+ net/mptcp/protocol.c                      |  7 ++++
+ net/mptcp/protocol.h                      |  3 ++
+ net/mptcp/sockopt.c                       |  4 +++
+ tools/testing/selftests/net/mptcp/diag.sh | 53 +++++++++++++++++++++++++++++++
+ 6 files changed, 72 insertions(+)
+---
+base-commit: d76c740b2eaaddc5fc3a8b21eaec5b6b11e8c3f5
+change-id: 20240405-upstream-net-next-20240405-mptcp-last-time-info-9b03618e08f1
 
+Best regards,
 -- 
-2.43.0
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
