@@ -1,134 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-fw-9106.amazon.com (smtp-fw-9106.amazon.com [207.171.188.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA42916132B;
-	Fri,  5 Apr 2024 17:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 82E0D17555F;
+	Fri,  5 Apr 2024 22:27:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.171.188.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712338242; cv=none; b=HYjUqNUdqBR1q8tn4iB3TAddpTRpDBMtNjSjGq/dQ614eLa6T/pm51kwy75nAKPna3n5JFks2hnQneCavu9LlXPJj/MXNoPcRm/8tZm7QTSwO4zAOn4rgah/PRm7dyXnG4SbSOrIvlclF60NIoB0T389jwTETqe1wHYZw0p9pSk=
+	t=1712356047; cv=none; b=u+xTbhwsmRezwWfNUAyD1JnRzYl/RJ/gI33aR37BWnetkFsDlfuOE49y0jw4NlmNvPl+IRzp3v9tKVfEynZUheaDyRaLRI7r5G6eGY6/33jNYzyHjj++ENwlF76h46xJp4yZrTbnCZTWPFcbF4NglQgipCGifrHbHr8YbrgMt50=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712338242; c=relaxed/simple;
-	bh=JmJWRFqaN4fpcnp3j8sehmjBiBJSiY9vT0z0AqxntVc=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hognvxs5U7CL5AuH+q1vwXoDUcir8zq8+dZIurVnu1qOdKcNoTuKP8eH49Tcw7q9cwWSgFYJAPWbN58bK8/NnZlpynhbApjkz++/aDfC4Uc1iCbYbcC6SKcUPLGKJRu8O5x9spMVhJ7PBMfeoBxYTmSX8hKfaWauD9kfGTUIf2I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qSSKk9vj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712356047; c=relaxed/simple;
+	bh=qrrZBeX1vtGWgwK5O99qDlCfzTKu2CnGs6Zioe/+/30=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Z0aoUwsMtCAaySyGhoMv85FBhIAl7qXo9RqNcGHUA6nx0srvUfdJ0sUczzXtFonspXftrqI+tIQu3FI9Q5mPxzBi7tsHpXZLaZeA7USE3YTTRH9sj5p2/pxHsoCBKQygnR/hJPHMos+OzJ6ckIQP/hqFBl3Qp1ulx67fVGhsHKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=LMoCvuAv; arc=none smtp.client-ip=207.171.188.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qSSKk9vj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1912EC433F1;
-	Fri,  5 Apr 2024 17:30:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712338242;
-	bh=JmJWRFqaN4fpcnp3j8sehmjBiBJSiY9vT0z0AqxntVc=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qSSKk9vj9S489bIvwJWVrC5QUPk3OrL2f4BNJS4Pr/oHW9Ub2Wmc8GfSb7hvjVRs8
-	 ff38kSTrb83LGipCm+Bot8rfwnFpg0RBPglbwotEJlK6OqBgL8UYgYJ5hRnrJqvY+V
-	 D8Gv2pmTBoUDWOeOjK19DGZmS49GqNya4h01nNo8jqSqzeigV46+UqYd2fLTwAXYcZ
-	 6kLBZlIpkOHj6VZ3MUDTRioZc/5h8DFDdqBdGxZteKzT4RuPCdn7c2LIe8uHNVykr8
-	 eyvsbFs9gAdVU+hH0/pMSM1y4YptLzLngCINyx5jr1lnmV0idX/qkMBVkoyLRgtJCJ
-	 pBEOQ/3c9DvLg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Davide Caratti <dcaratti@redhat.com>,
-	Christoph Paasch <cpaasch@apple.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.10.y] mptcp: don't account accept() of non-MPC client as fallback to TCP
-Date: Fri,  5 Apr 2024 19:30:35 +0200
-Message-ID: <20240405173034.1471178-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024040524-stitch-resolute-ead5@gregkh>
-References: <2024040524-stitch-resolute-ead5@gregkh>
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="LMoCvuAv"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1712356045; x=1743892045;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=MZmfmRuTm98xxNT3u4GoRIvJJsGslBrgcovMMdqPwTw=;
+  b=LMoCvuAvAiKpauBjBvG9rZqvq6Adv0g22tVGZIEI0d5TB8C2HlDl1LHj
+   ASgigsE0s2Il2hca+iDoCM6AQH10YBXw8e5uCk/kWQjy44Sa3yPPKf9V2
+   ge0Y/ag/602Bo2vu9PmOTCQz5V4tyWdDcU0BFbPvDDGjaYJf/FMeOaHPI
+   Q=;
+X-IronPort-AV: E=Sophos;i="6.07,182,1708387200"; 
+   d="scan'208";a="716520780"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-9106.sea19.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Apr 2024 22:27:19 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.7.35:33431]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.50.222:2525] with esmtp (Farcaster)
+ id d323b31d-9f42-407f-b466-8125712ac6f4; Fri, 5 Apr 2024 22:27:18 +0000 (UTC)
+X-Farcaster-Flow-ID: d323b31d-9f42-407f-b466-8125712ac6f4
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.28; Fri, 5 Apr 2024 22:27:17 +0000
+Received: from 88665a182662.ant.amazon.com (10.106.101.45) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.28;
+ Fri, 5 Apr 2024 22:27:06 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <j.granados@samsung.com>
+CC: <Dai.Ngo@oracle.com>, <alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
+	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
+	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
+	<davem@davemloft.net>, <dccp@vger.kernel.org>,
+	<devnull+j.granados.samsung.com@kernel.org>, <dhowells@redhat.com>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
+	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
+	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
+	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
+	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
+	<kolga@netapp.com>, <kuba@kernel.org>, <kuniyu@amazon.com>,
+	<linux-afs@lists.infradead.org>, <linux-hams@vger.kernel.org>,
+	<linux-kernel@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <linux-s390@vger.kernel.org>,
+	<linux-sctp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
+	<linux-x25@vger.kernel.org>, <lucien.xin@gmail.com>,
+	<lvs-devel@vger.kernel.org>, <marc.dionne@auristor.com>,
+	<marcelo.leitner@gmail.com>, <martineau@kernel.org>, <matttbe@kernel.org>,
+	<mcgrof@kernel.org>, <miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>,
+	<ms@dev.tdt.de>, <neilb@suse.de>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
+	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
+	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
+	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
+	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
+	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
+	<ying.xue@windriver.com>
+Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel elements from ctl_table array
+Date: Fri, 5 Apr 2024 15:26:58 -0700
+Message-ID: <20240405222658.3615-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.30.2
+In-Reply-To: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
+References: <20240405071531.fv6smp55znlfnul2@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3508; i=matttbe@kernel.org; h=from:subject; bh=YmdsKse0Kap7VhQqGo7ToCdwNcOQp486numoobr1WO0=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmEDU6rr7eFvYGqTgb4Nt9IftHrSgAt1u+nPTe0 7lC1zxufTqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhA1OgAKCRD2t4JPQmmg c1qiEADdqObqTb/2jK6/ezQFoi7HSFB65HiVP1NvbfQrJbr4C4bzf+0yOTa/keIe54wLUiQJG9N KJ3QCU8ZH4HwGzPTVIa13K67SeZlwcMJw6QWlMlVO+k/lljiHia6KF0KfPuEPEVkef5rRY6OP0A FgNwyDnyPZ9oAuBn4RQva0rPC4ZzJlvYA+wyf5zcUtpzUKogtjJW33oxD5n294pQs6rm5mpm/48 rOPR+gdnt7T6vgC5cGqcwiacUpglRzXgBkUfO6TjAr2b0WYuHNLHjsF7gnknZkf9eHiMvHvgS4G c/oX/AAH8NcXuI76lYw2E0DpdcMxOSBcFtPksJFZ6FWZ9LnCRyIMZ+jzjhhzmlC6LGULOBvAC6s zBJ4670kSYNC5zjRu4RiVAJkCxQ79Gttkwc7Zdzc/9uQoNksyAiQa4834/doA2BYAt9mZMROpRn vzVTSLMek7D9gyoamEl0wcYj4wSZ5GFzEeDq4b8EcE6y2Rj3HmAFtvk6jRBQsu68I4mUQUyCvAo MUQt9IqUltIUriQlKch8LjzTmuYWz9WZv2rHWTfUPVFFHTqxxIS7j0+IOCxEfd1kCyW4/dftp7m +WMZ7Vyre6GsDdbqLW25Xbsv1veDAB4Q0lxgPL2QJzgJLyq30e1aMGIVR/16RFOW5S8nsTZOnGD Yzbn4yR11JhFcqQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: EX19D035UWB001.ant.amazon.com (10.13.138.33) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-From: Davide Caratti <dcaratti@redhat.com>
+From: Joel Granados <j.granados@samsung.com>
+Date: Fri, 5 Apr 2024 09:15:31 +0200
+> On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
+> > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
+> > Date: Thu, 28 Mar 2024 16:40:05 +0100
+> > > This commit comes at the tail end of a greater effort to remove the
+> > > empty elements at the end of the ctl_table arrays (sentinels) which will
+> > > reduce the overall build time size of the kernel and run time memory
+> > > bloat by ~64 bytes per sentinel (further information Link :
+> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
+> > > 
+> > > When we remove the sentinel from ax25_param_table a buffer overflow
+> > > shows its ugly head. The sentinel's data element used to be changed when
+> > > CONFIG_AX25_DAMA_SLAVE was not defined.
+> > 
+> > I think it's better to define the relation explicitly between the
+> > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
+> > 
+> >   BUILD_BUG_ON(AX25_MAX_VALUES != ARRAY_SIZE(ax25_param_table));
+> > 
+> > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
+> > as done for other enum.
+> 
+> When I remove AX25_VALUES_DS_TIMEOUT from the un-guarded build it
+> complains in net/ax25/ax25_ds_timer.c (ax25_ds_set_timer). Here is the
+> report https://lore.kernel.org/oe-kbuild-all/202404040301.qzKmVQGB-lkp@intel.com/.
+> 
+> How best to address this? Should we just guard the whole function and do
+> nothing when not set? like this:
 
-Current MPTCP servers increment MPTcpExtMPCapableFallbackACK when they
-accept non-MPC connections. As reported by Christoph, this is "surprising"
-because the counter might become greater than MPTcpExtMPCapableSYNRX.
+It seems fine to me.
 
-MPTcpExtMPCapableFallbackACK counter's name suggests it should only be
-incremented when a connection was seen using MPTCP options, then a
-fallback to TCP has been done. Let's do that by incrementing it when
-the subflow context of an inbound MPC connection attempt is dropped.
-Also, update mptcp_connect.sh kselftest, to ensure that the
-above MIB does not increment in case a pure TCP client connects to a
-MPTCP server.
+ax25_ds_timeout() checks !ax25_dev->dama.slave_timeout, but it's
+initialised by kzalloc() during dev setup, so it will be a noop.
 
-Fixes: fc518953bc9c ("mptcp: add and use MIB counter infrastructure")
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/449
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240329-upstream-net-20240329-fallback-mib-v1-1-324a8981da48@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 7a1b3490f47e88ec4cbde65f1a77a0f4bc972282)
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
-  - Conflicts in protocol.c: because commit 8e2b8a9fa512 ("mptcp: don't
-    overwrite sock_ops in mptcp_is_tcpsk()") is not in this version, but
-    it depends on new features, making it hard to be backported, while
-    the conflict resolution is easy: just remove the MIB incrementation
-    from the previous location.
-  - Conflicts in subflow.c: because commit a88d0092b24b ("mptcp:
-    simplify subflow_syn_recv_sock()") is not in this version, but it
-    depends on new features, making it hard to be backported, while the
-    conflict resolution is easy: just move the MIB incrementation where
-    the subflow context is dropped (fallback to TCP).
-  - Conflicts in mptcp_connect.sh: because commit e3aae1098f10
-    ("selftests: mptcp: connect: fix shellcheck warnings") and commit
-    e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
-    are not in this version. The dependency chain looks too long, and
-    probably not worth it trying to resolve the conflicts here when many
-    CIs use the selftests from the last stable version, not this old
-    stable one.
----
- net/mptcp/protocol.c | 3 ---
- net/mptcp/subflow.c  | 3 +++
- 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index adbe6350f980..6be7e7592291 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2218,9 +2218,6 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 
- 		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
- 		local_bh_enable();
--	} else {
--		MPTCP_INC_STATS(sock_net(sk),
--				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- 	}
- 
- out:
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 607519246bf2..276fe9f44df7 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -595,6 +595,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			if (fallback_is_fatal)
- 				goto dispose_child;
- 
-+			if (fallback)
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
-+
- 			subflow_drop_ctx(child);
- 			goto out;
- 		}
--- 
-2.43.0
+> 
+> ```
+> void ax25_ds_set_timer(ax25_dev *ax25_dev)
+> {
+> #ifdef COFNIG_AX25_DAMA_SLAVE
+>         if (ax25_dev == NULL)        ···/* paranoia */
+>                 return;
+> 
+>         ax25_dev->dama.slave_timeout =
+>                 msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
+>         mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
+> #else
+>         return;
+> #endif
+> }
+> 
+> ```
+> 
+> I'm not too familiar with this, so pointing me to the "correct" way to
+> handle this would be helpfull.
 
+Also, you will need to guard another use of AX25_VALUES_DS_TIMEOUT in
+ax25_dev_device_up().
+
+Thanks!
