@@ -1,99 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B5116F82C;
-	Fri,  5 Apr 2024 15:55:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E16AB6;
+	Fri,  5 Apr 2024 16:35:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712332502; cv=none; b=DXlvyclcToQliuecpcQgQYBwVP5ljxzawKURq32mQCnkpXZ9qeydebfn3D+hxQqd0Xf6Y3l+hyvb148s7AFr3hsbpV4JJD6u7AXZKkJFUO7pOEX+cHWZYdqhn2whlQsZmLA7eu0y7bXdpPi1GTTQo89IFn8mMJtu4OqkcYqPpp8=
+	t=1712334932; cv=none; b=BgTxMHKxBvzFRb2sjQ3FaFycySeYHmCD0UVk6mCdFEFTWnmak6licQrQv4I+qfqZ/rdRnCi++IPovlltKchRDJ5xI+ykMXITDpSeYSGhjonChFCj1PnGV8i1Zr1GPKz4/zc2fSgDwKM4lQrRXbGrIGzvQKk8QsSc37q7Pq5YZUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712332502; c=relaxed/simple;
-	bh=5ij4/+7EdZh2WBzZEgybsllfa6XwwEYxPpDJnzXsd/s=;
+	s=arc-20240116; t=1712334932; c=relaxed/simple;
+	bh=p/+QpX0KlgkdLBwbAK4Hs4k1UkbMmcEgsjTKeopdg3s=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HqjQA7uPxEl6qWUMcyGYH3zxLt3oHtEbxOPMHVx09vZhvf9FFrQy7cJhF99ymIpQIgsRS4dWzwloMNizFWGEkjFIiAdLzwaqzzSF1O9soG5IpS+55rI/e+Xqhutv/QNQkOxOyr0qkaOy8zhhFvoIc7CNA2QNI42SJhHEk0nP200=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2/5FLfy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HyurtkG9AulBICfiPiOgGWfxc6KGUUX7TWTGw+fAc3wefLCg3Kwbf+WyOhDIPynX7MmSZSkIotMk05rEfllTwuDC0YMyE++GgH35QLOWnMwAhuYLm0L6a2I7Rk98W2spbZXIIbbjWV1frjJcJ3deHqDKFg5VyMzdI/b48IcA00Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igRQi3KJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2/5FLfy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 564D1C433C7;
-	Fri,  5 Apr 2024 15:55:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igRQi3KJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C88FC433C7;
+	Fri,  5 Apr 2024 16:35:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712332501;
-	bh=5ij4/+7EdZh2WBzZEgybsllfa6XwwEYxPpDJnzXsd/s=;
+	s=k20201202; t=1712334932;
+	bh=p/+QpX0KlgkdLBwbAK4Hs4k1UkbMmcEgsjTKeopdg3s=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=X2/5FLfy1afdR5spMBDh2MXWU1Bm9qdzFrBTKelKQ9RJBSw18xE+WO56N9Re5VEJi
-	 AkjCpTb3NAsEW1PyxM7ed/nBMSVOW4rx74GmvyKyQmrAKXReknlMnqliDi5jrSFyS/
-	 DYJfsx2FgtADugEKvUaPBW4dI8062bFbzEEgtQSPtk3fMDKuccA4/ArzJjIByb3O3b
-	 2DHL1DD7rceLqh1bTMknNLU/+ozM7bi1d8qEk0xGeh/SulIA4JWdqpN/8XKoOvJc54
-	 D6RpGCmy5xjfuwTSoiB7+59nBJ+Kn5jSpFoyEZKpsT7rGXbzN/HLTasYdOAORqizj5
-	 zhZvPPNQ5BYLw==
+	b=igRQi3KJIGUhmay5u1dWjibiBnPBTsjlOkK9QLay4szt3+dTT2vOG3Fre364mew6e
+	 t1saKe2WVsWmYCkPoSLUt3ft3akmEfV56bf5Y7MtyFWJl+djcuq9ra8W/8tGiImqSD
+	 t+HFQ+8IymudMvt3/8uQ+3mCYDdlrWxowykuV1dW3hvdLkmeSZpP6TnTx7WRgLrNK3
+	 Ih3rseuGD8mHynjyyHFE8D5EWR/g/DEVytGy/jwntrMCz81Zw5re4m/LUmyLFu03eJ
+	 OO05Nz08D9oDNwrPBXuPtBcE5WYF0q0x7XAMnEdIGJ6CliXHuJ7u6Oxgk2+ZbabY2s
+	 RHmb1bhedduLw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Geliang Tang <tanggeliang@kylinos.cn>,
+	Davide Caratti <dcaratti@redhat.com>,
+	Christoph Paasch <cpaasch@apple.com>,
+	Mat Martineau <martineau@kernel.org>,
 	Matthieu Baerts <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y] selftests: mptcp: join: fix dev in check_endpoint
-Date: Fri,  5 Apr 2024 17:54:43 +0200
-Message-ID: <20240405155442.1054470-2-matttbe@kernel.org>
+Subject: [PATCH 6.1.y] mptcp: don't account accept() of non-MPC client as fallback to TCP
+Date: Fri,  5 Apr 2024 18:35:22 +0200
+Message-ID: <20240405163521.1221351-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024040506-skinny-unsuited-f487@gregkh>
-References: <2024040506-skinny-unsuited-f487@gregkh>
+In-Reply-To: <2024040522-tremor-freehand-618e@gregkh>
+References: <2024040522-tremor-freehand-618e@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1987; i=matttbe@kernel.org; h=from:subject; bh=npnpC/l59fq7S8IMWHjtFMJFrHt3mRImtl8n34jmohQ=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmEB7CBPR49r72teA/TptYNB4gxJSvnbFOQRzh9 q07BHdIV6aJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhAewgAKCRD2t4JPQmmg c6aUD/9t0cQxj6QwWB5YB4QFC+c/IIkERY6hYMNSOJrsn6cNuCqIYpoc2pytpys2qCP6lfitbYG Q5fxCkZ5bAOGB4aj/Npq9ptsgAkQtMWZXlnKpsj6tUxe/iRk4SJPC9HxZewGQdkOWRrvSufAFLo RhXDjxSOMPQM2tpDdPHNt4lLaZafP63G9yKV5FpinPBHCOTxf53bW1HUTi2z4663mM79V7Wy5ud 03m736ldUjmUmNMqSNRFash7DTafFxr3qrATpM82I5jDjz/H1vedfeh3Fhd2h+IadQ7df4Ofpj4 92Yw0YSVCb9C33v4Sow1IKhbrAH2g0rNLwTd9xx6CYd6xUV2eUlpulPoWl4Tk/2Z44kl1gH6vXX RltqjzLPc62lzpJNd12PKHmrOnCZurB6925ZEbyb4gh4E79WspKc00hxcTnpAyD+HLyi9OdWcSQ hIFJG9RAeuKFyQ/RJzapwYRuwyWvuvnYM4gfghztXF+m/aGjwDaTuArosCMOsuymdqMek2+Opth WO2WrjmYopzEV45RABQcpExvpp3tPu0lg3inTjtixx9q7xo7B79NyToMQ2+crugWdOPaQbVTKgZ L3awDtVgxlGbH/jS8uYRs3yc/I4czW89NlEJp0Y+W1U/fXWFt7apQvqPM/irSwflXNtAVEv6CbV a6Yh/p1cmfXCKmw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4810; i=matttbe@kernel.org; h=from:subject; bh=GsftLZFFdBRa1yvvDkcfllC5qjRTCi2xFub5bG7Zxrk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmEChKf3JEpQYaGsNO6VehhcyRV/EV1jpi1o71t RoFqU6ZZuaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhAoSgAKCRD2t4JPQmmg cxdoEADQ4878KZoHcpNjL35ZxUnscSW9EyGsKQ2wEAFSX05feQJI3Mh7MmY8ORW57NNsipJAeAn /bXOdWk+qbOTJtXj5n+MPHY1KdQWsMCSLDxqBNofD2pD26SLKX2CYXAiwVCNdkWoGHLjiGCYebj DJ02QqowRPGXDznPf00dMtNKrrRMnvXSLlQ/ntg6aBcCmk6tnkyA/HJ+FbZmU0OA2aRP77DlS7S EQgBK24Ujh2MUjjQdvdw9uKIIaOYo7T/ixrs7zH5VhMgWGo+8RRIHFM6g+8mwTYs7G8AyZglMOU k58YGgjrCX7d+P99TCs3EgPzzj3gyLj0eLc2x4DGWc5Z5GiB8JmtDmnIGIe7atCId6z+RVVzvfn 60NPTiwmOjlpF9aagaKjay7mMtOvdoi6wBhyI6CwvR/Sc9rbyB1eENIqttbTpZ6TNN1H3gg+Wom LNItvoqqpdvlIBrAwX1Bzk8O7JvKJX5m/3M6U4zFZuULttc/HZz+c+YuoTdLpuHDJdxfS/TmrFB qgfNUfyOqIxpcbEdTdOw01IWeZhc7lwhj6nKyzI/vFrj3F6IbPCwYZqRwXaLWB29yVA6xE3u+J/ gvlIRXUlC7oCLYb7VZz8OPAKWsaFrCHZKzRTGMp6SUx4h22IxsxS9Zi5uQrbZX30+3yNYQVVSBJ RGFL5cggICXbKng==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Davide Caratti <dcaratti@redhat.com>
 
-There's a bug in pm_nl_check_endpoint(), 'dev' didn't be parsed correctly.
-If calling it in the 2nd test of endpoint_tests() too, it fails with an
-error like this:
+Current MPTCP servers increment MPTcpExtMPCapableFallbackACK when they
+accept non-MPC connections. As reported by Christoph, this is "surprising"
+because the counter might become greater than MPTcpExtMPCapableSYNRX.
 
- creation  [FAIL] expected '10.0.2.2 id 2 subflow dev dev' \
-                     found '10.0.2.2 id 2 subflow dev ns2eth2'
+MPTcpExtMPCapableFallbackACK counter's name suggests it should only be
+incremented when a connection was seen using MPTCP options, then a
+fallback to TCP has been done. Let's do that by incrementing it when
+the subflow context of an inbound MPC connection attempt is dropped.
+Also, update mptcp_connect.sh kselftest, to ensure that the
+above MIB does not increment in case a pure TCP client connects to a
+MPTCP server.
 
-The reason is '$2' should be set to 'dev', not '$1'. This patch fixes it.
-
-Fixes: 69c6ce7b6eca ("selftests: mptcp: add implicit endpoint test case")
+Fixes: fc518953bc9c ("mptcp: add and use MIB counter infrastructure")
 Cc: stable@vger.kernel.org
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/449
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240329-upstream-net-20240329-fallback-mib-v1-2-324a8981da48@kernel.org
+Link: https://lore.kernel.org/r/20240329-upstream-net-20240329-fallback-mib-v1-1-324a8981da48@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit 40061817d95bce6dd5634a61a65cd5922e6ccc92)
+(cherry picked from commit 7a1b3490f47e88ec4cbde65f1a77a0f4bc972282)
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
 Notes:
-  - Conflicts in mptcp_join.sh: only the fix has been added, not the
-    verification because this modified subtest is quite different in
-    v6.1: to add this verification, we would need to change a bit the
-    subtest: pm_nl_check_endpoint() takes an extra argument for the
-    title, the next chk_subflow_nr() will no longer need the title, etc.
-    Easier with only the fix without the extra test.
+  - Conflicts in protocol.c: because commit 8e2b8a9fa512 ("mptcp: don't
+    overwrite sock_ops in mptcp_is_tcpsk()") is not in this version, but
+    it depends on new features, making it hard to be backported, while
+    the conflict resolution is easy: just remove the MIB incrementation
+    from the previous location.
+  - Conflicts in mptcp_connect.sh: because commit e3aae1098f10
+    ("selftests: mptcp: connect: fix shellcheck warnings") and commit
+    e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
+    are not in this version. The dependency chain looks too long, while
+    resolving the conflicts was not difficult:
+      - using get_mib_counter() instead of the new
+        mptcp_lib_get_counter()
+      - writing the error message with 'printf' instead of the new
+        mptcp_lib_pr_fail().
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.c                               | 3 ---
+ net/mptcp/subflow.c                                | 2 ++
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 7 +++++++
+ 3 files changed, 9 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index a20dca9d26d6..0b433606a298 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -725,7 +725,7 @@ pm_nl_check_endpoint()
- 			[ -n "$_flags" ]; flags="flags $_flags"
- 			shift
- 		elif [ $1 = "dev" ]; then
--			[ -n "$2" ]; dev="dev $1"
-+			[ -n "$2" ]; dev="dev $2"
- 			shift
- 		elif [ $1 = "id" ]; then
- 			_id=$2
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3bc21581486a..c652c8ca765c 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3349,9 +3349,6 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ 
+ 		newsk = new_mptcp_sock;
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
+-	} else {
+-		MPTCP_INC_STATS(sock_net(sk),
+-				MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
+ 	}
+ 
+ out:
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 891c2f4fed08..f1d422396b28 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -816,6 +816,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 	return child;
+ 
+ fallback:
++	if (fallback)
++		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
+ 	mptcp_subflow_drop_ctx(child);
+ 	return child;
+ }
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 18c9b00ca058..dacf4cf2246d 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -439,6 +439,7 @@ do_transfer()
+ 	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
+ 	local stat_csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
+ 	local stat_csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
++	local stat_tcpfb_last_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableFallbackACK")
+ 
+ 	timeout ${timeout_test} \
+ 		ip netns exec ${listener_ns} \
+@@ -504,6 +505,7 @@ do_transfer()
+ 	local stat_cookietx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
+ 	local stat_cookierx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
+ 	local stat_ooo_now=$(get_mib_counter "${listener_ns}" "TcpExtTCPOFOQueue")
++	local stat_tcpfb_now_l=$(get_mib_counter "${listener_ns}" "MPTcpExtMPCapableFallbackACK")
+ 
+ 	expect_synrx=$((stat_synrx_last_l))
+ 	expect_ackrx=$((stat_ackrx_last_l))
+@@ -548,6 +550,11 @@ do_transfer()
+ 		fi
+ 	fi
+ 
++	if [ ${stat_ooo_now} -eq 0 ] && [ ${stat_tcpfb_last_l} -ne ${stat_tcpfb_now_l} ]; then
++		printf "[ FAIL ]\nunexpected fallback to TCP"
++		rets=1
++	fi
++
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
+ 		printf "[ OK ]"
+ 	fi
 -- 
 2.43.0
 
