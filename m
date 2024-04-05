@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD1E16AB6;
-	Fri,  5 Apr 2024 16:35:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B88B16C858;
+	Fri,  5 Apr 2024 17:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712334932; cv=none; b=BgTxMHKxBvzFRb2sjQ3FaFycySeYHmCD0UVk6mCdFEFTWnmak6licQrQv4I+qfqZ/rdRnCi++IPovlltKchRDJ5xI+ykMXITDpSeYSGhjonChFCj1PnGV8i1Zr1GPKz4/zc2fSgDwKM4lQrRXbGrIGzvQKk8QsSc37q7Pq5YZUk=
+	t=1712337277; cv=none; b=KmsJWVo9c/gmNVno7F0U66JgSqk590/EkM1ONoEA4iSRCvdIKHE4E7ganrSHz1ABUBttAIk7mJn0A5P093nI7D02aamGrQczQrrbO7oycLPa6Daec4j+5iI3idydOXRrjC5UjPvne7b9gfeX6DEDvkSzL4LIhGHPim9CgNOr2O4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712334932; c=relaxed/simple;
-	bh=p/+QpX0KlgkdLBwbAK4Hs4k1UkbMmcEgsjTKeopdg3s=;
+	s=arc-20240116; t=1712337277; c=relaxed/simple;
+	bh=7KS+8uQDn3+UWDLsdqWI+ka4b54MG5rnGe8OuN9/We0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=HyurtkG9AulBICfiPiOgGWfxc6KGUUX7TWTGw+fAc3wefLCg3Kwbf+WyOhDIPynX7MmSZSkIotMk05rEfllTwuDC0YMyE++GgH35QLOWnMwAhuYLm0L6a2I7Rk98W2spbZXIIbbjWV1frjJcJ3deHqDKFg5VyMzdI/b48IcA00Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=igRQi3KJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qz4rTrJzdd9FLWK3OiGlZ6/pna4ugylF1UUs//rSz75dpDBUkBwHCiHlzQ+B04AlZfpOYfkSaY3Mv9J9pIEDbINOJcm91GhCO4SZ3SjQG23qljJvH5g/+nItDtUhuUxdDmcPTvWIa8JXRRBCJCrKmljNiUjxV8AY6ePHpIW4zSg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=It/OiOX1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="igRQi3KJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C88FC433C7;
-	Fri,  5 Apr 2024 16:35:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="It/OiOX1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD7EAC433F1;
+	Fri,  5 Apr 2024 17:14:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712334932;
-	bh=p/+QpX0KlgkdLBwbAK4Hs4k1UkbMmcEgsjTKeopdg3s=;
+	s=k20201202; t=1712337276;
+	bh=7KS+8uQDn3+UWDLsdqWI+ka4b54MG5rnGe8OuN9/We0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=igRQi3KJIGUhmay5u1dWjibiBnPBTsjlOkK9QLay4szt3+dTT2vOG3Fre364mew6e
-	 t1saKe2WVsWmYCkPoSLUt3ft3akmEfV56bf5Y7MtyFWJl+djcuq9ra8W/8tGiImqSD
-	 t+HFQ+8IymudMvt3/8uQ+3mCYDdlrWxowykuV1dW3hvdLkmeSZpP6TnTx7WRgLrNK3
-	 Ih3rseuGD8mHynjyyHFE8D5EWR/g/DEVytGy/jwntrMCz81Zw5re4m/LUmyLFu03eJ
-	 OO05Nz08D9oDNwrPBXuPtBcE5WYF0q0x7XAMnEdIGJ6CliXHuJ7u6Oxgk2+ZbabY2s
-	 RHmb1bhedduLw==
+	b=It/OiOX1FqkuRW802LWR0AmqT9af15526bL1EOsOk9GBljQmCsLMX8ndcNsIO2e1F
+	 z15mvdv3oGwmHTNFv8RCS50RbXXPOdzCpg2v/T88AZ+T7jG3RNMBGoheZY8SFgIR7O
+	 KAv2BlFxIy1n3fu7ji0duPHtzNUko5hszwZSPJaTv5OT93PTBjlX40ufJMpUpKEOzk
+	 IVS1QixgZmWUwjol50uKve/M69Z05GFA1usrPQf81klQOurW06RKtOQ25+Kky/5YHd
+	 AfYgL4ZdYGnSc4tuwePvXm+MAPx+FsOqelC43jX6d4K6riD5PVPMyRsspHgWpAEZEy
+	 NYeaNuP6SzpHA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
@@ -35,19 +35,19 @@ Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
 	Mat Martineau <martineau@kernel.org>,
 	Matthieu Baerts <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y] mptcp: don't account accept() of non-MPC client as fallback to TCP
-Date: Fri,  5 Apr 2024 18:35:22 +0200
-Message-ID: <20240405163521.1221351-2-matttbe@kernel.org>
+Subject: [PATCH 5.15.y] mptcp: don't account accept() of non-MPC client as fallback to TCP
+Date: Fri,  5 Apr 2024 19:14:15 +0200
+Message-ID: <20240405171415.1389330-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024040522-tremor-freehand-618e@gregkh>
-References: <2024040522-tremor-freehand-618e@gregkh>
+In-Reply-To: <2024040523-handling-conceded-2895@gregkh>
+References: <2024040523-handling-conceded-2895@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4810; i=matttbe@kernel.org; h=from:subject; bh=GsftLZFFdBRa1yvvDkcfllC5qjRTCi2xFub5bG7Zxrk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmEChKf3JEpQYaGsNO6VehhcyRV/EV1jpi1o71t RoFqU6ZZuaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhAoSgAKCRD2t4JPQmmg cxdoEADQ4878KZoHcpNjL35ZxUnscSW9EyGsKQ2wEAFSX05feQJI3Mh7MmY8ORW57NNsipJAeAn /bXOdWk+qbOTJtXj5n+MPHY1KdQWsMCSLDxqBNofD2pD26SLKX2CYXAiwVCNdkWoGHLjiGCYebj DJ02QqowRPGXDznPf00dMtNKrrRMnvXSLlQ/ntg6aBcCmk6tnkyA/HJ+FbZmU0OA2aRP77DlS7S EQgBK24Ujh2MUjjQdvdw9uKIIaOYo7T/ixrs7zH5VhMgWGo+8RRIHFM6g+8mwTYs7G8AyZglMOU k58YGgjrCX7d+P99TCs3EgPzzj3gyLj0eLc2x4DGWc5Z5GiB8JmtDmnIGIe7atCId6z+RVVzvfn 60NPTiwmOjlpF9aagaKjay7mMtOvdoi6wBhyI6CwvR/Sc9rbyB1eENIqttbTpZ6TNN1H3gg+Wom LNItvoqqpdvlIBrAwX1Bzk8O7JvKJX5m/3M6U4zFZuULttc/HZz+c+YuoTdLpuHDJdxfS/TmrFB qgfNUfyOqIxpcbEdTdOw01IWeZhc7lwhj6nKyzI/vFrj3F6IbPCwYZqRwXaLWB29yVA6xE3u+J/ gvlIRXUlC7oCLYb7VZz8OPAKWsaFrCHZKzRTGMp6SUx4h22IxsxS9Zi5uQrbZX30+3yNYQVVSBJ RGFL5cggICXbKng==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5185; i=matttbe@kernel.org; h=from:subject; bh=WybP+5ScK2x6ufSrrqQgVxdnkoh2etpaZNO5gcKMwU4=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmEDFnjK39FsmoMdCJv0xpqjbWPTX2UfpEtMXzF e8JxQlZ7F6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhAxZwAKCRD2t4JPQmmg czX3D/9jmdVSWh9mZIyfRfKKo96wyZGAQuTq/8LnSoCmkT9RZipPXj4Io2V7HYdsNO7UrrI/lRx iLpbKuiJSJ9yd1GzclkWBxWZLO4etd5b8PmkSNfjEnQttznXixA7G7h8WrmpsDxLVe3PInTpdwS xd55f3KgquDUEWaRXopz/cxPftpT/kLm9V30esn3KiVRuhFX/jB5HA92JbusTFNx4QESUXxva6g ntB3MkB2bFqprt/dqY9PqJN38RaiWpuU55oC9rNqPPZvaTFE8Ymq9W28aVRQY5k/tLbj8J+bX3K 5lrFJpgk9+98xW8oHCl/7YGXDHvBGvFfKL/oY7f/fMOGbSsBAtCFtYjD4tKbv47wjfWyEkrPNwr +WYnKTVHPEZe3nyQi0l/x98aVDApRKppm/sLJpOSk26wLf4N9jk96KfaMCIRpfFscp9vHPmvGnl mwJZBytRFzyXuKJuOn5/l9khzR6wZtXTjWb1vyl7MQmLihXPy+W3cBC0dF8lqTyJyb9NMIGigEN uThU55DAD3e0wNMX25Jd8dIHgqq7btTl/orHB1lleUzg7i8IxIAt0S6dXSzdZVYuag4akofUlRi irCOHnB1NbpF6vPq1RZD+WOEOAjuPulX2EaqD3lmmpxwkPnCqvbIvsocmXjwevXq6RaYc0VzAzJ M4Bf7WiUxAgA0RQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
@@ -84,6 +84,11 @@ Notes:
     it depends on new features, making it hard to be backported, while
     the conflict resolution is easy: just remove the MIB incrementation
     from the previous location.
+  - Conflicts in subflow.c: because commit a88d0092b24b ("mptcp:
+    simplify subflow_syn_recv_sock()") is not in this version, but it
+    depends on new features, making it hard to be backported, while the
+    conflict resolution is easy: just move the MIB incrementation where
+    the subflow context is dropped (fallback to TCP).
   - Conflicts in mptcp_connect.sh: because commit e3aae1098f10
     ("selftests: mptcp: connect: fix shellcheck warnings") and commit
     e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
@@ -95,16 +100,16 @@ Notes:
         mptcp_lib_pr_fail().
 ---
  net/mptcp/protocol.c                               | 3 ---
- net/mptcp/subflow.c                                | 2 ++
+ net/mptcp/subflow.c                                | 3 +++
  tools/testing/selftests/net/mptcp/mptcp_connect.sh | 7 +++++++
- 3 files changed, 9 insertions(+), 3 deletions(-)
+ 3 files changed, 10 insertions(+), 3 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 3bc21581486a..c652c8ca765c 100644
+index 5db1c0142abb..cde62dafda49 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -3349,9 +3349,6 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
- 
+@@ -3018,9 +3018,6 @@ static struct sock *mptcp_accept(struct sock *sk, int flags, int *err,
+ 		sock_hold(new_mptcp_sock);
  		newsk = new_mptcp_sock;
  		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEPASSIVEACK);
 -	} else {
@@ -114,23 +119,24 @@ index 3bc21581486a..c652c8ca765c 100644
  
  out:
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 891c2f4fed08..f1d422396b28 100644
+index 80230787554e..ff7239fe3d2c 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -816,6 +816,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 	return child;
+@@ -725,6 +725,9 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 				goto dispose_child;
+ 			}
  
- fallback:
-+	if (fallback)
-+		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
- 	mptcp_subflow_drop_ctx(child);
- 	return child;
- }
++			if (fallback)
++				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK);
++
+ 			subflow_drop_ctx(child);
+ 			goto out;
+ 		}
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 18c9b00ca058..dacf4cf2246d 100755
+index 8efff3f9c52a..5a1277d17286 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -439,6 +439,7 @@ do_transfer()
+@@ -451,6 +451,7 @@ do_transfer()
  	local stat_cookierx_last=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
  	local stat_csum_err_s=$(get_mib_counter "${listener_ns}" "MPTcpExtDataCsumErr")
  	local stat_csum_err_c=$(get_mib_counter "${connector_ns}" "MPTcpExtDataCsumErr")
@@ -138,7 +144,7 @@ index 18c9b00ca058..dacf4cf2246d 100755
  
  	timeout ${timeout_test} \
  		ip netns exec ${listener_ns} \
-@@ -504,6 +505,7 @@ do_transfer()
+@@ -516,6 +517,7 @@ do_transfer()
  	local stat_cookietx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesSent")
  	local stat_cookierx_now=$(get_mib_counter "${listener_ns}" "TcpExtSyncookiesRecv")
  	local stat_ooo_now=$(get_mib_counter "${listener_ns}" "TcpExtTCPOFOQueue")
@@ -146,7 +152,7 @@ index 18c9b00ca058..dacf4cf2246d 100755
  
  	expect_synrx=$((stat_synrx_last_l))
  	expect_ackrx=$((stat_ackrx_last_l))
-@@ -548,6 +550,11 @@ do_transfer()
+@@ -560,6 +562,11 @@ do_transfer()
  		fi
  	fi
  
