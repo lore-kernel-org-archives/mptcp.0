@@ -1,158 +1,152 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f43.google.com (mail-ed1-f43.google.com [209.85.208.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98C2A16D9B8;
-	Fri,  5 Apr 2024 13:06:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C56711E52C
+	for <mptcp@lists.linux.dev>; Fri,  5 Apr 2024 13:30:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712322402; cv=none; b=mNqhzekuOZAMCMsIx20OVkL7SMZp0bacYLeEOrY48+gUnY0wtcbpgHb/ituq7V6ktj+WdK74UjU8Ilf5skNQaO4vEkpTHgspXk1tGALlz9zB0q+UVA1qHqOHQxPOROmvs3mzErHztaR4CjQwfbVFp7vc+XOdUD03DhDWwGNBV14=
+	t=1712323808; cv=none; b=pxGeHcBr43NmwQDS4KDVwRBSn8AbVk1/oec8K0sfYfUInLyT34O3zDsLZGICAlIjPrFitaXB8gUhVJAfd9UmE0QzUJg4d4Nm685eTE2IZfwP8Er5p7xjDgCpy2cnyrKPL3FvKKv29uFlI48l/jRkT77AbzhWNVF04/BLJfGlwSY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712322402; c=relaxed/simple;
-	bh=cNRHTNoB1FjvRBTrgLJ9wDmPMMbth4hYAQoyT329fAU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sbbKNCVCe258ExBskiFRjCnse43M6DHvBSXf6SYyyHgtC+Utjr3Wk9fOFif/y9btGfXbc6Wxio2QwYH5Kk13lMSeNsyo/TJwjvI6K0kDehH85o6h73h/KJAKsZiUaidhjINESIxxpLwr7+drrSj0/CM1XgdgGYd4AaJEg6N6qog=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Eo9q1mnx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712323808; c=relaxed/simple;
+	bh=wSswXutQJ+wCZIDOdh13zZfPNpNOZaTJPxJxnSQYIrs=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ntnYOs50vyB6uQ6VsRDocC9dcD20tzRCubiBYakuV0JwGcmuVbbmevpRiZPUvrkhKJxxZBmpt5EhgDkMc6GCd80+UKJC0dNPrwsIAxbYyW/foRx/VILCGUpu/g57VHr0oSKoUVB1sgU1+s5/Y0h8I8M53tBAve4PtBIWgQEDz74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=FC0wNy32; arc=none smtp.client-ip=209.85.208.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Eo9q1mnx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 906EEC43394;
-	Fri,  5 Apr 2024 13:06:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712322402;
-	bh=cNRHTNoB1FjvRBTrgLJ9wDmPMMbth4hYAQoyT329fAU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Eo9q1mnxk3HiIgK1O+yi4lv40j/Z8oeMYMP+Qk9c2Fn38NlrCsxnTwEp7zfk1Sjdb
-	 DXUWGxiGqPNMXL6mbx9AuS9g/8wcYIrcUKUDBcLXfT3JNY5vZg6XBULa8mQiV8E/Gj
-	 cXO/l8uWwGsMWuJ31cXfPU5kXYmM91rgIvmEHYpeRvVYazGfwXfYoHK6hN40tXu5nU
-	 fp50vMrnzBnyTq8DCHq/NhSdXQJn1wUOmPY3OQ8wrYxQrY60IN2/V2hkcte2RBQNFF
-	 6LInZiZHplslm/JlCOpS6ynr8Gx1tA4TXmwAehR8JLcp3cZ3ts0c7h8UBKduuZfHdE
-	 bI3DHPs/qix7A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 05 Apr 2024 15:06:22 +0200
-Subject: [PATCH net-next 2/2] selftests: mptcp: test last time mptcp_info
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="FC0wNy32"
+Received: by mail-ed1-f43.google.com with SMTP id 4fb4d7f45d1cf-56e2e94095cso8872a12.0
+        for <mptcp@lists.linux.dev>; Fri, 05 Apr 2024 06:30:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1712323805; x=1712928605; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=udhYzo9d/0PPqGVdd4D3LGjxi+bDzO7RIJlIIFERmQE=;
+        b=FC0wNy32kKAd3CH0atdAiyF5JwkynC/VvD8hzCQ2snFtDC5S+b7o/dj7VFFAQirYGh
+         ChBuWLJYIfeENxYm5hmoN8ZPw9W2M8/vyvOCg+eMvhNNAhpqXHE4YgZmuv2KJmmGsVgp
+         LBwBVMAZpziLPfe/e9VHgocUCgFADknJyX+wwkuqO1Em9/RThVXV6DkB6qak1CBPR8Sy
+         AmAqkHFmUVqJsMxhxOjp3zfZ7ZgLDEMg9DzrXp5SaR5hYec7X6nG38+hz5RoG5lLesr0
+         gs4WJPmQXgWkYxrVS4AleM8YvqWe44R54u2gYXfIO9suQ9/L0mPxy59yMxQ2j2jIOD4O
+         j/tA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712323805; x=1712928605;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=udhYzo9d/0PPqGVdd4D3LGjxi+bDzO7RIJlIIFERmQE=;
+        b=racDsmQLpbzuzuoBx7f2scO91z4nks3/DeKtPZWMPX6GsN+JQ6xX/LBGv4pVRjnFyZ
+         icBDnxDpR9HQGoyrtsqdAmqJAj1uHBU2rToWUCfvuGQacsu5ZCxNqOAVxI+jxSYOm8Ez
+         rR7A5ciF4AOBFAueUF7J3O/wgRjIE2MCuK7u9e+TCKcdWnxbm1xWdW3VzNAhgJcGAwdU
+         l5WLqPRyXHXciWywIFfG5Ii5xF1JdphU8M506goGG9cwbnUEeKl0NbgLdfgbGSuH4UFr
+         +wRUEfHPQVnQvhw+juboSZbZb6otehRrzlGZGQqS48qbVgJzS2TQgakXsOfv6vTN0qQm
+         PgJw==
+X-Gm-Message-State: AOJu0YyjL+yi0BqPLZi+5DCzfoZKBbATMa7GdEkrDkffAyJ8tNrfAc4T
+	ZJDqAlwAVaA1CwuN2j6lFj0HZ2MGqEcvXRUkJdYbk90N9hFZSu20MVX255oJc4S13/hAcXZQXsW
+	TiejlBxxuSrAP5WNYw2Jp5487gUjRCg70WC6l
+X-Google-Smtp-Source: AGHT+IHKnNwfoWVM8o54afDpZXoYzLLS0/kJjLYpGez23Xun7fuG7ohs51CmC+MLEwtVWDcCBP1C25v11O1H+kvmdgE=
+X-Received: by 2002:a05:6402:26c4:b0:56e:22b4:fa72 with SMTP id
+ x4-20020a05640226c400b0056e22b4fa72mr347542edd.3.1712323804808; Fri, 05 Apr
+ 2024 06:30:04 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-2-52dc49453649@kernel.org>
 References: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-0-52dc49453649@kernel.org>
-In-Reply-To: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-0-52dc49453649@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <tanggeliang@kylinos.cn>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2718; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=y6e1hT6fB4Z4RvFtfA4YiCJgrUME8UDpc0J3qux4/kQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmD/dYbuuYeNarkIzoMVcZDRom6JrJ+CHavZocI
- SL4My/XEYKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZg/3WAAKCRD2t4JPQmmg
- cxCvEACkenL2P9tgiLJFrD6OjhLMOMiZ2z1YWp3jcg59jMGlH4bKuLT2uIEFJr/sKdMUWK8Gluq
- sU8/w6dM0f8b3CdQWcuomUWrPuvzmZzj0QeILCdOsRwBMoabqjDVWlr0yZTw3MtW+9CW8WnRhRP
- dZ1ZISvYo93TSBW0PqtGUGuqRR/3Oi/P0egvGbco+rM8wHci0bZ9A7X6rejwshmGI1w/S8b2Uhe
- J8DZiNN02rUsNnHSpRDpbFdEGPL7URrplmu0XxWYQLfJ1XPBrKHB/jQjl2Wd8vt6ll2mG9vCFBZ
- oSoIy7v5QOzjSktUu8saIg48Ctl8ylBicPvn01ACIYfwhM/fKv0tg+ICE02CetmDIEFPBrzRKpP
- JaVdT0UgFnK/VCeUj9XyV+B2TbNVB3VgWfUZ1ISq0cUi8oWHb2nFu5Bv3qipvLr3NTO5iLAVzpe
- xjRIRXhHFYdQoZgP4L7gFGALdeCG+OsTNnNXiQ5EsqPkypIJ/NVvEbO8zpAwUt4xqjioHZDVexV
- ppNUIN689QbrnZ0hFomhSfk6aG9yzp6iZgyEcUAs+NMd7M14WCtVbqT4XeOFn3ZUmOHBFrYCO9x
- aeCgFKNYNhB8UOQTbhXQqK0uKtSyr56c988jkFV4fXmH52on1fPlv6+LY6mx+rQB8LXmAs/uuwq
- g1Ndvtzip/DiYzA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+ <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-1-52dc49453649@kernel.org>
+In-Reply-To: <20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-1-52dc49453649@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Fri, 5 Apr 2024 15:29:53 +0200
+Message-ID: <CANn89i+2TMNF7chYaDFEBNRng3iLPaXBqXKNtZYevDd95-PqmQ@mail.gmail.com>
+Subject: Re: [PATCH net-next 1/2] mptcp: add last time fields in mptcp_info
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Fri, Apr 5, 2024 at 3:06=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> This patch adds "last time" fields last_data_sent, last_data_recv and
+> last_ack_recv in struct mptcp_sock to record the last time data_sent,
+> data_recv and ack_recv happened. They all are initialized as
+> tcp_jiffies32 in __mptcp_init_sock(), and updated as tcp_jiffies32 too
+> when data is sent in __subflow_push_pending(), data is received in
+> __mptcp_move_skbs_from_subflow(), and ack is received in ack_update_msk()=
+.
+>
+> Similar to tcpi_last_data_sent, tcpi_last_data_recv and tcpi_last_ack_rec=
+v
+> exposed with TCP, this patch exposes the last time "an action happened" f=
+or
+> MPTCP in mptcp_info, named mptcpi_last_data_sent, mptcpi_last_data_recv a=
+nd
+> mptcpi_last_ack_recv, calculated in mptcp_diag_fill_info() as the time
+> deltas between now and the newly added last time fields in mptcp_sock.
+>
+> Also add three reserved bytes in struct mptcp_info not to have holes in
+> this structure exposed to userspace.
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/446
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  include/uapi/linux/mptcp.h | 4 ++++
 
-This patch adds a new helper chk_msk_info() to show the counters in
-mptcp_info of the given info, and check that the timestamps move
-forward. Use it to show newly added last_data_sent, last_data_recv
-and last_ack_recv in mptcp_info in chk_last_time_info().
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/diag.sh | 53 +++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index 73fdf423de44..2ec2fdf9f4af 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -896,6 +896,7 @@ static int mptcp_getsockopt_first_sf_only(struct mptc=
+p_sock *msk, int level, int
+>  void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *inf=
+o)
+>  {
+>         struct sock *sk =3D (struct sock *)msk;
+> +       u32 now =3D tcp_jiffies32;
+>         u32 flags =3D 0;
+>         bool slow;
+>
+> @@ -930,6 +931,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, str=
+uct mptcp_info *info)
+>         info->mptcpi_snd_una =3D msk->snd_una;
+>         info->mptcpi_rcv_nxt =3D msk->ack_seq;
+>         info->mptcpi_bytes_acked =3D msk->bytes_acked;
+> +       info->mptcpi_last_ack_recv =3D jiffies_to_msecs(now - msk->last_a=
+ck_recv);
+>         mptcp_data_unlock(sk);
+>
+>         slow =3D lock_sock_fast(sk);
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index bc97ab33a00e..776d43a6922d 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -200,6 +200,58 @@ chk_msk_cestab()
- 		 "${expected}" "${msg}" ""
- }
- 
-+msk_info_get_value()
-+{
-+	local port="${1}"
-+	local info="${2}"
-+
-+	ss -N "${ns}" -inHM dport "${port}" | \
-+		mptcp_lib_get_info_value "${info}" "${info}"
-+}
-+
-+chk_msk_info()
-+{
-+	local port="${1}"
-+	local info="${2}"
-+	local cnt="${3}"
-+	local msg="....chk ${info}"
-+	local delta_ms=250  # half what we waited before, just to be sure
-+	local now
-+
-+	now=$(msk_info_get_value "${port}" "${info}")
-+
-+	mptcp_lib_print_title "${msg}"
-+	if { [ -z "${cnt}" ] || [ -z "${now}" ]; } &&
-+	   ! mptcp_lib_expect_all_features; then
-+		mptcp_lib_pr_skip "Feature probably not supported"
-+		mptcp_lib_result_skip "${msg}"
-+	elif [ "$((cnt + delta_ms))" -lt "${now}" ]; then
-+		mptcp_lib_pr_ok
-+		mptcp_lib_result_pass "${msg}"
-+	else
-+		mptcp_lib_pr_fail "value of ${info} changed by $((now - cnt))ms," \
-+				  "expected at least ${delta_ms}ms"
-+		mptcp_lib_result_fail "${msg}"
-+		ret=${KSFT_FAIL}
-+	fi
-+}
-+
-+chk_last_time_info()
-+{
-+	local port="${1}"
-+	local data_sent data_recv ack_recv
-+
-+	data_sent=$(msk_info_get_value "${port}" "last_data_sent")
-+	data_recv=$(msk_info_get_value "${port}" "last_data_recv")
-+	ack_recv=$(msk_info_get_value "${port}" "last_ack_recv")
-+
-+	sleep 0.5  # wait to check after if the timestamps difference
-+
-+	chk_msk_info "${port}" "last_data_sent" "${data_sent}"
-+	chk_msk_info "${port}" "last_data_recv" "${data_recv}"
-+	chk_msk_info "${port}" "last_ack_recv" "${ack_recv}"
-+}
-+
- wait_connected()
- {
- 	local listener_ns="${1}"
-@@ -233,6 +285,7 @@ echo "b" | \
- 				127.0.0.1 >/dev/null &
- wait_connected $ns 10000
- chk_msk_nr 2 "after MPC handshake "
-+chk_last_time_info 10000
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2
+ lock_sock_fast(sk) can sleep and be quite slow...
 
--- 
-2.43.0
+I suggest you reload now =3D jiffies32;
 
+
+> @@ -942,6 +944,8 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, str=
+uct mptcp_info *info)
+>         info->mptcpi_bytes_retrans =3D msk->bytes_retrans;
+>         info->mptcpi_subflows_total =3D info->mptcpi_subflows +
+>                 __mptcp_has_initial_subflow(msk);
+> +       info->mptcpi_last_data_sent =3D jiffies_to_msecs(now - msk->last_=
+data_sent);
+> +       info->mptcpi_last_data_recv =3D jiffies_to_msecs(now - msk->last_=
+data_recv);
+>         unlock_sock_fast(sk, slow);
+>  }
+>  EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+>
+> --
+> 2.43.0
+>
