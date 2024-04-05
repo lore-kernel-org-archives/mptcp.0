@@ -1,262 +1,104 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 467322C1AD;
-	Fri,  5 Apr 2024 06:35:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB6F821379
+	for <mptcp@lists.linux.dev>; Fri,  5 Apr 2024 07:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712298953; cv=none; b=haVN7symei8zouhJC+IfhylEnL3BJCgHCxCW9g2Jb/vY4C/XpXRIu+rjN0J/orq3RGosKQhZCcjKne6VprOomymU/blx/GKuHIwSePLjQn6NleQSAqbBSlerbmbJHyU+ENZ1pkRRzEuodZbG+yHXaMSKSPFlQVr9KWIgDS8kdDA=
+	t=1712303280; cv=none; b=WyNvUsllDeBK95QpJk5ZSVf5WuQHEGoMKsElDytgSBTr9MLOE8O6v7XrlihOUUBmUc63o1m8xnl1nfEtq29gBROvlfp4gMoE7seRFVXYJ3EyVyWQ2T4wInNqjCFd0Vjt+QGx7EFElh7ar9kGK7ELspEOR9ARRD4KwYLXdkVOztM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712298953; c=relaxed/simple;
-	bh=cO1PzXnsl05Oi3CJR79NBSXRD97u81UbzHGkGAWcnc4=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=b/hDR6ld7SJYZVbEXhJNLyx6ntFFG2XJ9vpNjNA9AamBG7VcuAJwpYHAWPeeO1Hka9DofODSiOe4y4zTUWRoFMc68RsnxyRtwqQ4bgzXo3rPX35Co1v5gS8MxfiqldaN1yzb7Qi1faFyMB1qYT8QUbNwfaPWeBo6z6sy8e9xZ44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=vLL9rtI/; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1712303280; c=relaxed/simple;
+	bh=uS0aQXQsh/a/pFBghae45x0sP6pAJI09/0vpYdULpm4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=D/SOyFN91LDMewcvKRxpKSHVbbHiL1kpykvGtYYtKDy9bOspD0Ou3dvqVYmdr7wunTZpyLp+IpzzgFvFbt9dVvzfrhjX59h2c4bSRt7Ze+bv0LRgkKvdC1P3SRpJmj+awiOeT0i3aPDRzmVSm3MEHzE8EV1z6DjWjvxw1WVPPZQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=aPMRPaA2; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="vLL9rtI/"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240405063549euoutp024dc9ce480a65aa6b4cf156e048429c46~DTtKHMJ1a2835028350euoutp02_;
-	Fri,  5 Apr 2024 06:35:49 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240405063549euoutp024dc9ce480a65aa6b4cf156e048429c46~DTtKHMJ1a2835028350euoutp02_
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1712298949;
-	bh=hG667JlBEGcijqfQ0bCFe89iWwdz0RQupU+vCJJh7gI=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=vLL9rtI/oHdfrQxFN0DLwcMDnqDors74/koymRS2310QBWeyv31yIBpwkwkoUeTSo
-	 lltrcZvZd/Ns7rpxicR/PWoV+HTsmfTk3gKUVuElEScvN+2fE0ruZYylFndr2yGBkj
-	 TKK9WQk2MZCNyikCJPXKZA6A0NNdI2Tce2aB5uAE=
-Received: from eusmges3new.samsung.com (unknown [203.254.199.245]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240405063549eucas1p125a1262ad66664a4616735348ea5a6aa~DTtJ6z7b90623506235eucas1p1C;
-	Fri,  5 Apr 2024 06:35:49 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges3new.samsung.com (EUCPMTA) with SMTP id 8D.85.09552.4CB9F066; Fri,  5
-	Apr 2024 07:35:49 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063548eucas1p1500de4f04b0d27fca8f29a1f02ce90b8~DTtJTtNbV3228332283eucas1p1h;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-Received: from eusmgms1.samsung.com (unknown [182.198.249.179]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240405063548eusmtrp15c48b857f1e330de8c899a3144758be0~DTtJSCSo-2498024980eusmtrp1I;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-X-AuditID: cbfec7f5-83dff70000002550-38-660f9bc43f5c
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms1.samsung.com (EUCPMTA) with SMTP id 28.88.09146.4CB9F066; Fri,  5
-	Apr 2024 07:35:48 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240405063548eusmtip14193961009864e00ad20f3c07538b0c9~DTtI_kPvT1565515655eusmtip1k;
-	Fri,  5 Apr 2024 06:35:48 +0000 (GMT)
-Received: from localhost (106.210.248.50) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Fri, 5 Apr 2024 07:35:47 +0100
-Date: Wed, 3 Apr 2024 12:59:13 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Kuniyuki Iwashima <kuniyu@amazon.com>
-CC: <devnull+j.granados.samsung.com@kernel.org>, <Dai.Ngo@oracle.com>,
-	<alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
-	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
-	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
-	<davem@davemloft.net>, <dccp@vger.kernel.org>, <dhowells@redhat.com>,
-	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
-	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
-	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
-	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
-	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
-	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
-	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
-	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
-	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
-	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
-	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
-	<neilb@suse.de>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <pabeni@redhat.com>,
-	<pablo@netfilter.org>, <ralf@linux-mips.org>, <razor@blackwall.org>,
-	<rds-devel@oss.oracle.com>, <roopa@nvidia.com>, <stefan@datenfreihafen.org>,
-	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
-	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
-	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
-	<ying.xue@windriver.com>
-Subject: Re: [PATCH v2 4/4] ax.25: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240403105913.o5jc45ijxjixbapw@joelS2.panther.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="aPMRPaA2"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1712303277;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
+	bh=uS0aQXQsh/a/pFBghae45x0sP6pAJI09/0vpYdULpm4=;
+	b=aPMRPaA29uOCUBLZiNff0DO9Eet7lijMkYZ0Pj9hJxETfcOu7jLx25iL/uyilElF5ODEYx
+	R861nBitzK7fgLEpPByOg85+gvKen9uibdf6sNzSw0g8IteL6S8ejPGpNYrv0xe8edqXkG
+	1/UtKdI8+fn06p5a0x7qXUtrRfxmfTA=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-668-E8NXRi9UPECHoAVY8BSe_g-1; Fri, 05 Apr 2024 03:47:54 -0400
+X-MC-Unique: E8NXRi9UPECHoAVY8BSe_g-1
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-343b9425ed1so350203f8f.1
+        for <mptcp@lists.linux.dev>; Fri, 05 Apr 2024 00:47:54 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712303273; x=1712908073;
+        h=mime-version:user-agent:content-transfer-encoding:autocrypt
+         :references:in-reply-to:date:cc:to:from:subject:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=uS0aQXQsh/a/pFBghae45x0sP6pAJI09/0vpYdULpm4=;
+        b=bmopzHbaeyLqomu5mlw59W3Pfop6HZ4BKq13GHXOBa2CJy91Sb/ZSW8EsFdQzg7BFN
+         VOX11FfibdgFZx9IUVOVGNNhkxS++XsZxAZSAFB6qqrNNXAN455ORbn11ayyeBksxL/0
+         EythsJMjng7oviyFLwqfDSmB7U9h1qDtWas7inaWU8CuDHQ3nX4djFaqtJ37WXzCc3OO
+         GJSsDm88IY0M7mzhswTWd7C8bStrBkEZYrqzQbU34/UTcSRLeKhtOVjSPfAsh8YbvLUv
+         W4PhatMcLFwrXkA0p9Cu5Hardo2qHenOXcAeC1SxouGHkykaRWhPuxRgBJMukfI4Sojw
+         PuZQ==
+X-Gm-Message-State: AOJu0YzQRjXVNmIilKsSr0PzGH9OXc6+ScIL2HQTTwAG6iWcocyNsMsK
+	EBbfLitlMrMgKHGjj45keXQGak/ON4YZfnXv1vPpgjJFLy2x/FKIRy/PFu8Pqw2bawS1Oo5OSMM
+	u64HMCczNwB9mtgJG+uBMP1XG9SYlGrUMimowqHfnAi1zh0dKIUxn
+X-Received: by 2002:a5d:64ec:0:b0:343:b5f0:f510 with SMTP id g12-20020a5d64ec000000b00343b5f0f510mr674800wri.1.1712303273198;
+        Fri, 05 Apr 2024 00:47:53 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHj95jbp1+tsuypKHAdGT+4GN5iykJLOOBF/bALOCINV/YZ+Ry60hzjSeiqcRf/DjA0/1S37g==
+X-Received: by 2002:a5d:64ec:0:b0:343:b5f0:f510 with SMTP id g12-20020a5d64ec000000b00343b5f0f510mr674784wri.1.1712303272857;
+        Fri, 05 Apr 2024 00:47:52 -0700 (PDT)
+Received: from gerbillo.redhat.com (146-241-247-213.dyn.eolo.it. [146.241.247.213])
+        by smtp.gmail.com with ESMTPSA id c8-20020adfe748000000b00343a0e2375esm1352353wrn.27.2024.04.05.00.47.51
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 05 Apr 2024 00:47:52 -0700 (PDT)
+Message-ID: <a0e75cbda948d9911425d8464ea47c92ab2eee3b.camel@redhat.com>
+Subject: Re: [PATCH net-next 1/2] mptcp: don't need to check SKB_EXT_MPTCP
+ in mptcp_reset_option()
+From: Paolo Abeni <pabeni@redhat.com>
+To: Jason Xing <kerneljasonxing@gmail.com>, davem@davemloft.net, 
+ edumazet@google.com, kuba@kernel.org, matttbe@kernel.org,
+ martineau@kernel.org,  geliang@kernel.org
+Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org, Jason Xing
+	 <kernelxing@tencent.com>
+Date: Fri, 05 Apr 2024 09:47:51 +0200
+In-Reply-To: <20240405023914.54872-2-kerneljasonxing@gmail.com>
+References: <20240405023914.54872-1-kerneljasonxing@gmail.com>
+	 <20240405023914.54872-2-kerneljasonxing@gmail.com>
+Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
+User-Agent: Evolution 3.50.4 (3.50.4-1.fc39)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="w6pan44lwventsuw"
-Content-Disposition: inline
-In-Reply-To: <20240403091625.lk35wt2iqkvabrmr@joelS2.panther.com>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2VTa1BUZRj2O7ddNteOiPElODorIBpBVOarlooZc6ofyeBMZk3KyAFJWHBX
-	wss4rYAscrFNmhjxAkisy21RWFeWixIqCDhchAKNy3BXWBRcQEFlE46WM/173ucy3/P8+MSk
-	bZJ4kThIvo9XyP2CZYyEMlZO1r9749SbAe9pJkioUK2GrtI4GlTRMQQcNVkpMGbEE2BtHyDg
-	uUlNgqVrgIbUc4UMnK6PpuB5SzwDTWd6CXgQ+ZQCffFRAvoqu0VgTMxBkBPZRsHlgccMxA86
-	QtSlcQS9P3fT0KwdYWBSmy2CzvFuCiaPvwEn46IIuBUfAkXtvRQ0GI/ToE3IY0BT4wl/XW4n
-	oKn4NAMN5bU09FckUqBJjyKhL22IhrYkLQXlZakIuvMfEhCV+oiEKEsPCVO6KhrqEq0kpOiz
-	SWjV9CG4pr5Cw638SBFMnL1JQlmqioLKtLdAo6+hYKLWjCDZ/CcJt0udoGbMSkBdoYUGy2lX
-	SNIZCCg59kQEhvofoGaqhoCexwMMWFs3bNzE6RriaO5u9zjJPairRtzZ3EPcKVUjxU1NruQM
-	WXcILv76IMmZUtpFnLHcmUsrCOeeVVwUcQXZxxjuRlYewZm61nCac+Voi2y75GN/PjjoR17h
-	sX6nZPfz0n5R2L3F+289/JtQoSoch2zEmP0QD8SoqTgkEduyOoTHGy2McIwhXNxseKlYEG69
-	eR+9iiQVDBOCcB7hP34ZIv91XVA9pYWjEGGNqepFRCymWCc8OiSZSTOsG643t5Ez2I5dgWP1
-	CbN+ki2U4upjLfSMsIANwE86+mazUnYjvjNpN0NL2fm4+mQvNYNJdj8e6bw5ayFZB3x+WjxD
-	27Be+FFZ7iyNWRl+nPOF0PkwrjHcne2M2ca5+F5mBiMIm/FvsYkvhy3Ag1UGkYAdcW1SAiUE
-	khC+Oj0iEo4chLVHxgnBtQ5HN/e+THjhYcsRRnh5Hm4dni/0nIdPGJNJgZbi2Bhbwe2CczrM
-	lAYtS3ltWcpry1L+WybQbjit5BHzP/odrE0fIgX8CdbrH1JpSJSN7PlwZUggr/xAzke4K/1C
-	lOHyQPddoSEF6MVfrZ2uGi9CusFR9wpEiFEFcnoR7r6Q04AWUfJQOS+zk8ZvlAbYSv39Dhzk
-	FaE7FOHBvLICOYgpmb3U2X8Jb8sG+u3j9/B8GK94pRJim0UqQr1kbvDowYgdYRJHz7oyx/eX
-	R/20YCl9NKGkLtt0QM6nZT3ri81fHOG2+sqmL22UrrX2zVt+Z24nF3dcdzkhu+ZPbt57uFTh
-	7usTWuSgECV+HVAtXtvyedGRFdOuprUj285kX+7o1JoHFm7fMzGV71O5bPQbXUTYymjfjwa3
-	9Y2OLamXW8vcntgmj9nfX7EmMnPOBovXLpnoO5/+zp0lnnYxid96SrSpuou+q6gpffPC9Qcj
-	jDZBLt7LzeYgc5xzaL/xs+8N1/O7vCzenfWuVFOTNc/De+/VS7mf/up976tDW5caHDJGG99O
-	d1H7zFnX7LW1J1S9yiOzyZWbM5wud1+r3t1zpV1GKXf7ea4kFUq/fwBFmmt5JgUAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0yTZxTGeb9bC67zGxT3Dl3UBjZls1IEPThRZJB924zTmP3DsmnBjzst
-	tgU3xa2hitoKsrCMiIyLbChFy7jIbbJ0TGCCAcSJwkCkcgkXZVJvVIRRm2Um++/J7zzPk5OT
-	HCHpel7gIYxRaHiVQh4vYVyotrmW/jWXTy+O9GmpxdCo3QCDl/Q0aA+nEXCkbp6C6iIDAfP9
-	owQ8rztKgnVwlIb8M5UM5HYcpuD5TQMD138YIuB+6jMKTPVHCBhutgigOr0UQWlqHwU1o08Y
-	MIwvA93FRwiGTlpo+LP4bwZmio0CGHhkoWAmYxGc0usIuGpIgNr+IQo6qzNoKD5xgYHMVhl0
-	1/QTcL0+l4FOcxsNI43pFGQW6kgYLpigoS+rmAJzQz4CS9kUAbr8aRJ01rsk2M610NCePk9C
-	jslIwq3MYQS/H/2VhqtlqQJ4nPcHCQ35WgqaC5ZApqmVgsdtkwiyJ2+Q0HXJE1ofzhPQXmml
-	wZq7CrLOVRHwy/GnAqjqiIVWWysBd5+MMjB/a0tQMHeuU09zvZZHJHe//Qri8s4f5E5rr1Gc
-	bcabqyrpITjD5XGSq8vpF3DVZi+uoCKJm20sF3AVxuMM11RygeDqBgO4zDNmtEMSJt2kUiZp
-	+BXRSrUmUPKZDHylsgCQ+voFSGXrNny+0ddfsnbzpr18fEwyr1q7eY80+my9jU4cefNLY4+7
-	FjVhPXIWYtYPZ1XcI+zalf0J4dG6IAdfhssf3qAd2g3PdusZPXJZ8DxAuKt3kHQEKhEeu7dG
-	j4RCivXEDyZc7Jhh38Udk30vLGJ2NT5mOkHbsyRbLsKTpR0vBm5sJH56exjZsyI2CPfMiB39
-	qQS2mCYYu0fEvoavnBqi7Jpkk3HXaBVj95PsUnx2TmjHzuxWPN1w/kUNZiX4SelHjpUPYevz
-	EZSJ3HJeKsp5qSjnvyIH9sa35saI/+F3cHHhBOnQgdhkmqIKkMCIxHySOiEqQS2TquUJ6iRF
-	lDRCmVCBFl6lunmmshbljT+QNiJCiBqR50LS8nNpJ/KgFEoFLxGLDEGiSFfRXvlXB3iVcrcq
-	KZ5XNyL/hRt+S3q4RygX/k6h2S1b7+Mv81sf4OMfsH6d5HXRh4nH5K5slFzDx/F8Iq/6N0cI
-	nT20hDnycGyJV1FwZ3jvJ92hPmNFtQerhftJ9++Wh8wu3pVxsm25Uwp6IyhoTfTN/V88e7/s
-	1dAPprZ8I2SvJYeL0UCY153YouTmwriQK9v2zWxJ+RgFGyt2BLZE6H5rWRU/5vv1vrGUKlXb
-	XJNm/MbAaienyqVnm840l2ybm56+/dcSMfcjfVQiUU0f8ah/ZpvYmnsgZaWS3VDh7hIbb3p4
-	aWMXH1a2fXuG/1vm6OzxwE3BF2MGQhMfo4aaOM+k/sqEzojsjZqVO3fHpb2X/L3x+p6BkGXh
-	l9OjonfODilS7rSko1emumTz4c4XdG+njZvF8qV1VdqaNgyLNtu8Pt11aMgz0jo7IKHU0XKZ
-	N6lSy/8BW/wH478EAAA=
-X-CMS-MailID: 20240405063548eucas1p1500de4f04b0d27fca8f29a1f02ce90b8
-X-Msg-Generator: CA
-X-RootMTR: 20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a
-References: <20240328-jag-sysctl_remset_net-v2-4-52c9fad9a1af@samsung.com>
-	<CGME20240328195008eucas1p2fc32577c64a80424c10f30e4f69fc11a@eucas1p2.samsung.com>
-	<20240328194934.42278-1-kuniyu@amazon.com>
-	<20240403091625.lk35wt2iqkvabrmr@joelS2.panther.com>
-
---w6pan44lwventsuw
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2024 at 11:16:25AM +0200, Joel Granados wrote:
-> On Thu, Mar 28, 2024 at 12:49:34PM -0700, Kuniyuki Iwashima wrote:
-> > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel=
-=2Eorg>
-> > Date: Thu, 28 Mar 2024 16:40:05 +0100
-> > > This commit comes at the tail end of a greater effort to remove the
-> > > empty elements at the end of the ctl_table arrays (sentinels) which w=
-ill
-> > > reduce the overall build time size of the kernel and run time memory
-> > > bloat by ~64 bytes per sentinel (further information Link :
-> > > https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org=
-/)
-> > >=20
-> > > When we remove the sentinel from ax25_param_table a buffer overflow
-> > > shows its ugly head. The sentinel's data element used to be changed w=
-hen
-> > > CONFIG_AX25_DAMA_SLAVE was not defined.
-> >=20
-> > I think it's better to define the relation explicitly between the
-> > enum and sysctl table by BUILD_BUG_ON() in ax25_register_dev_sysctl()
-> >=20
-> >   BUILD_BUG_ON(AX25_MAX_VALUES !=3D ARRAY_SIZE(ax25_param_table));
-> >=20
-> > and guard AX25_VALUES_DS_TIMEOUT with #ifdef CONFIG_AX25_DAMA_SLAVE
-> > as done for other enum.
-> This is a great idea. I'll also try to look and see where else I can add
-> the explicit relation check.
+On Fri, 2024-04-05 at 10:39 +0800, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
 >=20
-> Thx for the review
->=20
-> >=20
-> >=20
-> > > This did not have any adverse
-> > > effects as we still stopped on the sentinel because of its null
-> > > procname. But now that we do not have the sentinel element, we are
-> > > careful to check ax25_param_table's size.
-> > >=20
-> > > Signed-off-by: Joel Granados <j.granados@samsung.com>
-> > > ---
-> > >  net/ax25/sysctl_net_ax25.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > >=20
-> > > diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
-> > > index db66e11e7fe8..e55be8817a1e 100644
-> > > --- a/net/ax25/sysctl_net_ax25.c
-> > > +++ b/net/ax25/sysctl_net_ax25.c
-> > > @@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] =
-=3D {
-> > >  		.extra2		=3D &max_ds_timeout
-> > >  	},
-> > >  #endif
-> > > -
-> > > -	{ }	/* that's all, folks! */
-> > >  };
-> > > =20
-> > >  int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-> > > @@ -155,7 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
-> > >  	if (!table)
-> > >  		return -ENOMEM;
-> > > =20
-> > > -	for (k =3D 0; k < AX25_MAX_VALUES; k++)
-> > > +	for (k =3D 0; k < AX25_MAX_VALUES && k < ARRAY_SIZE(ax25_param_tabl=
-e); k++)
-And with the BUILD_BUG_ON we don't need to do the `k <
-ARRAY_SIZE(ax25_param_table)` any longer. Win/win :)
+> Before this, what mptcp_reset_option() checks is totally the same as
+> mptcp_get_ext() does, so we could skip it.
 
-> > >  		table[k].data =3D &ax25_dev->values[k];
-> > > =20
-> > >  	snprintf(path, sizeof(path), "net/ax25/%s", ax25_dev->dev->name);
-> > >=20
-> > > --=20
-> > > 2.43.0
->=20
-> --=20
->=20
-> Joel Granados
+Note that the somewhat duplicate test is (a possibly not great)
+optimization to avoid jumping in the mptcp code (possible icache
+misses) for plain TCP sockets.
 
+I guess we want to maintain it.
 
+Cheers,
 
---=20
+Paolo
 
-Joel Granados
-
---w6pan44lwventsuw
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYNNoEACgkQupfNUreW
-QU/2xwv+MItPQYrz+S6dRg4Ai/4AcELCorzBdY4bODL7PVt21oRNRzkdPrq6w6ju
-ZFVkQH/WIICFHeGJ9RJGwF/e3xOzwTpg3GK0xE0s3YT4eO2R/dzV7LyIGklp7WT2
-bsnrm2zhkiKp7OZHIhHUze9HniHLvoBiJPVAMMe3YXMkEtrjxfqLOVNnyKxuHjdD
-1QuYwZvFvCXZt/1y0B/vvCeaq+hlNidK29TRRU0Bmqb4jE9WYTYtBkwxLDPw9mNo
-kZ3nbaxct86hWGyWHXS9mYjySkRbS2JqHXYoDV+u0S51ufVgo7crYSL9E93t0hu2
-O6wCfXcUw2vcypp/jivDaSw5x9ULQWg4ITiWl3wxxsaRjoUwVl7IfOk1nQYwOsCE
-K138v1DytuqhzXRyLYYf6yEfug89HG762oB0V3UAxqx6uYQlpc99DhP2ejynYco2
-Ae8GVoKvakSl5NpefEu2btStO3NdM9rueEYF77z5oIYhbkC0YnkyJZz6zDtMQY/M
-7yoIH3I9
-=Ju+L
------END PGP SIGNATURE-----
-
---w6pan44lwventsuw--
