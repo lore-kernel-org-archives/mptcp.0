@@ -1,56 +1,56 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
+Received: from mail-oo1-f46.google.com (mail-oo1-f46.google.com [209.85.161.46])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 424B9171AD
-	for <mptcp@lists.linux.dev>; Fri,  5 Apr 2024 02:39:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D4C179AE
+	for <mptcp@lists.linux.dev>; Fri,  5 Apr 2024 02:39:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712284777; cv=none; b=gZeR5kuIIJ+5tV4bawi6oEGSaoTHUCxC1pyaOATf+seXNgJastzuDSLq/z+b9dGRWmqSsNJPXZlzmzfMWRmmWEzvF/eg61hX3K+qzLLW2Oo2q3fmXbPKN31PdIFCnb1GcQa7/5X1SarWONU3a8M4sfEPem2e+YpoBDM/0G3dAoQ=
+	t=1712284783; cv=none; b=cVanRzIClxj47EgqWqwrJVYRcXIohO42EdhcPniRPj+UddvC3ekzfe4xTqfyESjWxnIN8tbXJn90/jcmhFKXw7nKR9BtNj/JZ5TQeBKF2YmsEsrR1TQCFkmE4AZ2AgM+ceXZC3dy8I2GBEdG5DzoqYw7D99W0nd5AvC4yeVHzQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712284777; c=relaxed/simple;
-	bh=tTgPHWnpK1ARuYaqryAdkko9C7B0FiHVoFSbYKVwDg4=;
+	s=arc-20240116; t=1712284783; c=relaxed/simple;
+	bh=5QX6fzxn2CQXNmMlj/YURw9BuA5tNw+GgrYcPN6BxY8=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=cxmTwehAVzplwzb5WjtX+mEh7KO1yCgwtsFghjpWHfizyx52mqcHHt2hFeohyVe8sg0VuFNlF90TVHSoO+YS8cv2ZDcN7eVCUDKQ5TeSGCLpFkYak9ug1xuz3QjhxdjSrQzISXzSF706CmoqqpAuQI5Ie7rWm1UDtYli7rfouLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OWbXDzyg; arc=none smtp.client-ip=209.85.210.172
+	 MIME-Version; b=T4qh/BeI//l6rFjo4/QH2dABv0YJ5qWZGn80Z+nDiz4POjuO148nYcLQr/WJVlCPfjzp3ppuOiu5noq4ZyMc1wIx9r8Iu8Szf2Kx85hZ05sz3fGA5/8d9hmcvVzOXSmOUJ7GEFJdKpft1w+xdeFF/JcLbPdDxFQu33DzfJsPHV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Uk/lqoEw; arc=none smtp.client-ip=209.85.161.46
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OWbXDzyg"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-6e6b22af648so2140967b3a.0
-        for <mptcp@lists.linux.dev>; Thu, 04 Apr 2024 19:39:36 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Uk/lqoEw"
+Received: by mail-oo1-f46.google.com with SMTP id 006d021491bc7-5a47cecb98bso1029515eaf.0
+        for <mptcp@lists.linux.dev>; Thu, 04 Apr 2024 19:39:41 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712284775; x=1712889575; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1712284780; x=1712889580; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=lLePXVeMPfpQzwXoy7NOU9eXP6dijn/e0uzvyqDninM=;
-        b=OWbXDzyg4RHdNOf9WHoRKPu9WFvItlfmdHwoh+X7r8CJaCc/gzpEIulQHDJnjrAOkD
-         cOQ1MSU7lvOzIj3tqh+5emZjP7UzJNJ/+0IjkFe2EbauOSl2K0H+2cwtZf5DoGSE0L6T
-         yW1jS3nvHyyGgt5ebdNKChvQJHLzyCD8EAtjqv5x1r1h2VoSQQr5EgAfWBnwOg9+VBTo
-         Ru8zEQWkgnrF5F1ol1W4o4bD7eaoc7hUG+ed6VPhc6rIyuCdq+JPRw9YLzVeNNLrdpVh
-         AREpxKxHGKPuaUh4DT2iO8TUd0myJwyM2m1JVszyYcVqA4QvfiRhHi/Zx4hu2gXYIqS0
-         Wy9Q==
+        bh=8+WUgxwoWhE9CA4LyTM2EhUBxr1t+2JsbiUmutcJLZ0=;
+        b=Uk/lqoEwRMjR9w4xLfvHbGtW7kbiz4jW8iK/to8B7m9Qjdnu1p91RAqejXLdxlbe/0
+         ABpWFwZ/i8xFsFWWsxZjM4ySyZuecJ9hbRNy+0grrEKkg13OaQOR+51HsU8bH1dfkQ7c
+         HsJt3gsxbW55Sa3jt0I5XPB/FWMhPPqK29hpvftGqEesaRr8G7a274xzOAL5Lu0HPJUU
+         Xr0E4EXMr/3ACQdvJSoayg25d2LVA5dHkz8dzNCw2NMNucCAmpEDnMFmAaQSPLfCZNis
+         oDDgZ9EFIHLHelY1Gw0Al9s9+Z0Hv344nI7mkUOwekid9N0LKRwjbH0J4JwaGm8cnnad
+         s+tw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712284775; x=1712889575;
+        d=1e100.net; s=20230601; t=1712284780; x=1712889580;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=lLePXVeMPfpQzwXoy7NOU9eXP6dijn/e0uzvyqDninM=;
-        b=iQEFPp4NTPcC+AGE46Es2m5aUX3P1uKA45Siwf5LSPBqedn/0YLpRXrgpmdARLmR+c
-         EKLQyPbagLrd9s3q9jv1nRHuFJQPICvpSSTYEZOY8pxNHTwKwDO1sjg9JH+GY5z08fVO
-         WiXxlPGIqP/oDbOEEzmMUfPXOp/ONGJ2C8hXpq99D/AnBVUTEvbkv50Hh2o8YgnNR4nL
-         rsLNolh8QPj7BRqeWtM4P2xm8hlSdCh1fAkmj3XomUzcrXBsipbXKfJ8iewRe5IVP7W7
-         y3i8n67Tt5D1NrzfxMdnlf/ajs60LGMrlbeszh6xIzdVkWi/FMJ5QocCBZLU77J5XBPh
-         hwaw==
-X-Gm-Message-State: AOJu0YySwG5bs6yIiEQbdpfu9LiTAi5xNXreX90VETz94Xh2IbUpmgOq
-	mHzghew3vIlWnNhxr1XZlvGwakUifv4ycwjlApoZgwqJT3TfdEuhzT38hiqiVuo=
-X-Google-Smtp-Source: AGHT+IFgg+Or3iPiTfJ7Gpg6zUuzHOLtW8b/EWVJmICdCHYpjFDA+eeksmR2Rov5q5XFktbksHTv1Q==
-X-Received: by 2002:a05:6a20:549b:b0:1a5:6c2c:2db9 with SMTP id i27-20020a056a20549b00b001a56c2c2db9mr1676278pzk.3.1712284775505;
-        Thu, 04 Apr 2024 19:39:35 -0700 (PDT)
+        bh=8+WUgxwoWhE9CA4LyTM2EhUBxr1t+2JsbiUmutcJLZ0=;
+        b=ogeOHWfnpTefPeTl8681hgEFBjZ9DXz1S50lHGahDE9ya0sSwsg9/TC0r9YjsVRhcO
+         dD4SxTyDzx/IPkN6TEc6sW/3/MBs+Us2B4DA/hGQI9Z7+zbJUCNEkw2Doe/hV116jkFq
+         xmCgEIDcMq0JcdPvyx0+TMj3sLcCHz5vJrBU72QrXsr+yWa5x7cKrDhDsmPZ/oP+yVX3
+         OGIB+Ws+EIrJUG8p4iYCVz9dEx7Yz0ny9S3jv6lqMPErFcwgJm0pH8x7omA13WSjBZcU
+         HZOs9mp3BbWZkxkGVrB0aJ97RRQCqFyAY1WWk6CrfOcTIHgRRr+uE/y9ywMzoO1RjFLO
+         s8OA==
+X-Gm-Message-State: AOJu0Yyosx1L5ETLEHu/Ktj9nzHliGVLAFRMaQTietQEpQcY7mJSmtog
+	NjHz0bBLwfgpDJA6ZWPcEYxVdMQHAfZXM8a01HR3FjZXI9tc1+lA
+X-Google-Smtp-Source: AGHT+IE9uCOy08j21++u8sWENz6qjmz3wlGDjgbgkrmZJDVgWfDvR0rwMbf1iyPQZSZQ+wmX25CVPA==
+X-Received: by 2002:a05:6359:a214:b0:183:612d:4499 with SMTP id ko20-20020a056359a21400b00183612d4499mr340167rwc.31.1712284780471;
+        Thu, 04 Apr 2024 19:39:40 -0700 (PDT)
 Received: from KERNELXING-MB0.tencent.com ([111.201.28.7])
-        by smtp.gmail.com with ESMTPSA id g27-20020a63565b000000b005d8b89bbf20sm366494pgm.63.2024.04.04.19.39.30
+        by smtp.gmail.com with ESMTPSA id g27-20020a63565b000000b005d8b89bbf20sm366494pgm.63.2024.04.04.19.39.35
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 04 Apr 2024 19:39:34 -0700 (PDT)
+        Thu, 04 Apr 2024 19:39:39 -0700 (PDT)
 From: Jason Xing <kerneljasonxing@gmail.com>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -63,9 +63,9 @@ Cc: mptcp@lists.linux.dev,
 	netdev@vger.kernel.org,
 	kerneljasonxing@gmail.com,
 	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next 1/2] mptcp: don't need to check SKB_EXT_MPTCP in mptcp_reset_option()
-Date: Fri,  5 Apr 2024 10:39:13 +0800
-Message-Id: <20240405023914.54872-2-kerneljasonxing@gmail.com>
+Subject: [PATCH net-next 2/2] mptcp: add reset reason options in some places
+Date: Fri,  5 Apr 2024 10:39:14 +0800
+Message-Id: <20240405023914.54872-3-kerneljasonxing@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240405023914.54872-1-kerneljasonxing@gmail.com>
 References: <20240405023914.54872-1-kerneljasonxing@gmail.com>
@@ -79,30 +79,90 @@ Content-Transfer-Encoding: 8bit
 
 From: Jason Xing <kernelxing@tencent.com>
 
-Before this, what mptcp_reset_option() checks is totally the same as
-mptcp_get_ext() does, so we could skip it.
+The reason codes are handled in two ways nowadays (quoting Mat Martineau):
+1. Sending in the MPTCP option on RST packets when there is no subflow
+context available (these use subflow_add_reset_reason() and directly call
+a TCP-level send_reset function)
+2. The "normal" way via subflow->reset_reason. This will propagate to both
+the outgoing reset packet and to a local path manager process via netlink
+in mptcp_event_sub_closed()
+
+RFC 8684 defines the skb reset reason behaviour which is not required
+even though in some places:
+
+    A host sends a TCP RST in order to close a subflow or reject
+    an attempt to open a subflow (MP_JOIN). In order to let the
+    receiving host know why a subflow is being closed or rejected,
+    the TCP RST packet MAY include the MP_TCPRST option (Figure 15).
+    The host MAY use this information to decide, for example, whether
+    it tries to re-establish the subflow immediately, later, or never.
+
+Since the commit dc87efdb1a5cd ("mptcp: add mptcp reset option support")
+introduced this feature about three years ago, we can fully use it.
+There remains some places where we could insert reason into skb as
+we can see in this patch.
+
+Many thanks to Mat for help:)
 
 Signed-off-by: Jason Xing <kernelxing@tencent.com>
 ---
- include/net/mptcp.h | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
+ net/mptcp/subflow.c | 21 ++++++++++++++++++---
+ 1 file changed, 18 insertions(+), 3 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index fb996124b3d5..42d13ee26619 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -215,10 +215,7 @@ __be32 mptcp_get_reset_option(const struct sk_buff *skb);
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 1626dd20c68f..49f746d91884 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -301,8 +301,13 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+ 		return dst;
  
- static inline __be32 mptcp_reset_option(const struct sk_buff *skb)
- {
--	if (skb_ext_exist(skb, SKB_EXT_MPTCP))
--		return mptcp_get_reset_option(skb);
--
--	return htonl(0u);
-+	return mptcp_get_reset_option(skb);
+ 	dst_release(dst);
+-	if (!req->syncookie)
++	if (!req->syncookie) {
++		struct mptcp_ext *mpext = mptcp_get_ext(skb);
++
++		if (mpext)
++			subflow_add_reset_reason(skb, mpext->reset_reason);
+ 		tcp_request_sock_ops.send_reset(sk, skb);
++	}
+ 	return NULL;
  }
- #else
  
+@@ -368,8 +373,13 @@ static struct dst_entry *subflow_v6_route_req(const struct sock *sk,
+ 		return dst;
+ 
+ 	dst_release(dst);
+-	if (!req->syncookie)
++	if (!req->syncookie) {
++		struct mptcp_ext *mpext = mptcp_get_ext(skb);
++
++		if (mpext)
++			subflow_add_reset_reason(skb, mpext->reset_reason);
+ 		tcp6_request_sock_ops.send_reset(sk, skb);
++	}
+ 	return NULL;
+ }
+ #endif
+@@ -873,13 +883,18 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
+ 					 ntohs(inet_sk((struct sock *)owner)->inet_sport));
+ 				if (!mptcp_pm_sport_in_anno_list(owner, sk)) {
+ 					SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MISMATCHPORTACKRX);
++					subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
+ 					goto dispose_child;
+ 				}
+ 				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINPORTACKRX);
+ 			}
+ 
+-			if (!mptcp_finish_join(child))
++			if (!mptcp_finish_join(child)) {
++				struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(child);
++
++				subflow_add_reset_reason(skb, subflow->reset_reason);
+ 				goto dispose_child;
++			}
+ 
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKRX);
+ 			tcp_rsk(req)->drop_req = true;
 -- 
 2.37.3
 
