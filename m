@@ -1,121 +1,101 @@
-Received: from mail-oo1-f50.google.com (mail-oo1-f50.google.com [209.85.161.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19A2A817
-	for <mptcp@lists.linux.dev>; Sat,  6 Apr 2024 02:34:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5A1FA1
+	for <mptcp@lists.linux.dev>; Sat,  6 Apr 2024 05:13:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712370857; cv=none; b=F6k+yDFHW1POvjn1zJWRS4/th2zt5ZECVfkV5XC3RwmvV295DEuUE+gTw03EBVZHjMSnUxLhb06xAGkHyFip+6ZbeSz+gFTLh1uEsmMLbYFMZNZ/I9bDZMDokf8ZiylWYNaIrovL+1IXtuTStyIlIBDL2AmhL23b9JfKiDMvCyc=
+	t=1712380406; cv=none; b=Y3rSRQ66rKH+36wSGyZUi7q1QNq24eDzd/RjEGvFlObopfg+j56Yokl9yNKWtnl8LwGRYkNPQlxEAMFQRSpY5e+91qVGyhVc3JRDFQQoNtYmdaBtdTEd18xdmrB0C+b5kQnocfp/lmf/3OhQBn+hJebBqfGzNXblT8j4zLNGlPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712370857; c=relaxed/simple;
-	bh=yjbSJVCABZ7jxL1RJrDrs3054DCa5ubsvULRjLOOiOs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=iJHGhtCCmL6tGe3Yqm/cckypv/BNQ3Yfr+jvtvb0KuefSKOmvAmA398GttolFB7nxwXVaJMRV8OKeR+mpkH5QDT7N4tIRfddLY9ohLoR74OA6Q/EX+HFs28XdMZSqHmwK+tLnNmvIiEqqrFqtFauEGRSrluzlrIZF2vnDSmKI14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QxcwMumQ; arc=none smtp.client-ip=209.85.161.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712380406; c=relaxed/simple;
+	bh=7+n9aJcKDlHw2sVNzL1Bw1mjWkBGoTZBc2R6s4SgWR0=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=mP9Eqp5LfrFfO4XhrLu0ygzmMeoc5PR50GeZykhOqT5R7MnWtbGf+y57R+DJ20EiLIi3P4HJrT02TaRucKXJXM/dP/7rEt5jWr94n2K41W1HEmK3SLI5LtW0i7PinzTAptfN54npAvnw4JMgXZ3odVXPXVUgAXgJ408yekuRBD8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlXsVDd4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QxcwMumQ"
-Received: by mail-oo1-f50.google.com with SMTP id 006d021491bc7-5a51c063f99so1513084eaf.0
-        for <mptcp@lists.linux.dev>; Fri, 05 Apr 2024 19:34:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712370855; x=1712975655; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=j96nB6SbuT7MpKyBOt9SUnrjIsPwt7ZtJxogoYwhwV4=;
-        b=QxcwMumQryiqhYgZso5romYG1sknOMTcwjWhnpaEs51uBFQ3HYaD20Ah02QVCrUFXc
-         ZnFLVXudJ5xUtvY7Orxi8ONnurbWaY90FopoKF2BVnyFaH3KCZfTLprIwqpzmRHRRsnf
-         bZkOtWR90xxf+nNuTnL5t7cZjtMdRaNG0+et6QWmWu4lNSU+UO7SrSMl9xXplE2t+/+o
-         l/FC1lvsmbpdnJ6stqIOUo+u9a754R9Rk18Bt0zUZBmlcMkUsqWbkEEhwzRPytoOcUgE
-         67XA5AaaT8byK4FI6Z/UVK8XpD7vpBog1JjJ536o2wYJv5rVw6dqrYmg64O6mnu9dIal
-         M/bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712370855; x=1712975655;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=j96nB6SbuT7MpKyBOt9SUnrjIsPwt7ZtJxogoYwhwV4=;
-        b=hFuAybVIZdPW9MqgtuWrJQxCrPDyChCQf7RwAkgysPo7inaKgsicWp1cfCCXFnBQbi
-         weZxaJZCRppVMhfvFC8LOO8Zs8ccrmslHfavFHf1+vTxL2UJIJW+w/G65WRAmvLD2CCm
-         h8pTjCFVh2rDpn7F1L0dyPfWreftcK71O5VtDP925V5zPCvY/tsTaWjTmWGUt7EAo4du
-         rgPTX0VSHGh7YX+0002Ya5lz5ktG2RZtvZM6NiRbkIEtgxzoByAFLfeTmj/Bsyael5Q4
-         eTovKWROHYgnuu0Ptzis5LANlAVe6w/dSp6jw3UFvxDeCoxZ/4hod4R+BhdxLP4LtFw+
-         kqmQ==
-X-Gm-Message-State: AOJu0Ywd037F9qbjOazpbw8fiPp3PtdiwD9c09P9c/kXcFT9cKUfXD+Z
-	ncvAuMnFzkz7NCedXFWOEiM1/ItuiWWxDbCVBfWWaBs/Rst2uuE=
-X-Google-Smtp-Source: AGHT+IFOMfrHI67NZU/mGeJtc6AvOUfvljmXjsnoDIf0x0iEQu/FQ/JlJjmXJkYIbmv3z05u/EV6RA==
-X-Received: by 2002:a05:6358:d59b:b0:186:45c:d6de with SMTP id ms27-20020a056358d59b00b00186045cd6demr873681rwb.26.1712370854912;
-        Fri, 05 Apr 2024 19:34:14 -0700 (PDT)
-Received: from [127.0.0.1] ([4.227.114.102])
-        by smtp.gmail.com with ESMTPSA id g24-20020a63dd58000000b005d66caee3d0sm2167681pgj.22.2024.04.05.19.34.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Apr 2024 19:34:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jason Xing <kernelxing@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240406014848.71739-1-kerneljasonxing@gmail.com>
-References: <20240406014848.71739-1-kerneljasonxing@gmail.com>
-Subject: Re: [PATCH net-next v2] mptcp: add reset reason options in some
- places
-Message-ID: <eab8e0e0-574b-6f8c-4835-c4a62ed6efcf@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 06 Apr 2024 02:34:13 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlXsVDd4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3821BC433F1;
+	Sat,  6 Apr 2024 05:13:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712380406;
+	bh=7+n9aJcKDlHw2sVNzL1Bw1mjWkBGoTZBc2R6s4SgWR0=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=HlXsVDd40PUoXi5q3824i1J3/DW3QdHPJFNyuIsBQUe2jmFGVknMtclcfSNJQ3DXG
+	 ssWZBEqLhMxhiGz1ouYB0Tip8PF6IC6Hi4HrPkN51emjhcajeAoRwnAPikbm0zTu/a
+	 uDKaShjgkahuKY7VeDpdE17TUrjm8bml+5xWaV/HSxmxiEwgSjp6iQdETX0ai4jilY
+	 gUCKgUmsOi9+N771Jp0Y+o8zerQwnO0pLmw8YQA+JKRPKNrTKe7qdc1c8K2LNU4pTh
+	 L4Brw8XI75qjlSTuejG2K3Ngpznju43tkTOlE3ZP3r8enStSgj6hpBIxfL2PF/KRjO
+	 r/1GvHiJ2wf5A==
+Date: Sat, 6 Apr 2024 07:13:22 +0200 (GMT+02:00)
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+	Geliang Tang <tanggeliang@kylinos.cn>
+Message-ID: <dac737b6-ec30-4edf-a3f0-8471d93c54a1@kernel.org>
+In-Reply-To: <5900b56b-6654-b7e0-2fd4-88abeaeb52c1@kernel.org>
+References: <0979b4df687213cfaccaca526ad74958db8f67cf.1712363381.git.tanggeliang@kylinos.cn> <5900b56b-6654-b7e0-2fd4-88abeaeb52c1@kernel.org>
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add last time fields in
+ mptcp_info"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+X-Correlation-ID: <dac737b6-ec30-4edf-a3f0-8471d93c54a1@kernel.org>
 
-Hi Jason,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+6 Apr 2024 02:48:20 Mat Martineau <martineau@kernel.org>:
 
-Our CI did some validations and here is its report:
+> On Sat, 6 Apr 2024, Geliang Tang wrote:
+>
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Reload now =3D jiffies32 as Eric suggested.
+>>
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>> ---
+>> net/mptcp/sockopt.c | 1 +
+>> 1 file changed, 1 insertion(+)
+>>
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index 2ec2fdf9f4af..17223da5436d 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -944,6 +944,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, st=
+ruct mptcp_info *info)
+>> =C2=A0=C2=A0=C2=A0 info->mptcpi_bytes_retrans =3D msk->bytes_retrans;
+>> =C2=A0=C2=A0=C2=A0 info->mptcpi_subflows_total =3D info->mptcpi_subflows=
+ +
+>> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __mptcp_has_initial_subflow(m=
+sk);
+>> +=C2=A0=C2=A0 now =3D tcp_jiffies32; /* reload it, lock_sock_fast can sl=
+eep and be quite slow */
+>> =C2=A0=C2=A0=C2=A0 info->mptcpi_last_data_sent =3D jiffies_to_msecs(now =
+- msk->last_data_sent);
+>> =C2=A0=C2=A0=C2=A0 info->mptcpi_last_data_recv =3D jiffies_to_msecs(now =
+- msk->last_data_recv);
+>> =C2=A0=C2=A0=C2=A0 unlock_sock_fast(sk, slow);
+>
+> Geliang and Matthieu -
+>
+> I'd like to minimize the time difference between the assigments for all t=
+he last time fields. For example, if the last_ack_recv is copied before the=
+ socket lock is acquired, the value in the info struct could become stale w=
+hile waiting for the lock and not match up well with last_data_sent.
+>
+> Could instead move the entire mptcp_data_lock()/mptcp_data_unlock() block=
+ inside the socket lock critical section. Then, if 'now' is assigned with b=
+oth locks acquired there should not be significant delays between them.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8577922431
+Yes, that's what I had in mind when I replied to Eric.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/34e227fd1ebb
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D841989
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Because the data lock is a spin lock, maybe we don't need to reload it ther=
+e if this block is moved after the sk lock? So all the counters would be sy=
+nced.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
