@@ -1,101 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D5F5A1FA1
-	for <mptcp@lists.linux.dev>; Sat,  6 Apr 2024 05:13:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA56510A26;
+	Sun,  7 Apr 2024 08:28:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712380406; cv=none; b=Y3rSRQ66rKH+36wSGyZUi7q1QNq24eDzd/RjEGvFlObopfg+j56Yokl9yNKWtnl8LwGRYkNPQlxEAMFQRSpY5e+91qVGyhVc3JRDFQQoNtYmdaBtdTEd18xdmrB0C+b5kQnocfp/lmf/3OhQBn+hJebBqfGzNXblT8j4zLNGlPQ=
+	t=1712478500; cv=none; b=DrWT2L99MnhgcsF8ST5RrE4IYuarKWsDkLBsu/mzvMUKcf6jkkA1BbOvhbFwPJToC0nodRxoAxSWulwOEYxcUzRjRGXI0ofUKtV+drCwbTcFhYwmF+iQ7TjSe76vvUmaWJ9CvUuglAiHpUpxtmQ5YM4/waGb20fgZO/XDRoT39o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712380406; c=relaxed/simple;
-	bh=7+n9aJcKDlHw2sVNzL1Bw1mjWkBGoTZBc2R6s4SgWR0=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=mP9Eqp5LfrFfO4XhrLu0ygzmMeoc5PR50GeZykhOqT5R7MnWtbGf+y57R+DJ20EiLIi3P4HJrT02TaRucKXJXM/dP/7rEt5jWr94n2K41W1HEmK3SLI5LtW0i7PinzTAptfN54npAvnw4JMgXZ3odVXPXVUgAXgJ408yekuRBD8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HlXsVDd4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712478500; c=relaxed/simple;
+	bh=sQRFh15eS1KcsyILFzsjsuNASDD2MRAK6hYQtzSXvF0=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=jQpSoNbuRraXXKj7zsyNIj+I2sIESmlegvR2WhnV3A8/vIeQsyCRvyx+I12/UVmqCA51WPf3m3rxETuiB8U5E7CNtR+fEppPeMD9yqeiW/w2al4CrsqbTF0ZpZHxZGG/0MUDsibGFRZP3uMcPCs9yWkOpTG53AXRVYprwSvmeOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h13PZM00; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HlXsVDd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3821BC433F1;
-	Sat,  6 Apr 2024 05:13:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h13PZM00"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 008E6C433C7;
+	Sun,  7 Apr 2024 08:28:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712380406;
-	bh=7+n9aJcKDlHw2sVNzL1Bw1mjWkBGoTZBc2R6s4SgWR0=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=HlXsVDd40PUoXi5q3824i1J3/DW3QdHPJFNyuIsBQUe2jmFGVknMtclcfSNJQ3DXG
-	 ssWZBEqLhMxhiGz1ouYB0Tip8PF6IC6Hi4HrPkN51emjhcajeAoRwnAPikbm0zTu/a
-	 uDKaShjgkahuKY7VeDpdE17TUrjm8bml+5xWaV/HSxmxiEwgSjp6iQdETX0ai4jilY
-	 gUCKgUmsOi9+N771Jp0Y+o8zerQwnO0pLmw8YQA+JKRPKNrTKe7qdc1c8K2LNU4pTh
-	 L4Brw8XI75qjlSTuejG2K3Ngpznju43tkTOlE3ZP3r8enStSgj6hpBIxfL2PF/KRjO
-	 r/1GvHiJ2wf5A==
-Date: Sat, 6 Apr 2024 07:13:22 +0200 (GMT+02:00)
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
-	Geliang Tang <tanggeliang@kylinos.cn>
-Message-ID: <dac737b6-ec30-4edf-a3f0-8471d93c54a1@kernel.org>
-In-Reply-To: <5900b56b-6654-b7e0-2fd4-88abeaeb52c1@kernel.org>
-References: <0979b4df687213cfaccaca526ad74958db8f67cf.1712363381.git.tanggeliang@kylinos.cn> <5900b56b-6654-b7e0-2fd4-88abeaeb52c1@kernel.org>
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add last time fields in
- mptcp_info"
+	s=k20201202; t=1712478500;
+	bh=sQRFh15eS1KcsyILFzsjsuNASDD2MRAK6hYQtzSXvF0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=h13PZM009XrP2abNT1yWDVKHtOrym04yKdHaM5lzb170nD+64MufU7MjK2vMdJnOL
+	 J+d0WZvLI+I7s3SfMku3XqfcErvrFg/HvT/izT/3Qzm7vjbMzKn8x/KKMmsgdikHCI
+	 PW693o1V5RPuoZWxls1p5eJBrLSRwRnpR9vwTx0wp8iMVoUaSeIxHoX8SoJowiES6J
+	 VLrwFoI98T4wU5Bg6Buur2Vll39BYgXg01FLVdNRzYO8RbkA52fw0irO7xkm66QEQD
+	 xt0b1N1JJ5iLzK5QnTYrZGzu6ogiL5dVFV5v3bnYJurs80uco1DyuLjp4IofYSlv8K
+	 fiXVJ11EIt9og==
+From: Geliang Tang <geliang@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@google.com>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Jakub Sitnicki <jakub@cloudflare.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	bpf@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH bpf-next v2] selftests/bpf: Add F_SETFL for fcntl
+Date: Sun,  7 Apr 2024 16:28:09 +0800
+Message-Id: <6af4240525d760d0d89ed374bfa28826c18c7a2c.1712478251.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <dac737b6-ec30-4edf-a3f0-8471d93c54a1@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-6 Apr 2024 02:48:20 Mat Martineau <martineau@kernel.org>:
+Incorrect arguments are passed to fcntl() in test_sockmap.c when invoking
+it to set file status flags. If O_NONBLOCK is used as 2nd argument and
+passed into fcntl, -EINVAL will be returned (See do_fcntl() in fs/fcntl.c).
+The correct approach is to use F_SETFL as 2nd argument, and O_NONBLOCK as
+3rd one.
 
-> On Sat, 6 Apr 2024, Geliang Tang wrote:
->
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> Reload now =3D jiffies32 as Eric suggested.
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> ---
->> net/mptcp/sockopt.c | 1 +
->> 1 file changed, 1 insertion(+)
->>
->> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->> index 2ec2fdf9f4af..17223da5436d 100644
->> --- a/net/mptcp/sockopt.c
->> +++ b/net/mptcp/sockopt.c
->> @@ -944,6 +944,7 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, st=
-ruct mptcp_info *info)
->> =C2=A0=C2=A0=C2=A0 info->mptcpi_bytes_retrans =3D msk->bytes_retrans;
->> =C2=A0=C2=A0=C2=A0 info->mptcpi_subflows_total =3D info->mptcpi_subflows=
- +
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 __mptcp_has_initial_subflow(m=
-sk);
->> +=C2=A0=C2=A0 now =3D tcp_jiffies32; /* reload it, lock_sock_fast can sl=
-eep and be quite slow */
->> =C2=A0=C2=A0=C2=A0 info->mptcpi_last_data_sent =3D jiffies_to_msecs(now =
-- msk->last_data_sent);
->> =C2=A0=C2=A0=C2=A0 info->mptcpi_last_data_recv =3D jiffies_to_msecs(now =
-- msk->last_data_recv);
->> =C2=A0=C2=A0=C2=A0 unlock_sock_fast(sk, slow);
->
-> Geliang and Matthieu -
->
-> I'd like to minimize the time difference between the assigments for all t=
-he last time fields. For example, if the last_ack_recv is copied before the=
- socket lock is acquired, the value in the info struct could become stale w=
-hile waiting for the lock and not match up well with last_data_sent.
->
-> Could instead move the entire mptcp_data_lock()/mptcp_data_unlock() block=
- inside the socket lock critical section. Then, if 'now' is assigned with b=
-oth locks acquired there should not be significant delays between them.
+In nonblock mode, if EWOULDBLOCK is received, receive again, otherwise some
+subtests of test_sockmap will fail.
 
-Yes, that's what I had in mind when I replied to Eric.
+Fixes: 16962b2404ac ("bpf: sockmap, add selftests")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ v2:
+ - fix errors:
+# 6/ 7  sockmap::txmsg test skb:FAIL
+#21/ 7 sockhash::txmsg test skb:FAIL
+#36/ 7 sockhash:ktls:txmsg test skb:FAIL
+Pass: 42 Fail: 3
+---
+ tools/testing/selftests/bpf/test_sockmap.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-Because the data lock is a spin lock, maybe we don't need to reload it ther=
-e if this block is moved after the sk lock? So all the counters would be sy=
-nced.
+diff --git a/tools/testing/selftests/bpf/test_sockmap.c b/tools/testing/selftests/bpf/test_sockmap.c
+index 024a0faafb3b..bbc3fd57f349 100644
+--- a/tools/testing/selftests/bpf/test_sockmap.c
++++ b/tools/testing/selftests/bpf/test_sockmap.c
+@@ -603,7 +603,7 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
+ 		struct timeval timeout;
+ 		fd_set w;
+ 
+-		fcntl(fd, fd_flags);
++		fcntl(fd, F_SETFL, fd_flags);
+ 		/* Account for pop bytes noting each iteration of apply will
+ 		 * call msg_pop_data helper so we need to account for this
+ 		 * by calculating the number of apply iterations. Note user
+@@ -671,12 +671,15 @@ static int msg_loop(int fd, int iov_count, int iov_length, int cnt,
+ 				flags = 0;
+ 			}
+ 
++again:
+ 			recv = recvmsg(fd, &msg, flags);
+ 			if (recv < 0) {
+ 				if (errno != EWOULDBLOCK) {
+ 					clock_gettime(CLOCK_MONOTONIC, &s->end);
+ 					perror("recv failed()");
+ 					goto out_errno;
++				} else {
++					goto again;
+ 				}
+ 			}
+ 
+-- 
+2.40.1
 
-Cheers,
-Matt
