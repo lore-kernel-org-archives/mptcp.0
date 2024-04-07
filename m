@@ -1,122 +1,115 @@
-Received: from mail-yw1-f181.google.com (mail-yw1-f181.google.com [209.85.128.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 20AD512B7D
-	for <mptcp@lists.linux.dev>; Sun,  7 Apr 2024 09:15:02 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2B3A171C2
+	for <mptcp@lists.linux.dev>; Sun,  7 Apr 2024 10:38:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712481304; cv=none; b=S6O+eLcZlwnMs+6z3dRdFnkTM7xmHltuBQlVJe0fzc1SPu7M+DZC5FQkMs4GO0qxJ+iNjHtY1nFr1ctmsEO7lHe+iZT/IReXd3d2udvB5l8wt2PpEF8/IwE97zz5/KEkgxEDm7rWCSH+SNHPhgAnxNeuq3ufy61PpYoT2VOW328=
+	t=1712486328; cv=none; b=mmOBa/mJWYnt5hwi7No15z0pm2eJKbJ9vlVC8XlcYM8gVJ17HHKRMA8PMVjfVeu9j6rZ9QtL2+hZebd30RlQQATxaAv0HXtL6PRp81oW4B+4wQz/348NNxWni0IL3r8KrXpo37eTqGKmKwn8yD2AiyOu5qoot8gdA+aiWplW6jA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712481304; c=relaxed/simple;
-	bh=/KcAVT3vn8FNIwv/JOgxAxmNXgbMLUvtBAXcLQ5pkK8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PMLWI9SYn1Ag9uOSoAxVJOp82fuabUOrv1rtbt2JihWP0roB7uMv5uTAbE/op0cxMY36RTJPq5Olayx/kEwd8nQjVmHk3FbLIN0naxUyqpHLJMgEAqeRO6EZHx+nISS1uXvzBWZJHtIZxFO/W9R0dxIMDPv4SNx8bd0ivVXcUZ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AJxg3ZUp; arc=none smtp.client-ip=209.85.128.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712486328; c=relaxed/simple;
+	bh=eSSrLw+h2+ymvm3W8hgx4e3RZcevK1hk8++bbfGpR5k=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N72zFVXD0fF0wg7sLNHjW6B7Tg0Jj3ptJUQVxjxhhHL4ySIrzNcHDrZ5FyWA7JLdRQgduKMlEgHll3HId3s6WF4NjE3NV5cCgnsRgu4+GfaQjgnKvAMPKrZm8eH4VazTJv077Fl/t46XgQcNWYqLEFduvrX71KeKn35b9r8RcNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g2nuE8LK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AJxg3ZUp"
-Received: by mail-yw1-f181.google.com with SMTP id 00721157ae682-617d411a6b3so15339567b3.3
-        for <mptcp@lists.linux.dev>; Sun, 07 Apr 2024 02:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712481302; x=1713086102; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/1FX6haSTYzy+ahaLEJNy3USabM3d87DE/ZvAJefBP8=;
-        b=AJxg3ZUpUORA6D3vO1dGA8y9VIQoUR7vUP1yiChHrPo8zS0GP50cG8jgACDB6YyZwI
-         NOUvAsyRpwa0hzlaFuGzcuytttLLbP7gNctksXnq0dy2fQrNSpMMYmcaBDKuwIPmiV+0
-         K3LBRys/ZYG9r0tzMdbP8OLnszY/j2m5opHDm4UmKqRzT0yHGWXNcLfZ4+BcxSIF8zk3
-         LvsXmQcnYUcP4o/iyCQ4x0eaF5QA0vGwXCCeClRBjiru87JxkcKP8sv8d4E16PO17lfj
-         /ehQpLixu4IOMvlbB6Mdz077lxYRECYpildyRRoybqFqf/9a1EbsoPfdb0H6PSNhMD7R
-         Dv5w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712481302; x=1713086102;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/1FX6haSTYzy+ahaLEJNy3USabM3d87DE/ZvAJefBP8=;
-        b=fyPtiXEu4Pozu2dYoXrutSmw1TjXmobXrdAKG70a+W4uJU57DTgWhXIi+ek3e5nTmj
-         7B1zJJU8DQVnuoPN5Rkpl9Hl+qJ5W/q/zpFVQscEUPdOjcHupw7WIe2oFIvDZkT18Vq9
-         tgeGw1kjyYfa+9toYTFu7/GBsgoDi6JT8q6RDnVBNORLh5eRi4V0QZvt5YeqqFTTJfCU
-         UzEchj4dXl47ipQXU0RDrwZAMwn5HtLVOT6EdiHek5Lbd+aExGOh+C44P/efSY+K6pVc
-         pcn7PlNIsk5/4C+gH0iZCwWlRfNL/uzWafTrIP8dZYywi9JcqTvnDRykKiO3gnwP2dk7
-         A02w==
-X-Gm-Message-State: AOJu0YxAKvWVUE0MKgGW3kqk7DYcszlImnVYToHxfWEDxBpqmx7XvNPE
-	lb1mDqogiEnt0tXKEWqMFIJQlJm5YmYx/AoE0v8G/A6H5GZ0IxAfTzJX+NE=
-X-Google-Smtp-Source: AGHT+IEGqE8LTXzh1FZ/xH14BQb8JpIajdJIsjus/Yud2bvd1rWzX+acFmBhBa1t2S/YB/ZgzCoCmw==
-X-Received: by 2002:a0d:d953:0:b0:615:8174:61a2 with SMTP id b80-20020a0dd953000000b00615817461a2mr5494937ywe.8.1712481302039;
-        Sun, 07 Apr 2024 02:15:02 -0700 (PDT)
-Received: from [127.0.0.1] ([20.102.210.215])
-        by smtp.gmail.com with ESMTPSA id o82-20020a0dcc55000000b00614531d94d2sm1196145ywd.59.2024.04.07.02.15.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 07 Apr 2024 02:15:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <6af4240525d760d0d89ed374bfa28826c18c7a2c.1712478251.git.tanggeliang@kylinos.cn>
-References:
- <6af4240525d760d0d89ed374bfa28826c18c7a2c.1712478251.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Add F_SETFL for fcntl
-Message-ID: <9ea72aa4-bc04-fde3-8927-c9071ba73b12@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 07 Apr 2024 09:15:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g2nuE8LK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3CFBC433F1;
+	Sun,  7 Apr 2024 10:38:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712486328;
+	bh=eSSrLw+h2+ymvm3W8hgx4e3RZcevK1hk8++bbfGpR5k=;
+	h=From:To:Cc:Subject:Date:From;
+	b=g2nuE8LKIAy01CL4hjg/GgiSTBAkCp9VAtNJUUu8RrRv2JhC1SV4ClrvWPVAN4nSD
+	 5ZQgTqfTIK0RyYfidA88P+64HzJqx8HQP1rwGOAgo6S1agOSgyh3WKZ1wkNetathER
+	 lOz2CvFh5QvSIDRSENl7SkKE5Kx6iQc4SfvHADuYn0edu+fjYQzkrxxNs++Sw5z0Li
+	 6bh/CGwEafehMIvr0uGdofNDAzTbZxpN5cbe/XkvCN+p6SrAN92DL+iz+wCbudmdNv
+	 NWgpyGrvFhQHlKvdpTv/YEdR/L1eeKBaPLQqFX/wWuj6YOWBiaPtZoOhQZ00F1eykZ
+	 tznWPG7GdK97g==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2] Squash to "mptcp: add last time fields in mptcp_info"
+Date: Sun,  7 Apr 2024 18:38:40 +0800
+Message-Id: <7930751788d3bc8155898d4a22bdd6efca8cfde0.1712486293.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+Please append the following lines into the commit log:
 
-Our CI did some validations and here is its report:
+'''
+Since msk->last_ack_recv needs to be protected by mptcp_data_lock/unlock,
+and lock_sock_fast can sleep and be quite slow, move the entire
+mptcp_data_lock/unlock block after the lock/unlock_sock_fast block.
+Then mptcpi_last_data_sent and mptcpi_last_data_recv are set in
+lock/unlock_sock_fast block, while mptcpi_last_ack_recv is set in
+mptcp_data_lock/unlock block.
+'''
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8587489016
+v2:
+ - move the entire mptcp_data_lock()/mptcp_data_unlock() block after
+the lock_sock_fast()/unlock_sock_fast() block.
+ - can't move it inside lock_sock_fast()/unlock_sock_fast() block, this
+   causes a deadlock.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e64d6e3e59bd
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D842123
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/sockopt.c | 16 +++++++++-------
+ 1 file changed, 9 insertions(+), 7 deletions(-)
 
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 2ec2fdf9f4af..40b262b2c24a 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -896,9 +896,9 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+-	u32 now = tcp_jiffies32;
+ 	u32 flags = 0;
+ 	bool slow;
++	u32 now;
+ 
+ 	memset(info, 0, sizeof(*info));
+ 
+@@ -927,12 +927,6 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	if (READ_ONCE(msk->can_ack))
+ 		flags |= MPTCP_INFO_FLAG_REMOTE_KEY_RECEIVED;
+ 	info->mptcpi_flags = flags;
+-	mptcp_data_lock(sk);
+-	info->mptcpi_snd_una = msk->snd_una;
+-	info->mptcpi_rcv_nxt = msk->ack_seq;
+-	info->mptcpi_bytes_acked = msk->bytes_acked;
+-	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
+-	mptcp_data_unlock(sk);
+ 
+ 	slow = lock_sock_fast(sk);
+ 	info->mptcpi_csum_enabled = READ_ONCE(msk->csum_enabled);
+@@ -944,9 +938,17 @@ void mptcp_diag_fill_info(struct mptcp_sock *msk, struct mptcp_info *info)
+ 	info->mptcpi_bytes_retrans = msk->bytes_retrans;
+ 	info->mptcpi_subflows_total = info->mptcpi_subflows +
+ 		__mptcp_has_initial_subflow(msk);
++	now = tcp_jiffies32;
+ 	info->mptcpi_last_data_sent = jiffies_to_msecs(now - msk->last_data_sent);
+ 	info->mptcpi_last_data_recv = jiffies_to_msecs(now - msk->last_data_recv);
+ 	unlock_sock_fast(sk, slow);
++
++	mptcp_data_lock(sk);
++	info->mptcpi_snd_una = msk->snd_una;
++	info->mptcpi_rcv_nxt = msk->ack_seq;
++	info->mptcpi_bytes_acked = msk->bytes_acked;
++	info->mptcpi_last_ack_recv = jiffies_to_msecs(now - msk->last_ack_recv);
++	mptcp_data_unlock(sk);
+ }
+ EXPORT_SYMBOL_GPL(mptcp_diag_fill_info);
+ 
+-- 
+2.40.1
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
