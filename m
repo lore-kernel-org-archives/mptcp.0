@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B21217F7
-	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBFC184D
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712545278; cv=none; b=QAX7wZiaGRnPWsNgvY1f3XofNRsYgcpySmLV1oQgF3HyMdlEVR9u0NRQkuuoZatr5zrZrqUlM0mGkpdDjUYP7wM6FaQ/iui7MtRIsqPj53ZJUmTjhFOyXO/4H4H74++GO7OP8pW2XnmCvnG/bWE45RErMvNgib5HaJQImKN0hWw=
+	t=1712545279; cv=none; b=EPwEYBLhujQ/cHcV87ULUq8YuoHPhLlesPXYH5tCQQG3mUXmJWcSuIOPhbxbGBhSdI0PTgUq4cKd4moHiRLHw7jEFmqnhbLCysyco9aR3xy71ZsEfOJgSRI2SXUCOTpFXQUxJFCDP32La22zwIXdsCQIAOfL7OH9p6gfk/m/kb4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712545278; c=relaxed/simple;
-	bh=/Pc3wOJ+00tHqo8MDJm/cNhGbriSzwm6ucNRtr1wM7Y=;
+	s=arc-20240116; t=1712545279; c=relaxed/simple;
+	bh=S7AUp2qZf8k/T73vHb9lttnz3wUqv5fP9Bd7WLrerWQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=B7OL9HVpfnC++a+5h25BU7YUNqGUrOg92KJe7ZhHUWffACfxXYrwwxAJYbznmTWL1TW8q0iNY8LPzPmEKcIZQ3ftLrPR0i5yw8Cj5p+fUrg9U4CbjZPSDUURE1Fw9s4FTVvPPq3HNkSGKz9jADaYBWcuUEYnfvGvDz2sexzK6M8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INTtpPhb; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dEwi9NNrKT2vOTXUDyaQKMub1jxehyzTJGcMLih+wMyZiJljJ/esVHMZj2GHZcjt9P4/yZk+qM42mlT+JpgEuhAG8gTQU6RPBJgVEy4VwZAYEQVhPXsK0m2fMUf/ftKFB0vTdnvdMjfj7RJIs28iqAoG7wt7rmh8La319NunAWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R62WpEM/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INTtpPhb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8273C433C7;
-	Mon,  8 Apr 2024 03:01:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R62WpEM/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36322C43390;
+	Mon,  8 Apr 2024 03:01:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712545277;
-	bh=/Pc3wOJ+00tHqo8MDJm/cNhGbriSzwm6ucNRtr1wM7Y=;
+	s=k20201202; t=1712545279;
+	bh=S7AUp2qZf8k/T73vHb9lttnz3wUqv5fP9Bd7WLrerWQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=INTtpPhbBrCw6f46GJqjWPA0c2ba9pW0pet/jMP7iDUYH6w5kmlWY2MehkMej2MRb
-	 2YYoJeUOz5h+SEXbS1i/+699aezfPqD4XLhCIQAJ1k/PHlEzwSOpcmbbKgEFH5Ugcm
-	 dLVeVSH1EmLH7aIRrDRsEUppUJx/pqQIJuUJcQD/0Z/SvBzdeHSvvxAGYdMSBvgmmG
-	 lfcx+ri5iuTHgDoodDDwesbthFAEYptAA+WPdS5G36gt1YpbDRmBkzfH9dW2v8aPsg
-	 pGO2AGXWPIQlUwEAbakuJVwhNDXwQODbxbYqIIcXXFREXOe18zY2wQ46Om0LUD4v/5
-	 F3mnUX6c1vUKw==
+	b=R62WpEM/JBEYMNzqDdku3idbfBX7AOI151EQDIWDOwlTSp6C4NS0LNagP+9Fli5i1
+	 Oi0l1nuCf8rhFJvnhYVXljMyCWpuEmtfLX2adspIxd013wG0zNdXdIHnV1h4bM3KVr
+	 Fo/zrNa8geELxNhI/Q2ZJZEOMUUC3K+A5Ts85o3RAXMe2y2lbt/Z2fstp30EMPLvfY
+	 AF6n/QCEzXnM5pwYj0RxXiYPx8wKn5m/REY1VQEmXaUWKfybnQHf7iJjrtzpYC1i7+
+	 9AkRCG6m6k7WZ+inLPhn1xmlYuwF/c/ZpDo4syGepRDs237nRBohrjhXC0Ro6ZKf48
+	 RLGbBHxkgB//w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 1/9] selftests/bpf: Add RUN_MPTCP_TEST macro
-Date: Mon,  8 Apr 2024 11:01:03 +0800
-Message-Id: <c6aa42298bd0f4815ff29bfe2aa11fed876f9457.1712544986.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 2/9] Squash to "selftests/bpf: Add bpf scheduler test" 1 verify
+Date: Mon,  8 Apr 2024 11:01:04 +0800
+Message-Id: <05269e97e219cc51b59173f05ab3a3b622a3ca1a.1712544986.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1712544986.git.tanggeliang@kylinos.cn>
 References: <cover.1712544986.git.tanggeliang@kylinos.cn>
@@ -45,40 +45,80 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Each MPTCP subtest tests test__start_subtest(suffix), then invokes
-test_suffix(). It makes sense to add a new macro RUN_MPTCP_TEST to
-simpolify the code.
+Add send_data_and_verify helper to avoid duplicated code.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 40 ++++++++++++++-----
+ 1 file changed, 30 insertions(+), 10 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index cbdb15922949..c29c81239603 100644
+index c29c81239603..5080e680fbe0 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -653,12 +653,16 @@ static void test_burst(void)
- 	mptcp_bpf_burst__destroy(burst_skel);
+@@ -457,23 +457,44 @@ static int has_bytes_sent(char *addr)
+ 	return system(cmd);
  }
  
-+#define RUN_MPTCP_TEST(suffix)					\
-+do {								\
-+	if (test__start_subtest(#suffix))			\
-+		test_##suffix();				\
-+} while (0)
-+
- void test_mptcp(void)
+-static void test_default(void)
++static void send_data_and_verify(char *sched, char *addr1, char *addr2)
  {
--	if (test__start_subtest("base"))
--		test_base();
--	if (test__start_subtest("mptcpify"))
--		test_mptcpify();
-+	RUN_MPTCP_TEST(base);
-+	RUN_MPTCP_TEST(mptcpify);
- 	if (test__start_subtest("default"))
- 		test_default();
+ 	int server_fd, client_fd;
+-	struct nstoken *nstoken;
+ 
+-	nstoken = sched_init("subflow", "default");
+-	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
+-		goto fail;
+ 	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
++	if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n", errno))
++		return;
++
+ 	client_fd = connect_to_fd(server_fd, 0);
++	if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n", errno))
++		goto close_server;
+ 
+-	send_data(server_fd, client_fd, "default");
+-	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
+-	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
++	send_data(server_fd, client_fd, sched);
++
++	if (!strcmp(addr1, "WITH_DATA"))
++		CHECK(has_bytes_sent(ADDR_1), sched, "should have bytes_sent on addr1\n");
++	else if (!strcmp(addr1, "WITHOUT_DATA"))
++		CHECK(!has_bytes_sent(ADDR_1), sched, "shouldn't have bytes_sent on addr1\n");
++	if (!strcmp(addr2, "WITH_DATA"))
++		CHECK(has_bytes_sent(ADDR_2), sched, "should have bytes_sent on addr2\n");
++	else if (!strcmp(addr2, "WITHOUT_DATA"))
++		CHECK(!has_bytes_sent(ADDR_2), sched, "shouldn't have bytes_sent on addr2\n");
+ 
+ 	close(client_fd);
++close_server:
+ 	close(server_fd);
++}
++
++static void test_default(void)
++{
++	struct nstoken *nstoken;
++
++	nstoken = sched_init("subflow", "default");
++	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
++		goto fail;
++
++	send_data_and_verify("default", "WITH_DATA", "WITH_DATA");
++
+ fail:
+ 	cleanup_netns(nstoken);
+ }
+@@ -663,8 +684,7 @@ void test_mptcp(void)
+ {
+ 	RUN_MPTCP_TEST(base);
+ 	RUN_MPTCP_TEST(mptcpify);
+-	if (test__start_subtest("default"))
+-		test_default();
++	RUN_MPTCP_TEST(default);
  	if (test__start_subtest("first"))
+ 		test_first();
+ 	if (test__start_subtest("bkup"))
 -- 
 2.40.1
 
