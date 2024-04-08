@@ -1,98 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D720D6025E;
-	Mon,  8 Apr 2024 11:00:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E74D853AC;
+	Mon,  8 Apr 2024 11:31:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712574035; cv=none; b=rCRWhh/XrcNT4n03oq9TbY0ALlg4y8Afo/rVUxF6IfhBNPMvMa0SwPhlT3kt1wR4fS8kKdR1fpKUnsrI+HkR9VSdlJTJX6SpS1d2Waag0P314atT480KNyJZJv8aq0bqFSBUGJtkG3+tPeL6qmm8oqSJU9aCFRLy8WZfA6Ne4Ts=
+	t=1712575878; cv=none; b=A7MfI8EuFzrBNNLqnnLSBdpaTMFzjuYfOhnMNMxjJoza3YXLMljIYLYC7X0eWp+39wffSq1DPZRIyb8fOgrF+nJkDw5nIWTVf1ZAFRK9MmAVJ8JtQnO51MlLIx3xKhWV7+ot0uDYlMHc8w/BeZl8L2myNbheFaYMyvatEHUCL1E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712574035; c=relaxed/simple;
-	bh=vM6/mtyUgy39CBRZ+BRnJgNNz4EcuCM7ZMACQHQCzns=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=NtU9HVHvvkRkKp5nXN3a9QI2cILk1cdBXd3v0Ibi2xMVGJ37S77k6iQGXW7YWc1Tz0kKmhuYDJTiGliyy9ENB/F0BY+qw8Zgmm3etpT3+cQVxbdGVUJt59JeutFMIz64QwM6J+noaFhdQgXkq94ylgYc+ndOC3vCaHu0LZrqiG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d+cRvinj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712575878; c=relaxed/simple;
+	bh=rZgjKxMazEN8BXUaLfWU68GdlKeyxYPsbC1cLkqBHKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=aEYB8V0fFc5jpgNtpDheJuOZDxlLTuKJpvD0jTg++uc0fX4LNhpDnn4ayB7i86G7UQgWwYCjpre+aRMtfEt2dFRqJW0xpUwjEZ6R/xq92ctU1CM2MGpbcY8jLNw98Hin6SdKWEu9zHHRVCvSkYr5ZTmDRKXxo8kf/3TyaXr1pNo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=p2WEcpTI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d+cRvinj"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id AE867C433C7;
-	Mon,  8 Apr 2024 11:00:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712574034;
-	bh=vM6/mtyUgy39CBRZ+BRnJgNNz4EcuCM7ZMACQHQCzns=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=d+cRvinj3pOqjZnzVUzOb3bDqij5jIROFcBjm8JO9KcdNzmYfo6gx7nbA3rpQbU/0
-	 xaNshs9elUFMKP6PK00w7sZableMXdRtkcp23z4Bn/Gt1mPlUEXUJZNJEeWSghi2k1
-	 RcZMsY9gv2+2XRPxYio27UX4nE762K5DS8L4SG8pQm8SaLtzLgmXWub7A+U1Wygyr9
-	 bc4MfP600rG2InBKjA6DWzBq3U6CJU6ezvtgdwwU/lrCuBuC2rUsPkkbcHIkgJhjnr
-	 78cWw2ftB5b0zCCOC3r/n6pEU8Gz/bWcYsVAaWSXudKXIY/W73/4hbb3IE+tY5VaYh
-	 EhVYVxyuwTxFg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id A15C6C54BD4;
-	Mon,  8 Apr 2024 11:00:34 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="p2WEcpTI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E01C4C433C7;
+	Mon,  8 Apr 2024 11:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1712575877;
+	bh=rZgjKxMazEN8BXUaLfWU68GdlKeyxYPsbC1cLkqBHKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=p2WEcpTIQ7amMW3NjhdovTQSi3O03nl4b51WtAtJ9RuQC64gGDG6ubzXDUxwhfr54
+	 m3KYRSxZrNLi+r56FGSsowmJlrFowtlZJ0Dj87Ii1yQXSc2p9ajyx1kq2a1iu4uhs3
+	 T/qRIqno+a1XMj7Vwuay0Ek94s2/a//JBB8JIiKY=
+Date: Mon, 8 Apr 2024 13:31:14 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, stable@vger.kernel.org,
+	Geliang Tang <tanggeliang@kylinos.cn>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: Re: [PATCH 6.6.y 3/5] selftests: mptcp: use += operator to append
+ strings
+Message-ID: <2024040801-undaunted-boastful-5a01@gregkh>
+References: <2024040520-unselect-antitrust-a41b@gregkh>
+ <20240405153636.958019-10-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/11] selftests: mptcp: cleanups and 'ip mptcp'
- support
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171257403465.26748.462026930608140771.git-patchwork-notify@kernel.org>
-Date: Mon, 08 Apr 2024 11:00:34 +0000
-References: <20240405-upstream-net-next-20240405-mptcp-selftests-refactoring-v1-0-eabc9b960966@kernel.org>
-In-Reply-To: <20240405-upstream-net-next-20240405-mptcp-selftests-refactoring-v1-0-eabc9b960966@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240405153636.958019-10-matttbe@kernel.org>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
-
-On Fri, 05 Apr 2024 12:52:04 +0200 you wrote:
-> Here are some patches from Geliang, doing different cleanups, and
-> supporting 'ip mptcp' in more MPTCP selftests.
+On Fri, Apr 05, 2024 at 05:36:40PM +0200, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Patch 1 checks that TC is available in selftests requiring it.
+> This patch uses addition assignment operator (+=) to append strings
+> instead of duplicating the variable name in mptcp_connect.sh and
+> mptcp_join.sh.
 > 
-> Patch 2 adds 'ms' units in TC commands, to avoid confusions.
+> This can make the statements shorter.
 > 
-> [...]
+> Note: in mptcp_connect.sh, add a local variable extra in do_transfer to
+> save the various extra warning logs, using += to append it. And add a
+> new variable tc_info to save various tc info, also using += to append it.
+> This can make the code more readable and prepare for the next commit.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Link: https://lore.kernel.org/r/20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-8-4f42c347b653@kernel.org
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> (cherry picked from commit e7c42bf4d320affe37337aa83ae0347832b3f568)
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  .../selftests/net/mptcp/mptcp_connect.sh      | 53 ++++++++++---------
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++------
+>  2 files changed, 43 insertions(+), 40 deletions(-)
 
-Here is the summary with links:
-  - [net-next,01/11] selftests: mptcp: add tc check for check_tools
-    https://git.kernel.org/netdev/net-next/c/f30b04cacd85
-  - [net-next,02/11] selftests: mptcp: add ms units for tc-netem delay
-    https://git.kernel.org/netdev/net-next/c/9109853a388b
-  - [net-next,03/11] selftests: mptcp: export ip_mptcp to mptcp_lib
-    https://git.kernel.org/netdev/net-next/c/29aa32fee7d0
-  - [net-next,04/11] selftests: mptcp: netlink: add 'limits' helpers
-    https://git.kernel.org/netdev/net-next/c/3188309c8ceb
-  - [net-next,05/11] selftests: mptcp: add {get,format}_endpoint(s) helpers
-    https://git.kernel.org/netdev/net-next/c/0d16ed0c2e74
-  - [net-next,06/11] selftests: mptcp: netlink: add change_address helper
-    https://git.kernel.org/netdev/net-next/c/b79e51c99949
-  - [net-next,07/11] selftests: mptcp: join: update endpoint ops
-    https://git.kernel.org/netdev/net-next/c/571d79664a4a
-  - [net-next,08/11] selftests: mptcp: export pm_nl endpoint ops
-    https://git.kernel.org/netdev/net-next/c/441c6be9ae28
-  - [net-next,09/11] selftests: mptcp: use pm_nl endpoint ops
-    https://git.kernel.org/netdev/net-next/c/c99d57d0007a
-  - [net-next,10/11] selftests: mptcp: ip_mptcp option for more scripts
-    https://git.kernel.org/netdev/net-next/c/0cef6fcac24d
-  - [net-next,11/11] selftests: mptcp: netlink: drop disable=SC2086
-    https://git.kernel.org/netdev/net-next/c/6eaeda12dc77
+Odd, this one did not apply.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+All others did, thanks!
 
-
+greg k-h
