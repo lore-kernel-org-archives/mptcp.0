@@ -1,80 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72E9F7CF29;
-	Mon,  8 Apr 2024 13:00:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E99921422A5
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 15:55:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712581228; cv=none; b=F89Lc2NpreSxZ4wtN3yUud3as+O4l3Q1XqzNhohzQ6nGiOj776q7uGsM44i4mvzNLlFAdxFYa6gziHqtIl8E+AFDIMZL0kZMzGGRZ4da2/ud0CX01Jx94Jn7N4MI7/f9vvvdAh1z1q995t7bArpMTvm8BdN7N/miRlp3UGwhAvs=
+	t=1712591720; cv=none; b=CossW1PB5gDNs+POmNmkVZQVlYvUrCH2EKAfgCoLgyqR3fOMM1vG1tOAkOPu/O6kusbKfYWH0comSQE/QFd5BdBZA2BUvxZiFa1zXf+iuy26B0jmKQsZ1t7MEpk2/7XjGOC6YevAoVntvq1zNziEvcmTSVdoInNXc3wGw3S+yM8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712581228; c=relaxed/simple;
-	bh=SKmIkCuasOmtGJF2nICPyAm5mULG4Q7bUsyMXCdFlb0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=MugC8HKfPzEGJO7LtBHFJrgKS6rUM+rOKtAZ17Xhkh/9ulFNfpnl+VsXr7C9GhXwdcE85fbrvzQ/mFcjxAwZfdNH459L4G8ZsVGlFeqG5k5tCWMtT26NZ3MuPEKC/4vCBCCtKK9+BTsLX0NaFF3+kJiELYUauDL1kQQpW4INDbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJm6G0i9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712591720; c=relaxed/simple;
+	bh=hE817CDdKg+SxH2QMPBR35McYv5Tljp1R3u9MzigeBQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pKTc0F1cQ33LY8LW/FHzn2BKy0xKiF3AqoOMCpqpprwwj9lcM0U+KHGg8yGlDpahSyq07lSf4YYshC/R6+NEj+nbKHj4WK/APvLUzf6pBTOpMc6UYt9m+Tfp9m3dF2IHuHqujurN94FY+69XAMuLQp9Iq6XOPpBYwP/jlQWX7LI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ATM3KCev; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJm6G0i9"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 0D530C433A6;
-	Mon,  8 Apr 2024 13:00:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712581228;
-	bh=SKmIkCuasOmtGJF2nICPyAm5mULG4Q7bUsyMXCdFlb0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=NJm6G0i9sZk5lxrRxqDJK4K1dka3lgf31PO44tIglEge4ShH1f2Pw6bJgonptaPp6
-	 HHs55XoTlmYZq9i2qfz/FmPFbVX2NZIDXYxESG5BgFl5bAfi6X3Oo+6AMCNtVsRoEH
-	 ZIDCIBz9koOqsG8iukVdZNEniRhbp0s74ro/bMpJS48w/7E2zDgdGccJ0c4c6cN9Wk
-	 o4FRgQ5kIS9T+KFqtKdDo1fHJf926pDbW/T/ds14ZSiqjqrGeu2lRJGXWEbWXhHrIv
-	 JoqHVZoJzEyFpsDH71LFz6ICt7j8Rk0EY11xac0108N9TtYHVRP7u9TleduP6vjHaS
-	 SpRjnoDo2Yjxw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 024DBC54BD6;
-	Mon,  8 Apr 2024 13:00:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ATM3KCev"
+Message-ID: <5ee0db00-0895-448a-aa62-c5c9f6a3f5f4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1712591714;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hE817CDdKg+SxH2QMPBR35McYv5Tljp1R3u9MzigeBQ=;
+	b=ATM3KCevoHmmre2IztwZOXdXCKD9HWVHAPNDZkvxNwe5+l6Cd50ZD8FUOhh1yCqbMY2dMq
+	DxLnFmhGSXmY2FSg2wPbRpQukfq4MxvzhYfZH3EC1dQ4kvbtHx38taRFWdA01d6eXlZaKf
+	3LjTBxcM4y/751iTolO+pRLeGwQI+7w=
+Date: Mon, 8 Apr 2024 08:55:08 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] mptcp: add reset reason options in some places
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171258122800.2224.8882516894860681833.git-patchwork-notify@kernel.org>
-Date: Mon, 08 Apr 2024 13:00:28 +0000
-References: <20240406014848.71739-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20240406014848.71739-1-kerneljasonxing@gmail.com>
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
- pabeni@redhat.com, matttbe@kernel.org, martineau@kernel.org,
- geliang@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- kernelxing@tencent.com
+Subject: Re: [PATCH bpf-next v3 1/2] selftests/bpf: Add F_SETFL for fcntl in
+ test_sockmap
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ Jakub Sitnicki <jakub@cloudflare.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
+ mptcp@lists.linux.dev
+References: <cover.1712539403.git.tanggeliang@kylinos.cn>
+ <2f9f84be1366ca68b1123dd2f3fd06034e1bd3a4.1712539403.git.tanggeliang@kylinos.cn>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Yonghong Song <yonghong.song@linux.dev>
+In-Reply-To: <2f9f84be1366ca68b1123dd2f3fd06034e1bd3a4.1712539403.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hello:
 
-This patch was applied to netdev/net-next.git (main)
-by David S. Miller <davem@davemloft.net>:
+On 4/7/24 6:36 PM, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Incorrect arguments are passed to fcntl() in test_sockmap.c when invoking
+> it to set file status flags. If O_NONBLOCK is used as 2nd argument and
+> passed into fcntl, -EINVAL will be returned (See do_fcntl() in fs/fcntl.c).
+> The correct approach is to use F_SETFL as 2nd argument, and O_NONBLOCK as
+> 3rd one.
+>
+> In nonblock mode, if EWOULDBLOCK is received, continue receiving, otherwise
+> some subtests of test_sockmap will fail.
+>
+> Fixes: 16962b2404ac ("bpf: sockmap, add selftests")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 
-On Sat,  6 Apr 2024 09:48:48 +0800 you wrote:
-> From: Jason Xing <kernelxing@tencent.com>
-> 
-> The reason codes are handled in two ways nowadays (quoting Mat Martineau):
-> 1. Sending in the MPTCP option on RST packets when there is no subflow
-> context available (these use subflow_add_reset_reason() and directly call
-> a TCP-level send_reset function)
-> 2. The "normal" way via subflow->reset_reason. This will propagate to both
-> the outgoing reset packet and to a local path manager process via netlink
-> in mptcp_event_sub_closed()
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v2] mptcp: add reset reason options in some places
-    https://git.kernel.org/netdev/net-next/c/382c60019ee7
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Acked-by: Yonghong Song <yonghong.song@linux.dev>
 
