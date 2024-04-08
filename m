@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B0A717F7
-	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10C7EDF
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712545284; cv=none; b=QK9krrpoURmtoy8poPOLKg52FdoOdNN4xuKRdFx7/I+qk5PhH24SXxlimAofejOAmmaXJ5F0MiLUqwCe6+kZ7dy79VckhnwrsdeIYtuZRtC562oeS05VcIsDU8XwQ5qumhp9p541btIrBIdlIXN8wO4q0rLUjxXBEhq7WFastCQ=
+	t=1712545285; cv=none; b=muWp9UwZU+okY72tOOMwXJA9JVU2Erk9/NL8rqjiBuP0XOmiYcxK5lCb/J9JkrCm6CpMcPftOe9h7VwGPuWixp7C4q3GOT5FMXhSuxHSgQVa78m4scQpSVMC7VKoX/rUHR3uwu0duO548zZrtsB0hAfQJTKqutXwUN0LHeg3Xcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712545284; c=relaxed/simple;
-	bh=f/7wXEIsmB9bNRioCj8OzUtpIGZh77aXNOmQIEESvUA=;
+	s=arc-20240116; t=1712545285; c=relaxed/simple;
+	bh=1OMyUV3ltXv/IdJUHMiRxs42S8q82GdhvXGpj0u2Nlg=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=YGOxKSxQHuBl5YoEsoNAMzz1l1/EUZO4+4/rkJD7NkPIpZ+H+IwNfXL7oFmGT5ajBO4i3fMBI4dfh/muXOgTyIGluOMpN7Wv0UsratkodphDKr0NYu6/mxJcO3BBAUypKxzzhwdLFIzulP7yflgpIGMMpC+fqa/j9udEc2YPo7U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XwowNIhE; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FpyCvFoH1foMklGTtdEJFTgfu/RU4mMUE68da8jMN4KgPMkKtmJWVfo80XRD3rbFR9ZgIQQcPJCjyvof3VOEr9M/eKF+QSU5azE8pban8ia1VnuBPXhtup9NpVH9+IJH+FJCPXp8VKiMQfXmqr+Hp56PCXh26AQyO6qcKAIJ/Iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hwpy9+m0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XwowNIhE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BA4C433C7;
-	Mon,  8 Apr 2024 03:01:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hwpy9+m0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8FCDC433F1;
+	Mon,  8 Apr 2024 03:01:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712545284;
-	bh=f/7wXEIsmB9bNRioCj8OzUtpIGZh77aXNOmQIEESvUA=;
+	s=k20201202; t=1712545285;
+	bh=1OMyUV3ltXv/IdJUHMiRxs42S8q82GdhvXGpj0u2Nlg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XwowNIhERb1Boh80/tfdid3Q+T41I5VeEMqTV3BjWN7iA4ibC4os//M7zwIIqDU0Y
-	 G1VrrQSEwHBvYCfN/NRBbTTmDmHcTPYL4XmFaAGe8g3YtvnNZD8LqcvTfaeQGKVKNi
-	 tJc0D4Oqqb3NIRCZTwqHCWTztVe+A3/YBO4z4pFYzxwl9OL85mqRlRf9paGrTV3Dfj
-	 ku0mx97idF0IpYToH9p8CmUSMD5kzaMyA3vPG8P7bKDIQjn1knCnQlPqVBSKhzRfUo
-	 0z2b5SXYoZhh2r3urlEeLM0tdTFZHfkVJVkevSw/SGDv/9ycOFlSUWaZ99uTPgpWiR
-	 GCn8SX8yTdE0w==
+	b=Hwpy9+m0cjaKcr4brdc0O7XhLrgZ5OceFbOs9cREpmig9AlWlmNgjL0ARNUYDSOzm
+	 rydE3LJF4AVhT3htb8d9dOnFHCB8d/XToBdfpSdCIpvTNt2e07gC6VuPcrtg3E+J0P
+	 LANossuLlS1zPJFWoDn+p+qJjXYHoqbfoHgZ+wniZ7UcVFqHezPm5czntHnNtCfaAH
+	 h7kZyFkbULB8OmqpjQGqrWHX7rdu+mLK8S1bQnauRQTcbBHvvRsnRDgOJ9mEL9ysDn
+	 sdK4mFb0KsDBNUe2HnBIpWKNRKl2cUIUJSCA9kCN4CSKpyxWbJYbgLAiRFTYrfiNls
+	 7wPRZ91BtD8dA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 6/9] Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
-Date: Mon,  8 Apr 2024 11:01:08 +0800
-Message-Id: <f3e11dfed40b8e6d9d6691a03eb585eca6809d3e.1712544986.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 7/9] Squash to "selftests/bpf: Add bpf_rr scheduler & test"
+Date: Mon,  8 Apr 2024 11:01:09 +0800
+Message-Id: <f0ee7d08a71135456892294614757b6a69d4ba3a.1712544986.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1712544986.git.tanggeliang@kylinos.cn>
 References: <cover.1712544986.git.tanggeliang@kylinos.cn>
@@ -45,85 +45,85 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-After squashing into this change, the patch "selftests/bpf: Add bpf_bkup
-test" can be merged into the patch "selftests/bpf: Add bpf_bkup scheduler"
+After squashing into this change, the patch "selftests/bpf: Add bpf_rr
+test" can be merged into the patch "selftests/bpf: Add bpf_rr scheduler"
 appending the following lines into commit log:
 
 '''
-Using MPTCP_SCHED_TEST macro to add a new test for this bpf_bkup
-scheduler, the arguments "1 0" means data has been only sent on the
-first subflow ADDR1. Run this test by RUN_MPTCP_TEST macro.
+Using MPTCP_SCHED_TEST macro to add a new test for this bpf_rr
+scheduler, the arguments "1 1" means data has been sent on both
+net devices. Run this test by RUN_MPTCP_TEST macro.
 '''
 
-And update the subject to "selftests/bpf: Add bpf_bkup scheduler & test".
+And update the subject to "selftests/bpf: Add bpf_rr scheduler & test".
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
  .../testing/selftests/bpf/prog_tests/mptcp.c  | 39 +------------------
- .../selftests/bpf/progs/mptcp_bpf_bkup.c      |  1 +
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        |  1 +
  2 files changed, 3 insertions(+), 37 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 9d01e4af790f..f1a9faac3731 100644
+index f1a9faac3731..d7c6a0bec183 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -529,41 +529,7 @@ skel_destroy:							\
- }
+@@ -530,41 +530,7 @@ skel_destroy:							\
  
  MPTCP_SCHED_TEST(first, WITH_DATA, WITHOUT_DATA);
+ MPTCP_SCHED_TEST(bkup, WITH_DATA, WITHOUT_DATA);
 -
--static void test_bkup(void)
+-static void test_rr(void)
 -{
--	struct mptcp_bpf_bkup *bkup_skel;
+-	struct mptcp_bpf_rr *rr_skel;
 -	int server_fd, client_fd;
 -	struct nstoken *nstoken;
 -	struct bpf_link *link;
 -
--	bkup_skel = mptcp_bpf_bkup__open_and_load();
--	if (!ASSERT_OK_PTR(bkup_skel, "bpf_bkup__open_and_load"))
+-	rr_skel = mptcp_bpf_rr__open_and_load();
+-	if (!ASSERT_OK_PTR(rr_skel, "bpf_rr__open_and_load"))
 -		return;
 -
--	link = bpf_map__attach_struct_ops(bkup_skel->maps.bkup);
+-	link = bpf_map__attach_struct_ops(rr_skel->maps.rr);
 -	if (!ASSERT_OK_PTR(link, "bpf_map__attach_struct_ops")) {
--		mptcp_bpf_bkup__destroy(bkup_skel);
+-		mptcp_bpf_rr__destroy(rr_skel);
 -		return;
 -	}
 -
--	nstoken = sched_init("subflow backup", "bpf_bkup");
--	if (!ASSERT_OK_PTR(nstoken, "sched_init:bpf_bkup"))
+-	nstoken = sched_init("subflow", "bpf_rr");
+-	if (!ASSERT_OK_PTR(nstoken, "sched_init:bpf_rr"))
 -		goto fail;
 -	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
 -	client_fd = connect_to_fd(server_fd, 0);
 -
--	send_data(server_fd, client_fd, "bpf_bkup");
--	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
--	ASSERT_GT(has_bytes_sent(ADDR_2), 0, "has_bytes_sent addr_2");
+-	send_data(server_fd, client_fd, "bpf_rr");
+-	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr 1");
+-	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr 2");
 -
 -	close(client_fd);
 -	close(server_fd);
 -fail:
 -	cleanup_netns(nstoken);
 -	bpf_link__destroy(link);
--	mptcp_bpf_bkup__destroy(bkup_skel);
+-	mptcp_bpf_rr__destroy(rr_skel);
 -}
-+MPTCP_SCHED_TEST(bkup, WITH_DATA, WITHOUT_DATA);
++MPTCP_SCHED_TEST(rr, WITH_DATA, WITH_DATA);
  
- static void test_rr(void)
+ static void test_red(void)
  {
-@@ -682,8 +648,7 @@ void test_mptcp(void)
- 	RUN_MPTCP_TEST(mptcpify);
+@@ -649,8 +615,7 @@ void test_mptcp(void)
  	RUN_MPTCP_TEST(default);
  	RUN_MPTCP_TEST(first);
--	if (test__start_subtest("bkup"))
--		test_bkup();
-+	RUN_MPTCP_TEST(bkup);
- 	if (test__start_subtest("rr"))
- 		test_rr();
+ 	RUN_MPTCP_TEST(bkup);
+-	if (test__start_subtest("rr"))
+-		test_rr();
++	RUN_MPTCP_TEST(rr);
  	if (test__start_subtest("red"))
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
-index bfd4644dd592..486407a135c9 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c
+ 		test_red();
+ 	if (test__start_subtest("burst"))
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+index 39b7e1cfbbd5..05621467fe48 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
 @@ -1,5 +1,6 @@
  // SPDX-License-Identifier: GPL-2.0
  /* Copyright (c) 2022, SUSE. */
