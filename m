@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59914600C
-	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 19:58:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2543514600C
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 19:58:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712606327; cv=none; b=Qvu7Yrl5vGWwzuq7Xix13VA7Cx5kLBbsV9WEDuutBjiRnVCk1RZ7YtyIH+E3AcUEONncT9LxxAFtYa6lQEIFAcQGLCpSBEjX9lCHZngrs2Mo4CW86ZDjqeMzVRfd48lRApeJV9ZH4ZC5nuJb5s5aX2cwdbS8Hu4Cq0SpKYVrrJM=
+	t=1712606339; cv=none; b=VhMnZERzwMCw8Q58H8gLJ/3kAN1/RJqk7SS4tsXmyaNMZnuHfvg5bWEYgEs8KXmhBT5sqEMWSa6P/z0ji6F/geXIadpRCjGCkl/XrX6BaG/rMO/LvxGZ8heOZdMuL0udtXcg4SaBy7bI/sNaSBghyMA1W8JWnp3VFgbaeGU/Xec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712606327; c=relaxed/simple;
-	bh=cmSzF+8V9oujxQRHDQvR4wmdn7ptLD3WNo4meRApwRQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=Kyr62uWnt58m9anuALq42sxtaNvfGuOAp+Z2Sa5Pzv30/9Q4QI5i6YVyPMTf9IVIlhw3uXJSb/NBEKrmBGSL138moFfifQftNVKmSV/5jcsFn7bh9FtMZrDrIQRAXvwmn6pUH19Sn8oEFhaOZxpchx4YSzbb98vrrsWBrsKMu9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAMJrUJC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712606339; c=relaxed/simple;
+	bh=Qt53RPHmuwKYyXXqps4GumpKW3/hqnqr8TlrcQZy91M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K9KWAQYCm/9m3SIwVunKNIN0j1LzEMnLx81ZSid66YDOAPpnc3ZzwdtTVef1Q3AJeemN+Bzl+wmnMprXWk5uNEMFDDhKdYqDwrw6Y7uUXSrseRw79ZuODhkT7M5qpATanBc8tJdW1QFI1wqo51CbWoFvpu7IxVV8+XWNNcHe7nA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qcxtBhg+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAMJrUJC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D42C433C7;
-	Mon,  8 Apr 2024 19:58:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qcxtBhg+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A90B5C433C7;
+	Mon,  8 Apr 2024 19:58:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712606327;
-	bh=cmSzF+8V9oujxQRHDQvR4wmdn7ptLD3WNo4meRApwRQ=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=rAMJrUJCuy3IZvrNb7cMopj1bqyXY+tYpfOCEcHmOhIz+hSZn+jwlNyZjfjAHB13Y
-	 9oJ3PiAsute6CRs80ZrLzphDCO0MwdXAOf69Bs/my+xE0gl2C1QGJUT8YXUt3DJNiY
-	 1NZ+9Zo72xdPpOzUBfE8y+M1MNmuY6kIrnOiYPrKWo8QWgOEO2jMRuKIy6rl8vuiLu
-	 Fy7WO5uyHLIOZ4wBmWBruRctk06x18UEUfjzIXZthlwonvKMbtTUHVdrKKIziLxihN
-	 Yd/9Gn8n7XRbSgLOqQEyTSoh3M6B/HbyubypClJ8Y2cwF1Nu/v328rIYMZ8tSHidcC
-	 daoPj2e7LwNew==
-Message-ID: <f44d5960-8aa3-4914-bae3-4f0c072e07b4@kernel.org>
-Date: Mon, 8 Apr 2024 21:58:43 +0200
+	s=k20201202; t=1712606338;
+	bh=Qt53RPHmuwKYyXXqps4GumpKW3/hqnqr8TlrcQZy91M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=qcxtBhg+50qb9uU3Oz8z0tEbrWUC4VaziRDB1Ogph+rCxgB3iH8d+M4CaF6PCe9pW
+	 CFowjKrER23zsw8leXdjEoVh7XrHAn0SvnceJ78iu2pl/WaYXpmN15Uiig68YN7n7f
+	 q3Z2Eb2+QWbTDF7pLdJgS4IY5yhthotAqqsHQ46JON5fxCd82qmpUCWG5+EtZ6iVd2
+	 Q5/bSmk+OAsmWGHNStSdIvsLfUnz6OfWmEBcvBN6sxUIX6Qnpioo5Z0DPpnVAH1sG4
+	 0kocO++NjyRckXBuYsXUm03g6m2NuUGVJ+9YrHKp8B95nQodFMf2MDGUdFdC0e+HOT
+	 J5iCKWLAtF+PQ==
+Message-ID: <6ced2a3c-42da-4728-a36f-5cedf459dff0@kernel.org>
+Date: Mon, 8 Apr 2024 21:58:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 4/9] selftests/bpf: Add MPTCP_SCHED_TEST
- macro
+Subject: Re: [PATCH mptcp-next v7 2/9] Squash to "selftests/bpf: Add bpf
+ scheduler test" 1 verify
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-References: <cover.1712235379.git.tanggeliang@kylinos.cn>
- <ae75e2c884eb6a1742af12aaeae9015bb0b4d90c.1712235380.git.tanggeliang@kylinos.cn>
- <5a8d79cb-5dfc-45d8-b708-7d4c798408c7@kernel.org>
- <fb0c45182eaab1fd92f1302113d0298bc16d20f6.camel@kernel.org>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1712544986.git.tanggeliang@kylinos.cn>
+ <05269e97e219cc51b59173f05ab3a3b622a3ca1a.1712544986.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,125 +87,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fb0c45182eaab1fd92f1302113d0298bc16d20f6.camel@kernel.org>
+In-Reply-To: <05269e97e219cc51b59173f05ab3a3b622a3ca1a.1712544986.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Geliang,
 
-On 08/04/2024 05:10, Geliang Tang wrote:
-> Hi Matt,
+On 08/04/2024 05:01, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Thu, 2024-04-04 at 19:52 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 04/04/2024 15:03, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch defines MPTCP_SCHED_TEST macro, a template for all
->>> scheduler
->>> tests. Every scheduler is identified by argument name, and use
->>> sysctl
->>> to set net.mptcp.scheduler as "bpf_name" to use this sched. Add two
->>> veth net devices to simulate the multiple addresses case. Use 'ip
->>> mptcp
->>> endpoint' command to add the new endpoint ADDR2 to PM netlink.
->>> Arguments
->>> addr1/add2 means whether the data has been sent on the first/second
->>> subflow
->>> or not. Send data and check bytes_sent of 'ss' output after it
->>> using
->>> send_data_and_verify().
->>
->> Should we not squash this in "selftests/bpf: Add bpf scheduler test"
->> as
->> well? We already have a lot of different commits.
->>
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 30
->>> +++++++++++++++++++
->>>  1 file changed, 30 insertions(+)
->>>
->>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> index ffcd5ebe38b9..8a6b09a97698 100644
->>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> @@ -498,6 +498,36 @@ static void test_default(void)
->>>  	cleanup_netns(nstoken);
->>>  }
->>>  
->>> +#define MPTCP_SCHED_TEST(name, addr1, addr2)			\
->>> +static void test_##name(void)					\
->>> +{								\
->>> +	struct mptcp_bpf_##name *skel;				\
->>> +	struct nstoken *nstoken;				\
->>> +	struct bpf_link *link;					\
->>> +	struct bpf_map *map;					\
->>> +								\
->>> +	skel = mptcp_bpf_##name##__open_and_load();		\
->>> +	if (!ASSERT_OK_PTR(skel, "open_and_load " #name))	\
->>> +		return;					
->>> 	\
->>> +								\
->>> +	map = bpf_object__find_map_by_name(skel->obj, #name);	\
->>> +	link =
->>> bpf_map__attach_struct_ops(map);			\
->>> +	if (!ASSERT_OK_PTR(link, "attach_struct_ops " #name))	\
->>> +		goto skel_destroy;				\
->>> +								\
->>> +	nstoken = sched_init("subflow", "bpf_" #name);		\
->>> +	if (!ASSERT_OK_PTR(nstoken, "sched_init " #name))	\
->>> +		goto link_destroy;				\
->>> +								\
->>> +	send_data_and_verify(#name, atoi(#addr1), atoi(#addr2));\
->>
->> Can you not use the values of addr1 and addr2 directly as number
->> instead
->> of string + atoi()?
->>
->>> +								\
->>> +	cleanup_netns(nstoken);				
->>> 	\
->>> +link_destroy:							\
->>> +	bpf_link__destroy(link);				\
->>> +skel_destroy:							\
->>> +	mptcp_bpf_##name##__destroy(skel);			\
->>> +}
->>
->> I don't mind having functions defined in macros, but I think we
->> should
->> try to reduce their size to the minimum (if possible) because they
->> are
->> hard to read and debug in case of error.
->>
->> Here, do you think we could have a smaller macro passing the name as
->> a
->> string (for the error messages) and the different functions pointers
->> you
->> need to a new helper? (+ using generic skel structure?)
+> Add send_data_and_verify helper to avoid duplicated code.
 > 
-> Thanks for your review, it's very useful. v7 is sent, address all your
-> comments except this one. I didn't got it, please give me more details
-> about this.
-My comment was similar to the one from Mat:
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 40 ++++++++++++++-----
+>  1 file changed, 30 insertions(+), 10 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index c29c81239603..5080e680fbe0 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -457,23 +457,44 @@ static int has_bytes_sent(char *addr)
+>  	return system(cmd);
+>  }
+>  
+> -static void test_default(void)
+> +static void send_data_and_verify(char *sched, char *addr1, char *addr2)
+>  {
+>  	int server_fd, client_fd;
+> -	struct nstoken *nstoken;
+>  
+> -	nstoken = sched_init("subflow", "default");
+> -	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
+> -		goto fail;
+>  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
+> +	if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n", errno))
+> +		return;
+> +
+>  	client_fd = connect_to_fd(server_fd, 0);
+> +	if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n", errno))
+> +		goto close_server;
+>  
+> -	send_data(server_fd, client_fd, "default");
+> -	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
+> -	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
+> +	send_data(server_fd, client_fd, sched);
+> +
+> +	if (!strcmp(addr1, "WITH_DATA"))
 
-https://lore.kernel.org/mptcp/f9daffc3-c1a6-0ec3-f821-107ab97f551c@kernel.org/
+Out of curiosity, why did you use strings? Why not using booleans? (or a
+bitmask)
 
-In short: macros can be hard to debug.
+  #define WITH_DATA true
+  static void send_data_and_verify(char *sched, bool addr1_with_data,
+                                   bool addr1_with_data)
+
+  send_data_and_verify("...", WITH_DATA, !WITH_DATA);
 
 
-I also see why you are using a macro here, all these functions are very
-similar. Here, there are more functions that can "reduced", so maybe
-that's OK?
-
-@Mat: what do you think? Or maybe another idea?
-
-(Or maybe it is possible to have a "small" macro, passing function
-pointers to a (proper) helper? But not sure if it is less complex. And
-maybe not worth it for the tests.)
+I guess that's fine for the tests, just strange in C :)
 
 Cheers,
 Matt
