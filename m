@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 308601422AC;
-	Mon,  8 Apr 2024 16:10:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE59914600C
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 19:58:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712592644; cv=none; b=I/sOODUxHdsT3UVp7mahf/JtZ2xRSQZuFfcSx1Vzs1RAC/wJC/ElaaUm8iXlbEFgroUWYF9l32LDmA3uDIAyYqg4G4zdBNQ4igg7Nce/N2ojtYEze5TUIfGcTeDBIVa9qVljwB47UY+zOIYGooZxCb6C+7PqwjLhzFgLIlR1b/w=
+	t=1712606327; cv=none; b=Qvu7Yrl5vGWwzuq7Xix13VA7Cx5kLBbsV9WEDuutBjiRnVCk1RZ7YtyIH+E3AcUEONncT9LxxAFtYa6lQEIFAcQGLCpSBEjX9lCHZngrs2Mo4CW86ZDjqeMzVRfd48lRApeJV9ZH4ZC5nuJb5s5aX2cwdbS8Hu4Cq0SpKYVrrJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712592644; c=relaxed/simple;
-	bh=WU1dAnBPBYUs5YVwHT2GQEbOUF6Cch5bk9bErVfgI5o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eZjpgQygOWxWw96Qwx5+v+HlPisekaSYnzExNCjKmwyzKtn1yHribUprblkuYIO2i6pQvlzToNapEKnggO7ApEevB0Ik7tAuzQBdI1vS0VAH1rqpQCgonMCmcKUVC7upxA/S8uoxgSu8e9+k+BFCfiE+1PB2ACuHgy6TM6hEHYQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbRVLdHm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712606327; c=relaxed/simple;
+	bh=cmSzF+8V9oujxQRHDQvR4wmdn7ptLD3WNo4meRApwRQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Kyr62uWnt58m9anuALq42sxtaNvfGuOAp+Z2Sa5Pzv30/9Q4QI5i6YVyPMTf9IVIlhw3uXJSb/NBEKrmBGSL138moFfifQftNVKmSV/5jcsFn7bh9FtMZrDrIQRAXvwmn6pUH19Sn8oEFhaOZxpchx4YSzbb98vrrsWBrsKMu9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rAMJrUJC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbRVLdHm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B9AC433F1;
-	Mon,  8 Apr 2024 16:10:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rAMJrUJC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D42C433C7;
+	Mon,  8 Apr 2024 19:58:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712592643;
-	bh=WU1dAnBPBYUs5YVwHT2GQEbOUF6Cch5bk9bErVfgI5o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qbRVLdHmWe1SG5k4lTlF6pmlo7rhZEal3fcoIXMD4DgdfjCp4ryFuR/H+NsyN0F/k
-	 IPK0kKiCkGvKR1gm8r0Cs+aDKCmqWvI//BtUuEBKieHXF4ZMeycmABHn92qbUoKeG0
-	 CSLHejeQSGuwKF0zRlR8uo9DYYcl+YiRWVyW/V3sNtB686Fpbx9GbLfn3EeqbSGzrf
-	 92Q72qqPfv5iYthASNvFxZbFoNoEQFlkhMylHvlMGYW5cM4XYXj8IMirfBGiS/Q1ZX
-	 Nu6hqVDAtX9Ig8+G26gSm8wjvk3c8YqukNZIEwqYR4mbJiF+WFSybZay4vh+Ux134R
-	 oAkA1icwfO/+w==
-Message-ID: <26b5e6f5-6da2-44ff-adbd-c1c1eda3ccba@kernel.org>
-Date: Mon, 8 Apr 2024 18:10:38 +0200
+	s=k20201202; t=1712606327;
+	bh=cmSzF+8V9oujxQRHDQvR4wmdn7ptLD3WNo4meRApwRQ=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=rAMJrUJCuy3IZvrNb7cMopj1bqyXY+tYpfOCEcHmOhIz+hSZn+jwlNyZjfjAHB13Y
+	 9oJ3PiAsute6CRs80ZrLzphDCO0MwdXAOf69Bs/my+xE0gl2C1QGJUT8YXUt3DJNiY
+	 1NZ+9Zo72xdPpOzUBfE8y+M1MNmuY6kIrnOiYPrKWo8QWgOEO2jMRuKIy6rl8vuiLu
+	 Fy7WO5uyHLIOZ4wBmWBruRctk06x18UEUfjzIXZthlwonvKMbtTUHVdrKKIziLxihN
+	 Yd/9Gn8n7XRbSgLOqQEyTSoh3M6B/HbyubypClJ8Y2cwF1Nu/v328rIYMZ8tSHidcC
+	 daoPj2e7LwNew==
+Message-ID: <f44d5960-8aa3-4914-bae3-4f0c072e07b4@kernel.org>
+Date: Mon, 8 Apr 2024 21:58:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.6.y 3/5] selftests: mptcp: use += operator to append
- strings
+Subject: Re: [PATCH mptcp-next v6 4/9] selftests/bpf: Add MPTCP_SCHED_TEST
+ macro
 Content-Language: en-GB
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mptcp@lists.linux.dev, stable@vger.kernel.org,
- Geliang Tang <tanggeliang@kylinos.cn>, Jakub Kicinski <kuba@kernel.org>
-References: <2024040520-unselect-antitrust-a41b@gregkh>
- <20240405153636.958019-10-matttbe@kernel.org>
- <2024040801-undaunted-boastful-5a01@gregkh>
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+References: <cover.1712235379.git.tanggeliang@kylinos.cn>
+ <ae75e2c884eb6a1742af12aaeae9015bb0b4d90c.1712235380.git.tanggeliang@kylinos.cn>
+ <5a8d79cb-5dfc-45d8-b708-7d4c798408c7@kernel.org>
+ <fb0c45182eaab1fd92f1302113d0298bc16d20f6.camel@kernel.org>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,92 +89,125 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2024040801-undaunted-boastful-5a01@gregkh>
+In-Reply-To: <fb0c45182eaab1fd92f1302113d0298bc16d20f6.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+Hi Geliang, Mat,
 
-On 08/04/2024 13:31, Greg KH wrote:
-> On Fri, Apr 05, 2024 at 05:36:40PM +0200, Matthieu Baerts (NGI0) wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> This patch uses addition assignment operator (+=) to append strings
->> instead of duplicating the variable name in mptcp_connect.sh and
->> mptcp_join.sh.
->>
->> This can make the statements shorter.
->>
->> Note: in mptcp_connect.sh, add a local variable extra in do_transfer to
->> save the various extra warning logs, using += to append it. And add a
->> new variable tc_info to save various tc info, also using += to append it.
->> This can make the code more readable and prepare for the next commit.
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Link: https://lore.kernel.org/r/20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-8-4f42c347b653@kernel.org
->> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->> (cherry picked from commit e7c42bf4d320affe37337aa83ae0347832b3f568)
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  .../selftests/net/mptcp/mptcp_connect.sh      | 53 ++++++++++---------
->>  .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++------
->>  2 files changed, 43 insertions(+), 40 deletions(-)
+On 08/04/2024 05:10, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Odd, this one did not apply.
+> On Thu, 2024-04-04 at 19:52 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 04/04/2024 15:03, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> This patch defines MPTCP_SCHED_TEST macro, a template for all
+>>> scheduler
+>>> tests. Every scheduler is identified by argument name, and use
+>>> sysctl
+>>> to set net.mptcp.scheduler as "bpf_name" to use this sched. Add two
+>>> veth net devices to simulate the multiple addresses case. Use 'ip
+>>> mptcp
+>>> endpoint' command to add the new endpoint ADDR2 to PM netlink.
+>>> Arguments
+>>> addr1/add2 means whether the data has been sent on the first/second
+>>> subflow
+>>> or not. Send data and check bytes_sent of 'ss' output after it
+>>> using
+>>> send_data_and_verify().
+>>
+>> Should we not squash this in "selftests/bpf: Add bpf scheduler test"
+>> as
+>> well? We already have a lot of different commits.
+>>
+>>>
+>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>> ---
+>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 30
+>>> +++++++++++++++++++
+>>>  1 file changed, 30 insertions(+)
+>>>
+>>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>> index ffcd5ebe38b9..8a6b09a97698 100644
+>>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>> @@ -498,6 +498,36 @@ static void test_default(void)
+>>>  	cleanup_netns(nstoken);
+>>>  }
+>>>  
+>>> +#define MPTCP_SCHED_TEST(name, addr1, addr2)			\
+>>> +static void test_##name(void)					\
+>>> +{								\
+>>> +	struct mptcp_bpf_##name *skel;				\
+>>> +	struct nstoken *nstoken;				\
+>>> +	struct bpf_link *link;					\
+>>> +	struct bpf_map *map;					\
+>>> +								\
+>>> +	skel = mptcp_bpf_##name##__open_and_load();		\
+>>> +	if (!ASSERT_OK_PTR(skel, "open_and_load " #name))	\
+>>> +		return;					
+>>> 	\
+>>> +								\
+>>> +	map = bpf_object__find_map_by_name(skel->obj, #name);	\
+>>> +	link =
+>>> bpf_map__attach_struct_ops(map);			\
+>>> +	if (!ASSERT_OK_PTR(link, "attach_struct_ops " #name))	\
+>>> +		goto skel_destroy;				\
+>>> +								\
+>>> +	nstoken = sched_init("subflow", "bpf_" #name);		\
+>>> +	if (!ASSERT_OK_PTR(nstoken, "sched_init " #name))	\
+>>> +		goto link_destroy;				\
+>>> +								\
+>>> +	send_data_and_verify(#name, atoi(#addr1), atoi(#addr2));\
+>>
+>> Can you not use the values of addr1 and addr2 directly as number
+>> instead
+>> of string + atoi()?
+>>
+>>> +								\
+>>> +	cleanup_netns(nstoken);				
+>>> 	\
+>>> +link_destroy:							\
+>>> +	bpf_link__destroy(link);				\
+>>> +skel_destroy:							\
+>>> +	mptcp_bpf_##name##__destroy(skel);			\
+>>> +}
+>>
+>> I don't mind having functions defined in macros, but I think we
+>> should
+>> try to reduce their size to the minimum (if possible) because they
+>> are
+>> hard to read and debug in case of error.
+>>
+>> Here, do you think we could have a smaller macro passing the name as
+>> a
+>> string (for the error messages) and the different functions pointers
+>> you
+>> need to a new helper? (+ using generic skel structure?)
+> 
+> Thanks for your review, it's very useful. v7 is sent, address all your
+> comments except this one. I didn't got it, please give me more details
+> about this.
+My comment was similar to the one from Mat:
 
-Indeed, that's odd. Do you use a different merge strategy?
+https://lore.kernel.org/mptcp/f9daffc3-c1a6-0ec3-f821-107ab97f551c@kernel.org/
 
-I just tried on my side with the default merge strategy coming with Git
-2.43.0, and it works:
-
-  $ git fetch
-git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
-refs/heads/linux-6.6.y
-  $ git switch -c tmp FETCH_HEAD
-  $ git rebase -i 2f39e4380e73~ ## to drop these 3 patches you added:
-    # 2f39e4380e73 selftests: mptcp: connect: fix shellcheck warnings
+In short: macros can be hard to debug.
 
 
+I also see why you are using a macro here, all these functions are very
+similar. Here, there are more functions that can "reduced", so maybe
+that's OK?
 
-    # bd3b5b0fff75 mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
+@Mat: what do you think? Or maybe another idea?
 
-
-
-    # f723f9449193 mptcp: don't account accept() of non-MPC client (...)
-  $ git cherry-pick -xs \
-    629b35a225b0 e3aae1098f10 e7c42bf4d320 8e2b8a9fa512 7a1b3490f47e
-  Auto-merging tools/testing/selftests/net/mptcp/mptcp_join.sh
-  (...)
-  $ echo $?
-  0
-
-But if I try the 3 patches you selected
-
-  $ git reset --hard HEAD~5
-  $ git cherry-pick -xs e3aae1098f10 8e2b8a9fa512 7a1b3490f47e
-  Auto-merging tools/testing/selftests/net/mptcp/mptcp_connect.sh
-  (...)
-  CONFLICT (content): Merge conflict in
-tools/testing/selftests/net/mptcp/mptcp_connect.sh
-  error: could not apply 7a1b3490f47e... mptcp: don't account accept()
-of non-MPC client as fallback to TCP
-
-
-And the conflict makes sense: with the version that is currently in
-linux-6.6.y branch, the new check is done after having printed "OK", so
-that's not correct.
-
-
-I can share the 5 patches I applied without conflicts on top of the
-current linux-6.6.y branch, without the 3 patches you added today if it
-can help.
-
-
-> All others did, thanks!
-
-Thank you!
+(Or maybe it is possible to have a "small" macro, passing function
+pointers to a (proper) helper? But not sure if it is less complex. And
+maybe not worth it for the tests.)
 
 Cheers,
 Matt
