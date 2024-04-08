@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FBFC184D
-	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62E317F7
+	for <mptcp@lists.linux.dev>; Mon,  8 Apr 2024 03:01:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712545279; cv=none; b=EPwEYBLhujQ/cHcV87ULUq8YuoHPhLlesPXYH5tCQQG3mUXmJWcSuIOPhbxbGBhSdI0PTgUq4cKd4moHiRLHw7jEFmqnhbLCysyco9aR3xy71ZsEfOJgSRI2SXUCOTpFXQUxJFCDP32La22zwIXdsCQIAOfL7OH9p6gfk/m/kb4=
+	t=1712545280; cv=none; b=Z+fUlp2ZAn6yEAx0lw+6mA//r/SOH/8DxYWqij40ZYZ+Yg19sy1AAYOWUvSThAZKbYShskpvVWZrSVPQRPyOe5hKQSHAo3xI9XEk1z9ieTrda9WjtIa9LNOMPkrUVUJbMdHnJb5+Jss8tqV9P3AWrNHO8rWsQhq6yJfBRiwf3uY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712545279; c=relaxed/simple;
-	bh=S7AUp2qZf8k/T73vHb9lttnz3wUqv5fP9Bd7WLrerWQ=;
+	s=arc-20240116; t=1712545280; c=relaxed/simple;
+	bh=xekquGCfYqzdmpOy+gdC4kEQJl6x4R1SJ4uRaTMfsyQ=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=dEwi9NNrKT2vOTXUDyaQKMub1jxehyzTJGcMLih+wMyZiJljJ/esVHMZj2GHZcjt9P4/yZk+qM42mlT+JpgEuhAG8gTQU6RPBJgVEy4VwZAYEQVhPXsK0m2fMUf/ftKFB0vTdnvdMjfj7RJIs28iqAoG7wt7rmh8La319NunAWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R62WpEM/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SHI9Y3DI80HRndSE+hUUGWMJagrviMWOPSINP4YzWP+W/Egw64dTGhxYRmhBARxmiGfXrZEVAHUfL497/HA8/UZA9GZGf8AlXkp7eXXUTHkX8JpM+M9A7g4tkHJen8he40Pgm+YsMyPZK17aes5VQ9TL3fKSDoy1rHaLUpQ8J8s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o36cKsUL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R62WpEM/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36322C43390;
-	Mon,  8 Apr 2024 03:01:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o36cKsUL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86C51C433C7;
+	Mon,  8 Apr 2024 03:01:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712545279;
-	bh=S7AUp2qZf8k/T73vHb9lttnz3wUqv5fP9Bd7WLrerWQ=;
+	s=k20201202; t=1712545280;
+	bh=xekquGCfYqzdmpOy+gdC4kEQJl6x4R1SJ4uRaTMfsyQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=R62WpEM/JBEYMNzqDdku3idbfBX7AOI151EQDIWDOwlTSp6C4NS0LNagP+9Fli5i1
-	 Oi0l1nuCf8rhFJvnhYVXljMyCWpuEmtfLX2adspIxd013wG0zNdXdIHnV1h4bM3KVr
-	 Fo/zrNa8geELxNhI/Q2ZJZEOMUUC3K+A5Ts85o3RAXMe2y2lbt/Z2fstp30EMPLvfY
-	 AF6n/QCEzXnM5pwYj0RxXiYPx8wKn5m/REY1VQEmXaUWKfybnQHf7iJjrtzpYC1i7+
-	 9AkRCG6m6k7WZ+inLPhn1xmlYuwF/c/ZpDo4syGepRDs237nRBohrjhXC0Ro6ZKf48
-	 RLGbBHxkgB//w==
+	b=o36cKsULBEdGHKJ6ZbuTMs3dnDXEVJMY5yBswOg2Lhuzi0AWGn2SHF6jTs3/wlhE/
+	 CXIfPh5+WyzLWMIpqkJC4HlU3KBrFtmlCjA6mDg16hj5+11k2YeUlF8kzal6QDpfso
+	 CAfAJvIlMVJqJKJ0GYKe3vWYmhGPjqos5oAzgosqtQj3KH+AQLHw0qXvNwpnqQC6Q7
+	 izpE0WVt3C89NVvcZi39tfTfRey++wEqfQOBRfjtWq7R8axknfJbGMyQzSwl8B17a7
+	 16l8HqIOepPptUdflyhAFQbzzY2RTLxD11gKnET5eFqvClMtIFI2Ws2XRp4tiv83is
+	 W3RJRQZI8YsSw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 2/9] Squash to "selftests/bpf: Add bpf scheduler test" 1 verify
-Date: Mon,  8 Apr 2024 11:01:04 +0800
-Message-Id: <05269e97e219cc51b59173f05ab3a3b622a3ca1a.1712544986.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 3/9] Squash to "selftests/bpf: Add bpf scheduler test" 2 time
+Date: Mon,  8 Apr 2024 11:01:05 +0800
+Message-Id: <7fc2ba157a9d9a944d93868e64aecf727430c34d.1712544986.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1712544986.git.tanggeliang@kylinos.cn>
 References: <cover.1712544986.git.tanggeliang@kylinos.cn>
@@ -45,80 +45,92 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Add send_data_and_verify helper to avoid duplicated code.
+Move time related code from send_data into send_data_and_verify. Then
+send_data can be exported into network_helpers.h as a public function,
+reused by mptcp.c and bpf_tcp_ca.c.
+
+Drop duplicate '#include <time.h>', it's included in test_progs.h
+already.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 40 ++++++++++++++-----
- 1 file changed, 30 insertions(+), 10 deletions(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 23 +++++++++----------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index c29c81239603..5080e680fbe0 100644
+index 5080e680fbe0..aa95bb41d5ea 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -457,23 +457,44 @@ static int has_bytes_sent(char *addr)
- 	return system(cmd);
- }
- 
--static void test_default(void)
-+static void send_data_and_verify(char *sched, char *addr1, char *addr2)
+@@ -5,7 +5,6 @@
+ #include <linux/const.h>
+ #include <netinet/in.h>
+ #include <test_progs.h>
+-#include <time.h>
+ #include "cgroup_helpers.h"
+ #include "network_helpers.h"
+ #include "mptcp_sock.skel.h"
+@@ -380,16 +379,12 @@ static void *server(void *arg)
+ static void send_data(int lfd, int fd, char *msg)
  {
+ 	ssize_t nr_recv = 0, bytes = 0;
+-	struct timespec start, end;
+-	unsigned int delta_ms;
+ 	pthread_t srv_thread;
+ 	void *thread_ret;
+ 	char batch[1500];
+ 	int err;
+ 
+ 	WRITE_ONCE(stop, 0);
+-	if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
+-		return;
+ 
+ 	err = pthread_create(&srv_thread, NULL, server, (void *)(long)lfd);
+ 	if (CHECK(err != 0, "pthread_create", "err:%d errno:%d\n", err, errno))
+@@ -406,16 +401,9 @@ static void send_data(int lfd, int fd, char *msg)
+ 		bytes += nr_recv;
+ 	}
+ 
+-	if (clock_gettime(CLOCK_MONOTONIC, &end) < 0)
+-		return;
+-
+-	delta_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
+-
+ 	CHECK(bytes != total_bytes, "recv", "%zd != %u nr_recv:%zd errno:%d\n",
+ 	      bytes, total_bytes, nr_recv, errno);
+ 
+-	printf("%s: %u ms\n", msg, delta_ms);
+-
+ 	WRITE_ONCE(stop, 1);
+ 
+ 	pthread_join(srv_thread, &thread_ret);
+@@ -459,7 +447,9 @@ static int has_bytes_sent(char *addr)
+ 
+ static void send_data_and_verify(char *sched, char *addr1, char *addr2)
+ {
++	struct timespec start, end;
  	int server_fd, client_fd;
--	struct nstoken *nstoken;
++	unsigned int delta_ms;
  
--	nstoken = sched_init("subflow", "default");
--	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
--		goto fail;
  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n", errno))
-+		return;
-+
- 	client_fd = connect_to_fd(server_fd, 0);
-+	if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n", errno))
+ 	if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n", errno))
+@@ -469,8 +459,17 @@ static void send_data_and_verify(char *sched, char *addr1, char *addr2)
+ 	if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n", errno))
+ 		goto close_server;
+ 
++	if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
 +		goto close_server;
++
+ 	send_data(server_fd, client_fd, sched);
  
--	send_data(server_fd, client_fd, "default");
--	ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
--	ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
-+	send_data(server_fd, client_fd, sched);
++	if (clock_gettime(CLOCK_MONOTONIC, &end) < 0)
++		goto close_server;
 +
-+	if (!strcmp(addr1, "WITH_DATA"))
-+		CHECK(has_bytes_sent(ADDR_1), sched, "should have bytes_sent on addr1\n");
-+	else if (!strcmp(addr1, "WITHOUT_DATA"))
-+		CHECK(!has_bytes_sent(ADDR_1), sched, "shouldn't have bytes_sent on addr1\n");
-+	if (!strcmp(addr2, "WITH_DATA"))
-+		CHECK(has_bytes_sent(ADDR_2), sched, "should have bytes_sent on addr2\n");
-+	else if (!strcmp(addr2, "WITHOUT_DATA"))
-+		CHECK(!has_bytes_sent(ADDR_2), sched, "shouldn't have bytes_sent on addr2\n");
- 
- 	close(client_fd);
-+close_server:
- 	close(server_fd);
-+}
++	delta_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
++	printf("%s: %u ms\n", sched, delta_ms);
 +
-+static void test_default(void)
-+{
-+	struct nstoken *nstoken;
-+
-+	nstoken = sched_init("subflow", "default");
-+	if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
-+		goto fail;
-+
-+	send_data_and_verify("default", "WITH_DATA", "WITH_DATA");
-+
- fail:
- 	cleanup_netns(nstoken);
- }
-@@ -663,8 +684,7 @@ void test_mptcp(void)
- {
- 	RUN_MPTCP_TEST(base);
- 	RUN_MPTCP_TEST(mptcpify);
--	if (test__start_subtest("default"))
--		test_default();
-+	RUN_MPTCP_TEST(default);
- 	if (test__start_subtest("first"))
- 		test_first();
- 	if (test__start_subtest("bkup"))
+ 	if (!strcmp(addr1, "WITH_DATA"))
+ 		CHECK(has_bytes_sent(ADDR_1), sched, "should have bytes_sent on addr1\n");
+ 	else if (!strcmp(addr1, "WITHOUT_DATA"))
 -- 
 2.40.1
 
