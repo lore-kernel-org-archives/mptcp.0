@@ -1,120 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B1AD84A38;
-	Tue,  9 Apr 2024 10:58:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 362A785924
+	for <mptcp@lists.linux.dev>; Tue,  9 Apr 2024 11:01:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712660281; cv=none; b=MhMmdZ/5JC6ZtjMKZfTA/mLqzZb0bcZUDJatb68p8ImFP8etrxXFEoOynwFOdryyWpB8S0v5DSOKqW6CWoOso4bKD6UaE3YMAqVSksQ8aupd+RSqY4vXaTyeE5ZXYAND3teEwtXEHPEPKE90bWp48qdo80EWWRiRWI2ACF5eTEw=
+	t=1712660477; cv=none; b=e8nnD2f/+vKowlX65lWnyS023blFDgqwpAIgrtn+GgAInlCqWSi45QK6mD63VRg/fy/icZPqkd17qpigsUlUGlqZw6ghBhyEwFRJIsuiI7B5IZWCXFuuPu4zkpDlgAI312wGpXogSwZhhtG2uYg1ThIH9Ux4Y596A6wZJ7NyB00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712660281; c=relaxed/simple;
-	bh=1Bbg6ZrbPLTUeYX11KUhFLpnFmjl2oTsXv7zRjBuY9k=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=MB7nQpydSJHhozUuJx73R94e3if69FZEojkSQ7jUouf+2ZmG1pUd1FA8JDGYubzIqzneTXrnbN6rjWn04Yn6hWA6916Ys7wUYhvRNISuKz5C6Lf+oiIq34GZbDrxLER7KvzL2l52xZBczHTm8EqNKLH/lJY1hc+rOzjgYhoUQf0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JeF6v419; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712660477; c=relaxed/simple;
+	bh=HVdCMUhJ31/13AfwGBAKutA1QOcFfPbDtov+Geikwiw=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=K5j2hTyVHwFG29G6Kyg/6S8B81cfC2MpiBEdSnEoenIFV30578+N0WjIxU16HTn8Nat/JWVE+8D9zkjSnmBmrS6/a3J4jCMVNUmzIokfUyDpO7t9O9JSmU4G7JZBWcuieNPk0iGoyEQzYtOMo+Yd/N4sHOxZXKMXpxoBgi2zJhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Wc23Km6A; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JeF6v419"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49C9EC433F1;
-	Tue,  9 Apr 2024 10:57:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712660281;
-	bh=1Bbg6ZrbPLTUeYX11KUhFLpnFmjl2oTsXv7zRjBuY9k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=JeF6v419YMBNTzV04DRcgUtNVC73ajSpWumSJU/As2R/ZT8Mv/dfF8xc8pWv07q2J
-	 rne3m3GMVmYDn+FtE5dPfOuS8+Gx/FNfMCo+C41WOnnqReQPWSlB+/z5Y/0Zk8tVcP
-	 8KkFV8YJIB9y/lrkWZFzS37QjZQEE50z+GDm0fWx6YP1vQ3f6OJbYZDF0/RZ09oClC
-	 pVGKbo3MGCFt06oKGe0kIuiW/YkovXjkGbKfCKQ4WsJnNMn3Ux33+LKUHjIb9BxhJ+
-	 ET8ZyOd+kqA174VsbQrADgpHNp9EXLss8mHQLXGFgogSX6OVPiGTFjqDcVkwqzDBUe
-	 1vWAu0vZyBYiA==
-From: Geliang Tang <geliang@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>,
-	Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	John Fastabend <john.fastabend@gmail.com>,
-	KP Singh <kpsingh@kernel.org>,
-	Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>,
-	Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	bpf@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org
-Subject: [PATCH bpf-next v3 4/4] selftests/bpf: Support nonblock for send_recv_data
-Date: Tue,  9 Apr 2024 18:57:25 +0800
-Message-Id: <ff4076db2676a89fadea5187480cd49e767a337a.1712659575.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.40.1
-In-Reply-To: <cover.1712659575.git.tanggeliang@kylinos.cn>
-References: <cover.1712659575.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Wc23Km6A"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-78d57b9f3caso214745885a.3
+        for <mptcp@lists.linux.dev>; Tue, 09 Apr 2024 04:01:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1712660475; x=1713265275; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9qhIXUFB2UBBfhPDcH0Y+NqtPepwcmxDL3b6KHL5uc8=;
+        b=Wc23Km6AnSR85QF/AYyoBRC0ZmtXxHzbjtYOnRb2hD0bMEtE7wizoE+1+6I3oaWnLa
+         225c216e0jfIoW2q9VNo9Y4yJoZ09zrUShWR+q0n8b/evk8WrXB6Tn2njM7nHt7Bysfh
+         aEtaDty8PPO12fxg5qOHBNPC4GesX3+Aayu5i0nzmntl5SR6vl3GJuRs+7k+HxOLkky0
+         BhbacepXZpFML6ReQ48R2+uRjKE8WNx0LTK8R0e766AHxewOEkBteC0G6OLnE54oqcwX
+         JBpwbYUmKIxnm8gMsjbszujxFwvza7K8xdthNmAsBbhqInnbJn2olhCHT0IKWjTsXnDC
+         1Y5Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1712660475; x=1713265275;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=9qhIXUFB2UBBfhPDcH0Y+NqtPepwcmxDL3b6KHL5uc8=;
+        b=eR/O/pNHbysuH5D/oEkXibQm2dtXHLE+qmp5MDpZ1xy0E7gVJU/8VM5M9XrGE2I0Z8
+         wCVzGj4CWmF3JoOcXtpuhzKjgTmHl8dPT+Fp066/+w9keQDAsQo6N69OgTwihEtrSVqY
+         9HMErpLkc9BZ8mNVDsBhUs3u6nufYCPs9f4C4Du4Ypiodlj5e8fBkxh2zEWAkpLJEdwg
+         TjvKI6/TGUqSssGTqRgl/N0xHAZfbbYroXbH+ryd0kfNnm8cUH29s9WRY+0L5GltBCt9
+         Ts635PYl8yV0BM7Rp4o9e8eIKnErnM7wD6FSdBY/1FJQlJmokRzIWChOCKwqwzcsfSKH
+         drkA==
+X-Gm-Message-State: AOJu0YyvAWwiK5SCHNQSqe6A0mR3RJs9YgVTIuHggczOy/OBAznFKue7
+	E1cjZf5g+JYYduO22VEkxf5SjM5HDlEs1CvF5AYynN2Pzc0uRVU=
+X-Google-Smtp-Source: AGHT+IHN/TezLmQsS+4XSdd8UrIlyJIxClxYZWm42oGQaA0H363ngpz1t6dpI5Oh8rlHoPUwC7U4Zg==
+X-Received: by 2002:a05:620a:2489:b0:78d:61fe:77c2 with SMTP id i9-20020a05620a248900b0078d61fe77c2mr8117467qkn.31.1712660474832;
+        Tue, 09 Apr 2024 04:01:14 -0700 (PDT)
+Received: from [127.0.0.1] ([20.55.15.21])
+        by smtp.gmail.com with ESMTPSA id qp12-20020a05620a388c00b0078d704f9867sm382756qkn.71.2024.04.09.04.01.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 09 Apr 2024 04:01:14 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Jason Xing <kernelxing@tencent.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+References: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+Subject: Re: [PATCH net-next v3 0/6] Implement reset reason mechanism to
+ detect
+Message-ID: <7e3a4d1d-bdca-266a-7752-af7a3daccf9b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 09 Apr 2024 11:01:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Jason,
 
-Some tests, such as the MPTCP bpf tests, require send_recv_data helper
-to run in nonblock mode.
+Thank you for your modifications, that's great!
 
-This patch adds nonblock support for send_recv_data(). Check if it is
-currently in nonblock mode, and if so, ignore EWOULDBLOCK to continue
-sending and receiving.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/network_helpers.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): packetdrill_sockopts =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/861412=
+9316
 
-diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
-index 55d41508fe1f..08a204828ded 100644
---- a/tools/testing/selftests/bpf/network_helpers.c
-+++ b/tools/testing/selftests/bpf/network_helpers.c
-@@ -565,6 +565,7 @@ struct send_recv_arg {
- static void *send_recv_server(void *arg)
- {
- 	struct send_recv_arg *a = (struct send_recv_arg *)arg;
-+	int flags = fcntl(a->fd, F_GETFL);
- 	ssize_t nr_sent = 0, bytes = 0;
- 	char batch[1500];
- 	int err = 0, fd;
-@@ -588,6 +589,8 @@ static void *send_recv_server(void *arg)
- 		if (nr_sent == -1 && errno == EINTR)
- 			continue;
- 		if (nr_sent == -1) {
-+			if (flags & O_NONBLOCK && errno == EWOULDBLOCK)
-+				continue;
- 			err = -errno;
- 			break;
- 		}
-@@ -609,6 +612,7 @@ static void *send_recv_server(void *arg)
- 
- int send_recv_data(int lfd, int fd, uint32_t total_bytes)
- {
-+	int flags = fcntl(lfd, F_GETFL);
- 	ssize_t nr_recv = 0, bytes = 0;
- 	struct send_recv_arg arg = {
- 		.fd	= lfd,
-@@ -632,8 +636,11 @@ int send_recv_data(int lfd, int fd, uint32_t total_bytes)
- 			       MIN(total_bytes - bytes, sizeof(batch)), 0);
- 		if (nr_recv == -1 && errno == EINTR)
- 			continue;
--		if (nr_recv == -1)
-+		if (nr_recv == -1) {
-+			if (flags & O_NONBLOCK && errno == EWOULDBLOCK)
-+				continue;
- 			break;
-+		}
- 		bytes += nr_recv;
- 	}
- 
--- 
-2.40.1
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a1b3417a8588
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D842746
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
