@@ -1,54 +1,56 @@
-Received: from mail-oo1-f54.google.com (mail-oo1-f54.google.com [209.85.161.54])
+Received: from mail-oo1-f52.google.com (mail-oo1-f52.google.com [209.85.161.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E78D380630
-	for <mptcp@lists.linux.dev>; Tue,  9 Apr 2024 10:10:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A00E8063B
+	for <mptcp@lists.linux.dev>; Tue,  9 Apr 2024 10:10:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712657408; cv=none; b=camFT80Yf0tgia48sBlp3IeTrjT4kw9Kj7nkaLOxB9Mp+0eJCHlvuN1ynXAlIp+W1b5MM6b3A8xUM7fVkS/c5HzB3Nu4sSbzgZ9o9jxY0Svuhn/ALkuY55S+Xr2SNRn/ECA+f7ZuNJvPeshsGb7cTX8wKTyU5TSCqi2NPEyE/6o=
+	t=1712657414; cv=none; b=u4cHnBoGVJoIjOrN9f2UHcrTii38yRa/fO8jYMLG34JuecJgi3S2hVtYvb9PJegEgB2pxOEKYlhvBxvjBC7yKOrEULA0Rtj3erKmxON28MuDUu8Y0F9X25FvBdiqTuDjIQI1FubG5+NjYjBj1wYCvLE0oIuMP2EsUtTpu+DNIQU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712657408; c=relaxed/simple;
-	bh=za5Qe3T81KPoPvfYbaiKVVOcs3g03twc/hkiVAkW01s=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=cWX9KfcvZCxus7FZoYsVrqhKszjM+UKBBMGjgKCnyxzxdkte4jbYUyCkcSlnwALqoxSYb+Kf4t3SiG2oUamaoqOySAYXz1JbvIF5KNwg4wdzfulfO6ot2VtCd6XKq6exeekNScdh7gsX0eeijpgvp0Y1u5vpu2VNBx8qGql7sN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=h0YkexPb; arc=none smtp.client-ip=209.85.161.54
+	s=arc-20240116; t=1712657414; c=relaxed/simple;
+	bh=mlfxcIg4+Phml4qIdFRVfQLahA9cOJbdd5MjdoBa8Vs=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=uIgni6xQIX4LJECLurXeTV49nEDmftGWBUVlmpwrCvPISM3UO9jKVAqbvv4DKUlxa5DAQmevLxDvWsUoE0NPHBOW6+mEibZHHyxUHzxoUG5rftVNGmyAmqENjjyNyUJw7wNVEfegqC/MYIBuYSPI9Hmwuggynl5UObBspO7OcVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l7h/kEX0; arc=none smtp.client-ip=209.85.161.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="h0YkexPb"
-Received: by mail-oo1-f54.google.com with SMTP id 006d021491bc7-5a7d6bc81c6so3819577eaf.2
-        for <mptcp@lists.linux.dev>; Tue, 09 Apr 2024 03:10:06 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l7h/kEX0"
+Received: by mail-oo1-f52.google.com with SMTP id 006d021491bc7-5aa362cc2ccso1808005eaf.3
+        for <mptcp@lists.linux.dev>; Tue, 09 Apr 2024 03:10:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712657406; x=1713262206; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=8mruov800edUKD3s5DsSyAgW1ponzVgToF/35nN5w8E=;
-        b=h0YkexPbLC/LFnG4onf3+XJsKrBGCVzk1P8pc18z172QlKrIfazQJiJ8xG180NHhx6
-         lf6GvjT/gEUp3SwMho9FFFG6NqUjsAkqU4kQbAktyEDvPAUUGCOjzowsUmtkT5cwYIt8
-         reDe/48M5KLRc5hb+AOUyEMR9rpzPycZDS+IuzxgOTnrETnnGWRz95KLRuH+ok2YTCB3
-         LVdx7HwBt5ONDY3LrUxFrA4i8cNdn35JDsBst/LK+moabTZJ9Oex5HgJslw+fK9LXwra
-         CZOaqhJ3+XoR+1Xd5xYeewG1N7+ITX7Ei+IuGf2/KCtNXaddqt/tgmCihuxg6JFZ7+vo
-         X/Xg==
+        d=gmail.com; s=20230601; t=1712657412; x=1713262212; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PS2aNr/EX+hXSh4C6UyaT13e9lWbB8QJ2EHpJCpiGRg=;
+        b=l7h/kEX0o+jJOcBP7vGKcFZEA8Hzr27fQ7sx2WdALnwxa2cYM4L6CptP4ko+LANuh9
+         Hg7iPkmgG5EzVF1JgwjWVdtl20zQgZo/lMMA1rQHMTNDsowEoR+818mtY1VAi83XWiP1
+         kyxhgmbrH1fO8ZpNyl0dyX1fsr+9l3sb5c04046dUp83mketP7TYSyDM/gXMnHpPsFqD
+         A9gwGQv2gsrG9cyZQxwtba0Bu/w6OqojA2Y/jgzS8fydKhNZWTsfdSoEJQIHK9cTMgR3
+         +boco80vPOuQrb0OGAuf6SnQVyCakY/tnxGJWigh59iuJZe/I5DHTlTWeb2mAnwa0ALh
+         +z8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712657406; x=1713262206;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=8mruov800edUKD3s5DsSyAgW1ponzVgToF/35nN5w8E=;
-        b=kUsSYLwWV4Y465agssogmi7Mx1sGjFVoa3neX3q2sy7ldHXqMe91yeFx7FGlDNjyPm
-         7nqQ65udOC7/Lb2CMsJ4v/CfZ0Xxe6wBC7f0KH86cxbM5GBTBlXnfozrcUbRZv4+tPii
-         vIB3nX0WgmukPsddxsL3LRVchFXBaDHi5c3vTyqTefiD/Pn2EH1VJn+fYETHYDE8QZw+
-         oAjnzPyuGD1SYluCXyZs0rGLL2rp4nNYcQibYOsYFCOGBODE35MdKWx18YjXTuvrB4MH
-         tAoLihS+SZbkCFSeXlbh7r3gjnsLu97WYxNsPY/coT5sCurG3+mmfRGsYPfPWqLlZf1Q
-         /B0g==
-X-Gm-Message-State: AOJu0Yx2IxKJg5ep8UduriZn7B+K+E0/S/eIVCUOQPIMwuAeerHbFC0K
-	ymB3j8Ag3sAnEVVS/IqeTjBNcNlerMKMBH1WoTHbc7S78gRwOhe4
-X-Google-Smtp-Source: AGHT+IEpEcoa0r0grFcu8YL7LH1ud285pJaTKCEQ6oxemBbkGixnvtKjoqeL6jo+fpNygSLBBDJY+g==
-X-Received: by 2002:a05:6358:794:b0:186:160e:927a with SMTP id n20-20020a056358079400b00186160e927amr10112593rwj.25.1712657405870;
-        Tue, 09 Apr 2024 03:10:05 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1712657412; x=1713262212;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PS2aNr/EX+hXSh4C6UyaT13e9lWbB8QJ2EHpJCpiGRg=;
+        b=bLsNpNUHIM5R/Ua8KkVyX2UUcj5z9CVaacfVAPuaXwlWGN8O/M0Eo9zTW/SrZDH4x3
+         cpRBxuq0iRCqwf5FpP4u2le7fvzCuEHubupdJPiMnLHtAg2yipkpkniiTEqKfDxigZyI
+         ide2wdeBji0ljV6Xv1ud3M28QnVBIpCv9BJDmYv43+bn3lyptS71sN+n7tn0UXa+iE/x
+         eL0j3m2bzExw1aANcWs5x3PhSjiMOnIzikZ7d7Fndhg+x4XvfF57s6Kim6Q3W3p4OaNF
+         rPTjqsAjzKoGjePcwptP3k/0NAN7q/LBU7TNSZSXg4jxaqHxIYmnKN+6YjRDOnEnEMTW
+         zejw==
+X-Gm-Message-State: AOJu0YxxERjfVyRI9mITmhDilbWkrI9U7KWD+KCqT54ZjBLNPygvZLCz
+	El3dZgu5IRiRIrAQwPYOOpU3urBiZTSC7zqT3PB5b1XddEp8bKEd
+X-Google-Smtp-Source: AGHT+IGAfyUuL5DqUrOODFzjKEsh3f6feDS348foF0B094yjqIPM8WrzuwwtI8F7juk8jb+VSRXq9Q==
+X-Received: by 2002:a05:6358:c92:b0:186:1193:8ccd with SMTP id o18-20020a0563580c9200b0018611938ccdmr9710915rwj.23.1712657412155;
+        Tue, 09 Apr 2024 03:10:12 -0700 (PDT)
 Received: from KERNELXING-MB0.tencent.com ([111.201.26.66])
-        by smtp.gmail.com with ESMTPSA id fn12-20020a056a002fcc00b006e5597994c8sm7959130pfb.5.2024.04.09.03.09.59
+        by smtp.gmail.com with ESMTPSA id fn12-20020a056a002fcc00b006e5597994c8sm7959130pfb.5.2024.04.09.03.10.06
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 09 Apr 2024 03:10:05 -0700 (PDT)
+        Tue, 09 Apr 2024 03:10:11 -0700 (PDT)
 From: Jason Xing <kerneljasonxing@gmail.com>
 To: davem@davemloft.net,
 	edumazet@google.com,
@@ -66,10 +68,12 @@ Cc: mptcp@lists.linux.dev,
 	netdev@vger.kernel.org,
 	kerneljasonxing@gmail.com,
 	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v3 0/6] Implement reset reason mechanism to detect
-Date: Tue,  9 Apr 2024 18:09:28 +0800
-Message-Id: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+Subject: [PATCH net-next v3 1/6] net: introduce rstreason to detect why the RST is sent
+Date: Tue,  9 Apr 2024 18:09:29 +0800
+Message-Id: <20240409100934.37725-2-kerneljasonxing@gmail.com>
 X-Mailer: git-send-email 2.33.0
+In-Reply-To: <20240409100934.37725-1-kerneljasonxing@gmail.com>
+References: <20240409100934.37725-1-kerneljasonxing@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -80,66 +84,127 @@ Content-Transfer-Encoding: 8bit
 
 From: Jason Xing <kernelxing@tencent.com>
 
-In production, there are so many cases about why the RST skb is sent but
-we don't have a very convenient/fast method to detect the exact underlying
-reasons.
+Add a new standalone file for the easy future extension to support
+both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
 
-RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
-and active kind (like tcp_send_active_reset()). The former can be traced
-carefully 1) in TCP, with the help of drop reasons, which is based on
-Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
-RFC 8684. The latter is relatively independent, which should be
-implemented on our own.
+This patch only does the preparations for reset reason mechanism,
+nothing else changes.
 
-In this series, I focus on the fundamental implement mostly about how
-the rstreason mechnism works and give the detailed passive part as an
-example, not including the active reset part. In future, we can go
-further and refine those NOT_SPECIFIED reasons.
+The reset reasons are divided into three parts:
+1) reuse drop reasons for passive reset in TCP
+2) reuse MP_TCPRST option for MPTCP
+3) our own reasons
 
-Here are some examples when tracing:
-<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
-        skaddr=x src=x dest=x state=x reason=NOT_SPECIFIED
-<idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=x
-        skaddr=x src=x dest=x state=x reason=NO_SOCKET
+I will implement the basic codes of active/passive reset reason in
+those three protocols, which is not complete for this moment. But
+it provides a new chance to let other people add more reasons into
+it:)
 
-[1]
-Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10QN2WBdr+X4k=w@mail.gmail.com/
-
-v3
-Link:
-https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@gmail.com/
-1. rebase (mptcp part) and address what Mat suggested.
-
-v2
-Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
-1. rebase against the latest net-next tree
-
-Jason Xing (6):
-  net: introduce rstreason to detect why the RST is sent
-  rstreason: prepare for passive reset
-  rstreason: prepare for active reset
-  tcp: support rstreason for passive reset
-  mptcp: support rstreason for passive reset
-  rstreason: make it work in trace world
-
- include/net/request_sock.h |  3 +-
- include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
- include/net/tcp.h          |  2 +-
- include/trace/events/tcp.h | 37 +++++++++++++--
- net/dccp/ipv4.c            | 10 ++--
- net/dccp/ipv6.c            | 10 ++--
- net/dccp/minisocks.c       |  3 +-
- net/ipv4/tcp.c             | 15 ++++--
- net/ipv4/tcp_ipv4.c        | 14 +++---
- net/ipv4/tcp_minisocks.c   |  3 +-
- net/ipv4/tcp_output.c      |  4 +-
- net/ipv4/tcp_timer.c       |  9 ++--
- net/ipv6/tcp_ipv6.c        | 17 ++++---
- net/mptcp/protocol.c       |  4 +-
- net/mptcp/subflow.c        | 25 +++++++---
- 15 files changed, 202 insertions(+), 47 deletions(-)
+Signed-off-by: Jason Xing <kernelxing@tencent.com>
+---
+ include/net/rstreason.h | 93 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 93 insertions(+)
  create mode 100644 include/net/rstreason.h
 
+diff --git a/include/net/rstreason.h b/include/net/rstreason.h
+new file mode 100644
+index 000000000000..24d098a78a60
+--- /dev/null
++++ b/include/net/rstreason.h
+@@ -0,0 +1,93 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++
++#ifndef _LINUX_RSTREASON_H
++#define _LINUX_RSTREASON_H
++#include <net/dropreason-core.h>
++
++#define DEFINE_RST_REASON(FN, FNe)	\
++	FN(MPTCP_RST_EUNSPEC)		\
++	FN(MPTCP_RST_EMPTCP)		\
++	FN(MPTCP_RST_ERESOURCE)		\
++	FN(MPTCP_RST_EPROHIBIT)		\
++	FN(MPTCP_RST_EWQ2BIG)		\
++	FN(MPTCP_RST_EBADPERF)		\
++	FN(MPTCP_RST_EMIDDLEBOX)	\
++	FN(NOT_SPECIFIED)		\
++	FNe(MAX)
++
++#define RST_REASON_START (SKB_DROP_REASON_MAX + 1)
++
++/* There are three parts in order:
++ * 1) 0 - SKB_DROP_REASON_MAX: rely on drop reasons for passive reset in TCP
++ * 2) SKB_DROP_REASON_MAX + 1 - MPTCP_RST_EMIDDLEBOX: for MPTCP use
++ * 3) MPTCP_RST_EMIDDLEBOX - SK_RST_REASON_MAX: independent reset reason
++ */
++enum sk_rst_reason {
++	/* Leave this 'blank' part (0-SKB_DROP_REASON_MAX) for the reuse
++	 * of skb drop reason because rst reason relies on what drop reason
++	 * indicates exactly why it could happen.
++	 */
++
++	/* Copy from include/uapi/linux/mptcp.h.
++	 * These reset fields will not be changed since they adhere to
++	 * RFC 8684. So do not touch them. I'm going to list each definition
++	 * of them respectively.
++	 */
++	/* Unspecified error.
++	 * This is the default error; it implies that the subflow is no
++	 * longer available. The presence of this option shows that the
++	 * RST was generated by an MPTCP-aware device.
++	 */
++	SK_RST_REASON_MPTCP_RST_EUNSPEC = RST_REASON_START,
++	/* MPTCP-specific error.
++	 * An error has been detected in the processing of MPTCP options.
++	 * This is the usual reason code to return in the cases where a RST
++	 * is being sent to close a subflow because of an invalid response.
++	 */
++	SK_RST_REASON_MPTCP_RST_EMPTCP,
++	/* Lack of resources.
++	 * This code indicates that the sending host does not have enough
++	 * resources to support the terminated subflow.
++	 */
++	SK_RST_REASON_MPTCP_RST_ERESOURCE,
++	/* Administratively prohibited.
++	 * This code indicates that the requested subflow is prohibited by
++	 * the policies of the sending host.
++	 */
++	SK_RST_REASON_MPTCP_RST_EPROHIBIT,
++	/* Too much outstanding data.
++	 * This code indicates that there is an excessive amount of data
++	 * that needs to be transmitted over the terminated subflow while
++	 * having already been acknowledged over one or more other subflows.
++	 * This may occur if a path has been unavailable for a short period
++	 * and it is more efficient to reset and start again than it is to
++	 * retransmit the queued data.
++	 */
++	SK_RST_REASON_MPTCP_RST_EWQ2BIG,
++	/* Unacceptable performance.
++	 * This code indicates that the performance of this subflow was
++	 * too low compared to the other subflows of this Multipath TCP
++	 * connection.
++	 */
++	SK_RST_REASON_MPTCP_RST_EBADPERF,
++	/* Middlebox interference.
++	 * Middlebox interference has been detected over this subflow,
++	 * making MPTCP signaling invalid. For example, this may be sent
++	 * if the checksum does not validate.
++	 */
++	SK_RST_REASON_MPTCP_RST_EMIDDLEBOX,
++
++	/* For the real standalone socket reset reason, we start from here */
++	SK_RST_REASON_NOT_SPECIFIED,
++
++	/* Maximum of socket reset reasons.
++	 * It shouldn't be used as a real 'reason'.
++	 */
++	SK_RST_REASON_MAX,
++};
++
++static inline int convert_mptcp_reason(int reason)
++{
++	return reason += RST_REASON_START;
++}
++#endif
 -- 
 2.37.3
 
