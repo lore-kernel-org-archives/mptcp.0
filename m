@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D7412FB38;
-	Tue,  9 Apr 2024 15:04:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5EBC13AD1D
+	for <mptcp@lists.linux.dev>; Tue,  9 Apr 2024 15:20:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712675047; cv=none; b=pkuLgo4UHs+Wer9patxYhNz3CRVbS5PY5g4U2cYTF+n6sqPBbFk8wDJhYoIw7JjLilAWAeyz03ADOzo+ovrEtitvaCsvs2jYigh7IgLnKIpc7E0ibnSPXwkO3nRPb35Oz/CIx/wHKZGwfxY+EAVpOuvyJx/P3boKpNWQ0PVFJNE=
+	t=1712676025; cv=none; b=Rs5Ke4G/Yw+1GJg/MXmsBBi0CKznGOJqEPJXwFtqH+rHvrdFpGy7dHQr3ZsJfQiuPbpYgsL4IvcUIXD867cvsgu5AQMYJxJH6mQNUT7INcWBClQc4/9c/mHFKZZakEA95VcAgLVDVDTzwU3b+FuG6Dtlb8ERIdhZAIr5/I68AWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712675047; c=relaxed/simple;
-	bh=stGqVLqm6JDHrMYa+Oq4yheQA8EP2CaEwMcOfDNIzgY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WOZSfGV8embwubW8WTysAdMhiXH5jgkl2ngIYw+crd6OnU4zDd7/cucnS1u1D075tDP54+UCLnS20goxq5ghCyqUqj0CDAKx0VTPlhVieym6V/LDWKCZde1ZeMZCro3tlOn1Yupx+fypBXK7bj7EXakHbFtkaO4PJLPh3iRNz24=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Z2BH0nhn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712676025; c=relaxed/simple;
+	bh=Hjce7FwlKRyxdLNbsNpI/SJE8/3vPHP8YEw6Y6W+90o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U9nuNZkiFVwXLm7m5lfgf3CPxMIL3AE394uW/7ABekFWqB5YDO1UwBKnr5Lo6jACU3KIhCWiEMvSyf7vBrFRSWGBYxZPTR4pJLtzWDID9BZv1DoWt5KT4watx9VJRrX3X+jmaNq+WvDuszKScCADlWWI/4Uj/6vVr6WdpBxlAw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rROG4XQO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Z2BH0nhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2708FC433F1;
-	Tue,  9 Apr 2024 15:04:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rROG4XQO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB05C433A6;
+	Tue,  9 Apr 2024 15:20:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712675047;
-	bh=stGqVLqm6JDHrMYa+Oq4yheQA8EP2CaEwMcOfDNIzgY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Z2BH0nhnoLIntiE7aHPpPYiK5Fgy6OslAFs0hkifEXiVGXkFiI9eTcoSObyvWrzrJ
-	 A1UXyuYZ8H3eRF0IAJeqV8sLk/Eq9R6XYeTmbCu4rO+yleaUcKVtndwI3XTPcLJJeg
-	 +/faq3vzJXyTV6R5tIjnTJ+SAZGEBufDFeE6FgyBM72TaWyqtN8uWnY8eRmpaZJSd7
-	 865XiWBwKMBc5RIPyFfvjOyY5IqIuQAW76+1Mf+sWaTEuvpzvDSM3J7dl8WqpwRANB
-	 Kn8gtr9+1x9aMjPi6yH5jYYK9/5yaZ1w8eSEJQTs/eXe4K34XRSLFfFrCRNlJtZuPN
-	 BLLmWW4uNiHFw==
-Message-ID: <af60b8c3-e3c4-48b2-a4c6-f2f430aa9c68@kernel.org>
-Date: Tue, 9 Apr 2024 17:04:02 +0200
+	s=k20201202; t=1712676025;
+	bh=Hjce7FwlKRyxdLNbsNpI/SJE8/3vPHP8YEw6Y6W+90o=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=rROG4XQOzu3gl3CuKR4hlm0fWxGHwo4St7Qi7dlUduxGPm3OIAuYdNJDx6S7xf846
+	 c5uxWEoyZ+ygqZz0uCOOldAsqjzIf2HR3qQjLVQuWyQ5X5/DnmnTckoZ41zRAn2JKA
+	 SNpuKaZ0IR2p9CwAMIfeTm9StboOjGfr+BillbGzTUQ0gUtLG8w7R/oaOG4kyOVvYg
+	 UmS140o0PEzSzd5JLRzJzniPzmWqyL5XJIXm9c0rPWeXQXRS9YSA85Oy9zAmsNaNcP
+	 Vj/l5D8N5U03hIEEcS1p/6k5BFqo882PQaFXpo16ZcrR9tZBwqbQCvStxzv1bcf/YE
+	 LHqzqpFhNG2bw==
+Message-ID: <604bdd6d-3385-45f2-8729-a1633e699af7@kernel.org>
+Date: Tue, 9 Apr 2024 17:20:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.6.y 3/5] selftests: mptcp: use += operator to append
- strings
+Subject: Re: [PATCH mptcp-next v7 2/9] Squash to "selftests/bpf: Add bpf
+ scheduler test" 1 verify
 Content-Language: en-GB
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: mptcp@lists.linux.dev, stable@vger.kernel.org,
- Geliang Tang <tanggeliang@kylinos.cn>, Jakub Kicinski <kuba@kernel.org>
-References: <2024040520-unselect-antitrust-a41b@gregkh>
- <20240405153636.958019-10-matttbe@kernel.org>
- <2024040801-undaunted-boastful-5a01@gregkh>
- <26b5e6f5-6da2-44ff-adbd-c1c1eda3ccba@kernel.org>
- <2024040902-syrup-sneezing-62c4@gregkh>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <cover.1712544986.git.tanggeliang@kylinos.cn>
+ <05269e97e219cc51b59173f05ab3a3b622a3ca1a.1712544986.git.tanggeliang@kylinos.cn>
+ <6ced2a3c-42da-4728-a36f-5cedf459dff0@kernel.org>
+ <a7ad092db6bdc19ecc7fb911db4bed7101bf39f7.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,136 +88,113 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2024040902-syrup-sneezing-62c4@gregkh>
+In-Reply-To: <a7ad092db6bdc19ecc7fb911db4bed7101bf39f7.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+Hi Geliang,
 
-On 09/04/2024 14:16, Greg KH wrote:
-> On Mon, Apr 08, 2024 at 06:10:38PM +0200, Matthieu Baerts wrote:
->> Hi Greg,
->>
->> On 08/04/2024 13:31, Greg KH wrote:
->>> On Fri, Apr 05, 2024 at 05:36:40PM +0200, Matthieu Baerts (NGI0) wrote:
->>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>
->>>> This patch uses addition assignment operator (+=) to append strings
->>>> instead of duplicating the variable name in mptcp_connect.sh and
->>>> mptcp_join.sh.
->>>>
->>>> This can make the statements shorter.
->>>>
->>>> Note: in mptcp_connect.sh, add a local variable extra in do_transfer to
->>>> save the various extra warning logs, using += to append it. And add a
->>>> new variable tc_info to save various tc info, also using += to append it.
->>>> This can make the code more readable and prepare for the next commit.
->>>>
->>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> Link: https://lore.kernel.org/r/20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-8-4f42c347b653@kernel.org
->>>> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->>>> (cherry picked from commit e7c42bf4d320affe37337aa83ae0347832b3f568)
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> ---
->>>>  .../selftests/net/mptcp/mptcp_connect.sh      | 53 ++++++++++---------
->>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++------
->>>>  2 files changed, 43 insertions(+), 40 deletions(-)
+On 09/04/2024 14:42, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Mon, 2024-04-08 at 21:58 +0200, Matthieu Baerts wrote:
+>>> Hi Geliang,
 >>>
->>> Odd, this one did not apply.
->>
->> Indeed, that's odd. Do you use a different merge strategy?
+>>> On 08/04/2024 05:01, Geliang Tang wrote:
+>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>
+>>>>> Add send_data_and_verify helper to avoid duplicated code.
+>>>>>
+>>>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>> ---
+>>>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 40
+>>>>> ++++++++++++++-----
+>>>>>  1 file changed, 30 insertions(+), 10 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> index c29c81239603..5080e680fbe0 100644
+>>>>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> @@ -457,23 +457,44 @@ static int has_bytes_sent(char *addr)
+>>>>>   return system(cmd);
+>>>>>  }
+>>>>>  
+>>>>> -static void test_default(void)
+>>>>> +static void send_data_and_verify(char *sched, char *addr1,
+>>>>> char
+>>>>> *addr2)
+>>>>>  {
+>>>>>   int server_fd, client_fd;
+>>>>> - struct nstoken *nstoken;
+>>>>>  
+>>>>> - nstoken = sched_init("subflow", "default");
+>>>>> - if (!ASSERT_OK_PTR(nstoken, "sched_init:default"))
+>>>>> - goto fail;
+>>>>>   server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
+>>>>> + if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n",
+>>>>> errno))
+>>>>> + return;
+>>>>> +
+>>>>>   client_fd = connect_to_fd(server_fd, 0);
+>>>>> + if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n",
+>>>>> errno))
+>>>>> + goto close_server;
+>>>>>  
+>>>>> - send_data(server_fd, client_fd, "default");
+>>>>> - ASSERT_OK(has_bytes_sent(ADDR_1), "has_bytes_sent addr_1");
+>>>>> - ASSERT_OK(has_bytes_sent(ADDR_2), "has_bytes_sent addr_2");
+>>>>> + send_data(server_fd, client_fd, sched);
+>>>>> +
+>>>>> + if (!strcmp(addr1, "WITH_DATA"))
+>>>
+>>> Out of curiosity, why did you use strings? Why not using booleans?
+>>> (or a
+>>> bitmask)
+>>>
 > 
-> I do not use any merge strategy at all, I use 'patch' to apply patches
-> (well, that's what quilt does), so git is not involved here.
+> Since arguments addr1 and addr2 of macro MPTCP_SCHED_TEST are strings:
 
-Ah OK, thank you for the explanation. I thought git was used to do the
-cherry-pick + generate the patch for quilt.
+They are strings because you asked the preprocessor to convert them as
+string ...
 
-I'm still surprised quilt didn't accept these patches generated on top
-of the 6.6-y branch. (By "chance", did you not have conflicts because
-the patch 1/5 (commit 629b35a225b0 ("selftests: mptcp: display simult in
-extra_msg")) didn't get backported by accident? It is strange it is also
-missing in the v6.6.y branch.)
+> #define MPTCP_SCHED_TEST(sched, addr1, addr2)                   \
+> static void test_##sched(void)                                  \
+> {                                                               \
+> ...
+>         send_data_and_verify(#sched, #addr1, #addr2);           \
 
->> I just tried on my side with the default merge strategy coming with Git
->> 2.43.0, and it works:
->>
->>   $ git fetch
->> git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git
->> refs/heads/linux-6.6.y
->>   $ git switch -c tmp FETCH_HEAD
->>   $ git rebase -i 2f39e4380e73~ ## to drop these 3 patches you added:
->>     # 2f39e4380e73 selftests: mptcp: connect: fix shellcheck warnings
->>
->>
->>
->>     # bd3b5b0fff75 mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()
->>
->>
->>
->>     # f723f9449193 mptcp: don't account accept() of non-MPC client (...)
->>   $ git cherry-pick -xs \
->>     629b35a225b0 e3aae1098f10 e7c42bf4d320 8e2b8a9fa512 7a1b3490f47e
->>   Auto-merging tools/testing/selftests/net/mptcp/mptcp_join.sh
->>   (...)
->>   $ echo $?
->>   0
->>
->> But if I try the 3 patches you selected
->>
->>   $ git reset --hard HEAD~5
->>   $ git cherry-pick -xs e3aae1098f10 8e2b8a9fa512 7a1b3490f47e
->>   Auto-merging tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>   (...)
->>   CONFLICT (content): Merge conflict in
->> tools/testing/selftests/net/mptcp/mptcp_connect.sh
->>   error: could not apply 7a1b3490f47e... mptcp: don't account accept()
->> of non-MPC client as fallback to TCP
->>
->>
->> And the conflict makes sense: with the version that is currently in
->> linux-6.6.y branch, the new check is done after having printed "OK", so
->> that's not correct.
->>
->>
->> I can share the 5 patches I applied without conflicts on top of the
->> current linux-6.6.y branch, without the 3 patches you added today if it
->> can help.
-> 
-> How about just resending this one patch after the next 6.6.y release
-> that comes out in a day or so.
+... here, by using "#addr1" and "#addr2".
 
-No hurry, that can indeed wait for the next 6.6.y release.
+Why not simply removing the "#" not to do any conversion?
 
-Just to be sure we are aligned: I suggested backporting these 5 commits:
+e.g.
 
-- 629b35a225b0 ("selftests: mptcp: display simult in extra_msg")
-- e3aae1098f10 ("selftests: mptcp: connect: fix shellcheck warnings")
-- e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
-- 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
-- 7a1b3490f47e ("mptcp: don't account accept() of non-MPC client as
-fallback to TCP")
+================================= 8< =================================
+#include <stdio.h>
+#include <stdbool.h>
 
-But only these 3 got backported to 6.6.y:
+static void send_data_and_verify(char *sched, bool addr1, bool addr2)
+{
+	printf("%s: %d %d\n", sched, addr1, addr2);
+}
 
-- e3aae1098f10 ("selftests: mptcp: connect: fix shellcheck warnings")
-- 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
-- 7a1b3490f47e ("mptcp: don't account accept() of non-MPC client as
-fallback to TCP")
+#define MPTCP_SCHED_TEST(sched, addr1, addr2)		\
+static void test_##sched(void)				\
+{							\
+	send_data_and_verify(#sched, addr1, addr2);	\
+}
 
-The last commit ("mptcp: don't account accept() of non-MPC client as
-fallback to TCP") has a small problem in 6.6.y (only):
+#define WITH_DATA true
+MPTCP_SCHED_TEST(first, WITH_DATA, !WITH_DATA);
 
-- In case of issue, a message will say that the subtest is OK and not
-OK, and the TAP report will report that everything is OK with this
-subtest => that's OK, nothing critical, that's the tests.
-- We can solve that in the next 6.6 version by manually backporting
-commit e7c42bf4d320 ("selftests: mptcp: use += operator to append
-strings") and its dependence: commit 629b35a225b0 ("selftests: mptcp:
-display simult in extra_msg").
+int main()
+{
+	test_first();
+}
+================================= 8< =================================
 
+This prints 'first: 1 0', what you want, no?
 
 Cheers,
 Matt
