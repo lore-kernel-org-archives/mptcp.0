@@ -1,159 +1,62 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14778158D99;
-	Wed, 10 Apr 2024 09:48:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4DDA5154C00
+	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 10:21:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712742518; cv=none; b=NJLvO4pisRuve+89eL0W/PQ53O3JoNvhXw2/nyGdB+hdYJ6aaiTnrgG3BvH5PHGnLuJs4vxCQHD7fTaNTdSAaGi0jmklBqEWPpn7VeSpQ0iYyeqQXZcEBBTf+IXK5ruERo0ofv8znZpJMePArsAEzyre3LNE2T4D7hqmNkg4so0=
+	t=1712744520; cv=none; b=npeWsQHbeG+WH5JCb1NOUf5b0yOSWHPdLulscbYycr8tXCs+bxQYcoqQvm2qwM09NEP1Hsc10MqYZiLM2lHffud2hIbgRnRfRvPJYE+3eQQdjkfPOAb0mTf0h9jMuVL0FF9A481P0V79QmZUbK9S7pvywEsq5WFzIHsHkAZv4RI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712742518; c=relaxed/simple;
-	bh=cNRHTNoB1FjvRBTrgLJ9wDmPMMbth4hYAQoyT329fAU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=YLsg/D3lR2zxs6EWKlLcaezGMlMMNaGk/ZnIR6k9kdiaxRzSaY1Q/Y+Ca7k0jomNM2tLQzBz6XpNjJJwORbCAsben5HFL/bIVagXlDHd2jscPpMfnwp+AYD5rgrpUcDvuOhIqVOY556BpU6Jebb7Dn1zWNWDFOyeDOAZTFU5s1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aHsIIZWT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712744520; c=relaxed/simple;
+	bh=0lThVK7jdPGfnnux9rj1EOMIaDSo31kChCoY4gRPJyE=;
+	h=Message-ID:Subject:From:To:Cc:Date:Content-Type:MIME-Version; b=ADpcLsrIyMlU8ok0NswiMnBCtEzvThZlgWrfXbJ35zOpT3WZbq6iOzDxtLZ+HYttjOfNcwIoH06Vdcy+VBK27JQ3cCJU1EZ0Patg+z0DUM2HwgjQRnssCaW7KV2RTFXwqVfAgvnYs82Vnv5xoQMAq/fzKR6x1G5dhWAb0hnAVjQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fh1jRmRH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aHsIIZWT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D11FAC433C7;
-	Wed, 10 Apr 2024 09:48:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fh1jRmRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF614C433C7;
+	Wed, 10 Apr 2024 10:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712742517;
-	bh=cNRHTNoB1FjvRBTrgLJ9wDmPMMbth4hYAQoyT329fAU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=aHsIIZWTdrWCQTEQxm7maSsnNu5eWu3tl49W/CG76To3Em1c/kDOAfSjVyw3j70Df
-	 rOi/dpuP6QNPEUk3QKEey98REJ9o8DaJoQnAXnSd+DSpMT7eHAvl/M9SMfngFQ+v9m
-	 zi7QfvnssKU1GP5uQcHe3t0+bpBXWbrAPfhnR7wlKevTQOueLiizMMpadO70ZAkQOo
-	 UH1N5TOqMvLiFXBdW1tKScQDK/mj88zHkwt317PA1NTNWxjV5DPVd0fzxHoQDDXJbx
-	 M2RmsFJ2AGUnW3ipNaughqw6JioHOlBHfNwYyDFQXD3xTt72gv0GPxpHNT0vAnhKDS
-	 9YsCvpBJwgYHA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 10 Apr 2024 11:48:25 +0200
-Subject: [PATCH net-next v2 2/2] selftests: mptcp: test last time
- mptcp_info
+	s=k20201202; t=1712744519;
+	bh=0lThVK7jdPGfnnux9rj1EOMIaDSo31kChCoY4gRPJyE=;
+	h=Subject:From:To:Cc:Date:From;
+	b=fh1jRmRHqCY+G+wOjq0O6hwyohLy01LngtahLH3CSpep8VzBapT/eluouQCh90ESb
+	 227qZa3vXLQ0wZzeALAyil+3Q5z0vh/MP5zLDcQxhnZf3a7+J6UKmbY+nVeu06lx0S
+	 oKTG4BrEHYpW7N2fBLukLgYMPfpQSNo4AZI/FhWBbl2QHSLikRnnGWvw3GjnFHdghs
+	 I0FG0Pck8QLz3ij2Z5UwCGq9n2t++bH0Q9CUajYDqwKsVGv+qmVGVlq+viKShOkP0c
+	 aGbydvIMrWy0lnhHyEBHA3IFSc404NZbywjRJ6hLrXaCHtcJKvYEmqrshlocwY9dte
+	 h+MRHFZgG/pag==
+Message-ID: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
+Subject: sync requests from bpf-next
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Wed, 10 Apr 2024 18:21:54 +0800
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-2-f95bd6b33e51@kernel.org>
-References: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
-In-Reply-To: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <tanggeliang@kylinos.cn>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2718; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=y6e1hT6fB4Z4RvFtfA4YiCJgrUME8UDpc0J3qux4/kQ=;
- b=owEBbAKT/ZANAwAIAfa3gk9CaaBzAcsmYgBmFmBs2dzr/QMaUnyVUnEaaqXee3OoP6+PiAo5P
- qTTczB3w3KJAjIEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhZgbAAKCRD2t4JPQmmg
- c5zzD/UccNx5cv2z4AZgIwqtZAMNa9oSub2dtGGs7w4a37Dly9wnwevqLL6JZNEaKnicrH9EPCG
- G0E/yVBkNrjUyYbWkArW4Mb3O9QOqbuYCb24/8sIz5y20uXeuzsdQ4hFTSkq4f/C6wYtfrq7s6W
- EAdvYhARM7C4aQIH42Kmbq5+zLFaIpnZN2n7z6Bvdz+G0Uwx3wfrdZp5B9B/AHKpVgz/+HY+Ele
- PEwcxOt6rhsd373VBWS7YIPpL+mwmxw2+V/n8wJk1SNkm5VyXsxhy90H8HCc0o6aL14RM1QuCn5
- 5wLCjwiTjLQGp+aYk3TMY2R0VVA7/kEf+jBTzF5r/a403BLCLquL5mdUxAeYMO3Qz7BtzXk/VyD
- wzvg6QOkIs2gF23yDf8dnIDIihEqoHMfbIW6zVzWUHYdsPkZS7dKul0qxwJsgrGWJfGHW0xhchD
- 2EzyritNrntgeembKq0akTpVWdFNNwyk8ou7XbRSW8ZjBwioVwVgITbaswTopMZVGGTQInhG73n
- hyoiw+d/IzAFgLKpzNVsR8EMmycTBDmdlKXhobrNhefxdVurMBHzMsxeP9rtIrWUzpCcY2nm9oV
- RrxYa04qyPuBRxvVF3bbSx+nMoz+8sCJSpn4e3ZsR6sOjn53IT/n3ZDYFfJoupb+aAhRZhCrMnu
- YRkQ2xHh3G63r
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-This patch adds a new helper chk_msk_info() to show the counters in
-mptcp_info of the given info, and check that the timestamps move
-forward. Use it to show newly added last_data_sent, last_data_recv
-and last_ack_recv in mptcp_info in chk_last_time_info().
+These four patches need to be merged into mptcp_net-next from bpf-next
+to avoid conflicts:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/diag.sh | 53 +++++++++++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
+bee3a7b07624 selftests/bpf: Implement set_hw_ring_size function to
+configure interface ring size
+90a695c3d31e selftests/bpf: Implement get_hw_ring_size function to
+retrieve current and max interface size
+c3bd015090f2 selftests/xsk: Make batch size variable
+7effe3fdc049 tools: Add ethtool.h header to tooling infra
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index bc97ab33a00e..776d43a6922d 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -200,6 +200,58 @@ chk_msk_cestab()
- 		 "${expected}" "${msg}" ""
- }
- 
-+msk_info_get_value()
-+{
-+	local port="${1}"
-+	local info="${2}"
-+
-+	ss -N "${ns}" -inHM dport "${port}" | \
-+		mptcp_lib_get_info_value "${info}" "${info}"
-+}
-+
-+chk_msk_info()
-+{
-+	local port="${1}"
-+	local info="${2}"
-+	local cnt="${3}"
-+	local msg="....chk ${info}"
-+	local delta_ms=250  # half what we waited before, just to be sure
-+	local now
-+
-+	now=$(msk_info_get_value "${port}" "${info}")
-+
-+	mptcp_lib_print_title "${msg}"
-+	if { [ -z "${cnt}" ] || [ -z "${now}" ]; } &&
-+	   ! mptcp_lib_expect_all_features; then
-+		mptcp_lib_pr_skip "Feature probably not supported"
-+		mptcp_lib_result_skip "${msg}"
-+	elif [ "$((cnt + delta_ms))" -lt "${now}" ]; then
-+		mptcp_lib_pr_ok
-+		mptcp_lib_result_pass "${msg}"
-+	else
-+		mptcp_lib_pr_fail "value of ${info} changed by $((now - cnt))ms," \
-+				  "expected at least ${delta_ms}ms"
-+		mptcp_lib_result_fail "${msg}"
-+		ret=${KSFT_FAIL}
-+	fi
-+}
-+
-+chk_last_time_info()
-+{
-+	local port="${1}"
-+	local data_sent data_recv ack_recv
-+
-+	data_sent=$(msk_info_get_value "${port}" "last_data_sent")
-+	data_recv=$(msk_info_get_value "${port}" "last_data_recv")
-+	ack_recv=$(msk_info_get_value "${port}" "last_ack_recv")
-+
-+	sleep 0.5  # wait to check after if the timestamps difference
-+
-+	chk_msk_info "${port}" "last_data_sent" "${data_sent}"
-+	chk_msk_info "${port}" "last_data_recv" "${data_recv}"
-+	chk_msk_info "${port}" "last_ack_recv" "${ack_recv}"
-+}
-+
- wait_connected()
- {
- 	local listener_ns="${1}"
-@@ -233,6 +285,7 @@ echo "b" | \
- 				127.0.0.1 >/dev/null &
- wait_connected $ns 10000
- chk_msk_nr 2 "after MPC handshake "
-+chk_last_time_info 10000
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2
-
--- 
-2.43.0
-
+Thanks,
+-Geliang
