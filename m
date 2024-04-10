@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10C516E86E
-	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 15:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3480F16E872
+	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 15:28:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762796; cv=none; b=aQkTQQ2CH7yQXVwv5CIO8V5lGHvzbX4oqA4oUPd+4a6XiopbwgB/VDvflQkmN/Nf7xPuXNVwnZktejCC1UWOMokTYPxPPor9b/iHb6P3i4ohjnuBDFbBxGPYqvJfovPUHMQk4fysDo7eV0oYTlHBfvRKiuKQK+Ln20UYmXe2bGM=
+	t=1712762888; cv=none; b=Z6cZ3IeZkRJqwNDlkAj0CQb6Tjg86YDg/HXA9/sG2DP1L0Nmtf64mEz53ULAYQnM2qPwxnmMJ3VqcXfjqnv86jv5qQABIovYfYH7QcDFcV+PrmETgZlvXArw9rRAE4Jz1N901bkZqFuPrjmLNcuQAExp2HwzVIm97C8uDxOc1Hg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762796; c=relaxed/simple;
-	bh=fYksSJVbdWhE7zUKz45U8m9DcOFHWwshuOPRjowxGAI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rCvT+QW5JtmYCbYqSfm/47UqQwIJxcBlt+LYtI9+KyXdwBNPJ6JpVpEZqRa2I/JRb6kyJ8hHB/NPUDKPAvR/vArMWXQiXDbwJbZOndyvcabRy0EWKVum3sFhRdjWyHxpMz00+APDGCxtVay0rDK80Slx9Jr6L5sbQagAXn6QKXY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFGRdQWc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712762888; c=relaxed/simple;
+	bh=vJ4Dn/rALFMysjlm67lY/913mnvNbl5jIQtHjaCQMOc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=XRHNWzer9gGmjCEfYydTHj1CMUxMhmpRbkDVp/pILstrPJojNbl/0JGyMBKWe6sr2M2k7AAQLs4xp312dp5GgqSmnRVvRZb7EKDJlk1NY7aSgK2AyjghxHi9fDC5MAqIBiIsNB9qWNsuU4+FsQNfbxEL5p8JvPTSSoMuvVAHEaM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAB2fkdC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFGRdQWc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E359DC433C7;
-	Wed, 10 Apr 2024 15:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAB2fkdC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BB1C433F1;
+	Wed, 10 Apr 2024 15:28:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712762795;
-	bh=fYksSJVbdWhE7zUKz45U8m9DcOFHWwshuOPRjowxGAI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cFGRdQWcr6uo3EOmIc4IQJXtZyTUCXd6304FPIGek6ky8M+MEVpbN3+gFieHHGarK
-	 EsiJ+iV9Ws+IdSG8c7RHKFbYiE1XFwrZRq+5QMoyERVRH/BIR2DK3neSrBWkQCJaRg
-	 YrH5A40OMGX3pAAu52Ps+Lxn0F+eEwVubz0qOOyF6Sugs+PmJt5RHrqy6s64t+SJud
-	 BY/yl/Hv9YSVjdRByk3Q5vW4JHMaqGSgFIk1u3a7GJSqc5vgPd+AKn1Lh8/jt++wTS
-	 aK3bPS6eM0qND1qqfPA7QPhBuNsd/DQbzfNvFzEXTS5uE8FsJ13mW3xaHxFrpWTEyx
-	 xf7MQCFXp0sLQ==
-Message-ID: <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
-Date: Wed, 10 Apr 2024 17:26:32 +0200
+	s=k20201202; t=1712762887;
+	bh=vJ4Dn/rALFMysjlm67lY/913mnvNbl5jIQtHjaCQMOc=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=lAB2fkdCF9Ht6EgEmf16TGI20zwHmEoDDwi1K0aWRBZ12FUATSMdZVniSP580I/98
+	 en2CFsT0hv3q/QhPFEBi6zD00aBUxXcbZgP1cvVjdlZQHkHHlRZ6OgdyCtZA5nTf9r
+	 JldHXDhTOmGYGQGsCFBGS1We6+xO1k+tz7r4WCek1qLLz0SsXWiUIrzq3VttQZOMWE
+	 0E/XpxipXDRYerHWQH8nb/qZB5z3JO+RgSR/vd5l6PtzYANM2oGyduQyBQr8+2mnct
+	 fUW07IthBpeSUCroQ6QF5KmCZ24sCueXiR4lolOyAsla+TtoDoC4gdBHxUe3HqzV6C
+	 vOjGLCt//nXmQ==
+Message-ID: <ec30c6c4-9bab-4884-bfa2-fa1fd6ca00ed@kernel.org>
+Date: Wed, 10 Apr 2024 17:28:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,11 +36,12 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: sync requests from bpf-next
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
+ <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,29 +86,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
+In-Reply-To: <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On 10/04/2024 17:26, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 10/04/2024 12:21, Geliang Tang wrote:
+>> These four patches need to be merged into mptcp_net-next from bpf-next
+>> to avoid conflicts:
+> 
+> For which series do you need these patches to be cherry-picked from
+> bpf-next repo?
+> 
+> I assume it is for "use start_server and connect_to helpers" and "export
+> send_recv_data (v4)", right? These series don't directly modify MPTCP
+> code or tests, do you need MPTCP CI to validate them?
 
-On 10/04/2024 12:21, Geliang Tang wrote:
-> These four patches need to be merged into mptcp_net-next from bpf-next
-> to avoid conflicts:
+I forgot to add that I manually applied these patches on top of the
+bpf-next tree, and pushed a "patchew/" tag. So our CI will validate them
+(even if I'm not sure the results will be very interesting).
 
-For which series do you need these patches to be cherry-picked from
-bpf-next repo?
-
-I assume it is for "use start_server and connect_to helpers" and "export
-send_recv_data (v4)", right? These series don't directly modify MPTCP
-code or tests, do you need MPTCP CI to validate them?
-
-If you need tests to be performed by our CI, you can also push any new
-branches (a few are ignored, see ".github/workflows/tests.yml") on your
-fork repo on GitHub. I guess you can do the same with BPF repo [1] on
-GitHub.
-
-[1] https://github.com/kernel-patches/bpf
+> If you need tests to be performed by our CI, you can also push any new
+> branches (a few are ignored, see ".github/workflows/tests.yml") on your
+> fork repo on GitHub. I guess you can do the same with BPF repo [1] on
+> GitHub.
+> 
+> [1] https://github.com/kernel-patches/bpf
+> 
+> Cheers,
+> Matt
 
 Cheers,
 Matt
