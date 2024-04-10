@@ -1,171 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3DFBA2E;
-	Wed, 10 Apr 2024 08:14:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F2CB155744;
+	Wed, 10 Apr 2024 09:48:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712736884; cv=none; b=YepDwRJXwX8euNaD8aVYf+sD7cevpPoZY2cgtfDQRkGPPPEAXcA7g4IHMTr+XGrggSCfgMf+gUlUfmd6mSmR751eInJBXbd6VERD12VzcXG/4nwttBTkyBOzi9fIkDIvjRHRVVoku0PkhjcpFWgLD5FBOq3l7V3K/aNlNalWG4k=
+	t=1712742511; cv=none; b=b5yw4C45BwKw2//Pn5A1388iEf4b05BZT6e3LBOzs05mWkHAYwG5mS/VoU0JWtrPaPQE1Tc0aIwlvsZT9NTynbwWYjM7ia08sTb0w1zHcjGCyNAaXbtWiXb3VrARWxmTS3CTFidkNjNWXuJByCrbBA+xontu42sS7NJaJ8zwxAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712736884; c=relaxed/simple;
-	bh=O+leYepAFRo8ICmIGEVY0G/02B8AAx2Wdt3lPfF8SJE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=hZaDDvbKux3/VI4QnASEhQQHf0HGlqshDJtWlpusOgVWTFGb8v9Zr7joLbSYyiPdklDVr65siEWSJ/uD/mxi2a/rVW0foHRNEacu1vcCtt42O4EmcMzTgLs+lOgLs4nm02/kVbQJ/UiTNo7OKcjHhFG2DI9T2pp+ULO9TEl7Dd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ujac6vTK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712742511; c=relaxed/simple;
+	bh=1s0oiBo2Pj76zj482KObdE2PpY+vfqZgUvcrnvoopgw=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=h11VPq0i6mOB3GeIyUkv52woo9Q/XI35czYMzYh/eJNEXG2XTlfPguKDnRDujJSAbLhQwdvVSGrbyiQvh4SH0lXOm0116WELF9HSmPhnx65dHDeebXR3LKvo6FkGxwLmCRbR7cixsesxV7yZ46AO9eiBVtXCl3IMF03U8emuom0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WZMzT0em; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ujac6vTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82B16C433C7;
-	Wed, 10 Apr 2024 08:14:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WZMzT0em"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0632C433C7;
+	Wed, 10 Apr 2024 09:48:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712736883;
-	bh=O+leYepAFRo8ICmIGEVY0G/02B8AAx2Wdt3lPfF8SJE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=Ujac6vTKUvzJmZtrXgkUem3F4helFt39NZHJG9soE23W++90jVtkGUOTLs0scMtH6
-	 hPjd/dd93mUOJ8GfMKkJgRy6suXLm9nzOmRNZfC/hotF4E0BxmJ5wTEmUjTbLRiw3a
-	 oVjrPMW+EZoSVzDl5bk6noE7Xmtp8owYC0guD0zy5gl8oj6GR46ACWvWaP4t0utrAs
-	 PGxLs33k1+rf7sGIsFq5xDA/YRm4/SWr29m9eq+Z93NfKUIlL2G35BserSDaSvmvWn
-	 ACjkHJXNscHKMBVl7KI9sfVYzWKZCFwwzeFlBgLBzE7pJaMaC8NWxO3FFi+kqnxs3K
-	 GzrbGnlOK0CZw==
-Message-ID: <ff6874d5bd8dc5c89fcd913c3f1ba1820fe7ae4f.camel@kernel.org>
-Subject: Re: [PATCH bpf-next 06/14] selftests/bpf: Use log_err in
- network_helpers
-From: Geliang Tang <geliang@kernel.org>
-To: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>,  Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov
- <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau
- <martin.lau@linux.dev>, Song Liu <song@kernel.org>, Yonghong Song
- <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
- Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
- <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Shuah Khan
- <shuah@kernel.org>
-Cc: bpf@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org
-Date: Wed, 10 Apr 2024 16:14:29 +0800
-In-Reply-To: <77e0288d4757b2fcc2c491a2ed535ef223268071.1712733999.git.tanggeliang@kylinos.cn>
-References: <cover.1712733999.git.tanggeliang@kylinos.cn>
-	 <77e0288d4757b2fcc2c491a2ed535ef223268071.1712733999.git.tanggeliang@kylinos.cn>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	s=k20201202; t=1712742511;
+	bh=1s0oiBo2Pj76zj482KObdE2PpY+vfqZgUvcrnvoopgw=;
+	h=From:Subject:Date:To:Cc:From;
+	b=WZMzT0emdyQUTtK+HL5QTvS5wxNYb3itthHbKQ3hMgvRqzyb4VwDMqTq1HeMpvumj
+	 fH604hmCfz0sE70zpPYsyaFnqcEFGHBpb9/8RXYXH9UuxS4V8hO+dhzeZzNuTHq2x6
+	 2ak2S+meTTRBxxugmS2WdUgtkGL/VRB/rWk9hFT7uECVmKGychKBd16hJPE/vXq7xh
+	 YWjxDzO8bwwFECy4dw4c+yToMHmGZafTlvXruu8224OSMh4V29t+DZzlpXbbDmHOO6
+	 ZIkUztljwrtwBEXR48tFwPNA8jU66W4AqTkrN9mPDnzB2DKVFcxFl493NruExHEvKR
+	 OS7AS0UZg+R6Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v2 0/2] mptcp: add last time fields in mptcp_info
+Date: Wed, 10 Apr 2024 11:48:23 +0200
+Message-Id: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGdgFmYC/52OTQqDMBCFr1Jm3SlJjKJd9R7FhdVRh2oSklQs4
+ t0bhPYAXbzF4+P9bBDIMwW4njbwtHBga5JR5xO0Y2MGQu6SByWUFlrk+HIhempmNBST1og/NLv
+ YOpyaEDHynJKmt1g9RFbIkkTZS0itzlPP67F4h28H1ImMHKL17+PKIg/+9+oiUWCuulZXOs8KX
+ d2e5A1NF+sHqPd9/wCjHIuL+QAAAA==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <tanggeliang@kylinos.cn>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1526; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1s0oiBo2Pj76zj482KObdE2PpY+vfqZgUvcrnvoopgw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmFmBrp75LAfC3NH0qx8F3cRbNS2uWU+d2hOFH2
+ sA80zSDE4aJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhZgawAKCRD2t4JPQmmg
+ c/6nEADYk8pzJSlVjM8Bsrw57zGUwUyiPmBmVRfSX7j6GFPGBaMudIaa/n4TKjQ6/UHevD+yXkB
+ yhb0tF0MNsK94kj6DbSSW5qBnxL5un9Dh2wwyCCNWp0DCvZNLjaQ1r8W4Y1mjrgxMNxCZhx1J+d
+ f5te/IlB+9lvEK+3TuyflBipdp3RLiS8Fl5Ek2oo/u3V7JyabEM7TLaJlWGOsF2zHVoJ7v7aMjc
+ OD5fvLoL0NOx6EfXVq/GYAhh1Gg4LMQ+WtixzMAlStL4QtGQSOm3x0UcVQRfQSPOWXKdrDekPB8
+ 3GaNsoDaa1MCeFFrzDrsDUZ5/SzoQelCGtPI22WC+lP2D8B315GqPwFW1ZcA3k6OCRWiw/nD1/o
+ HRklDf0wfp+MzQGOHuzFJcr3zRMQWfL4QhPHpxkY+ElutoX91GtvPQhSTXPy1hPFFRdK3It4k/y
+ G5WfEc8GUG/l8vCvCd7G0lHBN7JcThw+hGcpcY8xS47IKJd/rCq1VbHHt2ITlw5oAwpan89y6cK
+ CwSv/Cg3Qyas0WjvNz1KNeEw7UG0Ps7Bl6kbkpfWz/Z3Vj0MbGEutNOYWqiskeqXUL+q9UpN2Eb
+ bdKAZiIy3o+9vtMrPrV4LCX397wL2Fqziilv5l5eGc6etqh8tPK3A8ZqFKYwlt3IS9vSAk+KYnr
+ ekdWKs4K6qOIjbw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Wed, 2024-04-10 at 15:29 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->=20
-> The helpers ASSERT_OK/GE/OK_PTR should avoid using in public
-> functions.
-> This patch uses log_err() to replace them in network_helpers.c.
->=20
-> And drop '#include "test_progs.h"' in it, include <pthread.h> and
-> <sys/param.h> instead.
+These patches from Geliang add support for the "last time" field in
+MPTCP Info, and verify that the counters look valid.
 
-Sorry, CI complains about this:
+Patch 1 adds these counters: last_data_sent, last_data_recv and
+last_ack_recv. They are available in the MPTCP Info, so exposed via
+getsockopt(MPTCP_INFO) and the Netlink Diag interface.
 
-  network_helpers.c: In function =E2=80=98open_netns=E2=80=99:
-  network_helpers.c:466:25: error: implicit declaration of function
-=E2=80=98open=E2=80=99; did you mean =E2=80=98popen=E2=80=99? [-Werror=3Dim=
-plicit-function-declaration]
-    466 |  token->orig_netns_fd =3D open("/proc/self/ns/net", O_RDONLY);
-        |                         ^~~~
-        |                         popen
+Patch 2 adds a test in diag.sh MPTCP selftest, to check that the
+counters have moved by at least 250ms, after having waited twice that
+time.
 
-"test_progs.h" is still needed. I'll update this in v2.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Only patch 1/2 has been modified following Eric's suggestion, see the
+  individual changelog for more details.
+- Link to v1: https://lore.kernel.org/r/20240405-upstream-net-next-20240405-mptcp-last-time-info-v1-0-52dc49453649@kernel.org
 
-Changes Requested.
+---
+Geliang Tang (2):
+      mptcp: add last time fields in mptcp_info
+      selftests: mptcp: test last time mptcp_info
 
--Geliang
+ include/uapi/linux/mptcp.h                |  4 +++
+ net/mptcp/options.c                       |  1 +
+ net/mptcp/protocol.c                      |  7 ++++
+ net/mptcp/protocol.h                      |  3 ++
+ net/mptcp/sockopt.c                       | 16 +++++++---
+ tools/testing/selftests/net/mptcp/diag.sh | 53 +++++++++++++++++++++++++++++++
+ 6 files changed, 79 insertions(+), 5 deletions(-)
+---
+base-commit: 2ecd487b670fcbb1ad4893fff1af4aafdecb6023
+change-id: 20240405-upstream-net-next-20240405-mptcp-last-time-info-9b03618e08f1
 
->=20
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> =C2=A0tools/testing/selftests/bpf/network_helpers.c | 22 ++++++++++++++--=
--
-> --
-> =C2=A01 file changed, 16 insertions(+), 6 deletions(-)
->=20
-> diff --git a/tools/testing/selftests/bpf/network_helpers.c
-> b/tools/testing/selftests/bpf/network_helpers.c
-> index 7ddeb6698ec7..9fd271d5d571 100644
-> --- a/tools/testing/selftests/bpf/network_helpers.c
-> +++ b/tools/testing/selftests/bpf/network_helpers.c
-> @@ -7,11 +7,13 @@
-> =C2=A0#include <string.h>
-> =C2=A0#include <unistd.h>
-> =C2=A0#include <sched.h>
-> +#include <pthread.h>
-> =C2=A0
-> =C2=A0#include <arpa/inet.h>
-> =C2=A0#include <sys/mount.h>
-> =C2=A0#include <sys/stat.h>
-> =C2=A0#include <sys/un.h>
-> +#include <sys/param.h>
-> =C2=A0
-> =C2=A0#include <linux/err.h>
-> =C2=A0#include <linux/in.h>
-> @@ -20,7 +22,6 @@
-> =C2=A0
-> =C2=A0#include "bpf_util.h"
-> =C2=A0#include "network_helpers.h"
-> -#include "test_progs.h"
-> =C2=A0
-> =C2=A0#ifndef IPPROTO_MPTCP
-> =C2=A0#define IPPROTO_MPTCP 262
-> @@ -447,22 +448,30 @@ struct nstoken *open_netns(const char *name)
-> =C2=A0	struct nstoken *token;
-> =C2=A0
-> =C2=A0	token =3D calloc(1, sizeof(struct nstoken));
-> -	if (!ASSERT_OK_PTR(token, "malloc token"))
-> +	if (!token) {
-> +		log_err("malloc token");
-> =C2=A0		return NULL;
-> +	}
-> =C2=A0
-> =C2=A0	token->orig_netns_fd =3D open("/proc/self/ns/net", O_RDONLY);
-> -	if (!ASSERT_GE(token->orig_netns_fd, 0, "open
-> /proc/self/ns/net"))
-> +	if (token->orig_netns_fd <=3D 0) {
-> +		log_err("open /proc/self/ns/net");
-> =C2=A0		goto fail;
-> +	}
-> =C2=A0
-> =C2=A0	snprintf(nspath, sizeof(nspath), "%s/%s", "/var/run/netns",
-> name);
-> =C2=A0	nsfd =3D open(nspath, O_RDONLY | O_CLOEXEC);
-> -	if (!ASSERT_GE(nsfd, 0, "open netns fd"))
-> +	if (nsfd <=3D 0) {
-> +		log_err("open netns fd");
-> =C2=A0		goto fail;
-> +	}
-> =C2=A0
-> =C2=A0	err =3D setns(nsfd, CLONE_NEWNET);
-> =C2=A0	close(nsfd);
-> -	if (!ASSERT_OK(err, "setns"))
-> +	if (err) {
-> +		log_err("setns");
-> =C2=A0		goto fail;
-> +	}
-> =C2=A0
-> =C2=A0	return token;
-> =C2=A0fail:
-> @@ -475,7 +484,8 @@ void close_netns(struct nstoken *token)
-> =C2=A0	if (!token)
-> =C2=A0		return;
-> =C2=A0
-> -	ASSERT_OK(setns(token->orig_netns_fd, CLONE_NEWNET),
-> "setns");
-> +	if (setns(token->orig_netns_fd, CLONE_NEWNET))
-> +		log_err("setns");
-> =C2=A0	close(token->orig_netns_fd);
-> =C2=A0	free(token);
-> =C2=A0}
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
