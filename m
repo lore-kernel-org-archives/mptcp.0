@@ -1,109 +1,131 @@
-Received: from out-189.mta0.migadu.com (out-189.mta0.migadu.com [91.218.175.189])
+Received: from out-184.mta0.migadu.com (out-184.mta0.migadu.com [91.218.175.184])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FB621836CC
-	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 21:20:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.189
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8B9A181BA1
+	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 21:34:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.184
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712784014; cv=none; b=ICsF4mCMLiVUOJd4qASlHNDyDX2H4mpeh/0QjSEcXKB9RI/5n3oIxGQEUdcXwO3rxLgwdreS8hG00K7ZLylg0YhI5SiX+KTgFzmsgnRi39NoVCt65Xu1fbeCvmbBmPnIuV+OLhwJ2DLNwLXK58lvYTfcdqT2u4zrZ3NhK6x6/Bo=
+	t=1712784873; cv=none; b=ob7LTSdboL+Mrs3dgxBa7SLLvm8ZSXXyNmozi8p/QwxW76jOlrVrNA1UGZEWQcNkTZTUs5wzZCFMBJMuki4fy25VQXbxAy+aALCIIvh5toEwgOIyNYeHyCHL2k1K/fesBiIy8cgIz6WK/9aLMFddrRgLtGPv/MEJ3/+sAt9KQuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712784014; c=relaxed/simple;
-	bh=REkXgz1nvwfSQazm/q64YEAox4iA/CcshWlq42TMmc8=;
+	s=arc-20240116; t=1712784873; c=relaxed/simple;
+	bh=nTCngW3nrSGVCIRXkroP1FsAaiPn/eIdCJe9G+XiqaY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ofLtXF0cwWXy/NlMgwfntWh8kQwngGngX5Onqmqc1uFxsg9scN/0aMBeZZx6Q/NS6CzV9uC7JEYCqfbH25hW/r+Wg6LX3HOREFsGsmk0pioo6F+YqqyhsSURRIl30dXFH3mIjm6ViYyQ9wzi371WHfokGz19MaYhy5Y+X4J9Tb4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=ohAS6a+1; arc=none smtp.client-ip=91.218.175.189
+	 In-Reply-To:Content-Type; b=o3o2abdfS26Ry5JjQe4OCf28iwpouzbLopf1nbcP8lSPcItr6yFHc9m9ViGyr5NaPvZZYNXgex08E0/S2d2F2ACQ/VDSwXDhKuaHOIoa1uxvFkEzbbcb9g6V8nznoW1zR7YuHG4G5b8vyrC7nqWK1iGcgnoFkzOe6IHeXhZBokU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f28vyqjg; arc=none smtp.client-ip=91.218.175.184
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="ohAS6a+1"
-Message-ID: <9d914a95-0d79-44fb-96b8-ca0b34744455@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f28vyqjg"
+Message-ID: <12aab271-da72-49b4-ac91-2091b6889856@linux.dev>
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1712784011;
+	t=1712784869;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=sFQHL0dbndzxsL9DsXyf/uU+3MLrYDNeJdtA9F0MJys=;
-	b=ohAS6a+1M9mFM0RnUX4olxNOHfqJU7uA3IjuWaWUNF88vOwQ3OHmP/ACXg+9NgmaGPs6gu
-	V1tVKceAKEPvcHWbXFnycV1edhmje+syhvwLwYv1RjiooZKRQXvNuJ7Z4w76zK9z99yiHN
-	8wIqWdfx8whlYsUOk+lhdmUaloous4o=
-Date: Wed, 10 Apr 2024 14:20:00 -0700
+	bh=f1+MP+UF7zZldgEwkbI/nDmnr9/WctxU9HHYLrU4DTw=;
+	b=f28vyqjgk/8ZEL4XlO/vbqXWHNSqr+FgStrOhkgnVuVUxWv30h4DJ9atohz53ijmY9/y1l
+	fyOrQJVL6FUJ85qJvexdLQDj3pbZ8wOdzSC5X0qizOeTI0R4K+aBfo2DJi03DbIY4YrJN8
+	FPXJYC2RbUakju5lL//5QuT8aP6dhYQ=
+Date: Wed, 10 Apr 2024 14:34:22 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 2/3] selftests/bpf: Export send_recv_data
- helper
+Subject: Re: [PATCH bpf-next v4 3/3] selftests/bpf: Support nonblock for
+ send_recv_data
 To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Andrii Nakryiko
+ <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
  Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
  Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
  Yonghong Song <yonghong.song@linux.dev>,
  John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
  Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
  Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org
+ bpf@vger.kernel.org, mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org
 References: <cover.1712729342.git.tanggeliang@kylinos.cn>
- <a5cfd3271d91756deca82fafbc41f17819b6e67a.1712729342.git.tanggeliang@kylinos.cn>
+ <9cd358958245f8ec87c4f553779aa4243f967a2f.1712729342.git.tanggeliang@kylinos.cn>
 Content-Language: en-US
 X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
 From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <a5cfd3271d91756deca82fafbc41f17819b6e67a.1712729342.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9cd358958245f8ec87c4f553779aa4243f967a2f.1712729342.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
 X-Migadu-Flow: FLOW_OUT
 
 On 4/9/24 11:13 PM, Geliang Tang wrote:
-> +int send_recv_data(int lfd, int fd, uint32_t total_bytes)
-> +{
-> +	ssize_t nr_recv = 0, bytes = 0;
-> +	struct send_recv_arg arg = {
-> +		.fd	= lfd,
-> +		.bytes	= total_bytes,
-> +		.stop	= 0,
-> +	};
-> +	pthread_t srv_thread;
-> +	void *thread_ret;
-> +	char batch[1500];
-> +	int err;
-> +
-> +	err = pthread_create(&srv_thread, NULL, send_recv_server, (void *)&arg);
-> +	if (err) {
-> +		log_err("pthread_create");
-> +		return err;
-> +	}
-> +
-> +	/* recv total_bytes */
-> +	while (bytes < total_bytes && !READ_ONCE(arg.stop)) {
-> +		nr_recv = recv(fd, &batch,
-> +			       MIN(total_bytes - bytes, sizeof(batch)), 0);
-> +		if (nr_recv == -1 && errno == EINTR)
-> +			continue;
-> +		if (nr_recv == -1)
-> +			break;
-> +		bytes += nr_recv;
-> +	}
-> +
-> +	if (bytes != total_bytes) {
-> +		log_err("recv");
-> +		return -1;
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Some tests, such as the MPTCP bpf tests, require send_recv_data helper
+> to run in nonblock mode.
+> 
+> This patch adds nonblock support for send_recv_data(). Check if it is
+> currently in nonblock mode, and if so, ignore EWOULDBLOCK to continue
+> sending and receiving.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>   tools/testing/selftests/bpf/network_helpers.c | 9 ++++++++-
+>   1 file changed, 8 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
+> index 137cd18ef3f2..ca16ef2b648e 100644
+> --- a/tools/testing/selftests/bpf/network_helpers.c
+> +++ b/tools/testing/selftests/bpf/network_helpers.c
+> @@ -555,6 +555,7 @@ struct send_recv_arg {
+>   static void *send_recv_server(void *arg)
+>   {
+>   	struct send_recv_arg *a = (struct send_recv_arg *)arg;
+> +	int flags = fcntl(a->fd, F_GETFL);
+>   	ssize_t nr_sent = 0, bytes = 0;
+>   	char batch[1500];
+>   	int err = 0, fd;
+> @@ -578,6 +579,8 @@ static void *send_recv_server(void *arg)
+>   		if (nr_sent == -1 && errno == EINTR)
+>   			continue;
+>   		if (nr_sent == -1) {
+> +			if (flags & O_NONBLOCK && errno == EWOULDBLOCK)
 
-This is still not right. It needs to write arg.stop and do pthread_join().
+I still don't see why it needs to be a non blocking IO. mptcp should work
+with blocking IO also, no? Does it really need non blocking IO to make
+mptcp test work? I would rather stay with blocking IO in selftest as much as
+possible for simplicity reason.
 
-pw-bot: cr
+I am afraid the root cause of the EAGAIN thread has not been figured out yet:
+https://lore.kernel.org/all/b3943f9a8bf595212b00e96ba850bf32893312cc.camel@kernel.org/
 
-> +	}
-> +
-> +	WRITE_ONCE(arg.stop, 1);
-> +	pthread_join(srv_thread, &thread_ret);
-> +	if (IS_ERR(thread_ret)) {
-> +		log_err("thread_ret");
-> +		return -1;
-> +	}
-> +
-> +	return 0;
-> +}
+Lets drop patch 3 until it is understood why mptcp needs EAGAIN or non-blocking IO.
+It feels like there is some flakiness and it should be understood and avoided.
+
+Other than the comment in patch 2, the first two patches lgtm. Please respin with
+the first two patches.
+
+> +				continue;
+>   			err = -errno;
+>   			break;
+>   		}
+> @@ -599,6 +602,7 @@ static void *send_recv_server(void *arg)
+>   
+>   int send_recv_data(int lfd, int fd, uint32_t total_bytes)
+>   {
+> +	int flags = fcntl(lfd, F_GETFL);
+>   	ssize_t nr_recv = 0, bytes = 0;
+>   	struct send_recv_arg arg = {
+>   		.fd	= lfd,
+> @@ -622,8 +626,11 @@ int send_recv_data(int lfd, int fd, uint32_t total_bytes)
+>   			       MIN(total_bytes - bytes, sizeof(batch)), 0);
+>   		if (nr_recv == -1 && errno == EINTR)
+>   			continue;
+> -		if (nr_recv == -1)
+> +		if (nr_recv == -1) {
+> +			if (flags & O_NONBLOCK && errno == EWOULDBLOCK)
+> +				continue;
+>   			break;
+> +		}
+>   		bytes += nr_recv;
+>   	}
+>   
 
