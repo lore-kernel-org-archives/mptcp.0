@@ -1,153 +1,116 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A31215ECEA
-	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 13:55:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E10C516E86E
+	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 15:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712757361; cv=none; b=Y0Wv5FiJUtQtWr6FfRKrs3ZVa6t8lOvvv6DMwiffbgnr/leLCR++SSGPgbUYuLxnbz7zDULKY2wOx+OWB1IOE7GGWzGSp69tVprWkT13Wove7xVOWoOy903BhvtAS+uNFxFF+kCXmkNbXQfvQTtdt6yIz25Iu4fXLPHVYNrCzpw=
+	t=1712762796; cv=none; b=aQkTQQ2CH7yQXVwv5CIO8V5lGHvzbX4oqA4oUPd+4a6XiopbwgB/VDvflQkmN/Nf7xPuXNVwnZktejCC1UWOMokTYPxPPor9b/iHb6P3i4ohjnuBDFbBxGPYqvJfovPUHMQk4fysDo7eV0oYTlHBfvRKiuKQK+Ln20UYmXe2bGM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712757361; c=relaxed/simple;
-	bh=2itrPDvQqyqeFaRt8NzSdpPSErUeSETmFVRFFPor3nM=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CU2fLXInLjPJiD+znsdyfery0mb8w64D7E7eduvSjmV7M5ZE7uGjwtoLgW9uOVxhaZXc+p48bCF9Xb7Wq0dc/y1LT+zJNquPce2WJUwyCHDnCTvzOx8lu1sY4HKc3PZDM0aWEyS9b1VveKZhEQzQi1IDHtUt7mj2DOm3COlsSFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=itx5WoSH; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712762796; c=relaxed/simple;
+	bh=fYksSJVbdWhE7zUKz45U8m9DcOFHWwshuOPRjowxGAI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=rCvT+QW5JtmYCbYqSfm/47UqQwIJxcBlt+LYtI9+KyXdwBNPJ6JpVpEZqRa2I/JRb6kyJ8hHB/NPUDKPAvR/vArMWXQiXDbwJbZOndyvcabRy0EWKVum3sFhRdjWyHxpMz00+APDGCxtVay0rDK80Slx9Jr6L5sbQagAXn6QKXY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cFGRdQWc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="itx5WoSH"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-56e6f4ee104so3091576a12.2
-        for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 06:55:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712757358; x=1713362158; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=QWQlsDTYX7kv+ayRisA7/g7aN7I7JCIFXwuugQXW9Og=;
-        b=itx5WoSHNpazjFmlodMuZ9OD73OOHX9+UKxccrZGvedi3jaz1Z/Fl+dIz/7WtqA4Bn
-         dlQI6iUusJNggGDUlZJac+7TxYiZdQXc5rieb3qI4Ql9jGK38iGvpGGC8IckTZvwP1C8
-         ZGa6wLU2dikOzBCBHxH8cL0MfBXsdqZdZEWhsNV/wrtI7O8aw4LHznJC5sx8qdFnr+bJ
-         DkXjcZTRJwq4xym5uCQ15vYGU/TIJp/BGTm76Mqd4Q+TJnAWRIWAPwZqkYExDxQ9VaP3
-         yhC66vJSENx9Yuh1z8LinftRVZzM1XDROnKrVLsNclnDwc1qNpbMsHhjCP2nlpCcvOrY
-         4ejw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712757358; x=1713362158;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWQlsDTYX7kv+ayRisA7/g7aN7I7JCIFXwuugQXW9Og=;
-        b=ETiYXCciiQ06n0t6aUzBvYeDQvlJWxpz5rKBKY+UoJ+Jlq87G/A9JCEpjrrDAUxLNy
-         yPLMe4E8fVfxLh9jUCZYbX92zqwKSEPt7Xo9lNhSWSE+Llogkm6ldxsJlpEVJc9tZC+J
-         MXy+6FYS/Xlu84y/5bIRdzsKVcXhOJUtnp7/3ZzXcafCMH7aGm5R7Hs2g24U1gmye66p
-         Nh6M68g79iFX//BsCtv5y9jooiFISVcpRJbtrTQIfzq/hiPXD0tmcKJ5F5Qujl+1iyjx
-         4WKgWu6GnKjT93Hm1oQpVQyMvtnNV55FOn9r+3bpFeOIGqHJxcy2ZR2gKj6tGJ4nRdxj
-         tuUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCW1NfIALrgW5basgRuumVJiD0oj7b22U4tBT15giMdvSC9CUI+qawE8QByTrqG8oyTso6asaPx2B9PFrZ5gUR/ktOGDItg=
-X-Gm-Message-State: AOJu0YzO6Idu5C0ejF47KqaH5Bvu3DbY4qrL/LNG69C1d/1AVPXGoUPp
-	jB0B7cZSHHi+paHf3CPxYtNG6gkLUQ7S7yHHXtovWX8j9tPhGWbRBwVt+T2fVOpARzedyuRUH0k
-	DaHSveRwJx+9IkV6IWdHnBDDl6zu0Nc62
-X-Google-Smtp-Source: AGHT+IENVXsgKB+31fO+svP4FXBa8f0BYNY349jc/+9Z5zgvSx/G+YkJ/+z+Q4TwbSXYF7YRjy0MwLX/L1AUCXb3Tl8=
-X-Received: by 2002:a17:906:1b4a:b0:a51:dc1f:a44b with SMTP id
- p10-20020a1709061b4a00b00a51dc1fa44bmr1604044ejg.29.1712757358225; Wed, 10
- Apr 2024 06:55:58 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cFGRdQWc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E359DC433C7;
+	Wed, 10 Apr 2024 15:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712762795;
+	bh=fYksSJVbdWhE7zUKz45U8m9DcOFHWwshuOPRjowxGAI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cFGRdQWcr6uo3EOmIc4IQJXtZyTUCXd6304FPIGek6ky8M+MEVpbN3+gFieHHGarK
+	 EsiJ+iV9Ws+IdSG8c7RHKFbYiE1XFwrZRq+5QMoyERVRH/BIR2DK3neSrBWkQCJaRg
+	 YrH5A40OMGX3pAAu52Ps+Lxn0F+eEwVubz0qOOyF6Sugs+PmJt5RHrqy6s64t+SJud
+	 BY/yl/Hv9YSVjdRByk3Q5vW4JHMaqGSgFIk1u3a7GJSqc5vgPd+AKn1Lh8/jt++wTS
+	 aK3bPS6eM0qND1qqfPA7QPhBuNsd/DQbzfNvFzEXTS5uE8FsJ13mW3xaHxFrpWTEyx
+	 xf7MQCFXp0sLQ==
+Message-ID: <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
+Date: Wed, 10 Apr 2024 17:26:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240409100934.37725-1-kerneljasonxing@gmail.com>
- <20240409100934.37725-3-kerneljasonxing@gmail.com> <171275126085.4303.2994301700079496197@kwain>
- <CAL+tcoCk_RTp6EBiRQ96nrdN7cuY1z+zxzxepyar4nXEJkAB9A@mail.gmail.com> <171275527215.4303.17205725451869291289@kwain>
-In-Reply-To: <171275527215.4303.17205725451869291289@kwain>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Wed, 10 Apr 2024 21:55:21 +0800
-Message-ID: <CAL+tcoBpAOhbLC5TqwMBG6Q3hgiJYSV+ZAkZfLPNmG_OK22r1A@mail.gmail.com>
-Subject: Re: [PATCH net-next v3 2/6] rstreason: prepare for passive reset
-To: Antoine Tenart <atenart@kernel.org>
-Cc: davem@davemloft.net, dsahern@kernel.org, edumazet@google.com, 
-	geliang@kernel.org, kuba@kernel.org, martineau@kernel.org, 
-	mathieu.desnoyers@efficios.com, matttbe@kernel.org, mhiramat@kernel.org, 
-	pabeni@redhat.com, rostedt@goodmis.org, mptcp@lists.linux.dev, 
-	linux-trace-kernel@vger.kernel.org, netdev@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: sync requests from bpf-next
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, Apr 10, 2024 at 9:21=E2=80=AFPM Antoine Tenart <atenart@kernel.org>=
- wrote:
->
-> Quoting Jason Xing (2024-04-10 14:54:51)
-> > Hi Antoine,
-> >
-> > On Wed, Apr 10, 2024 at 8:14=E2=80=AFPM Antoine Tenart <atenart@kernel.=
-org> wrote:
-> > >
-> > > Quoting Jason Xing (2024-04-09 12:09:30)
-> > > >         void            (*send_reset)(const struct sock *sk,
-> > > > -                                     struct sk_buff *skb);
-> > > > +                                     struct sk_buff *skb,
-> > > > +                                     int reason);
-> >
-> > > what should be 'reason' harder. Eg. when looking at the code or when
-> > > using BTF (to then install debugging probes with BPF) this is not
-> > > obvious.
-> >
-> > Only one number if we want to extract the reason with BPF, right? I
-> > haven't tried it.
->
-> Yes, we can get 'reason'. Knowing the type helps.
->
-> > > A similar approach could be done as the one used for drop reasons: en=
-um
-> > > skb_drop_reason is used for parameters (eg. kfree_skb_reason) but oth=
-er
-> > > valid values (subsystem drop reasons) can be used too if casted (to
-> > > u32). We could use 'enum sk_rst_reason' and cast the other values. WD=
-YT?
-> >
-> > I have been haunted by this 'issue' for a long time...
-> >
-> > Are you suggesting doing so as below for readability:
-> > 1) replace the reason parameter in all the related functions (like
-> > .send_reset(), tcp_v4_send_reset(), etc) by using 'enum sk_rst_reason'
-> > type?
-> > 2) in patch [4/6], when it needs to pass the specific reason in those
-> > functions, we can cast it to 'enum sk_rst_reason'?
-> >
-> > One modification I just made based on this patchset if I understand cor=
-rectly:
-> > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-> > index 4889fccbf754..e0419b8496b5 100644
-> > --- a/net/ipv4/tcp_ipv4.c
-> > +++ b/net/ipv4/tcp_ipv4.c
-> > @@ -725,7 +725,7 @@ static bool tcp_v4_ao_sign_reset(const struct sock
-> > *sk, struct sk_buff *skb,
-> >   */
-> >
-> >  static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *s=
-kb,
-> > -                             int reason)
-> > +                             enum sk_rst_reason reason)
-> >  {
-> >         const struct tcphdr *th =3D tcp_hdr(skb);
-> >         struct {
-> > @@ -1935,7 +1935,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff=
- *skb)
-> >         return 0;
-> >
-> >  reset:
-> > -       tcp_v4_send_reset(rsk, skb, reason);
-> > +       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
-> >  discard:
-> >         kfree_skb_reason(skb, reason);
-> >         /* Be careful here. If this function gets more complicated and
-> >
->
-> That's right. I think (u32) can also be used for the cast to make the
-> compiler happy in 2), but the above makes sense.
+Hi Geliang,
 
-Got it :) Will update soon.
+On 10/04/2024 12:21, Geliang Tang wrote:
+> These four patches need to be merged into mptcp_net-next from bpf-next
+> to avoid conflicts:
 
-Thanks,
-Jason
+For which series do you need these patches to be cherry-picked from
+bpf-next repo?
+
+I assume it is for "use start_server and connect_to helpers" and "export
+send_recv_data (v4)", right? These series don't directly modify MPTCP
+code or tests, do you need MPTCP CI to validate them?
+
+If you need tests to be performed by our CI, you can also push any new
+branches (a few are ignored, see ".github/workflows/tests.yml") on your
+fork repo on GitHub. I guess you can do the same with BPF repo [1] on
+GitHub.
+
+[1] https://github.com/kernel-patches/bpf
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
