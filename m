@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3480F16E872
-	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 15:28:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D9AB179659
+	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 16:50:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712762888; cv=none; b=Z6cZ3IeZkRJqwNDlkAj0CQb6Tjg86YDg/HXA9/sG2DP1L0Nmtf64mEz53ULAYQnM2qPwxnmMJ3VqcXfjqnv86jv5qQABIovYfYH7QcDFcV+PrmETgZlvXArw9rRAE4Jz1N901bkZqFuPrjmLNcuQAExp2HwzVIm97C8uDxOc1Hg=
+	t=1712767852; cv=none; b=axOGaH9cxHjmDCqBaHwK48yNsFpRr184Ey9a1j5HpHjBFJVFo69JDBk0dOhjJw3VFxrPSgKdoqoQNZFCXyiOEBQiNWqw7VGjAHeMnarjDmpYGjq2L96VG+DzwtjvjYupYHtNi/OXkJROBU0Q4SZ4oDkddErW8t8LaUasm97rlHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712762888; c=relaxed/simple;
-	bh=vJ4Dn/rALFMysjlm67lY/913mnvNbl5jIQtHjaCQMOc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=XRHNWzer9gGmjCEfYydTHj1CMUxMhmpRbkDVp/pILstrPJojNbl/0JGyMBKWe6sr2M2k7AAQLs4xp312dp5GgqSmnRVvRZb7EKDJlk1NY7aSgK2AyjghxHi9fDC5MAqIBiIsNB9qWNsuU4+FsQNfbxEL5p8JvPTSSoMuvVAHEaM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lAB2fkdC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712767852; c=relaxed/simple;
+	bh=nOwPKVCz8w1qpRvyIYjO2UyyjlBDljMKRmmMdEGbXGw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=d7NwxAlR2jB4CbmNGh6i+ne9oKeoOC/NUdACEOCHedpN5bj/O6FBXYM/caSyNSeMlAn+KJP16Ak3jcJM2sNW1JP+AMqFhvzRSGJodk1PKl05hBphVTdiD8B0DRJH2u8//x8rJRMpLnEL+fZk3V2IZkxnR50V5y3xS5pzz6RUbX0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p72U3I5T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lAB2fkdC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27BB1C433F1;
-	Wed, 10 Apr 2024 15:28:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p72U3I5T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E520DC433F1;
+	Wed, 10 Apr 2024 16:50:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712762887;
-	bh=vJ4Dn/rALFMysjlm67lY/913mnvNbl5jIQtHjaCQMOc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=lAB2fkdCF9Ht6EgEmf16TGI20zwHmEoDDwi1K0aWRBZ12FUATSMdZVniSP580I/98
-	 en2CFsT0hv3q/QhPFEBi6zD00aBUxXcbZgP1cvVjdlZQHkHHlRZ6OgdyCtZA5nTf9r
-	 JldHXDhTOmGYGQGsCFBGS1We6+xO1k+tz7r4WCek1qLLz0SsXWiUIrzq3VttQZOMWE
-	 0E/XpxipXDRYerHWQH8nb/qZB5z3JO+RgSR/vd5l6PtzYANM2oGyduQyBQr8+2mnct
-	 fUW07IthBpeSUCroQ6QF5KmCZ24sCueXiR4lolOyAsla+TtoDoC4gdBHxUe3HqzV6C
-	 vOjGLCt//nXmQ==
-Message-ID: <ec30c6c4-9bab-4884-bfa2-fa1fd6ca00ed@kernel.org>
-Date: Wed, 10 Apr 2024 17:28:05 +0200
+	s=k20201202; t=1712767852;
+	bh=nOwPKVCz8w1qpRvyIYjO2UyyjlBDljMKRmmMdEGbXGw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=p72U3I5TQRpqictOS2u/AXa0UuJyNhFTP44VV2UpG8dp/QxkEcwCEynUtAUzhk1Bt
+	 3loqiiO24gjwD9kygJF86mGXkKfelREcKXB5oCzdXtaAY1cd0P0TJFjvzrg0rc/SOc
+	 y0jVFn+xda9uwRuMxtYD8DmNkfkoF7i6dVaZgBbUARc2XmSwP4gb6mWLBG7Vf+clof
+	 eKO7LO/8xaIsBv7tQ4dvkmPIfYT/uG57jKnwpabRzyxJhjk5gyJjWEafXMqAQ/jcqu
+	 oobGJNt+0FNWACPDHSjNYcq0NfKQxdvKCtiX5TeR9DD1th4PBIPQq1EYk22l/ueWag
+	 5RxGlrfR/vrRA==
+Message-ID: <8fd73495-436b-479b-ac99-71d9af1fa4b3@kernel.org>
+Date: Wed, 10 Apr 2024 18:50:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: sync requests from bpf-next
+Subject: Re: [PATCH mptcp-next v8 0/9] refactor mptcp bpf tests
 Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1712714407.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
- <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,37 +85,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
+In-Reply-To: <cover.1712714407.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/04/2024 17:26, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 10/04/2024 12:21, Geliang Tang wrote:
->> These four patches need to be merged into mptcp_net-next from bpf-next
->> to avoid conflicts:
-> 
-> For which series do you need these patches to be cherry-picked from
-> bpf-next repo?
-> 
-> I assume it is for "use start_server and connect_to helpers" and "export
-> send_recv_data (v4)", right? These series don't directly modify MPTCP
-> code or tests, do you need MPTCP CI to validate them?
+Hi Geliang,
 
-I forgot to add that I manually applied these patches on top of the
-bpf-next tree, and pushed a "patchew/" tag. So our CI will validate them
-(even if I'm not sure the results will be very interesting).
+On 10/04/2024 04:05, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v8:
+>  - change argument types of send_data_and_verify from strings to
+>    booleans as Matt suggested.
 
-> If you need tests to be performed by our CI, you can also push any new
-> branches (a few are ignored, see ".github/workflows/tests.yml") on your
-> fork repo on GitHub. I guess you can do the same with BPF repo [1] on
-> GitHub.
-> 
-> [1] https://github.com/kernel-patches/bpf
-> 
-> Cheers,
-> Matt
+The v8 looks OK to me, but I prefer to wait for Mat's feedback regarding
+patch 4/9:
+
+https://lore.kernel.org/mptcp/f44d5960-8aa3-4914-bae3-4f0c072e07b4@kernel.org/
 
 Cheers,
 Matt
