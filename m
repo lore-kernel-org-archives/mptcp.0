@@ -1,120 +1,71 @@
-Received: from mail-qk1-f169.google.com (mail-qk1-f169.google.com [209.85.222.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAC9A16E865
-	for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 17:53:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0229C1CD25;
+	Wed, 10 Apr 2024 18:34:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712771599; cv=none; b=mtC/p2OGmf8FIjpH0SGXTbtuyDBVQfT+gWMZ+d1AI5ROXkuXwNZH3eAjcPhXxTzx6QPgS6qOGPuN25yae7zy9nJmbIjH8P3pWTyKrlnscgAQ4wIeS+mQRsWoMY8WH0GAmGDgpRikD4DURTscPs7GqhsYZvUdWM1x9Iz8qnspHD0=
+	t=1712774094; cv=none; b=YyLcDOsMcjTjsnvnyWNMg0EH9SAskD0tAl8XNyf9HUehjF1IDmCGf8izJdiUp4T6AwVjQtv1MWkOMegHi4jUpcgf6a7UdVXCG0uWe8UaQ0ZySjivq1nvrPKx9/FsNha7jm4fdTxrlsi1jE8wYK2cdu7ALHdJ2tm2DQtf4YWn+HE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712771599; c=relaxed/simple;
-	bh=K302FD8yLr9mZdB7O2ItQ435d4o0QXBSpEY/IQqykEc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=f0jd1QDwoplhKdw4QOrOHqi9T7bCSlqvbXihmaoQSbZrTXKlh6b5dAE92zwwITddO8QlzsOwYFQsq7FCpvzm6PTJXG/W3VYGz6BDabNwC+SJsT6bNLQrAa/x+xzYV5uSvtLekGCWRic5BoUD8W9TUhBxmY6sChsrtV/OWRNkP0Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZTFBSrn8; arc=none smtp.client-ip=209.85.222.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1712774094; c=relaxed/simple;
+	bh=F61Mkhuy93wl4DonLy9eLfoKURKFPgWtPlD/DWAIyQg=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kvM+z7FvDQ2P+Qoy5RLsVCyl35PkCEOFcU+tRXTP8JtN6/QrYlxwEEBGR4WS1WIGdsZB0Yb0pqAQIeV7gdrPPRdZndIj98KX5HWEJrUAbYpYMThjVSp3pTSAgfK7RqtJ0tAXJsRd4o8piDb9KSMrq7qumXYYFfSr2HdVi5qo7sU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ahEsiKi6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZTFBSrn8"
-Received: by mail-qk1-f169.google.com with SMTP id af79cd13be357-78d61a6229bso222792385a.0
-        for <mptcp@lists.linux.dev>; Wed, 10 Apr 2024 10:53:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712771597; x=1713376397; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Uu02+JxqzwyQM0W0ZKrxOh5vE1feD1Y4C+Ut1S/k1fM=;
-        b=ZTFBSrn8auz06UxAKtJUDqMkgHfn8ONMpXYQKmC+Fp9B+lE8kyEpoDasS/4GBwncv/
-         MMbOeR+be5mqDy+qwirf5obDhQikTSxq6hNXhqvFez0kclvl4IFXCLhciDQSretkdK/l
-         xm8sNreLgWXxQxaO9/OPrR5KRN/8jWcTdvTLdZizBE5I2Th2G5r/AopuUlOdKBNTae7Q
-         I2sSveb9go89M7SK85rHresTU8UaPY2oJx405UGkbOgfeEgVH4oCJmMWSWfnOD3tqSmB
-         0c/JBMHm5Kltfo0wgNWDbAqvz2i4QgHM8QjQoC7wjgnpL3SSzImfgY+ZDskZ/BpdzobV
-         rCJw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712771597; x=1713376397;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Uu02+JxqzwyQM0W0ZKrxOh5vE1feD1Y4C+Ut1S/k1fM=;
-        b=jZYeMenmZwG7Z1yxnc3R+ow58xA4tNFTJ1iBT5Fi0FD9enSrjZUJaUEiXRd0H18RrR
-         yLXt0fdtgggyFZPgNKOAbBWMtbcTWPKD4dNPwSnLJ+ZafnQeDhYZjyIhKouYftzHQCoz
-         mcoEjH1KH0IdryLCwNRVGtekufXgsOyJ40YfNkW1TmNvtzQ2IUoLKqMXmA/xnaf2+M0Z
-         9ebU80UEqsCBSjp0uUXgRUx1YYeJ2R/zDaWkqS6cguaV9jAvQ/naFv4hgtNFWLq8Icm9
-         NkuUVyLRJ/VGGUsYy3ryjt0eqh3MP+cvvcNwmBZoHn6f8t5eNVuMquU5kCza3GokuqqE
-         0G/A==
-X-Gm-Message-State: AOJu0YwmG2rCjxmAnpD83Zu9aZhdOqFAHlOczJzHwWifDudWL+K7JVZl
-	8oFqDI3c434AxHqRAeAU6ezfiRHvdxnt/Ka7v/C8iL/0vgKkuWk=
-X-Google-Smtp-Source: AGHT+IH8E1tLh9Ck5quuQWJI9LEeEdVjjBYpKriSujq3l/senh8/fzeaEfNmFvV6oT9DXyIFpf7eEQ==
-X-Received: by 2002:a05:620a:178c:b0:78e:be2e:b707 with SMTP id ay12-20020a05620a178c00b0078ebe2eb707mr823310qkb.8.1712771596843;
-        Wed, 10 Apr 2024 10:53:16 -0700 (PDT)
-Received: from [127.0.0.1] ([20.55.126.47])
-        by smtp.gmail.com with ESMTPSA id l1-20020ae9f001000000b0078a751b6c99sm5442744qkg.132.2024.04.10.10.53.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 10 Apr 2024 10:53:16 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1712729342.git.tanggeliang@kylinos.cn>
-References: <cover.1712729342.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH bpf-next v4 0/3] export send_recv_data
-Message-ID: <b0fa2f6a-30d7-dd0c-bb7d-2660f61c6d71@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 10 Apr 2024 17:53:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ahEsiKi6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3C85C433F1;
+	Wed, 10 Apr 2024 18:34:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712774093;
+	bh=F61Mkhuy93wl4DonLy9eLfoKURKFPgWtPlD/DWAIyQg=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=ahEsiKi6VT15hhK+qifkk+tCVRTzPBViY5FpVnP+isfqwx93MSOkYrhErhinBrU0D
+	 JAsx4cbcwfysl4QIg0xJdLmpnYkZy5InggQ2WOgnyJboxjfhP0fFXqacrVXEFC9SAR
+	 ukLNciQJRNeeVfSdMt5F1zJe5khuyEHtgH1lM9L+Z6ycGUGpXFIuRA7cIki/rj7Jy0
+	 2cF06xyl1uZJVfMlnc8QhRAiIezM0aAqgQWLBU716aFokcjxXboW6fU4baloXI6PWP
+	 NsCHhsv7/y+84sGiPLUP1jWAeHV8RcU4AZGDxRnSoa39KnV6VshuTxpNGmZLZXbLGQ
+	 L1UJiXCqd9IQw==
+Date: Wed, 10 Apr 2024 11:34:52 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
+ <shuah@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH net-next v2 0/2] mptcp: add last time fields in
+ mptcp_info
+Message-ID: <20240410113452.56f156f4@kernel.org>
+In-Reply-To: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
+References: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+On Wed, 10 Apr 2024 11:48:23 +0200 Matthieu Baerts (NGI0) wrote:
+> These patches from Geliang add support for the "last time" field in
+> MPTCP Info, and verify that the counters look valid.
+> 
+> Patch 1 adds these counters: last_data_sent, last_data_recv and
+> last_ack_recv. They are available in the MPTCP Info, so exposed via
+> getsockopt(MPTCP_INFO) and the Netlink Diag interface.
+> 
+> Patch 2 adds a test in diag.sh MPTCP selftest, to check that the
+> counters have moved by at least 250ms, after having waited twice that
+> time.
 
-Thank you for your modifications, that's great!
+Hi Mat, is this causing skips in selftests by any chance?
 
-Our CI did some validations and here is its report:
+# 07 ....chk last_data_sent                            [SKIP] Feature probably not supported
+# 08 ....chk last_data_recv                            [SKIP] Feature probably not supported
+# 09 ....chk last_ack_recv                             [SKIP] Feature probably not supported
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8635152681
-
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/544eee7fd63f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D843088
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+I'll "hide it" from patchwork for now..
+-- 
+pw-bot: defer
