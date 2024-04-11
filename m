@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9C71442FA;
-	Thu, 11 Apr 2024 09:17:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E211448F3;
+	Thu, 11 Apr 2024 10:06:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712827066; cv=none; b=GdfAioQtlgAb0+xLDne143P8pmWczcwSYAA8fA0Jgp9k9uuewcU9v+D1QP6w7ZrV7PAIBCoPflbI605Azrg0JO/s8HK1QX9tXfO9CCUsy0hgR3qTJBXQXsJHDPX8ACN3qOTATWORxuH7DRQAFR2irWwrAZIxLQtzFBvbbAR42qQ=
+	t=1712829966; cv=none; b=gDKLwl4lf6HDFUNitxQrggzFgvX7XAK1IGE13LdN6Kpxlc7f+nNpKbcnPCQl4RHYqqLWVtcnhr2nrd0BeecP+Mcv/bek/BemSYER3QP02GC5fJuQua+qw2+hkP1Jj1P+KEf9XpaYVHiP44XISIVZgqaYvFw0L49CM5Tu5KGR6Xo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712827066; c=relaxed/simple;
-	bh=m53nnFpzQz5oa1v/Euu3FIxD4QTQaLgZyNyzPdTs6Rg=;
+	s=arc-20240116; t=1712829966; c=relaxed/simple;
+	bh=zgSHhGLVlM76+OM6bnkD3qpSEVF9N8cOmCGy0N/UW0U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nCcx43R9EiDgiVZTnJnN2AjiaYKgXJ5FOGriMuPJCyyrVXvoOkX2QBc8zScVK4FfdwiUfevunr7ikBSzd+PZuSnd0L0o1D1uVSN9h9pRm7lhT/8YtNmjA1SBCSbAQ8FD86RLLtbqe5nHli18dTds0pdJFRXdPo/6xqqVNe2end4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LE8IbOiq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IifKxqtPzooWiK0Y+WAk0PBjr5gm7az0Nj4l0RqVftyVYU3YibzEwj9y0NwE+fuq2r173aUXl9qnXhCoEv1nV8zxwzIHaR5QTHDqUz4sCGOwJ2GejpBTVZTGMCcOSLw47p4ZOk3CBTZd7cHJQQ1wZJRUaHKrxxGMimpWjllqBiA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HDnxgAHT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LE8IbOiq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCEDC433C7;
-	Thu, 11 Apr 2024 09:17:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HDnxgAHT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D49B2C433C7;
+	Thu, 11 Apr 2024 10:06:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712827065;
-	bh=m53nnFpzQz5oa1v/Euu3FIxD4QTQaLgZyNyzPdTs6Rg=;
+	s=k20201202; t=1712829966;
+	bh=zgSHhGLVlM76+OM6bnkD3qpSEVF9N8cOmCGy0N/UW0U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LE8IbOiqmjrO6CE65HQ6hZD7IoKOFza7js5vu8KknTIp7vqUjzjfw4yFAfwp5Z0k1
-	 cphzy/9aL20qork06Rm98zcwXvgH6eAkRoya6inGKHltIJJbDvaSIzETVqxTjEqJAx
-	 ereCYOFOWOA5A9GP+kSMRjdz4qnm/8SDD35kdVZ/iRE9t2PDmBhcK1luQb3yx9emER
-	 KQv849WxEYmGuqSCNcFRhOuusGS49sIJeWhuiWM+HQwlmVNOY+jc672UW255conZ+l
-	 oTFOrgv5Ad+3TJqrucHhfUVPZiCkyhZxL2XKryeqLJoH4dbYsbtXByORWeCmayjgaC
-	 5eOUhgAihCQKw==
-Message-ID: <d7faeacc-0442-4cee-a0ae-4b39b75d0cda@kernel.org>
-Date: Thu, 11 Apr 2024 11:17:39 +0200
+	b=HDnxgAHTIUdAIWmmr2grMDhiCk5hVzXu3q3a50iKoiu6+QCu+0YiDw0d3nQN50Qrn
+	 OM24zLfh2PQlFzPCWvrbppJJrVyJwH38lo9dHOIQWZE7P2cnNGJ7wM1hFcxjMpZevP
+	 yA37UmejLRujvXbT6nvdkij7HDWVTDU6iYPaEdFYRFLHUErN8RRAumnBOkHFQulqWD
+	 6tvHPJymLWa4e5YaveoT+FD4foyAMPX9AsfsDnHNE9Hip2LgHgYB6UzxNoC4MVfD2O
+	 FlM8RZ5L5gFytduBnfWBvzjo+2fnEMAHPBAlPzs5Ee0sIr6hQo4pA5QiB6GPRpPyQ5
+	 Dqb7MrxNwe9eg==
+Message-ID: <aec649c1-db1c-41e2-99b4-bc4c91fc8ee5@kernel.org>
+Date: Thu, 11 Apr 2024 12:06:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,19 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v2 0/2] mptcp: add last time fields in mptcp_info
+Subject: Re: [PATCH 6.6.y 3/5] selftests: mptcp: use += operator to append
+ strings
 Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Geliang Tang <tanggeliang@kylinos.cn>
-References: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
- <20240410113452.56f156f4@kernel.org>
- <b8c14751-37a9-4a3d-b9af-a5c697d34781@kernel.org>
- <20240410140103.37b94193@kernel.org>
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: mptcp@lists.linux.dev, stable@vger.kernel.org,
+ Geliang Tang <tanggeliang@kylinos.cn>, Jakub Kicinski <kuba@kernel.org>
+References: <2024040520-unselect-antitrust-a41b@gregkh>
+ <20240405153636.958019-10-matttbe@kernel.org>
+ <2024040801-undaunted-boastful-5a01@gregkh>
+ <26b5e6f5-6da2-44ff-adbd-c1c1eda3ccba@kernel.org>
+ <2024040902-syrup-sneezing-62c4@gregkh>
+ <af60b8c3-e3c4-48b2-a4c6-f2f430aa9c68@kernel.org>
+ <2024041111-shirt-germicide-b316@gregkh>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,60 +93,106 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240410140103.37b94193@kernel.org>
+In-Reply-To: <2024041111-shirt-germicide-b316@gregkh>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
+Hi Greg,
 
-On 10/04/2024 23:01, Jakub Kicinski wrote:
-> On Wed, 10 Apr 2024 21:31:13 +0200 (GMT+02:00) Matthieu Baerts wrote:
->>> Hi Mat, is this causing skips in selftests by any chance?
+On 11/04/2024 09:32, Greg KH wrote:
+> On Tue, Apr 09, 2024 at 05:04:02PM +0200, Matthieu Baerts wrote:
+>> Hi Greg,
+>>
+>> On 09/04/2024 14:16, Greg KH wrote:
+>>> On Mon, Apr 08, 2024 at 06:10:38PM +0200, Matthieu Baerts wrote:
+>>>> Hi Greg,
+>>>>
+>>>> On 08/04/2024 13:31, Greg KH wrote:
+>>>>> On Fri, Apr 05, 2024 at 05:36:40PM +0200, Matthieu Baerts (NGI0) wrote:
+>>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>>
+>>>>>> This patch uses addition assignment operator (+=) to append strings
+>>>>>> instead of duplicating the variable name in mptcp_connect.sh and
+>>>>>> mptcp_join.sh.
+>>>>>>
+>>>>>> This can make the statements shorter.
+>>>>>>
+>>>>>> Note: in mptcp_connect.sh, add a local variable extra in do_transfer to
+>>>>>> save the various extra warning logs, using += to append it. And add a
+>>>>>> new variable tc_info to save various tc info, also using += to append it.
+>>>>>> This can make the code more readable and prepare for the next commit.
+>>>>>>
+>>>>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>>>> Link: https://lore.kernel.org/r/20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-8-4f42c347b653@kernel.org
+>>>>>> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+>>>>>> (cherry picked from commit e7c42bf4d320affe37337aa83ae0347832b3f568)
+>>>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>>>> ---
+>>>>>>  .../selftests/net/mptcp/mptcp_connect.sh      | 53 ++++++++++---------
+>>>>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++------
+>>>>>>  2 files changed, 43 insertions(+), 40 deletions(-)
+>>>>>
+>>>>> Odd, this one did not apply.
+>>>>
+>>>> Indeed, that's odd. Do you use a different merge strategy?
 >>>
->>> # 07 ....chk last_data_sent                            [SKIP] Feature probably not supported
->>> # 08 ....chk last_data_recv                            [SKIP] Feature probably not supported
->>> # 09 ....chk last_ack_recv                             [SKIP] Feature probably not supported  
+>>> I do not use any merge strategy at all, I use 'patch' to apply patches
+>>> (well, that's what quilt does), so git is not involved here.
 >>
->> Yes it does, I should have added a note about that, sorry: that's because
->> SS needs to be patched as well to display the new counters.
->>
->> https://patchwork.kernel.org/project/mptcp/patch/fd9e850f1e00691204f1dfebc63c01c6a4318c10.1711705327.git.geliang@kernel.org/
->>
->> This patch will be sent when the kernel one will be accepted.
+>> Ah OK, thank you for the explanation. I thought git was used to do the
+>> cherry-pick + generate the patch for quilt.
 > 
-> I see, applied locally now, thanks!
+> No, git is used only to export the patch from the tree if a git id is
+> used.  As you sent a patch here, I just used your patch for this.
+
+Thank you, that's clearer!
+
+>> I'm still surprised quilt didn't accept these patches generated on top
+>> of the 6.6-y branch. (By "chance", did you not have conflicts because
+>> the patch 1/5 (commit 629b35a225b0 ("selftests: mptcp: display simult in
+>> extra_msg")) didn't get backported by accident? It is strange it is also
+>> missing in the v6.6.y branch.)
+> 
+> I do not remember if there were conflicts or not, sorry.
+
+All good, I can send a fix for v6.6.
+
+>>> How about just resending this one patch after the next 6.6.y release
+>>> that comes out in a day or so.
+>>
+>> No hurry, that can indeed wait for the next 6.6.y release.
+
+(after having read the announcement around the last stable releases, I
+understand why it was better to wait to fix this minor issue :) )
+
+>> Just to be sure we are aligned: I suggested backporting these 5 commits:
+>>
+>> - 629b35a225b0 ("selftests: mptcp: display simult in extra_msg")
+> 
+> This one I've now queued up.
 
 Thank you!
 
->> Is it an issue? The modification of the selftests can be applied later
->> if you prefer.
+>> - e3aae1098f10 ("selftests: mptcp: connect: fix shellcheck warnings")
 > 
-> Not sure. If it doesn't happen super often maybe co-post the iproute2
-> patch as described:
-> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#co-posting-changes-to-user-space-components
-> and I'll apply it on the worker machines manually.
-
-I missed that. Indeed, that should be rare. We will do that next time!
-
->> Earlier today, I was looking at changing NIPA not to mark the whole
->> selftest as "SKIP" but I saw it was not a bug: a check is there to
->> mark everything as skipped if one subtest is marked as skipped
->> from what I understood. So I guess we don't want to change that :)
+> Was already in the tree.
 > 
-> Correct :) It's working as intended :)
-
-It can maybe be modified when we can re-use the option to parse embedded
-TAP results :)
-
->>> I'll "hide it" from patchwork for now..
->>> --
->>> pw-bot: defer  
->>
->> Thank you! Do you prefer if I resend only patch 1/2 for now?
+>> - e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
 > 
-> No need, restored the patches back, let's see if next run is clean.
+> Failed to apply
 
-Thank you! It looks like they are OK now!
+That's now normal, I can send a patch as a reply to your message.
+
+>> - 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
+> 
+> In the tree.
+> 
+>> - 7a1b3490f47e ("mptcp: don't account accept() of non-MPC client as
+>> fallback to TCP")
+> 
+> In the tree.
 
 Cheers,
 Matt
