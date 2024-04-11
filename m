@@ -1,224 +1,121 @@
-Received: from mail-pl1-f175.google.com (mail-pl1-f175.google.com [209.85.214.175])
+Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com [209.85.217.44])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C581514A096
-	for <mptcp@lists.linux.dev>; Thu, 11 Apr 2024 11:57:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC1031EF1E
+	for <mptcp@lists.linux.dev>; Thu, 11 Apr 2024 12:49:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.44
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712836640; cv=none; b=hhUZj+uV5cd/w8P4LvFrDQV4daHFVzsgLOQ2dxzOwwLQiNCByfDogUFie+iv7KgdiD6US/UjrgGmcwZycXc8731+prqRlwCD0T3WKlj/XyzsaV/9mYiKf94tWeG+grge5EDHGlgJfYHE0qV6VELvsXev8eoRnEfrVZH05eILTz8=
+	t=1712839776; cv=none; b=UXvU2xZYuHVpsDttxKbHpMAcDfJqw4AiEWV3BgB64Ior2y23bWswbInNUN9G9dLkq+d61aq2JB9klwoRgLDWK8/lioIab63k4Vv5eD0YkOHkup9nVYWfvJbxgYboB9MR00WqiQIT2EloWpM9LqSz21U9DGKvPxmfuJ98YtsKZ0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712836640; c=relaxed/simple;
-	bh=vTP3QZ7Mb+YJeA+LCWJ0BN539kxVD/c229G2uXJNsqI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=X3eFKf7BBUFGr8AVvxQBUutUGtHA5sATvn4HbFwnGU/0NxpdoR8YVe37UiWDpFwKA9opBEmiiVC8uobUOEpISf5matAZBEfrQ1Qmz+opkG5jTWB6G2qaLgZm9/qySjDcAMQ5OY/4Pt0xh8G+JajjKSAuswKiU6uzpkpCkPdR15Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DnobkaMP; arc=none smtp.client-ip=209.85.214.175
+	s=arc-20240116; t=1712839776; c=relaxed/simple;
+	bh=oIPDov2VVCIpmz6tjjZQ19XqYxN+iQI2/S5KHWX6l34=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=jDgVxzbGQViVZhgiTk51T8EW7rEthEyTvEKVdHf+wZ7a/emG6N+ZJA6v4BLbv4zofg3LTwRcz6Nrn4okcEPtREEBf6ln6nyxnummzRQ+o4w0wwsB00R1rjoSWZYCHpxmlYr97ljGr3MdxY8dMsbH6S7FK1OH/jAqCwADQDDuYF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rw593ymm; arc=none smtp.client-ip=209.85.217.44
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DnobkaMP"
-Received: by mail-pl1-f175.google.com with SMTP id d9443c01a7336-1e4149e7695so33378185ad.0
-        for <mptcp@lists.linux.dev>; Thu, 11 Apr 2024 04:57:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rw593ymm"
+Received: by mail-vs1-f44.google.com with SMTP id ada2fe7eead31-479cbfc62e9so2336931137.0
+        for <mptcp@lists.linux.dev>; Thu, 11 Apr 2024 05:49:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1712836638; x=1713441438; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1712839774; x=1713444574; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=QWEXT88lioNnr4qYEuDUqPtJMEDt8QzYuw3n5cZfxZ0=;
-        b=DnobkaMPeKf0/lT2UO2hsCWarPqDyh2oo9uCjQltseUdm3QD10SKqukBC5dTUxSmfF
-         KgE/YLdXYyt07MtEa5WQmvu2bgueVJVP/uTUZylzEl5gKGhsbk1VaZzf36b6d/c5Jjsb
-         /6IoSWOP/HB433XCSW+JgDMEsj4helIu51uoOAufmDFvcOycC6Q5JRKUWel9aCCZnk/e
-         BnNBdPs4U8hcPnLH/aWKnjrP2P48uf9cdHoRCni9l5EQOMMR7E4gtLYjAufvT/keaCCI
-         +ZFTVjfCF7rMj5s4QP3E3UQu3bvkwsZhGG5uT/a9xJCdCj6mJayDI/ZNLM1ntL9HEC/u
-         bCGQ==
+        bh=a/V5X0oXZNgeRKEpi+SB2ucrxgtRDfru53UCEY5cgSo=;
+        b=Rw593ymmBUgFh5LcFuVSWe8TeMGWUKI0T/rI+8SZadffUenU/t7FQRx/c7qj2Aijv/
+         IEJlnKsr1kFKB8Minbr0McQtbEczxcvgYRIf5scKuxpVj3lvCEsZyXyAsJe5RGFt6/iw
+         pVUnP0rszAP5TB757MBBqtbWpSwzS/lZ1EZMeWvnWvPrfCCt3eWV66ic/DaXZ1+Je4xk
+         2mzhWAeOsQ3cdhj+HYhxB8w3MXFQuDlo5cHDWhh74i2rVj5SVMB6kLO07wHmDhKj/9+1
+         dNIA3TCjsf5zPBa26OgS/r0KOmS+suns1eL5c62AFfFJ2bRkLG1RXChj39GVHc2Zbyd0
+         bNZQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1712836638; x=1713441438;
-        h=content-transfer-encoding:mime-version:references:in-reply-to
-         :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=QWEXT88lioNnr4qYEuDUqPtJMEDt8QzYuw3n5cZfxZ0=;
-        b=Q5k0Feqw7AcUNGwGS7fDxJzH4DXr9d/znSGlWaJoXNSupgZ2MJNe6pO7zv3WZfoQKi
-         UxzvJFLFvgVTItAChKGI7lmlomqsG24nqciflzSsw7YTAT6tCg37oodVLUAj1uG1SDHB
-         io7lJLw0Toxd2ob/6c2jA5k/gYysxNUoFBQspFfPLobSjStljKVGXs/U4hqJndHKgeCX
-         7kltrqkXlJ3qhz/xKXDaVjMM9bmnCqUWgmUocrJXlcWWbHEGTIxDZGQ4IHr4JL2UXgd8
-         8V9JQXDstEMMQbbyCLj4/eCQwlORdz/sTls3xKmZY+RTBlCnu7c/IIKQBnbrqXQwhX1b
-         HpzA==
-X-Gm-Message-State: AOJu0YwVdh6ZWjjWVvQ9Ru510EjZne+Ff08i0o2e/Q/pU7q3j9P/Nn+r
-	iyMtfXxVdHyXNVHLMt7rz+BAecIxIQRTRmHuFu2UaCmnNDNtaON9
-X-Google-Smtp-Source: AGHT+IFqYXTgNjL4+xx66eG3U7c7lQ2V9mgdJIUFQU1kPnie++FZVWqY6URtyzRTXyxxVGKyXrx0jA==
-X-Received: by 2002:a17:902:7ec1:b0:1e0:e85b:b9ca with SMTP id p1-20020a1709027ec100b001e0e85bb9camr4216746plb.21.1712836638082;
-        Thu, 11 Apr 2024 04:57:18 -0700 (PDT)
-Received: from KERNELXING-MB0.tencent.com ([43.132.141.25])
-        by smtp.gmail.com with ESMTPSA id u11-20020a170902e5cb00b001e20587b552sm1011840plf.163.2024.04.11.04.57.14
+        d=1e100.net; s=20230601; t=1712839774; x=1713444574;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=a/V5X0oXZNgeRKEpi+SB2ucrxgtRDfru53UCEY5cgSo=;
+        b=MS0EnYVQGVv7gfWTfAAcdDl7mUbar3dxv8PzutQ8CuRQ9R9nzQXSAVjpOCS5pob8bs
+         T7LcP+/Qqf1iQY0XQh+kKCQw60ncqAAq3zNVBlMLnmKW/uSBlCRnpmJvO0wjOCiXj6Lp
+         R9J0Woa9Nso026MYMDDpsxujkujX/aRKV87yG6mCQ1s0zeFf1U5QSYX7aTBYyZ3O3uyS
+         mXlZOn7d4iNguZze7D4F1WUrltiIwQUQTpPOAl7zAg1rdjLFezF7w+IW0M+3cLEif3cn
+         j7b9GyOwkbQPpbGDnjaPECRR0g7oPCSiinxcjq2ECh1FTqsn/GrPwnvS36MzUhLwrI2O
+         IYFw==
+X-Gm-Message-State: AOJu0Yx4rpdt57EyNR1WDu1TVwPx4kib+mXJqfwbOsah5xhnzoGUFF4y
+	ZwmSpbJeDzAEYhQK2XbrB3OwFeuiZLXOJKlJa7zOLm/e8tjnKFA=
+X-Google-Smtp-Source: AGHT+IECfgPGedU7e/VM6ZAaJLFOk9BKB1EGheuvrYlkkJwmeeJ1a3Iv6E+66eKNrz5CpGVeiUAFjg==
+X-Received: by 2002:a05:6102:c4e:b0:47a:40f0:d343 with SMTP id y14-20020a0561020c4e00b0047a40f0d343mr126734vss.32.1712839773632;
+        Thu, 11 Apr 2024 05:49:33 -0700 (PDT)
+Received: from [127.0.0.1] ([20.36.173.204])
+        by smtp.gmail.com with ESMTPSA id e11-20020ad4442b000000b00690fd3f6e3esm882677qvt.104.2024.04.11.05.49.32
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 11 Apr 2024 04:57:17 -0700 (PDT)
-From: Jason Xing <kerneljasonxing@gmail.com>
-To: edumazet@google.com,
-	dsahern@kernel.org,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	davem@davemloft.net,
-	rostedt@goodmis.org,
-	mhiramat@kernel.org,
-	mathieu.desnoyers@efficios.com,
-	atenart@kernel.org
-Cc: mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	kerneljasonxing@gmail.com,
-	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net-next v4 6/6] rstreason: make it work in trace world
-Date: Thu, 11 Apr 2024 19:56:30 +0800
-Message-Id: <20240411115630.38420-7-kerneljasonxing@gmail.com>
-X-Mailer: git-send-email 2.33.0
+        Thu, 11 Apr 2024 05:49:33 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Jason Xing <kernelxing@tencent.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20240411115630.38420-1-kerneljasonxing@gmail.com>
 References: <20240411115630.38420-1-kerneljasonxing@gmail.com>
+Subject: Re: [PATCH net-next v4 0/6] Implement reset reason mechanism to
+ detect
+Message-ID: <5db10185-ba45-f4c6-d798-187451b3018c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 11 Apr 2024 12:49:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Jason Xing <kernelxing@tencent.com>
+Hi Jason,
 
-At last, we should let it work by introducing this reset reason in
-trace world.
+Thank you for your modifications, that's great!
 
-One of the possible expected outputs is:
-... tcp_send_reset: skbaddr=xxx skaddr=xxx src=xxx dest=xxx
-state=TCP_ESTABLISHED reason=NOT_SPECIFIED
+Our CI did some validations and here is its report:
 
-Signed-off-by: Jason Xing <kernelxing@tencent.com>
-Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
----
- include/trace/events/tcp.h | 37 +++++++++++++++++++++++++++++++++----
- net/ipv4/tcp_ipv4.c        |  2 +-
- net/ipv4/tcp_output.c      |  2 +-
- net/ipv6/tcp_ipv6.c        |  2 +-
- 4 files changed, 36 insertions(+), 7 deletions(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/8646443837
 
-diff --git a/include/trace/events/tcp.h b/include/trace/events/tcp.h
-index 5c04a61a11c2..b1455cbc0634 100644
---- a/include/trace/events/tcp.h
-+++ b/include/trace/events/tcp.h
-@@ -11,6 +11,7 @@
- #include <net/ipv6.h>
- #include <net/tcp.h>
- #include <linux/sock_diag.h>
-+#include <net/rstreason.h>
- 
- /*
-  * tcp event with arguments sk and skb
-@@ -74,20 +75,38 @@ DEFINE_EVENT(tcp_event_sk_skb, tcp_retransmit_skb,
- 	TP_ARGS(sk, skb)
- );
- 
-+#undef FN1
-+#define FN1(reason)	TRACE_DEFINE_ENUM(SK_RST_REASON_##reason);
-+#undef FN2
-+#define FN2(reason)	TRACE_DEFINE_ENUM(SKB_DROP_REASON_##reason);
-+DEFINE_RST_REASON(FN1, FN1)
-+
-+#undef FN1
-+#undef FNe1
-+#define FN1(reason)	{ SK_RST_REASON_##reason, #reason },
-+#define FNe1(reason)	{ SK_RST_REASON_##reason, #reason }
-+
-+#undef FN2
-+#undef FNe2
-+#define FN2(reason)	{ SKB_DROP_REASON_##reason, #reason },
-+#define FNe2(reason)	{ SKB_DROP_REASON_##reason, #reason }
- /*
-  * skb of trace_tcp_send_reset is the skb that caused RST. In case of
-  * active reset, skb should be NULL
-  */
- TRACE_EVENT(tcp_send_reset,
- 
--	TP_PROTO(const struct sock *sk, const struct sk_buff *skb),
-+	TP_PROTO(const struct sock *sk,
-+		 const struct sk_buff *skb,
-+		 const enum sk_rst_reason reason),
- 
--	TP_ARGS(sk, skb),
-+	TP_ARGS(sk, skb, reason),
- 
- 	TP_STRUCT__entry(
- 		__field(const void *, skbaddr)
- 		__field(const void *, skaddr)
- 		__field(int, state)
-+		__field(enum sk_rst_reason, reason)
- 		__array(__u8, saddr, sizeof(struct sockaddr_in6))
- 		__array(__u8, daddr, sizeof(struct sockaddr_in6))
- 	),
-@@ -113,14 +132,24 @@ TRACE_EVENT(tcp_send_reset,
- 			 */
- 			TP_STORE_ADDR_PORTS_SKB(skb, th, entry->daddr, entry->saddr);
- 		}
-+		__entry->reason = reason;
- 	),
- 
--	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s",
-+	TP_printk("skbaddr=%p skaddr=%p src=%pISpc dest=%pISpc state=%s reason=%s",
- 		  __entry->skbaddr, __entry->skaddr,
- 		  __entry->saddr, __entry->daddr,
--		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN")
-+		  __entry->state ? show_tcp_state_name(__entry->state) : "UNKNOWN",
-+		  __entry->reason < RST_REASON_START ?
-+			__print_symbolic(__entry->reason, DEFINE_DROP_REASON(FN2, FNe2)) :
-+			__print_symbolic(__entry->reason, DEFINE_RST_REASON(FN1, FNe1)))
- );
- 
-+#undef FN1
-+#undef FNe1
-+
-+#undef FN2
-+#undef FNe2
-+
- /*
-  * tcp event with arguments sk
-  *
-diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
-index 863397c2a47b..b35bb4a52464 100644
---- a/net/ipv4/tcp_ipv4.c
-+++ b/net/ipv4/tcp_ipv4.c
-@@ -871,7 +871,7 @@ static void tcp_v4_send_reset(const struct sock *sk, struct sk_buff *skb,
- 	if (sk)
- 		arg.bound_dev_if = sk->sk_bound_dev_if;
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	BUILD_BUG_ON(offsetof(struct sock, sk_bound_dev_if) !=
- 		     offsetof(struct inet_timewait_sock, tw_bound_dev_if));
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 5d8eab15f462..196c25194acc 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -3611,7 +3611,7 @@ void tcp_send_active_reset(struct sock *sk, gfp_t priority,
- 	/* skb of trace_tcp_send_reset() keeps the skb that caused RST,
- 	 * skb here is different to the troublesome skb, so use NULL
- 	 */
--	trace_tcp_send_reset(sk, NULL);
-+	trace_tcp_send_reset(sk, NULL, SK_RST_REASON_NOT_SPECIFIED);
- }
- 
- /* Send a crossed SYN-ACK during socket establishment.
-diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
-index ba9d9ceb7e89..1dfe5b99476b 100644
---- a/net/ipv6/tcp_ipv6.c
-+++ b/net/ipv6/tcp_ipv6.c
-@@ -1131,7 +1131,7 @@ static void tcp_v6_send_reset(const struct sock *sk, struct sk_buff *skb,
- 			label = ip6_flowlabel(ipv6h);
- 	}
- 
--	trace_tcp_send_reset(sk, skb);
-+	trace_tcp_send_reset(sk, skb, reason);
- 
- 	tcp_v6_send_response(sk, skb, seq, ack_seq, 0, 0, 0, oif, 1,
- 			     ipv6_get_dsfield(ipv6h), label, priority, txhash,
--- 
-2.37.3
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/ce1857255013
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D843592
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
