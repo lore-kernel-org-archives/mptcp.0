@@ -1,156 +1,155 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE37713E057;
-	Thu, 11 Apr 2024 07:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA9C71442FA;
+	Thu, 11 Apr 2024 09:17:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712820776; cv=none; b=JjZ/N8ZSvzyuDvATF2lCudeVFM8rJ1vg6XAAlActzP4aqRL9x0cz/WidHxJB+UVsz5vNE5QgOKhXY5KjPKEYSCtRbLnu1Um0s/JZ476AHrBE7y7/KeCckn1xqEbhC1r/jmQLvfTpzN5xlQ2ODqZtSLtOVlcL1zdzjrSig0TXrdQ=
+	t=1712827066; cv=none; b=GdfAioQtlgAb0+xLDne143P8pmWczcwSYAA8fA0Jgp9k9uuewcU9v+D1QP6w7ZrV7PAIBCoPflbI605Azrg0JO/s8HK1QX9tXfO9CCUsy0hgR3qTJBXQXsJHDPX8ACN3qOTATWORxuH7DRQAFR2irWwrAZIxLQtzFBvbbAR42qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712820776; c=relaxed/simple;
-	bh=P/JEPZ8/bdZlLFI8atcD5Myhc+wd+nhuxTDkpIWpa0U=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=bd3kMHJb9CKrdyrgNZ3Mp7T0cikdicqhqWTiovl4kWwJyasccbW93OIc7GPg7dYt9VVummRynCAf2h4iIGysb5IvYxfScPCu5GIC6f9/MEa6s1QyPA4kB0FtI5yuA1qbj6n7gn1IXE+Jr2XEBu0oSBsC6bPYREaJW7knPrVhstU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SB6GCJGQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712827066; c=relaxed/simple;
+	bh=m53nnFpzQz5oa1v/Euu3FIxD4QTQaLgZyNyzPdTs6Rg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=nCcx43R9EiDgiVZTnJnN2AjiaYKgXJ5FOGriMuPJCyyrVXvoOkX2QBc8zScVK4FfdwiUfevunr7ikBSzd+PZuSnd0L0o1D1uVSN9h9pRm7lhT/8YtNmjA1SBCSbAQ8FD86RLLtbqe5nHli18dTds0pdJFRXdPo/6xqqVNe2end4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LE8IbOiq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SB6GCJGQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02210C433F1;
-	Thu, 11 Apr 2024 07:32:54 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1712820775;
-	bh=P/JEPZ8/bdZlLFI8atcD5Myhc+wd+nhuxTDkpIWpa0U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SB6GCJGQDLQjg2mTCjbfYv52aBNNJ+vX7IPsWVjsN9UtAv+0q6obdgg1LQ7QeR7vM
-	 Q9/5CukrEvq10Jhp3F/r5uZxC1CPwuLygU0k/eC+Ni6JnraLdaRmbhmM8jciA2VQ8e
-	 ucynii3reSfDdgTULemsTZzbm4IUm6g+6hpoCr1g=
-Date: Thu, 11 Apr 2024 09:32:52 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, stable@vger.kernel.org,
-	Geliang Tang <tanggeliang@kylinos.cn>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 6.6.y 3/5] selftests: mptcp: use += operator to append
- strings
-Message-ID: <2024041111-shirt-germicide-b316@gregkh>
-References: <2024040520-unselect-antitrust-a41b@gregkh>
- <20240405153636.958019-10-matttbe@kernel.org>
- <2024040801-undaunted-boastful-5a01@gregkh>
- <26b5e6f5-6da2-44ff-adbd-c1c1eda3ccba@kernel.org>
- <2024040902-syrup-sneezing-62c4@gregkh>
- <af60b8c3-e3c4-48b2-a4c6-f2f430aa9c68@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LE8IbOiq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBCEDC433C7;
+	Thu, 11 Apr 2024 09:17:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1712827065;
+	bh=m53nnFpzQz5oa1v/Euu3FIxD4QTQaLgZyNyzPdTs6Rg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LE8IbOiqmjrO6CE65HQ6hZD7IoKOFza7js5vu8KknTIp7vqUjzjfw4yFAfwp5Z0k1
+	 cphzy/9aL20qork06Rm98zcwXvgH6eAkRoya6inGKHltIJJbDvaSIzETVqxTjEqJAx
+	 ereCYOFOWOA5A9GP+kSMRjdz4qnm/8SDD35kdVZ/iRE9t2PDmBhcK1luQb3yx9emER
+	 KQv849WxEYmGuqSCNcFRhOuusGS49sIJeWhuiWM+HQwlmVNOY+jc672UW255conZ+l
+	 oTFOrgv5Ad+3TJqrucHhfUVPZiCkyhZxL2XKryeqLJoH4dbYsbtXByORWeCmayjgaC
+	 5eOUhgAihCQKw==
+Message-ID: <d7faeacc-0442-4cee-a0ae-4b39b75d0cda@kernel.org>
+Date: Thu, 11 Apr 2024 11:17:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <af60b8c3-e3c4-48b2-a4c6-f2f430aa9c68@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next v2 0/2] mptcp: add last time fields in mptcp_info
+Content-Language: en-GB
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Geliang Tang <tanggeliang@kylinos.cn>
+References: <20240410-upstream-net-next-20240405-mptcp-last-time-info-v2-0-f95bd6b33e51@kernel.org>
+ <20240410113452.56f156f4@kernel.org>
+ <b8c14751-37a9-4a3d-b9af-a5c697d34781@kernel.org>
+ <20240410140103.37b94193@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240410140103.37b94193@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Tue, Apr 09, 2024 at 05:04:02PM +0200, Matthieu Baerts wrote:
-> Hi Greg,
+Hi Jakub,
+
+On 10/04/2024 23:01, Jakub Kicinski wrote:
+> On Wed, 10 Apr 2024 21:31:13 +0200 (GMT+02:00) Matthieu Baerts wrote:
+>>> Hi Mat, is this causing skips in selftests by any chance?
+>>>
+>>> # 07 ....chk last_data_sent                            [SKIP] Feature probably not supported
+>>> # 08 ....chk last_data_recv                            [SKIP] Feature probably not supported
+>>> # 09 ....chk last_ack_recv                             [SKIP] Feature probably not supported  
+>>
+>> Yes it does, I should have added a note about that, sorry: that's because
+>> SS needs to be patched as well to display the new counters.
+>>
+>> https://patchwork.kernel.org/project/mptcp/patch/fd9e850f1e00691204f1dfebc63c01c6a4318c10.1711705327.git.geliang@kernel.org/
+>>
+>> This patch will be sent when the kernel one will be accepted.
 > 
-> On 09/04/2024 14:16, Greg KH wrote:
-> > On Mon, Apr 08, 2024 at 06:10:38PM +0200, Matthieu Baerts wrote:
-> >> Hi Greg,
-> >>
-> >> On 08/04/2024 13:31, Greg KH wrote:
-> >>> On Fri, Apr 05, 2024 at 05:36:40PM +0200, Matthieu Baerts (NGI0) wrote:
-> >>>> From: Geliang Tang <tanggeliang@kylinos.cn>
-> >>>>
-> >>>> This patch uses addition assignment operator (+=) to append strings
-> >>>> instead of duplicating the variable name in mptcp_connect.sh and
-> >>>> mptcp_join.sh.
-> >>>>
-> >>>> This can make the statements shorter.
-> >>>>
-> >>>> Note: in mptcp_connect.sh, add a local variable extra in do_transfer to
-> >>>> save the various extra warning logs, using += to append it. And add a
-> >>>> new variable tc_info to save various tc info, also using += to append it.
-> >>>> This can make the code more readable and prepare for the next commit.
-> >>>>
-> >>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> >>>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >>>> Link: https://lore.kernel.org/r/20240308-upstream-net-next-20240308-selftests-mptcp-unification-v1-8-4f42c347b653@kernel.org
-> >>>> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> >>>> (cherry picked from commit e7c42bf4d320affe37337aa83ae0347832b3f568)
-> >>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >>>> ---
-> >>>>  .../selftests/net/mptcp/mptcp_connect.sh      | 53 ++++++++++---------
-> >>>>  .../testing/selftests/net/mptcp/mptcp_join.sh | 30 +++++------
-> >>>>  2 files changed, 43 insertions(+), 40 deletions(-)
-> >>>
-> >>> Odd, this one did not apply.
-> >>
-> >> Indeed, that's odd. Do you use a different merge strategy?
-> > 
-> > I do not use any merge strategy at all, I use 'patch' to apply patches
-> > (well, that's what quilt does), so git is not involved here.
+> I see, applied locally now, thanks!
+
+Thank you!
+
+>> Is it an issue? The modification of the selftests can be applied later
+>> if you prefer.
 > 
-> Ah OK, thank you for the explanation. I thought git was used to do the
-> cherry-pick + generate the patch for quilt.
+> Not sure. If it doesn't happen super often maybe co-post the iproute2
+> patch as described:
+> https://www.kernel.org/doc/html/next/process/maintainer-netdev.html#co-posting-changes-to-user-space-components
+> and I'll apply it on the worker machines manually.
 
-No, git is used only to export the patch from the tree if a git id is
-used.  As you sent a patch here, I just used your patch for this.
+I missed that. Indeed, that should be rare. We will do that next time!
 
-> I'm still surprised quilt didn't accept these patches generated on top
-> of the 6.6-y branch. (By "chance", did you not have conflicts because
-> the patch 1/5 (commit 629b35a225b0 ("selftests: mptcp: display simult in
-> extra_msg")) didn't get backported by accident? It is strange it is also
-> missing in the v6.6.y branch.)
-
-I do not remember if there were conflicts or not, sorry.
-
-> > How about just resending this one patch after the next 6.6.y release
-> > that comes out in a day or so.
+>> Earlier today, I was looking at changing NIPA not to mark the whole
+>> selftest as "SKIP" but I saw it was not a bug: a check is there to
+>> mark everything as skipped if one subtest is marked as skipped
+>> from what I understood. So I guess we don't want to change that :)
 > 
-> No hurry, that can indeed wait for the next 6.6.y release.
+> Correct :) It's working as intended :)
+
+It can maybe be modified when we can re-use the option to parse embedded
+TAP results :)
+
+>>> I'll "hide it" from patchwork for now..
+>>> --
+>>> pw-bot: defer  
+>>
+>> Thank you! Do you prefer if I resend only patch 1/2 for now?
 > 
-> Just to be sure we are aligned: I suggested backporting these 5 commits:
-> 
-> - 629b35a225b0 ("selftests: mptcp: display simult in extra_msg")
+> No need, restored the patches back, let's see if next run is clean.
 
-This one I've now queued up.
+Thank you! It looks like they are OK now!
 
-> - e3aae1098f10 ("selftests: mptcp: connect: fix shellcheck warnings")
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Was already in the tree.
-
-> - e7c42bf4d320 ("selftests: mptcp: use += operator to append strings")
-
-Failed to apply
-
-> - 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
-
-In the tree.
-
-> - 7a1b3490f47e ("mptcp: don't account accept() of non-MPC client as
-> fallback to TCP")
-
-In the tree.
-
-> But only these 3 got backported to 6.6.y:
-> 
-> - e3aae1098f10 ("selftests: mptcp: connect: fix shellcheck warnings")
-> - 8e2b8a9fa512 ("mptcp: don't overwrite sock_ops in mptcp_is_tcpsk()")
-> - 7a1b3490f47e ("mptcp: don't account accept() of non-MPC client as
-> fallback to TCP")
-> 
-> The last commit ("mptcp: don't account accept() of non-MPC client as
-> fallback to TCP") has a small problem in 6.6.y (only):
-> 
-> - In case of issue, a message will say that the subtest is OK and not
-> OK, and the TAP report will report that everything is OK with this
-> subtest => that's OK, nothing critical, that's the tests.
-> - We can solve that in the next 6.6 version by manually backporting
-> commit e7c42bf4d320 ("selftests: mptcp: use += operator to append
-> strings") and its dependence: commit 629b35a225b0 ("selftests: mptcp:
-> display simult in extra_msg").
-
-Patches gladly accepted :)
-
-thanks,
-
-greg k-h
