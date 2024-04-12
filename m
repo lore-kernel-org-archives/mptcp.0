@@ -1,142 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7D552F70
-	for <mptcp@lists.linux.dev>; Fri, 12 Apr 2024 08:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C641B4F1E5;
+	Fri, 12 Apr 2024 08:20:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1712909076; cv=none; b=H0l8LQ2PtpcgMVpJOdB8FcWqZidvXIcN5BRjyL5vWFhMifbOoMI12ZO3wvX8qatCTvX9smEHejz8omx6UUznZZ1NFpS4bUv4ZFw0UGmbQ54By5krNkLCZYtb9E/H7VVyi/ADolUePSI22MOrIsA3X0aedeorqI3j43qCOFZ32sQ=
+	t=1712910017; cv=none; b=Um8YcUdrK7b8AD4L5J29nGJdbhBb+2hCX6Cw53v5USXmkt19XWLcZOj9vvmMpFqYyYw3aBTKfrgLVwzikQXXmpQ3ulQbyqKuUraE6DXXeSC5Bf/PQmUDLiEwPwcLHlWUi4PbYsVl6NNczMb9PVVgIzQ7BSmXxM1IaXNo7LVwtGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1712909076; c=relaxed/simple;
-	bh=r7k2Mso1MN1eMubJvIkgTvy3mh73DWxmeosIILl9Znw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g68GrOfwW2lTRipuzJ8q4HTyhrUaGEVHTCdWsgtb7LxD91HQDlYxqjF2lo2HTRyDVruFe3YMhlAs9vDTFF6ZYhtyoub0tK/Uy7/lNZxngTkZMPqeVhmpumbS2zD8eoIZsMS4OFMVB2qkbyVZCMbKws3McuApj46YMQpWOyeM6Ys=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eg5vBoCG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1712910017; c=relaxed/simple;
+	bh=BpPsC576jT/hFv4s4WL/XpSNwMDP08RHf2v/qnvEtE0=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AujWE/VVwEEs7l8rRMxVKoiTpSDDJGf+eb1nNuILRybk4zvzkh7mM/2PU7wrvzstbyF2bnjFdSCEi8mvDq5laBgtTLUEyAzV6QivoWEk2Xm1pvup+6jIyUI1DuoQz2MHX8TKedmJUXWqNTsDPyFAGDRkZ/IPqXbUKEKiaCPTqw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LwZv0Qi+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eg5vBoCG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B623FC2BBFC;
-	Fri, 12 Apr 2024 08:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LwZv0Qi+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D90A5C113CC;
+	Fri, 12 Apr 2024 08:20:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1712909075;
-	bh=r7k2Mso1MN1eMubJvIkgTvy3mh73DWxmeosIILl9Znw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eg5vBoCGHfJuTqQi3eW66RV3xw+A6tU0qCL6iPEXM5BrSVw7qSnLyEd3pR5Knq9Dd
-	 lMrr0fje/q9uQCOuVHlCnN506uMGQygS+lR/KfY69RhNad8l9AVEKG1xqQUyJYqg63
-	 QE60aNFoR1DhhuN+S9uXPs0VG40DPFX8BVxoHeQ3Ws41d6eLzb8UAJS3520qMSX3I6
-	 vCA+jqVCsKvSt934Mqkrl2oy8y6NqJaVHsco5bwslT6IxqwVwu/MXSaRtVBREDjn9e
-	 ZVC1SasbefsDeITAUTqtbC3Ja7pDcJMfAplomEb0/MAmWo2HudKfrHpJdpYLfrnBFF
-	 aNQDpvwms0bRw==
-Message-ID: <baab617b-2829-4a6c-8979-d857ad0f91d7@kernel.org>
-Date: Fri, 12 Apr 2024 10:04:32 +0200
+	s=k20201202; t=1712910017;
+	bh=BpPsC576jT/hFv4s4WL/XpSNwMDP08RHf2v/qnvEtE0=;
+	h=From:Date:Subject:To:Cc:From;
+	b=LwZv0Qi+LzViGwgyWbcQGgRtyjLucHRObXbvA555c7LXSNk1ARxvUfpMbtP3xgy+W
+	 oPsibri48fYsZF4oJz73w+VnMOIpIPojNnKETCWz3AvCE0ShIL7F2flwaE38CjGmLD
+	 kEtU43PxQHrO1Osl2FC8BfB0ojuv4lDnHvz0S6IE/S6ouJFx+jFHkrVTJdB9VEa+JM
+	 yivmA5RX7ea7H2xVw0t6ytIRvp5zIDBNUrQ84vemMfdgvjdasqYRamMRS6izi/KmmE
+	 kVuAqAZ00bMv9dDAApk55YqH39U7BNhLQi8RFwqQSjykeFHKhka44Myt6QSvNBDx9u
+	 Pu41wFpqB2xog==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 12 Apr 2024 10:19:52 +0200
+Subject: [PATCH iproute2-next] ss: mptcp: print out last time counters
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: sync requests from bpf-next
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
- <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
- <9de803660793c77da3e834fe023e072b8dacd1f0.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <9de803660793c77da3e834fe023e072b8dacd1f0.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240412-upstream-iproute2-next-20240412-mptcp-last-time-info-v1-1-7985c7c395b9@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAKfuGGYC/1WNQQrCMBBFr1Jm7UAaulCvIi7GZKoDJhmSaSmU3
+ t3gQnD5ePz3d2hchRtchx0qr9Kk5A7jaYDwovxklNgZvPOTm0aPizarTAlFa1mMPWbeDH8+qQX
+ FNzVDk9TneS4YyV0inR9MIUBPa+VZtu/tDf5CcD+OD3BKERqVAAAA
+To: David Ahern <dsahern@gmail.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ Stephen Hemminger <stephen@networkplumber.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1964; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=peEZPkCHANfDFAZBTs/k1zY2RZcbXFVbmdGN61yaLdY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmGO6/F6YlvRUHp4hH1Fz5aEMIVph+unLpj0WzR
+ AYt8xlkenKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZhjuvwAKCRD2t4JPQmmg
+ cxezEACq5hKrWRv32luqJbErk39Z+AocHlbyWmCoGUMJqzdOimON2otIk/KJQx72zhbWbRk4O7i
+ evOOf13xBn0u0f9heO6gRHA5RtZ+epa7q30ekTWNG+yEICrpKR48E8UDi0f85Tb5kJUyaj2p7rd
+ 1ymiDMOlHLfceB/oAMUvqjwJlWX7r4UTkr/KSRwHHnK7QtsDQlFxJCsvIUQcY/vAPDiUVK5ZEfF
+ pRBPOLY6I/VmUI21vbv+dEaBecfbp5SZ2GQ0ljzWHK/hQUkL79VCByElcaLHiUIVdNfUgU3XajY
+ ov+REAwiPrH3OyFo55Yg+1OULD7fVrwpK6NoxEPAt/h10iX79TrdAX9uhxMmV0uVuez+XIokSD1
+ 4a4VhZlf8U+jQtefWlzGn/Cdd3+QkZ73EVQnTFDDc9/5X71FDTTb/uF35mr6ca3cImu0OKdv61u
+ vMIFEJ2wXy7S1XILS7fcW2ETD/0mDgSd98cFYwL+3rjnZ5HOFCJ5jf5N5kQVzmElf9eg4ee2bBD
+ ktLqc6NXJbMskYfAKi8xr8TnYPBCNwhzBtirU0Z33Or20dKz5bGPRc3DMoT30k4jqTkLaviFSiO
+ 4dyOwC1BkQ5J+tSDAd4owEODTAneLEi/0pK13pqFMM1xL+zhcBl2dNV/liSIKuUG+2KxBeMkMoc
+ ZbMLv03+Ea4gw2w==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+From: Geliang Tang <geliang@kernel.org>
 
-On 12/04/2024 03:21, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Wed, 2024-04-10 at 17:26 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 10/04/2024 12:21, Geliang Tang wrote:
->>> These four patches need to be merged into mptcp_net-next from bpf-
->>> next
->>> to avoid conflicts:
->>
->> For which series do you need these patches to be cherry-picked from
->> bpf-next repo?
->>
->> I assume it is for "use start_server and connect_to helpers" and
->> "export
->> send_recv_data (v4)", right? These series don't directly modify MPTCP
->> code or tests, do you need MPTCP CI to validate them?
-> 
-> The series "export send_recv_data"
-> 
-> selftests/bpf: Add struct send_recv_arg
-> selftests/bpf: Export send_recv_data helper
-> 
-> accepted by bpf-next needs to merge into mptcp_net-next. I changes them
-> as "Queued" on our patchwork. But patch 2 has modified by Martin a
-> little bit.
-> 
-> Patch 2 will conflicts when merging it without the patches I mentioned
-> in this 'sync requests'.
-> 
-> Another option is to fix the conflicts, it's much simpler.
+Three new "last time" counters have been added to "struct mptcp_info":
+last_data_sent, last_data_recv and last_ack_recv. They have been added
+in commit 18d82cde7432 ("mptcp: add last time fields in mptcp_info") in
+net-next recently.
 
-Would it be OK to wait for these patches to be in net-next? BPF
-maintainers usually send their pull-requests on Monday.
+This patch prints out these new counters into mptcp_stats output in ss.
 
-If there is no urgency, it would be easier and safer I think. Plus,
-there are two BPF series that are currently in review ("refactor mptcp
-bpf tests" and "setsockopt per subflow: BPF"), best not to have multiple
-reviews on the same topic in parallel, otherwise it is hard to follow,
-especially for those not fully involved in them.
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ include/uapi/linux/mptcp.h | 4 ++++
+ misc/ss.c                  | 6 ++++++
+ 2 files changed, 10 insertions(+)
 
-Cheers,
-Matt
+diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
+index c2e6f3be..a0da2632 100644
+--- a/include/uapi/linux/mptcp.h
++++ b/include/uapi/linux/mptcp.h
+@@ -56,6 +56,10 @@ struct mptcp_info {
+ 	__u64	mptcpi_bytes_received;
+ 	__u64	mptcpi_bytes_acked;
+ 	__u8	mptcpi_subflows_total;
++	__u8	reserved[3];
++	__u32	mptcpi_last_data_sent;
++	__u32	mptcpi_last_data_recv;
++	__u32	mptcpi_last_ack_recv;
+ };
+ 
+ /* MPTCP Reset reason codes, rfc8684 */
+diff --git a/misc/ss.c b/misc/ss.c
+index 87008d7c..81b813c1 100644
+--- a/misc/ss.c
++++ b/misc/ss.c
+@@ -3279,6 +3279,12 @@ static void mptcp_stats_print(struct mptcp_info *s)
+ 		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
+ 	if (s->mptcpi_subflows_total)
+ 		out(" subflows_total:%u", s->mptcpi_subflows_total);
++	if (s->mptcpi_last_data_sent)
++		out(" last_data_sent:%u", s->mptcpi_last_data_sent);
++	if (s->mptcpi_last_data_recv)
++		out(" last_data_recv:%u", s->mptcpi_last_data_recv);
++	if (s->mptcpi_last_ack_recv)
++		out(" last_ack_recv:%u", s->mptcpi_last_ack_recv);
+ }
+ 
+ static void mptcp_show_info(const struct nlmsghdr *nlh, struct inet_diag_msg *r,
+
+---
+base-commit: 7a6d30c95da98fbb375e7f1520fad34c1e959441
+change-id: 20240412-upstream-iproute2-next-20240412-mptcp-last-time-info-da09da8beacc
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
