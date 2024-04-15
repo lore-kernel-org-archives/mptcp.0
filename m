@@ -1,131 +1,119 @@
-Received: from mail-il1-f179.google.com (mail-il1-f179.google.com [209.85.166.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E0841E891
-	for <mptcp@lists.linux.dev>; Sat, 13 Apr 2024 16:45:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C8A1C02
+	for <mptcp@lists.linux.dev>; Mon, 15 Apr 2024 01:47:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713026721; cv=none; b=W+8IlPyJEC/5gbOuwPAnsCWCRP0lHYYNRQJodgifETDUqW4eJyr/a3gBRdVpiCQ6tlEcbmj3j5ipI4YIvKC1/ZFUy8h8k4IEPk+GMG5FOknaLfwfhrQBKT9cSyIM+10+5QrXMLyCTIhLVUbLH7ksfr04QMQ18Xfi1t43RnFkA4Y=
+	t=1713145640; cv=none; b=GM3UQEbOoN2gDLycH1OCn8b2goxBRRRQkgxUec5mSTyZB9mW08nop7vMSBZupBmZtzgfwLHcLZxWnnzDZlPhOl2KUa70zeT6e13jhoPQHaUJ50NcjhTHA6TQKZ5gBP1YzuXI8V+wArLoUQ7sZwUxWd0+qZhiKN1hPX6Z4Bb1JN0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713026721; c=relaxed/simple;
-	bh=PSejv3wYmsFleA1hJ0BcjHUG7LsWO1m7TNaYBaCINPs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bIAmsc2TeDBDMrT/F44lQBV6bx4n/Wg2oUoR88aFK6j0rGg6tTdfgxHmxID2kFDuS7QF0LkLM8GlSJpYSu4HlrlZpKF6SNi8BTUinnd2EAjrIN8Z41N5fqwRc8q7vOYJlQV2BHfgwwxKj10puxId3xl20yUHGqUbiZIw5th8VK8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JrbpgpBC; arc=none smtp.client-ip=209.85.166.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713145640; c=relaxed/simple;
+	bh=f1pxPVnGCQ/xGhO5PWr3PxQQib4mhAb70H31ZZ1bnr8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=WwOFX7eRlIAv3KI5ycXXFXyh3ylEGlch4DsL+Gdap2ovV4J4niowaVMcJUHywub6gClpAIkxm0XDK/cC/gCZSQj9DFO0uFfk5e8Kr3wgsqNd+kyPTm/v9FNytepn8FA8c5qoqk8OBomR/LMdfATYXCUIuahMq9hU/w6t/8Y8nlM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gktreCJE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JrbpgpBC"
-Received: by mail-il1-f179.google.com with SMTP id e9e14a558f8ab-36b0e1301e3so5074575ab.2
-        for <mptcp@lists.linux.dev>; Sat, 13 Apr 2024 09:45:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713026719; x=1713631519; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=6AWoi7AcWMFrM9AuKQoXehk+tHcCjKtQiu66Iwn+m2w=;
-        b=JrbpgpBCbsLbDhIJtWSNPXzKZGetPIOBZRZkfVknRS+axs9KhnFs6zRN1pM31oazz8
-         8t6w7QdtYbauM0dAyDljsGRH64pSoT239LP3XHwAH9l2puYaP11MiT+xa8ld/Pk7gV9B
-         YvHUK6Nrz+VK7KzI27Xgwc1/IbaNbXqxF6TJhOLHR/xoVJuZI+BN94z7sxMFbBSJd53W
-         XnUp1qCcCe+CrcROW5rMlHNVxkyKjEAVrm57IqGldoYnpfOFQ9Lmmva3ka7T6802vnlj
-         zL4rNuJfI0t22/StFwm0tyAwy2gTvy/cQfSQrsMv+CAanxbK2g9cutetIvY6MIlEwese
-         aaIw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713026719; x=1713631519;
-        h=content-transfer-encoding:in-reply-to:from:references:cc:to
-         :content-language:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=6AWoi7AcWMFrM9AuKQoXehk+tHcCjKtQiu66Iwn+m2w=;
-        b=IIuO9TwVV2/uOnZzwoojVtR1QZP+K7Lnl2gNFQLksXXuv0Ous7KuiuSI9xwvs0ia6U
-         qZeFPSd1hXcabqAl5Dv97wucNz6oiMi84/F/83/bnLQuGRsB5Jc2RZUytQLGTCGtaDuL
-         FoDBJKWJBaOpmPwP3E5BYSdRzpYf7pBWLbF6RctIRFVB6wBramdvnPQ+QUbqKzR2eFXW
-         RgsvR8yM2H3mkPNzFubin1SgCjjjNdpORTUtQomYALov6IU12NvC7m4b0IXTlsyu+h9t
-         +x0HSgFKBpU8caM3tptO5VBtFfYj0RimBHOIy9Bix/nBJwe09N6WYzikLRp86wMpwVut
-         KXog==
-X-Forwarded-Encrypted: i=1; AJvYcCWglX2x22xto0SyuxOSh5qbcAz+cPoGgek3VLyHW6CWh8SmdZFXzhbQcRxHL6002I5eEyZgmsyisV/0zHWY6yWzIr17pjc=
-X-Gm-Message-State: AOJu0Yziw2G1CL31QRfgyF8x0QrOjqFzWkhpNG8HILDC8i+Ilsobfjqf
-	Gg6FfXiz1TCjRLbRWRaljMYYyd/qRQj4RBJ/NNQ3LE/f7W4LrHAwHxjSRA==
-X-Google-Smtp-Source: AGHT+IEArR68JchitJk+iKq+CDG6LfBrmucdDPCF9/7R1BU3ZawZGdLkvQOpMdnIneKpjvAzObMwaw==
-X-Received: by 2002:a05:6e02:1689:b0:36a:1e10:6820 with SMTP id f9-20020a056e02168900b0036a1e106820mr6687857ila.23.1713026719388;
-        Sat, 13 Apr 2024 09:45:19 -0700 (PDT)
-Received: from ?IPV6:2601:282:1e82:2350:91c:ed53:dd92:4d73? ([2601:282:1e82:2350:91c:ed53:dd92:4d73])
-        by smtp.googlemail.com with ESMTPSA id l17-20020a05663814d100b0047f1e195368sm1767578jak.136.2024.04.13.09.45.18
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Sat, 13 Apr 2024 09:45:19 -0700 (PDT)
-Message-ID: <69e00bd0-a1d7-4021-ada9-9d344e0e84e4@gmail.com>
-Date: Sat, 13 Apr 2024 10:45:17 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gktreCJE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 639A0C072AA;
+	Mon, 15 Apr 2024 01:47:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713145639;
+	bh=f1pxPVnGCQ/xGhO5PWr3PxQQib4mhAb70H31ZZ1bnr8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gktreCJEG523tWDbbbRyUKzvxBDVMQu3xCCsRtMwzU84SiiNTz+oiLOUWxUnJKRuC
+	 r7rXRscmMfr/DRZ7dsIIvNtg+pucXA9OmyoYlfYM6T9ap7hkLKB+Y3ksZufw0b+7iJ
+	 RPRUw6E8GEwtfuwWQfLTUPHDmZFCzRjNAoQ9oGYqjBQN9uptrXmX2QEDqF/cG22i7i
+	 qSZq8T8dmc4KOpxRHWliFj8GWPEUNHK1VteGnGTnA6xj/EWxQYHc1ypwkAsXqUll4u
+	 CVREpyU6DbbwLxAl8Xk5c6KxPDDEabwCPy0QHIUhiRyMymsNkQGLE1wlDcD8Ib+8ZP
+	 YMkZw0AkRlb7A==
+Message-ID: <aa82c458d6fd621553029e637f3788da45cfa874.camel@kernel.org>
+Subject: Re: sync requests from bpf-next
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Date: Mon, 15 Apr 2024 09:47:14 +0800
+In-Reply-To: <baab617b-2829-4a6c-8979-d857ad0f91d7@kernel.org>
+References: <3212eef3a5ce6e683b194e1d353df5393115ab54.camel@kernel.org>
+	 <9f273947-14c9-47ef-b135-12571003f4bc@kernel.org>
+	 <9de803660793c77da3e834fe023e072b8dacd1f0.camel@kernel.org>
+	 <baab617b-2829-4a6c-8979-d857ad0f91d7@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH iproute2-next] ss: mptcp: print out last time counters
-Content-Language: en-US
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- Stephen Hemminger <stephen@networkplumber.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-References: <20240412-upstream-iproute2-next-20240412-mptcp-last-time-info-v1-1-7985c7c395b9@kernel.org>
-From: David Ahern <dsahern@gmail.com>
-In-Reply-To: <20240412-upstream-iproute2-next-20240412-mptcp-last-time-info-v1-1-7985c7c395b9@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 4/12/24 2:19 AM, Matthieu Baerts (NGI0) wrote:
-> From: Geliang Tang <geliang@kernel.org>
-> 
-> Three new "last time" counters have been added to "struct mptcp_info":
-> last_data_sent, last_data_recv and last_ack_recv. They have been added
-> in commit 18d82cde7432 ("mptcp: add last time fields in mptcp_info") in
-> net-next recently.
-> 
-> This patch prints out these new counters into mptcp_stats output in ss.
-> 
-> Signed-off-by: Geliang Tang <geliang@kernel.org>
-> Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  include/uapi/linux/mptcp.h | 4 ++++
->  misc/ss.c                  | 6 ++++++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/include/uapi/linux/mptcp.h b/include/uapi/linux/mptcp.h
-> index c2e6f3be..a0da2632 100644
-> --- a/include/uapi/linux/mptcp.h
-> +++ b/include/uapi/linux/mptcp.h
+On Fri, 2024-04-12 at 10:04 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+>=20
+> On 12/04/2024 03:21, Geliang Tang wrote:
+> > Hi Matt,
+> >=20
+> > On Wed, 2024-04-10 at 17:26 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang,
+> > >=20
+> > > On 10/04/2024 12:21, Geliang Tang wrote:
+> > > > These four patches need to be merged into mptcp_net-next from
+> > > > bpf-
+> > > > next
+> > > > to avoid conflicts:
+> > >=20
+> > > For which series do you need these patches to be cherry-picked
+> > > from
+> > > bpf-next repo?
+> > >=20
+> > > I assume it is for "use start_server and connect_to helpers" and
+> > > "export
+> > > send_recv_data (v4)", right? These series don't directly modify
+> > > MPTCP
+> > > code or tests, do you need MPTCP CI to validate them?
+> >=20
+> > The series "export send_recv_data"
+> >=20
+> > selftests/bpf: Add struct send_recv_arg
+> > selftests/bpf: Export send_recv_data helper
+> >=20
+> > accepted by bpf-next needs to merge into mptcp_net-next. I changes
+> > them
+> > as "Queued" on our patchwork. But patch 2 has modified by Martin a
+> > little bit.
+> >=20
+> > Patch 2 will conflicts when merging it without the patches I
+> > mentioned
+> > in this 'sync requests'.
+> >=20
+> > Another option is to fix the conflicts, it's much simpler.
+>=20
+> Would it be OK to wait for these patches to be in net-next? BPF
+> maintainers usually send their pull-requests on Monday.
+>=20
+> If there is no urgency, it would be easier and safer I think. Plus,
 
-uapi headers are synced using scripts, meaning at best uapi updates
-should be a separate patch (the updates can also be omitted).
+Sure, I can wait.
 
-> @@ -56,6 +56,10 @@ struct mptcp_info {
->  	__u64	mptcpi_bytes_received;
->  	__u64	mptcpi_bytes_acked;
->  	__u8	mptcpi_subflows_total;
-> +	__u8	reserved[3];
-> +	__u32	mptcpi_last_data_sent;
-> +	__u32	mptcpi_last_data_recv;
-> +	__u32	mptcpi_last_ack_recv;
->  };
->  
->  /* MPTCP Reset reason codes, rfc8684 */
-> diff --git a/misc/ss.c b/misc/ss.c
-> index 87008d7c..81b813c1 100644
-> --- a/misc/ss.c
-> +++ b/misc/ss.c
-> @@ -3279,6 +3279,12 @@ static void mptcp_stats_print(struct mptcp_info *s)
->  		out(" bytes_acked:%llu", s->mptcpi_bytes_acked);
->  	if (s->mptcpi_subflows_total)
->  		out(" subflows_total:%u", s->mptcpi_subflows_total);
-> +	if (s->mptcpi_last_data_sent)
-> +		out(" last_data_sent:%u", s->mptcpi_last_data_sent);
-> +	if (s->mptcpi_last_data_recv)
-> +		out(" last_data_recv:%u", s->mptcpi_last_data_recv);
-> +	if (s->mptcpi_last_ack_recv)
-> +		out(" last_ack_recv:%u", s->mptcpi_last_ack_recv);
->  }
->  
+> there are two BPF series that are currently in review ("refactor
+> mptcp
+> bpf tests" and "setsockopt per subflow: BPF"), best not to have
+> multiple
+> reviews on the same topic in parallel, otherwise it is hard to
 
-applied to iproute2-next
+Sure.
+
+Regards,
+Geliang
+
+> follow,
+> especially for those not fully involved in them.
+>=20
+> Cheers,
+> Matt
 
