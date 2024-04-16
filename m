@@ -1,121 +1,243 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
+Received: from mail-ej1-f42.google.com (mail-ej1-f42.google.com [209.85.218.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FDEA129A93
-	for <mptcp@lists.linux.dev>; Tue, 16 Apr 2024 12:01:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FA721DFF0
+	for <mptcp@lists.linux.dev>; Tue, 16 Apr 2024 12:25:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713268879; cv=none; b=EhC1UAyTf4Gwgfsywk/31pu94OaRwwU7OXZcXTBlK1cTkSp8kfgXIt2HY7Zld0bc+1yO0c0PLdyUPxDSyvPtC7vpCZPJ3rbjgS0ih+6PMQpIcDhpqLXOqemGws4IG1Yd2l58raGujAnE9L6tEiBFS+/8d2H12g6hC6FNQnP3yzk=
+	t=1713270312; cv=none; b=VP5SjaWjOF+rCh0/t/Y/GO7qsEq1GGxRO9PNN1j+dqgKA7jtZE6IvyQe/XkEanI+YgVdRIFqQw5sPjn+8MGCZL2IU3w14F3dksqodmgolKip5Gp3KZc+2ESV9iOpDjAT73VL5eJxwm541yW0a87zON6/pzqEk1DSxkQgXxZ2FR8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713268879; c=relaxed/simple;
-	bh=P/4TidhxCKj+nPoFhG7Jly0Al7PGCpB6qBIlZVO5Xpc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=srTS2SeyIzkpR7iSXOY5uNeoMdfNrDZF4hhGvwQqC8xmWwbTGp+qKrxqKY+rk+4/klCAx9a+G2F3k1WiWnxzs7JDux4bGWLQpjd0kvodfGKTcJB/RB6a4J6fkHtUdqgzRJ5QG6mLwLJNgGwkUBsOKw2Sm0k0DcbEN2vmkZm1Nkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=I3pcbbqQ; arc=none smtp.client-ip=209.85.219.49
+	s=arc-20240116; t=1713270312; c=relaxed/simple;
+	bh=A3I3UnEi4Jj6XEGZVoebUIPjEFSfASUBccQUwXzsHM0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A98tvYGAj+OXQCvrJEnACbVnnTGgEEwbZYysii4i8nWWGpQFn/ismgzsINLxIgf6buqeao6UvI+xO7SPUin5tOzQZkEsvFzmKOpGHtEaVm7FyAMI4L10jsbLeApKbKV96wBW/Z7FHxLidjkXxdL1PIgI8zs5Cyv/olcD/6oGlUw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EA7vzYQP; arc=none smtp.client-ip=209.85.218.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I3pcbbqQ"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-699320fcbc1so22614776d6.3
-        for <mptcp@lists.linux.dev>; Tue, 16 Apr 2024 05:01:17 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EA7vzYQP"
+Received: by mail-ej1-f42.google.com with SMTP id a640c23a62f3a-a54176639ecso216418666b.0
+        for <mptcp@lists.linux.dev>; Tue, 16 Apr 2024 05:25:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713268877; x=1713873677; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1713270309; x=1713875109; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8vb2kPWpFmxdghMQEoLrc9pAxdyrVsllhI6Oz2DDf/E=;
-        b=I3pcbbqQVrk6upgPaQvIEsHjC9STQYxv+Kbm8EK1rNJYtZfitntJqfwehbGxsTAZpj
-         gxwjcu9Ut5UTU2sgloLrVGGfBwhUMztFPHGs/xRiuUklGK2JuLzppw7hYuhF57KeyodO
-         tDNJ2L9TYXt4gA3F8nRmjG9XgygvPOCjEesN8raEJPOPHirhjpdzk9IY0V7ZLzKZzLyl
-         dxgCM0tRW+1XdEdPlL2IIaJf+1tywgGWdofpijz3WXnFqeoEBSKdbX+dhgX+spMxKC8C
-         S6OsoO0VZL/j/7YSJ38CAzHvZse6YZG9aSz0MMAgaVG5Mbno4GoUpBM6Xz1sMeA8zhra
-         vryQ==
+        bh=3Iqz3uYB03cZmo9aNBvR/ZOxNMywrtwP/4mJcGIIpN4=;
+        b=EA7vzYQP1F2RyvY02cPWD3hGsT3MPQbG/nvCBCKZqJ+OOVuHGtKengAYC2KZhvNH9C
+         /whQNA8hhuEhuS7qrC4QTkBVRAzZuTRkg0IeHGZzI2jFDofZQ3GpW0x73A6V+jEfecao
+         Qd1+ZSuWjYGVUhudGMwooY/CPUy4MCmIVpXcBuHntBFWWSYQrQ3eWo0PjRr0qtrzNUew
+         lJ0PPnEr5H6Zpb8A5pCCwdN1K2mXc0DKdVEvSwEpluQ98AVvvoQH+gg5jJArFJ/y1wVV
+         v9Mr2cMvfedPLHJRH18ttxZVm3u6/lf5Fu7Mok5nyLkejTht89osnF0VcK4L0tCrp2rS
+         t0QA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713268877; x=1713873677;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=8vb2kPWpFmxdghMQEoLrc9pAxdyrVsllhI6Oz2DDf/E=;
-        b=mW6fSbSBpyI5jw6EJgowEGScFhVrPOrpupkchp3tLy2eshj+n2EP61WXUJypjH6guN
-         Jyf7qu4Ft0f8PCX33G0ZhNVDdYAw/09i6+7IZ9zz0Gu43EFgmKM3Jf5JrxoU8FJvBGw2
-         hkWOWguzhoy0zvspCiYg9mtAWSWlkz6duVYTZ9HiBawpeKMy+w+3kH1H7XJwT/iLW/fJ
-         wwH8YWpr+vtAaPIyd1I6deWY1QENoRBEYgalXMGKSRvRPK1bc2aqxWgicifc9khMhN+k
-         TVi4aLBUID845JOc6ZPrST8wwvchwRNr4EM8nK06OjOQZb8043KdbcNEFme4UdIlBzJd
-         gKNQ==
-X-Gm-Message-State: AOJu0YwUi2JxeXFzvoTK3rwqSRm03RbWFc+dqz5tr8qcC8YPf/8a36ci
-	5xd4+4/7H9Ll4HNBIu/gu2ZJA7wtX5zVtLz3OXLPbbJvJXwy/kg/z1wU
-X-Google-Smtp-Source: AGHT+IGPRfVCfL8MTYz5ttMT9dnMdid8ei11stsOQv09QoTqj+A6Btt+4x60+qIqKymdLqK491yajA==
-X-Received: by 2002:a05:6214:5983:b0:69b:5475:8b03 with SMTP id qp3-20020a056214598300b0069b54758b03mr20192322qvb.14.1713268877088;
-        Tue, 16 Apr 2024 05:01:17 -0700 (PDT)
-Received: from [127.0.0.1] ([20.55.126.32])
-        by smtp.gmail.com with ESMTPSA id e15-20020a0cf74f000000b00690c77505bdsm7341231qvo.37.2024.04.16.05.01.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 16 Apr 2024 05:01:16 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jason Xing <kernelxing@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240416114003.62110-1-kerneljasonxing@gmail.com>
-References: <20240416114003.62110-1-kerneljasonxing@gmail.com>
-Subject: Re: [PATCH net-next v5 0/7] Implement reset reason mechanism to
- detect
-Message-ID: <4a731ece-df3a-ed3d-76c1-5be2c86ac84a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 16 Apr 2024 12:01:16 +0000
+        d=1e100.net; s=20230601; t=1713270309; x=1713875109;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=3Iqz3uYB03cZmo9aNBvR/ZOxNMywrtwP/4mJcGIIpN4=;
+        b=cZD2M04sIl+xTCx5hV9A+ANkSz6l/KETXIVYImGR11KEeBuLHpF/8OdPXY3t/qcdla
+         xZjh2JRHA4j1cd0gx3s/K7TTzyxeC5PQ3qJGL/YwDv+iiqOC0hQafSLfBIYttuKXH/FC
+         DHr7MP1KlDSzrQzrqOL3DV6wp+v5ERYaO59IUSi6vuM3ZU6u5I5oOPvqU5NC2QgkuXgx
+         Z5GV/P5WEwa1rB28slTqH6PhkzrOCHQR5JwwC7U7Qpsg9TCGQXvMVNL1+ZbxKzTUgJ1S
+         HVOr6fBomc1mNoF4rc5XG7wF2IhcgUyE6jXXjzK6mWSpoFMqfz+Jo/pY+uPRSh4UmlaG
+         1iBQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU5PRBZY3dUJZXR5ZgvESZkE7CfbBnTev2Fb9o15pOcmzLnIbxNFreJX7j8oMfh/GneqYPuvjoRx0okD3irnbGD2mDmJkg=
+X-Gm-Message-State: AOJu0YzCCJ+TjQF/Q1WjlDwhgWoSx3pP0hbWMrKnQdpvFYXllyZd3UgO
+	/UHEE7tZgCEKXV039QKWV9y3t4Lip0GhmYAE7Ko9QNhuFl89RKE/IVmNpYqhUl1UBnFjjtvSr45
+	n0BIKiX/wIlvY2cQ27eR3pfbYyCY=
+X-Google-Smtp-Source: AGHT+IFAlHbB8sWqNMPSyWvDGwR8gagW+jfhM7hArqhN/K9UaYFyybAhAdOI1y0UHIcKye+RvecL9GUppbL71gD+27k=
+X-Received: by 2002:a17:907:9717:b0:a51:c88e:e95a with SMTP id
+ jg23-20020a170907971700b00a51c88ee95amr9550001ejc.23.1713270308559; Tue, 16
+ Apr 2024 05:25:08 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20240411115630.38420-1-kerneljasonxing@gmail.com>
+ <20240411115630.38420-5-kerneljasonxing@gmail.com> <CANn89iKbBuEqsjyJ-di3e-cF1zv000YY1HEeYq-Ah5x7nX5ppg@mail.gmail.com>
+ <CAL+tcoB=Hr8s+j7Sm8viF-=3aHwhEevZZcpn5ek0RYmNowAtoQ@mail.gmail.com>
+In-Reply-To: <CAL+tcoB=Hr8s+j7Sm8viF-=3aHwhEevZZcpn5ek0RYmNowAtoQ@mail.gmail.com>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Tue, 16 Apr 2024 20:24:31 +0800
+Message-ID: <CAL+tcoDVFtvg6+Kio9frU5W=2e2n7qrCJkitXUxNjsouAG+iGg@mail.gmail.com>
+Subject: Re: [PATCH net-next v4 4/6] tcp: support rstreason for passive reset
+To: Eric Dumazet <edumazet@google.com>
+Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
+	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	atenart@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jason,
+On Tue, Apr 16, 2024 at 3:45=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
+>
+> On Tue, Apr 16, 2024 at 2:34=E2=80=AFPM Eric Dumazet <edumazet@google.com=
+> wrote:
+> >
+> > On Thu, Apr 11, 2024 at 1:57=E2=80=AFPM Jason Xing <kerneljasonxing@gma=
+il.com> wrote:
+> > >
+> > > From: Jason Xing <kernelxing@tencent.com>
+> > >
+> > > Reuse the dropreason logic to show the exact reason of tcp reset,
+> > > so we don't need to implement those duplicated reset reasons.
+> > > This patch replaces all the prior NOT_SPECIFIED reasons.
+> > >
+> > > Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> > > ---
+> > >  net/ipv4/tcp_ipv4.c | 8 ++++----
+> > >  net/ipv6/tcp_ipv6.c | 8 ++++----
+> > >  2 files changed, 8 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+> > > index 441134aebc51..863397c2a47b 100644
+> > > --- a/net/ipv4/tcp_ipv4.c
+> > > +++ b/net/ipv4/tcp_ipv4.c
+> > > @@ -1935,7 +1935,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_bu=
+ff *skb)
+> > >         return 0;
+> > >
+> > >  reset:
+> > > -       tcp_v4_send_reset(rsk, skb, SK_RST_REASON_NOT_SPECIFIED);
+> > > +       tcp_v4_send_reset(rsk, skb, (u32)reason);
+> > >  discard:
+> > >         kfree_skb_reason(skb, reason);
+> > >         /* Be careful here. If this function gets more complicated an=
+d
+> > > @@ -2278,7 +2278,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
+> > >                 } else {
+> > >                         drop_reason =3D tcp_child_process(sk, nsk, sk=
+b);
+> > >                         if (drop_reason) {
+> > > -                               tcp_v4_send_reset(nsk, skb, SK_RST_RE=
+ASON_NOT_SPECIFIED);
+> > > +                               tcp_v4_send_reset(nsk, skb, (u32)drop=
+_reason);
+> >
+> > Are all these casts really needed ?
+>
+> Not really. If without, the compiler wouldn't complain about it.
 
-Thank you for your modifications, that's great!
+The truth is mptcp CI treats it as an error (see link[1]) when I
+submitted the V5 patchset but my machine works well. I wonder whether
+I should not remove all the casts or ignore the warnings?
 
-Our CI did some validations and here is its report:
+[1]: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/870508471=
+7/job/23874718134
+net/ipv6/tcp_ipv6.c: In function 'tcp_v6_do_rcv':
+4148 net/ipv6/tcp_ipv6.c:1683:36: error: implicit conversion from
+'enum skb_drop_reason' to 'enum sk_rst_reason'
+[-Werror=3Denum-conversion]
+4149 1683 | tcp_v6_send_reset(sk, skb, reason);
+4150 | ^~~~~~
+4151 net/ipv6/tcp_ipv6.c: In function 'tcp_v6_rcv':
+4152 net/ipv6/tcp_ipv6.c:1868:61: error: implicit conversion from
+'enum skb_drop_reason' to 'enum sk_rst_reason'
+[-Werror=3Denum-conversion]
+4153 1868 | tcp_v6_send_reset(nsk, skb, drop_reason);
+4154 | ^~~~~~~~~~~
+4155 net/ipv6/tcp_ipv6.c:1945:46: error: implicit conversion from
+'enum skb_drop_reason' to 'enum sk_rst_reason'
+[-Werror=3Denum-conversion]
+4156 1945 | tcp_v6_send_reset(NULL, skb, drop_reason);
+4157 | ^~~~~~~~~~~
+4158 net/ipv6/tcp_ipv6.c:2001:44: error: implicit conversion from
+'enum skb_drop_reason' to 'enum sk_rst_reason'
+[-Werror=3Denum-conversion]
+4159 2001 | tcp_v6_send_reset(sk, skb, drop_reason);
 
-- KVM Validation: normal: Script error! =E2=9D=93
-- KVM Validation: debug: =
-Script error! =E2=9D=93
-- KVM Validation: btf (only bpftest_all): Script =
-error! =E2=9D=93
-- Task: https://github.com/multipath-tcp/mptcp_net-next/ac=
-tions/runs/8705084721
+Thanks,
+Jason
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/83268a9f6efd
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D845019
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>
+> >
+> > enum sk_rst_reason is not the same as u32 anyway ?
+>
+> I will remove the cast in the next version.
+>
+> Thanks,
+> Jason
+>
+> >
+> >
+> >
+> > >                                 goto discard_and_relse;
+> > >                         }
+> > >                         sock_put(sk);
+> > > @@ -2356,7 +2356,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
+> > >  bad_packet:
+> > >                 __TCP_INC_STATS(net, TCP_MIB_INERRS);
+> > >         } else {
+> > > -               tcp_v4_send_reset(NULL, skb, SK_RST_REASON_NOT_SPECIF=
+IED);
+> > > +               tcp_v4_send_reset(NULL, skb, (u32)drop_reason);
+> > >         }
+> > >
+> > >  discard_it:
+> > > @@ -2407,7 +2407,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
+> > >                 tcp_v4_timewait_ack(sk, skb);
+> > >                 break;
+> > >         case TCP_TW_RST:
+> > > -               tcp_v4_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIE=
+D);
+> > > +               tcp_v4_send_reset(sk, skb, (u32)drop_reason);
+> > >                 inet_twsk_deschedule_put(inet_twsk(sk));
+> > >                 goto discard_it;
+> > >         case TCP_TW_SUCCESS:;
+> > > diff --git a/net/ipv6/tcp_ipv6.c b/net/ipv6/tcp_ipv6.c
+> > > index 6cad32430a12..ba9d9ceb7e89 100644
+> > > --- a/net/ipv6/tcp_ipv6.c
+> > > +++ b/net/ipv6/tcp_ipv6.c
+> > > @@ -1678,7 +1678,7 @@ int tcp_v6_do_rcv(struct sock *sk, struct sk_bu=
+ff *skb)
+> > >         return 0;
+> > >
+> > >  reset:
+> > > -       tcp_v6_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
+> > > +       tcp_v6_send_reset(sk, skb, (u32)reason);
+> > >  discard:
+> > >         if (opt_skb)
+> > >                 __kfree_skb(opt_skb);
+> > > @@ -1864,7 +1864,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct s=
+k_buff *skb)
+> > >                 } else {
+> > >                         drop_reason =3D tcp_child_process(sk, nsk, sk=
+b);
+> > >                         if (drop_reason) {
+> > > -                               tcp_v6_send_reset(nsk, skb, SK_RST_RE=
+ASON_NOT_SPECIFIED);
+> > > +                               tcp_v6_send_reset(nsk, skb, (u32)drop=
+_reason);
+> > >                                 goto discard_and_relse;
+> > >                         }
+> > >                         sock_put(sk);
+> > > @@ -1940,7 +1940,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct s=
+k_buff *skb)
+> > >  bad_packet:
+> > >                 __TCP_INC_STATS(net, TCP_MIB_INERRS);
+> > >         } else {
+> > > -               tcp_v6_send_reset(NULL, skb, SK_RST_REASON_NOT_SPECIF=
+IED);
+> > > +               tcp_v6_send_reset(NULL, skb, (u32)drop_reason);
+> > >         }
+> > >
+> > >  discard_it:
+> > > @@ -1995,7 +1995,7 @@ INDIRECT_CALLABLE_SCOPE int tcp_v6_rcv(struct s=
+k_buff *skb)
+> > >                 tcp_v6_timewait_ack(sk, skb);
+> > >                 break;
+> > >         case TCP_TW_RST:
+> > > -               tcp_v6_send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIE=
+D);
+> > > +               tcp_v6_send_reset(sk, skb, (u32)drop_reason);
+> > >                 inet_twsk_deschedule_put(inet_twsk(sk));
+> > >                 goto discard_it;
+> > >         case TCP_TW_SUCCESS:
+> > > --
+> > > 2.37.3
+> > >
