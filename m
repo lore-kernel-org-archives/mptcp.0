@@ -1,290 +1,216 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5374A12C463
-	for <mptcp@lists.linux.dev>; Tue, 16 Apr 2024 13:11:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 818D612EBCB;
+	Tue, 16 Apr 2024 16:18:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713273095; cv=none; b=ox6sr3F4MGbeFgFsrhD9MAxaaHIUXXS/vlvJsNSSpD9az4dCLQNmv5QqPd0Q828zNQMQzjoBeH8wOGuz0UGEXFB+rMyIo7U9twdc5+YknKxtgF56YaLIYfFPf3mg8sErhJb/JUecqYFRkMU7+UPC8x2NP7oT3ZE5HGClSKr/Zyw=
+	t=1713284323; cv=none; b=etO/SzJxwr50cJ/MTTfVkWxQm0INqhPRIUFUUS7y/AcnNvNy1GCAsXF/jo7VbwtOpWDY8C+7owgiXIm2qfOBnXLlfI9gRh0+HnpL7bRo3pXJD0Ih/Qr5F4fLs6MwQeWc2Lixsqr1h12jD918Jp2+L0SaCK9GLpZXaal4fFubGOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713273095; c=relaxed/simple;
-	bh=VtghAz6a6yMkKLtdSyh9PvKwZg9JMfOvq9+2URGMbVY=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=RmPYDqPXOfdzPwPi8QYWJv+o+PbIkwbooyQo17ki3nMwz4bIB2FhJmsz0EFAAvPGbf3/L28iJjApulF4UWWTJmygS6mCx+pgxNkkwKg8xAaeL5UDRdsdZCJ7bX2YC9ylI8tXq6qFy1YHXjkdeZmrGhL4UGcQOc4Ka8PpuAVO6kU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VJkqs31Nmz2CcLY;
-	Tue, 16 Apr 2024 21:08:25 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id B099118002D;
-	Tue, 16 Apr 2024 21:11:22 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Tue, 16 Apr
- 2024 21:11:22 +0800
-Subject: Re: [PATCH net-next v2 13/15] net: replace page_frag with
- page_frag_cache
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
- Dumazet <edumazet@google.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	Boris Pismenny <borisp@nvidia.com>, <bpf@vger.kernel.org>,
-	<mptcp@lists.linux.dev>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
- <20240415131941.51153-14-linyunsheng@huawei.com>
- <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <cb541985-a06d-7a71-9e6d-38827ccdf875@huawei.com>
-Date: Tue, 16 Apr 2024 21:11:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1713284323; c=relaxed/simple;
+	bh=TMe84rkKVnERfDW7pnotvDYbq5M96tycRe0wAzXGtTE=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:In-Reply-To:References; b=cK4V1282Jq825iOMsdQ7LwVDRLXh15dLoIXdtq8qrHmJGUIPwbHbPQWvv2ucCbKjqktTDhZSTp3c5BK8HUk2HNygwCCJlYRztFShSHffqa2pj43CxIa0Ccnb6hk9j3hnjHQQUKy3CuIUoASIaPmgYsIYdb7boPusk20bdpodWHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=oQA3y6Km; arc=none smtp.client-ip=210.118.77.11
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="oQA3y6Km"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240416161834euoutp016ed8e3413fe609790c0d8dbf9feac414~GzwGfGfWW3240132401euoutp019;
+	Tue, 16 Apr 2024 16:18:34 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240416161834euoutp016ed8e3413fe609790c0d8dbf9feac414~GzwGfGfWW3240132401euoutp019
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1713284314;
+	bh=h+c9h4XaiZkjioKXCmApqXr79Ng5aLpw1//8aiqZHc0=;
+	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
+	b=oQA3y6KmBKthx8qB9iE4BR3H6yqJ6FukwNapodgwSnRYzAL31g2zz1LG0XV+UMQtL
+	 4zQb3hb/qbUPieVGupbzz8vixmzqZg/dtu/87j1Ox0AjkK/QGpaLghlYR8LlHkWnMB
+	 IcVLcJI4qek4WgTYJyN7I9My/dEfKwnCG6u2qbyY=
+Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTP id
+	20240416161833eucas1p2933e7709d8615304a664fce5197722dc~GzwGP5yav1903019030eucas1p2N;
+	Tue, 16 Apr 2024 16:18:33 +0000 (GMT)
+Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
+	eusmges1new.samsung.com (EUCPMTA) with SMTP id 88.0B.09624.9D4AE166; Tue, 16
+	Apr 2024 17:18:33 +0100 (BST)
+Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
+	20240416161833eucas1p12e7e5db7e46bb558f0b7e7b7c0f3a17d~GzwFfH9zE2936029360eucas1p1t;
+	Tue, 16 Apr 2024 16:18:33 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
+	20240416161833eusmtrp13acb475819bd914644dc864e75f24f1b~GzwFdvMoW2276022760eusmtrp1Q;
+	Tue, 16 Apr 2024 16:18:33 +0000 (GMT)
+X-AuditID: cbfec7f2-c11ff70000002598-dd-661ea4d9ad2d
+Received: from eusmtip2.samsung.com ( [203.254.199.222]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id D1.78.09010.8D4AE166; Tue, 16
+	Apr 2024 17:18:32 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip2.samsung.com (KnoxPortal) with ESMTPA id
+	20240416161832eusmtip2f37c2e32456a165bc55314d3e78c49a2~GzwFH_cTH1934419344eusmtip27;
+	Tue, 16 Apr 2024 16:18:32 +0000 (GMT)
+Received: from localhost (106.210.248.3) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Tue, 16 Apr 2024 17:18:31 +0100
+Date: Tue, 16 Apr 2024 14:32:12 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Paolo Abeni <pabeni@redhat.com>
+CC: Kuniyuki Iwashima <kuniyu@amazon.com>,
+	<devnull+j.granados.samsung.com@kernel.org>, <Dai.Ngo@oracle.com>,
+	<alex.aring@gmail.com>, <alibuda@linux.alibaba.com>,
+	<allison.henderson@oracle.com>, <anna@kernel.org>, <bridge@lists.linux.dev>,
+	<chuck.lever@oracle.com>, <coreteam@netfilter.org>, <courmisch@gmail.com>,
+	<davem@davemloft.net>, <dccp@vger.kernel.org>, <dhowells@redhat.com>,
+	<dsahern@kernel.org>, <edumazet@google.com>, <fw@strlen.de>,
+	<geliang@kernel.org>, <guwen@linux.alibaba.com>,
+	<herbert@gondor.apana.org.au>, <horms@verge.net.au>, <ja@ssi.bg>,
+	<jaka@linux.ibm.com>, <jlayton@kernel.org>, <jmaloy@redhat.com>,
+	<jreuter@yaina.de>, <kadlec@netfilter.org>, <keescook@chromium.org>,
+	<kolga@netapp.com>, <kuba@kernel.org>, <linux-afs@lists.infradead.org>,
+	<linux-hams@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+	<linux-nfs@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linux-sctp@vger.kernel.org>,
+	<linux-wpan@vger.kernel.org>, <linux-x25@vger.kernel.org>,
+	<lucien.xin@gmail.com>, <lvs-devel@vger.kernel.org>,
+	<marc.dionne@auristor.com>, <marcelo.leitner@gmail.com>,
+	<martineau@kernel.org>, <matttbe@kernel.org>, <mcgrof@kernel.org>,
+	<miquel.raynal@bootlin.com>, <mptcp@lists.linux.dev>, <ms@dev.tdt.de>,
+	<neilb@suse.de>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <pablo@netfilter.org>,
+	<ralf@linux-mips.org>, <razor@blackwall.org>, <rds-devel@oss.oracle.com>,
+	<roopa@nvidia.com>, <stefan@datenfreihafen.org>,
+	<steffen.klassert@secunet.com>, <tipc-discussion@lists.sourceforge.net>,
+	<tom@talpey.com>, <tonylu@linux.alibaba.com>,
+	<trond.myklebust@hammerspace.com>, <wenjia@linux.ibm.com>,
+	<ying.xue@windriver.com>
+Subject: Re: [PATCH v3 1/4] networking: Remove the now superfluous sentinel
+ elements from ctl_table array
+Message-ID: <20240416123212.nrgpuix3dhkmfbzq@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems703-chm.china.huawei.com (10.3.19.180) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+Content-Type: multipart/signed; micalg="pgp-sha512";
+	protocol="application/pgp-signature"; boundary="arc6idvhr2tglhrq"
+Content-Disposition: inline
+In-Reply-To: <be056435353af60a564f457c79dacc16c6ea920e.camel@redhat.com>
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1BUdRTH+9179+6KLV12KX+DZoqShUJSpqc0n6XX0VHLPyKnRhi4osjD
+	dqUgs5AF0UV0cymT1wLmykNWhXUVQaSNhy4GKE9RbFiXFoFEgVVAYWO9ODrjf5/zPecz95zf
+	zBWRkt9EbqJtYTs5WZh/iDvtRBkqh2q8bvwxdcvcv3s9wRi9ANpLlAKIjt1LQFyRnQLDsQQC
+	7G1WAkaK4knob7cKQJNVSENqbSwFI80JNNSnWQi4F/OYAt2FOAI6Ks1CMCTmIciLuUXBOesj
+	GhK6poDirA2B5ZBZAA3a+zQMaXOF8I/NTMHQwYlwVKkg4GpCKJxvs1BQZzgoAO2BfBpUJh9o
+	OtdGQP2FVBrqyqoF8K8xkQJVpoKEjoxuAdxSaykou6hBYD7VS4BC00eCov8OCcPZVQKoSbST
+	kKzLJaFF1YHgr/hSAVw9FSOEh+mXSbioiaagMuMNUOlMFDys7kFwpKeRhOslM8E0YCegprBf
+	AP2p74A6W09A8f5BIehrg8E0bCLgziMrDfaWJUuXs9l1SgHbaraR7L2aK4hNP7mLTYm+RrHD
+	Q56sPucGwSaUd5FsUXKbkDWUebAZBRHsE+MZIVuQu59mK3LyCbao/SNWlVWGNrhvcloUyIVs
+	+46TvbfYz2mrPUGNdjS4RGZq+8hoFOesRBNEmJmH0zp1pBI5iSRMNsLX2kbGiwGET2tKhHzR
+	j3B7/E3imZKjiEN84wTClt5Lz6f2FOeP+4UIlx+vIB0KxXjgjuZy5GCamYNre249zV2ZGbh7
+	5DLtEEimSow7Ux8/HZIy27EpuYd2sJhZis9Wd5A8u+ArRy2Ug0kmEl/45fgYi8Z4Mj4xKnLE
+	ExgWJ2U2IX7V6VhX20DxvBub9K2E41uYufIqNpuHab7xKT6vqhHyLMVdVfpxnoKr1QcoXlAj
+	fGn0vpAv8hDW7rGNv8ZCHNtgGTeW4bKUlqcbYcYZt/znwi/qjA8bjpB8LMb79kr46bdx3u0e
+	SoVmJL9wWvILpyU/P42P5+CM4j76pXg21mZ2kzx/gnW6XioDCXPRJC5CHhrEyX3CuO+95f6h
+	8oiwIO+A8NACNPa7Vo9W9Z1HaV0PvI2IECEjmjkmm0/n1SE3Kiw8jHN3FcdK39wiEQf6R/3A
+	ycI3yyJCOLkRTRZR7pPEHoFvcRImyH8nt53jdnCyZ11CNMEtmpjf2XXa69i6DeRXQs3G11ev
+	/RJ1rJll4O4GpKxK/LXx3MDNkE22kDVWaUqU9IOVReqNwVNju4VLTlwvMGU3mGNcSuTiubNr
+	dOnVt5uy7MEPj8t8xDp5U7Dfu7agk1HrzwRWLbT0TZzuXjS64GvfAmXSrAfLPvz9SUBzaUVd
+	Vqvey2dzqXX9IXudJP3PwbKAafqfNLleWWnTIpfvS9ncWOG84uNgpa9xRZKhJa7ix0VLC90k
+	921LSL9vDgrWba9IbVy98PDnoz2DEqnUuy9gduVrZ6yv+MYv3t1kXZtqmb4yX7GKix8ovyzL
+	UX9xPWtXVH3prrstnx3zeuTqMe/n91Uebt82SOcvTnKn5Fv9fTxJmdz/f4S0r8gpBQAA
+X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTdxTH/d17e1vc0EpR79At2kliulkoFDxd8JFlSy7LsviHWzLN5hq4
+	gtoHttQ9zBakoFIESkCmFQR8lNeE8bCIw0mqIhRjOxSsW4HRgmQUZViF8WrX2i0z2X+f8z3n
+	+83JSQ4HD2tkR3D2KdIZlUIq45NLiR7v7cFN9gtv7I1+bBeDOWMzDLfrWJCRdRSD7DYfAabz
+	uRj4BsYwWGw7hoNneIwF5eeaSSi1ZhGw+CCXhHtlIxg8yZwnoP5qNgajnU42mPLqENRlOgho
+	HZshIXd8LWgvP0cwUuBkwX3jnyTMGmvZMPTcScBs/itwWqfF4E6uHK4MjBBgM+WzwHjiEgl6
+	iwj6WwcwuHe1lARbRw8LHpnzCNBXanEYrXCzwFFkJKDjWjkCZ8MkBtrypzhoPS4c5qpvs+Bu
+	ng8HQ30tDnb9KIIbx35mwZ2GTDZMn+3C4Vp5BgGdFatAX28hYLpnAsH3E3049LZvAMszHwZ3
+	mz0s8JRuhKLqFgx+yvmLDS3W/WCZs2DgmhkjwWfftv1dutqmY9G/Op/j9JO73Yg++8Nh+kzG
+	LwQ9NyugW2oeYnTuzXGcbjMMsGlTRyRd0aShF8yNbLqpNoekb9Vcwui2YQmtP9eBdvB3CRNU
+	Sk06sy5VqU7fwt8tghihSALCGLFEKIrd/Nk7MXH8qK0JyYxs3yFGFbX1C2GqXasj0npXfFVR
+	OIRlIO0yHQrhUFwxVaPNRgEO415ElNG4PqivpRqf9bGCzKMW+nWkDi31z0wh6nbr9X+KZkQd
+	OTX3wk1wI6nRBzdfMMl9m7JOOPAAh3PfpNyLXS8MOPdWKOUuGmQHGjzuAcpimCADHMrdTl3u
+	GcWDqTkYlZOdzQo2VlDdp0eIAOPcQ1Tp74GdOH5eQ1V5OQE5hEtTxZX9KLjqeqreep8I8reU
+	Z/ER0iOe4aUkw0tJhv+SgrKAsnv/wP4nv0UZK914kLdQ9fWTRAVi16JwRqOWp8jVMUK1VK7W
+	KFKESUp5E/L/i6lztuUKqhmfEpoRxkFmtMHvdP5YZ0MRhEKpYPjhoVm81/eGhSZLv/6GUSn3
+	qDQyRm1Gcf4zFuIRK5OU/udTpO8RxUfHicTxkug4SXwsf3VoYtpxaRg3RZrOHGCYNEb1rw/j
+	hERkYLB5tdablXQwa++qeCH+Pr1c4ZgS9H7auu1z0/HhZv6IZuM6HD+zKSay8bHMdbZ5RlFu
+	trzqEsc/beLYY2dk0wuupWWJj5n+ecFr7I/XamDhS897ndVXf0voXba8Shd3fuWOglZ5Vrji
+	4WDiZTI2jO86v1j5XQivLpnXlFBDr/nE1n4jsVZf5xa4lxjm91dtPzQdNX7R0VByhK3Zrbz+
+	YZo0uezoPtOsJtxlG9zJiy7buatAdbDLunxJ/gfWR0eijBeKo91Dp4uTxpSn5iXKtsMlDbLS
+	B91DXonPVtDZUygebpjMjLVJtjlOHKVL+pQTfaJi0TXmozjRzAFve/pJD59Qp0pFAlyllv4N
+	Xa6R4cQEAAA=
+X-CMS-MailID: 20240416161833eucas1p12e7e5db7e46bb558f0b7e7b7c0f3a17d
+X-Msg-Generator: CA
+X-RootMTR: 20240416081854eucas1p102081018d3e61cd9a250ab62f46b4e8a
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240416081854eucas1p102081018d3e61cd9a250ab62f46b4e8a
+References: <20240412-jag-sysctl_remset_net-v3-1-11187d13c211@samsung.com>
+	<20240415231210.22785-1-kuniyu@amazon.com>
+	<CGME20240416081854eucas1p102081018d3e61cd9a250ab62f46b4e8a@eucas1p1.samsung.com>
+	<be056435353af60a564f457c79dacc16c6ea920e.camel@redhat.com>
 
-On 2024/4/16 9:37, Mat Martineau wrote:
-> On Mon, 15 Apr 2024, Yunsheng Lin wrote:
-> 
->> Use the newly introduced prepare/commit API to replace
->> page_frag with page_frag_cache for sk_page_frag().
->>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
->> .../chelsio/inline_crypto/chtls/chtls_io.c    | 101 ++++---------
->> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
->> drivers/net/tun.c                             |  34 ++---
->> include/linux/sched.h                         |   4 +-
->> include/net/sock.h                            |  14 +-
->> kernel/exit.c                                 |   3 +-
->> kernel/fork.c                                 |   2 +-
->> net/core/skbuff.c                             |  32 ++--
->> net/core/skmsg.c                              |  22 +--
->> net/core/sock.c                               |  46 ++++--
->> net/ipv4/ip_output.c                          |  35 +++--
->> net/ipv4/tcp.c                                |  35 ++---
->> net/ipv4/tcp_output.c                         |  28 ++--
->> net/ipv6/ip6_output.c                         |  35 +++--
->> net/kcm/kcmsock.c                             |  30 ++--
->> net/mptcp/protocol.c                          |  74 ++++++----
->> net/tls/tls_device.c                          | 139 ++++++++++--------
->> 18 files changed, 342 insertions(+), 298 deletions(-)
-> 
-> Hi Yunsheng,
-> 
-> Just focusing on mptcp:
+--arc6idvhr2tglhrq
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for reviewing.
+On Tue, Apr 16, 2024 at 10:18:42AM +0200, Paolo Abeni wrote:
+> On Mon, 2024-04-15 at 16:12 -0700, Kuniyuki Iwashima wrote:
+> > From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel=
+=2Eorg>
+> > Date: Fri, 12 Apr 2024 16:48:29 +0200
+> > > From: Joel Granados <j.granados@samsung.com>
+=2E..
+> > >  net/rxrpc/sysctl.c                  | 1 -
+> > >  net/sctp/sysctl.c                   | 6 +-----
+> > >  net/smc/smc_sysctl.c                | 1 -
+> > >  net/sunrpc/sysctl.c                 | 1 -
+> > >  net/sunrpc/xprtrdma/svc_rdma.c      | 1 -
+> > >  net/sunrpc/xprtrdma/transport.c     | 1 -
+> > >  net/sunrpc/xprtsock.c               | 1 -
+> > >  net/tipc/sysctl.c                   | 1 -
+> > >  net/unix/sysctl_net_unix.c          | 1 -
+> > >  net/x25/sysctl_net_x25.c            | 1 -
+> > >  net/xfrm/xfrm_sysctl.c              | 5 +----
+> > >  35 files changed, 20 insertions(+), 81 deletions(-)
+> >=20
+> > You may want to split patch based on subsystem or the type of changes
+> > to make review easier.
+>=20
+> I agree with Kuniyuki. I think the x25 chunks can me moved in the last
+> patch, and at least sunrpc and rds could go in separate patches,
+> possibly even xfrm and smc.
 
-> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index f8bc34f0d973..368dd480c4cd 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -959,17 +959,16 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
->> }
->>
->> /* we can append data to the given data frag if:
->> - * - there is space available in the backing page_frag
->> - * - the data frag tail matches the current page_frag free offset
->> + * - the data frag tail matches the current page and offset
->>  * - the data frag end sequence number matches the current write seq
->>  */
->> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
->> -                       const struct page_frag *pfrag,
->> +                       const struct page *page,
->> +                       const unsigned int offset,
->>                        const struct mptcp_data_frag *df)
->> {
->> -    return df && pfrag->page == df->page &&
->> -        pfrag->size - pfrag->offset > 0 &&
->> -        pfrag->offset == (df->offset + df->data_len) &&
->> +    return df && page == df->page &&
->> +        offset == (df->offset + df->data_len) &&
->>         df->data_seq + df->data_len == msk->write_seq;
->> }
->>
->> @@ -1084,30 +1083,36 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
->> /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
->>  * data
->>  */
->> -static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
->> +static struct page *mptcp_page_frag_alloc_prepare(struct sock *sk,
->> +                          struct page_frag_cache *pfrag,
->> +                          unsigned int *offset,
->> +                          unsigned int *size, void **va)
->> {
->> -    if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
->> -                    pfrag, sk->sk_allocation)))
->> -        return true;
->> +    struct page *page;
->> +
->> +    page = page_frag_alloc_prepare(pfrag, offset, size, va,
->> +                       sk->sk_allocation);
->> +    if (likely(page))
->> +        return page;
->>
->>     mptcp_enter_memory_pressure(sk);
->> -    return false;
->> +    return NULL;
->> }
->>
->> static struct mptcp_data_frag *
->> -mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
->> -              int orig_offset)
->> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page *page,
->> +              unsigned int orig_offset)
->> {
->>     int offset = ALIGN(orig_offset, sizeof(long));
->>     struct mptcp_data_frag *dfrag;
->>
->> -    dfrag = (struct mptcp_data_frag *)(page_to_virt(pfrag->page) + offset);
->> +    dfrag = (struct mptcp_data_frag *)(page_to_virt(page) + offset);
->>     dfrag->data_len = 0;
->>     dfrag->data_seq = msk->write_seq;
->>     dfrag->overhead = offset - orig_offset + sizeof(struct mptcp_data_frag);
->>     dfrag->offset = offset + sizeof(struct mptcp_data_frag);
->>     dfrag->already_sent = 0;
->> -    dfrag->page = pfrag->page;
->> +    dfrag->page = page;
->>
->>     return dfrag;
->> }
->> @@ -1792,7 +1797,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
->> static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->> {
->>     struct mptcp_sock *msk = mptcp_sk(sk);
->> -    struct page_frag *pfrag;
->> +    struct page_frag_cache *pfrag;
->>     size_t copied = 0;
->>     int ret = 0;
->>     long timeo;
->> @@ -1831,9 +1836,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>     while (msg_data_left(msg)) {
->>         int total_ts, frag_truesize = 0;
->>         struct mptcp_data_frag *dfrag;
->> -        bool dfrag_collapsed;
->> -        size_t psize, offset;
->> +        bool dfrag_collapsed = false;
->> +        unsigned int offset, size;
->> +        struct page *page;
->> +        size_t psize;
->>         u32 copy_limit;
->> +        void *va;
->>
->>         /* ensure fitting the notsent_lowat() constraint */
->>         copy_limit = mptcp_send_limit(sk);
->> @@ -1844,21 +1852,31 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>          * page allocator
->>          */
->>         dfrag = mptcp_pending_tail(sk);
->> -        dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
->> +        size = 32U;
->> +        page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset, &size,
->> +                             &va);
->> +        if (!page)
->> +            goto wait_for_memory;
->> +
->> +        dfrag_collapsed = mptcp_frag_can_collapse_to(msk, page, offset,
->> +                                 dfrag);
->>         if (!dfrag_collapsed) {
->> -            if (!mptcp_page_frag_refill(sk, pfrag))
->> +            size = 32U + sizeof(struct mptcp_data_frag);
->> +            page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset,
->> +                                 &size, &va);
-> 
-> Since 'size' was updated to contain the maximum available space on the first call to mptcp_page_frag_alloc_prepare(), is it necessary to call it again instead of checking to see if 'size' is large enough for the mptcp_data_frag struct?
+No problem. I'll put x25 and ax.25 patches together into one commit.
+Thx
 
-As the first call to the mptcp_page_frag_alloc_prepare() with the size
-being 32U, the maximum available space might less than '32U +
-sizeof(struct mptcp_data_frag)', in that case we need to call the
-mptcp_page_frag_alloc_prepare() with the size being '32U +
-sizeof(struct mptcp_data_frag)' anyway, so I am not sure if checking
-the maximum available space on the first call to
-mptcp_page_frag_alloc_prepare() before making the second call will
-make the thing simpler.
+Best
 
-> 
->> +            if (!page)
->>                 goto wait_for_memory;
->>
->> -            dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
->> +            dfrag = mptcp_carve_data_frag(msk, page, offset);
->>             frag_truesize = dfrag->overhead;
->> +            va += dfrag->overhead;
->>         }
->>
->>         /* we do not bound vs wspace, to allow a single packet.
->>          * memory accounting will prevent execessive memory usage
->>          * anyway
->>          */
->> -        offset = dfrag->offset + dfrag->data_len;
->> -        psize = pfrag->size - offset;
->> +        psize = size - frag_truesize;
->>         psize = min_t(size_t, psize, msg_data_left(msg));
->>         psize = min_t(size_t, psize, copy_limit);
->>         total_ts = psize + frag_truesize;
->> @@ -1866,8 +1884,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>         if (!sk_wmem_schedule(sk, total_ts))
->>             goto wait_for_memory;
->>
->> -        ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
->> -                       page_address(dfrag->page) + offset);
->> +        ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
->>         if (ret)
->>             goto do_error;
->>
->> @@ -1876,7 +1893,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>         copied += psize;
->>         dfrag->data_len += psize;
->>         frag_truesize += psize;
->> -        pfrag->offset += frag_truesize;
->>         WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
->>
->>         /* charge data on mptcp pending queue to the msk socket
->> @@ -1884,11 +1900,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
->>          */
->>         sk_wmem_queued_add(sk, frag_truesize);
->>         if (!dfrag_collapsed) {
->> -            get_page(dfrag->page);
->> +            page_frag_alloc_commit(pfrag, offset, frag_truesize);
-> 
-> It would be more efficient (but more complicated) to defer the commit until the loop is done or the maximum frag size is reached. This would perform more like the older code, which only had to call refill when mptcp_frag_can_collapse_to() returned false.
+--=20
 
-page_frag_alloc_commit() is a inlined helper, it does not seems
-to be an issue here as it is updating the reference counting
-and offset as the old code does with less overhead.
+Joel Granados
 
-Maybe what we could do is to do the prepare in the inline
-helper instead of a function when cache is enough, so that
-we can avoid a function call as the old code does, as an
-inlined function requires less overhead and is generally
-faster than a function call.
+--arc6idvhr2tglhrq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-But that requires more refactoring, as this patchset is bigger
-enough now, I guess we try it later if it is possible.
+-----BEGIN PGP SIGNATURE-----
 
+iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYeb8sACgkQupfNUreW
+QU9IgQv/f3B6o6CgzcLe66voGeH52C4Mqq88G+CAPi1Y55DViplwGANdfK6EBoDN
+6Uzq/iW+1nx0YiieJ0iErfZYCed7fAx2cY90xhYzfiJk3+e0xJGOzirNFxHFI0oL
+/AdldpRWTtKVIjqOLxy8V75vvztbqeUhe7WrLg59RD3bDhmRtwXp/VsJ7bfe+HjC
+lUB3RjWgKUyR0J8eRFAi0cq3JgnpPHxOyHmr6RUrARc/MEm/fXh+L/GiipQLOjMM
+3AiwB/v96pvRP+gjjIVHvB87IAZYCrpeLlx5YKpxNg6z3YxKf+unw2DrwXrbsduD
+Uxd0fgyicGQFvBbm4eSG/49a5uByExNlmH7aldYY1QuSbCVgTCFc/85ybpbyufFJ
+k0MgrMSr4J7H+kxulOrh3U0NW7qhZXo0HGc6isvypx0qZARcVunY/pLIqyyGsInv
+V6iNf9SGHFSR5BL81V0wQVuPrRaIgae5oho/2EzF8x5dCuwZtIc3oW5dfmk0Nlr4
+EsKgK3Yv
+=6qGD
+-----END PGP SIGNATURE-----
 
-> 
-> - Mat
-> 
+--arc6idvhr2tglhrq--
