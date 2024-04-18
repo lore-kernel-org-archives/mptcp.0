@@ -1,172 +1,154 @@
-Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A5F3A1B6
-	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 03:30:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D3DB39FDD
+	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 07:44:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713411043; cv=none; b=KyRHpxm9jsWQT8H3a2XB0fFkZ0KgNS9dKcccpDklRPU/TeAy/oTZVAdPzGTgglweujkR2ZgDr8csEvlC38HW80CK8AGqdnCpxrVMGjrydODQn8sJ5PwMmiAXljWR6ieGMEYWL0GKdsxS1ick0k93gLl2m5Ja55ZCYOpTm+w+GzA=
+	t=1713426261; cv=none; b=ontXdfs73dYDkn5wRG5kD2EKZ+6babF71fayRLSeD55zx7zti9V+/IkQVO+yLcJeOsfa7eeS9LQa4ePFCxgYztKNQ/EQkMwzanuekjhnQ1hL8SRNB1vtliL/rnqOQG0kuV9dv1GD2Vs3wPKP4C5yvoSQ263xP/ZrqARruD9BwIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713411043; c=relaxed/simple;
-	bh=DCA4ZXGfA6CF2fRmBG48aqBKpyuyrXsqeWgyw2L4DBE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Ic7HC2jyN1360pwgO5aaJ2E8/CAwrffXszR+QOrrcEnRFcDXrcdj3j9nBBeMG+QesRZdgsuLxOSkPzEatopU5FV7ZLryNFaKriJhunBIkc/Negpifaq6MMgX228lOORXXkCrqrGezAr3PcbwfO1xeLEo90Xm0mLcBFLEk+/DWj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YJ7JqB8k; arc=none smtp.client-ip=209.85.218.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713426261; c=relaxed/simple;
+	bh=zf71jyChCa8cpHHiWsP/cUgYCdP3qSh8qfP5hii9D54=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=lkT1q1Y7zgN6W8rrPUzHxjpn04rCFyBikVx5aKVm2BN1swezo5EozViroquDUl9DxLXyFpdEyaiSd7leZzqQzJ0gE2fEQs/hw/W6/h76/i5uZrsAhrD264qsQB1iBBzXzL6B98TB9iHItkIvOnM6a3dLSmM0UzGQCxlqaGVcu0E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ULsPzW7E; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YJ7JqB8k"
-Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-a5568bef315so87434966b.1
-        for <mptcp@lists.linux.dev>; Wed, 17 Apr 2024 20:30:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713411040; x=1714015840; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
-        b=YJ7JqB8kw/FpncrO1GQpurT4+cXSa3CuyQT47nICcmjI6QnMypN2I7H1LD+G53xKN0
-         Urb6xGt3xC1qxpwa1oD5+FQ0CLfz3ZYaPwSw9Hh31tQhi0txXF965tHHlT1S8+g4D6b2
-         iHabwm6IjfVMQ0l/pfiFnezfjxOqqYc5ky4T3s0tmwLIX2VVGeAkKi0MnRd5D4WQxsyS
-         tD8qp5UxtnFUX/Ba05DRFKqNDDOHTv8uHOmtNoyoDvxRJHRvUs2DfiAXqjbxGVOZ5Eqm
-         RlSCRoaOaXyzFvZeXuUo/obogUjIcN0yGXheqL0e390P1nsQtksZwjaMZCFTsDFHvqgn
-         TaRg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713411040; x=1714015840;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=XxhTyKTIE0qzJxTrsheENDHgXb5i9dLfwKH5M/LulNs=;
-        b=nAElUxJJQwKo0JhM9l2dR2I5njddlokRGlmbJI1LZgbbkJF/CycuHMarnjK8qFy03S
-         WQdaBhys2cuj4obBb4cOZbr2KM3qaE/KLwBviCOpbcp3KBI9DDuX3Pl5JhwtCO7Gb/bF
-         FfadLnLigMxRO9UIKwkRLOI3/CPyp+0GAHHtIK0Yjop2epzTqYlscSVyUEBHkcvSFobe
-         eOAjPTujsy1R5jGCUtY6R/MLb76PbP0CyinCcKAteFyYIAacyRwWhNq4pdVEvdQzxyql
-         LjlvG0HwyAZOQUYjoBrphflUuMOo2YbAnXRxFCVt1IpBR+dYIk3EmV8D3/ZenLQIOSQq
-         Dlzg==
-X-Gm-Message-State: AOJu0Yw7Ir5LHgCN/mIa87HHdoALy7BxPMw61prVKNEQLyPQ7vhyBfK7
-	+bLrDH624VB2ny8f+0esa/xxuMcRoa71ApNpD6ORkz+YnI06Oz99AIMvxtePBhOQ7rPmsRAGp1b
-	yDFrmRSt9htNvnkbw/0RLJ/1C38A=
-X-Google-Smtp-Source: AGHT+IHIXEmxxBrJTy9464N8x83VfqQQwELj66FQKhLRL51cqDV42VJTFPlEdcZJ6x4RQa4TVQPrGaadlUpan2ko3zc=
-X-Received: by 2002:a17:906:161a:b0:a52:3984:148f with SMTP id
- m26-20020a170906161a00b00a523984148fmr686853ejd.36.1713411040348; Wed, 17 Apr
- 2024 20:30:40 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ULsPzW7E"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1713426258;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=lkvDHvaNKW2WNyqWQ9ASWsRvW2qlNM0QRJuSo0usBgs=;
+	b=ULsPzW7EyPhpUsjgWPbW8kP2dUngmocnNlx1PshkCduZNSzQC1U6sVQi0Fe1ynkznKlL6X
+	4qyNjqaYpEMxkFrhWnK+Ob6UNDlK9eoJgk5KHu9LFg7QhGMhjFYG+5XPWEF736IhRRqkJ8
+	7rUdmBkg3eCFQPFbzNTpCm3gxPounoA=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-19-Vw_O9btRPU6H8Rc-B-w5gw-1; Thu, 18 Apr 2024 03:44:17 -0400
+X-MC-Unique: Vw_O9btRPU6H8Rc-B-w5gw-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C51498032FA;
+	Thu, 18 Apr 2024 07:44:16 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.224.190])
+	by smtp.corp.redhat.com (Postfix) with ESMTP id 2AB5A3543A;
+	Thu, 18 Apr 2024 07:44:16 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>
+Subject: [PATCH mptcp-net v3] mptcp: ensure snd_nxt is properly initialized on connect
+Date: Thu, 18 Apr 2024 09:44:11 +0200
+Message-ID: <3b0ca23eaa8906f967a841f55bafed48d0f895cb.1713367699.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
-In-Reply-To: <20240417085143.69578-1-kerneljasonxing@gmail.com>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Thu, 18 Apr 2024 11:30:02 +0800
-Message-ID: <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: edumazet@google.com, dsahern@kernel.org, matttbe@kernel.org, 
-	martineau@kernel.org, geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, rostedt@goodmis.org, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.5
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Wed, Apr 17, 2024 at 4:51=E2=80=AFPM Jason Xing <kerneljasonxing@gmail.c=
-om> wrote:
->
-> From: Jason Xing <kernelxing@tencent.com>
->
-> In production, there are so many cases about why the RST skb is sent but
-> we don't have a very convenient/fast method to detect the exact underlyin=
-g
-> reasons.
->
-> RST is implemented in two kinds: passive kind (like tcp_v4_send_reset())
-> and active kind (like tcp_send_active_reset()). The former can be traced
-> carefully 1) in TCP, with the help of drop reasons, which is based on
-> Eric's idea[1], 2) in MPTCP, with the help of reset options defined in
-> RFC 8684. The latter is relatively independent, which should be
-> implemented on our own.
->
-> In this series, I focus on the fundamental implement mostly about how
-> the rstreason mechnism works and give the detailed passive part as an
-> example, not including the active reset part. In future, we can go
-> further and refine those NOT_SPECIFIED reasons.
->
-> Here are some examples when tracing:
-> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
->         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNOT_SPECIFIED
-> <idle>-0       [002] ..s1.  1830.262425: tcp_send_reset: skbaddr=3Dx
->         skaddr=3Dx src=3Dx dest=3Dx state=3Dx reason=3DNO_SOCKET
->
-> [1]
-> Link: https://lore.kernel.org/all/CANn89iJw8x-LqgsWOeJQQvgVg6DnL5aBRLi10Q=
-N2WBdr+X4k=3Dw@mail.gmail.com/
->
-> v6
-> 1. add back casts, or else they are treated as error.
->
-> v5
-> Link: https://lore.kernel.org/all/20240411115630.38420-1-kerneljasonxing@=
-gmail.com/
-> 1. address format issue (like reverse xmas tree) (Eric, Paolo)
-> 2. remove unnecessary casts. (Eric)
-> 3. introduce a helper used in mptcp active reset. See patch 6. (Paolo)
->
-> v4
-> Link: https://lore.kernel.org/all/20240409100934.37725-1-kerneljasonxing@=
-gmail.com/
-> 1. passing 'enum sk_rst_reason' for readability when tracing (Antoine)
->
-> v3
-> Link: https://lore.kernel.org/all/20240404072047.11490-1-kerneljasonxing@=
-gmail.com/
-> 1. rebase (mptcp part) and address what Mat suggested.
->
-> v2
-> Link: https://lore.kernel.org/all/20240403185033.47ebc6a9@kernel.org/
-> 1. rebase against the latest net-next tree
->
->
->
-> Jason Xing (7):
->   net: introduce rstreason to detect why the RST is sent
->   rstreason: prepare for passive reset
->   rstreason: prepare for active reset
->   tcp: support rstreason for passive reset
->   mptcp: support rstreason for passive reset
->   mptcp: introducing a helper into active reset logic
->   rstreason: make it work in trace world
->
->  include/net/request_sock.h |  4 +-
->  include/net/rstreason.h    | 93 ++++++++++++++++++++++++++++++++++++++
->  include/net/tcp.h          |  3 +-
->  include/trace/events/tcp.h | 37 +++++++++++++--
->  net/dccp/ipv4.c            | 10 ++--
->  net/dccp/ipv6.c            | 10 ++--
->  net/dccp/minisocks.c       |  3 +-
->  net/ipv4/tcp.c             | 15 ++++--
->  net/ipv4/tcp_ipv4.c        | 14 +++---
->  net/ipv4/tcp_minisocks.c   |  3 +-
->  net/ipv4/tcp_output.c      |  5 +-
->  net/ipv4/tcp_timer.c       |  9 ++--
->  net/ipv6/tcp_ipv6.c        | 17 ++++---
->  net/mptcp/protocol.c       |  2 +-
->  net/mptcp/protocol.h       | 11 +++++
->  net/mptcp/subflow.c        | 27 ++++++++---
->  16 files changed, 216 insertions(+), 47 deletions(-)
->  create mode 100644 include/net/rstreason.h
->
-> --
-> 2.37.3
->
+Christoph reported a splat hinting at a corrupted snd_una:
 
-Hello maintainers,
+WARNING: CPU: 1 PID: 38 at net/mptcp/protocol.c:1005 __mptcp_clean_una+0x4b3/0x620 net/mptcp/protocol.c:1005
+Modules linked in:
+CPU: 1 PID: 38 Comm: kworker/1:1 Not tainted 6.9.0-rc1-gbbeac67456c9 #59
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+Workqueue: events mptcp_worker
+RIP: 0010:__mptcp_clean_una+0x4b3/0x620 net/mptcp/protocol.c:1005
+Code: be 06 01 00 00 bf 06 01 00 00 e8 a8 12 e7 fe e9 00 fe ff ff e8
+	8e 1a e7 fe 0f b7 ab 3e 02 00 00 e9 d3 fd ff ff e8 7d 1a e7 fe
+	<0f> 0b 4c 8b bb e0 05 00 00 e9 74 fc ff ff e8 6a 1a e7 fe 0f 0b e9
+RSP: 0018:ffffc9000013fd48 EFLAGS: 00010293
+RAX: 0000000000000000 RBX: ffff8881029bd280 RCX: ffffffff82382fe4
+RDX: ffff8881003cbd00 RSI: ffffffff823833c3 RDI: 0000000000000001
+RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+R10: 0000000000000000 R11: fefefefefefefeff R12: ffff888138ba8000
+R13: 0000000000000106 R14: ffff8881029bd908 R15: ffff888126560000
+FS:  0000000000000000(0000) GS:ffff88813bd00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f604a5dae38 CR3: 0000000101dac002 CR4: 0000000000170ef0
+Call Trace:
+ <TASK>
+ __mptcp_clean_una_wakeup net/mptcp/protocol.c:1055 [inline]
+ mptcp_clean_una_wakeup net/mptcp/protocol.c:1062 [inline]
+ __mptcp_retrans+0x7f/0x7e0 net/mptcp/protocol.c:2615
+ mptcp_worker+0x434/0x740 net/mptcp/protocol.c:2767
+ process_one_work+0x1e0/0x560 kernel/workqueue.c:3254
+ process_scheduled_works kernel/workqueue.c:3335 [inline]
+ worker_thread+0x3c7/0x640 kernel/workqueue.c:3416
+ kthread+0x121/0x170 kernel/kthread.c:388
+ ret_from_fork+0x44/0x50 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+ </TASK>
 
-I'm not sure why the patch series has been changed to 'Changes
-Requested', until now I don't think I need to change something.
+When fallback to TCP happens early on a client socket, snd_nxt
+is not yet initialized and any incoming ack will copy such value
+into snd_una. If the mptcp worker (dumbly) tries mptcp-level
+re-injection after such ack, that would unconditionally trigger a send
+buffer cleanup using 'bad' snd_una values.
 
-Should I repost this series (keeping the v6 tag) and then wait for
-more comments?
+We could easily disable re-injection for fallback sockets, but such
+dumb behavior already helped catching a few subtle issues and a very
+low to zero impact in practice.
 
-Thanks,
-Jason
+Instead address the issue always initializing snd_nxt (and write_seq,
+for consistency) at connect time.
+
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Tested-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
+Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+v2 -> v3:
+ - init snd_nxt/write_seq instead
+
+v1 -> v2:
+ - moved the initialization at established time (Mat)
+ - dropped debug code wrongly landed in v1
+ - added fixes tag
+---
+ net/mptcp/protocol.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 3e1b15d76442..4205cef2d45f 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1002,8 +1002,13 @@ static void __mptcp_clean_una(struct sock *sk)
+ 
+ 		if (unlikely(dfrag == msk->first_pending)) {
+ 			/* in recovery mode can see ack after the current snd head */
+-			if (WARN_ON_ONCE(!msk->recovery))
++			if (WARN_ON_ONCE(!msk->recovery)) {
++				pr_err("sk state %d:%d snd_una %llx write_seq %llx dfrag end seq %llx frag len %d bytes sent %lld acked %lld",
++				       sk->sk_state, msk->first ? msk->first->sk_state: -1, msk->write_seq,
++				       msk->snd_una, dfrag->data_seq + dfrag->data_len, dfrag->data_len,
++				       msk->bytes_sent, msk->bytes_acked);
+ 				break;
++			}
+ 
+ 			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
+ 		}
+@@ -3730,6 +3735,9 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_TOKENFALLBACKINIT);
+ 		mptcp_subflow_early_fallback(msk, subflow);
+ 	}
++
++	WRITE_ONCE(msk->write_seq, subflow->idsn);
++	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
+ 	if (likely(!__mptcp_check_fallback(msk)))
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVE);
+ 
+-- 
+2.43.2
+
