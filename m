@@ -1,90 +1,124 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-oi1-f174.google.com (mail-oi1-f174.google.com [209.85.167.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BC416078D
-	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 16:44:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78CE216FF2B
+	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 16:52:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713458686; cv=none; b=rXbEOUImD1s9wKMro+2AKBxmI0WY5742HPIorRhlqy2YH+7BjaiwWNacC2SR2KpwbT8wotzTKudm7cnCxYRvrLfUxZSYHylmh+kzksf3mrPdLXqLx39iPf8hR2Rx+/KtgVHFlOHXPnVeC7uNAow33UIHihvWl6MARrkYN1DeB+U=
+	t=1713459172; cv=none; b=Zat+LyIPHqInwK7OcAQ/zdEuhS4+RHg3/bV914CtsrNP+C8mPA7bMsLVVTgrIo7G9h/xwaf7JYUnLQt/qe76Z6ZJvKmuSzbjpRKHA+V5IrK1g+fFZiOiS3nivZdBfy9NdeTuyWMTI90FhDNjpUTeQ6o1jvzU22U75tMDQTMMi9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713458686; c=relaxed/simple;
-	bh=A8sMijOYgrC9+NMTlCO+Ohq6HZKQV39AdrSzuvifcgI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iTpuvn1TpgOEd80sBleclVg/i+ScVnRsc+BiCR+m8jA/0Wvbzuxz4vLXZpoli7Z0RJHYGsyM49sbpyVOzz7EOrBN3YEz82SMgc101FIDUVplJmNwkSTEiGxd/wYTqI9Z3MyszJhD73pBRfIddpssGnKAp+2UhBFqcxQQb9bZmc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3aPHtzl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713459172; c=relaxed/simple;
+	bh=5Yu/lId23JAYzaZGxlhWU2AAKwjdlTMQltgC1CHzqo0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=gqMjrRNjTVnw7Pk0muvW2T5Go7jX4jIPgB/uCmHipBx4uW9PPsITJ4InIOMPFPObMp9YXokFEQNk+G2xCkQB+WkVrTLrmzCqeBcm24ZWecmNB4vrM8WNvAkaa61WR3hsnQ7SMRaCQAqd920C6eyI6hnFSvJSMoDEK2AGnNB2BEM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ef2lGUep; arc=none smtp.client-ip=209.85.167.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3aPHtzl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC758C113CC;
-	Thu, 18 Apr 2024 16:44:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713458685;
-	bh=A8sMijOYgrC9+NMTlCO+Ohq6HZKQV39AdrSzuvifcgI=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=A3aPHtzlMfETmBDtbS3Xd6oDmBhZciNOeLm7xXK2xWdRhNS8vh+Gh6j0d3ieimg+u
-	 XpEMnS6rBglHgHvIVN5UKeP8VPDxY/Tv5LNAXiQEGynd9TWIziOjGFMecEEuZ3gGGm
-	 wSJYRMiU/T1HeLD3xMEQKAPV2orOjuO1TpAU7ra018sZI1f+xQ3QYfLJLvBNzVeXku
-	 vyq+pEhQYaBREpodrGg/mtqXbi+KYc6AaYjcDYreGlN62Srvw3kLuxqJKNRz0cSsqM
-	 9ZzIOMixtlUf5kXOdIFHrVuv+L9d1YY+0kwNx7QioSVqH/MLRvrygEJFwqbzCO+t6+
-	 RdqQagGe4XASQ==
-Date: Thu, 18 Apr 2024 09:44:45 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf_first
- scheduler & test" 2
-In-Reply-To: <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
-Message-ID: <2804769e-9cf0-9ed5-bc7c-491149009269@kernel.org>
-References: <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ef2lGUep"
+Received: by mail-oi1-f174.google.com with SMTP id 5614622812f47-3c730f599abso680553b6e.0
+        for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 09:52:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713459170; x=1714063970; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=jN+ietqg0BtgxTH9h7UnL9VNXDR4UQzLlQOY2/9ID2k=;
+        b=ef2lGUeplxelD41oxoUCYaIGsyM7FJVPIlUcPpsrTRckfHZPLeISPo5PRuwgh35/7c
+         ITlZtCyoKa05o1lYe6Pp5EXokZtirj5l1FlWZgywIwu/Bblt2NH+f9BT9aMZFnzQJucS
+         ZwIp2Dc4mPOI8I1btIL9riYIo1GaFJF0EIHWtBPyGdre+yo41oZDXecgkPwGuSVUEXdK
+         xFftsntuq9beUqIWmwiOtNpW9Yv5udrOklfcywB3dwXQmmqFMxpLibUwyKuhKnmlpXUf
+         4P0dwpEAWgKAZSNVU8Undy9TQ5Jhu6oxAAvY5fVoxpBCzASy33u94XCPB1oXne4Z0o/L
+         HzdQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713459170; x=1714063970;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=jN+ietqg0BtgxTH9h7UnL9VNXDR4UQzLlQOY2/9ID2k=;
+        b=OhKL3htgfZRcqvFWGXwm/zTZZ174ypUnchMvlHGp0liejEkHk2SOm+jZLU2oe6zXtx
+         6dsIVRZ8qsl2c9j+1FK4PtteXVBYrYM8+WlWWDtCrJiqpzPbSJcxya67MHgk2LTggrtw
+         GT9iD0Nzu177H+dC6rVlnJlZd1vBrIYdlOKYv7/uh04uEngg5FxJPY/3TagAQ5yXsfwt
+         BPAQ9NvvUjCJNI+IbWbrHS7eZDxryF2JwmQyTG+dZfZpQgv38tlFnja12JO7Cc8LXVaq
+         eFYbP0LxIOijLbIFByTy++eLTkmPAZqfcfj1xGZvqdBTljsZtCyo6enLnkn0s2uXAq0D
+         BZCg==
+X-Gm-Message-State: AOJu0Yy0J3Q/3KrG+8Drws68k0MXtKGU7CEBtkktucIxRN6I5RvZeO9Y
+	oTnx3ndoxySAuLsfqFvFCSeY8woWMGyUm7LaHTD2P+w6qhAWMOjMIYPb
+X-Google-Smtp-Source: AGHT+IH5uYbvig6moUTJ7N9pzo+eVm+UTRMq3jkwwxu/xBfOfmJpSXsvj+l5Hz7PeCMOwk/8A00WQA==
+X-Received: by 2002:a05:6808:210e:b0:3c5:fba5:9a23 with SMTP id r14-20020a056808210e00b003c5fba59a23mr4642828oiw.11.1713459170512;
+        Thu, 18 Apr 2024 09:52:50 -0700 (PDT)
+Received: from [127.0.0.1] ([20.81.158.167])
+        by smtp.gmail.com with ESMTPSA id fp29-20020a05622a509d00b004364fd7a9d9sm806765qtb.58.2024.04.18.09.52.49
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 18 Apr 2024 09:52:50 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
+References:
+ <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
+ =?UTF-8?Q?=22selftests/bpf=3A_Add_bpf=5Ffirst_sche?=
+ =?UTF-8?Q?duler_=26_test=22_2?=
+Message-ID: <67bd2c4b-fca3-47cc-8645-10dd7fca9e2b@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 18 Apr 2024 16:52:49 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Thu, 18 Apr 2024, Geliang Tang wrote:
+Hi Geliang,
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> Check the string length of sched as Mat suggested.
->
-> Please insert this patch into "refactor mptcp bpf tests" v9 as the
-> last commit.
->
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++++
-> 1 file changed, 4 insertions(+)
->
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 9f17453b2d59..56dca35f289d 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -509,6 +509,10 @@ static void test_bpf_sched(struct bpf_object *obj, char *sched,
-> 	struct bpf_link *link;
-> 	struct bpf_map *map;
->
-> +	if (!ASSERT_LT(strlen(bpf_sched) + strlen(sched),
-> +		       MPTCP_SCHED_NAME_MAX, "too long string"))
+Thank you for your modifications, that's great!
 
-Matthieu, could you change the above message to "Scheduler name too long" 
-when applying?
+Our CI did some validations and here is its report:
 
-Otherwise, looks good to squash with along with v9 of "refactor mptcp bpf 
-tests", thank you!
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/8741315896
 
-- Mat
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/0bda5a7699a6
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D845641
 
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-> +		return;
-> +
-> 	map = bpf_object__find_map_by_name(obj, sched);
-> 	link = bpf_map__attach_struct_ops(map);
-> 	if (CHECK(!link, sched, "attach_struct_ops: %d\n", errno))
-> -- 
-> 2.40.1
->
->
->
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
