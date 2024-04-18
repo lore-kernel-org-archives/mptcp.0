@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9131635A6
-	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 16:42:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42BC416078D
+	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 16:44:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713458550; cv=none; b=JR528YereuEkanxIzPAQ1ZUvincu51LOiN9unq8oozQ0XBq7p8Robpx+7TOXvFRYz745lTRSScB37zgewGXyeyv0XsdqVMa7MxAXLqr62DIKJHS22dL2NijyVPLBCzOvlL0jZ0oH2giJ8tjRu3kdpBN/IVMWL3Hff3si10ucb9s=
+	t=1713458686; cv=none; b=rXbEOUImD1s9wKMro+2AKBxmI0WY5742HPIorRhlqy2YH+7BjaiwWNacC2SR2KpwbT8wotzTKudm7cnCxYRvrLfUxZSYHylmh+kzksf3mrPdLXqLx39iPf8hR2Rx+/KtgVHFlOHXPnVeC7uNAow33UIHihvWl6MARrkYN1DeB+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713458550; c=relaxed/simple;
-	bh=nO2R7eYU4p8xQPIMJ/Xkw6M3rpjp6fau7+LDsaWbGig=;
+	s=arc-20240116; t=1713458686; c=relaxed/simple;
+	bh=A8sMijOYgrC9+NMTlCO+Ohq6HZKQV39AdrSzuvifcgI=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kkXfRAvG2edgc+Vguhwhkfr2oekzLawtEq/cuGS1k3HsckPbwecGxQyNPUH1JedSyfS8460EUzHRaEHtUO9v2bnsqRTh5GQ4LwI8AOUDkkTaaUsZs+ShHyjuZLuT6++TKuWrxdDNLT/3m1ZFp18P+15SI48RbcmOZ+BhrPBKpLo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k36h06oe; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=iTpuvn1TpgOEd80sBleclVg/i+ScVnRsc+BiCR+m8jA/0Wvbzuxz4vLXZpoli7Z0RJHYGsyM49sbpyVOzz7EOrBN3YEz82SMgc101FIDUVplJmNwkSTEiGxd/wYTqI9Z3MyszJhD73pBRfIddpssGnKAp+2UhBFqcxQQb9bZmc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A3aPHtzl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k36h06oe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1347C113CC;
-	Thu, 18 Apr 2024 16:42:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A3aPHtzl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC758C113CC;
+	Thu, 18 Apr 2024 16:44:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713458549;
-	bh=nO2R7eYU4p8xQPIMJ/Xkw6M3rpjp6fau7+LDsaWbGig=;
+	s=k20201202; t=1713458685;
+	bh=A8sMijOYgrC9+NMTlCO+Ohq6HZKQV39AdrSzuvifcgI=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=k36h06oeKLpvLyw4JRJhHylX4d8/zR9J2PDXvNC3aKjR0J3H6jTK/qC8ZIxz9a/RS
-	 /DM9+2DrSbOXNvLqMjjh3HEnJSx9vf2if4auIwIZA1xeG/bzasCfcKCbK0+j+54NVA
-	 pM+ozClNciz/Etj9fa2FVi53gYZRwj93YgABd9vfeo8E8ftuYZuV7NFq/buimhGOAR
-	 RRs1//2z83Q1I6N0RtjjAUKi3JEsCrRse9a4mhkAIDaGJiSXF58uL7JONyjE6yhk4e
-	 2ZAbQQCvZYbRLhOQhk7RI4vBhspLBmcqu88l5VxQqAmvgk77oe4Fk9EH4nXUC1Xhj3
-	 i/81plhkOAENw==
-Date: Thu, 18 Apr 2024 09:42:29 -0700 (PDT)
+	b=A3aPHtzlMfETmBDtbS3Xd6oDmBhZciNOeLm7xXK2xWdRhNS8vh+Gh6j0d3ieimg+u
+	 XpEMnS6rBglHgHvIVN5UKeP8VPDxY/Tv5LNAXiQEGynd9TWIziOjGFMecEEuZ3gGGm
+	 wSJYRMiU/T1HeLD3xMEQKAPV2orOjuO1TpAU7ra018sZI1f+xQ3QYfLJLvBNzVeXku
+	 vyq+pEhQYaBREpodrGg/mtqXbi+KYc6AaYjcDYreGlN62Srvw3kLuxqJKNRz0cSsqM
+	 9ZzIOMixtlUf5kXOdIFHrVuv+L9d1YY+0kwNx7QioSVqH/MLRvrygEJFwqbzCO+t6+
+	 RdqQagGe4XASQ==
+Date: Thu, 18 Apr 2024 09:44:45 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
 cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v9 1/8] selftests/bpf: Add RUN_MPTCP_TEST
- macro
-In-Reply-To: <87f974d9431af3018c35cbd4db147ea807e3c451.1713321357.git.tanggeliang@kylinos.cn>
-Message-ID: <79b6295b-7536-9b32-1131-c85fac417698@kernel.org>
-References: <cover.1713321357.git.tanggeliang@kylinos.cn> <87f974d9431af3018c35cbd4db147ea807e3c451.1713321357.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf_first
+ scheduler & test" 2
+In-Reply-To: <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
+Message-ID: <2804769e-9cf0-9ed5-bc7c-491149009269@kernel.org>
+References: <cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,55 +43,46 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Wed, 17 Apr 2024, Geliang Tang wrote:
+On Thu, 18 Apr 2024, Geliang Tang wrote:
 
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> Each MPTCP subtest tests test__start_subtest(suffix), then invokes
-> test_suffix(). It makes sense to add a new macro RUN_MPTCP_TEST to
-> simpolify the code.
+> Check the string length of sched as Mat suggested.
+>
+> Please insert this patch into "refactor mptcp bpf tests" v9 as the
+> last commit.
 >
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-
-With 
-https://patchwork.kernel.org/project/mptcp/patch/cc01abb2882608ac5f719e0f7960aa2a2d9fca41.1713404174.git.tanggeliang@kylinos.cn/,
-v9 of the series looks good to apply.
-
-The rest of the series is all "squash-to" patches, but for this first 
-patch:
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-
 > ---
-> tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++----
-> 1 file changed, 8 insertions(+), 4 deletions(-)
+> tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++++
+> 1 file changed, 4 insertions(+)
 >
 > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index cbdb15922949..c29c81239603 100644
+> index 9f17453b2d59..56dca35f289d 100644
 > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -653,12 +653,16 @@ static void test_burst(void)
-> 	mptcp_bpf_burst__destroy(burst_skel);
-> }
+> @@ -509,6 +509,10 @@ static void test_bpf_sched(struct bpf_object *obj, char *sched,
+> 	struct bpf_link *link;
+> 	struct bpf_map *map;
 >
-> +#define RUN_MPTCP_TEST(suffix)					\
-> +do {								\
-> +	if (test__start_subtest(#suffix))			\
-> +		test_##suffix();				\
-> +} while (0)
+> +	if (!ASSERT_LT(strlen(bpf_sched) + strlen(sched),
+> +		       MPTCP_SCHED_NAME_MAX, "too long string"))
+
+Matthieu, could you change the above message to "Scheduler name too long" 
+when applying?
+
+Otherwise, looks good to squash with along with v9 of "refactor mptcp bpf 
+tests", thank you!
+
+- Mat
+
+
+
+> +		return;
 > +
-> void test_mptcp(void)
-> {
-> -	if (test__start_subtest("base"))
-> -		test_base();
-> -	if (test__start_subtest("mptcpify"))
-> -		test_mptcpify();
-> +	RUN_MPTCP_TEST(base);
-> +	RUN_MPTCP_TEST(mptcpify);
-> 	if (test__start_subtest("default"))
-> 		test_default();
-> 	if (test__start_subtest("first"))
+> 	map = bpf_object__find_map_by_name(obj, sched);
+> 	link = bpf_map__attach_struct_ops(map);
+> 	if (CHECK(!link, sched, "attach_struct_ops: %d\n", errno))
 > -- 
 > 2.40.1
 >
