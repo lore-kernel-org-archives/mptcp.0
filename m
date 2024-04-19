@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38A9D3A8F7
-	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 09:58:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC8AA6FE14
+	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 10:01:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713520698; cv=none; b=t9rP5tmRXkvtATImupV8G53itbIl8AckfhIIciVtEqjt0+e0BEWznmscx3iqUD853ECqK2o5VYN8rQ+jU7C9pD9gbkjdgteEjn//CeCj4SwInJBZ0m8lBtuMASgGsWXHWLW/wtRLyRFXh9bOm/vOvTc4mTedHAyylCLm1aLzDUo=
+	t=1713520879; cv=none; b=nkZyOkc5qh/9Do0X9EVCrXPFRnswO/VQ7w35YrEbZEnlF6effF+1b0Ipd5BY+/f/T2RAODDYDov4k5m9VXeIWSBO7Vbi3/umBSyxStEQM6oi84M5bimULZPGhVqhS1Zsah8J8vr/Ss2GlyiXBM5Zwga6HAj/n2Xa4boQaLaOg/4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713520698; c=relaxed/simple;
-	bh=a3AEkYXcfF2bb4YEstX4JBFS6Sd+K7YVOb5VmofW3PU=;
+	s=arc-20240116; t=1713520879; c=relaxed/simple;
+	bh=vPOZJvCm+mMuCdPnTpkyELNpbfQUdGPSSYjAEfSBMyg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TL6ijHfCKOLriqe4mkX6/Ifqftk/sI1128PcGQWPftl3W8vY+R6aoNXYLX44AVVRgA1KZwz+O6il0TUAuth0hZuoJ+zccy8SKXnptClMGjPlVQXIN2wqOR9/NsvmL/hNxcS/apC4Kcz8qPp2Quuqpd+acD49bo3RbtLHcWfhV6o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hb8TLM4y; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KuvmjCvzXYc0aHhqnkWzdOTzAEcIROUgzzxNLsuU8Mcb8ldpHwF/E2tTL9xLO/Ru4w/T/I9Teqrv34Qf+9GDwshQd//NiELCThLtFyta2+Y5Uau38LRjeH5oG99ClDXfTKu/nj82UhRnEyBbhJXlcuJcdv85dkrh1ZikB4CAh0M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PW8AbBS7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hb8TLM4y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03E97C072AA;
-	Fri, 19 Apr 2024 09:58:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PW8AbBS7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C921CC072AA;
+	Fri, 19 Apr 2024 10:01:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713520697;
-	bh=a3AEkYXcfF2bb4YEstX4JBFS6Sd+K7YVOb5VmofW3PU=;
+	s=k20201202; t=1713520879;
+	bh=vPOZJvCm+mMuCdPnTpkyELNpbfQUdGPSSYjAEfSBMyg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Hb8TLM4yP/t5x38U1Wvy4Z9doR6BsCHuIOpQq62VlkC2rpAlYTOp0HR1GQ6kkAjWd
-	 zzx2HEPaF15xwgWJPZqxRlSI7lErGZGB7IgK4kh/QjodMnkh/pmDv+FRwTdzKMBBEl
-	 +u57cbodmz9FKyXRqGF9pcvRi7Pt1M/oj2ac/uR52I0CYpkDuBzMh0gROnqJq0CuCz
-	 zkU8tUdrGvLDbGUS16cSDTHbNlPgjbIgc756shwhpPKqoBswW4UyHGhEBWgCxC6/Ko
-	 /ce/jfnEcpGsgfz1LHKK00lD+ETUB43/n5IUgDpvqmZu5Al2H6mtA0RvpaT8mxQQwY
-	 JHmel08OoNqBw==
-Message-ID: <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
-Date: Fri, 19 Apr 2024 11:58:14 +0200
+	b=PW8AbBS7KctTUMWYYR6nRxTCZF9xStTF6RdeyUKdsMUXdFQ3J9g2Bd2lH5txflwAu
+	 aRi1wgw+d5CVqrB+AQRCW21lOtA8uKdTmHFZHIIjtZkCNgESGyVJFO57oJ4kdUdQbx
+	 g0t2qqAO8fbwywpnsC6Nd1zgL36uZSq/QZcY0NZPp36GhJhvYjewdlZ3TZk6m/4Bz8
+	 coO378hSaYNjo1IoIxe1N/E9HsW3JLNlE2wyqkBpgDcV061Ki8BR4JmQDzlnuYdkkC
+	 8s3ojn810lWBzDCpj758/UKA8Hi/6R7db1WSeU83UAwH/6r8Gflpw1NAb6PRyLCqu0
+	 kUTheVLvrGmSQ==
+Message-ID: <e6e208de-3739-4b7f-b5e2-c72adf87f416@kernel.org>
+Date: Fri, 19 Apr 2024 12:01:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
+Subject: Re: [PATCH mptcp-next] mptcp: sockopt: info: stop early if no buffer
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1713321357.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240418-mptcp-getsockopt-info-opti-v1-1-7138a96eb50c@kernel.org>
+ <e10a438b-a286-3bb5-4818-b2537acecf65@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,110 +86,68 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1713321357.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e10a438b-a286-3bb5-4818-b2537acecf65@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang, Mat,
+Hi Mat,
 
-On 17/04/2024 04:38, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 18/04/2024 19:06, Mat Martineau wrote:
+> On Thu, 18 Apr 2024, Matthieu Baerts (NGI0) wrote:
 > 
-> v9:
->  - extract a new helper test_bpf_sched() from MPTCP_SCHED_TEST() to make
->    the macro simpler as Mat suggested. (thanks)
->  - squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_first
->    scheduler & test", not "selftests/bpf: Add bpf scheduler test" to
->    avoid a build error "test_bpf_sched is not used".
-Thank you for the v9, and the review!
+>> Up to recently, it has been recommended to use getsockopt(MPTCP_INFO) on
+>> an 'accept'ed socket, for a server app to check if the client requested
+>> to use MPTCP.
+>>
+>> In this case, the userspace app is only interested by the returned value
+>> of the getsocktop() call, and can then give 0 for the option lenght, and
+>> NULL for the buffer address. An easy optimisation is then to stop early,
+>> and avoid filling a local buffer -- which now requires two different
+>> locks -- if it is not needed.
+>>
+>> Note that userspace apps should use getsockopt(SO_PROTOCOL) in such case
+>> instead: it looks less like a workaround, and it works with any kernel
+>> versions, while the MPTCP_INFO method requires kernels >= v5.16.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> net/mptcp/sockopt.c | 6 ++++++
+>> 1 file changed, 6 insertions(+)
+>>
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index 1fea43f5b6f3..b0d1dc4df0c1 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -960,6 +960,12 @@ static int mptcp_getsockopt_info(struct
+>> mptcp_sock *msk, char __user *optval, in
+>>     if (get_user(len, optlen))
+>>         return -EFAULT;
+>>
+>> +    /* Opti when used to check if a fallback to TCP happened on an
+>> 'accept'
+>> +     * socket. Userspace apps should use getsockopt(SO_PROTOCOL)
+>> instead.
+>> +     */
+>> +    if (len == 0)
+>> +        return 0;
+>> +
+> 
+> Makes sense to skip the work, LGTM:
+> 
+> Reviewed by: Mat Martineau <martineau@kernel.org>
 
-@Geliang: there were a lot of Git (TopGit) manipulations here, please
-check that the result is the expected one.
+Thank you for the quick review!
 
+Now in our tree (without a typo: s/lenght/length/)
 
-New patch for t/upstream:
+New patches for t/upstream:
+- 1131e79ff7b0: mptcp: sockopt: info: stop early if no buffer
+- Results: f0f388aa6196..b88f530f98b9 (export)
 
-- d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
-- 9791281821ba: conflict in t/selftests-bpf-Add-bpf-scheduler-test
-- 92efb2a19752: conflict in t/selftests-bpf-add-bpf_first-test
-- 78858b124aee: conflict in t/selftests-bpf-Add-bpf_bkup-test
-- e25a04564f65: conflict in t/selftests-bpf-Add-bpf_rr-test
-- d474c99c9c56: conflict in t/selftests-bpf-Add-bpf_red-test
-- 0091786b07e3: conflict in t/selftests-bpf-Add-bpf_burst-test
-- Results: eb9a8fbc1cd3..6ad6176a437b (export)
+Tests are now in progress:
 
-
-Squash-to patches:
-
-- da0ce2d96df7: "squashed" "1 verify" (with conflicts) in
-"selftests/bpf: Add bpf scheduler test"
-
-- d08d36c72f3e: "squashed" "2 time" in "selftests/bpf: Add bpf scheduler
-test"
-- f9800e6dbb07: conflict in t/selftests-bpf-add-bpf_first-test
-
-- d910fb60db22: "squashed" (with conflicts) in "selftests/bpf: Add
-bpf_first test"
-- 6723021b9a04: "squashed" "2 strlen" in "selftests/bpf: Add bpf_first test"
-- 1bcf273624e6: "squashed" "3 err msg" in "selftests/bpf: Add bpf_first
-test"
-- 20df6c66a4bf: conflict in t/selftests-bpf-Add-bpf_bkup-test
-
-- 6f9d19a73d33: "squashed" (with conflicts) in "selftests/bpf: Add
-bpf_bkup test"
-- 9c86e3027008: conflict in t/selftests-bpf-Add-bpf_rr-test
-
-- 2bbbcc6cc7c1: "squashed" (with conflicts) in "selftests/bpf: Add
-bpf_rr test"
-- 3bdb5c116569: conflict in t/selftests-bpf-Add-bpf_red-test
-
-- 9eb2410e20b4: "squashed" (with conflicts) in "selftests/bpf: Add
-bpf_red test"
-- 55e93f797697: conflict in t/selftests-bpf-Add-bpf_burst-test
-
-- 9004d2b898a4: "squashed" (with conflicts) in "selftests/bpf: Add
-bpf_burst test"
-- Results: 6ad6176a437b..665448084780 (export)
-
-
-Squash "sched & test":
-
-- 57731e73cc97: tg:squash: bpf_first sched & test
-- 45b46aeeb072: tg:msg: update after squash
-
-- a5a572331f7c: tg:squash: bpf_bkup sched & test
-- d89c4282bf53: tg:msg: update after squash
-
-- 44155448f992: tg:squash: bpf_rr sched & test
-- 702454c6ba93: tg:msg: update after squash
-
-- 71681fc66d24: tg:squash: bpf_red sched & test
-- a15a6438bcbd: tg:msg: update after squash
-
-- 297175c89808: tg:squash: bpf_burst sched & test
-- c4624cdf779e: tg:msg: update after squash
-- Results: 665448084780..c23ad453d8cc (export)
-
-
-While at it, I also updated your email address:
-- dbec7401465d: tg:msg: update Geliang's email address
-- facd3cec3d0a: tg:msg: update Geliang's email address
-- 59127f756c66: tg:msg: update Geliang's email address
-- c20d79792bb2: tg:msg: update Geliang's email address
-- 5f3d6b7755a2: tg:msg: update Geliang's email address
-- 05efce6832cb: tg:msg: update Geliang's email address
-- becd15a77346: tg:msg: update Geliang's email address
-- e2b1e31d7720: tg:msg: update Geliang's email address
-- a3bcc475f994: tg:msg: update Geliang's email address
-- 699e0dbd591c: tg:msg: update Geliang's email address
-- 2d5b66a3675f: tg:msg: update Geliang's email address
-- 1df821d94ac8: tg:msg: update Geliang's email address
-- 7a0adfdb70d0: tg:msg: update Geliang's email address
-- cce49572147a: tg:msg: update Geliang's email address
-- fff8347933fd: tg:msg: update Geliang's email address
-- 6118caa31040: tg:msg: update Geliang's email address
-- 6603ca35adf6: tg:msg: remove my SoB
-- Results: c23ad453d8cc..f0f388aa6196 (export)
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0347b4edc15cbbeaf0d16118ffa43fecc9b51e2c/checks
 
 Cheers,
 Matt
