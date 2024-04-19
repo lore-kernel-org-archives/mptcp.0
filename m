@@ -1,268 +1,134 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 905DD7F489
-	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 12:37:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED5B312DD93
+	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 15:16:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713530279; cv=none; b=h2Y1HRpd/qUWCdu8ssHXDIunMF7XZl2KYL8U5sGq0o1PJ9AusHSMi3/x7lbNuJm1/+wr11w7YfwXbQrkh01HU2zYUC1UP39ZXKupQLI2sOTSE/oo0atXijQ0O+Kk5+GGOO8lAmo6SFEM3huI7mDh4GH/PDFB3o/TWz2rGDol9xs=
+	t=1713539761; cv=none; b=PDetc/f/K8xbYrmBmADqh6LWiuB+txUhGQYI3bQTGJqBWh4XWe95I2TmXtRJtxEOcjRhx6vtFJYyaYBnH1RB9ej3abd3pRm7jRXL7eL4v1wKx4ssA7KU0ak4o+QcsfS6oCbNZbh+XJ1xJe4ypDs/AtlB6ksfZAeh5/JAVv5eX9Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713530279; c=relaxed/simple;
-	bh=CtvHFDck+w2iZroa+6jPORcjDAiRAeL3wYfx97pu67U=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=hpm8bmZvcr4OxqwHc8NlgH5AKqpCpU7LdTRTZSvqS3IoPIka0pDmEwtZOMjpxQILtdEYkUotvkPJkE+JhaufVSMAdGkOO6SakWI79OwTnxc4gHHDdMrpjD6wZiB4F5LBV01G77kmAIldpsF2uojxc+y1QaFnqOLWlzKGH0YWakw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.162.254])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VLYxv0rYXz1R8P8;
-	Fri, 19 Apr 2024 20:34:59 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 354B718007D;
-	Fri, 19 Apr 2024 20:37:54 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 19 Apr
- 2024 20:37:53 +0800
-Subject: Re: [PATCH net-next v2 13/15] net: replace page_frag with
- page_frag_cache
-To: Mat Martineau <martineau@kernel.org>
-CC: Paolo Abeni <pabeni@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Ayush Sawal
-	<ayush.sawal@chelsio.com>, Eric Dumazet <edumazet@google.com>, Willem de
- Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>,
-	Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri
- Lelli <juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	Boris Pismenny <borisp@nvidia.com>, <bpf@vger.kernel.org>,
-	<mptcp@lists.linux.dev>
-References: <20240415131941.51153-1-linyunsheng@huawei.com>
- <20240415131941.51153-14-linyunsheng@huawei.com>
- <c5a8eabb-1b46-1e9f-88c9-e707c3a086c4@kernel.org>
- <cb541985-a06d-7a71-9e6d-38827ccdf875@huawei.com>
- <83991c67-8e4a-c287-b4a5-5dbba8835947@kernel.org>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <e1e7ebcf-8c7a-8ef4-c48a-3ddfa05d22bb@huawei.com>
-Date: Fri, 19 Apr 2024 20:37:53 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1713539761; c=relaxed/simple;
+	bh=GCeoUX3g3YB6exg3tXg+0t9UN4UCcP0WyvRyIY1eJJM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GOXRQVw96YJu2/OkEJncrnrDEkidvugCYa8RMNth99vhO5JKZy13dGh2VCd0yCtRBKdpz/nRAGy5wGzVIYk1PrOcjEEmLz7hOEb1EiyNR7lFV7lBnTXb128S/iJfs2QWukVfbvVEP3QS0NqYUEo6U5lgSXmik3EC5tOiKHKMg30=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e3GVK7Yf; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e3GVK7Yf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87255C072AA;
+	Fri, 19 Apr 2024 15:15:59 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713539760;
+	bh=GCeoUX3g3YB6exg3tXg+0t9UN4UCcP0WyvRyIY1eJJM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e3GVK7Yf6ep5iWUA+H+v4kovf7W7HV41w08IoXd7YqsIl3OaldyQnx1IS/EwmYai0
+	 OhpZiLeXPj2RAbLPbszjuL4SVH3BeJ44fJpmaTBMApMPatnRRWWv9wkXEdemcb7bSo
+	 Zk0t40V2BccJLkLm0nj5hIHQG2tdMvjKKj2Zlg3KfCAWe469SLKT0/agUNV5ogtoj8
+	 mX1t98LsUMyl2mGH9918i8uaVFJ6KvORJuUAh1R8b1xPud7g07WI7CpyauNdjm37uC
+	 0NWuliMvMAuMYkfkUjhke0dXKcM7FNYrvooOmtwQTtDjRMHlQ1WX3MkueeuFfAS2/K
+	 nSKpTYrw8zm7w==
+Message-ID: <f979f4ba-d075-4ec7-95b9-3edfa0fb354b@kernel.org>
+Date: Fri, 19 Apr 2024 17:15:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <83991c67-8e4a-c287-b4a5-5dbba8835947@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v3] mptcp: ensure snd_nxt is properly
+ initialized on connect
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: Christoph Paasch <cpaasch@apple.com>, mptcp@lists.linux.dev,
+ Mat Martineau <martineau@kernel.org>
+References: <3b0ca23eaa8906f967a841f55bafed48d0f895cb.1713367699.git.pabeni@redhat.com>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3b0ca23eaa8906f967a841f55bafed48d0f895cb.1713367699.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemm500005.china.huawei.com (7.185.36.74)
 
-On 2024/4/17 5:40, Mat Martineau wrote:
-...
+Hi Paolo, Mat, Christoph,
 
-> I wasn't concerned as much about the direct cost of the inlined page_frag_alloc_commit() helper, it was that we could make fewer prepare calls if the commit was deferred as long as possible. As we discussed above, I see now that the prepare is not expensive when there is more space available in the current frag.
-> 
->> Maybe what we could do is to do the prepare in the inline
->> helper instead of a function when cache is enough, so that
->> we can avoid a function call as the old code does, as an
->> inlined function requires less overhead and is generally
->> faster than a function call.
->>
->> But that requires more refactoring, as this patchset is bigger
->> enough now, I guess we try it later if it is possible.
-> 
-> A more generic (possible) optimization would be to inline some of page_frag_cache_refill(), but I'm not sure the code size tradeoff is worth it - would have to collect some data to find out for sure!
+On 18/04/2024 09:44, Paolo Abeni wrote:
+> Christoph reported a splat hinting at a corrupted snd_una:
+Thank you for the patch, the review, and the bug report + test.
 
-In my arm64 system, It seems inlining some of page_frag_cache_refill() results
-in smaller kernel code size as below, has not done the performance test yet, but
-the smaller code size seems odd here.
+I forgot to send a notification after I applied this patch. In between,
+the CI already validated this, and both the build for export and
+export-net have the same issue with Packetdrill (fastopen):
 
-Without this patchset:
-linyunsheng@ubuntu:~/ksize$ ./ksize.sh
-Linux Kernel                          total |       text       data        bss
---------------------------------------------------------------------------------
-vmlinux                            51974159 |   32238573   19087890     647696
+- export:
 
-With this patchset:
-linyunsheng@ubuntu:~/ksize$ ./ksize.sh
-Linux Kernel                          total |       text       data        bss
---------------------------------------------------------------------------------
-vmlinux                            51970078 |   32234468   19087914     647696
+> not ok 32 packetdrill: mptcp/fastopen/server-TCP_FASTOPEN-cookie-req.pkt (ipv4-mapped-v6)
+> # server-TCP_FASTOPEN-cookie-req.pkt:23: error handling packet: live packet field ipv4_total_length: expected: 48 (0x30) vs actual: 64 (0x40)
+> # script packet:  0.660855 . 1:1(0) ack 1 <dss dack4 3007449510 flags: A>
+> # actual packet:  0.651162 . 1:1(0) ack 1 win 256 <dss dack4 3007449509 dsn8 4250179620018965011 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
+
+ https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8752422517
+
+- export-net:
+
+> not ok 32 packetdrill: mptcp/fastopen/server-TCP_FASTOPEN-cookie-req.pkt (ipv4-mapped-v6)
+> # server-TCP_FASTOPEN-cookie-req.pkt:23: error handling packet: live packet field ipv4_total_length: expected: 48 (0x30) vs actual: 64 (0x40)
+> # script packet:  0.667029 . 1:1(0) ack 1 <dss dack4 3007449510 flags: A>
+> # actual packet:  0.665988 . 1:1(0) ack 1 win 256 <dss dack4 3007449509 dsn8 4812888791396531368 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
+
+ https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8752426856
+
+Do you think this is linked?
 
 
-With this patchset and below patch inlining some of page_frag_cache_refill():
-linyunsheng@ubuntu:~/ksize$ ./ksize.sh
-Linux Kernel                          total |       text       data        bss
---------------------------------------------------------------------------------
-vmlinux                            51966078 |   32230468   19087914     647696
+New patches for t/upstream-net and t/upstream:
+- b3584792f65e: mptcp: ensure snd_nxt is properly initialized on connect
+- Results: 428f275bfbb0..e065a4657da5 (export-net)
+- Results: b88f530f98b9..47bb272bba61 (export)
 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-
-
-diff --git a/include/linux/page_frag_cache.h b/include/linux/page_frag_cache.h
-index 529e7c040dad..3e1de20c8146 100644
---- a/include/linux/page_frag_cache.h
-+++ b/include/linux/page_frag_cache.h
-@@ -60,8 +60,33 @@ static inline bool page_frag_cache_is_pfmemalloc(struct page_frag_cache *nc)
-
- void page_frag_cache_drain(struct page_frag_cache *nc);
- void __page_frag_cache_drain(struct page *page, unsigned int count);
--void *page_frag_cache_refill(struct page_frag_cache *nc, unsigned int fragsz,
--                            gfp_t gfp_mask);
-+void *__page_frag_cache_refill(struct page_frag_cache *nc, gfp_t gfp_mask);
-+void *page_frag_cache_flush(struct page_frag_cache *nc, gfp_t gfp_mask);
-+
-+static inline void *page_frag_cache_refill(struct page_frag_cache *nc,
-+                                          unsigned int fragsz, gfp_t gfp_mask)
-+{
-+       unsigned long size_mask;
-+       void *va;
-+
-+       if (unlikely(!nc->va)) {
-+               va = __page_frag_cache_refill(nc, gfp_mask);
-+               if (likely(va))
-+                       return va;
-+       }
-+
-+#if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-+       /* if size can vary use size else just use PAGE_SIZE */
-+       size_mask = nc->size_mask;
-+#else
-+       size_mask = PAGE_SIZE - 1;
-+#endif
-+
-+       if (unlikely(nc->offset + fragsz > (size_mask + 1)))
-+               return page_frag_cache_flush(nc, gfp_mask);
-+
-+       return (void *)((unsigned long)nc->va & ~size_mask);
-+}
-
- /**
-  * page_frag_alloc_va() - Alloc a page fragment.
-diff --git a/mm/page_frag_cache.c b/mm/page_frag_cache.c
-index 8b1d35aafcc1..74f643d472fb 100644
---- a/mm/page_frag_cache.c
-+++ b/mm/page_frag_cache.c
-@@ -18,8 +18,7 @@
- #include <linux/page_frag_cache.h>
- #include "internal.h"
-
--static bool __page_frag_cache_refill(struct page_frag_cache *nc,
--                                    gfp_t gfp_mask)
-+void *__page_frag_cache_refill(struct page_frag_cache *nc, gfp_t gfp_mask)
- {
-        struct page *page = NULL;
-        gfp_t gfp = gfp_mask;
-@@ -40,7 +39,7 @@ static bool __page_frag_cache_refill(struct page_frag_cache *nc,
-
-        if (unlikely(!page)) {
-                nc->va = NULL;
--               return false;
-+               return NULL;
-        }
-
-        nc->va = page_address(page);
-@@ -57,8 +56,9 @@ static bool __page_frag_cache_refill(struct page_frag_cache *nc,
-
-        nc->pfmemalloc = page_is_pfmemalloc(page);
-        nc->offset = 0;
--       return true;
-+       return nc->va;
- }
-+EXPORT_SYMBOL(__page_frag_cache_refill);
-
- /**
-  * page_frag_cache_drain - Drain the current page from page_frag cache.
-@@ -83,20 +83,12 @@ void __page_frag_cache_drain(struct page *page, unsigned int count)
- }
- EXPORT_SYMBOL(__page_frag_cache_drain);
-
--void *page_frag_cache_refill(struct page_frag_cache *nc, unsigned int fragsz,
--                            gfp_t gfp_mask)
-+void *page_frag_cache_flush(struct page_frag_cache *nc, gfp_t gfp_mask)
- {
-        unsigned long size_mask;
--       unsigned int offset;
-        struct page *page;
-        void *va;
-
--       if (unlikely(!nc->va)) {
--refill:
--               if (!__page_frag_cache_refill(nc, gfp_mask))
--                       return NULL;
--       }
--
- #if (PAGE_SIZE < PAGE_FRAG_CACHE_MAX_SIZE)
-        /* if size can vary use size else just use PAGE_SIZE */
-        size_mask = nc->size_mask;
-@@ -105,41 +97,23 @@ void *page_frag_cache_refill(struct page_frag_cache *nc, unsigned int fragsz,
- #endif
-
-        va = (void *)((unsigned long)nc->va & ~size_mask);
--       offset = nc->offset;
--
--       if (unlikely(offset + fragsz > (size_mask + 1))) {
--               page = virt_to_page(va);
--
--               if (!page_ref_sub_and_test(page, nc->pagecnt_bias & size_mask))
--                       goto refill;
--
--               if (unlikely(nc->pfmemalloc)) {
--                       free_unref_page(page, compound_order(page));
--                       goto refill;
--               }
--
--               /* OK, page count is 0, we can safely set it */
--               set_page_count(page, size_mask);
--               nc->pagecnt_bias |= size_mask;
--
--               nc->offset = 0;
--               if (unlikely(fragsz > (size_mask + 1))) {
--                       /*
--                        * The caller is trying to allocate a fragment
--                        * with fragsz > PAGE_SIZE but the cache isn't big
--                        * enough to satisfy the request, this may
--                        * happen in low memory conditions.
--                        * We don't release the cache page because
--                        * it could make memory pressure worse
--                        * so we simply return NULL here.
--                        */
--                       return NULL;
--               }
-+       page = virt_to_page(va);
-+       if (!page_ref_sub_and_test(page, nc->pagecnt_bias & size_mask))
-+               return __page_frag_cache_refill(nc, gfp_mask);
-+
-+       if (unlikely(nc->pfmemalloc)) {
-+               free_unref_page(page, compound_order(page));
-+               return __page_frag_cache_refill(nc, gfp_mask);
-        }
-
-+       /* OK, page count is 0, we can safely set it */
-+       set_page_count(page, size_mask);
-+       nc->pagecnt_bias |= size_mask;
-+       nc->offset = 0;
-+
-        return va;
- }
--EXPORT_SYMBOL(page_frag_cache_refill);
-+EXPORT_SYMBOL(page_frag_cache_flush);
-
- /*
-  * Frees a page fragment allocated out of either a compound or order 0 page.
-
-
-> 
-> Thanks,
-> 
-> Mat
-> 
-> .
-> 
