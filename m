@@ -1,54 +1,55 @@
-Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
+Received: from mail-ej1-f54.google.com (mail-ej1-f54.google.com [209.85.218.54])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8561829CEF
-	for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 23:27:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6119938D
+	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 02:31:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713482859; cv=none; b=IyT7qcS3Dsnm2nsEaxFoRl4DnkC8Wru171/odSR9uVOCKrH9gD6gczIYKFDUs1KwQzXXCzywphKgiHlwmaRF+LABEBcXhWlen989OdzhfKdjdL1VCEPhombqaTjeys8CDD3nXolQNkv8oCySHYsZRD8P0eSiFLDunTUhr4sWZRA=
+	t=1713493888; cv=none; b=cI4FfAUZA/9NJP7bOnPRSjrvLSPvHt4JKhLQGaUcWANJv5eYsxgPZ0n+3CFaNFVCp1hPL40dxpGMLeoKx6pZGyCmsxXOUIeNiDXUBpkSNc5aFLtdvzLft31NEcBl2nKC5s1hmp43Bsuv/euEe3EB2JuXfa7xz+RlBzekCvCbOvo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713482859; c=relaxed/simple;
-	bh=xizDYZulULm1cor7kU1CBg+oGHqLt4pe1urWfkCgvDo=;
+	s=arc-20240116; t=1713493888; c=relaxed/simple;
+	bh=k7YCvT9S1zPWE6gr7w35gMD+gW9CyioUt9kwY/OI7kY=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hq2z5GvNfmXDBKMYGhn1pfAdi/Cfeq5E7pPqaeJC/h8W6xFS+PVk1lzvd92hNqK35eUTwL05pWcYXrPHdL+WAmYC9c9XTjXDe4qBZw4SF9kuPRm2DW8zUU8OL2sWSp0Dhayz8EG8GbXlLUDeSVYhg98s4N/1WwSTEerbD0Z4Fyw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hvu+0XiC; arc=none smtp.client-ip=209.85.221.42
+	 To:Cc:Content-Type; b=jTThklTwAnUvC/xLz5QimTpuAs8XLKdG5T4ZqKxlYMVgKY7Fgainmpuqwz3LSzNdUSff8yEJpGJLcNYTZpAFnnGJTfvH35P5TzUV9PxMMDSik5lpIw0dLG0k7JylRG0ewmL2B1t2svMynwSfAhqOD1orietYk4Rd/0K8z8NB+dg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nrTelFiA; arc=none smtp.client-ip=209.85.218.54
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hvu+0XiC"
-Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34782453ffdso1374544f8f.1
-        for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 16:27:37 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nrTelFiA"
+Received: by mail-ej1-f54.google.com with SMTP id a640c23a62f3a-a51ddc783e3so174494066b.0
+        for <mptcp@lists.linux.dev>; Thu, 18 Apr 2024 19:31:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713482856; x=1714087656; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=xizDYZulULm1cor7kU1CBg+oGHqLt4pe1urWfkCgvDo=;
-        b=Hvu+0XiCsG8C9ZMnAZiUTnMLyWipqlqKp/eUY/YE1DUbDM42KWwRCKpfTNiUpszUxA
-         aOuUZKeu310J85+Iih88WzStF6crO3/r9/DsRMWvdtTg6y7K3we4OLgoMGR+trItfB4G
-         XiuSyKdcmOcFZyhKfS9wzm0WomeD8U231P3s/rU7yBO2M3i1Ikd+no5ZBnmF+nIDU1w1
-         s4pzrXZ0t/3SQSyUaFQEXY/O3xBBkWmQBlsYLSXwJAeakPvPoXff7k4lsnp5qxYYmvsN
-         immFodaVsnQ5IIAF76YF1BHi+a4lNIMA9D8yP9PO+aUQ/YGotsY68mbzWccA9F3Bll9c
-         nRCQ==
+        d=gmail.com; s=20230601; t=1713493886; x=1714098686; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=P4FFDf630SIm2RKLsFh02a/UIvtxYS7bnxqS33DUwxg=;
+        b=nrTelFiACRsqHGWhlOigovAXA7KrqOrknepd7BimoIziItEFEM4NvoGPXu4B3PDrpS
+         JqrNX9jBCuYvoNr1/E5SjUg5TLRfKgNZ4mIo4cI8sNxfreQfKXCdWhF67QwzJIMLjHwG
+         Xb2C3KztLY4qKtLv9cLwcKUG5KkA07DkLyYHjMnwJ/8YmpeVLt6e20bdLUPOzHrrAQZJ
+         MMObChYxpA0nfShtEejjvGvzpRodVYUVsm+XdhwL8xkiULDzTCHPfS/8pGl2DBa22yev
+         gAfPTDaiSkFb3YuorWngm/2p+ycD2La0N4fJS0VXY1euRKk+pb/yc2IcepNJEroJhyXx
+         vCGQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713482856; x=1714087656;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=xizDYZulULm1cor7kU1CBg+oGHqLt4pe1urWfkCgvDo=;
-        b=q8cODGr95ZKxFG47EUjYEJ2Knwvm2A4PoDzCVb2AGvK4gkEqGWYeMarMrW/0QvTgK5
-         ZuxRQzSrAxr01LDS1XHP8n6zcG8t2ANhx+SV+yCpMbqrsdmEWXGtGU2bliKXXiHoxxWk
-         4jJnu8lGPWspVjaYezPykI4I91TtSDBkOMS76VOmqoe0uRn6/KD2QsN6Q7Ms0u9PcHaQ
-         poSvzwba1CUmoTtvX8c4/CsN8GnVX6MY/LU7h6xYOk1iGdlK7/4OSY6k+FEi7RsNSZCO
-         JnHW9uE25P8JmDFgUygThTmwCIPOdjC1yILP3OsVHxSUerlpbYvGnRIKsbCOcC78lgI6
-         IDUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCV7QCGVwAJQLyK1+soLHUhsvRmmHNKV0DDz0W7sV/2ChmUUzWn3s0Izt8YnFhkln2Q0/MMOg0DCodVHLVij+F+VaoOLYeQ=
-X-Gm-Message-State: AOJu0YxmQUIBSNNfucPaLeLe2c/6Kvders7nhgzZgGzx0O3l4U+Y2uUU
-	DEO7PrfZc99gSKhFZAsxUC/BLrOtdY9GULRL8g0SsMy7jPLu2sO4OqRy2ZUIblmfGNR0ACHg1RW
-	05L9QIuGK1CoN3lXYHxI9y7BZJH8=
-X-Google-Smtp-Source: AGHT+IGx1cA9bIs5ny5tYrBbOqozFvluuDaWI9b5II0BFVbz7OLtPuXGmvlvVRvsL1YUhwViEmwaAfmQH3671sqJBLo=
-X-Received: by 2002:a5d:522d:0:b0:34a:d2a:5905 with SMTP id
- i13-20020a5d522d000000b0034a0d2a5905mr261746wra.31.1713482855640; Thu, 18 Apr
- 2024 16:27:35 -0700 (PDT)
+        d=1e100.net; s=20230601; t=1713493886; x=1714098686;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=P4FFDf630SIm2RKLsFh02a/UIvtxYS7bnxqS33DUwxg=;
+        b=ZZPdsWwrRqdIHYFaphm8+x6FditbPdRsBvUNdzAU8MFBY/7PdEknOOwO2zHGdBFylD
+         2nltR4ehJQj+YWmwV01SHDXJ4XeAjZoA05sljfXH5yFc9/2lubhZWXGFkQS+/xL7OONs
+         1QeVt73qZx1gRb5Uj9EBPVygOtn0gNhdYxBxe2A7AMiLGpsB71Se/ChUByd9SK8BJ8/L
+         qe80Pt2rqFTE4H/FFzVYDsYPUeEIrAahbINLq6cf199RpokXqw49DEwfrfNvwbAPaRE5
+         bKyxgNi5x+nD+uCdQvD2XtumRbUdS68Sj3PMNh6jcGKWCyV78ixGXflFSmXgPxKCcXQY
+         fChQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVSVpwxQ5g1HGOC9Pzne3/r/BMDzOQgrqKH5dEf75KHDjw4kfVCUx/i/79K2JsYTz0vrC2t6tCKnVltvnMj2mFqp8IOHgI=
+X-Gm-Message-State: AOJu0YyzuqU6l1l0zgxLcIKD1SS3t/chqeEW0kTuaQ4HclXfSPvWAbVq
+	/C4hPBmAvwu3m/dPnkyGzTG2CcH52uh8dPAvOBs6aIdlMBtEp1vXoSFdkFuhZ5w5VtAACPr0xhV
+	n5S2+2wfncrJq7dh8NrDOhjV6zkMTJf/aPxQ=
+X-Google-Smtp-Source: AGHT+IFH6g6Zj3ciCGagpT+fKvYUkgSx3d4QE29JqmK/DoLeEGjr/xqSvuzZuP0Em5cIHLh/cKGosTj5Zc2x2u9vnKY=
+X-Received: by 2002:a17:906:30c8:b0:a52:5789:9c5d with SMTP id
+ b8-20020a17090630c800b00a5257899c5dmr469091ejb.39.1713493885421; Thu, 18 Apr
+ 2024 19:31:25 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,11 +59,11 @@ MIME-Version: 1.0
 References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
  <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
  <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
- <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
-In-Reply-To: <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
+ <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com> <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
+In-Reply-To: <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
 From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Fri, 19 Apr 2024 07:26:58 +0800
-Message-ID: <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
+Date: Fri, 19 Apr 2024 10:30:48 +0800
+Message-ID: <CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
 Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
 To: Eric Dumazet <edumazet@google.com>
 Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org, 
@@ -72,22 +73,85 @@ Cc: Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, matttbe@kernel.org,
 	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
 	Jason Xing <kernelxing@tencent.com>
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-> When I said "If you feel the need to put them in a special group, this
-> is fine by me.",
-> this was really about partitioning the existing enum into groups, if
-> you prefer having a group of 'RES reasons'
+On Fri, Apr 19, 2024 at 7:26=E2=80=AFAM Jason Xing <kerneljasonxing@gmail.c=
+om> wrote:
+>
+> > When I said "If you feel the need to put them in a special group, this
+> > is fine by me.",
+> > this was really about partitioning the existing enum into groups, if
+> > you prefer having a group of 'RES reasons'
+>
+> Are you suggesting copying what we need from enum skb_drop_reason{} to
+> enum sk_rst_reason{}? Why not reusing them directly. I have no idea
+> what the side effect of cast conversion itself is?
 
-Are you suggesting copying what we need from enum skb_drop_reason{} to
-enum sk_rst_reason{}? Why not reusing them directly. I have no idea
-what the side effect of cast conversion itself is?
+Sorry that I'm writing this email. I'm worried my statement is not
+that clear, so I write one simple snippet which can help me explain
+well :)
 
-If __not__ doing so (copying reasons one by one), for passive rests,
-we can totally rely on the drop reason, which means if we implement
-more reasons for skb drop happening in reset cases, we don't need to
-handle reset cases over and over again (like adding rst reasons just
-after newly added drop reasons if without cast conversions). It's
-easier to maintain the reset reason part if we can apply the current
-patch series.
+Allow me give NO_SOCKET as an example:
+diff --git a/net/ipv4/icmp.c b/net/ipv4/icmp.c
+index e63a3bf99617..2c9f7364de45 100644
+--- a/net/ipv4/icmp.c
++++ b/net/ipv4/icmp.c
+@@ -767,6 +767,7 @@ void __icmp_send(struct sk_buff *skb_in, int type,
+int code, __be32 info,
+        if (!fl4.saddr)
+                fl4.saddr =3D htonl(INADDR_DUMMY);
 
-Thank you.
++       trace_icmp_send(skb_in, type, code);
+        icmp_push_reply(sk, &icmp_param, &fl4, &ipc, &rt);
+ ende:
+        ip_rt_put(rt);
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 1e650ec71d2f..d5963831280f 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -2160,6 +2160,7 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ {
+        struct net *net =3D dev_net(skb->dev);
+        enum skb_drop_reason drop_reason;
++       enum sk_rst_reason rst_reason;
+        int sdif =3D inet_sdif(skb);
+        int dif =3D inet_iif(skb);
+        const struct iphdr *iph;
+@@ -2355,7 +2356,8 @@ int tcp_v4_rcv(struct sk_buff *skb)
+ bad_packet:
+                __TCP_INC_STATS(net, TCP_MIB_INERRS);
+        } else {
+-               tcp_v4_send_reset(NULL, skb);
++               rst_reason =3D RST_REASON_NO_SOCKET;
++               tcp_v4_send_reset(NULL, skb, rst_reason);
+        }
+
+ discard_it:
+
+As you can see, we need to add a new 'rst_reason' variable which
+actually is the same as drop reason. They are the same except for the
+enum type... Such rst_reasons/drop_reasons are all over the place.
+
+Eric, if you have a strong preference, I can do it as you said.
+
+Well, how about explicitly casting them like this based on the current
+series. It looks better and clearer and more helpful to people who is
+reading codes to understand:
+diff --git a/net/ipv4/tcp_ipv4.c b/net/ipv4/tcp_ipv4.c
+index 461b4d2b7cfe..eb125163d819 100644
+--- a/net/ipv4/tcp_ipv4.c
++++ b/net/ipv4/tcp_ipv4.c
+@@ -1936,7 +1936,7 @@ int tcp_v4_do_rcv(struct sock *sk, struct sk_buff *sk=
+b)
+        return 0;
+
+ reset:
+-       tcp_v4_send_reset(rsk, skb, (u32)reason);
++       tcp_v4_send_reset(rsk, skb, (enum sk_rst_reason)reason);
+ discard:
+        kfree_skb_reason(skb, reason);
+        /* Be careful here. If this function gets more complicated and
+
+Thanks for your patience again.
+
+Jason
