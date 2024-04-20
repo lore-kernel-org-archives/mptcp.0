@@ -1,133 +1,180 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6153813A27D
-	for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 16:58:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90A1257B
+	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 00:18:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713545902; cv=none; b=dMwu4zWtaDGMZDTbSSHPRTFKbIIx0HACHaZ4UfxP2JQWo1XveeXKSTDGb6AKu2sAmnfk/9ZuoKTqJgxiId3+LuxPkfJ2sNVqkbiIWNyFWQwG0xFwClkGpc42jTnAAIfbaqm3PgveN9V8ZfOCC7BjHo3S7x9NOm1uzyBLEaXVtQ8=
+	t=1713572307; cv=none; b=afjuutgWXAHJxSc726qMX3aFvWYo4GcYWbfBzv4LQCWpS7ro5rRS4gS4cOVc/7o3binRlZejfNmsbUnKsNOL6CUGRSNmUGtEoVgwCEN6SPL7CB3pqj73qTTdQMMB7LOU8o4spqyIf2On94IJg5Zga60/TN3znzXyB8EMk3+MDkc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713545902; c=relaxed/simple;
-	bh=fxjbUsx/UxfRAVUEoW/xQodCX5hr8LcIxERPtmiJasc=;
+	s=arc-20240116; t=1713572307; c=relaxed/simple;
+	bh=bDtFl1HS94ytCpteOa3+pTW/2HYAhQFrTXH/nFPFf7c=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=mJ5jG7l86xIDPPy9M8gV7toCztASAQZ4x5JWvCUsIGJHt8WL6tYjLd9Wp6DjiCvWnqplduklPT+FFyBFvAcBtB1ftfDQIkvbY9lHPGnXXsWuiuVguOrt27OO56ZmNuxgyYubuhNbNra/Y0Xwjt9RSt1NvJFiMwf9UHEOWvS5F3o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=bWUZp4iw; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 Content-Type:MIME-Version; b=P9erkzTO1+niId28NDxZpMrVN0nHoj73QUeZkxPcL92BGShqzoqBmAqzu51yWiOcRtCfMZ6Je1An5qRBRn5YLFZ6uNXIIBBA+zJadOA5uaPVISrP8/70mLXo/p8VrfI9/ABsLop7Tq1pWxsM/t0Z1w24edIwpP2kOsEKd50smR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/cv2E/f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="bWUZp4iw"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1713545900;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references:autocrypt:autocrypt;
-	bh=4HsDcfj1bUW7rutzTCsQj6DcDbxWRVBLmYJSWrpp9Xw=;
-	b=bWUZp4iw61ma7MMrU5XkiOEx9L0UHgDJIsILgao+ewpS5hF3mr6gYR1VNz0b5UFnoAI4K3
-	dmTcuxt4lX37hCdkLRQmENuE2DSRh8Ww1fzKPvQAKk4OabuXRKmBOMChc/bAmXnehKiq/j
-	kqymM2GTX5zQjtKbsk+L9o9FS3f5sq4=
-Received: from mail-wr1-f69.google.com (mail-wr1-f69.google.com
- [209.85.221.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-210-8IOTeZPiPzahY0q7bVC22Q-1; Fri, 19 Apr 2024 12:58:19 -0400
-X-MC-Unique: 8IOTeZPiPzahY0q7bVC22Q-1
-Received: by mail-wr1-f69.google.com with SMTP id ffacd0b85a97d-34a62c37dbcso111940f8f.0
-        for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 09:58:18 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713545897; x=1714150697;
-        h=mime-version:user-agent:content-transfer-encoding:autocrypt
-         :references:in-reply-to:date:cc:to:from:subject:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=4HsDcfj1bUW7rutzTCsQj6DcDbxWRVBLmYJSWrpp9Xw=;
-        b=H1wsLVJO60oxLB8AtgmBmCg11KnrKnqxy64FCif9aUk7pa30hdC3S2dxiiqEqpVhHi
-         FCD/7tKSZilKL2g886cDIGhXm+OoZkk8mNemdxoqFPXGhOQDzjIqYmuDtoaaZY9X4P1f
-         kDcEDk/r0BAc7Joiln6daFQtvsmvRxFa45EMOMWVGmj9zDI58TS5CMkVUGB+6vCeBshG
-         gR3bvB3WjF3vqI3k8bmdrwMkKIPn8ufUIa6E8pg1GONuJtcfw4cWA90hb+jkJ6ObmLJp
-         vKP50L0bGH7WI6giMnoqWoKbxNTsbvpk5eptDMuCcngGSJJXSRqpJ+KGGCGTIQ03uycH
-         uvrA==
-X-Forwarded-Encrypted: i=1; AJvYcCVxkqzCke3CL/PUDij55QFSeJlkG/ma/ZzJACZyVhcFB1ifGeTtugQMSiqYwTOLDs+DOX2nd92Q4G0Ey7/1f0B+SzYrRN8=
-X-Gm-Message-State: AOJu0YxlK0Rxj1wLlSUEwlOkfIY1182L6VuKZq9fNEDaFa6id1hdV+w7
-	1bjQ0eTml6aIBKscBq0CmmezUtLENdKWXrUfOxh9AS5O9zqjcAeF83uC4V3ncblGWYmrnZDUKTB
-	WoZtAszXyndLXQc0NBWbp/23Gv1Yf9/C1cLI6D09qifFF1DXs4MfgWUoQYx5r
-X-Received: by 2002:a05:600c:5113:b0:416:7b2c:df05 with SMTP id o19-20020a05600c511300b004167b2cdf05mr1848460wms.1.1713545897538;
-        Fri, 19 Apr 2024 09:58:17 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFNrpb/+KZ2kpR9F93oPrPrngaeOjM79UMHFTRiKNl4k63dowl+Wxxe1Ii035pZYbgw+wBzZA==
-X-Received: by 2002:a05:600c:5113:b0:416:7b2c:df05 with SMTP id o19-20020a05600c511300b004167b2cdf05mr1848445wms.1.1713545897142;
-        Fri, 19 Apr 2024 09:58:17 -0700 (PDT)
-Received: from gerbillo.redhat.com (146-241-227-179.dyn.eolo.it. [146.241.227.179])
-        by smtp.gmail.com with ESMTPSA id bi8-20020a05600c3d8800b00419c8e27f75sm1214640wmb.16.2024.04.19.09.58.16
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 19 Apr 2024 09:58:16 -0700 (PDT)
-Message-ID: <b41d1e68d1010c4735ea0d596c814168cd79f5d8.camel@redhat.com>
-Subject: Re: [PATCH mptcp-net v3] mptcp: ensure snd_nxt is properly
- initialized on connect
-From: Paolo Abeni <pabeni@redhat.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Christoph Paasch <cpaasch@apple.com>, mptcp@lists.linux.dev, Mat
- Martineau <martineau@kernel.org>
-Date: Fri, 19 Apr 2024 18:58:15 +0200
-In-Reply-To: <f979f4ba-d075-4ec7-95b9-3edfa0fb354b@kernel.org>
-References: <3b0ca23eaa8906f967a841f55bafed48d0f895cb.1713367699.git.pabeni@redhat.com>
-	 <f979f4ba-d075-4ec7-95b9-3edfa0fb354b@kernel.org>
-Autocrypt: addr=pabeni@redhat.com; prefer-encrypt=mutual; keydata=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
-User-Agent: Evolution 3.50.4 (3.50.4-1.fc39)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/cv2E/f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29256C072AA;
+	Sat, 20 Apr 2024 00:18:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713572306;
+	bh=bDtFl1HS94ytCpteOa3+pTW/2HYAhQFrTXH/nFPFf7c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=S/cv2E/fLwn2goAiX3HksN7kW67nharmYyxeR5Eof1Gry9Mfit9pncatXyl8wUvHy
+	 34VJwtgmjcC/cqSjLaQ+fZngXS0VHJAwtuN5AxizkEnbX/q0knytFOx71JoqmtJzhQ
+	 Sy7cqVK2W1edId64Feq/7TX0+zEZaxK7TTN/T6iyBvuFijAKWRAG+l1bodbVXj/TQg
+	 9cMt3LWY0XnepySBkrejQJTaFDe/YINzOzh38Vv97FqmxHB93G6cuDXzgiNgw3rH4p
+	 6P4pnDqBTJJuqmpr4c+IWQC64YysL/cF+adAukBdgavlvryKfw3TDbccmAYRVa4bZH
+	 uKfzVnbHyVoTA==
+Message-ID: <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Sat, 20 Apr 2024 08:18:22 +0800
+In-Reply-To: <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
+References: <cover.1713321357.git.tanggeliang@kylinos.cn>
+	 <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+XlU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLlP9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInMHcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL518p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucpVCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU23wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/PvX+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBBMBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvhG5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7Ad
+	WelP+0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcmBA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIPkNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0obpX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6VRORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJGBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTAQoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atDyyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhVc9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzxOwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4pa
+	Yt49pNvhcqLKMGNLPsX06OR4G+4ai0JTTzIlwVJXuo+uZRFQyuOaSmlSjEsiQ/WsGdhILldV35RiFKe/ojQNd4B4zREBe3xT+Sf5keyAmO/TG14tIOCoGJarkGImGgYltTTTM6rIk/wwo9FWshgKAmQyEEiSzHTSnXcGbalD3Do89YRmdG+5eP7HQfsG+VWdn8IH6qgIvSt8GOw6RfSP7omMXvXji1VrbWG4LOFYcsKTN+dGDhl8LmU0y44HejkCzYj/b28MvNTiRVfucrmZMGgI8L5A4ZwQ3Inv7jY13GZSvTb7PQIbqMcb1P3SqWJFodSwBg9oSw21b+T3aYG3z3MRCDXDlZAJONELx32rPMdBva8k+8L+K8gc7uNVH4jkMPkP9jPnVPx+2P2cKc7LXXedb/qQ3MuQINBGWKTg4BEADJxiOtR4SC7EHrUDVkp/pJCQC2wxNVEiJOas/q7H62BTSjXnXDc8yamb+HDO+Sncg9SrSRaXIh+bw9G3rvOiC2aQKB6EyIWKMcuDlD7GbkLJGRoPCA5nSfHSzht2PdNvbDizODhtBy8BOQA6Vb21XOb1k/hfD8Wy6OnvkA4Er61cf66BzXeTEFrvAIW+eUeoYTBAeOOc2m4Y0J28lXhoQftpNGV5DxH9HSQilQZxEyWkNj8oomVJ6Db7gSHre0odlt5ZdB7eCJik12aPIdK5W97adXrUDAclipsyYmZoC1oRkfUrHZ3aYVgabfC+EfoHnC3KhvekmEfxAPHydGcp80iqQJPjqneDJBOrk6Y51HDMNKg4HJfPV0kujgbF3Oie2MVTuJawiidafsAjP4r7oZTkP0N+jqRmf/wkPe4xkGQRu+L2GTknKtzLAOMAPSh38JqlReQ59G4JpCqLPr00sA9YN+XP+9vOHT9s4iOu2RKy2v4eVOAfEFLXq2JejUQfXZtzSrS/31ThMbfUmZsRi8CY3HRBAENX224Wcn6IsXj3K6lfYxImRKWGa
+	/4KviLias917DT/pjLw/hE8CYubEDpm6cYpHdeAEmsrt/9dMe6flzcNQZlCBgl9zuErP8Cwq8YNO4jN78vRlLLZ5sqgDTWtGWygi/SUj8AUQHyF677QARAQABiQI7BBgBCgAmFiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwwFCRLMAwAACgkQfnvtNTGKqCkpsw/2MuS0PVhl2iXs+MleEhnN1KjeSYaw+nLbRwd2SdXoVXBquPP9Bgb92T2XilcWObNwfVtD2eDz8eKf3e9aaWIzZRQ3E5BxiQSHXl6bDDNaWJB6I8dd5TW+QnBPLzvqxgLIoYn+2FQ0AtL0wpMOdcFg3Av8MEmMJk6s/AHkL8HselA3+4h8mgoK7yMSh601WGrQAFkrWabtynWxHrq4xGfyIPpq56e5ZFPEPd4Ou8wsagn+XEdjDof/QSSjJiIaenCdDiUYrx1jltLmSlN4gRxnlCBp6JYr/7GlJ9Gf26wk25pb9RD6xgMemYQHFgkUsqDulxoBit8g9e0Jlo0gwxvWWSKBJ83f22kKiMdtWIieq94KN8kqErjSXcpI8Etu8EZsuF7LArAPch/5yjltOR5NgbcZ1UBPIPzyPgcAmZlAQgpy5c2UBMmPzxco/A/JVp4pKX8elTc0pS8W7ne8mrFtG7JL0VQfdwNNn2R45VRf3Ag+0pLSLS7WOVQcB8UjwxqDC2t3tJymKmFUfIq8N1DsNrHkBxjs9m3r82qt64u5rBUH3GIO0MGxaI033P+Pq3BXyi1Ur7p0ufsjEj7QCbEAnCPBTSfFEQIBW4YLVPk76tBXdh9HsCwwsrGC2XBmi8ymA05tMAFVq7a2W+TO0tfEdfAX7IENcV87h2yAFBZkaA==
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+User-Agent: Evolution 3.50.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, 2024-04-19 at 17:15 +0200, Matthieu Baerts wrote:
-> Hi Paolo, Mat, Christoph,
->=20
-> On 18/04/2024 09:44, Paolo Abeni wrote:
-> > Christoph reported a splat hinting at a corrupted snd_una:
-> Thank you for the patch, the review, and the bug report + test.
->=20
-> I forgot to send a notification after I applied this patch. In between,
-> the CI already validated this, and both the build for export and
-> export-net have the same issue with Packetdrill (fastopen):
->=20
-> - export:
->=20
-> > not ok 32 packetdrill: mptcp/fastopen/server-TCP_FASTOPEN-cookie-req.pk=
-t (ipv4-mapped-v6)
-> > # server-TCP_FASTOPEN-cookie-req.pkt:23: error handling packet: live pa=
-cket field ipv4_total_length: expected: 48 (0x30) vs actual: 64 (0x40)
-> > # script packet:  0.660855 . 1:1(0) ack 1 <dss dack4 3007449510 flags: =
-A>
-> > # actual packet:  0.651162 . 1:1(0) ack 1 win 256 <dss dack4 3007449509=
- dsn8 4250179620018965011 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
->=20
->  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8752422517
->=20
-> - export-net:
->=20
-> > not ok 32 packetdrill: mptcp/fastopen/server-TCP_FASTOPEN-cookie-req.pk=
-t (ipv4-mapped-v6)
-> > # server-TCP_FASTOPEN-cookie-req.pkt:23: error handling packet: live pa=
-cket field ipv4_total_length: expected: 48 (0x30) vs actual: 64 (0x40)
-> > # script packet:  0.667029 . 1:1(0) ack 1 <dss dack4 3007449510 flags: =
-A>
-> > # actual packet:  0.665988 . 1:1(0) ack 1 win 256 <dss dack4 3007449509=
- dsn8 4812888791396531368 ssn 0 dll 1 no_checksum flags: MmAF,nop,nop>
->=20
->  https://github.com/multipath-tcp/mptcp_net-next/actions/runs/8752426856
->=20
-> Do you think this is linked?
+Hi Matt,
 
-I hope it's not, but the timing hints otherwise :( I'll try to have a
-better look.
+On Fri, 2024-04-19 at 11:58 +0200, Matthieu Baerts wrote:
+> Hi Geliang, Mat,
+>=20
+> On 17/04/2024 04:38, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> >=20
+> > v9:
+> > =C2=A0- extract a new helper test_bpf_sched() from MPTCP_SCHED_TEST() t=
+o
+> > make
+> > =C2=A0=C2=A0 the macro simpler as Mat suggested. (thanks)
+> > =C2=A0- squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_first
+> > =C2=A0=C2=A0 scheduler & test", not "selftests/bpf: Add bpf scheduler t=
+est"
+> > to
+> > =C2=A0=C2=A0 avoid a build error "test_bpf_sched is not used".
+> Thank you for the v9, and the review!
+>=20
+> @Geliang: there were a lot of Git (TopGit) manipulations here, please
+> check that the result is the expected one.
 
-Thanks for the head-up!
+Thank you for applying these patches. I know there must be many
+conflicts inside. Thank you for updating my email address too. All
+patches merged well and all tests passed.
 
-Paolo
+>=20
+>=20
+> New patch for t/upstream:
+>=20
+> - d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
+
+Please insert this commit "selftests/bpf: Add RUN_MPTCP_TEST macro"
+before "mptcp: add sched_data helpers" so that it can be upstreamed
+in advance with "setsockopt per subflow: BPF" series being reviewed,
+without waiting for BPF scheduler APIs to be updated. WDYT?
+
+Regards,
+-Geliang
+
+> - 9791281821ba: conflict in t/selftests-bpf-Add-bpf-scheduler-test
+> - 92efb2a19752: conflict in t/selftests-bpf-add-bpf_first-test
+> - 78858b124aee: conflict in t/selftests-bpf-Add-bpf_bkup-test
+> - e25a04564f65: conflict in t/selftests-bpf-Add-bpf_rr-test
+> - d474c99c9c56: conflict in t/selftests-bpf-Add-bpf_red-test
+> - 0091786b07e3: conflict in t/selftests-bpf-Add-bpf_burst-test
+> - Results: eb9a8fbc1cd3..6ad6176a437b (export)
+>=20
+>=20
+> Squash-to patches:
+>=20
+> - da0ce2d96df7: "squashed" "1 verify" (with conflicts) in
+> "selftests/bpf: Add bpf scheduler test"
+>=20
+> - d08d36c72f3e: "squashed" "2 time" in "selftests/bpf: Add bpf
+> scheduler
+> test"
+> - f9800e6dbb07: conflict in t/selftests-bpf-add-bpf_first-test
+>=20
+> - d910fb60db22: "squashed" (with conflicts) in "selftests/bpf: Add
+> bpf_first test"
+> - 6723021b9a04: "squashed" "2 strlen" in "selftests/bpf: Add
+> bpf_first test"
+> - 1bcf273624e6: "squashed" "3 err msg" in "selftests/bpf: Add
+> bpf_first
+> test"
+> - 20df6c66a4bf: conflict in t/selftests-bpf-Add-bpf_bkup-test
+>=20
+> - 6f9d19a73d33: "squashed" (with conflicts) in "selftests/bpf: Add
+> bpf_bkup test"
+> - 9c86e3027008: conflict in t/selftests-bpf-Add-bpf_rr-test
+>=20
+> - 2bbbcc6cc7c1: "squashed" (with conflicts) in "selftests/bpf: Add
+> bpf_rr test"
+> - 3bdb5c116569: conflict in t/selftests-bpf-Add-bpf_red-test
+>=20
+> - 9eb2410e20b4: "squashed" (with conflicts) in "selftests/bpf: Add
+> bpf_red test"
+> - 55e93f797697: conflict in t/selftests-bpf-Add-bpf_burst-test
+>=20
+> - 9004d2b898a4: "squashed" (with conflicts) in "selftests/bpf: Add
+> bpf_burst test"
+> - Results: 6ad6176a437b..665448084780 (export)
+>=20
+>=20
+> Squash "sched & test":
+>=20
+> - 57731e73cc97: tg:squash: bpf_first sched & test
+> - 45b46aeeb072: tg:msg: update after squash
+>=20
+> - a5a572331f7c: tg:squash: bpf_bkup sched & test
+> - d89c4282bf53: tg:msg: update after squash
+>=20
+> - 44155448f992: tg:squash: bpf_rr sched & test
+> - 702454c6ba93: tg:msg: update after squash
+>=20
+> - 71681fc66d24: tg:squash: bpf_red sched & test
+> - a15a6438bcbd: tg:msg: update after squash
+>=20
+> - 297175c89808: tg:squash: bpf_burst sched & test
+> - c4624cdf779e: tg:msg: update after squash
+> - Results: 665448084780..c23ad453d8cc (export)
+>=20
+>=20
+> While at it, I also updated your email address:
+> - dbec7401465d: tg:msg: update Geliang's email address
+> - facd3cec3d0a: tg:msg: update Geliang's email address
+> - 59127f756c66: tg:msg: update Geliang's email address
+> - c20d79792bb2: tg:msg: update Geliang's email address
+> - 5f3d6b7755a2: tg:msg: update Geliang's email address
+> - 05efce6832cb: tg:msg: update Geliang's email address
+> - becd15a77346: tg:msg: update Geliang's email address
+> - e2b1e31d7720: tg:msg: update Geliang's email address
+> - a3bcc475f994: tg:msg: update Geliang's email address
+> - 699e0dbd591c: tg:msg: update Geliang's email address
+> - 2d5b66a3675f: tg:msg: update Geliang's email address
+> - 1df821d94ac8: tg:msg: update Geliang's email address
+> - 7a0adfdb70d0: tg:msg: update Geliang's email address
+> - cce49572147a: tg:msg: update Geliang's email address
+> - fff8347933fd: tg:msg: update Geliang's email address
+> - 6118caa31040: tg:msg: update Geliang's email address
+> - 6603ca35adf6: tg:msg: remove my SoB
+> - Results: c23ad453d8cc..f0f388aa6196 (export)
+>=20
+> Cheers,
+> Matt
 
