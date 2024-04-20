@@ -1,146 +1,93 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4B214F65
-	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 09:12:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF3029421
+	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 11:24:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713604363; cv=none; b=JLNARI9dFcdf0ApdnyVB/2wQ49e6tBk2YOBJM/d4Rg6XTuwx+vSni/YKvY1uDRG+ephQ6bUeR7abWVkOt5oZeGO14OggwVin1jNUewxyDcpKROdDPx0U0KAKcv3f5mDdDYPS+LsfRd8uPh3DTJRddMmNHNPXwtBtTIy2U04PZyw=
+	t=1713612255; cv=none; b=sCZdGSuXjl2kSPjOnmEg6qmG57lWKNWt7HTBVH1US4HA9VEuYU0T2yv3xoxqsQhLb0SY7r0RAjle6aKLQ2bovy2BfILdMHE7I+VhePJ8bnsUFpS1YmKMNL58F9jhCMhM02MGwovy7JlHLLdPaupR7blgEoPbEiAaByyv0Be0U0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713604363; c=relaxed/simple;
-	bh=ZGSMZVZqFzC7ZWNkcvGQ7+tmm4qYTTZ+mtW5yUbkvms=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p3XY6ilMyBuKN3c1Ti8c21T1GOd/DumViEaaywnblEjW//QHkMENu9QhsjgKhZR93RKOCGYzVY6HnX/5E8qqkp4vEH7l41K/YFkdkmt3MAiwj101aWTv+hq2olfpQJLbaEeRoZuX4QpL5Dkr0EP/iqTPi1MigIQ3amSPF6jt5+M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLgLl6Kn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713612255; c=relaxed/simple;
+	bh=wXzMs16bGmQGZZTY/L3lEngwLyiiLAPQ59McCIFEVJg=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=eKngZ/eRkXIkZ2VzMEvYYdVM4nlVyFjthZuxMexUyiT7ggxpHr3xV0ylZx8pT7EBQlREajJdl+qjYZMnMsiQ8+FJss5HIp6fd78GFVaDRovfeK8V5wM1kfg5lBRHUVSfl4we8XQqrqYEDuPB7vQuU2rXjrcBKjGcqxrKDkQAyL4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MOqp0NX4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLgLl6Kn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBEDC072AA;
-	Sat, 20 Apr 2024 09:12:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MOqp0NX4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3F21C072AA;
+	Sat, 20 Apr 2024 11:24:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713604363;
-	bh=ZGSMZVZqFzC7ZWNkcvGQ7+tmm4qYTTZ+mtW5yUbkvms=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nLgLl6KnBYVtBhPPHl7U86r3iJTK/l4lg307QXIKKQf66q1bwlpzGPKRMW74qblfQ
-	 7WDL8T9YuOdPRpMG1Ee9p4TGGWGi7bzbxLYRzr4HalvHk3tqWLDo7yK4HpNLXE8H8B
-	 h+sty0sktuaxal2elGrD0ANi9LY+mQmPKQubvdrEIDvOw3Ulzb41BPyN21ntAbaGQ9
-	 pTvQbP1hjy3kplOgeZkC0sEjgDr3sDUQ6EqvDSE66ioA8FTTMZBFwke8ny1HOS3OgC
-	 1jU09tCUCS8Ji7AOuxs+mRds/X77egWRk4g7nqzMnvAJcUVELFcKY1RzcU1XFv9ZhV
-	 oFNniSPPsnGCQ==
-Message-ID: <72ba1395-fa5f-489a-872d-5dcb1727da5f@kernel.org>
-Date: Sat, 20 Apr 2024 11:12:39 +0200
+	s=k20201202; t=1713612254;
+	bh=wXzMs16bGmQGZZTY/L3lEngwLyiiLAPQ59McCIFEVJg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=MOqp0NX4m1wKLOrgjIQIZgsIWwu5FRhMbH5L5k0Xyd6TvGM5CCesUe+jL7o/J2cZ/
+	 Y3qIrNd6uN+9gP67AgJfSeYAimVat13GAxSCqU8FBDh9KXQ951eZAetqTheGGs/tvd
+	 2nhi10rz/hvf88wBDKC02HgPfvE/seI9VGAJ8UCP72YK+Nrk3Atmop/0IStmRSqYiW
+	 tDxK97EEkgoVGbshTAr4lX7sxHMjdTvihYPsw+UGtqbtc45JbebMoGc73KpSY+0IPQ
+	 pQXazHqIca/T1Qdo89FmVAAzHmwz/ihkDDBicbmFhK7N9FsneKW8XmTo2zsjZUjrKW
+	 jf/lczLQf26Gg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 0/4] setsockopt per subflow: BPF
+Date: Sat, 20 Apr 2024 19:23:25 +0800
+Message-Id: <cover.1713612119.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.40.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1713321357.git.tanggeliang@kylinos.cn>
- <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
- <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 20/04/2024 02:18, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Fri, 2024-04-19 at 11:58 +0200, Matthieu Baerts wrote:
->> Hi Geliang, Mat,
->>
->> On 17/04/2024 04:38, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> v9:
->>>  - extract a new helper test_bpf_sched() from MPTCP_SCHED_TEST() to
->>> make
->>>    the macro simpler as Mat suggested. (thanks)
->>>  - squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_first
->>>    scheduler & test", not "selftests/bpf: Add bpf scheduler test"
->>> to
->>>    avoid a build error "test_bpf_sched is not used".
->> Thank you for the v9, and the review!
->>
->> @Geliang: there were a lot of Git (TopGit) manipulations here, please
->> check that the result is the expected one.
-> 
-> Thank you for applying these patches. I know there must be many
-> conflicts inside. Thank you for updating my email address too. All
-> patches merged well and all tests passed.
+v8:
+ - rebased on "export/20240420T092451"
+ - update the git metadata to add Nicolas as the git "Author" and add a
+   "Co-authored-by" tag with my name in patch 1 as Mat suggested in v7.
+ - use send_byte in patch 2 instead of send_recv_data, to make this
+   series independent of the commit "selftests/bpf: Export send_recv_data
+   helper", which is in bpf-next, but not in mptcp_net-next at this moment.
 
-Thank you for having checked!
+v7:
+ - address Mat's comments in v6 (thanks): drop MPTCP_BASE_TEST and rebased.
+ - depends on:
+ "refactor mptcp bpf tests" v7
+ "export send_byte and send_recv_data" v2
 
->>
->>
->> New patch for t/upstream:
->>
->> - d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
-> 
-> Please insert this commit "selftests/bpf: Add RUN_MPTCP_TEST macro"
-> before "mptcp: add sched_data helpers" so that it can be upstreamed
-> in advance with "setsockopt per subflow: BPF" series being reviewed,
-> without waiting for BPF scheduler APIs to be updated. WDYT?
+v6:
+ - Deponds on "[bpf-next] export send_byte and send_recv_data" series.
 
-I don't think we need to move it: there are no other patches modifying
-the BPF selftests before that one. So we should be safe regarding conflicts.
+v5:
+ - #1-#7 Address #76: add new macros MPTCP_BASE_TEST and RUN_MPTCP_TEST.
+ - #8-#14 add MPTCP_SCHED_TEST macro.
 
-We can indeed send it with "setsockopt per subflow: BPF" series. These
-patches can be applied before "selftests/bpf: Add RUN_MPTCP_TEST macro",
-in the "patches for net-next" section when they will be marked as ready.
+v4:
+ - #1-#5 Address #76: add a new macro RUN_MPTCP_TEST.
+ - #6-#11 Cleanups: add send_data_and_verify and SCHED_TEST.
 
-Cheers,
-Matt
+v3:
+ - deal with EAGAIN.
+ - add _ss_search helper.
+
+v2:
+ - fix checkpatch warnings.
+ - cleanups.
+
+Geliang Tang (3):
+  selftests/bpf: Add mptcp subflow subtest
+  selftests/bpf: Handle SIGINT when creating netns
+  Squash to "selftests/bpf: Add bpf scheduler test"
+
+Nicolas Rybowski (1):
+  selftests/bpf: Add mptcp subflow example
+
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 139 +++++++++++++++---
+ .../selftests/bpf/progs/mptcp_subflow.c       |  70 +++++++++
+ 2 files changed, 191 insertions(+), 18 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_subflow.c
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.40.1
 
