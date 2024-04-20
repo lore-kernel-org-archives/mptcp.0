@@ -1,194 +1,146 @@
-Received: from mail-ej1-f47.google.com (mail-ej1-f47.google.com [209.85.218.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0F4A5CB5
-	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 03:23:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A4B214F65
+	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 09:12:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713583393; cv=none; b=fAdWtFXYzg/yKWsfVVnBB6NPaPp5ndZBDofiwxqzFeEyd/6Z/V2oZx8WRv4H56OBLrYo+p40xYfq+gv+wKhcTkdvPLFnTHS9eHst7H99bwVktfiaHI8sT/ZG3K9IqwKwaPmlWf6f0E1XoxqAiP0X/NXEFKlnXCGNljMqYdyNEC4=
+	t=1713604363; cv=none; b=JLNARI9dFcdf0ApdnyVB/2wQ49e6tBk2YOBJM/d4Rg6XTuwx+vSni/YKvY1uDRG+ephQ6bUeR7abWVkOt5oZeGO14OggwVin1jNUewxyDcpKROdDPx0U0KAKcv3f5mDdDYPS+LsfRd8uPh3DTJRddMmNHNPXwtBtTIy2U04PZyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713583393; c=relaxed/simple;
-	bh=efxe3LWT1F4DBpCl6IYwsNI5Ug5mdMiWXefSbL916ZI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=P3GG/P9CJRueRltrirxg1TK8l7k+8xb9ljmXeekjWYp/YW25pZrw3UBnUCv3rbhGY1LRftcy6KJk1El7RucLL9H4x6OlyH+u8CrgOHDXHqtj6C4bbuSUlMrP4SgZMBN8wVvn3qKpI0SaD1ofeN6CxX7c5EtuIsaZmHsfFQAjuvE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=R5sf6p18; arc=none smtp.client-ip=209.85.218.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1713604363; c=relaxed/simple;
+	bh=ZGSMZVZqFzC7ZWNkcvGQ7+tmm4qYTTZ+mtW5yUbkvms=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=p3XY6ilMyBuKN3c1Ti8c21T1GOd/DumViEaaywnblEjW//QHkMENu9QhsjgKhZR93RKOCGYzVY6HnX/5E8qqkp4vEH7l41K/YFkdkmt3MAiwj101aWTv+hq2olfpQJLbaEeRoZuX4QpL5Dkr0EP/iqTPi1MigIQ3amSPF6jt5+M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nLgLl6Kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R5sf6p18"
-Received: by mail-ej1-f47.google.com with SMTP id a640c23a62f3a-a5200afe39eso282104466b.1
-        for <mptcp@lists.linux.dev>; Fri, 19 Apr 2024 20:23:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1713583390; x=1714188190; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bpLu6IVjSlqb5TSshPffMpA3zpsaR9HFuHO2G5ymDPM=;
-        b=R5sf6p18ru40W7ltlWMtwJaN8okOf4EOcCOunHv1So37I+qjZskRLh4TlBfvpQNBey
-         fbzRvEE2bAkXD6rvIgTnMJwyCBDNbcos3pX6ZJW8eO2HUGBTURUwgPRml1a7AvuCufEt
-         LpaDXO3l44SVOhdhzVo4iifWMJBjqqm5yzcjRu6fVDCAO4pI/Up1oBVPe9nU9kebro9j
-         vYOBuW+jfgyoO31SdQaTeeXeVvIoEYrV7Hq8+ca6TH+1BeZBJUaOWoRDD+XsQ7dEeM4m
-         ytXuRgsnXI/WasUjPSMF5g+iyByo+/rM9BZCXo8tu0gBEf1qtSseb0bok9I1DqmPzpJZ
-         sE6Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1713583390; x=1714188190;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=bpLu6IVjSlqb5TSshPffMpA3zpsaR9HFuHO2G5ymDPM=;
-        b=otTw2JQobL4NFpF6ap+KOP2eaz1ML5MnD8Sm0plGBjLxwNyjs6W4iIf0LCZIa7Z108
-         7FKxO5D3/2Rh4+sIvD/Ps4x5dFmRD3k8qaFG7W5Kx4sUMJWxk0PVkZds/AKBJLbSR7WB
-         79t6A8mi52zwl0SDX3q2l3RoRVzw3xgD5aPvTFAY7Zwrw2OWKp63D8ieMSTsNfNoC/rt
-         kIYewVjEjoMqcsVPMEnr2rqWPTm9cNMJQ+zNrGX+sjCBv5zG0qDpdOVXol0oXVYBJBve
-         PcQHZejl/CzXacb97EcSBq/axVpKDCgwYzeoegvLrGjOatCaiVXblLqgrTYl6nolqNI7
-         z81w==
-X-Forwarded-Encrypted: i=1; AJvYcCVrB1gPMU8CSC5hvqGq9jVy8ssEfeQSFGOiRqI5TfgW4WOnt5yRJ/5bm64tgQhgg+0ggkMcoswJ0HY7vceiOLtrkx+Lg3s=
-X-Gm-Message-State: AOJu0Yx1a39AWvfBFJU1XbLOja5J2w/lbak+Dtvy1QxojU78mGnB2u9h
-	sSx/gr4+NdiA8+iyes+IDZJYxabM2ZtfLw22/OsMPNF6jWfnvEIHJIaXJu1095/QwUY2KB5Ld79
-	53F77+TCkWEAk1v7DIgop/EdhqRE=
-X-Google-Smtp-Source: AGHT+IHPmY1syujhBD4xStYQPROXKUhZWyW6X0fVqqUaltqcDWT552yWFmDdwt+9n9NNErHbE+ctL8JdG2V4VRpEbdM=
-X-Received: by 2002:a17:906:5856:b0:a55:5fb4:824f with SMTP id
- h22-20020a170906585600b00a555fb4824fmr3525634ejs.45.1713583389615; Fri, 19
- Apr 2024 20:23:09 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nLgLl6Kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBBEDC072AA;
+	Sat, 20 Apr 2024 09:12:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1713604363;
+	bh=ZGSMZVZqFzC7ZWNkcvGQ7+tmm4qYTTZ+mtW5yUbkvms=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=nLgLl6KnBYVtBhPPHl7U86r3iJTK/l4lg307QXIKKQf66q1bwlpzGPKRMW74qblfQ
+	 7WDL8T9YuOdPRpMG1Ee9p4TGGWGi7bzbxLYRzr4HalvHk3tqWLDo7yK4HpNLXE8H8B
+	 h+sty0sktuaxal2elGrD0ANi9LY+mQmPKQubvdrEIDvOw3Ulzb41BPyN21ntAbaGQ9
+	 pTvQbP1hjy3kplOgeZkC0sEjgDr3sDUQ6EqvDSE66ioA8FTTMZBFwke8ny1HOS3OgC
+	 1jU09tCUCS8Ji7AOuxs+mRds/X77egWRk4g7nqzMnvAJcUVELFcKY1RzcU1XFv9ZhV
+	 oFNniSPPsnGCQ==
+Message-ID: <72ba1395-fa5f-489a-872d-5dcb1727da5f@kernel.org>
+Date: Sat, 20 Apr 2024 11:12:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
- <CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
- <20240418084646.68713c42@kernel.org> <CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
- <CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
- <CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
- <CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
- <CANn89iL9OzD5+Y56F_8Jqyxwa5eDQPaPjhX9Y-Y_b9+bcQE08Q@mail.gmail.com>
- <CAL+tcoBn8RHm8AbwMBJ6FM6PMLLotCwTxSgPS1ABd-_D7uBSxw@mail.gmail.com>
- <CANn89iJ4a5VE-_AV-wVrh9Zpu0yS=jtwJaR_s2cBX7pP_QGQXQ@mail.gmail.com>
- <CAL+tcoA_eU98hMoWA2UM2LD_fNp=geY0uUfc+4pDnbUCKK6=Ew@mail.gmail.com> <20240419223553.49cb0628@rorschach.local.home>
-In-Reply-To: <20240419223553.49cb0628@rorschach.local.home>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Sat, 20 Apr 2024 11:22:32 +0800
-Message-ID: <CAL+tcoBS1pAp-1sKE8V9CHEXqwme2-eRvwJtL150mGqmD+7hpQ@mail.gmail.com>
-Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to detect
-To: Steven Rostedt <rostedt@goodmis.org>
-Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, dsahern@kernel.org, 
-	matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org, 
-	pabeni@redhat.com, davem@davemloft.net, mhiramat@kernel.org, 
-	mathieu.desnoyers@efficios.com, atenart@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, linux-trace-kernel@vger.kernel.org, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1713321357.git.tanggeliang@kylinos.cn>
+ <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
+ <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Steven,
+Hi Geliang,
 
-On Sat, Apr 20, 2024 at 10:36=E2=80=AFAM Steven Rostedt <rostedt@goodmis.or=
-g> wrote:
->
-> On Fri, 19 Apr 2024 16:00:20 +0800
-> Jason Xing <kerneljasonxing@gmail.com> wrote:
->
-> > If other experts see this thread, please help me. I would appreciate
-> > it. I have strong interests and feel strong responsibility to
-> > implement something like this patch series. It can be very useful!!
->
-> I'm not a networking expert, but as I'm Cc'd and this is about tracing,
-> I'll jump in to see if I can help. Honestly, reading the thread, it
-> appears that you and Eric are talking past each other.
->
-> I believe Eric is concerned about losing the value of the enum. Enums
-> are types, and if you typecast them to another type, they lose the
-> previous type, and all the safety that goes with it.
+On 20/04/2024 02:18, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Fri, 2024-04-19 at 11:58 +0200, Matthieu Baerts wrote:
+>> Hi Geliang, Mat,
+>>
+>> On 17/04/2024 04:38, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> v9:
+>>>  - extract a new helper test_bpf_sched() from MPTCP_SCHED_TEST() to
+>>> make
+>>>    the macro simpler as Mat suggested. (thanks)
+>>>  - squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_first
+>>>    scheduler & test", not "selftests/bpf: Add bpf scheduler test"
+>>> to
+>>>    avoid a build error "test_bpf_sched is not used".
+>> Thank you for the v9, and the review!
+>>
+>> @Geliang: there were a lot of Git (TopGit) manipulations here, please
+>> check that the result is the expected one.
+> 
+> Thank you for applying these patches. I know there must be many
+> conflicts inside. Thank you for updating my email address too. All
+> patches merged well and all tests passed.
 
-Ah, I see. Possible lost value in another enum could cause a problem.
+Thank you for having checked!
 
->
-> Now, I do not really understand the problem trying to be solved here. I
-> understand how TCP works but I never looked into the implementation of
-> MPTCP.
->
-> You added this:
->
-> +static inline enum sk_rst_reason convert_mptcp_reason(u32 reason)
-> +{
-> +       return reason +=3D RST_REASON_START;
-> +}
->
-> And used it for places like this:
->
-> @@ -309,8 +309,13 @@ static struct dst_entry *subflow_v4_route_req(const =
-struct sock *sk,
->                 return dst;
->
->         dst_release(dst);
-> -       if (!req->syncookie)
-> -               tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NO=
-T_SPECIFIED);
-> +       if (!req->syncookie) {
-> +               struct mptcp_ext *mpext =3D mptcp_get_ext(skb);
-> +               enum sk_rst_reason reason;
-> +
-> +               reason =3D convert_mptcp_reason(mpext->reset_reason);
-> +               tcp_request_sock_ops.send_reset(sk, skb, reason);
-> +       }
->         return NULL;
->  }
->
-> As I don't know this code or how MPTCP works, I do not understand the
-> above. It use to pass to send_reset() SK_RST_REASON_NOT_SPECIFIED. But
-> now it takes a "reset_reason" calls the "convert_mptcp_reason()" to get
-> back a enum value.
->
-> If you are mapping the reset_reason to enum sk_rst_reason, why not do
-> it via a real conversion instead of this fragile arithmetic between the t=
-wo
-> values?
->
-> static inline enum sk_rst_reason convert_mptcp_reason(u32 reason)
-> {
->         switch(reason) {
->         case 0: return SK_RST_REASON_MPTCP_RST_EUNSPEC;
->         case 1: return SK_RST_REASON_MPTCP_RST_EMPTCP;
->         case 2: return SK_RST_REASON_MPTCP_RST_ERESOURCE;
->         [..]
->         default: return SK_RST_REASON_MAX; // or some other error value
->         ]
-> }
+>>
+>>
+>> New patch for t/upstream:
+>>
+>> - d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
+> 
+> Please insert this commit "selftests/bpf: Add RUN_MPTCP_TEST macro"
+> before "mptcp: add sched_data helpers" so that it can be upstreamed
+> in advance with "setsockopt per subflow: BPF" series being reviewed,
+> without waiting for BPF scheduler APIs to be updated. WDYT?
 
-This code snippet looks much better than mine.
+I don't think we need to move it: there are no other patches modifying
+the BPF selftests before that one. So we should be safe regarding conflicts.
 
->
-> I'm not sure if this is any better, but it's not doing any casting and
-> it's easier to understand. It's a simple mapping between the reason and
-> the enum and there's no inherit dependency between the values. Could
-> possibly create enums for the reason numbers and replace the hard coded
-> values with them.
+We can indeed send it with "setsockopt per subflow: BPF" series. These
+patches can be applied before "selftests/bpf: Add RUN_MPTCP_TEST macro",
+in the "patches for net-next" section when they will be marked as ready.
 
-Right.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-I also need to handle many drop reasons cases like what you do. Due to
-too many of them, I will try the key-value map instead of switch-case
-and then see if it works.
-
->
-> That way that helper function is at least doing a real conversion of
-> one type to another.
->
-> But like I said from the beginning. I don't understand the details here
-> and have not spent the time to dig deeper. I just read the thread and I
-> agree with Eric that the arithmetic conversion of reason to an enum
-> looks fragile at best and buggy at worst.
-
-Thanks so much for your help, which I didn't even imagine.
-
-Sure, after one night of investigation, I figured it out. I will drop
-enum casts without any doubt as Eric and you suggested. But I believe
-a new enum is needed, grouping various reasons together which help
-ftrace print the valid string to userspace.
-
-Thanks,
-Jason
-
->
-> -- Steve
