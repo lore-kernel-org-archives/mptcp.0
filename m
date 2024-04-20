@@ -1,180 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A90A1257B
-	for <mptcp@lists.linux.dev>; Sat, 20 Apr 2024 00:18:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFF72DF44;
+	Sat, 20 Apr 2024 02:36:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713572307; cv=none; b=afjuutgWXAHJxSc726qMX3aFvWYo4GcYWbfBzv4LQCWpS7ro5rRS4gS4cOVc/7o3binRlZejfNmsbUnKsNOL6CUGRSNmUGtEoVgwCEN6SPL7CB3pqj73qTTdQMMB7LOU8o4spqyIf2On94IJg5Zga60/TN3znzXyB8EMk3+MDkc=
+	t=1713580560; cv=none; b=MtGzIMuUQ8xPYu6CoUHzsQQhV3417gCX+2LHhzD4cFWB0psqeuI8Aqjuagm5uOUT5sX1VVxL8LPEV2VAO0CElJrZrdpCpyhkKOWrRhI1neXmqSI51+IaUJ1rQT/0TJqhBQI9Fk04zl/GRD3L0XpNtvZThM6ugL8nKAGtRUAyf44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713572307; c=relaxed/simple;
-	bh=bDtFl1HS94ytCpteOa3+pTW/2HYAhQFrTXH/nFPFf7c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=P9erkzTO1+niId28NDxZpMrVN0nHoj73QUeZkxPcL92BGShqzoqBmAqzu51yWiOcRtCfMZ6Je1An5qRBRn5YLFZ6uNXIIBBA+zJadOA5uaPVISrP8/70mLXo/p8VrfI9/ABsLop7Tq1pWxsM/t0Z1w24edIwpP2kOsEKd50smR0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S/cv2E/f; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S/cv2E/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29256C072AA;
-	Sat, 20 Apr 2024 00:18:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713572306;
-	bh=bDtFl1HS94ytCpteOa3+pTW/2HYAhQFrTXH/nFPFf7c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=S/cv2E/fLwn2goAiX3HksN7kW67nharmYyxeR5Eof1Gry9Mfit9pncatXyl8wUvHy
-	 34VJwtgmjcC/cqSjLaQ+fZngXS0VHJAwtuN5AxizkEnbX/q0knytFOx71JoqmtJzhQ
-	 Sy7cqVK2W1edId64Feq/7TX0+zEZaxK7TTN/T6iyBvuFijAKWRAG+l1bodbVXj/TQg
-	 9cMt3LWY0XnepySBkrejQJTaFDe/YINzOzh38Vv97FqmxHB93G6cuDXzgiNgw3rH4p
-	 6P4pnDqBTJJuqmpr4c+IWQC64YysL/cF+adAukBdgavlvryKfw3TDbccmAYRVa4bZH
-	 uKfzVnbHyVoTA==
-Message-ID: <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Sat, 20 Apr 2024 08:18:22 +0800
-In-Reply-To: <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
-References: <cover.1713321357.git.tanggeliang@kylinos.cn>
-	 <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.50.0-1 
+	s=arc-20240116; t=1713580560; c=relaxed/simple;
+	bh=rebUQf/UKr8xUTovVhPoRr3DOOOrnUizU7UWCD3khKU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=ILl5VDAEQDVJQvhUVFrndtPzhfSBW+lqjSwFmxsa5AGF0ArG6riS4Ydj3nNtALqBM4IoqtKv6FjZ8+/AFgZb7yxBMtbcrGpq7pC021zJETE4xkT+L34DQBmXzYOB/9neNJm4GDgfbJqdDpfcj9N3vVe1+HC7U5ChF7ga3UJ4I2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDF88C32782;
+	Sat, 20 Apr 2024 02:35:57 +0000 (UTC)
+Date: Fri, 19 Apr 2024 22:35:53 -0400
+From: Steven Rostedt <rostedt@goodmis.org>
+To: Jason Xing <kerneljasonxing@gmail.com>
+Cc: Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, pabeni@redhat.com, davem@davemloft.net,
+ mhiramat@kernel.org, mathieu.desnoyers@efficios.com, atenart@kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+Subject: Re: [PATCH net-next v6 0/7] Implement reset reason mechanism to
+ detect
+Message-ID: <20240419223553.49cb0628@rorschach.local.home>
+In-Reply-To: <CAL+tcoA_eU98hMoWA2UM2LD_fNp=geY0uUfc+4pDnbUCKK6=Ew@mail.gmail.com>
+References: <20240417085143.69578-1-kerneljasonxing@gmail.com>
+	<CAL+tcoDJZe9pxjmVfgnq8z_sp6Zqe-jhWqoRnyuNwKXuPLGzVQ@mail.gmail.com>
+	<20240418084646.68713c42@kernel.org>
+	<CAL+tcoD4hyfBz4LrOOh6q6OO=6G7zpdXBQgR2k4rH3FwXsY3XA@mail.gmail.com>
+	<CANn89iJ4pW7OFQ59RRHMimdYdN9PZ=D+vEq0je877s0ijH=xeg@mail.gmail.com>
+	<CAL+tcoBV77KmL8_d1PTk8muA6Gg3hPYb99BpAXD9W1RcFsg7Bw@mail.gmail.com>
+	<CAL+tcoAEN-OQeqn3m3zLGUiPZEaoTjz0WHaNL-xm702aot_m-g@mail.gmail.com>
+	<CANn89iL9OzD5+Y56F_8Jqyxwa5eDQPaPjhX9Y-Y_b9+bcQE08Q@mail.gmail.com>
+	<CAL+tcoBn8RHm8AbwMBJ6FM6PMLLotCwTxSgPS1ABd-_D7uBSxw@mail.gmail.com>
+	<CANn89iJ4a5VE-_AV-wVrh9Zpu0yS=jtwJaR_s2cBX7pP_QGQXQ@mail.gmail.com>
+	<CAL+tcoA_eU98hMoWA2UM2LD_fNp=geY0uUfc+4pDnbUCKK6=Ew@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.8 (GTK+ 2.24.33; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+On Fri, 19 Apr 2024 16:00:20 +0800
+Jason Xing <kerneljasonxing@gmail.com> wrote:
 
-On Fri, 2024-04-19 at 11:58 +0200, Matthieu Baerts wrote:
-> Hi Geliang, Mat,
->=20
-> On 17/04/2024 04:38, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> >=20
-> > v9:
-> > =C2=A0- extract a new helper test_bpf_sched() from MPTCP_SCHED_TEST() t=
-o
-> > make
-> > =C2=A0=C2=A0 the macro simpler as Mat suggested. (thanks)
-> > =C2=A0- squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_first
-> > =C2=A0=C2=A0 scheduler & test", not "selftests/bpf: Add bpf scheduler t=
-est"
-> > to
-> > =C2=A0=C2=A0 avoid a build error "test_bpf_sched is not used".
-> Thank you for the v9, and the review!
->=20
-> @Geliang: there were a lot of Git (TopGit) manipulations here, please
-> check that the result is the expected one.
+> If other experts see this thread, please help me. I would appreciate
+> it. I have strong interests and feel strong responsibility to
+> implement something like this patch series. It can be very useful!!
 
-Thank you for applying these patches. I know there must be many
-conflicts inside. Thank you for updating my email address too. All
-patches merged well and all tests passed.
+I'm not a networking expert, but as I'm Cc'd and this is about tracing,
+I'll jump in to see if I can help. Honestly, reading the thread, it
+appears that you and Eric are talking past each other.
 
->=20
->=20
-> New patch for t/upstream:
->=20
-> - d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
+I believe Eric is concerned about losing the value of the enum. Enums
+are types, and if you typecast them to another type, they lose the
+previous type, and all the safety that goes with it.
 
-Please insert this commit "selftests/bpf: Add RUN_MPTCP_TEST macro"
-before "mptcp: add sched_data helpers" so that it can be upstreamed
-in advance with "setsockopt per subflow: BPF" series being reviewed,
-without waiting for BPF scheduler APIs to be updated. WDYT?
+Now, I do not really understand the problem trying to be solved here. I
+understand how TCP works but I never looked into the implementation of
+MPTCP.
 
-Regards,
--Geliang
+You added this:
 
-> - 9791281821ba: conflict in t/selftests-bpf-Add-bpf-scheduler-test
-> - 92efb2a19752: conflict in t/selftests-bpf-add-bpf_first-test
-> - 78858b124aee: conflict in t/selftests-bpf-Add-bpf_bkup-test
-> - e25a04564f65: conflict in t/selftests-bpf-Add-bpf_rr-test
-> - d474c99c9c56: conflict in t/selftests-bpf-Add-bpf_red-test
-> - 0091786b07e3: conflict in t/selftests-bpf-Add-bpf_burst-test
-> - Results: eb9a8fbc1cd3..6ad6176a437b (export)
->=20
->=20
-> Squash-to patches:
->=20
-> - da0ce2d96df7: "squashed" "1 verify" (with conflicts) in
-> "selftests/bpf: Add bpf scheduler test"
->=20
-> - d08d36c72f3e: "squashed" "2 time" in "selftests/bpf: Add bpf
-> scheduler
-> test"
-> - f9800e6dbb07: conflict in t/selftests-bpf-add-bpf_first-test
->=20
-> - d910fb60db22: "squashed" (with conflicts) in "selftests/bpf: Add
-> bpf_first test"
-> - 6723021b9a04: "squashed" "2 strlen" in "selftests/bpf: Add
-> bpf_first test"
-> - 1bcf273624e6: "squashed" "3 err msg" in "selftests/bpf: Add
-> bpf_first
-> test"
-> - 20df6c66a4bf: conflict in t/selftests-bpf-Add-bpf_bkup-test
->=20
-> - 6f9d19a73d33: "squashed" (with conflicts) in "selftests/bpf: Add
-> bpf_bkup test"
-> - 9c86e3027008: conflict in t/selftests-bpf-Add-bpf_rr-test
->=20
-> - 2bbbcc6cc7c1: "squashed" (with conflicts) in "selftests/bpf: Add
-> bpf_rr test"
-> - 3bdb5c116569: conflict in t/selftests-bpf-Add-bpf_red-test
->=20
-> - 9eb2410e20b4: "squashed" (with conflicts) in "selftests/bpf: Add
-> bpf_red test"
-> - 55e93f797697: conflict in t/selftests-bpf-Add-bpf_burst-test
->=20
-> - 9004d2b898a4: "squashed" (with conflicts) in "selftests/bpf: Add
-> bpf_burst test"
-> - Results: 6ad6176a437b..665448084780 (export)
->=20
->=20
-> Squash "sched & test":
->=20
-> - 57731e73cc97: tg:squash: bpf_first sched & test
-> - 45b46aeeb072: tg:msg: update after squash
->=20
-> - a5a572331f7c: tg:squash: bpf_bkup sched & test
-> - d89c4282bf53: tg:msg: update after squash
->=20
-> - 44155448f992: tg:squash: bpf_rr sched & test
-> - 702454c6ba93: tg:msg: update after squash
->=20
-> - 71681fc66d24: tg:squash: bpf_red sched & test
-> - a15a6438bcbd: tg:msg: update after squash
->=20
-> - 297175c89808: tg:squash: bpf_burst sched & test
-> - c4624cdf779e: tg:msg: update after squash
-> - Results: 665448084780..c23ad453d8cc (export)
->=20
->=20
-> While at it, I also updated your email address:
-> - dbec7401465d: tg:msg: update Geliang's email address
-> - facd3cec3d0a: tg:msg: update Geliang's email address
-> - 59127f756c66: tg:msg: update Geliang's email address
-> - c20d79792bb2: tg:msg: update Geliang's email address
-> - 5f3d6b7755a2: tg:msg: update Geliang's email address
-> - 05efce6832cb: tg:msg: update Geliang's email address
-> - becd15a77346: tg:msg: update Geliang's email address
-> - e2b1e31d7720: tg:msg: update Geliang's email address
-> - a3bcc475f994: tg:msg: update Geliang's email address
-> - 699e0dbd591c: tg:msg: update Geliang's email address
-> - 2d5b66a3675f: tg:msg: update Geliang's email address
-> - 1df821d94ac8: tg:msg: update Geliang's email address
-> - 7a0adfdb70d0: tg:msg: update Geliang's email address
-> - cce49572147a: tg:msg: update Geliang's email address
-> - fff8347933fd: tg:msg: update Geliang's email address
-> - 6118caa31040: tg:msg: update Geliang's email address
-> - 6603ca35adf6: tg:msg: remove my SoB
-> - Results: c23ad453d8cc..f0f388aa6196 (export)
->=20
-> Cheers,
-> Matt
++static inline enum sk_rst_reason convert_mptcp_reason(u32 reason)
++{
++	return reason += RST_REASON_START;
++}
 
+And used it for places like this:
+
+@@ -309,8 +309,13 @@ static struct dst_entry *subflow_v4_route_req(const struct sock *sk,
+ 		return dst;
+ 
+ 	dst_release(dst);
+-	if (!req->syncookie)
+-		tcp_request_sock_ops.send_reset(sk, skb, SK_RST_REASON_NOT_SPECIFIED);
++	if (!req->syncookie) {
++		struct mptcp_ext *mpext = mptcp_get_ext(skb);
++		enum sk_rst_reason reason;
++
++		reason = convert_mptcp_reason(mpext->reset_reason);
++		tcp_request_sock_ops.send_reset(sk, skb, reason);
++	}
+ 	return NULL;
+ }
+
+As I don't know this code or how MPTCP works, I do not understand the
+above. It use to pass to send_reset() SK_RST_REASON_NOT_SPECIFIED. But
+now it takes a "reset_reason" calls the "convert_mptcp_reason()" to get
+back a enum value.
+
+If you are mapping the reset_reason to enum sk_rst_reason, why not do
+it via a real conversion instead of this fragile arithmetic between the two
+values?
+
+static inline enum sk_rst_reason convert_mptcp_reason(u32 reason)
+{
+	switch(reason) {
+	case 0: return SK_RST_REASON_MPTCP_RST_EUNSPEC;
+	case 1: return SK_RST_REASON_MPTCP_RST_EMPTCP;
+	case 2: return SK_RST_REASON_MPTCP_RST_ERESOURCE;
+	[..]
+	default: return SK_RST_REASON_MAX; // or some other error value
+	]
+}
+
+I'm not sure if this is any better, but it's not doing any casting and
+it's easier to understand. It's a simple mapping between the reason and
+the enum and there's no inherit dependency between the values. Could
+possibly create enums for the reason numbers and replace the hard coded
+values with them.
+
+That way that helper function is at least doing a real conversion of
+one type to another.
+
+But like I said from the beginning. I don't understand the details here
+and have not spent the time to dig deeper. I just read the thread and I
+agree with Eric that the arithmetic conversion of reason to an enum
+looks fragile at best and buggy at worst.
+
+-- Steve
