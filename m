@@ -1,44 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE42A481C6
-	for <mptcp@lists.linux.dev>; Mon, 22 Apr 2024 06:50:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3D5482CA
+	for <mptcp@lists.linux.dev>; Mon, 22 Apr 2024 07:05:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713768631; cv=none; b=Cy1mSi2LfjiCl7ql1cVwuu1Oqj87hdhImAX4DXGGES8C7ta6sn1d20kcWVa8z3VBFgFTP2F8hE9h92L7pC0KF6qD4w5SEfM6sAD+RT5VmPncDHlLJGE0Meh3KLGSLrxo6ZlKdzuSJKFIrhtdgPcYGx1y66948ifTOftKzlDMHVY=
+	t=1713769528; cv=none; b=dvO0GrG72unBJBGE3R1YHypPgxUj/lYXyauA29T3v6N/WWA/Qw+1JvWnOC6kheMFHpN0LYIQHzwUjWnsOy3FQ40CneSa0mmMl62lJL/Vy/6FWffIpgPb3U3NrNeLmXbBuspTFgzIMkFF7pNGtlnFKvnHcPb3DQIFGgOuIhJE91s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713768631; c=relaxed/simple;
-	bh=niMcFupcFVaQSC9U8OI4dXgX/sV0N2nzgTSBGCDHrco=;
+	s=arc-20240116; t=1713769528; c=relaxed/simple;
+	bh=IhXoAQhZ+DCLFhsyQ8SKb5wf4o6cTGxfM+3xSdw+K7s=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iA60Kt8rSG4sVY7WIvxOhIHiRAuZ0WZG6vX4jKTvSqjNH7GykeuaIsiXqVSdwSsGEQ9AC0aY7SQ+KthvoLm3EmeGWwvsS+fSTPNGi2sXqnEoO6QoDtLc+1fwEd99B0t3bE8JCRhG/PujSOvmZRmJwZ5UHr6SjAKHxA3e+sOA70w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MpghLfa/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=spYqe/sEUFe7TzBJhbOlv3dqMSdZhwV+0Wk7yHefQHByU+mD6eK+TMpHnmeVkqAO/A1yLmATrFWghgaLZnexTIzfFYn+OCCWXMsxmW/aI54VPuBDXUaHa4zkKKE9obDc8KAOTZVPniL0nvw3jUOtPOhp4pPHRlKET5t1wEtGXmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JgLrqPXe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MpghLfa/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E104C113CC;
-	Mon, 22 Apr 2024 06:50:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JgLrqPXe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 857B1C113CC;
+	Mon, 22 Apr 2024 07:05:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713768631;
-	bh=niMcFupcFVaQSC9U8OI4dXgX/sV0N2nzgTSBGCDHrco=;
+	s=k20201202; t=1713769528;
+	bh=IhXoAQhZ+DCLFhsyQ8SKb5wf4o6cTGxfM+3xSdw+K7s=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=MpghLfa/kIOkMmQHjbDJQksRrOXvovhWjy9yV47MaG1sWYfa8nbiiNEr0gy1UWNNk
-	 mR5AYRoJPPETUblYVvtzjYhiRAP6TMR7VfFIa5z6nb6g7bCBpuTZYr/G62Dq24Xkba
-	 VOaGogXKEBD24hvx3kOYI7emiIBCHsHhQDZGGQEybLyb2WI0vv41me1KRDTo/47Iaq
-	 q4FfpjSS8OWrS0S7UtCd4yj+EKTWY/mpANmZfMV+3HOIUV8/pOMgGlPyWahtBgKIWC
-	 GqMjwGJoPu4aiHXiWvsQfLk8IMMApoFWYiz145Ubs1VyE2QqfSnKOtAIGCeDbJeeAH
-	 SdL42n01AJs5w==
-Message-ID: <9475c2259b3d32774bc1488dd0d6004f7ddfbf13.camel@kernel.org>
-Subject: Re: [PATCH bpf-next v4 3/3] selftests/bpf: Support nonblock for
- send_recv_data
+	b=JgLrqPXepXw+OYF6ueO9idbpiDAE9ZL3X/m+MNotNkIPDdrTyC+HKUHiVE8CVFT0t
+	 Fzn1vOyAUQXBLIodBxfGW1qJxt2qyDhsLZRrNeG9w9IfMNFsNpiI4lIaHYUhfv11uh
+	 hLl+9f8UbxhO0818i1tezAn5HmD7HHZx5BMp4ywwPEE4gPUMWyjgFJd+rlIYg5alOB
+	 hNw/NPVghNF+z9/E7VsZgbzmOrzNSe2PeYttX7pSt7oASbFTxByUVX+0siDWzsHDQ2
+	 qSX0VCm2wWF7mxgBnr/tslDplzVOqEDQyENooiQvTGDkHZUoLTv9K3+/w3U1Swf59l
+	 rLsflXot4ywMQ==
+Message-ID: <febc0751efc11641e353216ff22fe94e6d623811.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v9 0/8] refactor mptcp bpf tests
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Mon, 22 Apr 2024 14:50:24 +0800
-In-Reply-To: <bec7ade6bfc99f6340fa231cf68f0f4459625dbe.camel@kernel.org>
-References: <cover.1712729342.git.tanggeliang@kylinos.cn>
-	 <9cd358958245f8ec87c4f553779aa4243f967a2f.1712729342.git.tanggeliang@kylinos.cn>
-	 <12aab271-da72-49b4-ac91-2091b6889856@linux.dev>
-	 <bec7ade6bfc99f6340fa231cf68f0f4459625dbe.camel@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Mon, 22 Apr 2024 15:05:22 +0800
+In-Reply-To: <72ba1395-fa5f-489a-872d-5dcb1727da5f@kernel.org>
+References: <cover.1713321357.git.tanggeliang@kylinos.cn>
+	 <10659d84-5d60-4a0f-84d9-859ad39a23f5@kernel.org>
+	 <db02b2fd3c44e050aa9bc20537f108c3b9e07c9b.camel@kernel.org>
+	 <72ba1395-fa5f-489a-872d-5dcb1727da5f@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+XlU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLlP9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInMHcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL518p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucpVCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU23wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/PvX+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBBMBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBYCAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvhG5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7Ad
 	WelP+0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcmBA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIPkNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0obpX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6VRORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJGBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTAQoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAgMBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atDyyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhVc9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzxOwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4pa
@@ -54,142 +52,82 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
-On Thu, 2024-04-11 at 14:52 +0800, Geliang Tang wrote:
-> mptcp-only
+Hi Matt,
+
+On Sat, 2024-04-20 at 11:12 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
 >=20
-> Hi Matt & Mat,
->=20
-> On Wed, 2024-04-10 at 14:34 -0700, Martin KaFai Lau wrote:
-> > On 4/9/24 11:13 PM, Geliang Tang wrote:
-> > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > >=20
-> > > Some tests, such as the MPTCP bpf tests, require send_recv_data
-> > > helper
-> > > to run in nonblock mode.
-> > >=20
-> > > This patch adds nonblock support for send_recv_data(). Check if
-> > > it
-> > > is
-> > > currently in nonblock mode, and if so, ignore EWOULDBLOCK to
-> > > continue
-> > > sending and receiving.
-> > >=20
-> > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > > ---
-> > > =C2=A0 tools/testing/selftests/bpf/network_helpers.c | 9 ++++++++-
-> > > =C2=A0 1 file changed, 8 insertions(+), 1 deletion(-)
-> > >=20
-> > > diff --git a/tools/testing/selftests/bpf/network_helpers.c
-> > > b/tools/testing/selftests/bpf/network_helpers.c
-> > > index 137cd18ef3f2..ca16ef2b648e 100644
-> > > --- a/tools/testing/selftests/bpf/network_helpers.c
-> > > +++ b/tools/testing/selftests/bpf/network_helpers.c
-> > > @@ -555,6 +555,7 @@ struct send_recv_arg {
-> > > =C2=A0 static void *send_recv_server(void *arg)
-> > > =C2=A0 {
-> > > =C2=A0=C2=A0	struct send_recv_arg *a =3D (struct send_recv_arg *)arg;
-> > > +	int flags =3D fcntl(a->fd, F_GETFL);
-> > > =C2=A0=C2=A0	ssize_t nr_sent =3D 0, bytes =3D 0;
-> > > =C2=A0=C2=A0	char batch[1500];
-> > > =C2=A0=C2=A0	int err =3D 0, fd;
-> > > @@ -578,6 +579,8 @@ static void *send_recv_server(void *arg)
-> > > =C2=A0=C2=A0		if (nr_sent =3D=3D -1 && errno =3D=3D EINTR)
-> > > =C2=A0=C2=A0			continue;
-> > > =C2=A0=C2=A0		if (nr_sent =3D=3D -1) {
-> > > +			if (flags & O_NONBLOCK && errno =3D=3D
-> > > EWOULDBLOCK)
+> On 20/04/2024 02:18, Geliang Tang wrote:
+> > Hi Matt,
 > >=20
-> > I still don't see why it needs to be a non blocking IO. mptcp
-> > should
-> > work
-> > with blocking IO also, no? Does it really need non blocking IO to
-> > make
-> > mptcp test work? I would rather stay with blocking IO in selftest
-> > as
-> > much as
-> > possible for simplicity reason.
+> > On Fri, 2024-04-19 at 11:58 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang, Mat,
+> > >=20
+> > > On 17/04/2024 04:38, Geliang Tang wrote:
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > >=20
+> > > > v9:
+> > > > =C2=A0- extract a new helper test_bpf_sched() from
+> > > > MPTCP_SCHED_TEST() to
+> > > > make
+> > > > =C2=A0=C2=A0 the macro simpler as Mat suggested. (thanks)
+> > > > =C2=A0- squash MPTCP_SCHED_TEST() into "selftests/bpf: Add bpf_firs=
+t
+> > > > =C2=A0=C2=A0 scheduler & test", not "selftests/bpf: Add bpf schedul=
+er
+> > > > test"
+> > > > to
+> > > > =C2=A0=C2=A0 avoid a build error "test_bpf_sched is not used".
+> > > Thank you for the v9, and the review!
+> > >=20
+> > > @Geliang: there were a lot of Git (TopGit) manipulations here,
+> > > please
+> > > check that the result is the expected one.
+> >=20
+> > Thank you for applying these patches. I know there must be many
+> > conflicts inside. Thank you for updating my email address too. All
+> > patches merged well and all tests passed.
 >=20
-> I need some help here.
+> Thank you for having checked!
 >=20
-> This issue is reported by Matt in "CI: MPTCP BPF tests are now
-> validated", and my fixes ([1] and this patch) aren't accepted by
-> Martin. Is it normal to get EAGAINs in this case? Please give some
-> suggestions.
+> > >=20
+> > >=20
+> > > New patch for t/upstream:
+> > >=20
+> > > - d0432b7d2bb0: selftests/bpf: Add RUN_MPTCP_TEST macro
+> >=20
+> > Please insert this commit "selftests/bpf: Add RUN_MPTCP_TEST macro"
+> > before "mptcp: add sched_data helpers" so that it can be upstreamed
+> > in advance with "setsockopt per subflow: BPF" series being
+> > reviewed,
+> > without waiting for BPF scheduler APIs to be updated. WDYT?
+>=20
+> I don't think we need to move it: there are no other patches
+> modifying
+> the BPF selftests before that one. So we should be safe regarding
+> conflicts.
 
-It fails in mptcp_sendmsg()
+Yes, I agree.
 
-1898 wait_for_memory:
-1899                 set_bit(SOCK_NOSPACE, &sk->sk_socket->flags);
-1900                 __mptcp_push_pending(sk, msg->msg_flags);
-1901                 ret =3D sk_stream_wait_memory(sk, &timeo);
-1902                 if (ret)
-1903                         goto do_error;
-1904         }
+>=20
+> We can indeed send it with "setsockopt per subflow: BPF" series.
+> These
+> patches can be applied before "selftests/bpf: Add RUN_MPTCP_TEST
+> macro",
+> in the "patches for net-next" section when they will be marked as
+> ready.
 
-sk_stream_wait_memory() fails in the case, and
-tcp_rtx_and_write_queues_empty(sk) is true.
+"setsockopt per subflow: BPF" series could be merged in this order:
 
-I added a issue #487 to trace this issue.
+1 selftests/bpf: Add mptcp subflow example
+2 selftests/bpf: Add RUN_MPTCP_TEST macro
+3 selftests/bpf: Add mptcp subflow subtest
+4 selftests/bpf: Handle SIGINT when creating netns
 
 Thanks,
 -Geliang
 
 >=20
-> [1]
-> https://patchwork.kernel.org/project/mptcp/patch/311e074a3ca0465bdc5e4c22=
-83e334bae5ccd306.1711296000.git.tanggeliang@kylinos.cn/
->=20
-> Thanks,
-> -Geliang
->=20
-> >=20
-> > I am afraid the root cause of the EAGAIN thread has not been
-> > figured
-> > out yet:
-> > https://lore.kernel.org/all/b3943f9a8bf595212b00e96ba850bf32893312cc.ca=
-mel@kernel.org/
-> >=20
-> > Lets drop patch 3 until it is understood why mptcp needs EAGAIN or
-> > non-blocking IO.
-> > It feels like there is some flakiness and it should be understood
-> > and
-> > avoided.
-> >=20
-> > Other than the comment in patch 2, the first two patches lgtm.
-> > Please
-> > respin with
-> > the first two patches.
-> >=20
-> > > +				continue;
-> > > =C2=A0=C2=A0			err =3D -errno;
-> > > =C2=A0=C2=A0			break;
-> > > =C2=A0=C2=A0		}
-> > > @@ -599,6 +602,7 @@ static void *send_recv_server(void *arg)
-> > > =C2=A0=20
-> > > =C2=A0 int send_recv_data(int lfd, int fd, uint32_t total_bytes)
-> > > =C2=A0 {
-> > > +	int flags =3D fcntl(lfd, F_GETFL);
-> > > =C2=A0=C2=A0	ssize_t nr_recv =3D 0, bytes =3D 0;
-> > > =C2=A0=C2=A0	struct send_recv_arg arg =3D {
-> > > =C2=A0=C2=A0		.fd	=3D lfd,
-> > > @@ -622,8 +626,11 @@ int send_recv_data(int lfd, int fd, uint32_t
-> > > total_bytes)
-> > > =C2=A0=C2=A0			=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 MIN(total_bytes -=
- bytes,
-> > > sizeof(batch)), 0);
-> > > =C2=A0=C2=A0		if (nr_recv =3D=3D -1 && errno =3D=3D EINTR)
-> > > =C2=A0=C2=A0			continue;
-> > > -		if (nr_recv =3D=3D -1)
-> > > +		if (nr_recv =3D=3D -1) {
-> > > +			if (flags & O_NONBLOCK && errno =3D=3D
-> > > EWOULDBLOCK)
-> > > +				continue;
-> > > =C2=A0=C2=A0			break;
-> > > +		}
-> > > =C2=A0=C2=A0		bytes +=3D nr_recv;
-> > > =C2=A0=C2=A0	}
-> > > =C2=A0=20
-> >=20
-> >=20
->=20
+> Cheers,
+> Matt
 
