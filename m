@@ -1,208 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ej1-f45.google.com (mail-ej1-f45.google.com [209.85.218.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E29550A72;
-	Mon, 22 Apr 2024 08:47:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00CDD56452
+	for <mptcp@lists.linux.dev>; Mon, 22 Apr 2024 09:18:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713775624; cv=none; b=bPbYMkzU5Ly9lw55tSG434gKYfI9lSrHoRmneiv51P20CpGFAISXeKV2zyIkUdI5uGpa29heAg8AT6sKHEl3Fo4uMFmBBcXHBRujIGALFeyGDIpw9ncBsNQ8TN7IdTNAm9kOER7jkJj8GqLwnRK68u7Xq2daSmhb+LkvTbRBVPY=
+	t=1713777498; cv=none; b=UIfGmmubBT6PO5fMcodOsAg3P0m9394m75z1KN1UTSzF23uMvwhShfbVVhdaglo2rRl4O4N/j28qq6psYnwoOaDTfM3wWLUV1ZQmNVDOydWnvv1RDiB13yUG4njqHWaPdAmZwe6LGj+0ojf/8PkpZsDffDkc0U1341T4u/e/TuE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713775624; c=relaxed/simple;
-	bh=BPjsR/H4bAhpP8TjaRt6U4VR0hx9e8E2U+ccLfYrPTI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=jaVjwErBNLpn254czA9fCHfJJdlJc9u8N8gNF2NQcwQEIYyzBqOhSQzBaMDJYJdrxTXYOY7ERmqE1PaGPyGjG9SVIKFxek8T5f+JDj/0IKrGezSW9/Vm24VdJk9dCaPat6CH/FMUY9I45A9MUGjn7MQ9DtmnwC/urGxqABHc6ZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mdH6kATk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1713777498; c=relaxed/simple;
+	bh=lxEcktRM3o1u22clJI+gdENckYYwX0xCiMNHeF4WEiQ=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=tnwKpX87PHI8vthmQwoeghqh9j1n4gdaqyM9GLwqmp3LOP5ilA9E721PWPq7I894ueQbmCrUEnzK0DTWtCB84aXgE8t5+MCDlN/qzP1ForaGKj4K05Ol+kzZzKS+8qgWfHS1ULjkBUq9zEY0M+A/rZVi4nt5Jt2VFrB/Ewy0+xQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tk76xYSV; arc=none smtp.client-ip=209.85.218.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mdH6kATk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 417B7C32782;
-	Mon, 22 Apr 2024 08:47:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713775623;
-	bh=BPjsR/H4bAhpP8TjaRt6U4VR0hx9e8E2U+ccLfYrPTI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mdH6kATkYUmRLnW9kpZE73BhvAEaN1JH5KCWUcvVkSPjujoo1Ei1Ip+a5HPUaPj7s
-	 AaJGAPVVqkl9TNeCOgtmmBB92JvYjWV8f8AqG/sSFaXoJU1u1cGr8/xiIisUcRMr8f
-	 c4QegdrhrNS1jys1kk0GYpFlRZ1dEGkGf15s7vabwn0M86wu7ZzykQaK37uDPASZ/s
-	 02XSMZWP2W5Yif3e6LWwe3QQN+BzPohN7gcj8JhOyjzFFiNx/CcQAErXQG97lnzIsB
-	 yH6uR0hciUEEI+qFIKkn/WF4O5ST/BaEAXW+z0SXeSLv/b3II6piUSy9dxlpU1bYjl
-	 qTBo+pewtDB6g==
-Message-ID: <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
-Date: Mon, 22 Apr 2024 10:46:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tk76xYSV"
+Received: by mail-ej1-f45.google.com with SMTP id a640c23a62f3a-a55b481cf0fso95922466b.3
+        for <mptcp@lists.linux.dev>; Mon, 22 Apr 2024 02:18:16 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1713777495; x=1714382295; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yVwqwhtjvlZszt9bRT54ZI824MgakHvK+s8hVXWfzLQ=;
+        b=Tk76xYSVT4Bu7uYMG1aLKWTYHPU2eLSgdpWEwkUKumfLP6VUh5j4VZPuQwO2eBctDR
+         Tv+GkfDOZk9Bm5n924qRB+5oyVA3kg6hWYR6Cgeoq5bmsY12/LCbB6Fe2THfu3JSOtk3
+         NHvJY9ygq7N34czd0fhnvlYb007zoMXSfHxx7dzFtoyKBEEJJdMe0wyLpyeFkyWp4sfq
+         1XmN2e6fXwiVU9Z1UGiD2GFKTv3ojplUzDlx6IJzTyLUrF8nNaKtpl2Bas33Cyk8KztQ
+         nrqcz8sc1QZZLBUQ69cGufTivila14/ynTK2yQrQBbeS/GuPySN+aowYlFGZ3DhMuz7q
+         cRqQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1713777495; x=1714382295;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=yVwqwhtjvlZszt9bRT54ZI824MgakHvK+s8hVXWfzLQ=;
+        b=vERjEku4FtWZ5JBKSjmhmfYmXd3lHQpfe/uS8qsSszmMb2mmnbPtOx12Q/TYcS5IAe
+         AYHGFWvoMqwI4RtMEGvJh3jL4ZA/k2TRD5kBfsThR7indPAQavKZnJv8PpuFIYFTgRBF
+         QaAwZSLKbaf/kucwIWjePYi7Sa4EPBZ4K6/oFqPjKEANChTbI+VV6+hx+ZIuOu9AybWD
+         Xg7S6FXGvSKY5NrPdoUxameWhDNoej19yhboEI5oAY9IpnF8zjBAcS1AMScNUDukvDHG
+         QIPkMDAxxg/bFOhuppUsfVzvkgC4Hriqd7tHBUjJUIexshCA4KpaHrCZLkV7sJ+8oveb
+         vIng==
+X-Forwarded-Encrypted: i=1; AJvYcCUiVgu4nWxeHC+nW4ZSA/EdLPO6D4eVmn2oIaLDbyyUaZF//10n5yPojsldmYC7FBb+tGLBnIsEW/IIa8KwcfmSfjC/IFc=
+X-Gm-Message-State: AOJu0YxsjrLWLgf67akjulijCoG41r7iXJvxHQ+SrgW752uodzfN6bfS
+	hcUhfWx/nI9YUixJW662tbIJYkAKrmgy0tmNFl0OTV7VyxOSX540lDoIe8RhdAtxDu4xgkL4l7L
+	4WhHu8Qu39QpGPWu/Z6U3JUkf5bs=
+X-Google-Smtp-Source: AGHT+IHv6eCluYziBGpcYsO49wKQF/pXyNdctQ3vZj8mdPKj4PxQNwwBYVRfwy5VlGKSnU5FVg6/hvwrwSLU6IGhtY0=
+X-Received: by 2002:a17:906:649:b0:a46:cef3:4aba with SMTP id
+ t9-20020a170906064900b00a46cef34abamr7016502ejb.75.1713777495027; Mon, 22 Apr
+ 2024 02:18:15 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+References: <20240422030109.12891-1-kerneljasonxing@gmail.com>
+ <20240422030109.12891-2-kerneljasonxing@gmail.com> <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
+In-Reply-To: <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
+From: Jason Xing <kerneljasonxing@gmail.com>
+Date: Mon, 22 Apr 2024 17:17:37 +0800
+Message-ID: <CAL+tcoBRtE0ikv9xiUoWq66_WcysF7QwGggTMwiw793qXxKH8g@mail.gmail.com>
 Subject: Re: [PATCH net-next v7 1/7] net: introduce rstreason to detect why
  the RST is sent
-Content-Language: en-GB
-To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
- dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
- kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- atenart@kernel.org
-Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-References: <20240422030109.12891-1-kerneljasonxing@gmail.com>
- <20240422030109.12891-2-kerneljasonxing@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240422030109.12891-2-kerneljasonxing@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: edumazet@google.com, dsahern@kernel.org, martineau@kernel.org, 
+	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
+	rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com, 
+	atenart@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Jason,
+Hello Matthieu,
 
-On 22/04/2024 05:01, Jason Xing wrote:
-> From: Jason Xing <kernelxing@tencent.com>
-> 
-> Add a new standalone file for the easy future extension to support
-> both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
+On Mon, Apr 22, 2024 at 4:47=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hi Jason,
+>
+> On 22/04/2024 05:01, Jason Xing wrote:
+> > From: Jason Xing <kernelxing@tencent.com>
+> >
+> > Add a new standalone file for the easy future extension to support
+> > both active reset and passive reset in the TCP/DCCP/MPTCP protocols.
+>
+> Thank you for looking at that!
 
-Thank you for looking at that!
+Thanks for the review!
 
-(...)
+>
+> (...)
+>
+> > diff --git a/include/net/rstreason.h b/include/net/rstreason.h
+> > new file mode 100644
+> > index 000000000000..c57bc5413c17
+> > --- /dev/null
+> > +++ b/include/net/rstreason.h
+> > @@ -0,0 +1,144 @@
+> > +/* SPDX-License-Identifier: GPL-2.0-or-later */
+> > +
+> > +#ifndef _LINUX_RSTREASON_H
+> > +#define _LINUX_RSTREASON_H
+> > +#include <net/dropreason-core.h>
+> > +#include <uapi/linux/mptcp.h>
+> > +
+> > +#define DEFINE_RST_REASON(FN, FNe)   \
+> > +     FN(MPTCP_RST_EUNSPEC)           \
+> > +     FN(MPTCP_RST_EMPTCP)            \
+> > +     FN(MPTCP_RST_ERESOURCE)         \
+> > +     FN(MPTCP_RST_EPROHIBIT)         \
+> > +     FN(MPTCP_RST_EWQ2BIG)           \
+> > +     FN(MPTCP_RST_EBADPERF)          \
+> > +     FN(MPTCP_RST_EMIDDLEBOX)        \
+>
+> Small detail: should it not make more sense to put the ones linked to
+> MPTCP at the end? I mean I guess MPTCP should be treated in second
+> priority: CONFIG_MPTCP could not be set, and the ones linked to TCP
+> should be more frequent, etc.
 
-> diff --git a/include/net/rstreason.h b/include/net/rstreason.h
-> new file mode 100644
-> index 000000000000..c57bc5413c17
-> --- /dev/null
-> +++ b/include/net/rstreason.h
-> @@ -0,0 +1,144 @@
-> +/* SPDX-License-Identifier: GPL-2.0-or-later */
-> +
-> +#ifndef _LINUX_RSTREASON_H
-> +#define _LINUX_RSTREASON_H
-> +#include <net/dropreason-core.h>
-> +#include <uapi/linux/mptcp.h>
-> +
-> +#define DEFINE_RST_REASON(FN, FNe)	\
-> +	FN(MPTCP_RST_EUNSPEC)		\
-> +	FN(MPTCP_RST_EMPTCP)		\
-> +	FN(MPTCP_RST_ERESOURCE)		\
-> +	FN(MPTCP_RST_EPROHIBIT)		\
-> +	FN(MPTCP_RST_EWQ2BIG)		\
-> +	FN(MPTCP_RST_EBADPERF)		\
-> +	FN(MPTCP_RST_EMIDDLEBOX)	\
+Do you mean that I need to adjust the order: 1) tcp reasons first, 2)
+independent reasons, 3) mptcp reasons ?
 
-Small detail: should it not make more sense to put the ones linked to
-MPTCP at the end? I mean I guess MPTCP should be treated in second
-priority: CONFIG_MPTCP could not be set, and the ones linked to TCP
-should be more frequent, etc.
+Reasonable. I will do it :)
 
-> +	FN(NOT_SPECIFIED)		\
-> +	FN(NO_SOCKET)			\
-> +	FNe(MAX)
+>
+> > +     FN(NOT_SPECIFIED)               \
+> > +     FN(NO_SOCKET)                   \
+> > +     FNe(MAX)
+>
+> (...)
+>
+> > +/* Convert reset reasons in MPTCP to our own enum type */
+> > +static inline enum sk_rst_reason convert_mptcpreason(u32 reason)
+> > +{
+> > +     switch (reason) {
+> > +     case MPTCP_RST_EUNSPEC:
+> > +             return SK_RST_REASON_MPTCP_RST_EUNSPEC;
+> > +     case MPTCP_RST_EMPTCP:
+> > +             return SK_RST_REASON_MPTCP_RST_EMPTCP;
+> > +     case MPTCP_RST_ERESOURCE:
+> > +             return SK_RST_REASON_MPTCP_RST_ERESOURCE;
+> > +     case MPTCP_RST_EPROHIBIT:
+> > +             return SK_RST_REASON_MPTCP_RST_EPROHIBIT;
+> > +     case MPTCP_RST_EWQ2BIG:
+> > +             return SK_RST_REASON_MPTCP_RST_EWQ2BIG;
+> > +     case MPTCP_RST_EBADPERF:
+> > +             return SK_RST_REASON_MPTCP_RST_EBADPERF;
+> > +     case MPTCP_RST_EMIDDLEBOX:
+> > +             return SK_RST_REASON_MPTCP_RST_EMIDDLEBOX;
+> > +     default:
+> > +             /**
+> > +              * It should not happen, or else errors may occur
+> > +              * in MPTCP layer
+> > +              */
+> > +             return SK_RST_REASON_ERROR;
+> > +     }
+> > +}
+>
+> If this helper is only used on MPTCP, maybe better to move it to
+> net/mptcp/protocol.h (and to patch 5/7?)? We tried to isolate MPTCP code.
 
-(...)
+Roger that. I will move the helper into protocol.h as well as the patch its=
+elf.
 
-> +/* Convert reset reasons in MPTCP to our own enum type */
-> +static inline enum sk_rst_reason convert_mptcpreason(u32 reason)
-> +{
-> +	switch (reason) {
-> +	case MPTCP_RST_EUNSPEC:
-> +		return SK_RST_REASON_MPTCP_RST_EUNSPEC;
-> +	case MPTCP_RST_EMPTCP:
-> +		return SK_RST_REASON_MPTCP_RST_EMPTCP;
-> +	case MPTCP_RST_ERESOURCE:
-> +		return SK_RST_REASON_MPTCP_RST_ERESOURCE;
-> +	case MPTCP_RST_EPROHIBIT:
-> +		return SK_RST_REASON_MPTCP_RST_EPROHIBIT;
-> +	case MPTCP_RST_EWQ2BIG:
-> +		return SK_RST_REASON_MPTCP_RST_EWQ2BIG;
-> +	case MPTCP_RST_EBADPERF:
-> +		return SK_RST_REASON_MPTCP_RST_EBADPERF;
-> +	case MPTCP_RST_EMIDDLEBOX:
-> +		return SK_RST_REASON_MPTCP_RST_EMIDDLEBOX;
-> +	default:
-> +		/**
-> +		 * It should not happen, or else errors may occur
-> +		 * in MPTCP layer
-> +		 */
-> +		return SK_RST_REASON_ERROR;
-> +	}
-> +}
+>
+> Also, maybe it is just me, but I'm not a big fan of the helper name:
+> convert_mptcpreason() (same for the "drop" one). I think it should at
+> least mention its "origin" (rst reason): e.g. something like
+> (sk_)rst_reason_convert_mptcp or (sk_)rst_convert_mptcp_reason() (or
+> mptcp_to_rst_reason())?
+>
+> And (sk_)rst_reason_convert_(skb_)drop() (or skb_drop_to_rst_reason())?
 
-If this helper is only used on MPTCP, maybe better to move it to
-net/mptcp/protocol.h (and to patch 5/7?)? We tried to isolate MPTCP code.
+I agree with you. Actually I had a local patch where I used
+sk_rst_reason_skbdrop() and sk_rst_reason_mptcpreason().
+Interestingly, I changed them in this patch series due to the function
+name being too long (which is my initial thought).
 
-Also, maybe it is just me, but I'm not a big fan of the helper name:
-convert_mptcpreason() (same for the "drop" one). I think it should at
-least mention its "origin" (rst reason): e.g. something like
-(sk_)rst_reason_convert_mptcp or (sk_)rst_convert_mptcp_reason() (or
-mptcp_to_rst_reason())?
+I will use sk_rst_convert_xxx_reason() as you suggested.
 
-And (sk_)rst_reason_convert_(skb_)drop() (or skb_drop_to_rst_reason())?
+>
+> > +/* Convert reset reasons in MPTCP to our own enum type */
+>
+> I don't think this part is linked to MPTCP, right?
 
-> +/* Convert reset reasons in MPTCP to our own enum type */
+Ah, copy-paste syndrome... Sorry, I will correct it.
 
-I don't think this part is linked to MPTCP, right?
+>
+> > +static inline enum sk_rst_reason convert_dropreason(enum skb_drop_reas=
+on reason)
+> > +{
+> > +     switch (reason) {
+> > +     case SKB_DROP_REASON_NOT_SPECIFIED:
+> > +             return SK_RST_REASON_NOT_SPECIFIED;
+> > +     case SKB_DROP_REASON_NO_SOCKET:
+> > +             return SK_RST_REASON_NO_SOCKET;
+> > +     default:
+> > +             /* If we don't have our own corresponding reason */
+> > +             return SK_RST_REASON_NOT_SPECIFIED;
+> > +     }
+> > +}
+>
+> (This helper could be introduced in patch 4/7 because it is not used
+> before, but I'm fine either ways.)
 
-> +static inline enum sk_rst_reason convert_dropreason(enum skb_drop_reason reason)
-> +{
-> +	switch (reason) {
-> +	case SKB_DROP_REASON_NOT_SPECIFIED:
-> +		return SK_RST_REASON_NOT_SPECIFIED;
-> +	case SKB_DROP_REASON_NO_SOCKET:
-> +		return SK_RST_REASON_NO_SOCKET;
-> +	default:
-> +		/* If we don't have our own corresponding reason */
-> +		return SK_RST_REASON_NOT_SPECIFIED;
-> +	}
-> +}
+Good. It makes more sense.
 
-(This helper could be introduced in patch 4/7 because it is not used
-before, but I'm fine either ways.)
-
-> +#endif
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Thanks,
+Jason
