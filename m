@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964CF13C677;
-	Mon, 22 Apr 2024 10:05:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4FFFF145320
+	for <mptcp@lists.linux.dev>; Mon, 22 Apr 2024 10:31:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713780345; cv=none; b=pFu7AxKjDJeQQbJdjVX6y8MidH9WfxqQxGpasdRu/RvC/ATtI8e+7nyKPHB58uPfQ9TK1H8/tSdGdAr4uLxUCuEHxXG1RTzJXY6XQwPw48gPZbs+hq0fUbCBTSkS5/RqFWTpRRNC1bKKaCY7gKwBqbL8bjPaOYW67vvcCjvcGwg=
+	t=1713781891; cv=none; b=OrAbbyTdsfC5uCfpZg3oPQlNy+IsMiRCio8WC0oaTHE1yTax+YgYmga+ez5eIhFIK9TdjiwFV/G9WY4c/exY2sTtmOx8scQslITMO2ikVSMp0atPX8TYKilfvtWxuYfO3lNEGemqwlyIq5vteVEzhpPWS7HCnwEp29lqZ1VKVfg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713780345; c=relaxed/simple;
-	bh=WPTWdTvATvp/Jc2ILqq8RbsICHapQ9gBhIDKHIKQg0g=;
+	s=arc-20240116; t=1713781891; c=relaxed/simple;
+	bh=4oygYQwHfuoEoklI7/Qgzhik9hlSOYSR0H7M21jj1KA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZNR1Ey6d5Y2NIRL5WG0hg+0MLTlwY6OQbTIJu7yK/AFccJeLWbW1+GNqI4HljbXh7NLg1t/MfCSasGxEgwkMabXXVnyQgvZqsuhblwCbzpHd0jZbOFMoMQyEWViAaIboS/lTWE+cqhPbiLN02IjCFa/LftbWoTSDgGwV4KCIuxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dAniB5Js; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cNodTWrr35rYlRRj50OK8swJu8nHxsL6YnWFygJsrtciWEhp/dqF+I6Vg1N34+WTnjLnMOSpDhtS9PYBZ7b8MZXHWa7/T9P6xto3vUPU1IgJckMxuyvsRmjEV/6xxzW19HY6z/GSO9AN94rMAl1BdcBvio5+LvOAnbMuQVJcIe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QMFCyaw8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dAniB5Js"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AA6CC113CC;
-	Mon, 22 Apr 2024 10:05:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QMFCyaw8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D541AC113CC;
+	Mon, 22 Apr 2024 10:31:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713780345;
-	bh=WPTWdTvATvp/Jc2ILqq8RbsICHapQ9gBhIDKHIKQg0g=;
+	s=k20201202; t=1713781890;
+	bh=4oygYQwHfuoEoklI7/Qgzhik9hlSOYSR0H7M21jj1KA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dAniB5Jsq/cAUYner1B86ic2vrrL731C8vhtTKZw0rc1uQ+S3NC/lrsp9sVE7Oj9l
-	 JRDSKNaB3Jh/ud4alrjEr32BST067vcCTQVK3dofx9+p+axKXAH+Rn4A4r1lM7fukd
-	 LUEsc4Qu0kgyagzUl9YXttTHgylXLOBIbBnGgrhFwz52ZFUSm8z9f0F5G9JNtLS70q
-	 HY6vn+f4GW1/AjosvWx5kFe/mZ6seAfwl/qZVbccuYVNkH+z9E/outNlR67+iB8/uJ
-	 IJ8rU/0cJRIKpoF1lczjhBvcEyUoxcCHfTZs6I6+VvfDmI8myZHvJ9nQYWnQ6hip/d
-	 ujdirnxpi+7sA==
-Message-ID: <70184416-344f-4e03-bfb7-0626ff845fe0@kernel.org>
-Date: Mon, 22 Apr 2024 12:05:39 +0200
+	b=QMFCyaw8Cl4ZUGQw62HPi7ZJ+UtUJXl/jlGWuF9XRCP8cocmC0KDjZ2fThp0dnUXb
+	 aXy0QBJuOWEimt/peqjZygUCgxlZbXgE86S0PlA/JWL01BHNIYSa7b2cKh0pu2K8jT
+	 Rqfv2YRIqKGoJPxcafQWLqdtG+GMJqJZdey4ceDnbqtmlWNtSkuIZ1+4ahYwoaKkDm
+	 WLv9HlkHBqukcNonBf9UpN/TnYi1HL1ABUGBHCCIW2t1v/06RnG7Qb4SfC/WRETCof
+	 5jXNWaEfCa9G3ddAr+gnsuZloJXAb/9gRIXruvkI1r/6QWZALJdIepjZ9X/yBM8+9T
+	 PXP6pN0WQefJA==
+Message-ID: <0017e477-3fcd-45de-917b-b58b3781ca9b@kernel.org>
+Date: Mon, 22 Apr 2024 12:31:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v7 1/7] net: introduce rstreason to detect why
- the RST is sent
+Subject: Re: [PATCH bpf-next v4 3/3] selftests/bpf: Support nonblock for
+ send_recv_data
 Content-Language: en-GB
-To: Jason Xing <kerneljasonxing@gmail.com>
-Cc: edumazet@google.com, dsahern@kernel.org, martineau@kernel.org,
- geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net,
- rostedt@goodmis.org, mhiramat@kernel.org, mathieu.desnoyers@efficios.com,
- atenart@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
-References: <20240422030109.12891-1-kerneljasonxing@gmail.com>
- <20240422030109.12891-2-kerneljasonxing@gmail.com>
- <4f492445-1fe3-44af-bbaa-bb1fe281964e@kernel.org>
- <CAL+tcoBRtE0ikv9xiUoWq66_WcysF7QwGggTMwiw793qXxKH8g@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1712729342.git.tanggeliang@kylinos.cn>
+ <9cd358958245f8ec87c4f553779aa4243f967a2f.1712729342.git.tanggeliang@kylinos.cn>
+ <12aab271-da72-49b4-ac91-2091b6889856@linux.dev>
+ <bec7ade6bfc99f6340fa231cf68f0f4459625dbe.camel@kernel.org>
+ <9475c2259b3d32774bc1488dd0d6004f7ddfbf13.camel@kernel.org>
+ <52673f90-84c6-4e3d-9967-a3d0a7335c46@kernel.org>
+ <7732f129e5c1c2ff128878be9b865115e1319b85.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,52 +92,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAL+tcoBRtE0ikv9xiUoWq66_WcysF7QwGggTMwiw793qXxKH8g@mail.gmail.com>
+In-Reply-To: <7732f129e5c1c2ff128878be9b865115e1319b85.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-On 22/04/2024 11:17, Jason Xing wrote:> On Mon, Apr 22, 2024 at 4:47 PM
-Matthieu Baerts <matttbe@kernel.org> wrote:
->> On 22/04/2024 05:01, Jason Xing wrote:
->>> From: Jason Xing <kernelxing@tencent.com>
+On 22/04/2024 12:04, Geliang Tang wrote:> On Mon, 2024-04-22 at 11:45
++0200, Matthieu Baerts wrote:
 
 (...)
 
->>> diff --git a/include/net/rstreason.h b/include/net/rstreason.h
->>> new file mode 100644
->>> index 000000000000..c57bc5413c17
->>> --- /dev/null
->>> +++ b/include/net/rstreason.h
->>> @@ -0,0 +1,144 @@
->>> +/* SPDX-License-Identifier: GPL-2.0-or-later */
->>> +
->>> +#ifndef _LINUX_RSTREASON_H
->>> +#define _LINUX_RSTREASON_H
->>> +#include <net/dropreason-core.h>
->>> +#include <uapi/linux/mptcp.h>
->>> +
->>> +#define DEFINE_RST_REASON(FN, FNe)   \
->>> +     FN(MPTCP_RST_EUNSPEC)           \
->>> +     FN(MPTCP_RST_EMPTCP)            \
->>> +     FN(MPTCP_RST_ERESOURCE)         \
->>> +     FN(MPTCP_RST_EPROHIBIT)         \
->>> +     FN(MPTCP_RST_EWQ2BIG)           \
->>> +     FN(MPTCP_RST_EBADPERF)          \
->>> +     FN(MPTCP_RST_EMIDDLEBOX)        \
+>> I might be wrong, but with MPTCP schedulers, it is different: with
+>> non-blocking IO, EAGAIN can be seen, and this case needs to be
+>> handled.
+>> Actively waiting by retrying directly in the loop in case of EAGAIN
+>> is
+>> not recommended, but probably OK for the tests (still, might be good
+>> to
+>> add a comment to recommend polling instead). So here as well, such
+>> modifications can stay in our tree for the moment.
 >>
->> Small detail: should it not make more sense to put the ones linked to
->> MPTCP at the end? I mean I guess MPTCP should be treated in second
->> priority: CONFIG_MPTCP could not be set, and the ones linked to TCP
->> should be more frequent, etc.
+>> Also, what is not clear to me is where we set the socket as the
+>> non-blocking one. Is it only done for MPTCP servers/clients?
 > 
-> Do you mean that I need to adjust the order: 1) tcp reasons first, 2)
-> independent reasons, 3) mptcp reasons ?
+> I didn't set the socket as non-block in the end.
+> 
+> EAGAIN will be got no matter non-block flag is set or not.
 
-Correct, it looks like it is a more "natural" order.
+That's strange, no? When the userspace sends data with a blocking IO
+socket, it should not get EAGAIN, no?
 
-> Reasonable. I will do it :)
+> In old version like "[mptcp-next,v7,0/5] setsockopt per subflow: BPF":
+> 
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1712571740.git.tanggeliang@kylinos.cn/
+> 
+> "set_nonblock" is added in patch 2, and invoked in run_subflow() in
+> patch 3.
 
-Thanks!
+I see, but the commit message of patch 2 doesn't explain why
+set_nonblock() is needed for MPTCP. I see it is used in patch 3, but is
+it really necessary? Maybe it was added for other reasons, that are no
+longer valid today?
+
+>>> I added a issue #487 to trace this issue.
+
+Please also note that we didn't have this issue for a while. When we had
+it, it is when KVM was not supported on the CI:
+
+ $ /opt/virtme/virtme-run (...)
+ Could not access KVM kernel module: No such file or directory
+ qemu-system-x86_64: failed to initialize kvm: No such file or directory
+ qemu-system-x86_64: falling back to tcg
+
+
+Maybe we had this issue because the VM was abnormally too slow, and we
+reached the 3 seconds timeout described by Martin in a previous message?
+If this is due to the "abnormally slow setup", maybe we don't need to do
+anything?
+
+In other words, can you (easily) reproduce the issue on your side? With
+or without KVM support?
 
 Cheers,
 Matt
