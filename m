@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 634C822F11;
-	Tue, 23 Apr 2024 10:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A54875FBAA;
+	Tue, 23 Apr 2024 10:02:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713866432; cv=none; b=gxxiZm+JDKMK7Sh8fit12mpdxx4yG/kz2t0erRcirHLV+HFVbxLSA/k9WUSPOIet8AfAHFiJ9FehMImJpyc3l0YFKDMG4L7OmjYx3eJEsj1pGyROFI6RCk4BMnIvaEsRcXykpemTCOtfVGoOqYayjF+DwNHTKozCV3TORiTQDEE=
+	t=1713866540; cv=none; b=aeNk4duMuSPX8qI3dBrWE4qQm2ZHJdRuNWWr+Mx/OfvxdqPbOheq2F+sSDjUUg8l0acE+yJnM89sq7+PpBYN4gfbp1iL2zdiW0Q5ua1pwrhEnz1u01l+mq5quLanSjAmJ+QOgQaKaOtLWFztMdyg8SKDZk+COpw92WjYa1W3f8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713866432; c=relaxed/simple;
-	bh=RbGqJ18AF0JZVlHc/3WiJEw/EucQINaoLbxfyBKDvO4=;
+	s=arc-20240116; t=1713866540; c=relaxed/simple;
+	bh=roHevk8etALCBrRz2KDXK9F53loOjFxJP/aOxjGpleo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e3PBAyfeT7e/LaMHHjweissh1/JBLugMA+eEKII5EGfZ60bBrLgjNYskqzXQnDvwTdoelvDbipFcgQXlcR0+/KSdOTwKL6C5tLPXVxs8bnioI69/ezEcCARbPB5gXoZ7csiMtM/VxOtWwHz5J6eFwTyuSGEsry8Whc6YflBJwv4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru9brAeT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Vp0omaqhkqUNOu1/EZLTNOFyWp+0G+bMFPCmymFC8iNtz4PRSPRWtHakxtDtgP/iSg6j80Rw7eaKwPpWYH/hn16uM5y09BppVm4aNls7hO6MetyIZBlB3xHyXvBkKXRHlKSB3bqQarVYv+4zZ7nh+fsoVMz5/eIU25jytUWYufU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OfEfuua9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru9brAeT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6F6C116B1;
-	Tue, 23 Apr 2024 10:00:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OfEfuua9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D734CC2BD11;
+	Tue, 23 Apr 2024 10:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713866432;
-	bh=RbGqJ18AF0JZVlHc/3WiJEw/EucQINaoLbxfyBKDvO4=;
+	s=k20201202; t=1713866540;
+	bh=roHevk8etALCBrRz2KDXK9F53loOjFxJP/aOxjGpleo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ru9brAeTLtveKewJUQAP3OTBXQNrul1J8oKGXlXU0t7lVeN/WMMfWqzk42+F08DE6
-	 kbhv+slxjITfqaNhE0CK28M5Iv2JAJ1aKoJSXy/0PcGk5bJ+Ro89ltxNVwE4okYvED
-	 L564hHtyAw/IRiLq99z46wrQVb2Sww1BzKvL5c0yjVOB+6FUk2V2MRxmi3jsyO0Wh2
-	 7BWWvnQyyvOhfgMDPcZzbmeWr+COyVLxl1l9IlEXZIfWxOAKkc0iLsRjFi4N45jS7H
-	 eKF52OW13EdNZzkbrw6fhInRgUgsSM9KhWlPKHtSqhR4eNhoQ7O8gB+5TXaQ1Lr6jv
-	 7XPJtKdqdEPtQ==
-Message-ID: <75e7638d-2b74-4eba-9fa7-937cec4b65c4@kernel.org>
-Date: Tue, 23 Apr 2024 12:00:26 +0200
+	b=OfEfuua93euOvHR3DhnMSLa5ipxTDgnCLldGfzhSSOs0T1GrUJT/UYal87/tcntY5
+	 kIzH2cbPg2/eJ+bxYPHlcooeybIvKBjl2yu/DCaSrxdJ3GwfTd35kUYwFCzSubHT2D
+	 A0CoTJDB+AEU/Z6rrygJcz33BKn9TUfzG23IE+RMs1rsS9AZ36KqCkFgSDjIwHzolV
+	 /Ofi+o2qK/Z8FUt8GDQVeGzII5UUBibjOiWC1pvNq23dwAOEcXREm3ZyKkGIqreMs/
+	 WcY/WV52n1etlfqF57mTzPiG5VtR/Or14+/uEbuL4fR4cpd5x47hvGrNAWVHa8AX1f
+	 NsDwRw3N9bV+Q==
+Message-ID: <4ce919ea-6110-4a84-8992-a72a9785c48b@kernel.org>
+Date: Tue, 23 Apr 2024 12:02:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,7 +35,8 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v8 3/7] rstreason: prepare for active reset
+Subject: Re: [PATCH net-next v8 5/7] mptcp: support rstreason for passive
+ reset
 Content-Language: en-GB
 To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
  dsahern@kernel.org, martineau@kernel.org, geliang@kernel.org,
@@ -45,7 +46,7 @@ To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
 Cc: mptcp@lists.linux.dev, netdev@vger.kernel.org,
  linux-trace-kernel@vger.kernel.org, Jason Xing <kernelxing@tencent.com>
 References: <20240423072137.65168-1-kerneljasonxing@gmail.com>
- <20240423072137.65168-4-kerneljasonxing@gmail.com>
+ <20240423072137.65168-6-kerneljasonxing@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,7 +92,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240423072137.65168-4-kerneljasonxing@gmail.com>
+In-Reply-To: <20240423072137.65168-6-kerneljasonxing@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -100,19 +101,62 @@ Hi Jason,
 On 23/04/2024 09:21, Jason Xing wrote:
 > From: Jason Xing <kernelxing@tencent.com>
 > 
-> Like what we did to passive reset:
-> only passing possible reset reason in each active reset path.
+> It relys on what reset options in the skb are as rfc8684 says. Reusing
+
+(if you have something else to fix, 'checkpatch.pl --codespell' reported
+a warning here: s/relys/relies/)
+
+> this logic can save us much energy. This patch replaces most of the prior
+> NOT_SPECIFIED reasons.
 > 
-> No functional changes.
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> ---
+>  net/mptcp/protocol.h | 28 ++++++++++++++++++++++++++++
+>  net/mptcp/subflow.c  | 22 +++++++++++++++++-----
+>  2 files changed, 45 insertions(+), 5 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index fdfa843e2d88..bbcb8c068aae 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -581,6 +581,34 @@ mptcp_subflow_ctx_reset(struct mptcp_subflow_context *subflow)
+>  	WRITE_ONCE(subflow->local_id, -1);
+>  }
+>  
+> +/* Convert reset reasons in MPTCP to enum sk_rst_reason type */
+> +static inline enum sk_rst_reason
+> +sk_rst_convert_mptcp_reason(u32 reason)
+> +{
+> +	switch (reason) {
+> +	case MPTCP_RST_EUNSPEC:
+> +		return SK_RST_REASON_MPTCP_RST_EUNSPEC;
+> +	case MPTCP_RST_EMPTCP:
+> +		return SK_RST_REASON_MPTCP_RST_EMPTCP;
+> +	case MPTCP_RST_ERESOURCE:
+> +		return SK_RST_REASON_MPTCP_RST_ERESOURCE;
+> +	case MPTCP_RST_EPROHIBIT:
+> +		return SK_RST_REASON_MPTCP_RST_EPROHIBIT;
+> +	case MPTCP_RST_EWQ2BIG:
+> +		return SK_RST_REASON_MPTCP_RST_EWQ2BIG;
+> +	case MPTCP_RST_EBADPERF:
+> +		return SK_RST_REASON_MPTCP_RST_EBADPERF;
+> +	case MPTCP_RST_EMIDDLEBOX:
+> +		return SK_RST_REASON_MPTCP_RST_EMIDDLEBOX;
+> +	default:
+> +		/**
 
-(...)
+I guess here as well, it should be '/*' instead of '/**'. But I guess
+that's fine, this file is probably not scanned. Anyway, if you have to
+send a new version, please fix this as well.
 
->  net/mptcp/protocol.c  |  4 +++-
->  net/mptcp/subflow.c   |  5 +++--
+(Also, this helper might require '#include <net/rstreason.h>', but our
+CI is fine with it, it is also added in the next commit, and probably
+already included via include/net/request_sock.h. So I guess that's fine.)
 
-For the modifications in MPTCP:
 
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Other than that, it looks good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
