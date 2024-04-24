@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D4A35221
-	for <mptcp@lists.linux.dev>; Wed, 24 Apr 2024 01:14:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35EA879CD
+	for <mptcp@lists.linux.dev>; Wed, 24 Apr 2024 01:14:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1713921248; cv=none; b=pAizgasEJR+GRvxAPrmDw8xYEmvEa+t1hTLZSeBgYjDUzVCMZ5MA6dOJ7Rn7YF7JS7Bb8AKukdJPBzaGaoVcMItRDLpANqRz9zpOyPfYO41Y4LC4L22e99jM6KhIAnWJzEST9SKj3l/Xl7fVxBE4i3Ly7UNBjDt5OrlSO/HWIww=
+	t=1713921250; cv=none; b=K40qiT2HpwdyG78yWbsrB7ymXWGr4CjajtgjZNC82iTv1pz7USsQDo2W+RYKIwZKQ6herAsmRS2chhvNRMfhNiPMd0tWC0pbNMb6JLgUQE0UVFWqnn1QE0dDnxnSy0oiZoQEFombHdInKiH0LHY+4JFc68v/cnLIBbO9RIfhJ/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1713921248; c=relaxed/simple;
-	bh=8tMH3z1r6GffVZ0M3gpuR6SnnvWzB3EU1bkp9G4fla4=;
+	s=arc-20240116; t=1713921250; c=relaxed/simple;
+	bh=t7QELByV4/Sgz3JpQX5FCeugXehCOTqo4curzopiHDY=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=mZqEXHirHkJO3+Zm8RPBdQOAjyJGizkv+0GeVvUEPwhk/FGwwUm7pxRkl/lPVRtiyzu4Geo5ugij+ip5+xPcfSIupOW+qSXcMdP5EqZ5OOSFZK9T/4MtytkPqTD4sIB/QxLhWTebBnso6FNzNQ+CojNE1CVTBhPCQ+cw2tUcrmI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B9fpz4IC; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fUV2fWr9KJyaqPbTvXGBPG8EcKKuulAZ2RTmUyeGbe6g6xlcdPyJKo8bKJa2m2R29SXNObvB+1BTfw2RE/VPtPPqW/Z+uMXK2NEWPD1Djnrm2agGUibh7V31z/UgcBRClbeN8GtxR5WZzaU93B/071SJL342FeJZJy/olHySHng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T8Zrk3t7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B9fpz4IC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14957C4AF09;
-	Wed, 24 Apr 2024 01:14:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T8Zrk3t7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6506C32781;
+	Wed, 24 Apr 2024 01:14:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1713921248;
-	bh=8tMH3z1r6GffVZ0M3gpuR6SnnvWzB3EU1bkp9G4fla4=;
+	s=k20201202; t=1713921249;
+	bh=t7QELByV4/Sgz3JpQX5FCeugXehCOTqo4curzopiHDY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=B9fpz4ICV5cEOJYNtfGIzPEoCkyUc28MkeyTlnqxgUrqLjT4uvtKf6CiUN1j8Chya
-	 3NEnpAkE3M1WY0dZ55fgFHoyHTLV93pkPyjE9qUup9taqKEzCp10JdQES1CB74L70k
-	 tSEoCYTGJghcuMHDNU2ngOR/QFTrXM2+7HUZQD9s+HqAqADIqA4RdNsmYHf7KT8vj2
-	 MjeWs2iCoPyxySh0O8FrQ1zV415piYIs3Pu/bhQQ9p2lzvVtIEZ7Icfa4g67Mm9ABh
-	 W4vtv6tGo02UHPGXSPS8D0UyiEvdYY3JpcefFiN78yMFjoxQG2uej8SmL1IBDRpx0A
-	 saa/rm1a8x1Tw==
+	b=T8Zrk3t7yr+wcC2XnNk9GBNUyY74e5ENKq15xs4zx8JGuoupLFPCZWrDTuLJV/Dmj
+	 aYZBjFNVjZ7/FNjVJ/I9EZs4vhWUkmPWOmGIGktzY4g1Fs4tC9nP0vVXYJAjsvdNrJ
+	 2S3f51RoKPzUZBRJDv80QlLD3i7+1Y3+bqWXyx+To4UoeMA2513p+SPc1iq2Qw/oAx
+	 ZzuUZK/SqODkIQvQPEBHwCRj2J4CDIRy1iFWMGeVaZk5vjoJI7Dk5ltbAf/0oBgOuv
+	 H+oSpvw6kduhTVyrIFcvOXuNuyEtneUYcypPE1rtyvKXl5GwtBdQGhxC3dGDEK+4Aj
+	 Vab4w0HDpIYvQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 3/4] selftests/bpf: Handle SIGINT when creating netns
-Date: Wed, 24 Apr 2024 09:13:53 +0800
-Message-Id: <08ce28802953e76b337107f1efd978737c913cc0.1713920939.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 4/4] Squash to "selftests/bpf: Add bpf scheduler test"
+Date: Wed, 24 Apr 2024 09:13:54 +0800
+Message-Id: <c459b29f617283a420f1142f26605e5d3aca5e44.1713920939.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.40.1
 In-Reply-To: <cover.1713920939.git.tanggeliang@kylinos.cn>
 References: <cover.1713920939.git.tanggeliang@kylinos.cn>
@@ -45,39 +45,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-It's necessary to delete netns during the MPTCP bpf tests interrupt,
-otherwise the next tests run will fail due to unable to create netns.
-
-This patch adds a new SIGINT handle sig_int, and deletes NS_TEST in it.
+Use endpoint_init in sched_init and use _ss_search in has_bytes_sent.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 18 ++++++------------
+ 1 file changed, 6 insertions(+), 12 deletions(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 6d94cda6b97a..7409f7c8b1f6 100644
+index 7409f7c8b1f6..f84c74b87d23 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -79,11 +79,18 @@ struct mptcp_storage {
- 	char ca_name[TCP_CA_NAME_MAX];
- };
+@@ -536,28 +536,22 @@ static struct nstoken *sched_init(char *flags, char *sched)
  
-+static void sig_int(int sig)
-+{
-+	signal(sig, SIG_IGN);
-+	SYS_NOFAIL("ip netns del %s", NS_TEST);
-+}
+ 	nstoken = create_netns();
+ 	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
++		return NULL;
 +
- static struct nstoken *create_netns(void)
- {
- 	SYS(fail, "ip netns add %s", NS_TEST);
- 	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
++	if (!ASSERT_OK(endpoint_init("subflow"), "endpoint_init"))
+ 		goto fail;
  
-+	signal(SIGINT, sig_int);
- 	return open_netns(NS_TEST);
+-	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
+-	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
+-	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+-	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
+-	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+-	SYS(fail, "ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags);
+ 	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.scheduler=%s", NS_TEST, sched);
+ 
+ 	return nstoken;
  fail:
++	cleanup_netns(nstoken);
  	return NULL;
+ }
+ 
+-static int has_bytes_sent(char *addr)
++static int has_bytes_sent(char *dst)
+ {
+-	char cmd[128];
+-
+-	snprintf(cmd, sizeof(cmd), "ip netns exec %s ss -it src %s sport %d dst %s | %s",
+-		 NS_TEST, ADDR_1, PORT_1, addr, "grep -q bytes_sent:");
+-	return system(cmd);
++	return _ss_search(ADDR_1, dst, "sport", "bytes_sent:");
+ }
+ 
+ static void send_data_and_verify(char *sched, bool addr1, bool addr2)
 -- 
 2.40.1
 
