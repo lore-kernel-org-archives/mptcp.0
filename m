@@ -1,109 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-yb1-f179.google.com (mail-yb1-f179.google.com [209.85.219.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2895E12BF28;
-	Thu, 25 Apr 2024 22:58:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D981913A276
+	for <mptcp@lists.linux.dev>; Fri, 26 Apr 2024 05:50:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714085889; cv=none; b=UKjIzWySvO4bE+i+R07JJinYA6FOo2fgfdBFLJ3wQsJ0Ok25V2DCMWZBkQBYtSET2LC27Og0tYkdXfrFfv03nMyQkP9h1Lncpdki3gcPrmb5lFvQhoHvgaKk2sdzBM2nGSLhUCDDRygz1qY/K/P0Xw/qlOeyUpgQChD9V6DnhaU=
+	t=1714110603; cv=none; b=rDR+V06ETQbBYWg4W/pxD5dgkdlz5MGw8Yh2OKOBXQehdj7mnYXiLpmi1GKZo4N4ZwPATDTCSu4ObSAgt29LEev3ppOFUskk/DIpikGD35HXaASvlZsl9FZ07AZlXglelVI8iW02p/vg6EIJEYZB47CL8dOdeyGSjVuvwrzRroE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714085889; c=relaxed/simple;
-	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=c1vIRoD0mqVvzd8eT81Nx2JjmImmwuRoGApm7OfcIEB5r5siU77rQvOIqfyBWoBcXS7m1f/U+fkG12v5/s/R8XCY5r65N4mlj/rmGVwdfN2HctNxdKYVFd8toU0YMA5PjN9VHxnOPywOXT5opCRreZhCqQ36x9VUUBYu/SZ04Z4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XQHjP+/I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714110603; c=relaxed/simple;
+	bh=b77+4Vnn35cz0MrdKiN3g+GM9LEAOjH34hpvujazC/I=;
+	h=MIME-Version:From:Date:Message-ID:Subject:To:Content-Type; b=N4lrtHVMLNlDigpqiF5rXge9relrpU6g3HtpvVzMBob/24jdVK+ydRO0JnUPsMIKwRX87o3bNxaidwTusJn67XQfvxAkSemyoNoWS6LtQSjteeaomujSOU6pkb6FXnipr8YlM6h4NCQ89K7aEFuq2i+WkuuRS/0J9LqxPMmByPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lrKQe6J7; arc=none smtp.client-ip=209.85.219.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XQHjP+/I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3902C113CC;
-	Thu, 25 Apr 2024 22:58:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714085888;
-	bh=KZ6d6tmhKGWfhPvc5pe1zvmWKH4eLy2i/SVKQGqyco4=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=XQHjP+/IEP3Hod/NE4TIvhSjSrvdrjAy9k2SyFIAJjFzNY8+Nh3Sx4POcNt5btuMm
-	 3im4slzGoWYkGm7TS50kvWPPVYBYIGT0/MZhkPK2muqrQmmbWC0GyjmcZ0ybOYTxW9
-	 SMkcyLR9W1KlZ7QqBNuRE0iMGbU80vuL7IHG1jEi41QYuf83RSpP92ZQTtRVvOQLlr
-	 v3hS48+RITvJrg9TWBKbL4CriqzPOg3Tsg+Vt50QKETrvCXiqDRTehoqDAJ9x/Y1u/
-	 a3230EtuGUq8KzmygdeZcglcAOIPu4ukSmpzRXKV2jvztr04ZgWZjoIRpRbueNQj+A
-	 zP3uYbLEZ8C/g==
-Date: Thu, 25 Apr 2024 15:58:04 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Cc: j.granados@samsung.com, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Alexander
- Aring <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>, David Ahern
- <dsahern@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, Ralf Baechle <ralf@linux-mips.org>, Remi
- Denis-Courmont <courmisch@gmail.com>, Allison Henderson
- <allison.henderson@oracle.com>, David Howells <dhowells@redhat.com>, Marc
- Dionne <marc.dionne@auristor.com>, Marcelo Ricardo Leitner
- <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Wenjia Zhang
- <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
- <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
- <guwen@linux.alibaba.com>, Trond Myklebust
- <trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
- Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil
- Brown <neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
- <Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jon Maloy
- <jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, Martin Schiller
- <ms@dev.tdt.de>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik
- <kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Roopa Prabhu
- <roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman
- <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Joerg Reuter
- <jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook
- <keescook@chromium.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
- linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
- linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
- rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
- linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
- linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
- linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
- coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org
-Subject: Re: [PATCH v4 1/8] net: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240425155804.66f3bed5@kernel.org>
-In-Reply-To: <20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
-References: <20240425-jag-sysctl_remset_net-v4-0-9e82f985777d@samsung.com>
-	<20240425-jag-sysctl_remset_net-v4-1-9e82f985777d@samsung.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lrKQe6J7"
+Received: by mail-yb1-f179.google.com with SMTP id 3f1490d57ef6-de462f3d992so1992919276.2
+        for <mptcp@lists.linux.dev>; Thu, 25 Apr 2024 22:50:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714110601; x=1714715401; darn=lists.linux.dev;
+        h=to:subject:message-id:date:from:mime-version:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=b77+4Vnn35cz0MrdKiN3g+GM9LEAOjH34hpvujazC/I=;
+        b=lrKQe6J72X6vjBtTDz04jmys11zo4b8njyEKJ0jIsp4rYPpAx6JqLFt9xHjybUoqis
+         zXTUf7Mqhg+ixYu6VIa5rnI/wygF2XSwRXX6dabwlwEgxjy6MzMXtRFiARbQ9ZyNEa49
+         EK3x/hdAD7lSsvDhlZqIZSieluDVCsWTo3OUFJroHeNjch+7CbnZEGfJEEXMc/2iBdhF
+         lVG+l/vEFObeqW/MWRPbS2pMKH/K0IGjnn5qYTepNwi5pmlfklmVztusCy6gUHHvAuOP
+         deKWP9XZUP9yPUPqRQRg2wNcbdBGkFBQgLv+PQDvCHUwhSLGXnOMmumS18rggivEMjIg
+         a8Eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714110601; x=1714715401;
+        h=to:subject:message-id:date:from:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=b77+4Vnn35cz0MrdKiN3g+GM9LEAOjH34hpvujazC/I=;
+        b=cV9vxKPXP35M6xaCbpVZKFfl1/11XQNjS8KNshIWibvKAKddPtBVyULpF/OpTPRo/9
+         FPwK3+r0LAZHPmhWlzbBfZTvnh8Ln886KHfMGT8LeYvkjY/wC2ep3+RaM0G5HbZRAYMf
+         U8QfyHCJpP0PqvZ/d0QPHJIUne1472y38RWWKFHaMnxLK+JqgR4qYp7ZTIKVC+zWq5x7
+         wcXR7DVzuHd4vFqveQ1yOCgDgqG1pHvcydSEJJ08TUvTcIXbWqoxKINjhLSebTUuUh3d
+         mgp1MdUk9AlC8xStfEtHFHE/QNLFzQFfEcIZ/LfYAHzpHdKAm992351+4UbQ7wdmLR2/
+         In8w==
+X-Gm-Message-State: AOJu0YwTNyTL/TWhV2jUAuCZfUVj0MnLLhy/iCs8sMsBSkGvb0deVcJ+
+	lu1WxSjFC5CNh885I7jjAX+Evy3Y1yUYLNcC7b2ruy/MpwkUWf+f6RGgdoXvAtMVCNAuypU9lW7
+	xePmejTDzwwS4houIC5tYph4bHpGLXpai
+X-Google-Smtp-Source: AGHT+IGBQ7hgnABhj8IA3qZ0dFyGgjx9j4PGtjf0b/npWfFRXJqGu37cbG00e4X+YqXWO+w9JvLavR3KgWInA6cwjok=
+X-Received: by 2002:a05:690c:6308:b0:615:6f95:489d with SMTP id
+ ho8-20020a05690c630800b006156f95489dmr1920900ywb.3.1714110600759; Thu, 25 Apr
+ 2024 22:50:00 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+From: Haathim Munas <haathimmunas@gmail.com>
+Date: Fri, 26 Apr 2024 11:19:50 +0530
+Message-ID: <CACObUf_KcUnyUtR=Uzt32b3E1XgVuQ5Z8u9QuWhOzaTgjUvqGw@mail.gmail.com>
+Subject: Regarding data-level length in DSS option
+To: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
 
-On Thu, 25 Apr 2024 14:02:59 +0200 Joel Granados via B4 Relay wrote:
-> -	for (i =3D 0; i < ARRAY_SIZE(mpls_table) - 1; i++)
-> +	for (i =3D 0; i < tabel_size; i++)
->  		table[i].data =3D (char *)net + (uintptr_t)table[i].data;
-> =20
->  	net->mpls.ctl =3D register_net_sysctl_sz(net, "net/mpls", table,
-> -					       ARRAY_SIZE(mpls_table));
-> +					       tabel_size);
+Dear All,
+Note: I am using MPTCP version 0.
+I would like to know why it is that when I use the default scheduler,
+there exists some packets in the communication where the server adds a
+common DSS option for several TCP packets making the data-level length
+larger than the TCP payload length. I thought the only time the
+data-level length is different to the TCP payload length is when there
+is a DATA_FIN flag set (which makes data-level length payload length +
+1) . Also why does this happen only when using the default scheduler
+and not when using the round robin scheduler?
 
-../net/mpls/af_mpls.c: In function =E2=80=98mpls_net_init=E2=80=99:
-../net/mpls/af_mpls.c:2676:25: error: =E2=80=98tabel_size=E2=80=99 undeclar=
-ed (first use in this function); did you mean =E2=80=98table_size=E2=80=99?
- 2676 |         for (i =3D 0; i < tabel_size; i++)
-      |                         ^~~~~~~~~~
-      |                         table_size
-../net/mpls/af_mpls.c:2676:25: note: each undeclared identifier is reported=
- only once for each function it appears in
-../net/mpls/af_mpls.c:2660:16: warning: unused variable =E2=80=98table_size=
-=E2=80=99 [-Wunused-variable]
- 2660 |         size_t table_size =3D ARRAY_SIZE(mpls_table);
-      |                ^~~~~~~~~~
---=20
-netdev FAQ tl;dr:
- - designate your patch to a tree - [PATCH net] or [PATCH net-next]
- - for fixes the Fixes: tag is required, regardless of the tree
- - don't post large series (> 15 patches), break them up
- - don't repost your patches within one 24h period
+Hope you could clarify this for me.
 
-pw-bot: cr
+Thanks,
+Haathim.
