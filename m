@@ -1,68 +1,67 @@
-Received: from mail-ed1-f44.google.com (mail-ed1-f44.google.com [209.85.208.44])
+Received: from mail-ed1-f51.google.com (mail-ed1-f51.google.com [209.85.208.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D944226AE3
-	for <mptcp@lists.linux.dev>; Fri, 26 Apr 2024 07:12:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C30FF26AE3
+	for <mptcp@lists.linux.dev>; Fri, 26 Apr 2024 07:12:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714115533; cv=none; b=nigBVrQaU1cxU2U5TIqAyYWTL2OrRlcZVLIMMJ2Of042kcAZQwTpDXM/T1pWSrs8BoHyDsSx4psvtRAdHJlO57wzpvNyPJNqRIgzOYeCiRbf4tcoeHTrMk+Vz0MO3wdY8cUjC1J1piTclTPZHabuJ0kzaf1MH+ovU090VYcTKAY=
+	t=1714115562; cv=none; b=cKFS7BqYPzKFLYTM+S/LpZsPhXz0HE0Mm8k29dHNaIuLdmfX5kQuZtIK5zs5ughyCMn3s8LPGMqfvD95zo0sr4cGZcNoql98axlZ4fnA6ql76Zn19DhdTZgvPidglfOYWuqJrZ/xgaAL/l8o5nxn1+izAgKwJVoeEpMF2+Am290=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714115533; c=relaxed/simple;
-	bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
+	s=arc-20240116; t=1714115562; c=relaxed/simple;
+	bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=VAWWVc7yCJM8rdYVV841Of9f1Aah/h2N88bCP9PP35sLKuktjadY58JeJ4lFm74BK6ksK91SR5MhSxwPCn84WxFOi9NKVmdbfF2SZazK2QyWM8r0nLvlMlMHgiq2o653A6cAz9tk0kX9LVV8JTKKew2m3j1Wi5AHcipD03sUfLk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=LeTKIMat; arc=none smtp.client-ip=209.85.208.44
+	 To:Cc:Content-Type; b=fLXLbJ8R2qtSlRCSuF0YEXLEgOjNH/6WTG6NplSFAZ4atmAMi9QKmftkyr06TrUDzH5pM+fWy92Y0FUDrdOkctlg9KXc/bWCibfUqbjpCKPmqlqSYqeiPNlr+1F2Ps/W8ASiLLyV3uwYniLZzIsrYsVVRF4REL1G4WJ4GuTtOEY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=kJwHCyUa; arc=none smtp.client-ip=209.85.208.51
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LeTKIMat"
-Received: by mail-ed1-f44.google.com with SMTP id 4fb4d7f45d1cf-571b5fba660so5911a12.1
-        for <mptcp@lists.linux.dev>; Fri, 26 Apr 2024 00:12:10 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="kJwHCyUa"
+Received: by mail-ed1-f51.google.com with SMTP id 4fb4d7f45d1cf-5724736770cso5002a12.1
+        for <mptcp@lists.linux.dev>; Fri, 26 Apr 2024 00:12:40 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1714115529; x=1714720329; darn=lists.linux.dev;
+        d=google.com; s=20230601; t=1714115559; x=1714720359; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
-        b=LeTKIMat7jWIYwC/InJ9AWKfWflIhB+ZK2kD+Wv0uIISvAQb+34X+9YxN/EltAF6z9
-         2G875VVQ7P1Oong7G5/nNyfwd+6fzHeedRWwYQ99V4OXRMPbgGyITW/j+bdSqI5Fdm53
-         vaRnmaZvuBr3g3BUdZM7JaMESJQRQ0ydSfID9xYwQn05nLh6eEAFo4YOoQfqfzHsUCB1
-         xquXa/WnCui1MymuJpFRz09WGLw19hVviY6ZKTq3Z71X4BCj3a1r1OeTs9LBhQUjem6D
-         CluA0rRxi2lxMJlHHAvWzjajivBu3PiS+EFYpYV0d7H6o3WKl2/doMa7bxQFu2PEXryJ
-         fRKw==
+        bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
+        b=kJwHCyUaWAeuMb727FArRvtGaMtGqb4vobAPlZt21M3lV2PVRdShYBEXtsH1P21ZSq
+         M3eBDQxxPUEAyq5uFWcO8M2oaBJGNF5JgjUtZ8XaNtr7PASkjPkb7JaRWJfHISH0Quro
+         wlPNq+1tkPcNHRYot+pHvPyjD/1kN8kCVzWy2mVGvn+mbVePJhXk07TmwmN8DMfldnna
+         a4FF5pXGaI/bRLhQDzS4agf25JtH9Gg0xyUHmUF5Xms7SJTggidJnHL/QHKlpEJ8VB2X
+         mnRHRWsncFvBOPZ7m2hw6QG14QbcG0FcAFykiLwhuXCidfvSBqFa2FT8m8/IRExDExIp
+         ti8Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714115529; x=1714720329;
+        d=1e100.net; s=20230601; t=1714115559; x=1714720359;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=o4CijGE6DQCwbT0vcZY7rzU07Zixh1ND3g5gwlWNbNI=;
-        b=EdtrBr+2NOMUYTfYDsq576VDU90aSO4yHdbw2feXPRJknE51ABRMTwEU/tVvWkPzRH
-         EOoJ8NxZt87ugVrYkCSelTFEpAtbSgqWuKNwmgATTAdatVJc/esYcj7SDuDNfI0PEcgP
-         TUJsOqBuxpAwQvEZPw/rYlEIuUS6LFW+qj46MTUL2roqhTKWmDPb9/6Tm7W+tFam2u9w
-         K3qCwD3xUKLYGEqBW/plVhL5X6tXakV4CSNHK3oVKK1bgJkPOaCgCOLnUyDCbj1AHLcj
-         plcVphPM+5EpnwzONEG6BTfkn9qwbRwNgCatft3sih18QQ3QPcw3eC2ht6mv5eh6GOxY
-         Uchw==
-X-Forwarded-Encrypted: i=1; AJvYcCVwZQATAbHLtua+bbVprICXVPGe0WBDJD6umsMCUwzkk36znwXKFqlDbvqswFyhipgBbXeLELPn2y132QxbG7qs/jnP49w=
-X-Gm-Message-State: AOJu0YwK4464AfmX2feQV5C8I+6jjXPn7MEX+vgCfsBXUFVvro91N4Jl
-	hDBzDwyMXpuGBqjOIbY4NZE/WBx8vEuyxM1WpFBZNW191ntk+NicHp2g9STkzfX93syaq/UDUim
-	0dlQ68zxyDRPVXwMY+06H35Hku7G5hYrbJNbM
-X-Google-Smtp-Source: AGHT+IFGK6axy8x4vSxxxy3Oh+3ntHHua1mtJilCxbRJCerWML/wCChAU9qlPo9HVLrAqSWMm+hZgH/UuWi5SnGwh08=
-X-Received: by 2002:aa7:d497:0:b0:572:25e4:26eb with SMTP id
- b23-20020aa7d497000000b0057225e426ebmr71684edr.7.1714115529122; Fri, 26 Apr
- 2024 00:12:09 -0700 (PDT)
+        bh=4seAV79ridn4oK7nRaqYqUH8RKW5l/spsnmRvibRiNs=;
+        b=pZKqQL5+F03NJ4v6sbMIVJPJz+GFoTt4NK1DOK1z9XMcCFuty+uUtPt5cjuzmVA76v
+         iTD1maodIbrxIRXSVYaMkhwIgXZvdcNP5V+bVmLPjLwq3swpt0Iz2IgkQHu/hBq+xlg6
+         caTq8UIJowYEGLESF2EXeLhBfjCK9wCIafW8rIEZNHYOVLODnRQjCSnK1SnPYlcYYuMq
+         LOSKizOUEwB7XJFko3kP0WktE9EYk8yFUfX/AGBixatBaM0AjsAN7m8V9Dwu9wgW9lR8
+         PFIGSXxpfm1GJF9zvbXcU23uaMkCiFjAVhQ4HvGfoAYp4Z5u/A/ioZmBaupEVtT338Zl
+         o/vg==
+X-Forwarded-Encrypted: i=1; AJvYcCUP1ycXzYqypovHLGPQZUDoDLrAgW4fDrfiLX4BJ6OedvpAjDpDr25DsJYetr7/X7SbcnW2W5S0vBUnaTwXwoxXnKC642k=
+X-Gm-Message-State: AOJu0YzpmsfFyNI6fImDOSXmGjf0UE5wX3ytZGGkIU2Y2xrJGI/vd/z/
+	zVlCaSQiKP6GmTASjELyqqxbfVdaT3hTpa0nn5E8r4+IJBriGIL/0CzDNA+UKHpge71OUEaeVob
+	i2q6XMNu3ZzjD93L/CqFelh+QVF0Yu7Bcv/oB
+X-Google-Smtp-Source: AGHT+IExI6r1PzLpwM+kdZrqejtoIV/lrdCRc9hPnUboYdDZk61WahQ3oh9IdCqM9A4jm4HWv8p1C4wk/G0gLyWVjh0=
+X-Received: by 2002:a05:6402:26cc:b0:572:57d8:4516 with SMTP id
+ x12-20020a05640226cc00b0057257d84516mr44282edd.2.1714115558737; Fri, 26 Apr
+ 2024 00:12:38 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-7-kerneljasonxing@gmail.com>
-In-Reply-To: <20240425031340.46946-7-kerneljasonxing@gmail.com>
+References: <20240425031340.46946-1-kerneljasonxing@gmail.com> <20240425031340.46946-8-kerneljasonxing@gmail.com>
+In-Reply-To: <20240425031340.46946-8-kerneljasonxing@gmail.com>
 From: Eric Dumazet <edumazet@google.com>
-Date: Fri, 26 Apr 2024 09:11:58 +0200
-Message-ID: <CANn89iK9Nqug+X8fPzRQ49fu+AydSqb2Js2FggkOHNFdNEcfAw@mail.gmail.com>
-Subject: Re: [PATCH net-next v9 6/7] mptcp: introducing a helper into active
- reset logic
+Date: Fri, 26 Apr 2024 09:12:27 +0200
+Message-ID: <CANn89i+oyLS8goc0oVEpDW+PR35q+BcSph0s31q3Lj-RwSRFVQ@mail.gmail.com>
+Subject: Re: [PATCH net-next v9 7/7] rstreason: make it work in trace world
 To: Jason Xing <kerneljasonxing@gmail.com>
 Cc: dsahern@kernel.org, matttbe@kernel.org, martineau@kernel.org, 
 	geliang@kernel.org, kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, 
@@ -78,16 +77,15 @@ om> wrote:
 >
 > From: Jason Xing <kernelxing@tencent.com>
 >
-> Since we have mapped every mptcp reset reason definition in enum
-> sk_rst_reason, introducing a new helper can cover some missing places
-> where we have already set the subflow->reset_reason.
+> At last, we should let it work by introducing this reset reason in
+> trace world.
 >
-> Note: using SK_RST_REASON_NOT_SPECIFIED is the same as
-> SK_RST_REASON_MPTCP_RST_EUNSPEC. They are both unknown. So we can convert
-> it directly.
+> One of the possible expected outputs is:
+> ... tcp_send_reset: skbaddr=3Dxxx skaddr=3Dxxx src=3Dxxx dest=3Dxxx
+> state=3DTCP_ESTABLISHED reason=3DNOT_SPECIFIED
 >
-> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Reviewed-by: Steven Rostedt (Google) <rostedt@goodmis.org>
+> ---
 
 Reviewed-by: Eric Dumazet <edumazet@google.com>
