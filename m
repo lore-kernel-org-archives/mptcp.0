@@ -1,58 +1,60 @@
-Received: from mail-ej1-f53.google.com (mail-ej1-f53.google.com [209.85.218.53])
+Received: from mail-ed1-f45.google.com (mail-ed1-f45.google.com [209.85.208.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71FD12D758
-	for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 12:06:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D344013D618
+	for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 12:06:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714478819; cv=none; b=Su63Jkf3sBux4EtBehfWXAc5XaEbF4VV5qM24wR5z2NztwRp8TSbRkZUVOQAIMpPh9jOyxyyyewHgfL31bbnFJwgLYsBHS5BbKAMrqJ1Uk8WgBZo2sEHSRdl8Zg6eNVyaMevf9YtIHW6iU0Q6KnPrzIfvKeqi3terMKfb61YAfs=
+	t=1714478820; cv=none; b=Xd6bMZLS/945r8PgUuIHxnoFOyKMYqT8aDYFn7EjUjp4gsZ5oLYvrM3HaSOmQgnkuBmvQDr8VEVMS4Y7MT7IDXH8bMiOKp7tKBEq1hLHDkKJyeq+nTotXJB7F0AZ+cI63nWrnc2jVEfIXjFrOfLCGXcqrYhIGJT22EHDi8Cd3MQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714478819; c=relaxed/simple;
-	bh=x23ZmUT013iUCLSXaUpi5LlryRrA3BD/ZAzMO8y10dM=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=JYPnWshKipWoBdAEibUzzSFYc/jP0UEP0x67uUHtDipXdm0RkO61cd8TqqZYKUKsqz4hV1Aqd9AZtkb3bc86DFl+lANUtjhYsk40YUFljERQif9+kfWdccbNjui+a18yFwm7FiwTzdNKSxSe2kYE9St1e9sNsLSp1TSDpzBRexI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=l2ktX4dQ; arc=none smtp.client-ip=209.85.218.53
+	s=arc-20240116; t=1714478820; c=relaxed/simple;
+	bh=VAU3ALS9gJEyoBIZDRFuHrx5VVGheT+uTqPuNaV4ZpA=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=XwxE+bDXBJu+nOkP4R3YHF1Mx1P06tIDBqv8WUg1AbqG0Cj2WUc/rt5Cgbh6R3GK9qQjb+cU6N4Hc2r7kodUV+esI7+3+i1ZTHYyv31Mv0EnTdBE5/5jfZhJKzEDB9Z0+6IlaaRRokop4WETxyWUizE52HstSCqMG7IhtiyzRZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LLXy2MNo; arc=none smtp.client-ip=209.85.208.45
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l2ktX4dQ"
-Received: by mail-ej1-f53.google.com with SMTP id a640c23a62f3a-a58eb9a42d9so393987566b.0
-        for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 05:06:57 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LLXy2MNo"
+Received: by mail-ed1-f45.google.com with SMTP id 4fb4d7f45d1cf-572229f196cso5818217a12.2
+        for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 05:06:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1714478816; x=1715083616; darn=lists.linux.dev;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=7hZLwKbv9c5bAVLt3i8TXd1TJdk794rrVqCRO+gOArU=;
-        b=l2ktX4dQjGbh+XrPk2mhLeQ+2Q5OjS20pDFDFat/3x+/XslmFdpvGnj+tARXZ1Asji
-         qO61oSiUEKk5TAaSLpWJlXPvmjVR4DaW3S+e3Mbr38E04im5iVA8V3Z5EzGE+JkXHSxt
-         rp3uzGsChBQnSloZu0NK+hzZH6UWbRfCe5RV32dpP6IJ+TMAgDMN2pTLU7WDxh8I8udh
-         uGe9J7d7qtmB4+ApAwW1s7mCRHEECzfC7WleFC5o+xyHxMG/b0x9894DWWjlbdqeW1Ru
-         qaWqHziri+E+whh1ubUhwJxzZ/NMxSFhna3GcSkbBUy4Vzo/Zw7JuRnXwdIbp3MQOtGB
-         PGXA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714478816; x=1715083616;
-        h=cc:to:content-transfer-encoding:mime-version:message-id:date
-         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+        d=gmail.com; s=20230601; t=1714478817; x=1715083617; darn=lists.linux.dev;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=7hZLwKbv9c5bAVLt3i8TXd1TJdk794rrVqCRO+gOArU=;
-        b=FmGCdI1ocTCw1eaFPNmlzGc210+PvGmpcTyi+wbZkxCw0/SaUD8SzCCPZXepb05R87
-         XmR6sa59PcqGIGmuBHYy/+X0YUsMvitQuDSxHYytkkGk5PAxgf64iOf3RDxP7od4kduK
-         +Ep+a1BZjB0bqS71w8pgkK7kHagjXmMH39pwpEgiWbByfp8yG+Xghybx8fUy/cNQfvBA
-         7N1G3CgpuND9iC0ZpwRjR5/4Jdc+o6tP776gG8EzNtinLQdpJWvJEb54wGHSA0dgK9L1
-         wxky1S3AQV5quONdvx2P4lxQvWYCdgNTfUITR4/XicNxhtqtVN4tSxmdkJ8c8SdoVItW
-         Ootw==
-X-Gm-Message-State: AOJu0Yz4Mmyk8APJRTIcJqZhJ9S2nQ+hgkQukpLJptBOF4Xaecv+tJo8
-	2gEugqQqO7s8bm/peXG72l2CxdH73urxYFDK76/I9WeypsuwsLfK3h80hIKt
-X-Google-Smtp-Source: AGHT+IHrM1zlG0ZzAb29wtAufdWWuYY9vBDuGi+0rMj7OuflpBTLc2eR0B82HaLCSAR6mJR35f+UqQ==
-X-Received: by 2002:a17:906:492:b0:a52:2772:b9cb with SMTP id f18-20020a170906049200b00a522772b9cbmr1826981eja.24.1714478815860;
-        Tue, 30 Apr 2024 05:06:55 -0700 (PDT)
+        bh=tPXzCxemjkj/xUKmH/yneaMxGlgsNYeCjRqZPEGXhDs=;
+        b=LLXy2MNo/QEJiHeWbA5wYA1DIHMKlBwVZcYMEqNxric4zNJonjo9cNSrPCI87F5tbp
+         GiuwGKWNJUgX3mLqYZyjyhqnqUm4rMfXupjz7Ke/u4wTsc9Kj+wtKKjeDBbP5PQJDbhU
+         BWCd4NeHOsPFwos8eSVRi31Y+CGY1RiSH6YdXq+SA2sXwtP/LruQE0RczfNZqAqvwZmV
+         2zhOnzEJxo/oDoFViOAK9CA403ySkptKlf+zS0IhWxiX9ORQF9vW4UQ2UwhZzFyOQn1u
+         4py25Ows3fukWCpLTxEbVDWHlDbR5axDKTs9GfwL248WE0JnJhcNER4Ohsb2C3LVoAqN
+         nchw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714478817; x=1715083617;
+        h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
+         :mime-version:subject:date:from:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=tPXzCxemjkj/xUKmH/yneaMxGlgsNYeCjRqZPEGXhDs=;
+        b=M5Q+jxm9baOQJEdTrLhfRGjiUFF+3trCN53cxAaS0AMW/5EpbMS4NgmTVzO4EAl61y
+         1h1nqmCdkzVaDhs+cu0pAMjkURfvCVv7DSYRJMhj43vtq19equr/GtCyphAPXQ/7sMnk
+         Nd5AMDm6xIe/MU0VS9knGnBUWKLldMfeIZlco0jttNNQI4x4b5ArviV7STohAWNpxDaF
+         v7yJHf9pKMGYUXzGmsHupcTBIZn+WcAAGcW849p9EBuFH0XvFfGUXA+7LNEIhVcEES8D
+         7MdMKQ1pkShzMA24ArpOuijXMgO6chS6upbZjz6sqx5RpA2EA3Iw7HS0qXW3DWWwvbYZ
+         1K6w==
+X-Gm-Message-State: AOJu0YzPRKXQfFEMBTVZEDlW8PnArc6V7Vx7CFl5ueHY2M/A/ULG09QC
+	KFBAwCDPMlqbErsq9Q3hZd1FiQMxbCVIdWjKfRSmI8EDs3SxNbX4
+X-Google-Smtp-Source: AGHT+IEUcAD2Ds2ePtu3X/qH01i4VuxtqPFeKXiA1ePJNvborRNVuG5MSvWH2zxylkt2CxF41XWqpg==
+X-Received: by 2002:a17:907:bb97:b0:a52:2d35:5e28 with SMTP id xo23-20020a170907bb9700b00a522d355e28mr10499331ejc.57.1714478816589;
+        Tue, 30 Apr 2024 05:06:56 -0700 (PDT)
 Received: from [127.0.1.1] ([2001:41d0:700:80a3::])
         by smtp.gmail.com with ESMTPSA id s17-20020a170906bc5100b00a4660b63502sm15242626ejv.12.2024.04.30.05.06.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 30 Apr 2024 05:06:55 -0700 (PDT)
+        Tue, 30 Apr 2024 05:06:56 -0700 (PDT)
 From: Gregory Detal <gregory.detal@gmail.com>
-Subject: [PATCH mptcp-next 0/2] mptcp: fix net.mptcp.scheduler behavior
-Date: Tue, 30 Apr 2024 12:06:40 +0000
-Message-Id: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+Date: Tue, 30 Apr 2024 12:06:41 +0000
+Subject: [PATCH mptcp-next 1/2] mptcp: only allow set existing scheduler
+ for net.mptcp.scheduler
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -61,44 +63,94 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIANDeMGYC/x3M3QqEIBBA4VeJuV5Bsz96lWWJ0qkGysRxo4jeP
- enyuzjnAsZAyNBmFwTciWlzCeqTgZl7N6Egmwy5zAtZaCn4ZBOXjs2M9r9gEErrqrblMDaqh5T
- 5gCMd7/ILq4/GC4dHhN99P5LeqnduAAAA
+Message-Id: <20240430-sysctl_scheduler-v1-1-8187148850df@gmail.com>
+References: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+In-Reply-To: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: Gregory Detal <gregory.detal@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1714478815; l=893;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714478815; l=2098;
  i=gregory.detal@gmail.com; s=20240430; h=from:subject:message-id;
- bh=x23ZmUT013iUCLSXaUpi5LlryRrA3BD/ZAzMO8y10dM=;
- b=rJAN08seIQ1gKrOmhwiIS2SidZZhrCgYXKI62Za2xdl40iXSejBM8H2uENhoL5fTDSfBL5+4k
- SNU7CBRlO9rBKIeTJZLfq5XeYTtK55VG9rBT3jICTE069NfcuYAtcIN
+ bh=VAU3ALS9gJEyoBIZDRFuHrx5VVGheT+uTqPuNaV4ZpA=;
+ b=PEHezW0x4eY2kBNSpVdTgQuFFt6SbQdMoJaB7mF/VLbzoXXO0TjoQkCrkXujBI6sgZ4/E2IiG
+ j93K/mhnIh1CRgDkqFIfSIK9rTqRxstSu5NDFtvzQ8KvVWcu7+yWtmE
 X-Developer-Key: i=gregory.detal@gmail.com; a=ed25519;
  pk=TziJDop3YEG3Ywr6io7U9Iy2jaAY3l0hTh8KdwDKXQM=
 
-The sysctl is accepting any input. This patchset ensures only
-existing scheduler can be set.
+The current behavior is to accept any strings as inputs, this results in
+an inconsistent result where an unexisting scheduler can be set:
 
-Moreover, this adds an helper sysctl to list the available scheduler
-similarly to tcp_available_congestion_control.
+ # sysctl -w net.mptcp.scheduler=notdefault
+ net.mptcp.scheduler = notdefault
 
-The first patch of the series is a fix for mptcp-net.
+This patch changes this behavior by checking for existing scheduler
+before accepting the input.
 
+Fixes: e3b2870b6d22 ("mptcp: add a new sysctl scheduler")
 Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
 ---
-Gregory Detal (2):
-      mptcp: only allow set existing scheduler for net.mptcp.scheduler
-      mptcp: add net.mptcp.available_schedulers
+ net/mptcp/ctrl.c | 40 +++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 39 insertions(+), 1 deletion(-)
 
- include/net/mptcp.h  |  3 +++
- net/mptcp/ctrl.c     | 67 ++++++++++++++++++++++++++++++++++++++++++++++++++--
- net/mptcp/protocol.h |  1 +
- net/mptcp/sched.c    | 22 +++++++++++++++++
- 4 files changed, 91 insertions(+), 2 deletions(-)
----
-base-commit: dd741144c1d1e3bd1fed5eb0ded1934c9230b4ef
-change-id: 20240430-sysctl_scheduler-13367d5bf81a
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 8d661156ab8c..0e69bd0ea302 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -96,6 +96,44 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ }
+ 
+ #ifdef CONFIG_SYSCTL
++
++static int mptcp_set_scheduler(const struct net *net, const char *name)
++{
++	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
++	struct mptcp_sched_ops *sched;
++	int ret = 0;
++
++	rcu_read_lock();
++	sched = mptcp_sched_find(name);
++	if (sched)
++		strscpy(pernet->scheduler, name, MPTCP_SCHED_NAME_MAX);
++	else
++		ret = -ENOENT;
++	rcu_read_unlock();
++
++	return ret;
++}
++
++static int proc_scheduler(struct ctl_table *ctl, int write,
++			  void *buffer, size_t *lenp, loff_t *ppos)
++{
++	const struct net *net = current->nsproxy->net_ns;
++	char val[MPTCP_SCHED_NAME_MAX];
++	struct ctl_table tbl = {
++		.data = val,
++		.maxlen = MPTCP_SCHED_NAME_MAX,
++	};
++	int ret;
++
++	strscpy(val, mptcp_get_scheduler(net), MPTCP_SCHED_NAME_MAX);
++
++	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
++	if (write && ret == 0)
++		ret = mptcp_set_scheduler(net, val);
++
++	return ret;
++}
++
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
+@@ -148,7 +186,7 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.procname = "scheduler",
+ 		.maxlen	= MPTCP_SCHED_NAME_MAX,
+ 		.mode = 0644,
+-		.proc_handler = proc_dostring,
++		.proc_handler = proc_scheduler,
+ 	},
+ 	{
+ 		.procname = "close_timeout",
 
-Best regards,
 -- 
-Gregory Detal <gregory.detal@gmail.com>
+2.43.0
 
