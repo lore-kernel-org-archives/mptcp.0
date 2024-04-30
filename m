@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F7A5168A9
-	for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 14:00:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A372168A9
+	for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 14:00:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714485623; cv=none; b=E9f5eogslv1y+4MxfYmdHZQMZdRTPX9v+GqwLP2Ci6DNbnxHSM25QBRSCIbB5gghJ3CciKxlP+/cWDoDNm5uZVQE8XnMngUdbE31hIpWSuarpxEo7AJdSEN3GVzSNWlf+EgLCMbmJ5ohMwYC15gQOJdOig0HczfERwb4ylSx4KQ=
+	t=1714485625; cv=none; b=UIWbxKv4fmPOFVE27YI3LOu/GOkOHW4luZHsZzMA9fC7EszzjYU89cqm12Uxakb7u12uFpUkIeR7zdB1qyuPH8iHY0YO2k+6afUUuzdmmlcj/YxJJrtSf6bMUwpm83PwKwT2HXqjY3v1zVwAbiTKzfv2hhYd2F27dSEKNvf025U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714485623; c=relaxed/simple;
-	bh=5wezkYRgO+dnwpBwANf/0MuCzebsOtQKvfO7EDu+i5s=;
+	s=arc-20240116; t=1714485625; c=relaxed/simple;
+	bh=yiDRlUz2oB+cJB8WhvE0Dwwm079VSsSRXdcT2RBAv5M=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=aJNVQqVveN9iloNVfQTv90pNehlk9aZTomv/x78NNsSO66VDg6T4EhvN4tLDQ4J0zzr13bTJnWcxu8tCzgD87lt/rHhSY7ARYrjPex//ad0QvSI+6WE8MYvDWD21qwxpPIHyQzHrgMu22No17000PeGouXkgLAPt5vjYWy5Zi68=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ee5ILhb/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gyY/OzCvwAVxUOVeiCLsxhV4efH1KUMOZIP9Vio5Z5bgdm4XRjBIVPp0G1HaDyzRTN2YQeDTiqJQT+3kb60AYgzDZMw4QfyzcHY+J8ZkLaElu6ZeUg+/N9VsqQdemOAVNjyEs0op/I6vPhniZ0hC+wGw3lb4YBvGBac912Xadlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=REqCDi/R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ee5ILhb/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 718D8C4AF1A;
-	Tue, 30 Apr 2024 14:00:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="REqCDi/R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B3E9C2BBFC;
+	Tue, 30 Apr 2024 14:00:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714485622;
-	bh=5wezkYRgO+dnwpBwANf/0MuCzebsOtQKvfO7EDu+i5s=;
+	s=k20201202; t=1714485625;
+	bh=yiDRlUz2oB+cJB8WhvE0Dwwm079VSsSRXdcT2RBAv5M=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Ee5ILhb/6ZBtIoEVXKGBlWZcuJCXy9NSjpyJewZSFkOYPLgsijVY1kqekj1agjRvL
-	 mHG2DUwMLfNoAK4dwK8C2GrhDW07B5N6sfR8trM9GDVCfrRW4AeAYrH7HRphkIuF7/
-	 XkdnkjIIsGOMOSkSCIXVx+6VcgH6JnOWbp0sHcOeu1Xe08k/wPU1no6tQNkHuNTUG4
-	 b4kEleLEgLgxumNO4Dwtvw8r1BWjxLDSu55gKHPnbrq3tiF0rKGAiTAQtAHtmce89A
-	 0aw+UR7fI7Pob1N0BaTfwU7EdC6rJFtdnalE1ltWMFhpSiF0kDFSCve56eKPdzWDcK
-	 Nez/942Yy72Mg==
-Message-ID: <45081e80-632a-40a2-b059-0ee00d624f36@kernel.org>
-Date: Tue, 30 Apr 2024 16:00:20 +0200
+	b=REqCDi/RjYOLanjUhI+3tY3r+6k3rcH+WeglLoAFlW6/mh/Gy6nyTvElKz/NpE8HH
+	 xYodU63VPAnWPgdSX6D3Q3mxAH/eDTR2WanuLpnt6t0uvSVbZG/l67foisI4W3zhLS
+	 RUwi+JA1Ce8tiuFqQPGhm33NbrTGE/CyevyAB5gr0NB+TZplFr1dwQtllpYYw9F409
+	 YwiE2z6sQSnIay2xqdGK8URuCjLgY12MWxC/xAOtNWXSZAOra2sLJyFJy+6tNdaT23
+	 Ax2Fttt6qcSGT3/cELkKfEvBs687TF9J0Gtzs5dfJWEEp5qRktc87Rr2KxkIVUAV0/
+	 QMw3Yo7tq+mTg==
+Message-ID: <74b9bd3e-2363-4c38-b5ab-7e44fb1a47a1@kernel.org>
+Date: Tue, 30 Apr 2024 16:00:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: only allow set existing scheduler
- for net.mptcp.scheduler
-Content-Language: en-GB
-To: Gregory Detal <gregory.detal@gmail.com>,
- MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: fix net.mptcp.scheduler behavior
+To: mptcp@lists.linux.dev, Gregory Detal <gregory.detal@gmail.com>
 References: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
- <20240430-sysctl_scheduler-v1-1-8187148850df@gmail.com>
+ <a9304a47-a0d5-b157-4302-ec1e6886f169@gmail.com>
+Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,41 +85,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240430-sysctl_scheduler-v1-1-8187148850df@gmail.com>
+In-Reply-To: <a9304a47-a0d5-b157-4302-ec1e6886f169@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 30/04/2024 14:06, Gregory Detal wrote:
-> The current behavior is to accept any strings as inputs, this results in
-> an inconsistent result where an unexisting scheduler can be set:
-> 
->  # sysctl -w net.mptcp.scheduler=notdefault
->  net.mptcp.scheduler = notdefault
-> 
-> This patch changes this behavior by checking for existing scheduler
-> before accepting the input.
-> 
-> Fixes: e3b2870b6d22 ("mptcp: add a new sysctl scheduler")
-> Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
-> ---
->  net/mptcp/ctrl.c | 40 +++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 39 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 8d661156ab8c..0e69bd0ea302 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -96,6 +96,44 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
->  }
->  
->  #ifdef CONFIG_SYSCTL
-> +
+Hi Gregory,
 
-We can remove this extra new line here: I can do that when applying the
-patches if I don't forget.
+On 30/04/2024 14:59, MPTCP CI wrote:
+> Hi Gregory,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal: Success! ✅
+> - KVM Validation: debug: Unstable: 1 failed test(s): selftest_mptcp_join 🔴
 
-> +static int mptcp_set_scheduler(const struct net *net, const char *name)
-(...)
+FYI, the issue doesn't seem to be due to your modification.
+
+This test is known to be unstable:
+
+  https://github.com/multipath-tcp/mptcp_net-next/issues/324
 
 Cheers,
 Matt
