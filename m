@@ -1,251 +1,119 @@
-Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f53.google.com (mail-pj1-f53.google.com [209.85.216.53])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92A52171651;
-	Tue, 30 Apr 2024 12:41:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 883E617106E
+	for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 12:59:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.53
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714480894; cv=none; b=ZA7ueKobep28nZoF4HSznHPSzxs9vBta9g8L3WINbvAoTLhzXncqVv3ycUgfq+SfZ+Edsjjk6Wf3AQMBXGSqHRfWqKw4CO4R8/+FWJieL3WOKCZjBCYP9E42q1zuLPIVlmN1poXbOYjyGRBfMPxThJg52cmjVpwktkoSqcG9hqs=
+	t=1714481994; cv=none; b=DYyzOQYnceS7/HENa0AMOwNLL5XUVvkhrnx0xGXGnCc61LHVQaP+ubKHPevkelVOW0IJ1O+OPTRcMmxOvOnnPVXIv+ImCirKd7KUZzTAoPdFWs5m6l82Jc5mve/a+1gFRTJHpvAAZrBe+9sPFt5o/7vdkKP0Dj4/4WI0Xx6Ezzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714480894; c=relaxed/simple;
-	bh=9v5nbIyTk29DQD7K8yfF9zFZjD5rlyG1NzU6KgBfAeo=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=qCS0+eQK9Aqg75VXszQYeBltBtfDQ11gJMioaMfQguFl7nVLnWgiC7MyODuvlTUiSbzTsVrKq9k90JNLACg5CVDDMo3oTcu+NlY2njLahvJI1pM4FnHNu2uhk7PJinuKa5fC3uoM5BIpni+eH+PVEyHd+EpCl6K1GNLY8tr9r58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=bVxPN267; arc=none smtp.client-ip=210.118.77.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1714481994; c=relaxed/simple;
+	bh=MLpWvhuWOEXrhuurXv9VdvMUUZGzHHkGk27V3HEBh6o=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=B+8hnV9C0Mwew7ExZZEQ/5GwOqpFkvTvk7bKEWEnwMeUwa//iZ3rupb27wX9QJ0jn2yPHCTPHT+GDDAdZAL+LKYlnWgr/2iopafYUV/+xhpyxeB2Vtbwp3mgLI+bvmZSMKbTWSdqt6aDpc8BPDALk9IJA15ke+REomWTSCOoCzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dDP7je8F; arc=none smtp.client-ip=209.85.216.53
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="bVxPN267"
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240430124123euoutp02dae4cc936cdd34776578b5f692aaef5a~LD0emysCv2912729127euoutp02K;
-	Tue, 30 Apr 2024 12:41:23 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240430124123euoutp02dae4cc936cdd34776578b5f692aaef5a~LD0emysCv2912729127euoutp02K
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1714480883;
-	bh=ee6hOge47N/ZUZL/n09Dop1nA6z21xPJS7cNGpe348M=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=bVxPN267bjohfRSlay34PZ1s31TIerml/wNMQuGtS3y+UFt9HaX8oXXaq+8k18y0Q
-	 2gf73U9j+w1mh4g8WYeR0ARw4DTULSGmJ4IAiWTvOuiGoIb2Ce6oX4v12e1Goks2zm
-	 PqTwcojlqolN4YbR4wxYZuqxjS7XJzp8pRBbhglc=
-Received: from eusmges1new.samsung.com (unknown [203.254.199.242]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240430124123eucas1p112ecb22e58892e0197f6992f62e6ef6b~LD0eXm6fx2825228252eucas1p1G;
-	Tue, 30 Apr 2024 12:41:23 +0000 (GMT)
-Received: from eucas1p1.samsung.com ( [182.198.249.206]) by
-	eusmges1new.samsung.com (EUCPMTA) with SMTP id CD.3D.09624.3F6E0366; Tue, 30
-	Apr 2024 13:41:23 +0100 (BST)
-Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-	20240430124122eucas1p1878107fc7b05ea2dc0c4f8b4e37e0bbb~LD0dv7cJd2825428254eucas1p1z;
-	Tue, 30 Apr 2024 12:41:22 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
-	20240430124122eusmtrp2892d70f7322ac2914bbd949ffe915179~LD0duZtTh1688716887eusmtrp2c;
-	Tue, 30 Apr 2024 12:41:22 +0000 (GMT)
-X-AuditID: cbfec7f2-c11ff70000002598-2e-6630e6f38b4a
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 04.C6.09010.2F6E0366; Tue, 30
-	Apr 2024 13:41:22 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240430124122eusmtip11f9eb40338d7a273674f7912309dba07~LD0dLgJxf0368603686eusmtip1y;
-	Tue, 30 Apr 2024 12:41:22 +0000 (GMT)
-Received: from localhost (106.210.248.68) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Tue, 30 Apr 2024 13:41:21 +0100
-Date: Tue, 30 Apr 2024 14:41:16 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Sabrina Dubroca <sd@queasysnail.net>
-CC: "David S. Miller" <davem@davemloft.net>, Eric Dumazet
-	<edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni
-	<pabeni@redhat.com>, Alexander Aring <alex.aring@gmail.com>, Stefan Schmidt
-	<stefan@datenfreihafen.org>, Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>, Steffen Klassert
-	<steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>,
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>, Remi Denis-Courmont
-	<courmisch@gmail.com>, Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long
-	<lucien.xin@gmail.com>, Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher
-	<jaka@linux.ibm.com>, "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu
-	<tonylu@linux.alibaba.com>, Wen Gu <guwen@linux.alibaba.com>, Trond
-	Myklebust <trond.myklebust@hammerspace.com>, Anna Schumaker
-	<anna@kernel.org>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
-	<jlayton@kernel.org>, Neil Brown <neilb@suse.de>, Olga Kornievskaia
-	<kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>, Tom Talpey
-	<tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>, Ying Xue
-	<ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>, Pablo Neira Ayuso
-	<pablo@netfilter.org>, Jozsef Kadlecsik <kadlec@netfilter.org>, Florian
-	Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>, Nikolay
-	Aleksandrov <razor@blackwall.org>, Simon Horman <horms@verge.net.au>, Julian
-	Anastasov <ja@ssi.bg>, Joerg Reuter <jreuter@yaina.de>, Luis Chamberlain
-	<mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-	<dccp@vger.kernel.org>, <linux-wpan@vger.kernel.org>,
-	<mptcp@lists.linux.dev>, <linux-hams@vger.kernel.org>,
-	<linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
-	<linux-afs@lists.infradead.org>, <linux-sctp@vger.kernel.org>,
-	<linux-s390@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
-	<tipc-discussion@lists.sourceforge.net>, <linux-x25@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
-	<bridge@lists.linux.dev>, <lvs-devel@vger.kernel.org>
-Subject: Re: [PATCH v5 1/8] net: Remove the now superfluous sentinel
- elements from ctl_table array
-Message-ID: <20240430124116.vcgeggkcwtbbvibm@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dDP7je8F"
+Received: by mail-pj1-f53.google.com with SMTP id 98e67ed59e1d1-2b27c660174so580807a91.1
+        for <mptcp@lists.linux.dev>; Tue, 30 Apr 2024 05:59:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714481993; x=1715086793; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=GozPfm3MY7QW/cnBV865HXfdV8Exa0TxdsuLwScECtk=;
+        b=dDP7je8FeVPccqRn7QOGusYh06Jh7iiUuFvqCsTf7iB/nJHfqi3sQQVYxpbtUrHZ/A
+         PDldrSpVVRpdRC6Z7k9Z4q9eKp5NCJh0spNDtaHMrDtbQWNrMdDKxHedBiVkrbj4N2h6
+         eS3x0OGJgv4gLzpXsrUPdOiDnm6gyfQV2Hak7ONI2SKpESYBSZuMvO9Q1O5malcAPnfH
+         MOoq8xOBq/1YYxYDhXU2Blv0EkXDSOwOlIKT0ItNLhpKdeP1Aj8slaludHjTMgBgJ6l1
+         9NwqI9dSb1RW+C63mSPmCd63dLr5cDOGgs9fBgAMzyWYpG8/5+awUPEbV8q+65g7Up3P
+         StYQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714481993; x=1715086793;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=GozPfm3MY7QW/cnBV865HXfdV8Exa0TxdsuLwScECtk=;
+        b=gYu91/dy0XtiVZ1bv3HNcVCJ1936ODfa2MmWe5jvbLItJsOwLEuplyS4uzbn+YKQrI
+         onmGxAgF6x3jGzY2/SU8Wlx4Dy8fo5ob/2hOhKMfuBP2fixYy66htktezQMaEgFDF1pZ
+         83s6FP41ZbVShYTM3Vf+322TPYQSoy80vTH+JB6KBJoVlgpPByBSSfXWA8OMv0vRfDho
+         FJ/MaoGXl/39b6zDCWFhyppT+R9ex2sBzBtt3KIS0EuJo+ayGtAq42lJOx96UaTOcACr
+         FsTlmwWKmPeOAu7yUCtNYozXhXiLjtA7jh6xtMvrEbGlOJZaZ2tSq3vrS2KL6BKfAvaX
+         Z6Nw==
+X-Gm-Message-State: AOJu0YxP3arp+Q50Xdl4E8OqHSlHSzSNzyPcMimRglIYs6g7q5Gtel++
+	OaAL2dUG720rBogJpgHsHxAZhQwfbK4Nh66N+eUQhsz8U+S59PWzecNK
+X-Google-Smtp-Source: AGHT+IGlWC2umDLyZkHJ/+LEaQrE5fnYdRut+ixT1GvHUg/uVy0pxd1hasQ/hYFep2xc8CUN1c/YZQ==
+X-Received: by 2002:a17:90a:4a90:b0:2ae:7f27:82cd with SMTP id f16-20020a17090a4a9000b002ae7f2782cdmr8750808pjh.7.1714481992781;
+        Tue, 30 Apr 2024 05:59:52 -0700 (PDT)
+Received: from [127.0.0.1] ([52.238.25.7])
+        by smtp.gmail.com with ESMTPSA id x6-20020a17090ad68600b002a20c0dcebbsm21215169pju.31.2024.04.30.05.59.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 30 Apr 2024 05:59:52 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gregory Detal <gregory.detal@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+References: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: fix net.mptcp.scheduler behavior
+Message-ID: <a9304a47-a0d5-b157-4302-ec1e6886f169@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 30 Apr 2024 12:59:51 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="kslkfvepsb4lk7db"
-Content-Disposition: inline
-In-Reply-To: <Zi-zbrq43dnlsQBY@hog>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe1CUVRjG53y3XQj0A01PaGhcCi+oNFavmUqkzddUWjkTM8VM7sjnfRfb
-	hVTIXAG5bVwEE1jABSokFiG5LCAhzGpLrNxMlIWBbBcQRVBkQVwvEOuu5Uz//c77vM953+fM
-	HCHpelLoJtwtCeWlEtE+D8aR0ugsrb7mG6t2rKrSOYBW/hYYf0ugQR4dQ8CxmmkKND8qCJju
-	HSTgSU0sCWbjIA2q/HIGstuiKXjSqWDgTuQjCkrOHSNgQGcSgCZRjUAd2UNB1eAkA4qhhRBV
-	OYGgP9lEQ0fBKAOWgiIBXJ8wUWBJegEyE6IIaFaIobq3n4J2TRINKXo/uFbVS8CVc9kMtDdc
-	ouGGNpGClLwoEgZyb9PQk1ZAQUOdCoGp9C4BUaoxEqLMfSQ8LGykoTVxmgRlSREJhpQBBBdi
-	z9PQXBopgPun/iChTiWnQJc7D1JK9BTcvzSMIH34Kgn68WkCWsvNNJizfcBgFdMKKwiojX8g
-	gIq2PaB/qCegb3KQgWnDBjjarBFAX2cn6e/PdZsmSO5OaxPiThVHcFnyyxT30LKUq/ili+AU
-	F4dIrkbZK+A0Dd5cblkY91h7VsCVFcUzXI1xDZeS34C48p+OcDfLM9Enr3zh+E4wv2/3N7x0
-	5fptjrsuthvJ/fo5BzMGLLQctc1OQA5CzK7Gp5IVdAJyFLqyhQhfSWxDtsM4wmcMBrtiRlgz
-	3kU9s8QaWyibcBrh2owOwb9d0XHNdksFwnkTZbTVQrHeePhWNGllhl2O24Z7nvJc1gf3x2pI
-	q4FkR13wgz/TGaswhw3GCbpCwsrOrD/uVkXa2QU3ZfY/3YNkD+K7j4wzo4UzvACfnhJayw6s
-	JzYZWwnbqh44MSPHzoexvqKbsM7CbIsTbqzNYmzCRtwUVWzPNgcPNVYIbLwQT9eo7IY0hOun
-	RgW2gxrhgqMT9mvX4uiOfrvjXZw5ZH0/4QzPwoYRF9uis3CqJp20lZ1xXIyrrftVrP5rmEpB
-	nsrnoimfi6b8L5qtvBzn1o4x/ysvwwV5t0kbr8MlJXepXCQoQvP5MJl4Jy/zk/AHVshEYlmY
-	ZOeK7SHiMjTzXS9NNY5Vo5yheyu0iBAiLfKaMZt+VbcjN0oSIuE95jqfyFu5w9U5WHQonJeG
-	fCUN28fLtGiBkPKY7+wdvIh3ZXeKQvm9PL+flz5TCaGDm5zwU25NjdsSjhYPVo38XPf6weOH
-	vwucDHwg/9hStHnJlK/P2ojV8vigx+Hjf587oPBa+CZ+sl608oNbvtp76jMQed5HSYWtd5gU
-	eyaN7KCvv6Zq/NDsXZy+xf1k8g9NydTx9/pjSk1cbVBdWrfL1CF9RC/+dGPeCSc2OCOUmdgE
-	7tUd+dzLF48FvgGb3BoMJz+a3eHsJMq5/O126YXqrd9HBmwIchec3lO7ecrxqDlwb/KV1Iil
-	18q+rnm79cjetXGqbkn9YiOMeN88cZXtLG4JOFu/xHNcvKV9kVw3eval/J6s8DXLKkWf/R6T
-	tCdt3YulX37eEVA61NU17/2WbVsfzfOq1JVbujwo2S6R31JSKhP9A5+WkVQpBQAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0xTZxjG951zesGNWG7zDFmmFRKGrFBuvizKyFzM8Q8XMrcwt2zYwAHk
-	0mILZrq4Aa0gFKSAIjCEIpNxURQKlSI6LIRLuW5TLkpdKFCUq4ogMKEDumUm++/3vc/7PHny
-	JS8bt65m2bOPCWNpsVAQxWVuITrX2vQfPDe6h7pX62xAG78HRhpTGRAvS8LgjMZEgLpEjoFJ
-	P4HBqiYZh/mRCQYUXVYxoaBXRsDqgJwJs4l/EVDVcAaD8VYDC9TplQgqE4cJuDnxkgnySQeQ
-	1i0gGMswMOBe6VMmLJdWsODPBQMBy+fehLxUKQZd8mio148R0Kc+xwCFjg/9N/UY/NFQwIS+
-	pk4GGLXpBCiKpTiMK6cYMJxdSkDT7SIEhutzGEiLnuMgnR/FYaWsjQE96SYc8qsqcBhUjCNo
-	Tr7DgK7riSxYLGzH4XZRPAGtyrdBUaUjYLFzGsHF6fs46F6YMOhRzTNgvsAZBjfE7LJaDG6l
-	LLGgtjcCdCs6DEZfTjDBNPgRJHSpWTA6MID7+1MPDAs4NdvTgajCq99TP8X/RlAryy5UbfkQ
-	RslbJnFKk69nUeomJ0pZE0e90lazqJqKFCalGfGlFJebEKX6+UfqsSoPBez8irdXLIqLpXeE
-	iySx+7hf88GDx/cFnoeXL4/vueebDz28uW5+e0PoqGMnaLGb31FeeJI8LKbd5ruuBhkzHnVv
-	TUUWbJLjRSaPdBOpaAvbmnMFkTn1q4RZcCCrX9xnmNmGfNWfyjQvPUNkcm4lMj9qEXkhs3Bz
-	i+A4kdNPZPgGMzmuZO/08CbbcpzJsWQ1vmHAOU+tyJnsMWxDsOGEkKpHS2iDLTn+5IOiRMyc
-	2o6RmqxszCxYkR15Y5udcM4J8sylhvUe7HXeTv6yxt4YW3B2kYaRHsxclUum5176h0+T86tG
-	pEA2+a8l5b+WlP9fknnsQg6uPcH+N95NlhZP4WbeR1ZVzRFKxKpAtnScJDosWuLBkwiiJXHC
-	MF6wKLoGrd+LunW5th6VTz7jaRHGRlrkuO403KjsQ/aEUCSkubaW54vdQq0tQwQnT9FiUZA4
-	LoqWaJH3+jdm4vZ2waL14xPGBvF93L35Xj6+7t6+Pp7cbZYHY84KrDlhglg6kqZjaPG/Poxt
-	YR+P1XZERuwPU3UG6t+xttDK6fPiqjTXZn3QlXKjtNn+jcefL8ZkfvqecXdU07WWmQPTDmk/
-	ZMzxGMW80l7lqSP9+q0Fh3gTWX7XdgkDzwaLxDmq3LQbXdsMkBeT9e2QIqnU5aL8rsTJechL
-	bYKAWce3th5vbCz77H2fbrt7SV/udU4szzCdLilJ+F3rei3V99b+h852aDpge/7a4YrrRupQ
-	dEbzF3c0ASPOo3mRJQkvCn00IlyrDmMtth1893hPqNLr6MxAzJGQu54TjsTJZJm88pPDdXz+
-	fFzhkvHCvp4DgUuPHu6cbZN1pESQHTsUUUMtv9bpaGVBjmR86uN2K6ekzqtDXEISLuC74GKJ
-	4G9+5KdBxAQAAA==
-X-CMS-MailID: 20240430124122eucas1p1878107fc7b05ea2dc0c4f8b4e37e0bbb
-X-Msg-Generator: CA
-X-RootMTR: 20240429085414eucas1p11b3790e4687b8dc8ef02fe0f54bc9c55
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240429085414eucas1p11b3790e4687b8dc8ef02fe0f54bc9c55
-References: <20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com>
-	<20240426-jag-sysctl_remset_net-v5-1-e3b12f6111a6@samsung.com>
-	<CGME20240429085414eucas1p11b3790e4687b8dc8ef02fe0f54bc9c55@eucas1p1.samsung.com>
-	<Zi9gG82_OKnLlFI2@hog> <20240429123315.og27yehofzz6cui3@joelS2.panther.com>
-	<Zi-zbrq43dnlsQBY@hog>
 
---kslkfvepsb4lk7db
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Gregory,
 
-On Mon, Apr 29, 2024 at 04:49:18PM +0200, Sabrina Dubroca wrote:
-> 2024-04-29, 14:33:15 +0200, Joel Granados wrote:
-> > On Mon, Apr 29, 2024 at 10:53:47AM +0200, Sabrina Dubroca wrote:
-> > > 2024-04-26, 12:46:53 +0200, Joel Granados via B4 Relay wrote:
-=2E..
-> > > >  {
-> > > > +	size_t table_size =3D ARRAY_SIZE(mpls_table);
-> > >=20
-> > > This table still has a {} as its final element. It should be gone too?
-> > Now, how did that get away?  I'll run my coccinelle scripts once more to
-> > make sure that I don't have more of these hiding in the shadows.
->=20
-> I didn't spot any other with a dumb
->=20
->     sed -n '<line>,^};/p' <file>
+Thank you for your modifications, that's great!
 
-I used a coccinelle script:
-  * ran it with `make coccicheck MODE=3Dpatch SPFLAGS=3D"--in-place --debug=
-" COCCI=3Dscript.cocci`
-  * script:
-    ```
-    virtual patch
+Our CI did some validations and here is its report:
 
-    @r1@
-    identifier ctl_table_name;
-    @@
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/889462=
+5435
 
-    static struct ctl_table ctl_table_name[] =3D {
-    ...
-    -, {}
-    };
-    ```
-
-and a gawk script
-  * ran it with `for f in $(git grep -l "struct ctl_table") ; do script $f =
-; done`
-  * script:
-    ```
-    #!/usr/bin/gawk -f
-
-    BEGINFILE {
-      RS=3D","
-      has_struct =3D 0
-    }
-
-    /(static )?(const )?struct ctl_table/ {
-      has_struct =3D 1
-    }
-
-    has_struct && /^(\n)?[\t ]*{(\n)*[\t ]*}/ {
-      print "Filename : " FILENAME ", Record Number : " FNR
-    }
-    ```
-
-At this point the coccinelle script gives me too many false positives
-but the gawk is spot on. Thx for the sed one. Will make a note of it.
-
-Best
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/de7bcee71937
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D849264
 
 
---=20
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Joel Granados
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
---kslkfvepsb4lk7db
-Content-Type: application/pgp-signature; name="signature.asc"
+For more details:
 
------BEGIN PGP SIGNATURE-----
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmYw5uwACgkQupfNUreW
-QU9l3wwAkqQQGkCIH8hoA/NcwLoETQ0VaIIcpgRXYq3d+WvE3iHimlD4zkeOxvel
-saZJ2dmttK0T+DjmrV7XMvEyH1DchjlJBSB9xRl9+0NgwfP7q40MBgRJXptfl/FI
-BDavrylIYGWdP5XAldlUfQiH/NDmx1gXbjuUNZvJXpZxd2qY6fLDBC3yoYGL/Ucq
-uhu9JJUZgXWVLZbB+mTdA3dLCzwJN6coxzuAxFTnqbpLj69Ds6vj47jG4aeg8Xf/
-QcQ3HPuwPt5OCswVu6WExaB6Yz/b5TLnQzN1dgMWsMTMHWo3/+GNGUIfAffxtpwc
-AMzd1dqvwIXvx6EZilpayO0Y052Fd91CuqR/OcKmz60BntOM6hxjIecGmqMdcKhZ
-0YN3i6Tmk/VCmg6i95066V5fFlzbCoWTarpG0ozYzEQJNPY4y/bhCSGFtNn5eXJQ
-IdAUXFCJcyhfOWPGRMNkLl+XhgCOvopNTj4rQ1w1ynnxBXt7FKMG68chVXnad8Bc
-54MD/HbU
-=Dpqe
------END PGP SIGNATURE-----
 
---kslkfvepsb4lk7db--
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
