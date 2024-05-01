@@ -1,167 +1,122 @@
-Received: from us-smtp-delivery-44.mimecast.com (us-smtp-delivery-44.mimecast.com [207.211.30.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f45.google.com (mail-pj1-f45.google.com [209.85.216.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B08DD12DDB2
-	for <mptcp@lists.linux.dev>; Wed,  1 May 2024 13:22:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=207.211.30.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7D912FB1E
+	for <mptcp@lists.linux.dev>; Wed,  1 May 2024 15:57:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714569751; cv=none; b=EsrryNSZozreHgpaWlmgABAvZ0tIMqE3xffRtDmMOfaqYjj1ZmpnUb5eKD6wPO1TK9Yrvr6ETSUght98vWyVrYC13lX78+1EVrRuzGOeCJ6UyO9InLi1V0lEMeAtkZozfxeNPGL3VZ0mwHP4xZJP9rHqEMSYUrX9Ho0bX2eLG5w=
+	t=1714579031; cv=none; b=kHXeLLaRwzEGKQ4MkcCESg8a58+2XwOwOL9CobhSWQXAa/dWoootZEr2fuLVWpkPIqsBnqRESvIh7gTx3ZrGG2roYwYN9ioeT4Mx+Qnms6SQ+jMIkLYwYQdloVqy3QpNjK70IW17L9mT1ljEbsVgA5d91r6LxbQJn4xUNyCmOg0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714569751; c=relaxed/simple;
-	bh=gozmKD4gz2TfdHsspJfpOMrWaKtGaqJSlHwDFew6Dhs=;
+	s=arc-20240116; t=1714579031; c=relaxed/simple;
+	bh=ckoWfyyPNvCGxi2fVomdJaaX3vET2oCk2vilFXck1oc=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=fs6QectjrnkjkQv1OhkgKL1ZG2A/ErxxyTFKDIaI6onuYme3lvW77S7W1xCcA8ThCOwOEOZL6gfUuk7km3SKYW4ib2sUm3+KKk8Y/g6LhZARnMa5DKx8pG0cnYIIg5tb4SwEtfQI17IPYVg1auauCaodZT36jnglLpeRY8y13oQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net; spf=none smtp.mailfrom=queasysnail.net; arc=none smtp.client-ip=207.211.30.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=queasysnail.net
-Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=queasysnail.net
-Received: from mimecast-mx02.redhat.com (mx-ext.redhat.com [66.187.233.73])
- by relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-217-raJRK7aQOAeoJjogj82kFg-1; Wed,
- 01 May 2024 09:22:19 -0400
-X-MC-Unique: raJRK7aQOAeoJjogj82kFg-1
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.rdu2.redhat.com [10.11.54.3])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9CE7F385A18E;
-	Wed,  1 May 2024 13:22:16 +0000 (UTC)
-Received: from hog (unknown [10.39.193.137])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 52B561121312;
-	Wed,  1 May 2024 13:22:08 +0000 (UTC)
-Date: Wed, 1 May 2024 15:22:08 +0200
-From: Sabrina Dubroca <sd@queasysnail.net>
-To: j.granados@samsung.com
-Cc: "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
-	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 0/8] sysctl: Remove sentinel elements from
- networking
-Message-ID: <ZjJCANEjFK890VCA@hog>
-References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
+	 Content-Type:Content-Disposition:In-Reply-To; b=Mve1SLSzeXTPC6pHk5seRXGehaXPv9DGJ2/fKdOkwYfdruv1M3Fa3oEOIKiuA0foLOT+4EjJve6YawkvT8n1voSvtBWkCwWadlpAJvTZ6IJmm2x1cPo1vmpEXR7mXSls/1LVIfTUnb2Li2PE5Saz18yV14LoJojhNxI3NE4IGhI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MCUbrYvj; arc=none smtp.client-ip=209.85.216.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MCUbrYvj"
+Received: by mail-pj1-f45.google.com with SMTP id 98e67ed59e1d1-2b360096cc4so110297a91.1
+        for <mptcp@lists.linux.dev>; Wed, 01 May 2024 08:57:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714579029; x=1715183829; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=JzfY/kmW53uOWAjNU/h5BVe0MuVfIdc+r+3hv3BH8NA=;
+        b=MCUbrYvj3c72RIB4u6lIrXXmZH52pC/4oKt8sZTlSct09/Kzatz+3nEgpxaScCe/AN
+         dXwPEuwKN9DgMR+MyDzAKWanrGF5JDjen2/ayEWqGg53lmedqMrwORf7k8kEwd8Pb6fN
+         s7f+GMaWHwxecspTH2EVZB4UBuIp4FJ6NgbLlH9RNutM7La0mohDphKhyzwBgXYH5IPa
+         a2/KHlx2ycrEtmeEI26ik44k1h2OcAt7a0M1u0lHRE7dwvodtwl2RtHoA4Cy66/BD1qw
+         wiigBq0xb5IPjTw66D3WV3NUWhvIsI3XIyVtHVM7sonS7MHCPjEKlzIcSE99zdi2UGqr
+         KV5w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714579029; x=1715183829;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=JzfY/kmW53uOWAjNU/h5BVe0MuVfIdc+r+3hv3BH8NA=;
+        b=Da0LeiFlDLSitMaUTB5yQDi4WP3GCiQaXhpXsnHtvTjsqCESNp9+uD7DYavC0+ZKR+
+         wq0l+CAo8vWAG4ZbHnSIB98bhVOJV+H7cG3/8GtRv6R/nuq6Yzqmse4CaURFNt9b7fcd
+         EpVNZWT5yNItSJSpfWq6+T7QsECcPUICON3M8GuprDTddwUJFL7KdhgIEO8fFOsNqrTO
+         8XakV1R5EFPCTAITLez+QbTpkpFqAQWOaQkLQXm8XLuGwPl8oxvMOER9M9YQMPuMHHkd
+         tQd+pEe+x+VQXSEPk+K684CyjTAPb59JqUPoJOa4JinxUk6hC/xJ15qeLOGCqSRn5qik
+         fmTQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWczgz9VhZrDzcdA7V6iM6GeUAY8Q4c+15sxbbTthiXakBsslpb/3f7Jr7ilWwx+4f00qHJ3103nBlFAypcZs8f7VR5JMs=
+X-Gm-Message-State: AOJu0YwmslO/omFnpSN0dT+mJENknKSYgfQiJei9aTnTOvhcq4VJwET3
+	ybLNk/E+h8WEywRYyx+WZ6PwInK9V+VE8pE/m/Yz9sopnInfLTOh
+X-Google-Smtp-Source: AGHT+IEqUo1eBvHR/WvPzsLh02ckKC0kjNX4dU4g0A0KwEIj4AgPLsyI8oM8EjDjFw9PvnKEhB/wtg==
+X-Received: by 2002:a17:902:db0e:b0:1e7:b7da:842 with SMTP id m14-20020a170902db0e00b001e7b7da0842mr3016504plx.2.1714579029330;
+        Wed, 01 May 2024 08:57:09 -0700 (PDT)
+Received: from visitorckw-System-Product-Name ([140.113.216.168])
+        by smtp.gmail.com with ESMTPSA id h9-20020a170902f54900b001ebd7bdaaffsm5820761plf.288.2024.05.01.08.57.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 01 May 2024 08:57:08 -0700 (PDT)
+Date: Wed, 1 May 2024 23:57:05 +0800
+From: Kuan-Wei Chiu <visitorckw@gmail.com>
+To: Shi-Sheng Yang <fourcolor4c@gmail.com>,
+	Shi-Sheng Yang <james1qaz2wsx12qw@gmail.com>
+Cc: Simon Horman <horms@kernel.org>, matttbe@kernel.org,
+	martineau@kernel.org, davem@davemloft.net, edumazet@google.com,
+	kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
+	netdev@vger.kernel.org, mptcp@lists.linux.dev,
+	linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] mptcp: subflow.c: fix typo
+Message-ID: <ZjJmUcfDioUzX2Gg@visitorckw-System-Product-Name>
+References: <20240429225033.3920874-1-james1qaz2wsx12qw@gmail.com>
+ <20240430180057.GB2575892@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.3
+In-Reply-To: <20240430180057.GB2575892@kernel.org>
 
-2024-05-01, 11:29:24 +0200, Joel Granados via B4 Relay wrote:
-> From: Joel Granados <j.granados@samsung.com>
+On Tue, Apr 30, 2024 at 07:00:57PM +0100, Simon Horman wrote:
+> On Tue, Apr 30, 2024 at 06:50:33AM +0800, Shi-Sheng Yang wrote:
+> > Replace 'greceful' with 'graceful'.
+> > 
+> > Signed-off-by: Shi-Sheng Yang <james1qaz2wsx12qw@gmail.com>
 > 
-> What?
-> These commits remove the sentinel element (last empty element) from the
-> sysctl arrays of all the files under the "net/" directory that register
-> a sysctl array. The merging of the preparation patches [4] to mainline
-> allows us to just remove sentinel elements without changing behavior.
-> This is safe because the sysctl registration code (register_sysctl() and
-> friends) use the array size in addition to checking for a sentinel [1].
+> Hi Shi-Sheng Yang,
 > 
-> Why?
-> By removing the sysctl sentinel elements we avoid kernel bloat as
-> ctl_table arrays get moved out of kernel/sysctl.c into their own
-> respective subsystems. This move was started long ago to avoid merge
-> conflicts; the sentinel removal bit came after Mathew Wilcox suggested
-> it to avoid bloating the kernel by one element as arrays moved out. This
-> patchset will reduce the overall build time size of the kernel and run
-> time memory bloat by about ~64 bytes per declared ctl_table array (more
-> info here [5]).
+> Elsewhere in the same file 'earlier' is mispelt as 'eariler'.
+> Could you consider fixing that too?
 > 
-> When are we done?
-> There are 4 patchest (25 commits [2]) that are still outstanding to
-> completely remove the sentinels: files under "net/" (this patchset),
-> files under "kernel/" dir, misc dirs (files under mm/ security/ and
-> others) and the final set that removes the unneeded check for ->procname
-> == NULL.
+> Better still, could you consider running codespell over
+> net/mptcp/ and fixing (the non false-positives) that it flags?
 > 
-> Testing:
-> * Ran sysctl selftests (./tools/testing/selftests/sysctl/sysctl.sh)
-> * Ran this through 0-day with no errors or warnings
+> If you do repost then I think an appropriate prefix
+> would be 'mctp: ' rather than 'mctp: subflow.c ',
+> as this follows the pattern in git history.
 > 
-> Savings in vmlinux:
->   A total of 64 bytes per sentinel is saved after removal; I measured in
->   x86_64 to give an idea of the aggregated savings. The actual savings
->   will depend on individual kernel configuration.
->     * bloat-o-meter
->         - The "yesall" config saves 3976 bytes (bloat-o-meter output [6])
->         - A reduced config [3] saves 1263 bytes (bloat-o-meter output [7])
+> And I think the target tree should be net-next.
+> That is, the patch should be based on net-next and
+> it should be designated in the subject.
 > 
-> Savings in allocated memory:
->   None in this set but will occur when the superfluous allocations are
->   removed from proc_sysctl.c. I include it here for context. The
->   estimated savings during boot for config [3] are 6272 bytes. See [8]
->   for how to measure it.
+> e.g. Subject: [PATCH v2 net-next] mptcp: fix typos in comments
 > 
-> Comments/feedback greatly appreciated
+> Lastly, please keep in mind that 24h should elapse
+> before posting a new version.
 > 
-> Changes in v6:
-> - Rebased onto net-next/main.
-> - Besides re-running my cocci scripts, I ran a new find script [9].
->   Found 0 hits in net/
-> - Moved "i" variable declaraction out of for() in sysctl_core_net_init
-> - Removed forgotten sentinel in mpls_table
-> - Removed CONFIG_AX25_DAMA_SLAVE guard from net/ax25/ax25_ds_timer.c. It
->   is not needed because that file is compiled only when
->   CONFIG_AX25_DAMA_SLAVE is set.
-> - When traversing smc_table, stop on ARRAY_SIZE instead of ARRAY_SIZE-1.
-> - Link to v5: https://lore.kernel.org/r/20240426-jag-sysctl_remset_net-v5-0-e3b12f6111a6@samsung.com
+> Link: https://docs.kernel.org/process/maintainer-netdev.html
+> 
+> ...
+>
 
-I pointed out a few tiny details in the ax25 patch but either way, the
-series looks good to me. Thanks!
+Hi Shi-Sheng,
 
-Series:
-Reviewed-by: Sabrina Dubroca <sd@queasysnail.net>
+I also noticed that the email you sent and the email from SoB are not
+the same, which causes checkpatch.pl to complain about the following
+warning:
 
-Note that you could have kept the ack/reviewed-by on patch 4 since it
-was not modified. Jeff and Chuck, your reviews got lost in the repost.
+WARNING: From:/Signed-off-by: email address mismatch: 'From: Shi-ShengYang fourcolor4c@gmail.com' != 'Signed-off-by: Shi-Sheng Yang james1qaz2wsx12qw@gmail.com'
 
--- 
-Sabrina
+total: 0 errors, 1 warning, 0 checks, 8 lines checked
 
+Could you please address this issue in the next version as well?
+
+Regards,
+Kuan-Wei
