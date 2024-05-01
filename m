@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C663F53816;
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C88C553E07;
 	Wed,  1 May 2024 09:30:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714555809; cv=none; b=nD1scLXgkEVklkLnaAHX3+FubMFgbvUHKFCmBIAvDp1g9yUuafBsOF25fyiwydR7bB4DToBwwFToUwAE7RYnwTY3Mohhslfr8+y6NGBuvnb89hdkFcy7fMPxDS3rHeGmoOfOdgAjU++Ti357qBdp9qddceSrXDDkSQLSMxJ9/sk=
+	t=1714555809; cv=none; b=ZIwIeK70qQvChZSnBS2Co3KIi/rnhcYZSb+xdSTfAeyo0gjB74LsIvBkE8wunZHW3XVAEF0/HxxocjhgoYBSHOoZucZ0FHa3EydCXENWcCMo41SWNSTcueYuNwH28tHCuysNDdIj4LT0wk9ArkmzPEV8nt2sYOveBzMSTFTl0ec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1714555809; c=relaxed/simple;
-	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	bh=hNf63Pk2HgAGXyBQQDS5WAsEv/JgWTScOzabV6lKgvc=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=S5XL2AZkIKRD5HyzKbkRxLA2FPCEI5O91Qi+CC+k5jCDgJCFWPDYJUrwDC8B99DxrijZ8GTUvQ+xAAshUDgslkddkLmVnM1uH2Oc/JFyL35lXerv4zKwgDSWtZSB9nHx5rEHtkalVpsgvAREunAaNq8UXaIDE2NZHRwsDmxqlcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7fh9hSY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=megTcRyJRsBYfgaR5qQIMqjFDPH3nXp/WF5JC1zG6Sx/OFpo0wZ5RCUCON08BPJHRgD48uendNOsVgGJL+d4eak8bNjiETBF36DD2yEOqhp99fDv1GD5/T/ti1C/6QgaE2NVyg+ALPp3eGJfpPVv6N8tdGHewoSSMmDAXszaAGM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VQd0De6S; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7fh9hSY"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id C5BB7C4AF1D;
-	Wed,  1 May 2024 09:30:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VQd0De6S"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 207D8C4DDF1;
+	Wed,  1 May 2024 09:30:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
 	s=k20201202; t=1714555809;
-	bh=OaWenH2ecs+TvT40FvZfeCOsMkIprLb3i+uRB7TGjxw=;
+	bh=hNf63Pk2HgAGXyBQQDS5WAsEv/JgWTScOzabV6lKgvc=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=k7fh9hSY+24EwO274jrJcgF/Xh6X5q40XOyqMJLmulZxlsHBEbJeNA5u6PWVXYuOt
-	 IQPvncFZ1fCMU3MV/Gm3hmp9LXdGxg1IhZNhC6dsL3uHiRixZl/2MPsMrUW7EVZA+T
-	 BFG+BjWyxBuVHD+ANdZkzJ4Cqy2SppVC64q/BF+DdqrBkBGuv1kWkGVj9RwCiw/S0n
-	 wot+ezItFyl2OMppIeXF2sAbwC65IeUIyxnEVy3/Ic+x5Ms/QtS928SpRQUY/cr2rv
-	 Ap8F+lRr0AcwQ34+joF4TnaSZUtbsKjxGUMDzFRarA11a3K+FC3VJoKAwZ14hOL/yW
-	 4b7KQk9D8oc0w==
+	b=VQd0De6So4doAjJTCCet49lx95qoLIjPiu5+aD+VXkqFT6+RutHhFAN1iIcbE62nZ
+	 fa6NJeX4drewKJvWHV3wZPubVy/y9m5dhrukSR/4RF4qZ2q0tXm+xxrwIDiKphT+oe
+	 RKBBYh6fdHuqcg1engr3LK9ZIQ0MOSZu6bCXNh1V1u4YvOgw50T3IVTr5ie4UwtUrJ
+	 TriWlwx+iVIAXtspLSF3kX5Wd71+dTQ/d/Lq+/wUoE+ixoueyoW0Nlj9AU2raN/1g3
+	 6+84w7Kpev/GEl9c7B/TgkQhP6Wb/8AzxCICoc6EcbQw8H6SllPzkZs/KmMCFzgHQI
+	 WIT/g4ZxcD4rA==
 Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AF330C25B5C;
-	Wed,  1 May 2024 09:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13FF7C25B76;
+	Wed,  1 May 2024 09:30:09 +0000 (UTC)
 From: Joel Granados via B4 Relay <devnull+j.granados.samsung.com@kernel.org>
-Date: Wed, 01 May 2024 11:29:27 +0200
-Subject: [PATCH net-next v6 3/8] net: rds: Remove the now superfluous
+Date: Wed, 01 May 2024 11:29:32 +0200
+Subject: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
  sentinel elements from ctl_table array
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -41,7 +41,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240501-jag-sysctl_remset_net-v6-3-370b702b6b4a@samsung.com>
+Message-Id: <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
 References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
 In-Reply-To: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
 To: "David S. Miller" <davem@davemloft.net>, 
@@ -82,19 +82,19 @@ Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
  coreteam@netfilter.org, bridge@lists.linux.dev, lvs-devel@vger.kernel.org, 
  Joel Granados <j.granados@samsung.com>
 X-Mailer: b4 0.13-dev-2d940
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1604;
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3832;
  i=j.granados@samsung.com; h=from:subject:message-id;
- bh=Yhw5Yxzxk2wGoyQtTfioNjf4XA/aQJR8HoqakSkFmW8=;
- b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYyC5vaKKwcVsjyo5fyyzaGv4yzNPxedXx6I
- 0oz4J2bF3f16YkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmMgubAAoJELqXzVK3
- lkFPAt8L/RvcZo67sV9/SAsIlFKCyMM+qMXV+vDZgycTjvVIA+SfdOd5Dt/cE8sPk2Vbd5m1zV0
- 1bTYSIIzndwnYwNr0po+EDDom4Kh8mphlq63AcozIb3FtAE9gEijzxANbPT0uiZQiBdyGHfgd5L
- jUd9CESOohGjmih6u85i0nF0hV0zXXj4dyzliDaDl8C+vSQN5cHGJ3+wZn4J5SDRXGYrE7PGny8
- mpjgul+wUgIeWT+bmFhWlNgqlLFKEYCkRqXpa0KZRZmofIpFb05+j3enq7MzPkMkqjW7L7v/Oa0
- AHljkixYmiTw5qZOAz65zYrlPzu208TMOGpezXGMfAawyJc/HYbCL8AS/qZp8bwZCgrmeCcKeQ0
- VFBYUqpLr8VVDFTqEQA0YUb4s00REm2N6VViy20fU5WeR9chhD9M0JzPhaLi92OFmRKxY2g7HXs
- DWgQyhIZiES63sd2awdgqnweGvfHVA5sKmTulKSRHZjPttFiCIZTnmjBBO/sSry0ePsrsmzRot6
- aY=
+ bh=AuUMNVULwdRpc7MqK6QxuNKeT/f1k5AlEkDFZpyU2BQ=;
+ b=owJ4nAHtARL+kA0DAAoBupfNUreWQU8ByyZiAGYyC55+jATyuag2cMz+nAfHl+HL6F0qL73yQ
+ it9OOI3ZHMdqIkBswQAAQoAHRYhBK5HCVcl5jElzssnkLqXzVK3lkFPBQJmMgueAAoJELqXzVK3
+ lkFPeOEL/jPjta+dOJSZPZOjLVWcJG08CJUC7rYb1k0PNtxO7S/21gaMJjENoVcIEVGESaFX22i
+ 7CGruN2yxgicXlNg5nTRv1ZrlzybcKiPH06JFYreKEgLe6CJ4UsTGS/jXsMpupMDpSw3FsLRf2b
+ p0RiEVHZlB5v+TY5XZVLfYuni9WBamS0CWyHo/YP4Cpt7BFk7Z400iRHZtp8Mm3BbernP88WLsI
+ tu+949SFzqw3fVIsjFSrmWoCP3O1O3XbWbwn1jbbvjMMcwEoQ5HtlVMe4wofVUgR58+Qo4dxmMg
+ cnk4INgUh0IkD/gez2ewL7bnlZDDKjRA1wtR25xIqsxCmxeamUeFFjWs1856xfEwNa8w48gn3q6
+ jKggb0B5t38jUi1rgISS3kB5+IDwZsSmZLV7SdEBgZTQoA0WntUu/A6QzpK/dm4yw4JHktCZeyb
+ G7zXpWgiGYiuhdcJC4yBMyJcFqQUYM71xk7umchoPq1It2qt5P/Iwgk1NCdtrg06W7Bz3uHXL76
+ mk=
 X-Developer-Key: i=j.granados@samsung.com; a=openpgp;
  fpr=F1F8E46D30F0F6C4A45FF4465895FAAC338C6E77
 X-Endpoint-Received: by B4 Relay for j.granados@samsung.com/default with
@@ -105,56 +105,106 @@ Reply-To: j.granados@samsung.com
 From: Joel Granados <j.granados@samsung.com>
 
 This commit comes at the tail end of a greater effort to remove the
-empty elements at the end of the ctl_table arrays (sentinels) which
-will reduce the overall build time size of the kernel and run time
-memory bloat by ~64 bytes per sentinel (further information Link :
+empty elements at the end of the ctl_table arrays (sentinels) which will
+reduce the overall build time size of the kernel and run time memory
+bloat by ~64 bytes per sentinel (further information Link :
 https://lore.kernel.org/all/ZO5Yx5JFogGi%2FcBo@bombadil.infradead.org/)
 
-* Remove sentinel element from ctl_table structs.
+Avoid a buffer overflow when traversing the ctl_table by ensuring that
+AX25_MAX_VALUES is the same as the size of ax25_param_table. This is
+done with a BUILD_BUG_ON where ax25_param_table is defined and a
+CONFIG_AX25_DAMA_SLAVE guard in the unnamed enum definition as well as
+in the ax25_dev_device_up and ax25_ds_set_timer functions.
+
+The overflow happened when the sentinel was removed from
+ax25_param_table. The sentinel's data element was changed when
+CONFIG_AX25_DAMA_SLAVE was undefined. This had no adverse effects as it
+still stopped on the sentinel's null procname but needed to be addressed
+once the sentinel was removed.
 
 Signed-off-by: Joel Granados <j.granados@samsung.com>
 ---
- net/rds/ib_sysctl.c | 1 -
- net/rds/sysctl.c    | 1 -
- net/rds/tcp.c       | 1 -
- 3 files changed, 3 deletions(-)
+ include/net/ax25.h         | 2 ++
+ net/ax25/ax25_dev.c        | 3 +++
+ net/ax25/ax25_ds_timer.c   | 1 +
+ net/ax25/sysctl_net_ax25.c | 3 +--
+ net/x25/sysctl_net_x25.c   | 1 -
+ 5 files changed, 7 insertions(+), 3 deletions(-)
 
-diff --git a/net/rds/ib_sysctl.c b/net/rds/ib_sysctl.c
-index e4e41b3afce7..2af678e71e3c 100644
---- a/net/rds/ib_sysctl.c
-+++ b/net/rds/ib_sysctl.c
-@@ -103,7 +103,6 @@ static struct ctl_table rds_ib_sysctl_table[] = {
- 		.mode		= 0644,
- 		.proc_handler	= proc_dointvec,
- 	},
--	{ }
+diff --git a/include/net/ax25.h b/include/net/ax25.h
+index 0d939e5aee4e..eb9cee8252c8 100644
+--- a/include/net/ax25.h
++++ b/include/net/ax25.h
+@@ -139,7 +139,9 @@ enum {
+ 	AX25_VALUES_N2,		/* Default N2 value */
+ 	AX25_VALUES_PACLEN,	/* AX.25 MTU */
+ 	AX25_VALUES_PROTOCOL,	/* Std AX.25, DAMA Slave, DAMA Master */
++#ifdef CONFIG_AX25_DAMA_SLAVE
+ 	AX25_VALUES_DS_TIMEOUT,	/* DAMA Slave timeout */
++#endif
+ 	AX25_MAX_VALUES		/* THIS MUST REMAIN THE LAST ENTRY OF THIS LIST */
  };
  
- void rds_ib_sysctl_exit(void)
-diff --git a/net/rds/sysctl.c b/net/rds/sysctl.c
-index e381bbcd9cc1..025f518a4349 100644
---- a/net/rds/sysctl.c
-+++ b/net/rds/sysctl.c
-@@ -89,7 +89,6 @@ static struct ctl_table rds_sysctl_rds_table[] = {
- 		.mode           = 0644,
- 		.proc_handler   = proc_dointvec,
+diff --git a/net/ax25/ax25_dev.c b/net/ax25/ax25_dev.c
+index 282ec581c072..0bc682ffae9c 100644
+--- a/net/ax25/ax25_dev.c
++++ b/net/ax25/ax25_dev.c
+@@ -78,7 +78,10 @@ void ax25_dev_device_up(struct net_device *dev)
+ 	ax25_dev->values[AX25_VALUES_N2]        = AX25_DEF_N2;
+ 	ax25_dev->values[AX25_VALUES_PACLEN]	= AX25_DEF_PACLEN;
+ 	ax25_dev->values[AX25_VALUES_PROTOCOL]  = AX25_DEF_PROTOCOL;
++
++#ifdef CONFIG_AX25_DAMA_SLAVE
+ 	ax25_dev->values[AX25_VALUES_DS_TIMEOUT]= AX25_DEF_DS_TIMEOUT;
++#endif
+ 
+ #if defined(CONFIG_AX25_DAMA_SLAVE) || defined(CONFIG_AX25_DAMA_MASTER)
+ 	ax25_ds_setup_timer(ax25_dev);
+diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
+index c4f8adbf8144..c50a58d9e368 100644
+--- a/net/ax25/ax25_ds_timer.c
++++ b/net/ax25/ax25_ds_timer.c
+@@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
+ 	ax25_dev->dama.slave_timeout =
+ 		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
+ 	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
++	return;
+ }
+ 
+ /*
+diff --git a/net/ax25/sysctl_net_ax25.c b/net/ax25/sysctl_net_ax25.c
+index e0128dc9def3..68753aa30334 100644
+--- a/net/ax25/sysctl_net_ax25.c
++++ b/net/ax25/sysctl_net_ax25.c
+@@ -141,8 +141,6 @@ static const struct ctl_table ax25_param_table[] = {
+ 		.extra2		= &max_ds_timeout
  	},
--	{ }
+ #endif
+-
+-	{ }	/* that's all, folks! */
  };
  
- void rds_sysctl_exit(void)
-diff --git a/net/rds/tcp.c b/net/rds/tcp.c
-index 2dba7505b414..d8111ac83bb6 100644
---- a/net/rds/tcp.c
-+++ b/net/rds/tcp.c
-@@ -86,7 +86,6 @@ static struct ctl_table rds_tcp_sysctl_table[] = {
- 		.proc_handler   = rds_tcp_skbuf_handler,
- 		.extra1		= &rds_tcp_min_rcvbuf,
+ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
+@@ -155,6 +153,7 @@ int ax25_register_dev_sysctl(ax25_dev *ax25_dev)
+ 	if (!table)
+ 		return -ENOMEM;
+ 
++	BUILD_BUG_ON(ARRAY_SIZE(ax25_param_table) != AX25_MAX_VALUES);
+ 	for (k = 0; k < AX25_MAX_VALUES; k++)
+ 		table[k].data = &ax25_dev->values[k];
+ 
+diff --git a/net/x25/sysctl_net_x25.c b/net/x25/sysctl_net_x25.c
+index e9802afa43d0..643f50874dfe 100644
+--- a/net/x25/sysctl_net_x25.c
++++ b/net/x25/sysctl_net_x25.c
+@@ -71,7 +71,6 @@ static struct ctl_table x25_table[] = {
+ 		.mode = 	0644,
+ 		.proc_handler = proc_dointvec,
  	},
--	{ }
+-	{ },
  };
  
- u32 rds_tcp_write_seq(struct rds_tcp_connection *tc)
+ int __init x25_register_sysctl(void)
 
 -- 
 2.43.0
