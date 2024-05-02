@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F62C16FF2A
-	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 17:23:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8578A16D4C0
+	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 17:23:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714670600; cv=none; b=JlTzJIzB9TWb2xiju5jV7Ez+szoX+7el0uY5iBNts22BFKm20es6tFfEfrB9V0nifVaKcjh+8t0tRlIdrAPszCkdC+N8d8pVRNaMKCi7XbCBkNKtOZGKA9ZMV8nDhVK7AWYORrcPZAd7KNSPeHrZbpxI0OwKJKfmhHqeAbFKCsU=
+	t=1714670601; cv=none; b=jwrhBpVHtxn42ZbbpjVZ8HaQ7uLaswkU/GQoZRdAU7z3n/eiZDs0CkvWE0hv9I+KeOcmRCWhvIqaWI8v0o3FslZ4ZOZOQ5cb9MGDbSOd+KP4tieRcnaVY+9Vcd4j3rqcwU0mc9J6JKP7H7yQJ2QzFfx5sd5jAfMWNPb5cM2wkM0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714670600; c=relaxed/simple;
-	bh=mvvlH2m409VuiWYpIh3M8K3HaWJsVPp30WQFQLduJ3M=;
+	s=arc-20240116; t=1714670601; c=relaxed/simple;
+	bh=Ttit8Sj0t88KyvcChT4U9PjIkI9d4LUsr0a9dNeF7Fo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=FlL/L2di/epaGfYSnSAY1s5IBfWHzjf36cG6yjcupiVCADgErNE5lX02tarhcqNVZGjb2WuGMJRxVVgBAxyXhcZXue8COaD4Pz2Hu/F/cVsmFqJ+FrCslLYxTLfJjcTncwTwf9y0WM6pXJEHjqQxKtVNX+4wK4g9xRn0GsJ9msY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3WZZSKr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=t8qFVHc72/AOEfdIXhkclkaGZhnzau5DZQe1tTzYgl3THnVst6+e5f5ZHB8AfEDEKtVbHEdOxU2z6Xhu2ZnYOJCVlYNCzaoGjI0+IpsehP4vb4mOi6zneJWQ+z+a8XfUEwLDpEEGc1NpSNQNWQ0uejLNaLwnpikebxLkJstTAxo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JtjRTEuT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3WZZSKr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B0DAC4AF14;
-	Thu,  2 May 2024 17:23:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JtjRTEuT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DD27C116B1;
+	Thu,  2 May 2024 17:23:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714670600;
-	bh=mvvlH2m409VuiWYpIh3M8K3HaWJsVPp30WQFQLduJ3M=;
+	s=k20201202; t=1714670601;
+	bh=Ttit8Sj0t88KyvcChT4U9PjIkI9d4LUsr0a9dNeF7Fo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=T3WZZSKrDBTHDCVylZWPyg2l77aDxwC3heiyR+NLLWALB5JSzh2XnMzWzKeDkBvMn
-	 fxZyI19aKaPtYQV9OM/bliwu3y3SVCN+m86OerUlgt5nirm958BtDsAHJQjy5epZdl
-	 oJjV4PCifJo0SlsaAyz1wkr3kU+szW0vFwrumgSb33sFbvG+qXuqmJse0r7TOZ0Aef
-	 ucfGlyV32nlgK4HnVqscnlF0S8sOYHwDlBygbjzPQJtupABv6sdOJ5KSm4zhk+0P30
-	 yL3xOJll2o8aLRP/r6IuEf1nspZMuEh3kk2HSgbDyQIsroll0LLZb3+XIedvU5fkC4
-	 jh5KIsDUIcoGQ==
+	b=JtjRTEuT4UHeegiqzSMq56+rdivLf68Qkjud0KuiPKCwyTnhwVAjfngurVJ3AgfLU
+	 geDRREupBQih1lF8iIcDGLZrPYA5qdbJmforZ/o97hyzB8rMePGf8hB5UwP8SYtWBk
+	 42Rl7MRJCrpUwi4sq0FFnff8TlvIqBdPIEQ/+IWSYx1lGTWAUaujjIRdevY3I5+VWS
+	 JHc5U2QSKpvUd9Sl9Er0paC6Zf4GIgpsPcQFvOdCd+nZIyt/lHq68hhdklG4SZWR4Z
+	 1vWcFB/g9nYfNga2eGOdNcoZ8XOXPqwAJVoBXnmTDSUzobRep4q5Mjt4dIvzPLQtXc
+	 ZovA605eopmSQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 02 May 2024 19:23:05 +0200
-Subject: [PATCH mptcp-next 2/4] mptcp: move mptcp_pm_gen.h's include
+Date: Thu, 02 May 2024 19:23:06 +0200
+Subject: [PATCH mptcp-next 3/4] mptcp: remove unnecessary else statements
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,79 +37,96 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240502-mptcp-cleanup-clang-checkpatch-v1-2-a2b46c0a6bec@kernel.org>
+Message-Id: <20240502-mptcp-cleanup-clang-checkpatch-v1-3-a2b46c0a6bec@kernel.org>
 References: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
 In-Reply-To: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1390; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=mvvlH2m409VuiWYpIh3M8K3HaWJsVPp30WQFQLduJ3M=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmM8wEQwv/bdXEl8+Yzrn4ljpVK/xiP+guMkY9c
- WYWqNG+u+SJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjPMBAAKCRD2t4JPQmmg
- c0YVEADopF8iPQDeEGObtphjr7Jl15jZNGIiR43a/ildnBob7YBwf8OAAU8vnQF//TV2OAjhy0u
- +yL3e1tzhskdhyPAweJRCdB3o6+RLWRYDiTk1KWwG/WOeyioLotPpTdumSDZdPXTV+W909/Nj44
- cu0du9Mt8zE18EX/KHH95jjP/xWgjvT0l1Xwv2d3ihXKAj8P5hCFWyq4NMXNF5IubxBiaKZA4DQ
- C3UgJM0JXVbOU/oHaX00BjFN3WWfZetbf5b40JUGh/wp9fy8R1jphxg5YFMj3fgKVWIPlvYpTL3
- i9f48YEdSnungbtfKp4uXp9EkFBbBU6SaIM00PaprgYY/1UvEBRtJL00agkRx/6XNZh796sEO2k
- yrDUxq+pCM86DWwVB4mE6KXNKdDLJn/vP0/FnpT0PPfE8ebbn1lcW/Jb6J8VttTZqlUOeYfuw4I
- c0bFcWldG2qclnaBgdB8e+v7inT648JSfvH9DlaAK+XNSx8xBFw+VgD2mfWZpJKYIRbxxunbZHw
- 1GhhH86nAGz0KYHH1fll7r6jrCvMg0L7TEoQen05xU9fM+vBENGMyFXICERTvNj35PteKZUYQ3x
- N3FC233CtW8RQ4XLhieE9MFWp4yIhkDMzu/Ni2DcoUZN8rKNodvFN8mkNYIrt6G0Nh/HZmPLXhy
- VsKUYj5iqBYXlZA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2084; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Ttit8Sj0t88KyvcChT4U9PjIkI9d4LUsr0a9dNeF7Fo=;
+ b=owEBbAKT/ZANAwAIAfa3gk9CaaBzAcsmYgBmM8wFhQfm0HmgQcs5iHOkJRwXK0TM7ao+WAjVw
+ hdU+icbWZWJAjIEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjPMBQAKCRD2t4JPQmmg
+ c6qSD/iqnMTV0w50t0q+ucGnxrVTGwerEkPvrMeL5SFaft7wb0lVxHBo+Xd9cYftzKZvCvqtVvq
+ xITxt3mUmEPz2Wva+T/my5Qa8AETwJzKW5V7wPzGDrf6XLNWMhwAf7llDO+r58/uOsjpmpVxdrT
+ ix3Z5OULUoeHJZ4WlAo5G67gns9uh68x0rYA55YZgjtT9P3yIkkltxdS6DMfE3UWHvt5CZilWQD
+ E6+f2kSZlQBg7Cz9sizxd1Uezoi/ax+9gK1ukTeND4Vu7Fl/ouWfa47xhaMf7SoFo/L22cdYgOc
+ 9dzMbbR1IGPVt5kUg8zW9uMhcPU0Rt9F5e6AMN+yiq/YH/G2s+v9qDxHsra8g9VnsCemcCiYLWW
+ 7aRB645y+Iot+KbmNPVF4mfTH2WmownliQJH5TrYlqpoKKqBkwDJ4bhbXw02dtzEp5VvRCK1eow
+ sEuj78T5voQPX6eknMUkz8fvOOGuz52pMRSz56aR1JTeL88Ix4/YS5KR+zaEwKYktVPEzeSke8P
+ ZxTQwLSNZWkD4sUylU2HFgk/FqL7I14OPFzVMTbcgp028we7ql1Sf89D0bc015qjBOlgz7Iigg2
+ mQ3JJNWGEDM7ViLtm3OvqMWFD1fMp4HbJjT4MZARQ94tcPx8BYCbf0dbTND7mMo2UsVCO2dSKgf
+ HKQ7ObLaw7HOb
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Nothing from protocol.h depends on mptcp_pm_gen.h, only code from
-pm_netlink.c and pm_userspace.c depends on it.
+The 'else' statements are not needed here, because their previous 'if'
+block ends with a 'return'.
 
-So this include can be moved where it is needed to avoid a "unused
-includes" warning.
+This fixes CheckPatch warnings:
+
+  WARNING: else is not generally useful after a break or return
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c   | 1 +
- net/mptcp/pm_userspace.c | 1 +
- net/mptcp/protocol.h     | 2 --
- 3 files changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/subflow.c | 32 +++++++++++++++++---------------
+ 1 file changed, 17 insertions(+), 15 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 5c17d39146ea..7f53e022e27e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -14,6 +14,7 @@
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 97ec44d1df30..7987342f4526 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1117,6 +1117,8 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 	}
  
- #include "protocol.h"
- #include "mib.h"
-+#include "mptcp_pm_gen.h"
- 
- static int pm_nl_pernet_id;
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 9f5d422d5ef6..f0a4590506c6 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -6,6 +6,7 @@
- 
- #include "protocol.h"
- #include "mib.h"
-+#include "mptcp_pm_gen.h"
- 
- void mptcp_free_local_addr_list(struct mptcp_sock *msk)
- {
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ffd00fb45433..2d40629e8231 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -14,8 +14,6 @@
- #include <net/genetlink.h>
- #include <net/rstreason.h>
- 
--#include "mptcp_pm_gen.h"
+ 	if (mpext->data_fin == 1) {
++		u64 data_fin_seq;
++
+ 		if (data_len == 1) {
+ 			bool updated = mptcp_update_rcv_data_fin(msk, mpext->data_seq,
+ 								 mpext->dsn64);
+@@ -1129,26 +1131,26 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 				 */
+ 				skb_ext_del(skb, SKB_EXT_MPTCP);
+ 				return MAPPING_OK;
+-			} else {
+-				if (updated)
+-					mptcp_schedule_work((struct sock *)msk);
 -
- #define MPTCP_SUPPORTED_VERSION	1
+-				return MAPPING_DATA_FIN;
+ 			}
+-		} else {
+-			u64 data_fin_seq = mpext->data_seq + data_len - 1;
  
- /* MPTCP option bits */
+-			/* If mpext->data_seq is a 32-bit value, data_fin_seq
+-			 * must also be limited to 32 bits.
+-			 */
+-			if (!mpext->dsn64)
+-				data_fin_seq &= GENMASK_ULL(31, 0);
++			if (updated)
++				mptcp_schedule_work((struct sock *)msk);
+ 
+-			mptcp_update_rcv_data_fin(msk, data_fin_seq, mpext->dsn64);
+-			pr_debug("DATA_FIN with mapping seq=%llu dsn64=%d",
+-				 data_fin_seq, mpext->dsn64);
++			return MAPPING_DATA_FIN;
+ 		}
+ 
++		data_fin_seq = mpext->data_seq + data_len - 1;
++
++		/* If mpext->data_seq is a 32-bit value, data_fin_seq must also
++		 * be limited to 32 bits.
++		 */
++		if (!mpext->dsn64)
++			data_fin_seq &= GENMASK_ULL(31, 0);
++
++		mptcp_update_rcv_data_fin(msk, data_fin_seq, mpext->dsn64);
++		pr_debug("DATA_FIN with mapping seq=%llu dsn64=%d",
++			 data_fin_seq, mpext->dsn64);
++
+ 		/* Adjust for DATA_FIN using 1 byte of sequence space */
+ 		data_len--;
+ 	}
 
 -- 
 2.43.0
