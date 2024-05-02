@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 716783E47E
-	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 12:58:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 865E67F7EB
+	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 13:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714654719; cv=none; b=j62X4TENNPLbOEljOYaWiiA/i6OJBbfLD6HEWMtQ15WFGTo2B0+buGKhBsWhfntQmOW0ydUNtD+QJIm7JzVfuxbVie8SA6G1UEPBjeT8hT6SLL0iGYoICYkJSPI53sXITMFcTy32HhH32mDB0D/+Nxob71pC4FzTmscfxugFDI8=
+	t=1714654807; cv=none; b=Nfw8Ax4Iggddx0QdkHO7huiY60F/6lZMgG9Mnwr8LgI8HEsTZeYQx0BgTD0HS94wFk17klBTu46zE4Hcy0jCtV7FubskdYRR+hYRLhoFO/0931lBkj0wSBCQ9R9VHRDRAbWlk/N8CZbspLzgDVqf5bYJk4lAbAp1FrK4eNNYm1g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714654719; c=relaxed/simple;
-	bh=DyhC5++8zh72kmX2GwppWC95UEZPF4Mu4tPpDnsGmEU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B3flD8wHMs0wHnc18BLgabn/ZJ/3s6B6lBAHWTiBGvgUF6lm923Us93a8XppVAGaVVjboN59Zv6qxXGdGrjMCFttzGImUkE//XmrWz4akSEHEC6zAgQNn9VMh7dvrUrbztV34ymBxKmT68MqMGXpSd0nBXAjqixMWxN4/8zC/Mo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hQn7/FP4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714654807; c=relaxed/simple;
+	bh=Os6ANadVm4pM+RTDmV3IUdinAcetK2+xoQzdESzMy0Q=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RS33cpgYstiNMOa2rXzWOVWaMoyh4m3Gcq/t+q3NrPGJPf5rVS90gZ30C6yPDAvEcAsQ0Jw10hYcvZfHoJG3cDy50aFZwrFhj1mSbsYpGuOaon73RyEnK62+4esyDUmsXju4dqh+rIGyx6XTptLIFl9V3xr2SfMxZ4Ux8K02YMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rtzHHEG7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hQn7/FP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40711C4AF18;
-	Thu,  2 May 2024 12:58:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rtzHHEG7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69EB2C113CC;
+	Thu,  2 May 2024 13:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714654719;
-	bh=DyhC5++8zh72kmX2GwppWC95UEZPF4Mu4tPpDnsGmEU=;
+	s=k20201202; t=1714654807;
+	bh=Os6ANadVm4pM+RTDmV3IUdinAcetK2+xoQzdESzMy0Q=;
 	h=From:To:Cc:Subject:Date:From;
-	b=hQn7/FP4GDZSqXH9TgGZu+Xse9R9m968k0SFw+gbodVyJa8Pcqea9VXElWjrCc6WB
-	 1v5dyzBKQSCnFS467bB9x+5XGzTAGNwgIYT/rivReAc7mDQZ086aSyT7H+wVC4Wwbu
-	 56txirQqNm5elIJ/X79DbvLcMn27TWWIMKUKBi5Aed+k4FfTZ9TVH2Wk2LlF4LzyDO
-	 6YhYyiD9P+hQAAqqokNXeJKglxTu0y4Evpb7j6czisWS5jJbvZ0snODhLdl0ncTJfo
-	 EZhg+ww7caBWbOkUYw7QTzYmoKlID6oosISPYbaDhaASLamylzuY2yEZVfGg4vxCJ1
-	 41/UGoeyDYJmQ==
+	b=rtzHHEG7bC9AXgR8vQRUCyB8RjHYJFb5p22/vWDfwXPs/iy3O7Qk0qxCUXQEmAryh
+	 aeMgCHw5efkC4tfWi19zCzOJKCjxK9JUezqDXSzh97O6uWflpe8UXN07WA6q955p1k
+	 O9v0ZJ4IUsj6A22HQZFTVl3X2gt0hqB/1XETxoZOv/QVeLjReQOGXYnRO+3Q+mAq23
+	 uH153kmHdhCWRvFUC5Ljwok932wL4eqpB0wa/B96dVOVqYnnETzsUnlfc1nmzwZDuI
+	 UizsrbGCYxwFb847NfAZxpPq3eTWg5jsv1Rh8NrPaaOS9ZMMC4zAqMs4nZiu6mhJEE
+	 ZWVSzvhUN9fVw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-net] mptcp: fix EAGAIN errors in MPTCP BPF tests
-Date: Thu,  2 May 2024 20:57:54 +0800
-Message-ID: <4538e7bca21fdb7f997c026d74f886aedb547d39.1714654631.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf scheduler test" - drop send_data
+Date: Thu,  2 May 2024 20:59:23 +0800
+Message-ID: <b0ae79b3c2e446dd0f5ac09470db661d51575227.1714654747.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -42,47 +42,123 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-BPF tests fail sometimes with "bytes != total_bytes" errors:
+Drop send_data, using send_recv_data instead.
 
- test_default:PASS:sched_init:default 0 nsec
- send_data:PASS:pthread_create 0 nsec
- send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
- default: 3041 ms
- server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
- send_data:FAIL:pthread_join thread_ret:-11 test_default:PASS: \
-				has_bytes_sent addr_1 0 nsec
- test_default:PASS:has_bytes_sent addr_2 0 nsec
- close_netns:PASS:setns 0 nsec
-
-In this case mptcp_recvmsg gets EAGAIN errors. This issue introduces
-by commit dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale").
-This patch fixes it by adding sk_is_mptcp() check defore update
-scaling_ratio in tcp_measure_rcv_mss(). Do not update scaling_ratio if
-this is a MPTCP socket.
-
-Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/ipv4/tcp_input.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 85 +------------------
+ 1 file changed, 4 insertions(+), 81 deletions(-)
 
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index ad8fa129fcfe..39237d6713ee 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -235,8 +235,10 @@ static void tcp_measure_rcv_mss(struct sock *sk, const struct sk_buff *skb)
- 		/* Note: divides are still a bit expensive.
- 		 * For the moment, only adjust scaling_ratio
- 		 * when we update icsk_ack.rcv_mss.
-+		 *
-+		 * This breaks MPTCP BPF tests, skip it.
- 		 */
--		if (unlikely(len != icsk->icsk_ack.rcv_mss)) {
-+		if (unlikely(len != icsk->icsk_ack.rcv_mss && !sk_is_mptcp(sk))) {
- 			u64 val = (u64)skb->len << TCP_RMEM_TO_WIN_SCALE;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 88bc96bfd594..6a07160b5ac9 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -46,7 +46,7 @@
+ #define MPTCP_SCHED_NAME_MAX	16
  
- 			do_div(val, skb->truesize);
+ static const unsigned int total_bytes = 10 * 1024 * 1024;
+-static int stop, duration;
++static int duration;
+ 
+ struct __mptcp_info {
+ 	__u8	mptcpi_subflows;
+@@ -465,85 +465,6 @@ static void test_subflow(void)
+ 	close(cgroup_fd);
+ }
+ 
+-static void *server(void *arg)
+-{
+-	int lfd = (int)(long)arg, err = 0, fd;
+-	ssize_t nr_sent = 0, bytes = 0;
+-	char batch[1500];
+-
+-	fd = accept(lfd, NULL, NULL);
+-	while (fd == -1) {
+-		if (errno == EINTR)
+-			continue;
+-		err = -errno;
+-		goto done;
+-	}
+-
+-	if (settimeo(fd, 0)) {
+-		err = -errno;
+-		goto done;
+-	}
+-
+-	while (bytes < total_bytes && !READ_ONCE(stop)) {
+-		nr_sent = send(fd, &batch,
+-			       MIN(total_bytes - bytes, sizeof(batch)), 0);
+-		if (nr_sent == -1 && errno == EINTR)
+-			continue;
+-		if (nr_sent == -1) {
+-			err = -errno;
+-			break;
+-		}
+-		bytes += nr_sent;
+-	}
+-
+-	CHECK(bytes != total_bytes, "send", "%zd != %u nr_sent:%zd errno:%d\n",
+-	      bytes, total_bytes, nr_sent, errno);
+-
+-done:
+-	if (fd >= 0)
+-		close(fd);
+-	if (err) {
+-		WRITE_ONCE(stop, 1);
+-		return ERR_PTR(err);
+-	}
+-	return NULL;
+-}
+-
+-static void send_data(int lfd, int fd, char *msg)
+-{
+-	ssize_t nr_recv = 0, bytes = 0;
+-	pthread_t srv_thread;
+-	void *thread_ret;
+-	char batch[1500];
+-	int err;
+-
+-	WRITE_ONCE(stop, 0);
+-
+-	err = pthread_create(&srv_thread, NULL, server, (void *)(long)lfd);
+-	if (CHECK(err != 0, "pthread_create", "err:%d errno:%d\n", err, errno))
+-		return;
+-
+-	/* recv total_bytes */
+-	while (bytes < total_bytes && !READ_ONCE(stop)) {
+-		nr_recv = recv(fd, &batch,
+-			       MIN(total_bytes - bytes, sizeof(batch)), 0);
+-		if (nr_recv == -1 && errno == EINTR)
+-			continue;
+-		if (nr_recv == -1)
+-			break;
+-		bytes += nr_recv;
+-	}
+-
+-	CHECK(bytes != total_bytes, "recv", "%zd != %u nr_recv:%zd errno:%d\n",
+-	      bytes, total_bytes, nr_recv, errno);
+-
+-	WRITE_ONCE(stop, 1);
+-
+-	pthread_join(srv_thread, &thread_ret);
+-	CHECK(IS_ERR(thread_ret), "pthread_join", "thread_ret:%ld",
+-	      PTR_ERR(thread_ret));
+-}
+-
+ static struct nstoken *sched_init(char *flags, char *sched)
+ {
+ 	struct nstoken *nstoken;
+@@ -585,7 +506,9 @@ static void send_data_and_verify(char *sched, bool addr1, bool addr2)
+ 	if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
+ 		goto fail;
+ 
+-	send_data(server_fd, client_fd, sched);
++	if (!ASSERT_OK(send_recv_data(server_fd, client_fd, total_bytes),
++		       "send_recv_data"))
++		goto fail;
+ 
+ 	if (clock_gettime(CLOCK_MONOTONIC, &end) < 0)
+ 		goto fail;
 -- 
 2.43.0
 
