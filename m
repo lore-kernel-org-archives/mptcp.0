@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 783A516FF2A
-	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 17:23:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7306116FF2A
+	for <mptcp@lists.linux.dev>; Thu,  2 May 2024 17:23:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714670598; cv=none; b=qyH0qX1YqcL8B96x/TFQJfmsQ4ZwIVW1tRQeOFukEUU5IIGAqP9t1LkuUa3N6WET8Sol3g6AVph7QboqX31f/HUDdZIeJaBwe8igxrlld3foUv/jijkAX5n4D3LqYgM+Plg8U8nqxYkjIwecGMySrvrjBfM3zUiZOsKY408R16k=
+	t=1714670599; cv=none; b=nAf1FOIh3UiUwF4OWI2ZsrczShuHedWcaGnFq1A6Qu1W8ddS30s0+LlFGfLj1lGyr4YioIFxG3Ek7x3/PC2pxViE4sKlAEmOS333EfLrl1WAbmDlwOaJtssl9KGU1jLJeNzBZtmSJ0f4ArYGcgM55I5HhSkRweQGMzNDi4dRA4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714670598; c=relaxed/simple;
-	bh=irMueMVZvfx3GOB/2N34IVYDkbZSJX583KaXq7xovhY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PsfiDPW8aRhtdFNvaEyd44akQcmZR1iHuQ2c9cePhmA+Y3JkMwdsdZlzILzs0A/nZiVy4lp1PtcJV88dfXKWqqMlvSGInLQNOZdz62dt0/sj/IZtgoLtK2qgE8ksHEboZWqxPsVYvGUuihQpIlg2EDmhMsusgttz1SpM+zLOW8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHU2hhM4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714670599; c=relaxed/simple;
+	bh=bMiCs/gqGEJkKIh2cpuKospUiWHyYgh2mjYUnA4KrTw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=R0ylwHmBEGVOiDGXCVdljfxfGfP6kHzu8akGcDNFrkwiCMj/FwjtFw6QwcQWzf1b7ooge/+KjgNlYGyceQbQ4FWIsdQ5rPSGTd5lHZspfcKqnU7/xorUmsdNlE0fjLCo6AsfH98bFhl7TkKvXDdtHy47cTgTRaWD9HJd8qCsl+4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eh4Jnkdw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHU2hhM4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81743C113CC;
-	Thu,  2 May 2024 17:23:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eh4Jnkdw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D55C4AF18;
+	Thu,  2 May 2024 17:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714670598;
-	bh=irMueMVZvfx3GOB/2N34IVYDkbZSJX583KaXq7xovhY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=nHU2hhM4Kp73Uxy1SzR/1z3lDqrQ35uM5LXoIKdDNMZbTD/Zk7CiQK255OQSle8j7
-	 JpUW2Qqo9DQsxmHzAjEE2sfTDNz1/p4D8AyQ0vGFX8jJ+SNRPdpqR6LFoXgy1JaekB
-	 1P0lGe6vHmiGb0YZLhmUQb8H2YqfbT++N0H3LQaDXCwYkh5c2Je/4jCIj9gm9qkkGM
-	 1oCfsqedqPnm8dNDbXtDSgADpEUAo9petBocBydN9iEvsntszYFkYsfWkiBruF9OWx
-	 6mgQ1qFZUNukqbaqJsmLg/xcI1Q3Mhkfyi2mh3rJgnPBtqPw9fHoKB0I3/iHKoNTdy
-	 A1BsHbdrRic0w==
+	s=k20201202; t=1714670599;
+	bh=bMiCs/gqGEJkKIh2cpuKospUiWHyYgh2mjYUnA4KrTw=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=eh4JnkdwSwQ86g3GJdQ6V1W0mnTAGFnD/vkHhO+jeeVGAZ3sLKcP8I0Bv91KpXZvW
+	 wKIZC0h0WXGTzrteRAM0mfMmHkm7TAVSxYBozhxq7VcFT9nauCOMaASVCTcOLdTH/p
+	 lUyReFtUjqDdG9m+XGeNzS/q05w5coK2p7h0gH446jDjkZilw563o6yyO05FsVJovG
+	 3tAzJFjiIGJd0zRtt1vc7DBNIAyF+Ik7N3pMCGzon4Ms2vWfXwoOKQgQPmkFE+xjlK
+	 sJ+LpGP7BsuqaKYdZFtjF+gh/jqEfj+b7riCA3hXRKHJ0xWTUItDBnkSh6g01jGwkA
+	 F6Kq5RUWRs/kw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/4] mptcp: Spring cleaning
-Date: Thu, 02 May 2024 19:23:03 +0200
-Message-Id: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
+Date: Thu, 02 May 2024 19:23:04 +0200
+Subject: [PATCH mptcp-next 1/4] mptcp: prefer strscpy over strcpy
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,55 +37,99 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAPfLM2YC/yWNwQrCMBBEf6Xs2YUYoxR/RTzEdWIWNYYklULpv
- xv1NDyYN7NQRVFUOg4LFby16it12G4GkujTDazXzmSNdWZvLD9zk8zygE/TN3uHJULu2TeJPOL
- ivBvdLoQD9ZFcEHT+HZzo7ybMjc7r+gEU0n/lfAAAAA==
+Message-Id: <20240502-mptcp-cleanup-clang-checkpatch-v1-1-a2b46c0a6bec@kernel.org>
+References: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
+In-Reply-To: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=971; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=irMueMVZvfx3GOB/2N34IVYDkbZSJX583KaXq7xovhY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmM8wEC0ayjsKpSOuyvRa9Mu9crZbK5084OJ1CO
- wgwCImaVxSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjPMBAAKCRD2t4JPQmmg
- cyIqEADulINj7m+OWFABFozuTvGVkARwC1YsPzo4ddJmtWATCTa4gXxUbDfLFdzuH2OJr9xm9XY
- WUPSFMY1mXvDa3wJRaWwF5hrGtcLcIhfrUEXiEKpYyptYnguOT4FgyOXscPDYW6HveMklErvzBt
- h7nl8RqePIdPcLmf0TSJOsCCEj4p8gMlfSrHqQ3rdeAfx9USCbBWyKUaLcO+jwba7wU1Axq/DEc
- hE6bFLtqFSLmOhkkKZpFIiAERFlCury5YWml+ag/Jdi9QU3ie8GCEhNfE36Vh9/jSJjY1sVYD4B
- 0rmd5FbmrKUM+kr8qsfBPGGMtyhcXIJISXH6XrWwTKzPIC45QCx9BECFBgz8jZm0DD2VsPeMjHj
- 0iTWLTNm7J+sUJUEP/pvp9x/hT4b5DWR8dXfvi0q+Xo3RTHzMGGkIfshHthE4wu6FFJQAb1wf+o
- g6CQraAZKolK1Fdocf8L+fOf9Btk+zlDpY1VAW2ND7StUvBsri65sVOP/MHE9RoJ6uh18YZqI6o
- JscMCcoLDKKdBfdURUILp0ydE2y4WSV8zBiw6AyTixKgXfjtoQJRtIbCgrTduRk3RahIWjZEMD4
- Vz0c06IdIX/R7bHBNtxgh7c947e9LmNM6IY0AMGcYDaPY0I5wolgFJuqZxYd2tuDfQ6fTNoU61h
- 96pTQmixihMMXeA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2616; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=bMiCs/gqGEJkKIh2cpuKospUiWHyYgh2mjYUnA4KrTw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmM8wE4GQ8rYki2F9gZq7f4t/gm5pDo8MG9m1b+
+ Ax9MWYdBLWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjPMBAAKCRD2t4JPQmmg
+ c0uUEACWCBLbeu2bwDW+fvwIvFFgscixhSnCk0cb+y3T2n6wDVHhr9lEjIZ0A/kARyEU6lyNfCJ
+ swgJ7HPkUL30k1i76Dib2d6f4h6zlwqnOj8gWKV2jbi9pyJv5EISnjbUnQ0koKSesDe4AUyCS4d
+ JxY6+aWEbzX3AoHSm9rjCpfqP7IeEJSQ96czGSYqxSouxjPzlQcHh7r/mJu2UAfa5Ajyyo7w6G+
+ BHGlIRTsNIbCyWPv+E4vNGkVi1q13pIoWJewihv9d/qCvsP6k/T5lyaCWa4PcJriGngwCcXd05F
+ vqQl8/d2tdEuuRVJiQjc9nqIs0lS/qpgvH3hk8evAqswbrUq2D2Hyx9hZVlgk38VbCZEUuRg8SB
+ 4bPz7Daa8Ie48SrY7yD7T8+0jcfp0So6p/pelfwYkhNX+ArjvVNgMIlRhQj2Z7TpIxJOEyrg8Ea
+ U5SmV37F9Kc3kSbh9coOwuf0RzivmQVXC09fbHK1WkgMG4+tRAR/9f6rIA2t9WDi5jdK/HVCQJf
+ MhUWLDZbW5QrtYWnqKWxX0aJDrPr6ABO4OQjsG9BekwtEPWa1eNB9KT+lGquvA71Zl8rwA1vR/X
+ NjV2Rj2EkNJfaguNcB231kvtnJJmzGGf9GxGGr5FTXilq6vCmawPpmj1as2Q1p/7+4qxw1aYN9h
+ nHcpDMh4RAFBt4w==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This series fixes some warnings reported by CheckPatch and CLang.
+strcpy() performs no bounds checking on the destination buffer. This
+could result in linear overflows beyond the end of the buffer, leading
+to all kinds of misbehaviors. The safe replacement is strscpy() [1].
 
-The behaviour is not supposed to be modified, just some simple fixes.
+This is in preparation of a possible future step where all strcpy() uses
+will be removed in favour of strscpy() [2].
 
+This fixes CheckPatch warnings:
+
+  WARNING: Prefer strscpy over strcpy
+
+Link: https://www.kernel.org/doc/html/latest/process/deprecated.html#strcpy [1]
+Link: https://github.com/KSPP/linux/issues/88 [2]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (4):
-      mptcp: prefer strscpy over strcpy
-      mptcp: move mptcp_pm_gen.h's include
-      mptcp: remove unnecessary else statements
-      mptcp: include inet_common in mib.h
+ net/mptcp/ctrl.c     | 2 +-
+ net/mptcp/protocol.c | 5 +++--
+ net/mptcp/sockopt.c  | 2 +-
+ 3 files changed, 5 insertions(+), 4 deletions(-)
 
- net/mptcp/ctrl.c         |  2 +-
- net/mptcp/mib.h          |  2 ++
- net/mptcp/pm_netlink.c   |  1 +
- net/mptcp/pm_userspace.c |  1 +
- net/mptcp/protocol.c     |  5 +++--
- net/mptcp/protocol.h     |  2 --
- net/mptcp/sockopt.c      |  2 +-
- net/mptcp/subflow.c      | 32 +++++++++++++++++---------------
- 8 files changed, 26 insertions(+), 21 deletions(-)
----
-base-commit: c3c3514169a8e548fba51d0694b86a72f89acce0
-change-id: 20240502-mptcp-cleanup-clang-checkpatch-8eb4a4843ff6
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 8d661156ab8c..3d9d26b29bcd 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -92,7 +92,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ 	pernet->allow_join_initial_addr_port = 1;
+ 	pernet->stale_loss_cnt = 4;
+ 	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+-	strcpy(pernet->scheduler, "default");
++	strscpy(pernet->scheduler, "default", sizeof(pernet->scheduler));
+ }
+ 
+ #ifdef CONFIG_SYSCTL
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 62403f93c4d7..579031c60937 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2814,7 +2814,8 @@ static void mptcp_ca_reset(struct sock *sk)
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 
+ 	tcp_assign_congestion_control(sk);
+-	strcpy(mptcp_sk(sk)->ca_name, icsk->icsk_ca_ops->name);
++	strscpy(mptcp_sk(sk)->ca_name, icsk->icsk_ca_ops->name,
++		sizeof(mptcp_sk(sk)->ca_name));
+ 
+ 	/* no need to keep a reference to the ops, the name will suffice */
+ 	tcp_cleanup_congestion_control(sk);
+@@ -4169,7 +4170,7 @@ int __init mptcp_proto_v6_init(void)
+ 	int err;
+ 
+ 	mptcp_v6_prot = mptcp_prot;
+-	strcpy(mptcp_v6_prot.name, "MPTCPv6");
++	strscpy(mptcp_v6_prot.name, "MPTCPv6", sizeof(mptcp_v6_prot.name));
+ 	mptcp_v6_prot.slab = NULL;
+ 	mptcp_v6_prot.obj_size = sizeof(struct mptcp6_sock);
+ 	mptcp_v6_prot.ipv6_pinfo_offset = offsetof(struct mptcp6_sock, np);
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index b0d1dc4df0c1..2edaf1a16005 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -618,7 +618,7 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
+ 	}
+ 
+ 	if (ret == 0)
+-		strcpy(msk->ca_name, name);
++		strscpy(msk->ca_name, name, sizeof(msk->ca_name));
+ 
+ 	release_sock(sk);
+ 	return ret;
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
