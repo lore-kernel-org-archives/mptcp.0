@@ -1,149 +1,125 @@
-Received: from mail-wr1-f47.google.com (mail-wr1-f47.google.com [209.85.221.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18F081514E4
-	for <mptcp@lists.linux.dev>; Fri,  3 May 2024 15:23:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FF6156C6D
+	for <mptcp@lists.linux.dev>; Fri,  3 May 2024 16:45:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714749802; cv=none; b=SEYAOv20c13tyRzB4kaS7Jryb1fEof4JryOd5LRIYezjXTTum3q985BQiKLdrYR1UulzLXQ/abdmjl3JSIQ97xDhKbD4a98IuMl1c6NZ1B+cBjS7kE0zHEgdwZTznBzC3q4GOz0RYvvHjaDUrQybUZXxZMYVhXX+Jp7CDzl/Htg=
+	t=1714754753; cv=none; b=f7imfG8zFlfrOejSTPgDzjlrxAUHP15+8P9DGvgFV8jy9IoEugrqVu/2DjzRNOaVHQuedewqkF1bRQ1zpGXgHFZ7hJlPhmwzMCeM2LTAg+XpnGP+HW5vsprJ3DG1MCgSp73AR/S4rPUezoxNl/30BnE6yWX46WOCjF3AY5Cx4mk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714749802; c=relaxed/simple;
-	bh=MWE7coWNqMXJleIi3yjk5awPC1JbvNBfC0e959nu6Uk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F//ec22BJV6c7zWJWRb6w8jx0IwDvClmMHtV54nQ5nlVk1Y+h31POB8VfZ7n24NyeQR4OpRtSMmBn253FkZo2PtsYXdrii2szw4ayQpVG3slu5+3yFmHRRjWSX4d+caXD8+JrWcsxaCanogX4QVrkJdsfUNgiJPEXWwRf7Y0HNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org; spf=pass smtp.mailfrom=linaro.org; dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b=Uflx+G/A; arc=none smtp.client-ip=209.85.221.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linaro.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linaro.org
+	s=arc-20240116; t=1714754753; c=relaxed/simple;
+	bh=8H7QnJUYZk+tj3af+RIRAe/MMjGUVlXVVhzh/KdlBW0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=kkUV62F0gAPmTBMUq1INUZxsOW0QxEJJozMV5F7Ty8+DxyZExo++fVyPR+O58SWB+/Ltwi/DjdBNkSFevNyraxGQsdZ0HnWR3I/5jTr1+yV6eRk0K8uf5GQi6TiwmqEEh6PbQ+a5zGglU4hw+2zQL5rkQjbi8If4455eVr7i19w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePxYVdFP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Uflx+G/A"
-Received: by mail-wr1-f47.google.com with SMTP id ffacd0b85a97d-34dc8d3fbf1so2065607f8f.1
-        for <mptcp@lists.linux.dev>; Fri, 03 May 2024 08:23:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google; t=1714749799; x=1715354599; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=wdt2IfwqtFqaZTN79e9iL9j98LJEO7sDYqEbNeYYJaU=;
-        b=Uflx+G/AtcJVkTVGVklBUtO/S5lhnPRy066d47r/g/5tC5E1xkX5Zu8ql69d6sMVr/
-         e8OM/2x0fSX4lA7U0ZvPET4bQNqI5dGbKoCO2T/LKexZW3TZuORFCXHNLkdQNs5TZpid
-         Pn3VojCxgpxb1VUuu9MlEbEGlQB6P6nu240TZvkbGalvqXJ9Vho+kp1m8WKYOwptGzd1
-         gtH5cgQpLVJ5RNrxL+tGwmkqD/qW+w0xjnIBvky+h1ZJ4qkL4rWMIQ2hnW9NLt26E9G4
-         MJeoljAP3h4Vcx8zxwvS8eBqgo/8o43o5+RpR2da+dgZ4SketKFO7cQmC7/C7nxcqjwG
-         MdKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1714749799; x=1715354599;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=wdt2IfwqtFqaZTN79e9iL9j98LJEO7sDYqEbNeYYJaU=;
-        b=B3/ZuZvRP4GlXkHLrukDIFIiNlO5/JLqKkH62Ghqrl3HhExgqX7px/IyBSfcisABdm
-         Y12+vdpS2UdPCzuhhzSrpDYZ8j3aymoFh011cP5xZR444U717Vr/giTC20S0nPUfvbQi
-         +KHLglO06aTf6wDgoT/+rk7e1ZRQqiODXbr62CR+GyejlGqrh1/YWURHU52F4BWXs6G8
-         6ozifQ5k0sMBec5z0XFRbW6lZJbWRql8CNUll0WTR8Sw4gBa6SBaIDZuLvTMdGGYgDOb
-         HOybEA/TbLcchgzaXo8f0pJwFKmve8Z8s8Bb3IeiNq2lJ2difBE7nxjiJewAF/dDOfXb
-         QvoA==
-X-Forwarded-Encrypted: i=1; AJvYcCWUJhz7ewGnsPOfoAY0kAFe/1Cak0GU00ES60+OR0NciqyaDwgFwI91itm+90yKbgfvzJQImgsulmbaoHvmfbfnnx5efus=
-X-Gm-Message-State: AOJu0Yz0EX5zWWaPLgb5ac7SyOk8oUgchJTuYiz7y2wwT5Xck5P71anb
-	U8CjzhWHPO0Q7cCPxhwCkeVnNKCADNyg40MYl1eRWufwpR3vRA9EfK/16bkh5XI=
-X-Google-Smtp-Source: AGHT+IF9s4k+fRR7e1yxXvSlCXD3nF/jRBs6Gtlty++TWU+4zWj+bqwN6oJg1Acr4XwoE1SLANszRA==
-X-Received: by 2002:a5d:6a8c:0:b0:34c:5af8:e491 with SMTP id s12-20020a5d6a8c000000b0034c5af8e491mr2016677wru.33.1714749799241;
-        Fri, 03 May 2024 08:23:19 -0700 (PDT)
-Received: from localhost ([102.222.70.76])
-        by smtp.gmail.com with ESMTPSA id p12-20020adfe60c000000b0034ccd06a6a3sm4011645wrm.18.2024.05.03.08.23.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 03 May 2024 08:23:18 -0700 (PDT)
-Date: Fri, 3 May 2024 18:23:14 +0300
-From: Dan Carpenter <dan.carpenter@linaro.org>
-To: Joel Granados <j.granados@samsung.com>
-Cc: Sabrina Dubroca <sd@queasysnail.net>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Alexander Aring <alex.aring@gmail.com>,
-	Stefan Schmidt <stefan@datenfreihafen.org>,
-	Miquel Raynal <miquel.raynal@bootlin.com>,
-	David Ahern <dsahern@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Remi Denis-Courmont <courmisch@gmail.com>,
-	Allison Henderson <allison.henderson@oracle.com>,
-	David Howells <dhowells@redhat.com>,
-	Marc Dionne <marc.dionne@auristor.com>,
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
-	Xin Long <lucien.xin@gmail.com>,
-	Wenjia Zhang <wenjia@linux.ibm.com>,
-	Jan Karcher <jaka@linux.ibm.com>,
-	"D. Wythe" <alibuda@linux.alibaba.com>,
-	Tony Lu <tonylu@linux.alibaba.com>,
-	Wen Gu <guwen@linux.alibaba.com>,
-	Trond Myklebust <trond.myklebust@hammerspace.com>,
-	Anna Schumaker <anna@kernel.org>,
-	Chuck Lever <chuck.lever@oracle.com>,
-	Jeff Layton <jlayton@kernel.org>, Neil Brown <neilb@suse.de>,
-	Olga Kornievskaia <kolga@netapp.com>, Dai Ngo <Dai.Ngo@oracle.com>,
-	Tom Talpey <tom@talpey.com>, Jon Maloy <jmaloy@redhat.com>,
-	Ying Xue <ying.xue@windriver.com>, Martin Schiller <ms@dev.tdt.de>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Florian Westphal <fw@strlen.de>, Roopa Prabhu <roopa@nvidia.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Simon Horman <horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>,
-	Joerg Reuter <jreuter@yaina.de>,
-	Luis Chamberlain <mcgrof@kernel.org>,
-	Kees Cook <keescook@chromium.org>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, dccp@vger.kernel.org,
-	linux-wpan@vger.kernel.org, mptcp@lists.linux.dev,
-	linux-hams@vger.kernel.org, linux-rdma@vger.kernel.org,
-	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
-	linux-sctp@vger.kernel.org, linux-s390@vger.kernel.org,
-	linux-nfs@vger.kernel.org, tipc-discussion@lists.sourceforge.net,
-	linux-x25@vger.kernel.org, netfilter-devel@vger.kernel.org,
-	coreteam@netfilter.org, bridge@lists.linux.dev,
-	lvs-devel@vger.kernel.org
-Subject: Re: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
- sentinel elements from ctl_table array
-Message-ID: <21f76a94-1b35-4cf7-914d-e341848b0b9e@moroto.mountain>
-References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
- <20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
- <CGME20240501131616eucas1p28a33eeb55f6c084a0751e5b7b7d91d78@eucas1p2.samsung.com>
- <ZjJAikcdWzzaIr1s@hog>
- <20240503121811.fsmriwsgugzm2o7i@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePxYVdFP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35401C4AF1C;
+	Fri,  3 May 2024 16:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1714754753;
+	bh=8H7QnJUYZk+tj3af+RIRAe/MMjGUVlXVVhzh/KdlBW0=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ePxYVdFP5TH5QqtkECVZIJljExIbRTS71tAEyk7pWm+b+NAFvXEereBbuAcv2D5XF
+	 2XTiBFjM2cuUF1bGcICo+azkOUgrdFWHtR1y5uwoTrOLiTjk9Yq8I8ZJv/r0SE+FiA
+	 8hu1pDVLgyseuW5VtWnJ001o6h5ei8kGc/J3l2CgMzRxi0I5/kulq69S8OBWLGHB+E
+	 6TXbqnzow5fcSQwu9+euT8JOg8+zxa38bqMyGnF5PaTmidU2Plqk1g8na1pB5jmt5K
+	 I0GjFghH6lx4K8GteAKQ9iJQ9ZAyqfvczAarnlQqnbCgCHIZkQ3VUQI3XJBQtvkMot
+	 DfoFbrg9GY5Xg==
+Message-ID: <fef27199-7ec3-4390-9a71-9e76e59bc692@kernel.org>
+Date: Fri, 3 May 2024 18:45:51 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240503121811.fsmriwsgugzm2o7i@joelS2.panther.com>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: fix net.mptcp.scheduler behavior
+Content-Language: en-GB
+To: Gregory Detal <gregory.detal@gmail.com>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 03, 2024 at 02:18:11PM +0200, Joel Granados wrote:
-> On Wed, May 01, 2024 at 03:15:54PM +0200, Sabrina Dubroca wrote:
-> > 2024-05-01, 11:29:32 +0200, Joel Granados via B4 Relay wrote:
-> > > From: Joel Granados <j.granados@samsung.com>
-> > > diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-> > > index c4f8adbf8144..c50a58d9e368 100644
-> > > --- a/net/ax25/ax25_ds_timer.c
-> > > +++ b/net/ax25/ax25_ds_timer.c
-> > > @@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
-> > >  	ax25_dev->dama.slave_timeout =
-> > >  		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
-> > >  	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-> > > +	return;
-> > 
-> > nit: return not needed here since we're already at the bottom of the
-> > function, but probably not worth a repost of the series.
-> > 
-> Thx. I will not repost, but I have changed them locally so they are
-> there in case a V7 is required.
+Hi Gregory, Geliang, Mat,
+
+On 30/04/2024 14:06, Gregory Detal wrote:
+> The sysctl is accepting any input. This patchset ensures only
+> existing scheduler can be set.
 > 
+> Moreover, this adds an helper sysctl to list the available scheduler
+> similarly to tcp_available_congestion_control.
+> 
+> The first patch of the series is a fix for mptcp-net.
+Thank you for the patches, the tests, and the review:
 
-It's a checkpatch.pl -f warning so we probably will want to fix it
-eventually.
+New patches for t/upstream-net and t/upstream:
+- bc3eac499491: mptcp: only allow set existing scheduler for
+net.mptcp.scheduler
+- Results: 9df9126ccb3d..193bf8fbc31b (export-net)
+- Results: c1f52bb3cea5..e83515296801 (export)
 
-regards,
-dan carpenter
+New patches for t/upstream:
+- 660afb67d62f: mptcp: add net.mptcp.available_schedulers
+- Results: e83515296801..022e39266b3c (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/56030f9d3812071365435354c0eb5ffb3504e58a/checks
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/a6e18d675691b704ed8e61862efa61464ffbeeb7/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
