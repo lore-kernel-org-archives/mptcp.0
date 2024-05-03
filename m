@@ -1,125 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f48.google.com (mail-wr1-f48.google.com [209.85.221.48])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6FF6156C6D
-	for <mptcp@lists.linux.dev>; Fri,  3 May 2024 16:45:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27DA414F121
+	for <mptcp@lists.linux.dev>; Fri,  3 May 2024 19:34:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.48
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714754753; cv=none; b=f7imfG8zFlfrOejSTPgDzjlrxAUHP15+8P9DGvgFV8jy9IoEugrqVu/2DjzRNOaVHQuedewqkF1bRQ1zpGXgHFZ7hJlPhmwzMCeM2LTAg+XpnGP+HW5vsprJ3DG1MCgSp73AR/S4rPUezoxNl/30BnE6yWX46WOCjF3AY5Cx4mk=
+	t=1714764843; cv=none; b=VaRG0YlLoBCBVLatKWOPlaZSs/6ygG/9Dl/bqZhqGN4dkdprPzTpyZEY9/aVMU90CnFj7WivczdL44e6lDhw+XRGpT4sB0Fl+K0D0LYnI0oNffgGl053nRGjIs5PozumFwn6C5blH3oDRKeSVCfsn6SMWpD95K3TKdj8iCxE5qQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714754753; c=relaxed/simple;
-	bh=8H7QnJUYZk+tj3af+RIRAe/MMjGUVlXVVhzh/KdlBW0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kkUV62F0gAPmTBMUq1INUZxsOW0QxEJJozMV5F7Ty8+DxyZExo++fVyPR+O58SWB+/Ltwi/DjdBNkSFevNyraxGQsdZ0HnWR3I/5jTr1+yV6eRk0K8uf5GQi6TiwmqEEh6PbQ+a5zGglU4hw+2zQL5rkQjbi8If4455eVr7i19w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ePxYVdFP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714764843; c=relaxed/simple;
+	bh=QHrzXoKBGbSszZUhAyIi5ily8po8cRed6Cp/+9bpMA4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=pwGsg1d8JfnyhR4zWeNO8ThkoJGUYmA2cJ6LgXICc4sAyDMJvYRc71jyhQzxvBqF/unN/57NldhOYqwq+jeGTSM3/Wb0DPlqXbWEytZcpsXPhf5QcK8L/Ngv+utOmOMkCZ37IFj+wSFyQLQdTG4AR96L02LNc9hKPsWseR0M2BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=So2HzOoF; arc=none smtp.client-ip=209.85.221.48
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ePxYVdFP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35401C4AF1C;
-	Fri,  3 May 2024 16:45:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714754753;
-	bh=8H7QnJUYZk+tj3af+RIRAe/MMjGUVlXVVhzh/KdlBW0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ePxYVdFP5TH5QqtkECVZIJljExIbRTS71tAEyk7pWm+b+NAFvXEereBbuAcv2D5XF
-	 2XTiBFjM2cuUF1bGcICo+azkOUgrdFWHtR1y5uwoTrOLiTjk9Yq8I8ZJv/r0SE+FiA
-	 8hu1pDVLgyseuW5VtWnJ001o6h5ei8kGc/J3l2CgMzRxi0I5/kulq69S8OBWLGHB+E
-	 6TXbqnzow5fcSQwu9+euT8JOg8+zxa38bqMyGnF5PaTmidU2Plqk1g8na1pB5jmt5K
-	 I0GjFghH6lx4K8GteAKQ9iJQ9ZAyqfvczAarnlQqnbCgCHIZkQ3VUQI3XJBQtvkMot
-	 DfoFbrg9GY5Xg==
-Message-ID: <fef27199-7ec3-4390-9a71-9e76e59bc692@kernel.org>
-Date: Fri, 3 May 2024 18:45:51 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="So2HzOoF"
+Received: by mail-wr1-f48.google.com with SMTP id ffacd0b85a97d-34da04e44a2so13734f8f.1
+        for <mptcp@lists.linux.dev>; Fri, 03 May 2024 12:34:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1714764840; x=1715369640; darn=lists.linux.dev;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=thr8xqOZrByCL9GPaDBY1dMYAk6XNElAOErwG9Vli34=;
+        b=So2HzOoFraKqEePhD835WueVR6HRZ5gLJN7yObnK7xTXthWpR01HY3kgJHWR6Ofxmm
+         vXJLXMRfisprR/oOoUtgIapoMBkOJ7befttkqT+aPOPCcwGnsN07sRI/j+oiUYcHQg/a
+         b1uW66CG7juh2+IPC2iKjFUaGM7x5UVST/HWmYfW5FwZcaydN/5GWkF+qdrSlFwmy28d
+         HiBGvfHKtWh15ATahCDTDVOJJ3+RBFBVcbC3C8VbLeK3zzPbBGA8YXOusbTnocUnXKzF
+         auSAclaxENSyMkVjJcMieQnfdawBAALK32VLy2+FHBSAwoqbza8GrZBOuRYpG03oOFl4
+         SCYw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1714764840; x=1715369640;
+        h=cc:to:message-id:content-transfer-encoding:mime-version:subject
+         :date:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=thr8xqOZrByCL9GPaDBY1dMYAk6XNElAOErwG9Vli34=;
+        b=xF8VD+VwEEVgyjxIxXkU8HZRGVsvgVQ6DbVknUbWsCYs5JlAbjkFbjzaKsC5ov1hw4
+         uyo92+iKAf3fCo1h1A5jWXsH4AfU1uW97+p0lvfsRTa3EJ+hsgppIJtYRmrmLGTs4ADI
+         IiILkyGbA9KTOpvq93XAA99iPU+dTVPlmMqMdV1F0atIFG3bByVq2/rdMF8U0TbhgkZ9
+         t3SixEvIvYWFH11nz/Q4W+KfenH35Qs8fqDLNtljSa7b9Bk5V2dticheqktukM6Yieys
+         07Dn6Ryazxr+SHcTd+ThInDNTjOH5lNDC1TRLwPQ/1SuzEVNbiZf0awsPDTpnHrXtAmh
+         YZHA==
+X-Gm-Message-State: AOJu0Yxqxsg12OJuzzjYxurUD1pSxLyM0ju1gDwISlKUZkUf0l9od7Nn
+	8S60Qv9/oY9Zgw3DshZadnkLDOyawkyPtoL4onEQz37e5jR5CNXlg63HR7Lt
+X-Google-Smtp-Source: AGHT+IEgGr2BUMVUumu24GeWsV047D2NzdiOf6BT+4ek5K6jralhjQHtxUYZMYO3HaAM8nZAlvf5RA==
+X-Received: by 2002:a5d:6c62:0:b0:34c:e0d6:c260 with SMTP id r2-20020a5d6c62000000b0034ce0d6c260mr3205553wrz.47.1714764840180;
+        Fri, 03 May 2024 12:34:00 -0700 (PDT)
+Received: from [127.0.1.1] ([2001:41d0:700:80a3::])
+        by smtp.gmail.com with ESMTPSA id y10-20020a170906470a00b00a4e24d259edsm2021469ejq.167.2024.05.03.12.33.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 03 May 2024 12:33:59 -0700 (PDT)
+From: Gregory Detal <gregory.detal@gmail.com>
+Date: Fri, 03 May 2024 19:33:25 +0000
+Subject: [PATCH mptcp-next] Squash to "mptcp: add bpf_mptcp_sched_ops" --
+ fix bpf access
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: fix net.mptcp.scheduler behavior
-Content-Language: en-GB
-To: Gregory Detal <gregory.detal@gmail.com>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240430-sysctl_scheduler-v1-0-8187148850df@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240503-bpf_fix_access-v1-1-5a714318ea64@gmail.com>
+X-B4-Tracking: v=1; b=H4sIAAQ8NWYC/x2MQQqAIBAAvxJ7TrDUiL4SEbZttYdM3Igg+nvSc
+ RhmHhBKTAJd8UCii4WPkKEqC8DNh5UUz5mh1rXVThs1xWVc+B49Iokobxo9tS1WzljIUUyU7T/
+ sYY8nRhXoPmF43w8MX/tmbAAAAA==
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Gregory Detal <gregory.detal@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1714764839; l=2414;
+ i=gregory.detal@gmail.com; s=20240430; h=from:subject:message-id;
+ bh=QHrzXoKBGbSszZUhAyIi5ily8po8cRed6Cp/+9bpMA4=;
+ b=7pzFZH8w6x4JMYMrzBGJQumF4cPxtOUC0+7xEgFy44PoiR/iHN2mIFRBcdh0w0vXuHzR22bVB
+ SYiQxPJvjOeBVPMWGoscht2DWVyp8qRj1Eb5E8Xs4Z3opFPJ8hMCwxV
+X-Developer-Key: i=gregory.detal@gmail.com; a=ed25519;
+ pk=TziJDop3YEG3Ywr6io7U9Iy2jaAY3l0hTh8KdwDKXQM=
 
-Hi Gregory, Geliang, Mat,
+The current behavior allows to write to mptcp_sock at offset that is
+defined in mptcp_subflow_context and vice versa.
 
-On 30/04/2024 14:06, Gregory Detal wrote:
-> The sysctl is accepting any input. This patchset ensures only
-> existing scheduler can be set.
-> 
-> Moreover, this adds an helper sysctl to list the available scheduler
-> similarly to tcp_available_congestion_control.
-> 
-> The first patch of the series is a fix for mptcp-net.
-Thank you for the patches, the tests, and the review:
+This fixes this by splitting the checks for each struct type.
 
-New patches for t/upstream-net and t/upstream:
-- bc3eac499491: mptcp: only allow set existing scheduler for
-net.mptcp.scheduler
-- Results: 9df9126ccb3d..193bf8fbc31b (export-net)
-- Results: c1f52bb3cea5..e83515296801 (export)
+Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
+---
+ net/mptcp/bpf.c | 42 +++++++++++++++++++++++++-----------------
+ 1 file changed, 25 insertions(+), 17 deletions(-)
 
-New patches for t/upstream:
-- 660afb67d62f: mptcp: add net.mptcp.available_schedulers
-- Results: e83515296801..022e39266b3c (export)
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 208e5d3f066f..57c47bb430b1 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -47,24 +47,32 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+ 	size_t end;
+ 
+ 	t = btf_type_by_id(reg->btf, reg->btf_id);
+-	if (t != mptcp_sock_type && t != mptcp_subflow_type) {
+-		bpf_log(log, "only access to mptcp sock or subflow is supported\n");
+-		return -EACCES;
+-	}
+ 
+-	switch (off) {
+-	case offsetof(struct mptcp_sock, snd_burst):
+-		end = offsetofend(struct mptcp_sock, snd_burst);
+-		break;
+-	case offsetof(struct mptcp_subflow_context, scheduled):
+-		end = offsetofend(struct mptcp_subflow_context, scheduled);
+-		break;
+-	case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
+-		end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
+-		break;
+-	default:
+-		bpf_log(log, "no write support to %s at off %d\n",
+-			t == mptcp_sock_type ? "mptcp_sock" : "mptcp_subflow_context", off);
++	if (t == mptcp_sock_type) {
++		switch (off) {
++		case offsetof(struct mptcp_sock, snd_burst):
++			end = offsetofend(struct mptcp_sock, snd_burst);
++			break;
++		default:
++			bpf_log(log, "no write support to mptcp_sock at off %d\n",
++				off);
++			return -EACCES;
++		}
++	} else if (t == mptcp_subflow_type) {
++		switch (off) {
++		case offsetof(struct mptcp_subflow_context, scheduled):
++			end = offsetofend(struct mptcp_subflow_context, scheduled);
++			break;
++		case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
++			end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
++			break;
++		default:
++			bpf_log(log, "no write support to mptcp_subflow_context at off %d\n",
++				off);
++			return -EACCES;
++		}
++	} else {
++		bpf_log(log, "only access to mptcp sock or subflow is supported\n");
+ 		return -EACCES;
+ 	}
+ 
 
-Tests are now in progress:
+---
+base-commit: 56030f9d3812071365435354c0eb5ffb3504e58a
+change-id: 20240503-bpf_fix_access-a360b88c1534
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/56030f9d3812071365435354c0eb5ffb3504e58a/checks
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a6e18d675691b704ed8e61862efa61464ffbeeb7/checks
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Gregory Detal <gregory.detal@gmail.com>
 
