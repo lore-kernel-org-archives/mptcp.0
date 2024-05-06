@@ -1,115 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD66B154C08;
-	Mon,  6 May 2024 15:04:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB9A2F2C;
+	Mon,  6 May 2024 15:35:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715007884; cv=none; b=gaIXn3sOBSsrTkz5FLMzoajUpgncjxa/oYowoEkr3QyHGI8uyFq3SW27JAW3HCjGKZP3EyiUevFSBvDiSNK2dN0qXtzEo0sz0yrzBqLN2rYl0OelNJ/W/W+A4DQP86gh4TxNsbasp6BzsmkHudcKJKuCAOdro9/Obn6icdIsLB0=
+	t=1715009739; cv=none; b=PoNYYDnPGeeenW8N1p4XVTUqr+4IXYxKXN0YbdggvDroX84xje7IU50qxYOgX4wDA+5IHE7fHvnzlDMF0H0P7MYgvlNc3xw/whpFxUOOD8fDzv9Sv1O2zKAiIj9AVYeJ882yF7l3eq1F63q5DLPNB/6/Jx0EBy1DTU5UxaXkSvg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715007884; c=relaxed/simple;
-	bh=Nc2BLlY2msSNff0dIc/i8A1dbggiS89ie/JJ6ON2I2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mFZFPyoeYzPMpQh3lEE5JYl8Yu51Eb93dfL92PmuFrGi+3bOSN6v2dvJvnI3DftRULUIdOv8+zU8CPBBrbd46Ql6xxJkzlSCxj/efxehO8Fl4Z5xMGdKtNDA7FomOEhzLTw3StU43/xNobP4q87RgDP5dVqha8TkLEnviiBq+Vo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pl4WC63Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715009739; c=relaxed/simple;
+	bh=oGVCWQDYjNsdrnj+qazvX1umQxTGlOb3a+h86Rhs1gQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=WSbuGe9BuPTYDa88HjBrDSirHkfSro9NLhn8vCUCBXv6r0s8fSs0KO78/SaBJS2TPiVeqOJ/Pcv9G55g045cwcsGwOVW2r4vSJd97UuStNmrt4jThOnXms4Ny4EDKTswu4csh/RCe1/XUy9MqIFAZ7vNIIDI8Zpq68hWWszEEm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBK+H4rj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pl4WC63Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7535CC116B1;
-	Mon,  6 May 2024 15:04:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBK+H4rj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B830C116B1;
+	Mon,  6 May 2024 15:35:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715007884;
-	bh=Nc2BLlY2msSNff0dIc/i8A1dbggiS89ie/JJ6ON2I2Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Pl4WC63QcXMbqG9wexTrPOJUYCrmp6k459NDHlidaYxs1qJMFG4ASypjtfKLCTxak
-	 UOs5YlQ5ZINzkXlzSwIpbl68bd/Ms/rpwC6caCRtXvDKtzIbtAGDVwPCO7NLDN+ztA
-	 3eCAWzpo6PI2sMV5uR7gf3ShXih6ZrHRxG4zVv8s0ODEkCTIbbKFvGUeDQ52gV1O09
-	 VE8Xh/SNmq90WE+WADoiTlmtJOB/9X9szdX5cLOjnTFq6Mqrrpg5ZSQF5D6A5sugtd
-	 Y0JiXUWrHZsthCVsXTTciq5lte5DWDCfh+DtiECbyNKAZNyVEef758VS6cdyAnRXw+
-	 NSPK6NzlRSxUA==
-Message-ID: <48d71ee4-7b01-48a8-a2ec-9030204eac07@kernel.org>
-Date: Mon, 6 May 2024 17:04:34 +0200
+	s=k20201202; t=1715009738;
+	bh=oGVCWQDYjNsdrnj+qazvX1umQxTGlOb3a+h86Rhs1gQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=UBK+H4rjTdYc4zvgYsp9IejhkCGq4Szntf3sTdCy0GrJJ8jEXsKN82s5Q5zzliUUw
+	 xF2791yhISGMTtPJuJJZIhq3gFcig/GElOOTEwrfFU1Jli8I8eLloTM9byk37OKiLo
+	 vhhz8clfYcEk9g6mTo//XJuJ1cO4U4IjI894pU3LKmRAEdjgLWKyr4FLSIhdL4lTm3
+	 GKZxJfyDC++EfklCLRug0QtKTpgX2gExt5XVLNK8NMVk70/NVVaHsJjWXESUSJo2EM
+	 Z+1QSpJKj2wgJTvo9ejCdc9SYBedYlupcUx5HWcwaGo3FGCvM1QkWhdN9eaYgG1L1X
+	 QXqJomxAAIl3g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 06 May 2024 17:35:28 +0200
+Subject: [PATCH net] mptcp: only allow set existing scheduler for
+ net.mptcp.scheduler
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] mptcp: fix possible NULL dereferences
-Content-Language: en-GB
-To: Eric Dumazet <edumazet@google.com>, "David S . Miller"
- <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, eric.dumazet@gmail.com,
- syzbot <syzkaller@googlegroups.com>, Jason Xing <kernelxing@tencent.com>,
- MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20240506123032.3351895-1-edumazet@google.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240506123032.3351895-1-edumazet@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240506-upstream-net-20240506-mptcp-sched-exist-v1-1-2ed1529e521e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAL/4OGYC/z2NywqDMBBFf0Vm3YEkbe3jV6SLNF51FqYhE0UQ/
+ 72hiy7PhXPPToosUHo2O2WsovKJFeypoTD5OIKlr0zOuIu5mpaXpCXDzxxR+L/OqYTEGib0jE2
+ 0cOvt+2HvN+fPjupbyhhk+5U6qi69juMLcDNVzH4AAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Gregory Detal <gregory.detal@gmail.com>, stable@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2527; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0aZdfFi8skR4B7NuJvRMz6O7iszcw6HkWeXMMdh4f+c=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmOPjH9GWsrQ6Maigio6WZQWiyEbCPrOs+g2gYZ
+ BjZMHog7wWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjj4xwAKCRD2t4JPQmmg
+ c0qyD/4k/KpuUjpD0HjQHOcfg/2jG9hTmpnqIxN4ug+hqg1rjDQNnQkf/VGV1TdXOQaiWtMn10l
+ SpHnUXTHyKf50qDee1Ln6E0woxV1PtW/85n8AunmBGJ1jlaHjymv7ZznCdmL7R5PpKO3BA557Ln
+ DRRpg9aB6NOMTgTNi+qq1WkvnoIPIwm/xZaY5QlyceX/K68Rmz7KQUSBWikKeH/3jD4TOZ5r3WC
+ RwhrFUjKDI4+Y+sFt/aRWRlQ6KdaN5f22CZIMKcPp5am7FN1R1qLuWJvgvET4jtbz4M5GNen868
+ hW5Ony8np6pE55wWex86PvWJgWgmczgq2R/cNrAicpL3yPLXo7V99efn6XWqqP5NUKLoFLBR6Cv
+ EbR2BIgETHw4ofpxlKZ0cMutOxqX+SL7nUU36Cxl9q1VZCK2v2FDtWE72i0OFWaXSGXvjv2Rigc
+ k0BIUDcTBdj4F8kAtaZtLPd4VKCtdHt9pyq35DOuq0AwE5ExwSIOF7I/CrgZJCWtJ7vjETyh+5B
+ bNFnhBXx3kcEyfyMLWbZ9rSKA+gyWNdGWg4DRdf1nPOhOkBIAuNGW17CPos3xLmF1eR4UOnpuNT
+ Atld84F0EFo6h/gqVsOSrxWTZYD1I7Ze/m3YP27gmA9qlJske8Bd/LC5sxysjWKy+s52pqyhf2J
+ +dSfiB9bZbMkkHg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Eric,
+From: Gregory Detal <gregory.detal@gmail.com>
 
-(+cc MPTCP ML for the CI, patch tracking, and other devs)
+The current behavior is to accept any strings as inputs, this results in
+an inconsistent result where an unexisting scheduler can be set:
 
-On 06/05/2024 14:30, Eric Dumazet wrote:
-> subflow_add_reset_reason(skb, ...) can fail.
-> 
-> We can not assume mptcp_get_ext(skb) always return a non NULL pointer.
+  # sysctl -w net.mptcp.scheduler=notdefault
+  net.mptcp.scheduler = notdefault
 
-Good catch! Thank you for the fix!
+This patch changes this behavior by checking for existing scheduler
+before accepting the input.
 
-It looks good to me:
-
+Fixes: e3b2870b6d22 ("mptcp: add a new sysctl scheduler")
+Cc: stable@vger.kernel.org
+Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tested-by: Geliang Tang <geliang@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/ctrl.c | 39 ++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 38 insertions(+), 1 deletion(-)
 
-Cheers,
-Matt
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 13fe0748dde8..2963ba84e2ee 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -96,6 +96,43 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ }
+ 
+ #ifdef CONFIG_SYSCTL
++static int mptcp_set_scheduler(const struct net *net, const char *name)
++{
++	struct mptcp_pernet *pernet = mptcp_get_pernet(net);
++	struct mptcp_sched_ops *sched;
++	int ret = 0;
++
++	rcu_read_lock();
++	sched = mptcp_sched_find(name);
++	if (sched)
++		strscpy(pernet->scheduler, name, MPTCP_SCHED_NAME_MAX);
++	else
++		ret = -ENOENT;
++	rcu_read_unlock();
++
++	return ret;
++}
++
++static int proc_scheduler(struct ctl_table *ctl, int write,
++			  void *buffer, size_t *lenp, loff_t *ppos)
++{
++	const struct net *net = current->nsproxy->net_ns;
++	char val[MPTCP_SCHED_NAME_MAX];
++	struct ctl_table tbl = {
++		.data = val,
++		.maxlen = MPTCP_SCHED_NAME_MAX,
++	};
++	int ret;
++
++	strscpy(val, mptcp_get_scheduler(net), MPTCP_SCHED_NAME_MAX);
++
++	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
++	if (write && ret == 0)
++		ret = mptcp_set_scheduler(net, val);
++
++	return ret;
++}
++
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
+@@ -148,7 +185,7 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.procname = "scheduler",
+ 		.maxlen	= MPTCP_SCHED_NAME_MAX,
+ 		.mode = 0644,
+-		.proc_handler = proc_dostring,
++		.proc_handler = proc_scheduler,
+ 	},
+ 	{
+ 		.procname = "close_timeout",
+
+---
+base-commit: a26ff37e624d12e28077e5b24d2b264f62764ad6
+change-id: 20240506-upstream-net-20240506-mptcp-sched-exist-6a1b91872a32
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
