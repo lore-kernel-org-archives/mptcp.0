@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3001411E3
-	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 08:19:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0255D1D53C
+	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 08:23:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714983570; cv=none; b=V0FqijgPBaU7jxaXapnWTGe8ypRklYQqFv+qEOjJcdrd6xGFz77ggdjdIwJ4AE9+6xJTbNeu4a+Us0KCSQ9XtpFR5HgIrWC2IArz+haWMpSesJEFqmHFOHMpyQ/DJfpShAd5yFCEiCetbEjNXW5LMWm8wlpocuvhkrdWI5zWDwo=
+	t=1714983834; cv=none; b=j0Ws0c7+ruka0IYwz4dRgbW1Iv1a4rgR5KM6w4DFd+WiVVNOYaH5enbo+E9oVvl8Nlc/a6hZrZd1gHzSioVWyJic9QY2jwfeIte8c3UopmJWH2hkrQoNG0cfNahy2X/mctphco0nlMJh7nS454DbRT617W2YHiURQm2c3R3sFEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714983570; c=relaxed/simple;
-	bh=IrSNQhaA72UjrvZnfJrlgSSXSPbzzDmoS5FiRNFA0yE=;
+	s=arc-20240116; t=1714983834; c=relaxed/simple;
+	bh=Rvzz5NgGzzRGaCQcawWEZQ7RDdTYWgqN1d7S+KygeOk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UBtzxgpvUNdud4pdCLQmNGv9xuIhAWCK6lUbKLZ+uPyOwBFWFzABKwi5IP6AqA0RSGJvk6Jgh1i9xTk3/xNZistzzUsggTweufYOh+YexKrTALcpowKYA7iFttW9FLB4PZgJqcH8xpSPNo57qpldGzOCB17ce/kh5vFkMBqErhs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+GbQRtE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=e6cqQzGZBx+YzEi0s2EBXaqbMNuyZxSSCdUARbYN7KcZbZX+mFxn+ZMwxmR7f41ZPclJQxgEY6fgcsfgn1LS7wsHDK8/zDEMEGB8Wwe10hZtH+Ev9nDLBEx3ovaEdud8TShoRuxd2jnCk/S/5NipHCPqdhAEYwxXI6yfiQ+Va7M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AftRxHJd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+GbQRtE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCDEC116B1;
-	Mon,  6 May 2024 08:19:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AftRxHJd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC3DC116B1;
+	Mon,  6 May 2024 08:23:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714983570;
-	bh=IrSNQhaA72UjrvZnfJrlgSSXSPbzzDmoS5FiRNFA0yE=;
+	s=k20201202; t=1714983833;
+	bh=Rvzz5NgGzzRGaCQcawWEZQ7RDdTYWgqN1d7S+KygeOk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=E+GbQRtEqlLHsSkklx1TzP5Ydo0PkXUezCiSXtdT/ChBeUuF3Jyo5HU78QsaMtFCN
-	 80DFXuxtm69ft63AH2hLuufnPhZXfhZNXs9Oihm3QdVKPEkLu3pZ6fnCdnknLfy7N5
-	 3kKCDh5/WnIqGLfM02ymJOM49xq+WM3mk+hU8mf6rJDQ/2dwzE/yRPbJ3YaiBjpleb
-	 plrvmyhvHgsEvGUxXOY2iSz6AkbX+9HKbfaheUZtfqp8w5Eu9NMCjt+drHENYwAObZ
-	 mMy3oOZM4a4hja3MM4AWeZyCa4F7MKcUOFOhG/9ZXjiv5qvVSp5v1OlNKSmDcClU8m
-	 tKnXY6lsmU0wA==
-Message-ID: <2d4b81e3-99cb-4a55-9796-f9cd20c3d3e4@kernel.org>
-Date: Mon, 6 May 2024 10:19:27 +0200
+	b=AftRxHJdd/RRfhtzWzknTkxAWLG1+m87jOfq60zKuTy9taE6RxHfmswoPHc7v8+GF
+	 X5qlf0i86YF+WYbMiT+g7DVlHPsxDIC/IOrN4hse1bAOPSNd/Gdncf/nSj3pnG0Wa2
+	 mYFxQDb+YSR41fpNXQVcTH0/7QMlp5xKMzjd5fnAEmv780rBHjoRLJsX5YBjeIHRzx
+	 tO80D1aMzoTka4FSD42brKngxf8KLlc8NepFkeLh87HquPSOdchX5s7H8cH/8w5hhM
+	 0x0KnyrGVXR11nrGIoGtJowkXYZts2JF263uOZyXUQ3aF0AN7pvIgzLFcF8IEE+fH7
+	 HoM/hIBiGZsFg==
+Message-ID: <506c9f1e-b9c8-4d7b-951a-9ed26ffc1316@kernel.org>
+Date: Mon, 6 May 2024 10:23:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf scheduler
- test" - drop send_data
+Subject: Re: [PATCH mptcp-next 0/4] mptcp: Spring cleaning
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <b0ae79b3c2e446dd0f5ac09470db661d51575227.1714654747.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
+ <ZjbORgdQzABhzrzi@T480>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,28 +86,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b0ae79b3c2e446dd0f5ac09470db661d51575227.1714654747.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ZjbORgdQzABhzrzi@T480>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 02/05/2024 14:59, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 05/05/2024 02:09, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Drop send_data, using send_recv_data instead.
+> On Thu, May 02, 2024 at 07:23:03PM +0200, Matthieu Baerts (NGI0) wrote:
+>> This series fixes some warnings reported by CheckPatch and CLang.
+>>
+>> The behaviour is not supposed to be modified, just some simple fixes.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> This series looks good to me, thanks.
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Thank you for the follow-up patch! It looks good to me:
+Thank you for the reviews!
+
+Now in our tree:
 
 New patches for t/upstream:
-- f6121dceb9df: "squashed" (with conflicts) in "selftests/bpf: Add bpf
-scheduler test"
-- Results: aec5976283ec..553805a44319 (export)
+- 30bcdc95bba9: mptcp: prefer strscpy over strcpy
+- a34ad3c16bea: mptcp: move mptcp_pm_gen.h's include
+- ee96a2272093: mptcp: remove unnecessary else statements
+- 1122ef798833: mptcp: include inet_common in mib.h
+- Results: 553805a44319..77024827f43c (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2eb644226c7bbf2ff4525c16c9d636e386c50c57/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/0c710353718af7825e121b25983bc352ccc64024/checks
 
 Cheers,
 Matt
