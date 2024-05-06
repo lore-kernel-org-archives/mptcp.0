@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0255D1D53C
-	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 08:23:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CBB026AF0
+	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 08:33:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714983834; cv=none; b=j0Ws0c7+ruka0IYwz4dRgbW1Iv1a4rgR5KM6w4DFd+WiVVNOYaH5enbo+E9oVvl8Nlc/a6hZrZd1gHzSioVWyJic9QY2jwfeIte8c3UopmJWH2hkrQoNG0cfNahy2X/mctphco0nlMJh7nS454DbRT617W2YHiURQm2c3R3sFEE=
+	t=1714984414; cv=none; b=JKXTwMVeWkl8G8QD9OPjcRhd1V38HThhQmByBt0KC9s52tq0fECf5Nm+0ExowIqapOWVjzTEZM22O/NvHnQcL18VR5RrY2b4J8D2mOmL3CTegBSCw/3Kdk/ILnWl9cDm9qdqKnczhh2uwTBnNLgpRzrP9o6bMuQaY0Zp7R07K38=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714983834; c=relaxed/simple;
-	bh=Rvzz5NgGzzRGaCQcawWEZQ7RDdTYWgqN1d7S+KygeOk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=e6cqQzGZBx+YzEi0s2EBXaqbMNuyZxSSCdUARbYN7KcZbZX+mFxn+ZMwxmR7f41ZPclJQxgEY6fgcsfgn1LS7wsHDK8/zDEMEGB8Wwe10hZtH+Ev9nDLBEx3ovaEdud8TShoRuxd2jnCk/S/5NipHCPqdhAEYwxXI6yfiQ+Va7M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AftRxHJd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1714984414; c=relaxed/simple;
+	bh=CyPhylblkePd4wfhZ0LO32KC/uMMq70RfWF0HfzueGo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=oGbwA9UbWqq6GfT43hU4l0G7niZrUs9G+rGKZ6r9f0z9wOylY4AK+VPI1OXjIYYYKmRmqny6gMwr980e4djveWcmb3ZB7PI2I1P8z8v6aFexYXeLpbCRncFAP+n34LxoegcaEvc8XsDqaLtAWUzvD9Ztj9Lsg3ObtqyMexixfbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+Qt73AE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AftRxHJd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFC3DC116B1;
-	Mon,  6 May 2024 08:23:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+Qt73AE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B92C4AF63;
+	Mon,  6 May 2024 08:33:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714983833;
-	bh=Rvzz5NgGzzRGaCQcawWEZQ7RDdTYWgqN1d7S+KygeOk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AftRxHJdd/RRfhtzWzknTkxAWLG1+m87jOfq60zKuTy9taE6RxHfmswoPHc7v8+GF
-	 X5qlf0i86YF+WYbMiT+g7DVlHPsxDIC/IOrN4hse1bAOPSNd/Gdncf/nSj3pnG0Wa2
-	 mYFxQDb+YSR41fpNXQVcTH0/7QMlp5xKMzjd5fnAEmv780rBHjoRLJsX5YBjeIHRzx
-	 tO80D1aMzoTka4FSD42brKngxf8KLlc8NepFkeLh87HquPSOdchX5s7H8cH/8w5hhM
-	 0x0KnyrGVXR11nrGIoGtJowkXYZts2JF263uOZyXUQ3aF0AN7pvIgzLFcF8IEE+fH7
-	 HoM/hIBiGZsFg==
-Message-ID: <506c9f1e-b9c8-4d7b-951a-9ed26ffc1316@kernel.org>
-Date: Mon, 6 May 2024 10:23:50 +0200
+	s=k20201202; t=1714984413;
+	bh=CyPhylblkePd4wfhZ0LO32KC/uMMq70RfWF0HfzueGo=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=t+Qt73AEzhD/C/sqBwKSYdDlyuDuwn9deIvjajCYz0OLTbFaa96hgzgSqVvzvrvGp
+	 a9ZzCokFh/P0/nZPP+B996RbQ8IyFAq9wEjk3yb55ph9+RxTAQdipMlG5HBd/J6lvR
+	 qEyYxaJw+Yh+Seeh2r9qMlpSekjJiTYDELl82zewp3wUURpsFpxg2qIh9E34p48Ryb
+	 YkN/hHJcA5InqlPuFOeb7+F8PmPZpK9esfAKN+e85vpF1Xe1VfuAghMl8W8UTHefmn
+	 BJmxqAep4Dnz40OLLqSY6OBhC4cqfAwH43scT9T4j8jYgbd0lRHxQk60MP7SO9fNwg
+	 JXVCksUUqlh1A==
+Message-ID: <172763d1-cc17-4b9c-b395-49e722ab56ca@kernel.org>
+Date: Mon, 6 May 2024 10:33:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/4] mptcp: Spring cleaning
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: add bpf_mptcp_sched_ops" --
+ fix bpf access
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240502-mptcp-cleanup-clang-checkpatch-v1-0-a2b46c0a6bec@kernel.org>
- <ZjbORgdQzABhzrzi@T480>
+To: Gregory Detal <gregory.detal@gmail.com>, Geliang Tang <geliang@kernel.org>
+References: <20240503-bpf_fix_access-v1-1-5a714318ea64@gmail.com>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,41 +86,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZjbORgdQzABhzrzi@T480>
+In-Reply-To: <20240503-bpf_fix_access-v1-1-5a714318ea64@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gregory, Geliang,
 
-On 05/05/2024 02:09, Geliang Tang wrote:
-> Hi Matt,
+On 03/05/2024 21:33, Gregory Detal wrote:
+> The current behavior allows to write to mptcp_sock at offset that is
+> defined in mptcp_subflow_context and vice versa.
 > 
-> On Thu, May 02, 2024 at 07:23:03PM +0200, Matthieu Baerts (NGI0) wrote:
->> This series fixes some warnings reported by CheckPatch and CLang.
->>
->> The behaviour is not supposed to be modified, just some simple fixes.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> This series looks good to me, thanks.
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> This fixes this by splitting the checks for each struct type.
 
-Thank you for the reviews!
+Thank you for the fix and the review!
 
 Now in our tree:
 
 New patches for t/upstream:
-- 30bcdc95bba9: mptcp: prefer strscpy over strcpy
-- a34ad3c16bea: mptcp: move mptcp_pm_gen.h's include
-- ee96a2272093: mptcp: remove unnecessary else statements
-- 1122ef798833: mptcp: include inet_common in mib.h
-- Results: 553805a44319..77024827f43c (export)
+- 17783ae38851: "squashed" in "bpf: Add bpf_mptcp_sched_ops"
+- c0f6d508db13: "Signed-off-by" + "Co-developed-by"
+- Results: 77024827f43c..f16f6f211e69 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0c710353718af7825e121b25983bc352ccc64024/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/26924223a2c1354a5444e3e70b286fee1a3f1c67/checks
 
 Cheers,
 Matt
