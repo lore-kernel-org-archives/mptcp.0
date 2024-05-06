@@ -1,131 +1,120 @@
-Received: from mail-oa1-f45.google.com (mail-oa1-f45.google.com [209.85.160.45])
+Received: from mail-qk1-f172.google.com (mail-qk1-f172.google.com [209.85.222.172])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8171A13C69F;
-	Mon,  6 May 2024 19:23:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.45
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56EB5DDC7
+	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 19:55:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715023428; cv=none; b=rT4OpAiZJZ/0HsMOBAj/w+JrGqQv0cLdOkQVwZDNOes9tmz8w0SUpk6QYZBJPmfT0h1QFQWCfUTF3ShLml/LYKNf2IeXLyJLArJe3SMvnOaO06VXLJYIRztOIkv7PseI3SRY10PvuyUi85K07fYhTyJn0TopsHm5dpzw/XWaEfk=
+	t=1715025310; cv=none; b=dqqWu/iZufHNmQ7zrfHsCKQX4vNDk8OB2WfojlNbSdsDwhWO2EIZDZq3osB+eaD2otXHs94Mhp8dHXGj6RdfrqybdcMS6BMdYrEA3qMBOA4YkCWQju39n+DWFgvPLenvF950CtawR2t9ySFB5boYQZm8qHmcE1mKJgJxlhPcr6A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715023428; c=relaxed/simple;
-	bh=VjKGuE2C0thOxnAgsCwVrGWxtDbyC3SnKsv1KFItiOk=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=bauFyQlaLraV6Z81ZrpUStqYOfrSCTmxAKQbNojHXR4/EXsnMHQzmnimlYxtOCxaowbR/Glr0c4MCtnvqbpJWCyuf4Sa6kUWnIPyhJ/F4nnBM0rFv7C31pwvldmRbFk7qGZdqdckOObaTlX5SkGGJiRIQ7lHchuANAHsm05UtvY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dNFlwJYk; arc=none smtp.client-ip=209.85.160.45
+	s=arc-20240116; t=1715025310; c=relaxed/simple;
+	bh=hB2V8kLnupnVdr+FIXnXePZl8GrOI3bWM1pLjPSHL3U=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=cmvYOdffMGIRAaL+Vx3fOxkC2DNHQKMytQkKm+IzWNtalbS4TmEXappbj8H0tz+sq90sOyDGlmFpemLTumsmWOzpUfXoVzAoZuZb18WMWQusWF7uRCMnv1hNpxrTgJ3WNAZbF2+cn5PYYXUPt5oLBUykozLYH+UNjrGeQnqLyIg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Db8PNsgN; arc=none smtp.client-ip=209.85.222.172
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNFlwJYk"
-Received: by mail-oa1-f45.google.com with SMTP id 586e51a60fabf-23d1c4c14ceso1594143fac.0;
-        Mon, 06 May 2024 12:23:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Db8PNsgN"
+Received: by mail-qk1-f172.google.com with SMTP id af79cd13be357-78f043eaee9so144047685a.3
+        for <mptcp@lists.linux.dev>; Mon, 06 May 2024 12:55:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715023426; x=1715628226; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+        d=gmail.com; s=20230601; t=1715025308; x=1715630108; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=HMEDQp7jecrc8iXiBOXlaMlkv7t0FOpm2f19JeLxtsA=;
-        b=dNFlwJYk2bgeXwaqpEAURmRoP/39i+EmVcZA5+aArDLZdmh08Z3xRwmf41YTgvu73S
-         wNjynVMhjCIVumjEAGFKxQUfeK9iWHAA+f/e2P9liVG9FLU3obEsY4OzBOq64SLgPKge
-         jZEt/VFgwhfbFg9naUg3ivg2tN+xBpDaPC/yELc0sdpXe8KPW/b7OHkFMvWsFHSmay12
-         a20Bu0GxSAOwBktgrNmNFQ9CWTrUNTLtwGfUC6qBoK/aZPZ06jr6pJz6YJHVDxBqCvCy
-         0fkyEGhUDJR+qWPMdjIxlbBJiRXqOj6UheoiGlVCC7S8ZzQuasga1TkJEwgfmTjUD916
-         P30w==
+        bh=zmj1USb2J2YoExYOiiqzZfgjVXy3OpaIOeNBPD5BS0U=;
+        b=Db8PNsgNT2/iF29cKhRVnTX4NdArXEWpjTivgBUWl0qB3+R8nERY8uqgLYXCmdMSnJ
+         cFmH3Pkp4Muzym4oZZvN/qkG95d21LX3eAOQQraKyHjxCoxBpyrtndOgFM2VFmqnfm1a
+         4haOo/Id59K7fnNA4V+44D6z48UVseR9N+SlAKtboqk0+U0x1XCs9YC+/wDJbyDvvY9t
+         wzZG15zSQq7fIdnntKYkAZ+29pHJNm49vLQT+b9TzC4jEqOSbJ6n1ftkG0zwU9AQ5Rja
+         pQ1jdDWPlKURbEmj77bvAkhQ4DLYFAHXWlmouqc6NsEC12mYsWkERH/o/8FyyO24mPSE
+         Euwg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715023426; x=1715628226;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=HMEDQp7jecrc8iXiBOXlaMlkv7t0FOpm2f19JeLxtsA=;
-        b=BbmI+GvtGAwSAGi8ejtSgHmXPrwP1HCBDZqBtl5QXefe5AxLAhjJBLHNxpijQsZT+u
-         jcoi9JrFGD+/tdD6LOftTTBzC8RSi2JTXC+xKKlq0zq9+TktLfEr5F89EY3ub4skIdFO
-         Wh0lbbqDpFE0tI5/8/ZKibfz8qzleffyvln4gS0Ci1nvCBguU1nLGwVaKc75jor6+r1O
-         0UbFSz2T1RUKBmjWsFwXyZvpWa1G+Qlxns6OLgThtZRv1AwUvTJDPtPmt4mKNLngR/I8
-         IeMz1KG9DWeLQ/8H2IQDUb3XhFG32VjmNh8cLQpibe1PpQmIAffFNb8ANhxTUapb6HRG
-         m2Rg==
-X-Forwarded-Encrypted: i=1; AJvYcCXUT4Fwzy89QNPKWleOtucbXgNslJM9RbEQeLBrz5kgItq9HIdQPr07t6w+q2N4hiXAHQ0KhxW5hQGs3QWuvZ3+UZwNWvWAzh0xNxOQVlo0tfMG39dcdtc8za3+
-X-Gm-Message-State: AOJu0Yyf3UzO8IIMj4eIITqMuQ0+3okQ0ZMTqFJScedKZHC/ErPQEgiv
-	m0HNlh/98IU0xD/CvuUwczPEjhUYb0QqXeA6JbdvB/sGPejBLbuV
-X-Google-Smtp-Source: AGHT+IHf/3INeYWfNXb4/rpQGjmxAqtkFZ5EKMg8ufpMcJVGnz6iF9K1N+nuOnOSpdZrqR2k0xN2tg==
-X-Received: by 2002:a05:6870:8898:b0:22e:b96a:375 with SMTP id m24-20020a056870889800b0022eb96a0375mr13017922oam.30.1715023426523;
-        Mon, 06 May 2024 12:23:46 -0700 (PDT)
-Received: from localhost (164.146.150.34.bc.googleusercontent.com. [34.150.146.164])
-        by smtp.gmail.com with ESMTPSA id m24-20020ae9e718000000b0078d5e60b52esm4137182qka.114.2024.05.06.12.23.46
+        d=1e100.net; s=20230601; t=1715025308; x=1715630108;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=zmj1USb2J2YoExYOiiqzZfgjVXy3OpaIOeNBPD5BS0U=;
+        b=qFeJj79nuNklRvy1CCanSoDr+reseFx1soPFvH5c7wLO1QUVDOjO6yHeO6j5EHTmZZ
+         I0TZZIfiVTPZj6ydBUf2dXcPjnRvaphbJYHTMVG9THYWgQ0yslJqLKfO0XSYL58ghjW4
+         IjC6+2in1iR6gZqCR3bj1qJC+1xf2yfNVXtOL9uuY27BFzffH8dYmCtZ73TcACQJIpkg
+         t885g6dN6LUp9kH6Ekq1Bjn0rJrHvPAJQ19/Y7sHBaeE9vUfTxiAOzB6T5W+7IUFPE6k
+         YM8fAufEcNkj6rM+sTSUp37IrOz/xel2RvmYlxrFgAkoLuj3lZhd05cf8y5qggR8qIWQ
+         eEhg==
+X-Gm-Message-State: AOJu0YxiMsIiPkojBcca1z+0ASLpECD75w+fG77DHTIgEddh/sIY7DnO
+	a7A9pfQxhnc2sz9EKu5QL2q6tWmP8IWckXx+o0lWUAkadHeFUko=
+X-Google-Smtp-Source: AGHT+IHlzKjnG0KYZoGgsLnK88XbhN1pE2OMNeocAUTPI3gf9uyZXOM1jlf4c0rG6yNmBGm74K44hQ==
+X-Received: by 2002:a05:620a:27d5:b0:792:9487:c474 with SMTP id i21-20020a05620a27d500b007929487c474mr6038527qkp.21.1715025308181;
+        Mon, 06 May 2024 12:55:08 -0700 (PDT)
+Received: from [127.0.0.1] ([20.49.55.76])
+        by smtp.gmail.com with ESMTPSA id m24-20020ae9e718000000b0078d5e60b52esm4161951qka.114.2024.05.06.12.55.07
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 12:23:46 -0700 (PDT)
-Date: Mon, 06 May 2024 15:23:45 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: John Hubbard <jhubbard@nvidia.com>, 
- Shuah Khan <shuah@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, 
- Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, 
- Steffen Klassert <steffen.klassert@secunet.com>, 
- Herbert Xu <herbert@gondor.apana.org.au>, 
- =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, 
- Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
- Matthieu Baerts <matttbe@kernel.org>, 
- Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, 
- Pravin B Shelar <pshelar@ovn.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
- Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
- zhujun2 <zhujun2@cmss.chinamobile.com>, 
- Petr Machata <petrm@nvidia.com>, 
- Ido Schimmel <idosch@nvidia.com>, 
- Hangbin Liu <liuhangbin@gmail.com>, 
- Nikolay Aleksandrov <razor@blackwall.org>, 
- Benjamin Poirier <bpoirier@nvidia.com>, 
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
- Dmitry Safonov <0x7f454c46@gmail.com>, 
- netdev@vger.kernel.org, 
- linux-arm-kernel@lists.infradead.org, 
- linux-actions@lists.infradead.org, 
- mptcp@lists.linux.dev, 
- dev@openvswitch.org, 
- Valentin Obst <kernel@valentinobst.de>, 
- linux-kselftest@vger.kernel.org, 
- LKML <linux-kernel@vger.kernel.org>, 
- llvm@lists.linux.dev, 
- John Hubbard <jhubbard@nvidia.com>
-Message-ID: <66392e41e6889_55f25294dc@willemb.c.googlers.com.notmuch>
+        Mon, 06 May 2024 12:55:07 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20240506190204.28497-1-jhubbard@nvidia.com>
 References: <20240506190204.28497-1-jhubbard@nvidia.com>
 Subject: Re: [PATCH v2] selftests/net: fix uninitialized variables
+Message-ID: <308ff142-92fe-10cd-56a8-4b2049967e33@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 06 May 2024 19:55:07 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: 7bit
+MIME-Version: 1.0
 
-John Hubbard wrote:
-> When building with clang, via:
-> 
->     make LLVM=1 -C tools/testing/selftest
-> 
-> ...clang warns about three variables that are not initialized in all
-> cases:
-> 
-> 1) The opt_ipproto_off variable is used uninitialized if "testname" is
-> not "ip". Willem de Bruijn pointed out that this is an actual bug, and
-> suggested the fix that I'm using here (thanks!).
-> 
-> 2) The addr_len is used uninitialized, but only in the assert case,
->    which bails out, so this is harmless.
-> 
-> 3) The family variable in add_listener() is only used uninitialized in
->    the error case (neither IPv4 nor IPv6 is specified), so it's also
->    harmless.
-> 
-> Fix by initializing each variable.
-> 
-> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+Hi John,
 
-Reviewed-by: Willem de Bruijn <willemb@google.com>
+Thank you for your modifications, that's great!
 
-Thanks!
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/8974532880
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/21cccbac5dd3
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D850921
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
