@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ACA536CDBF;
-	Mon,  6 May 2024 07:50:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E3001411E3
+	for <mptcp@lists.linux.dev>; Mon,  6 May 2024 08:19:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1714981837; cv=none; b=FdlccD7eMWL+yhCeykByeZq4vxM/ZOAredtozWzc1aJ0HXt+S06vOe1c0WWyvXmgQJbLFjereWuoe2qXUwFgO8GRQoiCbz6EK+BN1o015agYQpi6Kl1NP8vkVO223e7X28/yP2e7xpXnTgyr7UsEK3BC9asZX+PIDoQLULZqEuQ=
+	t=1714983570; cv=none; b=V0FqijgPBaU7jxaXapnWTGe8ypRklYQqFv+qEOjJcdrd6xGFz77ggdjdIwJ4AE9+6xJTbNeu4a+Us0KCSQ9XtpFR5HgIrWC2IArz+haWMpSesJEFqmHFOHMpyQ/DJfpShAd5yFCEiCetbEjNXW5LMWm8wlpocuvhkrdWI5zWDwo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1714981837; c=relaxed/simple;
-	bh=HXInDPAgjaWxpnc2isb/l7/UETm/7etL+J7jmNAa9uQ=;
+	s=arc-20240116; t=1714983570; c=relaxed/simple;
+	bh=IrSNQhaA72UjrvZnfJrlgSSXSPbzzDmoS5FiRNFA0yE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r9PkxfUYnuZR70AYjsgeNhXhGEsa9jzvVZmM4vLIqzCyaVCugSso8rrXStDkZeb5CykwpFrmrBHwd4FkIJnIHTKnfvVlMPaicBsLm5XyalmnzUS0JUnZ1uJqBJ2gdrczCf0Y5n72Q+fNN6goD6SuD+qcT0snMUd5SWUloK3xjTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GAhmos70; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UBtzxgpvUNdud4pdCLQmNGv9xuIhAWCK6lUbKLZ+uPyOwBFWFzABKwi5IP6AqA0RSGJvk6Jgh1i9xTk3/xNZistzzUsggTweufYOh+YexKrTALcpowKYA7iFttW9FLB4PZgJqcH8xpSPNo57qpldGzOCB17ce/kh5vFkMBqErhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E+GbQRtE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GAhmos70"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5ECAC116B1;
-	Mon,  6 May 2024 07:50:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E+GbQRtE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCDEC116B1;
+	Mon,  6 May 2024 08:19:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1714981837;
-	bh=HXInDPAgjaWxpnc2isb/l7/UETm/7etL+J7jmNAa9uQ=;
+	s=k20201202; t=1714983570;
+	bh=IrSNQhaA72UjrvZnfJrlgSSXSPbzzDmoS5FiRNFA0yE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GAhmos70T8aOc5nA0O8mNi5Jfg3HC7YPIWsZAOR/be504ykJLaQlCrnxEqds9omkq
-	 gCwmqH1ibBmPBiU7fD3j2QiYyp6VaqLhtq8W+IgS9ukIHdPiCbfdzX2Ctu73IWpdfh
-	 6FTO4bGMz+VOOnBI8rUjhGBfxvTjffOLO73dRCCnF0dGpOok46j6bU7AgrMcHuE2Vw
-	 OAHT+SCyuDSMn1qqr7w0YnFgx9qtwtBsleMkNB8bsRbBRmumMX6KXpcMgAr8r7T3K9
-	 GlqpXCvCM3iSwMnC/pQuynlI7l/+PWiA2ZegAEU8nZBrXtMdyMbowbgY9J+mTPF/qq
-	 n9aXg28FlvGOg==
-Message-ID: <ff35f349-5036-4305-a352-fdef09326851@kernel.org>
-Date: Mon, 6 May 2024 09:49:14 +0200
+	b=E+GbQRtEqlLHsSkklx1TzP5Ydo0PkXUezCiSXtdT/ChBeUuF3Jyo5HU78QsaMtFCN
+	 80DFXuxtm69ft63AH2hLuufnPhZXfhZNXs9Oihm3QdVKPEkLu3pZ6fnCdnknLfy7N5
+	 3kKCDh5/WnIqGLfM02ymJOM49xq+WM3mk+hU8mf6rJDQ/2dwzE/yRPbJ3YaiBjpleb
+	 plrvmyhvHgsEvGUxXOY2iSz6AkbX+9HKbfaheUZtfqp8w5Eu9NMCjt+drHENYwAObZ
+	 mMy3oOZM4a4hja3MM4AWeZyCa4F7MKcUOFOhG/9ZXjiv5qvVSp5v1OlNKSmDcClU8m
+	 tKnXY6lsmU0wA==
+Message-ID: <2d4b81e3-99cb-4a55-9796-f9cd20c3d3e4@kernel.org>
+Date: Mon, 6 May 2024 10:19:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,31 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 2/2] selftests/net: fix uninitialized variables
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf scheduler
+ test" - drop send_data
 Content-Language: en-GB
-To: John Hubbard <jhubbard@nvidia.com>, Shuah Khan <shuah@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Pravin B Shelar <pshelar@ovn.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Alexander Mikhalitsyn <alexander@mihalicyn.com>,
- zhujun2 <zhujun2@cmss.chinamobile.com>, Petr Machata <petrm@nvidia.com>,
- Ido Schimmel <idosch@nvidia.com>, Hangbin Liu <liuhangbin@gmail.com>,
- Nikolay Aleksandrov <razor@blackwall.org>,
- Benjamin Poirier <bpoirier@nvidia.com>,
- Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
- Dmitry Safonov <0x7f454c46@gmail.com>, netdev@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org,
- mptcp@lists.linux.dev, dev@openvswitch.org,
- Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org,
- LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-References: <20240505222639.70317-1-jhubbard@nvidia.com>
- <20240505222639.70317-2-jhubbard@nvidia.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <b0ae79b3c2e446dd0f5ac09470db661d51575227.1714654747.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -105,43 +86,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240505222639.70317-2-jhubbard@nvidia.com>
+In-Reply-To: <b0ae79b3c2e446dd0f5ac09470db661d51575227.1714654747.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi John,
+Hi Geliang,
 
-On 06/05/2024 00:26, John Hubbard wrote:
-> When building with clang, via:
+On 02/05/2024 14:59, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->     make LLVM=1 -C tools/testing/selftest
-> 
-> ...clang warns about three variables that are not initialized in all
-> cases:
-> 
-> 1) The opt_ipproto_off variable is used uninitialized if "testname" is
-> not "ip". This seems like an actual bug.
-> 
-> 2) The addr_len is used uninitialized, but only in the assert case,
->    which bails out, so this is harmless.
-> 
-> 3) The family variable in add_listener() is only used uninitialized in
->    the error case (neither IPv4 nor IPv6 is specified), so it's also
->    harmless.
-> 
-> Fix by initializing each variable.
-> 
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
-> ---
->  tools/testing/selftests/net/gro.c                 | 3 ++-
->  tools/testing/selftests/net/ip_local_port_range.c | 2 +-
->  tools/testing/selftests/net/mptcp/pm_nl_ctl.c     | 2 +-
+> Drop send_data, using send_recv_data instead.
 
-Thank you for fixing these warnings!
+Thank you for the follow-up patch! It looks good to me:
 
-The modification in the MPTCP selftest directory looks good to me:
+New patches for t/upstream:
+- f6121dceb9df: "squashed" (with conflicts) in "selftests/bpf: Add bpf
+scheduler test"
+- Results: aec5976283ec..553805a44319 (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2eb644226c7bbf2ff4525c16c9d636e386c50c57/checks
 
 Cheers,
 Matt
