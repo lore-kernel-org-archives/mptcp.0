@@ -1,123 +1,104 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0CFB79CF
-	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 04:33:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 498136BB20
+	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 05:37:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715056424; cv=none; b=V8TY7hzhrQwyVJaP9AS4cymhRaraPXDvLxYI0yhGr3p/UMIgJ0+bvMm1Flepq4xcIegwVFWYGPD0C8JjsDV3tGGBMTpb71Xs4PHqtxcalUvfVuG/vdZqzREchQ2pnfYam3T8bf0T3MOo4VIpT/hh8S9KpCAY0BDkFO+pz71QsXg=
+	t=1715060238; cv=none; b=CZ+OomNMAOU1Pf+x52IkiaqhmkpVgfZw/ioD2OagY0vJ1koMH7+dcXaKzax/mobr3+BAf3Mtbt7N0DVlSXj9pUz9jAuBXgt4M+mEtO4UHvOKC+8MxhQUSTjnxIn7+leVxbV2o8qIRQXRMJal1IUEbZz8gE7CBmQJCsmMs3fqYi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715056424; c=relaxed/simple;
-	bh=mArfoEoSNQes5v6/ZwXML8+gfAuYhOXIHZUnoAn2XUQ=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=bRif3joBNnOvqpcp/8mz6NEGNEtA1t15uDrX5cxTqDiLJ7qrKpfmaFTUw8sT8vkvw/bd+AKDUgGn55jh/47Gu6ruXlMBRLxfmPqc8FKg/0ZC7xNDfwlp8euIwghKkNH1KGCSGC2kJ6W0Dnb38SRNiasSokJcjVR9G1G1pN35HbU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=S7MYzvX9; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715060238; c=relaxed/simple;
+	bh=UNGXfs0DBKwfVThyrFxpfna+/M/i52FnwiFXnfu2E4w=;
+	h=Date:From:To:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=B0RCo2Bhbq/iNBbHg2mpelYzf9+4/rDTlQXI2A5CZJeU2CB4Tc4Dq+KZMOHqWXhyCn5P8nxjrHJzcXhhFr2Umpp4fXYnr714JHjydkxyFrs2q0HzmOU7Ln8Z9+jDPhHX1nqarkB/WsQVTSNJhfPbSvG0ofjoP9jdfTb3pL8Qalc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TzKZ/H9N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="S7MYzvX9"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1e9ffd3f96eso19790005ad.3
-        for <mptcp@lists.linux.dev>; Mon, 06 May 2024 21:33:43 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715056423; x=1715661223; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=lIFl0tOC20nlasMDVf6NNkOc7jeKM8uOBnLQpT+doDk=;
-        b=S7MYzvX9cXwJCzaaRJ9yjsg2wWRtCZIOz0KWG6ZycFkvZmq4iZoadbdxJmL8h4auFc
-         JckrFKkkdFHx+Vhxfm2Byzd2kSENjR57E83xkwOfL8twGksorJ+KkTug0PAtVrscxoRb
-         mzHHXVEFZe7tywOJCl2QPPWz0NXgDpCbgHIPpYmzDnxVwroO6oH1Jegwksr2e9dyrQGM
-         k7bYJCDpPDza/5n+J2IuwE0aiUMfui05QvrFGQPUgqf3QxypoofuXlkHu8nrUkRoBZFk
-         UuJ0/R4fzE7idP7RIcJthX4mPdZlFoeQdxNotgYJ3D4O3VM/1v9oFYwmWm9hp3PKL0/j
-         4F/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715056423; x=1715661223;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=lIFl0tOC20nlasMDVf6NNkOc7jeKM8uOBnLQpT+doDk=;
-        b=lo49IqAsnFfq5FBaeP/LvJRADPEmIubDFYt99+82ScIH6dAlvsZpx8vzQEk45+O3Dq
-         tnySXfx940kfpVnQ0I/ZDLk3YyM66xqxWRxN25ALqwuMN40sxXutsfmBovLfTIGX6ujp
-         ET7/7DIfq26BGbpIzv6pHuZP+xd1lD6Ao5CXIX8N5VUgZpd1d6byewmY9GDpi9kQ8I0b
-         WSj/tCnyAwOu4ZX/0kW8iohtSUK6qJrwVeDuJaZ+ZDaAD8fFQGRThPdH3zZXpFfr174m
-         yDRRABN4dCPQLvD8c3UwDzu1tdNp28TKKjtYULo/gTdhCf7TuPsvP04VYkFNJKqhQXuj
-         ZZww==
-X-Gm-Message-State: AOJu0YzhjtFsSw6n1/lpTqjbTefBGWYSKK8kE+jEvKJnkJHctx/3yJy6
-	SgY0reQxekopVDKMq4+X48cgS83jN3MKFIkCOmnFn1yPVl4L/ITR4MWA
-X-Google-Smtp-Source: AGHT+IEdY5xxl2utl/v/+cHEMH/BGmYokM76Os4q5zqYBVMbciDse5FMtsHyLdBfxEuF7BOZtrcrSQ==
-X-Received: by 2002:a17:902:db86:b0:1e2:952b:81fc with SMTP id m6-20020a170902db8600b001e2952b81fcmr9994471pld.29.1715056422736;
-        Mon, 06 May 2024 21:33:42 -0700 (PDT)
-Received: from [127.0.0.1] ([52.238.25.1])
-        by smtp.gmail.com with ESMTPSA id kk6-20020a170903070600b001dda32430b3sm9143759plb.89.2024.05.06.21.33.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 06 May 2024 21:33:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
-References:
- <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TzKZ/H9N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5E89C2BBFC
+	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 05:37:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715060237;
+	bh=UNGXfs0DBKwfVThyrFxpfna+/M/i52FnwiFXnfu2E4w=;
+	h=Date:From:To:Subject:References:In-Reply-To:From;
+	b=TzKZ/H9NC/GC97DtNkSoEfNSXIuH+jPT8YXEl4r3iEsF8uSjRi+fMlFuVIdYc5e6R
+	 m7C5qkvY4E1PvLqeDg+ekeal5IgMRyZ6OLZt2vAEPegFzBgwDb20DR7BWBGvZLifzQ
+	 S9VF9IXVU36CJ/TzBezN3J2DxbcceUVnVBvBTPqlu1sQOgx56yEq8RYDO62PUU6cGg
+	 fkVdUnAcIsCSvby66g3kZlDvPzwcXlmaRD9AGwpnVEpGsJA4KqqXPkVofpTFYsWMQx
+	 ebE/SSw3/zJ3eaw04zBUVxBM5M/7tslULVcka3BW1t1AVbEU04SEvN1ES8bjdmgR9J
+	 oYeR6jW6k545g==
+Date: Tue, 7 May 2024 13:37:12 +0800
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
 Subject: Re: [PATCH mptcp-net v2] mptcp: fix the default value of
  scaling_ratio
-Message-ID: <92c5821d-d32c-40f2-fe03-d66f525d0bdf@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 07 May 2024 04:33:41 +0000
+Message-ID: <Zjm-CCC2wAR6QRmg@T480>
+References: <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
 
-Hi Geliang,
+On Tue, May 07, 2024 at 11:46:31AM +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> BPF tests fail sometimes with "bytes != total_bytes" errors:
+> 
+>  test_default:PASS:sched_init:default 0 nsec
+>  send_data:PASS:pthread_create 0 nsec
+>  send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
+>  default: 3041 ms
+>  server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
+>  send_data:FAIL:pthread_join thread_ret:-11 test_default:PASS: \
+> 				has_bytes_sent addr_1 0 nsec
+>  test_default:PASS:has_bytes_sent addr_2 0 nsec
+>  close_netns:PASS:setns 0 nsec
+> 
+> In this case mptcp_recvmsg() gets EAGAIN errors. This issue introduces
+> by commit b8dc6d6ce931 ("mptcp: fix rcv buffer auto-tuning"). The default
+> value of scaling_ratio should be TCP_DEFAULT_SCALING_RATIO, not U8_MAX.
 
-Thank you for your modifications, that's great!
+Please update the last line of the commit log as:
 
-Our CI did some validations and here is its report:
+'''
+  value of scaling_ratio should be TCP_DEFAULT_SCALING_RATIO (128), not
+  U8_MAX (255).
+'''
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8979422287
+Thanks,
+-Geliang
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1c37730c0e5f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D851005
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> 
+> Fixes: b8dc6d6ce931 ("mptcp: fix rcv buffer auto-tuning")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v2:
+>  - I finally found the root cause of this issue.
+>  - cc Martin too.
+> ---
+>  net/mptcp/protocol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 579031c60937..d00cd21e8d3f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1981,9 +1981,9 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+>   */
+>  static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+>  {
+> +	u8 scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+>  	struct mptcp_subflow_context *subflow;
+>  	struct sock *sk = (struct sock *)msk;
+> -	u8 scaling_ratio = U8_MAX;
+>  	u32 time, advmss = 1;
+>  	u64 rtt_us, mstamp;
+>  
+> -- 
+> 2.43.0
+> 
