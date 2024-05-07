@@ -1,225 +1,171 @@
-Received: from mailout1.w1.samsung.com (mailout1.w1.samsung.com [210.118.77.11])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E9A413C81E;
-	Tue,  7 May 2024 08:02:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45E0C13C83E
+	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 08:12:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715068951; cv=none; b=VUACohHxpPw9d+dzd62bYPaEp97NmqwX5vW5arWZ4c/JAelT6Xbnnaq6tY4JgtVJQEWSZoAC7pdaBjN+eD31IXNHZ/SMomwN0SWsc5+5gYlwEG44KFzSjOoz9VtkNQgwJ5ZVtZba8mmEGkTWfVuPjRxmTqneol+zU/y/r3MzPos=
+	t=1715069565; cv=none; b=RqQcRVPigq+S9VEhX/VMyCU4R8Wmso6OscxTa5cEgYXvGkKwtFCS0/WCZaKPS8/QlTgmx2WZj3XxP1EckSy0KlCTn1zn8RIw/9/tRN1ZzcK7e5XrU6wZ2iff+yGtd+RvdwIObJrAzqtl0U5eeRk6CVBPUGVBn4K3xNbTbH1Ebzw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715068951; c=relaxed/simple;
-	bh=eVuJaWmf6K+6Q7+mij6ttOAXRmIGKtXLtFRjx9VCUhU=;
-	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition:In-Reply-To:References; b=D9N21sdkfQlbttpaGG2w8Z4/T3yQn86E5RNB6hmEsxeKjiSp/qXH7Ec8siEkZesAyw43wwXNCA0IT57QoebdkY+YAVqxUyCdMLNnFWlxOV3gd8PGCXfV3MAeqTlikFGcxZ9XYCnDSASE6GeSpdJm9pTcxlVMDQtd7O9CNQF/tg0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=OaCt/I82; arc=none smtp.client-ip=210.118.77.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
+	s=arc-20240116; t=1715069565; c=relaxed/simple;
+	bh=NXh+amqcHZFILwCx51DtFWxrj2ewpyihCsc2qrgHac4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Mqrh1MhRvinl5CAggewFVjd6BnjRwv8OP59TT6QTKbNo60FPNF8pV6GELcyGJLN98UGoVA1lhyyebKNGVLqbd2vJVF75McqGFJjGj4Vz2Pu5NTbqw1v58yg/GoAHgFUuIigOvUVtpDC1f+nykRkDjyj9cHGOhhWenoLwGrGf02o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ygffgf25; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="OaCt/I82"
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-	by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20240507080226euoutp01ffb1c9ea68a4ba254d5e06cfea0a15ef~NJh6jrufP1475714757euoutp01N;
-	Tue,  7 May 2024 08:02:26 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.w1.samsung.com 20240507080226euoutp01ffb1c9ea68a4ba254d5e06cfea0a15ef~NJh6jrufP1475714757euoutp01N
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-	s=mail20170921; t=1715068946;
-	bh=bM6BO+kXomYK6wu5Oe2x75rmz5FGAnqZz6OZvwI6EI8=;
-	h=Date:From:To:CC:Subject:In-Reply-To:References:From;
-	b=OaCt/I8263CIse6EAHirslaA+XjPx3S99X0Lnu+QkIer/c0VKj8SFlQ3zGajYKMOr
-	 LYHYoCwD/OM250G6eDa95qO5w5nzjQVjBgP5yR0c7DVdlluAmL+6rTNVU6/ftVtthh
-	 whD4dNzZqSg6CHoctLNTdfvbH/llcfrspgm6hywo=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-	20240507080225eucas1p100839565bf9accbaa12bd4b6d3ce75ea~NJh6UAr6t1360813608eucas1p1P;
-	Tue,  7 May 2024 08:02:25 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-	eusmges2new.samsung.com (EUCPMTA) with SMTP id F5.3E.09875.110E9366; Tue,  7
-	May 2024 09:02:25 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
-	20240507080225eucas1p2ecd684015a8497b39ba48a3cbf7ff117~NJh5t9EE63198231982eucas1p2j;
-	Tue,  7 May 2024 08:02:25 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-	eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-	20240507080225eusmtrp1c4d5b256ccf9962d4d861eb6994c583a~NJh5r3Gwh1695816958eusmtrp1e;
-	Tue,  7 May 2024 08:02:25 +0000 (GMT)
-X-AuditID: cbfec7f4-131ff70000002693-73-6639e011d550
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-	eusmgms2.samsung.com (EUCPMTA) with SMTP id 9F.32.09010.010E9366; Tue,  7
-	May 2024 09:02:24 +0100 (BST)
-Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
-	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-	20240507080224eusmtip1557a07acc6af3e10765745c779036cca~NJh5VdlXv1570615706eusmtip19;
-	Tue,  7 May 2024 08:02:24 +0000 (GMT)
-Received: from localhost (106.110.32.44) by CAMSVWEXC02.scsc.local
-	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
-	Tue, 7 May 2024 09:02:24 +0100
-Date: Tue, 7 May 2024 10:02:19 +0200
-From: Joel Granados <j.granados@samsung.com>
-To: Dan Carpenter <dan.carpenter@linaro.org>
-CC: Sabrina Dubroca <sd@queasysnail.net>, "David S. Miller"
-	<davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
-	<kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Alexander Aring
-	<alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>, Miquel
-	Raynal <miquel.raynal@bootlin.com>, David Ahern <dsahern@kernel.org>,
-	Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu
-	<herbert@gondor.apana.org.au>, Matthieu Baerts <matttbe@kernel.org>, Mat
-	Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, Remi
-	Denis-Courmont <courmisch@gmail.com>, Allison Henderson
-	<allison.henderson@oracle.com>, David Howells <dhowells@redhat.com>, Marc
-	Dionne <marc.dionne@auristor.com>, Marcelo Ricardo Leitner
-	<marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, Wenjia Zhang
-	<wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, "D. Wythe"
-	<alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>, Wen Gu
-	<guwen@linux.alibaba.com>, Trond Myklebust
-	<trond.myklebust@hammerspace.com>, Anna Schumaker <anna@kernel.org>, Chuck
-	Lever <chuck.lever@oracle.com>, Jeff Layton <jlayton@kernel.org>, Neil Brown
-	<neilb@suse.de>, Olga Kornievskaia <kolga@netapp.com>, Dai Ngo
-	<Dai.Ngo@oracle.com>, Tom Talpey <tom@talpey.com>, Jon Maloy
-	<jmaloy@redhat.com>, Ying Xue <ying.xue@windriver.com>, Martin Schiller
-	<ms@dev.tdt.de>, Pablo Neira Ayuso <pablo@netfilter.org>, Jozsef Kadlecsik
-	<kadlec@netfilter.org>, Florian Westphal <fw@strlen.de>, Roopa Prabhu
-	<roopa@nvidia.com>, Nikolay Aleksandrov <razor@blackwall.org>, Simon Horman
-	<horms@verge.net.au>, Julian Anastasov <ja@ssi.bg>, Joerg Reuter
-	<jreuter@yaina.de>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook
-	<keescook@chromium.org>, <netdev@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <dccp@vger.kernel.org>,
-	<linux-wpan@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<linux-hams@vger.kernel.org>, <linux-rdma@vger.kernel.org>,
-	<rds-devel@oss.oracle.com>, <linux-afs@lists.infradead.org>,
-	<linux-sctp@vger.kernel.org>, <linux-s390@vger.kernel.org>,
-	<linux-nfs@vger.kernel.org>, <tipc-discussion@lists.sourceforge.net>,
-	<linux-x25@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<coreteam@netfilter.org>, <bridge@lists.linux.dev>,
-	<lvs-devel@vger.kernel.org>
-Subject: Re: [PATCH net-next v6 8/8] ax.25: x.25: Remove the now superfluous
- sentinel elements from ctl_table array
-Message-ID: <20240507080219.xp6m5lyx5mt655yg@joelS2.panther.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ygffgf25"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CAD4C2BBFC;
+	Tue,  7 May 2024 08:12:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715069565;
+	bh=NXh+amqcHZFILwCx51DtFWxrj2ewpyihCsc2qrgHac4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ygffgf25C8DRPPj5FhxuFrrNc3XODCoYxilfbPmY0jyAMh7WizuVAFm44eZfRtbX0
+	 MwwK1/FqPChCM3L/rnUReEMPte6d4B57xf78fiNcF4A3z4rpF9BcC6pn1JnQkHZp8r
+	 /o50XfzSmX17iFDiVCz9J+N8KzRk+p/jdlROVg2ohQPyav6LTUbdNx5FnJpvtOPp3r
+	 87CEcqQBitUua9KNaRN9h7lSH5qIyMSER0Gqs/CRNdD87Ak0bhFvEpBDDgGe2xWO8R
+	 xDdgyPYEFZ00P4S3W2ae3K2BgZ8EQYa6d8gTM6cZGM/IsyxR30uXumpGiVh6551rNp
+	 7Ajn0Lm7kxt8w==
+Message-ID: <7f9f2b7f-9bb5-4c17-bdef-c96fe2707d27@kernel.org>
+Date: Tue, 7 May 2024 10:12:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg="pgp-sha512";
-	protocol="application/pgp-signature"; boundary="3yuuqqhcvvnk6kqm"
-Content-Disposition: inline
-In-Reply-To: <21f76a94-1b35-4cf7-914d-e341848b0b9e@moroto.mountain>
-X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
-	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTfUxTVxjGc+5HW5l1l0rmibow+XCGOZDNyGumDqdzN/vDmBjDhku0wysw
-	obAWlGHYqtCiINhZB5MRQFwAWykMoYAfjHQIWipgRAVSUCqFrIKiUL4EOup1mcn++z3v+zw5
-	5znJEZESrWi5KFqWwMll0hgfgQdlbJ5u/9Dz0caD69QNa8GkDIH+axk0KNPUBKjqXRQYL2QS
-	4OodImCuPp2Esf4hGgqLLwtgtEAlhPz2NArmHmQK4OnxlxQYrqgIsDfbhGDM0iPQH7dSUDs0
-	KYBMx0pIrXEiGDhto6GzZFQA0yU6ITx02iiYzn4LzmWkEmDJjIW63gEKOozZNGjMwXC/tpeA
-	u1fyBdDR2ErDoCmLAs35VBLsRU9osGpLKGi8XojAVvGMgNTCFySkjj0mYaashYa2LBcJeQYd
-	CV0aO4K/0htosFQcF8JEwU0SrhcqKWguegc0BjMFE63DCHKH75FgHncR0HZ5jIax/DXQ5V5q
-	y6oJuHpySgjV7d+BecZMwOPJIQG4uj6FYxajMHQr22NzkuzTtluILbh0lP1NeYdiZ6YD2OqL
-	3QSb2eQg2fq8XiFrbPRni6oS2VnTH0K2SndSwFrvXxOw9f0bWU1xI2Iv//7TLp9wj00HuJjo
-	w5w8aMt+j6ixM6fo+D5JUl6ak1Cik0wGEokwsx5XVa7JQB4iCVOGcJqqkeLFOMIWXRfKQIsW
-	xBjC15uxm92BDmUPzZtKEbaWVb5OLJg6KmpIXlQhfPFEsdAdoRg/PGfPJdwsYNbi9mEr6Wav
-	BZ6f075Kk8yvEqxuqHwVWMok4tIn6a9MYiYUG+c6Ec+e+Na5AcrNJJOE1UOFpLsEyazApfMi
-	Ny5ituHaRm/+pquw80IfxXMKNlf3EO6jMHN7MbbU3BXwi+34dP3Ua16KHS3VQp5X4lbtKYoP
-	aBH+c35UyAs9wiXHnATv+gSndQ68TmzFt62XEP+qS3DXiCd/zyX4jDGX5MdifEIt4d2rsb5v
-	mNIg37w3muW90Szvv2b8eC0uuvpC8L/xB7jk/BOS583YYHhGFSGhDi3jEhWxkZziIxl3JFAh
-	jVUkyiIDI+Jiq9DCX22dbxmvQ6WO54EmRIiQCfkthG2V+g60nJLFyTgfL/GN9JCDEvEB6Q/J
-	nDxunzwxhlOY0AoR5bNM7H/Am5MwkdIE7hDHxXPyf7eEaNFyJRFtarb4lE+rAjflhK1b7L83
-	e/GeI/cLftHcDDvq7bgxW3vP76X2q7aBVSObN6SnhOdHT20c16RIApqP1nXSE8nEZOjHTNbb
-	Tbq/40JinOej5+32nX2D3ttyRgpco+9t6XPc0YfdpXwnvNSf28qdG1RZ629Wdv/o+OLbU00z
-	DwMCuyVh4oioZNm+d59/86BhX35w+B5i74TfHO6ZHIioMNgyU2y7YncMzqo99lvjRx/t3lxV
-	m13XOh3hX786yVLT/f7PsxU54b7lLLfrs4czQQkh7NT6kaHRs9uTvXU76Ud3iO6zK2Xm4O8T
-	Arq+HG5J397/tdfu0PjYIP/nh8Tyw7fveR6qsfpQiihpcAApV0j/AfPhAtomBQAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA2WTe0yTZxTG836XtkjYPlvdvjAStUrGmKuU6+kiTIMun4FETZguGAeNFpFB
-	iy1lTiMrFERbL0WjjMsAwZWbKwpYBBWxOhyVAWbCmBQcBcQpE5CLgpautVlmsv9+eZ7zPO/J
-	mxwOzr3I9uTslaZI5FJxIp+1iLi7cKf/E+pPUZzfZNtaMKlCYPCahgRV5mEMshrtBBjLtBjY
-	+0cxsDVm4zA1OEpCcWkdCyaKsthQ2JlJgO13LQueZbwiwNCUhcFIq5UNxuPVCKozLAQ0jL5g
-	gfaJF6gvzyAYPmkl4b5+ggVz+io2PJyxEjB3wh3yNGoM2rVJcKV/mIAu4wkSdGYh9DT0Y/Bb
-	UyELulrukvDIdJwA3Tk1DiMlT0mwnNYT0HK9GIG1ZhwDdfFzHNRTQzjMV9whoeO4HYd8QxUO
-	vboRBLeym0lor8lgw2zRLzhcL1YR0FryHugMZgJm744hyB3rxsE8bcego26KhKlCH+h1mqcr
-	6jG4evQlG+o7E8A8b8Zg6MUoC+y9n0F6u5G9bj3zwDqDM8862hBTdOEgU6C6RzDzc75MfeUf
-	GKO9/QRnGvP72YyxxZspqVUyr02X2Ext1VEWY+m5xmIaB0WMrrQFMXXnv9vCjxaslcuUKZLl
-	8TJFSih/hxD8BUIRCPwDRQJhQMjOT/2D+GvC1u6WJO5NlcjXhMUK4sd708lkC3f/1K3vkQpl
-	UxrkxqGpQLpL9YDUoEUcLvUjoke7O9guw4u+NN1NuphHv+7RsFxDk4i+XaXBnAaXqkX0dQM4
-	maBW0baR3Dc6i1pNd45ZcCcvcfCC7TThDOPUWS59uSn9TSuPUtLlT7PfDHlQ62ij7T5yvfAY
-	o39NP4O5jMV0W94w4WScSqXHtEOO9TgO/oAuX+A40Y0KpxtalrkWXUHPlA0QLj5ET9keIR3i
-	5b9VlP9WUf5/RS7Zl+5d+Av7n/wxrT/3FHdxKG0wjBMliF2FlkiUiqQ9SQp/gUKcpFBK9wh2
-	yZJqkeNcjK1z9VdQ5ZNJgQlhHGRCqxxJ68XqLuRJSGVSCX+Jx8/ZIXFcj93ibw9I5LIYuTJR
-	ojChIMcv5uCeS3fJHLcnTYkRBvsFCQODRX5BouAA/vsem5KPiLnUHnGK5GuJJFki/zeHcdw8
-	VVhkSE91843glvTYF7LdvDXtKSEFpsEPbbc0oY/TloYpVpZ/nlDcwBdEugtg483MyLjHgZur
-	th9LU9hvxu64GV62/svQnQurovdHRjetDFN+EV6nS8sciDpjjzzYd+NqVEJfwaWjc+6pgZHh
-	MRnn9cf2Hdl1T7/lUMXWh8RwfE118/xXvMrGFX05PN7JjXu9/M7+VLrNEmzRbN4Q/oP3clNT
-	j89S2WTupmcbvlGfLD8RO+0dPPD3hc5li3n7uZyovEcRUq8yi8fsBImtrLxqSojAV2+NCChM
-	zOS/0/XuQXOa1bYtJ8D3QWU3P8/nQHeS1Kx/fnj75KvGl7J9fZxTH23QJidwvd35hCJeLPTF
-	5QrxP3FAyGDDBAAA
-X-CMS-MailID: 20240507080225eucas1p2ecd684015a8497b39ba48a3cbf7ff117
-X-Msg-Generator: CA
-X-RootMTR: 20240501131616eucas1p28a33eeb55f6c084a0751e5b7b7d91d78
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20240501131616eucas1p28a33eeb55f6c084a0751e5b7b7d91d78
-References: <20240501-jag-sysctl_remset_net-v6-0-370b702b6b4a@samsung.com>
-	<20240501-jag-sysctl_remset_net-v6-8-370b702b6b4a@samsung.com>
-	<CGME20240501131616eucas1p28a33eeb55f6c084a0751e5b7b7d91d78@eucas1p2.samsung.com>
-	<ZjJAikcdWzzaIr1s@hog> <20240503121811.fsmriwsgugzm2o7i@joelS2.panther.com>
-	<21f76a94-1b35-4cf7-914d-e341848b0b9e@moroto.mountain>
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2] mptcp: fix the default value of
+ scaling_ratio
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: martin.lau@kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
+ Paolo Abeni <pabeni@redhat.com>
+References: <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
---3yuuqqhcvvnk6kqm
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi Geliang,
 
-On Fri, May 03, 2024 at 06:23:14PM +0300, Dan Carpenter wrote:
-> On Fri, May 03, 2024 at 02:18:11PM +0200, Joel Granados wrote:
-> > On Wed, May 01, 2024 at 03:15:54PM +0200, Sabrina Dubroca wrote:
-> > > 2024-05-01, 11:29:32 +0200, Joel Granados via B4 Relay wrote:
-> > > > From: Joel Granados <j.granados@samsung.com>
-> > > > diff --git a/net/ax25/ax25_ds_timer.c b/net/ax25/ax25_ds_timer.c
-> > > > index c4f8adbf8144..c50a58d9e368 100644
-> > > > --- a/net/ax25/ax25_ds_timer.c
-> > > > +++ b/net/ax25/ax25_ds_timer.c
-> > > > @@ -55,6 +55,7 @@ void ax25_ds_set_timer(ax25_dev *ax25_dev)
-> > > >  	ax25_dev->dama.slave_timeout =3D
-> > > >  		msecs_to_jiffies(ax25_dev->values[AX25_VALUES_DS_TIMEOUT]) / 10;
-> > > >  	mod_timer(&ax25_dev->dama.slave_timer, jiffies + HZ);
-> > > > +	return;
-> > >=20
-> > > nit: return not needed here since we're already at the bottom of the
-> > > function, but probably not worth a repost of the series.
-> > >=20
-> > Thx. I will not repost, but I have changed them locally so they are
-> > there in case a V7 is required.
-> >=20
->=20
-> It's a checkpatch.pl -f warning so we probably will want to fix it
-> eventually.
+(+cc Paolo who wrote the commit mentioned by the "Fixes" tag)
 
-According to [1] the patchset has already been applied. So I'll just
-send another patch for it to be applied on top.
+On 07/05/2024 05:46, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> BPF tests fail sometimes with "bytes != total_bytes" errors:
+> 
+>  test_default:PASS:sched_init:default 0 nsec
+>  send_data:PASS:pthread_create 0 nsec
+>  send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
+>  default: 3041 ms
+>  server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
+>  send_data:FAIL:pthread_join thread_ret:-11 test_default:PASS: \
+> 				has_bytes_sent addr_1 0 nsec
+>  test_default:PASS:has_bytes_sent addr_2 0 nsec
+>  close_netns:PASS:setns 0 nsec
+> 
+> In this case mptcp_recvmsg() gets EAGAIN errors. This issue introduces
+> by commit b8dc6d6ce931 ("mptcp: fix rcv buffer auto-tuning"). The default
+> value of scaling_ratio should be TCP_DEFAULT_SCALING_RATIO, not U8_MAX.
 
-Thx for pointing this out.
+It looks like you are modifying the max value, not the default one.
+
+Also, please always explain the reason: why should it be X, not Y?
+
+> 
+> Fixes: b8dc6d6ce931 ("mptcp: fix rcv buffer auto-tuning")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v2:
+>  - I finally found the root cause of this issue.
+>  - cc Martin too.
+> ---
+>  net/mptcp/protocol.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 579031c60937..d00cd21e8d3f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1981,9 +1981,9 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+>   */
+>  static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+>  {
+> +	u8 scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+
+With this modification, you are limiting msk->scaling_ratio to
+TCP_DEFAULT_SCALING_RATIO. That's probably not what you want. See below:
+
+  (...)
+  mptcp_for_each_subflow(msk, subflow)
+      (...)
+      scaling_ratio = min(tp->scaling_ratio, scaling_ratio);
+
+  (...)
+  msk->scaling_ratio = scaling_ratio;
 
 
-[1] https://patchwork.kernel.org/project/netdevbpf/patch/20240501-jag-sysct=
-l_remset_net-v6-1-370b702b6b4a@samsung.com/
---=20
+Do you mean that in your case, msk->scaling_ratio was assigned to
+U8_MAX? Or it was assigned to a too high value (>TCP_DEFAULT_SCALING_RATIO)?
 
-Joel Granados
+Please add such info in the commit message as well.
 
---3yuuqqhcvvnk6kqm
-Content-Type: application/pgp-signature; name="signature.asc"
+>  	struct mptcp_subflow_context *subflow;
+>  	struct sock *sk = (struct sock *)msk;
+> -	u8 scaling_ratio = U8_MAX;
+>  	u32 time, advmss = 1;
+>  	u64 rtt_us, mstamp;
+>  
 
------BEGIN PGP SIGNATURE-----
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-iQGzBAABCgAdFiEErkcJVyXmMSXOyyeQupfNUreWQU8FAmY54AoACgkQupfNUreW
-QU9Dbgv+Op/tVXQJ7NdTua64j7NUxRCzHsjHQRU3hdSkupwQI/OaUY7bGGoodczt
-iNNg2J0Y0JSmRdASM/aOD7s7SaOxFKiYEe+2VsUZz/BzFO2Y2v3NI2RiwnSQh4wi
-kEJJfiJnfq3F5Kmie/WyXxmzU/2oSKFykgNJ11RddJnduusi+dU5l6qCymKxRjZg
-SX5SB1waJpZkGTnuevMNqF/GWr9DK1kAAU6OBKZO/lUneHDGag6yX3qPbKZJslJZ
-s16Z/mlzepR8cxQH3beDzfirydf2IlOH8HZh4WVH76mloTq2lQknnkdcqi+18eP1
-PE8600acZK1jILUXHGxMpMkLM1PAWARbwV2NWpdv1eFt2t1BEap/sVfaSy03EJpx
-LluZY7QlJy2LQs4alGQmme51crtM0ej6zbEF/MjTgPC5rtdsaKYxm8AUqMUTpZXK
-9seDYkN4LcV0sAb8ckQgOEfnNnDEezQ2koX8si4S1g4d7SZaGkNTpC/56oH4zk6T
-wbHvE20c
-=sLD8
------END PGP SIGNATURE-----
-
---3yuuqqhcvvnk6kqm--
