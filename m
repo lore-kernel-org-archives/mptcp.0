@@ -1,95 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61D9A1877;
-	Tue,  7 May 2024 01:27:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EB8B46A4;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715045229; cv=none; b=QegrAwzP03WbEUQzZ7g+MgYI865RNl/i9+dzEX90PhgBhmjdFhkpaojK2tqF/9/sO2g5J0fuwi5o6qirw5RhudJOFYMzRNYo3nh0IqtjOl0WXtJSQ3S2kcbvJYrjtnTWpRii0cz7VdvbOYFWMTK0LeRWaJx9WNieByFw16DfEO4=
+	t=1715050228; cv=none; b=P6co3RPoGmZnJiOTVqBLn8a29T6GuxYkmm/6wXAh1OOL37mwS1cdeKRfX9gTkwU0jc+H2yPYfFsks+2vxmA82syVrTq8ZYzVnWLXY1S4cjq5fNFJ5rbCBRorEDVvZ+tkQqs31vMfszCDnkO5BIg31UCmrwMExQY2eHONZDO2/70=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715045229; c=relaxed/simple;
-	bh=+wuctz0AiwVRvA/EpqH1dAUfEc9dgfyNT226PxPonE0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iQilpMCv50KNIaxh2ldBzTnn4NRCPLk2E9gftv+dOXHDG5KDPQB1HQC8JOG/ExNxzM7kq+hL2709O4qjiTxHl6aAs3X0uCaHo5JIvMkgh59CCq+BmX31P6NpupP/OKeoqnJxRjYg3kUJBDRVt6XzH042n0VWJCVMuq3cSGQOsaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=erF2OyYo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715050228; c=relaxed/simple;
+	bh=KBBezeqB0U+xBPgpqduI3HFO+ZA2L3INddeFJ/hemnc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=QsObg5DY+wcSwe35iIx1SkIW8DlYFgrX8WZY6P81pZTii/HFUSUQwWr+h8xdc4eL+HlRcPZE/s3i5w2ZClYpllZGjtiE8T8v2BxXu97/Un2UyL64GQtZYrOxuOVKusVvn8/+3g8i5cDj7KzxdqIE9zOVvW0XFf/Mext9urG3mGU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LjJP6V7M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="erF2OyYo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 582A3C116B1;
-	Tue,  7 May 2024 01:27:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LjJP6V7M"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id CD7AAC4AF65;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715045228;
-	bh=+wuctz0AiwVRvA/EpqH1dAUfEc9dgfyNT226PxPonE0=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=erF2OyYo4g4QHD5j+j/3El51K5HlY9YjpCRnz5+/o1sT/zNOJPJwzyi6m6MZDvSys
-	 5sAwwmFyjwIsLj0TcrgdOKkFnsVqRy57dxu+rlRnVFdvJfZhMr6M9JpIxiPBCfganM
-	 Gqan89L+VItIyncqv/8uLollGFRnVZusKMFrg3hgWyRxxtSIDYmpjmYhKIKjFcQzel
-	 Z4bNtAcx+8yiiBOkgD5JHG1Mhdt7NdAz3qnDeNJ+Cu6VeWQaIA6sfJRFS24fSeTDex
-	 IIkLisFrox1YdCcoA/+mw1ftDA47lfMNklduD9b2h6jA4UmOeCkAHQlyPLXaGOVa2R
-	 1xE25HTw3e+KQ==
-Date: Mon, 6 May 2024 18:27:07 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: John Hubbard <jhubbard@nvidia.com>
-cc: Shuah Khan <shuah@kernel.org>, "David S . Miller" <davem@davemloft.net>, 
-    Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
-    Paolo Abeni <pabeni@redhat.com>, 
-    Steffen Klassert <steffen.klassert@secunet.com>, 
-    Herbert Xu <herbert@gondor.apana.org.au>, 
-    =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>, 
-    Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, 
-    Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-    Pravin B Shelar <pshelar@ovn.org>, 
-    Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-    Alexander Mikhalitsyn <alexander@mihalicyn.com>, 
-    zhujun2 <zhujun2@cmss.chinamobile.com>, Petr Machata <petrm@nvidia.com>, 
-    Ido Schimmel <idosch@nvidia.com>, Hangbin Liu <liuhangbin@gmail.com>, 
-    Nikolay Aleksandrov <razor@blackwall.org>, 
-    Benjamin Poirier <bpoirier@nvidia.com>, 
-    Sebastian Andrzej Siewior <bigeasy@linutronix.de>, 
-    Dmitry Safonov <0x7f454c46@gmail.com>, netdev@vger.kernel.org, 
-    linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, 
-    mptcp@lists.linux.dev, dev@openvswitch.org, 
-    Valentin Obst <kernel@valentinobst.de>, linux-kselftest@vger.kernel.org, 
-    LKML <linux-kernel@vger.kernel.org>, llvm@lists.linux.dev
-Subject: Re: [PATCH v2] selftests/net: fix uninitialized variables
-In-Reply-To: <20240506190204.28497-1-jhubbard@nvidia.com>
-Message-ID: <610f9818-b899-1f70-8110-f88db47595ff@kernel.org>
-References: <20240506190204.28497-1-jhubbard@nvidia.com>
+	s=k20201202; t=1715050227;
+	bh=KBBezeqB0U+xBPgpqduI3HFO+ZA2L3INddeFJ/hemnc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LjJP6V7MOrjbednIfdHRRS35bsRIgfvl8gvwYkdVNKHzXe9Em0SN1H6KxKK2VRQw7
+	 kU2Uqf3tybVnv/3FGuAzmncfh8LXhNHstmR5hcyccYBg22Yjlvw+w6JbAGG59NB74Q
+	 kU9ha3lc039xdbdR9tcqlUibXhb6RW2+ASQwUrTExkDYYAPdyPbSq0smP3fAaeUpYW
+	 4w0KKU14iRsMK7Ds2pA9rw9d/M6BWXZbat4yOtJLx3wRp23lz5JyvHtBL5wS42UahU
+	 DFqoeftK2RWFjGQ0tM8r1iSGTcYZBC2Tck3hwJq7VzhAOx7faO/fRZ0ha6qcR1yycm
+	 3NVBw97Z8hp+g==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id C5D4DC43334;
+	Tue,  7 May 2024 02:50:27 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH] [PATCH v2 net-next] mptcp: fix typos in comments
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171505022780.7000.12296419388151521927.git-patchwork-notify@kernel.org>
+Date: Tue, 07 May 2024 02:50:27 +0000
+References: <20240502154740.249839-1-fourcolor4c@gmail.com>
+In-Reply-To: <20240502154740.249839-1-fourcolor4c@gmail.com>
+To: Shi-Sheng Yang <fourcolor4c@gmail.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, geliang@kernel.org,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
 
-On Mon, 6 May 2024, John Hubbard wrote:
+Hello:
 
-> When building with clang, via:
->
->    make LLVM=1 -C tools/testing/selftest
->
-> ...clang warns about three variables that are not initialized in all
-> cases:
->
-> 1) The opt_ipproto_off variable is used uninitialized if "testname" is
-> not "ip". Willem de Bruijn pointed out that this is an actual bug, and
-> suggested the fix that I'm using here (thanks!).
->
-> 2) The addr_len is used uninitialized, but only in the assert case,
->   which bails out, so this is harmless.
->
-> 3) The family variable in add_listener() is only used uninitialized in
->   the error case (neither IPv4 nor IPv6 is specified), so it's also
->   harmless.
->
-> Fix by initializing each variable.
->
-> Cc: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-> Signed-off-by: John Hubbard <jhubbard@nvidia.com>
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Hi John -
+On Thu,  2 May 2024 23:47:40 +0800 you wrote:
+> This patch fixes the spelling mistakes in comments.
+> The changes were generated using codespell and reviewed manually.
+> 
+> eariler -> earlier
+> greceful -> graceful
+> 
+> Signed-off-by: Shi-Sheng Yang <fourcolor4c@gmail.com>
+> 
+> [...]
 
-MPTCP change looks good to me:
+Here is the summary with links:
+  - [v2,net-next] mptcp: fix typos in comments
+    https://git.kernel.org/netdev/net-next/c/46a5d3abedbe
 
-Acked-by: Mat Martineau <martineau@kernel.org>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
