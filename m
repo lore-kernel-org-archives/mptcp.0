@@ -1,54 +1,54 @@
-Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+Received: from mail-wr1-f42.google.com (mail-wr1-f42.google.com [209.85.221.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA2F315098D
-	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 14:43:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7D6815F32E
+	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 14:44:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715093033; cv=none; b=ZPX0DCLjq9e3ySSX7hXN8G4Z2+m2rSDug/8QC+Nq5JvSlNRi1E43TNhDa+wSMWq1VHr/cNmujyIwdd0yfRvsBiiHYKITdCpJLxjWkuTvKmjDDFz9vnjUoY/2UmHtA50aPcrI3qPQsyz+YHsdwk9JiK8vFRRM1T5t4AZvnbhpW2s=
+	t=1715093063; cv=none; b=pHnuxGI0jO9BFhgomA6JuvoqQEmJwHBkK5BVAwFx4sLYo6NsqKlaO+GdvS7u7Gxt8Y50u8MRa4/B/7c0nsCtRCPeCzKd73ZF80hEph+H7EVTsPknFvXBsSFdPxSmeaN06kShahgpFsIdK67ppcdHGHNQ8lwbOOCQ0HfwwDPfuAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715093033; c=relaxed/simple;
-	bh=cVK00FVDWLzEDng1ImuaW8RdJLe7pFz6qhNng9TB52w=;
+	s=arc-20240116; t=1715093063; c=relaxed/simple;
+	bh=MJcYisYTisx12c9+k/4ROq+EmyGFozWAglzPDCQ8LYQ=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=hsmL83J9qgyQqpqU51kIwEACkBRThBQbwZCtjrzmv1tlnEIxoenJgQMZ8KWdOiEPQuxS5frcK23Wn/VRHJy0v2dneYWTv9wrvlQvKydrk/k0VKL0HyNIAnP9/F5FmMpAY3K30PqlUY+1XZYbAVokhfDIKPpteFYjYNa3HARI6jY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EZiEuP7l; arc=none smtp.client-ip=209.85.221.50
+	 To:Cc:Content-Type; b=pVecEbA4V35+U3kfYE3r50i33b2oJl2CIloaHXEmQ7+UhTJpQ2/s6eoIqkygyLVC6L+iaSQGGQjHjcEdSkGtvgzIX7RO8E/ke5VgLu/DGDUxnmmYVhSRgkXJseyTu+D4n+7XVtYrMnJE27i1989DpbClb18BBS3AjtXojLNM9Xg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FSVTH6Lk; arc=none smtp.client-ip=209.85.221.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EZiEuP7l"
-Received: by mail-wr1-f50.google.com with SMTP id ffacd0b85a97d-34d7a32bdd3so1603606f8f.0
-        for <mptcp@lists.linux.dev>; Tue, 07 May 2024 07:43:51 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FSVTH6Lk"
+Received: by mail-wr1-f42.google.com with SMTP id ffacd0b85a97d-34da35cd01cso2959985f8f.2
+        for <mptcp@lists.linux.dev>; Tue, 07 May 2024 07:44:20 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715093030; x=1715697830; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1715093059; x=1715697859; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=8bM5RjluxHipg60pIjQCs1Kdq4Li1XFga7CcO2QMKNA=;
-        b=EZiEuP7li4b/8+hTWc3C85ydQcQgNu0fox4SLaRg7vfr5TxD9vIPabWaI+esJQ4ucx
-         7WgUclJC8YF2AXo+xQvoET/QKcqhIUisEJv7aQuJxfkDqA0sGw3ZRURWS5Ghjw6kF/Lb
-         nkojG2qwWHPA5U01XmnvU0zJ4+V3HfXHHAMcrJqyXWstYKxTJ8YJmes3qXhEnuQFhrfE
-         7PRQr5Hu5kW8zhqpsLv7e5CxUxzBWlpYde2557zTSZMjBwC+NRMGL2r2AM7VFv+si8iS
-         Hr0Dbz87gdJq64rFSfpxqlArgvS9RwkCyI3MkoVH0TQ3DP8FKQSR7QdRPWfFCFJ+a98P
-         2OPA==
+        bh=mMp6G35qfDMIFLx3yZQGEQxUo7Vd7yGH6r3sL6jUUss=;
+        b=FSVTH6Lk6VY+vUDOAC/VIFCaGAw+wCTBFQut5tzB59nw35DVkQebNT6GuN9UsKxXtX
+         F/D6eRcoH94OEJyAoeJSxuqwcdMChZaJz+9rwjh8/SvyYeCIk3PgjnLKkm3mIi74Yjzg
+         94BMRZQr0sNL1iHZpulRwpAiiQZWbWn4XfqJ0JealKHxLwrYVu1mMRx50B1NRYVkeEOr
+         Upz89nRypaUXvt1DpxwkpYDaiW1xcmtZ9BBQiTQ2AmkJlzTAh/j5IiC7FpgK37s6iy8y
+         X26ARJiB8Z8ARZS3H1r7EsDqNYoMBvWgejILK5Omu4WmaZRe2Yah2pnrQwC7f1W0iZJ1
+         9Vew==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715093030; x=1715697830;
+        d=1e100.net; s=20230601; t=1715093059; x=1715697859;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=8bM5RjluxHipg60pIjQCs1Kdq4Li1XFga7CcO2QMKNA=;
-        b=l6c5YuykRcS3LlfqGxSbA1+c391xpSmY0e8lQCeFA0H2KEVDLiESSCpA6ewMl29UN8
-         xcEkFwkyORVeFO+PeRZ0YpgQ34gmja6z7eEFz8n1eJ5jw1lxKXB4LwnlbxA9YJXXwle6
-         bGv/VAEOl5Vcl9WYSKjTXz5+usRwny3ALL3sNXnji+Q9trgRX3jRce7CZQFe2mQlL5mb
-         xhcEBn+/+Ays69lbksP5xSTckypCuxbgCeJVzDjN7qyD6ovunAO1MFuv+qHO1f5Yq3+N
-         byBhQmu23CRMfSB+uDjObp9+aj48LzP0PLWJkWTgXKutAzMoMNydtuCUdMpW5ZML4Y2b
-         notg==
-X-Gm-Message-State: AOJu0Yw9Fv31QSYOjhm0ghpsrBZ6O71tY5GTmr6cFl3ET2a4+mRF2qsg
-	p6pr/WhYE/81uMVeKcxNBO3yh6a5e59wvWF3VPmeZuU/SD2hKqqaHbCih32sGQvfxtjaU0AM5BI
-	hPirUK5NMCk7cAxXpCTceDN8TbZY=
-X-Google-Smtp-Source: AGHT+IGohbKdu5N5Ex+4EkZMkPfNXVJa4QuvuOwWy2p6XWZL9RHKYD+h27FqkUdbOj4eiHLrpqiOUEpbKJrSf/ZV38w=
-X-Received: by 2002:a5d:42d2:0:b0:34a:56e7:5cc4 with SMTP id
- ffacd0b85a97d-34fca14b3bamr36578f8f.2.1715093030024; Tue, 07 May 2024
- 07:43:50 -0700 (PDT)
+        bh=mMp6G35qfDMIFLx3yZQGEQxUo7Vd7yGH6r3sL6jUUss=;
+        b=IrJZF+PDJpabrbf4P0NHKbPlE6Fbd8qFD6duNxUTGeiMK0SlvurSawNIouzq0kvkt2
+         hfJMa0zoA+fHpjiCa3YI6n/pFYQUSdN5f0+JBemdQJqdd4hsQk4akstZ5aGfqKCR3wLt
+         cowN0wsOqCQJFAR3nkirDKKD0mBySquqYR9cxcQ5BQ9WwH6l85sW5FNaiEr20dM6ha4L
+         BW3hYvNmgVT6iMDif0cGMT/ZoupzUquACl4apSIkodMrqpsA/kmJus7uzEEhoj1n7c2b
+         QUj0xayLqzJ9SrjCJ52/JyrW0DBcx6OhEKWduo0kZEtU0dpLzLRceQPTUtzDuHaFheRW
+         JPng==
+X-Gm-Message-State: AOJu0YxNhKDmIQKXKb5msrgOznr9ilkrzf0mCCCeqQ8S0A8pf7BvFWMO
+	5BLnmy4mgV34iP2jYnLDduWG7ITH3LIwwKrNYLUcw7ALlmJFkI2t6zC2byqRnlPtzVsWVNsaY0X
+	MGTsdV124cYpPaab8/JVyg/0+tvI=
+X-Google-Smtp-Source: AGHT+IGk49uH7ZoboBcvIRsYhD4hszb/KCw/BsklZO7vFWGZC10XurT1JgKe8yLt1pp+x1aSe9iYc42YpisLFYU8qk0=
+X-Received: by 2002:a5d:434a:0:b0:34c:8cbb:d6e9 with SMTP id
+ ffacd0b85a97d-34fca8116a0mr14105f8f.71.1715093059114; Tue, 07 May 2024
+ 07:44:19 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -56,12 +56,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 References: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
- <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-1-e2bcbdf49857@kernel.org>
-In-Reply-To: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-1-e2bcbdf49857@kernel.org>
+ <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-2-e2bcbdf49857@kernel.org>
+In-Reply-To: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-2-e2bcbdf49857@kernel.org>
 From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Tue, 7 May 2024 07:43:39 -0700
-Message-ID: <CAADnVQKWCVfUhQnoYBoEZaZbfiX8MROcj7Ct-nB4-axhZqMecw@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 1/4] selftests/bpf: Handle SIGINT when creating netns
+Date: Tue, 7 May 2024 07:44:07 -0700
+Message-ID: <CAADnVQJ5-APFxMeGsUDSWBsiAbhJGivs=fBUapgYEFNHgnEVeA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next 2/4] selftests/bpf: Add RUN_MPTCP_TEST macro
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>, 
 	Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
@@ -80,41 +80,45 @@ On Tue, May 7, 2024 at 3:53=E2=80=AFAM Matthieu Baerts (NGI0)
 >
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> It's necessary to delete netns during the MPTCP bpf tests interrupt,
-> otherwise the next tests run will fail due to unable to create netns.
->
-> This patch adds a new SIGINT handle sig_int, and deletes NS_TEST in it.
+> Each MPTCP subtest tests test__start_subtest(suffix), then invokes
+> test_suffix(). It makes sense to add a new macro RUN_MPTCP_TEST to
+> simpolify the code.
 >
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > Reviewed-by: Mat Martineau <martineau@kernel.org>
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/bpf/prog_tests/mptcp.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 >
 > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testi=
 ng/selftests/bpf/prog_tests/mptcp.c
-> index 274d2e033e39..baf976a7a1dd 100644
+> index baf976a7a1dd..9d1b255bb654 100644
 > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -64,11 +64,18 @@ struct mptcp_storage {
->         char ca_name[TCP_CA_NAME_MAX];
->  };
+> @@ -347,10 +347,14 @@ static void test_mptcpify(void)
+>         close(cgroup_fd);
+>  }
 >
-> +static void sig_int(int sig)
-> +{
-> +       signal(sig, SIG_IGN);
-> +       SYS_NOFAIL("ip netns del %s", NS_TEST);
-> +}
-> +
->  static struct nstoken *create_netns(void)
->  {
->         SYS(fail, "ip netns add %s", NS_TEST);
->         SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
->
-> +       signal(SIGINT, sig_int);
->         return open_netns(NS_TEST);
+> +#define RUN_MPTCP_TEST(suffix)                                 \
+> +do {                                                           \
+> +       if (test__start_subtest(#suffix))                       \
+> +               test_##suffix();                                \
+> +} while (0)
 
-That's a drop in the bucket.
-ctrl-c of test_progs doesn't really work.
-Such clean up needs to be generic as part of network_helpers.c
+Please no.
+Don't hide it behind macros.
+
+>  void test_mptcp(void)
+>  {
+> -       if (test__start_subtest("base"))
+> -               test_base();
+> -       if (test__start_subtest("mptcpify"))
+> -               test_mptcpify();
+> +       RUN_MPTCP_TEST(base);
+> +       RUN_MPTCP_TEST(mptcpify);
+>  }
+>
+> --
+> 2.43.0
+>
