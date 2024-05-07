@@ -1,41 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BF01D524
-	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 03:53:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D464087F;
+	Tue,  7 May 2024 04:04:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715053981; cv=none; b=KGe4oOtsdZ4NAo19y89I5WOpuawif0fPwQsl+yGvIoErHzdLr8hIT6K71pGif3+ZSWyzl1v9yaBhO0yt+RxEhM61v2O0JC/kvLvy3J99Dt3UNEBCbG24dN8n3z597HxgHZeZneY1DUbsRcyMSDpvAnowHBhkRsfyQEEQ25t37i0=
+	t=1715054700; cv=none; b=awv+L29xA5iX5LWSDDrQQOz2Eu9L6+kd9wrQJjzgBbm0fZ0ugCaAR/uCnXhz8R/V/BbzjEnJSvc5g4uh0T8HMJUHg6LtJhaEH9SAOF8Gue11xHQL7WqJIMkU5CfGJn/v+0DG8TCcjrpBxX8hEnZi2SxoVF2hCk6H5GkKzdV1nNA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715053981; c=relaxed/simple;
-	bh=WWW8I11iRhP1pEIbEsmCpG2QHMRnwSVFIla2BUdD16s=;
+	s=arc-20240116; t=1715054700; c=relaxed/simple;
+	bh=RVnEF18pmo4hzHCpqUvXE5nta1BVMS7Kjs1hKQO8KSs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Z/K0DtQ2/EPV4v1loZNyDT5tl3QNBdMhvQbS2eIM26HQ6/f2jiEau7XTBWfUC46TrrIQNPw8bWn1blczo87on4EQvrGoRkP4J+Ve+by2Y/14aWbIHpef48c/LZHuekAiGGsBQ8/kv7jcj+Z/y6dfe8bgC2evxBD4nnnpHghS+DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eQZ67PhX; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ZeVXUOMXn0n04nSH1jD1XVWr6moG/5j4a7q8O30K//rda31cfLBxXy/WrymQW4z4E1/LA44kLDUbIOwTU0aerGlyP1e2l2fVh5sLG7282JCu1+WOD+KRtWnVm0KfOlmBeIbOvLCb6goi9GD3ep7cFuVywc858deygNG1mPFjFl8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3RidpiQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eQZ67PhX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64DC9C2BBFC;
-	Tue,  7 May 2024 03:52:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3RidpiQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F5AFC2BBFC;
+	Tue,  7 May 2024 04:04:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715053980;
-	bh=WWW8I11iRhP1pEIbEsmCpG2QHMRnwSVFIla2BUdD16s=;
+	s=k20201202; t=1715054699;
+	bh=RVnEF18pmo4hzHCpqUvXE5nta1BVMS7Kjs1hKQO8KSs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eQZ67PhXrEuugwQdkDkvih4sstjpklHQMLCYXMBIsQefR5Zdlp1QFT02ox0evQzL1
-	 OU18nZvjmAfnVE/O3I4WMPLo3WBewvC5IxxDxXI4VCCVgORCSD0VQzPffiqdYjJUR8
-	 uCsOIJFEPazFVT+wy/+sADln7K2cfDMUniNyiJ8u1diLhIzMyeLWMEFknVfq8aAZZi
-	 ls+x4PBBr0SR9vtCdPBb1HIhqchwIaX26WnBYtkJzuH5AapjAXD819QKQrZrFetb/F
-	 dyjFHIQoTM17huXrb0xzgi+usNIlxuu4KMqBp5Qb+U6yG54z3aLcGF+Lb8xCE7iWeD
-	 fV/EluU1gybgQ==
-Message-ID: <e90b693a9452a5c28597b04c6d1aac84c7b961c4.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: fix EAGAIN errors in MPTCP BPF tests
+	b=U3RidpiQoAFe0PkC0w2ZDoeNacGei0vDvEgwD/KvUkQhdB8m1pnbQG1TWPxA8jz1n
+	 weACrG3kV9Cb7geopsoTeOxF4XlvDLShrf4S+bK1+wA/j+fOySHxZRCpa9GrFHiS63
+	 4ZKCaUkA9h1H4U/+Wm+rsQmrYzN1AMzozd4H0G+DAucQAiZRacwOJJ4PCW6cTonuOr
+	 WlCEjB/zGkUzNGuwrLYwsSblHVNcyFUh6LyCzSx/8qIeel2kVtA6pfq+QSdFzCzjAU
+	 69gZqSCdOaoMOEmCko8HIxww/2wsyv9kyBjjXilDqM6Rn2B21U6wQCKH4EPZECh0j6
+	 5awf+eCDVoWrQ==
+Message-ID: <8201104dcc0b2b1e26a915315083e2098fb420b3.camel@kernel.org>
+Subject: Re: [PATCH bpf-next v4 3/3] selftests/bpf: Support nonblock for
+ send_recv_data
 From: Geliang Tang <geliang@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Tue, 07 May 2024 11:52:56 +0800
-In-Reply-To: <24b54657-5afe-b4a9-0229-3bd30477936e@kernel.org>
-References: 
-	<4538e7bca21fdb7f997c026d74f886aedb547d39.1714654631.git.tanggeliang@kylinos.cn>
-	 <24b54657-5afe-b4a9-0229-3bd30477936e@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Andrii Nakryiko
+ <andrii@kernel.org>,  Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko
+ <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann
+ <daniel@iogearbox.net>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Shuah Khan
+ <shuah@kernel.org>, bpf@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kselftest@vger.kernel.org
+Date: Tue, 07 May 2024 12:04:48 +0800
+In-Reply-To: <12aab271-da72-49b4-ac91-2091b6889856@linux.dev>
+References: <cover.1712729342.git.tanggeliang@kylinos.cn>
+	 <9cd358958245f8ec87c4f553779aa4243f967a2f.1712729342.git.tanggeliang@kylinos.cn>
+	 <12aab271-da72-49b4-ac91-2091b6889856@linux.dev>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -98,94 +107,107 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-05-06 at 18:02 -0700, Mat Martineau wrote:
-> On Thu, 2 May 2024, Geliang Tang wrote:
-> 
+On Wed, 2024-04-10 at 14:34 -0700, Martin KaFai Lau wrote:
+> On 4/9/24 11:13 PM, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > BPF tests fail sometimes with "bytes != total_bytes" errors:
+> > Some tests, such as the MPTCP bpf tests, require send_recv_data
+> > helper
+> > to run in nonblock mode.
 > > 
-> > test_default:PASS:sched_init:default 0 nsec
-> > send_data:PASS:pthread_create 0 nsec
-> > send_data:FAIL:recv 936000 != 10485760 nr_recv:-1 errno:11
-> > default: 3041 ms
-> > server:FAIL:send 7579500 != 10485760 nr_sent:-1 errno:11
-> > send_data:FAIL:pthread_join thread_ret:-11 test_default:PASS: \
-> > 				has_bytes_sent addr_1 0 nsec
-> > test_default:PASS:has_bytes_sent addr_2 0 nsec
-> > close_netns:PASS:setns 0 nsec
+> > This patch adds nonblock support for send_recv_data(). Check if it
+> > is
+> > currently in nonblock mode, and if so, ignore EWOULDBLOCK to
+> > continue
+> > sending and receiving.
 > > 
-> > In this case mptcp_recvmsg gets EAGAIN errors. This issue
-> > introduces
-> > by commit dfa2f0483360 ("tcp: get rid of
-> > sysctl_tcp_adv_win_scale").
-> > This patch fixes it by adding sk_is_mptcp() check defore update
-> > scaling_ratio in tcp_measure_rcv_mss(). Do not update scaling_ratio
-> > if
-> > this is a MPTCP socket.
-> > 
-> > Fixes: dfa2f0483360 ("tcp: get rid of sysctl_tcp_adv_win_scale")
-> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
 > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > > ---
-> > net/ipv4/tcp_input.c | 4 +++-
-> > 1 file changed, 3 insertions(+), 1 deletion(-)
+> >   tools/testing/selftests/bpf/network_helpers.c | 9 ++++++++-
+> >   1 file changed, 8 insertions(+), 1 deletion(-)
 > > 
-> > diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-> > index ad8fa129fcfe..39237d6713ee 100644
-> > --- a/net/ipv4/tcp_input.c
-> > +++ b/net/ipv4/tcp_input.c
-> > @@ -235,8 +235,10 @@ static void tcp_measure_rcv_mss(struct sock
-> > *sk, const struct sk_buff *skb)
-> > 		/* Note: divides are still a bit expensive.
-> > 		 * For the moment, only adjust scaling_ratio
-> > 		 * when we update icsk_ack.rcv_mss.
-> > +		 *
-> > +		 * This breaks MPTCP BPF tests, skip it.
-> > 		 */
-> > -		if (unlikely(len != icsk->icsk_ack.rcv_mss)) {
-> > +		if (unlikely(len != icsk->icsk_ack.rcv_mss &&
-> > !sk_is_mptcp(sk))) {
+> > diff --git a/tools/testing/selftests/bpf/network_helpers.c
+> > b/tools/testing/selftests/bpf/network_helpers.c
+> > index 137cd18ef3f2..ca16ef2b648e 100644
+> > --- a/tools/testing/selftests/bpf/network_helpers.c
+> > +++ b/tools/testing/selftests/bpf/network_helpers.c
+> > @@ -555,6 +555,7 @@ struct send_recv_arg {
+> >   static void *send_recv_server(void *arg)
+> >   {
+> >   	struct send_recv_arg *a = (struct send_recv_arg *)arg;
+> > +	int flags = fcntl(a->fd, F_GETFL);
+> >   	ssize_t nr_sent = 0, bytes = 0;
+> >   	char batch[1500];
+> >   	int err = 0, fd;
+> > @@ -578,6 +579,8 @@ static void *send_recv_server(void *arg)
+> >   		if (nr_sent == -1 && errno == EINTR)
+> >   			continue;
+> >   		if (nr_sent == -1) {
+> > +			if (flags & O_NONBLOCK && errno ==
+> > EWOULDBLOCK)
 > 
+> I still don't see why it needs to be a non blocking IO. mptcp should
+> work
+> with blocking IO also, no? Does it really need non blocking IO to
+> make
+> mptcp test work? I would rather stay with blocking IO in selftest as
+> much as
+> possible for simplicity reason.
 > 
-> Hi Geliang -
+> I am afraid the root cause of the EAGAIN thread has not been figured
+> out yet:
+> https://lore.kernel.org/all/b3943f9a8bf595212b00e96ba850bf32893312cc.camel@kernel.org/
 > 
-> It's not clear to me why avoiding scaling ratio changes when
-> 
->      len > icsk->icsk_ack.rcv_mss
-> 
-> is the right solution to the problem. From the conditional right
-> above 
-> this diff, it looks like scaling_ratio still could change when
-> 
->      len == icsk->icsk_ack.rcv_mss
-> 
-> Does the MPTCP code handle that case, or is that not exercised by the
-> tests? Are you sure there isn't an issue with the MPTCP code where it
-> should be able to handle the TCP layer updating scaling_ratios on 
-> different subflows?
-> 
-> Paolo do you have any suggestions or notes?
+> Lets drop patch 3 until it is understood why mptcp needs EAGAIN or
+> non-blocking IO.
+> It feels like there is some flakiness and it should be understood and
+> avoided.
 
-Thanks Mat, I finally found the root cause of this issue. It is indeed
-an MPTCP bug. And v2 has just sent out, renamed as "fix the default
-value of scaling_ratio".
+Hi Martin,
+
+I finally found the root cause of this issue. It is indeed an MPTCP
+bug. It took me a long time to debug, and the fix is here:
+
+https://patchwork.kernel.org/project/mptcp/patch/0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn/
+
+Thank you for insisting on not accepting these work around patches from
+me in the user space, almost hiding a kernel bug.
 
 -Geliang
 
 > 
+> Other than the comment in patch 2, the first two patches lgtm. Please
+> respin with
+> the first two patches.
 > 
-> Thanks,
-> Mat
+> > +				continue;
+> >   			err = -errno;
+> >   			break;
+> >   		}
+> > @@ -599,6 +602,7 @@ static void *send_recv_server(void *arg)
+> >   
+> >   int send_recv_data(int lfd, int fd, uint32_t total_bytes)
+> >   {
+> > +	int flags = fcntl(lfd, F_GETFL);
+> >   	ssize_t nr_recv = 0, bytes = 0;
+> >   	struct send_recv_arg arg = {
+> >   		.fd	= lfd,
+> > @@ -622,8 +626,11 @@ int send_recv_data(int lfd, int fd, uint32_t
+> > total_bytes)
+> >   			       MIN(total_bytes - bytes,
+> > sizeof(batch)), 0);
+> >   		if (nr_recv == -1 && errno == EINTR)
+> >   			continue;
+> > -		if (nr_recv == -1)
+> > +		if (nr_recv == -1) {
+> > +			if (flags & O_NONBLOCK && errno ==
+> > EWOULDBLOCK)
+> > +				continue;
+> >   			break;
+> > +		}
+> >   		bytes += nr_recv;
+> >   	}
+> >   
 > 
-> > 			u64 val = (u64)skb->len <<
-> > TCP_RMEM_TO_WIN_SCALE;
-> > 
-> > 			do_div(val, skb->truesize);
-> > -- 
-> > 2.43.0
-> > 
-> > 
-> > 
 > 
 
