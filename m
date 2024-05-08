@@ -1,204 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045D87351A
-	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 09:45:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010092836D
+	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 10:43:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715161504; cv=none; b=Uv/LgsCrRL3A2lBT02yvE17Vgi1xmdeTds7LEK+QnbX/I8tyxWSE+k+s1kKVGj/WvxISEAncAkwgDwdKa9DbbLOfeQheD35iRC9vvLGSr27TifZsNYtOtRG4oazCLEldb4iQIa69z6BOHiQoT8QcYw5VrbBPjCagZwv4igK5hBo=
+	t=1715164988; cv=none; b=dZKj/G/OmKYNcyZm5QQdgSpu0yXGZRcZfaRqC61GeuSFrJ4PGZHo+Chfm7nbHyQfRYf++WnPCsIXfgWpJ4ss+MgK7999ponhbngm6xYfkWGGBKvoj00c+o0Kt9/qRB6Kb0GDF4ZhaIynQSusclSaURPF+vI4hYuU5pEN1+5r5Vo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715161504; c=relaxed/simple;
-	bh=ksreAEGnNzmeG5OiE7Gg3UuxKoGvCfS88QXSdCs8nUM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=tkm3kkau6RLYk/VmWQIMVmzwUshRru5Ye7k2nA6CaVs29at2Hy1IF20kEdj7xbhdwhUrCLaz/te/3Kq3SaymsDKxI/UeQmFeQ90YfeEcbbYYNKtKzrlkYtVtiXfLrOPP/u4RMYU2QpdmKqkQDnDtwUG8gA3Eh6yPN+wExB6RnHI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RyAtcwXH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715164988; c=relaxed/simple;
+	bh=gV2LOZjGOE1Na/fhLv7QHhqCc+6p2/jvYPgEAHGrypw=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=YAfD8kPKfe2KY5H+N5iIRBO9/17QEMHkFxu8KSlDaG1FsEw7wXBc4b293Rza6brEYx6SsFfl1/TIh92FloELN1GuytRxbXLoaXH4s/v6wtI9BFZKMiU52Xsglf2zR+LPxwC39fotqE64S+fI+QuKAx1bxKbfho52o24Wv7Aq43I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cr7Xugfm; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RyAtcwXH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A82C113CC;
-	Wed,  8 May 2024 09:45:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715161503;
-	bh=ksreAEGnNzmeG5OiE7Gg3UuxKoGvCfS88QXSdCs8nUM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RyAtcwXHifqP1LSRMNA7OYvryX57ybWn3kcp9BnXlPF/fYdQk5EcGTGW2PsLDyxj9
-	 AudpDDWIa3R2JK0+P7yuWu0f88HuBZRARmj2yJwRBDP+D6dB/vzloMkrkK8fRqpuUs
-	 tk5/CqXs3MgGNstZcBiW0h5VMZW4FclvIzI2Vd2PzOb6HlaFCqgj1YB27pCMjiudgO
-	 diQh7P4EX7hIMKDLfzNnKyEZ/WyN/P2FGKrKSsRk0mxG4Q9fcC3wAN3CO5p1j7cYaZ
-	 FnFI1DG0MLCCjgeayfd4nuI4FtyRzcrm+c39jqwL+XcDeJCZjVa8oYwssj3XD+mbtK
-	 ittusZ3muN4uQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 08 May 2024 11:44:56 +0200
-Subject: [PATCH mptcp-net 2/2] mptcp: fix full TCP keep-alive support
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr7Xugfm"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-78f043eaee9so237734985a.3
+        for <mptcp@lists.linux.dev>; Wed, 08 May 2024 03:43:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715164986; x=1715769786; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=0w6mu4U5k11OxE/DXVypXwDEU8/upGeVDhbmjS8to8w=;
+        b=Cr7XugfmE0gSYgde9tf7aDGfbrkJldfRJm0ObJJBaZR3TJn2TwH0HHfVmmeRsOCLwx
+         qPyOh3odev9bvX8huZc+w924a6F+/no74Atgh5gky/8lLFBF8+VkBkioJDYiYrPOZPQz
+         2yL/PzWibW2zB5U3riKAZQLO9gP8rHFzzT7G2zzjfBtFz1ytc/TUhm6oFjkLn2wx+3BG
+         9UhXbvmeaxNHi+F8S8C7//nce6rzCUvCnWEVJb7eevd/bEzw5RZ38y9/dfUrmH5x5/Sq
+         ffecCbhgWeJjOO1esK8MpywNw4RHsIYcjctv/vdeiiKatbLuBN0a9NuZpF0ltprQEDgZ
+         qWuA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715164986; x=1715769786;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=0w6mu4U5k11OxE/DXVypXwDEU8/upGeVDhbmjS8to8w=;
+        b=Q0T6sFDL2xZDz2amwxAr7koRSuHsC7gBAxgmIpauCiNz4elzSb8MfuIGSaNVdi0KwG
+         oC3Ta4Xem/Qdzo5ilJADcy2i8Fv8EfzZqHWYx4AelPQX/bl+BCC15NfERpZnfTe9O96D
+         1l59REPVCHTUkINu61/hj3nZxKMeO3CWdtro/RPzx5rhFPy7D6D+5DP6NXkBZnwBpi0J
+         oI4SJPdON2ps58ruNZbYBBqYy1VJnWe+2URI/6lVhjpgScakpcJ6ytHHY3RKWO7B7W7i
+         anq9w2n+Xxa7+pqpbKvPgoBckCFmQj6LNBzCyvEMbeFQRmIKH1ZaKcEkctD3Kdm++1R2
+         sTNQ==
+X-Gm-Message-State: AOJu0Yz4DWbomAGnvYY5h4CI+gQynVjRHdD+TMQnYUm0M0BaX6SIO0Lz
+	8x0exh6SMpRaqQfPOpN8KwfjjMdjKySMZ/kfdr3p92IvEEZUd0Y=
+X-Google-Smtp-Source: AGHT+IGJrCHw40DuvDXBDehJVRDhrWJC5xvx/WzGHoNvtMp4LpeUPNuppuPksMXc66dgetacysO3jQ==
+X-Received: by 2002:a05:620a:25ce:b0:792:b8f8:7832 with SMTP id af79cd13be357-792b8f878f3mr62743285a.5.1715164985816;
+        Wed, 08 May 2024 03:43:05 -0700 (PDT)
+Received: from [127.0.0.1] ([20.51.206.98])
+        by smtp.gmail.com with ESMTPSA id vq12-20020a05620a558c00b00792a414a2fasm2111373qkn.112.2024.05.08.03.43.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 08 May 2024 03:43:05 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
+References:
+ <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: getsockopt(SO_KEEPALIVE) and
+ TCP_KEEP* sockopts
+Message-ID: <c4a2f59d-ef62-0bbd-44d0-5417f145f2f6@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 08 May 2024 10:43:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240508-mptcp-tcp-keepalive-sockopts-v1-2-fdf7e03e14c4@kernel.org>
-References: <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
-In-Reply-To: <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5282; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ksreAEGnNzmeG5OiE7Gg3UuxKoGvCfS88QXSdCs8nUM=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmO0mcWWAplU0j0AVjvV/D9o/T4nl1unmjCATLR
- Y0Jwgk5XiyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjtJnAAKCRD2t4JPQmmg
- c3YzEACak72BmUz4acHumxeb63ShsDAxkEoiKU8PXXhbTwKM3bemBFSN5PKRN0h73pEQaJdr3zS
- LEPb9kvI6sjdD5IHpMzNskHprH4+/dPn1ey73iAeUidazh5tLCe7GYnhf1EgMPqWwl4QP2Vwdh7
- d5q6M0uv18R6kvQjHA6C3pAgXkE+UXLoWMM7ix5KnH0uzk+/WJZD8Ok3o0i271yH8x2SkuUKHeQ
- XKLZXVrgg2X41hCjKD7mgZ+kkMLBfkiVqW+i+aB9POQOrXPbolxiMd9g3A12ra95kGD2QO3tpsI
- lk9TUa0BM0+gaVYjgeA6BT3raL+O1SdicjkNv1RpkmaMq73DrJ91EfJmmcYSD6J3pqq83VQCcCK
- E9iBYM6ZZB6WMItW4CiVYxN3jT0/bW4fT+YKhaxnNCWr4ywgb8NWg/k2wC9Zo0BqP7VhYh3Lebl
- mrmc4Gj4clYDLU8wGM4J8eBmSIHzB3Ckkm85SdPwqzD+lO8qqRlTLmtwpeTuyiQ1WKrZ6ORZjDC
- lWEOWXqH+IiIM5Ck9vd55qm151LZQ8Bq4ZRNOeujPvkBa4GdlHfAB6OSFYHWkXHte52YI4Ftsxa
- TQLHWshdjyN3tPwgWurSZsAjftkDYIxihy7l0SXs7UnUKFuoiiS2++mTRfhrNHca6AE478fGqEf
- A4Usz6mq1NzFBNA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-SO_KEEPALIVE support has been added a while ago, as part of a series
-"adding SOL_SOCKET" support. To have a full control of this keep-alive
-feature, it is important to also support TCP_KEEP* socket options at the
-SOL_TCP level.
+Hi Matthieu,
 
-Supporting them on the setsockopt() part is easy, it is just a matter of
-remembering each value in the MPTCP sock structure, and calling
-tcp_sock_set_keep*() helpers on each subflow. If the value is not
-modified (0), calling these helpers will not do anything. For the
-getsockopt() part, the corresponding value from the MPTCP sock structure
-or the default one is simply returned.
+Thank you for your modifications, that's great!
 
-It looks important for kernels supporting SO_KEEPALIVE, to also support
-TCP_KEEP* options as well: some apps seem to (wrongly) consider that if
-the former is supported, the latter ones will be supported as well. But
-also, not having this simple and isolated change is preventing MPTCP
-support in some apps, and libraries like GoLang [1]. This is why this
-patch is seen as a fix.
+Our CI did some validations and here is its report:
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/383
-Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
-Link: https://github.com/golang/go/issues/56539 [1]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.h |  3 +++
- net/mptcp/sockopt.c  | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/8999961874
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c09357e04f23..8c7ab1d50c75 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -309,6 +309,9 @@ struct mptcp_sock {
- 			in_accept_queue:1,
- 			free_first:1,
- 			rcvspace_init:1;
-+	u8		keepalive_cnt;
-+	unsigned int	keepalive_idle;
-+	unsigned int	keepalive_intvl;
- 	u32		notsent_lowat;
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index d9f0d36e24ad..794d8b63024a 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -622,6 +622,30 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	return ret;
- }
- 
-+static int __mptcp_setsockopt_set_val(struct mptcp_sock *msk, int max,
-+				      int (*set_val)(struct sock *, int),
-+				      unsigned int *msk_val, int val)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	int ret = 0;
-+
-+	if (val < 1 || val > max)
-+		return -EINVAL;
-+
-+	*msk_val = val;
-+	sockopt_seq_inc(msk);
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+
-+		lock_sock(ssk);
-+		ret |= set_val(ssk, val);
-+		release_sock(ssk);
-+	}
-+
-+	return ret;
-+}
-+
- static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
-@@ -818,6 +842,22 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	case TCP_NODELAY:
- 		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
- 		break;
-+	case TCP_KEEPIDLE:
-+		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPIDLE,
-+						 &tcp_sock_set_keepidle_locked,
-+						 &msk->keepalive_idle, val);
-+		break;
-+	case TCP_KEEPINTVL:
-+		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPINTVL,
-+						 &tcp_sock_set_keepintvl,
-+						 &msk->keepalive_intvl, val);
-+		break;
-+	case TCP_KEEPCNT:
-+		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPCNT,
-+						 &tcp_sock_set_keepcnt,
-+						 (unsigned int *)&msk->keepalive_cnt,
-+						 val);
-+		break;
- 	default:
- 		ret = -ENOPROTOOPT;
- 	}
-@@ -1332,6 +1372,8 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
- static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    char __user *optval, int __user *optlen)
- {
-+	struct sock *sk = (void *)msk;
-+
- 	switch (optname) {
- 	case TCP_ULP:
- 	case TCP_CONGESTION:
-@@ -1352,6 +1394,18 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		return mptcp_put_int_option(msk, optval, optlen, msk->nodelay);
- 	case TCP_NOTSENT_LOWAT:
- 		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
-+	case TCP_KEEPIDLE:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_idle ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_time) / HZ);
-+	case TCP_KEEPINTVL:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_intvl ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_intvl) / HZ);
-+	case TCP_KEEPCNT:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_cnt ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_probes));
- 	}
- 	return -EOPNOTSUPP;
- }
-@@ -1467,6 +1521,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
- 	__tcp_sock_set_cork(ssk, !!msk->cork);
- 	__tcp_sock_set_nodelay(ssk, !!msk->nodelay);
-+	tcp_sock_set_keepidle_locked(ssk, msk->keepalive_idle);
-+	tcp_sock_set_keepintvl(ssk, msk->keepalive_intvl);
-+	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
- 
- 	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
- 	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/852e82e9b555
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D851490
 
--- 
-2.43.0
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
