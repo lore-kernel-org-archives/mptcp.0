@@ -1,176 +1,127 @@
-Received: from madrid.collaboradmins.com (madrid.collaboradmins.com [46.235.227.194])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C2B93F8D6;
-	Wed,  8 May 2024 07:58:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=46.235.227.194
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0595D757F7
+	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 09:45:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715155104; cv=none; b=gQ4T2L0LXhqW/pB+iPtxRhC2vQXpUkZORoctNgSKFqiwpu82JG31vKlnrXFkq5gS1NUDo3zNgLjfHCumcCS8W1PpwNK7H8ckUIzBfWJ2kDZWQzZvlDhg3d3v0L4VBmsMw80dDmbO5s7GQyBalxCj+Gks06aXedKEu9V1B+fGf8E=
+	t=1715161502; cv=none; b=Dv681E7pndyvDqIUmT62Pn2ByFNhpHHIru0hy5OPnoNfnBlrR/60vhkRNPQp4gZ7Mp+WVCL/HbqlGJQyNpOuNu6hL+9A9nqx/74FzuBzDd1ZbkeY1Hvm3sMWPPU//fAacnaGPnmVAgf0NGl4eL1HhjofYfOLZUpYuIawZV45Slw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715155104; c=relaxed/simple;
-	bh=W8h0zv7fM5rho2qCrJQe63u3RrkuJY8jHMl1xzQ0llk=;
-	h=Message-ID:Date:MIME-Version:Cc:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=IjU25Xg9gPe5MqgyNQI+U3t/5SVR1EJeHEUhkho0498dTu6O/PwyMaXW/1V8dqTMNciDI3/Ib7JxDW4bGVwTxeFpb9L0irSuXYBlYHPO7p5/4qsnQIxnJ3cc+vzZGpmgGXU6AJRQn8PXpSLDRpfFxbisyejQSs7AqMsrCk1ga40=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com; spf=pass smtp.mailfrom=collabora.com; dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b=d+6Wlldu; arc=none smtp.client-ip=46.235.227.194
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=collabora.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=collabora.com
+	s=arc-20240116; t=1715161502; c=relaxed/simple;
+	bh=Cnu4tmvCs2Y1wi6KNdfzkOGfCsGacWmjwyCjZfGa1s4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Wnz+G+D9wWdVeHQJG1DOoj41ja25IiOdVAJ/pAPoQ+YX/L9xK0UCVnRL3oCKQC61TVb3zwDZo80nSAEeDW6VMtbiVFpR0bVLXcebz76USTUjrKLuQ2h09keBj+vBIpEjlzAVJkGjRIJdPynHJih2y1SwAQ4ppguijmEnqFMeRqI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oeDdTDcb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=collabora.com header.i=@collabora.com header.b="d+6Wlldu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=collabora.com;
-	s=mail; t=1715155100;
-	bh=W8h0zv7fM5rho2qCrJQe63u3RrkuJY8jHMl1xzQ0llk=;
-	h=Date:Cc:Subject:To:References:From:In-Reply-To:From;
-	b=d+6WlldukdN+eWmS3sBsn4libaX2zcJvXa/ngL+dhdc+DchosZSUl43ALM0fKrizz
-	 ysZ99uHC/8UpNmyFE4hOPapdp0NUzrlzrQjGLrkMDMqYNps7lgHGiCM7grlVWeqvuL
-	 e5HkvXoNYPhMwpb30PKIuWAHw1A/b8v33oat12Wn15tu738O33/VYc94jtdztajScu
-	 4J+5rFyzWIZ90H5CzrX9B4Ib32RGjnbcFX2KDX2Cv9yM6dA7sRVQyStsK2OIpLFTHR
-	 MsAgmoQsx7QhT2c2rNTU9MLlxEjijsJQpah0OPot4l0rd5cOVPx4wu8rShkkg7Xmln
-	 rRM76zFaWDvsw==
-Received: from [10.193.1.1] (broslavsky.collaboradmins.com [68.183.210.73])
-	(using TLSv1.3 with cipher TLS_AES_128_GCM_SHA256 (128/128 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: usama.anjum)
-	by madrid.collaboradmins.com (Postfix) with ESMTPSA id 5163A378107C;
-	Wed,  8 May 2024 07:57:56 +0000 (UTC)
-Message-ID: <e3f6bb2a-a9bd-43c2-9468-85242eab0390@collabora.com>
-Date: Wed, 8 May 2024 12:58:20 +0500
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oeDdTDcb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC301C113CC;
+	Wed,  8 May 2024 09:45:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715161501;
+	bh=Cnu4tmvCs2Y1wi6KNdfzkOGfCsGacWmjwyCjZfGa1s4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=oeDdTDcbaGKyk5I0igE9H1JpyiZ6AzApPFKtFvac9r5InvrOFVrOPOTs5zwt9DvnW
+	 qm1Kp2LPtq7I6SPB86oavg+qSbY87o1bZ9vbdph1GmGdsMBfiE1BUS/uUKGanrVn4f
+	 ktQLFYc6gPpMS3OARKPE79E0v+efrEhj/Elp9tIBRF1gAztTCE6yeMLiBolIbMruON
+	 b3Bj5SshjYnw1h3towTDRvqpu/kY3ryKkdJZpToqFVQph8P5RdevYuwOiCjnkclFG+
+	 HNTWJDhd7UocfKHH8HPsXN5tUwI4EoTvFTezDmLAEfASFF2IK0Vs3C5SA8ufHFTiCb
+	 wxS7UVAKNnTDw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net 0/2] mptcp: getsockopt(SO_KEEPALIVE) and
+ TCP_KEEP* sockopts
+Date: Wed, 08 May 2024 11:44:54 +0200
+Message-Id: <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Cc: Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
- linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
- linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org
-Subject: Re: [PATCH v2 5/5] selftests: Drop duplicate -D_GNU_SOURCE
-To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
- Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
- Takashi Iwai <tiwai@suse.com>, Catalin Marinas <catalin.marinas@arm.com>,
- Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
- Johannes Weiner <hannes@cmpxchg.org>, Christian Brauner
- <brauner@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
- Kees Cook <keescook@chromium.org>,
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
- <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>
-References: <20240507214254.2787305-1-edliaw@google.com>
- <20240507214254.2787305-6-edliaw@google.com>
-Content-Language: en-US
-From: Muhammad Usama Anjum <usama.anjum@collabora.com>
-In-Reply-To: <20240507214254.2787305-6-edliaw@google.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJZJO2YC/yWMQQqDMBAAvyJ77kKMxoJfkR5sXHWxTZZsEEH8e
+ 9P2MIc5zJyglJgU+uqERDsrx1CkvlXg1zEshDwVB2tsa5y541uyF/yyEcn44p1Qo9+iZEXXdlP
+ zrOfGug7KQhLNfPz2A/zLQBke1/UBCkPsHHkAAAA=
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2790; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Cnu4tmvCs2Y1wi6KNdfzkOGfCsGacWmjwyCjZfGa1s4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmO0mc7MeqPKn1/H1mtg7IMounOIcJT3zHjt3t0
+ EkQjWmfFhiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjtJnAAKCRD2t4JPQmmg
+ c3wDEAChwqRt8UjgIgGgtCucnsSz1Na5Sqldg9YxcqzSX67Z7ApS3eHwyI6HXLfgzJN38tI9or+
+ O2QJXQS1eAJr4oYbZE+cV8YuUvBzARAlUPUAPrHI/ZiStYruDq49bkUOL+O3ZGm5PLsB0H3H7/l
+ +uaf54TADG1e9fEAwSgJm9LrlvElNPZV2IMVB+2AMQit49fpJIul3qs0rNYJXP34J6uB7iTQKy0
+ bZ4IQAoyYX/tTcmd5lltGz3+QWdOtHSKjaTaO3nUeqU51RtIiEMAubyqsIkHpN3OvjNUaBRBgLe
+ dbqcRtJOvkeAwcI258jJHxfSCvK6+OArNHYe6Ucw9RMtfkkO7deKEkMzQKe6A/Exv4JY9Ims4z/
+ hjoKlWXNgKSICl86YxYW2WI4skgPXeJzDtK9cF5OL6n4dsimalK9HqcuNd/pAxN+QU2RQbOB3/m
+ hJ8KCMRtP3sM2uFQPmjQwuyctOaBGqG7MELMevjI5oerBMSSO23AoEzufya8XL+i0EIeU6cl+yO
+ /RZ4qUG7cnO5VIwYxQMTaaY8y841FmsoXI+HFPsMvauCITY8Xy7ztSghXkLkeKK4+4NE+OdKIja
+ 7oq3aHgd8ss5t3FwhaT2eyKTA4uACnYvqXlRhAFdu6qJzJmg2U7bW8gtfWmNWS1eUqknJwdrxW+
+ tP9VbTy4HhyfHHg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 5/8/24 2:38 AM, Edward Liaw wrote:
-> -D_GNU_SOURCE can be de-duplicated here, as it is added by
-> KHDR_INCLUDES.
-> 
-> Signed-off-by: Edward Liaw <edliaw@google.com>
-Reviewed-by: Muhammad Usama Anjum <usama.anjum@collabora.com>
+This is linked to a discussion we had a few weeks ago: not supporting
+TCP_KEEP* socket options is preventing MPTCP to be used in some apps or
+libraries like it was the case in GoLang recently.
 
-> ---
->  tools/testing/selftests/futex/functional/Makefile | 2 +-
->  tools/testing/selftests/iommu/Makefile            | 2 --
->  tools/testing/selftests/net/tcp_ao/Makefile       | 2 +-
->  tools/testing/selftests/resctrl/Makefile          | 2 +-
->  4 files changed, 3 insertions(+), 5 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/futex/functional/Makefile b/tools/testing/selftests/futex/functional/Makefile
-> index a392d0917b4e..f79f9bac7918 100644
-> --- a/tools/testing/selftests/futex/functional/Makefile
-> +++ b/tools/testing/selftests/futex/functional/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  INCLUDES := -I../include -I../../ $(KHDR_INCLUDES)
-> -CFLAGS := $(CFLAGS) -g -O2 -Wall -D_GNU_SOURCE -pthread $(INCLUDES) $(KHDR_INCLUDES)
-> +CFLAGS := $(CFLAGS) -g -O2 -Wall -pthread $(INCLUDES) $(KHDR_INCLUDES)
->  LDLIBS := -lpthread -lrt
->  
->  LOCAL_HDRS := \
-> diff --git a/tools/testing/selftests/iommu/Makefile b/tools/testing/selftests/iommu/Makefile
-> index 32c5fdfd0eef..fd6477911f24 100644
-> --- a/tools/testing/selftests/iommu/Makefile
-> +++ b/tools/testing/selftests/iommu/Makefile
-> @@ -2,8 +2,6 @@
->  CFLAGS += -Wall -O2 -Wno-unused-function
->  CFLAGS += $(KHDR_INCLUDES)
->  
-> -CFLAGS += -D_GNU_SOURCE
-> -
->  TEST_GEN_PROGS :=
->  TEST_GEN_PROGS += iommufd
->  TEST_GEN_PROGS += iommufd_fail_nth
-> diff --git a/tools/testing/selftests/net/tcp_ao/Makefile b/tools/testing/selftests/net/tcp_ao/Makefile
-> index 522d991e310e..c608b1ec02e6 100644
-> --- a/tools/testing/selftests/net/tcp_ao/Makefile
-> +++ b/tools/testing/selftests/net/tcp_ao/Makefile
-> @@ -26,7 +26,7 @@ LIB	:= $(LIBDIR)/libaotst.a
->  LDLIBS	+= $(LIB) -pthread
->  LIBDEPS	:= lib/aolib.h Makefile
->  
-> -CFLAGS	:= -Wall -O2 -g -D_GNU_SOURCE -fno-strict-aliasing
-> +CFLAGS	:= -Wall -O2 -g -fno-strict-aliasing
->  CFLAGS	+= $(KHDR_INCLUDES)
->  CFLAGS	+= -iquote ./lib/ -I ../../../../include/
->  
-> diff --git a/tools/testing/selftests/resctrl/Makefile b/tools/testing/selftests/resctrl/Makefile
-> index 2deac2031de9..5073dbc96125 100644
-> --- a/tools/testing/selftests/resctrl/Makefile
-> +++ b/tools/testing/selftests/resctrl/Makefile
-> @@ -1,6 +1,6 @@
->  # SPDX-License-Identifier: GPL-2.0
->  
-> -CFLAGS = -g -Wall -O2 -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE
-> +CFLAGS = -g -Wall -O2 -D_FORTIFY_SOURCE=2
->  CFLAGS += $(KHDR_INCLUDES)
->  
->  TEST_GEN_PROGS := resctrl_tests
+Supporting them is not difficult, it should have probably done before,
+when SO_KEEPALIVE support has been added. Supporting them is easy and
+isolated from the rest, it sounds safe enough to add a Fixes tag, and
+check with the stable team to backport them. I understand it can be a
+bit controversial, but it would unnecessary delay (1 or 2 years?) some
+deployments, for something that simple.
 
+While at it, getsockopt(SO_KEEPALIVE) is now returning the expected
+value.
+
+The manipulation of these different socket options can be verified with
+this simple packetdrill test:
+
+  --tolerance_usecs=100000
+  `../common/defaults.sh`
+
+  0.0    socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
+  +0     setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+  +0     bind(3, ..., ...) = 0
+  +0     listen(3, 1) = 0
+
+  +0       <  S   0:0(0)         win 8000  <mss 1024, sackOK, nop, nop, nop, wscale 0, mpcapable v1 flags[flag_h] nokey>
+  +0       >  S.  0:0(0)  ack 1            <mss 1460, nop, nop, sackOK, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
+  +0.01    <   .  1:1(0)  ack 1  win 8000                                             <mpcapable v1 flags[flag_h] key[ckey=2, skey]>
+  +0     accept(3, ..., ...) = 4
+
+  // Set and check the different Keep-Alive options.
+  +0     getsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [0], [4]) = 0
+  +0     setsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [1], 4) = 0
+  +0     getsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [1], [4]) = 0
+
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], [4]) = 0
+
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPINTVL, [75], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPINTVL, [10], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPINTVL, [10], [4]) = 0
+
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPCNT, [9], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPCNT, [2], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPCNT, [2], [4]) = 0
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: SO_KEEPALIVE: fix getsockopt support
+      mptcp: fix full TCP keep-alive support
+
+ net/mptcp/protocol.h |  3 +++
+ net/mptcp/sockopt.c  | 59 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 60 insertions(+), 2 deletions(-)
+---
+base-commit: a64044939fd33676d7098eb08397e65e83d278ed
+change-id: 20240507-mptcp-tcp-keepalive-sockopts-546d3b1f3256
+
+Best regards,
 -- 
-BR,
-Muhammad Usama Anjum
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
