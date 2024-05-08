@@ -1,161 +1,79 @@
-Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F423012BF27
-	for <mptcp@lists.linux.dev>; Tue,  7 May 2024 23:28:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85E1938F;
+	Wed,  8 May 2024 00:30:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715124536; cv=none; b=croToHfHCGDR4dZal+728DAMh7rO/XCe/LIQTQAaD41HJJYEN4EuHysTVPPt/ZkVVQpBRo/+bLuY6KnOLvuShnpSMxU6+kPJVmmyBv5sxmINFDsbKuWGi1++ZEa5KKVxVus/iimeTyrFu7ZjHAQHFrdgTtDI0tAgUdz3j4PhA/M=
+	t=1715128232; cv=none; b=km6isFrY/wYrtJ+XOZwCmBufx54S38A92mXGFM29KQBijhNoYe7G2LTvEppfJe0ydP1ZQ+yUS+mX/5hhcppXsG/ApDZEQvco6dR/1/p0RJCMItGC7RWDUOfq1XZR917c8j1S872S2+Mw9NmxFC3IhqslBSD8ZyAC8z2bQYnwFHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715124536; c=relaxed/simple;
-	bh=JX0XCKXr1thgDPxaTecjtKr6rIsRQAHKTIazy9OBhDc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=F7VZsiaWmxh5B8Rd605vpzaee1r33ZLxZ5/x3qAqyUd79CXWFC7MEr43FBEuXqJKE/gaKgfwdY5iEDB1hxWUcauUcGFgpbMQMlRx2nXrp0hScoZPC5YphALsCnAG6jqU/Au9dvxWvTjBkFRKyS9FkKF+qY688aefUf6mDqBl7Eo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org; spf=pass smtp.mailfrom=chromium.org; dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b=BWFdGDvn; arc=none smtp.client-ip=209.85.215.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=chromium.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chromium.org
+	s=arc-20240116; t=1715128232; c=relaxed/simple;
+	bh=k8BXEudDpHpt0/brJcoInDKI3eTW/lQczY+pbYkA2zk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=pr0reizOqhoA9cRbpZQKX/jf3Yy9Jq070C2FNCcxCZewE5eA3jIHmhK/bmuN0oMl5DXevAgcie1AKwXnHTpQSi6mtYfXESsmQ2kZPj3wzVI5lfc60SScIFkEP5zwgEeGP1LAJRYzb4kwMt8fKvhi1gnu1H4t1biWqY7UyLUjFZE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TSHNcXaA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="BWFdGDvn"
-Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-53fbf2c42bfso2805360a12.3
-        for <mptcp@lists.linux.dev>; Tue, 07 May 2024 16:28:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google; t=1715124534; x=1715729334; darn=lists.linux.dev;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
-        bh=Tt8XgRQm+eA+VmBxGqEcvvy66oE9R2AfbLeL3WkCPuU=;
-        b=BWFdGDvn3yKmpoPvhqSNjfqGhfnOhm0OoJJFDdsIhjMdD8Q6I/aC5xEE49u5C0Uyxt
-         A+hjsquwJpgP+zBWERVR1hfzNUoL+b1zTbGOTohRgAjrNZV0euiLRtIB5bU1wBWuDcTz
-         0N/iIVCnL9h3I23UlDrGltQ66n+U7K0lvPkZc=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715124534; x=1715729334;
-        h=in-reply-to:content-disposition:mime-version:references:message-id
-         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tt8XgRQm+eA+VmBxGqEcvvy66oE9R2AfbLeL3WkCPuU=;
-        b=Geo6DSl8t/9LS8hg0MZNrMeu7r6kZQZ0LzlRkteVZ1bRyKe3Pl+aHs6ibOKIpFN2Tu
-         PCMsAMwEhVuYqKaFaeTb/viXYqSnMJz98DvDhHBAQQR9zHmSnC+rdGpkEhEGRAT4ILzw
-         0stdzp2bK+1dP30f67+ex81bklzYIS5QeLr/lxLaCTH9NHng3Nn5gOEf2jwugwzwwLK3
-         Nd2624eSlU4ibKbFEnpp5GLGIwYXcGEx4etxNr/cFyTqqF/Oxkf2eKlpoJTW4+zd5erf
-         vHeno8p8RgsR+Xug7Bxhk+Hn7G42FNP73mfwY9H0QEIFBQVvK1xZRUHMv+fTrmemHQZM
-         ZxHw==
-X-Forwarded-Encrypted: i=1; AJvYcCWpJ728s0DL/3pTY5RjGE1UStpLsO0pAgAdlwsKj3nweAdQjFPpKim1kgRushzHPbDEJuWDvKNI0KnD9pzfLLrlguj7PHw=
-X-Gm-Message-State: AOJu0YwiKIK0BTVyhomccuXvdABkVLhxXENAAUWrowaWUwnQyiWgv0iB
-	UGnHqF10BI9xsNuwahYp5g4ICQOD1CmkBMR1CATDeGhRxs1xn/bgtXZ27OlcDA==
-X-Google-Smtp-Source: AGHT+IElkYKkPF9F5WlZiOfJXRbgeCSMUqbJ3Z1JrZ5HzzcuDvdHCUlR3LVeoTae63dQgTdtTlamYA==
-X-Received: by 2002:a05:6a20:9f88:b0:1ad:6c5:4ea1 with SMTP id adf61e73a8af0-1afc8db5479mr1525582637.41.1715124534335;
-        Tue, 07 May 2024 16:28:54 -0700 (PDT)
-Received: from www.outflux.net ([198.0.35.241])
-        by smtp.gmail.com with ESMTPSA id 60-20020a17090a09c200b002b624b0161fsm80422pjo.19.2024.05.07.16.28.53
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 07 May 2024 16:28:53 -0700 (PDT)
-Date: Tue, 7 May 2024 16:28:53 -0700
-From: Kees Cook <keescook@chromium.org>
-To: Edward Liaw <edliaw@google.com>
-Cc: shuah@kernel.org, Mark Brown <broonie@kernel.org>,
-	Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
-	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
-	Johannes Weiner <hannes@cmpxchg.org>,
-	Christian Brauner <brauner@kernel.org>,
-	Eric Biederman <ebiederm@xmission.com>,
-	OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Peter Zijlstra <peterz@infradead.org>,
-	Darren Hart <dvhart@infradead.org>,
-	Davidlohr Bueso <dave@stgolabs.net>,
-	=?iso-8859-1?Q?Andr=E9?= Almeida <andrealmeid@igalia.com>,
-	Jiri Kosina <jikos@kernel.org>,
-	Benjamin Tissoires <bentiss@kernel.org>,
-	Jason Gunthorpe <jgg@ziepe.ca>, Kevin Tian <kevin.tian@intel.com>,
-	Andy Lutomirski <luto@amacapital.net>,
-	Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
-	Oliver Upton <oliver.upton@linux.dev>,
-	James Morse <james.morse@arm.com>,
-	Suzuki K Poulose <suzuki.poulose@arm.com>,
-	Zenghui Yu <yuzenghui@huawei.com>,
-	Paolo Bonzini <pbonzini@redhat.com>,
-	Sean Christopherson <seanjc@google.com>,
-	Anup Patel <anup@brainfault.org>,
-	Atish Patra <atishp@atishpatra.org>,
-	Paul Walmsley <paul.walmsley@sifive.com>,
-	Palmer Dabbelt <palmer@dabbelt.com>,
-	Albert Ou <aou@eecs.berkeley.edu>,
-	Christian Borntraeger <borntraeger@linux.ibm.com>,
-	Janosch Frank <frankja@linux.ibm.com>,
-	Claudio Imbrenda <imbrenda@linux.ibm.com>,
-	David Hildenbrand <david@redhat.com>,
-	=?iso-8859-1?Q?Micka=EBl_Sala=FCn?= <mic@digikod.net>,
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>,
-	"Serge E. Hallyn" <serge@hallyn.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Seth Forshee <sforshee@kernel.org>,
-	Bongsu Jeon <bongsu.jeon@samsung.com>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Fenghua Yu <fenghua.yu@intel.com>,
-	Reinette Chatre <reinette.chatre@intel.com>,
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-	"Paul E. McKenney" <paulmck@kernel.org>,
-	Boqun Feng <boqun.feng@gmail.com>,
-	Alexandre Belloni <alexandre.belloni@bootlin.com>,
-	Jarkko Sakkinen <jarkko@kernel.org>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Muhammad Usama Anjum <usama.anjum@collabora.com>,
-	linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-	kernel-team@android.com, linux-sound@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
-	linux-input@vger.kernel.org, iommu@lists.linux.dev,
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org,
-	kvm-riscv@lists.infradead.org, linux-riscv@lists.infradead.org,
-	linux-security-module@vger.kernel.org,
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
-	linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
-	linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org,
-	bpf@vger.kernel.org
-Subject: Re: [PATCH v2 0/5] Define _GNU_SOURCE for sources using
-Message-ID: <202405071628.7F8C3EC@keescook>
-References: <20240507214254.2787305-1-edliaw@google.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TSHNcXaA"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 2CBF9C4DDE2;
+	Wed,  8 May 2024 00:30:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715128232;
+	bh=k8BXEudDpHpt0/brJcoInDKI3eTW/lQczY+pbYkA2zk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=TSHNcXaACur+/GZluQlXnpU37/1vNA02m//LEL3qN6PZwVJ+G6qHAOvVzI+QnkSu0
+	 O6CVpM3CjqCug/QPjwLHx270KlootJ5FaX79HisWEeDjyh5CVESORjdI9gnrbl4ipv
+	 5BDs5+3OFpphJNOm3Ce0geLeL4hweXCkbDDbNcCHp/Jt2lwO78HiXcX7sKRhc/OXrH
+	 PBkTVj9xN/4d8uTmltaOUakjQbe/ir1Dr18xk03gSD79dkCCRlTbfWwXZ+V66reLSz
+	 hRKKQPCzpw7HhF/Jdcdi4K/fR6LdSWnPyV9xjwI8OX7PoD85A05iYOZ2uPVv9yi56m
+	 5282eDtZID+rg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 20C0EC43617;
+	Wed,  8 May 2024 00:30:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240507214254.2787305-1-edliaw@google.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] mptcp: only allow set existing scheduler for
+ net.mptcp.scheduler
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171512823213.17947.12733712609638814177.git-patchwork-notify@kernel.org>
+Date: Wed, 08 May 2024 00:30:32 +0000
+References: <20240506-upstream-net-20240506-mptcp-sched-exist-v1-1-2ed1529e521e@kernel.org>
+In-Reply-To: <20240506-upstream-net-20240506-mptcp-sched-exist-v1-1-2ed1529e521e@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ gregory.detal@gmail.com, stable@vger.kernel.org
 
-On Tue, May 07, 2024 at 09:38:25PM +0000, Edward Liaw wrote:
-> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
-> asprintf into kselftest_harness.h, which is a GNU extension and needs
-> _GNU_SOURCE to either be defined prior to including headers or with the
-> -D_GNU_SOURCE flag passed to the compiler.
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Mon, 06 May 2024 17:35:28 +0200 you wrote:
+> From: Gregory Detal <gregory.detal@gmail.com>
 > 
-> v1: https://lore.kernel.org/linux-kselftest/20240430235057.1351993-1-edliaw@google.com/
-> v2: add -D_GNU_SOURCE to KHDR_INCLUDES so that it is in a single
-> location.  Remove #define _GNU_SOURCE from source code to resolve
-> redefinition warnings.
+> The current behavior is to accept any strings as inputs, this results in
+> an inconsistent result where an unexisting scheduler can be set:
 > 
-> Edward Liaw (5):
->   selftests: Compile kselftest headers with -D_GNU_SOURCE
->   selftests/sgx: Include KHDR_INCLUDES in Makefile
->   selftests: Include KHDR_INCLUDES in Makefile
->   selftests: Drop define _GNU_SOURCE
->   selftests: Drop duplicate -D_GNU_SOURCE
+>   # sysctl -w net.mptcp.scheduler=notdefault
+>   net.mptcp.scheduler = notdefault
+> 
+> [...]
 
-It's a lot of churn, but I don't see a way to do it differently. :)
+Here is the summary with links:
+  - [net] mptcp: only allow set existing scheduler for net.mptcp.scheduler
+    https://git.kernel.org/netdev/net/c/6963c508fd7a
 
-Reviewed-by: Kees Cook <keescook@chromium.org>
-
+You are awesome, thank you!
 -- 
-Kees Cook
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
