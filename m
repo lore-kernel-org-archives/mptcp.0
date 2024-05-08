@@ -1,98 +1,171 @@
-Received: from mail-wr1-f46.google.com (mail-wr1-f46.google.com [209.85.221.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83EAE28F1
-	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 14:32:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA3571272A3;
+	Wed,  8 May 2024 15:33:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715178773; cv=none; b=hA91jlZHegfUbzXjjKAxI7s1r0UcxYcham/lqRp/5E66ENzwl4W+gDlzrO4zgX0NoDPih9KitgNBw3FxSymVGzRmjJmBDQruFC9bQiCwpn3tz3/5DRdO6ApNB5AnZAm4Ej77Y+IesOc1hdPVefuo6Ivqg1IHPwUG864o057XCZo=
+	t=1715182441; cv=none; b=eNUNzQd8urEpMHNBySyRMOA5e+LpP7p0/fHs8C8PtvJQqKcjqs4hVIWrH+tBsdcyLTRDDre8rKWb2TWb+lFVW9BWkzx8/4VuOr8TaTBHNkFX4mFWtXaadF1gzhLhxvuigEHdpJUJ2vYQrjSYBWgIPS6ClqTEn4c55+ST9N3gHZM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715178773; c=relaxed/simple;
-	bh=HVuSNV30ElxcT1+wSpbmK0uLVc4u+3qE7HNXqWCBkzE=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=J+zI+FONMuxB1y2bN2+OCLI087zFW8yT7UOxK2+UUH5VBXlpWfBMpib4yY5dgeal7ZsMqwOBC56kDA+OCNl+aoSDChNStU4wEb/ZAhjDBCmKZwCU+Jw1258CLiHmii9xLPWelU5yLmxKQ8SaFyMoMldrzAL9aMOmHlaAdbYL03M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Hgp4z2ww; arc=none smtp.client-ip=209.85.221.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715182441; c=relaxed/simple;
+	bh=cHqIt/5KCdqz0VMsKYMeMP3dgxBzGZKTJJHYdhJdLmc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kevgm5lVHJSHvj48AQel9g31hvaxN7zG0xvylSmNjIV4pWfkzLyXMKfplT6nt4CoyV6/ORXRPUT0iI/HjVIMQTBLzarvwT+isMZR3cJu9Dnx/oWOi0vDYAg95F00o2fICryFhvk5p9Jq+rUNG/vzkIaBxJSFRtnoEQSHoc1rhZ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=CterrzeT; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Hgp4z2ww"
-Received: by mail-wr1-f46.google.com with SMTP id ffacd0b85a97d-34e7a35d5d4so3343274f8f.2
-        for <mptcp@lists.linux.dev>; Wed, 08 May 2024 07:32:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715178770; x=1715783570; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HVuSNV30ElxcT1+wSpbmK0uLVc4u+3qE7HNXqWCBkzE=;
-        b=Hgp4z2wwasHawOvBITB0XkKC5fzlQpQn2YE+u3FcqmcjI3zC7jyTQOi5YmIgJ1M4Li
-         d9WHvznuF8SHc/3usxoqm5ipjxkl3oodBv4y7BgNOF2MCB+lWufjDYF2YaccjCRw4YIp
-         M2gMC4Dt7lsZ5mumKMBfrCjOldGuvyJZXipdpwtGwcAkbI9X7f+Q/FBbmCuMYoilfoMs
-         XoSFZFfi47pI73S3RZS4S3pmXAJULWraxAk++wmb+tQ+5/CGe0a266JJTsdqGmBdfIn+
-         xvkaivTKuKYek3eCPtfN/ypB7C9wwatAFw/RFGExAIq4SwtnFU912JzJxSHeO1J2C4gd
-         e0sg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715178770; x=1715783570;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=HVuSNV30ElxcT1+wSpbmK0uLVc4u+3qE7HNXqWCBkzE=;
-        b=D3RS6Ux0mOoR8adpkjV8eV9w6nC+FdOop0bcH8EKr8lmCOkA6Lqtw/ydXJYxVfOddK
-         fKNIf0bilbc0KaAW6smODr+OBtiwCR1OGa6ioY/yeNxQJd2vy/EYRPhMuknFWJD23D+1
-         2ditYDc1eG59pTwm0TgvkM4mVvH9dQ6nu5FVqqrJeMztVCg4zhEf+MIE4B0PzxOtmH9s
-         FFu+eINq/qblElaMVYBlSAOvnurSWLvuBCqc5tH3bmQlYPRNJrcgAS8m+Epo8z2xikKl
-         96WaPy9YIkoVW4EGXMkTixdgAAV7BI/e+XXJ20zMZ/lySylUxPAcRfEc8VrIRspmSIpx
-         nQXA==
-X-Gm-Message-State: AOJu0YxhA5Ss+lPyQNQV02H+kw3ppJmVRBe05bWYNkSs8m8HFyoqIpWu
-	pbZQYFbCIp/n25tRU6d8+KjnJvb5VRBTyijX1DrxAnnMNWCOYSgQn6JeJwRB3H8N6tJt4niJ6qg
-	b3KltOe97Mc5uww0cHEvSHPgc+bo=
-X-Google-Smtp-Source: AGHT+IGIQzT0RrKC7x0GqEWEZhRSqTUdJnPjGul2tjjJI1pgCNj6AAR9flqehUHmkOSFJCiYE/2NxHIW09V4wGkEHx0=
-X-Received: by 2002:adf:b1d1:0:b0:34e:21cd:dbed with SMTP id
- ffacd0b85a97d-34fca14b28fmr2461061f8f.14.1715178769627; Wed, 08 May 2024
- 07:32:49 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="CterrzeT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1715182439; x=1746718439;
+  h=message-id:date:mime-version:subject:to:cc:references:
+   from:in-reply-to:content-transfer-encoding;
+  bh=cHqIt/5KCdqz0VMsKYMeMP3dgxBzGZKTJJHYdhJdLmc=;
+  b=CterrzeTwsZBvNPSrGjN728cTtzGyu++pqxXtz4r0MvlbsMPQNTkmLe/
+   WqWhbKonICagKfHT0KrFmyATb60wUIelJdnp56HqrnVByfZP8XWoAlvh0
+   hphnlcGXui8ylZBx46Ud/sluakGfZWSnAd6UCsilue3v8Lp5kgEc0Hs7O
+   5L49+DIfSG+8pz5+bjyJxgMJZ9OqmDMte9shwjc8vVAZgTK/2AVK/puxU
+   Bp57kro9mm0lGBPrrCoioj+QJgHnBNKH1AVLrVhF6fK0UlPZMRss+D7ZD
+   KqEm6sMjwQyV3OSDhYRBrGihyf+kN8CZ1LokqLWT8yTVhzAYzzxmr/tJP
+   A==;
+X-CSE-ConnectionGUID: djEs0E1VTDSTGH+FjKNfqQ==
+X-CSE-MsgGUID: fdvI1weJSRqSCJ8L2f5EZw==
+X-IronPort-AV: E=McAfee;i="6600,9927,11067"; a="10922382"
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="10922382"
+Received: from orviesa004.jf.intel.com ([10.64.159.144])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:33:32 -0700
+X-CSE-ConnectionGUID: qWug9sBpQt6NDBOZupjgug==
+X-CSE-MsgGUID: 1hBdEjUbRTeRkYbf89xuGA==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.08,145,1712646000"; 
+   d="scan'208";a="33760155"
+Received: from hemanthr-mobl.amr.corp.intel.com (HELO [10.209.17.69]) ([10.209.17.69])
+  by orviesa004-auth.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 08 May 2024 08:33:31 -0700
+Message-ID: <c3fc5396-bc71-4dee-a3e0-d59dbbc6eda1@intel.com>
+Date: Wed, 8 May 2024 08:33:24 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
- <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-3-e2bcbdf49857@kernel.org>
- <CAADnVQ+ADQRrZmZ_M9LLGj9u_HOo7Aeup+kid62xZfLCvSxUOQ@mail.gmail.com>
- <843ea6eb-a28d-437c-9c98-0b8c8816c518@kernel.org> <CAADnVQLA+2uoJJAJNFoK-EnUjLAwxJjxOXAizLWhcx4mf+C2Vg@mail.gmail.com>
- <42d0718f-296d-48ca-a21a-b4708e9bd6e9@kernel.org>
-In-Reply-To: <42d0718f-296d-48ca-a21a-b4708e9bd6e9@kernel.org>
-From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date: Wed, 8 May 2024 07:32:38 -0700
-Message-ID: <CAADnVQL4z=LcJW7iD246Tc+TB-Ast-eYHA9DaN9q6dgQ_Z97Wg@mail.gmail.com>
-Subject: Re: [PATCH bpf-next 3/4] selftests/bpf: Add mptcp subflow example
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
-	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, 
-	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
-	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
-	Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, LKML <linux-kernel@vger.kernel.org>, 
-	Network Development <netdev@vger.kernel.org>, bpf <bpf@vger.kernel.org>, 
-	"open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>, Geliang Tang <tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 2/5] selftests/sgx: Include KHDR_INCLUDES in Makefile
+To: Edward Liaw <edliaw@google.com>, shuah@kernel.org,
+ Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>,
+ Takashi Iwai <tiwai@suse.com>, Catalin Marinas <catalin.marinas@arm.com>,
+ Will Deacon <will@kernel.org>, Nhat Pham <nphamcs@gmail.com>,
+ Johannes Weiner <hannes@cmpxchg.org>, Christian Brauner
+ <brauner@kernel.org>, Eric Biederman <ebiederm@xmission.com>,
+ Kees Cook <keescook@chromium.org>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
+ <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
+ Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
+ <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Fenghua Yu <fenghua.yu@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>
+Cc: linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
+ linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org,
+ kernel test robot <oliver.sang@intel.com>
+References: <20240507214254.2787305-1-edliaw@google.com>
+ <20240507214254.2787305-3-edliaw@google.com>
+From: Dave Hansen <dave.hansen@intel.com>
+Content-Language: en-US
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+In-Reply-To: <20240507214254.2787305-3-edliaw@google.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, May 8, 2024 at 12:36=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
->
-> >
-> > The concern with picking reno is extra deps to CI and every developer.
-> > Currently in selftests/bpf/config we do:
-> > CONFIG_TCP_CONG_DCTCP=3Dy
-> > CONFIG_TCP_CONG_BBR=3Dy
-> >
-> > I'd like to avoid adding reno there as well.
-> > Will bpf_setsockopt("dctcp") work?
->
-> We picked Reno because this is an inlined kernel module that is always
-> built: there is no kernel config to set, no extra deps. Also, it is
-> usually not used as default, mostly used as fallback, so the
-> verification should not be an issue.
+On 5/7/24 14:38, Edward Liaw wrote:
+> Add KHDR_INCLUDES to the CFLAGS to pull in the kselftest harness
+> dependencies (-D_GNU_SOURCE).
+> 
+> Also, remove redefinitions of _GNU_SOURCE in the source code.
 
-Ahh. didn't realize that it's builtin. Then sure. keep it as reno.
+From an x86 and SGX perspective, looks fine.  I assume Shuah is planning
+on taking this pile.
+
+Acked-by: Dave Hansen <dave.hansen@linux.intel.com>
