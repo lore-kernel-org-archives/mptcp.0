@@ -1,123 +1,152 @@
-Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 010092836D
-	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 10:43:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2989D26AFF
+	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 11:11:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715164988; cv=none; b=dZKj/G/OmKYNcyZm5QQdgSpu0yXGZRcZfaRqC61GeuSFrJ4PGZHo+Chfm7nbHyQfRYf++WnPCsIXfgWpJ4ss+MgK7999ponhbngm6xYfkWGGBKvoj00c+o0Kt9/qRB6Kb0GDF4ZhaIynQSusclSaURPF+vI4hYuU5pEN1+5r5Vo=
+	t=1715166703; cv=none; b=VeeKdFYQTM2WNqUneBiSjyAW11GBJF5Bor3Q5+NYB4o+OTJVEU1vxZWWhM8zTpqjFNkgPvm6RGwXHh82eRlUXlE9nT4pmA0nJO9pGhDvLHgv1PKBYTh2OIoeoEQ6aKKhX3vodOqb0gtyjp78/OxWdWgXoOevkg/BsqjWKRWUsAs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715164988; c=relaxed/simple;
-	bh=gV2LOZjGOE1Na/fhLv7QHhqCc+6p2/jvYPgEAHGrypw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=YAfD8kPKfe2KY5H+N5iIRBO9/17QEMHkFxu8KSlDaG1FsEw7wXBc4b293Rza6brEYx6SsFfl1/TIh92FloELN1GuytRxbXLoaXH4s/v6wtI9BFZKMiU52Xsglf2zR+LPxwC39fotqE64S+fI+QuKAx1bxKbfho52o24Wv7Aq43I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cr7Xugfm; arc=none smtp.client-ip=209.85.222.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715166703; c=relaxed/simple;
+	bh=aLAiTNb/OSfMhITvWNYHasjkhR0VMZBn+8J2tJmE7K8=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=BAGTXqFCJCM2ZjMJihZKgDwFjzORMC4DTgJVgEfgAQ2STl+JdyFfVffBGSCmL7lh1gSMt13s2aLRD+V4fy89P+OBZL/XgxMRcPbuOo+DOOsANYoxbxvV+1ijsux1X7Ns7q79ATMZJf4bI9KmolCM0ysDehNJpQ7fG9ILjWAEnmg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlsgmaQx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cr7Xugfm"
-Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-78f043eaee9so237734985a.3
-        for <mptcp@lists.linux.dev>; Wed, 08 May 2024 03:43:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715164986; x=1715769786; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0w6mu4U5k11OxE/DXVypXwDEU8/upGeVDhbmjS8to8w=;
-        b=Cr7XugfmE0gSYgde9tf7aDGfbrkJldfRJm0ObJJBaZR3TJn2TwH0HHfVmmeRsOCLwx
-         qPyOh3odev9bvX8huZc+w924a6F+/no74Atgh5gky/8lLFBF8+VkBkioJDYiYrPOZPQz
-         2yL/PzWibW2zB5U3riKAZQLO9gP8rHFzzT7G2zzjfBtFz1ytc/TUhm6oFjkLn2wx+3BG
-         9UhXbvmeaxNHi+F8S8C7//nce6rzCUvCnWEVJb7eevd/bEzw5RZ38y9/dfUrmH5x5/Sq
-         ffecCbhgWeJjOO1esK8MpywNw4RHsIYcjctv/vdeiiKatbLuBN0a9NuZpF0ltprQEDgZ
-         qWuA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715164986; x=1715769786;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0w6mu4U5k11OxE/DXVypXwDEU8/upGeVDhbmjS8to8w=;
-        b=Q0T6sFDL2xZDz2amwxAr7koRSuHsC7gBAxgmIpauCiNz4elzSb8MfuIGSaNVdi0KwG
-         oC3Ta4Xem/Qdzo5ilJADcy2i8Fv8EfzZqHWYx4AelPQX/bl+BCC15NfERpZnfTe9O96D
-         1l59REPVCHTUkINu61/hj3nZxKMeO3CWdtro/RPzx5rhFPy7D6D+5DP6NXkBZnwBpi0J
-         oI4SJPdON2ps58ruNZbYBBqYy1VJnWe+2URI/6lVhjpgScakpcJ6ytHHY3RKWO7B7W7i
-         anq9w2n+Xxa7+pqpbKvPgoBckCFmQj6LNBzCyvEMbeFQRmIKH1ZaKcEkctD3Kdm++1R2
-         sTNQ==
-X-Gm-Message-State: AOJu0Yz4DWbomAGnvYY5h4CI+gQynVjRHdD+TMQnYUm0M0BaX6SIO0Lz
-	8x0exh6SMpRaqQfPOpN8KwfjjMdjKySMZ/kfdr3p92IvEEZUd0Y=
-X-Google-Smtp-Source: AGHT+IGJrCHw40DuvDXBDehJVRDhrWJC5xvx/WzGHoNvtMp4LpeUPNuppuPksMXc66dgetacysO3jQ==
-X-Received: by 2002:a05:620a:25ce:b0:792:b8f8:7832 with SMTP id af79cd13be357-792b8f878f3mr62743285a.5.1715164985816;
-        Wed, 08 May 2024 03:43:05 -0700 (PDT)
-Received: from [127.0.0.1] ([20.51.206.98])
-        by smtp.gmail.com with ESMTPSA id vq12-20020a05620a558c00b00792a414a2fasm2111373qkn.112.2024.05.08.03.43.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 08 May 2024 03:43:05 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
-References:
- <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/2] mptcp: getsockopt(SO_KEEPALIVE) and
- TCP_KEEP* sockopts
-Message-ID: <c4a2f59d-ef62-0bbd-44d0-5417f145f2f6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 08 May 2024 10:43:04 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlsgmaQx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3CCC113CC;
+	Wed,  8 May 2024 11:11:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715166702;
+	bh=aLAiTNb/OSfMhITvWNYHasjkhR0VMZBn+8J2tJmE7K8=;
+	h=Date:To:Cc:From:Subject:From;
+	b=BlsgmaQxR+7F4765+S4Tf7u+wdCAXblkxXoiqTmiJnl7dOCbeBvoXRKd42n3ZP1Fa
+	 K7dvZch4zCOwS0F13NLNZxKHSCzN/WupkE73mkSkNaFc0xggnwJNpAbyAKhuO/ogV0
+	 ppLftFSCJZ/LkESdJQKaHjSyWAk1OmfZzjwFfABoNdFA8vxrs0K13fEtcznL2dck+P
+	 IOJ7+Xm7ghedK3UCKu39BzZ6A9p60J0370mqKBz7DrgnmEU3YxlK82r9zOwL9BYNDU
+	 i7sULOsDzx7pevLcvWiIFwvKmWH4bgCEDsgC7YWJDsvzpF4KpcvC852JQTY8CXOObE
+	 LQziu+zTFHrvA==
+Message-ID: <52bdf14c-1c1a-411d-a72c-28e7596806da@kernel.org>
+Date: Wed, 8 May 2024 13:11:39 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-GB
+To: openssh-unix-dev@mindrot.org
+Cc: Olivier Bonaventure <Olivier.Bonaventure@uclouvain.be>,
+ Dorian Craps <dorian.craps@student.vinci.be>,
+ Christoph Paasch <cpaasch@apple.com>, Mat Martineau <martineau@kernel.org>,
+ MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Multipath TCP (MPTCP) support in OpenSSH
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hello,
 
-Thank you for your modifications, that's great!
+First, thank you so much for developing and maintaining this very useful
+project!
 
-Our CI did some validations and here is its report:
+I'm currently involved in a project around Multipath TCP (MPTCP) [1].
+MPTCP, standardized in RFC8684 [2], is a TCP extension that enables a
+TCP connection to use different paths. Multipath TCP has been used for
+several use cases. On smartphones, MPTCP enables seamless handovers
+between cellular and Wi-Fi networks while preserving established
+connections. This use-case is what pushed Apple to use MPTCP since 2013
+in multiple applications [3]. On dual-stack hosts, Multipath TCP enables
+the TCP connection to automatically use the best performing path, either
+IPv4 or IPv6. If one path fails, MPTCP automatically uses the other path.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/8999961874
+A long requested feature we got, is to have a native MPTCP support in
+OpenSSH. It is very useful when SSH is being used in a mobility use-case
+as demonstrated in [4]. I'm here to see if such native support could be
+possible.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/852e82e9b555
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D851490
+On Linux, apps can be forced to use MPTCP instead of TCP with different
+techniques (LD_PRELOAD, eBPF, SystemTAP, etc.) [5], but that's more a
+workaround, and some system administrators don't accept them.
 
+I'm aware of a previous pull-request [6] that has not been accepted
+because MPTCP was not widely supported. It is true that MPTCP is
+currently only officially supported on macOS and Linux (since 2020). It
+is also supported in load balancers and in userspace implementations,
+but that's for specific use-cases [7]. There was an ongoing
+implementation on FreeBSD, from people from the Swinburne University of
+Technology in Melbourne, but it looks like the development has stopped
+[8]. MPTCP can also be used on Windows, via their WSL2 environment [9].
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+If such native support cannot be done in OpenSSH, I guess it means we
+should ask GNU/Linux distributions to add this support. That's what
+Apple already did apparently [10] -- they already patched OpenSSH before
+to support their Network framework.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Following the xz-utils backdoor, I don't know if GNU/Linux distributions
+will continue to accept such modifications. Before asking them, and also
+to avoid having different implementations per distributor, is it still
+not OK to add (native) MPTCP support in the upstream project?
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+[1] https://www.mptcp.dev
+[2] https://www.rfc-editor.org/rfc/rfc8684.html
+[3] https://www.tessares.net/apples-mptcp-story-so-far/
+[4] http://blog.multipath-tcp.org/blog/html/index.html#real-life-testing
+[5] https://www.mptcp.dev/setup.html#force-applications-to-use-mptcp
+[6] https://github.com/openssh/openssh-portable/pull/335
+[7]
+http://blog.multipath-tcp.org/blog/html/2018/12/15/apple_and_multipath_tcp.html
+[8] http://www-cs-students.stanford.edu/~sjac/freebsd_mptcp_info.html
+[9] https://perso.uclouvain.be/tom.barbette/mptcp-on-windows-with-wsl2/
+[10]
+https://github.com/apple-oss-distributions/OpenSSH/blob/main/openssh/sshconnect.c#L487
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
