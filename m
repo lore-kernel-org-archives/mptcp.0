@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2989D26AFF
-	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 11:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 020E84C61F
+	for <mptcp@lists.linux.dev>; Wed,  8 May 2024 11:20:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715166703; cv=none; b=VeeKdFYQTM2WNqUneBiSjyAW11GBJF5Bor3Q5+NYB4o+OTJVEU1vxZWWhM8zTpqjFNkgPvm6RGwXHh82eRlUXlE9nT4pmA0nJO9pGhDvLHgv1PKBYTh2OIoeoEQ6aKKhX3vodOqb0gtyjp78/OxWdWgXoOevkg/BsqjWKRWUsAs=
+	t=1715167203; cv=none; b=pXe415eoNvsrBT9frS0aHM79j/gmW9yIR1+uKci6v+CXFzJCivuSd2HAG1eELzRQgi87tzb0tBg1LhU3ukKIZhES2koBopH5o8imesbOnh64mJKByqTuueRq42QqrLQ5b4jRBLERVACczl9Y4Evkn6+pKksDNGtnIGOyot3Tbdk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715166703; c=relaxed/simple;
-	bh=aLAiTNb/OSfMhITvWNYHasjkhR0VMZBn+8J2tJmE7K8=;
-	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=BAGTXqFCJCM2ZjMJihZKgDwFjzORMC4DTgJVgEfgAQ2STl+JdyFfVffBGSCmL7lh1gSMt13s2aLRD+V4fy89P+OBZL/XgxMRcPbuOo+DOOsANYoxbxvV+1ijsux1X7Ns7q79ATMZJf4bI9KmolCM0ysDehNJpQ7fG9ILjWAEnmg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BlsgmaQx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715167203; c=relaxed/simple;
+	bh=cPUKJUiNlYeUhQ5YdeYGS6oQPf7eHps4PVllXu5KcDo=;
+	h=Message-ID:Date:MIME-Version:From:Subject:References:To:Cc:
+	 In-Reply-To:Content-Type; b=kSG5rvJ4M3VsnZKme2aREUi6Ph0IgC3xoOYyl0KmXO3E/k6t4u+/rpnCI1kJ3HPMZMnESq1EQ2IXZqkwyfF5hfEDsOll8WlB2r3mhu73Al5LzdZ/Iwd7Sume8KwRDHC5E0shGdCi20QBJi0ygXvFyn3La+FrCZFF35wKycEByig=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P1fTxr9F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BlsgmaQx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B3CCC113CC;
-	Wed,  8 May 2024 11:11:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P1fTxr9F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CEFCC4AF17;
+	Wed,  8 May 2024 11:20:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715166702;
-	bh=aLAiTNb/OSfMhITvWNYHasjkhR0VMZBn+8J2tJmE7K8=;
-	h=Date:To:Cc:From:Subject:From;
-	b=BlsgmaQxR+7F4765+S4Tf7u+wdCAXblkxXoiqTmiJnl7dOCbeBvoXRKd42n3ZP1Fa
-	 K7dvZch4zCOwS0F13NLNZxKHSCzN/WupkE73mkSkNaFc0xggnwJNpAbyAKhuO/ogV0
-	 ppLftFSCJZ/LkESdJQKaHjSyWAk1OmfZzjwFfABoNdFA8vxrs0K13fEtcznL2dck+P
-	 IOJ7+Xm7ghedK3UCKu39BzZ6A9p60J0370mqKBz7DrgnmEU3YxlK82r9zOwL9BYNDU
-	 i7sULOsDzx7pevLcvWiIFwvKmWH4bgCEDsgC7YWJDsvzpF4KpcvC852JQTY8CXOObE
-	 LQziu+zTFHrvA==
-Message-ID: <52bdf14c-1c1a-411d-a72c-28e7596806da@kernel.org>
-Date: Wed, 8 May 2024 13:11:39 +0200
+	s=k20201202; t=1715167202;
+	bh=cPUKJUiNlYeUhQ5YdeYGS6oQPf7eHps4PVllXu5KcDo=;
+	h=Date:From:Subject:References:To:Cc:In-Reply-To:From;
+	b=P1fTxr9F4FAsY4uA0cf9pJW2uUe9bOMQzq4wXK9j4oWXr5yNYe12xqnmPo0Gf5olQ
+	 qToXmSg/LN8+ZD5uIYVuUzH3MdIjFrl0XcXtzMNXvEoAdSV/aoPBNh4s4Cq9yMK6Q4
+	 zf7FCZc3hgPEKbJox8Wm46RFczBwNSnrORNgM1NWRr8lWFGwEblsWHcjKc+8AdFc8R
+	 uwclJqFQuxLrrwFm8CEROmmwktvGuh38mk6jvUbyOCPkFuSOz+AN93g6AB5LUAbG4m
+	 63XKNPw8tf9nSHc/bHQU6P0hueF73NsbpN/F15HxZboQcDavx+KQ/1g/VPX1TfFNrD
+	 VssH7++Ri24Yw==
+Message-ID: <7b052697-15e1-425c-8127-7adfaca28c4b@kernel.org>
+Date: Wed, 8 May 2024 13:20:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,14 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Multipath TCP (MPTCP) support in OpenSSH
 Content-Language: en-GB
+References: <52bdf14c-1c1a-411d-a72c-28e7596806da@kernel.org>
 To: openssh-unix-dev@mindrot.org
 Cc: Olivier Bonaventure <Olivier.Bonaventure@uclouvain.be>,
  Dorian Craps <dorian.craps@student.vinci.be>,
  Christoph Paasch <cpaasch@apple.com>, Mat Martineau <martineau@kernel.org>,
  MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: Multipath TCP (MPTCP) support in OpenSSH
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,6 +88,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
+In-Reply-To: <52bdf14c-1c1a-411d-a72c-28e7596806da@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -149,4 +152,9 @@ Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
+--
+PS: sorry for the repost, the OpenSSH dev ML info page mentioned [11]
+the list was open for non-subscribers to post to, but it looks like it
+is no longer the case :)
+[11] https://lists.mindrot.org/mailman/listinfo/openssh-unix-dev
 
