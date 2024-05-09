@@ -1,144 +1,325 @@
-Received: from mail-ed1-f49.google.com (mail-ed1-f49.google.com [209.85.208.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E82711494CF
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 06:14:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C110814AD1B
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 10:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715235262; cv=none; b=msIrhWJxDqGDrShvBrq3ktBMQcDMeLA2T2pT3K/YdzjItxjIJ6E56q1wRS7s+1Qv8/NFPTuZcQ1JGfuM3SNNMRPFNfZXFvbkCreWf+q5d+pi0qfuxiZ+oTszlhvqC+JKPeRweg1mrnHyzvc+P/9zwUQXQSLTo1KfBw2ZffHDh5U=
+	t=1715250528; cv=none; b=A2vqfacSGr0WVrqNiGsqqhNEP/Oc356ePbk9gK/bQlwr+UrGDbqGtLrFyC333VxccqwuLiodahIT0RZfDH20fwKBcCsJrw7ku9637yMuDn5kU0K0ebBCGRMP2SDaRZVdqt5A2TjlXIJhTFx++0tY+h3/HIF062WV9rhO0fe552Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715235262; c=relaxed/simple;
-	bh=EL59YAvQ+NejbE+MgsQ0pGcYE6qA6HsEuHDusaEk0N4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=PrjWmM55ddye6/pa6xuI23c0IxDulKYbv+IcpBXJNIJqsOd05p8H19fyUbnj34XlfFXinf4ZKTyIe+6RLL/zJGzXlZEvCug4i+nZ6/oxJ2SDYMj1P3cTRHFIpoi37MDRXijSgavAf7aDVxeUvWK8qdtQh50U5jKhhfk/egcMwkI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=zitMz4/y; arc=none smtp.client-ip=209.85.208.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1715250528; c=relaxed/simple;
+	bh=XAEj2pNGEZPblYux2usNjDsB7Gr23CQ2aX1qajdei50=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=JWpftzhcoKNF+3Udno/Sj2N4blHshFmufEuK+hZCfwHbL/thUqFSE778deYQzmElaoZNnf4bHWyUvij9Rh40MhMz8rM/6vXxWwe/O1qoFhhA5gg9zWdE8Un9cjltGV12l8rR3ZA7F6ZpKdhW9NRsDekcSo6KlF6XbgspcLQRN04=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ukm20gDp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="zitMz4/y"
-Received: by mail-ed1-f49.google.com with SMTP id 4fb4d7f45d1cf-572f6c56cdaso10530a12.0
-        for <mptcp@lists.linux.dev>; Wed, 08 May 2024 23:14:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1715235259; x=1715840059; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=72bWBwjQodIuSi8MsUtQvKNvKwdUWjXGREUei480Xwo=;
-        b=zitMz4/y3MOj4Im473TNWv5wurvZHk2NQyfPQBloFm6mP0Q/sFm7wrqZaPYdtzqT1t
-         3HUSpajy1SuC0DeXKK2y6kfM/H1lN6X53jw5tayJvWzkEsCib/4KPR/LTjE8QufT85jv
-         j2/ukR+GZvAwjCM/Ced7r/PerdGSPyLoHkcQaJ0Y3aoe39Cq6NSCaclQ01eJvWp67gbZ
-         d5fTDaAxde60SXxvRnwRcFqI3BfhWC4YOoPcJ1f9+HgX+VvqNo6FmoPJ8VlDjgpOoCL+
-         Qs5il8NcCZOCZszG2yxKKYzsMMmkePiCfGSK1pijlZ6I3htO3zis3tVKpiXNMjnnfg5K
-         /DWA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715235259; x=1715840059;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=72bWBwjQodIuSi8MsUtQvKNvKwdUWjXGREUei480Xwo=;
-        b=IaU4fpIPexCXX06CQBrabHbxkOp86kWfDZyv8vjQdCNi898adoivaT01cMa5zbpy2Z
-         ygPq7fctRjprMCHOFYsQrEwKc2Ss3L8IoPS/DyPuH1MOEN7gXd6jkyLa2qvQ+EmNwqoh
-         nZsWp4IXgHjrtvPvyStHg8h9ywa+67FdcCA1nGIb0jqID/1lL0U5hedHWT3bg+u4Rnht
-         gg4D0L4bYW5lFeM06BwNeMsXsJ1nUmJbeu0M/GR2Sjh8wYEsTk7pnAfWhasy/wpnyfTv
-         s+AYSZfY2+35gsSC/7FYUkSQ17rUg2nKFAoNQnvSyf2Syzjcw8QstcysoOnw0//f/Sxq
-         X10A==
-X-Forwarded-Encrypted: i=1; AJvYcCUkrRf96W1qkUTtsxfKoQNwGU5FBDZ0UCA7a0IhcgPbTnobSn9CViyU/H+2J93RoVqycHNgqhD6flxu9O27RuqksSRxJiw=
-X-Gm-Message-State: AOJu0YyVWAMJf/6riJH3wiWlKKhmMG7aH6NAT1+LZeVaEkhl4MWagaAt
-	e8LLwIbeo6bOpEoryw6/pozuAdfw8ARB5czxq1NjytcBjXBakdTYOkpMhJX6HjPQroqn+5qck9n
-	Rv1YZXC5Dsjh64QVjSCxSOXpKWP6bSioQBx4l
-X-Google-Smtp-Source: AGHT+IHsPAG0LEeM4cJXnAxgH06RrdZlxemOxK5bdPXtb66jyshH3jVsPNC7i5pX8kAB1x6smMgaq3eKTmHMEonCtFw=
-X-Received: by 2002:a05:6402:5206:b0:572:a23b:1d81 with SMTP id
- 4fb4d7f45d1cf-5733b9d3b3emr79412a12.5.1715235258767; Wed, 08 May 2024
- 23:14:18 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ukm20gDp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF71FC116B1;
+	Thu,  9 May 2024 10:28:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715250528;
+	bh=XAEj2pNGEZPblYux2usNjDsB7Gr23CQ2aX1qajdei50=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=Ukm20gDpCNbdOAyLiuAvtKzeyBJaOE1xZP4BbJU0oaEom/pvinsgWp7nXKIcDsR7z
+	 guFkembafJ1pURA5gIE73vi10EJoouOhJe7WwI/tc9vMvJK4bRlntY1gFlTTUWMFmf
+	 o2nks6qA4PPXFu5Z+aFPFDjP9iLUoSTQ5vXLj+jShvAn1rbG35a7MWlnK9aeRkpbnp
+	 BeBLSLu6+1533JyMEPDfqkX+9ddMrHTiVDDRyrQsxATHWsCGfpChiy2yfIbkWeiw4B
+	 AU+f4+UMEeYPwugDHu35x7NYfZkzoe6XANt+E/95NM0NMYWn/aE1OOqvK+76352gLT
+	 80A8F+nPYJW9w==
+Message-ID: <0d2f4dd2-2619-4c42-8765-f8c0a0b1871c@kernel.org>
+Date: Thu, 9 May 2024 12:28:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240507214254.2787305-1-edliaw@google.com> <f4e45604-86b0-4be6-9bea-36edf301df33@linuxfoundation.org>
-In-Reply-To: <f4e45604-86b0-4be6-9bea-36edf301df33@linuxfoundation.org>
-From: Edward Liaw <edliaw@google.com>
-Date: Wed, 8 May 2024 23:13:51 -0700
-Message-ID: <CAG4es9XE2D94BNboRSf607NbJVW7OW4xkVq4jZ8pDZ_AZsb3nQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/5] Define _GNU_SOURCE for sources using
-To: Shuah Khan <skhan@linuxfoundation.org>
-Cc: shuah@kernel.org, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, 
-	Takashi Iwai <tiwai@suse.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, 
-	Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, 
-	Christian Brauner <brauner@kernel.org>, Eric Biederman <ebiederm@xmission.com>, 
-	Kees Cook <keescook@chromium.org>, OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, 
-	Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, 
-	Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?= <andrealmeid@igalia.com>, 
-	Jiri Kosina <jikos@kernel.org>, Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>, 
-	Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>, 
-	Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>, Oliver Upton <oliver.upton@linux.dev>, 
-	James Morse <james.morse@arm.com>, Suzuki K Poulose <suzuki.poulose@arm.com>, 
-	Zenghui Yu <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>, 
-	Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>, 
-	Atish Patra <atishp@atishpatra.org>, Paul Walmsley <paul.walmsley@sifive.com>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, 
-	Christian Borntraeger <borntraeger@linux.ibm.com>, Janosch Frank <frankja@linux.ibm.com>, 
-	Claudio Imbrenda <imbrenda@linux.ibm.com>, David Hildenbrand <david@redhat.com>, 
-	=?UTF-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, 
-	Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, 
-	"Serge E. Hallyn" <serge@hallyn.com>, Andrew Morton <akpm@linux-foundation.org>, 
-	Seth Forshee <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, 
-	=?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, 
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>, Fenghua Yu <fenghua.yu@intel.com>, 
-	Reinette Chatre <reinette.chatre@intel.com>, 
-	Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, "Paul E. McKenney" <paulmck@kernel.org>, 
-	Boqun Feng <boqun.feng@gmail.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, 
-	Jarkko Sakkinen <jarkko@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, 
-	Muhammad Usama Anjum <usama.anjum@collabora.com>, linux-kernel@vger.kernel.org, 
-	linux-kselftest@vger.kernel.org, kernel-team@android.com, 
-	linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, 
-	linux-mm@kvack.org, linux-input@vger.kernel.org, iommu@lists.linux.dev, 
-	kvmarm@lists.linux.dev, kvm@vger.kernel.org, kvm-riscv@lists.infradead.org, 
-	linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org, 
-	linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org, 
-	linux-actions@lists.infradead.org, mptcp@lists.linux.dev, 
-	linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net 2/2] mptcp: fix full TCP keep-alive support
+To: Paolo Abeni <pabeni@redhat.com>
+References: <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
+ <20240508-mptcp-tcp-keepalive-sockopts-v1-2-fdf7e03e14c4@kernel.org>
+ <dbaa4e59f1dbdbcf77634349ee968b4199b786f7.camel@redhat.com>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <dbaa4e59f1dbdbcf77634349ee968b4199b786f7.camel@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, May 8, 2024 at 4:10=E2=80=AFPM Shuah Khan <skhan@linuxfoundation.or=
-g> wrote:
->
-> On 5/7/24 15:38, Edward Liaw wrote:
-> > 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
-> > asprintf into kselftest_harness.h, which is a GNU extension and needs
-> > _GNU_SOURCE to either be defined prior to including headers or with the
-> > -D_GNU_SOURCE flag passed to the compiler.
-> >
-> > v1: https://lore.kernel.org/linux-kselftest/20240430235057.1351993-1-ed=
-liaw@google.com/
-> > v2: add -D_GNU_SOURCE to KHDR_INCLUDES so that it is in a single
-> > location.  Remove #define _GNU_SOURCE from source code to resolve
-> > redefinition warnings.
-> >
-> > Edward Liaw (5):
-> >    selftests: Compile kselftest headers with -D_GNU_SOURCE
-> >    selftests/sgx: Include KHDR_INCLUDES in Makefile
->
-> I appled patches 1/5 and 2.5 - The rest need to be split up.
->
-> >    selftests: Include KHDR_INCLUDES in Makefile
-> >    selftests: Drop define _GNU_SOURCE
-> >    selftests: Drop duplicate -D_GNU_SOURCE
-> >
->
-> Please split these patches pwe test directory. Otherwise it will
-> cause merge conflicts which can be hard to resolve.
+Hi Paolo,
 
-Hi Shuah,
-Sean asked that I rebase the patches on linux-next, and I will need to
-remove additional _GNU_SOURCE defines.  Should I send an unsplit v3 to
-be reviewed, then split it afterwards?  I'm concerned that it will be
-difficult to review with ~70 patches once split.
+Thank you for the review!
+
+On 08/05/2024 17:44, Paolo Abeni wrote:
+> On Wed, 2024-05-08 at 11:44 +0200, Matthieu Baerts (NGI0) wrote:
+>> SO_KEEPALIVE support has been added a while ago, as part of a series
+>> "adding SOL_SOCKET" support. To have a full control of this keep-alive
+>> feature, it is important to also support TCP_KEEP* socket options at the
+>> SOL_TCP level.
+>>
+>> Supporting them on the setsockopt() part is easy, it is just a matter of
+>> remembering each value in the MPTCP sock structure, and calling
+>> tcp_sock_set_keep*() helpers on each subflow. If the value is not
+>> modified (0), calling these helpers will not do anything. For the
+>> getsockopt() part, the corresponding value from the MPTCP sock structure
+>> or the default one is simply returned.
+>>
+>> It looks important for kernels supporting SO_KEEPALIVE, to also support
+>> TCP_KEEP* options as well: some apps seem to (wrongly) consider that if
+>> the former is supported, the latter ones will be supported as well. But
+>> also, not having this simple and isolated change is preventing MPTCP
+>> support in some apps, and libraries like GoLang [1]. This is why this
+>> patch is seen as a fix.
+>>
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/383
+>> Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
+>> Link: https://github.com/golang/go/issues/56539 [1]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  net/mptcp/protocol.h |  3 +++
+>>  net/mptcp/sockopt.c  | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 60 insertions(+)
+>>
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index c09357e04f23..8c7ab1d50c75 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -309,6 +309,9 @@ struct mptcp_sock {
+>>  			in_accept_queue:1,
+>>  			free_first:1,
+>>  			rcvspace_init:1;
+>> +	u8		keepalive_cnt;
+>> +	unsigned int	keepalive_idle;
+>> +	unsigned int	keepalive_intvl;
+> 
+> It's a bit a pity we have to duplicate such values in all the subflows
+> _and_ in the msk...
+
+Yes, I agree, but I don't see how else we could do that :-/
+
+(Or relying on what has been set in the first subflow? But that's not
+what we are currently doing, and should be part of a separated
+refactoring I think, see below.)
+
+>>  	u32		notsent_lowat;
+>>  	struct work_struct work;
+>>  	struct sk_buff  *ooo_last_skb;
+>> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+>> index d9f0d36e24ad..794d8b63024a 100644
+>> --- a/net/mptcp/sockopt.c
+>> +++ b/net/mptcp/sockopt.c
+>> @@ -622,6 +622,30 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
+>>  	return ret;
+>>  }
+>>  
+>> +static int __mptcp_setsockopt_set_val(struct mptcp_sock *msk, int max,
+>> +				      int (*set_val)(struct sock *, int),
+>> +				      unsigned int *msk_val, int val)
+>> +{
+>> +	struct mptcp_subflow_context *subflow;
+>> +	int ret = 0;
+>> +
+>> +	if (val < 1 || val > max)
+>> +		return -EINVAL;
+> 
+> I think it would be better just skip this check, to avoid copying more
+> logic from TCP, and do the store and sockopt_seq_inc() only when the
+> operation is successful on all the subflows.
+
+Good idea!
+
+>> +	*msk_val = val;
+>> +	sockopt_seq_inc(msk);
+>> +
+>> +	mptcp_for_each_subflow(msk, subflow) {
+>> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>> +
+>> +		lock_sock(ssk);
+>> +		ret |= set_val(ssk, val);
+> 
+> the above produces 'reasonable' return code only if all 'set_val' calls
+> will return the same error code.
+> 
+> That expectation should be respected by the existing code, but what
+> about keeping the first error code only? e.g:
+> 
+> 	int err, ret;
+> 	// ...
+> 
+> 		ret = set_val(ssk, val);
+> 		err = err ?: ret;
+> 
+> 	// ...
+> 	return err;
+
+Yes, sounds cleaner and similar to what we did with TCP_CONGESTION, thanks!
+
+>> +		release_sock(ssk);
+>> +	}
+>> +
+>> +	return ret;
+>> +}
+>> +
+>>  static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
+>>  {
+>>  	struct mptcp_subflow_context *subflow;
+>> @@ -818,6 +842,22 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>>  	case TCP_NODELAY:
+>>  		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
+>>  		break;
+>> +	case TCP_KEEPIDLE:
+>> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPIDLE,
+>> +						 &tcp_sock_set_keepidle_locked,
+>> +						 &msk->keepalive_idle, val);
+>> +		break;
+>> +	case TCP_KEEPINTVL:
+>> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPINTVL,
+>> +						 &tcp_sock_set_keepintvl,
+>> +						 &msk->keepalive_intvl, val);
+>> +		break;
+>> +	case TCP_KEEPCNT:
+>> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPCNT,
+>> +						 &tcp_sock_set_keepcnt,
+>> +						 (unsigned int *)&msk->keepalive_cnt,
+> 
+> keepalive_cnt is 'u8' so the above will be technically a buffer
+> overflow ;) If we keep 'keepalive_cnt' in msk, it has to become
+> an 'unsigned int'
+
+Argh, good catch! I checked the limits (1 < val < MAX_TCP_KEEPCNT), and
+I missed the overflowing later, sorry :-/
+Easier to store the original value, as an 'int' then.
+
+> 
+>> +						 val);
+>> +		break;
+>>  	default:
+>>  		ret = -ENOPROTOOPT;
+>>  	}
+>> @@ -1332,6 +1372,8 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
+>>  static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>>  				    char __user *optval, int __user *optlen)
+>>  {
+>> +	struct sock *sk = (void *)msk;
+>> +
+>>  	switch (optname) {
+>>  	case TCP_ULP:
+>>  	case TCP_CONGESTION:
+>> @@ -1352,6 +1394,18 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+>>  		return mptcp_put_int_option(msk, optval, optlen, msk->nodelay);
+>>  	case TCP_NOTSENT_LOWAT:
+>>  		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
+>> +	case TCP_KEEPIDLE:
+>> +		return mptcp_put_int_option(msk, optval, optlen,
+>> +					    msk->keepalive_idle ? :
+>> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_time) / HZ);
+> 
+> If we force the first subflow to be present/allocated at setsockopt
+> time, then here we could:
+> 
+> 	case TCP_KEEPIDLE:
+> 	case TCP_KEEPIDLE:
+> 	case TCP_KEEPCNT:
+> 		return do_tcp_getsockopt(msk->first, SOL_TCP,
+> optname, 
+> 					USER_SOCKPTR(optval),
+> 					USER_SOCKPTR(optlen));
+
+I initially did that -- by calling mptcp_getsockopt_first_sf_only() --
+like it is done for TCP_FASTOPEN*, etc.
+
+But then I changed that because TCP_FASTOPEN* and similar only make
+sense on the first subflow, while the other ones in the list (TCP_INQ,
+TCP_CORK, etc.) are set on all subflows. So I thought not to make an
+exception here. (Also, socket options could be modified per subflow with
+BPF, best not to have exceptions here).
+
+But I still think it would make sense to do that if we also do the same
+with the other socket options: I do think the way we handle the socket
+options should be simplified, e.g. what I proposed a while ago, and I
+failed to update so far:
+
+  https://patchwork.kernel.org/project/mptcp/list/?series=763505&state=7
+
+We could rely on the first subflow for the get as you suggested, but
+also use {ip,ipv6,tcp,sock}_[gs]etsockopt(), instead of setting
+variables manually. And maybe refactoring the 'sync' to "duplicate"
+options set on the first subflow, and not to have to store TCP specific
+options that have been set.
+
+Would it be OK to look at that later, and keep this way here?
+
+>> +	case TCP_KEEPINTVL:
+>> +		return mptcp_put_int_option(msk, optval, optlen,
+>> +					    msk->keepalive_intvl ? :
+>> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_intvl) / HZ);
+>> +	case TCP_KEEPCNT:
+>> +		return mptcp_put_int_option(msk, optval, optlen,
+>> +					    msk->keepalive_cnt ? :
+>> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_probes));
+>>  	}
+>>  	return -EOPNOTSUPP;
+>>  }
+>> @@ -1467,6 +1521,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
+>>  		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
+>>  	__tcp_sock_set_cork(ssk, !!msk->cork);
+>>  	__tcp_sock_set_nodelay(ssk, !!msk->nodelay);
+>> +	tcp_sock_set_keepidle_locked(ssk, msk->keepalive_idle);
+>> +	tcp_sock_set_keepintvl(ssk, msk->keepalive_intvl);
+>> +	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
+>>  
+>>  	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
+>>  	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+>>
+> 
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
