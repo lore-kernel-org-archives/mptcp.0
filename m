@@ -1,123 +1,168 @@
-Received: from mail-yb1-f171.google.com (mail-yb1-f171.google.com [209.85.219.171])
+Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29B3412FF8E
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 11:39:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC07037719
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 14:37:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715254780; cv=none; b=POq078hRZpHqZBttWZ76UaD5oSC1GQX0flo6nWgc49J0r04LRNokB6G0D2oKKN9j6sTt7b2YVS2Y9BWOB6UKojmFOo2mJADfg/qVnf7ibfXDYx4Sp0LQTTVb+uhiOsYF1o43AaIAlFOH+d8+YVJgWPNnN0ggSbyZmJfx5ZPh428=
+	t=1715265429; cv=none; b=pYUjtCFEwe796LUuo8cL7pGbS6eW7m0CdVVZsBXBqzjr9AUu9k90FqbNmjq/27QxPg4Vj6FgzEDkfGrACx7b6bBj5OilgIfz8NTeVg0kaktseiglaexrX1FSjSt5jjjxGgMwNzqz99INFFvie7U19CsQs+FU8sera710ZpSlDW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715254780; c=relaxed/simple;
-	bh=Kug4QWMPiuA2WRvbw0WZFXxXYrrJBvhq52RgDR1Msrw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=XeYlA9/cZAMRyl1wGSzZZlTmxSp/QVfRsWzQrofKMYxa53dG25D2F2lVuIMPjcAz3zkWhShrS8Astjzjcc6BZjHjqxJlFkoZADbDVj6yXZX4kV7ENreMSftQCMk0w9fCh8OWuP49Ru0g3UpLuQBai67LidfA1186qDO/Iy9spSw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mVP0Bcb4; arc=none smtp.client-ip=209.85.219.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715265429; c=relaxed/simple;
+	bh=rX2HhaPr9XjslEz/iELt3o8cY4WdThK1YOL4qhZC7cc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GBMESImrkE8IsgQwideId97B0DSpt46TVdl6nki6afp4d6DCOYOofMTHzegyTy5G7pk86wWzs8hr5wN5ePObeAwaVrwhYqc9t1jK1If+HNAsokC2wl9/tG1dWncyRXFh2CHFQjwHC8dE8nzE+opeG62pSOfYiYp4YTfvuDhb+AU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AnObrFZd; arc=none smtp.client-ip=209.85.166.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mVP0Bcb4"
-Received: by mail-yb1-f171.google.com with SMTP id 3f1490d57ef6-de604ca3cfcso759732276.3
-        for <mptcp@lists.linux.dev>; Thu, 09 May 2024 04:39:38 -0700 (PDT)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AnObrFZd"
+Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d9ef422859so8308039f.0
+        for <mptcp@lists.linux.dev>; Thu, 09 May 2024 07:37:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715254778; x=1715859578; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ZYMGUmFK4LQuwW33uzOS6ah7/AY6d/c4VRZqnU42uSQ=;
-        b=mVP0Bcb4aXIEZ9kcNS8Tjd3G1MBT5AQw6xFeZc68n23sOiCCLHrPe9Hc8LpuoAIDsw
-         t8ytf7kXNL9QgcnzD7zUFK3DwX8bjYzFGct/PUusRJBSbNXKgWuN+INGkHI4qUrYRq76
-         06MaCnyIws7AVIzteouTRezN/s66qGIZf4rBYIjkcASt5Y5mQHO3t8ddLQDO6LkW+LXI
-         N2NhiU1v4LVdAbJwU///OJI72ZJTXvDXQOcoXk9J24z0o2x2JCLTwRh3k8ILHqT6E5LA
-         OnNQA0Y/jI5oXMpWDc1WGlF8rZRIFk72ArFX13z/k8zJ81A/PIOrbqz8EcgwRlMOcyNT
-         /Dog==
+        d=linuxfoundation.org; s=google; t=1715265427; x=1715870227; darn=lists.linux.dev;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=qhunxhR/OF2icvm3HmEsNbbwCxzb74IsXbKxDT8qkPs=;
+        b=AnObrFZdnihMy+GVV+gkilBs8A4D8XFbikr6OFq/gCEkO4YoBslet5/30pA7BY1VHl
+         aGP1zU1tOw6JL3GaWVjF8AdSA1FRMKU9u4B3htdIl1EKxlZmPfGVElsT20zYuD9uMqeK
+         U40OPgtVrXWO/tKifbamG+KyH8Y3UEmWZ2b2E=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715254778; x=1715859578;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ZYMGUmFK4LQuwW33uzOS6ah7/AY6d/c4VRZqnU42uSQ=;
-        b=kyAyi5velKidhMHc6O33ZF2bItnOOEd6kp/GYOg/VM7+hRo6w84XeRUuiNgUctbG/r
-         4l8b3wXJ5JE98KqwcJxcq3hHMrO9i4OYgg8psOoE+WpADRXlFvYuQwHI5gizrJuJFznQ
-         dv3R7vHlcpFgKHyfzK1IwiEIjsyUtnoPoxayRelDPj3qlF3eaFV0dggEizNxcgz98Bw7
-         gxwACAF5zoUF5xelL4IrBF5lpYk5qZmncc86nkLFUBlRzY1h+vP3MAMmRilqzYj0MnXj
-         DCZWACfp/B1Q6QRox4/JSwC6GNWxE2donvr6rWrf+BGE5Kcv5nPiK3gi0q4jdML4bfft
-         bxRg==
-X-Gm-Message-State: AOJu0Yz99pDq28AOXwBpJARSaEWwLGvA33AbBKUpQANSY2ydD5Y+5AjA
-	bxg0hMXs2AL/EYgQF3hPNMozGMYAUsUG6bh24+7v19DOqnf3KDc=
-X-Google-Smtp-Source: AGHT+IFZqcZdDOfZXbwIk9AA+p0X8e452ennpmRJoSR2v7DjIfTUa+jNNs8Lbtg5oAzvvdQkiNV5Aw==
-X-Received: by 2002:a5b:549:0:b0:de6:e4d:e990 with SMTP id 3f1490d57ef6-debb9d3d708mr4706054276.37.1715254777972;
-        Thu, 09 May 2024 04:39:37 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.107.213])
-        by smtp.gmail.com with ESMTPSA id 3f1490d57ef6-debd372ab16sm264368276.21.2024.05.09.04.39.37
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 09 May 2024 04:39:37 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240509-mptcp-tcp-keepalive-sockopts-v2-0-5f97067847a2@kernel.org>
-References:
- <20240509-mptcp-tcp-keepalive-sockopts-v2-0-5f97067847a2@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: getsockopt(SO_KEEPALIVE) and
- TCP_KEEP* sockopts
-Message-ID: <9f143b91-b897-b23a-a869-080841b228e5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 09 May 2024 11:39:36 +0000
+        d=1e100.net; s=20230601; t=1715265427; x=1715870227;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=qhunxhR/OF2icvm3HmEsNbbwCxzb74IsXbKxDT8qkPs=;
+        b=EcFKlBpP5aGICAzv7I2N5CFzi5HxndJuQ7TcsQUDszQ+dia4iyilCb2/T7ieXzszc6
+         TCvI6EQFLa7DRAjsTtEUZUYONJrXCqOArCV5sng1wet8oX5y5ZbznLZLw5ZA1BhlrRtQ
+         ioKWM8EAuNfbq2d0q96VWKX8xy9rnOaCMTD9N5gQrFd1PQuYZP3aJnom3jdAjFjSbnzn
+         WrKXeJCRCsUk4+ct434XrGgkiLbb5YfncgdJ3r/gYhBUm+/hoeAZeDTCdxnA8qjuJMWO
+         G1nanxubxyUwfyPNLK4sl++RVS7iHq87H0SZRVIHuU1fraZcclzE90arqR25sYDg/EXk
+         17lA==
+X-Forwarded-Encrypted: i=1; AJvYcCULSiD4rKOEorN9zyG4Ya30dBmhGtqqUGweg7YGFyzHRtgGwYMYrpktpTTQ+GJR89EeqfTu6DSY6coF1AOWexrpHbftMMA=
+X-Gm-Message-State: AOJu0YzVkhyQ6ynfWEXkkhU67KC50y4RJoTtI+QVKbto5P/4ZJumCn1i
+	GpxHdkMVAANCFvy/MDpjIdt5xcx+GgORywnMdJnZFKc/SFa2U36tqQlUMdJ8rmY=
+X-Google-Smtp-Source: AGHT+IFLPV3hTUAqtiZSXFMZ3nZtJrVA8/PdzJcN3v/yjJF832scb22cGE7mYooNXziODVFLnPMOaA==
+X-Received: by 2002:a6b:e618:0:b0:7e1:86e1:cd46 with SMTP id ca18e2360f4ac-7e18fd9a35cmr655432839f.2.1715265426750;
+        Thu, 09 May 2024 07:37:06 -0700 (PDT)
+Received: from [192.168.1.128] ([38.175.170.29])
+        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4893703c0c8sm386684173.48.2024.05.09.07.37.03
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 09 May 2024 07:37:06 -0700 (PDT)
+Message-ID: <946ae22f-a4af-448a-92e1-60afb6ed9261@linuxfoundation.org>
+Date: Thu, 9 May 2024 08:37:03 -0600
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2 0/5] Define _GNU_SOURCE for sources using
+To: Edward Liaw <edliaw@google.com>
+Cc: shuah@kernel.org, Mark Brown <broonie@kernel.org>,
+ Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
+ Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+ Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
+ Christian Brauner <brauner@kernel.org>,
+ Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>,
+ OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
+ Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
+ <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
+ Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
+ Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
+ Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
+ Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
+ Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
+ <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
+ Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
+ Atish Patra <atishp@atishpatra.org>, Paul Walmsley
+ <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
+ Albert Ou <aou@eecs.berkeley.edu>,
+ Christian Borntraeger <borntraeger@linux.ibm.com>,
+ Janosch Frank <frankja@linux.ibm.com>,
+ Claudio Imbrenda <imbrenda@linux.ibm.com>,
+ David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
+ <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
+ James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+ Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
+ <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Steffen Klassert <steffen.klassert@secunet.com>,
+ Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
+ <afaerber@suse.de>, Manivannan Sadhasivam
+ <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
+ Fenghua Yu <fenghua.yu@intel.com>,
+ Reinette Chatre <reinette.chatre@intel.com>,
+ Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+ "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
+ Alexandre Belloni <alexandre.belloni@bootlin.com>,
+ Jarkko Sakkinen <jarkko@kernel.org>,
+ Dave Hansen <dave.hansen@linux.intel.com>,
+ Muhammad Usama Anjum <usama.anjum@collabora.com>,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ kernel-team@android.com, linux-sound@vger.kernel.org,
+ linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
+ linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
+ kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
+ linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
+ linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
+ linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
+ linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org,
+ Shuah Khan <skhan@linuxfoundation.org>
+References: <20240507214254.2787305-1-edliaw@google.com>
+ <f4e45604-86b0-4be6-9bea-36edf301df33@linuxfoundation.org>
+ <CAG4es9XE2D94BNboRSf607NbJVW7OW4xkVq4jZ8pDZ_AZsb3nQ@mail.gmail.com>
+Content-Language: en-US
+From: Shuah Khan <skhan@linuxfoundation.org>
+In-Reply-To: <CAG4es9XE2D94BNboRSf607NbJVW7OW4xkVq4jZ8pDZ_AZsb3nQ@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
 
-Hi Matthieu,
+On 5/9/24 00:13, Edward Liaw wrote:
+> On Wed, May 8, 2024 at 4:10 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
+>>
+>> On 5/7/24 15:38, Edward Liaw wrote:
+>>> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
+>>> asprintf into kselftest_harness.h, which is a GNU extension and needs
+>>> _GNU_SOURCE to either be defined prior to including headers or with the
+>>> -D_GNU_SOURCE flag passed to the compiler.
+>>>
+>>> v1: https://lore.kernel.org/linux-kselftest/20240430235057.1351993-1-edliaw@google.com/
+>>> v2: add -D_GNU_SOURCE to KHDR_INCLUDES so that it is in a single
+>>> location.  Remove #define _GNU_SOURCE from source code to resolve
+>>> redefinition warnings.
+>>>
+>>> Edward Liaw (5):
+>>>     selftests: Compile kselftest headers with -D_GNU_SOURCE
+>>>     selftests/sgx: Include KHDR_INCLUDES in Makefile
+>>
+>> I appled patches 1/5 and 2.5 - The rest need to be split up.
+>>
+>>>     selftests: Include KHDR_INCLUDES in Makefile
+>>>     selftests: Drop define _GNU_SOURCE
+>>>     selftests: Drop duplicate -D_GNU_SOURCE
+>>>
+>>
+>> Please split these patches pwe test directory. Otherwise it will
+>> cause merge conflicts which can be hard to resolve.
+> 
+> Hi Shuah,
+> Sean asked that I rebase the patches on linux-next, and I will need to
+> remove additional _GNU_SOURCE defines.  Should I send an unsplit v3 to
+> be reviewed, then split it afterwards?  I'm concerned that it will be
+> difficult to review with ~70 patches once split.
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/9016301142
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/7df5fa34e3e5
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D851859
+Please send them split - it will be easier to review and apply. You
+might as well wait until the merge window is done. I don't think
+anybody would have time to review now since merge window starts
+next week.
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+thanks,
+-- Shuah
