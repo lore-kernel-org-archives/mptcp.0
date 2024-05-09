@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF7F15AF1
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 14:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596A912FF9B
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 15:12:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715265550; cv=none; b=L+K87EvcLQYdadvX8iBM3LwMLiyVkKZUSN2Onex3ZBL/flVWCGcWo11UaMRvt+kb2IT3A0TifPOP5UUk1WqWcDu7qlqQ3adpF2GEEHUPxYX5hQAC82mJjfotTeiJDoyOzAT7VW7Pn+BNg8gB3wqWu6IHguRQs+77++lFWho23mo=
+	t=1715267546; cv=none; b=F1l9n4IOGNdav3DqKcRBL9wRz915TVt7y2cZCH9z3KUdexN7mSpo92nB5+1+23j5hqyQ9TgvU2fqSz8DIM/qUca3GVQWO7zhlCYLbyAQYXo3eoqCZVNIEAiaarxxqMHxeddh1lXy6wrdbYKvRhw2624C/FrJUn0qoc0FnatQeNw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715265550; c=relaxed/simple;
-	bh=F2rM6FnBqmVCqtVn0JCk+NWhBWaPzNfMcxgwjshhm/g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fD4z5UaI2oK1YEB50Qt6Y2hfK6XQHHIDaUPCF000RoMk/Z1RXFJvuw6ofsjNYSm6XKqk/HYMY3t84CT9Tj/M1yDtcJ5u8f5wo/q6JQ5jS27qq4Hv2DifiBxt1nTZnF5LOUJGsE8FQmdB0mpffZmotxsbOuaFklG6+d7FEPIG7UU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubUCj+M4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715267546; c=relaxed/simple;
+	bh=fU6siLu2e71ha/HxhMboKjUo0TzVpBehWUXG8KhiWF0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=KIfnvv4NxZwzN1+73wO08XLPCFkE8L59tnF7xPIHa90aXccI7S4eET9BKrvtEUfHHZIRIfjEREImvB6w7/+KMCzAcr/CavMoBL4G8HeAHsTji7P+mbID5bw11sGUm8d0ZATzsTT3oCIC2Ae1pwu5p3uGbDsIOue04Lyce/LSpvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IoMK1fIp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubUCj+M4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7920CC116B1;
-	Thu,  9 May 2024 14:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IoMK1fIp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D8AFC116B1;
+	Thu,  9 May 2024 15:12:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715265549;
-	bh=F2rM6FnBqmVCqtVn0JCk+NWhBWaPzNfMcxgwjshhm/g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ubUCj+M4uxR+A8dSw8QWh6UwEXVkKrfbNjkDSX+thIaymVVKD9KiF6Ax+4izz/rM4
-	 lh/rDIrjEYIoPdb1eNWk7s1Yc9NUQ4h6fjiwqJWz1aJBivr2CnFraE7J5n8zbJSOCE
-	 nQvnofbTf7Eo1VCeDZJL8hrR4SPqoU44rfLL8lBv5hhI+1ut0MGjtMccJu42PyE/yQ
-	 fURh39dJcGTTX6BvTWrLcN5lB4+AZhewA6uSOYejWKFyUvB5zmkrf0WEWECt/0xawb
-	 BLjJL51Hv80tcEPBYJ8SdUjpdHVywV5FH4RES2NJvHguXaG8v6KSQCXRzmkh72ptrV
-	 O4guz9Ti6bk8A==
-Message-ID: <89dc0020-6bd8-4cce-8b8c-8b73c22c386e@kernel.org>
-Date: Thu, 9 May 2024 16:39:06 +0200
+	s=k20201202; t=1715267545;
+	bh=fU6siLu2e71ha/HxhMboKjUo0TzVpBehWUXG8KhiWF0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=IoMK1fIp5G5MTqmJm5biAy1TSvW5dSJeZAfaP377StJzgaPHKazQYpHYI/UtBTACg
+	 1S94pFQuqItommgLc5qkMP1FhkpbS9YJlRwGikgkH9TwQ8aIk8Y6ti44jDlplT6frl
+	 Tiv4jr1CPFvL1n86/U4OylsR6Dpm5jBXH0X+IfPgWbwJQ6UsSkt3ciIEL8iSGA1akZ
+	 bHa5moY9szD/xZM7a15aaB04GrzpZUkvK8L0zg81hCQo0SBFpxezUvRDO7UKb/ILYG
+	 t+ue+G0XOgI1BxfIVE4km/ccZNtTU5XkJZ2Yf9J9n/M0GPk/KtlkE+09Xm+9iS8i5V
+	 nzlCcD4lvuHjw==
+Message-ID: <03f7f70f-839e-4f23-9840-536b0c0e4c15@kernel.org>
+Date: Thu, 9 May 2024 17:12:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH bpf-next 0/4] selftests/bpf: new MPTCP subflow subtest &
  improvements
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <89dc0020-6bd8-4cce-8b8c-8b73c22c386e@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,73 +87,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
+In-Reply-To: <89dc0020-6bd8-4cce-8b8c-8b73c22c386e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-(only with MPTCP ML in cc)
+On 09/05/2024 16:39, Matthieu Baerts wrote:
 
-On 07/05/2024 12:53, Matthieu Baerts (NGI0) wrote:
-> In this series from Geliang, modifying MPTCP BPF selftests, we have:
-> 
-> - SIGINT support
-> 
-> - A new macro to reduce duplicated code
-> 
-> - A new MPTCP subflow BPF program setting socket options per subflow: it
->   looks better to have this old test program in the BPF selftests to
->   track regressions and to serve as example.
-> 
->   Note: Nicolas is no longer working for Tessares, but he did this work
->   while working for them, and his email address is no longer available.
-> 
-> - A new MPTCP BPF subtest validating the new BPF program.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Geliang Tang (3):
->       selftests/bpf: Handle SIGINT when creating netns
+(...)
 
-Regarding this patch, do you mind looking for a new version that is
-generic as requested by Alexei, please?
+> I will also modify the tree not to remove MPTCP_SCHED_TEST() macro as
+> asked by Alexei.
 
-I guess he meant adding a new helper in network_helpers.c doing "ip
-netns add" + "signal(SIGINT)" + "open_netns()", and using it everywhere
-"ip netns add" + "open_netns()" are used. (I guess you will need another
-helper to "close_netns()" + "ip netns del" + remove the signal handler
-or the netns name.)
-Be careful that sometimes, more than one netns is used.
-
->       selftests/bpf: Add RUN_MPTCP_TEST macro
->       selftests/bpf: Add mptcp subflow subtest
-> 
-> Nicolas Rybowski (1):
->       selftests/bpf: Add mptcp subflow example
-
-For your information, I modified our tree to apply comments from Alexei:
+Just did:
 
 New patches for t/upstream:
-- 12609b68c8d9: tg:msg: clarify the commit message
-- a4ad7c6dee6a: Revert "selftests/bpf: Add RUN_MPTCP_TEST macro"
-- f457d8911a38: conflict in t/selftests-bpf-Add-mptcp-subflow-subtest
-- 5072ff915f8d: Revert "selftests/bpf: Handle SIGINT when creating netns"
-- 9df135860724: conflict in t/selftests-bpf-Add-bpf-scheduler-test
-- 8ef1339edc8a: conflict in t/selftests-bpf-add-bpf_first-scheduler
-- 2f5ced304cc1: conflict in t/selftests-bpf-Add-bpf_bkup-scheduler
-- e9bafe786620: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
-- dca93e3c7e9a: conflict in t/selftests-bpf-Add-bpf_red-scheduler
-- 5349d85a8c73: conflict in t/selftests-bpf-Add-bpf_burst-scheduler
-- Results: 304693999ba6..b74adae98e0d (export)
+- a9e30246511e: Squash to "selftests/bpf: Add bpf_first scheduler & test"
+- f023706acba3: conflict in t/selftests-bpf-Add-bpf_bkup-scheduler
+- a8d18a32b4cf: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
+- e85440cbea7c: conflict in t/selftests-bpf-Add-bpf_red-scheduler
+- be15c1b23526: conflict in t/selftests-bpf-Add-bpf_burst-scheduler
+- Results: b74adae98e0d..5bc872cb274e (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/715c505a46ae8394e40fdeb54e0ecea27f95dc5d/checks
-
-I will also modify the tree not to remove MPTCP_SCHED_TEST() macro as
-asked by Alexei.
+https://github.com/multipath-tcp/mptcp_net-next/commit/b185135fda4d0d1b180a317420cedebcf20c6662/checks
 
 Cheers,
 Matt
