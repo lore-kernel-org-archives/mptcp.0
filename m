@@ -1,53 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEB02811E9
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 20:17:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68E7585653
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 21:43:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715285828; cv=none; b=bVg823rTj1DEBDCJGyrkaBgRPDFGPHzNvddCgZ2DzzBxp1VtsxVlwywnuD041tu16Bv0o3OzQViyuYCS8zeF/lBIVzRmX0OH3OyB2FMkp5X/5R4bp/SavhnQgVqADgGBS5ydvaOvrecm7rnCfsGmDpiV6jOC8iwhjCSl1UxtVUo=
+	t=1715290994; cv=none; b=GtLldhqyz7NzeTF9mcfBNpJCPBlQmnH5N+wfLFgMCo0yW8nVOTJQrturaqPAwsgzqrGVL9Ido5TonvbdOVR9B55cu6ryX8GFcqTxuwoHdxLGRtAXSmJ3rUtCivlkaMzmFxwzOPzv3s4e91gHusOWmlVg2jSoM9Kj49b5HU3dpCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715285828; c=relaxed/simple;
-	bh=WLs4UcMbhiqPGENjTRxcKgFiqr1nupw61DxkvuWzBfk=;
-	h=Date:From:To:cc:Subject:Message-ID:MIME-Version:Content-Type; b=mCN9A7KTA7rcdi2SRkeNulKiRoXRA+GEs8aXIomMyOA+7JIZPOQd3HxqLh0TxpeMj7qghW2HcmWcEg8c/n1+BKVC+etlCLf5t+ye7ZOJihFZhsX316CTbIhgjdF/Ny63YYKRsl5zGkuRNGNyU9ZybRLLHk0n4pOk1sDL8ZXkHy0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iFxbaHL6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715290994; c=relaxed/simple;
+	bh=1cr4Hhh0xgOCOz6kFB4T1GPISm5EHphEtvmaK7YqmFo=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 MIME-Version:Content-Type; b=Ln7magrd6doKL5V+ziOb4uhFMG0Cs12cnDLrhol7q+lS470l4C13p780jl0l2VQaisVBiqhHUfqwYSsBXvmIHWc51eQXRUqbQ7h9/ph16o+CGiFWL39xv2H7NQUzvTnrZa+2w2BN4MI2wN4RqZMjJto3BJBIcXMPtGlRuWfpW0g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KhA53KfR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iFxbaHL6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5D6BEC116B1;
-	Thu,  9 May 2024 20:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KhA53KfR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B77D0C116B1;
+	Thu,  9 May 2024 21:43:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715285828;
-	bh=WLs4UcMbhiqPGENjTRxcKgFiqr1nupw61DxkvuWzBfk=;
-	h=Date:From:To:cc:Subject:From;
-	b=iFxbaHL6FijMLbKK3Y/KAbrhGGS6PfVDXPwaw7HtZJbmfpApteZH0f6n2bfWddk+F
-	 mENFnrK7v0RJHIuQq39PtxZZZ5J5p+5N/Osd3w8ubeDpAxHyqz2QfRUV+QXYkpAM3X
-	 0b4h6CM6RNDL+N0/88DxCNzDlTRa/z7TGk8o6BY6gVxskBrJKPp32EzrfvqfSC1rxL
-	 rVXVtEYRfAr2TM4tDTP/+u7wisScrM/CUKrds6qjqIL8kIgMd3dkGgCVllIukS2cZz
-	 C+rJGZ1I3LKd88eFvbai/7KP5nvPmZo7iZTwTiwMObdgYZIWFabEoUUaBAcDzRoCYa
-	 0WCxVPQRBTnHQ==
-Date: Thu, 9 May 2024 13:17:07 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: mptcp@lists.linux.dev
-cc: Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
-Subject: MPTCP selftest failures on Fedora 40
-Message-ID: <5464ef10-4c64-17da-7cd3-c819af2fa837@kernel.org>
+	s=k20201202; t=1715290993;
+	bh=1cr4Hhh0xgOCOz6kFB4T1GPISm5EHphEtvmaK7YqmFo=;
+	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
+	b=KhA53KfRnFQLA5EULmcJ2rJldhOexVCTEpsZiJ7a/MrumaObrdjOZWBUSaaktopnT
+	 XHodoKdFhDvy2B+JXMeoH4HvSpA1wk54PBJNYkr6maQHxFOCDd+UC9fxOrNjye2ghS
+	 mmiQhycE05HtYMklxfG9QVymuMuP6TDdm9qZPVIkhEA1/j0RumKDsX7TDCkR7l3UjM
+	 G3TPtwQOy5XQDsjc2XqswMeBJ71fbs2xyQLWRcTxvbp+t95OEwzkXhu1QIfUgiwXw0
+	 fEsbJe3jWDfHCYMv8Kz8Ues5CArAQU3dMmioseSr5SajKWCQcLiYZYmn1B1J+njJR1
+	 GzKJ80GGB40zg==
+Date: Thu, 9 May 2024 23:43:10 +0200 (GMT+02:00)
+From: Matthieu Baerts <matttbe@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>,
+	Paolo Abeni <pabeni@redhat.com>
+Message-ID: <77dc9ea1-02b2-45c3-9fb6-8b153285dcfa@kernel.org>
+In-Reply-To: <5464ef10-4c64-17da-7cd3-c819af2fa837@kernel.org>
+References: <5464ef10-4c64-17da-7cd3-c819af2fa837@kernel.org>
+Subject: Re: MPTCP selftest failures on Fedora 40
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+X-Correlation-ID: <77dc9ea1-02b2-45c3-9fb6-8b153285dcfa@kernel.org>
 
+Hi Mat,
 
-Just a heads-up, Fedora 40 shipped with a broken 'ss' command which causes 
-MPTCP self test failures.
+9 May 2024 22:17:11 Mat Martineau <martineau@kernel.org>:
 
-In short, the "-i" flag is ignored by the 'ss' command. I've filed a 
-Fedora bug:
+>
+> Just a heads-up, Fedora 40 shipped with a broken 'ss' command which causes MPTCP self test failures.
+>
+> In short, the "-i" flag is ignored by the 'ss' command. I've filed a Fedora bug:
+>
+> https://bugzilla.redhat.com/show_bug.cgi?id=2279920
 
-https://bugzilla.redhat.com/show_bug.cgi?id=2279920
+Thank you for the heads-up.
 
+On Debian side, they ended up taking the fix, not the revert:
 
-- Mat
+https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/misc/ss.c?id=87d804ca0854b09c07872e9fd6036bf5d3e0cc85
+
+https://salsa.debian.org/kernel-team/iproute2/-/commit/14cfd95e598ba712c9000a5212f57c8282223c19
+
+Maybe better to suggest to take this fix instead of the revert?
+
+Cheers,
+Matt
 
