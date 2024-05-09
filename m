@@ -1,225 +1,273 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D9263BBE3;
-	Thu,  9 May 2024 15:49:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3918C16F85D;
+	Thu,  9 May 2024 16:22:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715269790; cv=none; b=MNDoYEvoXTyG5icETN50RpjBQZNi/aKE4C7AeNQ+NlySDiRiJqBdw3Umj03+L58qkxzFZbho+5m8GoaX2rlnPeYwXUmX4T0fuVPQ5z41+Cb/XFm+bj1AuJUYCYYyDaWjt6jCU1uAPXSNiGaRkinsgK0ijAEJMhYgdVxaSVSXuvg=
+	t=1715271728; cv=none; b=UK0bYPTa7NORf1TXQeuwyMJIYlUNnjMe7BKME8GGS1XyfzXxDgiN0sFcwIOR0GfRsQ1AP9HCMmJ9XntMdRoEe8agxQAqqrKtsNC3+zKdprHJ7LDckpBUnugR7EUj/IjeqV8j4a3Ge1QdzRuSpkR/lKdhXTm+D/6zKtgK26onjII=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715269790; c=relaxed/simple;
-	bh=fwWU1y6Fq/raMfRnXEAPArvOPb7WTnJwfEnbbmHKMMo=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WUoNPF55jlTkfpO0bGIAEyuH/GPBZ9x7MWGNiR4D4/E5wjBZEXcKBE2IzXOFv/nk6Q/vmETvTps/gG782/kND38JdzyCWRRL/UDMrQsWfr4ds+iolOEvBxSH7JGPX83WVCD7MkwpIRx5j59oxZ845Z+n0D3yjn6xHfsXHNo+2co=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DGZLxob+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715271728; c=relaxed/simple;
+	bh=IL8r0xvUD4MebH1iIU9DukAU1bJeaYL6vvG94QxaVag=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Eh26W0gr5+qBn46ZhOl5K7kUAOC9TLJPq8LCkV+je0osDmDyNN6FNSBos3nqy8BB9n81MFUbkjf/vieU7G1r50ZG5+sTkEZIUdKs32L4hskoJmS+onEv2rjgLjJG8rh2GlD4ZBxb8Y6NCv764uMMD+QIvpU2efZZc1NfZ57SlwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mqSd014o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DGZLxob+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ECA9C4AF08;
-	Thu,  9 May 2024 15:49:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mqSd014o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A560C116B1;
+	Thu,  9 May 2024 16:22:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715269789;
-	bh=fwWU1y6Fq/raMfRnXEAPArvOPb7WTnJwfEnbbmHKMMo=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=DGZLxob+DWdDmZ5oINztgCw1wZDvVf7ay3e08FbmMxGfabdWnVGjsr/lJ9KG426S7
-	 wg+KfoQ4Z/+iqifBNK0JoLlorU5KZOd3cpJyuJVz74UrafrYr4I65+pD0cQYVZaeGN
-	 dWUhGRz4ZOMRspdGYR/iXnafviYJTUSE51AkUCP4oV7LN0cEyfT1xD2eYIlSxtaSPE
-	 twYlWky0+v6Cg/yahrotiJx2RSOlKVpc+6atB1XCKhquNQ4eRPcrof1fNTrg+eVBzH
-	 PTdK7gKRXAde0AD9m4KlGAJYY3iiMpxmiBgvltsSKaRQR+AlaWDbopABONHHbgJgHY
-	 fNvr8wHGfrJbg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 09 May 2024 17:49:12 +0200
-Subject: [PATCH bpf-next v2 2/2] selftests/bpf: Add mptcp subflow subtest
+	s=k20201202; t=1715271727;
+	bh=IL8r0xvUD4MebH1iIU9DukAU1bJeaYL6vvG94QxaVag=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=mqSd014oPs9qMHfbf/w8UGWecJ/yMDeavDW24z8I4EtEKoQeD7wUBGkkSeaQbqviB
+	 7Hhh2L/zrybj872eMv3TTgYZMkgsoczJhjH1hgBU9UXXo86WNk2fiPGXZurnJialdC
+	 BVgFon/xiKXRw6Sp584BztAToQj1JJIDU11EPN+7FBnaFG+IH2HtB3NOGP32Lswvtc
+	 a6hrGif9DMQkpjLlBGXx4lpNNU6GAR+1Rgwi98ywB3s10lSkOAoN58c6LpFRthelWY
+	 JDQYpaAZErNik/8VqDYJwKChrTECMtGImS7jCCS/sjSt5xFlbtFQP9Il14xUowCWx4
+	 TOjoj1Wxr7vWQ==
+Date: Thu, 9 May 2024 09:22:05 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Alexander Duyck <alexander.duyck@gmail.com>, 
+    Ayush Sawal <ayush.sawal@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
+    Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+    Jason Wang <jasowang@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+    Vincent Guittot <vincent.guittot@linaro.org>, 
+    Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+    Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+    Mel Gorman <mgorman@suse.de>, 
+    Daniel Bristot de Oliveira <bristot@redhat.com>, 
+    Valentin Schneider <vschneid@redhat.com>, 
+    John Fastabend <john.fastabend@gmail.com>, 
+    Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>, 
+    Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+    Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+    Jiri Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>, 
+    bpf@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next v3 11/13] net: replace page_frag with
+ page_frag_cache
+In-Reply-To: <20240508133408.54708-12-linyunsheng@huawei.com>
+Message-ID: <334a8c67-87c8-a918-9517-0afbfae0d02b@kernel.org>
+References: <20240508133408.54708-1-linyunsheng@huawei.com> <20240508133408.54708-12-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-2-4048c2948665@kernel.org>
-References: <20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-0-4048c2948665@kernel.org>
-In-Reply-To: <20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-0-4048c2948665@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <tanggeliang@kylinos.cn>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4451; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=LJOvAclIqDeTdcev8kuUSRjihzhLlQDft5mKWsBKgVA=;
- b=kA0DAAgB9reCT0JpoHMByyZiAGY88I6gJC+qoBHY0rayM2/i1+mgE4r9HTrzf1Byy6x2nsshU
- 4kCMwQAAQgAHRYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJmPPCOAAoJEPa3gk9CaaBz13YP/RDY
- XXwOC+86HWPGvJ10RvVL4e/1himpNFmzBbou2tqHBkr19qD0Ji2xmqnnI4LsY+QLsxhBEcM+8BZ
- ATdMxxXkhvTHKcyKOaqnpY0mNvZd/4ByQYia0Ykh2nDzsVwRXV3S3z4QEPpG1Qq/3OLBSrd/YJX
- bHU0hGII1occkeYG0LOZU/I0I00Yb5PjqswKtce49ruVgFfpIr+HmVGyvY70dwGY8Q8gMHoWhGq
- Sx1oilBRsglXGT7llNl/YZQ8advZdFmvjRkgyZYaah+2ESHHeXksAFTTlSkaaDFdESc+0iKaxcp
- hUc5buOlJidc0cq6lahyh82cnpNGtEYWd/QvvWe3u50/yFGKSojgP4NQbuWVUVVe7KXIr1WhNDH
- R0hT5CssUmARyzdtDO3Wzq2fbYagkCjPyk59eyCb5pVgWavOfXHCEOGrPdz13+XEObun2h1XZ/W
- 3Gw0halfqVsMr+MgL1l/HoTqDz/6wVIf+y6UX386ooBx3xCYt9OScNCYoE+zfOemsc1QPBbc3wj
- hSq+44GN/deXfASymVFiAGxLea0fRceRmWotMTM8/FfIDGflHcnqyjSh4tjMTB45hnnicDgucLw
- ayVYb6vXpR/sxXTdWQE94pDgUUmYnwEKsOP5fAj0x+2m+m9/qEtDYCaqGk8QTza1ytt9TRPEGAg
- Wo0/h
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Wed, 8 May 2024, Yunsheng Lin wrote:
 
-This patch adds a subtest named test_subflow to load and verify the newly
-added mptcp subflow example in test_mptcp. Add a helper endpoint_init()
-to add a new subflow endpoint. Add another helper ss_search() to verify the
-fwmark and congestion values set by mptcp_subflow prog using setsockopts.
+> Use the newly introduced prepare/probe/commit API to
+> replace page_frag with page_frag_cache for sk_page_frag().
+>
+> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> ---
+> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
+> .../chelsio/inline_crypto/chtls/chtls_io.c    | 100 ++++---------
+> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
+> drivers/net/tun.c                             |  28 ++--
+> include/linux/sched.h                         |   4 +-
+> include/net/sock.h                            |  14 +-
+> kernel/exit.c                                 |   3 +-
+> kernel/fork.c                                 |   3 +-
+> net/core/skbuff.c                             |  32 ++--
+> net/core/skmsg.c                              |  22 +--
+> net/core/sock.c                               |  46 ++++--
+> net/ipv4/ip_output.c                          |  33 +++--
+> net/ipv4/tcp.c                                |  35 ++---
+> net/ipv4/tcp_output.c                         |  28 ++--
+> net/ipv6/ip6_output.c                         |  33 +++--
+> net/kcm/kcmsock.c                             |  30 ++--
+> net/mptcp/protocol.c                          |  70 +++++----
+> net/sched/em_meta.c                           |   2 +-
+> net/tls/tls_device.c                          | 139 ++++++++++--------
+> 19 files changed, 331 insertions(+), 297 deletions(-)
+>
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/76
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 109 +++++++++++++++++++++++++
- 1 file changed, 109 insertions(+)
+<snip>
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 274d2e033e39..6039b0ff3801 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -9,8 +9,12 @@
- #include "network_helpers.h"
- #include "mptcp_sock.skel.h"
- #include "mptcpify.skel.h"
-+#include "mptcp_subflow.skel.h"
- 
- #define NS_TEST "mptcp_ns"
-+#define ADDR_1	"10.0.1.1"
-+#define ADDR_2	"10.0.1.2"
-+#define PORT_1	10001
- 
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
-@@ -340,10 +344,115 @@ static void test_mptcpify(void)
- 	close(cgroup_fd);
- }
- 
-+static int endpoint_init(char *flags)
-+{
-+	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
-+	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
-+	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
-+	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
-+	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
-+	SYS(fail, "ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags);
-+
-+	return 0;
-+fail:
-+	return -1;
-+}
-+
-+static int _ss_search(char *src, char *dst, char *port, char *keyword)
-+{
-+	char cmd[128];
-+	int n;
-+
-+	n = snprintf(cmd, sizeof(cmd),
-+		     "ip netns exec %s ss -Menita src %s dst %s %s %d | grep -q '%s'",
-+		     NS_TEST, src, dst, port, PORT_1, keyword);
-+	if (n < 0 || n >= sizeof(cmd))
-+		return -1;
-+
-+	return system(cmd);
-+}
-+
-+static int ss_search(char *src, char *keyword)
-+{
-+	return _ss_search(src, ADDR_1, "dport", keyword);
-+}
-+
-+static void run_subflow(char *new)
-+{
-+	int server_fd, client_fd, err;
-+	char cc[TCP_CA_NAME_MAX];
-+	socklen_t len = sizeof(cc);
-+
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
-+		goto fail;
-+
-+	err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-+	if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
-+		goto fail;
-+
-+	send_byte(client_fd);
-+
-+	ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search fwmark:0x1");
-+	ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search fwmark:0x2");
-+	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
-+	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
-+
-+	close(client_fd);
-+fail:
-+	close(server_fd);
-+}
-+
-+static void test_subflow(void)
-+{
-+	int cgroup_fd, prog_fd, err;
-+	struct mptcp_subflow *skel;
-+	struct nstoken *nstoken;
-+
-+	cgroup_fd = test__join_cgroup("/mptcp_subflow");
-+	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup: mptcp_subflow"))
-+		return;
-+
-+	skel = mptcp_subflow__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: mptcp_subflow"))
-+		goto close_cgroup;
-+
-+	err = mptcp_subflow__attach(skel);
-+	if (!ASSERT_OK(err, "skel_attach: mptcp_subflow"))
-+		goto skel_destroy;
-+
-+	prog_fd = bpf_program__fd(skel->progs.mptcp_subflow);
-+	err = bpf_prog_attach(prog_fd, cgroup_fd, BPF_CGROUP_SOCK_OPS, 0);
-+	if (!ASSERT_OK(err, "prog_attach"))
-+		goto skel_destroy;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
-+		goto skel_destroy;
-+
-+	if (!ASSERT_OK(endpoint_init("subflow"), "endpoint_init"))
-+		goto close_netns;
-+
-+	run_subflow(skel->data->cc);
-+
-+close_netns:
-+	cleanup_netns(nstoken);
-+skel_destroy:
-+	mptcp_subflow__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
- 		test_base();
- 	if (test__start_subtest("mptcpify"))
- 		test_mptcpify();
-+	if (test__start_subtest("subflow"))
-+		test_subflow();
- }
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index bb8f96f2b86f..ab844011d442 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -960,17 +960,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+> }
+>
+> /* we can append data to the given data frag if:
+> - * - there is space available in the backing page_frag
+> - * - the data frag tail matches the current page_frag free offset
+> + * - there is space available for the current page
+> + * - the data frag tail matches the current page and offset
+>  * - the data frag end sequence number matches the current write seq
+>  */
+> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+> -				       const struct page_frag *pfrag,
+> +				       const struct page *page,
+> +				       const unsigned int offset,
+> +				       const unsigned int size,
 
--- 
-2.43.0
+Hi Yunsheng -
+
+Why add the 'size' parameter here? It's checked to be a nonzero value, but 
+it can only be 0 if page is also NULL. In this case "page == df->page" 
+will be false, so the function will return false even without checking 
+'size'.
+
+Thanks,
+
+Mat
+
+> 				       const struct mptcp_data_frag *df)
+> {
+> -	return df && pfrag->page == df->page &&
+> -		pfrag->size - pfrag->offset > 0 &&
+> -		pfrag->offset == (df->offset + df->data_len) &&
+> +	return df && size && page == df->page &&
+> +		offset == (df->offset + df->data_len) &&
+> 		df->data_seq + df->data_len == msk->write_seq;
+> }
+>
+> @@ -1085,30 +1086,36 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
+> /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
+>  * data
+>  */
+> -static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+> +static struct page *mptcp_page_frag_alloc_prepare(struct sock *sk,
+> +						  struct page_frag_cache *pfrag,
+> +						  unsigned int *offset,
+> +						  unsigned int *size, void **va)
+> {
+> -	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
+> -					pfrag, sk->sk_allocation)))
+> -		return true;
+> +	struct page *page;
+> +
+> +	page = page_frag_alloc_prepare(pfrag, offset, size, va,
+> +				       sk->sk_allocation);
+> +	if (likely(page))
+> +		return page;
+>
+> 	mptcp_enter_memory_pressure(sk);
+> -	return false;
+> +	return NULL;
+> }
+>
+> static struct mptcp_data_frag *
+> -mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page_frag *pfrag,
+> -		      int orig_offset)
+> +mptcp_carve_data_frag(const struct mptcp_sock *msk, struct page *page,
+> +		      unsigned int orig_offset)
+> {
+> 	int offset = ALIGN(orig_offset, sizeof(long));
+> 	struct mptcp_data_frag *dfrag;
+>
+> -	dfrag = (struct mptcp_data_frag *)(page_to_virt(pfrag->page) + offset);
+> +	dfrag = (struct mptcp_data_frag *)(page_to_virt(page) + offset);
+> 	dfrag->data_len = 0;
+> 	dfrag->data_seq = msk->write_seq;
+> 	dfrag->overhead = offset - orig_offset + sizeof(struct mptcp_data_frag);
+> 	dfrag->offset = offset + sizeof(struct mptcp_data_frag);
+> 	dfrag->already_sent = 0;
+> -	dfrag->page = pfrag->page;
+> +	dfrag->page = page;
+>
+> 	return dfrag;
+> }
+> @@ -1793,7 +1800,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
+> static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> {
+> 	struct mptcp_sock *msk = mptcp_sk(sk);
+> -	struct page_frag *pfrag;
+> +	struct page_frag_cache *pfrag;
+> 	size_t copied = 0;
+> 	int ret = 0;
+> 	long timeo;
+> @@ -1832,9 +1839,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 	while (msg_data_left(msg)) {
+> 		int total_ts, frag_truesize = 0;
+> 		struct mptcp_data_frag *dfrag;
+> -		bool dfrag_collapsed;
+> -		size_t psize, offset;
+> +		bool dfrag_collapsed = false;
+> +		unsigned int offset, size;
+> +		struct page *page;
+> +		size_t psize;
+> 		u32 copy_limit;
+> +		void *va;
+>
+> 		/* ensure fitting the notsent_lowat() constraint */
+> 		copy_limit = mptcp_send_limit(sk);
+> @@ -1845,21 +1855,26 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 		 * page allocator
+> 		 */
+> 		dfrag = mptcp_pending_tail(sk);
+> -		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
+> +		page = page_frag_alloc_probe(pfrag, &offset, &size, &va);
+> +		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, page, offset,
+> +							     size, dfrag);
+> 		if (!dfrag_collapsed) {
+> -			if (!mptcp_page_frag_refill(sk, pfrag))
+> +			size = 32U + sizeof(struct mptcp_data_frag);
+> +			page = mptcp_page_frag_alloc_prepare(sk, pfrag, &offset,
+> +							     &size, &va);
+> +			if (!page)
+> 				goto wait_for_memory;
+>
+> -			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
+> +			dfrag = mptcp_carve_data_frag(msk, page, offset);
+> 			frag_truesize = dfrag->overhead;
+> +			va += dfrag->overhead;
+> 		}
+>
+> 		/* we do not bound vs wspace, to allow a single packet.
+> 		 * memory accounting will prevent execessive memory usage
+> 		 * anyway
+> 		 */
+> -		offset = dfrag->offset + dfrag->data_len;
+> -		psize = pfrag->size - offset;
+> +		psize = size - frag_truesize;
+> 		psize = min_t(size_t, psize, msg_data_left(msg));
+> 		psize = min_t(size_t, psize, copy_limit);
+> 		total_ts = psize + frag_truesize;
+> @@ -1867,8 +1882,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 		if (!sk_wmem_schedule(sk, total_ts))
+> 			goto wait_for_memory;
+>
+> -		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
+> -					   page_address(dfrag->page) + offset);
+> +		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
+> 		if (ret)
+> 			goto do_error;
+>
+> @@ -1877,7 +1891,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 		copied += psize;
+> 		dfrag->data_len += psize;
+> 		frag_truesize += psize;
+> -		pfrag->offset += frag_truesize;
+> 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
+>
+> 		/* charge data on mptcp pending queue to the msk socket
+> @@ -1885,11 +1898,14 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+> 		 */
+> 		sk_wmem_queued_add(sk, frag_truesize);
+> 		if (!dfrag_collapsed) {
+> -			get_page(dfrag->page);
+> +			page_frag_alloc_commit(pfrag, frag_truesize);
+> 			list_add_tail(&dfrag->list, &msk->rtx_queue);
+> 			if (!msk->first_pending)
+> 				WRITE_ONCE(msk->first_pending, dfrag);
+> +		} else {
+> +			page_frag_alloc_commit_noref(pfrag, frag_truesize);
+> 		}
+> +
+> 		pr_debug("msk=%p dfrag at seq=%llu len=%u sent=%u new=%d", msk,
+> 			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
+> 			 !dfrag_collapsed);
 
