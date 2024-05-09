@@ -1,168 +1,161 @@
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC07037719
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 14:37:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FF7F15AF1
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 14:39:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715265429; cv=none; b=pYUjtCFEwe796LUuo8cL7pGbS6eW7m0CdVVZsBXBqzjr9AUu9k90FqbNmjq/27QxPg4Vj6FgzEDkfGrACx7b6bBj5OilgIfz8NTeVg0kaktseiglaexrX1FSjSt5jjjxGgMwNzqz99INFFvie7U19CsQs+FU8sera710ZpSlDW8=
+	t=1715265550; cv=none; b=L+K87EvcLQYdadvX8iBM3LwMLiyVkKZUSN2Onex3ZBL/flVWCGcWo11UaMRvt+kb2IT3A0TifPOP5UUk1WqWcDu7qlqQ3adpF2GEEHUPxYX5hQAC82mJjfotTeiJDoyOzAT7VW7Pn+BNg8gB3wqWu6IHguRQs+77++lFWho23mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715265429; c=relaxed/simple;
-	bh=rX2HhaPr9XjslEz/iELt3o8cY4WdThK1YOL4qhZC7cc=;
+	s=arc-20240116; t=1715265550; c=relaxed/simple;
+	bh=F2rM6FnBqmVCqtVn0JCk+NWhBWaPzNfMcxgwjshhm/g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GBMESImrkE8IsgQwideId97B0DSpt46TVdl6nki6afp4d6DCOYOofMTHzegyTy5G7pk86wWzs8hr5wN5ePObeAwaVrwhYqc9t1jK1If+HNAsokC2wl9/tG1dWncyRXFh2CHFQjwHC8dE8nzE+opeG62pSOfYiYp4YTfvuDhb+AU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org; spf=pass smtp.mailfrom=linuxfoundation.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=AnObrFZd; arc=none smtp.client-ip=209.85.166.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linuxfoundation.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linuxfoundation.org
+	 In-Reply-To:Content-Type; b=fD4z5UaI2oK1YEB50Qt6Y2hfK6XQHHIDaUPCF000RoMk/Z1RXFJvuw6ofsjNYSm6XKqk/HYMY3t84CT9Tj/M1yDtcJ5u8f5wo/q6JQ5jS27qq4Hv2DifiBxt1nTZnF5LOUJGsE8FQmdB0mpffZmotxsbOuaFklG6+d7FEPIG7UU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ubUCj+M4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="AnObrFZd"
-Received: by mail-io1-f41.google.com with SMTP id ca18e2360f4ac-7d9ef422859so8308039f.0
-        for <mptcp@lists.linux.dev>; Thu, 09 May 2024 07:37:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linuxfoundation.org; s=google; t=1715265427; x=1715870227; darn=lists.linux.dev;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=qhunxhR/OF2icvm3HmEsNbbwCxzb74IsXbKxDT8qkPs=;
-        b=AnObrFZdnihMy+GVV+gkilBs8A4D8XFbikr6OFq/gCEkO4YoBslet5/30pA7BY1VHl
-         aGP1zU1tOw6JL3GaWVjF8AdSA1FRMKU9u4B3htdIl1EKxlZmPfGVElsT20zYuD9uMqeK
-         U40OPgtVrXWO/tKifbamG+KyH8Y3UEmWZ2b2E=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715265427; x=1715870227;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qhunxhR/OF2icvm3HmEsNbbwCxzb74IsXbKxDT8qkPs=;
-        b=EcFKlBpP5aGICAzv7I2N5CFzi5HxndJuQ7TcsQUDszQ+dia4iyilCb2/T7ieXzszc6
-         TCvI6EQFLa7DRAjsTtEUZUYONJrXCqOArCV5sng1wet8oX5y5ZbznLZLw5ZA1BhlrRtQ
-         ioKWM8EAuNfbq2d0q96VWKX8xy9rnOaCMTD9N5gQrFd1PQuYZP3aJnom3jdAjFjSbnzn
-         WrKXeJCRCsUk4+ct434XrGgkiLbb5YfncgdJ3r/gYhBUm+/hoeAZeDTCdxnA8qjuJMWO
-         G1nanxubxyUwfyPNLK4sl++RVS7iHq87H0SZRVIHuU1fraZcclzE90arqR25sYDg/EXk
-         17lA==
-X-Forwarded-Encrypted: i=1; AJvYcCULSiD4rKOEorN9zyG4Ya30dBmhGtqqUGweg7YGFyzHRtgGwYMYrpktpTTQ+GJR89EeqfTu6DSY6coF1AOWexrpHbftMMA=
-X-Gm-Message-State: AOJu0YzVkhyQ6ynfWEXkkhU67KC50y4RJoTtI+QVKbto5P/4ZJumCn1i
-	GpxHdkMVAANCFvy/MDpjIdt5xcx+GgORywnMdJnZFKc/SFa2U36tqQlUMdJ8rmY=
-X-Google-Smtp-Source: AGHT+IFLPV3hTUAqtiZSXFMZ3nZtJrVA8/PdzJcN3v/yjJF832scb22cGE7mYooNXziODVFLnPMOaA==
-X-Received: by 2002:a6b:e618:0:b0:7e1:86e1:cd46 with SMTP id ca18e2360f4ac-7e18fd9a35cmr655432839f.2.1715265426750;
-        Thu, 09 May 2024 07:37:06 -0700 (PDT)
-Received: from [192.168.1.128] ([38.175.170.29])
-        by smtp.gmail.com with ESMTPSA id 8926c6da1cb9f-4893703c0c8sm386684173.48.2024.05.09.07.37.03
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Thu, 09 May 2024 07:37:06 -0700 (PDT)
-Message-ID: <946ae22f-a4af-448a-92e1-60afb6ed9261@linuxfoundation.org>
-Date: Thu, 9 May 2024 08:37:03 -0600
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ubUCj+M4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7920CC116B1;
+	Thu,  9 May 2024 14:39:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715265549;
+	bh=F2rM6FnBqmVCqtVn0JCk+NWhBWaPzNfMcxgwjshhm/g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ubUCj+M4uxR+A8dSw8QWh6UwEXVkKrfbNjkDSX+thIaymVVKD9KiF6Ax+4izz/rM4
+	 lh/rDIrjEYIoPdb1eNWk7s1Yc9NUQ4h6fjiwqJWz1aJBivr2CnFraE7J5n8zbJSOCE
+	 nQvnofbTf7Eo1VCeDZJL8hrR4SPqoU44rfLL8lBv5hhI+1ut0MGjtMccJu42PyE/yQ
+	 fURh39dJcGTTX6BvTWrLcN5lB4+AZhewA6uSOYejWKFyUvB5zmkrf0WEWECt/0xawb
+	 BLjJL51Hv80tcEPBYJ8SdUjpdHVywV5FH4RES2NJvHguXaG8v6KSQCXRzmkh72ptrV
+	 O4guz9Ti6bk8A==
+Message-ID: <89dc0020-6bd8-4cce-8b8c-8b73c22c386e@kernel.org>
+Date: Thu, 9 May 2024 16:39:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH v2 0/5] Define _GNU_SOURCE for sources using
-To: Edward Liaw <edliaw@google.com>
-Cc: shuah@kernel.org, Mark Brown <broonie@kernel.org>,
- Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>,
- Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
- Nhat Pham <nphamcs@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>,
- Christian Brauner <brauner@kernel.org>,
- Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>,
- OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
- Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
- Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>,
- Davidlohr Bueso <dave@stgolabs.net>, =?UTF-8?Q?Andr=C3=A9_Almeida?=
- <andrealmeid@igalia.com>, Jiri Kosina <jikos@kernel.org>,
- Benjamin Tissoires <bentiss@kernel.org>, Jason Gunthorpe <jgg@ziepe.ca>,
- Kevin Tian <kevin.tian@intel.com>, Andy Lutomirski <luto@amacapital.net>,
- Will Drewry <wad@chromium.org>, Marc Zyngier <maz@kernel.org>,
- Oliver Upton <oliver.upton@linux.dev>, James Morse <james.morse@arm.com>,
- Suzuki K Poulose <suzuki.poulose@arm.com>, Zenghui Yu
- <yuzenghui@huawei.com>, Paolo Bonzini <pbonzini@redhat.com>,
- Sean Christopherson <seanjc@google.com>, Anup Patel <anup@brainfault.org>,
- Atish Patra <atishp@atishpatra.org>, Paul Walmsley
- <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>,
- Albert Ou <aou@eecs.berkeley.edu>,
- Christian Borntraeger <borntraeger@linux.ibm.com>,
- Janosch Frank <frankja@linux.ibm.com>,
- Claudio Imbrenda <imbrenda@linux.ibm.com>,
- David Hildenbrand <david@redhat.com>, =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?=
- <mic@digikod.net>, Paul Moore <paul@paul-moore.com>,
- James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
- Andrew Morton <akpm@linux-foundation.org>, Seth Forshee
- <sforshee@kernel.org>, Bongsu Jeon <bongsu.jeon@samsung.com>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Steffen Klassert <steffen.klassert@secunet.com>,
- Herbert Xu <herbert@gondor.apana.org.au>, =?UTF-8?Q?Andreas_F=C3=A4rber?=
- <afaerber@suse.de>, Manivannan Sadhasivam
- <manivannan.sadhasivam@linaro.org>, Matthieu Baerts <matttbe@kernel.org>,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
- Fenghua Yu <fenghua.yu@intel.com>,
- Reinette Chatre <reinette.chatre@intel.com>,
- Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
- "Paul E. McKenney" <paulmck@kernel.org>, Boqun Feng <boqun.feng@gmail.com>,
- Alexandre Belloni <alexandre.belloni@bootlin.com>,
- Jarkko Sakkinen <jarkko@kernel.org>,
- Dave Hansen <dave.hansen@linux.intel.com>,
- Muhammad Usama Anjum <usama.anjum@collabora.com>,
- linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
- kernel-team@android.com, linux-sound@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-mm@kvack.org,
- linux-input@vger.kernel.org, iommu@lists.linux.dev, kvmarm@lists.linux.dev,
- kvm@vger.kernel.org, kvm-riscv@lists.infradead.org,
- linux-riscv@lists.infradead.org, linux-security-module@vger.kernel.org,
- linux-fsdevel@vger.kernel.org, netdev@vger.kernel.org,
- linux-actions@lists.infradead.org, mptcp@lists.linux.dev,
- linux-rtc@vger.kernel.org, linux-sgx@vger.kernel.org, bpf@vger.kernel.org,
- Shuah Khan <skhan@linuxfoundation.org>
-References: <20240507214254.2787305-1-edliaw@google.com>
- <f4e45604-86b0-4be6-9bea-36edf301df33@linuxfoundation.org>
- <CAG4es9XE2D94BNboRSf607NbJVW7OW4xkVq4jZ8pDZ_AZsb3nQ@mail.gmail.com>
-Content-Language: en-US
-From: Shuah Khan <skhan@linuxfoundation.org>
-In-Reply-To: <CAG4es9XE2D94BNboRSf607NbJVW7OW4xkVq4jZ8pDZ_AZsb3nQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH bpf-next 0/4] selftests/bpf: new MPTCP subflow subtest &
+ improvements
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240507-upstream-bpf-next-20240506-mptcp-subflow-test-v1-0-e2bcbdf49857@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 5/9/24 00:13, Edward Liaw wrote:
-> On Wed, May 8, 2024 at 4:10 PM Shuah Khan <skhan@linuxfoundation.org> wrote:
->>
->> On 5/7/24 15:38, Edward Liaw wrote:
->>> 809216233555 ("selftests/harness: remove use of LINE_MAX") introduced
->>> asprintf into kselftest_harness.h, which is a GNU extension and needs
->>> _GNU_SOURCE to either be defined prior to including headers or with the
->>> -D_GNU_SOURCE flag passed to the compiler.
->>>
->>> v1: https://lore.kernel.org/linux-kselftest/20240430235057.1351993-1-edliaw@google.com/
->>> v2: add -D_GNU_SOURCE to KHDR_INCLUDES so that it is in a single
->>> location.  Remove #define _GNU_SOURCE from source code to resolve
->>> redefinition warnings.
->>>
->>> Edward Liaw (5):
->>>     selftests: Compile kselftest headers with -D_GNU_SOURCE
->>>     selftests/sgx: Include KHDR_INCLUDES in Makefile
->>
->> I appled patches 1/5 and 2.5 - The rest need to be split up.
->>
->>>     selftests: Include KHDR_INCLUDES in Makefile
->>>     selftests: Drop define _GNU_SOURCE
->>>     selftests: Drop duplicate -D_GNU_SOURCE
->>>
->>
->> Please split these patches pwe test directory. Otherwise it will
->> cause merge conflicts which can be hard to resolve.
+Hi Geliang,
+
+(only with MPTCP ML in cc)
+
+On 07/05/2024 12:53, Matthieu Baerts (NGI0) wrote:
+> In this series from Geliang, modifying MPTCP BPF selftests, we have:
 > 
-> Hi Shuah,
-> Sean asked that I rebase the patches on linux-next, and I will need to
-> remove additional _GNU_SOURCE defines.  Should I send an unsplit v3 to
-> be reviewed, then split it afterwards?  I'm concerned that it will be
-> difficult to review with ~70 patches once split.
+> - SIGINT support
+> 
+> - A new macro to reduce duplicated code
+> 
+> - A new MPTCP subflow BPF program setting socket options per subflow: it
+>   looks better to have this old test program in the BPF selftests to
+>   track regressions and to serve as example.
+> 
+>   Note: Nicolas is no longer working for Tessares, but he did this work
+>   while working for them, and his email address is no longer available.
+> 
+> - A new MPTCP BPF subtest validating the new BPF program.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Geliang Tang (3):
+>       selftests/bpf: Handle SIGINT when creating netns
 
-Please send them split - it will be easier to review and apply. You
-might as well wait until the merge window is done. I don't think
-anybody would have time to review now since merge window starts
-next week.
+Regarding this patch, do you mind looking for a new version that is
+generic as requested by Alexei, please?
 
+I guess he meant adding a new helper in network_helpers.c doing "ip
+netns add" + "signal(SIGINT)" + "open_netns()", and using it everywhere
+"ip netns add" + "open_netns()" are used. (I guess you will need another
+helper to "close_netns()" + "ip netns del" + remove the signal handler
+or the netns name.)
+Be careful that sometimes, more than one netns is used.
 
-thanks,
--- Shuah
+>       selftests/bpf: Add RUN_MPTCP_TEST macro
+>       selftests/bpf: Add mptcp subflow subtest
+> 
+> Nicolas Rybowski (1):
+>       selftests/bpf: Add mptcp subflow example
+
+For your information, I modified our tree to apply comments from Alexei:
+
+New patches for t/upstream:
+- 12609b68c8d9: tg:msg: clarify the commit message
+- a4ad7c6dee6a: Revert "selftests/bpf: Add RUN_MPTCP_TEST macro"
+- f457d8911a38: conflict in t/selftests-bpf-Add-mptcp-subflow-subtest
+- 5072ff915f8d: Revert "selftests/bpf: Handle SIGINT when creating netns"
+- 9df135860724: conflict in t/selftests-bpf-Add-bpf-scheduler-test
+- 8ef1339edc8a: conflict in t/selftests-bpf-add-bpf_first-scheduler
+- 2f5ced304cc1: conflict in t/selftests-bpf-Add-bpf_bkup-scheduler
+- e9bafe786620: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
+- dca93e3c7e9a: conflict in t/selftests-bpf-Add-bpf_red-scheduler
+- 5349d85a8c73: conflict in t/selftests-bpf-Add-bpf_burst-scheduler
+- Results: 304693999ba6..b74adae98e0d (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/715c505a46ae8394e40fdeb54e0ecea27f95dc5d/checks
+
+I will also modify the tree not to remove MPTCP_SCHED_TEST() macro as
+asked by Alexei.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
