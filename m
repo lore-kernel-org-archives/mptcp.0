@@ -1,325 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C110814AD1B
-	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 10:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5128112F582
+	for <mptcp@lists.linux.dev>; Thu,  9 May 2024 10:48:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715250528; cv=none; b=A2vqfacSGr0WVrqNiGsqqhNEP/Oc356ePbk9gK/bQlwr+UrGDbqGtLrFyC333VxccqwuLiodahIT0RZfDH20fwKBcCsJrw7ku9637yMuDn5kU0K0ebBCGRMP2SDaRZVdqt5A2TjlXIJhTFx++0tY+h3/HIF062WV9rhO0fe552Q=
+	t=1715251725; cv=none; b=lh9RQbgKV/ohgeBpM8CXmj70VoQoetf1IIM9pjVJmt4DWOXg50Z3If7W/qk/PSoXlSZmyoiiFe0n3gHNjrn5uWq40rzqHQ5BsMLXn1YY4xTli9ZIrSx9Zk5IfBshgI+FfS8Jre3EWTVgZTtTq6s0Y4l82q97booZP8f0Djz+R40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715250528; c=relaxed/simple;
-	bh=XAEj2pNGEZPblYux2usNjDsB7Gr23CQ2aX1qajdei50=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=JWpftzhcoKNF+3Udno/Sj2N4blHshFmufEuK+hZCfwHbL/thUqFSE778deYQzmElaoZNnf4bHWyUvij9Rh40MhMz8rM/6vXxWwe/O1qoFhhA5gg9zWdE8Un9cjltGV12l8rR3ZA7F6ZpKdhW9NRsDekcSo6KlF6XbgspcLQRN04=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ukm20gDp; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715251725; c=relaxed/simple;
+	bh=3OxqexqPSWsx9JLoFWgT2nvWiAO99ZscR2/I/7xcUJ4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DaW0p2TP/s8QEAu2f+w2uO6CUKII1yRFVM02g3VsLZHvw8W1G7gETP7d4luvZsrggf8/AvL+h75hg3y7f7wvAFYyZw+f0NvptmNLiiRJXGUU7kgKdod5uuZneEd7M0zzLYE2fMrgCVeWbmsjGz88BwlfEzWGUMR7RgKPeIBMfEs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBsqFTWS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ukm20gDp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AF71FC116B1;
-	Thu,  9 May 2024 10:28:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBsqFTWS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18E80C116B1;
+	Thu,  9 May 2024 10:48:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715250528;
-	bh=XAEj2pNGEZPblYux2usNjDsB7Gr23CQ2aX1qajdei50=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=Ukm20gDpCNbdOAyLiuAvtKzeyBJaOE1xZP4BbJU0oaEom/pvinsgWp7nXKIcDsR7z
-	 guFkembafJ1pURA5gIE73vi10EJoouOhJe7WwI/tc9vMvJK4bRlntY1gFlTTUWMFmf
-	 o2nks6qA4PPXFu5Z+aFPFDjP9iLUoSTQ5vXLj+jShvAn1rbG35a7MWlnK9aeRkpbnp
-	 BeBLSLu6+1533JyMEPDfqkX+9ddMrHTiVDDRyrQsxATHWsCGfpChiy2yfIbkWeiw4B
-	 AU+f4+UMEeYPwugDHu35x7NYfZkzoe6XANt+E/95NM0NMYWn/aE1OOqvK+76352gLT
-	 80A8F+nPYJW9w==
-Message-ID: <0d2f4dd2-2619-4c42-8765-f8c0a0b1871c@kernel.org>
-Date: Thu, 9 May 2024 12:28:43 +0200
+	s=k20201202; t=1715251724;
+	bh=3OxqexqPSWsx9JLoFWgT2nvWiAO99ZscR2/I/7xcUJ4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=FBsqFTWS4kl3Wm7KSs7GQTnnl5/Out+CTWXg/1qS0fZCgD7Uy1RAvEt2zzq0FFODm
+	 qDtyOCTM9WPHRVU6U5eHXwdJeH4BqCY4OerSTdtxhANjtQAsXimls+rDGXKplGwEGV
+	 92rQC4Oeeke0NORdJFaCpPikOWMe7UFfpJjJD6bbXY4GCki6xyKMbDCaAkj/a1MAA7
+	 fi9HicSfDrvxhM55GCf4NK78moyD0H/OzjQTwCp0kYA9x1TDLpZvQ9txCYuXoxClR9
+	 vnFPFTF7yn7nCvJAcxZDoZr7uUOJ361QRIJLEQtjnjALWsm8Ke//0r3a+hTJ1aLD34
+	 qzKMLZetzbCqg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/2] mptcp: getsockopt(SO_KEEPALIVE) and
+ TCP_KEEP* sockopts
+Date: Thu, 09 May 2024 12:48:20 +0200
+Message-Id: <20240509-mptcp-tcp-keepalive-sockopts-v2-0-5f97067847a2@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/2] mptcp: fix full TCP keep-alive support
-To: Paolo Abeni <pabeni@redhat.com>
-References: <20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org>
- <20240508-mptcp-tcp-keepalive-sockopts-v1-2-fdf7e03e14c4@kernel.org>
- <dbaa4e59f1dbdbcf77634349ee968b4199b786f7.camel@redhat.com>
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <dbaa4e59f1dbdbcf77634349ee968b4199b786f7.camel@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPSpPGYC/32NTQ7CIBCFr2JmLQYobY0r72G6qHRoJ61AgBBN0
+ 7uL1bWLt3h5P98KEQNhhMthhYCZIjlbjDweQE+9HZHRUDxILhWvecsePmnPPpoRfb9QRhadnp1
+ PkdWqGaq7MJWsGygXPqCh535/g+/SYoKuRBPF5MJrB2exF36M839GFowzM5gWeYVCaXWdMVhcT
+ i6M0G3b9gaMCAHC1AAAAA==
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2995; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3OxqexqPSWsx9JLoFWgT2nvWiAO99ZscR2/I/7xcUJ4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmPKoLi1onLO1z1omBQ+BH+GHrXsLgKqE6IcUdg
+ cX3TzOB/TeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZjyqCwAKCRD2t4JPQmmg
+ c5+xEADfP50iGffUsozxFNcgdSOQAEWb1Hmt3Xu6N6G5hFeyB8gfIq7/0ZcXL2TnZv7cR44cbXs
+ C9j3mbfl1Qxv06OaQcEXI8bEVKAAEYiooUpsYoK/MBaDhD54nVajLT4YpCpFiEjj88gBfb0VvGT
+ VK74jE0oAo/Z5hjg/F2IwwVAEJgbmsNA5MAsUG7utMurydCYxFbqGlg/XzrGgtoxbJA5AEsO0+B
+ A96vPcN4jTSqTTIlWoQWPRRcg2/KynJTg3qUF29KRAKAK2vJ5lnKTCzqaBZrSzurI4twuvstWyL
+ utFZw6m/xvrOIz3tVDfYCkPS4+9+14tpfxhHgcDzQ1CmpTJrTENQPGSeErwaVVU+nWQBdYM6MM2
+ md0Ai2C4uZ6Jgdh951PybhqdFGfM8D5iLSSY3Meff2a0mpRpTe8/EwsimKCCRQge21kpsiTTi1A
+ C5Rv5K+eVgfMSyGhzk/CbzWApV7JhrjYbWzGhR8fGl56/6HcfQE4f0NEmQ8Nq4pi4qT6bROV34I
+ jux3G7aHmIEl8WnHPCvRoNI58GYQ0ARs1OkXp5k4Rie5aMXEWyGoqD7I730eKuqDVikjOXWSbzn
+ RQyYa6vF8yOwWS4u5fYA0EVZLPOrtzg1HrLnoWbEe9WqwQK9DokLK0vgAIS88TF961wtUPZNI69
+ SCq2LePT2yjcq5Q==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+This is linked to a discussion we had a few weeks ago: not supporting
+TCP_KEEP* socket options is preventing MPTCP to be used in some apps or
+libraries like it was the case in GoLang recently.
 
-Thank you for the review!
+Supporting them is not difficult, it should have probably done before,
+when SO_KEEPALIVE support has been added. Supporting them is easy and
+isolated from the rest, it sounds safe enough to add a Fixes tag, and
+check with the stable team to backport them. I understand it can be a
+bit controversial, but it would unnecessary delay (1 or 2 years?) some
+deployments, for something that simple.
 
-On 08/05/2024 17:44, Paolo Abeni wrote:
-> On Wed, 2024-05-08 at 11:44 +0200, Matthieu Baerts (NGI0) wrote:
->> SO_KEEPALIVE support has been added a while ago, as part of a series
->> "adding SOL_SOCKET" support. To have a full control of this keep-alive
->> feature, it is important to also support TCP_KEEP* socket options at the
->> SOL_TCP level.
->>
->> Supporting them on the setsockopt() part is easy, it is just a matter of
->> remembering each value in the MPTCP sock structure, and calling
->> tcp_sock_set_keep*() helpers on each subflow. If the value is not
->> modified (0), calling these helpers will not do anything. For the
->> getsockopt() part, the corresponding value from the MPTCP sock structure
->> or the default one is simply returned.
->>
->> It looks important for kernels supporting SO_KEEPALIVE, to also support
->> TCP_KEEP* options as well: some apps seem to (wrongly) consider that if
->> the former is supported, the latter ones will be supported as well. But
->> also, not having this simple and isolated change is preventing MPTCP
->> support in some apps, and libraries like GoLang [1]. This is why this
->> patch is seen as a fix.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/383
->> Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
->> Link: https://github.com/golang/go/issues/56539 [1]
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/protocol.h |  3 +++
->>  net/mptcp/sockopt.c  | 57 ++++++++++++++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 60 insertions(+)
->>
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index c09357e04f23..8c7ab1d50c75 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
->> @@ -309,6 +309,9 @@ struct mptcp_sock {
->>  			in_accept_queue:1,
->>  			free_first:1,
->>  			rcvspace_init:1;
->> +	u8		keepalive_cnt;
->> +	unsigned int	keepalive_idle;
->> +	unsigned int	keepalive_intvl;
-> 
-> It's a bit a pity we have to duplicate such values in all the subflows
-> _and_ in the msk...
+While at it, getsockopt(SO_KEEPALIVE) is now returning the expected
+value.
 
-Yes, I agree, but I don't see how else we could do that :-/
+The manipulation of these different socket options can be verified with
+this simple packetdrill test:
 
-(Or relying on what has been set in the first subflow? But that's not
-what we are currently doing, and should be part of a separated
-refactoring I think, see below.)
+  --tolerance_usecs=100000
+  `../common/defaults.sh`
 
->>  	u32		notsent_lowat;
->>  	struct work_struct work;
->>  	struct sk_buff  *ooo_last_skb;
->> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
->> index d9f0d36e24ad..794d8b63024a 100644
->> --- a/net/mptcp/sockopt.c
->> +++ b/net/mptcp/sockopt.c
->> @@ -622,6 +622,30 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
->>  	return ret;
->>  }
->>  
->> +static int __mptcp_setsockopt_set_val(struct mptcp_sock *msk, int max,
->> +				      int (*set_val)(struct sock *, int),
->> +				      unsigned int *msk_val, int val)
->> +{
->> +	struct mptcp_subflow_context *subflow;
->> +	int ret = 0;
->> +
->> +	if (val < 1 || val > max)
->> +		return -EINVAL;
-> 
-> I think it would be better just skip this check, to avoid copying more
-> logic from TCP, and do the store and sockopt_seq_inc() only when the
-> operation is successful on all the subflows.
+  0.0    socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
+  +0     setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+  +0     bind(3, ..., ...) = 0
+  +0     listen(3, 1) = 0
 
-Good idea!
+  +0       <  S   0:0(0)         win 8000  <mss 1024, sackOK, nop, nop, nop, wscale 0, mpcapable v1 flags[flag_h] nokey>
+  +0       >  S.  0:0(0)  ack 1            <mss 1460, nop, nop, sackOK, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
+  +0.01    <   .  1:1(0)  ack 1  win 8000                                             <mpcapable v1 flags[flag_h] key[ckey=2, skey]>
+  +0     accept(3, ..., ...) = 4
 
->> +	*msk_val = val;
->> +	sockopt_seq_inc(msk);
->> +
->> +	mptcp_for_each_subflow(msk, subflow) {
->> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
->> +
->> +		lock_sock(ssk);
->> +		ret |= set_val(ssk, val);
-> 
-> the above produces 'reasonable' return code only if all 'set_val' calls
-> will return the same error code.
-> 
-> That expectation should be respected by the existing code, but what
-> about keeping the first error code only? e.g:
-> 
-> 	int err, ret;
-> 	// ...
-> 
-> 		ret = set_val(ssk, val);
-> 		err = err ?: ret;
-> 
-> 	// ...
-> 	return err;
+  // Set and check the different Keep-Alive options.
+  +0     getsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [0], [4]) = 0
+  +0     setsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [1], 4) = 0
+  +0     getsockopt(4, SOL_SOCKET, SO_KEEPALIVE, [1], [4]) = 0
 
-Yes, sounds cleaner and similar to what we did with TCP_CONGESTION, thanks!
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPIDLE, [7200], [4]) = 0
 
->> +		release_sock(ssk);
->> +	}
->> +
->> +	return ret;
->> +}
->> +
->>  static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
->>  {
->>  	struct mptcp_subflow_context *subflow;
->> @@ -818,6 +842,22 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->>  	case TCP_NODELAY:
->>  		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
->>  		break;
->> +	case TCP_KEEPIDLE:
->> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPIDLE,
->> +						 &tcp_sock_set_keepidle_locked,
->> +						 &msk->keepalive_idle, val);
->> +		break;
->> +	case TCP_KEEPINTVL:
->> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPINTVL,
->> +						 &tcp_sock_set_keepintvl,
->> +						 &msk->keepalive_intvl, val);
->> +		break;
->> +	case TCP_KEEPCNT:
->> +		ret = __mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPCNT,
->> +						 &tcp_sock_set_keepcnt,
->> +						 (unsigned int *)&msk->keepalive_cnt,
-> 
-> keepalive_cnt is 'u8' so the above will be technically a buffer
-> overflow ;) If we keep 'keepalive_cnt' in msk, it has to become
-> an 'unsigned int'
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPINTVL, [75], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPINTVL, [10], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPINTVL, [10], [4]) = 0
 
-Argh, good catch! I checked the limits (1 < val < MAX_TCP_KEEPCNT), and
-I missed the overflowing later, sorry :-/
-Easier to store the original value, as an 'int' then.
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPCNT, [9], [4]) = 0
+  +0     setsockopt(4, SOL_TCP, TCP_KEEPCNT, [2], 4) = 0
+  +0     getsockopt(4, SOL_TCP, TCP_KEEPCNT, [2], [4]) = 0
 
-> 
->> +						 val);
->> +		break;
->>  	default:
->>  		ret = -ENOPROTOOPT;
->>  	}
->> @@ -1332,6 +1372,8 @@ static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
->>  static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->>  				    char __user *optval, int __user *optlen)
->>  {
->> +	struct sock *sk = (void *)msk;
->> +
->>  	switch (optname) {
->>  	case TCP_ULP:
->>  	case TCP_CONGESTION:
->> @@ -1352,6 +1394,18 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->>  		return mptcp_put_int_option(msk, optval, optlen, msk->nodelay);
->>  	case TCP_NOTSENT_LOWAT:
->>  		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
->> +	case TCP_KEEPIDLE:
->> +		return mptcp_put_int_option(msk, optval, optlen,
->> +					    msk->keepalive_idle ? :
->> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_time) / HZ);
-> 
-> If we force the first subflow to be present/allocated at setsockopt
-> time, then here we could:
-> 
-> 	case TCP_KEEPIDLE:
-> 	case TCP_KEEPIDLE:
-> 	case TCP_KEEPCNT:
-> 		return do_tcp_getsockopt(msk->first, SOL_TCP,
-> optname, 
-> 					USER_SOCKPTR(optval),
-> 					USER_SOCKPTR(optlen));
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Addressed Paolo's comments in patch 2/2, see the individual changelog.
+- Link to v1: https://lore.kernel.org/r/20240508-mptcp-tcp-keepalive-sockopts-v1-0-fdf7e03e14c4@kernel.org
 
-I initially did that -- by calling mptcp_getsockopt_first_sf_only() --
-like it is done for TCP_FASTOPEN*, etc.
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: SO_KEEPALIVE: fix getsockopt support
+      mptcp: fix full TCP keep-alive support
 
-But then I changed that because TCP_FASTOPEN* and similar only make
-sense on the first subflow, while the other ones in the list (TCP_INQ,
-TCP_CORK, etc.) are set on all subflows. So I thought not to make an
-exception here. (Also, socket options could be modified per subflow with
-BPF, best not to have exceptions here).
+ net/mptcp/protocol.h |  3 +++
+ net/mptcp/sockopt.c  | 60 ++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 2 files changed, 61 insertions(+), 2 deletions(-)
+---
+base-commit: a64044939fd33676d7098eb08397e65e83d278ed
+change-id: 20240507-mptcp-tcp-keepalive-sockopts-546d3b1f3256
 
-But I still think it would make sense to do that if we also do the same
-with the other socket options: I do think the way we handle the socket
-options should be simplified, e.g. what I proposed a while ago, and I
-failed to update so far:
-
-  https://patchwork.kernel.org/project/mptcp/list/?series=763505&state=7
-
-We could rely on the first subflow for the get as you suggested, but
-also use {ip,ipv6,tcp,sock}_[gs]etsockopt(), instead of setting
-variables manually. And maybe refactoring the 'sync' to "duplicate"
-options set on the first subflow, and not to have to store TCP specific
-options that have been set.
-
-Would it be OK to look at that later, and keep this way here?
-
->> +	case TCP_KEEPINTVL:
->> +		return mptcp_put_int_option(msk, optval, optlen,
->> +					    msk->keepalive_intvl ? :
->> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_intvl) / HZ);
->> +	case TCP_KEEPCNT:
->> +		return mptcp_put_int_option(msk, optval, optlen,
->> +					    msk->keepalive_cnt ? :
->> +					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_probes));
->>  	}
->>  	return -EOPNOTSUPP;
->>  }
->> @@ -1467,6 +1521,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
->>  		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
->>  	__tcp_sock_set_cork(ssk, !!msk->cork);
->>  	__tcp_sock_set_nodelay(ssk, !!msk->nodelay);
->> +	tcp_sock_set_keepidle_locked(ssk, msk->keepalive_idle);
->> +	tcp_sock_set_keepintvl(ssk, msk->keepalive_intvl);
->> +	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
->>  
->>  	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
->>  	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
->>
-> 
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
