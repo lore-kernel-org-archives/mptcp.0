@@ -1,133 +1,120 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FC001635B7
-	for <mptcp@lists.linux.dev>; Fri, 10 May 2024 09:49:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F4016D326
+	for <mptcp@lists.linux.dev>; Fri, 10 May 2024 11:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715334543; cv=none; b=jiGsAMXvtUHxwXKuw8WpkTnNeQJjMhZib2qt0E6jUUiY02PnLCf0rATLLkgQdeFQcmRGyQIDHw1lyfX+MK7DCawsmUEWEvOY/q3mWq5CQkr9K1K6vfS62EOCe6Via3PoEPx/7fsobNQftXF4teThFQfaKzOSllLNEdOFZ5LyHmM=
+	t=1715339443; cv=none; b=BcB/0ynKypjfXcVwBRHjdF0evTZ/KxPQ9d8P1Z6WVpEKtJBEu4umDFAcWxVFgBms0MLYJeQGvPtRx39fJyo/g48IpuuyyZWF9ok49cUXmylUDajp3duUMwNeBKBYmUu6bBiGzB+mIuLmoPvxMSP0zjp9yDFwTIqHpNdp6PHPjbc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715334543; c=relaxed/simple;
-	bh=tikwrNQgAuH+VkfWVgQjOixW+UBXoAsIuyx2s3Yx22s=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=C7bwpdOwRA/Lthg++as9SBtCZK85wpHzy7Adu8qDgxQTaVxyeApGQgMI88V4USbowNaxSFDEiaCnlOfCACGxho9D0OYSu46CVkKysl8SZziFDjdtNfinDK0SBi40GCmGFGY8h8JXEZvYKUcePZndYjHVduGNfliyTiLPNIK9mFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.214])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4VbPCJ4Rzkz1ypGP;
-	Fri, 10 May 2024 17:46:04 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 1516E1A016C;
-	Fri, 10 May 2024 17:48:53 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Fri, 10 May
- 2024 17:48:52 +0800
-Subject: Re: [PATCH net-next v3 11/13] net: replace page_frag with
- page_frag_cache
-To: Mat Martineau <martineau@kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Alexander Duyck
-	<alexander.duyck@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
- Dumazet <edumazet@google.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>,
-	<bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
-References: <20240508133408.54708-1-linyunsheng@huawei.com>
- <20240508133408.54708-12-linyunsheng@huawei.com>
- <334a8c67-87c8-a918-9517-0afbfae0d02b@kernel.org>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <b8877f3a-831d-f899-9678-b1665739dbe9@huawei.com>
-Date: Fri, 10 May 2024 17:48:52 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1715339443; c=relaxed/simple;
+	bh=mAPl4GDeaQ4rvQjyteLL28gt4FLDQWF8eqz6O4SwUvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oLGfmgbLLRap8dakZPzZKd9RbCxkwUomgndsFQNcTrbPW2Kp9PgYx2wNwP+qeHKa5jFC/+/JHAIMTy2/wujT/1G66XlZ+Xr2FCWRNXkeONl+1N/2ju1uPQSUMtqn41wJlbKVpVcDZNXpyQhj80E5AWPpQRW4UJTEt5cRWdD2IKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NWL/Sc++; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NWL/Sc++"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47829C113CC
+	for <mptcp@lists.linux.dev>; Fri, 10 May 2024 11:10:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715339442;
+	bh=mAPl4GDeaQ4rvQjyteLL28gt4FLDQWF8eqz6O4SwUvk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=NWL/Sc++iEUCGR451iTx1/q319PnJ3GsNF8htLQVEYTaZNF+P+BUOmsARcv+FNL3F
+	 /FRqQOGUlLh9+HNXep5cZzcXwL796nOFLk4FakQIpRAeTwYJEV2rXlk3G/sbW+EaRr
+	 I2cQKmLSzdtg5aifVY00D/gw/vshA0dyP5jBjSSRKAKKvgaUUwP2GYOxDqScdgike+
+	 sW+xLWpVW/1iFsKhIYDgXZgm/AQdaW5gb8VBPJUmCczI3HJAJ9FhaU3S03bjq0o8dP
+	 XQHNl5at47g5eETy0Pue6RphMca3MOM62cboSrnt8107oSjEs5Jgd1KWwtTyPllLUm
+	 Qy8EeuCXccknA==
+Message-ID: <71912cc4-06b7-490a-bed6-ce50424f282e@kernel.org>
+Date: Fri, 10 May 2024 13:10:40 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <334a8c67-87c8-a918-9517-0afbfae0d02b@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: DO-NOT-MERGE: mptcp: enabled by default
+Content-Language: en-GB
+To: mptcp@lists.linux.dev
+References: <> <3f59cd64-1d30-178b-7328-a59320b7d0f5@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3f59cd64-1d30-178b-7328-a59320b7d0f5@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 2024/5/10 0:22, Mat Martineau wrote:
-> On Wed, 8 May 2024, Yunsheng Lin wrote:
-> 
->> Use the newly introduced prepare/probe/commit API to
->> replace page_frag with page_frag_cache for sk_page_frag().
->>
->> CC: Alexander Duyck <alexander.duyck@gmail.com>
->> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->> ---
->> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
->> .../chelsio/inline_crypto/chtls/chtls_io.c    | 100 ++++---------
->> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
->> drivers/net/tun.c                             |  28 ++--
->> include/linux/sched.h                         |   4 +-
->> include/net/sock.h                            |  14 +-
->> kernel/exit.c                                 |   3 +-
->> kernel/fork.c                                 |   3 +-
->> net/core/skbuff.c                             |  32 ++--
->> net/core/skmsg.c                              |  22 +--
->> net/core/sock.c                               |  46 ++++--
->> net/ipv4/ip_output.c                          |  33 +++--
->> net/ipv4/tcp.c                                |  35 ++---
->> net/ipv4/tcp_output.c                         |  28 ++--
->> net/ipv6/ip6_output.c                         |  33 +++--
->> net/kcm/kcmsock.c                             |  30 ++--
->> net/mptcp/protocol.c                          |  70 +++++----
->> net/sched/em_meta.c                           |   2 +-
->> net/tls/tls_device.c                          | 139 ++++++++++--------
->> 19 files changed, 331 insertions(+), 297 deletions(-)
->>
-> 
-> <snip>
-> 
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index bb8f96f2b86f..ab844011d442 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -960,17 +960,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
->> }
->>
->> /* we can append data to the given data frag if:
->> - * - there is space available in the backing page_frag
->> - * - the data frag tail matches the current page_frag free offset
->> + * - there is space available for the current page
->> + * - the data frag tail matches the current page and offset
->>  * - the data frag end sequence number matches the current write seq
->>  */
->> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
->> -                       const struct page_frag *pfrag,
->> +                       const struct page *page,
->> +                       const unsigned int offset,
->> +                       const unsigned int size,
-> 
-> Hi Yunsheng -
-> 
-> Why add the 'size' parameter here? It's checked to be a nonzero value, but it can only be 0 if page is also NULL. In this case "page == df->page" will be false, so the function will return false even without checking 'size'.
+Hello,
 
-Is it possible that the pfrag->page is also NULL, which may cause
-mptcp_frag_can_collapse_to() to return true?
+On 09/05/2024 21:00, MPTCP CI wrote:
+> Hi Matthieu,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal: Success! ✅
+> - KVM Validation: debug: Unstable: 1 failed test(s): selftest_mptcp_join 🔴
+> - KVM Validation: btf (only bpftest_all): Success! ✅
+> - Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/9021747950
+> 
+> Initiator: Matthieu Baerts (NGI0)
+> Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/5506cb76c43e
+> Patchwork: 
 
-I just found out that the 'size' is not set to zero when return
-NULL for the implementation of probe API for the current version.
-Perhaps it makes more sense to expect the API caller to make sure
-the the returned 'page' not being NULL before using the 'offset',
-'size' and 'va', like below:
+FYI, this is due to Patchew trying to apply patches that are already in
+the tree, and ended up pushing the non modified export branch in a new
+tag because 'git am' didn't do anything but didn't complain.
 
-df && page && page == df->page
+I just added a workaround to (hopefully) avoid doing such builds and
+send useless notifications.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
