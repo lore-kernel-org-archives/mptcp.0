@@ -1,40 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80FFC1798C
-	for <mptcp@lists.linux.dev>; Fri, 10 May 2024 17:12:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9CB9446A1;
+	Fri, 10 May 2024 17:29:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715361147; cv=none; b=ObL9YaG6Qjbta8O17S0NqoEa0wzTM/kLkoRMKTsKeisTbBFnQOk1hkUUSnXzGDbCLjgsfsht4r+CVs7/x6Grti5McLKdgnpo8Ywz8TODfjjjZk0Rnom0FHITKLGOR2lf5FcHPmNte/R40IYxp0KayBl66abWvlkzxMjxpQFiGok=
+	t=1715362169; cv=none; b=cGohw4gb0+zb6Ob66QZS4vOSFiKm0fwNhjJKnnB6bmt4UZHyeQlkBXnEUtZzW6EqQ6AjJDoyLPnT5OFbCCw82ApVF7WFkTapK+HMi8Mwj803P/uTyjfsfX1WqKchjO6OOfxNd1lQuRJwr3BQ6AqwunyNW3FKUVObRkW2RS5GbIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715361147; c=relaxed/simple;
-	bh=h/7fh1yhn7w9Wrx3lOu2LwI0z1V4146YQs0sd4sGDBg=;
+	s=arc-20240116; t=1715362169; c=relaxed/simple;
+	bh=9FerCyrlgXwGRxoi932MXaGZORA1hI35HAt1Vop6+YQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=RQcQoqTGStbadFV0gGr/M+G4mi8GduNew0yUs2qq1hHidpg94+eEoVCGAzkBZtV3jKBkieD56buyBjQhrLzwDD4yL1caD+Ka1q6bNEzVFhBVB8iRrW5b91fRwqHfiU8Vn7W7W3kqXt6LfxkIY4FrQwpO9BTTypQjvQFiEIN2v7E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jJ93WSS/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=qoiDqSzGbWhqiLo4xLIJfoNex57MqrX2jWokMVzGcz8p5am6DI4dPGXpkq7xkj0I0NSxIavV9F1HQTec4Y62qYCIfLJDQ1lqwi+1gSXxjDCUjAOdJzbWlEQ89Qi5d65mol42J7FEw2BTiBA0g77bAW6BdIjZGUwaIZB7BUlXxPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sx36sAne; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jJ93WSS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05968C113CC;
-	Fri, 10 May 2024 17:12:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sx36sAne"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B3BDC113CC;
+	Fri, 10 May 2024 17:29:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715361147;
-	bh=h/7fh1yhn7w9Wrx3lOu2LwI0z1V4146YQs0sd4sGDBg=;
+	s=k20201202; t=1715362169;
+	bh=9FerCyrlgXwGRxoi932MXaGZORA1hI35HAt1Vop6+YQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=jJ93WSS/Vyvg8tHpd4IKSBLKDMfO4WiGKRzGfz2n0DXTFnTuehh9HsPwMYSpzYYXJ
-	 Qt8IO4lD6jmNm1jARyjajF8sL6EH1OI8LcrLx1Yxke2sjCIZhXUjnvCV2kCh+jrJ8n
-	 ueseFpBwFQihE1rWh+SLKhbIHEc7BQO0NHMnnqo06NUAozhlrShHbia4M0S5ufU4Z9
-	 zxq9cWDKVWHHzg14Ek1ABF28Lq3I+6fOEHUtchPqybDDz3VZRv/8ZlTfv9bfy4iRDb
-	 Jdx7Cqh+6Xv2b0+hO6d9maZXPIgWSBWJuXGmyqjHQxYA1VOEUyIfwkbDYM2bjxkzIF
-	 ELTJc9fmy7Jgg==
-Date: Fri, 10 May 2024 10:12:26 -0700 (PDT)
+	b=sx36sAne/FEdqP1wxc3/9KU/1ADr2ABOKYQiWOPcLEPs7AGhMXqK2tolxinjZNh8g
+	 V+Aj73S9RmD2emupDMTeozc6bu7seT5B4P3CRwJI/G97mWUXJ3sCOtK2msyiOBJtoP
+	 tYqOQjIGhObhfVjIUud6IF4PX9G6lH47RcVp14dIPryQY957LfXOvTFuT3yhUxCd1B
+	 Ho7P8ZEKjojtQQjfewVaUxSgnKaQirDN9Yxi1fTcGUuA6vvL+f1k0PVSm+o3QzGdss
+	 yDht4MhsNnH6EhmNm0ZDiJLKFSmsEelXnsOJWLp5OfS61/YUTSsWJm0W+TvqfYmLx8
+	 35N0rxk3yjgkg==
+Date: Fri, 10 May 2024 10:29:28 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>, 
-    Paolo Abeni <pabeni@redhat.com>
-Subject: Re: MPTCP selftest failures on Fedora 40
-In-Reply-To: <77dc9ea1-02b2-45c3-9fb6-8b153285dcfa@kernel.org>
-Message-ID: <0bdddb31-dff1-524b-d56d-53caf75360f5@kernel.org>
-References: <5464ef10-4c64-17da-7cd3-c819af2fa837@kernel.org> <77dc9ea1-02b2-45c3-9fb6-8b153285dcfa@kernel.org>
+To: Yunsheng Lin <linyunsheng@huawei.com>
+cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
+    netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+    Alexander Duyck <alexander.duyck@gmail.com>, 
+    Ayush Sawal <ayush.sawal@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
+    Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
+    Jason Wang <jasowang@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
+    Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
+    Vincent Guittot <vincent.guittot@linaro.org>, 
+    Dietmar Eggemann <dietmar.eggemann@arm.com>, 
+    Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
+    Mel Gorman <mgorman@suse.de>, 
+    Daniel Bristot de Oliveira <bristot@redhat.com>, 
+    Valentin Schneider <vschneid@redhat.com>, 
+    John Fastabend <john.fastabend@gmail.com>, 
+    Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>, 
+    Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+    Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
+    Jiri Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>, 
+    bpf@vger.kernel.org, mptcp@lists.linux.dev
+Subject: Re: [PATCH net-next v3 11/13] net: replace page_frag with
+ page_frag_cache
+In-Reply-To: <b8877f3a-831d-f899-9678-b1665739dbe9@huawei.com>
+Message-ID: <9a3cea15-2001-2222-0d0d-5f61f90507c3@kernel.org>
+References: <20240508133408.54708-1-linyunsheng@huawei.com> <20240508133408.54708-12-linyunsheng@huawei.com> <334a8c67-87c8-a918-9517-0afbfae0d02b@kernel.org> <b8877f3a-831d-f899-9678-b1665739dbe9@huawei.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,33 +61,85 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 9 May 2024, Matthieu Baerts wrote:
+On Fri, 10 May 2024, Yunsheng Lin wrote:
 
-> Hi Mat,
->
-> 9 May 2024 22:17:11 Mat Martineau <martineau@kernel.org>:
->
+> On 2024/5/10 0:22, Mat Martineau wrote:
+>> On Wed, 8 May 2024, Yunsheng Lin wrote:
 >>
->> Just a heads-up, Fedora 40 shipped with a broken 'ss' command which causes MPTCP self test failures.
+>>> Use the newly introduced prepare/probe/commit API to
+>>> replace page_frag with page_frag_cache for sk_page_frag().
+>>>
+>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
+>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+>>> ---
+>>> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
+>>> .../chelsio/inline_crypto/chtls/chtls_io.c    | 100 ++++---------
+>>> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
+>>> drivers/net/tun.c                             |  28 ++--
+>>> include/linux/sched.h                         |   4 +-
+>>> include/net/sock.h                            |  14 +-
+>>> kernel/exit.c                                 |   3 +-
+>>> kernel/fork.c                                 |   3 +-
+>>> net/core/skbuff.c                             |  32 ++--
+>>> net/core/skmsg.c                              |  22 +--
+>>> net/core/sock.c                               |  46 ++++--
+>>> net/ipv4/ip_output.c                          |  33 +++--
+>>> net/ipv4/tcp.c                                |  35 ++---
+>>> net/ipv4/tcp_output.c                         |  28 ++--
+>>> net/ipv6/ip6_output.c                         |  33 +++--
+>>> net/kcm/kcmsock.c                             |  30 ++--
+>>> net/mptcp/protocol.c                          |  70 +++++----
+>>> net/sched/em_meta.c                           |   2 +-
+>>> net/tls/tls_device.c                          | 139 ++++++++++--------
+>>> 19 files changed, 331 insertions(+), 297 deletions(-)
+>>>
 >>
->> In short, the "-i" flag is ignored by the 'ss' command. I've filed a Fedora bug:
+>> <snip>
 >>
->> https://bugzilla.redhat.com/show_bug.cgi?id=2279920
+>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>>> index bb8f96f2b86f..ab844011d442 100644
+>>> --- a/net/mptcp/protocol.c
+>>> +++ b/net/mptcp/protocol.c
+>>> @@ -960,17 +960,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+>>> }
+>>>
+>>> /* we can append data to the given data frag if:
+>>> - * - there is space available in the backing page_frag
+>>> - * - the data frag tail matches the current page_frag free offset
+>>> + * - there is space available for the current page
+>>> + * - the data frag tail matches the current page and offset
+>>>  * - the data frag end sequence number matches the current write seq
+>>>  */
+>>> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+>>> -                       const struct page_frag *pfrag,
+>>> +                       const struct page *page,
+>>> +                       const unsigned int offset,
+>>> +                       const unsigned int size,
+>>
+>> Hi Yunsheng -
+>>
+>> Why add the 'size' parameter here? It's checked to be a nonzero value, 
+>> but it can only be 0 if page is also NULL. In this case "page == 
+>> df->page" will be false, so the function will return false even without 
+>> checking 'size'.
 >
-> Thank you for the heads-up.
->
-> On Debian side, they ended up taking the fix, not the revert:
->
-> https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/misc/ss.c?id=87d804ca0854b09c07872e9fd6036bf5d3e0cc85
->
-> https://salsa.debian.org/kernel-team/iproute2/-/commit/14cfd95e598ba712c9000a5212f57c8282223c19
->
-> Maybe better to suggest to take this fix instead of the revert?
+> Is it possible that the pfrag->page is also NULL, which may cause
+> mptcp_frag_can_collapse_to() to return true?
 
-Matthieu -
+Not sure. But I do know that df->page will never be NULL, so "page == 
+df->page" will always be false when page == NULL.
 
-I'm glad our CI was 4 months ahead of me in catching this, and you 
-expertly fixed it way back in January :)
+>
+> I just found out that the 'size' is not set to zero when return
+> NULL for the implementation of probe API for the current version.
+> Perhaps it makes more sense to expect the API caller to make sure
+> the the returned 'page' not being NULL before using the 'offset',
+> 'size' and 'va', like below:
+>
+> df && page && page == df->page
+>
 
+Given that df->page is never NULL, I don't think the extra "&& page" is 
+needed.
 
 - Mat
