@@ -1,91 +1,140 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com [209.85.128.43])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23DA5171E41;
-	Fri, 10 May 2024 11:19:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C55912CD81
+	for <mptcp@lists.linux.dev>; Fri, 10 May 2024 14:06:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715339958; cv=none; b=X5ht7OkrKCiN1mW44wXyhnRnSCg4iUtgxqtdfhgVd4F3EYHPiyCyKPXYtF5CQ95iKdl3wVWBZg8jj/hHeuDfpaDMhnNsNHCDxn41iM5RMuSr3l8YfTyhos+kEdmvmDiE+/Iui4Gzo8af7TfYRBBEKq4rHM2OAv35ReunzWF7x08=
+	t=1715349974; cv=none; b=QT1zqWpf9ZIekywdVtHt/IgoBtqrY+Rd5y6zt6DeV+xI8VvaZ81N0p8Al9ZBd/HVjBxS42HIHAn9yWp3KXlsjp9c5r12i8iEk3RRlV1SuWLh9GIxqEd0a4Hg1Omt2VKy+GytYhrK4Epqb8xELBNQktUuuIjv1RjQj1ZS+fTnhgE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715339958; c=relaxed/simple;
-	bh=6/hr6NKWVk5ktON4L8zlBVjlDBR2emmr9M+/RKd+Pms=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=IDxN4Y5Zebna3157QDUHxBOcEu1X+W48xQEhZVIsG2zqF1Bu4C5INFdpDjR3d5xXSUQBOexbfXVNOQTKebpt0C0JZ55AYquAVUXbmhGbtlgYMOK6Zp5gnl/8xI4ijn+c7uK2oDFWRLz4T0PJKkc//6B8V882JW5lX0GTyA3jEoU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C5OW2fI/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715349974; c=relaxed/simple;
+	bh=bijg8uhnWEQekQWJ9OWl+WHmxr8G6KdwdXn7ukNViuc=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=A03OtflCeZa4H9xh5sCwekHA58YAbk823XF0HWykx7QNEiCbPxQyN2BzfZ3Vy1JcDBz6Z6guhaJf9GikdFHsm8JiShVrPx31KgwqE7zWybqroJ9ivxtbCqBur6a265yavkdUGti2hpzDjx5VcfSxJ1J95jADrSfu0Ca/xpbaZwU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TWtzJVL5; arc=none smtp.client-ip=209.85.128.43
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C5OW2fI/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71DE2C2BD11;
-	Fri, 10 May 2024 11:19:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715339957;
-	bh=6/hr6NKWVk5ktON4L8zlBVjlDBR2emmr9M+/RKd+Pms=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=C5OW2fI/fGe9x33M0ewfh2YfkWUOM/q5zIMqaQj8V4lADMF6ZrOCXD/RtHvWbHoBn
-	 VR/DKJlrFJivzpkIe5uJEWmkTCWiEeaZcn+KhR6tG+C4+43TxrkEOwkVkHKOadD1CW
-	 EzzK7WG+6CAW9+hnGqkSp0WeTbaRq74TEl2CjfK4qkCCrzCKiiQlN5WweOk992lcPM
-	 HV//z+zvwNJsbLXIaK71RSWxS+NprZJSCbzfeIsaCHOI6S75L5z42takNHwMzhcf9E
-	 Rao6QUxpwv2YOl7pkKe3zeFMJO0qBbDMg+KRvVtVuQEwwybwR/xZvtdueRM+xn68S1
-	 DhTh2MbWr/jAw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 10 May 2024 13:18:38 +0200
-Subject: [PATCH net-next 8/8] mptcp: include inet_common in mib.h
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TWtzJVL5"
+Received: by mail-wm1-f43.google.com with SMTP id 5b1f17b1804b1-41ff5e3dc3bso4400875e9.1
+        for <mptcp@lists.linux.dev>; Fri, 10 May 2024 07:06:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715349971; x=1715954771; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KtoGz6jfy1lPdHNSbF50tppsBzL53WmOBF6+e6OvgdI=;
+        b=TWtzJVL5w52/aMrDD8Thm5spam4/H1gVWveYr9zPg/IkOccIsCmIbRvmzf2xAItPEk
+         uwxedlLs07qt7rZdgc3MdT2Ews4c6ip+rtJsO7vdofP8Cq1DcsTPMpuwiqtzCFJm6IkE
+         ks7hCw2ffFSye8GwuwkBHXgta/gPhII8JEZh/wRqaVdhPvJrHhuM9sE7BwI5NYD+iJkC
+         uryCq7pp8W5ryeGTz2kRr7ka8ZoOoEMZAtB3XljvSMHvnY9maGA6VJk1WqL7Ku8pZIFL
+         j7L+LLdqm7FbbbASBlf3d4Dlq/Se83BjqmRpaV219HFZsMEaFlQgb63P+PmS3MEGlfkk
+         WYGg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715349971; x=1715954771;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=KtoGz6jfy1lPdHNSbF50tppsBzL53WmOBF6+e6OvgdI=;
+        b=V4tIABs1HiQpo3nWvJ4PO6jCHJMuNLJnTfWrCt9fOR3VLFey9+oG2rwsB1sPhtJtcA
+         x5lAaX3WgLejbyxNRUYnDUfiYmGAarcqKXeFHV7/eWSr6ElnJ4k2gjM1qOvKnV1CHpu1
+         BQBO8r6rKoWVYVcTbKcPYxSt0/HvuedPsT3uNqJNb2BFpjsi909dvVPvmwB6umX1odS4
+         pmzXO8tm84y/RFKy9Tog9chi67izMFGvCcz/OTDOZ7H69257O5ZWuqNNx2Ch453GfEQe
+         Ofa9oWQCQ6cWE1V1WbVjgjcXvgo2EEkhNkGmz/TKJL5/yIYAEUVAlBJuye0mNQtL6vVK
+         WHDQ==
+X-Gm-Message-State: AOJu0Yzzm5vJArai0KpHW1OdZt7xFOA/YNt1IWrPFyBoWihcoXFzP+7b
+	gA5lO9Cgw1lX6qWFH35ob4mCCm9mW7p08qwc9R4cda19H5amzuTLwEIjpW0EfqXo1DMa8YIVlMj
+	56eV5l+dsFuNTzkE8KcJkhTCnDyA=
+X-Google-Smtp-Source: AGHT+IEw0fZBaki+GPAhG2zc2JHOEQAQx5c4LqBi9+08YsH3bkf+8FlSjd6bJTK1i+3cGr8XCGXUcZPKfXAoGkabQfg=
+X-Received: by 2002:a5d:4910:0:b0:34b:d659:7d0f with SMTP id
+ ffacd0b85a97d-3504a731d39mr1927718f8f.16.1715349970455; Fri, 10 May 2024
+ 07:06:10 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240510-upstream-net-next-20240509-misc-improvements-v1-8-4f25579e62ba@kernel.org>
-References: <20240510-upstream-net-next-20240509-misc-improvements-v1-0-4f25579e62ba@kernel.org>
-In-Reply-To: <20240510-upstream-net-next-20240509-misc-improvements-v1-0-4f25579e62ba@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=633; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=6/hr6NKWVk5ktON4L8zlBVjlDBR2emmr9M+/RKd+Pms=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmPgKcPo3L1SVb73QC7nbRWCJhmgtvOCR1VhoGV
- yxh2JYims6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZj4CnAAKCRD2t4JPQmmg
- c9ZsEADaaL2em1xg7yqRBIWbfmc3hAErMgb6bkhT6qo6Ooy8fHtrCRCS7ohC7JePoKgsE2Uol0/
- EHmd4yuOBmI4xfTTY4mhrGsIbTDquZYoJDVQ2NDuD1AHMXvj65BwzfKJHPs+b8iD3qZbbB5Ty8D
- qcAG2zKt/JIGBpim8U/ysF5rnOhv6szQpd3JQcCzGqYySKza8v0MLIYpI3c6qVMi40RzuQxr1Cr
- fd4oYiIPrpp4e3TWFjuZAdW/dcwikiVTSfNMfi2vJYeN2tP7yonS4i+5dRQlby2bJHIlX5KOdPp
- rImjbCEgwZMu/K+rTpQIeXHdzcgIULkPO53D21+kt0WGvYALQK8iPgNIIJMtf0uoPamYb9T5Yv9
- 8Sf2RsfC7H6DngaLe1M46cPB+U6L3spT1rVEoYSXdsfhHIaKP57Yoa6cVtBo+5LijdczAP2fr8F
- /X1DoWNil12dSit2H7kkXpGm0pLDCH3BgvmRFG5Oau87W7nOPW9NcmamFpqGGNjR04aiE954j+R
- N71t2KXZ6x4kcCdFlJixpQBNv5S2IEhBzaA2uqUSA/V5YsmIqZWCHrqWMVDJ0ceSacVWXQQmDhA
- ECvWzpmb8v05TgV8sRCK88zXfE97NzQl5In2Bs/CKk252lJbgU5mAhgWXahzHzZfx3YuHPLIwCo
- Sb2c+8m80MZE/Lw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-0-4048c2948665@kernel.org>
+ <20240509-upstream-bpf-next-20240506-mptcp-subflow-test-v2-2-4048c2948665@kernel.org>
+ <daf7ed61-e09b-439b-9cdd-b6d9aa003e27@kernel.org>
+In-Reply-To: <daf7ed61-e09b-439b-9cdd-b6d9aa003e27@kernel.org>
+From: Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Date: Fri, 10 May 2024 07:05:58 -0700
+Message-ID: <CAADnVQ+Tp8+Hhy__=uevSZsEetsWYommjhC9SqSfKEeBu51cKA@mail.gmail.com>
+Subject: Re: [PATCH bpf-next v2 2/2] selftests/bpf: Add mptcp subflow subtest
+To: Matthieu Baerts <matttbe@kernel.org>, Manu Bretelle <chantra@meta.com>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
+	Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>, 
+	Daniel Borkmann <daniel@iogearbox.net>, Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
+	Yonghong Song <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, 
+	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>, 
+	Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>, linux-kernel@vger.kernel.org, 
+	netdev@vger.kernel.org, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+	Geliang Tang <tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-So this file is now self-contained: it can be compiled alone with
-analytic tools.
+On Thu, May 9, 2024 at 11:31=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+>
+> Hello,
+>
+> On 09/05/2024 17:49, Matthieu Baerts (NGI0) wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> >
+> > This patch adds a subtest named test_subflow to load and verify the new=
+ly
+> > added mptcp subflow example in test_mptcp. Add a helper endpoint_init()
+> > to add a new subflow endpoint. Add another helper ss_search() to verify=
+ the
+> > fwmark and congestion values set by mptcp_subflow prog using setsockopt=
+s.
+> >
+> > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/76
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > Reviewed-by: Mat Martineau <martineau@kernel.org>
+> > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > ---
+> >  tools/testing/selftests/bpf/prog_tests/mptcp.c | 109 +++++++++++++++++=
+++++++++
+> >  1 file changed, 109 insertions(+)
+> >
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/tes=
+ting/selftests/bpf/prog_tests/mptcp.c
+> > index 274d2e033e39..6039b0ff3801 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>
+> (...)
+>
+> > @@ -340,10 +344,115 @@ static void test_mptcpify(void)
+> >       close(cgroup_fd);
+> >  }
+> >
+> > +static int endpoint_init(char *flags)
+> > +{
+> > +     SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", =
+NS_TEST);
+> > +     SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1)=
+;
+> > +     SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+> > +     SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2)=
+;
+> > +     SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+> > +     SYS(fail, "ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2,=
+ flags);
+>
+> I just noticed that this command is failing on the BPF CI:
+>
+>   https://github.com/kernel-patches/bpf/actions/runs/9020020315?pr=3D7009
+>
+> Is it possible that an old version of IPRoute2 is installed?
+> 'ip mptcp' is supported since v5.8.0 (from 2020).
+>
+> It looks like Ubuntu Focal 20.04 is being used, which has the v5.5.0. Do
+> we then need to find another way to set the MPTCP endpoints?
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/mib.h | 2 ++
- 1 file changed, 2 insertions(+)
 
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index dd7fd1f246b5..2704afd0dfe4 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -1,5 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
- 
-+#include <net/inet_common.h>
-+
- enum linux_mptcp_mib_field {
- 	MPTCP_MIB_NUM = 0,
- 	MPTCP_MIB_MPCAPABLEPASSIVE,	/* Received SYN with MP_CAPABLE */
-
--- 
-2.43.0
-
+Manu, any idea?
