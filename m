@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4040C1C01
-	for <mptcp@lists.linux.dev>; Sat, 11 May 2024 08:37:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D78A67F
+	for <mptcp@lists.linux.dev>; Sat, 11 May 2024 08:37:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715416661; cv=none; b=VOWwJtYqmeNVINDf+L/JIoD5uMvL9353PJpGIb+TccYxb8UxtlurX9Ab+Q979rsIJ7edkjNws7iAZO1lCNXq4NqcWdDyrj1pgsFhAE8LboWy8kGsIlGKtTfT6DT+Cqds4n8MIBiDuI6SHqS/x3EjzEnASVJgoCCFxi9kV2FvNUw=
+	t=1715416662; cv=none; b=jYizgPh96PnuZWA/jVrVDzDXFMTO4V7mU+xyyPgKtTnc1RGY96+6i60AY8ZwnQKx/RYpq4h5tdOW5f8slLfNkBd+BjxOb2u7a0WegbYdbvTlOSD/ubjyRIeC8owVioxFz+656epuAWTIylCOyAOOny0kI4D8+nnExb444uKT1HY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715416661; c=relaxed/simple;
-	bh=/73YsU/NL5hTSoxAhsKBGJGJnXcRu23ZSpjwoRy2CnA=;
+	s=arc-20240116; t=1715416662; c=relaxed/simple;
+	bh=llhXym/slEhIQMmoJInaTajVtpk8Nff3zeApqrmoDn0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aPNCSJjIVeYF183EiXvJZBuhvvQqDE+xUvNOweQ83/aNltTGi3+NeCzq9NgoMFqvbOijuWwlWcK3AsMzohQqNgb8pEoxs3ubppeqIBfMcGl09MRaKQRq0H9yEZ8Llj99x5gqJZZX/PzZZG7xKCkwxn4qMckzYZieOcvknqsoXAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZfC8elJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=CtX3RTPBNG04pzfU66TgV7pWYF9rPDl/vTa45LtHuva6p6cWdzmn/OHqJTjmhF/xM/JYvnfWe8aRHdrbRLMSrCwNrkYgzlyYUQPnFwO8jcPwc6F6ou+t42uHisjWvYMZd0/M2h+d4Ix0Vl+lUGX56g8tU2Bs8A8i10jij0bglkA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HhggVTDS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZfC8elJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 914DEC2BBFC;
-	Sat, 11 May 2024 08:37:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HhggVTDS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8B6C2BBFC;
+	Sat, 11 May 2024 08:37:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715416660;
-	bh=/73YsU/NL5hTSoxAhsKBGJGJnXcRu23ZSpjwoRy2CnA=;
+	s=k20201202; t=1715416662;
+	bh=llhXym/slEhIQMmoJInaTajVtpk8Nff3zeApqrmoDn0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aZfC8elJRKXVpOL8cDKpsBuvaIXbPRMOU+LqDEIuml5lA2BNGI9FuU2rg06Sb5LV2
-	 C4HIfgMq6UP8Lj4kvA003bN/B/cspKDiCy6c3w46J9ifMyod8mmat7peU8RD+PZz4Q
-	 AHuyHkdyPI2fYHtEiDVM+7owPAx3vggBXixQ4fLjQ4iJ5l5RRt4a97CN7Vtay/SOZp
-	 JJnUCH09htotvtoM9nowm0b/8JKnro2ZR9rRJWXAHJMckFPegdQjEHltMWUh148z30
-	 C9Pg+jZbzNDKO0ay2tFyYFwLumaITiytQaiXI0wR15FkgYWCSFcqKUZ02kG8fLNeE8
-	 pVq87VFXnPOVQ==
+	b=HhggVTDSyHFmYGlVATq+ins8L+NibqHpx13YmjxQkQDIzqwuPBVl/6cIgcJM6AaMY
+	 oKCu/wut9uTC31GVqjoz/04CMg8TUbOohEnh1lF3O+u3wtVtULRYGljjYyWU6ke1nZ
+	 EZE1Q0kGMeSHxvu7V0D/Cl/B2reB+qHCYtU1ZBy+uHbZgp07Ir9lZOaOZHvQspqfCp
+	 bZpQp8GXwBsnUXYVxoPFiHlHx8B7i1pzp0ZRrj0Lj2QJH6JU35ZZV/oO7jd5i/XwCw
+	 6cjOviA5P9CizqDKfLIW7rJdnYC3cRJ3KaTrgzMDAIiI17R85FCrKvmTyjVP+jjMD8
+	 m2DzILR6XLY6g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/2] mptcp: use mptcp_win_from_space helper
-Date: Sat, 11 May 2024 16:37:30 +0800
-Message-ID: <fc78b2ba54c834d31eea7d099f9e5db9418d53e8.1715416511.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/2] mptcp: add mptcp_space_from_win helper
+Date: Sat, 11 May 2024 16:37:31 +0800
+Message-ID: <866617e1d8b5a3d7c800e03a1948be7b6bc7c234.1715416511.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1715416511.git.tanggeliang@kylinos.cn>
 References: <cover.1715416511.git.tanggeliang@kylinos.cn>
@@ -45,28 +45,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The MPTCP dedicated win_from_space helper mptcp_win_from_space() is defined
-in protocol.h, use it in mptcp_rcv_space_adjust() instead of using the TCP
-one. Here scaling_ratio is the same as msk->scaling_ratio.
+As a wrapper of __tcp_space_from_win(), this patch adds a MPTCP dedicated
+space_from_win helper mptcp_space_from_win() in protocol.h to paired with
+mptcp_win_from_space().
+
+Use it instead of __tcp_space_from_win() in both mptcp_rcv_space_adjust()
+and mptcp_set_rcvlowat().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
  net/mptcp/protocol.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/mptcp/protocol.h | 5 +++++
+ net/mptcp/sockopt.c  | 2 +-
+ 3 files changed, 7 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 579031c60937..04dda32ccbef 100644
+index 04dda32ccbef..8b0a5b74a3b1 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2046,7 +2046,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+@@ -2040,7 +2040,7 @@ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied)
+ 		do_div(grow, msk->rcvq_space.space);
+ 		rcvwin += (grow << 1);
+ 
+-		rcvbuf = min_t(u64, __tcp_space_from_win(scaling_ratio, rcvwin),
++		rcvbuf = min_t(u64, mptcp_space_from_win(sk, rcvwin),
+ 			       READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_rmem[2]));
+ 
  		if (rcvbuf > sk->sk_rcvbuf) {
- 			u32 window_clamp;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index b5fb26ece2b8..19d60b6d5b45 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -386,6 +386,11 @@ static inline int mptcp_win_from_space(const struct sock *sk, int space)
+ 	return __tcp_win_from_space(mptcp_sk(sk)->scaling_ratio, space);
+ }
  
--			window_clamp = __tcp_win_from_space(scaling_ratio, rcvbuf);
-+			window_clamp = mptcp_win_from_space(sk, rcvbuf);
- 			WRITE_ONCE(sk->sk_rcvbuf, rcvbuf);
++static inline int mptcp_space_from_win(const struct sock *sk, int win)
++{
++	return __tcp_space_from_win(mptcp_sk(sk)->scaling_ratio, win);
++}
++
+ static inline int __mptcp_space(const struct sock *sk)
+ {
+ 	return mptcp_win_from_space(sk, READ_ONCE(sk->sk_rcvbuf) - __mptcp_rmem(sk));
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 7265b6733f5a..00e06c698415 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -1581,7 +1581,7 @@ int mptcp_set_rcvlowat(struct sock *sk, int val)
+ 	if (sk->sk_userlocks & SOCK_RCVBUF_LOCK)
+ 		return 0;
  
- 			/* Make subflows follow along.  If we do not do this, we
+-	space = __tcp_space_from_win(mptcp_sk(sk)->scaling_ratio, val);
++	space = mptcp_space_from_win(sk, val);
+ 	if (space <= sk->sk_rcvbuf)
+ 		return 0;
+ 
 -- 
 2.43.0
 
