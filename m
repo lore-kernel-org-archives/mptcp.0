@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B1A314A4F9
-	for <mptcp@lists.linux.dev>; Mon, 13 May 2024 10:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D5E21465AC
+	for <mptcp@lists.linux.dev>; Mon, 13 May 2024 10:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715596735; cv=none; b=ES1v9WRkdXr0QgNSNwbN9B10zrAbhCbEqRq7dCdQJmLEQd0DkmJxIdSPCkXDmA7hx/v+6vwn941qrQMhj/cTq6WPS9v22NFElMzP4yYmiDE7teYmGMEWJ+f17Pa/C7LeLv3t84PqThfORIRl56DRPcUcHlgfwGMTCUi1iycEDoU=
+	t=1715597070; cv=none; b=iN3TzfIvXNx44T19MV8LvwWrYD6Al8b5YVByrJvVkwBK7CrcEG58SOoXOJAwyPi9tsz+BOXotAQlOYU6Q3UzZ/X6kt8BID6xTwRSOOdYHE0J7S7qAhliAlLU1umxom9vJ4D0gjeM16sNniEYVjFcUsqrfqUFVARE4syTxXCuwp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715596735; c=relaxed/simple;
-	bh=DcelCX/qe62Cf0jK0De6jmYEw6xGnirHs9Nis4XO1hI=;
+	s=arc-20240116; t=1715597070; c=relaxed/simple;
+	bh=2jpr+Eth+jaZvaFmoRW0ZeEAFm7l1RAeyz5Nmjh24xI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=R+/2iB2G9mSag/4i8Xb+EJSk2NImEFm8vK/zSp7obHWhN34L0PohPMotQViyS5HBxd6vQv2OtqU2Lb6b2OXNVwB64WDBZF/me2cklqJfq9FoccYr3lFDPsVHVlYanu2yICgrCDYEwuuzaj82DY6AB6vJ1B4e3pLXeBmaVChwMis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TVn1R/H7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SY155N+riSSCQiKKae1vtnO+mPEOV/3pYAUCkv3hrscf92PZuW3SHL3/queClBUF1lIlY3qbx4B1UiCYdQmc0rwrrlOC2mXjcJsG7fio/FoONFx5dFlxAyhxi5VfHJ4OTbw1F/Ov77lCuUbvFrf+jkVQNuJNiaXO7kR36xQ8gSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G2plH7Zj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TVn1R/H7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1187FC113CC;
-	Mon, 13 May 2024 10:38:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G2plH7Zj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30ECBC113CC;
+	Mon, 13 May 2024 10:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715596735;
-	bh=DcelCX/qe62Cf0jK0De6jmYEw6xGnirHs9Nis4XO1hI=;
+	s=k20201202; t=1715597070;
+	bh=2jpr+Eth+jaZvaFmoRW0ZeEAFm7l1RAeyz5Nmjh24xI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TVn1R/H7mTNoU/MbwIK4Z8RCYQSG7lnDJNtLKt2VDVNbVpkNUfG5UMu/Fbw0jAIc4
-	 22Vnp0D5QSPolTb2/cwTdeBNKEA38irYvQvGPzUgCH2IIq5Mf9KPVExdyunNRXSLVq
-	 KFg6X9TFJyyncIxjKUJE2DcEd/CxDQX3zgcA1sve7aZcFui2Ebbrqzm32k8yJFiRTS
-	 BT+jaZSgqvTMVXW2mgkcERA7nK+vQTy9ac4w58W1q5koLiZTqs6xPzeF4WJghKAOAW
-	 /MK5xAWZmaQR5veXwpZqdIfo8oTgCHf66zTTn/VYwdw3zPp82A76dtk/JUBHfLi/NO
-	 aoKmdAnDg/P9Q==
-Message-ID: <8c5f3bbf-16a9-4588-b2d3-bd9e31c4cd1e@kernel.org>
-Date: Mon, 13 May 2024 12:38:51 +0200
+	b=G2plH7ZjHt4qK8xztqlUpEEcbtaAVH1fYvH1MhR654y99y/s4WHZAzSbMYbGtWP2d
+	 SWQ2vpPIT1ZFDtM9AeJQmoIaacESxuYCQg5n+w2B028XrO5hUTAHzK0X8Oo4OewHyE
+	 qKiuckI7K/ZuYwNiSRzziA0SLxP8itIC8/wMO40HMEJapFbv3giUKZm7T2lcEkOzfi
+	 cadgpalJwzkPDOqjEiUgITmKdCRFCj3/FrNladpWP2RhsAt/4HyK7i4cXkoJ8w/5nc
+	 OnthsHsbCRqWq0k+CHQEMDKJsXzjgwpx+57eRkovXRZLD4dhF1ZB/J4rDEh6dD84Dj
+	 Ogi6s8I8JEsAA==
+Message-ID: <602f2d3e-22b0-47e3-ba7c-0015468a3d72@kernel.org>
+Date: Mon, 13 May 2024 12:44:27 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/3] Squash to "selftests/bpf: Add mptcp
- subflow subtest"
+Subject: Re: [PATCH mptcp-next v4 3/3] checkpatch: skip warnings for symbol
+ links
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1715503185.git.tanggeliang@kylinos.cn>
- <77d5112c49fac9e8f77c09c7c1c057b8ea25a60f.1715503185.git.tanggeliang@kylinos.cn>
+ <1628d78e12809ff0f4dd0526f6addbbf00dae66b.1715503185.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <77d5112c49fac9e8f77c09c7c1c057b8ea25a60f.1715503185.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1628d78e12809ff0f4dd0526f6addbbf00dae66b.1715503185.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,64 +96,16 @@ Hi Geliang,
 On 12/05/2024 10:41, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Use pm_nl_ctl when 'ip mptcp' fails.
-> Use SYS_NOFAIL in _ss_search() and drop 'ss -M'.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/bpf/prog_tests/mptcp.c | 17 ++++++-----------
->  1 file changed, 6 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 793b4b9c2bd2..2459c0e2a794 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -362,7 +362,10 @@ static int endpoint_init(char *flags)
->  	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
->  	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
->  	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
-> -	SYS(fail, "ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags);
-> +	if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags)) {
-> +		SYS(fail, "ip netns exec %s ./mptcp_pm_nl_ctl add %s flags %s",
-> +		    NS_TEST, ADDR_2, flags);
+> If there is a symbol link in the given patch, checkpatch.pl reports two
+> inaccurate warnings:
 
-As I mentioned in the v1, I would prefer only using 'ip mptcp', and I
-find it strange to have a CI validating networking feature using an old
-version of IPRoute2. But if we need an alternative method for the BPF
-CI, I would prefer also having our CI using this method, to prevent any
-issue with this method, and only realising that when upstreaming
-patches, delaying them and causing confusions.
+Good idea to fix that!
 
-But feel free to add a command:
+Do you mind sending it as a separated patch to CheckPatch maintainers
+directly?
 
-  /* It would be better to use  "ip -net %s mptcp endpoint add %s %s",
-   * but the BPF CI is using an old version of IPRoute (5.5.0).
-   */
-
-
-> +	}
->  
->  	return 0;
->  fail:
-> @@ -371,16 +374,8 @@ static int endpoint_init(char *flags)
->  
->  static int _ss_search(char *src, char *dst, char *port, char *keyword)
->  {
-> -	char cmd[128];
-> -	int n;
-> -
-> -	n = snprintf(cmd, sizeof(cmd),
-> -		     "ip netns exec %s ss -Menita src %s dst %s %s %d | grep -q '%s'",
-> -		     NS_TEST, src, dst, port, PORT_1, keyword);
-> -	if (n < 0 || n >= sizeof(cmd))
-> -		return -1;
-> -
-> -	return system(cmd);
-> +	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
-> +			  NS_TEST, src, dst, port, PORT_1, keyword);
->  }
->  
->  static int ss_search(char *src, char *keyword)
+It might be good to split it in 2, with 2 different Fixes tag, to help
+with the backports.
 
 Cheers,
 Matt
