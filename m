@@ -1,160 +1,138 @@
-Received: from szxga08-in.huawei.com (szxga08-in.huawei.com [45.249.212.255])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09D3D14D2AA
-	for <mptcp@lists.linux.dev>; Mon, 13 May 2024 11:53:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.255
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 677BE539C;
+	Mon, 13 May 2024 15:17:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715601193; cv=none; b=fuxcoUd9FfggwgpZD78naucb/92j1E5S+kqwNSBZe7wdmn5m7pOkw9V2ee5JVHBea/9wE+OA+eSw+XnZy1lsKyKGDZC4GMSAMgtN8R3CAXhYn/VWeiTtx4sVYq1gyvziHJbQ0X0B48cUfZQETkGj0NfQRAt6CyxSNUDVn1Hvn1U=
+	t=1715613453; cv=none; b=EKUU6KEDQeAoo20a103sNDYubeXKRLinzqlLlRsucZddHp20vWJ8eycFFPt3Gp0cIhXh4jmaQfkrQCgzWeyz9Pnc01UUE13vPzSG9965GXqceLSnHQATiT6vMIGpLdTJad8m/YQ1j1Aq8fYNdIyhoQZlVPHLnYhtjZ7yM8eQg28=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715601193; c=relaxed/simple;
-	bh=973yi3/moS9nP33izvSYXjFm6aTvdo5cVj1K5rMMWH0=;
-	h=Subject:To:CC:References:From:Message-ID:Date:MIME-Version:
-	 In-Reply-To:Content-Type; b=F+zkIMDNZayZnIX39HluC0h3baJK88AwAUwSyJhEUh8cvrnibKcnIed0rLkD4YjEgQtTeFoJ3nKZ0d/N8V7OvG/rhzaBEXT8uGZUCNGbtwhfJVssRLqIpzGajDlNmEp3f7NZnxu2f15CiCRnzPeWPjnuvNRdzji5BLiKRPCF2Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.255
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.48])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4VdHpR0cMWz1S52Z;
-	Mon, 13 May 2024 19:49:35 +0800 (CST)
-Received: from dggpemm500005.china.huawei.com (unknown [7.185.36.74])
-	by mail.maildlp.com (Postfix) with ESMTPS id 75184180060;
-	Mon, 13 May 2024 19:53:01 +0800 (CST)
-Received: from [10.69.30.204] (10.69.30.204) by dggpemm500005.china.huawei.com
- (7.185.36.74) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.1.2507.35; Mon, 13 May
- 2024 19:53:01 +0800
-Subject: Re: [PATCH net-next v3 11/13] net: replace page_frag with
- page_frag_cache
-To: Mat Martineau <martineau@kernel.org>
-CC: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>,
-	<netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Alexander Duyck
-	<alexander.duyck@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
- Dumazet <edumazet@google.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Daniel Bristot de Oliveira <bristot@redhat.com>, Valentin
- Schneider <vschneid@redhat.com>, John Fastabend <john.fastabend@gmail.com>,
-	Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>,
-	Jiri Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>,
-	<bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
-References: <20240508133408.54708-1-linyunsheng@huawei.com>
- <20240508133408.54708-12-linyunsheng@huawei.com>
- <334a8c67-87c8-a918-9517-0afbfae0d02b@kernel.org>
- <b8877f3a-831d-f899-9678-b1665739dbe9@huawei.com>
- <9a3cea15-2001-2222-0d0d-5f61f90507c3@kernel.org>
-From: Yunsheng Lin <linyunsheng@huawei.com>
-Message-ID: <444d0349-476b-a04b-f6f1-d59ee57e2054@huawei.com>
-Date: Mon, 13 May 2024 19:53:00 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.0
+	s=arc-20240116; t=1715613453; c=relaxed/simple;
+	bh=OGxZWchEypSsKpfa3B/CsaIUjCyUiDDrD3vCvYiJruQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Du/d91UpVOpujc1k/sTZyaEq8qWUPsZu9CwkcDLxUQyO77BmC57nBWb2gsiaTCxcYS5f6B/qCFGdB6fT4FKTQPOZX1dmjm1j9Y9U12YWMC9KxrTsm70lR8vgjW+hvuiIrXmzGL0Gh5w/pS/Nx49u2VJvjQc6bcvqpiB8STJfPRs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uNGRaC12; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uNGRaC12"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 438ECC32782;
+	Mon, 13 May 2024 15:17:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715613453;
+	bh=OGxZWchEypSsKpfa3B/CsaIUjCyUiDDrD3vCvYiJruQ=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=uNGRaC12DFncB3jl5Yg4hJjrJ2bDpyX1+HYLs6FrcZOrt4c1+gKaxhet7G361er0J
+	 Q8UO37Vt79pWC+kI4gppEGAIZuN+Mo0sigbl6znohUl9GeFFN3N6Mf18Y2G6VSiL4r
+	 uoZEHTekG5TQkW7G/a1kK6uWhXR1jT/Z/t3X5v46c9z+Cijj1RQECXqCbUX1Hpqa1e
+	 9GtRN/uzScHHZDXOWmK4TS8MA5bnoe4MnXRPN+B7W6xzkWI1CMg0btgjiNUNPVOdgj
+	 H87+YIJ/DHAToNS4L0Epy75v7PWA3tq2UmUPP0clT65bCrkZGHocpPg1KuKqIfohiv
+	 OLrdtg92zbdgQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Christoph Paasch <cpaasch@apple.com>,
+	Mat Martineau <martineau@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.10.y] mptcp: ensure snd_nxt is properly initialized on connect
+Date: Mon, 13 May 2024 17:17:17 +0200
+Message-ID: <20240513151717.2733290-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <2024051325-dreamt-freebee-5563@gregkh>
+References: <2024051325-dreamt-freebee-5563@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-In-Reply-To: <9a3cea15-2001-2222-0d0d-5f61f90507c3@kernel.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500005.china.huawei.com (7.185.36.74)
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3981; i=matttbe@kernel.org; h=from:subject; bh=wVi+G138Ev65xjb0nTcgStUa34bZdk5Q/BHpRrSyQ1s=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmQi79PNUEBmrkPWOxdaFhPvHMWCpkLFegiwWBT ytcPoK+TUWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkIu/QAKCRD2t4JPQmmg c+mvD/9+TkwjqdIYXGSXjWnHdRy4wpXqPn/2UKoec6p9lhDj4HNA9W6/CO8v8Mm3K/bAj2I+v9/ qcThjWFdCN3Ap80OT0V/BT+X740UM7B6z1AzGYoRUcbrOCHZOSBSOYaDUv9XlwgIVUlhX1FlNzg JoeHpMynXqXrkigyRAelCcKoUpg6RGGomZ4QNyMlCeuVzTratCTH+JzMpTF341LOx3DJfE2XeQP Inf0EmhXYQyZNqd9OICmG+vzUqOCJJMRYarFwVsYbsCzbXsUW3zYjT/L46MnL7nH2k8A+VWfTrH JfhRZmtRg8Wiv8d4fL3l2scCFZAaCKBi1jPwrZ9r29FFPHQteCemiOJ4dOl/u2FZoubf33SGuRG s0LHEKSIjBu3JD5mw8KyQXytC7yOMfUXtmPRJr4RhHjnR5M3b0/FsEOSjGg9hx0SohqkDwK+mv+ VpmurP1LjvCrv7UsiykoyU6slmRObwovMnpTFc1jfQzpnmuaelQvfSM4O69lLsgrzGoS8HLDFcr nN9mQBdMHwOaAaSDMOVkt84NLJL7v4UiMlj2y3Vx6VIh33Hvi7xts0Pl2dFSwZJh+8qMcDjqK1/ 34VGTkdm13e5jlvx4BLRG5X7o7PJTx6gQTQor7grJa8nnNkPo9uOFnNewZi7TKjBCTu7Z+vs6fR VgUlfPWOF8wWLEQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On 2024/5/11 1:29, Mat Martineau wrote:
-> On Fri, 10 May 2024, Yunsheng Lin wrote:
-> 
->> On 2024/5/10 0:22, Mat Martineau wrote:
->>> On Wed, 8 May 2024, Yunsheng Lin wrote:
->>>
->>>> Use the newly introduced prepare/probe/commit API to
->>>> replace page_frag with page_frag_cache for sk_page_frag().
->>>>
->>>> CC: Alexander Duyck <alexander.duyck@gmail.com>
->>>> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
->>>> ---
->>>> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
->>>> .../chelsio/inline_crypto/chtls/chtls_io.c    | 100 ++++---------
->>>> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
->>>> drivers/net/tun.c                             |  28 ++--
->>>> include/linux/sched.h                         |   4 +-
->>>> include/net/sock.h                            |  14 +-
->>>> kernel/exit.c                                 |   3 +-
->>>> kernel/fork.c                                 |   3 +-
->>>> net/core/skbuff.c                             |  32 ++--
->>>> net/core/skmsg.c                              |  22 +--
->>>> net/core/sock.c                               |  46 ++++--
->>>> net/ipv4/ip_output.c                          |  33 +++--
->>>> net/ipv4/tcp.c                                |  35 ++---
->>>> net/ipv4/tcp_output.c                         |  28 ++--
->>>> net/ipv6/ip6_output.c                         |  33 +++--
->>>> net/kcm/kcmsock.c                             |  30 ++--
->>>> net/mptcp/protocol.c                          |  70 +++++----
->>>> net/sched/em_meta.c                           |   2 +-
->>>> net/tls/tls_device.c                          | 139 ++++++++++--------
->>>> 19 files changed, 331 insertions(+), 297 deletions(-)
->>>>
->>>
->>> <snip>
->>>
->>>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>>> index bb8f96f2b86f..ab844011d442 100644
->>>> --- a/net/mptcp/protocol.c
->>>> +++ b/net/mptcp/protocol.c
->>>> @@ -960,17 +960,18 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
->>>> }
->>>>
->>>> /* we can append data to the given data frag if:
->>>> - * - there is space available in the backing page_frag
->>>> - * - the data frag tail matches the current page_frag free offset
->>>> + * - there is space available for the current page
->>>> + * - the data frag tail matches the current page and offset
->>>>  * - the data frag end sequence number matches the current write seq
->>>>  */
->>>> static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
->>>> -                       const struct page_frag *pfrag,
->>>> +                       const struct page *page,
->>>> +                       const unsigned int offset,
->>>> +                       const unsigned int size,
->>>
->>> Hi Yunsheng -
->>>
->>> Why add the 'size' parameter here? It's checked to be a nonzero value, but it can only be 0 if page is also NULL. In this case "page == df->page" will be false, so the function will return false even without checking 'size'.
->>
->> Is it possible that the pfrag->page is also NULL, which may cause
->> mptcp_frag_can_collapse_to() to return true?
-> 
-> Not sure. But I do know that df->page will never be NULL, so "page == df->page" will always be false when page == NULL.
-> 
->>
->> I just found out that the 'size' is not set to zero when return
->> NULL for the implementation of probe API for the current version.
->> Perhaps it makes more sense to expect the API caller to make sure
->> the the returned 'page' not being NULL before using the 'offset',
->> 'size' and 'va', like below:
->>
->> df && page && page == df->page
->>
-> 
-> Given that df->page is never NULL, I don't think the extra "&& page" is needed.
+From: Paolo Abeni <pabeni@redhat.com>
 
-Not checking the extra "&& page" seems to cause the below warning, it seems we
-have the below options:
-1. ignore the warning.
-2. set offset to zero if there is no enough space when probe API asks for a specific
-   amount of available space as you suggested.
-3. add the "&& page" in mptcp_frag_can_collapse_to()
+commit fb7a0d334894206ae35f023a82cad5a290fd7386 upstream.
 
-what is your favour option? or any other better option?
+Christoph reported a splat hinting at a corrupted snd_una:
 
-net-mptcp-protocol.c:warning:variable-offset-is-used-uninitialized-whenever-if-condition-is-false
+  WARNING: CPU: 1 PID: 38 at net/mptcp/protocol.c:1005 __mptcp_clean_una+0x4b3/0x620 net/mptcp/protocol.c:1005
+  Modules linked in:
+  CPU: 1 PID: 38 Comm: kworker/1:1 Not tainted 6.9.0-rc1-gbbeac67456c9 #59
+  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.11.0-2.el7 04/01/2014
+  Workqueue: events mptcp_worker
+  RIP: 0010:__mptcp_clean_una+0x4b3/0x620 net/mptcp/protocol.c:1005
+  Code: be 06 01 00 00 bf 06 01 00 00 e8 a8 12 e7 fe e9 00 fe ff ff e8
+  	8e 1a e7 fe 0f b7 ab 3e 02 00 00 e9 d3 fd ff ff e8 7d 1a e7 fe
+  	<0f> 0b 4c 8b bb e0 05 00 00 e9 74 fc ff ff e8 6a 1a e7 fe 0f 0b e9
+  RSP: 0018:ffffc9000013fd48 EFLAGS: 00010293
+  RAX: 0000000000000000 RBX: ffff8881029bd280 RCX: ffffffff82382fe4
+  RDX: ffff8881003cbd00 RSI: ffffffff823833c3 RDI: 0000000000000001
+  RBP: 0000000000000000 R08: 0000000000000001 R09: 0000000000000000
+  R10: 0000000000000000 R11: fefefefefefefeff R12: ffff888138ba8000
+  R13: 0000000000000106 R14: ffff8881029bd908 R15: ffff888126560000
+  FS:  0000000000000000(0000) GS:ffff88813bd00000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 00007f604a5dae38 CR3: 0000000101dac002 CR4: 0000000000170ef0
+  Call Trace:
+   <TASK>
+   __mptcp_clean_una_wakeup net/mptcp/protocol.c:1055 [inline]
+   mptcp_clean_una_wakeup net/mptcp/protocol.c:1062 [inline]
+   __mptcp_retrans+0x7f/0x7e0 net/mptcp/protocol.c:2615
+   mptcp_worker+0x434/0x740 net/mptcp/protocol.c:2767
+   process_one_work+0x1e0/0x560 kernel/workqueue.c:3254
+   process_scheduled_works kernel/workqueue.c:3335 [inline]
+   worker_thread+0x3c7/0x640 kernel/workqueue.c:3416
+   kthread+0x121/0x170 kernel/kthread.c:388
+   ret_from_fork+0x44/0x50 arch/x86/kernel/process.c:147
+   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:243
+   </TASK>
 
-> 
-> - Mat
-> .
-> 
+When fallback to TCP happens early on a client socket, snd_nxt
+is not yet initialized and any incoming ack will copy such value
+into snd_una. If the mptcp worker (dumbly) tries mptcp-level
+re-injection after such ack, that would unconditionally trigger a send
+buffer cleanup using 'bad' snd_una values.
+
+We could easily disable re-injection for fallback sockets, but such
+dumb behavior already helped catching a few subtle issues and a very
+low to zero impact in practice.
+
+Instead address the issue always initializing snd_nxt (and write_seq,
+for consistency) at connect time.
+
+Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
+Cc: stable@vger.kernel.org
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
+Tested-by: Christoph Paasch <cpaasch@apple.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://lore.kernel.org/r/20240429-upstream-net-20240429-mptcp-snd_nxt-init-connect-v1-1-59ceac0a7dcb@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ snd_nxt field is not available in v5.10.y: before, only write_seq was
+  used, see commit eaa2ffabfc35 ("mptcp: introduce MPTCP snd_nxt") for
+  more details about that. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/protocol.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6be7e7592291..36fa456f42ba 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2645,6 +2645,8 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 	if (subflow->request_mptcp && mptcp_token_new_connect(ssock->sk))
+ 		mptcp_subflow_early_fallback(msk, subflow);
+ 
++	WRITE_ONCE(msk->write_seq, subflow->idsn);
++
+ do_connect:
+ 	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
+ 	sock->state = ssock->state;
+-- 
+2.43.0
+
