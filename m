@@ -1,77 +1,78 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C4ED84A32;
-	Mon, 13 May 2024 22:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610C784DF4;
+	Mon, 13 May 2024 23:06:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715637631; cv=none; b=SoLyzlRzx4VPuSj23jueLgD0MgE9KDxDcSShToIhKla7gxuV2cU+zSEUMYvx465nmMY8AatC/u7xjCtxMQvdbJQBPTN0DYMFOzABM33BUTdqNqBoqr/fv9/LNrmrzGbBk16L4ur/R6MXjisMBC+sjThW/WoW1Am9NimT73uubK0=
+	t=1715641592; cv=none; b=jBooi63ojAe5PacdiG2xMXkJXn/DeztiEJBc6SGhgOsNbOKzDw/wx1iwQ9mEJFn1AHiGvvwHkMVcnEhmYRO5hqf1UIsuSgFIkgOIMciUaomeIx9tai/TQju7ASNkgVgnY460CCKjYvo9txAGE0yPDteiOrmcpst4++BEOVYxVbo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715637631; c=relaxed/simple;
-	bh=Lr/2odPaex2heP0klUvWfA40R2wy3UHboAHTLtWrDOI=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GBJS1/nXcuUfVytFAWiKEMjkAN6RxfoyE+2rMM/ZKFHtOHFlElPmU9Ta2Ze/JsCEbrNca07Ek/Bkf+/cNtq8ynH3fMsDLz22EE0cWwzsttzrS3UReJx7DvsuOa8HZMAzXx2ShkBVZpt6HM6YopZUA9VpXOM3cXuac9RjpNHy/50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYm8Id1J; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715641592; c=relaxed/simple;
+	bh=e8N7D1BpfBQnynMsqmyyIUHaGcH8BKYPBKZbu2NtRRA=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=rrV0tT+cmCLbKJNVzk2OY5LvtPqMSHEox8NlM+Ou6aFcLzLa/lcMWPPK1XlPr5X+zRisNihrFcbJjZHcDh5hvkN841rH7HnLa0YJCInEEqcMd0kAM7iX76rukLIUgYWwd9C16agz8HeW0QiuTLZnY9lC275ugoWS7PnJ5Pi2BAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TsK17zj5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYm8Id1J"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DAAC4C4AF0C;
-	Mon, 13 May 2024 22:00:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TsK17zj5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A042C113CC;
+	Mon, 13 May 2024 23:06:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715637630;
-	bh=Lr/2odPaex2heP0klUvWfA40R2wy3UHboAHTLtWrDOI=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=hYm8Id1Jto9eHiVlq0qMo2uSnfXrzliyujk/9vNjcO0MuSWtxQoZlvf+n1/G2/OXK
-	 fVzcdcwRbcmR5aeUtMG9HnPf3GraG5o2aGI7MvEPF8tRUkfBeJMJU0702/ulfYkvLf
-	 xpxM5CoQi8gkZjIhx1U3YBaIs1RTHxu4c6UUjfQxQ2MOwifmgX7R24vlmzOvTAo2uK
-	 /dERlAnnOqeVsQMWF1BT4KiBtxMamJAzeQOwmnHUArjie4pgxkNi5FDKjrENGKI8KF
-	 L1miFrfKfOIfoa3QCHaTo5gyLzlczxDNTx8dUdNcRMaM+2t4i+mNOZfpAMM9owGtdu
-	 G7dTOna5rISJQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id CC49EC433E9;
-	Mon, 13 May 2024 22:00:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1715641591;
+	bh=e8N7D1BpfBQnynMsqmyyIUHaGcH8BKYPBKZbu2NtRRA=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=TsK17zj55pMffE9DVaKJikVTL8MIFp/VJO2w3ud043/vmOr07OHMzDwdWxmM/YxwD
+	 dgRIMAPWBX26BPYGKvPI23NCos0Q6RhvPMp2+oBG/gM/5qUGj71VOi64jmBOQoaILJ
+	 yh+LsO93S124rBA0PHyhn2pGPmwNJUS2ZcoFxQvJ70VRtZEcQ7IppH0pI6WaIzqPTb
+	 SIkxCmZhKqHEZABjaE5UE8lNne4Sh2lKdLA4vjjvF1yPZaTjGjUKJoa8FqpNwgxZVs
+	 umjuRdO6+/6ybDFGmCDt99cVwfVs99PFp/ZOsdd/HbbSA7l6iiEdRzIRRaODu87zRl
+	 2lFksnHjU9ViA==
+Date: Mon, 13 May 2024 16:06:30 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Florian
+ Westphal <fw@strlen.de>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Gregory Detal <gregory.detal@gmail.com>
+Subject: Re: [PATCH net-next 0/8] mptcp: small improvements, fix and
+ clean-ups
+Message-ID: <20240513160630.545c3024@kernel.org>
+In-Reply-To: <20240510-upstream-net-next-20240509-misc-improvements-v1-0-4f25579e62ba@kernel.org>
+References: <20240510-upstream-net-next-20240509-misc-improvements-v1-0-4f25579e62ba@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next] tcp: socket option to check for MPTCP fallback to
- TCP
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171563763083.31066.11558902540602032643.git-patchwork-notify@kernel.org>
-Date: Mon, 13 May 2024 22:00:30 +0000
-References: <20240509-upstream-net-next-20240509-mptcp-tcp_is_mptcp-v1-1-f846df999202@kernel.org>
-In-Reply-To: <20240509-upstream-net-next-20240509-mptcp-tcp_is_mptcp-v1-1-f846df999202@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, edumazet@google.com, davem@davemloft.net,
- dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, martineau@kernel.org,
- geliang@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 09 May 2024 20:10:10 +0200 you wrote:
-> A way for an application to know if an MPTCP connection fell back to TCP
-> is to use getsockopt(MPTCP_INFO) and look for errors. The issue with
-> this technique is that the same errors -- EOPNOTSUPP (IPv4) and
-> ENOPROTOOPT (IPv6) -- are returned if there was a fallback, *or* if the
-> kernel doesn't support this socket option. The userspace then has to
-> look at the kernel version to understand what the errors mean.
+On Fri, 10 May 2024 13:18:30 +0200 Matthieu Baerts (NGI0) wrote:
+> This series contain mostly unrelated patches:
 > 
-> [...]
+> - The two first patches can be seen as "fixes". They are part of this
+>   series for -next because it looks like the last batch of fixes for
+>   v6.9 has already been sent. These fixes are not urgent, so they can
+>   wait if an unlikely v6.9-rc8 is published. About the two patches:
+>     - Patch 1 fixes getsockopt(SO_KEEPALIVE) support on MPTCP sockets
+>     - Patch 2 makes sure the full TCP keep-alive feature is supported,
+>       not just SO_KEEPALIVE.
+> 
+> - Patch 3 is a small optimisation when getsockopt(MPTCP_INFO) is used
+>   without buffer, just to check if MPTCP is still being used: no
+>   fallback to TCP.
+> 
+> - Patch 4 adds net.mptcp.available_schedulers sysctl knob to list packet
+>   schedulers, similar to net.ipv4.tcp_available_congestion_control.
+> 
+> - Patch 5 and 6 fix CheckPatch warnings: "prefer strscpy over strcpy"
+>   and "else is not generally useful after a break or return".
+> 
+> - Patch 7 and 8 remove and add header includes to avoid unused ones, and
+>   add missing ones to be self-contained.
 
-Here is the summary with links:
-  - [net-next] tcp: socket option to check for MPTCP fallback to TCP
-    https://git.kernel.org/netdev/net-next/c/c084ebd77a00
-
-You are awesome, thank you!
+Seems to conflict with:
+https://lore.kernel.org/all/20240509-upstream-net-next-20240509-mptcp-tcp_is_mptcp-v1-1-f846df999202@kernel.org/
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+pw-bot: cr
