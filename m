@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B60A12B7F
-	for <mptcp@lists.linux.dev>; Tue, 14 May 2024 20:47:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 810BB1DFD1
+	for <mptcp@lists.linux.dev>; Tue, 14 May 2024 21:11:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715719626; cv=none; b=cdCVQx9wDzDQnExYxuoFuUGW5OKu+43jb76tVG1jUQBXJwFH815RIIdv03HYwCVot9/c6t5vqFSLl9Zfbi1nhF3eRlU5U3w0srTMy6HtksH+l1gBFEnJKsiGQg6QCaentHImCtnzOETccKLJQabMkpWj4MfPLIpilW0ptGbzmWg=
+	t=1715721086; cv=none; b=q0mDHTsyOUNhjdwvOPHC4B1nseV5yDbJbv7QVRZsCwFaYsmNh0EDxcFkzjGm0EPH5v8Qm27AlAsZH7kWr+xpUD0ib4h+kbly6+8BRT1IPMvyJfKuvoEdy4W3uk83q3qz9/0XyNYLOK9WxKmZlLNsiJ/WvUPXuRH6EmjCq6WBhWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715719626; c=relaxed/simple;
-	bh=iV9jZB0uAsbWdF2beEmKWW63UhZBzlmXpO3AMkyZxig=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=klKrzjMffZVly7U3xyc+B4wW1FGdXmwlu2LRx3ON5QCQ57/o0OUiYRsIyoHYWCd8nvigmefJ1xxT9lCxBkqCycwLolNkAktVMBzyn50i00F8oIFOf3kAgguIl469Cy/QbkpK/YGjJ5yuzdusQ1glDU3S5y+Bt0UREmr2RoKOWYM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iz3u/8hN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715721086; c=relaxed/simple;
+	bh=zVwPG2BSEBGLzXXjnB2eSCXJlgFxXw3d+LQcSegisb0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=azLrWEMsMleVZ/2325qTMDaneSieLXuU67OfzdXPkYZEVLJ3h0zm9+rINa7vfhSX3535+GukZVBQ6HkYJwwWz5ABy0d2Uv7Be41JLHE0wQVExmVDJAgDLTg/SBXL7/K4eHBCrHWzx64XeCD8BgTb1aANEw2yzOxDBZT5eyAeAk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PsSd4YI3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iz3u/8hN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33C06C2BD10;
-	Tue, 14 May 2024 20:47:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PsSd4YI3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CDC3C32782;
+	Tue, 14 May 2024 21:11:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715719625;
-	bh=iV9jZB0uAsbWdF2beEmKWW63UhZBzlmXpO3AMkyZxig=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=Iz3u/8hNkM77QgLKCn5sdi0baH7aaBpZIEuDWsUAqgM4aGB3p+aOrLMAGdYk17IYC
-	 PfnhjaKNJyie8txqX9mtSwWNWvciy2XuEhK9lCMjtGpmWy6rX/1M2QS9m1zZg1CiSP
-	 WI52cTnUYBkCgSQX9miWCNhkT3ZYWorZvtij4kbXB64y7KX2AYVo/+7RlDWENLX/v8
-	 Q+0n3UFd5/CiQ5Lmfz7AlublAdUaB5X7tdOD8TVRIiktZWsjPehEqjSKcSIhj8EoKS
-	 grYKsTXGcJsNha/C88EGEBDVX2cMXuQVsdPjUr+JniPSjFiRY6ST4MdeB9oMpU8hi1
-	 bIjfyJq5HRVNA==
-Message-ID: <a7cd8362-a091-4df9-827b-73887c690308@kernel.org>
-Date: Tue, 14 May 2024 22:47:01 +0200
+	s=k20201202; t=1715721086;
+	bh=zVwPG2BSEBGLzXXjnB2eSCXJlgFxXw3d+LQcSegisb0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=PsSd4YI3ecfzOPlaE8GxskBkalQhLTy/bqyM62kv/Miy2Kb6s08DGGPi42r/9+SLX
+	 h5rjxlCFUvZHlwKbrn33fPIMLc4y8OvIN/8mtU3uWWVtYrQ1XK3N9kEQLdD+uvHVyO
+	 aUnjgPgnN0nXHRWUI7Z8IExd8OBBg9Jadcz3BNc8SzyMWYs8Wm4NZMbx3+3oW1wCXA
+	 sHPansNdtydO0omJtp6QSuou57YzGLPteOS1dAjrDjUueDDYghZrHbb4GLqKGgoyaE
+	 ZULfAxjSTxhqLprCGvi5Xtr5QA8Xtk1/OrlTawK/MuRXyyBweKH+Q3/zzHOxBY2c1t
+	 a4aFIJ0t7vnHA==
+Message-ID: <f8a1596d-77d1-409e-9dfb-c43462e3f968@kernel.org>
+Date: Tue, 14 May 2024 23:11:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-From: Matthieu Baerts <matttbe@kernel.org>
 Subject: Re: pull-request: bpf-next 2024-05-13
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>
 References: <20240513134114.17575-1-daniel@iogearbox.net>
-Content-Language: en-GB
+ <a7cd8362-a091-4df9-827b-73887c690308@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,51 +86,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240513134114.17575-1-daniel@iogearbox.net>
+In-Reply-To: <a7cd8362-a091-4df9-827b-73887c690308@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 13/05/2024 15:41, Daniel Borkmann wrote:
-> Hi David, hi Jakub, hi Paolo, hi Eric,
+On 14/05/2024 22:47, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> The following pull-request contains BPF updates for your *net-next* tree.
+> On 13/05/2024 15:41, Daniel Borkmann wrote:
+>> Hi David, hi Jakub, hi Paolo, hi Eric,
+>>
+>> The following pull-request contains BPF updates for your *net-next* tree.
+>>
+>> We've added 119 non-merge commits during the last 14 day(s) which contain
+>> a total of 134 files changed, 9462 insertions(+), 4742 deletions(-).
+>>
+>> The main changes are:
 > 
-> We've added 119 non-merge commits during the last 14 day(s) which contain
-> a total of 134 files changed, 9462 insertions(+), 4742 deletions(-).
+> (...)
 > 
-> The main changes are:
+>> 8) Another batch of improvements to BPF selftests to retire obsolete bpf_tcp_helpers.h as
+>>    everything is available vmlinux.h, from Martin KaFai Lau.
+> 
+> These modifications are causing issues on our side: bpf_tcp_helpers.h
+> was modified, mainly to access to more items from structures. The prefer
+> way is to rely on vmlinux.h, see [1]:
+> 
+> For the sync, I then resolved conflicts:
+> 
+> - 5a4748274773: conflict in t/selftests-bpf-Add-mptcp-sched-structs
+> - 16e27bc205f2: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
+> - 6e4457a51a02: conflict in t/selftests-bpf-Add-bpf_burst-scheduler
+> 
+> But then we need to adapt the code, not to rely on bpf_tcp_helpers.h. I
+> started that, see [2]. The code compiles, but the tests fail to run. It
+> is too late for me to investigate. If by chance you have an idea what's
+> wrong, don't hesitate to share that with me. If not, I will try to
+> continue looking at that tomorrow.
 
-(...)
+When doing something else, I think I found what I did wrong. Please tell
+me if you see any issues with the new version:
 
-> 8) Another batch of improvements to BPF selftests to retire obsolete bpf_tcp_helpers.h as
->    everything is available vmlinux.h, from Martin KaFai Lau.
+  https://github.com/matttbe/mptcp_net-next/commit/b2fa488b5155
 
-These modifications are causing issues on our side: bpf_tcp_helpers.h
-was modified, mainly to access to more items from structures. The prefer
-way is to rely on vmlinux.h, see [1]:
+Except that now, I think we hit issue #487 quicker:
 
-For the sync, I then resolved conflicts:
-
-- 5a4748274773: conflict in t/selftests-bpf-Add-mptcp-sched-structs
-- 16e27bc205f2: conflict in t/selftests-bpf-Add-bpf_rr-scheduler
-- 6e4457a51a02: conflict in t/selftests-bpf-Add-bpf_burst-scheduler
-
-But then we need to adapt the code, not to rely on bpf_tcp_helpers.h. I
-started that, see [2]. The code compiles, but the tests fail to run. It
-is too late for me to investigate. If by chance you have an idea what's
-wrong, don't hesitate to share that with me. If not, I will try to
-continue looking at that tomorrow.
-
-[1]
-https://lore.kernel.org/all/20240509175026.3423614-1-martin.lau@linux.dev/T/
-[2]
-https://github.com/matttbe/mptcp_net-next/commit/6625e70093708eb4d8729927f802fd99d0e8d41c
+  https://github.com/multipath-tcp/mptcp_net-next/issues/487
 
 Cheers,
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
-
 
