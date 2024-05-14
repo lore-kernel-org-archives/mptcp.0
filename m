@@ -1,48 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F95B111A8;
-	Tue, 14 May 2024 01:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CD917F7;
+	Tue, 14 May 2024 01:40:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715649224; cv=none; b=YIlT7NhAl64oky3qTJiYKcZI5lGcKNtfJLYt1tnrEyhNwUUyG0iRsBR3otICJ4HxknD8FS3gW6WoS5J1w1YNqv0X8Tt7sO3DJAr1QkN/sn38v9zmSvVPsFJcpn0A9kCjkq/J0Mi2z18qIlhFYuazwMEmQsivOdGjVcbk1mbP45g=
+	t=1715650832; cv=none; b=AE7D2lYhUWBry48Qh+Wmaa+A1kVwVu78egLcxC/+tPjvuV+acS2p0CknMvuHf1pk49/80rf8QUd4yWjgIIsWwgAb1OcC8iZ57m3BNvazAsj+MuOLwjpAgsAMbOyFsxrwKaX/6m9n1kO6ZWz4Jr+9WDgWJsyEjcJIQsa2tE3xrIQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715649224; c=relaxed/simple;
-	bh=Ct/2fDVBOpgHX6ViSh82CQRY4rG3MD+taLck/RW657c=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Vw58Vr/H4BWrSpDqEFvRie4TH82h21WjtF5OeN+KFPYfc9XMxby2OFvshNGttjmkAAUAwy96xmifstxz60zfOhKEtGzJezu6am7Q8zAzEl3a9BZ+Ei/NIIubAOY8wpOaqUWM/KhAvPG9QZ3lbKScf1TYYqDYBaGLsB8jxK72FDQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M6vK+T8v; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715650832; c=relaxed/simple;
+	bh=m9ZcLTYc1SAEPKpUe9V1F7bYmbm2pz9HsBw//F/2arE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=gSWeEagKNt+n7Ew8JjtjrtmEXewOYVlfQkIITbuH1avJ3N/QGp+IgmmnfMLiCIYvTUKffcW+FMCq6T/QrcgodUKeOTCWVz9xJ9KRZu/FKOPsK6WY9cN/Vj5c+frWZB7HVNngbOJIiAactJv160cGOw/jFDEwQ4+NMA5kcvZR318=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZpcZv2e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M6vK+T8v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E06F2C4AF08;
-	Tue, 14 May 2024 01:13:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZpcZv2e"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id A9FAAC32782;
+	Tue, 14 May 2024 01:40:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715649224;
-	bh=Ct/2fDVBOpgHX6ViSh82CQRY4rG3MD+taLck/RW657c=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=M6vK+T8v21VuYurIZSTxAUe4FTPUTyitfl9VtAk8xKrpFBSQdYXyLndrivXdyUpV2
-	 aTUzSMN0ttvjm7FH3hfmSbkftKBsMRWyaLXSKn4B/OPaoITWLGraKYRI/M7pG0htQ2
-	 3amu5Irzi4+JILkHYWowY3Q0zd9SRhnnr0J2CiQGGgl4uACJq/sZKIKUL8CER3j+vy
-	 Mo8P40WAcOTjD3RFPYJIHyb2JzZGs5PZaT2AiQPcp4+y/6S104oo0zM+bUXtlj6mZi
-	 wkbOK7HF50ZQwHtXy8iOEHW0Sdw6YdVXJrGbYfbPMt7ueu65wtRHSeWEb+OX+5K152
-	 fFBe1XOIoY8hQ==
-From: Mat Martineau <martineau@kernel.org>
-To: mptcp@lists.linux.dev,
-	geliang@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	fw@strlen.de
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	netdev@vger.kernel.org,
-	Mat Martineau <martineau@kernel.org>
-Subject: [PATCH net-next v2 8/8] mptcp: include inet_common in mib.h
-Date: Mon, 13 May 2024 18:13:32 -0700
-Message-ID: <20240514011335.176158-9-martineau@kernel.org>
-X-Mailer: git-send-email 2.43.2
-In-Reply-To: <20240514011335.176158-1-martineau@kernel.org>
-References: <20240514011335.176158-1-martineau@kernel.org>
+	s=k20201202; t=1715650830;
+	bh=m9ZcLTYc1SAEPKpUe9V1F7bYmbm2pz9HsBw//F/2arE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=PZpcZv2e6bHthYt8gXXLGfLJ7s+Oqa0Lh6F7gaVuMrUr6kalYZJ2kl2u4s/rmvjmV
+	 iqRztbGLBbmTnfazCtYCCvuoxPH0C5ag/IWN4hBFewJaw8QbivfV5c8tJGUDTOTktt
+	 mu3AEckeNG2orO4Iis7U99lnDM/PnkaD+r7wvxdKiYZi92fbn63VX/3Nvq8H85Y2qJ
+	 w/XDQ/fGb9RkvWThSKhPsarZp67k1Z+OpU8VEu6clSVrLfY84Jfu9gYnOlR3L6TlaG
+	 S62a2fzrIWK2tj7rrEAV2D2ZOzbdUvJbo4/uZO64AyAu52OoAcaCPuzT4t8JUov74q
+	 bfhx51kuQ54LQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98A16C433F2;
+	Tue, 14 May 2024 01:40:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -50,31 +37,57 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v2 0/8] mptcp: small improvements, fix and clean-ups
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171565083062.25298.8765294977053470199.git-patchwork-notify@kernel.org>
+Date: Tue, 14 May 2024 01:40:30 +0000
+References: <20240514011335.176158-1-martineau@kernel.org>
+In-Reply-To: <20240514011335.176158-1-martineau@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, geliang@kernel.org, davem@davemloft.net,
+ edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, fw@strlen.de,
+ netdev@vger.kernel.org
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Hello:
 
-So this file is now self-contained: it can be compiled alone with
-analytic tools.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
----
- net/mptcp/mib.h | 2 ++
- 1 file changed, 2 insertions(+)
+On Mon, 13 May 2024 18:13:24 -0700 you wrote:
+> This series contain mostly unrelated patches:
+> 
+> - The two first patches can be seen as "fixes". They are part of this
+>   series for -next because it looks like the last batch of fixes for
+>   v6.9 has already been sent. These fixes are not urgent, so they can
+>   wait if an unlikely v6.9-rc8 is published. About the two patches:
+>     - Patch 1 fixes getsockopt(SO_KEEPALIVE) support on MPTCP sockets
+>     - Patch 2 makes sure the full TCP keep-alive feature is supported,
+>       not just SO_KEEPALIVE.
+> 
+> [...]
 
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index dd7fd1f246b5..2704afd0dfe4 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -1,5 +1,7 @@
- /* SPDX-License-Identifier: GPL-2.0-or-later */
- 
-+#include <net/inet_common.h>
-+
- enum linux_mptcp_mib_field {
- 	MPTCP_MIB_NUM = 0,
- 	MPTCP_MIB_MPCAPABLEPASSIVE,	/* Received SYN with MP_CAPABLE */
+Here is the summary with links:
+  - [net-next,v2,1/8] mptcp: SO_KEEPALIVE: fix getsockopt support
+    https://git.kernel.org/netdev/net-next/c/a65198136eaa
+  - [net-next,v2,2/8] mptcp: fix full TCP keep-alive support
+    https://git.kernel.org/netdev/net-next/c/bd11dc4fb969
+  - [net-next,v2,3/8] mptcp: sockopt: info: stop early if no buffer
+    https://git.kernel.org/netdev/net-next/c/ce5f6f71b029
+  - [net-next,v2,4/8] mptcp: add net.mptcp.available_schedulers
+    https://git.kernel.org/netdev/net-next/c/73c900aa3660
+  - [net-next,v2,5/8] mptcp: prefer strscpy over strcpy
+    https://git.kernel.org/netdev/net-next/c/5eae7a8202f3
+  - [net-next,v2,6/8] mptcp: remove unnecessary else statements
+    https://git.kernel.org/netdev/net-next/c/00797af95f5e
+  - [net-next,v2,7/8] mptcp: move mptcp_pm_gen.h's include
+    https://git.kernel.org/netdev/net-next/c/76a86686e3f0
+  - [net-next,v2,8/8] mptcp: include inet_common in mib.h
+    https://git.kernel.org/netdev/net-next/c/7fad5b375611
+
+You are awesome, thank you!
 -- 
-2.45.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
