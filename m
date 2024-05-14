@@ -1,93 +1,63 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mail.bizsol24.pl (mail.bizsol24.pl [54.37.225.206])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CD917F7;
-	Tue, 14 May 2024 01:40:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7A0D17C77
+	for <mptcp@lists.linux.dev>; Tue, 14 May 2024 07:36:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=54.37.225.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715650832; cv=none; b=AE7D2lYhUWBry48Qh+Wmaa+A1kVwVu78egLcxC/+tPjvuV+acS2p0CknMvuHf1pk49/80rf8QUd4yWjgIIsWwgAb1OcC8iZ57m3BNvazAsj+MuOLwjpAgsAMbOyFsxrwKaX/6m9n1kO6ZWz4Jr+9WDgWJsyEjcJIQsa2tE3xrIQ=
+	t=1715672191; cv=none; b=S1Ta68R9zS0mNN/l2AOi5g0038mYedQ5K1J5I1RRD6m8+v+hF90/Tvo0vCqN4bVzBVRZjyiaHvHrPbPTTNRemklt1Ptz4cJeVBrzQBnIhA9wnmDOMmVC2mLU5F2D6jMeKQT6tEhcQ6/PRRHV0XnoWL5SFD4yT5SieVgYPZcRl1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715650832; c=relaxed/simple;
-	bh=m9ZcLTYc1SAEPKpUe9V1F7bYmbm2pz9HsBw//F/2arE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gSWeEagKNt+n7Ew8JjtjrtmEXewOYVlfQkIITbuH1avJ3N/QGp+IgmmnfMLiCIYvTUKffcW+FMCq6T/QrcgodUKeOTCWVz9xJ9KRZu/FKOPsK6WY9cN/Vj5c+frWZB7HVNngbOJIiAactJv160cGOw/jFDEwQ4+NMA5kcvZR318=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PZpcZv2e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715672191; c=relaxed/simple;
+	bh=q21zm51WwxIQdfPGmAt595dLuZoYitUsm1crIT68Zk8=;
+	h=Message-ID:Date:From:To:Subject:MIME-Version:Content-Type; b=lR8fgNJEnAALbdk+v2h0wz8CpPlPeMXCLGrn5MKmdVtSfP1uywUF5RxNwHzzKL4UPEPx2uEJsz+L4413YXQ7rHIXxfqUJQ3qgneDgjOo+stEvagbrp/ILSUaR4e4mMmBRVtzF3aisyIMvQllPTyXwm184w4yfVknBNd4raFWBLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bizsol24.pl; spf=pass smtp.mailfrom=bizsol24.pl; dkim=pass (2048-bit key) header.d=bizsol24.pl header.i=@bizsol24.pl header.b=VwNK62tz; arc=none smtp.client-ip=54.37.225.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=bizsol24.pl
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bizsol24.pl
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PZpcZv2e"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id A9FAAC32782;
-	Tue, 14 May 2024 01:40:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715650830;
-	bh=m9ZcLTYc1SAEPKpUe9V1F7bYmbm2pz9HsBw//F/2arE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=PZpcZv2e6bHthYt8gXXLGfLJ7s+Oqa0Lh6F7gaVuMrUr6kalYZJ2kl2u4s/rmvjmV
-	 iqRztbGLBbmTnfazCtYCCvuoxPH0C5ag/IWN4hBFewJaw8QbivfV5c8tJGUDTOTktt
-	 mu3AEckeNG2orO4Iis7U99lnDM/PnkaD+r7wvxdKiYZi92fbn63VX/3Nvq8H85Y2qJ
-	 w/XDQ/fGb9RkvWThSKhPsarZp67k1Z+OpU8VEu6clSVrLfY84Jfu9gYnOlR3L6TlaG
-	 S62a2fzrIWK2tj7rrEAV2D2ZOzbdUvJbo4/uZO64AyAu52OoAcaCPuzT4t8JUov74q
-	 bfhx51kuQ54LQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 98A16C433F2;
-	Tue, 14 May 2024 01:40:30 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=bizsol24.pl header.i=@bizsol24.pl header.b="VwNK62tz"
+Received: by mail.bizsol24.pl (Postfix, from userid 1002)
+	id 8811821866; Tue, 14 May 2024 07:31:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=bizsol24.pl; s=mail;
+	t=1715671874; bh=q21zm51WwxIQdfPGmAt595dLuZoYitUsm1crIT68Zk8=;
+	h=Date:From:To:Subject:From;
+	b=VwNK62tzP8pvlHSdBESSYC8pknH1aDV3Lpo5XPTZAXk2bry6i5dhhOPyJ1pzwoyGN
+	 vEpaNWpRwR4FVqaj0quWcpswPERLvv4Fk+CojwbMFdp6PR2DZfN0n06ojYzrfiemtv
+	 AGTADmnGeqYqg6BDXCSxPNMq8L67CO7JDIBoDRaZ3Q9Fi+Ik4pWm9iWu10Aa7oTe6m
+	 VMSwp08l15DklvZJGldafOvBfGcRvQvVho3eW8bOW1dn57p4HygkdHcqB7RxMT0jMR
+	 hXxC5JwykFIIF3UaKqEXLio7kUblg1OrZGpdvXgihxuw4QYBxSHXGeOIQsQ5EfeFjZ
+	 9L3mJQst/c4kA==
+Received: by mail.bizsol24.pl for <mptcp@lists.linux.dev>; Tue, 14 May 2024 07:30:56 GMT
+Message-ID: <20240514064500-0.1.q.1dti.0.beozkc02g5@bizsol24.pl>
+Date: Tue, 14 May 2024 07:30:56 GMT
+From: "Andrzej Fortuna" <andrzej.fortuna@bizsol24.pl>
+To: <mptcp@lists.linux.dev>
+Subject: Reklama w Google
+X-Mailer: mail.bizsol24.pl
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2 0/8] mptcp: small improvements, fix and clean-ups
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171565083062.25298.8765294977053470199.git-patchwork-notify@kernel.org>
-Date: Tue, 14 May 2024 01:40:30 +0000
-References: <20240514011335.176158-1-martineau@kernel.org>
-In-Reply-To: <20240514011335.176158-1-martineau@kernel.org>
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, geliang@kernel.org, davem@davemloft.net,
- edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, fw@strlen.de,
- netdev@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+Dzie=C5=84 dobry,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+jeste=C5=9Bmy zespo=C5=82em ekspert=C3=B3w od Digital Marketingu.
 
-On Mon, 13 May 2024 18:13:24 -0700 you wrote:
-> This series contain mostly unrelated patches:
-> 
-> - The two first patches can be seen as "fixes". They are part of this
->   series for -next because it looks like the last batch of fixes for
->   v6.9 has already been sent. These fixes are not urgent, so they can
->   wait if an unlikely v6.9-rc8 is published. About the two patches:
->     - Patch 1 fixes getsockopt(SO_KEEPALIVE) support on MPTCP sockets
->     - Patch 2 makes sure the full TCP keep-alive feature is supported,
->       not just SO_KEEPALIVE.
-> 
-> [...]
+Przedsi=C4=99biorcy sprzedaj=C4=85 wi=C4=99cej dzi=C4=99ki naszym efektyw=
+nym kampaniom Google Ads, Facebook Ads, Allegro Ads, Microsoft Ads. Nasze=
+ strategie sprawiaj=C4=85, =C5=BCe porzucone koszyki zape=C5=82niaj=C4=85=
+ si=C4=99 ponownie.
 
-Here is the summary with links:
-  - [net-next,v2,1/8] mptcp: SO_KEEPALIVE: fix getsockopt support
-    https://git.kernel.org/netdev/net-next/c/a65198136eaa
-  - [net-next,v2,2/8] mptcp: fix full TCP keep-alive support
-    https://git.kernel.org/netdev/net-next/c/bd11dc4fb969
-  - [net-next,v2,3/8] mptcp: sockopt: info: stop early if no buffer
-    https://git.kernel.org/netdev/net-next/c/ce5f6f71b029
-  - [net-next,v2,4/8] mptcp: add net.mptcp.available_schedulers
-    https://git.kernel.org/netdev/net-next/c/73c900aa3660
-  - [net-next,v2,5/8] mptcp: prefer strscpy over strcpy
-    https://git.kernel.org/netdev/net-next/c/5eae7a8202f3
-  - [net-next,v2,6/8] mptcp: remove unnecessary else statements
-    https://git.kernel.org/netdev/net-next/c/00797af95f5e
-  - [net-next,v2,7/8] mptcp: move mptcp_pm_gen.h's include
-    https://git.kernel.org/netdev/net-next/c/76a86686e3f0
-  - [net-next,v2,8/8] mptcp: include inet_common in mib.h
-    https://git.kernel.org/netdev/net-next/c/7fad5b375611
+Opr=C3=B3cz wysokiej skuteczno=C5=9Bci wyr=C3=B3=C5=BCniamy si=C4=99 elas=
+tycznym podej=C5=9Bciem do um=C3=B3w i rozlicze=C5=84.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+Z przyjemno=C5=9Bci=C4=85 sprawdzimy, jak to wygl=C4=85da u Pa=C5=84stwa,=
+ aby porozmawia=C4=87 o spersonalizowanych kampaniach. S=C4=85 Pa=C5=84st=
+wo zainteresowani?
 
 
+Pozdrawiam
+Andrzej Fortuna
