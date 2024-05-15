@@ -1,124 +1,175 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6568433AF
-	for <mptcp@lists.linux.dev>; Wed, 15 May 2024 07:09:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C8241C84
+	for <mptcp@lists.linux.dev>; Wed, 15 May 2024 07:32:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715756943; cv=none; b=BBqsyUhedl+75JW8NQGKDsH2gSwctofd9QaAw6k8lQtFuYS/K4CgOf6IMTB//1qy/5m02sOsUUpYpIJgBgy1Uu6mSnbZfCCcnhNzhr6YhbC9xw6TkcONjE5tjo6t74PgLRw8t4q5HNHBjT06n/gzf88SGzzU+bvPqLPapScf+eI=
+	t=1715758373; cv=none; b=ZtVfBP/UBXhY89Mmtxj+y/VdRbrb+gsXlH7dzfAFf5xnwS7KsTMbESjkhO1P7K6PpE6UkeGeH+8x1cNGUMw9AJZ9tcRbjHRlbZTN/ah58hpJGObgghs3k5tiY6CP70pzztr6+dDEz+ffkj9CBiPe709/ZKQi9KORSO8f882sraw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715756943; c=relaxed/simple;
-	bh=/rws+G6/ku7Izm8OqgMIp1zwGLp5FdHGCGoCsi0lTXk=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=tBD3ItPVNiQqGuxO+Mf7Fl+FHbxHlhnMu5ktepoSP7uCF4BTuyG1r25pqTX83qlmua2ISUdK7svS6rEx83PxJWPMrYMApQVXA21/CA9Ahr2eev+o6H8C3W+H0jpCOD89IBa3PEb6d/IzKgp1U9oMO6Ay/1tgZhSWCjoPyEWHgSQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=elL7/ROr; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1715758373; c=relaxed/simple;
+	bh=TVaWFQzTN+Ywanc9/lc3VbKBoe06e0d7eArNffCu5NA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hr39LQlAkcPxzWyL5Jp8tlJCu/PmE66jz/qOYKz7abjq1DJ3QryKX167VxFGjFRVfWZqkyoJoE2+xAVaZQIoMiePyFCrOaQaCC6QcNH3g0bIdw+k8vDZMqRTVd9g4ja8X/ak67B0jSi4WjsJjqX8pdOTNSn/+GHrWh4Z+APxXzk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgniMw4r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="elL7/ROr"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-792b8ebc4eeso495554485a.1
-        for <mptcp@lists.linux.dev>; Wed, 15 May 2024 00:09:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1715756941; x=1716361741; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=E2ZFaRWPOGkEK3e6jDe+elfzzhvdd+BOQMY/UQVfgcE=;
-        b=elL7/ROruYW7hxDnS6KYShWz99SWWRXzp2TfsdzdgACT3S5mxZhBDF1RFCwh8v4DQ7
-         4Y2bztwXrRFXpSpJ3oqNL9Ptzt0gwxEU4kIu+kpY7+m6+ob1m6TZlaFLshg/4dk80PVe
-         HTCvvmVlhOnvYFqmCCZI7wE2Np+CjUqG9zDHxXNp4EtaomvwEBpVDmQ3p6UhDQwbqgBd
-         rW3PAue6+fsteAaIVpzEvlq9fKsSERivQfgWcyvdbfFjQg0yC65SWNjwwJKccKoX7GZ+
-         G4W4Oxt0eeqMVlFhFCGPhLQ+O3Fy1k5clVpgGJE6mBrIcsQsrlIheGgrudjuZHwM0lHn
-         3SWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1715756941; x=1716361741;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=E2ZFaRWPOGkEK3e6jDe+elfzzhvdd+BOQMY/UQVfgcE=;
-        b=mq2t0psnq76Hcxy3oIj9xiXwzL8927iaHlEhYbYt1Gb18WQgV/eqjv9kBJhWjl1DNO
-         LXI/9ukYtgaZL2frkdizmJALrdUOH0hIf/oTLU2oJCFbRAfJDdlGqT/ognus6qspvU93
-         WCwhDd8SdC+VgAKRMc3VlGD1mXsWhkvml/9Up8h9KxGERpyk+bF4wiX6Urts9NyHVqzn
-         sXb1WTgOce/60AVszwcgHc59+WqBTmT3R3AAQFf6yYG7psxVizu2/3VQL8MOgb5W4D3C
-         ZmplnXunjnYWAOPc8noU0H+x9gGOSYTaJR+5GeE9561sCBt/IcoaHY9FJrimpqNTzmpk
-         SQFw==
-X-Gm-Message-State: AOJu0Yzx0IFkQsyOTaLWWaFu4OqnfSKt/zzqsVFB7xi2oMPIDzEqW6aa
-	sfEC+jaD3GQekhf5XQ4RuBdFkOj3FmDuMH2gb3kUvpNwkf82KGlpc2lx
-X-Google-Smtp-Source: AGHT+IHpKJoqVI2dIdB48jhkDt3FISHr2uG8yjrXEdVLFoKZUZc7asSwWYn9/sqNTqR7ay4vyHop+g==
-X-Received: by 2002:a05:6214:2f88:b0:6a0:d2b0:7e2 with SMTP id 6a1803df08f44-6a16824507fmr206337566d6.49.1715756940505;
-        Wed, 15 May 2024 00:09:00 -0700 (PDT)
-Received: from [127.0.0.1] ([20.55.14.242])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6a15f194bf9sm61406896d6.58.2024.05.15.00.08.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 May 2024 00:09:00 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1715753802.git.tanggeliang@kylinos.cn>
-References: <cover.1715753802.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 0/2] patches for new MPTCP subflow
- subtest
-Message-ID: <8b54db0b-53a4-71b8-2af4-6165802e82f9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 15 May 2024 07:08:59 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgniMw4r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD0FC116B1;
+	Wed, 15 May 2024 07:32:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1715758372;
+	bh=TVaWFQzTN+Ywanc9/lc3VbKBoe06e0d7eArNffCu5NA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=pgniMw4rV0MddFD2WU/kYkfRGsf/XFRxloK8JHutHp9bWxhQkwrTwxcjSKHdX3s/c
+	 xTZME16wYzxN/LAkAt9J+eI61+/8Mc7R6V9TmaFMr1vkpjmcGDTSI3wP7Pgi3+7F3a
+	 v4Vbr1ic/5fTK+TROxcs6znCARnBgbb1/0Ipn5/MrtXOMbdIGdTm8gcDfugSTbzPXe
+	 WfJkviP/aCRMZCcD7W8+U7F8og55JG6yqazqv5D2VOCcAu8A7A0CYSSDJkKP57RVLk
+	 j6P8ahp7gCbNLgZ2CEYuZKiY/pQ1G/00KeXjtKB11w4RtLQQEYKCH59PidP6eKJF6r
+	 zH2Y2/mPm7kHA==
+Message-ID: <774d7113-3517-45b9-b0fa-606a92914b70@kernel.org>
+Date: Wed, 15 May 2024 09:32:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/3] selftests/bpf: Handle SIGINT when creating
+ netns
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1715755275.git.tanggeliang@kylinos.cn>
+ <8c4198e7855045559ab746be7d90f72fd550a857.1715755275.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <8c4198e7855045559ab746be7d90f72fd550a857.1715755275.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 15/05/2024 08:44, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> It's necessary to delete netns during BPF selftests interrupt, otherwise
+> the next tests run will fail due to unable to create netns.
 
-Our CI did some validations and here is its report:
+I think this patch can be part of the series you sent to BPF
+maintainers, because that's not specific to MPTCP, no?
+(If yes, don't forget to wait 24h between posting).
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Unstable: 2 =
-failed test(s): bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_=
-mptcp =F0=9F=94=B4
-- Task: https://github.com/multipath-tcp/mptcp_net-next/=
-actions/runs/9091069267
+Or do you send it here to have a pre-review? If yes, please see below:
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/95ddedab45=
-20
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D853294
+> This patch adds a new SIGINT handle netns_sig_handler() in create_netns(),
+> and deletes NS_TEST in this handler.
+> 
+> For passing argument to signal handler, a trick mentioned in [1] is
+> used.
+> 
+> [1]
+> https://stackoverflow.com/questions/6970224/providing-passing-argument-to-signal-handler
 
+Interesting!
 
-If there are some issues, you can reproduce them using =
-the same environment as
-the one used by the CI thanks to a docker image, e.=
-g.:
+I guess you are referring to this answer, right?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" =
--w "${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+  Link: https://stackoverflow.com/a/43400143 [1]
 
-For more details:
+(instead of sharing the link to the question with multiple answers)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/bpf/network_helpers.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
+> index 0b25b008f4f6..7e233b8c75d9 100644
+> --- a/tools/testing/selftests/bpf/network_helpers.c
+> +++ b/tools/testing/selftests/bpf/network_helpers.c
+> @@ -519,6 +519,16 @@ void cleanup_netns(struct nstoken *token)
+>  	close_netns(token);
+>  }
+>  
+> +static int netns_sig_handler(const int sig, void *ptr)
+> +{
+> +	struct nstoken *token = (struct nstoken *)ptr;
+> +
+> +	signal(sig, SIG_IGN);
+> +	if (sig == SIGINT)
+> +		cleanup_netns(token);
+> +	return 0;
+> +}
+> +
+>  struct nstoken *create_netns(const char *name)
+>  {
+>  	struct nstoken *token = NULL;
+> @@ -539,6 +549,8 @@ struct nstoken *create_netns(const char *name)
+>  		goto fail;
+>  	}
+>  
+> +	signal(SIGINT, (__sighandler_t)netns_sig_handler);
+> +	netns_sig_handler(SIGUSR1, (void *)token);
 
+It doesn't look like it will work with multiple netns per test, right?
+It sounds a bit restricting to limit to only one netns. Or the helper
+name should be clearer about that: create_netns_single()? (not even sure
+people will understand this helper can only be used if there is only one
+netns to create...)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Can you not use an array (xfrm_info.c seems to be the one creating the
+maximum: 3) or a list in a global variable instead?
+
+>  	return token;
+>  
+>  fail:
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
