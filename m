@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9C8241C84
-	for <mptcp@lists.linux.dev>; Wed, 15 May 2024 07:32:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3C9F482C8
+	for <mptcp@lists.linux.dev>; Wed, 15 May 2024 08:09:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715758373; cv=none; b=ZtVfBP/UBXhY89Mmtxj+y/VdRbrb+gsXlH7dzfAFf5xnwS7KsTMbESjkhO1P7K6PpE6UkeGeH+8x1cNGUMw9AJZ9tcRbjHRlbZTN/ah58hpJGObgghs3k5tiY6CP70pzztr6+dDEz+ffkj9CBiPe709/ZKQi9KORSO8f882sraw=
+	t=1715760567; cv=none; b=M0Utcaz3cW0sLQ74BpNS4k+hK8EO45q2i0WZsYy04MFfy3UTr5eFEeawXT3s6YESIOrT71z045Tm9R9lysUcvdK+bTtKkbWwCgoqyYU04S8h8Zln6exJ6Y/a/DPHqC3v2/ql1kS5lMd91DVzAz9LWljhOpwBPLsjsBXUloJ1av8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715758373; c=relaxed/simple;
-	bh=TVaWFQzTN+Ywanc9/lc3VbKBoe06e0d7eArNffCu5NA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hr39LQlAkcPxzWyL5Jp8tlJCu/PmE66jz/qOYKz7abjq1DJ3QryKX167VxFGjFRVfWZqkyoJoE2+xAVaZQIoMiePyFCrOaQaCC6QcNH3g0bIdw+k8vDZMqRTVd9g4ja8X/ak67B0jSi4WjsJjqX8pdOTNSn/+GHrWh4Z+APxXzk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pgniMw4r; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715760567; c=relaxed/simple;
+	bh=si5Z4gY8y2+P17T7r/BohPdGB0LfVzECOgViRe2daIA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=fvV9dPLmgJBsvIzqh/mGN0lHjG7bgQyGEqlbEhZPKAhPFB60ic4g6Bw+3Td4j5+YNop1F62vWxEpNEpzbap500kvv7Mjpw+9VMJ2X44Xsu5B0CjhVBZAhji8jF/7bpp48QA6NyP35sqUeafE81jtcTbC5ksIeNS+pGivfiI8+Hk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LcNTcGYI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pgniMw4r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7BD0FC116B1;
-	Wed, 15 May 2024 07:32:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LcNTcGYI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF6FCC116B1;
+	Wed, 15 May 2024 08:09:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715758372;
-	bh=TVaWFQzTN+Ywanc9/lc3VbKBoe06e0d7eArNffCu5NA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pgniMw4rV0MddFD2WU/kYkfRGsf/XFRxloK8JHutHp9bWxhQkwrTwxcjSKHdX3s/c
-	 xTZME16wYzxN/LAkAt9J+eI61+/8Mc7R6V9TmaFMr1vkpjmcGDTSI3wP7Pgi3+7F3a
-	 v4Vbr1ic/5fTK+TROxcs6znCARnBgbb1/0Ipn5/MrtXOMbdIGdTm8gcDfugSTbzPXe
-	 WfJkviP/aCRMZCcD7W8+U7F8og55JG6yqazqv5D2VOCcAu8A7A0CYSSDJkKP57RVLk
-	 j6P8ahp7gCbNLgZ2CEYuZKiY/pQ1G/00KeXjtKB11w4RtLQQEYKCH59PidP6eKJF6r
-	 zH2Y2/mPm7kHA==
-Message-ID: <774d7113-3517-45b9-b0fa-606a92914b70@kernel.org>
-Date: Wed, 15 May 2024 09:32:48 +0200
+	s=k20201202; t=1715760566;
+	bh=si5Z4gY8y2+P17T7r/BohPdGB0LfVzECOgViRe2daIA=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=LcNTcGYIxql/rXSdSuljp3JYKueCAphzRIOfLZkEfJ7xeTl4g2ktYcKwzrb/66mZi
+	 7cAoKUh/T+t+Wr9Vn4qeMDFEDUsP4ujJqAYJp/y+MUSewdiehwgojkwiLjlOCpevdL
+	 ky+X9t6KeYgIvJIjeDu9RhCm0ciBhJe7YlaPc7ZHMmVvrVvGFupt74SyXxamd084dO
+	 I6i8taJv7T8ejfSqUGSPw4hZ3usIlZWXDpyW2zO7cQlG2S3DOgxipipWRm+T138D4Z
+	 VtOp422y4unKid+uI6IZc0QiGfFYUrPhOqSxJ0GFoula6waeUG/kTt1qqsl1hcRpS1
+	 GAWw+nNAY5aqw==
+Message-ID: <cba9e588-7ddd-4b69-8636-9666add39aaf@kernel.org>
+Date: Wed, 15 May 2024 10:09:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/3] selftests/bpf: Handle SIGINT when creating
- netns
+Subject: Re: [PATCH mptcp-next v5 0/2] patches for new MPTCP subflow subtest
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1715755275.git.tanggeliang@kylinos.cn>
- <8c4198e7855045559ab746be7d90f72fd550a857.1715755275.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1715753802.git.tanggeliang@kylinos.cn>
+ <8b54db0b-53a4-71b8-2af4-6165802e82f9@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,86 +85,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8c4198e7855045559ab746be7d90f72fd550a857.1715755275.git.tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <8b54db0b-53a4-71b8-2af4-6165802e82f9@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 15/05/2024 08:44, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 15/05/2024 09:08, MPTCP CI wrote:
+> Hi Geliang,
 > 
-> It's necessary to delete netns during BPF selftests interrupt, otherwise
-> the next tests run will fail due to unable to create netns.
-
-I think this patch can be part of the series you sent to BPF
-maintainers, because that's not specific to MPTCP, no?
-(If yes, don't forget to wait 24h between posting).
-
-Or do you send it here to have a pre-review? If yes, please see below:
-
-> This patch adds a new SIGINT handle netns_sig_handler() in create_netns(),
-> and deletes NS_TEST in this handler.
+> Thank you for your modifications, that's great!
 > 
-> For passing argument to signal handler, a trick mentioned in [1] is
-> used.
+> Our CI did some validations and here is its report:
 > 
-> [1]
-> https://stackoverflow.com/questions/6970224/providing-passing-argument-to-signal-handler
+> - KVM Validation: normal: Success! ✅
+> - KVM Validation: debug: Success! ✅
+> - KVM Validation: btf (only bpftest_all): Unstable: 2 failed test(s): bpftest_test_progs-cpuv4_mptcp bpftest_test_progs-no_alu32_mptcp 🔴
 
-Interesting!
+It looks like the CI doesn't like pm_nl_ctl (good we test that :) ):
 
-I guess you are referring to this answer, right?
+> endpoint_init:FAIL:ip netns exec mptcp_ns ./mptcp_pm_nl_ctl add 10.0.1.2 flags subflow unexpected error: 256 (errno 22)
 
-  Link: https://stackoverflow.com/a/43400143 [1]
+I'm not sure to understand what's wrong. Can you reproduce it on your side?
 
-(instead of sharing the link to the question with multiple answers)
+Note that if you use the Docker image, I recently added the 'bpftests'
+command, only to build these tests without the kernel. It should be
+useful if you want to check build errors first.
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/bpf/network_helpers.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/bpf/network_helpers.c b/tools/testing/selftests/bpf/network_helpers.c
-> index 0b25b008f4f6..7e233b8c75d9 100644
-> --- a/tools/testing/selftests/bpf/network_helpers.c
-> +++ b/tools/testing/selftests/bpf/network_helpers.c
-> @@ -519,6 +519,16 @@ void cleanup_netns(struct nstoken *token)
->  	close_netns(token);
->  }
->  
-> +static int netns_sig_handler(const int sig, void *ptr)
-> +{
-> +	struct nstoken *token = (struct nstoken *)ptr;
-> +
-> +	signal(sig, SIG_IGN);
-> +	if (sig == SIGINT)
-> +		cleanup_netns(token);
-> +	return 0;
-> +}
-> +
->  struct nstoken *create_netns(const char *name)
->  {
->  	struct nstoken *token = NULL;
-> @@ -539,6 +549,8 @@ struct nstoken *create_netns(const char *name)
->  		goto fail;
->  	}
->  
-> +	signal(SIGINT, (__sighandler_t)netns_sig_handler);
-> +	netns_sig_handler(SIGUSR1, (void *)token);
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/commit/d10b89
 
-It doesn't look like it will work with multiple netns per test, right?
-It sounds a bit restricting to limit to only one netns. Or the helper
-name should be clearer about that: create_netns_single()? (not even sure
-people will understand this helper can only be used if there is only one
-netns to create...)
-
-Can you not use an array (xfrm_info.c seems to be the one creating the
-maximum: 3) or a list in a global variable instead?
-
->  	return token;
->  
->  fail:
+(I also added defconfig, selftests, vm-manual, vm-auto, etc. I don't
+know if others can be useful.)
 
 Cheers,
 Matt
