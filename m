@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C151311AE
-	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:39:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4DE6D1AF
+	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:39:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715848744; cv=none; b=F5eoB/kbRmwGox/Zl66YX1M1j4I+F6i3uWZsPjyjwTUuBjPT6SHODx5qZHYRelyEp+W1nRnxnnaRBEl71H6AKp4sM8aUbTTDW5uZo6xohI/0QgIpuadZiQfAo7cEJevFC49x5PhqnIOBC15tkrqNjlmicehGI8TLz8UuQJwYuFQ=
+	t=1715848745; cv=none; b=SX3xhzqCezJyda/037Awlpjfj38BlKe+/3IShsz0m3EezHXIJWLmaGeK/9mC0YkL9RUNlBR1KX0gezbgnfY6zt84jY9kf6cWf23NvowqQn9IHV2BPaxEWilxiZSUme+iJpgX02x3kRNvsBHcOTfkAtDZ1pt4bLr7Ek9DRFdChBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715848744; c=relaxed/simple;
-	bh=ss0UohwsVxJk5+8aPvsrw2EdWBK3NgBuqLY3ruBOvqc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6EkRaB0xWPOaaem5II0XQGfpPpyB9ZdiPkmiCdOOmLRjBrVGAfv4NM29xF6eDlR/8BSAScB/cBr1Vc6OF/zzXwg0fspiN3mf7CYIvCGqDSHmPJwE+Jn5Wx8UwtErea+luj2p3Oy0gcMubV4nKj+ivWjdAZpEDszBiaUFgPxyi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrDuQ/au; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715848745; c=relaxed/simple;
+	bh=udG9vWPF00neKQVSuqKavYO999fBQVr3vJjG/gBGAtM=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=O5VUk3jmskHP2YVsuA8UkH1NxJKoQ2sRs6mcT1MuVP1TTK0BWUAi4bI3plD93MjQbLIDknlM9UO5eYickbtQscl+GLu5awE/Zj6a84i19r0PHl1mEbG9/PBmzMNRWT2aRR4LkPiBIC9E8OIg93o2yv31a6vrOsUz22V7uBq9ILA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lpjyL9FI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrDuQ/au"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8358AC113CC;
-	Thu, 16 May 2024 08:39:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lpjyL9FI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1601BC32782;
+	Thu, 16 May 2024 08:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715848743;
-	bh=ss0UohwsVxJk5+8aPvsrw2EdWBK3NgBuqLY3ruBOvqc=;
-	h=From:To:Cc:Subject:Date:From;
-	b=JrDuQ/aucZt641Dli381I/BY6uzFaLOrOshdfSRPlnU/npm7C4Jvy52ovDqLGH8hq
-	 VZ/hXz8lCPKuFQ8ClACPJ2H16p+zcfxZqO/cvtGO7MwO4bOKakmKHSe4wDLShgQ3lX
-	 s5iWKah4hD6PGrcITw64ppGqHUJrEmJSfNeQu8Wi3xPhHLbzHuXbhXyRE2ZNyEReIT
-	 f+9iM5JGvch9JOO33fwiJAP5bmIbZQSVXpeWB3b4RGYTxyyBjquYD2KMHCVDpG7DuR
-	 GsAgJI/+PKK+XrgInM6D7oO8FyadMAnKsYL8uIpx01yzADi8NDiYvwVoibVnfOhp+n
-	 E63vgVsx1gmgg==
+	s=k20201202; t=1715848745;
+	bh=udG9vWPF00neKQVSuqKavYO999fBQVr3vJjG/gBGAtM=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=lpjyL9FIDpyK2DD6Cch9TlnhcIp7Qd4ho3dGUKl31Ub1eFYsRaw7AhmSbr4+/RYZY
+	 KBW13stG8MOwSXr5Q+Qkz0NpIuc76X4EFUD2qubxvKOK56OlPhDpqw67ULvVPn+dIF
+	 hfpMj7/v4tDA7itIxSv66Qv8dbjK6HfYa9fEBUa71HAPnDVm9gU7O/paDVroeJbNj9
+	 PcRUBBKVp/mK4dAZe/09FRMDuRHjz+IkXHP86xmaEPAU+WJIKa5mlzzkv99E+bjvyQ
+	 GZnAZNV6pzV04iINg/zO+Zv+Vp0+NU40OvsscwasZ1xoVVuM1IVT/IHBLm/rETouOJ
+	 p1s3qi5tQ9H/g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 0/2] fixes for create_netns
-Date: Thu, 16 May 2024 16:38:55 +0800
-Message-ID: <cover.1715848543.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 1/2] Squash to "selftests/bpf: Add mptcp subflow subtest"
+Date: Thu, 16 May 2024 16:38:56 +0800
+Message-ID: <e301d8027ec2ed1a9e77f461680593f30c5e2ced.1715848543.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1715848543.git.tanggeliang@kylinos.cn>
+References: <cover.1715848543.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,28 +45,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Since create_netns() is updated in "bpf-next add netns helpers" series,
-some mptcp bpf patches need to be updated.
+create_netns() is updated in "bpf-next add netns helpers" series,
+test_subflow() needs to be updated too.
 
-This series epends on "bpf-next add netns helpers" series.
+That means v3 of "selftests/bpf: new MPTCP subflow subtest" cannot be sent
+to bpf-next at the moment until this "bpf-next add netns helpers" series is
+accepted.
 
-Based-on: <cover.1715821541.git.tanggeliang@kylinos.cn>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v3:
- - add based-on tag.
-
-v2:
- - drop patch 1. Now netns is deleted first before adding it in
-"selftests/bpf: Export create_netns helper", no need to use SIGINT
-to delete it anymore.
-
-Geliang Tang (2):
-  Squash to "selftests/bpf: Add mptcp subflow subtest"
-  Squash to "selftests/bpf: Add bpf scheduler test"
-
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index c7f61fd9e7a5..a4863328d2c7 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -418,7 +418,7 @@ static void test_subflow(void)
+ 	if (!ASSERT_OK(err, "prog_attach"))
+ 		goto skel_destroy;
+ 
+-	nstoken = create_netns();
++	nstoken = create_netns(NS_TEST);
+ 	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
+ 		goto skel_destroy;
+ 
 -- 
 2.43.0
 
