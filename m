@@ -1,166 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A2338101C8;
-	Wed, 15 May 2024 23:32:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70E7F37C
+	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 00:17:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715815946; cv=none; b=KcAcIu6bkdLoZBlD8rBSAWqaF2gvzIFRDA4DswtEunUWZDQoCwCTDPG69IJ956wcFAKhDZ3uyZA8XC69voRgfCC3mh1fa40cJskeeuF0Ae227YDkNjXI+VSJL9TLE0ryYGOdJeG+9LQKb/afElx8IGgVOQMbsfTrE6VG7UdJr5U=
+	t=1715818652; cv=none; b=M+yabBob2mhQDuS9QmYzQPbGkXz8n0EC/8M+RUiHa7XkjHtKJBdwbNGXSo+cm5Q2m65Z9JOgMgztS8tZqlGOhkArEE8ANvsM2aZPVyOBfZTfIYcorSs4ymr0hMWtktix1ZS6fLNe++taOAy99C4Ej/50KPTrlkjmiSZIDgsiO/w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715815946; c=relaxed/simple;
-	bh=xlzcoyehhMejb6OGH4fNOhekpsMwsi1xxWKpJVJfn4s=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=nMXKZE+6KCycdouRSXVfEiQeV+ADdkubBMd1C4qAq/8FISj75etKfWjxI2bjgUxueBatAKgZrybnfWm9ERN8anTU9w/3K7SkaR6u2Bo4FavCGLz0XDpzE2qLRZIk20KuVdMa5LInl9OsTDa0vAk3zdUhHySJARPt4InFdxmG8IA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u2GMg7pd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715818652; c=relaxed/simple;
+	bh=eRgukdsUbN0KNkVuu5wUfeFdjmj5S5aB2dkjIs4O8ik=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=GxBgsCYxKiKlwib/p1w584buDoVp4X7LboQbzCedVfy1bJnvooHfYithaWySIrtCk4RJX1NiY3IBoZoAAhXT5qnlLMjdDKUrQ8qJgXQuElmJ0QDnoV2JfuvhVxC3oFChT5Yj3rrnhJiqPSRBpyIFULy652RQxyBs2ecmTwuJbtI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bNHdzG80; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u2GMg7pd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABC43C116B1;
-	Wed, 15 May 2024 23:32:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715815946;
-	bh=xlzcoyehhMejb6OGH4fNOhekpsMwsi1xxWKpJVJfn4s=;
-	h=From:To:Cc:Subject:Date:From;
-	b=u2GMg7pd2TGcixAAjezr79nevd7i62BtCC180NKlspwonerc41QnjYhasSPAbVf5e
-	 StzfbQQ6Wryqx6G5E/qc65fMi6lhQ73X1D52ZHzRvqzrRL0xMHT5/yKwPNXEq1jjVo
-	 yJ4ehJCHsMGLvqw4UonjC/Kdl72txGu+a9p94Z4rrExfnFYFGdhbBDdjKaarOGEp/O
-	 7LxF4xPHGGTe2nEI9Ii1VBPKxpTK6aFVkWn+wWySPLiNIOlRh1bKWuwR4pe5p7jzp+
-	 kkClyOtYELuz1Xg4Xvv5pOiSs4enWfzdudspq9F6zu2/mzw7p65l7+kLDwbXJqGJ3o
-	 M1y1FsIVzDvdA==
-From: Geliang Tang <geliang@kernel.org>
-To: Andy Whitcroft <apw@canonical.com>,
-	Joe Perches <joe@perches.com>,
-	Dwaipayan Ray <dwaipayanray1@gmail.com>,
-	Lukas Bulwahn <lukas.bulwahn@gmail.com>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	linux-kernel@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH v2] checkpatch: skip warnings for symbol links
-Date: Thu, 16 May 2024 07:32:19 +0800
-Message-ID: <8e5cdb8e4eb6d964ec3ffe961ab8e65b8788584f.1715815795.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNHdzG80"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-6f44d2b3130so6276803b3a.2
+        for <mptcp@lists.linux.dev>; Wed, 15 May 2024 17:17:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1715818651; x=1716423451; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EkQcM6C9Tw+opnzb5ufbYjlbKC38Z5FBJWH519323Xw=;
+        b=bNHdzG80HuDSDiS+hCfzwHccn9CBiA1pa+lam/T5PZfKntAfpayy7IeWuWnFy/OIDy
+         GIlZlaa7r/CwbfTpnTlkdvQ+yiFPlEjoc56ZY5VMWRS1Xd92rMoHaODeL2859zRlWe3W
+         UdlmVRnxklYV4M/Y+vB25SCYYFJjWE/zK6HRv8wk2YRd1MSLx0myATeQ8N5x7/aTrpTn
+         tOVVdpw0IU7jz6TeboP8CZjbl6Z1ZtkOzkm4ef0YdSwMPeKelgYsab+vz60eV2Ed2Mm3
+         gCi7S1E7wGkfRNGloBn/LQ7ktYYfM7i/Gv9BvlJs3AVfErBcu48ELfiKx3m9qR4HL696
+         f7qw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1715818651; x=1716423451;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EkQcM6C9Tw+opnzb5ufbYjlbKC38Z5FBJWH519323Xw=;
+        b=nTzFSKtidXLMIQwOIZpCDSg87HuKfuGQxuWGLYuxhZDVh9CK6V5qKLemYS/eMH7lLk
+         IAn2VjrN+fvCxclU5Du/iFM9HfIsaqOMPQtMOaBxIh1TZQaVNnM4LMGEUviD/7K5KFUv
+         LafUbF3teiG7fvXsz0ZD4F9SoYhkflz3JXtSRO6oTIIOjlbeQkd4TiGigosj0+UhA66n
+         ZJKNPxYf7qiaU/0OPqL7V2ClM+qCPYn//xAjLj3zbnnZxQ5yYoQAhcC4m3OMHEbyYYnZ
+         WJL672vxCdgT/EV8YA7ywL2dwWuWTpCnCIHJqiKL/e+C8GMHwpGjfs5+ud5uLE8CTKHx
+         tzmQ==
+X-Gm-Message-State: AOJu0YwTqfWrGJVX3yP0ndtHRvrpg5LXq2IMOBI6fSkDiyDdVrCuKb0Y
+	vcvo0nqwoXH8QMAxKpNw4YWx1QYgdd15QRKk7vNZ5AtWkxqj7DpGASf/
+X-Google-Smtp-Source: AGHT+IHgk/yhgA7gFNHnVi6Uunzo1lbgMGP6TMg+f8OTfnMVuvR5KD4NUrILVMjn5E6eypmZ72eR9w==
+X-Received: by 2002:a05:6a21:819e:b0:1ae:3f36:28cf with SMTP id adf61e73a8af0-1afde1df2a8mr15535957637.56.1715818650496;
+        Wed, 15 May 2024 17:17:30 -0700 (PDT)
+Received: from [127.0.0.1] ([13.91.68.221])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2af2b48sm11752877b3a.156.2024.05.15.17.17.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 May 2024 17:17:29 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <8e5cdb8e4eb6d964ec3ffe961ab8e65b8788584f.1715815795.git.tanggeliang@kylinos.cn>
+References:
+ <8e5cdb8e4eb6d964ec3ffe961ab8e65b8788584f.1715815795.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH v2] checkpatch: skip warnings for symbol links
+Message-ID: <6e6001f7-3185-dd6f-9f6e-dd4e7157a09a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 16 May 2024 00:17:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-If there is a symbol link in the given patch, like the following one:
+Thank you for your modifications, that's great!
 
-$ cat 0001-selftests-bpf-Add-mptcp-pm_nl_ctl-link.patch
+Our CI did some validations and here is its report:
 
- '''
- # diff --git a/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c \
- #            b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
- # new file mode 120000
- # index 000000000000..5a08c255b278
- # --- /dev/null
- # +++ b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
- # @@ -0,0 +1 @@
- # +../net/mptcp/pm_nl_ctl.c
- # \ No newline at end of file
- '''
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9104105207
 
-checkpatch.pl reports two inaccurate warnings:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e7d456b6f3b0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D853526
 
- '''
- WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
- #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
- +../net/mptcp/pm_nl_ctl.c
 
- WARNING: adding a line without newline at end of file
- #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
- +../net/mptcp/pm_nl_ctl.c
- '''
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-And three checks if run it with strict option:
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
- '''
- CHECK: spaces preferred around that '/' (ctx:VxV)
- #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
- +../net/mptcp/pm_nl_ctl.c
-   ^
+For more details:
 
- CHECK: spaces preferred around that '/' (ctx:VxV)
- #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
- +../net/mptcp/pm_nl_ctl.c
-       ^
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
- CHECK: spaces preferred around that '/' (ctx:VxV)
- #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
- +../net/mptcp/pm_nl_ctl.c
- '''
 
-This patch fixes this by adding a new variable $symbol_link in checkpatch
-script, set it if the new file mode is 120000. Skip "missing or malformed
-SPDX-License-Identifier tag", "adding a line without newline at end of
-file" and "spaces preferred around that '/'" checks if this variable is
-set.
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-v2:
- - fix warnings with strict option too.
----
- scripts/checkpatch.pl | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
-
-diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
-index 9c4c4a61bc83..bed03c80190c 100755
---- a/scripts/checkpatch.pl
-+++ b/scripts/checkpatch.pl
-@@ -2694,6 +2694,8 @@ sub process {
- 
- 	my $checklicenseline = 1;
- 
-+	my $symbol_link = 0;
-+
- 	sanitise_line_reset();
- 	my $line;
- 	foreach my $rawline (@rawlines) {
-@@ -3564,6 +3566,11 @@ sub process {
- # ignore non-hunk lines and lines being removed
- 		next if (!$hunk_line || $line =~ /^-/);
- 
-+# Check for symbol links
-+		if ($line =~ /^new file mode 120000$/) {
-+			$symbol_link = 1;
-+		}
-+
- #trailing whitespace
- 		if ($line =~ /^\+.*\015/) {
- 			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
-@@ -3756,7 +3763,8 @@ sub process {
- 				}
- 
- 				if ($comment !~ /^$/ &&
--				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @) {
-+				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @ &&
-+				    $symbol_link =~ 1) {
- 					WARN("SPDX_LICENSE_TAG",
- 					     "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
- 				} elsif ($rawline =~ /(SPDX-License-Identifier: .*)/) {
-@@ -3867,7 +3875,8 @@ sub process {
- 		}
- 
- # check for adding lines without a newline.
--		if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/) {
-+		if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/ &&
-+		    $symbol_link =~ 1) {
- 			if (WARN("MISSING_EOF_NEWLINE",
- 			         "adding a line without newline at end of file\n" . $herecurr) &&
- 			    $fix) {
-@@ -5293,7 +5302,7 @@ sub process {
- 					 $op eq '*' or $op eq '/' or
- 					 $op eq '%')
- 				{
--					if ($check) {
-+					if ($check && $symbol_link =~ 1) {
- 						if (defined $fix_elements[$n + 2] && $ctx !~ /[EW]x[EW]/) {
- 							if (CHK("SPACING",
- 								"spaces preferred around that '$op' $at\n" . $hereptr)) {
--- 
-2.43.0
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
