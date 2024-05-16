@@ -1,121 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22EC12FB15
-	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:27:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04C151311AE
+	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:39:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715848079; cv=none; b=AqaB+QcIGG6+b2L397qjFyDQFIQogmJaoRLJAb9KQXVmg+TD7vtjh4tCMa1gQUwnVRal5CC9/0Vr+HKXHsCyuuGiB8xUxpqlNKLGALrZkwzyGdM8hgXj9NQT0fGT6go5nn0hMz5/+2hK4yMqSMt2ay1lDXvHGZWiRkXzQu5S/9Y=
+	t=1715848744; cv=none; b=F5eoB/kbRmwGox/Zl66YX1M1j4I+F6i3uWZsPjyjwTUuBjPT6SHODx5qZHYRelyEp+W1nRnxnnaRBEl71H6AKp4sM8aUbTTDW5uZo6xohI/0QgIpuadZiQfAo7cEJevFC49x5PhqnIOBC15tkrqNjlmicehGI8TLz8UuQJwYuFQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715848079; c=relaxed/simple;
-	bh=fJNl2jOG3LJA6BDcqVv+323Ixi0AVHxvVkfB3mNxE7c=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=jxw0cqPTdUhpXtexhCNFxH+9PaV4I5aaD+g2INTZvVUJ+hRNwWfIu/xI/w23fIzQRBXQqsY3sJuPun1ru8VcKMBnbigD0891tzW+Zp3SNLYHX+yN9wy4O/ZqLt2KbTE4jucpyBpUiV3ySlYSe5XzQMsemwTbRXXy5mLz3tB4LnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNbGH5DQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715848744; c=relaxed/simple;
+	bh=ss0UohwsVxJk5+8aPvsrw2EdWBK3NgBuqLY3ruBOvqc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B6EkRaB0xWPOaaem5II0XQGfpPpyB9ZdiPkmiCdOOmLRjBrVGAfv4NM29xF6eDlR/8BSAScB/cBr1Vc6OF/zzXwg0fspiN3mf7CYIvCGqDSHmPJwE+Jn5Wx8UwtErea+luj2p3Oy0gcMubV4nKj+ivWjdAZpEDszBiaUFgPxyi0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JrDuQ/au; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNbGH5DQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552C8C32781;
-	Thu, 16 May 2024 08:27:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JrDuQ/au"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8358AC113CC;
+	Thu, 16 May 2024 08:39:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715848079;
-	bh=fJNl2jOG3LJA6BDcqVv+323Ixi0AVHxvVkfB3mNxE7c=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=aNbGH5DQYALmQq+4qpz14VrFa1n0VMhVurSHoOAA6OjlPrqp9mXgMFP/qS/XFT0cp
-	 WbFkgmYsy83bCTb9XI/jKm6A2eKv7wh5Y4AZHI0fLV7DzeUj2y4cVaCa9ywWeUQ5ux
-	 rURBCT4TKaubz4MueTXuu/me6B26dWU0AScKkWpyAmqK5gtooHe6TgvktMPlBlRkKg
-	 SClanCV6ygN4dGnDGRRh3P4+4QrrntVE/BVnLknJyrmkU0R7UVwGOmHB5VcH+Tlgj0
-	 LbuvaV5H1ZPISF6IZUzJYdgsfW+iHxkrgwoanstMJbgvywdMwKMgOP7Hbkfocw/T2g
-	 nSUA9aiBILKIw==
-Message-ID: <502c6be2-e433-4c9a-bdfd-8a28926b2f23@kernel.org>
-Date: Thu, 16 May 2024 10:27:58 +0200
+	s=k20201202; t=1715848743;
+	bh=ss0UohwsVxJk5+8aPvsrw2EdWBK3NgBuqLY3ruBOvqc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=JrDuQ/aucZt641Dli381I/BY6uzFaLOrOshdfSRPlnU/npm7C4Jvy52ovDqLGH8hq
+	 VZ/hXz8lCPKuFQ8ClACPJ2H16p+zcfxZqO/cvtGO7MwO4bOKakmKHSe4wDLShgQ3lX
+	 s5iWKah4hD6PGrcITw64ppGqHUJrEmJSfNeQu8Wi3xPhHLbzHuXbhXyRE2ZNyEReIT
+	 f+9iM5JGvch9JOO33fwiJAP5bmIbZQSVXpeWB3b4RGYTxyyBjquYD2KMHCVDpG7DuR
+	 GsAgJI/+PKK+XrgInM6D7oO8FyadMAnKsYL8uIpx01yzADi8NDiYvwVoibVnfOhp+n
+	 E63vgVsx1gmgg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/2] fixes for create_netns
+Date: Thu, 16 May 2024 16:38:55 +0800
+Message-ID: <cover.1715848543.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: refer to 'MPTCP' socket in comments
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <829272fc031f542c7a3d8e446eba19ee0f78dffb.1715794371.git.dcaratti@redhat.com>
- <93ccc9b4-fc0c-442f-a47e-5caa45cfd5ea@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <93ccc9b4-fc0c-442f-a47e-5caa45cfd5ea@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Davide,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 16/05/2024 10:23, Matthieu Baerts wrote:
-> Hi Davide,
-> 
-> On 15/05/2024 19:34, Davide Caratti wrote:
->> we used to call it 'master' socket at the early stages of MPTCP
->> development, but the correct wording is 'MPTCP' socket opposed to 'TCP
->> subflows': convert the last 3 coments to use a more appropriate term.
-> 
-> Thanks! I'm giving my green light for that one (anyway, it cannot be
-> red, black, yellow or white... so green it is!)
+Since create_netns() is updated in "bpf-next add netns helpers" series,
+some mptcp bpf patches need to be updated.
 
-Now in our tree (feat. for net-next):
+This series epends on "bpf-next add netns helpers" series.
 
-New patches for t/upstream:
-- 3baae0500fde: mptcp: refer to 'MPTCP' socket in comments
-- Results: c7a8f53bd706..21cbbc8eb75d (export)
+Based-on: <cover.1715821541.git.tanggeliang@kylinos.cn>
 
-Tests are now in progress:
+v3:
+ - add based-on tag.
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/73d01b0fdcd849df097e33ff5378885228993e07/checks
+v2:
+ - drop patch 1. Now netns is deleted first before adding it in
+"selftests/bpf: Export create_netns helper", no need to use SIGINT
+to delete it anymore.
 
-Cheers,
-Matt
+Geliang Tang (2):
+  Squash to "selftests/bpf: Add mptcp subflow subtest"
+  Squash to "selftests/bpf: Add bpf scheduler test"
+
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
