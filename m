@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B493E6BFBF
-	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:23:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C22EC12FB15
+	for <mptcp@lists.linux.dev>; Thu, 16 May 2024 08:27:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715847787; cv=none; b=eFT7zRDYAg6RdlBv6pvqB7o3u6L73c8n3QpkAFqz1/u8uG2p+Dk2jAimbS/5AKa8fV0uwRhb9psfnGDUZYHvtWg82YhwG5FDnkj3qPEQobA/t7+Q+rV4gmSLHiLwDlo+QT4kwnAzH+oHzVfJH1NkhZyTH7MsxiAyHjkvjITe0U4=
+	t=1715848079; cv=none; b=AqaB+QcIGG6+b2L397qjFyDQFIQogmJaoRLJAb9KQXVmg+TD7vtjh4tCMa1gQUwnVRal5CC9/0Vr+HKXHsCyuuGiB8xUxpqlNKLGALrZkwzyGdM8hgXj9NQT0fGT6go5nn0hMz5/+2hK4yMqSMt2ay1lDXvHGZWiRkXzQu5S/9Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715847787; c=relaxed/simple;
-	bh=Fyiy/Ahy/PemaCKXjsSR5VUoa4QjXa674KymaxKmUZc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PNV3cep+QUiVraisTHRrX86K7OrsmQBhTr7UhatQxZrQsyLSEJHTbsGxm2Af49UWeD1wA1yOnMYTvJpT191WnHzoh3MeRmGBle8kUog2EZpmQWjemMqT7/MGvNo2k99JmQMSKw4cOyvv3aGwiNCSs6/5WeqZoC14M8mZD2FhL6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TfQyRgyU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1715848079; c=relaxed/simple;
+	bh=fJNl2jOG3LJA6BDcqVv+323Ixi0AVHxvVkfB3mNxE7c=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=jxw0cqPTdUhpXtexhCNFxH+9PaV4I5aaD+g2INTZvVUJ+hRNwWfIu/xI/w23fIzQRBXQqsY3sJuPun1ru8VcKMBnbigD0891tzW+Zp3SNLYHX+yN9wy4O/ZqLt2KbTE4jucpyBpUiV3ySlYSe5XzQMsemwTbRXXy5mLz3tB4LnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNbGH5DQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TfQyRgyU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3D050C113CC;
-	Thu, 16 May 2024 08:23:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNbGH5DQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 552C8C32781;
+	Thu, 16 May 2024 08:27:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715847787;
-	bh=Fyiy/Ahy/PemaCKXjsSR5VUoa4QjXa674KymaxKmUZc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TfQyRgyUIl7ARToGQn5tCOrGRrw2c5FnZQSSQWLQnTEbGY+wldpxyaiopUJH1vvqE
-	 hOacBTRUM02dtpL5WAD8MCo0zOPrx3Z5SYSDKHep/8K6DqA2WCa49Rzcj+lAOXRBeQ
-	 81h2cOcryH0juD221tSB4SUwl97WQUhg6rr5t2k4s+vTTQTSFXIiZUfRDsxSWfmpOR
-	 8RmJrWWnAF0bhF5XNkFlfic54g1Rt2Zdj7WpUZnBnOEUPsONWc8EuEKH03jClkxJH7
-	 NSPHqz7zvLD5snlNw5TiR2oixi5Cz2pd6A5uFtT56YaUYeKR/NyXeF5Iqne11jtilY
-	 omeoNZewHVCNA==
-Message-ID: <93ccc9b4-fc0c-442f-a47e-5caa45cfd5ea@kernel.org>
-Date: Thu, 16 May 2024 10:23:05 +0200
+	s=k20201202; t=1715848079;
+	bh=fJNl2jOG3LJA6BDcqVv+323Ixi0AVHxvVkfB3mNxE7c=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=aNbGH5DQYALmQq+4qpz14VrFa1n0VMhVurSHoOAA6OjlPrqp9mXgMFP/qS/XFT0cp
+	 WbFkgmYsy83bCTb9XI/jKm6A2eKv7wh5Y4AZHI0fLV7DzeUj2y4cVaCa9ywWeUQ5ux
+	 rURBCT4TKaubz4MueTXuu/me6B26dWU0AScKkWpyAmqK5gtooHe6TgvktMPlBlRkKg
+	 SClanCV6ygN4dGnDGRRh3P4+4QrrntVE/BVnLknJyrmkU0R7UVwGOmHB5VcH+Tlgj0
+	 LbuvaV5H1ZPISF6IZUzJYdgsfW+iHxkrgwoanstMJbgvywdMwKMgOP7Hbkfocw/T2g
+	 nSUA9aiBILKIw==
+Message-ID: <502c6be2-e433-4c9a-bdfd-8a28926b2f23@kernel.org>
+Date: Thu, 16 May 2024 10:27:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,10 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next] mptcp: refer to 'MPTCP' socket in comments
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>
 Cc: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <829272fc031f542c7a3d8e446eba19ee0f78dffb.1715794371.git.dcaratti@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <93ccc9b4-fc0c-442f-a47e-5caa45cfd5ea@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,21 +86,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <829272fc031f542c7a3d8e446eba19ee0f78dffb.1715794371.git.dcaratti@redhat.com>
+In-Reply-To: <93ccc9b4-fc0c-442f-a47e-5caa45cfd5ea@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Davide,
 
-On 15/05/2024 19:34, Davide Caratti wrote:
-> we used to call it 'master' socket at the early stages of MPTCP
-> development, but the correct wording is 'MPTCP' socket opposed to 'TCP
-> subflows': convert the last 3 coments to use a more appropriate term.
+On 16/05/2024 10:23, Matthieu Baerts wrote:
+> Hi Davide,
+> 
+> On 15/05/2024 19:34, Davide Caratti wrote:
+>> we used to call it 'master' socket at the early stages of MPTCP
+>> development, but the correct wording is 'MPTCP' socket opposed to 'TCP
+>> subflows': convert the last 3 coments to use a more appropriate term.
+> 
+> Thanks! I'm giving my green light for that one (anyway, it cannot be
+> red, black, yellow or white... so green it is!)
 
-Thanks! I'm giving my green light for that one (anyway, it cannot be
-red, black, yellow or white... so green it is!)
+Now in our tree (feat. for net-next):
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 3baae0500fde: mptcp: refer to 'MPTCP' socket in comments
+- Results: c7a8f53bd706..21cbbc8eb75d (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/73d01b0fdcd849df097e33ff5378885228993e07/checks
 
 Cheers,
 Matt
