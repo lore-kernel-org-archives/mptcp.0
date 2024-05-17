@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D99A158D91
-	for <mptcp@lists.linux.dev>; Fri, 17 May 2024 17:41:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2058158D7E
+	for <mptcp@lists.linux.dev>; Fri, 17 May 2024 17:41:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715967670; cv=none; b=uK24jNOmKHCTbRP0CaV1OfDZW04jxKGTkBHNIC4dwvu/TSjKMQGLeUdlHKEDjPeFxhThrKzZxNb5RJuCCO5HDxr/h2fkfUUFcg2ftGVIbYjzxlefLFYKHpH+ZPsYW5MXgv9AB+/UGvnOSOLZc/Lt6dknCL4lS8ZLBhBCQU50SI8=
+	t=1715967671; cv=none; b=FIr+7Gx0gf32TZn3hj2vquvprmv9vct4SxRwIYKQ0QdgaQaZumcRLBEG98P+LOkx+OlEsl/2qwEVDFrij0botWvezgKe/buKNipjsQRLF7jNpEK9T5Fl49/WmX8lfsUfKBb+Epa5mZSjV894qL4nKwIOV13/Kdlwt/JI5aiuZmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715967670; c=relaxed/simple;
-	bh=02UgC2SUUTf3R605TKQzX2uuRJeAOCEdWBzn15mij3s=;
+	s=arc-20240116; t=1715967671; c=relaxed/simple;
+	bh=3gm2Uf9xQQmepglmxe6UbEr1eW1MN3QblnjEz01QPfI=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ATbvJaFhA1ToU773m4Xck5kKnK3sm2NINObSIjOdEfPO6y4SARdoS39YsD2+nNcpVy1v+0U3vsARx7vwMNuMaWXV/I9/nkrvQnjMawlLyLJtvsRoBQdhmbvCFrGjcHt8bic2KG6UyHn7n646r2JXmJO0t+usyiSQXnvkmGlsYos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b4fVzLe+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GTHYskuHVOP5nVpUU4pDrZTf15dDgIwFRxxpw8IkRZ8V7tExw9onBs298mdbpAg892PAjfrlwLhk8EV8cmFZThdxXszgkOhNfc8oKL4jsqWSPE9kdRnqvVpSkm5NBA5uPic+UnWisq8F6dnagSvRkmvcqMk7QAbNMxhK8IS6YFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+osDyjI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b4fVzLe+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6578EC32781;
-	Fri, 17 May 2024 17:41:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+osDyjI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4774C2BD10;
+	Fri, 17 May 2024 17:41:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715967670;
-	bh=02UgC2SUUTf3R605TKQzX2uuRJeAOCEdWBzn15mij3s=;
+	s=k20201202; t=1715967671;
+	bh=3gm2Uf9xQQmepglmxe6UbEr1eW1MN3QblnjEz01QPfI=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=b4fVzLe+cNZLaor/QZLwwhTE2ZSkt0Ld3SYRfA2d46pIAdSgYTzg6wvXTi7wnnwBk
-	 eustfX7dxnqaaVdRiUF/Z0CWg/v+mFEqRM7NKioF+P5VFnX91l3LrD/W48GEPqqieM
-	 LRRpg5WU2cQExBc4rDpQ0yoeaWSvP24rg/SUu6NggYwSiyqgDxZlQUNxRHrkE6weBX
-	 MkJGefrp6/mcJD7/+aUbP5Vsuei1ONBCYZQHxm/x+adUjjeDVQnLOzlC0CmudKCsms
-	 6qL2ms8k9onb/+E4ek3jWLThWmfaWTFhcJFdE2oc1V/lKmWk7FRKo9czoaSOqgemm2
-	 uzrxNpZ34kh1Q==
+	b=t+osDyjIiV8EDH0XqbnwUx+1X07QmD9OHUblgFLtoRVBDKHGlhD5IJrS9JFl7DCWf
+	 lbzKZmQUsydBfBuravkILGv5xsiU8aRWWHmOhDapzukKtdaj4ijHdV9CYc3t/Ez8Aa
+	 +/wCfv19xqEpoy6hf9xMaqwqvB3X+WJj210k/X3UsxtEg1RiSiK6PUYWfX/7ZYK1RJ
+	 8hom34QpavDcJDf1MohAKkVxOtgxk7A9AVZQthIPD08jX5Abquv88eHsyssvnT89O/
+	 SSewNUoDdhH1x+ujs7drX+Wix6/3rCZ0ywmWFc0AVqx2XSvjM5jZhwVWLd58cb/EDi
+	 9gJEqK/Rv6tNQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 17 May 2024 19:40:44 +0200
-Subject: [PATCH mptcp-next 1/3] doc: mptcp: add missing
- 'available_schedulers' entry
+Date: Fri, 17 May 2024 19:40:45 +0200
+Subject: [PATCH mptcp-next 2/3] doc: mptcp: alphabetical order
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,53 +37,153 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240517-mptcp-doc-v1-1-fc1ef063584e@kernel.org>
+Message-Id: <20240517-mptcp-doc-v1-2-fc1ef063584e@kernel.org>
 References: <20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org>
 In-Reply-To: <20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=937; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=02UgC2SUUTf3R605TKQzX2uuRJeAOCEdWBzn15mij3s=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmR5az0pC17Sygq3x2ci/s3pn9t3GX3dzNKASpd
- G5Bkv+iWGGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkeWswAKCRD2t4JPQmmg
- cyqWD/4+GQ43YUKk+Vry1iZa/HUe2KGzfiIV2JjDCye3tzmnfareG/gFt1sW5HqPn2O8iAWBJR5
- TWzxC+6x6y1KZhehBgefAb6gw4vX7crQrxAf6O13DCFMtGfwzUxFRRLPTsb/zqdgpTpLfX6N2Mv
- i9sv5m3yVnuoiL9igmb7W38kq6+91bccB/76GGyebc2j8E93tQS4uXJW8k5DyOHdnNrriZD1yr2
- aUpMTU6cVgLfaDUQ/fzMiyi1EzQERK0DOqiXAiR/+LOM7M+qz6VrE2cQV5U2METSEnxDzZkx88v
- 5swqOpQnldAm6O65yNyGqjqG/3AGTYyej5wbfzBrcqrPK1f8F56hv93e6ZB4whbnbDkv547aPgs
- 8l4uQV2CJYUAXltzvwfFstgmtB/uP0Q5Rtu67netOwhMAkPCtNhstE/QBId9fGBiOcPGop9WikD
- ZRh7AoYYSjHSmEr2bV/R4mVBSiHQn01ZvUUSMy39iw8CQT2ECXmIO0akjk+9h1p7oumUktBYMbf
- n8UnSTmhpnlqhjVj8/IXFRxiOWt/6rFn36JZX0nYt+bHXPjjBzWlELOpPN1S/FQGePOrkMm1v/n
- frKyYaCiVU67YoRs5so5uPUqbfRocD6DSjg4CzeXwzjgHtOZExiSe7Jk86FJrMggONs+p7/lU4J
- th1ebdGCRZ3Mc8Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3857; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3gm2Uf9xQQmepglmxe6UbEr1eW1MN3QblnjEz01QPfI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmR5azL4eAYqSG0mHxCuRgp9cgM12e+P1e/vLe4
+ b4HKwDAAhGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkeWswAKCRD2t4JPQmmg
+ c2nFD/45GeCn8FCK92968ZUbYh9tsfJxarLrK+08Mgk6VPY9vgxYc3ZrOJvtE3oJj0FZamguLzF
+ okPVdvq5V9kziu8jMb2KLVZb10T/OGwDK0W2vhfgG3XhkNBg+5kb/Fih6J/gDRBCjj7ane3xMrV
+ KNahVUkOINDy+LMtVnJOxZivP0I9HCV9Rl7hKlEpQEFORObuxIdWKJa2+MksxD2VqNgj7GDCUux
+ FovXvTalxdJOUVKo18DWVnn4RqBW7RHpT21wotJYoNgvw6T6xMi/pEOz2VfmfGScb0kqY9ldd5n
+ NFhxI/uvHtaQGBSO9v5w76IrJrGJpor3RWfU2AfNUboWKnjCdEmuvAVhoplB6EfrhCyShX+nluo
+ A6Plwjjw+3P1X8rEVE5VcB5qNdPPSKe99avXD6/i3WqGkZ2YJBdQ3ws9MZ7mj61dSheO53d3dyN
+ X88JPttPRsf/kGvdr2QvOOn/lPddXex2wsTiRae9yGQeYQDuJbkeFsRaxhV2R3GykJh0xGRAv7z
+ Jl7zTOipxQUZIB+SYANMHxN3DeznB0Pcwd9poZqQ2qB35PceYyLd+UABZ2NYvOb5xikAPIHboji
+ +JYK87BZoyA8d2BndyCc9+QGrFYb934xDp02bkjr7821FyEGz1lgzDLJd+vMPhWR3nFTomfpdlZ
+ 1m+BZUIBkMbuZGg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This sysctl knob has been added recently, but the documentation has not
-been updated.
+Similar to what is done in other 'sysctl' pages.
 
-This knob is used to show the available schedulers choices that are
-registered, similar to 'net.ipv4.tcp_available_congestion_control'.
+Also, by not putting new entries at the end, this can help to reduce
+conflicts in case of backports.
 
-Fixes: 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- Documentation/networking/mptcp-sysctl.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/networking/mptcp-sysctl.rst | 78 +++++++++++++++----------------
+ 1 file changed, 39 insertions(+), 39 deletions(-)
 
 diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index 69975ce25a02..102a45e7bfa8 100644
+index 102a45e7bfa8..fd514bba8c43 100644
 --- a/Documentation/networking/mptcp-sysctl.rst
 +++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -93,3 +93,7 @@ scheduler - STRING
- 	sysctl.
+@@ -7,14 +7,6 @@ MPTCP Sysfs variables
+ /proc/sys/net/mptcp/* Variables
+ ===============================
  
- 	Default: "default"
-+
+-enabled - BOOLEAN
+-	Control whether MPTCP sockets can be created.
+-
+-	MPTCP sockets can be created if the value is 1. This is a
+-	per-namespace sysctl.
+-
+-	Default: 1 (enabled)
+-
+ add_addr_timeout - INTEGER (seconds)
+ 	Set the timeout after which an ADD_ADDR control message will be
+ 	resent to an MPTCP peer that has not acknowledged a previous
+@@ -25,25 +17,6 @@ add_addr_timeout - INTEGER (seconds)
+ 
+ 	Default: 120
+ 
+-close_timeout - INTEGER (seconds)
+-	Set the make-after-break timeout: in absence of any close or
+-	shutdown syscall, MPTCP sockets will maintain the status
+-	unchanged for such time, after the last subflow removal, before
+-	moving to TCP_CLOSE.
+-
+-	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
+-	sysctl.
+-
+-	Default: 60
+-
+-checksum_enabled - BOOLEAN
+-	Control whether DSS checksum can be enabled.
+-
+-	DSS checksum can be enabled if the value is nonzero. This is a
+-	per-namespace sysctl.
+-
+-	Default: 0
+-
+ allow_join_initial_addr_port - BOOLEAN
+ 	Allow peers to send join requests to the IP address and port number used
+ 	by the initial subflow if the value is 1. This controls a flag that is
+@@ -57,6 +30,37 @@ allow_join_initial_addr_port - BOOLEAN
+ 
+ 	Default: 1
+ 
 +available_schedulers - STRING
 +	Shows the available schedulers choices that are registered. More packet
 +	schedulers may be available, but not loaded.
++
++checksum_enabled - BOOLEAN
++	Control whether DSS checksum can be enabled.
++
++	DSS checksum can be enabled if the value is nonzero. This is a
++	per-namespace sysctl.
++
++	Default: 0
++
++close_timeout - INTEGER (seconds)
++	Set the make-after-break timeout: in absence of any close or
++	shutdown syscall, MPTCP sockets will maintain the status
++	unchanged for such time, after the last subflow removal, before
++	moving to TCP_CLOSE.
++
++	The default value matches TCP_TIMEWAIT_LEN. This is a per-namespace
++	sysctl.
++
++	Default: 60
++
++enabled - BOOLEAN
++	Control whether MPTCP sockets can be created.
++
++	MPTCP sockets can be created if the value is 1. This is a
++	per-namespace sysctl.
++
++	Default: 1 (enabled)
++
+ pm_type - INTEGER
+ 	Set the default path manager type to use for each new MPTCP
+ 	socket. In-kernel path management will control subflow
+@@ -74,6 +78,14 @@ pm_type - INTEGER
+ 
+ 	Default: 0
+ 
++scheduler - STRING
++	Select the scheduler of your choice.
++
++	Support for selection of different schedulers. This is a per-namespace
++	sysctl.
++
++	Default: "default"
++
+ stale_loss_cnt - INTEGER
+ 	The number of MPTCP-level retransmission intervals with no traffic and
+ 	pending outstanding data on a given subflow required to declare it stale.
+@@ -85,15 +97,3 @@ stale_loss_cnt - INTEGER
+ 	This is a per-namespace sysctl.
+ 
+ 	Default: 4
+-
+-scheduler - STRING
+-	Select the scheduler of your choice.
+-
+-	Support for selection of different schedulers. This is a per-namespace
+-	sysctl.
+-
+-	Default: "default"
+-
+-available_schedulers - STRING
+-	Shows the available schedulers choices that are registered. More packet
+-	schedulers may be available, but not loaded.
 
 -- 
 2.43.0
