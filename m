@@ -1,270 +1,114 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81CD41CAA9
-	for <mptcp@lists.linux.dev>; Fri, 17 May 2024 20:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C52CA7
+	for <mptcp@lists.linux.dev>; Sat, 18 May 2024 15:46:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1715978603; cv=none; b=m8+z2KhIyqDwoj+kqySnzxtaL/vMTKhgWgyV+i9Yk1UWCecjNWi6aheyqtfPB6k8dluUdWpJQ4qBi8Ohy+cKswyC30P+RwtLAjeaR0aq5hCtaahb/TccCbVe7vhuPVgjBcrmZS41uf71KxXcnnUkMnpzIfUOlHs6C0HYvnWI2Oo=
+	t=1716047193; cv=none; b=e2R8qiSQ9Cbx97qsjtkimW6riBVZvtx1e1WgRLOg7DZFBR8AfERi5Nvku9gBPmsek4/ss14Ie8NaTE+RdR6hcOjDsjnvM2xCua/F2/BIfbguXHvbbgCWr2SGagwZO6zwuKAg/2oV7ZSI1vtwPzLqyGBE7U6SoLX4TBfI/Q+VOjo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1715978603; c=relaxed/simple;
-	bh=z0367WFFVbzg0OupHDzoTwLTl1IDyaVksANKon7dFPM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=nwv+u0+6cf37fWPc9dHcxDvfdSWSDxiSJqiC39yErXllclI8aBFqboaod+R0ww3X6wwqWMKLZ9pIrmlIF6n4WRjDmSB4XqU1Fq6Uv7t5j7zn2AnXwVHXI739vIepDlQiZ7lmIB8B535uaMeCI2vBTOairj6LFRTh9pBqAevuvl8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+Wvc8Em; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716047193; c=relaxed/simple;
+	bh=iaCUSh4XL0mMT7iRmE11jnDLkV5KnHre/rHF/rTKbP0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZR6xGC0U8kZqQBEGyiuwA19t35DeJdZtb6Y0O0Ar0ir4oxFCpmUluOkI6TijUXoq9p4+xFWh/A2x2G8JYVH1XIT7KMr+lTYuDiQuk1KMr3oivU/zHiVTPQNepHcRhJSl9yIO1m994rzX5iYU+5oOR5IqXRWydh1UPt+cTusk77E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=az+hUBFt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+Wvc8Em"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 110A5C4AF08;
-	Fri, 17 May 2024 20:43:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="az+hUBFt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357BFC113CC;
+	Sat, 18 May 2024 15:46:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1715978603;
-	bh=z0367WFFVbzg0OupHDzoTwLTl1IDyaVksANKon7dFPM=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=o+Wvc8EmvR3TugtdCrdlgJBeoBCj5qKjDU9Je9+ZjDFcxTTEhImx3TdGgU8GdAW9w
-	 kO9ZT4AGB1Ug8Wpd51MJAKSy+Kn+wmj8SRY93H81j9ss919l/7tWIFSjlTGNEJIRM2
-	 xQXLu09Z8rtLyu+ydNCpFy3yqsxaPPPDypVsq6kisgELJ1sjk/25mcZ6WUOyzQa1EQ
-	 JJufjcCYKvE/fMXAnM0/OTK4nmqJSUiVoYzQhCa1PsYap/45ikJN172tA+xJgTRTrs
-	 m9ElkXl6bzktRJooHGtAVHt0V5jqSMK6rYfb0yy3gXLAguGzUn6PJS0bwUSAd+WzSM
-	 RZ26mmNQV23bg==
-Date: Fri, 17 May 2024 13:43:22 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 3/3] doc: new 'mptcp' page in 'networking'
-In-Reply-To: <20240517-mptcp-doc-v1-3-fc1ef063584e@kernel.org>
-Message-ID: <67ec014d-134a-28be-f20b-0d4d42a8bafc@kernel.org>
-References: <20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org> <20240517-mptcp-doc-v1-3-fc1ef063584e@kernel.org>
+	s=k20201202; t=1716047192;
+	bh=iaCUSh4XL0mMT7iRmE11jnDLkV5KnHre/rHF/rTKbP0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=az+hUBFtMTO9u8FILxmrDY+DJjwpQ238OeFfGlL6spijp5A+mFUw45vh5D9JkAe5D
+	 2NedM+CfSzACriQ3qnunrF0wZGg2vlP7yLoR6Lw0iqHxUkyJ+Wqpi8yZ8Yq1f5/yW5
+	 CvB91HFwpBl7guAy5Na7vV+5FMEN05sQNHamic7pf+DGkTowFqe9jZnyIGiDKMP/96
+	 ZOw/YYgEGbyfLG5dNeIs7LwiUh88kl5uIpJSzbV0dOKA028LBOGLjkodCnGY+p3QyY
+	 keZrLMPBA7A80ZWiilpiyQ2oNgYeamDODEM2J25LlflqxksDLwxu6iyK6/P81vq/b2
+	 HzZUnDo81IZsw==
+Message-ID: <c3fa41f6-a865-47d4-9729-1e68e131570a@kernel.org>
+Date: Sat, 18 May 2024 17:46:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 2/3] doc: mptcp: alphabetical order
+Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org>
+ <20240517-mptcp-doc-v1-2-fc1ef063584e@kernel.org>
+ <663611b7-0597-d3d8-3f95-e52748dbaba8@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <663611b7-0597-d3d8-3f95-e52748dbaba8@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Fri, 17 May 2024, Matthieu Baerts (NGI0) wrote:
+On 17/05/2024 22:37, Mat Martineau wrote:
+> On Fri, 17 May 2024, Matthieu Baerts (NGI0) wrote:
+> 
+>> Similar to what is done in other 'sysctl' pages.
+>>
+>> Also, by not putting new entries at the end, this can help to reduce
+>> conflicts in case of backports.
+>>
+> 
+> Putting these in order makes sense to me from a readability perspective.
+> This does replace one backporting problem with another, but we don't
+> change the information here too often.
 
-> A global documentation about MPTCP was missing since its introduction in
-> v5.6.
->
-> Most of what is there comes from our recently updated mptcp.dev website,
-> with additional links to resources from the kernel documentation.
->
-> This is a first version, mainly targeting app developers and users.
->
-> Link: https://www.mptcp.dev
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Documentation/networking/index.rst |   1 +
-> Documentation/networking/mptcp.rst | 155 +++++++++++++++++++++++++++++++++++++
-> MAINTAINERS                        |   2 +-
-> 3 files changed, 157 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
-> index 7664c0bfe461..a6443851a142 100644
-> --- a/Documentation/networking/index.rst
-> +++ b/Documentation/networking/index.rst
-> @@ -72,6 +72,7 @@ Contents:
->    mac80211-injection
->    mctp
->    mpls-sysctl
-> +   mptcp
->    mptcp-sysctl
->    multiqueue
->    multi-pf-netdev
-> diff --git a/Documentation/networking/mptcp.rst b/Documentation/networking/mptcp.rst
-> new file mode 100644
-> index 000000000000..cb04a553d010
-> --- /dev/null
-> +++ b/Documentation/networking/mptcp.rst
-> @@ -0,0 +1,155 @@
-> +.. SPDX-License-Identifier: GPL-2.0
-> +
-> +=====================
-> +Multipath TCP (MPTCP)
-> +=====================
-> +
-> +Introduction
-> +============
-> +
-> +Multipath TCP or MPTCP is an extension to the standard TCP and is described in
-> +`RFC 8684 (MPTCPv1) <https://www.rfc-editor.org/rfc/rfc8684.html>`_. It allows a
-> +device to make use of multiple interfaces at once to send and receive TCP
-> +packets over a single MPTCP connection. MPTCP can aggregate the bandwidth of
-> +multiple interfaces or prefer the one with the lowest latency, it also allows a
-> +fail-over if one path is down, and the traffic is seamlessly reinjected on other
-> +paths.
-> +
-> +For more details about Multipath TCP in the Linux kernel, please see the
-> +official website: `mptcp.dev <https://www.mptcp.dev>`.
-> +
-> +
-> +Use cases
-> +=========
-> +
-> +Thanks to MPTCP, being able to use multiple paths in parallel or simultaneously
-> +brings new use-cases, compared to TCP:
-> +
-> +- Seamless handovers: switching from one path to another while preserving
-> +  established connections, e.g. to be used in mobility use-cases, like on
-> +  smartphones.
-> +- Best network selection: using the "best" available path depending on some
-> +  conditions, e.g. latency, losses, cost, bandwidth, etc.
-> +- Network aggregation: using multiple paths at the same time to have a higher
-> +  throughput, e.g. to combine fixed and mobile networks to send files faster.
-> +
-> +
-> +Concepts
-> +========
-> +
-> +Technically, when a new socket is created with the ``IPPROTO_MPTCP`` protocol
-> +(Linux-specific), a *subflow* (or *path*) is created. This *subflow* consists of
-> +a regular TCP connection that is used to transmit data through one interface.
-> +Additional *subflows* can be negotiated later between the hosts. For the remote
-> +host to be able to detect the use of MPTCP, a new field is added to the TCP
-> +*option* field of the underlying TCP *subflow*. This field contains, amongst
-> +other things, a ``MP_CAPABLE`` option that tells the other host to use MPTCP if
-> +it is supported. If the remote host or any middlebox in between does not support
-> +it, the returned ``SYN+ACK`` packet will not contain MPTCP options in the TCP
-> +*option* field. In that case, the connection will be "downgraded" to plain TCP,
-> +and it will continue with a single path.
-> +
-> +This behavior is made possible by two internal components: the path manager, and
-> +the packet scheduler.
-> +
-> +Path Manager
-> +------------
-> +
-> +The Path Manager is in charge of *subflows*, from creation to deletion, and also
-> +address announcements. Typically, it is the client side that initiates subflows,
-> +and the server side that announces additional addresses via the ``ADD_ADDR`` and
-> +``REMOVE_ADDR`` options.
-> +
-> +Path managers are controlled by the ``net.mptcp.pm_type`` sysctl knob -- see
-> +mptcp-sysctl.rst. There are two types: the in-kernel one (type ``0``) where the
-> +same rules are applied for all the connections (see: ``ip mptcp``) ; and the
-> +userspace one (type ``1``), controlled by a userspace daemon (i.e. `mptcpd
-> +<https://mptcpd.mptcp.dev/>`_) where different rules can be applied for each
-> +connection. The path managers can be controlled via a Netlink API, see
-> +netlink_spec/mptcp_pm.rst.
-> +
-> +To be able to use multiple IP addresses on a host to create multiple *subflows*
-> +(paths), the default in-kernel MPTCP path-manager needs to know which IP
-> +addresses can be used. This can be configured with ``ip mptcp endpoint`` for
-> +example.
-> +
-> +Packet Scheduler
-> +----------------
-> +
-> +The Packet Scheduler is in charge of selecting which available *subflow(s)* to
-> +use to send the next data packet. It can decide to maximize the use of the
-> +available bandwidth, only to pick the path with the lower latency, or any other
-> +policy depending on the configuration.
-> +
-> +Packet schedulers are controlled by the ``net.mptcp.scheduler`` sysctl knob --
-> +see mptcp-sysctl.rst.
-> +
-> +
-> +Sockets API
-> +===========
-> +
-> +Creating MPTCP sockets
-> +----------------------
-> +
-> +On Linux, MPTCP can be used by selecting MPTCP instead of TCP when creating the
-> +``socket``:
-> +
-> +.. code-block:: C
-> +
-> +    int sd = socket(AF_INET(6), SOCK_STREAM, IPPROTO_MPTCP);
-> +
-> +Note that ``IPPROTO_MPTCP`` is defined as ``262``.
-> +
-> +If MPTCP is not supported, ``errno`` will be set to:
-> +
-> +- ``EINVAL``: (*Invalid argument*): MPTCP is not available, on kernels < 5.6.
-> +- ``EPROTONOSUPPORT`` (*Protocol not supported*): MPTCP has not been compiled,
-> +  on kernels >= v5.6.
-> +- ``ENOPROTOOPT`` (*Protocol not available*): MPTCP has been disabled using
-> +  ``net.mptcp.enabled`` sysctl knob, see mptcp-sysctl.rst.
-> +
-> +MPTCP is then opt-in: applications need to explicitly request it. Note that
-> +applications can be forced to use MPTCP with different techniques, e.g.
-> +``LD_PRELOAD`` (see ``mptcpize``), eBPF (see ``mptcpify``), SystemTAP,
-> +``GODEBUG`` (``GODEBUG=multipathtcp=1``), etc.
-> +
-> +Switching to ``IPPROTO_MPTCP`` instead of ``IPPROTO_TCP`` should be as
-> +transparent as possible for the userspace applications.
-> +
+Thank you, good point, I will update the commit message in the v2 to
+make this clearer :)
 
-Hi Matthieu -
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-Looks like most of the above is verbatim from mptcp.dev - LGTM
-
-> +Socket options
-> +--------------
-> +
-> +MPTCP supports most socket options handled by TCP. It is possible some less
-> +common ones are not supported, but contributions are welcomed.
-
-"common options are not supported, but contributions are welcome."
-
-> +
-> +Generally, the same value is propagated to all subflows, including the ones
-> +created later. eBPF can be used to set different values per subflows.
-
-Same edit here as the mptcp.dev PR:
-
-"created after the calls to `setsockopt()`. eBPF can be used to set 
-different values per subflow."
-
-> +
-> +There are some MPTCP specific socket options at the ``SOL_MPTCP`` (284) level to
-> +retrieve info. They fill the ``optval`` buffer of the ``getsockopt()`` system
-> +call:
-> +
-> +- ``MPTCP_INFO``: Uses ``struct mptcp_info``.
-> +- ``MPTCP_TCPINFO``: Uses ``struct mptcp_subflow_data``, followed by an array of
-> +  ``struct tcp_info``.
-> +- ``MPTCP_SUBFLOW_ADDRS``: Uses ``struct mptcp_subflow_data``, followed by an
-> +  array of ``mptcp_subflow_addrs``.
-> +- ``MPTCP_FULL_INFO``: Uses ``struct mptcp_full_info``, with one pointer to an
-> +  array of ``struct mptcp_subflow_info`` (including the
-> +  ``struct mptcp_subflow_addrs``), and one pointer to an array of
-> +  ``struct tcp_info``, followed by the content of ``struct mptcp_info``.
-> +
-> +Note that at the TCP level, ``TCP_IS_MPTCP`` socket option can be used to know
-> +if MPTCP is still being used: the value will be set to 1 if it is.
-
-s/still/currently/
-
-> +
-> +
-> +Design choices
-> +==============
-> +
-> +A new socket type has been added for MPTCP for the userspace-facing socket. The
-> +kernel is in charge of creating subflow sockets: they are TCP sockets where the
-> +behavior is modified using TCP-ULP.
-> +
-> +MPTCP listen sockets will create "plain" *accepted* TCP sockets if the
-> +connection request from the client didn't ask for MPTCP, making the performance
-> +impact minimal when MPTCP is enabled by default.
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 50892cdafb25..4edd8a3742f0 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15573,7 +15573,7 @@ B:	https://github.com/multipath-tcp/mptcp_net-next/issues
-> T:	git https://github.com/multipath-tcp/mptcp_net-next.git export-net
-> T:	git https://github.com/multipath-tcp/mptcp_net-next.git export
-> F:	Documentation/netlink/specs/mptcp_pm.yaml
-> -F:	Documentation/networking/mptcp-sysctl.rst
-> +F:	Documentation/networking/mptcp*.rst
-> F:	include/net/mptcp.h
-> F:	include/trace/events/mptcp.h
-> F:	include/uapi/linux/mptcp*.h
->
-
-Thanks for adding this document!
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
