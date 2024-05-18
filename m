@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 658C52CA7
-	for <mptcp@lists.linux.dev>; Sat, 18 May 2024 15:46:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E394D517
+	for <mptcp@lists.linux.dev>; Sat, 18 May 2024 15:50:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716047193; cv=none; b=e2R8qiSQ9Cbx97qsjtkimW6riBVZvtx1e1WgRLOg7DZFBR8AfERi5Nvku9gBPmsek4/ss14Ie8NaTE+RdR6hcOjDsjnvM2xCua/F2/BIfbguXHvbbgCWr2SGagwZO6zwuKAg/2oV7ZSI1vtwPzLqyGBE7U6SoLX4TBfI/Q+VOjo=
+	t=1716047457; cv=none; b=f58GSq9Tb2iLROu5fWxfRM9hSP7nmwtd7xPE/c0O/QQHfBmBVuwag6grGsjgyoMNNZr6QaUa/IkNbYBu4H52BlNQ/NByzCo7PmfjBNoG2IstLdXCVs+nHN5/cAoOHfDYenJtWN/L56lb0oeVFie+4Gr4RrE31G9EjtdfNt/Co4k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716047193; c=relaxed/simple;
-	bh=iaCUSh4XL0mMT7iRmE11jnDLkV5KnHre/rHF/rTKbP0=;
+	s=arc-20240116; t=1716047457; c=relaxed/simple;
+	bh=Yxnr040LKwIwwDhDKiLVkOjUoR5Nuy9RWo9S8jGCb6U=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZR6xGC0U8kZqQBEGyiuwA19t35DeJdZtb6Y0O0Ar0ir4oxFCpmUluOkI6TijUXoq9p4+xFWh/A2x2G8JYVH1XIT7KMr+lTYuDiQuk1KMr3oivU/zHiVTPQNepHcRhJSl9yIO1m994rzX5iYU+5oOR5IqXRWydh1UPt+cTusk77E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=az+hUBFt; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lVg0UDyqF30zaUZ+nReAA6wC8pSIP0ST3x1FSDzapxZzm+sSr2AnzIMhlxyhtf1birJAGzlK8G+x5uLtST/Q61ZLh/yoPIrkcYvrY3/PZC4n7ZWLSuFXgQj8HQK6MneDBsfVvW4yBYh0SNoWNf8KpwAMDuDHIjceWOPNTpKwxF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFgDf8u2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="az+hUBFt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 357BFC113CC;
-	Sat, 18 May 2024 15:46:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFgDf8u2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCFF1C113CC;
+	Sat, 18 May 2024 15:50:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716047192;
-	bh=iaCUSh4XL0mMT7iRmE11jnDLkV5KnHre/rHF/rTKbP0=;
+	s=k20201202; t=1716047457;
+	bh=Yxnr040LKwIwwDhDKiLVkOjUoR5Nuy9RWo9S8jGCb6U=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=az+hUBFtMTO9u8FILxmrDY+DJjwpQ238OeFfGlL6spijp5A+mFUw45vh5D9JkAe5D
-	 2NedM+CfSzACriQ3qnunrF0wZGg2vlP7yLoR6Lw0iqHxUkyJ+Wqpi8yZ8Yq1f5/yW5
-	 CvB91HFwpBl7guAy5Na7vV+5FMEN05sQNHamic7pf+DGkTowFqe9jZnyIGiDKMP/96
-	 ZOw/YYgEGbyfLG5dNeIs7LwiUh88kl5uIpJSzbV0dOKA028LBOGLjkodCnGY+p3QyY
-	 keZrLMPBA7A80ZWiilpiyQ2oNgYeamDODEM2J25LlflqxksDLwxu6iyK6/P81vq/b2
-	 HzZUnDo81IZsw==
-Message-ID: <c3fa41f6-a865-47d4-9729-1e68e131570a@kernel.org>
-Date: Sat, 18 May 2024 17:46:04 +0200
+	b=XFgDf8u2McQbCcyYXC47AhtkA+g0u8lPcAJdrUNFA9D2oZS6BmFaXTgGJd3lVPEyR
+	 uPJ1GxHk61/qdQmX37famv9WQvBclrnNS0zF++IW7dv0iqyfPBoTRgclG7lFIKUsI5
+	 76lQxXrxNLcNhOSM+4MVZkQ5meC84WBF0YeW+wdunhnlB4zFwKioG8+zcqvIj5Bg2t
+	 oIUnVR50/MhwT2Jga+wKohbRkY394MtALEYFx3vivQqYjKfdGzNLAvTza2H4GUG6Iw
+	 a9UpFwXYG0WDb7JMRB8Ymhl+aOU/0fezAnUrgdY6HbJAbPUIcbgPWJHIrhZBvH9guo
+	 EnUGb7Ha3Erlw==
+Message-ID: <1ee379f5-e692-44a1-83de-c8a59a7a3c7d@kernel.org>
+Date: Sat, 18 May 2024 17:50:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/3] doc: mptcp: alphabetical order
+Subject: Re: [PATCH mptcp-next 3/3] doc: new 'mptcp' page in 'networking'
 Content-Language: en-GB
 To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org>
- <20240517-mptcp-doc-v1-2-fc1ef063584e@kernel.org>
- <663611b7-0597-d3d8-3f95-e52748dbaba8@kernel.org>
+ <20240517-mptcp-doc-v1-3-fc1ef063584e@kernel.org>
+ <67ec014d-134a-28be-f20b-0d4d42a8bafc@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,25 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <663611b7-0597-d3d8-3f95-e52748dbaba8@kernel.org>
+In-Reply-To: <67ec014d-134a-28be-f20b-0d4d42a8bafc@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 17/05/2024 22:37, Mat Martineau wrote:
-> On Fri, 17 May 2024, Matthieu Baerts (NGI0) wrote:
-> 
->> Similar to what is done in other 'sysctl' pages.
->>
->> Also, by not putting new entries at the end, this can help to reduce
->> conflicts in case of backports.
->>
-> 
-> Putting these in order makes sense to me from a readability perspective.
-> This does replace one backporting problem with another, but we don't
-> change the information here too often.
+Hi Mat,
 
-Thank you, good point, I will update the commit message in the v2 to
-make this clearer :)
+On 17/05/2024 22:43, Mat Martineau wrote:
+> On Fri, 17 May 2024, Matthieu Baerts (NGI0) wrote:
+
+(...)
+
+> Looks like most of the above is verbatim from mptcp.dev - LGTM
+
+Thank you for the code review!
+
+> 
+>> +Socket options
+>> +--------------
+>> +
+>> +MPTCP supports most socket options handled by TCP. It is possible
+>> some less
+>> +common ones are not supported, but contributions are welcomed.
+> 
+> "common options are not supported, but contributions are welcome."
+> 
+>> +
+>> +Generally, the same value is propagated to all subflows, including
+>> the ones
+>> +created later. eBPF can be used to set different values per subflows.
+> 
+> Same edit here as the mptcp.dev PR:
+> 
+> "created after the calls to `setsockopt()`. eBPF can be used to set
+> different values per subflow."
+
+(sorry for the duplicated error :) )
+
+I just applied this modification, but using two pairs of backquotes
+around 'setsockopt()', because the RST format is used here.
 
 Cheers,
 Matt
