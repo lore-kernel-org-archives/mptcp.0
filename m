@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA279D517
-	for <mptcp@lists.linux.dev>; Sat, 18 May 2024 15:52:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C77D4D517
+	for <mptcp@lists.linux.dev>; Sat, 18 May 2024 15:52:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716047575; cv=none; b=j9zVVF8u50BY6OvkFFkfVRstoDmEuJGoQe0bVbp6Fg77Jk/ZPNWJSF/DRaSWeYRTP5CmwD6wdo8S1jsr9I6BO11hXmHsdU4FwQLxQxE2r+MZQtyu8cadiSRTwoUl+ujnG/gTHz4zDiuOk9WKdVK2G97ZQXPrbuYYboE9uF6SF2I=
+	t=1716047578; cv=none; b=gQAnJmYhg9s0zh3MMdWvUGLEJ0456fBjyZWB0cxDvxtZXwvQljD8Y4rKL7xR0dv3XZnh5GXu/j4QA5Ax5Qtr02N6ND8KV4TARdCxP0Jhig+smsfFIDm+whk0S9zFwLoargZI/XGoESI2R3B3eM+cQDosb3KBZBLROh5fXN45zp0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716047575; c=relaxed/simple;
-	bh=KyYQrkMdyci/rHU1cRHxAMxvRWgmsQo9J0ZBXwoTJus=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=pfq91uxZDSSQMBSuNSCJ+DucFcfnBXS20s4Wf7Kv9GN+PJv4p9cSLcS5vJ6CaKJYBcJz5cHquKrAGa7jU53IgCvRZJ7qcs9tJXz75hLT7UI9rJumA7cwLey1udCWAn3SlqI1h6G2nbGIloXGxjTGWL8uVaMmCrbIr8lNyS30yew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Niex4cEl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716047578; c=relaxed/simple;
+	bh=ypvHqt2ffZwH1g8JlbofDCv9yboiuwJHzR7LWZNKd+E=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=agHqePUmAsS779y2vUBde7yhqckvVwCqLllY8CG/pVuD6XL22LE4899EfoR/7LcMJstQvm+wHBXhkw2JVj8LGhQWYYGGpZ/dPC2N3dJiIUniVtDKn1jk3rMK8O+HbqJUtHzHgDZcWi/GZiEno9GONA6Rb9EhY1qzwCDcYTJapR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e4100WGi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Niex4cEl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C6E2C113CC;
-	Sat, 18 May 2024 15:52:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e4100WGi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5BDFC32786;
+	Sat, 18 May 2024 15:52:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716047575;
-	bh=KyYQrkMdyci/rHU1cRHxAMxvRWgmsQo9J0ZBXwoTJus=;
-	h=From:Subject:Date:To:Cc:From;
-	b=Niex4cElX+w99f56IIcJ1eGdUxcyK+nzsYpb7LpcfmBAKybGwD9YBAL3CnLFTnU+4
-	 GNvZqmnNtycqyBHDgF8/aj+XH9bq2INtZLHCQJKZO6RMZfo9mgV/w5VAkmWxSLqprk
-	 opCTkAlpVksm2uXgSO9o9J2a70/laU6NpgWRG6NUGGlfEaFhUjsFjubzYIm94yrlEi
-	 zDxKIyL3ePn4JfGrZ3Dsk+dv6M+UVYYxNyqp4Jv5g+z8TvqRJBTffSc16FAZWUCjK9
-	 lUsqLM9belRb65qklwOdJ5i5wWw8FTXPMTX8vKo5QAxVN2OP4PKMXO+RXn1HnYNtwT
-	 LIk2izd7zn55Q==
+	s=k20201202; t=1716047578;
+	bh=ypvHqt2ffZwH1g8JlbofDCv9yboiuwJHzR7LWZNKd+E=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=e4100WGistkSi5zZzRcON4gEvHAbbaPpCsNaljeMBXoQNdNBhx7sphLtDeKLYh3RK
+	 lzBSB5+N+V9qw9yT/y26DGrSgr+g4zCZXXUSXiPRAdVjFlMJZJO4Mk5dkdrwH6T73q
+	 7yDSpWYyrzN+ijAkBm4WVAYq6Ev3TUYT5/xSAoHeLf8TO+3PUf8G7CoaXeB/wNm/so
+	 AemD1s/A8QIJhtJ6iaEfmonn0qHrCl/qHi/TaGst12W1rMZg68BP88NZ2H1uqULckY
+	 61DLErlDbaT9v4DJMPVBeEK7/i65s4JH5ZSy4OgqZm1IaY94Gg87CnLIOoyBmX+iRf
+	 ys2yjgHgSpSAA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v2 0/3] doc: introduce MPTCP global doc
-Date: Sat, 18 May 2024 17:52:40 +0200
-Message-Id: <20240518-mptcp-doc-v2-0-68304a17cd7d@kernel.org>
+Date: Sat, 18 May 2024 17:52:41 +0200
+Subject: [PATCH mptcp-next v2 1/3] doc: mptcp: add missing
+ 'available_schedulers' entry
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,60 +38,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAMnOSGYC/22NQQ7CIBQFr9L8tRigoLYr72G6aOinJSoQIKSm4
- e4S3LqcvMm8AyIGgxHG7oCA2UTjbAV+6kBts12RmKUycMoFlexK3j4pTxanSM+kHugwM64EVN8
- H1GZvrQf8NIt7gqlum4nJhU+7yawZf4qZEUq0YqjppZc3gfcnBouvswsrTKWUL+MiEHOvAAAA
+Message-Id: <20240518-mptcp-doc-v2-1-68304a17cd7d@kernel.org>
+References: <20240518-mptcp-doc-v2-0-68304a17cd7d@kernel.org>
+In-Reply-To: <20240518-mptcp-doc-v2-0-68304a17cd7d@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Mat Martineau <martineau@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1208; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=KyYQrkMdyci/rHU1cRHxAMxvRWgmsQo9J0ZBXwoTJus=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmSM7THfNB442HCH/N51lqwVit1oBoggQtpMmsq
- gjrMBko8K2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkjO0wAKCRD2t4JPQmmg
- c6RJEAC0uMV1HUFCNh/NWvX8hbPfFy0d1l6nY7F2p6tad8r3McSwEcA3a2KUYS7nvOP9PMxPJ9j
- g/QBtfk09T39wd/pPZbnVGkMojYSnvo6rQiJwJQGAAkZimwcnsyoUyg7BFZjmsNTVm7Dbq2jD3S
- w21xh/naiKUpteHWM4jImsTpl9szuOZvutwpgY7OdQxaNkxRrNyzhut0Ss0iX97lISruQNgwITx
- O1Ec/y2+yD0NfMGFHYbqrAFcsEk52YEvTbiDiI6cJEkU+WTKohKDbWyohXIHiJMLXcEBHpAfB3P
- 6FCk/sDB8DOFxJ3DeKUbjieYLxBep0Ga/VvWlrC1XdXMgojdQra5bl7H+nxXXPYuMxrdPfYxo4L
- AK7agB+AGv+dfP8WuyeqPTmLB/Ko13vcNC8saPd+hh7QjPYzhKy/wSloB0DpOD8SGiaRLcK1V/c
- UDij4hTgC0BjsCX5hpyWYkYBhf44v5GvReyIa8k8Jl245wFlCCvaSGUqXYnaI44KKzFVb5ZdsdK
- RFhxhJUNySlB/MROOC01XQwYHPLP4AZ19V6VcqR3xS+Ib+XAbX6qbDtZzFc9qGTVju7LDy7x54q
- 7ZIqcFEodu0ckKY5CIGW8x1EmhcVU8MmrNtBuLffFmYG8G/koZ3XDpSCNJ+6T/Y7pMzYIDBnnJh
- UBXY1YvIccU9fow==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=988; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ypvHqt2ffZwH1g8JlbofDCv9yboiuwJHzR7LWZNKd+E=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmSM7TYZ4k3s5FlXoR2X/BSo2U6M8TVrwVshhIe
+ rUb+Ou17S2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkjO0wAKCRD2t4JPQmmg
+ c3dSD/9ChzkMXm9u6eVZgOs8DjXNHeO16njcMztEQWRefFcgIN0o8kZ3VHn1NFs/6nPjc+HyDfo
+ INq18ybs8bp5Q9QMgPf8YhMNPzR5KZd/YB9+6Dr1oa4n2wNEsPwa9NArqTdhGWDn7Zh6GrBlWEN
+ 2mjs2bQ2Zuqn+wYQYJb+bZA/87zSQrp90uh1e0udYrAqC/37KwtaRKQGgS9wGyEZ49sRThoXOmN
+ vZ7fZi0kcu5qIdHyhimmAZfxK3Oe43Mmq93n8MUhRBKULPLWKsJINTQJBKzPlHvwl8ndou5phch
+ LxreWiGuYcDvttknqn24HsFYMsciq0AiCy8iUTVc6bGgO0NQBz3vyfhKB2SQv3rJ9YB5MsF7OIU
+ kFDi5YqgB490YMboaNr3hjRRMNGBRxLFmT5W5lkbHbu15Lm82m3cylJDERg55AUX55Cr8FFcVNO
+ knbdWuO19VIq2ZK8qawWgzZJ7aP8avvtOOWyJGXltJjGthUErZw+7qWN/ZEW+8/SIFQteW7UqdY
+ lMrcHQ6tTLxXqGXWwQEcW4VDBXl+5orLEU9I4px1JSl5JhKG4xFzdnjVB+BLeglzkA32i8toEmw
+ hK68G0HqvQS+vV45AiCUMkz//oNgfy8i/7H8JAHA1QK1P3gB4cMJ/+xisvzrlo3iU2tMxVCLepR
+ H6jMDoVxI2wN6SQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The most interesting bit is in the last patch: a new 'mptcp' page in
-'networking' documentation.
+This sysctl knob has been added recently, but the documentation has not
+been updated.
 
-The first patch is a fix (missing sysctl entry), and the second one
-reorder the sysctl entries.
+This knob is used to show the available schedulers choices that are
+registered, similar to 'net.ipv4.tcp_available_congestion_control'.
 
+Fixes: 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers")
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- patch 2/3: make it clearer it is OK to do such modifications for the
-  backports by adding a note about that in the commit message (Mat).
-- patch 3/3: applied Mat's comments.
-- Link to v1: https://lore.kernel.org/r/20240517-mptcp-doc-v1-0-fc1ef063584e@kernel.org
+ Documentation/networking/mptcp-sysctl.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
----
-Matthieu Baerts (NGI0) (3):
-      doc: mptcp: add missing 'available_schedulers' entry
-      doc: mptcp: alphabetical order
-      doc: new 'mptcp' page in 'networking'
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 69975ce25a02..102a45e7bfa8 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -93,3 +93,7 @@ scheduler - STRING
+ 	sysctl.
+ 
+ 	Default: "default"
++
++available_schedulers - STRING
++	Shows the available schedulers choices that are registered. More packet
++	schedulers may be available, but not loaded.
 
- Documentation/networking/index.rst        |   1 +
- Documentation/networking/mptcp-sysctl.rst |  74 +++++++-------
- Documentation/networking/mptcp.rst        | 156 ++++++++++++++++++++++++++++++
- MAINTAINERS                               |   2 +-
- 4 files changed, 197 insertions(+), 36 deletions(-)
----
-base-commit: 2ccd59d4df6aef3f553caf11e00af66300448e63
-change-id: 20240517-mptcp-doc-315f909a12c4
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
