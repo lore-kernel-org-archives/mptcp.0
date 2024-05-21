@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C18974E1C8
-	for <mptcp@lists.linux.dev>; Tue, 21 May 2024 07:27:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D0E59179BD
+	for <mptcp@lists.linux.dev>; Tue, 21 May 2024 07:27:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716276458; cv=none; b=PY2GXP/OtW2Mx/gT65Lkv8yL0n+dnHad7STo+ynGO4eQePePTcZpWnHjXtbvNmFjHXaaWZfl0+RBk+o8CRK8y7vo4BDmjkNUftBXukNnnOuAK6Q3gDRZNxBMLfmWmrycoJq8YX4QmjAgt1yzQYlrgMYCVpxHZ7RTCZUZOnAEQVQ=
+	t=1716276459; cv=none; b=agNMXNR2yWnR6WWwme2NLH9B9EJlq80TfRMhowPVnhXpVYGbO+91GCgDL5nNgPuXJkGHAfanG21INZPlqrQIBl0xjhWs5u4KyFcCyuTd3v1gHZykhgd61+ZMoj9JV5BnTx6geJQlI89omiVKJP/CnFoyuZN6uBqk1ogNuJj79XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716276458; c=relaxed/simple;
-	bh=NNwISTmCUhySHdqJqAx/XtaM/YAyCnKegpzkvXP4K8I=;
+	s=arc-20240116; t=1716276459; c=relaxed/simple;
+	bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AmkXz2AzsXj2S2kSA5tdTu2DaR1r7y2qUAKogPKrHxuh5QvzWkl2NkCiueLeEnEjlpDazPCVCVbgv+GtnEqPNUnhFzj+vme4lBc5hweq0iFQVjRfbVLDTO3jfw7TQthVikYziNlUhswH/xlOTyLYBDvcC7sF8631ENs5P/RlpKQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HbctvYyT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=DSm9I4Hu4ODdniOjpk/IeSaVtrDfj1aB8SyvHmSvhxoBhP8Vu0sii7Sam0dRLCgajH2B+hbM7A7hKG0660qcIoIonhXO25IgD8N+WzTWAFN1H4axBzGnNUaWUDiwVQdTtO8n7cpIt1CmQRBZMKEGs81RgtQ3HA13/MHqMDQExbE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/ZL6xEf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HbctvYyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E48DC32782;
-	Tue, 21 May 2024 07:27:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/ZL6xEf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2078FC2BD11;
+	Tue, 21 May 2024 07:27:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716276458;
-	bh=NNwISTmCUhySHdqJqAx/XtaM/YAyCnKegpzkvXP4K8I=;
+	s=k20201202; t=1716276459;
+	bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=HbctvYyTELPXoUed72us3zMd1JHaPX3/UKTZ057VyPScNPaOvNjIA3ZfPIhuZgodz
-	 /Ml9r5R1ojmyLMGlfAl/R8kBUVu2B0IsDe20KChqAerVqISZHfhOjTkmtg4zy5z0gE
-	 RBKj80hs9Z4izBnk1NWbozICQVksmocbd6Em2oR/sZySa4aG0HrYAI90emA67EH005
-	 unTH76iY4KBgfVQHAR57jEan8Wzy2v/caQI33Lv11520BgWTyKtfspphjArgMy5xtx
-	 AAT0tGzfQJAGxTCnTa8aNO9n/fow2P+fe6IV9IA16rFQJXQgLbNSVo4KfkbD8y42Or
-	 ZMedo5ovOY3Yw==
+	b=A/ZL6xEf/8oIrmJP8c9M51PSJFUnwpOF4fcKne5p5wBqquaigzwkL3tmka3SFGxHV
+	 5VvUdOyzyLsXGk2geGhaPYOcfCA1MhY1B5ME7+vIc/M/FfJ2m/jKS+J4tHlKEkBQg+
+	 Dp4aPA5LpNeBu2q0h8Qseud8vdimXo6W9GRv/5jfUGsV6JAZdwIMKI1nmsgkHf3N/Q
+	 8+7rz2U3d1dnvarOOCBUiqbCu6IreRKAb1nX8tNelMb/m/SWtH8sNhuu+fT2X/XYFN
+	 iHWfn4/Fh4hqHgNJKlCOKtBRt9xYp1YLLOr13ntfTOWZTBer66HV38qdeBTYys7Ovi
+	 zY36gr8YJQz4g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 21 May 2024 09:27:32 +0200
-Subject: [PATCH mptcp-next v2 3/4] selftests: mptcp: join: mark 'fastclose'
+Date: Tue, 21 May 2024 09:27:33 +0200
+Subject: [PATCH mptcp-next v2 4/4] selftests: mptcp: join: mark 'fail'
  tests as flaky
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -38,84 +38,63 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-selftests-mptcp-disable-flaky-v2-3-eba143bcbad0@kernel.org>
+Message-Id: <20240521-selftests-mptcp-disable-flaky-v2-4-eba143bcbad0@kernel.org>
 References: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
 In-Reply-To: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1880; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=NNwISTmCUhySHdqJqAx/XtaM/YAyCnKegpzkvXP4K8I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmTEzmAACObjzZasMp0kEGDvJal86R+vnOqeJnD
- cl6Vs4oRC2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkxM5gAKCRD2t4JPQmmg
- cwBMEACxBJyey23s13JYiQmAuWmzKZZjKt4utCozYotsiXNfCroW/p7uW1TtAOhJCkAZOdxF/EP
- KhGFXgW+2ABwaPFVCIiHUdDmc4VxRG/D5BZlIm+ZMgLhEBDc/brZPxPYYXbSaZryKB6sjd8k2Ud
- qBWU5klqYsyCrk2aNaKqB5Z4jTHtUNYx/yd9c10Hy5rJfmPECGeODR9KVZL5X3OBJJcgcSTfLUi
- fIw1+9ZoBB6ndNA3CmVJCBUeoc61+JDZ57C8jZWOEo2bz6NOkXnKwsK2blmEopXZCfLrjVr6KnO
- WdCtKXmOhLcHyiN73ltbldwfi6hHPyGy4uwbrmdnU4b6QWfbbG0lwOD2oklAOCg7RxyJxEm0jz4
- 4Te3iOOwuyNYgRZVYWLgOYLN/+BUjJ0gfCRURZdv/fNBXAQExlDU2s84NFNQHe4wMWckWWeEtRL
- MVvg6FksPqZgWnYKqrMsRB6pVWH/e37D917R9FQqVioXgYstdcqwH36sS3UaNsvZPN42uRkmG9j
- oPgOqnE0s60u2Pu6IT7Nqb/iLsGzM8B6INJmjbO2dJKxiCUTllJRwjryDcFpNeoCBo7iCCPYYI3
- fAI2+g7ciZ6O4T+gSF+S7WSXTWDL9PDj3GvKm91BxBF2Htg0Kq3VTRErFst9vu2/IosLdmBCeWP
- s43abTyUEm2bjug==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1372; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmTEzm3sMndFw37tWMbQ5Fyy31QoOPHAZUj6lxG
+ fW54Med5UCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkxM5gAKCRD2t4JPQmmg
+ c049EADX8p8dsvtHpUo9c7JN+QKs7onSVTTEzmlFYsH583ukuuh7XSMAiuUf5OOgXrn9q7f0VJP
+ /S/K6DdNbLpY9/Xj6WpCMT7df46g5deP0FWZEyWVveKKclSJBKwQVorRL99+Y5p1ZHREY0BSRRf
+ 0JhzQ/vyw8RB2IsElRPmUFivcuSeYqO3C2mLIn2WBrCCI8srTDGYLKWzO7hs1+5n0yNMRJn8Ety
+ VqmdIxiV//6FcnDoiSuC58CZVyy981DLlPTlgATTwFwLA/8Qkk602pa9KQkAfBAx+gpusRqtm98
+ hDs9HWfVh56J9tQ/hITJBzsKjSOIzUOLuB735gEQ5feHoMy40X0Wcf9KIeZWdlMih+Df5h0IUto
+ kpSNjthuaTjaQ0y4YCOD7fj1duXLzVPFcu0MpfS487MbLQR+NlYBWNvnXg4cOeTBV6XFicU2YwX
+ cnb0mUUfDCGTeim0mfIUMvoHK5mCoMAA6lW+v13NqJfnLhaEUKD+t87rsPmTUIbuwCqZR3S3n1F
+ HkIV2ca+D1Kq4GMocltVYe/dKgTKQr6LvUZKHQKlmWHEonT6qoTPt6xF/s3Vy14K5OxMZs6axSw
+ 5CWfcAm7wg6iYNzZB4F9iibMrlt2kjauFID0sK8m/7gYJ+Xxl3OHDCKlFPL36IvVIuDam5FV6k3
+ gRIpZT0XvkTD7GQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These tests are flaky since their introduction. This might be less or
-not visible depending on the CI running the tests, especially if it is
-also busy doing other tasks in parallel, and if a debug kernel config is
-being used.
+These tests are rarely unstable. It depends on the CI running the tests,
+especially if it is also busy doing other tasks in parallel, and if a
+debug kernel config is being used.
 
-It looks like this issue is often present with the NetDev CI. While this
-is being investigated, the tests are marked as flaky not to create
+It looks like this issue is sometimes present with the NetDev CI. While
+this is being investigated, the tests are marked as flaky not to create
 noises on such CIs.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/324
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/491
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fefa9173bdaa..b869b46823d7 100755
+index b869b46823d7..2b66c5fa71eb 100755
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -261,6 +261,8 @@ reset()
- 
- 	TEST_NAME="${1}"
- 
-+	MPTCP_LIB_SUBTEST_FLAKY=0 # reset if modified
-+
- 	if skip_test; then
- 		MPTCP_LIB_TEST_COUNTER=$((MPTCP_LIB_TEST_COUNTER+1))
- 		last_test_ignored=1
-@@ -448,7 +450,9 @@ reset_with_tcp_filter()
- # $1: err msg
- fail_test()
+@@ -3101,6 +3101,7 @@ fail_tests()
  {
--	ret=${KSFT_FAIL}
-+	if ! mptcp_lib_subtest_is_flaky; then
-+		ret=${KSFT_FAIL}
-+	fi
- 
- 	if [ ${#} -gt 0 ]; then
- 		print_fail "${@}"
-@@ -3069,6 +3073,7 @@ fullmesh_tests()
- fastclose_tests()
- {
- 	if reset_check_counter "fastclose test" "MPTcpExtMPFastcloseTx"; then
+ 	# single subflow
+ 	if reset_with_fail "Infinite map" 1; then
 +		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=client \
+ 		test_linkfail=128 \
  			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0
-@@ -3077,6 +3082,7 @@ fastclose_tests()
- 	fi
+ 		chk_join_nr 0 0 0 +1 +0 1 0 1 "$(pedit_action_pkts)"
+@@ -3109,6 +3110,7 @@ fail_tests()
  
- 	if reset_check_counter "fastclose server test" "MPTcpExtMPFastcloseRx"; then
+ 	# multiple subflows
+ 	if reset_with_fail "MP_FAIL MP_RST" 2; then
 +		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=1024 fastclose=server \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0 0 0 0 1
+ 		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 1mbit delay 5ms
+ 		pm_nl_set_limits $ns1 0 1
+ 		pm_nl_set_limits $ns2 0 1
 
 -- 
 2.43.0
