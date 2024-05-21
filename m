@@ -1,123 +1,100 @@
-Received: from mail-pl1-f177.google.com (mail-pl1-f177.google.com [209.85.214.177])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFF3224DD
-	for <mptcp@lists.linux.dev>; Mon, 20 May 2024 15:25:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7014F5FA
+	for <mptcp@lists.linux.dev>; Tue, 21 May 2024 07:27:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716218727; cv=none; b=m88AzeRXA26ZJFUQrYNFnB+jqdMhlc/tax0DLbhQVTihLK+A9hfKDPtEKxjpJX0fqD6lOf5GhVTQYn98zFGMTGzhxWLNlSTQqKoYyb7wg/o01wMV95yBqim5BTAssuQ4dOQddr0j7pptrtfWP5UWFWpTL0Woa9nn1OJVX5ZefAg=
+	t=1716276456; cv=none; b=IeCE61jd3gTTbmEObSaciKUXGPVvDlfxNOQlhC+0UptreTG0vW7X6KMunflPx7J2q1bJBNUfNY2csr8GRcvWsBL+Kb18/2wow7QBnwkR7wFEPDSY1BuYm8UPhUREaCTpBei09t7jxEbAH7DVEvdJta7d2SISke6ESVWfsvWVS+E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716218727; c=relaxed/simple;
-	bh=YzY+DCiTuUAce3chb+vPEd8PQTJLKa69vhK2S3quih4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=S1lU0U+EZ1twYM9Z5Qm301NvHHtu2PrruUDG1bGKD689hkDg1mZWFB1ngGfNCI0qhcnM817nJ0F22Vl2Bhei/5scxADsY20LoptRyuLRloEeokLcQKfjQ3FVmUHNord1ND1KMfrCqY+4h9lFpQUtEiz9RWTVDpPSdvc62iq7xe0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Af4Knd8s; arc=none smtp.client-ip=209.85.214.177
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1716276456; c=relaxed/simple;
+	bh=hDfu/49DPbdcGeHStAle9RLe51vq42QcigaMwpgdutY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=DFZZs8tEzkiVNc7tGv7ZwfWe8wyYFCszpRQRZj7YE8x3fM1Q/ScYh78MLLgM/04XhP6J8T99/5OvC1wt2bTRcN+XD1rxBZ503FJAlUGiFmJI0ASMhZCNPi/oK5w4B6Lv0ynKfGHeKRMnNwp9NMJDhmoaxxxxVQQIONdNIyfs4yc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vsh8MSa7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Af4Knd8s"
-Received: by mail-pl1-f177.google.com with SMTP id d9443c01a7336-1eeabda8590so72872465ad.0
-        for <mptcp@lists.linux.dev>; Mon, 20 May 2024 08:25:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716218726; x=1716823526; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=M9SURV0+Qljv+m+kMB24iKuAyR5c9sVpGvXQ1o069wk=;
-        b=Af4Knd8sKSHIDfMm8yEiiApzZa3Jv2pIhqn4C9WPITP6cmMcugX2qn5Cr+mIQnmGTv
-         geLsu7K2qVjh+gjYWmFr7PQtugNKyBN0UD+MgNqRphX4H50Nu0ddyZAmquxsP7QcH0hc
-         22S/svqINPdVFQJymF3g0ATOM7O1gWHwbQySBxptiFpHfsN76ktXmtLpIYW2tT5R6MkO
-         Pm/12nuZnvzg271MJiI5/4tOQ1h+f1/3e512sJrBsq8kIh1bnRHW3ruenVRsEdyX06fk
-         P1onInnIBnH+xCPWzRKW0vk9NyS/ZDIYGdQsaZGWTAN6RRiRjYfw0WZN34ta52jykPLT
-         AyGA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716218726; x=1716823526;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=M9SURV0+Qljv+m+kMB24iKuAyR5c9sVpGvXQ1o069wk=;
-        b=qRdCeHC86gN5tzgokVPeLFIaryKWp7i61iydVl2d6NfNNEH+DVf2b8rSXY94uYB7ri
-         ZkwC65Uera58nVEuOKuED0tegIGa0gtcItjWMOjn47KNHpKeG8Mjle0wQqG1BFs2wykN
-         NUaDequIvmSbpnvcvEdPqQDuMI/6ZMKTpFoJwU23OWuSO5JLzWPRMtWp14hftDuUJ8sJ
-         wYVvL0oS9QWDl3eu2NmKTy44W9veQz4EtRj6enpkHzS3NIaAJCL6/G9GLrw0FhJSaHiT
-         g0DP+PvjFZffqyQLW5ftnNDSF2hDXnGjQkFhkCczZzeMCzBV32cBxy8xlOiGXRonxWY+
-         sHyw==
-X-Gm-Message-State: AOJu0YyEXTlxiGJtrB+W0jv0OK8nTtpuPfSJQCu1Nv41oxGP4wlzcT3f
-	BteUDttsBcihJZ8Ze6fNuw2T9amaLRZNNXxX/SLaoif+C1X69HNDv7uf
-X-Google-Smtp-Source: AGHT+IHvBloXacnXYsATbnBuR30GPOG+GxJcuzFgJAjrpme/yaRRusWKbC9mNPxs4eV0I3Ko6lbMbw==
-X-Received: by 2002:a05:6a00:391a:b0:6f3:ea4b:d1c1 with SMTP id d2e1a72fcca58-6f4e0298a60mr30007907b3a.1.1716218725694;
-        Mon, 20 May 2024 08:25:25 -0700 (PDT)
-Received: from [127.0.0.1] ([52.159.142.104])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-6f4d2b26cf5sm19209888b3a.195.2024.05.20.08.25.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 May 2024 08:25:25 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240520-selftests-mptcp-disable-flaky-v1-0-02e23ba0bc3b@kernel.org>
-References:
- <20240520-selftests-mptcp-disable-flaky-v1-0-02e23ba0bc3b@kernel.org>
-Subject: Re: [PATCH mptcp-next 0/4] selftests: mptcp: mark unstable
- subtests as flaky
-Message-ID: <ef789b90-4fdd-c18c-e45d-d7b58f473aba@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 May 2024 15:25:24 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vsh8MSa7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16A7AC2BD11;
+	Tue, 21 May 2024 07:27:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716276455;
+	bh=hDfu/49DPbdcGeHStAle9RLe51vq42QcigaMwpgdutY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Vsh8MSa7y6I+Pk+Jdi8RT1uxOeR/oxFf+H7ZPzAP8MiBlLDakb6YQvwgvN9D3f0tk
+	 8nDvxVbB42H5eZ/kR+rlMnkoA9UqRhFF91+4mfz5Af1OKeBjyqnTICheE9VXz1GVLr
+	 Z59OaE+30tRwkfhdk9iXxcFs6LrT3K0tOfDSZY22sLK7b7XkHtG3OTKIlaaG4qhxO9
+	 HsfdhYSdSM+efkEpIkyTznXJVy/y2jK07lpB9fhgCTQbBz99h9bT1WuB1Wbct2BLML
+	 5DCUhyLZ7EIKYPIbMh2Ik0CLOy5HmI20/S6o3uZXwZLdEpbf98o6rVhw279vKt1LKK
+	 O5f6LaqQkQHMA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v2 0/4] selftests: mptcp: mark unstable subtests
+ as flaky
+Date: Tue, 21 May 2024 09:27:29 +0200
+Message-Id: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOFMTGYC/42NTQ6DIBCFr2Jm3WlGqP1b9R6NC8BRiRQNEKMx3
+ r3EXqDLl/fe920QOViO8Cw2CDzbaEefgzgVYHrlO0bb5AyCxIUqQRjZtYljiviZkpmwsVFpx9g
+ 6Nawo73SrHs21ImkgM6bArV0O/ht+B89Lgjp3vY1pDOuhnstj8adlLpGQBAupFWkj9Wvg4Nmdx
+ 9BBve/7F9p6jNPXAAAA
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1506; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=hDfu/49DPbdcGeHStAle9RLe51vq42QcigaMwpgdutY=;
+ b=kA0DAAgB9reCT0JpoHMByyZiAGZMTOagzLOPuYhRWd+xmH/F8l6SCx7PQ7X8meSFwcMWFoJsi
+ IkCMwQAAQgAHRYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJmTEzmAAoJEPa3gk9CaaBzHNIP/jnB
+ zfpOB4yjsFV8a5e+p1BlFPN2VFbwj2ZBJLDe4WOZ/cxBJ4fk1i2HbKuRH1C7oNvj+3Y8jFXSoVL
+ 3nyl+fdYU+OFThBjhEdXDgqchCbtuq430msyjZp+aKIJR8Q0QOu9Z4jj53q+msq3xmtXIJ278PL
+ lKWjvuVdBGQ91QXghTGreJdoeQXnrkseneMuco9ACTkNvApOGG4ymiJ03w39vL7WF2YWaSlF5TH
+ sriKHkVpzS6Sxrq6G8ThwEc8Oq5sRnSZypPQemToqtTYyj7fCWBH2CmBBngDHbvf+BIvZn9CvHw
+ txtCsrzYx2t4UE1Ek1h0kJ2GDJyQYW3sEixOaHikZhr05ilTu4OPvJCEtyNDfqeNA8R60Ydi9ym
+ BrIb1UwLui2/KdC8dEfBlMgxnXr9BpZoy97WMhxMWXOvjJXvK2luuFh1IpbR0M8NTsi7V1qnV5y
+ RaCqVGbXxtJMtJtPH/jH7GN58tJprlUfRdwut5kxtb7/TA7ARhbo/X54t+VClnyk6pc+MSpqXIz
+ +RvJN9Mi5ZjM4us2EpjwJs+9QgHNYe4FPBR6dFjLAvM5+/2joH066oeYq7OiV/Nq69rrGVr6urG
+ yyqkBp+MSPoz4Dmhp+hkFqALhyzWebo2l7Jx/tDQI8mrkZ5sR2NXpE+qnpmgi64daNv2ZtrOQ18
+ iuqfy
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Some subtests can be unstable, failing once every X runs. Fixing them
+can take time: there could be an issue in the kernel or in the subtest,
+and it is then important to do a proper analysis, not to hide real bugs.
 
-Thank you for your modifications, that's great!
+To avoid creating noises on the different CIs, some subtests have been
+marked as flaky. As a result, errors with these subtests (if any) are
+ignored.
 
-Our CI did some validations and here is its report:
+Note that the MPTCP CI will continue to track these flaky subtests. All
+these unstable subtests are also tracked by our bug tracker.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/9160572069
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patch 2/4: only mark "unbalanced bwidth" subtest as flaky (Paolo)
+- Link to v1: https://lore.kernel.org/r/20240520-selftests-mptcp-disable-flaky-v1-0-02e23ba0bc3b@kernel.org
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b4fc99eddbe4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D854426
+---
+Matthieu Baerts (NGI0) (4):
+      selftests: mptcp: lib: support flaky subtests
+      selftests: mptcp: simult flows: mark 'unbalanced' tests as flaky
+      selftests: mptcp: join: mark 'fastclose' tests as flaky
+      selftests: mptcp: join: mark 'fail' tests as flaky
 
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 10 +++++-
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh    | 38 +++++++++++++++++------
+ tools/testing/selftests/net/mptcp/simult_flows.sh |  6 ++--
+ 3 files changed, 41 insertions(+), 13 deletions(-)
+---
+base-commit: 6816c73b882ab90adec3eb18ff296b30bea570b8
+change-id: 20240520-selftests-mptcp-disable-flaky-380759d6503c
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
