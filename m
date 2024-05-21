@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13C474F5FE
-	for <mptcp@lists.linux.dev>; Tue, 21 May 2024 07:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F10C04F5FE
+	for <mptcp@lists.linux.dev>; Tue, 21 May 2024 07:27:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716276457; cv=none; b=NhB+93gOg+ZHWIU5vzMoxqIyyPHLvL4RsumFH+LB9XP/HvDy8+bLhrzXy9uqdZbGPK7NxgrDp4FJ4L22tBu6ditQIYb0TOeeG10zkHtu689uV5nxagIcmH10MDI8sFOG4HZ1VCOaOFo929HVXawx5UbvmCofi+IuKcprRMNXpew=
+	t=1716276458; cv=none; b=sOkdFQi2EbIwSaQ+rmLJ7+pmGG1kQK/ltYisQl5H1El9kyanrWU6CapGZ5XkgwXk+9X6Koehy+AZPAhqh7ePADK6xHrNDNJKgD3bW2LuTcVaFICop/0R3jQj/+t7AVWqdHmbSXIZcBfiEI7ngkDN+9JJFb+Q/Jg7aeZ7u/YZNgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716276457; c=relaxed/simple;
-	bh=7cO4+g901/OvGtpUux7VPcBFyjT/JLEPvy0BAA2THy4=;
+	s=arc-20240116; t=1716276458; c=relaxed/simple;
+	bh=Ggy7iYS0IsFK7puQFPQ7OdbUwg1pe5OIKJkUZqeKNe0=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=sINP4/HRv5WShoCKm1pm3dHwlJrmyIDfDO6rXt4MyGdI1KAXf8o+tiYdD+a8nfoYOcSNyD9MDKfOFXo9FTe+LKwmcvWNOLCpAnVHM/TvxbgMRB5vCcjtHFhWH15hBQEWvo8BLarYjd2IZojaazexWYcoinsX3OwDLLr+XUhk9jc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cfJmVVBQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hMIFixDb6zdb/Bmi3t9rBIDeW41edT+/sg8wcBnETSgRj7YNOEh9lucYwY+t0ra/bTy1dIKsNW0ATBvu1jFr4fkQbu+hJ4oBuV7fO8b8DxLdToEWw3Qo42VL4QMfSywaIIBlca6okt1PakWaLJsJ1bgobQtMF0FXaMAwuVPzvyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k18+sLH9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cfJmVVBQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18FEEC4AF08;
-	Tue, 21 May 2024 07:27:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k18+sLH9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1C10FC32782;
+	Tue, 21 May 2024 07:27:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716276456;
-	bh=7cO4+g901/OvGtpUux7VPcBFyjT/JLEPvy0BAA2THy4=;
+	s=k20201202; t=1716276457;
+	bh=Ggy7iYS0IsFK7puQFPQ7OdbUwg1pe5OIKJkUZqeKNe0=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=cfJmVVBQNQ6bJ9+eDKeVSz6hh7M4ULvzOvES5CRBKCzrBEgohwE/Nt94QJ3TZMLQ1
-	 mYOgeaVk23IaUOIWO/9Nsx9LHvn227L2a7qQf3iEYY7+wzZN+croMCF9xu6pjmtMAp
-	 na2JX9a2osvU6MrqDjWNW4bc9R5p7O0pcPqQUIoo5GVKn7ijsOKPFFs1LYrWFXpE+w
-	 t6kyyOoncjH+DVBpLZJkykW/tMXD5Di6M8+M8SGRotZc3+xJfooz8zv0HiUduc13sR
-	 c6+TkgfYfaYSzB90gWB2r9v30Oc6l1XPYPj8ygRj1VCYTyPJCGDFwXQ6hX8NO619MW
-	 2aOQ4sVSRfSaA==
+	b=k18+sLH9EFWSkN7+U6ZREa7Pk5z8RRhUzaOlRonoh8DfK0n/nQF/OGIbTPBIlFXgm
+	 Bc3bFbgjOw1/BiIWPkbFQbZlwCfa7CebX0/LFgdb6YNcoj0XC4m95So/UJKjrRHG2l
+	 zB0T7Hzi0Qr+faGzowgc4wZ514XbAb3G3KNNs1HQPLQSTDPI5MhKSmzeBXeTsVgrWJ
+	 gVsUcT9NVPqL7+y9IPFMX92EB4HgjgJ59LC1gBUduDldbl6EhUtmZX3dj0u9wzEOIH
+	 sBU6b6FriWx6UP9kVhu/b4NEowAeqq92bgq+yApyYb0EhEEdsbbuXMNVYlvfSK6Sna
+	 7GIvKmzmAz9+g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 21 May 2024 09:27:30 +0200
-Subject: [PATCH mptcp-next v2 1/4] selftests: mptcp: lib: support flaky
- subtests
+Date: Tue, 21 May 2024 09:27:31 +0200
+Subject: [PATCH mptcp-next v2 2/4] selftests: mptcp: simult flows: mark
+ 'unbalanced' tests as flaky
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,128 +38,80 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240521-selftests-mptcp-disable-flaky-v2-1-eba143bcbad0@kernel.org>
+Message-Id: <20240521-selftests-mptcp-disable-flaky-v2-2-eba143bcbad0@kernel.org>
 References: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
 In-Reply-To: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3450; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=7cO4+g901/OvGtpUux7VPcBFyjT/JLEPvy0BAA2THy4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmTEzmRGM7sdJnwTneUWEN0ydbd8A/Cdu6wynqB
- vC4ROONgvyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkxM5gAKCRD2t4JPQmmg
- c95vD/wIoEwdOH802du7+ex500pnjI4LHS0YoMCu1ztbruNpxkbhwuk6b7ieYkv8wGSc/Lukynx
- ggqt3DL8W4BNtb3oHvejnrgiMug1D5YCWRPkIcQ7lQ0apLUNqMbvKLXma7zZd2wmHI5Qse7ElUi
- Hl6pqAPwLtP71/BLBk1ovrYYWnlaaOn34nGF/eskAys+/wf4iOBrMxYu1TXPU3ztGTPVBZ78eEr
- /f0TW3JenrLuTNyEnNj+KuxjuROo5DyP5CDMPtdlGCVXPquDoifYDKk6N+gvwgoesbEJ4OSWdgg
- EkzneWVcsaFmvgbCRQ6fgwKM68Wmf0Kb+erhIjWiQ3cDVOTLahV6xcokvFpmFFiOUddmXwdAO+p
- vPiy3VP5ceOnb4WKLCgiPnoYUzgB1stbZp8eLnL8f+lru8G1cxDftnlJ8IHLTegiyymqxl4BRvy
- mSgD+HUZ83Vh2X3VIjSs8n+uoAm5HVBUwL4JQNKQ4nWT6YPFSWYByFM1p6MDNiLn7vWlVk8pvIl
- FUK3I5cZNlB6j6mW/xIlXSlfhjgEXiSxWF6dXvn5wA6zpcfedBnA7OrEC7JHk3xPUnPMB3aO0To
- OfqnM60VmrBI3Y42tAWNu7NPgEmE4y7TzLp+AHWGRaq3zh9rzaRvGSfRYPDcQQuUfMNsPROzfn7
- ACKHb/QuyyZq4BA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2221; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Ggy7iYS0IsFK7puQFPQ7OdbUwg1pe5OIKJkUZqeKNe0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmTEzmvMa65fwEU641YCP1h5zYDn8etB+yjveUj
+ cH4cO/OVnOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZkxM5gAKCRD2t4JPQmmg
+ cxuTEACrnpiHy2e/W3yfdrtJVM3oLMxrHoeysJGGHaifqSR4q880GgO012dkQZMKmq+3A3YWvtH
+ AGdMbbbGAVquYE0VMGtIcQEDZEGdYGdvH8MJX1EuR6D7kmUDWyxbM/pGNKkeHiRWFmf88ozfTZk
+ sCLIa4SRUk/Q5wv9hlkT5ofBSKjG6K8nJa2iSZThPM+N2mlbJhyFHQgcEehMK5846oxMXG5Xs7U
+ BPXidc0VUoWFOeTqaR7GfG5neGzrm1vGTrXrNHI3EyfxgkccIjkgX2JBQAGQY6b50wGbliXSdjX
+ 6pYVxetQmYjEc45LU2qEubn0v5fvBCNIWwVXMgYsoJjYnI3xmIOtCE5tikZj4kkgA0x93qBuk30
+ JJr7UMOrQBy4Oi3b7nmvsgtwzST9Dixo/CKFry3/iXVAwm4kjMzvg2De7kxI/OKEIT10m1zOsKw
+ nCJBl9Px13XNtbrHKpuWvD6hNRZ6DSXwm6r2wulzytFrTftIyDRk6LuimhDBnSy7kDP/uo7iXDy
+ 0bELjvmn0uhIkyOZyN3tnMOVFVdWMj4z2EWYkSwNGAoxCED66hW8PGk2ZhinUtgv+KUbmCDylsS
+ 26tdSJvDt8lTHB/IvmhYowVfZRQZnsLsgDtTzpMe3CKGl7niU6MM7P2RSVon0Q9WJJXe2hU9uoL
+ S0maEcWRe33kq1A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Some subtests can be unstable, failing once every X runs. Fixing them
-can take time: there could be an issue in the kernel or in the subtest,
-and it is then important to do a proper analysis, not to hide real bugs.
+These tests are flaky since their introduction. This might be less or
+not visible depending on the CI running the tests, especially if it is
+also busy doing other tasks in parallel.
 
-To avoid creating noises on the different CIs, it is important to have a
-simple way to mark subtests as flaky, and ignore the errors. This is
-what this patch introduces: subtests can be marked as flaky by setting
-MPTCP_LIB_SUBTEST_FLAKY env var to 1, e.g.
+A first analysis shown that the transfer can be slowed down when there
+are some re-injections at the MPTCP level. Such re-injections can of
+course happen, and disturb the transfer, but it looks strange to have
+them in this lab. That could be caused by the kernel having access to
+less CPU cycles -- e.g. when other activities are executed in parallel
+-- or by a misinterpretation on the MPTCP packet scheduler side.
 
-  MPTCP_LIB_SUBTEST_FLAKY=1 <run flaky subtest>
+While this is being investigated, the tests are marked as flaky not to
+create noises in other CIs.
 
-The subtest will be executed, and errors (if any) will be ignored. It is
-still good to run these subtests, as it exercises code, and the results
-can still be useful for the on-going investigations.
-
-Note that the MPTCP CI will continue to track these flaky subtests, and
-a ticket should be created before marking a subtest as flaky.
-
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/475
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 38 ++++++++++++++++++++------
- 1 file changed, 29 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/mptcp/simult_flows.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index ad2ebda5cb64..44febbc11131 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -21,6 +21,7 @@ declare -rx MPTCP_LIB_AF_INET6=10
+diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh b/tools/testing/selftests/net/mptcp/simult_flows.sh
+index d0b39c2e38a3..b42d767246cc 100755
+--- a/tools/testing/selftests/net/mptcp/simult_flows.sh
++++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+@@ -244,7 +244,7 @@ run_test()
+ 	do_transfer $small $large $time
+ 	lret=$?
+ 	mptcp_lib_result_code "${lret}" "${msg}"
+-	if [ $lret -ne 0 ]; then
++	if [ $lret -ne 0 ] && ! mptcp_lib_subtest_is_flaky; then
+ 		ret=$lret
+ 		[ $bail -eq 0 ] || exit $ret
+ 	fi
+@@ -254,7 +254,7 @@ run_test()
+ 	do_transfer $large $small $time
+ 	lret=$?
+ 	mptcp_lib_result_code "${lret}" "${msg}"
+-	if [ $lret -ne 0 ]; then
++	if [ $lret -ne 0 ] && ! mptcp_lib_subtest_is_flaky; then
+ 		ret=$lret
+ 		[ $bail -eq 0 ] || exit $ret
+ 	fi
+@@ -290,7 +290,7 @@ run_test 10 10 0 0 "balanced bwidth"
+ run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
  
- MPTCP_LIB_SUBTESTS=()
- MPTCP_LIB_SUBTESTS_DUPLICATED=0
-+MPTCP_LIB_SUBTEST_FLAKY=0
- MPTCP_LIB_TEST_COUNTER=0
- MPTCP_LIB_TEST_FORMAT="%02u %-50s"
- MPTCP_LIB_IP_MPTCP=0
-@@ -41,6 +42,18 @@ else
- 	readonly MPTCP_LIB_COLOR_RESET=
- fi
+ # we still need some additional infrastructure to pass the following test-cases
+-run_test 15 5 0 0 "unbalanced bwidth"
++MPTCP_LIB_SUBTEST_FLAKY=1 run_test 15 5 0 0 "unbalanced bwidth"
+ run_test 15 5 1 25 "unbalanced bwidth with unbalanced delay"
+ run_test 15 5 25 1 "unbalanced bwidth with opposed, unbalanced delay"
  
-+# SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
-+# features using the last version of the kernel and the selftests to make sure
-+# a test is not being skipped by mistake.
-+mptcp_lib_expect_all_features() {
-+	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
-+}
-+
-+mptcp_lib_subtest_is_flaky() {
-+	# If all features are expected, do not threat them as flaky
-+	[ "${MPTCP_LIB_SUBTEST_FLAKY}" = 1 ] && ! mptcp_lib_expect_all_features
-+}
-+
- # $1: color, $2: text
- mptcp_lib_print_color() {
- 	echo -e "${MPTCP_LIB_START_PRINT:-}${*}${MPTCP_LIB_COLOR_RESET}"
-@@ -72,20 +85,21 @@ mptcp_lib_pr_skip() {
- }
- 
- mptcp_lib_pr_fail() {
--	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
-+	local title
-+
-+	if mptcp_lib_subtest_is_flaky; then
-+		title="IGNO"
-+	else
-+		title="FAIL"
-+	fi
-+
-+	mptcp_lib_print_err "[${title}]${1:+ ${*}}"
- }
- 
- mptcp_lib_pr_info() {
- 	mptcp_lib_print_info "INFO: ${*}"
- }
- 
--# SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
--# features using the last version of the kernel and the selftests to make sure
--# a test is not being skipped by mistake.
--mptcp_lib_expect_all_features() {
--	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
--}
--
- # $1: msg
- mptcp_lib_fail_if_expected_feature() {
- 	if mptcp_lib_expect_all_features; then
-@@ -208,7 +222,13 @@ mptcp_lib_result_pass() {
- 
- # $1: test name
- mptcp_lib_result_fail() {
--	__mptcp_lib_result_add "not ok" "${1}"
-+	if mptcp_lib_subtest_is_flaky; then
-+		# It might sound better to use 'not ok # TODO' or 'ok # SKIP',
-+		# but some CIs don't understand 'TODO' and treat SKIP as errors.
-+		__mptcp_lib_result_add "ok" "${1} # IGNORE"
-+	else
-+		__mptcp_lib_result_add "not ok" "${1}"
-+	fi
- }
- 
- # $1: test name
 
 -- 
 2.43.0
