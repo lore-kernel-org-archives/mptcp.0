@@ -1,101 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46FFA79B9D
-	for <mptcp@lists.linux.dev>; Wed, 22 May 2024 10:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8B0212DDBF
+	for <mptcp@lists.linux.dev>; Wed, 22 May 2024 11:42:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716374877; cv=none; b=jzFQqidRCBmMQOkcxIeqScTJwlmbx9Iivy7xU63b4ENSq7q60udENPkb5HaUpym6mmQYKfbBNYsVBP748crS2URFdSTuyXlQJOnRepCAibyRGolXG3P0eEnQ0eTZt7sVOjh/iZXvreNcx01wNlMVNKwlSmKM6JvAvgEYgeD2oOY=
+	t=1716378164; cv=none; b=C5EH1u84gOSwwH3JkccemmFfIafKAZAziLEcCDlimsPbEXxMAmltfy40IPNNwymtLNcdez3ghF+j94glNpRCIt/3TfEBSTs8/uOh7J4Z898rK5Iav5mPNwisfZ2q4mH3dh6UasZFzH2SI10ugkBU80DPbVtifZo/dxOAKj4vAsk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716374877; c=relaxed/simple;
-	bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=RGsGyxw3pRf4yH4rez4+BenG4R30tSPyQ4zYYDwoP05D4/walCt1gycFKaRyM6FpMeD0o2otLHMQamRNEdlGVVOmmXixHqCXV2LCIcL142k4EbkKMYHfXbuTYAHl8Pu2EBLEXvIdXdm3coMky5JW/JK36IOM+WVT7zTJxjGXxT8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q17mj77x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716378164; c=relaxed/simple;
+	bh=UXGAU5/8bhAYdc/8GPyJTWpQZy6H3uuH7j62/nch7tA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Mxu1s08fHsn1sdQWTFOENk0klxpMAyPwdlAei8uQ0WSBA04QIGzQUAs5LP1ucH4d+bWFDWIKbYGPgguPnjaCz+YyRMzOVNK0GtNYVICMs5H2h5T95WQ8wHQMe//ifvNI1MSwVwmWzV6436w8KYD25nCtV/Kqhz+1Zski+bOgG9k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdiQkahB; arc=none smtp.client-ip=209.85.214.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q17mj77x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A470C4AF07;
-	Wed, 22 May 2024 10:47:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716374876;
-	bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Q17mj77xIzz8OmSctEXUF6G3mK0f0IQj7tr3VwfnVJ3XnufAocORvh3e2GF6OYDAD
-	 giBETMCoXey30QRaeadgtIh7DUyCRXsss+xoLc6AzNAWap2iLB3lkR6pSj36MaPSgp
-	 D7IOS9nGUp7s+z+ODDGs/cKFRD0JSCpKu2op/v/wzcIYWZi80FJ0Est8zWfwU9arUp
-	 YO+oX6RqaGBgBJx+9nqasomOMzwCOYZlIunNHghq/9ZBA4kJuj2+8ulbpPbhdfLXuk
-	 mayjmZDptEbsgYKRConh++Wj/RyO6AWTNEKp6pV2p+6X8QxniuCMWk8QAvVdoSlquB
-	 miNgsN3z7bAkw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 22 May 2024 12:47:46 +0200
-Subject: [PATCH mptcp-net v3 4/4] selftests: mptcp: join: mark 'fail' tests
- as flaky
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdiQkahB"
+Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-1f2ecea41deso106284685ad.1
+        for <mptcp@lists.linux.dev>; Wed, 22 May 2024 04:42:42 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716378162; x=1716982962; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yPjT8NuPMbHNhTWigB3tFunE/zA+494mY1hKXRgwLAk=;
+        b=NdiQkahBvpTatJ1dSM0aL2gVjiAVrEbzENQrWLYNM16Jfq6K89JlhvFwusZf98Ipp4
+         0BQ5mJzW/UPI/I978p/nziEK02im2vwVo+N/5UtaKMU6gntR6L2J0CxwHcsTWEbK8FuY
+         YY89DGixhcAq0vIzUxrXDiIjvYFnOXfuxui+hYOn6lCpoec+dUBbYaZb+jpZSTS8pj5P
+         b/2hxIE7UMTd+tpNpnwbaMvmV4DoB4WvYYaJf/C1JtjhiSZwogG4hjclp4z3cwQLBccp
+         TDamu0rNohGax8yvxYQh60TChAC1S7KellTG5MzvMudFlH+h9IHFQ1mNVjQTDUwaB3WL
+         XGMA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716378162; x=1716982962;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yPjT8NuPMbHNhTWigB3tFunE/zA+494mY1hKXRgwLAk=;
+        b=goPdFsROXmtacu79QNEApWgiT8dHUNxRBCxn3ERMht8BO1TD3ug5uQ3uiYQ1zbXYMv
+         VBAFaftQkAGUs+Fn6FrHkAJmlHuCaheNOYA0Umb5vodfBpitGxYHFw6ihZcH4OPy4Xwg
+         tfhjWiO4wHgD2M3U7gwkLf4hOsfBl91J7wqTjm//32Dqfnlg7hFei3fmIeC8/dvpIeGU
+         FQYX0xijACu5zsXOxxEizzcEiMTCkaBhWoCODqMYTBu/DDOZpiLmM3gN5nTXpiRR2qdP
+         UDMFoZHL5brg0r96TlZMa7IN+Beet6QTHaPDZ9uyIFFyY4IftvbJeqxNbc+bpVafP8NV
+         qzww==
+X-Gm-Message-State: AOJu0Yyhw51O8gbOoMoyuwzQqNyN/KoH20QHFBdjYoATaF1g+bSREdT3
+	AQOBMc3lZz8qJNywkA6INb/97f8y832aZeyvqd7Ks8ccbAxj3WE=
+X-Google-Smtp-Source: AGHT+IEz7GyHXsxQOxg6+yO0rMAsWRu3UqJ6PvZYljnQuvddn9IhHB9dW/hKKM05Sd8gW38PthEypw==
+X-Received: by 2002:a17:902:d141:b0:1f2:ff28:c751 with SMTP id d9443c01a7336-1f31c9f03f6mr13671835ad.47.1716378162013;
+        Wed, 22 May 2024 04:42:42 -0700 (PDT)
+Received: from [127.0.0.1] ([52.190.140.16])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1ef0bf31a67sm243670405ad.149.2024.05.22.04.42.41
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 22 May 2024 04:42:41 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240522-selftests-mptcp-disable-flaky-v3-0-a10c68bf2680@kernel.org>
+References:
+ <20240522-selftests-mptcp-disable-flaky-v3-0-a10c68bf2680@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 0/4] selftests: mptcp: mark unstable
+ subtests as flaky
+Message-ID: <918d5f82-4c85-fdc3-6e4b-258fcf9fa7bf@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 22 May 2024 11:42:40 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240522-selftests-mptcp-disable-flaky-v3-4-a10c68bf2680@kernel.org>
-References: <20240522-selftests-mptcp-disable-flaky-v3-0-a10c68bf2680@kernel.org>
-In-Reply-To: <20240522-selftests-mptcp-disable-flaky-v3-0-a10c68bf2680@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1372; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=8MBb3YGLk1JPv2fvJpk6cJVJlQcDE2+JIiyeeg0Lk68=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmTc1XywECc8w0CxRsqYSiVYwkocib3T4IWr4TJ
- EG8rKKjCQWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZk3NVwAKCRD2t4JPQmmg
- c2G3D/0RAMZwl5xOZE/qb0srTh9tc8P/PVEgyE4w3WKEAJnDte8JOGkeaTSSi8483gNhVmAOzkC
- AUH9FbTRC/H+D4IDIq8wEZQB+T7UnSXHLSUXgv/1VyWg+nJMhg9yVh8zvsr2MAFV5GNbB5oXa0l
- Vnx7Omf9fgII6Cz5LKlSe24rQaOvPRBJnxfEuxbLzshpaZU7wvhUTQOjPiiejIHU9CIF9as0OYy
- 8FDgry6jZ2xZNMWz38hUTKOAbirdP71fb4acNV9jeuItc/pv2aVGLFI0JCPMKMfkf0D7qipIXB/
- aEb56HCkNCSSVUZKkYLpPyngYh+XR5RKF5gkLWIxXfMFK8xr7uuHfaW7F5GOXee4UGFiqPQ2zIa
- EL4pJ20GW7sfKVoL9P6wCbmdAnVw6hzM60/q1KM8tJXV7/EZlxGbSM2FeSwthCrY/H3NXm+WQkH
- tJUXnDwzPNdkbJtmaYAvvp7KeONZQ8zDGqqyVZUVqCdyzIdjplTJVE1Ae42GYZSSqHcsdD5fzfk
- 7dlfvXTvafGnaJZc1tFiGUO/8AVy1CdWair7hReLP2HZkECh6JRwAC+oQHpFWG+lrcMUzABblTx
- tnStid3miNgU26oxSGPHvln7X1niGFYiIxtzcjVh2vy6ZWbPyfT6NtL0c9KYcKQEFIpu0ZtjLLb
- WRVcA9UKk0dbLrA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-These tests are rarely unstable. It depends on the CI running the tests,
-especially if it is also busy doing other tasks in parallel, and if a
-debug kernel config is being used.
+Hi Matthieu,
 
-It looks like this issue is sometimes present with the NetDev CI. While
-this is being investigated, the tests are marked as flaky not to create
-noises on such CIs.
+Thank you for your modifications, that's great!
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/491
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 2 ++
- 1 file changed, 2 insertions(+)
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b869b46823d7..2b66c5fa71eb 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3101,6 +3101,7 @@ fail_tests()
- {
- 	# single subflow
- 	if reset_with_fail "Infinite map" 1; then
-+		MPTCP_LIB_SUBTEST_FLAKY=1
- 		test_linkfail=128 \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0 +1 +0 1 0 1 "$(pedit_action_pkts)"
-@@ -3109,6 +3110,7 @@ fail_tests()
- 
- 	# multiple subflows
- 	if reset_with_fail "MP_FAIL MP_RST" 2; then
-+		MPTCP_LIB_SUBTEST_FLAKY=1
- 		tc -n $ns2 qdisc add dev ns2eth1 root netem rate 1mbit delay 5ms
- 		pm_nl_set_limits $ns1 0 1
- 		pm_nl_set_limits $ns2 0 1
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9190142159
 
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/12b33a2436b5
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D855015
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
