@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674AA22086;
-	Wed, 22 May 2024 09:45:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5AD4B811E0
+	for <mptcp@lists.linux.dev>; Wed, 22 May 2024 09:50:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716371118; cv=none; b=iFDiKDHP8iG5TCGKSPHkEnSQsqYaPzfOqEaNJEb00Y7WuXmZbWLokK50YaFo54GHS5dW3mndT9kNTv6XbA55LiSDxN6WtDdISrUrn9INhna0WiHzPn8XJfYIIB3kuoqn2y2630WKFhMtYHHagTdAy7LD87OSIZRfWFRa882rSFE=
+	t=1716371450; cv=none; b=qpoReioNkhZyc2W3AyDNIcYd2izHIm/yzvuu8sRF1zfCpXxMs0SliT2ZCfZqIWyhserNaFyA9HhikRcjGInPREYEyiSliFLPIPkA3mZLuhdtGCMWRy0yKwGiPb8LZBs8C2roKU6JPY9k5Nrbwv5pSnQbB6KJIdjt4UgNoAnU650=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716371118; c=relaxed/simple;
-	bh=qYv4awJponJVTMURVaZCUK355/IK5Q/ijJovQLrQtFU=;
+	s=arc-20240116; t=1716371450; c=relaxed/simple;
+	bh=Nvq/JM+0YZNW+5yJfocLZb1g/NBmldxCKcIzpIGPuIY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=d2+id9wPV9oovfhNV4U1hcC2rogtzxSMz0OjWYZCFIRMZXAWd6FWZQAzO62tXLOjVs8cU2Rji+V46v3uK5wkpyJyehnjYIVPB6q3TbUxv2nMqeMDFEZzpBEqOJG69zBw9BM2+JqA9PfKsSo4zCglJ2d3/bY0wqgZw7YV1O30Qpg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kj38TorU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ez528B24at41292KeOftJyVToaEXwqBPTl+XB5KQObcNNuhdnC7lpkZUu7H0LdiC5kiJsCbezjoVBbo8GUmF0d6swXwSDobqxm7JrFnYzJsYTGw6yqseL/DGJxGhlYqBlQxfyJc10vKvoBx+6r85U1DHf5dNbVD4WkeV95Ijoh0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qPZ87ped; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kj38TorU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 78E4DC2BD11;
-	Wed, 22 May 2024 09:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qPZ87ped"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53B20C2BD11;
+	Wed, 22 May 2024 09:50:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716371118;
-	bh=qYv4awJponJVTMURVaZCUK355/IK5Q/ijJovQLrQtFU=;
+	s=k20201202; t=1716371449;
+	bh=Nvq/JM+0YZNW+5yJfocLZb1g/NBmldxCKcIzpIGPuIY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Kj38TorUK3Ojrmadg1u8VdLR0WVyWCyAWIEgg1euDZ6fb6GvkQ0ZUgxfy67dfsCMr
-	 3YY+zLCy3lA/mGrqLsX8cD4JmYqhOZPUYyoBXO6KoC7cgO9KaKnuDgfCn8ocxWRGwX
-	 n2UIejO7Bm4sDN9NNfSLSBjC7F1p8kio3kgGEY3T/5fvv5KktLbuT82itc37KQAjH2
-	 tSGF19M513bgiROjKC/09B17zwmg7YOiprq+/pceAhNsTOxqxShIShqFVrsZlBckdr
-	 RAajctdyAluqYfhGGiRP1F3cLTjnK0EVayaiZD9P2CYvfS7OXsDcEEp0ISdhHbCX7M
-	 /DcN1FhIwLTjQ==
-Message-ID: <33c849d2-994b-4380-a177-88412e698615@kernel.org>
-Date: Wed, 22 May 2024 11:45:07 +0200
+	b=qPZ87pedPNuNc2kYzwG64+BQ2z+FSnS/aCfj0qV+UKlR9NGSGyHBHK7aPpyoxCd6E
+	 8n9qyuf8sN1Ad4iFeF4+coc9GlpRcKcl/klqXCWYd4Zn3IHxQKSQYejv9EMCf86+/p
+	 ctbL0m4V1J21jhLPGLumGb7YCIe1+rBfQAB1aVlbFaw2ZV90mWhUWCRhk7D2b0/qQP
+	 3rYtjLypUl4lwgIb8TLWUWALVSqAQFveagDG9xYK7+NThT5lYvivooMOHvpBRBVTrp
+	 hEWxi2GeYqd3ANHlP/gDRXIHXXXAThDsh0SDQ5YaPctHDzAvEa2n8HJbm/qjyJLckG
+	 y9gKHL7Ge2YPA==
+Message-ID: <210bb3ad-2092-441b-8295-8d78e58f3239@kernel.org>
+Date: Wed, 22 May 2024 11:50:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 0/3] doc: mptcp: new general doc and fixes
+Subject: Re: [PATCH mptcp-next v2 1/4] selftests: mptcp: lib: support flaky
+ subtests
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Jonathan Corbet <corbet@lwn.net>,
- Gregory Detal <gregory.detal@gmail.com>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240520-upstream-net-20240520-mptcp-doc-v1-0-e3ad294382cb@kernel.org>
- <8945a5ae3f94572daae42d4bfdc326bcf0889964.camel@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org>
+ <20240521-selftests-mptcp-disable-flaky-v2-1-eba143bcbad0@kernel.org>
+ <3a5062b1-98aa-77fe-a3ee-331456de7388@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,36 +88,81 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8945a5ae3f94572daae42d4bfdc326bcf0889964.camel@redhat.com>
+In-Reply-To: <3a5062b1-98aa-77fe-a3ee-331456de7388@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-On 22/05/2024 11:35, Paolo Abeni wrote:
-> Hi,
+Thank you for the review!
+
+On 22/05/2024 02:27, Mat Martineau wrote:
+> On Tue, 21 May 2024, Matthieu Baerts (NGI0) wrote:
 > 
-> On Mon, 2024-05-20 at 10:16 +0200, Matthieu Baerts (NGI0) wrote:
->> A general documentation about MPTCP was missing since its introduction
->> in v5.6. The last patch adds a new 'mptcp' page in the 'networking'
->> documentation.
+>> Some subtests can be unstable, failing once every X runs. Fixing them
+>> can take time: there could be an issue in the kernel or in the subtest,
+>> and it is then important to do a proper analysis, not to hide real bugs.
 >>
->> The first patch is a fix for a missing sysctl entry introduced in v6.10
->> rc0, and the second one reorder the sysctl entries.
+>> To avoid creating noises on the different CIs, it is important to have a
+>> simple way to mark subtests as flaky, and ignore the errors. This is
+>> what this patch introduces: subtests can be marked as flaky by setting
+>> MPTCP_LIB_SUBTEST_FLAKY env var to 1, e.g.
 >>
->> These patches can be applied without conflicts on top of the 'net' tree
->> and the 'docs-next' one. They are currently based on top of the current
->> 'net' tree because the first patch is a fix for a patch that is not in
->> 'docs-next' yet.
+>>  MPTCP_LIB_SUBTEST_FLAKY=1 <run flaky subtest>
+>>
+>> The subtest will be executed, and errors (if any) will be ignored. It is
+>> still good to run these subtests, as it exercises code, and the results
+>> can still be useful for the on-going investigations.
+>>
+>> Note that the MPTCP CI will continue to track these flaky subtests, and
+>> a ticket should be created before marking a subtest as flaky.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 38 ++++++++++++++++++
+>> ++------
+>> 1 file changed, 29 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/
+>> testing/selftests/net/mptcp/mptcp_lib.sh
+>> index ad2ebda5cb64..44febbc11131 100644
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+>> @@ -21,6 +21,7 @@ declare -rx MPTCP_LIB_AF_INET6=10
+>>
+>> MPTCP_LIB_SUBTESTS=()
+>> MPTCP_LIB_SUBTESTS_DUPLICATED=0
+>> +MPTCP_LIB_SUBTEST_FLAKY=0
+>> MPTCP_LIB_TEST_COUNTER=0
+>> MPTCP_LIB_TEST_FORMAT="%02u %-50s"
+>> MPTCP_LIB_IP_MPTCP=0
+>> @@ -41,6 +42,18 @@ else
+>>     readonly MPTCP_LIB_COLOR_RESET=
+>> fi
+>>
+>> +# SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when
+>> validating all
+>> +# features using the last version of the kernel and the selftests to
+>> make sure
+>> +# a test is not being skipped by mistake.
+>> +mptcp_lib_expect_all_features() {
+>> +    [ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
+>> +}
 > 
-> These patches are IMHO net-next material. If you don't mind I'll defer
-> them.
+> Hi Matthieu -
+> 
+> This is overloading SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES to also
+> override any "flaky" flags, and treat those tests normally, correct?
 
-No problem, my bad, I thought it was OK to send new doc about existing
-features and missing items to -net. I will re-send them next week,
-targetting net-next then.
+Correct.
+
+> I think it's preferable to add an environment varaible specific to this
+> (like SELFTESTS_MPTCP_LIB_OVERRIDE_FLAKY), what do you think?
+
+Sure: I initially started to do that, then I thought "expecting all
+features" also means "expecting all tests to work" somehow, but I agree
+it is not clear. I will add a new dedicated env var in the v3 (and
+target mptcp-net), and set it on the CI side as well.
 
 Cheers,
 Matt
