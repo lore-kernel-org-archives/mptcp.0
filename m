@@ -1,97 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59202B9A7;
-	Tue, 21 May 2024 18:31:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E34CA50
+	for <mptcp@lists.linux.dev>; Wed, 22 May 2024 00:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716316263; cv=none; b=hDq1sX2Id6iFDbluyCDf71XCWMsIjhiX5/mBYQute0FZe+8FrEb4y7Zafzt6S2BDU8VaJar//8SHiGyF684zYWF3omOyzjzsk/5mhX7edNft9XbIMOs6QmdezzRBS7kfino9TI0xW7TlZ2wjas0eI4gw8Vm7zMW1MzUBgzjq99Y=
+	t=1716337636; cv=none; b=pZFYjWAP0TK9iyP4pJ1wuqCBfDuHnjhmmvixDel0y396IFhBqSI2sPka+Dxo45h25F2XjwFH3IJR6fjvIBnbRGTq0W8tmM7juyoeDPy8wCm7TygJWqioQQkZGJFbcB8zPMXmamOlKMFqy6Qo4W7TpG+nnguqFlnUtSOFfSvAdOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716316263; c=relaxed/simple;
-	bh=UzsGdwJz/Brc2hgT0ha+Ss2WZxJOw4KDyYb7rLojnz8=;
+	s=arc-20240116; t=1716337636; c=relaxed/simple;
+	bh=KGVS/Yg60Sf5z72VV6dBdf/8qxTU5L8R6nLzV2YUnyY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=AH3gjtMWYbq/B0Gx3ehMv1GYqCfmBwrfs4iSflqrCImW0NnSmNcDd1sbK+LYBrW/OHkdymCAzx+c7ogNtedIo1116vj9qS8tr+zDQJrfXkRSBvmOqYX1m7eFWSAyWt2TLFqeOfg6415ZCXK1n0Q8n+JalE6m15Mmr5rChNTBStU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WRoKrGrQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=p//CbCRcU2PwElka5tK0I9DnqK++Sa4R8OEyZPbDnOJ+7sLsQcME9IiWyl3Bd93NXRy31+oLtR4Jh431MFXHFOYQU5Ji8ImbOioXTIX9/PiAhLjdqVDWoAUla7ZNj1hgrT2OdFZnTs/w67sVFXtHStaw24glbtePGy+rsBNECDc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QXbULbwN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WRoKrGrQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 039D7C2BD11;
-	Tue, 21 May 2024 18:31:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QXbULbwN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC32DC2BD11;
+	Wed, 22 May 2024 00:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716316263;
-	bh=UzsGdwJz/Brc2hgT0ha+Ss2WZxJOw4KDyYb7rLojnz8=;
+	s=k20201202; t=1716337636;
+	bh=KGVS/Yg60Sf5z72VV6dBdf/8qxTU5L8R6nLzV2YUnyY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=WRoKrGrQZOCjJuFjxcJt5qdA5n7OpRVziUqYEnc15RYyic+NZImF4s98u9PMiiuTr
-	 18QobjbvQ5vs3AFanAADzoy1LIYstrJzvc0/C6Njfd+a5R4fh37UvTTkuqI6OmFiVT
-	 icb0xlGuM60UbeMVWPXidJGp/jfAnC8IMbW/WMdXEzltAefy9iQr4Fkvm8JpS/sQJl
-	 DDEPefAJ6TqHnGo0svWlYl4uFYM2id8vG3EmN4MIRcwbzbf+i1xQjuqCjXJ/xZqE20
-	 a1UWn0bCGIMkXwJAqszVzB6888P7bULfz1rgq4kyi6yhHUzt5w8y9PsZKBT7bWe0pM
-	 zz7MSbWLDaOxw==
-Date: Tue, 21 May 2024 11:31:02 -0700 (PDT)
+	b=QXbULbwNnAkHCSSDWVtXll7lU9GNXLEJiqIA6JfOQx+gHpFtMS+WVyjgueZ56w1jR
+	 QiA4vwLJ88Q15tDeii24XuDgRVqnDUyHEYayXnjvEZjCza6Rwpsoy8oLFOlvgUxTBH
+	 +Poh1HocKBT2/Fs77r8oa4fBnf7UPuQzT9i/AEnLSE4SOAAUWYKvkSI/Zjpfe/0ges
+	 mGOB2y6TRpR+9LKevOG/fOhLyZ96OyrO3I0FAVue4RLYXAp2M3CJ+wJbpuQjeilh56
+	 quI4S1CheIx7gtAoR97iS8pI10CI1sVwlpS/tl8devZLqNCJ8sae8ACMuJMyGKmCr+
+	 C6wEfWaOo8Reg==
+Date: Tue, 21 May 2024 17:27:15 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Yunsheng Lin <linyunsheng@huawei.com>
-cc: davem@davemloft.net, kuba@kernel.org, pabeni@redhat.com, 
-    netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-    Alexander Duyck <alexander.duyck@gmail.com>, 
-    Ayush Sawal <ayush.sawal@chelsio.com>, Eric Dumazet <edumazet@google.com>, 
-    Willem de Bruijn <willemdebruijn.kernel@gmail.com>, 
-    Jason Wang <jasowang@redhat.com>, Ingo Molnar <mingo@redhat.com>, 
-    Peter Zijlstra <peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, 
-    Vincent Guittot <vincent.guittot@linaro.org>, 
-    Dietmar Eggemann <dietmar.eggemann@arm.com>, 
-    Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, 
-    Mel Gorman <mgorman@suse.de>, 
-    Daniel Bristot de Oliveira <bristot@redhat.com>, 
-    Valentin Schneider <vschneid@redhat.com>, 
-    John Fastabend <john.fastabend@gmail.com>, 
-    Jakub Sitnicki <jakub@cloudflare.com>, David Ahern <dsahern@kernel.org>, 
-    Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-    Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, 
-    Jiri Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>, 
-    bpf@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [RFC v4 11/13] net: replace page_frag with page_frag_cache
-In-Reply-To: <20240515130932.18842-12-linyunsheng@huawei.com>
-Message-ID: <b405347e-3fde-8521-6541-c0afc6a48e3d@kernel.org>
-References: <20240515130932.18842-1-linyunsheng@huawei.com> <20240515130932.18842-12-linyunsheng@huawei.com>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next v2 1/4] selftests: mptcp: lib: support flaky
+ subtests
+In-Reply-To: <20240521-selftests-mptcp-disable-flaky-v2-1-eba143bcbad0@kernel.org>
+Message-ID: <3a5062b1-98aa-77fe-a3ee-331456de7388@kernel.org>
+References: <20240521-selftests-mptcp-disable-flaky-v2-0-eba143bcbad0@kernel.org> <20240521-selftests-mptcp-disable-flaky-v2-1-eba143bcbad0@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Wed, 15 May 2024, Yunsheng Lin wrote:
+On Tue, 21 May 2024, Matthieu Baerts (NGI0) wrote:
 
-> Use the newly introduced prepare/probe/commit API to
-> replace page_frag with page_frag_cache for sk_page_frag().
+> Some subtests can be unstable, failing once every X runs. Fixing them
+> can take time: there could be an issue in the kernel or in the subtest,
+> and it is then important to do a proper analysis, not to hide real bugs.
 >
-> CC: Alexander Duyck <alexander.duyck@gmail.com>
-> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+> To avoid creating noises on the different CIs, it is important to have a
+> simple way to mark subtests as flaky, and ignore the errors. This is
+> what this patch introduces: subtests can be marked as flaky by setting
+> MPTCP_LIB_SUBTEST_FLAKY env var to 1, e.g.
+>
+>  MPTCP_LIB_SUBTEST_FLAKY=1 <run flaky subtest>
+>
+> The subtest will be executed, and errors (if any) will be ignored. It is
+> still good to run these subtests, as it exercises code, and the results
+> can still be useful for the on-going investigations.
+>
+> Note that the MPTCP CI will continue to track these flaky subtests, and
+> a ticket should be created before marking a subtest as flaky.
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
-> .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
-> .../chelsio/inline_crypto/chtls/chtls_io.c    | 100 ++++---------
-> .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
-> drivers/net/tun.c                             |  44 ++----
-> include/linux/sched.h                         |   4 +-
-> include/net/sock.h                            |  14 +-
-> kernel/exit.c                                 |   3 +-
-> kernel/fork.c                                 |   3 +-
-> net/core/skbuff.c                             |  59 +++++---
-> net/core/skmsg.c                              |  22 +--
-> net/core/sock.c                               |  46 ++++--
-> net/ipv4/ip_output.c                          |  33 +++--
-> net/ipv4/tcp.c                                |  35 ++---
-> net/ipv4/tcp_output.c                         |  28 ++--
-> net/ipv6/ip6_output.c                         |  33 +++--
-> net/kcm/kcmsock.c                             |  30 ++--
-> net/mptcp/protocol.c                          |  67 +++++----
-> net/sched/em_meta.c                           |   2 +-
-> net/tls/tls_device.c                          | 139 ++++++++++--------
-> 19 files changed, 349 insertions(+), 319 deletions(-)
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 38 ++++++++++++++++++++------
+> 1 file changed, 29 insertions(+), 9 deletions(-)
 >
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index ad2ebda5cb64..44febbc11131 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -21,6 +21,7 @@ declare -rx MPTCP_LIB_AF_INET6=10
+>
+> MPTCP_LIB_SUBTESTS=()
+> MPTCP_LIB_SUBTESTS_DUPLICATED=0
+> +MPTCP_LIB_SUBTEST_FLAKY=0
+> MPTCP_LIB_TEST_COUNTER=0
+> MPTCP_LIB_TEST_FORMAT="%02u %-50s"
+> MPTCP_LIB_IP_MPTCP=0
+> @@ -41,6 +42,18 @@ else
+> 	readonly MPTCP_LIB_COLOR_RESET=
+> fi
+>
+> +# SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
+> +# features using the last version of the kernel and the selftests to make sure
+> +# a test is not being skipped by mistake.
+> +mptcp_lib_expect_all_features() {
+> +	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
+> +}
 
-Hi Yunsheng -
+Hi Matthieu -
 
-The MPTCP content looks ok to me. The MPTCP regression tests pass as well.
+This is overloading SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES to also 
+override any "flaky" flags, and treat those tests normally, correct?
 
-Acked-by: Mat Martineau <martineau@kernel.org>
+I think it's preferable to add an environment varaible specific to this 
+(like SELFTESTS_MPTCP_LIB_OVERRIDE_FLAKY), what do you think?
+
+- Mat
+
+> +
+> +mptcp_lib_subtest_is_flaky() {
+> +	# If all features are expected, do not threat them as flaky
+> +	[ "${MPTCP_LIB_SUBTEST_FLAKY}" = 1 ] && ! mptcp_lib_expect_all_features
+> +}
+> +
+> # $1: color, $2: text
+> mptcp_lib_print_color() {
+> 	echo -e "${MPTCP_LIB_START_PRINT:-}${*}${MPTCP_LIB_COLOR_RESET}"
+> @@ -72,20 +85,21 @@ mptcp_lib_pr_skip() {
+> }
+>
+> mptcp_lib_pr_fail() {
+> -	mptcp_lib_print_err "[FAIL]${1:+ ${*}}"
+> +	local title
+> +
+> +	if mptcp_lib_subtest_is_flaky; then
+> +		title="IGNO"
+> +	else
+> +		title="FAIL"
+> +	fi
+> +
+> +	mptcp_lib_print_err "[${title}]${1:+ ${*}}"
+> }
+>
+> mptcp_lib_pr_info() {
+> 	mptcp_lib_print_info "INFO: ${*}"
+> }
+>
+> -# SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES env var can be set when validating all
+> -# features using the last version of the kernel and the selftests to make sure
+> -# a test is not being skipped by mistake.
+> -mptcp_lib_expect_all_features() {
+> -	[ "${SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES:-}" = "1" ]
+> -}
+> -
+> # $1: msg
+> mptcp_lib_fail_if_expected_feature() {
+> 	if mptcp_lib_expect_all_features; then
+> @@ -208,7 +222,13 @@ mptcp_lib_result_pass() {
+>
+> # $1: test name
+> mptcp_lib_result_fail() {
+> -	__mptcp_lib_result_add "not ok" "${1}"
+> +	if mptcp_lib_subtest_is_flaky; then
+> +		# It might sound better to use 'not ok # TODO' or 'ok # SKIP',
+> +		# but some CIs don't understand 'TODO' and treat SKIP as errors.
+> +		__mptcp_lib_result_add "ok" "${1} # IGNORE"
+> +	else
+> +		__mptcp_lib_result_add "not ok" "${1}"
+> +	fi
+> }
+>
+> # $1: test name
+>
+> -- 
+> 2.43.0
+>
+>
+>
