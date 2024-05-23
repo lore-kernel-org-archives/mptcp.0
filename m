@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D52C517F6
-	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:34:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E211213D2AC
+	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 10:10:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716456878; cv=none; b=L6zKZRP+hSRNAXA3bUmUF4ld928yugLCUlWPms7PfuAF4n+XjtTwpfHul2/QsnaMryqbgEk0kWz0tBTqK0Fwe2/MtjzGWzN+DiJgBR6qX9GGF2lChJl29a93NCCi1cIrZzb/3nyo2SZvwBjBLHRW6ihLa276bEypA8kBS2zurjo=
+	t=1716459038; cv=none; b=K/+UQe15IK2vJQAhiYhAd+n6Vi+cpw4CxfnA9qNwaWGDXjN3erSd9Bn3ZJlB/m7AIubOwRG7b1tVzUvPIla80AqxqA2vsrqNYftWyjOY14th0Q8GE9B/A7Tp8lvb6Hk2Jtoh8x3HEpn9y5N+FEvoJOhZoKEsUYc7krZhSk1M6TQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716456878; c=relaxed/simple;
-	bh=+NsdWYQIg5HdbUG6r1R/WcZN7jjHcqmqWPStUqI9PzY=;
+	s=arc-20240116; t=1716459038; c=relaxed/simple;
+	bh=r8b9bItFeYGAq4Ce9zzCIjUTJol/Q5lbVQvJ6xKjrtw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SNQ40brOrkei58hP1k653S06CZ8qqnJEJU2/66E/Y+XIYGJO9vakSNbq8cVRwGAI6Ad5g8F1710pvkixRN/GpqbJTQTqmbJ3kZ2VZP6PPoDLxfzBKTdVmnoD5Xm1/PvmBVKq0T219wrEWJ63qUCi8lTLw5mlFLSfic8Cd4EDgWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqWNZAOr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HH7a9BmFpM9qsJCsv0fosh2lrwG/rXru6eRkgmh+s21qTtVGkwN0SJR9LFnH5JHaRWzlxMtQ51f8hCGlUnrrCrHj8meJujC05Kjg0ZUvq9DfUM/XNxRPBvvMcAo2Ivam/L79bJ+y6cjeohbHPxZtPlyS3CsCZHUY2LJ6dMJBd+c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ST/94iHn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqWNZAOr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AF65C2BD10;
-	Thu, 23 May 2024 09:34:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ST/94iHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE4F0C2BD10;
+	Thu, 23 May 2024 10:10:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716456878;
-	bh=+NsdWYQIg5HdbUG6r1R/WcZN7jjHcqmqWPStUqI9PzY=;
+	s=k20201202; t=1716459037;
+	bh=r8b9bItFeYGAq4Ce9zzCIjUTJol/Q5lbVQvJ6xKjrtw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YqWNZAOrccA+8+l6w/GZBX72XPL6wMhRVoFAqklifWDwpVapWodSN6N1Ek6AT2T9F
-	 LeG99/XlysdQBgKguqCcO2NOXJhvVqfkXeSGXuMyiiAsWzj5nWegUgwlqrPVxHH5LP
-	 tF+tU0gAdRQA/MIMiJjaRdqFIQepsccUjKjblTgS7n+R5TMJKzzNUhIxfDEoAkFqTA
-	 vPxdEKOoRi7o2JIMTeJqoQl8ignD1t7+uZ7wy2odld/l0655lrHDBllb1uxslo3MVm
-	 g1HfbHLvIQ3du5NnEI1ptuOfkMbe3nzv/472m6JTrgAqAliLtllRYfr6L7gTX8aWEb
-	 4Nu7ALsMP4BRg==
-Message-ID: <93c1de5e-4196-4d25-93f4-1addb45d7e91@kernel.org>
-Date: Thu, 23 May 2024 11:34:35 +0200
+	b=ST/94iHngasBRq8+ZEPoGQqag++gVOAWrIK558Wf/jciT/j9S5QGmfIOFrlK4dJvI
+	 OFD8QhwgMp6EjCL1sNwDGz5qnxb2aO+QIVRRCjQJksrCXF0glXh9ZDbJBG81cwS32O
+	 uGDgi8FRf9P3htlRwvZSCgjn61BZ+XtXdOXshlSim2DfcYdrst9JUZzMwRkq4U0EeE
+	 L3231Edh7FtIWS7VkO1CaWDL/BAnGbxFBJQ2RrejJ5wQ7JW+hAUh0A8GDaI5nYN29f
+	 5D/eGh51aaKdC9UNRabBvTovXIxdzTC1vHIl8eBREUVr9ONoOpKGrwZeuWcPTWna+e
+	 G6pWQyWViZY0g==
+Message-ID: <cac043fe-feb7-4c59-a895-8541f738af1b@kernel.org>
+Date: Thu, 23 May 2024 12:10:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/4] selftests: mptcp: use setup_ns helper
- in lib.sh
+Subject: Re: [PATCH mptcp-net v3 0/4] selftests: mptcp: mark unstable subtests
+ as flaky
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1716451525.git.tanggeliang@kylinos.cn>
- <644ac151204efcd05b047d4e9b1545747ba785f1.1716451525.git.tanggeliang@kylinos.cn>
- <4fe52b77-75af-42ff-9079-fc61fb2509d8@kernel.org>
- <ee6ae6878137687a0734cd7ea6767a86a8fb21a3.camel@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240522-selftests-mptcp-disable-flaky-v3-0-a10c68bf2680@kernel.org>
+ <be731768-e8ce-2f05-0e49-21909e8cda19@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,87 +87,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ee6ae6878137687a0734cd7ea6767a86a8fb21a3.camel@kernel.org>
+In-Reply-To: <be731768-e8ce-2f05-0e49-21909e8cda19@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 23/05/2024 11:26, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Thu, 2024-05-23 at 11:18 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 23/05/2024 10:08, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch includes lib.sh into mptcp_lib.sh, uses setup_ns()
->>> helper
->>> defined in lib.sh to set up namespaces in mptcp_lib_ns_init(). Then
->>> for
->>> each namespace in NS_LIST, run all sysctl commands. This can drop
->>> some
->>> duplicate code.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 19 +++++++--------
->>> ----
->>>  1 file changed, 7 insertions(+), 12 deletions(-)
->>>
->>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>> b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>> index ad2ebda5cb64..59eb77e7813d 100644
->>> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
->>
->>
->> (...)
->>
->>> @@ -412,20 +414,13 @@ mptcp_lib_check_tools() {
->>>  }
->>>  
->>>  mptcp_lib_ns_init() {
->>> -	local sec rndh
->>> -
->>> -	sec=$(date +%s)
->>> -	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
->>> +	setup_ns "${@}"
->>>  
->>>  	local netns
->>> -	for netns in "${@}"; do
->>> -		eval "${netns}=${netns}-${rndh}"
->>> -
->>> -		ip netns add "${!netns}" || exit ${KSFT_SKIP}
->>> -		ip -net "${!netns}" link set lo up
->>> -		ip netns exec "${!netns}" sysctl -q
->>> net.mptcp.enabled=1
->>> -		ip netns exec "${!netns}" sysctl -q
->>> net.ipv4.conf.all.rp_filter=0
->>> -		ip netns exec "${!netns}" sysctl -q
->>> net.ipv4.conf.default.rp_filter=0
->>> +	for netns in $NS_LIST; do
->>
->> Could you add {} (${NS_LIST}), to keep the same style (and usually
->> recommended in order to avoid typos, etc.)
->>
->> Also, I wonder if it is a good idea to use '${NS_LIST}': it might
->> contain existing netns. e.g. with your patch 3/4, in mptcp_connect,
->> mptcp_lib_ns_init will be called twice, modifying the first netns
->> twice.
->>
->> What if you keep:
->>
->>   for netns in "${@}"; do
->>
->> and use "${!netns}" instead?
-> 
-> We don't know the name of ns now because "mktemp -u XXXXXX" is executed
-> within setup_ns(). So we have to use $NS_LIST.
+Hi Mat,
 
-Will 'setup_ns' not assign the variable names given in parameter? If we
-give 'ns1', it will set 'ns1=xxxx'. So we can use '${ns1}' to get the
-name. If 'netns="ns1"', we can then get the name with '${!netns}', using
-'!' (${!netns}) to resolve the name, no?
+On 22/05/2024 17:38, Mat Martineau wrote:
+> On Wed, 22 May 2024, Matthieu Baerts (NGI0) wrote:
+> 
+>> Some subtests can be unstable, failing once every X runs. Fixing them
+>> can take time: there could be an issue in the kernel or in the subtest,
+>> and it is then important to do a proper analysis, not to hide real bugs.
+>>
+>> To avoid creating noises on the different CIs, some subtests have been
+>> marked as flaky. As a result, errors with these subtests (if any) are
+>> ignored.
+>>
+>> Note that the MPTCP CI will continue to track these flaky subtests. All
+>> these unstable subtests are also tracked by our bug tracker.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Changes in v3:
+>> - Patch 1/4:
+>>  - use SELFTESTS_MPTCP_LIB_OVERRIDE_FLAKY env var (Mat)
+>>  - clearly indicate 'flaky' in the output / TAP format
+>> - Target mptcp-net: these are "fixes" for the selftests. I don't think
+>>  we need to add Fixes tag, right?
+>> - Link to v2: https://lore.kernel.org/r/20240521-selftests-mptcp-
+>> disable-flaky-v2-0-eba143bcbad0@kernel.org
+>>
+> 
+> Thanks for the v3, this version LGTM:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+Thank you for the reviews!
+
+Now in our tree (fixes for -net):
+
+New patches for t/upstream-net and t/upstream:
+- 31a8e77f8a8e: selftests: mptcp: lib: support flaky subtests
+- 72b77cdcc01a: selftests: mptcp: simult flows: mark 'unbalanced' tests
+as flaky
+- 15017664727f: selftests: mptcp: join: mark 'fastclose' tests as flaky
+- 37d7a595c026: selftests: mptcp: join: mark 'fail' tests as flaky
+- Results: c60497ee2fda..dffeea9a0a9a (export-net)
+- Results: 1d530a1e5853..40645b1ba57f (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/1dfb0687fdfad507a166c105b9b9963b6055ea37/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e74ff5f00596022e8aca0d5de76ada6e5aad7066/checks
 
 Cheers,
 Matt
