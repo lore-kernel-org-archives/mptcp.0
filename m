@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7DF13D243
-	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:18:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 620B613C914
+	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455905; cv=none; b=ELjAozkdK9PH+POyJAcu4D8xYEuEwEVSjdnfbPQsf6hHm/LIutB58UCGT1xLiv7X/HISb8jfn8AxSkDw9tffNZK6cE3JpH9pDi/cztzMIxKJL/C/yC2CP5V7UpepRY1As5onaeyygNyzLCFZZ8T3SWXlMLfhcy+6/5BztGMzEQw=
+	t=1716456173; cv=none; b=jI4ag7d+ByMre+etXM1+usdrJlOXIwr1S1m/lsR9ag/NfB11KjxV3X9BvOn9cctpVV/K1zvbz08AX8Ow4p4xY36JnL91K9BM/tVYzkH37FfXnA826ruhKqNcL58jXhDxowDTXDcy81ZzGyvjdX5nlHGyCObuVuuILmS9MZpGWQs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455905; c=relaxed/simple;
-	bh=pH1rd4uwrlouoS82/Hf0nri5F5TFXY4uHp5EhGQ51LU=;
+	s=arc-20240116; t=1716456173; c=relaxed/simple;
+	bh=9j1dGMyCPPYKsN6Vlq1jUKsoCs+4m9YQf4i9Kl4mXfw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XH1wq8Teu/8HyARfVcnBEa5pLCuvpymK6O8f0dE8xxYRUV+UaSrXYP+0C8BNlJ2kKHwI1xhdHPRcWU7c0er8+TQay/wMaN2noUWD/IPnSXgUYEX550Fw8CIMq5/XOh1+QA4zKI0ELfqkcdYjQcDfLZW9nxVwNxbsN+x8gTAJp8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwovosQy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CTBWiIHFLQiMTl42IpeaOmXdJAGa3xx11wMqAChsL1ltweckLcyYRRfeBULU+mOCUUgnGv1tEx0LdTwtmCUFmHoNC5wNwfsKuD+IBET9TyFSqVBYdrVD0kl5r9hdn3CxMLsutdwNoGIfxbEeedAOdvHK8o9gER/g5sGthENAMFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vN+awECM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwovosQy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23E3C2BD10;
-	Thu, 23 May 2024 09:18:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vN+awECM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D046C3277B;
+	Thu, 23 May 2024 09:22:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716455903;
-	bh=pH1rd4uwrlouoS82/Hf0nri5F5TFXY4uHp5EhGQ51LU=;
+	s=k20201202; t=1716456172;
+	bh=9j1dGMyCPPYKsN6Vlq1jUKsoCs+4m9YQf4i9Kl4mXfw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JwovosQyDnMo8NB+4GUgOJaBPhLphGe52Y/3hITv8CO8N1dr9M2au4HpLStZwdcJm
-	 P1CNKaVju+s1goOdVomDE4JnV0GMsP3c3v8gcFh5qPFxHV4SXOZv6haKNfLyeTsZIs
-	 qPEeSuqxWEeEGevbwnugdl3qrKCsgYL5Pe8adJhU1qscuJqM5wM4znctMevdmQhTXE
-	 WNP+b9IgQCMCfmiC3+dE17vjiSW3vAux4cbT56FwhMwO+rty39lf7uw9GfHW3a4Jx0
-	 QnmmFlCJvD4pRSEHYeCCyxRfn+lwlQioaH4baWrGFFIiFi9EKmf4Fmub8C08N6GnUx
-	 fgDfl/p2xqapg==
-Message-ID: <4fe52b77-75af-42ff-9079-fc61fb2509d8@kernel.org>
-Date: Thu, 23 May 2024 11:18:20 +0200
+	b=vN+awECMgHit1XM2tVf4xgWyfeHbXIYU4Ib4Qmdz+t/KjljupNAxKyBItdP6Ssorf
+	 FLY4P5xwwuedwqBvhIoNf2PKhbXb0xYlPZnlJduZAbNPYwJOQCwfGp4k2tP6rQS4EJ
+	 bmpnKotE8jqXffZMWl6I8C9L5ourgU+eVHhdzdzuTXwTFXoztSZmYleL4QIDKW1Jbm
+	 69H4HAD1oUG3hd4BPCVPkWvgFbMrml5b5Qc3ExNg+kDzNQUSYDTyihF83GCaWhF6dl
+	 8Rl8frIKgRk7yV5exwrC1XZLHnWkTxes9S7yOSQpih8+8VGluPVvdcPy71kReSjZjc
+	 +Gf9O/ruhQeiw==
+Message-ID: <77b181f2-cff1-4747-9a4e-5633d54c3121@kernel.org>
+Date: Thu, 23 May 2024 11:22:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/4] selftests: mptcp: use setup_ns helper
- in lib.sh
+Subject: Re: [PATCH mptcp-next v2 3/4] selftests: mptcp: use cleanup_all_ns
+ helper in lib.sh
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716451525.git.tanggeliang@kylinos.cn>
- <644ac151204efcd05b047d4e9b1545747ba785f1.1716451525.git.tanggeliang@kylinos.cn>
+ <d341c904ef486b7e0039c3812ddd659ef7791f9f.1716451525.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <644ac151204efcd05b047d4e9b1545747ba785f1.1716451525.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d341c904ef486b7e0039c3812ddd659ef7791f9f.1716451525.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,65 +96,60 @@ Hi Geliang,
 On 23/05/2024 10:08, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch includes lib.sh into mptcp_lib.sh, uses setup_ns() helper
-> defined in lib.sh to set up namespaces in mptcp_lib_ns_init(). Then for
-> each namespace in NS_LIST, run all sysctl commands. This can drop some
-> duplicate code.
+> This patch uses cleanup_all_ns() helper defined in lib.sh instead of
+> all mptcp_lib_ns_exit() in mptcp seltests. And drop this duplicate
+> mptcp helper in mptcp_lib.sh.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 19 +++++++------------
->  1 file changed, 7 insertions(+), 12 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index ad2ebda5cb64..59eb77e7813d 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> In mptcp_connect.sh, drop mptcp_lib_ns_exit in check_mptcp_disabled()
+> directly, this "disabled_ns" will be deleted by cleanup_all_ns() in
+> cleanup(), together with "ns1 - ns4".
 
+Mmh, I think it is better to clear resources when we don't need them,
+than cleaning them all at the end. New code doing that might be OK, but
+here switching to that while not really gaining anything new looks less
+good.
+
+> In mptcp_join.sh, drop mptcp_lib_ns_exit in cleanup_partial() directly,
+> each existing namespace will delete automaticly in setup_ns(), only
+> adding cleanup_all_ns in cleanup() is enough.
+
+Mmh, same here: I think it is better to clean at the end of a test, than
+at the beginning of a new one: if there are issues to delete it, it will
+be clearer it is due to the previous test, not the new one.
 
 (...)
 
-> @@ -412,20 +414,13 @@ mptcp_lib_check_tools() {
->  }
->  
->  mptcp_lib_ns_init() {
-> -	local sec rndh
-> -
-> -	sec=$(date +%s)
-> -	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
-> +	setup_ns "${@}"
->  
->  	local netns
-> -	for netns in "${@}"; do
-> -		eval "${netns}=${netns}-${rndh}"
-> -
-> -		ip netns add "${!netns}" || exit ${KSFT_SKIP}
-> -		ip -net "${!netns}" link set lo up
-> -		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
-> -		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
-> -		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
-> +	for netns in $NS_LIST; do
-
-Could you add {} (${NS_LIST}), to keep the same style (and usually
-recommended in order to avoid typos, etc.)
-
-Also, I wonder if it is a good idea to use '${NS_LIST}': it might
-contain existing netns. e.g. with your patch 3/4, in mptcp_connect,
-mptcp_lib_ns_init will be called twice, modifying the first netns twice.
-
-What if you keep:
-
-  for netns in "${@}"; do
-
-and use "${!netns}" instead?
-
-
-> +		ip netns exec "${netns}" sysctl -q net.mptcp.enabled=1
-> +		ip netns exec "${netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
-> +		ip netns exec "${netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 59eb77e7813d..bd7d78e4aa83 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -424,14 +424,6 @@ mptcp_lib_ns_init() {
 >  	done
 >  }
 >  
+> -mptcp_lib_ns_exit() {
+> -	local netns
+> -	for netns in "${@}"; do
+> -		ip netns del "${netns}"
+> -		rm -f /tmp/"${netns}".{nstat,out}
+
+These files are no longer removed. It is then no longer just a "simple"
+refactoring. Such behaviour change should be mentioned in the commit
+message, explaining why it is OK to do that.
+
+I would suggest to keep mptcp_lib_ns_exit helper(), and simply call
+'cleanup_ns "${@}"' here instead. If you do that, there is no need to
+modify the other selftests, and you can squash this in patch 2 with
+'setup_ns()'. WDYT?
+
+> -	done
+> -}
+> -
+>  mptcp_lib_events() {
+>  	local ns="${1}"
+>  	local evts="${2}"
+
+(...)
 
 Cheers,
 Matt
