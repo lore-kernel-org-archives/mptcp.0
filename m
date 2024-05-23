@@ -1,80 +1,72 @@
-Received: from chinatelecom.cn (smtpnm6-04.21cn.com [182.42.158.78])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 9C13413CAA3
-	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 08:06:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.158.78
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1BA312AAF0
+	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 08:09:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716451595; cv=none; b=ua4dvbjPglxtr27KPhDLiICFS7rot6xNVrDdMHRni6qAr9Hx2gcYVnR1ppC76LYDlkcpFykqvZzhOUbY4Nd7GLLUbWHxpMZP1vA/JfDGet7d/tUtQe3y5FViaxWlHCuKg3Y2gIvMY9eelRJNpguCkN8iVKKrySTZhBrzJIE33No=
+	t=1716451747; cv=none; b=jWpgQeQ9u0sRYiLhh9GS+xZ1xSHN5DNJguZtWstlQ1YNR2eU9IFoofxpRzuE8Yw5/BSqonHVpA92gSSW8HBCmmk1kAGBSt6f78fK0GHOrbOnQob85hAPdQ/OwIOk5kJbwePqc87BZuWMCkGD4C4H0wbctW2mASsaHPoRgDhSdW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716451595; c=relaxed/simple;
-	bh=nuhth45E674FydDeAsVKMEDEFYrS8BdbMYYvKEhoIx8=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=PXzq2FM03FYiNbZg2NFrcLZT9mhZRv846lrZWZDNClJAJtecCTFg9FOX+iwWyNnV9VpONix1OBrgK92Boct7Eod315B6YBMRCdRV+xtmaguRha5ZelhC+kYsUlqZpGPgg3O5foo965sNyxV421ErO1lyMogGx6ErssgRD3ThlSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.158.78
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
-HMM_SOURCE_IP:192.168.138.117:62437.1273893622
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9 (unknown [192.168.138.117])
-	by chinatelecom.cn (HERMES) with SMTP id 31B9DA053;
-	Thu, 23 May 2024 15:56:42 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([36.111.140.9])
-	by gateway-ssl-dep-84c6c6b769-jsnsj with ESMTP id 4482adcace2444f7834d854347c0dad2 for mptcp@lists.linux.dev;
-	Thu, 23 May 2024 15:56:46 CST
-X-Transaction-ID: 4482adcace2444f7834d854347c0dad2
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 36.111.140.9
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
+	s=arc-20240116; t=1716451747; c=relaxed/simple;
+	bh=OCrDmMiUjXfBPdy6d+Ijvrf5yzPbBwHpGW20F0hfZl8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Z1XxxY7oNHJfaWNPbvYs5faIkwoSAWxEFh8NPtD3/NRVZNU4WvgmsSZhllJnqqME3IOybQWS2zZVT9le5NEpybSZp0KaUOoHyUUtYzOx1pa1gOq6i6+/Xf3SXMpEViYv3CUInTh7gWTBqiOSDJW4+PorELaUxKGKOocov9Iht1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XWB6lPQs; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XWB6lPQs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11D7BC2BD10;
+	Thu, 23 May 2024 08:09:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716451746;
+	bh=OCrDmMiUjXfBPdy6d+Ijvrf5yzPbBwHpGW20F0hfZl8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=XWB6lPQsHPy+yXKIDKJPJWig+bPuqyIqJYImovplw2gh4l8KA4AQzVCBXUepfopz6
+	 ycEutUIuWcdhSayY4Grhxxzo/Eu3cceB9dPwl6gqnFu9FUBYKd/r1tXz+43g2T2/mS
+	 eOsFoCkgzKK4W9ge1JxFujD9jDiavpc1KXbtgfUW8WRDNXanKVr8zmd/TUxdGlj8rn
+	 Bd1PQAnmhLLza31rBoMGCRrMwrs66Mx/JaBHsissR2iNE5iW9MR28F0i/wjYsVglYO
+	 O0y7Bw4IbY4yRSKVVDQ4SWNGULTd4o0bAxtcs8q0hFkpxzw1JR6DiEmW6agA1O1gF7
+	 woKvR+oaV7KFQ==
+From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: geliang@kernel.org,
-	matthieu.baerts@tessares.net,
-	liyonglong@chinatelecom.cn
-Subject: [PATCH] mptcp: make RMADDR MIB counter clearly
-Date: Thu, 23 May 2024 15:56:34 +0800
-Message-Id: <1716450994-5145-1-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/4] use helpers in lib.sh and net_helpers.sh
+Date: Thu, 23 May 2024 16:08:56 +0800
+Message-ID: <cover.1716451525.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 
-From: YonglongLi <liyonglong@chinatelecom.cn>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-it should inc RMADDR MIB counter when received RMADDR but didn't
-find any subflow related,
+This set uses the public helpers defined in net selftests to replace
+helpers in mptcp_lib.sh.
 
-Fixes: 7a7e52e38a40 ("mptcp: add RM_ADDR related mibs")
+v2:
+ - only patch 3 updated, mptcp_join.sh, move cleanup_all_ns from
+   cleanup_partial to cleanup, setup_ns will delete existing
+   namespaces automaticly.
+ - update commit logs.
 
-Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
----
- net/mptcp/pm_netlink.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+Geliang Tang (4):
+  selftests: mptcp: rename ns to ns1 in diag.sh
+  selftests: mptcp: use setup_ns helper in lib.sh
+  selftests: mptcp: use cleanup_all_ns helper in lib.sh
+  selftests: mptcp: use wait_local_port_listen helper
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 7f53e02..766a840 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -814,10 +814,13 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			spin_lock_bh(&msk->pm.lock);
- 
- 			removed = true;
--			__MPTCP_INC_STATS(sock_net(sk), rm_type);
-+			if (rm_type == MPTCP_MIB_RMSUBFLOW)
-+				__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
- 		if (rm_type == MPTCP_MIB_RMSUBFLOW)
- 			__set_bit(rm_id ? rm_id : msk->mpc_endpoint_id, msk->pm.id_avail_bitmap);
-+		else if (rm_type == MPTCP_MIB_RMADDR)
-+			__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		if (!removed)
- 			continue;
- 
+ tools/testing/selftests/net/mptcp/diag.sh     | 58 +++++++++----------
+ .../selftests/net/mptcp/mptcp_connect.sh      |  3 +-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  3 +-
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 43 +++-----------
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  2 +-
+ .../testing/selftests/net/mptcp/pm_netlink.sh |  2 +-
+ .../selftests/net/mptcp/simult_flows.sh       |  2 +-
+ .../selftests/net/mptcp/userspace_pm.sh       |  2 +-
+ 8 files changed, 44 insertions(+), 71 deletions(-)
+
 -- 
-1.8.3.1
+2.43.0
 
