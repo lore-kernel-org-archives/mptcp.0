@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BEC13C9BD
-	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:14:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B7DF13D243
+	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:18:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455645; cv=none; b=EwRH3cf1bNYsb0svJio8uIEezDJ5MiH5LbbImpVCsnZUjVblNUI+cilnIbt48UVycu+CSFBQ4FJHwbQtSnzjv7TcHTGq7gD0rs+zKwUfERaT9pVoBfFddG7+M1opE60Yf4cfhGhkUtx7HXtPMALUeVlgo0qt4fQvDTIb2s+i5lw=
+	t=1716455905; cv=none; b=ELjAozkdK9PH+POyJAcu4D8xYEuEwEVSjdnfbPQsf6hHm/LIutB58UCGT1xLiv7X/HISb8jfn8AxSkDw9tffNZK6cE3JpH9pDi/cztzMIxKJL/C/yC2CP5V7UpepRY1As5onaeyygNyzLCFZZ8T3SWXlMLfhcy+6/5BztGMzEQw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455645; c=relaxed/simple;
-	bh=Mp6RvIlDCDXpv17AoTvqaATGrhTs95kBIruvka81/fc=;
+	s=arc-20240116; t=1716455905; c=relaxed/simple;
+	bh=pH1rd4uwrlouoS82/Hf0nri5F5TFXY4uHp5EhGQ51LU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OTSbUqSoVj66vgf2ablpryEmFwa9YmdTNYfzIpwlj327EnQae9OweC/RV+RE5t0k/Ov2Eca2eOcfolpDxwVQYteCkqgTnoQ7k3+KLzWUvUDJYXMcLJDz1l5kDI1Th/FJVueLvf2n7DGqDccdRQ9ilIddxBZg0/WzdS8Es5T9ZyY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqY1M9JH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XH1wq8Teu/8HyARfVcnBEa5pLCuvpymK6O8f0dE8xxYRUV+UaSrXYP+0C8BNlJ2kKHwI1xhdHPRcWU7c0er8+TQay/wMaN2noUWD/IPnSXgUYEX550Fw8CIMq5/XOh1+QA4zKI0ELfqkcdYjQcDfLZW9nxVwNxbsN+x8gTAJp8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwovosQy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqY1M9JH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98198C2BD10;
-	Thu, 23 May 2024 09:14:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwovosQy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D23E3C2BD10;
+	Thu, 23 May 2024 09:18:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716455645;
-	bh=Mp6RvIlDCDXpv17AoTvqaATGrhTs95kBIruvka81/fc=;
+	s=k20201202; t=1716455903;
+	bh=pH1rd4uwrlouoS82/Hf0nri5F5TFXY4uHp5EhGQ51LU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PqY1M9JHQi3EJN1t+JEgtDu87W7iBQKbm0yo0RXqGbKnVz2dq2P4IeSMD9Jqq3M2B
-	 f0HVGsLb59PDmZzmqy/5oIvzrg7PdL9dvl78tfuXqKP1ksk9AjTbpCxeszeSpzVcHP
-	 g+tLgGSWHI9da5GlzVROauyubFJdZMGcgbR6l7/CpPnAdnLIN53Jyi81SVqFt3SAyx
-	 adEGAOgdcegBgWQTJ4vBrQ7OUcvhzxxyxLjjhFGh9QiFskcn07Qv5c/+ombcrElNBJ
-	 thpEBMA+a0K79n4/7KiYJkonSpQtmLUPhJxIUCCYZiQhzhdAA5egyM+OqSGs4qlJPw
-	 tZ9o1kXr++z0w==
-Message-ID: <24e33b43-3223-4c78-912d-0df88c3f180e@kernel.org>
-Date: Thu, 23 May 2024 11:14:02 +0200
+	b=JwovosQyDnMo8NB+4GUgOJaBPhLphGe52Y/3hITv8CO8N1dr9M2au4HpLStZwdcJm
+	 P1CNKaVju+s1goOdVomDE4JnV0GMsP3c3v8gcFh5qPFxHV4SXOZv6haKNfLyeTsZIs
+	 qPEeSuqxWEeEGevbwnugdl3qrKCsgYL5Pe8adJhU1qscuJqM5wM4znctMevdmQhTXE
+	 WNP+b9IgQCMCfmiC3+dE17vjiSW3vAux4cbT56FwhMwO+rty39lf7uw9GfHW3a4Jx0
+	 QnmmFlCJvD4pRSEHYeCCyxRfn+lwlQioaH4baWrGFFIiFi9EKmf4Fmub8C08N6GnUx
+	 fgDfl/p2xqapg==
+Message-ID: <4fe52b77-75af-42ff-9079-fc61fb2509d8@kernel.org>
+Date: Thu, 23 May 2024 11:18:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/4] selftests: mptcp: rename ns to ns1 in
- diag.sh
+Subject: Re: [PATCH mptcp-next v2 2/4] selftests: mptcp: use setup_ns helper
+ in lib.sh
+Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716451525.git.tanggeliang@kylinos.cn>
- <8ba084333877b94a5675d7a6c8b855c4505956d2.1716451525.git.tanggeliang@kylinos.cn>
-Content-Language: en-GB
+ <644ac151204efcd05b047d4e9b1545747ba785f1.1716451525.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8ba084333877b94a5675d7a6c8b855c4505956d2.1716451525.git.tanggeliang@kylinos.cn>
+In-Reply-To: <644ac151204efcd05b047d4e9b1545747ba785f1.1716451525.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,16 +96,65 @@ Hi Geliang,
 On 23/05/2024 10:08, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The next commit will use setup_ns() helper defined in lib.sh instead
-> of mptcp helper mptcp_lib_ns_init(). But the namespace "ns" in diag.sh
-> makes it not working. Since "ns" is a local variable in this helper.
-> So this patch renames it as "ns1".
+> This patch includes lib.sh into mptcp_lib.sh, uses setup_ns() helper
+> defined in lib.sh to set up namespaces in mptcp_lib_ns_init(). Then for
+> each namespace in NS_LIST, run all sysctl commands. This can drop some
+> duplicate code.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  | 19 +++++++------------
+>  1 file changed, 7 insertions(+), 12 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index ad2ebda5cb64..59eb77e7813d 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 
-Can we not modify 'setup_ns' from 'lib.sh' to avoid the conflict
-instead? e.g. using the variable '_ns' or '__netns' instead of 'ns'.
 
-By doing that, we don't have to modify diag.sh a bit everywhere, which
-is annoying for the backports, etc.
+(...)
+
+> @@ -412,20 +414,13 @@ mptcp_lib_check_tools() {
+>  }
+>  
+>  mptcp_lib_ns_init() {
+> -	local sec rndh
+> -
+> -	sec=$(date +%s)
+> -	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
+> +	setup_ns "${@}"
+>  
+>  	local netns
+> -	for netns in "${@}"; do
+> -		eval "${netns}=${netns}-${rndh}"
+> -
+> -		ip netns add "${!netns}" || exit ${KSFT_SKIP}
+> -		ip -net "${!netns}" link set lo up
+> -		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
+> -		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
+> -		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
+> +	for netns in $NS_LIST; do
+
+Could you add {} (${NS_LIST}), to keep the same style (and usually
+recommended in order to avoid typos, etc.)
+
+Also, I wonder if it is a good idea to use '${NS_LIST}': it might
+contain existing netns. e.g. with your patch 3/4, in mptcp_connect,
+mptcp_lib_ns_init will be called twice, modifying the first netns twice.
+
+What if you keep:
+
+  for netns in "${@}"; do
+
+and use "${!netns}" instead?
+
+
+> +		ip netns exec "${netns}" sysctl -q net.mptcp.enabled=1
+> +		ip netns exec "${netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
+> +		ip netns exec "${netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
+>  	done
+>  }
+>  
 
 Cheers,
 Matt
