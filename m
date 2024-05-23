@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9625B13C9BD
-	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:13:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8BEC13C9BD
+	for <mptcp@lists.linux.dev>; Thu, 23 May 2024 09:14:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716455610; cv=none; b=smkj5VT1DQtNnjqSZFBE9OEieDfg1XI+aYxTSCh19jknPBVZFGpuO43Azhu79s3MpnTQVVVrhG3F/wr0zGDhn0OzGJJb7ndcakTcjxRVBEFwAFvi8PoM+rNaOyuGMePFBOdXvodjaglMRp/ZAmujU3dG6oKhpvsjDXzpGAxt3bk=
+	t=1716455645; cv=none; b=EwRH3cf1bNYsb0svJio8uIEezDJ5MiH5LbbImpVCsnZUjVblNUI+cilnIbt48UVycu+CSFBQ4FJHwbQtSnzjv7TcHTGq7gD0rs+zKwUfERaT9pVoBfFddG7+M1opE60Yf4cfhGhkUtx7HXtPMALUeVlgo0qt4fQvDTIb2s+i5lw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716455610; c=relaxed/simple;
-	bh=drniOmVFu4xvwoVyyza8NwD3oTCNhQ+exL2SeN0KNLE=;
+	s=arc-20240116; t=1716455645; c=relaxed/simple;
+	bh=Mp6RvIlDCDXpv17AoTvqaATGrhTs95kBIruvka81/fc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dZglGJkuycIwo5zSz/OFZ3bQCIbYKitn2xBtGC4JsKAx8K0F7jO8vfsKxXFvAMqtAbGLKN4kvbdjGXZo6DGMDSF3veQEGRMUvpQfLI6FT+oiE8hnJRRWQe3eFnFOxWSdkNmS7YAeQs3lX1+nhfvL9LS944Vk2MmQyPV3GbPzbr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ScCRFz1H; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OTSbUqSoVj66vgf2ablpryEmFwa9YmdTNYfzIpwlj327EnQae9OweC/RV+RE5t0k/Ov2Eca2eOcfolpDxwVQYteCkqgTnoQ7k3+KLzWUvUDJYXMcLJDz1l5kDI1Th/FJVueLvf2n7DGqDccdRQ9ilIddxBZg0/WzdS8Es5T9ZyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PqY1M9JH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ScCRFz1H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 403B2C2BD10;
-	Thu, 23 May 2024 09:13:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PqY1M9JH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98198C2BD10;
+	Thu, 23 May 2024 09:14:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716455610;
-	bh=drniOmVFu4xvwoVyyza8NwD3oTCNhQ+exL2SeN0KNLE=;
+	s=k20201202; t=1716455645;
+	bh=Mp6RvIlDCDXpv17AoTvqaATGrhTs95kBIruvka81/fc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ScCRFz1Hj0x6Hr2DUXDwQ81EGD7e1Cc1227H+iagSo1S/j2/iI23oufwtuL8iyY3f
-	 wEABj2gyRVmNekMSfc8rhzPLUmm63qJ3IOK7+KmMDRmvI12c5CkyPs5dyWAcQlnArt
-	 XSamI2Y97FA6e/1rd3rWp9xzpnKMiujqAodR9/SCfXgfDnwcpruzEm0/FXZFSeJEWt
-	 ywxrpSs/Y+7wMmxfuJsucX+9kXVMckc4DVyBzwrx08NZ4NnSrDS+IsepG164UkfhvT
-	 /lwuuEfMRXW7XDBpNVTWJf7kDruPge6HEve3SwdOESKqEfQyaUq2TSTEk1rGXbfKJE
-	 EtLV4T6oy+VrA==
-Message-ID: <1092d5e6-33c9-472f-8adc-d719162e839e@kernel.org>
-Date: Thu, 23 May 2024 11:13:26 +0200
+	b=PqY1M9JHQi3EJN1t+JEgtDu87W7iBQKbm0yo0RXqGbKnVz2dq2P4IeSMD9Jqq3M2B
+	 f0HVGsLb59PDmZzmqy/5oIvzrg7PdL9dvl78tfuXqKP1ksk9AjTbpCxeszeSpzVcHP
+	 g+tLgGSWHI9da5GlzVROauyubFJdZMGcgbR6l7/CpPnAdnLIN53Jyi81SVqFt3SAyx
+	 adEGAOgdcegBgWQTJ4vBrQ7OUcvhzxxyxLjjhFGh9QiFskcn07Qv5c/+ombcrElNBJ
+	 thpEBMA+a0K79n4/7KiYJkonSpQtmLUPhJxIUCCYZiQhzhdAA5egyM+OqSGs4qlJPw
+	 tZ9o1kXr++z0w==
+Message-ID: <24e33b43-3223-4c78-912d-0df88c3f180e@kernel.org>
+Date: Thu, 23 May 2024 11:14:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/4] use helpers in lib.sh and
- net_helpers.sh
-Content-Language: en-GB
+Subject: Re: [PATCH mptcp-next v2 1/4] selftests: mptcp: rename ns to ns1 in
+ diag.sh
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716451525.git.tanggeliang@kylinos.cn>
+ <8ba084333877b94a5675d7a6c8b855c4505956d2.1716451525.git.tanggeliang@kylinos.cn>
+Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1716451525.git.tanggeliang@kylinos.cn>
+In-Reply-To: <8ba084333877b94a5675d7a6c8b855c4505956d2.1716451525.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,19 +96,16 @@ Hi Geliang,
 On 23/05/2024 10:08, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This set uses the public helpers defined in net selftests to replace
-> helpers in mptcp_lib.sh.
-> 
-> v2:
->  - only patch 3 updated, mptcp_join.sh, move cleanup_all_ns from
->    cleanup_partial to cleanup, setup_ns will delete existing
->    namespaces automaticly.
->  - update commit logs.
+> The next commit will use setup_ns() helper defined in lib.sh instead
+> of mptcp helper mptcp_lib_ns_init(). But the namespace "ns" in diag.sh
+> makes it not working. Since "ns" is a local variable in this helper.
+> So this patch renames it as "ns1".
 
-Thank you for the modifications! Good idea to use the main lib.sh file.
+Can we not modify 'setup_ns' from 'lib.sh' to avoid the conflict
+instead? e.g. using the variable '_ns' or '__netns' instead of 'ns'.
 
-I think there are some modifications we can avoid here, and only modify
-the lib files, see my comments in the individual patches.
+By doing that, we don't have to modify diag.sh a bit everywhere, which
+is annoying for the backports, etc.
 
 Cheers,
 Matt
