@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588E482D8
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 11:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B11C2BAF3
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 14:50:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548958; cv=none; b=MCoDg+zdhN54cvNY/Xy5SqvIokJo2H/58V5lr7oJe+LscaoxZANyVAREM7SXfY/B5aYKk0pS/tCohL5/c/z05qBaj74qPRHdHFQPEzP1tTAglVOPFdi7Grxbz+qgPnsxwkwx3TBnCSEAA1OusNYm1XoCFt09OqEK3LZoIpUOppI=
+	t=1716562214; cv=none; b=n3P4JGr5dQTPSZnFNye9YiJKQufSI7HgvM+wPA95Qs1BhoeOmOEWDx/fYSr37K5B5QVRk1GNbYsR9TnKKpxTL7TXAnd5NujeuGbAatGTcRKUTV7Apa5OsMLSO9LAETDZsPHVijLrNb36ZhyJKwP0gwKASSxGGVSU57Lx532nA0s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548958; c=relaxed/simple;
-	bh=dm4ZxN8s5wat+eMXwUgtXarNpy4bDyRvetzDUiQ/Pzo=;
+	s=arc-20240116; t=1716562214; c=relaxed/simple;
+	bh=dK1GuSAjxuvT7odI/RCcfZzZiEJ0WPbi0udC8yYYtBY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=IS/m44atFOnu5nC12V9/lsYQL4dREGe6+8aY8Jq+j5yucFFBUgiUU4wJ8jW7s/yRB6+mt1NRQDUvZixr9ga6nfThq9M1HQPbhm1+WPpsDQzt0JANB9O+d6p+LvOLdIl535EhfSdb8PLpoVrJTQYEc5V7D2Ui5pUKZkTZMME35ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIHD5bHA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lcTDo0C8X4qB1UYt2jK+3LeL8NDDoPEClAiIgy5gq218SapAfx7tN1lx8OqT6/J6Gq6iLf8uGXpmlyqiUaWLGp2CUU24grp2iM6cZ+EyOOlvZPEx9TpIvlrerDvsrZgacOQsTc/Lcb7mt2BrfGt17Qq56qmuNZ/9m8l4ZcZ3+4o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VDvsY4vD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIHD5bHA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 740FAC2BBFC;
-	Fri, 24 May 2024 11:09:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VDvsY4vD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B16DC2BBFC;
+	Fri, 24 May 2024 14:50:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716548957;
-	bh=dm4ZxN8s5wat+eMXwUgtXarNpy4bDyRvetzDUiQ/Pzo=;
+	s=k20201202; t=1716562214;
+	bh=dK1GuSAjxuvT7odI/RCcfZzZiEJ0WPbi0udC8yYYtBY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XIHD5bHAJocmYC/i9jXA39ErZbufnb0YyXBhufLRO6B+JfrHBFsb5/IN75bd+VkB/
-	 D0Tm8B9Atxb23cAd9EL8o/oJLfgx22U9AcTiiomIbBwV4iMeU5hK2ggO8CZMKVKeUL
-	 vmL1g8p37d43QQZHv6uQeySyi6IIb+PWPvPzE65afWVGvrKXTOVVaGz3Cd9tm8SPt6
-	 QC7nQpDff40JkMRoK4OG76IghPbHKySAq5s3bjPGTAU/XALQc32NGLQOGVe/+ij1nr
-	 e2kess38VhfoYRcHUi64xjhvWHy5wu8CAoPwbIqc9QRhWQszxMoDhL1uOD/426j+Jt
-	 jK5/lLcUZBt2g==
-Message-ID: <10479e4f-16d3-4de4-95c5-41c17da16198@kernel.org>
-Date: Fri, 24 May 2024 13:09:16 +0200
+	b=VDvsY4vDt7B0O+6w1bE7EirRq9Nka453ET80r67+Jre2Cs66i9cNE3MuXGMW4kLhy
+	 KWEmASeZn//iCa1Nu9iKvNCEXHRPZnEtUMXUb42G5k3tVO+ZQUh5/LGW3lTbTgFXiE
+	 eZ39fdMSiQoxPgSiG8lv8hkMZaXq51I4MhyMjjctr8A807wtuHDYLs0oNla7sYhJ/t
+	 8g204CXEAt8//TMaW6ZhAmTKHHQ9/mbNoXlE4WscCeppiBiJZy50l7qhsrT8RdAk0G
+	 b/vUbV1pW+sk+jE8ZnMx7g5FzI57nCc8xFZC8v2dwZ4B4n6CIMHHqElHvSTVgcP0RH
+	 ZYMyTcGqkmA3A==
+Message-ID: <d7f1de2a-b1a2-4a00-869d-a1c6dc9240a7@kernel.org>
+Date: Fri, 24 May 2024 16:50:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 5/6] selftests: mptcp: join: print title
- after init_partial
+Subject: Re: [PATCH] mptcp: make RMADDR MIB counter clearly
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1716533107.git.tanggeliang@kylinos.cn>
- <4716cd1f4f594b2cc68e9e6692898eb725de8ce5.1716533107.git.tanggeliang@kylinos.cn>
+To: Yonglong Li <liyonglong@chinatelecom.cn>
+Cc: geliang@kernel.org, mptcp@lists.linux.dev
+References: <1716450994-5145-1-git-send-email-liyonglong@chinatelecom.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,20 +85,90 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4716cd1f4f594b2cc68e9e6692898eb725de8ce5.1716533107.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1716450994-5145-1-git-send-email-liyonglong@chinatelecom.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 24/05/2024 08:48, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> init_partial may fail sometimes, in that case, titles shouldn't be
-> printed out. So the patch moves mptcp_lib_print_title from the front
-> of init_partial to the back of it.
+Hi Yonglong,
 
-I'm not sure to understand why the title should not be printed: it would
-help to understand which test had an issue: the next one or the previous
-one, no?
+Thank you for sharing this patch!
+
+On 23/05/2024 09:56, Yonglong Li wrote:
+> From: YonglongLi <liyonglong@chinatelecom.cn>
+> 
+> it should inc RMADDR MIB counter when received RMADDR but didn't
+> find any subflow related,
+
+I suggest using this text instead:
+
+ The RmAddr MIB counter is supposed to be incremented once when a valid
+ RM_ADDR has been received. Before this patch, it could have been
+ incremented as many times as the number of subflows connected to the
+ the linked address ID, so it could have been 0, 1 or more than 1.
+
+ The "RmSubflow" is incremented after a local operation. In this case,
+ it is normal to tied it with the number of subflows that have been
+ actually removed.
+
+WDYT?
+
+> 
+> Fixes: 7a7e52e38a40 ("mptcp: add RM_ADDR related mibs")
+> 
+
+There should be no empty lines here between the Fixes and the SoB tags.
+
+(I can modify the commit message when applying the patch, no need to
+send a v2)
+
+> Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
+> ---
+>  net/mptcp/pm_netlink.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 7f53e02..766a840 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -814,10 +814,13 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+>  			spin_lock_bh(&msk->pm.lock);
+>  
+>  			removed = true;
+> -			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+> +			if (rm_type == MPTCP_MIB_RMSUBFLOW)
+> +				__MPTCP_INC_STATS(sock_net(sk), rm_type);
+>  		}
+>  		if (rm_type == MPTCP_MIB_RMSUBFLOW)
+>  			__set_bit(rm_id ? rm_id : msk->mpc_endpoint_id, msk->pm.id_avail_bitmap);
+> +		else if (rm_type == MPTCP_MIB_RMADDR)
+> +			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+
+The modification looks good to me.
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+It would be good to modify the selftests to avoid any regressions later,
+and to cover this case. But I'm not sure how to reproduce your case
+where a RM_ADDR is received but for an ID that is not being used by the
+PM. Do you know more about your case? Maybe because the subflows have
+just been removed?
+
+The issue to reproduce that in the selftests is that we cannot (easily)
+send a RM_ADDR for an ID that is not currently handled by the PM (if I'm
+not mistaken). Probably better to do that with Packetdrill [1].
+
+What we can do instead, is to have subflows reusing the same ID multiple
+times, e.g. using the fullmesh PM. Before the end of the connection, we
+can send a RM_ADDR for an address that is used for multiple subflows by
+the other end. Then we can check that the counter has been decreased
+only once. That's what I tried to do, but I got another issue, see [2].
+
+[1] https://github.com/multipath-tcp/packetdrill
+[2] https://github.com/multipath-tcp/mptcp_net-next/issues/492
+
+>  		if (!removed)
+>  			continue;
+>  
 
 Cheers,
 Matt
