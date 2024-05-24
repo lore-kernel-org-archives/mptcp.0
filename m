@@ -1,101 +1,121 @@
-Received: from chinatelecom.cn (smtpnm6-01.21cn.com [182.42.159.233])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 37B586EB4B
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 09:54:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.159.233
+Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C28FDDC7
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 10:45:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716544500; cv=none; b=islM5d7MGqWHp5lwfSfhuMYcxeoQB251/JXCF7oBZUhTIbmk3hAZgTLPRpiZ1+o/uL6gKOO6Dz3mbN1bRxzfsvM+vstKJkIx7zkMETCaiIDaY/2ddQYmKIu5fwgbqjjB1Z5E59g+66d92iRWeyJH1p0RhqDcRcAEEuwQTdopoHI=
+	t=1716547534; cv=none; b=ZX2VlhoG+HzizWZODClXgV07kvqZct8obFzGgGdMZWaLq8edmfL8ltQWFDnJC5zMPQOYLDU+neqiDP02//1H3xwKNPRebkgyFf6EYNprRw2ccjZT4vxLLvRvtzoaISjq6B2wfBruN+Ww6Jl/5EOX5MknbKRNNVxODL8a7GbrnBo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716544500; c=relaxed/simple;
-	bh=FOQO0wzvNm/XE0EEQ19Fuao2fbO9wVQBa9d8Rt0yRQc=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version:Content-Type; b=ii9ME5cfYjKU13raO6iaMSbzrUHsvektNJLu1lF4JEOO9XmQu1a/KxaW7W83vchWMJNVIY0Bpi6KgB2PkuFZeRua/CUzdOIJlZL6NrKcGMk+weB0+g/J/2LhvVmzurq3RDeCCcc96XeZt8L0CvfxWxtEdLxvjuYp4zkc/HnmDVo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.159.233
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
-HMM_SOURCE_IP:192.168.138.117:53773.517287112
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-36.111.140.9 (unknown [192.168.138.117])
-	by chinatelecom.cn (HERMES) with SMTP id 6E238100111F5;
-	Fri, 24 May 2024 17:44:53 +0800 (CST)
-X-189-SAVE-TO-SEND: +liyonglong@chinatelecom.cn
-Received: from  ([36.111.140.9])
-	by gateway-ssl-dep-84c6c6b769-jsnsj with ESMTP id 6653b6e79970460eba8664609a517762 for mptcp@lists.linux.dev;
-	Fri, 24 May 2024 17:44:56 CST
-X-Transaction-ID: 6653b6e79970460eba8664609a517762
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 36.111.140.9
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-From: Yonglong Li <liyonglong@chinatelecom.cn>
-To: mptcp@lists.linux.dev
-Cc: matttbe@kernel.org,
-	pabeni@redhat.com,
-	geliang@kernel.org,
-	liyonglong@chinatelecom.cn
-Subject: [PATCH] mptcp: update add_addr_accepted and accept_add after subflow added
-Date: Fri, 24 May 2024 17:44:25 +0800
-Message-Id: <1716543865-37448-1-git-send-email-liyonglong@chinatelecom.cn>
-X-Mailer: git-send-email 1.8.3.1
+	s=arc-20240116; t=1716547534; c=relaxed/simple;
+	bh=kvOmc2tmow7z2jcKbXHbI6ciAJzKWg3N4xIgdMIVFS8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=pDFc6ldTfzP5aRTWKdLYKHb1QDE889OhA4zIhUhcn51HfTM1do0z2mv0ZynP5baTukW/I4HQ7Qv8RhgM6d6XW5Zlu2uwgm7nZT07Dv8W43zgY9AZWA29O+hq+OCHEYETsZQL4a2aHNdd5NxZj+zNkzXgQcLGq2XqdxsBbGRFAmM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NNKB8BOW; arc=none smtp.client-ip=209.85.219.52
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NNKB8BOW"
+Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6a8691d736cso21461986d6.0
+        for <mptcp@lists.linux.dev>; Fri, 24 May 2024 03:45:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716547531; x=1717152331; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yr+2RKv8eMHztAIq70XQWhVGH1RGsQBNmDxozn7RNpc=;
+        b=NNKB8BOWhmzjOXKdEHSWmIz//8X4ya+ohIjxXMMJ/GmfHAWWoiAc+CCaQ/qQsw77kG
+         dQ3qiPY1KGSkZzBxD9JmDNgrNd4/G4a83QNV9SMaOCV1XWY1gVZ7SUP+zFi1rFQlRqDe
+         PFJ8x2s8a/lKr+idcoKrLDuJtOnNyU+Zv5mykI5uCm7nQLcGOuIHV1OghWD/xC9H43is
+         aJNVTP/+LPnGOyu9F4uC/2h1A9t2NKF9PXllYzdFDUnPKt2QDEeblrEF0MV5ZI0UJSxM
+         zex68eFhP++dPDCKN3ZVHztP+Li8IrD1xMz86/iJQhg9FmWvSqsC6B4UHvaCWOP0CnOp
+         fciQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716547531; x=1717152331;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yr+2RKv8eMHztAIq70XQWhVGH1RGsQBNmDxozn7RNpc=;
+        b=EVqvPSRC7BBoPpYxaYehSZsixhXX1PSQtF4fpjav4uoxUxnijSREBKjM1es3OuS3LZ
+         6D0gAZTMACnsJaLEhNfLV3bzc53s+bbccBxNDeyiPnZAIBCODW1MMz86r2ehCu21y0ac
+         JoF0nXuIxny5HKFJ+Jno9mFPlZ5zuuoh3rZUhl5/T5Hv5HKnBKy7rZN0UGz8RT6OAh3r
+         8SJ2PUt4tk+jjAeFzK4rvGu4wsBTyxFT3RBbuQI4j5US37KMjltSM6zJcgENQMshFXkX
+         kd+vgZCVo8vfBg9+Ja2P4aszpZNJDxNLN0TbPQw+C4r2hLZi9WLwkxjCLEfHqjNc6S9v
+         8NWw==
+X-Gm-Message-State: AOJu0YxD/EWxLy9ot9aNFot/YEKkeElQoVBuB/StuszijUlR4g4xgoFb
+	QttDyW2w+5qG/CD7CSMETU4dOTKg+I5wJ38iscyGj19OwpysdfBFQMSVGu4=
+X-Google-Smtp-Source: AGHT+IHq+3czmAvH5o5uce5sLPf+GtJC2ugJXYEIF6pvesIDy7t1M3luc1RsOLgeR6UpRzssNF46vQ==
+X-Received: by 2002:ad4:5be4:0:b0:6ad:5d67:1276 with SMTP id 6a1803df08f44-6ad5d6717a9mr11610146d6.26.1716547531155;
+        Fri, 24 May 2024 03:45:31 -0700 (PDT)
+Received: from [127.0.0.1] ([172.183.37.87])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6ac16306c8bsm6139856d6.113.2024.05.24.03.45.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 24 May 2024 03:45:30 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: YonglongLi <liyonglong@chinatelecom.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <1716543865-37448-1-git-send-email-liyonglong@chinatelecom.cn>
+References: <1716543865-37448-1-git-send-email-liyonglong@chinatelecom.cn>
+Subject: Re: [PATCH] mptcp: update add_addr_accepted and accept_add after
+ subflow added
+Message-ID: <bdea2c58-b516-9056-64b3-b72cce7d36db@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 24 May 2024 10:45:29 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
 
-From: YonglongLi <liyonglong@chinatelecom.cn>
+Hi YonglongLi,
 
-receive RM_ADDR will update pm.add_addr_accepted and pm.add_addr_accepted
-only if remove id match remote id of subflow. so receive ADD_ADDR should
-update pm.add_addr_accepted and pm.add_addr_accepted after subflow added
-to conn_list.
+Thank you for your modifications, that's great!
 
-Fixes: f7d6a237d742 ("mptcp: fix per socket endpoint accounting")
+Our CI did some validations and here is its report:
 
-Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
----
- net/mptcp/pm_netlink.c | 16 ++++++++++------
- 1 file changed, 10 insertions(+), 6 deletions(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9222300685
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 766a840..117cc7b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -676,6 +676,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	struct sock *sk = (struct sock *)msk;
- 	unsigned int add_addr_accept_max;
- 	struct mptcp_addr_info remote;
-+	bool subflow_added = false;
- 	unsigned int subflows_max;
- 	int i, nr;
- 
-@@ -704,15 +705,18 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	if (nr == 0)
- 		return;
- 
--	msk->pm.add_addr_accepted++;
--	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
--	    msk->pm.subflows >= subflows_max)
--		WRITE_ONCE(msk->pm.accept_addr, false);
--
- 	spin_unlock_bh(&msk->pm.lock);
- 	for (i = 0; i < nr; i++)
--		__mptcp_subflow_connect(sk, &addrs[i], &remote);
-+		if (!__mptcp_subflow_connect(sk, &addrs[i], &remote))
-+			subflow_added = true;
- 	spin_lock_bh(&msk->pm.lock);
-+
-+	if (subflow_added) {
-+		msk->pm.add_addr_accepted++;
-+		if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-+		    msk->pm.subflows >= subflows_max)
-+			WRITE_ONCE(msk->pm.accept_addr, false);
-+	}
- }
- 
- void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
--- 
-1.8.3.1
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/3e6551d3f61f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D855647
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
