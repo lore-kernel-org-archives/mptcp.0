@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3ACE184FB0
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 15:13:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C84584FB0
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 15:13:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716563637; cv=none; b=fc++j77vsiGueA9BYVzTAYcc86SaDxENsPoBk8Xu4CoO4K/bj0cd1Oa2CatIOrdIKbGofDUF0xotKEyXmF41f2RtNiaL7HAfvM0FLYrubJKAov786erfHZNEJABdYmMO4a+JMcba/BhKhF2OkKpYAxbsoiy2GcKV+glOTO8hEas=
+	t=1716563638; cv=none; b=JdxOJxdb3J3EwPeUqUjrbavRVBZ+I7zI2SbWJXcHMox4+dnp81ziOqmI3SvBJIGBCtNirheRhz+jZHGpt7bh/tqrSbWsSOIJC5zk8seS5W4+AoPZ5Sf4osQyWak9CXfd2NlhAg0T68kB83/zIeRTZ5MiGRyTZLWC/C3vJ8HabbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716563637; c=relaxed/simple;
-	bh=UpmF42rzB+l29P4/lnEqG0714MfNrsbQNxRuPcMOzaY=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=oWtuyy3w3y/qnhkH8xSjg5HmS3arnpOpexPfIyUBuPrAT0NyrOrerPrGVPO0g0AW5c2F9wl2K9/cxHDVliDqguO4UNVjyFzlecWaPX/SbU3KRwVn3KX0g3CLI2f+bEINhgqyu+LM+5GogJ1OA7JlBRDole2HfmlXDGZd9PohXRA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxMYZLkX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716563638; c=relaxed/simple;
+	bh=5sF13AQ0XQYTT9ojTSNuw2FASfABGqn7HXvokl2i96o=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=TJqx+I67Ja6FU6d0LXBsxRzHjQ+gNP1aYx+2SK2twv3VwRWNMIwzvLA3UWn9hQF30RHvupjwftnVm2I8uX4JHIBF27x/L9XT5gYl5a/Pc3xBLmWvb5X+xnFIQW/st8+1k/IBFacHgB2stXcZdhoN2IW8sd+tJOrljxva1jaaONc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YZWVD/6L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxMYZLkX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0ADD1C2BBFC;
-	Fri, 24 May 2024 15:13:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YZWVD/6L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 72928C4AF07;
+	Fri, 24 May 2024 15:13:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716563637;
-	bh=UpmF42rzB+l29P4/lnEqG0714MfNrsbQNxRuPcMOzaY=;
-	h=From:Subject:Date:To:Cc:From;
-	b=JxMYZLkXB0SF8ujbDDRq2i7DYpMhRsBQk9GifnAZnLHhnvTbzyy2D4WBwX0rsgBdA
-	 WxMjN1FOn1dz/fGIdf+EMa6oxBADnq9c/3Yixyh8BT5/l4a3O4UCb4H6R222axT8/w
-	 WmhSY1km85jK/jwnLg8cv3ve5/9zYWAS76Oyvvn79RD/f51ConwnEM6TaBbcKmbdy0
-	 N3P/UEuL725FLemtewFlffx1LYjzo8L+sT+TQQglSV8CtYrzoaNo5lMM04gDcwHUtU
-	 nkkVdf5ZHSnZ8gR1Hq2PaPMhA2vnmeXOH8Hmoq6FNi7nYKz1mTxMRa5rQSkYiqwKvg
-	 319Po//xMBRFQ==
+	s=k20201202; t=1716563638;
+	bh=5sF13AQ0XQYTT9ojTSNuw2FASfABGqn7HXvokl2i96o=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=YZWVD/6LShvFj22Q3ZyXFy9Q0dRIYx1s49qWDZfAW6yZiGnsgO83hsh/GBJ3pU+Wu
+	 Hd8mVsBx4jN1WsdwnZZJBWrX2vr8a9jXNWQO4h+sAEsNB+tpF/jIPs3728SkbHhdS8
+	 Fu5X+ut94dCVU+MuhY9VCrhgWN3ILOJGp2djMBx4ptzlXatBrrXDkkrs2ftRXA8gzK
+	 fonRh7H8M+cziZAlyiKnFZanZA8hA8hOpsB7L5ruzMxPdVRXWGfXZJBBiXI1aC2CN/
+	 uqIeN/iJXWeWCn7wL1VysvlINvzGoaAk64FqkCNDpAdv62JUH0pTFcCArhEAdo1G7x
+	 eCcN+j/aKaGDA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v5 0/9] use helpers in lib.sh and net_helpers.sh
-Date: Fri, 24 May 2024 17:13:23 +0200
-Message-Id: <20240524-selftests-net-lib-fixes-v5-0-b9e0968571a3@kernel.org>
+Date: Fri, 24 May 2024 17:13:24 +0200
+Subject: [PATCH mptcp-next v5 1/9] selftests: net: lib: set 'i' as local
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,87 +37,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJOuUGYC/x3LQQqEMAxA0atI1gZKtVjmKuLCanQCTqc0QQTx7
- hNm+fm8G4Qqk8CruaHSycLfbBHaBpb3nHdCXq3BO9+74HsUOjYlUcFMigcn3PgiwTAPLsW1S9F
- HMF0q/YfhET5Fl2LgUpie5wesjUtrdQAAAA==
+Message-Id: <20240524-selftests-net-lib-fixes-v5-1-b9e0968571a3@kernel.org>
+References: <20240524-selftests-net-lib-fixes-v5-0-b9e0968571a3@kernel.org>
+In-Reply-To: <20240524-selftests-net-lib-fixes-v5-0-b9e0968571a3@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: geliang@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <tanggeliang@kylinos.cn>
+Cc: geliang@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2281; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=UpmF42rzB+l29P4/lnEqG0714MfNrsbQNxRuPcMOzaY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmUK6yCBwMPCnTPJP5Sl5gOFbTUDhcyGVjx0uKJ
- y2E0m8wI6eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlCusgAKCRD2t4JPQmmg
- c6C5D/4nZTp3bUCZ96+Y9v+0UVZLEDE1qX9EPeDIxYhC2FV5aFOdOwm75fP6VwnUWk6X57ImA8u
- XwVGmCXLrtzfZZZD2NG8dPW3secRZCL/AGyZ1vpV/KODzpwPSyMZcqSJ769DrpHeDEtCw8aSjVZ
- nnszgIkdUG/21Oulo5mqYktxaHJvlqAGqeMNLF/YGgzI6Ob+I7LNKM91cbWDDClwvubxgi9H07a
- WE2P67Qup/OP61m9CG6LSeGXYZNyxKGAPaUAgvWzYxy9XmYeYFTkX+lriBU/CO7QEJ+/xqDfc72
- hdqYr3YXaxFVokf0CCSc6sheg5kU9sMgMcYasWSfIHBeMzJ21a6vHNmMQu6UDvIoJqrdb560Agx
- e913m0jl4XtUFWECpct2wlK0+P1LrecGYPFTHcItKw8EWeaWiNFTpJlY6yVnDON5FcSdQUpHVGd
- 7oW8MVNU6080q8wt7EFDtKCFW0jHrOGjtyh5pAKgJw+V+06l3ZMW3FDOwFBCCdidWyKn9dbePiC
- Y7HAg35457ygTSScBYj5cnEmMtSEgb0pV57V3XM1PcTS7DHPDN85iSa1rMZMEuJnAZJxOm1qk+s
- 6Zc5j4CbkTrnW7YueAff5mkZDLiB71U+wkgMsNTHGd+MGZh7J9QtTxyhEznG848hnDhZaUw+Rky
- L+kTx069P3iyFEA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1112; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=5sF13AQ0XQYTT9ojTSNuw2FASfABGqn7HXvokl2i96o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmUK6yh3fCKOwNvBlpGvGfTcphtq/zWnetB79A9
+ sZ7qVFQYc+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlCusgAKCRD2t4JPQmmg
+ cwzMEAChUn7BJAYzIS6Cz53pSNOwynH7dHCHJQa+rjgZ7IE7pFk4jwEi3ZI4FJyMkbDAM3m+DvD
+ tiDH0ulia5e4k+B0RyboS2p/SdjibDH4a1QJtGspCkRNME8t2yBnAgkXAaIzZoVZ0fNrZuvFHCp
+ +YgQD8VfQT+Mc+gD7Ol5JdYqwyregSBcqdh8LSUcc2bX+2QxDZ6mT+zzclqrNTzUNAbkhSJpNqR
+ UDSWo+dHhb0QmTHJxzbWho+X6NQU212quJy8Lq7lnCYpbibCywI2VxgwrgcsMqvdLp7qh0ScIxH
+ r6VdjVjzV6zvMlt9GfhGA5PbOTHOa9TZdoXfKkrhGB5S8fyXXX0I4TDsANEF0aGh/Bdbb3RKNIi
+ a75rgiFJ8ghTX8M5eykKBAWsZgiFqPYEXEPOL8FChon4Ozx+BrMWmEqLxCp6v/hZdNmi0uBGm43
+ cGDxEdqUon3m7SbApmHwF0VuYF+Ks2g73lxT9WqcxvixE0JI0XZMoEBNKS7BncWqPmBJHhHBA6M
+ uiDUZ7vLQPTlIl48NG6X1DdFEMJa3JIPF7E+wXpJzltYseIc81wrisehHGXWGCawHS+ffzflvme
+ rNydB5efjcP5tc7dAtcBowc+Txk+jDFK2c+NSJiKsASy+HJ/Q8iva2gieTTkawViMT2XL3OJExt
+ AeSowTkC69dXeeA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-(This is a new version for the series created by Geliang. @Geliang: I
- hope that's OK for you like that, it was easier to describing the
- modifications by email. I validated my changes by running MPTCP
- selftests only)
+Without this, the 'i' variable declared before could be overridden by
+accident, e.g.
 
-This set uses the public helpers defined in net selftests to replace
-helpers in mptcp_lib.sh.
+  for i in "${@}"; do
+      __ksft_status_merge "${i}"  ## 'i' has been modified
+      foo "${i}"                  ## using 'i' with an unexpected value
+  done
 
-v5: (Matt)
- - New patches: 1-6: some unrelated fixes, some modifications to avoid
-   adding workaround on our side (changing variable names, trap, etc.)
- - "rename ns in setup_ns": drop the modifications in cleanup_ns, exit
-   in case of error, and updated commit message.
- - Drop patches 2, 4, 5/6 from v4.
+After a quick look, it looks like 'i' is currently not used after having
+been modified in __ksft_status_merge(), but still, better be safe than
+sorry. I saw this while modifying the same file, not because I suspected
+an issue somewhere.
 
-v4:
- - two more fixes added
- - exit when setup_ns fails in mptcp_lib_ns_init
-
-v3:
- - address Matt's comments in v2 (thanks, it's very useful.)
- - don't rename ns in diag.sh, but in lib.sh
- - ns in get_counter needs to be renamed too
- - add a ns_name valid check in setup_ns
- - drop $NS_LIST in mptcp_lib_ns_init
- - don't drop mptcp_lib_ns_init, use cleanup_ns in it
- - don't use cleanup_all_ns, still use mptcp_lib_ns_init
-
-v2:
- - only patch 3 updated, mptcp_join.sh, move cleanup_all_ns from
-   cleanup_partial to cleanup, setup_ns will delete existing
-   namespaces automatically.
- - update commit logs.
-
+Fixes: 596c8819cb78 ("selftests: forwarding: Have RET track kselftest framework constants")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Geliang Tang (3):
-      selftests: net: lib: rename ns in setup_ns
-      selftests: mptcp: lib: use setup/cleanup_ns helpers
-      selftests: mptcp: lib: use wait_local_port_listen helper
+ tools/testing/selftests/net/lib.sh | 1 +
+ 1 file changed, 1 insertion(+)
 
-Matthieu Baerts (NGI0) (6):
-      selftests: net: lib: set 'i' as local
-      selftests: net: lib: support errexit with busywait
-      selftests: net: lib: avoid error removing empty netns name
-      selftests: net: lib: ignore possible error
-      selftests: net: lib: remove ns from list after clean-up
-      selftests: net: lib: do not set ns var as readonly
+diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
+index edc030e81a46..be80f7b1f9d7 100644
+--- a/tools/testing/selftests/net/lib.sh
++++ b/tools/testing/selftests/net/lib.sh
+@@ -27,6 +27,7 @@ __ksft_status_merge()
+ 	local -A weights
+ 	local weight=0
+ 
++	local i
+ 	for i in "$@"; do
+ 		weights[$i]=$((weight++))
+ 	done
 
- tools/testing/selftests/net/lib.sh             | 73 +++++++++++++++-----------
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 33 ++++--------
- 2 files changed, 52 insertions(+), 54 deletions(-)
----
-base-commit: 958cd231864867eb931c4ed55db7945fb4e5af43
-change-id: 20240524-selftests-net-lib-fixes-5a70b8d3b828
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.43.0
 
