@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 597FD2574F
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 03:12:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE0D12574F
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 03:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716520320; cv=none; b=B+k5yUJIeBInS07hK/Q2YavRvdVBv0Tp/czo5iA//FaOS+cQ5PjQlZdhS9yEZE4uwM0csg46ziqh8EUlkA7corLt+F7Ckn544l1p/8/x+7bfVV/deewneFSG+S7qOTZSmWYSklk6j0ZD5vgdlIhdwPiR+8Y6ZVR/FmODC3mjAJc=
+	t=1716520321; cv=none; b=eCuoUwubB8xvnxV2uO5jrrqnILB85DEs9oyuTJf0cp+zFMjv8SjYobdWV8XWBhulOYe06b1KtpVU4notzhs3WzMhjvWVvRJTkKsHMXpYe69SaSvbRvrXdnxxZNLZ71zs37Pd/OQAejIJ9+bFzpNOhXXt40OKSIiC3TRmEUK8hjs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716520320; c=relaxed/simple;
-	bh=G4KLd7hvM8wQ8n1ZPUkb6ONEZe3Uhg7XFWmWGo7OK/A=;
+	s=arc-20240116; t=1716520321; c=relaxed/simple;
+	bh=Vcgn2BAbTqilbdGhBI6353MWKisq1Q2p9sG7JojfT/8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=jG7OpQfRnfGlUFQcPR73m0i8ZA32L5+QYppuwPAcT3RCBhXF4jxdF2q52LQDk4ykJuSGnaWyls6hQQ5hn1xfdTHRDKzNqx2wy1D31AveL0PIs/qSmDa5me0RE99guV0tJ2vqckAE6OpKMzTNe29rx7Omhw7Y8gPuVcuk4A3nF9w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EWEvnSBy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PnFp881KR32Gno/2YU3DL7JbYvGHdfQUdGJ3XndgLnD4nSNmdoYvJ1U/dgYLZ9R00781Ful79OcFa5PvpJjSsuDrKh9On0Vr6NaoH7Uo6N4QRpm8nYbPTHgY5vDw8ap/nGYQFCG0Edvw/k0hrwIqq8f/O0/xQrSV9jWvIHAhLOM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpD9Arwp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EWEvnSBy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DB77C2BD10;
-	Fri, 24 May 2024 03:11:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpD9Arwp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1CCAC2BD10;
+	Fri, 24 May 2024 03:12:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716520320;
-	bh=G4KLd7hvM8wQ8n1ZPUkb6ONEZe3Uhg7XFWmWGo7OK/A=;
+	s=k20201202; t=1716520321;
+	bh=Vcgn2BAbTqilbdGhBI6353MWKisq1Q2p9sG7JojfT/8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EWEvnSByHxFRssaAVm/OIV+6oTikRaXefCvUqM7Vi7ohfpxTaUxBU340I82Km8FFt
-	 6MmV/LEQSi7Mw9+aIm2OzNVXavnCMTq2Dmv5yQNp5jdvpl3BJNqdgLozTuxclNb0pV
-	 gs1kEAvzYOb28RgSZ2uPFhrXX/cjZRjc4FyVeLiLDppOcxbpZ9U1Ic44UUG3wVzTAl
-	 fiOClKG8987fz2hm3mi/Tf5EJlBvwvZpUirPKzqRHLobew4m1ADPKBThigToJLDu3g
-	 +7neRQcy9UKi2iHOiUqfUwMv4MHlR319NLLjTxlcVRV513X/z8J3QdWKQGmNlfRsjn
-	 OFm+/pdkGXUqg==
+	b=jpD9ArwpL2umG+A5Vf7WXhj7OK0xUT3sA/8xHkPG8EB1Q+WS8ZtixFcevQV5l70Uf
+	 m2pc7N6yIhxmuN9DxtjdBN3OTCZKLl90cDziYgqeiMm+J72pMpF0YZYGDGxYecHEoJ
+	 jt8B/4ty1jNaH2ZjsUsE+Pw8GeaBN2qFKT8S3fkRkvrzdMkAqQ2eDpN6q6aVbzgV+/
+	 P3L/c9IAXbabp2tafv2gt1zrOM8quW4lyJORfh+i7AVxQKnRLXA7sWVywAomGB0kkj
+	 pLxd3H3CDl6P+dZMgzwoIcU3Ch8/yXrR7YSuxkzietBgSpx2t5312O6vS2YMSNnHfk
+	 1ufx3+Fd3yvqw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 3/4] selftests: mptcp: use setup/cleanup_ns helpers
-Date: Fri, 24 May 2024 11:11:48 +0800
-Message-ID: <7587b0110e680acd1cd7a48dcbea9542c05090db.1716519897.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 4/4] selftests: mptcp: use wait_local_port_listen helper
+Date: Fri, 24 May 2024 11:11:49 +0800
+Message-ID: <096673dbaaf23c75fbcbb93b602e4e7fc08646d7.1716519897.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1716519897.git.tanggeliang@kylinos.cn>
 References: <cover.1716519897.git.tanggeliang@kylinos.cn>
@@ -45,59 +45,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch includes lib.sh into mptcp_lib.sh, uses setup_ns helper
-defined in lib.sh to set up namespaces in mptcp_lib_ns_init(), and
-uses cleanup_ns to delete namespaces in mptcp_lib_ns_exit().
+This patch includes net_helper.sh into mptcp_lib.sh, uses the helper
+wait_local_port_listen() defined in it to implement the similar mptcp
+helper. This can drop some duplicate code.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 14 +++++---------
- 1 file changed, 5 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 16 ++--------------
+ 1 file changed, 2 insertions(+), 14 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 16aa080c8229..642a0ee255ef 100644
+index 642a0ee255ef..5ccb302e3fd2 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -1,6 +1,8 @@
- #! /bin/bash
+@@ -2,6 +2,7 @@
  # SPDX-License-Identifier: GPL-2.0
  
-+. "$(dirname "${0}")/../lib.sh"
-+
+ . "$(dirname "${0}")/../lib.sh"
++. "$(dirname "${0}")/../net_helper.sh"
+ 
  readonly KSFT_PASS=0
  readonly KSFT_FAIL=1
- readonly KSFT_SKIP=4
-@@ -412,17 +414,10 @@ mptcp_lib_check_tools() {
- }
+@@ -337,20 +338,7 @@ mptcp_lib_check_transfer() {
  
- mptcp_lib_ns_init() {
--	local sec rndh
+ # $1: ns, $2: port
+ mptcp_lib_wait_local_port_listen() {
+-	local listener_ns="${1}"
+-	local port="${2}"
 -
--	sec=$(date +%s)
--	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
-+	setup_ns "${@}"
- 
- 	local netns
- 	for netns in "${@}"; do
--		eval "${netns}=${netns}-${rndh}"
+-	local port_hex
+-	port_hex="$(printf "%04X" "${port}")"
 -
--		ip netns add "${!netns}" || exit ${KSFT_SKIP}
--		ip -net "${!netns}" link set lo up
- 		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
- 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
- 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
-@@ -430,9 +425,10 @@ mptcp_lib_ns_init() {
+-	local _
+-	for _ in $(seq 10); do
+-		ip netns exec "${listener_ns}" cat /proc/net/tcp* | \
+-			awk "BEGIN {rc=1} {if (\$2 ~ /:${port_hex}\$/ && \$4 ~ /0A/) \
+-			     {rc=0; exit}} END {exit rc}" &&
+-			break
+-		sleep 0.1
+-	done
++	wait_local_port_listen "${@}" "tcp"
  }
  
- mptcp_lib_ns_exit() {
-+	cleanup_ns "${@}"
-+
- 	local netns
- 	for netns in "${@}"; do
--		ip netns del "${netns}"
- 		rm -f /tmp/"${netns}".{nstat,out}
- 	done
- }
+ mptcp_lib_check_output() {
 -- 
 2.43.0
 
