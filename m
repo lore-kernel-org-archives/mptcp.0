@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3A0D1CD06
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 06:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBAD811720
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 06:49:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716533345; cv=none; b=YUv8N6yhLR2RBP3bXta8Ho8tKIe/P3dHkn877MWPZ8cCT1ly+CwVNh05IpK6diDu2X48YDBzRUYI9A1XPLQQ7K7qykdBHlCTUzskhi8V1Cq3ZSGMTLPHOx8wPwDqnLpnaEiczEQazSW1uHMRKylUtS43zT1UWppcKfWQMexhoB4=
+	t=1716533346; cv=none; b=JC4RsyfDO3B8I1kp2q8dO2QqleZW9/MI1AypTBvr6+KREnLVmfk9h9xiY9E2QLZbveAJwIT20rSij7YLdzSt8wOANeFkvNe6Sn81gqOLZUZ++moe2gdd4BSorh/rEN6JCEfKOXjh822eB/fmfjmnKY7g/rFHppkrrJKaIL40yNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716533345; c=relaxed/simple;
-	bh=aHCtjdh6+rJVHVct9JaQ/sVbsDM5Iq4vPqBYpbmkC40=;
+	s=arc-20240116; t=1716533346; c=relaxed/simple;
+	bh=v2sGNKS/Xrx7OMlqyQZcHSY6Hy3dBAUf/3LuuWKk4WM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nuu+nK/hNtnOvITdKz45yVJET93z9jgcntYzIKMr1QwEcjsYoFAlzk5yfHUtNV5TmvDSt+0tlnXfg93CqFBQ0d4hFmv1d0HVH5jBNfCjsL68bBH/39B8jsB8TE5y2V4v54fDIMyvWFEBAAmrq/VjgwTRCNhSLVyk76/8zPxNQLU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/JDSjCF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=fMC7lHpg+uhfsHrrC6MnJrxaxUV4dZt0z73uZ17eRFr40N/vRfR90KndZXObXH38y0w1cR8O/2ZHYcPFZ2laW1aJqb6QnI3G1JXAZFkWGVZscES3wiEp9KVf3cNl44h2k5J1STgIlKpzf3SscceUs5gGZI4QMC08pCcZDxhchXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WczIf4yO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/JDSjCF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A65CC2BBFC;
-	Fri, 24 May 2024 06:49:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WczIf4yO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 34652C2BD11;
+	Fri, 24 May 2024 06:49:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716533344;
-	bh=aHCtjdh6+rJVHVct9JaQ/sVbsDM5Iq4vPqBYpbmkC40=;
+	s=k20201202; t=1716533346;
+	bh=v2sGNKS/Xrx7OMlqyQZcHSY6Hy3dBAUf/3LuuWKk4WM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=U/JDSjCFneexdoiYc6aHCP72fuYt7JAdXh4A3YznYhTIB3gFjokNv9rh92zFQHH8E
-	 E81GbwkuUl4JvQxLs+ten1/6U+fdLDg22SNYiRvrNeM+13Pv4mJWbUP4uE3+3BusGg
-	 5sCLd8LdoVsoBLPT1LB3Iqfw4ys1ouJqVujRv8H32PNTuR1CCGkzfmHyRvUafHOn/2
-	 PiIXYNgDjhV5g7TXY/enjTnacieSxfzcgvD3D3wkvB2galradLXCf2Vngrr661H9vH
-	 tDaHjYskGm0SYW1p6gnJCZHITnGK8IoPYtCJCtNyvEAboOxtQkXO4qCCgBiKdZh3j7
-	 W/CntzsYOz0Zg==
+	b=WczIf4yOWJ4lm258DE9YKREx1vMwzsq7/ZHQJtTbbPjCeObkwC+Vt34Y6xwusEm3J
+	 O2igU5O6qZemnmCdtnkQvMVEJ9X/tHOrL6jlundIgStqish3rUlGRAYPujdbEq8XuU
+	 SGbA5YV99tE6uRvZnF74bs3a60ukEtFMoq4EQuMBDwibxPQYPIiepXAsNG1QaTI39x
+	 267jn4/dovfyBUJN9qWEB6EjwdPdGRDaty4OBarbMny+Oyi+J2qbLD1whOd5cfJxzM
+	 WLWhVMVzFmQsMyMrugPlz7cwS2eaMTw4Kff7e0EBvTgFNZogyBVcCcKgfThK2+Nh6P
+	 yKaU10r9z2uPA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 2/6] selftests: mptcp: rename ns to _ns in get_counter
-Date: Fri, 24 May 2024 14:48:47 +0800
-Message-ID: <e6adf1ed401342f0065b6dcee02e43b7c769ef2a.1716533107.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 3/6] selftests: mptcp: use setup/cleanup_ns helpers
+Date: Fri, 24 May 2024 14:48:48 +0800
+Message-ID: <a5da748b2c83a17df1a3b6e80dd35404842534fb.1716533107.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1716533107.git.tanggeliang@kylinos.cn>
 References: <cover.1716533107.git.tanggeliang@kylinos.cn>
@@ -45,38 +45,62 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-If "setup_ns ns" is used in diag.sh, it fails with errors:
-
- ./mptcp_lib.sh: line 289: local: ns: readonly variable
- 13 ....chk 2 cestab                                  [ OK ]
- 14 ....chk 2->0 msk in use after flush               [ OK ]
-
-That is because "ns" is also a local variable in mptcp_lib_get_counter.
-To solve this, this patch renames it as "_ns".
+This patch includes lib.sh into mptcp_lib.sh, uses setup_ns helper
+defined in lib.sh to set up namespaces in mptcp_lib_ns_init(), and
+uses cleanup_ns to delete namespaces in mptcp_lib_ns_exit().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 6ffa9b7a3260..3397bf511f41 100644
+index 3397bf511f41..60f802e808a7 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -312,11 +312,11 @@ mptcp_lib_is_v6() {
+@@ -1,6 +1,8 @@
+ #! /bin/bash
+ # SPDX-License-Identifier: GPL-2.0
  
- # $1: ns, $2: MIB counter
- mptcp_lib_get_counter() {
--	local ns="${1}"
-+	local _ns="${1}"
- 	local counter="${2}"
- 	local count
++. "$(dirname "${0}")/../lib.sh"
++
+ readonly KSFT_PASS=0
+ readonly KSFT_FAIL=1
+ readonly KSFT_SKIP=4
+@@ -438,17 +440,13 @@ mptcp_lib_check_tools() {
+ }
  
--	count=$(ip netns exec "${ns}" nstat -asz "${counter}" |
-+	count=$(ip netns exec "${_ns}" nstat -asz "${counter}" |
- 		awk 'NR==1 {next} {print $2}')
- 	if [ -z "${count}" ]; then
- 		mptcp_lib_fail_if_expected_feature "${counter} counter"
+ mptcp_lib_ns_init() {
+-	local sec rndh
+-
+-	sec=$(date +%s)
+-	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
++	if ! setup_ns ${@}; then
++		mptcp_lib_pr_fail "Failed to setup namespace ${@}"
++		exit ${KSFT_FAIL}
++	fi
+ 
+ 	local netns
+ 	for netns in "${@}"; do
+-		eval "${netns}=${netns}-${rndh}"
+-
+-		ip netns add "${!netns}" || exit ${KSFT_SKIP}
+-		ip -net "${!netns}" link set lo up
+ 		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
+ 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
+@@ -456,9 +454,10 @@ mptcp_lib_ns_init() {
+ }
+ 
+ mptcp_lib_ns_exit() {
++	cleanup_ns "${@}"
++
+ 	local netns
+ 	for netns in "${@}"; do
+-		ip netns del "${netns}"
+ 		rm -f /tmp/"${netns}".{nstat,out}
+ 	done
+ }
 -- 
 2.43.0
 
