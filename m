@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561A985931
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 11:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2588E482D8
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 11:09:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548953; cv=none; b=Rv5FoMmfHNitvZ9OmuoNHE8GPCxI63ELHOHnhsmQdU9vUWQIQwExbkqR6Hoorc3HQ71mniXd4b/3o3WNk/t8iCaWtwI0uwuG2/yTE5Inbq3Bb29O+3gmcAFVfYP+Yxrdo1zqYJO6NC01GniopIxzG4fe3cOYJfiZZO54Wq0OBho=
+	t=1716548958; cv=none; b=MCoDg+zdhN54cvNY/Xy5SqvIokJo2H/58V5lr7oJe+LscaoxZANyVAREM7SXfY/B5aYKk0pS/tCohL5/c/z05qBaj74qPRHdHFQPEzP1tTAglVOPFdi7Grxbz+qgPnsxwkwx3TBnCSEAA1OusNYm1XoCFt09OqEK3LZoIpUOppI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548953; c=relaxed/simple;
-	bh=D2aBZaPkgLYXgtXmQOHZ8FsDNuZr/1Q5sGKc6JHdfQs=;
+	s=arc-20240116; t=1716548958; c=relaxed/simple;
+	bh=dm4ZxN8s5wat+eMXwUgtXarNpy4bDyRvetzDUiQ/Pzo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CJP/eOT4CLwTKXurIck1ohGN87Fi6gZet1MjId2xIN+ffM2uI79r0iePMQBzzPVgx51Z25M0rkfj2qH/zjBsDwgkl43nOE67QSTmwlp75y18k9id2Yee7AvKIdu9Yca2SbVHST7/8ylzG1MhFP9SAP8lF5o6Q21ZvvwbZuDuoXw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyyc5bog; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=IS/m44atFOnu5nC12V9/lsYQL4dREGe6+8aY8Jq+j5yucFFBUgiUU4wJ8jW7s/yRB6+mt1NRQDUvZixr9ga6nfThq9M1HQPbhm1+WPpsDQzt0JANB9O+d6p+LvOLdIl535EhfSdb8PLpoVrJTQYEc5V7D2Ui5pUKZkTZMME35ss=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIHD5bHA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyyc5bog"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1B7C3277B;
-	Fri, 24 May 2024 11:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIHD5bHA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 740FAC2BBFC;
+	Fri, 24 May 2024 11:09:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716548952;
-	bh=D2aBZaPkgLYXgtXmQOHZ8FsDNuZr/1Q5sGKc6JHdfQs=;
+	s=k20201202; t=1716548957;
+	bh=dm4ZxN8s5wat+eMXwUgtXarNpy4bDyRvetzDUiQ/Pzo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fyyc5bog8aPpbXIk5nE0mh82wxikJQcNab5n5eEKeCyGImQTz3apwNZi/pRSlHQ8z
-	 7avrUMwfKpBEgJRXCJMIMPVLc51fLK4q7YYbs1icQgw1XD7+mmSK1Ag9u+mL5ayu7b
-	 S2t3H3MRG3RQaDXllA+k8cAcpsX9AvBE/4HDDfqM8kcmU0Gh7Bj9+e3wLkyTJBlpNP
-	 Fr9qPFM+PdI0vj/l+UJxyUWJwQwmuPenwvdwtSnzSlTi50F8KfiY/dYAwaLbaiAuzq
-	 IE2yDmSHwZ4JI9s/zspDpQSThpOThppKljyIGneIWZrq5/nP5i0GJOKfv8T9Bp2Bs+
-	 QTS2SvWsHSUxQ==
-Message-ID: <8e649854-a855-4b06-b8b0-b35960f3b5f7@kernel.org>
-Date: Fri, 24 May 2024 13:09:11 +0200
+	b=XIHD5bHAJocmYC/i9jXA39ErZbufnb0YyXBhufLRO6B+JfrHBFsb5/IN75bd+VkB/
+	 D0Tm8B9Atxb23cAd9EL8o/oJLfgx22U9AcTiiomIbBwV4iMeU5hK2ggO8CZMKVKeUL
+	 vmL1g8p37d43QQZHv6uQeySyi6IIb+PWPvPzE65afWVGvrKXTOVVaGz3Cd9tm8SPt6
+	 QC7nQpDff40JkMRoK4OG76IghPbHKySAq5s3bjPGTAU/XALQc32NGLQOGVe/+ij1nr
+	 e2kess38VhfoYRcHUi64xjhvWHy5wu8CAoPwbIqc9QRhWQszxMoDhL1uOD/426j+Jt
+	 jK5/lLcUZBt2g==
+Message-ID: <10479e4f-16d3-4de4-95c5-41c17da16198@kernel.org>
+Date: Fri, 24 May 2024 13:09:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/6] selftests: mptcp: rename ns to _ns in
- get_counter
+Subject: Re: [PATCH mptcp-next v4 5/6] selftests: mptcp: join: print title
+ after init_partial
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716533107.git.tanggeliang@kylinos.cn>
- <e6adf1ed401342f0065b6dcee02e43b7c769ef2a.1716533107.git.tanggeliang@kylinos.cn>
+ <4716cd1f4f594b2cc68e9e6692898eb725de8ce5.1716533107.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,29 +87,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e6adf1ed401342f0065b6dcee02e43b7c769ef2a.1716533107.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4716cd1f4f594b2cc68e9e6692898eb725de8ce5.1716533107.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 24/05/2024 08:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> If "setup_ns ns" is used in diag.sh, it fails with errors:
-> 
->  ./mptcp_lib.sh: line 289: local: ns: readonly variable
+> init_partial may fail sometimes, in that case, titles shouldn't be
+> printed out. So the patch moves mptcp_lib_print_title from the front
+> of init_partial to the back of it.
 
-Mmh, that's due to Bash not allowing local variables with the same name
-as readonly ones. Maybe we can avoid using the "readonly" variable,
-because we use 'ns' in many other helpers in mptcp_lib.sh, let me check
-that, I will come back to you later.
+I'm not sure to understand why the title should not be printed: it would
+help to understand which test had an issue: the next one or the previous
+one, no?
 
->  13 ....chk 2 cestab                                  [ OK ]
->  14 ....chk 2->0 msk in use after flush               [ OK ]
-> 
-> That is because "ns" is also a local variable in mptcp_lib_get_counter.
-> To solve this, this patch renames it as "_ns".
 Cheers,
 Matt
 -- 
