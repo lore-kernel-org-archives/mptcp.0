@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F15B686251
-	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 11:09:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 561A985931
+	for <mptcp@lists.linux.dev>; Fri, 24 May 2024 11:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716548951; cv=none; b=NqP+gvNkCrTAsZGaUlB9h1r+hIPczL2a0xQvZZ3R2Pw/LtbqVSndJkhw2ByAYxnxEBI12g9v/Uu6GmMG8KuwJAuOoxXrc7doRfP6JNslD5VaYVDw9HvXaschiSa2UdovxT+jXwtlONChjyJqWqrudAKbMsC/RIxW0Aaau5rhHz8=
+	t=1716548953; cv=none; b=Rv5FoMmfHNitvZ9OmuoNHE8GPCxI63ELHOHnhsmQdU9vUWQIQwExbkqR6Hoorc3HQ71mniXd4b/3o3WNk/t8iCaWtwI0uwuG2/yTE5Inbq3Bb29O+3gmcAFVfYP+Yxrdo1zqYJO6NC01GniopIxzG4fe3cOYJfiZZO54Wq0OBho=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716548951; c=relaxed/simple;
-	bh=LbZVy+sOtxUlDHxJSKv3CYZZKEfUMXw97Oum31rvD1k=;
+	s=arc-20240116; t=1716548953; c=relaxed/simple;
+	bh=D2aBZaPkgLYXgtXmQOHZ8FsDNuZr/1Q5sGKc6JHdfQs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PfN2U+3a9x2oxc6cGKhf0ZdiuQi1rr2VsdYVk4UM/gYWi0y9NZcqsC4rnAXuRpsvZMhntBDZb3cjXyI/WajzgGBZ4FDKbsb8DiEE7FeAw+URuDG2YK6bDCXWOgd0+XAEGjHAODqiFh/BMqIxZgpzj8d6lb1tF1WNLTslVTHSqEc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b2yQ509B; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CJP/eOT4CLwTKXurIck1ohGN87Fi6gZet1MjId2xIN+ffM2uI79r0iePMQBzzPVgx51Z25M0rkfj2qH/zjBsDwgkl43nOE67QSTmwlp75y18k9id2Yee7AvKIdu9Yca2SbVHST7/8ylzG1MhFP9SAP8lF5o6Q21ZvvwbZuDuoXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyyc5bog; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b2yQ509B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6928BC2BBFC;
-	Fri, 24 May 2024 11:09:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyyc5bog"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE1B7C3277B;
+	Fri, 24 May 2024 11:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716548950;
-	bh=LbZVy+sOtxUlDHxJSKv3CYZZKEfUMXw97Oum31rvD1k=;
+	s=k20201202; t=1716548952;
+	bh=D2aBZaPkgLYXgtXmQOHZ8FsDNuZr/1Q5sGKc6JHdfQs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b2yQ509BQYTylkwm5p6wv6iLAqdFU5DzP5RO6lXJsSsvlEE13ezOmtohghEgXuZTW
-	 4LmkZKMFhKZSktfafTgDhxoMjiCMC1K20Z2XPIVAA/9q3Ri6FdbZEYllJBsdlEd8aq
-	 VNj6cbaSZfWxpXaDJhFuNh8+HFNbadg0I15gzmPcXKdb8TzIU2Jy5cNzxJL4nz9VyV
-	 tIpI+gUmZuCbaesR1TjjpNoJ2u4ifd7tAqa27pjWrPFnzHkF0SAU8Hr+Nah17M3Gpm
-	 YLSnwFvcjGMs8/B607MNUjgycSvGPyMdPNh9VhzhLVMD2dHljOhi3gGnq19dSgtZo7
-	 KW38HLxId5jcw==
-Message-ID: <83d554c8-efef-43dd-a514-bfc0a51ca562@kernel.org>
-Date: Fri, 24 May 2024 13:09:06 +0200
+	b=fyyc5bog8aPpbXIk5nE0mh82wxikJQcNab5n5eEKeCyGImQTz3apwNZi/pRSlHQ8z
+	 7avrUMwfKpBEgJRXCJMIMPVLc51fLK4q7YYbs1icQgw1XD7+mmSK1Ag9u+mL5ayu7b
+	 S2t3H3MRG3RQaDXllA+k8cAcpsX9AvBE/4HDDfqM8kcmU0Gh7Bj9+e3wLkyTJBlpNP
+	 Fr9qPFM+PdI0vj/l+UJxyUWJwQwmuPenwvdwtSnzSlTi50F8KfiY/dYAwaLbaiAuzq
+	 IE2yDmSHwZ4JI9s/zspDpQSThpOThppKljyIGneIWZrq5/nP5i0GJOKfv8T9Bp2Bs+
+	 QTS2SvWsHSUxQ==
+Message-ID: <8e649854-a855-4b06-b8b0-b35960f3b5f7@kernel.org>
+Date: Fri, 24 May 2024 13:09:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 1/6] selftests: net: rename ns in
- setup/cleanup_ns
+Subject: Re: [PATCH mptcp-next v4 2/6] selftests: mptcp: rename ns to _ns in
+ get_counter
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716533107.git.tanggeliang@kylinos.cn>
- <7a877165562901175b913285b3bb844f2cbc49c9.1716533107.git.tanggeliang@kylinos.cn>
+ <e6adf1ed401342f0065b6dcee02e43b7c769ef2a.1716533107.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7a877165562901175b913285b3bb844f2cbc49c9.1716533107.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e6adf1ed401342f0065b6dcee02e43b7c769ef2a.1716533107.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,128 +96,20 @@ Hi Geliang,
 On 24/05/2024 08:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The helpers setup_ns and cleanup_ns don't work when a namespace named
-> "ns" is passed to them.
+> If "setup_ns ns" is used in diag.sh, it fails with errors:
 > 
-> For example, in net/mptcp/diag.sh, the name of the namespace is "ns".
-> If "setup_ns ns" is used in it, diag.sh fails with errors:
+>  ./mptcp_lib.sh: line 289: local: ns: readonly variable
+
+Mmh, that's due to Bash not allowing local variables with the same name
+as readonly ones. Maybe we can avoid using the "readonly" variable,
+because we use 'ns' in many other helpers in mptcp_lib.sh, let me check
+that, I will come back to you later.
+
+>  13 ....chk 2 cestab                                  [ OK ]
+>  14 ....chk 2->0 msk in use after flush               [ OK ]
 > 
->  Invalid netns name "./mptcp_connect"
->  Cannot open network namespace "10000": No such file or directory
->  Cannot open network namespace "10000": No such file or directory
-> 
-> That is because "ns" is also a local variable in both setup_ns and
-> cleanup_ns. To solve this, this patch renames the local variable "ns"
-> as "_ns".
-
-Do you mind justifying why the new name helps? Something like:
-
-  (...)
-  as "_ns", which is more unlikely to conflict with existing variables.
-  "_ns" name appears to be unused in the selftests.
-
-> Also a ns_name valid check has been added to setup_ns. If "_ns" is
-> passed in as a ns_name, setup_ns helper exits.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/lib.sh | 33 ++++++++++++++++++------------
->  1 file changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
-> index edc030e81a46..ce611bc73098 100644
-> --- a/tools/testing/selftests/net/lib.sh
-> +++ b/tools/testing/selftests/net/lib.sh
-> @@ -128,7 +128,7 @@ slowwait_for_counter()
->  
->  cleanup_ns()
->  {
-> -	local ns=""
-> +	local _ns=""
-
-Are you sure this modification in cleanup_ns is needed as well? The
-variable is local, and it is not unset / modified using the name passed
-in argument.
-
->  	local errexit=0
->  	local ret=0
->  
-> @@ -138,10 +138,11 @@ cleanup_ns()
->  		set +e
->  	fi
->  
-> -	for ns in "$@"; do
-> -		ip netns delete "${ns}" &> /dev/null
-> -		if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -vq "^$ns$" &> /dev/null; then
-> -			echo "Warn: Failed to remove namespace $ns"
-> +	for _ns in "$@"; do
-> +		ip netns delete "${_ns}" &> /dev/null
-> +		if ! busywait $BUSYWAIT_TIMEOUT ip netns list \
-> +		   \| grep -vq "^$_ns$" &> /dev/null; then
-> +			echo "Warn: Failed to remove namespace $_ns"
->  			ret=1
->  		fi
->  	done
-> @@ -159,29 +160,35 @@ cleanup_all_ns()
->  # setup_ns local remote
->  setup_ns()
->  {
-> -	local ns=""
-> +	local _ns=""
->  	local ns_name=""
->  	local ns_list=""
->  	local ns_exist=
->  	for ns_name in "$@"; do
-> +		if [ "${ns_name}" == "_ns" ]; then
-> +			echo "Failed to setup namespace '${ns_name}': invalid name"
-> +			cleanup_ns "$ns_list"
-
-If the list is empty, it will call cleanup_ns with "", and it will try
-to do 'ip netns delete ""', etc.
-
-If ns_list is an array, then 'cleanup_ns "${ns_list[@]}"' is OK. Mmh, I
-see there is the same issue below. I can send a fix for that, that would
-be for -net, not next. I will look at that this afternoon.
-
-> +			set -e
-
-Why do you need this? (see below)
-
-> +			return $ksft_fail
-
-Why not 'exit ${ksft_fail}' instead? That's an internal error, you can
-do that.
-
-> +		fi
->  		# Some test may setup/remove same netns multi times
->  		if unset ${ns_name} 2> /dev/null; then
-> -			ns="${ns_name,,}-$(mktemp -u XXXXXX)"
-> -			eval readonly ${ns_name}="$ns"
-> +			_ns="${ns_name,,}-$(mktemp -u XXXXXX)"
-> +			eval readonly ${ns_name}="$_ns"
->  			ns_exist=false
->  		else
-> -			eval ns='$'${ns_name}
-> -			cleanup_ns "$ns"
-> +			eval _ns='$'${ns_name}
-> +			cleanup_ns "$_ns"
->  			ns_exist=true
->  		fi
->  
-> -		if ! ip netns add "$ns"; then
-> +		if ! ip netns add "$_ns"; then
->  			echo "Failed to create namespace $ns_name"
->  			cleanup_ns "$ns_list"
->  			return $ksft_skip
->  		fi
-> -		ip -n "$ns" link set lo up
-> -		! $ns_exist && ns_list="$ns_list $ns"
-> +		ip -n "$_ns" link set lo up
-> +		! $ns_exist && ns_list="$ns_list $_ns"
->  	done
->  	NS_LIST="$NS_LIST $ns_list"
->  }
-
+> That is because "ns" is also a local variable in mptcp_lib_get_counter.
+> To solve this, this patch renames it as "_ns".
 Cheers,
 Matt
 -- 
