@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6952125DC
-	for <mptcp@lists.linux.dev>; Sat, 25 May 2024 13:02:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13AD7125DC
+	for <mptcp@lists.linux.dev>; Sat, 25 May 2024 13:02:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716642139; cv=none; b=jcM/zmjww2JDmN9DSw2Kwsg0/4+SNk9EuFDDDQIWWp+6fe8/3G/Ff/mQvbvfyf76o0MMIgmjFPT5sz+97l1ii8Iws1EdCZEuHgP+CtaI//4mLeMNHqlQ9lfFqngMerRUPkjmrTXvstOpG37kzT2Gq6j9rzu21IOaEv2mfhFUA00=
+	t=1716642141; cv=none; b=pAqkV4zW3po0OVZ36qzPZ1enokIXvj08IEWOBqY3DfRFzPrcnxxdu53R+t3OUDjTbBGJTaxuUUYHyH2NNglnuf1Vag+YtbDQEatyANB+R1tMFH+83/f393JhWp71c9WJcobp6fm0aJtsD95fbBvjZaOZDuEPS4mP/Sxqvo8XWuc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716642139; c=relaxed/simple;
-	bh=cpJhF0tfkdsbMA3a9h27E9ZvdIgKuVwPsv3RdLP16vo=;
+	s=arc-20240116; t=1716642141; c=relaxed/simple;
+	bh=sqRT7u1zqCVp77hX/dnok3dYjaU3tkuOKGGNWeA0Ri8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kjY/GTOjsGFsLSKeotuVxUbUGEgqe3hm0jrFGtT3abFxHazVPNEsScpe8OJ4S7wpsE2B7usPc6aD9AQhj+lax4I+tn2CM9gRKtB1fHsBukuYs8xa4A3AqHl6cH0vgxuat+Ee8f+UUlLdOra6qlv9QcC5yatDAMqOWZZ8BW711lk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK2V/zlD; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=c5i8kvu932uyDTfwfpceNWJnE9dT8L/OkOeUs8AnLlLzInGEV8SSz2rZsYs9Q8PD1Et96V3bPim2brYtmM3cSN2eTEe7rQ1P6XnfZLFFS9YkJPoMXeLJ0mdAdM0wO+52a9im15R9Qzga/bcAQETy02TAqdr2noXG6nPFgpegvkE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OIDPLRpd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK2V/zlD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD4D7C3277B;
-	Sat, 25 May 2024 13:02:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OIDPLRpd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 29C7CC3277B;
+	Sat, 25 May 2024 13:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716642139;
-	bh=cpJhF0tfkdsbMA3a9h27E9ZvdIgKuVwPsv3RdLP16vo=;
+	s=k20201202; t=1716642140;
+	bh=sqRT7u1zqCVp77hX/dnok3dYjaU3tkuOKGGNWeA0Ri8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YK2V/zlDIMrw+670JqCyijRc+fGV7X3yCNU3peU9xOcjXmnR6oHZdG6YlmjDxuCfg
-	 C2Lrl/gyaXVDXC2XoFgYRrKFjEHdahHbHEzC+q1z+5PvTVqf6Lh4ZSPxbDMEBQ/E9a
-	 HBpk6aRoLIdzUBjwdJbenKdj0i83QrMmajLIsloSs4IK3RRZkZaMOJjtJ/glaAv1tR
-	 KanZBksXNu6STePL7MNGGZd125Zljrj/6Xu2UJ5APvnOMFycfRkDnl3RlKE76gjtuj
-	 lqgsyOP5USH5pY0vBBFt0RThI6l03mfxB3sWwmzEYOUAWvBJjK9LPJt52wphjcpJPT
-	 h677MA2UEYaMQ==
+	b=OIDPLRpdcULrgPiecnEVCkwUdBimA3X305gVy3i9SNZISmI3X+Zo8CBCsOUMERmoi
+	 X8n4rcz1dQyouUlBGNTILV9jQOk0xXFPzHGGUmcLylh8Y/UCnIomZAwhZqKPmiDcHH
+	 7scusukjIYRnM4Ggknwu3tf80RyKbd97GIVQ29kPyF2NYpnGQZ7/m+o8VRk0IZ5afr
+	 NJHa029fCa1NBiaXiXA9U/EDUAHg0srLn4bEheptybYSGxxS6hmG1zLioM8wLHP1ZZ
+	 ng8rSIsbQJqzskxFoB77UU4T5/gQRZ/iOR/FJ8ROOpNbrRVRzh0xlE4at1FQX0VRcG
+	 PINfoZ4qJgztA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 3/4] selftests: mptcp: diag: add ns name empty check in cleanup
-Date: Sat, 25 May 2024 21:01:24 +0800
-Message-ID: <eb0532a18d2d520268dc2ba0f1e414b25aaafb04.1716641976.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 4/4] selftests: mptcp: join: print title at the end of reset
+Date: Sat, 25 May 2024 21:01:25 +0800
+Message-ID: <7dbbb909edef2fecc46bde435fae21be6bc9ed81.1716641976.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1716641976.git.tanggeliang@kylinos.cn>
 References: <cover.1716641976.git.tanggeliang@kylinos.cn>
@@ -45,34 +45,44 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-mptcp_lib_ns_init may fail sometimes, then ns isn't setup correctly. In
-that case, cleanup is invoked, and ns is used in cleanup. So an "Invalid
-netns name ''" error occurs.
+init or init_partial may fail sometimes, in that case, titles shouldn't
+be printed out.
 
 For example, these errors occur when invalid name is set to setup_ns:
 
+    001 no JOIN
     Failed to setup namespace 'ns_temp': invalid name
-    Invalid netns name ""
 
-The patch adds an ns name empty check before using it in cleanup.
+"001 no JOIN" shouldn't be printed out in this case. So the patch moves
+mptcp_lib_print_title from the front of init to the end of reset().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 776d43a6922d..7ee43c35e0e9 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -31,6 +31,7 @@ flush_pids()
- #shellcheck disable=SC2317
- cleanup()
- {
-+	[ -n "${ns}" ] &&
- 	ip netns pids "${ns}" | xargs --no-run-if-empty kill -SIGKILL &>/dev/null
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 2b66c5fa71eb..d20a053eee8f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -269,8 +269,6 @@ reset()
+ 		return 1
+ 	fi
  
- 	mptcp_lib_ns_exit "${ns}"
+-	mptcp_lib_print_title "${TEST_NAME}"
+-
+ 	if [ "${init}" != "1" ]; then
+ 		init
+ 	else
+@@ -279,6 +277,8 @@ reset()
+ 
+ 	init_partial
+ 
++	mptcp_lib_print_title "${TEST_NAME}"
++
+ 	return 0
+ }
+ 
 -- 
 2.43.0
 
