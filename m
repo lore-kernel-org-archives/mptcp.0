@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE89E13AD12
-	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:15:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4481327E5
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:15:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804903; cv=none; b=SJQkfPYAMzZPtFIPsxv8Gmu4UXNsVpERb0ZMS95fuPgx6gkYh+ssyqRwGZXdrFWgj1sWmC14yDJ3eFF1EfQ50cS4A50xB11AQSF9YVJLMOgL4vhV68BBKxAAaxeHlfXKUSROV1w/lajLFkfPMZYVPLotdLkn5VZKV9k/1vJXUtU=
+	t=1716804918; cv=none; b=KTpOodIiXyNc+cnkl7YrSpeHlf8FWUwUAeolZOmGA/dRanwER5HO5J3BN8yedVwTmnWelE3aePLhMlHS7jLfm/XTxF7hsFCmVjgHx5OkwSveL+7bk4ICj+IwshaAZ9szJAJ0fkpK+IYOREtd9CSjH1N+vlLc1rrxkxrAo+Fsx4Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804903; c=relaxed/simple;
-	bh=ht801/KS8AiKYGLwx2LuyOPwd5yiuRR67THFwRQvLI0=;
+	s=arc-20240116; t=1716804918; c=relaxed/simple;
+	bh=/ODCSvUfbKjTwUPr1S6dG/cSbzitssalF5qqpE7/pXQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eHaj5/Rqe9qiubrXDc70c+TS0Q0YNr4duKqLD/0G6f/MwdBv1IgEgmM1mT+o3MNRvTgaDqsjwyOnK6yLCadeC5Kc7XYTDmNX6fZraTLgupOBPHfBDxDC7D4oM9PvNXSWaiXEm+amkVkufzLhFUbz9ehomDt7mTx503y2On5nmDY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrIf4iOS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=POOlMZiEln0P5/iGAZTq5obhR2xKipFWda6xhwqN8fuk1o5x73UaG5YCGTGxVw6ULQ1FMoKXXbdd2OzE118jOrO5mfZFEIrVnfBjZAHqXJ/V0vLH0Leha83CVtdtS5BU3MWtKdgmSP1SYGrnDZftDmtODMqPndZ3Cr+ZYPOwhsI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0xPm6wM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrIf4iOS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CEEC2BBFC;
-	Mon, 27 May 2024 10:15:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0xPm6wM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830B2C2BBFC;
+	Mon, 27 May 2024 10:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716804903;
-	bh=ht801/KS8AiKYGLwx2LuyOPwd5yiuRR67THFwRQvLI0=;
+	s=k20201202; t=1716804918;
+	bh=/ODCSvUfbKjTwUPr1S6dG/cSbzitssalF5qqpE7/pXQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UrIf4iOS0PHopUT1gGp5UGfZmcvqR60N8cnEZaEGSi48aQwuzmpYi1r1z7tIGJ7HK
-	 qwmoTS3ycTxJIKpw9VXKe4Nw2dOgN4YRY2CxaewR1Gex2EGcgmuEPwf7hQZJWtYWzg
-	 OjxzEXkfZZGzDrt+EFstRieXSBTtihIuDsdTRgzENDC0u9GL7exFPuToAoY+FhlHPE
-	 N9gZtGm4bpGf8QZTblKjj2cDPxTM6Y1lD5IWjtOnLXN7wpPHrkZzGOHXoMJln7tJAs
-	 gvAvYfLVPDZYrsoufy1mbJVLiukR/EuLMvHgBHLwzeRzirsOgIS7SMPAEYxmhls0Az
-	 0GQt+3QnBENkA==
-Message-ID: <682eb8c7-5792-4f7e-ae4d-939c739210d8@kernel.org>
-Date: Mon, 27 May 2024 12:15:00 +0200
+	b=T0xPm6wMmIc7ugpZ9jBNLiY4fPLv3HFpJTWpHQsnKcLsbiiI0PKgsFgxQhCXadp9o
+	 TDr9rwSOOBLjnM7UrvEtwS1wQE39qm7SleGfLm4RV3JgeV4x/IRhouf3feUre1l39x
+	 dje+lNlE6QideEv6CO/k2l0E5vfQXDvG082cEnTBCIFQB6GmcyNZsKRi6SblnL1W3i
+	 KY/geDRN30dnoH2ZtuCAyslPCyMRU/gGNIoqBqyxUjvQOUirSOzclF4mfVtdIQkJX9
+	 L+qvFOGE7DeK1kduMlQzuBfpv+vjhRoQcACU8TTVb8eiMMWItPzrKK976iVhtE4C7z
+	 XguYj05a7B80A==
+Message-ID: <9c729cec-8eb8-484c-875a-41a705520a07@kernel.org>
+Date: Mon, 27 May 2024 12:15:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/4] Squash to "selftests: mptcp: lib: use
- setup/cleanup_ns helpers"
+Subject: Re: [PATCH mptcp-next 3/4] selftests: mptcp: diag: add ns name empty
+ check in cleanup
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716641976.git.tanggeliang@kylinos.cn>
- <029bea7a92e16983747025bc586910cbfa4dd2ac.1716641976.git.tanggeliang@kylinos.cn>
+ <eb0532a18d2d520268dc2ba0f1e414b25aaafb04.1716641976.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <029bea7a92e16983747025bc586910cbfa4dd2ac.1716641976.git.tanggeliang@kylinos.cn>
+In-Reply-To: <eb0532a18d2d520268dc2ba0f1e414b25aaafb04.1716641976.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,35 +96,18 @@ Hi Geliang,
 On 25/05/2024 15:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> setup_ns exits when it fails, so I think no need to exit in
-> mptcp_lib_ns_init anymore.
+> mptcp_lib_ns_init may fail sometimes, then ns isn't setup correctly. In
+> that case, cleanup is invoked, and ns is used in cleanup. So an "Invalid
+> netns name ''" error occurs.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
+> For example, these errors occur when invalid name is set to setup_ns:
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 194c8fc2e55a..7a461830539b 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -428,10 +428,7 @@ mptcp_lib_check_tools() {
->  }
->  
->  mptcp_lib_ns_init() {
-> -	if ! setup_ns ${@}; then
-> -		mptcp_lib_pr_fail "Failed to setup namespace ${@}"
-> -		exit ${KSFT_FAIL}
-> -	fi
-> +	setup_ns "${@}"
+>     Failed to setup namespace 'ns_temp': invalid name
+>     Invalid netns name ""
 
-It only exits when there is an internal error (name conflict), but not
-if there was an issue with 'ip netns add'. I think it is safer to keep
-this check, no?
-
->  
->  	local netns
->  	for netns in "${@}"; do
+Mmh, I don't think this is needed: here, you explicitly caused the issue
+by picking an invalid name. That's the only case where the 'ns' variable
+will be not set. It should not fail with this error then.
 
 Cheers,
 Matt
