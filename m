@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BCD2763F8
-	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:14:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE89E13AD12
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804891; cv=none; b=Io3pmGEtVRj+bw2wKLT3N9lndbDDIUU+/w2YymiNMonRG+A1FFDtoIWDBIw52GnD7Rldq6W0t1Kg9uQp7uWxLqNP59mEuDHMqiQo1zIbFfbeFYtciY8SxotJ7KpmN8zGiKFou9Ec7b3QnjsQ9ITsKRUV0WoIFg0XLh6EUg55f6U=
+	t=1716804903; cv=none; b=SJQkfPYAMzZPtFIPsxv8Gmu4UXNsVpERb0ZMS95fuPgx6gkYh+ssyqRwGZXdrFWgj1sWmC14yDJ3eFF1EfQ50cS4A50xB11AQSF9YVJLMOgL4vhV68BBKxAAaxeHlfXKUSROV1w/lajLFkfPMZYVPLotdLkn5VZKV9k/1vJXUtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804891; c=relaxed/simple;
-	bh=30nsz5rkCEY8Mqdi9ETRRpgj23ubSFE02IYBhUNegpQ=;
+	s=arc-20240116; t=1716804903; c=relaxed/simple;
+	bh=ht801/KS8AiKYGLwx2LuyOPwd5yiuRR67THFwRQvLI0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HgdmDa+psnrdaiEHdEBotv2T8SKUVxc65oHAAyDG0KDp1Wql3GhXlFKKdJ3cJex/WiFkcDDeUlGPxGNRxDYUlOOa+B2E9TklRJDrBFMkZLUlQg3B8+9uDnY/+B8fy0wxrDFZVmHZYkHKxXu02Hz1eHQ1qmmQ7zmp/bh/hxq5cGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pfjMgeOP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eHaj5/Rqe9qiubrXDc70c+TS0Q0YNr4duKqLD/0G6f/MwdBv1IgEgmM1mT+o3MNRvTgaDqsjwyOnK6yLCadeC5Kc7XYTDmNX6fZraTLgupOBPHfBDxDC7D4oM9PvNXSWaiXEm+amkVkufzLhFUbz9ehomDt7mTx503y2On5nmDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UrIf4iOS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pfjMgeOP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F931C2BBFC;
-	Mon, 27 May 2024 10:14:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UrIf4iOS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32CEEC2BBFC;
+	Mon, 27 May 2024 10:15:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716804890;
-	bh=30nsz5rkCEY8Mqdi9ETRRpgj23ubSFE02IYBhUNegpQ=;
+	s=k20201202; t=1716804903;
+	bh=ht801/KS8AiKYGLwx2LuyOPwd5yiuRR67THFwRQvLI0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pfjMgeOPqsyXiDc/1NcdQJkf7lJ+yf7OWH2xg+IqiaI/o/WbYgxHt82RVwT0d+JKa
-	 dmGA/F67qPmdYbvifn62HOCsLyPbLrGnOp4sLofO0QKjWQBBj2rv1PhaU1tJHnY41B
-	 9FpJndOVSl+PNJtk/B7pZJ0/aInjW7jN5n4d4+N/ckzsx1+SliP6w0xUkjWlaN9yn5
-	 vt+gf9gvSdIcJ2qB2SgrXAbH5eWEMdJEPtvNe2U+4M00qiWRDi3Cto+5+lLs/lb1sI
-	 yZUMgQzt0kQrANvdxdb8bP91UWYe1Nfj4c02/8q4BUMXAWsqh6U8hdG3b9OU6NGlnq
-	 HGQnmm6W9gWEQ==
-Message-ID: <047d144c-74e6-471a-81f2-b0dc4c5903df@kernel.org>
-Date: Mon, 27 May 2024 12:14:47 +0200
+	b=UrIf4iOS0PHopUT1gGp5UGfZmcvqR60N8cnEZaEGSi48aQwuzmpYi1r1z7tIGJ7HK
+	 qwmoTS3ycTxJIKpw9VXKe4Nw2dOgN4YRY2CxaewR1Gex2EGcgmuEPwf7hQZJWtYWzg
+	 OjxzEXkfZZGzDrt+EFstRieXSBTtihIuDsdTRgzENDC0u9GL7exFPuToAoY+FhlHPE
+	 N9gZtGm4bpGf8QZTblKjj2cDPxTM6Y1lD5IWjtOnLXN7wpPHrkZzGOHXoMJln7tJAs
+	 gvAvYfLVPDZYrsoufy1mbJVLiukR/EuLMvHgBHLwzeRzirsOgIS7SMPAEYxmhls0Az
+	 0GQt+3QnBENkA==
+Message-ID: <682eb8c7-5792-4f7e-ae4d-939c739210d8@kernel.org>
+Date: Mon, 27 May 2024 12:15:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/4] Squash to "selftests: net: lib: rename ns
- in setup_ns"
+Subject: Re: [PATCH mptcp-next 2/4] Squash to "selftests: mptcp: lib: use
+ setup/cleanup_ns helpers"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716641976.git.tanggeliang@kylinos.cn>
- <a6c019fd6e47ba0c98fd03e9a4723df0075ad269.1716641976.git.tanggeliang@kylinos.cn>
+ <029bea7a92e16983747025bc586910cbfa4dd2ac.1716641976.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a6c019fd6e47ba0c98fd03e9a4723df0075ad269.1716641976.git.tanggeliang@kylinos.cn>
+In-Reply-To: <029bea7a92e16983747025bc586910cbfa4dd2ac.1716641976.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,69 +96,35 @@ Hi Geliang,
 On 25/05/2024 15:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> I think "ns_temp" is a better name than "_ns" here.
-
-Good point. But when looking at that, I think it would be even better to
-get rid of this variable.
-
-I can suggest a patch in a v6.
-
+> setup_ns exits when it fails, so I think no need to exit in
+> mptcp_lib_ns_init anymore.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/lib.sh | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 5 +----
+>  1 file changed, 1 insertion(+), 4 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
-> index b883289ec4a1..97f3d7d6b913 100644
-> --- a/tools/testing/selftests/net/lib.sh
-> +++ b/tools/testing/selftests/net/lib.sh
-> @@ -167,11 +167,11 @@ cleanup_all_ns()
->  # setup_ns local remote
->  setup_ns()
->  {
-> -	local _ns=""
-> +	local ns_temp=""
->  	local ns_name=""
->  	local ns_list=()
->  	for ns_name in "$@"; do
-> -		if [ "${ns_name}" = "_ns" ]; then
-> +		if [ "${ns_name}" = "ns_temp" ]; then
->  			echo "Failed to setup namespace '${ns_name}': invalid name"
->  			cleanup_ns "${ns_list[@]}"
->  			exit $ksft_fail
-
-I don't know if this check still makes sense. It could also conflict
-with ns_name...
-
-> @@ -179,20 +179,20 @@ setup_ns()
->  
->  		# Some test may setup/remove same netns multi times
->  		if [ -z "${!ns_name}" ]; then
-> -			_ns="${ns_name,,}-$(mktemp -u XXXXXX)"
-> -			eval "${ns_name}=${_ns}"
-> +			ns_temp="${ns_name,,}-$(mktemp -u XXXXXX)"
-> +			eval "${ns_name}=${ns_temp}"
->  		else
-> -			_ns="${!ns_name}"
-> -			cleanup_ns "${_ns}"
-> +			ns_temp="${!ns_name}"
-> +			cleanup_ns "${ns_temp}"
->  		fi
->  
-> -		if ! ip netns add "${_ns}"; then
-> +		if ! ip netns add "${ns_temp}"; then
->  			echo "Failed to create namespace $ns_name"
->  			cleanup_ns "${ns_list[@]}"
->  			return $ksft_skip
->  		fi
-> -		ip -n "${_ns}" link set lo up
-> -		ns_list+=("${_ns}")
-> +		ip -n "${ns_temp}" link set lo up
-> +		ns_list+=("${ns_temp}")
->  	done
->  	NS_LIST+=("${ns_list[@]}")
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 194c8fc2e55a..7a461830539b 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -428,10 +428,7 @@ mptcp_lib_check_tools() {
 >  }
+>  
+>  mptcp_lib_ns_init() {
+> -	if ! setup_ns ${@}; then
+> -		mptcp_lib_pr_fail "Failed to setup namespace ${@}"
+> -		exit ${KSFT_FAIL}
+> -	fi
+> +	setup_ns "${@}"
+
+It only exits when there is an internal error (name conflict), but not
+if there was an issue with 'ip netns add'. I think it is safer to keep
+this check, no?
+
+>  
+>  	local netns
+>  	for netns in "${@}"; do
 
 Cheers,
 Matt
