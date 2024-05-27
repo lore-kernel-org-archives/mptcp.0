@@ -1,122 +1,144 @@
-Received: from mail-ua1-f47.google.com (mail-ua1-f47.google.com [209.85.222.47])
+Received: from mail-ed1-f52.google.com (mail-ed1-f52.google.com [209.85.208.52])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9933315DBBA
-	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 11:47:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6222F4EB55
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 13:17:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.52
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716810456; cv=none; b=qqQEgLGFXzzI/DMPfW/ZBkxxnyNkVPsbmat5CkfU/V0hQHvrtBjXgFaew0CPX67P3o5wFERCp4C4/C3LcENioz5ZDQQB1RcmT6QcInzJP4jhpG8uG9YzPfykHhOHidzPJmyUENUHKu+01G2eTVNZFjM3n6rWMZTgoYB8k2nPIiI=
+	t=1716815878; cv=none; b=lCKVj82hSNre1YftmONgP5bOWqpJPezjAFA9E7Xexbiv+WXZ/kXybxns7M4gRanNaZQuLVFoGslwiu1VI8ubTkuq/O5kwQkEf2alUt5SaqbKT5KVzYScBjZT2qScOAq9D8MaYtVa5QY+YabtxoLAH2vHdTnSO74K9xqoYeu/aps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716810456; c=relaxed/simple;
-	bh=lMMOWtSA/bBf69tEoIWVvK6m2ywObml9TI/pcS8PWoY=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=K40TIENztoC20NRnrQtzvalHjptspSXKtTnnajxIM0PtOdief+5xdlS3DESyg2utBeIB14iINtRT7yolB0wk3ueJd0/QXG2L+1WaBDhDSK9F2lSUke32DusMquDPqz53CQeiRbxlGe1qGhq6lg3enm01IfyoFxIgPaIMMX4Ycx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=esvnfZs8; arc=none smtp.client-ip=209.85.222.47
+	s=arc-20240116; t=1716815878; c=relaxed/simple;
+	bh=PyAZDVLFtlElDD1T73D2X8vusE4Xnx93oRalmQoR0fA=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FSdnqNCs+BBxZSt4Fmd+EGw7UGndUriVVIovxmK8eiLY0v9MBlr8BPUE7XyPMvDVt1wBVUMaifIVhNPYRC4y3F+L/2QHOxv05Phpungpe2rz4ToizqKLUK4UBx6pnQ4mFqbjPyNt1I7V1jfqWZ+MunzV8UVHz2GNDHnlfuny/Cw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fwhu3GEb; arc=none smtp.client-ip=209.85.208.52
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="esvnfZs8"
-Received: by mail-ua1-f47.google.com with SMTP id a1e0cc1a2514c-804ea25904eso659567241.1
-        for <mptcp@lists.linux.dev>; Mon, 27 May 2024 04:47:34 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fwhu3GEb"
+Received: by mail-ed1-f52.google.com with SMTP id 4fb4d7f45d1cf-5786988ae9bso2626645a12.3
+        for <mptcp@lists.linux.dev>; Mon, 27 May 2024 06:17:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716810453; x=1717415253; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=aRJQ1seNfdIHkyEzdDy0VwaOK4qPf+plqwGi5YjbyfE=;
-        b=esvnfZs8mOwbLehEzGguvySwHUsLib3FNE2Y2yCDlK+WHvjWwBCWBy6hB8QgkX1Z2X
-         B/WY2/F07cjPZ4ajfAEArJUbQFVQaAWIowl8B+BYi/F59lhYhHyzZehBZmJMzOJkOiwQ
-         G7HGHC7XEZHnU3PuGCrqu0p6MxEtLp9LxwDUfN1lMtU94HzvFLUDxbIZvYCpUxzXFTIV
-         enMEjWnU9uNXfoHIvxr3cp2M8erbG4HnPLJZP9wdxOt/tQNmaCyrVYNEGLuQvbNg4Alu
-         Ksy+a7soi4T7KGTLez1yekq9mGZxiejpcd4T087LJQbGYk2m7u/WZtx91yZ16nUgyf6d
-         3iwg==
+        d=gmail.com; s=20230601; t=1716815875; x=1717420675; darn=lists.linux.dev;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=2GGvUHHy5naZ9KldGRBmA1h3nqMUojb2YUPaRf5OvIo=;
+        b=fwhu3GEb1mcz7zOPJUAYPtAnl7lJdj9pGNp3KNG5Sm6Cu5T9O2Cuz+SRVakuvcd/uL
+         29pY4BWHpH+ERgiitiSAT+dPSD3nYNIOtvcPME8r4ndG8B5M/mJodUx9fREtzLsOlQ9P
+         +Pyv8jm+cOLNLDRR2o0eWA+SZPCOct0xWyWSdwXy/1usYWQ4/gYeSUzk+1BRNegupAGK
+         LodlNFahTQu0YNFAup9tz71UwZ7YyPFBsSVSyNRPm5JNGRknzEoWZkUBqpv/AIgD26AY
+         +MEg6tvwCaxTPBvgeN9dAAB049JIasX+3+T5SwNOOUiSZVMzvzP3J9tbFz3miLyloYKO
+         nkqA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716810453; x=1717415253;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=aRJQ1seNfdIHkyEzdDy0VwaOK4qPf+plqwGi5YjbyfE=;
-        b=JBfl1bqMj2zRvvBBSJ+3poYTmyIDBvqrD/fLyX0qaBpD8wUHyfmGdJH4W+tJChXspW
-         lJoyZF1Q2FGP2vJUSrnOQzwYRtyJXAdM1yPILQuxgtQQHmQ3H9iH6+/CiDgdyR6Q3Rci
-         R56toe4w/Z/lkLpHFX7jVTP7J/PB7N6sSwYo8wBXJXWlGxA0gml9PJ3z37XXC6EBR7Uq
-         Cv3EI69L4GOqBhwGuQstcJg9QV0HabOQKVw89hJaDB2m/+SASJKtfk7BQ9va6ATAN34F
-         mCTpNu/NGuneIh4/fdqWTQ6GCh3L49+ifLl8UBuft6mc1w0nznp0XiMoIYJNsto3Vbh+
-         qGwQ==
-X-Gm-Message-State: AOJu0Yyri6aDtmX3Uvonn+sBpWWKTUZJlMPI+z4ZrRNAvowt6Uf4qPsl
-	vU/V37cwFZ8nPxoDd3UXm4itOKxTcVRxdtS4h8NK0D1jxei93TPkjwG1
-X-Google-Smtp-Source: AGHT+IHYpCcIwFnyIO8WG0KxLyaNbvd6wXhbD1Lng7EinUwmnch5bqell/W0XRImDzb2UKqBz4e69w==
-X-Received: by 2002:a67:cb02:0:b0:47f:40f7:2b5f with SMTP id ada2fe7eead31-48a38503ef3mr9241826137.5.1716810451877;
-        Mon, 27 May 2024 04:47:31 -0700 (PDT)
-Received: from [127.0.0.1] ([74.249.5.236])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-794abcdab0csm289363785a.59.2024.05.27.04.47.31
+        d=1e100.net; s=20230601; t=1716815875; x=1717420675;
+        h=cc:to:content-transfer-encoding:mime-version:message-id:date
+         :subject:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=2GGvUHHy5naZ9KldGRBmA1h3nqMUojb2YUPaRf5OvIo=;
+        b=Qkp3iSTSzK8CivH0lJZ4OtRERh1G2Omj+zk2VgRpt+JeEnbMg93RLtDSos5blQE+5U
+         tBGu1wpE1oSmNcvOV1qr9BkkY8C7mNKmbtoQ49128HvH3BrU5Xk6KHjfm5IDzJkqa1kq
+         abytPx+GJ0g25j9cZXlo8XEr4vjoxWtCUnIg/d0NdDBx2JbJxZtciARJCigwQsU/zPkX
+         xAVFEmSYsfVIQ+7+K0vDqPojPtStHbNa/lMiGjbJylghc8aoR43Y/CVJNsE3Bldbrqed
+         Dqj93V3s6jU5UrUHtnw9LTl1CJ+Gf/N9koJqlFiA6T81ADqs3zRoTsQuGcXE7wODkOmk
+         hZ9Q==
+X-Gm-Message-State: AOJu0YxBaTeB+kUtsKuO+5iGrcj2ky/fiV/z3U/C4pOEFAc+KbN9qpB8
+	Q2Mr72VJJ4U2C7JTb6nOsvS/lAesTQHpBAM9MpJA047+N8EG8LV4SGspJJMD
+X-Google-Smtp-Source: AGHT+IHW8AxA/6LLyVpWNnqs6MYg8SWXOwTLckSwQoj9il6qtvHgu3TtDGMAKmMfQ6VdUQZBuiNttA==
+X-Received: by 2002:a50:a402:0:b0:573:5c4f:27a8 with SMTP id 4fb4d7f45d1cf-57851a1ed5emr7102591a12.35.1716815874381;
+        Mon, 27 May 2024 06:17:54 -0700 (PDT)
+Received: from [127.0.1.1] ([2001:41d0:700:80a3::])
+        by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785240d1f9sm5799272a12.51.2024.05.27.06.17.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 May 2024 04:47:31 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
-References: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
-Subject: Re: [PATCH mptcp-next v6 0/9] use helpers in lib.sh and
- net_helpers.sh
-Message-ID: <03c4511e-fdbe-3ca4-57a4-35db099e144a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 27 May 2024 11:47:30 +0000
+        Mon, 27 May 2024 06:17:54 -0700 (PDT)
+From: Gregory Detal <gregory.detal@gmail.com>
+Subject: [PATCH mptcp-next RFC 0/4] mptcp: update scheduler API
+Date: Mon, 27 May 2024 13:17:51 +0000
+Message-Id: <20240527-sched_per_packet-v1-0-09a41d405f7c@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAP+HVGYC/x3MQQqDMBBG4auEWTeQ2lhCt4UeoNsiIsmvDmI6J
+ KEI4t0NXX6L93bKSIxMD7VTwo8zf2PF9aLIz0OcoDlUU2Maa1pz09nPCL0g9TL4BUWHO6x1Dq2
+ Fo5pJwsjbf/mhVYoXHbEV9X49qTuOEw4lUeByAAAA
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Matthieu Baerts <matttbe@kernel.org>, 
+ Gregory Detal <gregory.detal@gmail.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716815873; l=3139;
+ i=gregory.detal@gmail.com; s=20240430; h=from:subject:message-id;
+ bh=PyAZDVLFtlElDD1T73D2X8vusE4Xnx93oRalmQoR0fA=;
+ b=bCqLXUtGVqOLFjB2AXo9Ri3bxL8hDd4G4qKmrXnk+VTYsCoB1QE0CJyEVZMnPLD3xzbu7UtUI
+ w8W+zP9GSPLCgUJBDd7fS5yPjeE60n7jtm8rtqCa1xnsmCjXwG+gQ/p
+X-Developer-Key: i=gregory.detal@gmail.com; a=ed25519;
+ pk=TziJDop3YEG3Ywr6io7U9Iy2jaAY3l0hTh8KdwDKXQM=
 
-Hi Geliang,
+This patchset proposes an updated API for mptcp schedulers to provide
+more flexibility for future scheduling strategies. This does not change
+the current behavior of get_subflow. It adds an optional hook to control
+scheduling behavior after selecting a subflow in get_subflow.
 
-Thank you for your modifications, that's great!
+The main idea is to provide a way to perform a scheduling per-MSS or per
+chunk of data. To demonstrate this, the mptcp_bpf_rr scheduler has been
+modified to send one MSS per subflow in an alternating fashion.
 
-Our CI did some validations and here is its report:
+The other potential application of this API could be to define a
+scheduler that will proactivelly reinject data on available subflows
+based on some heuristics (eg. when one subflow RTT increases when moving
+away from WiFi AP). It could also allow to limit the usage of a specific
+subflow, eg., in the case of high BDP.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/9253831822
+I am mainly looking for feedback to see whether this design make sense.
+Matthieu already did a quick pass on it.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/01b4afee398d
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D856116
+The API introduces a push() function (name TBD) that takes the subflow
+and data chunk (sequence number and length) as arguments. The scheduler
+can then control packet scheduling by:
+- Setting data transmission limits (e.g., per-MSS on a subflow or per window).
+- Setting flags associated with the data. Currently, only
+  MPTCP_SCHED_FLAG_RESCHEDULE is defined, forcing the scheduler to call
+  get_subflow after sending the chunk.
 
+I am envisioning another flag MPTCP_SCHED_FLAG_REINJECT that will ensure
+that chunk of data can be rescheduled directly on another subflow.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+I've written some packetdrill tests to validate the update RR scheduler
+the test are available on my fork:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+https://github.com/gdetal/packetdrill/tree/mptcp-net-next/gtests/net/mptcp-bpf/round-robin
 
-For more details:
+Open questions:
+- Is the current API for setting flags and limits appropriate? What are
+  eBPF best practices to pass back information to kernel ?
+- should get_scheduler and this new API be merged somehow as to provide
+  a single way of scheduling data ? Eg. could pass chunk and return
+  flags, limit and subflow to send this data to.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Co-Developed-By: Matthieu Baerts <matttbe@kernel.org>
+Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
+---
+Gregory Detal (4):
+      mptcp: add push sched callback
+      mptcp: use new push callback to schedule chunks
+      mptcp: bpf: allow to write to mptcp_sched_chunk
+      selftests/bpf: mptcp RR: send 1 MSS on each subflow
 
+ include/net/mptcp.h                              | 29 ++++++++++++++++++++++++
+ net/mptcp/bpf.c                                  | 25 ++++++++++++++++++--
+ net/mptcp/protocol.c                             | 14 ++++++++----
+ net/mptcp/protocol.h                             |  9 ++++++++
+ net/mptcp/sched.c                                | 20 ++++++++++++++++
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h    |  1 +
+ tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c | 18 +++++++++++++++
+ 7 files changed, 110 insertions(+), 6 deletions(-)
+---
+base-commit: c98f8dc106a6d6c4424f2e612762821e1be14bf0
+change-id: 20240503-sched_per_packet-d6e4488e54e8
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Best regards,
+-- 
+Gregory Detal <gregory.detal@gmail.com>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
