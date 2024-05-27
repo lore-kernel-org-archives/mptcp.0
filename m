@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D30D226AFA
-	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:58:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0DE013B7A3
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:58:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716807532; cv=none; b=HXvRF4jL243n8ibZV4FPeGxkUUQD/lnXVTWxXDDV4PzdYkNBYLwKkwDdLTk4MswBSYFRETfQ9/hFyAL2hZsM7oCbkcWq3kaVQJmUSwvzR1tTH7ZgdiQoSPUVvcuD9EKqHOi8rfUbMWLf/22dRdfOYVm5lLEw2vpHFt6qzo7KWAg=
+	t=1716807534; cv=none; b=aBHsclmq31Ks/UdU9WcG8+Ga9BA0HkvM6Nyfe8G6IkpThCpBTfMptQIi2cDcX9EcLrEz3X+gBI7xHVShsTwxiK9N62YAbrKpnCeNIUu4Ya/7lzX1FgKmV+p1viRUNTwwjsTF6Yapnx9cPKsL2t/3h2IprKkoElxwXaonoodSsxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716807532; c=relaxed/simple;
-	bh=v07HtAOFNZo3mgcCFp7Ei+IU6Ufyv1bihLw243ca9xI=;
+	s=arc-20240116; t=1716807534; c=relaxed/simple;
+	bh=ClSxmwWO2U9SG4cXkYEmj9cxaLnaOSwzWkJRxKT9oWE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=fdWGBWFIxzUS8fy0xY/mIVls0AI3x6Rsv9kCs+LvUs+Rzrp6XYvmSguTy5G3OGhTqCjxyhEXBZ1lOhR0sxW8YMVLxZQw//VOvNol5yRuKF7BiISG+cB4OfecXCIBBEaVOt4rscpp0wF1sbvfOHWAn1vxnt6cANZwzWerYR4j5K4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FgLto0E2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hzDPdikcdgzprvZhEgToAeoG9EVesCV6WQcfFTvNeoGtW8lKxeh5by1NV0tW8uNlYuCp6oBT2AYZqK41DHac9eEkIz0WOHoYSRa5Sgj0P4BfvAopJKrFxWEgomdBXp5RgstjQlUaH+1atp7Iofs0leQD6KcsUQwvAp2RXWz+2Ws=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HAAzbTph; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FgLto0E2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DDD8C32781;
-	Mon, 27 May 2024 10:58:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HAAzbTph"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D97C1C32789;
+	Mon, 27 May 2024 10:58:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716807532;
-	bh=v07HtAOFNZo3mgcCFp7Ei+IU6Ufyv1bihLw243ca9xI=;
+	s=k20201202; t=1716807533;
+	bh=ClSxmwWO2U9SG4cXkYEmj9cxaLnaOSwzWkJRxKT9oWE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=FgLto0E2CccPSbkWTOLfYhXf5DgMHm+H3S/c4/Ful/XvLpKjNsweUm85aCFGaQdZo
-	 6d24oUlUROfbdVXgPjf7AZSNKwoiBBPpasM5u0Abg2J8Gwl1MuGvJ1MK70XkOSgnjO
-	 wmZMbEoU/VcSa5JzzPj8MQ9Ym/yxtlprA7RsZbCvCV10KU2B+AYoJChviesCFqbCxO
-	 Miy9lmvm5mpYbcADWBcQTXkoxInNP5STWSCgcIzxoEtbnDdKTr1cQs6No4TBI7DzPe
-	 lk9t8xtdW/ckNQTdQMgIAGk/yVb06mdsmTysn3SIVl8XZxL0vkM0wwZkLl1xXIE9+n
-	 UwNX+N8HMGmIQ==
+	b=HAAzbTphpepuvvwjMMlz9baAicf6R2y1xv5MHrJzbT7E/dIVo1Kl7CAqc/TmCrcxC
+	 +TdbhzpJF2NzeGCJUd0d9uQRXXV3t6LJ0NA9fpm5GLo0u0YMULUySh03aPThC/UFSw
+	 PDOkXr9bWOcwRRTrK+jhsFXfkkh2jZPwl26UpsKXZz79LmDgdgW9YZdWI+2t9zTjTm
+	 Uu7wT6AUgjuqZbZyoVdmoFQt/i2JOLvyHfamEU4Vms0vwvMdBZ8SbXfmvX3kZ5+1PI
+	 OiWaGWxNpnDFsmWPL+5caE9oj50jqNclfjWQZKshy4g8BgB+L4Gja1K9xkz5TG39Jr
+	 Ia3pzfz4i2k3g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 27 May 2024 12:58:34 +0200
-Subject: [PATCH mptcp-next v6 7/9] selftests: net: lib: remove 'ns' var in
- setup_ns
+Date: Mon, 27 May 2024 12:58:35 +0200
+Subject: [PATCH mptcp-next v6 8/9] selftests: mptcp: lib: use
+ setup/cleanup_ns helpers
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,104 +38,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-selftests-net-lib-fixes-v6-7-72411ff2460e@kernel.org>
+Message-Id: <20240527-selftests-net-lib-fixes-v6-8-72411ff2460e@kernel.org>
 References: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
 In-Reply-To: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: geliang@kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  Geliang Tang <tanggeliang@kylinos.cn>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2565; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=c7+F646DzRoswLZI5eyfnXvpB8pRU/Lbp4+dhQyIdak=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmVGdi+nN5qUhb8KGGmJF4ZMapJN+Q/yHUbYB7/
- ucpczstgO2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlRnYgAKCRD2t4JPQmmg
- c3MfEACNspABoIWNRkOqmZsj1ESh5MbUh1FtAjQ2+k6F46PKC4MI6o4f/+cMz9YlMOBtoDnC2ft
- jkV7XlnViNzV/f3CBWGgywHmD+7RTqjrwHRPmfCjdJS+Y9KZe3r27Q9LPCwPCsTSlZUf5p7HeBm
- KgmN+76Ow+SjAXyFqswuQrwkQbTURw/QyH0wY7kop1ttM/ImFbBNxvlcJ/AtrtjuaBvD7nhQHH5
- qRyYtHgujbaH0htmKuR6z0vJy+tGmSObaQby9Xq3LsGQF9eH7DEAKNftrAKwE2WKkgGWb5gA9YS
- CCPDN7lQJFF4scZOxu3vSicKupTGAwjQS9AqX/pw6/kiXF4KCSN2tXxBksCazbCdM9fcDAzyB6C
- ybXYQi4enb1bZ+kiJ1W0zstyH+vD0PLlejSpN0nzjhG2D2vQ8whSFrgL4gEJDFelaZlWAyApSpq
- /NOfmWBQF0LedGTbh8WrWx3RJvkLeEntv3nC/znxl5mAq6RkJaDbe/PBX24jwnu+LG5yTEWy3Sr
- ozzlFkCXLLoais27NWzFxq3me8uaZ7KSgrPssHHrHxeaLDesGhgIrUcsYM7wTmvkpc8z/0/3kDh
- jHQodn9oxtBuEUBL/gOae/LyQneEwmeiLkaYAEnwsYDdgvOG3b1waJHpwqt06bz0FAI6dvR3JqC
- cFVEug/yYUGJE1Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1713; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=aGrjt/RDOMUUSXTZAa9PaA4YVy1Qtna2bT4y7qjVvdA=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmVGdipIjGF8byWUHSPYuKwBQhFTgdJeIHmEHVh
+ X4dRPyfMd2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlRnYgAKCRD2t4JPQmmg
+ c9w3D/9rqUD1EaMMvoLIVTORoycb0zBnZNZHWRp/8mLlVXmAglZyc+A5WpvN2zKbyyfuUcl2UW4
+ TTDu69B9HNp70FdGw3vB0XMhyt6YGXRfY1GTxxk89Khp856xRjp2R+f2n21p3B9Z/QKlk3fx+h1
+ VZISFm96RUqrDoQpdO5IVJoO9CdibiYyyd3bmY+1rqxr5xEXOYjpF/wdG6ZoVZ4b/z8aDPxEjM6
+ W8aGy8IC22AjQ/Zv8wVYlQWTiFBaNYct++rZaYQANWGfeIbw4FXa2LFs7NxBrurNady3lUnli2Q
+ f3SR6lIEuV7jBQMUBGATkk446Tvkl7RpwGNk0P7KUDR89Csv22DSqPQS9laPtLYKZ4z3Rq3rSi+
+ 2lFKQ5vQCSJq7C2ZGl/iVfS9YSI5Lal+4eMLCy/Vs4L5GrjU6rUv2inpYwdajQXmwguLA2SsdK8
+ zB7J6DGhkGLvByVRO71YrrzyMVeLbfIW+qC89trAhBsNIXcfIoKSF3lFyRBAfdGzKegxLCYxihD
+ plTBf0dDfYAIgDFEONtJjnk1I9vkypbqoDLWj7GOEBozF/sbfnbRxhOxGP6no9ctwAdjKpor5uD
+ 14nbvf/q+1in3x/tXUM5vXVZUyEiOAEtcsZexF8XF7BjsthsGaUMlrj2+S1SizOEHjHLtGuJJKA
+ /bpst8czihiwKrQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The helper setup_ns() doesn't work when a net namespace named "ns" is
-passed to it.
+This patch includes lib.sh into mptcp_lib.sh, uses setup_ns helper
+defined in lib.sh to set up namespaces in mptcp_lib_ns_init(), and
+uses cleanup_ns to delete namespaces in mptcp_lib_ns_exit().
 
-For example, in net/mptcp/diag.sh, the name of the namespace is "ns". If
-"setup_ns ns" is used in it, diag.sh fails with errors:
-
-  Invalid netns name "./mptcp_connect"
-  Cannot open network namespace "10000": No such file or directory
-  Cannot open network namespace "10000": No such file or directory
-
-That is because "ns" is also a local variable in setup_ns, and it will
-not set the value for the global variable that has been giving in
-argument. To solve this, we could rename the variable, but it sounds
-better to drop it, as we can resolve the name using the variable passed
-in argument instead.
-
-The other local variables -- "ns_list" and "ns_name" -- are more
-unlikely to conflict with existing global variables. They don't seem to
-be currently used in other net selftests.
-
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/lib.sh | 26 +++++++++++++++-----------
- 1 file changed, 15 insertions(+), 11 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 17 ++++++++---------
+ 1 file changed, 8 insertions(+), 9 deletions(-)
 
-diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
-index 114b927fee25..915f319bcc8b 100644
---- a/tools/testing/selftests/net/lib.sh
-+++ b/tools/testing/selftests/net/lib.sh
-@@ -167,26 +167,30 @@ cleanup_all_ns()
- # setup_ns local remote
- setup_ns()
- {
--	local ns=""
- 	local ns_name=""
- 	local ns_list=()
- 	for ns_name in "$@"; do
--		# Some test may setup/remove same netns multi times
--		if [ -z "${!ns_name}" ]; then
--			ns="${ns_name,,}-$(mktemp -u XXXXXX)"
--			eval "${ns_name}=${ns}"
--		else
--			ns="${!ns_name}"
--			cleanup_ns "$ns"
-+		# avoid conflicts with local var: internal error
-+		if [ "${ns_name}" = "ns_name" ]; then
-+			echo "Failed to setup namespace '${ns_name}': invalid name"
-+			cleanup_ns "${ns_list[@]}"
-+			exit $ksft_fail
- 		fi
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 6ffa9b7a3260..d9e30516dc72 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -1,6 +1,8 @@
+ #! /bin/bash
+ # SPDX-License-Identifier: GPL-2.0
  
--		if ! ip netns add "$ns"; then
-+		# Some test may setup/remove same netns multi times
-+		if [ -z "${!ns_name}" ]; then
-+			eval "${ns_name}=${ns_name,,}-$(mktemp -u XXXXXX)"
-+		else
-+			cleanup_ns "${!ns_name}"
-+		fi
++. "$(dirname "${0}")/../lib.sh"
 +
-+		if ! ip netns add "${!ns_name}"; then
- 			echo "Failed to create namespace $ns_name"
- 			cleanup_ns "${ns_list[@]}"
- 			return $ksft_skip
- 		fi
--		ip -n "$ns" link set lo up
--		ns_list+=("$ns")
-+		ip -n "${!ns_name}" link set lo up
-+		ns_list+=("${!ns_name}")
+ readonly KSFT_PASS=0
+ readonly KSFT_FAIL=1
+ readonly KSFT_SKIP=4
+@@ -438,17 +440,13 @@ mptcp_lib_check_tools() {
+ }
+ 
+ mptcp_lib_ns_init() {
+-	local sec rndh
+-
+-	sec=$(date +%s)
+-	rndh=$(printf %x "${sec}")-$(mktemp -u XXXXXX)
++	if ! setup_ns ${@}; then
++		mptcp_lib_pr_fail "Failed to setup namespace ${@}"
++		exit ${KSFT_FAIL}
++	fi
+ 
+ 	local netns
+ 	for netns in "${@}"; do
+-		eval "${netns}=${netns}-${rndh}"
+-
+-		ip netns add "${!netns}" || exit ${KSFT_SKIP}
+-		ip -net "${!netns}" link set lo up
+ 		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
+ 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
+ 		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
+@@ -456,9 +454,10 @@ mptcp_lib_ns_init() {
+ }
+ 
+ mptcp_lib_ns_exit() {
++	cleanup_ns "${@}"
++
+ 	local netns
+ 	for netns in "${@}"; do
+-		ip netns del "${netns}"
+ 		rm -f /tmp/"${netns}".{nstat,out}
  	done
- 	NS_LIST+=("${ns_list[@]}")
  }
 
 -- 
