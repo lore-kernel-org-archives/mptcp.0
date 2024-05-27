@@ -1,60 +1,60 @@
-Received: from mail-ed1-f41.google.com (mail-ed1-f41.google.com [209.85.208.41])
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com [209.85.167.43])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C90C15ECE9
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC67A15ECEC
 	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 13:17:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.41
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.167.43
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716815879; cv=none; b=ZynIsSHNeaCktgsZD/LSAhi7qf5Ngn82/RccgLNMoX2fPb9vex9D/jExGKKqVBIiCiQqVME/fTu6KRoZf9lHpH91qtbR6rOvY93uVPAjZJfyFzaOa2S8iZvXoZotLTYGiTyLaWnV6FH5On+Mn9I+zyjCLwqBnHpIUl5ODU2vw94=
+	t=1716815879; cv=none; b=JT0mP8f2CwCsdXU/lafhvLvtX3Db1SEWJ4w22Gtrdb4A3XRWZAYSi+EW/CG0Q9M8p+fQn94ke0pcM9p+2oeixtz9hpoCPYHV2Clz4t3THP3J9OvokZTLixADX9lKm6shs27kbvbnuZ5qrN08lPTU+UNk4n7CKHvl5YQqX5bBCVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1716815879; c=relaxed/simple;
-	bh=mTIvgjgeufaXJBPxpbHks25Awe2EZeO7qcC/JQFYLXE=;
+	bh=P8QxBfP31dStHpRF3OPsaueoDvTAbUSMPA9wUEbJE6s=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=D90i+UJgAjPkjoFYkGnqcNNi3MZLrU/Vcqf4zmcCNJgfAUdpZ8MCU0m+czfDWIspaNGvTKILKsXovK6wHp2cA/lLmHECdf3dlLsd9Uv85XRaXj2xu8xj3H9zzUIoMssxi33aO5IYjplGir6EoUdpmxAOX61zWQ2O/KrqO0f3ce4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XEWETFWN; arc=none smtp.client-ip=209.85.208.41
+	 In-Reply-To:To:Cc; b=h51TVpMCiRhq31wrUl9LTeFMgRzKCIP8sf+6DcgBYBoLEtJ+FieFZtot4tLQ5fmyley2iZ+74c6CLP5381f6VAqjA6Kg8orFDPScjUvNJmmCjvfQNdzYBxWqQntQpJgYoxFuCBM3o88xqWH+yliK6u/ni1NVtWCztxhDs/KPzhg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lq9O+K4e; arc=none smtp.client-ip=209.85.167.43
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XEWETFWN"
-Received: by mail-ed1-f41.google.com with SMTP id 4fb4d7f45d1cf-57857e0f45dso3194001a12.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lq9O+K4e"
+Received: by mail-lf1-f43.google.com with SMTP id 2adb3069b0e04-52449b7aa2bso8607180e87.3
         for <mptcp@lists.linux.dev>; Mon, 27 May 2024 06:17:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1716815875; x=1717420675; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1716815876; x=1717420676; darn=lists.linux.dev;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:from:to:cc:subject:date:message-id
          :reply-to;
-        bh=BQkxxq0c8rMh99uZ/nUkNpm/TLGGhNJACzy359Jwrjk=;
-        b=XEWETFWN6FDYEvOKQbY9b+8b/V+qnZSR+Fz5WN319ayyYvHx39joJ3fcuAZlVUc+r/
-         S4pOdpGeu/ATN/WMkpTnwCk9zFkNG2a8isloKCjMoTMWD7LO19GnMgDT6RbgXU7jljmO
-         NTKvorvkrJGjGjAQfNFBcFsdSaoNUivHu3TvNcOCn72RSjsysFPaIqz5rfuK+NP+AsTD
-         P8NdwFyhr/VE92/a+Uz5NeHyAP/4s5El3MVUdR/NpZ4Gp+g1U+YIisybj0lLr5t/AOZA
-         4uVr9t7STcjeRrxzWc0FWEEsgJVMjB3fhP+WLukt+0OzckRe2HxI4nTZXvq1U4mo/fko
-         KmkA==
+        bh=PCd3DnD4wgoSE8+JwEWGmcJXrhJ/2oYHrCgzw8ggWYQ=;
+        b=lq9O+K4eNmT/j6ONAVMBnDrNfQufy26k86nhXXutkkM/IhnAnxJlSrM3zzR6OuCyci
+         euYlrJkh0N5kEsTg3O7YYUr8ehRSnRKHblIs2gCI/adCQRKh0qhhi+Um4B2uqgSatpy9
+         gkmWsh3McbSg+PZha9TQPAydgjfXH+MCBFGRFoOBW3ZOH+7ZyMkZJXbWQ7it+9k0XplB
+         yZDAsWx4aOFrY0GfJhAv2VsYNRhbtxsnfRice8gRQF9ZtKSVmYD4zsCturSJbfVJNqtZ
+         L9bWWuupewBLk7xQF927RQ9k7tcZXlJGO1BXVPhMOv2Aedy+YDvNKUwvTIcocn3eUHfA
+         caqQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1716815875; x=1717420675;
+        d=1e100.net; s=20230601; t=1716815876; x=1717420676;
         h=cc:to:in-reply-to:references:message-id:content-transfer-encoding
          :mime-version:subject:date:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=BQkxxq0c8rMh99uZ/nUkNpm/TLGGhNJACzy359Jwrjk=;
-        b=VSnY4T2+kZx/5Q6DEi5YCdsZMIRhI3Oj3nqrl1yU2DMTuzO0Ky77yXdVx/ZhDnm/3H
-         QXUFLcBiLzuTke0UthipO57T4wl3OU+j9DHRiwQXtSwRj7UslQhSQFNJIIJiRqmbO6zl
-         SnMmA0zGkc0176BSKxw3PRa3ymMfotqk8dHlPBEHDpXJWctCT8QPXvrBDeI+XvsFivFc
-         DjgJxvg6cDJGFfRHO9oeDGW3b3fIND3lBdxJY4OdAQU0oQvUPWKSTKX9ZYkhAKIBUbnu
-         gztuSDEZUNLH+w7nIZ6fWo/8O4nHr8Tp2uLxR0EnlSm4y/vvrwUMuU1ErhvB+eYp7I50
-         cxFw==
-X-Gm-Message-State: AOJu0Yzongc4qonYyM5yNbeALKpupqQryQ0hbaCFLXuvwlVi899+j38w
-	nF2lHeTtv/z4IRULuFwssnlfhipotDEfnazWO8okmHp3QpyeXK9j
-X-Google-Smtp-Source: AGHT+IHiMFISAFPZ7XT+D55a2NJQevxXt1jaYqWbe/5JdBBcfFMxsfPUIG12C5jjVKUPMCQn5AJaBw==
-X-Received: by 2002:a50:a412:0:b0:578:6361:1364 with SMTP id 4fb4d7f45d1cf-5786361172emr4856152a12.21.1716815875470;
-        Mon, 27 May 2024 06:17:55 -0700 (PDT)
+        bh=PCd3DnD4wgoSE8+JwEWGmcJXrhJ/2oYHrCgzw8ggWYQ=;
+        b=KeSUq4+6sdTcFenX+ZuIzGvOoSQN2T+iSs6RsaAEqMC4a7zlG2R8QXHHJOvwJOd9yO
+         9ibVMBA82FSLCrH3wpIU94tky3paxbw2Oil5fC72Ra2BKO/aieIntmh6MzR7bPVDEtqe
+         aYa0ZCcXyNWfpRtn4JihC5eHOmPh1i9uO8DkTxdhjrc1YDzB7wdlehvZk/1KDpIgd8CP
+         /vSH9g34LwVBsXi38z5mtWsKzppDBuoC4kKxHb58i3kjV/8vkaoAazYxV3ZAa3CuDYTO
+         IuYYmbktcQlwam+qHz2P1mPBzQ+xkpJY0wsmkA1MvZvrNsZM5VAa1JN6mPK5i1NA5FcH
+         tqqw==
+X-Gm-Message-State: AOJu0YxJQZsWPSPn/iRQFlcxpvHpCpAyfCHStFxO2St0nNucNlr3d1WX
+	tasaOP8kY4tuC4eJ0RB/orGa2daqn5nZqmIzbaIt2iE7aPphi8FL
+X-Google-Smtp-Source: AGHT+IGZA4b23rCYHAFrWC8nDT5dVx27dB/+S+94nqpXV4+XmxvPu1FmGvhUYZarVnVEEVh/mPwy8w==
+X-Received: by 2002:a05:6512:1143:b0:524:3177:8e46 with SMTP id 2adb3069b0e04-52964bb2c92mr5453841e87.28.1716815876041;
+        Mon, 27 May 2024 06:17:56 -0700 (PDT)
 Received: from [127.0.1.1] ([2001:41d0:700:80a3::])
         by smtp.gmail.com with ESMTPSA id 4fb4d7f45d1cf-5785240d1f9sm5799272a12.51.2024.05.27.06.17.55
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
         Mon, 27 May 2024 06:17:55 -0700 (PDT)
 From: Gregory Detal <gregory.detal@gmail.com>
-Date: Mon, 27 May 2024 13:17:53 +0000
-Subject: [PATCH mptcp-next RFC 2/4] mptcp: use new push callback to
- schedule chunks
+Date: Mon, 27 May 2024 13:17:54 +0000
+Subject: [PATCH mptcp-next RFC 3/4] mptcp: bpf: allow to write to
+ mptcp_sched_chunk
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -63,124 +63,81 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240527-sched_per_packet-v1-2-09a41d405f7c@gmail.com>
+Message-Id: <20240527-sched_per_packet-v1-3-09a41d405f7c@gmail.com>
 References: <20240527-sched_per_packet-v1-0-09a41d405f7c@gmail.com>
 In-Reply-To: <20240527-sched_per_packet-v1-0-09a41d405f7c@gmail.com>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: Matthieu Baerts <matttbe@kernel.org>, 
  Gregory Detal <gregory.detal@gmail.com>
 X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1716815873; l=3822;
+X-Developer-Signature: v=1; a=ed25519-sha256; t=1716815873; l=2078;
  i=gregory.detal@gmail.com; s=20240430; h=from:subject:message-id;
- bh=mTIvgjgeufaXJBPxpbHks25Awe2EZeO7qcC/JQFYLXE=;
- b=T68v/b+vqvJRegQidm7L7BthLGMa/83R4RWhggvL/lkDMKdemKCjqQmw9vVcLxILhzlts3IFE
- 5xLC6ohEkDqC9mjg+cJucEbx4WR/q80yWTFvF63nUt/gCaLq0MdHmuE
+ bh=P8QxBfP31dStHpRF3OPsaueoDvTAbUSMPA9wUEbJE6s=;
+ b=A2FtL5lzDdPwllAkhUAkNsAZSm/JKQtGy4MLvdKyZGF+huUh8HedPMioXBZNZX+qse12ITZf0
+ GDgXCa3zKTPAN677xJhGuOz6aZvLag9KJZ1h7hNVqYsNzIS1FMzo8ko
 X-Developer-Key: i=gregory.detal@gmail.com; a=ed25519;
  pk=TziJDop3YEG3Ywr6io7U9Iy2jaAY3l0hTh8KdwDKXQM=
 
-This commit modifies the subflow push pending function to call for
-each data that will be sent over this subflow.
+This patch allows to write to either limit or flags, allowing a bpf
+program to change the packet scheduling behavior.
 
-Only send the amount of data defined by the scheduler. If it sets
-MPTCP_SCHED_FLAG_RESCHEDULE, the function will ignore further data to
-be sent. This will cause the get_subflow function to be called again.
-
-The previous behavior is maintained if the push function isn't defined
-by the scheduler.
+The fields will be used in next commit.
 
 Signed-off-by: Gregory Detal <gregory.detal@gmail.com>
 ---
- net/mptcp/protocol.c | 14 ++++++++++----
- net/mptcp/protocol.h |  9 +++++++++
- net/mptcp/sched.c    | 20 ++++++++++++++++++++
- 3 files changed, 39 insertions(+), 4 deletions(-)
+ net/mptcp/bpf.c | 25 +++++++++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2f8f32cd31d3..abfd5b6748f2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1526,12 +1526,15 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
- 	struct mptcp_sock *msk = mptcp_sk(sk);
- 	struct mptcp_data_frag *dfrag;
- 	int len, copied = 0, err = 0;
-+	u16 sflags = 0;
-+
-+	while ((dfrag = mptcp_send_head(sk)) && !(sflags & MPTCP_SCHED_FLAG_RESCHEDULE)) {
-+		u16 limit = mptcp_sched_push(msk, ssk, dfrag, &sflags);
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 57c47bb430b1..2fb706342064 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -18,8 +18,9 @@
  
--	while ((dfrag = mptcp_send_head(sk))) {
- 		info->sent = dfrag->already_sent;
--		info->limit = dfrag->data_len;
- 		len = dfrag->data_len - dfrag->already_sent;
--		while (len > 0) {
-+		info->limit = limit ? info->sent + min_t(u16, limit, len) : dfrag->data_len;
-+		while (len > 0 && info->sent < info->limit) {
- 			int ret = 0;
+ #ifdef CONFIG_BPF_JIT
+ static struct bpf_struct_ops bpf_mptcp_sched_ops;
+-static const struct btf_type *mptcp_sock_type, *mptcp_subflow_type __read_mostly;
+-static u32 mptcp_sock_id, mptcp_subflow_id;
++static const struct btf_type *mptcp_sock_type, *mptcp_subflow_type __read_mostly,
++	*mptcp_sched_chunk_type;
++static u32 mptcp_sock_id, mptcp_subflow_id, mptcp_sched_chunk_id;
  
- 			ret = mptcp_sendmsg_frag(sk, ssk, dfrag, info);
-@@ -1546,7 +1549,10 @@ static int __subflow_push_pending(struct sock *sk, struct sock *ssk,
- 
- 			mptcp_update_post_push(msk, dfrag, ret);
+ static const struct bpf_func_proto *
+ bpf_mptcp_sched_get_func_proto(enum bpf_func_id func_id,
+@@ -71,6 +72,19 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
+ 				off);
+ 			return -EACCES;
  		}
--		WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
-+
-+		/* if the whole data has been sent, move to next data segment: */
-+		if (len <= 0)
-+			WRITE_ONCE(msk->first_pending, mptcp_send_next(sk));
++	} else if (t == mptcp_sched_chunk_type) {
++		switch (off) {
++		case offsetof(struct mptcp_sched_chunk, limit):
++			end = offsetofend(struct mptcp_sched_chunk, limit);
++			break;
++		case offsetof(struct mptcp_sched_chunk, flags):
++			end = offsetofend(struct mptcp_sched_chunk, flags);
++			break;
++		default:
++			bpf_log(log, "no write support to mptcp_sched_chunk at off %d\n",
++				off);
++			return -EACCES;
++		}
+ 	} else {
+ 		bpf_log(log, "only access to mptcp sock or subflow is supported\n");
+ 		return -EACCES;
+@@ -152,6 +166,13 @@ static int bpf_mptcp_sched_init(struct btf *btf)
+ 	mptcp_subflow_id = type_id;
+ 	mptcp_subflow_type = btf_type_by_id(btf, mptcp_subflow_id);
  
- 		if (msk->snd_burst <= 0 ||
- 		    !sk_stream_memory_free(ssk) ||
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 19d60b6d5b45..5e4d62bed142 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -742,6 +742,15 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk);
- struct sock *mptcp_subflow_get_retrans(struct mptcp_sock *msk);
- int mptcp_sched_get_send(struct mptcp_sock *msk);
- int mptcp_sched_get_retrans(struct mptcp_sock *msk);
-+u16 __mptcp_sched_push(struct mptcp_sock *msk, struct sock *ssk,
-+		       struct mptcp_data_frag *dfrag, u16 *flags);
-+static inline u16 mptcp_sched_push(struct mptcp_sock *msk, struct sock *ssk,
-+				   struct mptcp_data_frag *dfrag, u16 *flags) {
-+	if (likely(!msk->sched || !msk->sched->push))
-+		return 0;
++	type_id = btf_find_by_name_kind(btf, "mptcp_sched_chunk",
++					BTF_KIND_STRUCT);
++	if (type_id < 0)
++		return -EINVAL;
++	mptcp_sched_chunk_id = type_id;
++	mptcp_sched_chunk_type = btf_type_by_id(btf, mptcp_sched_chunk_id);
 +
-+	return __mptcp_sched_push(msk, ssk, dfrag, flags);
-+}
- 
- static inline u64 mptcp_data_avail(const struct mptcp_sock *msk)
- {
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 8def10abd60e..d6ff82bde641 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -193,6 +193,26 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
- 	return msk->sched->get_subflow(msk, &data);
+ 	return 0;
  }
  
-+/* This is called before the data has been sent on a subflow. It returns flags
-+ * that defines what the scheduler should do with the ongoing data.
-+ */
-+u16 __mptcp_sched_push(struct mptcp_sock *msk, struct sock *ssk,
-+		       struct mptcp_data_frag *dfrag, u16 *flags)
-+{
-+	struct mptcp_sched_chunk chunk = {
-+		.data_seq = dfrag->data_seq + dfrag->already_sent,
-+		.limit = 0,
-+		.flags = 0,
-+	};
-+
-+	msk_owned_by_me(msk);
-+
-+	msk->sched->push(msk, mptcp_subflow_ctx(ssk), &chunk);
-+	*flags = chunk.flags;
-+
-+	return chunk.limit;
-+}
-+
- int mptcp_sched_get_retrans(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
 
 -- 
 2.43.0
