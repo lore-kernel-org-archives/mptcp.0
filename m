@@ -1,216 +1,122 @@
-Received: from NAM04-DM6-obe.outbound.protection.outlook.com (mail-dm6nam04on2087.outbound.protection.outlook.com [40.107.102.87])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F048D17BA7;
-	Mon, 27 May 2024 21:37:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.102.87
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716845831; cv=fail; b=a3FA8ua5QjTThLWBlon6NSq3V0JufPOkMhdXl83IDUG70yP0ginm7D9ASfYo02egV1Sq2pwmKHPTxTTPDZ0XRjhj6YtrCdMqf9fBFtaajBnAmElW0ADlYZu4AJXWVp9OPAr1eAp88sZbG51q4OyaUbNatyQrOiNa/29G0x90LNs=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716845831; c=relaxed/simple;
-	bh=nu5knViLN9kC7IyZ5zDIgK36QJs81EMtgauMnSRw63g=;
-	h=From:To:Cc:Subject:Date:Message-ID:Content-Type:MIME-Version; b=qamnhxTr5YT4BNBL5JVEuraOPmAuRyH5tVBQcueht4yd0Vk4Yx++/226XVylcpAX0cKEOTt1cCPh2vuCkRQXbfQRMdY+02xsYI5SRSuaiZbuubRhLPDhTHR+MbppWV18tDWs/XL9+T/F23PFnCEOWB55OynYrDRy42Or8x//BVI=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=ZOZwI3yF; arc=fail smtp.client-ip=40.107.102.87
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7EFA017E8EF
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 22:23:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1716848595; cv=none; b=GiTI3/P9y6syuANkZPYFFe29jNQjEaNJMoqmOBUIHJKCJnb3+j4vmlwY6GKXc5ifAsY0Gmi1yc9rgnpBeaYy1vjpHNdcaHCXlISCPLye/GmVVxLyER6o8NojyYMjgQZCQupL/sRBVd9OIaxFPCkRdpAUW5euTLGU2jQbVYQzeQs=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1716848595; c=relaxed/simple;
+	bh=SedFj9PgmKESWHlYdtsXPwnyNlan6pISANI6JryO2pI=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=U3Xj0ANaWfYzJZ/DWd7BFryQnnp9KYIKnpj9UldzCWPrvECjUczgoISg2LpNh9+En6Jx07kIe76c/SrF4bXHU/A20KPamRuutFhih/ZfPCp5epHMwufwB79I0Km6Oyq3ZuQb2x2cq5n2ieYzB4UZHRpp51HNh5wRM6BlL+/Xaf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Mv5gGLOY; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="ZOZwI3yF"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=T1k3221eadaWXgFGUlZY/saZdPvoTuKCam04Oq0lAvYWcM+s2KS1ReB9UycaR9yM9yl5bBTapcXuBHAPMUK5h4lr7zgT1OdklKXR/E2iwsv8MK/JIVdzvLDtz6CWyX+oF9x1xm1iIIRFdgi2obvK6ub2fEQcBVeUSI5EyewSYiMCw7FYU6ZuDibmYx897DkR6Y08uevCip2Ff5c7t3UtyKeQKSyAyELH7FN0Yf1VUP+pLFSafwQcmEueDxFpgMXkLDbgixVhA48EftH0mjEbWBXSAZMtKye68OpbnMVf/LMpQf/8zMAUB/7gpLg3xZXdKVtF9bLgQCa/yzcVptVYdA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=zKhN8rOF7mi+H17yK5dN3IjNBUqqkQKztErwDOzzptc=;
- b=PpUD5MqeppaTR7SKLjfDIno57CbTQaxxxplfb0fQnQh6r4BoL+FLI+NHa7zKrRW81H5Yyw0qHE4lk9qhZPStjlXb+R1ez8JkOuXypaPzrwcCRnWivkFTdHsCFsPYL/ADwG2WkQJEuWvKhB8nQnujWWhl4fOxubwuVwxgXA1cYSgeGjJUXocOCVUiaCsCFvqSwI8cyF5CxQNKn02n4HuOYWdPlT81cDXwWy0hYSCO92LXYsHga7dEI1JitrLuDuUHqWaALNsnu1Qoq3fYk0jM5l39YyYTSfqesW0sD4ci9T8pw/LSmHP2YLJgp0eFV1sqZyxG0NSialWxYXNC4eBK3g==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=nvidia.com; dmarc=pass action=none header.from=nvidia.com;
- dkim=pass header.d=nvidia.com; arc=none
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=zKhN8rOF7mi+H17yK5dN3IjNBUqqkQKztErwDOzzptc=;
- b=ZOZwI3yFfQjF3MjSOGL1CvYfyizpZ7U1JrZa7y21vhZC/z9WB2cNmWWZkPHzit7MOhaVtAxfuRS38QPWuJ1m/G/ZA6L6S3KMheiCA+nFphGJ6n6f0ZIocwEc0xs2Fo7U50ZfZqVy3puevk28IQboquJdMZXTrQ4uyMK6sMdqXTsqlmfxMn47I2JsMeskN1xW8nXyeifg3GkTZvfCATr+0OqwMmtq9UJa6H4uFX1PQYT9+Uw/oGjpSjGTVYrT6IJXWfXHzupYlSeWqA83IAI57BAZI2YBvNeeiP05Qqp9EyKN5KXu1KJ8rL+yYm1EdH5LYqZ+05+Hjh/mQ/brQAY4JQ==
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=nvidia.com;
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com (2603:10b6:a03:20b::16)
- by SN7PR12MB6888.namprd12.prod.outlook.com (2603:10b6:806:260::11) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.7611.22; Mon, 27 May
- 2024 21:37:04 +0000
-Received: from BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07]) by BY5PR12MB4130.namprd12.prod.outlook.com
- ([fe80::2cf4:5198:354a:cd07%4]) with mapi id 15.20.7611.030; Mon, 27 May 2024
- 21:37:04 +0000
-From: John Hubbard <jhubbard@nvidia.com>
-To: Shuah Khan <shuah@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Steffen Klassert <steffen.klassert@secunet.com>,
-	Herbert Xu <herbert@gondor.apana.org.au>,
-	=?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>,
-	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Pravin B Shelar <pshelar@ovn.org>,
-	Willem de Bruijn <willemdebruijn.kernel@gmail.com>,
-	Alexander Mikhalitsyn <alexander@mihalicyn.com>,
-	zhujun2 <zhujun2@cmss.chinamobile.com>,
-	Petr Machata <petrm@nvidia.com>,
-	Ido Schimmel <idosch@nvidia.com>,
-	Hangbin Liu <liuhangbin@gmail.com>,
-	Nikolay Aleksandrov <razor@blackwall.org>,
-	Benjamin Poirier <bpoirier@nvidia.com>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Dmitry Safonov <0x7f454c46@gmail.com>,
-	netdev@vger.kernel.org,
-	linux-arm-kernel@lists.infradead.org,
-	linux-actions@lists.infradead.org,
-	mptcp@lists.linux.dev,
-	dev@openvswitch.org,
-	Valentin Obst <kernel@valentinobst.de>,
-	linux-kselftest@vger.kernel.org,
-	LKML <linux-kernel@vger.kernel.org>,
-	llvm@lists.linux.dev,
-	John Hubbard <jhubbard@nvidia.com>
-Subject: [PATCH v2] selftests/net: suppress clang's "variable-sized type not at the end" warning
-Date: Mon, 27 May 2024 14:36:41 -0700
-Message-ID: <20240527213641.299458-1-jhubbard@nvidia.com>
-X-Mailer: git-send-email 2.45.1
-X-NVConfidentiality: public
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: SJ0PR03CA0127.namprd03.prod.outlook.com
- (2603:10b6:a03:33c::12) To BY5PR12MB4130.namprd12.prod.outlook.com
- (2603:10b6:a03:20b::16)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Mv5gGLOY"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-794c1a4e5f7so19051485a.1
+        for <mptcp@lists.linux.dev>; Mon, 27 May 2024 15:23:14 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1716848593; x=1717453393; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=mrjTL0uOuSwvLoyN8rAqTPUMJoUyXzAGW+KCNOsgHn0=;
+        b=Mv5gGLOYro0k6gN+JLojy2bDqN902SRvf+q85KIXn5GHz+txppfqBnd3Gm/XI6Nq3y
+         bsIovrMIX7W5lWMGjZxUENfp1YuC+VTossDur38MvQhouIzq0EMek9jlefac4oYsmd4a
+         +S5ZNnhZNr7BiRTJAzfABtApg1hKX1baH0HMnlcWiwe5toUR2iAlyL3OfttcJFO5ToUO
+         py+VvJhJAPCx+B+2MrNTDm6PPqd0HGLwulZrRNwk4K2f3uVJksAXqZxpmkXDjyd8a4jb
+         mYXKUXikzVIzH1HOwhBskBnyW89zz5cKerOnD9I4uHhNQrAOmk4sURVOClMszOeGkC/H
+         M/ww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1716848593; x=1717453393;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=mrjTL0uOuSwvLoyN8rAqTPUMJoUyXzAGW+KCNOsgHn0=;
+        b=lbVLXxh2LvkkFTSnM0k2kPulRQKq9XOJqZmgxXWNcS6AtwWtEYn1sTVhZg5T7AcIpv
+         rRhtcKi0ehhkh871lQAm2Vi9ZH+TM9l9kJzreDXiaCpMdYkeM/0gK6LHqNQHfbolwAr7
+         ypqGm7Strkfom4wcqTY/LDy/8xGB/3jcgYeRboyQeB2mKEoNrkCmn//mtYEih//7M2x3
+         1sSeVT96s0tYaucldIhuG/LlJOhsUznS/zXaR+EgS8Yhuvxh6+VZf9BnrjbKNyn/cyBf
+         Yp5hQzpjJueb6AG/K44oVJbRFqB2vZMwk532752sl7dxDi5fjnTurh5DBKJSwnIc19qA
+         DvNw==
+X-Gm-Message-State: AOJu0YyFELAcz4cDHRDLWsyQuwfBvCb7L7Ru/XZj6NcxzGnrdjwn/NPi
+	Uvsd/WHVe9wRgynOhmPK6L0JovOnbMdIcu/WIpCIQ767B7o7xA8=
+X-Google-Smtp-Source: AGHT+IFbHZXh9EtJnsJ5moWg4f4RPUOKfN3Ho/v7ZPTuYvwqQ3XQ0Aj3fPcJMoBJAoNwfJr+zbxjPQ==
+X-Received: by 2002:a05:620a:1a0c:b0:792:956f:6b93 with SMTP id af79cd13be357-794ab0f8ab0mr1281995085a.57.1716848593351;
+        Mon, 27 May 2024 15:23:13 -0700 (PDT)
+Received: from [127.0.0.1] ([74.249.14.179])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-794abcd9673sm326101685a.55.2024.05.27.15.23.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 May 2024 15:23:12 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: John Hubbard <jhubbard@nvidia.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240527213641.299458-1-jhubbard@nvidia.com>
+References: <20240527213641.299458-1-jhubbard@nvidia.com>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_v2=5D_selftests/net=3A_su?=
+ =?UTF-8?Q?ppress_clang=27s_=22variable-sized_type_?=
+ =?UTF-8?Q?not_at_the_end=22_warning?=
+Message-ID: <2bc9545b-e59e-727b-59ac-fecbb4b67f0a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 27 May 2024 22:23:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: BY5PR12MB4130:EE_|SN7PR12MB6888:EE_
-X-MS-Office365-Filtering-Correlation-Id: 7708a56d-01d8-4ca9-2190-08dc7e95267f
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230031|7416005|1800799015|366007|376005;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?40aFKmVxUM7U+ShmJ46dBn6PyzlCKMANgB71hzf+oMFIyY9f7J13071cKOeg?=
- =?us-ascii?Q?Veeq9/bAGkQmbYlAjx2aStxWdmnYU+eZvdY/vQVpkc0QVMteXbFmvCbKhHaJ?=
- =?us-ascii?Q?xf94CkOa7noja82APvvLWr/DI7T4szZVILHQQSLFN+bcRO4TQMy+st+w6ClC?=
- =?us-ascii?Q?2FqtsttrFjd4Gc6HUl/NaULc2SkLH7C88UmPhMChzlkC2pJijs6JpqerSX9g?=
- =?us-ascii?Q?EdK6IcpLQNAOn6TSozeVig9L9pE90rkQPNW5TKLWj16ro5ojjl7+eGQ6ngmv?=
- =?us-ascii?Q?x0R5WnRXIFoPsKOMmFs+gAbV9tpvIBWBRDC4VbcCY9sEu09Wob7VtNUjhpNh?=
- =?us-ascii?Q?szji+FWL8l9T9jDiewJ+fYvPaAar7tXH3wrmUJr9q5YmA3XOveQv18WFGBfi?=
- =?us-ascii?Q?5Gf/5AZQ7VRRXS3puRJfpEds5WA3qN+rP0iao6mjvhEDqYGtpsiOSZAKAQko?=
- =?us-ascii?Q?D23dR1wSWewqnrbxEbOo77Ic4Pl53Pxq9z7RUTRj9lWxY5SXTnL3FnwcL6FZ?=
- =?us-ascii?Q?hxgOtgnIc+riW1iRkJEAPsNPxWZJCcIPhNAFn/YuAFl12PW6mEZQLwuooy66?=
- =?us-ascii?Q?9LqJej0KOEMC8pUdFnoQV90TGn8puKUvrxQFvvdVvNhd08q3Gb6DEVSPhTI7?=
- =?us-ascii?Q?XdEOwGcNzWoeTB0BAkKzMOpKPmFv6bOK1WIg056UocT+x4YezL+kYmDWREfs?=
- =?us-ascii?Q?V01GEC0Gv21PwL3WKAI9YCTiLEISOgOyexulG/ius6oJpnOSlrpU1zsXzP9S?=
- =?us-ascii?Q?G2pC8OiRKwR1PcUv706T7ZhS/IfiyyfAKyf1Dbb92qIfyhQBH4nr/WSK+/RG?=
- =?us-ascii?Q?i5JzBuzaaTwZU+jiCTINFGugSztyRo6/gZueuBC4Y9W4PtdSNmTQnA06YMMa?=
- =?us-ascii?Q?QNPJotog4y7oE3dpHmudYliHSXxFlSkYAVSiI4M+4uy/CBMNpeFdTRIIalwY?=
- =?us-ascii?Q?NE0kqsERYf+tSHocl+Re5uIo35ZN76QZrDueJOJmP8PpG3hvA3pgMPbnHBrv?=
- =?us-ascii?Q?wG75M3u5VLjl4Da16lBqhhURF5sv9Bk/wIVCt9fXFzN1x6dhqITg+1c5UbVX?=
- =?us-ascii?Q?LO9Swh736KJ2h9BJfmACjQj4e3ZanZeFRXVYAsFFvvlF/FajdKuGILNsJ6k3?=
- =?us-ascii?Q?e9iRItjq4Gz3prrxKFKrUvpkQDCVn2CV2YaglPcdwCSGyvvYZQsec1sgwd3D?=
- =?us-ascii?Q?z7Ph1njKyvBlC3D/CfsuAMUePvxMzUJh+JErHu6EexOu0itO+IM0bXCW8nkO?=
- =?us-ascii?Q?hiwshHQvhoVezCuIMHjFvLReJLYZ30QgKm2BqktRZw=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:BY5PR12MB4130.namprd12.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230031)(7416005)(1800799015)(366007)(376005);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0:
-	=?us-ascii?Q?7+4uxXia0x8YuRCfQVKp8Gy/RqB8fyuCc9ga3akr/x0oW5dlxrlDSf+P6Loq?=
- =?us-ascii?Q?eRv9y43FCp71YWAoJM4WIcJ3IMOGBSGJcKZbQ7waFASzCNjo44qByVY6jKPk?=
- =?us-ascii?Q?w+w5BoPve369L438hcfYzgmuPhxv1cUsSdiKF9yetkPIYcq3PeW+fO/5S2LN?=
- =?us-ascii?Q?3bp3l9yKzp6SL9yBMLF/Ot4X3uQ92/sCBlyTAVjumJhcq626K0aahDIrrba6?=
- =?us-ascii?Q?C8/1/0FceX1AHEedOZfjexyB2w1TU10NArMrryZ9e5rGPyYVkexRBcA6EKE9?=
- =?us-ascii?Q?bi3Vp+rLTZL60eqSyEDlPTI5t6K8g29ifArJmSK0WNgb7mW3OmzTHF6hTOWZ?=
- =?us-ascii?Q?OUw36fdcMG8ddH6sEaWLgnjfEhpFj0QMv7QwV07zvkd84cgEUYlP1wkukVHI?=
- =?us-ascii?Q?HtnvlBhjS/EnbQPt2+7IbpNHksWfR9NX39jOJxLlfMpiDZiPoMdK1MA4A1Va?=
- =?us-ascii?Q?4+2msPsLukRWFhPWrgcR19HZgEH/jMJfM1mpvgQrbVS00aIlS6EfnVWi3MGC?=
- =?us-ascii?Q?8yeki5RTJtLLYt6+xffh/ibYCStwlXeokLS42E7tKslA6c6OlumZcQUU3KcB?=
- =?us-ascii?Q?LnuqpxAjdKSXF/UpjA6nQpTcPO9unFWuWP8OoHiKEro29r2e+N/r34tqmwzg?=
- =?us-ascii?Q?tA/lw563/yuCWZy+H4ILS63CcCWtqZkElvf7/yUhdFgDBF3zisONZTJNMvVG?=
- =?us-ascii?Q?NXGr/EBwAA9wMt8sej3DVJcyM3uetJzBu96cWnOP3FWfT+SyUmmC+nmB0KU2?=
- =?us-ascii?Q?PehtLybt/C4w/XcjJlumBE2r9BEzrMsA2mva5WHUZOGWL2+WnQ4UxCmzwgiu?=
- =?us-ascii?Q?FF/tver1O1M9gdUg86M4L1R6fxZUOYK4gAg2oDnHMHDbXSCvfRQGEnfUj4s0?=
- =?us-ascii?Q?FtQFc0zaaH1QhHaaFMIcvRNed8wusokt+onApbXbMSWyWd7isE4ivLqzd/+v?=
- =?us-ascii?Q?JSWJmgxk7JjE9Ws7nJQFgbxUomx2I/NUwz4OI5XWlieHa2O7Pc4K7PeMTOqC?=
- =?us-ascii?Q?fZZEFffrWEUjAUlPaPEUcqUSE/Dl6MhkM/rbKRgccZKEhvS1afqOAAKf+xq0?=
- =?us-ascii?Q?NpJdGTJaBAmbhbu08OldaDN8PyIUZz/T6FQ06XwDWJagcT2H1P7XPz0D0lgP?=
- =?us-ascii?Q?aAi/TYagaI8nKXGzqKjOBOA6nAgSsxRijgg1d96227EXQiDOCBP3DNv1Xevt?=
- =?us-ascii?Q?FpbERtJcS2gTA6ft+q2kL/auuOqd7ktwEAaPbVVyiUJcP4Cmc7uHAmZ2hlK0?=
- =?us-ascii?Q?GEUDeoqlNKZwpUyc9P0Zhehq1DfqSmP++tvcqaFZ8CkKOMH0CX9vvtO/lm8I?=
- =?us-ascii?Q?nJyiNZL3c7VFYnifIQ4a1TZAcCqRogJh+asCkGCJC0Uu+X2sw2PG9VaziAnO?=
- =?us-ascii?Q?xnIhvIQm0lz+tL1NbEmpB5ENjabHS06mPLzq6CfZNKz/D6g07mNSzsAGZhvl?=
- =?us-ascii?Q?yZcT/tsAczi9GX/+8aL2VsexWUMflG9QgLiud6JkMNVaV3smFq47JaVS70hh?=
- =?us-ascii?Q?LF+xwWMcrjIrI50oKSeFLKCgoPRIdrLU0utODc3LV3b5F7f2dgAQrOybLXa0?=
- =?us-ascii?Q?2HYcr0lcs68+h0GUx0eB0hx5uICMWApKg5Ty4hjuS2n50kG+/Azjq8kXjY2o?=
- =?us-ascii?Q?Cw=3D=3D?=
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 7708a56d-01d8-4ca9-2190-08dc7e95267f
-X-MS-Exchange-CrossTenant-AuthSource: BY5PR12MB4130.namprd12.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 27 May 2024 21:37:04.1828
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: cZQOZW0dllvXYgh8x/ZZ5T+82NzgCI9PvMSXG1ui8uubs3xH0IoM28hGCCdk3ycymDpaorBstUnvBEKDykEqNA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN7PR12MB6888
 
-When building with clang, via:
+Hi John,
 
-    make LLVM=1 -C tools/testing/selftest
+Thank you for your modifications, that's great!
 
-...clang warns that "a variable sized type not at the end of a struct or
-class is a GNU extension".
+Our CI did some validations and here is its report:
 
-These cases are not easily changed, because they involve structs that
-are part of the API. Fortunately, however, the tests seem to be doing
-just fine (specifically, neither affected test runs any differently with
-gcc vs. clang builds, on my test system) regardless of the warning. So,
-all the warning is doing is preventing a clean build of selftests/net.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9260539047
 
-Fix this by suppressing this particular clang warning for the
-selftests/net suite.
-
-Signed-off-by: John Hubbard <jhubbard@nvidia.com>
----
-
-Changes since the first version:
-
-1) Rebased onto Linux 6.10-rc1
-
-thanks,
-John Hubbard
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/31d0136a686c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D856310
 
 
- tools/testing/selftests/net/Makefile | 4 ++++
- 1 file changed, 4 insertions(+)
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-diff --git a/tools/testing/selftests/net/Makefile b/tools/testing/selftests/net/Makefile
-index bd01e4a0be2c..9a3b766c8781 100644
---- a/tools/testing/selftests/net/Makefile
-+++ b/tools/testing/selftests/net/Makefile
-@@ -6,6 +6,10 @@ CFLAGS += -I../../../../usr/include/ $(KHDR_INCLUDES)
- # Additional include paths needed by kselftest.h
- CFLAGS += -I../
- 
-+ifneq ($(LLVM),)
-+    CFLAGS += -Wno-gnu-variable-sized-type-not-at-end
-+endif
-+
- TEST_PROGS := run_netsocktests run_afpackettests test_bpf.sh netdevice.sh \
- 	      rtnetlink.sh xfrm_policy.sh test_blackhole_dev.sh
- TEST_PROGS += fib_tests.sh fib-onlink-tests.sh pmtu.sh udpgso.sh ip_defrag.sh
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-base-commit: 2bfcfd584ff5ccc8bb7acde19b42570414bf880b
--- 
-2.45.1
+For more details:
 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
