@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD4481327E5
-	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:15:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6213C22EE8
+	for <mptcp@lists.linux.dev>; Mon, 27 May 2024 10:15:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716804918; cv=none; b=KTpOodIiXyNc+cnkl7YrSpeHlf8FWUwUAeolZOmGA/dRanwER5HO5J3BN8yedVwTmnWelE3aePLhMlHS7jLfm/XTxF7hsFCmVjgHx5OkwSveL+7bk4ICj+IwshaAZ9szJAJ0fkpK+IYOREtd9CSjH1N+vlLc1rrxkxrAo+Fsx4Q=
+	t=1716804921; cv=none; b=EzpSLy5jx/OYmSptfKGNUpKIJsn5BnyuWqIpXOJ2k1H2jR9GOdRnKZh8ig91AatB4Ys8fg+xUneb1mkEz5OIOBGQ02QHV9aZT95HEfW3Uyoo67FOByMydLBBtcRfdbu3r55vUaHEBIElZ02JUSwpcbfLWRfJ6yqCy0dsdhTLzkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716804918; c=relaxed/simple;
-	bh=/ODCSvUfbKjTwUPr1S6dG/cSbzitssalF5qqpE7/pXQ=;
+	s=arc-20240116; t=1716804921; c=relaxed/simple;
+	bh=qk88dR8V60zXWShAQbS/Ko+FGlPh3m3ChstJtlOVnh4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=POOlMZiEln0P5/iGAZTq5obhR2xKipFWda6xhwqN8fuk1o5x73UaG5YCGTGxVw6ULQ1FMoKXXbdd2OzE118jOrO5mfZFEIrVnfBjZAHqXJ/V0vLH0Leha83CVtdtS5BU3MWtKdgmSP1SYGrnDZftDmtODMqPndZ3Cr+ZYPOwhsI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T0xPm6wM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=l6icf8KmRhgIxcH6qoh3j7loWUGmkXWREbSTGzPuIA4dUAdAUItX5XBlo/a2Q+dj388QebpqcmRPob7gii02ukBi2PISMgSwcOGuL4XviymaZOl6OSyGs1HFoZyhr2Ek+KpUQNYKo/cXMl3glHv0CdEXgXG7YEbp8+u6p7rcsM0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBVW8hI7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T0xPm6wM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 830B2C2BBFC;
-	Mon, 27 May 2024 10:15:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBVW8hI7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21B68C2BBFC;
+	Mon, 27 May 2024 10:15:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716804918;
-	bh=/ODCSvUfbKjTwUPr1S6dG/cSbzitssalF5qqpE7/pXQ=;
+	s=k20201202; t=1716804921;
+	bh=qk88dR8V60zXWShAQbS/Ko+FGlPh3m3ChstJtlOVnh4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T0xPm6wMmIc7ugpZ9jBNLiY4fPLv3HFpJTWpHQsnKcLsbiiI0PKgsFgxQhCXadp9o
-	 TDr9rwSOOBLjnM7UrvEtwS1wQE39qm7SleGfLm4RV3JgeV4x/IRhouf3feUre1l39x
-	 dje+lNlE6QideEv6CO/k2l0E5vfQXDvG082cEnTBCIFQB6GmcyNZsKRi6SblnL1W3i
-	 KY/geDRN30dnoH2ZtuCAyslPCyMRU/gGNIoqBqyxUjvQOUirSOzclF4mfVtdIQkJX9
-	 L+qvFOGE7DeK1kduMlQzuBfpv+vjhRoQcACU8TTVb8eiMMWItPzrKK976iVhtE4C7z
-	 XguYj05a7B80A==
-Message-ID: <9c729cec-8eb8-484c-875a-41a705520a07@kernel.org>
-Date: Mon, 27 May 2024 12:15:15 +0200
+	b=sBVW8hI745nnBL1ls926VjygXMA4EXTAGy5Wdu1JsQ3vHZ6brLqP/itn+LmACvirf
+	 99ln37cTUSPqck0R6jFhcMbwcrNkxleF9gRDEVZtOes/2xqsmACLejDtvAcR+ROaOn
+	 zabiYhm7Mc6Vt+IpNbicUchLXwMNau3JhtkJLLArz+V4kMobbg4ZGgYDb2xpMDigEw
+	 glmWFLO7xzitUTBElneVyk+qh1jFA3nSWVuxd3TIAz4QsOJuSiV/P8PCECF1waSIW9
+	 Ma161MFShUE13BAJveimC+I6et/n152uor4SyfjtnmNtKvRMXZ3Z+NbkXrwIzgKwgb
+	 35EsAAbCLCM7Q==
+Message-ID: <7169caa8-2b8b-48c3-968c-a99e8614604a@kernel.org>
+Date: Mon, 27 May 2024 12:15:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/4] selftests: mptcp: diag: add ns name empty
- check in cleanup
+Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: join: print title at the
+ end of reset
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1716641976.git.tanggeliang@kylinos.cn>
- <eb0532a18d2d520268dc2ba0f1e414b25aaafb04.1716641976.git.tanggeliang@kylinos.cn>
+ <7dbbb909edef2fecc46bde435fae21be6bc9ed81.1716641976.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,27 +87,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eb0532a18d2d520268dc2ba0f1e414b25aaafb04.1716641976.git.tanggeliang@kylinos.cn>
+In-Reply-To: <7dbbb909edef2fecc46bde435fae21be6bc9ed81.1716641976.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 25/05/2024 15:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_lib_ns_init may fail sometimes, then ns isn't setup correctly. In
-> that case, cleanup is invoked, and ns is used in cleanup. So an "Invalid
-> netns name ''" error occurs.
+> init or init_partial may fail sometimes, in that case, titles shouldn't
+> be printed out.
 > 
 > For example, these errors occur when invalid name is set to setup_ns:
 > 
+>     001 no JOIN
 >     Failed to setup namespace 'ns_temp': invalid name
->     Invalid netns name ""
+> 
+> "001 no JOIN" shouldn't be printed out in this case.
 
-Mmh, I don't think this is needed: here, you explicitly caused the issue
-by picking an invalid name. That's the only case where the 'ns' variable
-will be not set. It should not fail with this error then.
+Why? For me, it sounds better to print the title before creating the
+netns: each subtest creates a new netns, that's part of the test, it is
+important to know which one had an issue. Imagine there is an error later:
+
+  001 no JOIN
+        syn                                 [ OK ]
+        synack                              [ OK ]
+        ack                                 [ OK ]
+  002 single subflow, limited by client
+  mount --make-shared /run/netns failed: Operation not permitted
+  Failed to create namespace ns0
+
+Here, it is clear the issue is when creating a new netns with the 2nd
+test, that's not linked to the first one, no?
 
 Cheers,
 Matt
