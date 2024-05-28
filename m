@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B33116F274
-	for <mptcp@lists.linux.dev>; Tue, 28 May 2024 13:18:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37254170841
+	for <mptcp@lists.linux.dev>; Tue, 28 May 2024 13:19:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716902308; cv=none; b=VDjdsn4NCLlUlqbNukOyW0BYP1kZHMocUeh2VfHEgjpCarmq4nAccjTxGV4xIMgRTkMpW34HuNei4UhxPWrYYyxX27nJzS5YJB1z3P7minVGzLhQDMvwcxaP7/7ViWpxkb0fDlZin8EiPFoAq09sWJnQJ1ZjHR+0zRaB0LG96fQ=
+	t=1716902395; cv=none; b=ueFxNw++ZeDSwH5wDRv7nMa0wmD2ekj9gJ8j+Ln6qV9JIvbLkHcx5DSqIEwB2GMrw0A9ei33DMb+k+muKiBF/s1UsW0oTGHn/pzDUpk7ZMSiMvZm9WJTT7IabPNjNiRGDxzRA7+9W+GEntdZ/iDfkgyj/tkU0P1N50haeZi8434=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716902308; c=relaxed/simple;
-	bh=21UaUH6ad/Pq+sHvZs0mRYcKLuNizF8Oa8QnSuAAyj0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=f39IUuzItmv+TARKC6FoNIlumSmTmSJwClsjWl1jpTXRpOxC56qEoX4YFcJaHboZtU0FTVDDJkD2V1x4GP81oj+Cc2PMD22B0X0VoGhPQKYyrcQxM9942tJ5Q2UgajCkJ9UuteCbIBUipf5k/Fn1f+NEX8cb6NiQWdPdTq6ORuM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UxQF0ow6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1716902395; c=relaxed/simple;
+	bh=7E1wXdiFOHFfvViXJSLGKxGNc6VCZY8hHdiLWMHKy50=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=lqu6DHlPUVcg/Hyjt3CDfzHtMvdSLWN7RQeF1fCMjz3tGIEHd/gy6rC5j2H3MGM/yeAsH4zQuuSjYnfiX9GCTo9i6nA4LOo9HRZWVmIvlXOw8S5q5GLMfiIKXCOX4QZv/9uH0Z7/SLpKMjK8+h3FSC1F5/49tm/uEAnHF132pZ0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C1sbQZE/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UxQF0ow6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA58FC3277B;
-	Tue, 28 May 2024 13:18:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C1sbQZE/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB382C3277B;
+	Tue, 28 May 2024 13:19:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716902308;
-	bh=21UaUH6ad/Pq+sHvZs0mRYcKLuNizF8Oa8QnSuAAyj0=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=UxQF0ow6O7VKb6MSCRnoBYwIVW3qNVbX/78qIczUpBJUpxKsIqWETbjekG/nulfrd
-	 kKq4sp27WjewHuMeglgoN9mbstOH4gTAW6GGvpBX4w5ZFQMvu+PV+cYkUAvYAzUfWZ
-	 RW93M0PupoLUSfj82nN2RpVB3mp4LNLPzJU4GPo30gQouXiTtJW8Ai4e/EkJfRI7fq
-	 EBvHPAuhvb4UAJSxfd+U4PC61b8c0dDPgPJRqfAPuMgRSQsHCsqfrKwNJ1blkm0MX6
-	 nVDHSoueV+HnltdKJ5tkc9hRFi9yAK/NCnQZZGnRD6IhYtDbGDDCuDjHfbclDzwm/T
-	 Vpvc+0Ky51pgw==
-Message-ID: <60d8e4dd2e8bb8671200bf009c7f49d9ec545cec.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v6 5/9] selftests: net: lib: remove ns from
- list after clean-up
+	s=k20201202; t=1716902394;
+	bh=7E1wXdiFOHFfvViXJSLGKxGNc6VCZY8hHdiLWMHKy50=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=C1sbQZE/weLlXXHrLnQgqmT2M9U2Kmynd/HRS+EfvCI4k3A/aHtHT61nP6end4HDF
+	 3AQ9OLAyqkGIuLBLTAM2WKEDh/9cUjG026kZdKPxrThok1WTRJDcY2t6kK+QKDXNNH
+	 B1n5sNIusghMp6kcWNMB89Rzr8v5wHrG6dYvtVTexxgDtGKMU1Z0AUmCDnUoe3oPXe
+	 VXXvYBAIFUFVpicMFs4K/KgzebCYFmhVm93FofOQKowAgb5Kx03n3qCIWjbfT9GZGI
+	 HBL5cQ/CCLmqXLZ+Zn9Lufb0QQi6b8yGcjIwXMNhWNEVU9wPXKKhY3GTVbpPzdWKvJ
+	 YecTBJiXEQ7ag==
+Message-ID: <88fe6f925f2db11c7fda8703d3ccb5f2c20c01ce.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 0/9] use helpers in lib.sh and
+ net_helpers.sh
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Tue, 28 May 2024 21:18:24 +0800
-In-Reply-To: <a5f1ae57-009b-4a44-93a9-8bfd38ab672b@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Tue, 28 May 2024 21:19:51 +0800
+In-Reply-To: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
 References: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
-	 <20240527-selftests-net-lib-fixes-v6-5-72411ff2460e@kernel.org>
-	 <312d5bb28672c8bd0eff47fcaf1ea7707bec8d60.camel@kernel.org>
-	 <a5f1ae57-009b-4a44-93a9-8bfd38ab672b@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -99,109 +97,81 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-05-28 at 12:38 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+On Mon, 2024-05-27 at 12:58 +0200, Matthieu Baerts (NGI0) wrote:
+> (This is a new version for the series created by Geliang. @Geliang: I
+>  hope that's OK for you like that, it was easier to describing the
+>  modifications by email. I validated my changes by running MPTCP
+>  selftests only)
 > 
-> Thank you for your review!
+> This set uses the public helpers defined in net selftests to replace
+> helpers in mptcp_lib.sh.
 > 
-> On 28/05/2024 05:47, Geliang Tang wrote:
-> > On Mon, 2024-05-27 at 12:58 +0200, Matthieu Baerts (NGI0) wrote:
-> > > Instead of only appending items to the list, remove them when the
-> > > netns
-> > > has been deleted.
-> > > 
-> > > By doing that, we can make sure 'cleanup_all_ns()' is not trying
-> > > to
-> > > remove already deleted netns.
-> > > 
-> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > ---
-> > >  tools/testing/selftests/net/lib.sh | 21 +++++++++++++++++----
-> > >  1 file changed, 17 insertions(+), 4 deletions(-)
-> > > 
-> > > diff --git a/tools/testing/selftests/net/lib.sh
-> > > b/tools/testing/selftests/net/lib.sh
-> > > index b2572aff6286..c7a8cfb477cc 100644
-> > > --- a/tools/testing/selftests/net/lib.sh
-> > > +++ b/tools/testing/selftests/net/lib.sh
-> > > @@ -125,6 +125,20 @@ slowwait_for_counter()
-> > >  	slowwait "$timeout" until_counter_is ">= $((base +
-> > > delta))"
-> > > "$@"
-> > >  }
-> > >  
-> > > +remove_ns_list()
-> > > +{
-> > > +	local item=$1
-> > > +	local ns
-> > > +	local ns_list=("${NS_LIST[@]}")
-> > > +	NS_LIST=()
-> > > +
-> > > +	for ns in "${ns_list[@]}"; do
-> > > +		if [ "${ns}" != "${item}" ]; then
-> > > +			NS_LIST+=("${ns}")
-> > > +		fi
-> > > +	done
-> > > +}
-> > > +
-> > >  cleanup_ns()
-> > >  {
-> > >  	local ns=""
-> > > @@ -136,6 +150,8 @@ cleanup_ns()
-> > >  		if ! busywait $BUSYWAIT_TIMEOUT ip netns list \|
-> > > grep -vq "^$ns$" &> /dev/null; then
-> > >  			echo "Warn: Failed to remove namespace
-> > > $ns"
-> > >  			ret=1
-> > > +		else
-> > 
-> > nit: Should we also remove ns_list when "ip netns list" is busy? Or
-> > should we not delete ns when "ip netns list" is busy?
-> > 
-> > I think we should do these two commands together:
-> > 
-> > 	ip netns delete "${ns}" &> /dev/null || true
-> > 	remove_ns_list "${ns}"
-> > 
-> > I'm not sure. WDYT?
+> v6:
+>  - Replace "rename ns in setup_ns" by "remove 'ns' var in setup_ns":
+> we
+>    don't need it, avoid extra conflicts.
 > 
-> Good point, I'm not sure either. I kept it in the list because in
-> case
-> of errors, the caller could still get the list of NS that have been
-> created, but not deleted yet.
+> v5: (Matt)
+>  - New patches: 1-6: some unrelated fixes, some modifications to
+> avoid
+>    adding workaround on our side (changing variable names, trap,
+> etc.)
+>  - "rename ns in setup_ns": drop the modifications in cleanup_ns,
+> exit
+>    in case of error, and updated commit message.
+>  - Drop patches 2, 4, 5/6 from v4.
 > 
-> To be honest, I don't think any actions should be done on the NS
-> after
-> having called cleanup: it would probably better to kill all attached
-> processes before that, and not retry later after errors and a kill.
-> But
-> I didn't want to change this logic as there might be other impacts.
-> So
-> at least here, we let the responsibility to the caller, and it can
-> call
-> cleanup_all_ns() again in case of errors. WDYT?
-
-If so, I think this is better:
-
-        for ns in "$@"; do
-                [ -z "${ns}" ] && continue
-                ip netns delete "${ns}" &> /dev/null || true
-                remove_ns_list "${ns}"
-                if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -
-vq "^$ns$" &> /dev/null; then
-                        echo "Warn: Failed to remove namespace $ns"
-                        ret=1
-                fi  
-        done
-
-If you agree, please update this when merging it. No need to send a v7.
-
-And please add my Reviewd-by tag. I'll repay it in the cover-letter.
-
-Thanks,
--Geliang
-
+> v4:
+>  - two more fixes added
+>  - exit when setup_ns fails in mptcp_lib_ns_init
 > 
-> Cheers,
-> Matt
+> v3:
+>  - address Matt's comments in v2 (thanks, it's very useful.)
+>  - don't rename ns in diag.sh, but in lib.sh
+>  - ns in get_counter needs to be renamed too
+>  - add a ns_name valid check in setup_ns
+>  - drop $NS_LIST in mptcp_lib_ns_init
+>  - don't drop mptcp_lib_ns_init, use cleanup_ns in it
+>  - don't use cleanup_all_ns, still use mptcp_lib_ns_init
+> 
+> v2:
+>  - only patch 3 updated, mptcp_join.sh, move cleanup_all_ns from
+>    cleanup_partial to cleanup, setup_ns will delete existing
+>    namespaces automatically.
+>  - update commit logs.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Thanks Matt, please add my tag:
+
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+
+> ---
+> Changes in v6:
+> - Link to v5:
+> https://lore.kernel.org/r/20240524-selftests-net-lib-fixes-v5-0-b9e0968571a3@kernel.org
+> 
+> ---
+> Geliang Tang (3):
+>       selftests: net: lib: remove 'ns' var in setup_ns
+>       selftests: mptcp: lib: use setup/cleanup_ns helpers
+>       selftests: mptcp: lib: use wait_local_port_listen helper
+> 
+> Matthieu Baerts (NGI0) (6):
+>       selftests: net: lib: set 'i' as local
+>       selftests: net: lib: support errexit with busywait
+>       selftests: net: lib: avoid error removing empty netns name
+>       selftests: net: lib: ignore possible error
+>       selftests: net: lib: remove ns from list after clean-up
+>       selftests: net: lib: do not set ns var as readonly
+> 
+>  tools/testing/selftests/net/lib.sh             | 71 +++++++++++++++-
+> ----------
+>  tools/testing/selftests/net/mptcp/mptcp_lib.sh | 33 ++++--------
+>  2 files changed, 50 insertions(+), 54 deletions(-)
+> ---
+> base-commit: 55aceb609c1baec3e762e938e2028df7ecd545e1
+> change-id: 20240524-selftests-net-lib-fixes-5a70b8d3b828
+> 
+> Best regards,
 
