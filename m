@@ -1,222 +1,69 @@
-Received: from chinatelecom.cn (smtpnm6-08.21cn.com [182.42.159.130])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 718B716D9AD
-	for <mptcp@lists.linux.dev>; Wed, 29 May 2024 09:48:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=182.42.159.130
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724C316D9D9;
+	Wed, 29 May 2024 09:58:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976137; cv=none; b=Mqh2C7/GBeVyu2IPe2Y9G9tTqdtoV1dWJYrdFaejW8gjO7G+70g5PlNIsBMvbc13Ph2r/jOFB9gCXHNPMBwRrnAuVDjmsBSncfIv0wpC4W36Pm3gvHOYKw4RA28IJqKyEPza1KK2SOxEYSrbxreWLLVdlx/gWQiWOA88yJczCf0=
+	t=1716976709; cv=none; b=vALJ8VUpO+UNCM+JO6UuUMhCtqN/8ZBx92bJsKeVVBrDCJ8dGUgDgAPvKUjWzuhglVJL0/AcesurOCTjZvwA5d3EdMLtUkDmdYmXTk363dA99Nr5vBgCvhOzTxW47i+KonqO1AsMh/8lhqJmnYOu61y9HN3g1I7m8Zny8Ur2Mms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976137; c=relaxed/simple;
-	bh=i0HesL3kyI9VWREQunNgbfcn/l2oQnlkkirfFe6/Adg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=twgsShmQVOZs3G6hjCnKFI7sOx8/W0e4UK7Up9du/x2N8j544iGse3mY/wCm1crxj2fgTolw1SHteRRbsjWybbBKOvaQvs0wTH4zYoDcNMCoMvYhXgIuwcOPWFGf6ReSDH5IpncaZrsGK+A0Ey4yn4IiafpuhsiprnRLjZIIMfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn; spf=pass smtp.mailfrom=chinatelecom.cn; arc=none smtp.client-ip=182.42.159.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=chinatelecom.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=chinatelecom.cn
-HMM_SOURCE_IP:192.168.137.232:36280.540440798
-HMM_ATTACHE_NUM:0000
-HMM_SOURCE_TYPE:SMTP
-Received: from clientip-27.148.194.68 (unknown [192.168.137.232])
-	by chinatelecom.cn (HERMES) with SMTP id 51615903257C;
-	Wed, 29 May 2024 17:37:48 +0800 (CST)
-X-189-SAVE-TO-SEND: liyonglong@chinatelecom.cn
-Received: from  ([27.148.194.68])
-	by gateway-ssl-dep-67bdc54df-b7md5 with ESMTP id 800bb0f293d142c2a06292579c99fafd for matttbe@kernel.org;
-	Wed, 29 May 2024 17:37:54 CST
-X-Transaction-ID: 800bb0f293d142c2a06292579c99fafd
-X-Real-From: liyonglong@chinatelecom.cn
-X-Receive-IP: 27.148.194.68
-X-MEDUSA-Status: 0
-Sender: liyonglong@chinatelecom.cn
-Message-ID: <9baca944-9777-445b-8344-d6755c65a509@chinatelecom.cn>
-Date: Wed, 29 May 2024 17:37:47 +0800
+	s=arc-20240116; t=1716976709; c=relaxed/simple;
+	bh=WkD4hBmsscXkGO0rSV1JbqaOuPHFRTDlcy61U400FU4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=AJ/+RUHNJKkvMoauVgbP109tWHm+whCqGcJ+lqhcHd6iblXRhJp5myZhAVqlL7Loyf+uoNds6yZlhBhiPS6fSXLtzvx45ADhBEgc9S6B+1meqfauE/NcHuyZKe0FbJAzK5rW2u2xbiJls+fRB5qMNAK++OSSbDZEBAXfnEz01gY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggozvxJm; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggozvxJm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0156C2BD10;
+	Wed, 29 May 2024 09:58:26 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1716976709;
+	bh=WkD4hBmsscXkGO0rSV1JbqaOuPHFRTDlcy61U400FU4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=ggozvxJm64HH+cm7YwgqsaQabV+1t92/XcZCZc22D+IgqNoEMivT3dJxfbQcO8xt2
+	 i7cQb8frfhvl4aR2koOIBTm5E5EgieZPVIxPCpXw5yZWhc7FA4F8X/Hg/u/o58vV2D
+	 3ry52RGm7G8H8fS2vp3i+jutjKRI6R33OvbfigbVRvuZcn8Mh3RXdANz03LSoMGIH8
+	 DopN79ozNyzomm+MNqA0czIwg8NsyHr2C+/qm8jV9i+g5CJu317+ws0qjTkoqLzgvP
+	 cGXWDGiSnJVvzgvJq0TtTBHNkigMPSKwjL3DL6jAJEeZAZ6Fbd3uPg5j3BSGLPbcDU
+	 iwuvCg+iZ6WAw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org,
+	sashal@kernel.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.6.y 0/3] Backport of "mptcp: fix full TCP keep-alive support"
+Date: Wed, 29 May 2024 11:58:18 +0200
+Message-ID: <20240529095817.3370953-5-matttbe@kernel.org>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH] mptcp: update add_addr_accepted and accept_add after
- subflow added
-Content-Language: en-US
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: pabeni@redhat.com, geliang@kernel.org
-References: <1716543865-37448-1-git-send-email-liyonglong@chinatelecom.cn>
- <1990877063.5336.1716773859206.JavaMail.root@jt-retransmission-dep-59f6f76b7b-svmkb>
-From: YonglongLi <liyonglong@chinatelecom.cn>
-In-Reply-To: <1990877063.5336.1716773859206.JavaMail.root@jt-retransmission-dep-59f6f76b7b-svmkb>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=721; i=matttbe@kernel.org; h=from:subject; bh=WkD4hBmsscXkGO0rSV1JbqaOuPHFRTDlcy61U400FU4=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmVvw5w23Nd65jqOUhpV/EfrW4vTY0210LUg2Gx U+B/Sfk7NiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlb8OQAKCRD2t4JPQmmg c5EyEADBgYpzAC79gWmzgt+UKtDLEwDAEYpfzIHUOwwEeq9tYhTQ12h1h7zhb5jZbgecsyiGwQ8 LXj6PvNCcrKx1wdFdCNzfXNz5kt/TBKSsx2pL74SUqd/fMrLWac7cpsKpNcsalTtHw04Yv4SVOU V8bgvrNjA/MrQGOkiPDtHEeqXVMLWx0TbM76IeOtGEE3NrbAbO64n8H3skjOikVsJCf6MgkrzTt FG6uA6zX06myHnVf/C4oJfnUk82bQBn40qdofbMtN0yg2QlETvKoDHtJwybk7f3JmNZARgDvbRb 246jNxOzfxO0lercf+Mth7bq1fMvnrwwQStFlM4NRIlWf9/UODBvSNhBYVRzN5zzTnWVnyn7fHf Uu/x626PMT4mPt2Ags+PK7OgMgxi0IUBgLWStiaPaIyFtY0GbIqCDLBQOdoJoFp+Sek1i2XDTVf 4U7qI8N6ZMt+t4EEaN5S9hGzfxD8EnOk0jWwd/9LZHyf7tUna92NH9rL959yoPooi0CwJfexHBZ RcdnfJC3PIfCIANYw/kCouIlxyhSxB0qyawm/LJk0yX8xmDtWomLgCH3mbr0gv9s15E35VWXZML og5NfcxLzoBuXD7EgyTjWiMPXvZJ8xptdh5W91vgwXYEcMYUsXspdtydmkxPbDFc86XiWjRdWpZ Nm15lpdg2Ha/qZA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+It looks like the patch "mptcp: fix full TCP keep-alive support" has
+been backported up to v6.8 recently (thanks!), but not before due to
+conflicts.
 
-Sorry for the late relay. And thanks for your review.
+I had to adapt a bit the code not to backport new features, but the 
+modifications were simple, and isolated from the rest. MPTCP sockopt 
+tests have been executed, and no issues have been reported.
 
-On 5/24/2024 23:06, Matthieu Baerts wrote:
-> Hi Yonglong Li,
-> 
-> On 24/05/2024 11:44, Yonglong Li wrote:
->> From: YonglongLi <liyonglong@chinatelecom.cn>
->>
->> receive RM_ADDR will update pm.add_addr_accepted and pm.add_addr_accepted
->> only if remove id match remote id of subflow. so receive ADD_ADDR should
->> update pm.add_addr_accepted and pm.add_addr_accepted after subflow added
->> to conn_list.
-> 
-> Do you think it could be possible to cover this case by modifying/adding
-> one subtest in our selftests?
-> 
+Matthieu Baerts (NGI0) (1):
+  mptcp: fix full TCP keep-alive support
 
-yes, test case for this issue like this:
+Paolo Abeni (2):
+  mptcp: avoid some duplicate code in socket option handling
+  mptcp: cleanup SOL_TCP handling
 
-       if reset "remove invalid address and re-add"; then
-               pm_nl_set_limits $ns1 2 2
-               pm_nl_set_limits $ns2 2 2
-               pm_nl_add_endpoint $ns1 224.0.0.1  flags signal
-               #pm_nl_add_endpoint $ns1 10.0.4.1  flags signal
-               run_tests $ns1 $ns2 10.0.1.1 0 -1 0 speed_10 2>/dev/null &
-               sleep 0.5
-
-               pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-               pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-               wait_mpj $ns2
-               chk_join_nr 2 2 2
-               chk_rm_nr 1 0 invert
-               chk_add_nr 3 3
-               chk_rst_nr 0 0
-               kill_tests_wait
-       fi
-
-
-> The commit message is not very clear to me. ("add_addr_accepted" are
-> also always duplicated, I'm not sure why).
-
-sorry for mistake. my origin mean is "pm.add_addr_accepted and pm.accept_addr"
-
-> 
-> I understand we can have issues with __mptcp_subflow_connect() and we
-> might want to increment the counter only if it was possible to create a
-> subflow (even if the connection can fail later -- I'm not sure whether
-> we decrement the counter in this case as well), but I'm not sure to
-> understand the context: the reason why this call could fail, and the
-> link with RM_ADDR.
-> 
-
-I think we should make sure that update pm.add_addr_accepted and pm.accept_addr
-after new subflow was added into conn_list when receive do ADD_ADDR action. And
-decremant the counter when unlink the last subflow of the addr ID from conn_list.
-
-decremant the counter like this:
-
-@@ -827,10 +829,7 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-                if (!mptcp_pm_is_kernel(msk))
-                        continue;
-
--               if (rm_type == MPTCP_MIB_RMADDR) {
--                       msk->pm.add_addr_accepted--;
--                       WRITE_ONCE(msk->pm.accept_addr, true);
--               } else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
-+               if (rm_type == MPTCP_MIB_RMSUBFLOW) {
-                        msk->pm.local_addr_used--;
-                }
-        }
-
-@@ -757,11 +757,32 @@ static void subflow_ulp_fallback(struct sock *sk,
- void mptcp_subflow_drop_ctx(struct sock *ssk)
- {
-        struct mptcp_subflow_context *ctx = mptcp_subflow_ctx(ssk);
-+       struct mptcp_sock *msk = NULL;
-
-        if (!ctx)
-                return;
-
-        list_del(&mptcp_subflow_ctx(ssk)->node);
-+        if (ctx->conn)
-+                msk = mptcp_sk(ctx->conn);
-+        if (msk && !list_empty(&msk->conn_list)) {
-+                struct mptcp_subflow_context *subflow, *tmp;
-+                u8 id = subflow_get_local_id(ctx);
-+                bool lastone = true;
-+                mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-+                        if (id == 0 || id == subflow_get_local_id(subflow)) {
-+                                lastone = false;
-+                                break;
-+                        }
-+                }
-+                if (lastone == true) {
-+                        spin_lock_bh(&msk->pm.lock);
-+                        msk->pm.add_addr_accepted++;
-+                        WRITE_ONCE(msk->pm.accept_addr, true);
-+                        spin_unlock_bh(&msk->pm.lock);
-+                }
-+        }
-+
-        if (inet_csk(ssk)->icsk_ulp_ops) {
-                subflow_ulp_fallback(ssk, ctx);
-                if (ctx->conn)
-
-And do the same thing in __mptcp_close_ssk
-
-WDYT?
-
->>
->> Fixes: f7d6a237d742 ("mptcp: fix per socket endpoint accounting")
->>
-> 
-> (no new line here)
-> 
->> Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
->> ---
->>  net/mptcp/pm_netlink.c | 16 ++++++++++------
->>  1 file changed, 10 insertions(+), 6 deletions(-)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 766a840..117cc7b 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -676,6 +676,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
->>  	struct sock *sk = (struct sock *)msk;
->>  	unsigned int add_addr_accept_max;
->>  	struct mptcp_addr_info remote;
->> +	bool subflow_added = false;
->>  	unsigned int subflows_max;
->>  	int i, nr;
->>  
->> @@ -704,15 +705,18 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
->>  	if (nr == 0)
->>  		return;
->>  
->> -	msk->pm.add_addr_accepted++;
->> -	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
->> -	    msk->pm.subflows >= subflows_max)
->> -		WRITE_ONCE(msk->pm.accept_addr, false);
->> -
->>  	spin_unlock_bh(&msk->pm.lock);
->>  	for (i = 0; i < nr; i++)
->> -		__mptcp_subflow_connect(sk, &addrs[i], &remote);
->> +		if (!__mptcp_subflow_connect(sk, &addrs[i], &remote))
->> +			subflow_added = true;
-> 
-> Probably clearer to use:
-> 
->   if (__mptcp_subflow_connect(...) == 0)
-> 
-> Otherwise, we might think the subflow is added in case of issues.
-> 
->>  	spin_lock_bh(&msk->pm.lock);
->> +
->> +	if (subflow_added) {
->> +		msk->pm.add_addr_accepted++;
->> +		if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
->> +		    msk->pm.subflows >= subflows_max)
->> +			WRITE_ONCE(msk->pm.accept_addr, false);
->> +	}
->>  }
->>  
->>  void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
-> 
-> Cheers,
-> Matt
+ net/mptcp/protocol.h |   3 ++
+ net/mptcp/sockopt.c  | 123 +++++++++++++++++++++++++++++--------------
+ 2 files changed, 87 insertions(+), 39 deletions(-)
 
 -- 
-Li YongLong
+2.43.0
+
