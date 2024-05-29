@@ -1,272 +1,272 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0BF16176FD8;
-	Wed, 29 May 2024 10:01:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C303D1C6B2;
+	Wed, 29 May 2024 16:59:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.137.202.133
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1716976906; cv=none; b=VHv3U6ZTu3ji3UiM4qCE5gmc6QdVq+hpbby3lx1ZNjcKOtM4T9NBSpT6QIXJxadkSaXadKC+1uWGsYEGEHDAd1NiQl5zR107PrSKgvE+LarEOlxYpeVOXh8FVtw04ZXGPYzgfyZJYBMdOuIxxoEQPB+E5mJWxlhIrURtLLH9yF4=
+	t=1717001963; cv=none; b=QrCi4gM51cuoD4cvNKK1Fa53sNAbhs/MAhID++xErTzUU61Ejw1d816wZ6UOO5uH8kitZJmQWo4oWWLBUuj63U1nn9ubxx2AEbZDGpLRDiPGwLdCfSJRGfQqQYGP5pjlQ8xpizFVzqxZW1UPQT0MCxsQ8dd9AITOzrRS68HyZ3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1716976906; c=relaxed/simple;
-	bh=nh/XSjBObbOx6HpafG1Uepxj05v+qaURr87XVgDROdk=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rng94hsOHvg13jKweuFay5qcXAY+cGjNIZuBieTWVOB58REE4wQ5ZJigGTVFIvJXjP1T1BvBPrW4giSyWubQWyJXh3b5H7QZ6CaxdsYU17QMyN8M/wazOSMWdUJLuSBgULDFUpgqf+MKnMJTcyNbSUM6lkzFrKITgSmKoW0dx0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGybFY2Y; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717001963; c=relaxed/simple;
+	bh=3JmITgZLRm7PzrB8DVGRCNYKXDP7KKvUR8Ly1J2HzPY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VF/Rbc95PvRuOIxZmRxxxPthj2+3MOo848GB0N/rywdVQV9f3BuMkYM9L13WalGeVrPmzuYcEPdeAfjlAGA0V/f1ZquEzKu4TGMwz8ZcLssywbkw6hYHDDwwIL1xMWxI+0qrhta6kANsBCLYH3QELEPzTrLWbTmXsOPFffa7K/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org; spf=none smtp.mailfrom=infradead.org; dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b=AuhPsZll; arc=none smtp.client-ip=198.137.202.133
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=infradead.org
+Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=infradead.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGybFY2Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8155FC2BD10;
-	Wed, 29 May 2024 10:01:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1716976905;
-	bh=nh/XSjBObbOx6HpafG1Uepxj05v+qaURr87XVgDROdk=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KGybFY2Y+h2A1D77RMvPZjvLZ5MuV0FlF5nlaEidG/x+/48yKj7561q2u1vP8GwVM
-	 vTyhM+TYI9WThfDe5nrD75SpzlUaVFlf7MI/s92FsA22W0OoZaa6fGy+rhOCMkCSfG
-	 nlyy1VXdLRijLbjUuStI1UY7ZRB+KcF9q7uNEYi43dzR44kXqShnRmqFTmN3avJiGJ
-	 +GrsRFdW3M5vX8iVVI3fLUDHFzhzAJy7c5Uv8GdK40rF82PZybL4NinNdI+8kre51A
-	 UXh97uKubUSxEkn2CUsJKeuCN87lbDNWpZMvyctFllBgT2fIfp8uZx0wp8ag61D3Qy
-	 5bCzYSJQk5zXQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org,
-	sashal@kernel.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y] mptcp: fix full TCP keep-alive support
-Date: Wed, 29 May 2024 12:01:31 +0200
-Message-ID: <20240529100130.3375226-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="AuhPsZll"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+	d=infradead.org; s=bombadil.20210309; h=Content-Transfer-Encoding:
+	Content-Type:In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:
+	Message-ID:Sender:Reply-To:Content-ID:Content-Description;
+	bh=u+J7UNedaAitVJ/3TUFXdqiVh6hPSZVkhW52IorTbi0=; b=AuhPsZllPuI7ck4umh5WNFlRM4
+	kjDsDXMQhqShyRjMN84jniKFVV1xgB4Uxj+kuH7+ZQ17fWCTsnKVqBzLoqnrzK5H175Jc35DdhZaz
+	41jV09v9hOtW9JOyYemFejCrsVjrJmwd6svk2O1maclnS8lv/I9Kb4Ab7iJ80fGuZXRtzoZMBqk8a
+	A+7RCy8gUAspOMQS/jKankHGJI6hWDHYzFiG/ZQPfseDgiXwUXKBpnzlNC24uNCy3K0XXitp1sn3D
+	KBPKFd81xny2RqK03UZG8+YgaqrqKsW4SzK4QdyvPXeWk5l3vM24QGqCoQ59r3d4DCztjQgcZAD1f
+	KQ4bz4NQ==;
+Received: from [50.53.4.147] (helo=[192.168.254.15])
+	by bombadil.infradead.org with esmtpsa (Exim 4.97.1 #2 (Red Hat Linux))
+	id 1sCMdy-000000050Zo-1YlQ;
+	Wed, 29 May 2024 16:59:18 +0000
+Message-ID: <9076abad-01f6-4ff4-a176-c2f4a85eb3fc@infradead.org>
+Date: Wed, 29 May 2024 09:59:17 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7789; i=matttbe@kernel.org; h=from:subject; bh=nh/XSjBObbOx6HpafG1Uepxj05v+qaURr87XVgDROdk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmVvz6D8pCwCklPsUDJfYdjvJSHIJR1Q1y10u8H OJnDODXbMmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZlb8+gAKCRD2t4JPQmmg c/XeEACGgyaCdA1rlu9ATWXRvKCJPNBavEQshlG4tvzyUAsKQIJ/qmo3hn+Rl84ni9g3kspRpuN wISYc5B9zFMteznrCLL0yhoS7fR4INHtsVRVb973Nz2Lx01ikuZ4r0+Di4oSpPnkPlm5SgibVYq F40cbwsfiywsoRPbwrt8bxHSKwyBqtNi2KEJau1loxzMKd9ak9QbaWUNV8JefCaE1k2a6wuU8JX xtgggXvx9Y0gaMV3gW4kLsTIzUPxHLLmlGljT92ytEAjr1TljmEJW3puiWtSCw2L6G6pH2Je5sr rIcULbrVd1EdUE9/KWJZAod0BUDdGfEYzWBN9wFE0Qm/qukPhRCz0c3dBGrzmCvK0n9F+JHBeA9 x8TRdxZf734LkZZZv2CLvArCCiqHyUFNy+gUcJrl1QhPosMXe/6ry3BmvoG4C3VgmmDsv1Dawk/ XmCeKmi0j0HQKWCSpDAtSwVRsZ/60pmXGhEqDYsGD2UtCVQgD5nu6IHr0skuVWrB9IGDN5amH0e Sryt6UhYZ8q3ZUyBUyuT45dYyQd6cQe7JAcsoNjGNMiCIJnAl85jKJx7VG/b6ycioiDXOBJ9Rmu LSB036JiBLEzw4bPcK577NN1zYdRV1kGeLQBXuCmwyMXdhAHpeUePSkzpLuGsjR2NAhGh0wDvqf UUHUFPqWXMeNJcg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v2 3/3] doc: new 'mptcp' page in 'networking'
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Jonathan Corbet <corbet@lwn.net>, Gregory Detal <gregory.detal@gmail.com>
+Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240528-upstream-net-20240520-mptcp-doc-v2-0-47f2d5bc2ef3@kernel.org>
+ <20240528-upstream-net-20240520-mptcp-doc-v2-3-47f2d5bc2ef3@kernel.org>
+Content-Language: en-US
+From: Randy Dunlap <rdunlap@infradead.org>
+In-Reply-To: <20240528-upstream-net-20240520-mptcp-doc-v2-3-47f2d5bc2ef3@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-commit bd11dc4fb969ec148e50cd87f88a78246dbc4d0b upstream.
+Hi,
 
-SO_KEEPALIVE support has been added a while ago, as part of a series
-"adding SOL_SOCKET" support. To have a full control of this keep-alive
-feature, it is important to also support TCP_KEEP* socket options at the
-SOL_TCP level.
+Fix a few run-on sentences:
 
-Supporting them on the setsockopt() part is easy, it is just a matter of
-remembering each value in the MPTCP sock structure, and calling
-tcp_sock_set_keep*() helpers on each subflow. If the value is not
-modified (0), calling these helpers will not do anything. For the
-getsockopt() part, the corresponding value from the MPTCP sock structure
-or the default one is simply returned. All of this is very similar to
-other TCP_* socket options supported by MPTCP.
+On 5/28/24 1:09 AM, Matthieu Baerts (NGI0) wrote:
+> A general documentation about MPTCP was missing since its introduction
+> in v5.6.
+> 
+> Most of what is there comes from our recently updated mptcp.dev website,
+> with additional links to resources from the kernel documentation.
+> 
+> This is a first version, mainly targeting app developers and users.
+> 
+> Link: https://www.mptcp.dev
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>   - v2:
+>     - Fix mptcp.dev link syntax.
+> ---
+>  Documentation/networking/index.rst |   1 +
+>  Documentation/networking/mptcp.rst | 156 +++++++++++++++++++++++++++++++++++++
+>  MAINTAINERS                        |   2 +-
+>  3 files changed, 158 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/networking/index.rst b/Documentation/networking/index.rst
+> index 7664c0bfe461..a6443851a142 100644
+> --- a/Documentation/networking/index.rst
+> +++ b/Documentation/networking/index.rst
+> @@ -72,6 +72,7 @@ Contents:
+>     mac80211-injection
+>     mctp
+>     mpls-sysctl
+> +   mptcp
+>     mptcp-sysctl
+>     multiqueue
+>     multi-pf-netdev
+> diff --git a/Documentation/networking/mptcp.rst b/Documentation/networking/mptcp.rst
+> new file mode 100644
+> index 000000000000..ee0ae68ca271
+> --- /dev/null
+> +++ b/Documentation/networking/mptcp.rst
+> @@ -0,0 +1,156 @@
+> +.. SPDX-License-Identifier: GPL-2.0
+> +
+> +=====================
+> +Multipath TCP (MPTCP)
+> +=====================
+> +
+> +Introduction
+> +============
+> +
+> +Multipath TCP or MPTCP is an extension to the standard TCP and is described in
+> +`RFC 8684 (MPTCPv1) <https://www.rfc-editor.org/rfc/rfc8684.html>`_. It allows a
+> +device to make use of multiple interfaces at once to send and receive TCP
+> +packets over a single MPTCP connection. MPTCP can aggregate the bandwidth of
+> +multiple interfaces or prefer the one with the lowest latency, it also allows a
 
-It looks important for kernels supporting SO_KEEPALIVE, to also support
-TCP_KEEP* options as well: some apps seem to (wrongly) consider that if
-the former is supported, the latter ones will be supported as well. But
-also, not having this simple and isolated change is preventing MPTCP
-support in some apps, and libraries like GoLang [1]. This is why this
-patch is seen as a fix.
+                                                         latency. It also
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/383
-Fixes: 1b3e7ede1365 ("mptcp: setsockopt: handle SO_KEEPALIVE and SO_PRIORITY")
-Link: https://github.com/golang/go/issues/56539 [1]
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Mat Martineau <martineau@kernel.org>
-Link: https://lore.kernel.org/r/20240514011335.176158-3-martineau@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in the same context, because commit 29b5e5ef8739 ("mptcp:
-  implement TCP_NOTSENT_LOWAT support") (new feature), commit
-  013e3179dbd2 ("mptcp: fix rcv space initialization") (not backported
-  because of the various conflicts, and because the race fixed by this
-  commit "does not produce ill effects in practice"), and commit
-  4f6e14bd19d6 ("mptcp: support TCP_CORK and TCP_NODELAY") are not in
-  this version. The adaptations done by 7f71a337b515 ("mptcp: cleanup
-  SOL_TCP handling") have been adapted to this case here. Also,
-  TCP_KEEPINTVL and TCP_KEEPCNT value had to be set without lock, the
-  same way it was done on TCP side prior commit 6fd70a6b4e6f ("tcp: set
-  TCP_KEEPINTVL locklessly") and commit 84485080cbc1 ("tcp: set
-  TCP_KEEPCNT locklessly"). ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.h |   3 ++
- net/mptcp/sockopt.c  | 115 +++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 118 insertions(+)
+> +fail-over if one path is down, and the traffic is seamlessly reinjected on other
+> +paths.
+> +
+> +For more details about Multipath TCP in the Linux kernel, please see the
+> +official website: `mptcp.dev <https://www.mptcp.dev>`_.
+> +
+> +
+> +Use cases
+> +=========
+> +
+> +Thanks to MPTCP, being able to use multiple paths in parallel or simultaneously
+> +brings new use-cases, compared to TCP:
+> +
+> +- Seamless handovers: switching from one path to another while preserving
+> +  established connections, e.g. to be used in mobility use-cases, like on
+> +  smartphones.
+> +- Best network selection: using the "best" available path depending on some
+> +  conditions, e.g. latency, losses, cost, bandwidth, etc.
+> +- Network aggregation: using multiple paths at the same time to have a higher
+> +  throughput, e.g. to combine fixed and mobile networks to send files faster.
+> +
+> +
+> +Concepts
+> +========
+> +
+> +Technically, when a new socket is created with the ``IPPROTO_MPTCP`` protocol
+> +(Linux-specific), a *subflow* (or *path*) is created. This *subflow* consists of
+> +a regular TCP connection that is used to transmit data through one interface.
+> +Additional *subflows* can be negotiated later between the hosts. For the remote
+> +host to be able to detect the use of MPTCP, a new field is added to the TCP
+> +*option* field of the underlying TCP *subflow*. This field contains, amongst
+> +other things, a ``MP_CAPABLE`` option that tells the other host to use MPTCP if
+> +it is supported. If the remote host or any middlebox in between does not support
+> +it, the returned ``SYN+ACK`` packet will not contain MPTCP options in the TCP
+> +*option* field. In that case, the connection will be "downgraded" to plain TCP,
+> +and it will continue with a single path.
+> +
+> +This behavior is made possible by two internal components: the path manager, and
+> +the packet scheduler.
+> +
+> +Path Manager
+> +------------
+> +
+> +The Path Manager is in charge of *subflows*, from creation to deletion, and also
+> +address announcements. Typically, it is the client side that initiates subflows,
+> +and the server side that announces additional addresses via the ``ADD_ADDR`` and
+> +``REMOVE_ADDR`` options.
+> +
+> +Path managers are controlled by the ``net.mptcp.pm_type`` sysctl knob -- see
+> +mptcp-sysctl.rst. There are two types: the in-kernel one (type ``0``) where the
+> +same rules are applied for all the connections (see: ``ip mptcp``) ; and the
+> +userspace one (type ``1``), controlled by a userspace daemon (i.e. `mptcpd
+> +<https://mptcpd.mptcp.dev/>`_) where different rules can be applied for each
+> +connection. The path managers can be controlled via a Netlink API, see
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 78aa6125eafb..b4ccae4f6849 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -250,6 +250,9 @@ struct mptcp_sock {
- 	bool		use_64bit_ack; /* Set when we received a 64-bit DSN */
- 	bool		csum_enabled;
- 	spinlock_t	join_list_lock;
-+	int		keepalive_cnt;
-+	int		keepalive_idle;
-+	int		keepalive_intvl;
- 	struct work_struct work;
- 	struct sk_buff  *ooo_last_skb;
- 	struct rb_root  out_of_order_queue;
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index bd797d8f72ab..36d85af12e76 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -593,6 +593,60 @@ static int mptcp_setsockopt_sol_tcp_congestion(struct mptcp_sock *msk, sockptr_t
- 	return ret;
- }
- 
-+static int __tcp_sock_set_keepintvl(struct sock *sk, int val)
-+{
-+	if (val < 1 || val > MAX_TCP_KEEPINTVL)
-+		return -EINVAL;
-+
-+	WRITE_ONCE(tcp_sk(sk)->keepalive_intvl, val * HZ);
-+
-+	return 0;
-+}
-+
-+static int __tcp_sock_set_keepcnt(struct sock *sk, int val)
-+{
-+	if (val < 1 || val > MAX_TCP_KEEPCNT)
-+		return -EINVAL;
-+
-+	/* Paired with READ_ONCE() in keepalive_probes() */
-+	WRITE_ONCE(tcp_sk(sk)->keepalive_probes, val);
-+
-+	return 0;
-+}
-+
-+static int mptcp_setsockopt_set_val(struct mptcp_sock *msk, int max,
-+				    int (*set_val)(struct sock *, int),
-+				    int *msk_val, sockptr_t optval,
-+				    unsigned int optlen)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct sock *sk = (struct sock *)msk;
-+	int val, err;
-+
-+	err = mptcp_get_int_option(msk, optval, optlen, &val);
-+	if (err)
-+		return err;
-+
-+	lock_sock(sk);
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		int ret;
-+
-+		lock_sock(ssk);
-+		ret = set_val(ssk, val);
-+		err = err ? : ret;
-+		release_sock(ssk);
-+	}
-+
-+	if (!err) {
-+		*msk_val = val;
-+		sockopt_seq_inc(msk);
-+	}
-+	release_sock(sk);
-+
-+	return err;
-+}
-+
- static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    sockptr_t optval, unsigned int optlen)
- {
-@@ -601,6 +655,21 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 		return -EOPNOTSUPP;
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
-+	case TCP_KEEPIDLE:
-+		return mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPIDLE,
-+						&tcp_sock_set_keepidle_locked,
-+						&msk->keepalive_idle,
-+						optval, optlen);
-+	case TCP_KEEPINTVL:
-+		return mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPINTVL,
-+						&__tcp_sock_set_keepintvl,
-+						&msk->keepalive_intvl,
-+						optval, optlen);
-+	case TCP_KEEPCNT:
-+		return mptcp_setsockopt_set_val(msk, MAX_TCP_KEEPCNT,
-+						&__tcp_sock_set_keepcnt,
-+						&msk->keepalive_cnt,
-+						optval, optlen);
- 	}
- 
- 	return -EOPNOTSUPP;
-@@ -667,9 +736,40 @@ static int mptcp_getsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
- 	return ret;
- }
- 
-+static int mptcp_put_int_option(struct mptcp_sock *msk, char __user *optval,
-+				int __user *optlen, int val)
-+{
-+	int len;
-+
-+	if (get_user(len, optlen))
-+		return -EFAULT;
-+	if (len < 0)
-+		return -EINVAL;
-+
-+	if (len < sizeof(int) && len > 0 && val >= 0 && val <= 255) {
-+		unsigned char ucval = (unsigned char)val;
-+
-+		len = 1;
-+		if (put_user(len, optlen))
-+			return -EFAULT;
-+		if (copy_to_user(optval, &ucval, 1))
-+			return -EFAULT;
-+	} else {
-+		len = min_t(unsigned int, len, sizeof(int));
-+		if (put_user(len, optlen))
-+			return -EFAULT;
-+		if (copy_to_user(optval, &val, len))
-+			return -EFAULT;
-+	}
-+
-+	return 0;
-+}
-+
- static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 				    char __user *optval, int __user *optlen)
- {
-+	struct sock *sk = (void *)msk;
-+
- 	switch (optname) {
- 	case TCP_ULP:
- 	case TCP_CONGESTION:
-@@ -677,6 +777,18 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
- 	case TCP_CC_INFO:
- 		return mptcp_getsockopt_first_sf_only(msk, SOL_TCP, optname,
- 						      optval, optlen);
-+	case TCP_KEEPIDLE:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_idle ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_time) / HZ);
-+	case TCP_KEEPINTVL:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_intvl ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_intvl) / HZ);
-+	case TCP_KEEPCNT:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    msk->keepalive_cnt ? :
-+					    READ_ONCE(sock_net(sk)->ipv4.sysctl_tcp_keepalive_probes));
- 	}
- 	return -EOPNOTSUPP;
- }
-@@ -746,6 +858,9 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
- 
- 	if (inet_csk(sk)->icsk_ca_ops != inet_csk(ssk)->icsk_ca_ops)
- 		tcp_set_congestion_control(ssk, msk->ca_name, false, true);
-+	tcp_sock_set_keepidle_locked(ssk, msk->keepalive_idle);
-+	__tcp_sock_set_keepintvl(ssk, msk->keepalive_intvl);
-+	__tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
- }
- 
- static void __mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk)
+                                                                 API; see
+
+> +netlink_spec/mptcp_pm.rst.
+> +
+> +To be able to use multiple IP addresses on a host to create multiple *subflows*
+> +(paths), the default in-kernel MPTCP path-manager needs to know which IP
+> +addresses can be used. This can be configured with ``ip mptcp endpoint`` for
+> +example.
+> +
+> +Packet Scheduler
+> +----------------
+> +
+> +The Packet Scheduler is in charge of selecting which available *subflow(s)* to
+> +use to send the next data packet. It can decide to maximize the use of the
+> +available bandwidth, only to pick the path with the lower latency, or any other
+> +policy depending on the configuration.
+> +
+> +Packet schedulers are controlled by the ``net.mptcp.scheduler`` sysctl knob --
+> +see mptcp-sysctl.rst.
+> +
+> +
+> +Sockets API
+> +===========
+> +
+> +Creating MPTCP sockets
+> +----------------------
+> +
+> +On Linux, MPTCP can be used by selecting MPTCP instead of TCP when creating the
+> +``socket``:
+> +
+> +.. code-block:: C
+> +
+> +    int sd = socket(AF_INET(6), SOCK_STREAM, IPPROTO_MPTCP);
+> +
+> +Note that ``IPPROTO_MPTCP`` is defined as ``262``.
+> +
+> +If MPTCP is not supported, ``errno`` will be set to:
+> +
+> +- ``EINVAL``: (*Invalid argument*): MPTCP is not available, on kernels < 5.6.
+> +- ``EPROTONOSUPPORT`` (*Protocol not supported*): MPTCP has not been compiled,
+> +  on kernels >= v5.6.
+> +- ``ENOPROTOOPT`` (*Protocol not available*): MPTCP has been disabled using
+> +  ``net.mptcp.enabled`` sysctl knob, see mptcp-sysctl.rst.
+
+                                  knob; see
+
+> +
+> +MPTCP is then opt-in: applications need to explicitly request it. Note that
+> +applications can be forced to use MPTCP with different techniques, e.g.
+> +``LD_PRELOAD`` (see ``mptcpize``), eBPF (see ``mptcpify``), SystemTAP,
+> +``GODEBUG`` (``GODEBUG=multipathtcp=1``), etc.
+> +
+> +Switching to ``IPPROTO_MPTCP`` instead of ``IPPROTO_TCP`` should be as
+> +transparent as possible for the userspace applications.
+> +
+> +Socket options
+> +--------------
+> +
+> +MPTCP supports most socket options handled by TCP. It is possible some less
+> +common options are not supported, but contributions are welcome.
+> +
+> +Generally, the same value is propagated to all subflows, including the ones
+> +created after the calls to ``setsockopt()``. eBPF can be used to set different
+> +values per subflow.
+> +
+> +There are some MPTCP specific socket options at the ``SOL_MPTCP`` (284) level to
+> +retrieve info. They fill the ``optval`` buffer of the ``getsockopt()`` system
+> +call:
+> +
+> +- ``MPTCP_INFO``: Uses ``struct mptcp_info``.
+> +- ``MPTCP_TCPINFO``: Uses ``struct mptcp_subflow_data``, followed by an array of
+> +  ``struct tcp_info``.
+> +- ``MPTCP_SUBFLOW_ADDRS``: Uses ``struct mptcp_subflow_data``, followed by an
+> +  array of ``mptcp_subflow_addrs``.
+> +- ``MPTCP_FULL_INFO``: Uses ``struct mptcp_full_info``, with one pointer to an
+> +  array of ``struct mptcp_subflow_info`` (including the
+> +  ``struct mptcp_subflow_addrs``), and one pointer to an array of
+> +  ``struct tcp_info``, followed by the content of ``struct mptcp_info``.
+> +
+> +Note that at the TCP level, ``TCP_IS_MPTCP`` socket option can be used to know
+> +if MPTCP is currently being used: the value will be set to 1 if it is.
+> +
+> +
+> +Design choices
+> +==============
+> +
+> +A new socket type has been added for MPTCP for the userspace-facing socket. The
+> +kernel is in charge of creating subflow sockets: they are TCP sockets where the
+> +behavior is modified using TCP-ULP.
+> +
+> +MPTCP listen sockets will create "plain" *accepted* TCP sockets if the
+> +connection request from the client didn't ask for MPTCP, making the performance
+> +impact minimal when MPTCP is enabled by default.
+
+
 -- 
-2.43.0
-
+#Randy
+https://people.kernel.org/tglx/notes-about-netiquette
+https://subspace.kernel.org/etiquette.html
