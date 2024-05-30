@@ -1,139 +1,157 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691593207
-	for <mptcp@lists.linux.dev>; Thu, 30 May 2024 06:55:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC574183963
+	for <mptcp@lists.linux.dev>; Thu, 30 May 2024 09:06:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717052114; cv=none; b=ENFp7gjjw45d3gcZH1jU3JLWH9ZNO6vk44jg6BA4XtBhQ08mYNj149C3JYsQjRpVVNAuBdzvL/9SRiTxyciSebv5Y0dbmOeNv9OHacQFs1GFNXmLQCPkbzJQdDOrO5PCeP5b1CB1ZpTB+5/2mdZIbQVdEpv0M/obVxGHTQSPvmc=
+	t=1717059996; cv=none; b=BTBjEj0yL7iv1AWdnGLS8RdBwwCVotlB4yaBjCTI9fz1u9hg5OTCJVlSHOFxfUEHKNHjGscFqdbKCbkeP7w0HPsfOFR/LytcbI2Gc2A91qxNW8LcEVyYzUUYbrvJFMcON5F0FcYKsHQzzOO5u8N93XqR3Y7fpTp/Bl3jcyVI9do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717052114; c=relaxed/simple;
-	bh=6qFrFCg7YaZbe7//UTlJ02uzbHhnECKXH8Qc+tfkPuM=;
-	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
-	 MIME-Version:Date; b=J+YSKlfvYhZ/VwpzIkLWlhaHGd+hlgCMKsvOWaSJ/F2KYBwkoDRkqcqpLPltYznho9k3wpJQOeXqi4endJWuBQF9gVvDTsvX9U72T1YGXFhJHk1AMOwzXB6qddZIRhrXsmPZWjoNXu/ODd9B+fym4W1IX2dbZavmKisHu6CYE9E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OeCn45CY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717059996; c=relaxed/simple;
+	bh=ba/IY/VrUnRVrdfqhJxml6pgkBc6Yx+uQxuJkAdbc8o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cJAPOpWlUaQoV/k3BzjAh1Ge6Z9MizGUZzSNFlISmle3FcbVUvbFXARE8CQeDoU+b3wpay4Y/jcmz7zNVUHRA95DKo/h4RkE8QLYF2TwWQObHSUQAQrtFFixegbKN4eziesmIvhpePj0B6ZcWbk81gGZ/287iSVNCfAjpxRZy10=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t2takebf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OeCn45CY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1AABDC2BBFC;
-	Thu, 30 May 2024 06:55:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t2takebf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBC9CC3277B;
+	Thu, 30 May 2024 09:06:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717052114;
-	bh=6qFrFCg7YaZbe7//UTlJ02uzbHhnECKXH8Qc+tfkPuM=;
-	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
-	b=OeCn45CY4tMcqtHbnChPTXWySZijTYuWiEdpobnGOvPInqKRSys8JfWwJLfNINz/z
-	 IUCg7EvkHrq1h4Qf2wHck2mmSAEsc2edziBI/cxpYs/JVU7gPb8YtA0EB3AzGLx0t/
-	 J+gMH+t/OENfaLIR1fTNLIuTYYtUzRUFexWb1S1bRt8q1wEcsbqjuOD5FvfWvZy+kf
-	 +NgR0ehDubzB6835Rp93SaLRM2ZO98N7ljf8s0TkfSeGhyfHjZl15ZFosMPTtwMQ99
-	 S+R7JZiVbftMMkfmXXDR8bjUe/7VvStxFRoI+EMRipq5q5cOaDdMkDUETHGT6+9dST
-	 DKMJddwqMT+6g==
-Message-ID: <b95540e8de3d657cca95a3e0bd39cda40a712368.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 0/2] fixes for create_netns
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-In-Reply-To: <cover.1715848543.git.tanggeliang@kylinos.cn>
-References: <cover.1715848543.git.tanggeliang@kylinos.cn>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
- lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
- wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLl
- P9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInM
- HcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav
- 0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL5
- 18p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucp
- VCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU2
- 3wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/Pv
- X+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBB
- MBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBY
- CAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvh
- G5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7AdWelP
- +0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcm
- BA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIP
- kNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0ob
- pX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71
- k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6V
- RORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJ
- GBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7
- Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTA
- QoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAg
- MBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atD
- yyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhV
- c9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzx
- OwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4paYt49pNvh
- cqLKMGNLPsX06OR4G+4ai0JTTzIlwVJXuo+uZRFQyuOaSmlSjEsiQ/WsGdhILldV35RiFKe/ojQNd
- 4B4zREBe3xT+Sf5keyAmO/TG14tIOCoGJarkGImGgYltTTTM6rIk/wwo9FWshgKAmQyEEiSzHTSnX
- cGbalD3Do89YRmdG+5eP7HQfsG+VWdn8IH6qgIvSt8GOw6RfSP7omMXvXji1VrbWG4LOFYcsKTN+d
- GDhl8LmU0y44HejkCzYj/b28MvNTiRVfucrmZMGgI8L5A4ZwQ3Inv7jY13GZSvTb7PQIbqMcb1P3S
- qWJFodSwBg9oSw21b+T3aYG3z3MRCDXDlZAJONELx32rPMdBva8k+8L+K8gc7uNVH4jkMPkP9jPnV
- Px+2P2cKc7LXXedb/qQ3MuQINBGWKTg4BEADJxiOtR4SC7EHrUDVkp/pJCQC2wxNVEiJOas/q7H62
- BTSjXnXDc8yamb+HDO+Sncg9SrSRaXIh+bw9G3rvOiC2aQKB6EyIWKMcuDlD7GbkLJGRoPCA5nSfH
- Szht2PdNvbDizODhtBy8BOQA6Vb21XOb1k/hfD8Wy6OnvkA4Er61cf66BzXeTEFrvAIW+eUeoYTBA
- eOOc2m4Y0J28lXhoQftpNGV5DxH9HSQilQZxEyWkNj8oomVJ6Db7gSHre0odlt5ZdB7eCJik12aPI
- dK5W97adXrUDAclipsyYmZoC1oRkfUrHZ3aYVgabfC+EfoHnC3KhvekmEfxAPHydGcp80iqQJPjqn
- eDJBOrk6Y51HDMNKg4HJfPV0kujgbF3Oie2MVTuJawiidafsAjP4r7oZTkP0N+jqRmf/wkPe4xkGQ
- Ru+L2GTknKtzLAOMAPSh38JqlReQ59G4JpCqLPr00sA9YN+XP+9vOHT9s4iOu2RKy2v4eVOAfEFLX
- q2JejUQfXZtzSrS/31ThMbfUmZsRi8CY3HRBAENX224Wcn6IsXj3K6lfYxImRKWGa/4KviLias917
- DT/pjLw/hE8CYubEDpm6cYpHdeAEmsrt/9dMe6flzcNQZlCBgl9zuErP8Cwq8YNO4jN78vRlLLZ5s
- qgDTWtGWygi/SUj8AUQHyF677QARAQABiQI7BBgBCgAmFiEEZiKd+VhdGdcosBcafnvtNTGKqCkFA
- mWKTg4CGwwFCRLMAwAACgkQfnvtNTGKqCkpsw/2MuS0PVhl2iXs+MleEhnN1KjeSYaw+nLbRwd2Sd
- XoVXBquPP9Bgb92T2XilcWObNwfVtD2eDz8eKf3e9aaWIzZRQ3E5BxiQSHXl6bDDNaWJB6I8dd5TW
- +QnBPLzvqxgLIoYn+2FQ0AtL0wpMOdcFg3Av8MEmMJk6s/AHkL8HselA3+4h8mgoK7yMSh601WGrQ
- AFkrWabtynWxHrq4xGfyIPpq56e5ZFPEPd4Ou8wsagn+XEdjDof/QSSjJiIaenCdDiUYrx1jltLmS
- lN4gRxnlCBp6JYr/7GlJ9Gf26wk25pb9RD6xgMemYQHFgkUsqDulxoBit8g9e0Jlo0gwxvWWSKBJ8
- 3f22kKiMdtWIieq94KN8kqErjSXcpI8Etu8EZsuF7LArAPch/5yjltOR5NgbcZ1UBPIPzyPgcAmZl
- AQgpy5c2UBMmPzxco/A/JVp4pKX8elTc0pS8W7ne8mrFtG7JL0VQfdwNNn2R45VRf3Ag+0pLSLS7W
- OVQcB8UjwxqDC2t3tJymKmFUfIq8N1DsNrHkBxjs9m3r82qt64u5rBUH3GIO0MGxaI033P+Pq3BXy
- i1Ur7p0ufsjEj7QCbEAnCPBTSfFEQIBW4YLVPk76tBXdh9HsCwwsrGC2XBmi8ymA05tMAFVq7a2W+
- TO0tfEdfAX7IENcV87h2yAFBZkaA==
-Content-Type: text/plain; charset="UTF-8"
+	s=k20201202; t=1717059995;
+	bh=ba/IY/VrUnRVrdfqhJxml6pgkBc6Yx+uQxuJkAdbc8o=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=t2takebfDmEFE0dSJ05bo7IrY6SnkK8EMSUBMTHXkc/xf3ihH8NVQNYOyaEPTUzlI
+	 BF5WOWbYCzZEa0uz+nkzOiW+E06xuzabWZSfMRWCAwaujxfEHtFdtTAxN1n+H6tXhr
+	 J5NDB5uDo+rI48Yme/ZbXNjC6wCXK8Lez57rSCl4VfGmcspvc6CMtAbeu5tmcg6NoA
+	 B8mgWNjJ+D1gnkyI9eE9Y62uvlq3EJYomzzFyW7/v9impomfOB88Kqht5QeTayNYbF
+	 JxwIXRH9oWXzvBprVr77WTN0SiEPqvS/k4dGEdtzAL9ytBc41MCx3T47gPAcaeYfpp
+	 gx25UBNg7uNfw==
+Message-ID: <eb6508f3-baee-47e4-b414-27d66a9cebb4@kernel.org>
+Date: Thu, 30 May 2024 11:06:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Date: Thu, 30 May 2024 14:53:15 +0800
-User-Agent: Evolution 3.52.0-1build2 
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 0/2] fixes for create_netns
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1715848543.git.tanggeliang@kylinos.cn>
+ <b95540e8de3d657cca95a3e0bd39cda40a712368.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <b95540e8de3d657cca95a3e0bd39cda40a712368.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Geliang,
 
-On Thu, 2024-05-16 at 16:38 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 30/05/2024 08:53, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Since create_netns() is updated in "bpf-next add netns helpers"
-> series,
-> some mptcp bpf patches need to be updated.
+> On Thu, 2024-05-16 at 16:38 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Since create_netns() is updated in "bpf-next add netns helpers"
+>> series,
+>> some mptcp bpf patches need to be updated.
+>>
+>> This series epends on "bpf-next add netns helpers" series.
 > 
-> This series epends on "bpf-next add netns helpers" series.
+> The series "bpf-next: add netns helpers" has not been accepted yet,
+> and I guess it will take a long time.
 
-The series "bpf-next: add netns helpers" has not been accepted yet,
-and I guess it will take a long time. I suggest to send v3 of
-"selftests/bpf: new MPTCP subflow subtest" to bpf-next first. Don't
-wait for the series "bpf-next: add netns helpers" anymore.
+Thank you for the update!
 
-I changed this series "fixes for create_netns" from "Awaiting Upstream"
-to "Changes Requested" on patchwork.
+> I suggest to send v3 of
+> "selftests/bpf: new MPTCP subflow subtest" to bpf-next first. Don't
+> wait for the series "bpf-next: add netns helpers" anymore.
 
-Thanks,
--Geliang
+This 'new MPTCP subflow subtest' series is not urgent, nor blocking
+anything: I'm sure it is fine to wait. We have ~6 weeks before the
+future v6.10 release. Do you think the "add netns helpers" will not be
+accepted before?
+
+> I changed this series "fixes for create_netns" from "Awaiting Upstream"
+> to "Changes Requested" on patchwork.
+
+Thanks!
+
+Cheers,
+Matt
 
 > 
-> Based-on: <cover.1715821541.git.tanggeliang@kylinos.cn>
+> Thanks,
+> -Geliang
 > 
-> v3:
->  - add based-on tag.
+>>
+>> Based-on: <cover.1715821541.git.tanggeliang@kylinos.cn>
+>>
+>> v3:
+>>  - add based-on tag.
+>>
+>> v2:
+>>  - drop patch 1. Now netns is deleted first before adding it in
+>> "selftests/bpf: Export create_netns helper", no need to use SIGINT
+>> to delete it anymore.
+>>
+>> Geliang Tang (2):
+>>   Squash to "selftests/bpf: Add mptcp subflow subtest"
+>>   Squash to "selftests/bpf: Add bpf scheduler test"
+>>
+>>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
 > 
-> v2:
->  - drop patch 1. Now netns is deleted first before adding it in
-> "selftests/bpf: Export create_netns helper", no need to use SIGINT
-> to delete it anymore.
-> 
-> Geliang Tang (2):
->   Squash to "selftests/bpf: Add mptcp subflow subtest"
->   Squash to "selftests/bpf: Add bpf scheduler test"
-> 
->  tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
