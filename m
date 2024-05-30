@@ -1,123 +1,60 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EF9A17F5;
-	Thu, 30 May 2024 17:35:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F65047A48;
+	Thu, 30 May 2024 17:41:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717090558; cv=none; b=llDA+gozbKlQ7W3QseWjJY6WPmlZn63cVkacTf7QVEo10aSYuVQEjoqTNSltr8PpZhXvRsj8AIJkppi6oKFF0UjFFzg6bgBWkLmKhH8ZzzMq5WB6hWKDIrtZB0eYz8Xcvx/bjzTa3kPHLG0Tuom9NSLbUst/bNA2mU4AFa22Lyc=
+	t=1717090884; cv=none; b=aQCcKrLpesilZVAOwRsozapbQP3S6e0cqq24eF7FXFs2XQDa6sT6+1XN+0zSxinyaORe8bbTNbWIvwOeOxq6bXlXqEEtzIOci/Ki8SKBf1DZ6Ukwto/KN3DaCjqHB9PPIW3t5RGohkb1ZqCY4sIsgBEWff5EKIktEEBAoDqnFvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717090558; c=relaxed/simple;
-	bh=ySA3qGoOv77Kj+2JOSfztlTPJtvNGX/ZUjZpww6gAWQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=faZOUovDoKQLK1+HFW0Twj0c8PdsJsQqBA868SGFnk64Z8ubHYXn7xpzAAciHrwv1mIzYfMD7I9+z9kDLvyAZSIdrqvHAJCCA04fWdOq7zEtIX1BdVAMHmaT79E41zwzuJVMb3/v9iAnLaB9P0qJqtoe73SL95T2INkMEfdqxac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tt4Z7obe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717090884; c=relaxed/simple;
+	bh=roopk3FiU1nx6Bdq/8QcRdRvLfPTi/USsK3xuA13g84=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pC9Aoup+Xqh+DxTGL4WEVAPmms/+i/oYLjoiMsQO7OfZqVSL6pLQyM+zyTtQX0fyPyWayG91KhqdW8VtvosSOUPebfjL6/ZCfCF89pPuqaRk0mkwr4X00O9oxdAWOlD6hwSOi8xjlXm/tZUlo0m85zalOWlGTQbjlU+USPJ0UPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vChPCKvt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tt4Z7obe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2638BC2BBFC;
-	Thu, 30 May 2024 17:35:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vChPCKvt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15B2DC2BBFC;
+	Thu, 30 May 2024 17:41:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717090558;
-	bh=ySA3qGoOv77Kj+2JOSfztlTPJtvNGX/ZUjZpww6gAWQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=Tt4Z7obenZPIzytNHWx8Uf5ToRX1Ul/8ItRUAQLmMfBxQzIU6CrU67LSnfS3AzMRR
-	 8uufZL/8YJc1w2zkMxrOEGaDHd+QWSbeX68ikLMkEyteok3231VRcUROhnoU/UQSCm
-	 CtQ6kE0sNJm41M4hJNskKrhqAIkrbKfKoQzDC2d8BDTSRv/NKTKCJw6646PdotwOnq
-	 dwno/IXtn7a4pAQwt672DGFqjF9Z5rXLz7LjEpDr8/z8ojo0gvktypWSgQqsn17a13
-	 JKOAYowe/vceNGtNN/6ZWzkeY4feuQncFsNVp+ueZOR0/8nabyFjp0kkvhp6SIMbhP
-	 iCXVDd/FIkHIA==
-Message-ID: <7e443c56-129e-4421-8dd8-adb57e9e6193@kernel.org>
-Date: Thu, 30 May 2024 19:35:56 +0200
+	s=k20201202; t=1717090884;
+	bh=roopk3FiU1nx6Bdq/8QcRdRvLfPTi/USsK3xuA13g84=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=vChPCKvtPCAaZ+7nEOZQWZ90NoIQzTq2+Hq9CSPOefEkG5Ff8l1CCtVhwE2NnQIbS
+	 PcojaCkUYT73x3yPltxqaaMQRoZ7hpbcFOpkBeWMgaKx1hYYgNc8QH/zmCklwDgPjg
+	 MkWULHEKtJGdA62HdwRMrtGGNRX19gszgtMzQetge0wIyoEBYf0tKUJ0NdJLear5lM
+	 H8/27hSYU7plgnUAxmIg6EhteyWdi/XtAG38SeLLWy3FKIBMFT6C531et7WjSfPFia
+	 x11HfTWjx4SpOVdClHeYrW0OzrvWJDScA8MODPf7aj2G184Uq48qiO7qoIeNOK0z2f
+	 XS3Qm+fiaijQQ==
+Date: Thu, 30 May 2024 10:41:23 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: netdev@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [TEST] Flake report
+Message-ID: <20240530104123.72ab528b@kernel.org>
+In-Reply-To: <7e443c56-129e-4421-8dd8-adb57e9e6193@kernel.org>
+References: <20240509160958.2987ef50@kernel.org>
+	<11ff9d2b-6c3e-4ee5-81c0-d36de2308dbd@kernel.org>
+	<7e443c56-129e-4421-8dd8-adb57e9e6193@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [TEST] Flake report
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20240509160958.2987ef50@kernel.org>
- <11ff9d2b-6c3e-4ee5-81c0-d36de2308dbd@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <11ff9d2b-6c3e-4ee5-81c0-d36de2308dbd@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
-
-(+ MPTCP ML, - authors of other unstable selftests)
-
-On 10/05/2024 16:28, Matthieu Baerts wrote:
-> On 10/05/2024 01:09, Jakub Kicinski wrote:
+On Thu, 30 May 2024 19:35:56 +0200 Matthieu Baerts wrote:
+> > Yes, we need to find a solution for that. It is not as unstable on our
+> > side [1]. We will look at that next week. If we cannot find a solution
+> > quickly, we will skip the flaky subtests to stop the noise while
+> > continuing to investigate.  
+> Now that the flaky MPTCP subtests results have been ignored, the results
+> look better:
 > 
-> (...)
+>   https://netdev.bots.linux.dev/flakes.html?br-cnt=88&tn-needle=mptcp
 > 
->> mptcp
->> -----
->> To: Matthieu Baerts <matttbe@kernel.org>
->>
->> simult-flows-sh is still quite flaky :(
-> 
-> Yes, we need to find a solution for that. It is not as unstable on our
-> side [1]. We will look at that next week. If we cannot find a solution
-> quickly, we will skip the flaky subtests to stop the noise while
-> continuing to investigate.
-Now that the flaky MPTCP subtests results have been ignored, the results
-look better:
+> Do you think we could also stop ignoring them on NIPA side?
 
-  https://netdev.bots.linux.dev/flakes.html?br-cnt=88&tn-needle=mptcp
-
-Do you think we could also stop ignoring them on NIPA side?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+Thanks for take care of it, done!
