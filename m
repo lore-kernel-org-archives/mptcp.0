@@ -1,117 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f170.google.com (mail-pf1-f170.google.com [209.85.210.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E96E5155759;
-	Fri, 31 May 2024 08:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7996974297
+	for <mptcp@lists.linux.dev>; Fri, 31 May 2024 09:18:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717145615; cv=none; b=SZYa+4kSlgsPpNkdOc17w9t8spL3hvQUr+qfiFiGhoijTY59ENdSyxtBRBsbbUepa6ZuZhUoaa8stDEcRT1lHksS9IhT/XpQpU8xBys67jL+mPfXrNxRRAbMmOVWLgfc99xK5dj/1MTQDJzH4dr4QKpbJI9oUnJxBb1X2f1rClM=
+	t=1717147082; cv=none; b=ojcfnYMWB4gy1RT+jp29wLw8t9UeZvfij+qhs0vMdbL0Uq5o5GHPqrJTfoKK4knf7JOE7EA18wLDtLbwfA1vEstZH1TkDOkFfXleQ4aTpGxwvB63brLqxTk8X4CsKLDqFdGLLIiKFtrXfs0672ehYAihREYdkw4h7V4/9vd9rKY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717145615; c=relaxed/simple;
-	bh=DJdYv9Aclm9xzO6sgLWVVc6ioHMVepz/EZEM9Y4Y5bk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ku17LarYL4NF2fwU9ZsLd/4XU16lNh4g2YKzX2PH8wC9HFXuP2JNVPEnH8PMCMJZLnmkCRG/f/oXB05mXmIoHeAL63K+SGOPE0fIKZCngZU9xj++gfeXxUzIU1BcCW70vEaAz5x13VXycaCBLmnxaS7SIO3OOQXf4ETVhNcW/Q4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gxSTttlI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717147082; c=relaxed/simple;
+	bh=8I/a30jZnTqfpfNPgkeeMDh2ALPauRl9rp3+2I9qbyE=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=nrhMLnFDCY1xFP8OAKAxnMDsHO6aNvg0dpoAFVSDs5ItFjUHMe/BAqxchQmKO36qkn68h2gLPLYx9Y0bTXWMBA2Qn325bzGVVWxda2FVXOegY3nT6KEfeuqqlP+qDRHQnyH0ebOKM9f9La2473XhO6OaaGbis2hRthg+ALkYD5c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=epeyu0AY; arc=none smtp.client-ip=209.85.210.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gxSTttlI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73E4EC116B1;
-	Fri, 31 May 2024 08:53:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717145614;
-	bh=DJdYv9Aclm9xzO6sgLWVVc6ioHMVepz/EZEM9Y4Y5bk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gxSTttlIJIeCciKSUq+i8PLaVVsq2Bci0fHS7rgsD7e5OSRndjig78xrEP+jvmORm
-	 JGYLZ6egXIeP8pdznx/3SY3r/QLZBB6GIL+nqdYKpCzJ8XatOrt589wGNjOjND2yWZ
-	 ixRIRqJrcSdqm+JPPWvchJt/4pqrpP57iKGNAvudyHlMix9y5wV/nTjGV8nPbCn2Dx
-	 Dsm5V08JzBbBP9McqdxW0K0bk/AH3/zzdTwji02qzcfMbcI/Gm87QHouy2Ihe6cZpZ
-	 yW+kyzivP5c94kRIYGaE3wQXkKwOl675Bpiv0+jQBA12R2hjUHF70B5xWCHzigpqZv
-	 HOi2bBI2prG/A==
-Message-ID: <a62b992b-c327-4da1-babb-5940d9a3fe0f@kernel.org>
-Date: Fri, 31 May 2024 10:53:29 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="epeyu0AY"
+Received: by mail-pf1-f170.google.com with SMTP id d2e1a72fcca58-702447766fdso611990b3a.1
+        for <mptcp@lists.linux.dev>; Fri, 31 May 2024 02:18:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717147081; x=1717751881; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=3tOB66n+P1I9gWnR6juVMERuYmSl2Jj0Hp5nLCvT/H0=;
+        b=epeyu0AYB6q2mb/PlCtvHjIsMH8j2a/sZwRtP5OgRbxmpyNEX2T6BB1/bq4WOpi6II
+         NeO0PaOUTkHufjxEXNpUW8t227ULLcnY5BNB7hBSNskUQk5T1hA+hxeh1LmxbR3DGSFe
+         Hz/3H64bqCxbpsHKHZGQZVYh28A98VwnGUrXCiDrJ34Q7+B5Jse1tWUb0Mor14jH7efQ
+         fTgW3ygUG0BVRjHOhZcC/crfzRwssX15ZfjsvDKnsUfAOl/gjd3U4oFfHYAceQvs5135
+         Pyx4YGSshruAEwrJxyFXJ/N/DrDOlYHGC0jyvbAYSGrmgV2Pe0ky6INayb7OZlxe0GG0
+         0eZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717147081; x=1717751881;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=3tOB66n+P1I9gWnR6juVMERuYmSl2Jj0Hp5nLCvT/H0=;
+        b=EMfJrd4WdZVPeXLR6mQWidP450GahxYWnLo6ZpziPxL3TOuEoKirmsxoNFKxkEVZaU
+         Oz5w1EYjbcaKnPwjU3C+xBfN6VH4U9y5zXFzpePCJsqYgZPPE5B2jX749gGgqn6zatOq
+         1501/BJ9NikUXPWkgwrAHDHqQkbhF1ESO4DJQyxnGrc9pwatKipZnJ47C3h2E9hINi5Q
+         FQn3s2eIuM7Eh9RGi2eEmHcRN6SKC+O1JkwUIGPYyErx2/RnxMEf++JJtAEYWxdTqetg
+         mTMFdb3/utj/fRG+Yp+fNnJTBY/cVXvzVIcD+eGCIyTyJ5WGGeGHzVnvHn1m/FX4Fstu
+         jwFQ==
+X-Forwarded-Encrypted: i=1; AJvYcCW3BuqBLGJ7feNejVUKYEGnx/EI8esJcsTew4oeR6i21FsXnnJz+87vUb5BIV/ecc7fe1NKiaY9c73fsjgx4vYwA5waRoE=
+X-Gm-Message-State: AOJu0YzNOgoQIfUeZVktKqJvUL8Kp1dNGs9Ecug+SIgTd8RlESMV98wm
+	HDSdu/uYWJwsnISUOtle0ze0xQFlQeSrbmtRaL83pojoBZ+vZQpP
+X-Google-Smtp-Source: AGHT+IGgEjX+CGeHGmFCGqmbKCLITKC2cQybiJvDG1yufPXs2ulzjW/ax1tp9KNasHN8tn8YI1hupQ==
+X-Received: by 2002:a05:6a20:72a2:b0:1b2:663a:968f with SMTP id adf61e73a8af0-1b26f1f725amr1670814637.31.1717147080592;
+        Fri, 31 May 2024 02:18:00 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([43.132.141.24])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1f632356c84sm11950015ad.76.2024.05.31.02.17.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 31 May 2024 02:17:59 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org
+Cc: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net v4 0/2] tcp/mptcp: count CLOSE-WAIT for CurrEstab
+Date: Fri, 31 May 2024 17:17:51 +0800
+Message-Id: <20240531091753.75930-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 1/3] tcp: wrap mptcp and decrypted checks into
- tcp_skb_can_collapse_rx()
-Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>, edumazet@google.com, pabeni@redhat.com
-Cc: davem@davemloft.net, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- martineau@kernel.org, borisp@nvidia.com, willemdebruijn.kernel@gmail.com
-References: <20240530233616.85897-1-kuba@kernel.org>
- <20240530233616.85897-2-kuba@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240530233616.85897-2-kuba@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jakub,
+From: Jason Xing <kernelxing@tencent.com>
 
-On 31/05/2024 01:36, Jakub Kicinski wrote:
-> tcp_skb_can_collapse() checks for conditions which don't make
-> sense on input. Because of this we ended up sprinkling a few
-> pairs of mptcp_skb_can_collapse() and skb_cmp_decrypted() calls
-> on the input path. Group them in a new helper. This should make
-> it less likely that someone will check mptcp and not decrypted
-> or vice versa when adding new code.
-> 
-> This implicitly adds a decrypted check early in tcp_collapse().
-> AFAIU this will very slightly increase our ability to collapse
-> packets under memory pressure, not a real bug.
+Taking CLOSE-WAIT sockets into CurrEstab counters is in accordance with RFC
+1213, as suggested by Eric and Neal.
 
-Good idea! Thank you for this refactoring, and for having cc'd MPTCP ML:
+v4
+Link: https://lore.kernel.org/all/20240530131308.59737-1-kerneljasonxing@gmail.com/
+1. correct the Fixes: tag in patch [2/2]. (Eric)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Previous discussion
+Link: https://lore.kernel.org/all/20240529033104.33882-1-kerneljasonxing@gmail.com/
 
-Cheers,
-Matt
+Jason Xing (2):
+  tcp: count CLOSE-WAIT sockets for TCP_MIB_CURRESTAB
+  mptcp: count CLOSE-WAIT sockets for MPTCP_MIB_CURRESTAB
+
+ net/ipv4/tcp.c       | 6 +++++-
+ net/mptcp/protocol.c | 5 +++--
+ 2 files changed, 8 insertions(+), 3 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.37.3
 
