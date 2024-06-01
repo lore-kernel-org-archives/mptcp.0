@@ -1,58 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D8914A82;
-	Sat,  1 Jun 2024 21:56:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC062224CC;
+	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717278982; cv=none; b=iGfM2oAX0SpT9dwuwWC5EFBw16ZaaB+ztlNy9ctoaYaTQ7PiIjubZDhu7kcIWzihfWNfL57eVOBEBRFa+ysyYgrXVZLnmz1w2DOT7+8MmMaiVL8HYFk9XZoP0cavUfSGdS9Fpdm9204jsi/m5FnUiNY+9kai1TVpBUZQpbfo3js=
+	t=1717281030; cv=none; b=HO0mpSR8ZUbBgByXEHtgRC74/mId0mK9rK6WSEiKD1sAKKN0UivLOVbRhlwQJJG9YTiS0z4N6aQyr3u8gI4D3ZAhWz0R6CifdQgveaP/LW3injYNpjHINXBbmca0f/wZaVU1KD6kRM3ZqMpnnbC3RyyKfyZWtAG/ClpEe+NMUzQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717278982; c=relaxed/simple;
-	bh=lgVp7NvXT5vDd7Lb0r3V1J4x6OKqwMTUUWGjTwCgjBY=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=FWY+JXzSr93c5MgAVqm5u928FkfxDakK+qhH53mGrZL87B36Uqq/V2FJHibqKl9Qo/Bl3suiJvYwhM13aJ9UMcNXutU5Gs/yNWy3QUHv33qA12qrzCs6BfJf2DuBR1CcRypi1AkOsUn0Z3iqKHaOTm12jsWA7YHjJb10mPvJTZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVsqsPz4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717281030; c=relaxed/simple;
+	bh=BxJehKDbY16NeSK4HqgSAPE5UO3fb+8pHTqhsHA8MO4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=SSo9yth74rjKgttDorvZVEcosFaAofHpu7JuuL7Cv0WALpQHo4F0DM0y+1NvroWIKpWLfKT+GaM4CEEmkZazm6ope6EVTp+ZfYDI/NFZ1BhZxhTFKNzDAPClbDiS+/W1F7TpHp58G9O9sL4VoqbMEOcqavlQLe05Uv2GIyeG7rI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBQvyX74; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVsqsPz4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A71CC116B1;
-	Sat,  1 Jun 2024 21:56:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBQvyX74"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 79774C32786;
+	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717278982;
-	bh=lgVp7NvXT5vDd7Lb0r3V1J4x6OKqwMTUUWGjTwCgjBY=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=kVsqsPz4WgZK6OBVrPBDlwNOAG92Wl0TSezYlhvL7aOnsU4D7RJdAUyaEht6WS1qY
-	 fGZOBANlrI0h6Z3dfSIGil8eA4Ag/Cmv0flMoBZOWcC8k7zpvdbHekB12ZCaXr3eLK
-	 mpMiEmP+JVIl2V/iuS8mW0ohV3FwRLL9xdv39HGME3/v5Y2lFgpGDYJj7J2ED9JqNr
-	 4W78LHVYKqMP3UFY9k72IkeXxxIqZ20OM2bcZtnnM6sUiEjXLdmpLzbdFs1oLA/Eq3
-	 waTPIUXZWj33PIyyuSKKC0q4i/htJr5sPruBl17+XFjY8zgY23/3zB+gl3u0A5/aB6
-	 XCRCXvW+3FLuA==
-Date: Sat, 1 Jun 2024 14:56:20 -0700
-From: Jakub Kicinski <kuba@kernel.org>
-To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
- netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
- martineau@kernel.org, borisp@nvidia.com
-Subject: Re: [PATCH net-next 2/3] tcp: add a helper for setting EOR on tail
- skb
-Message-ID: <20240601145620.065e6a5d@kernel.org>
-In-Reply-To: <6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
-References: <20240530233616.85897-1-kuba@kernel.org>
-	<20240530233616.85897-3-kuba@kernel.org>
-	<6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
+	s=k20201202; t=1717281029;
+	bh=BxJehKDbY16NeSK4HqgSAPE5UO3fb+8pHTqhsHA8MO4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=sBQvyX74T8gvi7TCiLQcHq2XUMK2sntMrYZGjYjC53aCtkCDHKMD2ybf2a1R11FsE
+	 RLepBlSsPmnfIczy4pJ3jHDWyxT120e6Cc1qvIicFUJuKvHXDQwXgSz2f/eJjMVs3z
+	 qh3+sJhiPQbk/thvrw6qNLtG9zk8cdfKP42/8tTAluHp9NlQk/dEyigt6RblcIBxzQ
+	 or7za3aQp8hBt+JySpFKLBirHdx8bH8cMosnGL55//KRL2RQqjqvAlTAklG7FmZAj6
+	 nrKJo3cq1uDuqtTLFdSNE643AnQwtzamzjcK9Z/GIkLfnmdoiZtY0RQMbokBKVD+cv
+	 38pGY883t/IRQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69FD6DEA711;
+	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v3 0/3] doc: mptcp: new general doc and fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171728102943.22013.15601696646895135776.git-patchwork-notify@kernel.org>
+Date: Sat, 01 Jun 2024 22:30:29 +0000
+References: <20240530-upstream-net-20240520-mptcp-doc-v3-0-e94cdd9f2673@kernel.org>
+In-Reply-To: <20240530-upstream-net-20240520-mptcp-doc-v3-0-e94cdd9f2673@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ corbet@lwn.net, gregory.detal@gmail.com, netdev@vger.kernel.org,
+ linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
+ rdunlap@infradead.org
 
-On Fri, 31 May 2024 09:41:30 -0400 Willem de Bruijn wrote:
-> > +static inline void tcp_write_collapse_fence(struct sock *sk)
-> > +{  
+Hello:
+
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu, 30 May 2024 16:07:29 +0200 you wrote:
+> A general documentation about MPTCP was missing since its introduction
+> in v5.6. The last patch adds a new 'mptcp' page in the 'networking'
+> documentation.
 > 
-> const struct ptr?
+> The first patch is a fix for a missing sysctl entry introduced in v6.10
+> rc0, and the second one reorder the sysctl entries.
+> 
+> [...]
 
-Maybe just me, but feels kinda weird for the sole input to be const
-if the function does modify the object it operates on.
+Here is the summary with links:
+  - [net-next,v3,1/3] doc: mptcp: add missing 'available_schedulers' entry
+    https://git.kernel.org/netdev/net-next/c/ccf45c92d746
+  - [net-next,v3,2/3] doc: mptcp: alphabetical order
+    https://git.kernel.org/netdev/net-next/c/a32c6966b23d
+  - [net-next,v3,3/3] doc: new 'mptcp' page in 'networking'
+    https://git.kernel.org/netdev/net-next/c/c049275f24de
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
