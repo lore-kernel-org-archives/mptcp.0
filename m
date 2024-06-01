@@ -1,121 +1,58 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE23B3EA86;
-	Fri, 31 May 2024 14:35:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95D8914A82;
+	Sat,  1 Jun 2024 21:56:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717166157; cv=none; b=i/glmwqo9DJ48rquNN9tfSoYhI9S5CP9CLfOm+iTo5UFwb1rjycX9rcKzydrcywr0Gpuhtt4vYHqh37XFcjG4O+hSm2YaLzUlpjyzvcnixKOpK1FFQKzGrVT9zh9O8VeX2VkSgnF1+IZjuMnpITd1NoheNUAf1njNsRWMPFgQKI=
+	t=1717278982; cv=none; b=iGfM2oAX0SpT9dwuwWC5EFBw16ZaaB+ztlNy9ctoaYaTQ7PiIjubZDhu7kcIWzihfWNfL57eVOBEBRFa+ysyYgrXVZLnmz1w2DOT7+8MmMaiVL8HYFk9XZoP0cavUfSGdS9Fpdm9204jsi/m5FnUiNY+9kai1TVpBUZQpbfo3js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717166157; c=relaxed/simple;
-	bh=/Ltdv79q3skkml0ifKj3D0gZrv9LGfP0o2gnIsRp+6E=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=Mson6biAPtxnYviketqfsJwQ7ivqHxqdNDLQgsQjfDQPfsnxlZNf9XuQF67Ly1ERpPo+yvM8Se8baJ0aVdnUqhcN8K+he2mCSiE+nqibNb/neeCvcHIDBDQ3nl1gmYOUU2AI6CS5JupOcZ033WEKi+GmUeYksZQuJpHeRgP3VJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LD3tAu+e; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717278982; c=relaxed/simple;
+	bh=lgVp7NvXT5vDd7Lb0r3V1J4x6OKqwMTUUWGjTwCgjBY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=FWY+JXzSr93c5MgAVqm5u928FkfxDakK+qhH53mGrZL87B36Uqq/V2FJHibqKl9Qo/Bl3suiJvYwhM13aJ9UMcNXutU5Gs/yNWy3QUHv33qA12qrzCs6BfJf2DuBR1CcRypi1AkOsUn0Z3iqKHaOTm12jsWA7YHjJb10mPvJTZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kVsqsPz4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LD3tAu+e"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A26BC116B1;
-	Fri, 31 May 2024 14:35:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kVsqsPz4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A71CC116B1;
+	Sat,  1 Jun 2024 21:56:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717166156;
-	bh=/Ltdv79q3skkml0ifKj3D0gZrv9LGfP0o2gnIsRp+6E=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LD3tAu+e2GZhlS16l95NYRLhYtJf/bC/FGtKdWqvEJMCGTvsCjzT1oSP4xYjJFXtO
-	 nKkOW0K18ohGEohKEyNOS4W6L+8uNkx3i2ekTEkr5wxwJ+mDlDFpHj82h3wuX7zoIp
-	 v3+sqmTSVOgciQfMyPng5hhEwV/YYGPF54tmOaShwx1ggme3/TiWNGBrF+Xji3teHQ
-	 nwBTWqNeo1OLQ4ZbQAdbF/X8lv8vvXNz4cv+MUsCwHQQxqV9HpS+NfDS2t8D6Z/HMK
-	 EBomR6Du7bgyetQGT3GTgb/4n5KwpFEdMYA87cJLSlMXoZpRJPLiySkY75nHdLHkJa
-	 3aAhimH/2aCxA==
-Date: Fri, 31 May 2024 22:35:46 +0800
-From: Geliang Tang <geliang@kernel.org>
-To: Jakub Sitnicki <jakub@cloudflare.com>,
-	John Fastabend <john.fastabend@gmail.com>
-Cc: Andrii Nakryiko <andrii@kernel.org>,
-	Eduard Zingerman <eddyz87@gmail.com>,
-	Mykola Lysenko <mykolal@fb.com>,
-	Alexei Starovoitov <ast@kernel.org>,
-	Daniel Borkmann <daniel@iogearbox.net>,
-	Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
-	Yonghong Song <yonghong.song@linux.dev>,
-	KP Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@google.com>,
-	Hao Luo <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,
-	Shuah Khan <shuah@kernel.org>, bpf@vger.kernel.org,
-	mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org
-Subject: Re: [PATCH bpf-next 3/8] selftests/bpf: Use bpf_link attachments in
- test_sockmap
-Message-ID: <ZlngQqfkS-R1PNqk@T480>
-References: <cover.1716446893.git.tanggeliang@kylinos.cn>
- <32cf8376a810e2e9c719f8e4cfb97132ed2d1f9c.1716446893.git.tanggeliang@kylinos.cn>
- <6654beff96840_23de2086e@john.notmuch>
- <87wmnfujwg.fsf@cloudflare.com>
- <577531139c4db3cb35f3f40e23587bcb9815b0ba.camel@kernel.org>
- <66590f821d120_e5072085a@john.notmuch>
- <87wmnaw7x8.fsf@cloudflare.com>
+	s=k20201202; t=1717278982;
+	bh=lgVp7NvXT5vDd7Lb0r3V1J4x6OKqwMTUUWGjTwCgjBY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=kVsqsPz4WgZK6OBVrPBDlwNOAG92Wl0TSezYlhvL7aOnsU4D7RJdAUyaEht6WS1qY
+	 fGZOBANlrI0h6Z3dfSIGil8eA4Ag/Cmv0flMoBZOWcC8k7zpvdbHekB12ZCaXr3eLK
+	 mpMiEmP+JVIl2V/iuS8mW0ohV3FwRLL9xdv39HGME3/v5Y2lFgpGDYJj7J2ED9JqNr
+	 4W78LHVYKqMP3UFY9k72IkeXxxIqZ20OM2bcZtnnM6sUiEjXLdmpLzbdFs1oLA/Eq3
+	 waTPIUXZWj33PIyyuSKKC0q4i/htJr5sPruBl17+XFjY8zgY23/3zB+gl3u0A5/aB6
+	 XCRCXvW+3FLuA==
+Date: Sat, 1 Jun 2024 14:56:20 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, borisp@nvidia.com
+Subject: Re: [PATCH net-next 2/3] tcp: add a helper for setting EOR on tail
+ skb
+Message-ID: <20240601145620.065e6a5d@kernel.org>
+In-Reply-To: <6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
+References: <20240530233616.85897-1-kuba@kernel.org>
+	<20240530233616.85897-3-kuba@kernel.org>
+	<6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <87wmnaw7x8.fsf@cloudflare.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, May 31, 2024 at 01:13:39PM +0200, Jakub Sitnicki wrote:
-> On Thu, May 30, 2024 at 04:45 PM -07, John Fastabend wrote:
-> > Geliang Tang wrote:
-> >> On Mon, 2024-05-27 at 21:36 +0200, Jakub Sitnicki wrote:
-> >> > On Mon, May 27, 2024 at 10:12 AM -07, John Fastabend wrote:
-> >> > > Geliang Tang wrote:
+On Fri, 31 May 2024 09:41:30 -0400 Willem de Bruijn wrote:
+> > +static inline void tcp_write_collapse_fence(struct sock *sk)
+> > +{  
 > 
-> [...]
-> 
-> >> > > The one advantage of test_sockmap is we can have it run for longer
-> >> > > runs by pushing different options through so might be worth keeping
-> >> > > just for that.
-> >> > > 
-> >> > > If you really want links here I'm OK with that I guess just asking.
-> >> > 
-> >> > It was me who suggested the switch to bpf_link in reaction to a
-> >> > series
-> >> > of cleanups to prog_type and prog_attach_type submitted by Geliang.
-> >> 
-> >> Yes, patches 3-5 address Jakub's suggestion: switching attachments to
-> >> bpf_link.
-> >
-> > OK. Lets just take them the series lgtm. Jakub any other comments?
-> 
-> Gave it a run - all looks well. Thanks for the patches.
-> 
-> Geliang, is there some MPTCP+sockmap use-case you're working towards?
+> const struct ptr?
 
-Yes, indeed. I have been working on a task related to MPTCP+sockmap
-recently, at least related to this test_sockmap.c selftest. We recently
-received an issue with MPTCP [1], that is TLS cannot be set on MPTCP
-sockets. The reason is that both MPTCP and TLS are implemented on TCP ULP.
-And each socket only supports one type of TCP ULP.
-
-I simply modified this test_sockmap.c selftest to support MPTCP, so that
-it can be used as the first version of test for MPTCP+TLS. So I spent some
-time reading and debugging this test.
-
-The development of MPTCP+TLS is still ongoing, and currently only setsockopt
-part has been successfully supported. The idea is simple, use an array of
-tcp_ulp_ops in a socket, instead of a single one:
-
-struct inet_connection_sock {
-      ... ...
-      const struct tcp_ulp_ops  *icsk_ulp_ops[ULP_INDEX_MAX];
-      void __rcu                *icsk_ulp_data[ULP_INDEX_MAX];
-}
-
-The entire patch is in my commit "mptcp: tls support" [2]. It's not finish
-yet, but I really want to hear your opinions, especially John's.
-
-[1]
-https://github.com/multipath-tcp/mptcp_net-next/issues/480
-[2]
-https://github.com/geliangtang/mptcp_net-next/commit/bba00a6cde75bab5a2c1c196d49812b4ed6addb0
-
-Thanks,
--Geliang
+Maybe just me, but feels kinda weird for the sole input to be const
+if the function does modify the object it operates on.
