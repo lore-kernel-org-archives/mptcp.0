@@ -1,82 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC062224CC;
-	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB29370
+	for <mptcp@lists.linux.dev>; Sun,  2 Jun 2024 01:35:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717281030; cv=none; b=HO0mpSR8ZUbBgByXEHtgRC74/mId0mK9rK6WSEiKD1sAKKN0UivLOVbRhlwQJJG9YTiS0z4N6aQyr3u8gI4D3ZAhWz0R6CifdQgveaP/LW3injYNpjHINXBbmca0f/wZaVU1KD6kRM3ZqMpnnbC3RyyKfyZWtAG/ClpEe+NMUzQ=
+	t=1717292108; cv=none; b=NgH88Y03Gv1En02jOih3ATMBHGCVwzeF32CBjBbhx07tgIwaw5wjNhBgTcaajS3cbCCkDao4/aOabXVxivtYMWzt7QfF/EkM1l5v+Bas+D5RtChbNGR3tKO52FjoSx1iif7rxAOZi8Ls+g4IH6Cx5qi2hPoGCGYPyLuWbRXTCd8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717281030; c=relaxed/simple;
-	bh=BxJehKDbY16NeSK4HqgSAPE5UO3fb+8pHTqhsHA8MO4=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=SSo9yth74rjKgttDorvZVEcosFaAofHpu7JuuL7Cv0WALpQHo4F0DM0y+1NvroWIKpWLfKT+GaM4CEEmkZazm6ope6EVTp+ZfYDI/NFZ1BhZxhTFKNzDAPClbDiS+/W1F7TpHp58G9O9sL4VoqbMEOcqavlQLe05Uv2GIyeG7rI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sBQvyX74; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717292108; c=relaxed/simple;
+	bh=zOm8LsWoqxyyYNtXt1211IJq2j1oNCELPPYYsNwTw6E=;
+	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
+	 Mime-Version:Content-Type; b=lIROT6UWaKtzDzT5lDHB1ftN5p1CYPWH9L8CKDV13birz27a079AJVprH8k2hlzGxHKdR9j56wnnnQzZ4flHFaB50YxSM7D4THv82FXkXe2T3Tu4SYHIKwOYjKrG9Ic9/Pql9dIwS/eIYU8R7m3RSNZlyitKXSKcO9xg6K3F+bY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JsNJwAxF; arc=none smtp.client-ip=209.85.219.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sBQvyX74"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 79774C32786;
-	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717281029;
-	bh=BxJehKDbY16NeSK4HqgSAPE5UO3fb+8pHTqhsHA8MO4=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=sBQvyX74T8gvi7TCiLQcHq2XUMK2sntMrYZGjYjC53aCtkCDHKMD2ybf2a1R11FsE
-	 RLepBlSsPmnfIczy4pJ3jHDWyxT120e6Cc1qvIicFUJuKvHXDQwXgSz2f/eJjMVs3z
-	 qh3+sJhiPQbk/thvrw6qNLtG9zk8cdfKP42/8tTAluHp9NlQk/dEyigt6RblcIBxzQ
-	 or7za3aQp8hBt+JySpFKLBirHdx8bH8cMosnGL55//KRL2RQqjqvAlTAklG7FmZAj6
-	 nrKJo3cq1uDuqtTLFdSNE643AnQwtzamzjcK9Z/GIkLfnmdoiZtY0RQMbokBKVD+cv
-	 38pGY883t/IRQ==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 69FD6DEA711;
-	Sat,  1 Jun 2024 22:30:29 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsNJwAxF"
+Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ae60725ea1so13073026d6.2
+        for <mptcp@lists.linux.dev>; Sat, 01 Jun 2024 18:35:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717292106; x=1717896906; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=o9ppVBOWciW7VBoZG//V8PspX74UoRB+vuqQeneEijQ=;
+        b=JsNJwAxFOaHiyulwaMgpScl4yz2xb24Rz+b8Klm7UsBDvIa2Svuo1ZDNt8Rdkb/X8+
+         UuYLdxNyERgf3rgpmJarbln0TR2/1pTx6sSXM5Ogb7pUmt6A+44t0Mkes79RoTLUCZ/n
+         TPSjxZtwzNgfARLOqoWPRuLfbJIWw0rKMxW7PkELoRFGLXxi/hMuByx3pItZp8dmXBhp
+         /5/ReFQyw1P1CHK4ny/wRGAcsww34oN+6TN/yIS4c2A4VNBhJFKTOrZIy7uAEIXM0LQX
+         78YUOH7S3uidHkS7JXS1VevVEN/27IO0mV82WhtEVfikLVj763tFA+wUeYKAaclha0gl
+         EN8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717292106; x=1717896906;
+        h=content-transfer-encoding:mime-version:subject:references
+         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
+         :cc:subject:date:message-id:reply-to;
+        bh=o9ppVBOWciW7VBoZG//V8PspX74UoRB+vuqQeneEijQ=;
+        b=soGW4JBJ+OnlTocC1sVxkfT6f+48/DkgJ3ez4zRzLvdG8CKzsWEBP7ZI8XDABG7Hn3
+         RZcY83hksYExkpUKMLVNkCercp5SuazU9nA17Z7Y64LcXJZLfg9ZL0COoyiQGEVde39a
+         6g0LIGKzNmkyHrzb8JSVXjsguxvzCmuKserP4pvsiAnWHofsBf7Dh37ji/KG9GvB7nNF
+         phljLO0ydJ4O3pjTE1EjVra+5srW/gxWpS6pEzFWG6vKI1rfZo/nOUlNGgb6L9jQ8qF4
+         UJJRKL1bY329g1w/G641vNjI/dPMbRF+UkFy5TWBkVXSrhkCQkhlql3HvAjhOQR+Nmf+
+         1aTw==
+X-Forwarded-Encrypted: i=1; AJvYcCUkAJGUfGpsMhmL8zUKvAM9qtaaBKTzB/UknOe/ghMJGvfYLPP36rXTJ3ZdGEjJWiJp40A4RChLAG1cct7/xPQ3t8obM2M=
+X-Gm-Message-State: AOJu0Yw6rP+i8adm+Xc/JByatpLwRSSA5m5br51y42/IPDZ6MmlV3RGE
+	ZdC6ZKEn3YkMRoNqmYwCKZSAc+vs4nK4vtCGPMPDIZ6JYujKVI18
+X-Google-Smtp-Source: AGHT+IElFXjAaw0z5HqH5gIclh6dcm5V837UNKlZeT/cTKmlsFQ4NyXNqrVamMB3+jWq8tnRnjJO3A==
+X-Received: by 2002:a0c:ef04:0:b0:6ae:d591:3a4 with SMTP id 6a1803df08f44-6aed5910519mr45849276d6.11.1717292105597;
+        Sat, 01 Jun 2024 18:35:05 -0700 (PDT)
+Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6af3d644efbsm7047486d6.19.2024.06.01.18.35.04
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 01 Jun 2024 18:35:04 -0700 (PDT)
+Date: Sat, 01 Jun 2024 21:35:04 -0400
+From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>, 
+ Willem de Bruijn <willemdebruijn.kernel@gmail.com>
+Cc: edumazet@google.com, 
+ pabeni@redhat.com, 
+ davem@davemloft.net, 
+ netdev@vger.kernel.org, 
+ mptcp@lists.linux.dev, 
+ matttbe@kernel.org, 
+ martineau@kernel.org, 
+ borisp@nvidia.com
+Message-ID: <665bcc4869dc3_94803294e9@willemb.c.googlers.com.notmuch>
+In-Reply-To: <20240601145620.065e6a5d@kernel.org>
+References: <20240530233616.85897-1-kuba@kernel.org>
+ <20240530233616.85897-3-kuba@kernel.org>
+ <6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
+ <20240601145620.065e6a5d@kernel.org>
+Subject: Re: [PATCH net-next 2/3] tcp: add a helper for setting EOR on tail
+ skb
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 0/3] doc: mptcp: new general doc and fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171728102943.22013.15601696646895135776.git-patchwork-notify@kernel.org>
-Date: Sat, 01 Jun 2024 22:30:29 +0000
-References: <20240530-upstream-net-20240520-mptcp-doc-v3-0-e94cdd9f2673@kernel.org>
-In-Reply-To: <20240530-upstream-net-20240520-mptcp-doc-v3-0-e94cdd9f2673@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- corbet@lwn.net, gregory.detal@gmail.com, netdev@vger.kernel.org,
- linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org,
- rdunlap@infradead.org
+Mime-Version: 1.0
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Thu, 30 May 2024 16:07:29 +0200 you wrote:
-> A general documentation about MPTCP was missing since its introduction
-> in v5.6. The last patch adds a new 'mptcp' page in the 'networking'
-> documentation.
+Jakub Kicinski wrote:
+> On Fri, 31 May 2024 09:41:30 -0400 Willem de Bruijn wrote:
+> > > +static inline void tcp_write_collapse_fence(struct sock *sk)
+> > > +{  
+> > 
+> > const struct ptr?
 > 
-> The first patch is a fix for a missing sysctl entry introduced in v6.10
-> rc0, and the second one reorder the sysctl entries.
-> 
-> [...]
+> Maybe just me, but feels kinda weird for the sole input to be const
+> if the function does modify the object it operates on.
 
-Here is the summary with links:
-  - [net-next,v3,1/3] doc: mptcp: add missing 'available_schedulers' entry
-    https://git.kernel.org/netdev/net-next/c/ccf45c92d746
-  - [net-next,v3,2/3] doc: mptcp: alphabetical order
-    https://git.kernel.org/netdev/net-next/c/a32c6966b23d
-  - [net-next,v3,3/3] doc: new 'mptcp' page in 'networking'
-    https://git.kernel.org/netdev/net-next/c/c049275f24de
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+Ok. I can see that.
