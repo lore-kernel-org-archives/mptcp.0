@@ -1,173 +1,131 @@
-Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 671FAB65F
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 15:05:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902806F2F2
+	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 15:51:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717427134; cv=none; b=uT11/e1kHtgbi5wHsqXdiES8+elVP60lqKS2zAB/I2OVSwUJKeheaphD/nYoTxQv+8L/8gFCVohQP1EuZJFiamBwVmEmvVmSnKjgWIM+UNx87Ok2nQvO2eOor/tPo5H/Szp9aeUU2cAZvaELWbGVmo8GUI68KLmaIz2dJVEOuYo=
+	t=1717429918; cv=none; b=YzE2ZfdqgcgkUzBj+oyi6jkK3EDALJbVets9genERf1ErJeDoVEX80oyLXnBnO4DY0IaXcVU00dK5rV8LhDDShQk0bNrk2tQuW7jt2OKv3vQU0sqy0vUTJsde1nc48dBlP+wRwMHtYktR3PxdBkOPgCkL09I9MWf3OUhAfukVGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717427134; c=relaxed/simple;
-	bh=FxMQkPWYiU3Qctd0yp52JxmWJ77zyZmAQd/lA5vIazg=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=LT5Cjt5X9O1d2HJbN/FR9Iq+IAhSmq8tnobP+y4+J3iDPo3UcvNrLcBz9LoTwHU1tYMIQ0ujl0YK2iJil0e5BNQgTKyN8W7dRKB75MIYfvAZU8+hAG5Jhtz/u5I5JRp3e3aYKyHYX9Ty8NQDt49/ud3qdl15NZBIKVu6RRWJauA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=mrZISuQi; arc=none smtp.client-ip=209.85.218.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717429918; c=relaxed/simple;
+	bh=smMG305t3dXLIw9LtN2/x7BwjaXLSL61RCVpOn3RMaQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZkfjlJrQrUnok1kGUsRDb3ACIHM161CaSPBf2kqm0sa9WB2e8PD/Mc4GOne8C4Q+D4TVgOfL1DwqjbkDQMAvoN1O70ZXWyOpCTEY5RRvdv6NdQ/Xki43KAz5zzFsxpkzNB3t8ZGfWkUtaqAcEU843BxiNJKryRwkiQW26qxSzSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HA+8xbPP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mrZISuQi"
-Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a68c2915d99so3199066b.2
-        for <mptcp@lists.linux.dev>; Mon, 03 Jun 2024 08:05:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717427131; x=1718031931; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=5KarSyaGJNitul7/bvq/KlC0uYBjYgORXo+gGjOouVw=;
-        b=mrZISuQiJ/iQmuL9NUQeP+cP6vFa8YqHO+QaKCrboIHdLXh0BZYsJV8Rwkpv6uDxI0
-         pMj6iAheu5n6VmbI2TufRAYid5mcaGE97QrPPW7Dm29ZHO5dgTjvvI+JuWtFxw2lOZvo
-         IDdfLvH8D+eMuhJHw//7O2tk1nMuwTAfS3TcxyXt3PHRM1a7heQrWNpI4qGUDgtEqigb
-         Hb2ksoTpsJZvATMJALYAVmniOkOEJ7wQacSq72EtwOEPouIEZsMfPZSdk7GKEVnXNRIl
-         18VhQqGXViBfXzfsIU6FRqOWSxlsZ5clKsK5xwn4t8iB2RCtpq1xZiYtluyhkbpJZPTs
-         HjZg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717427131; x=1718031931;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=5KarSyaGJNitul7/bvq/KlC0uYBjYgORXo+gGjOouVw=;
-        b=U6CzVtr8msWH3QAktf4MNvWvZpjn8EuLGTYBOYrYzrHiRQm+3s5EUx1PzwXVmtAK0o
-         H+VsbdqPthpsalyvjaGAFub8u/Dp0PY84+P3TZL5s6aH41C6j2f7FRntU2nULJd/TFw3
-         Xc2oD4KRZ5fXCtOhO5RmDioeHqxOE7AgVsEhQDKONo/V45I6M7+ulXm9cQk170+yQGCT
-         pRofNhwSXEgkLmmkRtN+YTA2TdCTcQ1dG5mADsk0FYNuZ2ljE/o7FcNvO6Rjkl8Osnfj
-         lZy0QQ+SRgwequjtOt3o5YxOz256P+6J78DDt+Q5BhLE3hlkBJAGUCVr4gxcmceUa6j/
-         jNUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCUVOB6Kk7SbmEndMcVMbxvw0wR3t+I1n98XXH83horQMpVEKEbMUgBRiFQvmZTUU42hgVSzzwOz8tKu5Z9DWQSc2t7O68s=
-X-Gm-Message-State: AOJu0YzWS9daI1h1jEXDR5NRInoDiV9nP4LPN+vwuvmEAU7QwgdjAxdd
-	VFxubISrMtQjHrGPPDxXxarDbcIPZPVJFXuurad3WNxKsrUB3Mv/ssDNzn9xOi4W7O71j0m1K65
-	0fhwRDP8NRc/cLmEngxbAf41L07Jdsg==
-X-Google-Smtp-Source: AGHT+IFnTF0oAFItA5uz6g29Qz/dhqqwFCBQ5Sr13fTuSVNvSnSXA1b/ADsy9a1dv2fanzo4+lDDBBRX8I/kFZBPgcQ=
-X-Received: by 2002:a17:906:36cc:b0:a68:b557:76f5 with SMTP id
- a640c23a62f3a-a68b55779c1mr366928266b.69.1717427130508; Mon, 03 Jun 2024
- 08:05:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HA+8xbPP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB50C2BD10;
+	Mon,  3 Jun 2024 15:51:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717429918;
+	bh=smMG305t3dXLIw9LtN2/x7BwjaXLSL61RCVpOn3RMaQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=HA+8xbPP0tB7f92cbhFBsD3HbnTdfPz4rXV4Q1I0fiZ4+CZ27kZKCNtFg2tZ51kxX
+	 ul0BNI6vvgxp5Z0YBJkHuF99e/kldeajjLFN0buK1IzVx8pn1edzCS6JAQM0/SoIZE
+	 L/foSP0JqjNXdSlYKIGYg8fsd8bm2MUHkMW501OoDBooIY6Fd/2WxQjf+HPIuH7/xW
+	 cD8adw+tXteiPSKeq9epiakXQPXYR8UbQUfyu8H3dG6NU2uyEW7J16DImw6aKoH1/j
+	 eLfO7eRr2tnte0tZti1aA8VHiBDSDC2HL9AQgKNO0hzb4vj9Crqvql1SyIKeQ2wldC
+	 AzkzhUfn20YoQ==
+Message-ID: <f82edec4-2259-486e-adfe-db3c26a3b0a2@kernel.org>
+Date: Mon, 3 Jun 2024 17:51:56 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240531091753.75930-1-kerneljasonxing@gmail.com>
- <20240531091753.75930-3-kerneljasonxing@gmail.com> <df99fb97-74ca-4b5c-9d5f-86466025a531@kernel.org>
- <CAL+tcoAa+8pEcW5C3jjU4cieHBm8PUWMKUR=hP8sqQbh1gmVug@mail.gmail.com> <80acd903-3cde-4232-8a78-ce20a3e746fa@kernel.org>
-In-Reply-To: <80acd903-3cde-4232-8a78-ce20a3e746fa@kernel.org>
-From: Jason Xing <kerneljasonxing@gmail.com>
-Date: Mon, 3 Jun 2024 23:04:53 +0800
-Message-ID: <CAL+tcoD_JfOMvwGCN=6pNMyBGfUJiVio1RDEuoSQhSjLnPeJxQ@mail.gmail.com>
-Subject: Re: [PATCH net v4 2/2] mptcp: count CLOSE-WAIT sockets for MPTCP_MIB_CURRESTAB
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: edumazet@google.com, kuba@kernel.org, pabeni@redhat.com, 
-	davem@davemloft.net, dsahern@kernel.org, martineau@kernel.org, 
-	geliang@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	Jason Xing <kernelxing@tencent.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2] mptcp: increment RmAddr MIB counter once
+ per RM_ADDR
+Content-Language: en-GB
+To: mptcp@lists.linux.dev
+Cc: YonglongLi <liyonglong@chinatelecom.cn>
+References: <20240527-mptcp-rmaddr-counter-once-v2-1-3e61360a90ac@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240527-mptcp-rmaddr-counter-once-v2-1-3e61360a90ac@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hello,
 
-On Mon, Jun 3, 2024 at 9:57=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org>=
- wrote:
->
-> Hi Jason,
->
-> On 03/06/2024 15:26, Jason Xing wrote:
-> > Hello Matthieu,
-> >
-> > On Mon, Jun 3, 2024 at 8:47=E2=80=AFPM Matthieu Baerts <matttbe@kernel.=
-org> wrote:
-> >>
-> >> Hi Jason,
-> >>
-> >> On 31/05/2024 11:17, Jason Xing wrote:
-> >>> From: Jason Xing <kernelxing@tencent.com>
-> >>>
-> >>> Like previous patch does in TCP, we need to adhere to RFC 1213:
-> >>>
-> >>>   "tcpCurrEstab OBJECT-TYPE
-> >>>    ...
-> >>>    The number of TCP connections for which the current state
-> >>>    is either ESTABLISHED or CLOSE- WAIT."
-> >>>
-> >>> So let's consider CLOSE-WAIT sockets.
-> >>>
-> >>> The logic of counting
-> >>> When we increment the counter?
-> >>> a) Only if we change the state to ESTABLISHED.
-> >>>
-> >>> When we decrement the counter?
-> >>> a) if the socket leaves ESTABLISHED and will never go into CLOSE-WAIT=
-,
-> >>> say, on the client side, changing from ESTABLISHED to FIN-WAIT-1.
-> >>> b) if the socket leaves CLOSE-WAIT, say, on the server side, changing
-> >>> from CLOSE-WAIT to LAST-ACK.
-> >>
-> >> Thank you for this modification, and for having updated the Fixes tag.
-> >>
-> >>> Fixes: d9cd27b8cd19 ("mptcp: add CurrEstab MIB counter support")
-> >>> Signed-off-by: Jason Xing <kernelxing@tencent.com>
-> >>> ---
-> >>>  net/mptcp/protocol.c | 5 +++--
-> >>>  1 file changed, 3 insertions(+), 2 deletions(-)
-> >>>
-> >>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> >>> index 7d44196ec5b6..6d59c1c4baba 100644
-> >>> --- a/net/mptcp/protocol.c
-> >>> +++ b/net/mptcp/protocol.c
-> >>> @@ -2916,9 +2916,10 @@ void mptcp_set_state(struct sock *sk, int stat=
-e)
-> >>>               if (oldstate !=3D TCP_ESTABLISHED)
-> >>>                       MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CURREST=
-AB);
-> >>>               break;
-> >>> -
-> >>> +     case TCP_CLOSE_WAIT:
-> >>> +             break;
-> >>
-> >> The modification is correct: currently, and compared to TCP, the MPTCP
-> >> "accepted" socket will not go through the TCP_SYN_RECV state because i=
-t
-> >> will be created later on.
-> >>
-> >> Still, I wonder if it would not be clearer to explicitly mention this
-> >> here, and (or) in the commit message, to be able to understand why the
-> >> logic is different here, compared to TCP. I don't think the SYN_RECV
-> >> state will be used in the future with MPTCP sockets, but just in case,
-> >> it might help to mention TCP_SYN_RECV state here. Could add a small
-> >> comment here above please?
-> >
-> > Sure, but what comments do you suggest?
-> > For example, the comment above the case statement is:
-> > "Unlike TCP, MPTCP would not have TCP_SYN_RECV state, so we can skip
-> > it directly"
-> > ?
-> Yes, thank you, it looks good to me. But while at it, you can also add
-> the reason:
->
->   case TCP_CLOSE_WAIT:
->           /* Unlike TCP, MPTCP sk would not have the TCP_SYN_RECV state:
->            * MPTCP "accepted" sockets will be created later on. So no
->            * transition from TCP_SYN_RECV to TCP_CLOSE_WAIT.
->            */
->
-> WDYT?
+On 27/05/2024 18:03, Matthieu Baerts (NGI0) wrote:
+> From: YonglongLi <liyonglong@chinatelecom.cn>
+> 
+> The RmAddr MIB counter is supposed to be incremented once when a valid
+> RM_ADDR has been received. Before this patch, it could have been
+> incremented as many times as the number of subflows connected to the
+> linked address ID, so it could have been 0, 1 or more than 1.
+> 
+> The "RmSubflow" is incremented after a local operation. In this case,
+> it is normal to tied it with the number of subflows that have been
+> actually removed.
+> 
+> The "remove invalid addresses" MP Join subtest has been modified to
+> validate this case. A broadcast IP address is now used instead: the
+> client will not be able to create a subflow to this address. The
+> consequence is that when receiving the RM_ADDR with the ID attached to
+> this broadcast IP address, no subflow linked to this ID will be found.
 
-So great. Thank you. I will update it soon.
+Now in our tree (fixes for -net):
 
-Thanks,
-Jason
+New patches for t/upstream-net and t/upstream:
+- 9c592aa6f604: mptcp: increment RmAddr MIB counter once per RM_ADDR
+- Results: bbdf7fd48eef..e85c0954b4e4 (export-net)
+- Results: 05497250894c..5e8a75a149b7 (export)
 
->
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0cd8eb1e3be7cc7691835ad2b30d34a122253081/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/37ac616090e02d163a41ceefbc28d3ff41afe470/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
