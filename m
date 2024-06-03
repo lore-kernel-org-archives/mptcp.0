@@ -1,121 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592B312DDAF
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 16:03:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F411C2562E
+	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 17:02:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717430627; cv=none; b=PRZ3CTt9TJi/nqDDPJ/hzA5zAibTEa4V3/OHSc5WS7RmZ4qj1NNbyvl4HbBW1gIY4cI8vxMF7EBp+iWE+lCl1Kbkf7IPNBM4q/BYiE7Gqv9+K5RFAXIWQNeIGPtDNhIgDYlq640sxNcc7iudQkmek4VoL82hZE3iPvPNTCjCY5I=
+	t=1717434153; cv=none; b=d3IUIkPwh6X4uvAvPGPixQmTps9m3hf563VhePVz7AKaGTVa+jhlw6VulmWCJhPrNucP7k2FvKZ96ntsbKz4R2IFnWrqmNvoPsnNfmRVdHJXGKn1Mmzme18+WAtjyWGJB4N657QiJWb9fy9g9vQGfJBOqS1rLh/N/whQojhgvuY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717430627; c=relaxed/simple;
-	bh=JLPxs6+rEJBMiWfPwP+MygoBmm+oeT2cVqjhhT9nb8g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CTlV5b9tV4UmTKM4araFjjuLER5K7mCuf0TQeTmsVp0mdePj+66vouSOZ70WOIvUBGtRUR/qrtZmMd2wlSjXO4k/U9Uif3TF+EvksS0wIlo+FgiOIX+AE/0njF0Ppkxm0V66q08WS3KVwfr+qII2iCukUrHoQ77gza9/2gNry7g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKd3pUcy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717434153; c=relaxed/simple;
+	bh=VjMt0glpQePD8evdEjP05HrOAXJ7FMPoS+Bm3n4Nkhw=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=N3zPw1vOz5klS2pub1fOtIB/ZPXbZgZ2LJ/54DK4ROOHGQn9MIPhhzV32+4K8OaHvOZILg9NagQxNSyvg4628QYilcVfp+QbixsAMY4EFxw1Yvr9zjvpo+Fpf95Qr6SdWZZ8Nz12JuRe/qam1MP+iMEFNEZYffdAbdCueh50zag=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P3YYkoiO; arc=none smtp.client-ip=209.85.216.42
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKd3pUcy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289C0C2BD10;
-	Mon,  3 Jun 2024 16:03:45 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717430626;
-	bh=JLPxs6+rEJBMiWfPwP+MygoBmm+oeT2cVqjhhT9nb8g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GKd3pUcy0GXV9p6kbtQD75y9d2GT/ldaNGDMj7/QtjFfELwqOhHPZOflRTeqoR242
-	 MwUduwn6K/c37TIvm6XkmiV2i4fzrfZIpWw3VR6ZVsMPjqmVU/ZHch04S4EEVXas69
-	 DEZ3SFny+83d+xoYOZpYIa592JOJLL4zfzCvgAAvK2c67wJYpaAFNxTYtd6LEMwVDb
-	 NG8NdudBXCndL9EKUIU0GzmVL5XPtdI2e/rHqPPzRxTOe2+DPEMx7cgYYICOIrJiMC
-	 oafRwNBEuxH0YzPr3OTGzqkMDJy7QKUfvUj/YXa7gfvwY1XgvEc6jIafKynJTNuODu
-	 i42CGyYv4LE4w==
-Message-ID: <ead24fe6-48fe-4d9e-9c3b-b925ef9d4131@kernel.org>
-Date: Mon, 3 Jun 2024 18:03:44 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P3YYkoiO"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2bfff08fc29so178007a91.1
+        for <mptcp@lists.linux.dev>; Mon, 03 Jun 2024 10:02:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717434151; x=1718038951; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=hM97C1DwkDE3R6cN0KJoKmJQI59XMjBaknQKnZz5NeE=;
+        b=P3YYkoiOSEgMMfRlQ0v82FGXj3diDhy/Xf3Cvl6P1u1HewcphRkwt/Ev5epBa5hPbN
+         rRSSzDdRTJspOyvA34ousxsflY+yPpexmkJq/xYXo59iShJGWB4iFovoR6EMzRichq+e
+         9CkTOcv2lKyymMRGdX6609WFJ4unimfB6WSmhkmRW9zPfVA+EVcM/cKrKEQ0yCnmb9AU
+         1Rr80NmjENmk2apmwmdi9x89POY2JFtY9qYNDBxhsUB37sa2EIGgdj1Lqz+ToEruYdKl
+         LdGpvLj7yJw1Z5AEIDoGBDFZDZXFwBmP549Exq7SckLJd2U+wDRuWcYbRUkthGzV6zoP
+         aKEA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717434151; x=1718038951;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=hM97C1DwkDE3R6cN0KJoKmJQI59XMjBaknQKnZz5NeE=;
+        b=sZLYQNOLIXn7ZjOsNorYZmmYRwL4R+usvK369rFEBFnvPdgEaEZk3D1f7JnEfGrmQM
+         uDTBNDUAeAVqQcCWojW2gaiuk9HTf+3FF/fYDIEfEaOr0pKvYJDehnwN7OdxrURH5DY9
+         6XAP4no+n5y3NoEj3zrxucv7bs0oLXnXeLUucXOKinRiqNnCDr3MrZ0naqXt06gdUYJV
+         4oQ05uOUkgaz//SpcWbjIGz+47xhfjFJ/wPN9LynVTrfAUi2WIqJB34SW4xkD5KNApM1
+         tvJCOYSPm/bp9Ytr8u6NSa9RC8rxgym9jMe4202ZkCIacAgmav2nc91tHU3NrAz+FUTw
+         T6jA==
+X-Forwarded-Encrypted: i=1; AJvYcCXTqsIvDk7d7rAQBC/ytVKWw6wXCTYuIhPGpf/caUoVggBa9CrOeDxetmN++hOYLmEKZCNBdMr2K1VgTAxg2S4Bg2STYFk=
+X-Gm-Message-State: AOJu0YzTQlho/fNaL+9qKFCv+dEBSDoTtEFfenYNwblZkA6JHDcgIVNQ
+	uGn4kLr6eSOYj1uTU0Oxv9HwyrSXIGH0cA7Qvqbl++L4Xv+5WAYa
+X-Google-Smtp-Source: AGHT+IGuDw2evC4F6PvTbIamoMcNVw149vK0hJNtZu5/sqgt0ZQEGrCWXYyJox9BE24L7f9VJsNREA==
+X-Received: by 2002:a17:90b:1241:b0:2c2:1d86:f785 with SMTP id 98e67ed59e1d1-2c21d86f8e4mr3703907a91.47.1717434151173;
+        Mon, 03 Jun 2024 10:02:31 -0700 (PDT)
+Received: from KERNELXING-MB0.tencent.com ([111.201.28.17])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1c27e577fsm6460431a91.32.2024.06.03.10.02.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 03 Jun 2024 10:02:30 -0700 (PDT)
+From: Jason Xing <kerneljasonxing@gmail.com>
+To: edumazet@google.com,
+	kuba@kernel.org,
+	pabeni@redhat.com,
+	davem@davemloft.net,
+	dsahern@kernel.org,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org
+Cc: netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	kerneljasonxing@gmail.com,
+	Jason Xing <kernelxing@tencent.com>
+Subject: [PATCH net v5 0/2] tcp/mptcp: count CLOSE-WAIT for CurrEstab
+Date: Tue,  4 Jun 2024 01:02:15 +0800
+Message-Id: <20240603170217.6243-1-kerneljasonxing@gmail.com>
+X-Mailer: git-send-email 2.33.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mailmap: map Geliang's new email address
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>
-References: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Jason Xing <kernelxing@tencent.com>
 
-On 31/05/2024 03:45, Geliang Tang wrote:
-> Just like my other email addresses, map my new one to kernel.org
-> account too.
-> 
-> My new email address uses "last name, first name" format, which is
-> different from my other email addresses. This mailmap is also used
-> to indicate that it is actually the same person.
-Thank you, it will be clearer!
+Taking CLOSE-WAIT sockets into CurrEstab counters is in accordance with RFC
+1213, as suggested by Eric and Neal.
 
-I just applied it in tree, for -net instead of net-next.
+v5
+Link: https://lore.kernel.org/all/20240531091753.75930-1-kerneljasonxing@gmail.com/
+1. add more detailed comment (Matthieu)
 
-New patches for t/upstream-net and t/upstream:
-- e89afaaae323: mailmap: map Geliang's new email address
-- Results: e83ba0520cf6..b9087e3434a1 (export-net)
-- Results: aedee3f57caf..8202ca73ccb7 (export)
+v4
+Link: https://lore.kernel.org/all/20240530131308.59737-1-kerneljasonxing@gmail.com/
+1. correct the Fixes: tag in patch [2/2]. (Eric)
 
-Tests are now in progress:
+Previous discussion
+Link: https://lore.kernel.org/all/20240529033104.33882-1-kerneljasonxing@gmail.com/
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/cd3a087bf962712e145853ead9c4e8129d85f1a6/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/374365ea6316942877325d3a71f1ca63a47c98e6/checks
+Jason Xing (2):
+  tcp: count CLOSE-WAIT sockets for TCP_MIB_CURRESTAB
+  mptcp: count CLOSE-WAIT sockets for MPTCP_MIB_CURRESTAB
 
-Cheers,
-Matt
+ net/ipv4/tcp.c       | 6 +++++-
+ net/mptcp/protocol.c | 9 +++++++--
+ 2 files changed, 12 insertions(+), 3 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.37.3
 
