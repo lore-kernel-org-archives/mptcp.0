@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 902806F2F2
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 15:51:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DDF125601
+	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 16:00:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717429918; cv=none; b=YzE2ZfdqgcgkUzBj+oyi6jkK3EDALJbVets9genERf1ErJeDoVEX80oyLXnBnO4DY0IaXcVU00dK5rV8LhDDShQk0bNrk2tQuW7jt2OKv3vQU0sqy0vUTJsde1nc48dBlP+wRwMHtYktR3PxdBkOPgCkL09I9MWf3OUhAfukVGo=
+	t=1717430433; cv=none; b=WJTKT7vwesKSHw0kywImGe+EbyciMqIEQBEkcT4IKHwMqQ7332o2Nd+OhK7VVaAMA+leYygYSqWxRezdL7nkVwWG1C9onSUTcGoKQKFw5URVHB6N0+E1hXSnVpKZ00/UddF3t5W4RfKu/i/6pOKr8UoLb8FzEkPhmykxrj+u2mE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717429918; c=relaxed/simple;
-	bh=smMG305t3dXLIw9LtN2/x7BwjaXLSL61RCVpOn3RMaQ=;
+	s=arc-20240116; t=1717430433; c=relaxed/simple;
+	bh=H6XcrMrMD72OKyqDGH880GL0yd1bGEZyIiH+N+VmEP0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZkfjlJrQrUnok1kGUsRDb3ACIHM161CaSPBf2kqm0sa9WB2e8PD/Mc4GOne8C4Q+D4TVgOfL1DwqjbkDQMAvoN1O70ZXWyOpCTEY5RRvdv6NdQ/Xki43KAz5zzFsxpkzNB3t8ZGfWkUtaqAcEU843BxiNJKryRwkiQW26qxSzSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HA+8xbPP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=X4tL/20XLYu04sTT6u0tEt0CfS23bcAxI5XDXFM9qwnB2YzZcEBVohqdvI1+x/iuPLUwrBKlnHB0+uWQtOhuEYp000wJAwH90gNqY15Eu7GD6FI6eK6h1zSL4tXiAg9XksN6t3h1A+9Z4Iqz5Nfk26geaOqy6O0SMh3qM10diZw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r6kGMOs/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HA+8xbPP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDB50C2BD10;
-	Mon,  3 Jun 2024 15:51:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r6kGMOs/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2327C2BD10;
+	Mon,  3 Jun 2024 16:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717429918;
-	bh=smMG305t3dXLIw9LtN2/x7BwjaXLSL61RCVpOn3RMaQ=;
+	s=k20201202; t=1717430432;
+	bh=H6XcrMrMD72OKyqDGH880GL0yd1bGEZyIiH+N+VmEP0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HA+8xbPP0tB7f92cbhFBsD3HbnTdfPz4rXV4Q1I0fiZ4+CZ27kZKCNtFg2tZ51kxX
-	 ul0BNI6vvgxp5Z0YBJkHuF99e/kldeajjLFN0buK1IzVx8pn1edzCS6JAQM0/SoIZE
-	 L/foSP0JqjNXdSlYKIGYg8fsd8bm2MUHkMW501OoDBooIY6Fd/2WxQjf+HPIuH7/xW
-	 cD8adw+tXteiPSKeq9epiakXQPXYR8UbQUfyu8H3dG6NU2uyEW7J16DImw6aKoH1/j
-	 eLfO7eRr2tnte0tZti1aA8VHiBDSDC2HL9AQgKNO0hzb4vj9Crqvql1SyIKeQ2wldC
-	 AzkzhUfn20YoQ==
-Message-ID: <f82edec4-2259-486e-adfe-db3c26a3b0a2@kernel.org>
-Date: Mon, 3 Jun 2024 17:51:56 +0200
+	b=r6kGMOs/lXjGkAQZEw3KT5ScwFQNjswjkE54Ze31Qd9zIVXdXU4MgTmcwqgbelnmJ
+	 deyneddLwGHEJ+0T9KdGp35hURcJwzLwB+3t6dg3pgq3zIm1canDFfQ31p67d3FxXR
+	 M3o5kVRb+gPDWtv1DC/r0tNcxFjwYHvZWkdA3V9PqHrbNgG65GDklLE3xLJVrE9I2v
+	 SoelDosSPGQXv5xw1T6PXvxwrvgpf9qwY0g5yk5K3MSUNoCyDqglfe4dFYFwq2UnAL
+	 5g+rtawvWMCrW9O3CIw+1DkYbkLC2TXH6rMkXuo42LJNS0ZI5t9ACck2+1RBkz5N9f
+	 gIBNJTWb33rdQ==
+Message-ID: <34db76fb-6517-4008-9c2c-43484342ba14@kernel.org>
+Date: Mon, 3 Jun 2024 18:00:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2] mptcp: increment RmAddr MIB counter once
- per RM_ADDR
+Subject: Re: [PATCH mptcp-next] mailmap: map Geliang's new email address
 Content-Language: en-GB
-To: mptcp@lists.linux.dev
-Cc: YonglongLi <liyonglong@chinatelecom.cn>
-References: <20240527-mptcp-rmaddr-counter-once-v2-1-3e61360a90ac@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,43 +85,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240527-mptcp-rmaddr-counter-once-v2-1-3e61360a90ac@kernel.org>
+In-Reply-To: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Geliang,
 
-On 27/05/2024 18:03, Matthieu Baerts (NGI0) wrote:
-> From: YonglongLi <liyonglong@chinatelecom.cn>
+On 31/05/2024 03:45, Geliang Tang wrote:
+> Just like my other email addresses, map my new one to kernel.org
+> account too.
 > 
-> The RmAddr MIB counter is supposed to be incremented once when a valid
-> RM_ADDR has been received. Before this patch, it could have been
-> incremented as many times as the number of subflows connected to the
-> linked address ID, so it could have been 0, 1 or more than 1.
+> My new email address uses "last name, first name" format, which is
+> different from my other email addresses. This mailmap is also used
+> to indicate that it is actually the same person.
 > 
-> The "RmSubflow" is incremented after a local operation. In this case,
-> it is normal to tied it with the number of subflows that have been
-> actually removed.
-> 
-> The "remove invalid addresses" MP Join subtest has been modified to
-> validate this case. A broadcast IP address is now used instead: the
-> client will not be able to create a subflow to this address. The
-> consequence is that when receiving the RM_ADDR with the ID attached to
-> this broadcast IP address, no subflow linked to this ID will be found.
+> Suggested-by: Mat Martineau <martineau@kernel.org>
+> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> ---
+>  Sorry for sending this patch too late.
 
-Now in our tree (fixes for -net):
+No problem, thank you for having sent this!
 
-New patches for t/upstream-net and t/upstream:
-- 9c592aa6f604: mptcp: increment RmAddr MIB counter once per RM_ADDR
-- Results: bbdf7fd48eef..e85c0954b4e4 (export-net)
-- Results: 05497250894c..5e8a75a149b7 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0cd8eb1e3be7cc7691835ad2b30d34a122253081/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/37ac616090e02d163a41ceefbc28d3ff41afe470/checks
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
