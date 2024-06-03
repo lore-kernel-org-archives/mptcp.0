@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52B9E4436
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 16:01:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 592B312DDAF
+	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 16:03:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717430470; cv=none; b=SciwWGY8fjVoXMLGtkRvsXT0G+82D06EC8/jG1ItLmjhbkreMjFgPB7Wu/5K76qh4bITvqqIvoTq6BM0yZth0JWXg2JsR9mIpoIWMwxXEQwfOg6DNSPY2GOqN4BCLEi0VfA5QiCsu5gWqu1NTGXexmsQ3Z8Lx8cK0tznSSZXr2s=
+	t=1717430627; cv=none; b=PRZ3CTt9TJi/nqDDPJ/hzA5zAibTEa4V3/OHSc5WS7RmZ4qj1NNbyvl4HbBW1gIY4cI8vxMF7EBp+iWE+lCl1Kbkf7IPNBM4q/BYiE7Gqv9+K5RFAXIWQNeIGPtDNhIgDYlq640sxNcc7iudQkmek4VoL82hZE3iPvPNTCjCY5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717430470; c=relaxed/simple;
-	bh=mSOB18YUVmSjR9W7PLJIdmX275vwzEwIApJz4bq64xQ=;
+	s=arc-20240116; t=1717430627; c=relaxed/simple;
+	bh=JLPxs6+rEJBMiWfPwP+MygoBmm+oeT2cVqjhhT9nb8g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DRvkIOQ8yMAms89BF1wb2MLwk0RD/0VNwuCQ6TjSU61/7FnS0iMDH0B84z0U89bN6Rxt5Rto3TRe38aHW+PFMZCmBjOYKXRsm1IZimrEATJTBEDtNqCGw6MweAMwfxBZ0P7Hof97qbATKIJqozpUgwk3DA9DTsjlIVmucwjy3fY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sGysmrKN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CTlV5b9tV4UmTKM4araFjjuLER5K7mCuf0TQeTmsVp0mdePj+66vouSOZ70WOIvUBGtRUR/qrtZmMd2wlSjXO4k/U9Uif3TF+EvksS0wIlo+FgiOIX+AE/0njF0Ppkxm0V66q08WS3KVwfr+qII2iCukUrHoQ77gza9/2gNry7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GKd3pUcy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sGysmrKN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 191E9C2BD10;
-	Mon,  3 Jun 2024 16:01:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GKd3pUcy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 289C0C2BD10;
+	Mon,  3 Jun 2024 16:03:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717430468;
-	bh=mSOB18YUVmSjR9W7PLJIdmX275vwzEwIApJz4bq64xQ=;
+	s=k20201202; t=1717430626;
+	bh=JLPxs6+rEJBMiWfPwP+MygoBmm+oeT2cVqjhhT9nb8g=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sGysmrKNenpwIkUZqayLBV5bxT1zYc98Ki2T6BimQZf6NCqrHaLzHPyuCfKq5v8zk
-	 ufouB/rR+HaevopCghP5xHNJkNYt4i6kQHtr4uoc/5vDBLC6TVTA8X0s4dV4C1eWR4
-	 GImg41pNM3AU+b1W3AaOOrMys+1a+CEWl9Dwvfa8r7OVSka7o6DmYa5JiZmvAC2GI+
-	 9OYk1Nm3+KBq0KqGXXDKFYYuGrOgDeOfRrhdWwFXOamNb6/1LU//Bi4OFYexs2T5y4
-	 lW70YrnClRbS+GWzMPK7jEq9Hfs1Aw0lifLyFQh1RB3WUCyRqi9nAUgBSa0nOBOfLA
-	 F1fMnWbCfcVNQ==
-Message-ID: <5f4615c3-0621-43c5-ad25-55747a4350ce@kernel.org>
-Date: Mon, 3 Jun 2024 18:01:06 +0200
+	b=GKd3pUcy0GXV9p6kbtQD75y9d2GT/ldaNGDMj7/QtjFfELwqOhHPZOflRTeqoR242
+	 MwUduwn6K/c37TIvm6XkmiV2i4fzrfZIpWw3VR6ZVsMPjqmVU/ZHch04S4EEVXas69
+	 DEZ3SFny+83d+xoYOZpYIa592JOJLL4zfzCvgAAvK2c67wJYpaAFNxTYtd6LEMwVDb
+	 NG8NdudBXCndL9EKUIU0GzmVL5XPtdI2e/rHqPPzRxTOe2+DPEMx7cgYYICOIrJiMC
+	 oafRwNBEuxH0YzPr3OTGzqkMDJy7QKUfvUj/YXa7gfvwY1XgvEc6jIafKynJTNuODu
+	 i42CGyYv4LE4w==
+Message-ID: <ead24fe6-48fe-4d9e-9c3b-b925ef9d4131@kernel.org>
+Date: Mon, 3 Jun 2024 18:03:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 0/9] use helpers in lib.sh and
- net_helpers.sh
+Subject: Re: [PATCH mptcp-next] mailmap: map Geliang's new email address
 Content-Language: en-GB
-To: mptcp@lists.linux.dev
-Cc: geliang@kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
-References: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,49 +85,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240527-selftests-net-lib-fixes-v6-0-72411ff2460e@kernel.org>
+In-Reply-To: <58464660b9d2f74d45c0c91663fd71132749db90.1717119915.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 27/05/2024 12:58, Matthieu Baerts (NGI0) wrote:
-> (This is a new version for the series created by Geliang. @Geliang: I
->  hope that's OK for you like that, it was easier to describing the
->  modifications by email. I validated my changes by running MPTCP
->  selftests only)
+On 31/05/2024 03:45, Geliang Tang wrote:
+> Just like my other email addresses, map my new one to kernel.org
+> account too.
 > 
-> This set uses the public helpers defined in net selftests to replace
-> helpers in mptcp_lib.sh.
-> 
-> v6:
->  - Replace "rename ns in setup_ns" by "remove 'ns' var in setup_ns": we
->    don't need it, avoid extra conflicts.
+> My new email address uses "last name, first name" format, which is
+> different from my other email addresses. This mailmap is also used
+> to indicate that it is actually the same person.
+Thank you, it will be clearer!
 
-Now in our tree (fixes for -net and feat. for -next):
+I just applied it in tree, for -net instead of net-next.
 
 New patches for t/upstream-net and t/upstream:
-- 531b9e5222f4: selftests: net: lib: set 'i' as local
-- e47f89091b76: selftests: net: lib: support errexit with busywait
-- 8266f8c1b153: selftests: net: lib: avoid error removing empty netns name
-- Results: e85c0954b4e4..e83ba0520cf6 (export-net)
-- Results: 5e8a75a149b7..c1dac3d16c4c (export)
-
-New patches for t/upstream:
-- 713a5cd1095c: selftests: net: lib: ignore possible error
-- 74952f110c3d: selftests: net: lib: remove ns from list after clean-up
-- 8d28d8be5404: selftests: net: lib: do not set ns var as readonly
-- 3a8b0674ddc6: selftests: net: lib: remove 'ns' var in setup_ns
-- f65043962737: selftests: mptcp: lib: use setup/cleanup_ns helpers
-- 15270f7eb6d0: selftests: mptcp: lib: use wait_local_port_listen helper
-- Results: c1dac3d16c4c..aedee3f57caf (export)
+- e89afaaae323: mailmap: map Geliang's new email address
+- Results: e83ba0520cf6..b9087e3434a1 (export-net)
+- Results: aedee3f57caf..8202ca73ccb7 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/21fc491d972666fdd691ae3c3f9a07177487b19a/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/cd3a087bf962712e145853ead9c4e8129d85f1a6/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/928d380f179b846a4ba1ab0bfb21f1a215b5a469/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/374365ea6316942877325d3a71f1ca63a47c98e6/checks
 
 Cheers,
 Matt
