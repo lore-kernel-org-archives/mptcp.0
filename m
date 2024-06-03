@@ -1,57 +1,57 @@
-Received: from mail-pf1-f169.google.com (mail-pf1-f169.google.com [209.85.210.169])
+Received: from mail-pj1-f42.google.com (mail-pj1-f42.google.com [209.85.216.42])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 241AF12FB0B
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 17:02:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4241412FB0B
+	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 17:02:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.42
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717434159; cv=none; b=US5s21HoARC/BwHhK8TKNcMtlcsJLharhIsmh8nKNckWFSN24kyKiCqd7Uoyy6Z5UKyAx0cpOohsNBsARU2kG42KlZS1eNeDaevV96tXccllWGYYlAO+y2PLWe2axedSP7FJwksZMnbUJRXje3rzVz8BTS+nbaQiRH97T4Kw4z8=
+	t=1717434166; cv=none; b=Gn/XciPCTbqDPgUWOA+GjkBN4WrkWWhkB/fyYwCAp3fJF06AaGyNgaLxjxu/h1vDcy0Dw8FE9R+xs7+3es4wA9tkegm6ZvF8iHT73vMTDyvnspLqnqa5ptMK0I0BDGdTpK4HitwVabh3WptcAissVzy6/+5WIx13tKEYLA5Hg9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717434159; c=relaxed/simple;
-	bh=LxPSHGj+YqVPkDKGo+uORRwgqnKKiBsfU35zezrsazo=;
+	s=arc-20240116; t=1717434166; c=relaxed/simple;
+	bh=zISG6yHAh6L1orzXgPMlwLk4EZq0CiQ3ktK1OzoK1Qw=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=SlpZx9tLBBrLl8clyP4Eo9l+Nga66wQZvRyAKTwXAQ6UKPzoIQh4S/1F34hWjWu0wDiSj5li3aBlSAJUUgpsulog5l/7DbOQW1aoszEO2KhFr4VUwZXy6KlgAQ+AguP8zaecoYSSDAnftpQDzYV4swltu2slGdtJJbfZfoaPp44=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aq/RPWKA; arc=none smtp.client-ip=209.85.210.169
+	 MIME-Version; b=ufi3vgECFcn0XaZBQz9bji05F3PXEq0aSFN+fqSuX79hQJW0ty6i8qKha65fi5l03ew46Ks9HKsChnUuhzUj4IfKNWHQ9z5AS8riGzKZNFm5j7Rck70A/u2uK3lPepYAhne+0/Hlj2BsR4cxLC3eSuYD9qVhfd8dmAjoWzm51iE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cCPTz6VF; arc=none smtp.client-ip=209.85.216.42
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aq/RPWKA"
-Received: by mail-pf1-f169.google.com with SMTP id d2e1a72fcca58-7024cd9dd3dso2373223b3a.3
-        for <mptcp@lists.linux.dev>; Mon, 03 Jun 2024 10:02:38 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cCPTz6VF"
+Received: by mail-pj1-f42.google.com with SMTP id 98e67ed59e1d1-2c1e6eadb54so167297a91.3
+        for <mptcp@lists.linux.dev>; Mon, 03 Jun 2024 10:02:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717434157; x=1718038957; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1717434163; x=1718038963; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=SyfPe9ztbEYNGGiUHWp+Lku7sfb+L/LbaE9KE47G5ug=;
-        b=aq/RPWKANct6xaUyniN6ITP5QPq1YV046H0t0K7JcTNtfMsc/r2K8+FlmM/u6XeSeq
-         Y1Epq3EBrykjBGjFwQktmQXvXG8qzdSI8I5rJOxC4tTbqsMccPivsrTx77hj4/DEeMmE
-         KIzFyWAW07+XHmYPwXHNhHBhqByCfXv8YSwZijfR5McWqxBO2uBucNfkXMfw/6NTYyO3
-         YTcujrBH3Yyo+FQKG9g9HcbAM3QeFrRyW1oMUH1xn6Q1L3AURka+GSiVwtX464FdDtUk
-         KvtWpno4p+gN3s1EUbptGh90Y+gUJCjp36CMkW9ZkacmmaZEWsE80i1KtuSgLQmjtZ6G
-         /WfQ==
+        bh=YUOdVRnefN2TG2DgKbC6vXDKZD70/za0tG8Wz0BIq6A=;
+        b=cCPTz6VFbnk/1NlGIqkcw83VbtamqTKMkKSUm5x091cfKc0PQ0TkEAuvdm1cCkTAKI
+         YHeV80CNXaRau8b1JOqOacPqFrRYQ80Rfv/dP1dRqVsDNeyUlir8P15dkShPFXh4sv/u
+         tk8xMYptLZWrFA2SDc4TxnvdzgHEeJf8m1wdkLgOU7A3Lm1T1cRpsrhgmF7Xl4Ouco3U
+         +DdUujhr7EDxQryi6hUo9J97mOZOtynKsh9f+JRh/JqNioTZKk3ntEaq35Z9TRiUY4Ol
+         oPz9K1PUIuUVQR0eZG1sVJ7aU9HJ0SStG8p6oUKW26SifpQS/6rkjPQkZJhZY2nMc4j4
+         K3rQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717434157; x=1718038957;
+        d=1e100.net; s=20230601; t=1717434163; x=1718038963;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=SyfPe9ztbEYNGGiUHWp+Lku7sfb+L/LbaE9KE47G5ug=;
-        b=LjPcqb4m1eq0ykZ6Dei+7nKKgBa7Nuap+RplzV+UgD+/DOdxXrUEzccJGBLe+nGIj2
-         ialnoOT6bsXeENAj+J0p2jKhoZ0mHuNf1jgUcnHGtVLoXud9+6avKXtRPpJMloNLYcxB
-         2wu/aXmfWbkMF2m5kUscRWCa5bTYNoMLDmssQwAj/GFSFVV5iM7elFeUKa0MRSUOcPbA
-         T47KodL2Enoq7J+5oA1AF1VVGFxxlPvupSePHj3aKXaWaJzc64X3Sb5Z/K+sYhkDhI/e
-         hK2ST+hSEjXx8Be+x24cFdwUVes6u2QIYLYdnfVgIt7Pr9Ajem1PjS46v5XM+7BplnHk
-         /Icw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAlJjQjPlbkAHCFhYAWNYLBSwd7LfKytacArQxjPzOu2NNI4D7gX5sNET0fQ7eyvAwad7GlgUjZ1X34F5+XSJgHK6ON5M=
-X-Gm-Message-State: AOJu0YwmBbWFUej42OyN68qOBQ5GKyRq4p0GkBkBbawn5diRXXOibjYF
-	I22fLtOpjn5hz7mrhj2mFl5erKFpDIo29Ah3c+HsXuipb9t5tedb
-X-Google-Smtp-Source: AGHT+IGpi5Tpv3DJ3j3s3qdDjRqX28Ju2V7VqI8lPxnOSQaD1fyMdZjvXAzIKkzNPgfyWGcBGoToGw==
-X-Received: by 2002:a17:90a:4b06:b0:2be:af:3637 with SMTP id 98e67ed59e1d1-2c1dc5c8ffamr8276778a91.37.1717434157359;
-        Mon, 03 Jun 2024 10:02:37 -0700 (PDT)
+        bh=YUOdVRnefN2TG2DgKbC6vXDKZD70/za0tG8Wz0BIq6A=;
+        b=fa4y4lNmp8pwj1lCDfSgh4ZSz3Wt3QaoDciu6YkGp1suTSfV5xTb9ELYLhqq2nh2uQ
+         o2YMEree9x/x9ZoByMRm8tjRTataH+gwKa0JZm1/JayA/+NKJVVlgQ074XrPRUgw5b0A
+         zCLqLrzCSfrWRKEqmHVvrlxrLNBgJSee8HwTYkXJ5YYpo9jrirfRMRDTQbaLoN7aPLDT
+         eSWbNnrwqq6PSDb7F5arIjTyEpzQz2Zt7ETAd0NBerLIJ+JXreHLzd95/tvSmIOichO6
+         lvOdGp4TEgmL/stDqwFgGVZIXGjCoMLtBE44feQ/LObNj8xfJQxWTmbUI51NijwRC/jj
+         g7OA==
+X-Forwarded-Encrypted: i=1; AJvYcCX3cT2eOJJaT/XnaHwghfLKvUpNSOjriQtLyx0pXOfUdk6xmKnf61dAXljARmUbPnQFIWnGN0KiQv4tB8rEo+bu/TQKV10=
+X-Gm-Message-State: AOJu0YwsKcL7GD68f7I5gN6yrugH+JP65EKRIl2y42WtMoEAARHGY99w
+	D2+H/LUWaI3v+g8fDVo8J2Pt5A1v399HPLgDoXp8c1WmhRgPpF/O
+X-Google-Smtp-Source: AGHT+IGoFO32AO0kxmqcKniiWCpHNyKylhFLcQXOZjP8QMHGyuhX0TJFSoxIbEpIvxl1zWJd63qh9g==
+X-Received: by 2002:a17:90a:ad8b:b0:2c2:4107:1fc3 with SMTP id 98e67ed59e1d1-2c241073a8fmr2419113a91.38.1717434163398;
+        Mon, 03 Jun 2024 10:02:43 -0700 (PDT)
 Received: from KERNELXING-MB0.tencent.com ([111.201.28.17])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1c27e577fsm6460431a91.32.2024.06.03.10.02.31
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2c1c27e577fsm6460431a91.32.2024.06.03.10.02.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 10:02:36 -0700 (PDT)
+        Mon, 03 Jun 2024 10:02:42 -0700 (PDT)
 From: Jason Xing <kerneljasonxing@gmail.com>
 To: edumazet@google.com,
 	kuba@kernel.org,
@@ -65,9 +65,9 @@ Cc: netdev@vger.kernel.org,
 	mptcp@lists.linux.dev,
 	kerneljasonxing@gmail.com,
 	Jason Xing <kernelxing@tencent.com>
-Subject: [PATCH net v5 1/2] tcp: count CLOSE-WAIT sockets for TCP_MIB_CURRESTAB
-Date: Tue,  4 Jun 2024 01:02:16 +0800
-Message-Id: <20240603170217.6243-2-kerneljasonxing@gmail.com>
+Subject: [PATCH net v5 2/2] mptcp: count CLOSE-WAIT sockets for MPTCP_MIB_CURRESTAB
+Date: Tue,  4 Jun 2024 01:02:17 +0800
+Message-Id: <20240603170217.6243-3-kerneljasonxing@gmail.com>
 X-Mailer: git-send-email 2.33.0
 In-Reply-To: <20240603170217.6243-1-kerneljasonxing@gmail.com>
 References: <20240603170217.6243-1-kerneljasonxing@gmail.com>
@@ -81,21 +81,18 @@ Content-Transfer-Encoding: 8bit
 
 From: Jason Xing <kernelxing@tencent.com>
 
-According to RFC 1213, we should also take CLOSE-WAIT sockets into
-consideration:
+Like previous patch does in TCP, we need to adhere to RFC 1213:
 
   "tcpCurrEstab OBJECT-TYPE
    ...
    The number of TCP connections for which the current state
    is either ESTABLISHED or CLOSE- WAIT."
 
-After this, CurrEstab counter will display the total number of
-ESTABLISHED and CLOSE-WAIT sockets.
+So let's consider CLOSE-WAIT sockets.
 
 The logic of counting
 When we increment the counter?
-a) if we change the state to ESTABLISHED.
-b) if we change the state from SYN-RECEIVED to CLOSE-WAIT.
+a) Only if we change the state to ESTABLISHED.
 
 When we decrement the counter?
 a) if the socket leaves ESTABLISHED and will never go into CLOSE-WAIT,
@@ -103,43 +100,31 @@ say, on the client side, changing from ESTABLISHED to FIN-WAIT-1.
 b) if the socket leaves CLOSE-WAIT, say, on the server side, changing
 from CLOSE-WAIT to LAST-ACK.
 
-Please note: there are two chances that old state of socket can be changed
-to CLOSE-WAIT in tcp_fin(). One is SYN-RECV, the other is ESTABLISHED.
-So we have to take care of the former case.
-
-Fixes: 1da177e4c3f4 ("Linux-2.6.12-rc2")
+Fixes: d9cd27b8cd19 ("mptcp: add CurrEstab MIB counter support")
 Signed-off-by: Jason Xing <kernelxing@tencent.com>
-Reviewed-by: Eric Dumazet <edumazet@google.com>
 ---
-previous discussion
-Link: https://lore.kernel.org/all/20240529033104.33882-1-kerneljasonxing@gmail.com/
-1. Chose to fix CurrEstab instead of introduing a new counter (Eric, Neal)
----
- net/ipv4/tcp.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
 
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 5fa68e7f6ddb..902266146d0e 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -2646,6 +2646,10 @@ void tcp_set_state(struct sock *sk, int state)
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7d44196ec5b6..96b113854bd3 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2916,9 +2916,14 @@ void mptcp_set_state(struct sock *sk, int state)
  		if (oldstate != TCP_ESTABLISHED)
- 			TCP_INC_STATS(sock_net(sk), TCP_MIB_CURRESTAB);
+ 			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
  		break;
+-
 +	case TCP_CLOSE_WAIT:
-+		if (oldstate == TCP_SYN_RECV)
-+			TCP_INC_STATS(sock_net(sk), TCP_MIB_CURRESTAB);
++		/* Unlike TCP, MPTCP sk would not have the TCP_SYN_RECV state:
++		 * MPTCP "accepted" sockets will be created later on. So no
++		 * transition from TCP_SYN_RECV to TCP_CLOSE_WAIT.
++		 */
 +		break;
- 
- 	case TCP_CLOSE:
- 		if (oldstate == TCP_CLOSE_WAIT || oldstate == TCP_ESTABLISHED)
-@@ -2657,7 +2661,7 @@ void tcp_set_state(struct sock *sk, int state)
- 			inet_put_port(sk);
- 		fallthrough;
  	default:
 -		if (oldstate == TCP_ESTABLISHED)
 +		if (oldstate == TCP_ESTABLISHED || oldstate == TCP_CLOSE_WAIT)
- 			TCP_DEC_STATS(sock_net(sk), TCP_MIB_CURRESTAB);
+ 			MPTCP_DEC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
  	}
  
 -- 
