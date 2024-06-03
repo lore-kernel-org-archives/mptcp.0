@@ -1,120 +1,129 @@
-Received: from mail-qv1-f48.google.com (mail-qv1-f48.google.com [209.85.219.48])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB321259C
-	for <mptcp@lists.linux.dev>; Mon,  3 Jun 2024 19:40:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.48
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD341386B5;
+	Mon,  3 Jun 2024 19:48:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717443603; cv=none; b=RYHjHnybw/CenFZiOY2arlYH15NlouscI/39ylqC1i7Oeob6GwZbw2ht56MtlKwH5dyPcQtkeXesMoubTBrd8Z6GYtqHr1NZ8FYzhrOtVEtp3A/WkoJLT1gfSazhKx9Y6zaHAa2cXriLqotXlfXB+8CAJXgYtW5Dgdc1yZB9mjs=
+	t=1717444087; cv=none; b=chijHKIvQFl30mE+JZtIYwfMd6+1ARq8zq8hoj6+2MG0SpzkWjYXms0pyTfoQsjS4pvx8D983twd5p3YcBaFwyfbrEi1xZYuTUneN/NVj9cAIqdLS6UCneWl6qaeYXHCeH378teAydXjUtXzccsyLX6IIbWWKkR88xhd067rajU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717443603; c=relaxed/simple;
-	bh=bbezwj4MM00N2rfa4637qA45U0qt0MoIqbrhcdSVWcc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=qkIQJkuOZc18dMNbAgXT/B54kmCvOpYlTdui0wgNSsuoK22AtNDYxlE3cPporxOfqehXiw4dUNoc64cy8axT/rfX3ORR2GHlr4pmmTjdfOQVLg+DQalSd7u5VMwmmqFYJskbPd7EO4PUO+0H0jrOIABpCvpFZQ5k4QZB9oqUozg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=FahPbZzb; arc=none smtp.client-ip=209.85.219.48
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717444087; c=relaxed/simple;
+	bh=jHK4CiOKU5qKwNVtRKGGki+wW2ZSO2DHwaC3xFPdXAk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Wkkz3MfzgdXODyXH4DfhACApIPjJC6u70TJo2PHiwebRMm/NhIiEBUqpY0kIm5rpzdv0DyBZhYkiuGsj8TLPRoe4cn3j2wJCRlF6fYl1M8BiCHUHnhuv2IUvu7OMCmqwZ+f2xK77R1QbPgowtamVYb79WON2yrrsP7hUsQV/mRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N845XKo7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FahPbZzb"
-Received: by mail-qv1-f48.google.com with SMTP id 6a1803df08f44-6ae279e6427so21649856d6.1
-        for <mptcp@lists.linux.dev>; Mon, 03 Jun 2024 12:40:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717443601; x=1718048401; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=MOW4vAPGyQ49ahy/rlH8Z8nFF6qUlaB1hsZtGQdQqzE=;
-        b=FahPbZzb/yzjxnvwfy20uERAsOY8bpPtQR+kIsaBpwKbiI7d3qxeludq/Xt9eGnGSA
-         F7FJVYD3ZiknDm147opk40hB7Q1oKk8D/EEHo2jkWglxR/GQHYx0btkBivZBLcgk4iS3
-         Zpmue0996nyM9thVzsV3oBtgIAw9cBfrMlEJXNZkBZ0eSjFbGzC5PJD3s0ZFW9LYaWZ5
-         sTwY9wZJCIRwOSlc10MvZxOwZivWC47BWbUqbJyJiOL13VH7H98IqblOJBgYHd5Ktqgd
-         T97yz+gIEWFJvimolmGcEOchUHvW7MfjZ528G0N0+yDDdtz6jj5BeTbqcAEMHjZ+MqTA
-         CtTw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717443601; x=1718048401;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=MOW4vAPGyQ49ahy/rlH8Z8nFF6qUlaB1hsZtGQdQqzE=;
-        b=ADH2JTmN0jMLvQsCEAqmMkgiqwXsMsgiF74ef3o0hQMUqmppeUh/DF1I8pk1MUTuRl
-         1s6qKrZUZ8CTaBTFDfgfFR/A7/gT5hRKuEd2r233sr3zdEnpfVwGBMbLwSS+nC07c6CD
-         wu8VbNp4hQY8NkQ3kS70ZIR8Zddd+ktHBPDteDWgLtGHmenyBfDy9R8MXii/P4fim/de
-         yDwyg7iNWTdNL4hZlJjmyIeAQ7A+HyGITsGDbqXZ9NebGwva4fSttFvDmNMQB0oSLd2J
-         IK9Tzb7hVEsyfejKybYCwjrGqClYkZSPkpljmFk76P73lDtbKvP5UqHZiGv2A9ldXj5u
-         1fcA==
-X-Gm-Message-State: AOJu0YyqjaAMuO7lU1+H0SkCnbCVcZkkpQbTMGr6ysJi8XuF/ro11k07
-	+5gIOn/C/H7IISe5ic/AhA8V5+dXTgzzqZdi2INqAFjAgftfJ9U=
-X-Google-Smtp-Source: AGHT+IEwQm2h+E7NyfG6lizPYA708baBIIxftOkiDpF5cDglkTfcZqWsmXCW40YoKHrzl7LlpxmWNw==
-X-Received: by 2002:a05:6214:5bc9:b0:6ab:8b56:5f4a with SMTP id 6a1803df08f44-6aecd6da677mr105513526d6.43.1717443600682;
-        Mon, 03 Jun 2024 12:40:00 -0700 (PDT)
-Received: from [127.0.0.1] ([40.71.163.67])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6afbcf61646sm13458146d6.27.2024.06.03.12.39.59
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 03 Jun 2024 12:40:00 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Jason Xing <kernelxing@tencent.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240603170217.6243-1-kerneljasonxing@gmail.com>
-References: <20240603170217.6243-1-kerneljasonxing@gmail.com>
-Subject: Re: [PATCH net v5 0/2] tcp/mptcp: count CLOSE-WAIT for CurrEstab
-Message-ID: <6c6037e9-33d0-e19f-ee38-32f40663477c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 03 Jun 2024 19:39:59 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N845XKo7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9BCC2BD10;
+	Mon,  3 Jun 2024 19:48:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717444086;
+	bh=jHK4CiOKU5qKwNVtRKGGki+wW2ZSO2DHwaC3xFPdXAk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=N845XKo7AUlaWJx2/YdlVxo53TwW/QV5lSyb/aCsXNszhyRDz6kszlKF8uGKmNtPU
+	 DV8qcMfObKRj18pOwn88ngCtjCwRkXE8zjHKo3VNbGEd94RFLiZMZE6rQldyJF++/C
+	 XrYykvgtK3k4rpgcQNBwVQKss0rcQFcKlFknrgmRJ53K5A54hSPhZjv982bxnYx0dj
+	 UQgT7Ulf3Z0aYYACu8gHC0XkGECyYU8C2ZKoX5f4/6p9ntv9ovczr1CwwcJA7E439r
+	 BfEoLVKG/LvIJQsPiy2HbcOhB1imu6jpNmotCo9bI4sUrzl9Pb4ANMMTnlZjNin4yt
+	 xqbOHiKqg+k2g==
+Message-ID: <35b92abd-73a0-4033-b83d-ec84922711f8@kernel.org>
+Date: Mon, 3 Jun 2024 21:48:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v5 2/2] mptcp: count CLOSE-WAIT sockets for
+ MPTCP_MIB_CURRESTAB
+Content-Language: en-GB
+To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, dsahern@kernel.org,
+ martineau@kernel.org, geliang@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ Jason Xing <kernelxing@tencent.com>
+References: <20240603170217.6243-1-kerneljasonxing@gmail.com>
+ <20240603170217.6243-3-kerneljasonxing@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240603170217.6243-3-kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Jason,
 
-Thank you for your modifications, that's great!
+On 03/06/2024 19:02, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Like previous patch does in TCP, we need to adhere to RFC 1213:
+> 
+>   "tcpCurrEstab OBJECT-TYPE
+>    ...
+>    The number of TCP connections for which the current state
+>    is either ESTABLISHED or CLOSE- WAIT."
+> 
+> So let's consider CLOSE-WAIT sockets.
+> 
+> The logic of counting
+> When we increment the counter?
+> a) Only if we change the state to ESTABLISHED.
+> 
+> When we decrement the counter?
+> a) if the socket leaves ESTABLISHED and will never go into CLOSE-WAIT,
+> say, on the client side, changing from ESTABLISHED to FIN-WAIT-1.
+> b) if the socket leaves CLOSE-WAIT, say, on the server side, changing
+> from CLOSE-WAIT to LAST-ACK.
 
-Our CI did some validations and here is its report:
+Thank you for the update!
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/9355807888
-
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3b2b65c4b8ae
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D858351
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
