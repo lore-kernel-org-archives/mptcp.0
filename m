@@ -1,95 +1,163 @@
-Received: from mail-qv1-f47.google.com (mail-qv1-f47.google.com [209.85.219.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFB29370
-	for <mptcp@lists.linux.dev>; Sun,  2 Jun 2024 01:35:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E060126F1A;
+	Mon,  3 Jun 2024 12:47:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717292108; cv=none; b=NgH88Y03Gv1En02jOih3ATMBHGCVwzeF32CBjBbhx07tgIwaw5wjNhBgTcaajS3cbCCkDao4/aOabXVxivtYMWzt7QfF/EkM1l5v+Bas+D5RtChbNGR3tKO52FjoSx1iif7rxAOZi8Ls+g4IH6Cx5qi2hPoGCGYPyLuWbRXTCd8=
+	t=1717418854; cv=none; b=hjYAN3g6CWqFOjg0x6qMN3HbcMfbX0/hcI00GWifjNKFSmwV5CFcg9VHtBednAXuz9ZiR/hsPjJIbxHMVbbiyLgBRH3O0j63RIFstcApQmJ7haoooJ2o4XIGhj54cRcXTZJ3wHMYqJGmd/stf2nxJ3+7+miQD9kYFs0Ny6TckQ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717292108; c=relaxed/simple;
-	bh=zOm8LsWoqxyyYNtXt1211IJq2j1oNCELPPYYsNwTw6E=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 Mime-Version:Content-Type; b=lIROT6UWaKtzDzT5lDHB1ftN5p1CYPWH9L8CKDV13birz27a079AJVprH8k2hlzGxHKdR9j56wnnnQzZ4flHFaB50YxSM7D4THv82FXkXe2T3Tu4SYHIKwOYjKrG9Ic9/Pql9dIwS/eIYU8R7m3RSNZlyitKXSKcO9xg6K3F+bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JsNJwAxF; arc=none smtp.client-ip=209.85.219.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1717418854; c=relaxed/simple;
+	bh=LMXgICBK9jzSKeq1CZShYf4ASR61d5SfgZoDX8H2yhs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GASGFXIFU8jjnYHEAcD5YZ3sIS307I/QxjK7tXWsp/hn+qJ1fOIxwGeii9VEmK463QXNxDuxqgM8Gwqxi81PGze1KXjT2OJS1Y81x2U8JogZiZxBID9z4l/oM8Ct7ZJaeTViMxU6aQz94Ug+N9IejrdxDzbJX5vh7TJmjUN2MGY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RRsvEEb1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JsNJwAxF"
-Received: by mail-qv1-f47.google.com with SMTP id 6a1803df08f44-6ae60725ea1so13073026d6.2
-        for <mptcp@lists.linux.dev>; Sat, 01 Jun 2024 18:35:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1717292106; x=1717896906; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=o9ppVBOWciW7VBoZG//V8PspX74UoRB+vuqQeneEijQ=;
-        b=JsNJwAxFOaHiyulwaMgpScl4yz2xb24Rz+b8Klm7UsBDvIa2Svuo1ZDNt8Rdkb/X8+
-         UuYLdxNyERgf3rgpmJarbln0TR2/1pTx6sSXM5Ogb7pUmt6A+44t0Mkes79RoTLUCZ/n
-         TPSjxZtwzNgfARLOqoWPRuLfbJIWw0rKMxW7PkELoRFGLXxi/hMuByx3pItZp8dmXBhp
-         /5/ReFQyw1P1CHK4ny/wRGAcsww34oN+6TN/yIS4c2A4VNBhJFKTOrZIy7uAEIXM0LQX
-         78YUOH7S3uidHkS7JXS1VevVEN/27IO0mV82WhtEVfikLVj763tFA+wUeYKAaclha0gl
-         EN8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1717292106; x=1717896906;
-        h=content-transfer-encoding:mime-version:subject:references
-         :in-reply-to:message-id:cc:to:from:date:x-gm-message-state:from:to
-         :cc:subject:date:message-id:reply-to;
-        bh=o9ppVBOWciW7VBoZG//V8PspX74UoRB+vuqQeneEijQ=;
-        b=soGW4JBJ+OnlTocC1sVxkfT6f+48/DkgJ3ez4zRzLvdG8CKzsWEBP7ZI8XDABG7Hn3
-         RZcY83hksYExkpUKMLVNkCercp5SuazU9nA17Z7Y64LcXJZLfg9ZL0COoyiQGEVde39a
-         6g0LIGKzNmkyHrzb8JSVXjsguxvzCmuKserP4pvsiAnWHofsBf7Dh37ji/KG9GvB7nNF
-         phljLO0ydJ4O3pjTE1EjVra+5srW/gxWpS6pEzFWG6vKI1rfZo/nOUlNGgb6L9jQ8qF4
-         UJJRKL1bY329g1w/G641vNjI/dPMbRF+UkFy5TWBkVXSrhkCQkhlql3HvAjhOQR+Nmf+
-         1aTw==
-X-Forwarded-Encrypted: i=1; AJvYcCUkAJGUfGpsMhmL8zUKvAM9qtaaBKTzB/UknOe/ghMJGvfYLPP36rXTJ3ZdGEjJWiJp40A4RChLAG1cct7/xPQ3t8obM2M=
-X-Gm-Message-State: AOJu0Yw6rP+i8adm+Xc/JByatpLwRSSA5m5br51y42/IPDZ6MmlV3RGE
-	ZdC6ZKEn3YkMRoNqmYwCKZSAc+vs4nK4vtCGPMPDIZ6JYujKVI18
-X-Google-Smtp-Source: AGHT+IElFXjAaw0z5HqH5gIclh6dcm5V837UNKlZeT/cTKmlsFQ4NyXNqrVamMB3+jWq8tnRnjJO3A==
-X-Received: by 2002:a0c:ef04:0:b0:6ae:d591:3a4 with SMTP id 6a1803df08f44-6aed5910519mr45849276d6.11.1717292105597;
-        Sat, 01 Jun 2024 18:35:05 -0700 (PDT)
-Received: from localhost (112.49.199.35.bc.googleusercontent.com. [35.199.49.112])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6af3d644efbsm7047486d6.19.2024.06.01.18.35.04
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 01 Jun 2024 18:35:04 -0700 (PDT)
-Date: Sat, 01 Jun 2024 21:35:04 -0400
-From: Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-To: Jakub Kicinski <kuba@kernel.org>, 
- Willem de Bruijn <willemdebruijn.kernel@gmail.com>
-Cc: edumazet@google.com, 
- pabeni@redhat.com, 
- davem@davemloft.net, 
- netdev@vger.kernel.org, 
- mptcp@lists.linux.dev, 
- matttbe@kernel.org, 
- martineau@kernel.org, 
- borisp@nvidia.com
-Message-ID: <665bcc4869dc3_94803294e9@willemb.c.googlers.com.notmuch>
-In-Reply-To: <20240601145620.065e6a5d@kernel.org>
-References: <20240530233616.85897-1-kuba@kernel.org>
- <20240530233616.85897-3-kuba@kernel.org>
- <6659d38ac31fa_3f8cab29482@willemb.c.googlers.com.notmuch>
- <20240601145620.065e6a5d@kernel.org>
-Subject: Re: [PATCH net-next 2/3] tcp: add a helper for setting EOR on tail
- skb
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RRsvEEb1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74A8BC2BD10;
+	Mon,  3 Jun 2024 12:47:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1717418853;
+	bh=LMXgICBK9jzSKeq1CZShYf4ASR61d5SfgZoDX8H2yhs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RRsvEEb1ByvNoptOh3hLJZ6cvcg7z8KulS7utQElWzBPJ7Tpr5MWHSZzhU1LjnXRk
+	 X0ywX/eSaDYNFiXw2d1BBLEaxsVzWVFk9mVpLNp/5YBeP+m4u8Xmm/m/0d+sdspBng
+	 zV62hyXcKJQ0IY/RVsKX1kObLa74g81HQO7ijF/gCFKQllV40W3kS1YJsJyn2SU2AC
+	 ady1ZMrkSJrzi+SWnwU5vPJ4REqg9ahWraarp60uRGB9yLO7hxevTVoW1q/cYYFEbr
+	 4g/gY7JP28EDfJhrjrK6xcEI9L+Cu5cFq99L0PIhr452P5OwfRL37+o+oAIbyeUTQy
+	 qOfzv4phQCG/Q==
+Message-ID: <df99fb97-74ca-4b5c-9d5f-86466025a531@kernel.org>
+Date: Mon, 3 Jun 2024 14:47:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
+MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v4 2/2] mptcp: count CLOSE-WAIT sockets for
+ MPTCP_MIB_CURRESTAB
+Content-Language: en-GB
+To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, dsahern@kernel.org,
+ martineau@kernel.org, geliang@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ Jason Xing <kernelxing@tencent.com>
+References: <20240531091753.75930-1-kerneljasonxing@gmail.com>
+ <20240531091753.75930-3-kerneljasonxing@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240531091753.75930-3-kerneljasonxing@gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Jakub Kicinski wrote:
-> On Fri, 31 May 2024 09:41:30 -0400 Willem de Bruijn wrote:
-> > > +static inline void tcp_write_collapse_fence(struct sock *sk)
-> > > +{  
-> > 
-> > const struct ptr?
-> 
-> Maybe just me, but feels kinda weird for the sole input to be const
-> if the function does modify the object it operates on.
+Hi Jason,
 
-Ok. I can see that.
+On 31/05/2024 11:17, Jason Xing wrote:
+> From: Jason Xing <kernelxing@tencent.com>
+> 
+> Like previous patch does in TCP, we need to adhere to RFC 1213:
+> 
+>   "tcpCurrEstab OBJECT-TYPE
+>    ...
+>    The number of TCP connections for which the current state
+>    is either ESTABLISHED or CLOSE- WAIT."
+> 
+> So let's consider CLOSE-WAIT sockets.
+> 
+> The logic of counting
+> When we increment the counter?
+> a) Only if we change the state to ESTABLISHED.
+> 
+> When we decrement the counter?
+> a) if the socket leaves ESTABLISHED and will never go into CLOSE-WAIT,
+> say, on the client side, changing from ESTABLISHED to FIN-WAIT-1.
+> b) if the socket leaves CLOSE-WAIT, say, on the server side, changing
+> from CLOSE-WAIT to LAST-ACK.
+
+Thank you for this modification, and for having updated the Fixes tag.
+
+> Fixes: d9cd27b8cd19 ("mptcp: add CurrEstab MIB counter support")
+> Signed-off-by: Jason Xing <kernelxing@tencent.com>
+> ---
+>  net/mptcp/protocol.c | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 7d44196ec5b6..6d59c1c4baba 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2916,9 +2916,10 @@ void mptcp_set_state(struct sock *sk, int state)
+>  		if (oldstate != TCP_ESTABLISHED)
+>  			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
+>  		break;
+> -
+> +	case TCP_CLOSE_WAIT:
+> +		break;
+
+The modification is correct: currently, and compared to TCP, the MPTCP
+"accepted" socket will not go through the TCP_SYN_RECV state because it
+will be created later on.
+
+Still, I wonder if it would not be clearer to explicitly mention this
+here, and (or) in the commit message, to be able to understand why the
+logic is different here, compared to TCP. I don't think the SYN_RECV
+state will be used in the future with MPTCP sockets, but just in case,
+it might help to mention TCP_SYN_RECV state here. Could add a small
+comment here above please?
+
+>  	default:
+> -		if (oldstate == TCP_ESTABLISHED)
+> +		if (oldstate == TCP_ESTABLISHED || oldstate == TCP_CLOSE_WAIT)
+>  			MPTCP_DEC_STATS(sock_net(sk), MPTCP_MIB_CURRESTAB);
+>  	}
+>  
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
