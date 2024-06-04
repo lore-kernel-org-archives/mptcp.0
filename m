@@ -1,90 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f174.google.com (mail-qt1-f174.google.com [209.85.160.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1934C91
-	for <mptcp@lists.linux.dev>; Tue,  4 Jun 2024 15:12:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3A70146D7F
+	for <mptcp@lists.linux.dev>; Tue,  4 Jun 2024 16:05:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717513970; cv=none; b=kMN1K2HNpsGKIOeD4pqzH16Q9PDehnfLT+fk+bK2V+qIlbcW4ArmyjaarRF2gYgNNiYLr/zxoHQlKTqP76GOiUd5cErJ8Bop98N3oYE+c9P/ukBBNVcM1o9bqwJjLKNCDrgiqNVtc3BV4QZApt7Ta12ZnCXpAp2eVsLZPAuO6pI=
+	t=1717517136; cv=none; b=o2QQEzOMmX8Zexon4QK/Ys+hoNqb1TIGufT6fOJfv/G+zW/3qXHw/hZvqF1pqoWzheLSGipG9zt/mcsaIK9SVif7v7z1vOQt1YwgdC2/ClecYVJPz5ppeQzQTDqE4XUSlGzLV08pVZ7GUHh3P8bxFYyyz9/Y842d5YD+xhS+A4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717513970; c=relaxed/simple;
-	bh=4mTIPnVDqRAWaWo2P3xfyXByKlvb+qMN3xsNPaQ8GGM=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=CZonkshNsE5rHS8gfChdl2x1pBVVxEe0Tugr+Gupmh1gPRKLxRQrH94wd4pB8FOhe/dv5lW1BPXyopS8Hk92fY84fwgZJcKzUWaerkB4ttbYxYnKz1IG6Qe24LH6BoUW91KbH05nN7xPMbcr84tpERgG6x/YDv3vWLREyag4IjA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=eyL/RXmu; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1717517136; c=relaxed/simple;
+	bh=T4YoSNv3vWdoi9PzqS14V9Jm3L5GoEDenZpjlA6B+Mk=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=ZLUTh+GY2U+3SmeqAHnJslLam2+i1bHFqrOfpZ1iX/IJkM/veKAhb7p4igxx/GHcaF/Cnuu8E9EQnuTOWFWgO1U62Obv9lDcFReQCQ73zcJDg9jD/pVVeFyfjytVgdIrQxojxEIdjd2ld6T40oEbCbky0YPy/eVUPqHTsBoB5MA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Tm4leT7n; arc=none smtp.client-ip=209.85.160.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="eyL/RXmu"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1717513967;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=qvJ+E+cNvqgeDmz68puB1pObXsq4qGK+Yu025xgHkzs=;
-	b=eyL/RXmuhaIVkU+B1K72DUEqrdMxALG70VDL9g5JJCDIRprLJMGPxweNv+5F71sGF5S2Mk
-	pnuRM7imVfizEgnqdXE7NGMzpKVm7DJiAKfbp3iwa05S8GmbxalnPAtqp9jg47uNJ4+adN
-	TyE82w4rcVdBmH7dXXCDPzRSYfsCGJs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-556-w5POvcGyNXW2ob5G6TxQ_Q-1; Tue, 04 Jun 2024 11:12:46 -0400
-X-MC-Unique: w5POvcGyNXW2ob5G6TxQ_Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 45059185A78E
-	for <mptcp@lists.linux.dev>; Tue,  4 Jun 2024 15:12:44 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.225.192])
-	by smtp.corp.redhat.com (Postfix) with ESMTP id C66B91C060D2
-	for <mptcp@lists.linux.dev>; Tue,  4 Jun 2024 15:12:43 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net] mptcp: ensure snd_una is properly initialized on connect
-Date: Tue,  4 Jun 2024 17:12:36 +0200
-Message-ID: <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Tm4leT7n"
+Received: by mail-qt1-f174.google.com with SMTP id d75a77b69052e-44022c9433bso3644191cf.2
+        for <mptcp@lists.linux.dev>; Tue, 04 Jun 2024 09:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1717517133; x=1718121933; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/hXLowVG1jlKkvdvrwhbPt7vKAuAA0v2J0ALJOGtf88=;
+        b=Tm4leT7nThxXLhNdsUfMx7fxWrcU8HwyoerebZwdCGr/Xp08kY7gvtlSz7q+fOlL/W
+         1yG43w8LIoJPhTJGfxgZ7mck7I4n/AJuUbkg+ULg6m9DiD/zL5GI2tVeVIuWikj78yMz
+         AH/LZ+cqsSLnekAhODrVh2H8wrfuAMUhyxMZcAv5ZmfHDqcd1snRwOpWHCSvWtEsCI1p
+         GFKrhFu0CTdTTZsmYM9zK/Siy6W0zPvMWBMyF77vRgNPko2B1HFCZkTzZWHd5q2ZWIxi
+         rGQihkQG6RVxNxzD47KifLYHZ2vul2evFbBKucNFRiO27J35j2qeOekm2Sfr+hCd1vii
+         gT9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1717517133; x=1718121933;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/hXLowVG1jlKkvdvrwhbPt7vKAuAA0v2J0ALJOGtf88=;
+        b=RbP2xisxiKUASXiLnOHKleri3sGFtKOxxFIcYy6Kd2MQQ9ceLJjK2WtdEtHnYVh+m3
+         O3/hA32A+W6X+zD2s9E/O75ngy8yCJ5FYVG5I4Tze363N5m0C7Z4AaJsWKXGbL5aJKx/
+         3ddbhR4mYBtYapIUpeziW1jJpQB1DxAE4IE3wnhUpWmxDjx3zLUm3ydZaRED7G3Pxsrd
+         m45HwLsmX0gQTzbzyBBupJa+NvHw2Nv28vH4RfGkkfGe9OJMMjpFeAHkTwIOrwf9eEm3
+         vVy/Z40Ak7nZoB78MftNNKYF0QtJBcQPX8448/XgWTVQNu7Vj1Lju0NthUAeb7Ikul8J
+         6mkw==
+X-Gm-Message-State: AOJu0YwedYA+CBts1efeWbDX2rGgbB+Skq7C2nz1mCp6xVHVdxhua3Ia
+	iGPHMznntni7oRShcpDQucSjk6/tMDjckhnPMKm4cAevVjq8KXw=
+X-Google-Smtp-Source: AGHT+IFDNdS/8BXHRyBUMHuwrEHQ2oPy+kaXNizBnMar2GIf5BTKNgsUzzbE20TgUjFvW+Os6P/95Q==
+X-Received: by 2002:ac8:570a:0:b0:43d:ebab:d4dd with SMTP id d75a77b69052e-43ff4fab76cmr147600401cf.0.1717517133310;
+        Tue, 04 Jun 2024 09:05:33 -0700 (PDT)
+Received: from [127.0.0.1] ([172.200.199.169])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4402177fd6asm6510001cf.66.2024.06.04.09.05.32
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Jun 2024 09:05:32 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+References:
+ <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: ensure snd_una is properly
+ initialized on connect
+Message-ID: <90d4c317-f0b2-24df-30b8-476122f7b201@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 04 Jun 2024 16:05:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.4.1 on 10.11.54.7
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-This is strictly related to commit fb7a0d334894 ("mptcp: ensure snd_nxt
-is properly initialized on connect"). It turns out that syzkaller can
-trigger the retransmit after fallback and before processing any other
-incoming packet - so that snd_una is still left uninitialized.
+Hi Paolo,
 
-Address the issue explicitly initializing snd_una together with snd_nxt
-and write_seq.
+Thank you for your modifications, that's great!
 
-Suggested-by: Mat Martineau <martineau@kernel.org>
-Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-Cc: stable@vger.kernel.org
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2f8f32cd31d3..1c5b7796daaf 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3735,6 +3735,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
- 
- 	WRITE_ONCE(msk->write_seq, subflow->idsn);
- 	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
-+	WRITE_ONCE(msk->snd_una, subflow->idsn);
- 	if (likely(!__mptcp_check_fallback(msk)))
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVE);
- 
--- 
-2.43.2
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9369952349
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/45ea564d5e7e
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D858724
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
