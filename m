@@ -1,129 +1,82 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BD341386B5;
-	Mon,  3 Jun 2024 19:48:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE5661442E3;
+	Tue,  4 Jun 2024 11:30:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717444087; cv=none; b=chijHKIvQFl30mE+JZtIYwfMd6+1ARq8zq8hoj6+2MG0SpzkWjYXms0pyTfoQsjS4pvx8D983twd5p3YcBaFwyfbrEi1xZYuTUneN/NVj9cAIqdLS6UCneWl6qaeYXHCeH378teAydXjUtXzccsyLX6IIbWWKkR88xhd067rajU=
+	t=1717500631; cv=none; b=nOxvMPXwsvYDeEmDrMCm93LxW3+8HWXXmstSw3lFAEB4bcAZ4hdKRr3OasyTef2V+14kXbURCUniUjtJpNgFDVhgeYJDrGTxKkF8NeOMT5QW4slb9ZR74oXxTnbtK5y/vgOr4bfLHZCCXDqIqLLB3XEQ7BIZQDrHxydugRRYrOU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717444087; c=relaxed/simple;
-	bh=jHK4CiOKU5qKwNVtRKGGki+wW2ZSO2DHwaC3xFPdXAk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wkkz3MfzgdXODyXH4DfhACApIPjJC6u70TJo2PHiwebRMm/NhIiEBUqpY0kIm5rpzdv0DyBZhYkiuGsj8TLPRoe4cn3j2wJCRlF6fYl1M8BiCHUHnhuv2IUvu7OMCmqwZ+f2xK77R1QbPgowtamVYb79WON2yrrsP7hUsQV/mRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N845XKo7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717500631; c=relaxed/simple;
+	bh=wnPcpCiwYuJB7xUl04rFUO/ubRVn7YZK2/gMWkW9BcI=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Qigoq51RlQ/365gNolXVbPdwAraSFNIfQAvd5Qc80Pt/EqFFD9ddwjVbGlwvTZtFAwT7WhrdeZ22Bw8xwja6usnZGIsxEGKvXtDvdw3W25oRdEs2JC+MWvnRWoG0W2zyWkygqs6yP+6MF9OV2MMvck9uYUvthXp0pEG4lrBJWME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyDqI2nM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N845XKo7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9BCC2BD10;
-	Mon,  3 Jun 2024 19:48:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyDqI2nM"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 62657C3277B;
+	Tue,  4 Jun 2024 11:30:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717444086;
-	bh=jHK4CiOKU5qKwNVtRKGGki+wW2ZSO2DHwaC3xFPdXAk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N845XKo7AUlaWJx2/YdlVxo53TwW/QV5lSyb/aCsXNszhyRDz6kszlKF8uGKmNtPU
-	 DV8qcMfObKRj18pOwn88ngCtjCwRkXE8zjHKo3VNbGEd94RFLiZMZE6rQldyJF++/C
-	 XrYykvgtK3k4rpgcQNBwVQKss0rcQFcKlFknrgmRJ53K5A54hSPhZjv982bxnYx0dj
-	 UQgT7Ulf3Z0aYYACu8gHC0XkGECyYU8C2ZKoX5f4/6p9ntv9ovczr1CwwcJA7E439r
-	 BfEoLVKG/LvIJQsPiy2HbcOhB1imu6jpNmotCo9bI4sUrzl9Pb4ANMMTnlZjNin4yt
-	 xqbOHiKqg+k2g==
-Message-ID: <35b92abd-73a0-4033-b83d-ec84922711f8@kernel.org>
-Date: Mon, 3 Jun 2024 21:48:02 +0200
+	s=k20201202; t=1717500630;
+	bh=wnPcpCiwYuJB7xUl04rFUO/ubRVn7YZK2/gMWkW9BcI=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nyDqI2nMvMFveZZfpCTZu1AXUT47TsUedrdNGqoZ3DbCZGk0bDfY0fETJbnwhC1aD
+	 86GK/4BjOaO8zP/Dxu5j+4ifZIpJfpjYF9riogcK5/ydkBw42Dhc1E3G47WZb24KT2
+	 Dr+BSZURU7siH0l0sYqEfist+YEoillL+6kKfmdVZv/4h3VBtkGQbZGgsCeKu3gPsM
+	 Fc1/vfmbjXHQ3ozOSgMcZA05jRhbNNRPeHWnY4U86ZGHPuQaDnsQ/1hRj5VAD0jGHm
+	 lYoH5LYsyWSo+s0aMs7AvTrxxjoTYzppJZyKRWMt8yJKBHBdyx0LeX5O44PoIbl/lj
+	 Ac3oH7JCiPTNA==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 510D5C43617;
+	Tue,  4 Jun 2024 11:30:30 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v5 2/2] mptcp: count CLOSE-WAIT sockets for
- MPTCP_MIB_CURRESTAB
-Content-Language: en-GB
-To: Jason Xing <kerneljasonxing@gmail.com>, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, davem@davemloft.net, dsahern@kernel.org,
- martineau@kernel.org, geliang@kernel.org
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- Jason Xing <kernelxing@tencent.com>
-References: <20240603170217.6243-1-kerneljasonxing@gmail.com>
- <20240603170217.6243-3-kerneljasonxing@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240603170217.6243-3-kerneljasonxing@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/3] tcp: refactor skb_cmp_decrypted() checks
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171750063032.8045.5135732857456695804.git-patchwork-notify@kernel.org>
+Date: Tue, 04 Jun 2024 11:30:30 +0000
+References: <20240530233616.85897-1-kuba@kernel.org>
+In-Reply-To: <20240530233616.85897-1-kuba@kernel.org>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: edumazet@google.com, pabeni@redhat.com, davem@davemloft.net,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, matttbe@kernel.org,
+ martineau@kernel.org, borisp@nvidia.com, willemdebruijn.kernel@gmail.com
 
-Hi Jason,
+Hello:
 
-On 03/06/2024 19:02, Jason Xing wrote:
-> From: Jason Xing <kernelxing@tencent.com>
-> 
-> Like previous patch does in TCP, we need to adhere to RFC 1213:
-> 
->   "tcpCurrEstab OBJECT-TYPE
->    ...
->    The number of TCP connections for which the current state
->    is either ESTABLISHED or CLOSE- WAIT."
-> 
-> So let's consider CLOSE-WAIT sockets.
-> 
-> The logic of counting
-> When we increment the counter?
-> a) Only if we change the state to ESTABLISHED.
-> 
-> When we decrement the counter?
-> a) if the socket leaves ESTABLISHED and will never go into CLOSE-WAIT,
-> say, on the client side, changing from ESTABLISHED to FIN-WAIT-1.
-> b) if the socket leaves CLOSE-WAIT, say, on the server side, changing
-> from CLOSE-WAIT to LAST-ACK.
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Thank you for the update!
+On Thu, 30 May 2024 16:36:13 -0700 you wrote:
+> Refactor the input patch coalescing checks and wrap "EOR forcing"
+> logic into a helper. This will hopefully make the code easier to
+> follow. While at it throw some DEBUG_NET checks into skb_shift().
+> 
+> Jakub Kicinski (3):
+>   tcp: wrap mptcp and decrypted checks into tcp_skb_can_collapse_rx()
+>   tcp: add a helper for setting EOR on tail skb
+>   net: skb: add compatibility warnings to skb_shift()
+> 
+> [...]
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Here is the summary with links:
+  - [net-next,1/3] tcp: wrap mptcp and decrypted checks into tcp_skb_can_collapse_rx()
+    https://git.kernel.org/netdev/net-next/c/071115301838
+  - [net-next,2/3] tcp: add a helper for setting EOR on tail skb
+    https://git.kernel.org/netdev/net-next/c/1be68a87ab33
+  - [net-next,3/3] net: skb: add compatibility warnings to skb_shift()
+    https://git.kernel.org/netdev/net-next/c/99b8add01f98
 
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
