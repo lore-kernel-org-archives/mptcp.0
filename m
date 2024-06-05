@@ -1,174 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1073319D8B1;
-	Wed,  5 Jun 2024 14:33:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35DB0153BC7
+	for <mptcp@lists.linux.dev>; Wed,  5 Jun 2024 20:38:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717598033; cv=none; b=UcYV+vqYDKOoHDX1uprh7VL4WWO6/x27110+F5mMLYMnihH/UJ24merPlBIueHasDxLwVjDzPcSydDa8NAbXBJvYQLdntSuRve+DSoMzIkjuLT61jH8YEbbvOxTIrOWtpjtvhB041fAPxB304Y2SN3MwuuW9DGAhyMKNuYGNDx0=
+	t=1717619904; cv=none; b=p5NmqOXW/6anvbMh1YmomMPd8XBTeJP0j15X3jRkdL2S6SIIU5mYz7X8YuLLLNUxV3PaTjJNUyTukbDTwcaS7SlfX6iHjGsO83ws1ZiO8wRWbFtW6wwgRD1QQhlm8pXzdj9Ft/DA8atvsgSRJcv7DzM9uP2lA2PRHIZm9s9rJ88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717598033; c=relaxed/simple;
-	bh=YlKMrykXOHD/CY+5hLXKnWTfq+ZFZ4U0U4Ww7WX5qQk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L/BklMPaZ0d5Q+5JqHkYduPGT/bp+PSgqAxPSNMBo5F1EUcEhH5OXMPmP+obUK0w0We9tsABfs0ACRadhUxPEfSajTD1F2ETCTOymStRfWnS3A60igGE1aSSMPMTy7OnCF7waipw5bItKLBNAayaq1eFc6hhfIYyy8prTMqThOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sO3wRMLQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717619904; c=relaxed/simple;
+	bh=Bs3j58opDkRedLZeWed97gBvqvVcYioQeebI/ZBD6IE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=fCSGik5nXxqgYj3ZOK77VmvjNr9NYXMtasCwxXb2INRapStd81RHUGlIpuL7qqaXgSPyLCPtgJkpirW3cJwdywjA8+DFlq88ghAIp2MuKtVnkt2755UWu2JWzUZj8x3ePF5brMrzi6e7N/EEJO4+ldWYIti1FYao69Vtf8DdVAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LQwY5Ox4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sO3wRMLQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F08DCC2BD11;
-	Wed,  5 Jun 2024 14:33:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LQwY5Ox4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8A14C2BD11;
+	Wed,  5 Jun 2024 20:38:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717598032;
-	bh=YlKMrykXOHD/CY+5hLXKnWTfq+ZFZ4U0U4Ww7WX5qQk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sO3wRMLQ4FK4MkJrYo8Xcbsd5hi7Vwt2/zajyGrhSJSJ539UTmptqTtIpiQPUiSgO
-	 JIZoQliyswdaI377pz16wFEw69uc5KJrkTTQ9iLEttR/PMsCAOqeTtDbTCxxlrSXzH
-	 lkH0Nok9zjvc33o9ewEajiC6ln5XXvPVAhPATJtcqMZIk/NXr/tlb9X8//U6ZALdrk
-	 +GuqTgzA38WDy1GiTqRhbbo0HBDsb9zo/GNSDkMR/3RAzvCpmaGFVz4/pwrLUfn+hT
-	 BXUzbgEKV6vKgm4rccEllAsGAEVe//hRsTNpnZ+gMyq7dmW6jwEyQaYHxQDHEtmaa/
-	 viu4wyUQnOFcw==
-Message-ID: <5e2faef6-c80d-4fde-8b15-029b687cdf4a@kernel.org>
-Date: Wed, 5 Jun 2024 16:33:48 +0200
+	s=k20201202; t=1717619903;
+	bh=Bs3j58opDkRedLZeWed97gBvqvVcYioQeebI/ZBD6IE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=LQwY5Ox4BP5j6tEFZNUkb8xJ1flIrEDJk7+/uDwRgt3uMu9OZo1xIkO12LwK9GxpT
+	 3rumD30V+UdSX5ORI8iOI04D3HOIf/lF4DYGH8O61S5L2LRXowq0mKHXlTvm3sAKMG
+	 N53QKW7pB8y9pHLwjmz76aeyBrqg5uXTgD4fqm9cM/G8PmEbSDUKsIKOcbU7xmtsh/
+	 QfFuZ9igYn6bApcjeTGOxaipIWByI3tkrhhdqJPQYqGaWub/pb0qJ1xv3vURw6Tfpj
+	 rnsm73tACPJAcMV4KSKiPn9ivJ0cPUoAA/ekPntXS0yqurjhfjQGNV6vHA/QayVWMt
+	 oP9n47TScnCfw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-iproute 0/4] mptcp: guide the user to avoid mistakes
+Date: Wed, 05 Jun 2024 22:38:11 +0200
+Message-Id: <20240605-mptcp-user-feedback-v1-0-d2dc3b399643@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 2/3] selftests: net: lib: avoid error removing empty
- netns name
-Content-Language: en-GB
-To: Petr Machata <petrm@nvidia.com>
-Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>,
- Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org, Geliang Tang <geliang@kernel.org>
-References: <20240605-upstream-net-20240605-selftests-net-lib-fixes-v1-0-b3afadd368c9@kernel.org>
- <20240605-upstream-net-20240605-selftests-net-lib-fixes-v1-2-b3afadd368c9@kernel.org>
- <877cf38yg5.fsf@nvidia.com> <0f85551f-dd67-4d88-abc2-cdf80293a604@kernel.org>
- <87h6e7796c.fsf@nvidia.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <87h6e7796c.fsf@nvidia.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALPMYGYC/yXMQQ5AMBBA0avIrE0yGq1wFbGgBhNB0yIScXcNy
+ 794/4bAXjhAldzg+ZQg2xojSxOwU7uOjNLHBkUqJ0MaF7dbh0dkODD3XWtnJFOYMtNKk+0gSud
+ 5kOu71vADcX47dobmeV5H5HAOdAAAAA==
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1102; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Bs3j58opDkRedLZeWed97gBvqvVcYioQeebI/ZBD6IE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYMy94zU1xrJBtUdCkYzxt4ldIoPGdIkYXrsAD
+ iQbfBG+80+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmDMvQAKCRD2t4JPQmmg
+ cxP9D/9wzP79iboQyLGVXMSJ8uSylAqT9ycSe2znHAHl5oH5TC0wyybHQ69JS3ANvEv1VIg6cQM
+ 8Nee9UlSVBUF0w3AJdcQCuVS3OOK+zKeYBNX1EIFBgkPn5Rjd4roLKL28wdP1HtQpxxLHrwKi95
+ m84PDNMtbJvgDF79XuOEO9gtnkEh1gvp5fLx8yPEmtirwHkmYo/8EZoGRpZotIgxEGVXs2HsknB
+ qAuDV1P/Kn4A56jG7VwaE21Bydmn4H9ony6dMD9Rt10WivCL149vOGZokhVkJJMfYDTXiRT0zIb
+ ve/8RQBhQXOPBs55++S8qj6Byn6nErG4Lm62PYJmAOGtq9aEfvNYmf5TivULQXxzJjX9yUtuB+t
+ LJ1HVai4NI0c+78LYGhNlJbvfLCXjJbwDvm5doqEiA/rv1sPK/hKx/MxElIMeUQ09H+ATM8L5Rx
+ 6AsWgqfKLDJBgnTCERGtNurA/Y7Lw6aln77nSD9N0BbDNkJHb04Hhsx+2HfDDYXIMVD4zqNdetf
+ fgSU+Z95cERnMn9c7ziwZcGp9GPX79xrNZaszPg93kIEqlsR8nxi8LLFbUz3ulrOZSUE31jmqQp
+ ut7L4rYkmPkibyGn7ABsavxc/IJIiKTZ5dk0yyagNInB7IjmqDt86ERc1pNMBWsBM+pINSBTGY3
+ y7QNz7UntHmlquQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 05/06/2024 16:30, Petr Machata wrote:
-> 
-> Matthieu Baerts <matttbe@kernel.org> writes:
-> 
->> Hi Petr,
->>
->> Thank you for the review!
->>
->> On 05/06/2024 12:38, Petr Machata wrote:
->>>
->>> "Matthieu Baerts (NGI0)" <matttbe@kernel.org> writes:
->>>
->>>> If there is an error to create the first netns with 'setup_ns()',
->>>> 'cleanup_ns()' will be called with an empty string as first parameter.
->>>>
->>>> The consequences is that 'cleanup_ns()' will try to delete an invalid
->>>> netns, and wait 20 seconds if the netns list is empty.
->>>>
->>>> Instead of just checking if the name is not empty, convert the string
->>>> separated by spaces to an array. Manipulating the array is cleaner, and
->>>> calling 'cleanup_ns()' with an empty array will be a no-op.
->>>>
->>>> Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
->>>> Cc: stable@vger.kernel.org
->>>> Acked-by: Geliang Tang <geliang@kernel.org>
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> ---
->>>>  tools/testing/selftests/net/lib.sh | 13 +++++++------
->>>>  1 file changed, 7 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
->>>> index a422e10d3d3a..e2f51102d7e1 100644
->>>> --- a/tools/testing/selftests/net/lib.sh
->>>> +++ b/tools/testing/selftests/net/lib.sh
->>>> @@ -15,7 +15,7 @@ ksft_xfail=2
->>>>  ksft_skip=4
->>>>  
->>>>  # namespace list created by setup_ns
->>>> -NS_LIST=""
->>>> +NS_LIST=()
->>>>  
->>>>  ##############################################################################
->>>>  # Helpers
->>>> @@ -137,6 +137,7 @@ cleanup_ns()
->>>>  	fi
->>>>  
->>>>  	for ns in "$@"; do
->>>> +		[ -z "${ns}" ] && continue
->>>
->>> I think this is now irrelevant though? Now cleanup_ns() will be called
->>> with no arguments for an empty NS list, so the loop does not even kick in.
->>
->> If you don't mind, I think it is "safer" to keep it: some selftests are
->> using 'cleanup_ns()' directly, not via 'cleanup_all_ns()', e.g.
->> netns-name.sh, cmsg-*.sh, fib-*.sh, etc. which can call it with the
->> variables not set if 'setup_ns' failed during the init phase.
->>
->> For the moment, all these selftests are calling 'cleanup_ns()' with
->> parameters added without double quotes: so it is fine. Until someone
->> changes that to please shellcheck, like we did on our side with MPTCP
->> selftests. So this line will be useful soon when we will publish the
->> rest of our patches to use 'lib.sh' [1] :)
-> 
-> All right.
-> 
-> Reviewed-by: Petr Machata <petrm@nvidia.com>
+According to some bug reports we had in the past, setting the MPTCP
+endpoints might be confusing, and the wrong flags might be set.
 
-Thank you!
+Adding missing info for the 'dev' parameter, and clarifying 'signal' and
+'subflow' flags in the manual is a first step. But because people might
+surprisingly not (fully) read the manual, printing warnings to stderr if
+the 'signal' and 'subflow' flags are wrongly used is a second step to
+prevent frustration, and bug reports.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (4):
+      man: mptcp: document 'dev IFNAME'
+      man: mptcp: clarify 'signal' and 'subflow' flags
+      mptcp: warn if 'signal' and 'subflow' flags are set
+      mptcp: warn if 'signal' or 'subflow' flag is not set
+
+ ip/ipmptcp.c        | 18 ++++++++++++++++++
+ man/man8/ip-mptcp.8 | 14 ++++++++++++--
+ 2 files changed, 30 insertions(+), 2 deletions(-)
+---
+base-commit: f9601b10c21145f76c3d46c163bac39515ed2061
+change-id: 20240605-mptcp-user-feedback-0676915250cb
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
