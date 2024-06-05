@@ -1,120 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F71021C185;
-	Wed,  5 Jun 2024 07:16:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 660461922D2
+	for <mptcp@lists.linux.dev>; Wed,  5 Jun 2024 07:27:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717571783; cv=none; b=Ojbx/YxMay+N8nuEWD5OYdjWCN3KeLwE4GvYgGZRGAdXs1UMXdT6YLc9LkXihE5GXSPkHH22N3g2kKU1nMufFkDtHkLbi2J+gpvnyP3vvGb/oOdlrHBx9chfvn/JOfJVxkvzX1FZs2wSeGnGgcDKOpcgR0msbkFtFBPmrAmyvfA=
+	t=1717572470; cv=none; b=Vzz7st12ra0CPvKK+azxu4ARVNT6CZQxZw1MQ5FmImmLi+jQxvEPSTAGk4wF++PoMsTFdAQTZVj79bzRrju+9DuzamZ7OSesJ/cy+bcCeqIslfSoR77Acnei20dTh8apQI8OeoT7bX3FOtMk3R13lDRtITd3q/mFWGg4Ia3OJqI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717571783; c=relaxed/simple;
-	bh=sxhJ+EeYfFnndf+P0KauzX3XfZr2LhOzY9YOAHJPD6w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TG5NDo3POV8GRiovSBWb3dyJR3FxdEzJFS27Fsrm4xLc0gNK5vCCk4fWiYJBWbXxeUdMGPzemr+y0YhjheAa8XnDx0LgNJKTHxmxQELl1+WHFUPqEVq8YSD8fEcFoFgriMLAK7OTAN+HgHje4Ewc9ohY7Zr6mOpo50LKrPJ7/RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PUklBisJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717572470; c=relaxed/simple;
+	bh=DktcD+4VNU+54D52HQ9w/n3Xsi1xpsYPfSMS/JF7oJ4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=uaTzbjjFjIj6cD8GRws7GAafoLdew07xvdzaOkGCRL5EWhbJMJC6EgiBS1ikmtVvdlfnP/Dt73X9xac5/K0FSxkzSq+ggWENVV5e7MQhFlt3YwHoatx0oxJYMBLIubWc3kBYBgMSuDIdHttwqd0K85UrujuX6x6bVVBuLcAIlqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FFWq9OAz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PUklBisJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7577CC3277B;
-	Wed,  5 Jun 2024 07:16:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FFWq9OAz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58DFFC4AF0F;
+	Wed,  5 Jun 2024 07:27:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717571782;
-	bh=sxhJ+EeYfFnndf+P0KauzX3XfZr2LhOzY9YOAHJPD6w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=PUklBisJrytmGj0XZcFRcCUwkYjPhYLL94hppWLuh5QfRoN6zA+hCICCGgdiTu6Et
-	 911xlyTYvfzLPe6SuFOxIPxd3ULHjWhh8g9zrzPRFgeDJAhmOTD4YRipCPBDViiHCx
-	 tYQBDGmtBTRVfpSvnDuPXhqn+bWBOZhgaMFYZSzAAdQQFVkLn8eSoEmLblLhkAsKjL
-	 LdeUP89jg+AnbK9CJbG2xTb90Nd9CTwXmeYArpTjPPT5VA04hPjhxxr7xumyvM8VD3
-	 J7bRzgYTL/FGQebqmotT7Dpm5yBDDiYDS/jG9kqSipUZ5afWHpzRYXYqbhSf/gZykw
-	 B0kFO25eBXwDw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 05 Jun 2024 09:15:42 +0200
-Subject: [PATCH net-next 3/3] mptcp: refer to 'MPTCP' socket in comments
+	s=k20201202; t=1717572470;
+	bh=DktcD+4VNU+54D52HQ9w/n3Xsi1xpsYPfSMS/JF7oJ4=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=FFWq9OAz8Q85KhgU4sHWsPyQVptyf69cL7kJIOne2Il2BBF8oFJM8W6d7ttFrYr0p
+	 +iAbT9NxVwDkHyaONGF7fb70fqrxAwjdbLEm+jC5ipsmWFri4G4ap06p2cYFelITVO
+	 oWRMCd8QPCgddx/7Vr3HNnCfMQC1bh/RxKMZHOR4bqQVrSqPdYNdMRM2y+nj75+Xa2
+	 gEDJt6bJIJMdKxLzg3f1YRGcH6T3GgC7H0Oi+I6tLRimnB1toxCDpifgQkjZZZ5y1T
+	 jYuu+Zvmo+11BgkEbB0qPsnccFH5XYhIRXKiBRiQgDovxGmCoCdqFezB94fdAMDqUE
+	 mhHZjHcAlNSWA==
+Message-ID: <5ea0af63-908a-4651-a4cb-aa9928430685@kernel.org>
+Date: Wed, 5 Jun 2024 09:27:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: ensure snd_una is properly initialized
+ on connect
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240605-upstream-net-next-20240604-misc-cleanup-v1-3-ae2e35c3ecc5@kernel.org>
-References: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
-In-Reply-To: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Davide Caratti <dcaratti@redhat.com>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2058; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Xd/BOnYnE8h1Cykv9cgIddsDI+Z+77oERfzWjuomB9I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYBC7HWWH3TEifZf4FmGVMWHnhruMbJ29zUlzn
- U6p/LIDWnyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmAQuwAKCRD2t4JPQmmg
- c5eUEAC2A6lQb6MHH4HnEJYrktKf4J/aM5++jxUXVHo9qmpgGdUTeCHtJnlYEUWWtNEZnUw3MTY
- iXC9SoqKo/ReBHdsqROzL1hG4tXoC9z4+SWjWogCQ5mf1AGmA55R2GqZNgtQPDNaiKZke/aGxTS
- p77YQg7OKhMvDwHPocOEmJSc2RLAa46xiLC8bCUrYaf9vxszaoAivinzzGFGXcAKQBBupHEBSqS
- WBpIjlX8zJ+MgFtr4BkGQB+fJDQiCVrArhMt2yrxJUbUgpRhiE612WaGqHxfrS00kqp/Y9HMw8E
- shS3h5jYhiuTT5A5+Uv5wIJXunyDnu/R8GiqBZtx44kBrh3I4FrFK3SOJ3rGvStLysxRz5PR+m6
- AGjNJc3kXFrmlqE2tFP+ygNuWk0eB26QGGjtrCciK/nS+ruxeuSChOjvXybRoOUcvvbwtYBjXab
- G/uoujC7VRzBbEnyOXZVJPVpLKtLWpDwigATMIN1did+tVzK9e4YNA57Mdsycg/Rfi2NFPL6UEj
- 32DLz7aCI8EgXDKr7d7A5/qLP9+RF61eYE6HojwIyF6YlIH64LTDguDp84QgguShL7qO95mIvi6
- YdJkmS2iqcrPXSB0Q6wz3EBQ9eJcixU0HN5HvGSwz2JsB11xT//vWqaBFktteMGINQtOLG78Qwy
- GSIuOFbF8NM+xUA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Davide Caratti <dcaratti@redhat.com>
+Hi Paolo, Mat,
 
-We used to call it 'master' socket at the early stages of MPTCP
-development, but the correct wording is 'MPTCP' socket opposed to 'TCP
-subflows': convert the last 3 comments to use a more appropriate term.
+On 04/06/2024 17:12, Paolo Abeni wrote:
+> This is strictly related to commit fb7a0d334894 ("mptcp: ensure snd_nxt
+> is properly initialized on connect"). It turns out that syzkaller can
+> trigger the retransmit after fallback and before processing any other
+> incoming packet - so that snd_una is still left uninitialized.
+> 
+> Address the issue explicitly initializing snd_una together with snd_nxt
+> and write_seq.
 
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/protocol.c | 4 ++--
- net/mptcp/subflow.c  | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+Thank you for the patch and the review!
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7ce11bee3b79..ead0bf63cf95 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2202,7 +2202,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
- 		if (skb_queue_empty(&msk->receive_queue) && __mptcp_move_skbs(msk))
- 			continue;
- 
--		/* only the master socket status is relevant here. The exit
-+		/* only the MPTCP socket status is relevant here. The exit
- 		 * conditions mirror closely tcp_recvmsg()
- 		 */
- 		if (copied >= target)
-@@ -3521,7 +3521,7 @@ void mptcp_subflow_process_delegated(struct sock *ssk, long status)
- static int mptcp_hash(struct sock *sk)
- {
- 	/* should never be called,
--	 * we hash the TCP subflows not the master socket
-+	 * we hash the TCP subflows not the MPTCP socket
- 	 */
- 	WARN_ON_ONCE(1);
- 	return 0;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 612c38570a64..39e2cbdf3801 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1719,7 +1719,7 @@ int mptcp_subflow_create_socket(struct sock *sk, unsigned short family,
- 	mptcp_sockopt_sync_locked(mptcp_sk(sk), sf->sk);
- 	release_sock(sf->sk);
- 
--	/* the newly created socket really belongs to the owning MPTCP master
-+	/* the newly created socket really belongs to the owning MPTCP
- 	 * socket, even if for additional subflows the allocation is performed
- 	 * by a kernel workqueue. Adjust inode references, so that the
- 	 * procfs/diag interfaces really show this one belonging to the correct
+Now in our tree (fixes for -net):
 
+New patches for t/upstream-net and t/upstream:
+- cb8305364a4e: mptcp: ensure snd_una is properly initialized on connect
+- Results: 6a73724ecdb9..1445e7997ac5 (export-net)
+- Results: 4b2b4ad31b2f..62017f8a5840 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8fb2c487a1ff37b885f724482fc82d85608b7ab5/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8aa3bd2d65c8827d0f8907d8dfb8e5623d15c346/checks
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
