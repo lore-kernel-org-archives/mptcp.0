@@ -1,80 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3689171BA
-	for <mptcp@lists.linux.dev>; Tue,  4 Jun 2024 16:49:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E67619148A;
+	Wed,  5 Jun 2024 07:16:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717519758; cv=none; b=KDmp+N6hjA0t1jd7ymzAZYw6fVwU3nYEIUetmckP5YhEVzhwo9wzCAXGaBhNDtOzE5oN2nH8vf17VI5lQEvtztlYIsvJ8udbL6zRJKATDlBJ0LZqILJO6LUuyz8+l/HEloC+Ayos0/RlotWkb89oq8GV/gxvzWS4qrWzypqqmQw=
+	t=1717571775; cv=none; b=AfELpcC5le71iCkl/zyr26ys0WvQ4YO+723n2E+smsSubpurS6lKzyFFcpVQk8xZFcGB8kb+5oOn8GuPLjzxDBeYksqGYmxyTCIUaqrJYuWhS6z7nlRdN7W8vNu7QPtEnOxVZvDWXvh1pXD02zoCa2x6uxOwNOvjHa4fCLNEuhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717519758; c=relaxed/simple;
-	bh=DeRkU8DmVmIRX3oK/Vty5otMUghPGx1cY/A7jUxjIMA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ta21AIb7mQVDipa3dEcf+yzAIf56ZL4UzeZaFKZvfrWJlZOwiMZ+3B9N0+8YPQ4/D2qIImkklHb4j4/4tNiSUkoqgYF9hs+f514NVcADVmy/6uXerqb5sGJdre09aLwrPvaKy4U91TtZ3wtNYxpQM79OpE2Mb8ZpCq3U+JYXXBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=frzkPGua; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717571775; c=relaxed/simple;
+	bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=OeHAFntMnq1MRQERN276JbOPkFftW+D4ownchITo7nrXoRAG1bM7RE4p8sovvrB0lxfuyigz+Q6GxUFculQ6vHpLOJx83JlmWLvV6TubxjO/+ZJbRwBFmZwLUheQwZbdSvJkmH/eMXF8phYkXQ7KtuHlyg9IqVUFANHAQ6gFSys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sHXojvJF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="frzkPGua"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9A3EC32786;
-	Tue,  4 Jun 2024 16:49:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sHXojvJF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE72C3277B;
+	Wed,  5 Jun 2024 07:16:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717519758;
-	bh=DeRkU8DmVmIRX3oK/Vty5otMUghPGx1cY/A7jUxjIMA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=frzkPGuaoGymcyIjT8FIxfHTId+NWBoAeJ22QRCdL/rsEHRJh8bL9pSouZyrV3tj3
-	 yIiTyGJGi57qe//6oltuTdpgtnwoqyyauwhbws9EDBm5OWKSMSoDZjwCKNM19R57wg
-	 dm72axDPpZKOH8mZGBZz+PC/NAH1QKZT/dVImgeFDVY3U/23bHkyfWHaRYfRxrcrFx
-	 mlO7L6Os9xKH4u4O+xlq8YIgdokBB/0Jc23JU9/VpRmdElmBE+eDAyxPcfcgfrXwL/
-	 D72Dhb8pfCjQNdvqNC7/jWGu4KIztEk5HGXtpH0/gBzDwVfPINhzx/53xnZ4LZ5jX4
-	 TP0J52pr8naAw==
-Date: Tue, 4 Jun 2024 09:49:16 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] mptcp: ensure snd_una is properly initialized
- on connect
-In-Reply-To: <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
-Message-ID: <2c7981d3-10d0-0ea5-90a8-1089decd6240@kernel.org>
-References: <61aae3730b8c35c2e0b8b70f5f2fe5170067f5c8.1717512099.git.pabeni@redhat.com>
+	s=k20201202; t=1717571774;
+	bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=sHXojvJFueOpYA7pqNWbErqcw7UPxoVixwaVF3YSLX6K36eiZpYkVD4dYLzty8ic6
+	 qpCHT5aOSxhZPZWexNWNiVp3rSD8fOdb4L8phiuhYJPPcDFQ/BEj1Sm/HJAwdxgIc6
+	 lFfc4YYnXBRNIK0Q7KUs4U36jqap77Em+y61cMrHGaEbmdbIQ3EoSvZtIG4FEIYhq8
+	 BBFzKrNY2HLRIff7tOjfIxcAcgEzfmW8GdtFET3p+poZyMQ4C6NZBzQlHHdyIewROy
+	 OwOUefuMuumXaXit3hjW4CzbEir9DNZ4FH8cGACDboLshpTrqshUXwAfSBSnifKO0Z
+	 gLXXng/Ud7ZHQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/3] mptcp: misc. cleanups
+Date: Wed, 05 Jun 2024 09:15:39 +0200
+Message-Id: <20240605-upstream-net-next-20240604-misc-cleanup-v1-0-ae2e35c3ecc5@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJsQYGYC/z2NwQqDMBBEf0X27EKMptL+ingIcW0XahqyiQjiv
+ xsEe5jDY3gzOwhFJoFXtUOklYV/vkBTV+A+1r8JeSoMWulOPVSHOUiKZBf0lEq2hP9qYXHovmR
+ 9Dtj3U6tN+3TGzFDWQqSZt+tpgNuF8ThOOh9DJ4MAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <tanggeliang@kylinos.cn>, Davide Caratti <dcaratti@redhat.com>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=909; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ej8v0/75YvFLQkYynFarXRgl/ZzJFpTxeBDUabEwZzM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYBC6giU7OqsLP9SRwngKz2nv8EwB1jWpW1LWI
+ UyWeEluJi2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmAQugAKCRD2t4JPQmmg
+ c5r3D/956rKFPfpm81mshDeIjhsjILlIJ+4T7jRszasXEwrmD1FFfM9zzRsHuLuhaGEKIqJGnZq
+ qUt+2FwXyKXJlOWHcXOiQGczmHFfiSuSTk6QldvdZSqYziGVdqk7BgLboLDgf61Ncx5WE5K/hyf
+ u9+3yVvgYlQMnNa+a8xhMwRHIy9cbhESkcDOdEbOfTPgc+/4g7ibMCeO9EdQiY9Fp82O3EU/DiQ
+ +NrXgChZGwQgjPoiIuOcHNiw9TeWFJ9E1gVQyKKxLEgiVWkJokTrQWTo2eGLz0Lrni6nhrLpoUg
+ Mt2hknqe+UdbXKvG6DuJfwNGc8apwZ7Oev5ZRmvAbmPqjCWze7X08+WYf6b7R/QJC0jx/QhAhYQ
+ aOJighLrS/f+I8kBimeKb9ovX+ZGwxyX9lA3wZR3CAM9WV9583Kx1qqne6SErBkteYzQkEIFU0G
+ bItoGG6aKBNHerCzESGOCEqLJmr4+SoYgi+rU+kIRG8cFN9CYv5qndTezY5OfwOqewKJiPvqkwW
+ pqUebbmdEG7Sxte2aVC6f37RRP9Ky12kADxcoVcKHR5py9CtjbBtNZS5XMYFtTdoeukSdpV+53c
+ 85Yv7G35rLLKlD4xonMQuuzMNAdA4Bn3nYmsQivRnhxLNPallUY5epqiJ/uVYhB5E6VEZv0jWXj
+ gf8NDtpwtOdIRJQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Tue, 4 Jun 2024, Paolo Abeni wrote:
+Here is a small collection of miscellaneous cleanups:
 
-> This is strictly related to commit fb7a0d334894 ("mptcp: ensure snd_nxt
-> is properly initialized on connect"). It turns out that syzkaller can
-> trigger the retransmit after fallback and before processing any other
-> incoming packet - so that snd_una is still left uninitialized.
->
-> Address the issue explicitly initializing snd_una together with snd_nxt
-> and write_seq.
->
-> Suggested-by: Mat Martineau <martineau@kernel.org>
-> Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-> Cc: stable@vger.kernel.org
-> Reported-by: Christoph Paasch <cpaasch@apple.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> net/mptcp/protocol.c | 1 +
-> 1 file changed, 1 insertion(+)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 2f8f32cd31d3..1c5b7796daaf 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3735,6 +3735,7 @@ static int mptcp_connect(struct sock *sk, struct sockaddr *uaddr, int addr_len)
->
-> 	WRITE_ONCE(msk->write_seq, subflow->idsn);
-> 	WRITE_ONCE(msk->snd_nxt, subflow->idsn);
-> +	WRITE_ONCE(msk->snd_una, subflow->idsn);
-> 	if (likely(!__mptcp_check_fallback(msk)))
-> 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_MPCAPABLEACTIVE);
+- Patch 1 uses an MPTCP helper, instead of a TCP one, to do the same
+  thing.
 
-Thanks Paolo, LGTM:
+- Patch 2 adds a similar MPTCP helper, instead of using a TCP one
+  directly.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- Patch 3 uses more appropriated terms in comments.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Davide Caratti (1):
+      mptcp: refer to 'MPTCP' socket in comments
+
+Geliang Tang (2):
+      mptcp: use mptcp_win_from_space helper
+      mptcp: add mptcp_space_from_win helper
+
+ net/mptcp/protocol.c | 8 ++++----
+ net/mptcp/protocol.h | 5 +++++
+ net/mptcp/sockopt.c  | 2 +-
+ net/mptcp/subflow.c  | 2 +-
+ 4 files changed, 11 insertions(+), 6 deletions(-)
+---
+base-commit: a6ba5125f10bd7307e775e585ad21a8f7eda1b59
+change-id: 20240604-upstream-net-next-20240604-misc-cleanup-77d32539c55f
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
