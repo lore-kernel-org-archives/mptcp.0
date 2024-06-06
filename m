@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C10C54E1CA
-	for <mptcp@lists.linux.dev>; Thu,  6 Jun 2024 18:58:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 99C7F44C68
+	for <mptcp@lists.linux.dev>; Thu,  6 Jun 2024 19:14:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717700322; cv=none; b=eq0linMFFXS4iE4AeUdRKO9i0c1TJsQdpz1v8S+0TvW9uAkwOj2Qmqf1qEjKyVm+vc6cbJdH2d+wP/JCTxfuR+r0heSFKN7swAFjB27utayjxBbFLKlhTg2bklwtuEHSGptL+VDghkCojKo+50yIfNunexE1vBwQdSaHLadCTHc=
+	t=1717701285; cv=none; b=NS7kQ6mDVtLuHfcSjHvdrZwGTqHe0cD+USHA9WUbHMMJm01RxP4A7/GrdGlXfOc8CQe2mtk3HGPRZo5+4Q2urVK5PzFhjSFENNbf/Q1NwT9rgT8r4x8BkeSsB7AmjicmzPAzujbSFbcVSri1SDPNQnS8hpr+hjKQsZ6NKKhjZMY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717700322; c=relaxed/simple;
-	bh=nB1QNND1z7idwp9v8vZ9F2SF9OyZmK7KTyxVFlE+hcg=;
+	s=arc-20240116; t=1717701285; c=relaxed/simple;
+	bh=5ndmfjv3Z6VUytV9KtPzgwMlSELqeWLzfPKgRJpxyEY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=Bdzi5ZJuOf8FREBOsEelhQE5ZQExa219K9AoAyDgepHTh727Hwg4LOml1CjB2WWSrkPBrc8HstJ9EpJL76yxxaSgxM9u+UE+gOIdCYoTvYhKmncRzguu4cqFXwfrpUNVRdaNmgguCsXFh/eDd41xZdGOkrNWAffkZ4FfqhXWjUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lpu/xDDh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=Ejwrb7s4bh4+SUcu9AFQ05xZvC5UmcMP63Q/n3BCtJViXJr+go6u4BGi0sCUzLa1Ga4cMOZEycIPq7BYMWGsDlKhr8xxvCwrwXrjUhidZC3c4kk2ghblmNAOikT+Q7UxbN0kpNXkbjWL7gcOYfTUmFbu05Qkt31Rl6xNrMVqmPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcwADqj7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lpu/xDDh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50FDEC2BD10;
-	Thu,  6 Jun 2024 18:58:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcwADqj7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A343C2BD10;
+	Thu,  6 Jun 2024 19:14:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717700322;
-	bh=nB1QNND1z7idwp9v8vZ9F2SF9OyZmK7KTyxVFlE+hcg=;
+	s=k20201202; t=1717701285;
+	bh=5ndmfjv3Z6VUytV9KtPzgwMlSELqeWLzfPKgRJpxyEY=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Lpu/xDDh8jyyT5mYxFHNAeFT2AIiXI6aLbKzxZVUgLyClTIHNqV6jhHGjhuTJJdhl
-	 uSJLkoGmAkrMXeeNDp0ewynjTl32fVKpFVUCz+g9E3/CcDMfcwTtucku/mDf5H9k2r
-	 5wuXhd6fPDEbRphrHla7PC78454C8smmt3RuFiWghdRZmRSf85ToheDnogsA6G0U0M
-	 hqA2ktJYvWPaFCHTZyjeiboKwmrdt0qTSmwcHQ5OgMZ1tdDxS6pIsvxjbTfr4jlCoi
-	 op+sG9MP3tcaPcT5Ihl4ZFlH2U7SkzHxzA3dsxg8gmEi3sI16qWas/mDBCwoBqRvkx
-	 qF3lo9jAt+P2Q==
-Date: Thu, 6 Jun 2024 11:58:41 -0700 (PDT)
+	b=AcwADqj7CDDkeZfwCPLtGqtiNsNA1QsKaFoMPFggjXk30cNNuP6wUcwziNopLCt60
+	 CmlzxlHW6H05XVms9KqmitZQatiCuUdgnsc/P6sVdEGnyYgCiJLEZcPhbZsw6yPCBb
+	 DuG8mb0DP+uQ5NgEZv6Bf+wiB3qQJ0ZgpX1BNCQfzHCWOqKv/IFb+sS37amJW9DQNi
+	 jt+3ndTJVWXhpj3RZERVdRbzQxkxNQVOwdmO5GVC4qdCj13dCe/Oji3sj9ldnzKf+a
+	 oY0csE92lN147jOXta1Fnji+XugRN2qMprcjSzerFQL5WFfn8+StmcxbYbb4SK66aU
+	 H0RSGxtPJDpLA==
+Date: Thu, 6 Jun 2024 12:14:44 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, YonglongLi <liyonglong@chinatelecom.cn>
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: update add_addr counters after
- connect
-In-Reply-To: <20240606-mptcp-pm-inc-cnt-sf-create-v2-1-67c4759a4885@kernel.org>
-Message-ID: <02951816-fe62-4d3b-4d78-20c293e1df26@kernel.org>
-References: <20240606-mptcp-pm-inc-cnt-sf-create-v2-1-67c4759a4885@kernel.org>
+cc: MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-iproute 3/4] mptcp: warn if 'signal' and 'subflow'
+ flags are set
+In-Reply-To: <20240605-mptcp-user-feedback-v1-3-d2dc3b399643@kernel.org>
+Message-ID: <72cb6b39-7de9-b339-12fa-e7a7546e8a60@kernel.org>
+References: <20240605-mptcp-user-feedback-v1-0-d2dc3b399643@kernel.org> <20240605-mptcp-user-feedback-v1-3-d2dc3b399643@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,122 +43,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Thu, 6 Jun 2024, Matthieu Baerts (NGI0) wrote:
+On Wed, 5 Jun 2024, Matthieu Baerts (NGI0) wrote:
 
-> From: YonglongLi <liyonglong@chinatelecom.cn>
+> Setting both the 'signal' and 'subflow' flags is very likely a mistake
+> from the user, and would bring unexpected behaviours as mentioned in
+> some bug reports on the MPTCP project.
 >
-> The creation of new subflows can fail for different reasons. If no
-> subflow have been created using the received ADD_ADDR, the related
-> counters should not be updated, otherwise they will never be decremented
-> for events related to this ID later on.
+> It is then important to guide the users by printing a warning on stderr.
+> Users can ignore this message if they have an atypical environment where
+> the initiator of a connection might accept the creation of additional
+> subflows from the other peer.
 >
-> For the moment, the number of accepted ADD_ADDR is only decremented upon
-> the reception of a related RM_ADDR, and only if the remote address ID is
-> currently being used by at least one subflow. In other words, if no
-> subflow can be created with the received address, the counter will not
-> be decremented. In this case, it is then important not to increment
-> pm.add_addr_accepted counter, and not to modify pm.accept_addr bit.
->
-> Note that this patch does not modify the behaviour in case of failures
-> later on, e.g. if the MP Join is dropped or rejected.
->
-> The "remove invalid addresses" MP Join subtest has been modified to
-> validate this case. The broadcast IP address is added before the "valid"
-> address that will be used to successfully create a subflow, and the
-> limit is decreased by one: without this patch, it was not possible to
-> create the last subflow, because:
->
-> - the broadcast address would have been accepted even if it was not
->  usable: the creation of a subflow to this address results in an error,
->
-> - the limit of 2 accepted ADD_ADDR would have then been reached.
->
-> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-> Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
 > ---
-> v2 (from Matt):
-> - Clarify the commit message
-> - Replace the Fixes tag
-> - No new line after the Fixes tag
-> - Use 'sf_created' instead 'subflow_added'
-> - Use '__mptcp_subflow_connect() == 0' instead of '!__mptcp_subflow_connect'
-> - Validate the modification in the selftests
-> - Added my Co-dev tag
-> - Link to v1: https://lore.kernel.org/mptcp/1716543865-37448-1-git-send-email-liyonglong@chinatelecom.cn
-
-v2 lgtm, thanks Matthieu and Yonglong Li:
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-> ---
-> net/mptcp/pm_netlink.c                          | 16 ++++++++++------
-> tools/testing/selftests/net/mptcp/mptcp_join.sh |  4 ++--
-> 2 files changed, 12 insertions(+), 8 deletions(-)
+> ip/ipmptcp.c | 9 +++++++++
+> 1 file changed, 9 insertions(+)
 >
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 766a8409fa67..ea9e5817b9e9 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -677,6 +677,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> 	unsigned int add_addr_accept_max;
-> 	struct mptcp_addr_info remote;
-> 	unsigned int subflows_max;
-> +	bool sf_created = false;
-> 	int i, nr;
+> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
+> index 9847f95b..0f09cf75 100644
+> --- a/ip/ipmptcp.c
+> +++ b/ip/ipmptcp.c
+> @@ -179,6 +179,15 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
+> 	if (adding && port && !(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+> 		invarg("flags must have signal when using port", "port");
 >
-> 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
-> @@ -704,15 +705,18 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
-> 	if (nr == 0)
-> 		return;
->
-> -	msk->pm.add_addr_accepted++;
-> -	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-> -	    msk->pm.subflows >= subflows_max)
-> -		WRITE_ONCE(msk->pm.accept_addr, false);
-> -
-> 	spin_unlock_bh(&msk->pm.lock);
-> 	for (i = 0; i < nr; i++)
-> -		__mptcp_subflow_connect(sk, &addrs[i], &remote);
-> +		if (__mptcp_subflow_connect(sk, &addrs[i], &remote) == 0)
-> +			sf_created = true;
-> 	spin_lock_bh(&msk->pm.lock);
+> +	if (adding && (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) &&
+> +	              (flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+> +		fprintf(stderr,
+> +		    "Warning: Setting both the 'signal' and 'subflow' flags is usually a mistake:\n"
+> +		    "         'signal' is used to announce additional addresses, typically for the\n"
+> +		    "         server side, while 'subflow' is used to create new paths, typically\n"
+> +		    "         for the client side. It is not typical to both initiate, and accept\n"
+> +		    "         new connections with the same peer. Continuing as requested.\n");
 > +
-> +	if (sf_created) {
-> +		msk->pm.add_addr_accepted++;
-> +		if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-> +		    msk->pm.subflows >= subflows_max)
-> +			WRITE_ONCE(msk->pm.accept_addr, false);
-> +	}
-> }
+
+Hi Matthieu -
+
+For this patch and the next one, I think it would be better to update the 
+man page with information about typical usage rather than printing this 
+error message. Seems like the ip tool doesn't have other informational 
+run-time messages like this (especially ones this long), and there's no 
+'-q' flag to silence them for non-typical cases.
+
+- Mat
+
+> 	if (setting && id_set && port)
+> 		invarg("port can't be used with id", "port");
 >
-> void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index aea314d140c9..108aeeb84ef1 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2249,10 +2249,10 @@ remove_tests()
-> 	if reset "remove invalid addresses"; then
-> 		pm_nl_set_limits $ns1 3 3
-> 		pm_nl_add_endpoint $ns1 10.0.12.1 flags signal
-> -		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-> 		# broadcast IP: no packet for this address will be received on ns1
-> 		pm_nl_add_endpoint $ns1 224.0.0.1 flags signal
-> -		pm_nl_set_limits $ns2 3 3
-> +		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
-> +		pm_nl_set_limits $ns2 2 2
-> 		addr_nr_ns1=-3 speed=10 \
-> 			run_tests $ns1 $ns2 10.0.1.1
-> 		chk_join_nr 1 1 1
 >
-> ---
-> base-commit: 91419da702aaa1ad2b0110a07fd50a1a38bade6c
-> change-id: 20240606-mptcp-pm-inc-cnt-sf-create-dfc49d798f13
->
-> Best regards,
 > -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 2.43.0
 >
 >
 >
