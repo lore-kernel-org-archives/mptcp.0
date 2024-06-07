@@ -1,144 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26D20193099
-	for <mptcp@lists.linux.dev>; Fri,  7 Jun 2024 13:58:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65E6C197521;
+	Fri,  7 Jun 2024 15:02:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717768714; cv=none; b=bw9ak6NXUm87MKDD6O6DemJi0RkbIUUdTNDjcIYmLdS//KrFOgHyx+E+Tfzqb9AmvKiae80e3sgSWmYxAJiulL6maaqViwlxB/lh8+hr1SpCRp+PzLvh2yHEmxVmXM4Y/9pPVq+8TqY3mMb8aSv63AZ8LAPYl7GLrv6z/qR0+r8=
+	t=1717772534; cv=none; b=WsFKnpt1FjhnR6V3EmKzhJd0iXd5gTwUCiNxd8QofSMInQQbqa8HU8sm4JjpDdw9hnyYIpuUnkIy8fTK82r8uYdvcwihkSsbjSEDX8fVBOHdeAysF2s4asZeFkZ5rBoqFDXJoJyI583HAeHRKjSMV6HyN80d7U2TQkh+CjwQ0jI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717768714; c=relaxed/simple;
-	bh=hIVIgLjbKfOABzqKjZ8js3XD88+coKcN00OUDaEleKY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ab9+wHtvntxBU10IYDkriCjR4+tMSSt3zezGk3sg1tjr+84o4AzAInGaB82tyR5m+nVi8TzrXWEYZdQAKvulp70DYglFAjGKcts6LtUcsCG7wjay4b3h2za1o7pciwy3i66tbx58HsfnTwQW0imITev7qeuIrosiqDu//TJPN0Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=abwhT70Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717772534; c=relaxed/simple;
+	bh=uF8vT+OcPDdR5VdfX4WfqKuZuRJ7pOLHE27ORfVXlFg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=CHvjRW7xEHBtgzFSg2K4yFaTJMXWrFFacvTBSuXejbOFpQK6rEAICZbj6TsS+1VVUTQDCM9yDH0lXup/CfRjIrOaN/UcwYNdgr4cHc2LM8cMF9X0kq+8ZQZc4XmAD0mAiOOLXSKE0khH3VDxQ9RSwnvWBbWzisdCd1JBxRyV6Ew=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OgRNkV9V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="abwhT70Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEC42C2BBFC;
-	Fri,  7 Jun 2024 13:58:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OgRNkV9V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2C9CC2BBFC;
+	Fri,  7 Jun 2024 15:02:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717768713;
-	bh=hIVIgLjbKfOABzqKjZ8js3XD88+coKcN00OUDaEleKY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=abwhT70Q6cLayFlOtuIkOiCjOB6XdqCSvUPvUViLMTwLJEK12mzJDGV1WGOKIhcT1
-	 ehmIHqasG73vpquQg1TtfQWRlCGHK8TFd58tIdrxpiNYWEO0j9P0j5NcZqrz2PBcWT
-	 bHze4pEEaVurLEVehTosfpSBew8HKLiQdzGD/c847zQThiDubISRc8B1S5UD0MQIhT
-	 caIa19eoL+GRYYa9fXBWQTUL6WdfL7XIfha4yGT2mqQyiBXMTNSI8GyYWM8CO9geAj
-	 GVOj6VnEBaEiETg6kU4HJ63ilxtuljstItMUesPZ86vABsCV9bztfhflLuuukcLGkp
-	 FA72W7iCtCVcg==
-Message-ID: <e1d9f050-69a0-41fb-9015-49ee31caa677@kernel.org>
-Date: Fri, 7 Jun 2024 15:58:30 +0200
+	s=k20201202; t=1717772533;
+	bh=uF8vT+OcPDdR5VdfX4WfqKuZuRJ7pOLHE27ORfVXlFg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=OgRNkV9VGlIiqIjSZo4jIJWcrQzU0COGkyi78cBkg3cKtjgtogWfVZWKbD6CD5h8W
+	 VRyfEsfQxh3Q8SpvnVep+nHhzruYU8tzsaV+GMyFRhD/1AsgWbzGmZyMpzsuo0kHmb
+	 7Zt+JCeYOM8C0zz77ryy6E4LsA2I6/MmPsw0vQK22A8iR7P6SlZSEpBDV0JoX5n9GH
+	 Z7t3YpRtBHvNJgAy0zvfFyBZFkBHsJnHJhre/wM1yMWaKzlD8cWJG43t0s0vb2kQy5
+	 bx94E9tOdG71lD2bnPrCqMPjhrj/Y4rG/2HAIsZpoN9u1KViTFTuWCcpHfkKHTwrVh
+	 XCaClJrwAOQSw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/4] mptcp: various fixes
+Date: Fri, 07 Jun 2024 17:01:47 +0200
+Message-Id: <20240607-upstream-net-20240607-misc-fixes-v1-0-1ab9ddfa3d00@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: update add_addr counters after
- connect
-Content-Language: en-GB
-To: YonglongLi <liyonglong@chinatelecom.cn>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>
-References: <20240606-mptcp-pm-inc-cnt-sf-create-v2-1-67c4759a4885@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240606-mptcp-pm-inc-cnt-sf-create-v2-1-67c4759a4885@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIANsgY2YC/z2MQQ5AQAxFryJda9IRMYmriIWYogtDpohE3F1ZW
+ L73898FyklYoc4uSHyIyhINXJ5BP3VxZJRgDAUVJVXkcV91S9zNGHnD386iPQ5ysuKryDvvQkV
+ gmTXxN1ilATtBe98P4PwTtncAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Davide Caratti <dcaratti@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ Christoph Paasch <cpaasch@apple.com>, 
+ YonglongLi <liyonglong@chinatelecom.cn>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1437; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=uF8vT+OcPDdR5VdfX4WfqKuZuRJ7pOLHE27ORfVXlFg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYyDyXD9GnRwMZjOUY8pzRftCN0te079/gk33y
+ QAyGVFlIjmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmMg8gAKCRD2t4JPQmmg
+ c+toEAC5Il+4G9yWn+KCtBNluOSVUDQ1BitLnWbvmxbZks94ofCsmkGIneSZlEx4E6dBjdq0OCa
+ sRLtJ44sEd20/adnP4lBIEYhX1Nvdmgcokg9/8MkjhUMEsrDMtOVC4oXdd7Qny4q3eB7VEzw0AN
+ SlIElE0hgYqucoXbSGLZQ+B19mhIryj2/iyD0pym/8mOckfybU3qls+9PyPsuZx7QWqEcMAFnL/
+ VNl81+gke9qsq7+slP0T/I05fnqcA6VJTUy9d51g6FrEAutlFlYW31djKuIRYHmEDTO8kC+NKSq
+ ewGw25W1To59re8VHRAFu2KNcyc9fBQIyZ4ilw1ntCRxa6W9f4RKQAfvBx0HoFudMfUIVRNw5ap
+ ZBq9hLKDibELegf8ojRAO0IG2F36ATYVXRa8gqNtqkr0Rtd3bbA6qYJ+BuLVhVoz2bPf2W6jAvk
+ Dko75mBdNWFvqKEZDZV4G0vbomOk+IDeyH7LA6Nwfn2X1buBrTgE9R29oI4a/DdKZJDmUJIwDk5
+ Ig2j93I77bDntjyxGD1V5Dpj52qNxYmK7DSZVpWTOlZ0Nzx+rRbDJ1cjrlU4U146rOUJRYvwv7K
+ nRC394Y0NlGcUeokkSBpy/f9jxmanVrtAYytUNQxY97e1zwfLg2Kw8CvtCwGAd83b3b1qZepwS/
+ n39TKg6jAKJkx9w==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Yonglong Li, Mat,
+The different patches here are some unrelated fixes for MPTCP:
 
-On 06/06/2024 19:16, Matthieu Baerts (NGI0) wrote:
-> From: YonglongLi <liyonglong@chinatelecom.cn>
-> 
-> The creation of new subflows can fail for different reasons. If no
-> subflow have been created using the received ADD_ADDR, the related
-> counters should not be updated, otherwise they will never be decremented
-> for events related to this ID later on.
-> 
-> For the moment, the number of accepted ADD_ADDR is only decremented upon
-> the reception of a related RM_ADDR, and only if the remote address ID is
-> currently being used by at least one subflow. In other words, if no
-> subflow can be created with the received address, the counter will not
-> be decremented. In this case, it is then important not to increment
-> pm.add_addr_accepted counter, and not to modify pm.accept_addr bit.
-> 
-> Note that this patch does not modify the behaviour in case of failures
-> later on, e.g. if the MP Join is dropped or rejected.
-> 
-> The "remove invalid addresses" MP Join subtest has been modified to
-> validate this case. The broadcast IP address is added before the "valid"
-> address that will be used to successfully create a subflow, and the
-> limit is decreased by one: without this patch, it was not possible to
-> create the last subflow, because:
-> 
-> - the broadcast address would have been accepted even if it was not
->   usable: the creation of a subflow to this address results in an error,
-> 
-> - the limit of 2 accepted ADD_ADDR would have then been reached.
+- Patch 1 ensures 'snd_una' is initialised on connect in case of MPTCP
+  fallback to TCP followed by retransmissions before the processing of
+  any other incoming packets. A fix for v5.9+.
 
-Thank you for the original patch, and the review!
+- Patch 2 makes sure the RmAddr MIB counter is incremented, and only
+  once per ID, upon the reception of a RM_ADDR. A fix for v5.10+.
 
-Now in our tree (fixes for -net):
+- Patch 3 doesn't update 'add addr' related counters if the connect()
+  was not possible. A fix for v5.7+.
 
-New patches for t/upstream-net and t/upstream:
-- 98857efdda00: mptcp: pm: update add_addr counters after connect
-- Results: a39272cab4d2..773de679718d (export-net)
-- Results: 4dce5dfd2129..ce1f2fbad3db (export)
+- Patch 4 updates the mailmap file to add Geliang's new email address.
 
-Tests are now in progress:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (1):
+      mailmap: map Geliang's new email address
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/af11f42fc788bc4832e56eac10228a31d8fb0764/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0bcdbf97432494747dd13cec8d264f2e670e1bb6/checks
+Paolo Abeni (1):
+      mptcp: ensure snd_una is properly initialized on connect
 
-Cheers,
-Matt
+YonglongLi (2):
+      mptcp: pm: inc RmAddr MIB counter once per RM_ADDR ID
+      mptcp: pm: update add_addr counters after connect
+
+ .mailmap                                        |  1 +
+ net/mptcp/pm_netlink.c                          | 21 ++++++++++++++-------
+ net/mptcp/protocol.c                            |  1 +
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  5 +++--
+ 4 files changed, 19 insertions(+), 9 deletions(-)
+---
+base-commit: c44711b78608c98a3e6b49ce91678cd0917d5349
+change-id: 20240607-upstream-net-20240607-misc-fixes-024007171d60
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
