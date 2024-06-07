@@ -1,168 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54B221991D5
-	for <mptcp@lists.linux.dev>; Fri,  7 Jun 2024 15:56:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3310D134B2;
+	Fri,  7 Jun 2024 16:31:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1717775792; cv=none; b=ETL0twaVVbB6jRmmJ94emwXUQC8dPjMF76e20A409oFij0jEsz6wcb0UshNOHyp/kq04QuOWe7D8dmuXdcI1Cs46uUrQv8z6a0giH1f/txAt6PyROIgsgntN+juAoTXYbrhfAhyu7USXW4v35FnelKSYZ571zeI8ZvjkJ8iNUkQ=
+	t=1717777875; cv=none; b=iQiyrJ+PABt5dxEWVInA4dBhCjitzw2j1/L1ZCpF8gHXqldW1g5274fW+YQMsAAzaQ21jbKtWrDIB2AWZnKgTHjt/Ib+RI9GNKPVSCmTsCnGl0eaHptf7k1RAWKob4a6xmoWKmOYN0LupkN8lOyfokUuEYFaMZtUMhWWYzfttl8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1717775792; c=relaxed/simple;
-	bh=2RI6uEvQt54v2JJ3Izsb3FXclzaZvUjRq3HvFFlOsKk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RZbXPyvX999sHzHp/MYdC94TGt1SPGS7+GZx2kOnB18f4UIQz7dUUbFFBm3J+sF+HWJADKrt/0aqix9DJqpOO9hJCxkjavIJ8bsko3tRYwudST8lRBUklPOu0Q1mJtac9qMKP5vtO4xycELYrr8m8vnpuCl11r4ghNMDMrmcCtQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LoCMCdD9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1717777875; c=relaxed/simple;
+	bh=jhLtBrMAo8ryDnhWQTtDLfSSE4LNiPRN3afuSKN4v8Q=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=YAFH9N3SkjM9RbGz3Q0A9wptXjHmpVkMSOCYJDRIZdxMe6nU3q038gwY/RXQ64K9dwx255PsvTvCRKTMnEekmLI/UfbIxaCq3YIQDyB03Km1hawFZ6nIBbTaUoGNwKj7UE3TsVyQzBbd6+VL0PGMXRl7Za6d252UU1JcrbTOrBw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8LJpdch; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LoCMCdD9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4964CC2BBFC;
-	Fri,  7 Jun 2024 15:56:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8LJpdch"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FDC1C2BBFC;
+	Fri,  7 Jun 2024 16:31:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1717775791;
-	bh=2RI6uEvQt54v2JJ3Izsb3FXclzaZvUjRq3HvFFlOsKk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LoCMCdD9z10nOWwsY2UPo7mam14XZc68umiXeIrhzlqFiGXjGZqqCfiPwuE9cACZK
-	 rqrC/4rN3duKf1aQHqwPmouX750oT9GRDcnALUJFzQosTQKMdkbFibzRHXZms8to9A
-	 bSWxWrC1W6ERhLtAYlKEhxMNxG4NcatpJY5au0NgAUfVjkfxEwcDVF+/FN5KsSGHjc
-	 Qk1KlmRtseKWjJ4reZUtLPB8DU4ZVRdkKOnTl5c7XPEY7qhvWG/D/NGBw7LWq2MRT0
-	 B3StFh6XeVhFvjUWLwxGUzn14xkkqFClSQZ6uq0VD2b/ne94qDRRwplvn3a6jsc/sC
-	 1LyJSfocnYHOw==
-Message-ID: <ed821f74-95fd-49f2-ae3c-91e2e7bfa395@kernel.org>
-Date: Fri, 7 Jun 2024 17:56:29 +0200
+	s=k20201202; t=1717777874;
+	bh=jhLtBrMAo8ryDnhWQTtDLfSSE4LNiPRN3afuSKN4v8Q=;
+	h=From:Subject:Date:To:Cc:From;
+	b=R8LJpdchzAmPkZB3CQqsWbRchh4lBgCpjcc/u5EtLHj7wDjm+cSEYIIUysptV7xKc
+	 +lql0j496256hrtgYFdnnBX5qq91mn8vg2fb1aHJcjUb3tGrA9NE9ffdxlCLnxMiyX
+	 Ck9mlHo/H4I1lOs4PKXq+BwA2ZTgciY2Ye22e5tRkWI8ldkd9B7zm8iqj+3JwoKkuD
+	 X4L3xWhA6CIzDp+0Dfm2kQA7ZuZZQcm5q1hH0M5w0RY6KyjOFbrdyul3JGA2pSBIDe
+	 t/24waOtkijFzszzL2lmoHwjV7bv921rdKAZ5t4e7oiqCkUjo3L6j9fL+bT7jqHXGA
+	 0ZNgLbOrKxcOQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/6] selftests: mptcp: use net/lib.sh to manage
+ netns
+Date: Fri, 07 Jun 2024 18:31:01 +0200
+Message-Id: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-iproute 3/4] mptcp: warn if 'signal' and 'subflow'
- flags are set
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20240605-mptcp-user-feedback-v1-0-d2dc3b399643@kernel.org>
- <20240605-mptcp-user-feedback-v1-3-d2dc3b399643@kernel.org>
- <72cb6b39-7de9-b339-12fa-e7a7546e8a60@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <72cb6b39-7de9-b339-12fa-e7a7546e8a60@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMU1Y2YC/z2NwQrCMBBEf6Xs2YU0rRX8FfEQ41QX2hiyqxRK/
+ 91Q0MMcHjO8WUlRBErnZqWCj6i8UoX20FB8hvQAy70yeed7N7gTv7NaQZg5wWoW43+lmEaDmvK
+ cLeZ9McmNu+GIvoNHGwNVcS4YZdlPL/TT0HXbvqkbt9+OAAAA
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <tanggeliang@kylinos.cn>
+X-Mailer: b4 0.13.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1664; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=jhLtBrMAo8ryDnhWQTtDLfSSE4LNiPRN3afuSKN4v8Q=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmYzXPzkHF/dP9UOJPwz+3WRICf4XmqHzCwJCMy
+ ZGrKGQ0BxGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmM1zwAKCRD2t4JPQmmg
+ cw0vEADdwBa+vFOXcyCHnBWs8kybF7ImH9DJbc0enEgjonqQYfehgbizvU3ENFoJQlfqT7cC60A
+ h/EHNbo9BkOdyh8ZfaISU25EJqTe9dbVDA+f1lOYnqxQMWEtkIEnhGV5A9pV32fVgBLtuG8Q7iF
+ Huyz4W9yWD5a1c5xGz1fiz753EXts/qRuwJLbf2JPDHCP7zCHJoRNnDBotPjf0c3kRn9PkFK3bV
+ YmM7MmxLBvl0J1Ho/SR5S0+D8ocQiWPdx7Lt7S3w8uyA55YxrPf+SDCpwoIF4/9N2vyRHOe+2x9
+ S/yGZSkzJ60KtdCFJ55Anvf95U1SK9pjKZtLYPLyNmbEqiKnrLjpY7dofk/VqwKwF1gYhdthk4r
+ A3e/fekh+j2ChXRcKKYgGbfjsTS0A0/lBRj9jpTnnQ7XIUlwBl2PWZN2NuraQihI5xrgpUrpAOe
+ AiLSvugJMicSEQscVU8RPQ/YwVWiB5hONvuoyiy+M/zEgaaA+8yf3TM/o4N/1VEt8ZOT2auZd/i
+ 3qmLl1dINopja5k9dp5FEaVjPDGHCx+3zU6ynNnTPhRcPeAPSYji+/Qvstr4/msfPG9hQ6eudlq
+ um6qKw9RroBp04SbGptkHP3QpzMOtR5Ahm6hubzGl/R0dQ4nZZMLO90tMC46NEE+2nFJZWkCum1
+ HwlEb88ashD45MQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Mat,
+The goal of this series is to use helpers from net/lib.sh with MPTCP
+selftests.
 
-On 06/06/2024 21:14, Mat Martineau wrote:
-> On Wed, 5 Jun 2024, Matthieu Baerts (NGI0) wrote:
-> 
->> Setting both the 'signal' and 'subflow' flags is very likely a mistake
->> from the user, and would bring unexpected behaviours as mentioned in
->> some bug reports on the MPTCP project.
->>
->> It is then important to guide the users by printing a warning on stderr.
->> Users can ignore this message if they have an atypical environment where
->> the initiator of a connection might accept the creation of additional
->> subflows from the other peer.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> ip/ipmptcp.c | 9 +++++++++
->> 1 file changed, 9 insertions(+)
->>
->> diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
->> index 9847f95b..0f09cf75 100644
->> --- a/ip/ipmptcp.c
->> +++ b/ip/ipmptcp.c
->> @@ -179,6 +179,15 @@ static int mptcp_parse_opt(int argc, char **argv,
->> struct nlmsghdr *n, int cmd)
->>     if (adding && port && !(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
->>         invarg("flags must have signal when using port", "port");
->>
->> +    if (adding && (flags & MPTCP_PM_ADDR_FLAG_SIGNAL) &&
->> +                  (flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
->> +        fprintf(stderr,
->> +            "Warning: Setting both the 'signal' and 'subflow' flags
->> is usually a mistake:\n"
->> +            "         'signal' is used to announce additional
->> addresses, typically for the\n"
->> +            "         server side, while 'subflow' is used to create
->> new paths, typically\n"
->> +            "         for the client side. It is not typical to both
->> initiate, and accept\n"
->> +            "         new connections with the same peer. Continuing
->> as requested.\n");
->> +
-> 
-> Hi Matthieu -
+- Patches 1 to 4 are some clean-ups and preparation in net/lib.sh:
 
-Thank you for the review!
+  - Patch 1 simplifies the code handling errexit by ignoring possible
+    errors instead of disabling errexit temporary.
 
-> For this patch and the next one, I think it would be better to update
-> the man page with information about typical usage rather than printing
-> this error message. Seems like the ip tool doesn't have other
-> informational run-time messages like this (especially ones this long),
-> and there's no '-q' flag to silence them for non-typical cases.
-That was my first intension, but I think only adding such info in the
-man page will not prevent frustrations, and bug reports. I mean: that
-supposes people are (fully and carefully) reading the man pages, and not
-just 'ip mptcp help' :)
+  - Patch 2 removes the netns from the list after having cleaned it, not
+    to try to clean it twice.
 
-I thought it was OK to let people ignoring this message, because the
-action will still be done. But what about adding a new option
-'nowarning' option then?
+  - Patch 3 removes the 'readonly' attribute for the netns variable, to
+    allow using the same name in local variables.
 
-  ip mptcp endpoint add (...) [ nowarning ]
+  - Patch 4 removes the local 'ns' var, not to conflict with the global
+    one it needs to setup.
 
-If people know what they are doing, they can add this not to have the
-warning, while not fully ignoring what is printing to stderr.
+- Patch 5 uses helpers from net/lib.sh to create and delete netns in
+  MPTCP selftests.
 
-If not, I'm not sure people will notice what they are doing is very
-likely wrong.
+- Patch 6 uses wait_local_port_listen helper from net/net_helper.sh.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (3):
+      selftests: net: lib: remove 'ns' var in setup_ns
+      selftests: mptcp: lib: use setup/cleanup_ns helpers
+      selftests: mptcp: lib: use wait_local_port_listen helper
+
+Matthieu Baerts (NGI0) (3):
+      selftests: net: lib: ignore possible errors
+      selftests: net: lib: remove ns from list after clean-up
+      selftests: net: lib: do not set ns var as readonly
+
+ tools/testing/selftests/net/lib.sh             | 55 +++++++++++++++-----------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 33 +++++-----------
+ 2 files changed, 42 insertions(+), 46 deletions(-)
+---
+base-commit: a999973236543f0b8f6daeaa7ecba7488c3a593b
+change-id: 20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-365e43e2e1ca
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
