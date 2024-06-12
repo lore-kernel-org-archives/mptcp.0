@@ -1,89 +1,71 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959E32D60C;
-	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4248B173331;
+	Wed, 12 Jun 2024 12:52:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718161238; cv=none; b=G7h6qmdqkTTNPdKYzR5oyKnXUru59bugaomz6xAyWChabsPgJRSise71y3AhjdbEDZB5ev2hRAC9xq3hkBxtRIKzvAdGqg/9oxfjJAke3QofqkIz0ChaRGS7xsBDoiU0mMTCZncIjIuvy5gb7gkUKwZabF4oLoyLM7RLHBmimlc=
+	t=1718196764; cv=none; b=bgg47hUyu2Jghir8FB2SwaupAulBD/DNPtY3KOWIz5IHypWJSnMsvbUQnFBkCDwmwtiP8J06md30/bWOtI9XWDtRl/CrwmtpWUK0v3EBKsJzS6kL4/MsnknTVCUtR+QFC6NZdfcugbvxVqbAS0aWOLQfZT1yjtgexvrmRsruhUk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718161238; c=relaxed/simple;
-	bh=J/kQkK84KQJAkIFQhoiCtHTv4yGPIAirFnvd3aW3x2Q=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Z8p7BhrjtcL+nrHSo5LEoXvtoOqHT1+A6PEHMNBJy1m4muDilMQcIGo7I2AOau4m8daw7ZLl+zmVpIEk5eXamW9xzIMvm0WyWz+WXj4w5j3hzzxNMBJvd/VUtzaTDGfgU2aE2APIWQh0lcLLajTAVyzMF538VdDqdVDCLrGQzHE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXtI/rnI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718196764; c=relaxed/simple;
+	bh=PktZaXz5s4fvZyc9Sq5NIIfPxTn3kdxOWAzFL3DtRKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=DAOb/oEeRiVZyIZBcoAP4fP5j9D3PoLvyTjmf/K/xsXZBSyaEXXMvuRj/gWS5y7/QHkVeWGf/Xtiwknk1dWTJPOTI8vkcsxlZ7wgTLF+LuZ8qAulJfHM+BQgfM3Ko44+5NrCHHe8zgceH1Gkt6m9Gj3SdnUm1UXqeFk/E2202GA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hl6SvsaN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXtI/rnI"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 71BCCC32786;
-	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718161238;
-	bh=J/kQkK84KQJAkIFQhoiCtHTv4yGPIAirFnvd3aW3x2Q=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=SXtI/rnIth8j9oQDxbtTNNpSDTVyRo+yikew61JFqkGM+8i73aXqcSL2ukTqWHDeJ
-	 gQPEUPk8JQljrLwi0Kr+ZkWDir80ErunONy/7gFX9F3wfZ/q9KD09hp9du1X5ULZyE
-	 +mBwDDae6qMLsTXQsCpPTGw2CW1Yhqpu44crupj9nZXmQAntGHNo/qc0n6nCY4WGPw
-	 5Uu1zfZ4I9kRM5qIj0mRbrLBfBWk7n/haowc/UkR4R95M4WS3cNeGOCjpj4U5UfqXR
-	 gvAGukxWrcKdsPTKyjDsANM9682YMuP2scfeT2VvdA3/GTGPXF/jlJQ0M0IWTaFrrP
-	 3+ip3ZYHe4Szg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 636AAC54BB2;
-	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hl6SvsaN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67F86C4AF1A;
+	Wed, 12 Jun 2024 12:52:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1718196763;
+	bh=PktZaXz5s4fvZyc9Sq5NIIfPxTn3kdxOWAzFL3DtRKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=hl6SvsaNxSzY9Ne/1e328WMFTSjQImgBukl2vf8L+aQe3gSUYb7XNtt+LQmKAAdv5
+	 Bm3giSaOXJhoSPN0JkirYOVVqDSbJua31nZsW5ouU7Hl3fnm7ajvPX8Ryz/93LAL2e
+	 HfFi4rnfsuk777EJ66iZMZCwQzuVM2DPrvf4KxE0=
+Date: Wed, 12 Jun 2024 14:52:41 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, stable@vger.kernel.org, sashal@kernel.org
+Subject: Re: [PATCH 6.6.y 0/3] Backport of "mptcp: fix full TCP keep-alive
+ support"
+Message-ID: <2024061232-slinging-facsimile-d487@gregkh>
+References: <20240529095817.3370953-5-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/6] selftests: mptcp: use net/lib.sh to manage
- netns
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <171816123840.11889.13593974623249727089.git-patchwork-notify@kernel.org>
-Date: Wed, 12 Jun 2024 03:00:38 +0000
-References: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
-In-Reply-To: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org, martineau@kernel.org,
- geliang@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240529095817.3370953-5-matttbe@kernel.org>
 
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 07 Jun 2024 18:31:01 +0200 you wrote:
-> The goal of this series is to use helpers from net/lib.sh with MPTCP
-> selftests.
+On Wed, May 29, 2024 at 11:58:18AM +0200, Matthieu Baerts (NGI0) wrote:
+> It looks like the patch "mptcp: fix full TCP keep-alive support" has
+> been backported up to v6.8 recently (thanks!), but not before due to
+> conflicts.
 > 
-> - Patches 1 to 4 are some clean-ups and preparation in net/lib.sh:
+> I had to adapt a bit the code not to backport new features, but the 
+> modifications were simple, and isolated from the rest. MPTCP sockopt 
+> tests have been executed, and no issues have been reported.
 > 
->   - Patch 1 simplifies the code handling errexit by ignoring possible
->     errors instead of disabling errexit temporary.
+> Matthieu Baerts (NGI0) (1):
+>   mptcp: fix full TCP keep-alive support
 > 
-> [...]
+> Paolo Abeni (2):
+>   mptcp: avoid some duplicate code in socket option handling
+>   mptcp: cleanup SOL_TCP handling
+> 
+>  net/mptcp/protocol.h |   3 ++
+>  net/mptcp/sockopt.c  | 123 +++++++++++++++++++++++++++++--------------
+>  2 files changed, 87 insertions(+), 39 deletions(-)
+> 
+> -- 
+> 2.43.0
+> 
+> 
 
-Here is the summary with links:
-  - [net-next,1/6] selftests: net: lib: ignore possible errors
-    https://git.kernel.org/netdev/net-next/c/7e0620bc6a5e
-  - [net-next,2/6] selftests: net: lib: remove ns from list after clean-up
-    https://git.kernel.org/netdev/net-next/c/92fe5670271a
-  - [net-next,3/6] selftests: net: lib: do not set ns var as readonly
-    https://git.kernel.org/netdev/net-next/c/577db6bd5750
-  - [net-next,4/6] selftests: net: lib: remove 'ns' var in setup_ns
-    https://git.kernel.org/netdev/net-next/c/f8a2d2f874b7
-  - [net-next,5/6] selftests: mptcp: lib: use setup/cleanup_ns helpers
-    https://git.kernel.org/netdev/net-next/c/f265d3119a29
-  - [net-next,6/6] selftests: mptcp: lib: use wait_local_port_listen helper
-    https://git.kernel.org/netdev/net-next/c/1af3bc912eac
+All backports now queued up, thanks so much for them!
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+greg k-h
