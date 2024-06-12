@@ -1,123 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C08222E851
-	for <mptcp@lists.linux.dev>; Tue, 11 Jun 2024 15:42:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 959E32D60C;
+	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718120526; cv=none; b=Q0z85I2xQVgRFGpPuWRYIyjtltDf1rKTCSV/YlVDcSIryxuZn70ACT5dCNdMm4VVkSsmCvbDk6ZmQydSAYw7H7+hiFsMcZQ7UZf5yuoZpMytGpg1G/Ds6EFMn1N591mMIn6o3Ens902kN92c2ulJ1fc5POI4UL+QJRr/KH2KmDg=
+	t=1718161238; cv=none; b=G7h6qmdqkTTNPdKYzR5oyKnXUru59bugaomz6xAyWChabsPgJRSise71y3AhjdbEDZB5ev2hRAC9xq3hkBxtRIKzvAdGqg/9oxfjJAke3QofqkIz0ChaRGS7xsBDoiU0mMTCZncIjIuvy5gb7gkUKwZabF4oLoyLM7RLHBmimlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718120526; c=relaxed/simple;
-	bh=1/7eAVDQat5gCXNSBJV4n2WJ1ms6yCnQD0/6uNgIv3o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=M/b9GBcWLctgGaBwu2u41Samgx687vrBSssJKbEXOnIjtaOItczHHlzD5x9FegqGSN4d7E1btwinjCpWrbpVaMhCGS+8dGdCLKauxotAWOkD5PGphD2KQ0LcQkTs7j2xaD5pKBaYnd2UbSk/svFHvSzh2u+9zlOpZBYF84l04N4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBZV0k3h; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718161238; c=relaxed/simple;
+	bh=J/kQkK84KQJAkIFQhoiCtHTv4yGPIAirFnvd3aW3x2Q=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Z8p7BhrjtcL+nrHSo5LEoXvtoOqHT1+A6PEHMNBJy1m4muDilMQcIGo7I2AOau4m8daw7ZLl+zmVpIEk5eXamW9xzIMvm0WyWz+WXj4w5j3hzzxNMBJvd/VUtzaTDGfgU2aE2APIWQh0lcLLajTAVyzMF538VdDqdVDCLrGQzHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXtI/rnI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBZV0k3h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5BC2C4AF48;
-	Tue, 11 Jun 2024 15:42:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXtI/rnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 71BCCC32786;
+	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718120526;
-	bh=1/7eAVDQat5gCXNSBJV4n2WJ1ms6yCnQD0/6uNgIv3o=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=tBZV0k3hWrkYBT5UC28Fc+R1C+YE7CQ5ZDgtUdg8nyxAmexlBigssCO59CjDcQK+S
-	 jkj+1T/nX5XQF4ayTZtnTqSPfvJ/4FDC32GS/nZMptwVNMh2AlV1JSWD4UMkKagu9H
-	 rCHvXMLn0jGCfBoRKYG47xZ8JzXlH225ii+xd2vq+3pOqtgyk4yGHotj9q/UoCqmia
-	 5gO3/VWZdV7wffbTQVg33r7lWmUg9UNe3N/pxZrosVKcnR+bymcVCWeq7CgV8/wj3z
-	 pKCvdpsyCxSSx4O6i3d81Za+F6vY8bxPUtc+9kiT2d6zMC6sEer9Obmde1KGPGDYNo
-	 79nXBvQxxC+Vg==
-Message-ID: <4c776740-3953-41c9-bb63-a5814351293b@kernel.org>
-Date: Tue, 11 Jun 2024 17:42:03 +0200
+	s=k20201202; t=1718161238;
+	bh=J/kQkK84KQJAkIFQhoiCtHTv4yGPIAirFnvd3aW3x2Q=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=SXtI/rnIth8j9oQDxbtTNNpSDTVyRo+yikew61JFqkGM+8i73aXqcSL2ukTqWHDeJ
+	 gQPEUPk8JQljrLwi0Kr+ZkWDir80ErunONy/7gFX9F3wfZ/q9KD09hp9du1X5ULZyE
+	 +mBwDDae6qMLsTXQsCpPTGw2CW1Yhqpu44crupj9nZXmQAntGHNo/qc0n6nCY4WGPw
+	 5Uu1zfZ4I9kRM5qIj0mRbrLBfBWk7n/haowc/UkR4R95M4WS3cNeGOCjpj4U5UfqXR
+	 gvAGukxWrcKdsPTKyjDsANM9682YMuP2scfeT2VvdA3/GTGPXF/jlJQ0M0IWTaFrrP
+	 3+ip3ZYHe4Szg==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 636AAC54BB2;
+	Wed, 12 Jun 2024 03:00:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Create_on_err or anything else for auto recreate subflows in
- mainline kernels
-Content-Language: en-GB
-To: vgusev2007@yandex.ru
-References: <20240611152044.3q6OMIkD@mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net>
-Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240611152044.3q6OMIkD@mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] selftests: mptcp: use net/lib.sh to manage
+ netns
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <171816123840.11889.13593974623249727089.git-patchwork-notify@kernel.org>
+Date: Wed, 12 Jun 2024 03:00:38 +0000
+References: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
+In-Reply-To: <20240607-upstream-net-next-20240607-selftests-mptcp-net-lib-v1-0-e36986faac94@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, shuah@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org, tanggeliang@kylinos.cn
 
-Hi,
+Hello:
 
-Please be patient: I got 4 messages from you from different canals in a
-couple of hours about the same question.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On 11/06/2024 14:20, vgusev2007@yandex.ru wrote:
-> Dear all, I don' t understand where is that parameter? I mean create_on_err  or anything else for auto recreate subflows. Is it possible to change shceduler?
->  
-> In the old doc it was in a separate mptcp module, but I don't understand where I can create it or found it in a new kernel (after v 5.6 - for example 6.8 in ubuntu 24.04).
+On Fri, 07 Jun 2024 18:31:01 +0200 you wrote:
+> The goal of this series is to use helpers from net/lib.sh with MPTCP
+> selftests.
+> 
+> - Patches 1 to 4 are some clean-ups and preparation in net/lib.sh:
+> 
+>   - Patch 1 simplifies the code handling errexit by ignoring possible
+>     errors instead of disabling errexit temporary.
+> 
+> [...]
 
-The two implementations are very different: the new implementation is a
-rewrite of the previous one to fit Netdev maintainers' requirements.
+Here is the summary with links:
+  - [net-next,1/6] selftests: net: lib: ignore possible errors
+    https://git.kernel.org/netdev/net-next/c/7e0620bc6a5e
+  - [net-next,2/6] selftests: net: lib: remove ns from list after clean-up
+    https://git.kernel.org/netdev/net-next/c/92fe5670271a
+  - [net-next,3/6] selftests: net: lib: do not set ns var as readonly
+    https://git.kernel.org/netdev/net-next/c/577db6bd5750
+  - [net-next,4/6] selftests: net: lib: remove 'ns' var in setup_ns
+    https://git.kernel.org/netdev/net-next/c/f8a2d2f874b7
+  - [net-next,5/6] selftests: mptcp: lib: use setup/cleanup_ns helpers
+    https://git.kernel.org/netdev/net-next/c/f265d3119a29
+  - [net-next,6/6] selftests: mptcp: lib: use wait_local_port_listen helper
+    https://git.kernel.org/netdev/net-next/c/1af3bc912eac
 
-There is no such "create_on_err" handled by the in-kernel path-manager
-with the new implementation. Currently, subflows are re-created when the
-MPTCP endpoints are removed and re-added later, but not when there are
-network issues as described in [1]. New contributions are welcome!
-
-Note that such issues can be prevented by enabling SO_KEEPALIVE socket
-option in the userspace program. Of course, if you create your own
-path-manager controlled by the userspace -- e.g. by creating a custom
-plugin with mptcpd [2] -- it can handle this.
-
-[1] https://github.com/multipath-tcp/mptcp_net-next/issues/440
-[2] https://github.com/multipath-tcp/mptcpd/wiki/Plugins
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
