@@ -1,210 +1,169 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from forward501c.mail.yandex.net (forward501c.mail.yandex.net [178.154.239.209])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F07B36AF2;
-	Wed, 12 Jun 2024 12:56:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E05015E85
+	for <mptcp@lists.linux.dev>; Thu, 13 Jun 2024 14:56:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=178.154.239.209
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718196960; cv=none; b=VpDb9ssfajF0ffoy+Ge4ZHVjXX2zArWwH27pzJmEp/dAG0M3847YIZIs9fqd8Hx/qzm6ZWW9S3T+UVp/KS/a1+DIheGTMPALkTx/DdUTCK3svW6tcJru6oj5cn/iwxACc7GH1gJVD2wZK6uPXpwR1umL8+8EjIECYejKcCPK3FU=
+	t=1718290604; cv=none; b=FmNvF87BiWnih9YNSBVjwbPZOHe4lpV9K5+9yYvtb2ynxcnwWyG2tM46mmTng9c+J92QS9YD2u87LkO9eIHhLMfRgaNUhmjaWzFgayN6RKCVLIH99SkkRQDNylUPQ0/LbLAEy9Rl+5dZ8JBqGOMdgCHmVwlwtzYCDBCvib0s3sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718196960; c=relaxed/simple;
-	bh=V/Noe/XGcHkwNbGTe0jTUTJnGxzdzzV3U8aCvQhdyR8=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=npIsNJFwYpmk7UfO86YxUjVU+EUxJvCpc8yHOqdMC6Dhl/E/wRUv3KguAHtep6spsxsDISBGRTuHjsXXpBvhxsg27jvRcJt5qCJ7VJvXfLO23673OBI8Ym4SDehH9JabOfAyNTfPrQKfPKM59jxUBLFIJbVuErumb3+aNCjZK9k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=sR8IVczk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718290604; c=relaxed/simple;
+	bh=ZwsUJv2Y8pGcq7XvmcsCL/XCfGpjfOxrnOf5ENpavBk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=YzPSuSUy9BWUEs78Jx4wtsY07vtFpODl2nwbXJXZue+IpY4nFuc72czqCMZC1mhftolpKOXhcubBcvPL5c2T2oG0sQjGvy2jeG6VDCvG+rJB/U+QwKkjZB/Dmw058gIRjrjL88qeo/3g/r+hCFvUF4vzZbioj8cIGopJnif2edc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru; spf=pass smtp.mailfrom=yandex.ru; dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b=I3tNvCBd; arc=none smtp.client-ip=178.154.239.209
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=yandex.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=yandex.ru
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="sR8IVczk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C1AFC3277B;
-	Wed, 12 Jun 2024 12:55:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718196959;
-	bh=V/Noe/XGcHkwNbGTe0jTUTJnGxzdzzV3U8aCvQhdyR8=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=sR8IVczks21RQ6udT9gsp4fh3/uxLwGvwTiVls7/7Qu4RSTB4se9HaUg3iKff1art
-	 1B/UbPB7xHsmRnAm3/26UStzNRYOqzHgOjZ23B0DorwVmip87Uyz9AnqQiz7DtJsqV
-	 Shdhj/ztIOzeozQhX1f7XGBFdKtFUSj0uG8kySnI=
-Subject: Patch "mptcp: cleanup SOL_TCP handling" has been added to the 6.6-stable tree
-To: davem@davemloft.net,gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 12 Jun 2024 14:55:42 +0200
-In-Reply-To: <20240529095817.3370953-7-matttbe@kernel.org>
-Message-ID: <2024061241-jaybird-diabolic-eb56@gregkh>
+	dkim=pass (1024-bit key) header.d=yandex.ru header.i=@yandex.ru header.b="I3tNvCBd"
+Received: from mail-nwsmtp-smtp-production-main-19.sas.yp-c.yandex.net (mail-nwsmtp-smtp-production-main-19.sas.yp-c.yandex.net [IPv6:2a02:6b8:c24:3b2:0:640:ff71:0])
+	by forward501c.mail.yandex.net (Yandex) with ESMTPS id 475EE60A41;
+	Thu, 13 Jun 2024 17:50:44 +0300 (MSK)
+Received: by mail-nwsmtp-smtp-production-main-19.sas.yp-c.yandex.net (smtp/Yandex) with ESMTPSA id aohbc1AmA4Y0-XtmQhGwb;
+	Thu, 13 Jun 2024 17:50:43 +0300
+X-Yandex-Fwd: 1
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex.ru; s=mail;
+	t=1718290243; bh=3lghH3FJUVsMR5pO7k3oFb4zXxPS4db6eZ+IreJj9+I=;
+	h=From:In-Reply-To:Cc:Date:References:To:Subject:Message-ID;
+	b=I3tNvCBd99Tjg9JDJUXxl7FOejtMWFH5R5G+J+X+RqpXzuqzLNPQwFkapMj+PsE1T
+	 qpA3MRUnGEe6vNMvyRlMeFlAZwanqKUFjtkcb6CKvBP96pOrLKi+xtH4g2YGBxAEvp
+	 owf7M6Wq2S6Kht9tUunyGBZKWJoGy7xe9T3lo4qM=
+Authentication-Results: mail-nwsmtp-smtp-production-main-19.sas.yp-c.yandex.net; dkim=pass header.i=@yandex.ru
+Message-ID: <2ce5931f-2551-4aba-9d86-2bf1a39f44f3@yandex.ru>
+Date: Thu, 13 Jun 2024 17:50:35 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
+User-Agent: Mozilla Thunderbird
+Subject: Re: Create_on_err or anything else for auto recreate subflows in
+ mainline kernels
+Content-Language: en-US
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240611152044.3q6OMIkD@mail-nwsmtp-smtp-production-main-87.sas.yp-c.yandex.net>
+ <4c776740-3953-41c9-bb63-a5814351293b@kernel.org>
+From: =?UTF-8?B?0JPRg9GB0LXQsiDQktC40LrRgtC+0YA=?= <vgusev2007@yandex.ru>
+In-Reply-To: <4c776740-3953-41c9-bb63-a5814351293b@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+
+Dear Matthieu Baerts, first of all I want to thank you for you answer to me.
+
+I try to re-add subflow, but no luck. Please see that below.
+
+before:
+
+root@mptcp-clt:~# ss -nti '( dport :1194 )' dst 158.160.3.76
+State                    Recv-Q 
+Send-Q                                             Local 
+Address:Port                                        Peer Address:Port
+Process
+ESTAB                    0 0 62.117.117.117:46234 158.160.3.76:1194
+  cubic wscale:7,7 rto:211 rtt:10.188/2.94 ato:40 mss:1448 pmtu:1500 
+rcvmss:536 advmss:1448 cwnd:10 bytes_sent:156 bytes_acked:157 
+bytes_received:156 segs_out:6 segs_in:5 data_segs_out:2 dat
+a_segs_in:2 send 11370239bps lastsnd:2721 lastrcv:2647 lastack:2647 
+pacing_rate 22739080bps delivery_rate 1139144bps delivered:3 busy:20ms 
+rcv_space:14480 rcv_ssthresh:31832 minrtt:9.921 snd_wnd:31
+872 tcp-ulp-mptcp flags:Mmec token:0000(id:0)/3172dd19(id:0) 
+seq:895f63b32fbca2b5 sfseq:4f ssnoff:cf8ab108 maplen:4e
+ESTAB                    0 0 94.247.123.178%eth2:36301 158.160.3.76:1194
+  cubic wscale:7,7 rto:209 rtt:8.898/4.449 mss:1448 pmtu:1500 rcvmss:536 
+advmss:1448 cwnd:10 bytes_acked:1 segs_out:2 segs_in:2 send 13018656bps 
+lastsnd:7230 lastrcv:7230 lastack:7221 pacing
+_rate 26037304bps delivered:1 app_limited rcv_space:14480 
+rcv_ssthresh:31832 minrtt:8.898 snd_wnd:31872 tcp-ulp-mptcp flags:Jjec 
+token:180a97fe(id:0)/3172dd19(id:2) seq:895f63b32fbca267 sfseq:0 ssn
+off:f227a127 maplen:0
 
 
-This is a note to let you know that I've just added the patch titled
+del endpoint:
 
-    mptcp: cleanup SOL_TCP handling
-
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     mptcp-cleanup-sol_tcp-handling.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-47624-greg=kroah.com@vger.kernel.org Wed May 29 11:58:39 2024
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 29 May 2024 11:58:20 +0200
-Subject: mptcp: cleanup SOL_TCP handling
-To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org, sashal@kernel.org
-Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Message-ID: <20240529095817.3370953-7-matttbe@kernel.org>
-
-From: Paolo Abeni <pabeni@redhat.com>
-
-commit 7f71a337b5152ea0e7bef408d1af53778a919316 upstream.
-
-Most TCP-level socket options get an integer from user space, and
-set the corresponding field under the msk-level socket lock.
-
-Reduce the code duplication moving such operations in the common code.
-
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: bd11dc4fb969 ("mptcp: fix full TCP keep-alive support")
-[ Without TCP_NOTSENT_LOWAT support, as it is not in this version, see
-  commit 29b5e5ef8739 ("mptcp: implement TCP_NOTSENT_LOWAT support") ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/mptcp/sockopt.c |   61 ++++++++++++++++++++++------------------------------
- 1 file changed, 26 insertions(+), 35 deletions(-)
-
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -621,18 +621,11 @@ static int mptcp_setsockopt_sol_tcp_cong
- 	return ret;
- }
- 
--static int mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, sockptr_t optval,
--					 unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_cork(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
- 
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
--
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->cork = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -644,23 +637,15 @@ static int mptcp_setsockopt_sol_tcp_cork
- 	}
- 	if (!val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
- 
- 	return 0;
- }
- 
--static int mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, sockptr_t optval,
--					    unsigned int optlen)
-+static int __mptcp_setsockopt_sol_tcp_nodelay(struct mptcp_sock *msk, int val)
- {
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
--	int val, ret;
--
--	ret = mptcp_get_int_option(msk, optval, optlen, &val);
--	if (ret)
--		return ret;
- 
--	lock_sock(sk);
- 	sockopt_seq_inc(msk);
- 	msk->nodelay = !!val;
- 	mptcp_for_each_subflow(msk, subflow) {
-@@ -672,8 +657,6 @@ static int mptcp_setsockopt_sol_tcp_node
- 	}
- 	if (val)
- 		mptcp_check_and_set_pending(sk);
--	release_sock(sk);
--
- 	return 0;
- }
- 
-@@ -786,25 +769,10 @@ static int mptcp_setsockopt_sol_tcp(stru
- 	int ret, val;
- 
- 	switch (optname) {
--	case TCP_INQ:
--		ret = mptcp_get_int_option(msk, optval, optlen, &val);
--		if (ret)
--			return ret;
--		if (val < 0 || val > 1)
--			return -EINVAL;
--
--		lock_sock(sk);
--		msk->recvmsg_inq = !!val;
--		release_sock(sk);
--		return 0;
- 	case TCP_ULP:
- 		return -EOPNOTSUPP;
- 	case TCP_CONGESTION:
- 		return mptcp_setsockopt_sol_tcp_congestion(msk, optval, optlen);
--	case TCP_CORK:
--		return mptcp_setsockopt_sol_tcp_cork(msk, optval, optlen);
--	case TCP_NODELAY:
--		return mptcp_setsockopt_sol_tcp_nodelay(msk, optval, optlen);
- 	case TCP_DEFER_ACCEPT:
- 		/* See tcp.c: TCP_DEFER_ACCEPT does not fail */
- 		mptcp_setsockopt_first_sf_only(msk, SOL_TCP, optname, optval, optlen);
-@@ -817,7 +785,30 @@ static int mptcp_setsockopt_sol_tcp(stru
- 						      optval, optlen);
- 	}
- 
--	return -EOPNOTSUPP;
-+	ret = mptcp_get_int_option(msk, optval, optlen, &val);
-+	if (ret)
-+		return ret;
-+
-+	lock_sock(sk);
-+	switch (optname) {
-+	case TCP_INQ:
-+		if (val < 0 || val > 1)
-+			ret = -EINVAL;
-+		else
-+			msk->recvmsg_inq = !!val;
-+		break;
-+	case TCP_CORK:
-+		ret = __mptcp_setsockopt_sol_tcp_cork(msk, val);
-+		break;
-+	case TCP_NODELAY:
-+		ret = __mptcp_setsockopt_sol_tcp_nodelay(msk, val);
-+		break;
-+	default:
-+		ret = -ENOPROTOOPT;
-+	}
-+
-+	release_sock(sk);
-+	return ret;
- }
- 
- int mptcp_setsockopt(struct sock *sk, int level, int optname,
+root@mptcp-clt:~# ip mptcp endpoint del id 2
+root@mptcp-clt:~# ss -nti '( dport :1194 )' dst 158.160.3.76
+State                 Recv-Q Send-Q                                  
+Local Address:Port                                    Peer 
+Address:Port                 Process
+ESTAB                 0 0 62.117.117.117:46234 158.160.3.76:1194
+  cubic wscale:7,7 rto:215 rtt:14.505/10.008 ato:40 mss:1448 pmtu:1500 
+rcvmss:536 advmss:1448 cwnd:10 bytes_sent:465 bytes_acked:466 
+bytes_received:465 segs_out:13 segs_in:11 data_segs_out:5
+  data_segs_in:5 send 7986212bps lastsnd:12506 lastrcv:12944 
+lastack:12496 pacing_rate 15972280bps delivery_rate 1154816bps 
+delivered:6 busy:90ms rcv_space:14480 rcv_ssthresh:31832 minrtt:9.921 snd_
+wnd:31872 tcp-ulp-mptcp flags:Mmec token:0000(id:0)/3172dd19(id:0) 
+seq:895f63b32fbca3ea sfseq:184 ssnoff:cf8ab108 maplen:4e
 
 
-Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+check:
 
-queue-6.6/mptcp-fix-full-tcp-keep-alive-support.patch
-queue-6.6/mptcp-cleanup-sol_tcp-handling.patch
-queue-6.6/mptcp-avoid-some-duplicate-code-in-socket-option-handling.patch
+root@mptcp-clt:~# ip mptcp endpoint add 94.247.123.178 id 2 dev eth2 
+subflow
+root@mptcp-clt:~# ss -nti '( dport :1194 )' dst 158.160.3.76
+State                 Recv-Q Send-Q                                  
+Local Address:Port                                    Peer 
+Address:Port                 Process
+ESTAB                 0 0 62.117.117.117:46234 158.160.3.76:1194
+  cubic wscale:7,7 rto:214 rtt:13.94/8.635 ato:40 mss:1448 pmtu:1500 
+rcvmss:536 advmss:1448 cwnd:10 bytes_sent:543 bytes_acked:544 
+bytes_received:543 segs_out:15 segs_in:13 data_segs_out:6 d
+ata_segs_in:6 send 8309900bps lastsnd:33271 lastrcv:33197 lastack:33197 
+pacing_rate 16618752bps delivery_rate 1159440bps delivered:7 busy:100ms 
+rcv_space:14480 rcv_ssthresh:31832 minrtt:9.921 snd_w
+nd:31872 tcp-ulp-mptcp flags:Mmec token:0000(id:0)/3172dd19(id:0) 
+seq:895f63b32fbca438 sfseq:1d2 ssnoff:cf8ab108 maplen:4e
+
+There is still only one connect. Also I tried to delete connect by 
+iptables (I used DROP action) - in any case: no luck. Connection didn't 
+restore at all. For restore it I need to restart my vpn.
+
+Can you show me how can I re-add subflow into established connection?
+
+The second question is about create SO_KEEPALIVE. Is it possible do that 
+by other external program like mptcpize do mptcp socket? For example, I 
+mean create openvpn tunnel. I think that I can use ssh as a tunnel with 
+TCPKeepAlive option but I think that is not good idea at all because 
+I've read about maximum KEEPALIVE is 2 hours but I need it up to 1 or 2 
+weeks.
+
+The last question is about old implementation of mptcp. What do you 
+think about openmptcprouter.com project? Can you advice me to use that 
+for my purpose (make vpn over 3 ISP for long time)?
+
+Best regards,
+
+Viktor.
+
+
+
+On 11.06.2024 18:42, Matthieu Baerts wrote:
+> Hi,
+>
+> Please be patient: I got 4 messages from you from different canals in a
+> couple of hours about the same question.
+>
+> On 11/06/2024 14:20, vgusev2007@yandex.ru wrote:
+>> Dear all, I don' t understand where is that parameter? I mean create_on_err  or anything else for auto recreate subflows. Is it possible to change shceduler?
+>>   
+>> In the old doc it was in a separate mptcp module, but I don't understand where I can create it or found it in a new kernel (after v 5.6 - for example 6.8 in ubuntu 24.04).
+> The two implementations are very different: the new implementation is a
+> rewrite of the previous one to fit Netdev maintainers' requirements.
+>
+> There is no such "create_on_err" handled by the in-kernel path-manager
+> with the new implementation. Currently, subflows are re-created when the
+> MPTCP endpoints are removed and re-added later, but not when there are
+> network issues as described in [1]. New contributions are welcome!
+>
+> Note that such issues can be prevented by enabling SO_KEEPALIVE socket
+> option in the userspace program. Of course, if you create your own
+> path-manager controlled by the userspace -- e.g. by creating a custom
+> plugin with mptcpd [2] -- it can handle this.
+>
+> [1] https://github.com/multipath-tcp/mptcp_net-next/issues/440
+> [2] https://github.com/multipath-tcp/mptcpd/wiki/Plugins
+>
+> Cheers,
+> Matt
