@@ -1,298 +1,133 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76CD2F3E
-	for <mptcp@lists.linux.dev>; Fri, 14 Jun 2024 16:52:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A054BD52A
+	for <mptcp@lists.linux.dev>; Fri, 14 Jun 2024 17:00:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718383974; cv=none; b=X98iPzubyZjAeqYNwjGxIc8Lcxn4VVIcu6w5ghtb/2fx0YIygt4K90KJ/l+8url8sdV6Kj+erYKkOv7N+/UCSu5nYlSCDok9A1JQJlzNYCgOb1zPp9HFaSobZCp/BxhGzsnnaNTHBH8MIkSRD3eso3LZ5iy3pAVG5mX3W5cbyc0=
+	t=1718384423; cv=none; b=B8AxrCD6ZpoSdp9PWfU7DZE6FzFA5gyy9WpIlIFaWS/kzZeSEfoW7h7fJrpm2i6IepWDsLft0MVrpKEJQhYmZKWQUttl/azjoaezKL5Q02ZO4XUGhlOGb0+ygu0M/NvqVmewDWVkcNga7p010XqQqsZq+DHi3YOgUxMWdVbLOKM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718383974; c=relaxed/simple;
-	bh=epir2nYh0znC+A506Vl7B80DA+MLEdvpmCegk/cZWHA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=NCdooU1mRLGCeUXvAhqkuUEzY0KwsfbXLK8/EtgULGy2wsEJuDXX+H5grT8A8B8GIXW3h70QwCL6vjfKfCaTe0mSmd394AV4poKf4+swnBC7qExwPomVlYiIn+L205bErVr+VEzQnsp9aogrSXuoGhXedTcpgm+EgOpdAnGECIU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PuRqgcOI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718384423; c=relaxed/simple;
+	bh=R+Pl3GeSDt3Ok2hEqto6tsZ1UySoMyirMpufA1YljB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YKeGHzR2fWX9a0ZLbXGfWhQREwgqz2PqeyeE+ktYM7+jc8acI+JtfAe/muTlkUbD14ml3RXIDcSGpCw8PgyOlmXhVHCsNpdGiMs1d7HcPZfFuQpKB5DiqfgjGXQTkzNi7MTMa9AHibpGzLQ8ZlONdx5DQP9/8nUPrMpVbEPxphs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XTUnpSbJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PuRqgcOI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EC8BC2BD10;
-	Fri, 14 Jun 2024 16:52:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XTUnpSbJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CFEE1C2BD10
+	for <mptcp@lists.linux.dev>; Fri, 14 Jun 2024 17:00:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718383974;
-	bh=epir2nYh0znC+A506Vl7B80DA+MLEdvpmCegk/cZWHA=;
-	h=From:Date:Subject:To:Cc:From;
-	b=PuRqgcOIK6LT/JDtUsuJI/ExbNzGAPmIHHPyLkjf9MZvyktn/nB8YpxfKQiHgPA48
-	 o2qswyMMlIhp5OgWBoJHbF8XaGS+UqZXNIa2TTuj87jOu/4sMFPAJ2CDqzIFkohkll
-	 07fyOHDFVWe1n5W1ufg1uDS4yFZxqxtBgW4VQzru1e4UvM8PO2bMA//6cvT50rTXC7
-	 pxwcyFhQu39yuYaFb0iaZPSZ6Bv0QDwNniZU1S6E40fOxPIamnbGZ4VHz2iIQ3iqDT
-	 Lxjd2w+OS0p7dwapMoifzJP2YCwDMKvb8Ys5oVZD+MmQmDwgDZ/7P5Kjetg56IJw32
-	 TMbRMMJzAy65A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 14 Jun 2024 18:52:34 +0200
-Subject: [PATCH mptcp-net] selftests: mptcp: userspace_pm: fixed subtest
- names
+	s=k20201202; t=1718384423;
+	bh=R+Pl3GeSDt3Ok2hEqto6tsZ1UySoMyirMpufA1YljB8=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=XTUnpSbJCDozruECoWr4Fz0upkiLymQlRZNcN1OHxXNnukN9JYbV1ytrBhuAH115r
+	 AYk70WbTh6dRULkvS+dZVn7sc98dlC55uQPIzBXzT7zDWZv8q11kCerGKrxz8VdmMT
+	 Gpgo70I4XOpL8uMRbs6bffGqjp7jhWZocibPCh1dXQs6Yoc9iBjp9IVa0Rc+R6tMlB
+	 nKbrbGrMOHzfwAjZ30ABXDlU3eSeHEA70fH8NgciO2kzv0A0649UdRtiPo1O3ufgbF
+	 iLp9Kz6ArGYA+Dojt2kJkUIuFiTxRhChaMnSjqIf683M7f2aujlSNySG/GkTSWiSq/
+	 3kFCkIebY6W4g==
+Message-ID: <3ba46260-7114-4eb2-b95e-12f4f2109a81@kernel.org>
+Date: Fri, 14 Jun 2024 19:00:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: userspace_pm: fixed subtest
+ names
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20240614-selftests-mptcp-uspace-pm-fixed-test-names-v1-1-b5cb8274627d@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240614-selftests-mptcp-uspace-pm-fixed-test-names-v1-1-b5cb8274627d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240614-selftests-mptcp-uspace-pm-fixed-test-names-v1-1-b5cb8274627d@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAFF1bGYC/yWNwQrCMBBEf6Xs2YU0xoL+ingI6UQDJi7ZKELpv
- 5vg8THzZjZS1ASly7RRxSdpepUO82Gi8PDlDk5rZ7LGOrPMjhXP2KBNOUsLwm8VH8CSOaYvVh4
- ZF5+hvPgz3BEnE2ykPigVozPOrvS3Cxrd9v0HBF1f5YcAAAA=
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.13.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=10059; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=epir2nYh0znC+A506Vl7B80DA+MLEdvpmCegk/cZWHA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmbHVldoLlqnu964yACxh8/sDbzn+rT+BcBnSd/
- 7foip44OHmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZmx1ZQAKCRD2t4JPQmmg
- c17HD/9KtN0RrEsJ5UkO5ukfpVbr7oIudGBcXRQeZsKvygJpsS0qrxLeugz/zZsWrXYKRTToEKU
- msEwDlhfPByg8MoHXs3Ycx7ZN+UOXWhlTxl1Ct8wB6JH3Ecbg4cONVLcyOj4KFc26YhHJFMlwgl
- Hm4Gvu80g3aaoF2bsj5gIsGvW028bvCYrPbMeGugK/43GsVnYvUopPoq0PrNNktaoJI7YFoOTZ9
- ep4u+jYlEhjRZ8bFAHr5Acn7+gpauK0PU6hqWPdIMqNOIx6GOnnAQicjX89SO/07ej1dysVhZzh
- Go9Zlcsmm20u6+590H/mle3picmJ5k6Gp8m7H3aBLr/I7vKrF/FdvoWk9J98EaTTjC286O2/thE
- cQSX+9je1xQhgkHE/02H1FIkIpBhoFTdk2iM0OJSD2M5BA/oBlB7+a0v7WqfH9l+3idQTeqdbNR
- krzjKhAqVpJraDa8IgnFNTjSuBgSacNUOj1zBOSZUH40xWFUyukjbrRTbQjBL2dTGeHxQbvxh26
- sSBB/mJcGboDSimcNVyvs33Reg4n7gJevpH8yDf667+rHkgAAZRru7n0rysHWC3XI4wu2TntymM
- Fnu7e0Cg3cdOKx6bVJBdXYY9n8Z6APTgJsvQk7UB0F9Z+slq975GayO5trQAX5O5KqY+wGdgs0S
- VV+fxI1L5xRvMqw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It is important to have a fixed (sub)test names in TAP, because these
-names are used to identify them. If they are not fixed, tracking cannot
-be done.
+On 14/06/2024 18:52, Matthieu Baerts (NGI0) wrote:
+> It is important to have a fixed (sub)test names in TAP, because these
+> names are used to identify them. If they are not fixed, tracking cannot
+> be done.
+> 
+> Some subtests from the userspace_pm selftest were using random numbers
+> in their names: address IDs from $RANDOM, and the client port number
+> randomly picked by the kernel when creating the connection. These values
+> have been replaced by 'client' and 'server' words: that's even more
+> helpful than showing random numbers. Note that the addresses IDs are
+> incremented and decremented in the test: +1 or -1 are then displayed.
+> 
+> Not to loose info that can be useful for debugging in case of issues,
+> these random numbers are now displayed at the beginning of the test.
+> 
+> Fixes: f589234e1af0 ("selftests: mptcp: userspace_pm: format subtests results in TAP")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>  - The Netdev CI is parsing MPTCP subtests again. Because it is affected
+>    by this bug (passed tests are tracked), I suggest to apply and send
+>    this patch ASAP: it is only modifying the test name, it sounds safe.
 
-Some subtests from the userspace_pm selftest were using random numbers
-in their names: address IDs from $RANDOM, and the client port number
-randomly picked by the kernel when creating the connection. These values
-have been replaced by 'client' and 'server' words: that's even more
-helpful than showing random numbers. Note that the addresses IDs are
-incremented and decremented in the test: +1 or -1 are then displayed.
+As mentioned here above, already applied:
 
-Not to loose info that can be useful for debugging in case of issues,
-these random numbers are now displayed at the beginning of the test.
+New patches for t/upstream-net and t/upstream:
+- edfe5011523a: selftests: mptcp: userspace_pm: fixed subtest names
+- Results: 2ae7e8ada2b1..b7a82c8e4bc4 (export-net)
+- Results: e0a0b47b386f..74472bedc83c (export)
 
-Fixes: f589234e1af0 ("selftests: mptcp: userspace_pm: format subtests results in TAP")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - The Netdev CI is parsing MPTCP subtests again. Because it is affected
-   by this bug (passed tests are tracked), I suggest to apply and send
-   this patch ASAP: it is only modifying the test name, it sounds safe.
----
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 46 ++++++++++++++---------
- 1 file changed, 28 insertions(+), 18 deletions(-)
+Tests are now in progress:
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 9e2981f2d7f5..9cb05978269d 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -160,10 +160,12 @@ make_connection()
- 	local is_v6=$1
- 	local app_port=$app4_port
- 	local connect_addr="10.0.1.1"
-+	local client_addr="10.0.1.2"
- 	local listen_addr="0.0.0.0"
- 	if [ "$is_v6" = "v6" ]
- 	then
- 		connect_addr="dead:beef:1::1"
-+		client_addr="dead:beef:1::2"
- 		listen_addr="::"
- 		app_port=$app6_port
- 	else
-@@ -206,6 +208,7 @@ make_connection()
- 		   [ "$server_serverside" = 1 ]
- 	then
- 		test_pass
-+		print_title "Connection info: ${client_addr}:${client_port} -> ${connect_addr}:${app_port}"
- 	else
- 		test_fail "Expected tokens (c:${client_token} - s:${server_token}) and server (c:${client_serverside} - s:${server_serverside})"
- 		mptcp_lib_result_print_all_tap
-@@ -297,7 +300,7 @@ test_announce()
- 	ip netns exec "$ns2"\
- 	   ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id $client_addr_id dev\
- 	   ns2eth1
--	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, reuse port"
-+	print_test "ADD_ADDR id:client 10.0.2.2 (ns2) => ns1, reuse port"
- 	sleep 0.5
- 	verify_announce_event $server_evts $ANNOUNCED $server4_token "10.0.2.2" $client_addr_id \
- 			      "$client4_port"
-@@ -306,7 +309,7 @@ test_announce()
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl ann\
- 	   dead:beef:2::2 token "$client6_token" id $client_addr_id dev ns2eth1
--	print_test "ADD_ADDR6 id:${client_addr_id} dead:beef:2::2 (ns2) => ns1, reuse port"
-+	print_test "ADD_ADDR6 id:client dead:beef:2::2 (ns2) => ns1, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server6_token" "dead:beef:2::2"\
- 			      "$client_addr_id" "$client6_port" "v6"
-@@ -316,7 +319,7 @@ test_announce()
- 	client_addr_id=$((client_addr_id+1))
- 	ip netns exec "$ns2" ./pm_nl_ctl ann 10.0.2.2 token "$client4_token" id\
- 	   $client_addr_id dev ns2eth1 port $new4_port
--	print_test "ADD_ADDR id:${client_addr_id} 10.0.2.2 (ns2) => ns1, new port"
-+	print_test "ADD_ADDR id:client+1 10.0.2.2 (ns2) => ns1, new port"
- 	sleep 0.5
- 	verify_announce_event "$server_evts" "$ANNOUNCED" "$server4_token" "10.0.2.2"\
- 			      "$client_addr_id" "$new4_port"
-@@ -327,7 +330,7 @@ test_announce()
- 	# ADD_ADDR from the server to client machine reusing the subflow port
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
- 	   $server_addr_id dev ns1eth2
--	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
-+	print_test "ADD_ADDR id:server 10.0.2.1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
- 			      "$server_addr_id" "$app4_port"
-@@ -336,7 +339,7 @@ test_announce()
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann dead:beef:2::1 token "$server6_token" id\
- 	   $server_addr_id dev ns1eth2
--	print_test "ADD_ADDR6 id:${server_addr_id} dead:beef:2::1 (ns1) => ns2, reuse port"
-+	print_test "ADD_ADDR6 id:server dead:beef:2::1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "dead:beef:2::1"\
- 			      "$server_addr_id" "$app6_port" "v6"
-@@ -346,7 +349,7 @@ test_announce()
- 	server_addr_id=$((server_addr_id+1))
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server4_token" id\
- 	   $server_addr_id dev ns1eth2 port $new4_port
--	print_test "ADD_ADDR id:${server_addr_id} 10.0.2.1 (ns1) => ns2, new port"
-+	print_test "ADD_ADDR id:server+1 10.0.2.1 (ns1) => ns2, new port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client4_token" "10.0.2.1"\
- 			      "$server_addr_id" "$new4_port"
-@@ -380,7 +383,7 @@ test_remove()
- 	local invalid_token=$(( client4_token - 1 ))
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token $invalid_token id\
- 	   $client_addr_id > /dev/null 2>&1
--	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1, invalid token"
-+	print_test "RM_ADDR id:client ns2 => ns1, invalid token"
- 	local type
- 	type=$(mptcp_lib_evts_get_info type "$server_evts")
- 	if [ "$type" = "" ]
-@@ -394,7 +397,7 @@ test_remove()
- 	local invalid_id=$(( client_addr_id + 1 ))
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
- 	   $invalid_id > /dev/null 2>&1
--	print_test "RM_ADDR id:${invalid_id} ns2 => ns1, invalid id"
-+	print_test "RM_ADDR id:client+1 ns2 => ns1, invalid id"
- 	type=$(mptcp_lib_evts_get_info type "$server_evts")
- 	if [ "$type" = "" ]
- 	then
-@@ -407,7 +410,7 @@ test_remove()
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
- 	   $client_addr_id
--	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
-+	print_test "RM_ADDR id:client ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
- 
-@@ -416,7 +419,7 @@ test_remove()
- 	client_addr_id=$(( client_addr_id - 1 ))
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client4_token" id\
- 	   $client_addr_id
--	print_test "RM_ADDR id:${client_addr_id} ns2 => ns1"
-+	print_test "RM_ADDR id:client-1 ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server4_token" "$client_addr_id"
- 
-@@ -424,7 +427,7 @@ test_remove()
- 	:>"$server_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl rem token "$client6_token" id\
- 	   $client_addr_id
--	print_test "RM_ADDR6 id:${client_addr_id} ns2 => ns1"
-+	print_test "RM_ADDR6 id:client-1 ns2 => ns1"
- 	sleep 0.5
- 	verify_remove_event "$server_evts" "$REMOVED" "$server6_token" "$client_addr_id"
- 
-@@ -434,7 +437,7 @@ test_remove()
- 	# RM_ADDR from the server to client machine
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
- 	   $server_addr_id
--	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
-+	print_test "RM_ADDR id:server ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
- 
-@@ -443,7 +446,7 @@ test_remove()
- 	server_addr_id=$(( server_addr_id - 1 ))
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server4_token" id\
- 	   $server_addr_id
--	print_test "RM_ADDR id:${server_addr_id} ns1 => ns2"
-+	print_test "RM_ADDR id:server-1 ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client4_token" "$server_addr_id"
- 
-@@ -451,7 +454,7 @@ test_remove()
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl rem token "$server6_token" id\
- 	   $server_addr_id
--	print_test "RM_ADDR6 id:${server_addr_id} ns1 => ns2"
-+	print_test "RM_ADDR6 id:server-1 ns1 => ns2"
- 	sleep 0.5
- 	verify_remove_event "$client_evts" "$REMOVED" "$client6_token" "$server_addr_id"
- }
-@@ -479,8 +482,14 @@ verify_subflow_events()
- 	local locid
- 	local remid
- 	local info
-+	local e_dport_txt
- 
--	info="${e_saddr} (${e_from}) => ${e_daddr}:${e_dport} (${e_to})"
-+	# only display the fixed ports
-+	if [ "${e_dport}" -ge "${app4_port}" ] && [ "${e_dport}" -le "${app6_port}" ]; then
-+		e_dport_txt=":${e_dport}"
-+	fi
-+
-+	info="${e_saddr} (${e_from}) => ${e_daddr}${e_dport_txt} (${e_to})"
- 
- 	if [ "$e_type" = "$SUB_ESTABLISHED" ]
- 	then
-@@ -766,7 +775,7 @@ test_subflows_v4_v6_mix()
- 	:>"$client_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl ann 10.0.2.1 token "$server6_token" id\
- 	   $server_addr_id dev ns1eth2
--	print_test "ADD_ADDR4 id:${server_addr_id} 10.0.2.1 (ns1) => ns2, reuse port"
-+	print_test "ADD_ADDR4 id:server 10.0.2.1 (ns1) => ns2, reuse port"
- 	sleep 0.5
- 	verify_announce_event "$client_evts" "$ANNOUNCED" "$client6_token" "10.0.2.1"\
- 			      "$server_addr_id" "$app6_port"
-@@ -861,7 +870,7 @@ test_listener()
- 	local listener_pid=$!
- 
- 	sleep 0.5
--	print_test "CREATE_LISTENER 10.0.2.2:$client4_port"
-+	print_test "CREATE_LISTENER 10.0.2.2 (client port)"
- 	verify_listener_events $client_evts $LISTENER_CREATED $AF_INET 10.0.2.2 $client4_port
- 
- 	# ADD_ADDR from client to server machine reusing the subflow port
-@@ -878,13 +887,14 @@ test_listener()
- 	mptcp_lib_kill_wait $listener_pid
- 
- 	sleep 0.5
--	print_test "CLOSE_LISTENER 10.0.2.2:$client4_port"
-+	print_test "CLOSE_LISTENER 10.0.2.2 (client port)"
- 	verify_listener_events $client_evts $LISTENER_CLOSED $AF_INET 10.0.2.2 $client4_port
- }
- 
- print_title "Make connections"
- make_connection
- make_connection "v6"
-+print_title "Will be using address IDs ${client_addr_id} (client) and ${server_addr_id} (server)"
- 
- test_announce
- test_remove
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f2572787c6e2b8b6f29da7ab189f621626827f65/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2de6052ef9f255dede8ffbb24ec1b8474cf4d955/checks
 
----
-base-commit: e0a0b47b386faa313b3afe99ba5d3b439482eb1c
-change-id: 20240614-selftests-mptcp-uspace-pm-fixed-test-names-6a9e43e50c2f
-
-Best regards,
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
