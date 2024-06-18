@@ -1,163 +1,99 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A00614D2A5;
-	Tue, 18 Jun 2024 10:57:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2636C46557;
+	Tue, 18 Jun 2024 12:25:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718708279; cv=none; b=bnCODP74hDQYDECTIyhsih2GK987F+8KPrfH56ivZXDdnlFu8cdQzY6/hbCUpC0quEctN5tk0E1TZRAx9ug24NoXqCZOJSfnZXiPXBDxo5VB1Td1FvCoNwUhaUrGlKR7fpQokajM645rd4j+etBDtLUwDlKjGwAKUrFTYde3bP0=
+	t=1718713502; cv=none; b=buo0QhvZ7YnfnLr95Kzr484WncXlATAhvJrBX0KPYLV7mkw7XZO28IMaiH0aeFL+5/WSGyRSi342wRE0Wg4+m5/4jZXoqN0eMllNMrWacrXsbjko4tUQaeyJe8jf+v6K8froKd6Mrml1bmsXuyG0cKLDqCPn0gI75hnSmVOH0t4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718708279; c=relaxed/simple;
-	bh=/y/dqF/ybd0QML+UvJ/cQpIV3/QUFzYkGtwa+JUucBA=;
+	s=arc-20240116; t=1718713502; c=relaxed/simple;
+	bh=7jFLieY93XnEOiHmQjVBlz+PTDOpAeaQnSQDc8DWm9I=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zio2WSDonqdx3Lo5HVz5Y2ybd/ICbuVKW0qmn+srIaVyMfoJCE9ZJtOxf+4Y+OnEhKLojfq2oozKaawUnq3nyjJhzskK+nCyXmRPP66q8H7HUzQCwTwVpRwJWfiMJbjgehdr+RVg101oQ2in0y3ksMXW+4yZTlyOREMcol3S790=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwF+YKTI; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NylbKChF9pTtxt3+217cooVqZSKFLRQNV/TUXFF804HRuIvF5UKCQ/9vdjV8Qz2v9AjOWJCBhvqjOTxIBuROrVBvOMvFmRHmbFmj4/ojXy9L8a5b3M9sGdoY3Cr8AAyXbEPKEDlgLkkQTGmDwpEqsK/E7OpoOI2If+m2hvX7YHE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ir6+yDYO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwF+YKTI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B03FC3277B;
-	Tue, 18 Jun 2024 10:57:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ir6+yDYO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94D50C4AF49;
+	Tue, 18 Jun 2024 12:24:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718708279;
-	bh=/y/dqF/ybd0QML+UvJ/cQpIV3/QUFzYkGtwa+JUucBA=;
+	s=k20201202; t=1718713501;
+	bh=7jFLieY93XnEOiHmQjVBlz+PTDOpAeaQnSQDc8DWm9I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GwF+YKTIjLtZL6YhmXr/xh5oyUiXA+8+obRu6MTVU3iiLebOHq2opmtT1D7/a7yuM
-	 +OEbakgVQYo7rl8JJoYnvmdhKFRm5+qdj8Ka3FBlysMYEcDB+ln9538XpnsZzpSqBW
-	 TJp9LuHW3A1DSHFG2Zv9omHvbvahYYS3whVtw4IZ6LKAQbHD70aWoqwE4HMcDc6fv/
-	 5O2iOOqOZlQRpsv2qL3VA0X3vsiDjDzt8I/yJT0ZBRC4GO4avOrtUV56decNxLHsbv
-	 UGTJiEhSlUpaRlN9gyHpIzF/JXBijnp0zvJmN46mPpD2+lhsjNlpp6GdV6XU42QEiV
-	 lCuLB+6fYWgQg==
+	b=ir6+yDYO386xWCxRzcYDH/ld5x3AD6r6piktwffCep+vFt1IdbpJOPVlEe4ouRsnN
+	 9DBUtTjPXmmY6DIPUvh5cCFybe/yaHph3DjJhwv+MWxEgOUh41pXp4q+epk455K12b
+	 2386OBIys/NdytRY4XuVUwTr170wCJXv/LXjpvkB0n0j40tiN9OrkcE8ookKYZ+zLP
+	 kNX3UZ37NCaXdojn9nvc2hrD9uaSf7AZncYSMebPzG8D4FSl/6ckl2hBWhVes5jdz/
+	 jGtLLM1eqo6tKjAbiFhGTziIpDZp1xlGkGYtSH5GPqnr+laFN1csztBoAArBA6FIWD
+	 AqjcDLImGwAxQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 To: stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	YonglongLi <liyonglong@chinatelecom.cn>,
-	Matthieu Baerts <matttbe@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
 	Mat Martineau <martineau@kernel.org>,
+	Christoph Paasch <cpaasch@apple.com>,
+	Matthieu Baerts <matttbe@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y] mptcp: pm: update add_addr counters after connect
-Date: Tue, 18 Jun 2024 12:57:51 +0200
-Message-ID: <20240618105750.471201-2-matttbe@kernel.org>
+Subject: [PATCH 5.10.y] mptcp: ensure snd_una is properly initialized on connect
+Date: Tue, 18 Jun 2024 14:24:45 +0200
+Message-ID: <20240618122444.640369-2-matttbe@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <2024061752-crowbar-granddad-34da@gregkh>
-References: <2024061752-crowbar-granddad-34da@gregkh>
+In-Reply-To: <2024061719-prewashed-wimp-a695@gregkh>
+References: <2024061719-prewashed-wimp-a695@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4903; i=matttbe@kernel.org; h=from:subject; bh=D9IwU5jcCWKHwO0lgV0mq62dBlcwWyBPzf85+hFP8kA=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmcWgu81D7hJ63VYyQU/1NK9oj0htHWqgA3Wewk K/Sy28K/z6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZnFoLgAKCRD2t4JPQmmg c989EACnk7GihhrOI0vZxDjh1qYuJK4FmfCtpUMB8Q3owz3Pcq09jm6I5O2nDGJlQqGQzcby7QN EYhmHbJ4KcJtHGKN5ubt0WXs3BTgi44O3ygoUDBOtyCSHx5wEGerRuviKVplCSh8jhhj5p+72OC F2p30eoczI3gcmRDmCyMvLhiHUDooZELzfVDZcLq3mHZqu4B4Gl64UWVt16GvY5ddlBz0Njw2Ci ols6grPq7aV4aSIb0RxmfVw2BJcajyPQAE6zMMGP46+YWBdno2q72zupbYEEp/3YfD0pBjKS1pO hXgkMbAIF3j+kn1Ipga9ohX0UoUHxrwGL1UafVww9L20f5VbbbpKf8vCJYaw3g40vrXkFCdNGeG ehYXl1NBcco2FCx2dPqJmF4w58yDbTnvkTBXAerGVUvOjatjZ6kDo+zzUxV2aejYbE4CzAD5+eT 2tWwj3DZtN3tsfdOIWip5KXpsLSZh3mN61pT4O/XlD0A/NHaCbkeZQyjxTlNW5AYhS/MgJrvm3M Fepda19+FWLrLlrWaU+0UBPfnxjIq9rrUB9dg8MOWdlgSiiRpUpdMAC5mK3XovueU4zAf2rqffw 1LmdDQMcjdXK3mLWt1To5SVdsJvL9TEVrR7iOvNs4FCDgCoEhW+6ngDEHFCFGtoF8YQKepks/8+ i9VSx6zgy/MkRmg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1929; i=matttbe@kernel.org; h=from:subject; bh=XuloGgQR2UwYQd/+z9GcJssTjFWtXSaGdOYYHWTYCmo=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmcXyMRoeIscP/u/XDRjvfzIL4phBCmQP+5QZ0A Xd2d/oGUF2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZnF8jAAKCRD2t4JPQmmg c5WAEADftvZNAqvRbi3o/UbspalyFw9NLh/LP1b1mfoEr3tdWu6iOx61hq72vqr8iQYt76wkBqG gkVIeHAhfTthOuU2W8rN+ez3lIm+BbKK2tFaM0ka3yOvNoCqB3iqZPGrKVBIkMHjj4NzGkOJ9e2 o1CS7eRGNntMB19DpsB917tAmOsqbJ9FmvlR7EeqYQG4eF6wvErfEgf5aIRPUbembI/SgO/Reuv zK9v+nAVO5yimrYUWWphdUiFXkL1Ecu5S6qu0lXPzByoXrYaChT11RFOUbiGyi/bYJLaxjvyene hICc2UzJi9jr+HpoX3n0N6AxzUZZYxBvj0KemUUlovwFwo3s5m2EOng8FudEFs5yk1uC2XS82Io QMmSUQ1ptYupEjPvEVnFwkaiHFROywBh5gXk8hsYz/i4X9ZVhbcGKHulpBSmOToqX+3e2hx8iJ9 YaJlo/4i181p/cUIx6suggRQDxB1hQzHf8brl9EuF0oATw/V+76kT42kQF2dDLPOdWfSqAb83MF tgx3vKkGS40ymodid0yM0Fzxof5Yfn5uslLbkC7vKRZpzoH1OpJgXAz0wrpPBR0xUjGcV7IUCFK ECbwGteLw9xDnud6ihC+vFNOi6e9AQHQfcDNncf+GodGNGFJwqZRXbn+yozGW553Cq8G0+39mvX vpKNkgJ14W8Malg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: YonglongLi <liyonglong@chinatelecom.cn>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 40eec1795cc27b076d49236649a29507c7ed8c2d upstream.
+commit 8031b58c3a9b1db3ef68b3bd749fbee2e1e1aaa3 upstream.
 
-The creation of new subflows can fail for different reasons. If no
-subflow have been created using the received ADD_ADDR, the related
-counters should not be updated, otherwise they will never be decremented
-for events related to this ID later on.
+This is strictly related to commit fb7a0d334894 ("mptcp: ensure snd_nxt
+is properly initialized on connect"). It turns out that syzkaller can
+trigger the retransmit after fallback and before processing any other
+incoming packet - so that snd_una is still left uninitialized.
 
-For the moment, the number of accepted ADD_ADDR is only decremented upon
-the reception of a related RM_ADDR, and only if the remote address ID is
-currently being used by at least one subflow. In other words, if no
-subflow can be created with the received address, the counter will not
-be decremented. In this case, it is then important not to increment
-pm.add_addr_accepted counter, and not to modify pm.accept_addr bit.
+Address the issue explicitly initializing snd_una together with snd_nxt
+and write_seq.
 
-Note that this patch does not modify the behaviour in case of failures
-later on, e.g. if the MP Join is dropped or rejected.
-
-The "remove invalid addresses" MP Join subtest has been modified to
-validate this case. The broadcast IP address is added before the "valid"
-address that will be used to successfully create a subflow, and the
-limit is decreased by one: without this patch, it was not possible to
-create the last subflow, because:
-
-- the broadcast address would have been accepted even if it was not
-  usable: the creation of a subflow to this address results in an error,
-
-- the limit of 2 accepted ADD_ADDR would have then been reached.
-
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
+Suggested-by: Mat Martineau <martineau@kernel.org>
+Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
 Cc: stable@vger.kernel.org
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240607-upstream-net-20240607-misc-fixes-v1-3-1ab9ddfa3d00@kernel.org
+Link: https://lore.kernel.org/r/20240607-upstream-net-20240607-misc-fixes-v1-1-1ab9ddfa3d00@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.c because commit 12a18341b5c3 ("mptcp: send
-  ADD_ADDR echo before create subflows") is not present in this version,
-  and it changes the context, but not the block that needs to be moved.
-  Conflicts in the selftests, because many features modifying the whole
-  file have been added later, e.g. commit ae7bd9ccecc3 ("selftests:
-  mptcp: join: option to execute specific tests"). The same
-  modifications have been reported to the old code: simply moving one
-  line, and changing the limits. ]
+[ Conflicts in protocol.c, similar to the ones from commit 99951b62bf20
+  ("mptcp: ensure snd_nxt is properly initialized on connect"), with the
+  same resolution. Note that in this version, 'snd_una' is an atomic64
+  type, so use atomic64_set() instead, as it is done everywhere else. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c                          | 16 ++++++++++------
- tools/testing/selftests/net/mptcp/mptcp_join.sh |  4 ++--
- 2 files changed, 12 insertions(+), 8 deletions(-)
+ net/mptcp/protocol.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index d78ef96a88cc..7b312aa03e6b 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -608,6 +608,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	struct mptcp_addr_info remote;
- 	unsigned int subflows_max;
- 	bool reset_port = false;
-+	bool sf_created = false;
- 	int i, nr;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 36fa456f42ba..a36493bbf895 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2646,6 +2646,7 @@ static int mptcp_stream_connect(struct socket *sock, struct sockaddr *uaddr,
+ 		mptcp_subflow_early_fallback(msk, subflow);
  
- 	add_addr_accept_max = mptcp_pm_get_add_addr_accept_max(msk);
-@@ -632,16 +633,19 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 	 */
- 	nr = fill_local_addresses_vec(msk, addrs);
+ 	WRITE_ONCE(msk->write_seq, subflow->idsn);
++	atomic64_set(&msk->snd_una, msk->write_seq);
  
--	msk->pm.add_addr_accepted++;
--	if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
--	    msk->pm.subflows >= subflows_max)
--		WRITE_ONCE(msk->pm.accept_addr, false);
--
- 	spin_unlock_bh(&msk->pm.lock);
- 	for (i = 0; i < nr; i++)
--		__mptcp_subflow_connect(sk, &addrs[i], &remote);
-+		if (__mptcp_subflow_connect(sk, &addrs[i], &remote) == 0)
-+			sf_created = true;
- 	spin_lock_bh(&msk->pm.lock);
- 
-+	if (sf_created) {
-+		msk->pm.add_addr_accepted++;
-+		if (msk->pm.add_addr_accepted >= add_addr_accept_max ||
-+		    msk->pm.subflows >= subflows_max)
-+			WRITE_ONCE(msk->pm.accept_addr, false);
-+	}
-+
- 	/* be sure to echo exactly the received address */
- 	if (reset_port)
- 		remote.port = 0;
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 3cf4f9f05956..e725285298a0 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1306,10 +1306,10 @@ remove_tests()
- 	reset
- 	ip netns exec $ns1 ./pm_nl_ctl limits 3 3
- 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.12.1 flags signal
--	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
- 	# broadcast IP: no packet for this address will be received on ns1
- 	ip netns exec $ns1 ./pm_nl_ctl add 224.0.0.1 flags signal
--	ip netns exec $ns2 ./pm_nl_ctl limits 3 3
-+	ip netns exec $ns1 ./pm_nl_ctl add 10.0.3.1 flags signal
-+	ip netns exec $ns2 ./pm_nl_ctl limits 2 2
- 	run_tests $ns1 $ns2 10.0.1.1 0 -3 0 slow
- 	chk_join_nr "remove invalid addresses" 1 1 1
- 	chk_add_nr 3 3
+ do_connect:
+ 	err = ssock->ops->connect(ssock, uaddr, addr_len, flags);
 -- 
 2.43.0
 
