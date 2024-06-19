@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED05375817;
-	Wed, 19 Jun 2024 10:41:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B71175817;
+	Wed, 19 Jun 2024 10:41:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793677; cv=none; b=UQrLDcSHCMvc4ToXlbT/BL6o3aBORHptZpMM1iMnwhHwuy3bIThmvu83r8LCq6ObIa9RgcdZmnLB4RdNMkdv5fps0b3qT5OeAuUiyVeCYzOfq47rcE96q31gVtgM5lnSLt3kZWk+Gw8XA8XLnlpeTkb6srqzrgFX6BzTyJ/LCAs=
+	t=1718793680; cv=none; b=KffLQh1i+YQPd3LGooMToVcAb0TT7+SA3/bzNhhSDkHcpKq2L+bqjRj1XECcSrtQtXx7LsSzyZu/QynWDlWwpPkz0NRi69MjEfWwWDlnn1gOM/3GD9BH5ATDlKPx9cM82g8rOSa18ZzhOWPN6dZav5lteoOQVKy2Y+a+4KVRdqo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793677; c=relaxed/simple;
-	bh=1TmCdo+FO/zkEnVKnASxRL4HA4jV5ExbAC4KK+Cu0Oc=;
+	s=arc-20240116; t=1718793680; c=relaxed/simple;
+	bh=9/kKCFldH84AyGm8TZpt5WMb1M6k+6AXFX9lbIl0pKo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=D76OGM1Cs3xJvhmqN/oC0g4pN1Y3BG99ijjlMcB8pkxBdHA/GC0iWdl+OcTZr+8btprcIORpflpwVCZBPiKoT74p11oE1QGqIC9KoV7CVfPb+isEhUTpzGGl0yCPF8NBkROEIDgBov14qg7z5ZgSCn7opnKW6hxKbxJ+cUR6iRk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=vLWFtDEU; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=BrROGoVTxXlsCIz5wsCxzLmUX8qdNai+OwdAY1u8OBwbOU1aMEeUjwEp/6hRyhBnlJFxsjZ57CpMTt7KSmwBIT8WtVXoZGqHxA3Zx2lmXVPoW4EuDk4S7KuN6mB9xTPsK1RRTcWgx+K4dB8NEJABtajf18ot3rqveBboxoKeTqg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P2mzXLZm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="vLWFtDEU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20BB2C2BBFC;
-	Wed, 19 Jun 2024 10:41:15 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P2mzXLZm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 385CDC4AF4D;
+	Wed, 19 Jun 2024 10:41:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718793676;
-	bh=1TmCdo+FO/zkEnVKnASxRL4HA4jV5ExbAC4KK+Cu0Oc=;
+	s=korg; t=1718793679;
+	bh=9/kKCFldH84AyGm8TZpt5WMb1M6k+6AXFX9lbIl0pKo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=vLWFtDEUn/pFHG3/ipg+G9kxUwVKRd0d4D09RJCfeME9TbJc0is4QU8AO2IUylQIT
-	 1o2boTLa+qG3gaHhHcznfu3HZ3sQ/OhrK9egW4bmy+i0+2MQxXNzU6jkEY5rokm0YP
-	 5E17oQQzJEEX8aitcwvaPK1pHVCQN0hlU2n0RBHE=
-Subject: Patch "mptcp: pm: inc RmAddr MIB counter once per RM_ADDR ID" has been added to the 5.10-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,liyonglong@chinatelecom.cn,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=P2mzXLZm7KETqoyUOxyAT3bPMW8ESh0K5PEATCIISm2QmOPG86Kg22izq3wWt+J9K
+	 vR/hJX5rRuOjpc6xIMCWO2jlDqH3igIY20GO51oSpE4/3ITln0cG48iiEprN2igbTd
+	 GKjPRRAycFdqfWlmGB+dp03Sruo4/dlwEfKhOYPc=
+Subject: Patch "mptcp: pm: update add_addr counters after connect" has been added to the 5.10-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,liyonglong@chinatelecom.cn,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Wed, 19 Jun 2024 12:41:05 +0200
-In-Reply-To: <20240618122511.640963-2-matttbe@kernel.org>
-Message-ID: <2024061904-unpainted-vitamins-cc50@gregkh>
+Date: Wed, 19 Jun 2024 12:41:06 +0200
+In-Reply-To: <20240618122531.641433-2-matttbe@kernel.org>
+Message-ID: <2024061905-shifting-writing-82d6@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,83 +44,117 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: pm: inc RmAddr MIB counter once per RM_ADDR ID
+    mptcp: pm: update add_addr counters after connect
 
 to the 5.10-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-pm-inc-rmaddr-mib-counter-once-per-rm_addr-id.patch
+     mptcp-pm-update-add_addr-counters-after-connect.patch
 and it can be found in the queue-5.10 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-52670-greg=kroah.com@vger.kernel.org Tue Jun 18 14:25:24 2024
+From stable+bounces-52671-greg=kroah.com@vger.kernel.org Tue Jun 18 14:25:44 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 18 Jun 2024 14:25:12 +0200
-Subject: mptcp: pm: inc RmAddr MIB counter once per RM_ADDR ID
+Date: Tue, 18 Jun 2024 14:25:32 +0200
+Subject: mptcp: pm: update add_addr counters after connect
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, YonglongLi <liyonglong@chinatelecom.cn>, Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240618122511.640963-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, YonglongLi <liyonglong@chinatelecom.cn>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240618122531.641433-2-matttbe@kernel.org>
 
 From: YonglongLi <liyonglong@chinatelecom.cn>
 
-commit 6a09788c1a66e3d8b04b3b3e7618cc817bb60ae9 upstream.
+commit 40eec1795cc27b076d49236649a29507c7ed8c2d upstream.
 
-The RmAddr MIB counter is supposed to be incremented once when a valid
-RM_ADDR has been received. Before this patch, it could have been
-incremented as many times as the number of subflows connected to the
-linked address ID, so it could have been 0, 1 or more than 1.
+The creation of new subflows can fail for different reasons. If no
+subflow have been created using the received ADD_ADDR, the related
+counters should not be updated, otherwise they will never be decremented
+for events related to this ID later on.
 
-The "RmSubflow" is incremented after a local operation. In this case,
-it is normal to tied it with the number of subflows that have been
-actually removed.
+For the moment, the number of accepted ADD_ADDR is only decremented upon
+the reception of a related RM_ADDR, and only if the remote address ID is
+currently being used by at least one subflow. In other words, if no
+subflow can be created with the received address, the counter will not
+be decremented. In this case, it is then important not to increment
+pm.add_addr_accepted counter, and not to modify pm.accept_addr bit.
+
+Note that this patch does not modify the behaviour in case of failures
+later on, e.g. if the MP Join is dropped or rejected.
 
 The "remove invalid addresses" MP Join subtest has been modified to
-validate this case. A broadcast IP address is now used instead: the
-client will not be able to create a subflow to this address. The
-consequence is that when receiving the RM_ADDR with the ID attached to
-this broadcast IP address, no subflow linked to this ID will be found.
+validate this case. The broadcast IP address is added before the "valid"
+address that will be used to successfully create a subflow, and the
+limit is decreased by one: without this patch, it was not possible to
+create the last subflow, because:
 
-Fixes: 7a7e52e38a40 ("mptcp: add RM_ADDR related mibs")
+- the broadcast address would have been accepted even if it was not
+  usable: the creation of a subflow to this address results in an error,
+
+- the limit of 2 accepted ADD_ADDR would have then been reached.
+
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
 Cc: stable@vger.kernel.org
 Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: YonglongLi <liyonglong@chinatelecom.cn>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://lore.kernel.org/r/20240607-upstream-net-20240607-misc-fixes-v1-2-1ab9ddfa3d00@kernel.org
+Link: https://lore.kernel.org/r/20240607-upstream-net-20240607-misc-fixes-v1-3-1ab9ddfa3d00@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.c because the commit 9f12e97bf16c ("mptcp:
-  unify RM_ADDR and RM_SUBFLOW receiving"), and commit d0b698ca9a27
-  ("mptcp: remove multi addresses in PM") are not in this version. To
-  fix the issue, the incrementation should be done outside the loop: the
-  same resolution has been applied here.
+[ Conflicts in pm_netlink.c because commit 1a0d6136c5f0 ("mptcp: local
+  addresses fullmesh") is not present in this version (+ others changing
+  the context). To resolve the conflicts, the same block is moved later,
+  and under the condition that the call to __mptcp_subflow_connect()
+  didn't fail.
   The selftest modification has been dropped, because the modified test
   is not in this version. That's fine, we can test with selftests from a
   newer version. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ net/mptcp/pm_netlink.c |   14 +++++++++-----
+ 1 file changed, 9 insertions(+), 5 deletions(-)
 
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -427,10 +427,10 @@ void mptcp_pm_nl_rm_addr_received(struct
- 		msk->pm.subflows--;
- 		WRITE_ONCE(msk->pm.accept_addr, true);
+@@ -371,15 +371,12 @@ void mptcp_pm_nl_add_addr_received(struc
+ 	struct sock *sk = (struct sock *)msk;
+ 	struct mptcp_addr_info remote;
+ 	struct mptcp_addr_info local;
++	int err;
  
--		__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
--
- 		break;
- 	}
+ 	pr_debug("accepted %d:%d remote family %d",
+ 		 msk->pm.add_addr_accepted, msk->pm.add_addr_accept_max,
+ 		 msk->pm.remote.family);
+-	msk->pm.add_addr_accepted++;
+ 	msk->pm.subflows++;
+-	if (msk->pm.add_addr_accepted >= msk->pm.add_addr_accept_max ||
+-	    msk->pm.subflows >= msk->pm.subflows_max)
+-		WRITE_ONCE(msk->pm.accept_addr, false);
+ 
+ 	/* connect to the specified remote address, using whatever
+ 	 * local address the routing configuration will pick.
+@@ -391,9 +388,16 @@ void mptcp_pm_nl_add_addr_received(struc
+ 	local.family = remote.family;
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+-	__mptcp_subflow_connect((struct sock *)msk, &local, &remote);
++	err = __mptcp_subflow_connect((struct sock *)msk, &local, &remote);
+ 	spin_lock_bh(&msk->pm.lock);
+ 
++	if (!err) {
++		msk->pm.add_addr_accepted++;
++		if (msk->pm.add_addr_accepted >= msk->pm.add_addr_accept_max ||
++		    msk->pm.subflows >= msk->pm.subflows_max)
++			WRITE_ONCE(msk->pm.accept_addr, false);
++	}
 +
-+	__MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMADDR);
+ 	mptcp_pm_announce_addr(msk, &remote, true);
  }
  
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk, u8 rm_id)
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
