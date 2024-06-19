@@ -1,83 +1,104 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C22175817;
-	Wed, 19 Jun 2024 10:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB80D155A5F
+	for <mptcp@lists.linux.dev>; Wed, 19 Jun 2024 15:42:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718793685; cv=none; b=hIz+FyXUdin/b2D0ge9FcSpJ61O3SD3VQWWw41VEfu6JnF46XJe4Juh2jtKaa/lAvfXi2wc3zKi8v+7YlLAba/igHYhRf8W66Vv5mR5IRdO0VTg+1JhkmidDXnoCeuOyRmI9jJVs3ozns84CsV9waDycx1XBXfB/vAMKDzJRJ0o=
+	t=1718811746; cv=none; b=VkzgC5lu+dLZqR3IGaF6t1vLoNhXmiDtsonjSLTi9rlopsAWWT8BfIzrHG/qkf+3kbj7gVQn+a+iqwJ0Taudi16L2pqZLGJDIMbQav8QgEs2j44O3Tk4L4gTn1MUqT/n0xSYMC/AeLAtR1ZZkbu5b7FtaQ068BuDA2aqsU2NmOY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718793685; c=relaxed/simple;
-	bh=gq9oSwl/z0sw4OPuFdIkjNagT73NLMbEXOef+BxVRKA=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=YZv9V2rwRMAyJL55fGOHiX608jm7RNWusH22bt+my2/BP5f9zQM2xq/5vmrQ8cuSUQCKVBhIICQR7uu8cyLuYl4XAC2CUiIa6S7hr3bpEIpjkTDflE/fuW4+yGiZ9KO9x5wsvzMlS6WBiSnwcVp9BTwXNkLX2AWc7oO4PdTQU8Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SwJRaCTT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718811746; c=relaxed/simple;
+	bh=tMHl8cM+1MV4zC/b6tft0Mi9GQd7W9pUEQTZOHLMupc=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=X4hWCgnBEbHiKaqN5BdPhwpwUsMPA46MO4/NLbbHKyHzdUU1XnSjiyrUA70gqHKJmsHQ4TeIgxHdxrLog62fgPu6peEezk74l2RtFSY73BjopgFfhq0rYPZmFAf4z5HgYowKB76ZYJKroZLEhQFxwlPpLc5U92rFQE8Nra1bcRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzEhB0jL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SwJRaCTT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CDD39C2BBFC;
-	Wed, 19 Jun 2024 10:41:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1718793685;
-	bh=gq9oSwl/z0sw4OPuFdIkjNagT73NLMbEXOef+BxVRKA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=SwJRaCTT05IaAJyJWaClozBQ6ovLScLJKsHnnKwYqtYj9CyMA300VGNK/az65cjK0
-	 mzDVjorgjhvOR3veBByZOXF9wHg7053VGx8TirPjnHht3WwvpQEC6CrS1QxE3bt/1A
-	 utakMXojgOMzPZrHsao0W0NcMMvPrJFEjRFBpSNY=
-Date: Wed, 19 Jun 2024 12:41:16 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Christoph Paasch <cpaasch@apple.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: Re: [PATCH 5.10.y] mptcp: ensure snd_una is properly initialized on
- connect
-Message-ID: <2024061902-stable-skimpily-ce79@gregkh>
-References: <2024061719-prewashed-wimp-a695@gregkh>
- <20240618122444.640369-2-matttbe@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzEhB0jL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E34ACC2BBFC
+	for <mptcp@lists.linux.dev>; Wed, 19 Jun 2024 15:42:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1718811745;
+	bh=tMHl8cM+1MV4zC/b6tft0Mi9GQd7W9pUEQTZOHLMupc=;
+	h=Date:To:From:Subject:From;
+	b=NzEhB0jLBgXS7p91j23UB+n/DpkldpP1XxElqGn4q4/bgcQl03PyTSQgLO6ZDuj0Z
+	 39CBRYqPsnbCJ0UzkLxG2dcpNQQleAcYjNLa5lAIVd7d6zdrv2aiJlwbqIRySv+qtO
+	 QDGJ6/s60WertPEyA3rPPlSCkmSzKfaMZfydfiUl0i3awPu4zfe0GDbXFkcW1N6o7s
+	 1dJOH9EK4gERxkElRyW4tsZnpYBymF9Tp2b7KsHLLbJiiM5WS5VSVOUYjqCNIvbBQT
+	 J8qPsdP/TsXZk1NM5ABv2To7XfhCsXnagChCaQfvNh11VYl82KnH9s3i5pa/y9kawF
+	 iKF+BqteFeKcQ==
+Message-ID: <87a37d09-f87f-4a6d-9a5d-81dd2f655ec4@kernel.org>
+Date: Wed, 19 Jun 2024 17:42:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20240618122444.640369-2-matttbe@kernel.org>
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-GB
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: [Weekly meetings] MoM - 19th of June 2024
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Tue, Jun 18, 2024 at 02:24:45PM +0200, Matthieu Baerts (NGI0) wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
-> 
-> commit 8031b58c3a9b1db3ef68b3bd749fbee2e1e1aaa3 upstream.
-> 
-> This is strictly related to commit fb7a0d334894 ("mptcp: ensure snd_nxt
-> is properly initialized on connect"). It turns out that syzkaller can
-> trigger the retransmit after fallback and before processing any other
-> incoming packet - so that snd_una is still left uninitialized.
-> 
-> Address the issue explicitly initializing snd_una together with snd_nxt
-> and write_seq.
-> 
-> Suggested-by: Mat Martineau <martineau@kernel.org>
-> Fixes: 8fd738049ac3 ("mptcp: fallback in case of simultaneous connect")
-> Cc: stable@vger.kernel.org
-> Reported-by: Christoph Paasch <cpaasch@apple.com>
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/485
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Link: https://lore.kernel.org/r/20240607-upstream-net-20240607-misc-fixes-v1-1-1ab9ddfa3d00@kernel.org
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> [ Conflicts in protocol.c, similar to the ones from commit 99951b62bf20
->   ("mptcp: ensure snd_nxt is properly initialized on connect"), with the
->   same resolution. Note that in this version, 'snd_una' is an atomic64
->   type, so use atomic64_set() instead, as it is done everywhere else. ]
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  net/mptcp/protocol.c | 1 +
->  1 file changed, 1 insertion(+)
+Hello everyone,
 
-All backports now queued up, thanks.
+No meeting today, as people in the US are on PTO today, and no one else
+seems available. Talk to you next week!
 
-greg k-h
+
+Next meeting:
+    - Next one on Wednesday, the 26th of June.
+    - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
+    - Still open to everyone!
+    - https://annuel2.framapad.org/p/mptcp_upstreaming_20240626
+
+
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
