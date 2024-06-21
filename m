@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49216174EED
-	for <mptcp@lists.linux.dev>; Fri, 21 Jun 2024 11:39:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79CFB13777F
+	for <mptcp@lists.linux.dev>; Fri, 21 Jun 2024 11:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718969968; cv=none; b=AuZ0SuWp3nms3/FI6U4WlmZcJoTURymQM/UM7wwwCnFPRaEeFE+qvGAEzHvCGH/Fe+QltV38jMuIlW3i0r/zI4pMT2U4SQQXXXTi5jqgBi6EK8rueHtUm0ZYTxN/muAmFy54ooqztOpmkYeRnqHvWgcZ+DRMPiO8exKBH+icmH8=
+	t=1718969969; cv=none; b=WTNk9fabWoz1c6Zw59tOSlgmjG3w/0DsQvbDElPGMQBRHRkn/ThuNT+zu572PfHi3wGNiWgKuWKMW+SjT5jCxy9N5yqbw7lvlWL+soLZ1DpIJma8muvboa7X0vllemWl9iX7MFa6vHjRH6RDaxaT8sl89AX56deY6WqOF1UEpIU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718969968; c=relaxed/simple;
-	bh=3cqSJ+rQBhqK/BunDk7NEDtDeXP1Y+n7Dy+gGOVdQdc=;
+	s=arc-20240116; t=1718969969; c=relaxed/simple;
+	bh=bxESA9RyE6Q2GVZhl2l+RPRIRfX3gqlM6Uy/yG+YhP4=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=buIPI3sYf4PjEEUV0dT60JuJTaC3Nm3aidMKMuX28LYcXkkbekLNBclSLc/SdSZkCNnjEBHglyPSNR4PvZYH82u39AhKkx+cOdHyQ+PbibVM8dEvyDOuBatjnIMiFgXeciSC2YtaF+X3DdFFV8QReloBkZO0/TBLTxak/WHDPKU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rmuc4mET; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=XX0CHidksFSoN/ft/gynu8BTLuMgiFB3Aw2Kbo1fwnz+fCSyz0/NOsCMOTNN+atNDwKdeG9sXaDHEKgvJs95mWk3exhecY172gVen4GbphL80I0Qh1Zn5V2yIuT6gksXWYG91Z+iaVk/JQrD8GbE34nhK3+lroMoA0h5LwDYEfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rDzG9Du3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rmuc4mET"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28769C3277B;
-	Fri, 21 Jun 2024 11:39:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rDzG9Du3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 52A40C4AF08;
+	Fri, 21 Jun 2024 11:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718969967;
-	bh=3cqSJ+rQBhqK/BunDk7NEDtDeXP1Y+n7Dy+gGOVdQdc=;
+	s=k20201202; t=1718969969;
+	bh=bxESA9RyE6Q2GVZhl2l+RPRIRfX3gqlM6Uy/yG+YhP4=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Rmuc4mETp9FICY5ZzK+YWFVxUO7T2jc3YIjna3+8h7XjOQSGIBWzhuU56joXiMe8s
-	 w9XS8IYWhvqIgX6AS18BUr8eKCKdMm038/PdQnvWauWxJ+cNlVS5oc81xCjhataZg4
-	 dSSvaPSLuVLOKg/IL4ct0iv9VVD8V9KSC+wxR5RKE9BspOzEPp5dk7GdWul5HnwWLH
-	 6QntT5wDeJ+HQpZqoOOP1jBvR2rGBrkeDALUkpnhLi1rdjJryflEYbXwySzpdBXV7V
-	 R1fXaU+wkiyE0oCP98fo5HAYZvsWpWGAas1mEpMM+28hqEy2ma3HLMaXep0ZXIJkZA
-	 5Rv7ysAXPVf3Q==
+	b=rDzG9Du36kvxGYU5jjDCXGluoceNUTkL247NFMPn9P3AruezZcEEPVyqwZrU8IgVo
+	 F5bFXv2eYtmc6cvyIFsKFqeQ7deUWfV93F8Hk5rG5MfG50M3ncg6puc74DwCMUYThq
+	 b74C2t/PXGAF24GIOJuZE0p82Wwjm8gHZ6Na/ITwGGAO0irGQ/EFTXYVso0+cJ0LsO
+	 zCFDF5LHa9iV1eXnPOy07FDzAV+eBiF5rlWYMBXNhQog7vYN3NtRhU3my2c2eGm68R
+	 y+7QAnnoIu5FwxTpm3ER8BEhvPGuKo2KcURViDJCuDkkbqABORg44gmgvyEcFDNBzR
+	 Xo9KEALX8YOMQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 21 Jun 2024 13:39:08 +0200
-Subject: [PATCH mptcp-next 2/4] mptcp: split id_avail_bitmap per target
+Date: Fri, 21 Jun 2024 13:39:09 +0200
+Subject: [PATCH mptcp-next 3/4] selftests: mptcp: join: ability to invert
+ ADD_ADDR check
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,174 +38,155 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240621-mptcp-pm-avail-v1-2-b692d5eb89b5@kernel.org>
+Message-Id: <20240621-mptcp-pm-avail-v1-3-b692d5eb89b5@kernel.org>
 References: <20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org>
 In-Reply-To: <20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6546; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=3cqSJ+rQBhqK/BunDk7NEDtDeXP1Y+n7Dy+gGOVdQdc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmdWZsyr/bjiE8E4nKGvBrpYhfAgZDDdLoScQ9r
- 5faIXlKs1WJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZnVmbAAKCRD2t4JPQmmg
- c4zrEADuFk4t35236e619r7rhsf+EaK5VyB1nhzCsMnoyi9Ei/Zlg8gkf0A7CceG1sgUDFF6bAx
- ROeKFzr8ZV6/L3/a6n+71xiXdiG5WiuGhXiWl8wup63FBPG2qp/Lko5J/pdzRWU5wZ0/Qny4P1N
- UidfsihhsJEJc2vAOsyDjyQIYAgxuL74sg/VhMOWKN3fTf3DeObaFMA6k7qiTbYZF4bZKxonHrX
- QffX1AtZxN512dWQ30q0grTnMwgseswzXTPLrTWGm0vAfDrYXi+kB/IS657DxQJad89BpAxQJWr
- g67E9ChHZvLYfP48mGUL9QCqihc8lai0VJeZPnnw5aGsqYdW5FXPvtntEihExftckbqFRlRIQVe
- /TMzeJ5nSc2d1FXlqsp+aewFawooMmThnW8AFWU1AeQmT5iHw0pWEnmrMf9SGpA2OVeDz6XPRoM
- 9pZVahc7WDsBfHYeJkPI1GEcHOgbt7pTINpN5kSKvByNYI04s9vNvDFFyi3bINRp3yE8hdta7t3
- /PjW19X33dqeHkS4PwqpXC+zmWMs0PtdHwr6/CG3ty+iqNWIeUTYiI5t8vbzYuKSw3VekkCEmQy
- aWzIyMxq5E5fYc1ScPrHOj9f/NQcfSyZ5Wy2mlmlsvABYQ289AfbQgA2wZmR9Ta95UJK6FfOtZd
- nwTQu2G9r23RhCA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3973; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=bxESA9RyE6Q2GVZhl2l+RPRIRfX3gqlM6Uy/yG+YhP4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmdWZsUk4jyDc+BC9suK5cCyIWtQ/tK3mujwWxE
+ 8r0UnEaWkqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZnVmbAAKCRD2t4JPQmmg
+ czS7EADe30JNmsSyN+wp6pqmDYYHEErlu/Hi7Ya7UCWUKcge6UH05XKOFKT5uKp84UOYYRq1jTI
+ y1CiHfd2ydyYFR26+xfLQlGdkMfKqDQGZsCgg0t/ni7BfK3q0fIZzK3wXwTPVUsbcdmrhHH0Vnn
+ TeOd6ePp4E9VDzCC8/6Ogw1C9FRu0DYjF9glMCPWjWc9Z0lLzwZn6ra7C4nggP/3wwDjcF8WQy3
+ cxyuKa40SQVIYJ+YCAH1ZSqjhXHDJ2tfETEvXiGvkouvZKnSYNOPz0bRLNdnriq1Hv9mPaj/tDo
+ 7MXkosgluZnip4zuqIIhsF9YBfpoZm/OebiR5MNrXSzibPFQEGNlIHPVp33Jp2tc8Y6+9mKQUdw
+ 7MRifurddvdcu2fWGZYWDHQ6ncS5cy/TU67ZDWbAzk6vPwaO0oT+u3yqdRlvIsDPOKC00RJ/34a
+ LRPDVkswKi/aN3EG0KFZS2Gwb0T8F5mzlD3RSzr8t4psy1dmfq28+/LfnAoDOM/ZWS8I3zUpa5n
+ vy/K8Bkad8efa1jBUgWRo36qz4K93Wd/MvJufUwRdr3YgapyaIdkNvuB3KmvvSfkUSzsuUwTWpN
+ eAHD6aIJ71Qey1qd/p0VhP1N16xpiO56JpYIbsFcKFclBHhJwNsHxob89B8UKVkJn1oWNq5GHto
+ kW915PyzETLeFfA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Up to the 'Fixes' commit, having an endpoint with both the 'signal' and
-'subflow' flags, resulted in the creation of a subflow and an address
-announcement using the address linked to this endpoint. After this
-commit, only the address announcement was done, ignoring the 'subflow'
-flag.
+In the following commit, the client will initiate the ADD_ADDR, instead
+of the server. We need to way to verify the ADD_ADDR have been correctly
+sent.
 
-That's because the same bitmap was used for the two flags. It is easy to
-split it in two: one for 'signal', and one for 'subflow'.
+Note: the default expected counters for when the port number is given
+are never changed by the caller, no need to accept them as parameter
+then.
 
-It is unusual to set the two flags together: creating a new subflow
-using a new local address will implicitly advertise it to the other
-peer. So in theory, no need to advertise it explicitly as well. Maybe
-there are use-cases -- the subflow might not reach the other peer that
-way, we can ask the other peer to try initiating the new subflow without
-delay -- or very likely the user is confused, and put both flags "just
-to be sure at least the right one is set". Still, the kernel should do
-what has been asked: using this endpoint to announce the address and to
-create a new subflow from it.
-
-An alternative is to forbid the use of the two flags together, but
-that's probably too late, and there are maybe use-cases. This patch will
-avoid people complaining subflows are not created using the endpoint
-they added with the 'subflow' and 'signal' flag.
-
-Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c         |  3 ++-
- net/mptcp/pm_netlink.c | 20 ++++++++++++--------
- net/mptcp/protocol.h   |  5 +++--
- 3 files changed, 17 insertions(+), 11 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 40 ++++++++++++++++---------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 55406720c607..d29fb35bb927 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -543,7 +543,8 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	WRITE_ONCE(pm->addr_signal, 0);
- 	WRITE_ONCE(pm->remote_deny_join_id0, false);
- 	pm->status = 0;
--	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+	bitmap_fill(msk->pm.id_avail_signals_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+	bitmap_fill(msk->pm.id_avail_subflows_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 108aeeb84ef1..5f5e498bbb75 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1415,18 +1415,28 @@ chk_add_nr()
+ 	local add_nr=$1
+ 	local echo_nr=$2
+ 	local port_nr=${3:-0}
+-	local syn_nr=${4:-$port_nr}
+-	local syn_ack_nr=${5:-$port_nr}
+-	local ack_nr=${6:-$port_nr}
+-	local mis_syn_nr=${7:-0}
+-	local mis_ack_nr=${8:-0}
++	local ns_invert=${4:-""}
++	local syn_nr=$port_nr
++	local syn_ack_nr=$port_nr
++	local ack_nr=$port_nr
++	local mis_syn_nr=0
++	local mis_ack_nr=0
++	local ns_tx=$ns1
++	local ns_rx=$ns2
++	local extra_msg=""
+ 	local count
+ 	local timeout
+ 
+-	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
++	if [[ $ns_invert = "invert" ]]; then
++		ns_tx=$ns2
++		ns_rx=$ns1
++		extra_msg="invert"
++	fi
++
++	timeout=$(ip netns exec ${ns_tx} sysctl -n net.mptcp.add_addr_timeout)
+ 
+ 	print_check "add"
+-	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtAddAddr")
++	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtAddAddr")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+ 	# if the test configured a short timeout tolerate greater then expected
+@@ -1438,7 +1448,7 @@ chk_add_nr()
+ 	fi
+ 
+ 	print_check "echo"
+-	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtEchoAdd")
++	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtEchoAdd")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+ 	elif [ "$count" != "$echo_nr" ]; then
+@@ -1449,7 +1459,7 @@ chk_add_nr()
+ 
+ 	if [ $port_nr -gt 0 ]; then
+ 		print_check "pt"
+-		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtPortAdd")
++		count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtPortAdd")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$port_nr" ]; then
+@@ -1459,7 +1469,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "syn"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortSynRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinPortSynRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$syn_nr" ]; then
+@@ -1470,7 +1480,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "synack"
+-		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinPortSynAckRx")
++		count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinPortSynAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$syn_ack_nr" ]; then
+@@ -1481,7 +1491,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "ack"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortAckRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinPortAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$ack_nr" ]; then
+@@ -1492,7 +1502,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "syn"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortSynRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMismatchPortSynRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$mis_syn_nr" ]; then
+@@ -1503,7 +1513,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "ack"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortAckRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMismatchPortAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$mis_ack_nr" ]; then
+@@ -1513,6 +1523,8 @@ chk_add_nr()
+ 			print_ok
+ 		fi
+ 	fi
++
++	print_info "$extra_msg"
  }
  
- void mptcp_pm_data_init(struct mptcp_sock *msk)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ea9e5817b9e9..4805452d05a2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -156,7 +156,7 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
- 			continue;
- 
--		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
-+		if (!test_bit(entry->addr.id, msk->pm.id_avail_subflows_bitmap))
- 			continue;
- 
- 		ret = entry;
-@@ -178,10 +178,10 @@ select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
- 	 * can lead to additional addresses not being announced.
- 	 */
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
-+		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
- 			continue;
- 
--		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
-+		if (!test_bit(entry->addr.id, msk->pm.id_avail_signals_bitmap))
- 			continue;
- 
- 		ret = entry;
-@@ -228,7 +228,9 @@ bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk)
- 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
- 
- 	if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
--	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap,
-+	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_signals_bitmap,
-+			       MPTCP_PM_MAX_ADDR_ID + 1, 0) == MPTCP_PM_MAX_ADDR_ID + 1) ||
-+	    (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_subflows_bitmap,
- 			       MPTCP_PM_MAX_ADDR_ID + 1, 0) == MPTCP_PM_MAX_ADDR_ID + 1)) {
- 		WRITE_ONCE(msk->pm.work_pending, false);
- 		return false;
-@@ -537,7 +539,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		rcu_read_lock();
- 		entry = __lookup_addr(pernet, &mpc_addr);
- 		if (entry) {
--			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-+			__clear_bit(entry->addr.id, msk->pm.id_avail_signals_bitmap);
-+			__clear_bit(entry->addr.id, msk->pm.id_avail_subflows_bitmap);
- 			msk->mpc_endpoint_id = entry->addr.id;
- 			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
- 		}
-@@ -570,7 +573,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 
- 		if (local) {
- 			if (mptcp_pm_alloc_anno_list(msk, &local->addr)) {
--				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+				__clear_bit(local->addr.id, msk->pm.id_avail_signals_bitmap);
- 				msk->pm.add_addr_signaled++;
- 				mptcp_pm_announce_addr(msk, &local->addr, false);
- 				mptcp_pm_nl_addr_send_ack(msk);
-@@ -592,7 +595,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
- 
- 		msk->pm.local_addr_used++;
--		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+		__clear_bit(local->addr.id, msk->pm.id_avail_subflows_bitmap);
- 		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
- 		if (nr == 0)
- 			continue;
-@@ -822,7 +825,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 				__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
- 		if (rm_type == MPTCP_MIB_RMSUBFLOW)
--			__set_bit(rm_id ? rm_id : msk->mpc_endpoint_id, msk->pm.id_avail_bitmap);
-+			__set_bit(rm_id ? rm_id : msk->mpc_endpoint_id,
-+				  msk->pm.id_avail_subflows_bitmap);
- 		else if (rm_type == MPTCP_MIB_RMADDR)
- 			__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		if (!removed)
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 19d60b6d5b45..cbb430108823 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -187,7 +187,7 @@ enum mptcp_pm_status {
- 	MPTCP_PM_SUBFLOW_ESTABLISHED,
- 	MPTCP_PM_ALREADY_ESTABLISHED,	/* persistent status, set after ESTABLISHED event */
- 	MPTCP_PM_MPC_ENDPOINT_ACCOUNTED /* persistent status, set after MPC local address is
--					 * accounted int id_avail_bitmap
-+					 * accounted in id_avail_*_bitmap
- 					 */
- };
- 
-@@ -231,7 +231,8 @@ struct mptcp_pm_data {
- 	u8		pm_type;
- 	u8		subflows;
- 	u8		status;
--	DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+	DECLARE_BITMAP(id_avail_signals_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+	DECLARE_BITMAP(id_avail_subflows_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- 	struct mptcp_rm_list rm_list_tx;
- 	struct mptcp_rm_list rm_list_rx;
- };
+ chk_add_tx_nr()
 
 -- 
 2.43.0
