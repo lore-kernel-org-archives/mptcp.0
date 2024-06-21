@@ -1,104 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BB80D155A5F
-	for <mptcp@lists.linux.dev>; Wed, 19 Jun 2024 15:42:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 066A1171E41
+	for <mptcp@lists.linux.dev>; Fri, 21 Jun 2024 11:39:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1718811746; cv=none; b=VkzgC5lu+dLZqR3IGaF6t1vLoNhXmiDtsonjSLTi9rlopsAWWT8BfIzrHG/qkf+3kbj7gVQn+a+iqwJ0Taudi16L2pqZLGJDIMbQav8QgEs2j44O3Tk4L4gTn1MUqT/n0xSYMC/AeLAtR1ZZkbu5b7FtaQ068BuDA2aqsU2NmOY=
+	t=1718969966; cv=none; b=rfSs3DMBQKboTMvfzUN2VECwRK6K/R35OdZ4f19fo/BvvuA5LAevKQ54j9Hg7LmhuGMoo+3Z/IxUoPMXnPAj1YD61PQMg7ZtUcFtS02NWxwGQTlrDHGGj1afskGm4ExxtlDuiR6Zpc3LZDgndKAkiUNjyQd1KS7XXICfvClP210=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1718811746; c=relaxed/simple;
-	bh=tMHl8cM+1MV4zC/b6tft0Mi9GQd7W9pUEQTZOHLMupc=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=X4hWCgnBEbHiKaqN5BdPhwpwUsMPA46MO4/NLbbHKyHzdUU1XnSjiyrUA70gqHKJmsHQ4TeIgxHdxrLog62fgPu6peEezk74l2RtFSY73BjopgFfhq0rYPZmFAf4z5HgYowKB76ZYJKroZLEhQFxwlPpLc5U92rFQE8Nra1bcRU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzEhB0jL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1718969966; c=relaxed/simple;
+	bh=UCPl3BKuDDaZArIS+SUGeCKOXHJ8lQ5FzEMz/uOnisM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=RS3Y3E1QZbEf7Pq9vFY161N9vXarvXI0xbwwLj5194+oZN5AT4/G7NHa5XxqXimrjs1T2g+Gtuk/Nlunap5AbfyEngLdKmdDfBaDOx0pHRYteZgYgHZ6XdViwlXsZ+2QyIcCbKDSn6/ZEc3kF69oAI+hg5DvH9vLOqxP2y3XPFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UJFCuZcM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzEhB0jL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E34ACC2BBFC
-	for <mptcp@lists.linux.dev>; Wed, 19 Jun 2024 15:42:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UJFCuZcM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5ED4C2BBFC;
+	Fri, 21 Jun 2024 11:39:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1718811745;
-	bh=tMHl8cM+1MV4zC/b6tft0Mi9GQd7W9pUEQTZOHLMupc=;
-	h=Date:To:From:Subject:From;
-	b=NzEhB0jLBgXS7p91j23UB+n/DpkldpP1XxElqGn4q4/bgcQl03PyTSQgLO6ZDuj0Z
-	 39CBRYqPsnbCJ0UzkLxG2dcpNQQleAcYjNLa5lAIVd7d6zdrv2aiJlwbqIRySv+qtO
-	 QDGJ6/s60WertPEyA3rPPlSCkmSzKfaMZfydfiUl0i3awPu4zfe0GDbXFkcW1N6o7s
-	 1dJOH9EK4gERxkElRyW4tsZnpYBymF9Tp2b7KsHLLbJiiM5WS5VSVOUYjqCNIvbBQT
-	 J8qPsdP/TsXZk1NM5ABv2To7XfhCsXnagChCaQfvNh11VYl82KnH9s3i5pa/y9kawF
-	 iKF+BqteFeKcQ==
-Message-ID: <87a37d09-f87f-4a6d-9a5d-81dd2f655ec4@kernel.org>
-Date: Wed, 19 Jun 2024 17:42:22 +0200
+	s=k20201202; t=1718969965;
+	bh=UCPl3BKuDDaZArIS+SUGeCKOXHJ8lQ5FzEMz/uOnisM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=UJFCuZcMyanFahDOYrORbbF8f0v8TrE6MBmcliNWZOuuypj+Ogp5Bq6TojPoAMkkZ
+	 R0gsAXfHHNfheyrxIZNhmroizT0m0X/e+mt6lBiIqPlZ8ee0prlaIW9Ow0TGcTIcnf
+	 MUbOx5basXN0m1gihlMO/Kg2sv7Wm3kxhiM2OAHG0AtEiYmHFZtkV0Ed/5WiOD815I
+	 7/S6M19R5KnlHZkrgIWhlAL5X7epgYLCoVel/ioA3z1oTmRIFhbnRu+a2EpLD+1BzR
+	 Jxu9KowY5NjgpyagHhHrW1Cy6r7DzJzRFHhZVzxLOGi7A2anUTvNECbFBDolNmYzox
+	 HbJ6Y4nOVhtsQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/4] mptcp: fix endpoints with 'signal' and
+ 'subflow' flags
+Date: Fri, 21 Jun 2024 13:39:06 +0200
+Message-Id: <20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [Weekly meetings] MoM - 19th of June 2024
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAFpmdWYC/yWM0QpAMBRAf0X32a2ZIX5FHmbuuMWsTVLy7xaPp
+ 845N0QKTBG67IZAJ0feXYIiz8As2s2EPCUGKaQStRS4+cN49BvqU/OKtqKyrZqRlCogRT6Q5es
+ b9vC7jq4Dhud5AWQG/fZsAAAA
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2319; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=UCPl3BKuDDaZArIS+SUGeCKOXHJ8lQ5FzEMz/uOnisM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmdWZsc/bcoaWqkdZLeIXarnfqcbsX8Q17ZJ9mQ
+ JtssDYAHqqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZnVmbAAKCRD2t4JPQmmg
+ cy8sD/4/2NrtJknJMYUlri4M7r9ACuTkPXv7sJt9IzrWjFYlT3Ir/hPkyOudoyl3spTgLOUNpUf
+ /GNop3E5TtNZSJkjgJtF1vG2aLZuES+6qddYGCVkMdwCmzPNLsF8mSGQpSUPNPKSnEm+KDJp54X
+ R8vuy2S3+UzVMcE6O6JJ6NzdwCu7H9vVOBluYtpgQMky8l2MUnDIHFBlFrPQ9Lag6ZIJf7PaKb2
+ Ejef80el6GC5sKQSnVWeNCZ4y+kW0gJ6og5yI+lugJC02rCFPPorYgLzA3GEDJvgZV7Rq2v8H3+
+ h60ae1dtI4voubRK9zCYklQDzhofuAOk00+1bFa2/YC3THuZkGZtvv8KpRdV5WN/VZgIGBS1MrE
+ cDUic2Dz5Akh2r+J6ybuO/XoBLfAS+GulBWo6O3QLVi7g1KnNJ1qVtmdnKpmSgiQvV2Ntt5TE0/
+ vtZxJYOhFY55FxaiZLoS5R/7p+QHxukB6AfVzU9dr9vduRTaPIlSsfOsIikTHnIuVFBBxK6BI3F
+ HQoa6iaavYyi2uZM6HC0qdnTRdgUiFzV3sB4gkN9bv5oh90jfaIpNmdXf/EDdVOD7iacGoxP+1e
+ WQqNjfzzCdAhV5a5x4wv3IF0hciHcCIZdFr8yvw8Zfn5GFXwu6rsrqP7XHhXSRuuDvZBKxXYy/j
+ QDtACgGDSpWugQw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello everyone,
+When looking at improving the user experience around the MPTCP endpoints
+setup, I noticed that setting an endpoint with both the 'signal' and the
+'subflow' flags -- as it has been done in the past by users according to
+bug reports we got -- were resulting on only announcing the endpoint,
+but not using it to create subflows: the 'subflow' flag was then
+ignored.
 
-No meeting today, as people in the US are on PTO today, and no one else
-seems available. Talk to you next week!
+My initial thought was to modify IPRoute2 to warn the user when the two
+flags were set, but it doesn't sound normal to ignore one of them. I
+then looked at modifying the kernel not to allow having the two flags
+set, but when discussing about that with Mat, we thought it was maybe
+not ideal to do that, as there might be use-cases, we might break some
+configs, and it was working before apparently. So instead, I fixed the
+support by splitting the previously shared 'available IDs' bitmap.
 
+While at it, I added a new selftest (patch 4) to validate this case --
+including a modification of the chk_add_nr helper to inverse the sides
+were the counters are checked (patch 3) -- and allowed ADD_ADDR echo
+just after the MP_JOIN 3WHS.
 
-Next meeting:
-    - Next one on Wednesday, the 26th of June.
-    - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20240626
+The selftests modification don't have a Fixes tag, because backporting
+will not be easy: on some versions, the backport will not generate
+conflicts, but the test will fail because some helpers are not
+available. That's OK, many CIs will use the selftests from the last
+stable version to validate previous stable releases.
 
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (4):
+      mptcp: fully established after ADD_ADDR echo on MPJ
+      mptcp: split id_avail_bitmap per target
+      selftests: mptcp: join: ability to invert ADD_ADDR check
+      selftests: mptcp: join: test both signal & subflow
 
-Matt
+ net/mptcp/options.c                             |  3 +-
+ net/mptcp/pm.c                                  |  3 +-
+ net/mptcp/pm_netlink.c                          | 20 +++++----
+ net/mptcp/protocol.h                            |  5 ++-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 55 ++++++++++++++++++-------
+ 5 files changed, 60 insertions(+), 26 deletions(-)
+---
+base-commit: e6b62d29168e1aef6aa328f8956e5e0aadffe3d5
+change-id: 20240620-mptcp-pm-avail-f5e3957be441
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
