@@ -1,100 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 65A86146A64
-	for <mptcp@lists.linux.dev>; Tue, 25 Jun 2024 23:18:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E13421C68A6
+	for <mptcp@lists.linux.dev>; Fri, 28 Jun 2024 15:54:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719357520; cv=none; b=SQbi+VGwqrOFAuA6K0ac3FadmuXd7Z2pE1r0Xhy9/VlUA8uUOLQGuHc2l9r4ggS7j4z34XAh68dGiGn4tx62WtoXCw5Ce1uyM+5gBFKsbS6XZrbNDXJRl+ib21SXgn5ED2pVaI8hehvZ/r0zBCkO6FjNnSGDbyVrgE/LG5BldjY=
+	t=1719590062; cv=none; b=E+5Q9k/RTM9EGkSkhvZ5EPxo4ILtWsr7g5KCYyWhw0AqlVkb3EoX4M7ypM0wNn+6aWXHgtfdXqyknDBA+PjbKVkJ4iH6mHa6bt/AIe1UPZer9FkFfSKYHwNCIe3xtDAxbh+AoYtFr9bPJusxD66A5uxY/axTVT0rSnb951lbvEA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719357520; c=relaxed/simple;
-	bh=DghHlrb5keCfIUNkzOkcIW/vrAlWCCgOQB0GX9eYPTw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=kIDGZkTC2/JXnGyWB1plF4vh8bSm3Zw/BGxQL2EHmadSLppMrbuHaYhszv/JnlrwySI/9+AaFgyBV7Q8xO7a9XkCzQG7YMcVrusi48t5nG/BwukG53tFlfRdd16gzhA/CY8SGHZl3R8Uujk5u0FTFWdvcOKerbL4vyEGLThKyYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zo0sayYO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719590062; c=relaxed/simple;
+	bh=1q5gRW494o41NC7mPAMznR5FgIiKlFgFZZ1VcbtxJis=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=Oz7x+Iv7Nuly2Xifm//y13+2GG3YMlQQfMKmSrT74K3EpYGfx2u1m7wCjAWDN7Sr8KBapBI23Ac3oNR4gnxebo0IOjuBFXbXWCYqBtUS6/sG7/ua2QwOoD28gMaVjlL7o1FOXApPZYAgIdzgdk0jerArM8DG0y7e1ev0kP+sXOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=V3B5VKjC; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zo0sayYO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DA1BCC32781;
-	Tue, 25 Jun 2024 23:18:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719357519;
-	bh=DghHlrb5keCfIUNkzOkcIW/vrAlWCCgOQB0GX9eYPTw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Zo0sayYOrEUpcUdW33u82b5SNLWCSnEr0tjzQVmLsrxMRl167POr7FiQD4pXAGSt1
-	 /VBEYcsNWiVxdglh0S1dcWgkV7ACNgNrbGlKNZMTIdcsP3TzBHmQtPfgKLm9SZexP4
-	 tzvkwUOpqJX1iTmbYJTMU99pki4tqLdyqMpPZR//oUHWujuTotihf7gLnEygny8uYl
-	 eiC8xMBMj/jKffZUI6hDgKLKFNSab9hm9AOLXB1DPoSQghiZDISeUWLMA3da4idqbO
-	 2kuF/KIYF1sRs0CMzxfKA+35bFg0aXjfRH3y2SR115bSkberc/VzjKW/HbhX2dQ4KR
-	 75OBrT6JM1h2Q==
-Date: Tue, 25 Jun 2024 16:18:39 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: join: test both signal
- & subflow
-In-Reply-To: <20240621-mptcp-pm-avail-v1-4-b692d5eb89b5@kernel.org>
-Message-ID: <2dd5acd8-e841-00d8-bdde-6037d6bea3cb@kernel.org>
-References: <20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org> <20240621-mptcp-pm-avail-v1-4-b692d5eb89b5@kernel.org>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="V3B5VKjC"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1719590059;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=u14D78JHQEAfOXXEzPqBEXThxDbmbq3TnCXtAfw5HrU=;
+	b=V3B5VKjCXdjnS+QHDORD0ZrFxmxWnir4GpxwLNQ59vJkCQclwj7U0aeNzYT7CH3/Vkmtr0
+	BTtNlBg5A9jUZ0tGTyLsIMPKj2EodnKpikO7+7PuUJAtniViQGN3bQ8dTwgZi22TLreKD3
+	vpGjJhwd9QfWwt/BO0z4l5exUnm8yIc=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-619-ArzpeemiPMik_OZABcFQaw-1; Fri,
+ 28 Jun 2024 11:54:17 -0400
+X-MC-Unique: ArzpeemiPMik_OZABcFQaw-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id B8B4F1944CCA
+	for <mptcp@lists.linux.dev>; Fri, 28 Jun 2024 15:54:16 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.45.225.34])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id B173019560B2
+	for <mptcp@lists.linux.dev>; Fri, 28 Jun 2024 15:54:15 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-net 0/3] mptcp: fix signal endpoint readd
+Date: Fri, 28 Jun 2024 17:54:05 +0200
+Message-ID: <cover.1719589916.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-On Fri, 21 Jun 2024, Matthieu Baerts (NGI0) wrote:
+Issues/501 showed that the NL PM currently don't add corectly removal
+and re-add of signal endpoint.
 
-> It should be quite uncommon to set both the subflow and the signal
-> flags: the initiator of the connection is typically the one creating new
-> subflows, not the other peer, then no need to announce additional local
-> addresses, and use it to create subflows.
->
-> But some people might be confused about the flags, and set both "just to
-> be sure at least the right one is set". To verify the previous fix, and
-> avoid future regressions, this specific case is now validated: the
-> client announces a new address, and initiates a new subflow from the
-> same address.
->
-> While working on this, another bug has been noticed, where the client
-> reset the new subflow because an ADD_ADDR echo got received as the 3rd
-> ACK: check that no RST have been sent by the client and server.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 +++++++++++++++
-> 1 file changed, 15 insertions(+)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 5f5e498bbb75..b8c0b69db527 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1967,6 +1967,21 @@ signal_address_tests()
-> 		chk_add_nr 1 1
-> 	fi
->
-> +	# uncommon: subflow and signal flags on the same endpoint
-> +	# or because the user wrongly picked both, but still expects the client
-> +	# to create additional subflows
-> +	if reset "subflow and signal together"; then
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 0 2
-> +		pm_nl_add_endpoint $ns2 10.0.3.2 flags signal,subflow
-> +		run_tests $ns1 $ns2 10.0.1.1
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1 0 invert  # only initiated by ns2
-> +		chk_add_nr 0 0 0         # none initiated by ns1
-> +		chk_rst_nr 0 0 invert    # no RST sent by the client
-> +		chk_rst_nr 0 0           # no RST sent by the server
-> +	fi
-> +
-> 	# accept and use add_addr with additional subflows
-> 	if reset "multiple subflows and signal"; then
-> 		pm_nl_set_limits $ns1 0 3
+Patch 1/3 addresses the issue, patch 2/3 introduce a related self-test,
+and the last patch address a pre-existing buglet in the self-test infra.
 
-Matthieu -
+Paolo Abeni (3):
+  mptcp: fix announced address accounting
+  selftests: mptcp: add explicit test case for remove/readd
+  selftests: mptcp: fix error path
 
-Related to my feedback on patch 2, it would be good to add a test to 
-confirm that announced addr_ids can be reused after they are removed.
+ net/mptcp/pm_netlink.c                        | 27 ++++++++++++-----
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 30 ++++++++++++++++++-
+ 2 files changed, 48 insertions(+), 9 deletions(-)
 
-- Mat
+-- 
+2.45.1
+
