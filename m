@@ -1,166 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f170.google.com (mail-pl1-f170.google.com [209.85.214.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 504DD10F9
-	for <mptcp@lists.linux.dev>; Mon,  1 Jul 2024 18:48:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7969C8C7
+	for <mptcp@lists.linux.dev>; Mon,  1 Jul 2024 19:08:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719859688; cv=none; b=DMl37r+UO4pZgxYltJKkICrImq4WaW1INr8/t3V3FBXpN6y7ZR7fjozszRif8281aNLjbdraqOjrQsZnTUD1BxfhPlWs2vKT2CNTQXhqzw2cHEEv0uNHFDgxGITmyTInZy40E2+4AAcWO5T/Jpq1oEKcebOy8PyVXZ6/0oTjY3s=
+	t=1719860907; cv=none; b=Wwq/BGm3+PxPcLrsHDoYy4tjkYepVNEu6JAX7r7mWIYRTJ62CsRp7DHa+AmUU9UCR3W6qMSVdjE/Ofzh3CzcOygaX3PRCNqoJkPwClOzXePsENRqRn37zssSOKgA5JjqYbauOSEQ8pHw2kCmPGeK2kuJ4ScsZYIUFz82OPtz3vU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719859688; c=relaxed/simple;
-	bh=F7HU8Pi8r8d8cS8ZhRcY7pQoyd4bpXKec3qa87tbM08=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VKVvZYj3LFTfzVNLdW6T8CGMBkCOvpjGnOfdtuy58ul+i7ofP/KHCdnhNFq7W6AyJik5fm7yHE+p9kxRnK33NgyF4fYpoPAo1M/p6OO/8ytepAZoQZ7k1daxhyoHF0iYqAKpNChOTHcJWiLMmetnGiiE1iLdSDuQbZs5waVRagc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Esj2Z5aO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719860907; c=relaxed/simple;
+	bh=ymR3czF8jWWUwYYuintPNeyAhCcdShLuOBV0lYK5WU4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=FLvE/Miqr9aUfpBrMYNc6BBwYEDZGlR6VolvtS2iJasIQt5RtPGQx4WDMj9MJPl/ozykup/Erm3I7NFQxmafiVvelbRXwFAWTLnYiqGf619HpnUdsZ6XGIAzcxecqOuXtYFNbgXqyf3ep6Tmkm2x+ausx96PGu6KoHyCVvDGkhA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PsrqQtuA; arc=none smtp.client-ip=209.85.214.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Esj2Z5aO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97BB6C116B1;
-	Mon,  1 Jul 2024 18:48:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719859688;
-	bh=F7HU8Pi8r8d8cS8ZhRcY7pQoyd4bpXKec3qa87tbM08=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Esj2Z5aOnV+z5YGz6PPeFEhfPE6zGtQ6EQPbaqqUdXrq2NI5Ar6ycR/L7N7+cAlEP
-	 k0kxz0ueTZLISZ66GJeouRS/u0dHSbLYNANJEJvdnU9eamvLwliaTGQDLLUdYG5/si
-	 GPQIvCxqNBe/gIGmVX/Hghu9JfQSXwdxpH6tl2De7G7Z6JFGNqV08oU/bXDI7iHlvw
-	 r248hVGNvkkkT+OSIVUVM0Xzf2Fs1xTVcGfrh2g3eBB0V3G83aYpHdaWnXzrw+O8Ja
-	 aQv8sWgnVtMSuDP5Y5YOMpscSXDar5owGl1d8gjZ/rwYmfkU7FOFedQAwLOslM98cC
-	 GtLKu0vXwdzUg==
-Message-ID: <09b48662-9334-41e3-a825-3d555110ae35@kernel.org>
-Date: Mon, 1 Jul 2024 20:48:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PsrqQtuA"
+Received: by mail-pl1-f170.google.com with SMTP id d9443c01a7336-1fa9ecfb321so19825815ad.0
+        for <mptcp@lists.linux.dev>; Mon, 01 Jul 2024 12:08:25 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1719860905; x=1720465705; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ZiUASAcvSSMMAkamAotHaL7YSipSiVsC8BtjXqEZmBo=;
+        b=PsrqQtuA1ncIAZs0Evz09OcC51uMfI52xWtuW3r6F1v4R2TMWKqUlewkVXvZHFjfkY
+         3l7pFsFYf/xLhDtbpYuVPuwiYX9OkInLflrGjEWxYQsGaaJAEjoRl8QsDyCo02yTSZfP
+         yQOqqAnoQwZlcXX6mrS5wxucd1/MVP8peH0TRpspL/+1uVL0AL7PZnrQeEj1llliX3sn
+         0kN/9qDgmDVvN3dpZJRHEtSv2DM78KJQOL2oHKzyltX9NkVLt4QO1UaTJJvmyJOVvlk2
+         bES2IFeDPVK3+l8JfK2DLVJwo5P7t7Ad5kckpiVYTHRwIoEHf8OmFS5F1bDjKy7/VFbk
+         DMAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1719860905; x=1720465705;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ZiUASAcvSSMMAkamAotHaL7YSipSiVsC8BtjXqEZmBo=;
+        b=tUZ38LtLutiWkb3JiiwDeqXebo0DkuISvTaBR5VP2Y9WLBd6odoC8MLTGoPtNCI+j8
+         QvymAnGrGW169z/tPJNE9fD7RgKXTLfHqf097Ob/0XpWmnoEGV6u8ZAFt0uwAULixADO
+         wbhbb0HymvDhLbwaC67ktjR6iDoxoGBdv0S3l4tVF0iIetdZvpxiZdd+iKU4oLHWPSzb
+         wDizBprKHLHNjS14SbAepdvzqNiinkuDQX5EFW24YfmeErS8nfVe/rTsL6v1FLXC/QZi
+         36Oo9qiriw/AB30gykiBHAHAs1gguQx/38JZdTCcOemd7zn8NgaCtFp1nql/q1+x8dOM
+         NBWg==
+X-Gm-Message-State: AOJu0YyYCCh0OgL1niKze8Etq19cTPKB5VBqamWgxosSv3AtvqTSZi8P
+	XI+LfuHtM7WaYiyedSYI417iFl8bujLk/epQrXrFDT1yRFIncobUSH9o
+X-Google-Smtp-Source: AGHT+IEQiHGsmwq2E5hgvTYcRYdJZ5XAeri99C8h72KXRU6YoFr0/rnRBBQqFKQfUwvjKWKQy4PGCg==
+X-Received: by 2002:a17:902:c94b:b0:1f9:cf2f:507c with SMTP id d9443c01a7336-1fadbcb4858mr42219025ad.41.1719860903654;
+        Mon, 01 Jul 2024 12:08:23 -0700 (PDT)
+Received: from [127.0.0.1] ([52.234.33.250])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-1fac10d1c78sm70101255ad.23.2024.07.01.12.08.22
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 01 Jul 2024 12:08:23 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Liu Jing <liujing@cmss.chinamobile.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240701181646.252683-2-matttbe@kernel.org>
+References: <20240701181646.252683-2-matttbe@kernel.org>
+Subject: Re: [PATCH] selftests: mptcp: add close function in main_loop_s
+ function
+Message-ID: <0586d247-9be5-d748-353e-160d35f7e99e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 01 Jul 2024 19:08:22 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] selftests: mptcp: add close function in main_loop_s
- function
-Content-Language: en-GB
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Liu Jing <liujing@cmss.chinamobile.com>
-References: <20240701181646.252683-2-matttbe@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240701181646.252683-2-matttbe@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Liu Jing,
+Hi Liu,
 
-Thank you for this patch.
+Thank you for your modifications, that's great!
 
-I have some comments, please see below. Can you send a v2 please?
+Our CI did some validations and here is its report:
 
-Please send such patches to MPTCP mailing list, as mentioned in the
-MAINTAINERS file: for us to be able to track and review these patches.
-And for our CI to validate them.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/9749324571
 
-On 01/07/2024 20:16, Matthieu Baerts (NGI0) wrote:
-> From: Liu Jing <liujing@cmss.chinamobile.com>
-> 
-> in main_loop_s function, when open(cfg_input, O_RDONLY),When the open(cfg_input, O_RDONLY) function is run,
-
-"when open(cfg_input, O_RDONLY)" is duplicated.
-
-> the last fd file descriptor is not closed if the if (--cfg_repeat > 0) branch is not taken
-
-Could you limit the lines to max 72 chars for the description and around
-~50 for the title please?
-
-  selftests: mptcp: always close input's FD if opened
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/27aea1e315d8
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D867250
 
 
-Also, it looks like it is a bug-fix. Then please add a 'Fixes' tag, e.g.:
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+For more details:
 
-(In your v2, please drop my SoB that has been automatically added when
-sending this patch to our ML)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index d2043ec3bf6d..48b7389ae75b 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1119,7 +1119,8 @@ int main_loop_s(int listensock)
->  		if (cfg_input)
->  			 close(fd);
->  		goto again;
-> -	}
-> +	} else
-> +		close(fd);
 
-I think it would be clearer to move...
-
-  if (cfg_input)
-          close(fd);
-
-... before 'if (--cfg_repeat > 0)' (with an empty line in between): so
-first we 'close(fd)' if needed, then we check if we need to do it again.
-
-Note: Please run 'checkpatch.pl': it was complaining about this line:
-
- https://github.com/multipath-tcp/mptcp_net-next/actions/runs/9749324582
-
- https://docs.kernel.org/process/5.Posting.html
-
->  
->  	return 0;
->  }
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
