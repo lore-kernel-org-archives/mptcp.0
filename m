@@ -1,152 +1,73 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AC4B14BF8F
-	for <mptcp@lists.linux.dev>; Mon,  1 Jul 2024 18:08:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837F72BB04
+	for <mptcp@lists.linux.dev>; Mon,  1 Jul 2024 18:16:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719857302; cv=none; b=aKJ0OI9KCrdua0inWX8UvFwOwIU9znmyfKYzYCGzz58yyprla9uitbvTLu46Hv2u6I0nFok78fKIgsFL8O8bQAVk8WVYkWIZEi9fupfEBUhqEFAVgX+KIyBC7kk9L7Sj8pf/ZlsdwRb/aMfKLZtP6kvNyMkEzV/YE/M5IuTvjH8=
+	t=1719857811; cv=none; b=tS/4aAA292Osn8LfDdnexvVmMX/XBGEUFj5Otz1nbC5x3qjSigadPg2KuF1TYShgBciuwUGMq4X4Ndg+Y7avz7/jlVrRApbm9vspJL+/MIt+PD/7VpTP1BKZK0LKdOryN0H7wgBWqxjq3noDah1GL2MRRMc8X86B623cGtAT3us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719857302; c=relaxed/simple;
-	bh=UoWMiY/Ep6dxA8A3NFNN7a8ZgdEDkxy3oZXrsjMr/KU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ePpPIIeEfItnQ8O4K8ZCp237KXn/ndtC50yEgbV04vq5O/YU04ZhyNZwtHhqGlfCVKLvJXuCvFI8fGbCx1KyvPnlp0lKd7fr0kgTT/23J1lS23gngA9/vAiZCav939r9qqtP9U6X5Hx0SnfNfwU68zhmtBb+4DIbGE480GBTCJA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HfJYkTTi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719857811; c=relaxed/simple;
+	bh=kbBuEmbOnT5f4urUj8+/YZFEfjq6x1AFIG616yzK/8c=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BofcvR9HEeQuq6A6gjroQCggR2I1pJeDqnRthB/c3cJl5b3xWesZPG+sc87+O730k63VWCzQRJN1WgX+zWBej/FY9ucO+UTBEl0N8HasLjyrYXcQeFqIrE9lcmUINGaacv8J5Bme6osn06m5JVM0zIROJcBQMVebA+sbJv1Fapg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j7aYm9gx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HfJYkTTi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 019D1C116B1;
-	Mon,  1 Jul 2024 18:08:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j7aYm9gx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68DC4C116B1;
+	Mon,  1 Jul 2024 18:16:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719857302;
-	bh=UoWMiY/Ep6dxA8A3NFNN7a8ZgdEDkxy3oZXrsjMr/KU=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=HfJYkTTiicFIAprRCp5+VOvS8wjleee9HfBI3yFkgOMUp0+PGFJBFw5hDdK00TTPX
-	 c7VxBSlD1ngO/hFlUI1uMVE4tyIA9sor2lLKa7G9DlxKR/RLJadRuDPTnlYOv4Lqoa
-	 NDmHcGAupVNz59NxhwoXphx2YarTHBi4k7bP3jtAK0ibxsnMbz8OivcqRXp2wRW1YS
-	 PFamNCLLDAVfGX7KqScpfCpK4zIDdZkgHiUpV/YD+rQpZ7AygnQA0M/GAPbME3jdM5
-	 uwGU9p1kXWcz3hO90ybccykL+KgUfR8xVfN/wU8avxhmmOFH2uwaSRNv+H5OaaxkfY
-	 ZnmyDoktN6Xbw==
-Date: Mon, 1 Jul 2024 11:08:21 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net 1/3] mptcp: fix announced address accounting
-In-Reply-To: <4a8ac95282ec2b551a64134f24b2e2fd7d82973c.1719589916.git.pabeni@redhat.com>
-Message-ID: <f5abcf0d-1ca3-5601-3159-2d553f3591c4@kernel.org>
-References: <cover.1719589916.git.pabeni@redhat.com> <4a8ac95282ec2b551a64134f24b2e2fd7d82973c.1719589916.git.pabeni@redhat.com>
+	s=k20201202; t=1719857811;
+	bh=kbBuEmbOnT5f4urUj8+/YZFEfjq6x1AFIG616yzK/8c=;
+	h=From:To:Cc:Subject:Date:From;
+	b=j7aYm9gxMTAtzv/0g8QOOgFYP5+MB5u3gbRPIPDQBbAiYJmhM6hfMMSAbIjE6lLrs
+	 v4fkzfnQdzBcv5zC4i1EwU5mhZGO9Dn8HZ++xQ1xDkCIAuR9qTJWrNslTob8Rm3QRm
+	 +RGHdnalxPzS8f1YnQ8tXm3WcvnlsCijAdfymGtt8dXL5rBIryrINEkvanKqt1sMQu
+	 /Je3CCbJ9FjmevCe2YntFUIEJZsPLPPq8qxIV6yZYk56qIQH72dF0Rpfspj/F8Z/58
+	 hWxEh8o8PpjRUXjqWyyRdSLTw6nPYyU9p6yDiTKJh71ToUIgve2UoDInMtE4yBM41s
+	 tMf+2roLsTVpw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: MPTCP Upstream <mptcp@lists.linux.dev>
+Cc: Liu Jing <liujing@cmss.chinamobile.com>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH] selftests: mptcp: add close function in main_loop_s function
+Date: Mon,  1 Jul 2024 20:16:47 +0200
+Message-ID: <20240701181646.252683-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=875; i=matttbe@kernel.org; h=from:subject; bh=SdDtajciaY7eKQYmP1pJznkMhsntjvHNH3UXxru5yDc=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmgvKOupvTif3N6NHkVWoBiFEs5aDlCVb/+9t7K PaZXVzhi7uJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZoLyjgAKCRD2t4JPQmmg cxjMEADubNAIpSkp702hVQlX5N9s5lWzpuZm61zm2KRzhlVXVsKZf4M7fo8ZTUiMbPrEsv1LLxs EIBEXE6qVN3JMLJYtxplK0DLjYa4haQCkkhVcDqeACABdtorK+jPu7SMUjTM5RlH2hte0rsyyZ1 3DegQ1nMySbsNMvUmea2jsi5qdhrAsQ/hVl45vUazuj/7KcYDhO1ZFloaTDqhB9CfkGIO3LcJkM 4wvD2fqi+9Wnve1iztuOB6wGn5jgyLm1pHk3JA2p/ZJGeJN6HXn7wYg8le4XHFRyCmI3dtW9XnR Uk5f9O0juPd138qZ8cGF3XRmhMkT1he88tJAPU1CZxTYf1ckm0MwMjWY6GMrzhmPnpoadJqa4Fp z+J/0R4QQLUwJ4VtzciJvnaPXaODU2WL6SP2bfkgruc5vxLPmz58WlRgi8gPAH3lJz3GaWJgkAG dhjWIOFb0b6zrPGcKUjciz5sC+RXDDSIgrjQXnaNQeJREoasw6Ve8Ca+ssNchxbYa8ItpK9oCyF 2uh7KoyRXrn8LsBaMRuUqB8pl2Wq+YAtdJmHYK1NkKl9wUG6gktxLQtjBWHmtKdX4kEWFo9KBsn Zsgpiy0AnO+BTLC7V01Bh1TTMKMUYHs5Hp2VCBb4ADCckZ0wv/Tyix6/6/vhqbabep4zhc8CW80 pZY7PmZFPVHjCcw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On Fri, 28 Jun 2024, Paolo Abeni wrote:
+From: Liu Jing <liujing@cmss.chinamobile.com>
 
-> Currently the per connection announced address counter is never
-> decreased. As a consequence, after connection establishment, if
-> the NL PM deletes an endpoint and adds a new/different one, no
-> additional subflow is created for the new endpoint even if the
-> current limits allow that.
->
-> Address the issue properly updating the signaled address counter
-> every time one of such address is removed.
->
-> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> slightly unrelated: is unclear to me why mptcp_pm_remove_addrs() does
-> things slightly differently from mptcp_pm_remove_addrs_and_subflows(),
-> with the latter IMHO doing the right thing (TM)
+in main_loop_s function, when open(cfg_input, O_RDONLY),When the open(cfg_input, O_RDONLY) function is run,
+the last fd file descriptor is not closed if the if (--cfg_repeat > 0) branch is not taken
 
-Hi Paolo -
+Signed-off-by: Liu Jing <liujing@cmss.chinamobile.com>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-I don't remember why mptcp_pm_remove_addrs() has the extra code to send 
-the RM_ADDR for addresses that are in the conn_list but not the anno_list. 
-Maybe to allow a way to sent RM_ADDR as a "request for the peer to 
-initiate a disconnect" even on implicitly added address IDs (from outgoing 
-subflow connections instead of ADD_ADDRs)?
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index d2043ec3bf6d..48b7389ae75b 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1119,7 +1119,8 @@ int main_loop_s(int listensock)
+ 		if (cfg_input)
+ 			close(fd);
+ 		goto again;
+-	}
++	} else
++		close(fd);
+ 
+ 	return 0;
+ }
+-- 
+2.45.2
 
-> ---
-> net/mptcp/pm_netlink.c | 27 +++++++++++++++++++--------
-> 1 file changed, 19 insertions(+), 8 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ea9e5817b9e9..624f9ea66aea 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1401,6 +1401,7 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
-> 	ret = remove_anno_list_by_saddr(msk, addr);
-> 	if (ret || force) {
-> 		spin_lock_bh(&msk->pm.lock);
-> +		msk->pm.add_addr_signaled--;
-
-Looks like this only be decremented if ret is true, since that indicates a 
-list element was removed and add_addr_signaled is supposed (?) to track 
-the length of the anno_list.
-
-
-- Mat
-
-> 		mptcp_pm_remove_addr(msk, &list);
-> 		spin_unlock_bh(&msk->pm.lock);
-> 	}
-> @@ -1534,16 +1535,25 @@ void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
-> {
-> 	struct mptcp_rm_list alist = { .nr = 0 };
-> 	struct mptcp_pm_addr_entry *entry;
-> +	int anno_nr = 0;
->
-> 	list_for_each_entry(entry, rm_list, list) {
-> -		if ((remove_anno_list_by_saddr(msk, &entry->addr) ||
-> -		     lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) &&
-> -		    alist.nr < MPTCP_RM_IDS_MAX)
-> -			alist.ids[alist.nr++] = entry->addr.id;
-> +		if (alist.nr >= MPTCP_RM_IDS_MAX)
-> +			break;
-> +
-> +		/* only delete if either announced or matching a subflow */
-> +		if (remove_anno_list_by_saddr(msk, &entry->addr))
-> +			anno_nr++;
-> +		else if (!lookup_subflow_by_saddr(&msk->conn_list,
-> +						  &entry->addr))
-> +			continue;
-> +
-> +		alist.ids[alist.nr++] = entry->addr.id;
-> 	}
->
-> 	if (alist.nr) {
-> 		spin_lock_bh(&msk->pm.lock);
-> +		msk->pm.add_addr_signaled -= anno_nr;
-> 		mptcp_pm_remove_addr(msk, &alist);
-> 		spin_unlock_bh(&msk->pm.lock);
-> 	}
-> @@ -1556,17 +1566,18 @@ static void mptcp_pm_remove_addrs_and_subflows(struct mptcp_sock *msk,
-> 	struct mptcp_pm_addr_entry *entry;
->
-> 	list_for_each_entry(entry, rm_list, list) {
-> -		if (lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
-> -		    slist.nr < MPTCP_RM_IDS_MAX)
-> +		if (slist.nr < MPTCP_RM_IDS_MAX &&
-> +		    lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-> 			slist.ids[slist.nr++] = entry->addr.id;
->
-> -		if (remove_anno_list_by_saddr(msk, &entry->addr) &&
-> -		    alist.nr < MPTCP_RM_IDS_MAX)
-> +		if (alist.nr < MPTCP_RM_IDS_MAX &&
-> +		    remove_anno_list_by_saddr(msk, &entry->addr))
-> 			alist.ids[alist.nr++] = entry->addr.id;
-> 	}
->
-> 	if (alist.nr) {
-> 		spin_lock_bh(&msk->pm.lock);
-> +		msk->pm.add_addr_signaled -= alist.nr;
-> 		mptcp_pm_remove_addr(msk, &alist);
-> 		spin_unlock_bh(&msk->pm.lock);
-> 	}
-> -- 
-> 2.45.1
->
->
->
