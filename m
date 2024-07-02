@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDA314B06C
-	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 09:01:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC260152533
+	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 09:03:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719910914; cv=none; b=jOMwTOB6i2Zehsui1F9/qP3ugxvgspxGTjaJy8J038vFNyrE+aRfqDFbAEgY5sVVXQt3IcDfwE+bxm9dH3Z1Q3ItvdVLmjO5GlZLy0gT8MYLBSl02eC5lpF1rbskWKVrFaayDse3iAmXgYUUEEa+6oecivY1QD76KP7qcrGHS60=
+	t=1719911037; cv=none; b=FhGbE3epSR5CnjYiX9syHsIPxYss1b0uKw2L5ki89zywYrXjkjbCVGb9hd7w3mcW4nJ088w5qxxzudfYbDMKbD90FfeOzrdEVosxa7g14gMUwQfrZ/vwrM196KCdS0frwjXZZy72zqtHDh9nC+UBH4FqZP82/QFtXIy11VA0AgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719910914; c=relaxed/simple;
-	bh=O6etH3gWTxOF2TX94H1UummRiopsqScUd7ZGN4VUe2M=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=t6PfFUdhf5yYT3cvNy6Fr+GVpFeHjgq8lJNh2vpauGCPzSZZ0KTEgnBF5zhY4WyC/A0+x+F1p5FRoqzRxmS00hpT8ASkmpUtQeB1pDaQOToUzKYMs6GxfSHeihGuZVZOxYrcX+m2wd1LOITEDL86hNBzcyHT2Nqkx+0utSwvWto=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpoVa9aY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719911037; c=relaxed/simple;
+	bh=El1OnCoOg+GzRWNafd3ghpBTiQDrhbbIyJPNlN7pEEI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=nWsnjWTdxMniv4hEeIfFbI6C1CV5l2UhAx0TFQsPGPLp5vGOQpwJpPK5+qWb6U+ZIiyybH55rHWCz2Od/M2x7Px3+pPjoLux/GWEFNJtAm/F4dqz6yBC62emf779Jw6myHCCVTrlijJxn9dEEmO8LHBP/s8Y8NWRWklsYxZJgWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i0XwMqVi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpoVa9aY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271EBC116B1;
-	Tue,  2 Jul 2024 09:01:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i0XwMqVi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B728FC32781;
+	Tue,  2 Jul 2024 09:03:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719910913;
-	bh=O6etH3gWTxOF2TX94H1UummRiopsqScUd7ZGN4VUe2M=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=LpoVa9aYzhXkueqnxnHZTm5sVD4mDoQoPvUh0h2RoOMQokHJVE70aYG4WbYyU29az
-	 XrZNL1a1zJAyzXtNabt/QF6WUt5jh7jxbilHzoXO//sNN6oBHFnEDs55dFRF2Y9lT9
-	 Ysztny7QzQcxy6U2zEQQ8LNYCTXph1eGsjFQ/IX2+7ROtabbYYzpkpiym0S91kZX7v
-	 GkIh2EavNefHrKEGrV2F+z/QTykgDygEFO3EVh8rapqah//xgV/5vUJPs8e3LtQ1AX
-	 0lXqQJZC4+1kyuGmUOTtb827qzLIVjAn/KtFowu6nNH6FmXnJaAuhMmbLyFpSwSwWV
-	 EMpAgrWJ7GGIA==
-Message-ID: <3eff208d-f3e2-411a-9f72-faa9ae6560b2@kernel.org>
-Date: Tue, 2 Jul 2024 11:01:50 +0200
+	s=k20201202; t=1719911037;
+	bh=El1OnCoOg+GzRWNafd3ghpBTiQDrhbbIyJPNlN7pEEI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=i0XwMqViltscbl5JTkJOqBNEMV0wHTorx4dFc4vY+yHrZH29Wfb7bCR5yK2aTlkqj
+	 CyhJJCmcGfixfLG2BhsmuWzH+rWADrnE3R4TVkEeKvjZKtMDJSjBeEvHkuU90UvObL
+	 8mGOrqIuqREut6J+NH1Bg1NXbEhyO284D2NUy2JDsDUNb5RF2DUvi7XLx51xdGSBxS
+	 dG4LcyEOfwrj3yEthWtlk5Tvo+TGukVRMwUFi1WRiyD81t9+Aa0rqdfxQQtAX6BzKD
+	 yL/kM5Nq2GXyLeCFIX60pho7LwD8P3zEaUkDj/wNvEJkWaLsPCfz3KSFo/mONhRI0i
+	 qqUy0NGNimbTw==
+Message-ID: <304bc54a-4a3b-4878-8565-0296e707b5a8@kernel.org>
+Date: Tue, 2 Jul 2024 11:03:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: add explicit test case
- for remove/readd
+Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: fix error path
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1719589916.git.pabeni@redhat.com>
- <1d4a6ebd0f843910f35a842673af55fca6962b8e.1719589916.git.pabeni@redhat.com>
+ <aa0ddd712e2b466b69ea87fba6158f13b850c1b1.1719589916.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,48 +85,19 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-Cc: mptcp@lists.linux.dev
-In-Reply-To: <1d4a6ebd0f843910f35a842673af55fca6962b8e.1719589916.git.pabeni@redhat.com>
+In-Reply-To: <aa0ddd712e2b466b69ea87fba6158f13b850c1b1.1719589916.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
 On 28/06/2024 17:54, Paolo Abeni wrote:
-> Delete and re-create a signal endpoint and ensure that the PM
-> actually deletes and re-create the subflow.
+> pm_nl_check_endpoint() currently calls an not existing helper
+> to mark the test as failed. Fix the wrong call.
 > 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 108aeeb84ef1..228fecee61f9 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3526,6 +3526,34 @@ endpoint_tests()
->  		chk_mptcp_info subflows 1 subflows 1
->  		mptcp_lib_kill_wait $tests_pid
->  	fi
-> +
-> +	# remove and re-add
-> +	if reset "delete re-add signal"; then
+> Fixes: 03668c65d153 ("selftests: mptcp: join: rework detailed report")
 
-In the previous tests -- "delete and re-add", we added:
+Good catch!
 
-  mptcp_lib_kallsyms_has "subflow_rebuild_header$"
-
-At the beginning of the endpoint_tests() function there is this comment:
-
-  # subflow_rebuild_header is needed to support the implicit flag
-
-Maybe I put the same check on "delete and re-add" by mistake. I don't
-think this test depends on the "implicit" type. Or maybe it is, because
-its introduction is also linked to some big modifications on the PM
-side. In this case, should we have the same check?
-
-  && mptcp_lib_kallsyms_has "subflow_rebuild_header$"
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
