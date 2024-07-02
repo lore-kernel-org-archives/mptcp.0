@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 53F6482D7F
-	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 10:37:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB691158DCA
+	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 10:54:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719916657; cv=none; b=PrlepY9kIBcxofEoGjYstusam0R6vvxxcUEPsuzUI2BSAGmf6yqVGz3tcowmuorcjqEDC6RyKk9Nn97cnU97fpYu/pqCZYiBWI8AsbYqhlvizIGbscnK1tGAL5F6829k+mCqkRZiI1H3uSEb2xCXdzIUA+E7OYX3srVI7y5EHJc=
+	t=1719917667; cv=none; b=ImokAk6b5e+sN3Z9i83tTwrHTlt9VN2OYgxVPN7vEH2uZufum9UbgVLv/u6VRgCdWr276qU2sJxqgPORlQeYRgtTWOKJjC4u/UQTzwCcqNca/qBYPLXpaPevByShvzev8lRKtpQq+lwOE13fLOX2melRYgMQ2teEfXnTwgRInuI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719916657; c=relaxed/simple;
-	bh=nxZ1py0vJp/w6jwxXDb0MZmnFwO/bxcbPdrcI44KKgw=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=Zcmtcj1pAcwhjyhsCbn48VrbmJMH5G7GRYv0lVXo0azHFBQFz8adGR0cqPpkwFz8VTJpFCFnkNx9o4bI/6D2bpJNMITSqGlBz6GUrr4c5bYa/PBFiO2XmhzEkkiJrMbxzAoD8Q44vp2vYaCQRVerUq9M7/h6+T6IM5aqIBKtnG8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IGSyKRQG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719917667; c=relaxed/simple;
+	bh=yW1OtRITi80br/kPt0OLBAQZH6LYCej1FnMOLVGquMA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=B5hoOHVffDQBfWr1VqooQnKBbDR0xst/OPwuziAnJJbm33mFHntWHHEmnv86c61CWbuoYx18OKUM88YYa1KW55Ge6y6EYrBGXxHfoRdwNQqqAfblVjEswWadJQcbxrxaqSVNd8h3Blo/3kBr9tTsdWnu7jHx92g/SdfzZK5Gs2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a6/WepsO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IGSyKRQG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1545EC116B1;
-	Tue,  2 Jul 2024 10:37:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a6/WepsO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3AA7CC2BD10;
+	Tue,  2 Jul 2024 10:54:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719916657;
-	bh=nxZ1py0vJp/w6jwxXDb0MZmnFwO/bxcbPdrcI44KKgw=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=IGSyKRQG5HiBQQ9XfpL/yHMIq33GGHu3l0h1OpXXrJ08v+8LEIAhTqS2xmbxAQrqA
-	 0I/EUeRdOEFOjWHK0AcuPOZmW5FGBlvO86gzfBNr9u5c/mDXhm3G9622VdJ7Kcw/Nn
-	 /OXAeR14IfOc8IgfhIpb6VHtX/dVKjL1wpiapaJiDDLc9Met7KZAi5hbCKhJnY6yAw
-	 BsNi8COuemEuV9xr00AJ55Y5I/Wzi68FUBJAhl537p7U4ytUlxhJu00Qtom7N8gh2K
-	 NX1hJLP3aBYXqLYHqhpMI7GWkM3YGVu0hikjHoufdR7Cj4x2D/tf1Msn1dU647w7lO
-	 YqjwTKqOeS4JQ==
-Message-ID: <4443c9e2-626e-4a16-85e5-c11e1164d155@kernel.org>
-Date: Tue, 2 Jul 2024 12:37:33 +0200
+	s=k20201202; t=1719917667;
+	bh=yW1OtRITi80br/kPt0OLBAQZH6LYCej1FnMOLVGquMA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a6/WepsOPRtT+95qhps8x3Vl/AzGlO07yU+q/OJbw6VvuCZ/3ZJfiXxXC+xdBvi9c
+	 zgIpMxr7pS7NEzqPuUeTylselvsVSAE9U+v6ModxePv/QigUeu2NN4eIiDt3ZnI85o
+	 NpRhYRvz001RkPhB5cvcebZfYLDBr8sxOIqBVrRObkhNH+i67cNj4e9jFfz+0OnAMB
+	 9yFO2z26FGUtij9eQgXAdzabx+E6/LiXscHxVTcnMRRR+xjUzWqE9M5uUlYmxKLc1U
+	 iXLGnEE9P4VLUNvVv3Jf3XYnFjYeVmY1qncw8sy6QJ76cC7J7WTFGpwxkqEZYPy9IN
+	 QD0Ugl53f5XzQ==
+Message-ID: <a0d4520d-29ba-47df-aa4d-5bfa4661323e@kernel.org>
+Date: Tue, 2 Jul 2024 12:54:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] mptcp: fix announced address accounting
+Subject: Re: [PATCH mptcp-next 2/4] mptcp: split id_avail_bitmap per target
 Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org>
+ <20240621-mptcp-pm-avail-v1-2-b692d5eb89b5@kernel.org>
+ <e1d59bcb-3baa-c432-31ab-139428ef7cde@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1719589916.git.pabeni@redhat.com>
- <4a8ac95282ec2b551a64134f24b2e2fd7d82973c.1719589916.git.pabeni@redhat.com>
- <f5abcf0d-1ca3-5601-3159-2d553f3591c4@kernel.org>
- <82e70747-2a6e-4a40-b5f7-573b23317780@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,118 +87,161 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <82e70747-2a6e-4a40-b5f7-573b23317780@kernel.org>
+In-Reply-To: <e1d59bcb-3baa-c432-31ab-139428ef7cde@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-On 02/07/2024 10:51, Matthieu Baerts wrote:
-> Hi Paolo, Mat,
+Note: I forgot to change the topic to 'mptcp-net'...
+
+On 26/06/2024 01:16, Mat Martineau wrote:
+> On Fri, 21 Jun 2024, Matthieu Baerts (NGI0) wrote:
 > 
-> On 01/07/2024 20:08, Mat Martineau wrote:
->> On Fri, 28 Jun 2024, Paolo Abeni wrote:
+>> Up to the 'Fixes' commit, having an endpoint with both the 'signal' and
+>> 'subflow' flags, resulted in the creation of a subflow and an address
+>> announcement using the address linked to this endpoint. After this
+>> commit, only the address announcement was done, ignoring the 'subflow'
+>> flag.
 >>
->>> Currently the per connection announced address counter is never
->>> decreased. As a consequence, after connection establishment, if
->>> the NL PM deletes an endpoint and adds a new/different one, no
->>> additional subflow is created for the new endpoint even if the
->>> current limits allow that.
->>>
->>> Address the issue properly updating the signaled address counter
->>> every time one of such address is removed.
-> 
-> Thank you for having looked at that!
-> 
->>> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> slightly unrelated: is unclear to me why mptcp_pm_remove_addrs() does
->>> things slightly differently from mptcp_pm_remove_addrs_and_subflows(),
->>> with the latter IMHO doing the right thing (TM)
+>> That's because the same bitmap was used for the two flags. It is easy to
+>> split it in two: one for 'signal', and one for 'subflow'.
 >>
->> Hi Paolo -
+>> It is unusual to set the two flags together: creating a new subflow
+>> using a new local address will implicitly advertise it to the other
+>> peer. So in theory, no need to advertise it explicitly as well. Maybe
+>> there are use-cases -- the subflow might not reach the other peer that
+>> way, we can ask the other peer to try initiating the new subflow without
+>> delay -- or very likely the user is confused, and put both flags "just
+>> to be sure at least the right one is set". Still, the kernel should do
+>> what has been asked: using this endpoint to announce the address and to
+>> create a new subflow from it.
 >>
->> I don't remember why mptcp_pm_remove_addrs() has the extra code to send
->> the RM_ADDR for addresses that are in the conn_list but not the
->> anno_list. Maybe to allow a way to sent RM_ADDR as a "request for the
->> peer to initiate a disconnect" even on implicitly added address IDs
->> (from outgoing subflow connections instead of ADD_ADDRs)?
-> 
-> mptcp_pm_remove_addrs() is only used by the userspace PM, it should
-> probably be moved to pm_userspace.c in fact (but it uses helpers from
-> pm_netlink.c, I guess that's why it is there). My understanding is that
-> it also checks the local subflows list because the userspace can ask to
-> send a remove ADDR for addresses that have been "implicitly" announced
-> via the MPJoin as well.
-> 
-> Maybe the modification in mptcp_pm_remove_addrs() should be in a
-> different commit? With a different Fixes tag then:
-> 
->   Fixes: 8b1c94da1e48 ("mptcp: only send RM_ADDR in nl_cmd_remove")
-> 
+>> An alternative is to forbid the use of the two flags together, but
+>> that's probably too late, and there are maybe use-cases. This patch will
+>> avoid people complaining subflows are not created using the endpoint
+>> they added with the 'subflow' and 'signal' flag.
 >>
->>> ---
->>> net/mptcp/pm_netlink.c | 27 +++++++++++++++++++--------
->>> 1 file changed, 19 insertions(+), 8 deletions(-)
->>>
->>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->>> index ea9e5817b9e9..624f9ea66aea 100644
->>> --- a/net/mptcp/pm_netlink.c
->>> +++ b/net/mptcp/pm_netlink.c
->>> @@ -1401,6 +1401,7 @@ static bool mptcp_pm_remove_anno_addr(struct
->>> mptcp_sock *msk,
->>>     ret = remove_anno_list_by_saddr(msk, addr);
->>>     if (ret || force) {
->>>         spin_lock_bh(&msk->pm.lock);
->>> +        msk->pm.add_addr_signaled--;
+>> Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still
+>> available for each msk")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> net/mptcp/pm.c         |  3 ++-
+>> net/mptcp/pm_netlink.c | 20 ++++++++++++--------
+>> net/mptcp/protocol.h   |  5 +++--
+>> 3 files changed, 17 insertions(+), 11 deletions(-)
 >>
->> Looks like this only be decremented if ret is true, since that indicates
->> a list element was removed and add_addr_signaled is supposed (?) to
->> track the length of the anno_list.
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index 55406720c607..d29fb35bb927 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+>> @@ -543,7 +543,8 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>>     WRITE_ONCE(pm->addr_signal, 0);
+>>     WRITE_ONCE(pm->remote_deny_join_id0, false);
+>>     pm->status = 0;
+>> -    bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+>> +    bitmap_fill(msk->pm.id_avail_signals_bitmap, MPTCP_PM_MAX_ADDR_ID
+>> + 1);
+>> +    bitmap_fill(msk->pm.id_avail_subflows_bitmap,
+>> MPTCP_PM_MAX_ADDR_ID + 1);
+>> }
+>>
+>> void mptcp_pm_data_init(struct mptcp_sock *msk)
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index ea9e5817b9e9..4805452d05a2 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -156,7 +156,7 @@ select_local_address(const struct pm_nl_pernet
+>> *pernet,
+>>         if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW))
+>>             continue;
+>>
+>> -        if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
+>> +        if (!test_bit(entry->addr.id, msk->pm.id_avail_subflows_bitmap))
+>>             continue;
+>>
+>>         ret = entry;
+>> @@ -178,10 +178,10 @@ select_signal_address(struct pm_nl_pernet
+>> *pernet, const struct mptcp_sock *msk)
+>>      * can lead to additional addresses not being announced.
+>>      */
+>>     list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+>> -        if (!test_bit(entry->addr.id, msk->pm.id_avail_bitmap))
+>> +        if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+>>             continue;
+>>
+>> -        if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+>> +        if (!test_bit(entry->addr.id, msk->pm.id_avail_signals_bitmap))
+>>             continue;
+>>
+>>         ret = entry;
+>> @@ -228,7 +228,9 @@ bool mptcp_pm_nl_check_work_pending(struct
+>> mptcp_sock *msk)
+>>     struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+>>
+>>     if (msk->pm.subflows == mptcp_pm_get_subflows_max(msk) ||
+>> -        (find_next_and_bit(pernet->id_bitmap, msk->pm.id_avail_bitmap,
+>> +        (find_next_and_bit(pernet->id_bitmap, msk-
+>> >pm.id_avail_signals_bitmap,
+>> +                   MPTCP_PM_MAX_ADDR_ID + 1, 0) ==
+>> MPTCP_PM_MAX_ADDR_ID + 1) ||
+>> +        (find_next_and_bit(pernet->id_bitmap, msk-
+>> >pm.id_avail_subflows_bitmap,
+>>                    MPTCP_PM_MAX_ADDR_ID + 1, 0) ==
+>> MPTCP_PM_MAX_ADDR_ID + 1)) {
+>>         WRITE_ONCE(msk->pm.work_pending, false);
+>>         return false;
+>> @@ -537,7 +539,8 @@ static void
+>> mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>>         rcu_read_lock();
+>>         entry = __lookup_addr(pernet, &mpc_addr);
+>>         if (entry) {
+>> -            __clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
+>> +            __clear_bit(entry->addr.id, msk-
+>> >pm.id_avail_signals_bitmap);
+>> +            __clear_bit(entry->addr.id, msk-
+>> >pm.id_avail_subflows_bitmap);
+>>             msk->mpc_endpoint_id = entry->addr.id;
+>>             backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>>         }
+>> @@ -570,7 +573,7 @@ static void
+>> mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>>
+>>         if (local) {
+>>             if (mptcp_pm_alloc_anno_list(msk, &local->addr)) {
+>> -                __clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+>> +                __clear_bit(local->addr.id, msk-
+>> >pm.id_avail_signals_bitmap);
 > 
-> Good point.
+> Hi Matthieu -
 > 
-> Should we not also set the corresponding bit in:
-> 
->   msk->pm.id_avail_signals_bitmap
-> 
-> Linked to my series:
-> 
-> 
-> https://lore.kernel.org/mptcp/20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org/T/
-> 
-> Otherwise, we will not be able to re-use the same ID, no?
+> I don't see anywhere that __set_bit(id, msk->pm.id_avail_signals_bitmap)
+> is ever called, so it looks like once an id is announced it is never
+> available to announce again.
 
-It is a bit confusing, but it looks like the bitmap is modified in some
-cases:
+Good point! It looks like it was already the case before: we only mark
+an ID as available again in mptcp_pm_nl_rm_addr_or_subflow(), but only
+when we found a matching local subflow. If the local ID was not used
+locally -- e.g. the other peer didn't establish a new subflow -- the ID
+was not marked as available again.
 
-- mptcp_pm_remove_anno_addr() is only called from
-mptcp_nl_remove_subflow_and_signal_addr(), but for 2 different cases:
+> I think it would work to set that bit whenever an announce list entry is
+> removed using remove_anno_list_by_saddr()? The idea would be to keep
+> id_avail_signals_bitmap consistent with the anno_list, and
+> id_avail_subflows_bitmap consistent with the connected subflows.
 
-  - If there are no additional subflows (list_empty(&msk->conn_list)),
-    force == false → the bitmap is not modified
+Yes, either in remove_anno_list_by_saddr() or mptcp_pm_remove_addr().
+But then it is now linked to Paolo's series :)
 
-  - If there are additional subflows, and a matching one, force could be
-    set to true (if not implicit), but also mptcp_pm_remove_subflow()
-    will be called. In this case, the bitmap is modified.
+https://lore.kernel.org/r/cover.1719589916.git.pabeni@redhat.com
 
-I wonder if it would not be clearer to set the available "signals" bit
-in mptcp_pm_remove_addr(), and set the available "subflows" bit in
-mptcp_pm_nl_rm_addr_or_subflow(MPTCP_MIB_RMSUBFLOW) -- what the v1 of my
-patch is doing [1] -- so one is dedicated to remove endpoints with  the
-'signal' flag, and the other one for endpoints with the 'subflow' flag.
+Maybe better to do that there?
+
+It might be clearer to keep the suggested modification in
+mptcp_pm_nl_rm_addr_or_subflow(): only set the ID as available for the
+subflows bitmap. Then in another patch, set the ID as available for the
+signal bitmap in remove_anno_list_by_saddr() or mptcp_pm_remove_addr().
 WDYT?
-
-[1]
-https://lore.kernel.org/r/20240621-mptcp-pm-avail-v1-2-b692d5eb89b5@kernel.org
-
-> And if we change add_addr_signaled counter here after having removed an
-> address, maybe now we are no longer at the signalled limit, should we
-> then call mptcp_pm_create_subflow_or_signal_addr()?
-> 
-> Cheers,
-> Matt
 
 Cheers,
 Matt
