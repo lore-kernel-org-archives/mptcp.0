@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 596CB84D39
-	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 08:51:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CDA314B06C
+	for <mptcp@lists.linux.dev>; Tue,  2 Jul 2024 09:01:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1719910272; cv=none; b=h1Szf8xWpPt44j8dXWZjJO8MaxkI33yWNG+pbGmWOsrhl/dW5jvbhfmjgyptKxQTM+wjq1DCIFNdYrMs5CtklyOa02AqMwL1pvXYq1eWZ2c6PckOnUgpg280cxzCI8TkW5BROxyc1FmFvkIfDX3bPL/7K33hS1fMeZ5sBPb6ajU=
+	t=1719910914; cv=none; b=jOMwTOB6i2Zehsui1F9/qP3ugxvgspxGTjaJy8J038vFNyrE+aRfqDFbAEgY5sVVXQt3IcDfwE+bxm9dH3Z1Q3ItvdVLmjO5GlZLy0gT8MYLBSl02eC5lpF1rbskWKVrFaayDse3iAmXgYUUEEa+6oecivY1QD76KP7qcrGHS60=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1719910272; c=relaxed/simple;
-	bh=yOKMwK/fhC7kRUOKykLDr0UZ3UhD8CzyvWkXCHogCxc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GTrBJfgm/4ccxvNCLf3yvSS/UQYv/qKuuzR7Lq/r72CdififmX5bDzpXO/vlGNih64BtgNFjT+8IKc6REJZmcGXm+NUjDyxcT/ZOt8dIktmv6qDwZ6p5M9ngdaMPmx2rS1F5gRyOxyF3sNdDAhqLJdBC3ypCxcG0fWnHsbgd/g0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExDpacO9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1719910914; c=relaxed/simple;
+	bh=O6etH3gWTxOF2TX94H1UummRiopsqScUd7ZGN4VUe2M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=t6PfFUdhf5yYT3cvNy6Fr+GVpFeHjgq8lJNh2vpauGCPzSZZ0KTEgnBF5zhY4WyC/A0+x+F1p5FRoqzRxmS00hpT8ASkmpUtQeB1pDaQOToUzKYMs6GxfSHeihGuZVZOxYrcX+m2wd1LOITEDL86hNBzcyHT2Nqkx+0utSwvWto=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LpoVa9aY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExDpacO9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 596D9C116B1;
-	Tue,  2 Jul 2024 08:51:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LpoVa9aY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 271EBC116B1;
+	Tue,  2 Jul 2024 09:01:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1719910272;
-	bh=yOKMwK/fhC7kRUOKykLDr0UZ3UhD8CzyvWkXCHogCxc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ExDpacO9P8xeTrRJueM3Ky2TW1l2VviZ39nsqVaBeq3Dzh0HMjVw8SPehsNYa+jjM
-	 cUUqkEL2DYlPtbOl3YGw1ZABM+vQ0/OSFRyG+AyI4rVJwJHm/qhnt43Pvds5Ho0hO6
-	 7i1AXZDFYHs67kIH4gARAxc5iuUCllz8etar3+kw1JTeldKk0SBKIwD5xpeFg08FLO
-	 5CgqnAG3l4zYmITVtO4jntoscVY31H0xVVyg4NMiky4IvY53crsePBKeIuWJ8/BIXh
-	 nTZUKQQO7m3oSGte1khuWJvn/2x775HqFExbiHmF9x0Q/8C6R0FFgClBtpBmGnWaWs
-	 uDFH8FzbzQD4A==
-Message-ID: <82e70747-2a6e-4a40-b5f7-573b23317780@kernel.org>
-Date: Tue, 2 Jul 2024 10:51:09 +0200
+	s=k20201202; t=1719910913;
+	bh=O6etH3gWTxOF2TX94H1UummRiopsqScUd7ZGN4VUe2M=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=LpoVa9aYzhXkueqnxnHZTm5sVD4mDoQoPvUh0h2RoOMQokHJVE70aYG4WbYyU29az
+	 XrZNL1a1zJAyzXtNabt/QF6WUt5jh7jxbilHzoXO//sNN6oBHFnEDs55dFRF2Y9lT9
+	 Ysztny7QzQcxy6U2zEQQ8LNYCTXph1eGsjFQ/IX2+7ROtabbYYzpkpiym0S91kZX7v
+	 GkIh2EavNefHrKEGrV2F+z/QTykgDygEFO3EVh8rapqah//xgV/5vUJPs8e3LtQ1AX
+	 0lXqQJZC4+1kyuGmUOTtb827qzLIVjAn/KtFowu6nNH6FmXnJaAuhMmbLyFpSwSwWV
+	 EMpAgrWJ7GGIA==
+Message-ID: <3eff208d-f3e2-411a-9f72-faa9ae6560b2@kernel.org>
+Date: Tue, 2 Jul 2024 11:01:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] mptcp: fix announced address accounting
+Subject: Re: [PATCH mptcp-net 2/3] selftests: mptcp: add explicit test case
+ for remove/readd
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
+To: Paolo Abeni <pabeni@redhat.com>
 References: <cover.1719589916.git.pabeni@redhat.com>
- <4a8ac95282ec2b551a64134f24b2e2fd7d82973c.1719589916.git.pabeni@redhat.com>
- <f5abcf0d-1ca3-5601-3159-2d553f3591c4@kernel.org>
+ <1d4a6ebd0f843910f35a842673af55fca6962b8e.1719589916.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,89 +86,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f5abcf0d-1ca3-5601-3159-2d553f3591c4@kernel.org>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <1d4a6ebd0f843910f35a842673af55fca6962b8e.1719589916.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Paolo, Mat,
+Hi Paolo,
 
-On 01/07/2024 20:08, Mat Martineau wrote:
-> On Fri, 28 Jun 2024, Paolo Abeni wrote:
+On 28/06/2024 17:54, Paolo Abeni wrote:
+> Delete and re-create a signal endpoint and ensure that the PM
+> actually deletes and re-create the subflow.
 > 
->> Currently the per connection announced address counter is never
->> decreased. As a consequence, after connection establishment, if
->> the NL PM deletes an endpoint and adds a new/different one, no
->> additional subflow is created for the new endpoint even if the
->> current limits allow that.
->>
->> Address the issue properly updating the signaled address counter
->> every time one of such address is removed.
-
-Thank you for having looked at that!
-
->> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> slightly unrelated: is unclear to me why mptcp_pm_remove_addrs() does
->> things slightly differently from mptcp_pm_remove_addrs_and_subflows(),
->> with the latter IMHO doing the right thing (TM)
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> Hi Paolo -
-> 
-> I don't remember why mptcp_pm_remove_addrs() has the extra code to send
-> the RM_ADDR for addresses that are in the conn_list but not the
-> anno_list. Maybe to allow a way to sent RM_ADDR as a "request for the
-> peer to initiate a disconnect" even on implicitly added address IDs
-> (from outgoing subflow connections instead of ADD_ADDRs)?
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 108aeeb84ef1..228fecee61f9 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3526,6 +3526,34 @@ endpoint_tests()
+>  		chk_mptcp_info subflows 1 subflows 1
+>  		mptcp_lib_kill_wait $tests_pid
+>  	fi
+> +
+> +	# remove and re-add
+> +	if reset "delete re-add signal"; then
 
-mptcp_pm_remove_addrs() is only used by the userspace PM, it should
-probably be moved to pm_userspace.c in fact (but it uses helpers from
-pm_netlink.c, I guess that's why it is there). My understanding is that
-it also checks the local subflows list because the userspace can ask to
-send a remove ADDR for addresses that have been "implicitly" announced
-via the MPJoin as well.
+In the previous tests -- "delete and re-add", we added:
 
-Maybe the modification in mptcp_pm_remove_addrs() should be in a
-different commit? With a different Fixes tag then:
+  mptcp_lib_kallsyms_has "subflow_rebuild_header$"
 
-  Fixes: 8b1c94da1e48 ("mptcp: only send RM_ADDR in nl_cmd_remove")
+At the beginning of the endpoint_tests() function there is this comment:
 
-> 
->> ---
->> net/mptcp/pm_netlink.c | 27 +++++++++++++++++++--------
->> 1 file changed, 19 insertions(+), 8 deletions(-)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index ea9e5817b9e9..624f9ea66aea 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1401,6 +1401,7 @@ static bool mptcp_pm_remove_anno_addr(struct
->> mptcp_sock *msk,
->>     ret = remove_anno_list_by_saddr(msk, addr);
->>     if (ret || force) {
->>         spin_lock_bh(&msk->pm.lock);
->> +        msk->pm.add_addr_signaled--;
-> 
-> Looks like this only be decremented if ret is true, since that indicates
-> a list element was removed and add_addr_signaled is supposed (?) to
-> track the length of the anno_list.
+  # subflow_rebuild_header is needed to support the implicit flag
 
-Good point.
+Maybe I put the same check on "delete and re-add" by mistake. I don't
+think this test depends on the "implicit" type. Or maybe it is, because
+its introduction is also linked to some big modifications on the PM
+side. In this case, should we have the same check?
 
-Should we not also set the corresponding bit in:
-
-  msk->pm.id_avail_signals_bitmap
-
-Linked to my series:
-
-
-https://lore.kernel.org/mptcp/20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org/T/
-
-Otherwise, we will not be able to re-use the same ID, no?
-
-And if we change add_addr_signaled counter here after having removed an
-address, maybe now we are no longer at the signalled limit, should we
-then call mptcp_pm_create_subflow_or_signal_addr()?
+  && mptcp_lib_kallsyms_has "subflow_rebuild_header$"
 
 Cheers,
 Matt
