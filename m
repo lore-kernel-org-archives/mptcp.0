@@ -1,119 +1,158 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2495813F42A
-	for <mptcp@lists.linux.dev>; Fri,  5 Jul 2024 21:25:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A7895144D01
+	for <mptcp@lists.linux.dev>; Fri,  5 Jul 2024 23:10:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720214757; cv=none; b=Rl3ElRos2w3wkqpWMxjV+qU4Q0cTqkx0aNF1+4n/hsDDSf9/bmSDined9QxsobmbHUWh1EWH+FsKhCmwiqmCtqgKGoXpvnOj5c1C4ADJL7Tnl1zIFDoHrq1G6+sYNXlhI/G3QXs6/znV06g68aQAkerPjOPuaJqY9ogMYqQc/u0=
+	t=1720221045; cv=none; b=UU/3+WyixgCVA3QgmiwR/zQMzknDegFQMGBI3aXPXEOJum0eK3NnDYmxeSAo+ax0matw3JrL3yZTfju1qqBWckBBnuSf5G3EkMIvw7CYgApNskNmw/b2u/eSjh1+MyKs8Wan+Tt7smvyjpZotU9ZNqulgE+9/rhA2ZC0EdT+Qx0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720214757; c=relaxed/simple;
-	bh=DwhbiKB5OwPAywF1xMn7N9mF3Tjr54cT5l7C/YrXkcI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=CEHSpntl8Wp2ECi5qT16W+dxn1YF2pFccCl5MAJdHOuCmB7eDayRkkcftbNn6anVW48LB9iTQKZxCyC9InjOsiJmqAzpxRFVuiUm7qZ7b2ajsGhY+zl+NwUJfyEIkJShSQvMpPJMwxWV0V1XLndZSg5NrdQkYULYdrWwifXrmj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=H5/37UHJ; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1720221045; c=relaxed/simple;
+	bh=4CEqD7VmRndX/qN6v0TFl5xl7rdwJo23W+D2nNPbChY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=haYCj7qlD3+DFWG0TP1tpaz/vhEAFGsrulAT1fteewq6L+xx3cjZeGKS/DYiEE7AGzb5c2D2oLYudkpt2M25XEkKHrtI9hqU8MBQ/AL0if31a6sE/H84VUo3murZrnKiOFtf4i2rLxjeD6z3lp7pDTX4caDqbYOXkIvuR+OrURw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=me8hNNEe; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="H5/37UHJ"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6b5dd7cd945so11171906d6.1
-        for <mptcp@lists.linux.dev>; Fri, 05 Jul 2024 14:25:55 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1720214755; x=1720819555; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XojsRw8hDQMPH0mKV8JdFcNQiZoF1o6R0Z561mw/Wks=;
-        b=H5/37UHJDm1OthvF/272pqOv747Ymj3qUbLmXAFCbvh42BtxKpOjLOblmZv5gp4MPm
-         8tsmnEa6SlDpPWe//AjS3U2zlNv9erAdro2zmNIwlR6/CEbbiqZLsxnmD8uwwbMHOAtW
-         3q8qcDXGbsF9F9PVahCj4JLpa2jikZ5Mhs17KNtgSe2au7ki0aJmVUKSkalKRckWmZDz
-         XB2TnUvF55SdqYTrKUpzK+f5tTSnJXWyE9aCUcxURWIaP1A4Ibrbr+qC8DUjECHNROWa
-         BtsYSNwBE79qwaDdjtx7ycbtG2KS3OEbMywVZ+Ir27GkI0/cJPm60C8zODDUp32DDJQn
-         muGQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1720214755; x=1720819555;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XojsRw8hDQMPH0mKV8JdFcNQiZoF1o6R0Z561mw/Wks=;
-        b=ZRn5ZjCqTj2XgP8lo/uvz8Z6idb8DuSMHKFujU1MWEmL0cAI8rA9uogKInTXoLr8ZW
-         csvPsaCwQ3iqet9HQgALAsDf4U7tGxYYP6fo7r2mi3bZjXw18iBXr5BfwRQD4bswY70+
-         nusLFlgHXsmEkitvaCMPzBXieOuYtcac/iA9a5UDu0OvXO0ABF7oGlRpnxTSDmFARF2j
-         KaONyx7I5aBls1MhM+Sjug8XpXb5SOFQODcvvS2RAqnwbhALRfn5QClT4CKoqFNH/TAi
-         R5qhN/wf8mnIt3g5d+22taX4kNliOObgtsTII1a+B0aZXaJwvkB4llBsxhE8A7fmlmEt
-         tvrQ==
-X-Gm-Message-State: AOJu0Yxlf8GfhgmVf1pFXLzcMntkvhg5vMSRCQKVeSMn6KRSSc/9VWCP
-	aiaj1o85Uid6qP4h7t9D4cywaN6N6D7sA03NwI58N3jOLZdPqqw=
-X-Google-Smtp-Source: AGHT+IHlN87RPqkkhEL8rhvOtDhynQthqO6OM/GYI0w45Eq/PH0WR4NSJmuhgImMLjnQAgvQJk0HYw==
-X-Received: by 2002:a05:6214:d6d:b0:6b5:4fe6:1eb6 with SMTP id 6a1803df08f44-6b5ed27245bmr62181896d6.65.1720214755028;
-        Fri, 05 Jul 2024 14:25:55 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.131.96])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6b5fe1de71esm4264946d6.75.2024.07.05.14.25.54
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 05 Jul 2024 14:25:54 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1720211515.git.pabeni@redhat.com>
-References: <cover.1720211515.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net v2 0/4] mptcp: fix signal endpoint readd
-Message-ID: <a66ec51f-33dd-07ba-df34-21c6de5c0199@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 05 Jul 2024 21:25:53 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="me8hNNEe"
+X-Envelope-To: matttbe@kernel.org
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1720221040;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=EYSTaBvET+7Y92pC4W26UTSlgkepbfTnQLMrMemfNbQ=;
+	b=me8hNNEesaK3JInhevdUm0hR3gV8oybY6jYc26r6lfTHDKE9vrBfNkSMKvP4W2oU+nvRZ6
+	BHj5L+4KLS/ywY4cbb88o1ZyRNGsZs2ILYOGuQBH8bPxktRYXPvxBHj5c5j81IOSQLgSPI
+	+97Vo9G+TKKCxFWTGjHImfVxTcQ+rQQ=
+X-Envelope-To: andrii@kernel.org
+X-Envelope-To: eddyz87@gmail.com
+X-Envelope-To: mykolal@fb.com
+X-Envelope-To: ast@kernel.org
+X-Envelope-To: daniel@iogearbox.net
+X-Envelope-To: song@kernel.org
+X-Envelope-To: yonghong.song@linux.dev
+X-Envelope-To: john.fastabend@gmail.com
+X-Envelope-To: kpsingh@kernel.org
+X-Envelope-To: sdf@google.com
+X-Envelope-To: haoluo@google.com
+X-Envelope-To: jolsa@kernel.org
+X-Envelope-To: davem@davemloft.net
+X-Envelope-To: kuba@kernel.org
+X-Envelope-To: hawk@kernel.org
+X-Envelope-To: linux-kernel@vger.kernel.org
+X-Envelope-To: netdev@vger.kernel.org
+X-Envelope-To: bpf@vger.kernel.org
+X-Envelope-To: linux-kselftest@vger.kernel.org
+X-Envelope-To: tanggeliang@kylinos.cn
+X-Envelope-To: mptcp@lists.linux.dev
+X-Envelope-To: martineau@kernel.org
+X-Envelope-To: geliang@kernel.org
+X-Envelope-To: shuah@kernel.org
+Message-ID: <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
+Date: Fri, 5 Jul 2024 16:10:27 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next v3 2/3] selftests/bpf: Add mptcp pm_nl_ctl link
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
+ <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
+ mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Shuah Khan <shuah@kernel.org>
+References: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
+ <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-2-ebdc2d494049@kernel.org>
+ <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Paolo,
+On 7/4/24 3:48 AM, Matthieu Baerts wrote:
+>> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+>> index e0b3887b3d2d..204269d0b5b8 100644
+>> --- a/tools/testing/selftests/bpf/Makefile
+>> +++ b/tools/testing/selftests/bpf/Makefile
+>> @@ -144,7 +144,7 @@ TEST_GEN_PROGS_EXTENDED = test_skb_cgroup_id_user \
+>>   	flow_dissector_load test_flow_dissector test_tcp_check_syncookie_user \
+>>   	test_lirc_mode2_user xdping test_cpp runqslower bench bpf_testmod.ko \
+>>   	xskxceiver xdp_redirect_multi xdp_synproxy veristat xdp_hw_metadata \
+>> -	xdp_features bpf_test_no_cfi.ko
+>> +	xdp_features bpf_test_no_cfi.ko mptcp_pm_nl_ctl
+> On the BPF CI, we have such errors:
+> 
+>     mptcp_pm_nl_ctl.c:20:10: fatal error: 'linux/mptcp.h' file not found
+>       20 | #include "linux/mptcp.h"
+>          |          ^~~~~~~~~~~~~~~
+> 
+> On my side, I don't have any issue, because the compiler uses the
+> mptcp.h file from the system: /usr/include/linux/mptcp.h
+> 
+> I suppose that's not OK on the BPF CI, as it looks like it doesn't have
+> this file there, probably because it still uses Ubuntu 20.04 as base,
+> which doesn't include this file in the linux-libc-dev package.
+> 
+> When I look at how this 'mptcp_pm_nl_ctl' tool -- and all the other
+> programs from that list -- is compiled (V=1), I see that the following
+> "-I" options are given:
+> 
+>    -I${PWD}/tools/testing/selftests/bpf
+>    -I${BUILD}//tools/include
+>    -I${BUILD}/include/generated
+>    -I${PWD}/tools/lib
+>    -I${PWD}/tools/include
+>    -I${PWD}/tools/include/uapi
+>    -I${BUILD}/
+> 
+> It will then not look at -I${PWD}/usr/include or the directory generated
+> with:
+> 
+>    make headers_install INSTALL_HDR_PATH=(...)
 
-Thank you for your modifications, that's great!
+It sounds like the tools/testing/selftests/net/mptcp/Makefile is looking at this 
+include path, so it works?
 
-Our CI did some validations and here is its report:
+iiu the bpf/Makefile correctly, it has the bpftool "make" compiled and installed 
+at tools/testing/selftests/bpf/tools/sbin/. May be directly compile the 
+pm_nl_ctl by "make tools/testing/selftests/net/mptcp/"?
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): packetdrill_mp_capable =F0=9F=94=B4
-- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/981347=
-5267
+> 
+> I guess that's why people have duplicated files in 'tools/include/uapi',
+> but I also understood from Jakub that it is not a good idea to continue
+> to do so.
+> 
+> What would be the best solution to avoid a copy? A symlink still looks
+> like a workaround.
+> 
+> In the other selftests, KHDR_INCLUDES is used to be able to include the
+> path containing the UAPI headers. So if someone built the headers in a
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3675d1072e39
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D868916
+Meaning KHDR_INCLUDES should be used and -I${PWD}/tools/include/uapi can be 
+retired? I haven't looked into the details. I quickly tried but it fails in my 
+environment.
 
+> seperated directory -- INSTALL_HDR_PATH=(...) -- KHDR_INCLUDES can be
+> overridden to look there, instead of ${KERNEL_SRC}/usr/include. Would it
+> be OK to do that? Would it work for the CI without extra changes? Or do
+> you still prefer a copy/symlink to 'tools/include/uapi' instead?
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+> 
+> Cheers,
+> Matt
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
