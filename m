@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E5BA819;
-	Sat,  6 Jul 2024 00:25:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70414154C03
+	for <mptcp@lists.linux.dev>; Tue,  9 Jul 2024 09:03:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720225516; cv=none; b=r0GzqqjEPjeo1svATn6NEJiemb5ciELoYTYGBuv/siHHXT/9zpJbZPVl5m+MbjIHj5V6eH2+X8ZNXk8W6tDm7WbzQ7tCcMcenhWrF9SB1COOIfu+6zyYJNfOi66cnVEXoWBEX5DwK5dIISo/+6b1G5uHyYSht2msm/HtmLQ21fY=
+	t=1720515791; cv=none; b=hMWRulQ+T1EUECqkC2ixGMPBZ7tbHwX8JyUAZ6t90WKOsE1rYV5+uBQnQfDgfTGYYfA1uU19ExsM+ENq0q2cJrbTf5Szu1PpmEmRkLIp5boVP3kENmqlKuBB95RLHfUVDabFXG4auPjJdJmrH9xJYReUM7o2U7IdKusGgLmc1eQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720225516; c=relaxed/simple;
-	bh=HDvxJMVFURzuoh4c5OywGu8H0n7JGtyxxxcWcnJoWXU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HA33JL+b1kCdmNgFnXgz8KY0Ff9CZiyeGzY5asJiWpSJi4TzoTs0MBEbtnMWVKTGWnaOQpJRbIbI+E/DVYx2I97RAVDHB3nxEQ8ly+wmhFlUIo6jKyqwl4lzcShQ70UgdyhAPXxBFYJ7gSrtK52kORAl5l2Qz8Tdea/LxnIkNws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bU7jiVie; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720515791; c=relaxed/simple;
+	bh=JDeGsGZaxX7t0HnMzP1XsXu31csuR5w4nNvkBefpi5M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ubaf2mLOzaE+ffR5ttsCbLPm++P7IJQ91RQlcRklPzmAVIpMI9WCZxmmidRHU0wMXKrF5/2GPqEGr9bAV6/aKJu/O7o1C7bYF9mmZJjUiWEavG5GZ+I8mpYXR9jPwtIAhtwMz9pbWV4cBxicAexLfwfuIoQQrNsmshTuU1zmIOI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTP8PpnZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bU7jiVie"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D696EC116B1;
-	Sat,  6 Jul 2024 00:25:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTP8PpnZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775D9C4AF0A;
+	Tue,  9 Jul 2024 09:03:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720225516;
-	bh=HDvxJMVFURzuoh4c5OywGu8H0n7JGtyxxxcWcnJoWXU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bU7jiVieKBuQprBoh0u/A02pz9mcwwtR0eUlvqFw9gNsXqar0NX5atAJJbzT4poOo
-	 eosqTjOzDVpPohLwyuaQ0MYCLH1b47YLuq66jTbzck+spkmCqewht1waTZQIgl61mW
-	 GudrQW2tX7CxEgAeKE/u/A/4Xs27PsVL3UwTcLwSj+isXbPZ/kn84QyQStI00m28Qp
-	 NHNuuJIx2l1NbGB9xfkrdXuk6Hr4uOn9ZwworXG47dfEiiYHhIFf+mbJ08Gd7lA7gl
-	 gEp60/jZVigEfXbrUjzkwuAYD/lE9tknHUbmxHBVV7QsHayj74mHE7EBfaYWoO9Yoi
-	 7rd/NKSJ1rUbw==
-Message-ID: <ab8112e6-ea7b-4b36-b395-049214e1608d@kernel.org>
-Date: Sat, 6 Jul 2024 02:25:07 +0200
+	s=k20201202; t=1720515791;
+	bh=JDeGsGZaxX7t0HnMzP1XsXu31csuR5w4nNvkBefpi5M=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=YTP8PpnZPQDm5khSc+6SdiVAcD7qbLl95xhZCC+SJ4FlkA+4Z5O4utS+wrzllSy6J
+	 fZ51nhvIOEJrpRqwu6v0LJk70T5k20pECgyRg5QQaOJgRCqv6Qb1tnj15HqmP9M8Qq
+	 RS8cns9jqE72WbVby9NmswjmpKToKzTYN2rgOiFsavnFZyjoAT562rCcyiY/nPcdct
+	 dyUvFt6dZ8R5CEhjJazZsfhhzpJRez3WQxtwrW5Utj8vvoPcnd9tAFj2VYK/Ti46Ef
+	 gbM+NUuOknqCdpkvK4bnpNte2xcJJ3J55ECyD9aYW+Wpit5/VLd4hV4Xru6tgdAYxv
+	 JfmddfIf+slUQ==
+Message-ID: <2bb11954-04c6-46bf-bfc6-175709cebdd3@kernel.org>
+Date: Tue, 9 Jul 2024 11:03:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,25 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next v3 2/3] selftests/bpf: Add mptcp pm_nl_ctl link
+Subject: Re: [PATCH mptcp-net v2 0/4] mptcp: fix signal endpoint readd
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <cover.1720211515.git.pabeni@redhat.com>
 Content-Language: en-GB
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
- mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Shuah Khan <shuah@kernel.org>
-References: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
- <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-2-ebdc2d494049@kernel.org>
- <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
- <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -99,125 +84,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
+In-Reply-To: <cover.1720211515.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Martin,
+Hi Paolo,
 
-Thank you for your reply!
-
-On 06/07/2024 01:10, Martin KaFai Lau wrote:
-> On 7/4/24 3:48 AM, Matthieu Baerts wrote:
->>> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/
->>> selftests/bpf/Makefile
->>> index e0b3887b3d2d..204269d0b5b8 100644
->>> --- a/tools/testing/selftests/bpf/Makefile
->>> +++ b/tools/testing/selftests/bpf/Makefile
->>> @@ -144,7 +144,7 @@ TEST_GEN_PROGS_EXTENDED = test_skb_cgroup_id_user \
->>>       flow_dissector_load test_flow_dissector
->>> test_tcp_check_syncookie_user \
->>>       test_lirc_mode2_user xdping test_cpp runqslower bench
->>> bpf_testmod.ko \
->>>       xskxceiver xdp_redirect_multi xdp_synproxy veristat
->>> xdp_hw_metadata \
->>> -    xdp_features bpf_test_no_cfi.ko
->>> +    xdp_features bpf_test_no_cfi.ko mptcp_pm_nl_ctl
->> On the BPF CI, we have such errors:
->>
->>     mptcp_pm_nl_ctl.c:20:10: fatal error: 'linux/mptcp.h' file not found
->>       20 | #include "linux/mptcp.h"
->>          |          ^~~~~~~~~~~~~~~
->>
->> On my side, I don't have any issue, because the compiler uses the
->> mptcp.h file from the system: /usr/include/linux/mptcp.h
->>
->> I suppose that's not OK on the BPF CI, as it looks like it doesn't have
->> this file there, probably because it still uses Ubuntu 20.04 as base,
->> which doesn't include this file in the linux-libc-dev package.
->>
->> When I look at how this 'mptcp_pm_nl_ctl' tool -- and all the other
->> programs from that list -- is compiled (V=1), I see that the following
->> "-I" options are given:
->>
->>    -I${PWD}/tools/testing/selftests/bpf
->>    -I${BUILD}//tools/include
->>    -I${BUILD}/include/generated
->>    -I${PWD}/tools/lib
->>    -I${PWD}/tools/include
->>    -I${PWD}/tools/include/uapi
->>    -I${BUILD}/
->>
->> It will then not look at -I${PWD}/usr/include or the directory generated
->> with:
->>
->>    make headers_install INSTALL_HDR_PATH=(...)
+On 05/07/2024 22:33, Paolo Abeni wrote:
+> Issues/501 showed that the NL PM currently don't add corectly removal
+> and re-add of signal endpoint.
 > 
-> It sounds like the tools/testing/selftests/net/mptcp/Makefile is looking
-> at this include path, so it works?
-
-Yes it does work.
-
-> iiu the bpf/Makefile correctly, it has the bpftool "make" compiled and
-> installed at tools/testing/selftests/bpf/tools/sbin/. May be directly
-> compile the pm_nl_ctl by "make tools/testing/selftests/net/mptcp/"?
-
-That could be an alternative, I didn't know it would be OK to add such
-dependence, good idea.
-
->> I guess that's why people have duplicated files in 'tools/include/uapi',
->> but I also understood from Jakub that it is not a good idea to continue
->> to do so.
->>
->> What would be the best solution to avoid a copy? A symlink still looks
->> like a workaround.
->>
->> In the other selftests, KHDR_INCLUDES is used to be able to include the
->> path containing the UAPI headers. So if someone built the headers in a
+> Patches 1 and 2 addresses the issue, patch 3/4 introduce a related
+> self-test, and the last patch address a pre-existing buglet in the
+> self-test infra.
 > 
-> Meaning KHDR_INCLUDES should be used and -I${PWD}/tools/include/uapi can
-> be retired?
+> v1 -> v2:
+>  - splitted the first 2 patches
+>  - fixed accounting in mptcp_pm_remove_anno_addr
+>  - self-tests depends on subflow_rebuild_header
 
-That's the idea, yes, for "userspace programs". I mean: for BPF programs
-requiring vmlinux.h (BPF_CFLAGS), I guess you will still need the bpf.h
-file from tools/include/uapi, no?
+Thank you for the v2, it looks good to me:
 
-> I haven't looked into the details. I quickly tried but it
-> fails in my environment.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Do you not have issues because some files have something like:
+I will do a follow-up regarding the re-use of the same ID (if needed --
+but I guess yes, because we never mark the ID as available again when we
+remove a signal endpoint).
 
-  #include <uapi/linux/(...).h>
+For the issue with Packetdrill, reported by the CI, I think it should be
+fixed by this PR:
 
-On my side, I had a working version using this patch:
-
-> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
-> index 7c5827d20c2e..112f14d40852 100644
-> --- a/tools/testing/selftests/bpf/Makefile
-> +++ b/tools/testing/selftests/bpf/Makefile
-> @@ -37,7 +37,7 @@ CFLAGS += -g $(OPT_FLAGS) -rdynamic            \
->           -Wall -Werror -fno-omit-frame-pointer                  \
->           $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)             \
->           -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)   \
-> -         -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
-> +         -I$(TOOLSINCDIR) $(KHDR_INCLUDES) -I$(OUTPUT)
->  LDFLAGS += $(SAN_LDFLAGS)
->  LDLIBS += $(LIBELF_LIBS) -lz -lrt -lpthread
->  
-
-But only after having removed these extra 'uapi/':
-
-  $ git grep -l '<uapi/' -- tools/testing/selftests/bpf | \
-    xargs sed -i 's|#include <uapi/|#include <|g'
-
-Is it not OK for you like that?
-
-Note that I built the selftests using KHDR_INCLUDES=-I$INSTALL_HDR_PATH.
-
->> seperated directory -- INSTALL_HDR_PATH=(...) -- KHDR_INCLUDES can be
->> overridden to look there, instead of ${KERNEL_SRC}/usr/include. Would it
->> be OK to do that? Would it work for the CI without extra changes? Or do
->> you still prefer a copy/symlink to 'tools/include/uapi' instead?
+  https://github.com/multipath-tcp/packetdrill/pull/151
 
 Cheers,
 Matt
