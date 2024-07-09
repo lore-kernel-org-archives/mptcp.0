@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 70414154C03
-	for <mptcp@lists.linux.dev>; Tue,  9 Jul 2024 09:03:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E06CC146016
+	for <mptcp@lists.linux.dev>; Tue,  9 Jul 2024 09:14:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720515791; cv=none; b=hMWRulQ+T1EUECqkC2ixGMPBZ7tbHwX8JyUAZ6t90WKOsE1rYV5+uBQnQfDgfTGYYfA1uU19ExsM+ENq0q2cJrbTf5Szu1PpmEmRkLIp5boVP3kENmqlKuBB95RLHfUVDabFXG4auPjJdJmrH9xJYReUM7o2U7IdKusGgLmc1eQ=
+	t=1720516497; cv=none; b=GjICrI1SJxAfY5iq9ug3MNxBoC92ex7YRZxuNeUSomO2LrfVU1Ct0fDBjMvdL6HpTtjOwdia3wzqKZ9JEqlG1uF6jZRv/Ll0lbthT9wFmPHVFaMc+LVRUISjdF5jhk+W4eK7uCcH7omqcWgktu0grI9fMJb0hC7ZC1mLYKI59C4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720515791; c=relaxed/simple;
-	bh=JDeGsGZaxX7t0HnMzP1XsXu31csuR5w4nNvkBefpi5M=;
+	s=arc-20240116; t=1720516497; c=relaxed/simple;
+	bh=baHhNpo1E87nZiNhMN/aza7e6ZOq+qZG0kVOVnES0cg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ubaf2mLOzaE+ffR5ttsCbLPm++P7IJQ91RQlcRklPzmAVIpMI9WCZxmmidRHU0wMXKrF5/2GPqEGr9bAV6/aKJu/O7o1C7bYF9mmZJjUiWEavG5GZ+I8mpYXR9jPwtIAhtwMz9pbWV4cBxicAexLfwfuIoQQrNsmshTuU1zmIOI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTP8PpnZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gxr/TQNKyXZd2cen4KReK35HN0aYEliv4ch8CtdkKpxqARcL8kGCTDo8TiLAFnUImc/E5Q+TPboBOS1qBGee8ZMBN+byuAFc/OyBlTe7kEPGeLkrhph8V+nvfgRErPGuBNl3cRhtO9u8f+LOs74S6yDdkB2NDnTqyWNg5RIjTx0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MTrqzxzI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTP8PpnZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 775D9C4AF0A;
-	Tue,  9 Jul 2024 09:03:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MTrqzxzI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E25E6C3277B;
+	Tue,  9 Jul 2024 09:14:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720515791;
-	bh=JDeGsGZaxX7t0HnMzP1XsXu31csuR5w4nNvkBefpi5M=;
+	s=k20201202; t=1720516496;
+	bh=baHhNpo1E87nZiNhMN/aza7e6ZOq+qZG0kVOVnES0cg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=YTP8PpnZPQDm5khSc+6SdiVAcD7qbLl95xhZCC+SJ4FlkA+4Z5O4utS+wrzllSy6J
-	 fZ51nhvIOEJrpRqwu6v0LJk70T5k20pECgyRg5QQaOJgRCqv6Qb1tnj15HqmP9M8Qq
-	 RS8cns9jqE72WbVby9NmswjmpKToKzTYN2rgOiFsavnFZyjoAT562rCcyiY/nPcdct
-	 dyUvFt6dZ8R5CEhjJazZsfhhzpJRez3WQxtwrW5Utj8vvoPcnd9tAFj2VYK/Ti46Ef
-	 gbM+NUuOknqCdpkvK4bnpNte2xcJJ3J55ECyD9aYW+Wpit5/VLd4hV4Xru6tgdAYxv
-	 JfmddfIf+slUQ==
-Message-ID: <2bb11954-04c6-46bf-bfc6-175709cebdd3@kernel.org>
-Date: Tue, 9 Jul 2024 11:03:07 +0200
+	b=MTrqzxzI+FuIqwVUp/C6LHlEHnI1b7tQyzI/5Ice/yiMHtBOt1/yc8WRS8BE1RpFM
+	 yP26/B7T2YfiHyp2UylXOGzvw3cYF7lOyT291D+ZpiiCRO8fFW8wuqGfK4jikYGGPh
+	 dFkghccdXzJ73kcxHngO4aHF7GrwRC9RfqL164n2RFnoQ32GJMUKKGnHVeMIgKQ1FP
+	 +7UtXiWfgsVDLqPeFl4SL29XjFXMidYjrDthf7KhjKA8XIhCPxBgf0AP0wOqSvOMSy
+	 ddVibhSwpO/fnKcIFuKUvzJk/wpu/0RTqKa8OwJr+DVSyZxVcAm80JDhCp8ai/I8es
+	 aM82rpuOsIxIg==
+Message-ID: <a90252b7-ff44-4b5c-8999-ec5fb029e14f@kernel.org>
+Date: Tue, 9 Jul 2024 11:14:54 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,9 +36,9 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 0/4] mptcp: fix signal endpoint readd
+Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1720211515.git.pabeni@redhat.com>
-Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,28 +93,28 @@ Hi Paolo,
 On 05/07/2024 22:33, Paolo Abeni wrote:
 > Issues/501 showed that the NL PM currently don't add corectly removal
 > and re-add of signal endpoint.
-> 
+
+(I didn't close it, I didn't check if it is fully fixed yet)
+
 > Patches 1 and 2 addresses the issue, patch 3/4 introduce a related
 > self-test, and the last patch address a pre-existing buglet in the
 > self-test infra.
-> 
-> v1 -> v2:
->  - splitted the first 2 patches
->  - fixed accounting in mptcp_pm_remove_anno_addr
->  - self-tests depends on subflow_rebuild_header
+Now in our tree:
 
-Thank you for the v2, it looks good to me:
+New patches for t/upstream-net and t/upstream:
+- a973aebd56ba: mptcp: fix user-space PM announced address accounting
+- ed70cf97ff31: mptcp: fix NL PM announced address accounting
+- dc47c6d60de4: selftests: mptcp: add explicit test case for remove/readd
+- 538cf9db944b: selftests: mptcp: fix error path
+- Results: 8db44fbab258..e21a2574f711 (export-net)
+- Results: 91e30f779125..a1f720d3a383 (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
 
-I will do a follow-up regarding the re-use of the same ID (if needed --
-but I guess yes, because we never mark the ID as available again when we
-remove a signal endpoint).
-
-For the issue with Packetdrill, reported by the CI, I think it should be
-fixed by this PR:
-
-  https://github.com/multipath-tcp/packetdrill/pull/151
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/93dd443c35874ff0a74cb51f747c08a9e0d1a5aa/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/52d4e14b827f1d4694bbb23dc513351ef0ac00fb/checks
 
 Cheers,
 Matt
