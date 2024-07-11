@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D38C41662FA
-	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 15:39:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CF4516A93F
+	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 15:39:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720712394; cv=none; b=fw/4pj3nccTSVuLHGPnzhbCIlT4SRDmIoXf916fN6AOki46F25VFcP9y38WQCxF1vVXauiCHE5Y4nD+S2/56mHfd0bgtKY8pg75j2/ZOhO4xDjmA2CC/Z/hJ1TG7UlquQ0yf9m6mcy+AZJS3T8Dh9+IwCAzRiUeP2JLrojNh2Sc=
+	t=1720712396; cv=none; b=Z4psZyTF4vf5toZ3BSEBRoaQQRENgl9TcPzAsqZohQ6Bm00V8XgnPAhARN203LvWpVocI88MpcCmFyZ2XgxgUXERixmUusf0o9bJOsWd6EGfthvJOCdiZVLJHqz5Bm/0B3ynoXg4JEwQXZr77gbFFuxfbCQzvmkUGaXP3gCUgso=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720712394; c=relaxed/simple;
-	bh=qt238KAH1HoONNqykav2oNlgQbcm1b5rGlwQFfiZVK8=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=o26wGCPXr7vQmiXdawu4ua8FGFYpWTAig5+5g8QES/4KRXodrbkoJZ11QiYJPjJ7JKex0nsgUV/bKrsJMeEcksOHUCxxMZCAFMHl4VS3CETyEzQHbJmUcdcpQ+j6KqpbSVn8PX9oj/JE83Z2zldod9YZgoCV2eh9PTKMitrutdM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOYKNlbj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720712396; c=relaxed/simple;
+	bh=/8hfjipBRbGO/JeaUmL3swIPSyyfYZ6/wCbBD5jA8lY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=LZsHijeY9seDYO9q7DBJgK/mc6bBl7T2Tfl3X5STValpsEMSMEyq9TNI9Rs6kNNk9oQCwkh/yLJCAuv0cD+cRPKP9cKPalVhIplfeVzIG/3ISZhs2/aOtpUWPO4qu8bXE4GsVtlx8CbbBNza31BVlmWTO5MAfaL3EKiiWTZf1hI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iNypbzcO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOYKNlbj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FCFBC116B1;
-	Thu, 11 Jul 2024 15:39:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iNypbzcO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5A7AC4AF09;
+	Thu, 11 Jul 2024 15:39:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720712394;
-	bh=qt238KAH1HoONNqykav2oNlgQbcm1b5rGlwQFfiZVK8=;
-	h=From:Subject:Date:To:Cc:From;
-	b=JOYKNlbj5ou6Rtb16JdLSO2L5iflZp6pjd2TMvEcJpHr7nmo9bLxcAknXRPtmy9gP
-	 n3rYrugx+dd73CFdFk5hLuIHzqWn6++758iEO9WZrbl7DNuZWMKIT2mhh75Mgvl2kV
-	 Lo7Ja4FgJfNip/GN9v8eQLHI8kpsFTA0itnf774w4IFqQy0ngL6dUoPq0wuEEq4n8N
-	 FF9strS8aUoMarfhT7o+FJXxXOaLdfJJiRJfSHoz0U8OIwzl9fS7S5NWUF363YawGb
-	 CIgPVPvY6N3loqO9Ngzp/biXw/IpwWi/A7518xWV49vCtNEspF/jDBO5UtcFxGVaCw
-	 6bweO3E5vpRrQ==
+	s=k20201202; t=1720712395;
+	bh=/8hfjipBRbGO/JeaUmL3swIPSyyfYZ6/wCbBD5jA8lY=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=iNypbzcOByWlUa3Eas0X4xE7uivChc35+/TDNWOTlqsjkvRqYhnnmSWYgTccVTG2E
+	 SnlTJqo6WIaChm8tH6m/YoABjGP0LOhQOc08o+87/BEFTJ6IEP31IkYTuy4tbQIeRR
+	 YrCipmLrvQF5VVzxYqFtf3Cufd+uEQ/q9a5/Akff/SkYzTWWuQbT5adQfIyB+Ceuf8
+	 QQOPnDbDwHU3KJlPnJlM80c+si9C6oGFh7dtS5fCkZVMjP8YMPIsu6VcT9V86/HoG1
+	 1Y0LNikZonLqFHHjlJ8kUptJkcOGO7vWhk+6aVS+uLfixcapeLvMHZyYwVxQH/H794
+	 EnPiARW/1Zz2A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net 0/6] mptcp: fix inconsistent backup usage
-Date: Thu, 11 Jul 2024 17:38:57 +0200
-Message-Id: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
+Date: Thu, 11 Jul 2024 17:38:58 +0200
+Subject: [PATCH mptcp-net 1/6] mptcp: sched: check both directions for
+ backup
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,78 +38,101 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAJH8j2YC/yXMywqAIBCF4VeJWSekhV1eJVqYjTVFJloRRO+e1
- PKD/5wbAnrCAE1yg8eTAm02gqcJ6EnZERkN0SAyUWQl52x1u3asV3o5XMTMhKlyWRs15FJCnDm
- Phq7vsoW/trhD9zwvi7mLTG0AAAA=
+Message-Id: <20240711-mptcp-backup-mpj-v1-1-d45506182a9e@kernel.org>
+References: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
+In-Reply-To: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2448; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qt238KAH1HoONNqykav2oNlgQbcm1b5rGlwQFfiZVK8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmj/zIfQUL1/8dDmbhvu6KS8n/gqwyDv75iLiC0
- rDx6lGnXIaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZo/8yAAKCRD2t4JPQmmg
- c14rD/wKoJXkjR2wrNjjsnKQ9rsjeU9/9cvOgXq9NpzGvRjJvKrudxXlBWMddfQz8Q4Qam+yx/r
- ddbcujJQ21Vo9LEchFXhWt9w+FeTitXMbuKs+R36OliLnzg++/8V5NpXd4TGv38NWl31vfv7cNC
- Mh2mEqrWvHmi+MnrL8EFNp52oislolDyMBm24MjIovald67DMpE1EfGKRQm5J3q5Zpd1Z944Orr
- Z8A/JvtE7aVfaPJGoNeLM91VoumzITT1Dfms22ZDzKPtHLxReecIPPzYxROjQ+zs8v9JbvnGZGx
- 5w1q1EeBI5zksL+Lm5EjO4/m2JH2rDwpnx0Zdk8eWKRnwphwHEW3HyjblUHhLGcUKFhZBTsPrD2
- zrN3TJ44ovQF/JsC46QtxgI+aANvUJ3JL1pVDffIlgunaZM5g5dtobfdYKDH6Dsq1DMH+i8lFSO
- InTG3BZSSC5p4tn4EoN5vSCuVu8RJhnyRgU++u32gOxqNPIXDjEjtEYwXMqlbnUtuJC8AmN/quN
- 4tcyhb3xF6yPvSzjrJIl30qbg5EGPsvmqEeA6kzUNipBVXY983F8VEzCvEN0kjsinuB8UcPxBj9
- uJqIVCd1DWhF0Hl3flXheC8CmY37XdAm4QQuTm+6WrZgAjnPcaDKedjF3gVIcpnQ1NXHF+OUDsr
- AfRHjDuR2n+aDYg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2802; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=/8hfjipBRbGO/JeaUmL3swIPSyyfYZ6/wCbBD5jA8lY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmj/zIvsAR31P5iK9DeRpEfHgVfIj8dqpmcsqxb
+ faYLpuU5GWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZo/8yAAKCRD2t4JPQmmg
+ cxjuEACqLWjn8Hjp/Nolk69MzaP3mzN/rQ9HUZJHaEFkuzhlQJXOiS+lBFWU9KwWVWT02pNS+zS
+ Dn/DcEbiVcpt9zRc3lmcYy7GPmIHbfsS2OAEZDTjLECMlfO4F7qs5bAkv0ZNzC0qjVfT5kUuRew
+ JBpb5FebtvyLKS8t5cWBe7ld7gDZh90DLGqvDo3//+w4V1fWjZATcClmmN0HwEad/bG0NowdKv5
+ 0Rk7VxV6SI0VN9TJhzw6g9rYvICCQSMbHVbqFw6zjyyR66fY6mB045mW5LjrsuCogYYg/0RoJKQ
+ Zn3lcRiFDc4mP63/KfKB52sP0nknn1BZ5Z2aj4iH/BlJID/9Kupyxj+BiwJFp4KgGkLzbEo3M5M
+ ZICEvZm8HFK+Ik7F8ArNKa2yx6uEG6nM6WPvNedXdMigesHrkfWiEWN8Q2j1dfgTnAc9W8mnrIi
+ R7mFaujaQNo9YYS+NhlFmbE4G+8IwWIJnA+KTSwHsxvwICLkT9qAVN8nELckLIzj+dBLxz5jbTo
+ yy3U7GWg8GbxEjXD5oRhr3TKILNncI0UgsKGgFnL11dmaVQlpAhJnh1IuPsdw7cv5yjsYCc7P27
+ EzTTIVOd3vuPAgktPX0ar2bFfe+X/QhmBCiCRYvd2D75aXvUyy9MD6eW4CFW8PjXGIRqoh87RBj
+ F/vQTC/P3D+pB1A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In all the backup tests we have, the backup flag is set on one side, and
-the expected behaviour is to have both sides respecting this decision.
+The 'mptcp_subflow_context' structure has two items related to the
+backup flags:
 
-On the scheduler side, only the 'backup' field is checked, which is
-supposed to be set only if the other peer flagged a subflow as backup.
-But in various places, this flag is set when the local host flagged the
-subflow as backup.
+ - 'backup': the subflow has been marked as backup by the other peer
 
-One last thing that has been fixed is the backup flag in 'signal'
-endpoints: it was working only when setting the backup flag while the
-connection was already opened. That's what the MPJ selftests were doing
-to check that the signal endpoint were supporting the backup flag (on
-purpose I guess, because the support was broken in MP_JOIN...).
+- 'request_bkup': the backup flag has been set by the host
 
-The last two patches adapt the BPF selftests to mimic what is now done
-by the in-kernel packets scheduler.
+Before this patch, the scheduler was only looking at the 'backup' flag.
+That can make sense in some cases, but it looks like that's not what we
+wanted for the general use, because either the path-manager was setting
+both of them when sending an MP_PRIO, or the receiver was duplicating
+the 'backup' flag in the subflow request.
 
-Note that the Packetdrill tests need to be updated because the behaviour
-has been changed / fixed:
+Note that the use of these two flags in the path-manager are going to be
+fixed in the next commits, but this change here is needed not to modify
+the behaviour.
 
-  https://github.com/multipath-tcp/packetdrill/pull/152
-
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (6):
-      mptcp: sched: check both directions for backup
-      mptcp: distinguish rcv vs sent backup flag in requests
-      mptcp: pm: only set request_bkup flag when sending MP_PRIO
-      mptcp: pm: fix backup support in signal endpoints
-      Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
-      Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+ include/trace/events/mptcp.h |  2 +-
+ net/mptcp/protocol.c         | 10 ++++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
- include/trace/events/mptcp.h                        |  2 +-
- net/mptcp/options.c                                 |  2 +-
- net/mptcp/pm.c                                      |  9 ++++++---
- net/mptcp/pm_netlink.c                              |  5 +++--
- net/mptcp/pm_userspace.c                            |  6 ++++--
- net/mptcp/protocol.c                                | 10 ++++++----
- net/mptcp/protocol.h                                | 10 +++++++---
- net/mptcp/subflow.c                                 |  8 ++++++--
- tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c  |  3 ++-
- tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 12 ++++++++----
- tools/testing/selftests/net/mptcp/mptcp_join.sh     | 19 ++++++++++++++++---
- 11 files changed, 60 insertions(+), 26 deletions(-)
----
-base-commit: 3b378b48c0eb39df55dacebebb958187fd68d802
-change-id: 20240711-mptcp-backup-mpj-2f8369fad366
+diff --git a/include/trace/events/mptcp.h b/include/trace/events/mptcp.h
+index 09e72215b9f9..085b749cdd97 100644
+--- a/include/trace/events/mptcp.h
++++ b/include/trace/events/mptcp.h
+@@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
+ 		struct sock *ssk;
+ 
+ 		__entry->active = mptcp_subflow_active(subflow);
+-		__entry->backup = subflow->backup;
++		__entry->backup = subflow->backup || subflow->request_bkup;
+ 
+ 		if (subflow->tcp_sock && sk_fullsock(subflow->tcp_sock))
+ 			__entry->free = sk_stream_memory_free(subflow->tcp_sock);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index ac94225489f8..b3a48d97f009 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1422,13 +1422,15 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 	}
+ 
+ 	mptcp_for_each_subflow(msk, subflow) {
++		bool backup = subflow->backup || subflow->request_bkup;
++
+ 		trace_mptcp_subflow_get_send(subflow);
+ 		ssk =  mptcp_subflow_tcp_sock(subflow);
+ 		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ 
+ 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
+-		nr_active += !subflow->backup;
++		nr_active += !backup;
+ 		pace = subflow->avg_pacing_rate;
+ 		if (unlikely(!pace)) {
+ 			/* init pacing rate from socket */
+@@ -1439,9 +1441,9 @@ struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk)
+ 		}
+ 
+ 		linger_time = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32, pace);
+-		if (linger_time < send_info[subflow->backup].linger_time) {
+-			send_info[subflow->backup].ssk = ssk;
+-			send_info[subflow->backup].linger_time = linger_time;
++		if (linger_time < send_info[backup].linger_time) {
++			send_info[backup].ssk = ssk;
++			send_info[backup].linger_time = linger_time;
+ 		}
+ 	}
+ 	__mptcp_set_timeout(sk, tout);
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.45.2
 
