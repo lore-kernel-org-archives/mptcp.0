@@ -1,117 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00D6B16C6AC
-	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 15:40:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1C4816C6B8
+	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 16:13:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720712403; cv=none; b=F4QfgVeH5vyIyunMpm2dVxiNGLv4wk+0xn3ZUgJy0LuZVf9OIkr9t5n+IWd18rMKhUsV6OcVEUYTYxHIktqR/iZlandaWZG5ZBb9vwc+76vBWIp/4YmEPemdFDaZ3UAz7+VYn4W6KE8sILDf/q7LzhIgRfVWupiZksv0AXFEDnE=
+	t=1720714388; cv=none; b=O3lB1XUdFdWxIuUvX3EAZC+10aC9N5tHKT7z2j9+XXAJEVIujM7p3xvtSN+IPpv/n8gV8kz0Un840o7EyShO7MxxUum4Pzpu6WJnPLr55OS6+ix58YCFTlyExYh82mcMc+rS4DvKj5DvUtxK33w1kH6K36ED6rx4hX+nmqKDcAM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720712403; c=relaxed/simple;
-	bh=Fn73rImpeWC8EQqc9FknandKAe95OLv5q72DUryxtME=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=h2DDUikOSdeG8mxmC3aF230hMlps2VUq67lKIIkHQylYAeGQA8HgV1TirnRYHAryhWV93qLNVv01TXKadYmdiZPA4JowCeikCCicW3x5PtUH3bY0FUKANuefE/jgcIZ4yrRjoI7sjoQI7ONLWVl5KFsDtz/CXM7OwUW019fVuHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d8Sz308I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720714388; c=relaxed/simple;
+	bh=6E7MW3YNsZABu3K0KIyURaf8C+XKOHzQS60EqjhYtrU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tUYI1ptLD+u1/YwbeQ/qaAfu1yrGhZ//6ZB6aVqM1HctoHHRxmvssHLubwHhjQUuFDvI6C9iQVkNapBRqZtCQsPMu5mTtl9MrzANhgiAsV6AOJXH52uk5G60AeOs6V/O6DuOLjuUnXF3a6uNM6rMXxa22Gap6iBKOrLOYZH4jGE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDHMVJv2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d8Sz308I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB67EC116B1;
-	Thu, 11 Jul 2024 15:40:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDHMVJv2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 24AB7C116B1;
+	Thu, 11 Jul 2024 16:13:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720712402;
-	bh=Fn73rImpeWC8EQqc9FknandKAe95OLv5q72DUryxtME=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=d8Sz308IKfipO7JqZy7v8zyqzwVzGm06jQujQNDnjWd/3qxGk2id4qrSV7FhelZ4T
-	 GoZE40X9QyasY9WTgBdmdBDT2c0Qbx6ijPjGz9KPm82FSpHd9xLN8odnv1LnTfu2I0
-	 2MC0owJ5yd8ljlS9GfcOqnfdBqL1u4+GmCrkT8VQrwMmXD0oSxaKlASMOohEbF+pHU
-	 YpYNAoz2u+cY8u/Z/72kc77dn6z3QzWqt80BJw8MEsqe1jqh5sJ8zmZQC0xKRMkI5N
-	 D6m5/wrPN9wFKz749N8GW6iCwvh2GxzqTLqrDVReO+F/LAU8ih1Hr+7HuwTSb+aNkf
-	 DHZTxxs/rpd5Q==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 11 Jul 2024 17:39:03 +0200
-Subject: [PATCH mptcp-net 6/6] Squash to "selftests/bpf: Add bpf_burst
- scheduler & test"
+	s=k20201202; t=1720714387;
+	bh=6E7MW3YNsZABu3K0KIyURaf8C+XKOHzQS60EqjhYtrU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=QDHMVJv26ScSyLEdfLSTJoRFG0FdnFzfPrVorPTmVl4oNybJmMvM32pxDdLkxa1JA
+	 +glAFjxIa2wuViLAqcUEzOSWr//g1Xdao6dP2gtXeVfAEfNKfusS1dMJoElW+EX+f+
+	 ExcaViArvaeeBEyIkCpwPCU60TJsvAvqIN6cLetUUGkx3RD1GsVTZSwsmbjXoGF7gG
+	 gKZHWcKzp/y8gog+CRUTClOCqZvsM9e3il5/dNUpMpimS9Rb109IO9+jtVisZzhyp5
+	 Z+W8krrJQlm0guRBPm4mPJVG1JNC+J0yeMybvZfXHvXgkFj3+0VfqsebhdKqbc0iHI
+	 8cAflzp6TUpRQ==
+Message-ID: <891a14ac-c8b2-49c8-a5cc-da88b52542a8@kernel.org>
+Date: Thu, 11 Jul 2024 18:13:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240711-mptcp-backup-mpj-v1-6-d45506182a9e@kernel.org>
-References: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
-In-Reply-To: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1833; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Fn73rImpeWC8EQqc9FknandKAe95OLv5q72DUryxtME=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmj/zJeDY1+Gf4rUjiz+HKVip2O9ViekbCk0j4L
- F5efaQwfh6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZo/8yQAKCRD2t4JPQmmg
- c9cbD/0RkDbfJY6vnbn9007yuN+uANxQlRuHl0MfcCUYaea+v8le7cYt9T24WuQtP2M2vLo/C9E
- O7MbKRFhSYuTCESpcuHAshCuxrgsl0xDwdefsxL+/kNx0UIeBFgzNSmSQ/2mGyTaBCrDA3j2f+S
- sC2HKurOV8217pB78FS/gMENO22aAVb8bvlHR/BUkcibpbXZAZzUvTTkyJ62jYSFngyBJatD9TA
- EPSLhTpPSJyctiuCNlbgeioGR8WUHFUftI7//jiDV1cCFa2Kk45z6ccObhP5ikEdzajrSUukrgS
- 3in+LmVkSG2VWy7ZukXP1IMauWGH0R/qpCAnqax3oq18Gobsyux9iPkQh74VvVkOlq6u5trIcgX
- wy+g5ai1x1LE6VHtodAjxyc3oneXj5mpPd60ItiQRmiZMiYKr9tTZx8iq08b26A/iETlkceKbKu
- wwaaNl/xABNqi0oRyiL/URxqDNBbaldgI9FUw7nSlQQ99/dOhwg3lCAIDGnReeHmpNbL8CnJqt4
- y4mEkl8hlnQ+K4FWb4t02qOntPVpGFuxSNXM3zF5BdY9ibYsFTNHBRpMC6syRlhCnGRx+MDSZrr
- y5MIXmmTlpM9AvbS/io00Fr8Yue10vgUmE6IYHMCVNsOVDybY8kQZRsMBQpt/7+vWo6A6ZVv90k
- Utb6Ep9dNGLYd3g==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 1/3] mptcp: add mptcp_snd_nxt helper
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1720618186.git.tanggeliang@kylinos.cn>
+ <53b582fc24af3a387417fce90377b5529b225063.1720618186.git.tanggeliang@kylinos.cn>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <53b582fc24af3a387417fce90377b5529b225063.1720618186.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Similar to "mptcp: sched: check both directions for backup": it didn't
-matter before because the two flags were very likely set by accident.
-But that's no longer the case now.
+Hi Geliang,
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+Thank you for this patch!
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-index 0026587a94df..3a673291b4dd 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-@@ -85,10 +85,14 @@ static int bpf_burst_get_send(struct mptcp_sock *msk,
- 	}
- 
- 	for (i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
-+		bool backup;
-+
- 		subflow = bpf_mptcp_subflow_ctx_by_pos(data, i);
- 		if (!subflow)
- 			break;
- 
-+		backup = subflow->backup || subflow->request_bkup;
-+
- 		ssk = mptcp_subflow_tcp_sock(subflow);
- 		if (!mptcp_subflow_active(subflow))
- 			continue;
-@@ -103,9 +107,9 @@ static int bpf_burst_get_send(struct mptcp_sock *msk,
- 		}
- 
- 		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
--		if (linger_time < send_info[subflow->backup].linger_time) {
--			send_info[subflow->backup].subflow_id = i;
--			send_info[subflow->backup].linger_time = linger_time;
-+		if (linger_time < send_info[backup].linger_time) {
-+			send_info[backup].subflow_id = i;
-+			send_info[backup].linger_time = linger_time;
- 		}
- 	}
- 	mptcp_set_timeout(sk);
-@@ -160,7 +164,7 @@ static int bpf_burst_get_retrans(struct mptcp_sock *msk,
- 			continue;
- 		}
- 
--		if (subflow->backup) {
-+		if (subflow->backup || subflow->request_bkup) {
- 			if (backup == MPTCP_SUBFLOWS_MAX)
- 				backup = i;
- 			continue;
+On 10/07/2024 15:46, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> It's better to get msk->snd_nxt with READ_ONCE() in get_subflow() of
+> the burst scheduler.
 
+Please always explain the reason → "It's better": OK, but why is it
+better? :)
+
+Can we currently have a data race with the in-kernel scheduler? Is this
+field being read and written locklessly?
+
+If yes, this should be explained in the commit message, target -net, and
+have a proper 'Fixes' tag.
+
+> Similar to mptcp_wnd_end() helper, this patch defines a new helper
+> mptcp_snd_nxt(), and use it in mptcp_subflow_get_send().
+> 
+> It will be used in BPF burst scheduler too, so export it in protocol.h.
+
+(if this patch is for -net, you can remove it).
+
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
