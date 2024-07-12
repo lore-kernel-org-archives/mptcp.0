@@ -1,114 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B5C16D9B5
-	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 18:47:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C774624;
+	Fri, 12 Jul 2024 10:00:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1720723630; cv=none; b=s1uFidYKmG7pkYxs/blI4oTGKRsCdkqKxmrrwfuZaLikCKkuJKZo9v5cCLAeGw9XDlApb8ITa5Dx3GFR5ro6ZW6sm7oHJ/JJmq/1g4yok5FCfN4cVl8xNlkkhmLLgM0Ooqy02L1Tf/Dt42RFraFZK8bWqIS16RDYpYam1QC6tmA=
+	t=1720778439; cv=none; b=W3cGY7+HbklqkA+p2SDTgd034af79gR/FOFQOKH+0c9YIyu2G4cjPCQpuwpV45BicQ6NEkunN8roYx/lQ5vv2y3Hhq01d9HkYd3qaIxnsbSgL7EhilGhzxZHTgsXgdYl8CwgakdCjAoRxXpeIfqcutl91ojBmOY/efZ7JEt+J6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1720723630; c=relaxed/simple;
-	bh=HdywtrNR/xrVWMx3KcnvVFOcDEuDgDTtcD0fEiwM4K0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=szvgKHAM5xD6clUwOhCM+dhbb/PL1tsS4VpAqntQUnCkPCwaaqWOPoM5maLUJkzrbiUWSnlog0veh6snxGf652hB8pk+v1MzNn+8NQYtSWMypP6wxykzY5FiWVBKEZCueRVKvEc8/8Vx/Z+JQNdWaiXWMTmZv/841WDK9uruNXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=okja4F6l; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1720778439; c=relaxed/simple;
+	bh=OjZcO5Y/p3VJkM8yC5RnwUbNTQGbECoPCnl3MYrvQP4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=udTjRk3ze7Gxft0HomF0S3nboKj5cdMliTWTsnIoCBv/yNeBZ8xVI35zOs6pf/n8N2nDl9qpA3GpYO4a/OsAZ76LEF3mBLG/rDMYWwW6U/iuxifS17VSysZmcV/ciTUQ8dz/1BXINMo/gyG2vXKBmhyJwAeUoSndVUiLz7iXhUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y3EhOmRa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="okja4F6l"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04481C116B1
-	for <mptcp@lists.linux.dev>; Thu, 11 Jul 2024 18:47:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y3EhOmRa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0644C32786;
+	Fri, 12 Jul 2024 10:00:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1720723630;
-	bh=HdywtrNR/xrVWMx3KcnvVFOcDEuDgDTtcD0fEiwM4K0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=okja4F6lhCEYl4ROFVl+2LZa5dbGBjTAm6v0B0VYV5tZF57h9L+5byNwM2GZMQrIs
-	 /u9Psbj894MIcjMle72qxkST9GYa6Ar+8MYXb6BhmjtV7A3OcuQaa13qVCOU72kgHf
-	 ny75TTYYS+9lr6tvTlA7iNhPAKgHIXc/iJg+U6/VuSYRLhhkG/5xg3sbnGRNArXBqp
-	 6Kdr5htEqS+q/3PGjkNhwiLuKQn7Z2761DXVweFVjNaY67GGdk0/r7C4x0eKzSfkDV
-	 vnulOp/Y9qN8XncKKlGWJszuep/dQj4r1nm/ZCS9l9Wen+9gJOD34HvM2NAJwRedmG
-	 yxtEbEZUxK4ig==
-Message-ID: <54bbd2ab-aeca-40c0-9a7d-f566a3018da2@kernel.org>
-Date: Thu, 11 Jul 2024 20:47:08 +0200
+	s=k20201202; t=1720778439;
+	bh=OjZcO5Y/p3VJkM8yC5RnwUbNTQGbECoPCnl3MYrvQP4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=Y3EhOmRawcToB8Y50dXh3LvRY9xDs8zUPNyNvuxFSd+QIxAJjjZ/Y8B5/qnIBKYvM
+	 iH1GMM+xEe021s+FhioMF6mT780Ef2JcAyyPpTTE8zIIR3FR3mrd25OP+P7OqeHmRe
+	 DqPEIQQs81OdkqK0RwdW4KVRNkLC6ySq/aK/GDxLmMs2z8jNvpK7bahbmZLDRaPRVh
+	 Zt/xYd5Irzt6k8fwRazrKh4xwunJk671+nmHsCiSkGhcWOKbdWoJ3hsF7JsXlNgRFO
+	 Nu1YGciVSzWFEybhPEpshSN/iRrHqGrsTIUYCTeoBOpnKTqRW6Bi9KaR/mvZuR4zz7
+	 nR+6pkhRc4ouA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 12 Jul 2024 12:00:15 +0200
+Subject: [PATCH net-next] selftests: mptcp: lib: fix shellcheck errors
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/6] mptcp: fix inconsistent backup usage
-Content-Language: en-GB
-To: mptcp@lists.linux.dev
-References: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
- <5d289983-12d6-8fdf-5a05-7bc7b80d8d3c@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <5d289983-12d6-8fdf-5a05-7bc7b80d8d3c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240712-upstream-net-next-20240712-selftests-mptcp-fix-shellcheck-v1-1-1cb7180db40a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAK7+kGYC/z2NwQrCMBBEf6Xs2YUmaAv+iniocWKCaQzZrRRK/
+ 90g6GEOjxnebCSoEULnbqOKd5T4yg3MoSMXpvwAx3tjsr099qOxvBTRimnmDG1Zlf+VIHmFqPB
+ c1BX2cWUJSMkFuCcP3owYTm5w5kbNXyra4vt9oZ+Nrvv+AYb/eS6VAAAA
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1485; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OjZcO5Y/p3VJkM8yC5RnwUbNTQGbECoPCnl3MYrvQP4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmkP7EQ2BR/zeb4cBmw6GrnLDEFoqjy7o5IjRyR
+ UtuB5lfEpyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZpD+xAAKCRD2t4JPQmmg
+ c0B/EADj9aUj3KGhZb3TKEu0tg9TQlcryAThbXO+qf93el1zpeiDYHl0ZyaWOwj2oMDV2QGaG/s
+ +blKSoMWZZTj3Aju0EwC8vmst5YZIJAfet5+F4yN4Nzlxyz1ZDxfqzLad8Wm/X9ZweG5ZA58OTO
+ Pca8Nc9ew+r2rTt/UWdwQ82fTZXHoXxSPVdSp7oBrW58E3kvkrSGrobuIahinr9hA7jzyVSd1Jr
+ dQZfNqbcmF+O8uD1youEoU7zW79wCwsAt5HvbESlul0Zso/qo0WNzBLNIH7UGwAUXh0efOzs4KG
+ 45vUHf5Wnc2Yd56hMi4n2thIOIaT7SAd44EdVrVm888kuelRVk0LLShY0m3KOLdPFq6Qi/Hin8e
+ Woe/zPqLgTGfTA+7TNJJYv8Ctv0jqT5tfdIJF1z0+oUzFQfOJwLPIfe/TvkZlTW0uj8OVS4YEow
+ hClhNu3LkkRSmfJXkHddWRa3bAmsCCrrNMhmWSQV6dvUqndq8g/NA7+CckZ6kGBk/mvj0m2Tax9
+ 0T+35EJQt9ra7m0zcUpXPq8XekHar3Wfzyg22RlNk3uD0tKrdWsHWuM1zfHi3V+A7tzaFrAV6Z2
+ a5d+FUir/WWaU/WovxBcin4oghOlMTV0yqzB1L+Gp4EW8ckoeLxpEjSgOGBJqd32a+aTQCkcoVX
+ H5+6gUuKn6t/+ew==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+It looks like we missed these two errors recently:
 
-On 11/07/2024 18:32, MPTCP CI wrote:
-> Hi Matthieu,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal: Unstable: 4 failed test(s): packetdrill_mp_join packetdrill_mp_prio packetdrill_regressions packetdrill_syscalls 🔴
-> - KVM Validation: debug: Unstable: 4 failed test(s): packetdrill_mp_join packetdrill_mp_prio packetdrill_regressions packetdrill_syscalls 🔴
+  - SC2068: Double quote array expansions to avoid re-splitting elements.
+  - SC2145: Argument mixes string and array. Use * or separate argument.
 
-Just to avoid some confusions, and as mentioned in my cover-letter,
-these errors were expected because these tests were looking for the
-backup flags in the MPJ+SYN+ACK which were not supposed to be there:
+Two simple fixes, it is not supposed to change the behaviour as the
+variable names should not have any spaces in their names. Still, better
+to fix them to easily spot new issues.
 
-  https://github.com/multipath-tcp/packetdrill/pull/152
+Fixes: f265d3119a29 ("selftests: mptcp: lib: use setup/cleanup_ns helpers")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+  - The mentioned commit is currently only in 'net-next', not in 'net'.
+---
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Cheers,
-Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 194c8fc2e55a..438280e68434 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -428,8 +428,8 @@ mptcp_lib_check_tools() {
+ }
+ 
+ mptcp_lib_ns_init() {
+-	if ! setup_ns ${@}; then
+-		mptcp_lib_pr_fail "Failed to setup namespace ${@}"
++	if ! setup_ns "${@}"; then
++		mptcp_lib_pr_fail "Failed to setup namespaces ${*}"
+ 		exit ${KSFT_FAIL}
+ 	fi
+ 
+
+---
+base-commit: 2146b7dd354c2a1384381ca3cd5751bfff6137d6
+change-id: 20240712-upstream-net-next-20240712-selftests-mptcp-fix-shellcheck-6f17e65c6c1b
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
