@@ -1,220 +1,122 @@
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564B518EA8E
-	for <mptcp@lists.linux.dev>; Mon, 15 Jul 2024 14:28:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.69
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FE3D1CAB8
+	for <mptcp@lists.linux.dev>; Mon, 15 Jul 2024 16:33:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721053709; cv=none; b=nZ2oSsghbrTjGoeFuPi8nQuI4Nt6AEkbTLWKDLZf1ks16DU8HAqS13JAuQRzSV5dvN3po4qwL/KdR1JyBCC7rQECIaIzaLnq6K01uDI5l7IQgeeqSN8Gp+bjCoisn828nTci5Ab5ndwktG1vb9AuTsk7pQ/sl+NsSwdayDp8MEk=
+	t=1721061216; cv=none; b=aT9CkYSaYP1GJZqp5qWO1Vo6PCqU7gZS4xfwwZ9bTTmzukCw7IoPKtrSTzsNJv9Gw+PFaBuFIgyK0txbinBa5b4N8JH/QbI8JWnWFouKday0XVeg3tgrz94Wgo4Arwnst6FiutMiP3GcYsQ+YWMqv0kRlZeAhoz1d4mdUhftR1Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721053709; c=relaxed/simple;
-	bh=Nz5E4d8xdCYlAzvXJoX1t5TkTVnajK8GmE4FzW/DTJk=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=cD3TnVNNiK4iRIXfWYUtXGoMk20XARR6NV90B7iti7DvFXfE++A6Ys5tUn7i1NFkaXMEnrXZ1r9M6QcL5qUR7hT1zmdwRRphUbPegN9yoYYDQoWGtV4N7Mk+gNp3TK9DobZ0vvXMFLc/VkBDECc59DQSVlmkrfAwXwV+a+NxEHA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.69
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-io1-f69.google.com with SMTP id ca18e2360f4ac-7f682fb3b16so506785939f.1
-        for <mptcp@lists.linux.dev>; Mon, 15 Jul 2024 07:28:27 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721053706; x=1721658506;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=IR0zuY3FALGpcWvHyYpjsZ+HMUPt8PRIglRtf9AhPso=;
-        b=hXJ/m74Vb/ZlU5cfvptuHWALRItA2Jk27Q6CSzU5hEaZ5Cvj5uMoKfahsiEHLnSJSP
-         KymOKMnXjgF/WTHELtMjtmEfFllGCT9py2hSRHPFRyZtMQuYCPFa+Qr3ZKFYgZ/Paqeu
-         wR3k0n1ENOphb2mZUs3Ii+63xUJSUKMwIJauNfoSDnZuAY7tc8usgfh0muXIfNpFOA+9
-         7C8YR6fKbWsgSZiw0I9UMKyeDp7Bkvrk/4JUzSMFrDKO3icuWD1jusQtInoXE9aGFtcG
-         ZpkLt8uYUjRcRFN22jt/TnQDg/vN6tMkTGiwLUdRnHQwgKGXGfz2+PUh1KCVK8h3BhA9
-         aH+A==
-X-Forwarded-Encrypted: i=1; AJvYcCUmwxSbaQ3vosheXBDsns5D4sOoaAgPd0+aG7BbRU226JdgsFt9+QC2HAroEagR6k4COAL8KezPeqnoI3wkGgbi8fwL4sg=
-X-Gm-Message-State: AOJu0YwKuiuQNUX9kOJxu7h76raRqGAq56OSd37+A4vdiTiP2YT+WjRq
-	Xm9us6Uv77itSeTt9HKGR+6IeoqRpRU2gY1XJ82dAzMEiY2cpmLi6onmARloB7yck3CaSFZFKYO
-	FCGfw40DWaFy2bWz98rYkK1AriHUBp404tHws+a9pwrXMSJcnhLPiew0=
-X-Google-Smtp-Source: AGHT+IGeec/8lJVCadA9XLMLVNYgpfoMlE9cCTA5P2vddsZilbVjfk5WlJbB4KJ0I2Lf+Za7HdlZR10jdW0jx7pbwIaoB9pZkwCk
+	s=arc-20240116; t=1721061216; c=relaxed/simple;
+	bh=MUKIcjv4ojwOJ0PhoIjegw7qecTSe+mJgHzQ7/wGF7E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=X8BmsFTQl3h/OhrcGsV5RAY9IEaoWNQgep3tQpE4S5j0SUeZE/1B/k6++v1DX16ZYsjWVsCU3kAz/0XS0qgOSCihAcJcCiQWw4yXJ+4PdXlACV3+kiilupr9vacMsNQz7u4e2X+/sfy4FDax9GGXgKR1NrPB7G44KHe1uZvwbw0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LuOEEU0J; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LuOEEU0J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CEBFC4AF10
+	for <mptcp@lists.linux.dev>; Mon, 15 Jul 2024 16:33:35 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721061216;
+	bh=MUKIcjv4ojwOJ0PhoIjegw7qecTSe+mJgHzQ7/wGF7E=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=LuOEEU0JxmdHrXNcNBqt2N5/0iDIobzvdx4DRLdQ6hsDGYDcBKsyxFb4UxzP9liXr
+	 8owqZ4ubeBRKc/GwoR7UaTb1osXNkvDPRmSaU4IgGloQ4toWy2JvU+OhBHll5MNYYi
+	 /rfEgNx3zjMc4PN3XHUT+WdutblNAbxqvBqtu18orUXkbRKdY7A/QLXV6EJyENwQu9
+	 1X+9NtcofeAnX+8jj7yrCBQTiWCmYQssJcay0oOfjWkUGq6h0yYgElfo9e+yfGpmZD
+	 +gA+QRyYc9WK5+dc4l3hkYalWOjwEDifsPUkzj0FOLIHZifuvdjctfZT74oHb4Oc9u
+	 X06KuCsyBKXGQ==
+Message-ID: <672860f3-9337-4316-9ab5-f9ef9e973cea@kernel.org>
+Date: Mon, 15 Jul 2024 18:33:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6602:6403:b0:7f8:c159:fec2 with SMTP id
- ca18e2360f4ac-800050cc601mr122279339f.4.1721053706570; Mon, 15 Jul 2024
- 07:28:26 -0700 (PDT)
-Date: Mon, 15 Jul 2024 07:28:26 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <000000000000d1dd99061d4a0af4@google.com>
-Subject: [syzbot] [mptcp?] WARNING in __mptcp_move_skbs_from_subflow
-From: syzbot <syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org, 
-	matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 00/17] mptcp: fix endpoints with 'signal' and
+ 'subflow' flags
+Content-Language: en-GB
+To: mptcp@lists.linux.dev
+References: <20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org>
+ <d15a0636-5951-7243-c814-f7ed21e4c209@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <d15a0636-5951-7243-c814-f7ed21e4c209@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
 Hello,
 
-syzbot found the following issue on:
+On 15/07/2024 13:06, MPTCP CI wrote:
+> Hi Matthieu,
+> 
+> Thank you for your modifications, that's great!
+> 
+> Our CI did some validations and here is its report:
+> 
+> - KVM Validation: normal: Unstable: 5 failed test(s): packetdrill_fastclose packetdrill_mp_join packetdrill_mp_prio packetdrill_mp_reset packetdrill_syscalls 🔴
+> - KVM Validation: debug: Unstable: 7 failed test(s): packetdrill_fastclose packetdrill_fastopen packetdrill_mp_join packetdrill_mp_prio packetdrill_mp_reset packetdrill_syscalls selftest_mptcp_connect 🔴
 
-HEAD commit:    d0d0cd380055 Merge tag '6.10-rc7-smb3-client-fix' of git:/..
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=1320b879980000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=84344463c2ebf8a1
-dashboard link: https://syzkaller.appspot.com/bug?extid=d1bff73460e33101f0e7
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-userspace arch: i386
+FYI, these failed tests are likely not due to these patches, because
+they are also visible when using the last export branch, synced just
+before having sent these patches:
 
-Unfortunately, I don't have any reproducer for this issue yet.
+ https://github.com/multipath-tcp/mptcp_net-next/actions/runs/9936227696
+ https://ci-results.mptcp.dev/flakes.html
 
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7bc7510fe41f/non_bootable_disk-d0d0cd38.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/501bce8ef014/vmlinux-d0d0cd38.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/8cca4ce21aed/bzImage-d0d0cd38.xz
+It looks like it is due to a patch recently applied in net-next:
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com
+ https://lore.kernel.org/netdev/19b76438-2fc8-4f2f-a0ae-c988f5b17e9f@kernel.org/T/#u
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 20604 at net/mptcp/protocol.c:693 __mptcp_move_skbs_from_subflow+0x1677/0x2500 net/mptcp/protocol.c:693
-Modules linked in:
-CPU: 0 PID: 20604 Comm: syz.3.4228 Not tainted 6.10.0-rc7-syzkaller-00256-gd0d0cd380055 #0
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__mptcp_move_skbs_from_subflow+0x1677/0x2500 net/mptcp/protocol.c:693
-Code: 85 04 0e 00 00 c6 43 7f 00 e9 fd ef ff ff e8 b0 e4 d0 f6 90 0f 0b 90 e9 d0 f0 ff ff 4c 8b ac 24 90 00 00 00 e8 9a e4 d0 f6 90 <0f> 0b 90 e9 ae f2 ff ff e8 8c e4 d0 f6 90 0f 0b 90 e9 28 eb ff ff
-RSP: 0018:ffffc90000007498 EFLAGS: 00010246
-RAX: 0000000000000000 RBX: 00000000000081e5 RCX: ffffffff8abd9c87
-RDX: ffff88801ed74880 RSI: ffffffff8abdaa86 RDI: 0000000000000004
-RBP: 00000000000055f0 R08: 0000000000000004 R09: 00000000000081e5
-R10: 00000000000055f0 R11: 0000000000000007 R12: ffff88805b1ce2e8
-R13: ffffc900000075c0 R14: ffff88805b1ce200 R15: dffffc0000000000
-FS:  0000000000000000(0000) GS:ffff88802c000000(0063) knlGS:00000000f5d5fb40
-CS:  0010 DS: 002b ES: 002b CR0: 0000000080050033
-CR2: 0000000020287000 CR3: 000000001c02c000 CR4: 0000000000350ef0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- move_skbs_to_msk net/mptcp/protocol.c:809 [inline]
- mptcp_data_ready+0x2c5/0x960 net/mptcp/protocol.c:854
- subflow_data_ready+0x51d/0x7d0 net/mptcp/subflow.c:1465
- tcp_data_ready+0x146/0x5b0 net/ipv4/tcp_input.c:5177
- tcp_data_queue+0x1a6f/0x5270 net/ipv4/tcp_input.c:5267
- tcp_rcv_established+0x8e9/0x21b0 net/ipv4/tcp_input.c:6210
- tcp_v4_do_rcv+0x707/0xab0 net/ipv4/tcp_ipv4.c:1909
- tcp_v4_rcv+0x2eb4/0x3c00 net/ipv4/tcp_ipv4.c:2345
- ip_protocol_deliver_rcu+0xba/0x4e0 net/ipv4/ip_input.c:205
- ip_local_deliver_finish+0x316/0x570 net/ipv4/ip_input.c:233
- NF_HOOK include/linux/netfilter.h:314 [inline]
- NF_HOOK include/linux/netfilter.h:308 [inline]
- ip_local_deliver+0x18e/0x1f0 net/ipv4/ip_input.c:254
- dst_input include/net/dst.h:460 [inline]
- ip_rcv_finish net/ipv4/ip_input.c:449 [inline]
- NF_HOOK include/linux/netfilter.h:314 [inline]
- NF_HOOK include/linux/netfilter.h:308 [inline]
- ip_rcv+0x2c5/0x5d0 net/ipv4/ip_input.c:569
- __netif_receive_skb_one_core+0x199/0x1e0 net/core/dev.c:5625
- __netif_receive_skb+0x1d/0x160 net/core/dev.c:5739
- process_backlog+0x133/0x760 net/core/dev.c:6068
- __napi_poll.constprop.0+0xb7/0x550 net/core/dev.c:6722
- napi_poll net/core/dev.c:6791 [inline]
- net_rx_action+0x9b6/0xf10 net/core/dev.c:6907
- handle_softirqs+0x216/0x8f0 kernel/softirq.c:554
- do_softirq kernel/softirq.c:455 [inline]
- do_softirq+0xb2/0xf0 kernel/softirq.c:442
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x100/0x120 kernel/softirq.c:382
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:851 [inline]
- __dev_queue_xmit+0x872/0x4130 net/core/dev.c:4420
- dev_queue_xmit include/linux/netdevice.h:3095 [inline]
- neigh_hh_output include/net/neighbour.h:526 [inline]
- neigh_output include/net/neighbour.h:540 [inline]
- ip_finish_output2+0x16bf/0x2590 net/ipv4/ip_output.c:235
- __ip_finish_output net/ipv4/ip_output.c:313 [inline]
- __ip_finish_output+0x49e/0x950 net/ipv4/ip_output.c:295
- ip_finish_output+0x31/0x310 net/ipv4/ip_output.c:323
- NF_HOOK_COND include/linux/netfilter.h:303 [inline]
- ip_output+0x13b/0x2a0 net/ipv4/ip_output.c:433
- dst_output include/net/dst.h:450 [inline]
- ip_local_out+0x33e/0x4a0 net/ipv4/ip_output.c:129
- __ip_queue_xmit+0x747/0x1940 net/ipv4/ip_output.c:535
- __tcp_transmit_skb+0x29c1/0x3da0 net/ipv4/tcp_output.c:1466
- tcp_transmit_skb net/ipv4/tcp_output.c:1484 [inline]
- tcp_mtu_probe net/ipv4/tcp_output.c:2546 [inline]
- tcp_write_xmit+0x83f4/0x87e0 net/ipv4/tcp_output.c:2751
- __tcp_push_pending_frames+0xaf/0x390 net/ipv4/tcp_output.c:3014
- tcp_push_pending_frames include/net/tcp.h:2102 [inline]
- tcp_data_snd_check net/ipv4/tcp_input.c:5693 [inline]
- tcp_rcv_established+0x972/0x21b0 net/ipv4/tcp_input.c:6212
- tcp_v4_do_rcv+0x707/0xab0 net/ipv4/tcp_ipv4.c:1909
- sk_backlog_rcv include/net/sock.h:1106 [inline]
- __release_sock+0x31b/0x400 net/core/sock.c:2983
- release_sock+0x5a/0x220 net/core/sock.c:3549
- __mptcp_push_pending+0x400/0x560 net/mptcp/protocol.c:1623
- mptcp_sendmsg+0xce5/0x1f20 net/mptcp/protocol.c:1901
- inet_sendmsg+0x119/0x140 net/ipv4/af_inet.c:853
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg net/socket.c:745 [inline]
- __sys_sendto+0x42c/0x4e0 net/socket.c:2192
- __do_sys_sendto net/socket.c:2204 [inline]
- __se_sys_sendto net/socket.c:2200 [inline]
- __ia32_sys_sendto+0xdd/0x1b0 net/socket.c:2200
- do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
- __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
- do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
- entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-RIP: 0023:0xf7447579
-Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-RSP: 002b:00000000f5d5f57c EFLAGS: 00000292 ORIG_RAX: 0000000000000171
-RAX: ffffffffffffffda RBX: 0000000000000004 RCX: 00000000200000c0
-RDX: 00000000fffffe44 RSI: 0000000004000000 RDI: 0000000000000000
-RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
- </TASK>
-----------------
-Code disassembly (best guess), 2 bytes skipped:
-   0:	10 06                	adc    %al,(%rsi)
-   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
-   6:	10 07                	adc    %al,(%rdi)
-   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
-   c:	10 08                	adc    %cl,(%rax)
-   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
-  1e:	00 51 52             	add    %dl,0x52(%rcx)
-  21:	55                   	push   %rbp
-  22:	89 e5                	mov    %esp,%ebp
-  24:	0f 34                	sysenter
-  26:	cd 80                	int    $0x80
-* 28:	5d                   	pop    %rbp <-- trapping instruction
-  29:	5a                   	pop    %rdx
-  2a:	59                   	pop    %rcx
-  2b:	c3                   	ret
-  2c:	90                   	nop
-  2d:	90                   	nop
-  2e:	90                   	nop
-  2f:	90                   	nop
-  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+I will soon apply a revert of this patch in our tree (or the suggested fix)
 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
