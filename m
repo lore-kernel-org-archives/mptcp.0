@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66FCA12B72
-	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 03:20:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2A3476FBE
+	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 03:40:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721100053; cv=none; b=J232DTWMF1hh7HkE8ArJHHjSyJPXDTspDf8JAjJN27EJ5Q5N/bNW/l9s/ML0Z4nJrVNpCKDwb7jbd6or+HfXVTyhxTpmrchm6dN609Q3eJ0GsDvSngYlpNk4AVFX6wfcMDQS5229C6gOdyV3O7pumsagQY6u8+P7Hw5mEF0PgPQ=
+	t=1721101239; cv=none; b=WHZZWDgFUwKiUBkSjm/fSe4dyi2wH9iZIoed6rZSaKchdZ/Tj9BpeghBiAEZqST0yKcoQ4j+3RwOzd5yi1HdqUT+m1BEQSDDObrRQHyVMtLCp2fRoLihDSK+ipESri25N2xD3Y24X2+iRtukh0vf8FTKjiRm8Yf4qCinxdXBy8o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721100053; c=relaxed/simple;
-	bh=Zh1grBOGbO8bIlQlNpI4k64WbAmlwW19D/ppnG+si5A=;
+	s=arc-20240116; t=1721101239; c=relaxed/simple;
+	bh=6sq+UkUyK4glpHWnQn0s0wrRhhLLV7lEdqGYZFFy/8o=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=sqTIf1R5LKpCjH7kqV8dtu+JrrReIzE9t/+BBGLDXoxXKdVHHWhST9vSHMvk3saJ6czcLzogH8gqPBCiWY+h2NuQ07RJCR5yRkdVfM0ykWmvWgciKtdAmcTUSxq6yYWf8S96uxfe5SXg1ibfAFbZLmyaQbC9wy4ZliqhZrdPWJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sxfRWfLp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=ElyHPFbC26ELAPhCBiJ2fTQ/jwKqSdzh/OP723EKkxn5gQ2l5d5EVJTScvP64l9CbSyZ6/0eac4ePrWsXibcngWU8TWqPFHwhtMH5tp32BWU/MGHGuRxW2h5j14c/Z27DffyyWMpsvtCgTwXVubcr95vfNELbclHQ9KRmXqsDvU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcTy2ZNZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sxfRWfLp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF793C116B1;
-	Tue, 16 Jul 2024 03:20:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcTy2ZNZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74423C116B1;
+	Tue, 16 Jul 2024 03:40:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721100052;
-	bh=Zh1grBOGbO8bIlQlNpI4k64WbAmlwW19D/ppnG+si5A=;
+	s=k20201202; t=1721101238;
+	bh=6sq+UkUyK4glpHWnQn0s0wrRhhLLV7lEdqGYZFFy/8o=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=sxfRWfLp9ttEkrOOxBr/F3uMJZjk6KB2r4icoescj7pB3D9KkkpOxH5a99+w0hljF
-	 HomroKxMW9f7kXcCwOOLlj+kv0yLjVoGCCUSDXE8Yw0fR9jDwECjOmSPVTWN3Y6iVz
-	 oIw2dTNLEmqddFjH/rT/GhxoTm21VYFQlNo3La/H4fucnwE49n6n3H1GmMDwDPP+P5
-	 XeWgtH7o/LpPxeUQn+L74IqMer1TGhvxc0PZA/WsDqi6V0quof5OclkXV85chIdJEi
-	 9yYICw9ZJeBkp4e9Jko5Zpwn7aIS/T3XxA+PltrwcoR8dTAwCWnGS59nwZ0EdEQQ8L
-	 gleRvCVrn6Iow==
-Message-ID: <f62e151f743c4e6358f8745f2ba9bfbc746f6bab.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 06/17] selftests: mptcp: join: ability to
- invert ADD_ADDR check
+	b=IcTy2ZNZadjP3h7G5jg7xCPRjrOeskLvf/F6kqmEEKb2D9LV+6kS1YTC7ALoZjMvk
+	 2xdcpXUXfTBrsc86lB1zEnmbBO+QGgJGz5hkutSogBJnL3sXznFRxsl59dDBZ56EM4
+	 fOq/bQ0QWT+GKxnDvkkVRJxbg11WpjKvq2KWPhd3GW3stdp5fpjTNLfIsl2lC4pMj8
+	 /W4YVd0oxvAC+r8kRggMZTVWLL4ZCOxrq0DNyRodpIH8wC8eNodOrisl8RYkIkiGGl
+	 u5b18JmL11gI3z3qlxBd25oICZfqIPghGLKF/If7OySVM8nFSRZWjExf96cmUhMw+U
+	 g1P+EshkK3gpA==
+Message-ID: <04f90c53bf7842c80b501e5e60e2f04872ddc88e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 14/17] mptcp: pm: remove
+ mptcp_pm_remove_subflow()
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>
-Date: Tue, 16 Jul 2024 11:20:44 +0800
-In-Reply-To: <20240715-mptcp-pm-avail-v2-6-fc5153bd1f6e@kernel.org>
+Date: Tue, 16 Jul 2024 11:40:32 +0800
+In-Reply-To: <20240715-mptcp-pm-avail-v2-14-fc5153bd1f6e@kernel.org>
 References: <20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org>
-	 <20240715-mptcp-pm-avail-v2-6-fc5153bd1f6e@kernel.org>
+	 <20240715-mptcp-pm-avail-v2-14-fc5153bd1f6e@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -98,173 +98,151 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
-
 On Mon, 2024-07-15 at 12:09 +0200, Matthieu Baerts (NGI0) wrote:
-> In the following commit, the client will initiate the ADD_ADDR,
-> instead
-> of the server. We need to way to verify the ADD_ADDR have been
-> correctly
-> sent.
+> This helper is confusing. It is in pm.c, but it is specific to the
+> in-kernel PM and it cannot be used by the userspace one. Also, it
+> simply
+> calls one in-kernel specific function with the PM lock, while the
+> similar mptcp_pm_remove_addr() helper requires the PM lock.
 > 
-> Note: the default expected counters for when the port number is given
-> are never changed by the caller, no need to accept them as parameter
-> then.
+> What's left is the pr_debug(), which is not that useful, because a
+> similar one is present in the only function called by this helper:
 > 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the
-> selftests,
-> but it validates the previous fix for an issue introduced by this
-> commit
-> ID.
+>   mptcp_pm_nl_rm_subflow_received()
 > 
-> Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still
-> available for each msk")
+> After these modifications, this helper can now be marked as 'static'.
+> 
+> Note that it is not really a bug, but it will help backporting the
+> following commits.
+> 
+> Fixes: 0ee4261a3681 ("mptcp: implement mptcp_pm_remove_subflow")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 40
-> ++++++++++++++++---------
->  1 file changed, 26 insertions(+), 14 deletions(-)
+>  net/mptcp/pm.c         | 10 ----------
+>  net/mptcp/pm_netlink.c | 16 +++++++++++-----
+>  net/mptcp/protocol.h   |  3 ---
+>  3 files changed, 11 insertions(+), 18 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 55d84a1bde15..55ccc4fdf18a 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1415,18 +1415,28 @@ chk_add_nr()
->  	local add_nr=$1
->  	local echo_nr=$2
->  	local port_nr=${3:-0}
-> -	local syn_nr=${4:-$port_nr}
-> -	local syn_ack_nr=${5:-$port_nr}
-> -	local ack_nr=${6:-$port_nr}
-> -	local mis_syn_nr=${7:-0}
-> -	local mis_ack_nr=${8:-0}
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 55406720c607..1f1b2617d0f5 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -60,16 +60,6 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk,
+> const struct mptcp_rm_list *rm_
+>  	return 0;
+>  }
+>  
+> -int mptcp_pm_remove_subflow(struct mptcp_sock *msk, const struct
+> mptcp_rm_list *rm_list)
+> -{
+> -	pr_debug("msk=%p, rm_list_nr=%d", msk, rm_list->nr);
+> -
+> -	spin_lock_bh(&msk->pm.lock);
+> -	mptcp_pm_nl_rm_subflow_received(msk, rm_list);
+> -	spin_unlock_bh(&msk->pm.lock);
+> -	return 0;
+> -}
+> -
+>  /* path manager event handlers */
+>  
+>  void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct
+> sock *ssk, int server_side)
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 44092246259c..96336a87973f 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -858,8 +858,8 @@ static void mptcp_pm_nl_rm_addr_received(struct
+> mptcp_sock *msk)
+>  	mptcp_pm_nl_rm_addr_or_subflow(msk, &msk->pm.rm_list_rx,
+> MPTCP_MIB_RMADDR);
+>  }
+>  
+> -void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+> -				     const struct mptcp_rm_list
+> *rm_list)
+> +static void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+> +					    const struct
+> mptcp_rm_list *rm_list)
+>  {
+>  	mptcp_pm_nl_rm_addr_or_subflow(msk, rm_list,
+> MPTCP_MIB_RMSUBFLOW);
+>  }
+> @@ -1454,8 +1454,11 @@ static int
+> mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+>  		remove_subflow = lookup_subflow_by_saddr(&msk-
+> >conn_list, addr);
+>  		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow
+> &&
+>  					  !(entry->flags &
+> MPTCP_PM_ADDR_FLAG_IMPLICIT));
+> +
 
-nit: How about moving the code that reduces arguments into a separate
-patch?
+I think no need to add a new line here.
 
-> +	local ns_invert=${4:-""}
-> +	local syn_nr=$port_nr
-> +	local syn_ack_nr=$port_nr
-> +	local ack_nr=$port_nr
-> +	local mis_syn_nr=0
-> +	local mis_ack_nr=0
-> +	local ns_tx=$ns1
-> +	local ns_rx=$ns2
+>  		if (remove_subflow) {
+> -			mptcp_pm_remove_subflow(msk, &list);
+> +			spin_lock_bh(&msk->pm.lock);
+> +			mptcp_pm_nl_rm_subflow_received(msk, &list);
+> +			spin_unlock_bh(&msk->pm.lock);
 
-And move the code for renaming ns into another separate patch too?
+The subsequent code holds msk->pm.lock too, both of them can be placed
+in the same block holding msk->pm.lock once.
+
+>  		} else if (entry->flags &
+> MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+>  			/* If the subflow has been used, but now
+> closed */
+>  			spin_lock_bh(&msk->pm.lock);
+> @@ -1608,8 +1611,11 @@ static void
+> mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
+>  		spin_unlock_bh(&msk->pm.lock);
+>  	}
+>  
+> -	if (slist.nr)
+> -		mptcp_pm_remove_subflow(msk, &slist);
+> +	if (slist.nr) {
+> +		spin_lock_bh(&msk->pm.lock);
+> +		mptcp_pm_nl_rm_subflow_received(msk, &slist);
+> +		spin_unlock_bh(&msk->pm.lock);
+> +	}
+
+The same here. Holding msk->pm.lock once.
 
 WDYT?
 
-Thanks,
--Geliang
-
-> +	local extra_msg=""
->  	local count
->  	local timeout
 >  
-> -	timeout=$(ip netns exec $ns1 sysctl -n
-> net.mptcp.add_addr_timeout)
-> +	if [[ $ns_invert = "invert" ]]; then
-> +		ns_tx=$ns2
-> +		ns_rx=$ns1
-> +		extra_msg="invert"
-> +	fi
-> +
-> +	timeout=$(ip netns exec ${ns_tx} sysctl -n
-> net.mptcp.add_addr_timeout)
+>  	/* Reset counters: maybe some subflows have been removed
+> before */
+>  	spin_lock_bh(&msk->pm.lock);
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 19d60b6d5b45..f2eb5273d752 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1030,7 +1030,6 @@ int mptcp_pm_announce_addr(struct mptcp_sock
+> *msk,
+>  			   const struct mptcp_addr_info *addr,
+>  			   bool echo);
+>  int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct
+> mptcp_rm_list *rm_list);
+> -int mptcp_pm_remove_subflow(struct mptcp_sock *msk, const struct
+> mptcp_rm_list *rm_list);
+>  void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head
+> *rm_list);
 >  
->  	print_check "add"
-> -	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtAddAddr")
-> +	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtAddAddr")
->  	if [ -z "$count" ]; then
->  		print_skip
->  	# if the test configured a short timeout tolerate greater
-> then expected
-> @@ -1438,7 +1448,7 @@ chk_add_nr()
->  	fi
+>  void mptcp_free_local_addr_list(struct mptcp_sock *msk);
+> @@ -1134,8 +1133,6 @@ static inline u8 subflow_get_local_id(const
+> struct mptcp_subflow_context *subflo
 >  
->  	print_check "echo"
-> -	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtEchoAdd")
-> +	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtEchoAdd")
->  	if [ -z "$count" ]; then
->  		print_skip
->  	elif [ "$count" != "$echo_nr" ]; then
-> @@ -1449,7 +1459,7 @@ chk_add_nr()
->  
->  	if [ $port_nr -gt 0 ]; then
->  		print_check "pt"
-> -		count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtPortAdd")
-> +		count=$(mptcp_lib_get_counter ${ns_rx}
-> "MPTcpExtPortAdd")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$port_nr" ]; then
-> @@ -1459,7 +1469,7 @@ chk_add_nr()
->  		fi
->  
->  		print_check "syn"
-> -		count=$(mptcp_lib_get_counter ${ns1}
-> "MPTcpExtMPJoinPortSynRx")
-> +		count=$(mptcp_lib_get_counter ${ns_tx}
-> "MPTcpExtMPJoinPortSynRx")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$syn_nr" ]; then
-> @@ -1470,7 +1480,7 @@ chk_add_nr()
->  		fi
->  
->  		print_check "synack"
-> -		count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinPortSynAckRx")
-> +		count=$(mptcp_lib_get_counter ${ns_rx}
-> "MPTcpExtMPJoinPortSynAckRx")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$syn_ack_nr" ]; then
-> @@ -1481,7 +1491,7 @@ chk_add_nr()
->  		fi
->  
->  		print_check "ack"
-> -		count=$(mptcp_lib_get_counter ${ns1}
-> "MPTcpExtMPJoinPortAckRx")
-> +		count=$(mptcp_lib_get_counter ${ns_tx}
-> "MPTcpExtMPJoinPortAckRx")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$ack_nr" ]; then
-> @@ -1492,7 +1502,7 @@ chk_add_nr()
->  		fi
->  
->  		print_check "syn"
-> -		count=$(mptcp_lib_get_counter ${ns1}
-> "MPTcpExtMismatchPortSynRx")
-> +		count=$(mptcp_lib_get_counter ${ns_tx}
-> "MPTcpExtMismatchPortSynRx")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$mis_syn_nr" ]; then
-> @@ -1503,7 +1513,7 @@ chk_add_nr()
->  		fi
->  
->  		print_check "ack"
-> -		count=$(mptcp_lib_get_counter ${ns1}
-> "MPTcpExtMismatchPortAckRx")
-> +		count=$(mptcp_lib_get_counter ${ns_tx}
-> "MPTcpExtMismatchPortAckRx")
->  		if [ -z "$count" ]; then
->  			print_skip
->  		elif [ "$count" != "$mis_ack_nr" ]; then
-> @@ -1513,6 +1523,8 @@ chk_add_nr()
->  			print_ok
->  		fi
->  	fi
-> +
-> +	print_info "$extra_msg"
->  }
->  
->  chk_add_tx_nr()
+>  void __init mptcp_pm_nl_init(void);
+>  void mptcp_pm_nl_work(struct mptcp_sock *msk);
+> -void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+> -				     const struct mptcp_rm_list
+> *rm_list);
+>  unsigned int mptcp_pm_get_add_addr_signal_max(const struct
+> mptcp_sock *msk);
+>  unsigned int mptcp_pm_get_add_addr_accept_max(const struct
+> mptcp_sock *msk);
+>  unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock
+> *msk);
 > 
 
