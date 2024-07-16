@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA652EAEA
-	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 08:12:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF8B046522
+	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 08:35:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721117562; cv=none; b=SuCwD5txv/QFhTnEcf2Y9+zHDdASTAJ7cu8F0ydBtPy6yJYXRq/Uau95DenhHo/DO4VPw12u7mou1rFRu1ff+aqVto6z74HDF+F9ifU1miXW3VWphQPxxmfvcqmqO9lIwReRuWgDNML/BpGLhmaP4eQKe8kELpi8IkEw0UGBWMA=
+	t=1721118907; cv=none; b=BGHaVbhcR7kgw3hrEfuuaGT1G13Bh1wB8GW+trzT89pu7usGZCF7XuLDWBkoba+SpjsN+vxbuQJpOQJwTNwgPYHAlGabBna2NcGzcabFXcZSftae9Dkas0BPFx9e9vkovnbsb6Ir6G3VGsRlrxd2cJh8PX3Iplkugkg3iES3KiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721117562; c=relaxed/simple;
-	bh=5TcfaNx3e2cI+qvmdP5ChZvxgIew+8Pc7Aswu0cXPx8=;
+	s=arc-20240116; t=1721118907; c=relaxed/simple;
+	bh=4G1cxk5rgrsyTuuKCep3DvSuWoiNhg3+7ED4tBAlgV0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D2GNNtD74RhkU0sTFlUsOgItVV07Xjz7HYGS2ezLf3828UvRhn89XbGNHnORKvJ2EKeRUKErYFcQGVTldwz6134pzkWYfRaLX9NyTiC6W5n0eGfBC0vQeuOcIbR5HKBKORlAsVoew3B5dt/oiYvPGLqntVLaYI5HyiJKxja3ytY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sftRlEF+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=m7Z/SzgGnhVLWf4ppYsXe83aD367zN6fF5g/lXNyl36mKTnqe9tAYrIVP1Peg+9ddESZMNbTjyuUS6UY91uGNP9PQbs9WMLcTUcMZ2tCKZwKW34AiZp7VA+Ro7OI14CBEvz8B4aW6hWj7JAAtzllisqQzPz5UdQnFnyKYcP0+m8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=thml2gxK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sftRlEF+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36DB9C116B1;
-	Tue, 16 Jul 2024 08:12:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="thml2gxK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F91BC116B1;
+	Tue, 16 Jul 2024 08:35:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721117562;
-	bh=5TcfaNx3e2cI+qvmdP5ChZvxgIew+8Pc7Aswu0cXPx8=;
+	s=k20201202; t=1721118906;
+	bh=4G1cxk5rgrsyTuuKCep3DvSuWoiNhg3+7ED4tBAlgV0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sftRlEF+8T8HUdNMTypvhFGvSw3ri3Nz74kBv7YFXxpQZy/rp7kjqtHtSF9Cs1e79
-	 1O2cjLnMyT0gs7E63aa+rRD8KIg6SMbbon+7VBTrB6hhZJYNF8Z0QzG/D2uHqh1eGB
-	 W6NCg+MFU4Z8yNv92YHjCbD6aHaEMbHhlJT2IVk7tlgcBwe4dbObzZmQhCzxs4ClKx
-	 vJ34QIu4drHaGr3xeDlHaj13EUt98/WUmoJCzPk5Ue/BKIe1thPV3pyKT0vwu8Q7/9
-	 O+TFztN4k8UYRvGDNOPHUSXb5jGuRK5AWwslCQeZQ01q7w9n41TMDgKQTuxpJp9SHr
-	 jLwZG0SZ/9CTQ==
-Message-ID: <9b98925b-addc-4be9-ab27-d9054ebc51fe@kernel.org>
-Date: Tue, 16 Jul 2024 10:12:38 +0200
+	b=thml2gxK0TB8i91oeAvLjgULCt99R7ck8Inwhx4+3oY/c42DrF2dnhNkKlbsHIuzb
+	 WGFR2UaOqw0MpHxGzrDZB1EPw8BDftWsmowam3OMP4FUfp9pbQYRQOKjPeWa5PNGOC
+	 3YQ7PagtpkKC9oV0wyqaQ9sOZe/XZ3rv8mzxB5sKuF8GWFi2mXILGHNF1Nu1vwha0J
+	 eBh7gzNoO0PCcbJ9+R6Qw4H409XEXS9eYElXDj4M9G9KUVp35PiAr+cubark9MnDrd
+	 /4OndrrekMMXcCXTkbJDuLgHVS1GEcg1yt4EiDb+5LeT45hIdqPjEpbWZzfcyzygh8
+	 2+bYKS1jkOz3A==
+Message-ID: <0e32e0e4-e7ef-490d-8107-5e1a03a6d1f6@kernel.org>
+Date: Tue, 16 Jul 2024 10:35:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 06/17] selftests: mptcp: join: ability to
- invert ADD_ADDR check
+Subject: Re: [PATCH mptcp-net v2 14/17] mptcp: pm: remove
+ mptcp_pm_remove_subflow()
+Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>
 References: <20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org>
- <20240715-mptcp-pm-avail-v2-6-fc5153bd1f6e@kernel.org>
- <f62e151f743c4e6358f8745f2ba9bfbc746f6bab.camel@kernel.org>
-Content-Language: en-GB
+ <20240715-mptcp-pm-avail-v2-14-fc5153bd1f6e@kernel.org>
+ <04f90c53bf7842c80b501e5e60e2f04872ddc88e.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,69 +88,91 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f62e151f743c4e6358f8745f2ba9bfbc746f6bab.camel@kernel.org>
+In-Reply-To: <04f90c53bf7842c80b501e5e60e2f04872ddc88e.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for this review!
+Thank you for the review!
 
-On 16/07/2024 05:20, Geliang Tang wrote:
-> Hi Matt,
-> 
+On 16/07/2024 05:40, Geliang Tang wrote:
 > On Mon, 2024-07-15 at 12:09 +0200, Matthieu Baerts (NGI0) wrote:
->> In the following commit, the client will initiate the ADD_ADDR,
->> instead
->> of the server. We need to way to verify the ADD_ADDR have been
->> correctly
->> sent.
+>> This helper is confusing. It is in pm.c, but it is specific to the
+>> in-kernel PM and it cannot be used by the userspace one. Also, it
+>> simply
+>> calls one in-kernel specific function with the PM lock, while the
+>> similar mptcp_pm_remove_addr() helper requires the PM lock.
 >>
->> Note: the default expected counters for when the port number is given
->> are never changed by the caller, no need to accept them as parameter
->> then.
+>> What's left is the pr_debug(), which is not that useful, because a
+>> similar one is present in the only function called by this helper:
 >>
->> The 'Fixes' tag here below is the same as the one from the previous
->> commit: this patch here is not fixing anything wrong in the
->> selftests,
->> but it validates the previous fix for an issue introduced by this
->> commit
->> ID.
+>>   mptcp_pm_nl_rm_subflow_received()
 >>
->> Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still
->> available for each msk")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 40
->> ++++++++++++++++---------
->>  1 file changed, 26 insertions(+), 14 deletions(-)
+>> After these modifications, this helper can now be marked as 'static'.
 >>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 55d84a1bde15..55ccc4fdf18a 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1415,18 +1415,28 @@ chk_add_nr()
->>  	local add_nr=$1
->>  	local echo_nr=$2
->>  	local port_nr=${3:-0}
->> -	local syn_nr=${4:-$port_nr}
->> -	local syn_ack_nr=${5:-$port_nr}
->> -	local ack_nr=${6:-$port_nr}
->> -	local mis_syn_nr=${7:-0}
->> -	local mis_ack_nr=${8:-0}
-> 
-> nit: How about moving the code that reduces arguments into a separate
-> patch?
+>> Note that it is not really a bug, but it will help backporting the
+>> following commits.
 
-I prefer not to in this case. If the patch was for net-next, that would
-have been a good idea. Here, it is for -net, and backporting shell
-scripts is a pain: there might not be any conflicts, but the script
-execution can be easily broken, and the stable team will not notice it
-because they don't execute them. Here, I want everything or nothing to
-be backported, not half of it. I even wonder if it would not be easier
-to squash patch 6 and 7 together. But maybe not for the moment to ease
-the reviews. WDYT?
+(...)
+
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index 44092246259c..96336a87973f 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -1454,8 +1454,11 @@ static int
+>> mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+>>  		remove_subflow = lookup_subflow_by_saddr(&msk-
+>>> conn_list, addr);
+>>  		mptcp_pm_remove_anno_addr(msk, addr, remove_subflow
+>> &&
+>>  					  !(entry->flags &
+>> MPTCP_PM_ADDR_FLAG_IMPLICIT));
+>> +
+> 
+> I think no need to add a new line here.
+
+The block below started to be a bit big, and was doing a different
+action that the one above (removing ADD_ADDR). Maybe I should have added
+it in patch 10/17?
+
+>>  		if (remove_subflow) {
+>> -			mptcp_pm_remove_subflow(msk, &list);
+>> +			spin_lock_bh(&msk->pm.lock);
+>> +			mptcp_pm_nl_rm_subflow_received(msk, &list);
+>> +			spin_unlock_bh(&msk->pm.lock);
+> 
+> The subsequent code holds msk->pm.lock too, both of them can be placed
+> in the same block holding msk->pm.lock once.
+
+Yes indeed, but there are cases where it is not needed to lock the PM:
+if we are removing a 'signal' endpoint. In this case, I thought it would
+be better to lock only if needed, and surround the helper requiring the
+lock. No?
+
+>>  		} else if (entry->flags &
+>> MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+>>  			/* If the subflow has been used, but now
+>> closed */
+>>  			spin_lock_bh(&msk->pm.lock);
+>> @@ -1608,8 +1611,11 @@ static void
+>> mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
+>>  		spin_unlock_bh(&msk->pm.lock);
+>>  	}
+>>  
+>> -	if (slist.nr)
+>> -		mptcp_pm_remove_subflow(msk, &slist);
+>> +	if (slist.nr) {
+>> +		spin_lock_bh(&msk->pm.lock);
+>> +		mptcp_pm_nl_rm_subflow_received(msk, &slist);
+>> +		spin_unlock_bh(&msk->pm.lock);
+>> +	}
+> 
+> The same here. Holding msk->pm.lock once.
+
+Yes, indeed, here we can probably lock once before "if (alist.nr)". If
+there is only this change needed, I can probably do the modification
+when applying the patches. (I already did the modifications locally).
 
 Cheers,
 Matt
