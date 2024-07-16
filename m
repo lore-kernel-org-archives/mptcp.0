@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E4845101F2
-	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 10:44:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D83813D630
+	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 10:56:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721126694; cv=none; b=K4B7wCF8u35/6iU+7Kcn0vx4qZ61M34XNZH9OiVwBLxmH+ODG4XJQZ6GPPk6ecLBZXyPreGIzKJcsh7rkq6p/4vcEu8N5u6yEYH679jMuyvMhkbRUf45lpvGU0/R2bJwlQ/tRef0KHliC7KgAJjeTzeSueQKjXJcYzQUF7QK7hY=
+	t=1721127399; cv=none; b=ezPqyiccBS+XjjJvfCK+tSfAcFP90ziaYOqITOQruH9f5iFy/7m+h1jWXsO16bT/jwHiX17YUEh5nVQ8yU3VlVBa6WH5mlolRcwqVYmmdY/QP/wVgPdTCIGPpmciAUs7Iyaas8gyprqS9kjpbmUio5YZR1nvt0+S+bhV4ZwOcJw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721126694; c=relaxed/simple;
-	bh=EMRTrZMgca9GqHSrDHC8tkXTsI7s6GcGH3vcUn23xZA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=sS92u3f/8lBZE3X9sPUwa6/hG0hMrmLTeLrfSJPXSTYcI1fM9l6ovm8HfidiGROSjpU2z2FOCOITeg5Q3Lbjnoy1X2nzWS/1nkF9rhtD2xzol/qiDZ5ge1jAZM+ybgCipW5ZJKkKHKdDZIwWaYpv5DHh+qNbkbi1xvZsPI/pECw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g8t+R652; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721127399; c=relaxed/simple;
+	bh=LGBt1UcpVz575s2o3qxKHZocDtTIet6sPrSfPUVQMKI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LMMdc7mSzh4f7Lz48Pf49RXi5j3e8XzPKlSnaMbIaRxaMfXY0EnD1RBXdijS/cht9NxWR/m/K59HYgVV7GXfdrhvGV5GexObz36IHbQ6GhFsOCvxFIJpp+1XqQOT9mKgE2/HIBL6q8wmbRF7IMARkYE2qJLWeP+fB2ZnJQvrHXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5XiJjac; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g8t+R652"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D04CBC116B1;
-	Tue, 16 Jul 2024 10:44:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5XiJjac"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87D8CC116B1;
+	Tue, 16 Jul 2024 10:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721126693;
-	bh=EMRTrZMgca9GqHSrDHC8tkXTsI7s6GcGH3vcUn23xZA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=g8t+R652cfdVx4AEjt8jg+qw8u/9eQImfJ8FTZO8rnTjo3UAPygHVrcPEdpDOh4V2
-	 znICpMp4reuNMex1HY0Zuj7pLywFA5zlbjpXrZx+uUzF1AstgLUspK2/oybKwlF7ao
-	 aFQGzHR6RRocrG4+5rfGuiuqSyr/pXKvPxympTiCxR8rb/CVPkUIg+nsLqpMyyMKmB
-	 DKCW+2aPSRQQ9njFX2RkeIVf6glWKJcDQzoryyN1YVkwe+faxAaDwH0Q7yZ1G5+lTl
-	 mqnPjhV3pDckhw5EI4K4FJ0mrJBXsL3I5O4iEz1sxAmkl+K8/dwWabF0LGj+2iMvLp
-	 V4K8pZMZaxIhw==
-Message-ID: <29d1c09f-f082-4740-91e3-91b9b585e30c@kernel.org>
-Date: Tue, 16 Jul 2024 12:44:50 +0200
+	s=k20201202; t=1721127399;
+	bh=LGBt1UcpVz575s2o3qxKHZocDtTIet6sPrSfPUVQMKI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=K5XiJjacjGtpIchDIkidz5rawUAwF2laj+hNueL3wBAKigN4f7Mqx+GKsNqEeveRA
+	 uMmoPjib8mjLT3lzGbnVdSpKa+5VoRwIASc18fi8DDZVpXp+paX5T70z0Sb/8v8gyX
+	 y2BH/mOeacupWKAxSw6UXEa8FIzM/HildxAH2/14oaOeyr0jVDJ3zX1p/0KJ5FCxsV
+	 h789CHD2RM5GOK9EENQfDu7QslwXcDjKrwAJp9Va9kLu/PJfOumhdLOf6G2YiFw0FB
+	 friey4WdvOMCtjVVaaMV8eco1L9sRSoRAFFOqGz0YabG5zeN9hU7lus2OcC+bQBaSg
+	 QL79lwensy84Q==
+Message-ID: <12f970d0-26c1-4426-9651-78412394c09b@kernel.org>
+Date: Tue, 16 Jul 2024 12:56:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH RFC mptcp-next fixes] mptcp: process MP_JOIN's 4th ACK
+Subject: Re: [PATCH mptcp-net 4/6] mptcp: pm: fix backup support in signal
+ endpoints
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20240715-mptcp-process-4th-ack-mpj-v1-1-d44fc90245e2@kernel.org>
- <504957bf-8de8-4ea4-aadf-b84b62d267ea@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org>
+ <20240711-mptcp-backup-mpj-v1-4-d45506182a9e@kernel.org>
+ <3b39df84-53c6-3d78-ccb1-6737955d29bf@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,103 +88,185 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <504957bf-8de8-4ea4-aadf-b84b62d267ea@redhat.com>
+In-Reply-To: <3b39df84-53c6-3d78-ccb1-6737955d29bf@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-On 16/07/2024 12:35, Paolo Abeni wrote:
+Thank you for your review!
+
+On 16/07/2024 07:48, Mat Martineau wrote:
+> On Thu, 11 Jul 2024, Matthieu Baerts (NGI0) wrote:
 > 
-> 
-> On 7/15/24 21:09, Matthieu Baerts (NGI0) wrote:
->> The 'Fixes' commit recently changed the behaviour for MPTCP Join
->> requests for listening sockets: when receiving the 3rd ACK of a request
->> adding a new path (MP_JOIN), sk->sk_socket will be set, and point to the
->> MPTCP sock that has been created when the MPTCP connection got created
->> before with the first path. The newly added 'goto' will then skip the
->> process of the segment text (step 7) and not go through tcp_data_queue()
->> where the MPTCP options are validated, and some actions are triggered,
->> e.g. sending the MPJ 4th ACK [1].
+>> There was a support for signal endpoints, but only when the endpoint's
+>> flag was changed during a connection. If an endpoint with the signal and
+>> backup was already present, the MP_JOIN reply was not containing the
+>> backup flag as expected.
 >>
->> This doesn't fully break MPTCP, mainly the 4th MPJ ACK that will be
->> delayed, but it looks like it affects the MPTFO feature as well --
->> probably in case of retransmissions I suppose -- and being the reason
->> why the selftests started to be unstable the last few days [2].
+>> That's confusing to have this inconsistent behaviour. On the other hand,
+>> the infrastructure to set the backup flag in the SYN + ACK + MP_JOIN was
+>> already there, it was just never set before. Now when requesting the
+>> local ID from the path-manager, the backup status is also requested.
 >>
->> TODO: it is not clear to me if we need to fix something for MPTCP. The
->> following packetdrill test doesn't seem to be failing with the following
->> patch, we can see a fallback to TCP, which seems OK in this case, no?
+>> Note that when the userspace PM is used, the backup flag can be set if
+>> the local address was already used before with a backup flag, e.g. if
+>> the address was announced with the 'backup' flag, or a subflow was
+>> created with the 'backup' flag.
 >>
->>    `../common/defaults.sh`
+>> The MPTCP Join selftest has been modified to validate this case: the
+>> test "single address, backup", is now validating the MPJ with a backup
+>> flag. The previous version has been kept, but renamed to "single
+>> address, switch to backup" to avoid confusions. The test "single address
+>> with port, backup" is also now validating the MPJ with a backup flag,
+>> which makes more sense.
 >>
->>     0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_MPTCP) = 3
->>    +0 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
->>
->>    +0 > S  0:0(0)                 <mss 1460, sackOK, TS val 100 ecr
->> 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
->>    +0 < S  0:0(0) win 1000        <mss 1460, sackOK, TS val 407 ecr
->> 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
->>    +0 > S. 0:0(0) ack 1           <mss 1460, sackOK, TS val 330 ecr
->> 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
->>    +0 < S. 0:0(0) ack 1 win 65535 <mss 1460, sackOK, TS val 700 ecr
->> 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
->>
->>    +0 write(3, ..., 100) = 100
->>    +0 >  . 1:1(0)     ack 1 <nop, nop, TS val 845707014 ecr 700, nop,
->> nop, sack 0:1>
->>    +0 > P. 1:101(100) ack 1 <nop, nop, TS val 845958933 ecr 700>
->>
->> Link: https://datatracker.ietf.org/doc/html/rfc8684#fig_tokens [1]
->> Link: https://netdev.bots.linux.dev/contest.html?executor=vmksft-
->> mptcp-dbg&test=mptcp-connect-sh [2]
->> Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous
->> connect().")
+>> Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/507
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>   net/ipv4/tcp_input.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> net/mptcp/pm.c                                  |  9 ++++++---
+>> net/mptcp/pm_netlink.c                          |  4 +++-
+>> net/mptcp/pm_userspace.c                        |  6 ++++--
+>> net/mptcp/protocol.h                            |  9 ++++++---
+>> net/mptcp/subflow.c                             |  7 +++++--
+>> tools/testing/selftests/net/mptcp/mptcp_join.sh | 19 ++++++++++++++++---
+>> 6 files changed, 40 insertions(+), 14 deletions(-)
 >>
->> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
->> index ff9ab3d01ced..ff981d7776c3 100644
->> --- a/net/ipv4/tcp_input.c
->> +++ b/net/ipv4/tcp_input.c
->> @@ -6820,7 +6820,7 @@ tcp_rcv_state_process(struct sock *sk, struct
->> sk_buff *skb)
->>           if (sk->sk_shutdown & SEND_SHUTDOWN)
->>               tcp_shutdown(sk, SEND_SHUTDOWN);
->>   -        if (sk->sk_socket)
->> +        if (sk->sk_socket && !sk_is_mptcp(sk))
->>               goto consume;
->>           break;
->>  
->> ---
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index 55406720c607..98b0b31e3b8d 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+>> @@ -405,7 +405,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock
+>> *msk, unsigned int remaining,
+>>     return ret;
+>> }
+>>
+>> -int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common
+>> *skc)
+>> +int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common
+>> *skc,
+>> +              bool *backup)
+>> {
+>>     struct mptcp_addr_info skc_local;
+>>     struct mptcp_addr_info msk_local;
+>> @@ -413,6 +414,8 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk,
+>> struct sock_common *skc)
+>>     if (WARN_ON_ONCE(!msk))
+>>         return -1;
+>>
+>> +    *backup = false;
 > 
-> patch LGTM
+> This will modify *backup on some error paths (but not the one that
+> returned -1 above). While the code that calls this function will ignore
+> that variable if this function returns an error anyway, I think it's
+> worth it to only set *backup on success within this function, just
+> before the 'return 0'.
 
-Thank you for having looked!
+Good point. I thought I had to add '*backup = false' in many places, but
+no, only 3. I can do that then.
 
-Should I already send the patch -- without the TODO, but mentioning the
-fallback to TCP instead -- to have it accepted before sending the pull
-request to Linus if we still have time?
+>> +
+>>     /* The 0 ID mapping is defined by the first subflow, copied into
+>> the msk
+>>      * addr
+>>      */
 
-> but I'm wondering if a similar problem can be reproduced
-> with plain TCP and  TFO?
+Note: when applying the modification above, I just realised I was not
+supporting this case with the 0 local ID: if there is an MPJ from/to the
+ID0. I can fix that.
+
+>> @@ -422,8 +425,8 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk,
+>> struct sock_common *skc)
+>>         return 0;
+>>
+>>     if (mptcp_pm_is_userspace(msk))
+>> -        return mptcp_userspace_pm_get_local_id(msk, &skc_local);
+>> -    return mptcp_pm_nl_get_local_id(msk, &skc_local);
+>> +        return mptcp_userspace_pm_get_local_id(msk, &skc_local, backup);
+>> +    return mptcp_pm_nl_get_local_id(msk, &skc_local, backup);
+>> }
+>>
+>> int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+>> unsigned int id,
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index 7635fac91539..44bfab351693 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -1064,7 +1064,8 @@ static int
+>> mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>>     return err;
+>> }
+>>
+>> -int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct
+>> mptcp_addr_info *skc)
+>> +int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct
+>> mptcp_addr_info *skc,
+>> +                 bool *backup)
+>> {
+>>     struct mptcp_pm_addr_entry *entry;
+>>     struct pm_nl_pernet *pernet;
+>> @@ -1076,6 +1077,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock
+>> *msk, struct mptcp_addr_info *skc
+>>     list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+>>         if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
+>>             ret = entry->addr.id;
+>> +            *backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>>             break;
+>>         }
+>>     }
+>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+>> index f0a4590506c6..adc015af168e 100644
+>> --- a/net/mptcp/pm_userspace.c
+>> +++ b/net/mptcp/pm_userspace.c
+>> @@ -137,7 +137,7 @@ int
+>> mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+>> }
+>>
+>> int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+>> -                    struct mptcp_addr_info *skc)
+>> +                    struct mptcp_addr_info *skc, bool *backup)
+>> {
+>>     struct mptcp_pm_addr_entry *entry = NULL, *e, new_entry;
+>>     __be16 msk_sport =  ((struct inet_sock *)
+>> @@ -151,8 +151,10 @@ int mptcp_userspace_pm_get_local_id(struct
+>> mptcp_sock *msk,
+>>         }
+>>     }
+>>     spin_unlock_bh(&msk->pm.lock);
+>> -    if (entry)
+>> +    if (entry) {
+>> +        *backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>>         return entry->addr.id;
+>> +    }
+>>
 > 
-> 
-> syn + TFO    ->
->         <- syn ack
->             [accept]
-> ack        ->
->         NO 3rd ack????
-> 
-> If so possibly the 'if (sk->sk_socket ...' check should be refined even
-> more?!??
+> *backup is left unchanged on the !entry code path, which could leave it
+> uninitialized.
 
-Good point!
+(it was not because it was initialised in mptcp_pm_get_local_id(),
+before calling mptcp_userspace_pm_get_local_id() -- same in pm_netlink.c)
 
-I can mention that in the comment of my patch, and try to reproduce that
-locally. WDYT?
+Cheers,
+Matt
+
+> 
+> - Mat
+> 
+>>     memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
+>>     new_entry.addr = *skc;
+
+(...)
+
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/
+>> testing/selftests/net/mptcp/mptcp_join.sh
+>> index 55d84a1bde15..167914df05fa 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+
+I should probably split the modification of the tests, to ease the
+backport (the backport of the test is optional if it is too hard to
+backport).
 
 Cheers,
 Matt
