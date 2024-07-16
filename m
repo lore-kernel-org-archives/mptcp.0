@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CDFD195B27;
-	Tue, 16 Jul 2024 19:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A59EE626CB
+	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 20:53:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721159020; cv=none; b=OjMuk2x6IAQ8LSEx8E4mHI9j6qIYjcZFV+7408eW8bAE5lTvUHrd/LVaDvKf16iVaTNyei495ye03BXw7uwLg7EnZIWpatIWNFsao5qzpElIrksDNXAJjohjV7LDd5NzYxvBQaH0aJuGiwSQjIUys62/K9Gjfa+eKfP0w1bqObI=
+	t=1721163203; cv=none; b=clVx+JBdzeLvZmQyiSB6Qro95r0D//yL/ndVv3ITxe9e+zn4cvhHmiX8NZXtucZoRYOM4HS7jxoayaTpSs/WXZAsNrPNSF9Z+xutaiYjboED7ElxqHHe6JL4pM6lgG77PfoK6CLxtsI0mXE6cE9YZNT2g9s/1gmClZE7+b5htxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721159020; c=relaxed/simple;
-	bh=UDVuLH2ejyZyzog+e73197p//fYN2TmRABPTol6ysV0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=M9wHi0ay9UXFo/1M0TkARBZMPSZ+P4nymGPvN3yC+7fnR0q1t1KFbDbciyBKuxTtbN4tfuwIEoMC8eiJsgwJ9vJtr1WsdnOSEmSrgm6W3wHnu1cLkp/U3UAVQ/PQUsJnb6vxZeDKTM8kWK0I3JOG7EtE9RM+stt+OvmHEd2Te00=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=diTRnJT7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721163203; c=relaxed/simple;
+	bh=UHuNqlZGxBejBVBmJI0UqHf0eUnY3p3lpg60fspnI4o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X5Csn7b5IvDvsQJkA5miBGJeb/35bFNtcjzQESjagTFcT4MMFgsoj6oqw7jRnuJCqIUHKTxfXAYlkEr6+v7Fz8UJWYDFXK1fHm9ckwzJ4OznmfZKcKeXacYZy1H6RMuc2Jt3gL9sWDvv4Ld/8+IXluvvjIwobS5IVBasq+Rk1p8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K3yOceNd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="diTRnJT7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B92EBC116B1;
-	Tue, 16 Jul 2024 19:43:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K3yOceNd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4BB3C4AF0E;
+	Tue, 16 Jul 2024 20:53:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721159019;
-	bh=UDVuLH2ejyZyzog+e73197p//fYN2TmRABPTol6ysV0=;
-	h=From:Date:Subject:To:Cc:From;
-	b=diTRnJT7EuCwwVFs2QyYU2Sr/4TN0Fq+N1JuHAPx4vSOjc5ks7yO4RBrNQFtS0OFJ
-	 Re7ZuDs3yC/nRq5yMfDXaIpASE1CkALfGoxrutWLeTqQSHLC/3JA2IPUSq/dQjANYi
-	 RqXIJD5CrT0j4NnYY0ss/qTmzG3uIePom4Op09Ux1NStuZj8Qx/i5sonFdBLPOecQD
-	 AazdFM2rOqsHwiU7LkeCs8vePn1EkAUNvOiAO5Tq4Ncq7T0DftsHyOQ8yZzJ+EA5MP
-	 sIwI8ugR35Hy89xPcXUk5t+j8sZpW+idJU6jzK6NXe3QarunApCvGHKyVdC1frd3G3
-	 sATpclTDF3dMw==
+	s=k20201202; t=1721163203;
+	bh=UHuNqlZGxBejBVBmJI0UqHf0eUnY3p3lpg60fspnI4o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=K3yOceNdcVeheog/7LLIa+T8Nt8Ra59XGb5OmUmt+9apdGEtxEVc4dhGHTcvkbZTr
+	 Cprm2eg5rq1plUZxZm6thB44lmEWXidb1sVNmFZqlGAVN3OMCajAmDyERyGhtrYjlr
+	 31mTH0wnoCu2NHQbT9jSC6SPqAXMbo5FDGDaVksEy4ac0+XyARIIbrjUI/EhLtH2qs
+	 xwpv9hA5EM0I6PWWP+aisASV6VXfh323MVAiAYnoN7TCxNA4sMIn/VXfQ+7PDWd3/v
+	 90nKp1Ljr4je6+TCWawJRe3Q47GAWwpzRWvdLK8gRz0CIQUuokhyXg2FfC30d7kfrZ
+	 N9ZQVF/zTARoA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 16 Jul 2024 21:43:32 +0200
-Subject: [PATCH net] tcp: process the 3rd ACK with sk_socket for for
- TFO/MPTCP
+Subject: [PATCH mptcp-net v2 0/9] mptcp: fix inconsistent backup usage
+Date: Tue, 16 Jul 2024 22:53:12 +0200
+Message-Id: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,125 +37,89 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v1-1-4e61d0b79233@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGPNlmYC/z2NwQrCMBBEf6Xs2YWkWkV/RUTSzVZDaBKyqRRK/
- 93Fg4c5PGZ4s4FwDSxw6zao/AkSclKwhw7o7dKLMXhl6E1/Mhd7xqVIq+xmTNw0a8N/1ajgsXp
- 0FJFykmVmlPiUTFG3hkZvh+tEw2hA9aXyFNbf9R1UBo99/wI/xqVTjwAAAA==
-To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Kuniyuki Iwashima <kuniyu@amazon.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-B4-Tracking: v=1; b=H4sIALjdlmYC/3WNQQ7CIBREr9L8tRigLbauvIfpAulvi1UggETTc
+ HdJXbt8mZk3GwT0GgOcqw08Jh20NQX4oQK1SDMj0WNh4JQ39MQYebqoHLlJtb5cgTvhU1eLfpJ
+ jLQSUmfM46feuvMKvbTDCUKJFh2j9Zz9LbC/89yZGKBmbtqWCdVz2eFnRG3wcrZ9hyDl/AW6sY
+ 9W8AAAA
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4735; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=UDVuLH2ejyZyzog+e73197p//fYN2TmRABPTol6ysV0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmls1pxpRaP8IapO+6KOfH5fNS37QGYOJMdvqCa
- yW0cpaj3jGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZpbNaQAKCRD2t4JPQmmg
- c8bpEAC0G7JprV8zMsBzL4vvkps4KLMdFWuLJ4M7fdSRgEDVKtGdEY6s/zUV3tOmbe7PY41sLJ3
- zQSnj0goDZgcYNXwCIGDC4PVdR0OUCDQLTRxGrDkdDS4zW5NZxWoZXwWX0NfEqitoLGXL2CztX6
- wuvRkZTcG6bW/MQmOYygeI6dUjl4kyD6yWjY+m0nLA2JRh7Hz6H9HWbTOIHcbafV+9uwCM39KbZ
- xPWjaDPDGibnKwuLAF/k/txp39+uz5soEcpZDsQPAW30x789eZJpPl1YIqiEhCd/0jIU6jEDG4+
- tKnZC0MSljMEZzFB2dwXGdc8Jgne/8LgrH2IPXAnU6GE3jo7a6V36pg41p6EhJ/HC4pi15Js4A/
- UJr/mgZp+NtO3zpfplg4IPo4Pd+oksb9kMdMxObHozbxDROh5oa0hojuzeiejbMsNl/67YvQsRA
- R3WGyGkda8jpYVLp9IzT1xUVYmIoL5veQvSy/B1IIz85zFlJfokuqSw74xzg00WoIkLxgYIMFK5
- X7z7E5EdT5F+ya3P2kAY8qGzzw3aWSWJjwPAI1A2DZElxUsHIZ9S+f1RGsOPImNrpXP5xv/22kf
- B4+1/+d2s5312hXkSJq6ZYdr8tub84xMCZU6Un345zwFKglIhXXgIPDh4Hq9k2mlmSaYCAvdmgt
- 5K7M44sdhyQbxbg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2975; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=UHuNqlZGxBejBVBmJI0UqHf0eUnY3p3lpg60fspnI4o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmlt3B5YF6HCd2U/8YLWVk61Kn+jh/BIib0oEG3
+ O97ejFn4hKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZpbdwQAKCRD2t4JPQmmg
+ cyHeEADDBC7i99zHNgF7DTYs4znhh5bketiHuM5Y5gCxAHP6VhPg+dOAJHUrt4rcKlPnwRMi7qk
+ HVujhENP0SoEGEXxdctsB4LZ64C0JJTjRAClHAeQitYqHJmw6E3w2H2tGty4hRk40IPW/hwmr1u
+ 8wBidW/lurJnKkGw7ES2p1vsMw/tXmCs2DvKgM+sFLd7rcjKAmXH1c21bGh4gtt38gQelHgBsa8
+ QPibwIK4ZSWoqmXTqXRv5NzI23oSGZpk9lFQwqfg2dxmNaqoyv0g9n6yWinRUfgZc5+uI3osZhU
+ naoUHTnQGkgmr2u1XL7v0BRS6azYcbnDCZHnE46gR3+OhrPJZFmWH+z+EfV0NZ45jxSzsRRBbEh
+ i9bKaOcYK+4m5IjRPhG0es/PpNvKPtFiq70JCv3x9nNvJuuRtv8NDxFMIRJZjAOX3Wh4Osn8yO4
+ GJo9M38Y594XE1jkouMOuBiSTyHFzDCHYplVWtCJpfiBW96klWuZ8QPRvq+aleys0tmBcMNmpsM
+ sN0nGftVyGlNm02Wt3h9ght9yz+dRARP6Puv3OmQcAk9ysO1vopg4up+7ZgFlnnV464vbCdpqEJ
+ 7zO1pKD+5zagbsI6yq1PB513ISK8J98jKZzC6wT/kSF06dGR8LbNV5aLKRICJBkBLoD6wW+TM+m
+ ZqqIXFwoaoYXseQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The 'Fixes' commit recently changed the behaviour of TCP by skipping the
-processing of the 3rd ACK when a sk->sk_socket is set. The goal was to
-skip tcp_ack_snd_check() in tcp_rcv_state_process() not to send an
-unnecessary ACK in case of simultaneous connect(). Unfortunately, that
-had an impact on TFO and MPTCP.
+In all the backup tests we have, the backup flag is set on one side, and
+the expected behaviour is to have both sides respecting this decision.
 
-I started to look at the impact on MPTCP, because the MPTCP CI found
-some issues with the MPTCP Packetdrill tests [1]. Then Paolo suggested
-me to look at the impact on TFO with "plain" TCP.
+On the scheduler side, only the 'backup' field is checked, which is
+supposed to be set only if the other peer flagged a subflow as backup.
+But in various places, this flag is set when the local host flagged the
+subflow as backup.
 
-For MPTCP, when receiving the 3rd ACK of a request adding a new path
-(MP_JOIN), sk->sk_socket will be set, and point to the MPTCP sock that
-has been created when the MPTCP connection got established before with
-the first path. The newly added 'goto' will then skip the processing of
-the segment text (step 7) and not go through tcp_data_queue() where the
-MPTCP options are validated, and some actions are triggered, e.g.
-sending the MPJ 4th ACK [2] as demonstrated by the new errors when
-running a packetdrill test [3] establishing a second subflow.
+One last thing that has been fixed is the backup flag in 'signal'
+endpoints: it was working only when setting the backup flag while the
+connection was already opened. That's what the MPJ selftests were doing
+to check that the signal endpoint were supporting the backup flag (on
+purpose I guess, because the support was broken in MP_JOIN...).
 
-This doesn't fully break MPTCP, mainly the 4th MPJ ACK that will be
-delayed. Still, we don't want to have this behaviour as it delays the
-switch to the fully established mode, and invalid MPTCP options in this
-3rd ACK will not be caught any more. This modification also affects the
-MPTCP + TFO feature as well, and being the reason why the selftests
-started to be unstable the last few days [4].
+The last two patches adapt the BPF selftests to mimic what is now done
+by the in-kernel packets scheduler.
 
-For TFO, the existing 'basic-cookie-not-reqd' test [5] was no longer
-passing: if the 3rd ACK contains data, these data would no longer be
-processed, and thus not ACKed.
+Note that the Packetdrill tests need to be updated because the behaviour
+has been changed / fixed:
 
-Note that for MPTCP, in case of simultaneous connect(), a fallback to
-TCP will be done, which seems fine:
+  https://github.com/multipath-tcp/packetdrill/pull/152
 
-  `../common/defaults.sh`
-
-   0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_MPTCP) = 3
-  +0 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
-
-  +0 > S  0:0(0)                 <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
-  +0 < S  0:0(0) win 1000        <mss 1460, sackOK, TS val 407 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
-  +0 > S. 0:0(0) ack 1           <mss 1460, sackOK, TS val 330 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
-  +0 < S. 0:0(0) ack 1 win 65535 <mss 1460, sackOK, TS val 700 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
-
-  +0 write(3, ..., 100) = 100
-  +0 >  . 1:1(0)     ack 1 <nop, nop, TS val 845707014 ecr 700, nop, nop, sack 0:1>
-  +0 > P. 1:101(100) ack 1 <nop, nop, TS val 845958933 ecr 700>
-
-Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/9936227696 [1]
-Link: https://datatracker.ietf.org/doc/html/rfc8684#fig_tokens [2]
-Link: https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/syscalls/accept.pkt#L28 [3]
-Link: https://netdev.bots.linux.dev/contest.html?executor=vmksft-mptcp-dbg&test=mptcp-connect-sh [4]
-Link: https://github.com/google/packetdrill/blob/master/gtests/net/tcp/fastopen/server/basic-cookie-not-reqd.pkt#L21 [5]
-Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous connect().")
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Notes:
- - We could also drop this 'goto consume', and send the unnecessary ACK
-   in this simultaneous connect case, which doesn't seem to be a "real"
-   case, more something for fuzzers.
- - When sending this patch, the 'Fixes' commit is only in net-next, this
-   patch is then on top of net-next. But because net-next will be merged
-   into -net soon -- judging by the PR that has been sent to Linus a few
-   hours ago -- the 'net' prefix is then used.
----
- net/ipv4/tcp_input.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
-
-diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
-index ff9ab3d01ced..a89b3ee57d8c 100644
---- a/net/ipv4/tcp_input.c
-+++ b/net/ipv4/tcp_input.c
-@@ -6820,7 +6820,13 @@ tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
- 		if (sk->sk_shutdown & SEND_SHUTDOWN)
- 			tcp_shutdown(sk, SEND_SHUTDOWN);
- 
--		if (sk->sk_socket)
-+		/* In simult-connect cases, sk_socket will be assigned. But also
-+		 * with TFO and MPTCP (MPJ) while they required further
-+		 * processing later in tcp_data_queue().
-+		 */
-+		if (sk->sk_socket &&
-+		    TCP_SKB_CB(skb)->seq == TCP_SKB_CB(skb)->end_seq &&
-+		    !sk_is_mptcp(sk))
- 			goto consume;
- 		break;
- 
+Changes in v2:
+- new patches 4 and 5.
+- split patch 6 in two (code then tests) to ease the backports.
+- patch 6 addresses Mat's comments, and support the ID0 case.
+- Link to v1: https://lore.kernel.org/r/20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org
 
 ---
-base-commit: 77ae5e5b00720372af2860efdc4bc652ac682696
-change-id: 20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-0cbd159fc5b0
+Matthieu Baerts (NGI0) (9):
+      mptcp: sched: check both directions for backup
+      mptcp: distinguish rcv vs sent backup flag in requests
+      mptcp: pm: only set request_bkup flag when sending MP_PRIO
+      mptcp: mib: count MPJ with backup flag
+      selftests: mptcp: join: validate backup in MPJ
+      mptcp: pm: fix backup support in signal endpoints
+      selftests: mptcp: join: check backup support in signal endp
+      Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
+      Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+
+ include/trace/events/mptcp.h                       |  2 +-
+ net/mptcp/mib.c                                    |  2 +
+ net/mptcp/mib.h                                    |  2 +
+ net/mptcp/options.c                                |  2 +-
+ net/mptcp/pm.c                                     | 15 +++--
+ net/mptcp/pm_netlink.c                             | 24 +++++++-
+ net/mptcp/pm_userspace.c                           | 25 +++++++-
+ net/mptcp/protocol.c                               | 10 +--
+ net/mptcp/protocol.h                               | 12 +++-
+ net/mptcp/subflow.c                                | 16 ++++-
+ tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c |  3 +-
+ .../testing/selftests/bpf/progs/mptcp_bpf_burst.c  | 12 ++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    | 72 +++++++++++++++++-----
+ 13 files changed, 159 insertions(+), 38 deletions(-)
+---
+base-commit: 06bd6d6c3416101af4881b6f3a0830ccca97c056
+change-id: 20240711-mptcp-backup-mpj-2f8369fad366
 
 Best regards,
 -- 
