@@ -1,35 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A355355885
-	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 20:53:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FE2A6BFC0
+	for <mptcp@lists.linux.dev>; Tue, 16 Jul 2024 20:53:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721163206; cv=none; b=o/3zovzOS+kON+iHSchop8vXwWE1IpG04vdTtdQ43twCGWGz0PChrX6lgl6AnWjWpvrwNJQT9pm0N9vsNSeHuHwapHVb621Cd27JVJrYdZ93pHDbsKqM4ajtzcWjfvp3OU35jeac6eslvN/4BE0kNez47xVBnT3RoAGX9OFLUKM=
+	t=1721163207; cv=none; b=K47rex63eUxs7+XJBm2phY8K0LuayrE+vS8jOiC3HBw8jCDdqK3tLFynplv9FfkI1uiZmvop6ZL8v6R9yKD2LXmvmiCHBQiGOq4NnWHz3yhYxYNLUHkUzeOn8dg1+nvpYaLVs32TQ06gBMap04mgfnI27ZRZXMPOxy4IHCvGbBg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721163206; c=relaxed/simple;
-	bh=el4qRlSZNNEra5/72bcgxC16DUkc+vjJu9h9eGeb9RA=;
+	s=arc-20240116; t=1721163207; c=relaxed/simple;
+	bh=3DozdXhaVIzx/Ieb6dDuffZMch1nXiGqG38mwTcBDMQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=UvZgKo34o2tPclgVf+yg3Q66LVpmcAkLPGKxOPHlCrHEwaIJRc3o8KppUh3y9AwwFp+VreqbT3XdmfpucKseqP8Hc3PPRGuB9bOhJ6aGZwnB+ZBj4x756lagmTb8P7SGNrNHI4EjUL5wWoqyJgXmCV4tRXnAGPyDzpaGBJ5YCPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rVoZbErY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=lQPC4A+I+HFiuB0avmW74lnczO+wnd8m7Ii4vRhIkh8NdC/VRAU2jd+oh3Fioxka8aKTuSRxHSUIclErl4UDjTvYlim3f6HY9Zt0p09YCSmn3/VNFEqKI4CugBypeqeja08YwZDuEASeM1oWRcG+F8lbIRd5xUtQ62oKXaeCtLw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fx5VaC8t; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rVoZbErY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD31AC4AF10;
-	Tue, 16 Jul 2024 20:53:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fx5VaC8t"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A963BC4AF0C;
+	Tue, 16 Jul 2024 20:53:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721163206;
-	bh=el4qRlSZNNEra5/72bcgxC16DUkc+vjJu9h9eGeb9RA=;
+	s=k20201202; t=1721163207;
+	bh=3DozdXhaVIzx/Ieb6dDuffZMch1nXiGqG38mwTcBDMQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rVoZbErYcpjIfsEwgRfhPIax91V906E0JmtZqEl3pOs5ZzVHQJd/+ugHZEQiRHKkC
-	 h4vV+O9BQvSNq5pn27gH6B9hlC0XpUlRbdxgdBId8qpgKdUoNGrJzPCHffXZwrEVdS
-	 gLTce3NTOl2PevjkOi5ciVF62RX3Nnu1yyheWSFtvGKtM20WIf8F1UKx7NA4agfI7o
-	 nsTr0YQQTJYOVVe6f0zVO4vm99WxXUGvtuaj4CfqjngiqOanlnRYzpXGJ7q4L0qgyg
-	 mGiM3qcP6C6Va7NQJVMAzqLZI4OAwKKrq5FPgDi/4+RHzfNFVRATmv1QpZ2FvI6YZT
-	 X4vL1JT097UlA==
+	b=fx5VaC8tI2r0FkKOth6H5Uo8LpdvO94S+1ZGc/qQH9zu5wBHEV2157A46DxXqjckD
+	 CIMwc7KqgNYBhved95sZrUTyGtBN3tM0qwg83ShrRWmJIjprItms02BD/MVq9zq/qr
+	 aPPtTbYW/J3Wf5aRYJN8eCOOojCYpTIVVgEiVtChM0KEJ9o4cDZbkMrTAUvcJTGefu
+	 NA+ah27gb+IpbaCLIsyvjDX8qoNEeiuCFL57sj51B8j4DJmV5TIzEMwBbG6o7mhMc3
+	 k0vUzC9TFpwev1UezZHz7IkM2+WsjpbFPiXK5V+8jVO6oMaEoZ8Pi7OvHteZ7hJ44A
+	 tAIkoqGG0eL0Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 16 Jul 2024 22:53:15 +0200
-Subject: [PATCH mptcp-net v2 3/9] mptcp: pm: only set request_bkup flag
- when sending MP_PRIO
+Date: Tue, 16 Jul 2024 22:53:16 +0200
+Subject: [PATCH mptcp-net v2 4/9] mptcp: mib: count MPJ with backup flag
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,51 +37,97 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240716-mptcp-backup-mpj-v2-3-4d50247405fb@kernel.org>
+Message-Id: <20240716-mptcp-backup-mpj-v2-4-4d50247405fb@kernel.org>
 References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
 In-Reply-To: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=780; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=el4qRlSZNNEra5/72bcgxC16DUkc+vjJu9h9eGeb9RA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmlt3BkoLlj1yAfXH87p3ZBBZgtfrlqbvHysFkj
- c3yEleRxsCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZpbdwQAKCRD2t4JPQmmg
- c3ceEACDO4oFLZymmfRHGvHjDyoojmZPgQcsWLBZyKiCraPU9HeWrNLAEZEuJ4pHJ6DEb4rlRGx
- 3wYAGTTKlcY7uSurkS6MCjgSkgzixFDm2VXpn8WwNA8ca03Vz2D8Y97HoXtBr1bwVfgINQklvPr
- dt7n09qeSJ0ij02wyAdEr0kdZe1glaRVHWrevNGqW2ci4CFDdoTep+qTUHCc7OjjSY1k2qnXUKk
- quuaSqnUyh7AJxFIPe30U274wElwzmfdwR0+DDmK6jpmSIXtKu7+c/l8LRVpBlRe4wWZlZAIKeE
- I+YfzFj0Ky3veMYhZY+SjSeOO+J72ztpqIg0jJnEbwno06K6u36ySHHtcaaZx1aXus9aefgv9sz
- UYB0NORHNGupOkhlwH1BT1A91Xy9PMGOFRf/MgXgz9Q381ppFe4a3yKadyqAZfpxNKyPrQGoIDK
- UPZaba09NhRGhJ53bIbDaqNlvgI//3ZvMgyz4OncdphwtnhCsacgSZQF/K0fMcFauJGIs8Bm1xs
- hqjpTPSfXUmRxe/iwtqx0dwF29Kp8V2cDXqt/3axaK5J2XDqFqmtLrCngtYq69clIOwYkHBVGA+
- RF9uBuXkaWX7Lqx9UoiEWxvueBYzlRmStNCkyC5qtR0LTBWXA0LNhxExX7IJEaIYak001jv0/Am
- CXHWxMrpo+bzagg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3094; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3DozdXhaVIzx/Ieb6dDuffZMch1nXiGqG38mwTcBDMQ=;
+ b=kA0DAAgB9reCT0JpoHMByyZiAGaW3cGi14XigsHAhRV1/10vTWbVX8FbdjZKhJqstsA+GPfdT
+ IkCMwQAAQgAHRYhBOjLhfdodwV6bif3eva3gk9CaaBzBQJmlt3BAAoJEPa3gk9CaaBzJJQP/jFM
+ heYIf26rf/ZG+cevOozmJ4r24+7H5+sY0WYs04WIKuq+HFA+ksZqIRDH8v5JNkaD0qqu1VhHw1x
+ eUn6UCnEuMQLqknTzU7gNR498e8ZC/Ie4o12GKChwq11v9sEv+1ejb64hSEe4dnN0CYK/odJmyn
+ BlYvStBV0UVOaG1TtvIiuZxWA1gI8lzikPtraWmdR1BFc75HUtyR4VhHukiM7OQ8IlcOWVLohbk
+ /noJDXZYS43l53t+lG8c6z1WYCQDnpy3ksQqXbG29+NH+hH64SH1V6Ax97s3QArm3zU9WOkz4bY
+ my0S2qky/xhL6dwCAqmQyZvvA1J4riWd1QQ7GdTLgm6VkDnW+h3Y4KR1Gs7cs0lvvayY3ah/o7p
+ XRxPU/apjW1mqoVEYnZqbs8nm3ycdcucSB7pR7yoaIZrObS86c7/5qjwaTqAfBDkrXyOuL9K6VS
+ +obo+V7t2tegOBnLr/G1BmhOO2hcuOGo7JQhyF78PmN+XrD0yndqFNfp7YzsKEjnkcE/Tmlyoxo
+ TRU66xD0txL4UNkHkSFXfX8qFJKf/GLQZ/9Qz2GySdY9BQ7edNdP6KbU6+9CGneDs8Znv2RQbOo
+ 2Zg8HrXKfLRS/9mqYmqxQiwWuWKWwXj6PUuxGaynq2pGtmJiFXxGn9+q50eo55RoxjA+bXXE140
+ Fe+sG
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The 'backup' flag from mptcp_subflow_context structure is supposed to be
-set only when the other peer flagged a subflow as backup, not the
-opposite.
+Without such counters, it is difficult to easily debug issues with MPJ
+not having the backup flags on production servers.
 
-Fixes: 067065422fcd ("mptcp: add the outgoing MP_PRIO support")
+This is not strictly a fix, but it eases to validate the following patch
+without requiring to take packet traces, to query ongoing connections
+with Netlink with admin permissions, or to guess by looking at the
+behaviour of the scheduler.
+
+Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c | 1 -
- 1 file changed, 1 deletion(-)
+ net/mptcp/mib.c     | 2 ++
+ net/mptcp/mib.h     | 2 ++
+ net/mptcp/subflow.c | 6 ++++++
+ 3 files changed, 10 insertions(+)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f65831de5c1a..7635fac91539 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -471,7 +471,6 @@ static void __mptcp_pm_send_ack(struct mptcp_sock *msk, struct mptcp_subflow_con
- 	slow = lock_sock_fast(ssk);
- 	if (prio) {
- 		subflow->send_mp_prio = 1;
--		subflow->backup = backup;
- 		subflow->request_bkup = backup;
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index c30405e76833..7884217f33eb 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -19,7 +19,9 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
+ 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
+ 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
++	SNMP_MIB_ITEM("MPJoinSynBackupRx", MPTCP_MIB_JOINSYNBACKUPRX),
+ 	SNMP_MIB_ITEM("MPJoinSynAckRx", MPTCP_MIB_JOINSYNACKRX),
++	SNMP_MIB_ITEM("MPJoinSynAckBackupRx", MPTCP_MIB_JOINSYNACKBACKUPRX),
+ 	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
+ 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+ 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 2704afd0dfe4..66aa67f49d03 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -14,7 +14,9 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
+ 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
+ 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
++	MPTCP_MIB_JOINSYNBACKUPRX,	/* Received a SYN + MP_JOIN + backup flag */
+ 	MPTCP_MIB_JOINSYNACKRX,		/* Received a SYN/ACK + MP_JOIN */
++	MPTCP_MIB_JOINSYNACKBACKUPRX,	/* Received a SYN/ACK + MP_JOIN + backup flag */
+ 	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
+ 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a3778aee4e77..be406197b1c4 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -168,6 +168,9 @@ static int subflow_check_req(struct request_sock *req,
+ 			return 0;
+ 	} else if (opt_mp_join) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNRX);
++
++		if (mp_opt.backup)
++			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
  	}
  
+ 	if (opt_mp_capable && listener->request_mptcp) {
+@@ -577,6 +580,9 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+ 		subflow->mp_join = 1;
+ 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
+ 
++		if (subflow->backup)
++			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKBACKUPRX);
++
+ 		if (subflow_use_different_dport(msk, sk)) {
+ 			pr_debug("synack inet_dport=%d %d",
+ 				 ntohs(inet_sk(sk)->inet_dport),
 
 -- 
 2.45.2
