@@ -1,295 +1,341 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64C3B4C8C
-	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 01:25:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 563A17470
+	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 03:04:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721179532; cv=none; b=WwReZHq8DDI/LDckvzF8RSCXoZCtxnraMQOh3MTHfczjyZK8HWTEgsOomH/k5I6vv8cdr95Khys9ZjioBZ+1Gv/CCc61YeX19/T/xeWCN4WoC/cE9sRn+ODx1H8+8bNgKZhfL3carbHXSqxUpCAdcP4bS3IGCHkLzxA/j1qHOHk=
+	t=1721185456; cv=none; b=GbSXlJ+IE6nF5Aim9/mcTAZwvn+P4Ky9HmjXwmvIPng5JAE+f8FHqU1KW9AaDXeOiKsK/Jb5g7I3neUv08jkE1paaJMI0zp8QkoAY7BE43ElAZ8G1bxVHQOcNhRCjra69k57vbGkRKHZwatxPpdL+6kW4X/9Os5QAwgJcUlHjsw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721179532; c=relaxed/simple;
-	bh=9CzCHfEfZzdqLxNrDUAXejhqV69pYZjepsZM60hXdS0=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=DW5xrTMViBicB2rZkngifEhXsU8XB3B1HU9wwuACJL7MmupEHjxWbZCJxbDsSzVZc/yLtf0gTZOC46DIlCKr4/2vFD684gxP58qQsJtH+CC2Q6pL+4lN84tV00r5qgrB61L4qFBgl8vjzv4bY4oiIyTCzWWpXRlJ0Z9c8XKjBK4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C3HnCw6D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721185456; c=relaxed/simple;
+	bh=ykWdRUIBpgHQNrk8aKSig/Q0LHxdyPsqLi4SN1hSU20=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=dQ83htWDhgR/yzfZEZp8VUFf3+ojszD13YOvvVapO30VKHK4yvTgMSoIrWh6uIS74YFwh/dnQvV2pAVdF7RA8YQ1IgHIyvBc0zBrQQPKYuCySPBmola4Wjqz3Rz7ZArqnIfJZpg/LmOXiuzP/mB+sU5cXjLddSIa88jSyr35JvI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf9706Rg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C3HnCw6D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11A0FC116B1;
-	Wed, 17 Jul 2024 01:25:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf9706Rg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E3502C116B1;
+	Wed, 17 Jul 2024 03:04:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721179532;
-	bh=9CzCHfEfZzdqLxNrDUAXejhqV69pYZjepsZM60hXdS0=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=C3HnCw6DW6h2YngUkOFOLFvZDaK1PeCFQWT09aakdzyAVoDKjeeU7m+uF0RqgWV9C
-	 mxEQLI4eJBFEvLgy6VQB3rnRXacmG9gjU1tCboX2TCde68kvuav35hDi2SpXFdgrPU
-	 +Loj+8eo9aTk1Z5Ph1SRVGITfbcAd/w0txs1URRBjCs4hTEAFyT0rpDZS6KDwK7OP9
-	 eQ2x+Hc+/liX5vwlufUI0SS4v/fyBePj/LJaXDhdvyaXzzeOlU5LIqwVkfy9ZLtJV0
-	 pWj+Oj6/pSAdW3cKV7fQgkPk3v/zwiHagyr9tPVpqIl+T8JDJFlr2drJ1IuLxyZ1YC
-	 E3BV09I6xe5nA==
-Message-ID: <108fbeaf69fdbc390287704b7a4f4af94890d244.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 5/9] selftests: mptcp: join: validate
- backup in MPJ
+	s=k20201202; t=1721185455;
+	bh=ykWdRUIBpgHQNrk8aKSig/Q0LHxdyPsqLi4SN1hSU20=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=Xf9706Rg9DsOKm6ZhhrU7+bL5NwjukRk57Ea13Y2mNBh4xZuTmvhLgeFfSE/sHzbS
+	 osIoKIM1xvezREsPJeecFY1PWmcF0kOPL+UyHvpoqlvwO4yacDd/EX6uwaAHfq3aMz
+	 qH7r4tOH2eY5XNJCvdAKpnteFdpasMlVaaEr4rgcv+kmFhKHhQVJnzYlUyeB4UeUvW
+	 9tubdhVSOMpNgUCvQcpHkyq86k1eAXI6InjrLyKzP3VJEFWpH8PArRaKMCD88JsME2
+	 mIWYk/9SSAgK4fu6KeMC4W+C3Gp65Xt9Rv4QWrJ3GjOHahnieimESDtwYMHoU/4vcN
+	 DQ/NqGZj3ccQA==
+Date: Wed, 17 Jul 2024 11:04:10 +0800
 From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Wed, 17 Jul 2024 09:25:25 +0800
-In-Reply-To: <20240716-mptcp-backup-mpj-v2-5-4d50247405fb@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2 6/9] mptcp: pm: fix backup support in signal
+ endpoints
+Message-ID: <Zpc0qmOTE4ykQ1lr@T480>
 References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
-	 <20240716-mptcp-backup-mpj-v2-5-4d50247405fb@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- TO0tfEdfAX7IENcV87h2yAFBZkaA==
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.0-1build2 
+ <20240716-mptcp-backup-mpj-v2-6-4d50247405fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240716-mptcp-backup-mpj-v2-6-4d50247405fb@kernel.org>
 
 Hi Matt,
 
-Thanks for these patches.
-
-On Tue, 2024-07-16 at 22:53 +0200, Matthieu Baerts (NGI0) wrote:
-> A peer can notify the other one that a subflow has to be treated as
-> "backup" by two different ways: either by sending a dedicated MP_PRIO
-> notification, or by setting the backup flag in the MP_JOIN handshake.
+On Tue, Jul 16, 2024 at 10:53:18PM +0200, Matthieu Baerts (NGI0) wrote:
+> There was a support for signal endpoints, but only when the endpoint's
+> flag was changed during a connection. If an endpoint with the signal and
+> backup was already present, the MP_JOIN reply was not containing the
+> backup flag as expected.
 > 
-> The selftests were previously monitoring the former, but not the
-> latter.
-> This is what is now done here by looking at these new MIB counters
-> when
-> validating the 'backup' cases:
+> That's confusing to have this inconsistent behaviour. On the other hand,
+> the infrastructure to set the backup flag in the SYN + ACK + MP_JOIN was
+> already there, it was just never set before. Now when requesting the
+> local ID from the path-manager, the backup status is also requested.
 > 
->   MPTcpExtMPJoinSynBackupRx
->   MPTcpExtMPJoinSynAckBackupRx
+> There is a special case for the ID0: the PM has to return this ID0 if
+> the local address of the initial subflow is being used, and not the ID
+> of the related endpoint. Still, it is required to look at the different
+> endpoints to find if one has been defined for this address with the
+> backup flag.
 > 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the
-> selftests,
-> but it will help to validate a new fix for an issue introduced by
-> this
-> commit ID.
+> Note that when the userspace PM is used, the backup flag can be set if
+> the local address was already used before with a backup flag, e.g. if
+> the address was announced with the 'backup' flag, or a subflow was
+> created with the 'backup' flag.
 > 
 > Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/507
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 42
-> +++++++++++++++++++------
->  1 file changed, 32 insertions(+), 10 deletions(-)
+> Notes:
+>  - v2:
+>    - Only set *backup on success (Mat).
+>    - Support MPJ to/from ID0 with backup.
+>    - Split the tests in a new dedicated commit to ease the backports.
+> ---
+>  net/mptcp/pm.c           | 15 +++++++++++----
+>  net/mptcp/pm_netlink.c   | 23 ++++++++++++++++++++++-
+>  net/mptcp/pm_userspace.c | 25 +++++++++++++++++++++++--
+>  net/mptcp/protocol.h     | 11 ++++++++---
+>  net/mptcp/subflow.c      |  9 +++++++--
+>  5 files changed, 71 insertions(+), 12 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 55d84a1bde15..175127a9c00c 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1634,6 +1634,8 @@ chk_prio_nr()
->  {
->  	local mp_prio_nr_tx=$1
->  	local mp_prio_nr_rx=$2
-> +	local mpj_syn=$3
-> +	local mpj_syn_ack=$4
-
-How about setting default values for them:
-
-        local mpj_syn=${3:-0}
-        local mpj_syn_ack=${4:-0}
-
->  	local count
->  
->  	print_check "ptx"
-> @@ -1655,6 +1657,26 @@ chk_prio_nr()
->  	else
->  		print_ok
->  	fi
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 55406720c607..359738b8826e 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -405,7 +405,8 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>  	return ret;
+>  }
+>  
+> -int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+> +int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc,
+> +			  bool *backup)
+>  {
+>  	struct mptcp_addr_info skc_local;
+>  	struct mptcp_addr_info msk_local;
+> @@ -418,12 +419,18 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+>  	 */
+>  	mptcp_local_address((struct sock_common *)msk, &msk_local);
+>  	mptcp_local_address((struct sock_common *)skc, &skc_local);
+> -	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
+> +	if (mptcp_addresses_equal(&msk_local, &skc_local, false)) {
+> +		if (mptcp_pm_is_userspace(msk))
+> +			*backup = mptcp_userspace_pm_is_backup(msk, &skc_local);
+> +		else
+> +			*backup = mptcp_pm_nl_is_backup(msk, &skc_local);
 > +
-> +	print_check "syn backup"
-> +	count=$(mptcp_lib_get_counter ${ns1}
-> "MPTcpExtMPJoinSynBackupRx")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$mpj_syn" ]; then
-> +		fail_test "got $count MPJ SYN[s] with Backup
-> expected $mpj_syn"
+>  		return 0;
+> +	}
+>  
+>  	if (mptcp_pm_is_userspace(msk))
+> -		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
+> -	return mptcp_pm_nl_get_local_id(msk, &skc_local);
+> +		return mptcp_userspace_pm_get_local_id(msk, &skc_local, backup);
+> +	return mptcp_pm_nl_get_local_id(msk, &skc_local, backup);
+>  }
 
-And make this log more like the one in chk_join_nr:
+I think that instead of mixing "backup" into get_local_id() interface, it is much
+better to add a new interface is_backup() for PM in pm.c:
 
-	fail_test "got $count JOIN[s] syn with Backup expected
-$mpj_syn"
+bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
+{
+       struct mptcp_addr_info skc_local;
 
-> +	else
-> +		print_ok
-> +	fi
+       mptcp_local_address((struct sock_common *)skc, &skc_local);
+
+       if (mptcp_pm_is_userspace(msk))
+               return mptcp_userspace_pm_is_backup(msk, &skc_local);
+       return mptcp_pm_nl_is_backup(msk, &skc_local);
+}
+
+No need to test whether the two addresses msk_local and skc_local are the same
+in mptcp_pm_is_backup(), just invoke mptcp_pm_nl_is_backup() or
+mptcp_userspace_pm_is_backup() with skc_local.
+
+>  
+>  int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id,
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 7635fac91539..796800a7fe96 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1064,7 +1064,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+>  	return err;
+>  }
+>  
+> -int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+> +int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc,
+> +			     bool *backup)
+>  {
+>  	struct mptcp_pm_addr_entry *entry;
+>  	struct pm_nl_pernet *pernet;
+> @@ -1076,6 +1077,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+>  	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+>  		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
+>  			ret = entry->addr.id;
+> +			*backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>  			break;
+>  		}
+>  	}
+> @@ -1094,6 +1096,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+>  	entry->ifindex = 0;
+>  	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+>  	entry->lsk = NULL;
+> +	*backup = false;
+>  	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
+>  	if (ret < 0)
+>  		kfree(entry);
+> @@ -1101,6 +1104,24 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+>  	return ret;
+>  }
+>  
+> +bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+> +{
+> +	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+> +	struct mptcp_pm_addr_entry *entry;
+> +	bool backup = false;
 > +
-> +	print_check "synack backup"
-> +	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynAckBackupRx")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$mpj_syn_ack" ]; then
-> +		fail_test "got $count MPJ SYNACK[s] with Backup
-> expected $mpj_syn_ack"
+> +	rcu_read_lock();
+> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+> +		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
+> +			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+> +			break;
+> +		}
+> +	}
+> +	rcu_read_unlock();
+> +
+> +	return backup;
+> +}
+> +
+>  #define MPTCP_PM_CMD_GRP_OFFSET       0
+>  #define MPTCP_PM_EV_GRP_OFFSET        1
+>  
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index f0a4590506c6..4e3829f96c88 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -137,7 +137,7 @@ int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+>  }
+>  
+>  int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+> -				    struct mptcp_addr_info *skc)
+> +				    struct mptcp_addr_info *skc, bool *backup)
+>  {
+>  	struct mptcp_pm_addr_entry *entry = NULL, *e, new_entry;
+>  	__be16 msk_sport =  ((struct inet_sock *)
+> @@ -151,13 +151,16 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+>  		}
+>  	}
+>  	spin_unlock_bh(&msk->pm.lock);
+> -	if (entry)
+> +	if (entry) {
+> +		*backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>  		return entry->addr.id;
+> +	}
+>  
+>  	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
+>  	new_entry.addr = *skc;
+>  	new_entry.addr.id = 0;
+>  	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+> +	*backup = false;
+>  
+>  	if (new_entry.addr.port == msk_sport)
+>  		new_entry.addr.port = 0;
+> @@ -165,6 +168,24 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+>  	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry, true);
+>  }
+>  
+> +bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+> +				  struct mptcp_addr_info *skc)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
+> +	bool backup = false;
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+> +		if (mptcp_addresses_equal(&entry->addr, skc, false)) {
+> +			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+> +			break;
+> +		}
+> +	}
+> +	spin_unlock_bh(&msk->pm.lock);
+> +
+> +	return backup;
+> +}
+> +
+>  int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+>  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 6b6b76152db5..e6cc7111f843 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1111,9 +1111,14 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+>  			      bool *drop_other_suboptions);
+>  bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+>  			     struct mptcp_rm_list *rm_list);
+> -int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+> -int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+> -int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+> +int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc,
+> +			  bool *backup);
+> +int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc,
+> +			     bool *backup);
+> +int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc,
+> +				    bool *backup);
+> +bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+> +bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+>  int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb);
+>  int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+>  			  struct netlink_callback *cb);
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index be406197b1c4..e60ba0327e4d 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -87,6 +87,7 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
+>  	struct mptcp_subflow_request_sock *subflow_req = mptcp_subflow_rsk(req);
+>  	struct mptcp_sock *msk;
+>  	int local_id;
+> +	bool backup;
+>  
+>  	msk = mptcp_token_get_sock(sock_net(req_to_sk(req)), subflow_req->token);
+>  	if (!msk) {
+> @@ -94,12 +95,13 @@ static struct mptcp_sock *subflow_token_join_request(struct request_sock *req)
+>  		return NULL;
+>  	}
+>  
+> -	local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req);
+> +	local_id = mptcp_pm_get_local_id(msk, (struct sock_common *)req, &backup);
+>  	if (local_id < 0) {
+>  		sock_put((struct sock *)msk);
+>  		return NULL;
+>  	}
+>  	subflow_req->local_id = local_id;
+> +	subflow_req->request_bkup = backup;
 
-The same here.
+Always invoke is_backup() after get_local_id():
+	
+	subflow_req->request_bkup = mptcp_pm_is_backup(msk, (struct sock_common *)req);
 
-> +	else
-> +		print_ok
-> +	fi
->  }
->  
->  chk_subflow_nr()
-> @@ -2612,7 +2634,7 @@ backup_tests()
->  		sflags=nobackup speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
-> -		chk_prio_nr 0 1
-> +		chk_prio_nr 0 1 1 0
+>  
+>  	return msk;
+>  }
+> @@ -610,16 +612,19 @@ static int subflow_chk_local_id(struct sock *sk)
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
+>  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+> +	bool backup;
+>  	int err;
+>  
+>  	if (likely(subflow->local_id >= 0))
+>  		return 0;
+>  
+> -	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk);
+> +	err = mptcp_pm_get_local_id(msk, (struct sock_common *)sk, &backup);
+>  	if (err < 0)
+>  		return err;
+>  
+>  	subflow_set_local_id(subflow, err);
+> +	subflow->request_bkup = backup;
 
-The last value is the default one, only "chk_prio_nr 0 1 1" is enough.
-
->  	fi
->  
->  	# single address, backup
-> @@ -2625,7 +2647,7 @@ backup_tests()
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
->  		chk_add_nr 1 1
-> -		chk_prio_nr 1 1
-> +		chk_prio_nr 1 1 0 0
-
-With default values, no need to change this then.
-
+	subflow->request_bkup = mptcp_pm_is_backup(msk, (struct sock_common *)sk);
 
 WDYT?
 
 Thanks,
 -Geliang
 
->  	fi
->  
->  	# single address with port, backup
-> @@ -2638,7 +2660,7 @@ backup_tests()
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
->  		chk_add_nr 1 1
-> -		chk_prio_nr 1 1
-> +		chk_prio_nr 1 1 0 0
->  	fi
->  
->  	if reset "mpc backup" &&
-> @@ -2647,7 +2669,7 @@ backup_tests()
->  		speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> -		chk_prio_nr 0 1
-> +		chk_prio_nr 0 1 0 0
->  	fi
->  
->  	if reset "mpc backup both sides" &&
-> @@ -2657,7 +2679,7 @@ backup_tests()
->  		speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> -		chk_prio_nr 1 1
-> +		chk_prio_nr 1 1 0 0
->  	fi
->  
->  	if reset "mpc switch to backup" &&
-> @@ -2666,7 +2688,7 @@ backup_tests()
->  		sflags=backup speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> -		chk_prio_nr 0 1
-> +		chk_prio_nr 0 1 0 0
->  	fi
->  
->  	if reset "mpc switch to backup both sides" &&
-> @@ -2676,7 +2698,7 @@ backup_tests()
->  		sflags=backup speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> -		chk_prio_nr 1 1
-> +		chk_prio_nr 1 1 0 0
->  	fi
->  }
->  
-> @@ -3053,7 +3075,7 @@ fullmesh_tests()
->  		addr_nr_ns2=1 sflags=backup,fullmesh speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 2 2 2
-> -		chk_prio_nr 0 1
-> +		chk_prio_nr 0 1 1 0
->  		chk_rm_nr 0 1
->  	fi
->  
-> @@ -3066,7 +3088,7 @@ fullmesh_tests()
->  		sflags=nobackup,nofullmesh speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 2 2 2
-> -		chk_prio_nr 0 1
-> +		chk_prio_nr 0 1 1 0
->  		chk_rm_nr 0 1
->  	fi
->  }
-> @@ -3318,7 +3340,7 @@ userspace_tests()
->  		sflags=backup speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 0
-> -		chk_prio_nr 0 0
-> +		chk_prio_nr 0 0 0 0
->  	fi
->  
->  	# userspace pm type prevents rm_addr
+> +
+>  	return 0;
+>  }
+>  
 > 
-
+> -- 
+> 2.45.2
+> 
