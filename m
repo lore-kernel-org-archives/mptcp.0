@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F46469D
-	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 04:25:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01506628
+	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 04:39:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721190334; cv=none; b=HbcKZeBUTVcivjEG2QDCivD/EMUfkZER0HEeVoTqGXYuww4MbJmGu0TNERKpdRiSM5asaE8WwHikJ7G+HKcmOndtIq8U7c0/KqAU9tXtk61Lsl3TFRukgPzW2ZnEzg5D6lTZDmXs7QsNWWplmxWT23rjDaBuiyM6vwW5anXDObY=
+	t=1721191197; cv=none; b=XOz98pI6tYJ/ej9wn77zhAxU3/RrRVAFkwIsweThhk0HJZ7s5SPgdE/T4g9g0pehC6N0TvWdW+0QBlSRlgzsyw25f8KauyNkWAQAEveP9kKmvpMs6zgeI+cjtcS9Nlfwfj/7gFyFOUrKEz33hD7FTQlV675mN6yAc8qLbYnUCG8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721190334; c=relaxed/simple;
-	bh=xUx8TqSd4PXSrmD0yJSaHFM3tuGIW6ZFxPqg8Pnoy1s=;
+	s=arc-20240116; t=1721191197; c=relaxed/simple;
+	bh=DJ6+DeW7nvAzlawTSuQodO8rOL9E9jiI3GNMIPcjHcM=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=e60zAxNJT1RaKGLQB7fnLdWH3c4No6KL8xW2OvUKs7lXYbMjOfoQCB5v2mXu1ogRgHWOFAVvgOKVCcoqOuF4fepgBN74Pvla1spi8TA+LOvAW5PUMUESOlBE5CxZYTSyVLnlSx9k9capSQ1vS+8qc5OUupTBHhVs5UsBcNdNOxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bs3L+Ayc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=VOk+/RugKEUAquAW8WT7Fm0WezLG8zw3u+Lw4+TohllhQ7YSpg/i56h6znRVtMdg7CajXv9YJ/7wPF6gVkRNY6tBZF1xpEtLpcZxr9k1JuK2CUqrb6nCj5Yrr2XWEp7abg7rEu85IAgVdfIWOocrXHIf7crpHT/RdhJrXQYV9QY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP9wEeVg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bs3L+Ayc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A85C32782;
-	Wed, 17 Jul 2024 04:25:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP9wEeVg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E0FAC32782;
+	Wed, 17 Jul 2024 04:39:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721190333;
-	bh=xUx8TqSd4PXSrmD0yJSaHFM3tuGIW6ZFxPqg8Pnoy1s=;
+	s=k20201202; t=1721191196;
+	bh=DJ6+DeW7nvAzlawTSuQodO8rOL9E9jiI3GNMIPcjHcM=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=bs3L+AycFln7nEr+ChQCZ441Ts95peHYrceukj9NgdcPeVT/Q7+86woNtGrRfIZD4
-	 5Oemv12a0x2DW5IJ5+OmfpwO+yVHdJ1kccOk7AQ0QUnDOAXNoY/P2TU8Ku4Oq/koow
-	 v51Vsuw6y6PGvbk7oLiAzE+UPWnedh+acPth/efaVc3GUy5rECi89vDuTgd1SxFsA2
-	 Kvze5fYn/Ub3h/hoGWmwLz7pq4VYkfmd8ehqK0khhmfewz4PEtLZ7r2Rv1QbMT961s
-	 rcYIPI6WHU10b6HjN54KOUjtSjinwmaqZ4cGQhKbwor8Y7v4WkW5Q6bVjqrPO/3rR6
-	 gSUULmTpg+VOg==
-Message-ID: <b1e4da8f4c7ed9179e4e6730f8b18f8661ace772.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 1/9] mptcp: sched: check both directions
- for backup
+	b=kP9wEeVg0DCWaqZMciYUgeeglRWq9ZpD8UOR12vZY0tWyEonzzIjXkz4rqbxvnPh3
+	 A7Sdnn/pe4z/jcbEC0iyAymkHmvls/5KQzKy2ELJZmFoofTSP84OCM8O3oiE8piUmL
+	 4TChYQJJWoaNqCtLeeQCxVZkHoZ/+6Qk+KGAkmNp2+puA3A08eSR57AnorlD2D0g6Y
+	 EoXsP1U+DAyK5hzv9B3tVs0clAyH7Jt4yA3X2dv56Em36gmWO/kfFKO0auQt2xZKd+
+	 fyt7fvxbQff8tCKnnpvZUljbpf5a/JhS8AHVVNq0cmwwEf/S+c2YTtMXLvYq26Nha1
+	 pTwG6nl0Nq/Iw==
+Message-ID: <59cdfb0ae86ea0f2e45c2fecbe0a0ceb7848a1f6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 7/9] selftests: mptcp: join: check backup
+ support in signal endp
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Wed, 17 Jul 2024 12:25:27 +0800
-In-Reply-To: <20240716-mptcp-backup-mpj-v2-1-4d50247405fb@kernel.org>
+Date: Wed, 17 Jul 2024 12:39:52 +0800
+In-Reply-To: <20240716-mptcp-backup-mpj-v2-7-4d50247405fb@kernel.org>
 References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
-	 <20240716-mptcp-backup-mpj-v2-1-4d50247405fb@kernel.org>
+	 <20240716-mptcp-backup-mpj-v2-7-4d50247405fb@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -98,104 +98,134 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 On Tue, 2024-07-16 at 22:53 +0200, Matthieu Baerts (NGI0) wrote:
-> The 'mptcp_subflow_context' structure has two items related to the
-> backup flags:
+> Before the previous commit, 'signal' endpoints with the 'backup' flag
+> were ignored when sending the MP_JOIN.
 > 
->  - 'backup': the subflow has been marked as backup by the other peer
+> The MPTCP Join selftest has then been modified to validate this case:
+> the "single address, backup" test, is now validating the MP_JOIN with
+> a
+> backup flag as it is what we expect it to do with such name. The
+> previous version has been kept, but renamed to "single address,
+> switch
+> to backup" to avoid confusions.
 > 
-> - 'request_bkup': the backup flag has been set by the host
+> The "single address with port, backup" test is also now validating
+> the
+> MPJ with a backup flag, which makes more sense than checking the
+> switch
+> to backup with an MP_PRIO.
+> 
+> The "mpc backup both sides" test is now validating that the backup
+> flag
+> is also set in MP_JOIN from and to the addresses used in the initial
+> subflow, using the special ID 0.
+> 
+> The 'Fixes' tag here below is the same as the one from the previous
+> commit: this patch here is not fixing anything wrong in the
+> selftests,
+> but it validates the previous fix for an issue introduced by this
+> commit
+> ID.
+> 
+> Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>  - v2:
+>    - Also validating MPJ to/from ID0 with backup
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 34
+> ++++++++++++++++++++-----
+>  1 file changed, 28 insertions(+), 6 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 175127a9c00c..ffcf558b4610 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2639,6 +2639,19 @@ backup_tests()
+>  
+>  	# single address, backup
+>  	if reset "single address, backup" &&
+> +	   continue_if mptcp_lib_kallsyms_has
+> "subflow_rebuild_header$"; then
+> +		pm_nl_set_limits $ns1 0 1
+> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
+> +		pm_nl_set_limits $ns2 1 1
+> +		sflags=nobackup speed=slow \
+> +			run_tests $ns1 $ns2 10.0.1.1
+> +		chk_join_nr 1 1 1
+> +		chk_add_nr 1 1
+> +		chk_prio_nr 1 0 0 1
+> +	fi
+> +
+> +	# single address, switch to backup
+> +	if reset "single address, switch to backup" &&
+>  	   continue_if mptcp_lib_kallsyms_has
+> "subflow_rebuild_header$"; then
+>  		pm_nl_set_limits $ns1 0 1
+>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+> @@ -2654,13 +2667,13 @@ backup_tests()
 
-The two lines are not aligned.
+'''
+>  	if reset "single address with port, backup" &&
+>  	   continue_if mptcp_lib_kallsyms_has
+> "subflow_rebuild_header$"; then
+>  		pm_nl_set_limits $ns1 0 1
+> -		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port
+> 10100
+> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
+> port 10100
+>  		pm_nl_set_limits $ns2 1 1
+> -		sflags=backup speed=slow \
+> +		sflags=nobackup speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+>  		chk_join_nr 1 1 1
+>  		chk_add_nr 1 1
+> -		chk_prio_nr 1 1 0 0
+> +		chk_prio_nr 1 0 0 1
+>  	fi
+'''
 
-> 
-> Before this patch, the scheduler was only looking at the 'backup'
-> flag.
-> That can make sense in some cases, but it looks like that's not what
-> we
-> wanted for the general use, because either the path-manager was
-> setting
-> both of them when sending an MP_PRIO, or the receiver was duplicating
-> the 'backup' flag in the subflow request.
-> 
-> Note that the use of these two flags in the path-manager are going to
-> be
-> fixed in the next commits, but this change here is needed not to
-> modify
-> the behaviour.
-> 
-> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN
-> requests")
-
-Patch 3 can be squashed into this one, with two "Fixes" tags here.
+How about keep this block unchanged. "nobackup" is already tested in
+the above newly added test "single address, backup"? They are almost
+the same now.
 
 WDYT?
 
 Thanks,
 -Geliang
 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  include/trace/events/mptcp.h |  2 +-
->  net/mptcp/protocol.c         | 10 ++++++----
->  2 files changed, 7 insertions(+), 5 deletions(-)
-> 
-> diff --git a/include/trace/events/mptcp.h
-> b/include/trace/events/mptcp.h
-> index 09e72215b9f9..085b749cdd97 100644
-> --- a/include/trace/events/mptcp.h
-> +++ b/include/trace/events/mptcp.h
-> @@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
->  		struct sock *ssk;
 >  
->  		__entry->active = mptcp_subflow_active(subflow);
-> -		__entry->backup = subflow->backup;
-> +		__entry->backup = subflow->backup || subflow-
-> >request_bkup;
+>  	if reset "mpc backup" &&
+> @@ -2674,12 +2687,21 @@ backup_tests()
 >  
->  		if (subflow->tcp_sock && sk_fullsock(subflow-
-> >tcp_sock))
->  			__entry->free =
-> sk_stream_memory_free(subflow->tcp_sock);
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index ac94225489f8..b3a48d97f009 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -1422,13 +1422,15 @@ struct sock *mptcp_subflow_get_send(struct
-> mptcp_sock *msk)
->  	}
->  
->  	mptcp_for_each_subflow(msk, subflow) {
-> +		bool backup = subflow->backup || subflow-
-> >request_bkup;
+>  	if reset "mpc backup both sides" &&
+>  	   continue_if mptcp_lib_kallsyms_doesnt_have "T
+> mptcp_subflow_send_ack$"; then
+> -		pm_nl_add_endpoint $ns1 10.0.1.1 flags
+> subflow,backup
+> +		pm_nl_set_limits $ns1 0 2
+> +		pm_nl_set_limits $ns2 1 2
+> +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal,backup
+>  		pm_nl_add_endpoint $ns2 10.0.1.2 flags
+> subflow,backup
 > +
->  		trace_mptcp_subflow_get_send(subflow);
->  		ssk =  mptcp_subflow_tcp_sock(subflow);
->  		if (!mptcp_subflow_active(subflow))
->  			continue;
+> +		# 10.0.2.2 (non-backup) -> 10.0.1.1 (backup)
+> +		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+> +		# 10.0.1.2 (backup) -> 10.0.2.1 (non-backup)
+> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+> +		ip -net "$ns2" route add 10.0.2.1 via 10.0.1.1 dev
+> ns2eth1 # force this path
+> +
+>  		speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 0 0 0
+> -		chk_prio_nr 1 1 0 0
+> +		chk_join_nr 2 2 2
+> +		chk_prio_nr 1 1 1 1
+>  	fi
 >  
->  		tout = max(tout,
-> mptcp_timeout_from_subflow(subflow));
-> -		nr_active += !subflow->backup;
-> +		nr_active += !backup;
->  		pace = subflow->avg_pacing_rate;
->  		if (unlikely(!pace)) {
->  			/* init pacing rate from socket */
-> @@ -1439,9 +1441,9 @@ struct sock *mptcp_subflow_get_send(struct
-> mptcp_sock *msk)
->  		}
->  
->  		linger_time = div_u64((u64)READ_ONCE(ssk-
-> >sk_wmem_queued) << 32, pace);
-> -		if (linger_time < send_info[subflow-
-> >backup].linger_time) {
-> -			send_info[subflow->backup].ssk = ssk;
-> -			send_info[subflow->backup].linger_time =
-> linger_time;
-> +		if (linger_time < send_info[backup].linger_time) {
-> +			send_info[backup].ssk = ssk;
-> +			send_info[backup].linger_time = linger_time;
->  		}
->  	}
->  	__mptcp_set_timeout(sk, tout);
+>  	if reset "mpc switch to backup" &&
 > 
 
