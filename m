@@ -1,231 +1,187 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01506628
-	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 04:39:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A36371802DF
+	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 14:58:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721191197; cv=none; b=XOz98pI6tYJ/ej9wn77zhAxU3/RrRVAFkwIsweThhk0HJZ7s5SPgdE/T4g9g0pehC6N0TvWdW+0QBlSRlgzsyw25f8KauyNkWAQAEveP9kKmvpMs6zgeI+cjtcS9Nlfwfj/7gFyFOUrKEz33hD7FTQlV675mN6yAc8qLbYnUCG8=
+	t=1721228297; cv=none; b=QCUFvAH3iKN/6n4VQ5qKNLZNNJvYvaif/yVH7jDLrYgqgl5G2UQR3b/3ogc1EXdA8AuMEGiQiweyx5UCuQvwz/WKX8LgnrXlne0uu01AG6mMwsJ/5ECmJVtJtV+ctJHZzJHC/lIXXwXqqUp+aPPOUwxIs+n33e9/dkQwDNo0nJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721191197; c=relaxed/simple;
-	bh=DJ6+DeW7nvAzlawTSuQodO8rOL9E9jiI3GNMIPcjHcM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=VOk+/RugKEUAquAW8WT7Fm0WezLG8zw3u+Lw4+TohllhQ7YSpg/i56h6znRVtMdg7CajXv9YJ/7wPF6gVkRNY6tBZF1xpEtLpcZxr9k1JuK2CUqrb6nCj5Yrr2XWEp7abg7rEu85IAgVdfIWOocrXHIf7crpHT/RdhJrXQYV9QY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kP9wEeVg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721228297; c=relaxed/simple;
+	bh=dpjUFS34+Kn5fyMlt2g900XkmwZUM84v+Sue8ykQgOE=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=dz9XSVnQdT6AsHzHWarEikzK+Sv41/N3yN4u8+Ey7My8ZqqIZ9UNDk3DKZMcx9P3yWiYHHzpnZhhs5ZCft7zS/rlf/oMHdyBwk2JpNYILRGEO11ruoY24huJfFhMM5HS6nQaDTjxOf5hHwt7+GRkMFbwHgvwqqIV/5FGeXTW4w4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=boCPkZMm; arc=none smtp.client-ip=209.85.208.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kP9wEeVg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E0FAC32782;
-	Wed, 17 Jul 2024 04:39:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721191196;
-	bh=DJ6+DeW7nvAzlawTSuQodO8rOL9E9jiI3GNMIPcjHcM=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=kP9wEeVg0DCWaqZMciYUgeeglRWq9ZpD8UOR12vZY0tWyEonzzIjXkz4rqbxvnPh3
-	 A7Sdnn/pe4z/jcbEC0iyAymkHmvls/5KQzKy2ELJZmFoofTSP84OCM8O3oiE8piUmL
-	 4TChYQJJWoaNqCtLeeQCxVZkHoZ/+6Qk+KGAkmNp2+puA3A08eSR57AnorlD2D0g6Y
-	 EoXsP1U+DAyK5hzv9B3tVs0clAyH7Jt4yA3X2dv56Em36gmWO/kfFKO0auQt2xZKd+
-	 fyt7fvxbQff8tCKnnpvZUljbpf5a/JhS8AHVVNq0cmwwEf/S+c2YTtMXLvYq26Nha1
-	 pTwG6nl0Nq/Iw==
-Message-ID: <59cdfb0ae86ea0f2e45c2fecbe0a0ceb7848a1f6.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 7/9] selftests: mptcp: join: check backup
- support in signal endp
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Wed, 17 Jul 2024 12:39:52 +0800
-In-Reply-To: <20240716-mptcp-backup-mpj-v2-7-4d50247405fb@kernel.org>
-References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
-	 <20240716-mptcp-backup-mpj-v2-7-4d50247405fb@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- TO0tfEdfAX7IENcV87h2yAFBZkaA==
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.0-1build2 
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="boCPkZMm"
+Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-57a16f4b8bfso20117a12.0
+        for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 07:58:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1721228294; x=1721833094; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=PQSNc99mSLlBbaOi1xCED/nnBkGtLUEtseNxdNSuNO8=;
+        b=boCPkZMmbYD5Lw2+oeJM4ksltCuzj1PChp/krOzg6vyK6mCLtGfpw4/CSiEgV9omv4
+         kaJlbqC9b+pW8R0IaMQzQXNnQSwOiuBbS2sR5KPzzizaolCl5C+3wNp5SDNkZW+8ZrwG
+         ejmOB7eGexBrnDNHrHzZ+eTe9xUXc18wpf4Z7+ZPn+TKz7knEmPuk0wY61zXc/V/DSWp
+         Xa9sEMd6W3W0CyAqQHJuJ7yTx4T9dDAckMO5bwJU4IMmtwOFwcEj2UhDdpkjj/Zm17JO
+         XaigI28y+be1AfoTuAZpWwdsaVTAT13s1dcSaLfJZZrSCwa0cqDJYxHGGfqe7M8HjBr7
+         qmEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1721228294; x=1721833094;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=PQSNc99mSLlBbaOi1xCED/nnBkGtLUEtseNxdNSuNO8=;
+        b=dklhUTmu6+oHMT0/KYbLiwnUiCDbozqa4fbk7SWbMed4/wsWrtrvFQzkxzo59KEosC
+         F8U1+5uI/i06wxmuGy1Ou3+Enj4ryExEULogqpO/iq+rxKVDteYiZFBhvUJLNQ8nSRIk
+         y4FMNMLURbU518WnJlaceHoH2ngZcerYj/TmgydxiU2zJIAHucyvU8hUzzAhoHXQ6dPW
+         Wjlh9aD0IQn/F7MMlQXK0PKqYa31ak2rZkI5UyO1d8FWBdMzZWkJgayaF2pcSi3LhqS+
+         hyAaF+r9hjA6Cwc4gBOtzn1rFmFvPkI8oT/c08cyDA3l9yC3cSczWPRfuQc3dPd6trOD
+         LUaA==
+X-Gm-Message-State: AOJu0YwOcpG9lmCQRRnu3aJ1Bgua98akCYGqhL7MIqTTujarWe+O8F5F
+	vN1yPp7YWTfpWaUr7lcoOU0c+gw0cUG1gE1WxBLGbkse5W7Ez+G4Zjpa8DL0P/sN4WO7qIZR77o
+	tt0tNtOmLVoWHlRoWWqN/6WlwOXQL8857yt4F
+X-Google-Smtp-Source: AGHT+IFiGEvyTzeYTN0dVhUmIpZZx/yHVA3uop/MuC3ufQZ/Oxya9cPJoO2sp/D/qKluIbTjfrLOEDl73SAIjX/CGhA=
+X-Received: by 2002:a50:9f6e:0:b0:57c:bb0d:5e48 with SMTP id
+ 4fb4d7f45d1cf-5a018b20444mr280272a12.2.1721228293562; Wed, 17 Jul 2024
+ 07:58:13 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v1-1-4e61d0b79233@kernel.org>
+In-Reply-To: <20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v1-1-4e61d0b79233@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Wed, 17 Jul 2024 07:57:58 -0700
+Message-ID: <CANn89iKrHnzuHpRn0fi6+2WB_wxi5r-HpZ2jrkhrZEPyhBe0HQ@mail.gmail.com>
+Subject: Re: [PATCH net] tcp: process the 3rd ACK with sk_socket for for TFO/MPTCP
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Neal Cardwell <ncardwell@google.com>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On Tue, 2024-07-16 at 22:53 +0200, Matthieu Baerts (NGI0) wrote:
-> Before the previous commit, 'signal' endpoints with the 'backup' flag
-> were ignored when sending the MP_JOIN.
-> 
-> The MPTCP Join selftest has then been modified to validate this case:
-> the "single address, backup" test, is now validating the MP_JOIN with
-> a
-> backup flag as it is what we expect it to do with such name. The
-> previous version has been kept, but renamed to "single address,
-> switch
-> to backup" to avoid confusions.
-> 
-> The "single address with port, backup" test is also now validating
-> the
-> MPJ with a backup flag, which makes more sense than checking the
-> switch
-> to backup with an MP_PRIO.
-> 
-> The "mpc backup both sides" test is now validating that the backup
-> flag
-> is also set in MP_JOIN from and to the addresses used in the initial
-> subflow, using the special ID 0.
-> 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the
-> selftests,
-> but it validates the previous fix for an issue introduced by this
-> commit
-> ID.
-> 
-> Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
+On Tue, Jul 16, 2024 at 12:43=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> The 'Fixes' commit recently changed the behaviour of TCP by skipping the
+> processing of the 3rd ACK when a sk->sk_socket is set. The goal was to
+> skip tcp_ack_snd_check() in tcp_rcv_state_process() not to send an
+> unnecessary ACK in case of simultaneous connect(). Unfortunately, that
+> had an impact on TFO and MPTCP.
+>
+> I started to look at the impact on MPTCP, because the MPTCP CI found
+> some issues with the MPTCP Packetdrill tests [1]. Then Paolo suggested
+> me to look at the impact on TFO with "plain" TCP.
+>
+> For MPTCP, when receiving the 3rd ACK of a request adding a new path
+> (MP_JOIN), sk->sk_socket will be set, and point to the MPTCP sock that
+> has been created when the MPTCP connection got established before with
+> the first path. The newly added 'goto' will then skip the processing of
+> the segment text (step 7) and not go through tcp_data_queue() where the
+> MPTCP options are validated, and some actions are triggered, e.g.
+> sending the MPJ 4th ACK [2] as demonstrated by the new errors when
+> running a packetdrill test [3] establishing a second subflow.
+>
+> This doesn't fully break MPTCP, mainly the 4th MPJ ACK that will be
+> delayed. Still, we don't want to have this behaviour as it delays the
+> switch to the fully established mode, and invalid MPTCP options in this
+> 3rd ACK will not be caught any more. This modification also affects the
+> MPTCP + TFO feature as well, and being the reason why the selftests
+> started to be unstable the last few days [4].
+>
+> For TFO, the existing 'basic-cookie-not-reqd' test [5] was no longer
+> passing: if the 3rd ACK contains data, these data would no longer be
+> processed, and thus not ACKed.
+>
+> Note that for MPTCP, in case of simultaneous connect(), a fallback to
+> TCP will be done, which seems fine:
+>
+>   `../common/defaults.sh`
+>
+>    0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_MPTCP) =3D 3
+>   +0 connect(3, ..., ...) =3D -1 EINPROGRESS (Operation now in progress)
+>
+>   +0 > S  0:0(0)                 <mss 1460, sackOK, TS val 100 ecr 0,   n=
+op, wscale 8, mpcapable v1 flags[flag_h] nokey>
+>   +0 < S  0:0(0) win 1000        <mss 1460, sackOK, TS val 407 ecr 0,   n=
+op, wscale 8, mpcapable v1 flags[flag_h] nokey>
+>   +0 > S. 0:0(0) ack 1           <mss 1460, sackOK, TS val 330 ecr 0,   n=
+op, wscale 8, mpcapable v1 flags[flag_h] nokey>
+>   +0 < S. 0:0(0) ack 1 win 65535 <mss 1460, sackOK, TS val 700 ecr 100, n=
+op, wscale 8, mpcapable v1 flags[flag_h] key[skey=3D2]>
+>
+>   +0 write(3, ..., 100) =3D 100
+>   +0 >  . 1:1(0)     ack 1 <nop, nop, TS val 845707014 ecr 700, nop, nop,=
+ sack 0:1>
+>   +0 > P. 1:101(100) ack 1 <nop, nop, TS val 845958933 ecr 700>
+>
+> Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/993622=
+7696 [1]
+> Link: https://datatracker.ietf.org/doc/html/rfc8684#fig_tokens [2]
+> Link: https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gt=
+ests/net/mptcp/syscalls/accept.pkt#L28 [3]
+> Link: https://netdev.bots.linux.dev/contest.html?executor=3Dvmksft-mptcp-=
+dbg&test=3Dmptcp-connect-sh [4]
+> Link: https://github.com/google/packetdrill/blob/master/gtests/net/tcp/fa=
+stopen/server/basic-cookie-not-reqd.pkt#L21 [5]
+> Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous connect().=
+")
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
 > Notes:
->  - v2:
->    - Also validating MPJ to/from ID0 with backup
+>  - We could also drop this 'goto consume', and send the unnecessary ACK
+>    in this simultaneous connect case, which doesn't seem to be a "real"
+>    case, more something for fuzzers.
+>  - When sending this patch, the 'Fixes' commit is only in net-next, this
+>    patch is then on top of net-next. But because net-next will be merged
+>    into -net soon -- judging by the PR that has been sent to Linus a few
+>    hours ago -- the 'net' prefix is then used.
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 34
-> ++++++++++++++++++++-----
->  1 file changed, 28 insertions(+), 6 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 175127a9c00c..ffcf558b4610 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -2639,6 +2639,19 @@ backup_tests()
->  
->  	# single address, backup
->  	if reset "single address, backup" &&
-> +	   continue_if mptcp_lib_kallsyms_has
-> "subflow_rebuild_header$"; then
-> +		pm_nl_set_limits $ns1 0 1
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
-> +		pm_nl_set_limits $ns2 1 1
-> +		sflags=nobackup speed=slow \
-> +			run_tests $ns1 $ns2 10.0.1.1
-> +		chk_join_nr 1 1 1
-> +		chk_add_nr 1 1
-> +		chk_prio_nr 1 0 0 1
-> +	fi
-> +
-> +	# single address, switch to backup
-> +	if reset "single address, switch to backup" &&
->  	   continue_if mptcp_lib_kallsyms_has
-> "subflow_rebuild_header$"; then
->  		pm_nl_set_limits $ns1 0 1
->  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> @@ -2654,13 +2667,13 @@ backup_tests()
+>  net/ipv4/tcp_input.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+> index ff9ab3d01ced..a89b3ee57d8c 100644
+> --- a/net/ipv4/tcp_input.c
+> +++ b/net/ipv4/tcp_input.c
+> @@ -6820,7 +6820,13 @@ tcp_rcv_state_process(struct sock *sk, struct sk_b=
+uff *skb)
+>                 if (sk->sk_shutdown & SEND_SHUTDOWN)
+>                         tcp_shutdown(sk, SEND_SHUTDOWN);
+>
+> -               if (sk->sk_socket)
+> +               /* In simult-connect cases, sk_socket will be assigned. B=
+ut also
+> +                * with TFO and MPTCP (MPJ) while they required further
+> +                * processing later in tcp_data_queue().
+> +                */
+> +               if (sk->sk_socket &&
+> +                   TCP_SKB_CB(skb)->seq =3D=3D TCP_SKB_CB(skb)->end_seq =
+&&
+> +                   !sk_is_mptcp(sk))
+>                         goto consume;
+>                 break;
+>
 
-'''
->  	if reset "single address with port, backup" &&
->  	   continue_if mptcp_lib_kallsyms_has
-> "subflow_rebuild_header$"; then
->  		pm_nl_set_limits $ns1 0 1
-> -		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port
-> 10100
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
-> port 10100
->  		pm_nl_set_limits $ns2 1 1
-> -		sflags=backup speed=slow \
-> +		sflags=nobackup speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
->  		chk_add_nr 1 1
-> -		chk_prio_nr 1 1 0 0
-> +		chk_prio_nr 1 0 0 1
->  	fi
-'''
+Hi Matthieu
 
-How about keep this block unchanged. "nobackup" is already tested in
-the above newly added test "single address, backup"? They are almost
-the same now.
+I had no time yet to run all our packetdrill tests with Kuniyuki patch
+because of the ongoing netdev conference.
 
-WDYT?
+Is it ok for you if we hold your patch for about 5 days ?
 
-Thanks,
--Geliang
+I would like to make sure we did not miss anything else.
 
->  
->  	if reset "mpc backup" &&
-> @@ -2674,12 +2687,21 @@ backup_tests()
->  
->  	if reset "mpc backup both sides" &&
->  	   continue_if mptcp_lib_kallsyms_doesnt_have "T
-> mptcp_subflow_send_ack$"; then
-> -		pm_nl_add_endpoint $ns1 10.0.1.1 flags
-> subflow,backup
-> +		pm_nl_set_limits $ns1 0 2
-> +		pm_nl_set_limits $ns2 1 2
-> +		pm_nl_add_endpoint $ns1 10.0.1.1 flags signal,backup
->  		pm_nl_add_endpoint $ns2 10.0.1.2 flags
-> subflow,backup
-> +
-> +		# 10.0.2.2 (non-backup) -> 10.0.1.1 (backup)
-> +		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
-> +		# 10.0.1.2 (backup) -> 10.0.2.1 (non-backup)
-> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-> +		ip -net "$ns2" route add 10.0.2.1 via 10.0.1.1 dev
-> ns2eth1 # force this path
-> +
->  		speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
-> -		chk_join_nr 0 0 0
-> -		chk_prio_nr 1 1 0 0
-> +		chk_join_nr 2 2 2
-> +		chk_prio_nr 1 1 1 1
->  	fi
->  
->  	if reset "mpc switch to backup" &&
-> 
+I am CCing Neal, perhaps he can help to expedite the testing part
+while I am busy.
 
+Thanks !
