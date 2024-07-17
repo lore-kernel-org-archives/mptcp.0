@@ -1,43 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE101524F
-	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 04:05:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F46469D
+	for <mptcp@lists.linux.dev>; Wed, 17 Jul 2024 04:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721189143; cv=none; b=krvt5nVcs0RHyYpDt32Qm7YZiEdGbY+1J+Lx+bRQ/jJ3tUUqUKrG81AfK4/4eUPmWVyShQPeP8cAug17h/DsxIsAsBvqrEMRw6yP7r9aWBPrhO/Fw+/k8kOWiB4c6+XXKd8WtFw9szeJC0QtDWR4EXMV9SpWdymCjASLud0/ojc=
+	t=1721190334; cv=none; b=HbcKZeBUTVcivjEG2QDCivD/EMUfkZER0HEeVoTqGXYuww4MbJmGu0TNERKpdRiSM5asaE8WwHikJ7G+HKcmOndtIq8U7c0/KqAU9tXtk61Lsl3TFRukgPzW2ZnEzg5D6lTZDmXs7QsNWWplmxWT23rjDaBuiyM6vwW5anXDObY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721189143; c=relaxed/simple;
-	bh=kmKmPpYBNJ8FqtkRJ+8DfJjvp/zgtBzCBTdMh++48SA=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=X+7BjXBdXJzrlbkTpB/y8NrVvKg7vi961/FnEzWjzsIDhRarIbgypHmV+RCeAGI7M3q3CYXtupu41tDjwgcZ96xyUfpaz0s2NJTz/oyWFblokIFz+pXojn6DnAInb1kyo63d3FsIwlPXT3juTRAUGzfmCdXlKwghWORBD+CQ/Kw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IcGGIGfD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721190334; c=relaxed/simple;
+	bh=xUx8TqSd4PXSrmD0yJSaHFM3tuGIW6ZFxPqg8Pnoy1s=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=e60zAxNJT1RaKGLQB7fnLdWH3c4No6KL8xW2OvUKs7lXYbMjOfoQCB5v2mXu1ogRgHWOFAVvgOKVCcoqOuF4fepgBN74Pvla1spi8TA+LOvAW5PUMUESOlBE5CxZYTSyVLnlSx9k9capSQ1vS+8qc5OUupTBHhVs5UsBcNdNOxg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bs3L+Ayc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IcGGIGfD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F184FC32782;
-	Wed, 17 Jul 2024 04:05:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bs3L+Ayc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79A85C32782;
+	Wed, 17 Jul 2024 04:25:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721189143;
-	bh=kmKmPpYBNJ8FqtkRJ+8DfJjvp/zgtBzCBTdMh++48SA=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=IcGGIGfD4D0SSgHBfSyYA/cPrTwMtUA3wwlLw/ICbsCI1kx4b9nTZjPW9qr+XnNg0
-	 ENZkM9QEKIjdGEXpuIPIMaYpOPtri9VyGbvv0YwiX9L5wir7gagOhaxE7db+iUpOLB
-	 Frk6/dZ1UJjeEzKaR7gyLOSktGABybaAmrfur9FqZcUkElybgMpW0wO7btwsiVsR1o
-	 UPqOLhrLUBLWwnwms9W664lx1s8sTRA+YWQQnDORWr/zNMAo6rt7jv85ENC1SlcJdf
-	 XH5PcnwxXHJhpXA95s2PjF8t12u9tvSYhJ1zOtCS1O/gWrx8GcF58I83tM1lPoWrHw
-	 QylxH+D5FmiVA==
-Message-ID: <13dbb609541f4f873d90cd5bd238f2f83c997962.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 14/17] mptcp: pm: remove
- mptcp_pm_remove_subflow()
+	s=k20201202; t=1721190333;
+	bh=xUx8TqSd4PXSrmD0yJSaHFM3tuGIW6ZFxPqg8Pnoy1s=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=bs3L+AycFln7nEr+ChQCZ441Ts95peHYrceukj9NgdcPeVT/Q7+86woNtGrRfIZD4
+	 5Oemv12a0x2DW5IJ5+OmfpwO+yVHdJ1kccOk7AQ0QUnDOAXNoY/P2TU8Ku4Oq/koow
+	 v51Vsuw6y6PGvbk7oLiAzE+UPWnedh+acPth/efaVc3GUy5rECi89vDuTgd1SxFsA2
+	 Kvze5fYn/Ub3h/hoGWmwLz7pq4VYkfmd8ehqK0khhmfewz4PEtLZ7r2Rv1QbMT961s
+	 rcYIPI6WHU10b6HjN54KOUjtSjinwmaqZ4cGQhKbwor8Y7v4WkW5Q6bVjqrPO/3rR6
+	 gSUULmTpg+VOg==
+Message-ID: <b1e4da8f4c7ed9179e4e6730f8b18f8661ace772.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 1/9] mptcp: sched: check both directions
+ for backup
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>
-Date: Wed, 17 Jul 2024 12:05:37 +0800
-In-Reply-To: <0e32e0e4-e7ef-490d-8107-5e1a03a6d1f6@kernel.org>
-References: <20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org>
-	 <20240715-mptcp-pm-avail-v2-14-fc5153bd1f6e@kernel.org>
-	 <04f90c53bf7842c80b501e5e60e2f04872ddc88e.camel@kernel.org>
-	 <0e32e0e4-e7ef-490d-8107-5e1a03a6d1f6@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Wed, 17 Jul 2024 12:25:27 +0800
+In-Reply-To: <20240716-mptcp-backup-mpj-v2-1-4d50247405fb@kernel.org>
+References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
+	 <20240716-mptcp-backup-mpj-v2-1-4d50247405fb@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -100,108 +97,105 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-07-16 at 10:35 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+On Tue, 2024-07-16 at 22:53 +0200, Matthieu Baerts (NGI0) wrote:
+> The 'mptcp_subflow_context' structure has two items related to the
+> backup flags:
 > 
-> Thank you for the review!
+>  - 'backup': the subflow has been marked as backup by the other peer
 > 
-> On 16/07/2024 05:40, Geliang Tang wrote:
-> > On Mon, 2024-07-15 at 12:09 +0200, Matthieu Baerts (NGI0) wrote:
-> > > This helper is confusing. It is in pm.c, but it is specific to
-> > > the
-> > > in-kernel PM and it cannot be used by the userspace one. Also, it
-> > > simply
-> > > calls one in-kernel specific function with the PM lock, while the
-> > > similar mptcp_pm_remove_addr() helper requires the PM lock.
-> > > 
-> > > What's left is the pr_debug(), which is not that useful, because
-> > > a
-> > > similar one is present in the only function called by this
-> > > helper:
-> > > 
-> > >   mptcp_pm_nl_rm_subflow_received()
-> > > 
-> > > After these modifications, this helper can now be marked as
-> > > 'static'.
-> > > 
-> > > Note that it is not really a bug, but it will help backporting
-> > > the
-> > > following commits.
-> 
-> (...)
-> 
-> > > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > > index 44092246259c..96336a87973f 100644
-> > > --- a/net/mptcp/pm_netlink.c
-> > > +++ b/net/mptcp/pm_netlink.c
-> > > @@ -1454,8 +1454,11 @@ static int
-> > > mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
-> > >  		remove_subflow = lookup_subflow_by_saddr(&msk-
-> > > > conn_list, addr);
-> > >  		mptcp_pm_remove_anno_addr(msk, addr,
-> > > remove_subflow
-> > > &&
-> > >  					  !(entry->flags &
-> > > MPTCP_PM_ADDR_FLAG_IMPLICIT));
-> > > +
-> > 
-> > I think no need to add a new line here.
-> 
-> The block below started to be a bit big, and was doing a different
-> action that the one above (removing ADD_ADDR). Maybe I should have
-> added
-> it in patch 10/17?
+> - 'request_bkup': the backup flag has been set by the host
 
-Yes, it's better in 10/17.
+The two lines are not aligned.
 
 > 
-> > >  		if (remove_subflow) {
-> > > -			mptcp_pm_remove_subflow(msk, &list);
-> > > +			spin_lock_bh(&msk->pm.lock);
-> > > +			mptcp_pm_nl_rm_subflow_received(msk,
-> > > &list);
-> > > +			spin_unlock_bh(&msk->pm.lock);
-> > 
-> > The subsequent code holds msk->pm.lock too, both of them can be
-> > placed
-> > in the same block holding msk->pm.lock once.
+> Before this patch, the scheduler was only looking at the 'backup'
+> flag.
+> That can make sense in some cases, but it looks like that's not what
+> we
+> wanted for the general use, because either the path-manager was
+> setting
+> both of them when sending an MP_PRIO, or the receiver was duplicating
+> the 'backup' flag in the subflow request.
 > 
-> Yes indeed, but there are cases where it is not needed to lock the
-> PM:
-> if we are removing a 'signal' endpoint. In this case, I thought it
-> would
-> be better to lock only if needed, and surround the helper requiring
-> the
-> lock. No?
+> Note that the use of these two flags in the path-manager are going to
+> be
+> fixed in the next commits, but this change here is needed not to
+> modify
+> the behaviour.
+> 
+> Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN
+> requests")
 
-Yes, I agree.
+Patch 3 can be squashed into this one, with two "Fixes" tags here.
 
+WDYT?
+
+Thanks,
+-Geliang
+
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  include/trace/events/mptcp.h |  2 +-
+>  net/mptcp/protocol.c         | 10 ++++++----
+>  2 files changed, 7 insertions(+), 5 deletions(-)
 > 
-> > >  		} else if (entry->flags &
-> > > MPTCP_PM_ADDR_FLAG_SUBFLOW) {
-> > >  			/* If the subflow has been used, but now
-> > > closed */
-> > >  			spin_lock_bh(&msk->pm.lock);
-> > > @@ -1608,8 +1611,11 @@ static void
-> > > mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
-> > >  		spin_unlock_bh(&msk->pm.lock);
-> > >  	}
-> > >  
-> > > -	if (slist.nr)
-> > > -		mptcp_pm_remove_subflow(msk, &slist);
-> > > +	if (slist.nr) {
-> > > +		spin_lock_bh(&msk->pm.lock);
-> > > +		mptcp_pm_nl_rm_subflow_received(msk, &slist);
-> > > +		spin_unlock_bh(&msk->pm.lock);
-> > > +	}
-> > 
-> > The same here. Holding msk->pm.lock once.
+> diff --git a/include/trace/events/mptcp.h
+> b/include/trace/events/mptcp.h
+> index 09e72215b9f9..085b749cdd97 100644
+> --- a/include/trace/events/mptcp.h
+> +++ b/include/trace/events/mptcp.h
+> @@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
+>  		struct sock *ssk;
+>  
+>  		__entry->active = mptcp_subflow_active(subflow);
+> -		__entry->backup = subflow->backup;
+> +		__entry->backup = subflow->backup || subflow-
+> >request_bkup;
+>  
+>  		if (subflow->tcp_sock && sk_fullsock(subflow-
+> >tcp_sock))
+>  			__entry->free =
+> sk_stream_memory_free(subflow->tcp_sock);
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index ac94225489f8..b3a48d97f009 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1422,13 +1422,15 @@ struct sock *mptcp_subflow_get_send(struct
+> mptcp_sock *msk)
+>  	}
+>  
+>  	mptcp_for_each_subflow(msk, subflow) {
+> +		bool backup = subflow->backup || subflow-
+> >request_bkup;
+> +
+>  		trace_mptcp_subflow_get_send(subflow);
+>  		ssk =  mptcp_subflow_tcp_sock(subflow);
+>  		if (!mptcp_subflow_active(subflow))
+>  			continue;
+>  
+>  		tout = max(tout,
+> mptcp_timeout_from_subflow(subflow));
+> -		nr_active += !subflow->backup;
+> +		nr_active += !backup;
+>  		pace = subflow->avg_pacing_rate;
+>  		if (unlikely(!pace)) {
+>  			/* init pacing rate from socket */
+> @@ -1439,9 +1441,9 @@ struct sock *mptcp_subflow_get_send(struct
+> mptcp_sock *msk)
+>  		}
+>  
+>  		linger_time = div_u64((u64)READ_ONCE(ssk-
+> >sk_wmem_queued) << 32, pace);
+> -		if (linger_time < send_info[subflow-
+> >backup].linger_time) {
+> -			send_info[subflow->backup].ssk = ssk;
+> -			send_info[subflow->backup].linger_time =
+> linger_time;
+> +		if (linger_time < send_info[backup].linger_time) {
+> +			send_info[backup].ssk = ssk;
+> +			send_info[backup].linger_time = linger_time;
+>  		}
+>  	}
+>  	__mptcp_set_timeout(sk, tout);
 > 
-> Yes, indeed, here we can probably lock once before "if (alist.nr)".
-> If
-> there is only this change needed, I can probably do the modification
-> when applying the patches. (I already did the modifications locally).
-> 
-> Cheers,
-> Matt
 
