@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDC79639
-	for <mptcp@lists.linux.dev>; Thu, 18 Jul 2024 11:09:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA1247407A
+	for <mptcp@lists.linux.dev>; Thu, 18 Jul 2024 11:15:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721300977; cv=none; b=t1KOhL0g3h8tId8QT7moMOSEoVc6yBHDEWTKE88/UDThKadB2iQ9GCF9vTV/dc1Tv1FgLIR2SLxX1utDMF4pn9pOtJkxlC11lQl6vXOck/pZjJ55omLxTXKZk0q3UyGv0+WUZFPyb0jLZWitISHRcwb4eYe/niU4rj1LY/TUFHQ=
+	t=1721301304; cv=none; b=rAZb0QUT9w8KwPED6JKgjIbqEdHh6fsXmupG8Sd1XyYoh8GGTAMEBkJejhYOvBgSmgMonnPvvTQWKPdAclNXGxDYaBvQfY5rhCauIRj624+sI7B+zGdcAKIYin8M1JqttVW+QaiIXwzG7SzvXAoBCVMkuA4y4fyR3RFGOCEKk7I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721300977; c=relaxed/simple;
-	bh=DIYuSyPfmPJ1GdUuOnjOIJpU5cpuZO5WU/+FPbZqxN0=;
+	s=arc-20240116; t=1721301304; c=relaxed/simple;
+	bh=i5XKo5p32UKIEQpFNLxmQvVY2zp59UeccXSl/1IQ6Ic=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gj6luHCgsgpVpb2LQSPf0tNFUd0nTFo4aDG6pO8m3GvTmU4gEp6mN7ym02UCaVCWp6m7Fjun7MyXhSvBOe2afiw6XZ4YxaFfAFV3hK45rTn8a/ykYxLR4Tb1LwjX3oH67/sUHJ+3GDbTbI5AxMA8kD9C41k6wLHL7txaTOtTMwo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j8TMuMSS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=TWKjfXMz31TOKbGdOoayiQvtMJLoeH5mx5wWcj6TTyidpzSADLjYIQmuZtIQQW2YynSJamqBwrgqITZYduMaXd4/AZ6FSXm0/ugsZrQLYybpkDtHH35sGj+242DJTQqZGzlZ/07zHgGBb17G9Necmmd6D/udBVezB48VhWm841o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n2N9m7RG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j8TMuMSS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9309FC4AF09;
-	Thu, 18 Jul 2024 11:09:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n2N9m7RG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C50ECC116B1;
+	Thu, 18 Jul 2024 11:15:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721300977;
-	bh=DIYuSyPfmPJ1GdUuOnjOIJpU5cpuZO5WU/+FPbZqxN0=;
+	s=k20201202; t=1721301303;
+	bh=i5XKo5p32UKIEQpFNLxmQvVY2zp59UeccXSl/1IQ6Ic=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=j8TMuMSSXBt+oPkk/pE+hdIwSiRZz9rff5gQtbmw0cg49OafDLOUgd0G9dutKqVxh
-	 CJZO7spqKPmBOQWJU+9xTcNvbjiduXyGZzNRLL2zd80sdhyw8BQ0S3jcVcy+Hfi2j0
-	 DDkE6nvbjhULMiFNZrHnzDtzpCgRMMpfe32QKSYmn1iymwzlFCJ9+mJ5MTjv+U34Yv
-	 Rst+7o28brfzG0myXktdAGwEYFA6zAYY3RJCjSj3brh/APCC52CSuyXwyKN2PyTvRX
-	 Xwq7k8WiWBMEhFCYjd6bzCDbKMPbPz1XfbNK3hdzyC1mm9+AUtGhN9TI7GSx5IPYP9
-	 X/bCdqd4cS3tQ==
-Message-ID: <2a8792e5-6035-4202-8496-3f1f5c60d844@kernel.org>
-Date: Thu, 18 Jul 2024 13:09:34 +0200
+	b=n2N9m7RGV7zrMlVlTEKtaFgx5r/M5WdHUX2/pmQxBMXKZ9K4XTB+HRgutbi5I/nw6
+	 8AMollmm1bqawUbfPJjsRyy/xfbTrSXtefMxX3/qQJ+kgzJQSVEK3Cn2vtzZQd1TcO
+	 fh7EgK+5VPBz1nrjZfKLIQ9ANRJ7QvHognSIWXUPh0ip1NLBQH2/YKpHrucHo/KK3i
+	 VJoBG6GcyszubY4A0cw+JWVW+OZhkc7KWGQTtqXAwb3uJJ+PhwJnLpZVCEOCidBFe5
+	 yuKJzjNPEkjq9C8+ZC2GHyZ/6Shd4wBAd5ONX5Uv2VMKRcRcFRH7Z2Yg/I9qOfxCC5
+	 a/CER4eDHvVag==
+Message-ID: <3302c193-7820-401b-b55b-e1aca11b3585@kernel.org>
+Date: Thu, 18 Jul 2024 13:15:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 5/9] selftests: mptcp: join: validate backup
- in MPJ
+Subject: Re: [PATCH mptcp-net v2 7/9] selftests: mptcp: join: check backup
+ support in signal endp
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org>
- <20240716-mptcp-backup-mpj-v2-5-4d50247405fb@kernel.org>
- <108fbeaf69fdbc390287704b7a4f4af94890d244.camel@kernel.org>
+ <20240716-mptcp-backup-mpj-v2-7-4d50247405fb@kernel.org>
+ <59cdfb0ae86ea0f2e45c2fecbe0a0ceb7848a1f6.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,148 +87,120 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <108fbeaf69fdbc390287704b7a4f4af94890d244.camel@kernel.org>
+In-Reply-To: <59cdfb0ae86ea0f2e45c2fecbe0a0ceb7848a1f6.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
 
-On 17/07/2024 03:25, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for these patches.
-> 
+
+On 17/07/2024 06:39, Geliang Tang wrote:
 > On Tue, 2024-07-16 at 22:53 +0200, Matthieu Baerts (NGI0) wrote:
->> A peer can notify the other one that a subflow has to be treated as
->> "backup" by two different ways: either by sending a dedicated MP_PRIO
->> notification, or by setting the backup flag in the MP_JOIN handshake.
+>> Before the previous commit, 'signal' endpoints with the 'backup' flag
+>> were ignored when sending the MP_JOIN.
 >>
->> The selftests were previously monitoring the former, but not the
->> latter.
->> This is what is now done here by looking at these new MIB counters
->> when
->> validating the 'backup' cases:
+>> The MPTCP Join selftest has then been modified to validate this case:
+>> the "single address, backup" test, is now validating the MP_JOIN with
+>> a
+>> backup flag as it is what we expect it to do with such name. The
+>> previous version has been kept, but renamed to "single address,
+>> switch
+>> to backup" to avoid confusions.
 >>
->>   MPTcpExtMPJoinSynBackupRx
->>   MPTcpExtMPJoinSynAckBackupRx
+>> The "single address with port, backup" test is also now validating
+>> the
+>> MPJ with a backup flag, which makes more sense than checking the
+>> switch
+>> to backup with an MP_PRIO.
+>>
+>> The "mpc backup both sides" test is now validating that the backup
+>> flag
+>> is also set in MP_JOIN from and to the addresses used in the initial
+>> subflow, using the special ID 0.
 >>
 >> The 'Fixes' tag here below is the same as the one from the previous
 >> commit: this patch here is not fixing anything wrong in the
 >> selftests,
->> but it will help to validate a new fix for an issue introduced by
->> this
->> commit ID.
+>> but it validates the previous fix for an issue introduced by this
+>> commit
+>> ID.
 >>
 >> Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 42
->> +++++++++++++++++++------
->>  1 file changed, 32 insertions(+), 10 deletions(-)
+>> Notes:
+>>  - v2:
+>>    - Also validating MPJ to/from ID0 with backup
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 34
+>> ++++++++++++++++++++-----
+>>  1 file changed, 28 insertions(+), 6 deletions(-)
 >>
 >> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 >> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 55d84a1bde15..175127a9c00c 100755
+>> index 175127a9c00c..ffcf558b4610 100755
 >> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 >> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1634,6 +1634,8 @@ chk_prio_nr()
->>  {
->>  	local mp_prio_nr_tx=$1
->>  	local mp_prio_nr_rx=$2
->> +	local mpj_syn=$3
->> +	local mpj_syn_ack=$4
-> 
-> How about setting default values for them:
-> 
->         local mpj_syn=${3:-0}
->         local mpj_syn_ack=${4:-0}
-
-I prefer not to: in our existing test suite, these counters can be set,
-it is then important to review all of these test cases.
-
-I also think it is important to check them in all our backup cases.
-That's why I don't want to not check them if they are not set.
-
-> 
->>  	local count
->>  
->>  	print_check "ptx"
->> @@ -1655,6 +1657,26 @@ chk_prio_nr()
->>  	else
->>  		print_ok
->>  	fi
->> +
->> +	print_check "syn backup"
->> +	count=$(mptcp_lib_get_counter ${ns1}
->> "MPTcpExtMPJoinSynBackupRx")
->> +	if [ -z "$count" ]; then
->> +		print_skip
->> +	elif [ "$count" != "$mpj_syn" ]; then
->> +		fail_test "got $count MPJ SYN[s] with Backup
->> expected $mpj_syn"
-> 
-> And make this log more like the one in chk_join_nr:
-> 
-> 	fail_test "got $count JOIN[s] syn with Backup expected
-> $mpj_syn"
-
-Good point!
-
->> +	else
->> +		print_ok
->> +	fi
->> +
->> +	print_check "synack backup"
->> +	count=$(mptcp_lib_get_counter ${ns2}
->> "MPTcpExtMPJoinSynAckBackupRx")
->> +	if [ -z "$count" ]; then
->> +		print_skip
->> +	elif [ "$count" != "$mpj_syn_ack" ]; then
->> +		fail_test "got $count MPJ SYNACK[s] with Backup
->> expected $mpj_syn_ack"
-> 
-> The same here.
-
-Will do!
-
->> +	else
->> +		print_ok
->> +	fi
->>  }
->>  
->>  chk_subflow_nr()
->> @@ -2612,7 +2634,7 @@ backup_tests()
->>  		sflags=nobackup speed=slow \
->>  			run_tests $ns1 $ns2 10.0.1.1
->>  		chk_join_nr 1 1 1
->> -		chk_prio_nr 0 1
->> +		chk_prio_nr 0 1 1 0
-> 
-> The last value is the default one, only "chk_prio_nr 0 1 1" is enough.
-
-I think it is also better to avoid that in the 'chk_*' helpers,
-otherwise it is hard to follow what is going to be done.
-
-> 
->>  	fi
+>> @@ -2639,6 +2639,19 @@ backup_tests()
 >>  
 >>  	# single address, backup
->> @@ -2625,7 +2647,7 @@ backup_tests()
+>>  	if reset "single address, backup" &&
+>> +	   continue_if mptcp_lib_kallsyms_has
+>> "subflow_rebuild_header$"; then
+>> +		pm_nl_set_limits $ns1 0 1
+>> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
+>> +		pm_nl_set_limits $ns2 1 1
+>> +		sflags=nobackup speed=slow \
+>> +			run_tests $ns1 $ns2 10.0.1.1
+>> +		chk_join_nr 1 1 1
+>> +		chk_add_nr 1 1
+>> +		chk_prio_nr 1 0 0 1
+>> +	fi
+>> +
+>> +	# single address, switch to backup
+>> +	if reset "single address, switch to backup" &&
+>>  	   continue_if mptcp_lib_kallsyms_has
+>> "subflow_rebuild_header$"; then
+>>  		pm_nl_set_limits $ns1 0 1
+>>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+>> @@ -2654,13 +2667,13 @@ backup_tests()
+> 
+> '''
+>>  	if reset "single address with port, backup" &&
+>>  	   continue_if mptcp_lib_kallsyms_has
+>> "subflow_rebuild_header$"; then
+>>  		pm_nl_set_limits $ns1 0 1
+>> -		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal port
+>> 10100
+>> +		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal,backup
+>> port 10100
+>>  		pm_nl_set_limits $ns2 1 1
+>> -		sflags=backup speed=slow \
+>> +		sflags=nobackup speed=slow \
 >>  			run_tests $ns1 $ns2 10.0.1.1
 >>  		chk_join_nr 1 1 1
 >>  		chk_add_nr 1 1
->> -		chk_prio_nr 1 1
->> +		chk_prio_nr 1 1 0 0
+>> -		chk_prio_nr 1 1 0 0
+>> +		chk_prio_nr 1 0 0 1
+>>  	fi
+> '''
 > 
-> With default values, no need to change this then.
+> How about keep this block unchanged. "nobackup" is already tested in
+> the above newly added test "single address, backup"? They are almost
+> the same now.
 
-Please note that I also find this change safer for the backports: if the
-commit cannot be backported without conflicts, we can check why: maybe
-the test behaviour was different before, and the number of MPJ with
-backup flags was different. (But this is only because here it is a
-series for -net. If we extend a check to verify more things in very
-specific cases, something that doesn't make sense to check in other
-cases, then it can be fine to have optional parameters I think.)
+The switch from 'nobackup' to 'backup' during the connection is also
+tested just before, in "single address, switch to backup".
+
+I think it makes more sense to validate the cases where the endpoints
+are set with the backup flag before establishing connections: that
+sounds like the most common use-cases. I guess people don't play with
+the 'endpoint change (no)backup' option that often, no?
+
+Supporting the switch of the backup flag for existing connections seems
+like a nice to have feature to me, but not the main one related to the
+backup case. So I think we should reflect that in our test suite. (And
+still, we validate the switch here, but now we also check that the flag
+is correctly set in the most common cases).
 
 Cheers,
 Matt
