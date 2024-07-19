@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4837783CA1
-	for <mptcp@lists.linux.dev>; Fri, 19 Jul 2024 12:24:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C4A683CA1
+	for <mptcp@lists.linux.dev>; Fri, 19 Jul 2024 12:24:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721391875; cv=none; b=gWpKMzRm9TO/Eb4der4Kyo4B9jcQVssik8zHKa3eD7pfZ01+0hPjJxDCudD4uORhKWGwqLHtPy4m5UI057de421kbrxxyivKb/qnqB+YefcrSJLdaNS4M5S6XNCOFJgu2TEqp1oyz2iko7PNp5hadPNp6i4mxkQgcLGTBJSnl60=
+	t=1721391876; cv=none; b=ClfsBogbrISpfI+MvXm9qnSEbExmx/hZREOYW5SMUlLu03vEXR2HT0saJ4WfsOqxpQFk7Qvy6WRKPjVS0J81H/gP7PyP92lttyWzGySohv+kVgdqq/trJABi0f5OUDpO+ozlo/IXOvFaLbVlVZwFcvQWYoOcFrH2THhOL67tsKs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721391875; c=relaxed/simple;
-	bh=lVYzLe5JrCLEvvxaysYG3kgQy2v6ncdEAEe/A6edulI=;
+	s=arc-20240116; t=1721391876; c=relaxed/simple;
+	bh=VTCYuWArzYhunK5hbwYMqWdj9fMJvYLpw+Ge9TGDPd8=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=aZjb1uX9kSN09hIESpsI2dlQR7CnOg/vh8pxA5UWbSOyuObhrb2CNUG8RGAYV1W6mdFykkreI9a7rOx/sBIp0dUGg6yRc02CD48BcJdLThesT1JC8wEQkfLHKzfQMCdqmNu1+OPp+QsLEsULkvHn5v3VVMFkQDaCipPHUgIA6vg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0+hsY0+; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ptyWWfIuKjxYZ0scD4NZmteTKFxVxAJGY1oH3dCuvoaa5X3nA2NOquH3QU96q+YXQi/X/+8yEANfYyhpmLCtgHOF6rx51A7Ei1MGez18SovvxbOygGAQRWzdksu5YKwp8ZrR8CiakiRc4gbN7G/KjvX+Mxgxr59zjm9BU5a5tIs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VXJdROZN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0+hsY0+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B5FCC4AF0A;
-	Fri, 19 Jul 2024 12:24:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VXJdROZN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568CEC4AF09;
+	Fri, 19 Jul 2024 12:24:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721391874;
-	bh=lVYzLe5JrCLEvvxaysYG3kgQy2v6ncdEAEe/A6edulI=;
+	s=k20201202; t=1721391876;
+	bh=VTCYuWArzYhunK5hbwYMqWdj9fMJvYLpw+Ge9TGDPd8=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=t0+hsY0+lPtKQBZVBmM1DeYHiEpkBceAz4phE2USjVrwOp4qtDwqq6lmttt/HxJ3f
-	 QPLFxSsfJvsVB7j/3XFJiBhmAboweMKWNeBMOQkj8tk3m53RxRSFR5jdCarpanppiN
-	 dEkgGbg4w3rNAs6GkHyNwesaGdOJkhBeYGsOuVDYD6ZRKzwJGrUTcstlW2FCHNn2wr
-	 jP+BY0faNE87zqz5NurCwbO8ovfcVINLJ9jnphAsq9JRjB+cVTndh5oVjCVa0HoWfs
-	 ltqtMILGJ9K5RplqSiKmhin325MirTmmlue1aztsNyBcSZfwVu5Z4evOqLv1PvgK6S
-	 35P3uD9hB/OLw==
+	b=VXJdROZNrkGpG9qcpNlquE6Ei2cbkP69MW6OcSqrn5wNF1Uxx+ydtOQ3cBZtiZzOL
+	 QJCMas88flCjPd0Rumdv5ofwUAIYXxxhf0JZTHOTPlsVo9dTVIDxxaTecCTezwvhfP
+	 3ADyNfr455/ASM0Qc0fdZ2qsywYneD6859mJObOo6IdSuWfQ+EBtUVkkbunfnXn6PF
+	 KB3qfVRb3KUYMaXjZZJmk4/ELh8uHekfs1u3J9xFUnciIfu46X0b0E7Lq0gsCRJiXn
+	 Paae+8dBuj1T7HXLBlHxT7ThzNA/oxAtv0YCovfaS6/1UipaNTwR/uK6sgMyHxNRJf
+	 X0ZbhNOG/LP5Q==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 19 Jul 2024 14:24:12 +0200
-Subject: [PATCH mptcp-net v3 01/20] mptcp: fully established after ADD_ADDR
- echo on MPJ
+Date: Fri, 19 Jul 2024 14:24:13 +0200
+Subject: [PATCH mptcp-net v3 02/20] mptcp: pm: deny endp with signal +
+ subflow + port
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,65 +38,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240719-mptcp-pm-avail-v3-1-e96b5591ced3@kernel.org>
+Message-Id: <20240719-mptcp-pm-avail-v3-2-e96b5591ced3@kernel.org>
 References: <20240719-mptcp-pm-avail-v3-0-e96b5591ced3@kernel.org>
 In-Reply-To: <20240719-mptcp-pm-avail-v3-0-e96b5591ced3@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1655; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=lVYzLe5JrCLEvvxaysYG3kgQy2v6ncdEAEe/A6edulI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmmlr/nt3aaCrUKmYcSue0ILOjyygt7FhRftky7
- CKjXYDo/vKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZppa/wAKCRD2t4JPQmmg
- c9ZqEACYdUYZcZmqQLszOTcHZiCf5qQ20eo3fE+/s/nVsQJA+w8Q/VFzqYb3T9Dr/HGTvk8k2bd
- mJOFPqP/sTZlEQne5aFwFY59C+Tx7sUoJZ68vYFDiHe0QptlQNSuwFTFrtcSfUdcgcQ553f24py
- Dk1bIFxVErsRNSdzluBZpC4xOTXk+VaUB1uNMTa6MJL2YAng+aQ+6cyDtaKnyPriaKkXV7rRIHV
- aNSpsOOxLJhReKcT+W4QXaMjReKXzbNh8faKmNgMVrXdUSod8UazzHGuVzQfKB3nvAH2LcyONqu
- Ohp0mTtsYbV0E6s0qsxkgawARr+1NGy9hLd/GwMnmvrAuoQ8vn967Masecg3F636Ep7M1glpK+6
- x//Z1xxRPjdN1MG31gcLavMFqGA27CKJ2KRuOi+IwlROGU8+YGcbCo8HkxmXCj86jKTh8HrnPQc
- FV5lMoErv3Q8KAbkF5/DTmchfWScZdzSML9kA3bC6Bgk+B1FaXgqsaWp64wPsPcGL3rJuSW6aOw
- R/pMma5xHTUwgMrokW6A4YGEnNohKPLhcNAWGvHDYt27/OGLtkFbtIYd2jGCpSBMcFcVc92cKip
- Z/yLjWvQs6xSILlOfXW4SO5Spe2cityPVs3iq7Uxsob0/BEbVBc+3HMOb7LvSKAVAlHyYKDitxz
- ksweRU6FrRNpLDQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1389; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=VTCYuWArzYhunK5hbwYMqWdj9fMJvYLpw+Ge9TGDPd8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmmlr/x6RqjWS3G5qyCir1+EatO690YSKHtk2TE
+ Qy2b1umLdSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZppa/wAKCRD2t4JPQmmg
+ c80bD/sEFNUdjJ7M4l5zvcDjAYu8wox3QHqM5oHb5B7f9Wj1NsuI6u0JgOZtYLPQ1Sb7UYYUefr
+ Xxx6oH/JNfH43ss90KeWQUSrawphDSX+UT9yI1mcvuAubBpNiYnecgnBoh5DO8CEQAkJqyuKr/U
+ sugGJY5dtIBoufInQ/3NrN0MA62lZnzo1s5+gSSRYP3vJsBh9wepYRsAWOrut0joC5BWcg0r1Xq
+ YsiVQeoxMoZEhWwP6vDTx8GajUN0yxYTyL9UPjRMKgxZ1Y3YngSSE4A5n234URW+B4d1ijNzeRJ
+ kwj67PXOy8HQGWxuczdSI1HF744gumkAb5Nkms9clomM88Y5OBvdK+iIomXxAu3/lSym4s+UYs1
+ ++j9qlmHMVDSdEbZjxbIfyWE6QdNRsCurs/WTZdD6PggUCtzjYAeXohw97r6wjwHuUJtJvjgXL7
+ 92KocBWhNUBQJzngdasGm+rTG3YKpISIYjICTNEwqIxe+wwrwb0p6AHc7fp/5uovs2OJp8V7LiJ
+ kDauX2IDqo/tKF35ndLiWA+RMuTJVmbYEcqRIVuHuCHIYncEYRRU1G67Iav5JFLO4+Fink7vqVJ
+ J8VEariOhbM50n4IDcNUZs9FR1EHhCAt17ndFm1yW5tvFpVv/BEZrl6DHK4JnX5v7k2BGROzfma
+ 2BGQK9F/rFxNulA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Before this patch, receiving an ADD_ADDR echo on the just connected
-MP_JOIN subflow -- initiator side, after the MP_JOIN 3WHS -- was
-resulting in an MP_RESET. That's because only ACKs with a DSS or
-ADD_ADDRs without the echo bit were allowed.
+As mentioned in the 'Fixes' commit, the port flag is only supported by
+the 'signal' flag, and not by the 'subflow' one. Then if both the
+'signal' and 'subflow' flags are set, the problem is the same: the
+feature cannot work with the 'subflow' flag.
 
-Not allowing the ADD_ADDR echo after an MP_CAPABLE 3WHS makes sense, as
-we are not supposed to send an ADD_ADDR before because it requires to be
-in full established mode first. For the MP_JOIN 3WHS, that's different:
-the ADD_ADDR can be sent on a previous subflow, and the ADD_ADDR echo
-can be received on the recently created one. The other peer will already
-be in fully established, so it is allowed to send that.
+Technically, if both the 'signal' and 'subflow' flags are set, it will
+be possible to create the listening socket, but not to establish a
+subflow using this source port. So better to explicitly deny it, not to
+create some confusions because the expected behaviour is not possible.
 
-We can then relax the conditions here to accept the ADD_ADDR echo for
-MPJ subflows.
-
-Fixes: 67b12f792d5e ("mptcp: full fully established support after ADD_ADDR")
+Fixes: 09f12c3ab7a5 ("mptcp: allow to use port and non-signal in set_flags")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/options.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ net/mptcp/pm_netlink.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index c0832df3b0a3..4ee2e3605f5b 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -958,7 +958,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index f65831de5c1a..c44b0ae51cdf 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1311,8 +1311,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		return ret;
  
- 	if (subflow->remote_key_valid &&
- 	    (((mp_opt->suboptions & OPTION_MPTCP_DSS) && mp_opt->use_ack) ||
--	     ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) && !mp_opt->echo))) {
-+	     ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) &&
-+	      (!mp_opt->echo || subflow->mp_join)))) {
- 		/* subflows are fully established as soon as we get any
- 		 * additional ack, including ADD_ADDR.
- 		 */
+-	if (addr.addr.port && !(addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+-		GENL_SET_ERR_MSG(info, "flags must have signal when using port");
++	if (addr.addr.port && !address_use_port(&addr)) {
++		GENL_SET_ERR_MSG(info, "flags must have signal and not subflow when using port");
+ 		return -EINVAL;
+ 	}
+ 
 
 -- 
 2.45.2
