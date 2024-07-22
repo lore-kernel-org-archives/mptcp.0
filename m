@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5BC87171640
-	for <mptcp@lists.linux.dev>; Mon, 22 Jul 2024 19:36:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ED00171640
+	for <mptcp@lists.linux.dev>; Mon, 22 Jul 2024 19:36:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721676973; cv=none; b=m2+mJ7QCz+iq6irx1s860CFge/SY7dbrcgmO57Ee3lJol3coluQ7Tp5oIUqaWRt3M4ZhDi8v0mILSRxVRTWUew6E8h33Xknzqm3L7kGk5slwi8Qw57iMWZJZxPREWJ02wjLMLHm1mKo24YhYc7ohBN6o7EUp0c/oTu+LamOWwIo=
+	t=1721676974; cv=none; b=FyNJo/qqn+lde+P3F5vVzyIwOvhYOvGo8RKolKDJk3zVAeqLrfyaloD4L8QOv2foSdLY0sFnBs58mMhjEJ8he0NJSNvyrA0F1SYoj/B/yQORMpmAfnc8Y4p3ZYmfnK3e2qYORDQv6ZZ8iKH01Byua6AOhxzIRr8yJ9N+UCXecOk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721676973; c=relaxed/simple;
-	bh=TWpomIPCHdgqln4Z9R1XvaM1nsH19QkgyOXDZ5F+sDQ=;
+	s=arc-20240116; t=1721676974; c=relaxed/simple;
+	bh=O8Iu5MYAsOMjwlWVDXEjbmXBzNq6+yIhkRZl0uBMg8A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U16JOupd96Ca4ccjieUuC7S4ZxyuVEvQ3oXwpDkPS9BtgaPuDLQPu4rkh6rf2eiNIyU5xcGY0RDL5vwirBCtimJ5W+YiMAVA8ZOkORctMW60oHPq65YpmWbvvM/ewuvNo0ERJPbvN+FOB1zk3nLAT0uElS0V+2s1/LfPHpC1J5E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MoGSD3I7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=YNBv1PW6tLFH+tqY8InARVzKz3Ujs4lpVuEtwF1SWpalfdmc0i+nxi8qII0GMrhKgnbb9V/Qxw9j5Fyh5aQCmGJD0k+J79NkCOeLOz5uWcMVEMlOnf0FL5F8Pnl5dwgV2QNwqHobRBRdl01tF7dHV7hPqyrk2/Fc5RL9orEhoUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=coMe0NrV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MoGSD3I7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 881FCC116B1;
-	Mon, 22 Jul 2024 19:36:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="coMe0NrV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD22BC32782;
+	Mon, 22 Jul 2024 19:36:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721676973;
-	bh=TWpomIPCHdgqln4Z9R1XvaM1nsH19QkgyOXDZ5F+sDQ=;
+	s=k20201202; t=1721676974;
+	bh=O8Iu5MYAsOMjwlWVDXEjbmXBzNq6+yIhkRZl0uBMg8A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=MoGSD3I7v5ECR0nPGiN+Z/BBdLklrbLhAocIhYZz6OQcTpDWQeeRyCQMUF53k2pAy
-	 KzCUZuIzvQYtirPSJSbRdBwB01YJMtLTI/RRaVG9oJrCSr4ra31OckrYe/TGsuXiWQ
-	 mPITh7F9mlj1P7F7XErbpOCbCcG5EUvzSU8axUbgLVZU+LzslLeRZah9H7/18eSBX/
-	 3Mf5BDJlM6MSOXTI9tP9R3J2UYmLu3aNios5Nr9nTR4FPsW0eZPXgjZVi64ak4z2C7
-	 zDiUds6eM4WAYI7lh14LJEog/jLa7LDV7TPnNXvvKzVZ8ZRPqPCawP3soY/JhzrimO
-	 mjlprn/HVDhew==
+	b=coMe0NrVPpGVGsO/Y8ktmTHxuIaRV/5RqR9ynfih4xef0QllhmwTHNRZd7UxNEY0b
+	 69loY5L7czI08/tk0U4iU78u00pj4TFAO/H4gxjMzlKUEXJ3idMXAumBwxV7bvSVmW
+	 zzknN0frNsJ4TF1LuzNOIUjhPbKYgrfQFW37h+aAmba0pjqjAAZ4spAMbIjPF6EJ9q
+	 QW3DVklRDL9MUFYV89Kb5mWmwGEswktTjQh0HS4DP7RHPyW9gqbDkNma841b2Co6Vg
+	 H+P0wv3/6YwoIYgZz53TMG2+QGS6pUA1CVs432ZY4A8EFGZ1TNHGopnyZgSJuP6Fwo
+	 HpnT91nNbh5IA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 22 Jul 2024 21:35:56 +0200
-Subject: [PATCH mptcp-net v4 18/23] mptcp: pm: only in-kernel cannot have
- entries with ID 0
+Date: Mon, 22 Jul 2024 21:35:57 +0200
+Subject: [PATCH mptcp-net v4 19/23] mptcp: pm: fullmesh: select the right
+ ID later
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,72 +38,88 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240722-mptcp-pm-avail-v4-18-15bfd73de384@kernel.org>
+Message-Id: <20240722-mptcp-pm-avail-v4-19-15bfd73de384@kernel.org>
 References: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org>
 In-Reply-To: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1493; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=TWpomIPCHdgqln4Z9R1XvaM1nsH19QkgyOXDZ5F+sDQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmnrSX7E6f4BXtyBWbZFG2Nd40NFDu0Cy2HlowO
- bQP1GduY7eJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp60lwAKCRD2t4JPQmmg
- c555D/9ZZD0fBRw+TQtyoUdMZlUjQ/vFEy7epHnbVS8MAfGrJzKJtazZraPQB9UXQ0qv58IDF14
- hIpQIO46s6xrz/G5cjNHFNPRFuzVrZKM6jAtqsmFTaBQZ84sdhHEK3L623ujnyY/8meXuza/xkj
- kJsoCJHklkPRA+p1nDN8DVo+mHekuEEBX5tK0St+/BrBdlcpmuTqu0BCvihsn1WQgGrM3m3iDvc
- sEoUyWnzLywT/LfSEZMqCOBZvj2Rsz3wd826lJ4xtIdlQUgMf1XUtjOuZhEBiTMe0KNoLdCjIja
- 1uVCoEPvx3DVjIDcHuyRB4Co3UI4CsQUqLAXvry3p/UcEnUuZsWH52LEUwpYbCJgdivDnhCH6T9
- g3IrB3EHDL/HljeRubTYSp+HPUXIDgQYDGC0lnxUcLAzF5tgA25EgNK02eS+k5ytOS4oINkIpin
- NT0yeSBRVAHH6TNRoqbHY9SF2r9ezayzS6I8NPffPNKAT1mcfX+HsWcl8YWnZe0cKPj15GojMN1
- q/zvtmPcSqxEgg7G79c1Lm6X6avm6obRhivWd/jKyvN0yZQl8CwlZNhQNj0AyDcKy9Pf5vFvQPG
- /cAkP2g2QHG/mnOMdFYW0/B408BCShlgTv6HCkXE0IL1dhu36xXGfOCrsp2D5bW+XjyVLq8RI0z
- 0386cYxalRlud4A==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2053; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=O8Iu5MYAsOMjwlWVDXEjbmXBzNq6+yIhkRZl0uBMg8A=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmnrSXTrIU78J+oAPZTC2dx+45O0S/z+5MqsCCg
+ Q49cSPvttSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp60lwAKCRD2t4JPQmmg
+ c78zD/435reFAtg7UyTOM+eTzDE3SIgOOdLARYZ5kYSUIXipU2+UPai+VzMGGLVog2SjJIjn4qr
+ VTtSjNrH22HrJuezNya6f3pcCnm12YemM1qNsiyT22d/VqO7v3/B3d/OVfeg4RYZTLSTB8nB4rI
+ VinjSDebxyu5jW67WfIHsNiz3tpBGCwqpLA/PVzfg6toocrz9ehMoo0QDJf3nt8xQQmI0NGdcO1
+ GgJcWQoALtzKBvOYfrzMdehgnEx9WSbgGnFNQtvvPAw+VEZnRbGn0fhKnrsBby8xmHsYh6zXJw3
+ ArjX8MNPjVdWDPc4ZrVWHH5R+pTLsulPwxKEhN88drv3CSRwpgKQeuA3WZAwq2Y334voLaH/7vt
+ 1HlzjhPyFr1yDwjQ9o5wpn8KrL25FQuubChxPHOIi1vF/yF42666irTDQz3pZ8bc7p7nLasqplh
+ ECUVzmgxXZSRgtDJ9SPHjwp9XmiiNH4jLaihf58GCT46PtQCzWcyp0VIik1MNRMXhT2NQHy3E8X
+ g7n/fWFKxi8whJdGOQrny6oz6gHCBJdgg9rzIWPPO8iQxShJ/k9Mtd9zcpt8ghy4EDllkTTXb7C
+ op7uMnE7zzqSbhSzQsidM2fmNtbmqVj49/VHEm77v0Cv9q4c6q9OJtym+EV6PBi4H5QbZEeuxQT
+ oqh5oQwFWuk3XyQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The ID 0 is specific per MPTCP connections. The per netns entries cannot
-have this special ID 0 then.
+When reacting upon the reception of an ADD_ADDR, the in-kernel PM first
+looks for fullmesh endpoints. If there are some, it will pick them,
+using their entry ID.
 
-But that's different for the userspace PM where the entries are per
-connection, they can then use this special ID 0.
+It should set the ID 0 when using the endpoint corresponding to the
+initial subflow, it is a special case imposed by the MPTCP specs.
 
-Fixes: f40be0db0b76 ("mptcp: unify pm get_flags_and_ifindex_by_id")
+Note that msk->mpc_endpoint_id might not be set when receiving the first
+ADD_ADDR from the server. So better to compare the addresses.
+
+Fixes: 1a0d6136c5f0 ("mptcp: local addresses fullmesh")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c         | 3 ---
- net/mptcp/pm_netlink.c | 4 ++++
- 2 files changed, 4 insertions(+), 3 deletions(-)
+Notes:
+ - v4:
+   - Check that msk->first is not NULL.
+---
+ net/mptcp/pm_netlink.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 1f1b2617d0f5..ddad51210971 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -422,9 +422,6 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int id
- 	*flags = 0;
- 	*ifindex = 0;
- 
--	if (!id)
--		return 0;
--
- 	if (mptcp_pm_is_userspace(msk))
- 		return mptcp_userspace_pm_get_flags_and_ifindex_by_id(msk, id, flags, ifindex);
- 	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id, flags, ifindex);
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index b6086e9c7fc8..ec23bb32862f 100644
+index ec23bb32862f..2c335202aafb 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1378,6 +1378,10 @@ int mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk, unsigned int
+@@ -637,6 +637,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ {
  	struct sock *sk = (struct sock *)msk;
- 	struct net *net = sock_net(sk);
+ 	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_addr_info mpc_addr;
+ 	struct pm_nl_pernet *pernet;
+ 	unsigned int subflows_max;
+ 	int i = 0;
+@@ -644,6 +645,9 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 	pernet = pm_nl_get_pernet_from_msk(msk);
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
  
-+	/* No entries with ID 0 */
-+	if (id == 0)
-+		return 0;
++	if (msk->first)
++		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
 +
  	rcu_read_lock();
- 	entry = __lookup_addr_by_id(pm_nl_get_pernet(net), id);
- 	if (entry) {
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+ 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
+@@ -654,7 +658,14 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 
+ 		if (msk->pm.subflows < subflows_max) {
+ 			msk->pm.subflows++;
+-			addrs[i++] = entry->addr;
++			addrs[i] = entry->addr;
++
++			/* Special case for ID0: set the correct ID */
++			if (msk->first &&
++			    mptcp_addresses_equal(&entry->addr, &mpc_addr, entry->addr.port))
++				addrs[i].id = 0;
++
++			i++;
+ 		}
+ 	}
+ 	rcu_read_unlock();
 
 -- 
 2.45.2
