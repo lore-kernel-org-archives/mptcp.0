@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2BF213C3EE
-	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 16:31:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3399113C3EE
+	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 16:31:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721752293; cv=none; b=ppB/lcmdjkCcc4G8AMIM3B//UF7xokMYt8o6wGaRGXfJDszpG0cxYQ0SDO3YGGOXZ/d9SE/xK+niNK6HMNQP1nzOgT8kj9VtPz1eyQy7H8UwIsEPiRuMfsiNHbmIyA1Qq1B2LBvq/jqwu9s3knN8ECFMovxmEAruvMbvRNo1FEs=
+	t=1721752294; cv=none; b=OeHVS2EQj+5BV/4qDkxAS0VJFlXcljWIG4dBlnZ9HGtA/TZZi46rAyug0A7hcea4MUlJdQmbMkx5uKj+tCbnMq1gE/Ia7rkUdA/dEZGMDIXqCxMqq1vGsM/EVhg9/wUKqMvH3bVd/yuNlyBeFihCbymnCOPkfImP1I+4TgJeAig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721752293; c=relaxed/simple;
-	bh=apSMkqX6PlYgHFRluqpDHKw+wbmfYFw9YsE5MBU44Eo=;
+	s=arc-20240116; t=1721752294; c=relaxed/simple;
+	bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=TbQNlxfTUrhk/ArnVTrcTpdveNK/YaYYQUuoNF4hr+JtDIffIxEFF7WTqR6ea1e6I8C7HfMrIuM3WDIlfzkt3Qak+tGnMO7Yrt5MfRQFf7vVUnV/bpCejlH5ZAXLCS74PhDCifx7LxCoJfiw14iP20mLC4yZWoKzjWx3TQpM7Yc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NoQEIaxM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=d+Xtbz/W2Id59TIDXB9EOJgB5nG3piGtz2rGv0+ZM+L+w9IKH0dsLEwHepGNlLumwAtHx8JBXvbvrbG67D3IXzH1LgRI1veAPTO/C1Yu9YSGtnUCBO5o2r9ZQrQS1rQkRRP1RXnMx1OEbd8tt6UUZ/+s8kPVDKP+XkrZq26b/4Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fju//gBd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NoQEIaxM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC24CC4AF0C;
-	Tue, 23 Jul 2024 16:31:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fju//gBd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8541C4AF09;
+	Tue, 23 Jul 2024 16:31:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721752292;
-	bh=apSMkqX6PlYgHFRluqpDHKw+wbmfYFw9YsE5MBU44Eo=;
+	s=k20201202; t=1721752293;
+	bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=NoQEIaxMFp+yGimkoVAUrsrkJTNRGz7X0K09wsE1JMilqvM1Y2hRXarSorCfQYw2n
-	 1OzPjXPrWZknVYKbEaWa10HFw1qfR4yZlKjlDjRT9Xz8y4/UJYdSP+QLK7yQMsG2ic
-	 EXktzxjCKGRQrpIXPmIZsg2MZNuYHNjOgib3hTtcqPFTUchkJEApVPFM1ajWScLtxE
-	 jjNaJLlAHCH3Q/jF3b8tCaLLessN21rOmACOSfIrj9kSxa+NMf/FhkYMbFEhx02Rej
-	 F0hf2pLcw5JTZ5o4YMtzZCq6QQd7Fkc1P0NftB1FJEPNJdzdnKitAeVDpV9hcO8V75
-	 IyqkNjvYs6eBw==
+	b=fju//gBdNcQ4CS85yKUQrjA6TXSQpWsthPWIUDy0K25fZ12yNz+OtLD8oQZXwZbmw
+	 TE/3YZU1ZhrphdC+1piIyjQb8rRspvauscPQLfI/1UTv6FCT6v8V2OUBx4wH1aJhBD
+	 xQZCZDpUU3820HVxlo4NedJPWGlhsRPiCZmtBETkHtFkpVAAkQNDJLCVRVZGldNUxF
+	 GYZTRavL0ra6rO7tXxlkNU6HzI+4fc95bXUeRN/oWGQ9ZgoUAEn3M066sQjy4Tg928
+	 5iLirt8H+NAojE6iZwvc4zNCyXhSgz7ED6s1cTIF1mTR86FOfhKQJiMaDadO9EEFQx
+	 mQuVHXAs1i38g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 23 Jul 2024 18:31:05 +0200
-Subject: [PATCH mptcp-iproute v2 2/7] man: mptcp: clarify 'signal' and
- 'subflow' flags
+Date: Tue, 23 Jul 2024 18:31:06 +0200
+Subject: [PATCH mptcp-iproute v2 3/7] man: mptcp: 'port' has to be used
+ with 'signal'
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,66 +38,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240723-mptcp-user-feedback-v2-2-59f18975401c@kernel.org>
+Message-Id: <20240723-mptcp-user-feedback-v2-3-59f18975401c@kernel.org>
 References: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
 In-Reply-To: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: Mat Martineau <martineau@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1487; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=apSMkqX6PlYgHFRluqpDHKw+wbmfYFw9YsE5MBU44Eo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmn9rgPSmd58lubH2NJlC/RoJk5x3Ct660v7/GB
- yqAFpH/CkqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp/a4AAKCRD2t4JPQmmg
- c0XfD/9vW4yPAMkYxNCs6dH4FOcPjavXVXdNyFW8EddKi8NkOxU++bCYP7JPNbqXcJ1N5SjBGep
- wzMuN2We60R+dNEjmDS9N7e3qen70MSa8dAu87UJmmPsnDW/NiEOdIUcZg0qxDT4gC+cl8o63kj
- IyUDq/lSPDcKd7ytAfM10AMsM5hdkVzLzmsUiAxhUXEGHQTeeeHkP62zlUHy02Wev/AodCKz0hj
- lAtvdY0oGjVA7H5VTFabBbCt/qJYDcuYFakKmtRJ738OWXEd6AU8VXyExd/D4j/xG8RwOwvVBx8
- TRNMBDBoQoXep7Fo6IRsF9HvUgNVt4FG7UWxAI/sDp3HuyqdzuSSRLJoZgK06XSnOT7Bi41V4GJ
- U/V+V1javGJECLLcS87owPGP9frw1jex1AZch7E7W3XzPXR3n7o9faDXQB4hEx9JykeR1r/bRzJ
- Pa0jWZxz2BKaXtajsjjcgJwfKdTn2o92VbQsK1XXMWOy0ggBgTgFcDrE5V+fVfPRODZRqOs6j3R
- XZFBWSj69VHcPOTADVsqM7mLRHO0fLVacLpaDIu9IgDktWPKjn1ZTSZsq9Xx2vDWxD/5eSNKMVm
- O5wul/uzSmekJWJy4UoTQ8TaxP8tdK+PS2F0K7J0blCr0UPG21r1Wfom+bWR6H22VozfJTHmjxk
- pr4e9nLf0Q2T1Cg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=937; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmn9rgWRpyy6J1akJmPU71gohplzbp/CGcQ8FcW
+ gBnjpqIWK6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp/a4AAKCRD2t4JPQmmg
+ c+QrEACnTfJMv3vXCY1B0vrVY3P2fBpXPsFHoTEQNXDqA7GK6C5ArZy4IrtzRqWPwKadqyCTWXl
+ KJEWCQwR+8e6fA9sfq9ULIjWJTbxL3X71sgbim9fkWOhtR6ABYC3Bfwhc9NeMreFkyWmRs1HbNN
+ OnrPrGsS2QHWrcHC/5HjHfTBJdYVtDtB+hvqYNBlS7cq9b4YIYqtxmW8572M7K7tuIyt6cPIm6m
+ 7O25zG5DLluea166DcBH/YovenfpHNXJJSpLW8fWEyrK4X7eDD6zWR5lsG83iQgsO4k44tmGLcq
+ QZ0fqrMCgm0zs4Ab0xYn+XpAu+IcCD2G334TfBs1+fY6dS6GL1RmdFCSAnmd8qnfmpLhvzG3GyT
+ R0yHOmJlAylmsrrZn87GUZU2XaIQW1CcWa6YOHuOC05GwV0qp9ZzGu+mKRxq+U44vqx+sNmbKKs
+ 2mSP4VaMPQYFi2CRQIS2xv6A5v6dNRQQquIR2KIIawxRF+a2IheRmCTPaeaEpYeanM5dN/4NoP6
+ HzFAU51X9u11/A5iE7UF1vAsDSEbi0VFyrMFnMGQyblewf7w+6OT2T5qzQFhqPC7CHDxlP67cLu
+ f0VGa2OZeJptThf0Z96RJuT3GRBvzIUJULHY5HfoFbjiQ7zuHuKtvlhO7PyMxNXkj3PjbhiAydk
+ IVVX9yNvsKwsM1Q==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-According to some bug reports on the MPTCP project, these options might
-be a bit confusing for some.
-
-Mentioning that the 'signal' flag is typically for a server, and the
-'subflow' one is typically for a client should help the user knowing in
-which context which flag should be picked.
+That's what is enforced by the kernel: the 'port' is used to create a
+new listening socket on that port, not to create a new subflow from/to
+that port. It then requires the 'signal' flag.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- man/man8/ip-mptcp.8 | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ man/man8/ip-mptcp.8 | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
 diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-index 89fcb64f..2b693564 100644
+index 2b693564..11df43ce 100644
 --- a/man/man8/ip-mptcp.8
 +++ b/man/man8/ip-mptcp.8
-@@ -150,7 +150,8 @@ is a unique numeric identifier for the given endpoint
- .TP
- .BR signal
- The endpoint will be announced/signaled to each peer via an MPTCP ADD_ADDR
--sub-option. Upon reception of an ADD_ADDR sub-option, the peer can try to
-+sub-option. Typically, a server would be responsible for this. Upon reception of
-+an ADD_ADDR sub-option, the other peer, typically the client side, can try to
- create additional subflows, see
- .BR ADD_ADDR_ACCEPTED_NR.
- 
-@@ -158,7 +159,8 @@ create additional subflows, see
- .BR subflow
- If additional subflow creation is allowed by the MPTCP limits, the MPTCP
- path manager will try to create an additional subflow using this endpoint
--as the source address after the MPTCP connection is established.
-+as the source address after the MPTCP connection is established. A client would
-+typically do this.
+@@ -133,7 +133,10 @@ is 0.
+ When a port number is specified, incoming MPTCP subflows for already
+ established MPTCP sockets will be accepted on the specified port, regardless
+ the original listener port accepting the first MPTCP subflow and/or
+-this peer being actually on the client side.
++this peer being actually on the client side. This option has to be used in
++combination with the
++.BR signal
++flag.
  
  .TP
- .BR backup
+ .IR IFNAME
 
 -- 
 2.45.2
