@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5E7136E3B
-	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 14:15:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3D215383B
+	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 14:29:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721744146; cv=none; b=Askt2j17OfgAFHExx3en34/eTTTnAbgEIYPqwnY4DHpu6Nn8dNPbuXRN7qKaJZNY+u6HW8TC86h8hAZEr9tnnNhmMchP4ZiNBtSWySWDqnKCsqxJkLhkxRuAgmLkjAofkd0RiNHD3gsc/AK/PyG/nLFCG2cbFpvdklfIBe65cDA=
+	t=1721744942; cv=none; b=pxsMyaFjJCMBJVrBaqPRwsg65vUlMP/GKsaALAlA7B2pST2EIWSU6X6x74oiiUN+KnQFGTviW0E/ti7IzUOWu9AUDb/sCmR6d2CRHkIzLUzQbSsAQLNI7qrguZ1gyyJ3zin0WSn6yn9dM+Mt1wGuocsZZNkjc5T6lgBbgyh6GxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721744146; c=relaxed/simple;
-	bh=grdUoVjODQF5ibxZKkUuCAcSNLGdfZV6ZrkXk8ZNkaw=;
+	s=arc-20240116; t=1721744942; c=relaxed/simple;
+	bh=ih+V+Ul3jEDm6FCJn1+typvfq/z/+ScHaQBPIdQE5PM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UVdvUrLNqgBJHGkNI6zeGewvysb1FXVNQJA12TOYaP8k4OHerxoBdQweDga/xAsKLDfP2ARwHxSDn24SBzQq28PKSQUAXwmecY9aJkrYc2gEG8keuen9f9ZFCS3/OcXexjgwIWP+0WHhf3LCTmtMWpMffUNNqki4qfE0xSn2xIo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ew5oJlxW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=vEhdupCdj7osVAgEa3lfv+1KOtDr5YEP8qiTfVuGhfLYIAm2QVwKHLaqFhrsGX/7TU08rxldzHoVL94akIDQJ4/UgSgVn+lEq16iQHDO7hqtUs/k9rVB6jUTH+gp1gYtJ5pBP3IaClEZYKNuOkEWAqrU1nSROdjnXIvDkDGWDNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s4GO0HrV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ew5oJlxW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBA68C4AF12;
-	Tue, 23 Jul 2024 14:15:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s4GO0HrV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2857AC4AF0A;
+	Tue, 23 Jul 2024 14:29:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721744145;
-	bh=grdUoVjODQF5ibxZKkUuCAcSNLGdfZV6ZrkXk8ZNkaw=;
+	s=k20201202; t=1721744941;
+	bh=ih+V+Ul3jEDm6FCJn1+typvfq/z/+ScHaQBPIdQE5PM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ew5oJlxWJ0M0aSSb+m2AFEZv7FKbYsljYMorE1UKUfJcruQjeyjueNoPb0A0F6t4B
-	 huiyOCZMaBkfpAAqqdbcXitT2hTDh6oFy1Z2RMAi7wcdIszwGeZYreEaxbL9xxI/SL
-	 LzMdgKjfrXHhxaCj7Hgy2nolCLJQujtN87n/tJoypoHO1wHVzCarKEOe7CB2gsihCO
-	 sNOc3PE+w9d37KRb8WDtvIlFGAIiJCQYOk7eaxgL/u37LcLZ4fk/hd8giClKrUb8/e
-	 oSlbljLgjlww3tPraTwyndB7KleMA/b/XQDtDnWsoderCKIe7M5XXbTzuM0qOWbUeI
-	 7oDq74djBb1Gw==
-Message-ID: <6be2da59-f589-46cb-b50c-f13dd6944d65@kernel.org>
-Date: Tue, 23 Jul 2024 16:15:41 +0200
+	b=s4GO0HrVVu2IwCdsCbVp+EjKdKChEYRhaTaUtdI5pth/nnRiiNToqBvmZ7npBF/rC
+	 4IYHUN18dAs6o/8ASVLhKHRMPJ7eLMm1OAbuu2jhNb8MChegcn7vI+MZY4BpKSPnJn
+	 5laXxDrr9pB9RXHs9Q4GHUmKW1tNB9JfouJ3wy2JV5xeQYVzrIyidk5nvGfmU+EDev
+	 F2fS8F5cF6hyhRDObgZNYfyV+7NHp+dlFEKNAYBz7Az4l5/EAmh1VbdOuD12MGk6bl
+	 Bh/cfuR0gkhhLjoux1gcTAyGEzmM0pC1wH0i61v9FfkLnbBE0utZisACl9aIXmTBm+
+	 ysziltE6qErZA==
+Message-ID: <1227f975-6a4c-45aa-b5af-bc1fc5fb6552@kernel.org>
+Date: Tue, 23 Jul 2024 16:28:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -130,14 +130,37 @@ On 23/07/2024 02:24, Mat Martineau wrote:
 > 
 > v3 LGTM. I'm not sure if the new MIBs are best targeted for net-next,
 > they do help with testing but don't seem critical for -stable.
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Indeed. My reasoning was that the MIB counters were not there, mainly
-because this behaviour has never been verified. At the end, it is only
-10 new but well controlled lines :)
+Thank you for the review!
 
-I suggest applying them in our tree, and delay them if they got
-rejected. At the end, the new MIB counters and the tests are well
-isolated, and with a note about that.
+Now in our tree (fixes for -net):
+
+New patches for t/upstream-net and t/upstream:
+- 9d426c00aef4: mptcp: sched: check both directions for backup
+- cba82af312b3: mptcp: distinguish rcv vs sent backup flag in requests
+- 1ed597db4a47: mptcp: pm: only set request_bkup flag when sending MP_PRIO
+- 887ecb0faf1d: mptcp: mib: count MPJ with backup flag
+- 5e248a08f195: selftests: mptcp: join: validate backup in MPJ
+- 237a12154c8f: mptcp: pm: fix backup support in signal endpoints
+- 34b6d5cac1f0: selftests: mptcp: join: check backup support in signal endp
+- Results: 159097cdb0e8..001fe004e8be (export-net)
+- Results: 140ff27ee472..939ca15e71e2 (export)
+
+New patches for t/upstream:
+- b4a459e0fd62: "squashed" patch 8/9 in "selftests/bpf: Add bpf_bkup
+scheduler & test"
+- ec4acb003f8a: "squashed" patch 9/9 in "selftests/bpf: Add bpf_burst
+scheduler & test"
+- Results: 939ca15e71e2..f0f02c71ff0d (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/293546bf79b70ea127af87026d99cfb91eacb77b/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b601d6da52375e9a0a078ec38af104b5243c4658/checks
 
 Cheers,
 Matt
