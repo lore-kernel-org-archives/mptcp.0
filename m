@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3399113C3EE
-	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 16:31:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 583AC13C3EE
+	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 16:31:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721752294; cv=none; b=OeHVS2EQj+5BV/4qDkxAS0VJFlXcljWIG4dBlnZ9HGtA/TZZi46rAyug0A7hcea4MUlJdQmbMkx5uKj+tCbnMq1gE/Ia7rkUdA/dEZGMDIXqCxMqq1vGsM/EVhg9/wUKqMvH3bVd/yuNlyBeFihCbymnCOPkfImP1I+4TgJeAig=
+	t=1721752295; cv=none; b=ddN+JdpRFbuvGpt4mHzGvdRbGQyMBPCD6f3Q/MHdC9UXrYtaCY/p0k1vZnUw7g5ZSIh4txIx1/d6A0+mPA5tcfOTmXO+Lci8gHGgw/jGxARiWBwiyUic2W0eHIB501XxghjsGYL8NNTlMQJOqpR+lifYqYJS6jks4InElr0DKJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721752294; c=relaxed/simple;
-	bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
+	s=arc-20240116; t=1721752295; c=relaxed/simple;
+	bh=FCNZhogJAqUc+dw4wheAd0YWaIlnlTPCs4r+lUGfi20=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=d+Xtbz/W2Id59TIDXB9EOJgB5nG3piGtz2rGv0+ZM+L+w9IKH0dsLEwHepGNlLumwAtHx8JBXvbvrbG67D3IXzH1LgRI1veAPTO/C1Yu9YSGtnUCBO5o2r9ZQrQS1rQkRRP1RXnMx1OEbd8tt6UUZ/+s8kPVDKP+XkrZq26b/4Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fju//gBd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=euT+ZL6cGvIAbd3RUsRrUnFGXQiyY54hav5acBd7oXY/gbDyn5MsD8BWT6orlnSjbm+Ca7LWqzQv2If8qdO0OZYAmR9TtMnqHxdS6WVkLa6EJ3xpghzgfXa0ZUPVqfun3X9vaIP7ZwxkRZRWpd1GcOL8NBYCCfG3G4jUiZ34Czs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KYdAlxvE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fju//gBd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8541C4AF09;
-	Tue, 23 Jul 2024 16:31:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KYdAlxvE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20428C4AF0A;
+	Tue, 23 Jul 2024 16:31:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721752293;
-	bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
+	s=k20201202; t=1721752294;
+	bh=FCNZhogJAqUc+dw4wheAd0YWaIlnlTPCs4r+lUGfi20=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fju//gBdNcQ4CS85yKUQrjA6TXSQpWsthPWIUDy0K25fZ12yNz+OtLD8oQZXwZbmw
-	 TE/3YZU1ZhrphdC+1piIyjQb8rRspvauscPQLfI/1UTv6FCT6v8V2OUBx4wH1aJhBD
-	 xQZCZDpUU3820HVxlo4NedJPWGlhsRPiCZmtBETkHtFkpVAAkQNDJLCVRVZGldNUxF
-	 GYZTRavL0ra6rO7tXxlkNU6HzI+4fc95bXUeRN/oWGQ9ZgoUAEn3M066sQjy4Tg928
-	 5iLirt8H+NAojE6iZwvc4zNCyXhSgz7ED6s1cTIF1mTR86FOfhKQJiMaDadO9EEFQx
-	 mQuVHXAs1i38g==
+	b=KYdAlxvEx/ZgfQT+TdWd+cd21Uus+fR4UMqc1HhvLszbS22tYNH7AbGz6U8ujkXyx
+	 8We/IbOWIiI8VIkctpvIcblQALHXI3Dx/9rIhLHRNeEGjPgJuehxxOLSh4CsjnHvkH
+	 4kZA1q7BZYUhSBfNueaJHbyo9IEdWh6CaD+yGji/7+ctAgYTEjjR2mbzfnuLRHdnqv
+	 N2cLby6qVT4f/eugr3edn1wowgq5CR27JFcjxtYWENYI+FG5SpaC+nObrPOIYg64XS
+	 NdKqGbLeIYniZ1x/LnqfOTmos9zBHpWUq64XUjqfPo0+t03+o1GuZ2jUtEoL92fO5w
+	 hxLXHXDvImupQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 23 Jul 2024 18:31:06 +0200
-Subject: [PATCH mptcp-iproute v2 3/7] man: mptcp: 'port' has to be used
- with 'signal'
+Date: Tue, 23 Jul 2024 18:31:07 +0200
+Subject: [PATCH mptcp-iproute v2 4/7] man: mptcp: 'backup' flag also
+ affects outgoing data
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,55 +38,57 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240723-mptcp-user-feedback-v2-3-59f18975401c@kernel.org>
+Message-Id: <20240723-mptcp-user-feedback-v2-4-59f18975401c@kernel.org>
 References: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
 In-Reply-To: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
 To: MPTCP Upstream <mptcp@lists.linux.dev>
 Cc: Mat Martineau <martineau@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=937; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=6LK+vWpXvXMPJCfqIGEmLGG1ZGT7sOEi4Qt/ngfpWWo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmn9rgWRpyy6J1akJmPU71gohplzbp/CGcQ8FcW
- gBnjpqIWK6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp/a4AAKCRD2t4JPQmmg
- c+QrEACnTfJMv3vXCY1B0vrVY3P2fBpXPsFHoTEQNXDqA7GK6C5ArZy4IrtzRqWPwKadqyCTWXl
- KJEWCQwR+8e6fA9sfq9ULIjWJTbxL3X71sgbim9fkWOhtR6ABYC3Bfwhc9NeMreFkyWmRs1HbNN
- OnrPrGsS2QHWrcHC/5HjHfTBJdYVtDtB+hvqYNBlS7cq9b4YIYqtxmW8572M7K7tuIyt6cPIm6m
- 7O25zG5DLluea166DcBH/YovenfpHNXJJSpLW8fWEyrK4X7eDD6zWR5lsG83iQgsO4k44tmGLcq
- QZ0fqrMCgm0zs4Ab0xYn+XpAu+IcCD2G334TfBs1+fY6dS6GL1RmdFCSAnmd8qnfmpLhvzG3GyT
- R0yHOmJlAylmsrrZn87GUZU2XaIQW1CcWa6YOHuOC05GwV0qp9ZzGu+mKRxq+U44vqx+sNmbKKs
- 2mSP4VaMPQYFi2CRQIS2xv6A5v6dNRQQquIR2KIIawxRF+a2IheRmCTPaeaEpYeanM5dN/4NoP6
- HzFAU51X9u11/A5iE7UF1vAsDSEbi0VFyrMFnMGQyblewf7w+6OT2T5qzQFhqPC7CHDxlP67cLu
- f0VGa2OZeJptThf0Z96RJuT3GRBvzIUJULHY5HfoFbjiQ7zuHuKtvlhO7PyMxNXkj3PjbhiAydk
- IVVX9yNvsKwsM1Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1197; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=FCNZhogJAqUc+dw4wheAd0YWaIlnlTPCs4r+lUGfi20=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmn9rgOElzZrmLEgD3HNEsNUYUHcZR6m4c7lDI7
+ JRO3vq8wrmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZp/a4AAKCRD2t4JPQmmg
+ c3jIEADeKAdAn3jmgwDjjtuVhICEQMQvsN0xrBNrCKO1m3yqbhe98orlsxPpPw28zib033XJ/4J
+ ywnFH4SDzVY0upMp8hpRSeJpujVuRRx505at0cBCGVG7QIljXrqas6EdLyWEPFvonjbOJARzfjZ
+ q1w5Jlv8HRqWZTENfuWybENesSPMw/5GPlwOofQANYlNA+VjwL45fXYfXeyAmzaet1g49CMQrv8
+ YNWIf4sQxbVZk9YDxgWZlfbpXwxbuLtkpeD94JDckovzEvyHdfBv4KjQKOr/uPdxjqJGUYnc0El
+ ao/OSFI8vgf/24qbQKsMcjODcUIXNGGkd7AM4HOUVgKwlU7Az1KkCmmkrTnzzZLjBIsEyPY1ksG
+ mgYDpRc3BIiiYqvkY55XoXaDV/arNhpZtghxI9qwZNWamm3NM//loeABGvA9pHKVHAOZMjypqCx
+ ho/0I2iiPOSH1zgiXXObm3yneW7TL79NHb+Gk5DZHKG3KsIWy9tOkG1u333wKVwabFonPCACjIa
+ X0EpXSG+TpiEMPXZGilm90thYX/vRP81OMQGSWM2eplglt03hm9NoASbt/nxfQAKe7esbQSOQ48
+ KdgnzU2HoCulO4ijJsoQOR3b61JG7DnlHp7s1ED3vu0kx9uWKyjlqXpnTuWd4rqrmlh/lzhyQDe
+ Iu9q1ujWzgq033w==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-That's what is enforced by the kernel: the 'port' is used to create a
-new listening socket on that port, not to create a new subflow from/to
-that port. It then requires the 'signal' flag.
+That's the behaviour with the default packet scheduler.
+
+In some early design, the default scheduler was supposed to take into
+account only the received backup flags, but it ended up not being the
+case, and setting the flag would also affect outgoing data.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- man/man8/ip-mptcp.8 | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ man/man8/ip-mptcp.8 | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
-index 2b693564..11df43ce 100644
+index 11df43ce..4d4c879b 100644
 --- a/man/man8/ip-mptcp.8
 +++ b/man/man8/ip-mptcp.8
-@@ -133,7 +133,10 @@ is 0.
- When a port number is specified, incoming MPTCP subflows for already
- established MPTCP sockets will be accepted on the specified port, regardless
- the original listener port accepting the first MPTCP subflow and/or
--this peer being actually on the client side.
-+this peer being actually on the client side. This option has to be used in
-+combination with the
-+.BR signal
-+flag.
+@@ -172,8 +172,9 @@ If this is a
+ endpoint, the subflows created using this endpoint will have the backup
+ flag set during the connection process. This flag instructs the peer to
+ only send data on a given subflow when all non-backup subflows are
+-unavailable. This does not affect outgoing data, where subflow priority
+-is determined by the backup/non-backup flag received from the peer
++unavailable. This does also affect outgoing data when the default packets
++scheduler is used. With it, the subflow priority is determined by the
++backup/non-backup flag sent to or received from the peer.
  
  .TP
- .IR IFNAME
+ .BR fullmesh
 
 -- 
 2.45.2
