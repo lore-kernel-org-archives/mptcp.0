@@ -1,126 +1,199 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.17])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76F3BA40
-	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 00:24:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF1F31DA22;
+	Tue, 23 Jul 2024 02:57:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.17
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721694282; cv=none; b=O5Lw2Ate6x6IWYcdiUWb/a7pdZZ9L6hB83JOyvzS/OgIR4ZGoOCuFYnda98VdTL8EnLhJJfhJOD7bReXbjBiYlcPxrSo462KYfvFEAxape63HiThHYS2VJu7K5Qy7IjS+fqC2DSyogQ0i54DAg84CaUJjQmWAb2mAZTr+64ZBGI=
+	t=1721703436; cv=none; b=RTZsnqzC+ZUwe3iZN3eRVlSi2eOQwZnlpHTzJoC/e8CEHEgQXAuepkVPgoXXQ3rqc8NBq3Fw5SzDbQr0efAULqK6IZ/nW/la9sv7ait6XQxdh2H1P+FBruJMnwYtOEJirxOTBRgZvhu5g6S6JNESNiIaxZKEHNvlRh+x4p/dM6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721694282; c=relaxed/simple;
-	bh=VCvjBdd8b4Xf7g32U8ynrPRjRdoYcw+biePBxRCw1K8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=A9q3ah1X4uH9QhsPYA1P0PlQ+SZx9lTfkpepngx6XsbDKg9stzz6iNqjsf9c238oCvPo4d7yTs/5OHJDvgX2FyrGkcGA55GWTzjliETcZZy1LnI0w9MXcqm8L4zWvMi49bNomcsHAb0DaF2PaP7nfNv5KdSxnb0gtakgqiTK65I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjW44A56; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721703436; c=relaxed/simple;
+	bh=KyvsydBaMqUsShDBZS37JrBBIA/ZU2ydrTEjgDTPiuc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VBe4BhuznrDQeawfQYzBlVNlVYP5MgmFXDyApHPlahOBxWcIWZFoeYre3nf3HFLmP0cAjKrmb0faMecKkGCpBeE+FM0kiMvDJZqrkEdao48btG4NMdWeEoNOkPRTo9T+oavRF0lL3doRWlz6JKSeuSctCkhqkK28VCNfiHUbKdE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=HTKGjwd3; arc=none smtp.client-ip=192.198.163.17
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjW44A56"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F19C116B1;
-	Tue, 23 Jul 2024 00:24:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721694282;
-	bh=VCvjBdd8b4Xf7g32U8ynrPRjRdoYcw+biePBxRCw1K8=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=gjW44A56b2gXsw1UFmEhJq2LahlqbD6Dr432CWosTM0k3IhbFQBUj5zAro4sHI0H3
-	 bx/Ebea3Vu7llRE2fLAdHbE071GDlOR87lo2+gyppC7Ec47UH7tWKRkxNhpHk4xg29
-	 RZYRLEvXoEbtx9ij78pyJ9a1oeczZjBHlUMeVd4SX3NsW/bVsxbyhPc/IC+Hpard8h
-	 No9h5so8awEy571r9Tqf3sbCnaHLenA7l1qBxsNlJu5uH554X5Rnwr19Zw3SM95+Rc
-	 Kj65iqUvR9lhJE5Ly+L3tu1q+sRi2UXm1oY9ok+/xjy/uRHFDTz9Myevc1t81EgYfw
-	 lDFM6LH1E76Xw==
-Date: Mon, 22 Jul 2024 17:24:42 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v3 0/9] mptcp: fix inconsistent backup usage
-In-Reply-To: <20240718-mptcp-backup-mpj-v3-0-1f6cd9b89ee4@kernel.org>
-Message-ID: <a59b9b6a-0c6b-0918-415e-378a482b3d6b@kernel.org>
-References: <20240718-mptcp-backup-mpj-v3-0-1f6cd9b89ee4@kernel.org>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="HTKGjwd3"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1721703435; x=1753239435;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=KyvsydBaMqUsShDBZS37JrBBIA/ZU2ydrTEjgDTPiuc=;
+  b=HTKGjwd3zKiSWqoYLJlZ+CT4Ww2kGNVxWOeGMp5arvvzF6PRlLOgkweD
+   08zxI1DxtRtVzMLXM1TSsasApmWaYB6nETTBeB2zhGmn9CT0xE9uNgeGY
+   JnShB+xCnRJAYgo9ZT3zatNnISLtspknEfKH0ucUR4uLHrnvtL1UP4gzM
+   mbou3GdxWFLWi6Rpur2lg3We3PSyx+Oy4nwGI2qne9pJ/b3D/DqwEiVTu
+   oFvPV6H6aBuCA1fU8HLkYJQmMryLHlBu+76LxzUSa6Yv60rWSCUhHG73j
+   fQJFZ4/2MdXdiPuKF+fkvWy5fK0VAZ52EPFjZT5hMqQk6Ha+/9LXLN5fr
+   A==;
+X-CSE-ConnectionGUID: yabezqaMSt+cJeNDvtkMMg==
+X-CSE-MsgGUID: 1a/FxxkXTk2IN2BcFnpcgA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11141"; a="19180320"
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="19180320"
+Received: from orviesa008.jf.intel.com ([10.64.159.148])
+  by fmvoesa111.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jul 2024 19:57:12 -0700
+X-CSE-ConnectionGUID: ASqvKW3tS1SEjnDoebRVwg==
+X-CSE-MsgGUID: rcU60Z7+SYWMcCsXYUC2yQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.09,229,1716274800"; 
+   d="scan'208";a="52826781"
+Received: from lkp-server01.sh.intel.com (HELO 68891e0c336b) ([10.239.97.150])
+  by orviesa008.jf.intel.com with ESMTP; 22 Jul 2024 19:57:11 -0700
+Received: from kbuild by 68891e0c336b with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1sW5i8-000laC-0K;
+	Tue, 23 Jul 2024 02:57:08 +0000
+Date: Tue, 23 Jul 2024 10:56:54 +0800
+From: kernel test robot <lkp@intel.com>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-net v4 23/23] mptcp: pm: reduce entries iterations
+ on connect
+Message-ID: <202407231046.JRpmrtkT-lkp@intel.com>
+References: <20240722-mptcp-pm-avail-v4-23-15bfd73de384@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240722-mptcp-pm-avail-v4-23-15bfd73de384@kernel.org>
 
-On Thu, 18 Jul 2024, Matthieu Baerts (NGI0) wrote:
+Hi Matthieu,
 
-> In all the backup tests we have, the backup flag is set on one side, and
-> the expected behaviour is to have both sides respecting this decision.
->
-> On the scheduler side, only the 'backup' field is checked, which is
-> supposed to be set only if the other peer flagged a subflow as backup.
-> But in various places, this flag is set when the local host flagged the
-> subflow as backup.
->
-> One last thing that has been fixed is the backup flag in 'signal'
-> endpoints: it was working only when setting the backup flag while the
-> connection was already opened. That's what the MPJ selftests were doing
-> to check that the signal endpoint were supporting the backup flag (on
-> purpose I guess, because the support was broken in MP_JOIN...).
->
-> The last two patches adapt the BPF selftests to mimic what is now done
-> by the in-kernel packets scheduler.
->
-> Note that the Packetdrill tests need to be updated because the behaviour
-> has been changed / fixed:
->
->  https://github.com/multipath-tcp/packetdrill/pull/152
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v3:
-> - Small fixes in patch 1 and 5: see the individual ChangeLog
-> - Use a new dedicated helper in patch 6: see the individual ChangeLog
-> - Link to v2: https://lore.kernel.org/r/20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org
->
+kernel test robot noticed the following build errors:
 
-Hi Matthieu -
+[auto build test ERROR on 140ff27ee47286bb0a270f3aa275fc319724da8d]
 
-v3 LGTM. I'm not sure if the new MIBs are best targeted for net-next, they 
-do help with testing but don't seem critical for -stable.
+url:    https://github.com/intel-lab-lkp/linux/commits/Matthieu-Baerts-NGI0/mptcp-fully-established-after-ADD_ADDR-echo-on-MPJ/20240723-035843
+base:   140ff27ee47286bb0a270f3aa275fc319724da8d
+patch link:    https://lore.kernel.org/r/20240722-mptcp-pm-avail-v4-23-15bfd73de384%40kernel.org
+patch subject: [PATCH mptcp-net v4 23/23] mptcp: pm: reduce entries iterations on connect
+config: sh-allmodconfig (https://download.01.org/0day-ci/archive/20240723/202407231046.JRpmrtkT-lkp@intel.com/config)
+compiler: sh4-linux-gcc (GCC) 14.1.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240723/202407231046.JRpmrtkT-lkp@intel.com/reproduce)
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202407231046.JRpmrtkT-lkp@intel.com/
+
+All errors (new ones prefixed by >>):
+
+   net/mptcp/subflow.c: In function '__mptcp_subflow_connect':
+>> net/mptcp/subflow.c:1580:48: error: 'const struct mptcp_addr_info' has no member named 'addr6'; did you mean 'addr'?
+    1580 |                 if (ipv6_addr_any(&local->addr.addr6))
+         |                                                ^~~~~
+         |                                                addr
 
 
-> Changes in v2:
-> - new patches 4 and 5.
-> - split patch 6 in two (code then tests) to ease the backports.
-> - patch 6 addresses Mat's comments, and support the ID0 case.
-> - Link to v1: https://lore.kernel.org/r/20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org
->
-> ---
-> Matthieu Baerts (NGI0) (9):
->      mptcp: sched: check both directions for backup
->      mptcp: distinguish rcv vs sent backup flag in requests
->      mptcp: pm: only set request_bkup flag when sending MP_PRIO
->      mptcp: mib: count MPJ with backup flag
->      selftests: mptcp: join: validate backup in MPJ
->      mptcp: pm: fix backup support in signal endpoints
->      selftests: mptcp: join: check backup support in signal endp
->      Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
->      Squash to "selftests/bpf: Add bpf_burst scheduler & test"
->
-> include/trace/events/mptcp.h                       |  2 +-
-> net/mptcp/mib.c                                    |  2 +
-> net/mptcp/mib.h                                    |  2 +
-> net/mptcp/options.c                                |  2 +-
-> net/mptcp/pm.c                                     | 12 ++++
-> net/mptcp/pm_netlink.c                             | 19 +++++-
-> net/mptcp/pm_userspace.c                           | 18 ++++++
-> net/mptcp/protocol.c                               | 10 +--
-> net/mptcp/protocol.h                               |  4 ++
-> net/mptcp/subflow.c                                | 10 +++
-> tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c |  3 +-
-> .../testing/selftests/bpf/progs/mptcp_bpf_burst.c  | 12 ++--
-> tools/testing/selftests/net/mptcp/mptcp_join.sh    | 72 +++++++++++++++++-----
-> 13 files changed, 142 insertions(+), 26 deletions(-)
-> ---
-> base-commit: 50d1a79f5003b88b03b37d05189ad02a84d7be49
-> change-id: 20240711-mptcp-backup-mpj-2f8369fad366
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+vim +1580 net/mptcp/subflow.c
+
+  1546	
+  1547	int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_addr_entry *local,
+  1548				    const struct mptcp_addr_info *remote)
+  1549	{
+  1550		struct mptcp_sock *msk = mptcp_sk(sk);
+  1551		struct mptcp_subflow_context *subflow;
+  1552		int local_id = local->addr.id;
+  1553		struct sockaddr_storage addr;
+  1554		int remote_id = remote->id;
+  1555		int err = -ENOTCONN;
+  1556		struct socket *sf;
+  1557		struct sock *ssk;
+  1558		u32 remote_token;
+  1559		int addrlen;
+  1560	
+  1561		if (!mptcp_is_fully_established(sk))
+  1562			goto err_out;
+  1563	
+  1564		err = mptcp_subflow_create_socket(sk, local->addr.family, &sf);
+  1565		if (err)
+  1566			goto err_out;
+  1567	
+  1568		ssk = sf->sk;
+  1569		subflow = mptcp_subflow_ctx(ssk);
+  1570		do {
+  1571			get_random_bytes(&subflow->local_nonce, sizeof(u32));
+  1572		} while (!subflow->local_nonce);
+  1573	
+  1574		/* if 'IPADDRANY', the ID will be set later, after the routing */
+  1575		if (local->addr.family == AF_INET) {
+  1576			if (!local->addr.addr.s_addr)
+  1577				local_id = -1;
+  1578	#if IS_ENABLED(CONFIG_IPV6)
+  1579		} else if (sk->sk_family == AF_INET6) {
+> 1580			if (ipv6_addr_any(&local->addr.addr6))
+  1581				local_id = -1;
+  1582	#endif
+  1583		}
+  1584	
+  1585		if (local_id >= 0)
+  1586			subflow_set_local_id(subflow, local_id);
+  1587	
+  1588		subflow->remote_key_valid = 1;
+  1589		subflow->remote_key = READ_ONCE(msk->remote_key);
+  1590		subflow->local_key = READ_ONCE(msk->local_key);
+  1591		subflow->token = msk->token;
+  1592		mptcp_info2sockaddr(&local->addr, &addr, ssk->sk_family);
+  1593	
+  1594		addrlen = sizeof(struct sockaddr_in);
+  1595	#if IS_ENABLED(CONFIG_MPTCP_IPV6)
+  1596		if (addr.ss_family == AF_INET6)
+  1597			addrlen = sizeof(struct sockaddr_in6);
+  1598	#endif
+  1599		ssk->sk_bound_dev_if = local->ifindex;
+  1600		err = kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+  1601		if (err)
+  1602			goto failed;
+  1603	
+  1604		mptcp_crypto_key_sha(subflow->remote_key, &remote_token, NULL);
+  1605		pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d", msk,
+  1606			 remote_token, local_id, remote_id);
+  1607		subflow->remote_token = remote_token;
+  1608		WRITE_ONCE(subflow->remote_id, remote_id);
+  1609		subflow->request_join = 1;
+  1610		subflow->request_bkup = !!(local->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+  1611		subflow->subflow_id = msk->subflow_id++;
+  1612		mptcp_info2sockaddr(remote, &addr, ssk->sk_family);
+  1613	
+  1614		sock_hold(ssk);
+  1615		list_add_tail(&subflow->node, &msk->conn_list);
+  1616		err = kernel_connect(sf, (struct sockaddr *)&addr, addrlen, O_NONBLOCK);
+  1617		if (err && err != -EINPROGRESS)
+  1618			goto failed_unlink;
+  1619	
+  1620		/* discard the subflow socket */
+  1621		mptcp_sock_graft(ssk, sk->sk_socket);
+  1622		iput(SOCK_INODE(sf));
+  1623		WRITE_ONCE(msk->allow_infinite_fallback, false);
+  1624		mptcp_stop_tout_timer(sk);
+  1625		return 0;
+  1626	
+  1627	failed_unlink:
+  1628		list_del(&subflow->node);
+  1629		sock_put(mptcp_subflow_tcp_sock(subflow));
+  1630	
+  1631	failed:
+  1632		subflow->disposable = 1;
+  1633		sock_release(sf);
+  1634	
+  1635	err_out:
+  1636		/* we account subflows before the creation, and this failures will not
+  1637		 * be caught by sk_state_change()
+  1638		 */
+  1639		mptcp_pm_close_subflow(msk);
+  1640		return err;
+  1641	}
+  1642	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
