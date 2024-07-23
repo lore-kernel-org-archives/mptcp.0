@@ -1,146 +1,67 @@
-Received: from mail-oo1-f51.google.com (mail-oo1-f51.google.com [209.85.161.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4C4D2561B
-	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 22:01:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.161.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23F28143747
+	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 22:01:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721772102; cv=none; b=Cc8F2+MyKLqjPEWMvOSbOV/TrcvTbOSyk8FEVgPKIR3bMXIVgl9CuG796kJTBX800bC5d28I7gw12YYK+XnH5lRVHgdxH1nq0as9jtxfQ37r21bND+0YMHVDEDgClP4iatS1WallUyI9VJ1T5bTGzOWKa3nX8Qn9G6NuRI0mcCc=
+	t=1721772118; cv=none; b=Zo11B68v18Eos7q2lloWjoQ+oGxHP+O9qH+PB+adRIWr/scd3lYYSxSawfW5LFZhBNkt3BE9c8E3ejklYvk0K6UEo8rdfhAv6vaYrQUA8nE77XDE5GbruWQ93als8LDPL75kBlkmx78467SHMSwrWzxgT9XXnuOhsvpBWMUY8IM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721772102; c=relaxed/simple;
-	bh=5xVlqisSBJYMgU9MzkbYusXo6EHS+CLhw7wKUYkGMG8=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=U/8Qpnuegm3wFewLjWQYgKDhsJ/+MYq8b8m4u6VKsF6peHrmiaQmVVSXF7LOfd3Bg6sUA729OqHRmvoKA22lB2QcqNowLQx7deyGXlUVAeFhDB8Xo7Mc05FX7Y6KYz4XRw5EF3QtnRYABnFCMO601sYavERPufmxuJBGtZp6Rr4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=cYjfFFDg; arc=none smtp.client-ip=209.85.161.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1721772118; c=relaxed/simple;
+	bh=krZNWggrWjVcl9hXlrFka7DZF2U2f1uQLs8mjxVeJVc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=QmeBc5eHG04uvCLXnBlVdoZxhEUrJhsS/AvIFxVV2ahjM0tWZ1n/5PHwiDvPQ/BNtNov4zMbTMVZTab4qGjyNUYdMqWcsw3mCofoKCmSjxm4AAjo6hw4PXjvOBDi1k6KOOycNBKEsweZ2nBOD4UDXh05QmJHWF2BHKD+qgdOuvc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=COSnbM7q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="cYjfFFDg"
-Received: by mail-oo1-f51.google.com with SMTP id 006d021491bc7-5d569902626so1946674eaf.2
-        for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 15:01:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1721772100; x=1722376900; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3RbOzRw1HgFS5DEp3YsvL3ixVExK5DUcKmrah8c6zUo=;
-        b=cYjfFFDgrVw5dMiL6CtaQUV47sCOQdYsYfb44Iuwlt5ngBj1zav6A3smLwR+zFYKE0
-         2ZFMImOMLcDSYEj2NErwcEJnzUdB3QvdoD/GVtol4mywb89m3H/bYSILQzvpezbUnwOh
-         p5cnKMtdhIZsVe/llroyRw+kLySOqfYvKf2PgnQNhRd/1A3E7blbbOUzmlQPR2cYkXf5
-         AFViPdpIJxk4aJmSDGOQ6I2rbhWDItih0UM2nDRhgNBKKAFfZpMqaadgVntphECaWP5p
-         fgb0ZRwSrBMDZRdu64llLbY30mXnA4bKyxol+Km3Il11gCtH9w+t+UU6EPbG/oKCQ7Jd
-         VCRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721772100; x=1722376900;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=3RbOzRw1HgFS5DEp3YsvL3ixVExK5DUcKmrah8c6zUo=;
-        b=JlSejFxY7qdCaXNU0cyqbR1TaDAcwe3ap8cHNAzePfu4+MTiiPTK9sxn+QSnx7gXz6
-         hAluad4cFap5VJ+AiyGQYCx5sdBiSNLaAq9gq/sQX4LanKP3e1qljp5iwRVxNIGS4QPO
-         kUZlBA+jKJ5BMQeHn46v357A1lA9AusV8Pyi5ZLffb9VHPgUV7T/gS+PrVLPEb3fTrsB
-         PI+nIHsx/XZtHEWa678ZrEDMXV2gxCxjUShYmuXA3JUcL3SrY8/Oa+WVNyTQgY9VnJiG
-         0DLS0yqLlN4SHgg63ypOTEX+/wAt/VjW9x4Aywc6XC9wD6XFKUorTfNjJNH0fSybvhZe
-         DFUQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXUWuUK7BggXFRA8OdEsigcV8lDKEV6YekWiYVauwfW0xE4eub0HM54rxw/oE2HpCMPYoNS1AJ3CPANMr9nfnZTBpX48ks=
-X-Gm-Message-State: AOJu0Yx9J03k4S4EnwZvKwyc6k/+HcJLRo5AbuGziE0Fnk12fm9TODFy
-	W7DYvPZmPhnDLlQdfFyJO3ysq2qtw0f15lrTM6sltEIuyAp+UJ2QQgAQCpndT+DGscOOYVwt2md
-	BhXL/U3G7Yr7pOqEM4LFOMJmi4Vm+VLwj+X3Q
-X-Google-Smtp-Source: AGHT+IG52jqWawXgN2kcOVQKAVuGRKQsz6erICJGp/9Nf2OmyPDQUG4y71nh5l7MhmNmqRHohI8zQDyyM5Dy7lSVDY8=
-X-Received: by 2002:a05:6358:297:b0:1aa:c73d:5a8a with SMTP id
- e5c5f4694b2df-1acc5b10dc0mr1273554155d.16.1721772099135; Tue, 23 Jul 2024
- 15:01:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="COSnbM7q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89DCFC4AF0A;
+	Tue, 23 Jul 2024 22:01:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721772117;
+	bh=krZNWggrWjVcl9hXlrFka7DZF2U2f1uQLs8mjxVeJVc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=COSnbM7qN8z0/HsdXesyREHvIesKu/koomFSbDwggP8u8RtCpbGjmtmJwu237E7TO
+	 mCWOcblYPFYB0Q+cSgLHgX1ZLXjxFafFqR4EFLs1mcgiXFV1I7vwWhGAFu/4pCgpva
+	 cZe+aD0ji4tEYk6Mj0ZJ9xi2oLUE7NZ4kUu9/KoCr08og25rqAIWwxFVW1CS/U0o6R
+	 T3Ff0cBXLmc32UIuhWdriFLCw5Yu0/gW4Ps/Ir6h8wOrYAs3Q7EExa/03P4Sni01Si
+	 oqeeGmcnTRhEDZJz2TLZ+ofrbPsnl+5l1LGB3X8L9Ng+XTEVEU/l/vLScrLVAALfF9
+	 NWQw2v6/opEXw==
+Date: Tue, 23 Jul 2024 15:01:56 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net v4 21/23] mptcp: pm: avoid possible UaF whend
+ selecting endp
+In-Reply-To: <20240722-mptcp-pm-avail-v4-21-15bfd73de384@kernel.org>
+Message-ID: <8c95f30b-617a-f72b-b729-844f158e50e7@kernel.org>
+References: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org> <20240722-mptcp-pm-avail-v4-21-15bfd73de384@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240718-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v2-0-d653f85639f6@kernel.org>
- <20240718-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v2-1-d653f85639f6@kernel.org>
- <CANn89iJNa+UqZrONT0tTgN+MjnFZJQQ8zuH=nG+3XRRMjK9TfA@mail.gmail.com>
- <2583642a-cc5f-4765-856d-4340adcecf33@kernel.org> <CANn89iKP4y7iMHxsy67o13Eair+tDquGPBr=kS41zPbKz+_0iQ@mail.gmail.com>
- <4558399b-002b-40ff-8d9b-ac7bf13b3d2e@kernel.org> <CANn89iLozLAj67ipRMAmepYG0eq82e+FcriPjXyzXn_np9xX2w@mail.gmail.com>
- <9c0b40e5-2137-423f-85c3-385408ea861e@kernel.org>
-In-Reply-To: <9c0b40e5-2137-423f-85c3-385408ea861e@kernel.org>
-From: Neal Cardwell <ncardwell@google.com>
-Date: Tue, 23 Jul 2024 18:01:19 -0400
-Message-ID: <CADVnQy=Aky08HJGnozv-Nd97kRHBnxhw+caks+42FUyn+9GbPQ@mail.gmail.com>
-Subject: Re: [PATCH net v2 1/2] tcp: process the 3rd ACK with sk_socket for TFO/MPTCP
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Eric Dumazet <edumazet@google.com>, "David S. Miller" <davem@davemloft.net>, 
-	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org, mptcp@lists.linux.dev, 
-	linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, Jul 23, 2024 at 3:09=E2=80=AFPM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
+On Mon, 22 Jul 2024, Matthieu Baerts (NGI0) wrote:
+
+> select_local_address() and select_signal_address() both select an
+> endpoint entry from the list inside an RCU protected section, but return
+> a reference to it, to be read later on. If the entry is dereferenced
+> after the RCU unlock, reading info could cause a Use-after-Free.
 >
-> Hi Eric,
+> A simple solution is to copy the required info while inside the RCU
+> protected section to avoid any risk of UaF later. The address ID might
+> need to be modified later to handle the ID0 case later, so a copy seems
+> OK to deal with.
 >
-> On 23/07/2024 18:42, Eric Dumazet wrote:
-> > On Tue, Jul 23, 2024 at 6:08=E2=80=AFPM Matthieu Baerts <matttbe@kernel=
-.org> wrote:
-> >>
-> >> Hi Eric,
-> >>
-> >> On 23/07/2024 17:38, Eric Dumazet wrote:
-> >>> On Tue, Jul 23, 2024 at 4:58=E2=80=AFPM Matthieu Baerts <matttbe@kern=
-el.org> wrote:
-> >>>>
-> >>>> Hi Eric,
-> >>>>
-> >>>> +cc Neal
-> >>>> -cc Jerry (NoSuchUser)
-> >>>>
-> >>>> On 23/07/2024 16:37, Eric Dumazet wrote:
-> >>>>> On Thu, Jul 18, 2024 at 12:34=E2=80=AFPM Matthieu Baerts (NGI0)
-> >>>>> <matttbe@kernel.org> wrote:
-> >>>>>>
-...
-> >>> +.045 < S. 1234:1234(0) ack 1001 win 14600 <mss
-> >>> 940,nop,nop,sackOK,nop,wscale 6,FO 12345678,nop,nop>
-> >>>    +0 > . 1001:1001(0) ack 1 <nop,nop,sack 0:1>  // See here
-> >>
-> >> I'm sorry, but is it normal to have 'ack 1' with 'sack 0:1' here?
-> >
-> > It is normal, because the SYN was already received/processed.
-> >
-> > sack 0:1 represents this SYN sequence.
->
-> Thank you for your reply!
->
-> Maybe it is just me, but does it not look strange to have the SACK
-> covering a segment (0:1) that is before the ACK (1)?
->
-> 'ack 1' and 'sack 0:1' seem to cover the same block, no?
-> Before Kuniyuki's patch, this 'sack 0:1' was not present.
+> Reported-by: Paolo Abeni <pabeni@redhat.com>
+> Closes: https://lore.kernel.org/45cd30d3-7710-491c-ae4d-a1368c00beb1@redhat.com
+> Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-A SACK that covers a sequence range that was already cumulatively or
-selectively acknowledged is legal and useful, and is called a
-Duplicate Selective Acknowledgement (DSACK or D-SACK).
+Hi Matthieu -
 
-A DSACK indicates that a receiver received duplicate data. That can be
-very useful in allowing a data sender to determine that a
-retransmission was not needed (spurious). If a data sender receives
-DSACKs for all retransmitted data in a loss detection episode then it
-knows all retransmissions were spurious, and thus it can "undo" its
-congestion control reaction to that estimated loss, since the
-congestion control algorithm was responding to an incorrect loss
-signal. This can be very helpful for performance in the presence of
-varying delays or reordering, which can cause spurious loss detection
-episodes..
+Minor subject line typo - "whend"
 
-See:
-
-https://datatracker.ietf.org/doc/html/rfc2883
-An Extension to the Selective Acknowledgement (SACK) Option for TCP
-
-https://www.rfc-editor.org/rfc/rfc3708.html
-"Using TCP Duplicate Selective Acknowledgement (DSACKs) and Stream
-Control Transmission Protocol (SCTP) Duplicate  Transmission Sequence
-Numbers (TSNs) to Detect Spurious Retransmissions"
-
-neal
+- Mat
