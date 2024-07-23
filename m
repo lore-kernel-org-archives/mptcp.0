@@ -1,121 +1,126 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2376D1C6A8
-	for <mptcp@lists.linux.dev>; Mon, 22 Jul 2024 20:32:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76F3BA40
+	for <mptcp@lists.linux.dev>; Tue, 23 Jul 2024 00:24:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721680355; cv=none; b=GY1DpbCjoXH3zWI4egGN3ePMBFycYPD0DZQWWwZyb+ExRUOKqHMo89so7IZgjNIWzOZUDMWehPxBwVROhAOY9nDz80X0+KYqyffDshcKf5ng3iI8ck8eDVI4btjzsyVh+Gauz80zb0lZBaufzmZmw6wg1ADTHeeSAArxa4JLbwU=
+	t=1721694282; cv=none; b=O5Lw2Ate6x6IWYcdiUWb/a7pdZZ9L6hB83JOyvzS/OgIR4ZGoOCuFYnda98VdTL8EnLhJJfhJOD7bReXbjBiYlcPxrSo462KYfvFEAxape63HiThHYS2VJu7K5Qy7IjS+fqC2DSyogQ0i54DAg84CaUJjQmWAb2mAZTr+64ZBGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721680355; c=relaxed/simple;
-	bh=0mtSyx+C+PQ7PZKRWO8CIqsFdz0QdNvVAG9h238hWeA=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=o6vbDXfKNM2rBmq/ChpL5cNPmBlPtJL2/k4LFI254yVKRQUBI65pQMI72VWt+m/2dQPp8Bs28Xu0hB5lzXaYG2JoqHwSduqFoQRE6Ss84DRsBrlrjawCU7S4uPQ8Gq2+stvFXlEyfjG6VBjTZDfi5KACnQt/Rbm5I079705bY78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=lXVUAz/8; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1721694282; c=relaxed/simple;
+	bh=VCvjBdd8b4Xf7g32U8ynrPRjRdoYcw+biePBxRCw1K8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A9q3ah1X4uH9QhsPYA1P0PlQ+SZx9lTfkpepngx6XsbDKg9stzz6iNqjsf9c238oCvPo4d7yTs/5OHJDvgX2FyrGkcGA55GWTzjliETcZZy1LnI0w9MXcqm8L4zWvMi49bNomcsHAb0DaF2PaP7nfNv5KdSxnb0gtakgqiTK65I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gjW44A56; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lXVUAz/8"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-1fd78c165eeso19451125ad.2
-        for <mptcp@lists.linux.dev>; Mon, 22 Jul 2024 13:32:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1721680353; x=1722285153; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=A4i9zGXEWcePqG4X7Cqxq32yO+VFSIALNVThJXx9+f0=;
-        b=lXVUAz/8Dijf8RDjeR9t8x1YJ/bckI0eMhPINcehz3hXBODwTiGYMpY+nKDQ8PTRX7
-         xaUvKb7aBapyZrHc71UTiPzAkV04nsST46Mu1DEcU/8VuVkXqw6XICWc90LQPgBc6SC7
-         oqXeht5S8cBbVA3hv5n6chqWtOJT/Y2FDK+DKrKhesa23kRxgGppjNGCAAG6XoADTefp
-         2JDRs9MlRO9emyx5E0voceEDWPDCHblEXPZORgef16ODFxqgDRBbb9Bh17ImSPo+u9pG
-         o+dLHf4VBvn9WN2Mlu5OvSlVChj/xRKuktKpvEJrTj9TN3xftW+ddwlVD8bM8ofZmY4K
-         90Qw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1721680353; x=1722285153;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=A4i9zGXEWcePqG4X7Cqxq32yO+VFSIALNVThJXx9+f0=;
-        b=Uuag6qJniSSsiCvP9VNi2TSxiu6sSAgaX2n/GbGdRjLa4m9dCQ5d0y36rOSZNxDHgY
-         N0+sN0kt2sBQA3YccMANXly3MDgnDBB50dV4Z9aBH835VUEgUIvqaaZ+au2zHJ+AxOQq
-         y5IPOUY/r9RJM+NhyIT6NYo8MgC7pf0HVPw2a8OWoaQU+Miiy1E6CIENEt4qR/GIKGZo
-         lGc1HNHIxK4KpRK+BzLIS6Yds2nYqGi1bzEZm8IEIngF/Hg2juStrR447NRej7cfiCjJ
-         mZE6H1BTl5K8ny3/554NwNqhOwCPWbYryqnWVtepbjZCK3kCa2DBc0RPbUj9SnFgqk19
-         789Q==
-X-Gm-Message-State: AOJu0Yz9DiiHhgtDvy9XyPMZq9NHQQI79P4kk5caOOvsjgJUMZi2xkAt
-	yWeQDRb7cEolV4hSRdVXsOmDfBurFHB1dOU7S/g2n8NOsBGuiZ8=
-X-Google-Smtp-Source: AGHT+IE92uf6pKvM4cvuM3IvjjSVuY8eEt8qQ4WrhsPbT7PkZStwycaaYkO048z4HkRGJtbhHDNlQQ==
-X-Received: by 2002:a17:90a:8a88:b0:2c9:98c2:f6d7 with SMTP id 98e67ed59e1d1-2cd273d5280mr6207744a91.5.1721680353269;
-        Mon, 22 Jul 2024 13:32:33 -0700 (PDT)
-Received: from [127.0.0.1] ([13.83.123.146])
-        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2ccf808f01esm7464495a91.42.2024.07.22.13.32.32
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 22 Jul 2024 13:32:32 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org>
-References: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org>
-Subject: Re: [PATCH mptcp-net v4 00/23] mptcp: fix endpoints with 'signal'
- and 'subflow' flags
-Message-ID: <1bcaee82-fc92-fed8-eb11-941d82769e08@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 22 Jul 2024 20:32:31 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gjW44A56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4F19C116B1;
+	Tue, 23 Jul 2024 00:24:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1721694282;
+	bh=VCvjBdd8b4Xf7g32U8ynrPRjRdoYcw+biePBxRCw1K8=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=gjW44A56b2gXsw1UFmEhJq2LahlqbD6Dr432CWosTM0k3IhbFQBUj5zAro4sHI0H3
+	 bx/Ebea3Vu7llRE2fLAdHbE071GDlOR87lo2+gyppC7Ec47UH7tWKRkxNhpHk4xg29
+	 RZYRLEvXoEbtx9ij78pyJ9a1oeczZjBHlUMeVd4SX3NsW/bVsxbyhPc/IC+Hpard8h
+	 No9h5so8awEy571r9Tqf3sbCnaHLenA7l1qBxsNlJu5uH554X5Rnwr19Zw3SM95+Rc
+	 Kj65iqUvR9lhJE5Ly+L3tu1q+sRi2UXm1oY9ok+/xjy/uRHFDTz9Myevc1t81EgYfw
+	 lDFM6LH1E76Xw==
+Date: Mon, 22 Jul 2024 17:24:42 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v3 0/9] mptcp: fix inconsistent backup usage
+In-Reply-To: <20240718-mptcp-backup-mpj-v3-0-1f6cd9b89ee4@kernel.org>
+Message-ID: <a59b9b6a-0c6b-0918-415e-378a482b3d6b@kernel.org>
+References: <20240718-mptcp-backup-mpj-v3-0-1f6cd9b89ee4@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Thu, 18 Jul 2024, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> In all the backup tests we have, the backup flag is set on one side, and
+> the expected behaviour is to have both sides respecting this decision.
+>
+> On the scheduler side, only the 'backup' field is checked, which is
+> supposed to be set only if the other peer flagged a subflow as backup.
+> But in various places, this flag is set when the local host flagged the
+> subflow as backup.
+>
+> One last thing that has been fixed is the backup flag in 'signal'
+> endpoints: it was working only when setting the backup flag while the
+> connection was already opened. That's what the MPJ selftests were doing
+> to check that the signal endpoint were supporting the backup flag (on
+> purpose I guess, because the support was broken in MP_JOIN...).
+>
+> The last two patches adapt the BPF selftests to mimic what is now done
+> by the in-kernel packets scheduler.
+>
+> Note that the Packetdrill tests need to be updated because the behaviour
+> has been changed / fixed:
+>
+>  https://github.com/multipath-tcp/packetdrill/pull/152
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v3:
+> - Small fixes in patch 1 and 5: see the individual ChangeLog
+> - Use a new dedicated helper in patch 6: see the individual ChangeLog
+> - Link to v2: https://lore.kernel.org/r/20240716-mptcp-backup-mpj-v2-0-4d50247405fb@kernel.org
+>
 
-Our CI did some validations and here is its report:
+Hi Matthieu -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10047466924
+v3 LGTM. I'm not sure if the new MIBs are best targeted for net-next, they 
+do help with testing but don't seem critical for -stable.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/86bf23fada47
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D873047
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> Changes in v2:
+> - new patches 4 and 5.
+> - split patch 6 in two (code then tests) to ease the backports.
+> - patch 6 addresses Mat's comments, and support the ID0 case.
+> - Link to v1: https://lore.kernel.org/r/20240711-mptcp-backup-mpj-v1-0-d45506182a9e@kernel.org
+>
+> ---
+> Matthieu Baerts (NGI0) (9):
+>      mptcp: sched: check both directions for backup
+>      mptcp: distinguish rcv vs sent backup flag in requests
+>      mptcp: pm: only set request_bkup flag when sending MP_PRIO
+>      mptcp: mib: count MPJ with backup flag
+>      selftests: mptcp: join: validate backup in MPJ
+>      mptcp: pm: fix backup support in signal endpoints
+>      selftests: mptcp: join: check backup support in signal endp
+>      Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
+>      Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+>
+> include/trace/events/mptcp.h                       |  2 +-
+> net/mptcp/mib.c                                    |  2 +
+> net/mptcp/mib.h                                    |  2 +
+> net/mptcp/options.c                                |  2 +-
+> net/mptcp/pm.c                                     | 12 ++++
+> net/mptcp/pm_netlink.c                             | 19 +++++-
+> net/mptcp/pm_userspace.c                           | 18 ++++++
+> net/mptcp/protocol.c                               | 10 +--
+> net/mptcp/protocol.h                               |  4 ++
+> net/mptcp/subflow.c                                | 10 +++
+> tools/testing/selftests/bpf/progs/mptcp_bpf_bkup.c |  3 +-
+> .../testing/selftests/bpf/progs/mptcp_bpf_burst.c  | 12 ++--
+> tools/testing/selftests/net/mptcp/mptcp_join.sh    | 72 +++++++++++++++++-----
+> 13 files changed, 142 insertions(+), 26 deletions(-)
+> ---
+> base-commit: 50d1a79f5003b88b03b37d05189ad02a84d7be49
+> change-id: 20240711-mptcp-backup-mpj-2f8369fad366
+>
+> Best regards,
+> -- 
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
