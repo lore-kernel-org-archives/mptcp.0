@@ -1,215 +1,343 @@
-Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
+Received: from mailout2.w1.samsung.com (mailout2.w1.samsung.com [210.118.77.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BB6167D83
-	for <mptcp@lists.linux.dev>; Wed, 24 Jul 2024 19:47:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 674CB763E7;
+	Wed, 24 Jul 2024 21:00:23 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=210.118.77.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721850479; cv=none; b=f16C0Xkp81jx20UznTpVhWwKRKMCABQJzvDFAWsqe0tuFtiRcu+EvYPH8HyNZu9o9SR7eLWJVr5PSZwgh+H3OJCHWAGmd6wWCJDEQGPT7TxhlhnpsL+Irpu3k1+3zYGWH47iJ76UnowLH1pdf4EFC5bCUM5aL9t8WFj2z0BIBNY=
+	t=1721854826; cv=none; b=ijFpn7w3xsRjBT2FUW4mEL1SlmQjLzmNM6CEJ/LLEciqI3dnrweEl9W2+Z1vW0XreO7fWOxm9JlTZRJNX+g7ehgyklhx8WJfEnt76spXmvSIrxrCPyr7c0XThSrbSMST5JvgWPW4+F28rTx5z83UkgFZC3wPe/MvrVhBVUrq9yQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721850479; c=relaxed/simple;
-	bh=k6FwyC2TQEGHr4zuRg4goZTUWzjhVQKmKTKmITDQEuY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g7mxJAZUkndYwUSmSIkLC33NMW+pf0q1VwjNoP9cKAu+auwdOIL0iWlyJir6yYScYNHRjdGflyavcsSqS27fHMYa/mPG/8K15z6uH7Cl/5Su1n47ArgarXRsJH048OCUA6q19xJaFdnFbim1J+ZaxsjW+paaN4pDw6eavzIiimA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H6J9pa23; arc=none smtp.client-ip=95.215.58.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1721854826; c=relaxed/simple;
+	bh=MWPyVHqyGAdLPGNh/jcvXb92SGEZuZ9xxlgHcr3qQcE=;
+	h=Date:From:To:CC:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition:References; b=A1j+ydKXNP4x5yl4fIWrgvs6IrUwTx6etrGsCEhl4LbBAQ3NY6G3z346N2hiShsgLna8q6SD5o2milajy8gkhYyI5/WZM4FXccfQ0MI794MwaLaaVomVXxc9Ysza2Olf5iL+zIw7Fec33WgodurhZe66ZVYXx+9f7QvwSICPur4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com; spf=pass smtp.mailfrom=samsung.com; dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b=TX5MYsYU; arc=none smtp.client-ip=210.118.77.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=samsung.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samsung.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H6J9pa23"
-Message-ID: <cdba9d7c-e5da-4e3b-a121-1fad4f517917@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1721850474;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=7YaV2tZ+kfBixAFIS2ceMaaoLIfoRysDRpw3nqa337M=;
-	b=H6J9pa23EkrNXfqC0xApI0RyKxu3miq3uV7DzOQGSNSV7SWO2lx9NE5PrF0cwhsltlKcCX
-	ILRrjOrHKRSUw3tauG2LEDDI+sMz1Nz75/fBcJqzV6Tl8j3brE7qyjUtN5PBaFPL/3YzGL
-	FUbs4B6XKawy/H/PHczYnnYl/fx63+U=
-Date: Wed, 24 Jul 2024 12:47:44 -0700
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="TX5MYsYU"
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+	by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20240724210021euoutp0231d7e8e05684c7fd4c00635de6447bfd~lQdZhL_N12009420094euoutp02z;
+	Wed, 24 Jul 2024 21:00:21 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20240724210021euoutp0231d7e8e05684c7fd4c00635de6447bfd~lQdZhL_N12009420094euoutp02z
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+	s=mail20170921; t=1721854821;
+	bh=6BetKsi/JkRZ4DymqJrR3MQXQeSQizzSeZc0DIGgj2A=;
+	h=Date:From:To:CC:Subject:References:From;
+	b=TX5MYsYUAk/lCQnbloJX/1xyvmFoLoZq1rLyEKiXNvi8HcjkATrMtfJUG54sZ15uC
+	 3xRNQ1Rdi4G19n6puLWjeC/DJO7G8cwLdX5Soo4n/mz7MkjaVQmXRfMBI1Leutbp89
+	 tRWoWmCvNiNzvQdU2Ry8KKOp4aaf03qHXG2EXOng=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+	eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+	20240724210021eucas1p14b3444339aa43fc76f8f3039d1a05213~lQdZG6ssu3068230682eucas1p1n;
+	Wed, 24 Jul 2024 21:00:21 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+	eusmges2new.samsung.com (EUCPMTA) with SMTP id 10.90.09875.46B61A66; Wed, 24
+	Jul 2024 22:00:20 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+	eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+	20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61~lQdYcJjOV1618116181eucas1p2F;
+	Wed, 24 Jul 2024 21:00:20 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+	eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+	20240724210020eusmtrp23954d5dd21bfc13f1ff8cc809fa8fafb~lQdYZk0eX2668126681eusmtrp2q;
+	Wed, 24 Jul 2024 21:00:20 +0000 (GMT)
+X-AuditID: cbfec7f4-11bff70000002693-ea-66a16b64e8e4
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+	eusmgms2.samsung.com (EUCPMTA) with SMTP id 94.8D.09010.46B61A66; Wed, 24
+	Jul 2024 22:00:20 +0100 (BST)
+Received: from CAMSVWEXC02.scsc.local (unknown [106.1.227.72]) by
+	eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+	20240724210019eusmtip13c5484587fc1cc980c2235c6d2fb06c1~lQdYCFWSP1854318543eusmtip18;
+	Wed, 24 Jul 2024 21:00:19 +0000 (GMT)
+Received: from localhost (106.210.248.226) by CAMSVWEXC02.scsc.local
+	(2002:6a01:e348::6a01:e348) with Microsoft SMTP Server (TLS) id 15.0.1497.2;
+	Wed, 24 Jul 2024 22:00:19 +0100
+Date: Wed, 24 Jul 2024 23:00:14 +0200
+From: Joel Granados <j.granados@samsung.com>
+To: Linus Torvalds <torvalds@linux-foundation.org>
+CC: Joel Granados <j.granados@samsung.com>, Thomas
+	=?utf-8?B?V2Vp77+9c2NodWg=?= <linux@weissschuh.net>, Luis Chamberlain
+	<mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, Jakub Kicinski
+	<kuba@kernel.org>, Dave Chinner <david@fromorbit.com>,
+	<linux-arm-kernel@lists.infradead.org>, <linux-kernel@vger.kernel.org>,
+	<linux-s390@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+	<netdev@vger.kernel.org>, <linux-riscv@lists.infradead.org>,
+	<linux-fsdevel@vger.kernel.org>, <linux-mm@kvack.org>,
+	<linux-xfs@vger.kernel.org>, <linux-trace-kernel@vger.kernel.org>,
+	<linux-perf-users@vger.kernel.org>, <linux-security-module@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <coreteam@netfilter.org>,
+	<bpf@vger.kernel.org>, <kexec@lists.infradead.org>,
+	<linux-hardening@vger.kernel.org>, <bridge@lists.linux.dev>,
+	<mptcp@lists.linux.dev>, <lvs-devel@vger.kernel.org>,
+	<linux-rdma@vger.kernel.org>, <rds-devel@oss.oracle.com>,
+	<linux-sctp@vger.kernel.org>, <linux-nfs@vger.kernel.org>,
+	<apparmor@lists.ubuntu.com>
+Subject: [GIT PULL] sysctl constification changes for v6.11-rc1
+Message-ID: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v3 2/3] selftests/bpf: Add mptcp pm_nl_ctl link
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
- netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
- mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Shuah Khan <shuah@kernel.org>
-References: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
- <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-2-ebdc2d494049@kernel.org>
- <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
- <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
- <ab8112e6-ea7b-4b36-b395-049214e1608d@kernel.org>
- <780ed38257480940def86947b2ee354f298e890b.camel@kernel.org>
- <684fd6c2-ad54-4479-8a6a-ab3270e558a7@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-Content-Language: en-US
-In-Reply-To: <684fd6c2-ad54-4479-8a6a-ab3270e558a7@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset="us-ascii"
+Content-Disposition: inline
+X-ClientProxiedBy: CAMSVWEXC01.scsc.local (2002:6a01:e347::6a01:e347) To
+	CAMSVWEXC02.scsc.local (2002:6a01:e348::6a01:e348)
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SfUxbZRTG8/Z+0qx46VBeGRZTw6KGIZKh7xxxLDHmqjEasg+VLK6xl68B
+	W1rYhDkdHxPHJtSCgZWvyyaUwdJKYR0Flg1CWwYyYANC5qwRSt2AytayOAIWKZdl++933nOe
+	85wneWlM2kKG0qmZWZwqU5EuJ8W42bY0vE15qD4p2nh+O8qz8QTy9tlJZL5wRoT+sxRhqN3m
+	AMjgHiZQ1+AjERoxlxDIND1BoO6rN3BUa1wC6HZnNYkcl1YJNHJ9kEBjlw04cvX+iCOzt5BE
+	mvoCDM3wcwR6cHaKRH3GIRx1rnRQaPmxS4SW//URqKDOg6FJzQxAvxnzKWTjX0AawwCObrZ5
+	CTRV4qbiw9mB85A1NZ8mWZNHS7H9lcs42/bLd+y9tnOAHa6sB+zE5J84617uF7EjjfMk6zXJ
+	2NIzNurTTV+I45RceupRTvXGuwfFKdPGIfJIyftfF5Q6qJNAu60YBNCQ2Q6tlVaiGIhpKdME
+	4E8jnaRQLAKo/eN3IBReAMfLbOCJpMRu3JjSA9hYe+Xp1Klxz0bnMoBNP9eSfgnORMCrPX9T
+	fiaZSDg8fxfzczATA733xtbdMUZDw/vGgnWPzcwu2Hx9eV0sYeKhpb8TFzgI3jjnXGdsbRHf
+	5Xej13gL1Pto4bxXoMPUjQl8Ag603xH590Pmohg6eA8uNN6D47NdpMCb4ay9nRI4DK5a6jYE
+	ZQBe8z2ghKJlLWjeI5EwtRMWjjkpvzNkdsPGK2kCBsJJd5BwWyDUmisw4VkCf/heKgi3whbH
+	PC48h8GbnkANkOueCaZ7JpjuaTAeYM0ghMtWZyRz6phM7liUWpGhzs5MjvrqcIYJrP3nQZ99
+	sQPoZx9G9QIRDXoBpDF5sMQ5W5MklSgVObmc6vCXqux0Tt0LttC4PEQSoQznpEyyIos7xHFH
+	ONWTrogOCD0pSsiSv1ia274Ql2/wlOkKy3/tf9iz/0IANrvpwKVTqsSzi9U10qRxqjj/rRg+
+	3i4RN6SVE/rKzxpuKZqfnzp2NyVs0rUQHJx12rdypyhi4aXVKn25rHrHCfcB88hxVpa79dr+
+	uH+4o1yiqjV2IATVHdzbVvrcR0GWKllNxfxrhYbB1nco3jOD7TbHJFgCbr16cVT7wXRPTNW3
+	Op9rqUwWG9lZc/xlsTOqwWplKdQ9tLrH0xpqGf0Qv/2xqykjX7lLvvNtG984l3g/Mjqh6BNL
+	Wk4qN5RX/Hl7/UR40FL3N9H849ix4KK/VuTWitE9MumEbCzH5+6w7gif29eX4oyYkePqFMWb
+	r2MqteJ/GkR62T4EAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFtrAKsWRmVeSWpSXmKPExsVy+t/xu7op2QvTDLoPsFo0HlvAavH5yHE2
+	i22Lu5ks/u5sZ7bYcuweo8W6t+dZLXaf/spkcWFbH6vFpsfXWC327D3JYjFv/U9Gi8u75rBZ
+	3Fvzn9XiwoHTrBZXtq5jsXh2qJfFYtvnFjaLCQubmS2eLnjNavGh5xGbxZH1Z1ksdv3ZwW7x
+	+8czJovf3/+xWjTP/8RscWPCU0aLM+ub2C2OLRCzmLDuFIvFuc2fWS0e9b1ld5D3OLVIwmPT
+	qk42j02fJrF7nJjxm8Vj85J6jxebZzJ6nJ+xkNHj2o37LB5vf59g8riw7A2bx+dNch793cfY
+	A3ii9GyK8ktLUhUy8otLbJWiDS2M9AwtLfSMTCz1DI3NY62MTJX07WxSUnMyy1KL9O0S9DIe
+	rz/LVtDnVtHcf4+9gXGSbhcjJ4eEgIlE3/H1bF2MXBxCAksZJe707mCDSMhIbPxylRXCFpb4
+	c60Lqugjo8TXLcsZIZytjBJTdh4H62ARUJXYe/A5O4jNJqAjcf7NHWYQW0TASOLziyusIA3M
+	AhM4JC6ufcgEkhAWsJdYdeA3WDOvgIPEzhO7WCBsQYmTM5+A2cxAgxbs/gRUwwFkS0ss/8cB
+	cZGyxL1Ne5gh7FqJz3+fMU5gFJyFpHsWku5ZCN0LGJlXMYqklhbnpucWG+kVJ+YWl+al6yXn
+	525iBCadbcd+btnBuPLVR71DjEwcjIcYJTiYlUR4n7yamybEm5JYWZValB9fVJqTWnyI0RTo
+	5YnMUqLJ+cC0l1cSb2hmYGpoYmZpYGppZqwkzutZ0JEoJJCeWJKanZpakFoE08fEwSnVwBTF
+	0tF7WtTqeM4ChtjpIvcenUz32ptZELVps1HFvY5tSxe9u1d9fEbQ5tCZc/+qufas3iv5JrJi
+	UYmw1RJxm7iw3RrFb+tWyV3qMFlc3n73gPrJk5W/M4t1E6PaGovOd97x9PhYxnFwWuf9728z
+	n69fJvnLtdOsStty/Y2H5y71dBfs8tklcFFT8c3NHfyBP004lYyVxfL43586pmehNHNxaFdT
+	yXL7it9h7D7RQb4Kj470CfDt4QkJzBApv3dczPzwsSexjw9ci9F7eOjKv3Qprr1Ha5T8c46u
+	9FyZwxO+c/PSXpecxOmT5WRit8ZNvS7hwag7PW6uySJztcdHzj+SNeNRUeyKmHmwrTJ0phJL
+	cUaioRZzUXEiAGTJglPDAwAA
+X-CMS-MailID: 20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61
+X-Msg-Generator: CA
+X-RootMTR: 20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61
+References: <CGME20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61@eucas1p2.samsung.com>
 
-On 7/24/24 1:24 AM, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for your reply!
-> 
-> On 24/07/2024 09:42, Geliang Tang wrote:
->> Hi Matt,
->>
->> On Sat, 2024-07-06 at 02:25 +0200, Matthieu Baerts wrote:
->>> Hi Martin,
->>>
->>> Thank you for your reply!
->>>
->>> On 06/07/2024 01:10, Martin KaFai Lau wrote:
->>>> On 7/4/24 3:48 AM, Matthieu Baerts wrote:
->>>>>> diff --git a/tools/testing/selftests/bpf/Makefile
->>>>>> b/tools/testing/
->>>>>> selftests/bpf/Makefile
->>>>>> index e0b3887b3d2d..204269d0b5b8 100644
->>>>>> --- a/tools/testing/selftests/bpf/Makefile
->>>>>> +++ b/tools/testing/selftests/bpf/Makefile
->>>>>> @@ -144,7 +144,7 @@ TEST_GEN_PROGS_EXTENDED =
->>>>>> test_skb_cgroup_id_user \
->>>>>>        flow_dissector_load test_flow_dissector
->>>>>> test_tcp_check_syncookie_user \
->>>>>>        test_lirc_mode2_user xdping test_cpp runqslower bench
->>>>>> bpf_testmod.ko \
->>>>>>        xskxceiver xdp_redirect_multi xdp_synproxy veristat
->>>>>> xdp_hw_metadata \
->>>>>> -    xdp_features bpf_test_no_cfi.ko
->>>>>> +    xdp_features bpf_test_no_cfi.ko mptcp_pm_nl_ctl
->>>>> On the BPF CI, we have such errors:
->>>>>
->>>>>      mptcp_pm_nl_ctl.c:20:10: fatal error: 'linux/mptcp.h' file
->>>>> not found
->>>>>        20 | #include "linux/mptcp.h"
->>>>>           |          ^~~~~~~~~~~~~~~
->>>>>
->>>>> On my side, I don't have any issue, because the compiler uses the
->>>>> mptcp.h file from the system: /usr/include/linux/mptcp.h
->>>>>
->>>>> I suppose that's not OK on the BPF CI, as it looks like it
->>>>> doesn't have
->>>>> this file there, probably because it still uses Ubuntu 20.04 as
->>>>> base,
->>>>> which doesn't include this file in the linux-libc-dev package.
->>>>>
->>>>> When I look at how this 'mptcp_pm_nl_ctl' tool -- and all the
->>>>> other
->>>>> programs from that list -- is compiled (V=1), I see that the
->>>>> following
->>>>> "-I" options are given:
->>>>>
->>>>>     -I${PWD}/tools/testing/selftests/bpf
->>>>>     -I${BUILD}//tools/include
->>>>>     -I${BUILD}/include/generated
->>>>>     -I${PWD}/tools/lib
->>>>>     -I${PWD}/tools/include
->>>>>     -I${PWD}/tools/include/uapi
->>>>>     -I${BUILD}/
->>>>>
->>>>> It will then not look at -I${PWD}/usr/include or the directory
->>>>> generated
->>>>> with:
->>>>>
->>>>>     make headers_install INSTALL_HDR_PATH=(...)
->>>>
->>>> It sounds like the tools/testing/selftests/net/mptcp/Makefile is
->>>> looking
->>>> at this include path, so it works?
->>>
->>> Yes it does work.
->>>
->>>> iiu the bpf/Makefile correctly, it has the bpftool "make" compiled
->>>> and
->>>> installed at tools/testing/selftests/bpf/tools/sbin/. May be
->>>> directly
->>>> compile the pm_nl_ctl by "make tools/testing/selftests/net/mptcp/"?
->>>
->>> That could be an alternative, I didn't know it would be OK to add
->>> such
->>> dependence, good idea.
->>>
->>>>> I guess that's why people have duplicated files in
->>>>> 'tools/include/uapi',
->>>>> but I also understood from Jakub that it is not a good idea to
->>>>> continue
->>>>> to do so.
->>>>>
->>>>> What would be the best solution to avoid a copy? A symlink still
->>>>> looks
->>>>> like a workaround.
->>>>>
->>>>> In the other selftests, KHDR_INCLUDES is used to be able to
->>>>> include the
->>>>> path containing the UAPI headers. So if someone built the headers
->>>>> in a
->>>>
->>>> Meaning KHDR_INCLUDES should be used and -
->>>> I${PWD}/tools/include/uapi can
->>>> be retired?
->>>
->>> That's the idea, yes, for "userspace programs". I mean: for BPF
->>> programs
->>> requiring vmlinux.h (BPF_CFLAGS), I guess you will still need the
->>> bpf.h
->>> file from tools/include/uapi, no?
->>>
->>>> I haven't looked into the details. I quickly tried but it
->>>> fails in my environment.
->>>
->>> Do you not have issues because some files have something like:
->>>
->>>    #include <uapi/linux/(...).h>
->>>
->>> On my side, I had a working version using this patch:
->>>
->>>> diff --git a/tools/testing/selftests/bpf/Makefile
->>>> b/tools/testing/selftests/bpf/Makefile
->>>> index 7c5827d20c2e..112f14d40852 100644
->>>> --- a/tools/testing/selftests/bpf/Makefile
->>>> +++ b/tools/testing/selftests/bpf/Makefile
->>>> @@ -37,7 +37,7 @@ CFLAGS += -g $(OPT_FLAGS) -rdynamic            \
->>>>            -Wall -Werror -fno-omit-frame-pointer                  \
->>>>            $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)             \
->>>>            -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)   \
->>>> -         -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
->>>> +         -I$(TOOLSINCDIR) $(KHDR_INCLUDES) -I$(OUTPUT)
->>>>   LDFLAGS += $(SAN_LDFLAGS)
->>>>   LDLIBS += $(LIBELF_LIBS) -lz -lrt -lpthread
->>>>   
->>>
->>> But only after having removed these extra 'uapi/':
->>>
->>>    $ git grep -l '<uapi/' -- tools/testing/selftests/bpf | \
->>>      xargs sed -i 's|#include <uapi/|#include <|g'
->>>
->>> Is it not OK for you like that?
+Linus
 
-I tried and it works for me with the above changes. The other $(APIDIR) usages 
-in the Makefile can be replaced also?
+Constifying ctl_table structs will prevent the modification of
+proc_handler function pointers as they would reside in .rodata. To get
+there, the proc_handler arguments must first be const qualified which
+requires this (fairly large) treewide PR. Sending it in the tail end of
+of the merge window after a suggestion from Kees to avoid unneeded merge
+conflicts. It has been rebased on top of 7a3fad30fd8b4b5e370906b3c554f64026f56c2f.
+I can send it later if it makes more sense on your side; please tell me
+what you prefer.
 
-Matt, do you want to post a patch and see how does it go with the bpf CI?
+This PR applies on top of what I see as your latest master, but if you
+need to generate it, you can do so by executing two commands:
+1. Semantic patch: The coccinelle script is here [1]
+  `make coccicheck MODE=patch SPFLAGS="--in-place --include-headers --smpl-spacing" COCCI=COCCI_SCRIPT`
+2. Sed command: The sed script is here [2]
+  `sed --in-place -f SED_SCRIPT fs/xfs/xfs_sysctl.c kernel/watchdog.c`
+This is my first time sending out a semantic patch, so get back to me if
+you have issues or prefer some other way of receiving it.
 
-[ Sorry for the late reply. ]
+Testing was done in sysctl-testing (0-day) to avoid generating
+unnecessary merge conflicts in linux-next. I do not expect any
+error/regression given that all changes contained in this PR are
+non-functional.
 
->>>
->>> Note that I built the selftests using KHDR_INCLUDES=-
->>> I$INSTALL_HDR_PATH.
+[1]
+```
+virtual patch
 
+@r1@
+identifier ctl, write, buffer, lenp, ppos;
+identifier func !~ "appldata_(timer|interval)_handler|sched_(rt|rr)_handler|rds_tcp_skbuf_handler|proc_sctp_do_(hmac_alg|rto_min|rto_max|udp_port|alpha_beta|auth|probe_interval)";
+@@
+
+int func(
+- struct ctl_table *ctl
++ const struct ctl_table *ctl
+  ,int write, void *buffer, size_t *lenp, loff_t *ppos);
+
+@r2@
+identifier func, ctl, write, buffer, lenp, ppos;
+@@
+
+int func(
+- struct ctl_table *ctl
++ const struct ctl_table *ctl
+  ,int write, void *buffer, size_t *lenp, loff_t *ppos)
+{ ... }
+
+@r3@
+identifier func;
+@@
+
+int func(
+- struct ctl_table *
++ const struct ctl_table *
+  ,int , void *, size_t *, loff_t *);
+
+@r4@
+identifier func, ctl;
+@@
+
+int func(
+- struct ctl_table *ctl
++ const struct ctl_table *ctl
+  ,int , void *, size_t *, loff_t *);
+
+@r5@
+identifier func, write, buffer, lenp, ppos;
+@@
+
+int func(
+- struct ctl_table *
++ const struct ctl_table *
+  ,int write, void *buffer, size_t *lenp, loff_t *ppos);
+```
+
+[2]
+```
+s/^xfs_stats_clear_proc_handler(const struct ctl_table \*ctl,$/xfs_stats_clear_proc_handler(\
+\tconst struct ctl_table\t*ctl,/
+s/^xfs_panic_mask_proc_handler(const struct ctl_table \*ctl,$/xfs_panic_mask_proc_handler(\
+\tconst struct ctl_table\t*ctl,/
+s/^xfs_deprecated_dointvec_minmax(const struct ctl_table \*ctl,$/xfs_deprecated_dointvec_minmax(\
+\tconst struct ctl_table\t*ctl,/
+s/proc_watchdog_common(int which, struct ctl_table \*table/proc_watchdog_common(int which, const struct ctl_table *table/
+```
+
+The following changes since commit 7a3fad30fd8b4b5e370906b3c554f64026f56c2f:
+
+  Merge tag 'random-6.11-rc1-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/crng/random (2024-07-24 10:29:50 -0700)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/constfy-sysctl-6.11-rc1
+
+for you to fetch changes up to 78eb4ea25cd5fdbdae7eb9fdf87b99195ff67508:
+
+  sysctl: treewide: constify the ctl_table argument of proc_handlers (2024-07-24 20:59:29 +0200)
+
+----------------------------------------------------------------
+sysctl: treewide: constify the ctl_table argument of proc_handlers
+
+Summary
+- const qualify struct ctl_table args in proc_handlers:
+  This is a prerequisite to moving the static ctl_table structs into .rodata
+  data which will ensure that proc_handler function pointers cannot be
+  modified.
+
+----------------------------------------------------------------
+Joel Granados (1):
+      sysctl: treewide: constify the ctl_table argument of proc_handlers
+
+ arch/arm64/kernel/armv8_deprecated.c      |  2 +-
+ arch/arm64/kernel/fpsimd.c                |  2 +-
+ arch/s390/appldata/appldata_base.c        | 10 ++---
+ arch/s390/kernel/debug.c                  |  2 +-
+ arch/s390/kernel/topology.c               |  2 +-
+ arch/s390/mm/cmm.c                        |  6 +--
+ arch/x86/kernel/itmt.c                    |  2 +-
+ drivers/cdrom/cdrom.c                     |  4 +-
+ drivers/char/random.c                     |  4 +-
+ drivers/macintosh/mac_hid.c               |  2 +-
+ drivers/net/vrf.c                         |  2 +-
+ drivers/parport/procfs.c                  | 12 +++---
+ drivers/perf/arm_pmuv3.c                  |  2 +-
+ drivers/perf/riscv_pmu_sbi.c              |  2 +-
+ fs/coredump.c                             |  2 +-
+ fs/dcache.c                               |  2 +-
+ fs/drop_caches.c                          |  2 +-
+ fs/exec.c                                 |  2 +-
+ fs/file_table.c                           |  2 +-
+ fs/fs-writeback.c                         |  2 +-
+ fs/inode.c                                |  2 +-
+ fs/pipe.c                                 |  2 +-
+ fs/quota/dquot.c                          |  2 +-
+ fs/xfs/xfs_sysctl.c                       |  6 +--
+ include/linux/ftrace.h                    |  4 +-
+ include/linux/mm.h                        |  8 ++--
+ include/linux/perf_event.h                |  6 +--
+ include/linux/security.h                  |  2 +-
+ include/linux/sysctl.h                    | 34 ++++++++--------
+ include/linux/vmstat.h                    |  4 +-
+ include/linux/writeback.h                 |  2 +-
+ include/net/ndisc.h                       |  2 +-
+ include/net/neighbour.h                   |  6 +--
+ include/net/netfilter/nf_hooks_lwtunnel.h |  2 +-
+ ipc/ipc_sysctl.c                          |  6 +--
+ kernel/bpf/syscall.c                      |  4 +-
+ kernel/delayacct.c                        |  2 +-
+ kernel/events/callchain.c                 |  2 +-
+ kernel/events/core.c                      |  4 +-
+ kernel/fork.c                             |  2 +-
+ kernel/hung_task.c                        |  2 +-
+ kernel/kexec_core.c                       |  2 +-
+ kernel/kprobes.c                          |  2 +-
+ kernel/latencytop.c                       |  2 +-
+ kernel/pid_namespace.c                    |  2 +-
+ kernel/pid_sysctl.h                       |  2 +-
+ kernel/printk/internal.h                  |  2 +-
+ kernel/printk/printk.c                    |  2 +-
+ kernel/printk/sysctl.c                    |  2 +-
+ kernel/sched/core.c                       |  6 +--
+ kernel/sched/rt.c                         |  8 ++--
+ kernel/sched/topology.c                   |  2 +-
+ kernel/seccomp.c                          |  2 +-
+ kernel/stackleak.c                        |  2 +-
+ kernel/sysctl.c                           | 64 +++++++++++++++----------------
+ kernel/time/timer.c                       |  2 +-
+ kernel/trace/ftrace.c                     |  2 +-
+ kernel/trace/trace.c                      |  2 +-
+ kernel/trace/trace_events_user.c          |  2 +-
+ kernel/trace/trace_stack.c                |  2 +-
+ kernel/umh.c                              |  2 +-
+ kernel/utsname_sysctl.c                   |  2 +-
+ kernel/watchdog.c                         | 12 +++---
+ mm/compaction.c                           |  6 +--
+ mm/hugetlb.c                              |  6 +--
+ mm/page-writeback.c                       | 10 ++---
+ mm/page_alloc.c                           | 14 +++----
+ mm/util.c                                 |  6 +--
+ mm/vmstat.c                               |  4 +-
+ net/bridge/br_netfilter_hooks.c           |  2 +-
+ net/core/neighbour.c                      | 18 ++++-----
+ net/core/sysctl_net_core.c                | 20 +++++-----
+ net/ipv4/devinet.c                        |  6 +--
+ net/ipv4/route.c                          |  2 +-
+ net/ipv4/sysctl_net_ipv4.c                | 30 +++++++--------
+ net/ipv6/addrconf.c                       | 16 ++++----
+ net/ipv6/ndisc.c                          |  2 +-
+ net/ipv6/route.c                          |  2 +-
+ net/ipv6/sysctl_net_ipv6.c                |  4 +-
+ net/mpls/af_mpls.c                        |  4 +-
+ net/mptcp/ctrl.c                          |  4 +-
+ net/netfilter/ipvs/ip_vs_ctl.c            | 12 +++---
+ net/netfilter/nf_conntrack_standalone.c   |  2 +-
+ net/netfilter/nf_hooks_lwtunnel.c         |  2 +-
+ net/netfilter/nf_log.c                    |  2 +-
+ net/phonet/sysctl.c                       |  2 +-
+ net/rds/tcp.c                             |  4 +-
+ net/sctp/sysctl.c                         | 28 +++++++-------
+ net/sunrpc/sysctl.c                       |  4 +-
+ net/sunrpc/xprtrdma/svc_rdma.c            |  2 +-
+ security/apparmor/lsm.c                   |  2 +-
+ security/min_addr.c                       |  2 +-
+ security/yama/yama_lsm.c                  |  2 +-
+ 93 files changed, 258 insertions(+), 258 deletions(-)
+
+-- 
+
+Joel Granados
