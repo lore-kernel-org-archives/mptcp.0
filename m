@@ -1,73 +1,215 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-175.mta1.migadu.com (out-175.mta1.migadu.com [95.215.58.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E882115ECEC
-	for <mptcp@lists.linux.dev>; Wed, 24 Jul 2024 17:14:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58BB6167D83
+	for <mptcp@lists.linux.dev>; Wed, 24 Jul 2024 19:47:56 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721841252; cv=none; b=eh5qOc7HvSuf4LLJEDc1DEdpmblG/o5cl24K9ZIONEOyj1jZkDmzm1Keg3lZtNWUWfRHCWiLkmYZRlWZ+EeMoQ3qP9u1z8vQ4RCovG+OlZHSv6dHTCwXIHu0MZ1NqzcPwPuvVd9/8X04Dhi+51ZBQp5NbGKHHEOh70JUNqUeZtY=
+	t=1721850479; cv=none; b=f16C0Xkp81jx20UznTpVhWwKRKMCABQJzvDFAWsqe0tuFtiRcu+EvYPH8HyNZu9o9SR7eLWJVr5PSZwgh+H3OJCHWAGmd6wWCJDEQGPT7TxhlhnpsL+Irpu3k1+3zYGWH47iJ76UnowLH1pdf4EFC5bCUM5aL9t8WFj2z0BIBNY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721841252; c=relaxed/simple;
-	bh=U0ZD7pCYFkWDBoDmTdmVjC9ccmu2Iy0GZU33AkkkLwc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=MrrOXgYkLnu42lHgLrkNmFONf6JyQpu9A1xOOYAIBrS3C6LLmAFt/du88HLzdPGMRUWB9qXQw07zfZtjMYu9g9DVDeGVqbvkTz79Ipj+RJ7aZ5lGKRZE/JVTsFittjjfBZLIfnLFLzTfYGg5oq6NJ3GGCFLf48JCyx6tsA1JZLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nCEpJ2Sn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721850479; c=relaxed/simple;
+	bh=k6FwyC2TQEGHr4zuRg4goZTUWzjhVQKmKTKmITDQEuY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g7mxJAZUkndYwUSmSIkLC33NMW+pf0q1VwjNoP9cKAu+auwdOIL0iWlyJir6yYScYNHRjdGflyavcsSqS27fHMYa/mPG/8K15z6uH7Cl/5Su1n47ArgarXRsJH048OCUA6q19xJaFdnFbim1J+ZaxsjW+paaN4pDw6eavzIiimA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=H6J9pa23; arc=none smtp.client-ip=95.215.58.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nCEpJ2Sn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81A2FC32781;
-	Wed, 24 Jul 2024 17:14:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721841251;
-	bh=U0ZD7pCYFkWDBoDmTdmVjC9ccmu2Iy0GZU33AkkkLwc=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=nCEpJ2SnxrVj6uNYxCbrCf2bRYMlLtJYoGzDtn2vj4JBDwo3XSoEkED4q75o3U4XR
-	 AW+vEqCIvdGjiYwjqUID5Q1D3AbT6686SQV0BDugm2nvu3s5pXDetx69Wfps+zz5hJ
-	 95Z6E4kJSsv4isUns/Y+DkIy2CyIl62tQtkP2lpfkhrvtVGY7WkdLup79kmYI6Q7Q3
-	 Syd0tSsyURHk0CG8Q6AvYY23TOgRt+18kAoCVoQnhy/I0J9OBUpvsKW4IjmayEQH7U
-	 AbF/bX6eFh2diNS9vVOCFkVcJ6+Y9gpKBtVT1p9+M64dq4VbEN8/KH4npGhKvxYkh/
-	 DHyysUlfubJJA==
-Date: Wed, 24 Jul 2024 10:14:10 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net v4 11/23] selftests: mptcp: join: check re-using
- ID of closed subflow
-In-Reply-To: <20240722-mptcp-pm-avail-v4-11-15bfd73de384@kernel.org>
-Message-ID: <1b2a66e3-424e-6ec8-3411-d7ef7b1f7fa0@kernel.org>
-References: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org> <20240722-mptcp-pm-avail-v4-11-15bfd73de384@kernel.org>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="H6J9pa23"
+Message-ID: <cdba9d7c-e5da-4e3b-a121-1fad4f517917@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1721850474;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=7YaV2tZ+kfBixAFIS2ceMaaoLIfoRysDRpw3nqa337M=;
+	b=H6J9pa23EkrNXfqC0xApI0RyKxu3miq3uV7DzOQGSNSV7SWO2lx9NE5PrF0cwhsltlKcCX
+	ILRrjOrHKRSUw3tauG2LEDDI+sMz1Nz75/fBcJqzV6Tl8j3brE7qyjUtN5PBaFPL/3YzGL
+	FUbs4B6XKawy/H/PHczYnnYl/fx63+U=
+Date: Wed, 24 Jul 2024 12:47:44 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Subject: Re: [PATCH bpf-next v3 2/3] selftests/bpf: Add mptcp pm_nl_ctl link
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
+ netdev@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
+ mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Shuah Khan <shuah@kernel.org>
+References: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
+ <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-2-ebdc2d494049@kernel.org>
+ <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
+ <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
+ <ab8112e6-ea7b-4b36-b395-049214e1608d@kernel.org>
+ <780ed38257480940def86947b2ee354f298e890b.camel@kernel.org>
+ <684fd6c2-ad54-4479-8a6a-ab3270e558a7@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+Content-Language: en-US
+In-Reply-To: <684fd6c2-ad54-4479-8a6a-ab3270e558a7@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-On Mon, 22 Jul 2024, Matthieu Baerts (NGI0) wrote:
+On 7/24/24 1:24 AM, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for your reply!
+> 
+> On 24/07/2024 09:42, Geliang Tang wrote:
+>> Hi Matt,
+>>
+>> On Sat, 2024-07-06 at 02:25 +0200, Matthieu Baerts wrote:
+>>> Hi Martin,
+>>>
+>>> Thank you for your reply!
+>>>
+>>> On 06/07/2024 01:10, Martin KaFai Lau wrote:
+>>>> On 7/4/24 3:48 AM, Matthieu Baerts wrote:
+>>>>>> diff --git a/tools/testing/selftests/bpf/Makefile
+>>>>>> b/tools/testing/
+>>>>>> selftests/bpf/Makefile
+>>>>>> index e0b3887b3d2d..204269d0b5b8 100644
+>>>>>> --- a/tools/testing/selftests/bpf/Makefile
+>>>>>> +++ b/tools/testing/selftests/bpf/Makefile
+>>>>>> @@ -144,7 +144,7 @@ TEST_GEN_PROGS_EXTENDED =
+>>>>>> test_skb_cgroup_id_user \
+>>>>>>        flow_dissector_load test_flow_dissector
+>>>>>> test_tcp_check_syncookie_user \
+>>>>>>        test_lirc_mode2_user xdping test_cpp runqslower bench
+>>>>>> bpf_testmod.ko \
+>>>>>>        xskxceiver xdp_redirect_multi xdp_synproxy veristat
+>>>>>> xdp_hw_metadata \
+>>>>>> -    xdp_features bpf_test_no_cfi.ko
+>>>>>> +    xdp_features bpf_test_no_cfi.ko mptcp_pm_nl_ctl
+>>>>> On the BPF CI, we have such errors:
+>>>>>
+>>>>>      mptcp_pm_nl_ctl.c:20:10: fatal error: 'linux/mptcp.h' file
+>>>>> not found
+>>>>>        20 | #include "linux/mptcp.h"
+>>>>>           |          ^~~~~~~~~~~~~~~
+>>>>>
+>>>>> On my side, I don't have any issue, because the compiler uses the
+>>>>> mptcp.h file from the system: /usr/include/linux/mptcp.h
+>>>>>
+>>>>> I suppose that's not OK on the BPF CI, as it looks like it
+>>>>> doesn't have
+>>>>> this file there, probably because it still uses Ubuntu 20.04 as
+>>>>> base,
+>>>>> which doesn't include this file in the linux-libc-dev package.
+>>>>>
+>>>>> When I look at how this 'mptcp_pm_nl_ctl' tool -- and all the
+>>>>> other
+>>>>> programs from that list -- is compiled (V=1), I see that the
+>>>>> following
+>>>>> "-I" options are given:
+>>>>>
+>>>>>     -I${PWD}/tools/testing/selftests/bpf
+>>>>>     -I${BUILD}//tools/include
+>>>>>     -I${BUILD}/include/generated
+>>>>>     -I${PWD}/tools/lib
+>>>>>     -I${PWD}/tools/include
+>>>>>     -I${PWD}/tools/include/uapi
+>>>>>     -I${BUILD}/
+>>>>>
+>>>>> It will then not look at -I${PWD}/usr/include or the directory
+>>>>> generated
+>>>>> with:
+>>>>>
+>>>>>     make headers_install INSTALL_HDR_PATH=(...)
+>>>>
+>>>> It sounds like the tools/testing/selftests/net/mptcp/Makefile is
+>>>> looking
+>>>> at this include path, so it works?
+>>>
+>>> Yes it does work.
+>>>
+>>>> iiu the bpf/Makefile correctly, it has the bpftool "make" compiled
+>>>> and
+>>>> installed at tools/testing/selftests/bpf/tools/sbin/. May be
+>>>> directly
+>>>> compile the pm_nl_ctl by "make tools/testing/selftests/net/mptcp/"?
+>>>
+>>> That could be an alternative, I didn't know it would be OK to add
+>>> such
+>>> dependence, good idea.
+>>>
+>>>>> I guess that's why people have duplicated files in
+>>>>> 'tools/include/uapi',
+>>>>> but I also understood from Jakub that it is not a good idea to
+>>>>> continue
+>>>>> to do so.
+>>>>>
+>>>>> What would be the best solution to avoid a copy? A symlink still
+>>>>> looks
+>>>>> like a workaround.
+>>>>>
+>>>>> In the other selftests, KHDR_INCLUDES is used to be able to
+>>>>> include the
+>>>>> path containing the UAPI headers. So if someone built the headers
+>>>>> in a
+>>>>
+>>>> Meaning KHDR_INCLUDES should be used and -
+>>>> I${PWD}/tools/include/uapi can
+>>>> be retired?
+>>>
+>>> That's the idea, yes, for "userspace programs". I mean: for BPF
+>>> programs
+>>> requiring vmlinux.h (BPF_CFLAGS), I guess you will still need the
+>>> bpf.h
+>>> file from tools/include/uapi, no?
+>>>
+>>>> I haven't looked into the details. I quickly tried but it
+>>>> fails in my environment.
+>>>
+>>> Do you not have issues because some files have something like:
+>>>
+>>>    #include <uapi/linux/(...).h>
+>>>
+>>> On my side, I had a working version using this patch:
+>>>
+>>>> diff --git a/tools/testing/selftests/bpf/Makefile
+>>>> b/tools/testing/selftests/bpf/Makefile
+>>>> index 7c5827d20c2e..112f14d40852 100644
+>>>> --- a/tools/testing/selftests/bpf/Makefile
+>>>> +++ b/tools/testing/selftests/bpf/Makefile
+>>>> @@ -37,7 +37,7 @@ CFLAGS += -g $(OPT_FLAGS) -rdynamic            \
+>>>>            -Wall -Werror -fno-omit-frame-pointer                  \
+>>>>            $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)             \
+>>>>            -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)   \
+>>>> -         -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
+>>>> +         -I$(TOOLSINCDIR) $(KHDR_INCLUDES) -I$(OUTPUT)
+>>>>   LDFLAGS += $(SAN_LDFLAGS)
+>>>>   LDLIBS += $(LIBELF_LIBS) -lz -lrt -lpthread
+>>>>   
+>>>
+>>> But only after having removed these extra 'uapi/':
+>>>
+>>>    $ git grep -l '<uapi/' -- tools/testing/selftests/bpf | \
+>>>      xargs sed -i 's|#include <uapi/|#include <|g'
+>>>
+>>> Is it not OK for you like that?
 
-> This test extends "delete and re-add" to validate the previous commit. A
-> new 'subflow' endpoint is added, but the subflow request will be
-> rejected. The result is that no subflow will be established from this
-> address.
->
-> Later, the endpoint is removed and re-added after having cleared the
-> firewall rule. Before the previous commit, the client would not have
-> been able to create this new subflow.
->
-> While at it, extra checks have been added to validate the expected
-> numbers of MPJ and RM_ADDR.
->
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the selftests,
-> but it validates the previous fix for an issue introduced by this commit
-> ID.
->
-> Fixes: b6c08380860b ("mptcp: remove addr and subflow in PM netlink")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 27 ++++++++++++++++++++-----
-> 1 file changed, 22 insertions(+), 5 deletions(-)
+I tried and it works for me with the above changes. The other $(APIDIR) usages 
+in the Makefile can be replaced also?
 
-As we discussed in the meeting today, for patches 1-11:
+Matt, do you want to post a patch and see how does it go with the bpf CI?
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+[ Sorry for the late reply. ]
+
+>>>
+>>> Note that I built the selftests using KHDR_INCLUDES=-
+>>> I$INSTALL_HDR_PATH.
+
