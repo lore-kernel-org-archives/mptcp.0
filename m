@@ -1,274 +1,187 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C0DBAD23;
-	Wed, 24 Jul 2024 08:24:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B78D14375C;
+	Wed, 24 Jul 2024 10:25:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721809489; cv=none; b=Sx56vzIk5p4xcHAliwbpzlMb3OghtZ8mTzhkWn9V5B3KZmtrZMTDbITR1eR6S5vfui4P+Eyk0Ya2eYU9Mj6Bjd30HmNiezegDKVrmsykf7zZTE1/bv9mTMd376EfAGgVgTEX7sXLjr/7tXk1s1AAAe6kvrF2twf9R8LoFrMiCR8=
+	t=1721816729; cv=none; b=i64dn9lFVXe7x5FFFeT23cy6f8T0qkDFn4QIJjMrgXJxzvl2zhDHybo0lkX0JwVu1wgM8yne6FuzxKggW7ldqRBM8NkUFtDPGqnV96bf2E+m/sjXCnYv4zATCuB6yKChWukTBhxzUa7QSNrlZ752yXiF6JBe9Zl9lygIYPwZrrg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721809489; c=relaxed/simple;
-	bh=HiGKmXRe4u6JuGpziWw1IAJIcZn0wakFfLZ3cyEgqJs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GV/DF4wbzMZUHgnowxcRvmXiRwGkYuUfq8VbXhXizVN/8PJLO/Q1jRlQLaV3trwPs0d4sej0hjS+1vDDGckCHJSSyv9wtt438u+B0dHLWRd9hg0v2DusU/3YjX9eDMU23+69OM3ZrtbY6tf77DYmbjESqZ0NtFaQ/6/eBwVeY1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hSqG3o5I; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721816729; c=relaxed/simple;
+	bh=MaPFNNWlHVL72dQxlX2AXPyB7G++Hk+qanpapL+ndRw=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=sYnOzIZ8dxYffyuAa5lXGEi6vKytRDnckV34iMowHxZ09Qqo62w1PYeqY42mCpRUGaSXvZA2aL6wJ4YLYFjjoSC7t9BNGS/hArv93O7elKZbsupLAJASiP8LbCWc7nLzvB13VfcDeNltFNOqLREury0vg7B05wKeMdFJh+ARfog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B2kTD26C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hSqG3o5I"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9375FC32782;
-	Wed, 24 Jul 2024 08:24:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B2kTD26C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5826C4AF10;
+	Wed, 24 Jul 2024 10:25:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721809489;
-	bh=HiGKmXRe4u6JuGpziWw1IAJIcZn0wakFfLZ3cyEgqJs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hSqG3o5I8vPPUDpmEkImH2WFIMTfajyKfbNxlFTFah7WDiSavAos8wG1DO42lCY9e
-	 cWqKwfIxVHMOIXg2NsrM7XFvLNLDOonpAm+pq39WmSGzT9y5eBHOuB+CaqCzfUKa7m
-	 mh8qDljeVqCGCAh7YIygJXmocACPLyIcYrCCjW2Jt0z6abG5K2tB8yG/JCK7gb6C0f
-	 HXFQTBsAQwtGcAntT/TymK8Kqy864ETtXfolMon+4r5EJL5xSJgFMTUFJdCdQ0KKxG
-	 A5QNCd/iOUP4PplqHm5DoXNzCZzsvNemSBUD0laP55Cgn7lschAib7t5Jc3TckybbO
-	 JMQG7N6UX2cKQ==
-Message-ID: <684fd6c2-ad54-4479-8a6a-ab3270e558a7@kernel.org>
-Date: Wed, 24 Jul 2024 10:24:40 +0200
+	s=k20201202; t=1721816729;
+	bh=MaPFNNWlHVL72dQxlX2AXPyB7G++Hk+qanpapL+ndRw=;
+	h=From:Date:Subject:To:Cc:From;
+	b=B2kTD26Cqe2E2XTFF30WaZZ0i5GzeJ9P0yrnskf7UmBzmfktxeNqITX8b7YSsenHd
+	 edXnRtqr9LC38swfiJ2zJNlnIPH7lRSsysZsm5yBbTmw+JAT5inXm4Yz/GQrWJtvuJ
+	 9hBBJ04FP83eoYs39JefBWCadKZWur323/ifM0eT8DtMBL2sY84IyH05drTpNU1XHB
+	 aVLc3LAfO/z+W5rhEiuGarsE3IL9r1AZo8vzhT871XUP44+dVrxHdlIyql8VnYuluq
+	 xCSu/s3MXS1RLEs6NuhMV2TxXXm41LH5t929OV6lfKbtP3SKJZAlYVWqRvLrZf1zKE
+	 TvEBRbKQ8qmWg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Wed, 24 Jul 2024 12:25:16 +0200
+Subject: [PATCH net v3] tcp: process the 3rd ACK with sk_socket for
+ TFO/MPTCP
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next v3 2/3] selftests/bpf: Add mptcp pm_nl_ctl link
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, Martin KaFai Lau <martin.lau@linux.dev>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@google.com>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Jakub Kicinski <kuba@kernel.org>, Jesper Dangaard Brouer <hawk@kernel.org>,
- netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Geliang Tang <tanggeliang@kylinos.cn>,
- mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Shuah Khan <shuah@kernel.org>
-References: <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-0-ebdc2d494049@kernel.org>
- <20240703-upstream-bpf-next-20240506-mptcp-subflow-test-v3-2-ebdc2d494049@kernel.org>
- <08f925cd-e267-4a6b-84b1-792515c4e199@kernel.org>
- <90e916e8-ec4e-447b-8ee6-eb247f3a72ad@linux.dev>
- <ab8112e6-ea7b-4b36-b395-049214e1608d@kernel.org>
- <780ed38257480940def86947b2ee354f298e890b.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <780ed38257480940def86947b2ee354f298e890b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240724-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v3-1-d48339764ce9@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAIvWoGYC/6WOzQ6CMBCEX8X07Jr+SAFPvocxBtoFGqQlbWk0h
+ ne34WD07GEOM7OZb18koDcYyGn3Ih6TCcbZbMR+R9TQ2B7B6OwJp/xISyZhmUP02ExgMWY9Iny
+ qqGYQXkOjRlDOhmVCCOMtODXmW6pazYq6U0VLSZ6fPXbmsaEvJI+Raw4HE6Lzz+2dxLbqf3Jiw
+ OCIkmnaljUX4jyit3g/ON9v1MS/SdUfJA4UtCxEVxVS1J38Ia3r+gbneCpEcAEAAA==
+To: Eric Dumazet <edumazet@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Neal Cardwell <ncardwell@google.com>
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=6097; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=MaPFNNWlHVL72dQxlX2AXPyB7G++Hk+qanpapL+ndRw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmoNaWHAiN2llseqeo0kZwz3M/CqA2ILonfgrc2
+ X0jtdZIEL+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqDWlgAKCRD2t4JPQmmg
+ c+F5EACQ3tMY880fYL6Iky1i6g2jsYXUZ4sqa5bGWE+uLWcmAxzznin9bb6i1KtpoIV98VsPSQm
+ 1gAJipip17Pu6/TvVlgyIWXKIpQA32sxMvkm9HAOKr3s/OrVKc6ibrpa5ZLCBsu1xPKYu/tAoSu
+ 7XyhBITQpGOJ2X1ZK0QAkKKAf0NAlVgDZJTqifL6vtIf4lPb8GFLB713BU6EFovZFLLQGPOQ5y6
+ 4iiOETxHRlGqGp13EtpssID0H+E9tZKNxcwGsy6aiMsccV4sMdUlQ5Ftf83PbEWLm6JCxNqyWqt
+ oTqNPqV9mdgtRyjKRPvRoN6lL1lfkzaj7vmwQXbL8t3liKDO8f8bJadcdrVItyCOld3+IoFBj1S
+ 9dxOnm8KMs5zhGMtYgc3jrJkmjvJNsrQqR7hot0Xlx5WGpoTVx/sFRgbSzG5ukeuSHxXnWEL+af
+ aaIcoOkKKQi6nrQI1radDLXf08wB/sAFyUADhy2VqWI3p00vIDprb/eq2GVROR9mh/r66YeP5T9
+ zSNGDXyfcJNIqLQWH/3MCZvcDNZIGXmLUCeh54A21nOLZ0B+qNT8Bhj2ZBA1NhYKnHPFof0otzo
+ dRSjGzyQcKCxcgpZdTxEmVC+syuNlgPeCSZirQrSXLnZJdkswTJGhJcGFimxvphoryC5U0zrqK+
+ c6BXARN/+olbgjA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+The 'Fixes' commit recently changed the behaviour of TCP by skipping the
+processing of the 3rd ACK when a sk->sk_socket is set. The goal was to
+skip tcp_ack_snd_check() in tcp_rcv_state_process() not to send an
+unnecessary ACK in case of simultaneous connect(). Unfortunately, that
+had an impact on TFO and MPTCP.
 
-Thank you for your reply!
+I started to look at the impact on MPTCP, because the MPTCP CI found
+some issues with the MPTCP Packetdrill tests [1]. Then Paolo Abeni
+suggested me to look at the impact on TFO with "plain" TCP.
 
-On 24/07/2024 09:42, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Sat, 2024-07-06 at 02:25 +0200, Matthieu Baerts wrote:
->> Hi Martin,
->>
->> Thank you for your reply!
->>
->> On 06/07/2024 01:10, Martin KaFai Lau wrote:
->>> On 7/4/24 3:48 AM, Matthieu Baerts wrote:
->>>>> diff --git a/tools/testing/selftests/bpf/Makefile
->>>>> b/tools/testing/
->>>>> selftests/bpf/Makefile
->>>>> index e0b3887b3d2d..204269d0b5b8 100644
->>>>> --- a/tools/testing/selftests/bpf/Makefile
->>>>> +++ b/tools/testing/selftests/bpf/Makefile
->>>>> @@ -144,7 +144,7 @@ TEST_GEN_PROGS_EXTENDED =
->>>>> test_skb_cgroup_id_user \
->>>>>       flow_dissector_load test_flow_dissector
->>>>> test_tcp_check_syncookie_user \
->>>>>       test_lirc_mode2_user xdping test_cpp runqslower bench
->>>>> bpf_testmod.ko \
->>>>>       xskxceiver xdp_redirect_multi xdp_synproxy veristat
->>>>> xdp_hw_metadata \
->>>>> -    xdp_features bpf_test_no_cfi.ko
->>>>> +    xdp_features bpf_test_no_cfi.ko mptcp_pm_nl_ctl
->>>> On the BPF CI, we have such errors:
->>>>
->>>>     mptcp_pm_nl_ctl.c:20:10: fatal error: 'linux/mptcp.h' file
->>>> not found
->>>>       20 | #include "linux/mptcp.h"
->>>>          |          ^~~~~~~~~~~~~~~
->>>>
->>>> On my side, I don't have any issue, because the compiler uses the
->>>> mptcp.h file from the system: /usr/include/linux/mptcp.h
->>>>
->>>> I suppose that's not OK on the BPF CI, as it looks like it
->>>> doesn't have
->>>> this file there, probably because it still uses Ubuntu 20.04 as
->>>> base,
->>>> which doesn't include this file in the linux-libc-dev package.
->>>>
->>>> When I look at how this 'mptcp_pm_nl_ctl' tool -- and all the
->>>> other
->>>> programs from that list -- is compiled (V=1), I see that the
->>>> following
->>>> "-I" options are given:
->>>>
->>>>    -I${PWD}/tools/testing/selftests/bpf
->>>>    -I${BUILD}//tools/include
->>>>    -I${BUILD}/include/generated
->>>>    -I${PWD}/tools/lib
->>>>    -I${PWD}/tools/include
->>>>    -I${PWD}/tools/include/uapi
->>>>    -I${BUILD}/
->>>>
->>>> It will then not look at -I${PWD}/usr/include or the directory
->>>> generated
->>>> with:
->>>>
->>>>    make headers_install INSTALL_HDR_PATH=(...)
->>>
->>> It sounds like the tools/testing/selftests/net/mptcp/Makefile is
->>> looking
->>> at this include path, so it works?
->>
->> Yes it does work.
->>
->>> iiu the bpf/Makefile correctly, it has the bpftool "make" compiled
->>> and
->>> installed at tools/testing/selftests/bpf/tools/sbin/. May be
->>> directly
->>> compile the pm_nl_ctl by "make tools/testing/selftests/net/mptcp/"?
->>
->> That could be an alternative, I didn't know it would be OK to add
->> such
->> dependence, good idea.
->>
->>>> I guess that's why people have duplicated files in
->>>> 'tools/include/uapi',
->>>> but I also understood from Jakub that it is not a good idea to
->>>> continue
->>>> to do so.
->>>>
->>>> What would be the best solution to avoid a copy? A symlink still
->>>> looks
->>>> like a workaround.
->>>>
->>>> In the other selftests, KHDR_INCLUDES is used to be able to
->>>> include the
->>>> path containing the UAPI headers. So if someone built the headers
->>>> in a
->>>
->>> Meaning KHDR_INCLUDES should be used and -
->>> I${PWD}/tools/include/uapi can
->>> be retired?
->>
->> That's the idea, yes, for "userspace programs". I mean: for BPF
->> programs
->> requiring vmlinux.h (BPF_CFLAGS), I guess you will still need the
->> bpf.h
->> file from tools/include/uapi, no?
->>
->>> I haven't looked into the details. I quickly tried but it
->>> fails in my environment.
->>
->> Do you not have issues because some files have something like:
->>
->>   #include <uapi/linux/(...).h>
->>
->> On my side, I had a working version using this patch:
->>
->>> diff --git a/tools/testing/selftests/bpf/Makefile
->>> b/tools/testing/selftests/bpf/Makefile
->>> index 7c5827d20c2e..112f14d40852 100644
->>> --- a/tools/testing/selftests/bpf/Makefile
->>> +++ b/tools/testing/selftests/bpf/Makefile
->>> @@ -37,7 +37,7 @@ CFLAGS += -g $(OPT_FLAGS) -rdynamic            \
->>>           -Wall -Werror -fno-omit-frame-pointer                  \
->>>           $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)             \
->>>           -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)   \
->>> -         -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
->>> +         -I$(TOOLSINCDIR) $(KHDR_INCLUDES) -I$(OUTPUT)
->>>  LDFLAGS += $(SAN_LDFLAGS)
->>>  LDLIBS += $(LIBELF_LIBS) -lz -lrt -lpthread
->>>  
->>
->> But only after having removed these extra 'uapi/':
->>
->>   $ git grep -l '<uapi/' -- tools/testing/selftests/bpf | \
->>     xargs sed -i 's|#include <uapi/|#include <|g'
->>
->> Is it not OK for you like that?
->>
->> Note that I built the selftests using KHDR_INCLUDES=-
->> I$INSTALL_HDR_PATH.
-> 
-> Do you need me to do anything here? This patchset seems to have been
-> waiting for several months.
+For MPTCP, when receiving the 3rd ACK of a request adding a new path
+(MP_JOIN), sk->sk_socket will be set, and point to the MPTCP sock that
+has been created when the MPTCP connection got established before with
+the first path. The newly added 'goto' will then skip the processing of
+the segment text (step 7) and not go through tcp_data_queue() where the
+MPTCP options are validated, and some actions are triggered, e.g.
+sending the MPJ 4th ACK [2] as demonstrated by the new errors when
+running a packetdrill test [3] establishing a second subflow.
 
-Sorry, I was not sure my suggestion here above was OK for Martin and
-other BPF maintainers. Maybe sending a proper patch implementing these
-modifications would be easier?
+This doesn't fully break MPTCP, mainly the 4th MPJ ACK that will be
+delayed. Still, we don't want to have this behaviour as it delays the
+switch to the fully established mode, and invalid MPTCP options in this
+3rd ACK will not be caught any more. This modification also affects the
+MPTCP + TFO feature as well, and being the reason why the selftests
+started to be unstable the last few days [4].
 
-> Another option is to roll back to v2, not add this mptcp_pm_nl_ctl
-> tool, and continue to use "ip mptcp". I remember mentioning in the
-> comments of v2 that BPF CI systems will also be upgraded to new Ubuntu
-> system and iproute2 in the future. At this time now we can make a check
-> for "ip mptcp" and only run this test on systems that support "ip
-> mptcp", and skip the test with test__skip() for systems that do not
-> support it, so that CI can also pass.
+For TFO, the existing 'basic-cookie-not-reqd' test [5] was no longer
+passing: if the 3rd ACK contains data, and the connection is accept()ed
+before receiving them, these data would no longer be processed, and thus
+not ACKed.
 
-I think it would be good to get rid of some duplicated header files, but
-well, that's not directly linked to the new test we want to add, it is
-more something to ease the maintenance of these duplicated files.
+One last thing about MPTCP, in case of simultaneous connect(), a
+fallback to TCP will be done, which seems fine:
 
-Then yes, it might be good to skip the test if "ip mptcp" is not supported.
+  `../common/defaults.sh`
 
-Cheers,
-Matt
+   0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_MPTCP) = 3
+  +0 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
+
+  +0 > S  0:0(0)                 <mss 1460, sackOK, TS val 100 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+  +0 < S  0:0(0) win 1000        <mss 1460, sackOK, TS val 407 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+  +0 > S. 0:0(0) ack 1           <mss 1460, sackOK, TS val 330 ecr 0,   nop, wscale 8, mpcapable v1 flags[flag_h] nokey>
+  +0 < S. 0:0(0) ack 1 win 65535 <mss 1460, sackOK, TS val 700 ecr 100, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey=2]>
+  +0 >  . 1:1(0) ack 1           <nop, nop, TS val 845707014 ecr 700, nop, nop, sack 0:1>
+
+Simultaneous SYN-data crossing is also not supported by TFO, see [6].
+
+Kuniyuki Iwashima suggested to restrict the processing to SYN+ACK only:
+that's a more generic solution than the one initially proposed, and
+also enough to fix the issues described above.
+
+Later on, Eric Dumazet mentioned that an ACK should still be sent in
+reaction to the second SYN+ACK that is received: not sending a DUPACK
+here seems wrong and could hurt:
+
+   0 socket(..., SOCK_STREAM|SOCK_NONBLOCK, IPPROTO_TCP) = 3
+  +0 connect(3, ..., ...) = -1 EINPROGRESS (Operation now in progress)
+
+  +0 > S  0:0(0)                <mss 1460, sackOK, TS val 1000 ecr 0,nop,wscale 8>
+  +0 < S  0:0(0)       win 1000 <mss 1000, sackOK, nop, nop>
+  +0 > S. 0:0(0) ack 1          <mss 1460, sackOK, TS val 3308134035 ecr 0,nop,wscale 8>
+  +0 < S. 0:0(0) ack 1 win 1000 <mss 1000, sackOK, nop, nop>
+  +0 >  . 1:1(0) ack 1          <nop, nop, sack 0:1>  // <== Here
+
+So in this version, the 'goto consume' is dropped, to always send an ACK
+when switching from TCP_SYN_RECV to TCP_ESTABLISHED. This ACK will be
+seen as a DUPACK -- with DSACK if SACK has been negotiated -- in case of
+simultaneous SYN crossing: that's what is expected here.
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/9936227696 [1]
+Link: https://datatracker.ietf.org/doc/html/rfc8684#fig_tokens [2]
+Link: https://github.com/multipath-tcp/packetdrill/blob/mptcp-net-next/gtests/net/mptcp/syscalls/accept.pkt#L28 [3]
+Link: https://netdev.bots.linux.dev/contest.html?executor=vmksft-mptcp-dbg&test=mptcp-connect-sh [4]
+Link: https://github.com/google/packetdrill/blob/master/gtests/net/tcp/fastopen/server/basic-cookie-not-reqd.pkt#L21 [5]
+Link: https://github.com/google/packetdrill/blob/master/gtests/net/tcp/fastopen/client/simultaneous-fast-open.pkt [6]
+Fixes: 23e89e8ee7be ("tcp: Don't drop SYN+ACK for simultaneous connect().")
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Suggested-by: Eric Dumazet <edumazet@google.com>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+ - v3:
+   - Drop the patch 2/2: will be sent to net-next when re-opened (Eric)
+   - Drop the 'goto consume' to always send an ACK (Eric)
+   - Drop Jerry Chu from the Cc list: the email address no longer exists
+   - Link to v2: https://lore.kernel.org/r/20240718-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v2-0-d653f85639f6@kernel.org
+ - v2:
+   - Check if the SYN bit is set instead of looking for TFO and MPTCP
+     specific attributes, as suggested by Kuniyuki.
+   - Updated the comment above
+   - Link to v1: https://lore.kernel.org/r/20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v1-1-4e61d0b79233@kernel.org
+---
+ net/ipv4/tcp_input.c | 3 ---
+ 1 file changed, 3 deletions(-)
+
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index ff9ab3d01ced..454362e359da 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6819,9 +6819,6 @@ tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
+ 		tcp_fast_path_on(tp);
+ 		if (sk->sk_shutdown & SEND_SHUTDOWN)
+ 			tcp_shutdown(sk, SEND_SHUTDOWN);
+-
+-		if (sk->sk_socket)
+-			goto consume;
+ 		break;
+ 
+ 	case TCP_FIN_WAIT1: {
+
+---
+base-commit: 3ba359c0cd6eb5ea772125a7aededb4a2d516684
+change-id: 20240716-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-0cbd159fc5b0
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
