@@ -1,94 +1,156 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 789EA1F951
-	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 09:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D04B1F951
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 09:03:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721984516; cv=none; b=J/Tzv2uQu6FrTF4MqYK97KMvQpSB1VOpcT3WRB5y1N9aeCCEdhiYQuA736njFGke0lPsHhU3GHq9vk47M6RiihP5Rw6rdJLg78Y/iSFkXIKiJcrtts9ExNaqn9MwfT6SfIWJVhoH+xO97kxB/CsCEkdvGIA2a/rgiVCL7pyAy6I=
+	t=1721984612; cv=none; b=EJj1E+YcYUL5WF4pPF7nyxsJZSrC6TrwKt3CO96yv4w30fUwNEarcREnJQTLcKL4P5PyvBar1Z0k8a0M9CnCVWuiw+CJLSGAxZ/xMgefyomOPwMzA8uuetIR5j9TwTsfaArLyCzDNbaPF5jDkp1P5gXiI/pMH0kOUV4JS6N191Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721984516; c=relaxed/simple;
-	bh=F4MAuB6QFQmzQhtbpngs/2R1rQblHEYfrO/wmuPILXg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=EbSe4EkhfJE20b8Z5XP7zzOZi8GvYK9SJusfo9eqXonIfdJDJUADH3H5clnXs/kQRizQxL8a6dTxL4Lv+gQS3siuzVGEaWOTRe2u0RQVeBayPRa3lr408LJ6OrkOOGVAGUy3Ln5NJVq0gKoctGYzcHbFBIBgiXZCVxY0CnvlBsQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e9mYEtYL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721984612; c=relaxed/simple;
+	bh=11YHmtJzEIUxbBR47FHPbHr4h4jQZj9iPur68DAXCn4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ZOEVODy1RdxnNQze3EX/wKGgS4/1erC1kLrlUX2Gyp4fC16YuzStuyj3UVmr76dEUau9S6IXj0S1G4Jh7DSMjH8UXlq8pvgGJMg1oyNhwYXhso8+JG/orlGdAxOO8BzNOmXH8SXEVPeaEGl7wADVidfutck74a2n66dVnXlKHNM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ll8SXD4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e9mYEtYL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99D42C4AF09;
-	Fri, 26 Jul 2024 09:01:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ll8SXD4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77758C32782;
+	Fri, 26 Jul 2024 09:03:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721984516;
-	bh=F4MAuB6QFQmzQhtbpngs/2R1rQblHEYfrO/wmuPILXg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=e9mYEtYLl0VXURKtKLfsxoSOyRKPNkxlXeL2fo0TGOXNR8mpUGM9Gsbvt8mmKDM+g
-	 R3rD+ro/qvd29JIxQZK30aERkRYDqqHTKq81UGlTpnHW06JxKYJXm8bLIg6EAJorfp
-	 2SWjkyf7sYVbcqGqeGpwdmOXD2WL6sVVwU4Ym56X6seR83K+AlA81dB1P0INfhkchU
-	 +206V7NBjI0GiUhE8ORQWQKtV9d6vw6SjQGZEuAiDB2nyQiHGfQ5jO9KG889z985E6
-	 chEdi7XTquzd5rdmv3aiPjpjPUv5DMF5rGnWhAx/OdRLffRJ9W6i6rv6MH756/l+da
-	 kl951NsFRbuiA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 26 Jul 2024 11:01:42 +0200
-Subject: [PATCH mptcp-iproute v3 7/7] ip: mptcp: 'id 0' is only for 'del'
+	s=k20201202; t=1721984612;
+	bh=11YHmtJzEIUxbBR47FHPbHr4h4jQZj9iPur68DAXCn4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Ll8SXD4fdSpFeD80pOM9yIlpL0zyCNqEghPBGpKpmUlet5Lngd4mu6/edYCMIL8lH
+	 y4kJtJuB4HSDere5UPD1yU1mcue0e9V7B4iqjOyOycOBXJvKUWaymfuoKc+QPmUTwE
+	 ZX6vneVyKeJxK4b0AtYT7PGKvNtfGKtl2xTTSkXQ5kvT1PhYKOQRDX69niYH/IBP6b
+	 LBkyufHePtgKLVAGSOAJmG1HUm3JCEX1YWKl8pAxYFH8qzAbYoftpOOS/sI7LPcE3S
+	 ICqqYEaruGFGWmUfsIziStB2yx5MGTT6D44+FQ1Pe6s1Pc16ygIkf2MC2Eq5EYOPGS
+	 dNfYRXlGkFsMg==
+Message-ID: <09a07a8b-79f4-422b-b18d-36942eb1ddbc@kernel.org>
+Date: Fri, 26 Jul 2024 11:03:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-iproute v2 4/7] man: mptcp: 'backup' flag also
+ affects outgoing data
+Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
+ <20240723-mptcp-user-feedback-v2-4-59f18975401c@kernel.org>
+ <478fa8ca-30e1-6be3-d8ec-4469a0f3b816@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <478fa8ca-30e1-6be3-d8ec-4469a0f3b816@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240726-mptcp-user-feedback-v3-7-c6ba1f5fa13e@kernel.org>
-References: <20240726-mptcp-user-feedback-v3-0-c6ba1f5fa13e@kernel.org>
-In-Reply-To: <20240726-mptcp-user-feedback-v3-0-c6ba1f5fa13e@kernel.org>
-To: MPTCP Upstream <mptcp@lists.linux.dev>
-Cc: Mat Martineau <martineau@kernel.org>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1022; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=F4MAuB6QFQmzQhtbpngs/2R1rQblHEYfrO/wmuPILXg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmo2X6MqNgrGsLYQZq+Pmi9eCTj/prLNK8uT4QP
- S3NvdfMqHGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqNl+gAKCRD2t4JPQmmg
- cxVlEADlxEIlVGyO6r9tC7r+etJ3RYDhZddfnthpLC8HOT02Tym+qbNVSHIDwSziBt+DCA5JM63
- 8iEa9eizV5V6Z2PSUgiNnvpD/xtcdJcgrVpG1pPlJ3JnDPWE1EXBzzUW+WtduI4Xaj75TLxtolD
- zcR42vt4E+43gYAHRmlArHsnairnIVxF+z+kD68eJY9i5mLZAO0zCh0jolGqWzSRzwnYVGgO6uf
- FlxCmSZI6CWhAMksgf57U9PTcp9KTF+ApmN7BpG9qTqtKh7RHor/95861iAiCbb/gdRfRob/+fN
- j8ed2Y3w9CIBM+F0aPkAVJyjLib0OwrgEwPZrPhzqvAGfOjHJ/ACVtm6djkVOZFacZ2oACDSyFs
- phV8JO0rxlASXsE6Z6aliYmt/cGHg46jtMASz+vLohVKb+lbV+ucjbwCprtiRMqS34Z8oNT4OJu
- Lqt5vuZ0i02hoaET3pbUnXSVB9DOp9YlqcVggxlSHpsC/ICKJtiKYNKe2kye+2dKe3C3zbq/Zou
- 4POhxJJD4XSSebPSpulwNMRKC0HXycyISOwQ4blz4D3rF/e4q1rNEBTHS0UZJBDUkjOuuPqND40
- PCjeQ9fw6CZd7pxFPH5lGQqRAmHho1rXliPYK7E+9vsOZ2q+jOUXOW4fdI14MBqYs4Bj005s9Jo
- cgBnvADraW8P8lw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Adding an endpoint with 'id 0' is not allowed. In this case, the kernel
-will ignore this 'id 0' and set another one.
+Hi Mat,
 
-Similarly, because there are no endpoints with this 'id 0', changing an
-attribute for such endpoint will not be possible.
+On 25/07/2024 00:25, Mat Martineau wrote:
+> On Tue, 23 Jul 2024, Matthieu Baerts (NGI0) wrote:
+> 
+>> That's the behaviour with the default packet scheduler.
+>>
+>> In some early design, the default scheduler was supposed to take into
+>> account only the received backup flags, but it ended up not being the
+>> case, and setting the flag would also affect outgoing data.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> man/man8/ip-mptcp.8 | 5 +++--
+>> 1 file changed, 3 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
+>> index 11df43ce..4d4c879b 100644
+>> --- a/man/man8/ip-mptcp.8
+>> +++ b/man/man8/ip-mptcp.8
+>> @@ -172,8 +172,9 @@ If this is a
+>> endpoint, the subflows created using this endpoint will have the backup
+> 
+> Hi Matthieu -
+> 
+> I think we should clarify this text some more.
 
-To avoid some confusions, it sounds better to clearly report an error
-that the ID cannot be 0 in these cases.
+Good idea!
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- ip/ipmptcp.c | 2 ++
- 1 file changed, 2 insertions(+)
+>> flag set during the connection process. This flag instructs the peer to
+> 
+> Changing it to "remote peer" on the above line will help clarify the
+> part about the packet scheduler below.
 
-diff --git a/ip/ipmptcp.c b/ip/ipmptcp.c
-index 9847f95b..118bac4a 100644
---- a/ip/ipmptcp.c
-+++ b/ip/ipmptcp.c
-@@ -174,6 +174,8 @@ static int mptcp_parse_opt(int argc, char **argv, struct nlmsghdr *n, int cmd)
- 			invarg("invalid for non-zero id address\n", "ADDRESS");
- 		else if (!id && !addr_set)
- 			invarg("address is needed for deleting id 0 address\n", "ID");
-+	} else if (id_set && !deling && !id) {
-+		invarg("cannot be 0\n", "ID");
- 	}
- 
- 	if (adding && port && !(flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
+Indeed!
 
+>> only send data on a given subflow when all non-backup subflows are
+>> -unavailable. This does not affect outgoing data, where subflow priority
+>> -is determined by the backup/non-backup flag received from the peer
+>> +unavailable. This does also affect outgoing data when the default
+>> packets
+>> +scheduler is used. With it, the subflow priority is determined by the
+>> +backup/non-backup flag sent to or received from the peer.
+>>
+> 
+> How about: "When using the default packet scheduler with a 'backup'
+> endpoint, outgoing data from the local peer is also affected: packets
+> will only be sent from this endpoint when all non-backup subflows are
+> unavailable."
+
+Clearer indeed, thanks!
+
+> The other patches all look good to me.
+
+I just send a v3. I guess that's OK for you if I add your Acked-by, and
+send it to netdev?
+
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
