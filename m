@@ -1,64 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66BAA4C7B;
-	Thu, 25 Jul 2024 20:37:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 137F17F8
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 00:39:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721939822; cv=none; b=pnZ8kzqdxUTbrjgi/0m2FpPFTIR/MSfG0xLMKm+TZKYXFouIHTKcc0abIYFm1J/kR3u+NOvoVPLQlnrpbhfrUBjlz5R2ctniMQcOa/jxVi0kTFXO8VjR4RryQROP8oFSHcAR6ODWVNAX8J+9dRgLRSlvwTKeplq1YN2ChNzDxms=
+	t=1721954383; cv=none; b=lG7AL7Fp68ohD2zLdfF8m7SVRLFeTwS/Hpctd751JU/I/1/tShrUwKj6QIdBFlNii7ZjuAC23zjO5Hndba2YJUVgknJgdf6bQkssk1cegxAacSF+oj/UIOUjiIGw6+3N/hB1uI3qrbavnUyyipg27COpLCxpfSBKMrXq3rcL98w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721939822; c=relaxed/simple;
-	bh=1R5Crw+ZwZOXSfA6dztHaSXevEbv/z06Mpcq8ujXfGo=;
-	h=Subject:From:In-Reply-To:References:Message-Id:Date:To:Cc; b=seedFjRO/lxz1zidWnPB8HT3Sa2wRLMvIHZ6pB0ESuhPeJ7WqppSLxb3G92hjn7CEgPhrKCb57Rn3efmFPw/U7IfZjUSa0G6OVdsulF0VUYN94C6eDmcl9tBCMVCOJjgr0lgecqE8qFHV7eEuBePuoVNc5GQV3YMH0d9B/NU27w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDfnaRaD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721954383; c=relaxed/simple;
+	bh=jGg3iXOq2YVcX5oA0WjAeakwppsqVn8xVlehPxICiJc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=A51wt1WeGAP35Dz9eINswjd8crwHw3h4rjr/idWjms9XPNjAVYB5/KK6AakojrBP4bWErQtKmx81P/RGxcfNsf9OIYzPz399JfkfvMp4CUb7sYqd2Wu7KPsksC+LpYUpsd5FPrN+nYsCGgjrNk1P3EjCKYbqPE1RdbwN60MNlR4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qz718QQM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDfnaRaD"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 3CAA4C116B1;
-	Thu, 25 Jul 2024 20:37:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qz718QQM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D2CEC116B1;
+	Fri, 26 Jul 2024 00:39:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721939822;
-	bh=1R5Crw+ZwZOXSfA6dztHaSXevEbv/z06Mpcq8ujXfGo=;
-	h=Subject:From:In-Reply-To:References:Date:To:Cc:From;
-	b=WDfnaRaDNE+J6fLuQmaWOq0eu4xt8vrjpGpgzKf8awCk2ncc3CtJgaCG0Hqj7mkzH
-	 UoFpaBz93eVtipyG7XwIyy+aPOZYvlKkx1jddyRJ33g8V5sFd8c9Q3jnneNP0+8L+E
-	 NwzfV4Rx4Ab66C8XgUABs2FgDwBVgWRoEApitYsOBdYg7Tnv1u5ABobfseBFKMtQOK
-	 ySj1sRI+LhTGkJXU5EpVQVAoDpnvqbzNBYZssQddaZNq//Vz+4W7SbGbuq+4pNQLH+
-	 8GL0GHV5QZqFASUwymJc8KCwqU5es4tPtX5yD7rDzhKENPx1+lVxXt/x771BGahmYW
-	 0G8q9ZQ+NQoLw==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 2DA87C43445;
-	Thu, 25 Jul 2024 20:37:02 +0000 (UTC)
-Subject: Re: [GIT PULL] sysctl constification changes for v6.11-rc1
-From: pr-tracker-bot@kernel.org
-In-Reply-To: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-References: <CGME20240724210020eucas1p2db4a3e71e4b9696804ac8f1bad6e1c61@eucas1p2.samsung.com> <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-X-PR-Tracked-List-Id: <linux-s390.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20240724210014.mc6nima6cekgiukx@joelS2.panther.com>
-X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/constfy-sysctl-6.11-rc1
-X-PR-Tracked-Commit-Id: 78eb4ea25cd5fdbdae7eb9fdf87b99195ff67508
-X-PR-Merge-Tree: torvalds/linux.git
-X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: b485625078cab3b824a84ce185b6e73733704b5b
-Message-Id: <172193982217.17931.952471986314376816.pr-tracker-bot@kernel.org>
-Date: Thu, 25 Jul 2024 20:37:02 +0000
-To: Joel Granados <j.granados@samsung.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Joel Granados <j.granados@samsung.com>, Thomas =?utf-8?B?V2Vp77+9c2NodWg=?= <linux@weissschuh.net>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <kees@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Dave Chinner <david@fromorbit.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, netdev@vger.kernel.org, linux-riscv@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, linux-xfs@vger.kernel.org, linux-trace-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org, linux-security-module@vger.kernel.org, netfilter-devel@vger.kernel.org, coreteam@netfilter.org, bpf@vger.kernel.org, kexec@lists.infradead.org, linux-hardening@vger.kernel.org, bridge@lists.linux.dev, mptcp@lists.linux.dev, lvs-devel@vger.kernel.org, linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, linux-sctp@vger.kernel.org, linux-nfs@vger.kernel.org, apparmor@lists.ub
- untu.com
+	s=k20201202; t=1721954382;
+	bh=jGg3iXOq2YVcX5oA0WjAeakwppsqVn8xVlehPxICiJc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=Qz718QQMO1u2Wdoe2cKtkZ4gVn2yqCslpYsjLzodev/N7MeIOtWaH3cE2Fzp8vaSj
+	 xesDErO1Met8hkXY8bK5svqf+Si2DrKXOYWyoedafHl9wx4Tmtn7nvJrEXC85ZsEk7
+	 rtdx9KimZ2C09RlPWum/Ag4kCvuYs9R/F0X3adjfGWOHId45xFRKBu8V4wwzg4R1aF
+	 v2S+t9v+M6uzcTSvkPyeMZ3s/P0o7pqXl2JwVDBDex1e9Gc0mzd4hFJqGuJY6ZkkWC
+	 O6o6b289q/y1rk+/dMkYGC2KNQ3Opl9Q/iHifCaUVC1kkFq0vj8EKvlKCZv0m/WTuZ
+	 ZzyKuMTFlYCAw==
+Date: Thu, 25 Jul 2024 17:39:41 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: fix bad RCVPRUNED mib accounting
+In-Reply-To: <51cd83cb7690d756e9a71797b133bdd9f286de76.1721921695.git.pabeni@redhat.com>
+Message-ID: <c271e123-2f51-3450-eb46-99975e52804f@kernel.org>
+References: <51cd83cb7690d756e9a71797b133bdd9f286de76.1721921695.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-The pull request you sent on Wed, 24 Jul 2024 23:00:14 +0200:
+On Thu, 25 Jul 2024, Paolo Abeni wrote:
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/sysctl/sysctl.git/ tags/constfy-sysctl-6.11-rc1
+> Since its introduction, the mentioned MIB accounted for the wrong
+> event: wake-up being skipped as not-needed on some edge condition
+> instead of incoming skb being dropped after landing in the (subflow)
+> receive queue.
+>
+> Move the increment in the correct location.
+>
+> Fixes: ce599c516386 ("mptcp: properly account bulk freed memory")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> net/mptcp/protocol.c | 8 ++++----
+> 1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index b3a48d97f009..13777c35496c 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -350,8 +350,10 @@ static bool __mptcp_move_skb(struct mptcp_sock *msk, struct sock *ssk,
+> 	skb_orphan(skb);
+>
+> 	/* try to fetch required memory from subflow */
+> -	if (!mptcp_rmem_schedule(sk, ssk, skb->truesize))
+> +	if (!mptcp_rmem_schedule(sk, ssk, skb->truesize)) {
+> +		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/b485625078cab3b824a84ce185b6e73733704b5b
+Hi Paolo -
 
-Thank you!
+MIB change LGTM:
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/prtracker.html
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+> 		goto drop;
+> +	}
+>
+> 	has_rxtstamp = TCP_SKB_CB(skb)->has_rxtstamp;
+>
+> @@ -844,10 +846,8 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+> 		sk_rbuf = ssk_rbuf;
+>
+> 	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
+> -	if (__mptcp_rmem(sk) > sk_rbuf) {
+> -		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
+> +	if (__mptcp_rmem(sk) > sk_rbuf)
+> 		return;
+> -	}
+>
+> 	/* Wake-up the reader only for in-sequence data */
+> 	mptcp_data_lock(sk);
