@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0F923741
-	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 09:46:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 200C4176240
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 10:33:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721987208; cv=none; b=t2lEde5YDt3b4zHafXlOmCCOXRX/8W104jd9ICx0CwULXZAhbXa4jxazSvDuuqSTCVESJEl0nhz9Ou6D++Ql464CD2EVgmtow0izBwICoE5NY8zu1r/nIcxBJFvh6v6NMCJqqKLek/KaUTo702WZlUtlv9bUmBU3zBLLW4yHT2E=
+	t=1721990005; cv=none; b=PbT9gyZFoy3wGWDgf7/n/aajK/aTlAYUR9zFmQkgi2l4mva4TQ4huTjELsM4q1q/XLTmazH3UorFsIzG7bmIc4eUEzLkpzdInVTfx5dXP3alL0oYLCn28BqCxZV/sgONEThYB6Ahmedvnb0c07zjpwwLH51oBBpz2W2Gzg3vw5Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721987208; c=relaxed/simple;
-	bh=96XIkYKBQs9EH9IkcH/AnHflJeKKd8rnb+3Q+sylkTY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=LUd/uFWo7nuC8tiXX0mXUSsmHtEPZYsN0IKApcPPRZI/FO2If0CiMchht8zYSj/7flVTHGu5vvPZjDtLDj2s0A9wgbYdaf/3yPkoYoD3TCNyWFp8nCD6uYD+aABM3TyZIuEDtcRN4DrkZhxI/u4wGTp9wFqQLJh/S83iMs5otsw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tByzs9bV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721990005; c=relaxed/simple;
+	bh=LF0k9SW/vi87sqBGsfeCgwArdoRM6kIP5C4BoFv2qtY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MrymM2dj9zfdsCIsI4lMuDEH55BAD7Nghw1eFMS8I/Qj6hGycu86UwizLJToaP/BplJOVj6hes9WWETCnzE7tbO17QzxGk5MoFLDLt8uX9YCyeGkUGYPq4CXNCxw5dGf79hO8kVg1PiTVaoifd/TnZ9/Cve8TId0O/k5/+6SMvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJ5akwWv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tByzs9bV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F36DDC4AF09;
-	Fri, 26 Jul 2024 09:46:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJ5akwWv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAE3DC32782;
+	Fri, 26 Jul 2024 10:33:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721987208;
-	bh=96XIkYKBQs9EH9IkcH/AnHflJeKKd8rnb+3Q+sylkTY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=tByzs9bVh8nh5EQsdYsjByT/N8IsHaIL8Ap3GJdexKo1GBUbAAWUy0E1vK0DZ59J0
-	 Szwyl1T1AwgReXIKtUbVOwD/zvmMAZQLgeP4JreY6csWvvZu+Et3Weg1Gw43+dWQr4
-	 wnSYhP2tNVOGwOx3fnZADFxGsC4QkKmpAjqz+6sW+gPzixvvpaPkwV+Eiu57bgHp2q
-	 gdCu32oV77mT5G8hZf9BB+/r6ydvCXQLOEqT1txAkbg+DXeTPJyabgBpRHVCpd0uQL
-	 K82S3t4ZK5o7g4+qwjiF/trCBmXaXRH9ptxvRwwWYeJgRnXnxPZDKXFg/CPtb/rXrQ
-	 J6KbBlrwZMwCQ==
-Message-ID: <807d8f18-19f7-4ecb-b2dc-4ceab076cae0@kernel.org>
-Date: Fri, 26 Jul 2024 11:46:44 +0200
+	s=k20201202; t=1721990004;
+	bh=LF0k9SW/vi87sqBGsfeCgwArdoRM6kIP5C4BoFv2qtY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=NJ5akwWv+kx35KZ89h6ImAkI8xjv89kbrJhprqTBvF+PakQhFSehfj83cIRqBvySE
+	 pU2AHD91arsi+vsXBC1Wx8xYbvrMza2fYxzDTTEI8N9Ru59i54RneW93QFSDXLNE0y
+	 xOZcNbown247BanXoX/gYp0XecIyfdEcBfXCiNq9AQYCAe7ytmsOkp3+wS0RoH2Ach
+	 UYswFi45gH5kkoy8F7XDcpRixHELeiHJoAYStOROM450nNuYgOEs/mDTOmirpx1z3n
+	 3ub5XqYdyQudRugUbCVA4SrX0ZNpOvjI3r3vOKf1IJDdMSwRMQIKWS8BC+/NXdlob0
+	 IL8Pb8QAUwrJA==
+Message-ID: <018a25b6-46ec-4ac4-93f9-d932b445db14@kernel.org>
+Date: Fri, 26 Jul 2024 12:33:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: pm: reduce entries iterations on
- connect
+Subject: Re: [PATCH mptcp-net 2/2] mptcp: fix duplicate data handling
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20240719-mptcp-pm-refact-connect-v1-1-1027d648a65f@kernel.org>
- <45cd30d3-7710-491c-ae4d-a1368c00beb1@redhat.com>
- <4f926139-2872-4869-8ece-fd72cec3c83a@kernel.org>
- <587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com>
+To: Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <51cd83cb7690d756e9a71797b133bdd9f286de76.1721921695.git.pabeni@redhat.com>
+ <1ca08110195a81b95a38449f1a12b5593dfad864.1721921695.git.pabeni@redhat.com>
+ <415224da-e982-2d69-d1de-f234abdc09fb@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,31 +87,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com>
+In-Reply-To: <415224da-e982-2d69-d1de-f234abdc09fb@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Paolo, Mat,
 
-On 25/07/2024 16:03, Paolo Abeni wrote:
+On 26/07/2024 02:42, Mat Martineau wrote:
+> On Thu, 25 Jul 2024, Paolo Abeni wrote:
+> 
+>> When a subflow receives and discards duplicate data, the mptcp
+>> stack assumes that the consumed offset inside the current skb is
+>> zero.
+>>
+>> With multiple subflows receiving data simultaneously such assertion
+>> does not held true. As a result the subflow-level copied_seq will
+>> be incorrectly increased and later on the same subflow will observe
+>> a bad mapping, leading to subflow reset.
 
-(...)
+Thank you for the patches and the reviews!
 
-> The additional memory user is a bit concerning for the
-> fill_local_addresses_vec() case, where the total amount of data on the
-> stack grows from 192 (already quite big) to 384 (quite concerning)...
+>> Address the issue tacking in account the skb consumed offset in
+> 
+> Just one fix but Matthieu can adjust: "Address the issue taking into
+> account..."
 
-I see, but I'm not sure what to do to improve this:
+Just did, thanks!
 
-- Having a new dedicated structure with 'addr', 'flag' and 'ifindex'
-instead of re-using "struct mptcp_pm_addr_entry" which includes the list
-pointers and socket pointer to save 8*24B?
+Now in our tree (fixes for -net)
 
-- Split the fullmesh part to reserve more space only in this case?
+New patches for t/upstream-net and t/upstream:
+- 6d60c2cf352d: mptcp: fix bad RCVPRUNED mib accounting
+- 2e6def94f212: mptcp: fix duplicate data handling
+- Results: a1f9b538328a..0e547869a341 (export-net)
+- Results: 8149d851361f..9a749f3dd928 (export)
 
-- Allocate memory?
+Tests are now in progress:
 
-- Any other ideas? :)
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/865fc5f5109629347844c647fa71a50484d02dec/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/166ef45101617d160bacd4c3330e32f8f71fcf17/checks
 
 Cheers,
 Matt
