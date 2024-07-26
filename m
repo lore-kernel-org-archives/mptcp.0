@@ -1,124 +1,130 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1F617A581
-	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 11:05:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4972BEEB2
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 14:28:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721991942; cv=none; b=IrMB75e/gfi2bD80VFRjWf8cTm/7FOwYyXjeGPkpvMKsnul45uNH1YvrZP5X9LBfEM3aaz+jdHJ7QXqLNq1XDvFp9+L/FmDqIu0tlwWC/3KM5ytx/3FyWpH2MiJ/RacBCiy7PN3SPXDqcKmxTQ5kisQebOO+gTj/OhVfxlm3NXo=
+	t=1722004126; cv=none; b=DrICaoAgoAN0dnWXLuGXtS3TapzNo3MoscqrxEuEx1tuNZBd0wwTGmHyBnvTpuwKFqBP2Bs8jAXGn5ixFwLE9hKUNLsH9EAM90DCPOrIBHQ28SrBpge6tSqnWiQ0CtKxTU+7WQ7tu1xizrxLe+2LS9v8qgP7SXjJgtjWPmbfLoI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721991942; c=relaxed/simple;
-	bh=P307bX9VfWfqyxha2hGe4diDy/xi9BOe1HCIIvlOHU4=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=CujLkl0jxYANS6EIbxLQySbZXoe3xnbdvX3kzJHEtKggTZ7w24f0l3m7PdfCfmv9FmalHPjjEtlhWpuE8S0AUcI7J9gPzZ4/OU8Cj66hDaTsPsPy8IjLz+CP2tdZd7hyP58afMo/V/INsavE1+v6LFhmm8rXLNKcfdWIenzyomo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fc0fzx8X; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722004126; c=relaxed/simple;
+	bh=NvcP0k4GCIhKFS6v3tA4FTqBh7yGpVkpo9m9fU3P3ao=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=p+xE66qCS+OysKAdR4yfVcXsEGZWM/DVkkLCELjF8mrwD56slSZAXhemZW9730gDAF3bSMSLyTOrHUlygheuSRNkbiPFGCmWPsBDL1TacnI0S0CCQsP4ntaqeKmes8XKo9u3A+8QxvsgaLUbE88vAGS/Lo8M7vooaFGMi91Rrm4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bHaKdLCR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fc0fzx8X"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1903C32782;
-	Fri, 26 Jul 2024 11:05:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bHaKdLCR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB699C32782;
+	Fri, 26 Jul 2024 14:28:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721991942;
-	bh=P307bX9VfWfqyxha2hGe4diDy/xi9BOe1HCIIvlOHU4=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=fc0fzx8XMxty5UIdUYFL9evEB16ViuLertVmRHhhcqAaZaX6Pj/+ST9jLDAv8ATOD
-	 QswEHtysrsJ53fvNp1Dcs3pvEg4M6b1JUupAi8/PEPKnF8kbR3+9WO45gWQ+ofj/g5
-	 Ntb7In67XYu0/PGWuRyTxYsmG63lnPBnQvKcwfb/4M6lUsoEpZZdx8CVRnbXl/nSrq
-	 hMDialnnlWuRi5lkXOmOnghE1UF2EEJtcrnSPrd562Trwqz2HgBJYVxym5raz/wYOn
-	 jLnZtc7//c+iNGCJywWvIaL0ATCAvVlENIX+47PdGTgBbpD90GiJRwSTEuvXMgFylc
-	 07uPyqZprZhjw==
-Message-ID: <026e0048-918b-4138-af3e-d45832d9f3c9@kernel.org>
-Date: Fri, 26 Jul 2024 13:05:38 +0200
+	s=k20201202; t=1722004125;
+	bh=NvcP0k4GCIhKFS6v3tA4FTqBh7yGpVkpo9m9fU3P3ao=;
+	h=From:Subject:Date:To:Cc:From;
+	b=bHaKdLCRfHhZciM3RpoCjyitXezZ+3k2l2HsKS00pOU5g54hOOZQuvItVlzC+5eDm
+	 QXv6mNeKU8flzeA5+cB6bYyYaVEaSYoeeeSaLDuNer2Yu9Gx6Fjm45XJZQW2egHgTu
+	 7rdhXKydRL3lw02AkqWtP4Rj8DPdRNiIVGMB1QtP1GB4YFOyprTP0/vH4t3h3086lI
+	 P7Wr5JkCebhXgmd14/ZTH/idobheqXUZiwb9ptBl7qBINhwRc8RyUb2eV0tyu9j0q3
+	 wCDJiCku3XirmCHmvHZ7kl+c5kTFOodtv0kB8Qoh3qj7bt5rHX3paGbZPaYeSztH+M
+	 Bj680r/JxBL2w==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v5 00/13] mptcp: fix endpoints with 'signal' and
+ 'subflow' flags
+Date: Fri, 26 Jul 2024 16:28:26 +0200
+Message-Id: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: pm: reduce entries iterations on
- connect
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <20240719-mptcp-pm-refact-connect-v1-1-1027d648a65f@kernel.org>
- <45cd30d3-7710-491c-ae4d-a1368c00beb1@redhat.com>
- <4f926139-2872-4869-8ece-fd72cec3c83a@kernel.org>
- <587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com>
- <807d8f18-19f7-4ecb-b2dc-4ceab076cae0@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <807d8f18-19f7-4ecb-b2dc-4ceab076cae0@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIuyo2YC/2XNTQ7CIBAF4KsY1mI6wLTiynsYF6UMStS2oQ3RN
+ L27pJr4w/Jl3vdmYgMFTwPbrSYWKPrBd20KuF6x5ly3J+LepsxEIVRRioLf+rHpeX/jdaz9lTs
+ kqbEypBSwhPpAzt+XwQN7dVsa2TGdzn4Yu/BYXkVYCu9V+F+NwAtuSi0sktlqg/sLhZaumy6cl
+ q0oPr4CzLxI3jUIKI0FV1Lm5bfXmZfJky4NooaGrMy8+vJCZF4lD2icraQluVU/fp7nJy8SW21
+ 4AQAA
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2812; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=NvcP0k4GCIhKFS6v3tA4FTqBh7yGpVkpo9m9fU3P3ao=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmo7KbxXn0tXPrLceXK86Yn731I3piK8DtXv/J7
+ e24zaR+kNGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqOymwAKCRD2t4JPQmmg
+ cyp9D/9/54OyXfib/tZoPgGOvhxUOO4OUvE2ntxBz2lu6GHOjtVIs4VcMZA/yctJOiIcTJpRmmZ
+ X3uSQFWeDZsPNjx63Z+G4sOITcBtdbdTcFK86mzkPHY9vvg27XmqyoHhHY4LDQo0rnk1EneEwW1
+ Q6yq99se0vwQh253T1VzNYR9yO++oVuMyEONMcGCG+F1TP4fl45BcGg7ffIygWbc0CsVw1iQksB
+ Rcxkl6u7/i7UnrbBFdBbrJJMq4A1812BqVfbxgG1n9jL9DtUGzTv7l/BWwdfC3GOUWNy+i02zn3
+ FVeoCesXHodpSFC1PG4qf74t9YDTMyvbvR4B/t38HJ6HNBtmTZQQTlxa83vxY8qjTl34WkGCAFS
+ a+S6LAbl8JdoOnN8OatT1spfPgmdjAgPCSvhbWctFucz60it2V0mmTeHQrBOTK/5140oKDruFZp
+ zL82saN5dQi2bc6HG90/6IA4LMqE0UOmtAY5FrX6joDK/oadcHodv9TLEOe1QrRfpMzH5YLq8yL
+ aQRitxp9XHDqVxEVC0BsonQKvheVl87GMakkzK2KDOmEUxLhV6drXdY3zwq72D8uZKAX4L/2YS5
+ 3KHYa9XPYpoYYNR4WitzILv6hv/u8QNs5pdqkGOdswG+dYykU0Q/6nstzaUujRJ5pbR5iQtsEIM
+ V3MoQTrElomC5iw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On 26/07/2024 11:46, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 25/07/2024 16:03, Paolo Abeni wrote:
-> 
-> (...)
-> 
->> The additional memory user is a bit concerning for the
->> fill_local_addresses_vec() case, where the total amount of data on the
->> stack grows from 192 (already quite big) to 384 (quite concerning)...
-> 
-> I see, but I'm not sure what to do to improve this:
-> 
-> - Having a new dedicated structure with 'addr', 'flag' and 'ifindex'
-> instead of re-using "struct mptcp_pm_addr_entry" which includes the list
-> pointers and socket pointer to save 8*24B?
-> 
-> - Split the fullmesh part to reserve more space only in this case?
+The first 11 patches have already been applied. Here are the remaining
+ones.
 
-Mmh, this could be done for fill_remote_addresses_vec(), but not really
-for fill_local_addresses_vec() where we need to check each entry to find
-out if the fullmesh flag is used. Or we loop twice, but well, that's
-what we want to avoid here :)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v5:
+- Split patch 1 (previously 12): the renaming has been done in a
+  dedicated patch at the end (patch patch 12), for -next.
+- Patch 10: fix typo and avoid memcpy.
+- Patch 11: fix comment.
+- Patch 13: fix build issue and use a new dedicated struct.
+- Please see the individual changelog for more details.
+- Link to v4: https://lore.kernel.org/r/20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org
 
-Cheers,
-Matt
+Changes in v4:
+- Patch 19: check for msk->first != NULL
+- New patches 21-22
+- Imported patch 23: might be easier to review all of them, then this
+  single one alone, while it depends on the previous ones.
+- Link to v3: https://lore.kernel.org/r/20240719-mptcp-pm-avail-v3-0-e96b5591ced3@kernel.org
+
+Changes in v3:
+- Small changes in patches 10 and 14, see individual changelog (Geliang)
+- New patches 18-20: small fixes
+- Link to v2: https://lore.kernel.org/r/20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org
+
+Changes in v2:
+- Do not split id_avail_bitmap per target in patch 5 (Paolo)
+- Explicit deny (patch 2), reduce indentation (patch 3), stop earlier
+  (patch 4) (Paolo)
+- New fixes and tests (patches 8-17).
+- Link to v1: https://lore.kernel.org/r/20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org
+
+---
+Matthieu Baerts (NGI0) (13):
+      mptcp: pm: re-using ID of unused flushed subflows
+      selftests: mptcp: join: test for flush/re-add endpoints
+      mptcp: pm: remove mptcp_pm_remove_subflow()
+      mptcp: pm: only mark 'subflow' endp as available
+      mptcp: pm: only decrement add_addr_accepted for MPJ req
+      mptcp: pm: check add_addr_accept_max before accepting new ADD_ADDR
+      mptcp: pm: only in-kernel cannot have entries with ID 0
+      mptcp: pm: fullmesh: select the right ID later
+      selftests: mptcp: join: validate fullmesh endp on 1st sf
+      mptcp: pm: avoid possible UaF when selecting endp
+      mptcp: pm: reuse ID 0 after delete and re-add
+      mptcp: pm: rename helpers linked to 'flush'
+      mptcp: pm: reduce entries iterations on connect
+
+ net/mptcp/pm.c                                  |  24 ---
+ net/mptcp/pm_netlink.c                          | 195 ++++++++++++++----------
+ net/mptcp/pm_userspace.c                        |  40 ++---
+ net/mptcp/protocol.h                            |  19 +--
+ net/mptcp/subflow.c                             |  29 ++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  31 ++++
+ 6 files changed, 180 insertions(+), 158 deletions(-)
+---
+base-commit: a9a9b3b154d187864b73eb0e86a0ff737d79a10a
+change-id: 20240620-mptcp-pm-avail-f5e3957be441
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
