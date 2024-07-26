@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C098178CEA
-	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 10:38:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB1F617A581
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 11:05:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721990321; cv=none; b=AMG29LUsacOb81eveeM3Ub6gWeW92BstbCfsNkdqVk3A2J7zYV+euaFmu4W+M0vEfyBRnWGK/Nb30cCrltU+IId3YMXhVX9HQl3fqV0973bgHU/ZzplhM0wQzGXvS3DFmhk5e8eSRNxExiXCgug58cov+GZmHTp4XRSD4q3R8qU=
+	t=1721991942; cv=none; b=IrMB75e/gfi2bD80VFRjWf8cTm/7FOwYyXjeGPkpvMKsnul45uNH1YvrZP5X9LBfEM3aaz+jdHJ7QXqLNq1XDvFp9+L/FmDqIu0tlwWC/3KM5ytx/3FyWpH2MiJ/RacBCiy7PN3SPXDqcKmxTQ5kisQebOO+gTj/OhVfxlm3NXo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721990321; c=relaxed/simple;
-	bh=2pGgUvts8OaZSP4bzbfPGkEvqyT/la32qBtCQY8aP6o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LZ4DaFX4tyzyG4+cVDQ1jVISM7YEau70abMNWPMtzAOoFdLh7abZuhAEvvZ9URNd9OYpiW9IIZ10KWzNOIk1XIMcRjkedsA5EscPzombtJYmlqDLLsw0tebyN1fmMgYXOfu+aUJ0o/lWjR57Kkkj+TspEZib0xoLqNui2nHU/Cc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iqHiuv/3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1721991942; c=relaxed/simple;
+	bh=P307bX9VfWfqyxha2hGe4diDy/xi9BOe1HCIIvlOHU4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=CujLkl0jxYANS6EIbxLQySbZXoe3xnbdvX3kzJHEtKggTZ7w24f0l3m7PdfCfmv9FmalHPjjEtlhWpuE8S0AUcI7J9gPzZ4/OU8Cj66hDaTsPsPy8IjLz+CP2tdZd7hyP58afMo/V/INsavE1+v6LFhmm8rXLNKcfdWIenzyomo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fc0fzx8X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iqHiuv/3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51470C4AF07;
-	Fri, 26 Jul 2024 10:38:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fc0fzx8X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1903C32782;
+	Fri, 26 Jul 2024 11:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721990321;
-	bh=2pGgUvts8OaZSP4bzbfPGkEvqyT/la32qBtCQY8aP6o=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iqHiuv/3SSFa3RdqtXWRGSED5w3iTKIhG2osnLOwDB7kN3Js6MLzFgRDM243LfMxw
-	 G1z0vovsLEtirSQT3rRDw6MhAMVdJFYtc4nPuILQ1SbtewC7vHFlnCNnqOQwbfq3xI
-	 /MBkEwmNFHrKgMaGBYXf/8yr6Y6HdLcPg32e/ZSnFuYh+QAkhvjs/uIiiF8pTP5j0k
-	 rjKQLOt3LpoMWvxmPRRx33rLoK3wk6Q/lJj5/JlI6HaSHmjN+lhlfnFYezRPxWzEZ0
-	 onJIFCWrpWYd+xMgOX8sN6BV5NzpS1p8Jacfh7z4mvWDKfQL64ggCqDSMI9e6DcW43
-	 AUASAauqeEaWw==
-Message-ID: <45a38e62-b4a2-420d-ae56-49c1e1bcf0db@kernel.org>
-Date: Fri, 26 Jul 2024 12:38:38 +0200
+	s=k20201202; t=1721991942;
+	bh=P307bX9VfWfqyxha2hGe4diDy/xi9BOe1HCIIvlOHU4=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=fc0fzx8XMxty5UIdUYFL9evEB16ViuLertVmRHhhcqAaZaX6Pj/+ST9jLDAv8ATOD
+	 QswEHtysrsJ53fvNp1Dcs3pvEg4M6b1JUupAi8/PEPKnF8kbR3+9WO45gWQ+ofj/g5
+	 Ntb7In67XYu0/PGWuRyTxYsmG63lnPBnQvKcwfb/4M6lUsoEpZZdx8CVRnbXl/nSrq
+	 hMDialnnlWuRi5lkXOmOnghE1UF2EEJtcrnSPrd562Trwqz2HgBJYVxym5raz/wYOn
+	 jLnZtc7//c+iNGCJywWvIaL0ATCAvVlENIX+47PdGTgBbpD90GiJRwSTEuvXMgFylc
+	 07uPyqZprZhjw==
+Message-ID: <026e0048-918b-4138-af3e-d45832d9f3c9@kernel.org>
+Date: Fri, 26 Jul 2024 13:05:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v4 11/23] selftests: mptcp: join: check re-using
- ID of closed subflow
+Subject: Re: [PATCH mptcp-next] mptcp: pm: reduce entries iterations on
+ connect
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-References: <20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org>
- <20240722-mptcp-pm-avail-v4-11-15bfd73de384@kernel.org>
- <1b2a66e3-424e-6ec8-3411-d7ef7b1f7fa0@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <20240719-mptcp-pm-refact-connect-v1-1-1027d648a65f@kernel.org>
+ <45cd30d3-7710-491c-ae4d-a1368c00beb1@redhat.com>
+ <4f926139-2872-4869-8ece-fd72cec3c83a@kernel.org>
+ <587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com>
+ <807d8f18-19f7-4ecb-b2dc-4ceab076cae0@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,66 +89,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1b2a66e3-424e-6ec8-3411-d7ef7b1f7fa0@kernel.org>
+In-Reply-To: <807d8f18-19f7-4ecb-b2dc-4ceab076cae0@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
-
-On 24/07/2024 19:14, Mat Martineau wrote:
-> On Mon, 22 Jul 2024, Matthieu Baerts (NGI0) wrote:
+On 26/07/2024 11:46, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
->> This test extends "delete and re-add" to validate the previous commit. A
->> new 'subflow' endpoint is added, but the subflow request will be
->> rejected. The result is that no subflow will be established from this
->> address.
->>
->> Later, the endpoint is removed and re-added after having cleared the
->> firewall rule. Before the previous commit, the client would not have
->> been able to create this new subflow.
->>
->> While at it, extra checks have been added to validate the expected
->> numbers of MPJ and RM_ADDR.
->>
->> The 'Fixes' tag here below is the same as the one from the previous
->> commit: this patch here is not fixing anything wrong in the selftests,
->> but it validates the previous fix for an issue introduced by this commit
->> ID.
->>
->> Fixes: b6c08380860b ("mptcp: remove addr and subflow in PM netlink")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> tools/testing/selftests/net/mptcp/mptcp_join.sh | 27 +++++++++++++++++
->> +++-----
->> 1 file changed, 22 insertions(+), 5 deletions(-)
+> On 25/07/2024 16:03, Paolo Abeni wrote:
 > 
-> As we discussed in the meeting today, for patches 1-11:
-Thank you for the review!
+> (...)
+> 
+>> The additional memory user is a bit concerning for the
+>> fill_local_addresses_vec() case, where the total amount of data on the
+>> stack grows from 192 (already quite big) to 384 (quite concerning)...
+> 
+> I see, but I'm not sure what to do to improve this:
+> 
+> - Having a new dedicated structure with 'addr', 'flag' and 'ifindex'
+> instead of re-using "struct mptcp_pm_addr_entry" which includes the list
+> pointers and socket pointer to save 8*24B?
+> 
+> - Split the fullmesh part to reserve more space only in this case?
 
-These first 11 patches are now in our tree (fixes for -net):
-
-New patches for t/upstream-net and t/upstream:
-- 0810e3bfd645: mptcp: fully established after ADD_ADDR echo on MPJ
-- fa82905dad6c: mptcp: pm: deny endp with signal + subflow + port
-- 0bcd8eb5baf3: mptcp: pm: reduce indentation blocks
-- 4446f3ce0f45: mptcp: pm: don't try to create sf if alloc failed
-- 23dcae2e002f: mptcp: pm: do not ignore 'subflow' if 'signal' flag is
-also set
-- 8396284e59ae: selftests: mptcp: join: ability to invert ADD_ADDR check
-- 97c32986ea33: selftests: mptcp: join: test both signal & subflow
-- 1624f3f439c1: mptcp: pm: re-using ID of unused removed ADD_ADDR
-- e85c614f5dae: selftests: mptcp: join: check re-using ID of unused ADD_ADDR
-- 887b2064d1c1: mptcp: pm: re-using ID of unused removed subflows
-- 6d8031641325: selftests: mptcp: join: check re-using ID of closed subflow
-- Results: 0e547869a341..35d7208999c3 (export-net)
-- Results: 9a749f3dd928..a9a9b3b154d1 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a2e8f006417d01deb51431292ae03179641b1e20/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/70a0d0dafa76f55e2d2e1ba5ae6067f832b1bcb0/checks
+Mmh, this could be done for fill_remote_addresses_vec(), but not really
+for fill_local_addresses_vec() where we need to check each entry to find
+out if the fullmesh flag is used. Or we loop twice, but well, that's
+what we want to avoid here :)
 
 Cheers,
 Matt
