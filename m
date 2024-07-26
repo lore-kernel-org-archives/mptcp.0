@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D04B1F951
-	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 09:03:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 162576116
+	for <mptcp@lists.linux.dev>; Fri, 26 Jul 2024 09:18:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1721984612; cv=none; b=EJj1E+YcYUL5WF4pPF7nyxsJZSrC6TrwKt3CO96yv4w30fUwNEarcREnJQTLcKL4P5PyvBar1Z0k8a0M9CnCVWuiw+CJLSGAxZ/xMgefyomOPwMzA8uuetIR5j9TwTsfaArLyCzDNbaPF5jDkp1P5gXiI/pMH0kOUV4JS6N191Y=
+	t=1721985538; cv=none; b=eLOv/SYQ2xd3gX9sYbReogWKLUZHdo0FxSDlT4QfqCWMxKK+IELrQ1f40zxdCwmHQdKS3NUxPstWavfnqHZSjU845wwV+l3FfXLOuxR7Hlu0aP4pwPNYXhl1kRbT1N41Sav3/qOe9Yn6iKHnIQeGwDshTfAlKCJo4l3hLPq5wjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1721984612; c=relaxed/simple;
-	bh=11YHmtJzEIUxbBR47FHPbHr4h4jQZj9iPur68DAXCn4=;
+	s=arc-20240116; t=1721985538; c=relaxed/simple;
+	bh=NSbiL+DYVB6Mz9BfVPwlKqq8vMDemsy5WQvkcWuDTnM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZOEVODy1RdxnNQze3EX/wKGgS4/1erC1kLrlUX2Gyp4fC16YuzStuyj3UVmr76dEUau9S6IXj0S1G4Jh7DSMjH8UXlq8pvgGJMg1oyNhwYXhso8+JG/orlGdAxOO8BzNOmXH8SXEVPeaEGl7wADVidfutck74a2n66dVnXlKHNM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ll8SXD4f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nxAAJOFcgIfTRezFITW82OLaUS8zCg48S7l24RV5tzt9KHzRAgyhxpICMD7z8tmI8IjSSds6tq2/3W5jPP3a1eDPIfs8mo/1ASbhFgmkt9SjUJ9DW8Aa4SR0t3PczP11E0gXo3/YDgfh3dIx1z4cV541FH/jjIu8gk/G8+a0We8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gn5NUNT/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ll8SXD4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77758C32782;
-	Fri, 26 Jul 2024 09:03:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gn5NUNT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B3BC32782;
+	Fri, 26 Jul 2024 09:18:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1721984612;
-	bh=11YHmtJzEIUxbBR47FHPbHr4h4jQZj9iPur68DAXCn4=;
+	s=k20201202; t=1721985537;
+	bh=NSbiL+DYVB6Mz9BfVPwlKqq8vMDemsy5WQvkcWuDTnM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ll8SXD4fdSpFeD80pOM9yIlpL0zyCNqEghPBGpKpmUlet5Lngd4mu6/edYCMIL8lH
-	 y4kJtJuB4HSDere5UPD1yU1mcue0e9V7B4iqjOyOycOBXJvKUWaymfuoKc+QPmUTwE
-	 ZX6vneVyKeJxK4b0AtYT7PGKvNtfGKtl2xTTSkXQ5kvT1PhYKOQRDX69niYH/IBP6b
-	 LBkyufHePtgKLVAGSOAJmG1HUm3JCEX1YWKl8pAxYFH8qzAbYoftpOOS/sI7LPcE3S
-	 ICqqYEaruGFGWmUfsIziStB2yx5MGTT6D44+FQ1Pe6s1Pc16ygIkf2MC2Eq5EYOPGS
-	 dNfYRXlGkFsMg==
-Message-ID: <09a07a8b-79f4-422b-b18d-36942eb1ddbc@kernel.org>
-Date: Fri, 26 Jul 2024 11:03:29 +0200
+	b=gn5NUNT/wXe6i40cGB+g63ip0Vsd7kxrVsUwcI//+U9ujvMPfwgD9O0cdaRePo2cH
+	 s/m1JbV47EINzXOqZNIdAI+rHtlKBsb/EBrUj9uLJcl6jsZ8LO5FDIbjmHMs/G/MB6
+	 2Jx4m5mxAs2KxcmjJJFfRfHmQX5JFBLmP7wwj6r7asUfL5OTff3/NI3UmwWrIY5c7i
+	 mQJHnoVwLjB0D28y2GiIfATSSCKM4Tuc/9u96bD6a26pJamQL8WXTwT6OpMTbeTj27
+	 adPUKi5sP3cYQNbMKICBMCHdQbcZyyWMdLU++lw0sjO3cuAlkwda4P5qAfaHdFByee
+	 sYpoMJ/m8qD+A==
+Message-ID: <39a825a6-ddf4-4ba4-97f1-9ac72d9ac811@kernel.org>
+Date: Fri, 26 Jul 2024 11:18:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-iproute v2 4/7] man: mptcp: 'backup' flag also
- affects outgoing data
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add mptcp subflow
+ subtest"
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20240723-mptcp-user-feedback-v2-0-59f18975401c@kernel.org>
- <20240723-mptcp-user-feedback-v2-4-59f18975401c@kernel.org>
- <478fa8ca-30e1-6be3-d8ec-4469a0f3b816@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <fccaccd2e7a1ce8518782c85965a6e26d37a87f9.1721872694.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,66 +86,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <478fa8ca-30e1-6be3-d8ec-4469a0f3b816@kernel.org>
+In-Reply-To: <fccaccd2e7a1ce8518782c85965a6e26d37a87f9.1721872694.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 25/07/2024 00:25, Mat Martineau wrote:
-> On Tue, 23 Jul 2024, Matthieu Baerts (NGI0) wrote:
+Thank you for the patch!
+
+On 25/07/2024 03:58, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->> That's the behaviour with the default packet scheduler.
->>
->> In some early design, the default scheduler was supposed to take into
->> account only the received backup flags, but it ended up not being the
->> case, and setting the flag would also affect outgoing data.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> man/man8/ip-mptcp.8 | 5 +++--
->> 1 file changed, 3 insertions(+), 2 deletions(-)
->>
->> diff --git a/man/man8/ip-mptcp.8 b/man/man8/ip-mptcp.8
->> index 11df43ce..4d4c879b 100644
->> --- a/man/man8/ip-mptcp.8
->> +++ b/man/man8/ip-mptcp.8
->> @@ -172,8 +172,9 @@ If this is a
->> endpoint, the subflows created using this endpoint will have the backup
+> Skip the test with test__skip() for systems that do not
+> support "ip mptcp", so that CI can also pass.
 > 
-> Hi Matthieu -
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
-> I think we should clarify this text some more.
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index 00f63f3f19f4..ddef8c61360f 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -357,10 +357,11 @@ static int endpoint_init(char *flags)
+>  	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+>  	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
+>  	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+> -	/* It would be better to use  "ip -net %s mptcp endpoint add %s %s",
+> -	 * but the BPF CI is using an old version of IPRoute (5.5.0).
+> -	 */
+> -	SYS(fail, "ip netns exec %s ./mptcp_pm_nl_ctl add %s flags %s", NS_TEST, ADDR_2, flags);
+> +	if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags)) {
 
-Good idea!
+This will silently mark the test as skipped, because stderr will be muted.
 
->> flag set during the connection process. This flag instructs the peer to
-> 
-> Changing it to "remote peer" on the above line will help clarify the
-> part about the packet scheduler below.
+> +		/* "ip mptcp" not support, skip this test. */
 
-Indeed!
+Could it be possible to at least print this comment? I can add:
 
->> only send data on a given subflow when all non-backup subflows are
->> -unavailable. This does not affect outgoing data, where subflow priority
->> -is determined by the backup/non-backup flag received from the peer
->> +unavailable. This does also affect outgoing data when the default
->> packets
->> +scheduler is used. With it, the subflow priority is determined by the
->> +backup/non-backup flag sent to or received from the peer.
->>
-> 
-> How about: "When using the default packet scheduler with a 'backup'
-> endpoint, outgoing data from the local peer is also affected: packets
-> will only be sent from this endpoint when all non-backup subflows are
-> unavailable."
+  fprintf(stderr, "'ip mptcp' not supported, skip this test.\n");
 
-Clearer indeed, thanks!
+when applying the patch. WDYT?
 
-> The other patches all look good to me.
-
-I just send a v3. I guess that's OK for you if I add your Acked-by, and
-send it to netdev?
+> +		test__skip();
+> +		goto fail;
+> +	}
+>  
+>  	return 0;
+>  fail:
+> @@ -435,7 +436,7 @@ static void test_subflow(void)
+>  	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
+>  		goto skel_destroy;
+>  
+> -	if (!ASSERT_OK(endpoint_init("subflow"), "endpoint_init"))
+> +	if (endpoint_init("subflow"))
+>  		goto close_netns;
+>  
+>  	run_subflow(skel->data->cc);
 
 Cheers,
 Matt
