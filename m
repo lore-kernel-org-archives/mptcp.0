@@ -1,36 +1,36 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B040B2570
-	for <mptcp@lists.linux.dev>; Sun, 28 Jul 2024 03:46:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6895863B9
+	for <mptcp@lists.linux.dev>; Sun, 28 Jul 2024 03:49:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722138374; cv=none; b=P0A3YEP6+NxrKoONh+MH2Mk1BFRYIbWx13S0eEwgJpINSrvuuhKPldUdh+JQabG2ZZo7QQiVmpJzWbflXvsLDsr1ocGodGc2H32aFvKqni3kcsGIfRXTEmzMtYIrLQQv8ib0BP0QhyY8iYy50+c+9xWKWhKE5JEYcYh3FTMiEV0=
+	t=1722138594; cv=none; b=vGtzgiS1RUf8yyXTVRXK/01/KGNW+Mv7d1MbNiolyU70tT8tPd800LwrqjJQw+/cjk+O8hmg6/TYi+RV3JDD5NRvbKzFEeDKflVmSba+o6DhNP2Wrpd5O7XYeBaXWELjTdfRForPfj8yLmEnrLHUzFaqusNRKGPqb4RraSZahWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722138374; c=relaxed/simple;
-	bh=vywci4LciWllSQMvrFuBmMnRdAMOutIeFuxMdqyeM8c=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cM67POzVmOdgbahRRCXi9BSBaS+CKvBsN/1UzyMc5R6y1jPTNaI6fqwa1YKjx64K/ANDrFN0LDbm7VtdbeDjQFFCmNtctsZCXFe3s8lQydT2hOuuETt2/8cobRDKU5BOjwfw/M2CSBrdavA9s0Jl8nJXhlSQw4RLTKudgl/EVC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=krjdQbLN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722138594; c=relaxed/simple;
+	bh=o4+5mqMnMN+RhlAV+gZZX/4s4mmVS3Fd4LXdymi+Hp8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=fUHZFh9EqCRXN2vVQH+IMlpE1FXT1GT1hxB7/Vae7/GzODBBD/UIf1cSz+aHP90Lf+TyC42o1HwUjapNDAEJAUT7bMYOqaU9U5/mDbWPqq8QCNEdpJJxBv/uf+Hrt26zqfvywnk42RSw9hos1z7chrKcKTKqKTm61mNmNmKoz/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGqZY5cB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="krjdQbLN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 11158C116B1;
-	Sun, 28 Jul 2024 03:46:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGqZY5cB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8942C32782;
+	Sun, 28 Jul 2024 03:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722138374;
-	bh=vywci4LciWllSQMvrFuBmMnRdAMOutIeFuxMdqyeM8c=;
+	s=k20201202; t=1722138594;
+	bh=o4+5mqMnMN+RhlAV+gZZX/4s4mmVS3Fd4LXdymi+Hp8=;
 	h=From:To:Cc:Subject:Date:From;
-	b=krjdQbLNqReQ7zI+8z5Ij6W0422Z1MhAlfN9IPzkaEE3oBmhYgh15i3dEoAK614DB
-	 FZo7cZPfLnZLWl7UUZ9rpntwS3pVefo5Ff64gZ2R2BjbJ8lLDQkXWuu10/hkfUy1hO
-	 hyw77dEBBxZxkQIushFyKpWhd/2kXvEBgBJxfLxW6t0Nn9QTiAJ9der4ARONLiJilG
-	 JcBf26nJGwnOn1WxhAm+w7Zg3bI0M4fNQIRsJ3+USKNOaYdaUA1IpDSXsJZNxSnrG5
-	 +Gc1j+GgPMkGAVjT+IFKL74+67aaWYsUsfpgcF5r+D9K9pUO7cMe7OfQ0lcl/pGRrc
-	 LJObH3JWXV/2g==
+	b=CGqZY5cB08ATlrspzbex7wshNHpi/sP7Tou2GJn7gdffVvdVWUP2iumbT/0p23nAx
+	 xsYO0pVCwF2gfnuA2dAVUMBi9qWKUG6zf+JunAt9VJsbLzSQ6wr9WLwFCxmSSzdI4O
+	 4Eh/HPPY1MsMgmgX0f/ElrOzuW6iH2IwgcDf81/H5kTFLu4WdCT1clG+1mQvPtuGPF
+	 xmeIKs1nd6/g6qhhvUFR6gXUMAgZJbc0w56T2qcsKwCmjR2s9xmiAcbVAOKT58Ov5D
+	 1qEkVGuc98M6KqbhopvxFPhfQAA+X4Nd4ObOHGWhYqHcSxas2XToAFpC8UNEIvHpvk
+	 ehmXAzRNjapfQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang.tang@suse.com>
-Subject: [PATCH mptcp-next] selftests: mptcp: join: simplify checksum_tests
-Date: Sun, 28 Jul 2024 11:46:08 +0800
-Message-ID: <1a05890e3e65de00b45b2453232eed12fe55ad14.1722138313.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [RESEND PATCH mptcp-next] selftests: mptcp: join: simplify checksum_tests
+Date: Sun, 28 Jul 2024 11:49:34 +0800
+Message-ID: <b61be1bd6c70121fee3c6e183fb224b41d9dac90.1722138514.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -40,12 +40,15 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <geliang.tang@suse.com>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
 The four checksum tests are similar, only one line is different. So
 a for-loop can be used to simplify these tests.
 
-Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+RESEND:
+ - update the email address.
 ---
  .../testing/selftests/net/mptcp/mptcp_join.sh | 43 +++++--------------
  1 file changed, 11 insertions(+), 32 deletions(-)
