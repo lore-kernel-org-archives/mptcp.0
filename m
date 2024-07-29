@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D1871EEE4
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 08:37:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA841428FE
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 09:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722242247; cv=none; b=m/m9QafOXoDTFnwKRkHkDMUS/NuUW0wAUnXjUDtEcSeGfhzeuBXlQaGcSBf9g3D/alzU4mqBr4/gItPD/1pCLq+5SucpAiejrX+HhxP5NecBdMfPU6lfvuDOkJcDBB7aXrAV41iSnBZPuTOn0iXFOjnqBsMiPDdr2cWIaE0Oeiw=
+	t=1722245359; cv=none; b=n20QdToG6OBYlFqiY7A9ML2EwtwQI+lnRjMWZB3Pzsvp/op5NuqOj/VuzMGAMD2ZMuU1f+OXPcaq+6TxXBommJdLOtkHSUO0NeC/iUNZNfP0CMiOb5fRGlEnsTl1MbHRuTJknosOS0YpHIZDLuL2lwDYVS4O2RIVBSUd8psAgbE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722242247; c=relaxed/simple;
-	bh=d5oHstfXTUkj5BP1POshuI1ENSVpT1oUb9gCtEzlaKI=;
+	s=arc-20240116; t=1722245359; c=relaxed/simple;
+	bh=dnv/ZR2she5vOmR+dpf1GZO6ww8bgPMVxsX0R1G41tg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=I2DwdufPm28P3hbqh0jVTTpHrRATYw3tJWUPeuJfJlfSDf1gCTdAhSTE/0OvysbnchzKcOW5SlENZYDG3GZ2tdHiog2/A3o6drhCdn+XtUbeWHInHUydo39GxRugoYsaU1IOSTYhacNQc3QsraIdgbZ6Ha9O53hl4uZ1G25i37k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WbRnTYdb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ExHyHoo88RqZ8Lfd1HYVBkWiXeO7Q/vtvyqZjEiLk8YCZo66yUwSKCfhe9fQVDoP6NMsfyT5v9li0XNSs+vrWUs/biANtLmetG0cOewguTO7NoJbKo3RYuXl9Ph0gPLKE8DK48vynSsI2nveRVHJwwSymKsmmCgcfJD0lt/kSL0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcUmhIjE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WbRnTYdb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6417AC32786;
-	Mon, 29 Jul 2024 08:37:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcUmhIjE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2F8C32786;
+	Mon, 29 Jul 2024 09:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722242247;
-	bh=d5oHstfXTUkj5BP1POshuI1ENSVpT1oUb9gCtEzlaKI=;
+	s=k20201202; t=1722245359;
+	bh=dnv/ZR2she5vOmR+dpf1GZO6ww8bgPMVxsX0R1G41tg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WbRnTYdbcOlUaeoGt2lWy5QI+hMDwPwW01JvwlX60+wM5qegTI07NOcv1z1OaNUHR
-	 2gtP5gw7NqBT2bHi3MdFymFYwGdpEIKEFjfekgUnwuvMk6xSCXZXeLnP7TSbozFSjE
-	 sDHdecXKptXdmvKt165gyrfRgxmJGfQzd4MIqtuPhDbOx2m1zEkq0eQXBMB6+3JjOw
-	 NLPaF4ss+sx3COHe59FwuO/PKJNZedo8HNg6haaghzSoYLdMXRX3rrQNF0QxHGQ2le
-	 KZX6PGvAcGuO6ZA8woeIbb3JwvT06dO8WAi+RtQVTtaiEr5UedRfzpkIoKlPE6LMPw
-	 tRnmRdDO/tOHQ==
-Message-ID: <a5007929-9ffd-4bf0-92df-33d327c91368@kernel.org>
-Date: Mon, 29 Jul 2024 10:37:23 +0200
+	b=hcUmhIjEeMWPZ29GBD7xw5kykaOfI9Sb+C4ZQYQEKX7HNt606WMLilUoMzZhqBnb7
+	 qM+KdOHGnTohM2ar7+Y/PP4ra2kOyaf/RDK24bgoYY4Y+N4EuIgq4Xv+uWeWZj0yKh
+	 gc5agMzM42ADS8h9o/BrhmdXd4ZT6bjK4umeh/1A5zw0GVLuWpY/e+xuYZL8AtvfXl
+	 7AToFFhxiF/Rnr7N20ifshyi3PH3f/bq3+QBVI5DOS0a49L1DZyfMLhnZ70z/yyIak
+	 r6hgq+PoBC3u38gz58ewqBp+NZMGoPpeJ5HT2twaZXLnkOUAu8Dao2ecQFqxiniuzS
+	 rbnGUCy9OzV+g==
+Message-ID: <09f0fffc-8101-4ffa-869c-a7f63d12c181@kernel.org>
+Date: Mon, 29 Jul 2024 11:29:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 04/13] mptcp: pm: only mark 'subflow' endp as
- available
+Subject: Re: [PATCH mptcp-net v5 07/13] mptcp: pm: only in-kernel cannot have
+ entries with ID 0
+Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
 References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
- <20240726-mptcp-pm-avail-v5-4-fb1117ddeef6@kernel.org>
- <6b0f7eff5552b0b0e45813e12f397b71fce54098.camel@kernel.org>
-Content-Language: en-GB
+ <20240726-mptcp-pm-avail-v5-7-fb1117ddeef6@kernel.org>
+ <bc65dcccc3569ba5de9930ae47e634912cf3efbe.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,92 +88,78 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6b0f7eff5552b0b0e45813e12f397b71fce54098.camel@kernel.org>
+In-Reply-To: <bc65dcccc3569ba5de9930ae47e634912cf3efbe.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for the review.
-
-On 29/07/2024 03:09, Geliang Tang wrote:
-> Hi Matt,
-> 
+On 29/07/2024 03:12, Geliang Tang wrote:
 > On Fri, 2024-07-26 at 16:28 +0200, Matthieu Baerts (NGI0) wrote:
->> Adding the following warning ...
+>> The ID 0 is specific per MPTCP connections. The per netns entries
+>> cannot
+>> have this special ID 0 then.
 >>
->>   WARN_ON_ONCE(msk->pm.local_addr_used == 0)
+>> But that's different for the userspace PM where the entries are per
+>> connection, they can then use this special ID 0.
 >>
->> ... before decrementing the local_addr_used counter helped to find a
->> bug
->> when running the "remove single address" subtest from the
->> mptcp_join.sh
->> selftests.
->>
->> Removing a 'signal' endpoint will trigger the removal of all subflows
->> linked to this endpoint via mptcp_pm_nl_rm_addr_or_subflow() with
->> rm_type == MPTCP_MIB_RMSUBFLOW. This will decrement the
->> local_addr_used
->> counter, which is wrong in this case because this counter is linked
->> to
->> 'subflow' endpoints, and here it is a 'signal' endpoint that is being
->> removed.
->>
->> Now, the counter is decremented, only if the ID is being used outside
->> of mptcp_pm_nl_rm_addr_or_subflow(), only for 'subflow' endpoints,
->> and
->> if the ID is not 0 -- local_addr_used is not taking into account
->> these
->> ones. This marking of the ID as being available, and the decrement is
->> done no matter if a subflow using this ID is currently available,
->> because the subflow could have been closed before.
->>
->> Fixes: 06faa2271034 ("mptcp: remove multi addresses and subflows in
->> PM")
+>> Fixes: f40be0db0b76 ("mptcp: unify pm get_flags_and_ifindex_by_id")
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  net/mptcp/pm_netlink.c | 26 +++++++++++++++++---------
->>  1 file changed, 17 insertions(+), 9 deletions(-)
+>>  net/mptcp/pm.c         | 3 ---
+>>  net/mptcp/pm_netlink.c | 4 ++++
+>>  2 files changed, 4 insertions(+), 3 deletions(-)
 >>
+>> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+>> index 925123e99889..3e6e0f5510bb 100644
+>> --- a/net/mptcp/pm.c
+>> +++ b/net/mptcp/pm.c
+>> @@ -434,9 +434,6 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct
+>> mptcp_sock *msk, unsigned int id
+>>  	*flags = 0;
+>>  	*ifindex = 0;
+>>  
+>> -	if (!id)
+>> -		return 0;
+>> -
+>>  	if (mptcp_pm_is_userspace(msk))
+>>  		return
+>> mptcp_userspace_pm_get_flags_and_ifindex_by_id(msk, id, flags,
+>> ifindex);
+>>  	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id,
+>> flags, ifindex);
 >> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 8a28fdaf3bb6..3ea417b52ff4 100644
+>> index 3cb02fe359c0..6a1495fec7ae 100644
 >> --- a/net/mptcp/pm_netlink.c
 >> +++ b/net/mptcp/pm_netlink.c
->> @@ -833,10 +833,10 @@ static void
->> mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
->>  			if (rm_type == MPTCP_MIB_RMSUBFLOW)
->>  				__MPTCP_INC_STATS(sock_net(sk),
->> rm_type);
->>  		}
->> -		if (rm_type == MPTCP_MIB_RMSUBFLOW)
->> -			__set_bit(rm_id ? rm_id : msk-
->>> mpc_endpoint_id, msk->pm.id_avail_bitmap);
->> -		else if (rm_type == MPTCP_MIB_RMADDR)
->> +
->> +		if (rm_type == MPTCP_MIB_RMADDR)
->>  			__MPTCP_INC_STATS(sock_net(sk), rm_type);
->> +
->>  		if (!removed)
->>  			continue;
+>> @@ -1395,6 +1395,10 @@ int
+>> mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
+>> unsigned int
+>>  	struct sock *sk = (struct sock *)msk;
+>>  	struct net *net = sock_net(sk);
 >>  
->> @@ -846,8 +846,6 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct
->> mptcp_sock *msk,
->>  		if (rm_type == MPTCP_MIB_RMADDR) {
->>  			msk->pm.add_addr_accepted--;
->>  			WRITE_ONCE(msk->pm.accept_addr, true);
->> -		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
->> -			msk->pm.local_addr_used--;
+>> +	/* No entries with ID 0 */
+>> +	if (id == 0)
+>> +		return 0;
+>> +
 > 
-> 
-> Is it necessary to call __mark_subflow_endp_available() here? I'm not
-> sure.
+> I think this check needs to be added in
+> mptcp_userspace_pm_get_flags_and_ifindex_by_id() too.
 
-No, because mptcp_pm_nl_rm_addr_or_subflow(MPTCP_MIB_RMSUBFLOW) will be
-called when removing an endpoint, to delete all linked subflows. That
-can be a 'signal' endpoint as well, while 'local_addr_used' is only
-linked to 'subflow' endpoint. There are more details about that in the
-commit message, but in short, that why I moved this to functions calling
-this helper, where there are more info about the endpoint type.
+We don't need it for the userspace PM, because the endpoints are managed
+per MPTCP connection, they can have an ID 0. On the other hand, the
+in-kernel PM manages the endpoints globally, they cannot have the ID 0
+because it is reserved to the address used by the initial subflow, which
+can be different per MPTCP connection.
+
+Please see the commit message for more details.
+
+> 
+>>  	rcu_read_lock();
+>>  	entry = __lookup_addr_by_id(pm_nl_get_pernet(net), id);
+>>  	if (entry) {
+>>
+> 
 
 Cheers,
 Matt
