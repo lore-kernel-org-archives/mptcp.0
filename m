@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAA841428FE
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 09:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E69313E032
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 09:35:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722245359; cv=none; b=n20QdToG6OBYlFqiY7A9ML2EwtwQI+lnRjMWZB3Pzsvp/op5NuqOj/VuzMGAMD2ZMuU1f+OXPcaq+6TxXBommJdLOtkHSUO0NeC/iUNZNfP0CMiOb5fRGlEnsTl1MbHRuTJknosOS0YpHIZDLuL2lwDYVS4O2RIVBSUd8psAgbE=
+	t=1722245704; cv=none; b=d91vlZKUc0qIv19aOnkqljDQVfVpnLEEj/E9ZWoDR1hJ+OUwHpodaoQSiFndxePfLtQ6YS3iEnFXeCSNVJf5XvwylDWUTH7sGsOWp16aXh/1zSc1mq1KtBkdacNlZJoc95tJQa54fc3tWtme/ygN2W00hQZaNeYVkb879LeoF8Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722245359; c=relaxed/simple;
-	bh=dnv/ZR2she5vOmR+dpf1GZO6ww8bgPMVxsX0R1G41tg=;
+	s=arc-20240116; t=1722245704; c=relaxed/simple;
+	bh=CwSBv6pnGZ06XcIx+/z8lOTyXvakhsbQtIv2ZjhHoTc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ExHyHoo88RqZ8Lfd1HYVBkWiXeO7Q/vtvyqZjEiLk8YCZo66yUwSKCfhe9fQVDoP6NMsfyT5v9li0XNSs+vrWUs/biANtLmetG0cOewguTO7NoJbKo3RYuXl9Ph0gPLKE8DK48vynSsI2nveRVHJwwSymKsmmCgcfJD0lt/kSL0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hcUmhIjE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oN6RUeGXwXVy7Md2vGgCGOKdkc4UqYsXks93Xfgc/c/kysXUVEpcKoWgCzuyQDL43l8jySb2L9w5qqPqkSG7ehBCj/K8ZVhfgjVSOn9hfzPwMGbBqX/+raurD4V7DUX18xFdnGbN5OSK0TeRCzYIm2sXi/KkG6esfd3Wgdkiaq8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQf6fNw5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hcUmhIjE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B2F8C32786;
-	Mon, 29 Jul 2024 09:29:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQf6fNw5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D02B7C32786;
+	Mon, 29 Jul 2024 09:35:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722245359;
-	bh=dnv/ZR2she5vOmR+dpf1GZO6ww8bgPMVxsX0R1G41tg=;
+	s=k20201202; t=1722245704;
+	bh=CwSBv6pnGZ06XcIx+/z8lOTyXvakhsbQtIv2ZjhHoTc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hcUmhIjEeMWPZ29GBD7xw5kykaOfI9Sb+C4ZQYQEKX7HNt606WMLilUoMzZhqBnb7
-	 qM+KdOHGnTohM2ar7+Y/PP4ra2kOyaf/RDK24bgoYY4Y+N4EuIgq4Xv+uWeWZj0yKh
-	 gc5agMzM42ADS8h9o/BrhmdXd4ZT6bjK4umeh/1A5zw0GVLuWpY/e+xuYZL8AtvfXl
-	 7AToFFhxiF/Rnr7N20ifshyi3PH3f/bq3+QBVI5DOS0a49L1DZyfMLhnZ70z/yyIak
-	 r6hgq+PoBC3u38gz58ewqBp+NZMGoPpeJ5HT2twaZXLnkOUAu8Dao2ecQFqxiniuzS
-	 rbnGUCy9OzV+g==
-Message-ID: <09f0fffc-8101-4ffa-869c-a7f63d12c181@kernel.org>
-Date: Mon, 29 Jul 2024 11:29:16 +0200
+	b=iQf6fNw525+L9pWtEqk7siT+BU8JNl5gEnhqt6i1PZkjjGjw7v6DcmJKiFvRtvHmx
+	 TpseeRwHMJ0O8eXD92GP0oWvk3Hs38VAlloXB7dlRpAqESwtWBScLA3/CveWvHHtqf
+	 p7mhhDDnDNnJ1ERPVGy/ChHBFjs0O/X81yZwTwCjiAC0gixinuIOjDZ1VelyAhVhco
+	 ZbC7WfFmdXMmvTqqyyFu6S59PYaWcZSy2Wnq5N26h6Ec8dj3hMGc2jt1EKeCYKI/74
+	 p9fbdTi28z5SQAz5FrH5MCRy/DiWawCiJ1GqSM6DTJaL5qIVSHIPyYITVkDZdBlyJI
+	 EplyDpePO7P2w==
+Message-ID: <39e788d2-dfb0-4b12-b891-99a8cb15a1ef@kernel.org>
+Date: Mon, 29 Jul 2024 11:35:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 07/13] mptcp: pm: only in-kernel cannot have
- entries with ID 0
+Subject: Re: [PATCH mptcp-net v5 09/13] selftests: mptcp: join: validate
+ fullmesh endp on 1st sf
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
 References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
- <20240726-mptcp-pm-avail-v5-7-fb1117ddeef6@kernel.org>
- <bc65dcccc3569ba5de9930ae47e634912cf3efbe.camel@kernel.org>
+ <20240726-mptcp-pm-avail-v5-9-fb1117ddeef6@kernel.org>
+ <5a5a7e689dbdad1afe1971759b780493fc7cc7de.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,77 +88,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <bc65dcccc3569ba5de9930ae47e634912cf3efbe.camel@kernel.org>
+In-Reply-To: <5a5a7e689dbdad1afe1971759b780493fc7cc7de.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 29/07/2024 03:12, Geliang Tang wrote:
+On 29/07/2024 03:19, Geliang Tang wrote:
 > On Fri, 2024-07-26 at 16:28 +0200, Matthieu Baerts (NGI0) wrote:
->> The ID 0 is specific per MPTCP connections. The per netns entries
->> cannot
->> have this special ID 0 then.
+>> This case was not covered, and the wrong ID was set before the
+>> previous
+>> commit.
 >>
->> But that's different for the userspace PM where the entries are per
->> connection, they can then use this special ID 0.
+>> The rest is not modified, it is just that it will increase the code
+>> coverage.
 >>
->> Fixes: f40be0db0b76 ("mptcp: unify pm get_flags_and_ifindex_by_id")
+>> The right address ID can be verified by looking at the packet traces.
+>> We
+>> could automate that using Netfilter with some cBPF code for example,
+>> but
+>> that's always a bit cryptic. Packetdrill seems better fitted for
+>> that.
+>>
+>> Fixes: 4f49d63352da ("selftests: mptcp: add fullmesh testcases")
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  net/mptcp/pm.c         | 3 ---
->>  net/mptcp/pm_netlink.c | 4 ++++
->>  2 files changed, 4 insertions(+), 3 deletions(-)
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
+>>  1 file changed, 1 insertion(+)
 >>
->> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
->> index 925123e99889..3e6e0f5510bb 100644
->> --- a/net/mptcp/pm.c
->> +++ b/net/mptcp/pm.c
->> @@ -434,9 +434,6 @@ int mptcp_pm_get_flags_and_ifindex_by_id(struct
->> mptcp_sock *msk, unsigned int id
->>  	*flags = 0;
->>  	*ifindex = 0;
->>  
->> -	if (!id)
->> -		return 0;
->> -
->>  	if (mptcp_pm_is_userspace(msk))
->>  		return
->> mptcp_userspace_pm_get_flags_and_ifindex_by_id(msk, id, flags,
->> ifindex);
->>  	return mptcp_pm_nl_get_flags_and_ifindex_by_id(msk, id,
->> flags, ifindex);
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 3cb02fe359c0..6a1495fec7ae 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1395,6 +1395,10 @@ int
->> mptcp_pm_nl_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
->> unsigned int
->>  	struct sock *sk = (struct sock *)msk;
->>  	struct net *net = sock_net(sk);
->>  
->> +	/* No entries with ID 0 */
->> +	if (id == 0)
->> +		return 0;
->> +
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index f609c02c6123..e4ac275366ce 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -3058,6 +3058,7 @@ fullmesh_tests()
+>>  	if reset "fullmesh test 1x1"; then
+>>  		pm_nl_set_limits $ns1 1 3
+>>  		pm_nl_set_limits $ns2 1 3
+>> +		pm_nl_add_endpoint $ns2 10.0.1.2 flags
+>> subflow,fullmesh
 > 
-> I think this check needs to be added in
-> mptcp_userspace_pm_get_flags_and_ifindex_by_id() too.
+> nit: add this line behind "pm_nl_add_endpoint $ns1 10.0.2.1 flags
+> signal". Usually, set n1 first and then n2.
 
-We don't need it for the userspace PM, because the endpoints are managed
-per MPTCP connection, they can have an ID 0. On the other hand, the
-in-kernel PM manages the endpoints globally, they cannot have the ID 0
-because it is reserved to the address used by the initial subflow, which
-can be different per MPTCP connection.
+It looks like we have a mix, but yes, most of the time we set the
+endpoints for the ns1, then the ns2. I can fix that when applying the
+patches if there are no other big changes needed here.
 
-Please see the commit message for more details.
-
-> 
->>  	rcu_read_lock();
->>  	entry = __lookup_addr_by_id(pm_nl_get_pernet(net), id);
->>  	if (entry) {
+>>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
+>>  		fullmesh=1 speed=slow \
+>>  			run_tests $ns1 $ns2 10.0.1.1
 >>
+> 
 > 
 
 Cheers,
