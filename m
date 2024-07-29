@@ -1,174 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B933313B290
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C362142E88
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:21:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248334; cv=none; b=LFUxt0eekQV0xUV7gTBSUZ1ezmmAP2W9FrXqzZianE1DmuSq0zsInTRgpLyZmgLl/+HVizpZx8lJKLpjQx+fDBuUxg7toDam/t7acWoS0aiVe/KxZu/ktEbtEYwd62yjpU0X8Bgm26A1N9viKxHPz4aaz5Zt20oSwjxcrH1GO9o=
+	t=1722248510; cv=none; b=nYDCw3vNvOzyJpQXPYk/4cpSGHl8sT4WfP+GJfnnXGvSDzS4dCP53vHyITRr/WDDgXYJpHww59WjReQEH0oxQY+55NcOiASXgOVcT9s5vSQbmGShpSOe2kGsPMl7ryYhPpXnvWVUBIk/+AQPQ2Una8FR8TRS7cI1Xu3VwcOfZSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248334; c=relaxed/simple;
-	bh=txWGadEsrmhQCY+1OCs5bFpGkDlrfCce55DOhsaXkMI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=uXVIT8csvoUiVInPSj17BVaEB1KjD4BUCC00e4ELN7FBHnBBWC6NJ9KyPHQLeAXGvPdQ15IDRydA6HfwkayA7wrJzT1HDPt0mBKW38Hnqp4/R5vnmszWg4URP2aZYbKTfyyrBGqmMrUUMNbcm7pTqWXrA66FYzKvPBdAsATeAZw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QYDuA4am; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722248510; c=relaxed/simple;
+	bh=XoQK6dh2ow3gZ1tO/MZ3lquKgpVaMgl1nCozL4KRlm8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=cnEzQNcN+EySrCUbDAYHRXObD33k/MlWQUZ/wGdir45c8ND3sgnU+Kvoy1qf8ZOe0BszD0bpvyVxuMDIBl5Yx7dvEDLtMmNbBlmkfsOovm/O/PqfQKOLbbTXShFMiNo0uNt/3HWdGA0BGNRzkVvr5pSUaxgT9OVAnzzNKRtZ8tM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN8JgpHn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QYDuA4am"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF47DC4AF0E;
-	Mon, 29 Jul 2024 10:18:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN8JgpHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FBFDC4AF0B;
+	Mon, 29 Jul 2024 10:21:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722248334;
-	bh=txWGadEsrmhQCY+1OCs5bFpGkDlrfCce55DOhsaXkMI=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=QYDuA4amwClKWAkZhb9YQn+ZxIUGszIMy/sFXt87Tpk3h/MQ3fpfY6DuGBKT/rwR8
-	 m/b8b73KSIYl5rhiUs29J/buFcfUV89BL6XpCe8PPhUqppCuse0Si0HQFsCW1MxejE
-	 tcR1MitSEWi9GaoiYHw6NWHHqI8kQ/jSG01bK6CaDBR6smEDAm7GUOgUD28vhkWh+r
-	 8uKAFtjgeWzcvQjf0Xwk2PCFIWCy4H9pDowvKzZZgXd7YH9DiJ9QA2UpTPEEI1WO59
-	 vgR5aFz5654xqjdy1jZhv/IDCnNYxuLlN5By7NTcnqJmpf4g9HO4GttJ/jgl1Xt/Hf
-	 cWPjAp7mLuQqQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 29 Jul 2024 12:18:44 +0200
-Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: join: validate MPJ SYN
- TX MIB counters
+	s=k20201202; t=1722248510;
+	bh=XoQK6dh2ow3gZ1tO/MZ3lquKgpVaMgl1nCozL4KRlm8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=LN8JgpHnguC2XG88X0+7JdM5LotQW/TDS+Wu6e1S/GV6CuBW7b9Tlz1cJ/mo7ZgAY
+	 4M65q5ZCZyXBH351geX4Lx1OriWKJxEBRL5bPxbhM+nnMGOIFnFmOf2kc7Uqnu3SUP
+	 o4rlmv5yD4NWULjRkQ3n6jvzgTkMC8cbghKYPaGnePs8FV/8ZCDWcVpHMr7wM21661
+	 ruTolHU2uy5uHop0hd9zCMjs4G1CfWBIFhki1SwkOO5yM0q9Gr0uuRUfvHEty2srf0
+	 qp52JOQA/kyVqMdMA8j0vRCXQzvcy3GYDBy7JkqZEPPqFE6qCl0ajL3hMIz3AqQUfG
+	 mwXvaF9Zv1alw==
+Message-ID: <cf0a5d7e-5bc0-453f-9ad3-42fc67fa768f@kernel.org>
+Date: Mon, 29 Jul 2024 12:21:47 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RESEND PATCH mptcp-next] selftests: mptcp: join: simplify
+ checksum_tests
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <b61be1bd6c70121fee3c6e183fb224b41d9dac90.1722138514.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <b61be1bd6c70121fee3c6e183fb224b41d9dac90.1722138514.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240729-mptcp-join-tx-mib-v2-2-8ace70fd407a@kernel.org>
-References: <20240729-mptcp-join-tx-mib-v2-0-8ace70fd407a@kernel.org>
-In-Reply-To: <20240729-mptcp-join-tx-mib-v2-0-8ace70fd407a@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3198; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=txWGadEsrmhQCY+1OCs5bFpGkDlrfCce55DOhsaXkMI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmp2yLUCG2f//86FNiuz5jwB4J2B/13Y/GjdBDZ
- ssMPguYUIaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqdsiwAKCRD2t4JPQmmg
- c+bCEACWX7SLVzHUrkGAP4DzbhNZx3bg67RuNg0tLcb/UVHqESi/SRofpukumy01oM3o6WrA1NC
- CMsb864oiqu9axF5PHH7ZMXlfbRT4BtUubKRnsfxNDJg+mmMEirKW7fSRTKga4LiEUiTCGJAEpl
- 1cgGNf6Eo4USfqEfgHrWfKxzr7eZ4QYFleUmzIpyhpDam782mFEyJ6Tz5Q6WkFuLneXymaEGvmH
- IcvH/MzCrkrrlZ8MEeiUF1YC8n6PHsFyzKmHCM3u+8bkcDk5vPjpz9AyYuIeUv2oPaEg/5Zv8rx
- qKtXC+0w00H+XFrWIggucDQ3QbSkf4yc71a5r0/aV0flB3q/WogO3g0wCWcJgFxCcEeob2+AQr3
- NhpY5RyVm8VYxeZAQa9Fcea0IqqJuvUBKdeT/tZ2+iHOTDTwQMyqcPgmUMMddRTqRjM+07zvwWC
- YcoK4V8zLW8FqrUjfDbLK9oD+1Ep4KozKiXm4/Bj4tsK50UeyR2LvShn9vlE9qNa1UbtaWPKZWS
- vKTipTcvbITota19FUgCNL+0KW36rQ+JGZirgjrHKILIr7S5Kd+j/+fND0DiUivuaPP3yHQAg7B
- Seer7wDKNFrFj4Nw82d+9HiCkMyAl8HuuAEboC2FQ2aq4olgN3DiNRgN8ONIVTKV6StV+r2I6k2
- zWEKtbtW5+IYXAg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A few new MIB counters have been added. They are being validated here.
+Hi Geliang,
 
-Most of the time, there are no errors, but sometimes, more MPJ SYN are
-queued compared to the numbers that are received.
+On 28/07/2024 05:49, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> The four checksum tests are similar, only one line is different. So
+> a for-loop can be used to simplify these tests.
 
-Only one test has an error, the one to connect to a broadcast IP address.
+I usually prefer distinct tests, if we want to extend them, or easily
+check something else, but these checksum tests are a bit particular.
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 63 +++++++++++++++++++++++++
- 1 file changed, 63 insertions(+)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index fbb0174145ad..c1f1ebd2340c 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1372,6 +1372,66 @@ chk_join_nr()
- 	fi
- }
- 
-+chk_join_tx_nr()
-+{
-+	local syn_nr=$1
-+	local festab=$2
-+	local create=$3
-+	local bind=$4
-+	local connect=$5
-+	local count
-+
-+	print_check "syn TX"
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTx")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$syn_nr" ]; then
-+		fail_test "got $count JOIN[s] syn TX expected $syn_nr"
-+	else
-+		print_ok
-+	fi
-+
-+	print_check "syn TX Fully Estab Error"
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxFEstabErr")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$festab" ]; then
-+		fail_test "got $count JOIN[s] syn TX Fully Estab Error expected $festab"
-+	else
-+		print_ok
-+	fi
-+
-+	print_check "syn TX Create Socket Error"
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxCreatSkErr")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$create" ]; then
-+		fail_test "got $count JOIN[s] syn TX Create Socket Error expected $create"
-+	else
-+		print_ok
-+	fi
-+
-+	print_check "syn TX Bind Error"
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxBindErr")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$bind" ]; then
-+		fail_test "got $count JOIN[s] syn TX Bind Error expected $bind"
-+	else
-+		print_ok
-+	fi
-+
-+	print_check "syn TX Connect Error"
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTxConnectErr")
-+	if [ -z "$count" ]; then
-+		print_skip
-+	elif [ "$count" != "$connect" ]; then
-+		fail_test "got $count JOIN[s] syn TX Connect Error expected $connect"
-+	else
-+		print_ok
-+	fi
-+}
-+
- # a negative value for 'stale_max' means no upper bound:
- # for bidirectional transfer, if one peer sleep for a while
- # - as these tests do - we can have a quite high number of
-@@ -1907,6 +1967,7 @@ subflows_error_tests()
- 		speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 0 0 0
-+		chk_join_tx_nr 0 0 0 0 0
- 	fi
- 
- 	# multiple subflows, with subflow creation error
-@@ -1919,6 +1980,7 @@ subflows_error_tests()
- 		speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 1 1 1
-+		chk_join_tx_nr 2 0 0 0 0
- 	fi
- 
- 	# multiple subflows, with subflow timeout on MPJ
-@@ -2306,6 +2368,7 @@ remove_tests()
- 		addr_nr_ns1=-3 speed=10 \
- 			run_tests $ns1 $ns2 10.0.1.1
- 		chk_join_nr 1 1 1
-+		chk_join_tx_nr 2 0 0 0 1
- 		chk_add_nr 3 3
- 		chk_rm_nr 3 1 invert
- 		chk_rst_nr 0 0
-
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
