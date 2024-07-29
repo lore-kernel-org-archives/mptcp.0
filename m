@@ -1,155 +1,95 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724381422C4
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:13:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8867D143737
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:18:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248021; cv=none; b=Kx+BqfbUcCn+RwjBBCzZ/DewDN/HPAmCFBaB7FuQIM8OQJHzg3tzT77/t6ShG8+xSaYsm+v1ZOjI+rvvJbYDlkzm0q96y6G8gUNLiS5iWQwyqHdDM95VqV+nPN/yALFCAxTumLKzZbrRMCHIlhxHI/idRx9eANCqN/OwvyBSzsY=
+	t=1722248332; cv=none; b=aZ5FIBzyXrlG29b7PCVAl6Rp4Stl5riv5TQYg5TZzYljwrLpXkZzZuWUQFCHJb872zuzoiLMFf8XQJ0PJvNemXKoHG8aRnjVtdYM7foxu/3DiqT0VQiv4M03GARBCznjmAfo0SwUAa8Zn9YzUNjAdumg3fWULrCtM+JUbI6yVbQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248021; c=relaxed/simple;
-	bh=8it5ZKF9+KGRFujAMInn+2HgWuUin7yHaVs7RUq/WYI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=CUlsdoDLL/Nd68RMo51VnXJaYX6KcNmO0Y8oA7pxcdtJrY2XrVZH2oT9JQ1AH+Nj+i6r1Unt2cDz04nNajPzrR7EqLj2yJtDTeBJTJFi2E9FYvmcF4caYVOmEIL2CNlnhuQO+7BdcuMhv8XMYlUn/S6kfNJCaf56YeevMmM+fZI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L47fYiuq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722248332; c=relaxed/simple;
+	bh=IaXpo0/CsoLSqq0FJJHItM1lyh1OGUeg5NZc7OirvWo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HPjxMOFGuBwo2VbZVqDGKkTpe5aUA0K4FZjRe7AwB9DCbc/wlsqmTe4MJ2S1DJHuaLhLEkwgbDRuscIY3GdEDR16TE6KrKcl1C9W10t2dJ3uEYG6IX2Xaw8vnowPF2DVQ0ExQ0sXm5RFH8X6cMaQTeKgU9EYBk07WA0aqjMHkq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOo/KkdW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L47fYiuq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FFAC4AF0A;
-	Mon, 29 Jul 2024 10:13:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOo/KkdW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CAF59C32786;
+	Mon, 29 Jul 2024 10:18:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722248021;
-	bh=8it5ZKF9+KGRFujAMInn+2HgWuUin7yHaVs7RUq/WYI=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=L47fYiuqUM9tpLz/9FnjxQzUPw6BA1/VUO+qr5w/q3MCzluNwClwJdfi6aT5NQra+
-	 HmrDUT5q6ZAJptYQRcCFvNPy8hJXO3ML4eAJMS4MZ+roI6loTGAq5EL5JeZDL8SVdk
-	 sSSTrxRZx9hZqvczCMUobaoKb0t1woN7ZVbr4QSaKkCsApJzxitrVthdgWIhVITHP3
-	 P9StJB2CNlUY7BxPrY/k/1ApsvdBAFODhYQOe+X5vfdkn442tvNfupfJL64I5Qn0+x
-	 ppin/6T1/JEX3d43qT/xLYXxVzoDMrlbf0alxW08r2LsqrfDjgspEhbG1NxknnOIQd
-	 3bO8lDIJ3Majg==
-Message-ID: <b9bd2b23-8af6-4a7b-bc0b-0cc76a04d95f@kernel.org>
-Date: Mon, 29 Jul 2024 12:13:38 +0200
+	s=k20201202; t=1722248332;
+	bh=IaXpo0/CsoLSqq0FJJHItM1lyh1OGUeg5NZc7OirvWo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=fOo/KkdW9ObB4lj/hAeJNo40G1w0AOHBsbyxfNUP1C1yLbsyfPLbHVGoqL6MA/Odx
+	 zfhIdhaFkgqFutzHscvKAGCPACCrdd6uJG5qDE6jJjar9GN0NOs1jblhwJgtLMktMz
+	 joD1nLJZJ+4nuA/XJk7wq5KaSnBc3jPJrGWPn6kwcNPGhpn0IPCvGfsl3OsXAH1s3D
+	 wxTXUalIqIiVsHcvXZS52vkH52USq7uU/Pb3lnNmUpvWabMoWJKa8DPQuU7F0cTFoi
+	 bZfIEPoemUSnZZas0P1Um+i93UL0q1FA545uU8Z+4FGhNgQcxhHfm2FMqksEYwSSeW
+	 nYPBL1iAfoM/Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v2 0/2] mptcp: MIB counters for sent MP_JOIN
+Date: Mon, 29 Jul 2024 12:18:42 +0200
+Message-Id: <20240729-mptcp-join-tx-mib-v2-0-8ace70fd407a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: MIB counters for sent MP_JOIN
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20240726-mptcp-join-tx-mib-v1-0-7f2149ba0dcf@kernel.org>
- <20240726-mptcp-join-tx-mib-v1-1-7f2149ba0dcf@kernel.org>
- <797a6a26e1f422dfd4722c6e53e623500fd93ab5.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <797a6a26e1f422dfd4722c6e53e623500fd93ab5.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAIJsp2YC/22NzQ6CMBCEX4Xs2TXt2oB68j0MB34WWJWWtA3BE
+ N7dBj16nMw336wQ2AsHuGYreJ4liLMp0CGDZqhszyhtykCKjCrI4DjFZsKHE4txwVFqPBsmzZW
+ p6ZRD2k2eO1l25x2+uOUlQpm6QUJ0/r3fzXonfub8j3nWqLDoSJtLXam26W5P9pZfR+d7KLdt+
+ wAsQzuivwAAAA==
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1215; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=IaXpo0/CsoLSqq0FJJHItM1lyh1OGUeg5NZc7OirvWo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmp2yLAFBwrxwZw7lge2CWnkvFnIDJyM/phhkac
+ BfU1K8xpo2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqdsiwAKCRD2t4JPQmmg
+ c6U7D/wIqomltzYKgMoK+FHZ0ZFglkRsJhDURyrqgzMszft2oBPMquJUMl5ZfBZyke6j5Sy4LDd
+ U64vmfdFdMeLyPTM+x6ozk0MgLlOLaPvhRPLNXHb2ksmkcNSANBGS+8G7QBYi7A7T9zfgZiIQpn
+ rq5eav0NpmscjI1h3QJNnIMzMfi8xst8rImG1DqgLw95w5FLSh7EDqwrU3m9+C8WDPMobq8NUxs
+ dTTo+yteTEI/f/H613H6ATq4pfR14Nilg1oM65VhrXpe0uvL1CGD6vMACg/9G2GMIr1pi5Yi0MM
+ DZq14HGZxq9BLObFY/MF14f6O0n/OBIy0MvVQJA9PN72/e59nSsJhccgBPdGz9L9zHrs3ZMEf5P
+ TP3rt8kHAApRMQi1y1C3hsJq3mmWuS1jF5kWOYKzJIx9y8exWBtKQmMMX46E9qhfAYungxr92i6
+ 1aAShTbG/fq44q/6Cx5qlmws8WjiZcUa9Rx1Prh6eFNK0j0sD7mZpxvvJTsYHjm37r3r4ORW6BT
+ XOQ6PBHP+XEXBLovmSR/wHTdcWHlFBk53O7mR76NtXyNdclTbCKrcTw91XU6f3f3GlUuuXk6FPb
+ +LMkTPPwsQ+nF6AlBf9J6jyiE/Ai4r3toxEQc6u5+muW2yKbAXbMiT/sghbevSTA1Y3z/+9I3aJ
+ 5CKV1gcPxmYqG0A==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Recently, a few issues have been discovered around the creation of
+additional subflows. Without these counters, it was difficult to point
+out the reason why some subflows were not created as expected.
 
-On 29/07/2024 05:09, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Fri, 2024-07-26 at 19:48 +0200, Matthieu Baerts (NGI0) wrote:
->> Recently, a few issues have been discovered around the creation of
->> additional subflows. Without these counters, it was difficult to
->> point
->> out the reason why some subflows were not created as expected.
->>
->> These counters should have been added earlier, because there is no
->> other
->> simple ways to extract such information from the kernel, and
->> understand
->> why subflows have not been created.
->>
->> While at it, some pr_debug() have been added, just in case the errno
->> needs to be printed.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/509
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/mib.c     |  5 +++++
->>  net/mptcp/mib.h     |  5 +++++
->>  net/mptcp/subflow.c | 24 ++++++++++++++++++++----
->>  3 files changed, 30 insertions(+), 4 deletions(-)
->>
->> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
->> index 7884217f33eb..a0b1152c32f1 100644
->> --- a/net/mptcp/mib.c
->> +++ b/net/mptcp/mib.c
->> @@ -25,6 +25,11 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->>  	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure",
->> MPTCP_MIB_JOINSYNACKMAC),
->>  	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
->>  	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
->> +	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
->> +	SNMP_MIB_ITEM("MPJoinSynTxFEstabErr",
->> MPTCP_MIB_JOINSYNTXFULLYESTAB),
-> 
-> It's better to keep the "Err" postfix to reduce ambiguity:
-> 
-> MPTCP_MIB_JOINSYNTXFULLYESTAB_ERR or MPTCP_MIB_JOINSYNTXFULLYESTABERR.
+All error paths from __mptcp_subflow_connect() are covered.
 
-I agree. I didn't do that because the names were already long enough,
-they are only used in one place, and we didn't do that for the "HMAC
-Failure" ones.
+These new counters are also verified in the MPTCP Join selftest.
 
-Or maybe I reuse a similar name to the ones exposed to the userspace?
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patch 1/2: Add "ERR" suffix in variable names. (Geliang)
+- Link to v1: https://lore.kernel.org/r/20240726-mptcp-join-tx-mib-v1-0-7f2149ba0dcf@kernel.org
 
-  MPTCP_MIB_JOINSYNTXFESTABERR
-  MPTCP_MIB_JOINSYNTXCREATSKERR
-  MPTCP_MIB_JOINSYNTXBINDERR
-  MPTCP_MIB_JOINSYNTXCONNECTERR
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: MIB counters for sent MP_JOIN
+      selftests: mptcp: join: validate MPJ SYN TX MIB counters
 
-I can send a v2 with that.
+ net/mptcp/mib.c                                 |  5 ++
+ net/mptcp/mib.h                                 |  5 ++
+ net/mptcp/subflow.c                             | 24 ++++++++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 63 +++++++++++++++++++++++++
+ 4 files changed, 93 insertions(+), 4 deletions(-)
+---
+base-commit: a9a9b3b154d187864b73eb0e86a0ff737d79a10a
+change-id: 20240724-mptcp-join-tx-mib-84e21ea4b236
 
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
