@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E69313E032
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 09:35:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 724381422C4
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:13:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722245704; cv=none; b=d91vlZKUc0qIv19aOnkqljDQVfVpnLEEj/E9ZWoDR1hJ+OUwHpodaoQSiFndxePfLtQ6YS3iEnFXeCSNVJf5XvwylDWUTH7sGsOWp16aXh/1zSc1mq1KtBkdacNlZJoc95tJQa54fc3tWtme/ygN2W00hQZaNeYVkb879LeoF8Y=
+	t=1722248021; cv=none; b=Kx+BqfbUcCn+RwjBBCzZ/DewDN/HPAmCFBaB7FuQIM8OQJHzg3tzT77/t6ShG8+xSaYsm+v1ZOjI+rvvJbYDlkzm0q96y6G8gUNLiS5iWQwyqHdDM95VqV+nPN/yALFCAxTumLKzZbrRMCHIlhxHI/idRx9eANCqN/OwvyBSzsY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722245704; c=relaxed/simple;
-	bh=CwSBv6pnGZ06XcIx+/z8lOTyXvakhsbQtIv2ZjhHoTc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oN6RUeGXwXVy7Md2vGgCGOKdkc4UqYsXks93Xfgc/c/kysXUVEpcKoWgCzuyQDL43l8jySb2L9w5qqPqkSG7ehBCj/K8ZVhfgjVSOn9hfzPwMGbBqX/+raurD4V7DUX18xFdnGbN5OSK0TeRCzYIm2sXi/KkG6esfd3Wgdkiaq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iQf6fNw5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722248021; c=relaxed/simple;
+	bh=8it5ZKF9+KGRFujAMInn+2HgWuUin7yHaVs7RUq/WYI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=CUlsdoDLL/Nd68RMo51VnXJaYX6KcNmO0Y8oA7pxcdtJrY2XrVZH2oT9JQ1AH+Nj+i6r1Unt2cDz04nNajPzrR7EqLj2yJtDTeBJTJFi2E9FYvmcF4caYVOmEIL2CNlnhuQO+7BdcuMhv8XMYlUn/S6kfNJCaf56YeevMmM+fZI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L47fYiuq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iQf6fNw5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D02B7C32786;
-	Mon, 29 Jul 2024 09:35:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L47fYiuq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 75FFAC4AF0A;
+	Mon, 29 Jul 2024 10:13:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722245704;
-	bh=CwSBv6pnGZ06XcIx+/z8lOTyXvakhsbQtIv2ZjhHoTc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iQf6fNw525+L9pWtEqk7siT+BU8JNl5gEnhqt6i1PZkjjGjw7v6DcmJKiFvRtvHmx
-	 TpseeRwHMJ0O8eXD92GP0oWvk3Hs38VAlloXB7dlRpAqESwtWBScLA3/CveWvHHtqf
-	 p7mhhDDnDNnJ1ERPVGy/ChHBFjs0O/X81yZwTwCjiAC0gixinuIOjDZ1VelyAhVhco
-	 ZbC7WfFmdXMmvTqqyyFu6S59PYaWcZSy2Wnq5N26h6Ec8dj3hMGc2jt1EKeCYKI/74
-	 p9fbdTi28z5SQAz5FrH5MCRy/DiWawCiJ1GqSM6DTJaL5qIVSHIPyYITVkDZdBlyJI
-	 EplyDpePO7P2w==
-Message-ID: <39e788d2-dfb0-4b12-b891-99a8cb15a1ef@kernel.org>
-Date: Mon, 29 Jul 2024 11:35:00 +0200
+	s=k20201202; t=1722248021;
+	bh=8it5ZKF9+KGRFujAMInn+2HgWuUin7yHaVs7RUq/WYI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=L47fYiuqUM9tpLz/9FnjxQzUPw6BA1/VUO+qr5w/q3MCzluNwClwJdfi6aT5NQra+
+	 HmrDUT5q6ZAJptYQRcCFvNPy8hJXO3ML4eAJMS4MZ+roI6loTGAq5EL5JeZDL8SVdk
+	 sSSTrxRZx9hZqvczCMUobaoKb0t1woN7ZVbr4QSaKkCsApJzxitrVthdgWIhVITHP3
+	 P9StJB2CNlUY7BxPrY/k/1ApsvdBAFODhYQOe+X5vfdkn442tvNfupfJL64I5Qn0+x
+	 ppin/6T1/JEX3d43qT/xLYXxVzoDMrlbf0alxW08r2LsqrfDjgspEhbG1NxknnOIQd
+	 3bO8lDIJ3Majg==
+Message-ID: <b9bd2b23-8af6-4a7b-bc0b-0cc76a04d95f@kernel.org>
+Date: Mon, 29 Jul 2024 12:13:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v5 09/13] selftests: mptcp: join: validate
- fullmesh endp on 1st sf
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: MIB counters for sent MP_JOIN
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
- <20240726-mptcp-pm-avail-v5-9-fb1117ddeef6@kernel.org>
- <5a5a7e689dbdad1afe1971759b780493fc7cc7de.camel@kernel.org>
+References: <20240726-mptcp-join-tx-mib-v1-0-7f2149ba0dcf@kernel.org>
+ <20240726-mptcp-join-tx-mib-v1-1-7f2149ba0dcf@kernel.org>
+ <797a6a26e1f422dfd4722c6e53e623500fd93ab5.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,59 +86,67 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5a5a7e689dbdad1afe1971759b780493fc7cc7de.camel@kernel.org>
+In-Reply-To: <797a6a26e1f422dfd4722c6e53e623500fd93ab5.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 29/07/2024 03:19, Geliang Tang wrote:
-> On Fri, 2024-07-26 at 16:28 +0200, Matthieu Baerts (NGI0) wrote:
->> This case was not covered, and the wrong ID was set before the
->> previous
->> commit.
+On 29/07/2024 05:09, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Fri, 2024-07-26 at 19:48 +0200, Matthieu Baerts (NGI0) wrote:
+>> Recently, a few issues have been discovered around the creation of
+>> additional subflows. Without these counters, it was difficult to
+>> point
+>> out the reason why some subflows were not created as expected.
 >>
->> The rest is not modified, it is just that it will increase the code
->> coverage.
+>> These counters should have been added earlier, because there is no
+>> other
+>> simple ways to extract such information from the kernel, and
+>> understand
+>> why subflows have not been created.
 >>
->> The right address ID can be verified by looking at the packet traces.
->> We
->> could automate that using Netfilter with some cBPF code for example,
->> but
->> that's always a bit cryptic. Packetdrill seems better fitted for
->> that.
+>> While at it, some pr_debug() have been added, just in case the errno
+>> needs to be printed.
 >>
->> Fixes: 4f49d63352da ("selftests: mptcp: add fullmesh testcases")
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/509
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
->>  1 file changed, 1 insertion(+)
+>>  net/mptcp/mib.c     |  5 +++++
+>>  net/mptcp/mib.h     |  5 +++++
+>>  net/mptcp/subflow.c | 24 ++++++++++++++++++++----
+>>  3 files changed, 30 insertions(+), 4 deletions(-)
 >>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index f609c02c6123..e4ac275366ce 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -3058,6 +3058,7 @@ fullmesh_tests()
->>  	if reset "fullmesh test 1x1"; then
->>  		pm_nl_set_limits $ns1 1 3
->>  		pm_nl_set_limits $ns2 1 3
->> +		pm_nl_add_endpoint $ns2 10.0.1.2 flags
->> subflow,fullmesh
+>> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+>> index 7884217f33eb..a0b1152c32f1 100644
+>> --- a/net/mptcp/mib.c
+>> +++ b/net/mptcp/mib.c
+>> @@ -25,6 +25,11 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>>  	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure",
+>> MPTCP_MIB_JOINSYNACKMAC),
+>>  	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+>>  	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+>> +	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
+>> +	SNMP_MIB_ITEM("MPJoinSynTxFEstabErr",
+>> MPTCP_MIB_JOINSYNTXFULLYESTAB),
 > 
-> nit: add this line behind "pm_nl_add_endpoint $ns1 10.0.2.1 flags
-> signal". Usually, set n1 first and then n2.
+> It's better to keep the "Err" postfix to reduce ambiguity:
+> 
+> MPTCP_MIB_JOINSYNTXFULLYESTAB_ERR or MPTCP_MIB_JOINSYNTXFULLYESTABERR.
 
-It looks like we have a mix, but yes, most of the time we set the
-endpoints for the ns1, then the ns2. I can fix that when applying the
-patches if there are no other big changes needed here.
+I agree. I didn't do that because the names were already long enough,
+they are only used in one place, and we didn't do that for the "HMAC
+Failure" ones.
 
->>  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
->>  		fullmesh=1 speed=slow \
->>  			run_tests $ns1 $ns2 10.0.1.1
->>
-> 
-> 
+Or maybe I reuse a similar name to the ones exposed to the userspace?
+
+  MPTCP_MIB_JOINSYNTXFESTABERR
+  MPTCP_MIB_JOINSYNTXCREATSKERR
+  MPTCP_MIB_JOINSYNTXBINDERR
+  MPTCP_MIB_JOINSYNTXCONNECTERR
+
+I can send a v2 with that.
 
 Cheers,
 Matt
