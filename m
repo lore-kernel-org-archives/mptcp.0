@@ -1,123 +1,235 @@
-Received: from mail-yw1-f176.google.com (mail-yw1-f176.google.com [209.85.128.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C25B1B86E5
-	for <mptcp@lists.linux.dev>; Sun, 28 Jul 2024 04:40:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C06628F72
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 01:09:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722141643; cv=none; b=hsqBU+Vs4cwR+V9mrjE+rqTEX88AJF/dwq2RyvbFE5n8zkPizL8CJSK4GjV8xGUDo3DOIQQve0a/qKepqPxAVgVXpLFbn2MHoYxxdBwUe0V7PqM2kWN7qcJVzZ9hIKr+eYL4BHNXgtQuWFWBPKN19KsMU1GYDklBwURH0dW2UiI=
+	t=1722215353; cv=none; b=BviswugRjrQpnyH7zIpDtj5ljzzeKmJvCVKTSitCFFg/t/xtySCI/SJP56H/ZxbWiWXZ0sdmasEhjPpGzEw3zH4uTGPs8qi+bM3w9nn8EKiYXEC/XcRcEhiSqvTXfLO6dEZOxIGPYecmXM8aMPMs5UcoK7aAuxnZczasgIljvDc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722141643; c=relaxed/simple;
-	bh=u6yzCUWPEdfU51ME5EzZNJq/MZ17nc/qwRbElblr7x0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=mdAyJpRLPZeOwe87ncE2yVfM1xoCIa5ivTBRMpTTJJylAfT1KEGNhklb+sX1CxEkCC+di00TtxjpcvvtmVCm3l94HGUvAPusISKgJTk2zZhpl0KAjajGe5Zp9Pfmbuuqa+IP42ZGS7olnqlAsNKF+uM7eccvZjKBJ2pD4UHOQkM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P11vP6KS; arc=none smtp.client-ip=209.85.128.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722215353; c=relaxed/simple;
+	bh=2yxy3eKZuS8xiPw0JTNJGt0MEUEFT6XG8zSrO4rJhj4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VfmvfTKUxh5B+R4ViEk4sykgf50U4Q5Phxt3Q3B9jmKjyUGI7O0HkceM/XzD5wbnAuCc2HAogWWzL3ZFASkpj/bncPawH14mwVuWWT29wnYW22DzK+hFsSBNSEBoW9J5uLZWAwxYE3lX+9jDqNb0JM84+1yZaBEybrxNmCjcCHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A7oAyBj0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P11vP6KS"
-Received: by mail-yw1-f176.google.com with SMTP id 00721157ae682-6510c0c8e29so9402677b3.0
-        for <mptcp@lists.linux.dev>; Sat, 27 Jul 2024 21:40:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722141641; x=1722746441; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=md3rHROHhm5592sLPbQQBsjndPbFrnk6cb1BeV5N5Mc=;
-        b=P11vP6KS2GyTeJWnQuS5qZMnIYjr5RzPmeLBIz51ui2qr6S4k4vzwAjChTS18mEcMo
-         iW1phtyjo7p/aGfp5FQhH9hoZyrHQGWPckrw6uJRmMoUWR0bmVMbCmuE8NVoQhZ3HX1+
-         Ju/qBZtitElLKQC+5d3O05Xgmlycd28qZOOYl0UN6Dv0mQqs+Y1OrWr5iXJVdwl23Gfz
-         UUVrAy6hCCs4VLkelrPYf9+W8JTrxbr6Pzo6utn6NlqQW/JHxwbS+eh4jZW0xKuI6tuf
-         Y9q7mCh3AVzlg37l5v74Xk19uiUsPQKaCL90Seqf1y5omfW+j+XeKppTMiERtfWVsOqQ
-         fEmA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722141641; x=1722746441;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=md3rHROHhm5592sLPbQQBsjndPbFrnk6cb1BeV5N5Mc=;
-        b=bdo5jbn1SME/1GsoKZphpEcaSfb396H1DwaNDlhDqfz4HCfiv996VNEAT51dY17V2V
-         I9MiobEZNotnw2wPDFkNYYVH1FLAJhPF5SKlrgzdOpSgjOrxsG4UKBGtq+IatvOWgXEu
-         URz1ZZehWv21b0gLt1TZZkDRRUAmmWJ0BFlqEn4ZHBzKmQ5EwpP4ldzZD85JTIROiXua
-         +iRGyC8R8ucJ+BccXoU1YsKPFW8icXkFZsJ92LUGdFbqhS1Z304iJ7Udxqb3uiluEnsI
-         gMgJdT5nIUNZ9iAvhCiuJMPx2nLIMP1BZbRDO0t0AWVobyVBcx1TyERB9qXT1gLUZKqM
-         SnJg==
-X-Gm-Message-State: AOJu0Yz/7SOunacqoViYn/6yfrGIxjSShlC+Vc2OcOs5CdJSgtmdg/mM
-	7dX2zsn/oHfggz7VarCW6VWPCGUIO+A/+SWYatzAEPvuxnyZuis=
-X-Google-Smtp-Source: AGHT+IF1gRq2d4IHGAn60a2Im5jPfZT1tJZP1plwZcMgPiobIdJJq6TdBP05pF9RPWdAKDTWE9yf1A==
-X-Received: by 2002:a81:9c50:0:b0:65f:ca0b:451c with SMTP id 00721157ae682-67a0769aa44mr48580577b3.21.1722141640872;
-        Sat, 27 Jul 2024 21:40:40 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.121.87])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6756bab4a76sm15224387b3.123.2024.07.27.21.40.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 27 Jul 2024 21:40:40 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <geliang.tang@suse.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <1a05890e3e65de00b45b2453232eed12fe55ad14.1722138313.git.tanggeliang@kylinos.cn>
-References:
- <1a05890e3e65de00b45b2453232eed12fe55ad14.1722138313.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: join: simplify
- checksum_tests
-Message-ID: <e135107b-e3d2-5c83-223a-a6a82290056e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 28 Jul 2024 04:40:39 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A7oAyBj0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DEF5C32782;
+	Mon, 29 Jul 2024 01:09:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722215353;
+	bh=2yxy3eKZuS8xiPw0JTNJGt0MEUEFT6XG8zSrO4rJhj4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=A7oAyBj0rHzSORqjirafgs149tyKiCCjHbZxwCz1CmmA0sxiuOf5j0LfnoI4fitdp
+	 5ylHpa3q9qiyAF2YyE+DZNPh83yUAaapipJ8as+pNvPbp9HQvL4olW/yaeemtGSur0
+	 B4qfw9gz5aKQeFqY2sk1OKbW0maIO7MA58MJyd1/8GuST9TZ7gDOnr6wNAFYC35lmN
+	 LeRgkrQ2Upi+QkNbzGl1s6Zd0aoT4oGcCxdvwlghtB+s2G2ch2zYI2o+4iXv+5cbti
+	 2ym8T/pyya3E1xxTGdCwhMYV7LL0dDn9EQGe9evCRnov/aAZFI/N8hOmCHO2C+8FHs
+	 IuI7t7iVhyBig==
+Message-ID: <6b0f7eff5552b0b0e45813e12f397b71fce54098.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v5 04/13] mptcp: pm: only mark 'subflow' endp
+ as available
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
+Date: Mon, 29 Jul 2024 09:09:07 +0800
+In-Reply-To: <20240726-mptcp-pm-avail-v5-4-fb1117ddeef6@kernel.org>
+References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
+	 <20240726-mptcp-pm-avail-v5-4-fb1117ddeef6@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ TO0tfEdfAX7IENcV87h2yAFBZkaA==
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.0-1build2 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+On Fri, 2024-07-26 at 16:28 +0200, Matthieu Baerts (NGI0) wrote:
+> Adding the following warning ...
+> 
+>   WARN_ON_ONCE(msk->pm.local_addr_used == 0)
+> 
+> ... before decrementing the local_addr_used counter helped to find a
+> bug
+> when running the "remove single address" subtest from the
+> mptcp_join.sh
+> selftests.
+> 
+> Removing a 'signal' endpoint will trigger the removal of all subflows
+> linked to this endpoint via mptcp_pm_nl_rm_addr_or_subflow() with
+> rm_type == MPTCP_MIB_RMSUBFLOW. This will decrement the
+> local_addr_used
+> counter, which is wrong in this case because this counter is linked
+> to
+> 'subflow' endpoints, and here it is a 'signal' endpoint that is being
+> removed.
+> 
+> Now, the counter is decremented, only if the ID is being used outside
+> of mptcp_pm_nl_rm_addr_or_subflow(), only for 'subflow' endpoints,
+> and
+> if the ID is not 0 -- local_addr_used is not taking into account
+> these
+> ones. This marking of the ID as being available, and the decrement is
+> done no matter if a subflow using this ID is currently available,
+> because the subflow could have been closed before.
+> 
+> Fixes: 06faa2271034 ("mptcp: remove multi addresses and subflows in
+> PM")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/pm_netlink.c | 26 +++++++++++++++++---------
+>  1 file changed, 17 insertions(+), 9 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 8a28fdaf3bb6..3ea417b52ff4 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -833,10 +833,10 @@ static void
+> mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
+>  			if (rm_type == MPTCP_MIB_RMSUBFLOW)
+>  				__MPTCP_INC_STATS(sock_net(sk),
+> rm_type);
+>  		}
+> -		if (rm_type == MPTCP_MIB_RMSUBFLOW)
+> -			__set_bit(rm_id ? rm_id : msk-
+> >mpc_endpoint_id, msk->pm.id_avail_bitmap);
+> -		else if (rm_type == MPTCP_MIB_RMADDR)
+> +
+> +		if (rm_type == MPTCP_MIB_RMADDR)
+>  			__MPTCP_INC_STATS(sock_net(sk), rm_type);
+> +
+>  		if (!removed)
+>  			continue;
+>  
+> @@ -846,8 +846,6 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct
+> mptcp_sock *msk,
+>  		if (rm_type == MPTCP_MIB_RMADDR) {
+>  			msk->pm.add_addr_accepted--;
+>  			WRITE_ONCE(msk->pm.accept_addr, true);
+> -		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
+> -			msk->pm.local_addr_used--;
 
-Our CI did some validations and here is its report:
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10128798562
+Is it necessary to call __mark_subflow_endp_available() here? I'm not
+sure.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ca671f006b59
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D874288
+>  		}
+>  	}
+>  }
+> @@ -1443,6 +1441,14 @@ static bool mptcp_pm_remove_anno_addr(struct
+> mptcp_sock *msk,
+>  	return ret;
+>  }
+>  
+> +static void __mark_subflow_endp_available(struct mptcp_sock *msk, u8
+> id)
+> +{
+> +	/* If it was marked as used, and not ID 0, decrement
+> local_addr_used */
+> +	if (!__test_and_set_bit(id ? : msk->mpc_endpoint_id, msk-
+> >pm.id_avail_bitmap) &&
+> +	    id && !WARN_ON_ONCE(msk->pm.local_addr_used == 0))
+> +		msk->pm.local_addr_used--;
+> +}
+> +
+>  static int mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+>  						   const struct
+> mptcp_pm_addr_entry *entry)
+>  {
+> @@ -1476,11 +1482,11 @@ static int
+> mptcp_nl_remove_subflow_and_signal_addr(struct net *net,
+>  			spin_lock_bh(&msk->pm.lock);
+>  			mptcp_pm_nl_rm_subflow_received(msk, &list);
+>  			spin_unlock_bh(&msk->pm.lock);
+> -		} else if (entry->flags &
+> MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+> -			/* If the subflow has been used, but now
+> closed */
+> +		}
+> +
+> +		if (entry->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW) {
+>  			spin_lock_bh(&msk->pm.lock);
+> -			if (!__test_and_set_bit(entry->addr.id, msk-
+> >pm.id_avail_bitmap))
+> -				msk->pm.local_addr_used--;
+> +			__mark_subflow_endp_available(msk, entry-
+> >addr.id);
+>  			spin_unlock_bh(&msk->pm.lock);
+>  		}
+>  
+> @@ -1518,6 +1524,7 @@ static int
+> mptcp_nl_remove_id_zero_address(struct net *net,
+>  		spin_lock_bh(&msk->pm.lock);
+>  		mptcp_pm_remove_addr(msk, &list);
+>  		mptcp_pm_nl_rm_subflow_received(msk, &list);
+> +		__mark_subflow_endp_available(msk, 0);
+>  		spin_unlock_bh(&msk->pm.lock);
+>  		release_sock(sk);
+>  
+> @@ -1919,6 +1926,7 @@ static void mptcp_pm_nl_fullmesh(struct
+> mptcp_sock *msk,
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+>  	mptcp_pm_nl_rm_subflow_received(msk, &list);
+> +	__mark_subflow_endp_available(msk, addr->id);
+>  	mptcp_pm_create_subflow_or_signal_addr(msk);
+>  	spin_unlock_bh(&msk->pm.lock);
+>  }
+> 
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
