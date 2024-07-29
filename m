@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C362142E88
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:21:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C12212F5A
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 10:44:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722248510; cv=none; b=nYDCw3vNvOzyJpQXPYk/4cpSGHl8sT4WfP+GJfnnXGvSDzS4dCP53vHyITRr/WDDgXYJpHww59WjReQEH0oxQY+55NcOiASXgOVcT9s5vSQbmGShpSOe2kGsPMl7ryYhPpXnvWVUBIk/+AQPQ2Una8FR8TRS7cI1Xu3VwcOfZSI=
+	t=1722249843; cv=none; b=sdGE/89JZVDeMGkYPFKHrMlffRAfK0Vi65C5ig4xfaYq/FH4nYfDan4Btqx2pMW4U3yjAjJJ0Cb75ehmylRbkBuHBU68xAqnnDFiTcyYV1CvP3fC+/OalTTRD5UDcOQ7IEyA3ZgqQX4cN8XV5y4VXe+3GupeHCwn+8ey+4xZovQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722248510; c=relaxed/simple;
-	bh=XoQK6dh2ow3gZ1tO/MZ3lquKgpVaMgl1nCozL4KRlm8=;
+	s=arc-20240116; t=1722249843; c=relaxed/simple;
+	bh=UyOzjk0S0GM19gTmqNC9ug7yl9YPCp5FeTkfjzUCGOs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cnEzQNcN+EySrCUbDAYHRXObD33k/MlWQUZ/wGdir45c8ND3sgnU+Kvoy1qf8ZOe0BszD0bpvyVxuMDIBl5Yx7dvEDLtMmNbBlmkfsOovm/O/PqfQKOLbbTXShFMiNo0uNt/3HWdGA0BGNRzkVvr5pSUaxgT9OVAnzzNKRtZ8tM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LN8JgpHn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Qfg4xegn5bXW3VWU1af1fxnj7O1/rrh8XOu+2e/WWPEZp0uAn5qn/zC6Dwxtiq1bfjDuCE4DXBvwkEz5/piqcgG7FNs71moMvGaJyT8qHeFxqU/Km6MPiYmnwnXkODoJeqYT2oreKdI+xq27NG4bIjtTIRBPyxq5MHgeOlOTo5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oLiJjzS3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LN8JgpHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4FBFDC4AF0B;
-	Mon, 29 Jul 2024 10:21:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oLiJjzS3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C868C32786;
+	Mon, 29 Jul 2024 10:44:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722248510;
-	bh=XoQK6dh2ow3gZ1tO/MZ3lquKgpVaMgl1nCozL4KRlm8=;
+	s=k20201202; t=1722249843;
+	bh=UyOzjk0S0GM19gTmqNC9ug7yl9YPCp5FeTkfjzUCGOs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LN8JgpHnguC2XG88X0+7JdM5LotQW/TDS+Wu6e1S/GV6CuBW7b9Tlz1cJ/mo7ZgAY
-	 4M65q5ZCZyXBH351geX4Lx1OriWKJxEBRL5bPxbhM+nnMGOIFnFmOf2kc7Uqnu3SUP
-	 o4rlmv5yD4NWULjRkQ3n6jvzgTkMC8cbghKYPaGnePs8FV/8ZCDWcVpHMr7wM21661
-	 ruTolHU2uy5uHop0hd9zCMjs4G1CfWBIFhki1SwkOO5yM0q9Gr0uuRUfvHEty2srf0
-	 qp52JOQA/kyVqMdMA8j0vRCXQzvcy3GYDBy7JkqZEPPqFE6qCl0ajL3hMIz3AqQUfG
-	 mwXvaF9Zv1alw==
-Message-ID: <cf0a5d7e-5bc0-453f-9ad3-42fc67fa768f@kernel.org>
-Date: Mon, 29 Jul 2024 12:21:47 +0200
+	b=oLiJjzS3JezNnEvPr4ikYvea4h9XLmxQ9GpEBWg1RhZtH4By/6a6q/EGaYSC2JTeE
+	 0pjd5FHbpQdJRmfMEtrpPGuXLFKlaTgFUjRskXnC6mFsUvz+94S/C8QqKscHslXEqh
+	 a8Bxl1Irk/AcTpEsvgu7U0J9HXAREuybvI4oGGQnbXXC/LqUFMCguqsdtv/2ae7N+j
+	 FRGhOJocW41AQMEf1bz3+v3cbp7EJ5PKT1AL6bCBqfJqKaIjurUNfm4kRDB7RIFv7E
+	 RyM3jcWRsX7Lgm/Aa0hgVuv8BgjAJT1C+xRCZPEHnIb5TJAq3jIYIWjBKTLUUvkevj
+	 AFeVV/LMZsvlg==
+Message-ID: <4aec3a9c-d0a0-4b83-975f-e82db394e8f1@kernel.org>
+Date: Mon, 29 Jul 2024 12:44:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -98,10 +98,16 @@ On 28/07/2024 05:49, Geliang Tang wrote:
 > The four checksum tests are similar, only one line is different. So
 > a for-loop can be used to simplify these tests.
 
-I usually prefer distinct tests, if we want to extend them, or easily
-check something else, but these checksum tests are a bit particular.
+Thank you for the patch. Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 58ec41767aea: selftests: mptcp: join: simplify checksum_tests
+- Results: 65e9f14d80cb..005b14c6d7b9 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/7812921044e786f1d6fdf3c896dcbadcdf6fec16/checks
 
 Cheers,
 Matt
