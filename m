@@ -1,41 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EDDD54903
-	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 01:19:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F2E27A702
+	for <mptcp@lists.linux.dev>; Mon, 29 Jul 2024 03:09:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722215985; cv=none; b=bfwXR1M8fZA5q67GXaHHjRd16lMEKyxnpb6BHwREiEOh9q2j17fE/oL89Z07OlbO4CTgQapcKhYstbNmNN73d0g0m8UzGrxSHktgKTegfKZEWRKiWGGrPQJhBK8GNYRKXRo+X7RNRaOj2mMEuMZBthFS/3WdG2fwcb0lNtsJvfw=
+	t=1722222580; cv=none; b=MQ7ZhjgC6SpTtHx9HRL7F+AzIHMRkHyC4qqxSZnrKVtpy057o4jOP/XuTuMjE9a2rtwBBVmygiiNxLLISzpFwQ19FBQzcOsJtZjcHsxVSiwwdtUE3S+ayKSQVpkG4flBK2/LdZPM2Sm3Csu4U2yYIQyRSNB+rWLpUZ5YIpyn11Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722215985; c=relaxed/simple;
-	bh=9V/LKvnaS+VsR8J6Vp6JrLihjI2uOCq4/aNZDeuxbps=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=RH4cs6wZfvTlakT1NyW2TGggclIu0TSgjI1GMP7LH6G9+eiEgzpLpNp+wR/8X5DMfdwNuI1Pr7t9Bxjb2Vszw+NU/qYZT3XsAicQshDZ+7HTQjFGoUyaN6kuqqBudazacl261rsJrKdTMtPj68N6/+qSA5RtoCl7syNOBjYL4uk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K7cAojXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722222580; c=relaxed/simple;
+	bh=6rECRIdAtSqNw2IJVFIkBhpgTpCAQi22WbyAhXiU3x0=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ZWnjYGHwfShto5k0Yk3QHJlKB56QtcG4jWDfpTysM4Y+s1u4lTANbmhuFlq5B8+ZMPZ8gtIDh9hC+IFhSPQaGPqxx0KkMYDiQOX0z83u92nbY8Zla38ys1IgCxXZuf4jpR5GC/HacgxR/kbSdb8ea2wTCI4J6Frz1t/Rc7E9XCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e1N1yj+3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K7cAojXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95E67C32782;
-	Mon, 29 Jul 2024 01:19:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e1N1yj+3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CF9FEC116B1;
+	Mon, 29 Jul 2024 03:09:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722215985;
-	bh=9V/LKvnaS+VsR8J6Vp6JrLihjI2uOCq4/aNZDeuxbps=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=K7cAojXKEGs0WReZ/tYTAGU3rprIZu4geVJzSM4YbW7LIroe/6HR1SIqoyPKHlsvX
-	 Z7gX5vzlWK7I81MilBl8UEz389KkBUn4VqOZB+LuHjYu4EpJWkztiqcLoIIGfE0OLH
-	 aygLQ8Y8kP6vJ8fdIGYvWBPQ/Zhc5G82uENfFSXk8JAzHLsoQLpcJTaJDvr4FUkklg
-	 OT7i/JrAFZeGZn4/J+dnIQVbxMdlcoKi/cZNigXei2CqkEWk1AMwNGFwcfOHmn8m3B
-	 y8mvPmpst4PSushMfxuMdJUPPEPBGWvYbXw+Nd5PNu0H7s7YnzoJQp6F/IIOQCdyvn
-	 CBgRDBGGeyW9A==
-Message-ID: <5a5a7e689dbdad1afe1971759b780493fc7cc7de.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net v5 09/13] selftests: mptcp: join: validate
- fullmesh endp on 1st sf
+	s=k20201202; t=1722222579;
+	bh=6rECRIdAtSqNw2IJVFIkBhpgTpCAQi22WbyAhXiU3x0=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=e1N1yj+37o7JxhEaoIdk1Egftz8cBz/ORxu24zNh5cnIWdngLJG0gtP/mfvjG4Kv+
+	 pbU7TEzG0gLeacMDLyeHVltaGYiUkes7I/THXFZtJ0CJvHh1aLgN0yE4JMiWecmKil
+	 xy3e67H/aMXAqRLVFN9YKamlCV3wTBMgRMZm4/Tm1TCQn8M9d0huz/mZdydN5+gmrG
+	 irJ5X0ZMP4JGQRnpHvcSO+yDqHiQH4Pcwnv4QxyNuWEMFbOTiPd+6P1LABVxZRoBCj
+	 uieLEgHe/ECKRNUBwhQtKj1HjHk4KAox2zY2CyO8VbQoIm1W4GHLiD5x8urBcuPL2Y
+	 fij5VSCkKLrHg==
+Message-ID: <797a6a26e1f422dfd4722c6e53e623500fd93ab5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 1/2] mptcp: MIB counters for sent MP_JOIN
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>
-Date: Mon, 29 Jul 2024 09:19:40 +0800
-In-Reply-To: <20240726-mptcp-pm-avail-v5-9-fb1117ddeef6@kernel.org>
-References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
-	 <20240726-mptcp-pm-avail-v5-9-fb1117ddeef6@kernel.org>
+Date: Mon, 29 Jul 2024 11:09:35 +0800
+In-Reply-To: <20240726-mptcp-join-tx-mib-v1-1-7f2149ba0dcf@kernel.org>
+References: <20240726-mptcp-join-tx-mib-v1-0-7f2149ba0dcf@kernel.org>
+	 <20240726-mptcp-join-tx-mib-v1-1-7f2149ba0dcf@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -98,44 +96,157 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Fri, 2024-07-26 at 16:28 +0200, Matthieu Baerts (NGI0) wrote:
-> This case was not covered, and the wrong ID was set before the
-> previous
-> commit.
+Hi Matt,
+
+On Fri, 2024-07-26 at 19:48 +0200, Matthieu Baerts (NGI0) wrote:
+> Recently, a few issues have been discovered around the creation of
+> additional subflows. Without these counters, it was difficult to
+> point
+> out the reason why some subflows were not created as expected.
 > 
-> The rest is not modified, it is just that it will increase the code
-> coverage.
+> These counters should have been added earlier, because there is no
+> other
+> simple ways to extract such information from the kernel, and
+> understand
+> why subflows have not been created.
 > 
-> The right address ID can be verified by looking at the packet traces.
-> We
-> could automate that using Netfilter with some cBPF code for example,
-> but
-> that's always a bit cryptic. Packetdrill seems better fitted for
-> that.
+> While at it, some pr_debug() have been added, just in case the errno
+> needs to be printed.
 > 
-> Fixes: 4f49d63352da ("selftests: mptcp: add fullmesh testcases")
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/509
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 1 +
->  1 file changed, 1 insertion(+)
+>  net/mptcp/mib.c     |  5 +++++
+>  net/mptcp/mib.h     |  5 +++++
+>  net/mptcp/subflow.c | 24 ++++++++++++++++++++----
+>  3 files changed, 30 insertions(+), 4 deletions(-)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index f609c02c6123..e4ac275366ce 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3058,6 +3058,7 @@ fullmesh_tests()
->  	if reset "fullmesh test 1x1"; then
->  		pm_nl_set_limits $ns1 1 3
->  		pm_nl_set_limits $ns2 1 3
-> +		pm_nl_add_endpoint $ns2 10.0.1.2 flags
-> subflow,fullmesh
+> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+> index 7884217f33eb..a0b1152c32f1 100644
+> --- a/net/mptcp/mib.c
+> +++ b/net/mptcp/mib.c
+> @@ -25,6 +25,11 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>  	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure",
+> MPTCP_MIB_JOINSYNACKMAC),
+>  	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+>  	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+> +	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
+> +	SNMP_MIB_ITEM("MPJoinSynTxFEstabErr",
+> MPTCP_MIB_JOINSYNTXFULLYESTAB),
 
-nit: add this line behind "pm_nl_add_endpoint $ns1 10.0.2.1 flags
-signal". Usually, set n1 first and then n2.
+It's better to keep the "Err" postfix to reduce ambiguity:
 
->  		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
->  		fullmesh=1 speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
+MPTCP_MIB_JOINSYNTXFULLYESTAB_ERR or MPTCP_MIB_JOINSYNTXFULLYESTABERR.
+
+> +	SNMP_MIB_ITEM("MPJoinSynTxCreatSkErr",
+> MPTCP_MIB_JOINSYNTXCREATESOCK),
+> +	SNMP_MIB_ITEM("MPJoinSynTxBindErr",
+> MPTCP_MIB_JOINSYNTXBIND),
+> +	SNMP_MIB_ITEM("MPJoinSynTxConnectErr",
+> MPTCP_MIB_JOINSYNTXCONNECT),
+
+Same these three.
+
+Thanks,
+-Geliang
+
+>  	SNMP_MIB_ITEM("DSSNotMatching", MPTCP_MIB_DSSNOMATCH),
+>  	SNMP_MIB_ITEM("InfiniteMapTx", MPTCP_MIB_INFINITEMAPTX),
+>  	SNMP_MIB_ITEM("InfiniteMapRx", MPTCP_MIB_INFINITEMAPRX),
+> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+> index 66aa67f49d03..ccb3a30e835a 100644
+> --- a/net/mptcp/mib.h
+> +++ b/net/mptcp/mib.h
+> @@ -20,6 +20,11 @@ enum linux_mptcp_mib_field {
+>  	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK
+> + MP_JOIN */
+>  	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN
+> */
+>  	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK +
+> MP_JOIN */
+> +	MPTCP_MIB_JOINSYNTX,		/* Sending a SYN + MP_JOIN
+> */
+> +	MPTCP_MIB_JOINSYNTXFULLYESTAB,	/* Not in fully established
+> when sending a SYN + MP_JOIN */
+> +	MPTCP_MIB_JOINSYNTXCREATESOCK,	/* Not able to create a
+> socket when sending a SYN + MP_JOIN */
+> +	MPTCP_MIB_JOINSYNTXBIND,	/* Not able to bind() the
+> address when sending a SYN + MP_JOIN */
+> +	MPTCP_MIB_JOINSYNTXCONNECT,	/* Not able to connect()
+> when sending a SYN + MP_JOIN */
+>  	MPTCP_MIB_DSSNOMATCH,		/* Received a new mapping
+> that did not match the previous one */
+>  	MPTCP_MIB_INFINITEMAPTX,	/* Sent an infinite mapping
+> */
+>  	MPTCP_MIB_INFINITEMAPRX,	/* Received an infinite
+> mapping */
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index a21c712350c3..d305c0f53a09 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -1577,12 +1577,18 @@ int __mptcp_subflow_connect(struct sock *sk,
+> const struct mptcp_addr_info *loc,
+>  	int ifindex;
+>  	u8 flags;
+>  
+> -	if (!mptcp_is_fully_established(sk))
+> +	if (!mptcp_is_fully_established(sk)) {
+> +		MPTCP_INC_STATS(sock_net(sk),
+> MPTCP_MIB_JOINSYNTXFULLYESTAB);
+>  		goto err_out;
+> +	}
+>  
+>  	err = mptcp_subflow_create_socket(sk, loc->family, &sf);
+> -	if (err)
+> +	if (err) {
+> +		MPTCP_INC_STATS(sock_net(sk),
+> MPTCP_MIB_JOINSYNTXCREATESOCK);
+> +		pr_debug("msk=%p local=%d remote:%d create sock
+> error: %d\n",
+> +			 msk, local_id, remote_id, err);
+>  		goto err_out;
+> +	}
+>  
+>  	ssk = sf->sk;
+>  	subflow = mptcp_subflow_ctx(ssk);
+> @@ -1608,8 +1614,12 @@ int __mptcp_subflow_connect(struct sock *sk,
+> const struct mptcp_addr_info *loc,
+>  #endif
+>  	ssk->sk_bound_dev_if = ifindex;
+>  	err = kernel_bind(sf, (struct sockaddr *)&addr, addrlen);
+> -	if (err)
+> +	if (err) {
+> +		MPTCP_INC_STATS(sock_net(sk),
+> MPTCP_MIB_JOINSYNTXBIND);
+> +		pr_debug("msk=%p local=%d remote:%d bind error:
+> %d\n",
+> +			 msk, local_id, remote_id, err);
+>  		goto failed;
+> +	}
+>  
+>  	mptcp_crypto_key_sha(subflow->remote_key, &remote_token,
+> NULL);
+>  	pr_debug("msk=%p remote_token=%u local_id=%d remote_id=%d",
+> msk,
+> @@ -1624,8 +1634,14 @@ int __mptcp_subflow_connect(struct sock *sk,
+> const struct mptcp_addr_info *loc,
+>  	sock_hold(ssk);
+>  	list_add_tail(&subflow->node, &msk->conn_list);
+>  	err = kernel_connect(sf, (struct sockaddr *)&addr, addrlen,
+> O_NONBLOCK);
+> -	if (err && err != -EINPROGRESS)
+> +	if (err && err != -EINPROGRESS) {
+> +		MPTCP_INC_STATS(sock_net(sk),
+> MPTCP_MIB_JOINSYNTXCONNECT);
+> +		pr_debug("msk=%p local=%d remote:%d connect error:
+> %d\n",
+> +			 msk, local_id, remote_id, err);
+>  		goto failed_unlink;
+> +	}
+> +
+> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNTX);
+>  
+>  	/* discard the subflow socket */
+>  	mptcp_sock_graft(ssk, sk->sk_socket);
 > 
 
