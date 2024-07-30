@@ -1,37 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B475218FDA2
-	for <mptcp@lists.linux.dev>; Tue, 30 Jul 2024 08:24:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D48C01940B3;
+	Tue, 30 Jul 2024 08:50:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722327878; cv=none; b=gposWteX+Cs6jxSRRF8pisIQAm7fmop/siS7ibP6q7NSqs25PNy2lr4AJMgdK1bXAFn7xpEsyD0QLOfg8nd4mU26Paq+5iK3pOQZvIxpvz4Cl617URD3r5bZAx9TBxudnfnjRA9xrsa6UXLhDEHyhDvtivqWaSRDAVE2JYAr7Go=
+	t=1722329438; cv=none; b=QnbzlM+os3jXf2jTzgrqF71+za+l6QZrGZ43Q6kp8l38W2CnCdCXHiqCgsX6fyMJKJXc3VN2bqanVAxkckWbnMVCHQ1aMZVp9m3RYtIoBFmSI9XwcwQkYxIkj4v7osvNWlqy0jrCl41O4ILi8+4Jcq2Eb64paiZOk9eqYRtvKwg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722327878; c=relaxed/simple;
-	bh=0AI8R8DXSsg/JspP8y2A4EBxMjx/5vI2RErm0C8sy/k=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=elYzufCZncVrq7X2D0sVWtZCqqOv1QrDYio0fluou/F/9RAKU6zz0ZzCD5sXWBsvVlVeZXguIP5DVZWgEVQ6dtCigovzqd9Hbmy/T4umCpJXqZHDftmTQVJQBkP7ZxhYrWR84RQBH9SKp8cztcEFYBTFji9FUFSRLfJcRNTzdss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJGUjs3P; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722329438; c=relaxed/simple;
+	bh=7xEjnu+XxywJICOBC6mbxvdShii78kN4dRkz0XvgP/4=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=fcmk6gxT+lQXyClvR23bXhZt9f4oToFk92VfmRAdQ0J5oiwXE6taDYwi66pZrlFfvCsGKo0r+B8EemBKlVsrR8KknXcSYSY8LJUEZ9TCeNgxe7yb0Yco9xlqVnkrBWVbcrWOLMK4xgw2YbIz8DQIIFwKI+nBZN60Ciggb/Ptqng=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=faJf7yM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJGUjs3P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D809C32782;
-	Tue, 30 Jul 2024 08:24:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="faJf7yM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPS id 6148AC4AF0B;
+	Tue, 30 Jul 2024 08:50:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722327878;
-	bh=0AI8R8DXSsg/JspP8y2A4EBxMjx/5vI2RErm0C8sy/k=;
-	h=From:To:Cc:Subject:Date:From;
-	b=TJGUjs3PujeoAz+bGNaLJv2u5x9Sg+BtvzzNnb4OtkEW3WFPmDvJZUyZ38lyWg3Su
-	 +HcBib89hPjCn8wvBu719KOl3g8XuALLSxOl3BRfKh9qv22R4yD3Z7zt/aTQvOw6fN
-	 VrFw3szU95IBFvPZ4m6C4cvin4R1WaeAhBIxn6kxhjqzh2Hng+HKLTaFrydu82AW6U
-	 OD3iNdy99K744jUAqG9chxyt72K3lbFOT3/b0JJArQEOMhItmYRnY702GklQJ8XbxG
-	 xAJ3EA1iQDoAN23tyQf0O5TfjiPlhKd7XY3+QN5wFO7BMqKe0wsYV2a9kl7AVGc/IL
-	 0cjYo5K9Bj7FQ==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next] Squash to "selftests/bpf: Add mptcp subflow subtest" - set limits
-Date: Tue, 30 Jul 2024 16:24:32 +0800
-Message-ID: <9dafce3091d30a8446897813d2a9d302625c09d0.1722327628.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	s=k20201202; t=1722329437;
+	bh=7xEjnu+XxywJICOBC6mbxvdShii78kN4dRkz0XvgP/4=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=faJf7yM4pW/Z8oVEhOY0PK+6doI9ABS/OqbbgJ8IIBlA0uejeK9fyfJYCK2Y8uoIJ
+	 XeHWOozrBdwiqcjqM9/LPcCk+ac0aWyaz9jE+zHJXuktyX/zkAg8MEUxJnRIkHKOCx
+	 4g65iScziMyJM4vt7SbCyOcq/+7MBcvIp4eE6pX4wLTu4FEB3KTgNXi5a8eSwm4+px
+	 5qtTgBm3FTVRuLUkC5I5gm47Z0QJ+eNTJJh3HQKCTusaFwtbW+g4CiDjKUUjd/FoA+
+	 5Ve4ay9Ff4eQ9vTr42bD/1Al0YVRfvaeCP/knmx7ZIQhzBp3cGDJULprkEms7PCAJ4
+	 TrSFL++L889CQ==
+Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
+	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 512B0C43619;
+	Tue, 30 Jul 2024 08:50:37 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -39,34 +37,59 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/7] mptcp: fix inconsistent backup usage
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172232943732.24083.9277579847408417971.git-patchwork-notify@kernel.org>
+Date: Tue, 30 Jul 2024 08:50:37 +0000
+References: <20240727-upstream-net-20240727-mptcp-backup-signal-v1-0-f50b31604cf1@kernel.org>
+In-Reply-To: <20240727-upstream-net-20240727-mptcp-backup-signal-v1-0-f50b31604cf1@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ fw@strlen.de, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org, rostedt@goodmis.org, mhiramat@kernel.org,
+ mathieu.desnoyers@efficios.com, linux-trace-kernel@vger.kernel.org
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello:
 
-Need to set limits before adding endpoints.
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+On Sat, 27 Jul 2024 12:01:22 +0200 you wrote:
+> In all the MPTCP backup related tests, the backup flag was set on one
+> side, and the expected behaviour is to have both sides respecting this
+> decision. That's also the "natural" way, and what the users seem to
+> expect.
+> 
+> On the scheduler side, only the 'backup' field was checked, which is
+> supposed to be set only if the other peer flagged a subflow as backup.
+> But in various places, this flag was also set when the local host
+> flagged the subflow as backup, certainly to have the expected behaviour
+> mentioned above.
+> 
+> [...]
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 00f63f3f19f4..ffc2cfacabee 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -357,9 +357,12 @@ static int endpoint_init(char *flags)
- 	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
- 	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
- 	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
--	/* It would be better to use  "ip -net %s mptcp endpoint add %s %s",
-+	/* It would be better to use
-+	 *	ip -net %s mptcp limits set add_addr_accepted 8 subflows 8
-+	 *	ip -net %s mptcp endpoint add %s %s
- 	 * but the BPF CI is using an old version of IPRoute (5.5.0).
- 	 */
-+	SYS(fail, "ip netns exec %s ./mptcp_pm_nl_ctl limits 8 8", NS_TEST);
- 	SYS(fail, "ip netns exec %s ./mptcp_pm_nl_ctl add %s flags %s", NS_TEST, ADDR_2, flags);
- 
- 	return 0;
+Here is the summary with links:
+  - [net,1/7] mptcp: sched: check both directions for backup
+    https://git.kernel.org/netdev/net/c/b6a66e521a20
+  - [net,2/7] mptcp: distinguish rcv vs sent backup flag in requests
+    https://git.kernel.org/netdev/net/c/efd340bf3d77
+  - [net,3/7] mptcp: pm: only set request_bkup flag when sending MP_PRIO
+    https://git.kernel.org/netdev/net/c/4258b94831bb
+  - [net,4/7] mptcp: mib: count MPJ with backup flag
+    https://git.kernel.org/netdev/net/c/4dde0d72ccec
+  - [net,5/7] selftests: mptcp: join: validate backup in MPJ
+    https://git.kernel.org/netdev/net/c/935ff5bb8a1c
+  - [net,6/7] mptcp: pm: fix backup support in signal endpoints
+    https://git.kernel.org/netdev/net/c/6834097fc38c
+  - [net,7/7] selftests: mptcp: join: check backup support in signal endp
+    https://git.kernel.org/netdev/net/c/f833470c2783
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
