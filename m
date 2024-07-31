@@ -1,247 +1,146 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A6C617BA2
-	for <mptcp@lists.linux.dev>; Wed, 31 Jul 2024 02:59:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610121CF93
+	for <mptcp@lists.linux.dev>; Wed, 31 Jul 2024 09:11:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722394752; cv=none; b=hTl7Aguwcoe+0C95vbvI1vQ2S5Vy4ooPCraUdiPEWuXY3waOffcEAiN1tU4tvyySRIEdlAJLnDZlGiWicP4ruObKRRa7cxp/ILSnfFdAW9g+21DHbepN/OOFgaf8XH509XJ8eCpUJV5D7rZjovs6FBGh3aEO6x4B0YlhnfPNs9c=
+	t=1722417061; cv=none; b=Sxq5I7rNQK6i9khR84x8L66tZSbeaAEN6K8Ia55ijjX+BN20KpuksEae8qB9kF2f0x78/3v2X+NcHcD5o0/4DT45G9xjEV6w0mVq72wWxZcven8a6ypJQlb/COu+52qIZh0AeeSOMh8pUvoXUKKb9x+zWWLrVw7GXVrgCBjxWcw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722394752; c=relaxed/simple;
-	bh=JrbubCJsctlYZQhkQMye+VzRF0cObJIpsrRX3oN3ScA=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UwvV3T02+F4pNuUuDguG6RsXy0hVCgY63+p75lI7RRrjGq2lqcbnFYHlGaLdtlVT5pERolQLvwlKbcobmE8iP50XcVsAgVrWZh4ewOh278vAss7adgHSy4K2cOxPZqktfOsG+uZzFDCUO2nkdUIUNM6EA5lwpce/woQ5B14HPbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b7hJ/PIW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722417061; c=relaxed/simple;
+	bh=wFyE10AIIFu3g7yp23LOi1XdCchb8UBMwkZLS11l2F8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pHCm5XXPUnpTyhJt5OOAuA3+ZK9JB2E/gN9LRolK9OZ0qGVg1BTzVx5N6kStNRzhtv0CxfVTQpuBD1PW4x5ckS0osFDfGEP03AIGxoeRwxiwVxWtVR6Rugvbte8nUMeyBVhfu9FuHkkm9mfKIj06FxRc4Zo96nfO5KFNf0BIzkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OHpmHjiD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b7hJ/PIW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4AC2C32782;
-	Wed, 31 Jul 2024 02:59:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OHpmHjiD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 723CAC116B1;
+	Wed, 31 Jul 2024 09:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722394751;
-	bh=JrbubCJsctlYZQhkQMye+VzRF0cObJIpsrRX3oN3ScA=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=b7hJ/PIWtjYqXBx/dWXvrkxr1POpErNuYcl0FJZptTcz07UbPFHAtCKdl4VCnt2vE
-	 smOjVs5i93C0/josSguEGl3/zPBgw61qmCzTtVWfDnrq6EdC+gOxizTZTq9r4oG8Ip
-	 Y14920YJcskDkxTuSTf7bkzyOzaukdx1D9zdP+I/B9U6ogZMGn9Pj1FEJ5AXnUt2v6
-	 XUZkPqq2QUA88ADr//L/60PgpcHDyhDiOimuXwp22Lz6lIfQFn1nshppN+BJBW3Sd8
-	 7kbAPF56YNK883LTDwXHvq9drW7yZyfz7VkMXr1qjnZFCXrNFIfkgZ9xfZbEbYCJPm
-	 nzK04SgP6t/ug==
-Message-ID: <54fe0a426f00ad7c6d4b2c639da7bb5925b408f7.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/2] selftests: mptcp: join: validate MPJ
- SYN TX MIB counters
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Wed, 31 Jul 2024 10:59:03 +0800
-In-Reply-To: <20240729-mptcp-join-tx-mib-v2-2-8ace70fd407a@kernel.org>
-References: <20240729-mptcp-join-tx-mib-v2-0-8ace70fd407a@kernel.org>
-	 <20240729-mptcp-join-tx-mib-v2-2-8ace70fd407a@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
- lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
- wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLl
- P9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInM
- HcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav
- 0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL5
- 18p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucp
- VCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU2
- 3wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/Pv
- X+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBB
- MBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBY
- CAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvh
- G5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7AdWelP
- +0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcm
- BA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIP
- kNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0ob
- pX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71
- k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6V
- RORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJ
- GBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7
- Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTA
- QoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAg
- MBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atD
- yyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhV
- c9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzx
- OwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4paYt49pNvh
- cqLKMGNLPsX06OR4G+4ai0JTTzIlwVJXuo+uZRFQyuOaSmlSjEsiQ/WsGdhILldV35RiFKe/ojQNd
- 4B4zREBe3xT+Sf5keyAmO/TG14tIOCoGJarkGImGgYltTTTM6rIk/wwo9FWshgKAmQyEEiSzHTSnX
- cGbalD3Do89YRmdG+5eP7HQfsG+VWdn8IH6qgIvSt8GOw6RfSP7omMXvXji1VrbWG4LOFYcsKTN+d
- GDhl8LmU0y44HejkCzYj/b28MvNTiRVfucrmZMGgI8L5A4ZwQ3Inv7jY13GZSvTb7PQIbqMcb1P3S
- qWJFodSwBg9oSw21b+T3aYG3z3MRCDXDlZAJONELx32rPMdBva8k+8L+K8gc7uNVH4jkMPkP9jPnV
- Px+2P2cKc7LXXedb/qQ3MuQINBGWKTg4BEADJxiOtR4SC7EHrUDVkp/pJCQC2wxNVEiJOas/q7H62
- BTSjXnXDc8yamb+HDO+Sncg9SrSRaXIh+bw9G3rvOiC2aQKB6EyIWKMcuDlD7GbkLJGRoPCA5nSfH
- Szht2PdNvbDizODhtBy8BOQA6Vb21XOb1k/hfD8Wy6OnvkA4Er61cf66BzXeTEFrvAIW+eUeoYTBA
- eOOc2m4Y0J28lXhoQftpNGV5DxH9HSQilQZxEyWkNj8oomVJ6Db7gSHre0odlt5ZdB7eCJik12aPI
- dK5W97adXrUDAclipsyYmZoC1oRkfUrHZ3aYVgabfC+EfoHnC3KhvekmEfxAPHydGcp80iqQJPjqn
- eDJBOrk6Y51HDMNKg4HJfPV0kujgbF3Oie2MVTuJawiidafsAjP4r7oZTkP0N+jqRmf/wkPe4xkGQ
- Ru+L2GTknKtzLAOMAPSh38JqlReQ59G4JpCqLPr00sA9YN+XP+9vOHT9s4iOu2RKy2v4eVOAfEFLX
- q2JejUQfXZtzSrS/31ThMbfUmZsRi8CY3HRBAENX224Wcn6IsXj3K6lfYxImRKWGa/4KviLias917
- DT/pjLw/hE8CYubEDpm6cYpHdeAEmsrt/9dMe6flzcNQZlCBgl9zuErP8Cwq8YNO4jN78vRlLLZ5s
- qgDTWtGWygi/SUj8AUQHyF677QARAQABiQI7BBgBCgAmFiEEZiKd+VhdGdcosBcafnvtNTGKqCkFA
- mWKTg4CGwwFCRLMAwAACgkQfnvtNTGKqCkpsw/2MuS0PVhl2iXs+MleEhnN1KjeSYaw+nLbRwd2Sd
- XoVXBquPP9Bgb92T2XilcWObNwfVtD2eDz8eKf3e9aaWIzZRQ3E5BxiQSHXl6bDDNaWJB6I8dd5TW
- +QnBPLzvqxgLIoYn+2FQ0AtL0wpMOdcFg3Av8MEmMJk6s/AHkL8HselA3+4h8mgoK7yMSh601WGrQ
- AFkrWabtynWxHrq4xGfyIPpq56e5ZFPEPd4Ou8wsagn+XEdjDof/QSSjJiIaenCdDiUYrx1jltLmS
- lN4gRxnlCBp6JYr/7GlJ9Gf26wk25pb9RD6xgMemYQHFgkUsqDulxoBit8g9e0Jlo0gwxvWWSKBJ8
- 3f22kKiMdtWIieq94KN8kqErjSXcpI8Etu8EZsuF7LArAPch/5yjltOR5NgbcZ1UBPIPzyPgcAmZl
- AQgpy5c2UBMmPzxco/A/JVp4pKX8elTc0pS8W7ne8mrFtG7JL0VQfdwNNn2R45VRf3Ag+0pLSLS7W
- OVQcB8UjwxqDC2t3tJymKmFUfIq8N1DsNrHkBxjs9m3r82qt64u5rBUH3GIO0MGxaI033P+Pq3BXy
- i1Ur7p0ufsjEj7QCbEAnCPBTSfFEQIBW4YLVPk76tBXdh9HsCwwsrGC2XBmi8ymA05tMAFVq7a2W+
- TO0tfEdfAX7IENcV87h2yAFBZkaA==
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.0-1build2 
+	s=k20201202; t=1722417061;
+	bh=wFyE10AIIFu3g7yp23LOi1XdCchb8UBMwkZLS11l2F8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=OHpmHjiDVaYo9lE0j4FiMwZlt7EZVQL9RqptVlr3SZAsIUzhAkK2AZOX8MiBYnd8Y
+	 VP2j0j6fBe05x+Ez4dxm5fW17PxSwE5v3p3C8tuIMBlk+WIBh0KPnUETEHwwhXme+D
+	 Tq3c2FBSbHwcycMBtYNDAles2npmON1K35FfLgLjJGhxRSRcDB5n8PLcTsgRHX9vzG
+	 doM/Y2iRUhNdqmguVVAV55tqIAj8S2PVxH/90SJ4Y0TsjKPmhUd7HvWFuqTxHRWIx5
+	 nG3aZRJj05XnrmI61ZQLMKxktnxR6rZWL23cYEnctPUeThJVgyEGd8FDgBjNwd1OME
+	 4/iv/LqcKUTAg==
+Message-ID: <6c0473f0-4ca8-4337-a6e4-101195cc25bd@kernel.org>
+Date: Wed, 31 Jul 2024 11:10:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v5 00/13] mptcp: fix endpoints with 'signal' and
+ 'subflow' flags
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Mat, Geliang,
 
-Thanks for these patches.
-
-On Mon, 2024-07-29 at 12:18 +0200, Matthieu Baerts (NGI0) wrote:
-> A few new MIB counters have been added. They are being validated
-> here.
-> 
-> Most of the time, there are no errors, but sometimes, more MPJ SYN
-> are
-> queued compared to the numbers that are received.
-> 
-> Only one test has an error, the one to connect to a broadcast IP
-> address.
+On 26/07/2024 16:28, Matthieu Baerts (NGI0) wrote:
+> The first 11 patches have already been applied. Here are the remaining
+> ones.
 > 
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 63
-> +++++++++++++++++++++++++
->  1 file changed, 63 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index fbb0174145ad..c1f1ebd2340c 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -1372,6 +1372,66 @@ chk_join_nr()
->  	fi
->  }
->  
-> +chk_join_tx_nr()
-> +{
-> +	local syn_nr=$1
-> +	local festab=$2
-> +	local create=$3
-> +	local bind=$4
-> +	local connect=$5
-> +	local count
-> +
-> +	print_check "syn TX"
-> +	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTx")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$syn_nr" ]; then
-> +		fail_test "got $count JOIN[s] syn TX expected
-> $syn_nr"
-> +	else
-> +		print_ok
-> +	fi
+> Changes in v5:
+> - Split patch 1 (previously 12): the renaming has been done in a
+>   dedicated patch at the end (patch patch 12), for -next.
+> - Patch 10: fix typo and avoid memcpy.
+> - Patch 11: fix comment.
+> - Patch 13: fix build issue and use a new dedicated struct.
+> - Please see the individual changelog for more details.
+> - Link to v4: https://lore.kernel.org/r/20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org
+Thank you for the reviews!
 
-Do you think it is necessary to check MPTcpExtMPJoinSynTx in
-chk_join_nr()?
+These patches are now in our tree (with the requested modification in
+patch 9/13)
 
-> +
-> +	print_check "syn TX Fully Estab Error"
-> +	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynTxFEstabErr")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$festab" ]; then
-> +		fail_test "got $count JOIN[s] syn TX Fully Estab
-> Error expected $festab"
-> +	else
-> +		print_ok
-> +	fi
-> +
-> +	print_check "syn TX Create Socket Error"
-> +	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynTxCreatSkErr")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$create" ]; then
-> +		fail_test "got $count JOIN[s] syn TX Create Socket
-> Error expected $create"
-> +	else
-> +		print_ok
-> +	fi
+New patches for t/upstream-net and t/upstream:
+- 4fdf3e16474d: mptcp: pm: re-using ID of unused flushed subflows
+- f4dcf600f081: selftests: mptcp: join: test for flush/re-add endpoints
+- 54cd819d5f1f: mptcp: pm: remove mptcp_pm_remove_subflow()
+- 5be0e90ef7d3: mptcp: pm: only mark 'subflow' endp as available
+- fdf749c7585a: mptcp: pm: only decrement add_addr_accepted for MPJ req
+- 6eb489c794e8: mptcp: pm: check add_addr_accept_max before accepting
+new ADD_ADDR
+- 91dc97dedafa: mptcp: pm: only in-kernel cannot have entries with ID 0
+- 3cc3d86a170e: mptcp: pm: fullmesh: select the right ID later
+- 19c879bdde12: selftests: mptcp: join: validate fullmesh endp on 1st sf
+- b84992e37697: mptcp: pm: avoid possible UaF when selecting endp
+- ba96900cae7a: mptcp: pm: reuse ID 0 after delete and re-add
+- Results: 36737d2814d6..6cd1e6d73592 (export-net)
+- Results: dec783f2e72a..2f4228f46030 (export)
 
-There is no test that can trigger MPTcpExtMPJoinSynTxFEstabErr and
-MPTcpExtMPJoinSynTxCreatSkErr. Does this mean that there is no need to
-add these two MIBs? Maybe adding pr_debug logs is enough? WDYT?
- 
-> +
-> +	print_check "syn TX Bind Error"
-> +	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynTxBindErr")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$bind" ]; then
-> +		fail_test "got $count JOIN[s] syn TX Bind Error
-> expected $bind"
-> +	else
-> +		print_ok
-> +	fi
-> +
-> +	print_check "syn TX Connect Error"
-> +	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynTxConnectErr")
-> +	if [ -z "$count" ]; then
-> +		print_skip
-> +	elif [ "$count" != "$connect" ]; then
-> +		fail_test "got $count JOIN[s] syn TX Connect Error
-> expected $connect"
-> +	else
-> +		print_ok
-> +	fi
-> +}
-> +
->  # a negative value for 'stale_max' means no upper bound:
->  # for bidirectional transfer, if one peer sleep for a while
->  # - as these tests do - we can have a quite high number of
-> @@ -1907,6 +1967,7 @@ subflows_error_tests()
+New patches for t/upstream:
+- 1d3e4f41c9fc: mptcp: pm: rename helpers linked to 'flush'
+- 54792ce59a08: mptcp: pm: reduce entries iterations on connect
+- Results: 2f4228f46030..6197303cc231 (export)
 
-Add an invalid address here in this test:
+Tests are now in progress:
 
-	pm_nl_add_endpoint $ns2 10.0.5.2 flags subflow
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/af4eff14c4262c736783183997c94795ccff10d0/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2ec038c21e3561ad3df17324253524d53d6ff97b/checks
 
->  		speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 0 0 0
-> +		chk_join_tx_nr 0 0 0 0 0
-
-It will trigger a "syn TX Bind Error":
-
-		chk_join_tx_nr 0 0 0 1 0
-
-
-Thanks!
-Geliang 
->  	# multiple subflows, with subflow creation error
-> @@ -1919,6 +1980,7 @@ subflows_error_tests()
->  		speed=slow \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
-> +		chk_join_tx_nr 2 0 0 0 0
->  	fi
->  
->  	# multiple subflows, with subflow timeout on MPJ
-> @@ -2306,6 +2368,7 @@ remove_tests()
->  		addr_nr_ns1=-3 speed=10 \
->  			run_tests $ns1 $ns2 10.0.1.1
->  		chk_join_nr 1 1 1
-> +		chk_join_tx_nr 2 0 0 0 1
->  		chk_add_nr 3 3
->  		chk_rm_nr 3 1 invert
->  		chk_rst_nr 0 0
-> 
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
