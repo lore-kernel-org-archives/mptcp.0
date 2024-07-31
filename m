@@ -1,121 +1,78 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f199.google.com (mail-il1-f199.google.com [209.85.166.199])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DEABE5E
-	for <mptcp@lists.linux.dev>; Wed, 31 Jul 2024 01:44:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84064DDA8
+	for <mptcp@lists.linux.dev>; Wed, 31 Jul 2024 02:00:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.199
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722390274; cv=none; b=DBBbh32XbKVMWOou1RNzzohp4kubkX/jstgp00CNVOTR25gewyZd3pHJJUIw9llBHpnYh/Y4AxrzH40LdpfC5nioL3aS3rv6w50/foqWR36zbdMExk0pA8KEg8Zx3TD92PfjekGmt2yr+3sUcrEngziJe8VS/uGgTT5EpDGczSo=
+	t=1722391205; cv=none; b=johRCkizCbWDdMHx+SeHBpIkuS/vp4JuwtAmLrsp65KIGv68mDoRTZIB2ujJcvitwrbbx3T6ZVSQq2m0crtoqVFSkkReivZJmzIU3DiGCxZ6wri9CbYOa/NT0qCJmt0B1cXPkLWn8WGg1pSdn6v2zrujNdkGsz563etIaTHD1x4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722390274; c=relaxed/simple;
-	bh=Te7cfhLSSIJs8KTiS3jyg8QBVP5nQfXz+GdszuA/xGQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=fQDasjDG//hCTgvWW4HbdZ30V7XV8pmLsRenyIaNDE4WFXhQthI09LeHSd18kGlVcoFs4Tn7IlikHvZ0StZUTp4rUPEtGH4O1y0cAKUiOKy1R5vyvYRpVuBOYQ5sY90WbLe9OlhJXIWICRvJrWUYCXoMm/292M1Bdo5D8s7R7Fs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ni0Mr2kM; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ni0Mr2kM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954E0C32782;
-	Wed, 31 Jul 2024 01:44:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722390273;
-	bh=Te7cfhLSSIJs8KTiS3jyg8QBVP5nQfXz+GdszuA/xGQ=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Ni0Mr2kMN6uUHKbga2OT1efmqo0cxcNoPbARaoQ6jEpDB/kxd9TYSVBDXQR58ctRn
-	 ksxEZ99/zdxFSnGHi8aEj0jKr8haQaVnxzWlGCCcqHV2gLo1u+usw6ZZQ2BoFj2afr
-	 0Puy1hnSWN/MFkCG6ONhcMtgqZ5pBvYM7vuF0uIzwwatLcfZ++4I9yhW+Xo473lwAD
-	 3Ah3+ZzYgljyqEojSZSf3BGPFF3zsuyFjhVxF9oWZFMmgUaQfJN4nBpUQFboAb81EB
-	 p9S7ePcaI42A2gHiXKBQfEZ70wER5IRcBHhafSItu5VHXoYCEh8JbGwIoUhZK1zQhv
-	 H6PAh1JkBHP0w==
-Date: Tue, 30 Jul 2024 18:44:32 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net v5 00/13] mptcp: fix endpoints with 'signal'
- and 'subflow' flags
-In-Reply-To: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
-Message-ID: <5962e7dc-435a-fdb3-1564-e8cdb701db3a@kernel.org>
-References: <20240726-mptcp-pm-avail-v5-0-fb1117ddeef6@kernel.org>
+	s=arc-20240116; t=1722391205; c=relaxed/simple;
+	bh=K1qOC5tHUaMsNZMC1TjMJaYf6RAeKSo/0m0qrGDii54=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=ghf2jZAc20j7QtP6QU2yXYwTqENrl4i/8kxNA/VKMqFffLcF2PvL9saE7CZfspv0I9TthLydgXXydjfl2ufAA+0l1MKE2EwsMgLZXUnLKpgrt3Me5xUCoNzWcappMqJCZG1a9jSQ/RSDoPibwpjxTaptpiqTcAsKRmH+zkiUi8E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.199
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f199.google.com with SMTP id e9e14a558f8ab-39915b8e08dso106021315ab.0
+        for <mptcp@lists.linux.dev>; Tue, 30 Jul 2024 19:00:04 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722391203; x=1722996003;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=oifXDfDa4Pc0Sdv5gbrkS91BTKOjBFXuRwSI5Vt+woE=;
+        b=Y3NOe46j/mDPVETzUtfRrdM1OHgd8ENfKa1FqKo9kNzRtiB8I7IASwcCGLW8gZL4s/
+         Pmtr9W9NCHiR594jPGzAU3A32RqBoXARa23PQlgkiH8O8AxQvqMOO9sZ3hHmhPlSr7OI
+         kiz0ZajAOkpfwhi6eRQqAsrSUy4TAdYnqwINKPca0LxZ1TMaoVLKwnT5uR25VOHP6l+J
+         e03utZUcvXYeoqUgKug5l1ePAXFKFzl2VFpuT3N5Lxfcb2IthFnvsndproNIAKB9+FwF
+         Wma29+XljYKdTgNQybDShGiX4RRWfAeA3520jPRi+a+66YRbu3VDIp8yTj56kSQ2KwcV
+         53JQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVWeoFlWFJe3gKEmNasJQa9e7PmsC9ymQWGnhirdM/G1QGk64Bp5zT4oWf4UZUe84XeoIwPEYdPr5UuNsDWlHKltbH6s8o=
+X-Gm-Message-State: AOJu0YzjAb7EDIqUoNJPMb2Yww7Wa3C+HJGgP/Sns6HGHO6n3zWcKyYg
+	rwTpjDc96sL/eD5O7hLZHfVHR35QifCqvouIcsG6E2UMInrPt6fK/JoFnN9ec1Ly33OepeAlJGp
+	mkMXNKOLWMMj7w7P5Tt3egFUsFR1TcqP3s6h6fNhJ4hjFN79yqYNOm+E=
+X-Google-Smtp-Source: AGHT+IEc9c926Yi+AT5PgUKRiu91sAVFQJ4tCQhhgGVLxxVCE3cfKmVkDEp3A00yLNByqBX3a4esm6+HSw2f3lbDf8KogXFJ5U+M
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Received: by 2002:a05:6e02:1d1d:b0:397:95c7:6f72 with SMTP id
+ e9e14a558f8ab-39aec448e1cmr10502905ab.6.1722391203729; Tue, 30 Jul 2024
+ 19:00:03 -0700 (PDT)
+Date: Tue, 30 Jul 2024 19:00:03 -0700
+In-Reply-To: <0000000000005dc7ce0611833268@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dce735061e8173dc@google.com>
+Subject: Re: [syzbot] [mptcp?] WARNING in __mptcp_clean_una
+From: syzbot <syzbot+5b3e7c7a0b77f0c03b0d@syzkaller.appspotmail.com>
+To: cpaasch@apple.com, davem@davemloft.net, edumazet@google.com, 
+	geliang.tang@linux.dev, geliang@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-On Fri, 26 Jul 2024, Matthieu Baerts (NGI0) wrote:
+syzbot suspects this issue was fixed by commit:
 
-> The first 11 patches have already been applied. Here are the remaining
-> ones.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v5:
-> - Split patch 1 (previously 12): the renaming has been done in a
->  dedicated patch at the end (patch patch 12), for -next.
-> - Patch 10: fix typo and avoid memcpy.
-> - Patch 11: fix comment.
-> - Patch 13: fix build issue and use a new dedicated struct.
-> - Please see the individual changelog for more details.
-> - Link to v4: https://lore.kernel.org/r/20240722-mptcp-pm-avail-v4-0-15bfd73de384@kernel.org
->
+commit fb7a0d334894206ae35f023a82cad5a290fd7386
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Mon Apr 29 18:00:31 2024 +0000
 
-Hi Matthieu -
+    mptcp: ensure snd_nxt is properly initialized on connect
 
-v5 LGTM, with the "fix when applying" changes already discussed in this 
-thread.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12c8bdbd980000
+start commit:   4f5e5092fdbf Merge tag 'net-6.8-rc5' of git://git.kernel.o..
+git tree:       upstream
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1d7c92dd8d5c7a1e
+dashboard link: https://syzkaller.appspot.com/bug?extid=5b3e7c7a0b77f0c03b0d
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14fc9c8a180000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=17d0cc1c180000
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+If the result looks correct, please mark the issue as fixed by replying with:
 
-> Changes in v4:
-> - Patch 19: check for msk->first != NULL
-> - New patches 21-22
-> - Imported patch 23: might be easier to review all of them, then this
->  single one alone, while it depends on the previous ones.
-> - Link to v3: https://lore.kernel.org/r/20240719-mptcp-pm-avail-v3-0-e96b5591ced3@kernel.org
->
-> Changes in v3:
-> - Small changes in patches 10 and 14, see individual changelog (Geliang)
-> - New patches 18-20: small fixes
-> - Link to v2: https://lore.kernel.org/r/20240715-mptcp-pm-avail-v2-0-fc5153bd1f6e@kernel.org
->
-> Changes in v2:
-> - Do not split id_avail_bitmap per target in patch 5 (Paolo)
-> - Explicit deny (patch 2), reduce indentation (patch 3), stop earlier
->  (patch 4) (Paolo)
-> - New fixes and tests (patches 8-17).
-> - Link to v1: https://lore.kernel.org/r/20240621-mptcp-pm-avail-v1-0-b692d5eb89b5@kernel.org
->
-> ---
-> Matthieu Baerts (NGI0) (13):
->      mptcp: pm: re-using ID of unused flushed subflows
->      selftests: mptcp: join: test for flush/re-add endpoints
->      mptcp: pm: remove mptcp_pm_remove_subflow()
->      mptcp: pm: only mark 'subflow' endp as available
->      mptcp: pm: only decrement add_addr_accepted for MPJ req
->      mptcp: pm: check add_addr_accept_max before accepting new ADD_ADDR
->      mptcp: pm: only in-kernel cannot have entries with ID 0
->      mptcp: pm: fullmesh: select the right ID later
->      selftests: mptcp: join: validate fullmesh endp on 1st sf
->      mptcp: pm: avoid possible UaF when selecting endp
->      mptcp: pm: reuse ID 0 after delete and re-add
->      mptcp: pm: rename helpers linked to 'flush'
->      mptcp: pm: reduce entries iterations on connect
->
-> net/mptcp/pm.c                                  |  24 ---
-> net/mptcp/pm_netlink.c                          | 195 ++++++++++++++----------
-> net/mptcp/pm_userspace.c                        |  40 ++---
-> net/mptcp/protocol.h                            |  19 +--
-> net/mptcp/subflow.c                             |  29 ++--
-> tools/testing/selftests/net/mptcp/mptcp_join.sh |  31 ++++
-> 6 files changed, 180 insertions(+), 158 deletions(-)
-> ---
-> base-commit: a9a9b3b154d187864b73eb0e86a0ff737d79a10a
-> change-id: 20240620-mptcp-pm-avail-f5e3957be441
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+#syz fix: mptcp: ensure snd_nxt is properly initialized on connect
+
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
