@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C9C61AAE1F;
-	Wed, 31 Jul 2024 10:10:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37F691AD3E0;
+	Wed, 31 Jul 2024 11:06:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722420641; cv=none; b=n2lVarZZwpj68/QGqot3otDTtJ0ITNzDeRAx1OzibD3XMWQZVYnSRUBbdBi0urd6EhjlkiIo2D6qhBd3OdF9DtLMG4FPTadn6SIm8RBaUNUnbwyPu3UdQnbu3xI8JUTHy8yyTKx2OWIiiMgmLHQgf70wNrCpExabfw4i1pJ5giQ=
+	t=1722423974; cv=none; b=ZkPpkxOwWdYb377cxHNyuFQJYggyJi5EPgsVWwI5N7jyYfwf0yB0gfzoci/WUUgbLeUciO8tqDefP9CnaefNg9kFcIWvBMyZajYHX0286/Qi8Uif8S1tLd3FFcqUjlQoYZ8dhGbtC0cPUYPltBJNlji7OMas1F2GVCmZ3ShN4Mc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722420641; c=relaxed/simple;
-	bh=mcoK9LmrP202DQiIDF28yqP/Wm3eTVzX8tzTOTUmoAY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=rTYvG4pew7BtsLvdfaKUEyxWJujjnL7vAZfDw7dPivBj0soGzGYFZxqeGmx3qQRermKe0a2ENEQnratChjOj3llgvZOsi9zO7TZPbE6vplEatWA7UzZc1TNTk7jWcrvq1IEBT2RXg9fummm32+ohoxAxzIthZbWIYJ31ndNHF1o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gaeC24Gt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722423974; c=relaxed/simple;
+	bh=/rfAcMxmb9Inbh+7ExU4M83JIezLRz9H62MSXp9vrNo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=tDGzAYoOk6cXBqVuhaUjUlwlMuMxE+lj+/kuFIBgEvJJRX/lWl1sPSDBYM4zWE4w5agR/CEkT83iIm3jmPPvHF38T+eG5lmmtYlAnCAGbecgYkuHixVQjrAUOL7cI9jZvvE5jlSC0k+nvjbZL3ZNKVbxUaBBFitU3OQ8+OeWiHM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qF7LA2TX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gaeC24Gt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA592C4AF0C;
-	Wed, 31 Jul 2024 10:10:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qF7LA2TX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 21661C116B1;
+	Wed, 31 Jul 2024 11:06:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722420640;
-	bh=mcoK9LmrP202DQiIDF28yqP/Wm3eTVzX8tzTOTUmoAY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=gaeC24GtLZmFaiiW6aeo7wP7A6N+qxppCwVG83UKh8Rr4zdkhY4uPiMYBEHUFLZ6k
-	 KOwijVh/QE1jdLB5YXys5gWaBe6HdtS+75FRU0kQ1ILb0kLofVxsO6MnX3z3bn28pL
-	 56lhn2fkDS+cfMOWsQYtKbl9l9XFkm2wrW82mhg/ldF7RWCJ44JHRDqWrjbgtDgCsQ
-	 GjCl//Ssq2JmguQBbYUcHQPY7n2hGg0vsyR/Pseqdekernxs1fKT0Qc/CxDgHHW3Em
-	 fzRdqVoT+rHvwHL0GRPU93YiTD0EdmB5UzcI8nh7zhhmSKgPcXIRwJ1lnOn0+9lWq1
-	 LyPfSrFMvOEHQ==
+	s=k20201202; t=1722423973;
+	bh=/rfAcMxmb9Inbh+7ExU4M83JIezLRz9H62MSXp9vrNo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=qF7LA2TXrhtxHz0qspjrfYX0o76b0TLfCxZ1BeLRgJ9RURp5+BUXm3nDornSLbPnM
+	 sJF2LyRn4bgB8gmDsbBtkZU2qCmOxDlzQg97V5hFZGBySFA2uBmW/eovCMH8jftrB6
+	 n3XtTwLxaxl3Ft+U6zwBnY2iFCezA68b/eTFKhxdgDpsRTOz4AOaWCeuq/YziGOARp
+	 TCPu09ZYSnpi/BCfD7w+5MwDi9+ciB341xNPPc0GM0Lk9AytBprMGcExzzL1dTBs1Q
+	 DGTVGNpyp65/Sazlg8x+bup5uJmHDntFiPiedh1piJk3t8AWObSxlu6x3EgikBskz5
+	 RXbmfv+IlzgSw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 31 Jul 2024 12:10:15 +0200
-Subject: [PATCH net 2/2] mptcp: fix duplicate data handling
+Subject: [PATCH net 0/7] mptcp: fix endpoints with 'signal' and 'subflow'
+ flags
+Date: Wed, 31 Jul 2024 13:05:52 +0200
+Message-Id: <20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-0-c8a9b036493b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,89 +38,82 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240731-upstream-net-20240731-mptcp-dup-data-v1-2-bde833fa628a@kernel.org>
-References: <20240731-upstream-net-20240731-mptcp-dup-data-v1-0-bde833fa628a@kernel.org>
-In-Reply-To: <20240731-upstream-net-20240731-mptcp-dup-data-v1-0-bde833fa628a@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJAaqmYC/z2NQQ6CMBAAv0L27CYtohK/YjyUdoubwNJ0i5IQ/
+ m7jwePMYWYHpcykcG92yPRm5UUq2FMD/uVkJORQGVrTduZ2trgmLZncjEIF/3ZOxSckCQl1HeK
+ 0fFB5FDeh7W24dsbHC/VQqylT5O13fEBtwPM4vt5JEOuGAAAA
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
 Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2111; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JqfstQqq0JRT5Fp57RkyUDj9RgOgTzdxW2LL9v2v+s8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmqg2YV5OWiY+8t9DVjxlTKa83MnV9kq+4PFviI
- t0agQiGkHOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqoNmAAKCRD2t4JPQmmg
- cyXWEADhwq48kgatRefVmpcR3KOOixaGnWRGkEgu6ShLL6BMyOxwfJDz936aqPDmP3JpZa8lf4l
- H/ZfHIYe1By2iPkmdsRxhZPxkzDtPnwzh7NV7ul+NVsapn2zAOmXTceoQzIUY59y0wT00fFua/n
- y05le07oeC/teIIs/UXCHbLhdbMxsMTpX6yMHO9EzFxjbQtzpR4guridn3uMDGKFYPn6J/R8vkF
- DsFOtcaK3W+PxI9BGZs2OEsaPxzdoEUjp+yFfNM4PyZRZCI8feiYEfsMDF/vrc6qil1T1+NGA+W
- GEWNOW+wT0SSrZQmM+qyS8qKOZ2VROmTTbY7wocgK27mJsQNZvAfndsp2psf6kU93LMddlg5tfH
- GtzHqN27vXEWYdc86gdWSWeTu1YNmn0r7UP/ZnaDx8bnmTSUU6k5M1VjBQRFpBf+icGHJ0BNWPh
- pAcpJ/nxJg6J8x43GRd6rD81rXmXSHC1AUXIitwQAvxmZjhWm9airIan2krBMVW02S6JLMpy2TP
- oK/PGtcIEhpSO0FgHAs02we/SEPlKcKcMQxNMDhUW33QiBoy2tpveuHs0AyZ0ej08yLMgYsfjVR
- 9DDHpyzbL0jj+y1bAfceQuscebPMAD8f/AKabhiyfzhyFzsGMqzJz2QYxPe48BB9Wk4dxrCVwd+
- zoriRgz0kLCD5zg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2643; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=/rfAcMxmb9Inbh+7ExU4M83JIezLRz9H62MSXp9vrNo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmqhqizHzJ45FoScJiCMQ7UFLVRlOv2AdAuCj+x
+ vdgEnTPdlCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqoaogAKCRD2t4JPQmmg
+ cwO9D/9jqHN2oEdo0gttmKyD1a4kT3fCPO1IKQNDrfNuky/PjBx6gIYpyHNeAKHVs3GzN2anlyF
+ pKzYHhOyK0s5hQaOoBraWzCJJ+xE0ChUOUt8K/R8zvUn2PdNocuPGGeXEfrnAe4eaVZLKIPtfwy
+ U5dsNzWpQKHEFNwTwy+6dcwtQXPzYKpEZF2tRXoQl39cLrw6aMryHvJn2Zn5moRnEcsXFtnyOxz
+ dI9G+9XKPwzbGFfz+8Ujru1KJNFkhPwkXh8c7pUE/zH6ZhtFnSXcfjhxKPR0dPizZQWQiMRTX8D
+ 7KfiyiDK1qxkz1CsJIgiHH///JyWUjuiLqvoCQZ8w0Mogr9Dxss+NU3TLSFnskWRa0vaVXq0iX2
+ 3/2BrqLbfafS32XeQ7biX8un0kxORRm82N2gYZdL4n/5c2m6WiRuaLQZcOKM4rh5gbhmc0cYO2E
+ cCQNf1wdqd0o97/3YIIXpiSnq0Yys6zTKSRUQ3VPXSrVuK7Wccp65adYdt36/d1YWEKdFVdIHfs
+ VdYxc86G118tVf5zczzx9nK4BDwF270KUxoljII7P3IotkyUZhWmlRVy9jqL13VZjks/7Kl1cWP
+ JHOfBT9InfKaB1U3+n7f8qJsgPGtdBQDI4tGk4A4zEuN0IDOnXI2qg9KLnhVZFdZMN6kw4aOJSB
+ 8sgTIweTqNIj+bA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Paolo Abeni <pabeni@redhat.com>
+When looking at improving the user experience around the MPTCP endpoints
+setup, I noticed that setting an endpoint with both the 'signal' and the
+'subflow' flags -- as it has been done in the past by users according to
+bug reports we got -- was resulting on only announcing the endpoint, but
+not using it to create subflows: the 'subflow' flag was then ignored.
 
-When a subflow receives and discards duplicate data, the mptcp
-stack assumes that the consumed offset inside the current skb is
-zero.
+My initial thought was to modify IPRoute2 to warn the user when the two
+flags were set, but it doesn't sound normal to ignore one of them. I
+then looked at modifying the kernel not to allow having the two flags
+set, but when discussing about that with Mat, we thought it was maybe
+not ideal to do that, as there might be use-cases, we might break some
+configs. Then I saw it was working before v5.17. So instead, I fixed the
+support on the kernel side (patch 5) using Paolo's suggestion. This also
+includes a fix on the options side (patch 1: for v5.11+), an explicit
+deny of some options combinations (patch 2: for v5.18+), and some
+refactoring (patches 3 and 4) to ease the inclusion of the patch 5.
 
-With multiple subflows receiving data simultaneously such assertion
-does not held true. As a result the subflow-level copied_seq will
-be incorrectly increased and later on the same subflow will observe
-a bad mapping, leading to subflow reset.
+While at it, I added a new selftest (patch 7) to validate this case --
+including a modification of the chk_add_nr helper to inverse the sides
+were the counters are checked (patch 6) -- and allowed ADD_ADDR echo
+just after the MP_JOIN 3WHS.
 
-Address the issue taking into account the skb consumed offset in
-mptcp_subflow_discard_data().
+The selftests modification have the same Fixes tag as the previous
+commit, but no 'Cc: Stable': if the backport can work, that's good --
+but it still need to be verified by running the selftests -- if not, no
+need to worry, many CIs will use the selftests from the last stable
+version to validate previous stable releases.
 
-Fixes: 04e4cd4f7ca4 ("mptcp: cleanup mptcp_subflow_discard_data()")
-Cc: stable@vger.kernel.org
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/501
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/subflow.c | 16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+Matthieu Baerts (NGI0) (7):
+      mptcp: fully established after ADD_ADDR echo on MPJ
+      mptcp: pm: deny endp with signal + subflow + port
+      mptcp: pm: reduce indentation blocks
+      mptcp: pm: don't try to create sf if alloc failed
+      mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set
+      selftests: mptcp: join: ability to invert ADD_ADDR check
+      selftests: mptcp: join: test both signal & subflow
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 0e4b5bfbeaa1..a21c712350c3 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1230,14 +1230,22 @@ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *skb,
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	bool fin = TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN;
--	u32 incr;
-+	struct tcp_sock *tp = tcp_sk(ssk);
-+	u32 offset, incr, avail_len;
- 
--	incr = limit >= skb->len ? skb->len + fin : limit;
-+	offset = tp->copied_seq - TCP_SKB_CB(skb)->seq;
-+	if (WARN_ON_ONCE(offset > skb->len))
-+		goto out;
- 
--	pr_debug("discarding=%d len=%d seq=%d", incr, skb->len,
--		 subflow->map_subflow_seq);
-+	avail_len = skb->len - offset;
-+	incr = limit >= avail_len ? avail_len + fin : limit;
-+
-+	pr_debug("discarding=%d len=%d offset=%d seq=%d", incr, skb->len,
-+		 offset, subflow->map_subflow_seq);
- 	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DUPDATA);
- 	tcp_sk(ssk)->copied_seq += incr;
-+
-+out:
- 	if (!before(tcp_sk(ssk)->copied_seq, TCP_SKB_CB(skb)->end_seq))
- 		sk_eat_skb(ssk, skb);
- 	if (mptcp_subflow_get_map_offset(subflow) >= subflow->map_data_len)
+ net/mptcp/options.c                             |  3 +-
+ net/mptcp/pm_netlink.c                          | 47 +++++++++++++--------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 55 ++++++++++++++++++-------
+ 3 files changed, 73 insertions(+), 32 deletions(-)
+---
+base-commit: 0bf50cead4c4710d9f704778c32ab8af47ddf070
+change-id: 20240731-upstream-net-20240731-mptcp-endp-subflow-signal-181d640cf5e8
 
+Best regards,
 -- 
-2.45.2
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
