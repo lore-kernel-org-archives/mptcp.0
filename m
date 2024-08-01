@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB20C1EB4BD
-	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 10:03:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC36B1EB4BD
+	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 10:03:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722506621; cv=none; b=e8dUmsvaOt8EWOwhtoO3F58qsEVh1Kw5gCqHln7hIBoCi34f0DQl518d55BBKL6fPqq+e4JCoKziec9rjZdAs/puzAODrvgtd7YRZTxd0TqcR25AE/rgIWZpc371L12m2YG7pEbS2TlHvdpQeRc+4lFhFfL/9oxqWrbDtHXABIw=
+	t=1722506636; cv=none; b=Rh6WMn1B79vVOGplX2NQuUntsRf+wKKerXvct2AY3TV9BdMr7yvr3j1C8pbhLKHno/+b9p5JGeXK8Z/OG5M7ZSvWBeUl91zmJMPz5fbR/ttu6b0LEa0dZUmKjjN0/gvY3IDW7U6eYTOoPDM+VebwgjLIjR+TuRdm+awwA9WewWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722506621; c=relaxed/simple;
-	bh=kMW+lfBExc8GH67J9cfymmwBvRxZhDhIbe1vrwbc5y8=;
+	s=arc-20240116; t=1722506636; c=relaxed/simple;
+	bh=vqAeZr4lmq1PvfLvyVR5/T1jmTXTfkYL3O2Z8/karIM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nbgYDFyEtAmcS8RRSK32XAmxDXml5xG9wnVo7oTdNwaM8C2kvDsAZhWXf6Ea3XbGhWtUkz8mrXXth5b1YSUIpxchfQeo33UMgc9oXS1VZUyhe5OgQVzf6bOnv/IDn5XS1ze45ZWJqpkkc3nlzup622thMWqTZV9gm8iXs3HhC+c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NpmhQhK8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uXHWJaqAKjidfktcQZZcVEUAoDBKwNOuXRAvMeFul91eB/wqptccYtYeqKzk+ftDA4cZnyoD8IQPCdm73aYGWfa4IhkgHTOXQTDdFY8+BpPtxFefq4BTfFMLwLm1gyglVRCiNiq4V6aVL0nF1/xBV+rXTTHqnhtFSJen+9PigYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcYPCmre; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NpmhQhK8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7E281C32786;
-	Thu,  1 Aug 2024 10:03:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcYPCmre"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76B20C32786;
+	Thu,  1 Aug 2024 10:03:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722506621;
-	bh=kMW+lfBExc8GH67J9cfymmwBvRxZhDhIbe1vrwbc5y8=;
+	s=k20201202; t=1722506636;
+	bh=vqAeZr4lmq1PvfLvyVR5/T1jmTXTfkYL3O2Z8/karIM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NpmhQhK8G9X+QHZwrrY9ASBCuzRHSOrnpU1+qPDMyj8Phs6SWQR2zkGWgijtq2ljt
-	 cCzNVTPVhZXkRK8RnNrPlMk7dizjAbDYqRAVeKqN2tjQpIZ5O5Zt8s8/PRalJxQhYp
-	 HReiBm/xdm0qshjCfeRcjJa2Sa7mzKaVVP+bo/ECBsvQYcKw/Kap+aSsk9bYj3JPz8
-	 3kyPw7WjXLDQhOBlCHN+bdt3gegM3YgVn6SUO/jj+t6WyXqFE36joYFA61elIq0cJ3
-	 9ik/kXaeq94iHAfKAUqiUQWYy5Nq9HOVx8f+LipVp+3MzpJVF+5TkTdycrne9a4TCV
-	 C2pkLGKlu71hw==
-Message-ID: <6fbcd5df-206e-4dfa-86c2-faf30880d24b@kernel.org>
-Date: Thu, 1 Aug 2024 12:03:38 +0200
+	b=JcYPCmre/BNQRvljqMblHd2rGPNFTtfFgNLOhqnN1TG4VBFoMelwIKd8Jt/bywGjn
+	 ZtXi4sgxA7cL5P5Rey3vgbtmW9d3qxT5ihm9r0RtZwDf6ONA0yZ3oprdmNTK1+ER3W
+	 TEh9YjaHkxnSd/Azijiyhfhr9f8tWwvjBWHumrjpicO5Lwo4REIADQkiw5q1mAQmW1
+	 bumuKBgEs4mqSh1nYAo8K43YKE0iSzgWgbOAZWQjHNgfhl11hoLKA7482q+rXGXyzN
+	 xkJSSfPaiaO/bZxoHeOsAN3UUDzI/FIQGUwdt/Z5Q8fFH/5HRP4n0mmz8kfVkCLJ3N
+	 /c0YQYwyfWyYA==
+Message-ID: <395bd999-9099-42d2-8452-2ce22559aaac@kernel.org>
+Date: Thu, 1 Aug 2024 12:03:53 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/4] add io thread mode tests
+Subject: Re: [PATCH mptcp-next 1/4] selftests: mptcp: add cfg_timeo for
+ mptcp_connect
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1722502941.git.tanggeliang@kylinos.cn>
+ <abe63ed463788d59150d7fbf04f6975821f66d08.1722502941.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1722502941.git.tanggeliang@kylinos.cn>
+In-Reply-To: <abe63ed463788d59150d7fbf04f6975821f66d08.1722502941.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,26 +96,22 @@ Hi Geliang,
 On 01/08/2024 11:21, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Related to #487 (send() fails with EAGAIN in blocking IO mode). In the
-> comment of this issue, I added a test named mptcp_eagain_reproducer.c to
-> reproduce these EAGAIN errors. It uses the same thread mode to send and
-> receive data as MPTCP sched BPF selftests (in network_helpers.c).
-> 
-> It looks like this type of data transfer is not covered by MPTCP selftests,
-> so this patchset adds them. The code is all from mptcp_eagain_reproducer.c,
-> just added into mptcp_connect and mptcp_join.
-> 
-> It is helpful to reproduce and solve #487 issue, and can also provide MPTCP
-> stability testing in the future.
+> This patch adds a new helper settimeo(), which comes from BPF selftests
+> network_helpers.c, into MPTCP selftests tool mptcp_connect, to set
+> SO_RCVTIMEO and SO_SNDTIMEO options of the given socket.
 
-Good idea to have this covered!
+Can you add a (very) brief description explaining *why* it is
+interesting to set these options in our tests?
 
-I guess we need to wait for a fix before accepting this series, right?
+(e.g. mention why the 'timeout' command we use when launching
+'mptcp_connect' is not enough)
 
-By chance, did you try to reproduce the issue with packetdrill? That
-might be quicker and more reliable to reproduce the issue, no?
+> Add a new mptcp_connect option "-O" to pass a timeout value and a new
+> cfg cfg_timeo to store this value.
 
-I have some comments, please see my other emails.
+Please also update the 'usage()' helper with this new option.
+
+> Invoke this new helper in sock_connect_mptcp() when cfg_timeo is set.
 
 Cheers,
 Matt
