@@ -1,120 +1,128 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91260198A03
-	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 13:50:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B892C1AAE0B;
+	Thu,  1 Aug 2024 16:39:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722520230; cv=none; b=t/63bbNSZVoQoSTv1l/73fKOPm3wgeI3LWb2Lhi1zWeAosPvTc1HymgHv4N+b8XsnAOekTAmez+Dbeorww+FMV8OKV3do+QztuBacV4BFZ54HgnlcjYOfmztfItbagsxrCocVRex3kq33J2T03ulhKuzGhMXIFJeP44VySOa73Q=
+	t=1722530392; cv=none; b=qABE6Em4JA6VFF3mGv6/tZIkomnBfFhAI5HmLtduSkLGdyPPJL89jfaZrnaK7PjHB/P4V7FXJuMt/ismWoxRieQhOCRHsViVlyqHyYZFF/qvuS/XdT79kjDuX2Dc/DSM9XTkKwSlEydcLhUBDgwM3Ta47f543wpNlJDd6FY4Nqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722520230; c=relaxed/simple;
-	bh=IgH+NvwjfKkdFrXtcSnOqZQA7AWizdlKKc2xFg54jcU=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=j+Ep7D32pXS8XscK0oD3eD/LoqbYhUE+l+LCl7bB14J8fadyffwnSVE98pNl5lJxbzP0efnvj6USQNBaGRRbS217IsTnA7lLuLAS9812Mp3bHv/ipxO3OTEwrQi0MFV+hWUmi+/IvKL45d/YkGnJV3vlgQgxSd4+0Vjs7J7JoDo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KTBufXo6; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722530392; c=relaxed/simple;
+	bh=z+OUMw3kszQuXiJWYi+kU103Bu6R94dW1vaH6eJVHNY=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=o99Wed1Xgdb/V/KzshwJ/Sjh099ZMrOVucoIYgYC5UzDrx/aItYHoO+g/b2cmHM/jP+zmXNb9xx6vlVIER/FgPKFR3tEN9TzMdsvlS9kAPpbRaS4AUoicUiVUkB+utf0dO5s+aMFdvWtPSQ8EQR+oBi5Rku/xkZ+kUo5A7gc5NE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U0wVhZNi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KTBufXo6"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6bb687c3cceso23101316d6.0
-        for <mptcp@lists.linux.dev>; Thu, 01 Aug 2024 06:50:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722520227; x=1723125027; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=T+zX0qTcx9uPVW929BK6dGtj5LM8Am2JSjNJq26mFZs=;
-        b=KTBufXo61vdushWuSrzN2v+rl6RwVu62UHJEnYjBKCFonq3NhQJkf3icflbmKuaWvO
-         FrQZJkWZdKDlrUjm/U/3PqYJc13U+CYc8ygg1SAnYyWSeAFDVgTr7hWWGhOzgCcja16i
-         rQ6dweEWD4f+QpsFcYsd85fENqhhlkCkBD/qguPvqqVx/gFhXhvPeSQBGAICdh7oXho+
-         nRI3msPRi3su14LOcUz0w9XWqlQD0RnUu7NjHJ0wDUtSLfNIfWR1ZOzjyiz5NbgKqSoQ
-         5yrhu/xR+cmlmWgcSrUQ6bjhn7Lr2rEkvSyLmd1JCy0MEUp4+FkhW2dhtVJtSHwV1oO/
-         ZKag==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722520227; x=1723125027;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=T+zX0qTcx9uPVW929BK6dGtj5LM8Am2JSjNJq26mFZs=;
-        b=X5T9FUUl2Z1yR9ganXw3A1sbpW20krXBPuRMq90U67q7TUBgftPKnynUXRSMQ5uce2
-         CTrOz2/Lr2sYN6Z7VQiyGkWoU+FNBAppQe9yZ2BXYfR/D3jVMPR0ePPAtnradLGFBsuu
-         ckcJfkAm8IBdLwFZUHmLERH6wiNrWkjQettlHhVTMjeNKL+McKkOitR3lCXnLPRHsoJH
-         0NRaOz9VnQ/yiH3GW8IOnnl+2gX+9+cfcNr/2l9CFcExZgWp4Z/Xr3S4VBAjggPi/hdq
-         XsP/lD/2kEIKeHwLKNBKQ13FtsExD68c1o7OQGtaRm1IJxfVSUSWLqBKwN8XI/IBQOqk
-         QgHA==
-X-Gm-Message-State: AOJu0Yx8QthDZjm/4vOIzKFKALexZfYlopFkrpxDqFyKFGleCPg0IcmE
-	JDQqjmHruTL9eeVTfAjpj9nDYUcWGx09JSD7UqAuVZ5r2o8SNlf915W6
-X-Google-Smtp-Source: AGHT+IGzdZbh6j823imZv/2E1+vrjNUioWWboRroTm8LY7BbwGgvoizCtoVMF+FjKCXF4YjS015Hig==
-X-Received: by 2002:a05:6214:5d89:b0:6bb:84d9:8f89 with SMTP id 6a1803df08f44-6bb98379d96mr1803926d6.7.1722520227323;
-        Thu, 01 Aug 2024 06:50:27 -0700 (PDT)
-Received: from [127.0.0.1] ([20.161.78.233])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bb3fb0bf4asm85354926d6.139.2024.08.01.06.50.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 01 Aug 2024 06:50:26 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1722517019.git.tanggeliang@kylinos.cn>
-References: <cover.1722517019.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 0/3] skip test if ip mptcp not support
-Message-ID: <d618b50a-e42b-43e4-9a60-3203b65568bd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 01 Aug 2024 13:50:26 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U0wVhZNi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3725CC32786;
+	Thu,  1 Aug 2024 16:39:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722530392;
+	bh=z+OUMw3kszQuXiJWYi+kU103Bu6R94dW1vaH6eJVHNY=;
+	h=From:Date:Subject:To:Cc:From;
+	b=U0wVhZNivzIbekk1qlpUNVthC/NHJhv22WxKKT/qIPu7P6RG35jeVOfrzY6+X720d
+	 6eQXvtCPfxaSp7ax9M7q2xst0stZCq+Z8TbNYpKW5I12yvLHhTFztS2K42cF0QHrty
+	 brFqqil0yAYUs0E/YxmmVwd87RXZ7nkF+NlVA6d0kW6h15yukq5grwZS3EWvCCXV7/
+	 Qcg8MvdmXHrtb9VU+gWEk5sLxwvm6XDhbnbflgmkXUzKVP8Bv/65zBpt/+hC3cXdTn
+	 Tri/+IgF9cjTtPIsEW0Zg6/d0tVsMnOH4h5pjBLJjAVpkPs4pnoQRPnWRJ6hqzYG1i
+	 Vdq2nGDgLp4YQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu, 01 Aug 2024 18:39:46 +0200
+Subject: [PATCH net-next] tcp: limit wake-up for crossed SYN cases with
+ SYN-ACK
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20240801-upstream-net-next-20240801-tcp-limit-wake-up-x-syn-v1-1-3a87f977ad5f@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAFG6q2YC/z2NzQoCMQyEX2XJ2UBbxL9XEQ8hRg26tTRVK8u+u
+ 0HQwxw+ZvhmApOqYrAbJqjyVNN7doiLAfhC+SyoR2dIIS3DJkR8FGtVaMQszdMb/qvGBW86asM
+ XXcWX2NHeGVdJtutIiZgZXFyqnLR/T/fw08Bhnj/x0OWljgAAAA==
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2398; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=z+OUMw3kszQuXiJWYi+kU103Bu6R94dW1vaH6eJVHNY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmq7pUNklrH0I3LPpTeCEtNhkGAyQVY/oEjKZSB
+ Szi+zhb9BqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqu6VAAKCRD2t4JPQmmg
+ c7h8EADIuwPkDv9DQLROtlfzGZHdILnRiTIAKtvNbNrmNPOiYAbjJHBTKtPUXDKyeyJgtNpIB2k
+ iVgJormaxy0lY3fnJaMer/lsUYFgWZ1CCpNJnacRd0PmP8mngCJfpoUka8yEHqbUb2969PdOONR
+ jt5bKEhhTuB02Y+Q6w2Dwd8K5viO/bZ3Tzm9IW6uOETDQ/jAH+xxBCZYu1lZN4TObwhApebEGmI
+ vlvudNKgMWXrE/gJ0dLjBXuFRdbnCIHZYDTBosYBaT2aWCAyZOH8XJx2F3XrRROuzgAbz1Py/Hh
+ RY112CCA9b3JCmwXeES4nGIb7Xe/nby8g64IqMnp0u5RhsaWYrATMInGxaDt946vKAL5uGWGAuL
+ DMB+3yfjakF7FlEtdFUUy5l49WhMxEC1VnUie3DrYsZDzsuYSmm51kd4Ts7hlPSdIJo/cO61ao9
+ YJraw89iQkq6Pnr+5UNbpn4qwb0ynuO4hyUm80kGOKFb59sHllZlP2PpeF8yrZg/kDYaJnO6xCe
+ Z7WfIyUn8Kq3QG1hqs49Lki9VJ6/g+Q0xAkjaFCXcYwGX5j6ekt96id938AinQTY+zMDg0eYdAF
+ Eyi76EHb3wFyTpXTVSGSeWq5OHalK56KVarGMDwvsZNOxR3N2cMtdDs7V0atELTwZZ5PlNh40xd
+ 5CbWYQoUrA859CQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+In TCP_SYN_RECV states, sk->sk_socket will be assigned in case of
+marginal crossed SYN, but also in other cases, e.g.
 
-Thank you for your modifications, that's great!
+ - With TCP Fast Open, if the connection got accept()'ed before
+   receiving the 3rd ACK ;
 
-Our CI did some validations and here is its report:
+ - With MPTCP, when accepting additional subflows to an existing MPTCP
+   connection.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10198995225
+In these cases, the switch to TCP_ESTABLISHED is done when receiving the
+3rd ACK, without the SYN flag then.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d1d49379e03b
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D875915
+To properly restrict the wake-up to crossed SYN cases as expected there,
+it is then required to also limit the check to packets containing the
+SYN-ACK flags.
 
+Without this modification, it looks like the wake-up was not causing any
+visible issue with TFO and MPTCP, apart from not being needed. That's
+why this patch doesn't contain a Cc to stable, and a Fixes tag.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+While at it, the attached comment has also been updated: sk->sk_sleep
+has been removed in 2010, and replaced by sk->sk_wq in commit
+43815482370c ("net: sock_def_readable() and friends RCU conversion").
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes:
+  - This is the same patch as the one suggested earlier in -net as part
+    of another series, but targeting net-next (Eric), and with an
+    updated commit message. The previous version was visible there:
+    https://lore.kernel.org/20240718-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v2-2-d653f85639f6@kernel.org/
+---
+ net/ipv4/tcp_input.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-For more details:
+diff --git a/net/ipv4/tcp_input.c b/net/ipv4/tcp_input.c
+index 454362e359da..b2d2c843ecd2 100644
+--- a/net/ipv4/tcp_input.c
++++ b/net/ipv4/tcp_input.c
+@@ -6797,9 +6797,9 @@ tcp_rcv_state_process(struct sock *sk, struct sk_buff *skb)
+ 
+ 		/* Note, that this wakeup is only for marginal crossed SYN case.
+ 		 * Passively open sockets are not waked up, because
+-		 * sk->sk_sleep == NULL and sk->sk_socket == NULL.
++		 * sk->sk_wq == NULL and sk->sk_socket == NULL.
+ 		 */
+-		if (sk->sk_socket)
++		if (sk->sk_socket && th->syn)
+ 			sk_wake_async(sk, SOCK_WAKE_IO, POLL_OUT);
+ 
+ 		tp->snd_una = TCP_SKB_CB(skb)->ack_seq;
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+---
+base-commit: 743ff02152bc46bb4a2f2a49ec891c87eba6ab5b
+change-id: 20240801-upstream-net-next-20240801-tcp-limit-wake-up-x-syn-62e971a2accc
 
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
