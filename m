@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5263136E37
-	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 01:34:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8F5B1A3BC4
+	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 01:36:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722476051; cv=none; b=ovbz/qLOcBncG4xoTjFKmZ2fGUF9d6Z7m1CIQKSqYst8ja+uF873xxQMoTE4rVrUiOqifTQQpvYHNtaiJkBAcwepZQcKm05xb2raimZ8/BIcBobWwF6/CFlgRby9KF4AH6HuFUx7otlOvjOeuvSrT3wky7oFaHWmqWwgP1XciSs=
+	t=1722476182; cv=none; b=ZmRjBEc95XYgldZvRwWxg0OOMbXNeolUey3Kyn22Ll6QuBJ2USRtBRAMhljt+hFZKfhf9Z1iILZ2Jc5EwwsdDWIf8tgUdHaYYkqIs2qcoiNnBiR41HilayWRZ7EQ0Q92Af4x9LCqQLdbBg2g/zazI/KX9KK3JmwJMTIfIwlHxWM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722476051; c=relaxed/simple;
+	s=arc-20240116; t=1722476182; c=relaxed/simple;
 	bh=DiShS/tue8JytDDXhpozuGkvzimHyHWOHEJ/DMM+j5M=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=I9u9+nAwUARveO2EFSAi0aL6ndT34nFCp16JGHkRluA0JA3sEnmpkE9mYfqbZKOLgmrstHYvlI8bXNawu3GXdWcrHLdFLcNvRDv+SOWWZkxYcwIkVpXfoLjAagqbA33gkN6TI0ykW1y8Pc+5TbIQNpjfi2oHr1tLqtdgVnZXE7o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=euYQmEEq; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=bDF8gmHhJ3+O0VwPdOw4f26xj+uxIJ6BECwlM0x9E2O5zJnutWbk7MMX0zYp2XhoYyb+eWHY5dstZDcRc/toCVVg2zegFRPEOMmZOP+IFfmSsYliLipJz1A1QzEa6BkjM0gbtmp8MACpv65a0F+sCu5GkMDetMs0vyugdgomcwk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3ieBl75; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="euYQmEEq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56A21C116B1;
-	Thu,  1 Aug 2024 01:34:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3ieBl75"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B924C116B1;
+	Thu,  1 Aug 2024 01:36:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722476051;
+	s=k20201202; t=1722476182;
 	bh=DiShS/tue8JytDDXhpozuGkvzimHyHWOHEJ/DMM+j5M=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=euYQmEEq1XtvvcbpwYJS7PyLD6ZwaIi56+2emWJaJNXDbBa3eiLJmgBS2O7ijAnXE
-	 VB5YMduZQ2SZ8zwbA1JVwl0BCiVPPyB6YDUUjxrKlMVgmubi4BFZeAA4hbgLyUrvYD
-	 CVl/YZ4uh6NEaQqE4A6so24pNyWPYsPwJkKeat1sPPyxuXP3Dj6ez37cMBUXCo0GgQ
-	 AxPkGjlomYbw0fgZ8RhgAqdRuYkcp+wkisNZpXhpX6ee8LPg1koBMWx5JJh0qURGPI
-	 5/7yh9U5zmlJ0t0o3IQ/CakijGdJtxLMXdz8GvEDO/72eGOl6vGFJ/Mwapu8WSaGcj
-	 nz39bnijUTuFw==
-Message-ID: <71b96aa39bb4830c01f6292c99d5c42ea4d86005.camel@kernel.org>
+	b=W3ieBl75nQCdit4goZptp6kxbYYAl0GD26feSZwnpded8fNi+2mQieqtjmq3PejZJ
+	 SD2ABnNb/TAVJOITCUc+rAjWr6YRPe0BpEp4TCGZjoLWJvzeV4LHVKUxZ0CuMAU4HN
+	 gQwLbUx4fffGHQpBNS8ViKxbIRbPfjwYe/vrIEfrYAtGidU9v1PST3qq/7bcOUH8ZA
+	 Y9dWNrDkayOjz4J351diQSxZGtUGpCPpPkEMqENw8ABV38CR2eyn64hVz6jGmH6ALM
+	 96mJ/hrwG55VE3qwBCCUq6sMCeJ72AUWD4pRVlSxaPXZxs85DT/tjalNw08UmdT+7i
+	 aizCrSSAsrONw==
+Message-ID: <8494622fb0378abf6f83964f72bb752f57dc0292.camel@kernel.org>
 Subject: Re: [PATCH mptcp-next v2 2/2] selftests: mptcp: join: validate MPJ
  SYN TX MIB counters
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Thu, 01 Aug 2024 09:34:06 +0800
+Date: Thu, 01 Aug 2024 09:36:16 +0800
 In-Reply-To: <9a05b63f-5f09-4a46-9c41-5d9c0a0d5318@kernel.org>
 References: <20240729-mptcp-join-tx-mib-v2-0-8ace70fd407a@kernel.org>
 	 <20240729-mptcp-join-tx-mib-v2-2-8ace70fd407a@kernel.org>
