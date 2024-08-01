@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FDE22AD25
-	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 10:05:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 102242AD25
+	for <mptcp@lists.linux.dev>; Thu,  1 Aug 2024 10:05:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722506703; cv=none; b=sWIzLDPxWplzUT9kGR1RiWsTMP2JiT3qWyeQI4pDmYWE/IHgBXzBR7c4JiUwvsu2gcE24bKKkVxqPDhD4aN0SGYvCSjNXQgq5hXfaA5cm3Towcz2bvQtkRrm+tTHwMxHj+R/+OIf8rRGhhKMTRnxN3DD3miPKzw3W+g77m6yKt4=
+	t=1722506718; cv=none; b=ss1W+p+8lp0WOOUXVUjQORGjIg0S2xWBmjGpkrIiKMKnyp9zrTc6IV+9K75Heei+pxdddkSbGW2qzgkhWa3f3oKUcQPKJgoIRnLd5bTnckAkllXGVa9G0p/a/+0lseNqc6YO/2jGVxjGMolIGjXYYqJc9PfvWVj7p+niPBvi6z0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722506703; c=relaxed/simple;
-	bh=bkovePIc6+8YQ0sx4OLcataH/ZkEES09xEkcJLDfX0M=;
+	s=arc-20240116; t=1722506718; c=relaxed/simple;
+	bh=w9hem0hY76FIz2/wyQCnez9qI0tko0iEKalv+X0fI5w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ktGqDPtV5FL/LMQBnqId0gqad0vrdMwKEXzedL5+FOa61aPmfKJpHhDv7D/BoR2TOOgnVsz6fbcSSg2hMzcsBZXhBt/vUL+sP+2THN4DscrKGdUHERraCn2Ficr2oYCRhBCf7I2tL+sbIJnplroLbutEp6hclZgBCFU1admob+s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o5Zs0K7c; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Ujp2JwxAmwE37s1X+yukgUEJKxQZRSjcxxoA0c/WYJU9r862tK4fWAExoknvDZqH6dk4YfXoKRTWpsNaGA3x4VA8CTuya4bX5EQECO8jsTlYSScbuPLDgpbbnBlIcbQLVYmjW+pC9jq/Z+P7Sln/vGLlkpfTHS7K1LlW5FLLV3M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmK8UbXI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o5Zs0K7c"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43AEEC32786;
-	Thu,  1 Aug 2024 10:05:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmK8UbXI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B464C32786;
+	Thu,  1 Aug 2024 10:05:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722506703;
-	bh=bkovePIc6+8YQ0sx4OLcataH/ZkEES09xEkcJLDfX0M=;
+	s=k20201202; t=1722506717;
+	bh=w9hem0hY76FIz2/wyQCnez9qI0tko0iEKalv+X0fI5w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o5Zs0K7cxJHdXQbhABwDKfieQi1OAgOtlRn5q5CC+NYKNN5RycApKagAkHo629ye/
-	 sTcQiLohe4GveqUP4tDZCB/A1aUb7k4qIyheL3wIn0LJa1d4EgKfcHd13mB6Lj4hRq
-	 pDzHyAIBOSH42vDBKFVB5SQ2/Zf9zZ2iEb95NuextSbN+/RdcO5mIUCWXGoKw7/829
-	 YFkraPgc1EC06hbP/tJ2rCLnmD+uHEvfXOGd5IpFXrCo4/a8MXCZCxFnV41koJxhf7
-	 zhn8UIjcPYmvnlNOzlzgykEchWzPsgLWcbwNZYupHKNhE8s9Gi8hdWHPpE6lWvR71J
-	 yHgwwXS9L5XGg==
-Message-ID: <ebbfef1f-e21c-4fbf-b7e8-ff30f62e45c3@kernel.org>
-Date: Thu, 1 Aug 2024 12:05:00 +0200
+	b=UmK8UbXIogzWddOAmtGWWrZsxpiQOTF+kEdPaJpDQdJc5eutU6TtqP/V+xq6K/+J1
+	 eYfGlYlHpb8DlkkaNFfcOfu5Uhok39Of9QfigM7yow7MvrHDtXAyr9UEWhMXa8HfnQ
+	 4Qvc1fhLGucGhi2y2MbIXFgDedagUCvkl5CtB3/8LqGQbEXrQkgRhpxJcekc32b9Jh
+	 CzoIFhZ0DZLb+4t6GnbCJW7afNyD/zVlqMN07EsKVBfKPHogDf7MkNFPOWnlSSGzY5
+	 bvtFMdmaQVHgeEnaG7GgC82Zkp6LpzPx2czZtkeg3ygAZMImNPggDs8JM0NVHffZET
+	 Qf4V07KBjYZuw==
+Message-ID: <650b8368-a911-4546-b306-d6f16598e92f@kernel.org>
+Date: Thu, 1 Aug 2024 12:05:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 3/4] selftests: mptcp: enable io thread mode
+Subject: Re: [PATCH mptcp-next 4/4] selftests: mptcp: join: add io thread
+ tests
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1722502941.git.tanggeliang@kylinos.cn>
- <fde5c2d7de9816aab48637225fc2c9a9df94bd20.1722502941.git.tanggeliang@kylinos.cn>
+ <30fbc6cffaf0617640cd1dbb0afd8b056dcab684.1722502941.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fde5c2d7de9816aab48637225fc2c9a9df94bd20.1722502941.git.tanggeliang@kylinos.cn>
+In-Reply-To: <30fbc6cffaf0617640cd1dbb0afd8b056dcab684.1722502941.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,99 +95,83 @@ Hi Geliang,
 
 On 01/08/2024 11:21, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> This patch adds a new parameter "listensock" for the client main_loop()
-> to support io thread mode tests. In it, invoke accept() to get the peer
-> socket and pass it to copyfd_io(), then to copyfd_io_thread().
+> 
+> This io thread mode is used in BPF selftests bpf_tcp_ca and MPTCP, and
+> it is not very stable for MPTCP sched tests. This patch adds them into
+> mptcp_join tests (-T) to make sure this scene is also covered.
 
-Please add the reason why this is needed.
+Do you need to have multiple subflows to reproduce the issue? Can we not
+have this test in mptcp_connect.sh instead?
 
-Also, it is not clear that this will cause the same app to send and
-receives data. Is it really required to reproduce the bug? Can we not do
-the usual client-server thing? e.g.
+For example, would it help to modify the CI to run:
 
   ./mptcp_connect.sh -m thread
 
-Or at least an explicit option.
 
+> 
+> These tests only run in ns1 for 100 times. The failed output looks like:
+> 
+>  001 io thread tests
+>  recv 2884500 expected 10485760
+>  send 8005500 expected 10485760
+>  Failed in thread_ret -11
+>  Test no. 12 failed.
+>        syn                        [FAIL] got 12 JOIN[s] syn expected 100
+>        synack                     [ OK ]
+>        ack                        [FAIL] got 12 JOIN[s] ack expected 100
+> 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  .../selftests/net/mptcp/mptcp_connect.c       | 25 ++++++++++++++++---
->  1 file changed, 21 insertions(+), 4 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 477969ba9653..bd61cf203501 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1372,9 +1372,9 @@ void xdisconnect(int fd, int addrlen)
->  		xerror("can't disconnect: %d", errno);
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 01c1e0871aca..ecba07aac776 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3663,6 +3663,24 @@ endpoint_tests()
+>  	fi
 >  }
 >  
-> -int main_loop(void)
-> +int main_loop(int listensock)
+> +io_thread_tests()
+> +{
+> +	if reset "io thread tests"; then
+> +		local nr=0 max=100
+> +		mptcp_lib_pm_nl_set_limits $ns1 8 8
+> +		mptcp_lib_pm_nl_add_endpoint $ns1 10.0.2.1 flags subflow
+> +		while [ $nr -lt $max ]; do
+> +			nr=$((nr + 1))
+> +			ip netns exec $ns1 ./mptcp_connect -l 10.0.1.1 -m "thread" -O 3000
+
+When you read this, it doesn't look obvious it is going to send and
+receive data with itself. Can we not have a client and server? If not,
+at least an explicit option, not making '-m "thread"' doing that.
+
+> +			if [ $? -ne 0 ]; then
+
+Shellcheck will not like that I guess:
+
+  if ! ip netns exec (...); then
+
+> +				echo "Test no. $nr failed."
+> +				break;
+> +			fi
+> +		done
+> +		chk_join_nr $max 0 $max
+> +	fi
+> +}
+> +
+>  # [$1: error message]
+>  usage()
 >  {
-> -	int fd = 0, ret, fd_in = 0;
-> +	int fd = 0, ret, fd_in = 0, peerfd = 1;
->  	struct addrinfo *peer;
->  	struct wstate winfo;
+> @@ -3711,6 +3729,7 @@ all_tests_sorted=(
+>  	F@fail_tests
+>  	u@userspace_tests
+>  	I@endpoint_tests
+> +	T@io_thread_tests
+>  )
 >  
-> @@ -1389,6 +1389,19 @@ int main_loop(void)
->  	if (fd < 0)
->  		return 2;
->  
-> +	if (cfg_mode == CFG_MODE_THREAD &&
-> +	    listensock >= 0) {
-
-(detail: can it not go to the previous line?)
-
-> +		peerfd = accept(listensock, NULL, NULL);
-> +		while (peerfd == -1) {
-> +			if (errno == EINTR)
-> +				continue;
-
-Mmh, do you not need to call 'accept()' again?
-
-> +			return -errno;
-> +		}
-> +
-> +		if (cfg_timeo)
-> +			settimeo(peerfd, cfg_timeo);
-> +	}
-> +
->  again:
->  	check_getpeername_connect(fd);
->  
-> @@ -1407,7 +1420,7 @@ int main_loop(void)
->  			xerror("can't open %s:%d", cfg_input, errno);
->  	}
->  
-> -	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
-> +	ret = copyfd_io(fd_in, fd, peerfd, 0, &winfo);
->  	if (ret)
->  		return ret;
->  
-> @@ -1430,6 +1443,8 @@ int main_loop(void)
->  		close(fd);
->  	}
->  
-> +	if (listensock >= 0)
-> +		close(listensock);
->  	return 0;
->  }
->  
-> @@ -1630,9 +1645,11 @@ int main(int argc, char *argv[])
->  			set_mark(fd, cfg_mark);
->  		if (cfg_cmsg_types.cmsg_enabled)
->  			apply_cmsg_types(fd, &cfg_cmsg_types);
-> +		if (cfg_mode == CFG_MODE_THREAD)
-> +			return main_loop(fd);
->  
->  		return main_loop_s(fd);
->  	}
->  
-> -	return main_loop();
-> +	return main_loop(-1);
->  }
+>  all_tests_args=""
 
 Cheers,
 Matt
