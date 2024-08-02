@@ -1,113 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EA71537A9
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 17:52:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B11E1AE029
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 18:17:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722621158; cv=none; b=kJEMCJVvo7MZxd6xM3nsaQcJGIoK4tVq7xSNPSenuwzlAR/iCyXRTg+mk2R26D6xSEgzVlC7hXjZp15QvReHUHn42LR/RTGGHiMov0w4HmCnwc5ow/lJBYEbX3SwosC4WwmOaA6VbeEOfojNxu4JIiZRYklcL+VYePFu63aY0Qo=
+	t=1722622669; cv=none; b=T5Nt7ofl0ouF25TWY0GK/GgGDk/ybLryOezxQjfCxIH2o4m4pFyU2q33ShgxdVHnbjiOljuYp+X4pMtCdtgg5sxNY5cyeQR7ekRUx8FUeZLhLMKcOI/lYR0LLYVPyZqyvaa0nvi7RN39Gz4vs6hZhmyIWUAl8paq8TsVj8ZaWSU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722621158; c=relaxed/simple;
-	bh=pbg6mBhx/Yd1jZSe8IeKUJt/mWyDRtQD2aYkzQTDmiI=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=uW5q2Rt3pWxPUSBUInKHq9Lzc3cRih7LtCa3k7Y1YwZEFxnD7+kd9SF4xwE7Xt388opQZGveI2t2nu/Fxgnbovpxpe691JeN+O15WV+/41QZnGq4B7bw63JgwMsCpmwOiWl1SZuLtLor4O/H+VE5wM5huH1H/Irx1opHwmMpZps=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpqB0NBt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722622669; c=relaxed/simple;
+	bh=2HLs2UFid0n41HZ+uC61TQTSim+hm2P4jmSj6TSjmmU=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UXhqdTuQ9TUhar27CHtu8yylYcj65o3JYvEWnBMcbhIMdkdA+MsZLxPC2VKZy5pUx1pPSQxKBKCdmuxW+sZDw9nqx5vMmu644+pt9tM8yBtAxSu+WyIm9YVp7uyVvir72ojSn5hi6enq9GY9W8FajukArlm0QZCucMvLGpzom/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I9/ybg+H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpqB0NBt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F7F0C32782
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 17:52:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I9/ybg+H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1DA9C32782;
+	Fri,  2 Aug 2024 18:17:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722621157;
-	bh=pbg6mBhx/Yd1jZSe8IeKUJt/mWyDRtQD2aYkzQTDmiI=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=ZpqB0NBtT/s9onTHPFluCX+CW5k9s2wIG/9KKyFiiUVvYreaeSNCqKg3UOcBIQsE9
-	 9zKyi1Nl4S40gvRBB9o8g+XR/rbomDRnp6fSid3ZJqHPX/SGc7kJ5WCn1Snrlb22Ul
-	 o1vuA/BI/pNFW3arIiAjxmX8qEG4kWj6O7j9OMsT4a5r4ma9CCzlnnFF0u88rNOwb8
-	 +dfih0Mfd2t4L40bZUSqX9mj98uOfRVsfqaAjU0OdJszhR4JV6F6vc7RrPjSE0r+yR
-	 oOLYMX7xcDYisKepOMSjMcHZVM4ZYw4DyVTpu2FHQPW7xxj5WA/CBzQj9T5a8fSC51
-	 J0CfV/cvEHpmw==
-Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6659e81bc68so76920397b3.0
-        for <mptcp@lists.linux.dev>; Fri, 02 Aug 2024 10:52:37 -0700 (PDT)
-X-Gm-Message-State: AOJu0YybEjhbzo1ZFH9B9x5T0kwdDsg3SMjFAo3JgK7QZC7pUo1+pODx
-	o1xgOEdmPvNndzvz2SRhm7CGSOGFp2TRYbMMy4DSgnnG681GdaDoifItJ5QxZ5vzFQdQ/Oyv+at
-	kB960MzD6eRtDrE3bX1D3rI+fEA97svkN6r5Z
-X-Google-Smtp-Source: AGHT+IGixkNPPtSEF1h224smgOxI+0T0It06aerZoOJT8x3F07ApyzYy8kw8XsQU8uKu3nWlv8G5x7/CFn8cE5wdBSY=
-X-Received: by 2002:a0d:f504:0:b0:65f:8afe:9ba6 with SMTP id
- 00721157ae682-689601aa855mr46182097b3.14.1722621156949; Fri, 02 Aug 2024
- 10:52:36 -0700 (PDT)
+	s=k20201202; t=1722622669;
+	bh=2HLs2UFid0n41HZ+uC61TQTSim+hm2P4jmSj6TSjmmU=;
+	h=From:Subject:Date:To:Cc:From;
+	b=I9/ybg+HTcxs2uDCCEeEgQyS1WZEApp0eZ2waiOs3LcAg6d7wrBEp4dm++j7MPrR/
+	 Gj2aEnSvM90z2QnP2rarT7+u9lrxBDMiG1lOevJVCUvQFo63WDvV5EdMgUO4783MkA
+	 rHs/hdED6awyswJNmHjHwf/Th09eYa42nE4hIa3Br52wN5fPed7V4rOBvFnk+IYitF
+	 WaN9fcb73XWrqchDncMj+s9+Zclfkc/K48ZFHYEAjTfR3zqaOkASVBncTNL/NpbDZ2
+	 X6nIZFVw/NQJi/GhMx1CskZRYHzcFwFqmt8XqHuVPBvBfVW9Ox2tu0dyd27R00qBgF
+	 H0E1H/S2l/o0Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v6 00/11] mptcp: pm: more fixes around the ID 0
+Date: Fri, 02 Aug 2024 20:17:37 +0200
+Message-Id: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
- <6806450e-7c7b-8072-0af9-23bac214ec0b@kernel.org>
-In-Reply-To: <6806450e-7c7b-8072-0af9-23bac214ec0b@kernel.org>
-From: Mat Martineau <martineau@kernel.org>
-Date: Fri, 2 Aug 2024 10:52:26 -0700
-X-Gmail-Original-Message-ID: <CABbSpciZfzrTdgQAp9fpKN5EPn7QdRXMCgBoipDQ6EF_u3eWzg@mail.gmail.com>
-Message-ID: <CABbSpciZfzrTdgQAp9fpKN5EPn7QdRXMCgBoipDQ6EF_u3eWzg@mail.gmail.com>
-Subject: Re: [PATCH mptcp-net] selftests: net: lib: kill PIDs before del netns
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMEirWYC/2XOwY7CIBAG4FcxnMV0gKGyp32PjYdSBiVq29CGr
+ DF992WriVWOk/m/f+bORoqBRva1ubNIKYyh7/KgtxvWnpruSDy4PDNRCVVpUfHrMLUDH668SU2
+ 4cI8kDdaWlAKW0RDJh9+l8Ic9sh1N7JBXpzBOfbwtpxIsgWcrfLYm4BW32giHZPfG4veZYkeXX
+ R+PS1cSL18DFl5k71sElNaB11R4ufam8DJ7MtoiGmjJycKrlRei8Cp7QOtdLR3JvSo8rr0uPP7
+ /bwGgdo7I6zc/z/MfgXYuZrgBAAA=
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2242; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2HLs2UFid0n41HZ+uC61TQTSim+hm2P4jmSj6TSjmmU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrSLKmZ7QEsWUgyft6vzYPU7DCh4cpAv279lYB
+ R8+BjY+npmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZq0iygAKCRD2t4JPQmmg
+ c2FYD/wNQ1lstho5KIIjHCjMwyRcBa4iG25ybs9aDopn5HFf6E6uD4bmuP9hXldZLdOzjhP+c+m
+ E+eIJDIaN2ruEvdgCG+HOqnUoBFE03VhFEK6VpW2Aw2OKEZVir4Tq4NJdpgnayx1gEQ/PHlXdNy
+ vL2sYX0YifgIu3RdQKHYDzkupzI5scXKycHcpnc7S+JEgyanyywoMmeqTLwPoos+16zUfBn8d5Q
+ o3ZOkcjqdd4KRxqE7LmtrV/LzfvjQ5ZgMu9sZKEKEl4jWgi4Ab23LfxEcYmkxTmeus6uPU/ZaFy
+ P/O1wpiK4QXYU2yMWJW/Bm4eVrDDqyeOtXMGfb/Lc3/VV9US2v5UqBbUlXyEyKSsfSjvY8/mJJB
+ 97tRZVrVyiw3p68z6ovP9PgSNDgXC2pGMJATUWnFntzVXoLUqA43hdvWBKIWF6z6j/a02ct4RkZ
+ 7wWRmTFPexwjGvfs+HCYct+Xtqs7wOVZz5So5JfqgFavTdByGw2rBKiz+cQDJBdYo+3AyKK4GKT
+ wtSUdN7ddmzqJbOQ4VDAOGMdkgaNQCqn//qsBi9k6+IBWul5iLn+u9P4MW5lXn3szufUrSTUY+t
+ 7pP/9nKfzY6h41HY7C7yIX2L6ta1l4AzXysngqvBKus+yn6wKdx9spzcz64IZArYC4OeU3S3JNB
+ nuFKyYCyZfJGNYA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Fri, Aug 2, 2024 at 10:43=E2=80=AFAM Mat Martineau <martineau@kernel.org=
-> wrote:
->
-> On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
->
-> > When deleting netns, it is possible to still have some tasks running,
-> > e.g. background tasks like tcpdump running in the background, not
-> > stopped because the test has been interrupted.
-> >
-> > Before deleting the netns, it is then safer to kill all attached PIDs,
-> > if any. That should reduce some noises after the end of some tests, and
-> > help with the debugging of some issues. That's why this modification is
-> > seen as a "fix".
-> >
-> > Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
-> > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > ---
-> > tools/testing/selftests/net/lib.sh | 1 +
-> > 1 file changed, 1 insertion(+)
-> >
->
-> Sounds like a good idea to me:
->
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+The two first patches are some small improvements for previous patches
+that are already in our tree, but not sent to netdev yet.
 
-Oops, it's in the net/ lib, not net/mptcp! I should have said:
+Then we have a fix to send a RM_ADDR with the correct ID 0, instead of
+using the ID of the global endpoint. The test that is linked to that
+doesn't check if the ID being sent is 0, but we can see the reaction of
+the other peer if it closes the connection or not.
 
-Acked-by: Mat Martineau <martineau@kernel.org>
+The next fix is to correctly reset the ID corresponding to the initial
+address: to avoid some confusion, or not to send the wrong ID if it is
+re-used by another address later on.
 
->
->
-> > diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftes=
-ts/net/lib.sh
-> > index d0219032f773..8ee4489238ca 100644
-> > --- a/tools/testing/selftests/net/lib.sh
-> > +++ b/tools/testing/selftests/net/lib.sh
-> > @@ -146,6 +146,7 @@ cleanup_ns()
-> >
-> >       for ns in "$@"; do
-> >               [ -z "${ns}" ] && continue
-> > +             ip netns pids "${ns}" 2> /dev/null | xargs -r kill || tru=
-e
-> >               ip netns delete "${ns}" &> /dev/null || true
-> >               if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -vq=
- "^$ns$" &> /dev/null; then
-> >                       echo "Warn: Failed to remove namespace $ns"
-> >
-> > ---
-> > base-commit: 3b0e1975962a388844508be0b3e61e759837fa3e
-> > change-id: 20240802-selftests-net-lib-cleanup-kill-f546a233572e
-> >
-> > Best regards,
-> > --
-> > Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >
-> >
-> >
+That leaded to two extra fix: sending an ACK on an active subflow, and
+allowing to create a new subflow if the subflow was not closed: that's
+because when the RM_ADDR was not correct, the other peer was not closing
+the expected subflow, and the connection ended up being half closed.
+This last issue is fixed by the next and last fix of the series.
+
+The last patch is not for -net. Something that sounds better to do.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (11):
+      Squash to "mptcp: pm: re-using ID of unused removed ADD_ADDR"
+      Squash to "mptcp: pm: fullmesh: select the right ID later"
+      mptcp: pm: fix RM_ADDR ID for the initial subflow
+      selftests: mptcp: join: check removing ID 0 endpoint
+      mptcp: pm: send ACK on an active subflow
+      mptcp: pm: skip connecting to already established sf
+      mptcp: pm: reset MPC endp ID when re-added
+      selftests: mptcp: join: check re-adding init endp with != id
+      mptcp: close subflow when receiving TCP+FIN
+      selftests: mptcp: join: cannot rm sf if closed
+      mptcp: pm: send ACK on non stale subflows
+
+ net/mptcp/pm_netlink.c                          | 72 ++++++++++++++-----------
+ net/mptcp/protocol.c                            |  5 +-
+ net/mptcp/subflow.c                             |  8 ++-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 49 ++++++++++-------
+ 4 files changed, 81 insertions(+), 53 deletions(-)
+---
+base-commit: 2b058d91b96082b282ab2b5bd2dbc7abdd28bacc
+change-id: 20240620-mptcp-pm-avail-f5e3957be441
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
