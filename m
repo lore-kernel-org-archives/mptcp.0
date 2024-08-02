@@ -1,123 +1,91 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019C11F61C
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 15:06:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5C6B1AE024
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 17:43:40 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722611177; cv=none; b=lW0VJa0QBuu5HGa+K/tpOe/IRVo8nH2spzFZtKTqII4NvfCpRAi9Sft5D+FnytyZAKRWubfhUD9mqqTncgf1syQ9vYhunjGfpC4iFyb1G0hzAx2AjwuQdMWUYVGcl9wCnDGofCMVaZbgcT13cNTeE6rLDjIz1vmadd+DLzeMz8M=
+	t=1722620620; cv=none; b=KBFfxiI2tCTbADeFsvqgITM7bkjlGw2SWL2pAzZjoWUcRVoFTVq8JlCJbAQ8ohqToJV/EZESZDOpGJVIBRaSlR5eSz1yYW8bYzovEyd1mbuR1GTMC9Thxh1EspUgVzodeGp1QmMdenkTswFzqaHJdjnz/7Itgn8U6RMdC1XawpA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722611177; c=relaxed/simple;
-	bh=fOQJISY1q91ASva5rF7vjN81OwUlprmsJRoX1+HIMV8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=uOAjBXqbMvax8t6jqFLHbDHYIFLlDL2Ex0Sh3NJ0Q+hGeIxUxRK23aUKRWYrNM+mhqLi8SnaVnELaXVT87963vmDJMSWVYaVgAjZFqYCjJbeaU7yZ5sldlZJt1vV/aAJ3y6+jNhI6CZsDwmPixm7S+l9Mzx5F7y9aVBIiPD8ekE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fP0i4Oa/; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722620620; c=relaxed/simple;
+	bh=h+/KJ377+AWlIu0KFATBHcj4fVco9M9qk/5xzfRmoR0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=kaSFD2zGP/onszS9KuuZL3qSNq2BK5GhIu5J0AOGfqRmUkxsrslEIcY/ws8AqDfHYaMB2szJvnepowV0vkDlI9ixkgXkc/zwLMp0VAUeAD9STmy98EbJXNXGDIVgE2U4V2YiLi7fNXIL3g6+5bYtl8yPzqOkxEkaSmofZfCXSpw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MVjEnGvi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP0i4Oa/"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ff4fa918afso15323195ad.1
-        for <mptcp@lists.linux.dev>; Fri, 02 Aug 2024 08:06:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722611175; x=1723215975; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=EXCDQCfXSU1SmDgGr+3yhoPqF3zfcqYkyC331TwxRuY=;
-        b=fP0i4Oa/szK6lTWCGyVCLxNcafjkEgPzxkqoDsGqYC+Qwb4v4PrExZRvHjqSL+IVpt
-         qKBxL1rk8WfPhQbhA3qYY4kSXzVD5CGrnhOLlxIxhSMVo60Dt8Odz6yRj94hXxRR8kox
-         Y/O4cJBlnNAnIPhSftjG1IMKTKL2vparfGLFvGeGWlm8QtYkPJXSIwlxi/p40PKbODJy
-         ZmQCTyIsBJQ0nPteYaaLy1YlGZnv0J/YVrIzRmNco/25kmyv5FcO5dzLbdBBerdriDI1
-         qfFGyFqQDeoTtgRiLyffHMfaAJClJDYwRkYB6FMeyM1k3WNHdXaoFi9e/evfIc54x4mF
-         V5Ow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722611175; x=1723215975;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=EXCDQCfXSU1SmDgGr+3yhoPqF3zfcqYkyC331TwxRuY=;
-        b=D95Ru6M+/ablRmvSXC5+EQEZmGpCR1imizL9a9CMYyQshaVz68mq/jCAS2uad6rkX6
-         K/DwmTKIVJi2kP1Z1Fx8tc5xR8TAb5BqSO/k8lchmIeQFBSekts3e+/l8IkOJUa3xWWE
-         JQc2Ii8Afz1TEnPWvYKhx50ch3CKCpV+rNalxhoqR1hLYUMDc5d35wYHZyJ9UweTID2s
-         w9XbltZt/bV+46lmoy4VtYEqpWh61n2TfrsEDjlOeHgczvBMqFviE89U0ABdEhdUlJLu
-         Wi31yCCOcSvLUe1JJ55A7hHNlPlzBHAHbBMu1kuxBjUiKH2N2XgMa3d6xYILpVFqyy+A
-         87Cw==
-X-Gm-Message-State: AOJu0YwwSBMQ15jHD1bjPhBNRs+ZqkBSOG9AnKcdj76a6mnIiWwGELtX
-	0IWGS9VKZQlCgrX18+jd1HjvYOpMtsZmJj3cJlcetrHBF3owYlE=
-X-Google-Smtp-Source: AGHT+IEfJ+fiqxwfg4YH1mcdq2BJYRkHGP4fpVj0B9RsCuD+jHXkb2+hYRg6RJqDjX8ss/f1jwPKaw==
-X-Received: by 2002:a17:902:d492:b0:1fb:8419:8384 with SMTP id d9443c01a7336-1ff5722d6e9mr47658985ad.13.1722611175132;
-        Fri, 02 Aug 2024 08:06:15 -0700 (PDT)
-Received: from [127.0.0.1] ([52.225.76.28])
-        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b76346b7f5sm1220633a12.21.2024.08.02.08.06.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 02 Aug 2024 08:06:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
-References:
- <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MVjEnGvi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C3A5C32782;
+	Fri,  2 Aug 2024 17:43:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722620620;
+	bh=h+/KJ377+AWlIu0KFATBHcj4fVco9M9qk/5xzfRmoR0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=MVjEnGviy0UjBAB5Y3P22alQM9/fbmoiYugNy6SbfMk6cEPWk++BZHXVIPaFA+GW1
+	 NhLtwspOZieTnGFRYEPr9WdXpbH5mOmd9N3jm96qSTzb4BPNukTa23Wg8wZ6hSbvNy
+	 Amii+Z/4XkDTpxQsKayYFSs4pD8rofjwC1lhejrFBa4cltj8jZkcKheaQpBp14Okar
+	 IEuiBsQTwWug6BO9MsV6+p2UZD5+0qaBQ71mTAAUBYI+R2bZzPjMZBp4f2RL5aCj2R
+	 +RhFg6CUBzbYqgm16fvjr73pfvaSRvVX2H9sofbGGZQ4hAhy5H3s6jBz9/lVGU2CFp
+	 m/tRknWGypVxg==
+Date: Fri, 2 Aug 2024 10:43:39 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
 Subject: Re: [PATCH mptcp-net] selftests: net: lib: kill PIDs before del
  netns
-Message-ID: <8c203f3c-112a-a268-b7bc-39ed7bac7b2d@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 02 Aug 2024 15:06:13 +0000
+In-Reply-To: <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
+Message-ID: <6806450e-7c7b-8072-0af9-23bac214ec0b@kernel.org>
+References: <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> When deleting netns, it is possible to still have some tasks running,
+> e.g. background tasks like tcpdump running in the background, not
+> stopped because the test has been interrupted.
+>
+> Before deleting the netns, it is then safer to kill all attached PIDs,
+> if any. That should reduce some noises after the end of some tests, and
+> help with the debugging of some issues. That's why this modification is
+> seen as a "fix".
+>
+> Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> tools/testing/selftests/net/lib.sh | 1 +
+> 1 file changed, 1 insertion(+)
+>
 
-Our CI did some validations and here is its report:
+Sounds like a good idea to me:
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10217280630
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e914241fbfde
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D876244
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
+> index d0219032f773..8ee4489238ca 100644
+> --- a/tools/testing/selftests/net/lib.sh
+> +++ b/tools/testing/selftests/net/lib.sh
+> @@ -146,6 +146,7 @@ cleanup_ns()
+>
+> 	for ns in "$@"; do
+> 		[ -z "${ns}" ] && continue
+> +		ip netns pids "${ns}" 2> /dev/null | xargs -r kill || true
+> 		ip netns delete "${ns}" &> /dev/null || true
+> 		if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -vq "^$ns$" &> /dev/null; then
+> 			echo "Warn: Failed to remove namespace $ns"
+>
+> ---
+> base-commit: 3b0e1975962a388844508be0b3e61e759837fa3e
+> change-id: 20240802-selftests-net-lib-cleanup-kill-f546a233572e
+>
+> Best regards,
+> -- 
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
