@@ -1,98 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7397F1E4EE3
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 14:09:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 019C11F61C
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 15:06:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722607797; cv=none; b=VK6Uoz0PKCH7Rfl/IlYOmWLiLOg2oyNz6J58pqR2whyjsAvpgrlVqP7UkrabcNjuzyjkhlpUL1sbPwoTy+AmDiWibrpgaiVU21TXFgTxQcYg9m+wjZe5xbIYHTLujQugXp0GYLh4gVPVKUVKEfk4oYdYK+s+D+yX5qC40jl8er8=
+	t=1722611177; cv=none; b=lW0VJa0QBuu5HGa+K/tpOe/IRVo8nH2spzFZtKTqII4NvfCpRAi9Sft5D+FnytyZAKRWubfhUD9mqqTncgf1syQ9vYhunjGfpC4iFyb1G0hzAx2AjwuQdMWUYVGcl9wCnDGofCMVaZbgcT13cNTeE6rLDjIz1vmadd+DLzeMz8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722607797; c=relaxed/simple;
-	bh=FOkAKENWCtHMM3qpGaJj8KkKjpHS7Y3tTHVvysiuFa8=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=B/0TsEnDkm5pddooG/Ds6VPTFYnS6hkf+39Hg5t0oFu9ODZM5KPvGLSIUbZbCA7TO8wTBwhpzMc8QOnQaEBf8Zo5MZRl6tpDWnd7M5PHqXLLan/FGboAtEi7VTBZYGc6eCzu2DFdehoOcSAHxh+E5WzSEE69SfrmjlRwxnIhdmE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gh6/NKuq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722611177; c=relaxed/simple;
+	bh=fOQJISY1q91ASva5rF7vjN81OwUlprmsJRoX1+HIMV8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=uOAjBXqbMvax8t6jqFLHbDHYIFLlDL2Ex0Sh3NJ0Q+hGeIxUxRK23aUKRWYrNM+mhqLi8SnaVnELaXVT87963vmDJMSWVYaVgAjZFqYCjJbeaU7yZ5sldlZJt1vV/aAJ3y6+jNhI6CZsDwmPixm7S+l9Mzx5F7y9aVBIiPD8ekE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fP0i4Oa/; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gh6/NKuq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB541C4AF0A;
-	Fri,  2 Aug 2024 14:09:56 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722607797;
-	bh=FOkAKENWCtHMM3qpGaJj8KkKjpHS7Y3tTHVvysiuFa8=;
-	h=From:Date:Subject:To:Cc:From;
-	b=Gh6/NKuqnb5x+kJH1hRRn308O/ApT/xwJAq1Y/OIZIe2quoD8cntZGN6o2u0nl9i0
-	 HDEMRCZ0KCKXyB+BozLXXOOiEjDTrGvkokG6pvbUDvuKzxtQT/1onmPnl4ZnHCPJKa
-	 BBY/aujgz+kehHt430pfYqhSLPi4ZDRzs5eN0x1c/1dkszozfsCCxnqH3cvBvMb65t
-	 Mk50rqKSYG4enSnMRWk7TyRoEcoC9Arlg8wvIrALXlzaRqkDDzw/yI++TlWuEqa9g6
-	 UYkCpzeFcCeFss5PH0wYJJ+JNS1r/alZqbYTTFvpPQtCcYJhGakrn509wRfZZvaZkw
-	 fL/qw2RXTrVAw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 02 Aug 2024 16:09:48 +0200
-Subject: [PATCH mptcp-net] selftests: net: lib: kill PIDs before del netns
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fP0i4Oa/"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-1ff4fa918afso15323195ad.1
+        for <mptcp@lists.linux.dev>; Fri, 02 Aug 2024 08:06:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1722611175; x=1723215975; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=EXCDQCfXSU1SmDgGr+3yhoPqF3zfcqYkyC331TwxRuY=;
+        b=fP0i4Oa/szK6lTWCGyVCLxNcafjkEgPzxkqoDsGqYC+Qwb4v4PrExZRvHjqSL+IVpt
+         qKBxL1rk8WfPhQbhA3qYY4kSXzVD5CGrnhOLlxIxhSMVo60Dt8Odz6yRj94hXxRR8kox
+         Y/O4cJBlnNAnIPhSftjG1IMKTKL2vparfGLFvGeGWlm8QtYkPJXSIwlxi/p40PKbODJy
+         ZmQCTyIsBJQ0nPteYaaLy1YlGZnv0J/YVrIzRmNco/25kmyv5FcO5dzLbdBBerdriDI1
+         qfFGyFqQDeoTtgRiLyffHMfaAJClJDYwRkYB6FMeyM1k3WNHdXaoFi9e/evfIc54x4mF
+         V5Ow==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1722611175; x=1723215975;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=EXCDQCfXSU1SmDgGr+3yhoPqF3zfcqYkyC331TwxRuY=;
+        b=D95Ru6M+/ablRmvSXC5+EQEZmGpCR1imizL9a9CMYyQshaVz68mq/jCAS2uad6rkX6
+         K/DwmTKIVJi2kP1Z1Fx8tc5xR8TAb5BqSO/k8lchmIeQFBSekts3e+/l8IkOJUa3xWWE
+         JQc2Ii8Afz1TEnPWvYKhx50ch3CKCpV+rNalxhoqR1hLYUMDc5d35wYHZyJ9UweTID2s
+         w9XbltZt/bV+46lmoy4VtYEqpWh61n2TfrsEDjlOeHgczvBMqFviE89U0ABdEhdUlJLu
+         Wi31yCCOcSvLUe1JJ55A7hHNlPlzBHAHbBMu1kuxBjUiKH2N2XgMa3d6xYILpVFqyy+A
+         87Cw==
+X-Gm-Message-State: AOJu0YwwSBMQ15jHD1bjPhBNRs+ZqkBSOG9AnKcdj76a6mnIiWwGELtX
+	0IWGS9VKZQlCgrX18+jd1HjvYOpMtsZmJj3cJlcetrHBF3owYlE=
+X-Google-Smtp-Source: AGHT+IEfJ+fiqxwfg4YH1mcdq2BJYRkHGP4fpVj0B9RsCuD+jHXkb2+hYRg6RJqDjX8ss/f1jwPKaw==
+X-Received: by 2002:a17:902:d492:b0:1fb:8419:8384 with SMTP id d9443c01a7336-1ff5722d6e9mr47658985ad.13.1722611175132;
+        Fri, 02 Aug 2024 08:06:15 -0700 (PDT)
+Received: from [127.0.0.1] ([52.225.76.28])
+        by smtp.gmail.com with ESMTPSA id 41be03b00d2f7-7b76346b7f5sm1220633a12.21.2024.08.02.08.06.14
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 02 Aug 2024 08:06:14 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
+References:
+ <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
+Subject: Re: [PATCH mptcp-net] selftests: net: lib: kill PIDs before del
+ netns
+Message-ID: <8c203f3c-112a-a268-b7bc-39ed7bac7b2d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 02 Aug 2024 15:06:13 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAKvorGYC/x2NQQ7CMAzAvjLlTKSSbYD4CtqhKylEhFI1BU2a9
- ncKRx9sr2BchA3O3QqFP2LySg32uw7C3acbo1wbAzka3MkRGmusbNUwcUWVGYOyT++MD1HFOA4
- HT30/HomhRXLhKMt/cIFnriH/PJi27Qt/DRI0ewAAAA==
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1365; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=FOkAKENWCtHMM3qpGaJj8KkKjpHS7Y3tTHVvysiuFa8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrOi0Rm0wfA/GLNtpP8ZJrPup0LqGGJ28vzeZb
- DHWBubBdOyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZqzotAAKCRD2t4JPQmmg
- c9xgEAC/6z/qafvNDZB/wdmOdf05/Pla+REHBBOkS9rg5TUTXwExFBXDq8YpTjztt1cTvKyeAWm
- aEjc/m4QarVExIT4mE8A25lI/TrqWpyse0W4XUfbS+37Iiwnq2GmGl6084id8LfCyqTaSOFmM8h
- 5/4KXr0QU+oXWo9VY1Z1XpEDa89gB12+0aSDf5r7GwFeqtf8cQ4+OvyWngnZAkE+bO+MKb/yhKS
- XOLzCLHNWiyb3Tl/2f0MSc597uxGOB+cAMh2EyJhlbIxtUx1AhMDiBBqqeWzzCK+bypzBaZ68EI
- /wuW45xC/pYZgISgA6GxLq08amxdjka2tBpdg2Tb7KfkPRSw+URKywAV/8wdlq/5mta9hsKUuK3
- EMMsKCIUfnpDOc3R3AObWA/mQdORNilQtFMfIcJjiUhffs/bZC8usa12JsxkUB5EHqbXksocDkp
- SlJdhhnwkU81RKZwDjCVXnO8SRPfEIjZ1BIcUynCxF5Eic7Kkzj8laVq1cHuv/OAarjZMYVoFxu
- +FTGL38h+xit4a4A+I8UzVPcKy+h0WdjV+0pnYTBkaw1b1jeaaeJI40467tgdShGFm/Uk3la75Q
- 1Ddgd6LJv9KiStJ5IiNrVVQXnU8pXa9p/Wnpr/lZIl7DjWVBDUQRziRl2j1bRfRm8qD/q1+oY1Y
- t+sXtki4Tw/tn+w==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When deleting netns, it is possible to still have some tasks running,
-e.g. background tasks like tcpdump running in the background, not
-stopped because the test has been interrupted.
+Hi Matthieu,
 
-Before deleting the netns, it is then safer to kill all attached PIDs,
-if any. That should reduce some noises after the end of some tests, and
-help with the debugging of some issues. That's why this modification is
-seen as a "fix".
+Thank you for your modifications, that's great!
 
-Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/lib.sh | 1 +
- 1 file changed, 1 insertion(+)
+Our CI did some validations and here is its report:
 
-diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftests/net/lib.sh
-index d0219032f773..8ee4489238ca 100644
---- a/tools/testing/selftests/net/lib.sh
-+++ b/tools/testing/selftests/net/lib.sh
-@@ -146,6 +146,7 @@ cleanup_ns()
- 
- 	for ns in "$@"; do
- 		[ -z "${ns}" ] && continue
-+		ip netns pids "${ns}" 2> /dev/null | xargs -r kill || true
- 		ip netns delete "${ns}" &> /dev/null || true
- 		if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -vq "^$ns$" &> /dev/null; then
- 			echo "Warn: Failed to remove namespace $ns"
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/10217280630
 
----
-base-commit: 3b0e1975962a388844508be0b3e61e759837fa3e
-change-id: 20240802-selftests-net-lib-cleanup-kill-f546a233572e
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e914241fbfde
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D876244
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
