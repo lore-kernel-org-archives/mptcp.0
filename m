@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 146FC1AE029
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 18:17:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44EC41AE029
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 18:17:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722622671; cv=none; b=QuRsOcoCnPJlr96lweO8s/EEbku/Bo2OLRQoKWBsFsNlIEZDhNL5u/2FWxe96fC2elT3XfuCDdBPifTdZxsRIegNH3yHHdECDIQlaTbUQN/T3y+/2rF7w6SUp/b8rI6Rv3xncWKkzxj0MfSc5bDLOjOHlCO32m9psrRFRJYoA/A=
+	t=1722622672; cv=none; b=LKZDXzLGk6WP009K4rTMOXaxRT1zyhcvr6eWJH/SKSdFAC0HX91246AkanYTmqLjnfnziRKKoJfW/PNPRvUVAo6VG/W8X/kGIuG7lKiMn9Y9wQKGTcBFIozplRdqTi51Lc89UyzcoOch+XkKNPHoIejChAlcjlDYXDrWi2Ae1Ts=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722622671; c=relaxed/simple;
-	bh=uM4Gq9zI9UOP2ANRhGukPPi6D3oGnF4sUdpTutMU+ms=;
+	s=arc-20240116; t=1722622672; c=relaxed/simple;
+	bh=jzCnTdKEaBj2I6Ig7Wb5w18r5QTMqq2lxNKRica19fo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=M17VNvVn2Ao13fpbUcRtAJdnetarJ/fSkvMyydzu+pucDHwKqxPzts1otmGWP1F4lVAAa0/5vRv3VIb3V5H7AcDV6DgY6TDzOKqDL2HU2IIYgQQkB3jIbPPH4huHhsDIeU5qQ19tILUg28feHpDOx3ELuwvPVyjUJCxU7dMiRO8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GoQChIci; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=pvHI6C34EgYLzYwsH19m/Q9GBh9supAX9qVW7aAoFrk2vgMdKbsi0zxC25LhGfzD3RTFuiTA9eXOHqBaa2ko43+B/YMnEOpnx0KUVGhz0KHiyWlyIPVHGFlFFXmcNBn3mFC+WU+l9vxoNE0AIWSHXA1L1coskW2mS/0R5zLgHGg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dYDeNR6z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GoQChIci"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DFB45C4AF0C;
-	Fri,  2 Aug 2024 18:17:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dYDeNR6z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 196CFC4AF09;
+	Fri,  2 Aug 2024 18:17:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722622670;
-	bh=uM4Gq9zI9UOP2ANRhGukPPi6D3oGnF4sUdpTutMU+ms=;
+	s=k20201202; t=1722622671;
+	bh=jzCnTdKEaBj2I6Ig7Wb5w18r5QTMqq2lxNKRica19fo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GoQChIciaZ6XWPmVFLYr7ZtmmQ2LCCPXdZ86p4/waSwmzjTHUdiqyQtfSq82xBsSu
-	 J5/02eqXf0FoVjGNasyn/TaTm0zfUKxoDsLTnprMP/LwXZvG7VzEv0Ud583howc34L
-	 w1DT8pWuhFyyJbahQrDUbeKgJKjt4vdCAXRHrqahFhWa7Fa69DaM7Mpcewf8DZfZrk
-	 HDYDEoJOX0NsYQ4eR2mAVP558CUD0+DsqiC8emYp7XgNK+NaMj2HRhcx/u6c2vN66d
-	 fP1QnRcI/OhwUlKSpSQ9B+JnBpI91TtcUUJSJHvXKj3/E8jRJPFeD28jy5I0ndpZp+
-	 elSKaECJ5gSKg==
+	b=dYDeNR6zlfGcodJfrg7AqGRq82Xtg8Zc+kuxSbzM3uQRLSFTkUL5XPcpiTTgRnkF0
+	 YvseCEmPOyEWyf76E3E6JrpVZwMKCcRq5qZLxfSStChV0HdPuh8YhY/BnyNvlQLXfi
+	 a8epL4NGSEg1ZnlSNVIfGtnkIXHlhtSFM04rLBaOJ7D/dT+ZjUy0oM5BCpD6yXYmo+
+	 PVJF0PvmARimMO8MlbnYDegFF3CW0GkwUAZU/dz/zYodGETCFSaOWVvLCXjymMV7YZ
+	 C2X1hY/iPb/DDBaaN41WLPF6gUrGmVY+GJURPIuo9kxGmi8Wad9KlakGYYM1eYw6ax
+	 aDUvE/gPvBC7g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 02 Aug 2024 20:17:38 +0200
-Subject: [PATCH mptcp-net v6 01/11] Squash to "mptcp: pm: re-using ID of
- unused removed ADD_ADDR"
+Date: Fri, 02 Aug 2024 20:17:39 +0200
+Subject: [PATCH mptcp-net v6 02/11] Squash to "mptcp: pm: fullmesh: select
+ the right ID later"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,66 +38,62 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240802-mptcp-pm-avail-v6-1-964ba9ce279f@kernel.org>
+Message-Id: <20240802-mptcp-pm-avail-v6-2-964ba9ce279f@kernel.org>
 References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
 In-Reply-To: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1446; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=uM4Gq9zI9UOP2ANRhGukPPi6D3oGnF4sUdpTutMU+ms=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrSLK38+WAYimf/JdVss+4mN5A4vMfl6t6oXgm
- 7gkXy6/PaqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZq0iygAKCRD2t4JPQmmg
- c/5oD/4+gxIaa4+WhOm/ndUFtqj7pv9+Pq3PBPwu/k5GYF4NYM7vqIpp0NMzIU8tSThKZyAuRNW
- PHyiMUF/RaxBP05dcoDyufJ+Pqg0098FY0D3Fd5Jt5e7+UfNdeSAktU6y81Uorc37Uh107yVd9G
- dZ4tzcgOOPbzxba6C6NjLsVBj/HGtONQxlRps4VHKyYJPuJj6VzgRKsSnW5gGrEIHZb5xvfQhQw
- Mf92NTJkSw1GJE+F3O9JdAf3SVRX2l7Y3D2iRE85yoF4DKK7pBbWH7BXP7kPvF2ECHfCJOF3Rl0
- 5X0W/8KIaknfGWlush33jHPdxO1dQO2D9KATWAXuBpxE3vZ+81Mk6qW+EVaOGSJ2WGGO5fyqNRk
- K5rSxHAZx5TfhhifmV6mfoZTIbpGVsqTNnlyZl7r+IQJfr7GL++IINHQYV9SUjqpTv0mr4vSbq+
- CZcN2n5EVH/dRaH9uoCe/bVzfuxOdz0rJIDXD2QVGzfXWhpROwiuDGcOIClU+KTdfnbsAEEpWeI
- QOKx5y1rZLUp2evfp1aLo+nEwoNy4/SbA8lWcZwQnujJuVZIukKjxaqa7IatQPBEneLvIi8gRYM
- VEuLMNXPlq3AXC5AYtUeqtJX3Y8O7dBAJ6z5n3P5vbPVYHRxBTCeoH0QorJcY/tEcrBJX898lDg
- P6QHohtteje837w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1321; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=jzCnTdKEaBj2I6Ig7Wb5w18r5QTMqq2lxNKRica19fo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrSLKEwdkKDyvXNgL512S/SCDLP5ME7QgMsRoD
+ 59zSk8/Q3mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZq0iygAKCRD2t4JPQmmg
+ c58PD/9f6Ae1z0oK0hijlOe45OUiHRLPRedUg6SMOqQP46/gNbSRf68NywsX3TFJUDTvNUme6EC
+ IUUhNwN/+JiwucQSHY7oAHneAmnJKbXihfqNerUjstJCxHuXcolIqQuk2q3VktJPA7KeVs0TMj3
+ JonHBnkBb6/8Ym/FXM6NMFV5CHEGynB28FQmJ9ga15xy4Lm3lahMKEjC4sCT6ZC4nuhaAzkqk3D
+ BfqstoDjJg4GaXcW7IhMeJqbbbHWISky3iV4uJNKjv9gO+wIQXQZdED/NN/FAb1Cz1JH2sCkq3V
+ O6i7/fH579EGPM55NBX7g+MVZSnHcKgOswtu6knZZrZrlHJgXejqb9P9s/ZcXc7glJCZI9WzAMo
+ 25tMPjUcBNk+TINrgCTM4yHdjHBdStPBh5qenWP9bl1cJThlGB8mjYlnm4O8hpuM+DAAqoRpfJh
+ wDTliP0H5Yx4FgTtHkfj+FeILV7Gbw/elpaaxxUm0QCeoOReVHaqeqazkXOelILdcflKJ1Yrxuy
+ 9x3mIBwcALIuIMhNiCb3kX8B6/GnWc77MqZ+78NzI8EV9Wjj5qOwHZoIjuMLKl+sWRsnWS1ZnUg
+ L8IpTF20QOcXui0PS3boc74OJ58DZYuhZAKxHUJV9SQkcQavboK0N0nIC2fvAmM3n24qD1XnhXd
+ HgiDKKulyxtZ8WA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It looks better to mark the addr ID as available in
-mptcp_pm_remove_anno_addr(), where we decrement pm.add_addr_signaled:
-this helper is only used by the in-kernel PM (compared to the previous
-one), and the mark was only done if an entry was found, which will not
-be the case if the entry of the initial subflow is removed while now, it
-will be done because 'force' will be set.
+We don't need to depend on msk->first to get the source address of the
+initial subflow: it can be retrieved from the msk itself.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c | 6 +-----
- 1 file changed, 1 insertion(+), 5 deletions(-)
+ net/mptcp/pm_netlink.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 469a16326b3f..3e552b4f1a21 100644
+index 3e552b4f1a21..605cfd7bc004 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1423,11 +1423,6 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+@@ -661,8 +661,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 	pernet = pm_nl_get_pernet_from_msk(msk);
+ 	subflows_max = mptcp_pm_get_subflows_max(msk);
  
- 	entry = mptcp_pm_del_add_timer(msk, addr, false);
- 	if (entry) {
--		spin_lock_bh(&msk->pm.lock);
--		__set_bit(entry->addr.id ? : msk->mpc_endpoint_id,
--			  msk->pm.id_avail_bitmap);
--		spin_unlock_bh(&msk->pm.lock);
--
- 		list_del(&entry->list);
- 		kfree(entry);
- 		return true;
-@@ -1448,6 +1443,7 @@ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
- 	ret = remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
- 		spin_lock_bh(&msk->pm.lock);
-+		__set_bit(addr->id, msk->pm.id_avail_bitmap);
- 		msk->pm.add_addr_signaled -= ret;
- 		mptcp_pm_remove_addr(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
+-	if (msk->first)
+-		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
++	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
+ 
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+@@ -678,8 +677,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+ 			locals[i].ifindex = entry->ifindex;
+ 
+ 			/* Special case for ID0: set the correct ID */
+-			if (msk->first &&
+-			    mptcp_addresses_equal(&locals[i].addr, &mpc_addr, locals[i].addr.port))
++			if (mptcp_addresses_equal(&locals[i].addr, &mpc_addr, locals[i].addr.port))
+ 				locals[i].addr.id = 0;
+ 
+ 			msk->pm.subflows++;
 
 -- 
 2.45.2
