@@ -1,90 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 052801AE05E;
-	Fri,  2 Aug 2024 17:50:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 17EA71537A9
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 17:52:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722621033; cv=none; b=GC+09Ru5cbvSaEs25ZtKGnsAjiLbbX970vWHTuayKzP1qz38fg528aE768clIIJF/vyiq/kLP6e9JrH++wwxvQKvmReL/9zwA1Q58rz/lgdZhhygPeLRbjf//SW+Ua/ii1UMk+6zA5du49ZfmX1F1WThJsXtscHKq666um1DhJQ=
+	t=1722621158; cv=none; b=kJEMCJVvo7MZxd6xM3nsaQcJGIoK4tVq7xSNPSenuwzlAR/iCyXRTg+mk2R26D6xSEgzVlC7hXjZp15QvReHUHn42LR/RTGGHiMov0w4HmCnwc5ow/lJBYEbX3SwosC4WwmOaA6VbeEOfojNxu4JIiZRYklcL+VYePFu63aY0Qo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722621033; c=relaxed/simple;
-	bh=DYfqICvUxtUBacVEPjO3itpH455jDIPz6MuXct51aF8=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gQu0C5ReDqzELx10nwKEdyMo6cLuKzNxHjTRmiHlr/1iM9jdzj4HqY/nVhE4+PG3pk/ZbdcoRkZ4WvPzSGEitKPDrK9vmB9BwT5g+hxU8fXSZJpBWVdVIHBv9NpatKEn1flbAlhhqjNLuYph+/vcBYd+FTUs6w8h+GxbsUk9iDE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cZVwdDyh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722621158; c=relaxed/simple;
+	bh=pbg6mBhx/Yd1jZSe8IeKUJt/mWyDRtQD2aYkzQTDmiI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=uW5q2Rt3pWxPUSBUInKHq9Lzc3cRih7LtCa3k7Y1YwZEFxnD7+kd9SF4xwE7Xt388opQZGveI2t2nu/Fxgnbovpxpe691JeN+O15WV+/41QZnGq4B7bw63JgwMsCpmwOiWl1SZuLtLor4O/H+VE5wM5huH1H/Irx1opHwmMpZps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZpqB0NBt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cZVwdDyh"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id 780C7C4AF0A;
-	Fri,  2 Aug 2024 17:50:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZpqB0NBt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F7F0C32782
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 17:52:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722621032;
-	bh=DYfqICvUxtUBacVEPjO3itpH455jDIPz6MuXct51aF8=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=cZVwdDyhpzASsXXWbnv+4fMaKxgo/L1hG2Sl7Ndu4w02zKNGv40+xn3u6JrPdVc4z
-	 OnMIja5JV+PZ2iGlFEcJqIU3TMGEwAMu/2qm/l5gOQs7J0s/ih8DSguUlPLkQ95zu2
-	 5CVzYJ1Z9Pz44v7T5NT5MO+qctYWPUNAfsAA8ia1Tzpquo/XbMCB6Pqr7pQHL8uyje
-	 HVuDmLSZ6Y8M5BLH14LnXpA3QQKjD5TBSVpB51XIZ5px/RS+tORjY3alkj1GF/hBX/
-	 9QXODziBLs0KawlWND+syXH3jKtfLnte1CkR7bEjfIT+ipMzNgwLcbmLLV/ozoNN6Z
-	 76VgmJa0Y2bNg==
-Received: from aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by aws-us-west-2-korg-oddjob-1.ci.codeaurora.org (Postfix) with ESMTP id 66057D0C60A;
-	Fri,  2 Aug 2024 17:50:32 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1722621157;
+	bh=pbg6mBhx/Yd1jZSe8IeKUJt/mWyDRtQD2aYkzQTDmiI=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+	b=ZpqB0NBtT/s9onTHPFluCX+CW5k9s2wIG/9KKyFiiUVvYreaeSNCqKg3UOcBIQsE9
+	 9zKyi1Nl4S40gvRBB9o8g+XR/rbomDRnp6fSid3ZJqHPX/SGc7kJ5WCn1Snrlb22Ul
+	 o1vuA/BI/pNFW3arIiAjxmX8qEG4kWj6O7j9OMsT4a5r4ma9CCzlnnFF0u88rNOwb8
+	 +dfih0Mfd2t4L40bZUSqX9mj98uOfRVsfqaAjU0OdJszhR4JV6F6vc7RrPjSE0r+yR
+	 oOLYMX7xcDYisKepOMSjMcHZVM4ZYw4DyVTpu2FHQPW7xxj5WA/CBzQj9T5a8fSC51
+	 J0CfV/cvEHpmw==
+Received: by mail-yw1-f179.google.com with SMTP id 00721157ae682-6659e81bc68so76920397b3.0
+        for <mptcp@lists.linux.dev>; Fri, 02 Aug 2024 10:52:37 -0700 (PDT)
+X-Gm-Message-State: AOJu0YybEjhbzo1ZFH9B9x5T0kwdDsg3SMjFAo3JgK7QZC7pUo1+pODx
+	o1xgOEdmPvNndzvz2SRhm7CGSOGFp2TRYbMMy4DSgnnG681GdaDoifItJ5QxZ5vzFQdQ/Oyv+at
+	kB960MzD6eRtDrE3bX1D3rI+fEA97svkN6r5Z
+X-Google-Smtp-Source: AGHT+IGixkNPPtSEF1h224smgOxI+0T0It06aerZoOJT8x3F07ApyzYy8kw8XsQU8uKu3nWlv8G5x7/CFn8cE5wdBSY=
+X-Received: by 2002:a0d:f504:0:b0:65f:8afe:9ba6 with SMTP id
+ 00721157ae682-689601aa855mr46182097b3.14.1722621156949; Fri, 02 Aug 2024
+ 10:52:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH iproute2-net 0/7] mptcp: improve man pages to avoid
- confusions
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172262103241.30562.13396080153288941317.git-patchwork-notify@kernel.org>
-Date: Fri, 02 Aug 2024 17:50:32 +0000
-References: <20240727-upstream-iproute2-net-20240726-mptcp-man-user-feedback-v1-0-c6398c2014ea@kernel.org>
-In-Reply-To: <20240727-upstream-iproute2-net-20240726-mptcp-man-user-feedback-v1-0-c6398c2014ea@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: stephen@networkplumber.org, dsahern@gmail.com, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org
+References: <20240802-selftests-net-lib-cleanup-kill-v1-1-66220a8b6911@kernel.org>
+ <6806450e-7c7b-8072-0af9-23bac214ec0b@kernel.org>
+In-Reply-To: <6806450e-7c7b-8072-0af9-23bac214ec0b@kernel.org>
+From: Mat Martineau <martineau@kernel.org>
+Date: Fri, 2 Aug 2024 10:52:26 -0700
+X-Gmail-Original-Message-ID: <CABbSpciZfzrTdgQAp9fpKN5EPn7QdRXMCgBoipDQ6EF_u3eWzg@mail.gmail.com>
+Message-ID: <CABbSpciZfzrTdgQAp9fpKN5EPn7QdRXMCgBoipDQ6EF_u3eWzg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net] selftests: net: lib: kill PIDs before del netns
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello:
+On Fri, Aug 2, 2024 at 10:43=E2=80=AFAM Mat Martineau <martineau@kernel.org=
+> wrote:
+>
+> On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
+>
+> > When deleting netns, it is possible to still have some tasks running,
+> > e.g. background tasks like tcpdump running in the background, not
+> > stopped because the test has been interrupted.
+> >
+> > Before deleting the netns, it is then safer to kill all attached PIDs,
+> > if any. That should reduce some noises after the end of some tests, and
+> > help with the debugging of some issues. That's why this modification is
+> > seen as a "fix".
+> >
+> > Fixes: 25ae948b4478 ("selftests/net: add lib.sh")
+> > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > ---
+> > tools/testing/selftests/net/lib.sh | 1 +
+> > 1 file changed, 1 insertion(+)
+> >
+>
+> Sounds like a good idea to me:
+>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-This series was applied to iproute2/iproute2.git (main)
-by Stephen Hemminger <stephen@networkplumber.org>:
+Oops, it's in the net/ lib, not net/mptcp! I should have said:
 
-On Sat, 27 Jul 2024 12:10:29 +0200 you wrote:
-> According to some bug reports we had in the past, setting the MPTCP
-> endpoints might be confusing, and the wrong flags might be set.
-> 
-> This series adds missing info for the 'dev' parameter in the manual, but
-> also clarify a few other parameters.
-> 
-> While at it, a better error message is reported when 'id 0' is used to
-> 'add' or 'change' an endpoint.
-> 
-> [...]
+Acked-by: Mat Martineau <martineau@kernel.org>
 
-Here is the summary with links:
-  - [iproute2-net,1/7] man: mptcp: document 'dev IFNAME'
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=484009f46e9c
-  - [iproute2-net,2/7] man: mptcp: clarify 'signal' and 'subflow' flags
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=80392875faa8
-  - [iproute2-net,3/7] man: mptcp: 'port' has to be used with 'signal'
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=8251786f3d81
-  - [iproute2-net,4/7] man: mptcp: 'backup' flag also affects outgoing data
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=e3c1e2a4e20d
-  - [iproute2-net,5/7] man: mptcp: 'fullmesh' has to be used with 'subflow'
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=640ebc23d8ab
-  - [iproute2-net,6/7] man: mptcp: clarify the 'ID' parameter
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=8145a842736d
-  - [iproute2-net,7/7] ip: mptcp: 'id 0' is only for 'del'
-    https://git.kernel.org/pub/scm/network/iproute2/iproute2.git/commit/?id=b176b9f40368
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
-
+>
+>
+> > diff --git a/tools/testing/selftests/net/lib.sh b/tools/testing/selftes=
+ts/net/lib.sh
+> > index d0219032f773..8ee4489238ca 100644
+> > --- a/tools/testing/selftests/net/lib.sh
+> > +++ b/tools/testing/selftests/net/lib.sh
+> > @@ -146,6 +146,7 @@ cleanup_ns()
+> >
+> >       for ns in "$@"; do
+> >               [ -z "${ns}" ] && continue
+> > +             ip netns pids "${ns}" 2> /dev/null | xargs -r kill || tru=
+e
+> >               ip netns delete "${ns}" &> /dev/null || true
+> >               if ! busywait $BUSYWAIT_TIMEOUT ip netns list \| grep -vq=
+ "^$ns$" &> /dev/null; then
+> >                       echo "Warn: Failed to remove namespace $ns"
+> >
+> > ---
+> > base-commit: 3b0e1975962a388844508be0b3e61e759837fa3e
+> > change-id: 20240802-selftests-net-lib-cleanup-kill-f546a233572e
+> >
+> > Best regards,
+> > --
+> > Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> >
+> >
+> >
