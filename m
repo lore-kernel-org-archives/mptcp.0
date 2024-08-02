@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 190351AE029
-	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 18:17:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45B4C1AE029
+	for <mptcp@lists.linux.dev>; Fri,  2 Aug 2024 18:18:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722622679; cv=none; b=RGcsW/DPJxchBgGIXdjohOo8oJ9p0DhXzcn8rapS/q5OffOop7+ypmKjCePOcprRfxdXbgkkOgTNbVJcJPCRrT2S0J4gRdStDrUz/+CxHRhkt/VK3yC9QqKakSwseiJ82qlvLY9BShPVPNYbfOMlT22b7HbDZtAZxelCiLPAAf4=
+	t=1722622680; cv=none; b=pgDhw1J2ESl4GucZvaGJYpFfte5PL/5PHk2xbCC5Q9ezSEuGgwZBvHSW+4YpkbAd22Hkc3PG6KrxDH0K3fF1eokHnwdl7MbNX+gaO1bqhIfRJThMwaCqMiy9W7xOXDO9zO7Qe+tXh21SOU4VYmSRUvCsaMIe82jqSz4xe4gcs3o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722622679; c=relaxed/simple;
-	bh=tf/wGOPhQYLV/T6rpzCr5ZuOds7ZUF/LJXfJO8rTvMY=;
+	s=arc-20240116; t=1722622680; c=relaxed/simple;
+	bh=KFd87TzFgoUXwm2i13o+sx1nEl0pAg0CTX7sVeZay3A=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=mxS3irqfGTbHQQmwUV8z8rrcnNjbRg3sXcR1KuEIO6L1LrduCmgCuzGzLYa4noCGkAO3rh1b4Q/pyDKAsXgfQtDM2pW6AzQdB84AV4JpR0r3y7zJEHdEMKO+CZlH97YrS4FM7w7f4ZtNH9j9l5JsxDMrEu8iK6PVPU6+Gpvy5qg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E5FNJAyY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=c8e/uCa76P4zpCE6rDZ3AsBcobtchBwLDDQtQzARVmqjU5L9N0Yn55nx9qYl9CdD5gV1SlIafFdfYKgv/xP18yyvtqYD/Ks+e6ZGOTyTZLjNOc4aB4GQopc5Zl9duNV7X04fK/5ajPKfvkOOoZMCMRceEtqzCl7mDIphbdxxRaE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hYsLYCKk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E5FNJAyY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3ADBCC4AF09;
-	Fri,  2 Aug 2024 18:17:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hYsLYCKk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A509C4AF09;
+	Fri,  2 Aug 2024 18:17:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722622679;
-	bh=tf/wGOPhQYLV/T6rpzCr5ZuOds7ZUF/LJXfJO8rTvMY=;
+	s=k20201202; t=1722622680;
+	bh=KFd87TzFgoUXwm2i13o+sx1nEl0pAg0CTX7sVeZay3A=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=E5FNJAyYoA6TUoBpxErtk/fvyXoJ6AM0EuOI38VkCZniOUbyT5TATGfgzSHlg9Xjn
-	 FFu1p29Kvi/pQgaSXQywWn8OZ4S9RXh17Om34yRI1oDL4Tn+f9sV1nML7E4WV1ASgN
-	 EA2QNCjPNR5tLOS6YQonx1+iPvHhFcHuV+aAS1/PaqiMVj0fqUMhX3rBREPULPJlCg
-	 HIy8I+4yxKOgMDj5fydlwPyZnuWtAI1Zx+9LsUWR6UUixRx7Yfvmxhma8fOAoKGOdJ
-	 WDdTO56AxMdDQwsoDkqJaebjD7oJE8S4wiowH8GTTn5FfrSl3rnCg1I9Tl4bf0T0jp
-	 OY58fdchXUoBA==
+	b=hYsLYCKkAMoGfyX6qqxAj4CWWWxe/881+aZCJMGdpu90gTcPSUizFjd6goP8vJWJp
+	 IDXsC/3LuPEtQO8+fCGT2N5sI/ZdYH6OAD5UKqkR4z7i/gtAqNwCD4ZxS5PHeADo/5
+	 2qpatg0uM6rJZGZfKuKwm6KcLzB3D0tL8OUOcZ9TgIxxPlRezdBUOaAcFs+ockoxvn
+	 rmmiqiBnbrqp5y5YfNPlqtxDY4s6W8aCnmTnk3fArLufrLt4bsv8OKmVLr5yfxXg7H
+	 Sy0pbX0EcCJ/n2WtvEggRwUVzjEt/V7J1qKQZairYg8mP4qd6CxzL3BCydnjgP2arI
+	 VQkzvS4ZBAprQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 02 Aug 2024 20:17:45 +0200
-Subject: [PATCH mptcp-net v6 08/11] selftests: mptcp: join: check re-adding
- init endp with != id
+Date: Fri, 02 Aug 2024 20:17:46 +0200
+Subject: [PATCH mptcp-net v6 09/11] mptcp: close subflow when receiving
+ TCP+FIN
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,100 +38,101 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240802-mptcp-pm-avail-v6-8-964ba9ce279f@kernel.org>
+Message-Id: <20240802-mptcp-pm-avail-v6-9-964ba9ce279f@kernel.org>
 References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
 In-Reply-To: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Mat Martineau <martineau@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2666; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tf/wGOPhQYLV/T6rpzCr5ZuOds7ZUF/LJXfJO8rTvMY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrSLLV4TPmUKAVIvLt4fw96WIi8sWP60NEXMBH
- ZzfZG0r04SJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZq0iywAKCRD2t4JPQmmg
- c6+kEADcEcXmGUVg3BNeI/x1Fe+CxutLqQ9VMDJvX9WNhO54YplJX/7HyKHiLlQo32vuy+1cK/g
- +VMfWdNb+rGkHifANM8AUE2VRrRByeHkTs886MEDzaC3MJ38LKeVIvJwDk09Z/B4sB782Cww3gu
- 7KTcdooh0nBIbHx+W1gLa3lGSGOCV5PaCzIWedctE7L4NB64YeezwABxohm/88/1F5rtTJknif4
- VMY8XI1DVD4ttSrBY8XnOqJmJWukccSEKpd8SJ+59I7p2egNL/Ssntd3dWRkHkkoL5foEPC4KID
- SKMYfFQ9bWYhZEZOVKzjldVW8Z4NCBGQ8O0rPBBU3s8dDDEC6Lb8JC8N7xQ/EzO4qWBIjUlHDRq
- SIyQv9G8hEB8zY0YqmHBKM8rh+gTJ2LzM6Xo5xoEQDlE269BwwpotWEcFx1xv8VJyivazPKYctr
- fcuopu+GTM+GZIjqlckUpUZ8xLUUBjhoa3J7a8QrSUCPXGUheYr8wBmKSmWl3SNL6CyrHaZJzmf
- syph/oA3gxHpNkIms43SiYF/uMI+OL1nHFe1q4rAuDDBKWl+A8FOvO4pWn1ayp02/9W/GQnlR6x
- Jmo8UX+E+fzMVDRjiFHHV9hQQB1nTf+fezq0qeifAnD6gGlfaZRWZOliiF/363q7/FKdJdPcMCF
- n/OR9YI6aA/8aTg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3163; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=KFd87TzFgoUXwm2i13o+sx1nEl0pAg0CTX7sVeZay3A=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmrSLLbpYjThkcbZ88osKQAh1OWfvqQGMBSEUsj
+ PRVRGz+PbSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZq0iywAKCRD2t4JPQmmg
+ c1fHD/44+lg51db9MycsPRSFj7PnPdhrtRgLe0vipZje/cmu0bq4eXW0sOJLMxBPj9vH75eK/im
+ OvUfaMVsh3WoZ3fMdJJ7FCluCe2nNkh8BwiAVm0OrhQ9WgZPNFqYoXXmF77brobvmBuUzGdIYFp
+ i6uIfqug6yHSaViWYsq/ZSX/guzwAdpDX1oSzEZlrp3GCWg9ijD84yXh91+KhC/QtM+tsUCM5D6
+ vgWkGFEcYgPRG6cQNzgUartgnUU/6upqyOs02tdRle3oqi1hCJulVFr6cqsnTJ8YxcOIP3gaceu
+ IlSfWD9aLeGoGsuFZOeOItl+isbLBAedCe50MBH7x9h/B2IPCb3ryd2U0np+JibV1ZoD+4YW34h
+ 29RJRvf9o/ZjvBzmyc8Shm66VRQy3Itn+WkYLr6LwOugCy06F3cQb/llWmybEIHHyQdbETbiouZ
+ 2kHlp5knAZSxKlY6sor+PA6oB3a3exRsZ2zsN+koe+w02qUOdvCOTJwsy4TFYycVuSUu9npbUZf
+ eV1aAyNRtjUudIh2iuh7hsqU3XnDG6CU/GHf1Mjr7Fv77YmA/GSQcahWhwCeJLqR/CVfPcfBNA8
+ T5etE7YpDkOCTcYjQnFuooZcmbNrUj2Y9doIaMRnF0BoMm8k0WyTkxZVy4Nt25NbXQRhz0zq3g2
+ /tnSG7qx/XkVu7A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The initial subflow has a special local ID: 0. It is specific per
-connection.
+When a peer decides to close one subflow in the middle of a connection
+having multiple subflows, the receiver of the first FIN should accept
+that, and close the subflow on its side as well. If not, the subflow
+will stay half closed, and would even continue to be used until the end
+of the MPTCP connection or a reset from the network.
 
-When a global endpoint is deleted and re-added later, it can have a
-different ID, but the kernel should still use the ID 0 if it corresponds
-to the initial address.
+The issue has not been seen before, probably because the in-kernel
+path-manager always sends a RM_ADDR before closing the subflow. Upon the
+reception of this RM_ADDR, the other peer will initiate the closure on
+its side as well. On the other hand, if the RM_ADDR is lost, or if the
+path-manager of the other peer only closes the subflow without sending a
+RM_ADDR, the subflow would switch to TCP_CLOSE_WAIT, but that's it,
+leaving the subflow half-closed.
 
-This test validates this behaviour: the endpoint linked to the initial
-subflow is removed, and re-added with a different ID.
+So now, when the subflow switches to the TCP_CLOSE_WAIT state, and if
+the MPTCP connection has not been closed before with a DATA_FIN, the
+kernel owning the subflow schedules its worker to initiate the closure
+on its side as well.
 
-Note that removing the initial subflow will not decrement the 'subflows'
-counters, which corresponds to the *additional* subflows. On the other
-hand, when the same endpoint is re-added, it will increment this
-counter, as it will be seen as an additional subflow this time.
+This issue can be easily reproduced with packetdrill, as visible in [1],
+by creating an additional subflow, injecting a FIN+ACK before sending
+the DATA_FIN, and expecting a FIN+ACK in return.
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
-
-Fixes: 3ad14f54bd74 ("mptcp: more accurate MPC endpoint tracking")
+Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
+Link: https://github.com/multipath-tcp/packetdrill/pull/154 [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 21 ++++++++++++++++-----
- 1 file changed, 16 insertions(+), 5 deletions(-)
+ net/mptcp/protocol.c | 5 ++++-
+ net/mptcp/subflow.c  | 8 ++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 03d92852de8c..ea954ba85969 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3599,11 +3599,12 @@ endpoint_tests()
- 	# remove and re-add
- 	if reset "delete re-add signal" &&
- 	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
--		pm_nl_set_limits $ns1 0 2
--		pm_nl_set_limits $ns2 2 2
-+		pm_nl_set_limits $ns1 0 3
-+		pm_nl_set_limits $ns2 3 3
- 		pm_nl_add_endpoint $ns1 10.0.2.1 id 1 flags signal
- 		# broadcast IP: no packet for this address will be received on ns1
- 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
-+		pm_nl_add_endpoint $ns1 10.0.1.1 id 42 flags signal
- 		test_linkfail=4 speed=20 \
- 			run_tests $ns1 $ns2 10.0.1.1 &
- 		local tests_pid=$!
-@@ -3625,11 +3626,21 @@ endpoint_tests()
- 		wait_mpj $ns2
- 		chk_subflow_nr "after re-add" 3
- 		chk_mptcp_info subflows 2 subflows 2
-+
-+		pm_nl_del_endpoint $ns1 42 10.0.1.1
-+		sleep 0.5
-+		chk_subflow_nr "after delete ID 0" 2
-+		chk_mptcp_info subflows 2 subflows 2
-+
-+		pm_nl_add_endpoint $ns1 10.0.1.1 id 99 flags signal
-+		wait_mpj $ns2
-+		chk_subflow_nr "after re-add" 3
-+		chk_mptcp_info subflows 3 subflows 3
- 		mptcp_lib_kill_wait $tests_pid
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 13777c35496c..609d684135dc 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2533,8 +2533,11 @@ static void __mptcp_close_subflow(struct sock *sk)
  
--		chk_join_nr 3 3 3
--		chk_add_nr 4 4
--		chk_rm_nr 2 1 invert
-+		chk_join_nr 4 4 4
-+		chk_add_nr 5 5
-+		chk_rm_nr 3 2 invert
- 	fi
+ 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		int ssk_state = inet_sk_state_load(ssk);
  
- 	# flush and re-add
+-		if (inet_sk_state_load(ssk) != TCP_CLOSE)
++		if (ssk_state != TCP_CLOSE &&
++		    (ssk->sk_state != TCP_CLOSE_WAIT ||
++		     inet_sk_state_load(sk) != TCP_ESTABLISHED))
+ 			continue;
+ 
+ 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a7fb4d46e024..723cd3fbba32 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1255,12 +1255,16 @@ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *skb,
+ /* sched mptcp worker to remove the subflow if no more data is pending */
+ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ssk)
+ {
+-	if (likely(ssk->sk_state != TCP_CLOSE))
++	struct sock *sk = (struct sock *)msk;
++
++	if (likely(ssk->sk_state != TCP_CLOSE &&
++		   (ssk->sk_state != TCP_CLOSE_WAIT ||
++		    inet_sk_state_load(sk) != TCP_ESTABLISHED)))
+ 		return;
+ 
+ 	if (skb_queue_empty(&ssk->sk_receive_queue) &&
+ 	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+-		mptcp_schedule_work((struct sock *)msk);
++		mptcp_schedule_work(sk);
+ }
+ 
+ static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
 
 -- 
 2.45.2
