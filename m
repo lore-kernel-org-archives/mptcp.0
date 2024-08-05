@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF8E1448D8
-	for <mptcp@lists.linux.dev>; Mon,  5 Aug 2024 10:07:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B71E418040;
+	Mon,  5 Aug 2024 10:17:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722852440; cv=none; b=Rdf36jWvK554oDKgTGbuWoOoJ0/E/Ai/zWoOU2IN1H9LL266DBMv8jGUiOhn7V+IeS1mQOhyH2pJdIT8D75a5r0D/Tbay2EEIkTKYmvoeT2eP8ZAyn4eyvj1/EgpMrN+6xUYdjBbFjQK7AKvzoWavYrLBcsfEo/gDXZmedhjEOw=
+	t=1722853037; cv=none; b=fsiYRa7TiZ4x3i5zhYDzjmsD8Vd6zvSZ0TJ7TCeJeMFl/Bkf/zv9QDksNllbVPJ4RJSKy447XIfxc/wd5rUO+7XIO7/8HaJSmuXgfr8SNvzPvLkB5DWDlm5tf65FpSr54CQmmxK2wv3zINcaaXlRQeEPJqCL5cMXaIPat4W5Wn4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722852440; c=relaxed/simple;
-	bh=yZdH7G/DWV1jbHdTgllGgObMAKhaUaXSQuQm46xjJDk=;
+	s=arc-20240116; t=1722853037; c=relaxed/simple;
+	bh=MHe9tTcbFgoOBRxEB6E0kr0JxBxZ7aKJJhgU6KNwnAg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fMm66MqjDoTrZtN8XS6YxWdJMO4WaeVcMRrb6R6502y27HkMZOLeuZPUKnFRDaBd/AY74uEe5cYR7wHF2Y8Js2TkpeQnprwH2RHKfXkYXvreBhr47MG8owf9pTWPpD6Fm/TBjBdoeU2qxJlyGZ4L3cpSXlArvPO4s8KDxELblyU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b82JQgEk; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=E2++06wcTZuclnE2GbXlCw2ar9dKf+TEnLkqpJkGi3m0/Pq9Ggie4IMDUrGWlVfc6oQG8rr6rzRctlaBf6lDo14lnJov7FXtp+UGbUCDSwSZSQ35jH0RWxjLiItQfo/iGlPx5I0gZAAbkmTL5K+jaqbmI3fYSTcc+LKzYwLCm+I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MnTmbyAJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b82JQgEk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F126AC4AF10;
-	Mon,  5 Aug 2024 10:07:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MnTmbyAJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8874AC4AF0D;
+	Mon,  5 Aug 2024 10:17:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722852439;
-	bh=yZdH7G/DWV1jbHdTgllGgObMAKhaUaXSQuQm46xjJDk=;
+	s=k20201202; t=1722853037;
+	bh=MHe9tTcbFgoOBRxEB6E0kr0JxBxZ7aKJJhgU6KNwnAg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=b82JQgEkLwNKhGWEOKkiRaATi2hyDnQH6LpeTOdpLGC/a4o9mCsKHbzG5om/FU1FE
-	 vSqce9C9hGy8jIOwLyRbuJOnhDw54YP1dHC3F2ckBAe/m6LLRlXDCV0kmYwA4i5QTp
-	 9KD8PTZxgwIfV25rMzY/ivJlWYWltzZ/eLnoMkiC+7RE/Uakhgj8UAFV2NrRM20LlY
-	 rDlJi4O8LP87m3rRn4Rp39Gqsb9jmnbqgmB+DkXtkd3j7zjprikBUTk2kAxGeqoIoo
-	 ljlPJtzweqmOPbtz9vvQWg/UNPSWTpdLoj3nMgrCaQZct2+CQhH38a6MVkXt0U0CkM
-	 LckKwFwh32M6w==
-Message-ID: <11c8d021-bf53-4200-bbe7-a343f68295ae@kernel.org>
-Date: Mon, 5 Aug 2024 12:07:17 +0200
+	b=MnTmbyAJn13897HMv90r8yjwra5kgUzkXMT2HAjChMfDmU4TsSQRoyoPgH80dW01p
+	 T1zHWgzcPTd/u1wsWyvlik4Po2YBZcgTVRB87LisoxGz0Iewi0ST1FWgDzHtZB4km3
+	 j+284WcQ6LA61ntCkvteiP9lcScPbVtl2Hs+zFsIYtxFjIxpUmyfXNCySWid1/X0C+
+	 ehYvKI+EtQkMa+6RWU8ShKgtGAn4Wg2BlCEvjN9hTrjFR1D0auzJM25qiTEQOEipSN
+	 qiD2iUaVU03UpxU2HXjTDvhIMRMZ+07/TpbQ3CYtxrbvZS3aHjQ5WQ5GgTwrsLEL1k
+	 FuhkMuP6cwujQ==
+Message-ID: <8184a4fe-ddfb-4c38-be2f-e8d808ce777b@kernel.org>
+Date: Mon, 5 Aug 2024 12:17:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next v2 0/8] add netns helpers
+Subject: Re: [RESEND PATCH v2] checkpatch: skip warnings for symbol links
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1715821541.git.tanggeliang@kylinos.cn>
+To: Andy Whitcroft <apw@canonical.com>, Joe Perches <joe@perches.com>,
+ Dwaipayan Ray <dwaipayanray1@gmail.com>,
+ Lukas Bulwahn <lukas.bulwahn@gmail.com>
+Cc: Geliang Tang <geliang@kernel.org>, Geliang Tang <tanggeliang@kylinos.cn>,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
+References: <dc502b1b45cb27fda48d72d73e3267a32db023d8.1717722648.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,35 +88,138 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1715821541.git.tanggeliang@kylinos.cn>
+In-Reply-To: <dc502b1b45cb27fda48d72d73e3267a32db023d8.1717722648.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Andy, Joe, Dwaipayan, Lukas,
 
-(MPTCP ML only)
-
-On 16/05/2024 03:13, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patchset addresses Alexei's comment for commit "Handle SIGINT
-> when creating netns" [1]. Export local helpers create_netns() and
-> cleanup_netns() defined in mptcp.c into network_helpers.c as generic
-> ones. For this another helper unshare_netns() is added to replace
-> the existing local helpers create_netns().
-> 
-> v2:
->  - drop patch 9, it breaks CI
->  - delete netns first before adding it in patch 4
->  - move cleanup_netns behind create_netns in patch 6
-
-What do you plan to do with this series?
-
-No hurry at all, it is just to know if we need to keep tracking them on
-patchwork or if we should archive them instead if no v3 is planned.
+I'm sorry to bother you about that, but it looks like the following
+patch from Geliang didn't get any review from your side. Do you mind
+having a look at this non-urgent patch when you have a bit of free time
+please?
 
 Cheers,
 Matt
+
+On 07/06/2024 03:12, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> If there is a symbol link in the given patch, like the following one:
+> 
+> $ cat 0001-selftests-bpf-Add-mptcp-pm_nl_ctl-link.patch
+> 
+>  '''
+>  # diff --git a/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c \
+>  #            b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
+>  # new file mode 120000
+>  # index 000000000000..5a08c255b278
+>  # --- /dev/null
+>  # +++ b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
+>  # @@ -0,0 +1 @@
+>  # +../net/mptcp/pm_nl_ctl.c
+>  # \ No newline at end of file
+>  '''
+> 
+> checkpatch.pl reports two inaccurate warnings:
+> 
+>  '''
+>  WARNING: Missing or malformed SPDX-License-Identifier tag in line 1
+>  #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
+>  +../net/mptcp/pm_nl_ctl.c
+> 
+>  WARNING: adding a line without newline at end of file
+>  #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
+>  +../net/mptcp/pm_nl_ctl.c
+>  '''
+> 
+> And three checks if run it with strict option:
+> 
+>  '''
+>  CHECK: spaces preferred around that '/' (ctx:VxV)
+>  #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
+>  +../net/mptcp/pm_nl_ctl.c
+>    ^
+> 
+>  CHECK: spaces preferred around that '/' (ctx:VxV)
+>  #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
+>  +../net/mptcp/pm_nl_ctl.c
+>        ^
+> 
+>  CHECK: spaces preferred around that '/' (ctx:VxV)
+>  #65: FILE: tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c:1:
+>  +../net/mptcp/pm_nl_ctl.c
+>  '''
+> 
+> This patch fixes this by adding a new variable $symbol_link in checkpatch
+> script, set it if the new file mode is 120000. Skip "missing or malformed
+> SPDX-License-Identifier tag", "adding a line without newline at end of
+> file" and "spaces preferred around that '/'" checks if this variable is
+> set.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v2:
+>  - fix warnings with strict option too.
+> ---
+>  scripts/checkpatch.pl | 15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 2b812210b412..1f3ce5ffe914 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2694,6 +2694,8 @@ sub process {
+>  
+>  	my $checklicenseline = 1;
+>  
+> +	my $symbol_link = 0;
+> +
+>  	sanitise_line_reset();
+>  	my $line;
+>  	foreach my $rawline (@rawlines) {
+> @@ -3564,6 +3566,11 @@ sub process {
+>  # ignore non-hunk lines and lines being removed
+>  		next if (!$hunk_line || $line =~ /^-/);
+>  
+> +# Check for symbol links
+> +		if ($line =~ /^new file mode 120000$/) {
+> +			$symbol_link = 1;
+> +		}
+> +
+>  #trailing whitespace
+>  		if ($line =~ /^\+.*\015/) {
+>  			my $herevet = "$here\n" . cat_vet($rawline) . "\n";
+> @@ -3756,7 +3763,8 @@ sub process {
+>  				}
+>  
+>  				if ($comment !~ /^$/ &&
+> -				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @) {
+> +				    $rawline !~ m@^\+\Q$comment\E SPDX-License-Identifier: @ &&
+> +				    $symbol_link =~ 1) {
+>  					WARN("SPDX_LICENSE_TAG",
+>  					     "Missing or malformed SPDX-License-Identifier tag in line $checklicenseline\n" . $herecurr);
+>  				} elsif ($rawline =~ /(SPDX-License-Identifier: .*)/) {
+> @@ -3867,7 +3875,8 @@ sub process {
+>  		}
+>  
+>  # check for adding lines without a newline.
+> -		if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/) {
+> +		if ($line =~ /^\+/ && defined $lines[$linenr] && $lines[$linenr] =~ /^\\ No newline at end of file/ &&
+> +		    $symbol_link =~ 1) {
+>  			if (WARN("MISSING_EOF_NEWLINE",
+>  			         "adding a line without newline at end of file\n" . $herecurr) &&
+>  			    $fix) {
+> @@ -5293,7 +5302,7 @@ sub process {
+>  					 $op eq '*' or $op eq '/' or
+>  					 $op eq '%')
+>  				{
+> -					if ($check) {
+> +					if ($check && $symbol_link =~ 1) {
+>  						if (defined $fix_elements[$n + 2] && $ctx !~ /[EW]x[EW]/) {
+>  							if (CHK("SPACING",
+>  								"spaces preferred around that '$op' $at\n" . $hereptr)) {
+
 -- 
 Sponsored by the NGI0 Core fund.
 
