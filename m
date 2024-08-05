@@ -1,230 +1,119 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB135155353;
-	Mon,  5 Aug 2024 09:53:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEF8E1448D8
+	for <mptcp@lists.linux.dev>; Mon,  5 Aug 2024 10:07:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722851618; cv=none; b=JPXGxo8VLjeGaGfoRCTP0fvIv0QqrV2/9JWVnQ1XGhFOuTD7cmDNKy+OawxY85+OGIa7D7PfEW9ScCwZUfNfyVwFcn5SLts6MSmfLVoWO5DeyxpOyJzBy1hGTFbmG5KsdXE1woXLGVAwrBNOdqkw+Vz2mnibQ26vZiLfGn7EPYw=
+	t=1722852440; cv=none; b=Rdf36jWvK554oDKgTGbuWoOoJ0/E/Ai/zWoOU2IN1H9LL266DBMv8jGUiOhn7V+IeS1mQOhyH2pJdIT8D75a5r0D/Tbay2EEIkTKYmvoeT2eP8ZAyn4eyvj1/EgpMrN+6xUYdjBbFjQK7AKvzoWavYrLBcsfEo/gDXZmedhjEOw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722851618; c=relaxed/simple;
-	bh=v8V8NsYqx5U0o5pTyv3XffdmocZLP0sMUWIWr5UKJPM=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=V1QvQ/H9qV/G++o4v0inG5/RgvnRKnMaeev7dBiHRlo5/zSi2QV08jneLzJb3nGDOxFplt70N6c3b/BjnY2mqEcBFP1a93TWF1qCt36TBzdt2zSoOCzrjc+HJs1EZTgKZrHAxNSozEhxA1f5ouZtk/cxdGhTv0JiWHWi+e7QQCU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ewYqvmRB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1722852440; c=relaxed/simple;
+	bh=yZdH7G/DWV1jbHdTgllGgObMAKhaUaXSQuQm46xjJDk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fMm66MqjDoTrZtN8XS6YxWdJMO4WaeVcMRrb6R6502y27HkMZOLeuZPUKnFRDaBd/AY74uEe5cYR7wHF2Y8Js2TkpeQnprwH2RHKfXkYXvreBhr47MG8owf9pTWPpD6Fm/TBjBdoeU2qxJlyGZ4L3cpSXlArvPO4s8KDxELblyU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b82JQgEk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ewYqvmRB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08298C4AF0D;
-	Mon,  5 Aug 2024 09:53:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b82JQgEk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F126AC4AF10;
+	Mon,  5 Aug 2024 10:07:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1722851618;
-	bh=v8V8NsYqx5U0o5pTyv3XffdmocZLP0sMUWIWr5UKJPM=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=ewYqvmRB8ArH3+CYzIX1ly4M/jHVUnS9iqEZWQTA8/aqTs0HbxAFJXKrrvGIlUDje
-	 ohOXVKUrdaB2jbMivPbEySD7/xMyQb6zJI1jsr/7S4zCuzMOdKCAW4KNmFOoHDZdSt
-	 VMGCIyWPd6bToOEOsDiG43nX+QU9Im4PisnNq9YTQS35p3Rn1rbYWgJ+oGT+VDU2Ct
-	 PYfd+fJfah5Lw5O9QunNRApweoiOLVHRoPuKwiaLAanMM6TpRngmX/KwPi5hLYaG8k
-	 /tHZ/D6kYX/BatgY5q2vt9I2NsxLm6wsg+0c2iOa6VHXMauXGnAKMw7HnBweThtyHR
-	 84SGvFOLEsa2w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 05 Aug 2024 11:52:57 +0200
-Subject: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
+	s=k20201202; t=1722852439;
+	bh=yZdH7G/DWV1jbHdTgllGgObMAKhaUaXSQuQm46xjJDk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=b82JQgEkLwNKhGWEOKkiRaATi2hyDnQH6LpeTOdpLGC/a4o9mCsKHbzG5om/FU1FE
+	 vSqce9C9hGy8jIOwLyRbuJOnhDw54YP1dHC3F2ckBAe/m6LLRlXDCV0kmYwA4i5QTp
+	 9KD8PTZxgwIfV25rMzY/ivJlWYWltzZ/eLnoMkiC+7RE/Uakhgj8UAFV2NrRM20LlY
+	 rDlJi4O8LP87m3rRn4Rp39Gqsb9jmnbqgmB+DkXtkd3j7zjprikBUTk2kAxGeqoIoo
+	 ljlPJtzweqmOPbtz9vvQWg/UNPSWTpdLoj3nMgrCaQZct2+CQhH38a6MVkXt0U0CkM
+	 LckKwFwh32M6w==
+Message-ID: <11c8d021-bf53-4200-bbe7-a343f68295ae@kernel.org>
+Date: Mon, 5 Aug 2024 12:07:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH bpf-next v2 0/8] add netns helpers
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <cover.1715821541.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1715821541.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
-References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
-In-Reply-To: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>, 
- Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>, 
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>, 
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>, 
- Yonghong Song <yonghong.song@linux.dev>, 
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>, 
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>, 
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org, 
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4710; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=2hmbi+FkyvyFNw1rfk0tf+u5UMK3sb/cD/zwQAToiXI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmsKETTOzGznQXdDJm+VGh6aU5ocfU8uVAzVdjG
- O9BUcf6rfaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZrChEwAKCRD2t4JPQmmg
- c2ZCEADKCMA3p85IK3NP7i/Nay+1tjmxstFtFsczsMZDfXfhDd2Ox7ZuElX3q86F0tppDUs0tHK
- ce7lb2GfpHbiD+lzkdDHSCDWM82M+UzLx4L8rQTc+RW5qhPTYrraGXikEfjxdGhH4SOZmg1aVyj
- EIcVDbVFW+sWN2LdbSPRYVpxxWbMnE7pKeAir2YjhoMzTdpVLQsVMKmStUZoVC5u4cOY55F5EED
- M3c1B1zfhWb98xHiJFN/j8oJPzt7yW5E36d1xtgTpP7BKtoT6n7y2mQ2ianymOAzo6ZxoQ7NTjj
- uyleEmKblp0MY7tSncNhhIoJELfvAh97mYGUJmvvzaM2vMIaX1YmkVwaXDcWB9g/WfwXxxP49Ub
- HhLfPvraLKUcivtz0JQrZ2yu9puNCEp70u87Qaxw2HQb8C3EB/MAwyYHkMqWvTVyeBaoFEDdwzU
- U6iYglj8Ao5piBYRBQVcEhHKPBC+wNcFV7bB/IsnX06XhUc7+GKEQWTCtcwJGWJrBskhEDiKrJx
- ZnpnUP8Arupu6hApglxxG3CiC4ZJ/maheZi+o58RP04spfg01Wn8T5AFyvldK6kgCQmnnqYEja1
- wuOf+ZzryHq2cYWjVSXWYfTG2W1PnfnW1punVdmuXrdNlTB1g/O9xUDhUmWBUmOMvTwq3lDq5Iw
- WdPPWJCO9O8e4bw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <geliang@kernel.org>
+Hi Geliang,
 
-This patch adds a subtest named test_subflow to load and verify the newly
-added mptcp subflow example in test_mptcp. Add a helper endpoint_init()
-to add a new subflow endpoint. Add another helper ss_search() to verify the
-fwmark and congestion values set by mptcp_subflow prog using setsockopts.
+(MPTCP ML only)
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/76
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - v2 -> v3:
-   - Use './mptcp_pm_nl_ctl' instead of 'ip mptcp', not supported by the
-     BPF CI running IPRoute 5.5.0.
-   - Use SYS_NOFAIL() in _ss_search() instead of calling system()
- - v3 -> v4:
-   - Drop './mptcp_pm_nl_ctl', but skip this new test if 'ip mptcp' is
-     not supported.
----
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 105 +++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
+On 16/05/2024 03:13, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This patchset addresses Alexei's comment for commit "Handle SIGINT
+> when creating netns" [1]. Export local helpers create_netns() and
+> cleanup_netns() defined in mptcp.c into network_helpers.c as generic
+> ones. For this another helper unshare_netns() is added to replace
+> the existing local helpers create_netns().
+> 
+> v2:
+>  - drop patch 9, it breaks CI
+>  - delete netns first before adding it in patch 4
+>  - move cleanup_netns behind create_netns in patch 6
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index d2ca32fa3b21..d06be03cc0f0 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -9,8 +9,12 @@
- #include "network_helpers.h"
- #include "mptcp_sock.skel.h"
- #include "mptcpify.skel.h"
-+#include "mptcp_subflow.skel.h"
- 
- #define NS_TEST "mptcp_ns"
-+#define ADDR_1	"10.0.1.1"
-+#define ADDR_2	"10.0.1.2"
-+#define PORT_1	10001
- 
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
-@@ -335,10 +339,111 @@ static void test_mptcpify(void)
- 	close(cgroup_fd);
- }
- 
-+static int endpoint_init(char *flags)
-+{
-+	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
-+	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
-+	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
-+	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
-+	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
-+	if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags)) {
-+		printf("'ip mptcp' not supported, skip this test.\n");
-+		test__skip();
-+		goto fail;
-+	}
-+
-+	return 0;
-+fail:
-+	return -1;
-+}
-+
-+static int _ss_search(char *src, char *dst, char *port, char *keyword)
-+{
-+	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
-+			  NS_TEST, src, dst, port, PORT_1, keyword);
-+}
-+
-+static int ss_search(char *src, char *keyword)
-+{
-+	return _ss_search(src, ADDR_1, "dport", keyword);
-+}
-+
-+static void run_subflow(char *new)
-+{
-+	int server_fd, client_fd, err;
-+	char cc[TCP_CA_NAME_MAX];
-+	socklen_t len = sizeof(cc);
-+
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
-+		goto fail;
-+
-+	err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-+	if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
-+		goto fail;
-+
-+	send_byte(client_fd);
-+
-+	ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search fwmark:0x1");
-+	ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search fwmark:0x2");
-+	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
-+	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
-+
-+	close(client_fd);
-+fail:
-+	close(server_fd);
-+}
-+
-+static void test_subflow(void)
-+{
-+	int cgroup_fd, prog_fd, err;
-+	struct mptcp_subflow *skel;
-+	struct nstoken *nstoken;
-+
-+	cgroup_fd = test__join_cgroup("/mptcp_subflow");
-+	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup: mptcp_subflow"))
-+		return;
-+
-+	skel = mptcp_subflow__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: mptcp_subflow"))
-+		goto close_cgroup;
-+
-+	err = mptcp_subflow__attach(skel);
-+	if (!ASSERT_OK(err, "skel_attach: mptcp_subflow"))
-+		goto skel_destroy;
-+
-+	prog_fd = bpf_program__fd(skel->progs.mptcp_subflow);
-+	err = bpf_prog_attach(prog_fd, cgroup_fd, BPF_CGROUP_SOCK_OPS, 0);
-+	if (!ASSERT_OK(err, "prog_attach"))
-+		goto skel_destroy;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
-+		goto skel_destroy;
-+
-+	if (endpoint_init("subflow") < 0)
-+		goto close_netns;
-+
-+	run_subflow(skel->data->cc);
-+
-+close_netns:
-+	cleanup_netns(nstoken);
-+skel_destroy:
-+	mptcp_subflow__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- void test_mptcp(void)
- {
- 	if (test__start_subtest("base"))
- 		test_base();
- 	if (test__start_subtest("mptcpify"))
- 		test_mptcpify();
-+	if (test__start_subtest("subflow"))
-+		test_subflow();
- }
+What do you plan to do with this series?
 
+No hurry at all, it is just to know if we need to keep tracking them on
+patchwork or if we should archive them instead if no v3 is planned.
+
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
