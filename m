@@ -1,120 +1,94 @@
-Received: from mail-ot1-f43.google.com (mail-ot1-f43.google.com [209.85.210.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C51FF1BF323
-	for <mptcp@lists.linux.dev>; Tue,  6 Aug 2024 12:08:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D495C3612D
+	for <mptcp@lists.linux.dev>; Tue,  6 Aug 2024 22:29:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1722946112; cv=none; b=BE2Qm77v1QA5SbZLdq5f4LxdzPYVi9v4YyJBtRYExVI6jKx6/XENLeMM26+Yx8onQ0XlTdInea/Di9mLwjSt+vCP4Ug19RSzHOozHvgTcxU45UtHaL380k8+zkU5W1ccgy7hUZkrSHbLSDRWgIbqeSM6epTRv+eqZLB2gI9NpkM=
+	t=1722983348; cv=none; b=KR7af8xlJn+0D9pNfKgE5v18x8AqmHnbBhVe5hnaPVNRmHgxHDOyIgAcSJsfdEOF2risQrePMqj6AwMtFI9Z/fXgmS6vzXFNJLXsmjXUo7Ovfn6WK/tuGvtQVCFPxM02jBLNG7A5Ak0CrfnDGZr8XhUpSXfQzkybC8cinWE/00E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1722946112; c=relaxed/simple;
-	bh=OZoZSBIITiOTMr0p0Dk9Tvw2qw9ZMPSmBZDG3phOWmk=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=eIxcvc5sdcpTTqVTfhIt78KZilKEVQHEfodWQglD41PaD4EQBiAoxbUl6eafRvdIDCDJzLKLoCJE/W0Cosz7rbIn6K96kcb1bHemM+o19QciVCEp+oRpxCRZ2GVDDnYri9uGeuDFdx3WIKp+dLm//z7zhsfgm9EMYOp1HIN3/0k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=E+QVckAE; arc=none smtp.client-ip=209.85.210.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1722983348; c=relaxed/simple;
+	bh=4Pkq++c+38d3FXG/t+BzJtBCa8gwpL6IIl8gAPYnV+0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=jX7kKPVQOy4EmvyrGJxQH3yxurTFmmS8ZmKcJrJPWJq5zL6SpMUezRtqbqLExnbLHJw0aaN7IhPZ24+anobZyjhT1o1jNupE9gVTWW8n4rSygboPg9uWzoaqArKxsYxY2CIZ4hOoi1UTAhGoNa93bEhjYjDk4p6ZVNdYJxc1Jpg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QF5n2rD5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="E+QVckAE"
-Received: by mail-ot1-f43.google.com with SMTP id 46e09a7af769-7091558067eso291820a34.3
-        for <mptcp@lists.linux.dev>; Tue, 06 Aug 2024 05:08:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1722946110; x=1723550910; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Tz4okfVedYYdyjaykL+OAtEJfepPjCaQaykt5AvwDcA=;
-        b=E+QVckAEIivsLGkIR/OxdyCZSPInX3eeleiyX+V2hUF6x9wzTZ7wNezspFAiz+pqjg
-         fJH9Lr2UlzDD7iVN/6nuH7my3qrSkTFazCIWnqFC9CqjWSPyYaUrBxagHgSW5X1Me7nk
-         QqEos9m8vGujFskOZUokVuom6BMMzoCWyMVqjqoyABCFggQE+pgWS3OiAyVYzE0OnFIz
-         xB9Cd0Tr3XUimKFX+10/LOu7GsgFhgMlq90MpOli2EzUdxXNy6F4nFOGUsN4s4WovOvU
-         o4JCHErwlNymRKBhhZSnwFBMtXOITNlaQekXA6f8Fpr9jzWi9AEtxdnrIEQz1ExddbSw
-         OwOg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1722946110; x=1723550910;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=Tz4okfVedYYdyjaykL+OAtEJfepPjCaQaykt5AvwDcA=;
-        b=G6qzue/1FYxGxR0rYnWvMS9oDmVVzKWNEo4tEifFBSLRSXxs5wH18pik5eq9vM34br
-         r7zmpVKrJtehhdKFaMgCGfYEVd8D2l8a8d+IkkYQF1DIiZY8cce69P3KkOy10kTzx0LF
-         rARsWSwWm9MrJdtXxogKe6SOuzFwtloj0EY4LQiwhnl6iJ0Bp7mP7hwpWvuYfbDEMJMy
-         SyqKs7iVB3b3XeHDSAO28kHyXXsvz/JAR4tnL3iRFISYKTMKlhBGvGaJM1gnsp+jc0o9
-         EfPNh8pTDLVJ633AsquysgD4BLqAm4n4d5SA9bpY1IG5cEoakK9HJySXhxV57s5XGFWF
-         HCkQ==
-X-Gm-Message-State: AOJu0YyyDvpGbUfgVHIeoTOrON4V0HqlGZCGhq6KYhWMxTmV5CTkkwhM
-	eBge11pxHLZH1H920UDhf8Y9K3DbyPB7lUo7ikq4BiSd3/dwCAg=
-X-Google-Smtp-Source: AGHT+IFJ6X7d/XTxA4ue0wWXERarMtd72kQjFKSckGUWcv2e5gb9woFRGeBE9Vxs/v3KP317jkcqeg==
-X-Received: by 2002:a05:6830:4905:b0:703:68c2:8356 with SMTP id 46e09a7af769-709b323d1b0mr18240656a34.17.1722946109773;
-        Tue, 06 Aug 2024 05:08:29 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.78.18])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6bba1527214sm41097276d6.116.2024.08.06.05.08.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 06 Aug 2024 05:08:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
-References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 0/8] mptcp: MIB counters for sent MP_JOIN
-Message-ID: <04ba9261-03bc-cff1-b8ca-3d8c232a4996@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 06 Aug 2024 12:08:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QF5n2rD5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65FDCC32786;
+	Tue,  6 Aug 2024 22:29:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1722983348;
+	bh=4Pkq++c+38d3FXG/t+BzJtBCa8gwpL6IIl8gAPYnV+0=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=QF5n2rD5LfTZO+oMMtRc6sBgvil3wzWE5VHVan7/goZA84TRTDKjB9p25lYaXe+dS
+	 6p7/qo+BOFmv5a1tz6GMSe9RCoX5blih+8JO6MBZGTEMjQ7IlqkKANqYkViV5h+9no
+	 l/UV0z97k/PDuaW8QC+U6wAgr8+x3zw1Qc5VGSRVhpUPgIS6xKKdf6CBfNFlk7K4B0
+	 vPjXQfaqSnF+NS56G4+UA5pA//NU+Z7ivLKoPzoS8UZJL4VYXOrNS2kWWiqwTbn8tA
+	 1YwJvk3Egn/CFVMevFQ/csAZFUe12alO9MMkd4H1iY3YM2ijxSUNiunZjgYW6/jQR4
+	 NwS8UqXZfMcuA==
+Date: Tue, 6 Aug 2024 15:29:07 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v6 05/11] mptcp: pm: send ACK on an active
+ subflow
+In-Reply-To: <20240802-mptcp-pm-avail-v6-5-964ba9ce279f@kernel.org>
+Message-ID: <e3368a02-2083-b0b2-54c4-3a9662c0d80f@kernel.org>
+References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org> <20240802-mptcp-pm-avail-v6-5-964ba9ce279f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> Taking the first one on the list doesn't work in some cases, e.g. if the
+> initial subflow is being removed. Pick another one instead of not
+> sending anything.
+>
+> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>  - We could also check if the subflow is not "staled", but probably
+>    best to do that for net-next only.
+> ---
+> net/mptcp/pm_netlink.c | 9 ++++++---
+> 1 file changed, 6 insertions(+), 3 deletions(-)
+>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 4000de54c99c..e25cda3909fa 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -768,9 +768,12 @@ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
+> 	    !mptcp_pm_should_rm_signal(msk))
+> 		return;
+>
+> -	subflow = list_first_entry_or_null(&msk->conn_list, typeof(*subflow), node);
+> -	if (subflow)
+> -		mptcp_pm_send_ack(msk, subflow, false, false);
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		if (__mptcp_subflow_active(subflow)) {
+> +			mptcp_pm_send_ack(msk, subflow, false, false);
+> +			break;
+> +		}
+> +	}
 
-Our CI did some validations and here is its report:
+Hi Matthieu -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10265659749
+If all subflows are stale, it should still try to send on one (falling 
+back to the original first entry seems as good as anything else?)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/a07e36f8ecfa
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D877027
+- Mat
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> }
+>
+> int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+>
+> -- 
+> 2.45.2
+>
+>
