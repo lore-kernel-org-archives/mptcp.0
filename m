@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B11146A7B
-	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 10:17:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564AD146A7B
+	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 10:19:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723112229; cv=none; b=nxCi0sxQymV+2pPVTyQjA9EN/go7yQ36WfE5NDnlWUAZWE6Kn8C6KRQQEHtU8yWUxAhCgunprayPCC77JYMtvbng4k2XQc1WTFkFshptK8SWZkIRlr8UwcNwn74uvabfdQwiDndRetC5MjTNXw/cR+s/vnfcfUekfyOHHTcb8qI=
+	t=1723112341; cv=none; b=l0X3yUsFqhatiuh0749vAZNQ0txz4fQErZHUuoDpXE4u0wfRzrqq3d0kklx/4Z9NOCMo7T6gHX9aMVRQWGeZP0VQgviiPjzw2f7agljB7FRjdtErM6H1bMVzziOA0X7Nhk6KLhq5nlnffFMR4gtXJlBQU/wSA2Wu4AdzBxJ91ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723112229; c=relaxed/simple;
-	bh=0GOw89696rP6t7jE9JlvCXXy3I+eNVK4MdQi+t15XkA=;
+	s=arc-20240116; t=1723112341; c=relaxed/simple;
+	bh=rcgA3E79uC7wuXcfIx/F1AZTAqfPmRHk0tHzTkgHUE0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ICfsBbqF5ik0BqiDGUcIsRvDgB+doSfSY6NrJtXkALkDcmhbXhBfDPy3K/vr0wddfhob7SeWk7T6NPqylYssnx1wt2Jo4GICX4XcTYHjZjBdrBvlzIrPcaY2wajROxx85PSXk/oPtaLDIt4uvJjUeQ3WtW5ToO+SZbYdroThfLM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l59SuEkU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PdYarySHdpwnIgHIevyeL96lQ8/KT1y8MRt0GoXvDBQAEtum0CeP4q/2ECvPBMngQ9aOX7xu5foNF+Y1qlTS0xKqVvZ0kkrxGq8zg+Vk/TDb+qyENkqncb1ImiZrWF6OuMPIORzlbHskTiENi4jfg+917slGr+jsyuoc2/+GPWM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gqwo9F7R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l59SuEkU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ACDFC32782;
-	Thu,  8 Aug 2024 10:17:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gqwo9F7R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351C1C32782;
+	Thu,  8 Aug 2024 10:18:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723112229;
-	bh=0GOw89696rP6t7jE9JlvCXXy3I+eNVK4MdQi+t15XkA=;
+	s=k20201202; t=1723112341;
+	bh=rcgA3E79uC7wuXcfIx/F1AZTAqfPmRHk0tHzTkgHUE0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=l59SuEkUMOhfjR9rklZIvPX3ARpUmxqGP6d+ftbl4/JyjMQzuhDmE9FKrBkgVlk0y
-	 s7XuTpyfUJIRPHMBkKBQXyWps7MGxq7rTkkGKpI3tzgSqyMLeiKF2eY/8ybDA+xDjW
-	 SRm+KXOCEmuKGJ3GRmSdXKZ1MEH+WFW6x17kcPMeaLjgmBivQ7KnlCb0gIvztuyQkQ
-	 EKCvBELfMt+AmpXVVWsqRMhJyj+v968t0+yBK3khzJmPzo20vIAef/cb+g98oJ07hs
-	 YTJgZEG8Zoq5Pya1uCHHLWHmRZ9f0iJZ+qgl53E9XB5IhaYUqQcar/tr5WOJfoQjnD
-	 rhVw/w1qXAZSg==
-Message-ID: <ef3e8f6d-18a5-4ffd-939d-c3d0c650fd39@kernel.org>
-Date: Thu, 8 Aug 2024 12:17:06 +0200
+	b=Gqwo9F7RZ35fKA5dD6hxBX59WV6042gpmNOO7hubG/RNGojoNZSuiFqoFsgqd+6Ga
+	 F95iW/IWx8SoN/WFC2W+wx8KwDAfa1BAxDPSwghrO3aRSarxKRrobwVOqlaITbd5ap
+	 ASYRMsP7KlvYuw1w+GC679v6T+HT6PPmroQKmMetDIdb366X3tJVgtFxl8YfNP3np4
+	 1irCG6T3lu9KkWSbXksKb8epJc++hByM1QXpvZEoG3eRwFFwHrDn8Gx0LiOG908kJe
+	 UJEsas4mwfZ2VZDVaL07LcCr5KC/qknNhYigJz79L7ajofdqtc4I4tTNSQvALnWnTs
+	 tkMgU3KYCxpqw==
+Message-ID: <39ca5a97-ee5b-4a0c-9748-3caad7c21744@kernel.org>
+Date: Thu, 8 Aug 2024 12:18:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 1/8] selftests: mptcp: join: no extra msg if
- no counter
+Subject: Re: [PATCH mptcp-next v3 2/8] mptcp: MIB counters for sent MP_JOIN
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
- <20240806-mptcp-join-tx-mib-v3-1-c3b54d2099e9@kernel.org>
- <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
+ <20240806-mptcp-join-tx-mib-v3-2-c3b54d2099e9@kernel.org>
+ <88fa2fcc26d43988d897b306df39df5c3b41afd6.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,63 +86,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
+In-Reply-To: <88fa2fcc26d43988d897b306df39df5c3b41afd6.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-Thank you for the review!
-
-On 08/08/2024 04:38, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for these patches.
-> 
+On 08/08/2024 04:46, Geliang Tang wrote:
 > On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
->> The checksum and fail counters might not be available. Then no need
->> to
->> display an extra message with missing info.
+>> Recently, a few issues have been discovered around the creation of
+>> additional subflows. Without these counters, it was difficult to
+>> point
+>> out the reason why some subflows were not created as expected.
 >>
->> While at it, fix the indentation around, which is wrong since the
->> same
->> commit.
+>> These counters should have been added earlier, because there is no
+>> other
+>> simple ways to extract such information from the kernel, and
+>> understand
+>> why subflows have not been created.
 >>
->> Fixes: 47867f0a7e83 ("selftests: mptcp: join: skip check if MIB
->> counter not supported")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++------
->>  1 file changed, 6 insertions(+), 6 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 01c1e0871aca..a1f80dac59a7 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1112,7 +1112,7 @@ chk_csum_nr()
+>> While at it, some pr_debug() have been added, just in case the errno
+>> needs to be printed.
+
+(...)
+
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index a7fb4d46e024..fdeb7df8b095 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -1575,12 +1575,17 @@ int __mptcp_subflow_connect(struct sock *sk,
+>> const struct mptcp_pm_local *local,
+>>  	u32 remote_token;
+>>  	int addrlen;
 >>  
->>  	print_check "sum"
->>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtDataCsumErr")
->> -	if [ "$count" != "$csum_ns1" ]; then
->> +	if [ -n "$count" ] && [ "$count" != "$csum_ns1" ]; then
+>> +	/* The userspace PM sent the request too early? */
+>>  	if (!mptcp_is_fully_established(sk))
+>>  		goto err_out;
+>>  
+>>  	err = mptcp_subflow_create_socket(sk, local->addr.family,
+>> &sf);
+>> -	if (err)
+>> +	if (err) {
+>> +		MPTCP_INC_STATS(sock_net(sk),
+>> MPTCP_MIB_JOINSYNTXCREATSKERR);
+>> +		pr_debug("msk=%p local=%d remote:%d create sock
+>> error: %d\n",
 > 
-> We have checked [ -z "$count" ] in mptcp_lib_get_counter() already, so
-> I think no need to double check it here. Can we just let
-> mptcp_lib_get_counter() return "0" in this [ -z "$count" ] case, then
-> we can drop all these [ -n "$count" ] or [ -z "$count" ] (like in
-> chk_cestab_nr()) checks after mptcp_lib_get_counter()? WDYT?
+> It's better to use "remote=%d" instead of "remote:%d" I guess. Same
+> below.
 
-I don't think we can do that: mptcp_lib_get_counter() will return
-nothing if the counter doesn't exist: if the kernel being used doesn't
-support it. If it is our CI running the tests, there will be a failure
-thanks to "mptcp_lib_fail_if_expected_feature()", but only with *our*
-CI, because "SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES" is set to 1.
-
-So here, we need to check if '$count' is not empty, before comparing it
-with '$csum_ns1'. If it is empty, the check will be skipped (see 4 lines
-below), but we don't want to print a useless "extra message" in this
-case, with just "ns1=".
+Indeed, I see we usually use '=', I can do the modification when
+applying the patches if there is nothing bigger to fix.
 
 Cheers,
 Matt
