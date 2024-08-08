@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 564AD146A7B
-	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 10:19:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F40B414A09F
+	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 10:22:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723112341; cv=none; b=l0X3yUsFqhatiuh0749vAZNQ0txz4fQErZHUuoDpXE4u0wfRzrqq3d0kklx/4Z9NOCMo7T6gHX9aMVRQWGeZP0VQgviiPjzw2f7agljB7FRjdtErM6H1bMVzziOA0X7Nhk6KLhq5nlnffFMR4gtXJlBQU/wSA2Wu4AdzBxJ91ps=
+	t=1723112542; cv=none; b=Pnrpg9Jen8oIFOl1e6xUH7iWQSJip6I37mSaQtoPoLF+aZ4h/etiu+SXBkDPb/J8RXyzyUcbJTt9LJlS3QfOaKIkkx4+88zQ+Ggbq7vk/7t1ugXik2d4noKKYIoKY/cFzao2EBVuPhvt0SlYoeGiJ7ZhB0RPlZ2SMS56yEVsP6Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723112341; c=relaxed/simple;
-	bh=rcgA3E79uC7wuXcfIx/F1AZTAqfPmRHk0tHzTkgHUE0=;
+	s=arc-20240116; t=1723112542; c=relaxed/simple;
+	bh=pf63nByEH4KLnm90tD6HgCuasXtVLISX161CYjoZzKo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PdYarySHdpwnIgHIevyeL96lQ8/KT1y8MRt0GoXvDBQAEtum0CeP4q/2ECvPBMngQ9aOX7xu5foNF+Y1qlTS0xKqVvZ0kkrxGq8zg+Vk/TDb+qyENkqncb1ImiZrWF6OuMPIORzlbHskTiENi4jfg+917slGr+jsyuoc2/+GPWM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Gqwo9F7R; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h+UklyV2ncStav1juJA9RLAP22FATfVIJFYiBAz8AIzSltuo137jzfIOhfi13wIvWGfReia20YdxxGuciiCfYe3eo09eHz3uZxUYiK9YEpV5Q1nkdEdSwFIJL503EdnggxWNGleSKdgbZTnc8ZO2DOWKuzDXsgU2EGIfntAfoyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WGz+VGU2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Gqwo9F7R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 351C1C32782;
-	Thu,  8 Aug 2024 10:18:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WGz+VGU2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42222C32782;
+	Thu,  8 Aug 2024 10:22:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723112341;
-	bh=rcgA3E79uC7wuXcfIx/F1AZTAqfPmRHk0tHzTkgHUE0=;
+	s=k20201202; t=1723112541;
+	bh=pf63nByEH4KLnm90tD6HgCuasXtVLISX161CYjoZzKo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Gqwo9F7RZ35fKA5dD6hxBX59WV6042gpmNOO7hubG/RNGojoNZSuiFqoFsgqd+6Ga
-	 F95iW/IWx8SoN/WFC2W+wx8KwDAfa1BAxDPSwghrO3aRSarxKRrobwVOqlaITbd5ap
-	 ASYRMsP7KlvYuw1w+GC679v6T+HT6PPmroQKmMetDIdb366X3tJVgtFxl8YfNP3np4
-	 1irCG6T3lu9KkWSbXksKb8epJc++hByM1QXpvZEoG3eRwFFwHrDn8Gx0LiOG908kJe
-	 UJEsas4mwfZ2VZDVaL07LcCr5KC/qknNhYigJz79L7ajofdqtc4I4tTNSQvALnWnTs
-	 tkMgU3KYCxpqw==
-Message-ID: <39ca5a97-ee5b-4a0c-9748-3caad7c21744@kernel.org>
-Date: Thu, 8 Aug 2024 12:18:57 +0200
+	b=WGz+VGU2zMVmvED64S+wObE83rP+eRi+4ge2/oY9ffIrheec9OXWN2W3/C34jNiJA
+	 Eny/2e5Q2VjGeeXNk+K+eqMZRMzXEoxCnD/X3au7cznJ9VcPreQo9kY3rbuU6rME1k
+	 /mAMWb03gD8zML/WHU/4Vl55kEJlQfqOiGvbMLpocW6fj8ygED+oOCUgzDEavLEzTz
+	 CSrfTjk0ppiCwPBQX5Wf47wwNNmphcWMJUkgES1N6EFEHUKKrk75t6DNHLFKfuVQMo
+	 g0+vn9qN++Xc1NRT9r2Nigsgj/XFi9XDrPSVPncCAdPIBqNzlXMIvz4gTBcsDpUTTP
+	 iMpcnkAwXissQ==
+Message-ID: <2743512d-4772-4e42-9abd-6849c36f1885@kernel.org>
+Date: Thu, 8 Aug 2024 12:22:19 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 2/8] mptcp: MIB counters for sent MP_JOIN
+Subject: Re: [PATCH mptcp-next v3 3/8] selftests: mptcp: join: reduce join_nr
+ params
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
- <20240806-mptcp-join-tx-mib-v3-2-c3b54d2099e9@kernel.org>
- <88fa2fcc26d43988d897b306df39df5c3b41afd6.camel@kernel.org>
+ <20240806-mptcp-join-tx-mib-v3-3-c3b54d2099e9@kernel.org>
+ <23fc6138bd31d81783683cf041fbf75e8280a204.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,57 +87,100 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <88fa2fcc26d43988d897b306df39df5c3b41afd6.camel@kernel.org>
+In-Reply-To: <23fc6138bd31d81783683cf041fbf75e8280a204.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 08/08/2024 04:46, Geliang Tang wrote:
+On 08/08/2024 05:28, Geliang Tang wrote:
 > On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
->> Recently, a few issues have been discovered around the creation of
->> additional subflows. Without these counters, it was difficult to
->> point
->> out the reason why some subflows were not created as expected.
+>> chk_join_nr() currently takes 9 positional parameters, 6 of them are
+>> optional. It makes it hard to read:
 >>
->> These counters should have been added earlier, because there is no
->> other
->> simple ways to extract such information from the kernel, and
->> understand
->> why subflows have not been created.
+>>   chk_join_nr 1 1 1 1 0 1 1 0 4
 >>
->> While at it, some pr_debug() have been added, just in case the errno
->> needs to be printed.
-
-(...)
-
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index a7fb4d46e024..fdeb7df8b095 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -1575,12 +1575,17 @@ int __mptcp_subflow_connect(struct sock *sk,
->> const struct mptcp_pm_local *local,
->>  	u32 remote_token;
->>  	int addrlen;
+>> Naming these vars helps to make it easier to read:
+>>
+>>   join_csum_ns1=1 join_csum_ns2=0 \
+>>     join_fail_nr=1 join_rst_nr=1 join_infi_nr=0 \
+>>     join_corrupted_pkts=4 \
+>>     chk_join_nr 1 1 1
+>>
+>> It will then be easier to add new optional parameters.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 31
+>> ++++++++++++++++++-------
+>>  1 file changed, 22 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index a1f80dac59a7..0401ba1aaf1b 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -61,6 +61,12 @@ unset sflags
+>>  unset fastclose
+>>  unset fullmesh
+>>  unset speed
+>> +unset join_csum_ns1
+>> +unset join_csum_ns2
+>> +unset join_fail_nr
+>> +unset join_rst_nr
+>> +unset join_infi_nr
+>> +unset join_corrupted_pkts
 >>  
->> +	/* The userspace PM sent the request too early? */
->>  	if (!mptcp_is_fully_established(sk))
->>  		goto err_out;
+>>  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
+>>  #				  (ip6 && (ip6[74] & 0xf0) ==
+>> 0x30)'"
+>> @@ -1314,12 +1320,12 @@ chk_join_nr()
+>>  	local syn_nr=$1
+>>  	local syn_ack_nr=$2
+>>  	local ack_nr=$3
+>> -	local csum_ns1=${4:-0}
+>> -	local csum_ns2=${5:-0}
+>> -	local fail_nr=${6:-0}
+>> -	local rst_nr=${7:-0}
+>> -	local infi_nr=${8:-0}
+>> -	local corrupted_pkts=${9:-0}
+>> +	local csum_ns1=${join_csum_ns1:-0}
+>> +	local csum_ns2=${join_csum_ns2:-0}
+>> +	local fail_nr=${join_fail_nr:-0}
+>> +	local rst_nr=${join_rst_nr:-0}
+>> +	local infi_nr=${join_infi_nr:-0}
+>> +	local corrupted_pkts=${join_corrupted_pkts:-0}
+>>  	local count
+>>  	local with_cookie
 >>  
->>  	err = mptcp_subflow_create_socket(sk, local->addr.family,
->> &sf);
->> -	if (err)
->> +	if (err) {
->> +		MPTCP_INC_STATS(sock_net(sk),
->> MPTCP_MIB_JOINSYNTXCREATSKERR);
->> +		pr_debug("msk=%p local=%d remote:%d create sock
->> error: %d\n",
+>> @@ -3138,7 +3144,8 @@ fastclose_tests()
+>>  		MPTCP_LIB_SUBTEST_FLAKY=1
+>>  		test_linkfail=1024 fastclose=server \
+>>  			run_tests $ns1 $ns2 10.0.1.1
+>> -		chk_join_nr 0 0 0 0 0 0 1
+>> +		join_rst_nr=1 \
+>> +			chk_join_nr 0 0 0
+>>  		chk_fclose_nr 1 1 invert
+>>  		chk_rst_nr 1 1
+>>  	fi
+>> @@ -3157,7 +3164,10 @@ fail_tests()
+>>  		MPTCP_LIB_SUBTEST_FLAKY=1
+>>  		test_linkfail=128 \
+>>  			run_tests $ns1 $ns2 10.0.1.1
+>> -		chk_join_nr 0 0 0 +1 +0 1 0 1 "$(pedit_action_pkts)"
+>> +		join_csum_ns1=+1 join_csum_ns2=+0 \
+>> +			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1
+>> \
 > 
-> It's better to use "remote=%d" instead of "remote:%d" I guess. Same
-> below.
+> Can we drop this "join_rst_nr=0"?
 
-Indeed, I see we usually use '=', I can do the modification when
-applying the patches if there is nothing bigger to fix.
+We could, but I prefer not: I think it is better to specify all
+variables here, to make it clear we expect no RST, compared to the next
+test where instead we expect an infinite mapping. It is easier to
+compare the expectations from the two tests.
+
+It is different from the 'fastclose_tests()' test, where it is just an
+exception there, just one test where there is a rst.
 
 Cheers,
 Matt
