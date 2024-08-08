@@ -1,184 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0CFD4317B
-	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 03:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95B11146A7B
+	for <mptcp@lists.linux.dev>; Thu,  8 Aug 2024 10:17:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723087728; cv=none; b=gYv9wwosaQMbelgnFfDzBFA3dQE6JnbPqD+AdM9mF4/un3DDxxb8y7DxVn4C+4KxOEPsNfT/Yw0GpSNFsugGVfRHXwseySPW82JoARwIWO1PLv1AEFNuaYGeFiJ00ApQBEfjZ20njlYCiR4mrDwr3GNxKPCIJHK9d71R/h3NDdU=
+	t=1723112229; cv=none; b=nxCi0sxQymV+2pPVTyQjA9EN/go7yQ36WfE5NDnlWUAZWE6Kn8C6KRQQEHtU8yWUxAhCgunprayPCC77JYMtvbng4k2XQc1WTFkFshptK8SWZkIRlr8UwcNwn74uvabfdQwiDndRetC5MjTNXw/cR+s/vnfcfUekfyOHHTcb8qI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723087728; c=relaxed/simple;
-	bh=m0U9/ZXJrj8yHzKMnTTf9cHylgJVR6U43pmgSgeyPIg=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=JyxBS579xs1AJQUfECFKevoEKfvpiGdGAeeW1OE2qKmf70e8ymlI23ZbAxinifzZPNndWf8nKWfmXFR/x1Q1CFdiOGamKyssfv6GQXcHtF6CPsudmIvdU7C2az2kDXbuwDOpHr5JN8autaa346GhurGu5mdYcLz0GQU/7IbIOGU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QbYitD4f; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723112229; c=relaxed/simple;
+	bh=0GOw89696rP6t7jE9JlvCXXy3I+eNVK4MdQi+t15XkA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=ICfsBbqF5ik0BqiDGUcIsRvDgB+doSfSY6NrJtXkALkDcmhbXhBfDPy3K/vr0wddfhob7SeWk7T6NPqylYssnx1wt2Jo4GICX4XcTYHjZjBdrBvlzIrPcaY2wajROxx85PSXk/oPtaLDIt4uvJjUeQ3WtW5ToO+SZbYdroThfLM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l59SuEkU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QbYitD4f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 827FAC4AF0B;
-	Thu,  8 Aug 2024 03:28:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l59SuEkU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6ACDFC32782;
+	Thu,  8 Aug 2024 10:17:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723087728;
-	bh=m0U9/ZXJrj8yHzKMnTTf9cHylgJVR6U43pmgSgeyPIg=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=QbYitD4fzIJs/uYZcG0OsGhtAEkQYTrWm6nrb+bpb0UVc0f26/W8w/PHbOfV/Tm1e
-	 LFCd853CeWp1GErKTjT4a7N+OqCP3EnQy6ErlpLpotebO18MmfrW9CRrVtHv1RQZaF
-	 LozPeAtWW3Gp7rzKjXKkoSyhq5fFdCxhPolmqiyCuOZXmEUn/+VLJc3yn5D89k10BT
-	 TAwUnlqRNdLaeIsgX4iYTgp4FLHwC0N+iXG2a888GDf8sPsVqD1ce8jPZHQseQiWTq
-	 3KRKFvJ9a2IbHkgxKTm958bOjeOJmKuPK//TvM7cZMZI22NqqLKVu/t7/3NxE9djEb
-	 PMoW0ESTbgB0g==
-Message-ID: <23fc6138bd31d81783683cf041fbf75e8280a204.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 3/8] selftests: mptcp: join: reduce
- join_nr params
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Thu, 08 Aug 2024 11:28:44 +0800
-In-Reply-To: <20240806-mptcp-join-tx-mib-v3-3-c3b54d2099e9@kernel.org>
-References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
-	 <20240806-mptcp-join-tx-mib-v3-3-c3b54d2099e9@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1723112229;
+	bh=0GOw89696rP6t7jE9JlvCXXy3I+eNVK4MdQi+t15XkA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=l59SuEkUMOhfjR9rklZIvPX3ARpUmxqGP6d+ftbl4/JyjMQzuhDmE9FKrBkgVlk0y
+	 s7XuTpyfUJIRPHMBkKBQXyWps7MGxq7rTkkGKpI3tzgSqyMLeiKF2eY/8ybDA+xDjW
+	 SRm+KXOCEmuKGJ3GRmSdXKZ1MEH+WFW6x17kcPMeaLjgmBivQ7KnlCb0gIvztuyQkQ
+	 EKCvBELfMt+AmpXVVWsqRMhJyj+v968t0+yBK3khzJmPzo20vIAef/cb+g98oJ07hs
+	 YTJgZEG8Zoq5Pya1uCHHLWHmRZ9f0iJZ+qgl53E9XB5IhaYUqQcar/tr5WOJfoQjnD
+	 rhVw/w1qXAZSg==
+Message-ID: <ef3e8f6d-18a5-4ffd-939d-c3d0c650fd39@kernel.org>
+Date: Thu, 8 Aug 2024 12:17:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3 1/8] selftests: mptcp: join: no extra msg if
+ no counter
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
+ <20240806-mptcp-join-tx-mib-v3-1-c3b54d2099e9@kernel.org>
+ <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
-> chk_join_nr() currently takes 9 positional parameters, 6 of them are
-> optional. It makes it hard to read:
-> 
->   chk_join_nr 1 1 1 1 0 1 1 0 4
-> 
-> Naming these vars helps to make it easier to read:
-> 
->   join_csum_ns1=1 join_csum_ns2=0 \
->     join_fail_nr=1 join_rst_nr=1 join_infi_nr=0 \
->     join_corrupted_pkts=4 \
->     chk_join_nr 1 1 1
-> 
-> It will then be easier to add new optional parameters.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 31
-> ++++++++++++++++++-------
->  1 file changed, 22 insertions(+), 9 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index a1f80dac59a7..0401ba1aaf1b 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -61,6 +61,12 @@ unset sflags
->  unset fastclose
->  unset fullmesh
->  unset speed
-> +unset join_csum_ns1
-> +unset join_csum_ns2
-> +unset join_fail_nr
-> +unset join_rst_nr
-> +unset join_infi_nr
-> +unset join_corrupted_pkts
->  
->  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) == 0x30) ||
->  #				  (ip6 && (ip6[74] & 0xf0) ==
-> 0x30)'"
-> @@ -1314,12 +1320,12 @@ chk_join_nr()
->  	local syn_nr=$1
->  	local syn_ack_nr=$2
->  	local ack_nr=$3
-> -	local csum_ns1=${4:-0}
-> -	local csum_ns2=${5:-0}
-> -	local fail_nr=${6:-0}
-> -	local rst_nr=${7:-0}
-> -	local infi_nr=${8:-0}
-> -	local corrupted_pkts=${9:-0}
-> +	local csum_ns1=${join_csum_ns1:-0}
-> +	local csum_ns2=${join_csum_ns2:-0}
-> +	local fail_nr=${join_fail_nr:-0}
-> +	local rst_nr=${join_rst_nr:-0}
-> +	local infi_nr=${join_infi_nr:-0}
-> +	local corrupted_pkts=${join_corrupted_pkts:-0}
->  	local count
->  	local with_cookie
->  
-> @@ -3138,7 +3144,8 @@ fastclose_tests()
->  		MPTCP_LIB_SUBTEST_FLAKY=1
->  		test_linkfail=1024 fastclose=server \
->  			run_tests $ns1 $ns2 10.0.1.1
-> -		chk_join_nr 0 0 0 0 0 0 1
-> +		join_rst_nr=1 \
-> +			chk_join_nr 0 0 0
->  		chk_fclose_nr 1 1 invert
->  		chk_rst_nr 1 1
->  	fi
-> @@ -3157,7 +3164,10 @@ fail_tests()
->  		MPTCP_LIB_SUBTEST_FLAKY=1
->  		test_linkfail=128 \
->  			run_tests $ns1 $ns2 10.0.1.1
-> -		chk_join_nr 0 0 0 +1 +0 1 0 1 "$(pedit_action_pkts)"
-> +		join_csum_ns1=+1 join_csum_ns2=+0 \
-> +			join_fail_nr=1 join_rst_nr=0 join_infi_nr=1
-> \
+Hi Geliang,
 
-Can we drop this "join_rst_nr=0"?
+Thank you for the review!
 
-> +			join_corrupted_pkts="$(pedit_action_pkts)" \
-> +			chk_join_nr 0 0 0
->  		chk_fail_nr 1 -1 invert
->  	fi
->  
-> @@ -3170,7 +3180,10 @@ fail_tests()
->  		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags
-> subflow
->  		test_linkfail=1024 \
->  			run_tests $ns1 $ns2 10.0.1.1
-> -		chk_join_nr 1 1 1 1 0 1 1 0 "$(pedit_action_pkts)"
-> +		join_csum_ns1=1 join_csum_ns2=0 \
-> +			join_fail_nr=1 join_rst_nr=1 join_infi_nr=0
-> \
-
-And this "join_infi_nr=0".
-
-> +			join_corrupted_pkts="$(pedit_action_pkts)" \
-> +			chk_join_nr 1 1 1
->  	fi
->  }
->  
+On 08/08/2024 04:38, Geliang Tang wrote:
+> Hi Matt,
 > 
+> Thanks for these patches.
+> 
+> On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
+>> The checksum and fail counters might not be available. Then no need
+>> to
+>> display an extra message with missing info.
+>>
+>> While at it, fix the indentation around, which is wrong since the
+>> same
+>> commit.
+>>
+>> Fixes: 47867f0a7e83 ("selftests: mptcp: join: skip check if MIB
+>> counter not supported")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++------
+>>  1 file changed, 6 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 01c1e0871aca..a1f80dac59a7 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -1112,7 +1112,7 @@ chk_csum_nr()
+>>  
+>>  	print_check "sum"
+>>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtDataCsumErr")
+>> -	if [ "$count" != "$csum_ns1" ]; then
+>> +	if [ -n "$count" ] && [ "$count" != "$csum_ns1" ]; then
+> 
+> We have checked [ -z "$count" ] in mptcp_lib_get_counter() already, so
+> I think no need to double check it here. Can we just let
+> mptcp_lib_get_counter() return "0" in this [ -z "$count" ] case, then
+> we can drop all these [ -n "$count" ] or [ -z "$count" ] (like in
+> chk_cestab_nr()) checks after mptcp_lib_get_counter()? WDYT?
+
+I don't think we can do that: mptcp_lib_get_counter() will return
+nothing if the counter doesn't exist: if the kernel being used doesn't
+support it. If it is our CI running the tests, there will be a failure
+thanks to "mptcp_lib_fail_if_expected_feature()", but only with *our*
+CI, because "SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES" is set to 1.
+
+So here, we need to check if '$count' is not empty, before comparing it
+with '$csum_ns1'. If it is empty, the check will be skipped (see 4 lines
+below), but we don't want to print a useless "extra message" in this
+case, with just "ns1=".
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
