@@ -1,135 +1,97 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86C7A1DFF5
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 12:34:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03CBC1DFF5
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 12:38:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723206852; cv=none; b=ZzNRcdrcCxWGqCvG+U3oGjyNUoMVWtn8pdi/CzEg8PKU57i6FQTH7fmtAffvI3kNg4hwNVioOfjLWfBnL4N+ythMgbKTHjYEqeXQ5+aKO3iXPHan6Zbb5J5Gn6HQ+cWsrWbK+uD7yQCWJJ9y4VxkJdhowfDtxDDMyvBW0ZJ2eC4=
+	t=1723207084; cv=none; b=ZH26qsud4OPYuLgr5PdW5sCDtItWO5/BkItoGxt0CxmYdkc5T1niQAQH7WcpbG6tl6xbKgMAtaicBZOugO8u65TlXD22YAx/szLsH8LukIlrHaGG83FbdfvZVMz27BQ8QmJsE/Vuc9GXhCzbI6vKq7hi7+g6GnQS2N8zXDGkQxo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723206852; c=relaxed/simple;
-	bh=rVA1sY+YAx6uMBTdzphpj/hIRU9Bvtw4Hib+DaTHKIs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fPfgMdyC5vh8xp7Cq6Jm+CSc27h5ANnlJXoObCgoPAgUKR9LgBEBajKC5qKvsTzxEJl+Hq20pv4Bwcx9LzpEVHCfT9vzlIBdr90HQpcFknJLDtZO3QtzLv6jj1ElLYYtPVKkf93kjwKrIlf6JVAPUFPFFfVoxYsIWzKs7coRkCY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0jURAvY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723207084; c=relaxed/simple;
+	bh=XpW0nWNy49OzQ7pVOF9AyiVfb81nhGIsjRbpT760rLY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=UQc+pGXSpv7uqqP6kdc7acMgbs79ytbb4hUtwtwb8/CpSbZ46CHDPvACGHjjinMj1iknQiy9YhJBZsBuvLsr3wg8rHrq2a0CPFX5ujZWRf//Ajk+0fhn+060KIZcmWlvT6azsKtUcyTqlHuXF3lFBcezkfhhydy8yM7ZHLCMCjE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufLZs7HF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0jURAvY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C8ADC32782;
-	Fri,  9 Aug 2024 12:34:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufLZs7HF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DCEBCC32782;
+	Fri,  9 Aug 2024 12:38:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723206852;
-	bh=rVA1sY+YAx6uMBTdzphpj/hIRU9Bvtw4Hib+DaTHKIs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=t0jURAvYTBD08jHg4dzyr642lwhMxSXjAlvI1Z9mtzzaWT0nue+w8z+Ix9y/H/2RX
-	 j6Z9GUyYZzTqwPFWBoiDqzt1ggCyMhhWcrFq0pnnAcliNs8EO7CN5A+tUTll4rGwYh
-	 tnpWqdz0dWrcjVKKER5rgk3J62bifukwPT6e9KSUea4CNdden0qeJ1uD7j4PLALROu
-	 nYnB/kRwAkTxv7+eoAiaAFys5hTYf31NSi6ZQix6wtHjiCtZ8WIDcDmwUnydIy5MjD
-	 z2EPNVpSNKQ7P3uP/J543FTpEyBsI7WAxLNgsq+ajGTDjsITt85MdLsi6EF2jz+1bt
-	 0UtzAKftx0ROg==
-Message-ID: <cacca721-92d9-4ded-9011-e201cec31c50@kernel.org>
-Date: Fri, 9 Aug 2024 14:34:09 +0200
+	s=k20201202; t=1723207083;
+	bh=XpW0nWNy49OzQ7pVOF9AyiVfb81nhGIsjRbpT760rLY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ufLZs7HFXOv5X4jV9xZ2ZbU8MxOTcSXZro0/uSwRihttFL8ws5UxrDgwYoD2OeSm5
+	 QdxvaoFkoWaWQNOePrHbPWhGw5zqi/kbjD65I1J5EbR60Ivsi5qZEo9+t7daxnIO++
+	 QCd72cTox1+pkbea74ZvotpKEyLpect5GKN8zPhtMiLW4sV6a7N4/qGrNMdiRmzz5x
+	 39JTj3XNqNI7AI07UabxlvQ6I23lygvEFrTwSVJBpOgo7xyg3gCGNpbrcY3SGnOKFf
+	 LEiQwox+wMAjbYODeolKcSyp/S6ZkNIPT1MOyItvQEsGh2Zp4DQoZj4C9E2M0FTPGm
+	 g9todMCUAFl8A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v7 0/3] mptcp: pm: more fixes around the ID 0
+Date: Fri, 09 Aug 2024 14:37:48 +0200
+Message-Id: <20240809-mptcp-pm-avail-v7-0-3d0916ba39b4@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v6 10/11] selftests: mptcp: join: cannot rm sf
- if closed
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
- <20240802-mptcp-pm-avail-v6-10-964ba9ce279f@kernel.org>
- <115783a3-d667-b9a9-3f8c-266023e15069@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <115783a3-d667-b9a9-3f8c-266023e15069@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJwNtmYC/2XOwW7DIAwG4FepOI8pBgyhp73H1EMIpkVrk4hEq
+ FOVdx/LJjUbR8v/99sPNlOKNLPj4cES5TjHcSiDeTmw/tINZ+LRl5mJRqhGi4bfpqWf+HTjXe7
+ ilQckadE4UgpYQVOiEO9b4Tv7yQ60sFNZXeK8jOlzO5VhC/y2wv/WDLzhTlvhkVxrHb59UBro+
+ jqm89aVxdMbwMqL4kOPgNJ5CJoqL/feVl4WT1Y7RAs9eVl5tfNCVF4VD+iCN9KTbFXlce915fH
+ 7fwcAxnuioCuvn75t6vu6eKuV62xPwtjwx6/r+gUtmgrb+AEAAA==
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1146; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=XpW0nWNy49OzQ7pVOF9AyiVfb81nhGIsjRbpT760rLY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmtg2q2tpdrJSzuCnN3xxyuFrUKQH+kqB7CJemy
+ rU8ks70HHaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZrYNqgAKCRD2t4JPQmmg
+ c/k+EACekDpZOm1oDXN1Wm6axYSLbZCBMDIsBuW2MifU7Rwb/QhObuneuc37SoKZJZ+l+8xzTJ0
+ yql4p2BdRHowHrF4mJ6FoYRfsdYYwFjDkK7RIz4pPMU9F/Ok7BzQ3VfIzCxEOu4VtrbnH2yKB4/
+ gzKHf1MLtq0radhUbeBrqd9cyJ69qu0SXt5PEfRumHIERqoSXhwv7B6eidCh5NJC/02vwclVpqQ
+ qQLV5UK38uJnz3g3eSB87YqKu1reQujpLAN09zB5Sq7ucOATbPipetZ4Odv+jP9Q3JxyoE27UI1
+ 4Ljl9N2meONECFmNKGrYI0P0bjxFeYNy3Nu6V5WzhEVmMT5N1iB/UY9SHP7koHWHkXWBPjO9oeL
+ M6Q6HetgUQF76ebb2fjM7FUvJnDErtGetrMumzaFbIkoJrlQgnPXMCwR7pp710PKmDy6mahjc+r
+ 5RCW4aeahewNP47CKG+VnoXjCBJQUo3vcfEKvsrOW2NNJawbX563AXNy4zT1NtYa54wE2FU5FTB
+ I7KnIzkht3/AyNVMgABWOa+C8WUbJGTUR72x3D9SGvCRfjhDrhWlrAvoxTBBEg6h6/hZ815oP6g
+ zklvZcU9MleGj3l1vXOyWDFJhRhaJopspXSPUWJimWFxJQlGyCsrRZPM4vk/y8oTZkzXG7E8MwS
+ oEIRhzwWfra6IhQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Mat,
+The 8 first patches from the previous version have already been applied.
 
-On 09/08/2024 02:33, Mat Martineau wrote:
-> On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
-> 
->> Thanks to the previous commit, the MPTCP subflows are now closed on both
->> directions even when only the MPTCP path-manager of one peer asks for
->> their closure.
->>
->> In the two tests modified here -- "userspace pm add & remove address"
->> and "userspace pm create destroy subflow" -- one peer is controlled by
->> the userspace PM, and the other one by in-kernel PM. When the userspace
->> PM sends a RM_ADDR notification, the in-kernel PM will automatically
->> react by closing all subflows using this address. Now that the subflows
->> are properly closed on both direction, the userspace PM can no longer
->> closes the same subflows if they are already closed. In this case, an
->> error will be returned to the userspace. So no need to run this command,
->> which mean that the linked counters will then not be incremented.
->>
->> These tests are then no longer sending both a RM_ADDR, then closing the
->> linked subflow just after. The test with the userspace PM on the server
->> side is now removing one subflow linked to one address, then sending
->> a RM_ADDR for another address. The test with the userspace PM on the
->> client side is now only removing the subflow that was previously
->> created.
->>
-> 
-> Hi Matthieu -
-> 
-> How does this selftest behave on older kernels without the fix in the
-> previous patch? Would be good to include that information in the commit
-> message.
+Last fix: the subflow is not closed when receiving a TCP+FIN, when there
+are other available subflows.
 
-I tried to explain that in the commit message. Let me try to clarify
-this in the v7 :)
+The last patch is not for -next. Something that sounds better to do.
 
-Cheers,
-Matt
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v7:
+- See the individual changelog.
+- Link to v6: https://lore.kernel.org/r/20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org
+
+---
+Matthieu Baerts (NGI0) (3):
+      mptcp: close subflow when receiving TCP+FIN
+      selftests: mptcp: join: cannot rm sf if closed
+      mptcp: pm: send ACK on non stale subflows
+
+ net/mptcp/pm_netlink.c                          | 14 +++++++++++---
+ net/mptcp/protocol.c                            |  5 ++++-
+ net/mptcp/subflow.c                             |  8 ++++++--
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++-------
+ 4 files changed, 25 insertions(+), 13 deletions(-)
+---
+base-commit: beede3e0f15d8869512b5b51e580829ab6939f92
+change-id: 20240620-mptcp-pm-avail-f5e3957be441
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
