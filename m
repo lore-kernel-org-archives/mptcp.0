@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C28B3232
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 00:28:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B18B1FB4
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 00:33:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723163307; cv=none; b=KGY4XmlRdkc4ZVup9a30PNKbjNySS1lutYnr1uOnybglfVI4/RYgHFSfXH7w4caXTzjWjgJ5pLBXEZF4qISkp/RbWldt3xWKL4J5ZAG28+obEF3/RbtrQeh1E/vAFcYLgAqYij2kg4TlN2XJf9dJVTf0ffOU17OhjgjFev3gAno=
+	t=1723163583; cv=none; b=iJf3xDiRpD9AaT+15pC3nsr1EtZr3wnb1AeMZxCQnAj4JAttMsnNMgk6znoVRf8WNGNyQGw19aK3vgei5dNL6/j6vHZm/3j+00IZa7d/V5zLffJYkt4AmOUwaCxOT8upyxMdDzH06csAF3CuARTTJbxf1+nwlpKp9DKQ0rQnTBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723163307; c=relaxed/simple;
-	bh=bWqOEL64zW4P//+YqR02IaxcwXSn9q6UJXGjsKTJOsI=;
+	s=arc-20240116; t=1723163583; c=relaxed/simple;
+	bh=zspNlDV0q73OkyJ8WcC4UeiOcZeo4kdTk8BwEFraf2M=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=J8n2zFg5Gia7BaGHhlYHCUhgwAz2HEnsAEQ67arnUtziTT3+7Z2iKfS3nuJDm2yQNHT3OHTL3YuuRRoxPt5skhV+JZR7BerdoFsA06hKZYo5wlwTi74FturDdGOkrUpeoYCnMeWiK6KG8lB8Y584sjUAeH7zoEP0LqApxn8R+cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SURQqF4G; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=kIligYyEBuSnz5K37OqVcVcPFFqNFsyq3/N1wYD/wJYQ7Ky0NuvKLpn4ZecAhXrUz786bwPbrlF54iYqN22bXLpGAcsh9R33dUyfL45XqT1UsHg/7kR6JIaL8vD7Ohc6LmiLoOWlm2Wqo7wsjxMPiI8iteyW6EYPvGqSrle/3Mo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J3OfvViQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SURQqF4G"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB79CC32782;
-	Fri,  9 Aug 2024 00:28:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J3OfvViQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB23AC32782;
+	Fri,  9 Aug 2024 00:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723163306;
-	bh=bWqOEL64zW4P//+YqR02IaxcwXSn9q6UJXGjsKTJOsI=;
+	s=k20201202; t=1723163583;
+	bh=zspNlDV0q73OkyJ8WcC4UeiOcZeo4kdTk8BwEFraf2M=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=SURQqF4Gf4pdg2CrQBEONMAeMddNgfPQUSNe2iRXXjcngnMDy2xC/bzLIqU9uIDek
-	 rcNIxQJFqmDeiMmRlAS9zYpgxISNbAyU8lCQPUB4QClrs/ATAY9kfvjGFK0su/oJjx
-	 tOKy+BAbfhPEC8ZeOBNOFMOP/Mf3/0Xj1epgM/S3hk2Me0XwXAgXH3Nc0hU1uoz9yN
-	 Esr3qnog3wIysuWUCc3O3j1WXsAlnBLl/03ifqAiEpUEzHjHMa7T43KnFzgxSm2Qnv
-	 slhImsqX0JQ7MqxAoDMx6HzweZoYnxUSSFwTscgQ0cswzXnKvTSOTGc/0+nDD93Iky
-	 4+8yxaFjCdUHA==
-Date: Thu, 8 Aug 2024 17:28:26 -0700 (PDT)
+	b=J3OfvViQEqTSYQkjAdUk0+Gl5mb2Vjrynq7V7GbrQd8ofTYtzA7i+LmX8cE2WDNnu
+	 YYL5L9zaBMrKlaofrYPs34B9rtUhgpx2sm8Lv7ihfWj72jM4WGrQV6OeWYIIOeMKcM
+	 9bBSn8892vraEQ6U7el9QCOGpkfzwYPN3dQ0qLOKZxA/EOKiv1gFXxtnfd4ih7PLVH
+	 BS+nTJ/ksSXAgW23AX4T8+g0H36DJpe4wDnymDhj3+E7XcGVzJBJoMATTSJSabgHK5
+	 7Akvu+YRb8BjQmTp8KtPZK7/hPBMjjp2szW6CSQw2CLAzh/sVSsAGZxRmuH/XCmWgv
+	 Lnj1X3FFjsA0Q==
+Date: Thu, 8 Aug 2024 17:33:02 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v6 09/11] mptcp: close subflow when receiving
- TCP+FIN
-In-Reply-To: <20240802-mptcp-pm-avail-v6-9-964ba9ce279f@kernel.org>
-Message-ID: <661729ef-4fbd-a497-8a39-5657069384eb@kernel.org>
-References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org> <20240802-mptcp-pm-avail-v6-9-964ba9ce279f@kernel.org>
+Subject: Re: [PATCH mptcp-net v6 10/11] selftests: mptcp: join: cannot rm sf
+ if closed
+In-Reply-To: <20240802-mptcp-pm-avail-v6-10-964ba9ce279f@kernel.org>
+Message-ID: <115783a3-d667-b9a9-3f8c-266023e15069@kernel.org>
+References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org> <20240802-mptcp-pm-avail-v6-10-964ba9ce279f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,85 +45,79 @@ Content-Type: text/plain; format=flowed; charset=US-ASCII
 
 On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
 
-> When a peer decides to close one subflow in the middle of a connection
-> having multiple subflows, the receiver of the first FIN should accept
-> that, and close the subflow on its side as well. If not, the subflow
-> will stay half closed, and would even continue to be used until the end
-> of the MPTCP connection or a reset from the network.
+> Thanks to the previous commit, the MPTCP subflows are now closed on both
+> directions even when only the MPTCP path-manager of one peer asks for
+> their closure.
 >
-> The issue has not been seen before, probably because the in-kernel
-> path-manager always sends a RM_ADDR before closing the subflow. Upon the
-> reception of this RM_ADDR, the other peer will initiate the closure on
-> its side as well. On the other hand, if the RM_ADDR is lost, or if the
-> path-manager of the other peer only closes the subflow without sending a
-> RM_ADDR, the subflow would switch to TCP_CLOSE_WAIT, but that's it,
-> leaving the subflow half-closed.
+> In the two tests modified here -- "userspace pm add & remove address"
+> and "userspace pm create destroy subflow" -- one peer is controlled by
+> the userspace PM, and the other one by in-kernel PM. When the userspace
+> PM sends a RM_ADDR notification, the in-kernel PM will automatically
+> react by closing all subflows using this address. Now that the subflows
+> are properly closed on both direction, the userspace PM can no longer
+> closes the same subflows if they are already closed. In this case, an
+> error will be returned to the userspace. So no need to run this command,
+> which mean that the linked counters will then not be incremented.
 >
-> So now, when the subflow switches to the TCP_CLOSE_WAIT state, and if
-> the MPTCP connection has not been closed before with a DATA_FIN, the
-> kernel owning the subflow schedules its worker to initiate the closure
-> on its side as well.
+> These tests are then no longer sending both a RM_ADDR, then closing the
+> linked subflow just after. The test with the userspace PM on the server
+> side is now removing one subflow linked to one address, then sending
+> a RM_ADDR for another address. The test with the userspace PM on the
+> client side is now only removing the subflow that was previously
+> created.
 >
-> This issue can be easily reproduced with packetdrill, as visible in [1],
-> by creating an additional subflow, injecting a FIN+ACK before sending
-> the DATA_FIN, and expecting a FIN+ACK in return.
->
-> Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
-> Link: https://github.com/multipath-tcp/packetdrill/pull/154 [1]
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/protocol.c | 5 ++++-
-> net/mptcp/subflow.c  | 8 ++++++--
-> 2 files changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 13777c35496c..609d684135dc 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2533,8 +2533,11 @@ static void __mptcp_close_subflow(struct sock *sk)
->
-> 	mptcp_for_each_subflow_safe(msk, subflow, tmp) {
-> 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		int ssk_state = inet_sk_state_load(ssk);
->
-> -		if (inet_sk_state_load(ssk) != TCP_CLOSE)
-> +		if (ssk_state != TCP_CLOSE &&
-> +		    (ssk->sk_state != TCP_CLOSE_WAIT ||
 
 Hi Matthieu -
 
-Looks like both those ssk checks should use ssk_state, but otherwise the 
-patch looks good.
+How does this selftest behave on older kernels without the fix in the 
+previous patch? Would be good to include that information in the commit 
+message.
 
 - Mat
 
-> +		     inet_sk_state_load(sk) != TCP_ESTABLISHED))
-> 			continue;
+
+> Fixes: 4369c198e599 ("selftests: mptcp: test userspace pm out of transfer")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 ++++-------
+> 1 file changed, 4 insertions(+), 7 deletions(-)
 >
-> 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index a7fb4d46e024..723cd3fbba32 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -1255,12 +1255,16 @@ static void mptcp_subflow_discard_data(struct sock *ssk, struct sk_buff *skb,
-> /* sched mptcp worker to remove the subflow if no more data is pending */
-> static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ssk)
-> {
-> -	if (likely(ssk->sk_state != TCP_CLOSE))
-> +	struct sock *sk = (struct sock *)msk;
-> +
-> +	if (likely(ssk->sk_state != TCP_CLOSE &&
-> +		   (ssk->sk_state != TCP_CLOSE_WAIT ||
-> +		    inet_sk_state_load(sk) != TCP_ESTABLISHED)))
-> 		return;
->
-> 	if (skb_queue_empty(&ssk->sk_receive_queue) &&
-> 	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
-> -		mptcp_schedule_work((struct sock *)msk);
-> +		mptcp_schedule_work(sk);
-> }
->
-> static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index ea954ba85969..4129952fd9ec 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -3408,14 +3408,12 @@ userspace_tests()
+> 			"signal"
+> 		userspace_pm_chk_get_addr "${ns1}" "10" "id 10 flags signal 10.0.2.1"
+> 		userspace_pm_chk_get_addr "${ns1}" "20" "id 20 flags signal 10.0.3.1"
+> -		userspace_pm_rm_addr $ns1 10
+> 		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $MPTCP_LIB_EVENT_SUB_ESTABLISHED
+> 		userspace_pm_chk_dump_addr "${ns1}" \
+> -			"id 20 flags signal 10.0.3.1" "after rm_addr 10"
+> +			"id 20 flags signal 10.0.3.1" "after rm_sf 10"
+> 		userspace_pm_rm_addr $ns1 20
+> -		userspace_pm_rm_sf $ns1 10.0.3.1 $MPTCP_LIB_EVENT_SUB_ESTABLISHED
+> 		userspace_pm_chk_dump_addr "${ns1}" "" "after rm_addr 20"
+> -		chk_rm_nr 2 2 invert
+> +		chk_rm_nr 1 1 invert
+> 		chk_mptcp_info subflows 0 subflows 0
+> 		chk_subflows_total 1 1
+> 		kill_events_pids
+> @@ -3439,12 +3437,11 @@ userspace_tests()
+> 			"id 20 flags subflow 10.0.3.2" \
+> 			"subflow"
+> 		userspace_pm_chk_get_addr "${ns2}" "20" "id 20 flags subflow 10.0.3.2"
+> -		userspace_pm_rm_addr $ns2 20
+> 		userspace_pm_rm_sf $ns2 10.0.3.2 $MPTCP_LIB_EVENT_SUB_ESTABLISHED
+> 		userspace_pm_chk_dump_addr "${ns2}" \
+> 			"" \
+> -			"after rm_addr 20"
+> -		chk_rm_nr 1 1
+> +			"after rm_sf 20"
+> +		chk_rm_nr 0 1
+> 		chk_mptcp_info subflows 0 subflows 0
+> 		chk_subflows_total 1 1
+> 		kill_events_pids
 >
 > -- 
 > 2.45.2
