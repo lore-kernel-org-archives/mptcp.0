@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 503A2193096
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 12:19:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 781521DFF5
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 12:26:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723205980; cv=none; b=lB8VdJTG1z6f13ndKR1ND6iHZIj/GthSyf6gyKyqtxYSzFwwXV2QmrwcMK6iHIsD8koDG7RxKJ6aik3uyEsf2Xqrs3BVOyVxfVhYd6EWruPY2K4ucgo1clpSvr5iDvN97GKt4TZXuZqPAPcua6FpyNA2tOGHmjR/42bA8w/WoFQ=
+	t=1723206363; cv=none; b=FY011bDobJYI5lCC0NadnsyX+OZHEz5nqKy0LZdl1Dxbvl4GcpRxxf8Q5le0n9wJnJ2Zl51lcyCpGAxkyEMhxFEWc61X+9f5VOJkAjQuhcnAwFEA3qWqylLQH3A+nVFsqd7GP00Pnk/94LNpcA6gffANfkni5KNECNvqGa7iFvY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723205980; c=relaxed/simple;
-	bh=ES/0DRqPD8uLX5NiKQnDlg3B+p0p6N3jUXPXrIT3E9w=;
+	s=arc-20240116; t=1723206363; c=relaxed/simple;
+	bh=bi+fSehW2qO2h6IMHUdLJGZCe5b8wNAMHo/dGNxh6Ys=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Ww4/cYXlCmEAAsKQ9z2p0cIQxc8FhgWqC4giGDjcEVX9QbI465MSqyGF3vjZ3BH/RXBNc3L6doRBBIJq2+39uRohy2hHBTsTsErb2HjM0beHGOWRoIp2uWTMLSYYtjOX5F1ISIkTsQewMmmj+DrFo/afgYd/xvdEt7x51H/rS1E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kYO32tyJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iOaUUEhOL1mICCpJA1CBpbQaevW3U4kxT5BrMrc2MLaydrBiwmIOtlQ3ZgdD7qrWq9dx/wyrgqIhfRSQASCxhexTGkaF/zHlbk68N9rBYIUsJuU+57c8KBDFK0bhiAERT/muvYBe/wnnI3d5BuBtBG7F50WzUQ/4I6ZoTSeFWl4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xd+Rw+BA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kYO32tyJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 410C7C32782;
-	Fri,  9 Aug 2024 12:19:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xd+Rw+BA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B11C4AF0E;
+	Fri,  9 Aug 2024 12:26:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723205979;
-	bh=ES/0DRqPD8uLX5NiKQnDlg3B+p0p6N3jUXPXrIT3E9w=;
+	s=k20201202; t=1723206363;
+	bh=bi+fSehW2qO2h6IMHUdLJGZCe5b8wNAMHo/dGNxh6Ys=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kYO32tyJE89w4kwSyorw8X1TymawTdBiG5HRW/DRFpmrKk2DksRg6jCTpab0GWNZP
-	 kFvtW7WVTLC7AD7JTBmNUzTVqbPlTuN+OjalG1GIpFWiltj877m8+dJe7FEIdfYUV0
-	 bMG/2LSF+DahgcMl1jvh/ySAXrdEIDK1OI3ctge5GeNjuHiqz8jFZxxKe+Yk5O4F0K
-	 JXg56tSyoXL2zZNrMYreD7J2PM08NybdmV9qLn8yKIXBVlj2B+dfR60zPZbXLSb3Fv
-	 bqmeEnCXy/0etThilkUqGlbvx7gwh5NaNjGEb6madoEWwoCqDAhJAC3VAgoPm1GZNW
-	 xN7/lAlDki3Cw==
-Message-ID: <ea2671b6-310e-4957-926c-ace89a337251@kernel.org>
-Date: Fri, 9 Aug 2024 14:19:37 +0200
+	b=Xd+Rw+BAtV5wK2FdjVlAhL1V5FyjV6U8+2aqMFOENHWny/m0TKY/dWjjp2ldP8UEN
+	 Xc4HpuDsQjI49w94sSeebA6B+ElPRApNu4/W0uFAgACWUFp6tk0L+ppR+daH4bgPzF
+	 ambJwyq1c7dsaWnJ825353KvgaEvAONdCawhC0rgN71uy89qwDC8qib325fGnDXBax
+	 DpKzDsefPCfozcK4btYa1nMltbeeKSP6q7/EnAYJIPSD+3Y/eFmLWmLs3Iv6fR1dH/
+	 X3ykSTUn+HOeR8f7Nl45QmfaepBedIU8U9jDMnix0dCECW246/SslBBKtluvbU+1jH
+	 zFAd4o7QSzb6g==
+Message-ID: <bc502de8-03c5-4e26-86ec-a3820a6bb993@kernel.org>
+Date: Fri, 9 Aug 2024 14:26:00 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v6 00/11] mptcp: pm: more fixes around the ID 0
+Subject: Re: [PATCH mptcp-net v6 09/11] mptcp: close subflow when receiving
+ TCP+FIN
 Content-Language: en-GB
 To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org>
- <05750c29-565c-925d-18f0-016d480d0a8a@kernel.org>
+ <20240802-mptcp-pm-avail-v6-9-964ba9ce279f@kernel.org>
+ <661729ef-4fbd-a497-8a39-5657069384eb@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,74 +88,68 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <05750c29-565c-925d-18f0-016d480d0a8a@kernel.org>
+In-Reply-To: <661729ef-4fbd-a497-8a39-5657069384eb@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-On 09/08/2024 02:36, Mat Martineau wrote:
+On 09/08/2024 02:28, Mat Martineau wrote:
 > On Fri, 2 Aug 2024, Matthieu Baerts (NGI0) wrote:
 > 
->> The two first patches are some small improvements for previous patches
->> that are already in our tree, but not sent to netdev yet.
+>> When a peer decides to close one subflow in the middle of a connection
+>> having multiple subflows, the receiver of the first FIN should accept
+>> that, and close the subflow on its side as well. If not, the subflow
+>> will stay half closed, and would even continue to be used until the end
+>> of the MPTCP connection or a reset from the network.
 >>
->> Then we have a fix to send a RM_ADDR with the correct ID 0, instead of
->> using the ID of the global endpoint. The test that is linked to that
->> doesn't check if the ID being sent is 0, but we can see the reaction of
->> the other peer if it closes the connection or not.
+>> The issue has not been seen before, probably because the in-kernel
+>> path-manager always sends a RM_ADDR before closing the subflow. Upon the
+>> reception of this RM_ADDR, the other peer will initiate the closure on
+>> its side as well. On the other hand, if the RM_ADDR is lost, or if the
+>> path-manager of the other peer only closes the subflow without sending a
+>> RM_ADDR, the subflow would switch to TCP_CLOSE_WAIT, but that's it,
+>> leaving the subflow half-closed.
 >>
->> The next fix is to correctly reset the ID corresponding to the initial
->> address: to avoid some confusion, or not to send the wrong ID if it is
->> re-used by another address later on.
+>> So now, when the subflow switches to the TCP_CLOSE_WAIT state, and if
+>> the MPTCP connection has not been closed before with a DATA_FIN, the
+>> kernel owning the subflow schedules its worker to initiate the closure
+>> on its side as well.
 >>
->> That leaded to two extra fix: sending an ACK on an active subflow, and
->> allowing to create a new subflow if the subflow was not closed: that's
->> because when the RM_ADDR was not correct, the other peer was not closing
->> the expected subflow, and the connection ended up being half closed.
->> This last issue is fixed by the next and last fix of the series.
+>> This issue can be easily reproduced with packetdrill, as visible in [1],
+>> by creating an additional subflow, injecting a FIN+ACK before sending
+>> the DATA_FIN, and expecting a FIN+ACK in return.
 >>
->> The last patch is not for -net. Something that sounds better to do.
+>> Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
+>> Link: https://github.com/multipath-tcp/packetdrill/pull/154 [1]
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> net/mptcp/protocol.c | 5 ++++-
+>> net/mptcp/subflow.c  | 8 ++++++--
+>> 2 files changed, 10 insertions(+), 3 deletions(-)
 >>
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index 13777c35496c..609d684135dc 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -2533,8 +2533,11 @@ static void __mptcp_close_subflow(struct sock *sk)
+>>
+>>     mptcp_for_each_subflow_safe(msk, subflow, tmp) {
+>>         struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+>> +        int ssk_state = inet_sk_state_load(ssk);
+>>
+>> -        if (inet_sk_state_load(ssk) != TCP_CLOSE)
+>> +        if (ssk_state != TCP_CLOSE &&
+>> +            (ssk->sk_state != TCP_CLOSE_WAIT ||
 > 
-> Ok, after revising my response to patch 5, and a couple of minor changes
-> noted for patches 9 and 10, I think the series looks good:
+> Hi Matthieu -
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Looks like both those ssk checks should use ssk_state, but otherwise the
+> patch looks good.
 
-Thank you for the review!
+Good catch!
 
-New patches for t/upstream-net and t/upstream:
-- 5ebe23ff5ade: "squashed" patch 1/11 in "mptcp: pm: re-using ID of
-unused removed ADD_ADDR"
-- d4e53d9d534b: "squashed" (with conflicts) in "mptcp: pm: fullmesh:
-select the right ID later"
-- 90ebd895d917: conflict in t/mptcp-pm-reduce-entries-iterations-on-connect
-- Results: dd8eea82e12f..64bb700808df (export-net)
-- Results: e4105976662e..79be0d5eca50 (export)
-
-- d8e98c0f3bf2: mptcp: pm: fix RM_ADDR ID for the initial subflow
-- ebdca4f0dafe: conflict in t/mptcp-pm-rename-helpers-linked-to-flush
-- 4d0382127a23: selftests: mptcp: join: check removing ID 0 endpoint
-- 67433e9c8864: mptcp: pm: send ACK on an active subflow
-- 0840279fb33e: mptcp: pm: skip connecting to already established sf
-- a7844983a8df: mptcp: pm: reset MPC endp ID when re-added
-- 1ec2de2a8c89: selftests: mptcp: join: check re-adding init endp with != id
-- Results: 64bb700808df..5c1437dbc580 (export-net)
-- Results: 79be0d5eca50..beede3e0f15d (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8283dd520fc366ce169363fe1d27df40e0e5b056/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/e76eecedaea68d03d2bd1ab1632589b1e7cb568c/checks
-
-> If you want to rework patch 10 given the reverse-compatibility question,
-> then you're welcome to apply all but 9 & 10 so you only need to respin
-> two patches.
-
-Yes, I can do that, thank you for the review!
+Will fix that in the v7.
 
 Cheers,
 Matt
