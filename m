@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CB08179A7
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 02:30:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F161018044
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 02:33:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723170652; cv=none; b=S+zt5JOWbFov5U8B5xyne7spVWP2RUZwz8lPu1/bW9M4Q4mD5gwdS6MvIiYyzjjxSbtk59MmIhPViZiXDvSrClYoMjipz8+t+8CWSUZHun23lVapIGSMDiLH/ugrXf6yjjutIID/Rtg74eIfYh5v0DFGvcA9l+xlYRgLHdXNZFk=
+	t=1723170781; cv=none; b=JHxRq3TyPc5yehsb7qsaOAnkBrOeiLF4HdbTmQ6gB9gnNbOgUkpbBY1AdTFpBgHURtZfSRyL8v4Wdqy4NAD/GMcv4U95FPm/KNhNlnxjR5yk6laMTFO325+EFK9FmxDHvg6Hsj1eAO9RUymozJteIF95Svu9e89jGKIdOL0mb2w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723170652; c=relaxed/simple;
-	bh=hjAO/sqsazpHEvwz1qy3KlbcX7pVZSQv1+fCNr8ROtA=;
+	s=arc-20240116; t=1723170781; c=relaxed/simple;
+	bh=ReBXwUyXmVGErU9K7AZoBma9H9gxMXPL8ncehsrCyTI=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fwje0tLnd8T8TEtKXd6W551WWlJpyFERLCNrwUOShfIVWJx+MhtMzQPox/A7liBFOWP1mGPEpO5exQ/K0aGzTZkSwx2+YJpxXp9b5zgrivME7+ziGY5gRbe4plxkRGICn65VpA7kwqkaMq3GzPyKecRtvtA1AX+G9Ehg7V5PKa4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o2gkxI1r; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=g1SL7kH43bRg5+usonVsZ31N/BrxqtlWIJf5shkjH132N9m6Y6ad5sKVZ5MgWX9Xi4RPKPYlblu2tYpR0ikh09Zy0+5GDOJDLGVQUd9iMYS0Fc5oTqlv+VEjv2O8bLSuNE7DZwr/J5hTzGl05iYtVzNvlOsUmQsBoD4xHQyqKUY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vrm+XWrM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o2gkxI1r"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B053EC32782;
-	Fri,  9 Aug 2024 02:30:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vrm+XWrM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B7B05C32786;
+	Fri,  9 Aug 2024 02:32:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723170651;
-	bh=hjAO/sqsazpHEvwz1qy3KlbcX7pVZSQv1+fCNr8ROtA=;
+	s=k20201202; t=1723170780;
+	bh=ReBXwUyXmVGErU9K7AZoBma9H9gxMXPL8ncehsrCyTI=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=o2gkxI1rhsC2xcdwrc6ibpmdcMr/iYrXZS0cS9FZYVZN6h5EmqA48zIsKV+8Q+VNn
-	 6otylxSnJgIrx67IZwuD/IfUPQxCsRyi1JD9zwPLtQFoh1QyxVWl0fRrA0s8scOdpr
-	 ItKvj0aNPp5yOfQMWO1U7y0+2MWYoPFLEpjlJKS7ejLXynJ8EhSwyOrXlChktiweNg
-	 QfIh+1WxUN/ooODnqxb1aJE1C0h+mgf+3FCHOQdcXEtAhtoND6PoiQX6zmb2GsEjrh
-	 /oyT5yyeme6UOs6H/PwO5HsvQI/7mEB04tnO6GDl15vFMeqEiKFSmXAaJo7/DF+bHB
-	 0XvFsZvQFpw8g==
-Message-ID: <8be6c6a01484696985cc90a800d749ed9acb4ff0.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 1/8] selftests: mptcp: join: no extra msg
- if no counter
+	b=Vrm+XWrMfDRUhltoGTJCIrQV8SCt/XyS0oF0TbYO63vGbh65vak2y41D2M+gLsLQh
+	 eWF5IxkYo5QMcQvGlS8+z1QZz8VT9sLZmDf4OidZiW8jJwR1uhubmMrTaSqXwi6aVR
+	 KqI7SZyhA0FKBaioq3Lq7YV7S9f/fnQgYTQRQV1HyWJ5xBC68w2/zJD2UU9CebutRY
+	 wgGtBGgpenkbXQT9ShxRcn8j2USbL50QZpUNkspjEU3IFQ953zv2bul6kEo5MmxYbG
+	 +4JJ5mqhaosCHGsldM9UVpcWCNmXDOpZV1rRdeTdUTUfpWSSruwX7Dnz8cJ9THEEWy
+	 ryrzlknFKr4pA==
+Message-ID: <53ca434dc5b19256dd591ca2b502732ae36aa271.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 3/8] selftests: mptcp: join: reduce
+ join_nr params
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Fri, 09 Aug 2024 10:30:49 +0800
-In-Reply-To: <ef3e8f6d-18a5-4ffd-939d-c3d0c650fd39@kernel.org>
+Date: Fri, 09 Aug 2024 10:32:55 +0800
+In-Reply-To: <2743512d-4772-4e42-9abd-6849c36f1885@kernel.org>
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
-	 <20240806-mptcp-join-tx-mib-v3-1-c3b54d2099e9@kernel.org>
-	 <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
-	 <ef3e8f6d-18a5-4ffd-939d-c3d0c650fd39@kernel.org>
+	 <20240806-mptcp-join-tx-mib-v3-3-c3b54d2099e9@kernel.org>
+	 <23fc6138bd31d81783683cf041fbf75e8280a204.camel@kernel.org>
+	 <2743512d-4772-4e42-9abd-6849c36f1885@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -80,71 +80,107 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Thu, 2024-08-08 at 12:17 +0200, Matthieu Baerts wrote:
+On Thu, 2024-08-08 at 12:22 +0200, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> Thank you for the review!
-> 
-> On 08/08/2024 04:38, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for these patches.
-> > 
+> On 08/08/2024 05:28, Geliang Tang wrote:
 > > On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
-> > > The checksum and fail counters might not be available. Then no
-> > > need
-> > > to
-> > > display an extra message with missing info.
+> > > chk_join_nr() currently takes 9 positional parameters, 6 of them
+> > > are
+> > > optional. It makes it hard to read:
 > > > 
-> > > While at it, fix the indentation around, which is wrong since the
-> > > same
-> > > commit.
+> > >   chk_join_nr 1 1 1 1 0 1 1 0 4
 > > > 
-> > > Fixes: 47867f0a7e83 ("selftests: mptcp: join: skip check if MIB
-> > > counter not supported")
+> > > Naming these vars helps to make it easier to read:
+> > > 
+> > >   join_csum_ns1=1 join_csum_ns2=0 \
+> > >     join_fail_nr=1 join_rst_nr=1 join_infi_nr=0 \
+> > >     join_corrupted_pkts=4 \
+> > >     chk_join_nr 1 1 1
+> > > 
+> > > It will then be easier to add new optional parameters.
+> > > 
 > > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > > > ---
-> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++-----
-> > > -
-> > >  1 file changed, 6 insertions(+), 6 deletions(-)
+> > >  tools/testing/selftests/net/mptcp/mptcp_join.sh | 31
+> > > ++++++++++++++++++-------
+> > >  1 file changed, 22 insertions(+), 9 deletions(-)
 > > > 
 > > > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > > > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > index 01c1e0871aca..a1f80dac59a7 100755
+> > > index a1f80dac59a7..0401ba1aaf1b 100755
 > > > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > > > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> > > @@ -1112,7 +1112,7 @@ chk_csum_nr()
+> > > @@ -61,6 +61,12 @@ unset sflags
+> > >  unset fastclose
+> > >  unset fullmesh
+> > >  unset speed
+> > > +unset join_csum_ns1
+> > > +unset join_csum_ns2
+> > > +unset join_fail_nr
+> > > +unset join_rst_nr
+> > > +unset join_infi_nr
+> > > +unset join_corrupted_pkts
 > > >  
-> > >  	print_check "sum"
-> > >  	count=$(mptcp_lib_get_counter ${ns1}
-> > > "MPTcpExtDataCsumErr")
-> > > -	if [ "$count" != "$csum_ns1" ]; then
-> > > +	if [ -n "$count" ] && [ "$count" != "$csum_ns1" ]; then
+> > >  # generated using "nfbpf_compile '(ip && (ip[54] & 0xf0) ==
+> > > 0x30) ||
+> > >  #				  (ip6 && (ip6[74] & 0xf0) ==
+> > > 0x30)'"
+> > > @@ -1314,12 +1320,12 @@ chk_join_nr()
+> > >  	local syn_nr=$1
+> > >  	local syn_ack_nr=$2
+> > >  	local ack_nr=$3
+> > > -	local csum_ns1=${4:-0}
+> > > -	local csum_ns2=${5:-0}
+> > > -	local fail_nr=${6:-0}
+> > > -	local rst_nr=${7:-0}
+> > > -	local infi_nr=${8:-0}
+> > > -	local corrupted_pkts=${9:-0}
+> > > +	local csum_ns1=${join_csum_ns1:-0}
+> > > +	local csum_ns2=${join_csum_ns2:-0}
+> > > +	local fail_nr=${join_fail_nr:-0}
+> > > +	local rst_nr=${join_rst_nr:-0}
+> > > +	local infi_nr=${join_infi_nr:-0}
+> > > +	local corrupted_pkts=${join_corrupted_pkts:-0}
+> > >  	local count
+> > >  	local with_cookie
+> > >  
+> > > @@ -3138,7 +3144,8 @@ fastclose_tests()
+> > >  		MPTCP_LIB_SUBTEST_FLAKY=1
+> > >  		test_linkfail=1024 fastclose=server \
+> > >  			run_tests $ns1 $ns2 10.0.1.1
+> > > -		chk_join_nr 0 0 0 0 0 0 1
+> > > +		join_rst_nr=1 \
+> > > +			chk_join_nr 0 0 0
+> > >  		chk_fclose_nr 1 1 invert
+> > >  		chk_rst_nr 1 1
+> > >  	fi
+> > > @@ -3157,7 +3164,10 @@ fail_tests()
+> > >  		MPTCP_LIB_SUBTEST_FLAKY=1
+> > >  		test_linkfail=128 \
+> > >  			run_tests $ns1 $ns2 10.0.1.1
+> > > -		chk_join_nr 0 0 0 +1 +0 1 0 1
+> > > "$(pedit_action_pkts)"
+> > > +		join_csum_ns1=+1 join_csum_ns2=+0 \
+> > > +			join_fail_nr=1 join_rst_nr=0
+> > > join_infi_nr=1
+> > > \
 > > 
-> > We have checked [ -z "$count" ] in mptcp_lib_get_counter() already,
-> > so
-> > I think no need to double check it here. Can we just let
-> > mptcp_lib_get_counter() return "0" in this [ -z "$count" ] case,
-> > then
-> > we can drop all these [ -n "$count" ] or [ -z "$count" ] (like in
-> > chk_cestab_nr()) checks after mptcp_lib_get_counter()? WDYT?
+> > Can we drop this "join_rst_nr=0"?
 > 
-> I don't think we can do that: mptcp_lib_get_counter() will return
-> nothing if the counter doesn't exist: if the kernel being used
-> doesn't
-> support it. If it is our CI running the tests, there will be a
-> failure
-> thanks to "mptcp_lib_fail_if_expected_feature()", but only with *our*
-> CI, because "SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES" is set to 1.
+> We could, but I prefer not: I think it is better to specify all
+> variables here, to make it clear we expect no RST, compared to the
+> next
+> test where instead we expect an infinite mapping. It is easier to
+> compare the expectations from the two tests.
 > 
-> So here, we need to check if '$count' is not empty, before comparing
-> it
-> with '$csum_ns1'. If it is empty, the check will be skipped (see 4
-> lines
-> below), but we don't want to print a useless "extra message" in this
-> case, with just "ns1=".
+> It is different from the 'fastclose_tests()' test, where it is just
+> an
+> exception there, just one test where there is a rst.
 
-If so, let's keep this patch as is. I'll try to fix it later.
+Sure! thanks for the explanation.
+
+-Geliang
 
 > 
 > Cheers,
