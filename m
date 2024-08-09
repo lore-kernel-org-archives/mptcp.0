@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BAE9D192B71
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 11:32:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B847156C4B
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 11:39:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723203171; cv=none; b=FVqDB3fn256p71nsnzC9ovwa63Xie120aWOfAt/8haAEz8mplGFGiTHcPiyHcPEHX7mU+SG+40OGOKxKmtcjvrrk3hnSkF7Btsm4cWF7e3FOrico0BaXD9MXQgm8NLnyYUZY8lj895R1njNoqKTe5xbsh6RCmfnw8uPB/wTtiRs=
+	t=1723203546; cv=none; b=XETq8iGNglDT/zcN1mCyiNbWmJwT47S3lE3ehNRCGjfWZyLR1Dy5KpSBZQHIRHjHXomj4uSC8W9tnxDypAN4Y9+r6Vhciz52+GOLQyI/HU8mQiQDDtuuPttqGrbi05lmKvxi3NjjYYNL/WYuR4MWLIJ0+/L/DApT7/LupDoBZVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723203171; c=relaxed/simple;
-	bh=dmCW4qJNZVKfkC2rRaa5hNsqJgrQlcqOq1B2viiwp9I=;
+	s=arc-20240116; t=1723203546; c=relaxed/simple;
+	bh=qvDNtIpqu1PYJL+QpDKuEO1F22Wdd4oIC9k35O0SGcA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Dx4ngHTl8vjkqznCCzGtQMiciyiqv5VqXfDYz4yvSilwJOHNjzAJb5ZeDZFyAyBJOu5o/0+iVzz9BxJqGXuj5jdPwEeT1JliEcmVNpcMjNXJhHlUO1Pu9i3J23dYeT8vnHOl8Ci0FhSZf9heZ7JhO9pD/v5xmYpzy3w7bnUoiGk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cEPcRgFO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DKQM3ouPe5H3EUmkvWcfUcPvfyMKjodTOeZR2Y1E1DOjuwuI8S7txX3JNibkGXzgZFzeW5nd1S3XRJ8OQHZ/3WZhgDqX6FvtgF1tJl5QN+nTqHwCyvwphQVNJp2vCUHTjmwsPslslwB7+0PUwc2rvZBfhFuo61kYfbwquiKlk6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJbjK6yr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cEPcRgFO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5FA2C32782;
-	Fri,  9 Aug 2024 11:32:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJbjK6yr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CBBDC32782;
+	Fri,  9 Aug 2024 11:39:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723203171;
-	bh=dmCW4qJNZVKfkC2rRaa5hNsqJgrQlcqOq1B2viiwp9I=;
+	s=k20201202; t=1723203546;
+	bh=qvDNtIpqu1PYJL+QpDKuEO1F22Wdd4oIC9k35O0SGcA=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=cEPcRgFO6wjp0tcfg1+I/IkAY43764n5wMEh9TAB9Zs+kVAlZxw3mKf8c+mvxE0p8
-	 OfW5+B3kX7QJwNVLf14XvI19TLKKplRAFMQCPYKJIGaPf38UY816DYv4KAJjbD13hZ
-	 HHjn48rlouoBIsNtrc1kClDwYkqJgOBPOzTfLvSfqqjybLAXpX9xQkscpx7m/jE546
-	 Htdsa9LkKFuAOu7x+6XBM786+4pnLJ3KN3j38BBp4qeYmvY9PwD0agCKtOD6cSo8QO
-	 vDlwDH5bZbvniatX63Y3yxH+Hxr0dsJWrPv2JT4Gyt3bOiVz6wtXDMPXNpul2+8G6e
-	 qnAz9I3oMfDwQ==
-Message-ID: <3ed64a86-ab9a-48da-b4b6-6952e29da39d@kernel.org>
-Date: Fri, 9 Aug 2024 13:32:48 +0200
+	b=NJbjK6yr+eRu5LvPXXy7tza8pGMrpAWrjRqqdkk/qw8rw054yeto1UAShS91Fi7EG
+	 y5YzMvaS0RUjNU4U3u+04x3LsTEttBiROJLkgSY4aGNmxw+CAiDmT7HYyve/1qVbqP
+	 /2dInIo36I0jQyvJqVMSjVzNA04HLT6yc29Iu9TA9EvWJlFgrNxu8xSTgLxybdwGp+
+	 dDIQFWYBCXceLTPyCTumJ4qXYxi3SKJjQ3VNCuLSL6Lo27TvsXyFhjlDSDrRHCrlei
+	 IVrE8o+5hCJ3g4p4GFhl61MeWfP4a5vmP/1+mnOmrDU2uiPIJMF1LvZXrZBZ4B/g4G
+	 ip8LtzGeiVt0w==
+Message-ID: <0c131a5e-10df-44c9-ad46-96b4821f3a1e@kernel.org>
+Date: Fri, 9 Aug 2024 13:39:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 1/8] selftests: mptcp: join: no extra msg if
- no counter
+Subject: Re: [PATCH mptcp-next v3 4/8] selftests: mptcp: join: one line for
+ join check
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
- <20240806-mptcp-join-tx-mib-v3-1-c3b54d2099e9@kernel.org>
- <2c144f50dc8e6f92e1bd1569802ec75f362a9ec9.camel@kernel.org>
- <ef3e8f6d-18a5-4ffd-939d-c3d0c650fd39@kernel.org>
- <8be6c6a01484696985cc90a800d749ed9acb4ff0.camel@kernel.org>
+ <20240806-mptcp-join-tx-mib-v3-4-c3b54d2099e9@kernel.org>
+ <ffcd94a0d7154a93d6405c0402b0d01a015603b9.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,82 +87,81 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8be6c6a01484696985cc90a800d749ed9acb4ff0.camel@kernel.org>
+In-Reply-To: <ffcd94a0d7154a93d6405c0402b0d01a015603b9.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 09/08/2024 04:30, Geliang Tang wrote:
-> On Thu, 2024-08-08 at 12:17 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
+On 09/08/2024 04:10, Geliang Tang wrote:
+> On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
+>> Most tests are checking if the expected number of SYN/SYN+ACK/ACK
+>> JOINs
+>> have been received, each of them on one line.
 >>
->> Thank you for the review!
+>> More Join related tests are going to be checked soon, no need to add
+>> 5
+>> new lines per test in case of success, just one is enough. In case of
+>> issue, the errors will still be reported like before.
 >>
->> On 08/08/2024 04:38, Geliang Tang wrote:
->>> Hi Matt,
->>>
->>> Thanks for these patches.
->>>
->>> On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
->>>> The checksum and fail counters might not be available. Then no
->>>> need
->>>> to
->>>> display an extra message with missing info.
->>>>
->>>> While at it, fix the indentation around, which is wrong since the
->>>> same
->>>> commit.
->>>>
->>>> Fixes: 47867f0a7e83 ("selftests: mptcp: join: skip check if MIB
->>>> counter not supported")
->>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>> ---
->>>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 12 ++++++-----
->>>> -
->>>>  1 file changed, 6 insertions(+), 6 deletions(-)
->>>>
->>>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> index 01c1e0871aca..a1f80dac59a7 100755
->>>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->>>> @@ -1112,7 +1112,7 @@ chk_csum_nr()
->>>>  
->>>>  	print_check "sum"
->>>>  	count=$(mptcp_lib_get_counter ${ns1}
->>>> "MPTcpExtDataCsumErr")
->>>> -	if [ "$count" != "$csum_ns1" ]; then
->>>> +	if [ -n "$count" ] && [ "$count" != "$csum_ns1" ]; then
->>>
->>> We have checked [ -z "$count" ] in mptcp_lib_get_counter() already,
->>> so
->>> I think no need to double check it here. Can we just let
->>> mptcp_lib_get_counter() return "0" in this [ -z "$count" ] case,
->>> then
->>> we can drop all these [ -n "$count" ] or [ -z "$count" ] (like in
->>> chk_cestab_nr()) checks after mptcp_lib_get_counter()? WDYT?
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 45
+>> ++++++++++++++++---------
+>>  1 file changed, 30 insertions(+), 15 deletions(-)
 >>
->> I don't think we can do that: mptcp_lib_get_counter() will return
->> nothing if the counter doesn't exist: if the kernel being used
->> doesn't
->> support it. If it is our CI running the tests, there will be a
->> failure
->> thanks to "mptcp_lib_fail_if_expected_feature()", but only with *our*
->> CI, because "SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES" is set to 1.
->>
->> So here, we need to check if '$count' is not empty, before comparing
->> it
->> with '$csum_ns1'. If it is empty, the check will be skipped (see 4
->> lines
->> below), but we don't want to print a useless "extra message" in this
->> case, with just "ns1=".
+>> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> index 0401ba1aaf1b..b10bcb1ac970 100755
+>> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> @@ -202,6 +202,22 @@ print_skip()
+>>  	mptcp_lib_pr_skip "${@}"
+>>  }
+>>  
+>> +# $1: check name; $2: rc
+>> +print_results()
+>> +{
+>> +	local check="${1}"
+>> +	local rc=${2}
+>> +
+>> +	print_check "${check}"
+>> +	if [ ${rc} = ${KSFT_PASS} ]; then
+>> +		print_ok
+>> +	elif [ ${rc} = ${KSFT_SKIP} ]; then
+>> +		print_skip
+>> +	else
+>> +		fail_test
 > 
-> If so, let's keep this patch as is. I'll try to fix it later.
+> To align error messages, it's better to pass an empty string to
+> fail_test to make sure an "EOL" is printed out:
+> 
+> 		fail_test ""
+> 
+> 001 no JOIN
+>       syn rx                 [FAIL] got 0 JOIN[s] syn rx expected 1
+>       synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
+>       ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
+>       join Rx                syn tx                              [FAIL]
+> got 0 JOIN[s] syn tx expected 1
+>       join Tx                002 single subflow, limited by client
+>       join Rx                             [ OK ]
+>       join Tx                             [ OK ]
+> 
+> ->
+> 
+> 001 no JOIN
+>       syn rx                 [FAIL] got 0 JOIN[s] syn rx 
+>       synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
+>       ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
+>       join Rx                [FAIL]
+>       syn tx                 [FAIL] got 0 JOIN[s] syn tx expected 1
+>       join Tx                [FAIL]
+> 002 single subflow, limited by client
+> 
+> WDYT?
 
-I don't think there is anything to fix there. We need these two checks:
-one for our CI to detect missing features, and the other one to skip the
-test if the (old) kernel (ran by another CI) doesn't support the counter.
+Good point. We can also print "see above" instead of nothing.
 
 Cheers,
 Matt
