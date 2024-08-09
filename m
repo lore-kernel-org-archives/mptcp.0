@@ -1,138 +1,121 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8C7B191F9F;
-	Fri,  9 Aug 2024 10:42:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A91EE192B60;
+	Fri,  9 Aug 2024 10:54:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723200152; cv=none; b=aoKFeGuajCSzUKXgF86cLzg9TJlLd5yOZahOzTdhbILm27gVzNThT6pmZSf3fbyNDYv5+FVR2tU7KUMmq9YVQ3YYBgx1ZK0GR+cUYWlDSZGR9qTVSxQcD+K+dJLQz++6hJCM2KqZz0n4+rkeDtRDhtyJYFzGwuRvcDu/bg5GsFA=
+	t=1723200860; cv=none; b=B9c8J2cWMPXSYYnwInPeQKzMum+kvkMlRZ0HDX7fa8AZRPs22zUz5YPUb+vy933c5nAttVCg4ZQqszCOec1oQRnDTUW96yS2519nW2BqC/K68OhFVLUvn6lP7OZBzICSxsAeRTiphj8+hcvs5E69MyZmmuglGmpkRztZ1fWZ7zM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723200152; c=relaxed/simple;
-	bh=11CLd4cGwaxpswtpwYC+4Bpe63IW3HXui40C8jjPo2Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dBzCa2JDnqNAKC6jY0sy6AIh1bbXM6I1BnJQMqQTFxMuepOl3oFdTxqKug86vUPlKYVXkl7xndDSLQvdCVlxNgfPR3yBpbaWAYu/JwYZhDFTTEm89qovHGnyB6gJ+4Qd99e72XeIvCgCOsljsrF4dmOuWvfepq0GqIYz9zfYCbs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u8hGWVLt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723200860; c=relaxed/simple;
+	bh=mIy8OCMJjbDJRr0Uw+t6ZyqmDG2lLt0/ipVE5kaw754=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IDc2qSwMPA6hqbR+FSQyZxe7NHoqvUiHweAMA7vYTGsUHmgvHKcrq8WwmWRyIo0puPR9QcHrt3yb2VZFtkkZiiRLuUImuF4NKRLb101WtjGPvdS+kH1AImcw6SoaFjcr+DIoZEA4QM4GE0o4mds++6fHotvRICtk2rf3XqscCVU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tkorLTHj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u8hGWVLt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C85FC32782;
-	Fri,  9 Aug 2024 10:42:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tkorLTHj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15C07C32786;
+	Fri,  9 Aug 2024 10:54:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723200150;
-	bh=11CLd4cGwaxpswtpwYC+4Bpe63IW3HXui40C8jjPo2Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=u8hGWVLtF44gEM1x3rtsi1K3fgwIRwhbrZzL1bheYoi/PeNfcEs3NJNOqhtF3Zr2m
-	 7UYMECLDn4S0r9o5X0g4J3olyJqxyUTqetLMNfo4aZJnMiotMPETVNGw7FT9oAEARy
-	 Q9J57sJW2tlZyVPuOJhc7iOihz3hV2zmKpgYoQ3Q8tBkvdoYatJyWmhwj00qMQCipK
-	 7qDCc9WBOnD1fZs7wKdaCyj74+TdanIx/LMpM53WRG/EWtNiKGbaHlB9KkQb+ECyyq
-	 ewDn8W3XMPHlKoQ5qzjhRKaK0blfTd/j9UXlWLf5Q8MTieVEzrn40xYqlZXi/6jx8N
-	 ooMN5jTihRWxw==
-Message-ID: <c78f98ff-df44-475f-bb1c-5c33f816ee11@kernel.org>
-Date: Fri, 9 Aug 2024 12:42:19 +0200
+	s=k20201202; t=1723200860;
+	bh=mIy8OCMJjbDJRr0Uw+t6ZyqmDG2lLt0/ipVE5kaw754=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=tkorLTHjO7c+sqhqx0s9z00oQy7wQyiEyGJ/bDOakApJ+HfFTDFP5I90qJKRfq/+r
+	 kTWy9deG4zzCq9uNDvXIab+9QYepSNXEmvJ4837kEWTqYisE7F8uuo6babedL0VV1Z
+	 RIOqlo8EUlS6wd+bDmb8uB0BGA+b00zmk3a9NmMha5kFm9TMxjJGrvdbnlihZgZ2fr
+	 YqUK3b05vu3y9M2SVAJY4vHzKACRh7BX5fPoMaUuHLHu/a326ciDsiI0fp3/KZkiPC
+	 wM80SU7i95wOr94GK+wu0VUdjtNzLOjKe5YCy7du/ZqbjnvMk/dI8zrondzNGTeipg
+	 IuCcKFfv6qQ7g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH 5.10.y] mptcp: sched: check both directions for backup
+Date: Fri,  9 Aug 2024 12:54:13 +0200
+Message-ID: <20240809105412.2901173-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <2024080759-deploy-send-dfa5@gregkh>
+References: <2024080759-deploy-send-dfa5@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH] mptcp: correct MPTCP_SUBFLOW_ATTR_SSN_OFFSET reserved
- size
-Content-Language: en-GB
-To: Eugene Syromiatnikov <esyr@redhat.com>, mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Davide Caratti <dcaratti@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20240809094321.GA8122@asgard.redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240809094321.GA8122@asgard.redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2724; i=matttbe@kernel.org; h=from:subject; bh=mIy8OCMJjbDJRr0Uw+t6ZyqmDG2lLt0/ipVE5kaw754=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmtfVURlEGLCH2iaJNsSGUnudgJaQSQ8EOjz7KF tnNk/8l4PmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZrX1VAAKCRD2t4JPQmmg c/IFD/0SmhUFLS3ux3Fe4eyTmEZeMJZYLFocQ2rxwYiyzwALclXDXCYLDu0V9AjyIH6i3HcD0jt qB6EuyulsxhXVUB/oq1Bl9WpDAHjsW7qmufQ60vUasHaxx8ClLZsJUjKvcnJm5isMJlk6ATZzgg igqmtQSY6z7mlPyzEZMHS1mFVNPGPeTe/Ih45fecYsgS5IN0klcSxjthGRyDqlaXS+63t0xnOTy udicJXSrNHW2hL40+yV5uPHzOKCG39KnuARfXRpT2Zyhr8y1ZouzEF4Hhh/09LyrXyWIlwchedk DjzBxUrCAV8yEfdElIe5D4awLcBsM6N7sgek+ShysbViEAfdiNqZuIqxpuJTVmBEiOneSBEdnVy ZG1KKoJm7XMtIICmWsH+8fkNWMtX3539OvdhH33lPm0IDUrZWAa2XZFIvO2667MQSI8Oe3spPer Oy/kAv1yYj5CToIxa2pJxh8g/88DyIDISRXbuKVXAty3ajCusBwkKZJYkkWiVxQQgdoRZGQDLHn LnYE/08B3Eg1kwOfarbZQ/gioM4M86VqfdWzdKHTJbhqKoBJmj19JAeO717jasS41F1jhqVB+ea 6+LDYZ6Y0IJrKDOmwEpMx6aE8ET4Jin9/tV/qMON1EsBg7G1C+rRv5hsYQGo5pq98eibTZue56F 3mYpGfqyhBMhnqQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Eugene,
+commit b6a66e521a2032f7fcba2af5a9bcbaeaa19b7ca3 upstream.
 
-On 09/08/2024 11:43, Eugene Syromiatnikov wrote:
-> ssn_offset field is u32 and is placed into the netlink response with
-> nla_put_u32(), but only 2 bytes are reserved for the attribute payload
-> in subflow_get_info_size() (even though it makes no difference in the end,
-> as it is aligned up to 4 bytes).  Supply the correct argument to the relevant
-> nla_total_size() call to make it less confusing.
+The 'mptcp_subflow_context' structure has two items related to the
+backup flags:
 
-Good catch, thank you for sharing this patch!
+ - 'backup': the subflow has been marked as backup by the other peer
 
-The modification in the code and the description look good to me!
+ - 'request_bkup': the backup flag has been set by the host
 
+Before this patch, the scheduler was only looking at the 'backup' flag.
+That can make sense in some cases, but it looks like that's not what we
+wanted for the general use, because either the path-manager was setting
+both of them when sending an MP_PRIO, or the receiver was duplicating
+the 'backup' flag in the subflow request.
 
-Please note that when you submit a patch to the Netdev mailing list, the
-subject should have the 'PATCH net' prefix (or net-next) as mentioned in
-the Netdev doc:
+Note that the use of these two flags in the path-manager are going to be
+fixed in the next commits, but this change here is needed not to modify
+the behaviour.
 
-  https://docs.kernel.org/process/maintainer-netdev.html
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Cc: stable@vger.kernel.org
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+[ Conflicts in protocol.c, because the context has changed in commit
+  3ce0852c86b9 ("mptcp: enforce HoL-blocking estimation") and in commit
+  33d41c9cd74c ("mptcp: more accurate timeout"), which are not in this
+  version. This commit is unrelated to this modification.
+  Note that the tracepoint is not in this version, see commit
+  e10a98920976 ("mptcp: add tracepoint in mptcp_subflow_get_send"). ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/protocol.c | 10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-> Fixes: 5147dfb5083204d6 ("mptcp: allow dumping subflow context to userspace")
-
-Checkpatch is complaining about this line, because the commit ID should
-have 12 chars:
-
-
-https://docs.kernel.org/process/submitting-patches.html#describe-your-changes
-
-Note that checkpatch.pl also points out the fact that the lines in the
-commit description should have max 75 chars -- ideally 72 -- which is
-not the case above with the line ending with 'relevant'.
-
-Do you mind sending a v2 with these small fixes, so your patch can be
-directly applied in the net tree, please?
-
-(Do not forget to wait 24h between two versions as mentioned in the doc)
-
-Cheers,
-Matt
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index a36493bbf895..a343b3077458 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1124,11 +1124,13 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
+ 		send_info[i].ratio = -1;
+ 	}
+ 	mptcp_for_each_subflow(msk, subflow) {
++		bool backup = subflow->backup || subflow->request_bkup;
++
+ 		ssk =  mptcp_subflow_tcp_sock(subflow);
+ 		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ 
+-		nr_active += !subflow->backup;
++		nr_active += !backup;
+ 		*sndbuf = max(tcp_sk(ssk)->snd_wnd, *sndbuf);
+ 		if (!sk_stream_memory_free(subflow->tcp_sock))
+ 			continue;
+@@ -1139,9 +1141,9 @@ static struct sock *mptcp_subflow_get_send(struct mptcp_sock *msk,
+ 
+ 		ratio = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
+ 				pace);
+-		if (ratio < send_info[subflow->backup].ratio) {
+-			send_info[subflow->backup].ssk = ssk;
+-			send_info[subflow->backup].ratio = ratio;
++		if (ratio < send_info[backup].ratio) {
++			send_info[backup].ssk = ssk;
++			send_info[backup].ratio = ratio;
+ 		}
+ 	}
+ 
 -- 
-Sponsored by the NGI0 Core fund.
+2.45.2
 
