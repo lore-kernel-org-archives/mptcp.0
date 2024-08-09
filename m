@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073E8125BA
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 02:10:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E5A6C8C7
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 02:21:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723169448; cv=none; b=JYUkwGrd/+cA4xJEGkB4sl6iGa3Nm5Jl9//8Jt7Jy3lOsEelhtya2KLoqLCq/MRtjAj/8rlCrF6mgFOejQ0GP1rpFWGyIfJCaBrjXprj5QIXhDgw0axA3xXfrY3sfhzINydVtRN196ZuEGigf39LKAqaYc5XTfo7Ki8HsbMmrWs=
+	t=1723170120; cv=none; b=QgPgDJ7OkI8Vg+tT9szc/MqwKq+I7GHmkVeBF0Nk73vfDwh7H6zL1IcGrT9wABNLfjdrCI599jVp6/wI//FPZxXB80kVsZRBvlufzDlg54YpyHiR1d6KtvmzsMpG4nLcYgprI8uRi9PAxpSCUR/VOr1tB4JLF5DOdflRvVKjcPU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723169448; c=relaxed/simple;
-	bh=Ut7R3UEovssCeLbIveY+QMigTCo+0RbvLegFtRYIz38=;
+	s=arc-20240116; t=1723170120; c=relaxed/simple;
+	bh=Q0Z8i4OKBuHm+ibWVzT0956W/G9zrdYZU62htDbPxDk=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ueXgrt4PcUL+WOuAT7NkspQQvIUCvLiL1sSU9Cx7KLwYEXbxIWqX4+KRdv08PTdqlVC1gBpqhyPn5MDA/d8cp9vR/rzex75WJdfhurzVvR+v3vCdR3og7gpNDvvq2Z/6JZluT+LzdWkljbrf+G7eZzxy8FFokTH0JeXB0hhg8F8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sXLVFKyP; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=sa0O/R69UckvASJajiY+Kyqh1f0UTphFJk77451P6v2F4uw2hTq0uDOujWmG1RxW3ZcU0EzmEx1BOBQJJ1xdCUuRYfNyoso1QPkDUniEztnTCX1VgNjvSqUC7EHBi78zSWWZuoZYZbYdYlG9z5yzjkUFLte+o+dlwsIMBLyTxg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X2GZL6JJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sXLVFKyP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5F72C32782;
-	Fri,  9 Aug 2024 02:10:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X2GZL6JJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF93C32782;
+	Fri,  9 Aug 2024 02:21:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723169447;
-	bh=Ut7R3UEovssCeLbIveY+QMigTCo+0RbvLegFtRYIz38=;
+	s=k20201202; t=1723170119;
+	bh=Q0Z8i4OKBuHm+ibWVzT0956W/G9zrdYZU62htDbPxDk=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=sXLVFKyPo/K7kz1sV0pdG3zjSVov2rjoWmSIufuynAtxfeC3v8WLIlfGWgB/YsEah
-	 nSGbAWYQe+zO3o+hsdlGUrSqGqhUgm2GNRNt30JgvcoSWHAWI5RO93TkJe2cmlYEsk
-	 EqYl632pAyPUWAAY7pVPfA/s50u3dgFW1p8wNuKCPhVeANTuvPc6PXgGJmFVgSmtRk
-	 W2NYdqM5mpEndR4hCnJLllTnG2A3gNVNdkIPR7bfPrfE3/rd2RRMe08f2YuUFe6iOi
-	 9/juhhdsHkNYiA4YtNhOr3M/DN2KLzuGf6Ce22wLQO38KNYr+OMG3e9zVEeTzVztRX
-	 k8POCc5FJNMsg==
-Message-ID: <ffcd94a0d7154a93d6405c0402b0d01a015603b9.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 4/8] selftests: mptcp: join: one line for
- join check
+	b=X2GZL6JJG3mT8cNqYc4k9bDhxV3JPE4dHaydYcK4nx1+gIequzzwSZ3jGyvA92qgB
+	 uSvHMtSgHo3bd7Ds6Ogirl0cBjQRB2U+vZJy8iVoC2XQgPwxdE6DqclX/NaAELSz2J
+	 Fvdo6605iO8E4GGJHqMG1FwfLiFJCvq3OdcSuh+uGs9//D4nkTfr7QwOeFDVn2LuUx
+	 J7olYj/cUu+IIYhItHQ2/McXUSYjkxk6TvAxloa43Rp0mFt4Ey3ETlmb0Tb9tO1yPD
+	 TI8sVT6VyU0FlDxWffApGt9L+tRcl7G/7nk3sTTi32pjRP2hjUkkvr1dNKmVNq6ldT
+	 ZiAue+iWCNtPQ==
+Message-ID: <e2fc22b0217c36fa516a4926994ae171f97fec38.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 5/8] selftests: mptcp: join: validate MPJ
+ SYN TX MIB counters
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Fri, 09 Aug 2024 10:10:41 +0800
-In-Reply-To: <20240806-mptcp-join-tx-mib-v3-4-c3b54d2099e9@kernel.org>
+Date: Fri, 09 Aug 2024 10:21:55 +0800
+In-Reply-To: <20240806-mptcp-join-tx-mib-v3-5-c3b54d2099e9@kernel.org>
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
-	 <20240806-mptcp-join-tx-mib-v3-4-c3b54d2099e9@kernel.org>
+	 <20240806-mptcp-join-tx-mib-v3-5-c3b54d2099e9@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -79,152 +79,227 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
-> Most tests are checking if the expected number of SYN/SYN+ACK/ACK
-> JOINs
-> have been received, each of them on one line.
+> A few new MPJoinSynTx MIB counters have been added in a previous
+> commit.
+> They are being validated here in mptcp_join.sh selftest, each time
+> the
+> number of received MPJ are checked.
 > 
-> More Join related tests are going to be checked soon, no need to add
-> 5
-> new lines per test in case of success, just one is enough. In case of
-> issue, the errors will still be reported like before.
+> Most of the time, the number of sent SYN+MPJ is the same as the
+> received
+> ones. But sometimes, there are more, because there are dropped, or
+> there
+> are errors.
+> 
+> While at it, the "no MPC reuse with single endpoint" subtest has been
+> modified to force a bind() error.
 > 
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 45
-> ++++++++++++++++---------
->  1 file changed, 30 insertions(+), 15 deletions(-)
+> Notes:
+>   - v3:
+>     - Force a bind error (Geliang)
+>     - Validate join tx with rx ones. (Geliang)
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 84
+> +++++++++++++++++++++----
+>  1 file changed, 73 insertions(+), 11 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 0401ba1aaf1b..b10bcb1ac970 100755
+> index b10bcb1ac970..23ea8acb7a36 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -202,6 +202,22 @@ print_skip()
->  	mptcp_lib_pr_skip "${@}"
+> @@ -1331,6 +1331,54 @@ chk_infi_nr()
+>  	fi
 >  }
 >  
-> +# $1: check name; $2: rc
-> +print_results()
+> +chk_join_tx_nr()
 > +{
-> +	local check="${1}"
-> +	local rc=${2}
+> +	local syn_tx=${join_syn_tx:-${syn_nr}}
+
+syn_nr is only a local variable of chk_join_nr(), does this limit that
+this chk_join_tx_nr() can only be called in chk_join_nr()? I think it
+is necessary to break this limit. WDYT?
+
+> +	local create=${join_create_err:-0}
+> +	local bind=${join_bind_err:-0}
+> +	local connect=${join_connect_err:-0}
+> +	local rc=${KSFT_PASS}
+> +	local count
 > +
-> +	print_check "${check}"
-> +	if [ ${rc} = ${KSFT_PASS} ]; then
-> +		print_ok
-> +	elif [ ${rc} = ${KSFT_SKIP} ]; then
-> +		print_skip
-> +	else
-> +		fail_test
-
-To align error messages, it's better to pass an empty string to
-fail_test to make sure an "EOL" is printed out:
-
-		fail_test ""
-
-001 no JOIN
-      syn rx                 [FAIL] got 0 JOIN[s] syn rx expected 1
-      synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
-      ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
-      join Rx                syn tx                              [FAIL]
-got 0 JOIN[s] syn tx expected 1
-      join Tx                002 single subflow, limited by client
-      join Rx                             [ OK ]
-      join Tx                             [ OK ]
-
-->
-
-001 no JOIN
-      syn rx                 [FAIL] got 0 JOIN[s] syn rx 
-      synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
-      ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
-      join Rx                [FAIL]
-      syn tx                 [FAIL] got 0 JOIN[s] syn tx expected 1
-      join Tx                [FAIL]
-002 single subflow, limited by client
-
-WDYT?
-
-Regards,
--Geliang
-
+> +	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynTx")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$syn_tx" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "syn tx"
+> +		fail_test "got $count JOIN[s] syn tx expected
+> $syn_tx"
 > +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxCreatSkErr")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$create" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "syn tx create socket error"
+> +		fail_test "got $count JOIN[s] syn tx create socket
+> error expected $create"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxBindErr")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$bind" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "syn tx bind error"
+> +		fail_test "got $count JOIN[s] syn tx bind error
+> expected $bind"
+> +	fi
+> +
+> +	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynTxConnectErr")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "$connect" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "syn tx connect error"
+> +		fail_test "got $count JOIN[s] syn tx connect error
+> expected $connect"
+> +	fi
+> +
+> +	print_results "join Tx" ${rc}
 > +}
 > +
->  # [ $1: fail msg ]
->  mark_as_skipped()
+>  chk_join_nr()
 >  {
-> @@ -1326,6 +1342,7 @@ chk_join_nr()
->  	local rst_nr=${join_rst_nr:-0}
->  	local infi_nr=${join_infi_nr:-0}
->  	local corrupted_pkts=${join_corrupted_pkts:-0}
-> +	local rc=${KSFT_PASS}
->  	local count
->  	local with_cookie
+>  	local syn_nr=$1
+> @@ -1385,6 +1433,8 @@ chk_join_nr()
 >  
-> @@ -1333,43 +1350,41 @@ chk_join_nr()
->  		print_info "${corrupted_pkts} corrupted pkts"
->  	fi
+>  	print_results "join Rx" ${rc}
 >  
-> -	print_check "syn"
->  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinSynRx")
->  	if [ -z "$count" ]; then
-> -		print_skip
-> +		rc=${KSFT_SKIP}
->  	elif [ "$count" != "$syn_nr" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "syn"
->  		fail_test "got $count JOIN[s] syn expected $syn_nr"
-> -	else
-> -		print_ok
->  	fi
->  
-> -	print_check "synack"
->  	with_cookie=$(ip netns exec $ns2 sysctl -n
-> net.ipv4.tcp_syncookies)
->  	count=$(mptcp_lib_get_counter ${ns2}
-> "MPTcpExtMPJoinSynAckRx")
->  	if [ -z "$count" ]; then
-> -		print_skip
-> +		rc=${KSFT_SKIP}
->  	elif [ "$count" != "$syn_ack_nr" ]; then
->  		# simult connections exceeding the limit with cookie
-> enabled could go up to
->  		# synack validation as the conn limit can be
-> enforced reliably only after
->  		# the subflow creation
-> -		if [ "$with_cookie" = 2 ] && [ "$count" -gt
-> "$syn_ack_nr" ] && [ "$count" -le "$syn_nr" ]; then
-> -			print_ok
-> -		else
-> +		if [ "$with_cookie" != 2 ] || [ "$count" -le
-> "$syn_ack_nr" ] || [ "$count" -gt "$syn_nr" ]; then
-> +			rc=${KSFT_FAIL}
-> +			print_check "synack"
->  			fail_test "got $count JOIN[s] synack
-> expected $syn_ack_nr"
->  		fi
-> -	else
-> -		print_ok
->  	fi
->  
-> -	print_check "ack"
->  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
->  	if [ -z "$count" ]; then
-> -		print_skip
-> +		rc=${KSFT_SKIP}
->  	elif [ "$count" != "$ack_nr" ]; then
-> +		rc=${KSFT_FAIL}
-> +		print_check "ack"
->  		fail_test "got $count JOIN[s] ack expected $ack_nr"
-> -	else
-> -		print_ok
->  	fi
-> +
-> +	print_results "join Rx" ${rc}
+> +	chk_join_tx_nr
 > +
 >  	if $validate_checksum; then
 >  		chk_csum_nr $csum_ns1 $csum_ns2
 >  		chk_fail_nr $fail_nr $fail_nr
+> @@ -1925,9 +1975,11 @@ subflows_error_tests()
+>  		pm_nl_set_limits $ns1 0 1
+>  		pm_nl_set_limits $ns2 0 1
+>  		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow
+> +		pm_nl_add_endpoint $ns2 10.0.12.2 flags subflow
+>  		speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 0 0 0
+> +		join_bind_err=1 \
+> +			chk_join_nr 0 0 0
+>  	fi
+>  
+>  	# multiple subflows, with subflow creation error
+> @@ -1939,7 +1991,8 @@ subflows_error_tests()
+>  		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+>  		speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=2 \
+> +			chk_join_nr 1 1 1
+>  	fi
+>  
+>  	# multiple subflows, with subflow timeout on MPJ
+> @@ -1951,7 +2004,8 @@ subflows_error_tests()
+>  		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+>  		speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=2 \
+> +			chk_join_nr 1 1 1
+>  	fi
+>  
+>  	# multiple subflows, check that the endpoint corresponding
+> to
+> @@ -1972,7 +2026,8 @@ subflows_error_tests()
+>  
+>  		# additional subflow could be created only if the PM
+> select
+>  		# the later endpoint, skipping the already used one
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=2 \
+> +			chk_join_nr 1 1 1
+>  	fi
+>  }
+>  
+> @@ -2058,7 +2113,8 @@ signal_address_tests()
+>  		pm_nl_add_endpoint $ns1 10.0.14.1 flags signal
+>  		pm_nl_set_limits $ns2 3 3
+>  		run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=3 \
+> +			chk_join_nr 1 1 1
+>  		chk_add_nr 3 3
+>  	fi
+>  
+> @@ -2226,7 +2282,8 @@ add_addr_timeout_tests()
+>  		pm_nl_set_limits $ns2 2 2
+>  		speed=10 \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=2 \
+> +			chk_join_nr 1 1 1
+>  		chk_add_nr 8 0
+>  	fi
+>  }
+> @@ -2326,7 +2383,8 @@ remove_tests()
+>  		pm_nl_set_limits $ns2 2 2
+>  		addr_nr_ns1=-3 speed=10 \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=2 join_connect_err=1 \
+> +			chk_join_nr 1 1 1
+>  		chk_add_nr 3 3
+>  		chk_rm_nr 3 1 invert
+>  		chk_rst_nr 0 0
+> @@ -2391,7 +2449,8 @@ remove_tests()
+>  		pm_nl_set_limits $ns2 3 3
+>  		addr_nr_ns1=-8 speed=slow \
+>  			run_tests $ns1 $ns2 10.0.1.1
+> -		chk_join_nr 1 1 1
+> +		join_syn_tx=3 \
+> +			chk_join_nr 1 1 1
+>  		chk_add_nr 3 3
+>  		chk_rm_nr 3 1 invert
+>  		chk_rst_nr 0 0
+> @@ -3619,7 +3678,8 @@ endpoint_tests()
+>  
+>  		mptcp_lib_kill_wait $tests_pid
+>  
+> -		chk_join_nr 3 3 3
+> +		join_syn_tx=4 \
+> +			chk_join_nr 3 3 3
+>  		chk_rm_nr 1 1
+>  	fi
+>  
+> @@ -3654,7 +3714,8 @@ endpoint_tests()
+>  		chk_mptcp_info subflows 2 subflows 2
+>  		mptcp_lib_kill_wait $tests_pid
+>  
+> -		chk_join_nr 3 3 3
+> +		join_connect_err=1 \
+> +			chk_join_nr 3 3 3
+>  		chk_add_nr 4 4
+>  		chk_rm_nr 2 1 invert
+>  	fi
+> @@ -3685,7 +3746,8 @@ endpoint_tests()
+>  		wait_mpj $ns2
+>  		mptcp_lib_kill_wait $tests_pid
+>  
+> -		chk_join_nr 2 2 2
+> +		join_syn_tx=3 join_connect_err=1 \
+> +			chk_join_nr 2 2 2
+>  		chk_add_nr 2 2
+>  		chk_rm_nr 1 0 invert
+>  	fi
 > 
 
