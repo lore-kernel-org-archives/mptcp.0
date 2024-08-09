@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B847156C4B
-	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 11:39:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8BAC192B7E
+	for <mptcp@lists.linux.dev>; Fri,  9 Aug 2024 11:42:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723203546; cv=none; b=XETq8iGNglDT/zcN1mCyiNbWmJwT47S3lE3ehNRCGjfWZyLR1Dy5KpSBZQHIRHjHXomj4uSC8W9tnxDypAN4Y9+r6Vhciz52+GOLQyI/HU8mQiQDDtuuPttqGrbi05lmKvxi3NjjYYNL/WYuR4MWLIJ0+/L/DApT7/LupDoBZVM=
+	t=1723203758; cv=none; b=NsPfjFpYOX+eyoOsrRbLx50JuabJiM+Ou5sZUihvYKnzHMZVgPDos4aeioykgsZk+o9REyNmQnB/TNSfFQKzUSFh3JG5We9rUHroyGRiIPp6CNi84b8bkCaRXBdHws8yXblQ8RPGtwj63AxYUr/rlvmc9DIyNl/fqBAuwalu9uc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723203546; c=relaxed/simple;
-	bh=qvDNtIpqu1PYJL+QpDKuEO1F22Wdd4oIC9k35O0SGcA=;
+	s=arc-20240116; t=1723203758; c=relaxed/simple;
+	bh=3oAIqeHluLb0kZLqYR4oL/91WjN+ewbLSebWUq3LJnw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=DKQM3ouPe5H3EUmkvWcfUcPvfyMKjodTOeZR2Y1E1DOjuwuI8S7txX3JNibkGXzgZFzeW5nd1S3XRJ8OQHZ/3WZhgDqX6FvtgF1tJl5QN+nTqHwCyvwphQVNJp2vCUHTjmwsPslslwB7+0PUwc2rvZBfhFuo61kYfbwquiKlk6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NJbjK6yr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Kzk2Hfp5FwL/z1rlmAu2mGkpcFL1AdqHRzQLRme9btmqGddOEoW/5bSY0TyyTBaJG6ccUEpIlajpTqH7k3hOn/TkZV08rSp+igbVmTL+KRS+QFdvhuuv1MVVIPF2h1/U97VS2GNKK3eoqAugw1bWnFNER9QwWjv45tnfuz0NHog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vK8HvpSY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NJbjK6yr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7CBBDC32782;
-	Fri,  9 Aug 2024 11:39:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vK8HvpSY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FF31C32782;
+	Fri,  9 Aug 2024 11:42:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723203546;
-	bh=qvDNtIpqu1PYJL+QpDKuEO1F22Wdd4oIC9k35O0SGcA=;
+	s=k20201202; t=1723203758;
+	bh=3oAIqeHluLb0kZLqYR4oL/91WjN+ewbLSebWUq3LJnw=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=NJbjK6yr+eRu5LvPXXy7tza8pGMrpAWrjRqqdkk/qw8rw054yeto1UAShS91Fi7EG
-	 y5YzMvaS0RUjNU4U3u+04x3LsTEttBiROJLkgSY4aGNmxw+CAiDmT7HYyve/1qVbqP
-	 /2dInIo36I0jQyvJqVMSjVzNA04HLT6yc29Iu9TA9EvWJlFgrNxu8xSTgLxybdwGp+
-	 dDIQFWYBCXceLTPyCTumJ4qXYxi3SKJjQ3VNCuLSL6Lo27TvsXyFhjlDSDrRHCrlei
-	 IVrE8o+5hCJ3g4p4GFhl61MeWfP4a5vmP/1+mnOmrDU2uiPIJMF1LvZXrZBZ4B/g4G
-	 ip8LtzGeiVt0w==
-Message-ID: <0c131a5e-10df-44c9-ad46-96b4821f3a1e@kernel.org>
-Date: Fri, 9 Aug 2024 13:39:03 +0200
+	b=vK8HvpSYZthVf0GA5gmaPQS14+6EK/9Ten3dX8mJony5hkvJXrodUeXSTTVdcKf9L
+	 +aWmOU9fZX2V09/7WpMxwS9kR+7yM85oKl0Hj9QBKDL0dGFCSKkaXmdeat7a4Atcdr
+	 L3C3rWOxWK50bXrKNY2x0nslMrVCgWVesKx1CVVgnZPgeqtXP+f0eYWA2olRUUm+E6
+	 GKu9K9P7vNFBq+ceWwJUrK11y4pjv1xX9osffyq/m2EnKcfCYe0Rqr+W2j46RUPAqB
+	 MIkj4ufy18evwnGZ6FsfU3hLj9bxHvZAxeo4veOMEBYL+VoJAZSS67Otx1JF/FPYTX
+	 fvXLcKClfxa1w==
+Message-ID: <4bff36f9-809b-481b-940f-69156075cafc@kernel.org>
+Date: Fri, 9 Aug 2024 13:42:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 4/8] selftests: mptcp: join: one line for
- join check
+Subject: Re: [PATCH mptcp-next v3 5/8] selftests: mptcp: join: validate MPJ
+ SYN TX MIB counters
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20240806-mptcp-join-tx-mib-v3-0-c3b54d2099e9@kernel.org>
- <20240806-mptcp-join-tx-mib-v3-4-c3b54d2099e9@kernel.org>
- <ffcd94a0d7154a93d6405c0402b0d01a015603b9.camel@kernel.org>
+ <20240806-mptcp-join-tx-mib-v3-5-c3b54d2099e9@kernel.org>
+ <e2fc22b0217c36fa516a4926994ae171f97fec38.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,81 +87,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ffcd94a0d7154a93d6405c0402b0d01a015603b9.camel@kernel.org>
+In-Reply-To: <e2fc22b0217c36fa516a4926994ae171f97fec38.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 09/08/2024 04:10, Geliang Tang wrote:
+On 09/08/2024 04:21, Geliang Tang wrote:
 > On Tue, 2024-08-06 at 13:18 +0200, Matthieu Baerts (NGI0) wrote:
->> Most tests are checking if the expected number of SYN/SYN+ACK/ACK
->> JOINs
->> have been received, each of them on one line.
+>> A few new MPJoinSynTx MIB counters have been added in a previous
+>> commit.
+>> They are being validated here in mptcp_join.sh selftest, each time
+>> the
+>> number of received MPJ are checked.
 >>
->> More Join related tests are going to be checked soon, no need to add
->> 5
->> new lines per test in case of success, just one is enough. In case of
->> issue, the errors will still be reported like before.
+>> Most of the time, the number of sent SYN+MPJ is the same as the
+>> received
+>> ones. But sometimes, there are more, because there are dropped, or
+>> there
+>> are errors.
+>>
+>> While at it, the "no MPC reuse with single endpoint" subtest has been
+>> modified to force a bind() error.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 45
->> ++++++++++++++++---------
->>  1 file changed, 30 insertions(+), 15 deletions(-)
+>> Notes:
+>>   - v3:
+>>     - Force a bind error (Geliang)
+>>     - Validate join tx with rx ones. (Geliang)
+>> ---
+>>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 84
+>> +++++++++++++++++++++----
+>>  1 file changed, 73 insertions(+), 11 deletions(-)
 >>
 >> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 >> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> index 0401ba1aaf1b..b10bcb1ac970 100755
+>> index b10bcb1ac970..23ea8acb7a36 100755
 >> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 >> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -202,6 +202,22 @@ print_skip()
->>  	mptcp_lib_pr_skip "${@}"
+>> @@ -1331,6 +1331,54 @@ chk_infi_nr()
+>>  	fi
 >>  }
 >>  
->> +# $1: check name; $2: rc
->> +print_results()
+>> +chk_join_tx_nr()
 >> +{
->> +	local check="${1}"
->> +	local rc=${2}
->> +
->> +	print_check "${check}"
->> +	if [ ${rc} = ${KSFT_PASS} ]; then
->> +		print_ok
->> +	elif [ ${rc} = ${KSFT_SKIP} ]; then
->> +		print_skip
->> +	else
->> +		fail_test
+>> +	local syn_tx=${join_syn_tx:-${syn_nr}}
 > 
-> To align error messages, it's better to pass an empty string to
-> fail_test to make sure an "EOL" is printed out:
-> 
-> 		fail_test ""
-> 
-> 001 no JOIN
->       syn rx                 [FAIL] got 0 JOIN[s] syn rx expected 1
->       synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
->       ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
->       join Rx                syn tx                              [FAIL]
-> got 0 JOIN[s] syn tx expected 1
->       join Tx                002 single subflow, limited by client
->       join Rx                             [ OK ]
->       join Tx                             [ OK ]
-> 
-> ->
-> 
-> 001 no JOIN
->       syn rx                 [FAIL] got 0 JOIN[s] syn rx 
->       synack rx              [FAIL] got 0 JOIN[s] synack rx expected 1
->       ack rx                 [FAIL] got 0 JOIN[s] ack rx expected 1
->       join Rx                [FAIL]
->       syn tx                 [FAIL] got 0 JOIN[s] syn tx expected 1
->       join Tx                [FAIL]
-> 002 single subflow, limited by client
-> 
-> WDYT?
+> syn_nr is only a local variable of chk_join_nr(), does this limit that
+> this chk_join_tx_nr() can only be called in chk_join_nr()? I think it
+> is necessary to break this limit. WDYT?
 
-Good point. We can also print "see above" instead of nothing.
+Yes, I can do the modification, just in case for later.
 
 Cheers,
 Matt
