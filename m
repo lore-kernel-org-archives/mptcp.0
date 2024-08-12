@@ -1,124 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ot1-f45.google.com (mail-ot1-f45.google.com [209.85.210.45])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB04D18453F;
-	Mon, 12 Aug 2024 15:51:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6243E134AC
+	for <mptcp@lists.linux.dev>; Mon, 12 Aug 2024 16:27:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.45
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723477888; cv=none; b=dO8oIUbD2h5T7eFoL2IOPysVU7S3/MEuV6C7oXb2wh8ppsi1puxXaLk/C1KivAypDIvrvuSmQKrEVg8C8EacezCbfG/phlpDE0BYQnltm/zEkoTpcTQxSoKONc7ydR41RISNXpez7LcXjDlxBa0XxDmAYKw8a9bJn9m8+r/NeIw=
+	t=1723480048; cv=none; b=nGN3QO3wYG8BhZkAEYOV3L0USQDDRCd/dRl3XSQS1uAyf4WzYoyaMOSdOvCnLKa/E0uh92vInhr/KckAb251wWAF1CuJ6bWTG1q/cwE6ZzdQJ6umQ8sDZDtFUQpYeUFRm0G5UQGNGh0/2Mt1DsS8+fp9dvVXpF1FigAP53Ip1vA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723477888; c=relaxed/simple;
-	bh=x2yW0LAxHszm1/qOkrGsPkxKQG4cgLDIstlJwDQSXqM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=l0xClCTiYPXCTRPlUkw9KKLBYJ+d8wMsC7Z/sQuHaObA+aPaTbn8Ec+wYRf90vnuoqIrGKw4skhWCVO80kz3oyxlaQpAYQgbxVs8fBsdwsjvzf1ZqS33PMKZtFMBc+kmPuimy4fTA6sqyz8SuZy1YcWm7BX3Buh6TXlsqs8sb8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=b6NXvWLk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723480048; c=relaxed/simple;
+	bh=aV4gnAU1b5iignG6ZkALm8IMpr+hKkA5rR3kv/8Ug6A=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=EOgkh//9W/wBjRxBHq8c4D1mXYcdc2qkS2uBJ+6K4OUaGQCNgkSVSMTyWKSZ1rGjmwlCUv4+/T/+VNFO8Q8DmKHyPOo/yEOivwPA91kpDkcHGAW+W4y0JX7dVjW7RXNu4WlFPNNZH5Kt2J1jI7cIAixmBmo1+/UQ8X5fGvvRg5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=N9LgJqiZ; arc=none smtp.client-ip=209.85.210.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="b6NXvWLk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6BDBC32782;
-	Mon, 12 Aug 2024 15:51:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723477888;
-	bh=x2yW0LAxHszm1/qOkrGsPkxKQG4cgLDIstlJwDQSXqM=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=b6NXvWLksddSwemfDuS7ttYXL7mZHeNFae6a4YW8tmlijQ/Jh82rYMNiez7TA7QbI
-	 PKVw/7Kqrmtsii9iHhbUh02onJnJHnlw3kbfspB1q/gMY1PHMmBIA5kS+E+vIsLoP6
-	 wG4ImR2XP731OohCtKJbh0/LZeJbvQXnr0bkWyJc=
-Subject: Patch "Revert "selftests: mptcp: simult flows: mark 'unbalanced' tests as flaky"" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 12 Aug 2024 17:51:01 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N9LgJqiZ"
+Received: by mail-ot1-f45.google.com with SMTP id 46e09a7af769-70942ebcc29so3144576a34.0
+        for <mptcp@lists.linux.dev>; Mon, 12 Aug 2024 09:27:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723480046; x=1724084846; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=KAK2Pbid4JT/uoftcv10fjrTuG/BhEIxj0pa22f44J8=;
+        b=N9LgJqiZFSF0tHhrsw0sMwnCEA18ahwT/vetL/oSEq9p+msZ5235YFmL9xVOXA1+VB
+         wRDdDUIFIZEiCrCge+4OBWHVGBS+2JEMjuP3g+WLCR5f2KiU1GVbgXtKzHxnND34PDNj
+         Ie35zOLSEYq980X6jyQyYBQPgFwoRcTZfQBPfMyBlaZuTMcoPWyViq3X8tKJKjjKGKr7
+         MkpTi6o5GIvJKZCwx+C4V3uED5agLdenChwsqGWpllGdw9GQVq6KK+noa/KhqY4fmgXB
+         2iQJDnRsAwCfwm/VJQX11/K+Ty+Z5mIA9z8Fy2/AvEGUe/ybQl0mEf86zbu7lnT5aYYE
+         IGBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723480046; x=1724084846;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=KAK2Pbid4JT/uoftcv10fjrTuG/BhEIxj0pa22f44J8=;
+        b=XnVs9W9VC3Y6qIp3iD9l6U7dMNM/Bznk54+jsiyzIlBdiQdsnFNygn3pTzZplvTKCU
+         QNdpIAMSUaTHpmrJEKyH2+5eZ6b3IHCUMF3EHJyKVc+J6+CLhSDfcRyL+rShsfUDln40
+         pcTkCiL/NxgdYgZHmO1Vn02ZVeWdltWoAR8qSej0YLmkv1aM1Ob8cmXClG/ZwgsaiHMX
+         KXE6QSKSxTJZuGRe3YN8PNld1+z7tk2pgok27cZxNknscwECu4THTlLmk3mzNKy5sz0p
+         a1cttXaKgdxDgW3+F/KRyyJDljlr3nwczoE0uo1q0QwPUc1rKg08A/6Rkt8JdMABNvm8
+         d6ag==
+X-Gm-Message-State: AOJu0YzKUIbFlFMp4aNoaORUPkCTQjYWtxZdnY+qIDsl9T2PuV7XkbLn
+	qIssh7s7V72X0B7aFjIAW6OFMWRRb6zW0IxDsvg8qqjGPw7xurk=
+X-Google-Smtp-Source: AGHT+IGsbFQqk5ptZ5Oiz3Mi/NPLPWH3sXZ6CTDUlMERnmQixtmn8e20aHOYkzVakIMy4JfyClDk+A==
+X-Received: by 2002:a05:6358:591f:b0:1aa:a01a:23dc with SMTP id e5c5f4694b2df-1b19d2cb5b6mr112487355d.15.1723480046374;
+        Mon, 12 Aug 2024 09:27:26 -0700 (PDT)
+Received: from [127.0.0.1] ([172.190.111.165])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4531c1d1437sm24523351cf.38.2024.08.12.09.27.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 12 Aug 2024 09:27:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <20240812153133.574382-2-matttbe@kernel.org>
-Message-ID: <2024081200-reward-washing-4d15@gregkh>
+References: <20240812153133.574382-2-matttbe@kernel.org>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_6=2E6=2Ey=5D_Revert_=22se?=
+ =?UTF-8?Q?lftests=3A_mptcp=3A_simult_flows=3A_mark?=
+ =?UTF-8?Q?_=27unbalanced=27_tests_as_flaky=22?=
+Message-ID: <3581e591-caab-1915-fabf-698c94baf297@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 12 Aug 2024 16:27:25 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+
+Hi Matthieu,
+
+Thank you for your modifications, that's great!
+
+Our CI did some validations and here is its report:
+
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): selftest_mptcp_join =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/103551=
+34055
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/cd7038c3ea89
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D878858
 
 
-This is a note to let you know that I've just added the patch titled
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-    Revert "selftests: mptcp: simult flows: mark 'unbalanced' tests as flaky"
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-to the 6.6-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+For more details:
 
-The filename of the patch is:
-     revert-selftests-mptcp-simult-flows-mark-unbalanced-tests-as-flaky.patch
-and it can be found in the queue-6.6 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-66756-greg=kroah.com@vger.kernel.org Mon Aug 12 17:32:58 2024
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 12 Aug 2024 17:31:34 +0200
-Subject: Revert "selftests: mptcp: simult flows: mark 'unbalanced' tests as flaky"
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Message-ID: <20240812153133.574382-2-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-This reverts commit 052c9f0c140c78e5d6826688b5d2f33e19db0ae7.
-
-If the test doesn't pass, we can get this error:
-
-  # ./simult_flows.sh: line 275: mptcp_lib_subtest_is_flaky: command not found
-
-This patch is not needed in v6.6: it is there to mark a test as "flaky",
-but the MPTCP selftests infrastructure in v6.6 doesn't support them. So
-it looks better to revert this patch.
-
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/testing/selftests/net/mptcp/simult_flows.sh |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
---- a/tools/testing/selftests/net/mptcp/simult_flows.sh
-+++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
-@@ -262,7 +262,7 @@ run_test()
- 	do_transfer $small $large $time
- 	lret=$?
- 	mptcp_lib_result_code "${lret}" "${msg}"
--	if [ $lret -ne 0 ] && ! mptcp_lib_subtest_is_flaky; then
-+	if [ $lret -ne 0 ]; then
- 		ret=$lret
- 		[ $bail -eq 0 ] || exit $ret
- 	fi
-@@ -272,7 +272,7 @@ run_test()
- 	do_transfer $large $small $time
- 	lret=$?
- 	mptcp_lib_result_code "${lret}" "${msg}"
--	if [ $lret -ne 0 ] && ! mptcp_lib_subtest_is_flaky; then
-+	if [ $lret -ne 0 ]; then
- 		ret=$lret
- 		[ $bail -eq 0 ] || exit $ret
- 	fi
-@@ -305,7 +305,7 @@ run_test 10 10 0 0 "balanced bwidth"
- run_test 10 10 1 25 "balanced bwidth with unbalanced delay"
- 
- # we still need some additional infrastructure to pass the following test-cases
--MPTCP_LIB_SUBTEST_FLAKY=1 run_test 10 3 0 0 "unbalanced bwidth"
-+run_test 10 3 0 0 "unbalanced bwidth"
- run_test 10 3 1 25 "unbalanced bwidth with unbalanced delay"
- run_test 10 3 25 1 "unbalanced bwidth with opposed, unbalanced delay"
- 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
 
-Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-queue-6.6/mptcp-pm-don-t-try-to-create-sf-if-alloc-failed.patch
-queue-6.6/selftests-mptcp-join-ability-to-invert-add_addr-check.patch
-queue-6.6/revert-selftests-mptcp-simult-flows-mark-unbalanced-tests-as-flaky.patch
-queue-6.6/mptcp-pm-do-not-ignore-subflow-if-signal-flag-is-also-set.patch
-queue-6.6/selftests-mptcp-join-test-both-signal-subflow.patch
-queue-6.6/mptcp-pm-reduce-indentation-blocks.patch
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
