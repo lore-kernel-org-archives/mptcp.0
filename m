@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06350187FF5;
-	Mon, 12 Aug 2024 15:51:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2862E184524;
+	Mon, 12 Aug 2024 15:51:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723477879; cv=none; b=P1vbVHKmAn2tT0X4DT9fyoK2s1AirRMMmSCh5xPsMplvkfMenMG+u5Frba9zYDX3GjIh5CLeFGI0MGQkou3XF6DIhzLkzhhkCECDHbk64MafdvQtkHZDcPalyug5jzcFLobldLoUj6gOjgKEY67hmqreSHqtK+rmikakfTbGaS4=
+	t=1723477882; cv=none; b=FbhF6VMM5+SMb/VG/ZCsoG0tWmgZW2gSQ5pP6t4Nfbjm5Az6dMZpg9y+0ohsa2GXg3h7HyA2gzJFE4kwXpvwSspPJUO/dxPD3QkVw5ihIZFfTq3V2tM+uOZkpX+pZUsh6CvJqEmxiCXb4mD1DyIvSqgOuxIKKDE2K/ov95vSPnY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723477879; c=relaxed/simple;
-	bh=XKty2kGhMu+fVEW4loKgfzg1WUiyRWqhIqERPN90jkg=;
+	s=arc-20240116; t=1723477882; c=relaxed/simple;
+	bh=my9pxW1S8HBrw69n8/p/MBasNeE6Py95DpKQ69mk10Q=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=HuZLEmeIH8t5OqvjGOLA92lKsIZSWilDyGdXldXyKQj+PZCZHyTuQCfN+HQ0KSPP/VZrvZDnf5sZuuR3cuLZ8qGOWgPZg3nK+mi6uxwSuxKbdeNQ6O59N8erguxcV7KFHOBDX3dXKkeX+6Tkax9pSIRZldatX1aM22MTRn4dhf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=rL2SESkk; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=ZrncKtevo69ujdRPSK1kPp+hInuHUlMt437pxsD7qSr1lPk/wVYTls9EHG/bv5Z0jJx1nkD81yOLMXjHkNlGncrNC8pBMKcy9XQAAMNOfRZPHs5AC745iPVGMbd+9cnWdzclfA0N+XZeQr7oKvkCAunJK14aV4zVEK3OsEs539g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ZQQ0l9X5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="rL2SESkk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE940C32782;
-	Mon, 12 Aug 2024 15:51:16 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ZQQ0l9X5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51FF8C32782;
+	Mon, 12 Aug 2024 15:51:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723477878;
-	bh=XKty2kGhMu+fVEW4loKgfzg1WUiyRWqhIqERPN90jkg=;
+	s=korg; t=1723477881;
+	bh=my9pxW1S8HBrw69n8/p/MBasNeE6Py95DpKQ69mk10Q=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=rL2SESkkLOgSRIP1fmOYwVXJadJvqVYHuXnYg74wGCzw8EEHVWcInEdDx5WNP72oe
-	 JZkyFoBpfXTibw2p4+HxULCi8AgvxX74tqH+OlWHaTxYL0Zp85eMAqYU6F7f0k4imc
-	 PllZy0MvP+Mz/ClhnRbm+W4LbvdVKfrR7DTumcBs=
-Subject: Patch "mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set" has been added to the 6.6-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=ZQQ0l9X5We8sCF/7Mw+rL5b6CNEKZSDbNygxN7sOoijhNHsPFI9FKEc1c+SZhgBX+
+	 dr+nf8R9zPSNJNc+U1Mnl/JqfIwVmO31HvW3RMOmboBKPQzV8armbrrqTFhGqFdDVE
+	 14+dETOfYEmGmJ6VRBx1D3Oh1WetNqOgPBF9sn0I=
+Subject: Patch "selftests: mptcp: join: ability to invert ADD_ADDR check" has been added to the 6.6-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 12 Aug 2024 17:51:00 +0200
-In-Reply-To: <20240812153050.573404-10-matttbe@kernel.org>
-Message-ID: <2024081200-tables-magnetism-5ad5@gregkh>
+Date: Mon, 12 Aug 2024 17:51:01 +0200
+In-Reply-To: <20240812153050.573404-11-matttbe@kernel.org>
+Message-ID: <2024081201-rumble-squatted-7761@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,122 +44,165 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set
+    selftests: mptcp: join: ability to invert ADD_ADDR check
 
 to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-pm-do-not-ignore-subflow-if-signal-flag-is-also-set.patch
+     selftests-mptcp-join-ability-to-invert-add_addr-check.patch
 and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-66753-greg=kroah.com@vger.kernel.org Mon Aug 12 17:32:52 2024
+From stable+bounces-66754-greg=kroah.com@vger.kernel.org Mon Aug 12 17:32:52 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 12 Aug 2024 17:30:54 +0200
-Subject: mptcp: pm: do not ignore 'subflow' if 'signal' flag is also set
+Date: Mon, 12 Aug 2024 17:30:55 +0200
+Subject: selftests: mptcp: join: ability to invert ADD_ADDR check
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240812153050.573404-10-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240812153050.573404-11-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 85df533a787bf07bf4367ce2a02b822ff1fba1a3 upstream.
+commit bec1f3b119ebc613d08dfbcdbaef01a79aa7de92 upstream.
 
-Up to the 'Fixes' commit, having an endpoint with both the 'signal' and
-'subflow' flags, resulted in the creation of a subflow and an address
-announcement using the address linked to this endpoint. After this
-commit, only the address announcement was done, ignoring the 'subflow'
-flag.
+In the following commit, the client will initiate the ADD_ADDR, instead
+of the server. We need to way to verify the ADD_ADDR have been correctly
+sent.
 
-That's because the same bitmap is used for the two flags. It is OK to
-keep this single bitmap, the already selected local endpoint simply have
-to be re-used, but not via select_local_address() not to look at the
-just modified bitmap.
+Note: the default expected counters for when the port number is given
+are never changed by the caller, no need to accept them as parameter
+then.
 
-Note that it is unusual to set the two flags together: creating a new
-subflow using a new local address will implicitly advertise it to the
-other peer. So in theory, no need to advertise it explicitly as well.
-Maybe there are use-cases -- the subflow might not reach the other peer
-that way, we can ask the other peer to try initiating the new subflow
-without delay -- or very likely the user is confused, and put both flags
-"just to be sure at least the right one is set". Still, if it is
-allowed, the kernel should do what has been asked: using this endpoint
-to announce the address and to create a new subflow from it.
-
-An alternative is to forbid the use of the two flags together, but
-that's probably too late, there are maybe use-cases, and it was working
-before. This patch will avoid people complaining subflows are not
-created using the endpoint they added with the 'subflow' and 'signal'
-flag.
-
-Note that with the current patch, the subflow might not be created in
-some corner cases, e.g. if the 'subflows' limit was reached when sending
-the ADD_ADDR, but changed later on. It is probably not worth splitting
-id_avail_bitmap per target ('signal', 'subflow'), which will add another
-large field to the msk "just" to track (again) endpoints. Anyway,
-currently when the limits are changed, the kernel doesn't check if new
-subflows can be created or removed, because we would need to keep track
-of the received ADD_ADDR, and more. It sounds OK to assume that the
-limits should be properly configured before establishing new
-connections.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
 Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
-Cc: stable@vger.kernel.org
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-5-c8a9b036493b@kernel.org
+Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-6-c8a9b036493b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |   16 ++++++++++++----
- 1 file changed, 12 insertions(+), 4 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   40 +++++++++++++++---------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
 
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -520,8 +520,8 @@ __lookup_addr(struct pm_nl_pernet *perne
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1559,18 +1559,28 @@ chk_add_nr()
+ 	local add_nr=$1
+ 	local echo_nr=$2
+ 	local port_nr=${3:-0}
+-	local syn_nr=${4:-$port_nr}
+-	local syn_ack_nr=${5:-$port_nr}
+-	local ack_nr=${6:-$port_nr}
+-	local mis_syn_nr=${7:-0}
+-	local mis_ack_nr=${8:-0}
++	local ns_invert=${4:-""}
++	local syn_nr=$port_nr
++	local syn_ack_nr=$port_nr
++	local ack_nr=$port_nr
++	local mis_syn_nr=0
++	local mis_ack_nr=0
++	local ns_tx=$ns1
++	local ns_rx=$ns2
++	local extra_msg=""
+ 	local count
+ 	local timeout
  
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
-+	struct mptcp_pm_addr_entry *local, *signal_and_subflow = NULL;
- 	struct sock *sk = (struct sock *)msk;
--	struct mptcp_pm_addr_entry *local;
- 	unsigned int add_addr_signal_max;
- 	unsigned int local_addr_max;
- 	struct pm_nl_pernet *pernet;
-@@ -587,6 +587,9 @@ static void mptcp_pm_create_subflow_or_s
- 		msk->pm.add_addr_signaled++;
- 		mptcp_pm_announce_addr(msk, &local->addr, false);
- 		mptcp_pm_nl_addr_send_ack(msk);
+-	timeout=$(ip netns exec $ns1 sysctl -n net.mptcp.add_addr_timeout)
++	if [[ $ns_invert = "invert" ]]; then
++		ns_tx=$ns2
++		ns_rx=$ns1
++		extra_msg="invert"
++	fi
 +
-+		if (local->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
-+			signal_and_subflow = local;
- 	}
++	timeout=$(ip netns exec ${ns_tx} sysctl -n net.mptcp.add_addr_timeout)
  
- subflow:
-@@ -597,9 +600,14 @@ subflow:
- 		bool fullmesh;
- 		int i, nr;
+ 	print_check "add"
+-	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtAddAddr")
++	count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtAddAddr")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+ 	# if the test configured a short timeout tolerate greater then expected
+@@ -1582,7 +1592,7 @@ chk_add_nr()
+ 	fi
  
--		local = select_local_address(pernet, msk);
--		if (!local)
--			break;
-+		if (signal_and_subflow) {
-+			local = signal_and_subflow;
-+			signal_and_subflow = NULL;
-+		} else {
-+			local = select_local_address(pernet, msk);
-+			if (!local)
-+				break;
-+		}
+ 	print_check "echo"
+-	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtEchoAdd")
++	count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtEchoAdd")
+ 	if [ -z "$count" ]; then
+ 		print_skip
+ 	elif [ "$count" != "$echo_nr" ]; then
+@@ -1593,7 +1603,7 @@ chk_add_nr()
  
- 		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
+ 	if [ $port_nr -gt 0 ]; then
+ 		print_check "pt"
+-		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtPortAdd")
++		count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtPortAdd")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$port_nr" ]; then
+@@ -1603,7 +1613,7 @@ chk_add_nr()
+ 		fi
  
+ 		print_check "syn"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortSynRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinPortSynRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$syn_nr" ]; then
+@@ -1614,7 +1624,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "synack"
+-		count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinPortSynAckRx")
++		count=$(mptcp_lib_get_counter ${ns_rx} "MPTcpExtMPJoinPortSynAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$syn_ack_nr" ]; then
+@@ -1625,7 +1635,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "ack"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinPortAckRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMPJoinPortAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$ack_nr" ]; then
+@@ -1636,7 +1646,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "syn"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortSynRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMismatchPortSynRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$mis_syn_nr" ]; then
+@@ -1647,7 +1657,7 @@ chk_add_nr()
+ 		fi
+ 
+ 		print_check "ack"
+-		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMismatchPortAckRx")
++		count=$(mptcp_lib_get_counter ${ns_tx} "MPTcpExtMismatchPortAckRx")
+ 		if [ -z "$count" ]; then
+ 			print_skip
+ 		elif [ "$count" != "$mis_ack_nr" ]; then
+@@ -1657,6 +1667,8 @@ chk_add_nr()
+ 			print_ok
+ 		fi
+ 	fi
++
++	print_info "$extra_msg"
+ }
+ 
+ chk_add_tx_nr()
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
