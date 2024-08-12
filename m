@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D87463B7A8;
-	Mon, 12 Aug 2024 12:38:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1BDD17B418;
+	Mon, 12 Aug 2024 12:38:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466319; cv=none; b=GtIDb1UqHyKGzLseydGICte4C/HHvQWN9vK6txQuBDlPnmOzqH56R8ucY5wNNsUvHd4iqdVbM6FWkgBjQs8R870pD1FC0vHulg4Rd1a9yRaYMxQCYyGw8oSh4xTerQZMRIq7zmsX50QL1v1F1W1jVqKzlC7DIdg6ky6BG7TKclY=
+	t=1723466323; cv=none; b=XozM2p5Jf590172G+ujMwZnMPTYmqx8JU+4dYqkWvRNdhWk4dvlckoM3xWm92/UjaxI6bg92sqPOTgLoDjxweZEO9SpC5Kuju6H5NbbzqM5hBY2Wl/MOuQGQUX/8CNSuDdJfSyZiBJ75ar6rBFatsNn2LElgLpiTGXjs9jLl7ME=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466319; c=relaxed/simple;
-	bh=+95YrsmFqGrpieCDsXwwEyJzUB8w0sjB0TTQ6KIjmqA=;
+	s=arc-20240116; t=1723466323; c=relaxed/simple;
+	bh=eQJLbMCUfJNOipPY5/M1AZOC0spPktkcBzZQGD+4/rU=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=CzINQEq+flhirrGvRmUcW7XKluVgueToP0ry7pVeOlY3LH5xTQj2reS/InCJzCH31rqV1cpIb0AJYv7V4vFrHoAN1TnPmYa8G/5Z3/gVrV6Lsw0Nc1JTiVItZgC10FV+9TH6On1uLsj7jQMJZAVT1kkXtCY1iz37f83XQ2gGx0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=j6URnRjl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=t+hZLLDQLB81PlTBKR2rRVzplX0svYeaSjm1enx43l91Frvds7phdzR0qSUDJkPx1KAbBWIBb8oJm0n5Grpcw7fDrIHjnPBrMX9782Cp0vkW54DDxq0Ua/glLvg4LnkMwCVIfYH026bAmCUaXbvKHFp/UjYrCIwNn5unCrq+OIY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=yIf05Wy/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="j6URnRjl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1AA6C4AF0D;
-	Mon, 12 Aug 2024 12:38:37 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="yIf05Wy/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0513AC32782;
+	Mon, 12 Aug 2024 12:38:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723466318;
-	bh=+95YrsmFqGrpieCDsXwwEyJzUB8w0sjB0TTQ6KIjmqA=;
+	s=korg; t=1723466321;
+	bh=eQJLbMCUfJNOipPY5/M1AZOC0spPktkcBzZQGD+4/rU=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=j6URnRjl5dLZzpW0rgTuT1JYtD+x2Iw8Teq5Zm57aCpvuj2V7DWJlxwkkGaXCkA0r
-	 tVGujGKTWlIgsKGYJZOM/YzDbpC5DUi/82tKYHw7WetsbT/5yFiAn1/8k5GttLi4hQ
-	 pVhl3i5YL13ZEs7SLq31YXBqymGOwVLcN/vj9WQ8=
-Subject: Patch "mptcp: fix bad RCVPRUNED mib accounting" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=yIf05Wy/e7OmS2IQdYiw5bjhphFSwyUk9goTccjm8zFsTjNUS9+pbEBNfH4jbH8Lq
+	 ZR3UALmGE6biTK0phFYNv6lo58qgEDilKT7aIE7tDqqw5GrBAGwvZCK51dAg+Thx39
+	 qNIf4/0RYk9qlo4lAA+VH2CtB3OmTKtc3PKt3wFc=
+Subject: Patch "mptcp: export local_address" has been added to the 5.15-stable tree
+To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,larysa.zaremba@intel.com,matthieu.baerts@tessares.net,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Mon, 12 Aug 2024 14:38:27 +0200
-In-Reply-To: <20240809090813.2700287-2-matttbe@kernel.org>
-Message-ID: <2024081227-levitator-spiritism-9493@gregkh>
+In-Reply-To: <20240809090912.2701580-3-matttbe@kernel.org>
+Message-ID: <2024081227-thing-amiss-8ae6@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,79 +44,122 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: fix bad RCVPRUNED mib accounting
+    mptcp: export local_address
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-fix-bad-rcvpruned-mib-accounting.patch
+     mptcp-export-local_address.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-66131-greg=kroah.com@vger.kernel.org Fri Aug  9 11:08:26 2024
+From stable+bounces-66133-greg=kroah.com@vger.kernel.org Fri Aug  9 11:09:34 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  9 Aug 2024 11:08:14 +0200
-Subject: mptcp: fix bad RCVPRUNED mib accounting
+Date: Fri,  9 Aug 2024 11:09:13 +0200
+Subject: mptcp: export local_address
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Message-ID: <20240809090813.2700287-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matthieu.baerts@tessares.net>, Larysa Zaremba <larysa.zaremba@intel.com>, Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+Message-ID: <20240809090912.2701580-3-matttbe@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: Geliang Tang <geliang.tang@suse.com>
 
-commit 0a567c2a10033bf04ed618368d179bce6977984b upstream.
+commit dc886bce753cc2cf3c88ec5c7a6880a4e17d65ba upstream.
 
-Since its introduction, the mentioned MIB accounted for the wrong
-event: wake-up being skipped as not-needed on some edge condition
-instead of incoming skb being dropped after landing in the (subflow)
-receive queue.
+Rename local_address() with "mptcp_" prefix and export it in protocol.h.
 
-Move the increment in the correct location.
+This function will be re-used in the common PM code (pm.c) in the
+following commit.
 
-Fixes: ce599c516386 ("mptcp: properly account bulk freed memory")
-Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflicts in protocol.c, because the commit 6511882cdd82 ("mptcp:
-  allocate fwd memory separately on the rx and tx path") is not in this
-  version. The fix can still be applied before the 'goto drop'. ]
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Stable-dep-of: 6834097fc38c ("mptcp: pm: fix backup support in signal endpoints")
+[ Conflicts in pm_netlink.c and protocol.h, because the context has
+  changed in commit 4638de5aefe5 ("mptcp: handle local addrs announced
+  by userspace PMs") which is not in this version. This commit is
+  unrelated to this modification. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/pm_netlink.c |   15 +++++++--------
+ net/mptcp/protocol.h   |    1 +
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -288,8 +288,10 @@ static bool __mptcp_move_skb(struct mptc
- 	if (!sk_rmem_schedule(sk, skb, skb->truesize)) {
- 		int amount = sk_mem_pages(skb->truesize) << SK_MEM_QUANTUM_SHIFT;
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -97,8 +97,7 @@ static bool address_zero(const struct mp
+ 	return addresses_equal(addr, &zero, true);
+ }
  
--		if (ssk->sk_forward_alloc < amount)
-+		if (ssk->sk_forward_alloc < amount) {
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
- 			goto drop;
-+		}
+-static void local_address(const struct sock_common *skc,
+-			  struct mptcp_addr_info *addr)
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr)
+ {
+ 	addr->family = skc->skc_family;
+ 	addr->port = htons(skc->skc_num);
+@@ -133,7 +132,7 @@ static bool lookup_subflow_by_saddr(cons
+ 	list_for_each_entry(subflow, list, node) {
+ 		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
  
- 		ssk->sk_forward_alloc -= amount;
- 		sk->sk_forward_alloc += amount;
-@@ -774,10 +776,8 @@ void mptcp_data_ready(struct sock *sk, s
- 		sk_rbuf = ssk_rbuf;
+-		local_address(skc, &cur);
++		mptcp_local_address(skc, &cur);
+ 		if (addresses_equal(&cur, saddr, saddr->port))
+ 			return true;
+ 	}
+@@ -286,7 +285,7 @@ bool mptcp_pm_sport_in_anno_list(struct
+ 	struct mptcp_addr_info saddr;
+ 	bool ret = false;
  
- 	/* over limit? can't append more skbs to msk, Also, no need to wake-up*/
--	if (__mptcp_rmem(sk) > sk_rbuf) {
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RCVPRUNED);
-+	if (__mptcp_rmem(sk) > sk_rbuf)
- 		return;
--	}
+-	local_address((struct sock_common *)sk, &saddr);
++	mptcp_local_address((struct sock_common *)sk, &saddr);
  
- 	/* Wake-up the reader only for in-sequence data */
- 	mptcp_data_lock(sk);
+ 	spin_lock_bh(&msk->pm.lock);
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+@@ -693,7 +692,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct
+ 		struct sock *sk = (struct sock *)msk;
+ 		struct mptcp_addr_info local;
+ 
+-		local_address((struct sock_common *)ssk, &local);
++		mptcp_local_address((struct sock_common *)ssk, &local);
+ 		if (!addresses_equal(&local, addr, addr->port))
+ 			continue;
+ 
+@@ -976,8 +975,8 @@ int mptcp_pm_nl_get_local_id(struct mptc
+ 	/* The 0 ID mapping is defined by the first subflow, copied into the msk
+ 	 * addr
+ 	 */
+-	local_address((struct sock_common *)msk, &msk_local);
+-	local_address((struct sock_common *)skc, &skc_local);
++	mptcp_local_address((struct sock_common *)msk, &msk_local);
++	mptcp_local_address((struct sock_common *)skc, &skc_local);
+ 	if (addresses_equal(&msk_local, &skc_local, false))
+ 		return 0;
+ 
+@@ -1388,7 +1387,7 @@ static int mptcp_nl_remove_id_zero_addre
+ 		if (list_empty(&msk->conn_list))
+ 			goto next;
+ 
+-		local_address((struct sock_common *)msk, &msk_local);
++		mptcp_local_address((struct sock_common *)msk, &msk_local);
+ 		if (!addresses_equal(&msk_local, addr, addr->port))
+ 			goto next;
+ 
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -583,6 +583,7 @@ void mptcp_subflow_send_ack(struct sock
+ void mptcp_subflow_reset(struct sock *ssk);
+ void mptcp_sock_graft(struct sock *sk, struct socket *parent);
+ struct socket *__mptcp_nmpc_socket(const struct mptcp_sock *msk);
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
+ 
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
