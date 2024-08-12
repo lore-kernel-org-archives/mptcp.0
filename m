@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 653091369AE;
-	Mon, 12 Aug 2024 12:38:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2F61369AE;
+	Mon, 12 Aug 2024 12:38:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466325; cv=none; b=SwT4xVm6zUkF1MUTDdRPxsHjtemjUiqAyb+pCV+Gia/kHYTMUpa0eAvYmzxgFDU99EG2C0/lYZxXJYrVhOtpl5yhVFFPNMV0xp8u2t26OEBvPUXwVO0Eua8xJrGOwVzR9liatdLZZKe8yR0GeO32csi9VefZuS0pmGAZysHhK0Q=
+	t=1723466329; cv=none; b=OSsfYCgK7Y5uJv+HzAU7YsL96x7SB/EaqLnutImDJU5eYDAj9rFUvAUppGHG+f8+Pt6SzKFJq2uqeBIw4V+UZnJ08+Eni1EHOiTIwirri43CkXthcwvUdiRH/DsKwhyBS3P/wptb2P6VvchBVEcthVwpYEtHcFonhG84fuipLcc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466325; c=relaxed/simple;
-	bh=lEtw64mBsp092Zc0zYgx/t89zJnaEEmOZUuU43b0ooc=;
+	s=arc-20240116; t=1723466329; c=relaxed/simple;
+	bh=G2BlWMXafcGwAE3ap19BzcabSqSWmd5MpoesSu3mDIQ=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=HK70oDQgsHWflDNLFgwCl09stdO/0pUNe2MMAZJBRTVgFJ/wBxHAODOWEcmbicqFvxVwQT5BoJvlXT/aIyrS1Q2fBeywxKOh3vJXjKK4hzzkI+5HTEsCg9G53P4tVr58SFF6OEPtKDszSuIZkMB0i9MwThj/m8+S8ncXmRr4zKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=FJhLFiCc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=lTmnDBNCxTJhkeLXjgU6m3dn8mc68MzgsE2L8ZrTS6AUY5V+2VrE3i+8ZY2IVIeEOAIl8O4MuHEYtCpTpAJ2el5CaNt8Cs1SMdnPc2dawe6AuG6F3e3+JcWwwwPRtjRlRlcnoyKJvBMmWuBC4T8qUa7wax9Mti5CDPeViVhq+xA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ve58boWO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="FJhLFiCc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6457C32782;
-	Mon, 12 Aug 2024 12:38:44 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ve58boWO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA5EC4AF0E;
+	Mon, 12 Aug 2024 12:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723466325;
-	bh=lEtw64mBsp092Zc0zYgx/t89zJnaEEmOZUuU43b0ooc=;
+	s=korg; t=1723466328;
+	bh=G2BlWMXafcGwAE3ap19BzcabSqSWmd5MpoesSu3mDIQ=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=FJhLFiCco62qQehM3jlLnj9Mkg9oy7zkdrm3gZXXOhKmua6EWVdwMktdunxHOVVsa
-	 yTvX2+FV6Yx+K6PSXaHU1pcByxnkYaeskjGD3585YdnBKxAYtC/6RX2dKngogLj11N
-	 kbVFBIZwhREAwmNtjG8H0YUWH9FGubbQbR2FyZ2k=
-Subject: Patch "mptcp: mib: count MPJ with backup flag" has been added to the 5.15-stable tree
+	b=ve58boWOCUHdYrDUcjzo3tazKAnqZzkP5T9v9RAEvlMZytTgO7uSaAAlAtX88h02Z
+	 zrjiSlfcN1f1RZTg3DLVtQ7fRKoblAUoxOQRGeQJhmI6MmisAYCwYfk4IbLo5y7h1p
+	 /uOqmZsjWd8u0T4CnD18hsLuNIS8L5un0ES3JrrI=
+Subject: Patch "mptcp: pm: fix backup support in signal endpoints" has been added to the 5.15-stable tree
 To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Mon, 12 Aug 2024 14:38:28 +0200
-In-Reply-To: <20240809090753.2699805-2-matttbe@kernel.org>
-Message-ID: <2024081228-sixfold-basket-0a44@gregkh>
+In-Reply-To: <20240809090912.2701580-4-matttbe@kernel.org>
+Message-ID: <2024081228-earache-marshland-c7b3@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,105 +44,161 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: mib: count MPJ with backup flag
+    mptcp: pm: fix backup support in signal endpoints
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-mib-count-mpj-with-backup-flag.patch
+     mptcp-pm-fix-backup-support-in-signal-endpoints.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-66130-greg=kroah.com@vger.kernel.org Fri Aug  9 11:08:15 2024
+From stable+bounces-66134-greg=kroah.com@vger.kernel.org Fri Aug  9 11:09:35 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  9 Aug 2024 11:07:54 +0200
-Subject: mptcp: mib: count MPJ with backup flag
+Date: Fri,  9 Aug 2024 11:09:14 +0200
+Subject: mptcp: pm: fix backup support in signal endpoints
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Message-ID: <20240809090753.2699805-2-matttbe@kernel.org>
+Message-ID: <20240809090912.2701580-4-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 4dde0d72ccec500c60c798e036b852e013d6e124 upstream.
+commit 6834097fc38c5416701c793da94558cea49c0a1f upstream.
 
-Without such counters, it is difficult to easily debug issues with MPJ
-not having the backup flags on production servers.
+There was a support for signal endpoints, but only when the endpoint's
+flag was changed during a connection. If an endpoint with the signal and
+backup was already present, the MP_JOIN reply was not containing the
+backup flag as expected.
 
-This is not strictly a fix, but it eases to validate the following
-patches without requiring to take packet traces, to query ongoing
-connections with Netlink with admin permissions, or to guess by looking
-at the behaviour of the packet scheduler. Also, the modification is self
-contained, isolated, well controlled, and the increments are done just
-after others, there from the beginning. It looks then safe, and helpful
-to backport this.
+That's confusing to have this inconsistent behaviour. On the other hand,
+the infrastructure to set the backup flag in the SYN + ACK + MP_JOIN was
+already there, it was just never set before. Now when requesting the
+local ID from the path-manager, the backup status is also requested.
+
+Note that when the userspace PM is used, the backup flag can be set if
+the local address was already used before with a backup flag, e.g. if
+the address was announced with the 'backup' flag, or a subflow was
+created with the 'backup' flag.
 
 Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
 Cc: stable@vger.kernel.org
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/507
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflicts in subflow.c because the context has changed in
-  commit b3ea6b272d79 ("mptcp: consolidate initial ack seq generation")
-  which is not in this version. This commit is unrelated to this
-  modification. ]
+[ Conflicts in pm_userspace.c because the context has changed in commit
+  1e07938e29c5 ("net: mptcp: rename netlink handlers to
+  mptcp_pm_nl_<blah>_{doit,dumpit}") which is not in this version. This
+  commit is unrelated to this modification.
+  Conflicts in protocol.h because the context has changed in commit
+  9ae7846c4b6b ("mptcp: dump addrs in userspace pm list") which is not
+  in this version. This commit is unrelated to this modification.
+  Conflicts in pm.c because the context has changed in commit
+  f40be0db0b76 ("mptcp: unify pm get_flags_and_ifindex_by_id") which is
+  not in this version. This commit is unrelated to this modification.
+  Conflicts in subflow.c, because the commit 4cf86ae84c71 ("mptcp:
+  strict local address ID selection") is not in this version. It is then
+  not needed to modify the subflow_chk_local_id() helper, which is not
+  in this version.
+  Also, in this version, there is no pm_userspace.c, because this PM has
+  been added in v5.19, which also causes conflicts in protocol.h, and
+  pm_netlink.c. Plus the code in pm.c can be simplified, as there is no
+  userspace PM. And the code in pm_netlink.c needs to use
+  addresses_equal() instead of mptcp_addresses_equal(), see commit
+  4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs").
+  The code in pm_netlink.c also needs to be adapted because the
+  pm_nl_get_pernet_from_msk() helper is not in this version, introduced
+  later in commit c682bf536cf4 ("mptcp: add pm_nl_pernet helpers"). ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/mib.c     |    2 ++
- net/mptcp/mib.h     |    2 ++
- net/mptcp/subflow.c |    6 ++++++
- 3 files changed, 10 insertions(+)
+ net/mptcp/pm.c         |    9 +++++++++
+ net/mptcp/pm_netlink.c |   20 ++++++++++++++++++++
+ net/mptcp/protocol.h   |    2 ++
+ net/mptcp/subflow.c    |    1 +
+ 4 files changed, 32 insertions(+)
 
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -19,7 +19,9 @@ static const struct snmp_mib mptcp_snmp_
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
- 	SNMP_MIB_ITEM("MPJoinSynRx", MPTCP_MIB_JOINSYNRX),
-+	SNMP_MIB_ITEM("MPJoinSynBackupRx", MPTCP_MIB_JOINSYNBACKUPRX),
- 	SNMP_MIB_ITEM("MPJoinSynAckRx", MPTCP_MIB_JOINSYNACKRX),
-+	SNMP_MIB_ITEM("MPJoinSynAckBackupRx", MPTCP_MIB_JOINSYNACKBACKUPRX),
- 	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
- 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
- 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -12,7 +12,9 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
- 	MPTCP_MIB_JOINSYNRX,		/* Received a SYN + MP_JOIN */
-+	MPTCP_MIB_JOINSYNBACKUPRX,	/* Received a SYN + MP_JOIN + backup flag */
- 	MPTCP_MIB_JOINSYNACKRX,		/* Received a SYN/ACK + MP_JOIN */
-+	MPTCP_MIB_JOINSYNACKBACKUPRX,	/* Received a SYN/ACK + MP_JOIN + backup flag */
- 	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -341,6 +341,15 @@ int mptcp_pm_get_local_id(struct mptcp_s
+ 	return mptcp_pm_nl_get_local_id(msk, skc);
+ }
+ 
++bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
++{
++	struct mptcp_addr_info skc_local;
++
++	mptcp_local_address((struct sock_common *)skc, &skc_local);
++
++	return mptcp_pm_nl_is_backup(msk, &skc_local);
++}
++
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1014,6 +1014,26 @@ int mptcp_pm_nl_get_local_id(struct mptc
+ 	return ret;
+ }
+ 
++bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
++{
++	struct mptcp_pm_addr_entry *entry;
++	struct pm_nl_pernet *pernet;
++	bool backup = false;
++
++	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
++
++	rcu_read_lock();
++	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
++		if (addresses_equal(&entry->addr, skc, entry->addr.port)) {
++			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
++			break;
++		}
++	}
++	rcu_read_unlock();
++
++	return backup;
++}
++
+ void mptcp_pm_nl_data_init(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_pm_data *pm = &msk->pm;
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -821,6 +821,7 @@ bool mptcp_pm_add_addr_signal(struct mpt
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
++bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
+ 
+ void __init mptcp_pm_nl_init(void);
+ void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
+@@ -828,6 +829,7 @@ void mptcp_pm_nl_work(struct mptcp_sock
+ void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
+ 				     const struct mptcp_rm_list *rm_list);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
++bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+ unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -163,6 +163,9 @@ static int subflow_check_req(struct requ
- 			return 0;
- 	} else if (opt_mp_join) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNRX);
-+
-+		if (mp_opt.backup)
-+			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
+@@ -97,6 +97,7 @@ static struct mptcp_sock *subflow_token_
+ 		return NULL;
  	}
+ 	subflow_req->local_id = local_id;
++	subflow_req->request_bkup = mptcp_pm_is_backup(msk, (struct sock_common *)req);
  
- 	if (opt_mp_capable && listener->request_mptcp) {
-@@ -462,6 +465,9 @@ static void subflow_finish_connect(struc
- 		subflow->mp_join = 1;
- 		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKRX);
- 
-+		if (subflow->backup)
-+			MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_JOINSYNACKBACKUPRX);
-+
- 		if (subflow_use_different_dport(mptcp_sk(parent), sk)) {
- 			pr_debug("synack inet_dport=%d %d",
- 				 ntohs(inet_sk(sk)->inet_dport),
+ 	return msk;
+ }
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
