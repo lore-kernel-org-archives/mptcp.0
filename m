@@ -1,163 +1,175 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01F1D16A948
-	for <mptcp@lists.linux.dev>; Mon, 12 Aug 2024 11:43:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7BEC417A59C;
+	Mon, 12 Aug 2024 12:26:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723462998; cv=none; b=srEA1VY7LAA7NbWnjUkqBnPiZl9zttVBO/SPT3WRxlNRQYi7AhGk8jR8ToxXwfNh4uagICt16T90iclaV/8uHK8/6mRAgTPZsLtVDM/LjJY0CWy84547IoLKmXLUE2J9vJEcTNv7gIkQNDEPPnxZGhuH51AhXW35YRxjpvQyYpY=
+	t=1723465569; cv=none; b=SzGyXhxi06x8QOSXAhtDRLE3Ye/3qINSkwRjXx95sSIiIf4O+sS7EsEkkWUzkRNWFYiB/GHJcSIjPEUB/RRBVvdYEmBZzIB8X+Ry/TM9jgao4ZKXdrAxYfoKg9mgjmWx3yKvQAiSuHiQ8D7ot9DEdPegwybqT6C9E0MNDRL9KSs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723462998; c=relaxed/simple;
-	bh=05fCKKf/D3F6ld/4tgVW0IVFBTiOV7RVEOLYOE0ki6s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=HLHA+bIzlv5O+Bg9ivnuyM763riN4L1coYUFER8D3mdg7HHzen5LOw2alrE3jzfWCOuysLjxYuEx1+0Sg69N955jkrQ1bs+bMbJuKAoGo/Y9dYFJX23lQvcPm7fVyhYg5earbbGr6MVjM0XkNb8Uxy4BL2EvaqJWmYMepiN+M6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwgCuNtT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723465569; c=relaxed/simple;
+	bh=yO4VKYGJtuYDi8KONJLee98RYDu+2oHzjpw5rj0Q/7Y=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=sv+e4gOyH4U0jYtAqtQjduFmaeDBlFWpXov5GzZMGuLmSc/dt0kwRqyOgx0FuoxpvbD10Wg9Oaj5rwtXN8tNYg0LHIh0DjXAP4RWTiCsmfbS8dY8S+xUIuFpgwjYwhSTt0vjE6/IL3FBTbBucWLrjxWAGFts2PGEHbLTE4daopw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=CNPABpGy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwgCuNtT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27CEAC4AF0D;
-	Mon, 12 Aug 2024 11:43:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723462997;
-	bh=05fCKKf/D3F6ld/4tgVW0IVFBTiOV7RVEOLYOE0ki6s=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=iwgCuNtTRG5LxdE1aJYHfW39dXJmb06jD9ShYxTNI++hu3zc5fJUOOksdORW132sf
-	 RDTNMGzgBpavLNvOZICyxdXzcTo9ZZlfPOcGDBSlzlNAH9gov+Pn4g/sMjSZqTdInM
-	 rZcjRGRoARYljACX6JJaCm9d8j7Hxirl3QhvXcy+sBwe/UPBe4qnWQySanUp3fFfwY
-	 r76GsDG8oGs5Et65q4tMiWEJ9StReFR7y5TL6lwcIYPg7QG/o18Dt5pDxaUB9S8amm
-	 9HU4NDtAaUZl2LEXGDpGRFV41wNv3MXo0Igx1EeMzt00HfyAf+e4n7+R9rqwLkucGD
-	 E+AaMB1+ByRRA==
-Message-ID: <ac82c87b-e7c4-4a55-b86c-b1431598600c@kernel.org>
-Date: Mon, 12 Aug 2024 13:43:14 +0200
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="CNPABpGy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F20C4AF0D;
+	Mon, 12 Aug 2024 12:26:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1723465569;
+	bh=yO4VKYGJtuYDi8KONJLee98RYDu+2oHzjpw5rj0Q/7Y=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=CNPABpGysiRqh/hK2IuTEadW7Bg5NL64LuFQ6QRtjGEIIwZBxIM8q5RHC7y+tQAIu
+	 sm4R2TxIytidvi7ITliZnCiz31Mu23ULZPTWs1AFv7QZV2oU5Z4UfIblWRc3I8S8qT
+	 dMXKsd4Pm2QTKHSs2J0HsFuhITPZU2ti5X1i0uO0=
+Subject: Patch "mptcp: export local_address" has been added to the 6.1-stable tree
+To: geliang.tang@suse.com,gregkh@linuxfoundation.org,kuba@kernel.org,larysa.zaremba@intel.com,matthieu.baerts@tessares.net,matttbe@kernel.org,mptcp@lists.linux.dev
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Mon, 12 Aug 2024 14:25:55 +0200
+In-Reply-To: <20240808153546.2315845-3-matttbe@kernel.org>
+Message-ID: <2024081254-shopper-flagman-6683@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/8] mptcp: MIB counters for sent MP_JOIN
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20240809-mptcp-join-tx-mib-v4-0-98b0b0e098c5@kernel.org>
- <f8fba6021728a27a44da1c2f6a9f06db09b43354.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <f8fba6021728a27a44da1c2f6a9f06db09b43354.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
-Hi Geliang,
 
-On 12/08/2024 03:55, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Fri, 2024-08-09 at 13:51 +0200, Matthieu Baerts (NGI0) wrote:
->> Recently, a few issues have been discovered around the creation of
->> additional subflows. Without these counters, it was difficult to
->> point
->> out the reason why some subflows were not created as expected.
->>
->> In patch 2, all error paths from __mptcp_subflow_connect() are
->> covered,
->> except the one related to the 'fully established mode', because it
->> should only happen with the userspace PM, which will propagate the
->> error
->> in this  case (ENOTCONN).
->>
->> These new counters are also verified in the MPTCP Join selftest in
->> patch
->> 5.
->>
->> While at it, a few other patches are improving the MPJoin selftests:
->>
->>  - Patch 1: a fix when using an old kernel
->>  - Patch 3: reduce the number of positional parameters
->>  - Patch 4: only one line for the 'join' checks, instead of 3
->>  - Patch 6: more explicit check names, instead of sometimes too
->> cryptic
->>             ones: rtx, ptx, ftx, ctx, fclzrx, sum
->>  - Patch 7: specify client/server instead of 'invert' for some checks
->>             not suggesting one direction
->>  - Patch 8: mute errors of mptcp_connect when ran in the background
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> v4 looks good to me, except for a nit in patch 1.
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+This is a note to let you know that I've just added the patch titled
 
-Thank you for the review!
+    mptcp: export local_address
 
-Now in our tree (fix and feat.), with the suggested fix for patch 1:
+to the 6.1-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
-New patches for t/upstream-net and t/upstream:
-- b9a0a7f3e3f5: selftests: mptcp: join: no extra msg if no counter
-- Results: 99ab2d5a0614..b602e35ece0d (export-net)
-- Results: 8cddf0574b26..911ef98f476b (export)
+The filename of the patch is:
+     mptcp-export-local_address.patch
+and it can be found in the queue-6.1 subdirectory.
 
-New patches for t/upstream:
-- 14b93b3aef89: mptcp: MIB counters for sent MP_JOIN
-- 733601d0fbaf: selftests: mptcp: join: reduce join_nr params
-- a4bf220dea45: selftests: mptcp: join: one line for join check
-- 6b46845acede: selftests: mptcp: join: validate MPJ SYN TX MIB counters
-- daf3c299b5b3: selftests: mptcp: join: more explicit check name
-- 861f376c89f0: selftests: mptcp: join: specify host being checked
-- b4d470795230: selftests: mptcp: join: mute errors when ran in the
-background
-- Results: 911ef98f476b..003fdde88eb8 (export)
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
 
-Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3a27935d710404a61eb4e61c22f1d50c2351a6d7/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/705a289bff1023b70ce89387f4c0e6bd51d8bb35/checks
+From stable+bounces-66067-greg=kroah.com@vger.kernel.org Thu Aug  8 17:36:21 2024
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu,  8 Aug 2024 17:35:47 +0200
+Subject: mptcp: export local_address
+To: stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Geliang Tang <geliang.tang@suse.com>, Matthieu Baerts <matthieu.baerts@tessares.net>, Larysa Zaremba <larysa.zaremba@intel.com>, Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+Message-ID: <20240808153546.2315845-3-matttbe@kernel.org>
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+From: Geliang Tang <geliang.tang@suse.com>
 
+commit dc886bce753cc2cf3c88ec5c7a6880a4e17d65ba upstream.
+
+Rename local_address() with "mptcp_" prefix and export it in protocol.h.
+
+This function will be re-used in the common PM code (pm.c) in the
+following commit.
+
+Signed-off-by: Geliang Tang <geliang.tang@suse.com>
+Reviewed-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Signed-off-by: Matthieu Baerts <matthieu.baerts@tessares.net>
+Reviewed-by: Larysa Zaremba <larysa.zaremba@intel.com>
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+Stable-dep-of: 6834097fc38c ("mptcp: pm: fix backup support in signal endpoints")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/mptcp/pm_netlink.c |   17 ++++++++---------
+ net/mptcp/protocol.h   |    1 +
+ 2 files changed, 9 insertions(+), 9 deletions(-)
+
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -86,8 +86,7 @@ bool mptcp_addresses_equal(const struct
+ 	return a->port == b->port;
+ }
+ 
+-static void local_address(const struct sock_common *skc,
+-			  struct mptcp_addr_info *addr)
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr)
+ {
+ 	addr->family = skc->skc_family;
+ 	addr->port = htons(skc->skc_num);
+@@ -122,7 +121,7 @@ static bool lookup_subflow_by_saddr(cons
+ 	list_for_each_entry(subflow, list, node) {
+ 		skc = (struct sock_common *)mptcp_subflow_tcp_sock(subflow);
+ 
+-		local_address(skc, &cur);
++		mptcp_local_address(skc, &cur);
+ 		if (mptcp_addresses_equal(&cur, saddr, saddr->port))
+ 			return true;
+ 	}
+@@ -274,7 +273,7 @@ bool mptcp_pm_sport_in_anno_list(struct
+ 	struct mptcp_addr_info saddr;
+ 	bool ret = false;
+ 
+-	local_address((struct sock_common *)sk, &saddr);
++	mptcp_local_address((struct sock_common *)sk, &saddr);
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+ 	list_for_each_entry(entry, &msk->pm.anno_list, list) {
+@@ -545,7 +544,7 @@ static void mptcp_pm_create_subflow_or_s
+ 		struct mptcp_addr_info mpc_addr;
+ 		bool backup = false;
+ 
+-		local_address((struct sock_common *)msk->first, &mpc_addr);
++		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
+ 		rcu_read_lock();
+ 		entry = __lookup_addr(pernet, &mpc_addr, false);
+ 		if (entry) {
+@@ -753,7 +752,7 @@ int mptcp_pm_nl_mp_prio_send_ack(struct
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 		struct mptcp_addr_info local, remote;
+ 
+-		local_address((struct sock_common *)ssk, &local);
++		mptcp_local_address((struct sock_common *)ssk, &local);
+ 		if (!mptcp_addresses_equal(&local, addr, addr->port))
+ 			continue;
+ 
+@@ -1072,8 +1071,8 @@ int mptcp_pm_nl_get_local_id(struct mptc
+ 	/* The 0 ID mapping is defined by the first subflow, copied into the msk
+ 	 * addr
+ 	 */
+-	local_address((struct sock_common *)msk, &msk_local);
+-	local_address((struct sock_common *)skc, &skc_local);
++	mptcp_local_address((struct sock_common *)msk, &msk_local);
++	mptcp_local_address((struct sock_common *)skc, &skc_local);
+ 	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
+ 		return 0;
+ 
+@@ -1507,7 +1506,7 @@ static int mptcp_nl_remove_id_zero_addre
+ 		if (list_empty(&msk->conn_list) || mptcp_pm_is_userspace(msk))
+ 			goto next;
+ 
+-		local_address((struct sock_common *)msk, &msk_local);
++		mptcp_local_address((struct sock_common *)msk, &msk_local);
+ 		if (!mptcp_addresses_equal(&msk_local, addr, addr->port))
+ 			goto next;
+ 
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -618,6 +618,7 @@ void __mptcp_unaccepted_force_close(stru
+ 
+ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
+ 			   const struct mptcp_addr_info *b, bool use_port);
++void mptcp_local_address(const struct sock_common *skc, struct mptcp_addr_info *addr);
+ 
+ /* called with sk socket lock held */
+ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_addr_info *loc,
+
+
+Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+
+queue-6.1/mptcp-pm-fix-backup-support-in-signal-endpoints.patch
+queue-6.1/selftests-mptcp-join-check-backup-support-in-signal-endp.patch
+queue-6.1/selftests-mptcp-join-validate-backup-in-mpj.patch
+queue-6.1/mptcp-export-local_address.patch
