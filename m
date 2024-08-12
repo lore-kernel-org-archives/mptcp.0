@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A61369AE;
-	Mon, 12 Aug 2024 12:38:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A77C17B4F6;
+	Mon, 12 Aug 2024 12:38:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466335; cv=none; b=VTXx0IvmOfvXY2h+fYsC8peEC3mEG7A2NLT0cnIai5CVVsGCc8PcmywjwwpAeu8cxjXE5aEWtlnNXUQ8fmavdc70s38skfggLdOHBb7CkJQIaiAbljTHF26eM8WvNEba8LBgVmioxEYlCHeW83IKmpkUjPSpYC5rlCX5vWcUNoY=
+	t=1723466338; cv=none; b=c16F5y8ou+MbTVK/9HFcz6FgHwNF+bZop5Z0b870tVlciaFXCY/VV18WRFtsBIC8ARR1YYTtH8AM2k+O1xFboJHpbTLFlqK85sB9L3uX1QplJjaCpdA5FNCvvAjP7BN25YyDhLLcR96jQm/A6jfsebuEPV3QqMN7tFcMAlJH7kg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466335; c=relaxed/simple;
-	bh=N10imcpJltWY6M0l9tiDIDXF3aiJlPYIbpj9ckAbJ7c=;
+	s=arc-20240116; t=1723466338; c=relaxed/simple;
+	bh=PtejrSfx0zkq7sEqfr75QLCOXO3ECjO+iWnOkobR8ZM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=KqEPNHfrV2KXIymYYCfRG4SGaBW/xMS02WCmxJbb++7r2Rx3AYrZxroOeDOox4ywjpOkCLOrNnNg+0A6QWsNPZIXJ1t2h2TG/z6/51lcyzH93Rss/BFjoecJp3zhbTncabK3dEHBBfLiGrxPMclpGNW0jye1PdlmSPguUZeYIHU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NSA/uum0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=I5oICqQk1ezI1Gk7UmNHWTOLcG8UOuBj6sEXrMbq19EHGLmbMZWIOPYhYLvsCS70fKs7Aw6254QQloQLyZv0QiQXKEXmHrs0ddRcOW7zqDlhf9Oid2dZtzubmbpCloPsx1DaSMPy5FmYdmAChUsULGT7ZapJAV0Uf0gTnU3FibM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=T9TSh+qi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NSA/uum0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF59C32782;
-	Mon, 12 Aug 2024 12:38:54 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="T9TSh+qi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EEAD8C32782;
+	Mon, 12 Aug 2024 12:38:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723466335;
-	bh=N10imcpJltWY6M0l9tiDIDXF3aiJlPYIbpj9ckAbJ7c=;
+	s=korg; t=1723466338;
+	bh=PtejrSfx0zkq7sEqfr75QLCOXO3ECjO+iWnOkobR8ZM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=NSA/uum0T1+xbr6gA70wEfgI44cw4va1Axi0LbeNXCecoH1tG0mmdRiZJ3bGIkhWR
-	 i/tA/lQa7dhXKl+sivQHtUwP6Fs2QKi1sQuxs4kJQqmOEyY1QRJsJ/XaOEL3VvwT3S
-	 e7/b/chxqDKl5JxUzSh2K15j/60o+o9OSYGfGY5Y=
-Subject: Patch "mptcp: sched: check both directions for backup" has been added to the 5.15-stable tree
+	b=T9TSh+qiM7416v1hQM+nDNGoidA/lHcZ6l01I/ifTKyrju9xcY+iA/SEYAzkOCzq/
+	 mGrl99mve6X9A2XL8BzltRkG4v/bs9CK1lb8KhDAOQ5UGMkdNbJDAqmv2VUBG5qhI+
+	 yNc1y9wz3WkGlPiBl+Snl/WBsXn4F2EVXaqUYMQA=
+Subject: Patch "selftests: mptcp: join: check backup support in signal endp" has been added to the 5.15-stable tree
 To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Mon, 12 Aug 2024 14:38:29 +0200
-In-Reply-To: <20240809090530.2696742-2-matttbe@kernel.org>
-Message-ID: <2024081229-snorkel-frisk-f2e7@gregkh>
+In-Reply-To: <20240809091031.2703339-2-matttbe@kernel.org>
+Message-ID: <2024081229-judgingly-tapioca-98d4@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,106 +44,95 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: sched: check both directions for backup
+    selftests: mptcp: join: check backup support in signal endp
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-sched-check-both-directions-for-backup.patch
+     selftests-mptcp-join-check-backup-support-in-signal-endp.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From matttbe@kernel.org Fri Aug  9 11:05:44 2024
+From matttbe@kernel.org Fri Aug  9 11:10:41 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  9 Aug 2024 11:05:31 +0200
-Subject: mptcp: sched: check both directions for backup
+Date: Fri,  9 Aug 2024 11:10:32 +0200
+Subject: selftests: mptcp: join: check backup support in signal endp
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Message-ID: <20240809090530.2696742-2-matttbe@kernel.org>
+Message-ID: <20240809091031.2703339-2-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit b6a66e521a2032f7fcba2af5a9bcbaeaa19b7ca3 upstream.
+commit f833470c27832136d4416d8fc55d658082af0989 upstream.
 
-The 'mptcp_subflow_context' structure has two items related to the
-backup flags:
+Before the previous commit, 'signal' endpoints with the 'backup' flag
+were ignored when sending the MP_JOIN.
 
- - 'backup': the subflow has been marked as backup by the other peer
+The MPTCP Join selftest has then been modified to validate this case:
+the "single address, backup" test, is now validating the MP_JOIN with a
+backup flag as it is what we expect it to do with such name. The
+previous version has been kept, but renamed to "single address, switch
+to backup" to avoid confusions.
 
- - 'request_bkup': the backup flag has been set by the host
+The "single address with port, backup" test is also now validating the
+MPJ with a backup flag, which makes more sense than checking the switch
+to backup with an MP_PRIO.
 
-Before this patch, the scheduler was only looking at the 'backup' flag.
-That can make sense in some cases, but it looks like that's not what we
-wanted for the general use, because either the path-manager was setting
-both of them when sending an MP_PRIO, or the receiver was duplicating
-the 'backup' flag in the subflow request.
+The "mpc backup both sides" test is now validating that the backup flag
+is also set in MP_JOIN from and to the addresses used in the initial
+subflow, using the special ID 0.
 
-Note that the use of these two flags in the path-manager are going to be
-fixed in the next commits, but this change here is needed not to modify
-the behaviour.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
-Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
+Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
 Cc: stable@vger.kernel.org
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflicts in protocol.c, because the context has changed in commit
-  3ce0852c86b9 ("mptcp: enforce HoL-blocking estimation"), which is not
-  in this version. This commit is unrelated to this modification. ]
+[ Conflicts in mptcp_join.sh because 'run_tests' helper has been
+  modified in multiple commits that are not in this version, e.g. commit
+  e571fb09c893 ("selftests: mptcp: add speed env var") and commit
+  ae7bd9ccecc3 ("selftests: mptcp: join: option to execute specific
+  tests"). Adaptations have been made to use the old way, similar to
+  what is done around.
+  Also in this version, there is no "single address with port, backup"
+  subtest. Same for "mpc backup both sides". ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- include/trace/events/mptcp.h |    2 +-
- net/mptcp/protocol.c         |   10 ++++++----
- 2 files changed, 7 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
---- a/include/trace/events/mptcp.h
-+++ b/include/trace/events/mptcp.h
-@@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
- 		struct sock *ssk;
- 
- 		__entry->active = mptcp_subflow_active(subflow);
--		__entry->backup = subflow->backup;
-+		__entry->backup = subflow->backup || subflow->request_bkup;
- 
- 		if (subflow->tcp_sock && sk_fullsock(subflow->tcp_sock))
- 			__entry->free = sk_stream_memory_free(subflow->tcp_sock);
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -1514,13 +1514,15 @@ static struct sock *mptcp_subflow_get_se
- 		send_info[i].ratio = -1;
- 	}
- 	mptcp_for_each_subflow(msk, subflow) {
-+		bool backup = subflow->backup || subflow->request_bkup;
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -1588,10 +1588,19 @@ backup_tests()
+ 	# single address, backup
+ 	reset
+ 	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
++	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal,backup
++	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
++	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow nobackup
++	chk_join_nr "single address, backup" 1 1 1
++	chk_add_nr 1 1
++	chk_prio_nr 1 0 0 1
 +
- 		trace_mptcp_subflow_get_send(subflow);
- 		ssk =  mptcp_subflow_tcp_sock(subflow);
- 		if (!mptcp_subflow_active(subflow))
- 			continue;
- 
- 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
--		nr_active += !subflow->backup;
-+		nr_active += !backup;
- 		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
- 			continue;
- 
-@@ -1530,9 +1532,9 @@ static struct sock *mptcp_subflow_get_se
- 
- 		ratio = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
- 				pace);
--		if (ratio < send_info[subflow->backup].ratio) {
--			send_info[subflow->backup].ssk = ssk;
--			send_info[subflow->backup].ratio = ratio;
-+		if (ratio < send_info[backup].ratio) {
-+			send_info[backup].ssk = ssk;
-+			send_info[backup].ratio = ratio;
- 		}
- 	}
- 	__mptcp_set_timeout(sk, tout);
++	reset
++	ip netns exec $ns1 ./pm_nl_ctl limits 0 1
+ 	ip netns exec $ns1 ./pm_nl_ctl add 10.0.2.1 flags signal
+ 	ip netns exec $ns2 ./pm_nl_ctl limits 1 1
+ 	run_tests $ns1 $ns2 10.0.1.1 0 0 0 slow backup
+-	chk_join_nr "single address, backup" 1 1 1
++	chk_join_nr "single address, switch to backup" 1 1 1
+ 	chk_add_nr 1 1
+ 	chk_prio_nr 1 0 0 0
+ }
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
