@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2F61369AE;
-	Mon, 12 Aug 2024 12:38:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7405C1369AE;
+	Mon, 12 Aug 2024 12:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466329; cv=none; b=OSsfYCgK7Y5uJv+HzAU7YsL96x7SB/EaqLnutImDJU5eYDAj9rFUvAUppGHG+f8+Pt6SzKFJq2uqeBIw4V+UZnJ08+Eni1EHOiTIwirri43CkXthcwvUdiRH/DsKwhyBS3P/wptb2P6VvchBVEcthVwpYEtHcFonhG84fuipLcc=
+	t=1723466332; cv=none; b=IPCbtNtCD+cJcnZEXCGIsYdyLHTI+n02Izx0UpZleIIQvS9S36F2eEalhURLh2A1vHGyCU7aZeC2Oe+3LNR55k47dXqinM+oSo5wJP2wnJ9NMwqzkoOiCJB7gQVtNiigu+yRM2U8VZnNLl/gW2DrZ6uSHDLiVMsEOwgANXrv9Fs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466329; c=relaxed/simple;
-	bh=G2BlWMXafcGwAE3ap19BzcabSqSWmd5MpoesSu3mDIQ=;
+	s=arc-20240116; t=1723466332; c=relaxed/simple;
+	bh=bxsjV2+rvbig8YCfl1zMYgSK1IliqRVW29EpeP3DppM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=lTmnDBNCxTJhkeLXjgU6m3dn8mc68MzgsE2L8ZrTS6AUY5V+2VrE3i+8ZY2IVIeEOAIl8O4MuHEYtCpTpAJ2el5CaNt8Cs1SMdnPc2dawe6AuG6F3e3+JcWwwwPRtjRlRlcnoyKJvBMmWuBC4T8qUa7wax9Mti5CDPeViVhq+xA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=ve58boWO; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=sLfQexpN4gZ6BkEnKmOQto2hxvDgB650YF2SjGWPnNJk4voESBjitHBNokb6a+8K+yVn25Rt/eEJ+n8i54/12FrSRxXt6PbOi0V6vwe78vLUBNgAq8T4pkF3Kpyc+rzlLSdPaQOUBuOzaxMlUxAacqy4BoBTXnFayIF0obBFfGo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hs5jbB5/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="ve58boWO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DA5EC4AF0E;
-	Mon, 12 Aug 2024 12:38:47 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hs5jbB5/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8344FC32782;
+	Mon, 12 Aug 2024 12:38:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723466328;
-	bh=G2BlWMXafcGwAE3ap19BzcabSqSWmd5MpoesSu3mDIQ=;
+	s=korg; t=1723466331;
+	bh=bxsjV2+rvbig8YCfl1zMYgSK1IliqRVW29EpeP3DppM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=ve58boWOCUHdYrDUcjzo3tazKAnqZzkP5T9v9RAEvlMZytTgO7uSaAAlAtX88h02Z
-	 zrjiSlfcN1f1RZTg3DLVtQ7fRKoblAUoxOQRGeQJhmI6MmisAYCwYfk4IbLo5y7h1p
-	 /uOqmZsjWd8u0T4CnD18hsLuNIS8L5un0ES3JrrI=
-Subject: Patch "mptcp: pm: fix backup support in signal endpoints" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=hs5jbB5/35/CSnHFifAZMPZx7ktUr8EHW2dfoweKkN/OoM9kMfg97SNwwivZxOelz
+	 bxkj8y/ZkRb5A45rsi+pqt9JRw1Xc/AMoq+rfA0/b7pH+O6CqImE8ZgB9NXpTVVvjw
+	 vpVfa5HecsDoYOLTxt1LhPdoDJVCOQVhfVE2u2Y0=
+Subject: Patch "mptcp: fix NL PM announced address accounting" has been added to the 5.15-stable tree
+To: davem@davemloft.net,gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Mon, 12 Aug 2024 14:38:28 +0200
-In-Reply-To: <20240809090912.2701580-4-matttbe@kernel.org>
-Message-ID: <2024081228-earache-marshland-c7b3@gregkh>
+In-Reply-To: <20240809090721.2699120-2-matttbe@kernel.org>
+Message-ID: <2024081227-lumber-tanned-fbc8@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,161 +44,92 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: pm: fix backup support in signal endpoints
+    mptcp: fix NL PM announced address accounting
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-pm-fix-backup-support-in-signal-endpoints.patch
+     mptcp-fix-nl-pm-announced-address-accounting.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-66134-greg=kroah.com@vger.kernel.org Fri Aug  9 11:09:35 2024
+From stable+bounces-66129-greg=kroah.com@vger.kernel.org Fri Aug  9 11:07:37 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  9 Aug 2024 11:09:14 +0200
-Subject: mptcp: pm: fix backup support in signal endpoints
+Date: Fri,  9 Aug 2024 11:07:22 +0200
+Subject: mptcp: fix NL PM announced address accounting
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Message-ID: <20240809090912.2701580-4-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>, "David S . Miller" <davem@davemloft.net>
+Message-ID: <20240809090721.2699120-2-matttbe@kernel.org>
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 6834097fc38c5416701c793da94558cea49c0a1f upstream.
+commit 4b317e0eb287bd30a1b329513531157c25e8b692 upstream.
 
-There was a support for signal endpoints, but only when the endpoint's
-flag was changed during a connection. If an endpoint with the signal and
-backup was already present, the MP_JOIN reply was not containing the
-backup flag as expected.
+Currently the per connection announced address counter is never
+decreased. As a consequence, after connection establishment, if
+the NL PM deletes an endpoint and adds a new/different one, no
+additional subflow is created for the new endpoint even if the
+current limits allow that.
 
-That's confusing to have this inconsistent behaviour. On the other hand,
-the infrastructure to set the backup flag in the SYN + ACK + MP_JOIN was
-already there, it was just never set before. Now when requesting the
-local ID from the path-manager, the backup status is also requested.
+Address the issue properly updating the signaled address counter
+every time the NL PM removes such addresses.
 
-Note that when the userspace PM is used, the backup flag can be set if
-the local address was already used before with a backup flag, e.g. if
-the address was announced with the 'backup' flag, or a subflow was
-created with the 'backup' flag.
-
-Fixes: 4596a2c1b7f5 ("mptcp: allow creating non-backup subflows")
+Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
 Cc: stable@vger.kernel.org
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/507
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflicts in pm_userspace.c because the context has changed in commit
-  1e07938e29c5 ("net: mptcp: rename netlink handlers to
-  mptcp_pm_nl_<blah>_{doit,dumpit}") which is not in this version. This
-  commit is unrelated to this modification.
-  Conflicts in protocol.h because the context has changed in commit
-  9ae7846c4b6b ("mptcp: dump addrs in userspace pm list") which is not
-  in this version. This commit is unrelated to this modification.
-  Conflicts in pm.c because the context has changed in commit
-  f40be0db0b76 ("mptcp: unify pm get_flags_and_ifindex_by_id") which is
-  not in this version. This commit is unrelated to this modification.
-  Conflicts in subflow.c, because the commit 4cf86ae84c71 ("mptcp:
-  strict local address ID selection") is not in this version. It is then
-  not needed to modify the subflow_chk_local_id() helper, which is not
-  in this version.
-  Also, in this version, there is no pm_userspace.c, because this PM has
-  been added in v5.19, which also causes conflicts in protocol.h, and
-  pm_netlink.c. Plus the code in pm.c can be simplified, as there is no
-  userspace PM. And the code in pm_netlink.c needs to use
-  addresses_equal() instead of mptcp_addresses_equal(), see commit
-  4638de5aefe5 ("mptcp: handle local addrs announced by userspace PMs").
-  The code in pm_netlink.c also needs to be adapted because the
-  pm_nl_get_pernet_from_msk() helper is not in this version, introduced
-  later in commit c682bf536cf4 ("mptcp: add pm_nl_pernet helpers"). ]
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+Signed-off-by: David S. Miller <davem@davemloft.net>
+[ Conflicts in pm_netlink.c, because the commit 6fa0174a7c86 ("mptcp:
+  more careful RM_ADDR generation") is not in this version. The
+  conditions are slightly different, but the same fix can be applied:
+  first checking the IDs, then removing the address. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm.c         |    9 +++++++++
- net/mptcp/pm_netlink.c |   20 ++++++++++++++++++++
- net/mptcp/protocol.h   |    2 ++
- net/mptcp/subflow.c    |    1 +
- 4 files changed, 32 insertions(+)
+ net/mptcp/pm_netlink.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -341,6 +341,15 @@ int mptcp_pm_get_local_id(struct mptcp_s
- 	return mptcp_pm_nl_get_local_id(msk, skc);
- }
- 
-+bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
-+{
-+	struct mptcp_addr_info skc_local;
-+
-+	mptcp_local_address((struct sock_common *)skc, &skc_local);
-+
-+	return mptcp_pm_nl_is_backup(msk, &skc_local);
-+}
-+
- void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1014,6 +1014,26 @@ int mptcp_pm_nl_get_local_id(struct mptc
- 	return ret;
- }
- 
-+bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+	struct pm_nl_pernet *pernet;
-+	bool backup = false;
-+
-+	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
-+
-+	rcu_read_lock();
-+	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-+		if (addresses_equal(&entry->addr, skc, entry->addr.port)) {
-+			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-+			break;
-+		}
-+	}
-+	rcu_read_unlock();
-+
-+	return backup;
-+}
-+
- void mptcp_pm_nl_data_init(struct mptcp_sock *msk)
- {
- 	struct mptcp_pm_data *pm = &msk->pm;
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -821,6 +821,7 @@ bool mptcp_pm_add_addr_signal(struct mpt
- bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
-+bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
- 
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_nl_data_init(struct mptcp_sock *msk);
-@@ -828,6 +829,7 @@ void mptcp_pm_nl_work(struct mptcp_sock
- void mptcp_pm_nl_rm_subflow_received(struct mptcp_sock *msk,
- 				     const struct mptcp_rm_list *rm_list);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
-+bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
- unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -97,6 +97,7 @@ static struct mptcp_sock *subflow_token_
- 		return NULL;
+@@ -1323,6 +1323,7 @@ static bool mptcp_pm_remove_anno_addr(st
+ 	ret = remove_anno_list_by_saddr(msk, addr);
+ 	if (ret || force) {
+ 		spin_lock_bh(&msk->pm.lock);
++		msk->pm.add_addr_signaled -= ret;
+ 		mptcp_pm_remove_addr(msk, &list);
+ 		spin_unlock_bh(&msk->pm.lock);
  	}
- 	subflow_req->local_id = local_id;
-+	subflow_req->request_bkup = mptcp_pm_is_backup(msk, (struct sock_common *)req);
+@@ -1462,19 +1463,20 @@ static void mptcp_pm_remove_addrs_and_su
+ 	struct mptcp_pm_addr_entry *entry;
  
- 	return msk;
- }
+ 	list_for_each_entry(entry, rm_list, list) {
+-		if (lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
+-		    alist.nr < MPTCP_RM_IDS_MAX &&
+-		    slist.nr < MPTCP_RM_IDS_MAX) {
++		if (alist.nr < MPTCP_RM_IDS_MAX &&
++		    slist.nr < MPTCP_RM_IDS_MAX &&
++		    lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
+ 			alist.ids[alist.nr++] = entry->addr.id;
+ 			slist.ids[slist.nr++] = entry->addr.id;
+-		} else if (remove_anno_list_by_saddr(msk, &entry->addr) &&
+-			 alist.nr < MPTCP_RM_IDS_MAX) {
++		} else if (alist.nr < MPTCP_RM_IDS_MAX &&
++			   remove_anno_list_by_saddr(msk, &entry->addr)) {
+ 			alist.ids[alist.nr++] = entry->addr.id;
+ 		}
+ 	}
+ 
+ 	if (alist.nr) {
+ 		spin_lock_bh(&msk->pm.lock);
++		msk->pm.add_addr_signaled -= alist.nr;
+ 		mptcp_pm_remove_addr(msk, &alist);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 	}
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
