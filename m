@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7405C1369AE;
-	Mon, 12 Aug 2024 12:38:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A20A61369AE;
+	Mon, 12 Aug 2024 12:38:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723466332; cv=none; b=IPCbtNtCD+cJcnZEXCGIsYdyLHTI+n02Izx0UpZleIIQvS9S36F2eEalhURLh2A1vHGyCU7aZeC2Oe+3LNR55k47dXqinM+oSo5wJP2wnJ9NMwqzkoOiCJB7gQVtNiigu+yRM2U8VZnNLl/gW2DrZ6uSHDLiVMsEOwgANXrv9Fs=
+	t=1723466335; cv=none; b=VTXx0IvmOfvXY2h+fYsC8peEC3mEG7A2NLT0cnIai5CVVsGCc8PcmywjwwpAeu8cxjXE5aEWtlnNXUQ8fmavdc70s38skfggLdOHBb7CkJQIaiAbljTHF26eM8WvNEba8LBgVmioxEYlCHeW83IKmpkUjPSpYC5rlCX5vWcUNoY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723466332; c=relaxed/simple;
-	bh=bxsjV2+rvbig8YCfl1zMYgSK1IliqRVW29EpeP3DppM=;
+	s=arc-20240116; t=1723466335; c=relaxed/simple;
+	bh=N10imcpJltWY6M0l9tiDIDXF3aiJlPYIbpj9ckAbJ7c=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=sLfQexpN4gZ6BkEnKmOQto2hxvDgB650YF2SjGWPnNJk4voESBjitHBNokb6a+8K+yVn25Rt/eEJ+n8i54/12FrSRxXt6PbOi0V6vwe78vLUBNgAq8T4pkF3Kpyc+rzlLSdPaQOUBuOzaxMlUxAacqy4BoBTXnFayIF0obBFfGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=hs5jbB5/; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=KqEPNHfrV2KXIymYYCfRG4SGaBW/xMS02WCmxJbb++7r2Rx3AYrZxroOeDOox4ywjpOkCLOrNnNg+0A6QWsNPZIXJ1t2h2TG/z6/51lcyzH93Rss/BFjoecJp3zhbTncabK3dEHBBfLiGrxPMclpGNW0jye1PdlmSPguUZeYIHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=NSA/uum0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="hs5jbB5/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8344FC32782;
-	Mon, 12 Aug 2024 12:38:51 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="NSA/uum0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF59C32782;
+	Mon, 12 Aug 2024 12:38:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723466331;
-	bh=bxsjV2+rvbig8YCfl1zMYgSK1IliqRVW29EpeP3DppM=;
+	s=korg; t=1723466335;
+	bh=N10imcpJltWY6M0l9tiDIDXF3aiJlPYIbpj9ckAbJ7c=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=hs5jbB5/35/CSnHFifAZMPZx7ktUr8EHW2dfoweKkN/OoM9kMfg97SNwwivZxOelz
-	 bxkj8y/ZkRb5A45rsi+pqt9JRw1Xc/AMoq+rfA0/b7pH+O6CqImE8ZgB9NXpTVVvjw
-	 vpVfa5HecsDoYOLTxt1LhPdoDJVCOQVhfVE2u2Y0=
-Subject: Patch "mptcp: fix NL PM announced address accounting" has been added to the 5.15-stable tree
-To: davem@davemloft.net,gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=NSA/uum0T1+xbr6gA70wEfgI44cw4va1Axi0LbeNXCecoH1tG0mmdRiZJ3bGIkhWR
+	 i/tA/lQa7dhXKl+sivQHtUwP6Fs2QKi1sQuxs4kJQqmOEyY1QRJsJ/XaOEL3VvwT3S
+	 e7/b/chxqDKl5JxUzSh2K15j/60o+o9OSYGfGY5Y=
+Subject: Patch "mptcp: sched: check both directions for backup" has been added to the 5.15-stable tree
+To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 12 Aug 2024 14:38:28 +0200
-In-Reply-To: <20240809090721.2699120-2-matttbe@kernel.org>
-Message-ID: <2024081227-lumber-tanned-fbc8@gregkh>
+Date: Mon, 12 Aug 2024 14:38:29 +0200
+In-Reply-To: <20240809090530.2696742-2-matttbe@kernel.org>
+Message-ID: <2024081229-snorkel-frisk-f2e7@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,101 +44,118 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: fix NL PM announced address accounting
+    mptcp: sched: check both directions for backup
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-fix-nl-pm-announced-address-accounting.patch
+     mptcp-sched-check-both-directions-for-backup.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-66129-greg=kroah.com@vger.kernel.org Fri Aug  9 11:07:37 2024
+From matttbe@kernel.org Fri Aug  9 11:05:44 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  9 Aug 2024 11:07:22 +0200
-Subject: mptcp: fix NL PM announced address accounting
+Date: Fri,  9 Aug 2024 11:05:31 +0200
+Subject: mptcp: sched: check both directions for backup
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Matthieu Baerts <matttbe@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Message-ID: <20240809090721.2699120-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Message-ID: <20240809090530.2696742-2-matttbe@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 4b317e0eb287bd30a1b329513531157c25e8b692 upstream.
+commit b6a66e521a2032f7fcba2af5a9bcbaeaa19b7ca3 upstream.
 
-Currently the per connection announced address counter is never
-decreased. As a consequence, after connection establishment, if
-the NL PM deletes an endpoint and adds a new/different one, no
-additional subflow is created for the new endpoint even if the
-current limits allow that.
+The 'mptcp_subflow_context' structure has two items related to the
+backup flags:
 
-Address the issue properly updating the signaled address counter
-every time the NL PM removes such addresses.
+ - 'backup': the subflow has been marked as backup by the other peer
 
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
+ - 'request_bkup': the backup flag has been set by the host
+
+Before this patch, the scheduler was only looking at the 'backup' flag.
+That can make sense in some cases, but it looks like that's not what we
+wanted for the general use, because either the path-manager was setting
+both of them when sending an MP_PRIO, or the receiver was duplicating
+the 'backup' flag in the subflow request.
+
+Note that the use of these two flags in the path-manager are going to be
+fixed in the next commits, but this change here is needed not to modify
+the behaviour.
+
+Fixes: f296234c98a8 ("mptcp: Add handling of incoming MP_JOIN requests")
 Cc: stable@vger.kernel.org
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-[ Conflicts in pm_netlink.c, because the commit 6fa0174a7c86 ("mptcp:
-  more careful RM_ADDR generation") is not in this version. The
-  conditions are slightly different, but the same fix can be applied:
-  first checking the IDs, then removing the address. ]
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+[ Conflicts in protocol.c, because the context has changed in commit
+  3ce0852c86b9 ("mptcp: enforce HoL-blocking estimation"), which is not
+  in this version. This commit is unrelated to this modification. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ include/trace/events/mptcp.h |    2 +-
+ net/mptcp/protocol.c         |   10 ++++++----
+ 2 files changed, 7 insertions(+), 5 deletions(-)
 
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1323,6 +1323,7 @@ static bool mptcp_pm_remove_anno_addr(st
- 	ret = remove_anno_list_by_saddr(msk, addr);
- 	if (ret || force) {
- 		spin_lock_bh(&msk->pm.lock);
-+		msk->pm.add_addr_signaled -= ret;
- 		mptcp_pm_remove_addr(msk, &list);
- 		spin_unlock_bh(&msk->pm.lock);
- 	}
-@@ -1462,19 +1463,20 @@ static void mptcp_pm_remove_addrs_and_su
- 	struct mptcp_pm_addr_entry *entry;
+--- a/include/trace/events/mptcp.h
++++ b/include/trace/events/mptcp.h
+@@ -34,7 +34,7 @@ TRACE_EVENT(mptcp_subflow_get_send,
+ 		struct sock *ssk;
  
- 	list_for_each_entry(entry, rm_list, list) {
--		if (lookup_subflow_by_saddr(&msk->conn_list, &entry->addr) &&
--		    alist.nr < MPTCP_RM_IDS_MAX &&
--		    slist.nr < MPTCP_RM_IDS_MAX) {
-+		if (alist.nr < MPTCP_RM_IDS_MAX &&
-+		    slist.nr < MPTCP_RM_IDS_MAX &&
-+		    lookup_subflow_by_saddr(&msk->conn_list, &entry->addr)) {
- 			alist.ids[alist.nr++] = entry->addr.id;
- 			slist.ids[slist.nr++] = entry->addr.id;
--		} else if (remove_anno_list_by_saddr(msk, &entry->addr) &&
--			 alist.nr < MPTCP_RM_IDS_MAX) {
-+		} else if (alist.nr < MPTCP_RM_IDS_MAX &&
-+			   remove_anno_list_by_saddr(msk, &entry->addr)) {
- 			alist.ids[alist.nr++] = entry->addr.id;
+ 		__entry->active = mptcp_subflow_active(subflow);
+-		__entry->backup = subflow->backup;
++		__entry->backup = subflow->backup || subflow->request_bkup;
+ 
+ 		if (subflow->tcp_sock && sk_fullsock(subflow->tcp_sock))
+ 			__entry->free = sk_stream_memory_free(subflow->tcp_sock);
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1514,13 +1514,15 @@ static struct sock *mptcp_subflow_get_se
+ 		send_info[i].ratio = -1;
+ 	}
+ 	mptcp_for_each_subflow(msk, subflow) {
++		bool backup = subflow->backup || subflow->request_bkup;
++
+ 		trace_mptcp_subflow_get_send(subflow);
+ 		ssk =  mptcp_subflow_tcp_sock(subflow);
+ 		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ 
+ 		tout = max(tout, mptcp_timeout_from_subflow(subflow));
+-		nr_active += !subflow->backup;
++		nr_active += !backup;
+ 		if (!sk_stream_memory_free(subflow->tcp_sock) || !tcp_sk(ssk)->snd_wnd)
+ 			continue;
+ 
+@@ -1530,9 +1532,9 @@ static struct sock *mptcp_subflow_get_se
+ 
+ 		ratio = div_u64((u64)READ_ONCE(ssk->sk_wmem_queued) << 32,
+ 				pace);
+-		if (ratio < send_info[subflow->backup].ratio) {
+-			send_info[subflow->backup].ssk = ssk;
+-			send_info[subflow->backup].ratio = ratio;
++		if (ratio < send_info[backup].ratio) {
++			send_info[backup].ssk = ssk;
++			send_info[backup].ratio = ratio;
  		}
  	}
- 
- 	if (alist.nr) {
- 		spin_lock_bh(&msk->pm.lock);
-+		msk->pm.add_addr_signaled -= alist.nr;
- 		mptcp_pm_remove_addr(msk, &alist);
- 		spin_unlock_bh(&msk->pm.lock);
- 	}
+ 	__mptcp_set_timeout(sk, tout);
 
 
-Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
+Patches currently in stable-queue which might be from matttbe@kernel.org are
 
 queue-5.15/mptcp-fix-nl-pm-announced-address-accounting.patch
 queue-5.15/mptcp-distinguish-rcv-vs-sent-backup-flag-in-requests.patch
 queue-5.15/mptcp-pm-fix-backup-support-in-signal-endpoints.patch
 queue-5.15/mptcp-mib-count-mpj-with-backup-flag.patch
+queue-5.15/selftests-mptcp-join-check-backup-support-in-signal-endp.patch
 queue-5.15/selftests-mptcp-join-validate-backup-in-mpj.patch
+queue-5.15/mptcp-sched-check-both-directions-for-backup.patch
 queue-5.15/mptcp-export-local_address.patch
 queue-5.15/mptcp-pm-only-set-request_bkup-flag-when-sending-mp_prio.patch
 queue-5.15/mptcp-fix-bad-rcvpruned-mib-accounting.patch
+queue-5.15/mptcp-fix-duplicate-data-handling.patch
