@@ -1,166 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E72B17B4FA
-	for <mptcp@lists.linux.dev>; Tue, 13 Aug 2024 10:13:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7261208AD;
+	Tue, 13 Aug 2024 10:31:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723544035; cv=none; b=EHjyiLp1BRivzylvVFxxd9mXH3HWCu77GI9zaLIcT6Fkl4YNAwMj5V/pBU6BC4AaZPbaguOuSlnRBFTb1CrXymfKG1GKfV30hoxFIjC1D+OhYuPx2+uPQEUaRKrJO+wOO8XAJjh8yC9UO4LKGPMGz7HVi2EsyDt3nXjh0uE35Ug=
+	t=1723545096; cv=none; b=i+aKDWB5TJxCTPzjFpToLkYG2CKBfSfuNDf3AcJa4oAPf6jqOsych0MqI3F1JCDvsIrnohMpb8MR0X5zNstXdW8PIGhU6aYN6Ckgw6QDdKN8Iy/9ys5xROS2Ep6epP3F4aIeODa1Fpe5uXXOb0eyg76jMRvN9vFVEwO5o/c9RVs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723544035; c=relaxed/simple;
-	bh=i23cSBjTRCx2DYjW98ZXQg7EkcSv5syeBHCgTC/WV2g=;
+	s=arc-20240116; t=1723545096; c=relaxed/simple;
+	bh=kGDIRO6JhY0g/fBCon73pGpfQROXPRDw//1cENqFzLE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SLB7wMvKwRojaad6UNX+Rejv+6Yu+GOVVzqzLO7lq4mnNbrN3q3oXmIW2vTU7PHUffADbGDdULhKQbYJ0gt2NWKf6IZYMNsBOcspoD/hxATh5QLnSWoZkLh7uBYueFfFxr1uCYvXo0DkVj2dP5I1mxdkk+Fh2PQNW/gtYiWXA+8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=P3xyU/5Q; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=eAtUaS/QvzpdB0xzosvbPB40lqV+8JZTT9No6xptJCRDgfwJVJ+Tg0owG/iHdg7MnjSuqf/hQp2JqMc9glkL46r6Sx7Gcpr1MzDvSneYvOn1VR2Wd6epdP1VFnofLXbzJN/GiEmpmTQsJNyeXF0AgGHijPrs/lp8Z2bWTqOZ3Fc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SRXCbmuN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="P3xyU/5Q"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1723544032;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=CjxtblCOPxJsxE8QSN1nSCIRTwIX6dCJwCctJwZakNQ=;
-	b=P3xyU/5QKdS1pGLKiPSI7zq1llfGb4WVyXLc1H46/bPhccb9DjqflENVroWT4rbX4PvHjF
-	VoKmn7fpE8YFN8YR2CLoBJZ6EJ1+nzg4Xs1Fwc8UDZkva8kM0XnHLjOmQcEJCOjKTYfjZ2
-	h9cjVTAYNxiEp7oc67GJA5dzdpyTO/M=
-Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
- [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-684-Ou-OFztcNAOrPqHnwLGfrQ-1; Tue, 13 Aug 2024 06:13:51 -0400
-X-MC-Unique: Ou-OFztcNAOrPqHnwLGfrQ-1
-Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-4281d62be91so10342255e9.1
-        for <mptcp@lists.linux.dev>; Tue, 13 Aug 2024 03:13:50 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723544030; x=1724148830;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=CjxtblCOPxJsxE8QSN1nSCIRTwIX6dCJwCctJwZakNQ=;
-        b=rBc1oluhTNq55T4tnQy4foJowaCatf1n/3A6P+tQtzBW/5arfLO1dYCAZjdrPXoCOb
-         tTa6m6cZfSbsUJcMy+sxJ8mvvqaJmksmz5H7udOYgu8TCB/YBau/x/xMog1eIgKt/JQg
-         3wOeauLb/KTqvQjEw+zyA6Tikg4s8tP4/J5l6f6XiwVnb/CchJg2607UKvjxVNp7cnrI
-         JDbwvx8Pc5KAETMSnZP+/Nh0R652AV5RZsZFFTo+9slefvru7dcGsvtXxeE5fpaxqGOq
-         jXs+PNh/5kkPy6WyucKhvkPPv1wCze8Q2ebJqpFjnLrX5oTPBcEdnESPiV18f1id7I55
-         ERbg==
-X-Gm-Message-State: AOJu0YwHhN4kmunNbxOxgPnBcnYfVN5onqWeQO2uuAtMRrPyx2YhfYM9
-	3F5aPfhXiVthGnitWfS2ZVACceYgbnQKxJbm3ZAlUSdy07h4ouO9mUh9ZycPs3TjmtMjrxLAdjb
-	uxn9bZokiJ5A/CBKmG/LFXcTUPebB+hqevhgUKdQIvgfQwzWwYzNK
-X-Received: by 2002:a05:600c:4712:b0:426:6ecc:e5c4 with SMTP id 5b1f17b1804b1-429d7619f4dmr7554005e9.4.1723544029695;
-        Tue, 13 Aug 2024 03:13:49 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHqKGCmEd3E72HlIMCCLzO9yIZXGf4hnVNLCFjZgr4b0FiM9ubmfosiMeYXlwopTLvzvU2kow==
-X-Received: by 2002:a05:600c:4712:b0:426:6ecc:e5c4 with SMTP id 5b1f17b1804b1-429d7619f4dmr7553775e9.4.1723544029163;
-        Tue, 13 Aug 2024 03:13:49 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:1708:9110:151e:7458:b92f:3067? ([2a0d:3344:1708:9110:151e:7458:b92f:3067])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4290c7bc8c3sm222711985e9.47.2024.08.13.03.13.47
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 13 Aug 2024 03:13:48 -0700 (PDT)
-Message-ID: <cc843b12-da3d-46b7-8ba8-fd4bc4cf153d@redhat.com>
-Date: Tue, 13 Aug 2024 12:13:46 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SRXCbmuN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB9DC4AF0B;
+	Tue, 13 Aug 2024 10:31:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1723545096;
+	bh=kGDIRO6JhY0g/fBCon73pGpfQROXPRDw//1cENqFzLE=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SRXCbmuNnr/gZknpTcyE6e5PXIsoSrlsqUmrjaij1eyImv+BHj4/iWNO+ZAgAVN9r
+	 AYCWNIfASAHQr3NFDku43h55g8Erou/uqObuVkMXpMx2NiZzeTUr2siCyvFNx/ZKsz
+	 07zwzHDZcOk6XPf8QC+ue6FYmVU+gDxszlv2Sz83MBT4kXrbaWWw8iIdOp7nbMARft
+	 mJCW15q+Sk4l30yosV4kkFSwMvohGhV3YTsTOccNa4R7Jo9UIfCGrxPnfRIJM1BmCy
+	 1hfW6pq9WKPSnsnNPlME2wx5oMtQHiMceDikdVzmNw1ag3a532YDBPqXnEcOGeG/eJ
+	 CTHSvhzpPfNLw==
+Message-ID: <85ddc853-b64d-4be9-8cd4-3d86e61b32d1@kernel.org>
+Date: Tue, 13 Aug 2024 12:31:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next] tcp: limit wake-up for crossed SYN cases with
- SYN-ACK
-To: Matthieu Baerts <matttbe@kernel.org>, Eric Dumazet <edumazet@google.com>
-Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
- David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Kuniyuki Iwashima <kuniyu@amazon.com>
-References: <20240801-upstream-net-next-20240801-tcp-limit-wake-up-x-syn-v1-1-3a87f977ad5f@kernel.org>
- <CANn89iK6PxVuPu_nwTBiHy8JLuX+RTvnNGC3m64nBN7j1eENxQ@mail.gmail.com>
- <79e327c5-f87f-4295-b461-81c09a699af6@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <79e327c5-f87f-4295-b461-81c09a699af6@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: FAILED: patch "[PATCH] mptcp: pm: don't try to create sf if alloc
+ failed" failed to apply to 5.15-stable tree
+Content-Language: en-GB
+To: gregkh@linuxfoundation.org
+Cc: stable@vger.kernel.org, kuba@kernel.org, martineau@kernel.org,
+ pabeni@redhat.com, MPTCP Linux <mptcp@lists.linux.dev>
+References: <2024081246-rinse-rockslide-346f@gregkh>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2024081246-rinse-rockslide-346f@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On 8/2/24 10:48, Matthieu Baerts wrote:
-> On 01/08/2024 19:52, Eric Dumazet wrote:
->> On Thu, Aug 1, 2024 at 6:39 PM Matthieu Baerts (NGI0)
->> <matttbe@kernel.org> wrote:
->>>
->>> In TCP_SYN_RECV states, sk->sk_socket will be assigned in case of
->>> marginal crossed SYN, but also in other cases, e.g.
->>>
->>>   - With TCP Fast Open, if the connection got accept()'ed before
->>>     receiving the 3rd ACK ;
->>>
->>>   - With MPTCP, when accepting additional subflows to an existing MPTCP
->>>     connection.
->>>
->>> In these cases, the switch to TCP_ESTABLISHED is done when receiving the
->>> 3rd ACK, without the SYN flag then.
->>>
->>> To properly restrict the wake-up to crossed SYN cases as expected there,
->>> it is then required to also limit the check to packets containing the
->>> SYN-ACK flags.
->>>
->>> Without this modification, it looks like the wake-up was not causing any
->>> visible issue with TFO and MPTCP, apart from not being needed. That's
->>> why this patch doesn't contain a Cc to stable, and a Fixes tag.
->>>
->>> While at it, the attached comment has also been updated: sk->sk_sleep
->>> has been removed in 2010, and replaced by sk->sk_wq in commit
->>> 43815482370c ("net: sock_def_readable() and friends RCU conversion").
->>>
->>> Suggested-by: Kuniyuki Iwashima <kuniyu@amazon.com>
->>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>> ---
->>> Notes:
->>>    - This is the same patch as the one suggested earlier in -net as part
->>>      of another series, but targeting net-next (Eric), and with an
->>>      updated commit message. The previous version was visible there:
->>>      https://lore.kernel.org/20240718-upstream-net-next-20240716-tcp-3rd-ack-consume-sk_socket-v2-2-d653f85639f6@kernel.org/
->>> ---
->>
->> Note: I am not aware of any tests using FASYNC
->>
->> sock_wake_async() / kill_fasync() are sending signals, not traditional wakeups.
-> 
-> Thank you for the review and the explanation!
-> 
->> Do we really want to potentially break some applications still using
->> pre-multi-thread era async io ?
-> 
-> They are potentially already broken if we don't test them :-D
-> 
->> Not that I really care, but I wonder why you care :)
-> 
-> More seriously, I sent this patch, because in previous discussions about
-> the crossed SYN case, Kuniyuki mentioned that he used the same condition
-> as the one I modified here. I didn't see why it is needed to send such
-> signal there for TFO and MPTCP cases, so I sent this patch. On the other
-> hand, I suppose such old apps relying on FASYNC will not natively use
-> TFO or MPTCP (except if they are forced externally).
-> 
-> In other words, I'm not fixing a problem I saw here, I'm only
-> restricting the condition to crossed SYN case, as mentioned in the
-> linked comment, then excluding TFO and MPTCP cases that don't seem to
-> require this signal at that moment. But then it's fine for me to drop
-> this patch if you think it is not needed :)
+Hi Greg,
 
-AFAICS this patch makes the code consistent with the associated comment, 
-but does not address any specific/real issue, right?
+On 12/08/2024 14:39, gregkh@linuxfoundation.org wrote:
+> 
+> The patch below does not apply to the 5.15-stable tree.
+> If someone wants it applied there, or to any other stable or longterm
+> tree, then please email the backport, including the original git commit
+> id to <stable@vger.kernel.org>.
+> 
+> To reproduce the conflict and resubmit, you may use the following commands:
+> 
+> git fetch https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/ linux-5.15.y
+> git checkout FETCH_HEAD
+> git cherry-pick -x cd7c957f936f8cb80d03e5152f4013aae65bd986
+> # <resolve conflicts, build, test, etc.>
+> git commit -s
+> git send-email --to '<stable@vger.kernel.org>' --in-reply-to '2024081246-rinse-rockslide-346f@gregkh' --subject-prefix 'PATCH 5.15.y' HEAD^..
+> 
+> Possible dependencies:
+> 
+> cd7c957f936f ("mptcp: pm: don't try to create sf if alloc failed")
+> c95eb32ced82 ("mptcp: pm: reduce indentation blocks")
+> 528cb5f2a1e8 ("mptcp: pass addr to mptcp_pm_alloc_anno_list")
+> 77e4b94a3de6 ("mptcp: update userspace pm infos")
+> 24430f8bf516 ("mptcp: add address into userspace pm list")
+> fb00ee4f3343 ("mptcp: netlink: respect v4/v6-only sockets")
+> 80638684e840 ("mptcp: get sk from msk directly")
+> 5ccecaec5c1e ("mptcp: fix locking in mptcp_nl_cmd_sf_destroy()")
+> 76a13b315709 ("mptcp: invoke MP_FAIL response when needed")
+> d9fb797046c5 ("mptcp: Do not traverse the subflow connection list without lock")
+> d42f9e4e2384 ("mptcp: Check for orphaned subflow before handling MP_FAIL timer")
+> d7e6f5836038 ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+> 
+> thanks,
+> 
+> greg k-h
+> 
+> ------------------ original commit in Linus's tree ------------------
+> 
+> From cd7c957f936f8cb80d03e5152f4013aae65bd986 Mon Sep 17 00:00:00 2001
+> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+> Date: Wed, 31 Jul 2024 13:05:56 +0200
+> Subject: [PATCH] mptcp: pm: don't try to create sf if alloc failed
+> 
+> It sounds better to avoid wasting cycles and / or put extreme memory
+> pressure on the system by trying to create new subflows if it was not
+> possible to add a new item in the announce list.
 
-If I read correctly, with the patch applied the stack will skip  wakeup 
-signals for some TFO and MPTCP edge cases. Such signals are not 
-duplicates, and existing (legacy) application could rely on them for 
-correct functionality.
+I think it is better not to backport this patch to v5.15: the
+dependencies list is quite big, and the fix is probably not worth it: in
+case of memory pressure, we don't try to do more actions (because they
+will fail as well).
 
-I think that risk of a the potential regression offsets the (unclear to 
-me) benefit. I'm dropping this patch.
-
-Thanks,
-
-Paolo
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
