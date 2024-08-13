@@ -1,100 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CB916B39A;
-	Tue, 13 Aug 2024 10:47:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEEBD76025;
+	Tue, 13 Aug 2024 10:55:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723546026; cv=none; b=amrVBF94akbwYIMJkBrcShYKt4pKSQp0zPOsmYHOxBT4o7xh0OjZj8+J55ckcgUlaT1XrV5IO4hLJyrB8vM0130QoivM8K9zZNXSEJSCwdDOBU5KRtiCvScCFpgJZjNCSYRiGAKi5aLFHZQBbtJS2dnsXteC+XediclisIvyPg4=
+	t=1723546547; cv=none; b=sbs6xSfQvYvum6VuKYJQKorV5Fz93bZ9oUaxMKqhLMJi6OOfbve2JdyU+GfNnDA5SPjFUqiR0u5XwiOm2CIO9scDNh91Rux3CihBZRx+wu0QizVwCW9FYdX5JsQAugSFxjyYS3tncMd9Y6V5ZzIaRQ7IK47LXaNKFA3tNNL5xCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723546026; c=relaxed/simple;
-	bh=SKo2EFi3xw7z1orJP6SgqeY5RDaW4/nvQmKXEmVL6K8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V6sPuWqoKShWA185YC1P8KcyEo9pmQRjgpuq4e/kdhTzzJjNkP9omn9pHWt0g3Xnki3DOAU0zbw6zzf+AevQeBuY+UaUGi7CBLpOe2vfq9N+tv2wbDa8Yk1gkh8Z++LG7tZHcNPDtY2m4g2s9OXfHKEpUKqlrkeCKjx2QVLkAj8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=malrt9dF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723546547; c=relaxed/simple;
+	bh=TygILqStMFbqo7N5dGU4tGf4JOrPwnNO6bj+bLsD50Y=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=GSSTIFJ9fuq1PdkTOE8F6XYywLDUAZrLesdcd5xE5ElalyxFR7Q82V2v/crVTSIvy2N7gilyXrg57uZyLvVG5mD8zIQrPjh4kBavWFMvylI94dJpfTYv0Z59OqsBET1AXVrhxiNWEBLAwfSXacHjVKCuF9XNkisUTPxL3+hI1TQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=JK4aDaMr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="malrt9dF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 920EAC4AF0B;
-	Tue, 13 Aug 2024 10:47:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723546026;
-	bh=SKo2EFi3xw7z1orJP6SgqeY5RDaW4/nvQmKXEmVL6K8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=malrt9dFXrfIV8I/14J0VOgaQtgDdVVMC/Ge2zz9cAYdS7l2/rhI5vI8gXB0mBAFZ
-	 y6DW8rVSm9MPszb42OIiRWs9SImUHiwNotEvxSGeQr8ZPa/oYeCmH5JXZRHMElG9Vf
-	 gfCVzukKvdXLzU65JxjrnYe9o7F/jKm49/QPGLrtenID/qeYaUe7UwQShC0eG4cVrX
-	 QJUoVbSz5oh82TE49AInx217APC8ZcAvkLQSFUhcmYfmzjdAjUd5p174Qq/fMK9gxx
-	 ssDi1xQ2D6OPDOwBAAKXkEbOptyOawqR2o/jbG3IQQCHHjgFygT2m6Mdx/kcx84PTc
-	 Aot/T5lXonMJA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="JK4aDaMr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0851C4AF09;
+	Tue, 13 Aug 2024 10:55:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1723546547;
+	bh=TygILqStMFbqo7N5dGU4tGf4JOrPwnNO6bj+bLsD50Y=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=JK4aDaMrrGakKDW8SF02QAC3T2BVUw4pPqkOPRfVUdMGsBD5XLNCObY7TWwG4cZ4h
+	 zu4L80pJv/Wg5jV2aX9YPewb1RiJ0NWuZwdHKu8WbzFcpMNzc/VRr6hNvC9YTnxjmP
+	 ePuo6fk2EQZPcTzwF6oM2IKN9bx6T6PZAxwHJmxc=
+Date: Tue, 13 Aug 2024 12:55:44 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
 	Mat Martineau <martineau@kernel.org>,
 	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.15.y] mptcp: fully established after ADD_ADDR echo on MPJ
-Date: Tue, 13 Aug 2024 12:46:43 +0200
-Message-ID: <20240813104642.1210553-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024081209-wrongly-zen-35f3@gregkh>
+Subject: Re: [PATCH 5.15.y] mptcp: fully established after ADD_ADDR echo on
+ MPJ
+Message-ID: <2024081337-device-cesspool-071d@gregkh>
 References: <2024081209-wrongly-zen-35f3@gregkh>
+ <20240813104642.1210553-2-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2204; i=matttbe@kernel.org; h=from:subject; bh=SKo2EFi3xw7z1orJP6SgqeY5RDaW4/nvQmKXEmVL6K8=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmuzmSrDf0oTNOi26YRU37kagCIP+S78sdiETk7 iqXbkrGmwWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZrs5kgAKCRD2t4JPQmmg cyIpD/0ftD4EGWylXbHgTAU1PPUqBJMQ75kiJokemJSg2f0MeCL/7quJM9OucjmrkO0198dEygU qYTkAT6+8E8WI0T4iVkpzqcgBlQW3VXnpowD7Aae4EDkQucF+89GgGuII2BOgN90qbobO3CeuvK IcC+W+aP8v4rSUtVNmF+ZRbyrlyByZFdXwK8ASfQTH4Jsf9Czq/RDs0zFT3TZtxTP/QQEJMgyoy pN7uYREyhXJ73vwZmIQHimwbS1vkD6tHSIuFY4uKVWNIia3XuZOEQQZBBReEUH2yYCaCnGowGfQ Fb5Y8TINtVa0vlDMTx81zZ9QkqT0G1aHGvrIGBVFVd6nsEcRlP+Ryy/RZQwwjfQrZ01aiyhrOjc OWpWU5LNzBqk5v1Lnr9c02tdJPYihk2ZjTVLoh75T+JEo8fzRWdtneaYBvrcy4XLM9234xPACDW 5D/3WAuQ67eoEbxsP9fw1CQRdOJX5XHOKP1qYhHZN0q3Jmv6dK1A8Rpsw5w377rFOLAEPKZhcFU +M/OMHCgyo7DZt7LOzdGguI++DBwsOw+HBeUCaciUqdP0cdNqWrkgLiXJE1xS4W/mzdZrBtAuk+ 6KmFml1eToK6YE9bJRWa0gzJvrTcvORblhTWKPUDq/TolTh125LiS0pwl8EsiUYZDjTeeU5Pg+k qIEJUUQg+sy4uxQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20240813104642.1210553-2-matttbe@kernel.org>
 
-commit d67c5649c1541dc93f202eeffc6f49220a4ed71d upstream.
+On Tue, Aug 13, 2024 at 12:46:43PM +0200, Matthieu Baerts (NGI0) wrote:
+> commit d67c5649c1541dc93f202eeffc6f49220a4ed71d upstream.
+> 
+> Before this patch, receiving an ADD_ADDR echo on the just connected
+> MP_JOIN subflow -- initiator side, after the MP_JOIN 3WHS -- was
+> resulting in an MP_RESET. That's because only ACKs with a DSS or
+> ADD_ADDRs without the echo bit were allowed.
+> 
+> Not allowing the ADD_ADDR echo after an MP_CAPABLE 3WHS makes sense, as
+> we are not supposed to send an ADD_ADDR before because it requires to be
+> in full established mode first. For the MP_JOIN 3WHS, that's different:
+> the ADD_ADDR can be sent on a previous subflow, and the ADD_ADDR echo
+> can be received on the recently created one. The other peer will already
+> be in fully established, so it is allowed to send that.
+> 
+> We can then relax the conditions here to accept the ADD_ADDR echo for
+> MPJ subflows.
+> 
+> Fixes: 67b12f792d5e ("mptcp: full fully established support after ADD_ADDR")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-1-c8a9b036493b@kernel.org
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> [ Conflicts in options.c, because the context has changed in commit
+>   b3ea6b272d79 ("mptcp: consolidate initial ack seq generation"), which
+>   is not in this version. This commit is unrelated to this
+>   modification. ]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  net/mptcp/options.c | 3 ++-
 
-Before this patch, receiving an ADD_ADDR echo on the just connected
-MP_JOIN subflow -- initiator side, after the MP_JOIN 3WHS -- was
-resulting in an MP_RESET. That's because only ACKs with a DSS or
-ADD_ADDRs without the echo bit were allowed.
+Now queued up, thanks.
 
-Not allowing the ADD_ADDR echo after an MP_CAPABLE 3WHS makes sense, as
-we are not supposed to send an ADD_ADDR before because it requires to be
-in full established mode first. For the MP_JOIN 3WHS, that's different:
-the ADD_ADDR can be sent on a previous subflow, and the ADD_ADDR echo
-can be received on the recently created one. The other peer will already
-be in fully established, so it is allowed to send that.
-
-We can then relax the conditions here to accept the ADD_ADDR echo for
-MPJ subflows.
-
-Fixes: 67b12f792d5e ("mptcp: full fully established support after ADD_ADDR")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-1-c8a9b036493b@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in options.c, because the context has changed in commit
-  b3ea6b272d79 ("mptcp: consolidate initial ack seq generation"), which
-  is not in this version. This commit is unrelated to this
-  modification. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/options.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index 4d8f2f6a8f73..2baed0c01922 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -923,7 +923,8 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 	}
- 
- 	if (((mp_opt->suboptions & OPTION_MPTCP_DSS) && mp_opt->use_ack) ||
--	    ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) && !mp_opt->echo)) {
-+	    ((mp_opt->suboptions & OPTION_MPTCP_ADD_ADDR) &&
-+	     (!mp_opt->echo || subflow->mp_join))) {
- 		/* subflows are fully established as soon as we get any
- 		 * additional ack, including ADD_ADDR.
- 		 */
--- 
-2.45.2
-
+greg k-h
