@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A9DA1BD014;
-	Wed, 14 Aug 2024 17:44:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1AF21BC082;
+	Wed, 14 Aug 2024 17:44:54 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723657491; cv=none; b=iMU3rDzTqrehpyUbPFxe27P2JQVSx6rxCC4KTKiBHqGdzDRNgH5gFT3BHozB6WUZ8fCbbi8kPnFi4WRYQEc65dxHdr4zXj6d1+X/r9FTBOrIsPMLo9xPZaAZ2O6111oddN+UELB1G7BN4ujUdZzQmKSEUlXcjmIo6LvcPTvv+tU=
+	t=1723657495; cv=none; b=AaCTJhxprj0p3VHRLtZSh250lsb2HrRVufFvnogou7Ow/EAF2OgfzzqAmV5+n2zTYrlDQVMzxVeP0TdMKYaILB2UTQVXFl0j+SHGhsE3s5VZtAnkHPdGr3J3Pjh9WJAl7qRiGlqw+Cm4B5x+Ka7+H8+jSO6BNB9WmWXRhEWclwI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723657491; c=relaxed/simple;
-	bh=k8RMEswTpy9SFmCxhZvxoZDESiKHwcdtUC1qxV2zrao=;
+	s=arc-20240116; t=1723657495; c=relaxed/simple;
+	bh=0+rMS5qbjOqCBwD7hbIHVJXIcZM06kDYi8cA0x/bxoo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=BfWMu6Zd0FfnCbPFK7RCGwmNNO2mV+mWafNNZnPjAjQ35gcu2lw9e111bTpk5TChX9RzGusjjUaUJb9RT8UZatQiYyrky2K00Gyzg5zMDTvncXC4DuXE+TOkUXnmovd9iVNLxLY5ze8LeTuTnQnq8dZbO7YsuOfFkCxmIpohfW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=r2hidcqc; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=ssk65uPupuT4Wt/+dqj9F9qSq7niGXcRiBTZdYDjeYmrzFAdwSdrey5Fh82CxEYm6n8X5zhEwiUphnaqzyL/OGAfs/kek3d/u3ONvvvBQS+GEnbNtjCoZ1E8/bJc/SvLIy2lyK09L3swVTEORv6evQ4BL7suCJJhiTSCDKs1OCI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HrpBdRsS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="r2hidcqc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D2AEC4AF09;
-	Wed, 14 Aug 2024 17:44:50 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HrpBdRsS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C349C116B1;
+	Wed, 14 Aug 2024 17:44:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1723657491;
-	bh=k8RMEswTpy9SFmCxhZvxoZDESiKHwcdtUC1qxV2zrao=;
+	s=korg; t=1723657494;
+	bh=0+rMS5qbjOqCBwD7hbIHVJXIcZM06kDYi8cA0x/bxoo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=r2hidcqcKwUisy5+ZjKLTp6VSBDDtOvco4UlNhHprTM5nCjTtMD0bvJWI2SOaCcO0
-	 XKOXPiX3yCNmrTgSPmtHkYUa0JDnXUvqwWwcn5SbwsyudSM+OhuZo8F1W+TNOD8Aer
-	 6qlYfAz9FfflqHv9AlU59Z3sBifx4pQLPSwjspuI=
-Subject: Patch "selftests: mptcp: join: test both signal & subflow" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=HrpBdRsSAvlEPBwBRsoB8Nwyf/sAuMbjQoJza1kk9PWl1oTlad2Uyylqsd8EDMoGP
+	 KWlmNseMgV45EBfOi6S/rqeZOtbKMwYqofQDJr5rXgsLiR6lW4iucVJmevfrVrXrzv
+	 KYBCGEFztkoOQBpIiXDGu/aEMHN+B+YWR+f4ppFg=
+Subject: Patch "mptcp: pm: reduce indentation blocks" has been added to the 6.1-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Wed, 14 Aug 2024 19:44:34 +0200
-In-Reply-To: <20240813092815.966749-12-matttbe@kernel.org>
-Message-ID: <2024081434-excusably-dizzy-57f8@gregkh>
+In-Reply-To: <20240813092815.966749-9-matttbe@kernel.org>
+Message-ID: <2024081433-grab-spellbind-a32e@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,91 +44,77 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: join: test both signal & subflow
+    mptcp: pm: reduce indentation blocks
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-join-test-both-signal-subflow.patch
+     mptcp-pm-reduce-indentation-blocks.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-67442-greg=kroah.com@vger.kernel.org Tue Aug 13 11:28:51 2024
+From stable+bounces-67438-greg=kroah.com@vger.kernel.org Tue Aug 13 11:28:37 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 13 Aug 2024 11:28:21 +0200
-Subject: selftests: mptcp: join: test both signal & subflow
+Date: Tue, 13 Aug 2024 11:28:18 +0200
+Subject: mptcp: pm: reduce indentation blocks
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240813092815.966749-12-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240813092815.966749-9-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 4d2868b5d191c74262f7407972d68d1bf3245d6a upstream.
+commit c95eb32ced823a00be62202b43966b07b2f20b7f upstream.
 
-It should be quite uncommon to set both the subflow and the signal
-flags: the initiator of the connection is typically the one creating new
-subflows, not the other peer, then no need to announce additional local
-addresses, and use it to create subflows.
+That will simplify the following commits.
 
-But some people might be confused about the flags, and set both "just to
-be sure at least the right one is set". To verify the previous fix, and
-avoid future regressions, this specific case is now validated: the
-client announces a new address, and initiates a new subflow from the
-same address.
+No functional changes intended.
 
-While working on this, another bug has been noticed, where the client
-reset the new subflow because an ADD_ADDR echo got received as the 3rd
-ACK: this new test also explicitly checks that no RST have been sent by
-the client and server.
-
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
-
-Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-7-c8a9b036493b@kernel.org
+Link: https://patch.msgid.link/20240731-upstream-net-20240731-mptcp-endp-subflow-signal-v1-3-c8a9b036493b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ No conflicts, but not using 'chk_add_nr 1 1 0 invert': in this
-  version, 'chk_add_nr' cannot be used with 'invert': d73bb9d3957b
-  ("selftests: mptcp: join: ability to invert ADD_ADDR check") is not in
-  this version, and backporting it causes a lot of conflicts. That's
-  fine, checking that there is an additional subflow should be enough. ]
+Stable-dep-of: cd7c957f936f ("mptcp: pm: don't try to create sf if alloc failed")
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |   14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ net/mptcp/pm_netlink.c |   19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -2090,6 +2090,20 @@ signal_address_tests()
- 		chk_add_nr 1 1
- 	fi
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -579,16 +579,19 @@ static void mptcp_pm_create_subflow_or_s
+ 		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
+ 			return;
  
-+	# uncommon: subflow and signal flags on the same endpoint
-+	# or because the user wrongly picked both, but still expects the client
-+	# to create additional subflows
-+	if reset "subflow and signal together"; then
-+		pm_nl_set_limits $ns1 0 2
-+		pm_nl_set_limits $ns2 0 2
-+		pm_nl_add_endpoint $ns2 10.0.3.2 flags signal,subflow
-+		run_tests $ns1 $ns2 10.0.1.1
-+		chk_join_nr 1 1 1
-+		chk_add_nr 0 0 0         # none initiated by ns1
-+		chk_rst_nr 0 0 invert    # no RST sent by the client
-+		chk_rst_nr 0 0           # no RST sent by the server
-+	fi
+-		if (local) {
+-			if (mptcp_pm_alloc_anno_list(msk, &local->addr)) {
+-				__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
+-				msk->pm.add_addr_signaled++;
+-				mptcp_pm_announce_addr(msk, &local->addr, false);
+-				mptcp_pm_nl_addr_send_ack(msk);
+-			}
+-		}
++		if (!local)
++			goto subflow;
 +
- 	# accept and use add_addr with additional subflows
- 	if reset "multiple subflows and signal"; then
- 		pm_nl_set_limits $ns1 0 3
++		if (!mptcp_pm_alloc_anno_list(msk, &local->addr))
++			goto subflow;
++
++		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
++		msk->pm.add_addr_signaled++;
++		mptcp_pm_announce_addr(msk, &local->addr, false);
++		mptcp_pm_nl_addr_send_ack(msk);
+ 	}
+ 
++subflow:
+ 	/* check if should create a new subflow */
+ 	while (msk->pm.local_addr_used < local_addr_max &&
+ 	       msk->pm.subflows < subflows_max) {
 
 
 Patches currently in stable-queue which might be from kroah.com@vger.kernel.org are
