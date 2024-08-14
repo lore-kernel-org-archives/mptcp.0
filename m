@@ -1,121 +1,131 @@
-Received: from mail-pl1-f173.google.com (mail-pl1-f173.google.com [209.85.214.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-188.mta0.migadu.com (out-188.mta0.migadu.com [91.218.175.188])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B5852AF0D
-	for <mptcp@lists.linux.dev>; Tue, 13 Aug 2024 15:55:11 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBA2AAD5F
+	for <mptcp@lists.linux.dev>; Wed, 14 Aug 2024 01:12:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.188
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723564513; cv=none; b=mPTHetWu/X6L9sxUz2xLlQQzJskeSWZphvKIGu8zEHU4Xc9QgoLW+kTV3vsIRZC1+2QEeMNXacvhZCXmFcVri1OQRKtX816A3GV56U06alRmQ6f08ka5gqQx9+mZBtKCeQF0P+AkQmrU2GHHMl7BIzAz5SFXLj5/djlK0UBLKr8=
+	t=1723597957; cv=none; b=JnEL0aGdzuSr1GJUwEoxl0MoHv+RpaoHMkzcRbf6VX2iXf44TmwWr9givnw5pwi0c7E5/vxJOblGBr2VUCtcb3sKHt19qxCZAzIixR9NBnZBJR12dDxGR5WdOVuSR3WBMEWzzBB3XaEsK1KSIXaZDXBzt1/quKsNFSBIBvJhp5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723564513; c=relaxed/simple;
-	bh=2MjaYJ7S4DG4dvkhpcEZWsHgxvP2UU3CAv5hp0O7bU8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=q5C9EUy1D6VQF1jVWHXGwrI2WiEjfeymC9DHH42V4gtaV+U5UvEqDaFbMaAw8iHrYL8Koo3KP9dBzwg412fIWy5sKdfbnp9gNm5OdeotHqZsNOEp1dqyVECGYJfdmHbPzLTl4LwV2gq3y98Gsb6kzKUNFvW+ea+w9d0WEu/CEuQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XnBSAywa; arc=none smtp.client-ip=209.85.214.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723597957; c=relaxed/simple;
+	bh=Tb69vJqo1ALtu5b0vp82iFIA4z8ojDKaQzyHh2enK58=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=GBx+dPBKLzlnqAsS2dh3MdpXt8qgIIcEFzgu62pFCsNIjsO0sN0PYwfWUDfjGiPF4M/qZYUvOzjUzK2Ppjl9bB5HhpPJ6tZYslwV2EWBNhfgjtB4LEH+hzW1IIZeWpLYqGBgopNRkm8u0XLqk8vKEej7VApRtIM8J6lyuVnqN6A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=njnjBOSL; arc=none smtp.client-ip=91.218.175.188
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XnBSAywa"
-Received: by mail-pl1-f173.google.com with SMTP id d9443c01a7336-1fc56fd4de1so40585ad.0
-        for <mptcp@lists.linux.dev>; Tue, 13 Aug 2024 08:55:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723564511; x=1724169311; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=hd1hbwaCwIzywA3TlRUWk/zl1EPhLZ6RIqnVM0HU4IM=;
-        b=XnBSAywa/G/ZeN4v/SmLeN9t9d7rJ+gq8eBJXTaSoboaeozXKVF1aV8LVaXvloMA2w
-         nAfPf+I+7XYYWrdxJ5+9EB0irCr5/kXtd7AO09PaEw8gnT8uW9LjTJia1x0yVQvURvSS
-         csRtDxWKRmZTMsu+GbL8ymeEsS35QO5YY5R5EQGFwrrLkuMuX5UQMzT/3GNLMt46XO/Y
-         HnBUzuafk+xpy9Zgd5bmL2vyhcWuBTBhjO/WhkLdrSkgp33GTtsGenChdcYZfOf0WY70
-         jFd/W+5kQ9Ju3bbIImekVI/jSQZdalV/xL6rGbIMuk+NizMlkk2/pQ8+zNK9XEaQ8I/R
-         2Myg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723564511; x=1724169311;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=hd1hbwaCwIzywA3TlRUWk/zl1EPhLZ6RIqnVM0HU4IM=;
-        b=Y/tB0WbisiEHdEjSZouNGbzBz66Tm+fh89Xc3cejxdgVi8oAs5DUL85Z1BbsLtfmtP
-         tIRzS8PiQQvFv28aHJHVlUwgB6PVF0JI6QZgXMvR3Z+Cxbb1WfqGoC2/toaPmtxwnlWQ
-         aDiiNaevX5KMqVhcjhESSQvB6jUd8cgrKaYTyA9GZMtYN3XfxAafff3Ta2v8N8tY5nrS
-         vqnJNMQo2q2U1sFP21k05dllVcJ2EbiI7zz/wWS/n0CrHKPeBRGpn3VQUl/7mH68voLj
-         2/b66UdCnD1WI4nFJ87vOgXnKZuS2UGdrK4qQQKFL2OuQ7G0spZuTrIrjkyeTQpjql1r
-         wXbQ==
-X-Gm-Message-State: AOJu0YzYW6trRB5oYpbURQ9IJkzPHNOUym3EWXKwSu4gIU40xW/5aQrs
-	KZ7uMx9znIsesG/BtIHLm8T1DFgp6p1+vO7pLuJlzG7oWO6iJEg=
-X-Google-Smtp-Source: AGHT+IHYMWG7TL2W+PTXNRFrdQxtP9PcRFlMlrM5r6VmenaLW4AwWTr5O1FCUpURGI19PeiCpEoqHw==
-X-Received: by 2002:a17:902:f54b:b0:1f9:e2c0:d962 with SMTP id d9443c01a7336-201cbca31f2mr44654275ad.31.1723564511212;
-        Tue, 13 Aug 2024 08:55:11 -0700 (PDT)
-Received: from [127.0.0.1] ([20.172.24.215])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201cd1bce12sm15243425ad.227.2024.08.13.08.55.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 13 Aug 2024 08:55:10 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240813-mptcp-sched-retrans-bkp-v1-1-78914a88c2c6@kernel.org>
-References: <20240813-mptcp-sched-retrans-bkp-v1-1-78914a88c2c6@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: sched: check both backup in retrans
-Message-ID: <c97809cd-80be-4d7a-64f9-a7772ac43010@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 13 Aug 2024 15:55:09 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="njnjBOSL"
+Message-ID: <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1723597952;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=Kg3Yn9psi6orOdw+gE/xX9QBdKXuCDu+XFWCUGqknj0=;
+	b=njnjBOSLSz/3Rw6McVXMEy0sMGYmKcFJKusbdJsaEWxfl7gJ4e+43jKEmlW7eCcPz1oGoA
+	uEjT+UWCaX550on6UAhXxWkV7BLDagYkyvQmuwkBd8+ux9pW8G0JPdo7yjP01WRPQa99xM
+	zaX/Z5nk5jexoKRrPOVGN+kMg0cuHuc=
+Date: Tue, 13 Aug 2024 18:12:19 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, Daniel Xu <dxu@dxuuu.xyz>,
+ Manu Bretelle <chantra@meta.com>
+References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
+ <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+Content-Language: en-US
+In-Reply-To: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matthieu,
+On 8/5/24 2:52 AM, Matthieu Baerts (NGI0) wrote:
+> +static int endpoint_init(char *flags)
+> +{
+> +	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
+> +	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
+> +	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+> +	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
+> +	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+> +	if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags)) {
+> +		printf("'ip mptcp' not supported, skip this test.\n");
+> +		test__skip();
 
-Thank you for your modifications, that's great!
+It is always a skip now in bpf CI:
 
-Our CI did some validations and here is its report:
+#171/3   mptcp/subflow:SKIP
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10369004703
+This test is a useful addition for the bpf CI selftest.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/6ac41d97714a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D879179
+It can't catch regression if it is always a skip in bpf CI though.
 
+iproute2 needs to be updated (cc: Daniel Xu and Manu, the outdated iproute2 is 
+something that came up multiple times).
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Not sure when the iproute2 can be updated. In the mean time, your v3 is pretty 
+close to getting pm_nl_ctl compiled. Is there other blocker on this?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> +		goto fail;
+> +	}
+> +
+> +	return 0;
+> +fail:
+> +	return -1;
+> +}
+> +
+> +static int _ss_search(char *src, char *dst, char *port, char *keyword)
+> +{
+> +	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
+> +			  NS_TEST, src, dst, port, PORT_1, keyword);
+> +}
+> +
+> +static int ss_search(char *src, char *keyword)
+> +{
+> +	return _ss_search(src, ADDR_1, "dport", keyword);
+> +}
+> +
+> +static void run_subflow(char *new)
+> +{
+> +	int server_fd, client_fd, err;
+> +	char cc[TCP_CA_NAME_MAX];
+> +	socklen_t len = sizeof(cc);
+> +
+> +	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
+> +	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
+> +		return;
+> +
+> +	client_fd = connect_to_fd(server_fd, 0);
+> +	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
+> +		goto fail;
+> +
+> +	err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
+> +	if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
+> +		goto fail;
+> +
+> +	send_byte(client_fd);
+> +
+> +	ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search fwmark:0x1");
+> +	ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search fwmark:0x2");
+> +	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
+> +	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
 
-For more details:
+Is there a getsockopt way instead of ss + grep?
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
