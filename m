@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5767838DC7;
-	Thu, 15 Aug 2024 20:57:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D241213C677
+	for <mptcp@lists.linux.dev>; Thu, 15 Aug 2024 21:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723755434; cv=none; b=KvDwKwSHfeRL1EM51Xs/rUtzA83pptjQ4S65vQHjNM/tgY6wIl9dPdzWRdPZhhVKRboQP4Gy6FA3Tttj101eKN5VlJIJWQNOJKcYeHXDSs0Tu2ZR7HMcznTpy8ve2q/f3bmPehZR5oZ+mWeXlK/Sa+7auRuAyOrJNunKjdSrPaM=
+	t=1723755607; cv=none; b=AjY0jXHbi+iS+RM791vgLGVbFtFRiH6wK/3habzOct3CwxX75z70pPAvLcFW4DO+XVdxZMAf5NdlpdYbvkl5XG8FbuaAWvNixTjzBDKpR5zyBsF/hcTo6RnnDIozIuuyMK+iIE5h53E8+qdCtYmFrm8Gog3Z2eNG2af1tg91/sc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723755434; c=relaxed/simple;
-	bh=CxitJOj2UwXlQodEuBRLka5dunS/7Sxix03eKG+L21o=;
+	s=arc-20240116; t=1723755607; c=relaxed/simple;
+	bh=HydlqhyV1Ful9Sat+nBNm8+q0+h5c1v94FLryjyH7uk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hHytUloZD7pcjf+cESwiiPJwHoBAY5Fm1c4h8X/uZBEluAUu+hh4o9lPHGPMVtBLmLatQL5X69vP8pG3NPVje3Hb0sUit390Z9c0IR4TjVjeYsAD+kO+TlA9palfMatA9KBKUBVsRhKLSiv7W2FYwCuCfMVm4aBS64e/LfsVneQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RKA0HAjR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=il8oJrQXV+xv5vP2B142PoZTBycHyMFKCm1A2xIReOsGGpzsOQh25g8+lcS7BXgwrWujW+P8xcQ5X5qRiqRZ8YU9+zSFxk8/zU2GAkGqYseuMuplheX4rM9tvGKA138Z7sFi6c3/fNSNNCvnA68sjMaNh4KUOFjolKt0R7kzyxE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpf/LxkZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RKA0HAjR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 075CCC32786;
-	Thu, 15 Aug 2024 20:57:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpf/LxkZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21D8C32786;
+	Thu, 15 Aug 2024 21:00:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723755433;
-	bh=CxitJOj2UwXlQodEuBRLka5dunS/7Sxix03eKG+L21o=;
+	s=k20201202; t=1723755607;
+	bh=HydlqhyV1Ful9Sat+nBNm8+q0+h5c1v94FLryjyH7uk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RKA0HAjRh3hX4HjnFxTF2jUx1BraLgD2kxzb4l1WxIWIq2l0ix1SAVfnBC9oHr2r0
-	 OySC4WXcD4+t9pSxbN6Fez9YAkdgy4uLTN6qTcIZtPWI4Au9eGnfAt2H8enBABdzU2
-	 fSouvgGSLnq1N529JZp77gtn3e0Sigc7KlX5xWSO5ElCB8BdxRBm2/fxUvtLX4jBpl
-	 JINZtYgoITjl/hzYCdzhO1XFxz24Y0PHzj8wnnwFrIpWj9piZ1cpVub9ar0lBVZKY1
-	 C9fQ0GMEZ3rlzeHFxDfwKdGu0CjmbgqDSr6w5r2blSuy33cDjxHZmYQ50XTpipgwZ2
-	 miMcXGxH9xBsg==
-Message-ID: <d9adb89e-6764-45d2-97b7-892b37c2b71c@kernel.org>
-Date: Thu, 15 Aug 2024 22:57:05 +0200
+	b=jpf/LxkZtaGgRO6II+EI5o8Ga6OCp4V/e5gBL5usu1kpftIjIPvlpXdt4NSbYJdbo
+	 AhywGgk7S9Jtvm4DtuwZA84wzYdpYcREnbLBXlNVek4bYcBZvkyzqKnihvof7y2uqr
+	 mx+UxUGqKa6+VWI7Rr4iRaOv1T5XqYuUXUaDpENfe45deWys0Tja8HEMWr3TQImv3O
+	 5oH+ISNtrGDqkO0U4CgCV23u2LuijDVHBd75kOSLnU2kN6N7X2Z/cse6v+mB2C+DWs
+	 +CUoXmDHuDMLRL9KaUL3XHZCee5WeD6HlZCkwYIqHZNJyXnTAFQpaZYBEhDxRtEL5a
+	 MMDkdLGBO0wmw==
+Message-ID: <b0f25eeb-e644-4cd7-a719-b9dcd1b57480@kernel.org>
+Date: Thu, 15 Aug 2024 23:00:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,18 +37,8 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
 Content-Language: en-GB
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- linux-kernel@vger.kernel.org, netdev@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org, Daniel Xu <dxu@dxuuu.xyz>,
- Manu Bretelle <chantra@meta.com>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
 References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
  <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
  <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
@@ -103,9 +93,9 @@ In-Reply-To: <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Martin,
+Hi Geliang,
 
-Thank you for your reply!
+(only the MPTCP list)
 
 On 15/08/2024 00:37, Martin KaFai Lau wrote:
 > On 8/14/24 3:04 AM, Matthieu Baerts wrote:
@@ -115,110 +105,9 @@ On 15/08/2024 00:37, Martin KaFai Lau wrote:
 >>
 >> On 14/08/2024 03:12, Martin KaFai Lau wrote:
 >>> On 8/5/24 2:52 AM, Matthieu Baerts (NGI0) wrote:
->>>> +static int endpoint_init(char *flags)
->>>> +{
->>>> +    SYS(fail, "ip -net %s link add veth1 type veth peer name veth2",
->>>> NS_TEST);
->>>> +    SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
->>>> +    SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
->>>> +    SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
->>>> +    SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
->>>> +    if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST,
->>>> ADDR_2, flags)) {
->>>> +        printf("'ip mptcp' not supported, skip this test.\n");
->>>> +        test__skip();
->>>
->>> It is always a skip now in bpf CI:
->>>
->>> #171/3   mptcp/subflow:SKIP
->>>
->>> This test is a useful addition for the bpf CI selftest.
->>>
->>> It can't catch regression if it is always a skip in bpf CI though.
->>
->> Indeed, for the moment, this test is skipped in bpf CI.
->>
->> The MPTCP CI checks the MPTCP BPF selftests that are on top of net and
->> net-next at least once a day. It is always running with the last stable
->> version of iproute2, so this test is not skipped:
->>
->>     #169/3   mptcp/subflow:OK
->>
->> https://github.com/multipath-tcp/mptcp_net-next/actions/
->> runs/10384566794/job/28751869426#step:7:11080
->>
->>> iproute2 needs to be updated (cc: Daniel Xu and Manu, the outdated
->>> iproute2 is something that came up multiple times).
->>>
->>> Not sure when the iproute2 can be updated. In the mean time, your v3 is
->>> pretty close to getting pm_nl_ctl compiled. Is there other blocker on
->>> this?
->>
->> I will try to find some time to check the modifications I suggested in
->> the v3, but I don't know how long it will take to have them ready, as
->> they might require some adaptations of the CI side as well, I need to
->> check. On the other hand, I understood adding a duplicated version of
->> the mptcp.h UAPI header is not an option either.
->>
->> So not to block this (already old) series, I thought it would help to
->> first focus on this version using 'ip mptcp', while I'm looking at the
->> selftests modifications. If these modifications are successful, I can
->> always resend the patch 2/3 from the v3 later, and using 'pm_nl_ctl'
->> instead of 'ip mptcp', to be able to work with IPRoute2 5.5.
->>
->> Do you think that could work like that?
-> 
-> If there is CI started covering it, staying with the 'ip mptcp' is fine.
-> 
-> The bpf CI has to start testing it asap also. The iproute2 package will
-> need to be updated on the bpf CI side. I think this has to be done
-> regardless.
-> 
-> It will be useful to avoid the uapi header dup on its own. The last one
-> you have seems pretty close.
 
-Thank you. Yes I will try to find time to look at that.
+(...)
 
->>>> +        goto fail;
->>>> +    }
->>>> +
->>>> +    return 0;
->>>> +fail:
->>>> +    return -1;
->>>> +}
->>>> +
->>>> +static int _ss_search(char *src, char *dst, char *port, char *keyword)
->>>> +{
->>>> +    return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d
->>>> | grep -q '%s'",
->>>> +              NS_TEST, src, dst, port, PORT_1, keyword);
->>>> +}
->>>> +
->>>> +static int ss_search(char *src, char *keyword)
->>>> +{
->>>> +    return _ss_search(src, ADDR_1, "dport", keyword);
->>>> +}
->>>> +
->>>> +static void run_subflow(char *new)
->>>> +{
->>>> +    int server_fd, client_fd, err;
->>>> +    char cc[TCP_CA_NAME_MAX];
->>>> +    socklen_t len = sizeof(cc);
->>>> +
->>>> +    server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
->>>> +    if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
->>>> +        return;
->>>> +
->>>> +    client_fd = connect_to_fd(server_fd, 0);
->>>> +    if (!ASSERT_GE(client_fd, 0, "connect to fd"))
->>>> +        goto fail;
->>>> +
->>>> +    err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
->>>> +    if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
->>>> +        goto fail;
->>>> +
->>>> +    send_byte(client_fd);
->>>> +
 >>>> +    ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search
 >>>> fwmark:0x1");
 >>>> +    ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search
@@ -253,9 +142,7 @@ Thank you. Yes I will try to find time to look at that.
 > existing bpf tests covering this inspection use case to ensure the
 > result is legit. A separate cgroup/getsockopt program should help here
 > (more on this below).
-
-I didn't consider a separate program. Indeed, should work.
-
+> 
 >> dedicated netns, it sounds OK to do that, no?
 > 
 > Thanks for the explanation. I was hoping there is a way to get to the
@@ -268,10 +155,7 @@ I didn't consider a separate program. Indeed, should work.
 > date. ss is another binary but arguably in the same iproute2 package.
 > There is now another extra "grep" and pipe here. We had been bitten by
 > different shell behaviors and some arch has different shells ...etc.
-
-OK, I thought it was fine to use 'ss | grep' because it is used in other
-BPF selftests: test_tc_tunnel.sh & test_xdp_features.sh.
-
+> 
 > I think it is ok to take this set as is if you (and Gelang?) are ok to
 > followup a "cgroup/getsockopt" way to inspect the subflow as the very
 > next patch to the mptcp selftest. It seems inspecting subflow will be a
@@ -285,18 +169,21 @@ BPF selftests: test_tc_tunnel.sh & test_xdp_features.sh.
 > to tcp_sock for readonly. It will allow to inspect all the fields in a
 > tcp_sock.
 
-It looks interesting to be able to inspect all the fields in a tcp_sock!
-I will check with Geliang what can be done.
+Do you think it is something that you could do to replace the
+validations with 'ss', and maybe help with future validations for the
+BPF packet schedulers?
+
 
 > Something needs to a fix in patch 2(replied separately), so a re-spin is
 > needed.
-
-Thank you. Will do in the next version!
-
+> 
 > pw-bot: cr
 > 
 > [0]: https://lore.kernel.org/all/20240808150558.1035626-3-
 > alan.maguire@oracle.com/
+> 
+> 
+> 
 
 Cheers,
 Matt
