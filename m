@@ -1,192 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D241213C677
-	for <mptcp@lists.linux.dev>; Thu, 15 Aug 2024 21:00:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A24AB14B092
+	for <mptcp@lists.linux.dev>; Thu, 15 Aug 2024 21:46:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723755607; cv=none; b=AjY0jXHbi+iS+RM791vgLGVbFtFRiH6wK/3habzOct3CwxX75z70pPAvLcFW4DO+XVdxZMAf5NdlpdYbvkl5XG8FbuaAWvNixTjzBDKpR5zyBsF/hcTo6RnnDIozIuuyMK+iIE5h53E8+qdCtYmFrm8Gog3Z2eNG2af1tg91/sc=
+	t=1723758420; cv=none; b=EM5UcGd06f7TR8osNllD499CVoV5lUxCwom1s/cdZgAj/rX64ymU9DDUDwDj+IowdLnGZF3ZKyq68KN6l900ktMC0Eh0fLxI3B5GVoozboPO8IAwMSCq4V9n1PGqCCcBCuWuwVzSAT0ILrcGPKOomd9Zv8jsudjWN+pdV3riQsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723755607; c=relaxed/simple;
-	bh=HydlqhyV1Ful9Sat+nBNm8+q0+h5c1v94FLryjyH7uk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=il8oJrQXV+xv5vP2B142PoZTBycHyMFKCm1A2xIReOsGGpzsOQh25g8+lcS7BXgwrWujW+P8xcQ5X5qRiqRZ8YU9+zSFxk8/zU2GAkGqYseuMuplheX4rM9tvGKA138Z7sFi6c3/fNSNNCvnA68sjMaNh4KUOFjolKt0R7kzyxE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jpf/LxkZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723758420; c=relaxed/simple;
+	bh=q36AXX7q4jP3ADfk7KSfXaXrvJx2I9dQgCF4HLESOds=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=skbfqlkGv6Wwm/9BelcRif80C1nm3fsDHmQtFs1HaazWYKxNkfm5oGLn8bSrQi138HAxeLBn4HzfiYGpAEr3eeWhaujXCViz4HpyLSHvKh+NSJq1P+KTvjQBRlKdxk5/vS8SpJcWRY9opslmAXDjnRWXnUdKjjSaEbw3m0XCpz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PDKxycjP; arc=none smtp.client-ip=209.85.215.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jpf/LxkZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C21D8C32786;
-	Thu, 15 Aug 2024 21:00:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723755607;
-	bh=HydlqhyV1Ful9Sat+nBNm8+q0+h5c1v94FLryjyH7uk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jpf/LxkZtaGgRO6II+EI5o8Ga6OCp4V/e5gBL5usu1kpftIjIPvlpXdt4NSbYJdbo
-	 AhywGgk7S9Jtvm4DtuwZA84wzYdpYcREnbLBXlNVek4bYcBZvkyzqKnihvof7y2uqr
-	 mx+UxUGqKa6+VWI7Rr4iRaOv1T5XqYuUXUaDpENfe45deWys0Tja8HEMWr3TQImv3O
-	 5oH+ISNtrGDqkO0U4CgCV23u2LuijDVHBd75kOSLnU2kN6N7X2Z/cse6v+mB2C+DWs
-	 +CUoXmDHuDMLRL9KaUL3XHZCee5WeD6HlZCkwYIqHZNJyXnTAFQpaZYBEhDxRtEL5a
-	 MMDkdLGBO0wmw==
-Message-ID: <b0f25eeb-e644-4cd7-a719-b9dcd1b57480@kernel.org>
-Date: Thu, 15 Aug 2024 23:00:05 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PDKxycjP"
+Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-6bce380eb96so943726a12.0
+        for <mptcp@lists.linux.dev>; Thu, 15 Aug 2024 14:46:58 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1723758418; x=1724363218; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=21DAXzek6uyxDQIw3daFrmiROdQULF1bG1We7LF8J4M=;
+        b=PDKxycjPun9U17Fgb0+7Zp9FrXynNCRZHNV5e7EDl9Niutcap1WKwvg97s1QR1GleD
+         fvBIyLiYgoRx9oezLTWF4nzONbrQ1pPzfuISXYcDvbolPUPrboQJftehyg8ORfi8lewU
+         saLVta2ESFbY5W2QlZMLjGFshXLODSbPB7PVkR6qQA2BC4DOd/aATVYhNmXFocZNS+fu
+         ws0uBHpa/sfC3MC1l5Har2iaDxZbuCbvraPDxDel5wgWiQntpCv8AYI1RsY0z8WWAo7P
+         n4KSkfBGza4vquZh/K/t5/y0prAVN35mzd/41HgBt3ghj24C5hxLvhv29XiamPxjaog2
+         fBCQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1723758418; x=1724363218;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=21DAXzek6uyxDQIw3daFrmiROdQULF1bG1We7LF8J4M=;
+        b=A7GNOacgo7LXetu6+AGdxTJNmxfWpYXBSlXET/o5Y2D7StlmC7jnh3aUvwkOpiP8dr
+         TXreN1UEQ6diCbO1nrOltG0BCcGJCiDppTKFvQD/DV70EHgO5xFOQQfFcudqk+zXw6I5
+         DevWxAbHOdz5Lg8wcKCvjZos1s1c8ed/X5lSAUvdtP8IbJwOWbjMzYyu8F1I6LNDImBe
+         pbHie0CSb/V16VjR7TiMYHLvWhIEj8jSs49aWZ4PnSVU3a0Y4UbR98qd/kAY37RDr0Bo
+         N1pl/oYq3XzCqN04DSUFk1X2x3rMS1+Vokmh73KN2km4dxuupY8rce9rEv1bqg6ELAni
+         dWKQ==
+X-Gm-Message-State: AOJu0Ywn4yvXH2Ed8x5uJjhfhH2fSO+IST6oBLbB9B+53q/yRI9Gx4lE
+	/ofLZyEHoG80vnWsX+40xJDBsxY35eSG03XvD4/Xu2d23Bs3ERs=
+X-Google-Smtp-Source: AGHT+IE1SR1xO4B0SdxS/vZNNmSo3hnKgJJ8cCQoE12YUGxUl7w2Y9KeGhCTK27t8bon5NO9epIyIg==
+X-Received: by 2002:a17:90a:2d8c:b0:2c9:e24d:bbaa with SMTP id 98e67ed59e1d1-2d3dfff5d3dmr1167334a91.27.1723758417823;
+        Thu, 15 Aug 2024 14:46:57 -0700 (PDT)
+Received: from [127.0.0.1] ([52.234.40.29])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2d3e3d94fa2sm291082a91.47.2024.08.15.14.46.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 15 Aug 2024 14:46:57 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240815-mptcp-dup-close-evt-v1-0-5a551d3a66cc@kernel.org>
+References: <20240815-mptcp-dup-close-evt-v1-0-5a551d3a66cc@kernel.org>
+Subject: Re: [PATCH mptcp-net 00/10] mptcp: pm: fix re-re-create the ID 0
+ endpoint
+Message-ID: <59fe54ed-4788-b21f-4c0f-03f6463ce50d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 15 Aug 2024 21:46:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
- <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
- <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
- <8a2ff1bd-52dc-421d-87b7-fc2f56e81da2@kernel.org>
- <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matthieu,
 
-(only the MPTCP list)
+Thank you for your modifications, that's great!
 
-On 15/08/2024 00:37, Martin KaFai Lau wrote:
-> On 8/14/24 3:04 AM, Matthieu Baerts wrote:
->> Hi Martin,
->>
->> Thank you for your reply!
->>
->> On 14/08/2024 03:12, Martin KaFai Lau wrote:
->>> On 8/5/24 2:52 AM, Matthieu Baerts (NGI0) wrote:
+Our CI did some validations and here is its report:
 
-(...)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): mptcp_connect_mmap =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/104105=
+32494
 
->>>> +    ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search
->>>> fwmark:0x1");
->>>> +    ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search
->>>> fwmark:0x2");
->>>> +    ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
->>>> +    ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
->>>
->>> Is there a getsockopt way instead of ss + grep?
->>
->> No there isn't: from the userspace, the app communicates with the MPTCP
->> socket, which can have multiple paths (subflows, a TCP socket). To keep
->> the compatibility with TCP, [gs]etsockopt() will look at/modify the
->> whole MPTCP connection. For example, in some cases, a setsockopt() will
->> propagate the option to all the subflows. Depending on the option, the
->> modification might only apply to the first subflow, or to the
->> user-facing socket.
->>
->> For advanced users who want to have different options set to the
->> different subflows of an MPTCP connection, they can use BPF: that's what
->> is being validated here. In other words, doing a 'getsockopt()' from the
->> userspace program here will not show all the different marks and TCP CC
->> that can be set per subflow with BPF. We can see that in the test: a
->> getsockopt() is done on the MPTCP socket to retrieve the default TCP CC
->> ('cc' which is certainly 'cubic'), but we expect to find another one
->> ('new' which is 'reno'), set by the BPF program from patch 1/2. I guess
->> we could use bpf to do a getsockopt() per subflow, but that's seems a
->> bit cheated to have the BPF test program setting something and checking
->> if it is set. Here, it is an external way. Because it is done from a
-> 
-> I think the result is valid by having a bpf prog to inspect the value of
-> a sock. Inspecting socket is an existing use case. There are many
-> existing bpf tests covering this inspection use case to ensure the
-> result is legit. A separate cgroup/getsockopt program should help here
-> (more on this below).
-> 
->> dedicated netns, it sounds OK to do that, no?
-> 
-> Thanks for the explanation. I was hoping there is a way to get to the
-> underlying subflow fd. It seems impossible.
-> 
-> In the netns does help here. It is not only about the ss iterating a lot
-> of connections or not. My preference is not depending on external tool/
-> shell-ing if possible, e.g. to avoid the package update discussion like
-> the iproute2 here. The uapi from the testing kernel is always up-to-
-> date. ss is another binary but arguably in the same iproute2 package.
-> There is now another extra "grep" and pipe here. We had been bitten by
-> different shell behaviors and some arch has different shells ...etc.
-> 
-> I think it is ok to take this set as is if you (and Gelang?) are ok to
-> followup a "cgroup/getsockopt" way to inspect the subflow as the very
-> next patch to the mptcp selftest. It seems inspecting subflow will be a
-> common test going forward for mptcp, so it will be beneficial to have a
-> "cgroup/getsockopt" way to inspect the subflow directly.
-> 
-> Take a look at a recent example [0]. The mptcp test is under a cgroup
-> already and has the cgroup setup. An extra "cgroup/getsockopt" prog
-> should be enough. That prog can walk the msk->conn_list and use
-> bpf_rdonly_cast (or the bpf_core_cast macro in libbpf) to cast a pointer
-> to tcp_sock for readonly. It will allow to inspect all the fields in a
-> tcp_sock.
-
-Do you think it is something that you could do to replace the
-validations with 'ss', and maybe help with future validations for the
-BPF packet schedulers?
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6a0e89f29675
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D880118
 
 
-> Something needs to a fix in patch 2(replied separately), so a re-spin is
-> needed.
-> 
-> pw-bot: cr
-> 
-> [0]: https://lore.kernel.org/all/20240808150558.1035626-3-
-> alan.maguire@oracle.com/
-> 
-> 
-> 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
