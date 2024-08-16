@@ -1,120 +1,75 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 715EA13AA2B
-	for <mptcp@lists.linux.dev>; Fri, 16 Aug 2024 12:09:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E82113AA2B
+	for <mptcp@lists.linux.dev>; Fri, 16 Aug 2024 12:28:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723810150; cv=none; b=Wr0ZosOxyyof2DpqTpHi44DUoCtrzfCWIr1AINUus090572RYTDWHaoafYbPN0qU+bDNJwtezdPvJl5jvLGh6yGvP5DAGIIucKfGGD41jdCBQQLZEuVUs7/AgPdfhjvftRmOjrt5331u0qCci/+/UWXTHhRQ96a+Ml1Qu5VnEuA=
+	t=1723811315; cv=none; b=S6AmemuJqGnDGaO6t2NU+XgBMOGCiUIVIFhDxGqYyTQ7ChuvQAuQyIAaSPhteXCpI9v/S6XjF7F3gTbXUSzK4tBZDfDpCdtHVBX3pGeaIdO32Vu29oesTExIjOBOPFugHxr2gW7TDj3jFd9GEMlpgnKCx0vgjKYbDkeWa9FjTIg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723810150; c=relaxed/simple;
-	bh=k8ui55I01SZcdhJ9AbUSxoMgEZI74V5huWQ75XzjC4w=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=iZRFKHOKCCto/r4x2PpfKN5816iA2u38EGqky5y/PumPPAnuZQolUjtMvMktxkWjZtvoHI8rDvdewK6hS060+GxOu3+xSUSWHxNoc22g0xbNnIG8eCcfAD3s0ChPCPokkYhXKgyYOPDY0JUo1h6gv3DPvorxGi11icWhHvz5Lf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OLHmUh9l; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1723811315; c=relaxed/simple;
+	bh=qXPIWZp1FNcobxA8iQGqYPG7k6ayhRVHvY+WvzZECCk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ngj6B+bRy5jPuIsHaDd1t0csrnJAkdPEIUu85tfwHVY0u1msGfUDyNBdf/lkzA5iDFFzGnrNHYzVYbv+ArdBIZc6rgazD8hS1nMNxUnc3yHvrrNEqvatuuNcNin1mjXOBQZwYHK2rQyUIlGNYIPczLJRrltSBlkHdxHqpGgxEpA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=ivUBaI88; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OLHmUh9l"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-7105043330aso1726001b3a.0
-        for <mptcp@lists.linux.dev>; Fri, 16 Aug 2024 05:09:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1723810149; x=1724414949; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=flQ/7h5oVTSJA5+bK85KSPF6EuRHs8so1fRCNOCFQ+Y=;
-        b=OLHmUh9lyLxg4ukWsEbLEli4YpGtyaJda47MI62MKqKEmncFFehFj5N25QbgHaLQdb
-         fgLPc60Zg4GPYmGMqBXm/5PBt0KXhTMb7EF7QPKqNt0HtDXTJLmEoBvUDGVfWKsLbhfq
-         XTBMDB1/JIiCU5ZvrQGwKQP5CROMNUeyE5WuufQZw5ZOruU3QHEyuBn2iLvF5ldUCDTh
-         VsW2WZ06m0OYYd0GZxctWBY0yvapY1mrTuBx17so5SHBO6ScOjZLLsj9DsHQZodBKtR3
-         jmoSQ1Dpo4ZT2JsYZfU4wUT+Yj34/Ri7ralcabFfx5NkkX6H7sZ/qbnltcxj2aGCVN8s
-         hvsw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1723810149; x=1724414949;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=flQ/7h5oVTSJA5+bK85KSPF6EuRHs8so1fRCNOCFQ+Y=;
-        b=q4Dy4bf3Pgi8O+hwu8ZowzkWwl/7IHk8WHN2s7HCT73YN6gV6M5mIoztZIqq8Lshlr
-         T39Zy5/eNbgr4nG16Lu8fcDSvcjBLPDGXKxxUuEZxJ9kk/qKKSqojiD3sUYFAF1fdPFo
-         fBJ1PJdoMVewzsC8vbHkRz8aDNlkKusrnVml62O5DH0JVUdf5I6VzE0ef1dqC0cm2PaV
-         ewnbatmpSRBAlXZa6ExhUauZnQuOHCYRgfP5FrWPEgw3CykUg3Au/2WFeSdB5NKbnrX/
-         xyG3+tEYH3AFVniMU+95VmOxikiXLLuvVqvqFzn4OptDrnT6tVIp2J/ev13tYpAUnI/G
-         y6pw==
-X-Gm-Message-State: AOJu0YzSc0y6o4wQZ3C4JvyMYawKAdGE2rsmiax9TZj5ernzkz3O1Vq1
-	p6AdHsRXlhIofKS6gff5RMkRDmeiM8zETKhLR3PyHvrfKC2ROZA=
-X-Google-Smtp-Source: AGHT+IFcWp+nnPHTeLcrOpiTVKod6DOlSfh3SBf0ngEiztcQOc0RqUtQdRWnpk8nQwYdXBDAEKnS6Q==
-X-Received: by 2002:a05:6a20:9d92:b0:1c6:9fe9:c425 with SMTP id adf61e73a8af0-1c9050534fdmr3422313637.45.1723810148493;
-        Fri, 16 Aug 2024 05:09:08 -0700 (PDT)
-Received: from [127.0.0.1] ([4.227.115.14])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7127af3d129sm2493147b3a.210.2024.08.16.05.09.07
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 16 Aug 2024 05:09:07 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
-References: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 00/12] mptcp: pm: fix re-re-create the ID
- 0 endpoint
-Message-ID: <ef3110d4-e8f2-52a9-8a7b-876e8133ed97@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 16 Aug 2024 12:09:07 +0000
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="ivUBaI88"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 779DD240002;
+	Fri, 16 Aug 2024 12:28:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1723811310;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=kMhNE+EY1jol70wm7wI/nPLyTPgzj82oFX+Ju2XyoV4=;
+	b=ivUBaI88fAeEF8ETroeFcKzIbSX0EMGdgHdlTxjpdDemlkElnTaknVmlUpNA90hnl/NAVu
+	GpHkVKRQ1ncd1brnGaN1OdEUHef6bnY4GphNp4D55/fqYl0ah9FIUj3kzX3kna0wIGZSWL
+	C3PY7YPBSaNt8rSflw/w1Yd9CdgLASAHFrlaPd86HzkBUulLK4XtU0DksuiuKzkYT2/PWr
+	3X9AZp5oF0WFjdHB7J5Q+bYf6b1T9242NHwD1OePquX4Cs8IVTfegi6G1jFvcTNq/rp7oG
+	slVel3gKIW1n5QHuhpGY2xKeAVDD2cfdazsLxBzHfjlgnVyrUVUGqz7TGXUMTw==
+Message-ID: <7bc26b73-32e5-48df-b978-d3c322915ce2@arinc9.com>
+Date: Fri, 16 Aug 2024 15:28:29 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v2 07/12] mptcp: pm: fix ID 0 endp usage after
+ multiple re-creations
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+References: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
+ <20240816-mptcp-dup-close-evt-v2-7-8a33f6617f5c@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240816-mptcp-dup-close-evt-v2-7-8a33f6617f5c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-GND-Sasl: arinc.unal@arinc9.com
 
-Hi Matthieu,
+On 16/08/2024 14:02, Matthieu Baerts (NGI0) wrote:
+> 'local_addr_used' and 'add_addr_accepted' are decremented for addresses
+> not related to the initial subflow (ID0), because the source and
+> destination addresses of the initial subflows are known from the
+> beginning: they don't count as "additional local address being used" or
+> "ADD_ADDR being accepted".
+> 
+> It is then required not to increment them when the entrypoint used by
+> the initial subflow is removed and re-added during a connection. Without
+> this modification, this entrypoint cannot be removed and re-added more
+> than once.
+> 
+> Reported-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/512
+> Fixes: 3ad14f54bd74 ("mptcp: more accurate MPC endpoint tracking")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for your modifications, that's great!
+Tested-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-Our CI did some validations and here is its report:
+Thanks a lot!
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): packetdrill_regressions =F0=9F=94=B4
-- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/104190=
-16942
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/de4d0b5876cc
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D880310
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Arınç
