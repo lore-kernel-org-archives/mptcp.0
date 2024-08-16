@@ -1,69 +1,89 @@
-Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
+Received: from relay1-d.mail.gandi.net (relay1-d.mail.gandi.net [217.70.183.193])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C3B16F8FD
-	for <mptcp@lists.linux.dev>; Fri, 16 Aug 2024 10:12:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4320D86AE3
+	for <mptcp@lists.linux.dev>; Fri, 16 Aug 2024 10:20:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=217.70.183.193
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723803148; cv=none; b=diAeY13f8bVnq7W4zu7VNhG8zdZf7DfHZcfaKqTptmi4vzje64g9RqK6m/B4Q/v5fzma8IJIrAtqI8Ql70GyVHEopP53XS4sudNsc++wqr3GtqRpoWW2kmpoP7c0hevdjwaoukhTb/JewrVZvvGEoIrAFyD2qdAVyzEhzykoPUI=
+	t=1723803625; cv=none; b=rnLPq4VdBDoNLZXdmTLD01wU9Rg/fl+E7NtVY8B9tVAvqGHY6O1eChXZb715GayteAoNiEZyHH2Ea9J6tHU0+GvIOskJwVieJM+tJ3J1beuNdETQR/ecLmeLza9wKlpU+fl0mBB5hv1hns54z5Npi8p+VgrB2ZOFGapxegduxmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723803148; c=relaxed/simple;
-	bh=8QV8I6F6hCq6HuYp+q0VpWSM3GKbCa3W9vKRJRdFmZE=;
-	h=From:To:CC:Subject:Date:Message-ID:MIME-Version:Content-Type; b=oF8aUoioF3d3KThOkANM8wwmN+DySFCRpsz5zbuGq5THgsc1PH8K8ml68+6+UOOpc64hwo+T5AhqMDjIiAPCqubvPg9H9199z+eXoNUCEUshQo36SsJ46rDpcGJQ58qP+ZLG4WCvgf0RUpPyEx90XHeFpOjcoeo6EJYzqlr733w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.88.163])
-	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4Wld2m6fWLz1j6VJ;
-	Fri, 16 Aug 2024 18:07:28 +0800 (CST)
-Received: from dggpemf500002.china.huawei.com (unknown [7.185.36.57])
-	by mail.maildlp.com (Postfix) with ESMTPS id 4CAF2180019;
-	Fri, 16 Aug 2024 18:12:23 +0800 (CST)
-Received: from huawei.com (10.175.101.6) by dggpemf500002.china.huawei.com
- (7.185.36.57) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.11; Fri, 16 Aug
- 2024 18:12:22 +0800
-From: Yue Haibing <yuehaibing@huawei.com>
-To: <matttbe@kernel.org>, <martineau@kernel.org>, <geliang@kernel.org>,
-	<davem@davemloft.net>, <edumazet@google.com>, <kuba@kernel.org>,
-	<pabeni@redhat.com>
-CC: <netdev@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<linux-kernel@vger.kernel.org>, <yuehaibing@huawei.com>
-Subject: [PATCH -next] mptcp: Remove unused declaration mptcp_sockopt_sync()
-Date: Fri, 16 Aug 2024 18:04:04 +0800
-Message-ID: <20240816100404.879598-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.34.1
+	s=arc-20240116; t=1723803625; c=relaxed/simple;
+	bh=e2pu1DCaplSNT5gLalc0ULOinyV6aT156sLBf4IqFLY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=lT3xkC1zMDqs2LoRtnZE8qXrA+DBC7WfOobvPy+WIVUAD5QGudXwvN0TXsMb2AdUVgyHDNSHE5QrlEhptC3L/ZIurskpHk2e+CRw/CD/9KaWIPkLLnbtFJxnCGQOdKQk0BHSjYxDQBiCiGF/DmyyPmorIJm0EhMOBO9TOmzJxyc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com; spf=pass smtp.mailfrom=arinc9.com; dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b=HPYe1bW6; arc=none smtp.client-ip=217.70.183.193
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=arinc9.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=arinc9.com header.i=@arinc9.com header.b="HPYe1bW6"
+Received: by mail.gandi.net (Postfix) with ESMTPSA id 9AC0F240004;
+	Fri, 16 Aug 2024 10:20:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=arinc9.com; s=gm1;
+	t=1723803614;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GMBpRGoJXEXJUiSJGJYrX8cwCYpBLRlZwi69XYtUSoc=;
+	b=HPYe1bW6fGxZBID5/J9nw05BJTUsjT1SJvUrw5pEJ6yhdT1PvmQ/HGaHldi/ojOnTv2MWM
+	C12Gr+ocak1ff9I5SUPAFB+239YZxeTd+6/WoupB1WdymWzrRD+11VltwZoHN4LfByY4mp
+	PmRRbXnv2YeZfWFsLWD0804zlPKT7UPPwKHpAYkt3vYtW2fcJCJ7CaAVYWGNO08d/RKVoE
+	ButhzDbR/ClVFipoY2TCIE/6GX6J0wOA6jGuLWHM0Tmr00sRWUzCoOoRMNO/II1vPcJ+Xe
+	FXqgGAsmOV8mhfVSwJvpc9L948o2gcB/wyQs6WrAezspJ2UweszVRfa9iHHvLw==
+Message-ID: <cdc28738-8d6e-4591-b618-0d0a61492b87@arinc9.com>
+Date: Fri, 16 Aug 2024 13:20:12 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net 07/10] mptcp: avoid duplicated SUB_CLOSED events
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+References: <20240815-mptcp-dup-close-evt-v1-0-5a551d3a66cc@kernel.org>
+ <20240815-mptcp-dup-close-evt-v1-7-5a551d3a66cc@kernel.org>
+Content-Language: en-US
+From: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+In-Reply-To: <20240815-mptcp-dup-close-evt-v1-7-5a551d3a66cc@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: dggems702-chm.china.huawei.com (10.3.19.179) To
- dggpemf500002.china.huawei.com (7.185.36.57)
+X-GND-Sasl: arinc.unal@arinc9.com
 
-Commit a1ab24e5fc4a ("mptcp: consolidate sockopt synchronization")
-removed the implementation but leave declaration.
+On 15/08/2024 23:45, Matthieu Baerts (NGI0) wrote:
+> The initial subflow might have already been closed, but still in the
+> connection list. When the worker is instructed to close the subflows
+> that have been marked as closed, it might then try to close the initial
+> subflow again.
+> 
+>   A consequence of that is that the SUB_CLOSED event can be seen twice:
+> 
+>    # ip mptcp endpoint
+>    1.1.1.1 id 1 subflow dev eth0
+>    2.2.2.2 id 2 subflow dev eth1
+> 
+>    # ip mptcp monitor &
+>    [         CREATED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
+>    [     ESTABLISHED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
+>    [  SF_ESTABLISHED] remid=0 locid=2 saddr4=2.2.2.2 daddr4=9.9.9.9
+> 
+>    # ip mptcp endpoint delete id 1
+>    [       SF_CLOSED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
+>    [       SF_CLOSED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
+> 
+> The first one is coming from mptcp_pm_nl_rm_subflow_received(), and the
+> second one from __mptcp_close_subflow().
+> 
+> To avoid doing the post-closed processing twice, the subflow is now
+> marked as closed the first time.
+> 
+> Note that it is not enough to check if we are dealing with the first
+> subflow and check its sk_state: the subflow might have been reset or
+> closed before calling mptcp_close_ssk().
+> 
+> Fixes: b911c97c7dc7 ("mptcp: add netlink event support")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
----
- net/mptcp/protocol.h | 1 -
- 1 file changed, 1 deletion(-)
+Tested-by: Arınç ÜNAL <arinc.unal@arinc9.com>
 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 60c6b073d65f..08387140a646 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1154,7 +1154,6 @@ static inline void mptcp_pm_close_subflow(struct mptcp_sock *msk)
- 	spin_unlock_bh(&msk->pm.lock);
- }
- 
--void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
- void mptcp_sockopt_sync_locked(struct mptcp_sock *msk, struct sock *ssk);
- 
- static inline struct mptcp_ext *mptcp_get_ext(const struct sk_buff *skb)
--- 
-2.34.1
-
+Arınç
