@@ -1,252 +1,397 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 175048BF0;
-	Sat, 17 Aug 2024 14:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 946FF2581;
+	Sun, 18 Aug 2024 02:13:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1723906268; cv=none; b=DInFCgbhtifXZtJ/D6qFnaySWK/1+U3GxTpIswbdEuCANkf4mmAEupu/sbQe73waCKPk5w3S49YCHxqTlXOMvtsa1NjuY5eZ0kx4bhYn5wyCee0H2q+JUGO0RVt82IVd1VDn1XSa12l82RxtkMoUF1pE3RlP4mGCgsgpG96PwZM=
+	t=1723947207; cv=none; b=RyB83anuXUri2wPxG+bF6sSOc0/0mfnX0h1jDzlUUUp0uYd0noEzO/zuQKGwlApt7ClOw9CWtX8pgpuFPYsVCyR6a8p67ZP6WzH3Ieg+3Yxx0rq/DrrCYZVrHh5Q+R0HC4XcZx+Sy+fgYvsiA7wOOiQwoHGMTUdSXvfdd4ShG7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1723906268; c=relaxed/simple;
-	bh=xX30yY9QWtJC/hwv9MWYyIBUgw+j0dFH2V19RSTRVXQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
-	 In-Reply-To:Content-Type; b=lQrLxYOgXVkgxN/qjGH3Rffg2/i1f6gIY/t1JRefaz7gXfBLWHKXFZH2B0Op5ooBfndXw+DsAMjf0jvh+bKDScIVeaiOGVUppuzOEyYAmv54WvBNKO6QB7dXgWca9VxONZEW5kby1fMJ1ArEIj/GcvZ0vds2fAYzJsgXkZ8LE/w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gRPV0IqE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1723947207; c=relaxed/simple;
+	bh=BrdPWcqAOYdeEhwl679VOuDPNfbtrI20oqwd3LsX580=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kZUkefejAzfC/aDPvcbdRdXqBP/Dg3NaC3ZXoAcPn59+RIRlPgW7QwrT1O1C+zNhhE/stLXphlem7wcNsqVy63S+vSTyfAgHPp4gSH8GxUwfUJNyDznMXP1AqoxpsYMTzy8Maepjfoqtv6AmH+5xRYSOpksX/qNKojZ7fKKP9DY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NVx0K4JS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gRPV0IqE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01618C116B1;
-	Sat, 17 Aug 2024 14:51:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NVx0K4JS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E84BC116B1;
+	Sun, 18 Aug 2024 02:13:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1723906267;
-	bh=xX30yY9QWtJC/hwv9MWYyIBUgw+j0dFH2V19RSTRVXQ=;
-	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
-	b=gRPV0IqEqa4Qs27n1S195VCMTcTx1mU2J1tALiRBfzU4kdk3zWYo1JaCTfgdRgSSM
-	 o2+48dM/thpP5UgxRqVkZH5v3b567X7G4cZMd3fu7mndSjkiCyBF/+RGuCrJmgnmSo
-	 QgyXSjP7Q/wb6YTPnU910/lfRtbwita8W6/AI9o2+9bHwEcSIdTyUYLNn2pmUqbG1b
-	 +3PQ0adzHY8YsjngYiqqdVEDTm0a9j5A/bBtkRW8GTIqA/0iBof6X/kcizhbqgSenw
-	 DKviEBhdKNcs2v0fFAI4e0hpMlY4hMbsEf5D3ZTfAv78W0yE7jqXqtu7p5/W+rKu3P
-	 RXQQU2qfA+Leg==
-Message-ID: <6a693ad6-f145-48c1-b3a7-d441d3764e73@kernel.org>
-Date: Sat, 17 Aug 2024 16:50:58 +0200
+	s=k20201202; t=1723947206;
+	bh=BrdPWcqAOYdeEhwl679VOuDPNfbtrI20oqwd3LsX580=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=NVx0K4JSZsEg9P79KKaHwToGVhp023NLSPong7wSPdICkRm/h2zWnckZnmXU+QQ3F
+	 vCt9T46akcIzAhs2L6S5exDyXyxxN2IWBezTcI7dOi951MmpWvfvGqrDmqy5YMpXZZ
+	 Oqqb+L/5BWBG2qwIdQs2tS24wPvAnK/qbHDAQJ36epNB9FUgcmSnsdkrffaA3dY92y
+	 erFEN8in/3aWQS7vSKM65b1Ud0Sf51hCof5n5lUkwjyN0dcTKudIStsHbohZEy7+JX
+	 /PTZYjsAOuO2dcpttXOSUdl15FkTW419tyA7mmQezaQY/iuM/msjRoD0NCb3+ZZITx
+	 do2/smE2fmQdg==
+Message-ID: <db295f729981cd0eaebb93c5939b515f50882c11.camel@kernel.org>
+Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
+From: Geliang Tang <geliang@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>, Matthieu Baerts
+	 <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Andrii
+ Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>, Mykola
+ Lysenko <mykolal@fb.com>,  Alexei Starovoitov <ast@kernel.org>, Daniel
+ Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>, Yonghong Song
+ <yonghong.song@linux.dev>, John Fastabend <john.fastabend@gmail.com>, KP
+ Singh <kpsingh@kernel.org>, Stanislav Fomichev <sdf@fomichev.me>, Hao Luo
+ <haoluo@google.com>, Jiri Olsa <jolsa@kernel.org>,  Shuah Khan
+ <shuah@kernel.org>, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Daniel Xu <dxu@dxuuu.xyz>, Manu Bretelle <chantra@meta.com>
+Date: Sun, 18 Aug 2024 10:13:18 +0800
+In-Reply-To: <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
+References: 
+	<20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
+	 <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
+	 <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
+	 <8a2ff1bd-52dc-421d-87b7-fc2f56e81da2@kernel.org>
+	 <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: Re: [PATCH bpf-next 1/2] selftests: bpf: use KHDR_INCLUDES for the
- UAPI headers
-To: Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>,
- Jesper Dangaard Brouer <hawk@kernel.org>, bpf <bpf@vger.kernel.org>,
- "open list:KERNEL SELFTEST FRAMEWORK" <linux-kselftest@vger.kernel.org>,
- LKML <linux-kernel@vger.kernel.org>,
- Network Development <netdev@vger.kernel.org>
-References: <20240816-ups-bpf-next-selftests-use-khdr-v1-0-1e19f3d5b17a@kernel.org>
- <20240816-ups-bpf-next-selftests-use-khdr-v1-1-1e19f3d5b17a@kernel.org>
- <CAADnVQ+JBq8-6Rhi_LHX470uj2_2xxJAhgdUfg_abUxEDqpdJQ@mail.gmail.com>
-Content-Language: en-GB
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CAADnVQ+JBq8-6Rhi_LHX470uj2_2xxJAhgdUfg_abUxEDqpdJQ@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Alexei,
+Hi Martin, Matt,
 
-Thank you for the review.
-
-On 17/08/2024 09:22, Alexei Starovoitov wrote:
-> On Fri, Aug 16, 2024 at 7:56 PM Matthieu Baerts (NGI0)
-> <matttbe@kernel.org> wrote:
->>
->> Instead of duplicating UAPI header files in 'tools/include/uapi', the
->> BPF selftests can also look at the header files inside the kernel
->> source.
->>
->> To do that, the kernel selftests infrastructure provides the
->> 'KHDR_INCLUDES' variable. This is what is being used in most selftests,
->> because it is what is recommended in the documentation [1]. If the
->> selftests are not executed from the kernel sources, it is possible to
->> override the variable, e.g.
->>
->>   make KHDR_INCLUDES="-I${HDR_DIR}/include" -C "${KSFT_DIR}"
->>
->> ... where ${HDR_DIR} has been generated by this command:
->>
->>   make headers_install INSTALL_HDR_PATH="${HDR_DIR}"
->>
->> Thanks to 'KHDR_INCLUDES', it is no longer needed to duplicate header
->> files for userspace test programs, and these programs can include UAPI
->> header files without the 'uapi' prefix.
->>
->> Note that it is still required to use 'tools/include/uapi' -- APIDIR,
->> which corresponds to TOOLS_INCLUDES from lib.mk -- for the BPF programs,
->> not to conflict with what is already defined in vmlinux.h.
->>
->> Link: https://docs.kernel.org/dev-tools/kselftest.html#contributing-new-tests-details [1]
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/bpf/Makefile                       | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/assign_reuse.c      | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/tc_links.c          | 4 ++--
->>  tools/testing/selftests/bpf/prog_tests/tc_netkit.c         | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/tc_opts.c           | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/user_ringbuf.c      | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/xdp_bonding.c       | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/xdp_cpumap_attach.c | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/xdp_devmap_attach.c | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/xdp_do_redirect.c   | 2 +-
->>  tools/testing/selftests/bpf/prog_tests/xdp_link.c          | 2 +-
->>  tools/testing/selftests/bpf/xdp_features.c                 | 4 ++--
->>  12 files changed, 14 insertions(+), 14 deletions(-)
->>
->> diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
->> index 4eceb491a8ae..6a7aeae7e206 100644
->> --- a/tools/testing/selftests/bpf/Makefile
->> +++ b/tools/testing/selftests/bpf/Makefile
->> @@ -37,7 +37,7 @@ CFLAGS += -g $(OPT_FLAGS) -rdynamic                                   \
->>           -Wall -Werror -fno-omit-frame-pointer                         \
->>           $(GENFLAGS) $(SAN_CFLAGS) $(LIBELF_CFLAGS)                    \
->>           -I$(CURDIR) -I$(INCLUDE_DIR) -I$(GENDIR) -I$(LIBDIR)          \
->> -         -I$(TOOLSINCDIR) -I$(APIDIR) -I$(OUTPUT)
->> +         -I$(TOOLSINCDIR) $(KHDR_INCLUDES) -I$(OUTPUT)
->>  LDFLAGS += $(SAN_LDFLAGS)
->>  LDLIBS += $(LIBELF_LIBS) -lz -lrt -lpthread
->>
->> diff --git a/tools/testing/selftests/bpf/prog_tests/assign_reuse.c b/tools/testing/selftests/bpf/prog_tests/assign_reuse.c
->> index 989ee4d9785b..3d06bf5a1ba4 100644
->> --- a/tools/testing/selftests/bpf/prog_tests/assign_reuse.c
->> +++ b/tools/testing/selftests/bpf/prog_tests/assign_reuse.c
->> @@ -1,6 +1,6 @@
->>  // SPDX-License-Identifier: GPL-2.0
->>  /* Copyright (c) 2023 Isovalent */
->> -#include <uapi/linux/if_link.h>
->> +#include <linux/if_link.h>
+On Wed, 2024-08-14 at 15:37 -0700, Martin KaFai Lau wrote:
+> On 8/14/24 3:04 AM, Matthieu Baerts wrote:
+> > Hi Martin,
+> > 
+> > Thank you for your reply!
+> > 
+> > On 14/08/2024 03:12, Martin KaFai Lau wrote:
+> > > On 8/5/24 2:52 AM, Matthieu Baerts (NGI0) wrote:
+> > > > +static int endpoint_init(char *flags)
+> > > > +{
+> > > > +    SYS(fail, "ip -net %s link add veth1 type veth peer name
+> > > > veth2",
+> > > > NS_TEST);
+> > > > +    SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST,
+> > > > ADDR_1);
+> > > > +    SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+> > > > +    SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST,
+> > > > ADDR_2);
+> > > > +    SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+> > > > +    if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s",
+> > > > NS_TEST,
+> > > > ADDR_2, flags)) {
+> > > > +        printf("'ip mptcp' not supported, skip this test.\n");
+> > > > +        test__skip();
+> > > 
+> > > It is always a skip now in bpf CI:
+> > > 
+> > > #171/3   mptcp/subflow:SKIP
+> > > 
+> > > This test is a useful addition for the bpf CI selftest.
+> > > 
+> > > It can't catch regression if it is always a skip in bpf CI
+> > > though.
+> > 
+> > Indeed, for the moment, this test is skipped in bpf CI.
+> > 
+> > The MPTCP CI checks the MPTCP BPF selftests that are on top of net
+> > and
+> > net-next at least once a day. It is always running with the last
+> > stable
+> > version of iproute2, so this test is not skipped:
+> > 
+> >     #169/3   mptcp/subflow:OK
+> > 
+> > https://github.com/multipath-tcp/mptcp_net-next/actions/runs/10384566794/job/28751869426#step:7:11080
+> > 
+> > > iproute2 needs to be updated (cc: Daniel Xu and Manu, the
+> > > outdated
+> > > iproute2 is something that came up multiple times).
+> > > 
+> > > Not sure when the iproute2 can be updated. In the mean time, your
+> > > v3 is
+> > > pretty close to getting pm_nl_ctl compiled. Is there other
+> > > blocker on this?
+> > 
+> > I will try to find some time to check the modifications I suggested
+> > in
+> > the v3, but I don't know how long it will take to have them ready,
+> > as
+> > they might require some adaptations of the CI side as well, I need
+> > to
+> > check. On the other hand, I understood adding a duplicated version
+> > of
+> > the mptcp.h UAPI header is not an option either.
+> > 
+> > So not to block this (already old) series, I thought it would help
+> > to
+> > first focus on this version using 'ip mptcp', while I'm looking at
+> > the
+> > selftests modifications. If these modifications are successful, I
+> > can
+> > always resend the patch 2/3 from the v3 later, and using
+> > 'pm_nl_ctl'
+> > instead of 'ip mptcp', to be able to work with IPRoute2 5.5.
+> > 
+> > Do you think that could work like that?
 > 
-> No. This is not an option.
-> User space shouldn't include kernel headers like this.
-> Long ago tools/include directory was specifically
-> created to break such dependency.
-> Back then it was done for perf.
+> If there is CI started covering it, staying with the 'ip mptcp' is
+> fine.
+> 
+> The bpf CI has to start testing it asap also. The iproute2 package
+> will need to 
+> be updated on the bpf CI side. I think this has to be done
+> regardless.
+> 
+> It will be useful to avoid the uapi header dup on its own. The last
+> one you have 
+> seems pretty close.
+> 
+> > 
+> > > > +        goto fail;
+> > > > +    }
+> > > > +
+> > > > +    return 0;
+> > > > +fail:
+> > > > +    return -1;
+> > > > +}
+> > > > +
+> > > > +static int _ss_search(char *src, char *dst, char *port, char
+> > > > *keyword)
+> > > > +{
+> > > > +    return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst
+> > > > %s %s %d
+> > > > > grep -q '%s'",
+> > > > +              NS_TEST, src, dst, port, PORT_1, keyword);
+> > > > +}
+> > > > +
+> > > > +static int ss_search(char *src, char *keyword)
+> > > > +{
+> > > > +    return _ss_search(src, ADDR_1, "dport", keyword);
+> > > > +}
+> > > > +
+> > > > +static void run_subflow(char *new)
+> > > > +{
+> > > > +    int server_fd, client_fd, err;
+> > > > +    char cc[TCP_CA_NAME_MAX];
+> > > > +    socklen_t len = sizeof(cc);
+> > > > +
+> > > > +    server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1,
+> > > > 0);
+> > > > +    if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
+> > > > +        return;
+> > > > +
+> > > > +    client_fd = connect_to_fd(server_fd, 0);
+> > > > +    if (!ASSERT_GE(client_fd, 0, "connect to fd"))
+> > > > +        goto fail;
+> > > > +
+> > > > +    err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc,
+> > > > &len);
+> > > > +    if (!ASSERT_OK(err, "getsockopt(srv_fd, TCP_CONGESTION)"))
+> > > > +        goto fail;
+> > > > +
+> > > > +    send_byte(client_fd);
+> > > > +
+> > > > +    ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search
+> > > > fwmark:0x1");
+> > > > +    ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search
+> > > > fwmark:0x2");
+> > > > +    ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
+> > > > +    ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
+> > > 
+> > > Is there a getsockopt way instead of ss + grep?
+> > 
+> > No there isn't: from the userspace, the app communicates with the
+> > MPTCP
+> > socket, which can have multiple paths (subflows, a TCP socket). To
+> > keep
+> > the compatibility with TCP, [gs]etsockopt() will look at/modify the
+> > whole MPTCP connection. For example, in some cases, a setsockopt()
+> > will
+> > propagate the option to all the subflows. Depending on the option,
+> > the
+> > modification might only apply to the first subflow, or to the
+> > user-facing socket.
+> > 
+> > For advanced users who want to have different options set to the
+> > different subflows of an MPTCP connection, they can use BPF: that's
+> > what
+> > is being validated here. In other words, doing a 'getsockopt()'
+> > from the
+> > userspace program here will not show all the different marks and
+> > TCP CC
+> > that can be set per subflow with BPF. We can see that in the test:
+> > a
+> > getsockopt() is done on the MPTCP socket to retrieve the default
+> > TCP CC
+> > ('cc' which is certainly 'cubic'), but we expect to find another
+> > one
+> > ('new' which is 'reno'), set by the BPF program from patch 1/2. I
+> > guess
+> > we could use bpf to do a getsockopt() per subflow, but that's seems
+> > a
+> > bit cheated to have the BPF test program setting something and
+> > checking
+> > if it is set. Here, it is an external way. Because it is done from
+> > a
+> 
+> I think the result is valid by having a bpf prog to inspect the value
+> of a sock. 
+> Inspecting socket is an existing use case. There are many existing
+> bpf tests 
+> covering this inspection use case to ensure the result is legit. A
+> separate 
+> cgroup/getsockopt program should help here (more on this below).
+> 
+> > dedicated netns, it sounds OK to do that, no?
+> 
+> Thanks for the explanation. I was hoping there is a way to get to the
+> underlying 
+> subflow fd. It seems impossible.
+> 
+> In the netns does help here. It is not only about the ss iterating a
+> lot of 
+> connections or not. My preference is not depending on external
+> tool/shell-ing if 
+> possible, e.g. to avoid the package update discussion like the
+> iproute2 here. 
+> The uapi from the testing kernel is always up-to-date. ss is another
+> binary but 
+> arguably in the same iproute2 package. There is now another extra
+> "grep" and 
+> pipe here. We had been bitten by different shell behaviors and some
+> arch has 
+> different shells ...etc.
+> 
+> I think it is ok to take this set as is if you (and Gelang?) are ok
+> to followup 
+> a "cgroup/getsockopt" way to inspect the subflow as the very next
+> patch to the 
+> mptcp selftest. It seems inspecting subflow will be a common test
+> going forward 
+> for mptcp, so it will be beneficial to have a "cgroup/getsockopt" way
+> to inspect 
+> the subflow directly.
+> 
+> Take a look at a recent example [0]. The mptcp test is under a cgroup
+> already 
+> and has the cgroup setup. An extra "cgroup/getsockopt" prog should be
+> enough. 
+> That prog can walk the msk->conn_list and use bpf_rdonly_cast (or the
 
-I'm sorry, but I think we are not talking about the same thing here:
-here, I'm only modifying the "normal" userspace programs, not the ones
-used to generate the BPF objects. Perf is a special case I suppose, it
-needs to know the kernel internals. It is the same with BPF programs
-requiring vmlinux.h. But I think "normal" userspace programs in the
-sefltests can use the UAPI headers, no?
+I encountered some difficulties while walking the msk->conn_list in
+BPF.
 
-Here, the BPF userspace programs will take the kernel headers generated
-by 'make headers', not directly from 'include/uapi' in the source.
-That's what is done in other kernel selftests, and what is documented in
-the kselftests doc [1]. With this modification, I'm able to compile the
-BPF selftests.
+I added mptcp_for_iach_stubflow() and other helpers related to
+list_dentry into progs/mptcp_bpf.h:
 
-I see that the BPF CI didn't manage to build them, but I think that's
-because it sets 'KBUILD_OUTPUT', and build the BPF selftests directly,
-not via the 'tools/testing/selftests/Makefile', which is the recommended
-way, which supports 'KBUILD_OUTPUT'. Please see [2] for a fix for the
-BPF CI.
+static inline int list_is_head(const struct list_head *list, const
+struct list_head *head)
+{
+        return list == head;
+}
 
+#define list_entry(ptr, type, member) \
+        container_of(ptr, type, member)
 
+#define list_first_entry(ptr, type, member) \
+        list_entry((ptr)->next, type, member)
 
-A bit of context: my goal here is to be able to add new BPF selftests to
-cover cases where BPF is used to modify MPTCP sockets and subflows. To
-setup these tests, we need to communicate with the kernel, either by
-using IPRoute2 -- but the BPF CI is still using IPRoute2 5.5 from
-pre-COVID time -- or with a dedicated userspace program. This program
-[2] has nothing special, it needs to include <linux/mptcp.h> to get the
-value of some defines and enums to be able to communicate with the
-kernel via Netlink. If I want to compile this program on my system,
-outside the kselftest, the compiler will use the file from
-'/usr/include/linux/mptcp.h', coming from the kernel UAPI. When
-validating new features in the selftests, it will use the version from
-the kernel source, the result of a 'make headers'. That works fine, we
-don't have to duplicate the MPTCP UAPI header file when building the
-MPTCP selftests. Same with the other selftests. Without this patch, I
-would need to duplicate the 'mptcp.h' header if I want to use the same
-program in the BPF selftests, because KHDR_INCLUDES is not used in the
-CFLAGS when compiling the userspace programs like everywhere else in the
-selftests.
+#define list_next_entry(pos, member) \
+        list_entry((pos)->member.next, typeof(*(pos)), member)
 
-I understand that I could indeed fix my initial problem by duplicating
-mptcp.h in tools/include/uapi/linux/, but this doesn't look to be
-allowed any more by the Netdev maintainers, e.g. recently, 'ethtool.h'
-has been duplicated there in commit 7effe3fdc049 ("tools: Add ethtool.h
-header to tooling infra"), but removed quickly after in commit
-bbe91a9f6889 ("tools: remove redundant ethtool.h from tooling infra").
-In this case, it was fine to simply drop it, because the linked test
-doesn't require a recent version. Jakub mentioned [4] that these
-duplicated headers should be avoided, and the ones generated by 'make
-headers' should be used instead: what is being suggested here.
+#define list_entry_is_head(pos, head, member) \
+        list_is_head(&pos->member, (head))
 
-Do you think it would not work? If not, any idea what I can do?
-Duplicating the defines and enums I need in the .c file doesn't seem
-like a nice solution either.
+#define list_for_each_entry(pos, head, member) \
+        for (pos = list_first_entry(head, typeof(*pos), member); \
+             !list_entry_is_head(pos, head, member); \
+             pos = list_next_entry(pos, member))
 
-[1] https://docs.kernel.org/dev-tools/kselftest.html
-[2] https://github.com/libbpf/ci/pull/131
-[3]
-https://elixir.bootlin.com/linux/v6.10.5/source/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-[4] https://lore.kernel.org/netdev/20240429132207.58ecf430@kernel.org/T/#u
+#define mptcp_for_each_subflow(__msk, __subflow) \
+        list_for_each_entry(__subflow, &((__msk)->conn_list), node)
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Then used them in progs/mptcp_subflow.c like this:
 
+SEC("cgroup/getsockopt")
+int _getsockopt(struct bpf_sockopt *ctx)
+{
+        struct mptcp_sock *msk = bpf_core_cast(ctx->sk, struct
+mptcp_sock);
+        struct mptcp_subflow_context *subflow;
+        __u32 token = 0;
+
+        if (!msk || ctx->level != SOL_TCP ||
+			ctx->optname != TCP_CONGESTION)
+                return 1;
+
+        subflow = list_first_entry(&msk->conn_list,
+			struct mptcp_subflow_context, node);
+        token = subflow->token;
+        bpf_trace_printk(fmt, sizeof(fmt), msk, token); 
+
+        return 1;
+}
+
+And got some access errors:
+
+; token = subflow->token; @ mptcp_subflow.c:92
+13: (61) r4 = *(u32 *)(r1 +524)
+access beyond struct list_head at off 524 size 4
+
+How can I resolve these errors? Shouldn't I walk the msk->conn_list
+like this? Or use bpf_iter instead? Please give me some advice?
+
+Thanks,
+-Geliang
+
+> bpf_core_cast macro in libbpf) to cast a pointer to tcp_sock for
+> readonly. It 
+> will allow to inspect all the fields in a tcp_sock.
+> 
+> Something needs to a fix in patch 2(replied separately), so a re-spin
+> is needed.
+> 
+> pw-bot: cr
+> 
+> [0]:
+> https://lore.kernel.org/all/20240808150558.1035626-3-alan.maguire@oracle.com/
+> 
+> 
+> 
 
