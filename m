@@ -1,153 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F9BBA41
-	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 08:04:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43E7915B11D
+	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 08:54:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724054643; cv=none; b=J+ou7EbH53T1LUeewLp5yJEMlkYlHtEIKZNocfFV6PEFmQoR9JAZrb2E8mkdBKrnQVdrgVYO6LaDEzOzowsOog0/Hc2+DslmaJiTiDephGrT/P8gB61FqaQFpJ+vJc+K/w0S8DymCutEnSJyIROLrI7UVC/79TrEKWG93KwVmtI=
+	t=1724057667; cv=none; b=BKkzv8P/3G2z5rvMuJPLPvTbnKSlJLGfNc3uxAb2ydahnLGzc1kM+qQ4ItdKOaiOLsDbZlIRbR4SN1euEpMun2ST2ovYhptwbBA2tiVEiNFv+z1MXKNhZRpr5N3GFbf2uqecoW4DnAbxMKndaF8VrYRZH5FhgvB3JIV2T+LeL8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724054643; c=relaxed/simple;
-	bh=0fwMmJ7MHURfyqCTSoSnhRGCaDd0ZFRwKNjA6O+ae1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pMWifnBP0GELA7LPEHaTbmCN8C7E3rqKUdI0dfTDh4DpvpD1AHgku4Bczn8kZKo+9akMxGV8U13pu9VD/wN60mG451yCdKd9b/Ad3rAVx+K07ZhTzZFR8DMgKwMcsk1yNUzqvKVOnmL1vzK3FcLlPUop4WiJdy0EuxdD1x4zjbA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=huGZtwmJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724057667; c=relaxed/simple;
+	bh=obEOVBZWPEGuAa1VmKMpFrHef933YrMyftRVeVN+iT0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=eyge836w/l4IfAPUN/zfLe3SCFchuWNJ+Rci9j8j+RNgAvOrs9rATIjxzLrrnKA6n+4L1OpD2tivOrp0SIaZ2vqYkm0UWZPEvUce4bjyZpe7JKB+EkQT/y76sdqFayS2AZuvsa4YPFlT/2kVz2Zsv9CzhoH3E5JBCU7aqIz6qyE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=j1xaRurW; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="huGZtwmJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9079BC32782;
-	Mon, 19 Aug 2024 08:04:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724054643;
-	bh=0fwMmJ7MHURfyqCTSoSnhRGCaDd0ZFRwKNjA6O+ae1g=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=huGZtwmJ8WZISAsneaF8F+kyRB87wKKp/dt2Ovp6HPE6QLJpoqT4iOtuX25eCuH8p
-	 9MXirXRaIyDYg673w7WBXAa6rOvFJgv6CpPFOd1nTdnTEYW9aR1FNPPq0efmw297ke
-	 OkDx07H5RayOd0rHb1ULCp/o5sSXP7qMFfACtXRWrU5JMWWAQCrYC2q/w7fLOF5Oqs
-	 jc/ALK0q3DfwRK1NLnFIvqdKHIv+Xwv2BiG6RLf+N7So8LPp67iB5IreoQO0WsRESI
-	 UJoqLNJK0C3PacWjxfCRTAMHZJpkd74igqKlT32gsLMnD9ZZqfhivWMngKZQj1YdXQ
-	 51/FzvNRxQoSQ==
-Message-ID: <ea0a05b7-8891-4055-b299-fc6e1dd1548f@kernel.org>
-Date: Mon, 19 Aug 2024 10:04:00 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="j1xaRurW"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7a35eff1d06so291329385a.0
+        for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 01:54:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724057665; x=1724662465; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dHwhriS49cKLaYSk+rnbBPRvl1IANO4K3uzlaqTDnJQ=;
+        b=j1xaRurWpoyMSZAFeVgx9J65wPozvBeSGXSaB9DjTJGeZAg0ZxBFPQ+XI7lQxFu7uZ
+         LtPEReC3sopAOM+9bVoFiptWcgXCRAdWlIKRPC+jR61qfLVUrhf077NkQjjnqfp6Lkgo
+         fdIO7kQQny/cy7M3nHQ3Qf1GMQgzrQJby+n08ynqfe/pz58ro0WLokU0eZDCPW7uzY9P
+         7qy0ahL0OjKf5HQlIyfYZrnN7RWV5cZMyBzjzTg9pgQBLEJxgz/FkZg2F1NeeSzdOtHD
+         A/DmG5jgenjhNE2XD176LLMV6lxSEWwlGoI8NWPiY/An3hobZi1ZVEU7qtrzSQG0zB92
+         PR9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724057665; x=1724662465;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dHwhriS49cKLaYSk+rnbBPRvl1IANO4K3uzlaqTDnJQ=;
+        b=FlA5GPgesIkuNHECfk65xmwvDBAwoa+JJbYuOMElGktZ1ypHz8xDoMW3ND4iqYPtDz
+         mhDo6KJaBN5lf2ZlR4VtP/O3LduoWVdLLuzJcHPXUDBVAdF4iI+STS4r1+xae7KZxapB
+         Ls1TKSu+Y4R6bZkUQR9rDQ0HjsHBbnVDBHK7oHpp9HEAiqpDjVG+4yqyOxrq7ZD0FJbB
+         JK1K1CIE7or9FDHKMIk64u/xLWTF815HXAuoI6nvksOJFiTdD9D6+Wnzv3U0Ae5IXfAX
+         DKvecEsPK4dPZyrY012po1TFwMD+IKDRmUTAwoflSMFmzRaAXd3k7hVs01lFIGmfqtYh
+         uh5Q==
+X-Gm-Message-State: AOJu0YwJgNr0vWm8J+bpWBrFbIo+KKmN4/T6bjV6wQm12RdrxiqQHylz
+	mfxr8Klbt6RlPDM+cwpSrpO4sS9qA6dMNdrT+hHZDpX9z9ffbRg=
+X-Google-Smtp-Source: AGHT+IF+yqC98dEDCmv5L5E/82ON9z+FXe5jfsaWqd9rD0D7FbZXntn7l+vHVtwY9Nw8j+Bhykn5YQ==
+X-Received: by 2002:a05:620a:244f:b0:79f:d80:592b with SMTP id af79cd13be357-7a5069d3c98mr1037774585a.53.1724057664956;
+        Mon, 19 Aug 2024 01:54:24 -0700 (PDT)
+Received: from [127.0.0.1] ([172.200.199.174])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a4ff106232sm414005685a.108.2024.08.19.01.54.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 Aug 2024 01:54:24 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20240819-mptcp-pr_debug_n-v2-1-97cbe3f7d975@kernel.org>
+References: <20240819-mptcp-pr_debug_n-v2-1-97cbe3f7d975@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: pr_debug: add missing \n at the
+ end
+Message-ID: <a4750611-b915-6625-a359-2be932008e53@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 19 Aug 2024 08:54:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pr_debug: add missing \n at the end
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20240813-mptcp-pr_debug_n-v1-1-ab706c0cbe60@kernel.org>
- <00c220a643e489af541f619d46f8c1d9db57ed09.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <00c220a643e489af541f619d46f8c1d9db57ed09.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matthieu,
 
-Thank you for the review!
+Thank you for your modifications, that's great!
 
-On 19/08/2024 05:03, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for this patch.
-> 
-> On Tue, 2024-08-13 at 15:30 +0200, Matthieu Baerts (NGI0) wrote:
->> pr_debug() have been added in various places in MPTCP code to help
->> developers to debug some situations. With the dynamic debug feature,
->> it
->> is easy to enable all or some of them, and asks users to reproduce
->> issues with extra debug.
->>
->> Many of these pr_debug() don't end with a new line, which causes the
->> messages to be printed with a delay, when something else needs to be
->> printed. That's fine when many messages need to be printed, but not
->> when
->> only specific ones are expected.
-> 
-> In which scenario? It has never happened in my tests. I mean, in my
-> tests, all line breaks are normal. But I think it's necessary to add
-> '\n' in pr_debug().
+Our CI did some validations and here is its report:
 
-Please see my v2: I added an example in the commit message.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): selftest_mptcp_connect =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/104496=
+81118
 
->> The 'Fixes' tag here below points to the first pr_debug() used
->> without
->> '\n' in net/mptcp. This patch could be split in many small ones, with
->> different Fixes tag, but it doesn't seem worth it, because it is easy
->> to
->> re-generate this patch with this simple 'sed' command:
->>
->>   git grep -l pr_debug -- net/mptcp | \
->>     xargs sed -i "s/\(pr_debug(\".*[^n]\)\",/\1\\\n\",/g"
-> 
-> Some '\n's in pr_debug() are still missing:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/41f8faae83b2
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D880801
 
-Good catch!
 
-Fixed in the v2.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-(...)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
->> So in case of conflicts, simply drop the modifications, and launch
->> this
->> command.
->>
->> Fixes: f870fa0b5768 ("mptcp: Add MPTCP socket stubs")
-> 
-> I think this is not a fix, it's better to merge it into -next.
+For more details:
 
-Please see my example from the v2, it looks like a fix to me when the
-expected message is not printed when running a test that should print it.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
