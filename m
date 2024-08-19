@@ -1,121 +1,106 @@
-Received: from mail-pf1-f172.google.com (mail-pf1-f172.google.com [209.85.210.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67324158A12
-	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 20:27:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF0B1DF666
+	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 23:28:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724099275; cv=none; b=cwlXV6G4P59MDpXGDa/3i18oms/f1Lsh4ta0nRrlVufGvTUm/vUW27Yfjp4puFwNl/CQEGDFUyO33iTLb9e1/EWV3/m3+gIekvHvvYII4ekN5iIhocL98Fw+YNEsupF881lV1y7nq7J+uinRen0NYR08qLxB5GDvSLIZhwPYcIY=
+	t=1724110130; cv=none; b=sOXrjhqaNBoP9rzkevgeqbNYY/3Qz/86sf04V4MJxryO2P8emEONE4lwl6y8DiA6t5X84PkxvyKf8tFeUt77euylomI4HbsVZEpPlQZ37azbl3jfIH8CEVMOSo2No8/YIa8QqKo5hDSWKdEnFhkMGX/8kqt4KZ84mgFn2ueikn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724099275; c=relaxed/simple;
-	bh=BX1T+qAEOcQUT8ve2IsV+WG0iEiy/ymCCMWqKwtA4bw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=njVoA27VNsODaPfIjbVgBlgHDdDfLv2dZYjh2iE/TcT48NaLlotI2o2RSs66AtIc2SqgYbBRo5IuFGkAg3zsP3EwPAvcFZyUH5ojD6cm2eLI6YYH2Mw2zieyJvqaw88GbztcrqGwWYKwbsz7A0ExxOAUzu99VoWRYOBVONA2sC8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z+AFLT7m; arc=none smtp.client-ip=209.85.210.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724110130; c=relaxed/simple;
+	bh=m7kxeGPfLbThsj9r9vGfFq8j8982Mb9ShTtJgvz8zDA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=OzLBnuSY9kKVcyh5G+xvkTrFnzQTDLmeE2F7mr4pC3CKODX4xR31hKUGpr2AWgU2g8XXjGCGX9gKwV+X8ml24ZV9hikjppsqk4KsBxOxUSrUCb7Mi26SLY+BLwC/rmWCaBomHR5BimKjwTMYy00k2DzGNVoSa8VqaFumTzjFNtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PQtBKgj6; arc=none smtp.client-ip=91.218.175.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z+AFLT7m"
-Received: by mail-pf1-f172.google.com with SMTP id d2e1a72fcca58-70f5ef740b7so4250333b3a.2
-        for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 13:27:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724099273; x=1724704073; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gxazWL2Rv74f5LGCEmGuy14/xvCtt/hhX+cDnwmf5TA=;
-        b=Z+AFLT7mXbISAy2dqutr7C1wSgx81YRwZ8Wg4yt4qPE79HWFLk5GXIBLniheQkVBNQ
-         Ux6RKT5bibD6hKjlHTuObEjARq4MsQf7tWmHaLDECeRr/Xl5UNJAi8HDb5A1dDfa9+H3
-         Dz76A+FbBIXhD2jaRUZp2CAP9VLZVM8UFy/lDtPOQeoBcBtvQGua1HswnKoRqqLS4m/F
-         ZLHxIdcHX/mt5jEfB5cgUJTa0xcg/9wn4uGMgHzVVWLJyeJTXb4RkYieFFDjWzaCqHm1
-         pVhWE/YYXcl8Y+7SFq5ipXyEER0KPCq6UXAs+Jg4shJ/v8S6j27Z9PpN/NzDSCerFjzA
-         zuOQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724099273; x=1724704073;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gxazWL2Rv74f5LGCEmGuy14/xvCtt/hhX+cDnwmf5TA=;
-        b=BYHm22HxaEyN2RkG21OaFmIfUBQAbsJ48hygxTgGbx+hf8MHMCRze2leQWlIvWvIHz
-         7cvPNIxqOZ/Kuy3OOiy3yHkQu6DJWG+tjOVtBcWwkUw/uB31faMR5xKeJPw7E8Ncreaj
-         hFZZ8XvfUGLwK/GXL+QVlvCtq6WEXg7wWmRoQlDalYs4J4P8EAJRzoMk9r5RJ6lGmF44
-         XGnJzXiWZT/RJBP2fEAvYG7SyZuF0kVr/8Dlh4xZGICkU0Pgl2c+EOOs2M+Vz/9FE4mM
-         3i/QBm9XmdoJ+vM1hNo6xL161uaZU32Ecx97qCu0ImioPgdfoxuSAzSDTrpEsHATqEYU
-         iNoA==
-X-Gm-Message-State: AOJu0YwM74/zAULnO/71WGvrR3v5rfl/SDszvj1r8x+bQIHlJNsoPQKG
-	voStLAlLIFcXQFNqKoLhccI90W8GQE8QUi82mUYEYWZ9jxyoKrbFVfhU
-X-Google-Smtp-Source: AGHT+IElr3YjSXS+0FUDPd3Nl9mkH5t7xLBpQezjax+brYKMh0sWC5nucju1K/jO1nPMMK9fZV2krw==
-X-Received: by 2002:a05:6a20:8411:b0:1c4:919f:368d with SMTP id adf61e73a8af0-1c905053573mr17437632637.49.1724099273517;
-        Mon, 19 Aug 2024 13:27:53 -0700 (PDT)
-Received: from [127.0.0.1] ([13.91.68.148])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f02fa51bsm65968295ad.53.2024.08.19.13.27.52
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 13:27:53 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
-References: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: remove
- re-definition
-Message-ID: <cb9397a6-f804-c9ee-b99d-457d37ce3069@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Aug 2024 20:27:52 +0000
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PQtBKgj6"
+Message-ID: <40a2828d-1881-416f-94ad-595b85b8dd84@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1724110126;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=0P27pgkkVQx3FMDv0ADp2wY6mPd7FvC3Vh5d2lNdR40=;
+	b=PQtBKgj6/d6qzSFWj22L/PnmEYDSRKUNKqyfNnVrckfqAzgKasVutHl2ip4seg2YTLo67L
+	zMImtrG2jDZn2/p3QaXhrMSFBASMFfvKZeaAgt57o0nH2Q79j679G34JZOyEyAJrpyZ3Mh
+	mrjKynMgafABPD6UojuKc4gb0xTfFnM=
+Date: Mon, 19 Aug 2024 16:28:37 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
+To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
+ Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ Daniel Xu <dxu@dxuuu.xyz>, Manu Bretelle <chantra@meta.com>
+References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
+ <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
+ <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
+ <8a2ff1bd-52dc-421d-87b7-fc2f56e81da2@kernel.org>
+ <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
+ <db295f729981cd0eaebb93c5939b515f50882c11.camel@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <db295f729981cd0eaebb93c5939b515f50882c11.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Matthieu,
+On 8/17/24 7:13 PM, Geliang Tang wrote:
+>> Take a look at a recent example [0]. The mptcp test is under a cgroup
+>> already
+>> and has the cgroup setup. An extra "cgroup/getsockopt" prog should be
+>> enough.
+>> That prog can walk the msk->conn_list and use bpf_rdonly_cast (or the
+ >> bpf_core_cast macro in libbpf) to cast a pointer to tcp_sock for
 
-Thank you for your modifications, that's great!
+[ ... ]
 
-Our CI did some validations and here is its report:
+> SEC("cgroup/getsockopt")
+> int _getsockopt(struct bpf_sockopt *ctx)
+> {
+>          struct mptcp_sock *msk = bpf_core_cast(ctx->sk, struct
+> mptcp_sock);
+>          struct mptcp_subflow_context *subflow;
+>          __u32 token = 0;
+> 
+>          if (!msk || ctx->level != SOL_TCP ||
+> 			ctx->optname != TCP_CONGESTION)
+>                  return 1;
+> 
+>          subflow = list_first_entry(&msk->conn_list,
+> 			struct mptcp_subflow_context, node);
+>          token = subflow->token;
+>          bpf_trace_printk(fmt, sizeof(fmt), msk, token);
+> 
+>          return 1;
+> }
+> 
+> And got some access errors:
+> 
+> ; token = subflow->token; @ mptcp_subflow.c:92
+> 13: (61) r4 = *(u32 *)(r1 +524)
+> access beyond struct list_head at off 524 size 4
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10454345821
+Similar to your bpf_core_cast() usage earlier that casts a sock ptr to 
+mptcp_sock ptr. r1 is in list_head ptr type. It needs to cast to 
+mptcp_subflow_context ptr.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d1fc17f8aaea
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D880916
+The same cast to tcp_sock is needed when you try to get the tcp_sock ptr from 
+subflow->tcp_sock which is in "struct sock *" type in the kernel instead of 
+"struct tcp_sock *".
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
