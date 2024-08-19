@@ -1,118 +1,135 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D51C1DDC9
-	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 13:15:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 12931EEA5
+	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 16:44:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724073327; cv=none; b=EefR347Wf/crQWcMeie77iqtf8rFHvPAiCt7/IyvZfSyY5323Xb1vk4xqmP0Jy0aoJbLnRLeGuxXXeqgHMRKalx6EO2dCBKVTDGywlLR81dyrecWqqNqx5FvNepTwR2SMHpuLHFgbUhJYHgoTchQRO4qdXKjlIVexacJ29WiSqc=
+	t=1724085870; cv=none; b=KJTeVsMAsyMt17LWDkPbRv7metNqzlyWYIIdL8R98ZCV0iOm/ns8JtOhq9avKceUfU6joeuAT/u0DCPCqgpTVm21FXtDFKXomsxZIbExnPRqkgJaYrQTm7j3WMETqgHfrB3FCr4wwaBv/QqUv6m2TRdKipa6/04Jcq7MDbV0ZQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724073327; c=relaxed/simple;
-	bh=FsttWvYwSPzSSUNy04zasLrpGv3vynxgrbLnfHa4HSc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=hRzhSMuE2ztIM05mmFB4p/dXt1ytQxvjJ5KWGnGUZyDfG7GwEDqaGrIxEnEj3L3PdQC6tvJIvxgDLe1HLTsgJWM0/rjJp72+D6M2CyRjtaIlnHVjsTUurcWTCPujJNFqHaU/Bcv9e+0duD3qYfvogdHBwTb1eS7u57G9qhBO3iA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNe7h6+N; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724085870; c=relaxed/simple;
+	bh=0G+I3c0Pg8cHwOd0VecZ7VBvGXB61xkoIzM6EDO/Cdc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ECYDkwGNuQJQvluz+18kMcedwXgXyQDAYCSj+gpQzXG8aecnUI6wP33nw6Xi5KEP8pJq0LQOvgCVGN1bTQ5GNkbci49L0tFZcPYeyCf6z+g3OE+CQuHPG1gAxDKomABtlsWKUR/66/MLa4d9C3KXJqjgTMXEs5o8d0HJfsYzFSs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Qa2kuVOm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNe7h6+N"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9FF47C32782;
-	Mon, 19 Aug 2024 13:15:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Qa2kuVOm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A245C32782;
+	Mon, 19 Aug 2024 16:44:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724073327;
-	bh=FsttWvYwSPzSSUNy04zasLrpGv3vynxgrbLnfHa4HSc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=KNe7h6+NavpGhErliC1I1TAeWw6A1YbxAu1snpN+zqDD5cQlpKOPPi8njNZI/l/t6
-	 Utr+FAZKTCUgIsSYdGTlUTNZXCMCUsrudypW36A8K/QR0i0j8RlGTHy/VTw0IBpjkH
-	 umIz1fKR45WXtZy24859TdLjv0kuy+Df/wXqpfN+gdOUNiFCttlyfAUHab0dt8RJni
-	 v8TkjK2krLvOxLGMSE8Bjr9YgOm8XVWXanASbwsh+qd2DU20weDFax2MR5XR7NWwOs
-	 r2PT3Giq135dP5HJlnWUjfNB5XPlsz/9HOK+FciUzKlBylhhas2zkkLq062tfeWDpS
-	 wmexQqT2m3N/A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 19 Aug 2024 15:15:20 +0200
-Subject: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: remove
- re-definition
+	s=k20201202; t=1724085869;
+	bh=0G+I3c0Pg8cHwOd0VecZ7VBvGXB61xkoIzM6EDO/Cdc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Qa2kuVOmNsoMjly4sJPkmUlFxqvz2ql8gOs69eSGu/27AWafojnoVIYRl9D9AbYeH
+	 VQO8quuMsdQqWRCQGAsLE0EXuw+5+JEGp+o0jgRIh56CBxQVvF+oYoshKsSgFCg7dk
+	 oxdVSJzlmHlMUKVfTX5sO6l5QQStL9mclPi61Cth/69lZp5VOK1l3MOOfn0ZpMsInQ
+	 1mSXbzU9Z1cVtXlOIfHz9o40LB5aacPFMbyYSTaMxr2p33NY5lA6ZUjzqCneZmanTz
+	 /7pljE88Eq6N2xxUhs5MdmTaJUTv0+Yo++TAHXnUBLyW4fyUksKNJkdXxIUFhSDRh6
+	 B4eEJ+jWTtyFg==
+Message-ID: <d99e6231-e612-4890-8e86-acda40c9c25a@kernel.org>
+Date: Mon, 19 Aug 2024 18:44:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAGdFw2YC/yWMQQqAIBAAvxJ7bqHCIPtKdFBbaw+ZqEgQ/j2p4
- 8DMPBApMEWYmwcCZY58uQp924A5lNsJeasMQzeIbuolnj4Zj/5EyuRSRCuVtpMZpTAaauUDWb6
- /4wK/7OhOsJbyAncocf9tAAAA
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 00/12] mptcp: pm: fix re-re-create the ID 0
+ endpoint
+Content-Language: en-GB
 To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1916; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=FsttWvYwSPzSSUNy04zasLrpGv3vynxgrbLnfHa4HSc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmw0Vu2IRc6S+RifOUgV2eHFyURpnh12+4OKSe5
- T6Nk4QUYuiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZsNFbgAKCRD2t4JPQmmg
- c+h1D/97r1JQy0T1/u5p8nWJSlnmxVVeo2YQ+Q2zTT84w/fdrCelp6yis9Rrt5EzmNP5NuAHDZD
- UGpoYW2rDKjpTBgAkieSrCjCQUzqE+TU0sN1uZxAx2HtehbuKzfg3z17TrnSPFHfRqSA8Gw7gdC
- LcdZZbrQ+Q0ApgJYX4C3OBiKQhB+ymAkZ27lBFDiDe4ik/qk+lh6aLjKkkcH7MFvzwAeLnIUEYK
- v1x1Om4gRXbioizlgoyRPc5x24PGV2cECLzoZuofucUBXAqIaTZJkonCxWiE9vTs8b8/FHefiqf
- wt4uDVDeuxTWdZ84TdhVijuCmWCdgPpFiRr0P7rG6RMe4f6JyfAabXFn/dSNk6QinN9GqhFix02
- yDvnM/Xbl5GN/BxM/W/wgUK01/YFlxmjCinJ0Sra4tSQ+uQeg3SBZmIa9POaKadFTYRDHsNMH4b
- bLcBbDNAOE6IlsQa/zPH+FwX3DBb850aio2aAZfOHI3YiMEmTwI7wrr7nU2Dt5gCexFK3KLD/1T
- Tqn/z3Jvczvx2UHkrKQE6UKpuCWkCZndHoneKIMgMaFh7q4l0Pf8beIkR71xTpTcmfdBoW4Rsvq
- cOumFhRcuKSezBKknwbzsTPYRMBZL6dM6/K9kd5eNF3U/YAaXc/OMHvK1ISZa/TJQWksDRZ+xFn
- QuHNTaFuaqEk9Tw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Cc: =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>
+References: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-'MPTCP_PM_NAME' is defined in 'linux/mptcp.h', no need to re-define it.
+Hello,
 
-'MPTCP_PM_EVENTS' is not defined in 'linux/mptcp.h', but
-'MPTCP_PM_EV_GRP_NAME' is, with the same value. We can then use the
-latter, and drop the other one.
+On 16/08/2024 13:01, Matthieu Baerts (NGI0) wrote:
+> Even more fixes for the in-kernel PM :)
+> 
+> There are a few Squash-to patches fist:
+> 
+> - a partial revert for a previous Squash-to patch: probably fine not to
+>   block the send of the original patch then.
+> 
+> - improve code coverage
+> 
+> - use the right ID with __mark_subflow_endp_available()
+> 
+> - small fix for the fullmesh case when re-adding the ID 0 endpoint
+> 
+> - set the ID for __mark_subflow_endp_available()
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/pm_nl_ctl.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+As discussed on IRC with Mat, I just applied 3 of these Squash-to
+patches, to be able to send some patches upstream:
 
-diff --git a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-index 7ad5a59adff2..994a556f46c1 100644
---- a/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-+++ b/tools/testing/selftests/net/mptcp/pm_nl_ctl.c
-@@ -19,12 +19,6 @@
- 
- #include "linux/mptcp.h"
- 
--#ifndef MPTCP_PM_NAME
--#define MPTCP_PM_NAME		"mptcp_pm"
--#endif
--#ifndef MPTCP_PM_EVENTS
--#define MPTCP_PM_EVENTS		"mptcp_pm_events"
--#endif
- #ifndef IPPROTO_MPTCP
- #define IPPROTO_MPTCP 262
- #endif
-@@ -116,7 +110,7 @@ static int capture_events(int fd, int event_group)
- 
- 	if (setsockopt(fd, SOL_NETLINK, NETLINK_ADD_MEMBERSHIP,
- 		       &event_group, sizeof(event_group)) < 0)
--		error(1, errno, "could not join the " MPTCP_PM_EVENTS " mcast group");
-+		error(1, errno, "could not join the " MPTCP_PM_EV_GRP_NAME " mcast group");
- 
- 	do {
- 		FD_ZERO(&rfds);
-@@ -288,7 +282,7 @@ static int genl_parse_getfamily(struct nlmsghdr *nlh, int *pm_family,
- 					if (grp->rta_type == CTRL_ATTR_MCAST_GRP_ID)
- 						*events_mcast_grp = *(__u32 *)RTA_DATA(grp);
- 					else if (grp->rta_type == CTRL_ATTR_MCAST_GRP_NAME &&
--						 !strcmp(RTA_DATA(grp), MPTCP_PM_EVENTS))
-+						 !strcmp(RTA_DATA(grp), MPTCP_PM_EV_GRP_NAME))
- 						got_events_grp = 1;
- 
- 					grp = RTA_NEXT(grp, grp_len);
+New patches for t/upstream-net and t/upstream:
+- 5bc9b44ceee6: "squashed" patch 1/12 in "mptcp: pm: re-using ID of
+unused removed ADD_ADDR"
+- cdf9299d9049: "squashed" patch 3/12 in "mptcp: pm: only mark 'subflow'
+endp as available"
+- 09ed0d2ad732: "squashed" patch 5/12 in "mptcp: pm: fix RM_ADDR ID for
+the initial subflow"
+- Results: 2fda2724156a..1abc61ec2c0d (export-net)
+- Results: a3cc6d5a9b3f..fa810ad2128f (export)
 
----
-base-commit: a3cc6d5a9b3f3ccf7a368b21fb739163771cdfc7
-change-id: 20240819-mptcp-pm-events-f9abf8c594cb
+Tests are now in progress:
 
-Best regards,
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/d7dd870a1134787d390aa69db7ced0885136a864/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4fc5ed8e59b495fb79d651028681d4eca5354284/checks
+
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
