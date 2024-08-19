@@ -1,120 +1,133 @@
-Received: from mail-pl1-f180.google.com (mail-pl1-f180.google.com [209.85.214.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743DC188CDF
-	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 17:13:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B30B928F3;
+	Mon, 19 Aug 2024 19:45:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724087618; cv=none; b=Vg5pCrVxfuHWJIrA4+z1uzajF6Rhiv+9HQlDyNBgjFrgyFsUQOxNOGKgXROYR9ArIGEWWlPXrxmI1S2hd1TtC4iXrqZZ0ogHeiwEKm7xpj4Nz5tGW6G73KHx7LgrQIttWj6yNlYVS8YJiJc/f65ZS9/FCYYqLWvi6S4ueIluZJ0=
+	t=1724096726; cv=none; b=UXa0qDV34Ira0XX2gfsups8h62m2Nc82yZbaQ+9WmmZ/DGX5lJ9GjrEfCkEWyITrEmZC1wGEe0zhLgiwPQEUlQPYbrpz9e63z3SwdXp99J74jrnDD6hLvbfivXA2wiMqHk0I7dWPZk0ectNo2EKxoaTLb6nQcdFSxX8op/y7OIo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724087618; c=relaxed/simple;
-	bh=bR6t6azTF6Zj+hUvWsKgiLCBQ/Lre+fikTL5l5PUhpE=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SuvkPPB5aoJ8aomnGEiOngXGyzKGV/d3aJjAgnScK0DDhpKrsQpoip4uVl2tYRw1t47BMHiSHmcCflyk0fSVmLtT4Wo2hW48ycnCwmeiU/lMMeFKu9pPNZuhStLjAQDl3dOH3oEaq/BKyYsTUN+0lKRz04pR84JzobLZZIEHgRs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=O4uGZgDN; arc=none smtp.client-ip=209.85.214.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1724096726; c=relaxed/simple;
+	bh=rxZqESM+eUB7EBEwECl45DgTGVkm6axYqGu1hueOi3k=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ULp3/ETAFOnieizY51HkybI05+cHaIH9Cku8wdTExy/SeR/is6bxoSe5Wvu7e+sxeH4G8EfDO0FyTzvFtOTu+qkqS/oZK2ZE7EkuUDekN0a6MIP6XGXVQ4/NWg0YFWitOjQ955M3kueYnBOgFtUFmZHVKZYybGfybUfqNo/sCLc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q8imgfX4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="O4uGZgDN"
-Received: by mail-pl1-f180.google.com with SMTP id d9443c01a7336-2023dd9b86aso9097985ad.1
-        for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 10:13:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1724087617; x=1724692417; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qYpAD3pIWA9uufJX7Wfqkox0QdKAlwdsr3j5aFMYTBY=;
-        b=O4uGZgDNF4PmUV4N4LtvqYlpcLuAQYenA6pY5JQgpyLptF5+xVXn2ysN9yrFtXoqkd
-         1N77Ruw5H6MZ/30I2/f59NXppyjqhi1wxX2DAU4FmHLteTDlDMTqBhFlS1Z2sYO43BBi
-         46fxziBPDvIDmG8TSd4OySfx4Eh9LEKeUutqDDZ0iW7OJcg1ecR+5JCl6UGlv5a52K0G
-         81UFIHBWqB5IO1WIfbjsUOhJ2gt0HKNl3xsnLX0IfxbmgZcrNh5ZzyTXmPzRfdDEOaNo
-         RVUNmm1aTO1T7WASyhIchgWxQA6loGYXKx4zzl2D3sF2DjWsY0y1PTS+u0FwnJ8UBXeX
-         cz9Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1724087617; x=1724692417;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qYpAD3pIWA9uufJX7Wfqkox0QdKAlwdsr3j5aFMYTBY=;
-        b=QgdX1jfziO07hhz3qsSKAHp+4kAi99kzyfvNq2z42sDQ8+UxxIcHa9eXjQxFcOk83t
-         75WYtG3DeYD/9IZ9LJXbXOFe7gwOqEhXfwgdnEkch9xHhgTn9UBhUTxMoovl+EN5xXTq
-         9EE/Tjph0IBvcoYd8vBv8uCAjp2zBOpPjGkCyt2F+4GgPVOSyLo3VojtGbiPGV5gxp81
-         OMrvmS4kyD5P3FF2DPXsHsQNSYn5+6cAY2tLHDCki02j3vC3wfdage8LXB72A3lc3Gz7
-         9knD2BgAST+Cq7WRrfpxCl1htv2lpGLhOZhqFQ6tswjuLe3Ln+Phs61YXVihdcLs4R77
-         v0iA==
-X-Gm-Message-State: AOJu0YxzrttfLQTw/AWN2Hgk88VJXSg3IZlvT2mMhS9qMFcNJdUQLcxU
-	8RM5TrgYMwa9c56wMjRsNPsEwN6dvs05QNqObg00g4PJrcIpBwPN0UkR
-X-Google-Smtp-Source: AGHT+IHMpxzNFOeiS1ywt/Wb4TDy4fwp7I21nwrpyPreYb0e0W0NIGgdzTCJHu7sATS4KA6/SiUw+Q==
-X-Received: by 2002:a17:902:d4cd:b0:1fd:ae10:722b with SMTP id d9443c01a7336-2020407d87emr94172395ad.63.1724087616586;
-        Mon, 19 Aug 2024 10:13:36 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.38.243])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-201f02fb465sm64642195ad.51.2024.08.19.10.13.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 19 Aug 2024 10:13:36 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
-References: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: remove
- re-definition
-Message-ID: <bca0df30-3a8f-86a0-207e-cfd53eef2637@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 19 Aug 2024 17:13:35 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q8imgfX4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2248C32782;
+	Mon, 19 Aug 2024 19:45:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724096726;
+	bh=rxZqESM+eUB7EBEwECl45DgTGVkm6axYqGu1hueOi3k=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Q8imgfX4tWt0Am2fcYPQDZQDcXPfAqjIMEMTeP3vEMSe+I48OZQ+0636BAbr1rpoR
+	 OrPhUmAAJBXJIjnaTJW6fr9cTOIHE3puqIhjflPX0n2URSKycxUPlrV02KzO3WzqDv
+	 ZQFGXw3AfZ11AoKrJIjYhadbthcMneP/XH9QZUCTMIEK1HeJTqVH6GujeI3ENApz96
+	 MaFoBlQgV5xdL+BFAsSkeO4s762CYXAHwS4q92DYZh3OEk4ETH22xaNzrbkCYYmSKZ
+	 o1tK9wsVMaq/rATiyQZxI+CYM90jsEPn5h/fLLSMOAii0xmcmNrgBFiLFsQxLcozxE
+	 Lzdmf/lcqOv7Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 00/14] mptcp: pm: fix IDs not being reusable
+Date: Mon, 19 Aug 2024 21:45:18 +0200
+Message-Id: <20240819-net-mptcp-pm-reusing-id-v1-0-38035d40de5b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAM6gw2YC/x2MwQqDMBAFf0X23IUYion9ldKD0dd0D8aQqBTEf
+ 3fxODAzB1UUQaVXc1DBLlWWpNA+Ghp/Q4pgmZTJGvs0vu05YeU5r2PmPHPBViVFdRjBeG9dcAE
+ daZ0LvvK/z2/SiD7neQHMpnhxbgAAAA==
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2921; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=rxZqESM+eUB7EBEwECl45DgTGVkm6axYqGu1hueOi3k=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmw6DShCkwBCwPsrJVDaJvEoQKj7WScMrjECzPx
+ fIdApAUFeiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZsOg0gAKCRD2t4JPQmmg
+ c3bvEADbcGE+bC1WIf8Jqlxgk1takIjIZGTB3mULFhv9P0Mr0uK3FclMmHKiui4wFIZBNHjxzWz
+ y/to1EHPzGK2eFe43EaleSE/OEjsHMfxXrD9TcDQBQ+SFI5xNgIT9Q0S5gu3OcaipqRji2Z1S6H
+ 1DsSYbtV6/1TgQTyK6MlWLsmjSsGTKhhgEdInvOenGu6z+ALsYKoAHqeDIMA1OExxaYDZi4p632
+ xR6DInNq9BmIowXTxaZLZjPJMTT8f0f6SybBUx6HcCttW9cr60Rfeolv1wnwpZIiuOVeHbvzZ8i
+ Bqtck2b8ViW9dgMDJbF8TL+ChrvnO1oGbMeT8c1c0y7a7HQZ8n3Q8dCcmcSRqZaMmSmQqJgBbci
+ LeqO1wMg1e1XmxjcBDL0IA4l0oEDnhhnrywQTDsiNwmmSW/ws77AuNYJN815oHz2U0wu6cOXIcc
+ 4s/avXQcmwDGZLDzqjoV2clt3edhoPVqjegjFahfn4Ua6Yy3nJXpXhanX2hY8yFGbHz/DdaqN6O
+ g+6URHda6DoJ71oyeqTde7O7Az4BjANkB9M8IOSlnojxcQdndB6wMFzhUuUdMS2riBxfWM9d5mh
+ loWdoTR1bDIwmUqNkrn7lJ6pnxPJyuV2hs1edGIgHl2ekNOIDf6VjovOlK+MrLbbv1H9s0IQMJ/
+ avD/dqhgMWeDisg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Here are more fixes for the MPTCP in-kernel path-manager. In this
+series, the fixes are around the endpoint IDs not being reusable for
+on-going connections when re-creating endpoints with previously used IDs.
 
-Thank you for your modifications, that's great!
+- Patch 1 fixes this case for endpoints being used to send ADD_ADDR.
+  Patch 2 validates this fix. The issue is present since v5.10.
 
-Our CI did some validations and here is its report:
+- Patch 3 fixes this case for endpoints being used to establish new
+  subflows. Patch 4 validates this fix. The issue is present since v5.10.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Critical: Global Timeout =E2=9D=8C
-- KVM Validation: btf (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/10454345821
+- Patch 5 fixes this case when all endpoints are flushed. Patch 6
+  validates this fix. The issue is present since v5.13.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/d1fc17f8aaea
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D880916
+- Patch 7 removes a helper that is confusing, and introduced in v5.10.
+  It helps simplifying the next patches.
 
+- Patch 8 makes sure a 'subflow' counter is only decremented when
+  removing a 'subflow' endpoint. Can be backported up to v5.13.
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
+- Patch 9 is similar, but for a 'signal' counter. Can be backported up
+  to v5.10.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+- Patch 10 checks the last max accepted ADD_ADDR limit before accepting
+  new ADD_ADDR. For v5.10 as well.
 
-For more details:
+- Patch 11 removes a wrong restriction for the userspace PM, added
+  during a refactoring in v6.5.
 
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
+- Patch 12 makes sure the fullmesh mode sets the ID 0 when a new subflow
+  using the source address of the initial subflow is created. Patch 13
+  covers this case. This issue is present since v5.15.
 
+- Patch 14 avoid possible UaF when selecting an address from the
+  endpoints list.
 
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (14):
+      mptcp: pm: re-using ID of unused removed ADD_ADDR
+      selftests: mptcp: join: check re-using ID of unused ADD_ADDR
+      mptcp: pm: re-using ID of unused removed subflows
+      selftests: mptcp: join: check re-using ID of closed subflow
+      mptcp: pm: re-using ID of unused flushed subflows
+      selftests: mptcp: join: test for flush/re-add endpoints
+      mptcp: pm: remove mptcp_pm_remove_subflow()
+      mptcp: pm: only mark 'subflow' endp as available
+      mptcp: pm: only decrement add_addr_accepted for MPJ req
+      mptcp: pm: check add_addr_accept_max before accepting new ADD_ADDR
+      mptcp: pm: only in-kernel cannot have entries with ID 0
+      mptcp: pm: fullmesh: select the right ID later
+      selftests: mptcp: join: validate fullmesh endp on 1st sf
+      mptcp: pm: avoid possible UaF when selecting endp
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+ net/mptcp/pm.c                                  |  13 ---
+ net/mptcp/pm_netlink.c                          | 142 ++++++++++++++++--------
+ net/mptcp/protocol.h                            |   3 -
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |  76 +++++++++++--
+ 4 files changed, 160 insertions(+), 74 deletions(-)
+---
+base-commit: 565d121b69980637f040eb4d84289869cdaabedf
+change-id: 20240819-net-mptcp-pm-reusing-id-eb08827b7be6
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
