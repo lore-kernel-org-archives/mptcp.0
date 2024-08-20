@@ -1,106 +1,75 @@
-Received: from out-178.mta0.migadu.com (out-178.mta0.migadu.com [91.218.175.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BF0B1DF666
-	for <mptcp@lists.linux.dev>; Mon, 19 Aug 2024 23:28:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F91822615;
+	Tue, 20 Aug 2024 01:00:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724110130; cv=none; b=sOXrjhqaNBoP9rzkevgeqbNYY/3Qz/86sf04V4MJxryO2P8emEONE4lwl6y8DiA6t5X84PkxvyKf8tFeUt77euylomI4HbsVZEpPlQZ37azbl3jfIH8CEVMOSo2No8/YIa8QqKo5hDSWKdEnFhkMGX/8kqt4KZ84mgFn2ueikn8=
+	t=1724115639; cv=none; b=XtKFIg0d1bXtu0mTodbey3yWGX9IFMuOvHeX36MoYyUpNo9ELGjuOJnyc/f5IXSiU/xhb9mF5pgNMa6wVccsU1UJI33orT/Z9nkioqV0W0K8hTdMOHLzN4X3fgshp4cCE0XFhskfmGRDhHHNSJHr2MUfuxnoiA9OUlDp/Gg/foo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724110130; c=relaxed/simple;
-	bh=m7kxeGPfLbThsj9r9vGfFq8j8982Mb9ShTtJgvz8zDA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OzLBnuSY9kKVcyh5G+xvkTrFnzQTDLmeE2F7mr4pC3CKODX4xR31hKUGpr2AWgU2g8XXjGCGX9gKwV+X8ml24ZV9hikjppsqk4KsBxOxUSrUCb7Mi26SLY+BLwC/rmWCaBomHR5BimKjwTMYy00k2DzGNVoSa8VqaFumTzjFNtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=PQtBKgj6; arc=none smtp.client-ip=91.218.175.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1724115639; c=relaxed/simple;
+	bh=VlvfzE9Dh+iO0kVgPewf7MSEEY3t7u4dhTPvVmxwLW0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=UKk92hhbhpx6yL5TRdzWujMcK/w2Yyyxb5jJfxFE8p8UbX65/Taii6z3v8c1dk/ZVx4y/hYm5rhZtRYBP/Ka6vPqA41eku5wwbmDNF86+sTJC+HA/DNHj44Oqjy0AMRqs/88QwfmiGlr06tpxZug7W92gLTqinq/ihbduaishwI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZqa41/l; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="PQtBKgj6"
-Message-ID: <40a2828d-1881-416f-94ad-595b85b8dd84@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1724110126;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0P27pgkkVQx3FMDv0ADp2wY6mPd7FvC3Vh5d2lNdR40=;
-	b=PQtBKgj6/d6qzSFWj22L/PnmEYDSRKUNKqyfNnVrckfqAzgKasVutHl2ip4seg2YTLo67L
-	zMImtrG2jDZn2/p3QaXhrMSFBASMFfvKZeaAgt57o0nH2Q79j679G34JZOyEyAJrpyZ3Mh
-	mrjKynMgafABPD6UojuKc4gb0xTfFnM=
-Date: Mon, 19 Aug 2024 16:28:37 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZqa41/l"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 019F7C4AF09;
+	Tue, 20 Aug 2024 01:00:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724115639;
+	bh=VlvfzE9Dh+iO0kVgPewf7MSEEY3t7u4dhTPvVmxwLW0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=LZqa41/lTeuyM80gVKw469o+4LAgnsBo3zUPG+jPwhJCyt9zfifiuvbi2G4iyi/l9
+	 12Uj7Npxz4jHdZrqt0zGuQHvZ58clgC2A8XvS2TZIxasils9dsX8oL9cO1L9fbam9y
+	 X72xr+O+ursKf5V2izvd+vc34Rj43uaSwonRBSlbzydElgJY87MWDC/GQ8YEYE9HaM
+	 MVLRF3DqhHCRXShbStWeNdnFL3LcP0ZnMdZ4K2zvl3zJgL1JGV4LbYU0LEZahrMRGq
+	 TjApZkrBV4UZbgWdNDR6BYvkdwBB53j5oXB+w/G8uQBcjkw3OFi0zNtPFeihUNPQus
+	 ukzFW0lBE7qsQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF123823271;
+	Tue, 20 Aug 2024 01:00:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next v4 2/2] selftests/bpf: Add mptcp subflow subtest
-To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Mykola Lysenko <mykolal@fb.com>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Daniel Xu <dxu@dxuuu.xyz>, Manu Bretelle <chantra@meta.com>
-References: <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-0-2b4ca6994993@kernel.org>
- <20240805-upstream-bpf-next-20240506-mptcp-subflow-test-v4-2-2b4ca6994993@kernel.org>
- <2136317a-3e95-4993-b2fc-1f3b2c28dbdc@linux.dev>
- <8a2ff1bd-52dc-421d-87b7-fc2f56e81da2@kernel.org>
- <716cbd56-4a44-4451-a6f3-5bacef3e0729@linux.dev>
- <db295f729981cd0eaebb93c5939b515f50882c11.camel@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <db295f729981cd0eaebb93c5939b515f50882c11.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH -next] mptcp: Remove unused declaration mptcp_sockopt_sync()
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172411563825.698489.16044829996229738152.git-patchwork-notify@kernel.org>
+Date: Tue, 20 Aug 2024 01:00:38 +0000
+References: <20240816100404.879598-1-yuehaibing@huawei.com>
+In-Reply-To: <20240816100404.879598-1-yuehaibing@huawei.com>
+To: Yue Haibing <yuehaibing@huawei.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
 
-On 8/17/24 7:13 PM, Geliang Tang wrote:
->> Take a look at a recent example [0]. The mptcp test is under a cgroup
->> already
->> and has the cgroup setup. An extra "cgroup/getsockopt" prog should be
->> enough.
->> That prog can walk the msk->conn_list and use bpf_rdonly_cast (or the
- >> bpf_core_cast macro in libbpf) to cast a pointer to tcp_sock for
+Hello:
 
-[ ... ]
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-> SEC("cgroup/getsockopt")
-> int _getsockopt(struct bpf_sockopt *ctx)
-> {
->          struct mptcp_sock *msk = bpf_core_cast(ctx->sk, struct
-> mptcp_sock);
->          struct mptcp_subflow_context *subflow;
->          __u32 token = 0;
+On Fri, 16 Aug 2024 18:04:04 +0800 you wrote:
+> Commit a1ab24e5fc4a ("mptcp: consolidate sockopt synchronization")
+> removed the implementation but leave declaration.
 > 
->          if (!msk || ctx->level != SOL_TCP ||
-> 			ctx->optname != TCP_CONGESTION)
->                  return 1;
-> 
->          subflow = list_first_entry(&msk->conn_list,
-> 			struct mptcp_subflow_context, node);
->          token = subflow->token;
->          bpf_trace_printk(fmt, sizeof(fmt), msk, token);
-> 
->          return 1;
-> }
-> 
-> And got some access errors:
-> 
-> ; token = subflow->token; @ mptcp_subflow.c:92
-> 13: (61) r4 = *(u32 *)(r1 +524)
-> access beyond struct list_head at off 524 size 4
+> Signed-off-by: Yue Haibing <yuehaibing@huawei.com>
+> ---
+>  net/mptcp/protocol.h | 1 -
+>  1 file changed, 1 deletion(-)
 
-Similar to your bpf_core_cast() usage earlier that casts a sock ptr to 
-mptcp_sock ptr. r1 is in list_head ptr type. It needs to cast to 
-mptcp_subflow_context ptr.
+Here is the summary with links:
+  - [-next] mptcp: Remove unused declaration mptcp_sockopt_sync()
+    https://git.kernel.org/netdev/net-next/c/af3dc0ad3167
 
-The same cast to tcp_sock is needed when you try to get the tcp_sock ptr from 
-subflow->tcp_sock which is in "struct sock *" type in the kernel instead of 
-"struct tcp_sock *".
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
