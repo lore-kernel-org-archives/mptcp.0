@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 743D61F2FF7
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 09:37:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6911B81BF
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724233043; cv=none; b=UBojlSkJQgO5GKgx0pA4x5G+arJxa7VjRehDh7JAZUKwCRJucWce81jAYKGDaw7Mf608t5c5UZcsh8VHUo1HHQcN+2B1QEi8+8WB8EtU3R++mJY47wIrcTNvTFO/C49Foy3YlbwiFBscn+SGypFCbgs3LtW2CiN/EInwG1XYSJs=
+	t=1724234772; cv=none; b=JTqJhhiTwwS3h6l6EZ9cC9bF7vY9hAkSEtswM2h8oj2YBwHPsEmWzcoQwG4zj98+cBH/pP/z+CsVmhJHeaKZYtCdpWaW6+2XC5o+v81NYCRUiD8x/g/fhmqhv0RTPzgZgEBG6cyujdDjPPU2bA/X4RjyjmTrR7pK5bWGio6vMFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724233043; c=relaxed/simple;
-	bh=R49RCNwJPKJF531IpdU4UAgSJskXC7nlU57G5tJOceo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sKZevjEd1aBT86e8UJSoMd2GtCUUx00QBxyZYik2HM9ANPawzmrqyGWm+QZh39jRXOL8s78IICYbuS7DpFGAoBtoNlzclJPxgXWfWOO7yk7lsBGqGLfw1yzMSVNNTaKr1OVUSP5Q4qGIuvNhquGLbD7ff7yZ5zwSmuF8xikpqCw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fWIphCaM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724234772; c=relaxed/simple;
+	bh=5kfrU0mTiQEmMd4EHSKBxpu1i7/jcB/3FiAZBrMHD5Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gOnXKmI4eogOeg5XNqOnvXNYuNyAdpVA9IDyTWLIdAYU3k78HW5wCex/9g03rLPHEKKaA7+VB1i5TEnETO3LRDKygFfDxBw+JZQnK5A0cufdXJ/E7SEQGC1m+R4Auigk++SojwRL8aFSYEyiOPCtavDa6S22AtuvzT6qlvKfLyg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlIP8x/5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fWIphCaM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0B42BC32782;
-	Wed, 21 Aug 2024 09:37:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlIP8x/5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4B2C32782;
+	Wed, 21 Aug 2024 10:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724233043;
-	bh=R49RCNwJPKJF531IpdU4UAgSJskXC7nlU57G5tJOceo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fWIphCaMELsRle/jdSyW5HvBHXIwZO2yDfR5uXXaFK4emaqOQFhnjpfn3dMMY2PW6
-	 5x7jpJ5GMiM7FneqOfpam4fXgcUbP/LtibOMGTA9F5hp8pbfTB60rtAQC0/Rt7sdSo
-	 bfHoVZyQF88Tik2fhEvpt99pJ7VItLuhUJ6t/MFTlQTCpLzDzmjsvseyV3yWw72q8U
-	 EOIenf5CmE5G3hJzpy7aq6piIlhnykNPbVjTLTluoCFmUj8Q5mMqFGlu+9sT7o+3/R
-	 s9D6W/u30x1/KEqknfDdp4hX6QmWKx7wxfrnfdeUTfcW8o4kUsRYsTU7lvxlYPDdhs
-	 q2GS8g0yAjJEw==
-Message-ID: <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
-Date: Wed, 21 Aug 2024 11:37:19 +0200
+	s=k20201202; t=1724234772;
+	bh=5kfrU0mTiQEmMd4EHSKBxpu1i7/jcB/3FiAZBrMHD5Q=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=MlIP8x/5Tdg51bc+RvwqnI2qab3sThx9vUsUknhOX1/mfl+IQlg4w/K5b1IiCRCZe
+	 BXicW44hzKHdftrkVMiTW6XWhQt1Lh/J8z8QS9cE2GFxQd7d+/yT6L/+zuuV+VRpDO
+	 qI+4HCkEfNMW2uigSW3UsxGwjTm6rvxrwo5dL1hPSplaNsyLcPiFnF5sE79JbKW3O7
+	 sSFtJ52ZGkZPRvsMayg9VEEuLG6GVkp0jiJS+ITY/089SNg8vOC20KwCdtYGb6r42m
+	 zgVJ89r7wFkMpkaJCkVQ859ncd4+kNVFurlqrDTRmCAElt5k7vyTcbTIiy3ZgqlAMP
+	 NDVWZBJ2CUkIQ==
+Message-ID: <4f77582a-8f3b-411c-b109-0736a55d095d@kernel.org>
+Date: Wed, 21 Aug 2024 12:06:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] selftests/bpf: Add getsockopt to inspect
- mptcp subflow
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
- Martin KaFai Lau <martin.lau@kernel.org>
-References: <cover.1724142917.git.tanggeliang@kylinos.cn>
- <3788544d841aa372a810f2d3dce905612063e872.1724142917.git.tanggeliang@kylinos.cn>
- <407f6a6a-344e-4f12-9293-e43b9a97f8d4@kernel.org>
- <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: remove
+ re-definition
 Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
+ <4c0af275f10d952f052dfdc8d247822a5f6ba1b7.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,246 +86,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
+In-Reply-To: <4c0af275f10d952f052dfdc8d247822a5f6ba1b7.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your reply!
-
-On 21/08/2024 10:00, Geliang Tang wrote:
-> On Tue, 2024-08-20 at 11:48 +0200, Matthieu Baerts wrote:
->> On 20/08/2024 10:44, Geliang Tang wrote:
-
-(...)
-
->>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> index 69fdcb28249d..2178db94f764 100644
->>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>> @@ -383,6 +383,7 @@ static void run_subflow(char *new)
->>>  {
->>>  	int server_fd, client_fd, err;
->>>  	char cc[TCP_CA_NAME_MAX];
->>> +	unsigned int mark;
->>>  	socklen_t len;
->>>  
->>>  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1,
->>> 0);
->>> @@ -407,6 +408,10 @@ static void run_subflow(char *new)
->>>  	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
->>>  	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
->>
->> I guess the next steps is to remove these 'ss_search()', right?
+On 21/08/2024 10:13, Geliang Tang wrote:
+> Hi Matt,
 > 
-> We can keep it for double checks.
-
-I would not mind, even if 'ss | grep' is used in other BPF tests, but I
-understood from Martin he prefers not to depend on external tools as
-much as possible. It should indeed ease the maintenance.
-
->>> +	len = sizeof(mark);
->>> +	err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark,
->>> &len);
->>> +	ASSERT_OK(err, "getsockopt(client_fd, SO_MARK)");
->>> +
->>>  	close(client_fd);
->>>  fail:
->>>  	close(server_fd);
->>> @@ -417,6 +422,7 @@ static void test_subflow(void)
->>>  	int cgroup_fd, prog_fd, err;
->>>  	struct mptcp_subflow *skel;
->>>  	struct nstoken *nstoken;
->>> +	struct bpf_link *link;
->>>  
->>>  	cgroup_fd = test__join_cgroup("/mptcp_subflow");
->>>  	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup:
->>> mptcp_subflow"))
->>> @@ -442,6 +448,10 @@ static void test_subflow(void)
->>>  	if (endpoint_init("subflow") < 0)
->>>  		goto close_netns;
->>>  
->>> +	link = bpf_program__attach_cgroup(skel->progs._getsockopt,
->>> cgroup_fd);
->>> +	if (!ASSERT_OK_PTR(link, "getsockopt prog"))
->>
->> I don't know how it works: is this going to fail if the getsockopt
->> program set 'ctx->retval = -1'?
+> Good catch!
 > 
-> Yes. ASSERT_OK(err, "getsockopt(client_fd, SO_MARK)") will fail if the
-> getsockopt program set 'ctx->retval = -1'.
-
-Good, thank you!
-
->>> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->>> b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->>> index 782f36ed027e..2086170e7379 100644
->>> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->>> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->>> @@ -7,6 +7,32 @@
->>>  
->>>  #define MPTCP_SUBFLOWS_MAX 8
->>>  
->>> +static inline int list_is_head(const struct list_head *list,
->>> +			       const struct list_head *head)
->>> +{
->>> +	return list == head;
->>> +}
->>> +
->>> +#define list_entry(ptr, type,
->>> member)					\
->>> +	container_of(ptr, type, member)
->>> +
->>> +#define list_first_entry(ptr, type,
->>> member)				\
->>> +	list_entry((ptr)->next, type, member)
->>> +
->>> +#define list_next_entry(pos,
->>> member)					\
->>> +	list_entry((pos)->member.next, typeof(*(pos)), member)
->>> +
->>> +#define list_entry_is_head(pos, head,
->>> member)				\
->>> +	list_is_head(&pos->member, (head))
->>> +
->>> +#define list_for_each_entry(pos, head,
->>> member)				\
->>> +	for (pos = list_first_entry(head, typeof(*pos),
->>> member);	\
->>> +	     !list_entry_is_head(pos, head,
->>> member);			\
->>> +	     pos = list_next_entry(pos, member))
->>
->> Out of curiosity, are these generic helpers not defined elsewhere? Is
->> it
->> OK not to use the '_safe' version where the deletion of elements is
->> supported?
+> On Mon, 2024-08-19 at 15:15 +0200, Matthieu Baerts (NGI0) wrote:
+>> 'MPTCP_PM_NAME' is defined in 'linux/mptcp.h', no need to re-define
+>> it.
 > 
-> It's read only in this test, so list_for_each_entry is enough. I added
-> the '_safe' version in v2 too for future use.
+> nit: It's defined in "linux/mptcp_pm.h".
 
-OK! (but I don't think you defined list_for_each_entry_safe(). Or is it
-defined elsewhere?)
+Indeed, it is not directly defined in mptcp.h any more. I updated the
+commit message to say:
 
->>> +
->>> +#define mptcp_for_each_subflow(__msk,
->>> __subflow)			\
->>> +	list_for_each_entry(__subflow, &((__msk)->conn_list),
->>> node)
->>> +
->>>  extern void mptcp_subflow_set_scheduled(struct
->>> mptcp_subflow_context *subflow,
->>>  					bool scheduled) __ksym;
->>>  
->>> diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>> b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>> index bc572e1d6df8..c41418ab8db4 100644
->>> --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>> +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>> @@ -4,6 +4,7 @@
->>>  
->>>  /* vmlinux.h, bpf_helpers.h and other 'define' */
->>>  #include "bpf_tracing_net.h"
->>> +#include "mptcp_bpf.h"
->>>  
->>>  char _license[] SEC("license") = "GPL";
->>>  
->>> @@ -57,3 +58,34 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
->>>  
->>>  	return 1;
->>>  }
->>> +
->>> +SEC("cgroup/getsockopt")
->>> +int _getsockopt(struct bpf_sockopt *ctx)
+  'MPTCP_PM_NAME' is defined in 'linux/mptcp_pm.h', included in
+  'linux/mptcp.h', no need to re-define it.
+
+>> 'MPTCP_PM_EVENTS' is not defined in 'linux/mptcp.h', but
+>> 'MPTCP_PM_EV_GRP_NAME' is, with the same value. We can then use the
+>> latter, and drop the other one.
 >>
->> This name seems too generic while what is done here is specific to
->> the
->> 'subflow' test. Maybe: _check_getsockopt_subflows()?
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Changed it to _getsockopt_subflow in v2.
+> Except for the nit in commit log, LGTM.
 > 
->>
->> (or _check_getsockopt_subflows_mark() and
->> _check_getsockopt_subflow_cc()
->> see below)
->>
->>> +{
->>> +	struct mptcp_sock *msk = bpf_core_cast(ctx->sk, struct
->>> mptcp_sock);
->>
->> What happens if the 'sk' is not an 'msk'?
->> Does it check that the sk is indeed an MPTCP one? (how?)
-> 
-> Also check msk->token in v2.
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Mmh, I'm not sure if this is enough: the offset of 'token' in the msk
-structure could point to something unrelated but non-null in another
-socket structure, or out of bound. I guess BPF is doing extra checks not
-to crash here. But maybe that's OK because it is only reading stuff?
+Thanks! Now in our tree:
 
->>> +	struct mptcp_subflow_context *subflow;
->>> +	int i = 0;
->>> +
->>> +	if (!msk || ctx->level != SOL_SOCKET || ctx->optname !=
->>> SO_MARK)
->>> +		return 1;
->>
->> Would it not be clearer to split the two checks? One dedicated to the
->> mark, when getsockopt(SO_MARK) is used, and one for the CC, when the
->> getsockopt(TCP_CONGESTION) is used? By doing that, we would know
->> which
->> one had an issue, if any, not just "something wrong with
->> getsockopt()"?
-> 
-> Done in v2.
+New patches for t/upstream:
+- 189988891094: selftests: mptcp: pm_nl_ctl: remove re-definition
+- Results: 7aa192fc76f8..a6b7b898cddd (export)
 
-Thanks!
+Tests are now in progress:
 
->>> +
->>> +	mptcp_for_each_subflow(msk, subflow) {
->>
->> (might be better to use this helper in our WIP MPTCP BPF packets
->> scheduler examples, instead of converting them to a fixed array)
-> 
-> Yes, but there are still some access permission issues that need to be
-> resolved.
-
-OK, because structures cannot be modified I suppose.
-
->>
->>> +		struct inet_connection_sock *icsk;
->>> +		struct sock *ssk;
->>> +
->>> +		ssk =
->>> mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
->>> +							   struct
->>> mptcp_subflow_context));
->>> +		icsk = bpf_core_cast(ssk, struct
->>> inet_connection_sock);
->>> +
->>> +		if (ssk->sk_mark != i + 1)
->>> +			ctx->retval = -1;
->>> +		if (ssk->sk_mark == 1 &&
->>> +		    __builtin_memcmp(icsk->icsk_ca_ops->name, cc,
->>> TCP_CA_NAME_MAX))
->>> +			ctx->retval = -1;
->>> +
->>> +		if (i++ >= MPTCP_SUBFLOWS_MAX)
->>> +			break;
->>
->> I guess this part is needed for the verifier, right?
->> Somehow related to "cond_break" explained in this link?
->>
->>   https://lwn.net/Articles/964381/
->>
-> 
-> Change this as "cond_break" in v2.
-
-Note that you could also modify list_for_each_entry() to add this
-'cond_break' (+bpf_experimental.h?), not to have to deal with that each
-time mptcp_for_each_subflow is used.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c790cd57b4dc5ef7425f61df72d0638d604c6f57/checks
 
 Cheers,
 Matt
