@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9291C1581EB
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:22:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B51C1AC9
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:27:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724235720; cv=none; b=KxidMvQxlVD72NGi1UtYDCCsAzxhrg4upKRxXyiHYEQ/dZmwy0r/3k3JF8KFEOpJtAbMKieBvqr5hfTeVD9GpE6oUW+iDFc3gpuX370yETadb+Z5nhvMeiH/IaAbR3hAkCUHusVHpna1wxH9JU///TEJ83N0hPHGih8FDhn9mGI=
+	t=1724236056; cv=none; b=BOm2NYn2zxODb6jxKWCaN4XKGQFcjq/JEVnQDr5UZNZPyI42Q3AQwH2EsEIJUh02PN7qUofQCFbkIwN6kjyhC43pZwqL7NWbH1gtPEa6hhQePsPvl6jnbw5j/VTPEvsB3ccEPKLaSZRhuTYVEimU5fRcY07D4WmGB8+kPfNM4kY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724235720; c=relaxed/simple;
-	bh=htg/6jj62ChUya4MmXleZvXI2ep2fTOFcpZFHEiYNps=;
+	s=arc-20240116; t=1724236056; c=relaxed/simple;
+	bh=T+o7BCKI2mmLMa0FvNnZD7+awc4+aoHt8OHgTfwEUe0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tPWcXHfj73n3OwIXvfL+3Mqr6zPChQmKLUm0QokZKT0uCQsB/PDjOvdTugcTiiv/iN/OYfdCevyMjNjKt/UIMcGDAt+tYjZ3ieVhg/DciXo8PqZGc4tG5wsBiwdtXR7/mWx4q79vBC0164nNr6MsAh7CsooTN+UrSB4VTOIfoMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOMRt+lg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HogJWCilKkDiwX0QoYhaGmWP6gMtUCQlLQm1jduvrL9tXE9xumSoxASjenoxAmSopJzQfj5c1M8WWJ4/2VJGPLavbM2Aq/9qK2SkuUtDZAGMoGrCuRL1rbE0VBe6UElU/uoppxiBiCCfgm/jajJN3D1WZhr1SAjXG6B/7Afctm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsZWEQpA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOMRt+lg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8320FC32782;
-	Wed, 21 Aug 2024 10:21:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsZWEQpA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D06C32782;
+	Wed, 21 Aug 2024 10:27:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724235720;
-	bh=htg/6jj62ChUya4MmXleZvXI2ep2fTOFcpZFHEiYNps=;
+	s=k20201202; t=1724236056;
+	bh=T+o7BCKI2mmLMa0FvNnZD7+awc4+aoHt8OHgTfwEUe0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UOMRt+lgwTF6vnpq5qv1zccLUiC9om1ejdcqhNNtMLO8NHS/0HUjE3dQBUTBxmM1V
-	 CeVok1M7LRd9aeK9I+4136k0FLC25q2G8nJ0L/Qy6duqF0kc0t7eO0Kiafnce4bMJr
-	 T3clPtBwAgbbfRTlqC/giaU24AKYr/wqpk8Ax04xO93rCoRoiiX1j3ucpNQpn7CjKo
-	 2Y/G9HLJxURLIek8RSK3BMF6kTKDQ6aaxUmdAvhUTRZEiW2TVnyxibmGO4aI7Wx8hd
-	 lfaxwTgfjr/YT4GFl2aUF2beT+Mgb344rTDRB4jD43Z1rihiN7G76ppNI/8dkUTOAD
-	 xHbBZyuxnJ/Bg==
-Message-ID: <bd69365e-4108-47c6-a630-8cd1d0a3fa9a@kernel.org>
-Date: Wed, 21 Aug 2024 12:21:57 +0200
+	b=HsZWEQpATbp6H8Y6oG1VJyWwiAZu93+dNTws3gmLMV6X0Ie/oIhFMg8yIwleuacq6
+	 RCqhnrbIi799Up2D7ZNpAAv2ujLgMGWW7PP0L/3Q9p6ax70dyCLH7sIcg0pBMXJyuJ
+	 U9+QzW7KvpktTgplxCBASiDw+2+ej9H6C+n0BPhxtGdh/zOCbU7oC6CLL8EC64p02Y
+	 J77l+br8j8Y3iLZUNDLkSR7BBv+dfk8+Vzbm/EWCqmsQwaohSoIXCruwwPN2bXozVy
+	 aGLKcxf2/8gYDLhUrI//uk4kZj5PPwQCHztm1OvHDRI+Y/riJo0Jl2xWA33cm52zY+
+	 SWbEaDDi3ukUA==
+Message-ID: <c85af4ec-9549-483b-be3d-9773e39d9fdc@kernel.org>
+Date: Wed, 21 Aug 2024 12:27:33 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v7 0/3] mptcp: pm: more fixes around the ID 0
+Subject: Re: [PATCH mptcp-net] mptcp: sched: check both backup in retrans
 Content-Language: en-GB
-To: mptcp@lists.linux.dev
-Cc: Mat Martineau <martineau@kernel.org>
-References: <20240809-mptcp-pm-avail-v7-0-3d0916ba39b4@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240813-mptcp-sched-retrans-bkp-v1-1-78914a88c2c6@kernel.org>
+ <90a11c1b-2d72-6b29-1139-3295f43269d2@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,48 +86,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240809-mptcp-pm-avail-v7-0-3d0916ba39b4@kernel.org>
+In-Reply-To: <90a11c1b-2d72-6b29-1139-3295f43269d2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 09/08/2024 14:37, Matthieu Baerts (NGI0) wrote:
-> The 8 first patches from the previous version have already been applied.
+On 21/08/2024 03:24, Mat Martineau wrote:
+> On Tue, 13 Aug 2024, Matthieu Baerts (NGI0) wrote:
 > 
-> Last fix: the subflow is not closed when receiving a TCP+FIN, when there
-> are other available subflows.
+>> The 'mptcp_subflow_context' structure has two items related to the
+>> backup flags:
+>>
+>> - 'backup': the subflow has been marked as backup by the other peer
+>>
+>> - 'request_bkup': the backup flag has been set by the host
+>>
+>> Looking only at the 'backup' flag can make sense in some cases, but it
+>> is not the behaviour of the default packet scheduler when selecting
+>> paths.
+>>
+>> As explained in the commit b6a66e521a20 ("mptcp: sched: check both
+>> directions for backup"), the packet scheduler should look at both flags,
+>> because that was the behaviour from the beginning: the 'backup' flag was
+>> set by accident instead of the 'request_bkup' one. Now that the latter
+>> has been fixed, get_retrans() needs to be adapted as well.
+>>
+>> Fixes: 3b1d6210a957 ("mptcp: implement and use MPTCP-level
+>> retransmission")
 > 
-> The last patch is not for -next. Something that sounds better to do.
+> I think this should have:
 > 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v7:
-> - See the individual changelog.
-> - Link to v6: https://lore.kernel.org/r/20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org
+> Fixes: b6a66e521a20 ("mptcp: sched: check both directions for backup")
 
-Thank you for the review, and your comment!
+Good idea, I switched to that one when applying the patch.
 
-Now in our tree:
+> and a Cc: stable ?
+
+Yes, I add them when sending patches to netdev.
+
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 New patches for t/upstream-net and t/upstream:
-- 45e7e7bb1d53: mptcp: close subflow when receiving TCP+FIN
-- 4dff13e9b19e: selftests: mptcp: join: cannot rm sf if closed
-- Results: 479b0f0c640c..c025238d573a (export-net)
-- Results: a6b7b898cddd..8d90262870c8 (export)
-
-New patches for t/upstream:
-- cee0b5912a36: mptcp: pm: send ACK on non stale subflows
-- Results: 8d90262870c8..a2eeb886f736 (export)
+- 353d48321ce0: mptcp: sched: check both backup in retrans
+- Results: c025238d573a..76f6fba9ef6b (export-net)
+- Results: a2eeb886f736..80d8c6b850fb (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/e9099bcf17a9d3c1b60dddc620e47c4307b8bb99/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/2e798b8d759eb6a9a1ee14544e625cae61a9cad3/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2c2279cec7af565f971bfe2805b325af05cc6039/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/133016fd5500a67dd98db80bf60e300367431966/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/91a502295edf01f2c23e9f11edad1d7db908d21f/checks
 
 Cheers,
 Matt
