@@ -1,35 +1,56 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-164.mail.qq.com (out203-205-221-164.mail.qq.com [203.205.221.164])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E991322B;
-	Wed, 21 Aug 2024 01:30:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A99B2B9B3
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 02:41:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.164
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724203835; cv=none; b=JWHKZzoIVkmsjxhfI0aykx2F0za6A9I0c/PPot3jumhQpfDHOIojmBR3Z+mVAV6cxY/Tls7YORqCbfPPAaFwcco6b1kWioBaQ9tWyor1OJ1Ud92NZPs/rCg9aoPmK8O6mkQj9/cET56ApA6K8ka576ZLJLjGx/Nm7v/SZAPAUe0=
+	t=1724208071; cv=none; b=H91LDZwOLYFLWLTk+pZcZFW6W1hb31oikilFG3PqBFx7uL6USO240Hw2kgEN3JtYEfBdUh7XjWbLgClPAnEbEx/JhFmUHfmV7zFIrZbhATlGU83CrpxO8yfurmYtOY7OcNP4Dk79UtrwGst9KYgsmVGRv7dunHVasSVAdhHVFWI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724203835; c=relaxed/simple;
-	bh=IgbRt2X/eqF3ZxBx7aI8dn140iBIsCi7/UUDBEAx9BU=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Mvr2gji3tCWDEX4y+/tjfgl+6OjWzK+HlsK2SSvhZW2iCPc36bmx90x4OPtzE9IS2OBUiX+Ho6Wor/JpfdfvTtxkpRudxSg/mQaah5wxlBJPIT8DUSEv6/XzLTktb+ZHzT2M7+BqOZ9jQ6+rmjLMszQhNTYCGsEtZwjjx530ogk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B4DDeIsQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724208071; c=relaxed/simple;
+	bh=guD7pSC2rVTGV0QsSkal0xartsx/aFfOmFPOl4SPvZM=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=hpT0MLXKTGDzrvHH1DgVof4+acTSuap4SwGL7T43v12LbQdUPsqj7A0m73iLTcFwzSd3/9YluIaKTf3xInXojV/ixV2zeuFS16Qs26NemOfWGkBLgtmEWxEfrv3DiqXosLVjfPvDx1o2AfTiYmDNvOecjpmGQ35sPEh6MexfGuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=V0FhZ+cH; arc=none smtp.client-ip=203.205.221.164
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B4DDeIsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DCB0C4AF0B;
-	Wed, 21 Aug 2024 01:30:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724203834;
-	bh=IgbRt2X/eqF3ZxBx7aI8dn140iBIsCi7/UUDBEAx9BU=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=B4DDeIsQgOkIvmVJvjgYpPgOiydDTojo+sl4F7YuyRShRCvZZCLXApGrOcxMIfh0u
-	 /9pK1UY0HYaQu9y6qmHt9sYN1yLYsR3g5HTtUx/RT18/ZcAWXe8m6kebL7d5IpdWvh
-	 p1CcGCg5m6SgFtqteIVwhTyUeVZi7WNCppouekDnOnWrebGs/hQOstF6OMmjKyRPWn
-	 YtWBa2r2DNiOp+DLNR5IZYpSs4A6SCCBhDbJAv+ro/JpcZJGom8BH9YwK6HG7LjplY
-	 SetPtlMKaO+pOPhLovv2wFyGoh3I4rTg206X1BmllHmg2y82XAX8GErsedA44gHsdi
-	 YJ1UcDjJ1PmTA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33FAE3804CB6;
-	Wed, 21 Aug 2024 01:30:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="V0FhZ+cH"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1724207759;
+	bh=hBaHG4goidSZc6tQBkSq1IMT7DA0lF+UvmNdzfVNKFQ=;
+	h=From:To:Cc:Subject:Date;
+	b=V0FhZ+cHdZ2xqEX2bVCASDL/VojMbXsKStEK9ZhUjO+pTYwRTBOP9Mih+NFbZxVeK
+	 YAwJWPzs2RpOU4PeZAqrqpSyONTi7ZUImCGlqx29AsnlgOEpA6VysuXWmgjVRPMsCC
+	 vwloEsP1uDCN/gh/QK7PtC2rCMqnkKTJKpOuGisU=
+Received: from yangang-TM1701.. ([39.156.73.13])
+	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
+	id 8F9AE600; Wed, 21 Aug 2024 10:35:57 +0800
+X-QQ-mid: xmsmtpt1724207757tpawc7ehg
+Message-ID: <tencent_48C13AF02833651C8CEA9329191D76628207@qq.com>
+X-QQ-XMAILINFO: MyIXMys/8kCtOucJUIlHDMOgwBdJuBwhNDzUR1OO+wkqkZYELoRzVXsSRcL1yG
+	 wk+F4QP3jrzfOvxenD/Vi4fGdKu1ZvJSTKFx+Xe07IXDr2AUqzmwXqkIMDua2sHBaHmXsYebvapU
+	 UzUrsZntR/4xPS6Fe0OG1f5AYJLQP9+Zh+twuFgTaQCyJ5aoxkD9c2rBdUz0r8vFlYgIb9XIrWvK
+	 SvRaBzweCJsbcCHXnnm4fdacn6XZRMusXt3HF3KGIHek8UJPGJ6SLL6MjusMaIkBd9vL9H34zM4t
+	 Lhxp9g2AAdbjaEsi+Cyjacg/5ks4EClR/aHxY4O/ZE7kgHcGHxcV0/ynUcLeh6Elv8kzrgQMc1HU
+	 Bz9vO7CfCrjse3MduxKhxr6eqQ2sh8J90bgyJ7HeXc29c/OXreMFR8+cJgNsADSUNoxbhHzbgSxw
+	 wWClqdDNzVxRFEfwbhpfyVCCKGY/tHVHZvmI4KhuWuuFfTB5S187M8eMC+K90cHY0lUQrtH25lbs
+	 bhtu1OfAQ0C8coo3laagch5zZwRS3g4plh848lsQ0yv8g4zFW09GC0Ak6GHpOUsZLDkZKk6FeVCt
+	 ZrnPUzRfVB1OzgymmNsBj77AldotG6fSPXa8asFl8hVlYkSpYLZpziRR73HUACIBfVBJ1daE+Ihn
+	 MsiNMpgVOnIXjSsRr2+/QR0XgsSWbQlwWN6qTqtXMNIrFJiIAoozsgJ6aNFH/WnKnBw0igtK+kzO
+	 ent6FD/46g1/wt7PSn2taBcXUog+om2txTKUB2EKl9PTqZEsZraYJY594CSBjGl0JQYRf3nUSH6q
+	 Ac3tkcsINET5cZbRq3Z+cVD6YJRvbrLWEx3zDKadEcd4Cqd1UwgNxnkPKbL0ULmBAUfM2Q/BLDvW
+	 7k98N+ksiSzHMWzNiIBlbBnqvUHalSiQ3D5NDdTV7Pu0TfsWXXE3CYM3rcAcPmfBKT/oNNoXhpBe
+	 IXM1vxvJdFKpw3FUrQ7uRR9NuSdmSY9aUFL21ua0F7rPt9L6FMQzaxuCxe1pGZ80OdHGZVMK8DWe
+	 N9BssPEruu+w//A2/j28RXWRM2EoGPncrEafEpew==
+X-QQ-XMRINFO: MPJ6Tf5t3I/ycC2BItcBVIA=
+From: Gang Yan <gang_yan@foxmail.com>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH mptcp-next] bpf: Allow error injection for update_socket_protocol
+Date: Wed, 21 Aug 2024 10:35:52 +0800
+X-OQ-MSGID: <20240821023552.606913-1-gang_yan@foxmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,67 +58,69 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 00/14] mptcp: pm: fix IDs not being reusable
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172420383401.1291081.11218145851509520450.git-patchwork-notify@kernel.org>
-Date: Wed, 21 Aug 2024 01:30:34 +0000
-References: <20240819-net-mptcp-pm-reusing-id-v1-0-38035d40de5b@kernel.org>
-In-Reply-To: <20240819-net-mptcp-pm-reusing-id-v1-0-38035d40de5b@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org
 
-Hello:
+From: Gang Yan <yangang@kylinos.cn>
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+The "update_socket_protocol" interface is designed to empower user space
+with the capability to customize and modify socket protocols leveraging
+BPF methods. Currently, it has only granted the fmod_ret permission,
+allowing for modifications to return values. We are extending the
+permissions further by 'ALLOW_ERROR_INJECTION', thereby facilitating
+the development of user-space programs with enhanced flexibility and
+convenience.
 
-On Mon, 19 Aug 2024 21:45:18 +0200 you wrote:
-> Here are more fixes for the MPTCP in-kernel path-manager. In this
-> series, the fixes are around the endpoint IDs not being reusable for
-> on-going connections when re-creating endpoints with previously used IDs.
-> 
-> - Patch 1 fixes this case for endpoints being used to send ADD_ADDR.
->   Patch 2 validates this fix. The issue is present since v5.10.
-> 
-> [...]
+When we attempt to modify the return value of "update_socket_protocol"
+to "IPPROTO_MPTCP" using the below code based on the BCC tool:
 
-Here is the summary with links:
-  - [net,01/14] mptcp: pm: re-using ID of unused removed ADD_ADDR
-    https://git.kernel.org/netdev/net/c/e255683c06df
-  - [net,02/14] selftests: mptcp: join: check re-using ID of unused ADD_ADDR
-    https://git.kernel.org/netdev/net/c/a13d5aad4dd9
-  - [net,03/14] mptcp: pm: re-using ID of unused removed subflows
-    https://git.kernel.org/netdev/net/c/edd8b5d868a4
-  - [net,04/14] selftests: mptcp: join: check re-using ID of closed subflow
-    https://git.kernel.org/netdev/net/c/65fb58afa341
-  - [net,05/14] mptcp: pm: re-using ID of unused flushed subflows
-    https://git.kernel.org/netdev/net/c/ef34a6ea0cab
-  - [net,06/14] selftests: mptcp: join: test for flush/re-add endpoints
-    https://git.kernel.org/netdev/net/c/e06959e9eebd
-  - [net,07/14] mptcp: pm: remove mptcp_pm_remove_subflow()
-    https://git.kernel.org/netdev/net/c/f448451aa62d
-  - [net,08/14] mptcp: pm: only mark 'subflow' endp as available
-    https://git.kernel.org/netdev/net/c/322ea3778965
-  - [net,09/14] mptcp: pm: only decrement add_addr_accepted for MPJ req
-    https://git.kernel.org/netdev/net/c/1c1f72137598
-  - [net,10/14] mptcp: pm: check add_addr_accept_max before accepting new ADD_ADDR
-    https://git.kernel.org/netdev/net/c/0137a3c7c2ea
-  - [net,11/14] mptcp: pm: only in-kernel cannot have entries with ID 0
-    https://git.kernel.org/netdev/net/c/ca6e55a703ca
-  - [net,12/14] mptcp: pm: fullmesh: select the right ID later
-    https://git.kernel.org/netdev/net/c/09355f7abb9f
-  - [net,13/14] selftests: mptcp: join: validate fullmesh endp on 1st sf
-    https://git.kernel.org/netdev/net/c/4878f9f8421f
-  - [net,14/14] mptcp: pm: avoid possible UaF when selecting endp
-    https://git.kernel.org/netdev/net/c/48e50dcbcbaa
+'''
+int kprobe__update_socket_protocol(void* ctx)
+{
+    ...
+    bpf_override_return(ctx,IPPROTO_MPTCP);
+    ...
+}
+'''
 
-You are awesome, thank you!
+But an error occurs:
+
+'''
+ioctl(PERF_EVENT_IOC_SET_BPF): Invalid argument
+Traceback (most recent call last):
+  File "/media/yangang/work/Code/BCC/test.py", line 27, in <module>
+    b = BPF(text=prog)
+        ^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 487, \
+                  in __init__ self._trace_autoload()
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 1466, \
+                  in _trace_autoload self.attach_kprobe(
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 855,\
+                  in attach_kprobe
+    raise Exception("Failed to attach BPF program %s to kprobe %s"
+Exception: Failed to attach BPF program b'kprobe__update_socket_protocol' \
+  to kprobe b'update_socket_protocol', it's not traceable \
+  (either non-existing, inlined, or marked as "notrace")
+'''
+
+This patch can fix the issue.
+
+Suggested-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ net/socket.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/socket.c b/net/socket.c
+index fcbdd5bc47ac..63ce1caf75eb 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -1695,6 +1695,7 @@ __weak noinline int update_socket_protocol(int family, int type, int protocol)
+ {
+ 	return protocol;
+ }
++ALLOW_ERROR_INJECTION(update_socket_protocol, ERRNO);
+ 
+ __bpf_hook_end();
+ 
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
