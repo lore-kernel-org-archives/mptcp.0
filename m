@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE3B51C1AC9
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:27:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CFD1531E6
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:39:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724236056; cv=none; b=BOm2NYn2zxODb6jxKWCaN4XKGQFcjq/JEVnQDr5UZNZPyI42Q3AQwH2EsEIJUh02PN7qUofQCFbkIwN6kjyhC43pZwqL7NWbH1gtPEa6hhQePsPvl6jnbw5j/VTPEvsB3ccEPKLaSZRhuTYVEimU5fRcY07D4WmGB8+kPfNM4kY=
+	t=1724236747; cv=none; b=ozziaoecTdGV06y5lo8gVLBIvZ0oE2UeePfb0pfiMsES4x7xoEoEtwaCyQYFMYAy5PpIxZaH0LLszmiHUXHslsZqwO70xuQoYaijEvwcTF37qtIDsdKvJJ4hoHMQ/avfb5U1EsWaswrXHwfUTVhPIJD06IgrSURCV4veulD5IYA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724236056; c=relaxed/simple;
-	bh=T+o7BCKI2mmLMa0FvNnZD7+awc4+aoHt8OHgTfwEUe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HogJWCilKkDiwX0QoYhaGmWP6gMtUCQlLQm1jduvrL9tXE9xumSoxASjenoxAmSopJzQfj5c1M8WWJ4/2VJGPLavbM2Aq/9qK2SkuUtDZAGMoGrCuRL1rbE0VBe6UElU/uoppxiBiCCfgm/jajJN3D1WZhr1SAjXG6B/7Afctm0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsZWEQpA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724236747; c=relaxed/simple;
+	bh=xxH0LuNsB+DyKoGDFDWxXj1peRI4e4bojJNDlG3uPjo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RrM83J2HYrFbu6x9ejAdt3M8RpvEpOo5sPaePO3f0mruZ4DjtBHUHDGh7YSwqmXhp96i2/8UFHZvx52+DhXvamXXXuzynuzYuUzAG8LQf7BYaF9muNMSbvp9LaICfE/IXh2so0tIdEJvwDQ/NxIPO+TnqGPQUI1g5e4NEjJming=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2sDajcX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsZWEQpA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D06C32782;
-	Wed, 21 Aug 2024 10:27:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2sDajcX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71EEC32782;
+	Wed, 21 Aug 2024 10:39:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724236056;
-	bh=T+o7BCKI2mmLMa0FvNnZD7+awc4+aoHt8OHgTfwEUe0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HsZWEQpATbp6H8Y6oG1VJyWwiAZu93+dNTws3gmLMV6X0Ie/oIhFMg8yIwleuacq6
-	 RCqhnrbIi799Up2D7ZNpAAv2ujLgMGWW7PP0L/3Q9p6ax70dyCLH7sIcg0pBMXJyuJ
-	 U9+QzW7KvpktTgplxCBASiDw+2+ej9H6C+n0BPhxtGdh/zOCbU7oC6CLL8EC64p02Y
-	 J77l+br8j8Y3iLZUNDLkSR7BBv+dfk8+Vzbm/EWCqmsQwaohSoIXCruwwPN2bXozVy
-	 aGLKcxf2/8gYDLhUrI//uk4kZj5PPwQCHztm1OvHDRI+Y/riJo0Jl2xWA33cm52zY+
-	 SWbEaDDi3ukUA==
-Message-ID: <c85af4ec-9549-483b-be3d-9773e39d9fdc@kernel.org>
-Date: Wed, 21 Aug 2024 12:27:33 +0200
+	s=k20201202; t=1724236747;
+	bh=xxH0LuNsB+DyKoGDFDWxXj1peRI4e4bojJNDlG3uPjo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=W2sDajcXFEZfiTF8ucQO0GjqaGN90/kyF99IyuaM9wHV+jwBqMGTmpi+JnkOIwsxJ
+	 YykPlmf2n+x1q2Rx9iz793DfYAbq2V3YRPNrtJXs8el1f4+9Zme7o5MXT/XQyMqhGC
+	 3SluJgXqKz7jYErSJfWfqiG/7yaeJcXij1oYT9VAd1+4sZ1QYeVpTbTedvqsT4jnGy
+	 wWDxQcMUw+PzcnDLl46KsfaAbZfjupROv8b1b1fYf/ze5C/T7c+kkEQimChJpEZWX/
+	 HzY3EWhzr+PJ7nqDIOFjbhH51aYMRvDcYeL0RGH9/5Gbtz1gO4pd3O74m/U+ZO577k
+	 ms5CTpYiOUl0Q==
+Message-ID: <d6e10c7e-2ff1-4fcb-bae8-294d3d203882@kernel.org>
+Date: Wed, 21 Aug 2024 12:39:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: sched: check both backup in retrans
+Subject: Re: [PATCH mptcp-net v2] mptcp: pr_debug: add missing \n at the end
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240813-mptcp-sched-retrans-bkp-v1-1-78914a88c2c6@kernel.org>
- <90a11c1b-2d72-6b29-1139-3295f43269d2@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20240819-mptcp-pr_debug_n-v2-1-97cbe3f7d975@kernel.org>
+ <ec12d8bb1e760327228fe9a08573ea0428daf8b2.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,58 +85,85 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <90a11c1b-2d72-6b29-1139-3295f43269d2@kernel.org>
+In-Reply-To: <ec12d8bb1e760327228fe9a08573ea0428daf8b2.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+Hi Geliang,
 
-On 21/08/2024 03:24, Mat Martineau wrote:
-> On Tue, 13 Aug 2024, Matthieu Baerts (NGI0) wrote:
+On 21/08/2024 08:46, Geliang Tang wrote:
+> Hi Matt,
 > 
->> The 'mptcp_subflow_context' structure has two items related to the
->> backup flags:
+> On Mon, 2024-08-19 at 10:01 +0200, Matthieu Baerts (NGI0) wrote:
+>> pr_debug() have been added in various places in MPTCP code to help
+>> developers to debug some situations. With the dynamic debug feature,
+>> it
+>> is easy to enable all or some of them, and asks users to reproduce
+>> issues with extra debug.
 >>
->> - 'backup': the subflow has been marked as backup by the other peer
+>> Many of these pr_debug() don't end with a new line, while no
+>> 'pr_cont()'
+>> are used in MPTCP code. So the goal was not to display multiple debug
+>> messages on one line: they were then not missing the '\n' on purpose.
+>> Not having the new line at the end causes these messages to be
+>> printed
+>> with a delay, when something else needs to be printed. This issue is
+>> not
+>> visible when many messages need to be printed, but it is annoying and
+>> confusing when only specific messages are expected, e.g.
 >>
->> - 'request_bkup': the backup flag has been set by the host
+>>   # echo "func mptcp_pm_add_addr_echoed +fmp" >
+>> /sys/kernel/debug/dynamic_debug/control
+>>   # ./mptcp_join.sh "signal address"; \
+>>         echo "$(awk '{print $1}' /proc/uptime) - end"; \
+>>         sleep 5s; \
+>>         echo "$(awk '{print $1}' /proc/uptime) - restart"; \
+>>         ./mptcp_join.sh "signal address"
+>>   013 signal address
+>>       (...)
+>>   551.75 - end
+>>   556.76 - restart
+>>   013 signal address
+>>   [  551.367935] mptcp:mptcp_pm_add_addr_echoed: MPTCP:
+>> msk=000000000740d23c
+>>       (...)
 >>
->> Looking only at the 'backup' flag can make sense in some cases, but it
->> is not the behaviour of the default packet scheduler when selecting
->> paths.
+>>   ## => a delay of 5 seconds.
 >>
->> As explained in the commit b6a66e521a20 ("mptcp: sched: check both
->> directions for backup"), the packet scheduler should look at both flags,
->> because that was the behaviour from the beginning: the 'backup' flag was
->> set by accident instead of the 'request_bkup' one. Now that the latter
->> has been fixed, get_retrans() needs to be adapted as well.
+>> The 'Fixes' tag here below points to the first pr_debug() used
+>> without
+>> '\n' in net/mptcp. This patch could be split in many small ones, with
+>> different Fixes tag, but it doesn't seem worth it, because it is easy
+>> to
+>> re-generate this patch with this simple 'sed' command:
 >>
->> Fixes: 3b1d6210a957 ("mptcp: implement and use MPTCP-level
->> retransmission")
+>>   git grep -l pr_debug -- net/mptcp |
+>>     xargs sed -i "s/\(pr_debug(\".*[^n]\)\(\"[,)]\)/\1\\\n\2/g"
+>>
+>> So in case of conflicts, simply drop the modifications, and launch
+>> this
+>> command.
+>>
+>> Fixes: f870fa0b5768 ("mptcp: Add MPTCP socket stubs")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> I think this should have:
+> Thanks for this v2. LGTM!
 > 
-> Fixes: b6a66e521a20 ("mptcp: sched: check both directions for backup")
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-Good idea, I switched to that one when applying the patch.
-
-> and a Cc: stable ?
-
-Yes, I add them when sending patches to netdev.
-
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+Thank you for the review!
 
 New patches for t/upstream-net and t/upstream:
-- 353d48321ce0: mptcp: sched: check both backup in retrans
-- Results: c025238d573a..76f6fba9ef6b (export-net)
-- Results: a2eeb886f736..80d8c6b850fb (export)
+- adcccec8d800: mptcp: pr_debug: add missing \n at the end
+- Results: 76f6fba9ef6b..ab5c53816256 (export-net)
+- Results: 80d8c6b850fb..624d90dc5dca (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2e798b8d759eb6a9a1ee14544e625cae61a9cad3/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/d0a1f54fb2f9a9a0e2b6ea85fae9670ac4818469/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/91a502295edf01f2c23e9f11edad1d7db908d21f/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/f81bdeae843224cb42ef2613e833d46675d9e8c9/checks
 
 Cheers,
 Matt
