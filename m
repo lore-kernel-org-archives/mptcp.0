@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6911B81BF
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:06:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9291C1581EB
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:22:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724234772; cv=none; b=JTqJhhiTwwS3h6l6EZ9cC9bF7vY9hAkSEtswM2h8oj2YBwHPsEmWzcoQwG4zj98+cBH/pP/z+CsVmhJHeaKZYtCdpWaW6+2XC5o+v81NYCRUiD8x/g/fhmqhv0RTPzgZgEBG6cyujdDjPPU2bA/X4RjyjmTrR7pK5bWGio6vMFU=
+	t=1724235720; cv=none; b=KxidMvQxlVD72NGi1UtYDCCsAzxhrg4upKRxXyiHYEQ/dZmwy0r/3k3JF8KFEOpJtAbMKieBvqr5hfTeVD9GpE6oUW+iDFc3gpuX370yETadb+Z5nhvMeiH/IaAbR3hAkCUHusVHpna1wxH9JU///TEJ83N0hPHGih8FDhn9mGI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724234772; c=relaxed/simple;
-	bh=5kfrU0mTiQEmMd4EHSKBxpu1i7/jcB/3FiAZBrMHD5Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gOnXKmI4eogOeg5XNqOnvXNYuNyAdpVA9IDyTWLIdAYU3k78HW5wCex/9g03rLPHEKKaA7+VB1i5TEnETO3LRDKygFfDxBw+JZQnK5A0cufdXJ/E7SEQGC1m+R4Auigk++SojwRL8aFSYEyiOPCtavDa6S22AtuvzT6qlvKfLyg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MlIP8x/5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724235720; c=relaxed/simple;
+	bh=htg/6jj62ChUya4MmXleZvXI2ep2fTOFcpZFHEiYNps=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=tPWcXHfj73n3OwIXvfL+3Mqr6zPChQmKLUm0QokZKT0uCQsB/PDjOvdTugcTiiv/iN/OYfdCevyMjNjKt/UIMcGDAt+tYjZ3ieVhg/DciXo8PqZGc4tG5wsBiwdtXR7/mWx4q79vBC0164nNr6MsAh7CsooTN+UrSB4VTOIfoMk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UOMRt+lg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MlIP8x/5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E4B2C32782;
-	Wed, 21 Aug 2024 10:06:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UOMRt+lg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8320FC32782;
+	Wed, 21 Aug 2024 10:21:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724234772;
-	bh=5kfrU0mTiQEmMd4EHSKBxpu1i7/jcB/3FiAZBrMHD5Q=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=MlIP8x/5Tdg51bc+RvwqnI2qab3sThx9vUsUknhOX1/mfl+IQlg4w/K5b1IiCRCZe
-	 BXicW44hzKHdftrkVMiTW6XWhQt1Lh/J8z8QS9cE2GFxQd7d+/yT6L/+zuuV+VRpDO
-	 qI+4HCkEfNMW2uigSW3UsxGwjTm6rvxrwo5dL1hPSplaNsyLcPiFnF5sE79JbKW3O7
-	 sSFtJ52ZGkZPRvsMayg9VEEuLG6GVkp0jiJS+ITY/089SNg8vOC20KwCdtYGb6r42m
-	 zgVJ89r7wFkMpkaJCkVQ859ncd4+kNVFurlqrDTRmCAElt5k7vyTcbTIiy3ZgqlAMP
-	 NDVWZBJ2CUkIQ==
-Message-ID: <4f77582a-8f3b-411c-b109-0736a55d095d@kernel.org>
-Date: Wed, 21 Aug 2024 12:06:09 +0200
+	s=k20201202; t=1724235720;
+	bh=htg/6jj62ChUya4MmXleZvXI2ep2fTOFcpZFHEiYNps=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UOMRt+lgwTF6vnpq5qv1zccLUiC9om1ejdcqhNNtMLO8NHS/0HUjE3dQBUTBxmM1V
+	 CeVok1M7LRd9aeK9I+4136k0FLC25q2G8nJ0L/Qy6duqF0kc0t7eO0Kiafnce4bMJr
+	 T3clPtBwAgbbfRTlqC/giaU24AKYr/wqpk8Ax04xO93rCoRoiiX1j3ucpNQpn7CjKo
+	 2Y/G9HLJxURLIek8RSK3BMF6kTKDQ6aaxUmdAvhUTRZEiW2TVnyxibmGO4aI7Wx8hd
+	 lfaxwTgfjr/YT4GFl2aUF2beT+Mgb344rTDRB4jD43Z1rihiN7G76ppNI/8dkUTOAD
+	 xHbBZyuxnJ/Bg==
+Message-ID: <bd69365e-4108-47c6-a630-8cd1d0a3fa9a@kernel.org>
+Date: Wed, 21 Aug 2024 12:21:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: pm_nl_ctl: remove
- re-definition
+Subject: Re: [PATCH mptcp-net v7 0/3] mptcp: pm: more fixes around the ID 0
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20240819-mptcp-pm-events-v1-1-c31d472471be@kernel.org>
- <4c0af275f10d952f052dfdc8d247822a5f6ba1b7.camel@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Mat Martineau <martineau@kernel.org>
+References: <20240809-mptcp-pm-avail-v7-0-3d0916ba39b4@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,49 +85,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4c0af275f10d952f052dfdc8d247822a5f6ba1b7.camel@kernel.org>
+In-Reply-To: <20240809-mptcp-pm-avail-v7-0-3d0916ba39b4@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 21/08/2024 10:13, Geliang Tang wrote:
-> Hi Matt,
+On 09/08/2024 14:37, Matthieu Baerts (NGI0) wrote:
+> The 8 first patches from the previous version have already been applied.
 > 
-> Good catch!
+> Last fix: the subflow is not closed when receiving a TCP+FIN, when there
+> are other available subflows.
 > 
-> On Mon, 2024-08-19 at 15:15 +0200, Matthieu Baerts (NGI0) wrote:
->> 'MPTCP_PM_NAME' is defined in 'linux/mptcp.h', no need to re-define
->> it.
+> The last patch is not for -next. Something that sounds better to do.
 > 
-> nit: It's defined in "linux/mptcp_pm.h".
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v7:
+> - See the individual changelog.
+> - Link to v6: https://lore.kernel.org/r/20240802-mptcp-pm-avail-v6-0-964ba9ce279f@kernel.org
 
-Indeed, it is not directly defined in mptcp.h any more. I updated the
-commit message to say:
+Thank you for the review, and your comment!
 
-  'MPTCP_PM_NAME' is defined in 'linux/mptcp_pm.h', included in
-  'linux/mptcp.h', no need to re-define it.
+Now in our tree:
 
->> 'MPTCP_PM_EVENTS' is not defined in 'linux/mptcp.h', but
->> 'MPTCP_PM_EV_GRP_NAME' is, with the same value. We can then use the
->> latter, and drop the other one.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Except for the nit in commit log, LGTM.
-> 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
-
-Thanks! Now in our tree:
+New patches for t/upstream-net and t/upstream:
+- 45e7e7bb1d53: mptcp: close subflow when receiving TCP+FIN
+- 4dff13e9b19e: selftests: mptcp: join: cannot rm sf if closed
+- Results: 479b0f0c640c..c025238d573a (export-net)
+- Results: a6b7b898cddd..8d90262870c8 (export)
 
 New patches for t/upstream:
-- 189988891094: selftests: mptcp: pm_nl_ctl: remove re-definition
-- Results: 7aa192fc76f8..a6b7b898cddd (export)
+- cee0b5912a36: mptcp: pm: send ACK on non stale subflows
+- Results: 8d90262870c8..a2eeb886f736 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e9099bcf17a9d3c1b60dddc620e47c4307b8bb99/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c790cd57b4dc5ef7425f61df72d0638d604c6f57/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/2c2279cec7af565f971bfe2805b325af05cc6039/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/133016fd5500a67dd98db80bf60e300367431966/checks
 
 Cheers,
 Matt
