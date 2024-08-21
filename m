@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3CFD1531E6
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4D8B16A92C
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 10:52:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724236747; cv=none; b=ozziaoecTdGV06y5lo8gVLBIvZ0oE2UeePfb0pfiMsES4x7xoEoEtwaCyQYFMYAy5PpIxZaH0LLszmiHUXHslsZqwO70xuQoYaijEvwcTF37qtIDsdKvJJ4hoHMQ/avfb5U1EsWaswrXHwfUTVhPIJD06IgrSURCV4veulD5IYA=
+	t=1724237566; cv=none; b=QaoSiO5mvUE3MoYGPf3QrVTLYcM+C1J/To1OHBLTHFpwBK6PlbvHrT3A44Z7BfCMkG2J8GYllUsGO+4YzrKZ23Puv14DA/bo7IFdpx927YRGrkMXQ/NPAPpALfr5h9Jlj1enA+vhwefvChSSl74DMGvKxfCKZR4eA913cDbUjyk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724236747; c=relaxed/simple;
-	bh=xxH0LuNsB+DyKoGDFDWxXj1peRI4e4bojJNDlG3uPjo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RrM83J2HYrFbu6x9ejAdt3M8RpvEpOo5sPaePO3f0mruZ4DjtBHUHDGh7YSwqmXhp96i2/8UFHZvx52+DhXvamXXXuzynuzYuUzAG8LQf7BYaF9muNMSbvp9LaICfE/IXh2so0tIdEJvwDQ/NxIPO+TnqGPQUI1g5e4NEjJming=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W2sDajcX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724237566; c=relaxed/simple;
+	bh=OgLX1jwuU6ZpEFNfGKRBbpx3nVKoAzLdeAiJCHnNUWI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DRnJO9+3ayjJ/Yy2b16BNVeCcvF8vlS4kfd7LclybZ0VxqpmuEwAh53NpRZn1eQGmcOj9V2JtNmHk7wacAvByQwjG1n6ZT/8913/Ev5FMVhHz4z4P5WfaRtGCEzIycuyAns7bRvZdKBPlrry502+USKjmHzxxhDReggqVQZ6pME=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gBETKSLF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W2sDajcX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B71EEC32782;
-	Wed, 21 Aug 2024 10:39:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gBETKSLF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56DA6C32782;
+	Wed, 21 Aug 2024 10:52:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724236747;
-	bh=xxH0LuNsB+DyKoGDFDWxXj1peRI4e4bojJNDlG3uPjo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=W2sDajcXFEZfiTF8ucQO0GjqaGN90/kyF99IyuaM9wHV+jwBqMGTmpi+JnkOIwsxJ
-	 YykPlmf2n+x1q2Rx9iz793DfYAbq2V3YRPNrtJXs8el1f4+9Zme7o5MXT/XQyMqhGC
-	 3SluJgXqKz7jYErSJfWfqiG/7yaeJcXij1oYT9VAd1+4sZ1QYeVpTbTedvqsT4jnGy
-	 wWDxQcMUw+PzcnDLl46KsfaAbZfjupROv8b1b1fYf/ze5C/T7c+kkEQimChJpEZWX/
-	 HzY3EWhzr+PJ7nqDIOFjbhH51aYMRvDcYeL0RGH9/5Gbtz1gO4pd3O74m/U+ZO577k
-	 ms5CTpYiOUl0Q==
-Message-ID: <d6e10c7e-2ff1-4fcb-bae8-294d3d203882@kernel.org>
-Date: Wed, 21 Aug 2024 12:39:04 +0200
+	s=k20201202; t=1724237566;
+	bh=OgLX1jwuU6ZpEFNfGKRBbpx3nVKoAzLdeAiJCHnNUWI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gBETKSLFI8bP2JjdxoA3029BDqvD+iq3uMB6cUAQ0E506TSYU7kamE227yCpwTMY5
+	 UE4+5BH+126Qdb85pQ0Dc4VVv9durzqQ3Zn3CNS9Qtwn8DEOQuTWr47cRYqTSN6tjE
+	 P21tNe7di/w5UkV9e/THVKnviBLIo4vDvYUzUi2rwV/k3UoSUfkesrYBPsxnfvhZ6T
+	 Khtffy7wEoBnt9D8Ili4aSGD3bj8ht657MJrTOygaN47AhXakmgXv08866xZPtOWJq
+	 Ghy6RK1A3HWfvg0wQlafvytXYGU0RcB1biFfqv6Zra518udB9/7c0qw6ozk/YM/TD5
+	 1tNrhLYfxPdgw==
+Message-ID: <57a55f3a-3214-49f2-a7ce-73a13ef24173@kernel.org>
+Date: Wed, 21 Aug 2024 12:52:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: pr_debug: add missing \n at the end
+Subject: Re: [PATCH mptcp-next] bpf: Allow error injection for
+ update_socket_protocol
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20240819-mptcp-pr_debug_n-v2-1-97cbe3f7d975@kernel.org>
- <ec12d8bb1e760327228fe9a08573ea0428daf8b2.camel@kernel.org>
+To: Gang Yan <gang_yan@foxmail.com>, mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>, Geliang Tang <geliang@kernel.org>
+References: <tencent_48C13AF02833651C8CEA9329191D76628207@qq.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,85 +86,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ec12d8bb1e760327228fe9a08573ea0428daf8b2.camel@kernel.org>
+In-Reply-To: <tencent_48C13AF02833651C8CEA9329191D76628207@qq.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang, Geliang,
 
-On 21/08/2024 08:46, Geliang Tang wrote:
-> Hi Matt,
+On 21/08/2024 04:35, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On Mon, 2024-08-19 at 10:01 +0200, Matthieu Baerts (NGI0) wrote:
->> pr_debug() have been added in various places in MPTCP code to help
->> developers to debug some situations. With the dynamic debug feature,
->> it
->> is easy to enable all or some of them, and asks users to reproduce
->> issues with extra debug.
->>
->> Many of these pr_debug() don't end with a new line, while no
->> 'pr_cont()'
->> are used in MPTCP code. So the goal was not to display multiple debug
->> messages on one line: they were then not missing the '\n' on purpose.
->> Not having the new line at the end causes these messages to be
->> printed
->> with a delay, when something else needs to be printed. This issue is
->> not
->> visible when many messages need to be printed, but it is annoying and
->> confusing when only specific messages are expected, e.g.
->>
->>   # echo "func mptcp_pm_add_addr_echoed +fmp" >
->> /sys/kernel/debug/dynamic_debug/control
->>   # ./mptcp_join.sh "signal address"; \
->>         echo "$(awk '{print $1}' /proc/uptime) - end"; \
->>         sleep 5s; \
->>         echo "$(awk '{print $1}' /proc/uptime) - restart"; \
->>         ./mptcp_join.sh "signal address"
->>   013 signal address
->>       (...)
->>   551.75 - end
->>   556.76 - restart
->>   013 signal address
->>   [  551.367935] mptcp:mptcp_pm_add_addr_echoed: MPTCP:
->> msk=000000000740d23c
->>       (...)
->>
->>   ## => a delay of 5 seconds.
->>
->> The 'Fixes' tag here below points to the first pr_debug() used
->> without
->> '\n' in net/mptcp. This patch could be split in many small ones, with
->> different Fixes tag, but it doesn't seem worth it, because it is easy
->> to
->> re-generate this patch with this simple 'sed' command:
->>
->>   git grep -l pr_debug -- net/mptcp |
->>     xargs sed -i "s/\(pr_debug(\".*[^n]\)\(\"[,)]\)/\1\\\n\2/g"
->>
->> So in case of conflicts, simply drop the modifications, and launch
->> this
->> command.
->>
->> Fixes: f870fa0b5768 ("mptcp: Add MPTCP socket stubs")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> The "update_socket_protocol" interface is designed to empower user space
+> with the capability to customize and modify socket protocols leveraging
+> BPF methods. Currently, it has only granted the fmod_ret permission,
+> allowing for modifications to return values. We are extending the
+> permissions further by 'ALLOW_ERROR_INJECTION', thereby facilitating
+> the development of user-space programs with enhanced flexibility and
+> convenience.
 > 
-> Thanks for this v2. LGTM!
+> When we attempt to modify the return value of "update_socket_protocol"
+> to "IPPROTO_MPTCP" using the below code based on the BCC tool:
 > 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> '''
+> int kprobe__update_socket_protocol(void* ctx)
+> {
+>     ...
+>     bpf_override_return(ctx,IPPROTO_MPTCP);
+>     ...
+> }
+> '''
+> 
+> But an error occurs:
+> 
+> '''
+> ioctl(PERF_EVENT_IOC_SET_BPF): Invalid argument
+> Traceback (most recent call last):
+>   File "/media/yangang/work/Code/BCC/test.py", line 27, in <module>
+>     b = BPF(text=prog)
+>         ^^^^^^^^^^^^^^
+>   File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 487, \
+>                   in __init__ self._trace_autoload()
+>   File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 1466, \
+>                   in _trace_autoload self.attach_kprobe(
+>   File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 855,\
+>                   in attach_kprobe
+>     raise Exception("Failed to attach BPF program %s to kprobe %s"
+> Exception: Failed to attach BPF program b'kprobe__update_socket_protocol' \
+>   to kprobe b'update_socket_protocol', it's not traceable \
+>   (either non-existing, inlined, or marked as "notrace")
+> '''
 
-Thank you for the review!
+Thank you for this patch and this explanation!
 
-New patches for t/upstream-net and t/upstream:
-- adcccec8d800: mptcp: pr_debug: add missing \n at the end
-- Results: 76f6fba9ef6b..ab5c53816256 (export-net)
-- Results: 80d8c6b850fb..624d90dc5dca (export)
+The modification looks good to me, but this should be accepted by BPF
+and netdev maintainers, more than us, I think.
 
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d0a1f54fb2f9a9a0e2b6ea85fae9670ac4818469/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f81bdeae843224cb42ef2613e833d46675d9e8c9/checks
+Do you mind sending this directly to netdev with the BPF ML in CC please?
 
 Cheers,
 Matt
