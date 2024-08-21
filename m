@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1204B192D69
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 11:28:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06075199FB4
+	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 11:28:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724239715; cv=none; b=fG3T98K52ITmjCFAmlhIC+3bkl6Dxr2hxbMucgAzYgjvdhXjbO53T30g71gdVP0s+R5jHi/WPQB1jlXTlQxaY8e/BhTqItVOvA5XBGEu8C5qEYI48fwBH1UuLefqtnPi2I76AjR0bX11QQVUGuRoQUqiVeyxBWBmn9RbcnzZbuM=
+	t=1724239716; cv=none; b=kgjlVfCTTzscTK3l+oR6KcI6LettVNhoYl+kEilHlPdo/YsylNPd+DuXFM70PHOL312cKQDm9hU4Nk8DSTrT4oWMexUK1+CNxGAWnIy/Mu3XGGda0H+v3MPBuDKI/vuG4Ha2NFDnGAiMHkG1vJD2UaflflD7QD1xt/9EEda7ChQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724239715; c=relaxed/simple;
-	bh=j0e8kNNr53rqJS3ydt44JTwp+YZHYCXLcPoTeh9ZU0w=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=mZMaHXfdOtJ+Y5yDeo9s8xC1NJCEzWb+KNgKpHX5pF/nzLUZxs03r7HlxGvbSVMWZI3VOnQeJ5UbgB4G8DJyOWD/w9B8zKR7cXalzkWah2sv09So6OaSd5LXoVHMRu2ngUZmDExlhkxX2/HkUxflnhNbSfEWBE/gXGHIWlaos3E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UpFTSFpd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724239716; c=relaxed/simple;
+	bh=C3OYK8VXgoKD8yVc6YatwuAiK2CNR43lCLbdquUX3VI=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=oA9ZErycQTg+qoqzBIofq4ML+j1HVfCvdRlSp3I0zMyxb2fUp9A6g+DUfsT2KH1OxBvZaEQEysf24MPWfXfdJWbawm9DmA7ZkzQl8PTaasIegMP9tUQ3kW6/5RxxSUPL+SoOJdt7K9Wced+Dg7BfapCSNxavVIAB1XyLTJtIBxU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UNLo9pGd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UpFTSFpd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F24DCC32782;
-	Wed, 21 Aug 2024 11:28:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UNLo9pGd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00EDAC4AF09;
+	Wed, 21 Aug 2024 11:28:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724239714;
-	bh=j0e8kNNr53rqJS3ydt44JTwp+YZHYCXLcPoTeh9ZU0w=;
-	h=From:Subject:Date:To:Cc:From;
-	b=UpFTSFpdmZ9/w9SjxbZXTWCgx7VRbw6BPwugEXyNZspPQNoWuLdjcU2SZ2JtKn5fd
-	 0wOcjKpdzI3IGS9KH2lQC2kWMUKvW6ohilOyzvyPMcHuEd+swY6nQxYqcoAowCx5R9
-	 w7gyBbzzXbv82uBYkvF808sAs2Uuw0WpW5CEajcrCLsoetlh5Sopi0qTWEBuUq0ipu
-	 JiSxm8zB5qrPuiTTsFMByrCaKhyCycfFemWuAiNAgcfXE2Q94cFuVTEc3wdbuGDWIU
-	 SpcZjiwD1B1fIfE7cvSCUIOcNROFNo4KxZZtsQfQ/to13tJjhY8bKbKHHGK+uenI6B
-	 mDlY3gSTU882w==
+	s=k20201202; t=1724239715;
+	bh=C3OYK8VXgoKD8yVc6YatwuAiK2CNR43lCLbdquUX3VI=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=UNLo9pGddDqLERAwhtjlxIFolXF2Xri9zQ4jjW7MEcjzkrrgjS2BfEjdF/rCpTRFU
+	 DNcmKPJpRyMwser8NQvjXNWRABfVtDjJd5WX+0i/Q7OiCW932eFFZ1PnVhgw8hl4I4
+	 Y0o6GrZzcNRZNIjcirEUM5OJqy81vpgiKcWmCL6Xi4b5qspGi9VCcJO0quqgVK8l/y
+	 GcZpfLSMPAyy208B20JpbFGx/2mG+Ad0bChKGc0ZA86tge09YQXb3Jgf83S6pqlted
+	 p0QfX/6eRDt0fHmoIsU5hr8d4ymwn0jI9RD+HExf3z50anStoqwflverXNDmLWYlOK
+	 /wjsoaxz4shDg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next 0/3] selftests: mptcp: add time per subtests in
- TAP output
-Date: Wed, 21 Aug 2024 13:28:29 +0200
-Message-Id: <20240821-mptcp-ksft-time-v1-0-c4ea94f41244@kernel.org>
+Date: Wed, 21 Aug 2024 13:28:30 +0200
+Subject: [PATCH mptcp-next 1/3] selftests: mptcp: lib: add time per
+ subtests in TAP output
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,57 +38,97 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAF3PxWYC/yWMQQqAIBAAvxJ7bsHEQ/WV6FC61hKaqEQg/T2p4
- 8DMFEgUmRKMTYFIFyc+fYWubUDvi98I2VQGKaQSvezQhawDHslmzOwIzaoGaRVpZRaoVYhk+f6
- OE/yypzvD/DwvaOaRvm0AAAA=
+Message-Id: <20240821-mptcp-ksft-time-v1-1-c4ea94f41244@kernel.org>
+References: <20240821-mptcp-ksft-time-v1-0-c4ea94f41244@kernel.org>
+In-Reply-To: <20240821-mptcp-ksft-time-v1-0-c4ea94f41244@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1220; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=j0e8kNNr53rqJS3ydt44JTwp+YZHYCXLcPoTeh9ZU0w=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmxc9h2h8rv4+UWMmpy91EiJQF5S6gYzfxJKjpk
- Zs5939WtMiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZsXPYQAKCRD2t4JPQmmg
- cwAfD/43t6SgKjMobSG4hsaZhYdzSulA6Sy1gBL6eFAPJ9YQQVdu/mh6qXrNiWcd/5Ijhs+jRZ3
- 3ond0+rcRoTlyxK6osh2/KJojpZk2NgETiX9or2gEVwfT5nB/VfULV7VS7YYHTtzGXpNQ1O8S0p
- U9rOGknRMGoaTYDcnmtnvW8L1im+BTehOKqUflvBYuZvXfKdsem+eXRszPNU8dnjBEBNaTsCy6n
- YnIul6HWfgHUkwu6QQX82cjd+bRvNFdqnD9DKg59pNPL2c6pHKA2Na6R92EC9bhmnQh1KsiTUlM
- W7Zr2LgI/r/O7dqKp24qDj2DCRZ+XYvRsPsVMHonCYOhkUjif86i8aZE/ahtBMHe5IILZlzqRgg
- l51e5cwVDUMKGkR+Vx5T3zbs9pGnexXyBGWk40MB5daXr5usuRrMGIx1SIgfyg+nbUa57o4y8Ga
- M09gWskh9CMlFeVpd7yYN0oxDudlYbPDzPJS8S0rMjjHfkieRdBDtGDZvLZMZMoiMBBt9QGry9E
- ynHroF5kEjLbuve7ryY5iqDyA1Yesh339AE62je69W+TTCnCFxvKdyBeEkSCMIrDb3b4VsjN36G
- N8jMo/nNYewjF9VeL9ClUFLoN6n4PszfdsfR6KBHYjvgPuUtSICQg33oLQH4PnRN28nXxd4U9zu
- HzbDIRXimLHRt7Q==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2322; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=C3OYK8VXgoKD8yVc6YatwuAiK2CNR43lCLbdquUX3VI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmxc9hC9rmC79Ag4I3RsvlFMuTri2MkmDV542SU
+ OAubVQn8iGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZsXPYQAKCRD2t4JPQmmg
+ cwdzEACcC2bs/BZPspyjk6uQLj/aY9fkZArZvvNbuEzaU4J+D0MTWEci9MzTKFOqP5/5eOibhEj
+ udviqFffvuotJ/2GJ1hFpvgxtMuHQas/ox/MKKRbMyJzaeKAAd2xWtbfdb2/YUzvWAm/lmy54cT
+ drdozzS3DHUBCmOAU9mrsw7bNIRefaIj1B9CPLfwinXR3mvwzDnJiug/a6TCShvOo+sMeDNa/HY
+ qlaWroHus5jWg2W2PG6fiStfz8+MVdKJVFjuVvjgU2bchbO2Cezt8GH8hN70Mj2wyWnpQPgQoXq
+ 69L2O0sTBHax9N3qundMLfgZkWcBx6fsr+RXs55mYdRgvHbX430yftNYEJWZRvdzG18NqNq7Zb8
+ rQdGKSWXNHtLGQmPu0RJuj6blpbbUQEJfHREZkBy+I8Gis65SxLCP6Qt2Mkb9QKFFV+wTb8B91D
+ KI324htz2T3Pk84cypuSrVWJxC3MGZb/g4yu3/WETt/Ew+ledVXTltUXnEPiUfpxa2g8DxaB0eY
+ n8xbQniThYht5+/g55TwtJF9y21NHv072yRc4Z2o//aCdFl41B9R2NLd390iLgwgPshXHmcmgJT
+ Kv55R0C+DuZWqhJCRjZD5ejOm3umlFPfE2hL03d9+JqeWwUd3MlzwIRR34DAnTBfo5fcI6Q69bG
+ vG+NyDT4XNDcx+A==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Patches here add 'time=<N>ms' in the diagnostic data of the TAP output,
-e.g.
+It adds 'time=<N>ms' in the diagnostic data of the TAP output, e.g.
 
   ok 1 - pm_netlink: defaults addr list # time=9ms
 
 This addition is useful to quickly identify which subtests are taking a
 longer time than the others, or more than expected.
 
+Note that there are no specific formats to follow to show this time
+according to the TAP 13 [1], TAP 14 [2] and KTAP [3] specifications.
+Let's then define this one here.
+
+Link: https://testanything.org/tap-version-13-specification.html [1]
+Link: https://testanything.org/tap-version-14-specification.html [2]
+Link: https://docs.kernel.org/dev-tools/ktap.html [3]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Matthieu Baerts (NGI0) (3):
-      selftests: mptcp: lib: add time per subtests in TAP output
-      sefltests: mptcp: connect: remote time in TAP output
-      selftests: mptcp: reset the last TS before the first test
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 17 ++++++++++++++++-
+ 1 file changed, 16 insertions(+), 1 deletion(-)
 
- tools/testing/selftests/net/mptcp/mptcp_connect.sh |  3 ++-
- tools/testing/selftests/net/mptcp/mptcp_join.sh    |  3 ++-
- tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 17 ++++++++++++++++-
- tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  1 +
- tools/testing/selftests/net/mptcp/pm_netlink.sh    |  2 ++
- tools/testing/selftests/net/mptcp/simult_flows.sh  |  1 +
- tools/testing/selftests/net/mptcp/userspace_pm.sh  |  1 +
- 7 files changed, 25 insertions(+), 3 deletions(-)
----
-base-commit: 624d90dc5dcaee846a57aa0985789623f7c64f2e
-change-id: 20240821-mptcp-ksft-time-db492f4ec4da
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 438280e68434..871720da04c4 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -25,6 +25,7 @@ declare -rx MPTCP_LIB_AF_INET6=10
+ MPTCP_LIB_SUBTESTS=()
+ MPTCP_LIB_SUBTESTS_DUPLICATED=0
+ MPTCP_LIB_SUBTEST_FLAKY=0
++MPTCP_LIB_SUBTESTS_LAST_TS_MS=
+ MPTCP_LIB_TEST_COUNTER=0
+ MPTCP_LIB_TEST_FORMAT="%02u %-50s"
+ MPTCP_LIB_IP_MPTCP=0
+@@ -201,6 +202,11 @@ mptcp_lib_kversion_ge() {
+ 	mptcp_lib_fail_if_expected_feature "kernel version ${1} lower than ${v}"
+ }
+ 
++mptcp_lib_subtests_last_ts_reset() {
++	MPTCP_LIB_SUBTESTS_LAST_TS_MS="$(date +%s%3N)"
++}
++mptcp_lib_subtests_last_ts_reset
++
+ __mptcp_lib_result_check_duplicated() {
+ 	local subtest
+ 
+@@ -215,13 +221,22 @@ __mptcp_lib_result_check_duplicated() {
+ 
+ __mptcp_lib_result_add() {
+ 	local result="${1}"
++	local time="time="
++	local ts_prev_ms
+ 	shift
+ 
+ 	local id=$((${#MPTCP_LIB_SUBTESTS[@]} + 1))
+ 
+ 	__mptcp_lib_result_check_duplicated "${*}"
+ 
+-	MPTCP_LIB_SUBTESTS+=("${result} ${id} - ${KSFT_TEST}: ${*}")
++	# not to add two '#'
++	[[ "${*}" != *"#"* ]] && time="# ${time}"
++
++	ts_prev_ms="${MPTCP_LIB_SUBTESTS_LAST_TS_MS}"
++	mptcp_lib_subtests_last_ts_reset
++	time+="$((MPTCP_LIB_SUBTESTS_LAST_TS_MS - ts_prev_ms))ms"
++
++	MPTCP_LIB_SUBTESTS+=("${result} ${id} - ${KSFT_TEST}: ${*} ${time}")
+ }
+ 
+ # $1: test name
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.45.2
 
