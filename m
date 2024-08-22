@@ -1,96 +1,131 @@
-Received: from out-182.mta1.migadu.com (out-182.mta1.migadu.com [95.215.58.182])
+Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.50])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A42D21D12F4
-	for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 23:54:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8043A1D130D
+	for <mptcp@lists.linux.dev>; Thu, 22 Aug 2024 05:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.50
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724284458; cv=none; b=bN0UQ4v6OEaba9zySNWg4hrS4E/w56demNhMUYYGX4VCD4MqO6w9tNkgzYMXWJFw2QA5Kdij+KR9Yt+aeoeaJm8WK90MW0I4e9EaKvs4U/LZQOBy29RYEokRITF7qx6zdSkkN15rUp+CkuiQouoP07db/jGFeMR6p+X11NuwunQ=
+	t=1724304708; cv=none; b=FIQmd64XYmyWR4j39jVxHULJRr76DC07SFhMqXu8k1iAdKENlDE1nZRpkNe7fjqDgE5O4RgI6Pqg9pQL7sqd/wOJpDpWSNTk6CyD1C6k7ZR+u11ECVKxoesmeiXh8S020kTwM40GGGqQh0lA1FZUuXeR4rYAscRE5gzrUG4X+N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724284458; c=relaxed/simple;
-	bh=0AmG6PMiuEHX4U8gAIkvRz8PtWk3dBE8lZNcn6pusdE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MZLHHEsh9LmffNvZEk1c/ODKqwZRg5Gjyq4DKy2Sig3saB/GgDt7VSpkOpILh3M/JPOdfVlLV4VYFKqw0kIFgFsj+GR0PMQn8mz7h0/ZKRRkgpWexcIlgs0fgiGdcV67aVOvVVmjhS4cX5XAN+rZj4DQCuIV9S+N7g175k/S0MY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=LmdZUCBy; arc=none smtp.client-ip=95.215.58.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1724304708; c=relaxed/simple;
+	bh=NGpXsx7dgwIfGJMb97R57CZgwLbo52OS/ujeqqpq5Oc=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ZfyGqeQyFmmJ3NwXwhe7ibTlHzp8N+J9LTJc+c93QMXY288TRAiULx9zUnpMqsw6bf3MF7xrmwidRN2T67IRMJl4+0Q0XgPShB8J3+Pt71JSnfuaJXJtdB7vmwuREv96mz3iZ+3Q0ycvbAz43PP8fFJzmyWTYDib2Pp5tlBT5qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=wXiwEpZr; arc=none smtp.client-ip=43.163.128.50
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="LmdZUCBy"
-Message-ID: <f8bc2ce4-e6c5-4a8a-82b0-b01495fc2f80@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1724284453;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jDF2Oz//renJ6+GfyF5hoUbqLd8wzAv4WupkwSjsbNs=;
-	b=LmdZUCByPXbM3tJHz6cH++7Ye8SLhUBQSyMZShw8Bv76RL3eQiBfzE1Fl5mX2EWCCArUKW
-	uN0XD4nuMMawA/MOU3jPtXuQY2R6dBFcNoc2sYS5hvPAgM9SYmznKvhz4DIu2Ylmu4+TJD
-	QjIK/aE9/FeoAnFxN0xG1ER/HzzvLmU=
-Date: Wed, 21 Aug 2024 16:54:07 -0700
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="wXiwEpZr"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1724304639;
+	bh=orGZxRP3EmbphZg4hF8C2M+U0CoOGrb/LiKV+L4HuA0=;
+	h=From:To:Cc:Subject:Date;
+	b=wXiwEpZr7ohLjakGQr+VDaU5KEq6BYpAe4pa+MhYJd05/yb6onD5RAxvUlKrq8XMV
+	 WGrnv/qrhIozJg9jeN/W3VwC6B6NU8EoboSsHBdjkAuSKM08sBDdxd1SIOhfsJ12t4
+	 FZZWY7eM+VpiSDPwKvN12zxoI9NZutu+6rw8XsuM=
+Received: from yangang-TM1701.. ([39.156.73.13])
+	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
+	id 7A4838B6; Thu, 22 Aug 2024 13:30:36 +0800
+X-QQ-mid: xmsmtpt1724304636tpkzgv083
+Message-ID: <tencent_CD94B9310E4F3464B4D83B0942EA0EA28409@qq.com>
+X-QQ-XMAILINFO: Ms5xyImz3IR/a39KuHviw2sJI9kiFsHXuqkt5El4KajtS6wuvXyjfTWqqMyHNd
+	 /SUd+GRnnPFvL7+VJ0nxczzKri0O3nnW0lh4mbWDj/4wR8ZR3GKoVFIRSqt5mlSPfp4tqu+Wt1T1
+	 6FE5GzGGUVixLyNocpmqiRn+R81AbBgS0UShwlWF4B2v7P04oJ5F7679g3Wg0ileKlexNDwh0AzQ
+	 BMc6K9EVKZqFsks13tdhLTORRkXqK6/NXH13G96wpEUMtcYUyyUkFGj2bhA+siY+aj7c8jr1Fg3y
+	 S7N52eoqlQcIfYaP0h1QurQt/RPTTZhw61C96u29Oe3i8BolPxKOCh1XcFXYaOW0hKRvdjsePbT1
+	 393VzNVgA68Mpjl0g59FH1C0SB48k1WcELNKceFDcK4x0gTG6kN7sgBishs6IR89M0snY8Z59lj5
+	 P9VKKApfn4JZm1YFZIHRcbOPbeWa9s1Ys0Q8ODKMuZUBUQKr9jvHHoEFt+q7+V4s2lbuhaoNlMbI
+	 DkPSsIvWZpFgn3wjg2El+3rjfVACd4uMEl70i/mOv0vpeeMHmsucnbfF5RoJNFohOh1Tw80l/ri5
+	 7UageaFwlP7J6qbP97GXImKW4YjGMyKD+BdYj6q5oUmO8WYXKQAgRmebpC8iwcG2NZYdBhy5JCs7
+	 vclbfautZDuqYKhgiu8z/+6UrxVDXd1JAPiexL1Dy4m+RteSV+3okBU5SVb5tHC2+xa7woAdXH8m
+	 +lwr1WJgePgHuCK8GI66LRjzfBDjGsYnagRNdFVK/Y7oagfK2oGUN9VyxDmf7HSXa2egMTjDSv/z
+	 4the8VdbBKXSvUCf6ps61ix7HzjsPOTICPGyeGuNmEcCwN2148iF04bRlNPSe5aAgT/GSH2alF+f
+	 BwMmeQVQdBw6rsQ+6S18Y7CwqmVOk9Xwluwgd63zDEycYbZoJQQBGdlY44GrlDqHB8ajVJI8741v
+	 cHsR1k9CA0pAchmb9QsMTGikBZTTq+fam+qioELVM=
+X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
+From: Gang Yan <gang_yan@foxmail.com>
+To: "David S . Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	bpf@lists.linux.dev,
+	mptcp@lists.linux.dev,
+	netdev@lists.linux.dev,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH bpf-next] bpf: Allow error injection for update_socket_protocol
+Date: Thu, 22 Aug 2024 13:30:24 +0800
+X-OQ-MSGID: <20240822053028.916973-1-gang_yan@foxmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH mptcp-next 2/2] selftests/bpf: Add getsockopt to inspect
- mptcp subflow
-To: Matthieu Baerts <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>,
- mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
- Martin KaFai Lau <martin.lau@kernel.org>
-References: <cover.1724142917.git.tanggeliang@kylinos.cn>
- <3788544d841aa372a810f2d3dce905612063e872.1724142917.git.tanggeliang@kylinos.cn>
- <407f6a6a-344e-4f12-9293-e43b9a97f8d4@kernel.org>
- <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
- <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 8/21/24 2:37 AM, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for your reply!
-> 
-> On 21/08/2024 10:00, Geliang Tang wrote:
->> On Tue, 2024-08-20 at 11:48 +0200, Matthieu Baerts wrote:
->>> On 20/08/2024 10:44, Geliang Tang wrote:
-> (...)
-> 
->>>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>>> index 69fdcb28249d..2178db94f764 100644
->>>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
->>>> @@ -383,6 +383,7 @@ static void run_subflow(char *new)
->>>>   {
->>>>   	int server_fd, client_fd, err;
->>>>   	char cc[TCP_CA_NAME_MAX];
->>>> +	unsigned int mark;
->>>>   	socklen_t len;
->>>>   
->>>>   	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1,
->>>> 0);
->>>> @@ -407,6 +408,10 @@ static void run_subflow(char *new)
->>>>   	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
->>>>   	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
->>> I guess the next steps is to remove these 'ss_search()', right?
->> We can keep it for double checks.
-> I would not mind, even if 'ss | grep' is used in other BPF tests, but I
-> understood from Martin he prefers not to depend on external tools as
-> much as possible. It should indeed ease the maintenance.
+From: Gang Yan <yangang@kylinos.cn>
 
-I would prefer to avoid the 'ss | grep'. The other bpf selftests using this "ss 
-| grep" should be in the .sh which is not in the test_progs and not run by bpf 
-CI. They are there to loop-waiting for something. The ss usage hopefully will be 
-removed when eventually migrating the .sh tests to test_progs. At least the one 
-in test_tc_tunnel.sh should be doable once moved to test_progs. Haven't looked 
-at the test_xdp_features.sh yet.
+The "update_socket_protocol" interface is designed to empower user space
+with the capability to customize and modify socket protocols leveraging
+BPF methods. Currently, it has only granted the fmod_ret permission,
+allowing for modifications to return values. We are extending the
+permissions further by 'ALLOW_ERROR_INJECTION', thereby facilitating
+the development of user-space programs with enhanced flexibility and
+convenience.
 
-Thanks for trying the getsockopt approach and it turns out working well.
+When we attempt to modify the return value of "update_socket_protocol"
+to "IPPROTO_MPTCP" using the below code based on the BCC tool:
+
+'''
+int kprobe__update_socket_protocol(void* ctx)
+{
+    ...
+    bpf_override_return(ctx, IPPROTO_MPTCP);
+    ...
+}
+'''
+
+But an error occurs:
+
+'''
+ioctl(PERF_EVENT_IOC_SET_BPF): Invalid argument
+Traceback (most recent call last):
+  File "/media/yangang/work/Code/BCC/test.py", line 27, in <module>
+    b = BPF(text=prog)
+        ^^^^^^^^^^^^^^
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 487, \
+                  in __init__ self._trace_autoload()
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 1466, \
+                  in _trace_autoload self.attach_kprobe(
+  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 855,\
+                  in attach_kprobe
+    raise Exception("Failed to attach BPF program %s to kprobe %s"
+Exception: Failed to attach BPF program b'kprobe__update_socket_protocol' \
+  to kprobe b'update_socket_protocol', it's not traceable \
+  (either non-existing, inlined, or marked as "notrace")
+'''
+
+This patch can fix the issue.
+
+Suggested-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ net/socket.c | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/net/socket.c b/net/socket.c
+index fcbdd5bc47ac..63ce1caf75eb 100644
+--- a/net/socket.c
++++ b/net/socket.c
+@@ -1695,6 +1695,7 @@ __weak noinline int update_socket_protocol(int family, int type, int protocol)
+ {
+ 	return protocol;
+ }
++ALLOW_ERROR_INJECTION(update_socket_protocol, ERRNO);
+ 
+ __bpf_hook_end();
+ 
+-- 
+2.43.0
+
