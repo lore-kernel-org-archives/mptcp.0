@@ -1,131 +1,120 @@
-Received: from xmbghk7.mail.qq.com (xmbghk7.mail.qq.com [43.163.128.50])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8043A1D130D
-	for <mptcp@lists.linux.dev>; Thu, 22 Aug 2024 05:30:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=43.163.128.50
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0815A249F9
+	for <mptcp@lists.linux.dev>; Thu, 22 Aug 2024 06:39:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724304708; cv=none; b=FIQmd64XYmyWR4j39jVxHULJRr76DC07SFhMqXu8k1iAdKENlDE1nZRpkNe7fjqDgE5O4RgI6Pqg9pQL7sqd/wOJpDpWSNTk6CyD1C6k7ZR+u11ECVKxoesmeiXh8S020kTwM40GGGqQh0lA1FZUuXeR4rYAscRE5gzrUG4X+N4=
+	t=1724308801; cv=none; b=dCFK6IwyvnGoA64omfDl5zf7lDi4NaETUzzfs/P7jz1805Rv/swsKc4k4u0iQbJmp9LJBPPewh2EpHLd07Zp2RiMF/wUKp/CRLuOwVyNLTACKC2rR+2A4oBXJoAQO1C2YPl5wA4Zgf1Ke/6+kVCHhsjd47IOybL2OVYeQFs0pno=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724304708; c=relaxed/simple;
-	bh=NGpXsx7dgwIfGJMb97R57CZgwLbo52OS/ujeqqpq5Oc=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=ZfyGqeQyFmmJ3NwXwhe7ibTlHzp8N+J9LTJc+c93QMXY288TRAiULx9zUnpMqsw6bf3MF7xrmwidRN2T67IRMJl4+0Q0XgPShB8J3+Pt71JSnfuaJXJtdB7vmwuREv96mz3iZ+3Q0ycvbAz43PP8fFJzmyWTYDib2Pp5tlBT5qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=wXiwEpZr; arc=none smtp.client-ip=43.163.128.50
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1724308801; c=relaxed/simple;
+	bh=LvpruJaiuL9l1drJGrad7RBXTJfvC2uBameED2SUgo4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=jqvMkMZHIH877/WjK7a3/3O2lqtS4ujPws4bqSajQMKokiAqc92JsIZ91kKP5BtCeNJG3VLpUKbZI2hCaA+v9pDs4fu9oja6r1IJnE9XBxY2DWkHbIie3k0o0wHoeAbsjBM04B1p+wSaz46xcUlg2kj5JwXlVlTyy4tNO8VsXpo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=NdJHb+Er; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="wXiwEpZr"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1724304639;
-	bh=orGZxRP3EmbphZg4hF8C2M+U0CoOGrb/LiKV+L4HuA0=;
-	h=From:To:Cc:Subject:Date;
-	b=wXiwEpZr7ohLjakGQr+VDaU5KEq6BYpAe4pa+MhYJd05/yb6onD5RAxvUlKrq8XMV
-	 WGrnv/qrhIozJg9jeN/W3VwC6B6NU8EoboSsHBdjkAuSKM08sBDdxd1SIOhfsJ12t4
-	 FZZWY7eM+VpiSDPwKvN12zxoI9NZutu+6rw8XsuM=
-Received: from yangang-TM1701.. ([39.156.73.13])
-	by newxmesmtplogicsvrsza10-0.qq.com (NewEsmtp) with SMTP
-	id 7A4838B6; Thu, 22 Aug 2024 13:30:36 +0800
-X-QQ-mid: xmsmtpt1724304636tpkzgv083
-Message-ID: <tencent_CD94B9310E4F3464B4D83B0942EA0EA28409@qq.com>
-X-QQ-XMAILINFO: Ms5xyImz3IR/a39KuHviw2sJI9kiFsHXuqkt5El4KajtS6wuvXyjfTWqqMyHNd
-	 /SUd+GRnnPFvL7+VJ0nxczzKri0O3nnW0lh4mbWDj/4wR8ZR3GKoVFIRSqt5mlSPfp4tqu+Wt1T1
-	 6FE5GzGGUVixLyNocpmqiRn+R81AbBgS0UShwlWF4B2v7P04oJ5F7679g3Wg0ileKlexNDwh0AzQ
-	 BMc6K9EVKZqFsks13tdhLTORRkXqK6/NXH13G96wpEUMtcYUyyUkFGj2bhA+siY+aj7c8jr1Fg3y
-	 S7N52eoqlQcIfYaP0h1QurQt/RPTTZhw61C96u29Oe3i8BolPxKOCh1XcFXYaOW0hKRvdjsePbT1
-	 393VzNVgA68Mpjl0g59FH1C0SB48k1WcELNKceFDcK4x0gTG6kN7sgBishs6IR89M0snY8Z59lj5
-	 P9VKKApfn4JZm1YFZIHRcbOPbeWa9s1Ys0Q8ODKMuZUBUQKr9jvHHoEFt+q7+V4s2lbuhaoNlMbI
-	 DkPSsIvWZpFgn3wjg2El+3rjfVACd4uMEl70i/mOv0vpeeMHmsucnbfF5RoJNFohOh1Tw80l/ri5
-	 7UageaFwlP7J6qbP97GXImKW4YjGMyKD+BdYj6q5oUmO8WYXKQAgRmebpC8iwcG2NZYdBhy5JCs7
-	 vclbfautZDuqYKhgiu8z/+6UrxVDXd1JAPiexL1Dy4m+RteSV+3okBU5SVb5tHC2+xa7woAdXH8m
-	 +lwr1WJgePgHuCK8GI66LRjzfBDjGsYnagRNdFVK/Y7oagfK2oGUN9VyxDmf7HSXa2egMTjDSv/z
-	 4the8VdbBKXSvUCf6ps61ix7HzjsPOTICPGyeGuNmEcCwN2148iF04bRlNPSe5aAgT/GSH2alF+f
-	 BwMmeQVQdBw6rsQ+6S18Y7CwqmVOk9Xwluwgd63zDEycYbZoJQQBGdlY44GrlDqHB8ajVJI8741v
-	 cHsR1k9CA0pAchmb9QsMTGikBZTTq+fam+qioELVM=
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Gang Yan <gang_yan@foxmail.com>
-To: "David S . Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Gang Yan <yangang@kylinos.cn>,
-	bpf@lists.linux.dev,
-	mptcp@lists.linux.dev,
-	netdev@lists.linux.dev,
-	Geliang Tang <geliang@kernel.org>
-Subject: [PATCH bpf-next] bpf: Allow error injection for update_socket_protocol
-Date: Thu, 22 Aug 2024 13:30:24 +0800
-X-OQ-MSGID: <20240822053028.916973-1-gang_yan@foxmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="NdJHb+Er"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7a1dea79e1aso30724285a.1
+        for <mptcp@lists.linux.dev>; Wed, 21 Aug 2024 23:39:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1724308799; x=1724913599; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=AzUddk1Rk4REE/sHCTLMNJGPh1VyXpJkdQQEaABWEbo=;
+        b=NdJHb+ErIzbcT7ZUlnsFZRNlSjZeWraWrNg24qoqPpxnqQIv4f3eGxE82NwHToRMP/
+         cQVgyzLgO6RHtSCW8zcqRenJiWvtvr2jZkow95TzJByAvG/0s91XOcoSObODk6YwrtYE
+         kM4YTtUSOeBzG0/+mFuxauuukVI7nQIYQuUQOYmrgiNdob6MatG/SN2UYltBJouSrhjU
+         IXCTUFeVVLRJ+xvMPbGNcHD+faEBVGxu52zymocejWETPafEypl8YcAwgu74FYKl3rlZ
+         +oQmXQyHQ7YTb5mP6POG6E4YAzPJqJynhU7HiEXjD7z/S6MkEHD4C4GpFpoBT5/kO0E8
+         Dkqg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724308799; x=1724913599;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=AzUddk1Rk4REE/sHCTLMNJGPh1VyXpJkdQQEaABWEbo=;
+        b=rU8xrhutADbEifSAEvSIO5VKxezhB76UfxBSzc//EdhA1Zko5nePgNe1GuNlWaFhzg
+         C7tGy9MmF94rdxEEDIB1vVs79uF+SNdfyuhLlkaW90TyGEW7WRglg65JBo2mnx7eekYe
+         9A1PhK0UjsZIHPNNE/7ytijtKgjQ0sYyzXCpY3bjEjzwHpD0nFrs+tfU87sjF1JbW0gB
+         DWtHhV9VjfARI89CWpvAPx1hkWotieACwg6AF+AneOhkEDCPb8+SqsXNA3u1lyjy6J9F
+         kVNZGcU08J6eywP+O5J0fBpRTWyPDqOB64rJ0JrJf+1adKgR45WQ4xFHTFO2LZHVZrQJ
+         MIUw==
+X-Gm-Message-State: AOJu0Yx/qFoqVqXaOfRHahM4DF7lxNtZhlnHkazAhCK1Su6IiUOTRJdP
+	QfhnXbQjrIaUNWUVxMUoIDYAruYsDsJoLqSNN4xxZxkEzPjtiEQ4C8Hn
+X-Google-Smtp-Source: AGHT+IEFuEDteU65T9GBi0QNI8A5y0nnE6mVeQjJBaNtbIAMLcytTOzi/ljhCAhj48w/0ZveyG0l2A==
+X-Received: by 2002:a05:6214:590a:b0:6b7:a3f1:3251 with SMTP id 6a1803df08f44-6c15686848cmr53169966d6.51.1724308798787;
+        Wed, 21 Aug 2024 23:39:58 -0700 (PDT)
+Received: from [127.0.0.1] ([40.84.61.4])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6c162dcdd81sm4427056d6.125.2024.08.21.23.39.58
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 21 Aug 2024 23:39:58 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <tencent_CD94B9310E4F3464B4D83B0942EA0EA28409@qq.com>
+References: <tencent_CD94B9310E4F3464B4D83B0942EA0EA28409@qq.com>
+Subject: Re: [PATCH bpf-next] bpf: Allow error injection for
+ update_socket_protocol
+Message-ID: <5f6e0f34-6a1a-8ff8-e608-f725a5bcc1cf@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 22 Aug 2024 06:39:57 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Gang,
 
-The "update_socket_protocol" interface is designed to empower user space
-with the capability to customize and modify socket protocols leveraging
-BPF methods. Currently, it has only granted the fmod_ret permission,
-allowing for modifications to return values. We are extending the
-permissions further by 'ALLOW_ERROR_INJECTION', thereby facilitating
-the development of user-space programs with enhanced flexibility and
-convenience.
+Thank you for your modifications, that's great!
 
-When we attempt to modify the return value of "update_socket_protocol"
-to "IPPROTO_MPTCP" using the below code based on the BCC tool:
+Our CI did some validations and here is its report:
 
-'''
-int kprobe__update_socket_protocol(void* ctx)
-{
-    ...
-    bpf_override_return(ctx, IPPROTO_MPTCP);
-    ...
-}
-'''
+- KVM Validation: normal: Unstable: 1 failed test(s): mptcp_connect_mmap =
+=F0=9F=94=B4
+- KVM Validation: debug: Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/105025=
+83505
 
-But an error occurs:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/889545cfdd86
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D881988
 
-'''
-ioctl(PERF_EVENT_IOC_SET_BPF): Invalid argument
-Traceback (most recent call last):
-  File "/media/yangang/work/Code/BCC/test.py", line 27, in <module>
-    b = BPF(text=prog)
-        ^^^^^^^^^^^^^^
-  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 487, \
-                  in __init__ self._trace_autoload()
-  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 1466, \
-                  in _trace_autoload self.attach_kprobe(
-  File "/usr/lib/python3/dist-packages/bcc/__init__.py", line 855,\
-                  in attach_kprobe
-    raise Exception("Failed to attach BPF program %s to kprobe %s"
-Exception: Failed to attach BPF program b'kprobe__update_socket_protocol' \
-  to kprobe b'update_socket_protocol', it's not traceable \
-  (either non-existing, inlined, or marked as "notrace")
-'''
 
-This patch can fix the issue.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Suggested-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- net/socket.c | 1 +
- 1 file changed, 1 insertion(+)
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-diff --git a/net/socket.c b/net/socket.c
-index fcbdd5bc47ac..63ce1caf75eb 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1695,6 +1695,7 @@ __weak noinline int update_socket_protocol(int family, int type, int protocol)
- {
- 	return protocol;
- }
-+ALLOW_ERROR_INJECTION(update_socket_protocol, ERRNO);
- 
- __bpf_hook_end();
- 
--- 
-2.43.0
+For more details:
 
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
