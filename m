@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DFA0757F3
-	for <mptcp@lists.linux.dev>; Sat, 24 Aug 2024 12:17:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED96F757F3
+	for <mptcp@lists.linux.dev>; Sat, 24 Aug 2024 12:19:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724501854; cv=none; b=IaZGRwyPMOCBf9lr5uj6OFCFZnPeAu8cykubS4ngXnF5/JuY4+geMUdsXKN6+7jvq2Uq8IZr00Jy//MJK5ijbi6h/Iz/H0yCEWDOWFSg/h9a90gfTzdcS4VstjEf88Ua6BwWH3f57Gtt9Mvcx1ZIcEQkGHuCSyZcrnBp8taTa58=
+	t=1724501960; cv=none; b=KKlR18932Pgn51sAjORiYJJTSDeX6Zq/I2cbkNpP29j3sG2e/2lo726/iCiqogzShcCTCzncnrlNz1lzrSP0+Xmt8DwimYU5NYcoHncRZVa2mtc9IpZ/bVz3aL6YLKbuNDPMWdFL78uR0+I6EPfYErt40WhgOcgFgypetgsf/7Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724501854; c=relaxed/simple;
-	bh=Y/kTiH1Y2k8Wsb3p1uBwifDugNI60yZLx+TV41GH17k=;
+	s=arc-20240116; t=1724501960; c=relaxed/simple;
+	bh=oA+6YDbpmef65Z3Idlf3SsmrZobBOBUWsOjVeKogz78=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g+1uOFW+rbrpVPQFOfAqKp35yleH6iNCk76FdM4qEfG2g7vKn98ohHoKwgqF8hDXcXnJIA0zvnUX6CD7hB+hNrzLyohTSRPFUrzfJH+t632rSkMd8PxcjNQnvfJpmZKvqE62TO0Giu2zM0q8BBlcTgudjhUib0/vbSLbV/xzZN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EjJ5azln; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fnZtLTt0r1DnYRDqt0dFjm7SzHQKX6ArhuBGx9wnO/rXY5i1rt2VB86SfCgfO8BBGQeQGoEBll6S2X5rx3hKeHnrJzXCzcr7+xO3QItjhZo+HYVjVGYrEOpxkLzFq++EO88VdHVdEEmG6fUW8wx9omEaYHMU3rdBtW7JlRuQhTA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzNvygc1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EjJ5azln"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6451C32781;
-	Sat, 24 Aug 2024 12:17:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzNvygc1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057D2C32781;
+	Sat, 24 Aug 2024 12:19:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724501854;
-	bh=Y/kTiH1Y2k8Wsb3p1uBwifDugNI60yZLx+TV41GH17k=;
+	s=k20201202; t=1724501959;
+	bh=oA+6YDbpmef65Z3Idlf3SsmrZobBOBUWsOjVeKogz78=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=EjJ5azlngVAjFOTYhE78xJOf7XxyusPDXPqi5vBHiyd9QVI89MsqxaPw/QRa4ufVB
-	 Jj5MTw8/g12iJMXooHhp8WQ5SKJXQr0BrgewB5bRNA4lM+yXCjcEJhwIU6FRIOab++
-	 Z8dJ3W1Qw1yHbqAUEJtPXGdSeNtmqa2DNUAfDuneLNi0ttX45JqU9yiYk1VDDgVgEI
-	 KfbVFEd9jteo9a6QjIoXulaujViBO19/w5aqnZfaRsiiPn59ITM7NF9Rf2POudJeKa
-	 TIxFndi6o3NXpbtS3hTp3Kjrnl7SRK/CLff+ao33O1ehAMLy6mmeR9NcR1hE3xkk/o
-	 tB7HaWt1eh0eg==
-Message-ID: <ad3aa21a-5634-4bfd-8be1-3207baa6639a@kernel.org>
-Date: Sat, 24 Aug 2024 14:17:32 +0200
+	b=BzNvygc1XfjozOuajinL2hVhJviBHGCSNwF7l1ysNlor7ANMhKXppGGFrFKqsbWox
+	 S0269G5cGJuKN7A2MrDKO/NtnchtoJvQ3DsWa1zQ8ddaekAYe2+o9Qx2PPccBWaa7C
+	 lNNjsWctxogOixz/gSUZVs7tbCWCSkA9t9cxknWRQnbfOvg2Ak3/4VUa+SKMiADy2q
+	 xtMdF1/Mx3yAOtOdgQHLBiO9IKdLrzERrCfGkiZ5QmMIGh9kxVyNK/exw34nW+Dc0n
+	 BYZoQJdCSFzcYg7qB/NepCCvfSC+I/yVyGzk/DJug1S3t/Xnr2CgN9AxJbNWHS4Odu
+	 vhQkJC6fPgttQ==
+Message-ID: <b850a69c-5d29-4971-8d14-94e1536d21fe@kernel.org>
+Date: Sat, 24 Aug 2024 14:19:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 00/12] mptcp: pm: fix re-re-create the ID 0
- endpoint
+Subject: Re: [PATCH mptcp-next 0/3] selftests: mptcp: add time per subtests in
+ TAP output
 Content-Language: en-GB
 To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
- <arinc.unal@arinc9.com>
-References: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
- <9382cd97-6674-d748-5559-d52f33b922fb@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20240821-mptcp-ksft-time-v1-0-c4ea94f41244@kernel.org>
+ <15747097-d702-ab6a-5973-2b93819e7d6e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,108 +87,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9382cd97-6674-d748-5559-d52f33b922fb@kernel.org>
+In-Reply-To: <15747097-d702-ab6a-5973-2b93819e7d6e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Mat,
 
-On 24/08/2024 02:42, Mat Martineau wrote:
-> On Fri, 16 Aug 2024, Matthieu Baerts (NGI0) wrote:
+On 24/08/2024 02:46, Mat Martineau wrote:
+> On Wed, 21 Aug 2024, Matthieu Baerts (NGI0) wrote:
 > 
->> Even more fixes for the in-kernel PM :)
+>> Patches here add 'time=<N>ms' in the diagnostic data of the TAP output,
+>> e.g.
 >>
->> There are a few Squash-to patches fist:
+>>  ok 1 - pm_netlink: defaults addr list # time=9ms
 >>
->> - a partial revert for a previous Squash-to patch: probably fine not to
->>  block the send of the original patch then.
->>
->> - improve code coverage
->>
->> - use the right ID with __mark_subflow_endp_available()
->>
->> - small fix for the fullmesh case when re-adding the ID 0 endpoint
->>
->> - set the ID for __mark_subflow_endp_available()
->>
->> Then a few more fixes:
->>
->> - avoid the RM_SUBFLOW MIB counter to be incremented twice
->>
->> - fix re-re-creation of the ID 0 endpoint
->>
->> - validate that in the selftests
->>
->> - avoid duplicated SUB_CLOSED events
->>
->> - validate that in the selftests
->>
->> - ADD_ADDR 0 is not taking into account by the 'add_addr_accepted'
->>  counter, then it should bypass 'accept_addr' & make sure ADD_ADDR 0 is
->>  not sent with a new address
->>
->> - validate that in the selftests
+>> This addition is useful to quickly identify which subtests are taking a
+>> longer time than the others, or more than expected.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->> Changes in v2:
->> - New squash-to patches after new issue reported by Arınç: patch 3,5/12.
->> - Patch 8/12 is re-creating the ID 0 endpoint 3 times.
->> - Link to v1: https://lore.kernel.org/r/20240815-mptcp-dup-close-evt-
->> v1-0-5a551d3a66cc@kernel.org
+>> Matthieu Baerts (NGI0) (3):
+>>      selftests: mptcp: lib: add time per subtests in TAP output
+>>      sefltests: mptcp: connect: remote time in TAP output
+>>      selftests: mptcp: reset the last TS before the first test
 >>
 > 
-> Hi Matthieu -
+> Matthieu -
 > 
-> I have one comment for patch 9 that you can add while applying.
+> Series LGTM, thanks!
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
 Thank you for the review!
 
-> A more general question for self tests, is there documentation around
-> for our reverse-compatibility goals for the self tests?
-
-Not really. I mean, the KSelftests doc mentions [1] that "Kselftest from
-mainline can be run on older stable kernels", but that's it.
-
-For who this doc would be? Would it be specific to MPTCP?
-
-(I still need to look at having a CI job regularly validating the stable
-kernels with the selftests from our export branch)
-
-[1] https://docs.kernel.org/dev-tools/kselftest.html
-
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-New patches for t/upstream-net and t/upstream:
-- 62ea9befdf81: "squashed" patch 2/12 (with conflicts) in "selftests:
-mptcp: join: check removing ID 0 endpoint"
-- 166b2e2e7e55: "squashed" patch 4/12 in "mptcp: pm: reuse ID 0 after
-delete and re-add"
-- 3760c0b70fd2: conflict in
-t/selftests-mptcp-join-validate-MPJ-SYN-TX-MIB-counters
-- Results: 410328b9177d..48372820bae1 (export-net)
-- Results: 578465d5bbbe..8a29143c4af9 (export)
-
-- 9a20909645a3: mptcp: pm: do not remove already closed subflows
-- dfe065fa0ed1: mptcp: pm: fix ID 0 endp usage after multiple re-creations
-- e4aed237e502: selftests: mptcp: join: check re-re-adding ID 0 endp
-- 67e2bf3f6157: mptcp: avoid duplicated SUB_CLOSED events
-- 240550f9423b: selftests: mptcp: join: validate event numbers
-- cac1db6d0b63: mptcp: pm: ADD_ADDR 0 is not a new address
-- 9ee8e1ef984d: selftests: mptcp: join: check re-re-adding ID 0 signal
-- 77eef1cce636: conflict in
-t/selftests-mptcp-join-validate-MPJ-SYN-TX-MIB-counters
-- Results: 48372820bae1..bbc47d79e5c3 (export-net)
-- Results: 8a29143c4af9..c94cd4e2e8ed (export)
+New patches for t/upstream:
+- 61eb92f67b13: selftests: mptcp: lib: add time per subtests in TAP output
+- 301490f2d642: sefltests: mptcp: connect: remote time in TAP output
+- 789ba8f8b57f: selftests: mptcp: reset the last TS before the first test
+- Results: c94cd4e2e8ed..6b5502abeca5 (export)
 
 Tests are now in progress:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3e189f6578aa29cfda6c0305cc2e0ba9890440b7/checks
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/455555bfbecd70ae0502fb68139e3f4f65e91657/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/4964e83f255e59f55e09d09a0447e49dcc77d7a3/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/9038dda10acf21b8021574e26927de82080d8394/checks
 
 Cheers,
 Matt
