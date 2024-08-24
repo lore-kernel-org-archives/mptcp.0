@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED96F757F3
-	for <mptcp@lists.linux.dev>; Sat, 24 Aug 2024 12:19:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7D0435894
+	for <mptcp@lists.linux.dev>; Sat, 24 Aug 2024 12:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724501960; cv=none; b=KKlR18932Pgn51sAjORiYJJTSDeX6Zq/I2cbkNpP29j3sG2e/2lo726/iCiqogzShcCTCzncnrlNz1lzrSP0+Xmt8DwimYU5NYcoHncRZVa2mtc9IpZ/bVz3aL6YLKbuNDPMWdFL78uR0+I6EPfYErt40WhgOcgFgypetgsf/7Y=
+	t=1724502490; cv=none; b=NlXvhO52xKZscpDVA3weA//RPwV7etgA8lfWmi+NEMnInQQOvxNKQqpu9Ak5u11N605xkKeED9fYEGzx6j9nirNwsbeer7mqI0xj58Zteud0gN/V5TWejFvglMzZYAHtfT22bnUNWLq8xu28ZKNc2hgPbpFnVkeV2V/h3ZFThqk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724501960; c=relaxed/simple;
-	bh=oA+6YDbpmef65Z3Idlf3SsmrZobBOBUWsOjVeKogz78=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fnZtLTt0r1DnYRDqt0dFjm7SzHQKX6ArhuBGx9wnO/rXY5i1rt2VB86SfCgfO8BBGQeQGoEBll6S2X5rx3hKeHnrJzXCzcr7+xO3QItjhZo+HYVjVGYrEOpxkLzFq++EO88VdHVdEEmG6fUW8wx9omEaYHMU3rdBtW7JlRuQhTA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BzNvygc1; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724502490; c=relaxed/simple;
+	bh=+o8O5NApz1gfsdQYNFs8KjG9JI9+msXU8c3j99VWAu0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=OFs8eoG+U+TQigLZh2WroVtb1FtI8/QuzH3dxVtuE+9RVwPbgDtzH9N0MoruKhzqhoyk2zawi52r4+MdE7FzE3XkMbpT77EaKSbyRKEDE1QZaYyRO4o4sY7VjGIzBgDoyZIGb9Jwvsl5X/vM67+J56I8NRSRs5GB4uV9SE1ZO44=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yt9QJ9HW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BzNvygc1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 057D2C32781;
-	Sat, 24 Aug 2024 12:19:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yt9QJ9HW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7D09DC4AF0B;
+	Sat, 24 Aug 2024 12:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724501959;
-	bh=oA+6YDbpmef65Z3Idlf3SsmrZobBOBUWsOjVeKogz78=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BzNvygc1XfjozOuajinL2hVhJviBHGCSNwF7l1ysNlor7ANMhKXppGGFrFKqsbWox
-	 S0269G5cGJuKN7A2MrDKO/NtnchtoJvQ3DsWa1zQ8ddaekAYe2+o9Qx2PPccBWaa7C
-	 lNNjsWctxogOixz/gSUZVs7tbCWCSkA9t9cxknWRQnbfOvg2Ak3/4VUa+SKMiADy2q
-	 xtMdF1/Mx3yAOtOdgQHLBiO9IKdLrzERrCfGkiZ5QmMIGh9kxVyNK/exw34nW+Dc0n
-	 BYZoQJdCSFzcYg7qB/NepCCvfSC+I/yVyGzk/DJug1S3t/Xnr2CgN9AxJbNWHS4Odu
-	 vhQkJC6fPgttQ==
-Message-ID: <b850a69c-5d29-4971-8d14-94e1536d21fe@kernel.org>
-Date: Sat, 24 Aug 2024 14:19:17 +0200
+	s=k20201202; t=1724502490;
+	bh=+o8O5NApz1gfsdQYNFs8KjG9JI9+msXU8c3j99VWAu0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=Yt9QJ9HWSJp3c0D1ofOTZZ/T3a01JdDtkZRXoVSH9hhr/tEZ819B4+mbPZCmz5BSr
+	 amS0OGXBaPqzoEJxcC0uzyvE4cVMW7m+YBitWs95z7pkadABqMjRoLhq9B6hogdaRf
+	 Cz6jq21qUy0yuULkjqt/HTOg6uzxYl5r+bO6FNqGKxrL+C9ETPxFaH5OuAB1zWzveX
+	 OhPF77JqRvQlDEQeIPSxyjnoOY5GrYq5nKxVAub6E732YkmjESiXj4DT5M/bw+b1g0
+	 OvwDNHZOFMMZbwpNnuc5QHvJJy6pkIQy/KCOpJylBDSvJLCWdUBQPtBj9lj0QKQceW
+	 2C1xD/YmFnQNA==
+Message-ID: <edc3b935-26e2-4926-b9d3-4c4fc1eb0cf9@kernel.org>
+Date: Sat, 24 Aug 2024 14:28:07 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/3] selftests: mptcp: add time per subtests in
- TAP output
+Subject: Re: [PATCH mptcp-net v2 09/12] mptcp: avoid duplicated SUB_CLOSED
+ events
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240821-mptcp-ksft-time-v1-0-c4ea94f41244@kernel.org>
- <15747097-d702-ab6a-5973-2b93819e7d6e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?=
+ <arinc.unal@arinc9.com>
+References: <20240816-mptcp-dup-close-evt-v2-0-8a33f6617f5c@kernel.org>
+ <20240816-mptcp-dup-close-evt-v2-9-8a33f6617f5c@kernel.org>
+ <35a841ef-ca3d-347f-43d1-fafd82639214@kernel.org>
+ <2ec9ae4e-bde7-45d1-8f28-f4be1f534838@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,49 +90,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <15747097-d702-ab6a-5973-2b93819e7d6e@kernel.org>
+In-Reply-To: <2ec9ae4e-bde7-45d1-8f28-f4be1f534838@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+On 24/08/2024 13:44, Matthieu Baerts wrote:
+> On 24/08/2024 02:44, Mat Martineau wrote:
+>> On Fri, 16 Aug 2024, Matthieu Baerts (NGI0) wrote:
+>>
+>>> The initial subflow might have already been closed, but still in the
+>>> connection list. When the worker is instructed to close the subflows
+>>> that have been marked as closed, it might then try to close the initial
+>>> subflow again.
+> 
+> (...)
+> 
+>>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>>> index 22b7eff311f5..ce15e7db464b 100644
+>>> --- a/net/mptcp/protocol.h
+>>> +++ b/net/mptcp/protocol.h
+>>> @@ -530,7 +530,8 @@ struct mptcp_subflow_context {
+>>>         stale : 1,        /* unable to snd/rcv data, do not use for
+>>> xmit */
+>>>         valid_csum_seen : 1,        /* at least one csum validated */
+>>>         is_mptfo : 1,        /* subflow is doing TFO */
+>>> -        __unused : 10;
+>>> +        closed : 1,        /* has done the post-closed part */
+>>
+>> One small naming request, I think something like close_event_done would
+>> be better so this flag doesn't get misused in the future.
+> 
+> Good idea, I'm going to change that when applying the series.
 
-On 24/08/2024 02:46, Mat Martineau wrote:
-> On Wed, 21 Aug 2024, Matthieu Baerts (NGI0) wrote:
-> 
->> Patches here add 'time=<N>ms' in the diagnostic data of the TAP output,
->> e.g.
->>
->>  ok 1 - pm_netlink: defaults addr list # time=9ms
->>
->> This addition is useful to quickly identify which subtests are taking a
->> longer time than the others, or more than expected.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (3):
->>      selftests: mptcp: lib: add time per subtests in TAP output
->>      sefltests: mptcp: connect: remote time in TAP output
->>      selftests: mptcp: reset the last TS before the first test
->>
-> 
-> Matthieu -
-> 
-> Series LGTM, thanks!
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+Or just after :)
 
-Thank you for the review!
-
-New patches for t/upstream:
-- 61eb92f67b13: selftests: mptcp: lib: add time per subtests in TAP output
-- 301490f2d642: sefltests: mptcp: connect: remote time in TAP output
-- 789ba8f8b57f: selftests: mptcp: reset the last TS before the first test
-- Results: c94cd4e2e8ed..6b5502abeca5 (export)
+New patches for t/upstream-net and t/upstream:
+- 3138fa0a53c0: Squash to "mptcp: avoid duplicated SUB_CLOSED events"
+- Results: bbc47d79e5c3..77bc31f37f6d (export-net)
+- Results: 07b49b0ab9d5..07b49b0ab9d5 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e5ce71220ca9cd3ae413de9bf6b0f587fce9e94f/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9038dda10acf21b8021574e26927de82080d8394/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/d11a08bb27165964dbd97048bfad3b89f47fb355/checks
 
 Cheers,
 Matt
