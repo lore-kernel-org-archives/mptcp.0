@@ -1,205 +1,165 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D1AC13B59E
-	for <mptcp@lists.linux.dev>; Mon, 26 Aug 2024 08:44:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0729D82D7F
+	for <mptcp@lists.linux.dev>; Mon, 26 Aug 2024 08:50:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724661877; cv=none; b=bpREV3SHUqIig53l4b8Ks6vzQa1HHpbT2ura5pm9lnZtQ3hdn9OJf3qgr8gTtlfW3rUS4KLx7/qe84cNqpmaqi7XgcJpsgrRiy9piNBVm32BmlL56vr8uGX1c738HrULROsqigS7QXUVafEQAh0a5YxsP52GsC4+Zn2hK/NCTLM=
+	t=1724662227; cv=none; b=GRRz+vZEQ4x2ZN5WuTr3nHYXrNQNiaDI+Cd/ZVVuqSaIXGZ7FejzfnSNK/lUKtmN/SpySgYsP+TnV2xOnn0mZZ1D1Ye0ofcAE/po2elAGZiYyd28/zY94FiLC8ylvVc797lSpnruLbtlZtqxA/KRzi0kaYxIpW3wmpkuiOm50qw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724661877; c=relaxed/simple;
-	bh=4IdDiSTDfdWjDVsdlyV32q2YiCZWaFF03eVWQZDf4T4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=EBXjKV6Gmdfd/odIol8ymLkpIwdVyr/ps4JTBEnAHF3UfrooQHrE00NGwZTxnmb8J7e+7vvNPmq3O6YYmKRunnhEgAWQ7kTMv3daa4FichSJ89F1scEdDZeuh22TxI3tGkUUgS8046L8Rz1JTvwRsUNtYXeL9mhorVp7qg+O1yI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DR67tMGc; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DR67tMGc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD7E7C91B7D;
-	Mon, 26 Aug 2024 08:44:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724661876;
-	bh=4IdDiSTDfdWjDVsdlyV32q2YiCZWaFF03eVWQZDf4T4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DR67tMGciQjhqHYr7sNd3KLuMN6t7cG+d0NrjsVAlRYUawLFnp54blyZJmKMReQck
-	 2akUtN4BT92mf6iJ5wWosGY45eh1gp6nSV2Wv8pMTrJZmx0KXGxDz9xdyI08jUo4vG
-	 2KN6MOAsummjQE+MzG8XFOgiQwmMqdxHwWKlYC0CmZz/9SAUD3qAWpsId6nOHgJRm1
-	 9HQ3fMAMaKK0QdgDL+sgSKyFW6O2t3CskgdZg4OiNtE455TNGnp8s/ZjVgsgnx9dNr
-	 5mDm98iV1C9DbGvc7l7R9SgUa5VAD8xtJxuWDM7ZSDueznobLul2jomjnPkarb/Lx3
-	 X16gk7cDhu2og==
-Message-ID: <547fdd31-a052-4274-a59e-d7177887dbbe@kernel.org>
-Date: Mon, 26 Aug 2024 10:44:33 +0200
+	s=arc-20240116; t=1724662227; c=relaxed/simple;
+	bh=7vFJJ3txwB2z0MEcMHTFI2WBhYC02WWYy3xpouFHJKE=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=GCr0LHOhly4KrotHWZfEhWSytfWg3rh1ylpNsQXK/INRNAfEVJYACLqA6gPUvuyCQamlGRlqLrSGR3fbaCvOt13dgGkTm+axGVumEsSbyadK7YGmtnO80SgD8OPffpsyYZekS1BEGBuZ+Afi3b4UVR9vOjrF/MtO+17DSGw5s/g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-39d4a4e4a78so50042885ab.2
+        for <mptcp@lists.linux.dev>; Mon, 26 Aug 2024 01:50:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1724662225; x=1725267025;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=6bii5ClLr5UsuXWOo+Lybiof65kgdF6FcoRGyCA9/LM=;
+        b=KzF0uwsy3frxisLA2k0665Vyp4GRiiDrFvE2cE25zbzoU8GW+ZvkUAGO+xkR0CGf8n
+         /cDO3MpT9WPMKuBsjUEKOuqb0/Mb+vykuDre7gqZmDSm3wmA1bWm+L02f+SgiXBkcemu
+         +00uA7P4WU8xtFshhvfqWf6W12TEyNKP4fFmZvOhBGXUxy00iuBSP+lXqWaJcAuHC2YR
+         g7izsqZ4bk/RiUwVdBcuP7Coy6Ynto81I62mOfPqC4yk+XXqsy7B1Ecvp0mogLLkaY0B
+         dUk+26Ed7ORlW305TO6XqKDWu7IxzCnaJcWZRqzUnGVfzwuuI+C48st+BT5cZqwEkSoP
+         1/TA==
+X-Forwarded-Encrypted: i=1; AJvYcCVwem+slZmpmsVzBB2Wkr11z7m7S0belju+h36/y/fG0hSKB4rViw2f5XcC0XIxDEyTyIc+4w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwHHodiF7jz2Roei6jawbrz8uy4C57hG9hGIWAYfls6mhdMYSOM
+	O7WI8NtP97Oz94Wl6zDfWH4Ur6CDu4oPHJJmtOAzo8fx9y2aHazo7oVOZpmkPO2CezvTuq7+EEm
+	X7B5ZnTL+BIkwRiZ8wg3elSxgshKUrqnqLYefIIvqGH7WUC/qB4TbdSY=
+X-Google-Smtp-Source: AGHT+IGqLiPf7C/UCIC9sKZ2/snIZVM1VZbI5kIbw2a0v9194pReQWwwrsPRldTGuX+/CK7Z5p6MlV6ubhU2nWZZE/aQEKRndF4W
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/2] selftests/bpf: Add getsockopt to inspect
- mptcp subflow
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>,
- Martin KaFai Lau <martin.lau@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1724142917.git.tanggeliang@kylinos.cn>
- <3788544d841aa372a810f2d3dce905612063e872.1724142917.git.tanggeliang@kylinos.cn>
- <407f6a6a-344e-4f12-9293-e43b9a97f8d4@kernel.org>
- <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
- <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
- <afaa9ac33002da2452d3df014cd61a89fbd4978c.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <afaa9ac33002da2452d3df014cd61a89fbd4978c.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1a4b:b0:397:fa4e:3df0 with SMTP id
+ e9e14a558f8ab-39e3c9e7c0cmr8404455ab.3.1724662225139; Mon, 26 Aug 2024
+ 01:50:25 -0700 (PDT)
+Date: Mon, 26 Aug 2024 01:50:25 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <00000000000049861306209237f4@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_nl_set_flags
+From: syzbot <syzbot+455d38ecd5f655fc45cf@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+Hello,
 
-On 26/08/2024 04:57, Geliang Tang wrote:
-> On Wed, 2024-08-21 at 11:37 +0200, Matthieu Baerts wrote:
->> On 21/08/2024 10:00, Geliang Tang wrote:
->>> On Tue, 2024-08-20 at 11:48 +0200, Matthieu Baerts wrote:
->>>> On 20/08/2024 10:44, Geliang Tang wrote:
+syzbot found the following issue on:
 
-(...)
+HEAD commit:    8af174ea863c net: mana: Fix race of mana_hwc_post_rx_wqe a..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=1718a993980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=df2f0ed7e30a639d
+dashboard link: https://syzkaller.appspot.com/bug?extid=455d38ecd5f655fc45cf
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=10a653d5980000
 
->>>>> +	mptcp_for_each_subflow(msk, subflow) {
->>>>
->>>> (might be better to use this helper in our WIP MPTCP BPF packets
->>>> scheduler examples, instead of converting them to a fixed array)
->>>
->>> Yes, but there are still some access permission issues that need to
->>> be
->>> resolved.
->>
->> OK, because structures cannot be modified I suppose.
-> 
-> No, it seems the subflow cast by bpf_core_cast() can't be passed to a
-> kernel function, regardless of whether this function modifies the
-> subflow or not. An "arg#0 is untrusted_ptr_ expected ptr_" error
-> occurs.
-> 
-> For example, mptcp_subflow_active() is a kernel function, and pass the
-> subflow to it in progs/mptcp_bpf_first.c like this:
-> 
-> '''
-> ... ...
-> extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow)
-> __ksym;
-> 
-> ... ...
-> SEC("struct_ops")
-> int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
->              struct mptcp_sched_data *data)
-> {
->         struct mptcp_subflow_context *subflow, *tmp;
-> 
->         mptcp_for_each_subflow(msk, tmp) {
->                 subflow = bpf_core_cast(tmp, struct
-> mptcp_subflow_context);
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/86225fd99eec/disk-8af174ea.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/fc4394f330d4/vmlinux-8af174ea.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1f30959324a7/bzImage-8af174ea.xz
 
-(Why do you need to cast "tmp" (struct mptcp_subflow_context *) in the
-same type of pointer? I don't think it changes anything for the error
-you got (see below), but it looks strange.)
+The issue was bisected to:
 
->                 if (!mptcp_subflow_active(subflow))
->                         continue;
->         }
->         return 0;
-> }
-> 
-> '''
-> 
-> An "arg#0 is untrusted_ptr_ expected ptr_" error occurs:
-> 
-> '''
-> ; mptcp_for_each_subflow(msk, tmp) { @ mptcp_bpf_first.c:27
-> 21: (e5) may_goto pc+1
-> 22: R1=2488 R2=2488 R6=trusted_ptr_mptcp_sock(off=2488) R7=0
-> R8=trusted_ptr_mptcp_sock(off=2488) R9=0 R10=fp0
-> ; mptcp_for_each_subflow(msk, tmp) { @ mptcp_bpf_first.c:27
-> 22: (05) goto pc-14
-> 9: (79) r6 = *(u64 *)(r6 +0)          ; R6_w=ptr_list_head()
-> 10: (1f) r6 -= r7                     ; R6_w=ptr_list_head() R7=0
-> 11: (bf) r1 = r6                      ; R1_w=ptr_list_head()
-> R6_w=ptr_list_head()
-> 12: (0f) r1 += r7                     ; R1=ptr_list_head() R7=0
-> 13: (1d) if r1 == r8 goto pc+9        ; R1=ptr_list_head()
-> R8=trusted_ptr_mptcp_sock(off=2488)
-> ; subflow = bpf_core_cast(tmp, struct mptcp_subflow_context); @
-> mptcp_bpf_first.c:28
-> 14: (bf) r1 = r6                      ; R1_w=ptr_list_head()
-> R6=ptr_list_head()
-> 15: (18) r2 = 0x6d14                  ; R2_w=27924
-> 17: (85) call bpf_rdonly_cast#159867          ;
-> R0_w=untrusted_ptr_mptcp_subflow_context()
-> ; if (!mptcp_subflow_active(subflow)) @ mptcp_bpf_first.c:29
-> 18: (bf) r1 = r0                      ;
-> R0_w=untrusted_ptr_mptcp_subflow_context()
-> R1_w=untrusted_ptr_mptcp_subflow_context()
-> 19: (85) call mptcp_subflow_active#111397
-> arg#0 is untrusted_ptr_ expected ptr_ or socket
-> processed 23 insns (limit 1000000) max_states_per_insn 0 total_states 2
-> peak_states 2 mark_read 2
-> -- END PROG LOAD LOG --
-> '''
-> 
-> How can I fix this? I need your advice.
+commit 322ea3778965da72862cca2a0c50253aacf65fe6
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Date:   Mon Aug 19 19:45:26 2024 +0000
 
-I'm not an expert in this, but I guess it means you cannot use
-'mptcp_subflow_active()', because it can modify the 'subflow' structure
-that you got with bpf_core_cast() for a read-only usage.
+    mptcp: pm: only mark 'subflow' endp as available
 
-I guess it means we cannot iterate through the list and modify items
-from the list "directly" with BPF. Except if there is something else we
-can use, and I don't know about (which is very likely), we might have to
-continue extracting the subflows into an array of a fixed size.
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=159fb015980000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=179fb015980000
+console output: https://syzkaller.appspot.com/x/log.txt?x=139fb015980000
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+455d38ecd5f655fc45cf@syzkaller.appspotmail.com
+Fixes: 322ea3778965 ("mptcp: pm: only mark 'subflow' endp as available")
 
+------------[ cut here ]------------
+WARNING: CPU: 1 PID: 5507 at net/mptcp/pm_netlink.c:1467 __mark_subflow_endp_available net/mptcp/pm_netlink.c:1467 [inline]
+WARNING: CPU: 1 PID: 5507 at net/mptcp/pm_netlink.c:1467 mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1948 [inline]
+WARNING: CPU: 1 PID: 5507 at net/mptcp/pm_netlink.c:1467 mptcp_nl_set_flags net/mptcp/pm_netlink.c:1971 [inline]
+WARNING: CPU: 1 PID: 5507 at net/mptcp/pm_netlink.c:1467 mptcp_pm_nl_set_flags+0x926/0xd50 net/mptcp/pm_netlink.c:2032
+Modules linked in:
+CPU: 1 UID: 0 PID: 5507 Comm: syz.3.20 Not tainted 6.11.0-rc4-syzkaller-00138-g8af174ea863c #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
+RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_netlink.c:1467 [inline]
+RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1948 [inline]
+RIP: 0010:mptcp_nl_set_flags net/mptcp/pm_netlink.c:1971 [inline]
+RIP: 0010:mptcp_pm_nl_set_flags+0x926/0xd50 net/mptcp/pm_netlink.c:2032
+Code: 00 00 00 49 89 c5 e8 29 b4 ef f5 e9 08 fd ff ff e8 1f b4 ef f5 4c 89 f7 be 03 00 00 00 e8 02 1c 0d f9 eb a0 e8 0b b4 ef f5 90 <0f> 0b 90 e9 14 ff ff ff 89 d9 80 e1 07 38 c1 0f 8c 19 fd ff ff 48
+RSP: 0018:ffffc90003adf2a0 EFLAGS: 00010293
+RAX: ffffffff8ba3d735 RBX: 1ffff11005fae2ca RCX: ffff888016b73c00
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc90003adf470 R08: ffffffff8ba3d621 R09: 1ffff11005fae2cb
+R10: dffffc0000000000 R11: ffffed1005fae2cc R12: ffff88802fd71608
+R13: ffff88802fd70bc0 R14: 0000000000000000 R15: ffff88802fd71650
+FS:  00007fe0b3ff86c0(0000) GS:ffff8880b9300000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f0485fd5fb8 CR3: 000000002e73e000 CR4: 00000000003506f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2550
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1357
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1901
+ sock_sendmsg_nosec net/socket.c:730 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:745
+ ____sys_sendmsg+0x525/0x7d0 net/socket.c:2597
+ ___sys_sendmsg net/socket.c:2651 [inline]
+ __sys_sendmsg+0x2b0/0x3a0 net/socket.c:2680
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fe0b3179e79
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fe0b3ff8038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fe0b3316058 RCX: 00007fe0b3179e79
+RDX: 0000000000000000 RSI: 0000000020000480 RDI: 0000000000000009
+RBP: 00007fe0b31e793e R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fe0b3316058 R15: 00007ffd9b67c0d8
+ </TASK>
+
+
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
