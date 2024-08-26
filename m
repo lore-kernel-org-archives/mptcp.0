@@ -1,281 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A709519753F
-	for <mptcp@lists.linux.dev>; Mon, 26 Aug 2024 16:54:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2A8578C89;
+	Mon, 26 Aug 2024 17:11:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724691276; cv=none; b=VXlQeEarDd5nqbsYBVoVmm38Sv9O0JMdmHaF6/U8DemC/dy3my4cUa6TurtUynI7HGDNoLkp6Lz97kZm5zL/eYcNewDb09G2f/BfotWGwLPyIyle4kJz6/hWeZmMTMqt78Xw8nQiJFBx9MgChSBfi8EWwCltVwFFNreeFWODvkw=
+	t=1724692289; cv=none; b=bFMvkPQzzw+seViK5fuAlCCgGVqz0fOWJK1eWoC55SUhBuPTh3Pm5K4x3pa9QXLSRKv8toBDc+6FFPUtTSa4qoIk83mwtc4Hgc66YwznobDzhViIXDQipr4qXjZjf4u2HG1Wtz6NJKVqcw/AsjhOSih6hd80NKb5ObV7CKZUW7c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724691276; c=relaxed/simple;
-	bh=m1xCCis076oPZ5ia4WQfMqMIIWca2sH6ptXf9ej3vRs=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VHrT9h/jsyQKgERAJe7FRcRDkgahlcOCT1DA3j+sWyAa1eV6biwijoZOozB/jP73185kNKP0YYnxCqBPwzHsVJfRovNhFbQaPLc7hXgKuUFlM/tBI5TLabBn0v1uiTewJcKvtICBuLsL3ktrp8O3OLU88xuZdG+G3TtQBDnrPAE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=az8ZC/3U; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724692289; c=relaxed/simple;
+	bh=OjlRIP/YfMcFStEv3GSbKGrEZZShBXmsGgMZmpWuKoE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=R2eN8yChufE7NL1rMtLSYHRwDY0Lgq0iTZ85zz2Hx83KF6DoyBSiJM5JBaIwGK8JVXucjB+s/exyo0RbzZKTJxbEnLHUs/6bHY248MIoPF22sMCS9pdY3ffEBuud07Tkx7uzSagV6embrAV44wGvEot+pLZjAhHR5HRHitJd2EM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zk3y5IwM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="az8ZC/3U"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6948C4E695;
-	Mon, 26 Aug 2024 16:54:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zk3y5IwM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7B83C582B9;
+	Mon, 26 Aug 2024 17:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724691276;
-	bh=m1xCCis076oPZ5ia4WQfMqMIIWca2sH6ptXf9ej3vRs=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=az8ZC/3UgokTrxkX0mgyj3pue6wrZxEIRx4CzEMbHxVjqWzdqbOJJcJgozacupPN6
-	 c4dfzOQn8PBuEBHTpsykc7nWnqlQr2Um8VzZREohREraClUfKGZpEM5xrdFjjAmnzS
-	 FTETiFSZnjTZKy/OOls11PzfS9xYu7aS98EGuus9yhF4Pr7nY2HxpffHWg4+1Rh4en
-	 DRAqp/V17M+14LiPSy1y7fvPFSWDkFt0prYgfjJkD+25b04pQAPCesagrVSpF7sKzn
-	 xbDLANB1H9Q2mJGHJvz/TuxLSgj6cqxRoqkhbzTCG/9HiCXa4nzbt3ZkPu8FhvOTpE
-	 qGZNLeo32Atuw==
-Message-ID: <26a19624-f042-487f-8227-a992ab786696@kernel.org>
-Date: Mon, 26 Aug 2024 18:54:32 +0200
+	s=k20201202; t=1724692288;
+	bh=OjlRIP/YfMcFStEv3GSbKGrEZZShBXmsGgMZmpWuKoE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Zk3y5IwM3tZZZpj3Yczdp6ghADoDbdWFt7dM+jBLL+sjffW/NoPIFWfoTB+Nd/NKP
+	 ps+12We/LlWUv98/iGFbjc3LkPETV3YCSOmRBbfSasBg7O6U4JLONp0BcVKogmRTjP
+	 F46JT0/K1JE7hsiGyARLQ9qROymFJpSmCheN4MhW0WoNx14BZ1JKeCRUIzlsoTyPDV
+	 zuB9c7xiXKFEpe+PWfTs/DMbzwyIDqxkx6ENBBfaqnezMvCKh+NLkrzeoUJz4By6Wp
+	 s8EVcKMRt65h/e3+4+2pMIyL9UmpG9wiVmzIx4+h/g2uIcYbNTR8cQrrGs/5HZ0sta
+	 zns7TrkE5h3Nw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/4] mptcp: close subflow when receiving TCP+FIN and
+ misc.
+Date: Mon, 26 Aug 2024 19:11:17 +0200
+Message-Id: <20240826-net-mptcp-close-extra-sf-fin-v1-0-905199fe1172@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 3/3] Squash to "selftests/bpf: Add mptcp
- subflow subtest"
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1724415435.git.tanggeliang@kylinos.cn>
- <ac6c7b2338205693434883a34256eddfd7605985.1724415435.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <ac6c7b2338205693434883a34256eddfd7605985.1724415435.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIADW3zGYC/x3MQQqDMBBG4avIrDugIS3aq5QuwvinDmgMmVAE8
+ e4NXX6L904yFIXRszup4Kume2oYbh3JEtIHrHMzud75fnQPTqi85SqZZd0NjKOWwBY5auJhmj3
+ uIXiZhNoiF0Q9/vsXtZLe1/UD1b4aL3MAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1830; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OjlRIP/YfMcFStEv3GSbKGrEZZShBXmsGgMZmpWuKoE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmzLc9JZUW5F/lg9YktD1Wr1ePhZuARG2/gO24t
+ 4WWfuhbFGiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZsy3PQAKCRD2t4JPQmmg
+ cy/lEADW9ymX2YFVRy1SQl2oH7snKHe/kKsDkN33iltiwF8JAA9Fll0E+ZZbKRK7ziewH4/NTH8
+ dkU6O5rOsX4sZ8DnCtpAja6RbqV/1/oNZyID4tCM9rNbpu9UrLYc5oPJwhfC0OHfv39+nFFiKtp
+ igENzx06TkOKIDB95HQo/+He1n3fyvBUfEok69PH0yMOsaa0nmkr9yhZTPirB+jCkRjxOwel7Rl
+ eD01VAH6hOHEX9A5024MGSRcMGkYiPHeF13/w2Orv+Pl89+QmdkKTlXvm5nEMJLKx4JTPIEMOiS
+ iaFP6ka3nAbfGIvWZqvETFZu2TnGNneD4Snv+6xqvHSUJgL9e9kcIZN6J5DUk3g2cxRlQSPWGrD
+ XTphIy1uRzMu6mFLBoukBlDfD+3A3LEUXtvGLi15L8kIXZjj+Tp/LLyFOP+95ek5FI6tkBB4lrz
+ AkpRnjBghq4CZXEHCQpZgVDS3301/f0yxQa2FKcn45kd2C9dXF9ttV4dbmrvmDktuqCSs+Ra1y3
+ YcWKwvdK6yHWObA7KaIdDKxz0d3fB2uErWBklAzJK+n0UhQ1JvpjCs1vMIkPP2MF9rY8EEfMehc
+ ecC9BTqxhr/nkSKvza1eYYlt79zosPJJhoO43D3f+WTyBwvxzHXneIe7+hhCNNvnTyBalVvj+iv
+ cgGn9lC8JeP+Qag==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Here are different fixes:
 
-On 23/08/2024 14:19, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Drop ss_search() from run_subflow().
-> 
-> Now ss_search() are only used by bpf_sched tests. It will be dropped
-> in next step.
-> 
-> Use the "cgroup/getsockopt" way to inspect the subflows.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/bpf/prog_tests/mptcp.c  | 57 ++++++++++++-------
->  1 file changed, 35 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 73adc58cd776..ce464b1e0802 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -368,22 +368,13 @@ static int endpoint_init(char *flags)
->  	return -1;
->  }
->  
-> -static int _ss_search(char *src, char *dst, char *port, char *keyword)
-> -{
-> -	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
-> -			  NS_TEST, src, dst, port, PORT_1, keyword);
-> -}
-> -
-> -static int ss_search(char *src, char *keyword)
-> -{
-> -	return _ss_search(src, ADDR_1, "dport", keyword);
-> -}
-> -
->  static void run_subflow(char *new)
->  {
-> -	int server_fd, client_fd, err;
-> +	int server_fd, client_fd, err, i;
->  	char cc[TCP_CA_NAME_MAX];
-> +	unsigned int mark;
->  	socklen_t len;
-> +	u8 subflows;
->  
->  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
->  	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
-> @@ -393,17 +384,26 @@ static void run_subflow(char *new)
->  	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
->  		goto close_server;
->  
-> -	len = sizeof(cc);
-> -	err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-> -	if (!ASSERT_OK(err, "getsockopt(server_fd, TCP_CONGESTION)"))
-> -		goto close_client;
-> -
->  	send_byte(client_fd);
->  
-> -	ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search fwmark:0x1");
-> -	ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search fwmark:0x2");
-> -	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
-> -	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
-> +	len = sizeof(subflows);
-> +	/* Wait max 1 sec for new subflows to be created */
-> +	for (i = 0; i < 10; i++) {
-> +		err = getsockopt(client_fd, SOL_MPTCP, MPTCP_INFO, &subflows, &len);
-> +		if (!err && subflows > 0)
-> +			break;
-> +
-> +		sleep(0.1);
-> +	}
-> +
-> +	len = sizeof(mark);
-> +	err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark, &len);
-> +	if (!ASSERT_OK(err || mark != 2, "getsockopt(client_fd, SO_MARK)"))
+Patch 1 closes the subflow after having received a FIN, instead of
+leaving it half-closed until the end of the MPTCP connection. A fix for
+v5.12.
 
-The mark should be 0 on the MPTCP socket, no?
+Patch 2 validates the previous patch.
 
-Also, I don't think you can do this check:
+Patch 3 is a fix for a recent fix to check both directions for the
+backup flag. It can follow the 'Fixes' commit and be backported up to
+v5.7.
 
-  err || mark != 2
+Patch 4 adds a missing \n at the end of pr_debug(), causing debug
+messages to be displayed with a delay, which confuses the debugger. A
+fix for v5.6.
 
-That will be converted to:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Note: Peter's email address has been removed from the Cc list, because
+it is bouncing.
 
-  (err || mark != 2) == 0
+---
+Matthieu Baerts (NGI0) (4):
+      mptcp: close subflow when receiving TCP+FIN
+      selftests: mptcp: join: cannot rm sf if closed
+      mptcp: sched: check both backup in retrans
+      mptcp: pr_debug: add missing \n at the end
 
-We need to check there was no error and the mark is 0.
+ net/mptcp/fastopen.c                            |  4 +-
+ net/mptcp/options.c                             | 50 ++++++++++-----------
+ net/mptcp/pm.c                                  | 28 ++++++------
+ net/mptcp/pm_netlink.c                          | 20 ++++-----
+ net/mptcp/protocol.c                            | 59 +++++++++++++------------
+ net/mptcp/protocol.h                            |  4 +-
+ net/mptcp/sched.c                               |  4 +-
+ net/mptcp/sockopt.c                             |  4 +-
+ net/mptcp/subflow.c                             | 56 ++++++++++++-----------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 11 ++---
+ 10 files changed, 122 insertions(+), 118 deletions(-)
+---
+base-commit: 31a972959ae57691a1e4f539399b2674ae576086
+change-id: 20240826-net-mptcp-close-extra-sf-fin-19d4e5aa4c9c
 
-You could use ASSERT_TRUE/ASSERT_FALSE instead, but I think it is better
-to use two different assert: check 'err' is OK, then check the mark is
-0, no?
-
-
-> +		goto close_client;
-
-Please see my previous comment on the v3:
-
-It is not needed to stop earlier here, we should check everything we can
-to give more info about the issue:
-
-  err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark, &len);
-  ASSERT_OK(err, "getsockopt(client_fd, SO_MARK)");
-  ASSERT_EQ(mark, 0, "mark");
-
-  err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-  ASSERT_OK(err, "getsockopt(client_fd, TCP_CONGESTION)");
-  ASSERT_STREQ(new, cc, "cc");
-
-> +
-> +	len = sizeof(cc);
-> +	err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-> +	ASSERT_OK(err || strcmp(cc, new), "getsockopt(client_fd, TCP_CONGESTION)");
-
-(See above)
-
-But after your modification in patch 1/3, 'cc' should be equal to
-'/proc/sys/net/ipv4/tcp_congestion_control' (not 'new'). So you need to
-get the value of the default CC first, then compare it to 'cc'. It
-should be different from 'new' (except if 'new' == default cc from
-/proc, so maybe enough to compare that 'cc' is the same as the default one).
-
->  
->  close_client:
->  	close(client_fd);
-> @@ -416,6 +416,7 @@ static void test_subflow(void)
->  	int cgroup_fd, prog_fd, err;
->  	struct mptcp_subflow *skel;
->  	struct nstoken *nstoken;
-> +	struct bpf_link *link;
->  
->  	cgroup_fd = test__join_cgroup("/mptcp_subflow");
->  	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup: mptcp_subflow"))
-> @@ -441,6 +442,11 @@ static void test_subflow(void)
->  	if (endpoint_init("subflow") < 0)
->  		goto close_netns;
->  
-> +	link = bpf_program__attach_cgroup(skel->progs._getsockopt_subflow,
-> +					  cgroup_fd);
-> +	if (!ASSERT_OK_PTR(link, "getsockopt prog"))
-> +		goto close_netns;
-> +
->  	run_subflow(skel->data->cc);
->  
->  close_netns:
-> @@ -449,6 +455,7 @@ static void test_subflow(void)
->  	mptcp_subflow__destroy(skel);
->  close_cgroup:
->  	close(cgroup_fd);
-> +	bpf_link__destroy(link);
-
-That should be done just before 'close_netns' label, otherwise this will
-be called with 'link' that has not been defined.
-
->  }
->  
->  static struct nstoken *sched_init(char *flags, char *sched)
-> @@ -470,9 +477,15 @@ static struct nstoken *sched_init(char *flags, char *sched)
->  	return NULL;
->  }
->  
-> +static int ss_search(char *src, char *dst, char *port, char *keyword)
-
-I guess this part should not be squashed in "selftests/bpf: Add mptcp
-subflow subtest", but in a different patch ("selftests/bpf: Add bpf
-scheduler test"), no?
-
-If yes, and if you need to send a new version, please split that in a
-separated patch, otherwise I might forget and apply this in
-"selftests/bpf: Add mptcp subflow subtest" instead.
-
-> +{
-> +	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
-> +			  NS_TEST, src, dst, port, PORT_1, keyword);
-> +}
-> +
->  static int has_bytes_sent(char *dst)
->  {
-> -	return _ss_search(ADDR_1, dst, "sport", "bytes_sent:");
-> +	return ss_search(ADDR_1, dst, "sport", "bytes_sent:");
->  }
->  
->  static void send_data_and_verify(char *sched, bool addr1, bool addr2)
-
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
