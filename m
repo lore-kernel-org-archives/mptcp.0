@@ -1,99 +1,139 @@
-Received: from out-173.mta0.migadu.com (out-173.mta0.migadu.com [91.218.175.173])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E5954414
-	for <mptcp@lists.linux.dev>; Tue, 27 Aug 2024 05:22:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF2C1487F4;
+	Tue, 27 Aug 2024 08:22:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724736166; cv=none; b=WEFyaxN8hv9ILQU8TTEv/GROsVvyElZTUl1OZQavHesPp5j75WMmmgeltCiL961hBkiE8/TOGmNA4UXsbZSK2qJcfryErB5V0pZaPQt0oipGMv0UojGbG3/0n6/g8yP2rWwX3c9qEQyfEJUr+fteWl6VXkU3S3uVGp283IjN/Ig=
+	t=1724746929; cv=none; b=QGSk6XV+/h+xLmskiEkQS/8i8EMmmUc8Oljx1UocpzaFeYgAQ0w5iU1dt+lKyjvknHFYwfNQkLkxLMOJa4LWlNSlG+uSXaU+ZT/B7n5dufZ6s3Ech/k3qUCiLdKHy1l1HLt4zkAfqvLqdbMI2M10rbfyzeUpky4cEBcU7FRCj7E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724736166; c=relaxed/simple;
-	bh=865p1tB1kZyRN7bydAmbt8fwb3qP+z0KAosciCpW7EY=;
+	s=arc-20240116; t=1724746929; c=relaxed/simple;
+	bh=le44pt6W8v+kknNIOR3bDsF+5jHJup/kHuUmFbjIeV4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GgzZtM0GVXO5uwAuibRT1OpMSeMERD1mKNLusfj3MvazFCy/0+7CB4vz2MHWIauhUqB9JJq/+DmNKhNfBHwQm11Bbeagx53q+RWVSjFrR2bBGpb7tmdbs+4g6too3Hjt18mGP1GgeItlkiyv2ucgILAeEpK0Dy8wOcsIkdYBceQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=VNTXtM30; arc=none smtp.client-ip=91.218.175.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	 In-Reply-To:Content-Type; b=Gon5A8myChNdGatj0WR7uIwj0ksyI+Am/ewu9WVtlB2mW2oxw8CGLJNCEiQ/7/tDfatAkQgwMpDs3j+3KwGO9aLDJYc1BgypTkBhO2NwwmPoVG+MzsLNw08PzyFpvEM2WFAOoM3L/zqDqxSm2O5Krhp+9lIQvM9WXYTsrkrmfFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZZbjEy8v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="VNTXtM30"
-Message-ID: <54ce6f90-e86c-4921-b1e0-423fcd655d32@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1724736162;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=quh7O3Lz5jDJSUydWdqAttbbklUHh/h5CagJnR7HKh0=;
-	b=VNTXtM30yTbAtX411fM83bPbumH+T0uj887p886clrCgx16kXqokXbs1Am4mCWV2jRyzI0
-	7U8Xy+W/77ZEUi2Jv6jCg39oL1pV+IV/Tkor+83bUYvyDFRcmpTaK9lRrEJaroT3Um4EqM
-	2cAO82UWXzRht96RpkM70emhkngmTNo=
-Date: Mon, 26 Aug 2024 22:22:32 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZZbjEy8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D566CC58122;
+	Tue, 27 Aug 2024 08:22:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1724746928;
+	bh=le44pt6W8v+kknNIOR3bDsF+5jHJup/kHuUmFbjIeV4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZZbjEy8vAcKORHbtsVHVq/Ek7nXokvMs5F9n4GRx4E3p5vHCRX2rPztYPefm+AAhI
+	 /TKF1uDiv2aRFX6rubfoa0UMd/vMAoS9qFAeJESuWMjvQSW7dD6ETab57vV0xaczvk
+	 0KI6gVFy8uHFX4cgGyMIQShTNLWrUMM75e+3iHxjwcIilw3Dr/gx+5xpQcZ71pjhPE
+	 jxnUVq1iFwBHCkozSGR4u0oxjIBq7Hb282OlbN2eAONomzZbrCrUNJTeqXrbUApGv3
+	 qz4DQYZpSSV2rzi44EupIGIWTGIuMhJefYuW0q6GIPnfpmfmRMRP4vbe2T8yyEdEWX
+	 o1QY6I7mdVSVg==
+Message-ID: <c832579b-c679-4b28-ab8f-2131ac539c24@kernel.org>
+Date: Tue, 27 Aug 2024 10:22:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH mptcp-next 2/2] selftests/bpf: Add getsockopt to inspect
- mptcp subflow
-To: Geliang Tang <geliang@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev,
- Martin KaFai Lau <martin.lau@kernel.org>
-References: <cover.1724142917.git.tanggeliang@kylinos.cn>
- <3788544d841aa372a810f2d3dce905612063e872.1724142917.git.tanggeliang@kylinos.cn>
- <407f6a6a-344e-4f12-9293-e43b9a97f8d4@kernel.org>
- <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
- <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
- <afaa9ac33002da2452d3df014cd61a89fbd4978c.camel@kernel.org>
- <547fdd31-a052-4274-a59e-d7177887dbbe@kernel.org>
- <010b2338434b7df67ac418ad7063543e91c946b9.camel@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-Content-Language: en-US
-In-Reply-To: <010b2338434b7df67ac418ad7063543e91c946b9.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net 00/15] mptcp: more fixes for the in-kernel PM
+Content-Language: en-GB
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, Florian Westphal <fw@strlen.de>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, stable@vger.kernel.org,
+ =?UTF-8?B?QXLEsW7DpyDDnE5BTA==?= <arinc.unal@arinc9.com>,
+ syzbot+455d38ecd5f655fc45cf@syzkaller.appspotmail.com
+References: <20240826-net-mptcp-more-pm-fix-v1-0-8cd6c87d1d6d@kernel.org>
+ <20240826192955.3dbb469d@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240826192955.3dbb469d@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 8/26/24 2:24 AM, Geliang Tang wrote:
->> I'm not an expert in this, but I guess it means you cannot use
->> 'mptcp_subflow_active()', because it can modify the 'subflow'
->> structure
->> that you got with bpf_core_cast() for a read-only usage.
-> 
-> A read-only function will get the same error.
-> 
-> I added a read-only function mptcp_subflow_get_scheduled() for testing:
-> 
-> bool mptcp_subflow_get_scheduled(struct mptcp_subflow_context *subflow)
-> {
->          return subflow->scheduled;
-> }
-> 
-> And invoke it from BPF in mptcp_for_each_subflow() loop:
-> 
-> int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
->               struct mptcp_sched_data *data)
-> {
->          struct mptcp_subflow_context *subflow, *tmp;
-> 
->          mptcp_for_each_subflow(msk, tmp) {
->                  subflow = bpf_core_cast(tmp, struct
-> mptcp_subflow_context);
->                  mptcp_subflow_get_scheduled(subflow);
->          }
->          return 0;
-> }
-> 
-> The same "arg#0 is untrusted_ptr_ expected ptr_ or socket" occurs.
-> 
-> Hope Martin can give us a solution for this issue.
+Hi Jakub,
 
-I don't know the context for this list walking + modify-by-kfunc usage, so the 
-following could be a grain of salt.
+On 27/08/2024 04:29, Jakub Kicinski wrote:
+> On Mon, 26 Aug 2024 17:58:59 +0200 Matthieu Baerts (NGI0) wrote:
+>> Matthieu Baerts (NGI0) (15):
+>>       mptcp: pm: reuse ID 0 after delete and re-add
+>>       mptcp: pm: fix RM_ADDR ID for the initial subflow
+>>       selftests: mptcp: join: check removing ID 0 endpoint
+>>       mptcp: pm: send ACK on an active subflow
+>>       mptcp: pm: skip connecting to already established sf
+>>       mptcp: pm: reset MPC endp ID when re-added
+>>       selftests: mptcp: join: check re-adding init endp with != id
+>>       selftests: mptcp: join: no extra msg if no counter
+>>       mptcp: pm: do not remove already closed subflows
+>>       mptcp: pm: fix ID 0 endp usage after multiple re-creations
+>>       selftests: mptcp: join: check re-re-adding ID 0 endp
+>>       mptcp: avoid duplicated SUB_CLOSED events
+>>       selftests: mptcp: join: validate event numbers
+>>       mptcp: pm: ADD_ADDR 0 is not a new address
+>>       selftests: mptcp: join: check re-re-adding ID 0 signal
+> 
+> The debug runner is failing mptcp-join-sh fairly consistently with
+> these applied :(
 
-It seems like fitting the bpf_iter use case. Take a look at some recent bpf_iter 
-additions, e.g. bpf_iter_{task,css}_next(). Also the bpf_for_each macro usage in 
-selftests. There may be some secondary things that need to consider, e.g. how 
-the walked subflow is protected, rcu, refcnt...etc.
+Thank you for this notification!
+
+It looks like the patch "selftests: mptcp: join: check re-re-adding ID 0
+endp" is making the "delete and re-add" subtest longer: the connection
+finishes while the validation is still ongoing. I guess I didn't see
+this issue on my side, nor on MPTCP CI, because the Netdev CI is slower
+(SLUB_DEBUG_ON?).
+
+It is easy to fix, but I will wait for the other MPTCP series to be
+applied, before sending a v2.
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
