@@ -1,75 +1,86 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 316C62EAE6
-	for <mptcp@lists.linux.dev>; Tue, 27 Aug 2024 20:09:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA06D13B293;
+	Tue, 27 Aug 2024 21:50:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724789384; cv=none; b=TVDr+bS20An+hUfXozyRpPlAt3ecMTlY12ukctlLWzjlSKUrYF+Q2TNtjkmB43RFF1RyeaOZlUwxBiWMoe73fdCCGomIBa/eAHf4q4YKJTA16uyvoz62Y2BW8SlssozYIX7KiGaCvTi8r06zAGOetywze4mjneaHjoINEKKMirQ=
+	t=1724795432; cv=none; b=QQIV+ubI45Whx5qvxsQwNNwYnPMnSfD4s20JVPMdAbiREBeSPa2iV6dVHrjFOMpzCr0p4icHJkIgXHyVRs7EfTrYJYmaqvrWnSzJ0ehACaJRqmcBwV5hfpnoqKKgtifAfDUCAYCHokz8la9hNqx5557FAiBwWMptITQ7F6rI7N4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724789384; c=relaxed/simple;
-	bh=mMfWq1UJW3ZNfUwTkH4I3pUlwmsGIcCWKi8T6OyMavE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=ndlIdXp7BxR0Hw080mlR0vEZaMzXqdQJeIaFfDbc28MHzJlMt7TQjO73HO0YzD7BmBSt+ZPZ74b59y/fL5upZN/ragw3VE2mOTSagZ0qRkT9Ls1VneYNzoM5a7eYrqqHUp4HGmZX0HfaGAB6TTYrpM56HkEjRfShEf7KD1fFZC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eGMyCOPY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724795432; c=relaxed/simple;
+	bh=4rYQNT0gECDd1fmElnBYuODs3dX24OZbqJmLg4YI/Ok=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ihBRwh1UevykbZMM9XuTy0dr1hcTmIS/3LAE3nKLL397jJpZdn4evumNXGKl//deJ/iLHDsvHzEmlxs/gzmLbZkKk04sZYkukYtB3fSsxMUYtUdSJnOrH7qocFqLmsADBH7egDtzj3WNQ6ydtx+ietheZ42iIdD0VhSJrUGGS9Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzcyDIPF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eGMyCOPY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90C85C4AF4D;
-	Tue, 27 Aug 2024 20:09:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzcyDIPF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28E98C4AF10;
+	Tue, 27 Aug 2024 21:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724789383;
-	bh=mMfWq1UJW3ZNfUwTkH4I3pUlwmsGIcCWKi8T6OyMavE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=eGMyCOPYVxxiq3pfqU/q5TpkumFL/nYlmzKgnNgHIS7XnsTZGJVYMsZS73Nh+xURa
-	 k6Q7SKs9Lr4Jrruht/zn4weTXSTFExhtWk3d3kc7wy8he5K4gZ0ZqR/VydZh1R4tVP
-	 vJKKt6PY0cj1Us1QLht4tTvrGBqId7otyIjdAhSVcH/jAocAxBZgoxtWv4GsQO0swz
-	 05Oos7lUqtdzTeP95ZsdPQVQu7VtFwTFpCBHz3C6ZZ9Hj7Xd4jhjhvvX/nQFQsfPdO
-	 YCWaI7GSxT2EaOGwMMTOODmzsMMhb5RrBuq8gun5HP4w3Jssw+qybBJpGOIKHj98oB
-	 2vd7b8K+ZP4DA==
-Date: Tue, 27 Aug 2024 13:09:42 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: Squash-to patches for "mptcp: more
- fixes for the in-kernel PM"
-In-Reply-To: <20240827-selftests-mptcp-longer-tests-v1-0-ec11c05fe980@kernel.org>
-Message-ID: <41e9e465-c8dd-fa13-a7d9-93a865f2159f@kernel.org>
-References: <20240827-selftests-mptcp-longer-tests-v1-0-ec11c05fe980@kernel.org>
+	s=k20201202; t=1724795432;
+	bh=4rYQNT0gECDd1fmElnBYuODs3dX24OZbqJmLg4YI/Ok=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=AzcyDIPFfuvxlKrbgceuxjGIj/h0BoY41XPHWlE3pzBTjD45pod+tU+KvQxRSO15D
+	 JxOb3RpJy/37ubScM3QMNFhGTUw4xuypB+dr11OfTpo3RbbzIc/s0mzvyxLXk0bmMv
+	 ItxiSWGJ3qqLefQi8OhpRzHwAh9XlPUFZzPmCDN6wJHWl9VY3cbX0BsqA1ZwZmbWJH
+	 ViXBuvf2hU5fBO2QYpBV4ObxPcDFaool3l7nlNuCHfdVkzB8YGqN3HuHZ2ClLfgwVw
+	 WsRPV5s2Gu7cCEhJB/dJ5i2Sncp16dCCpIFB9G3SjLyCs0VQg5grHb7FKi9WJ9p0lq
+	 22ea6eU3G2+Fg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70ED83822D6D;
+	Tue, 27 Aug 2024 21:50:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/4] mptcp: close subflow when receiving TCP+FIN and
+ misc.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172479543227.771722.4715567676668885065.git-patchwork-notify@kernel.org>
+Date: Tue, 27 Aug 2024 21:50:32 +0000
+References: <20240826-net-mptcp-close-extra-sf-fin-v1-0-905199fe1172@kernel.org>
+In-Reply-To: <20240826-net-mptcp-close-extra-sf-fin-v1-0-905199fe1172@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ fw@strlen.de, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org
 
-On Tue, 27 Aug 2024, Matthieu Baerts (NGI0) wrote:
+Hello:
 
-> These two small squash-to patches would avoid issues recently seen on
-> the Netdev CI when this series has been sent upstream.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Matthieu Baerts (NGI0) (2):
->      Squash to "selftests: mptcp: join: check re-re-adding ID 0 endp"
->      Squash to "selftests: mptcp: join: check re-re-adding ID 0 signal"
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Hi Matthieu -
+On Mon, 26 Aug 2024 19:11:17 +0200 you wrote:
+> Here are different fixes:
+> 
+> Patch 1 closes the subflow after having received a FIN, instead of
+> leaving it half-closed until the end of the MPTCP connection. A fix for
+> v5.12.
+> 
+> Patch 2 validates the previous patch.
+> 
+> [...]
 
-Both of these LGTM.
+Here is the summary with links:
+  - [net,1/4] mptcp: close subflow when receiving TCP+FIN
+    https://git.kernel.org/netdev/net/c/f09b0ad55a11
+  - [net,2/4] selftests: mptcp: join: cannot rm sf if closed
+    https://git.kernel.org/netdev/net/c/e93681afcb96
+  - [net,3/4] mptcp: sched: check both backup in retrans
+    https://git.kernel.org/netdev/net/c/2a1f596ebb23
+  - [net,4/4] mptcp: pr_debug: add missing \n at the end
+    https://git.kernel.org/netdev/net/c/cb41b195e634
 
-- Mat
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
->
-> tools/testing/selftests/net/mptcp/mptcp_join.sh | 4 ++--
-> 1 file changed, 2 insertions(+), 2 deletions(-)
-> ---
-> base-commit: a69c43e7eeeb5c959245dc2a20e6b41bc7afccb3
-> change-id: 20240827-selftests-mptcp-longer-tests-f3b30918add9
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+
