@@ -1,215 +1,164 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A9301F5FF
-	for <mptcp@lists.linux.dev>; Wed, 28 Aug 2024 02:44:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56DB33A8D0;
+	Wed, 28 Aug 2024 06:14:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724813044; cv=none; b=VvZQDUUAX57/gIH8NlDiDIJPspMN1W72I1TI2Plx1BlkrtQUuFJzt/scS1uuOVeUnHH02Febb+REs6H9IiGrmFb7EmVhsvNfOoOo8Iy5GvEYiKmHNlhhBrOJs03AygxxXmqMqezgBrhvzizHvTLxFXqKh/ss5JDWoo1gYWHhiMg=
+	t=1724825676; cv=none; b=Hqwj2O9ERPcjfu/yNjrHuGSv66Yd8TpeU+w6pQ+YtEftPUGky56EI5SmoJnNXjYtKpW0Hm0QPTFUnh32+1YpJaxUdrWrPSBuPmoM7PlNd3AwUoT2D/eGuxcwgSDOmn1/WemOfrH+nDC52krtmBYOw8kWMaGvN553YGm5O2BVimc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724813044; c=relaxed/simple;
-	bh=s9EHVUxot+WRViRL0kk/bhKJHECbo/1TSXn9QwVW/8g=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=dqkuvdSvQMarAVw+f8Yhm1FxSwrG0gEPEQfYreTh4eEn6RLvQvaS741SIcGx+kwL9hv3hBSCabLKwm5TYJKfNo3JJ5fwmu80EetatvFFNkKKJmkirtxllxPssfIbS80J9KmAR19vXqcO/hSA87ERw4WwnPT1gWEYw1lkkE6b66E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FehWI4GW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1724825676; c=relaxed/simple;
+	bh=OdWRDOd418du3sE4tmrHGr9q4vWpN0nIOaTamXbp8hI=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=jw8ae+x7hovVLM9/XF83UXggwkG/iuCEmE9eOEEzHRbfWzq/7lBrnkRu/oOp2Gm0EC0LYQKB2/H5yBVlETT1IgxQp4wFuhAICX+ZK+VghEmO1auaV5DpXH08osQoGW+3rnXldB2zqmNzL/QXWLNfZj4/kP8EpXJZRfkO0ya/s6I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEsBWlqC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FehWI4GW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A6DAC32786;
-	Wed, 28 Aug 2024 02:44:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEsBWlqC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B87BC4AF53;
+	Wed, 28 Aug 2024 06:14:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724813044;
-	bh=s9EHVUxot+WRViRL0kk/bhKJHECbo/1TSXn9QwVW/8g=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=FehWI4GWO2vnLp1XeQKD/qnj+qPoyO4Ej3JgCR+hJc/uva8K5gu7Dussl9B+rdI75
-	 x24Ox8mDyih+hSiV7aWXpwZ4IFFAJ6gLp9J10wAM6f7RQhqCsoTY9TPzDzeVxWT07c
-	 moyFNSWzAQrWN05pOLm3EYsII8tQRtY7HYTmfxWLyhJb4v66UnLiuaI7D/8/QRJjA9
-	 8N+d+7UJSEu9soyJf2CjmT19Y/rPNs1eTiYFC3TbVt2ggw+Bkhwhr/UHmv1Pr+UPfG
-	 7n7xqQM1CZk9/AMpsoGAAfxjq1JY+eecditGJiuba43FmoQDsO/9fz/L4CBN9GS+9v
-	 9g1TiSoLKwMog==
-Message-ID: <2a3a8b53865e3dc68e7aab28cca1b3433981d81a.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v4 3/3] Squash to "selftests/bpf: Add mptcp
- subflow subtest"
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 28 Aug 2024 10:44:00 +0800
-In-Reply-To: <17b3927e-0007-4e97-8c98-4c95068401b8@kernel.org>
-References: <cover.1724415435.git.tanggeliang@kylinos.cn>
-	 <ac6c7b2338205693434883a34256eddfd7605985.1724415435.git.tanggeliang@kylinos.cn>
-	 <26a19624-f042-487f-8227-a992ab786696@kernel.org>
-	 <363548497c01a3955412d32b281022104f993563.camel@kernel.org>
-	 <17b3927e-0007-4e97-8c98-4c95068401b8@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1724825675;
+	bh=OdWRDOd418du3sE4tmrHGr9q4vWpN0nIOaTamXbp8hI=;
+	h=From:Subject:Date:To:Cc:From;
+	b=KEsBWlqC/MvyV1ccNpVP5Ypj/kUO1Ss46ry4bt6PNUpms2RkdlMwP64OWQ9d4aHv9
+	 nF7ZPKnE2l8FjidO6YVVfI/Mru/SAiaC6XDxXQYdUO01BaKpOxr/Z9upa8UkkSbk2d
+	 EW6pDzIZBB2Akc25tDFkyqDcwi7dWiTG0byzG3kZg5eDOkRVP27CPwDkmlRTAL8wrI
+	 sMakrG3oGxJXwMC+Y3JYPHUBiVkbogYb8sFiYdSzr+hooe+L8yje02JgWhQ508ooh5
+	 9y61aMtpYTr0KkKtjgvsf6CXl1ELFIfheg5wH9Lu3hzEMP3vNnahi2+DBxjHeaRg5Z
+	 69Llz6SXHCetQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net v2 00/15] mptcp: more fixes for the in-kernel PM
+Date: Wed, 28 Aug 2024 08:14:23 +0200
+Message-Id: <20240828-net-mptcp-more-pm-fix-v2-0-7f11b283fff7@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAD/AzmYC/4WNQQrDIBBFrxJm3SnRFiNd9R4hi6BjIm1UxhBag
+ neveIEu3//890/IxJ4yPLoTmA6ffQwV5KUDs85hIfS2Mshe3nstFQbacUu7SbhFJkwbOv9B52Y
+ l5ptyWgxQt4mpxs07Qp3AVMPV5z3yt30dolV/tIfAHrWxyujBCqvs80Uc6H2NvMBUSvkBwb7/K
+ 8AAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>, 
+ Florian Westphal <fw@strlen.de>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ linux-kselftest@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ =?utf-8?q?Ar=C4=B1n=C3=A7_=C3=9CNAL?= <arinc.unal@arinc9.com>, 
+ syzbot+455d38ecd5f655fc45cf@syzkaller.appspotmail.com
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4049; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=OdWRDOd418du3sE4tmrHGr9q4vWpN0nIOaTamXbp8hI=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBmzsBHvS3V1SWWcT++5mFegZ4aK5GjF6+RUUeAM
+ 2QjHvTbdvmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZs7ARwAKCRD2t4JPQmmg
+ c4MHD/9Yq7xinABU/7nuY2F+0IjKhT/LQ5BPH/kdCv1qoIUM1ib4YqnDLX147ycHF3YT1U+cOee
+ GTtvP/54VhCy4TxzjXUvk9TCkYuNofbzX2Upz/m4x0t66XG0CKFj5LwILFXMnk0qTcWuAhygp89
+ SldlEaIbu35N5DlZCAYSj5cifcXoD/jzX4vLdute0mhlLNZYENGQB33sao12MM+uVv9VRZTgP+/
+ yxciW9SmLRK6IWwg6//8nx87I8FtpDeVaIX+ygAb2ZAQfLwQ161VQYtpC2Pty6ZODJFFRermOrp
+ ic9NUmnOq1A9zGhMbQ2QZeENH/mKnOqiG/2t01H2wqxiOwXW8S5jYU9gTq2uowu8UdhM05FJlDf
+ +3XIm7FNl5DONTyMZQ6ZgeltefpfJEnw4glkLBXQ4YFkD0z2ArWHzWcOTB4nE3tYhQ02AOlhJIB
+ qNwYfuRVAyUBq0hvvD8zDqlAB7dH7ixJVjZyqioT55cj0cHcpayZoPVzJB3Dfc2MtUPX5lfAOfv
+ UAR6AdYnDYZDSEEI92oRu8uiAlNkFYsXiA0R/5uQYcHawEHzk8eDIqG1xilwh8GtXOxGU87j008
+ k/29GOvzQAF5zojyZBWCzmo4YMryWrWwtNcEosf9mkIEiepva9+ZGjDfoXcGcxn/BcbGTIfOpED
+ FSfYcJPk+VumwpQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matt,
+Here is a new batch of fixes for the MPTCP in-kernel path-manager:
 
-On Tue, 2024-08-27 at 11:08 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for your reply.
-> 
-> On 27/08/2024 10:49, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for the review.
-> > 
-> > On Mon, 2024-08-26 at 18:54 +0200, Matthieu Baerts wrote:
-> > > Hi Geliang,
-> > > 
-> > > On 23/08/2024 14:19, Geliang Tang wrote:
-> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > > 
-> > > > Drop ss_search() from run_subflow().
-> > > > 
-> > > > Now ss_search() are only used by bpf_sched tests. It will be
-> > > > dropped
-> > > > in next step.
-> > > > 
-> > > > Use the "cgroup/getsockopt" way to inspect the subflows.
-> > > > 
-> > > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > > > ---
-> > > >  .../testing/selftests/bpf/prog_tests/mptcp.c  | 57
-> > > > ++++++++++++---
-> > > > ----
-> > > >  1 file changed, 35 insertions(+), 22 deletions(-)
-> > > > 
-> > > > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> > > > b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> > > > index 73adc58cd776..ce464b1e0802 100644
-> > > > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> > > > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> > > > @@ -368,22 +368,13 @@ static int endpoint_init(char *flags)
-> 
-> (...)
-> 
-> > > > + len = sizeof(mark);
-> > > > + err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark,
-> > > > &len);
-> > > > + if (!ASSERT_OK(err || mark != 2, "getsockopt(client_fd,
-> > > > SO_MARK)"))
-> > > 
-> > > The mark should be 0 on the MPTCP socket, no?
-> > 
-> > optval is modified in _check_getsockopt_subflows_mark(), so the
-> > mark is
-> > 2 now.
-> 
-> Mmh, I missed that. I don't think a helper called 'check_xxx()'
-> should
-> modify anything.
+Patch 1 ensures the address ID is set to 0 when the path-manager sends
+an ADD_ADDR for the address of the initial subflow. The same fix is
+applied when a new subflow is created re-using this special address. A
+fix for v6.0.
 
-We can rename _check_getsockopt_subflow_mark/_cc to
-_getsockopt_subflow_mark/_cc to make their names match.
+Patch 2 is similar, but for the case where an endpoint is removed: if
+this endpoint was used for the initial address, it is important to send
+a RM_ADDR with this ID set to 0, and look for existing subflows with the
+ID set to 0. A fix for v6.0 as well.
 
-> 
-> Would it not be better to have ...
-> 
->   _check_getsockopt_subflows_mark()
-> 
-> ... making sure the first subflow has the mark 1, and the other one,
-> the
-> mark 2? (if we add items at the end of the list)
+Patch 3 validates the two previous patches.
 
-No, this is what v3 do. I think this v4 is much better than v3.
+Patch 4 makes the PM selecting an "active" path to send an address
+notification in an ACK, instead of taking the first path in the list. A
+fix for v5.11.
 
-I didn't find a way to return a string type optval to getsockopt() in
-v3, so I had to do the mark/cc checks in
-_check_getsockopt_subflow_mark/_cc. I finally found a way to do this,
-so I used it in v4.
+Patch 5 fixes skipping the establishment of a new subflow if a previous
+subflow using the same pair of addresses is being closed. A fix for
+v5.13.
 
-It's strange that v3 sets mark/cc in the BPF program and checks mark/cc
-in the BPF program too. 
+Patch 6 resets the ID linked to the initial subflow when the linked
+endpoint is re-added, possibly with a different ID. A fix for v6.0.
 
-v4 is much better, it sets mark/cc in the BPF program, use getsockopt()
-to get mark/cc in user space in prog_tests/mptcp.c and do the checks in
-user space too.
+Patch 7 validates the three previous patches.
 
-Thanks,
--Geliang
+Patch 8 is a small fix for the MPTCP Join selftest, when being used with
+older subflows not supporting all MIB counters. A fix for a commit
+introduced in v6.4, but backported up to v5.10.
 
-> 
-> (...)
-> 
-> > > > + len = sizeof(cc);
-> > > > + err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, cc,
-> > > > &len);
-> > > > + ASSERT_OK(err || strcmp(cc, new), "getsockopt(client_fd,
-> > > > TCP_CONGESTION)");
-> > > 
-> > > (See above)
-> > > 
-> > > But after your modification in patch 1/3, 'cc' should be equal to
-> > > '/proc/sys/net/ipv4/tcp_congestion_control' (not 'new'). So you
-> > > need
-> > > to
-> > > get the value of the default CC first, then compare it to 'cc'.
-> > > It
-> > > should be different from 'new' (except if 'new' == default cc
-> > > from
-> > > /proc, so maybe enough to compare that 'cc' is the same as the
-> > > default one).
-> > 
-> > optval is modified in _check_getsockopt_subflow_cc(), so 'cc' is
-> > equal
-> > to 'new' now.
-> 
-> Same here:
-> 
->   _check_getsockopt_subflow_cc()
-> 
-> ... can check that the subflow with the mark 2 has the congestion
-> control algorithm is set to 'cc' (reno).
-> 
-> By doing that, you would have the BPF program setting the different
-> socket options when the subflows are created, and later checking that
-> they have been set properly when a 'getsockopt()' is called.
-> The userspace here will check that the values for the MPTCP sockets
-> have
-> the default values as expected: the BPF program has only modified the
-> subflow options, not the ones from the MPTCP socket.
-> 
-> Cheers,
-> Matt
+Patch 9 avoids the PM to try to close the initial subflow multiple
+times, and increment counters while nothing happened. A fix for v5.10.
+
+Patch 10 stops incrementing local_addr_used and add_addr_accepted
+counters when dealing with the address ID 0, because these counters are
+not taking into account the initial subflow, and are then not
+decremented when the linked addresses are removed. A fix for v6.0.
+
+Patch 11 validates the previous patch.
+
+Patch 12 avoids the PM to send multiple SUB_CLOSED events for the
+initial subflow. A fix for v5.12.
+
+Patch 13 validates the previous patch.
+
+Patch 14 stops treating the ADD_ADDR 0 as a new address, and accepts it
+in order to re-create the initial subflow if it has been closed, even if
+the limit for *new* addresses -- not taking into account the address of
+the initial subflow -- has been reached. A fix for v5.10.
+
+Patch 15 validates the previous patch.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patches 11,15/15: allow the connection to run for longer, should fix
+  the issue seen on the Netdev CI, with a debug kconfig.
+- Link to v1: https://lore.kernel.org/r/20240826-net-mptcp-more-pm-fix-v1-0-8cd6c87d1d6d@kernel.org
+
+---
+Matthieu Baerts (NGI0) (15):
+      mptcp: pm: reuse ID 0 after delete and re-add
+      mptcp: pm: fix RM_ADDR ID for the initial subflow
+      selftests: mptcp: join: check removing ID 0 endpoint
+      mptcp: pm: send ACK on an active subflow
+      mptcp: pm: skip connecting to already established sf
+      mptcp: pm: reset MPC endp ID when re-added
+      selftests: mptcp: join: check re-adding init endp with != id
+      selftests: mptcp: join: no extra msg if no counter
+      mptcp: pm: do not remove already closed subflows
+      mptcp: pm: fix ID 0 endp usage after multiple re-creations
+      selftests: mptcp: join: check re-re-adding ID 0 endp
+      mptcp: avoid duplicated SUB_CLOSED events
+      selftests: mptcp: join: validate event numbers
+      mptcp: pm: ADD_ADDR 0 is not a new address
+      selftests: mptcp: join: check re-re-adding ID 0 signal
+
+ net/mptcp/pm.c                                  |   4 +-
+ net/mptcp/pm_netlink.c                          |  87 ++++++++++----
+ net/mptcp/protocol.c                            |   6 +
+ net/mptcp/protocol.h                            |   5 +-
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 153 ++++++++++++++++++++----
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh  |   4 +
+ 6 files changed, 209 insertions(+), 50 deletions(-)
+---
+base-commit: 3a0504d54b3b57f0d7bf3d9184a00c9f8887f6d7
+change-id: 20240826-net-mptcp-more-pm-fix-ffa61a36f817
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
