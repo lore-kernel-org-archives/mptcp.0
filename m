@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A32113210D
-	for <mptcp@lists.linux.dev>; Wed, 28 Aug 2024 06:37:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FF1914A4F3
+	for <mptcp@lists.linux.dev>; Wed, 28 Aug 2024 06:45:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1724827032; cv=none; b=OtRBmgZ7agKSi+WZ+0aIwaKQZ3+a/I0cxC+9Sjx0H1ZtohdkMZys2Snc7i0+qlbEVoeAm1FnUbLeVHzSCpL1CvTnk1j7XlpNfo6k5c5Bd5whsc2l1ZoDcRgZw0oT9L2tkFriBfoedHh9ma6Rv1ifruNTlevY2Z3/ZegCWMfNGjs=
+	t=1724827525; cv=none; b=P7JyY5UW5XHqq99m3YBJv7ZsuQOgfbd5v4Ok+sTgJNT0ml3gKdACkcWmMAlny4tFIt9bNMxqTd7mWdpQ69RbQHrq3ZpIZHLLCz1QUkxdnUKPUiFW6g5Ym1hmcd8TnWRreYrOI4atvMaRoM46gX/SsVAWHmBRJRAkr7YLbTDAKxY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1724827032; c=relaxed/simple;
-	bh=WzC4j3qEKaIAXiGjpxZ9ckZ/K4GPle4XkGHIjHznOcU=;
+	s=arc-20240116; t=1724827525; c=relaxed/simple;
+	bh=mFupG58wIZgBGkp0V3Bxv80mv1dxUy3kp4V9W14RpZs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bhiQ/Fccmd9OjpdKL4mCYVK0czC2LW9XVH5WZ5AM0szPFYe6CVT1yBvv9Z0Ul5+tOFfKotpff2fw3y92kEFqpjFvzcnSBFd4vEzVpIflVNZu5SfaIcNWYMtv/hB0QPbyRd4jQOWxnoOvWye6pX1GoNCLdi3BdLImtybgUUjTQx4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nKqY3YIH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=a2UT+OJr1HnvT8c/xEusSSuAjgD1drcDEv5wF1b7f8jsvtlZ8nj9PSFiGPUXgaxRAa5idddGjrifn+fJyoLFf2KOwuAe5BGcv8nogz0hjKwO3IFXSVZdF7qIv6zzA+9QwOJ/k5SdtQUyl7NCSaHbIpAXtNusCUhDMoetvXBA0mU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PR4tqfJj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nKqY3YIH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 628EFC4AF0C;
-	Wed, 28 Aug 2024 06:37:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PR4tqfJj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D1B8C4DE00;
+	Wed, 28 Aug 2024 06:45:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1724827031;
-	bh=WzC4j3qEKaIAXiGjpxZ9ckZ/K4GPle4XkGHIjHznOcU=;
+	s=k20201202; t=1724827524;
+	bh=mFupG58wIZgBGkp0V3Bxv80mv1dxUy3kp4V9W14RpZs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nKqY3YIHS2SQ3fKvythfgMLXhoAfbeMzRXSwR02QVdm7jqojtuKzxtMx8FiNTrLsx
-	 G4QTXIfUYRgV4wWJ4ZnypdL4pj4tTvFCNIGGxHtPoNDh+yt2bTicMWY8X/Kt9E8AW+
-	 uTIDDsdMtjETwTbvj9ixxwy4BTfVXHDRicptUZQ9XziemA33HXuvqK1Seu9esb/2b6
-	 kGGp8HpXiHBjXGs8puU8HKf6Y+YrWM48afYGWBqKlJUbeCztkbpsWbJt+5jlL0F3/6
-	 gG4nI9qKmpncvn6LBQ/3YTlIq24JBdHCIZwIFUmSGAbyZy3i2GEnTrH0SQ756/SB+i
-	 SQMUbdIDTUeCg==
-Message-ID: <1732071c-afe4-4ff9-bc54-63b2a1275eb3@kernel.org>
-Date: Wed, 28 Aug 2024 08:37:08 +0200
+	b=PR4tqfJjCgEqV9AcNYMW9+RNLry4JvtB86261gsSQ4jBIi9CNQDzUCeHj1cg3HIaG
+	 IV95i+Om56Kw0WJAeSxOU6FPqU2gpZyqGpsuW/BopWA5DtthjxpZ+GlLL1LZ0my70E
+	 fVT/wSWVKmpKjg2r1N+cejbPqmz7WiXlb/C2nGXvLjez7wtRVsPZFXES8aCfZdKUry
+	 +Er/oFAALQympHu3/VtqOXIx839via5Mxoo+yOL9PiMNqXZPLY6L1ZAnrV6lhCAiu0
+	 VKItHtWJrX2gOpMotVLIU72lctgkQjemM6Whlp2vVzDIXZRPVe8ba5EGxp5s4qQ+Qj
+	 8Icj3fZivlw6A==
+Message-ID: <f25803ab-ee6d-4f05-a538-756c25958a65@kernel.org>
+Date: Wed, 28 Aug 2024 08:45:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,17 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: Squash-to patches for "mptcp: more
- fixes for the in-kernel PM"
+Subject: Re: [PATCH mptcp-next v4 3/3] Squash to "selftests/bpf: Add mptcp
+ subflow subtest"
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20240827-selftests-mptcp-longer-tests-v1-0-ec11c05fe980@kernel.org>
- <41e9e465-c8dd-fa13-a7d9-93a865f2159f@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1724415435.git.tanggeliang@kylinos.cn>
+ <ac6c7b2338205693434883a34256eddfd7605985.1724415435.git.tanggeliang@kylinos.cn>
+ <26a19624-f042-487f-8227-a992ab786696@kernel.org>
+ <363548497c01a3955412d32b281022104f993563.camel@kernel.org>
+ <17b3927e-0007-4e97-8c98-4c95068401b8@kernel.org>
+ <2a3a8b53865e3dc68e7aab28cca1b3433981d81a.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,44 +91,119 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <41e9e465-c8dd-fa13-a7d9-93a865f2159f@kernel.org>
+In-Reply-To: <2a3a8b53865e3dc68e7aab28cca1b3433981d81a.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Mat,
+Hi Geliang,
 
-On 27/08/2024 22:09, Mat Martineau wrote:
-> On Tue, 27 Aug 2024, Matthieu Baerts (NGI0) wrote:
+On 28/08/2024 04:44, Geliang Tang wrote:
+> Hi Matt,
 > 
->> These two small squash-to patches would avoid issues recently seen on
->> the Netdev CI when this series has been sent upstream.
+> On Tue, 2024-08-27 at 11:08 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
 >>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (2):
->>      Squash to "selftests: mptcp: join: check re-re-adding ID 0 endp"
->>      Squash to "selftests: mptcp: join: check re-re-adding ID 0 signal"
+>> Thank you for your reply.
+>>
+>> On 27/08/2024 10:49, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Thanks for the review.
+>>>
+>>> On Mon, 2024-08-26 at 18:54 +0200, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 23/08/2024 14:19, Geliang Tang wrote:
+>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>
+>>>>> Drop ss_search() from run_subflow().
+>>>>>
+>>>>> Now ss_search() are only used by bpf_sched tests. It will be
+>>>>> dropped
+>>>>> in next step.
+>>>>>
+>>>>> Use the "cgroup/getsockopt" way to inspect the subflows.
+>>>>>
+>>>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>> ---
+>>>>>  .../testing/selftests/bpf/prog_tests/mptcp.c  | 57
+>>>>> ++++++++++++---
+>>>>> ----
+>>>>>  1 file changed, 35 insertions(+), 22 deletions(-)
+>>>>>
+>>>>> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> index 73adc58cd776..ce464b1e0802 100644
+>>>>> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+>>>>> @@ -368,22 +368,13 @@ static int endpoint_init(char *flags)
+>>
+>> (...)
+>>
+>>>>> + len = sizeof(mark);
+>>>>> + err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark,
+>>>>> &len);
+>>>>> + if (!ASSERT_OK(err || mark != 2, "getsockopt(client_fd,
+>>>>> SO_MARK)"))
+>>>>
+>>>> The mark should be 0 on the MPTCP socket, no?
+>>>
+>>> optval is modified in _check_getsockopt_subflows_mark(), so the
+>>> mark is
+>>> 2 now.
+>>
+>> Mmh, I missed that. I don't think a helper called 'check_xxx()'
+>> should
+>> modify anything.
 > 
-> Both of these LGTM.
+> We can rename _check_getsockopt_subflow_mark/_cc to
+> _getsockopt_subflow_mark/_cc to make their names match.
 
-Thank you for the quick review!
+I don't know: to me, it is still strange to have the validation part
+modifying output. It could then hide thing.
 
-Now in our tree:
+>>
+>> Would it not be better to have ...
+>>
+>>   _check_getsockopt_subflows_mark()
+>>
+>> ... making sure the first subflow has the mark 1, and the other one,
+>> the
+>> mark 2? (if we add items at the end of the list)
+> 
+> No, this is what v3 do. I think this v4 is much better than v3.
+> 
+> I didn't find a way to return a string type optval to getsockopt() in
+> v3, so I had to do the mark/cc checks in
+> _check_getsockopt_subflow_mark/_cc. I finally found a way to do this,
+> so I used it in v4.
+> 
+> It's strange that v3 sets mark/cc in the BPF program and checks mark/cc
+> in the BPF program too. 
+> 
+> v4 is much better, it sets mark/cc in the BPF program, use getsockopt()
+> to get mark/cc in user space in prog_tests/mptcp.c and do the checks in
+> user space too.
 
-New patches for t/upstream-net and t/upstream:
-- a3be3c7a08d5: "squashed" (with conflicts) in "selftests: mptcp: join:
-check re-re-adding ID 0 endp"
-- 59a371c37841: "squashed" (with conflicts) in "selftests: mptcp: join:
-check re-re-adding ID 0 signal"
-- 3e07a3bd7bfd: conflict in
-t/selftests-mptcp-join-mute-errors-when-ran-in-the-background
+I don't know as well: I understand that the v4 is doing more operations
+in BPF, but it still does not check the MPTCP socket option, only the
+ones of the subflows. Also, the userspace, and the BPF programs are now
+validating the same thing: the options have been changed on the
+subflows, but is it really needed to do the same validation twice?
 
-Tests are now in progress:
+The idea being Nicolas' BPF program is to show that it is possible to
+set socket options per subflow with BPF. So it likes it is important to
+validate that:
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/a57f02c478c04a53ffd285d01d70908424ee4c3f/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c075d02b144c693f688166d40bbf4e087a094010/checks
+- the subflows TCP socket options have been modified: different marks
+and CC, validated by the new BPF program
+- and the MPTCP socket options are still referencing the default ones
+
+I don't think it is important to check that BPF can change the values
+returned by getsockopt(). I mean: doing this is not specific to MPTCP I
+think. That's why I think the BPF program should not modify the value
+returned by getsockopt(), but only checking everything is OK on the
+subflow side. No?
 
 Cheers,
 Matt
