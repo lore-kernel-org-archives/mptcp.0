@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FC9C374D1
-	for <mptcp@lists.linux.dev>; Fri, 30 Aug 2024 06:55:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6394814D2B5
+	for <mptcp@lists.linux.dev>; Fri, 30 Aug 2024 06:55:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725000939; cv=none; b=L5DePsm3fIUZGQQqslcRgvPVLWgR+V4kWx2R3Dmgj/Vk0KMRae0eOcE3Jz52lMM7eRr8Yo2kfqndKE4FcVdPyN9bzRsx+nUR8yZBzlMXaYnH5x19Q4IW/yE9+OUvwxlx4lyFyBUGyx0FnLmaVbZOpcYt46E+ISiOrLSXNj6ncI4=
+	t=1725000941; cv=none; b=pQgl6i/zrrleDCv0hepa6gcNs5IOU3QSO59unkIpreNPAj/YUTvLDNQz2yS7reGTZYlAR9AeZlSV1vrNHjbHDwgFGW+JHoe81IEE7ogFQszrHwBLwmxgX83Qc66qsPQjTq5487Gansq9NSmvY81ZZvu0ORMUHCEsLQ3MQlOEEnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725000939; c=relaxed/simple;
-	bh=yfAcXJXCYC2ItHqRjU4zIPffLFSXrYKtBSR2uRAxyiE=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cxkcb/bdnvh8z9yfZcD4/R0AaAo49InvLGfmFk9SZHomlZq7bGS8UfF3whksZIb3Ps0zCBQn8fN4h2aql76CBY8VJQu55s4bJ0ov1+5y2UcTiLkh9pPiOPA6mpPL3tF1KtfwAeggOTl344mIvVxnQN4YX02fIZ8r1sbyEWKUwpA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QTI77uxA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725000941; c=relaxed/simple;
+	bh=vTfiggft06llAFuz4f3D8JufNjpczNfklpupNrDDF5U=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=IU1mlmd5B1Q4YRm1i9/ASNZ1LBuWLlyAJ/vfOnB5T8lS3JUUGo0UyMLXk8zexA8A2oUB5v67drjuKvoBxA65ZOYZG8vdCW087bzk3S04J/KeB6yhTI9VA6stqZ4ysoJAPXl8mytkmkY2/IaWlDj0yW+282/eVGIAwByhrYUgdYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T20Bdf6u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QTI77uxA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A68C4CEC2;
-	Fri, 30 Aug 2024 06:55:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T20Bdf6u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB370C4CEC4;
+	Fri, 30 Aug 2024 06:55:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725000939;
-	bh=yfAcXJXCYC2ItHqRjU4zIPffLFSXrYKtBSR2uRAxyiE=;
-	h=From:To:Cc:Subject:Date:From;
-	b=QTI77uxALlhtVN565gNa5M+YVJeZSvqLQltoXDh6AUemyQheIb8Q3bta0uo4f0wwF
-	 omg6pYZv90RkFqLr0rbltv9i0F1qyCs3fJdgWQZiPV48Qd89GemQBFYAgP4jZTy0K9
-	 2aoVMU/PMCUNNVK8lFSSb96dBZl5usbpksbLsj0Tpip2VPp180OEVaCGPFWJTf2Gkh
-	 hip8uY3/RTy+NTfCxwtOq0A+Bsfq2Mft1k/q86/Fl5SROLfZZB8hhxL2vyEMa67H11
-	 KXgIRR+39/ZklZCdyPiNQXXvGprzVtFPweCQq4bqV1f56clf/fjmcr/F9ZxXfWxJ9X
-	 t5GuLCt5w4J2Q==
+	s=k20201202; t=1725000941;
+	bh=vTfiggft06llAFuz4f3D8JufNjpczNfklpupNrDDF5U=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=T20Bdf6uN0PhEvt3ZxBpmfGCR4NWQSlc+th8cKW37ujBj32IPCCxel63+l0089XVj
+	 yttnzET9hHFXBDy98auiE5pD79u2T1wBY/W/b8Xivmx2vjwg89hwMuog6+FpDpYeJ5
+	 2klM6L1izuZZeoOoOCKDVRsJ77DeWEbkZqwWG0bh3c5Fg3imD0DCTIh2o0jGbFvNDi
+	 11mOh+TEGJnuxYmniVW3AVCXEIcxsrm3PkhRx+uCTEs23RAaHZQ0iIf3ojlX6zWrXU
+	 78PgdvCO4pN2IVTyoqjIrycut0haUaX4MYJwYPtC1Rx3UM4Fde3N+ld61O0vYDZDAK
+	 WIv5pqpgLmYhw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 0/4] fixes for "new MPTCP subflow subtest v4"
-Date: Fri, 30 Aug 2024 14:55:29 +0800
-Message-ID: <cover.1725000687.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 1/4] Squash to "selftests/bpf: Add mptcp subflow example"
+Date: Fri, 30 Aug 2024 14:55:30 +0800
+Message-ID: <06de9b47ddc1e46527f42111a29b97ca01452ba4.1725000687.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1725000687.git.tanggeliang@kylinos.cn>
+References: <cover.1725000687.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,38 +45,27 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v6:
- - address Matt's comments in v5.
- - use mptcp_for_each_subflow in _check_getsockopt_subflow_mark.
- - check msk->pm.subflows in _check_getsockopt_subflow_mark/cc.
- - add wait_for_new_subflows helper.
+For easier verification of cc, set cc of the second subflow as "reno",
+instead of the first one.
 
-v5:
- - rename _check_getsockopt_subflows_mark in patch 1.
- - address Matt's comments in v4.
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/bpf/progs/mptcp_subflow.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-v4:
- - address Matt's comments in v3.
-
-v3:
- - drop "ss_search" from subflow subtest
- - fix mptcp_for_each_subflow_safe
- - add cond_break in list_for_each_entry/_safe
-
-Two fixes address Martin's comments in "new MPTCP subflow subtest" v4.
-Patch 2 will conflict with "selftests/bpf: Add bpf_first scheduler & test".
-
-Geliang Tang (4):
-  Squash to "selftests/bpf: Add mptcp subflow example"
-  selftests/bpf: Add getsockopt to inspect mptcp subflow
-  Squash to "selftests/bpf: Add mptcp subflow subtest"
-  Squash to "selftests/bpf: Add bpf scheduler test"
-
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 65 +++++++++++------
- tools/testing/selftests/bpf/progs/mptcp_bpf.h | 35 +++++++++
- .../selftests/bpf/progs/mptcp_subflow.c       | 71 ++++++++++++++++++-
- 3 files changed, 149 insertions(+), 22 deletions(-)
-
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+index bc572e1d6df8..2e28f4a215b5 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+@@ -52,7 +52,7 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
+ 	err = bpf_setsockopt(skops, SOL_SOCKET, SO_MARK, &mark, sizeof(mark));
+ 	if (err < 0)
+ 		return 1;
+-	if (mark == 1)
++	if (mark == 2)
+ 		err = bpf_setsockopt(skops, SOL_TCP, TCP_CONGESTION, cc, TCP_CA_NAME_MAX);
+ 
+ 	return 1;
 -- 
 2.43.0
 
