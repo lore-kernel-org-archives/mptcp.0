@@ -1,241 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F25F41AB6F1
-	for <mptcp@lists.linux.dev>; Mon,  2 Sep 2024 16:47:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7E5519F112;
+	Mon,  2 Sep 2024 17:25:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725295632; cv=none; b=hTDepjazqbGdIoy5x8xDj0pR0+Bxyi49Pe2k9iAVNlsuXgQ8BZ1sUEpX4qcY0rOMRxWpm8jUwldin4sL1m7OfBnd77/NK7eVv0Ve/9bMwR3Sf17wzfvmF0ze49EjAKfubz9Wx/q/u0EWSeqjZMcdJHoK7kgK3yphI9ClIzc93aM=
+	t=1725297925; cv=none; b=MgkhM0kPBZg3g9ZpxvnL4WaryNLx1RUHoc1Et+jttm5ahUESiMfZorQSxi52ZfFv7YcR40zc8b7TRFqnuamAWKnJuAaddW9G51A+3t5+AMzoKCFdkLTNbQLuD92yxzFDz3HGBoPVtQY9h/q1lqabFilcLCh4mhbIiCvrsugBS5I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725295632; c=relaxed/simple;
-	bh=mH0PUAaC4SX/dpG9A/cgoEIR5yVL/GoCKchMW9Aqcak=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SDMuKLOH6M8ahMqgksTWTJJaLOBH9QH1Ctm5aq735aci2IjkJBIrSYQZTKgSAXy766qnLkLyOe0vrGmIsSoWQHRRakuHW2CqbM/4/BCdkiceOP34NgpiC2Bk50fIh0jieULNE9zeUWHrY6Nt9h3B4a3StjueY1obCaUCvrX9+FM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vHf1FiSl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725297925; c=relaxed/simple;
+	bh=2eJ1pdoyFxgyFhYcLs1pco/m9bQkVEsBxssmmrtH25A=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=MMH78/Q4n5HJS8JQo7YhSjbyxgXCW35zIuZZh09gbF9DVOjGj009MioZM+Dc2gPm22IEc1/MreOyfIxefwHl1erVb+YP4hoMoWT2sXk2bO5u4e1c6lJFMifF0J0uf5kW8AoGQnMmvtG29/uZngME5u8vCQQZq+3uCahcNX+8A3I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W3tmCYp2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vHf1FiSl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BFAC4CECA;
-	Mon,  2 Sep 2024 16:47:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W3tmCYp2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2AA2C4CEC2;
+	Mon,  2 Sep 2024 17:25:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725295631;
-	bh=mH0PUAaC4SX/dpG9A/cgoEIR5yVL/GoCKchMW9Aqcak=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=vHf1FiSl37F1BOYKFUyCaenM0fCCu6HgeSvi2eOOv9o4lLqNbidnfAG4YdcW4l2nv
-	 xQD6eEKI8MPIX2L/4rSPg4KsbQxI2tB6oh51HN5/llvpT9pTpVfGk4pRV8IAuOJ9oR
-	 O0rGAHzhTw3W9nPylZfIlAiGRuzW72Bses1TpihwdXJu9iSc3m4yXOyzLmu8momona
-	 m3HXDCtd8ctWtL4mh7bsucvZ9xJGS1J1mHikVhONZe8G24VFPc1hJM8y7ZS1nK2o65
-	 CcIXnjWSYrL6iaabQizEgTeNkQOwxIfImr05VTirpKWXuTiJUy8GPFRQJ9CIC5xHO5
-	 nZxSzHyf5SuUg==
-Message-ID: <6d54b731-b8a5-4d2c-8569-82ae84fb4b75@kernel.org>
-Date: Mon, 2 Sep 2024 18:47:08 +0200
+	s=k20201202; t=1725297924;
+	bh=2eJ1pdoyFxgyFhYcLs1pco/m9bQkVEsBxssmmrtH25A=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=W3tmCYp26+pwqEmne4koDEzl2tGqRRKrKG8bB1OmADk8wj+KauJuuIXnE8T/0CwFN
+	 Qelhlhm20UWfi6Abuf/uCIjIIL1x6AkoR7egbHaj/Z9MxqXOhdbitybCHg/9fQjb/S
+	 W+Z8HaOSoe4mNMQBXxSjGRUxwe1fEXVb+8D86UGkDhHzzf9WNG9fLjIwvIVOO5in8/
+	 V3pfY3cueODpSJzDh6A+rfTDZEpqMfL2g4TTZ25Y5q2yxJyaL0a1rFVzEY2sODda6s
+	 eaJ2Xy0+/AXT/lRX9Fy0s5lcwxvmOcqhhjkeqvmsN4NFpBi+IoY3GG1THgzlsj4B6n
+	 uzQSt3CbrTfxA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.10.y 0/6] Backport of "selftests: mptcp: join: test for flush/re-add endpoints" and more
+Date: Mon,  2 Sep 2024 19:25:17 +0200
+Message-ID: <20240902172516.3021978-8-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
+In-Reply-To: <2024082617-malt-arbitrary-2f17@gregkh>
+References: <2024082617-malt-arbitrary-2f17@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 2/4] selftests/bpf: Add getsockopt to
- inspect mptcp subflow
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1725000687.git.tanggeliang@kylinos.cn>
- <0ce049060df256e7376516e4d94af71264a69da0.1725000687.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <0ce049060df256e7376516e4d94af71264a69da0.1725000687.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1698; i=matttbe@kernel.org; h=from:subject; bh=2eJ1pdoyFxgyFhYcLs1pco/m9bQkVEsBxssmmrtH25A=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm1fT8BNkbzZK1DcUmL5amG9E96aDMknkmg2HQH aDc95E0AlKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtX0/AAKCRD2t4JPQmmg c9mBD/9xbISLWMNsoW2i+73U/jKBgX4fxEUUCfynfDLPYe2YZ39hfwNcyvH/eyHd8i+dNBWEThA w6pjdo5GBGgQ+Ah2yMiv/U89+5FYrxBrjKu/tzwi0rRBz2yYk4L1j83lZyOgyGk5XqVu9MteOCn Zydzdcw7O+bKCZ/JqAOkzD5/NWdIZs57iF27pkAPrJlKj+HqeDR94f4rh+gc7EYiWvhHMLJpRbT 6oIK1ny7C8OqXp86QZTkp3hssjhc2/PEgxUeJ6xnIik8Nrzcdw7Codhs76fJDt95DNtP+8Iknzv O9tX+AEhAIs/TbWEASjSnH385GHFeB1nkZol9ClxlwNiA5QGKKxh+pHQrDufei/3oDG2y4JB8K+ oImwET771srMc2e2Q3k4xJ9jZUaFEx2tdbPzn7xsdnrJydtv7kTHrZZl7cJkUKavVWyBEhpv2Eu RlA0I0kY/o266cm7HAVqPvrFswBAgugK/XCd0TUNzTKcNOenSZY6GJLzla0kAovx1MZ4wSrvkn0 ohqn8ik0bsUPvCuFxr9oYoN/gk3zrkI0cpU0RNHJzyhMY9uL3eWWXQ/qj8zt5BiDRHld2sXw7XE tVuZ/TeOPKB3GCYU6DVrRUb2P51x0qgSD8s7rFDMghgshjKVAZGgOK3oBwyQvpRvKP0V6oBwCje Aj5oXZ6kviHSsdw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+All the patches that have recently failed to be backported in v6.10
+depend on b5e2fb832f48 ("selftests: mptcp: add explicit test case for
+remove/readd"), which can be backported without issue, and makes sense
+to be backported as it was validating 4b317e0eb287 ("mptcp: fix NL PM
+announced address accounting") that has been backported in v6.10 as
+well.
 
-Thank you for the new version. I still have one opened question about
-what is printed in case of error: do we have enough info to debug
-issues? Please see below.
+So this series includes the dependence, and all the 5 patches that have
+failed to be backported recently.
 
-On 30/08/2024 08:55, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patch adds a "cgroup/getsockopt" way to inspect the subflows of a
-> mptcp socket.
-> 
-> mptcp_for_each_stubflow() and other helpers related to list_dentry are
-> added into progs/mptcp_bpf.h.
-> 
-> Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list and use
-> bpf_core_cast to cast a pointer to tcp_sock for readonly. It will allow
-> to inspect all the fields in a tcp_sock.
+If you prefer, feel free to backport these 6 commits to v6.10:
 
-(...)
+  b5e2fb832f48 e06959e9eebd a13d5aad4dd9 1c2326fcae4f 20ccc7c5f7a3 f18fa2abf810
 
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> index 2e28f4a215b5..18396532f016 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> @@ -4,6 +4,7 @@
->  
->  /* vmlinux.h, bpf_helpers.h and other 'define' */
->  #include "bpf_tracing_net.h"
-> +#include "mptcp_bpf.h"
->  
->  char _license[] SEC("license") = "GPL";
->  
-> @@ -57,3 +58,71 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
->  
->  	return 1;
->  }
-> +
-> +static int _check_getsockopt_subflow_mark(struct mptcp_sock *msk, struct bpf_sockopt *ctx)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	int i = 0;
-> +
-> +	if (msk->pm.subflows != 1) {
-> +		bpf_printk("subflows=%u", msk->pm.subflows);
+Details:
 
-I think the message should be a bit longer, e.g.
+- b5e2fb832f48 ("selftests: mptcp: add explicit test case for remove/readd")
+- e06959e9eebd ("selftests: mptcp: join: test for flush/re-add endpoints")
+- a13d5aad4dd9 ("selftests: mptcp: join: check re-using ID of unused ADD_ADDR")
+- 1c2326fcae4f ("selftests: mptcp: join: check re-adding init endp with != id")
+- 20ccc7c5f7a3 ("selftests: mptcp: join: validate event numbers")
+- f18fa2abf810 ("selftests: mptcp: join: check re-re-adding ID 0 signal")
 
-  "MPTCP Subflow: expected 1 extra subflows, got %u"
 
-It looks like you didn't reply to my question from v5: if there is an
-issue with the verifications that are done in BPF, are these bpf_printk
-printed somewhere? e.g. if you force it to fail here, do you see the new
-message in the logs of the BPF selftests?
+Matthieu Baerts (NGI0) (5):
+  selftests: mptcp: join: test for flush/re-add endpoints
+  selftests: mptcp: join: check re-using ID of unused ADD_ADDR
+  selftests: mptcp: join: check re-adding init endp with != id
+  selftests: mptcp: join: validate event numbers
+  selftests: mptcp: join: check re-re-adding ID 0 signal
 
-If the test is unstable, we need to have a way understand where is the
-issue exactly, not somewhere where we set 'ctx->retval = -1'. The best
-would be to have a comprehensive message like what I'm suggesting here.
-If not, we should at least have a unique retval or errno somehow.
+Paolo Abeni (1):
+  selftests: mptcp: add explicit test case for remove/readd
 
-> +		ctx->retval = -1;
-> +	}
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk;
-> +
-> +		ssk = mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
-> +							   struct mptcp_subflow_context));
-> +
-> +		if (ssk->sk_mark != ++i)
-> +			ctx->retval = -1;
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 160 +++++++++++++++++-
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |   4 +
+ 2 files changed, 162 insertions(+), 2 deletions(-)
 
-Please add an error message here, e.g.
-
-  MPTCP Subflow: expected %d mark, got %d
-
-> +	}
-> +
-> +	return 1;
-
-(no need to change if you prefer, but your helper is always returning
--1, maybe it doesn't need to return anything?)
-
-> +}
-> +
-> +static int _check_getsockopt_subflow_cc(struct mptcp_sock *msk, struct bpf_sockopt *ctx)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	if (msk->pm.subflows != 1) {
-> +		bpf_printk("subflows=%u", msk->pm.subflows);
-
-Same here.
-
-> +		ctx->retval = -1;
-> +	}
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct inet_connection_sock *icsk;
-> +		struct sock *ssk;
-> +
-> +		ssk = mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
-> +							   struct mptcp_subflow_context));
-> +		icsk = bpf_core_cast(ssk, struct inet_connection_sock);
-> +
-> +		if (ssk->sk_mark == 2 &&
-> +		    __builtin_memcmp(icsk->icsk_ca_ops->name, cc, TCP_CA_NAME_MAX))
-> +			ctx->retval = -1;
-
-Same here.
-
-> +	}
-> +
-> +	return 1;
-> +}
-> +
-> +SEC("cgroup/getsockopt")
-> +int _getsockopt_subflow(struct bpf_sockopt *ctx)
-> +{
-> +	struct bpf_sock *sk = ctx->sk;
-> +	struct mptcp_sock *msk;
-> +
-> +	if (!sk || sk->protocol != IPPROTO_MPTCP) {
-> +		ctx->retval = -1;
-
-Same here.
-
-> +		return 1;
-> +	}
-> +
-> +	msk = bpf_core_cast(sk, struct mptcp_sock);
-
-Just to be sure: this cast can never fail, and no need to check if 'msk'
-is NULL, right?
-
-> +	if (ctx->level == SOL_SOCKET && ctx->optname == SO_MARK)
-> +		return _check_getsockopt_subflow_mark(msk, ctx);
-> +	if (ctx->level == SOL_TCP && ctx->optname == TCP_CONGESTION)
-> +		return _check_getsockopt_subflow_cc(msk, ctx);
-> +
-> +	return 1;
-> +}
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.45.2
 
