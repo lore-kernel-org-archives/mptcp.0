@@ -1,33 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B1CBD1B9B27
-	for <mptcp@lists.linux.dev>; Fri, 30 Aug 2024 15:36:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7BB7185B62
+	for <mptcp@lists.linux.dev>; Mon,  2 Sep 2024 09:09:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725032211; cv=none; b=FaV+Z5NMYzkHoC2E7IThib7Zgi/492HWFxlnKcdW/u08TKJccGCG6WfWuLINSWUXyUGQumsbrYgHVev6xw3oLxB448OvwGaW1YgByG6d5btQqBns7rvgdK5yt9p/jUtyE8PO8Qsy+/ZvZrIg8OUOM3dGtyBexM8HyTrPE2l2jRU=
+	t=1725268159; cv=none; b=Kk4LXed43ITroV3VMUI7wxMiqQrHxbYPNtKanUZU2oKCqfOvxZxhh7iNj1ybMH4OhJ7GDwcVAIYFUo8Bmm5bK3XRFyul8eDhwcoPswp0WfaiZDUvlOVLGwELmLEuVl+GiMPwhrwp97GjrdQ+3iWjTjrRo08k01KhEesoBLPlOvI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725032211; c=relaxed/simple;
-	bh=SRUIWc8xECvDd1lAdDNH4oC3EvajDbhku1Ug/GpfGRQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Z7/gyOEIxj1OXR7g69GwEbpZLG4uml7QW6PXrBtX0S93BpEK6iHUTV8RCTZTxgB5bAi41R52PPJNgJE2SGVvUFiXrx0gJmFxbww1H5Q6gzvIAiz8W5XUKe1W8OdRjsXefrHiCqy73bDm6c4z8YJrWROxtLSM3Eq3Xyw+KHqCMfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g+jnwmiv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725268159; c=relaxed/simple;
+	bh=j5HNPjUT4j6LBm5yMb7DWXkF8m/Sfqh4JGL68nEXR+U=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=nj+1Cm6VP53z3upxes5s1Q+gFLssL50+5eH5dUrs+wF1jP7tf5qD+eDPjYkd0hhGEz3jI2fjy+QN+8yNibUuVoRJtRnBBWHiySekvyjjIT2GUhjiOeDQylPM5D5EV+qcT6gYtNAxzr6+5ebaRvX3cZqx8vLX2Oasfl82Ih9fQ5E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CAin7oRN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g+jnwmiv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8593BC4CEC2;
-	Fri, 30 Aug 2024 15:36:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CAin7oRN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D0FCC4CEC2;
+	Mon,  2 Sep 2024 09:09:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725032211;
-	bh=SRUIWc8xECvDd1lAdDNH4oC3EvajDbhku1Ug/GpfGRQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=g+jnwmiv9Y/GA/eNLMSTqlduho1kUgEWBd40vDpMkVqVoYTYIShJVxeTiBYYoHPHY
-	 ihsSNOZg7XQJ8OX5i9y+1VU2osiSGcIaK6PXwPpHDvgrm7I72Q36J9nb0jjIvtkkmA
-	 SjkC9uiwxMUMnvmUaxWB6E91c7vryU4jNpNSiY3Lu8qWfhzMk0wGUgxFcrfcECEkx3
-	 x4NSgmipfQYXs1SbSEt2KmzjRdE+3iQv/huA71fxQ65h2bRhGk4f4vcuqUxYtRL/9/
-	 d4GX/b25NjEq23tzqhahYuM2ADWnvwhs1Ps2WX0w6IWlRblQ1mBGQUpE3gWLxY61Da
-	 IIUNY0DEdVDEg==
+	s=k20201202; t=1725268159;
+	bh=j5HNPjUT4j6LBm5yMb7DWXkF8m/Sfqh4JGL68nEXR+U=;
+	h=From:Subject:Date:To:Cc:From;
+	b=CAin7oRNZdnLPfx8WDnEfIOyRgS3tPWKEC4Ixj7FCw48uoPkFK7V4B333obN0kQGw
+	 uRIACFAYICdT8CDFiIRapr7IQ0Tux5LNdDS0yeSDHLKVjSIzc/5GKZ3nX2HboxS0Ss
+	 2B1YvDvqeoKbXeeHuD65qtX+21dA9/S2pY7cZSAP6Zt+hutDt0zGSYkGVV09tqi/dJ
+	 dSEBwiUCrxs2ehhfk/BGXmD5vbYfi8/ztil8bnhzkgafNanqJ+4cIszkJepEaLV5xc
+	 vGIVkb56u7kHNv8XhKr0Te+KU6kUmUSvKU0y8lRsmKtjMZySjIHy+Zwq1KygL9/kxa
+	 ACwKpPhxQy9Xg==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 30 Aug 2024 17:36:12 +0200
-Subject: [PATCH mptcp-net] mptcp: pm: do not remove closing subflows
+Subject: [PATCH mptcp-next 0/3] mptcp: fallback to TCP after 3 MPC drop +
+ cache
+Date: Mon, 02 Sep 2024 11:09:07 +0200
+Message-Id: <20240902-mptcp-fallback-x-mpc-v1-0-86d9170ddff7@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -36,68 +38,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240830-mptcp-pm-minor-fixes-v1-1-89737b847a8d@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAOvm0WYC/yXLQQqAIBBA0avErBuwxki6SrSImmoWmmhEIN49q
- eXn8xJEDsIRhipB4FuinK5EU1ewHLPbGWUtDa1qtTKk0Ppr8egtWnFnwE0ejkhdb1ZFZDQZKNQ
- H/kaRI/zC8QVTzi+LqyuAcQAAAA==
+X-B4-Tracking: v=1; b=H4sIALOA1WYC/yWMWwqAIBAArxL73ULZg+oq0YfaVktlohFCdPekP
+ mdg5gZPjslDl9zg6GLPh4mQpwnoRZqZkMfIIDJRZo0QuNtTW5zktimpVwxRaCzbXKmikg3VNcT
+ UOpo4fNse/sJQOGF4nheHWeiZcgAAAA==
 To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1593; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=SRUIWc8xECvDd1lAdDNH4oC3EvajDbhku1Ug/GpfGRQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm0ecSjHjg3sXrKatVGpExmgZNUI2kjhxKtQAYo
- +GgnNn9iDWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtHnEgAKCRD2t4JPQmmg
- c3GkD/4objxIvqW12PGUAdSI7om3RZ33L9OWwBMs4FBzUnbRNittB0EYE4Bds1GJeCR7Jacszqv
- ns5JkaZ+JKqgYLLz/+j3oQqIRIKqcF2wpIy13sQBqWhyk7SqEjrm07NbQJsfofJ99fi3IflGFsG
- iRWWup67MUmWkaDA0c15lOiIWy4CfXNo8PwGmdiZTqGTMGh6uBidGnbYPHxG4ljkKqvHpdUUjn7
- rIXeF2drBahzPZkj875irPBYsi74yt8TwLS4ClTC5BHfkrk2toxu6yPJ1bbXmB2bqoxcsIDMv13
- Ta+UiD7RNzyi0PqyNH4oG/28gu/4rDqUa9ONcNzSEE78tBvyi4eaI0NYSiI6r0kNVoxi+90Bm2w
- DRUzACagqOTGLzeas06Kt3nPfOs+ej+xhXEErDTVk3L/qxyhSmnyyb7134it4HhWb+4yX8gb116
- b5PmzmueAAzP5Mf1tRnQY/HjWer92e4WLMVvBL3u02l/A0zcObGEtIcQIfYP/vHJg1Qju99ro3C
- lfEHUygZRxFvx8carFxVZ+ziq1m8tkB3jEiB0a0Sqf7DRilzBD0XH3vfqZ1DdRF9wJO7uXc+GBC
- Frs3y3nPt7aLPGkjJ20zY26TetCfywHAtVmOR/RdgkVlqSNVOex/QvcEAl3nKIThq5Iyl9FPmkM
- BqKyNXJWuCaB1uw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2639; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=j5HNPjUT4j6LBm5yMb7DWXkF8m/Sfqh4JGL68nEXR+U=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm1YC+ga6H7Xj47IpzBMtOlWQBQ3+Jj9Vkvs1H8
+ cNq5vr3q5yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtWAvgAKCRD2t4JPQmmg
+ c68bEACN/kZvBfqGGPYsxznM7xvcCWYhfVdzKLPOFJc1Ay/Bn305waZj+KzMZfgiwmKZDhHuirC
+ 9IUwg6kOyS60n9ruAUIHAPP0uSHgbIGxRHxlyQ0NptuOPegOv2BA4izw5wn2j54OV0YPDei3oEc
+ hfRaB9Y6+ePmnIHbeLY49iuQSst71hCe6AuIDP9LdqInuL2U3LJU547TVh65Uu+1vbybJQZqKd7
+ S2fAx0XzidmxS4UYg84dU7QoOMSrmSRywmvTx4P5CaiJkiNP8HZp/Elwnq/GoIyvoECppvTx4Fm
+ EC6tIcAljxZxvvDnegRgRzPDqIRp+qfmNPLjXN/8q5XkzREk25y7w1D3QRvtRAniHbP0qPMt/aY
+ ZM3MZOThbwc+gIc/p6ln6DsE5JnsLKoSEcKYeH5NaazohZSYmRsWtNu/IicjzaaX2zzjcDV5Ha6
+ Dy/Z7n6gOY0i7UO/HYFRZIh2/4Q3JG5PFicvASUGyErZrLzJR457LFFHrJcjXHmPTov864y38sh
+ U/2gTEYmVhR2/TvXwO30l5X0eWBTe8pyQtqvql3to92lJIJVS2Z41wnpRWozrS1KbyttH+pCTSD
+ kqVxQonUa6IAK0XjUkne+4CvUrN8iItIH87ClLcGSVEY3XZUz6t/3Rps1MPiq2CV8B/nFpLb3Gh
+ SfCv4FEjy728ZBQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In a previous fix, the in-kernel path-manager has been modified not to
-retrigger the removal of a subflow if it was already closed, e.g. when
-the initial subflow is removed, but kept in the subflows list.
+The SYN + MPTCP_CAPABLE packets could be explicitly dropped by firewall
+somewhere in the network, e.g. with:
 
-To be complete, this fix should also skip the subflows that are in any
-closing state: mptcp_close_ssk() will initiate the closure, but the
-switch to the TCP_CLOSE state depends on the other peer.
+  iptables -t filter -A FORWARD -p tcp --tcp-option 30 -j DROP
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Fixes: Fixes: 58e1b66b4e4b ("mptcp: pm: do not remove already closed subflows")
+The idea of this series is to fallback to TCP after 3 SYN+MPC drop
+(patch 2). If the connection succeeds after the fallback, it very likely
+means a blackhole has been detected. In this case (patch 3), MPTCP can
+be disabled for a certain period of time, 1h by default. If after this
+period, MPTCP is still blocked, the period is doubled.
+
+This should help applications which want to use MPTCP by default on the
+client side if available.
+
+This series has been validated by a new packetdrill test:
+
+  https://github.com/multipath-tcp/packetdrill/pull/156
+
+Some questions:
+
+- Should we let the user changes the number of retransmissions (2)
+  before falling back to TCP? For TFO, the data are never retransmitted
+  in a SYN. Maybe that's different here? A sysctl knob could always be
+  added later on.
+- Should we globally disable all MPTCP connections if any retransmission
+  after the fallback is a success instead of only the first one? I guess
+  we reduce risks of accidents by only looking at the following
+  retransmission after the fallback.
+- Is one hour a good time for the fallback?
+
+For later:
+
+- The restriction could be done per oif (sk_dst_get(ssk)->dev), but we
+  would need to store it somehow, or per MPTCP entrypoint. Or let the PM
+  calling mptcp_active_enable() when a new endpoint is added.
+- Other cases could trigger mptcp_active_disable(): e.g. some fallbacks
+  or corruptions in the middle of the connections.
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Notes:
-- I'm not sure looking for TCPF_CLOSING is really needed in this case.
-  I can remove it if it is not needed.
----
- net/mptcp/pm_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Matthieu Baerts (NGI0) (3):
+      mptcp: export mptcp_subflow_early_fallback()
+      mptcp: fallback to TCP after SYN+MPC drops
+      mptcp: disable active MPTCP in case of blackhole
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a006ce39d41a..f52718e1c30c 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -862,7 +862,8 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 			int how = RCV_SHUTDOWN | SEND_SHUTDOWN;
- 			u8 id = subflow_get_local_id(subflow);
- 
--			if (inet_sk_state_load(ssk) == TCP_CLOSE)
-+			if ((1 << inet_sk_state_load(ssk)) &
-+			    (TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING | TCPF_CLOSE))
- 				continue;
- 			if (rm_type == MPTCP_MIB_RMADDR && remote_id != rm_id)
- 				continue;
-
+ Documentation/networking/mptcp-sysctl.rst |  11 +++
+ include/net/mptcp.h                       |   4 +
+ net/ipv4/tcp_timer.c                      |   1 +
+ net/mptcp/ctrl.c                          | 133 ++++++++++++++++++++++++++++++
+ net/mptcp/mib.c                           |   3 +
+ net/mptcp/mib.h                           |   3 +
+ net/mptcp/protocol.c                      |  18 ++--
+ net/mptcp/protocol.h                      |  16 +++-
+ net/mptcp/subflow.c                       |   4 +
+ 9 files changed, 182 insertions(+), 11 deletions(-)
 ---
-base-commit: 6b336f0e1c2b1f649f86fde82abeae5b87ce09b4
-change-id: 20240830-mptcp-pm-minor-fixes-3578d0338438
+base-commit: 44106bc7908a7c9e461983032567a918e1d62b91
+change-id: 20240822-mptcp-fallback-x-mpc-491bb35a8e66
 
 Best regards,
 -- 
