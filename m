@@ -1,134 +1,120 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46D513E41A
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 15:31:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE42A188A22
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 16:03:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725377494; cv=none; b=IG1P++CbE6n82Fw74qFuw18AeZI0tjfMsnQOqAew64J+1EFnB5p2QrAiBs+YbItHfWjL9qaHKQQb72Matb7uO69anUqatHVHMWEQzS5qzj+nhXyzjR+uWCPhQB9XtqlaeqfDYSnv6IMtH1z78+UcMiS5/fuJa5QS0WOiWGESZ1I=
+	t=1725379430; cv=none; b=gBbK+99llMnUwjKXovYQcifEFXUFeMHONJ/lTct2R0d0zS8f3YE/35QnYPB9c/Gs9x0jw9hSnj7c88CDMbTBJafxzZCiXbYxqyV68c+8wBPnJKRZ86aDIC9kHsyQz+uTu5xmiwmCf7cLoVdBfvchPnjvXeiCZYiDBkR8cF4XpTc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725377494; c=relaxed/simple;
-	bh=zuLonVHxboAtSIY7jn7BjPPvHE4IAffY5HeXdcem7fg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=couYzluPX9+0wZlCp4L+4Ty32SfWelXz1skNvRJixDlIEDfv0cHPZ04n99n6yXsYvVqLJWyAQwBE1tZWxTvYTXQXG5WDBy6vnMc/7TU0R0/CxU/t8SV9Fw3dMgC7EhSGdgWUmIREvuaMTdrt5CRtpkDTDAhVl/i0BjYXFxeP8EQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndJNxewC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725379430; c=relaxed/simple;
+	bh=IH2ryZ75OvRgOZSoOyuU7t4Txrgn4OfcdHA83H2r6MI=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=YBNpJMeXL/FI36vLiead/SULivqTJq8bXoM0TSHf/sIGNorkPR4jZrzYhWX9CjidobuGMSrUetXXpz/pgdJ0fO+j+UHDMibixr3pMj7FZPDljejig/GhBCJ1h9qcgs/7zN5TYqbORl3Ii2JwIgBW+UUBVOK1FXhDnP8YOPoRJEE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gF+B6G2t; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndJNxewC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA4DC4CEC4;
-	Tue,  3 Sep 2024 15:31:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725377493;
-	bh=zuLonVHxboAtSIY7jn7BjPPvHE4IAffY5HeXdcem7fg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ndJNxewCtfrOzz192hB3p3A5r/oSQJv41QIGBqpfDMdoTdNavPInK4BSsz+9dABRd
-	 nGXBoKBTytsbqNfidnCCo1ulSEJ3UqcTpKKRPtzMkeBxtxESnlMld8LifX9Jd+KpVo
-	 AwkiHsjXMFYs5Vl38wW9JIr1nznBcnMXx+8aIGMifXsDy9y4KwtSnp+9+V7Q2NnOB+
-	 7f+8EQtH3eowkQGd1II+iWXE/53GJfNMQNAxzqt6iJfVSw8ifj4ZsXNPbZ5N5UWcPf
-	 yATdCK5UshACp3Krtxzql/z6xf8IYJhRITJ77ZYErAJ3CSAF9UOG3Agrhkg5zQMHGp
-	 waRsnx6WITHDw==
-Message-ID: <8f355da2-5667-412b-b3fd-1ce8f7571fa8@kernel.org>
-Date: Tue, 3 Sep 2024 17:31:31 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gF+B6G2t"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-45681098bbdso46487141cf.1
+        for <mptcp@lists.linux.dev>; Tue, 03 Sep 2024 09:03:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725379427; x=1725984227; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=/eiyqWVUrlMxS53y9mUKws3tssjbGTOOnXcZt7SSrz4=;
+        b=gF+B6G2tar/7wgjq+p/4li5d6NpYjXjPuJaQdiDGQJj56658Z5WWLhRPrbwcX14z76
+         TzrUdhW1PeC4csrGhfPPyvNmwDV45MvI45U3XMI6IyIl4uVeKQSio+edztvgVme9BQKh
+         P0Yc0J+x4PTd8ABWL58Ks3cHkLO+6EB8R/dioopZoYNBtEsvYvtMqmb43jcIlzs2xbXv
+         EeXFmhS0Wou8buMf1BVnzImCclxiyhY2Ob0nhAa7+OT7Mcnyt6vhySu8BRRoUg3VZZ9v
+         SMTUbdwnFKdRWETJu3aBJ/p9rQxj8hXo9XAZnCU5qQE6bYC3pkPSnDVk2vAPaxakmqPf
+         OaHQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725379427; x=1725984227;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=/eiyqWVUrlMxS53y9mUKws3tssjbGTOOnXcZt7SSrz4=;
+        b=XzSB+twx6gVKs9xnw2S1zyiko6kCOLGtskaFFIFXhqMfkFkvT3iX1HCunGAf31nxs7
+         A6vDKYFQRzmTLxCTf/S8lMjnT6HtwZbzIJjOEDCMQFcEnHNRR9yK+/DHrYwFhFk6ZfGo
+         n85/KhuZnPK++exHEB8cA4JNU75ADxdKnlD1Yo3kuUJ9O6OMy6KLcBMfJ5MHn1MaB96d
+         jxxunfu5ukL48FqGQ+cqg9OSZUK4FYSiFXl8m8XzB1YM7JH+IaIjxJV+lYF2arnGdmql
+         BAROidSZIVYFk4OksfNCZrQEHjQMzIKOgnmC1FCe1P5LubhuyjhuA6ghzm8MOZcEPevK
+         bC9g==
+X-Gm-Message-State: AOJu0Yy1J2k7VEQBrGGAYx8fjIdLBFxMl7E/e2hFsOu1lm9Pcam+ZdNM
+	GVzFvVGGsL4wLZ8hQPcNIV07RANoKC5LL200nmCKgTGdwpnEexY=
+X-Google-Smtp-Source: AGHT+IFjHCxyb+jCgbdg5rMp0rnLb2akv5LxhTP1WZqKlFX8a+Jn84TcoQpaXyby7gReeeOsnY1FJA==
+X-Received: by 2002:a05:622a:2b4a:b0:447:d963:ebbf with SMTP id d75a77b69052e-4568bd92c8fmr274876611cf.21.1725379427397;
+        Tue, 03 Sep 2024 09:03:47 -0700 (PDT)
+Received: from [127.0.0.1] ([74.249.5.97])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45682ce3037sm51021011cf.49.2024.09.03.09.03.46
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 09:03:46 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <tencent_274B82754376EF66A23C0D37029644374609@qq.com>
+References: <tencent_274B82754376EF66A23C0D37029644374609@qq.com>
+Subject: Re: [PATCH] mptcp: pm: Fix uaf in __timer_delete_sync
+Message-ID: <2a703004-3b57-1e27-a15a-948f4899273c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 03 Sep 2024 16:03:46 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: mptcpd Usersapce PM
-Content-Language: en-GB
-To: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>
-Cc: mptcp@lists.linux.dev
-References: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
- <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org>
- <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-On 03/09/2024 17:21, ROSHITH SEBASTIAN wrote:
+Hi Edward,
 
-(...)
+Thank you for your modifications, that's great!
 
-> I am trying to implement userspace PM, because different rules have to
-> be set for each suflow based on different conditions (these are still
-> being defined). For example, 75% of the data should flow through one
-> and the rest through the other subflow based on the delay or the cost
-> of the link. The fraction in which the traffic is split might not be
-> known beforehand and can vary during simulation.
-> So my objective is to divide the traffic unevenly across the links
-> based on certain rules.
-> Is it possible to accomplish this with a PM or is a custom scheduler
-> needed? Although I have seen references to shedulers in previous
-> versions, it has not been mentioned in mptcpd.
+Our CI did some validations and here is its report:
 
-The PM is in charge of subflows, from creation to deletion, and also
-address announcements. From what I understand, you don't need to have
-custom rules for that: you just want to create 2 paths using two
-different networks, no?
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): mptcp_connect_mmap - Critical: 1 Call Trace(s) =
+=E2=9D=8C
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/106859=
+82560
 
-  https://www.mptcp.dev/#path-manager
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/96d64469d937
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D886357
 
-mptcpd can only control the path-managers.
 
-The packet scheduler is in charge of selecting which available
-subflow(s) to use to send the next data packet.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-  https://www.mptcp.dev/#packet-scheduler
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-For the moment, it is not possible to control the packet scheduler. It
-might be possible to do that in the future with BPF, the work is in
-progress, e.g.
+For more details:
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/75
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
