@@ -1,151 +1,134 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D3E18BC15
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 15:21:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E46D513E41A
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 15:31:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725376913; cv=none; b=G1ir1qxKFCN4vHh/3PBoDebqsv7rxpuo6/Q+j3YJwYlXnKEAVkNJuASzBbTPaG5UjhJs62ysjhsSxTL99Grb1MrolPgV7jHyAFv93oUB9PI+FhImt5q48hK4YMmnhqqZMykffDC7wtC2Px8l+sqVX9dyB8nwQngI8fG5CgXPJyg=
+	t=1725377494; cv=none; b=IG1P++CbE6n82Fw74qFuw18AeZI0tjfMsnQOqAew64J+1EFnB5p2QrAiBs+YbItHfWjL9qaHKQQb72Matb7uO69anUqatHVHMWEQzS5qzj+nhXyzjR+uWCPhQB9XtqlaeqfDYSnv6IMtH1z78+UcMiS5/fuJa5QS0WOiWGESZ1I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725376913; c=relaxed/simple;
-	bh=L7bzO8sduRuORxv+9b1sBD9W3ikmOj57/gzaaY42NB0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=Dta5bJ0SDhldeK/MsSh1tFMZGA7MyEexMD+i0w2g1eHVShRk3FVplQIh/ou7QEDQHlcuSFz+3cIcy/umUTPi8ezXuOFVX9GwlEJXBFQhOehu/OCwK1I0MN6VRDBcInqtXoxUAMQ2uceT/2cyH6u9xiIqIdLZkZq6ciPNAIpHbb0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=student.unisi.it; spf=pass smtp.mailfrom=student.unisi.it; dkim=pass (2048-bit key) header.d=student.unisi.it header.i=@student.unisi.it header.b=Q1qp9ENc; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=student.unisi.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=student.unisi.it
+	s=arc-20240116; t=1725377494; c=relaxed/simple;
+	bh=zuLonVHxboAtSIY7jn7BjPPvHE4IAffY5HeXdcem7fg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=couYzluPX9+0wZlCp4L+4Ty32SfWelXz1skNvRJixDlIEDfv0cHPZ04n99n6yXsYvVqLJWyAQwBE1tZWxTvYTXQXG5WDBy6vnMc/7TU0R0/CxU/t8SV9Fw3dMgC7EhSGdgWUmIREvuaMTdrt5CRtpkDTDAhVl/i0BjYXFxeP8EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ndJNxewC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=student.unisi.it header.i=@student.unisi.it header.b="Q1qp9ENc"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-205909afad3so15641015ad.2
-        for <mptcp@lists.linux.dev>; Tue, 03 Sep 2024 08:21:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=student.unisi.it; s=google; t=1725376908; x=1725981708; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=wM4j4eN2EqDuyONzWWAh8Mjq8Wlx8Xbue+qszgqh9l0=;
-        b=Q1qp9ENcVsaH5E2WyT711EgKe1FFaYn0t0pnT6hBSrISi9Pj3UYorWCGNoesxd+G01
-         5/x/+j5KPOPa4unCJBFFJEUf8u5C3viJOb3BsSq3OaWCP28TIC3G3nbbjOaJelhIetC4
-         /BIHYhvnA10PVjomOcm0cilqO18VG278TuwAsZC1P0TDzEsU5hTnbSnVChzU7nZtE/ih
-         bYk8ghBoGBVPry+kfcTd40U31+VKaWs18kGnpN4+LQpZdKxSHBilp0fT5ojHAWzg3dX1
-         vxwR3V6AYAWEeHhGhz3vceG49zeWKIR9wQ4ZO1rxHHs2WydP8kgDETtpbY1tfABBh+oc
-         Toaw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725376908; x=1725981708;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=wM4j4eN2EqDuyONzWWAh8Mjq8Wlx8Xbue+qszgqh9l0=;
-        b=pjcSgCfmpKakLYoxmTfiPPERorYU8k0yPWNipMig4WlN2fE3nddF/cSThzDjn/kI/c
-         ideyC7Xy9S8yiXDvmVRJ1ylYW5cDPeeiLB0khVoe3nboTVlhWW0fdPn0Ynm4MBFnBqLf
-         9LyEp2BSvUeljVZXSEeHyCN/A2AjCvyQzfoqXBZogsp54iwJuVStPx8JDj1YTjZ1Sdja
-         MI8g+hCS5aTx7tQkOSYGRka+MOSv+mm+TyWzTlrzDQMIcyFINFtGvB438vqIrH5kTnDQ
-         tw8jubUu0a5CZfn+Xy4ur9NsJXyiVUtIbkMqxHU9aBHBPSsJct846suzl+bU1eMwX6Zg
-         1mtA==
-X-Gm-Message-State: AOJu0YxVGsClLmz74tV77PtVWRA+csOaZ2CtONN0PH7FwcOjZKV1THAu
-	aUbDZpCmcpsxiMl51gX/7BsjMhTsOtT9vVFDzUIrknaLR6QPTjL0t/3wsYvCGdOEyMwG93Y+855
-	vBaZR6MxGDyKnnSedoxTNoL9LBbRVgyhF9RkHttHTZUQZ3f+j2vvmA5inW+xBuCuMP/2Et+V5Tv
-	goXkvsPgCcACJuxpmhXOVhsjIPes9rAIf6jg==
-X-Google-Smtp-Source: AGHT+IHM8Azql8dg/Px5q8ZhExxesYAW+7j4bBW0TnO5UKzqPIP7gz4ZE++M9E5ohAva1IqKvBby/SJCv/+X6DAnReA=
-X-Received: by 2002:a17:902:d58d:b0:206:994b:6d53 with SMTP id
- d9443c01a7336-206994b6f3emr25733095ad.30.1725376907586; Tue, 03 Sep 2024
- 08:21:47 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ndJNxewC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFA4DC4CEC4;
+	Tue,  3 Sep 2024 15:31:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725377493;
+	bh=zuLonVHxboAtSIY7jn7BjPPvHE4IAffY5HeXdcem7fg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ndJNxewCtfrOzz192hB3p3A5r/oSQJv41QIGBqpfDMdoTdNavPInK4BSsz+9dABRd
+	 nGXBoKBTytsbqNfidnCCo1ulSEJ3UqcTpKKRPtzMkeBxtxESnlMld8LifX9Jd+KpVo
+	 AwkiHsjXMFYs5Vl38wW9JIr1nznBcnMXx+8aIGMifXsDy9y4KwtSnp+9+V7Q2NnOB+
+	 7f+8EQtH3eowkQGd1II+iWXE/53GJfNMQNAxzqt6iJfVSw8ifj4ZsXNPbZ5N5UWcPf
+	 yATdCK5UshACp3Krtxzql/z6xf8IYJhRITJ77ZYErAJ3CSAF9UOG3Agrhkg5zQMHGp
+	 waRsnx6WITHDw==
+Message-ID: <8f355da2-5667-412b-b3fd-1ce8f7571fa8@kernel.org>
+Date: Tue, 3 Sep 2024 17:31:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: mptcpd Usersapce PM
+Content-Language: en-GB
+To: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>
+Cc: mptcp@lists.linux.dev
 References: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
  <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org>
-In-Reply-To: <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org>
-From: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>
-Date: Tue, 3 Sep 2024 17:21:36 +0200
-Message-ID: <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
-Subject: Re: mptcpd Usersapce PM
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Gm-Unisi: student.unisi.it
+ <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello Matt,
+On 03/09/2024 17:21, ROSHITH SEBASTIAN wrote:
 
-Yes, the sysctl net.mptcp.pm_type was set to 1 to use the userspace Kernel.
+(...)
 
-The OS & kernel details are as follows:
+> I am trying to implement userspace PM, because different rules have to
+> be set for each suflow based on different conditions (these are still
+> being defined). For example, 75% of the data should flow through one
+> and the rest through the other subflow based on the delay or the cost
+> of the link. The fraction in which the traffic is split might not be
+> known beforehand and can vary during simulation.
+> So my objective is to divide the traffic unevenly across the links
+> based on certain rules.
+> Is it possible to accomplish this with a PM or is a custom scheduler
+> needed? Although I have seen references to shedulers in previous
+> versions, it has not been mentioned in mptcpd.
 
-mpath@mpath-VirtualBox:~$ uname -a
-Linux mpath-VirtualBox 6.8.0-40-generic #40~22.04.3-Ubuntu SMP
-PREEMPT_DYNAMIC Tue Jul 30 17:30:19 UTC 2 x86_64 x86_64 x86_64
-GNU/Linux
+The PM is in charge of subflows, from creation to deletion, and also
+address announcements. From what I understand, you don't need to have
+custom rules for that: you just want to create 2 paths using two
+different networks, no?
 
-mpath@mpath-VirtualBox:~$ sysctl net.mptcp
-net.mptcp.add_addr_timeout = 120
-net.mptcp.allow_join_initial_addr_port = 1
-net.mptcp.checksum_enabled = 0
-net.mptcp.close_timeout = 60
-net.mptcp.enabled = 1
-net.mptcp.pm_type = 1
-net.mptcp.scheduler = default
-net.mptcp.stale_loss_cnt = 4
+  https://www.mptcp.dev/#path-manager
 
-I am trying to implement userspace PM, because different rules have to
-be set for each suflow based on different conditions (these are still
-being defined). For example, 75% of the data should flow through one
-and the rest through the other subflow based on the delay or the cost
-of the link. The fraction in which the traffic is split might not be
-known beforehand and can vary during simulation.
-So my objective is to divide the traffic unevenly across the links
-based on certain rules.
-Is it possible to accomplish this with a PM or is a custom scheduler
-needed? Although I have seen references to shedulers in previous
-versions, it has not been mentioned in mptcpd.
+mptcpd can only control the path-managers.
 
-Any guidance in this direction would be much appreciated.
+The packet scheduler is in charge of selecting which available
+subflow(s) to use to send the next data packet.
 
-Thanks and Regards,
-Roshith Sebastian
+  https://www.mptcp.dev/#packet-scheduler
 
+For the moment, it is not possible to control the packet scheduler. It
+might be possible to do that in the future with BPF, the work is in
+progress, e.g.
 
+  https://github.com/multipath-tcp/mptcp_net-next/issues/75
 
-On Tue, 3 Sept 2024 at 10:40, Matthieu Baerts <matttbe@kernel.org> wrote:
->
-> Hello,
->
-> (Next time, please share text instead of screenshot ; also, please write
-> in plain text only, not to be blocked by the antispam filter)
->
-> On 03/09/2024 09:41, ROSHITH SEBASTIAN wrote:
-> > I am able to use the in Kernel PM, and trying to define different rules
-> > to the subflows. The Userspace PM has been configured,
->
-> What does it mean? Did you change the pm_type sysctl? Which kernel version?
->
-> > but the data
-> > still flows only through one interface using sspi PM. Screenshots of the
-> > -d logs from client and server have been attached.
->
-> The sspi plugin is a demo one, just to give an example. It will only
-> announce addresses, and not create any subflows.
->
-> > Can you please help me with a sample PM plugin file like sspi or
-> > addr_adv that uses both (more than one) interfaces to send the data? or
-> > sspi_connection_established implementation that can send the data
-> > through all the interfaces?
->
-> Why can you not use the in-kernel path-manager for this simple use-case
-> to create just two paths over 5G and Starlink or whatever the links are?
->
->   https://www.mptcp.dev/pm.html
->
-> mptcpd can help to configure the in-kernel PM (what "addr_adv" does),
-> but its main purpose is to help to build a custom PM using the userspace
-> PM interface. If you need something custom, you need to build it using
-> mptcpd's API.
->
->   https://github.com/multipath-tcp/mptcpd/wiki/Plugins
->
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
