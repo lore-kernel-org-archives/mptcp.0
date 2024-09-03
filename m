@@ -1,79 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 852BC205E15
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:05:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB71CE6F5
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725350714; cv=none; b=A+rmdW3PAN6YuwR+TZovziip8SJ3AjE7cVhAVhrKPe10t91uCdUyvaSF3ZkwpZqZ6x4s4XBrZxKC9S8Tyz8/aNMWKY8ea+/cIKnWUdG45rg/qsUB7EnunHwy5u+W3Cb/TUvYLgvpeswVvw2x3PXb+ZWR/x6RGqJYfjIfvuMSg9E=
+	t=1725352848; cv=none; b=hpTlXpF9fBSuQANyLEuBMGQGOObb0Y223BlI2VgpXtcogFQILEgi/pAx8o/vFcU0jkAXtjOO6IOViYJhQwXStutzqt8sRLzm37cBjRtCDDWyn/6u5JfxXLAYk71/IbhQ5mgR9CCglDngAr22r7GS0gvAcuyKntQ8lKhEJDHX5hk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725350714; c=relaxed/simple;
-	bh=oX7Z8PFHcoibNtviiQrL8NrQS08lqeHBu56Z79Hddbw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zsu12kszFKM5AyHSq5LfrRPjRSvtbHGYirk9VBwy3ca5sDBejOJcmOVqy8+BUcQcROScS03ovqbw5PYGOpr1i9UqHi7X4ZN3BXL20ftaJy5mTe1RduW1YyL2B0CpzHMiHp/SmDN/WKwBsqNVokbL8vHlnEljrIMRHELhwqoZH38=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rumrqf+g; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725352848; c=relaxed/simple;
+	bh=k+TdOPKuk1wztHy3YbKsXr6oOLZ8aQe8odvMwZqo+Jk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=d293x8NJIbENMI0ihgj5DIB++a9TP+c9OYljuz+EvT9+C7PiAUGKswWPKoxm2z0t/lQh+inHtc/lvjFQXw2nIBLyv69HZknz7EaHRiPe7OobY3RfhMQLo9fvkPEZwWrZdjeKrhXqeNaceqM59Hk3m9PlgzmgQPF2k4aA2yEZRVs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOvPFWgo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rumrqf+g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7AD32C4CEC8;
-	Tue,  3 Sep 2024 08:05:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOvPFWgo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A6FC4CEC4;
+	Tue,  3 Sep 2024 08:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725350714;
-	bh=oX7Z8PFHcoibNtviiQrL8NrQS08lqeHBu56Z79Hddbw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rumrqf+gVqnWvVakZPFGW/ORecFWN/A2usPgCg6zFv0JO7ikeLCiX/PJ9Rq+ljrFB
-	 HZo6isF6caXXk2Wma5W1jvPFMklYl4kHUxNHsqAOKQdQJcUpjN6sSv7qTT6ybTqywW
-	 L0mzv66eK7i5X6UFZHswTTprXU+854wBhfsXSLbjsu2tphhXEjouaG/AKKOBuC/4HA
-	 ODjmWl7oFQ3IbBB3L9z/A5PSqrdQ+ql2ZrCeP7fbofvlHjIOGDTVGyO44/Fbr4zpkF
-	 CnZYpkgkIezgUfq39CrLicORT91taHk5nP5q31X+PH51VV5LsmUw35y4PrgGb79Bs8
-	 8l2PuaHs9WRfg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 4/4] Squash to "selftests/bpf: Add bpf scheduler test"
-Date: Tue,  3 Sep 2024 16:05:00 +0800
-Message-ID: <ca639ae9c654aa60428bfd0961476c6c8f8eddce.1725350462.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1725350462.git.tanggeliang@kylinos.cn>
-References: <cover.1725350462.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1725352848;
+	bh=k+TdOPKuk1wztHy3YbKsXr6oOLZ8aQe8odvMwZqo+Jk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=ZOvPFWgoeDWFIWxK4q5urRJrhONbGFXTOhKAuy5UvnAYngxVq/1OV77hHAfkiJMum
+	 CnzepK/tfvXGGPvoUDDQP9jiYTslovSU8T+XyCGWmKkuxjWPTE0EeBVxCXuRcn3v9Y
+	 SJ6a64Enepuhg1coF/Mw5Mk1hmPz6TG2gceFaaytEGE6I6XkNUPDNnNtKbaWAJ6Fgj
+	 iheSKgHrrQTao9NtoDimiwNmjeQTzm9i1620Jbmpmui47DNeoeLq7klk0kF8/QBDGa
+	 Pdo7iSylIHsiU7nVJu/j7FBdbN3kX+lTknEtTu/ozRYcZhMBK70d2UzHUVjk0X7kJb
+	 v20p1DrsFXVNA==
+Message-ID: <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org>
+Date: Tue, 3 Sep 2024 10:40:38 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: mptcpd Usersapce PM
+Content-Language: en-GB
+To: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>,
+ mptcp@lists.linux.dev
+References: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello,
 
-Now ss_search() are only used by bpf_sched tests. It will be dropped
-in next step.
+(Next time, please share text instead of screenshot ; also, please write
+in plain text only, not to be blocked by the antispam filter)
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+On 03/09/2024 09:41, ROSHITH SEBASTIAN wrote:
+> I am able to use the in Kernel PM, and trying to define different rules
+> to the subflows. The Userspace PM has been configured,
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 6085aaf61b27..8f22416e00fb 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -487,9 +487,15 @@ static struct nstoken *sched_init(char *flags, char *sched)
- 	return NULL;
- }
- 
-+static int ss_search(char *src, char *dst, char *port, char *keyword)
-+{
-+	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
-+			  NS_TEST, src, dst, port, PORT_1, keyword);
-+}
-+
- static int has_bytes_sent(char *dst)
- {
--	return _ss_search(ADDR_1, dst, "sport", "bytes_sent:");
-+	return ss_search(ADDR_1, dst, "sport", "bytes_sent:");
- }
- 
- static void send_data_and_verify(char *sched, bool addr1, bool addr2)
+What does it mean? Did you change the pm_type sysctl? Which kernel version?
+
+> but the data
+> still flows only through one interface using sspi PM. Screenshots of the
+> -d logs from client and server have been attached.
+
+The sspi plugin is a demo one, just to give an example. It will only
+announce addresses, and not create any subflows.
+
+> Can you please help me with a sample PM plugin file like sspi or
+> addr_adv that uses both (more than one) interfaces to send the data? or
+> sspi_connection_established implementation that can send the data
+> through all the interfaces?
+
+Why can you not use the in-kernel path-manager for this simple use-case
+to create just two paths over 5G and Starlink or whatever the links are?
+
+  https://www.mptcp.dev/pm.html
+
+mptcpd can help to configure the in-kernel PM (what "addr_adv" does),
+but its main purpose is to help to build a custom PM using the userspace
+PM interface. If you need something custom, you need to build it using
+mptcpd's API.
+
+  https://github.com/multipath-tcp/mptcpd/wiki/Plugins
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
