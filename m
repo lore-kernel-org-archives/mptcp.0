@@ -1,120 +1,100 @@
-Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE42A188A22
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 16:03:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C3D1EC01F;
+	Tue,  3 Sep 2024 22:30:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725379430; cv=none; b=gBbK+99llMnUwjKXovYQcifEFXUFeMHONJ/lTct2R0d0zS8f3YE/35QnYPB9c/Gs9x0jw9hSnj7c88CDMbTBJafxzZCiXbYxqyV68c+8wBPnJKRZ86aDIC9kHsyQz+uTu5xmiwmCf7cLoVdBfvchPnjvXeiCZYiDBkR8cF4XpTc=
+	t=1725402636; cv=none; b=u278AIZlpLkpRzzR63cFTYk7pHkqugFi4VbSUXMC7yLrl7saFCMSTAnLKLcl9R2RaGtDo3m3aNRzePqSt3sYWb+pXqepdkYWzFD4e7GfYDrfffyst9vHW4cXjfnXYOwERC0THrD/z7vldb+yx3KN56uEqnWUD7f1K2XnK04DfVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725379430; c=relaxed/simple;
-	bh=IH2ryZ75OvRgOZSoOyuU7t4Txrgn4OfcdHA83H2r6MI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=YBNpJMeXL/FI36vLiead/SULivqTJq8bXoM0TSHf/sIGNorkPR4jZrzYhWX9CjidobuGMSrUetXXpz/pgdJ0fO+j+UHDMibixr3pMj7FZPDljejig/GhBCJ1h9qcgs/7zN5TYqbORl3Ii2JwIgBW+UUBVOK1FXhDnP8YOPoRJEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gF+B6G2t; arc=none smtp.client-ip=209.85.160.172
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725402636; c=relaxed/simple;
+	bh=0NXvwQ8nOPQQ9cWalY9pUVsAdxuWo/Cm+R8hAX7RG9g=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=S+CNlNdTB5McAkQLgWv1vhSV43Z9pENWt7SzJNPCsDBM/ffzvmm4aDQeotfNuRFiPi32ycxa/xs7OZYGFUJQ6DK4ZoI5zWnhlk5zvqCao9P2PFxdaldut+I7h1piJQgNDFqspo2dABzf2Amx6MSf4zvHcE3r+F2TLOUME7JA1PE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GVsMSwf2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gF+B6G2t"
-Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-45681098bbdso46487141cf.1
-        for <mptcp@lists.linux.dev>; Tue, 03 Sep 2024 09:03:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725379427; x=1725984227; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/eiyqWVUrlMxS53y9mUKws3tssjbGTOOnXcZt7SSrz4=;
-        b=gF+B6G2tar/7wgjq+p/4li5d6NpYjXjPuJaQdiDGQJj56658Z5WWLhRPrbwcX14z76
-         TzrUdhW1PeC4csrGhfPPyvNmwDV45MvI45U3XMI6IyIl4uVeKQSio+edztvgVme9BQKh
-         P0Yc0J+x4PTd8ABWL58Ks3cHkLO+6EB8R/dioopZoYNBtEsvYvtMqmb43jcIlzs2xbXv
-         EeXFmhS0Wou8buMf1BVnzImCclxiyhY2Ob0nhAa7+OT7Mcnyt6vhySu8BRRoUg3VZZ9v
-         SMTUbdwnFKdRWETJu3aBJ/p9rQxj8hXo9XAZnCU5qQE6bYC3pkPSnDVk2vAPaxakmqPf
-         OaHQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725379427; x=1725984227;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/eiyqWVUrlMxS53y9mUKws3tssjbGTOOnXcZt7SSrz4=;
-        b=XzSB+twx6gVKs9xnw2S1zyiko6kCOLGtskaFFIFXhqMfkFkvT3iX1HCunGAf31nxs7
-         A6vDKYFQRzmTLxCTf/S8lMjnT6HtwZbzIJjOEDCMQFcEnHNRR9yK+/DHrYwFhFk6ZfGo
-         n85/KhuZnPK++exHEB8cA4JNU75ADxdKnlD1Yo3kuUJ9O6OMy6KLcBMfJ5MHn1MaB96d
-         jxxunfu5ukL48FqGQ+cqg9OSZUK4FYSiFXl8m8XzB1YM7JH+IaIjxJV+lYF2arnGdmql
-         BAROidSZIVYFk4OksfNCZrQEHjQMzIKOgnmC1FCe1P5LubhuyjhuA6ghzm8MOZcEPevK
-         bC9g==
-X-Gm-Message-State: AOJu0Yy1J2k7VEQBrGGAYx8fjIdLBFxMl7E/e2hFsOu1lm9Pcam+ZdNM
-	GVzFvVGGsL4wLZ8hQPcNIV07RANoKC5LL200nmCKgTGdwpnEexY=
-X-Google-Smtp-Source: AGHT+IFjHCxyb+jCgbdg5rMp0rnLb2akv5LxhTP1WZqKlFX8a+Jn84TcoQpaXyby7gReeeOsnY1FJA==
-X-Received: by 2002:a05:622a:2b4a:b0:447:d963:ebbf with SMTP id d75a77b69052e-4568bd92c8fmr274876611cf.21.1725379427397;
-        Tue, 03 Sep 2024 09:03:47 -0700 (PDT)
-Received: from [127.0.0.1] ([74.249.5.97])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45682ce3037sm51021011cf.49.2024.09.03.09.03.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 09:03:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <tencent_274B82754376EF66A23C0D37029644374609@qq.com>
-References: <tencent_274B82754376EF66A23C0D37029644374609@qq.com>
-Subject: Re: [PATCH] mptcp: pm: Fix uaf in __timer_delete_sync
-Message-ID: <2a703004-3b57-1e27-a15a-948f4899273c@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Sep 2024 16:03:46 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GVsMSwf2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F03E8C4CEC5;
+	Tue,  3 Sep 2024 22:30:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725402635;
+	bh=0NXvwQ8nOPQQ9cWalY9pUVsAdxuWo/Cm+R8hAX7RG9g=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=GVsMSwf2zoKcqiwSThVdDpVadtc48cynOH8JvyCaNQ1SuCeK4XqiX3rU2I7OnFrV8
+	 UGEJGEj8VrcnXvvRCPQ/ESb90UZ1F15V1aWt7xsYf670iXXFOzDnwOMx2ia3v+PM9m
+	 U6eT+3yGMKLLyqS+DHLbe5lstjEqL1lKTKBmgSJ7UUSKDTOGztBHGdIT64H2l+wj6B
+	 PgEzKXAzJtl+qYFmj0AOAkrg2ql7+yjySSMhrNzfJR98VoeZbe9raFtUXMs5OC8PEo
+	 aRHiCI5iYFaeafPAcMcFjDCtiRrsXMRBGn9TW8pUbYB37qr/exEXes8Wm0b47Ta0mn
+	 AshKvLuYlEb/w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB3733806651;
+	Tue,  3 Sep 2024 22:30:36 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/11] mptcp: MIB counters for MPJ TX + misc
+ improvements
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172540263576.468499.15933223216339757413.git-patchwork-notify@kernel.org>
+Date: Tue, 03 Sep 2024 22:30:35 +0000
+References: <20240902-net-next-mptcp-mib-mpjtx-misc-v1-0-d3e0f3773b90@kernel.org>
+In-Reply-To: <20240902-net-next-mptcp-mib-mpjtx-misc-v1-0-d3e0f3773b90@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ linux-kernel@vger.kernel.org
 
-Hi Edward,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Mon, 02 Sep 2024 12:45:51 +0200 you wrote:
+> Recently, a few issues have been discovered around the creation of
+> additional subflows. Without these counters, it was difficult to point
+> out the reason why some subflows were not created as expected.
+> 
+> In patch 3, all error paths from __mptcp_subflow_connect() are covered,
+> except the one related to the 'fully established mode', because it can
+> only happen with the userspace PM, which will propagate the error to the
+> userspace in this case (ENOTCONN).
+> 
+> [...]
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): mptcp_connect_mmap - Critical: 1 Call Trace(s) =
-=E2=9D=8C
-- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/106859=
-82560
+Here is the summary with links:
+  - [net-next,01/11] mptcp: pm: rename helpers linked to 'flush'
+    https://git.kernel.org/netdev/net-next/c/7bcf4d8022f9
+  - [net-next,02/11] mptcp: pm: reduce entries iterations on connect
+    https://git.kernel.org/netdev/net-next/c/b83fbca1b4c9
+  - [net-next,03/11] mptcp: MIB counters for sent MP_JOIN
+    https://git.kernel.org/netdev/net-next/c/1bd1788b6cab
+  - [net-next,04/11] selftests: mptcp: join: reduce join_nr params
+    https://git.kernel.org/netdev/net-next/c/1b2965a8cd8d
+  - [net-next,05/11] selftests: mptcp: join: one line for join check
+    https://git.kernel.org/netdev/net-next/c/ba8a664004da
+  - [net-next,06/11] selftests: mptcp: join: validate MPJ SYN TX MIB counters
+    https://git.kernel.org/netdev/net-next/c/004125c251a6
+  - [net-next,07/11] selftests: mptcp: join: more explicit check name
+    https://git.kernel.org/netdev/net-next/c/6ed495345be8
+  - [net-next,08/11] selftests: mptcp: join: specify host being checked
+    https://git.kernel.org/netdev/net-next/c/8d328dbcf61b
+  - [net-next,09/11] selftests: mptcp: join: mute errors when ran in the background
+    https://git.kernel.org/netdev/net-next/c/08eecd7e7fe7
+  - [net-next,10/11] selftests: mptcp: join: simplify checksum_tests
+    https://git.kernel.org/netdev/net-next/c/0e2b4584d61a
+  - [net-next,11/11] selftests: mptcp: pm_nl_ctl: remove re-definition
+    https://git.kernel.org/netdev/net-next/c/38dc0708bcc8
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/96d64469d937
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D886357
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
