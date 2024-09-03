@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4CB71CE6F5
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C720A1C7662
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:51:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725352848; cv=none; b=hpTlXpF9fBSuQANyLEuBMGQGOObb0Y223BlI2VgpXtcogFQILEgi/pAx8o/vFcU0jkAXtjOO6IOViYJhQwXStutzqt8sRLzm37cBjRtCDDWyn/6u5JfxXLAYk71/IbhQ5mgR9CCglDngAr22r7GS0gvAcuyKntQ8lKhEJDHX5hk=
+	t=1725353516; cv=none; b=koiMnrtQDICwRILZJYzbheOiXbtylKozH9IcCB1SXLxXZJKtJhJ79dAQx7Sp3PRn39zQycCiaQT2D9LJPw0o7XGPN2mwlZ7howpw0hsKixNTHSFl5B5AFUtnyR0BGysfiK19pYUzE0+xre2FqLTVsiSvnNeAzKyeym13dlR7bTE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725352848; c=relaxed/simple;
-	bh=k+TdOPKuk1wztHy3YbKsXr6oOLZ8aQe8odvMwZqo+Jk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=d293x8NJIbENMI0ihgj5DIB++a9TP+c9OYljuz+EvT9+C7PiAUGKswWPKoxm2z0t/lQh+inHtc/lvjFQXw2nIBLyv69HZknz7EaHRiPe7OobY3RfhMQLo9fvkPEZwWrZdjeKrhXqeNaceqM59Hk3m9PlgzmgQPF2k4aA2yEZRVs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZOvPFWgo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725353516; c=relaxed/simple;
+	bh=e/K4n76Mlr1klu75vjGByC0BhuAXb58Rcjo2ibV1TTQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=qvLeBUOH4h9Tl4M35Uq9L1urTnBG1jNzpfrw8DUWCxh+X4Pumhb/02Q83GBMpaRTdtVmZuttswDCBin5lLXu0B0YGWnc/TbySIUvgPt5xzAh/extjnuLyDuppN4Cx9LWXHvmPzEQsVdh5zIm2vX7m5OkjDpoZloxBnOiXV36tlI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y6oen4EN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZOvPFWgo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B6A6FC4CEC4;
-	Tue,  3 Sep 2024 08:40:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y6oen4EN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9959FC4CEC4;
+	Tue,  3 Sep 2024 08:51:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725352848;
-	bh=k+TdOPKuk1wztHy3YbKsXr6oOLZ8aQe8odvMwZqo+Jk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ZOvPFWgoeDWFIWxK4q5urRJrhONbGFXTOhKAuy5UvnAYngxVq/1OV77hHAfkiJMum
-	 CnzepK/tfvXGGPvoUDDQP9jiYTslovSU8T+XyCGWmKkuxjWPTE0EeBVxCXuRcn3v9Y
-	 SJ6a64Enepuhg1coF/Mw5Mk1hmPz6TG2gceFaaytEGE6I6XkNUPDNnNtKbaWAJ6Fgj
-	 iheSKgHrrQTao9NtoDimiwNmjeQTzm9i1620Jbmpmui47DNeoeLq7klk0kF8/QBDGa
-	 Pdo7iSylIHsiU7nVJu/j7FBdbN3kX+lTknEtTu/ozRYcZhMBK70d2UzHUVjk0X7kJb
-	 v20p1DrsFXVNA==
-Message-ID: <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org>
-Date: Tue, 3 Sep 2024 10:40:38 +0200
+	s=k20201202; t=1725353516;
+	bh=e/K4n76Mlr1klu75vjGByC0BhuAXb58Rcjo2ibV1TTQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Y6oen4ENSgI+eJv8bWdlbB8mz7JHWyoQU7dSdHusjoD2+eSImGAF1kwqJ09M19f3u
+	 9I2MTc7iCCD450aiMpJVmfMYrI3UMeq6MOqiSq0vkGyZUeAxjRAEjGEHYAPSG33+wq
+	 /ZmwJfSU78G2PE6t1yjXZyDoBrU4FKBApC5rK84WtxceuPhC6BqJkeCCCvoTPPOGVI
+	 1O2Cyu1B9mDLpUnkWwikgEbNtkNkgAoqgesw+sZQDK9DCES01t9/sx+H6FUtduOBZ6
+	 HA4OJfd7zM+YYX19x0oQXrEr/awx82OgFFxHC/QHM1HdRzmcV9k1wwspizPLvP6gMk
+	 djpQ7po4n6+QA==
+Message-ID: <23283e65-0447-499f-a1ba-5c3ffdd4d344@kernel.org>
+Date: Tue, 3 Sep 2024 10:51:53 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: mptcpd Usersapce PM
+Subject: Re: [PATCH mptcp-next v6 2/4] selftests/bpf: Add getsockopt to
+ inspect mptcp subflow
 Content-Language: en-GB
-To: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>,
- mptcp@lists.linux.dev
-References: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1725000687.git.tanggeliang@kylinos.cn>
+ <0ce049060df256e7376516e4d94af71264a69da0.1725000687.git.tanggeliang@kylinos.cn>
+ <6d54b731-b8a5-4d2c-8569-82ae84fb4b75@kernel.org>
+ <80605ef1b8687bbf4925577014781ef128ea5112.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,44 +89,89 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
+In-Reply-To: <80605ef1b8687bbf4925577014781ef128ea5112.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Geliang,
 
-(Next time, please share text instead of screenshot ; also, please write
-in plain text only, not to be blocked by the antispam filter)
+On 03/09/2024 10:00, Geliang Tang wrote:
+> On Mon, 2024-09-02 at 18:47 +0200, Matthieu Baerts wrote:
+>> On 30/08/2024 08:55, Geliang Tang wrote:
 
-On 03/09/2024 09:41, ROSHITH SEBASTIAN wrote:
-> I am able to use the in Kernel PM, and trying to define different rules
-> to the subflows. The Userspace PM has been configured,
+(...)
 
-What does it mean? Did you change the pm_type sysctl? Which kernel version?
+>> It looks like you didn't reply to my question from v5: if there is an
+>> issue with the verifications that are done in BPF, are these
+>> bpf_printk
+>> printed somewhere? e.g. if you force it to fail here, do you see the
+>> new
+>> message in the logs of the BPF selftests?
+> 
+> Yes, bpf_printk works. These logs are found in
+> /sys/kernel/debug/tracing/trace if force it to fail here:
+> 
+>       test_progs-75858   [003] ...11  2338.270065: bpf_trace_printk:
+> MPTCP Subflow: expected 1 extra subflows, got 1
 
-> but the data
-> still flows only through one interface using sspi PM. Screenshots of the
-> -d logs from client and server have been attached.
+Good, but is it visible when launching the test or did you have to do
+something else to see them?
 
-The sspi plugin is a demo one, just to give an example. It will only
-announce addresses, and not create any subflows.
+Said differently: if such issue happens on the CI side, will we see the
+logs? Or do we need to modify the CI to get them in case of error?
 
-> Can you please help me with a sample PM plugin file like sspi or
-> addr_adv that uses both (more than one) interfaces to send the data? or
-> sspi_connection_established implementation that can send the data
-> through all the interfaces?
+>> If the test is unstable, we need to have a way understand where is
+>> the
+>> issue exactly, not somewhere where we set 'ctx->retval = -1'. The
+>> best
+>> would be to have a comprehensive message like what I'm suggesting
+>> here.
+>> If not, we should at least have a unique retval or errno somehow.
+>>
+>>> + ctx->retval = -1;
+>>> + }
+>>> +
+>>> + mptcp_for_each_subflow(msk, subflow) {
+>>> + struct sock *ssk;
+>>> +
+>>> + ssk = mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
+>>> +    struct mptcp_subflow_context));
+>>> +
+>>> + if (ssk->sk_mark != ++i)
+>>> + ctx->retval = -1;
+>>
+>> Please add an error message here, e.g.
+>>
+>>   MPTCP Subflow: expected %d mark, got %d
+>>
+>>> + }
+>>> +
+>>> + return 1;
+>>
+>> (no need to change if you prefer, but your helper is always returning
+>> -1, maybe it doesn't need to return anything?)
+> 
+> Set the return value to ctx->retval in v7:
+> 
+> ctx->retval = _check_getsockopt_subflow_mark()
 
-Why can you not use the in-kernel path-manager for this simple use-case
-to create just two paths over 5G and Starlink or whatever the links are?
+Can 'ctx->retval' be != 0 before _getsockopt_subflow()? Not to override
+an error if there was already one before.
 
-  https://www.mptcp.dev/pm.html
+(...)
 
-mptcpd can help to configure the in-kernel PM (what "addr_adv" does),
-but its main purpose is to help to build a custom PM using the userspace
-PM interface. If you need something custom, you need to build it using
-mptcpd's API.
+>>> + return 1;
+>>> + }
+>>> +
+>>> + msk = bpf_core_cast(sk, struct mptcp_sock);
+>>
+>> Just to be sure: this cast can never fail, and no need to check if
+>> 'msk'
+>> is NULL, right?
+> 
+> Yes, no need to check if msk is NULL.
 
-  https://github.com/multipath-tcp/mptcpd/wiki/Plugins
+Good, thank you for your reply!
 
 Cheers,
 Matt
