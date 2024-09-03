@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDCAD205E1F
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:05:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 678391DAC5B
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:05:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725350711; cv=none; b=BmGWmIdKWO8HbcqgAwWcGjmsDI+q/uV3ICe/mus6bDBcpiIHRrovD1RCphbKHd6TrssRznau2ZL+DtUZOkCM6SkFoTDcrYoNmbHOs1ZsfXFinIOFp6MyQNTRadux6V7tokQzQhUY0htrlUE/oZ3oeQV5U6q14BhSxg4PM/zNfd4=
+	t=1725350713; cv=none; b=uRZwEy0Es4GplhV3w4H4szVWfWGsZWaQXx7Pt7UxuujEFkeNBWFOJoMPgfJ5ZrgweyOjeGrWWraq53IVBSihVqxLMGeLqQBq3FpDqMt/i55AUFCEioMMdrKcygZfk6MCn/nc1XYgn1xyzq0Yrezsuy6yTOinX3Dv960uCooPYHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725350711; c=relaxed/simple;
-	bh=2zoj9L0O/GSybtYkl/vHnS8JQ1/n2Tg3DY2FQ0e64yg=;
+	s=arc-20240116; t=1725350713; c=relaxed/simple;
+	bh=WQUOivnus5pQDSF5A5ALacDHfB37HG9FZxBZIj4lPdE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YxZVoJ8MY8bTHrT/oVvERThpgL4CcgnEO7MWby4OcBCpe/XbXDj+3wgE8u58EVsvcHyasNkUVazHod7ITupcuvLgbP9/KML97omwuIO1YmNwVKxLlRYv2WCrkp7eWm4f1OMduONtYNiVF0JeZzb6W0LP4JjXVdtfqgdfYyMnldM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SWshAXyK; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OsoWZVDkBJHJP3qjxmEE2MUIAbS7llHJj6E/cAD1mRNVWZlusbRZUmvKOCu8JKeH44z4l7Ini/AyODf6OzlmDbyJU9sbwPWQMdAdzxCzErgjg9cH91OBtHpni5RhAecMDkk/cXimWa+yKIIjvIU9DQ6OZa4Bzdap2PWAx2RH7w0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mmW508OW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SWshAXyK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DEFF5C4CEC8;
-	Tue,  3 Sep 2024 08:05:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mmW508OW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D4757C4CEC6;
+	Tue,  3 Sep 2024 08:05:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725350711;
-	bh=2zoj9L0O/GSybtYkl/vHnS8JQ1/n2Tg3DY2FQ0e64yg=;
+	s=k20201202; t=1725350712;
+	bh=WQUOivnus5pQDSF5A5ALacDHfB37HG9FZxBZIj4lPdE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SWshAXyKNaDWhK268r+s7iWPrwb9D6u7iqnQFOOfwHB/En3MVEsUrs1VyPO4yp3mz
-	 /5/rqkDPIZV+JrXPkA+qNz/rQF0Bw9QTPcut2lBGdrfveRoWzl4Rr6VpVIE+zVcvGN
-	 juNacpRoq7kG19x+PCxeNQHcAssGqndJNDyMry+eHtei01kNl1e4aneEfPGy0Wx1kn
-	 t49aP9Lycd2d5UN5QQFs/81ieiKS/zbfymDyWraTrYvzXlPSlQIFBa9gOvzFhUWzsv
-	 HSyBgqMoQ3yAuyEQA45TYNyPA/OV1mvrEXaN0VIVTXU+LVOIp5IxJ29DX62+z8KG6Y
-	 xhQdRuMRfJpMw==
+	b=mmW508OWj4YElltg5RxWWnTUTB05GwXKWQWbDr4aS3XhRevUZaX2s3Kpp6iq2Siq7
+	 eLrSCjo0GFumoWrmqjokVAbpjYH5oSqMXJb5ibwbEdDOy8JBgBsYXX2jQWLLF+MSJr
+	 nHCVqp8pBvszsJsAJbreXbm1IFQ/tek9wYTQzxHw75wVKNdS44ajcw35xCZOFDFxGo
+	 n2XH3aR0LYxbbqcLveFZXimMBhY9wtHcd8TxeQiHcq07Ux3AKPfsXNxHY2vjkRfx+M
+	 KYast168Nkuej5IUoQVvBkjLyiuAwUwZ1VsqnhFXZuOXrv3wseUJU5h+S4arFPmmoL
+	 HqJXXLp119RaA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Martin KaFai Lau <martin.lau@kernel.org>
-Subject: [PATCH mptcp-next v7 2/4] selftests/bpf: Add getsockopt to inspect mptcp subflow
-Date: Tue,  3 Sep 2024 16:04:58 +0800
-Message-ID: <2cd5946354c8cf839684274e9ccc52016fbcf717.1725350462.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 3/4] Squash to "selftests/bpf: Add mptcp subflow subtest"
+Date: Tue,  3 Sep 2024 16:04:59 +0800
+Message-ID: <3d2de951717c03cdadf6bcc7fb2ed9fe6f5dd83d.1725350462.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1725350462.git.tanggeliang@kylinos.cn>
 References: <cover.1725350462.git.tanggeliang@kylinos.cn>
@@ -46,169 +45,114 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a "cgroup/getsockopt" way to inspect the subflows of a
-mptcp socket.
+Drop ss_search() from run_subflow().
 
-mptcp_for_each_stubflow() and other helpers related to list_dentry are
-added into progs/mptcp_bpf.h.
+Use the "cgroup/getsockopt" way to inspect the subflows.
 
-Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list and use
-bpf_core_cast to cast a pointer to tcp_sock for readonly. It will allow
-to inspect all the fields in a tcp_sock.
-
-Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/progs/mptcp_bpf.h | 27 ++++++
- .../selftests/bpf/progs/mptcp_subflow.c       | 90 +++++++++++++++++++
- 2 files changed, 117 insertions(+)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 57 ++++++++++++-------
+ 1 file changed, 37 insertions(+), 20 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index 782f36ed027e..92d5deed0214 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -4,9 +4,36 @@
- 
- #include <vmlinux.h>
- #include <bpf/bpf_core_read.h>
-+#include "bpf_experimental.h"
- 
- #define MPTCP_SUBFLOWS_MAX 8
- 
-+static inline int list_is_head(const struct list_head *list,
-+			       const struct list_head *head)
-+{
-+	return list == head;
-+}
-+
-+#define list_entry(ptr, type, member)					\
-+	container_of(ptr, type, member)
-+
-+#define list_first_entry(ptr, type, member)				\
-+	list_entry((ptr)->next, type, member)
-+
-+#define list_next_entry(pos, member)					\
-+	list_entry((pos)->member.next, typeof(*(pos)), member)
-+
-+#define list_entry_is_head(pos, head, member)				\
-+	list_is_head(&pos->member, (head))
-+
-+#define list_for_each_entry(pos, head, member)				\
-+	for (pos = list_first_entry(head, typeof(*pos), member);	\
-+	     cond_break, !list_entry_is_head(pos, head, member);	\
-+	     pos = list_next_entry(pos, member))
-+
-+#define mptcp_for_each_subflow(__msk, __subflow)			\
-+	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
-+
- extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 					bool scheduled) __ksym;
- 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-index 2e28f4a215b5..1053a795eb43 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-@@ -4,6 +4,7 @@
- 
- /* vmlinux.h, bpf_helpers.h and other 'define' */
- #include "bpf_tracing_net.h"
-+#include "mptcp_bpf.h"
- 
- char _license[] SEC("license") = "GPL";
- 
-@@ -57,3 +58,92 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
- 
- 	return 1;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 73adc58cd776..6085aaf61b27 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -368,21 +368,29 @@ static int endpoint_init(char *flags)
+ 	return -1;
  }
+ 
+-static int _ss_search(char *src, char *dst, char *port, char *keyword)
++static void wait_for_new_subflows(int fd)
+ {
+-	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
+-			  NS_TEST, src, dst, port, PORT_1, keyword);
+-}
++	socklen_t len;
++	u8 subflows;
++	int err, i;
+ 
+-static int ss_search(char *src, char *keyword)
+-{
+-	return _ss_search(src, ADDR_1, "dport", keyword);
++	len = sizeof(subflows);
++	/* Wait max 1 sec for new subflows to be created */
++	for (i = 0; i < 10; i++) {
++		err = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &subflows, &len);
++		if (!err && subflows > 0)
++			break;
 +
-+static int _check_getsockopt_subflow_mark(struct bpf_sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk;
-+	int i = 0;
-+
-+	if (sk->protocol != IPPROTO_MPTCP) {
-+		bpf_printk("MPTCP Subflow: unexpected protocol %u", sk->protocol);
-+		return -1;
++		sleep(0.1);
 +	}
+ }
+ 
+-static void run_subflow(char *new)
++static void run_subflow(void)
+ {
+ 	int server_fd, client_fd, err;
++	char new[TCP_CA_NAME_MAX];
+ 	char cc[TCP_CA_NAME_MAX];
++	unsigned int mark;
+ 	socklen_t len;
+ 
+ 	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
+@@ -393,19 +401,21 @@ static void run_subflow(char *new)
+ 	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
+ 		goto close_server;
+ 
+-	len = sizeof(cc);
+-	err = getsockopt(server_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
+-	if (!ASSERT_OK(err, "getsockopt(server_fd, TCP_CONGESTION)"))
+-		goto close_client;
+-
+ 	send_byte(client_fd);
++	wait_for_new_subflows(client_fd);
 +
-+	msk = bpf_core_cast(sk, struct mptcp_sock);
-+	if (msk->pm.subflows != 1) {
-+		bpf_printk("MPTCP Subflow: expected 1 extra subflows, got %u",
-+			   msk->pm.subflows);
-+		return -1;
++	len = sizeof(mark);
++	err = getsockopt(client_fd, SOL_SOCKET, SO_MARK, &mark, &len);
++	if (ASSERT_OK(err, "getsockopt(client_fd, SO_MARK)"))
++		ASSERT_EQ(mark, 0, "mark");
++
++	len = sizeof(new);
++	err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, new, &len);
++	if (ASSERT_OK(err, "getsockopt(client_fd, TCP_CONGESTION)")) {
++		get_msk_ca_name(cc);
++		ASSERT_STREQ(new, cc, "cc");
 +	}
+ 
+-	ASSERT_OK(ss_search(ADDR_1, "fwmark:0x1"), "ss_search fwmark:0x1");
+-	ASSERT_OK(ss_search(ADDR_2, "fwmark:0x2"), "ss_search fwmark:0x2");
+-	ASSERT_OK(ss_search(ADDR_1, new), "ss_search new cc");
+-	ASSERT_OK(ss_search(ADDR_2, cc), "ss_search default cc");
+-
+-close_client:
+ 	close(client_fd);
+ close_server:
+ 	close(server_fd);
+@@ -416,6 +426,7 @@ static void test_subflow(void)
+ 	int cgroup_fd, prog_fd, err;
+ 	struct mptcp_subflow *skel;
+ 	struct nstoken *nstoken;
++	struct bpf_link *link;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcp_subflow");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup: mptcp_subflow"))
+@@ -441,8 +452,14 @@ static void test_subflow(void)
+ 	if (endpoint_init("subflow") < 0)
+ 		goto close_netns;
+ 
+-	run_subflow(skel->data->cc);
++	link = bpf_program__attach_cgroup(skel->progs._getsockopt_subflow,
++					  cgroup_fd);
++	if (!ASSERT_OK_PTR(link, "getsockopt prog"))
++		goto close_netns;
 +
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct sock *ssk;
-+
-+		ssk = mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
-+							   struct mptcp_subflow_context));
-+
-+		if (ssk->sk_mark != ++i) {
-+			bpf_printk("MPTCP Subflow: expected %d mark, got %d",
-+				   i, ssk->sk_mark);
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+static int _check_getsockopt_subflow_cc(struct bpf_sock *sk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk;
-+
-+	if (sk->protocol != IPPROTO_MPTCP) {
-+		bpf_printk("MPTCP Subflow: unexpected protocol %u", sk->protocol);
-+		return -1;
-+	}
-+
-+	msk = bpf_core_cast(sk, struct mptcp_sock);
-+	if (msk->pm.subflows != 1) {
-+		bpf_printk("MPTCP Subflow: expected 1 extra subflows, got %u",
-+			   msk->pm.subflows);
-+		return -1;
-+	}
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct inet_connection_sock *icsk;
-+		struct sock *ssk;
-+
-+		ssk = mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
-+							   struct mptcp_subflow_context));
-+		icsk = bpf_core_cast(ssk, struct inet_connection_sock);
-+
-+		if (ssk->sk_mark == 2 &&
-+		    __builtin_memcmp(icsk->icsk_ca_ops->name, cc, TCP_CA_NAME_MAX)) {
-+			bpf_printk("MPTCP Subflow: expected %s cc, got %s",
-+				   cc, icsk->icsk_ca_ops->name);
-+			return -1;
-+		}
-+	}
-+
-+	return 0;
-+}
-+
-+SEC("cgroup/getsockopt")
-+int _getsockopt_subflow(struct bpf_sockopt *ctx)
-+{
-+	struct bpf_sock *sk = ctx->sk;
-+
-+	if (!sk) {
-+		bpf_printk("MPTCP Subflow: unexpected socket, sk is NULL");
-+		ctx->retval = -1;
-+		return 1;
-+	}
-+
-+	if (ctx->level == SOL_SOCKET && ctx->optname == SO_MARK)
-+		ctx->retval = _check_getsockopt_subflow_mark(sk);
-+	else if (ctx->level == SOL_TCP && ctx->optname == TCP_CONGESTION)
-+		ctx->retval = _check_getsockopt_subflow_cc(sk);
-+
-+	return 1;
-+}
++	run_subflow();
+ 
++	bpf_link__destroy(link);
+ close_netns:
+ 	cleanup_netns(nstoken);
+ skel_destroy:
 -- 
 2.43.0
 
