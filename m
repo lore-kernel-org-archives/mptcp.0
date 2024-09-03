@@ -1,121 +1,187 @@
-Received: from mail-vs1-f43.google.com (mail-vs1-f43.google.com [209.85.217.43])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE2541C7670
-	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 08:59:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.217.43
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3EDD1C7669
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 09:11:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725353991; cv=none; b=i4apjWRGn+4Dre+027nxzfGiJgSdrVTeA8WffOpCRXsGmtsxNoxgzEoyq7sb+GF7wB+AWSnZ1y385w76mgs89ZPXC+Xz1TXTPbM7yYH2o3aRE77OFBtSVo9TIeoFeUEGy+d6GnjhiqlJ1+kWvEBoiB2Sz9xFBZGq8Hb5Az7bfvE=
+	t=1725354678; cv=none; b=Q9v45/DjgmInJFRfRhF/teiaLVsIfK6Ff4JQxTCLJqg3XVBaK1Yhs5AYuMg1SrJUymad5C8bdVWnSk/dJaolxjThOL1Nyh95nRbKqUJvLo9hDGEPExQ+EMuIybWVxSRXY+GCPTMMg0MVjujDykcCV47aJ55W81YanBCbw7T9CjE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725353991; c=relaxed/simple;
-	bh=NsDg/LgDvSN2xaEh+OXgz57rgIvcKfVLd6aOA3UyoZs=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=D4/bWAev8+ofs6vTgsquYr1V7655musNhtPSpZ/5TFrb1vhtmmg1lxGLifTh7MUM5THccMyjoEKR1GJOBqZrs6zDqxAoYKMCPOr4BFcaPgIx1QiTjRJyp0e7OT0aYlIUwuaKlpRR1DKoh49cY3HlkDMloMjn5mbvRfRbRO6f6nQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Rmpw2Edi; arc=none smtp.client-ip=209.85.217.43
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725354678; c=relaxed/simple;
+	bh=L5TQulHH2KrcCyTl56JyJDssvzVIUhbjMYnrFbfGWX8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DJuCwngXP2s1MjWM8pwvIB5rd6LCWjagieS6KN1BVMNCjZwOF2/0ycpLkjlgcxidsx2hq5PWo7BvtTF7ROS+n3N/UcbQ6+NQTRGu/qQZEwbiuAqL1dYQuJapG4U5E5V3YX9lTiOf8a9A2/qrHe/B9poBDTr0m7CyXS+aM2uvDe0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7o2w1xj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rmpw2Edi"
-Received: by mail-vs1-f43.google.com with SMTP id ada2fe7eead31-498cffc6a9fso1923994137.1
-        for <mptcp@lists.linux.dev>; Tue, 03 Sep 2024 01:59:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725353989; x=1725958789; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mIcsY7z/atqwCqjwIC+Z2SvjUd49MyJlUUH9KDX7R/A=;
-        b=Rmpw2Edi6NoWGbRjrdvy6ur5rTVMD5tfEXDHu/W3J7dGtPZjAxCF9A4Ni21FCe8C07
-         9sTKJtCLo0j0ZF/f0ZQsDfm0L4yB3wcSzhTVwMjBKzUwsIfzQRVhlDuSSlLg+jGnZzPq
-         ryaMOTQjgEMF1eNzJGHf/rCGIGOrSZiWsB2F1jsXYmZVfs2jV7+sVlIvQ+bDsMP2PNGM
-         7inVO5BbDpKRaCEo3LfjdXTA+Z1tF69SoQ2UEj0quqBUC6Ete+2BEbgBuI98d++xmMl5
-         QWDe4NwCnbtw9eyups4/ISKoM5bLGL17FrlQQ2oKdxFoGDKZzw6kfU7tVVs6i7MsNXSa
-         6bow==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725353989; x=1725958789;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=mIcsY7z/atqwCqjwIC+Z2SvjUd49MyJlUUH9KDX7R/A=;
-        b=ojqG/w8Thpmf4sZoir4cfhwdTzFGucacx8PnQuR4BXalwNbTqJiuS2IADUOZ3kh3hk
-         oDxIEC877vz5W0qaz11TFqMUFBu7dGacgex1q7dVnEMtsooZMX/oqsADiD6VsrpNEIEp
-         dBbw+iYr/E+WXohbaNfQAAov/Xh9MpM66UZyAWV0FkQFDExikCsy/woDS0Fwrb6LhOCd
-         kGqs3+HffRiWzWB1rF1kFG1eztIsXI9cV8+VjIiNc8jeQe6zusQA370faCePkfC8gJsi
-         OPCPGNl0T6wi4icYJHfJj1nPV00n1yc9OBTJbAGDv5PEBwMI5Q4k/ppLPf65Dj2wafCi
-         Xflg==
-X-Gm-Message-State: AOJu0YxRtLispuHnITVmDh4qnNqO1SJCKw59so1sWkCWLBJH3cLq+/U4
-	yu2qkuaGp95DDE7ofrMJHt/80FWy9QDizRDZazy0jfHyCUPNmByqbdvm
-X-Google-Smtp-Source: AGHT+IGVprf0pPzZwiIKP1/fZsmVxisZ9kl5/hux5HlEkfasm2l3gAZ12Ek+Km+f2LoOQccgI5mG/w==
-X-Received: by 2002:a05:6102:441d:b0:48f:4bba:778c with SMTP id ada2fe7eead31-49a774f6011mr11382944137.8.1725353988653;
-        Tue, 03 Sep 2024 01:59:48 -0700 (PDT)
-Received: from [127.0.0.1] ([172.190.111.200])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a806c4cb8asm504129985a.67.2024.09.03.01.59.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 03 Sep 2024 01:59:48 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1725350462.git.tanggeliang@kylinos.cn>
-References: <cover.1725350462.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v7_0/4=5D_fixe?=
- =?UTF-8?Q?s_for_=22new_MPTCP_subflow_subtest_v4=22?=
-Message-ID: <ef6f32d9-8464-3585-c8ff-a872e63d64ad@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 03 Sep 2024 08:59:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7o2w1xj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E3F3C4CEC4;
+	Tue,  3 Sep 2024 09:11:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725354678;
+	bh=L5TQulHH2KrcCyTl56JyJDssvzVIUhbjMYnrFbfGWX8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=e7o2w1xjVCgZFwJVfMSMtei/FiAfXLvuuG21L5cI7DYa7pQMLOJCSGRnhoLb1trQl
+	 nl32eVSuU5MOHQExnf8EEhk0H12t0YlNqsaOp1a7xi38N7RqABDezNHhOeOZnb9JGn
+	 CHLXIwVT5flUUTXsTflMpKRBYkjcPZX0dflWYh7rQCsnsV3cBSN089UooJS/+sdiig
+	 qdS0jPtLF8SxkIwrgKn8BSM5cZzaKFpKJpEyx/gvGOZjG7TDERIG6FAl/vHVxKBqw3
+	 2tpwszJEen3D1hhvnZG+BZkZrCHI4xzZSxeP0LXexMsh7/fOsti1KpRbY9K0uVI1oD
+	 rllMRlr7ecwVQ==
+Message-ID: <b32de9d6-f941-46d0-9805-ad542ef6f5d6@kernel.org>
+Date: Tue, 3 Sep 2024 11:11:15 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v7 2/4] selftests/bpf: Add getsockopt to
+ inspect mptcp subflow
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1725350462.git.tanggeliang@kylinos.cn>
+ <2cd5946354c8cf839684274e9ccc52016fbcf717.1725350462.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2cd5946354c8cf839684274e9ccc52016fbcf717.1725350462.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+Thank you for the new version.
 
-Our CI did some validations and here is its report:
+On 03/09/2024 10:04, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This patch adds a "cgroup/getsockopt" way to inspect the subflows of a
+> mptcp socket.
+> 
+> mptcp_for_each_stubflow() and other helpers related to list_dentry are
+> added into progs/mptcp_bpf.h.
+> 
+> Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list and use
+> bpf_core_cast to cast a pointer to tcp_sock for readonly. It will allow
+> to inspect all the fields in a tcp_sock.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10679196481
+(...)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3c23712662e4
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D886143
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> index 2e28f4a215b5..1053a795eb43 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> @@ -4,6 +4,7 @@
+>  
+>  /* vmlinux.h, bpf_helpers.h and other 'define' */
+>  #include "bpf_tracing_net.h"
+> +#include "mptcp_bpf.h"
+>  
+>  char _license[] SEC("license") = "GPL";
+>  
+> @@ -57,3 +58,92 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
+>  
+>  	return 1;
+>  }
+> +
+> +static int _check_getsockopt_subflow_mark(struct bpf_sock *sk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +	struct mptcp_sock *msk;
+> +	int i = 0;
+> +
+> +	if (sk->protocol != IPPROTO_MPTCP) {
+> +		bpf_printk("MPTCP Subflow: unexpected protocol %u", sk->protocol);
+> +		return -1;
+> +	}
 
+Out of curiosity, why did you move this code here and in
+_check_getsockopt_subflow_cc()?
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+I'm just surprised because recently, you tried to reduce the amount of
+duplicated code :)
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Or is it because this program is used in other tests, where it should
+not be? Do you need to add a restriction per PID, like you did in
+mptcpify.c?
 
-For more details:
+(...)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+> +SEC("cgroup/getsockopt")
+> +int _getsockopt_subflow(struct bpf_sockopt *ctx)
+> +{
+> +	struct bpf_sock *sk = ctx->sk;
+> +
+> +	if (!sk) {
+> +		bpf_printk("MPTCP Subflow: unexpected socket, sk is NULL");
+> +		ctx->retval = -1;
+> +		return 1;
+> +	}
+> +
+> +	if (ctx->level == SOL_SOCKET && ctx->optname == SO_MARK)
+> +		ctx->retval = _check_getsockopt_subflow_mark(sk);
+> +	else if (ctx->level == SOL_TCP && ctx->optname == TCP_CONGESTION)
+> +		ctx->retval = _check_getsockopt_subflow_cc(sk);
 
+As I mentioned in my previous reply: can ctx->retval be < 0 here, before
+calling _check_getsockopt_subflow_XXX()?
+If yes or not sure, maybe safer to do:
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+  err = _check_getsockopt_subflow_XXX()
+  (...)
+
+  if (err)
+      ctx->retval = -1;
+
+> +
+> +	return 1;
+> +}
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
