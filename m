@@ -1,139 +1,217 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga01-in.huawei.com (szxga01-in.huawei.com [45.249.212.187])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DE441B983E;
-	Tue,  3 Sep 2024 10:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E16441A7245
+	for <mptcp@lists.linux.dev>; Tue,  3 Sep 2024 12:47:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.187
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725359040; cv=none; b=fFf8mqxGJKBeM9AtFFKVpypoXcK5KkJLawRToHl0FSM+Fu4+gkmIu1QuaDkBs720MEafw1rWKzIcM7bTdNP16WNgZvGNKnvptJJIWCeBD4Rdh+AQOldLeUAM/HoODGr4ehUpU4yx9aNGfgaLfVToKbLo915Es6WkVClCwbJEdIM=
+	t=1725367681; cv=none; b=DBXxPmqoTCQ7t+ldPKIhUUTtlx2TlDzkA7r+TJELunLoi2Kq702SAQAvvlaI1KlbT3fR2S/aVj4ZjUH03b7vCAjBeZN1uAKY5Kj3uzjCP2qW7gl7PrMlg8YZC+cIdZcbBshKuAr92RETITSwt0ztoeqmX9cZgfRLc/xqrTPPcok=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725359040; c=relaxed/simple;
-	bh=RuBumBigVCVoi3VznTaZJkhBfsWaBHM7oEcGDAFpFfg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VwwEZEcbZgI1dsMLYbHDLvck+KkmFOXCGHpv0RMYBTlHm/fZHAr7jFXv/L+oQs80pRgHDTHIAiAePYPG6yurF3CnOvERAAIHAWIW2+d1Jg+fMaHCrT54vogkbp3kJo17kkxJZ1tebJjED+4JrIrV2Uz3pw5Lzbq1Q9s5+Soaelg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tzhQe6Iw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tzhQe6Iw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4340BC4CEC8;
-	Tue,  3 Sep 2024 10:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725359039;
-	bh=RuBumBigVCVoi3VznTaZJkhBfsWaBHM7oEcGDAFpFfg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=tzhQe6IwB+cFlp7vaZKnEaZFoN4sxTCeGKsZsldCu10nsLqrs+TjYZW/PuyhJtR33
-	 PCR6clXbH/iSC9vakbYgnlAwL1KgmKO3oyGnIdoDwirfmwy4NBsbZNGGykVZvh+WN5
-	 669pZqRwwYDkO8BPdp2Pup3IyL3kfBpQBgKyLffKmX8sEtG4fzKD4a+BeeRPQZF8xX
-	 T6oqb3xBfDSlSrqQvfr8IEb1FE1JyRn8kqBXe+CbmkVFsL5PhkHITXP/PcattlQu5v
-	 lWvVBkV4NIarpQweA1281iGP2/KUvDz1zFHQ2aEHwK8HjjSxCoQZp6xjRGYte9ZCpr
-	 2/q9djjJm5VQA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [PATCH 6.6.y 3/3] selftests: mptcp: join: check re-re-adding ID 0 signal
-Date: Tue,  3 Sep 2024 12:23:51 +0200
-Message-ID: <20240903102347.3384947-8-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024083025-ruined-stupor-4967@gregkh>
-References: <2024083025-ruined-stupor-4967@gregkh>
+	s=arc-20240116; t=1725367681; c=relaxed/simple;
+	bh=mYbd71lGUzUQ57BmQj8HsgapoJknNeb9nR0CqAID+lk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=CsEEDuKZXcaWWBZvAzjVej3Vtgpr1YsWQakM7aaoxu4exKFN0m/yUDTYgrvlLwgu8HlUGBi54NUBQjaY9oWXMjnbRdskdS1aIbB+yguMWW7RU2I2QeePjPD8xbM0YHZJo1OzqjMFDHQe3CfD4XS1JSles8okOmvi4mYuCSjg2uQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.187
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.162.254])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4WylkX0PhbzyR2T;
+	Tue,  3 Sep 2024 20:47:00 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id 8284B18010A;
+	Tue,  3 Sep 2024 20:47:56 +0800 (CST)
+Received: from [10.67.120.129] (10.67.120.129) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 3 Sep 2024 20:47:55 +0800
+Message-ID: <6b9503fe-566c-49bb-97b9-941090f9cf7e@huawei.com>
+Date: Tue, 3 Sep 2024 20:47:54 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3347; i=matttbe@kernel.org; h=from:subject; bh=RuBumBigVCVoi3VznTaZJkhBfsWaBHM7oEcGDAFpFfg=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm1uOz5htbm2a46iJtawAaOGM2Gk4cmNXhxAUSy xEoy7qMFPuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtbjswAKCRD2t4JPQmmg c92wEADtpIHSUxl4FGEdgm7XtO831uJnM81oMI2tWvGg8PdxDgyL1U3bQyNhBxUgo00RnXBwwl0 8EYBSoPEpkZ//VQvlkhxOaMIWPy1fKlf3HBYPsRMlbv4cXwLGibxSQ7ieTBgxzE4b1sWlvo6l67 BTDscIT8vaJfbcUjBXZ9JXT4I0mf+dX7op9YGNFKYmRRkHjCpb4AfuMAOiVJ171If+92rGcd+ge rVEyoNwWRIghkiXXl1r47/wfWjqkTiAgFNikgo0cN8tKKedpZA9hG3tRGQetxkMYLuAzShV8LgR jSx9XdchZyIZYr660ewBvfS4ofxUfVAG9CALVED8uvJ4Obka/zpgQxsft6ubRjFyRf8UBI++nzD V4eVwN5SiT2lcMTLT1w0cEytLIprOewj7YEk3dScW41gVjXDjJuMNHNxJxQvlPjMk0vfqV0krp/ /p3ZMG1ifaA6JV+4iEjc+43Xko4NG8ULGpD1P5M6nxQU+jrXk/p4KQd/vu3mAGoifwG7h9InuAp daX/p1yI2pK16pNtGD8Z7UeUiLHA/cH2JA+/41gHofnrz1w6IzLHGzaGvbUoQfuuOybWAK+HzOY iHIYxwVpMUtB97mkbK4Z2qnszTGdpzwp5f6oYUqQKvUrWnQpsJIWYBxlf/M85hQKZ15MIokpAWT MQqlMDkCeQRDYBQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net-next v17 12/14] net: replace page_frag with
+ page_frag_cache
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>, Mat
+ Martineau <martineau@kernel.org>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Alexander Duyck
+	<alexander.duyck@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
+ Dumazet <edumazet@google.com>, Willem de Bruijn
+	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
+ Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
+	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
+	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
+	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
+	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, John Fastabend
+	<john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>, David
+ Ahern <dsahern@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, Jamal Hadi Salim <jhs@mojatatu.com>, Cong Wang
+	<xiyou.wangcong@gmail.com>, Jiri Pirko <jiri@resnulli.us>, Boris Pismenny
+	<borisp@nvidia.com>, <bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
+References: <20240902120314.508180-1-linyunsheng@huawei.com>
+ <20240902120314.508180-13-linyunsheng@huawei.com>
+Content-Language: en-US
+From: Yunsheng Lin <linyunsheng@huawei.com>
+In-Reply-To: <20240902120314.508180-13-linyunsheng@huawei.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
 
-commit f18fa2abf81099d822d842a107f8c9889c86043c upstream.
+On 2024/9/2 20:03, Yunsheng Lin wrote:
+> Use the newly introduced prepare/probe/commit API to
+> replace page_frag with page_frag_cache for sk_page_frag().
+> 
+> CC: Alexander Duyck <alexander.duyck@gmail.com>
+> Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
 
-This test extends "delete re-add signal" to validate the previous
-commit: when the 'signal' endpoint linked to the initial subflow (ID 0)
-is re-added multiple times, it will re-send the ADD_ADDR with id 0. The
-client should still be able to re-create this subflow, even if the
-add_addr_accepted limit has been reached as this special address is not
-considered as a new address.
+Hi, Mat
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
+As new refactoring and new API naming is used since v14, the
+replacing patch have bigger change to use the new API naming too,
+so I dropped your 'Acked-by' tag when using the new API.
 
-Fixes: d0876b2284cf ("mptcp: add the incoming RM_ADDR support")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 32 ++++++++++++-------
- 1 file changed, 21 insertions(+), 11 deletions(-)
+It would good to review it again so that this patch doesn't
+break mptcp when you are not busy, thanks.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 52a028f0a3de..4efcbd2dea50 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3689,7 +3689,7 @@ endpoint_tests()
- 		# broadcast IP: no packet for this address will be received on ns1
- 		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
- 		pm_nl_add_endpoint $ns1 10.0.1.1 id 42 flags signal
--		test_linkfail=4 speed=20 \
-+		test_linkfail=4 speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 &
- 		local tests_pid=$!
- 
-@@ -3718,7 +3718,17 @@ endpoint_tests()
- 
- 		pm_nl_add_endpoint $ns1 10.0.1.1 id 99 flags signal
- 		wait_mpj $ns2
--		chk_subflow_nr "after re-add" 3
-+		chk_subflow_nr "after re-add ID 0" 3
-+		chk_mptcp_info subflows 3 subflows 3
-+
-+		pm_nl_del_endpoint $ns1 99 10.0.1.1
-+		sleep 0.5
-+		chk_subflow_nr "after re-delete ID 0" 2
-+		chk_mptcp_info subflows 2 subflows 2
-+
-+		pm_nl_add_endpoint $ns1 10.0.1.1 id 88 flags signal
-+		wait_mpj $ns2
-+		chk_subflow_nr "after re-re-add ID 0" 3
- 		chk_mptcp_info subflows 3 subflows 3
- 		mptcp_lib_kill_wait $tests_pid
- 
-@@ -3728,19 +3738,19 @@ endpoint_tests()
- 		chk_evt_nr ns1 MPTCP_LIB_EVENT_ESTABLISHED 1
- 		chk_evt_nr ns1 MPTCP_LIB_EVENT_ANNOUNCED 0
- 		chk_evt_nr ns1 MPTCP_LIB_EVENT_REMOVED 0
--		chk_evt_nr ns1 MPTCP_LIB_EVENT_SUB_ESTABLISHED 4
--		chk_evt_nr ns1 MPTCP_LIB_EVENT_SUB_CLOSED 2
-+		chk_evt_nr ns1 MPTCP_LIB_EVENT_SUB_ESTABLISHED 5
-+		chk_evt_nr ns1 MPTCP_LIB_EVENT_SUB_CLOSED 3
- 
- 		chk_evt_nr ns2 MPTCP_LIB_EVENT_CREATED 1
- 		chk_evt_nr ns2 MPTCP_LIB_EVENT_ESTABLISHED 1
--		chk_evt_nr ns2 MPTCP_LIB_EVENT_ANNOUNCED 5
--		chk_evt_nr ns2 MPTCP_LIB_EVENT_REMOVED 3
--		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 4
--		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 2
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_ANNOUNCED 6
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_REMOVED 4
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_ESTABLISHED 5
-+		chk_evt_nr ns2 MPTCP_LIB_EVENT_SUB_CLOSED 3
- 
--		chk_join_nr 4 4 4
--		chk_add_nr 5 5
--		chk_rm_nr 3 2 invert
-+		chk_join_nr 5 5 5
-+		chk_add_nr 6 6
-+		chk_rm_nr 4 3 invert
- 	fi
- 
- 	# flush and re-add
--- 
-2.45.2
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 37ebcb7640eb..5fbddd9de53e 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -960,7 +960,6 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+>  }
+>  
+>  /* we can append data to the given data frag if:
+> - * - there is space available in the backing page_frag
+>   * - the data frag tail matches the current page_frag free offset
+>   * - the data frag end sequence number matches the current write seq
+>   */
+> @@ -969,7 +968,6 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+>  				       const struct mptcp_data_frag *df)
+>  {
+>  	return df && pfrag->page == df->page &&
+> -		pfrag->size - pfrag->offset > 0 &&
+>  		pfrag->offset == (df->offset + df->data_len) &&
+>  		df->data_seq + df->data_len == msk->write_seq;
+>  }
+> @@ -1085,14 +1083,20 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
+>  /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
+>   * data
+>   */
+> -static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
+> +static void *mptcp_page_frag_alloc_refill_prepare(struct sock *sk,
+> +						  struct page_frag_cache *nc,
+> +						  struct page_frag *pfrag)
+>  {
+> -	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
+> -					pfrag, sk->sk_allocation)))
+> -		return true;
+> +	unsigned int fragsz = 32U + sizeof(struct mptcp_data_frag);
+> +	void *va;
+> +
+> +	va = page_frag_alloc_refill_prepare(nc, fragsz, pfrag,
+> +					    sk->sk_allocation);
+> +	if (likely(va))
+> +		return va;
+>  
+>  	mptcp_enter_memory_pressure(sk);
+> -	return false;
+> +	return NULL;
+>  }
+>  
+>  static struct mptcp_data_frag *
+> @@ -1795,7 +1799,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
+>  static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  {
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+> -	struct page_frag *pfrag;
+> +	struct page_frag_cache *nc;
+>  	size_t copied = 0;
+>  	int ret = 0;
+>  	long timeo;
+> @@ -1829,14 +1833,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  	if (unlikely(sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)))
+>  		goto do_error;
+>  
+> -	pfrag = sk_page_frag(sk);
+> +	nc = sk_page_frag_cache(sk);
+>  
+>  	while (msg_data_left(msg)) {
+> +		struct page_frag page_frag, *pfrag;
+>  		int total_ts, frag_truesize = 0;
+>  		struct mptcp_data_frag *dfrag;
+>  		bool dfrag_collapsed;
+> -		size_t psize, offset;
+>  		u32 copy_limit;
+> +		size_t psize;
+> +		void *va;
+>  
+>  		/* ensure fitting the notsent_lowat() constraint */
+>  		copy_limit = mptcp_send_limit(sk);
+> @@ -1847,21 +1853,26 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  		 * page allocator
+>  		 */
+>  		dfrag = mptcp_pending_tail(sk);
+> -		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
+> +		pfrag = &page_frag;
+> +		va = page_frag_alloc_refill_probe(nc, 1, pfrag);
+> +		dfrag_collapsed = va && mptcp_frag_can_collapse_to(msk, pfrag,
+> +								   dfrag);
+>  		if (!dfrag_collapsed) {
+> -			if (!mptcp_page_frag_refill(sk, pfrag))
+> +			va = mptcp_page_frag_alloc_refill_prepare(sk, nc,
+> +								  pfrag);
+> +			if (!va)
+>  				goto wait_for_memory;
+>  
+>  			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
+>  			frag_truesize = dfrag->overhead;
+> +			va += dfrag->overhead;
+>  		}
+>  
+>  		/* we do not bound vs wspace, to allow a single packet.
+>  		 * memory accounting will prevent execessive memory usage
+>  		 * anyway
+>  		 */
+> -		offset = dfrag->offset + dfrag->data_len;
+> -		psize = pfrag->size - offset;
+> +		psize = pfrag->size - frag_truesize;
+>  		psize = min_t(size_t, psize, msg_data_left(msg));
+>  		psize = min_t(size_t, psize, copy_limit);
+>  		total_ts = psize + frag_truesize;
+> @@ -1869,8 +1880,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  		if (!sk_wmem_schedule(sk, total_ts))
+>  			goto wait_for_memory;
+>  
+> -		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
+> -					   page_address(dfrag->page) + offset);
+> +		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
+>  		if (ret)
+>  			goto do_error;
+>  
+> @@ -1879,7 +1889,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  		copied += psize;
+>  		dfrag->data_len += psize;
+>  		frag_truesize += psize;
+> -		pfrag->offset += frag_truesize;
+>  		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
+>  
+>  		/* charge data on mptcp pending queue to the msk socket
+> @@ -1887,10 +1896,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+>  		 */
+>  		sk_wmem_queued_add(sk, frag_truesize);
+>  		if (!dfrag_collapsed) {
+> -			get_page(dfrag->page);
+> +			page_frag_commit(nc, pfrag, frag_truesize);
+>  			list_add_tail(&dfrag->list, &msk->rtx_queue);
+>  			if (!msk->first_pending)
+>  				WRITE_ONCE(msk->first_pending, dfrag);
+> +		} else {
+> +			page_frag_commit_noref(nc, pfrag, frag_truesize);
+>  		}
+>  		pr_debug("msk=%p dfrag at seq=%llu len=%u sent=%u new=%d\n", msk,
+>  			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
 
