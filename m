@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B68D41DB936;
-	Wed,  4 Sep 2024 14:18:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 763581D4170;
+	Wed,  4 Sep 2024 14:20:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725459530; cv=none; b=dsme8z66AZbbwigS6Oq67hjDn5z7Ole10pmPfEcJLXJKiCh8cHsNDCVDp5MHseL29Lx50/OPirDtfytxoK67b6uyB3KC1CP/QSy36/poNwk0+ke08xotVB6FKOqtVOun95EspY8R+qo8qJ2jJZvqrbj7Xxz0h6+BkUwvYk85B0c=
+	t=1725459638; cv=none; b=aOik2hzm33EXwW5KdIfLt5slClWCn+47eSQTqx2boRHe4TO7mEHCK+boAML9dzcJEQlCXbcl0xQ6lS4erjg76Su3Tqqj8kmSCOQNKEvT5cCPzlxdhAqgSF2iuE3xSZs3BwHQyoO3dsZH8nbX96t3h6t3NzNmtw2I/suE+D2gh10=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725459530; c=relaxed/simple;
-	bh=O+ihNvAF6xl22ELhi9gYOSEHsA+8QSh88lzUn7631SE=;
+	s=arc-20240116; t=1725459638; c=relaxed/simple;
+	bh=8TeTyxkPuqKs0E9KlcjCyubBjugwoozVVKl+fR8/568=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NYfIuZD0eHI30vWhH46YSx9bpCbT15tuR7svJRxklGlMf35dB7gGNYPRIa4XSThV9nPLO0Lvcj8wjfYrKDUQjdLDcjm45SY3felusyA6EGA9am59hgJyUTRTYjTfdfkyuPBdmPA4ooo+l13+5BeX+M4JAxOy1ZM8xrOaPMQiJqk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=OXry1XAh; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=IoftiKdHnnUcXUusfR7Eq+NIj3hm1TaOKsNB6fJnSXcCvd83LYdPcHk4a2sI9Yj1dplrKqgMThfwl4Wb6i4K5WSiDBa+5GBcBGC81KPLAeT1zGrlr8mEr7SAEsCQDxPR1IuFwFs9yPzij/EWgLW6S00kvkz+dGtT7wrOG/jFJxk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=froQbjmF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="OXry1XAh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C30F8C4CEC2;
-	Wed,  4 Sep 2024 14:18:49 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="froQbjmF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A070FC4CEC2;
+	Wed,  4 Sep 2024 14:20:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725459530;
-	bh=O+ihNvAF6xl22ELhi9gYOSEHsA+8QSh88lzUn7631SE=;
+	s=korg; t=1725459637;
+	bh=8TeTyxkPuqKs0E9KlcjCyubBjugwoozVVKl+fR8/568=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=OXry1XAhcviAqBmtCmOUHqhuivBNdII//mOUp4soU48cYL5tcN1aNC7Csse4XRN2f
-	 BpllK4z/fkf1kD7ZlEEGrQDjOp73KPtOH2RUewXauxr8x4Z/8Q6bEIwsyxadDFrd11
-	 /Cfnh66F7o3J3w8SsTxBI/2JoMN1AUlcm7ezTVr8=
-Date: Wed, 4 Sep 2024 16:18:47 +0200
+	b=froQbjmFZTxaLYOiosB3BTWeto7tmLASwku3J5xv9yABKCKVXzw+Nxa2y3gHTErHf
+	 UKEm35YYb4AlzQqyzlsMKfJCH1tJOV7PnVbirutO0ic7K9KBQxa04+nwnLcu2f/6f3
+	 lGgDJUFotoxX6JBw6ftLnAwMOOp0aplUcFKwX/T8=
+Date: Wed, 4 Sep 2024 16:20:33 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH 6.6.y 0/3] Backport of "selftests: mptcp: join: validate
- event numbers" and more
-Message-ID: <2024090439-marbling-bridged-1186@gregkh>
-References: <2024083025-ruined-stupor-4967@gregkh>
- <20240903102347.3384947-5-matttbe@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>, Mat Martineau <martineau@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>, stable@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH 6.6.y 2/4] selftests: mptcp: join: test for flush/re-add
+ endpoints
+Message-ID: <2024090428-jingle-railway-8ddd@gregkh>
+References: <2024082617-capture-unbolted-5880@gregkh>
+ <20240903100807.3365691-8-matttbe@kernel.org>
+ <a5f25f18-d60f-4544-9f28-3a463911fd0b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -40,33 +43,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20240903102347.3384947-5-matttbe@kernel.org>
+In-Reply-To: <a5f25f18-d60f-4544-9f28-3a463911fd0b@kernel.org>
 
-On Tue, Sep 03, 2024 at 12:23:48PM +0200, Matthieu Baerts (NGI0) wrote:
-> To ease the inclusion of 20ccc7c5f7a3 ("selftests: mptcp: join: validate 
-> event numbers"), 35bc143a8514 ("selftests: mptcp: add mptcp_lib_events 
-> helper") sounds safe to be backported as well, even if there are some 
-> small conflicts, but easy to resolve.
+On Wed, Sep 04, 2024 at 02:59:07PM +0200, Matthieu Baerts wrote:
+> Hi Greg, Sasha,
 > 
-> Once resolved, f18fa2abf810 ("selftests: mptcp: join: check re-re-adding 
-> ID 0 signal") can be backported without any conflicts.
+> On 03/09/2024 12:08, Matthieu Baerts (NGI0) wrote:
+> > commit e06959e9eebdfea4654390f53b65cff57691872e upstream.
+> > 
+> > After having flushed endpoints that didn't cause the creation of new
+> > subflows, it is important to check endpoints can be re-created, re-using
+> > previously used IDs.
+> > 
+> > Before the previous commit, the client would not have been able to
+> > re-create the subflow that was previously rejected.
+> > 
+> > The 'Fixes' tag here below is the same as the one from the previous
+> > commit: this patch here is not fixing anything wrong in the selftests,
+> > but it validates the previous fix for an issue introduced by this commit
+> > ID.
 > 
-> Geliang Tang (1):
->   selftests: mptcp: add mptcp_lib_events helper
+> FYI, Sasha has recently queued all the patches from this series for
+> v6.6, except this one, the backport of e06959e9eebd ("selftests: mptcp:
+> join: test for flush/re-add endpoints").
 > 
-> Matthieu Baerts (NGI0) (2):
->   selftests: mptcp: join: validate event numbers
->   selftests: mptcp: join: check re-re-adding ID 0 signal
-> 
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 100 +++++++++++++++---
->  .../testing/selftests/net/mptcp/mptcp_lib.sh  |  27 +++++
->  .../selftests/net/mptcp/userspace_pm.sh       |  14 +--
->  3 files changed, 117 insertions(+), 24 deletions(-)
-> 
-> -- 
-> 2.45.2
-> 
-> 
+> In theory, this commit can be applied without any conflicts now that
+> commit b5e2fb832f48 ("selftests: mptcp: add explicit test case for
+> remove/readd") has been queued in v6.6.
 
 Now queued up, thanks.
 
