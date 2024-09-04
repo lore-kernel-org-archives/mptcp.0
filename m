@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 456D084A40
-	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 10:29:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 925D1126C01
+	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 10:35:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725445793; cv=none; b=fJQBcREY/gI9PmEQp5myZANMv2T5i+Sgu1yT8/Omv7idc07/ZjRsTexTJuL8Hjg7kDXF427Oi1lBALqAC+o8t9qbB2uMshmvVw8TzEYG4xVSeuAuoGGTVd0/K0PIRRFV62kvmMiR0zVQYEivVX7CoeO6fTQE0HIp2twQrSZVq4A=
+	t=1725446155; cv=none; b=WdFQJcMDbN60mmwkZJWKK+O5vQc2achoQIgUkUiAU/seXZQhLJa277mgHKGlarEjsI2YZbMLmcRWX2Q7cgw1h6nLHd6EowmF1BqKn04wmqzzz4GYPZpARvWrx6IuymuSUQQKkQTsZ/NTbJwrr2N0dZ3dSvPT5HWY2KogQHZYToA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725445793; c=relaxed/simple;
-	bh=tw/JRwD16Cw7EI9Cavz4i4wRKr/NacNhto1ma+wOIfk=;
+	s=arc-20240116; t=1725446155; c=relaxed/simple;
+	bh=IUuXuNt2YPk1f/J+wtwfnQkPjrkgtEmi2FVCMfHgFoc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=krsmWvBlCXt/p8MrZvaz/5DLifrMusvb6gBfGwfmPwEfnobXaV8yi2fWiuFDn99qYRS2CfNLrFdddsuDzK2lcAxLa1A78zCBU1L7Gr97NHM527BMLZPf6eVwWmqPvgrTwLGmEgOVzHPivo1zJdrnTf7jgYShmufpZWG3uIBEzQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjgLpQjg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=hp+MSI8Wfxuho9lf5W0LGIRbm+vbbFdNss460Fncd1YMu0TZxOwz70u6w4fbPxNGxr847ET9AdEyImurevwPXSZRDR7mSkbqGL2decp8uJimULJ61RTOJ+ECJu5vMtzyMcGyOBjMQ22uw7sD4VSziJstEMf6pDHvgoQ8rCTxNsU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKnJvB2N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjgLpQjg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CCE1C4CEC6;
-	Wed,  4 Sep 2024 10:29:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKnJvB2N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51104C4CEC8;
+	Wed,  4 Sep 2024 10:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725445792;
-	bh=tw/JRwD16Cw7EI9Cavz4i4wRKr/NacNhto1ma+wOIfk=;
+	s=k20201202; t=1725446155;
+	bh=IUuXuNt2YPk1f/J+wtwfnQkPjrkgtEmi2FVCMfHgFoc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DjgLpQjglHZcKcBmvXWiZsgCnp6RVrFdp1kn6FOAbRgUw3Y2i/8O7R242Q4ji7Ejd
-	 mplpk1+mlXgVWGRYuHQ43dxaItrXw9R2iwdkZm652qqbmyg3Y8VEgMOVUtZiPbld/d
-	 y1FttaG+/cpA/YUMAhYnZagnQpogJ5GE0C9ofFcR/RsfycKh3iG90E3VOJdkI5Bcpb
-	 GexrYPmNIPsFnDKzoDWUPwBj3JtDkiBTOcdsLDzg6DY9pmEnKKyd3jtUy2abh3GqIb
-	 FnWFhI3MdUvtMAYfoOWy42oZ9EGOX+uYrclZEE/Ex4mtgxmk2BrYRsRJRu+v4S9WDb
-	 epVoaCyFhyJ+g==
-Message-ID: <ff17bdda-31b8-45a4-9483-fda9b337b8df@kernel.org>
-Date: Wed, 4 Sep 2024 12:29:49 +0200
+	b=iKnJvB2N2xVgVdAVnR31cfWuOhxilAOTtecQv8+JzVjKVFdtJHP4GBKcf/a7qDvXM
+	 yI2koEkCx11p2kAJtgtlPMEb9CuO0RNb7I73ln+g40Pcj98agCuZlePjPaI0F1d/rP
+	 PecpfHYkcmQ2ivDgTXeER8E/FLY9FkxJfPDfoLaE+kCkuRnsulFtfx2G9s7LkbveuK
+	 kNILQvcV39rX55jSebM4Ida/NEobgzB83dUyEUMG++NKlUD3vAMtSF0W1rrhSEFwc6
+	 gNYqOqOnvaIhrdwgosGKicIr4y9AvIVr3/5rJ849Yzs6YWn9Nwb153R2tKAWhuvn84
+	 hdqaFr2gmivXg==
+Message-ID: <5c2feea4-21ff-442e-91b3-bc7eecca4c4c@kernel.org>
+Date: Wed, 4 Sep 2024 12:35:52 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,8 +43,7 @@ Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1725350462.git.tanggeliang@kylinos.cn>
  <2cd5946354c8cf839684274e9ccc52016fbcf717.1725350462.git.tanggeliang@kylinos.cn>
  <b32de9d6-f941-46d0-9805-ad542ef6f5d6@kernel.org>
- <b8394aac-0fc7-4c40-8125-77450737c323@kernel.org>
- <cb3a4103dd195f6d4d2b8f7823609f9a6b20a2c4.camel@kernel.org>
+ <a6721d3d1700413d9e815a057267be55273f6f34.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,107 +89,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cb3a4103dd195f6d4d2b8f7823609f9a6b20a2c4.camel@kernel.org>
+In-Reply-To: <a6721d3d1700413d9e815a057267be55273f6f34.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+On 04/09/2024 12:09, Geliang Tang wrote:
+> On Tue, 2024-09-03 at 11:11 +0200, Matthieu Baerts wrote:
+>> On 03/09/2024 10:04, Geliang Tang wrote:
 
-Thank you for your reply!
+(...)
 
-On 04/09/2024 11:55, Geliang Tang wrote:
-> On Tue, 2024-09-03 at 11:16 +0200, Matthieu Baerts wrote:
->> On 03/09/2024 11:11, Matthieu Baerts wrote:
->>> On 03/09/2024 10:04, Geliang Tang wrote:
->>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>
->>>> This patch adds a "cgroup/getsockopt" way to inspect the subflows
->>>> of a
->>>> mptcp socket.
->>>>
->>>> mptcp_for_each_stubflow() and other helpers related to
->>>> list_dentry are
->>>> added into progs/mptcp_bpf.h.
->>>>
->>>> Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list
->>>> and use
->>>> bpf_core_cast to cast a pointer to tcp_sock for readonly. It will
->>>> allow
->>>> to inspect all the fields in a tcp_sock.
->>>
->>> (...)
->>>
->>>> diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>>> b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>>> index 2e28f4a215b5..1053a795eb43 100644
->>>> --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>>> +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
->>>> @@ -4,6 +4,7 @@
->>>>  
->>>>  /* vmlinux.h, bpf_helpers.h and other 'define' */
->>>>  #include "bpf_tracing_net.h"
->>>> +#include "mptcp_bpf.h"
->>>>  
->>>>  char _license[] SEC("license") = "GPL";
->>>>  
->>>> @@ -57,3 +58,92 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
->>>>  
->>>>  	return 1;
->>>>  }
->>>> +
->>>> +static int _check_getsockopt_subflow_mark(struct bpf_sock *sk)
->>>> +{
->>>> +	struct mptcp_subflow_context *subflow;
->>>> +	struct mptcp_sock *msk;
->>>> +	int i = 0;
->>>> +
->>>> +	if (sk->protocol != IPPROTO_MPTCP) {
->>>> +		bpf_printk("MPTCP Subflow: unexpected protocol
->>>> %u", sk->protocol);
->>>> +		return -1;
->>>> +	}
->>>
->>> Out of curiosity, why did you move this code here and in
->>> _check_getsockopt_subflow_cc()?
->>>
->>> I'm just surprised because recently, you tried to reduce the amount
->>> of
->>> duplicated code :)
+>>> +SEC("cgroup/getsockopt")
+>>> +int _getsockopt_subflow(struct bpf_sockopt *ctx)
+>>> +{
+>>> +	struct bpf_sock *sk = ctx->sk;
+>>> +
+>>> +	if (!sk) {
+>>> +		bpf_printk("MPTCP Subflow: unexpected socket, sk
+>>> is NULL");
+>>> +		ctx->retval = -1;
+>>> +		return 1;
+>>> +	}
+>>> +
+>>> +	if (ctx->level == SOL_SOCKET && ctx->optname == SO_MARK)
+>>> +		ctx->retval = _check_getsockopt_subflow_mark(sk);
+>>> +	else if (ctx->level == SOL_TCP && ctx->optname ==
+>>> TCP_CONGESTION)
+>>> +		ctx->retval = _check_getsockopt_subflow_cc(sk);
 >>
->> While at it: it sounds better to have unique error messages, to know
->> where was the error. Here, a few messages are the same, e.g.
->> protocol,
->> number of subflows, sk is null. Do not hesitate to add something to
->> differentiate them: level & optname, a string prefix, the line
->> number, etc.
+>> As I mentioned in my previous reply: can ctx->retval be < 0 here,
+>> before
+>> calling _check_getsockopt_subflow_XXX()?
+>> If yes or not sure, maybe safer to do:
+>>
+>>   err = _check_getsockopt_subflow_XXX()
+>>   (...)
+>>
+>>   if (err)
+>>       ctx->retval = -1;
+>     else
+>         ctx->retval = 0;
 > 
-> No, I think we should drop all these "bpf_printk" messages. I checked
-> all other BPF selftests programs, no one use these error messages to
-> debug like this. Just "return 1" is enough:
+> Otherwise:
 > 
->         if (!sk || sk->protocol != IPPROTO_MPTCP)
->                 return 1;
-> 
-> If a BPF program fail, its own load log will show:
-> 
-> libbpf: prog '_getsockopt_subflow': -- BEGIN PROG LOAD LOG --
-> 0: R1=ctx() R10=fp0
-> ; int _getsockopt_subflow(struct bpf_sockopt *ctx) @
-> mptcp_subflow.c:136
-> 0: (bf) r9 = r1                       ; R1=ctx() R9_w=ctx()
-> ; struct bpf_sock *sk = ctx->sk; @ mptcp_subflow.c:138
-> 1: (79) r7 = *(u64 *)(r9 +0)          ; R7_w=sock() R9_w=ctx()
-> ; if (bpf_get_current_pid_tgid() >> 32 != pid) @ mptcp_subflow.c:141
-> 2: (85) call bpf_get_current_pid_tgid#14      ; R0_w=scalar()
-> 
-> No need to add any line number by ourselves.
+> 86: (63) *(u32 *)(r6 +0) = r1
+> dereference of modified ctx ptr R6 off=36 disallowed
+> processed 169 insns (limit 1000000) max_states_per_insn 2 total_states
+> 15 peak_states 15 mark_read 4
+> -- END PROG LOAD LOG --
 
-Good, that looks OK.
+Sorry, I'm not familiar with these errors: do you mean that 'retval'
+always need to be set? But in a previous version you sent, 'retval' was
+only set to -1 in case of error, no?
 
-Just to be sure it is readable: here the BPF program failed because the
-PID was not the expected one, right? Or is it another error?
-
-Do you mind sharing the output if the CC is not "foo" for example please?
+The error message doesn't seem to say that.
+Are you sure it is not because 'err' was not initialised, or something
+like that?
 
 Cheers,
 Matt
