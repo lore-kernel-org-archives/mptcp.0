@@ -1,122 +1,120 @@
-Received: from out203-205-221-236.mail.qq.com (out203-205-221-236.mail.qq.com [203.205.221.236])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8A788173
-	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 01:01:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.236
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 78EBF29A2
+	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 01:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725411716; cv=none; b=B0gD6Bvbbki4aDfVFZwssrIBQDARiytuF0iTMC6iHMp3sBQBIGYBlz6zyryQHwr4W+spaiwGn9p4AsIul9I9Wq6Oj9as3C1UM6P6CwPhlDZg5xehr0zgqryB9Nh2a8eltiLaW8d0t9o7mXR9h7yzFEMFz59H+3WuUtidLT3LCgE=
+	t=1725414782; cv=none; b=H4X89YfcsUsqkA2yBZjfFqu4rEEBevG6I4auOnZpYz5CjI+qlaeYridM3X3NubMGkCTd8PIwH4XRmVCgNCXN7uxSq3kHGtenHDSXlgfkk/Mo5n0ZhUfr2TDZ8Bk/dNxdHZ9yc8ad5V1VDlPISJSOMV0IzlGLYdlICI2ngYBOA+Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725411716; c=relaxed/simple;
-	bh=EXMzDbmcyT8Qbv/FeHGnz5g0knYbqB/ouB2ky8UwEgs=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=cOHUWjgb9kwbXH8wmDVp0JIdAoypxB/tCC+5P5KbiJEmK0P1oS8q7EcmDTCifyISgldpfTC4zU5VqsGlSsGaiVyYzCxJiZSXgX4svA9Cgk0bbq/M99vn160Rqwuc2PqMo81OaRJtyV1ZH6jIZ1SMhryBdhEhJLRISxLc8rzSEw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=ch/ujsKn; arc=none smtp.client-ip=203.205.221.236
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1725414782; c=relaxed/simple;
+	bh=jgMRltvCoyI6GNoCTi94zxGrc8JS3bzBxyNnJy3STRo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=PdcfnfjPwlWKEB/NE3JAe/NgqMDbXqCK37qUCQGIqASVzGmPB3rJbXp7RtDbZFoxN5BOa1CXdGXNIhObAPAkfP2Kas8Dbd5MDOyVi2WzSOar/s0R1xlAMcTN/TfyCnIw/+Qr2Ag9IGKZMd192voAtydI92QQ6lpiu+ej36akweA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Ye2IcM3Z; arc=none smtp.client-ip=209.85.214.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="ch/ujsKn"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1725411700; bh=QJXZJ0i4PPyQs9pLBVhM6Cvr7GCkh2tTTsXYVcn50/s=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=ch/ujsKnshWYl+qr4tiIt22abVS9q6HRs3mnCMQQz0Pme3gvphYKAsZBJT0Dr5JPt
-	 S6PEbLoEulSkKatBXG7VP+YDDKcRw+2rMtWi0hG0i2AQ4s1odKQxDK9S8nmzEw5jo6
-	 pSaCoqMtnt309WE9Dct3Y8RH0KwKMRfopqcIxSCM=
-Received: from pek-lxu-l1.wrs.com ([111.198.224.50])
-	by newxmesmtplogicsvrszc13-0.qq.com (NewEsmtp) with SMTP
-	id 64972BC; Wed, 04 Sep 2024 09:01:36 +0800
-X-QQ-mid: xmsmtpt1725411696tbd4s16ca
-Message-ID: <tencent_472581BA11BB2533E79EA21B964B2A1BC408@qq.com>
-X-QQ-XMAILINFO: NiAdzfE16ND4G/kmn26CnIlyhaFL7BFoNKCJQqM4wJSMCMBfLvHOBYUa0FF4OB
-	 gEiIsHUffKRlg4jM1p6hUdRnlt+46h6w0PnLmdcIFMTvDZUFCXrxUwFYNpAtt7k1DghYYFh9tju2
-	 zjvBrBGL27gyvyV/LDaOe9dgzgVgvnC2DzV5EMmJSd5kIcm3qEc1u/F5qYxOq6yFIR4VoqPbhHDD
-	 KEqAzH7NCNlYdYKmZG1UlR+KzpLJHswLW1ssym0KETcqSc7zxa7cb5nq8hNu+aFeQ1JAROj1kLHa
-	 Slyl7KKWYuXtstFAkjoBY6DStCx0g1IiTz5tHodZBmJ8EthtTwussUghGhvBlkvr5Up11JG3z94Q
-	 dpsSUOyLi58kguToezbaLgk4nkCFMNdh7xHK2UtG4P8cJDAEMcpLV4rhbYRQFGoqYS8PsHzEy3H8
-	 0VbzIc8XIDsbrIi7dgUQ3Noe/P7x/XoTUhh9Fr2zi3GefOvMZuLdcQKh2HFOQqvmpn1yY0FplDvZ
-	 7gXtVDVIgC14VU7jLiP0AfHQ16qTX8sg0eCzU4Z8MUq+1ypeUCSNUBxiKFGv9fKVHc/jxVrxgI/B
-	 VNSyJjShrSY/LI1ENS7nbuPsAzl0Sz23dCZ9XvtFMblEVZjHyjkxjSgm/Ptb0q7ZV0JIoIizIaWk
-	 BnsHykcbLoolQGhnysmFgh/WvnWdS5ERJcfuuHWlj5UeVL4OsRjtRD6g2z4YxQJBdKy1Laomqk96
-	 spm9AMDzlEHiW+h8V/PFInyr9OWKjVwg0bZVRjkVMMTKCDywXIbH5ZxWJ15fXthMhm6ElF0GDena
-	 vTNQgbhsuK9e98X0Eheu/5nLXfQJ7YxL7mGnaLE10unU/qK0PBjtGNGSrPhfxWAKgPIFddA16Gl0
-	 MQVV4tGJzvehtkJswLcUZ8e3h3jqlXVdJD8jQsEUnDq702yPnQET2UXvJ5bmtYhNTjKAtnZJSyhO
-	 IIkoOvDH4J8qgl68T7Jmx31hLCa66G
-X-QQ-XMRINFO: NS+P29fieYNw95Bth2bWPxk=
-From: Edward Adam Davis <eadavis@qq.com>
-To: eadavis@qq.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	geliang@kernel.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	martineau@kernel.org,
-	matttbe@kernel.org,
-	mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH V2] mptcp: pm: Fix uaf in __timer_delete_sync
-Date: Wed,  4 Sep 2024 09:01:37 +0800
-X-OQ-MSGID: <20240904010136.3443727-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <tencent_EECBD37DC379497A63A1C455B773377AC605@qq.com>
-References: <tencent_EECBD37DC379497A63A1C455B773377AC605@qq.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ye2IcM3Z"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-2053616fa36so38605555ad.0
+        for <mptcp@lists.linux.dev>; Tue, 03 Sep 2024 18:53:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725414781; x=1726019581; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=yoBCFjWDbcx/Oa+q6/rhvpwOnk8UEWm6s2FDKs8NtY8=;
+        b=Ye2IcM3ZWDeCiOY1XpURoPnV4JgJTdFnf/pCINvB0lNhRrvfyXjud2d0xTGMwOuzeg
+         0mwo1z5gK6fl4+8POPxZscjAOUlyuD/+IeqJeoRudpaLJHvt1JesQOr2956kPMkyDehw
+         oq+EndeMzQ43qDi6tcJhVun4IBPxNsoRwG57U2ri1oQXHukbeImoSxCe1mMrlMM+eMqv
+         VRWwmy3FJqc92Nut3JP1d/J93GIIt+jk0+x7aTEGewIAxR3fGl0qXhZtEmtQRqvGTupN
+         qN2Cszg0dp5aQyFItwybOFc1fPBTX8e/XxEPP/FazDSdQdoQLB3yQ1FhXf0opAqc0+2o
+         DzQA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725414781; x=1726019581;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=yoBCFjWDbcx/Oa+q6/rhvpwOnk8UEWm6s2FDKs8NtY8=;
+        b=U4b6twsrj8rwBz7kJSLoqeo+HmjGNciuYMFqX5ydPC6ujr8w8qQbHkfjsAUgfM5UuU
+         k20dMf87L9hz3GSkxGDYusscTY2XY8hfjYePy9avN9OgmZh1y1Dysviq9VUvXjSaKjE7
+         gyYMzhH0sMW/E5dbqHWFcM+XqWcEWPvikTgepSPwhldMzXTBIpDOePAz/Sz+rjvi9CYJ
+         xtxXQGeLqkNiFF3K93O5vHboevhc4crg4XQKRh909xhVQvlTMD8ap4xUMJVqFljRGnF0
+         rSLCFERZW1A6yLSeYChx5WMH8xgJn05fLFwUfrkhdIGZXkwn8Bv5ttEDTKdBg8MGXphO
+         cgvA==
+X-Gm-Message-State: AOJu0YzYhJZTn8zphFmlG6BM5bDlPqkTQAdTT9MxAI9VOKKZckd1Krxm
+	ORz7B0mfQqyI2pXMYqOr+phK6hLCDP/Yawd8PIVDItyh8jsZSRNUVd9X
+X-Google-Smtp-Source: AGHT+IF9eBWA8lm2Flnq8XaXTk40GpmYnN5DgOqawSw5ZY/hBGtSDy4icE51wMmL7VxjB3kLo3NCGw==
+X-Received: by 2002:a17:902:e5c5:b0:206:892c:b751 with SMTP id d9443c01a7336-206892cb7f9mr68923735ad.65.1725414780575;
+        Tue, 03 Sep 2024 18:53:00 -0700 (PDT)
+Received: from [127.0.0.1] ([20.171.75.101])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206ae968f78sm4185305ad.119.2024.09.03.18.52.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 03 Sep 2024 18:52:59 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <tencent_472581BA11BB2533E79EA21B964B2A1BC408@qq.com>
+References: <tencent_472581BA11BB2533E79EA21B964B2A1BC408@qq.com>
+Subject: Re: [PATCH V2] mptcp: pm: Fix uaf in __timer_delete_sync
+Message-ID: <0407bf6c-6811-771d-1392-69d6f98d475d@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 04 Sep 2024 01:52:58 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-There are two paths to access mptcp_pm_del_add_timer, result in a race
-condition:
+Hi Edward,
 
-     CPU1				CPU2
-     ====                               ====
-     net_rx_action
-     napi_poll                          netlink_sendmsg
-     __napi_poll                        netlink_unicast
-     process_backlog                    netlink_unicast_kernel
-     __netif_receive_skb                genl_rcv
-     __netif_receive_skb_one_core       netlink_rcv_skb
-     NF_HOOK                            genl_rcv_msg
-     ip_local_deliver_finish            genl_family_rcv_msg
-     ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
-     tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
-     tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
-     tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
-     tcp_data_queue                     remove_anno_list_by_saddr
-     mptcp_incoming_options             mptcp_pm_del_add_timer
-     mptcp_pm_del_add_timer             kfree(entry)
+Thank you for your modifications, that's great!
 
-In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-zone protected by "pm.lock", the entry will be released, which leads to the
-occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
+Our CI did some validations and here is its report:
 
-Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- net/mptcp/pm_netlink.c | 2 ++
- 1 file changed, 2 insertions(+)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/10693305915
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 3e4ad801786f..d4cbf7dcf983 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1430,8 +1430,10 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 
- 	entry = mptcp_pm_del_add_timer(msk, addr, false);
- 	if (entry) {
-+		spin_lock_bh(&msk->pm.lock);
- 		list_del(&entry->list);
- 		kfree(entry);
-+		spin_unlock_bh(&msk->pm.lock);
- 		return true;
- 	}
- 
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/39f9be3b7f68
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D886515
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
