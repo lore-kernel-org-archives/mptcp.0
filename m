@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 896A9126BFD;
-	Tue,  3 Sep 2024 23:30:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F9E9173;
+	Wed,  4 Sep 2024 00:13:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725406237; cv=none; b=fDN0BWlE7YkuO7V153BVZqFWGZxiZCBz4j9225kG2PeYVW4Aq74BjWxNMmc7RoognVHG9v3II3s4xQPigLvpmVALw2+mw8dQDSOl3VBPMZzoYaErNxGZ8SGnWUIq2SDzAzcdWiZxA5o/AJChR4oIYTZ17sSk45i5YsO02LICxCc=
+	t=1725408791; cv=none; b=G2vQEvw/wMh65jkiWYARniPCKBP6XKfT6hcZFqaksFuQqvWAo9dagPGfaQxeZTCcM6E1aEE4LCrpob0zr6a2HWqEDq2RuNUlNSVbrg4smR9T/rm8r98X6xtV3hzokJ58vsd60bDL0W7jTLyeRiTvrXcHwrV1gHi72WRJAK9aBqs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725406237; c=relaxed/simple;
-	bh=FrqTil4fBuG9VhW7S6egVUGfJDEoHu0+jMNoBN6alS8=;
+	s=arc-20240116; t=1725408791; c=relaxed/simple;
+	bh=wzv2dlQImwfQPmX0iww6hLaABYJFLVMq1mXi9LVbT5A=;
 	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=CCocZGSC4dn4G1kw8W21cuMI54A4/O4Nmb2aemk2hhvDezbCHBuZ04uVzYfH/UZlhFHuh9bQO3v89ZB/GIabveDoTwXWgQSh6N/q9z0gGr8kGQQksowrGLLQRTnxb8qlUJIw8hlCUBwnDg+n18syejyWu57L/m1QZyk9wYqwDe8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7868TaG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=uGg641Y9dYZ8nD+a6D7txZ5Nwh7yGbNYJw29tTVSLVo4VN/L0BP/xr7IiIXn+cMYwemXZ9S/vNGBSAr1HdlUvGc4707iTNvIKC7rW6d5OTkGyMorBI0Ysxb0+SEGueoK4rgXkJ030P774WVjo/iilOmOXGYckvjIxbyrMGlgKaU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PrfTCg3V; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7868TaG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FABBC4CEC4;
-	Tue,  3 Sep 2024 23:30:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PrfTCg3V"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4775AC4CEC4;
+	Wed,  4 Sep 2024 00:13:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725406237;
-	bh=FrqTil4fBuG9VhW7S6egVUGfJDEoHu0+jMNoBN6alS8=;
+	s=k20201202; t=1725408790;
+	bh=wzv2dlQImwfQPmX0iww6hLaABYJFLVMq1mXi9LVbT5A=;
 	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=d7868TaGpZq0QiELnEM8y4j4JGyYHdE1dUi0FWItnXGJHGUJGhMSZGcaFQHK8e5x8
-	 k1J/wyQdt8Ftp3EKmPTFW8qk7lzhqn0S8jM/eChDyQdLcAskaQnvxz5/FsVK3sBHN6
-	 hz+rwBIRWxrp5NhkY3/6/emEEUoL25fqT+GCzOHbuwsQLLkvz9YeFgef9DiLOnBNhA
-	 Zn++t1fKSY8rTV5i5VaaMVKE5o0K8MMTSbIVQ4pnYzMCCSZPsmzla1Oa6bQ5bNflPQ
-	 L5sfaW26ZTDp1EqQAw3nePdXMsX1uCwsKSn3HXf08Y0WulE5RInvJA2LnWPq1MZlJq
-	 +4NUdcGMI5elA==
-Date: Tue, 3 Sep 2024 16:30:35 -0700
+	b=PrfTCg3VuHkdwmTbCafk5E0qNb8a/8MXXAlbp2TomWkXedUEV9kH20DgZVDlod9fo
+	 Q8+EbyyLfCsycwcBGImlPnOzJs17g6MNYvh/s4llvx97ptPOqw4Z6a1ILQj8AOR5tJ
+	 Qn4kbcufNXScFbQpb3wrONeAhBzuP2vKvLXo7YF4SJWLH2OmfGaQs8P5HPrtp88Dan
+	 yr0MMj3IHCFajUqJZR2Nl+BdHGrCELy9al2ivA05o4LhmJvdxxbWbumNXUzLPdWlN1
+	 JNYeiuNkWr9Ois0FPRtu4XlnU40sOSd4kX7Rufb9tu4oowUzYn87Og0xYWaSrUBK2m
+	 JYmRgdGiyYN8w==
+Date: Tue, 3 Sep 2024 17:13:09 -0700
 From: Jakub Kicinski <kuba@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
@@ -34,12 +34,12 @@ Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
  Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Shuah Khan
  <shuah@kernel.org>, netdev@vger.kernel.org,
  linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next 0/3] selftests: mptcp: add time per subtests in
+Subject: Re: [PATCH net-next 2/3] sefltests: mptcp: connect: remote time in
  TAP output
-Message-ID: <20240903163035.30639d62@kernel.org>
-In-Reply-To: <20240903162217.07c366c9@kernel.org>
+Message-ID: <20240903171309.1e032d49@kernel.org>
+In-Reply-To: <20240902-net-next-mptcp-ksft-subtest-time-v1-2-f1ed499a11b1@kernel.org>
 References: <20240902-net-next-mptcp-ksft-subtest-time-v1-0-f1ed499a11b1@kernel.org>
-	<20240903162217.07c366c9@kernel.org>
+	<20240902-net-next-mptcp-ksft-subtest-time-v1-2-f1ed499a11b1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -49,9 +49,9 @@ MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 
-On Tue, 3 Sep 2024 16:22:17 -0700 Jakub Kicinski wrote:
-> (None, '4', ' -', 'mptcp[...] MPTCP', ' # ', 'time=6173ms')
-> (None, '4', ' -', 'mptcp[...] TC', None, 'P   # time=6173ms')
+On Mon, 02 Sep 2024 13:13:05 +0200 Matthieu Baerts (NGI0) wrote:
+> Subject: [PATCH net-next 2/3] sefltests: mptcp: connect: remote time in TAP output
 
-Sorry I fumbled copy/pasting the results, ignore the exact time values
-in the last group, but the mis-parsing stands.
+nit: typo in the subject
+-- 
+pw-bot: cr
