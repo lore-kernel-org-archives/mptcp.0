@@ -1,176 +1,136 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FE129402;
-	Wed,  4 Sep 2024 14:39:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EE1DC078;
+	Wed,  4 Sep 2024 15:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460752; cv=none; b=FqdsMh/TSvGU4UFC7CL65dYUW+bcCu0fXlUAaGVd37n5NhVxRJcSGtJZaoC976bdAERWRyTTuDDurTgfl30VwT0Cx7EX8ZzfUrFEXF+JfwKgNTEjGJumSkRUSSBZhqKNT5EkvfvokUL/WOzieSySW2Zkx9A0uqdyoJH5PVuwVUk=
+	t=1725463276; cv=none; b=XP6V3nzZZhWSr0HLmOh78IqqsElQ6SloaRZXGlVQ9cbHI8OeybvgfbaEef4+QPmCHx48SFCWVVGhAyAMVJqpNYscCSLJv3NSpS05zDMo1OgGYWpdBjlSIrnzRZkH5h7kOWf2YyJMFSWipE7PeH9gg+MbUpNy7gwczuS02W7LAqc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460752; c=relaxed/simple;
-	bh=5naRVhnsCq6glFf4fbMGv27t1bQfjLZyTx95HIvgDfU=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=WKeyU6eamINfNWnDSHcuoGnJzG7MFZY3SdQ4awCljmdKRzRL8FTm9qNsWJip6UL9HC6jpN9aFZ31JLSyoYgHbVs6+5gVd7qUnKLPguin/F+3PTQi71KNn46K6/gjs4OPGIaK11OB28py06mVrL4eVxcd/Ut59xn/q+/hNVRynqc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=dU2HZCQ3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725463276; c=relaxed/simple;
+	bh=XQ5iP24j0i/pEIXaLbx1QqnHqn9KDrRudc4aEoUspiM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=TucjbiM4ZY/D6CW8Cdrc4UJEAG3nnzbHDG0vzPMH8QlyCyuQnsBRJhbMDHSrsbR6cUmZjf15AyEXrhLjbwFW6IPNjVnHhvmZ1HAWVeHmDFg4ifJuluLk6IiwItihXTgFPMr/sYQf3NiSjFGd4m4ZTRIr4dkwktvZi5As7rhjwLI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oH3rdihj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="dU2HZCQ3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 173AEC4CECC;
-	Wed,  4 Sep 2024 14:39:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725460751;
-	bh=5naRVhnsCq6glFf4fbMGv27t1bQfjLZyTx95HIvgDfU=;
-	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=dU2HZCQ3+ZJOQscKV0DLY9UnuFS+8cKA6Pze9TwkCBOPIW7cFMxa9T0vz5A2fnpZI
-	 8fNYNYIeAmihmXH76+bXV4AY99PFNky61JBz4knx2aVsDWgz1qQnV2SjblUXoWBRK1
-	 /tg3AMZp4pB0BEO1240eqnvXtZI+fZWtn75xX+oE=
-Subject: Patch "selftests: mptcp: join: cannot rm sf if closed" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
-Cc: <stable-commits@vger.kernel.org>
-From: <gregkh@linuxfoundation.org>
-Date: Wed, 04 Sep 2024 16:39:08 +0200
-In-Reply-To: <20240904111548.4098486-2-matttbe@kernel.org>
-Message-ID: <2024090408-freezing-dismay-ea2a@gregkh>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oH3rdihj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858AFC4CEC2;
+	Wed,  4 Sep 2024 15:21:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725463275;
+	bh=XQ5iP24j0i/pEIXaLbx1QqnHqn9KDrRudc4aEoUspiM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oH3rdihjLrBaUk+9RZkE8ETiX5q4sFGMSFs18GiP/AmtweyyUzquils5E6ZbmkfcM
+	 Z6Q5xEpMNMMHHsD7DKEbk8kzeg0u7b3VJ+hKW8N24BthNUeRIMaQ/f8u+rx9d+a9Hx
+	 89tDZLhIF/gkOU5MAzx5PZl3xrU0Hb4ZyHmKgr7Zy5WzeDCaQwULAaWoqz8Dy9gOKU
+	 XAi3Bog5FEsqun1QwGu3OYL508FXUOuVvG54EqIN2CfX13LDW3o8elDNfqPRDGNnOO
+	 bCU/0fYjpPckVKWH51+ZLmXf6uGt0IlfAzG7MQhG+WSBe4HSqUC/KmHybYMVxrC1oI
+	 QuDmcG1RVlskA==
+Message-ID: <fc21db4a-508d-41db-aa45-e3bc06d18ce7@kernel.org>
+Date: Wed, 4 Sep 2024 17:20:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
-X-stable: commit
-X-Patchwork-Hint: ignore 
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 6.1.y] selftests: mptcp: join: validate event numbers
+Content-Language: en-GB
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
+ Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+ Sasha Levin <sashal@kernel.org>
+References: <2024083026-attire-hassle-e670@gregkh>
+ <20240904111338.4095848-2-matttbe@kernel.org>
+ <2024090420-passivism-garage-f753@gregkh>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2024090420-passivism-garage-f753@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Greg,
 
-This is a note to let you know that I've just added the patch titled
+On 04/09/2024 16:38, Greg KH wrote:
+> On Wed, Sep 04, 2024 at 01:13:39PM +0200, Matthieu Baerts (NGI0) wrote:
+>> commit 20ccc7c5f7a3aa48092441a4b182f9f40418392e upstream.
+>>
+> 
+> This did not apply either.
+> 
+> I think I've gone through all of the 6.1 patches now.  If I've missed
+> anything, please let me know.
+It looks like there are some conflicts with the patches Sasha recently
+added:
 
-    selftests: mptcp: join: cannot rm sf if closed
-
-to the 6.1-stable tree which can be found at:
-    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-
-The filename of the patch is:
-     selftests-mptcp-join-cannot-rm-sf-if-closed.patch
-and it can be found in the queue-6.1 subdirectory.
-
-If you, or anyone else, feels it should not be added to the stable tree,
-please let <stable@vger.kernel.org> know about it.
-
-
-From stable+bounces-73024-greg=kroah.com@vger.kernel.org Wed Sep  4 13:19:25 2024
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed,  4 Sep 2024 13:15:48 +0200
-Subject: selftests: mptcp: join: cannot rm sf if closed
-To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240904111548.4098486-2-matttbe@kernel.org>
-
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-
-commit e93681afcb96864ec26c3b2ce94008ce93577373 upstream.
-
-Thanks to the previous commit, the MPTCP subflows are now closed on both
-directions even when only the MPTCP path-manager of one peer asks for
-their closure.
-
-In the two tests modified here -- "userspace pm add & remove address"
-and "userspace pm create destroy subflow" -- one peer is controlled by
-the userspace PM, and the other one by the in-kernel PM. When the
-userspace PM sends a RM_ADDR notification, the in-kernel PM will
-automatically react by closing all subflows using this address. Now,
-thanks to the previous commit, the subflows are properly closed on both
-directions, the userspace PM can then no longer closes the same
-subflows if they are already closed. Before, it was OK to do that,
-because the subflows were still half-opened, still OK to send a RM_ADDR.
-
-In other words, thanks to the previous commit closing the subflows, an
-error will be returned to the userspace if it tries to close a subflow
-that has already been closed. So no need to run this command, which mean
-that the linked counters will then not be incremented.
-
-These tests are then no longer sending both a RM_ADDR, then closing the
-linked subflow just after. The test with the userspace PM on the server
-side is now removing one subflow linked to one address, then sending
-a RM_ADDR for another address. The test with the userspace PM on the
-client side is now only removing the subflow that was previously
-created.
-
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240826-net-mptcp-close-extra-sf-fin-v1-2-905199fe1172@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Fixes: 97040cf9806e ("selftests: mptcp: userspace pm address tests")
-Fixes: 5e986ec46874 ("selftests: mptcp: userspace pm subflow tests")
-[ It looks like this patch is needed for the same reasons as mentioned
-  above, but the resolution is different: the subflows and addresses are
-  removed elsewhere. The same type of adaptations have been applied
-  here. The Fixes tag has been replaced by better appropriated ones. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh |    7 ++-----
- 1 file changed, 2 insertions(+), 5 deletions(-)
-
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -957,8 +957,6 @@ do_transfer()
- 				dp=$(grep "type:10" "$evts_ns1" |
- 				     sed -n 's/.*\(dport:\)\([[:digit:]]*\).*$/\2/p;q')
- 				ip netns exec ${listener_ns} ./pm_nl_ctl rem token $tk id $id
--				ip netns exec ${listener_ns} ./pm_nl_ctl dsf lip "$addr" \
--							lport $sp rip $da rport $dp token $tk
- 			fi
- 
- 			counter=$((counter + 1))
-@@ -1024,7 +1022,6 @@ do_transfer()
- 				sleep 1
- 				sp=$(grep "type:10" "$evts_ns2" |
- 				     sed -n 's/.*\(sport:\)\([[:digit:]]*\).*$/\2/p;q')
--				ip netns exec ${connector_ns} ./pm_nl_ctl rem token $tk id $id
- 				ip netns exec ${connector_ns} ./pm_nl_ctl dsf lip $addr lport $sp \
- 									rip $da rport $dp token $tk
- 			fi
-@@ -3227,7 +3224,7 @@ userspace_tests()
- 		run_tests $ns1 $ns2 10.0.1.1 0 userspace_1 0 slow
- 		chk_join_nr 1 1 1
- 		chk_add_nr 1 1
--		chk_rm_nr 1 1 invert
-+		chk_rm_nr 1 0 invert
- 	fi
- 
- 	# userspace pm create destroy subflow
-@@ -3237,7 +3234,7 @@ userspace_tests()
- 		pm_nl_set_limits $ns1 0 1
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 userspace_1 slow
- 		chk_join_nr 1 1 1
--		chk_rm_nr 1 1
-+		chk_rm_nr 0 1
- 	fi
- 
- 	# remove and re-add
-
-
-Patches currently in stable-queue which might be from matttbe@kernel.org are
-
-queue-6.1/selftests-mptcp-join-cannot-rm-sf-if-closed.patch
-queue-6.1/mptcp-pm-fix-rm_addr-id-for-the-initial-subflow.patch
-queue-6.1/selftests-mptcp-join-validate-fullmesh-endp-on-1st-sf.patch
-queue-6.1/mptcp-pm-fix-id-0-endp-usage-after-multiple-re-creations.patch
-queue-6.1/mptcp-make-pm_remove_addrs_and_subflows-static.patch
-queue-6.1/mptcp-pm-avoid-possible-uaf-when-selecting-endp.patch
-queue-6.1/mptcp-pm-reuse-id-0-after-delete-and-re-add.patch
-queue-6.1/selftests-mptcp-join-check-re-adding-init-endp-with-id.patch
-queue-6.1/selftests-mptcp-join-test-for-flush-re-add-endpoints.patch
 queue-6.1/selftests-mptcp-add-explicit-test-case-for-remove-re.patch
-queue-6.1/mptcp-avoid-duplicated-sub_closed-events.patch
-queue-6.1/selftests-mptcp-add-explicit-test-case-for-remove-readd.patch
 queue-6.1/selftests-mptcp-join-check-re-adding-init-endp-with-.patch
-queue-6.1/selftests-mptcp-join-check-re-using-id-of-closed-subflow.patch
-queue-6.1/selftests-mptcp-join-check-re-re-adding-id-0-endp.patch
-queue-6.1/mptcp-pm-fullmesh-select-the-right-id-later.patch
-queue-6.1/selftests-mptcp-join-no-extra-msg-if-no-counter.patch
-queue-6.1/mptcp-pr_debug-add-missing-n-at-the-end.patch
 queue-6.1/selftests-mptcp-join-check-re-using-id-of-unused-add.patch
-queue-6.1/selftests-mptcp-join-check-removing-id-0-endpoint.patch
-queue-6.1/selftests-mptcp-join-check-re-using-id-of-unused-add_addr.patch
+
+From commit 0d8d8d5bcef1 ("Fixes for 6.1") from the stable-queue tree:
+
+
+https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=0d8d8d5bcef1
+
+I have also added these patches -- we can see patches with almost the
+same name -- but I adapted them to the v6.1 kernel: it was possible to
+apply them without conflicts, but they were causing issues because they
+were calling functions that are not available in v6.1, or taking
+different parameters.
+
+Do you mind removing the ones from Sasha please? I hope that will not
+cause any issues. After that, the two patches you had errors with should
+apply without conflicts:
+
+ - selftests: mptcp: join: validate event numbers
+ - selftests: mptcp: join: check re-re-adding ID 0 signal
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
