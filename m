@@ -1,33 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E84EE1DC078;
-	Wed,  4 Sep 2024 15:21:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5B1DCB01
+	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 15:41:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725463276; cv=none; b=XP6V3nzZZhWSr0HLmOh78IqqsElQ6SloaRZXGlVQ9cbHI8OeybvgfbaEef4+QPmCHx48SFCWVVGhAyAMVJqpNYscCSLJv3NSpS05zDMo1OgGYWpdBjlSIrnzRZkH5h7kOWf2YyJMFSWipE7PeH9gg+MbUpNy7gwczuS02W7LAqc=
+	t=1725464496; cv=none; b=QqShus44Vf19b/Ba9ZOk/woUjuAxZQbP8ehNJVNu0tJTAXmGRn1vNBJBzvJEJC3ywWtEIm25aiHTFyXhPPRpa5jfX4arkamDpJUzvqNwIE99o0IdCWHpJQx40yNcrOA4PRK+nlP5sR2len00BkrDa3ogq75IbDSgAro2soB5RRQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725463276; c=relaxed/simple;
-	bh=XQ5iP24j0i/pEIXaLbx1QqnHqn9KDrRudc4aEoUspiM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TucjbiM4ZY/D6CW8Cdrc4UJEAG3nnzbHDG0vzPMH8QlyCyuQnsBRJhbMDHSrsbR6cUmZjf15AyEXrhLjbwFW6IPNjVnHhvmZ1HAWVeHmDFg4ifJuluLk6IiwItihXTgFPMr/sYQf3NiSjFGd4m4ZTRIr4dkwktvZi5As7rhjwLI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oH3rdihj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725464496; c=relaxed/simple;
+	bh=jXHz9XApw5jf/grxYJQ1VdB5H1P6PgJiepiDmw9d538=;
+	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=lJjFJnE5VB+wcf9t63+LElSXmsqcBrpy6Bwiqh96vXfSqxtz45QMJEtlhj5/WyLwzYqtBUDbxUjVYgUcwKxHnQXSOfIsF3Vg+UEtCZwslX9DTHIyV8oPe51LAXF6gACNkYN6Wev638h8frtbUwahr8O86gp9JhquDWUsKmRUVxA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czd9unfN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oH3rdihj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 858AFC4CEC2;
-	Wed,  4 Sep 2024 15:21:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czd9unfN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1747C4CEC2
+	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 15:41:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725463275;
-	bh=XQ5iP24j0i/pEIXaLbx1QqnHqn9KDrRudc4aEoUspiM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oH3rdihjLrBaUk+9RZkE8ETiX5q4sFGMSFs18GiP/AmtweyyUzquils5E6ZbmkfcM
-	 Z6Q5xEpMNMMHHsD7DKEbk8kzeg0u7b3VJ+hKW8N24BthNUeRIMaQ/f8u+rx9d+a9Hx
-	 89tDZLhIF/gkOU5MAzx5PZl3xrU0Hb4ZyHmKgr7Zy5WzeDCaQwULAaWoqz8Dy9gOKU
-	 XAi3Bog5FEsqun1QwGu3OYL508FXUOuVvG54EqIN2CfX13LDW3o8elDNfqPRDGNnOO
-	 bCU/0fYjpPckVKWH51+ZLmXf6uGt0IlfAzG7MQhG+WSBe4HSqUC/KmHybYMVxrC1oI
-	 QuDmcG1RVlskA==
-Message-ID: <fc21db4a-508d-41db-aa45-e3bc06d18ce7@kernel.org>
-Date: Wed, 4 Sep 2024 17:20:59 +0200
+	s=k20201202; t=1725464496;
+	bh=jXHz9XApw5jf/grxYJQ1VdB5H1P6PgJiepiDmw9d538=;
+	h=Date:To:From:Subject:From;
+	b=czd9unfNPqgaB3Oz5Cw+8neMvjCPtdG4hH+wVx3RXBmXqXNlEMk0Jb5MuJCnT19bH
+	 m8w1E1NRrE9oFuINWYV7q0Y0CmCHzU8Gq8JjtIzsS8D8CtmLQPRzWy+e/wLARXox6g
+	 ublNusK5fO//C/POXNpBxq6CpCtjX7kg6ToaeRz4njS9n8t0qwqxxEoqjBhqW6FUMG
+	 TfpsMlnqtCa/NfRmJPQjQEYNPudDk58GX/AY37BvgCyjQdwnLFXGZKvUvP5ku+ErpG
+	 CI5NYjrbSThN/2DoLw+yD6+0HsG10x5zVWxK8aBNG05nWQ2qZufjbn+2oKflZW60Gv
+	 laM6NHuDjKS6Q==
+Message-ID: <59b036ce-19e3-441f-b7ce-243dbad11a1e@kernel.org>
+Date: Wed, 4 Sep 2024 17:41:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +34,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.1.y] selftests: mptcp: join: validate event numbers
 Content-Language: en-GB
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
- Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Sasha Levin <sashal@kernel.org>
-References: <2024083026-attire-hassle-e670@gregkh>
- <20240904111338.4095848-2-matttbe@kernel.org>
- <2024090420-passivism-garage-f753@gregkh>
+To: MPTCP Linux <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
+Subject: [Weekly meetings] no meeting today
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -89,45 +82,14 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2024090420-passivism-garage-f753@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Greg,
+Hello,
 
-On 04/09/2024 16:38, Greg KH wrote:
-> On Wed, Sep 04, 2024 at 01:13:39PM +0200, Matthieu Baerts (NGI0) wrote:
->> commit 20ccc7c5f7a3aa48092441a4b182f9f40418392e upstream.
->>
-> 
-> This did not apply either.
-> 
-> I think I've gone through all of the 6.1 patches now.  If I've missed
-> anything, please let me know.
-It looks like there are some conflicts with the patches Sasha recently
-added:
+Due to unexpected events, today's meeting has just been cancelled.
 
-queue-6.1/selftests-mptcp-add-explicit-test-case-for-remove-re.patch
-queue-6.1/selftests-mptcp-join-check-re-adding-init-endp-with-.patch
-queue-6.1/selftests-mptcp-join-check-re-using-id-of-unused-add.patch
-
-From commit 0d8d8d5bcef1 ("Fixes for 6.1") from the stable-queue tree:
-
-
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=0d8d8d5bcef1
-
-I have also added these patches -- we can see patches with almost the
-same name -- but I adapted them to the v6.1 kernel: it was possible to
-apply them without conflicts, but they were causing issues because they
-were calling functions that are not available in v6.1, or taking
-different parameters.
-
-Do you mind removing the ones from Sasha please? I hope that will not
-cause any issues. After that, the two patches you had errors with should
-apply without conflicts:
-
- - selftests: mptcp: join: validate event numbers
- - selftests: mptcp: join: check re-re-adding ID 0 signal
+Talk to you next week, on the 11th of September!
 
 Cheers,
 Matt
