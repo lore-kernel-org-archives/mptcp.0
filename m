@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5A4F1DC04C;
-	Wed,  4 Sep 2024 14:33:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 904C11DC06C;
+	Wed,  4 Sep 2024 14:33:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460409; cv=none; b=jJhs3lamrODRI2whUn1/XWv9vt4INwyVKWYoIGjI4qSN5ZDdb9Dh8p6H2T3s5Xx4rfuEOo6WemAQNat67mroKKB4R6JfayGBFE/Y3liJaAPddxFK78VPqY6qeVMRw8vI3ns9CsaRgkUnUg4FHYBVqoTp0Lmpvvqsd0cTh6vmFP4=
+	t=1725460412; cv=none; b=bYlzJzZAzho4LNBuPFFTDNTOa5QL8cLkXrdJcWlKs8a05LAubIk6JDMDoVy8jjvbUZkAPkETn8802jD3+Ov/t5cQ/sKwA7dUkokg2NIKTPD6swJMaFk/kIncC2ZaZIeRod5j37ReVwZvlt3m+zL/+rGaHuEHyd9XD9w6s6lH5Cs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460409; c=relaxed/simple;
-	bh=30GUW7QVJB+QIia9SvGc0NS6Q6/f9zE78ow00ZJGqNc=;
+	s=arc-20240116; t=1725460412; c=relaxed/simple;
+	bh=DjtGAEPpWVEt4YWLqaaGQHhzIGtDHQxD3YnKyI0Zj6A=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=tbwZhkpoZ+We0jAIh5juA7FzAbX+tVcAuF1LOWVDeCyfC4Wrhro0Edm991dHPjyTeUEjnz+5KDBbe7136AHxm1zORlH/Cl0/XlYqQSFiC9i9T8DVVS3UzD06sPejrVUYdr4eexxcmhs5C2If7KL/415KnWAuH6Nb4gsmJg5VOb8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=wWzwrm0E; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=WH1qn4w5kdauxc5R+TF4tz+eDHnyg/vhO50wKlJuZAgj4OsLpMlsiTjFsg+yTYO2+DRoXmgfTtG7uVm3x9+mZFoMUrZXe0d8MB+qgttzTozfML8ZbSxkFhdixJD4d66V1568wWzOdKlY7aDcD/k0guAZXLpuc0zOj3gSVDAKl40=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Dh6wT7pq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="wWzwrm0E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C12A1C4CEC3;
-	Wed,  4 Sep 2024 14:33:28 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Dh6wT7pq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB628C4CEC2;
+	Wed,  4 Sep 2024 14:33:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725460409;
-	bh=30GUW7QVJB+QIia9SvGc0NS6Q6/f9zE78ow00ZJGqNc=;
+	s=korg; t=1725460412;
+	bh=DjtGAEPpWVEt4YWLqaaGQHhzIGtDHQxD3YnKyI0Zj6A=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=wWzwrm0EktfziHe5l1C2+ClYEYxYGNi0YYra3Djmh8c77ih+aw4Fn1FCTX5Yo/2XM
-	 JmwdgBEAFTVtnyMd/Itp445qYnpVPhpTSNN+M16d080Acx5rAWx7tw38vHUR8JeFY6
-	 UsWRwnzOzWCflbnQP+GJiAyNjaRLHEVVLYev2c10=
-Subject: Patch "selftests: mptcp: join: validate fullmesh endp on 1st sf" has been added to the 6.1-stable tree
+	b=Dh6wT7pq43RZiEDl7Hy2Eu4rXc2e0BaZ3KuzIOirsoJSUYXpcJmMla0sSdsL4wkO3
+	 6C8YWpdqT7KGtNxyvfjI5Uwo3FMGLseeQRTo4jmT0r8RHyAC+T78EclDqoCw9EIL+b
+	 lIVMrp6vfB9CwNaf92e/fXT+xfRYnCk7uW0acEl0=
+Subject: Patch "selftests: mptcp: join: test for flush/re-add endpoints" has been added to the 6.1-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Wed, 04 Sep 2024 16:32:53 +0200
-In-Reply-To: <20240904110430.4084188-2-matttbe@kernel.org>
-Message-ID: <2024090453-direction-cage-c61e@gregkh>
+In-Reply-To: <20240904110611.4086328-4-matttbe@kernel.org>
+Message-ID: <2024090452-degraded-eloquent-0244@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,67 +44,99 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: join: validate fullmesh endp on 1st sf
+    selftests: mptcp: join: test for flush/re-add endpoints
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-join-validate-fullmesh-endp-on-1st-sf.patch
+     selftests-mptcp-join-test-for-flush-re-add-endpoints.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73007-greg=kroah.com@vger.kernel.org Wed Sep  4 13:04:50 2024
+From stable+bounces-73010-greg=kroah.com@vger.kernel.org Wed Sep  4 13:06:39 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed,  4 Sep 2024 13:04:31 +0200
-Subject: selftests: mptcp: join: validate fullmesh endp on 1st sf
+Date: Wed,  4 Sep 2024 13:06:13 +0200
+Subject: selftests: mptcp: join: test for flush/re-add endpoints
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240904110430.4084188-2-matttbe@kernel.org>
+Message-ID: <20240904110611.4086328-4-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 4878f9f8421f4587bee7b232c1c8a9d3a7d4d782 upstream.
+commit e06959e9eebdfea4654390f53b65cff57691872e upstream.
 
-This case was not covered, and the wrong ID was set before the previous
-commit.
+After having flushed endpoints that didn't cause the creation of new
+subflows, it is important to check endpoints can be re-created, re-using
+previously used IDs.
 
-The rest is not modified, it is just that it will increase the code
-coverage.
+Before the previous commit, the client would not have been able to
+re-create the subflow that was previously rejected.
 
-The right address ID can be verified by looking at the packet traces. We
-could automate that using Netfilter with some cBPF code for example, but
-that's always a bit cryptic. Packetdrill seems better fitted for that.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
-Fixes: 4f49d63352da ("selftests: mptcp: add fullmesh testcases")
+Fixes: 06faa2271034 ("mptcp: remove multi addresses and subflows in PM")
 Cc: stable@vger.kernel.org
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-13-38035d40de5b@kernel.org
+Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-6-38035d40de5b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in mptcp_join.sh, because the 'run_tests' helper has been
-  modified in multiple commits that are not in this version, e.g. commit
-  e571fb09c893 ("selftests: mptcp: add speed env var"). The conflict was
-  in the context, the new line can still be added at the same place. ]
+[ No conflicts, but adapt the test to the helpers in this version:
+  - run_tests has been modified a few times to reduce the number of
+    positional parameters
+  - no chk_mptcp_info helper
+  - chk_subflow_nr taking an extra parameter
+  - kill_tests_wait instead of mptcp_lib_kill_wait ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |    1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   29 ++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3023,6 +3023,7 @@ fullmesh_tests()
- 		pm_nl_set_limits $ns1 1 3
- 		pm_nl_set_limits $ns2 1 3
- 		pm_nl_add_endpoint $ns1 10.0.2.1 flags signal
-+		pm_nl_add_endpoint $ns2 10.0.1.2 flags subflow,fullmesh
- 		run_tests $ns1 $ns2 10.0.1.1 0 0 fullmesh_1 slow
- 		chk_join_nr 3 3 3
- 		chk_add_nr 1 1
+@@ -3368,6 +3368,35 @@ endpoint_tests()
+ 		chk_rm_nr 3 2 invert
+ 	fi
+ 
++	# flush and re-add
++	if reset_with_tcp_filter "flush re-add" ns2 10.0.3.2 REJECT OUTPUT &&
++	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 1 2
++		# broadcast IP: no packet for this address will be received on ns1
++		pm_nl_add_endpoint $ns1 224.0.0.1 id 2 flags signal
++		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
++		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
++		local tests_pid=$!
++
++		wait_attempt_fail $ns2
++		chk_subflow_nr needtitle "before flush" 1
++
++		pm_nl_flush_endpoint $ns2
++		pm_nl_flush_endpoint $ns1
++		wait_rm_addr $ns2 0
++		ip netns exec "${ns2}" ${iptables} -D OUTPUT -s "10.0.3.2" -p tcp -j REJECT
++		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
++		wait_mpj $ns2
++		pm_nl_add_endpoint $ns1 10.0.3.1 id 2 flags signal
++		wait_mpj $ns2
++		kill_wait "${tests_pid}"
++		kill_tests_wait
++
++		chk_join_nr 2 2 2
++		chk_add_nr 2 2
++		chk_rm_nr 1 0 invert
++	fi
+ }
+ 
+ # [$1: error message]
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
