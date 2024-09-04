@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2538A1D9333;
-	Wed,  4 Sep 2024 14:33:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892041E871;
+	Wed,  4 Sep 2024 14:33:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460396; cv=none; b=NsfJM4t62pVQ90Q7BcCxyoq3OoKl64tPj11QbYC3frjKiR2XLb5toQ7jdI4Uz3KuEzmI24SQea9I9r7ZwkIfrpggC7iLZgmu+FPLdXleajjaQUZedNrpyFR2TvgjXCq9uOwK6vYLF9LJgvWnmHPW2OKY78z6uaeO5t+mKeQFfjA=
+	t=1725460399; cv=none; b=uIRBdjRBCd7DPBMZuWrK+uzskSb3b85Va0xKegR6fWJYWxp0KbAkTHHM/qF6TWYvzAw3J1L1OhPQEfaBycgDM7IBn2trEK79mfF38UTQKBJ9Kqa3haHPYMZg/HjJhKbpRX7b16MwJRM1XWIbcHqng39xhfmlVfTmjg8WYqFEwkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460396; c=relaxed/simple;
-	bh=NKDd2yuDDdtvsItKxUlH3Pk+YfpEbPY1GQ9/VMnWNnM=;
+	s=arc-20240116; t=1725460399; c=relaxed/simple;
+	bh=YwoHBhFskB8t6HWCR4gyIRzlfaToDf8lERyeUxWlKn4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=cHn3o7A0wolsmEllMzhhUeV7I9osI6ytbu4dNbFx7vKdSYwOEn9KhpjrDtusVIsdQPev7kgNQ4G/l+aI/o3DxiOkw0fa1JWvR5HgOZ1jhyAKawUuFdgupET5IU8GdUJrcIfhu+hQ8NUYFV+kjc0e5TcpmI8uAiikdK4HN+28Qlc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=SPzXQaOl; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=dsLFEIHBrUDjHijZehoMciYab5X9GMUW82UaD3O8y9Zh0D0pCnVbkWFqQRgd6WR1+rXSJEvlel5MfLANq2gI+PkjrqLMDN2OepcUnrlp6WITZLO17NJ6JpArODe2OWpULXcvc0v4bhoNLiC09UpnQ//GAg8XrTendjRLrLt3yVE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=IXRF8xmi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="SPzXQaOl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 561E5C4CEC2;
-	Wed,  4 Sep 2024 14:33:15 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="IXRF8xmi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 937C9C4CEC2;
+	Wed,  4 Sep 2024 14:33:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725460395;
-	bh=NKDd2yuDDdtvsItKxUlH3Pk+YfpEbPY1GQ9/VMnWNnM=;
+	s=korg; t=1725460399;
+	bh=YwoHBhFskB8t6HWCR4gyIRzlfaToDf8lERyeUxWlKn4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=SPzXQaOlR3kRKcWOPfVXAwOxb+f4185lrmQg6XcaJMYTj7mv8kIcjXzG9vJZeDqds
-	 ykIOjbwo0M36+s29haBuX3U6AjskpWS5tVVbvUC0E5/CHbDVyNZvdhGa0zSP+HMBtU
-	 WbSXdmrk177lLHcTf2i5Yb2opTlFVjzHnoUWaIg4=
-Subject: Patch "mptcp: pm: fullmesh: select the right ID later" has been added to the 6.1-stable tree
+	b=IXRF8xmi+r0VD+JTSflZsYqXsqw5TVgPQX4WkxMmdpbd6r1FNJcd6ippnGop+MYsS
+	 TGL6FKpoVCXrvaD7IWOAcsdN3YQz3xUeqCXZD4xJy9IOb8UJ7Z9ibIQyguo99K8RaO
+	 4HmoW2zmGvS9l5Sx8AlB2ppZuJLFn1kKQmuas3UM=
+Subject: Patch "selftests: mptcp: join: check re-using ID of closed subflow" has been added to the 6.1-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Wed, 04 Sep 2024 16:32:51 +0200
-In-Reply-To: <20240904105627.4074381-2-matttbe@kernel.org>
-Message-ID: <2024090450-account-churn-df45@gregkh>
+Date: Wed, 04 Sep 2024 16:32:52 +0200
+In-Reply-To: <20240904110510.4085066-2-matttbe@kernel.org>
+Message-ID: <2024090452-caddy-igloo-07d1@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,103 +44,123 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: pm: fullmesh: select the right ID later
+    selftests: mptcp: join: check re-using ID of closed subflow
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-pm-fullmesh-select-the-right-id-later.patch
+     selftests-mptcp-join-check-re-using-id-of-closed-subflow.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73001-greg=kroah.com@vger.kernel.org Wed Sep  4 12:58:26 2024
+From matttbe@kernel.org Wed Sep  4 13:05:24 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed,  4 Sep 2024 12:56:28 +0200
-Subject: mptcp: pm: fullmesh: select the right ID later
+Date: Wed,  4 Sep 2024 13:05:11 +0200
+Subject: selftests: mptcp: join: check re-using ID of closed subflow
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240904105627.4074381-2-matttbe@kernel.org>
+Message-ID: <20240904110510.4085066-2-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 09355f7abb9fbfc1a240be029837921ea417bf4f upstream.
+commit 65fb58afa341ad68e71e5c4d816b407e6a683a66 upstream.
 
-When reacting upon the reception of an ADD_ADDR, the in-kernel PM first
-looks for fullmesh endpoints. If there are some, it will pick them,
-using their entry ID.
+This test extends "delete and re-add" to validate the previous commit. A
+new 'subflow' endpoint is added, but the subflow request will be
+rejected. The result is that no subflow will be established from this
+address.
 
-It should set the ID 0 when using the endpoint corresponding to the
-initial subflow, it is a special case imposed by the MPTCP specs.
+Later, the endpoint is removed and re-added after having cleared the
+firewall rule. Before the previous commit, the client would not have
+been able to create this new subflow.
 
-Note that msk->mpc_endpoint_id might not be set when receiving the first
-ADD_ADDR from the server. So better to compare the addresses.
+While at it, extra checks have been added to validate the expected
+numbers of MPJ and RM_ADDR.
 
-Fixes: 1a0d6136c5f0 ("mptcp: local addresses fullmesh")
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
+
+Fixes: b6c08380860b ("mptcp: remove addr and subflow in PM netlink")
 Cc: stable@vger.kernel.org
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-12-38035d40de5b@kernel.org
+Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-4-38035d40de5b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.c, because the new 'mpc_addr' variable is
-  added where the 'local' one was, before commit b9d69db87fb7 ("mptcp:
-  let the in-kernel PM use mixed IPv4 and IPv6 addresses"), that is not
-  a candidate for the backports. This 'local' variable has been moved to
-  the new place to reduce the scope, and help with possible future
-  backports. ]
+[ Conflicts in mptcp_join.sh, because this subtest has been modified in
+  newer versions, e.g. commit 9095ce97bf8a ("selftests: mptcp: add
+  mptcp_info tests") added chk_mptcp_info check, commit 03668c65d153
+  ("selftests: mptcp: join: rework detailed report") changed the way
+  the info are displayed, commit 04b57c9e096a ("selftests: mptcp: join:
+  stop transfer when check is done (part 2)") uses the new
+  mptcp_lib_kill_wait helper instead of kill_tests_wait.
+  Conflicts have been resolved by not using the new helpers, the rest
+  was the same. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |   14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   25 +++++++++++++++++++-----
+ 1 file changed, 20 insertions(+), 5 deletions(-)
 
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -648,7 +648,7 @@ static unsigned int fill_local_addresses
- {
- 	struct sock *sk = (struct sock *)msk;
- 	struct mptcp_pm_addr_entry *entry;
--	struct mptcp_addr_info local;
-+	struct mptcp_addr_info mpc_addr;
- 	struct pm_nl_pernet *pernet;
- 	unsigned int subflows_max;
- 	int i = 0;
-@@ -656,6 +656,8 @@ static unsigned int fill_local_addresses
- 	pernet = pm_nl_get_pernet_from_msk(msk);
- 	subflows_max = mptcp_pm_get_subflows_max(msk);
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -402,9 +402,10 @@ reset_with_tcp_filter()
+ 	local ns="${!1}"
+ 	local src="${2}"
+ 	local target="${3}"
++	local chain="${4:-INPUT}"
  
-+	mptcp_local_address((struct sock_common *)msk, &mpc_addr);
-+
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_FULLMESH))
-@@ -673,7 +675,13 @@ static unsigned int fill_local_addresses
+ 	if ! ip netns exec "${ns}" ${iptables} \
+-			-A INPUT \
++			-A "${chain}" \
+ 			-s "${src}" \
+ 			-p tcp \
+ 			-j "${target}"; then
+@@ -3265,10 +3266,10 @@ endpoint_tests()
+ 		kill_tests_wait
+ 	fi
  
- 		if (msk->pm.subflows < subflows_max) {
- 			msk->pm.subflows++;
--			addrs[i++] = entry->addr;
-+			addrs[i] = entry->addr;
-+
-+			/* Special case for ID0: set the correct ID */
-+			if (mptcp_addresses_equal(&entry->addr, &mpc_addr, entry->addr.port))
-+				addrs[i].id = 0;
-+
-+			i++;
- 		}
- 	}
- 	rcu_read_unlock();
-@@ -682,6 +690,8 @@ static unsigned int fill_local_addresses
- 	 * 'IPADDRANY' local address
- 	 */
- 	if (!i) {
-+		struct mptcp_addr_info local;
-+
- 		memset(&local, 0, sizeof(local));
- 		local.family = msk->pm.remote.family;
+-	if reset "delete and re-add" &&
++	if reset_with_tcp_filter "delete and re-add" ns2 10.0.3.2 REJECT OUTPUT &&
+ 	   mptcp_lib_kallsyms_has "subflow_rebuild_header$"; then
+-		pm_nl_set_limits $ns1 1 1
+-		pm_nl_set_limits $ns2 1 1
++		pm_nl_set_limits $ns1 0 2
++		pm_nl_set_limits $ns2 0 2
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
  
+@@ -3277,10 +3278,24 @@ endpoint_tests()
+ 		sleep 0.5
+ 		chk_subflow_nr needtitle "after delete" 1
+ 
+-		pm_nl_add_endpoint $ns2 10.0.2.2 dev ns2eth2 flags subflow
++		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
+ 		wait_mpj $ns2
+ 		chk_subflow_nr "" "after re-add" 2
++
++		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
++		wait_attempt_fail $ns2
++		chk_subflow_nr "" "after new reject" 2
++
++		ip netns exec "${ns2}" ${iptables} -D OUTPUT -s "10.0.3.2" -p tcp -j REJECT
++		pm_nl_del_endpoint $ns2 3 10.0.3.2
++		pm_nl_add_endpoint $ns2 10.0.3.2 id 3 flags subflow
++		wait_mpj $ns2
++		chk_subflow_nr "" "after no reject" 3
++
+ 		kill_tests_wait
++
++		chk_join_nr 3 3 3
++		chk_rm_nr 1 1
+ 	fi
+ 
+ 	# remove and re-add
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
