@@ -1,229 +1,69 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9F9E1CFEC2;
-	Wed,  4 Sep 2024 10:57:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 420731CFECB;
+	Wed,  4 Sep 2024 11:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725447452; cv=none; b=qWZdHYSE9l+WijOlSvNcF/RXxjKJ7zrMkROVDWWqwMYNJJC+RHFXXqjDKF5M/cdwHQYCvrHuKOO+vht8PPvVfKtzptDkCRYbSYlnWIH8WAjrU0f00tALKlhsMQpE8jlBsIezWmvkUqvAjDT2VFeom3+a099ZG+gRLRu6tqQfwns=
+	t=1725447797; cv=none; b=CG5oOYuhnlGH4LJtPoCtE6hP0/P4Bp320pf0YrbzIAiQb/ju3TLOh7fUEgIDZuq9zxU2tZ9ui1i3NoKQdFCEuVt4vjkxP610QULui4s+16qGmyg3Ouw2rsV47brPbWSmb4dVS/30B1ng4f2Z2NT+FZVfiBKeT6vtxBxbd1+rvYY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725447452; c=relaxed/simple;
-	bh=RncFxiJsAUUV8VzKh7EZffKWsMGXTyj9/Tkfx5WGeDk=;
+	s=arc-20240116; t=1725447797; c=relaxed/simple;
+	bh=Nb5xjIIce9wUtDPSeZCSRm/Ua+5kp+iBduiF2bdExoo=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=llRx3WHPkgaG5SpwGBquCB8RjJqR7rm3oB9mqLGDyzm5xACkxx76Bk+xm3pJazmiVM0ggn0EmX7Ic2YMaFM2AIJ5ncntFN2Sjld45ehHEH1mR4+Yo3bU4X52l2YjW7tLdb0nT15fQK+YPccQPEEN94MGJOCovIMdstbR9dKgRiM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HpIxHr6H; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=M8E2sIa9s2k+tyCv/iLKYs268Wv3qTd7G/PRpJoqBMD7MJRrq3TkX0WXBL6aTiTScghNPNMHbssTxYyaI3ShMKIxKuhIlX0VQNp2RjO10l45d19s5ggkX6f3vAOe/2K7I1o3B8VGxCHtqGY65M2IFUWDYoXJA01snWiqJsj1cZA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qJclhyVL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HpIxHr6H"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98FBBC4CEC2;
-	Wed,  4 Sep 2024 10:57:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qJclhyVL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D20C4CEC2;
+	Wed,  4 Sep 2024 11:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725447452;
-	bh=RncFxiJsAUUV8VzKh7EZffKWsMGXTyj9/Tkfx5WGeDk=;
+	s=k20201202; t=1725447796;
+	bh=Nb5xjIIce9wUtDPSeZCSRm/Ua+5kp+iBduiF2bdExoo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=HpIxHr6Ha5Dm7+Epsv3J/RvBh9p/EYM7VDFCDYwgS3gBAqPudk25DXiqb+ERY2JSa
-	 mOaPW1zc24jtwkaBPJM0V7TlN/7mg7VHFlkuBkNWswl61pVYrfZPPKNBr7IhI50bIA
-	 ELWjwkVz+llfQOoiy8i4w70tSIpLxixkb2FYlJf5ttyCA/DAuGZiDBAZ9ik9WBfP/0
-	 T5dxxa6c+kPy05EnrvQu5xaBwLGuv5Pj17ffcpTSgjsnK/Aevh67I9EHhLg9KDM9ad
-	 8lmHCdoex+PhdI5b8d8sHSUZbWLzV0AHgpna3+DLt+9ktkkVlew9ATATPAGx/rW0O+
-	 psCmnzgLI2Wag==
+	b=qJclhyVLjkYt3kzR0Osil2lToA6LSDYT82G1i5vZSOmJa8jkukf4n0aMLldEeYB4y
+	 MkG+5bk3bl8zQpCj3tM56pxpkmfxt0C65JyG3s95uEu6BC1H/DH2h+Z+ehI8zvyV4A
+	 h2ZGwloNppqhRb0oe1QOI93TgG/BTu4ZdjhC31fpPu2lmQyEPn28wGHrcV72H9IRUT
+	 uh9UA0ZUx4tX9hNQH9lKFjIy3gazWEPqtXnW3QwM0EDVnhAlYs1Ed3iPhnSOQ1qBXj
+	 PXdkkbesp/v2WfcLEBHv1XtexfkF5O8DO6lydMBhXbnKk1Acuvgj5Oou7JIVDPjCGJ
+	 QV2n3ndgo0Gdw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
 	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y] mptcp: pm: avoid possible UaF when selecting endp
-Date: Wed,  4 Sep 2024 12:57:22 +0200
-Message-ID: <20240904105721.4075460-2-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.1.y 0/2] Backport of "mptcp: pm: reuse ID 0 after delete and re-add" and more
+Date: Wed,  4 Sep 2024 13:03:07 +0200
+Message-ID: <20240904110306.4082410-4-matttbe@kernel.org>
 X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024082656-bamboo-skinless-9366@gregkh>
-References: <2024082656-bamboo-skinless-9366@gregkh>
+In-Reply-To: <20240904105721.4075460-2-matttbe@kernel.org>
+References: <20240904105721.4075460-2-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6195; i=matttbe@kernel.org; h=from:subject; bh=RncFxiJsAUUV8VzKh7EZffKWsMGXTyj9/Tkfx5WGeDk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2D0RTJ3QTcGzQOPpXnsz2soQkQaFj+Q67coX4 MSyZ5fxMkSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtg9EQAKCRD2t4JPQmmg c51tEACRZRRZ4y5K9hTBb/FUuqCuAoBnelBMc18hkKc16bvGQ78J2ZY6Ulr3VXZf/mES+GSshD7 eT1OHrO/d0tdh7ZwRVqIVkVyb1bo02rxo+Hvkj0Fbm8cZ7ULvFno0+keqbWlCjWp6R+lkN++swr Ieh9E2J3fKoPsrwTf/Zp34RO9TpJ3ppUF4DXrPxfbd9thOklAbCDRgqPIvuhy1L9SJhzZXW8zvB Xw5fl/vrNQT0kSVH8a8alPyPvXX+ytpItGj0Pm+V68JFrngP+OGykS2XSmnceh6lu2+CO5N0Hvg QaYX4yd4MCYbzgVUoTxajxeYVQ1zLUc16QYvF4OAQi3vIPrfZnwjXY7UVAEq6HB9iDc/42AS1VU HvkKTH5DVNr2rHeN5II3RG8l9wb33VPI/G6tUFyW5q87brXMFcOG7+6Tej/obCeXht0tXVP7wGz NMBELSLIkaO93fnaFKrbbxveI3bNkfhJCWs0CWayJyxCuJyTR8ZNUkprjL0a/JE7pKGSt91tQUD 08PrNtxy+QZeWS30xIaLWG56RD6umbyfxR82CN5wcCnW5lr5l99pqRKdPtyyCSEEZGC8UoUR69y fucTzU5396156xlqtwWNHsQxMy8zTXuX8sSKng+6G7R9cNIB+VcDGFJFNqXt0RuECS0j9AntiEE 7WMzBInjvV1G3hA==
+Content-Type: text/plain; charset=UTF-8
+X-Developer-Signature: v=1; a=openpgp-sha256; l=691; i=matttbe@kernel.org; h=from:subject; bh=Nb5xjIIce9wUtDPSeZCSRm/Ua+5kp+iBduiF2bdExoo=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2D5qE9sk84dHvOmouhSL6Bc2gA0c6B8Y5OrDG 8VKjma78SKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZtg+agAKCRD2t4JPQmmg c9gZD/9YmVrOGzkU+jCGrRehy6gyG3LZOEXp+gYoopRGoPZ/9BbMX61alQ4cmtqJcfPOHmCtdeW 10m4QbKO32zF+7mnq6pH7ZclqSFktvEJjmRo1XF24M8pZ66InvQsmisBYSa6IvPegYpmEvPj6a3 8ww2sh6XS3pny9Cxg+kxa2vD4emoXJ6+Xg+U5Cyh3JU7o0l2csq0kUdMVB8KS80QGEf2GBb+uMb om70sOPqOFqK/MqWHwoZ3vMOdndUz+H8sLvW3sf6ydzWXSKfNs1vK0RYshYOYtyeJfOp/3JCSvb IIpN0XSQJLnsK8GvzVsIaczeY76Rjy8jKWD3Mr8Eb6kOX794y7UH8EeZOhHBoCdNgpBu+bolQTw qY7+1C2EEqVeE3bpmV2+SAS7fmvK2ioA/laQvXsNhHWrd9x61hALg4OnX5FgT8jtTVxO+0n3Vgu NfPH+0Ab0YVLGG9T3JAQyN+5PsLXsvrw5qg7k97cmQ0rKlOEvTtccATjD8t9X8dHQUlMntEa+lX uN+b+zVf/EtfOgxT124CVbtLmt/f+jPKHqqQ6xhuImpU1Lci0cj/H2+l+9b3hFEx3sizR6ZVwOP i5/QsvCJyjH1Vwn9696kfZ1l46w83BQaVVSI88SeaqrMjL7Y3MTXPUrxDSkj0v6Onj1u1MJtolI +VPZJ93Bf5yq5cA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-commit 48e50dcbcbaaf713d82bf2da5c16aeced94ad07d upstream.
+After having applied the patch "mptcp: pm: avoid possible UaF when
+selecting endp" in v6.1 with the adaptations proposed in the parent
+message [1], the two following patches can be applied without conflicts:
 
-select_local_address() and select_signal_address() both select an
-endpoint entry from the list inside an RCU protected section, but return
-a reference to it, to be read later on. If the entry is dereferenced
-after the RCU unlock, reading info could cause a Use-after-Free.
+- 8b8ed1b429f8 ("mptcp: pm: reuse ID 0 after delete and re-add")
+- 9366922adc6a ("mptcp: pm: fix ID 0 endp usage after multiple re-creations")
 
-A simple solution is to copy the required info while inside the RCU
-protected section to avoid any risk of UaF later. The address ID might
-need to be modified later to handle the ID0 case later, so a copy seems
-OK to deal with.
+[1] https://lore.kernel.org/20240904105721.4075460-2-matttbe@kernel.org
 
-Reported-by: Paolo Abeni <pabeni@redhat.com>
-Closes: https://lore.kernel.org/45cd30d3-7710-491c-ae4d-a1368c00beb1@redhat.com
-Fixes: 01cacb00b35c ("mptcp: add netlink-based PM")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-14-38035d40de5b@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.c, because the context has been modified in
-  commit b9d69db87fb7 ("mptcp: let the in-kernel PM use mixed IPv4 and
-  IPv6 addresses"), which is not a candidate for the backports. The same
-  modifications have been applied in this version. The conflict in
-  mptcp_pm_create_subflow_or_signal_addr() has been resolved by taking
-  the newer version, which skip a lock if it is not needed. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 68 +++++++++++++++++++++++-------------------
- 1 file changed, 37 insertions(+), 31 deletions(-)
+Matthieu Baerts (NGI0) (2):
+  mptcp: pm: reuse ID 0 after delete and re-add
+  mptcp: pm: fix ID 0 endp usage after multiple re-creations
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a152a3474d2c..44b036abe30f 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -150,12 +150,14 @@ static bool lookup_subflow_by_daddr(const struct list_head *list,
- 	return false;
- }
- 
--static struct mptcp_pm_addr_entry *
-+static bool
- select_local_address(const struct pm_nl_pernet *pernet,
--		     const struct mptcp_sock *msk)
-+		     const struct mptcp_sock *msk,
-+		     struct mptcp_pm_addr_entry *new_entry)
- {
- 	const struct sock *sk = (const struct sock *)msk;
--	struct mptcp_pm_addr_entry *entry, *ret = NULL;
-+	struct mptcp_pm_addr_entry *entry;
-+	bool found = false;
- 
- 	msk_owned_by_me(msk);
- 
-@@ -177,17 +179,21 @@ select_local_address(const struct pm_nl_pernet *pernet,
- 				continue;
- 		}
- 
--		ret = entry;
-+		*new_entry = *entry;
-+		found = true;
- 		break;
- 	}
- 	rcu_read_unlock();
--	return ret;
-+
-+	return found;
- }
- 
--static struct mptcp_pm_addr_entry *
--select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
-+static bool
-+select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk,
-+		      struct mptcp_pm_addr_entry *new_entry)
- {
--	struct mptcp_pm_addr_entry *entry, *ret = NULL;
-+	struct mptcp_pm_addr_entry *entry;
-+	bool found = false;
- 
- 	rcu_read_lock();
- 	/* do not keep any additional per socket state, just signal
-@@ -202,11 +208,13 @@ select_signal_address(struct pm_nl_pernet *pernet, const struct mptcp_sock *msk)
- 		if (!(entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL))
- 			continue;
- 
--		ret = entry;
-+		*new_entry = *entry;
-+		found = true;
- 		break;
- 	}
- 	rcu_read_unlock();
--	return ret;
-+
-+	return found;
- }
- 
- unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk)
-@@ -527,9 +535,10 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info,
- 
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
--	struct mptcp_pm_addr_entry *local, *signal_and_subflow = NULL;
- 	struct sock *sk = (struct sock *)msk;
-+	struct mptcp_pm_addr_entry local;
- 	unsigned int add_addr_signal_max;
-+	bool signal_and_subflow = false;
- 	unsigned int local_addr_max;
- 	struct pm_nl_pernet *pernet;
- 	unsigned int subflows_max;
-@@ -580,23 +589,22 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		if (msk->pm.addr_signal & BIT(MPTCP_ADD_ADDR_SIGNAL))
- 			return;
- 
--		local = select_signal_address(pernet, msk);
--		if (!local)
-+		if (!select_signal_address(pernet, msk, &local))
- 			goto subflow;
- 
- 		/* If the alloc fails, we are on memory pressure, not worth
- 		 * continuing, and trying to create subflows.
- 		 */
--		if (!mptcp_pm_alloc_anno_list(msk, &local->addr))
-+		if (!mptcp_pm_alloc_anno_list(msk, &local.addr))
- 			return;
- 
--		__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+		__clear_bit(local.addr.id, msk->pm.id_avail_bitmap);
- 		msk->pm.add_addr_signaled++;
--		mptcp_pm_announce_addr(msk, &local->addr, false);
-+		mptcp_pm_announce_addr(msk, &local.addr, false);
- 		mptcp_pm_nl_addr_send_ack(msk);
- 
--		if (local->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
--			signal_and_subflow = local;
-+		if (local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
-+			signal_and_subflow = true;
- 	}
- 
- subflow:
-@@ -607,24 +615,22 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 		bool fullmesh;
- 		int i, nr;
- 
--		if (signal_and_subflow) {
--			local = signal_and_subflow;
--			signal_and_subflow = NULL;
--		} else {
--			local = select_local_address(pernet, msk);
--			if (!local)
--				break;
--		}
-+		if (signal_and_subflow)
-+			signal_and_subflow = false;
-+		else if (!select_local_address(pernet, msk, &local))
-+			break;
- 
--		fullmesh = !!(local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
-+		fullmesh = !!(local.flags & MPTCP_PM_ADDR_FLAG_FULLMESH);
- 
- 		msk->pm.local_addr_used++;
--		nr = fill_remote_addresses_vec(msk, &local->addr, fullmesh, addrs);
--		if (nr)
--			__clear_bit(local->addr.id, msk->pm.id_avail_bitmap);
-+		__clear_bit(local.addr.id, msk->pm.id_avail_bitmap);
-+		nr = fill_remote_addresses_vec(msk, &local.addr, fullmesh, addrs);
-+		if (nr == 0)
-+			continue;
-+
- 		spin_unlock_bh(&msk->pm.lock);
- 		for (i = 0; i < nr; i++)
--			__mptcp_subflow_connect(sk, &local->addr, &addrs[i]);
-+			__mptcp_subflow_connect(sk, &local.addr, &addrs[i]);
- 		spin_lock_bh(&msk->pm.lock);
- 	}
- 	mptcp_pm_nl_check_work_pending(msk);
+ net/mptcp/pm_netlink.c | 17 +++++++++++++++--
+ 1 file changed, 15 insertions(+), 2 deletions(-)
+
 -- 
 2.45.2
 
