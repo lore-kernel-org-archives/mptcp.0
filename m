@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 92BDD29402;
-	Wed,  4 Sep 2024 14:36:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C65763D;
+	Wed,  4 Sep 2024 14:37:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460620; cv=none; b=aDTInOx3QpCLJ9nj7rc/hyAX2rAXowQb3Jz+E2XN5jtdNI0TrnUdYItRqVucJSNRg+EV7WZfJ7lPRdkMyddS09X4QsZ2O/l/luzVzVaV/gFLt294Vma5rCONXzoYaoRcNsp7k5mjVoViJ8G74fnz5ydciKYOXP+bcyfioHcvuhw=
+	t=1725460627; cv=none; b=DnRJrKJJVPl/dd394CiLwb9hCPYH11G6kMjPozq5Se4yuS9rYvmvxA1yinjS511mDc2Ga3RsiXTyF1GMa2LrXzLAkGm9/VkmNTH/gPb73+VpnS3T8p+ZM0WmK9sWM+5Y5TRFi27kavMVhGqJGT0pjDvjzBlCJLrOydl5U9XYoVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460620; c=relaxed/simple;
-	bh=wQHg/KbLw+GdTe2GQ+kFBfA3b1R7VWO7/5YPo5biREA=;
+	s=arc-20240116; t=1725460627; c=relaxed/simple;
+	bh=DuzjwOCv7T/oTL8VaVZ6ohs2gb8IDBnXfeGZFwmCHQc=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=D0QRoZavg6K6yrcovDIjEZNodKaQG7waJwHyt2M/LBae6B8wd0mlVAEhhQyi7J2zbPBp/EzmApwXgEQp9ltIvQtifiuC1b512B/S8J3O08FaNYZ7ZRFgSDxO/DDm5+dPOL/BGObcMZ4VJZ3z0lyWE2uxcCfXSLZJcg+yU+nju9Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=RosMCypV; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=Qtq68tnkTmdESNlg3XJeVKaNXx2D1eUGaXGF/asl/CqA73SXNMf2xs+BhxaK2obIVobVRn9Y3UZhCIxLEXqG5vl2Rs6cIoYfW6mWZaJO4+rcdSPk4R9CkkIxZa9EZqkrHe+OsOBYBWo2wD2e2V3TjV3F7VdJB4pCmETPJYGr/xc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=tCeewa93; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="RosMCypV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7979FC4CEC3;
-	Wed,  4 Sep 2024 14:36:58 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="tCeewa93"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A844C4CEC9;
+	Wed,  4 Sep 2024 14:37:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725460619;
-	bh=wQHg/KbLw+GdTe2GQ+kFBfA3b1R7VWO7/5YPo5biREA=;
+	s=korg; t=1725460626;
+	bh=DuzjwOCv7T/oTL8VaVZ6ohs2gb8IDBnXfeGZFwmCHQc=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=RosMCypVRnKdntKTnDdj+dgOyHz2UOc+ARh99qibo05CGkwQRYbOE/6ovEzou67MG
-	 bzka50N3bj6d6HqOJ2VaH2ZuN1Em3VyrCSeu/W+WXUsgYEw8UR5ZYsPVsJ77Yx7K82
-	 Yiw32y9/HIzPaZqjyXmVd0WWasB/2hWMAa0f988I=
-Subject: Patch "selftests: mptcp: join: check re-re-adding ID 0 endp" has been added to the 6.1-stable tree
-To: gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=tCeewa936uzfNobr8VYgqLusayo+5KhpWu+NRjVj0zpXShCH/4XL8kIIU21rRyDqy
+	 7GPfLadCSRpNqJuUABHAwZWgqgI9mB3srg5SNILFZ5YoJd0iVo4dshMZoWZVBNKOI5
+	 /fIaOpdiL5sq722M9KmRYTYfdiATWqK24H8E/lsE=
+Subject: Patch "selftests: mptcp: join: no extra msg if no counter" has been added to the 6.1-stable tree
+To: geliang@kernel.org,gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Wed, 04 Sep 2024 16:36:55 +0200
-In-Reply-To: <20240904111302.4095059-2-matttbe@kernel.org>
-Message-ID: <2024090455-district-barista-2478@gregkh>
+Date: Wed, 04 Sep 2024 16:36:56 +0200
+In-Reply-To: <20240904111233.4094425-2-matttbe@kernel.org>
+Message-ID: <2024090456-vaporizer-relatable-59e8@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,105 +44,117 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: join: check re-re-adding ID 0 endp
+    selftests: mptcp: join: no extra msg if no counter
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-join-check-re-re-adding-id-0-endp.patch
+     selftests-mptcp-join-no-extra-msg-if-no-counter.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73021-greg=kroah.com@vger.kernel.org Wed Sep  4 13:16:18 2024
+From stable+bounces-73020-greg=kroah.com@vger.kernel.org Wed Sep  4 13:14:55 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed,  4 Sep 2024 13:13:02 +0200
-Subject: selftests: mptcp: join: check re-re-adding ID 0 endp
+Date: Wed,  4 Sep 2024 13:12:34 +0200
+Subject: selftests: mptcp: join: no extra msg if no counter
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>
-Message-ID: <20240904111302.4095059-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Geliang Tang <geliang@kernel.org>, Paolo Abeni <pabeni@redhat.com>
+Message-ID: <20240904111233.4094425-2-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit d397d7246c11ca36c33c932bc36d38e3a79e9aa0 upstream.
+commit 76a2d8394cc183df872adf04bf636eaf42746449 upstream.
 
-This test extends "delete and re-add" to validate the previous commit:
-when the endpoint linked to the initial subflow (ID 0) is re-added
-multiple times, it was no longer being used, because the internal linked
-counters are not decremented for this special endpoint: it is not an
-additional endpoint.
+The checksum and fail counters might not be available. Then no need to
+display an extra message with missing info.
 
-Here, the "del/add id 0" steps are done 3 times to unsure this case is
-validated.
+While at it, fix the indentation around, which is wrong since the same
+commit.
 
-The 'Fixes' tag here below is the same as the one from the previous
-commit: this patch here is not fixing anything wrong in the selftests,
-but it validates the previous fix for an issue introduced by this commit
-ID.
-
-Fixes: 3ad14f54bd74 ("mptcp: more accurate MPC endpoint tracking")
+Fixes: 47867f0a7e83 ("selftests: mptcp: join: skip check if MIB counter not supported")
 Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflicts in mptcp_join.sh, because the helpers are different in this
-  version:
-  - run_tests has been modified a few times to reduce the number of
-    positional parameters
-  - no chk_mptcp_info helper
-  - chk_subflow_nr taking an extra parameter
-  - kill_tests_wait instead of mptcp_lib_kill_wait ]
+[ Conflicts in mptcp_join.sh, because the context is different, but the
+  exact same fix can still be applied on the modified lines: adding
+  '[ -n "$count" ]', and fixing the indentation. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |   23 +++++++++++++----------
- 1 file changed, 13 insertions(+), 10 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3312,7 +3312,7 @@ endpoint_tests()
- 		pm_nl_set_limits $ns2 0 3
- 		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.2.2 id 2 dev ns2eth2 flags subflow
--		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_20 2>/dev/null &
-+		run_tests $ns1 $ns2 10.0.1.1 4 0 0 speed_5 2>/dev/null &
+@@ -1252,13 +1252,13 @@ chk_csum_nr()
  
- 		wait_mpj $ns2
- 		pm_nl_del_endpoint $ns2 2 10.0.2.2
-@@ -3333,18 +3333,21 @@ endpoint_tests()
- 		wait_mpj $ns2
- 		chk_subflow_nr "" "after no reject" 3
- 
--		pm_nl_del_endpoint $ns2 1 10.0.1.2
--		sleep 0.5
--		chk_subflow_nr "" "after delete id 0" 2
--
--		pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow
--		wait_mpj $ns2
--		chk_subflow_nr "" "after re-add id 0" 3
-+		local i
-+		for i in $(seq 3); do
-+			pm_nl_del_endpoint $ns2 1 10.0.1.2
-+			sleep 0.5
-+			chk_subflow_nr "" "after delete id 0 ($i)" 2
-+
-+			pm_nl_add_endpoint $ns2 10.0.1.2 id 1 dev ns2eth1 flags subflow
-+			wait_mpj $ns2
-+			chk_subflow_nr "" "after re-add id 0 ($i)" 3
-+		done
- 
- 		kill_tests_wait
- 
--		chk_join_nr 4 4 4
--		chk_rm_nr 2 2
-+		chk_join_nr 6 6 6
-+		chk_rm_nr 4 4
+ 	printf "%-${nr_blank}s %s" " " "sum"
+ 	count=$(get_counter ${ns1} "MPTcpExtDataCsumErr")
+-	if [ "$count" != "$csum_ns1" ]; then
++	if [ -n "$count" ] && [ "$count" != "$csum_ns1" ]; then
+ 		extra_msg="$extra_msg ns1=$count"
  	fi
+ 	if [ -z "$count" ]; then
+ 		echo -n "[skip]"
+ 	elif { [ "$count" != $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 0 ]; } ||
+-	   { [ "$count" -lt $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 1 ]; }; then
++	     { [ "$count" -lt $csum_ns1 ] && [ $allow_multi_errors_ns1 -eq 1 ]; }; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns1"
+ 		fail_test
+ 		dump_stats=1
+@@ -1267,13 +1267,13 @@ chk_csum_nr()
+ 	fi
+ 	echo -n " - csum  "
+ 	count=$(get_counter ${ns2} "MPTcpExtDataCsumErr")
+-	if [ "$count" != "$csum_ns2" ]; then
++	if [ -n "$count" ] && [ "$count" != "$csum_ns2" ]; then
+ 		extra_msg="$extra_msg ns2=$count"
+ 	fi
+ 	if [ -z "$count" ]; then
+ 		echo -n "[skip]"
+ 	elif { [ "$count" != $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 0 ]; } ||
+-	   { [ "$count" -lt $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 1 ]; }; then
++	     { [ "$count" -lt $csum_ns2 ] && [ $allow_multi_errors_ns2 -eq 1 ]; }; then
+ 		echo "[fail] got $count data checksum error[s] expected $csum_ns2"
+ 		fail_test
+ 		dump_stats=1
+@@ -1315,13 +1315,13 @@ chk_fail_nr()
  
- 	# remove and re-add
+ 	printf "%-${nr_blank}s %s" " " "ftx"
+ 	count=$(get_counter ${ns_tx} "MPTcpExtMPFailTx")
+-	if [ "$count" != "$fail_tx" ]; then
++	if [ -n "$count" ] && [ "$count" != "$fail_tx" ]; then
+ 		extra_msg="$extra_msg,tx=$count"
+ 	fi
+ 	if [ -z "$count" ]; then
+ 		echo -n "[skip]"
+ 	elif { [ "$count" != "$fail_tx" ] && [ $allow_tx_lost -eq 0 ]; } ||
+-	   { [ "$count" -gt "$fail_tx" ] && [ $allow_tx_lost -eq 1 ]; }; then
++	     { [ "$count" -gt "$fail_tx" ] && [ $allow_tx_lost -eq 1 ]; }; then
+ 		echo "[fail] got $count MP_FAIL[s] TX expected $fail_tx"
+ 		fail_test
+ 		dump_stats=1
+@@ -1331,13 +1331,13 @@ chk_fail_nr()
+ 
+ 	echo -n " - failrx"
+ 	count=$(get_counter ${ns_rx} "MPTcpExtMPFailRx")
+-	if [ "$count" != "$fail_rx" ]; then
++	if [ -n "$count" ] && [ "$count" != "$fail_rx" ]; then
+ 		extra_msg="$extra_msg,rx=$count"
+ 	fi
+ 	if [ -z "$count" ]; then
+ 		echo -n "[skip]"
+ 	elif { [ "$count" != "$fail_rx" ] && [ $allow_rx_lost -eq 0 ]; } ||
+-	   { [ "$count" -gt "$fail_rx" ] && [ $allow_rx_lost -eq 1 ]; }; then
++	     { [ "$count" -gt "$fail_rx" ] && [ $allow_rx_lost -eq 1 ]; }; then
+ 		echo "[fail] got $count MP_FAIL[s] RX expected $fail_rx"
+ 		fail_test
+ 		dump_stats=1
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
