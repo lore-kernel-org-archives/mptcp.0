@@ -1,124 +1,64 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79C181DA2F8;
-	Wed,  4 Sep 2024 12:59:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A30FC1DB53E;
+	Wed,  4 Sep 2024 13:38:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725454750; cv=none; b=bsIylE7qos3rGqJzVlupKrPVBsCryO0nU2DF16DWAWNFt+STyG1Cy0Sewf6QtXFiRgWQXa2G7Aom3uS8g1AWEauTcQ8fCGq/+OcumsjDR/kseQrESXPtT+ooE0zV8TGilLDm+xyloKiTz7xgKdx5jbtM9mvX/285qwFxginvnaw=
+	t=1725457093; cv=none; b=EWYrzkBYr1H4cUfDbTP15QLOO2u1Z/VhgSEpIJj3UghM8huvKfeG9TvRoJ3iLF/1M3mEWaZk3wNGNQLRdA4SKjKKWWhFpD0r1Hqvj/ncvIhF4KZNzyv+n8Z+lfXjTTPmnujkh0TefB4yQeNZCCLBSdTB0MUMbPrfBLS06yBhcfs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725454750; c=relaxed/simple;
-	bh=1/R2z0kZ0U/PBor35M5Yn+s1t4FCzjvMNUAowIyng0k=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YxpoHwASFvRrnFUqsSVOn3ZCAEiftrg0c25myAfQTJwDvYGuL0GTvXvz7MSHk0NFhwXJYT32i6yB97h/3oXH9HanBQl6n5Xezi1tvOGGH4cDPnog9Nvkoa6/P6k0Y7RzJcNEQPZlg7m+f615eXhLQo2AVeeARSTPourVQZuF0do=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHF2Cwro; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725457093; c=relaxed/simple;
+	bh=tb7YFc96A14upkwj8vCfBBAkfuHYUF1Yg5D1DPPQqQw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=aaSib6A0NKhYJHJum2HnwNUlBUnPpxMaRT6oXQqLSxnWa2l8mD5h4UozeBYTA5WAUlqR2Q/PVIyd5HaQ1AKFwjFtbxsTRvM0hRq+MmqgYz1C21QDV7P7LFbE7PcdW0PwwigX79W3jnFIMgIhuF1qfnqhTE2MD7U0jZe4czGynr4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkMGZgsY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHF2Cwro"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C9417C4CEC2;
-	Wed,  4 Sep 2024 12:59:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkMGZgsY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E9ABEC4CEC2;
+	Wed,  4 Sep 2024 13:38:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725454750;
-	bh=1/R2z0kZ0U/PBor35M5Yn+s1t4FCzjvMNUAowIyng0k=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XHF2CwrocAYjhBqHtSo5kNRPKuBGbXfYG041MyTu/Zu22U/pb6eHHC5ZL1N6oY5yt
-	 5Qv6p3/x7OrSSV3ctj7RQ2bV/fyfrrBJwWfMT14K9OBcmfrkcm/B29PaYh2yqGTR7n
-	 GLdhSsnSHc2JJTrkVeRPR7VcTMBFWX16NxH8+SVfYyjr2KK1tgwvOhJUE0LM3TCwyp
-	 MLZ2ZYkqL1rDxyEemadsHd/xWOebpIlM/o5qBt7KNQeepWy5ub63BwLmmm/HJ7l83b
-	 SdRHCMGVNSmzyBGZFtJ0a80r73PUJkUOMGFaJkRtdPg0pFmKejTPdFwawtxUjXYR9+
-	 9fUADTLit/jiA==
-Message-ID: <a5f25f18-d60f-4544-9f28-3a463911fd0b@kernel.org>
-Date: Wed, 4 Sep 2024 14:59:07 +0200
+	s=k20201202; t=1725457093;
+	bh=tb7YFc96A14upkwj8vCfBBAkfuHYUF1Yg5D1DPPQqQw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=EkMGZgsY4dbvnmwtqQF7l+GD/xg6ocHUsNFRV2onv4TS/s+1W/MzmapBqI/HjxcRd
+	 714x6eEV2/nZ7CS/M6+xbgThSve+iLYMvxL/+XexSY9Nzi/VZdH6m2cjMOkTbsKqv3
+	 AEu/Bp6hiYEFQdK+EaxPgVcjSFPKOdDJf0QMTp86CroFMMvKyG13B97mbvIY+d1VXa
+	 v3tL0MdY5kocoF5/ihAaDdzPX2kJUfC4NFsWOZyoUgbQxgi4cmXmJky0Uyv4MKEP5z
+	 ouoBRgmMlN49yliFzIG1OTwQVHIlF7/lNoJYAFAQ9rkVi6jwCf95BSvrR1E5uZYAX8
+	 XrMfgdwYtTreg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 6.6.y 0/2] Fixes for recent backports
+Date: Wed,  4 Sep 2024 15:37:56 +0200
+Message-ID: <20240904133755.67974-4-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.6.y 2/4] selftests: mptcp: join: test for flush/re-add
- endpoints
-Content-Language: en-GB
-To: gregkh@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- stable@vger.kernel.org, mptcp@lists.linux.dev
-References: <2024082617-capture-unbolted-5880@gregkh>
- <20240903100807.3365691-8-matttbe@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20240903100807.3365691-8-matttbe@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=598; i=matttbe@kernel.org; h=from:subject; bh=tb7YFc96A14upkwj8vCfBBAkfuHYUF1Yg5D1DPPQqQw=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2GKzcwpXxW0mcjYaZccatXieH4/FawSHSPOxw +vj3c+YeLuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZthiswAKCRD2t4JPQmmg c59OD/9G+dj592x+CNFkQ+29pJyFUAkFGValkyhPiKGvgN5VNZUqflrgKXhYmL7Wg6Ya26TPIWq AIJT1zEw7HiD/CkPfJ1gEvPf+nYpg6+Xdmk9KVgiKWsCoYWE5w2cNjJ9J58CAA+Rtvi7yOsoAg1 qnu5CyQ/qtGbmS6ky82j3LJGZBLSu9/4uNS9Uds6jh+KVF0BVC4G20IAl4UKscjgi0298UTFqkC Ojs5DlAS6orHES5X4I0gv9FrxgMXbHamLEsiyee4hzzxXSjiyt4ohqZhHaydgrWxVJZwudDnRth XgnZumNr3wasWmNWWEqMZo53kke4qH6pQhRRDuAHC4p/HcgopPu3XJI8uA9S9BevPTd8SqxB7/h dINN1s743H8urR1ZZCXxxTTrFUHPsJsE0OxL2qn102MJ5+vC9azPUszZ1+OOqNHDmTqrBKnwdL7 6/ENyTv4IGcMS9xP9ixRh7F4NlFv7ZoslC4uUY3k2caYtXpnHpqTFFes4GVt3Gl+Mu2+x63pD6l WWtQ02PJrQaUo7EBoC8qotLba8042a1QgxCVP+VZXoXmIsBH9y3WHHzv+6s6aRJcpbZrC+mjfVr MYnYhwJeiit0izyawxxViXdNaF1WWsipJGbpuxiStyLi1A0mYLXMs7XyH2Hg0EXjGJqIIWnIMHa 5GHyBZNFlLHly8g==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Greg, Sasha,
+A few commits have been recently queued to v6.6 and needs to be adapted
+for this kernel version:
 
-On 03/09/2024 12:08, Matthieu Baerts (NGI0) wrote:
-> commit e06959e9eebdfea4654390f53b65cff57691872e upstream.
-> 
-> After having flushed endpoints that didn't cause the creation of new
-> subflows, it is important to check endpoints can be re-created, re-using
-> previously used IDs.
-> 
-> Before the previous commit, the client would not have been able to
-> re-create the subflow that was previously rejected.
-> 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the selftests,
-> but it validates the previous fix for an issue introduced by this commit
-> ID.
+  - 38f027fca1b7 ("selftests: mptcp: dump userspace addrs list")
+  - 4cc5cc7ca052 ("selftests: mptcp: userspace pm get addr tests")
+  - b2e2248f365a ("selftests: mptcp: userspace pm create id 0 subflow")
 
-FYI, Sasha has recently queued all the patches from this series for
-v6.6, except this one, the backport of e06959e9eebd ("selftests: mptcp:
-join: test for flush/re-add endpoints").
+Matthieu Baerts (NGI0) (2):
+  selftests: mptcp: join: disable get and dump addr checks
+  selftests: mptcp: join: stop transfer when check is done (part 2.2)
 
-In theory, this commit can be applied without any conflicts now that
-commit b5e2fb832f48 ("selftests: mptcp: add explicit test case for
-remove/readd") has been queued in v6.6.
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.45.2
 
