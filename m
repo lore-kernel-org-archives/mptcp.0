@@ -1,42 +1,50 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 914EC1CC16B
-	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 10:09:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D64D4AEE6
+	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 10:20:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725444593; cv=none; b=Dk7ZJasEq3EDYV0tA5RALBAUeF7TGBdMPSL9aBDFaUB6vVAQbc94oYgkgTfb9vwYrrnr+TyL5ylDWqijRO8g0wr9zz7CdAs0Jxj56AtFN0gx+d4DrqucTz7lBr64/xlxbz2h7/qON/6cjxjM7D9YMlc31ePy+qEPCOaf6sbiI7w=
+	t=1725445227; cv=none; b=O3X8/B4ETcLSfIwRVh76/XcMXgmFhT19a3JVVRcsYy90sWLRX+2rAMFqu/xlqOW058c+mPWhHBmSFaKNN9xFHgta3I0E5yXHNtKi6YBvgEHHBuw/xCImaZN6q6xyxJ51M/B/oYrsmcSVoTnOnUn9qerdk+vwSYYrtBAaf7L6LZs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725444593; c=relaxed/simple;
-	bh=RwUPRAXQiOCZe9NiYunblLYeV4Fq3DU+113fN8t+HAM=;
+	s=arc-20240116; t=1725445227; c=relaxed/simple;
+	bh=hOL0UJZs3hk1ZM83mVw0khPPHWGYNcGmrFD8jLO5oUI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=olIWOVOBFOqQXPNvFkH6cv+A/VjvC46kc5k0j3SZlKQq5qs6rV+qHf08V5PD8EHniENMfo5BCl90N+KTyMaEzvQs/W3r1INVgiDqewtqnCP6Cxtr8X4JM72//bG4Equ01DVESZ8Daj/iguZJu8OrharczYaDyGrTnDY+bbDPgcM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SUVSkFfz; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=hxam3fjt605EHiSXGV6lcWNTGUTVIhF4+y6k1XFgSztjRk8oVZ9jIZaaDJmSQwIoDIt2R8vwTU5pS4YByXQ9iFdg8o3CT/x8At2cLMBs9POIPz6uMA8Q5nnSDkrOP+l456znSj2sG69UIzkwgeuT3AJgWmtBzSO1LGnmFEpc4iI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jyi2TFsh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SUVSkFfz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3766EC4CEC2;
-	Wed,  4 Sep 2024 10:09:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jyi2TFsh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5B494C4CEC2;
+	Wed,  4 Sep 2024 10:20:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725444593;
-	bh=RwUPRAXQiOCZe9NiYunblLYeV4Fq3DU+113fN8t+HAM=;
+	s=k20201202; t=1725445227;
+	bh=hOL0UJZs3hk1ZM83mVw0khPPHWGYNcGmrFD8jLO5oUI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=SUVSkFfzaT/0vfVaxH/PuTepGt1NvSdDUVYWQsqfixTrzV3Wyhzw2tnvXMrVEUmCt
-	 GPiHcIdXQiqeLujsCGHU473pzRkTHSFro+azRe+inUzf625OqSwx7YO4zRobAzv2pr
-	 reM16GtyMeN9QZ9BEsbOly8E2kICINwGgVZ/HFrplcw5D0c6KMIriSRDvhtbmAP7Hb
-	 J7gePQguqiqzzHAHsRtI6+YT17PD3BMviS0dbSLIFUDzMf+nkzb2LO0hlMlb1Vv65Z
-	 UfRt8gi8QldGcLufQ1mCgdFcxTi2dRS2XtV8XmOrZUlFcNPZ9lykpGgdnSupT42moe
-	 Fgh+b345zxFqA==
-Message-ID: <a6721d3d1700413d9e815a057267be55273f6f34.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v7 2/4] selftests/bpf: Add getsockopt to
- inspect mptcp subflow
+	b=Jyi2TFshBPnw3GSQvEmICY0muZuZVOzYJ96AgqJDKqm2D4a99bMyWO6qMzdafe5li
+	 1EwdZtMSq1HTomssYhg+JPGVXcnF9PEnBg/Fzfh6erM9KtSwA/2lwJOj3z2jscw6w0
+	 sjY9lOacT8LlYkhzMZRMoO2YSSeypxHqmc+TMFcJ9umbI1Jtee6uUdFuT3vQxX2ZYg
+	 whqyoKrVxRAutai68U19ay7ejDxSXzuoyTPjYCj7VqOqjAK+uD03e0694c3aHAUl7o
+	 fh4iamQYOEdVw226MG2CNZ+0Xe1hOQf9oAjLzbzh/vYX2KoIvvwU3vNnOpc4mqEcgv
+	 Xr7d/86XjOoqw==
+Message-ID: <4d97e1f2290f5dba5832cd0ad287588693f341e1.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 2/2] selftests/bpf: Add getsockopt to inspect
+ mptcp subflow
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 04 Sep 2024 18:09:48 +0800
-In-Reply-To: <b32de9d6-f941-46d0-9805-ad542ef6f5d6@kernel.org>
-References: <cover.1725350462.git.tanggeliang@kylinos.cn>
-	 <2cd5946354c8cf839684274e9ccc52016fbcf717.1725350462.git.tanggeliang@kylinos.cn>
-	 <b32de9d6-f941-46d0-9805-ad542ef6f5d6@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>, Matthieu Baerts
+	 <matttbe@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev, Martin
+ KaFai Lau <martin.lau@kernel.org>
+Date: Wed, 04 Sep 2024 18:20:21 +0800
+In-Reply-To: <54ce6f90-e86c-4921-b1e0-423fcd655d32@linux.dev>
+References: <cover.1724142917.git.tanggeliang@kylinos.cn>
+	 <3788544d841aa372a810f2d3dce905612063e872.1724142917.git.tanggeliang@kylinos.cn>
+	 <407f6a6a-344e-4f12-9293-e43b9a97f8d4@kernel.org>
+	 <23cffc2904df37874f35f106975fccc962d6cb8e.camel@kernel.org>
+	 <689e3694-d8f9-4511-8363-6f83a3bb1a1d@kernel.org>
+	 <afaa9ac33002da2452d3df014cd61a89fbd4978c.camel@kernel.org>
+	 <547fdd31-a052-4274-a59e-d7177887dbbe@kernel.org>
+	 <010b2338434b7df67ac418ad7063543e91c946b9.camel@kernel.org>
+	 <54ce6f90-e86c-4921-b1e0-423fcd655d32@linux.dev>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -80,120 +88,164 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Tue, 2024-09-03 at 11:11 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for the new version.
-> 
-> On 03/09/2024 10:04, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Martin, Matt,
+
+On Mon, 2024-08-26 at 22:22 -0700, Martin KaFai Lau wrote:
+> On 8/26/24 2:24 AM, Geliang Tang wrote:
+> > > I'm not an expert in this, but I guess it means you cannot use
+> > > 'mptcp_subflow_active()', because it can modify the 'subflow'
+> > > structure
+> > > that you got with bpf_core_cast() for a read-only usage.
 > > 
-> > This patch adds a "cgroup/getsockopt" way to inspect the subflows
-> > of a
-> > mptcp socket.
+> > A read-only function will get the same error.
 > > 
-> > mptcp_for_each_stubflow() and other helpers related to list_dentry
-> > are
-> > added into progs/mptcp_bpf.h.
+> > I added a read-only function mptcp_subflow_get_scheduled() for
+> > testing:
 > > 
-> > Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list
-> > and use
-> > bpf_core_cast to cast a pointer to tcp_sock for readonly. It will
-> > allow
-> > to inspect all the fields in a tcp_sock.
+> > bool mptcp_subflow_get_scheduled(struct mptcp_subflow_context
+> > *subflow)
+> > {
+> >          return subflow->scheduled;
+> > }
+> > 
+> > And invoke it from BPF in mptcp_for_each_subflow() loop:
+> > 
+> > int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
+> >               struct mptcp_sched_data *data)
+> > {
+> >          struct mptcp_subflow_context *subflow, *tmp;
+> > 
+> >          mptcp_for_each_subflow(msk, tmp) {
+> >                  subflow = bpf_core_cast(tmp, struct
+> > mptcp_subflow_context);
+> >                  mptcp_subflow_get_scheduled(subflow);
+> >          }
+> >          return 0;
+> > }
+> > 
+> > The same "arg#0 is untrusted_ptr_ expected ptr_ or socket" occurs.
+> > 
+> > Hope Martin can give us a solution for this issue.
 > 
-> (...)
+> I don't know the context for this list walking + modify-by-kfunc
+> usage, so the 
+> following could be a grain of salt.
 > 
-> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > index 2e28f4a215b5..1053a795eb43 100644
-> > --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
-> > @@ -4,6 +4,7 @@
-> >  
-> >  /* vmlinux.h, bpf_helpers.h and other 'define' */
-> >  #include "bpf_tracing_net.h"
-> > +#include "mptcp_bpf.h"
-> >  
-> >  char _license[] SEC("license") = "GPL";
-> >  
-> > @@ -57,3 +58,92 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
-> >  
-> >  	return 1;
-> >  }
-> > +
-> > +static int _check_getsockopt_subflow_mark(struct bpf_sock *sk)
-> > +{
-> > +	struct mptcp_subflow_context *subflow;
-> > +	struct mptcp_sock *msk;
-> > +	int i = 0;
-> > +
-> > +	if (sk->protocol != IPPROTO_MPTCP) {
-> > +		bpf_printk("MPTCP Subflow: unexpected protocol
-> > %u", sk->protocol);
-> > +		return -1;
-> > +	}
-> 
-> Out of curiosity, why did you move this code here and in
-> _check_getsockopt_subflow_cc()?
-> 
-> I'm just surprised because recently, you tried to reduce the amount
-> of
-> duplicated code :)
-> 
-> Or is it because this program is used in other tests, where it should
-> not be? Do you need to add a restriction per PID, like you did in
-> mptcpify.c?
+> It seems like fitting the bpf_iter use case. Take a look at some
+> recent bpf_iter 
+> additions, e.g. bpf_iter_{task,css}_next(). Also the bpf_for_each
+> macro usage in 
+> selftests. There may be some secondary things that need to consider,
+> e.g. how 
+> the walked subflow is protected, rcu, refcnt...etc.
 
-I don't know, I'll add "per PID" in next version.
+Great! Thanks. bpf_iter works well for MPTCP BPF scheduler.
 
-> 
-> (...)
-> 
-> > +SEC("cgroup/getsockopt")
-> > +int _getsockopt_subflow(struct bpf_sockopt *ctx)
-> > +{
-> > +	struct bpf_sock *sk = ctx->sk;
-> > +
-> > +	if (!sk) {
-> > +		bpf_printk("MPTCP Subflow: unexpected socket, sk
-> > is NULL");
-> > +		ctx->retval = -1;
-> > +		return 1;
-> > +	}
-> > +
-> > +	if (ctx->level == SOL_SOCKET && ctx->optname == SO_MARK)
-> > +		ctx->retval = _check_getsockopt_subflow_mark(sk);
-> > +	else if (ctx->level == SOL_TCP && ctx->optname ==
-> > TCP_CONGESTION)
-> > +		ctx->retval = _check_getsockopt_subflow_cc(sk);
-> 
-> As I mentioned in my previous reply: can ctx->retval be < 0 here,
-> before
-> calling _check_getsockopt_subflow_XXX()?
-> If yes or not sure, maybe safer to do:
-> 
->   err = _check_getsockopt_subflow_XXX()
->   (...)
-> 
->   if (err)
->       ctx->retval = -1;
-    else
-        ctx->retval = 0;
+I added a new bpf_iter type named "mptcp_subflow" in net/mptcp/bpf.c
+like this:
 
-Otherwise:
+'''
+__bpf_kfunc_start_defs();
 
-86: (63) *(u32 *)(r6 +0) = r1
-dereference of modified ctx ptr R6 off=36 disallowed
-processed 169 insns (limit 1000000) max_states_per_insn 2 total_states
-15 peak_states 15 mark_read 4
--- END PROG LOAD LOG --
+__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
+bpf_iter_mptcp_subflow *it,
+                struct mptcp_sock *msk, unsigned int flags)
+{
+        struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
 
-> 
-> > +
-> > +	return 1;
-> > +}
-> 
-> Cheers,
-> Matt
+        kit->msk = msk;
+        kit->pos = &msk->conn_list;
+        spin_lock_bh(&msk->pm.lock);
+
+        return 0;
+}
+
+__bpf_kfunc struct mptcp_subflow_context *
+bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
+{
+        struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+        struct mptcp_subflow_context *subflow;
+        struct mptcp_sock *msk = kit->msk;
+
+        subflow = list_entry((kit->pos)->next, struct
+mptcp_subflow_context, node);
+        if (list_entry_is_head(subflow, &msk->conn_list, node))
+                return NULL;
+
+        kit->pos = &subflow->node;
+        return subflow;
+}
+
+__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
+bpf_iter_mptcp_subflow *it)
+{
+        struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+        struct mptcp_sock *msk = kit->msk;
+
+        spin_unlock_bh(&msk->pm.lock);
+}
+
+__bpf_kfunc_end_defs();
+'''
+
+And use "bpf_for_each(mptcp_subflow)" like this in
+progs/mptcp_bpf_burst.c:
+
+'''
+        i = 0;
+        bpf_rcu_read_lock();
+        bpf_for_each(mptcp_subflow, subflow, msk, 0) {
+                bool backup = subflow->backup || subflow->request_bkup;
+
+                if (i++ > MPTCP_SUBFLOWS_MAX)
+                        break;
+
+                ssk = mptcp_subflow_tcp_sock(subflow);
+                if (!mptcp_subflow_active(subflow))
+                        continue;
+
+                nr_active += !backup;
+                pace = subflow->avg_pacing_rate;
+                if (!pace) {
+                        /* init pacing rate from socket */
+                        subflow->avg_pacing_rate = ssk->sk_pacing_rate;
+                        pace = subflow->avg_pacing_rate;
+                        if (!pace)
+                                continue;
+                }
+
+                linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32,
+pace);
+                if (linger_time < send_info[backup].linger_time) {
+                        send_info[backup].subflow_id = i;
+                        send_info[backup].linger_time = linger_time;
+                }
+        }
+        bpf_rcu_read_unlock();
+'''
+
+With this mptcp_subflow bpf_iter, we can get rid of the subflows array
+"contexts" in struct mptcp_sched_data:
+
+'''
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index c3d0ea07cf0c..a739f917b054 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -104,8 +104,6 @@ struct mptcp_out_options {
+ 
+ struct mptcp_sched_data {
+        bool    reinject;
+-       u8      subflows;
+-       struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
+ };
+ 
+ struct mptcp_sched_ops {
+'''
+
+I'll send out these patches for review soon, with Martin's "Suggested-
+by" tags.
+
+Thanks,
+-Geliang
 
