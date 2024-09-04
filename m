@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDD5B1DCB01
-	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 15:41:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44BEA1E00A9;
+	Wed,  4 Sep 2024 16:15:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725464496; cv=none; b=QqShus44Vf19b/Ba9ZOk/woUjuAxZQbP8ehNJVNu0tJTAXmGRn1vNBJBzvJEJC3ywWtEIm25aiHTFyXhPPRpa5jfX4arkamDpJUzvqNwIE99o0IdCWHpJQx40yNcrOA4PRK+nlP5sR2len00BkrDa3ogq75IbDSgAro2soB5RRQ=
+	t=1725466514; cv=none; b=rZJli2HBzT05a8GhHKZ1/AfS1gfNKFdfBApRBeFVNpdu7dcPJ9c47vUSIgPNBEqcZDhETbLm6L/U3Bt1BAdY9Mqd6t64VwCTwPVcXjxHJ5lPccB5K2czpoCA8V6/DksGacftpyxwbZX/2y8/3EVaFbZV1Ix8ld43hG7sFNZkNJ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725464496; c=relaxed/simple;
-	bh=jXHz9XApw5jf/grxYJQ1VdB5H1P6PgJiepiDmw9d538=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=lJjFJnE5VB+wcf9t63+LElSXmsqcBrpy6Bwiqh96vXfSqxtz45QMJEtlhj5/WyLwzYqtBUDbxUjVYgUcwKxHnQXSOfIsF3Vg+UEtCZwslX9DTHIyV8oPe51LAXF6gACNkYN6Wev638h8frtbUwahr8O86gp9JhquDWUsKmRUVxA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=czd9unfN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725466514; c=relaxed/simple;
+	bh=CQbJvgdx+HftYu1CScSMfRU+2H/4ei0sp9Z+jGmkCNg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=VpQ65xGBN9A3LD1JcbIv2gJqJz0hLhtl5lbJC7gEN8YJ3mJJfE5AEFst7nfa4DWQv9zjMCZA/Bh7IMMtk21pBInFnf5JaWvpkKMT7dogqGtwzBCoyzXLXgSZRjsE16RPOdojisH3liesM73lVXJwxHRP0RA54gPBj2oDNeShSB8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UO5Jo5lJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="czd9unfN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1747C4CEC2
-	for <mptcp@lists.linux.dev>; Wed,  4 Sep 2024 15:41:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UO5Jo5lJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C4BCC4CEC2;
+	Wed,  4 Sep 2024 16:15:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725464496;
-	bh=jXHz9XApw5jf/grxYJQ1VdB5H1P6PgJiepiDmw9d538=;
-	h=Date:To:From:Subject:From;
-	b=czd9unfNPqgaB3Oz5Cw+8neMvjCPtdG4hH+wVx3RXBmXqXNlEMk0Jb5MuJCnT19bH
-	 m8w1E1NRrE9oFuINWYV7q0Y0CmCHzU8Gq8JjtIzsS8D8CtmLQPRzWy+e/wLARXox6g
-	 ublNusK5fO//C/POXNpBxq6CpCtjX7kg6ToaeRz4njS9n8t0qwqxxEoqjBhqW6FUMG
-	 TfpsMlnqtCa/NfRmJPQjQEYNPudDk58GX/AY37BvgCyjQdwnLFXGZKvUvP5ku+ErpG
-	 CI5NYjrbSThN/2DoLw+yD6+0HsG10x5zVWxK8aBNG05nWQ2qZufjbn+2oKflZW60Gv
-	 laM6NHuDjKS6Q==
-Message-ID: <59b036ce-19e3-441f-b7ce-243dbad11a1e@kernel.org>
-Date: Wed, 4 Sep 2024 17:41:34 +0200
+	s=k20201202; t=1725466513;
+	bh=CQbJvgdx+HftYu1CScSMfRU+2H/4ei0sp9Z+jGmkCNg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UO5Jo5lJh6lThqSjATwMR1CzlfJTm7KFPfOJYJ1IsMqB0jm8XBr5j0Wfv0AgWQaKp
+	 mvh5/CfiV1Wss2/+eQpCyZma6E5ZZmdgR30EJb2l8hlHZsxAm0LUZUcFrxt+gdROWz
+	 Te1l98LoLmsToNDWJSY9U077ghqZJzSAUwBoUCVKHzh2RVVTh7jRZLXR/Zbjrr7H12
+	 RYSCSwn/ivTTczt6njYa9kKwaiRG/Ld1CG/H7k8PljAQHY7OMpQxEMCr9urU2qS5vb
+	 AuPdK1Lz5P8MaHSZ1oHgnlCI4odq0PokQGJswJTnXfgIVt6jvC2BW40GHZIgEnpti/
+	 Sspv+bc2grKhw==
+Message-ID: <559e1458-b593-44c7-92b1-6946c57496c5@kernel.org>
+Date: Wed, 4 Sep 2024 18:15:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,10 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next 0/3] selftests: mptcp: add time per subtests in
+ TAP output
 Content-Language: en-GB
-To: MPTCP Linux <mptcp@lists.linux.dev>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20240902-net-next-mptcp-ksft-subtest-time-v1-0-f1ed499a11b1@kernel.org>
+ <20240903162217.07c366c9@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [Weekly meetings] no meeting today
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -82,14 +91,69 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
+In-Reply-To: <20240903162217.07c366c9@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Jakub,
 
-Due to unexpected events, today's meeting has just been cancelled.
+On 04/09/2024 01:22, Jakub Kicinski wrote:
+> On Mon, 02 Sep 2024 13:13:03 +0200 Matthieu Baerts (NGI0) wrote:
+>> Patches here add 'time=<N>ms' in the diagnostic data of the TAP output,
+>> e.g.
+>>
+>>   ok 1 - pm_netlink: defaults addr list # time=9ms
+> 
+> Looking closer, this:
+> 
+> # ok 3 - mptcp[...] MPTCP # time=7184ms
+> # ok 4 - mptcp[...] TCP   # time=6458ms
+> 
+> Makes NIPA unhappy. The match results for regexps look like this:
+> 
+> (None, '4', ' -', 'mptcp[...] MPTCP', ' # ', 'time=6173ms')
+> (None, '4', ' -', 'mptcp[...] TC', None, 'P   # time=6173ms')
+> 
+> IOW the first one is neat, second one gepooped. The regex really wants
+> there to be no more than a single space before the #.
 
-Talk to you next week, on the 11th of September!
+Good catch!
+
+> KTAP definition
+> doesn't say that description must not have trailing white space.
+
+Indeed. Same for TAP 13. (TAP 14 is clearer about that and allows
+multiple spaces)
+
+> Best I could come up with is:
+> 
+> diff --git a/contest/remote/vmksft-p.py b/contest/remote/vmksft-p.py
+> index fe9e87abdb5c..a37245bd5b30 100755
+> --- a/contest/remote/vmksft-p.py
+> +++ b/contest/remote/vmksft-p.py
+> @@ -73,7 +73,7 @@ group3 testV skip
+>      tests = []
+>      nested_tests = False
+>  
+> -    result_re = re.compile(r"(not )?ok (\d+)( -)? ([^#]*[^ ])( # )?([^ ].*)?$")
+> +    result_re = re.compile(r"(not )?ok (\d+)( -)? ([^#]*[^ ])( +# )?([^ ].*)?$")
+
+Looks good to me. While at it, we can add a '+' for the spaces after the
+'#':
+
+  ( +# +)
+
+I see you didn't commit the previous modification. I can open a PR if it
+helps.
+
+>      time_re = re.compile(r"time=(\d+)ms")
+>  
+>      for line in full_run.split('\n'):
+> 
+> Thoughts?
+
+In my v2, I will also strip these trailing whitespaces in the selftests,
+they don't need to be there.
 
 Cheers,
 Matt
