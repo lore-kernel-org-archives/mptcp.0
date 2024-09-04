@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE9351DB950;
-	Wed,  4 Sep 2024 14:29:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C877E1DA619;
+	Wed,  4 Sep 2024 14:29:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725460162; cv=none; b=qp71LqduIqFtO+UOemu2GU4XLoVVH+oaDSR7OBEEU38UNmZJ2slMBwoly04yWdZr+B6/O8P6YjvkirRFvqGaXHqFI969Br+ttUmhcO7qi3eij8sGnkbWNg54FuNSgGzb1q6At7fU8OhqtNfDMgmUaRFWfaMPL8p1h/lsCROq6WY=
+	t=1725460165; cv=none; b=DnzrP9XSBVtgrH5s7sBKxAUwAYyesBHBSYvXzGoQ4D9bwxlT+c+UkR8Io0QVwv7v4YgQrOZwY38ONv4MHCx+Tf5pR77D8ym0n3wiNwPS45iU9x9+L+wK8oQi/ndV6P9DYp/Ve38eV2PURpeWtEk+7w3YYK2xO5Kidvlej8+03hI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725460162; c=relaxed/simple;
-	bh=2LFRH4B9szwvimkXoK7PUxmq+thQpate/e9RGXTNzfI=;
+	s=arc-20240116; t=1725460165; c=relaxed/simple;
+	bh=Hp3jZpWehb69Z33gWhXwT2TzWA3CumQwPAtXBaiB9bY=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=jZIdPCKmxFFJLh5RkRfGAz+mpfCTG+gFtCn7liMQgkpdBYlmtyHd5TGySS8yWH4KWjdV0vptgv+pON0Ib2u7OY2xLwaZlIcDBRKiD87AGfI8Mu3mk3EDX5BjLLwEpnXNva5dNQNqIZGYboiIwyILXRhmXYUwVecG6AjPXt5iOfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=M1uaNDf6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=fMiqQhBKr+UFUQVXe3m/eumPtfiBk7zkCno19U8Fg9DBVddZnJhqP1/yHSU8ozZ0Ll1e+3ccvrjMXq7Zu30fmqDE0z1vAMlWyqDotQhs0Ath1lVV0E5bPO/mxgkQh/tUzhYushbHA1kCQ95hYZDd/jeyN3JgQ1e0RsfjGorfP5M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=lVxoXAQI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="M1uaNDf6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C286FC4CEC2;
-	Wed,  4 Sep 2024 14:29:21 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="lVxoXAQI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B898C4CEC2;
+	Wed,  4 Sep 2024 14:29:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725460162;
-	bh=2LFRH4B9szwvimkXoK7PUxmq+thQpate/e9RGXTNzfI=;
+	s=korg; t=1725460165;
+	bh=Hp3jZpWehb69Z33gWhXwT2TzWA3CumQwPAtXBaiB9bY=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=M1uaNDf6lAWQ+PosJDJ93YpVP9VPeEVEhv4AWqxkd6gs6PiAU4a/Xmzdg9/FoqLe4
-	 /GOCk9Q61NIDX8eHvapBCnEWJqIlGyMF0GEnW3ISig6dPxr7nrB+fkpgBaMpq4ZRvt
-	 PM+gfCvMoJQow4gJXJUH4atT0qj92wx5kOPlDjVs=
-Subject: Patch "selftests: mptcp: join: disable get and dump addr checks" has been added to the 6.6-stable tree
+	b=lVxoXAQIxMRLCIvhQedt9g+j5d4oqxoLdCN1enXxlQa9+K6VAh7EF2HtKJXE4hMgl
+	 uk0M9sAT68s1F61+HfsW/IT1vxqLFWrXTvt4cZMFTTqbIe3bWNZ3ma/serSyj/oX4W
+	 mAZzR9hZ08ym16vdF5e4ki9YNglCQ7S09T7QHQ+s=
+Subject: Patch "selftests: mptcp: join: stop transfer when check is done (part 2.2)" has been added to the 6.6-stable tree
 To: gregkh@linuxfoundation.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Wed, 04 Sep 2024 16:29:05 +0200
-In-Reply-To: <20240904133755.67974-5-matttbe@kernel.org>
-Message-ID: <2024090405-condiment-viewer-237c@gregkh>
+In-Reply-To: <20240904133755.67974-6-matttbe@kernel.org>
+Message-ID: <2024090405-catcher-snowstorm-7dc1@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,72 +44,59 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    selftests: mptcp: join: disable get and dump addr checks
+    selftests: mptcp: join: stop transfer when check is done (part 2.2)
 
 to the 6.6-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     selftests-mptcp-join-disable-get-and-dump-addr-checks.patch
+     selftests-mptcp-join-stop-transfer-when-check-is-done-part-2.2.patch
 and it can be found in the queue-6.6 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73054-greg=kroah.com@vger.kernel.org Wed Sep  4 15:39:40 2024
+From stable+bounces-73055-greg=kroah.com@vger.kernel.org Wed Sep  4 15:39:40 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed,  4 Sep 2024 15:37:57 +0200
-Subject: selftests: mptcp: join: disable get and dump addr checks
+Date: Wed,  4 Sep 2024 15:37:58 +0200
+Subject: selftests: mptcp: join: stop transfer when check is done (part 2.2)
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org
-Message-ID: <20240904133755.67974-5-matttbe@kernel.org>
+Message-ID: <20240904133755.67974-6-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-These new checks have been recently queued to v6.6 [1] with the backport
-of commit 38f027fca1b7 ("selftests: mptcp: dump userspace addrs list"),
-and commit 4cc5cc7ca052 ("selftests: mptcp: userspace pm get addr
-tests").
+Use mptcp_lib_kill_wait in "userspace pm create id 0 subflow" subtest.
 
-On v6.6, these checks will simply print 'skip', because the associated
-features are not available in this version. That's fine, except that the
-MPTCP CI sets the SELFTESTS_MPTCP_LIB_EXPECT_ALL_FEATURES=1 env var,
-which will force these subtests to fail when using the selftests from
-v6.6 on a v6.6 kernel, because the feature is not available.
+This new test has recently been queued to v6.6 [1] with the backport of
+commit b2e2248f365a ("selftests: mptcp: userspace pm create id 0
+subflow").
 
-To ease the backports (and possible future ones), I suggest to keep the
-recent backports, but skip calling mptcp_lib_kallsyms_has() not to have
-the CIs setting this env var complaining about the associated features
-not being available.
+The modification here was part of commit 04b57c9e096a ("selftests:
+mptcp: join: stop transfer when check is done (part 2)") that has been
+backported to v6.6 a few months ago -- see commit 358f02b84fbb
+("selftests: mptcp: join: stop transfer when check is done (part 2)") --
+but it was not modifying this subtest as it was not present in v6.6.
 
 Link: https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=bd2122541bd8 [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_join.sh |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3472,7 +3472,7 @@ userspace_pm_chk_dump_addr()
+@@ -3678,7 +3678,7 @@ userspace_tests()
+ 		chk_mptcp_info subflows 1 subflows 1
+ 		chk_subflows_total 2 2
+ 		kill_events_pids
+-		wait $tests_pid
++		mptcp_lib_kill_wait $tests_pid
+ 	fi
+ }
  
- 	print_check "dump addrs ${check}"
- 
--	if mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
-+	if false && mptcp_lib_kallsyms_has "mptcp_userspace_pm_dump_addr$"; then
- 		check_output "userspace_pm_dump ${ns}" "${exp}"
- 	else
- 		print_skip
-@@ -3487,7 +3487,7 @@ userspace_pm_chk_get_addr()
- 
- 	print_check "get id ${id} addr"
- 
--	if mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"; then
-+	if false && mptcp_lib_kallsyms_has "mptcp_userspace_pm_get_addr$"; then
- 		check_output "userspace_pm_get_addr ${ns} ${id}" "${exp}"
- 	else
- 		print_skip
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
