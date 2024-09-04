@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 079931D9337;
-	Wed,  4 Sep 2024 12:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B84F1DB548;
+	Wed,  4 Sep 2024 12:57:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725453656; cv=none; b=qRcH01tuchUQPaYXn4bUZUENo0ejUqKlnHedeerTHIe4xLPfoIlemMosRCSXyAdddWn9SmMDC3qP2kNm4expUVqMvo+XCMO+oqjYGIPT1SdGP458Whb+8uAyyvDcEzxNtcm4f2Qv81fK7c/Sb1KKIlqGmqd3L+d8M2AgWOeMc30=
+	t=1725454621; cv=none; b=tVoBp50BjSL2lEWHqlIyw2b8nSqEqoGna7IRZWamwD6iuvEl2gYy5yvFjIzvaSA5LluETDA185Ar9DifpGrc6pkm+hkMYjNacLUNPafuESGvMacY2rF51+yfcXQV/wz4Hz6RGT9x+iRiHjC5UsXItIo9SE1dqdLvSzh9kVnGIpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725453656; c=relaxed/simple;
-	bh=45ZH+VtyVCj83zuTb4TZIeGyl46YmjMUPNne01HEFVc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YRrTcR/VtJe7VY8DzH6/MEoWw5IYBYF19DhNBYLqsQBUD7sgdXj530m8Gh6KlAzc79XceyCN5Af2IPYY5yz9C45+Vf1If1MZAvi0DDEDjxVA/ZYiBO2hpduxlNRMxrxfoorEANgksJ8JKZj9QZes0G4ktEl7yV8bNvGy0xkhvdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLpX653z; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725454621; c=relaxed/simple;
+	bh=xtL14RmKMeu1w0uNEueDgZBSYhaFWT0O+TFimaUTWrI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=ngEjKYC3HOTll8TNok8etMW9T06cFaCGoaWGk5WJc8MARlkmv2FRs6n1BoQHYKJKPx3ukkw3ISisD07hI7vv/MyC8l62CdB0rOpJ1OUFAcUh7X6npT+OGYehgyQMpzS7GlvBoD4LFr1Lpc0F+d0+pHSVH/6gbfVmutFCh5XT69U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NmNBYIit; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLpX653z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3BD56C4CEC2;
-	Wed,  4 Sep 2024 12:40:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NmNBYIit"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 948FBC4CEC2;
+	Wed,  4 Sep 2024 12:56:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725453655;
-	bh=45ZH+VtyVCj83zuTb4TZIeGyl46YmjMUPNne01HEFVc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CLpX653z5ck5pPM6R2JQElF8QTUjfCJJMt6bICllW3PZerVuvzfY0fp7SsR95YatL
-	 lIVF7rMQ/VTYFHD5NYtFiG1G63by3Ssg6ry2Ne3fRkDD2QjORbChU2oZ0nJK/h7Gb+
-	 Y+GlIBHNS3cAfZheaLv5c0M13bX43iEAfydE8KXH7KrN4iCMgjhUnEDSZLI3bFy6aX
-	 FTGzwXm1wHz1phb0BF+V9vsuHqII2Z2C/0fBIwCN6RvDK24ucQ2z7NtEzMvZEiBhgV
-	 V+0PGRyhNvBXjVs5sMCGP6187CEC7Lqak8aiyHwqcAMn9yEnog3ia6e8edSsa59Ib2
-	 7B3l6FkMfrdQg==
-Message-ID: <1311d6a3-2007-4b26-aade-6c181ff67372@kernel.org>
-Date: Wed, 4 Sep 2024 14:40:52 +0200
+	s=k20201202; t=1725454620;
+	bh=xtL14RmKMeu1w0uNEueDgZBSYhaFWT0O+TFimaUTWrI=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=NmNBYIitNccYW9m6a/hkhhyWYNvmJPXaBJSDLQt16E2NI3PYZTwOxZhkcyVjJovFu
+	 KYfsYvb1cf6XiGI9hd4pKVLrq792O3SVVoeu3P22XtoCDZLQSQRuSZa1cJ4oVvaMD7
+	 PvbMZduhKxI14wqEQGAy0g5U0u/zDZMI6mTy6enbwXlQijy2Twmi9v8mShy5zpwQOz
+	 gBoBk2EZC2s5JEx2zqCGCktZecTt+7Cn1pjjiocC+2tk3T11tHJjpmEknFI3g8uDGE
+	 6qyhjDYV+Aap1bdwcmxxVkoncV6/0FB87150gbchG4r+7BaACUTzSmK9CDkl7j4h2e
+	 kgY+0uJusz3XA==
+Message-ID: <d22f6a38-585f-4ec7-8c98-b5a1ebbceed2@kernel.org>
+Date: Wed, 4 Sep 2024 14:56:57 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.10.y 2/6] selftests: mptcp: join: test for flush/re-add
- endpoints
+Subject: Re: [PATCH 6.6.y 0/2] Backport of "mptcp: pm: fix RM_ADDR ID for the
+ initial subflow"
 Content-Language: en-GB
-To: gregkh@linuxfoundation.org
-Cc: Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>,
- mptcp@lists.linux.dev, stable@vger.kernel.org,
- Sasha Levin <sashal@kernel.org>
-References: <2024082617-malt-arbitrary-2f17@gregkh>
- <20240902172516.3021978-10-matttbe@kernel.org>
+To: gregkh@linuxfoundation.org, Sasha Levin <sashal@kernel.org>
+References: <2024083044-banked-tapered-91df@gregkh>
+ <20240903101654.3376356-4-matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, stable@vger.kernel.org
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,34 +87,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20240902172516.3021978-10-matttbe@kernel.org>
+In-Reply-To: <20240903101654.3376356-4-matttbe@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Greg, Sasha,
 
-On 02/09/2024 19:25, Matthieu Baerts (NGI0) wrote:
-> commit e06959e9eebdfea4654390f53b65cff57691872e upstream.
+On 03/09/2024 12:16, Matthieu Baerts (NGI0) wrote:
+> 87b5896f3f78 ("mptcp: pm: fix RM_ADDR ID for the initial subflow") 
+> depends on e38b117d7f3b ("mptcp: make pm_remove_addrs_and_subflows 
+> static") to avoid conflicts. Both can be backported to v6.6 without 
+> conflicts.
 > 
-> After having flushed endpoints that didn't cause the creation of new
-> subflows, it is important to check endpoints can be re-created, re-using
-> previously used IDs.
+> If you prefer, feel free to backport these commits to v6.6:
 > 
-> Before the previous commit, the client would not have been able to
-> re-create the subflow that was previously rejected.
+>   e38b117d7f3b 87b5896f3f78
 > 
-> The 'Fixes' tag here below is the same as the one from the previous
-> commit: this patch here is not fixing anything wrong in the selftests,
-> but it validates the previous fix for an issue introduced by this commit
-> ID.
+> Details:
+> 
+> - e38b117d7f3b ("mptcp: make pm_remove_addrs_and_subflows static")
+> - 87b5896f3f78 ("mptcp: pm: fix RM_ADDR ID for the initial subflow")
 
-FYI, Sasha has applied all the patches from this series, except this
-one, the backport of e06959e9eebd ("selftests: mptcp: join: test for
-flush/re-add endpoints").
-
-In theory, this commit can be applied without any conflicts now that
-commit b5e2fb832f48 ("selftests: mptcp: add explicit test case for
-remove/readd") has been queued in v6.10.
+FYI, Sasha has recently queued these 2 patches for v6.6. Nothing else
+needs to be done here.
 
 Cheers,
 Matt
