@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D7F82F870
-	for <mptcp@lists.linux.dev>; Thu,  5 Sep 2024 14:29:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C555286A3
+	for <mptcp@lists.linux.dev>; Thu,  5 Sep 2024 14:29:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725546543; cv=none; b=IIjwdePA1AYFEMZ0AdXbjJK3VaJvqYkewQcqdwJwnV5QW24QMUJ1Ao9K5JsZ0KYX2JkO+Ev7jr8t9J+5oQibfCZMHU3XlHWFxytcu9/sys4nhuQFADowJoTcvG06CZ7wML8zkKxLCM3No5frZP8FSdQlUpnxNtezZKQTS4MeVRI=
+	t=1725546545; cv=none; b=QOVKSBgb6I6w/PdwFGg25pG1Bo09T/BWw84WPt6zcJ/dks4jUO+ENCvIxstcGMJoe7BwFnDimH/f8fhWn4ydKz8VeHZmTJ9daktzedsUN93JDNsVdElfUJcG/nRzzFPYwKQ0e8QiD2dFYDzVcZHJHMPZQo8CJccWXF3SNVLpi2M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725546543; c=relaxed/simple;
-	bh=oRPddNFGFo6Z+dCpJXlJ8VLO4VG3VnIN7OuGV5N+jBs=;
+	s=arc-20240116; t=1725546545; c=relaxed/simple;
+	bh=DdGEIIWht+8UQLVl/O99KOPa1fIqXXo4euO+8dSQqbM=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qzoD2D2+2rhml4T3EjSy2pk8eaU1S35lPPCpsb8c/kG8erctbYVSnP2Fxr1OuzrOu9hJFSmt420LDsNopl+2qoe2KKnWZ7dYClC//aa9bUlekcsIwFOJKh/XYIL5+5WrDDOPjqYZzkGDr8snWtdlzQ8JU0/NgAjGaN9sN9lz/gU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r0DcxPaT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=FBLRvhNnyfqsn/zsSe0nbOku7vWcpYDcNGwaPHJczq0I9xK9yeSswLRFA+s/f2NYKPz7txRyq1siY9Rgz+wbw3iz9GN2JbhJXaIAhRI00PWC83s1ygb6oKCgxIadLu5MDh1tXGxAhLoBZKxvPM8w8TWmA3aysdCK4uezYVhr3AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ALhE9HRZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r0DcxPaT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB696C4CEC3;
-	Thu,  5 Sep 2024 14:29:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ALhE9HRZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 839FBC4CEC5;
+	Thu,  5 Sep 2024 14:29:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725546542;
-	bh=oRPddNFGFo6Z+dCpJXlJ8VLO4VG3VnIN7OuGV5N+jBs=;
+	s=k20201202; t=1725546544;
+	bh=DdGEIIWht+8UQLVl/O99KOPa1fIqXXo4euO+8dSQqbM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=r0DcxPaT8ZzhOfx6dbUvkblv26556PBLBBscMNCoPS/eZhhS/QSHJlV/Hy7NDz1yS
-	 QFmUAkTSZumGDq47xqu1neNV3WcyMyHNuF7E+FPRjWafKNMw8tR7qCAd+KDaz24Iqd
-	 twbl7lC9ngNtAvSNO1M+wuNAqL+vajvAd/aOykmkio7oIe3av6ZrKB+8WHupmtDVuR
-	 XXgSHYQlctkQ9hWXbxxNPn2tkOQfXF5gF1JdDa4P0dv7DMD/PdpOV4CWBoh1YwjW8h
-	 PbAEvwcZrBCZShE8TglEwxJszIUAmLoNlZeCXOYwwUIJ/xUphHw1wpgViOZiJPmgMy
-	 HqFV+ALyfVO0w==
+	b=ALhE9HRZt/8ZxzQUrsH2NM4nrSC4xDT7cCfxvOcHeUYfPvveHrk+3QA+XgZIhEZj3
+	 RyZ+7p1QI99pgS9tNaGpEsU5JtyAVZbjNXFmqf/PQvBsx29hSEWhHNey4rQ2e9colY
+	 fWa3R63kfSQ96L2zjtR1JpbkMTAy+a9TnmvmRD8DAzv4OKL7gdWoPcZQYnt95nA0hR
+	 G99FwLUmuHMNUwR8IG7p30yCwh7yajU3/NBgEr9LeC2v+CcdJd0cJAJazHKJXNYfuP
+	 kIo+dp4oOWXSRwNahpUNIb+OdGPO5uTUYJus1qDQ5Ue7fqAR9wTKCk+fUwJj1kCrAw
+	 NXogV/RYEJAMA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/2] Squash to "bpf: Add bpf_mptcp_sched_ops"
-Date: Thu,  5 Sep 2024 22:28:50 +0800
-Message-ID: <48a40bc2bfb3a428092d7fe7385e236a32232398.1725546472.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/2] Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+Date: Thu,  5 Sep 2024 22:28:51 +0800
+Message-ID: <a1d8abd098a6b68a5c619b8cd7558f963f7d342a.1725546472.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1725546472.git.tanggeliang@kylinos.cn>
 References: <cover.1725546472.git.tanggeliang@kylinos.cn>
@@ -45,30 +45,45 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The helper mptcp_subflow_set_scheduled() is used to update the scheduled
-flags of a subflow. BPF schedulers are not allowed to directly modify
-this flags. So the write access permission for this flag shouldn't be
-allow.
+Use nr_active variable just like in mptcp_subflow_get_send().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 3 ---
- 1 file changed, 3 deletions(-)
+ tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 9672a70c24b0..6414824402e6 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -60,9 +60,6 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 		}
- 	} else if (t == mptcp_subflow_type) {
- 		switch (off) {
--		case offsetof(struct mptcp_subflow_context, scheduled):
--			end = offsetofend(struct mptcp_subflow_context, scheduled);
--			break;
- 		case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
- 			end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
- 			break;
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+index 3a673291b4dd..eb21119aa8f7 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+@@ -74,9 +74,9 @@ static int bpf_burst_get_send(struct mptcp_sock *msk,
+ 	struct mptcp_subflow_context *subflow;
+ 	struct sock *sk = (struct sock *)msk;
+ 	__u32 pace, burst, wmem;
++	int i, nr_active = 0;
+ 	__u64 linger_time;
+ 	struct sock *ssk;
+-	int i;
+ 
+ 	/* pick the subflow with the lower wmem/wspace ratio */
+ 	for (i = 0; i < SSK_MODE_MAX; ++i) {
+@@ -97,6 +97,7 @@ static int bpf_burst_get_send(struct mptcp_sock *msk,
+ 		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ 
++		nr_active += !backup;
+ 		pace = subflow->avg_pacing_rate;
+ 		if (!pace) {
+ 			/* init pacing rate from socket */
+@@ -115,7 +116,7 @@ static int bpf_burst_get_send(struct mptcp_sock *msk,
+ 	mptcp_set_timeout(sk);
+ 
+ 	/* pick the best backup if no other subflow is active */
+-	if (send_info[SSK_MODE_ACTIVE].subflow_id == MPTCP_SUBFLOWS_MAX)
++	if (!nr_active)
+ 		send_info[SSK_MODE_ACTIVE].subflow_id = send_info[SSK_MODE_BACKUP].subflow_id;
+ 
+ 	subflow = bpf_mptcp_subflow_ctx_by_pos(data, send_info[SSK_MODE_ACTIVE].subflow_id);
 -- 
 2.43.0
 
