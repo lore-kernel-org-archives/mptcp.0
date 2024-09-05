@@ -1,165 +1,293 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 240B01925AA;
-	Thu,  5 Sep 2024 09:42:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADA76194ACD
+	for <mptcp@lists.linux.dev>; Thu,  5 Sep 2024 09:44:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725529347; cv=none; b=b47f/WnfNsJYddZ1Xsd2ixDvCs6FI+/VKoCimXFx5Ac9E35a9/ICi0tnRx9lMeOmJOpmFcIE7hf+S4EqAD4M4H2oOaGfopjpD1c0016zHJVy5SywgxM8QZmsaQ6rYDaRQ93Obwc1sT2cY3NtZvvyRMR0xUEkSpMSJiannEkKxn8=
+	t=1725529488; cv=none; b=TnQrNvMZhS3617QIWz2v5QUOplz5DrRVvSpy9gvW/lw0CNZFpJpePC5cAWgmO76rfFovXgmpAWTVuibm9wcXnBN9WhRCCzDMyzZoo7AMRihDvbTLiIjJAEIvte03Sy3AP8hWp+it8xzEkQ+IxdicLVAjcLyBInNxRViDdUPR5XI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725529347; c=relaxed/simple;
-	bh=/emwOksMGFm+mpSWMzisAlioJX8T7Z2qXNCeO2PH4ac=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XdpZWLvKMuag967q38Hd8UoiqDmA8kreDMfer83sTUupsC/sw3eFKgzOk7gqx+b3IjbQY4T/9BK2oCrUVrFtkxNkg+UXbiUO9OlDWOQgJuiKzT6nRZwW1Uq6l9twgUUjM96MP4bWQjEU1s+iHrpwW9ORVZrzdFugqiV4JhYreao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aK2N6ity; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725529488; c=relaxed/simple;
+	bh=EKuGesz7hNvaK50vahzxd+q4QvQHA8p5M2+9LdZHFZg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=VPE/e3yjCuIxmTPN58va7SBipKTCr47UwCIytXJ2Z7DWSrUOHZxIKTNvvpnwhFnzIoAkQNZ8V3P4Ag2/VEuZxrvzXVe0WzPtH5un5OQ5h2p+klTkTvT0CDLk2/9SI4qeSUufaaTEcsYgPrwKQI55zdraBTX2aOJXdm6vCJC2DI4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pl6uGuQY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aK2N6ity"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 383C3C4CEC3;
-	Thu,  5 Sep 2024 09:42:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pl6uGuQY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 943B4C4CEC3;
+	Thu,  5 Sep 2024 09:44:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725529346;
-	bh=/emwOksMGFm+mpSWMzisAlioJX8T7Z2qXNCeO2PH4ac=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=aK2N6ityfD33QCrkLQdD0Xyzrl+PA3IwsbFwnr05UePrzjElWbCk2N/GwNT5QH4j+
-	 QOp4NC5GUAkizE5fJWH21VF4qXqmH9Iq6z40vB6D8rCBBYPQw6aZ7ki+WZghMiOlBP
-	 tZmEi7nJGZ2SefYo6oy1GXSbCq2b1dcH76/N5Om5ZiVv/XAVzCOM8hS5puo+kHkNeo
-	 UwBf+JEZORGK929SGPbxWxOFV4tjSLb7kKRh8osOpWivKg68fBdAegHsR7jXVOqHvd
-	 i5cF9glcd0ag4QKj9Ux+Lk7QzPCUQZ/XyKU5mpg3bbuwDwne/AtjLD+KbfwkxC5I6R
-	 L+MrrwymKIVNg==
-Message-ID: <23b49a68-476d-4c3d-b2c8-9e0dc4514c74@kernel.org>
-Date: Thu, 5 Sep 2024 11:42:21 +0200
+	s=k20201202; t=1725529488;
+	bh=EKuGesz7hNvaK50vahzxd+q4QvQHA8p5M2+9LdZHFZg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=pl6uGuQYAoOqWjCQ9X8fMiJLJWsXoOlKrr7msvJsbsZFStxTDaq+KCbW09DHXLpEk
+	 QpAc9AQR8PXLrhpY499MGb9UGBT9mKmU5laWKjJAf/WESL2s0YbcEFxwO+WGP9jfFd
+	 50sVju3P3Jz/+QIMxU6B/nk1mPKFBkU5XnmKitUbqkL21KUR8D77DjBJtiqIL2wHNP
+	 xm4Hekiv2NgCoEaP5UXpKvUfjKPMM0XL0uJegYaJQW/qpWcO5rYJGbSHJdEZ+iz3Gu
+	 PN214lKYWLr6SXyx2pkXgEKrchRk4W03DhqqsN8mxJeDheY6p7a0AJvoXS2EIdO8nl
+	 9YkEa7g5UeV3w==
+Message-ID: <ece6bef664d36a7f2047b74469bbe996a14835bd.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v8 2/4] selftests/bpf: Add getsockopt to
+ inspect mptcp subflow
+From: Geliang Tang <geliang@kernel.org>
+To: matttbe@kernel.org
+Cc: mptcp@lists.linux.dev
+Date: Thu, 05 Sep 2024 17:44:41 +0800
+In-Reply-To: <3d0b6acfa9753162380c640bcb13c54bf00af544.camel@kernel.org>
+References: <cover.1725502822.git.tanggeliang@kylinos.cn>
+	 <44ef8e395feddc3fe83c1ea043c3bc07f98c1042.1725502822.git.tanggeliang@kylinos.cn>
+	 <3d0b6acfa9753162380c640bcb13c54bf00af544.camel@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 6.1.y] selftests: mptcp: join: validate event numbers
-Content-Language: en-GB
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: stable@vger.kernel.org, MPTCP Upstream <mptcp@lists.linux.dev>,
- Mat Martineau <martineau@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Sasha Levin <sashal@kernel.org>
-References: <2024083026-attire-hassle-e670@gregkh>
- <20240904111338.4095848-2-matttbe@kernel.org>
- <2024090420-passivism-garage-f753@gregkh>
- <fc21db4a-508d-41db-aa45-e3bc06d18ce7@kernel.org>
- <2024090556-skewed-factoid-250c@gregkh>
- <2024090541-bride-marbled-f248@gregkh>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2024090541-bride-marbled-f248@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 05/09/2024 11:36, Greg KH wrote:
-> On Thu, Sep 05, 2024 at 11:33:46AM +0200, Greg KH wrote:
->> On Wed, Sep 04, 2024 at 05:20:59PM +0200, Matthieu Baerts wrote:
->>> Hi Greg,
->>>
->>> On 04/09/2024 16:38, Greg KH wrote:
->>>> On Wed, Sep 04, 2024 at 01:13:39PM +0200, Matthieu Baerts (NGI0) wrote:
->>>>> commit 20ccc7c5f7a3aa48092441a4b182f9f40418392e upstream.
->>>>>
->>>>
->>>> This did not apply either.
->>>>
->>>> I think I've gone through all of the 6.1 patches now.  If I've missed
->>>> anything, please let me know.
->>> It looks like there are some conflicts with the patches Sasha recently
->>> added:
->>>
->>> queue-6.1/selftests-mptcp-add-explicit-test-case-for-remove-re.patch
->>> queue-6.1/selftests-mptcp-join-check-re-adding-init-endp-with-.patch
->>> queue-6.1/selftests-mptcp-join-check-re-using-id-of-unused-add.patch
->>>
->>> >From commit 0d8d8d5bcef1 ("Fixes for 6.1") from the stable-queue tree:
->>>
->>>
->>> https://git.kernel.org/pub/scm/linux/kernel/git/stable/stable-queue.git/commit/?id=0d8d8d5bcef1
->>>
->>> I have also added these patches -- we can see patches with almost the
->>> same name -- but I adapted them to the v6.1 kernel: it was possible to
->>> apply them without conflicts, but they were causing issues because they
->>> were calling functions that are not available in v6.1, or taking
->>> different parameters.
->>>
->>> Do you mind removing the ones from Sasha please? I hope that will not
->>> cause any issues. After that, the two patches you had errors with should
->>> apply without conflicts:
->>
->> Ok, I've now dropped them, that actually fixes an error I was seeing
->> where we had duplicated patches in the tree.
->>
->>>  - selftests: mptcp: join: validate event numbers
->>>  - selftests: mptcp: join: check re-re-adding ID 0 signal
->>
->> I'll go add these now, thanks!
+Hi Matt,
+
+On Thu, 2024-09-05 at 16:06 +0800, Geliang Tang wrote:
+> Hi Matt,
 > 
-> I just tried, and they still fail to apply.  How about we wait for this
-> next 6.1.y release to happen and then you rebase and see what I messed
-> up and send me the remaining ones as this is getting confusing on my
-> end...
+> On Thu, 2024-09-05 at 10:26 +0800, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This patch adds a "cgroup/getsockopt" way to inspect the subflows
+> > of
+> > a
 
-Thank you for having tried!
+Here should be "an mptcp socket", not "a mptcp socket". Please update
+this for me when merging it.
 
-Sure, no problem, I can wait.
+Thanks,
+-Geliang
 
-I just hope the previous patches I sent have been applied properly. I
-mean: I don't know how quilt handled the duplicated patches with
-different content.
-
-If you prefer, we can also drop all the MPTCP related patches -- or only
-the ones related to the selftests -- and I send the whole series I have
-on my side: it is still on top of the v6.1.108-rc1, so without the
-patches Sasha backported yesterday.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> > mptcp socket.
+> > 
+> > mptcp_for_each_stubflow() and other helpers related to list_dentry
+> > are
+> > added into progs/mptcp_bpf.h.
+> > 
+> > Add an extra "cgroup/getsockopt" prog to walk the msk->conn_list
+> > and
+> > use
+> > bpf_core_cast to cast a pointer to tcp_sock for readonly. It will
+> > allow
+> > to inspect all the fields in a tcp_sock.
+> > 
+> > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  tools/testing/selftests/bpf/progs/mptcp_bpf.h | 27 ++++++++
+> >  .../selftests/bpf/progs/mptcp_subflow.c       | 69
+> > +++++++++++++++++++
+> >  2 files changed, 96 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > index 782f36ed027e..92d5deed0214 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > @@ -4,9 +4,36 @@
+> >  
+> >  #include <vmlinux.h>
+> >  #include <bpf/bpf_core_read.h>
+> > +#include "bpf_experimental.h"
+> >  
+> >  #define MPTCP_SUBFLOWS_MAX 8
+> >  
+> > +static inline int list_is_head(const struct list_head *list,
+> > +			       const struct list_head *head)
+> > +{
+> > +	return list == head;
+> > +}
+> > +
+> > +#define list_entry(ptr, type,
+> > member)					\
+> > +	container_of(ptr, type, member)
+> > +
+> > +#define list_first_entry(ptr, type,
+> > member)				\
+> > +	list_entry((ptr)->next, type, member)
+> > +
+> > +#define list_next_entry(pos,
+> > member)					\
+> > +	list_entry((pos)->member.next, typeof(*(pos)), member)
+> > +
+> > +#define list_entry_is_head(pos, head,
+> > member)				\
+> > +	list_is_head(&pos->member, (head))
+> > +
+> > +#define list_for_each_entry(pos, head,
+> > member)				\
+> > +	for (pos = list_first_entry(head, typeof(*pos),
+> > member);	\
+> > +	     cond_break, !list_entry_is_head(pos, head,
+> > member);	\
+> > +	     pos = list_next_entry(pos, member))
+> > +
+> > +#define mptcp_for_each_subflow(__msk,
+> > __subflow)			\
+> > +	list_for_each_entry(__subflow, &((__msk)->conn_list),
+> > node)
+> > +
+> 
+> The helper mptcp_subflow_tcp_sock() added by the commit
+> "selftests/bpf:
+> Add bpf_rr scheduler & test" needs be added into this commit:
+> 
+> static __always_inline struct sock *
+> mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+> {
+>         return subflow->tcp_sock;
+> }
+> 
+> Otherwise, compiling errors occur.
+> 
+> Thanks,
+> -Geliang
+> 
+> >  extern void mptcp_subflow_set_scheduled(struct
+> > mptcp_subflow_context
+> > *subflow,
+> >  					bool scheduled) __ksym;
+> >  
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> > b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> > index 2e28f4a215b5..70302477e326 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_subflow.c
+> > @@ -4,10 +4,12 @@
+> >  
+> >  /* vmlinux.h, bpf_helpers.h and other 'define' */
+> >  #include "bpf_tracing_net.h"
+> > +#include "mptcp_bpf.h"
+> >  
+> >  char _license[] SEC("license") = "GPL";
+> >  
+> >  char cc[TCP_CA_NAME_MAX] = "reno";
+> > +int pid;
+> >  
+> >  /* Associate a subflow counter to each token */
+> >  struct {
+> > @@ -57,3 +59,70 @@ int mptcp_subflow(struct bpf_sock_ops *skops)
+> >  
+> >  	return 1;
+> >  }
+> > +
+> > +static int _check_getsockopt_subflow_mark(struct mptcp_sock *msk,
+> > struct bpf_sockopt *ctx)
+> > +{
+> > +	struct mptcp_subflow_context *subflow;
+> > +	int i = 0;
+> > +
+> > +	mptcp_for_each_subflow(msk, subflow) {
+> > +		struct sock *ssk;
+> > +
+> > +		ssk =
+> > mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
+> > +							   struct
+> > mptcp_subflow_context));
+> > +
+> > +		if (ssk->sk_mark != ++i) {
+> > +			ctx->retval = -2;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +static int _check_getsockopt_subflow_cc(struct mptcp_sock *msk,
+> > struct bpf_sockopt *ctx)
+> > +{
+> > +	struct mptcp_subflow_context *subflow;
+> > +
+> > +	mptcp_for_each_subflow(msk, subflow) {
+> > +		struct inet_connection_sock *icsk;
+> > +		struct sock *ssk;
+> > +
+> > +		ssk =
+> > mptcp_subflow_tcp_sock(bpf_core_cast(subflow,
+> > +							   struct
+> > mptcp_subflow_context));
+> > +		icsk = bpf_core_cast(ssk, struct
+> > inet_connection_sock);
+> > +
+> > +		if (ssk->sk_mark == 2 &&
+> > +		    __builtin_memcmp(icsk->icsk_ca_ops->name, cc,
+> > TCP_CA_NAME_MAX)) {
+> > +			ctx->retval = -2;
+> > +			break;
+> > +		}
+> > +	}
+> > +
+> > +	return 1;
+> > +}
+> > +
+> > +SEC("cgroup/getsockopt")
+> > +int _getsockopt_subflow(struct bpf_sockopt *ctx)
+> > +{
+> > +	struct bpf_sock *sk = ctx->sk;
+> > +	struct mptcp_sock *msk;
+> > +
+> > +	if (bpf_get_current_pid_tgid() >> 32 != pid)
+> > +		return 1;
+> > +
+> > +	if (!sk || sk->protocol != IPPROTO_MPTCP ||
+> > +	    (!(ctx->level == SOL_SOCKET && ctx->optname ==
+> > SO_MARK)
+> > &&
+> > +	     !(ctx->level == SOL_TCP && ctx->optname ==
+> > TCP_CONGESTION)))
+> > +		return 1;
+> > +
+> > +	msk = bpf_core_cast(sk, struct mptcp_sock);
+> > +	if (msk->pm.subflows != 1) {
+> > +		ctx->retval = -1;
+> > +		return 1;
+> > +	}
+> > +
+> > +	if (ctx->optname == SO_MARK)
+> > +		return _check_getsockopt_subflow_mark(msk, ctx);
+> > +	return _check_getsockopt_subflow_cc(msk, ctx);
+> > +}
+> 
+> 
 
