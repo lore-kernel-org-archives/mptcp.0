@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED49819C573
-	for <mptcp@lists.linux.dev>; Thu,  5 Sep 2024 13:52:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 459E51EA85
+	for <mptcp@lists.linux.dev>; Thu,  5 Sep 2024 13:52:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725544339; cv=none; b=mPuEq34C0W9uL8dtRj4IJMcz9Zv60yuGGA0yBKyUrs+7k6FSUvYGXPIxcCUnB4iltHlI2a8t06n2JiiooD3NqPBl6zAAKTvVP8OlB/alXIg/IWRo6WXnRny1rGxVkYb+hTPqgyIUnFtOtYJBK8cye4/uqCftZU+LMs9kg4vImxw=
+	t=1725544340; cv=none; b=o6Ee+2uiJmXEUMBcC2YqY8SpGN5efe25NAdYNkOEsAVzH5mXAl7/ZtW4aTW3lL11ULhOVdzB3MRFiGS33EX8GTqacDQ6Y+WMBY5sCnCzU8I/gjbQiw0Mq8oAfaDnSLvREvnmz8BoSUalDbAD2N2bwcge4vBbedzNX/RfsqSL8kQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725544339; c=relaxed/simple;
-	bh=3Iiw/ev4v7xyR8PryT/7z/c5DPHsx1sWHSFO9gPA1p8=;
+	s=arc-20240116; t=1725544340; c=relaxed/simple;
+	bh=/7dcNxe7NJjQWtVfZyZqdN9uo0e0jW6M0qXBu8fSDN8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=chIrbPCnaCT1bTiQgUihDnnl78N4OMCvT6cdjFAcX3JPUSCVzn4XJQA/JBEgiVmqdAWQt6pBR0TnU46SBgkaLyPeSLZGlw2TmEqkN1tSaTMsZmKDzSuzsIugk79eqLtfgCMbI6IUWFruetQtEm+fp553CjFb59HfPcBVbTxBUPI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNYK29vu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=mD8AJoDcxQXyj/B/wDQPAMxxHZl7bk7vrsPrRwuAlZ8bfjRgj1iK4Wkx6K2Wmtaw8Qh5wUDTcL5qPB9KWSxK3GcfwosCulI3+xypEHglXWjIO9AcyWLbrzNmZTppm8ttnAcJVlHOnSGr1NxDsE7v0hVrJgRvpFdYPq++M5xEzDY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+ZuNabf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNYK29vu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C774C4CEC5;
-	Thu,  5 Sep 2024 13:52:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+ZuNabf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0455DC4CEC7;
+	Thu,  5 Sep 2024 13:52:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725544338;
-	bh=3Iiw/ev4v7xyR8PryT/7z/c5DPHsx1sWHSFO9gPA1p8=;
+	s=k20201202; t=1725544339;
+	bh=/7dcNxe7NJjQWtVfZyZqdN9uo0e0jW6M0qXBu8fSDN8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qNYK29vuwyjSd6Vtj6xCL+zeDJx9/T704AC9SETPGum+XZJLWm6WxYHt4R4Wfcjx+
-	 moYJYJJUZNHKQiDRzGruqL7tt5QZ4ZiRCt4EX8ewFRXofysWvF1GeHnJUHP7PQQPcu
-	 t9Gsird8CCpKhVjZzZJU+MCTjR7wOnXpYQxcWz8DCyuXT+U0wENxRGAzRGzM74K3x2
-	 8f0PIAQ335Cldcq/lbroanTgdWGoBrioQhFQ8ZXrbSvpZyoZoXvuUkyS3nhi4dI3vi
-	 WUE5jK4Zd4DsrsJwFsGNpUll8vxZKDS+JuG4GOO58Ab9DIfPa5t0NdXZ14byPcgOcV
-	 Ls+XtkRUeGYKA==
+	b=o+ZuNabfl9JBDS6+aDwFpZRAWfBarmZ0ehsO6V7pZOYMacXowoAc1AvMNIS0U6u4m
+	 fIe332GPRbjum6rUr7aBYGTQuu82MHBoyzKOKDUlgp921LgnQAvI11hZRWBLa4/SS1
+	 dxer+L11HyVXp/A/zCBlvT84PcknHMdg2L+Ilw0x+O6J3wtwOSn+T0CsUiCXP5y96Z
+	 q+reImIrRoPuFaILF5r+6ONz1liD+EzR2rgz3Dbc5od1MTcdor0mXorb9CzZK8tnAx
+	 DZ0IF5zDcrmkT4eTaTQpOEAl+IlahHn1Hi8py+z0slhLVInab1JQkAmZzbkWc0FIkx
+	 9t2Ir08CfzADg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Martin KaFai Lau <martin.lau@kernel.org>
-Subject: [PATCH mptcp-next 1/4] bpf: Add mptcp_subflow bpf_iter
-Date: Thu,  5 Sep 2024 21:52:09 +0800
-Message-ID: <a75fc3e8df7141ce582448d3f092871a4943fbf4.1725544210.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/4] bpf: Register mptcp tracing kfunc set
+Date: Thu,  5 Sep 2024 21:52:10 +0800
+Message-ID: <10a0327a5c882326e5ace658bfd2a4d6e075d794.1725544210.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1725544210.git.tanggeliang@kylinos.cn>
 References: <cover.1725544210.git.tanggeliang@kylinos.cn>
@@ -46,108 +45,36 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-It's necessary to traverse all subflows on the conn_list of an MPTCP
-socket and then call kfunc to modify the fields of each subflow. In
-kernel space, mptcp_for_each_subflow() helper is used for this:
+Since the kfuncs mptcp_subflow_active() and mptcp_subflow_set_scheduled()
+are invoked in the mptcp_subflow bpf_iter test in a trace for
+mptcp_subflow_get_send(), it's necessary to register them into a
+BPF_PROG_TYPE_TRACING type kfunc set.
 
- mptcp_for_each_subflow(msk, subflow)
-         kfunc(subflow);
+Note:
 
-But in the MPTCP BPF program, this has not yet been implemented. As
-Martin suggested recently, this conn_list walking + modify-by-kfunc
-usage fits the bpf_iter use case.
+ BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+ BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+ BTF_ID_FLAGS(func, mptcp_subflow_active)
+ BTF_KFUNCS_END(bpf_mptcp_sched_kfunc_ids)
 
-This patch adds a new bpf_iter type named "mptcp_subflow" to do this.
-
-Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- kernel/bpf/helpers.c |  3 +++
- net/mptcp/bpf.c      | 57 ++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 60 insertions(+)
+ net/mptcp/bpf.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-index b5f0adae8293..2340ba967444 100644
---- a/kernel/bpf/helpers.c
-+++ b/kernel/bpf/helpers.c
-@@ -3023,6 +3023,9 @@ BTF_ID_FLAGS(func, bpf_preempt_enable)
- BTF_ID_FLAGS(func, bpf_iter_bits_new, KF_ITER_NEW)
- BTF_ID_FLAGS(func, bpf_iter_bits_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_bits_destroy, KF_ITER_DESTROY)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
- BTF_KFUNCS_END(common_btf_ids)
- 
- static const struct btf_kfunc_id_set common_kfunc_set = {
 diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 9672a70c24b0..cda09bbfd617 100644
+index cda09bbfd617..01aedaff66ed 100644
 --- a/net/mptcp/bpf.c
 +++ b/net/mptcp/bpf.c
-@@ -204,6 +204,63 @@ static const struct btf_kfunc_id_set bpf_mptcp_fmodret_set = {
- 	.set   = &bpf_mptcp_fmodret_ids,
- };
+@@ -301,6 +301,8 @@ static int __init bpf_mptcp_kfunc_init(void)
+ 	int ret;
  
-+struct bpf_iter__mptcp_subflow {
-+	__bpf_md_ptr(struct bpf_iter_meta *, meta);
-+	__bpf_md_ptr(struct mptcp_sock *, msk);
-+	__bpf_md_ptr(struct list_head *, pos);
-+};
-+
-+DEFINE_BPF_ITER_FUNC(mptcp_subflow, struct bpf_iter_meta *meta,
-+		     struct mptcp_sock *msk, struct list_head *pos)
-+
-+struct bpf_iter_mptcp_subflow {
-+	__u64 __opaque[3];
-+} __attribute__((aligned(8)));
-+
-+struct bpf_iter_mptcp_subflow_kern {
-+	struct mptcp_sock *msk;
-+	struct list_head *pos;
-+} __attribute__((aligned(8)));
-+
-+__bpf_kfunc_start_defs();
-+
-+__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-+					   struct mptcp_sock *msk)
-+{
-+	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-+
-+	kit->msk = msk;
-+	kit->pos = &msk->conn_list;
-+	spin_lock_bh(&msk->pm.lock);
-+
-+	return 0;
-+}
-+
-+__bpf_kfunc struct mptcp_subflow_context *
-+bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
-+{
-+	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-+	struct mptcp_subflow_context *subflow;
-+	struct mptcp_sock *msk = kit->msk;
-+
-+	subflow = list_entry((kit->pos)->next, struct mptcp_subflow_context, node);
-+	if (list_entry_is_head(subflow, &msk->conn_list, node))
-+		return NULL;
-+
-+	kit->pos = &subflow->node;
-+	return subflow;
-+}
-+
-+__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
-+{
-+	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-+	struct mptcp_sock *msk = kit->msk;
-+
-+	spin_unlock_bh(&msk->pm.lock);
-+}
-+
-+__bpf_kfunc_end_defs();
-+
- __diag_push();
- __diag_ignore_all("-Wmissing-prototypes",
- 		  "kfuncs which will be used in BPF programs");
+ 	ret = register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
++	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING,
++					       &bpf_mptcp_sched_kfunc_set);
+ 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+ 					       &bpf_mptcp_sched_kfunc_set);
+ #ifdef CONFIG_BPF_JIT
 -- 
 2.43.0
 
