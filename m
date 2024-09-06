@@ -1,130 +1,152 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 607EE1D88B0;
-	Fri,  6 Sep 2024 18:46:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336E51B85C8;
+	Fri,  6 Sep 2024 18:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725648397; cv=none; b=Pl0WKVoGEaANvAVVQ7wFCwHFjdp84zMHdJavKjRIXCQWnJtvpaxQcuO3j7GzKwTK/rSwRTYvKbAm/iB9HqprKkzy9ghntoYRneA6ekT0sijHi1DsXQTFqQRBlL6XCZoYsUkvKZKiT3Qu0d23YHi1ggGDTVqkNkLbUTvCi6sp6aU=
+	t=1725648925; cv=none; b=X8Jq459I4lMjIXYqD5QYg6ad7fntxREgu+8HsOBME8Fv29h7iy1LQbu8Xa9zHSyWKrhknr9V4oVFivsRCGMEKQVO/sgZx49ShHXI6QvoVQHJCPWrYUMGK9/TUFr0bsD/+6DPHMXdDMtonooMVxqcktkWFCRHdDr4hWj0jeaFtw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725648397; c=relaxed/simple;
-	bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Wy04z4/LjMzHskSZBJUf/qQJQSsHZZU+TJxWWstuu+UD/1xS9QHYu5AmvD3CWq1cfGi8MSp/bIRc16gAjoM4at4QXJ/uJE5F8ewvgrrRHg5AZO1mFoWaZ2RCuZvlz6NnBANb4KfTxzHXkPH8hZ3Tc+PQLSWliUNtDOxtpA69R0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AcbYC4wO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725648925; c=relaxed/simple;
+	bh=xydqzXCNhgZuKdjblfs4ftwwAuG4PcoLJ3PLFKz70bA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fp4HOOqlkfzg9FeeCKvYzn8TaKRLLupo4f+ugWTFu3HfskLnZybazHn5LBnKAGTq1Xxa/pGMrBE7cSWZ/3IskxGcjTaiIusfnU3H66K7Sq9JsqVEoYfs+fA2ehpr2+UlMFhOqAAi6GSO6qgkyNkSIr90WrgU3QGYMDlkYhiNqBk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kA2ke1Ye; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AcbYC4wO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 727BFC4CEC4;
-	Fri,  6 Sep 2024 18:46:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kA2ke1Ye"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD06C4CEC4;
+	Fri,  6 Sep 2024 18:55:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725648396;
-	bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=AcbYC4wO+Y/JAa5ZJseSYcmc6yWpZi04cpfcPjphuQHZYhYCQP7tOiMsW/+eRAEA4
-	 usfaoVu34PPTI0tN4V2C6ilG9JUafb/lbjFFQhiN+MUNe1BbbM7YzAoKVpDdcMhxB/
-	 5/TTZqzxSDDc2cvVbGE6dEYrUnfUGGD/NbOpMvYU9VeC14R3wwiZ/1CBXMilL+HX93
-	 q4buwJaXDRmiTCMGf7wEwqXD4zsrMh7hjpiIx4eHs+qPZJq5XHcTT9JQwe8soV1xrE
-	 d0DNgU11LZPEat17q+M2XZVh4QkQwfc1DBgp9qS1lUvoQ56rBwApmhpMdTYV5nrfHH
-	 m2nX5kOcBNNuQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 06 Sep 2024 20:46:11 +0200
-Subject: [PATCH net-next v2 5/5] selftests: mptcp: connect: remove
- duplicated spaces in TAP output
+	s=k20201202; t=1725648924;
+	bh=xydqzXCNhgZuKdjblfs4ftwwAuG4PcoLJ3PLFKz70bA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=kA2ke1YehGFwS//3BnM1GozEFoxeWSjMBllDGEyKTYJUnGmSb23ARANM1Nhqu6TgE
+	 tf9vMXIylhysogsF9IKDcV11voj7dNmN7NQ6M/bG902rjWRLbpCvoOKnxDt41Qx24P
+	 0SJ8mM+0TWJtTPuzp7zjh4lJBHvPR1Q9t3iBYTKX2m+7/ZluKz3j46ey0a10jUOweu
+	 362mGKMmRO8ogDx/6xOSpM55QEdPm/MwATihALSv5fZ4bFkR5p4Yd5ZVIr9PJabZRW
+	 6lf37Fj8o9nIbodNoHg1qbvc1QZGmGdR3gBMC3R+zEDF56oerXtgW7AcdDlN8eBfU6
+	 ahIoO1ORPJCGA==
+Message-ID: <b2272b72-d207-4393-9245-31ad7628be09@kernel.org>
+Date: Fri, 6 Sep 2024 20:55:20 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net v3] mptcp: pm: Fix uaf in __timer_delete_sync
+Content-Language: en-GB
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com,
+ syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com
+References: <e4a13002-f471-4951-9180-14f0f8b30bd2@kernel.org>
+ <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240906-net-next-mptcp-ksft-subtest-time-v2-5-31d5ee4f3bdf@kernel.org>
-References: <20240906-net-next-mptcp-ksft-subtest-time-v2-0-31d5ee4f3bdf@kernel.org>
-In-Reply-To: <20240906-net-next-mptcp-ksft-subtest-time-v2-0-31d5ee4f3bdf@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2231; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2038rxbInPWV7BitNPE+7QuojyOTqgKUXrM5t
- /1lq8+RPtSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZttN/AAKCRD2t4JPQmmg
- cwsPD/91Ag+CYOxlBLcBKddIiQSvdaY5x7Miwz+Excw/0+oMUgMvBjQ2+D0L7curjXeyoZPz6Xe
- MqxIOcMQZFdjVj1PQIfvcucuSkflBAI98Bjic96f5huKjuUCdXKvIVJttEM92Qhx46dMs3aUpS6
- SLQdVBLorVedARees1Tp2zDIvODkXIpf1tfVbMMOPEM4UoLGWtqQBuOMvFSglDP10GFl/d5G2j4
- HU3HoUqmewSJ4obKMXSKmWEsdSUBkSdwXIZeCkVBMZlw10qWY1hhcmqSelv7i621udX+EllwUH/
- MXxlcVCNZrtkd38uvXzY51mTb1BlIfroQJp+BH5vsU8uxj76weiN2QINeGp2DnRpyucJQiqTnt9
- 5WoKQZUDZJ9SO8Kk1u03JPqncMWSuUWAoCLsKazaQejp9kKcjlPSkWNHJVUa/tlspY55WqUm7af
- JmpJyCthI68OBziS/GhEA+DbjeYyltzaLluusLJiVPGkFWNUHruTmk85/6a8c4Ljn8NavsF4g+Q
- KDT4eURqeRFlF/KYT0eF+15j3EZ2n53MFMMtCDcyR6MQ5C6P88h24t9sT5c0kDKdebBOkUkiQ1j
- 4S80L/17rAL3ixOdQkSvQq4VHmoLurI3JNsfSxODnlwAXJIOLPsi6M4wKLg21ByJwNGGZfn7ILq
- 7MVdeM0P3SPtKGQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It is nice to have a visual alignment in the test output to present the
-different results, but it makes less sense in the TAP output that is
-there for computers.
+Hi Edward,
 
-It sounds then better to remove the duplicated whitespaces in the TAP
-output, also because it can cause some issues with TAP parsers expecting
-only one space around the directive delimiter (#).
+On 05/09/2024 14:27, Edward Adam Davis wrote:
+> There are two paths to access mptcp_pm_del_add_timer, result in a race
+> condition:
+> 
+>      CPU1				CPU2
+>      ====                               ====
+>      net_rx_action
+>      napi_poll                          netlink_sendmsg
+>      __napi_poll                        netlink_unicast
+>      process_backlog                    netlink_unicast_kernel
+>      __netif_receive_skb                genl_rcv
+>      __netif_receive_skb_one_core       netlink_rcv_skb
+>      NF_HOOK                            genl_rcv_msg
+>      ip_local_deliver_finish            genl_family_rcv_msg
+>      ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
+>      tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
+>      tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
+>      tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
+>      tcp_data_queue                     remove_anno_list_by_saddr
+>      mptcp_incoming_options             mptcp_pm_del_add_timer
+>      mptcp_pm_del_add_timer             kfree(entry)
+> 
+> In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
+> zone protected by "pm.lock", the entry will be released, which leads to the
+> occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
+> 
+> Keeping a reference to add_timer inside the lock, and calling
+> sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
+> 
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Cc: stable@vger.kernel.org
+> Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-While at it, change the variable name (result_msg) to something more
-explicit.
+According to the doc [1], a 'Co-dev' tag is supposed to be added before
+this SoB:
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.sh | 14 ++++++++------
- 1 file changed, 8 insertions(+), 6 deletions(-)
+Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-index 49d90c4dbc01..57325d57e4c6 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
-@@ -345,9 +345,11 @@ do_transfer()
- 
- 	local addr_port
- 	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
--	local result_msg
--	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
--	mptcp_lib_print_title "${result_msg}"
-+	local pretty_title
-+	pretty_title="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
-+	mptcp_lib_print_title "${pretty_title}"
-+
-+	local tap_title="${connector_ns:0:3} ${cl_proto} -> ${listener_ns:0:3} (${addr_port}) ${srv_proto}"
- 
- 	if $capture; then
- 		local capuser
-@@ -443,7 +445,7 @@ do_transfer()
- 
- 		echo
- 		cat "$capout"
--		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
-+		mptcp_lib_result_fail "${TEST_GROUP}: ${tap_title}"
- 		return 1
- 	fi
- 
-@@ -543,12 +545,12 @@ do_transfer()
- 
- 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
- 		mptcp_lib_pr_ok "${extra:1}"
--		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
-+		mptcp_lib_result_pass "${TEST_GROUP}: ${tap_title}"
- 	else
- 		if [ -n "${extra}" ]; then
- 			mptcp_lib_print_warn "${extra:1}"
- 		fi
--		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
-+		mptcp_lib_result_fail "${TEST_GROUP}: ${tap_title}"
- 	fi
- 
- 	cat "$capout"
+But I'm sure that's fine without it.
 
+[1]
+https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
+
+
+This v3 now looks good to me. I don't know if it needs to be reviewed by
+someone else as I'm now listed as co-developed.
+
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
