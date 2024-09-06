@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 378AD129E93
-	for <mptcp@lists.linux.dev>; Fri,  6 Sep 2024 17:15:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43B3A482C1
+	for <mptcp@lists.linux.dev>; Fri,  6 Sep 2024 17:15:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725642917; cv=none; b=WoktLmTAv0m80uSt5ePl3yxYqfqKREvJxCTn2sVFXzhFv9djzU4CBOmNLacwDltoeyOsq9CYq31C5gdtYYAaDb/CBiJ+f9zZ4gbB6xrE0lMf0vlb6hjqaC55axgtjYH54i5+3BZHEwlUHFHgfYWv1J+2VXNqTMMb+jOAwVhqCOo=
+	t=1725642918; cv=none; b=XbpJg7kyILXy/33d2mYuDXmPQqNRjqK2HbzPrhteyAK8m0EV4hSlpyRHGQUd6LpHStWVggTtFZfxCSa4czBKMuAJicJQ7iev+UwIhkSJtsGff04XCOBDd8+CMuneINz3Nc4uJ/9Xk7WRB3sMa3Y8AzrLXbZ28enXZmkZltuyGC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725642917; c=relaxed/simple;
-	bh=5veUrZt4a8truXcimSm6Y9QmQ92Ra0EaYasr2Zmdcgc=;
+	s=arc-20240116; t=1725642918; c=relaxed/simple;
+	bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=K3bmCnXpjibXVkEM8ylSp5eMXYCYCZN9Xm0VePO9HDl5u43mvC+kYiIxugpHVlz8BXJxjN1o/Y+wJzt0MuO3IF53+4QyoU94ozFis3+w5OIhslxH10eKkkG/FaZO5ubQ4+qHTBAW/xYR54Dovjms50MXHpspJWe8UVwTF8uQQHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSnS3L0C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=USuPKsZZmpiW/BIVQUhe5j7b8ndlTMwR7KLvWpS/+ghHVWmR4b6B1AISVR/7HRJkP5o1GWVeF6dm2SKDL2QmmwMqR1AchCcTE758K82xtwfeRVNORZq2pESR7Ua6njNyi6TS5qyooA7HHrjjDG32dKCa0PfpVdY5u4tvZK57prA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQ9jEYL4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSnS3L0C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42030C4CEC7;
-	Fri,  6 Sep 2024 17:15:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQ9jEYL4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41E86C4CEC8;
+	Fri,  6 Sep 2024 17:15:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725642916;
-	bh=5veUrZt4a8truXcimSm6Y9QmQ92Ra0EaYasr2Zmdcgc=;
+	s=k20201202; t=1725642917;
+	bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=RSnS3L0Cn23jUwPChzrsqQWqS8Rq09X2gZ6Dhm6oP3fqzrcJ0cu9Mq0aVJS/CFMT1
-	 haNnnbpvWR8enijeTs6xdD8TtuFEXHieNEoSOvrj47jTw3ZjRj9hwXwTf2tqmWaqAt
-	 zBLuJHhzeaxH1JqqGQyXmUk0mvaMTFLHjTwsDbxRnEQU0fccXwEM3r7iR+Dqqt4fj9
-	 uTiIdGQPIdiz9ww8SYg5jcgxuVe96+bjcH1915Mbebr26ICK2l2Sn6zDiiejGeMnX4
-	 pJCrj4n/cMnW4Ant/3OoeclVLKeYaqkVM09sIcumiP8ZxGfaj9kX36hqtYnXAMrLfL
-	 NF6DL1jDHSDjw==
+	b=IQ9jEYL45QkWEHSTTxziZacn7TBhgxYpdR0MXKcCRcBV2Jp2I8gxluRPvJZkxzIvE
+	 jEl2rOen+SI9SfNX15ge3eG/oWm0NR+n2xXUpRAu8l5+ATDzmtQz4AY1fTJWFq9luh
+	 fRAvcPtiquAVWR46vpKF1GDZnP6x94tWk78GPsNlkIuHhTkZ6UGJtxTepso5UBLAKa
+	 Ga493cl3/nHq0Z66zdXM8jzOJ1zXtV+vI+B0mNV9kaXo/vkCiIP7/5jDP0AjMlpFRe
+	 KV/9IkrERaFIziSWN0sJryfzurOoT6vhDqH47J2UnWC/wiVOED4zB6uRf4L9KMbNN6
+	 hW2iVUOa4R6Vw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 06 Sep 2024 19:15:07 +0200
-Subject: [PATCH mptcp-next 1/2] selftests: mptcp: diag: remove trailing
- whitespace
+Date: Fri, 06 Sep 2024 19:15:08 +0200
+Subject: [PATCH mptcp-next 2/2] selftests: mptcp: connect: remove
+ duplicated spaces in TAP output
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,50 +38,88 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240906-selftests-mptcp-trailing-ws-v1-1-03421b02c48e@kernel.org>
+Message-Id: <20240906-selftests-mptcp-trailing-ws-v1-2-03421b02c48e@kernel.org>
 References: <20240906-selftests-mptcp-trailing-ws-v1-0-03421b02c48e@kernel.org>
 In-Reply-To: <20240906-selftests-mptcp-trailing-ws-v1-0-03421b02c48e@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=907; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=5veUrZt4a8truXcimSm6Y9QmQ92Ra0EaYasr2Zmdcgc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2zii8VxC0Lg6zjqraiHshgJOyYZSQksWbLRgx
- nROMC6QMcyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZts4ogAKCRD2t4JPQmmg
- c3HwD/0U1XIFWFWx/WYK3nA1nBJy7RV9x/em02zLJd/Oe4iBOr50Mkt+Ww2/EahpmTHxDGEvBeP
- NdQyOuzg7IwbpRBk4RS2Q5exjjjP67j35BlR+LmgZt5y5HDu5xKV8xvoYi/ZtI6mpZfpM/++CKG
- Wyezshvd2oi7j0pju5x0d+yNmAgepd0f0+6SsbQVM/6Yx6x4ZLg4SSxqtfoSWULMUnepBJaTWor
- IC7ekLUdF3sde9+8IfYHo5JXwcFsFuP7e+HmZtOFmXyeoYWp2lkWqTij7sK3HtlCXFUhwtDRyQ8
- LIbqL7Ymf1p9YS5jtOQXDw0bsCuZllzoQJ7vdMk7qZIL2rAt9VPG0pd9oC4Eg2t5Agj/9Hdusq/
- yvqDeyj7Ml/1C6hTaayo5NWcvqLusRHT5mxwdjryQptJTNOu+fniguo+QbxHToeKeZlLkEVzAF6
- 7R+29H7fOHpAgciwYanhokPn6Bw59yXiq1TPhgsa3DVIr6+fUvuGI9nlj6cRO134MqNWrEIQTPD
- 3gtRbVBsT3KEqZSw4fZdCps58a6HLf0m/73f+RSw1FHbf2rwmWurmjWgxDnNX5WQF7dELY0B3SJ
- ZbmX2fix4JFAmPVBDZKYE8mVYp5ksRv8lBTETLzidk6joMj8p0FnVVu0C1Ffm2hZbAXtpJZ9bt1
- z/V8EK1M8rbaicw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2231; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=JIwD47ohgeR39/mflNfwm5sG7pceaysqE8PN4r4u3Js=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm2ziisGYtJGpMAf50ntTjrMWW44LFSVNI9Vuzz
+ oIQ8OtRliGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZts4ogAKCRD2t4JPQmmg
+ c7SFEADB3pHUVPsC/2MTTBx1kfjnraMnKXN9WTxvCo+W9ZEzmlzsenALL77xYzlDJ/Rix44N570
+ p10Y+go+ixMpRjbPfxFAniS2Nlcj3wc2s7zBILflcQvHv8wEtjkl1n16HZaPKXEzVFIWIOFMS3K
+ /+150sWVT/hDzaCD+7WdCT0AJxy75dfO5nJ1JAdFCWjjxfS5rP/6qJjcaif53B5aNbm35UqS7D0
+ ia+dhUgkM2Lea9Y0Wed5bV1TT4fI9ZFhmPqvcWMyE07jrXiySlAc7ZMeQoTy3bvgw2/wsOTy6Cd
+ EvgQnfLethwCkqEbz0H9162uITBZq908lT5aXR7+SuhugURhvJlmIA4ahc5weAwMLZBGAq33++s
+ DBiTsOIYQz81kZzgCxRJcMyIp5Iv0OWGifrUOOGHkPTeSJtXhJh9ka+EQkvrwsS3ZhUlNuS7BpD
+ qbZtICtqxs3HkFZ9nI0IbvlOtTGQCALBKFfAlY0/sQwN9sKwR7ijk+WR/0aS1FePhedr584u+HC
+ cJXB7/+2f1P9ljRfvaTDOO4YVK56lBOSyYEhlU0i62Ne4/70l+pxdUxAsqIAdmxsOYWTopFesEd
+ 8w6UXbgfhLTE+OtpIQlZkz8BYfqsoqz3ODNXMNZr2GPmoxTIk6+b9mAEWkBG08QdyUqgsrZPsk7
+ mH0VM3NQ8PqXAyw==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-It doesn't need to be there, and it can cause some issues with TAP
-parsers expecting only one space around the directive delimiter (#).
+It is nice to have a visual alignment in the test output to present the
+different results, but it makes less sense in the TAP output that is
+there for computers.
+
+It sounds then better to remove the duplicated whitespaces in the TAP
+output, also because it can cause some issues with TAP parsers expecting
+only one space around the directive delimiter (#).
+
+While at it, change the variable name (result_msg) to something more
+explicit.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 14 ++++++++------
+ 1 file changed, 8 insertions(+), 6 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index 776d43a6922d..2bd0c1eb70c5 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -284,7 +284,7 @@ echo "b" | \
- 			./mptcp_connect -p 10000 -r 0 -t ${timeout_poll} -w 20 \
- 				127.0.0.1 >/dev/null &
- wait_connected $ns 10000
--chk_msk_nr 2 "after MPC handshake "
-+chk_msk_nr 2 "after MPC handshake"
- chk_last_time_info 10000
- chk_msk_remote_key_nr 2 "....chk remote_key"
- chk_msk_fallback_nr 0 "....chk no fallback"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index 49d90c4dbc01..57325d57e4c6 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -345,9 +345,11 @@ do_transfer()
+ 
+ 	local addr_port
+ 	addr_port=$(printf "%s:%d" ${connect_addr} ${port})
+-	local result_msg
+-	result_msg="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
+-	mptcp_lib_print_title "${result_msg}"
++	local pretty_title
++	pretty_title="$(printf "%.3s %-5s -> %.3s (%-20s) %-5s" ${connector_ns} ${cl_proto} ${listener_ns} ${addr_port} ${srv_proto})"
++	mptcp_lib_print_title "${pretty_title}"
++
++	local tap_title="${connector_ns:0:3} ${cl_proto} -> ${listener_ns:0:3} (${addr_port}) ${srv_proto}"
+ 
+ 	if $capture; then
+ 		local capuser
+@@ -443,7 +445,7 @@ do_transfer()
+ 
+ 		echo
+ 		cat "$capout"
+-		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
++		mptcp_lib_result_fail "${TEST_GROUP}: ${tap_title}"
+ 		return 1
+ 	fi
+ 
+@@ -543,12 +545,12 @@ do_transfer()
+ 
+ 	if [ $retc -eq 0 ] && [ $rets -eq 0 ]; then
+ 		mptcp_lib_pr_ok "${extra:1}"
+-		mptcp_lib_result_pass "${TEST_GROUP}: ${result_msg}"
++		mptcp_lib_result_pass "${TEST_GROUP}: ${tap_title}"
+ 	else
+ 		if [ -n "${extra}" ]; then
+ 			mptcp_lib_print_warn "${extra:1}"
+ 		fi
+-		mptcp_lib_result_fail "${TEST_GROUP}: ${result_msg}"
++		mptcp_lib_result_fail "${TEST_GROUP}: ${tap_title}"
+ 	fi
+ 
+ 	cat "$capout"
 
 -- 
 2.45.2
