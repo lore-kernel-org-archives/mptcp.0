@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BA32157492;
-	Fri,  6 Sep 2024 08:37:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F55916630F;
+	Fri,  6 Sep 2024 09:00:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725611874; cv=none; b=SnVC4FMhu+t/QNYYyKskAQxSso5CnuhooI8BeUWtdYpNfFgw9A4JQ5T2uJ1TxPyqP6n+coRZjTpkwB8dXPCUEt5UoYH3WIZWYsiiyfH549Z9x4/rtQ4yHplBZJYb9ctP1+Y44FrkBeCXWm43WWSs48b6doIYGVuZCkgPjBG9DKE=
+	t=1725613206; cv=none; b=HLojPX35EaFW3gZN9nfOVBZZq8+UJCbK5sQTIgozA5akziWaBX+gkxYRWciJ+vEBuu8ayp08D8LcOpLE/fxdv64Z1q7UiTMYwCx/81GOay4R5z14oW9yQfwV46qTEZMRq8Pw9mQ7Kdg/x2U5fQZDTsQ++tw6pLlmMt3k1jxf69Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725611874; c=relaxed/simple;
-	bh=uhvlLb7cyLPlPN/mTf5k2GyxcpuRJe/BH7UoRkoQgu4=;
+	s=arc-20240116; t=1725613206; c=relaxed/simple;
+	bh=ekC4m3cZK9fMlyQmVMcZlupXr9dwmHK363NsD4Xshlg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sKKkLL92q0Ak5h6WOEs+vc3TBWh0FwdKXrdLFrhzc6dJUL9GjSotxDhNycGrdCbvWbAt4PqgbZTPEwGdD07kfofWZ5+Wtk8XUGmrPlSCKJ9PjlKok4Y+anGYW4TvHgftGX55Y8o/Lru9ZK0CMaQwoZSC3mavIvCayMMswP1QDF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnP0m3Eq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JSD1I5QQtSJ02X8XIsBb2Fjvm+ygw5VMYxvZmq4tIa1jHRSeo6ReyufR88nidiVznMTFynYjuSwiQOBk1m57hb/dwoWEMY33Q1iysF8ZCCbCNz+YNsvmW9pb993p7rTa46ZPMzlQJQdlVcDsFLxvLzfQUwmDZeskhsEBvCfxcCA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QZtfA8d5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnP0m3Eq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DFC5C4CEC4;
-	Fri,  6 Sep 2024 08:37:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QZtfA8d5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBC21C4CEC4;
+	Fri,  6 Sep 2024 09:00:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725611873;
-	bh=uhvlLb7cyLPlPN/mTf5k2GyxcpuRJe/BH7UoRkoQgu4=;
+	s=k20201202; t=1725613206;
+	bh=ekC4m3cZK9fMlyQmVMcZlupXr9dwmHK363NsD4Xshlg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mnP0m3Eq6NtkLmzmJGqv0munSFld1QMMd+W+fOT5uCXLiL7K/Z0oGO4bnd+UKZpis
-	 J+SKmIBTAyzNmdxs8T657WyUbO2TJUqZquhezgtfGcBMRgyQyOAMxoCyZ24UEigr5/
-	 PcW2Uu4M7jf/zHRw7ckPXMvsF3r4IuBtEp7CiOK0PD1Y8+VPD4+a7gzr6zv7bTY5Ia
-	 CT1rVIV0eWWh2j0Y+uxqbS1l+/HRT3kRJKHgNGfUgRWNa1PSJSjn2pxSf1doz/+ycY
-	 nJ37F1/yjrNmhSGAYIyCvBaLOhxUoegk0bTaPNTb7VVtOfjvJwJI83px6H70PG3tDo
-	 Z6PnMnQfBMiHA==
-Message-ID: <64aebb54-0d07-4ffa-8580-a73d51be7f8a@kernel.org>
-Date: Fri, 6 Sep 2024 10:37:50 +0200
+	b=QZtfA8d5uHpGUjev/CgSF8gFgWkBAxggjR7sFVf/7VWl63ttfhQdIUoIgTk7STWD8
+	 9NzBa9IOTSnMWxbQl06DJ1jR+jdSB0WtnTiAs/yy4F53hN3q6+RLyq5w61+uagdPce
+	 g8V3Xg4Kxn0Zk2tTwR7b/UymP+aHITO1qNFujHOUrh41KztLRJvS0q6RJBneW0nQYR
+	 Ln7mAw2qBhrlbnyNW2YJKhnhIaDIhnigQthpNfVileYFbp9+vg6A1REiPT26A0okp7
+	 f9gADopRhv/QW+eWLpxC0Or90iDLvQwzZJIkDSl2xzskLZOw5M+jbu72jbnmWEc2Hr
+	 tu9G41RW/TSlA==
+Message-ID: <9f5e4ef8-2c51-4d83-98e8-bd1a7cb936ce@kernel.org>
+Date: Fri, 6 Sep 2024 11:00:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: FAILED: patch "[PATCH] mptcp: pm: remove
- mptcp_pm_remove_subflow()" failed to apply to 5.10-stable tree
+Subject: Re: FAILED: patch "[PATCH] mptcp: pm: re-using ID of unused flushed
+ subflows" failed to apply to 5.10-stable tree
 Content-Language: en-GB
 To: gregkh@linuxfoundation.org, kuba@kernel.org, martineau@kernel.org
 Cc: stable@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
-References: <2024082657-quartered-obtuse-ce45@gregkh>
+References: <2024082631-emerald-impotence-a278@gregkh>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,13 +86,13 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2024082657-quartered-obtuse-ce45@gregkh>
+In-Reply-To: <2024082631-emerald-impotence-a278@gregkh>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Greg,
 
-On 26/08/2024 14:05, gregkh@linuxfoundation.org wrote:
+On 26/08/2024 14:04, gregkh@linuxfoundation.org wrote:
 > 
 > The patch below does not apply to the 5.10-stable tree.
 > If someone wants it applied there, or to any other stable or longterm
@@ -105,29 +105,26 @@ Thank you for the notification!
 
 > ------------------ original commit in Linus's tree ------------------
 > 
-> From f448451aa62d54be16acb0034223c17e0d12bc69 Mon Sep 17 00:00:00 2001
+> From ef34a6ea0cab1800f4b3c9c3c2cefd5091e03379 Mon Sep 17 00:00:00 2001
 > From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-> Date: Mon, 19 Aug 2024 21:45:25 +0200
-> Subject: [PATCH] mptcp: pm: remove mptcp_pm_remove_subflow()
+> Date: Mon, 19 Aug 2024 21:45:23 +0200
+> Subject: [PATCH] mptcp: pm: re-using ID of unused flushed subflows
 > 
-> This helper is confusing. It is in pm.c, but it is specific to the
-> in-kernel PM and it cannot be used by the userspace one. Also, it simply
-> calls one in-kernel specific function with the PM lock, while the
-> similar mptcp_pm_remove_addr() helper requires the PM lock.
+> If no subflows are attached to the 'subflow' endpoints that are being
+> flushed, the corresponding addr IDs will not be marked as available
+> again.
 > 
-> What's left is the pr_debug(), which is not that useful, because a
-> similar one is present in the only function called by this helper:
+> Mark all ID as being available when flushing all the 'subflow'
+> endpoints, and reset local_addr_used counter to cover these cases.
 > 
->   mptcp_pm_nl_rm_subflow_received()
+> Note that mptcp_pm_remove_addrs_and_subflows() helper is only called for
+> flushing operations, not to remove a specific set of addresses and
+> subflows.
 > 
-> After these modifications, this helper can be marked as 'static', and
-> the lock can be taken only once in mptcp_pm_flush_addrs_and_subflows().
-> 
-> Note that it is not a bug fix, but it will help backporting the
-> following commits.
+> Fixes: 06faa2271034 ("mptcp: remove multi addresses and subflows in PM")
 
-It was helping with newer versions, but not here in v5.10, because other
-fixes have not been taken. We don't need this patch then.
+The code is too different in v5.10, and I don't think it is worth it to
+have this small fix in v5.10.
 
 Cheers,
 Matt
