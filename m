@@ -1,123 +1,124 @@
-Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9622D2BCF5
-	for <mptcp@lists.linux.dev>; Fri,  6 Sep 2024 18:14:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BBAD1B85D5;
+	Fri,  6 Sep 2024 18:46:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725646456; cv=none; b=DFX2DkTkZ41IG/kqDn6bTl2moHeFwQX1377SraegwNMN+3SGVIJBCFpQdYgWN50bHRfiOlZ5rqcx6oI1EOiDAJSoG9G0eSeH7B9FQ2DkXettlxOl9YNDNmhbRHTMOFlX3WxwjUfWgtrZgJbMhR1LnFwrNm3jk+vL44+nL1RAD7o=
+	t=1725648383; cv=none; b=ovohUDSNLPtW/LA3klPKEebwZPNle92dTMtVs9P1chYSYZ3ACNKb32ooIBAN7BvdOmMYDRtaGY/iO7S5FBpjQM02efyYtXt8nhA8j8AVNkrRQMTL58sybTRCjZQrEyZykxWmdFNo95/1XPDEOzLi6AyyfBoXuzJJtKMEcZHTIEE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725646456; c=relaxed/simple;
-	bh=FeYSNo5czcg3IR256XszvQ/6OhPYsQqriNIVtd7SUDk=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PrhpzCZXjIWcbKHfOnlVjdM8NKqU9ut7Y+VINWQPsK3z8APmKlnCudJMDSNQalKzRIlLwcRvwrxJYSoCbK19XfPMQlNLqa0UdkFvuCmvuXLw62S0nhA772WjEtOIfA2kHdPDSA8cwk480FuE9cAHlG+gaARsJUuVbmPmhGmj+B8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=U84bt+GG; arc=none smtp.client-ip=209.85.214.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725648383; c=relaxed/simple;
+	bh=/TWWVM3LOtpuoyPVfgax7PiTjbUDXYPw9cdrQ05JEyY=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=a7japptRUWQqxaKtk8F9f1mEnqltuDtVw0d0X7s1QZV4/HqtYTi3QfejN3tNufDy4YZOgaCQRkKSVSjUnjHFPA4NpGuMf7S53Mbu3S8QPchTXQH/vc431ruZ8X6f7eC3DOtVY4WFKlxwNl9EHSPFM3Za7cEq76xzgmaFn+Vz9rU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cuyyIMLX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="U84bt+GG"
-Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-2059204f448so21526145ad.0
-        for <mptcp@lists.linux.dev>; Fri, 06 Sep 2024 11:14:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725646455; x=1726251255; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=3CihCPYV/1mLJJR2EtGHL2SpqR74ISLo2o213PlCmFY=;
-        b=U84bt+GGZOWtzR5S0SbEKGXje+zHa+a+9iUSx9ABXbW+5Vb2cd3pQxHzFUYQ9Vw8gy
-         UZ2Q4Hf6kOM/O3DXVvuVexrQZXuPdhddRvaJHyso5AbaSYLzJvGTzV4QeRQMBysxR23c
-         IIWnyvzpKfDJEpJc9lwzbwzFmcdzDXKeWC37SEYzkP9jGCeao1KJUwqtaTV2sonyUhKy
-         qlSkmzJl9yftAmivNqOe4WgekvwyDlkwwlIi2o0P+Y3LHV+69Ed4n5qbZL/ObaZf4eO4
-         pEu0bPcqwATqltH03xkgDsak/sc63NEy6HJMFAiYB756V0rUqvZKbx23nEPrfJZbjP5L
-         ofkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725646455; x=1726251255;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=3CihCPYV/1mLJJR2EtGHL2SpqR74ISLo2o213PlCmFY=;
-        b=GR1x4aseon8eiHR9oQmHScPBJfkkb8KJefwpBov4IMGUed6ODNwcB3GDe82Mx4i5PO
-         XccnIImmNoaNCLxyqFcWh3gT1bzYFoKDxHyw0GpB1YQsxJqvzLfkjgttAGsUnf9VBiIS
-         nN0IJwEt7E3bzgpUNYIXTHt4dNBVkCxb03avYIX1cf/ZS9F+eY+hjKJRmpENbxdTpyMI
-         rLdGR/xDBGjZanS/fn9EHAwIiWd1UsIt5awEZ2ccRnXDbbnzwp5HsWHvcbvBFtJb0lax
-         xxePdjbpaihb/Jxq7ayXrqyZ18dNhZBVegxn2vYTQxcROM3ZstcclTFyQCoFJNlEEhd9
-         /rOA==
-X-Gm-Message-State: AOJu0YyTTOspleg2Qyo09yp8d/el3wkUYVMz4GXNlgdN9JOH3fKKRpvA
-	6G5v54Czz5MGPHAXB8K1W6Cu5dRJKm40FTVpzGAwsS7JhlPfRpo=
-X-Google-Smtp-Source: AGHT+IHvZ6Y4npRk5hr5Xdt3dNcoh6d0VpmoRFCWke/qGmd2daxpBJxBZpxXvIdLv2WmW6/4J4fp/w==
-X-Received: by 2002:a17:902:d50d:b0:206:a3a9:197e with SMTP id d9443c01a7336-206f04e16fdmr34637235ad.4.1725646454546;
-        Fri, 06 Sep 2024 11:14:14 -0700 (PDT)
-Received: from [127.0.0.1] ([52.238.24.180])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-206aea67bd1sm45814205ad.247.2024.09.06.11.14.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2024 11:14:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20240906-selftests-mptcp-trailing-ws-v1-0-03421b02c48e@kernel.org>
-References:
- <20240906-selftests-mptcp-trailing-ws-v1-0-03421b02c48e@kernel.org>
-Subject: Re: [PATCH mptcp-next 0/2] selftests: mptcp: add time per subtests
- in TAP output (part 2)
-Message-ID: <673d3126-c1f6-21a0-b867-6185ae100a3a@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 06 Sep 2024 18:14:13 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cuyyIMLX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 635EBC4CEC4;
+	Fri,  6 Sep 2024 18:46:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725648382;
+	bh=/TWWVM3LOtpuoyPVfgax7PiTjbUDXYPw9cdrQ05JEyY=;
+	h=From:Subject:Date:To:Cc:From;
+	b=cuyyIMLX7RFEfVJPtgOj7gTSphB0xfb0k491wxM61WD+CttTIOEug5J7GazISADiF
+	 ybrTlTa+rrGvqoyJ6OXk7EfVgAVo33MscJNK/pKnmQu2Z9oV/7n6czYslL4AY/6udD
+	 7y6r2qFyKYK8kjZzRPRS726+/NmrG1iX4UdwH4IwiNVKRg8JvE/6M20laT+WU/Nrzu
+	 FPstCU2mQsN7D1I18NGpjgmvpXPGiWheaINCDCFJ22WkAMODylkw/8ycxRj0ZSS+AU
+	 I6KKpadeOrSRo3pvYmOM5LuEP/jt9GX/MQ0c7cA90OWRkmsYgN9CbYcsAHMa5gUuzC
+	 OApuLMsxywAwA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v2 0/5] selftests: mptcp: add time per subtests in
+ TAP output
+Date: Fri, 06 Sep 2024 20:46:06 +0200
+Message-Id: <20240906-net-next-mptcp-ksft-subtest-time-v2-0-31d5ee4f3bdf@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAO5N22YC/42NwQqDMBBEf6XsuVuSmIPpqf9RPGhcNVijZLdiE
+ f+9Qei9hzk8hpm3A1MKxHC/7JBoDRzmmMFcL+CHOvaEoc0MRhmrnDIYSXI2wWkRv+DInSC/GyE
+ WlDAR1mXhyduiLZ2FfLMk6sJ2Kp7wW0OVmyGwzOlzuld99v9rVo0KO02tda7WutGPkVKk121OP
+ VTHcXwB1b2raNsAAAA=
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2273; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=/TWWVM3LOtpuoyPVfgax7PiTjbUDXYPw9cdrQ05JEyY=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm20371FkgbH8kqFjiOCr++/l5SUutuGGl1GnQP
+ p3vSMu7p86JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZttN+wAKCRD2t4JPQmmg
+ czE3EACSU/6XzXHCzZb2xzTNxspcEnAAetZpcPzJCxKewkpqNMFwEnw0rxSAOmRQSwohUWmShlh
+ KSfkMcr0JHEvrDKYmkFHCgs65g92TI/uvYuz1XQN1ys/mKogtcJjn5jLdMhLeWp8n30i77iWDzl
+ UpnYWlFNHeefgVPOvELVeq7RvEvG46r4DF9kKB4XyAH571IJ4EHzo68dS2Lqgj7alZ3UHEhS3oW
+ UbiVSpttIJ1XsE9bD+HwQFye2MbsuWVJbEwKM6WgAYSyVbIQBt2jc+uOaeqiqKsUg5V5AU9XmdK
+ aPh5NmuKRsQjmb62a+ARgbMAyfPLsyq25nzBRS+PQKdriQP4SE6cZHC/PjTpO8qX9G1vSiqdVUl
+ +v+aV93NtvKwKCeZb9Q2W+hPR0eLuUCuLNS2qvo8KZphc6sJv+z6qs8A6h93IfDZiz5t7H5Nij2
+ yH3jgN6oWJ41flHSZi6Y2hMIORhgiEUupIU0gbfdRYr+bRML+Oz0uWZtp9DsiQLAGgLzFEeD3Lv
+ JEgSCX9RlFRT3DlFSNLjiMgH0VENZuze1s3Rnj/ZCkeIuLNmToIc1EDJCPTeTbUIq4Esx3GhOks
+ 42hzIilxOBhLjvvoTkRUg9K4KLirHBfIFMlUFl5J7OxEZZzTWSJc++UW1TMkE3yx7vohPP/eoHQ
+ fqKe07DzGmD3FvA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+Patches here add 'time=<N>ms' in the diagnostic data of the TAP output,
+e.g.
 
-Thank you for your modifications, that's great!
+  ok 1 - pm_netlink: defaults addr list # time=9ms
 
-Our CI did some validations and here is its report:
+This addition is useful to quickly identify which subtests are taking a
+longer time than the others, or more than expected.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10742659832
+Note that there are no specific formats to follow to show this time
+according to the TAP 13, TAP 14 and KTAP specifications, but we follow
+the format being parsed by NIPA [1].
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/c061b56c6627
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D887838
+Patch 1 modifies mptcp_lib.sh to add this support to all MPTCP
+selftests.
 
+Patch 2 removes the now duplicated info in mptcp_connect.sh
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Patch 3 slightly improves the precision of the first subtests in all
+MPTCP subtests.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Patches 4 and 5 remove duplicated spaces in TAP output, for the TAP
+parsers that cannot handle them properly.
 
-For more details:
+Link: https://github.com/linux-netdev/nipa/pull/36
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Typo in the commit message of patch 2 (Jakub)
+- Two additional patches to remove duplicated spaces in TAP output
+- Link to v1: https://lore.kernel.org/r/20240902-net-next-mptcp-ksft-subtest-time-v1-0-f1ed499a11b1@kernel.org
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+---
+Matthieu Baerts (NGI0) (5):
+      selftests: mptcp: lib: add time per subtests in TAP output
+      selftests: mptcp: connect: remote time in TAP output
+      selftests: mptcp: reset the last TS before the first test
+      selftests: mptcp: diag: remove trailing whitespace
+      selftests: mptcp: connect: remove duplicated spaces in TAP output
 
+ tools/testing/selftests/net/mptcp/diag.sh          |  2 +-
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 17 ++++++++++-------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |  3 ++-
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 17 ++++++++++++++++-
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  1 +
+ tools/testing/selftests/net/mptcp/pm_netlink.sh    |  2 ++
+ tools/testing/selftests/net/mptcp/simult_flows.sh  |  1 +
+ tools/testing/selftests/net/mptcp/userspace_pm.sh  |  1 +
+ 8 files changed, 34 insertions(+), 10 deletions(-)
+---
+base-commit: 52fc70a32573707f70d6b1b5c5fe85cc91457393
+change-id: 20240902-net-next-mptcp-ksft-subtest-time-a83cec43d894
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
