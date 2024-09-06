@@ -1,152 +1,212 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336E51B85C8;
-	Fri,  6 Sep 2024 18:55:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 610253D0A9
+	for <mptcp@lists.linux.dev>; Fri,  6 Sep 2024 21:29:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725648925; cv=none; b=X8Jq459I4lMjIXYqD5QYg6ad7fntxREgu+8HsOBME8Fv29h7iy1LQbu8Xa9zHSyWKrhknr9V4oVFivsRCGMEKQVO/sgZx49ShHXI6QvoVQHJCPWrYUMGK9/TUFr0bsD/+6DPHMXdDMtonooMVxqcktkWFCRHdDr4hWj0jeaFtw4=
+	t=1725658188; cv=none; b=VRhYIpUS5BYiL/e/aqFUyj/UZlDQVvlwgyD+Md0XFTOIz6jc5wS14pie/KWD/ZumVWeGB4MN3+M7ymgNN3MrcfXVfyM0xzFECHvFxUNLse2oDiSu/0CRr7elVymxwuX7MAqhiP43rHfQcoCR0jYduwdvJEaltIVdVSs3DWrMC6c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725648925; c=relaxed/simple;
-	bh=xydqzXCNhgZuKdjblfs4ftwwAuG4PcoLJ3PLFKz70bA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fp4HOOqlkfzg9FeeCKvYzn8TaKRLLupo4f+ugWTFu3HfskLnZybazHn5LBnKAGTq1Xxa/pGMrBE7cSWZ/3IskxGcjTaiIusfnU3H66K7Sq9JsqVEoYfs+fA2ehpr2+UlMFhOqAAi6GSO6qgkyNkSIr90WrgU3QGYMDlkYhiNqBk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kA2ke1Ye; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725658188; c=relaxed/simple;
+	bh=PFdrokk0VEtQ17Zj+4safMzZBOLV9DjWazLLEv9yFp8=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=KJrhhXlzhGdAp1rHlrR8CqZIHfUpiR52eOkuO2lK1BoD8+lQHT5+aCVyGD3CVjkEqhEJsdltmrUiEA0zm2Q9d9Ke6HWTdseSoXeZ9vwoHl+58rsJr6JWC42YEvgkhf/tNA/smDB9R2pZY0wgo21W2ggiaAo99V0wQL92rYKCsOc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gbyR3yMr; arc=none smtp.client-ip=209.85.215.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kA2ke1Ye"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AD06C4CEC4;
-	Fri,  6 Sep 2024 18:55:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725648924;
-	bh=xydqzXCNhgZuKdjblfs4ftwwAuG4PcoLJ3PLFKz70bA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kA2ke1YehGFwS//3BnM1GozEFoxeWSjMBllDGEyKTYJUnGmSb23ARANM1Nhqu6TgE
-	 tf9vMXIylhysogsF9IKDcV11voj7dNmN7NQ6M/bG902rjWRLbpCvoOKnxDt41Qx24P
-	 0SJ8mM+0TWJtTPuzp7zjh4lJBHvPR1Q9t3iBYTKX2m+7/ZluKz3j46ey0a10jUOweu
-	 362mGKMmRO8ogDx/6xOSpM55QEdPm/MwATihALSv5fZ4bFkR5p4Yd5ZVIr9PJabZRW
-	 6lf37Fj8o9nIbodNoHg1qbvc1QZGmGdR3gBMC3R+zEDF56oerXtgW7AcdDlN8eBfU6
-	 ahIoO1ORPJCGA==
-Message-ID: <b2272b72-d207-4393-9245-31ad7628be09@kernel.org>
-Date: Fri, 6 Sep 2024 20:55:20 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gbyR3yMr"
+Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-7c6b4222fe3so1845442a12.3
+        for <mptcp@lists.linux.dev>; Fri, 06 Sep 2024 14:29:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725658186; x=1726262986; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=Q/9/E9nS3oZaqoMOUJYSBIGgv/b+BtHh+Wm6kmnxSnI=;
+        b=gbyR3yMrVVHvORT4tnGAehZei8CwNLtrFpvTMZlHMAF194AKFgUv2/ivaKfkbIa/Zq
+         h80jl3iFg7rsWEIpFK5rnYcyVh1XliME6x+XBX9VQwnq8d3VNf2x2yyu65NJkUaEqxkw
+         iTy9BmW3jFC5YHWun472o/H7hAfPlHQNS3H+09244VAB3mcbg2DdtG5F4s5qKnuw4a10
+         BRyVMbe8V+i1kAkAX3C/1+K2lM/p2+vwx7xZY5dFr7bXgPy2j9nWFtFLZkDa4bBH0KtI
+         lFuEtdkqnoiY8PLmTXWb9GZE76LETznA1Z/ZRO6DNkFLVjsvhLpIaeHHiQmuTxsWfRmc
+         OYfw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725658186; x=1726262986;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=Q/9/E9nS3oZaqoMOUJYSBIGgv/b+BtHh+Wm6kmnxSnI=;
+        b=rdQkEWrrYF1dlYJ/NmeAFIHzxdU4TM5YsHfrNm2hyzYReqj1F3u309PNuW8YKwgRk9
+         7Tv/huc9cv1Tzu0ugtlqVP4lkmRBRPjVKqD8XCsLUS0heRFIE/PDdS0zMT8XbYHW4BYO
+         QkUpNlelXygCh9ICftRG+ysZDGy1b6UDq/qtyaDO1Ar6x6q/bwtSgszI5i3qEDy/HAnR
+         LH+yCVzMfPHE9H1ln72b6r1RkKvgjJBDG16gXsG0ohAjDhOOIj24J0zmUIamNDHJyA0k
+         Bln+06Vp03REYdvxOPBexkprcJF033cdpOnnummmN8W5F5WEKL2uYsbUlJ5gPRY+7Rue
+         0M5A==
+X-Forwarded-Encrypted: i=1; AJvYcCVHgQHtXALSglWYsgOMGO+G8saLjgdxCF1h7sOtUka+2v+uV8TbANfbodhSpY4dPbUkdquYTw==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz6N2JoE+1X8/mBaXKtVaRUGV/HU7jTLQB7gKRL+cohrJj0gw7y
+	7QqASnOBYu52mH2XbswpiAukCR2vdUZsmCRdpcvr6eTj0k1AF656U0T5KXfGZYdt7/U8riFiciH
+	MwVtdsziNyG1vKjl6DcU65y7S8Fs=
+X-Google-Smtp-Source: AGHT+IFnvDa6GQQQQEhSiWTmjviyrde2w8FwHeWOc1+rrVPknOVdzD7xmaJSj/RUEGTJLG7N8whe1ojvRNbVyKiMLCQ=
+X-Received: by 2002:a17:90a:c90c:b0:2d3:d728:6ebb with SMTP id
+ 98e67ed59e1d1-2dad4de1412mr4755331a91.5.1725658185658; Fri, 06 Sep 2024
+ 14:29:45 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net v3] mptcp: pm: Fix uaf in __timer_delete_sync
-Content-Language: en-GB
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
- kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
- mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com,
- syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com
-References: <e4a13002-f471-4951-9180-14f0f8b30bd2@kernel.org>
- <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <cover.1725544210.git.tanggeliang@kylinos.cn> <a75fc3e8df7141ce582448d3f092871a4943fbf4.1725544210.git.tanggeliang@kylinos.cn>
+ <288ad1c2-501a-4319-bc1e-e7a7e276ff63@linux.dev>
+In-Reply-To: <288ad1c2-501a-4319-bc1e-e7a7e276ff63@linux.dev>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 6 Sep 2024 14:29:33 -0700
+Message-ID: <CAEf4BzY+FPNmX7VxQmbh-A4-QRCSLxGT3KOfGoHrdDJLg6QvDg@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next 1/4] bpf: Add mptcp_subflow bpf_iter
+To: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev, 
+	Geliang Tang <tanggeliang@kylinos.cn>, Martin KaFai Lau <martin.lau@kernel.org>, 
+	bpf <bpf@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Edward,
+On Thu, Sep 5, 2024 at 11:25=E2=80=AFAM Martin KaFai Lau <martin.lau@linux.=
+dev> wrote:
+>
+> On 9/5/24 6:52 AM, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> >
+> > It's necessary to traverse all subflows on the conn_list of an MPTCP
+> > socket and then call kfunc to modify the fields of each subflow. In
+> > kernel space, mptcp_for_each_subflow() helper is used for this:
+> >
+> >   mptcp_for_each_subflow(msk, subflow)
+> >           kfunc(subflow);
+> >
+> > But in the MPTCP BPF program, this has not yet been implemented. As
+> > Martin suggested recently, this conn_list walking + modify-by-kfunc
+> > usage fits the bpf_iter use case.
+> >
+> > This patch adds a new bpf_iter type named "mptcp_subflow" to do this.
+> >
+> > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >   kernel/bpf/helpers.c |  3 +++
+> >   net/mptcp/bpf.c      | 57 +++++++++++++++++++++++++++++++++++++++++++=
++
+> >   2 files changed, 60 insertions(+)
+> >
+> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
+> > index b5f0adae8293..2340ba967444 100644
+> > --- a/kernel/bpf/helpers.c
+> > +++ b/kernel/bpf/helpers.c
+> > @@ -3023,6 +3023,9 @@ BTF_ID_FLAGS(func, bpf_preempt_enable)
+> >   BTF_ID_FLAGS(func, bpf_iter_bits_new, KF_ITER_NEW)
+> >   BTF_ID_FLAGS(func, bpf_iter_bits_next, KF_ITER_NEXT | KF_RET_NULL)
+> >   BTF_ID_FLAGS(func, bpf_iter_bits_destroy, KF_ITER_DESTROY)
+> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
+> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
+> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
+> >   BTF_KFUNCS_END(common_btf_ids)
+> >
+> >   static const struct btf_kfunc_id_set common_kfunc_set =3D {
+> > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> > index 9672a70c24b0..cda09bbfd617 100644
+> > --- a/net/mptcp/bpf.c
+> > +++ b/net/mptcp/bpf.c
+> > @@ -204,6 +204,63 @@ static const struct btf_kfunc_id_set bpf_mptcp_fmo=
+dret_set =3D {
+> >       .set   =3D &bpf_mptcp_fmodret_ids,
+> >   };
+> >
+> > +struct bpf_iter__mptcp_subflow {
+> > +     __bpf_md_ptr(struct bpf_iter_meta *, meta);
+> > +     __bpf_md_ptr(struct mptcp_sock *, msk);
+> > +     __bpf_md_ptr(struct list_head *, pos);
+> > +};
+> > +
+> > +DEFINE_BPF_ITER_FUNC(mptcp_subflow, struct bpf_iter_meta *meta,
+> > +                  struct mptcp_sock *msk, struct list_head *pos)
 
-On 05/09/2024 14:27, Edward Adam Davis wrote:
-> There are two paths to access mptcp_pm_del_add_timer, result in a race
-> condition:
-> 
->      CPU1				CPU2
->      ====                               ====
->      net_rx_action
->      napi_poll                          netlink_sendmsg
->      __napi_poll                        netlink_unicast
->      process_backlog                    netlink_unicast_kernel
->      __netif_receive_skb                genl_rcv
->      __netif_receive_skb_one_core       netlink_rcv_skb
->      NF_HOOK                            genl_rcv_msg
->      ip_local_deliver_finish            genl_family_rcv_msg
->      ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
->      tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
->      tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
->      tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
->      tcp_data_queue                     remove_anno_list_by_saddr
->      mptcp_incoming_options             mptcp_pm_del_add_timer
->      mptcp_pm_del_add_timer             kfree(entry)
-> 
-> In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-> zone protected by "pm.lock", the entry will be released, which leads to the
-> occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
-> 
-> Keeping a reference to add_timer inside the lock, and calling
-> sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
-> 
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Cc: stable@vger.kernel.org
-> Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+this is defining BPF iterator *program type* (effectively), which is
+different from open-coded iterator. Do you need a BPF iterator program
+type for this? Or open-coded iterator called from other BPF program
+types would be sufficient?
 
-According to the doc [1], a 'Co-dev' tag is supposed to be added before
-this SoB:
+> > +
+> > +struct bpf_iter_mptcp_subflow {
+> > +     __u64 __opaque[3];
+> > +} __attribute__((aligned(8)));
+> > +
+> > +struct bpf_iter_mptcp_subflow_kern {
+> > +     struct mptcp_sock *msk;
+> > +     struct list_head *pos;
+> > +} __attribute__((aligned(8)));
 
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+opaque[3], but you are using two pointers here. Why the difference?
 
-But I'm sure that's fine without it.
-
-[1]
-https://docs.kernel.org/process/submitting-patches.html#when-to-use-acked-by-cc-and-co-developed-by
-
-
-This v3 now looks good to me. I don't know if it needs to be reviewed by
-someone else as I'm now listed as co-developed.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+> > +
+> > +__bpf_kfunc_start_defs();
+> > +
+> > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subfl=
+ow *it,
+> > +                                        struct mptcp_sock *msk)
+> > +{
+> > +     struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> > +
+> > +     kit->msk =3D msk;
+> > +     kit->pos =3D &msk->conn_list;
+> > +     spin_lock_bh(&msk->pm.lock);
+>
+> I don't think spin_lock here without unlock can be used. e.g. What if
+> bpf_iter_mptcp_subflow_new() is called twice back-to-back.
+>
+> I haven't looked at the mptcp details, some questions:
+> The list is protected by msk->pm.lock?
+> What happen to the sk_lock of the msk?
+> Can this be rcu-ify? or it needs some cares when walking the established =
+TCP
+> subflow?
+>
+>
+> [ Please cc the bpf list. Helping to review patches is a good way to cont=
+ribute
+> back to the mailing list. ]
+>
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +__bpf_kfunc struct mptcp_subflow_context *
+> > +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
+> > +{
+> > +     struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> > +     struct mptcp_subflow_context *subflow;
+> > +     struct mptcp_sock *msk =3D kit->msk;
+> > +
+> > +     subflow =3D list_entry((kit->pos)->next, struct mptcp_subflow_con=
+text, node);
+> > +     if (list_entry_is_head(subflow, &msk->conn_list, node))
+> > +             return NULL;
+> > +
+> > +     kit->pos =3D &subflow->node;
+> > +     return subflow;
+> > +}
+> > +
+> > +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_=
+subflow *it)
+> > +{
+> > +     struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> > +     struct mptcp_sock *msk =3D kit->msk;
+> > +
+> > +     spin_unlock_bh(&msk->pm.lock);
+> > +}
+> > +
+> > +__bpf_kfunc_end_defs();
+> > +
+> >   __diag_push();
+> >   __diag_ignore_all("-Wmissing-prototypes",
+> >                 "kfuncs which will be used in BPF programs");
+>
+>
