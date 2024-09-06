@@ -1,228 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47A9F17BBE;
-	Fri,  6 Sep 2024 10:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 745841C8FBE;
+	Fri,  6 Sep 2024 10:10:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725616968; cv=none; b=eU6K3P/SsULS4zd4NxFKa/GZeef8DG4w5pba5jiSqc+T7OCVBZvsGP0Eo1Do5uaQUO79wkm2Elx4IkSwhEN2DeELR+HTslF9dY0kYfWp/oIIGC/7XCg2YYOxcze+1MJYJFPayRi2Zr7MFPvd2GyzS3SxLN6YSz+vmmXh5SCMAnc=
+	t=1725617427; cv=none; b=Fpbc/BoafYp4eU5TAmBnUK47lv/Zk6Uu/8DXNVOUVZsNCH0/zBf42LEckTCwoKjDhXDX+fS07T3mDIY3wTZ2mRNAV5o8hP8/L8bbOsDCMRXsa86cp2ZAjh3EwgPIIYxZpnzNTZdle7vVNCHkGjmHgu+KakbhbpCXZAZC2T5fTaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725616968; c=relaxed/simple;
-	bh=iYA90GDpqgtTo5U9amp1FTYHBndZHESotRROhndrYU0=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=EFTk/NUucpeZXDMfCD70fMeljtu4qtNFVsFbFI0uf89TEevM9l1P/R3pwyBU2JpmFnMzqNCZ8Wv0xai8GWU/2mmuwYmF6WnpYiMezz8b3SNisRfyVVXRojG9Hqga2QKSpru/eTCurDlFK0O8XWXACtMgmNEBDSs5I7HcAOeMEno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WNc1c5GM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725617427; c=relaxed/simple;
+	bh=aHlWIs2y7UxXRyPHG97BeELexgtOF0bS+sKBfH9ulbk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=g2hDK40N6/VCc5ZGJLWgy3MEU571LUbaI2h6n2ReutkbMRcBvYpbvQizqwG8XXcJOitFM9Yp9YU8jN+15yZe7qPLVy+OPJyu2+jN/Ac6aWHIo4nV2ABx0CdRnFtfNr4x7rfo6fpM1oYNcx70i0mFkLGpHoh3sYKj8Mui/VLo4W8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gr3fMeFJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WNc1c5GM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC978C4CEC4;
-	Fri,  6 Sep 2024 10:02:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gr3fMeFJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A9FC4CEC4;
+	Fri,  6 Sep 2024 10:10:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725616967;
-	bh=iYA90GDpqgtTo5U9amp1FTYHBndZHESotRROhndrYU0=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=WNc1c5GMH4SIZuzb1eANockt0P5pTnrLkblRvSprYWFrga6f2eDQWlb3eJYiLluJN
-	 euS7IGc+M3YKuzfBj9bWjvXR1ttNBbGDZsvAN/7EbgMbkMNPV203la4KYDc37w4NZE
-	 IygNJRkl82JmxuHqVbbWmWBsqpq7uHkMWCmMJVpKLqzGnxF60saiL9UxR8SDBD/3iz
-	 G4Kf/F7C5ARnKCRhr3IgYc3j9vRcWvKfBvdpfOptmmL0WupkSfDGzhfZjzTWgYb4hQ
-	 d0aonECpvj7sqITmF2JCDDq6OE+Z7nrGltQ3vEJ+2ulYp+CSVNPY+qnfGyO1h8xhjz
-	 8x7tbRIXiTWhA==
-Message-ID: <18eb1fcd91e7283fda1932ff72e2d0cc53dc9e56.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 1/4] bpf: Add mptcp_subflow bpf_iter
-From: Geliang Tang <geliang@kernel.org>
-To: Martin KaFai Lau <martin.lau@linux.dev>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, Martin KaFai Lau
-	 <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>
-Date: Fri, 06 Sep 2024 18:02:43 +0800
-In-Reply-To: <288ad1c2-501a-4319-bc1e-e7a7e276ff63@linux.dev>
-References: <cover.1725544210.git.tanggeliang@kylinos.cn>
-	 <a75fc3e8df7141ce582448d3f092871a4943fbf4.1725544210.git.tanggeliang@kylinos.cn>
-	 <288ad1c2-501a-4319-bc1e-e7a7e276ff63@linux.dev>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1725617426;
+	bh=aHlWIs2y7UxXRyPHG97BeELexgtOF0bS+sKBfH9ulbk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gr3fMeFJxfyVvL3v3Hjr5XjzIOXzdQRVM7Kj8VR9xTI0eFEmncMpux6Z4GU7BCJU/
+	 4srO1HTXsZTOWD8ZnbUKNOl/IaZdz6jShQ2tju8mG7xWlhAvPAUL1alMpXFWxYotUN
+	 HjlG9TzIaEV9W857GMOjZbUqr8Pd23VRVq1FYFyb54iEkQ0HwUcb4h/bqnoXYJRVv+
+	 jQK6WWwcESv+4GhOC7yCoGtu1am5FExnnPvXZmd3WxDdYaeMNn0ErDnk1U9BsMUTWx
+	 /d5KKbk1fPCjbvAjnfa+Ak/j0Qp19Ps3NyAxmGWe7Da0EEc7gaMtREDu8ROpFjzrAm
+	 NlFFHrkc67BJQ==
+Message-ID: <be29b0d9-83be-4947-912e-8d9f5b8f5f9c@kernel.org>
+Date: Fri, 6 Sep 2024 12:10:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: MPTCP stable backports: is the workflow OK?
+Content-Language: en-GB
+To: Greg KH <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>
+Cc: stable@vger.kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
+References: <32148274-08bb-4031-a55b-6b16b48a5497@kernel.org>
+ <2024090642-viewing-happier-23b8@gregkh>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2024090642-viewing-happier-23b8@gregkh>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Martin,
+Hi Greg, Sasha,
 
-On Thu, 2024-09-05 at 11:24 -0700, Martin KaFai Lau wrote:
-> On 9/5/24 6:52 AM, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > It's necessary to traverse all subflows on the conn_list of an
-> > MPTCP
-> > socket and then call kfunc to modify the fields of each subflow. In
-> > kernel space, mptcp_for_each_subflow() helper is used for this:
-> > 
-> >   mptcp_for_each_subflow(msk, subflow)
-> >           kfunc(subflow);
-> > 
-> > But in the MPTCP BPF program, this has not yet been implemented. As
-> > Martin suggested recently, this conn_list walking + modify-by-kfunc
-> > usage fits the bpf_iter use case.
-> > 
-> > This patch adds a new bpf_iter type named "mptcp_subflow" to do
-> > this.
-> > 
-> > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >   kernel/bpf/helpers.c |  3 +++
-> >   net/mptcp/bpf.c      | 57
-> > ++++++++++++++++++++++++++++++++++++++++++++
-> >   2 files changed, 60 insertions(+)
-> > 
-> > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > index b5f0adae8293..2340ba967444 100644
-> > --- a/kernel/bpf/helpers.c
-> > +++ b/kernel/bpf/helpers.c
-> > @@ -3023,6 +3023,9 @@ BTF_ID_FLAGS(func, bpf_preempt_enable)
-> >   BTF_ID_FLAGS(func, bpf_iter_bits_new, KF_ITER_NEW)
-> >   BTF_ID_FLAGS(func, bpf_iter_bits_next, KF_ITER_NEXT |
-> > KF_RET_NULL)
-> >   BTF_ID_FLAGS(func, bpf_iter_bits_destroy, KF_ITER_DESTROY)
-> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
-> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
-> > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
-> >   BTF_KFUNCS_END(common_btf_ids)
-> >   
-> >   static const struct btf_kfunc_id_set common_kfunc_set = {
-> > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> > index 9672a70c24b0..cda09bbfd617 100644
-> > --- a/net/mptcp/bpf.c
-> > +++ b/net/mptcp/bpf.c
-> > @@ -204,6 +204,63 @@ static const struct btf_kfunc_id_set
-> > bpf_mptcp_fmodret_set = {
-> >    .set   = &bpf_mptcp_fmodret_ids,
-> >   };
-> >   
-> > +struct bpf_iter__mptcp_subflow {
-> > + __bpf_md_ptr(struct bpf_iter_meta *, meta);
-> > + __bpf_md_ptr(struct mptcp_sock *, msk);
-> > + __bpf_md_ptr(struct list_head *, pos);
-> > +};
-> > +
-> > +DEFINE_BPF_ITER_FUNC(mptcp_subflow, struct bpf_iter_meta *meta,
-> > +      struct mptcp_sock *msk, struct list_head *pos)
-> > +
-> > +struct bpf_iter_mptcp_subflow {
-> > + __u64 __opaque[3];
-> > +} __attribute__((aligned(8)));
-> > +
-> > +struct bpf_iter_mptcp_subflow_kern {
-> > + struct mptcp_sock *msk;
-> > + struct list_head *pos;
-> > +} __attribute__((aligned(8)));
-> > +
-> > +__bpf_kfunc_start_defs();
-> > +
-> > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
-> > bpf_iter_mptcp_subflow *it,
-> > +    struct mptcp_sock *msk)
-> > +{
-> > + struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > +
-> > + kit->msk = msk;
-> > + kit->pos = &msk->conn_list;
-> > + spin_lock_bh(&msk->pm.lock);
+Thank you for your reply!
+
+On 06/09/2024 11:56, Greg KH wrote:
+> On Fri, Sep 06, 2024 at 11:36:25AM +0200, Matthieu Baerts wrote:
+>> Hi Greg,
+>>
+>> Thank you again for your support when we send patches for stable
+>> versions for MPTCP!
+>>
+>> Recently, I sent many patches for the stable versions, and I just wanted
+>> to check if what I did was OK for you?
+>>
+>> I tried to reply to all the 'FAILED: patch' emails you sent, either with
+>> patches, or with reasons explaining why it is fine not to backport them.
+>> Are you OK with that?
+>>
+>> Or do you prefer only receiving the patches, and not the emails with the
+>> reasons not to backport some of them?
+>>
+>> About the patches, do you prefer to receive one big series per version
+>> or individual patches sent in reply to the different 'FAILED: patch'
+>> emails like I did?
 > 
-> I don't think spin_lock here without unlock can be used. e.g. What if
-> bpf_iter_mptcp_subflow_new() is called twice back-to-back.
-> 
-> I haven't looked at the mptcp details, some questions:
-> The list is protected by msk->pm.lock?
-> What happen to the sk_lock of the msk?
-> Can this be rcu-ify? or it needs some cares when walking the
-> established TCP 
-> subflow?
+> One big series, per kernel tree, would be ideal as that way I don't have
+> to pick them out and guess as to the order.
 
-Thank you for your review. msk->pm.lock shouldn't be used here. The
-conn_list is not protected by msk->pm.lock. I will remove it in v2.
+Sure, I will do that next time, it is even easier for me.
 
-> 
-> 
-> [ Please cc the bpf list. Helping to review patches is a good way to
-> contribute 
-> back to the mailing list. ]
+I sent the patches in the same order as they are in my working branch,
+but I understand they could be received in a different order.
 
-This patch is for "mptcp-next", it depends on the "new MPTCP subflow
-subtest" which is under review on the bpf list. We will send it to the
-bpf list very soon.
+> Also, if you don't respond to the FAILED emails, that's fine with me, I
+> don't keep track, but maybe Sasha does as I know he does backports based
+> on them at times.  So I'll let him answer that.
 
-Thanks,
--Geliang
+Thanks! I will wait for Sasha's reply.
 
-> 
-> > +
-> > + return 0;
-> > +}
-> > +
-> > +__bpf_kfunc struct mptcp_subflow_context *
-> > +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
-> > +{
-> > + struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > + struct mptcp_subflow_context *subflow;
-> > + struct mptcp_sock *msk = kit->msk;
-> > +
-> > + subflow = list_entry((kit->pos)->next, struct
-> > mptcp_subflow_context, node);
-> > + if (list_entry_is_head(subflow, &msk->conn_list, node))
-> > + return NULL;
-> > +
-> > + kit->pos = &subflow->node;
-> > + return subflow;
-> > +}
-> > +
-> > +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
-> > bpf_iter_mptcp_subflow *it)
-> > +{
-> > + struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > + struct mptcp_sock *msk = kit->msk;
-> > +
-> > + spin_unlock_bh(&msk->pm.lock);
-> > +}
-> > +
-> > +__bpf_kfunc_end_defs();
-> > +
-> >   __diag_push();
-> >   __diag_ignore_all("-Wmissing-prototypes",
-> >      "kfuncs which will be used in BPF programs");
-> 
+> But in the end, whatever is easier for you is good for us, thanks!
+
+Thanks!
+
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
