@@ -1,123 +1,93 @@
-Received: from mail-pf1-f174.google.com (mail-pf1-f174.google.com [209.85.210.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3703200A9
-	for <mptcp@lists.linux.dev>; Sat,  7 Sep 2024 04:38:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E419315F308;
+	Sat,  7 Sep 2024 15:43:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725683913; cv=none; b=IR5dPTCwcGkER1mSwa6bC7xmQXHCwkzUzDLiWUOZHUPcDNyQ6mVjjxJARsYhp+kLmy9waDzEcD9n4EyBKY+5tV+70Pw4QQX4/lbKD/k+ktLPZqFjLMC2aJFcIzK04IpKQ1qzYY9wOwTXzwjICxnQxqKPb6e8slzr/37HGCasXrA=
+	t=1725723788; cv=none; b=DxD9Sm9FL3VBgteh28SAsVtVJyyl7E3Y+pg+hyTym9zMv6WXQR+5eqNBZVZadIDYXkvzQHKM/N0jXc3iNZHeVXXOY9T5kjqfIaFisWuIbbz4DhA6VwMxDK9q/ug/DMgSy/mNiIXg84I1kV9PPN9xkPVlUYrg+LM1L6UQzE6P1us=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725683913; c=relaxed/simple;
-	bh=mGvUs2/qpdyR2mNpuMMPTIbmDwl+DfZt9p7+mxpRbNw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=LI9nxPIFgbigtqEHsgpezfMpYVq5PlpkRkAjLtS+w0p+cObRqLm9o+xzPmYVmMrXLE+MTHdn7PTHFNBn+T/5Soth9xCGSQ0Isr3ivhLZIFwFiGxxsCSjwmOML3Jv6JQW5sJuhVqUqfx4GUb0emjrTHSzbnTPxiA+ZFEw67xaJh8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=V+XIRCHv; arc=none smtp.client-ip=209.85.210.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725723788; c=relaxed/simple;
+	bh=08twX4UQNWgzpSje5WMUvhmLZ8rSu3to6AH0oOdogac=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRJUeXTe3d0wNpU3xEFFRME3OfFvYAiTnxpZwAWHd70qdCzRBek4ZkIYM0JlKcAVRekcArd9qsmNeaCbVS+tlDW3i3BgD4gEM2gTyV7XCdxC2aotxrIByMIv7EuIs6gisKOvage5jXH9NhbzHMAAECmt6YUYQCGkqj09tct8+j8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9qFeI7L; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+XIRCHv"
-Received: by mail-pf1-f174.google.com with SMTP id d2e1a72fcca58-714187df604so2326724b3a.1
-        for <mptcp@lists.linux.dev>; Fri, 06 Sep 2024 21:38:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725683910; x=1726288710; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=RXvDbCqb1MHEoYG7UBPr3+c5tMgUXC7o23Jr03rLP8w=;
-        b=V+XIRCHvLjYXCuROF9ySFEWYYVqKdPpjSwMdGXzinvJ78Qi6Qiy+3WFx92G1J6qs8f
-         vp5fYysdszIML7h1HsE3AyLNySEmHbDhgk0ZuXXk628XTvJzyjztuYWSppyuiUFjCFoz
-         F7R+uqM2DanR2FF02l9FRIQtVHx2l0BAHCT4CHtF0s6EnV6jTJwdMJQ92oA90b79HEnE
-         jEQ7+h9HIF4jUVv8mBYW07FxHZAQkIaJvotasRvrm8webZph7I9QVE/pnNfF+RDIUfGU
-         K7p2Ct1gzSdWLC9FEClnvj2f90umhZsesZJ6pAvxRdIi8i8C776PKezlP6ZZPxrjGBdG
-         euvw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725683910; x=1726288710;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=RXvDbCqb1MHEoYG7UBPr3+c5tMgUXC7o23Jr03rLP8w=;
-        b=rfwAeB6mCgot3vaFNdMtIRGoqi4hzwX0jHSYJF72Jz7zBQ6vZpAJ/67lhOS5+dIlFb
-         1YVF2m3tHnu7owt0kKzGNehyxVyuuNf7QyqO25u2oDvO3+9YfyLYotIz4R7iIhWZwTa9
-         xPxZZSKl+10PGvqCjKxYH9FplkXfHdIvkpGMPaN6foELNvz0OksL075+VVu8TnnWGnrP
-         oFx+XqXlXRBTwyp8UNtLfvHLkhLsgZfD8RT7pTNGk7o13M469hBcdOtl/j0iIJ30UsdQ
-         WLsxHbhWFJSxMjVmisp4VGTRODn9d6WnHJ+0P5l6N4o0H7bo5kOCr9MvnR7mekPoEzdx
-         a/kQ==
-X-Gm-Message-State: AOJu0YxpmIfhxX6WPhM+KpThUH6KIEUitzGH2hnkg7Si0rYArJwj4WWD
-	cPpHoLd2afYsumnamfV5Q6oJcPNndWoi0S4tQmR9bOpbfnxczoTDDNOW
-X-Google-Smtp-Source: AGHT+IF3Wkh54NpoCnJu7TGbCogtvGsSAFyBpWX0VMRd/ahh9L8SIQ6MMWzWf+IVSq7jtZtRYnuvrw==
-X-Received: by 2002:a05:6a20:2d0e:b0:1cf:1228:c175 with SMTP id adf61e73a8af0-1cf1bfa1533mr7202410637.8.1725683909617;
-        Fri, 06 Sep 2024 21:38:29 -0700 (PDT)
-Received: from [127.0.0.1] ([52.238.27.66])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-718e5983c15sm272992b3a.184.2024.09.06.21.38.28
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 06 Sep 2024 21:38:29 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <d5598209aecfc8fe58f9a93dc802817b041785a9.1725680751.git.tanggeliang@kylinos.cn>
-References:
- <d5598209aecfc8fe58f9a93dc802817b041785a9.1725680751.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22selftests/bpf=3A_Add_mptcp_subflow_su?= =?UTF-8?Q?btest=22?=
-Message-ID: <c78340ee-6268-b9d8-50f0-02b5922f0515@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 07 Sep 2024 04:38:28 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9qFeI7L"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A5FC4CEC4;
+	Sat,  7 Sep 2024 15:43:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725723787;
+	bh=08twX4UQNWgzpSje5WMUvhmLZ8rSu3to6AH0oOdogac=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=K9qFeI7L5U0cAPijk1FxysMlXiqQbk8ZE0j1Zwtr+AApsYxhCidbZs3UjAGLxyimQ
+	 BTA7LsRdbazz4oJsPSRiT6kM9ZN0VFEO0GGZU0h8AlWz6DY7B70X/wbkrSQH/H2Vow
+	 7V6Mrb9uoSOty4+rvgQmZphDUgY0fYIgx70dIcCRUR4vJz5An5EdQppiTb6hFVHRwl
+	 fgdAoaxPPypM/bmFxXlJtutdQ5NxYxuZzO9XTxQBkJxy05lpGmbCZIBWL0fZwgIuZL
+	 i8PfIOa1gMnOTmZ1RMhagtVbvLV2dcHwK2LEv2BjGuZqGdQDNedvKFGfQGN5MBNJoH
+	 2H/n2i9OJtsWg==
+Date: Sat, 7 Sep 2024 11:43:06 -0400
+From: Sasha Levin <sashal@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Greg KH <gregkh@linuxfoundation.org>, stable@vger.kernel.org,
+	MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: MPTCP stable backports: is the workflow OK?
+Message-ID: <Ztx0ii15ulDATpUK@sashalap>
+References: <32148274-08bb-4031-a55b-6b16b48a5497@kernel.org>
+ <2024090642-viewing-happier-23b8@gregkh>
+ <be29b0d9-83be-4947-912e-8d9f5b8f5f9c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <be29b0d9-83be-4947-912e-8d9f5b8f5f9c@kernel.org>
 
-Hi Geliang,
+On Fri, Sep 06, 2024 at 12:10:22PM +0200, Matthieu Baerts wrote:
+>Hi Greg, Sasha,
+>
+>Thank you for your reply!
+>
+>On 06/09/2024 11:56, Greg KH wrote:
+>> On Fri, Sep 06, 2024 at 11:36:25AM +0200, Matthieu Baerts wrote:
+>>> Hi Greg,
+>>>
+>>> Thank you again for your support when we send patches for stable
+>>> versions for MPTCP!
+>>>
+>>> Recently, I sent many patches for the stable versions, and I just wanted
+>>> to check if what I did was OK for you?
+>>>
+>>> I tried to reply to all the 'FAILED: patch' emails you sent, either with
+>>> patches, or with reasons explaining why it is fine not to backport them.
+>>> Are you OK with that?
+>>>
+>>> Or do you prefer only receiving the patches, and not the emails with the
+>>> reasons not to backport some of them?
+>>>
+>>> About the patches, do you prefer to receive one big series per version
+>>> or individual patches sent in reply to the different 'FAILED: patch'
+>>> emails like I did?
+>>
+>> One big series, per kernel tree, would be ideal as that way I don't have
+>> to pick them out and guess as to the order.
+>
+>Sure, I will do that next time, it is even easier for me.
+>
+>I sent the patches in the same order as they are in my working branch,
+>but I understand they could be received in a different order.
+>
+>> Also, if you don't respond to the FAILED emails, that's fine with me, I
+>> don't keep track, but maybe Sasha does as I know he does backports based
+>> on them at times.  So I'll let him answer that.
+>
+>Thanks! I will wait for Sasha's reply.
 
-Thank you for your modifications, that's great!
+Doesn't matter on my end :)
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10748445039
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0145299d2c69
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D887967
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+-- 
+Thanks,
+Sasha
