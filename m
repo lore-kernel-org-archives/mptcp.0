@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9AE3224;
-	Sun,  8 Sep 2024 13:06:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB2AF3224;
+	Sun,  8 Sep 2024 13:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725800807; cv=none; b=HdfrITSWoMuFjLwMEJDRNmZK5JRLKGHi1kFW2kEg8PSRVVaP0lR2vGtOIU6f0mcpAEsecnW9HX+bYdjlbtRlGtn/GCEt15ybpAaiYaxWsjTgcVm9klWCmcTDWyysm5qBo/njbfbDo5th8eRpJkgqlOe2yfqlOKKH//ypP1SFLVE=
+	t=1725800809; cv=none; b=TKvPIgHCLvManm8xf2UAgsTP/Sd0vky3s2iUIc1bw739VQlyTMnxE+i4WrPoj0baUQF7giLG46TB5Gxhtm7NQvaDJpPLouR4U72Wk4l6Zb7v+bp+LmGsC4S+jATnG2NXOVmQprM9kZ83GundMg+rLnikOab7MB5plvt8VbfY988=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725800807; c=relaxed/simple;
-	bh=F6/o1wQPFXzGZK3/iIpiY+bE5dbP0vR2zDwn8nk/2OM=;
+	s=arc-20240116; t=1725800809; c=relaxed/simple;
+	bh=m1vLFVS2fF2lvb7frbAKl+bmvp7/ygsGiv38NGxoJgo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=RA8iaeQxfzhkdiGtNV41VjXoLzKEfO5uwkwjYr1pSKLL0F/arQwq4rFxLFZ+nFpsoZ+PABJxJSDNh504QiHd4+rJqDCF7aNRJNxEuDq+WZqXGwgdwPpvuMW/wvmJvKNomKHHoj8sikFZHFpNIc2I47ZhmDW+K6++Y+Ult3hMXUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P2QO+vJa; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=PGmQULIrSA+Oi9vp2SWjRBBejm3uOo0hUpDCWlR83MGYKuLYmjC/Jvrf0kqmm5/nib9+9Cgf8XYuxXgCnOG1FI+9f6//1a9vnLNMHgBXIEkCPo7jHyFx6GKyVwiGloo/TFe4jSXitcHgF5B6ymYhzSrsIZD0cI8IAAPR3ij/UJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=Ovq/EVAe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P2QO+vJa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B70C4CEC3;
-	Sun,  8 Sep 2024 13:06:45 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="Ovq/EVAe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F2DD0C4CEC3;
+	Sun,  8 Sep 2024 13:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725800806;
-	bh=F6/o1wQPFXzGZK3/iIpiY+bE5dbP0vR2zDwn8nk/2OM=;
+	s=korg; t=1725800809;
+	bh=m1vLFVS2fF2lvb7frbAKl+bmvp7/ygsGiv38NGxoJgo=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=P2QO+vJarU8c0mGN1Kfh/dlNDyAXilTPuMqiSFtEUJneHLiTC429XMqxymbvQ1cDb
-	 9ajJqXJYbZYkBhx9RbfqrIrB+o5pFw9YlqV6rpmIeMkRaC9iPWi0cV5HmcXeKDi5A/
-	 OA1PiHeEH4gDOYexoCrqro3BNLGohPXJgpFvef/g=
-Subject: Patch "mptcp: close subflow when receiving TCP+FIN" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
+	b=Ovq/EVAevrx8iB4UHOIySE+z0UOqMpVH85n7SgcvEqW5FsAonWREq7fjvrRJJHCe0
+	 zU2o6n6q5EnnffqlFpQ6MVW4Uy7QIA+T2U7DudcNqYGblnecgkvtv4pYgGmuPxSTTL
+	 ajf8+JpMO1l6+1ufoXKNEP7zaOvwnJpcxW3A/lLc=
+Subject: Patch "mptcp: constify a bunch of of helpers" has been added to the 5.15-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,mathew.j.martineau@linux.intel.com,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 08 Sep 2024 15:06:41 +0200
-In-Reply-To: <20240906083520.1773331-2-matttbe@kernel.org>
-Message-ID: <2024090840-musty-equal-02d2@gregkh>
+Date: Sun, 08 Sep 2024 15:06:42 +0200
+In-Reply-To: <20240906083151.1768557-3-matttbe@kernel.org>
+Message-ID: <2024090842-ethically-padding-192d@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,109 +44,253 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: close subflow when receiving TCP+FIN
+    mptcp: constify a bunch of of helpers
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-close-subflow-when-receiving-tcp-fin.patch
+     mptcp-constify-a-bunch-of-of-helpers.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From matttbe@kernel.org Fri Sep  6 10:35:29 2024
+From stable+bounces-73734-greg=kroah.com@vger.kernel.org Fri Sep  6 10:32:23 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  6 Sep 2024 10:35:21 +0200
-Subject: mptcp: close subflow when receiving TCP+FIN
+Date: Fri,  6 Sep 2024 10:31:52 +0200
+Subject: mptcp: constify a bunch of of helpers
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240906083520.1773331-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, Paolo Abeni <pabeni@redhat.com>, Mat Martineau <mathew.j.martineau@linux.intel.com>, Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
+Message-ID: <20240906083151.1768557-3-matttbe@kernel.org>
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit f09b0ad55a1196f5891663f8888463c0541059cb upstream.
+commit 90d930882139f166ed2551205d6f6d8c50b656fb upstream.
 
-When a peer decides to close one subflow in the middle of a connection
-having multiple subflows, the receiver of the first FIN should accept
-that, and close the subflow on its side as well. If not, the subflow
-will stay half closed, and would even continue to be used until the end
-of the MPTCP connection or a reset from the network.
+A few pm-related helpers don't touch arguments which lacking
+the const modifier, let's constify them.
 
-The issue has not been seen before, probably because the in-kernel
-path-manager always sends a RM_ADDR before closing the subflow. Upon the
-reception of this RM_ADDR, the other peer will initiate the closure on
-its side as well. On the other hand, if the RM_ADDR is lost, or if the
-path-manager of the other peer only closes the subflow without sending a
-RM_ADDR, the subflow would switch to TCP_CLOSE_WAIT, but that's it,
-leaving the subflow half-closed.
-
-So now, when the subflow switches to the TCP_CLOSE_WAIT state, and if
-the MPTCP connection has not been closed before with a DATA_FIN, the
-kernel owning the subflow schedules its worker to initiate the closure
-on its side as well.
-
-This issue can be easily reproduced with packetdrill, as visible in [1],
-by creating an additional subflow, injecting a FIN+ACK before sending
-the DATA_FIN, and expecting a FIN+ACK in return.
-
-Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
-Cc: stable@vger.kernel.org
-Link: https://github.com/multipath-tcp/packetdrill/pull/154 [1]
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240826-net-mptcp-close-extra-sf-fin-v1-1-905199fe1172@kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Mat Martineau <mathew.j.martineau@linux.intel.com>
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ No conflicts but 'sk' is not available in __mptcp_close_subflow in
-  this version. It would require b6985b9b8295 ("mptcp: use the workqueue
-  to destroy unaccepted sockets") which has not been backported to this
-  version. It is easier to get 'sk' by casting 'msk' into a 'struct
-  sock'. ]
+Stable-dep-of: 48e50dcbcbaa ("mptcp: pm: avoid possible UaF when selecting endp")
+[ Conflicts because a few modified helpers from the original patch are
+  not present in this version. We don't need to do anything with them. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    5 ++++-
- net/mptcp/subflow.c  |    8 ++++++--
- 2 files changed, 10 insertions(+), 3 deletions(-)
+ net/mptcp/pm.c         |    4 ++--
+ net/mptcp/pm_netlink.c |   36 ++++++++++++++++++------------------
+ net/mptcp/protocol.h   |   18 +++++++++---------
+ 3 files changed, 29 insertions(+), 29 deletions(-)
 
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2361,8 +2361,11 @@ static void __mptcp_close_subflow(struct
- 
- 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
- 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-+		int ssk_state = inet_sk_state_load(ssk);
- 
--		if (inet_sk_state_load(ssk) != TCP_CLOSE)
-+		if (ssk_state != TCP_CLOSE &&
-+		    (ssk_state != TCP_CLOSE_WAIT ||
-+		     inet_sk_state_load((struct sock *)ssk) != TCP_ESTABLISHED))
- 			continue;
- 
- 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1131,12 +1131,16 @@ out:
- /* sched mptcp worker to remove the subflow if no more data is pending */
- static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ssk)
- {
--	if (likely(ssk->sk_state != TCP_CLOSE))
-+	struct sock *sk = (struct sock *)msk;
-+
-+	if (likely(ssk->sk_state != TCP_CLOSE &&
-+		   (ssk->sk_state != TCP_CLOSE_WAIT ||
-+		    inet_sk_state_load(sk) != TCP_ESTABLISHED)))
- 		return;
- 
- 	if (skb_queue_empty(&ssk->sk_receive_queue) &&
- 	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
--		mptcp_schedule_work((struct sock *)msk);
-+		mptcp_schedule_work(sk);
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -202,7 +202,7 @@ void mptcp_pm_add_addr_received(struct m
  }
  
- static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
+ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+-			      struct mptcp_addr_info *addr)
++			      const struct mptcp_addr_info *addr)
+ {
+ 	struct mptcp_pm_data *pm = &msk->pm;
+ 
+@@ -260,7 +260,7 @@ void mptcp_pm_mp_fail_received(struct so
+ 
+ /* path manager helpers */
+ 
+-bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
++bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      unsigned int opt_size, unsigned int remaining,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+ 			      bool *port, bool *drop_other_suboptions)
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -60,7 +60,7 @@ struct pm_nl_pernet {
+ #define ADD_ADDR_RETRANS_MAX	3
+ 
+ static bool addresses_equal(const struct mptcp_addr_info *a,
+-			    struct mptcp_addr_info *b, bool use_port)
++			    const struct mptcp_addr_info *b, bool use_port)
+ {
+ 	bool addr_equals = false;
+ 
+@@ -123,7 +123,7 @@ static void remote_address(const struct
+ }
+ 
+ static bool lookup_subflow_by_saddr(const struct list_head *list,
+-				    struct mptcp_addr_info *saddr)
++				    const struct mptcp_addr_info *saddr)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_addr_info cur;
+@@ -141,7 +141,7 @@ static bool lookup_subflow_by_saddr(cons
+ }
+ 
+ static bool lookup_subflow_by_daddr(const struct list_head *list,
+-				    struct mptcp_addr_info *daddr)
++				    const struct mptcp_addr_info *daddr)
+ {
+ 	struct mptcp_subflow_context *subflow;
+ 	struct mptcp_addr_info cur;
+@@ -162,8 +162,8 @@ static struct mptcp_pm_addr_entry *
+ select_local_address(const struct pm_nl_pernet *pernet,
+ 		     struct mptcp_sock *msk)
+ {
++	const struct sock *sk = (const struct sock *)msk;
+ 	struct mptcp_pm_addr_entry *entry, *ret = NULL;
+-	struct sock *sk = (struct sock *)msk;
+ 
+ 	msk_owned_by_me(msk);
+ 
+@@ -219,16 +219,16 @@ select_signal_address(struct pm_nl_perne
+ 	return ret;
+ }
+ 
+-unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk)
+ {
+-	struct pm_nl_pernet *pernet;
++	const struct pm_nl_pernet *pernet;
+ 
+-	pernet = net_generic(sock_net((struct sock *)msk), pm_nl_pernet_id);
++	pernet = net_generic(sock_net((const struct sock *)msk), pm_nl_pernet_id);
+ 	return READ_ONCE(pernet->add_addr_signal_max);
+ }
+ EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_signal_max);
+ 
+-unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk)
+ {
+ 	struct pm_nl_pernet *pernet;
+ 
+@@ -237,7 +237,7 @@ unsigned int mptcp_pm_get_add_addr_accep
+ }
+ EXPORT_SYMBOL_GPL(mptcp_pm_get_add_addr_accept_max);
+ 
+-unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk)
+ {
+ 	struct pm_nl_pernet *pernet;
+ 
+@@ -246,7 +246,7 @@ unsigned int mptcp_pm_get_subflows_max(s
+ }
+ EXPORT_SYMBOL_GPL(mptcp_pm_get_subflows_max);
+ 
+-unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk)
++unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk)
+ {
+ 	struct pm_nl_pernet *pernet;
+ 
+@@ -264,8 +264,8 @@ static void check_work_pending(struct mp
+ }
+ 
+ struct mptcp_pm_add_entry *
+-mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+-				struct mptcp_addr_info *addr)
++mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
++				const struct mptcp_addr_info *addr)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 
+@@ -346,7 +346,7 @@ out:
+ 
+ struct mptcp_pm_add_entry *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+-		       struct mptcp_addr_info *addr, bool check_id)
++		       const struct mptcp_addr_info *addr, bool check_id)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 	struct sock *sk = (struct sock *)msk;
+@@ -364,7 +364,7 @@ mptcp_pm_del_add_timer(struct mptcp_sock
+ }
+ 
+ static bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+-				     struct mptcp_pm_addr_entry *entry)
++				     const struct mptcp_pm_addr_entry *entry)
+ {
+ 	struct mptcp_pm_add_entry *add_entry = NULL;
+ 	struct sock *sk = (struct sock *)msk;
+@@ -410,8 +410,8 @@ void mptcp_pm_free_anno_list(struct mptc
+ 	}
+ }
+ 
+-static bool lookup_address_in_vec(struct mptcp_addr_info *addrs, unsigned int nr,
+-				  struct mptcp_addr_info *addr)
++static bool lookup_address_in_vec(const struct mptcp_addr_info *addrs, unsigned int nr,
++				  const struct mptcp_addr_info *addr)
+ {
+ 	int i;
+ 
+@@ -1329,7 +1329,7 @@ int mptcp_pm_get_flags_and_ifindex_by_id
+ }
+ 
+ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+-				      struct mptcp_addr_info *addr)
++				      const struct mptcp_addr_info *addr)
+ {
+ 	struct mptcp_pm_add_entry *entry;
+ 
+@@ -1344,7 +1344,7 @@ static bool remove_anno_list_by_saddr(st
+ }
+ 
+ static bool mptcp_pm_remove_anno_addr(struct mptcp_sock *msk,
+-				      struct mptcp_addr_info *addr,
++				      const struct mptcp_addr_info *addr,
+ 				      bool force)
+ {
+ 	struct mptcp_rm_list list = { .nr = 0 };
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -738,7 +738,7 @@ void mptcp_pm_subflow_closed(struct mptc
+ void mptcp_pm_add_addr_received(struct mptcp_sock *msk,
+ 				const struct mptcp_addr_info *addr);
+ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+-			      struct mptcp_addr_info *addr);
++			      const struct mptcp_addr_info *addr);
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+@@ -752,10 +752,10 @@ void mptcp_pm_free_anno_list(struct mptc
+ bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+ struct mptcp_pm_add_entry *
+ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+-		       struct mptcp_addr_info *addr, bool check_id);
++		       const struct mptcp_addr_info *addr, bool check_id);
+ struct mptcp_pm_add_entry *
+-mptcp_lookup_anno_list_by_saddr(struct mptcp_sock *msk,
+-				struct mptcp_addr_info *addr);
++mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
++				const struct mptcp_addr_info *addr);
+ int mptcp_pm_get_flags_and_ifindex_by_id(struct net *net, unsigned int id,
+ 					 u8 *flags, int *ifindex);
+ 
+@@ -814,7 +814,7 @@ static inline int mptcp_rm_addr_len(cons
+ 	return TCPOLEN_MPTCP_RM_ADDR_BASE + roundup(rm_list->nr - 1, 4) + 1;
+ }
+ 
+-bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, struct sk_buff *skb,
++bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ 			      unsigned int opt_size, unsigned int remaining,
+ 			      struct mptcp_addr_info *addr, bool *echo,
+ 			      bool *port, bool *drop_other_suboptions);
+@@ -830,10 +830,10 @@ void mptcp_pm_nl_rm_subflow_received(str
+ 				     const struct mptcp_rm_list *rm_list);
+ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+-unsigned int mptcp_pm_get_add_addr_signal_max(struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_add_addr_accept_max(struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_subflows_max(struct mptcp_sock *msk);
+-unsigned int mptcp_pm_get_local_addr_max(struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
++unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
+ 
+ void mptcp_sockopt_sync(struct mptcp_sock *msk, struct sock *ssk);
+ void mptcp_sockopt_sync_all(struct mptcp_sock *msk);
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
