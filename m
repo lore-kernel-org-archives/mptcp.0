@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5E23224;
-	Sun,  8 Sep 2024 13:07:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F1C116630E;
+	Sun,  8 Sep 2024 13:07:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725800830; cv=none; b=NsNbA1w5k0PmQ5YBQ03eqx+vS07UdUnmsBkBrKLoCZ9QJUdyOHNOU39BzyATq84SXQXZpRhAczKHnFKgEQvIBB+h0JGhHzyvkpi77o37taZWvpGizZd6GZcc3QdHh7yQlBW/FNDrfSKbYeK80wIlPdJ/IMUBeNyEPUBo20ILeYE=
+	t=1725800833; cv=none; b=tD6UMa9C9dDI+UFoE+4nllyoWjklFVhuebOqpCyfLVYdaP99b3Th+Qi2fGXaseE5ku0Qud8KfgAelADDxmSRr0v2rf2lJgnK1CHrwMe+a8w+RKn2adsnPJMNCIiF5gy3Gnbj50jsrbFRJs+ne1/i99m5vBbx5u4V3hOSVBaMSqQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725800830; c=relaxed/simple;
-	bh=Ne7o4xuutK8hRjuOI6S0anI4c5LOreo0BUHf2F7YeII=;
+	s=arc-20240116; t=1725800833; c=relaxed/simple;
+	bh=lNFqI1NSMYvDlYNGSd7rsNHMXMOw53cHsUMfj0nkYL4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=mQhqknwA0eg5YqvMuEbNZA8tZ+n76A5WEHvWX2y7PedrGLknN8usTfH0/RzQ1Q9QnyWOd3HghMgYG4LUdO3jNJQvaN6cxMaLlUIhiO0bpHg45SfF90PthY0Oet9vypPfC1kY6d95cVxRxfQ7BXDHefDcyCKQW1Ch08GEURzWXKM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UkbK1l8K; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=uaMuf2OaEF9lpTLGNU+YNcVMEKRRif8bwqLv8wflvvOOSsSuf6l3lVo5ljTa93ofJmKI3AOqJUHspXJOI3YyB+bHGHyx12ZLpPRHf9FsNwaNvokwkHjGzHCkiqG9O9drHgkBgzbylt6p1NSnEkUjbnGBpyi7XI3TBIclLGTpCJI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=GHO+jJJo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UkbK1l8K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B46C4CEC3;
-	Sun,  8 Sep 2024 13:07:09 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="GHO+jJJo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A65C4C4CEC3;
+	Sun,  8 Sep 2024 13:07:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725800830;
-	bh=Ne7o4xuutK8hRjuOI6S0anI4c5LOreo0BUHf2F7YeII=;
+	s=korg; t=1725800833;
+	bh=lNFqI1NSMYvDlYNGSd7rsNHMXMOw53cHsUMfj0nkYL4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=UkbK1l8KJm9tzjOsCnUVTGnikaohsbXV8HkijaZi2RhpcfSfUjDpPwLkOhsFZsd2v
-	 VGG1tsW/hpeMhWjHI4eMG4sGpTNHyp2L66TC3XUsmzz1gpwsa0LCe9o0iBNvmsz4yj
-	 wFhxi6p7pUyCwNoiK3SN6qTduY8DMhis9YQPaKQw=
-Subject: Patch "mptcp: pm: only decrement add_addr_accepted for MPJ req" has been added to the 5.15-stable tree
+	b=GHO+jJJoENYdy7lP1K60TT6qjCIHzBImLGGYY+DLzUD0BxCzB2dbJn8JsBXTA9wJ9
+	 boUkTwGkTvZZ0gjT5mUj1Ceb5k4apqbNnDLCDIcFM0wHiJ9tED1Of5p4wWtdhtJtED
+	 7yXmq6EoV5nlXzIZZ0Dip9xK4l/UppDmKHvWwhtA=
+Subject: Patch "mptcp: pm: re-using ID of unused flushed subflows" has been added to the 5.15-stable tree
 To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 08 Sep 2024 15:06:51 +0200
-In-Reply-To: <20240906083000.1766120-2-matttbe@kernel.org>
-Message-ID: <2024090850-mollusk-evolution-819b@gregkh>
+Date: Sun, 08 Sep 2024 15:06:52 +0200
+In-Reply-To: <20240906082853.1764704-2-matttbe@kernel.org>
+Message-ID: <2024090851-sanctity-ruby-9b1f@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,93 +44,76 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: pm: only decrement add_addr_accepted for MPJ req
+    mptcp: pm: re-using ID of unused flushed subflows
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-pm-only-decrement-add_addr_accepted-for-mpj-req.patch
+     mptcp-pm-re-using-id-of-unused-flushed-subflows.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73730-greg=kroah.com@vger.kernel.org Fri Sep  6 10:30:19 2024
+From stable+bounces-73729-greg=kroah.com@vger.kernel.org Fri Sep  6 10:29:13 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  6 Sep 2024 10:30:01 +0200
-Subject: mptcp: pm: only decrement add_addr_accepted for MPJ req
+Date: Fri,  6 Sep 2024 10:28:54 +0200
+Subject: mptcp: pm: re-using ID of unused flushed subflows
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
 Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20240906083000.1766120-2-matttbe@kernel.org>
+Message-ID: <20240906082853.1764704-2-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 1c1f721375989579e46741f59523e39ec9b2a9bd upstream.
+commit ef34a6ea0cab1800f4b3c9c3c2cefd5091e03379 upstream.
 
-Adding the following warning ...
+If no subflows are attached to the 'subflow' endpoints that are being
+flushed, the corresponding addr IDs will not be marked as available
+again.
 
-  WARN_ON_ONCE(msk->pm.add_addr_accepted == 0)
+Mark all ID as being available when flushing all the 'subflow'
+endpoints, and reset local_addr_used counter to cover these cases.
 
-... before decrementing the add_addr_accepted counter helped to find a
-bug when running the "remove single subflow" subtest from the
-mptcp_join.sh selftest.
+Note that mptcp_pm_remove_addrs_and_subflows() helper is only called for
+flushing operations, not to remove a specific set of addresses and
+subflows.
 
-Removing a 'subflow' endpoint will first trigger a RM_ADDR, then the
-subflow closure. Before this patch, and upon the reception of the
-RM_ADDR, the other peer will then try to decrement this
-add_addr_accepted. That's not correct because the attached subflows have
-not been created upon the reception of an ADD_ADDR.
-
-A way to solve that is to decrement the counter only if the attached
-subflow was an MP_JOIN to a remote id that was not 0, and initiated by
-the host receiving the RM_ADDR.
-
-Fixes: d0876b2284cf ("mptcp: add the incoming RM_ADDR support")
+Fixes: 06faa2271034 ("mptcp: remove multi addresses and subflows in PM")
 Cc: stable@vger.kernel.org
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-9-38035d40de5b@kernel.org
+Link: https://patch.msgid.link/20240819-net-mptcp-pm-reusing-id-v1-5-38035d40de5b@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in pm_netlink.c, because the context is different, but the
-  same lines can still be modified. The conflicts are due to commit
-  4d25247d3ae4 ("mptcp: bypass in-kernel PM restrictions for non-kernel
-  PMs") and commit a88c9e496937 ("mptcp: do not block subflows creation
-  on errors"), adding new features and not present in this version.
-  Note that because some features to better track subflows are missing
-  in this version, it is required to remove the WARN_ON, because the
-  counter could be 0 in some cases. ]
+[ No conflicts, but the line modifying msk->pm.id_avail_bitmap has been
+  removed, as it is not in this version, introduced later in commit
+  86e39e04482b ("mptcp: keep track of local endpoint still available for
+  each msk") and depending on other ones. The best we can do in this
+  version is to reset local_addr_used counter, better than nothing. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_netlink.c |    8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ net/mptcp/pm_netlink.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -757,7 +757,7 @@ static void mptcp_pm_nl_rm_addr_or_subfl
- 			mptcp_close_ssk(sk, ssk, subflow);
- 			spin_lock_bh(&msk->pm.lock);
+@@ -1498,8 +1498,14 @@ static void mptcp_pm_remove_addrs_and_su
+ 		mptcp_pm_remove_addr(msk, &alist);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 	}
++
+ 	if (slist.nr)
+ 		mptcp_pm_remove_subflow(msk, &slist);
++
++	/* Reset counters: maybe some subflows have been removed before */
++	spin_lock_bh(&msk->pm.lock);
++	msk->pm.local_addr_used = 0;
++	spin_unlock_bh(&msk->pm.lock);
+ }
  
--			removed = true;
-+			removed |= subflow->request_join;
- 			msk->pm.subflows--;
- 			if (rm_type == MPTCP_MIB_RMSUBFLOW)
- 				__MPTCP_INC_STATS(sock_net(sk), rm_type);
-@@ -767,7 +767,11 @@ static void mptcp_pm_nl_rm_addr_or_subfl
- 		if (!removed)
- 			continue;
- 
--		if (rm_type == MPTCP_MIB_RMADDR) {
-+		if (rm_type == MPTCP_MIB_RMADDR && rm_list->ids[i] &&
-+		    msk->pm.add_addr_accepted != 0) {
-+			/* Note: if the subflow has been closed before, this
-+			 * add_addr_accepted counter will not be decremented.
-+			 */
- 			msk->pm.add_addr_accepted--;
- 			WRITE_ONCE(msk->pm.accept_addr, true);
- 		} else if (rm_type == MPTCP_MIB_RMSUBFLOW) {
+ static void mptcp_nl_remove_addrs_list(struct net *net,
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
