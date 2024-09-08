@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7842D3224;
-	Sun,  8 Sep 2024 13:06:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD9AE3224;
+	Sun,  8 Sep 2024 13:06:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725800803; cv=none; b=ef3qZU3mBWXDFGuYlXR0bwuyz70nOZrzOAlDmA/rOgPmt5KuLHSUF0Tlt7Hr4qJXD0G132qOVf0QSbkfLsZg5kR1UbbVPHeEgPTGAHQIjD3vefDIuB8kxHgHN6JDTYwxKq2yVBqGr7A9bZ0JuuZh4lzs5HJHVZCL8rnUTMBEzYU=
+	t=1725800807; cv=none; b=HdfrITSWoMuFjLwMEJDRNmZK5JRLKGHi1kFW2kEg8PSRVVaP0lR2vGtOIU6f0mcpAEsecnW9HX+bYdjlbtRlGtn/GCEt15ybpAaiYaxWsjTgcVm9klWCmcTDWyysm5qBo/njbfbDo5th8eRpJkgqlOe2yfqlOKKH//ypP1SFLVE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725800803; c=relaxed/simple;
-	bh=ixlHWjPGrnWO+G9mWgKiEPQRYfn3dwg2UMEDerQPYe0=;
+	s=arc-20240116; t=1725800807; c=relaxed/simple;
+	bh=F6/o1wQPFXzGZK3/iIpiY+bE5dbP0vR2zDwn8nk/2OM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=lQcZ746JSybRiX+b2WOfo5P/67vfeeHS34kbZldJC7x4jLHDNgdONPkTjbKQqL2w4F3GEs1jBHGk9Vq1wotPaTgTLk+YSM9Gw+CvVbzfbDJO/MPvSBqqFNmSNtJ3UVCYeB8wW4wNScD6e8JjCJCS6uBmkN58SUS/YAFYGyomIII=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=VNFffr48; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=RA8iaeQxfzhkdiGtNV41VjXoLzKEfO5uwkwjYr1pSKLL0F/arQwq4rFxLFZ+nFpsoZ+PABJxJSDNh504QiHd4+rJqDCF7aNRJNxEuDq+WZqXGwgdwPpvuMW/wvmJvKNomKHHoj8sikFZHFpNIc2I47ZhmDW+K6++Y+Ult3hMXUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P2QO+vJa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="VNFffr48"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C14ECC4CEC3;
-	Sun,  8 Sep 2024 13:06:42 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P2QO+vJa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17B70C4CEC3;
+	Sun,  8 Sep 2024 13:06:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1725800803;
-	bh=ixlHWjPGrnWO+G9mWgKiEPQRYfn3dwg2UMEDerQPYe0=;
+	s=korg; t=1725800806;
+	bh=F6/o1wQPFXzGZK3/iIpiY+bE5dbP0vR2zDwn8nk/2OM=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=VNFffr48a/pvjP3EYx4AsaAV+QHgh6cc/QrFp1HmiIGJs5Eza/A15EXUbYe23pmar
-	 856fgWRPEq20qYmURjY0lzEAks44ikjR6A5AFFslwgmnBG05cI9/PibmhW1sUZdnfS
-	 XDAdMYmD3cFCvgNvsrtuS6BsR8fspVEW60njaGrU=
-Subject: Patch "mptcp: avoid duplicated SUB_CLOSED events" has been added to the 5.15-stable tree
-To: arinc.unal@arinc9.com,gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com
+	b=P2QO+vJarU8c0mGN1Kfh/dlNDyAXilTPuMqiSFtEUJneHLiTC429XMqxymbvQ1cDb
+	 9ajJqXJYbZYkBhx9RbfqrIrB+o5pFw9YlqV6rpmIeMkRaC9iPWi0cV5HmcXeKDi5A/
+	 OA1PiHeEH4gDOYexoCrqro3BNLGohPXJgpFvef/g=
+Subject: Patch "mptcp: close subflow when receiving TCP+FIN" has been added to the 5.15-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Sun, 08 Sep 2024 15:06:40 +0200
-In-Reply-To: <20240906083430.1772159-2-matttbe@kernel.org>
-Message-ID: <2024090839-panhandle-puppet-eaf5@gregkh>
+Date: Sun, 08 Sep 2024 15:06:41 +0200
+In-Reply-To: <20240906083520.1773331-2-matttbe@kernel.org>
+Message-ID: <2024090840-musty-equal-02d2@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
 X-stable: commit
 X-Patchwork-Hint: ignore
@@ -44,108 +44,109 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: avoid duplicated SUB_CLOSED events
+    mptcp: close subflow when receiving TCP+FIN
 
 to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-avoid-duplicated-sub_closed-events.patch
+     mptcp-close-subflow-when-receiving-tcp-fin.patch
 and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-73740-greg=kroah.com@vger.kernel.org Fri Sep  6 10:35:15 2024
+From matttbe@kernel.org Fri Sep  6 10:35:29 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri,  6 Sep 2024 10:34:31 +0200
-Subject: mptcp: avoid duplicated SUB_CLOSED events
+Date: Fri,  6 Sep 2024 10:35:21 +0200
+Subject: mptcp: close subflow when receiving TCP+FIN
 To: stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: "MPTCP Upstream" <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, "Arınç ÜNAL" <arinc.unal@arinc9.com>, "Mat Martineau" <martineau@kernel.org>, "Paolo Abeni" <pabeni@redhat.com>
-Message-ID: <20240906083430.1772159-2-matttbe@kernel.org>
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20240906083520.1773331-2-matttbe@kernel.org>
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit d82809b6c5f2676b382f77a5cbeb1a5d91ed2235 upstream.
+commit f09b0ad55a1196f5891663f8888463c0541059cb upstream.
 
-The initial subflow might have already been closed, but still in the
-connection list. When the worker is instructed to close the subflows
-that have been marked as closed, it might then try to close the initial
-subflow again.
+When a peer decides to close one subflow in the middle of a connection
+having multiple subflows, the receiver of the first FIN should accept
+that, and close the subflow on its side as well. If not, the subflow
+will stay half closed, and would even continue to be used until the end
+of the MPTCP connection or a reset from the network.
 
- A consequence of that is that the SUB_CLOSED event can be seen twice:
+The issue has not been seen before, probably because the in-kernel
+path-manager always sends a RM_ADDR before closing the subflow. Upon the
+reception of this RM_ADDR, the other peer will initiate the closure on
+its side as well. On the other hand, if the RM_ADDR is lost, or if the
+path-manager of the other peer only closes the subflow without sending a
+RM_ADDR, the subflow would switch to TCP_CLOSE_WAIT, but that's it,
+leaving the subflow half-closed.
 
-  # ip mptcp endpoint
-  1.1.1.1 id 1 subflow dev eth0
-  2.2.2.2 id 2 subflow dev eth1
+So now, when the subflow switches to the TCP_CLOSE_WAIT state, and if
+the MPTCP connection has not been closed before with a DATA_FIN, the
+kernel owning the subflow schedules its worker to initiate the closure
+on its side as well.
 
-  # ip mptcp monitor &
-  [         CREATED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
-  [     ESTABLISHED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
-  [  SF_ESTABLISHED] remid=0 locid=2 saddr4=2.2.2.2 daddr4=9.9.9.9
+This issue can be easily reproduced with packetdrill, as visible in [1],
+by creating an additional subflow, injecting a FIN+ACK before sending
+the DATA_FIN, and expecting a FIN+ACK in return.
 
-  # ip mptcp endpoint delete id 1
-  [       SF_CLOSED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
-  [       SF_CLOSED] remid=0 locid=0 saddr4=1.1.1.1 daddr4=9.9.9.9
-
-The first one is coming from mptcp_pm_nl_rm_subflow_received(), and the
-second one from __mptcp_close_subflow().
-
-To avoid doing the post-closed processing twice, the subflow is now
-marked as closed the first time.
-
-Note that it is not enough to check if we are dealing with the first
-subflow and check its sk_state: the subflow might have been reset or
-closed before calling mptcp_close_ssk().
-
-Fixes: b911c97c7dc7 ("mptcp: add netlink event support")
+Fixes: 40947e13997a ("mptcp: schedule worker when subflow is closed")
 Cc: stable@vger.kernel.org
-Tested-by: Arınç ÜNAL <arinc.unal@arinc9.com>
+Link: https://github.com/multipath-tcp/packetdrill/pull/154 [1]
 Reviewed-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-[ Conflict in protocol.h due to commit f1f26512a9bf ("mptcp: use plain
-  bool instead of custom binary enum"), commit dfc8d0603033 ("mptcp:
-  implement delayed seq generation for passive fastopen") and more that
-  are not in this version, because they modify the context and the size
-  of __unused. The conflict is easy to resolve, by not only adding the
-  new field (close_event_done), and __unused. ]
+Link: https://patch.msgid.link/20240826-net-mptcp-close-extra-sf-fin-v1-1-905199fe1172@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ No conflicts but 'sk' is not available in __mptcp_close_subflow in
+  this version. It would require b6985b9b8295 ("mptcp: use the workqueue
+  to destroy unaccepted sockets") which has not been backported to this
+  version. It is easier to get 'sk' by casting 'msk' into a 'struct
+  sock'. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/protocol.c |    6 ++++++
- net/mptcp/protocol.h |    4 +++-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ net/mptcp/protocol.c |    5 ++++-
+ net/mptcp/subflow.c  |    8 ++++++--
+ 2 files changed, 10 insertions(+), 3 deletions(-)
 
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2337,6 +2337,12 @@ static void __mptcp_close_ssk(struct soc
- void mptcp_close_ssk(struct sock *sk, struct sock *ssk,
- 		     struct mptcp_subflow_context *subflow)
+@@ -2361,8 +2361,11 @@ static void __mptcp_close_subflow(struct
+ 
+ 	list_for_each_entry_safe(subflow, tmp, &msk->conn_list, node) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
++		int ssk_state = inet_sk_state_load(ssk);
+ 
+-		if (inet_sk_state_load(ssk) != TCP_CLOSE)
++		if (ssk_state != TCP_CLOSE &&
++		    (ssk_state != TCP_CLOSE_WAIT ||
++		     inet_sk_state_load((struct sock *)ssk) != TCP_ESTABLISHED))
+ 			continue;
+ 
+ 		/* 'subflow_data_ready' will re-sched once rx queue is empty */
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1131,12 +1131,16 @@ out:
+ /* sched mptcp worker to remove the subflow if no more data is pending */
+ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ssk)
  {
-+	/* The first subflow can already be closed and still in the list */
-+	if (subflow->close_event_done)
-+		return;
+-	if (likely(ssk->sk_state != TCP_CLOSE))
++	struct sock *sk = (struct sock *)msk;
 +
-+	subflow->close_event_done = true;
-+
- 	if (sk->sk_state == TCP_ESTABLISHED)
- 		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk), ssk, GFP_KERNEL);
- 	__mptcp_close_ssk(sk, ssk, subflow);
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -441,7 +441,9 @@ struct mptcp_subflow_context {
- 		can_ack : 1,        /* only after processing the remote a key */
- 		disposable : 1,	    /* ctx can be free at ulp release time */
- 		stale : 1,	    /* unable to snd/rcv data, do not use for xmit */
--		valid_csum_seen : 1;        /* at least one csum validated */
-+		valid_csum_seen : 1,        /* at least one csum validated */
-+		close_event_done : 1,       /* has done the post-closed part */
-+		__unused : 11;
- 	enum mptcp_data_avail data_avail;
- 	u32	remote_nonce;
- 	u64	thmac;
++	if (likely(ssk->sk_state != TCP_CLOSE &&
++		   (ssk->sk_state != TCP_CLOSE_WAIT ||
++		    inet_sk_state_load(sk) != TCP_ESTABLISHED)))
+ 		return;
+ 
+ 	if (skb_queue_empty(&ssk->sk_receive_queue) &&
+ 	    !test_and_set_bit(MPTCP_WORK_CLOSE_SUBFLOW, &msk->flags))
+-		mptcp_schedule_work((struct sock *)msk);
++		mptcp_schedule_work(sk);
+ }
+ 
+ static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
