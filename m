@@ -1,245 +1,241 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-221.mail.qq.com (out203-205-221-221.mail.qq.com [203.205.221.221])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EBFA28EF;
-	Mon,  9 Sep 2024 01:12:22 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2E5D63A9
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 01:21:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.221
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725844343; cv=none; b=vBksbyuHh2mcwDs7G2JeEB2NSR4yssjyHHBhEND85P/+1M1yXQygXrNF7dUY1mJVdRLnRjBCqfkkpyEm+UhIvLMLZdyZZUBYpu0WcDUmqP5vrFcFXHxGvjcZOCIbxUsTWfLewBCQKoik8sYqO6ilO/0cMN+D801wH7PPnDIClLw=
+	t=1725844866; cv=none; b=FovryDGxmp9FgNMpYEfFbEe3WWy4QNLXMlhWn5EZ9i4B42LFkabAJXQy+wrGSe6hYu2LzUeJ6nXbKGVYzpjj/WPM42sOUG4gFhmgHpqnOkQdqysOZ32BGCCdyvqFiXz5xsi+tEr++SF6zg3nM6dB0KFYJ4RCo+hvJXvnGTgAFu8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725844343; c=relaxed/simple;
-	bh=ILDZww0lg8okZ9KyPzzCAoemGKXC53v74wmjkghSKAE=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MWPZFke1k1TcoMyiutprVtoNRT0NvCm3eQHvOng/WOrURKs7S8ZyVd/F+sdY55kZFwpo5S0CV1OMllnBRS9phbM0IGSDVP7O++xA+t9Tq3ZHaOZHgVZSW1Z771u6y/V41T8uOEvWucVgM0kTOHXsh00D+cDu7Cqih33NjiVXTCA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HGciWNUv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725844866; c=relaxed/simple;
+	bh=JHk2t4eFamDeaSdHUAGNMD5kRpH1LVYc36JlEXnDWUg=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version:Content-Type; b=Ce8mrn5lpWuzal6Ka/R33zAVtyE9q0xTrzJt1oBoNit+RXl851thI0HyRmtVXJ0OlBFgDDtI2dNQlkwRWFI/OdE2fTW0f+LOt2SlayRW3Vk4boOmauGQkMYhY1Ld4Yi2u8mlZjria92Zz88Pzoo95TDOGjEeKD+G9g97ZqfXlkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=MIIOekGT; arc=none smtp.client-ip=203.205.221.221
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HGciWNUv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB4A0C4CEC3;
-	Mon,  9 Sep 2024 01:12:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725844342;
-	bh=ILDZww0lg8okZ9KyPzzCAoemGKXC53v74wmjkghSKAE=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HGciWNUvCIxUzXZRE8pGjm+SUL/oDjqojVfVqE08yb1dC1o4yBAeLhllxvkaLzEnQ
-	 rUMU22Yc7ecDj8dS9ZaLusQzJ8iq2XnEAExpjYCb295Aq8/2Ix05F4iWQvZVnCpbuY
-	 pdr2HcYFUGq27l8FjEAsX0d8Zn8HyXOVfb25+LvgxS71IISCuR67C2THQJ7Hen4UE3
-	 4VBxt4bpsrPm09g9yFSqJ46W50ObVZ/3wI554fAhAVWbc5db8Uh/faV9BltACzeUas
-	 f39KiX+fUdd92ZkuiD4DNj9WsYd7GfY/t0rIYTVAT8cthuRbCryxnShNGixpklvwQn
-	 Mn5tkDAE/WQIg==
-Message-ID: <f1f65fe4b2dc5503026f852198d3345272183d86.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 1/4] bpf: Add mptcp_subflow bpf_iter
-From: Geliang Tang <geliang@kernel.org>
-To: Andrii Nakryiko <andrii.nakryiko@gmail.com>, Martin KaFai Lau
-	 <martin.lau@linux.dev>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, Martin
- KaFai Lau <martin.lau@kernel.org>, bpf <bpf@vger.kernel.org>
-Date: Mon, 09 Sep 2024 09:12:17 +0800
-In-Reply-To: <CAEf4BzY+FPNmX7VxQmbh-A4-QRCSLxGT3KOfGoHrdDJLg6QvDg@mail.gmail.com>
-References: <cover.1725544210.git.tanggeliang@kylinos.cn>
-	 <a75fc3e8df7141ce582448d3f092871a4943fbf4.1725544210.git.tanggeliang@kylinos.cn>
-	 <288ad1c2-501a-4319-bc1e-e7a7e276ff63@linux.dev>
-	 <CAEf4BzY+FPNmX7VxQmbh-A4-QRCSLxGT3KOfGoHrdDJLg6QvDg@mail.gmail.com>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
- lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
- wwjyafN5RQV0AXhKdvofSIryqm0GIHIH/+4bTSh5aB6mvsrjUusB5MnNYU4oDv2L8MBJStqPAQRLl
- P9BWcKKA7T9SrlgAr0VsFLIOkKOQPVTCnYxn7gfKogH52nkPAFqNofVB6AVWBpr0RTY7OnXRBMInM
- HcjVG4I/NFn8Cc7oaGaWHqX/yHAufJKUsldieQVFd7C/SI8jCUXdkZxR0Tkp0EUzkRc/TS1VwWHav
- 0x3oLSy/LGHfRaIC/MqdGVqgCnm6wapUt7f/JHloyIyKJBGBuHCLMpN6n/kNkSCzyZKV7h6Vw1OL5
- 18p0U3Optyakoh95KiJsKzcd3At/eftQGlNn5WDflHV1+oMdW2sRgfVDPrYeEcYI5IkTc3LRO6ucp
- VCm9/+poZSHSXMI/oJ6iXMJE8k3/aQz+EEjvc2z0p9aASJPzx0XTTC4lciTvGj62z62rGUlmEIvU2
- 3wWH37K2EBNoq+4Y0AZsSvMzM+CcTo25hgPaju1/A8ErZsLhP7IyFT17ARj/Et0G46JRsbdlVJ/Pv
- X+XIOc2mpqx/QARAQABtCVHZWxpYW5nIFRhbmcgPGdlbGlhbmcudGFuZ0BsaW51eC5kZXY+iQJUBB
- MBCgA+FiEEZiKd+VhdGdcosBcafnvtNTGKqCkFAmWKTg4CGwMFCRLMAwAFCwkIBwIGFQoJCAsCBBY
- CAwECHgECF4AACgkQfnvtNTGKqCmS+A/9Fec0xGLcrHlpCooiCnNH0RsXOVPsXRp2xQiaOV4vMsvh
- G5AHaQLb3v0cUr5JpfzMzNpEkaBQ/Y8Oj5hFOORhTyCZD8tY1aROs8WvbxqvbGXHnyVwqy7AdWelP
- +0lC0DZW0kPQLeel8XvLnm9Wm3syZgRGxiM/J7PqVcjujUb6SlwfcE3b2opvsHW9AkBNK7v8wGIcm
- BA3pS1O0/anP/xD5s5L7LIMADVB9MqQdeLdFU+FFdafmKSmcP9A2qKHAvPBUuQo3xoBOZR3DMqXIP
- kNCBfQGkAx5tm1XYli1u3r5tp5QCRbY5LSkntMNJJh0eWLU8I+zF6NWhqNhHYRD3zc1tiXlG5E0ob
- pX02Dy25SE2zB3abCRdAK30nCI4lMyMCcyaeFqvf6uhiugLiuEPRRRdJDWICOLw6KOFmxWmue1F71
- k08nj5PQMWQUX3X2K6jiOuoodYwnie/9NsH3DBHIVzVPWASFd6JkZ21i9Ng4ie+iQAveRTCeCCF6V
- RORJR0R8d7mI9+1eqhNeKzs21gQPVf/KBEIpwPFDjOdTwS/AEQQyhB+5ALeYpNgfKl2p30C20VRfJ
- GBaTc4ReUXh9xbUx5OliV69iq9nIVIyculTUsbrZX81Gz6UlbuSzWc4JclWtXf8/QcOK31wputde7
- Fl1BTSR4eWJcbE5Iz2yzgQu0IUdlbGlhbmcgVGFuZyA8Z2VsaWFuZ0BrZXJuZWwub3JnPokCVAQTA
- QoAPhYhBGYinflYXRnXKLAXGn577TUxiqgpBQJlqclXAhsDBQkSzAMABQsJCAcCBhUKCQgLAgQWAg
- MBAh4BAheAAAoJEH577TUxiqgpaGkP/3+VDnbu3HhZvQJYw9a5Ob/+z7WfX4lCMjUvVz6AAiM2atD
- yyUoDIv0fkDDUKvqoU9BLU93oiPjVzaR48a1/LZ+RBE2mzPhZF201267XLMFBylb4dyQZxqbAsEhV
- c9VdjXd4pHYiRTSAUqKqyamh/geIIpJz/cCcDLvX4sM/Zjwt/iQdvCJ2eBzunMfouzryFwLGcOXzx
- OwZRMOBgVuXrjGVB52kYu1+K90DtclewEgvzWmS9d057CJztJZMXzvHfFAQMgJC7DX4paYt49pNvh
- cqLKMGNLPsX06OR4G+4ai0JTTzIlwVJXuo+uZRFQyuOaSmlSjEsiQ/WsGdhILldV35RiFKe/ojQNd
- 4B4zREBe3xT+Sf5keyAmO/TG14tIOCoGJarkGImGgYltTTTM6rIk/wwo9FWshgKAmQyEEiSzHTSnX
- cGbalD3Do89YRmdG+5eP7HQfsG+VWdn8IH6qgIvSt8GOw6RfSP7omMXvXji1VrbWG4LOFYcsKTN+d
- GDhl8LmU0y44HejkCzYj/b28MvNTiRVfucrmZMGgI8L5A4ZwQ3Inv7jY13GZSvTb7PQIbqMcb1P3S
- qWJFodSwBg9oSw21b+T3aYG3z3MRCDXDlZAJONELx32rPMdBva8k+8L+K8gc7uNVH4jkMPkP9jPnV
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="MIIOekGT"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1725844860;
+	bh=mpeUnVEz7Deg5NM/ra1f075Fr0f6gYh7z75ZJuvSwtQ=;
+	h=From:To:Cc:Subject:Date;
+	b=MIIOekGThVrm1A3jI3lwnR4EpoYv7nQ74AGh6/2TvnfNRFC6iY5n1rV+hOPKjvCur
+	 prjpkeplflZPhGgMVb7PDrQVAEF9ORVPTeIaNL6GEutShBhc1rfwiClIcljHWGHFpk
+	 WisD/VSSfc26Jfm7xIC62/gYvzz/VVEiQdzK0fOc=
+Received: from yangang-TM1701.. ([39.156.73.13])
+	by newxmesmtplogicsvrsza15-1.qq.com (NewEsmtp) with SMTP
+	id 3B909A35; Mon, 09 Sep 2024 09:14:57 +0800
+X-QQ-mid: xmsmtpt1725844497tf0hmzms0
+Message-ID: <tencent_604F30643CD92D084CEB0AA3BE951B30C009@qq.com>
+X-QQ-XMAILINFO: NoLc/2Jxb1KSFsUAM+yorQF573ak5fuCiDPzwEGfNNPcrjpPtwICKKA6lrVNbV
+	 jRlRPgbBJ3Vhymzcq7Tjl+7yVW1Pe0LHJ1J2ZL3zk/JRr+34FmCGd+q74Nhizugi1gO3F/SBQqgk
+	 wM7yanZpw41sLD8E75FEWrlOW+SiQPI+x8ZY3GgW1CExgizDtI5psc4uCOp0jWUQIje6U8J8H0Cj
+	 1j6SY/5kuSfXains0l45VMfT+fzLsbaEubR8Xa9Wz+7zgVX0KAojKGv3aLZldReIQ1op+28MtaPE
+	 lq+tDR8aFLvmfaCKLq405fA8olaOXPiXC3c4+aJk/xoqp4lSn4JTQKaBYlqostF0e/QTYIdooCHL
+	 MLu+HIRdHTXT4qskl4UAfCAPVHnqB9vx8FjAmD/BM3H+hQrEJoajIH/Zb9yAAhdJCsIxunDpRnmO
+	 C0gEpZOCPGBEMbCqAPWbR1efP3AaMKXqJzCEgNtgIogDqnr0QONhj/cLlwCQ6BgnEHakQyFDokg9
+	 su81t0/CfHQbGOLTBAhgd+wHcIhyLGTlRzYq2W8KsJ6dk4B7zPwBgFQ/Si1xMddb2Dq0bpGqOS68
+	 8sv0bOsRyLWdGhR/+5DJKsH0WM+oDj2KoNix8Cb5y6S2fC3l1r9AIerRDOwaM0W7Zes+JWe+ACAE
+	 LewMVJd0UBhJ5Y0ta0CQBkyDv+bjkurJIocqrCBr/a5OG31IKhfl/khEhEIsleFy+Ar6zeBTlhuN
+	 WV/RalTkezhvrGYibeR0O2COf48YuwYHdJp0jB+Zm+sEuufRCgCkwJmaDrFybpXahowr5PkSdFOn
+	 l6q6BpzB5NeB6tRcEUJUH7EpMZ+L+nksK0kpeov4an/0RoaNb9BNbIdNmEMhi0LodNLqWDy7nOm1
+	 df1eKpt24itAkBEgDe+yY45z+JRwLEXUtURNTM+aCoOF0gMUlt+LAxW6VY4CNeDYxip19C0ml5ru
+	 QaPNBpCsp7WwG9IGAMe/8CGapYw26A7IwpZPo/T6EF9y/VXABdPPUjp/mKFNLAEYJjiF8QL7zlHH
+	 Mp1kt6jbgWwhr24atUG6C/yJv6niCgoqLossU6KQ==
+X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
+From: gang_yan@foxmail.com
+To: mptcp@lists.linux.dev
+Cc: YANGANG <yangang@kylinos.cn>
+Subject: [mptcp-next] mptcp: Add data race when accessing the fully_established of subflow
+Date: Mon,  9 Sep 2024 09:14:47 +0800
+X-OQ-MSGID: <20240909011447.14932-1-gang_yan@foxmail.com>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Andrii,
+From: YANGANG <yangang@kylinos.cn>
 
-On Fri, 2024-09-06 at 14:29 -0700, Andrii Nakryiko wrote:
-> On Thu, Sep 5, 2024 at 11:25 AM Martin KaFai Lau
-> <martin.lau@linux.dev> wrote:
-> > 
-> > On 9/5/24 6:52 AM, Geliang Tang wrote:
-> > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > 
-> > > It's necessary to traverse all subflows on the conn_list of an
-> > > MPTCP
-> > > socket and then call kfunc to modify the fields of each subflow.
-> > > In
-> > > kernel space, mptcp_for_each_subflow() helper is used for this:
-> > > 
-> > >   mptcp_for_each_subflow(msk, subflow)
-> > >           kfunc(subflow);
-> > > 
-> > > But in the MPTCP BPF program, this has not yet been implemented.
-> > > As
-> > > Martin suggested recently, this conn_list walking + modify-by-
-> > > kfunc
-> > > usage fits the bpf_iter use case.
-> > > 
-> > > This patch adds a new bpf_iter type named "mptcp_subflow" to do
-> > > this.
-> > > 
-> > > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
-> > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > > ---
-> > >   kernel/bpf/helpers.c |  3 +++
-> > >   net/mptcp/bpf.c      | 57
-> > > ++++++++++++++++++++++++++++++++++++++++++++
-> > >   2 files changed, 60 insertions(+)
-> > > 
-> > > diff --git a/kernel/bpf/helpers.c b/kernel/bpf/helpers.c
-> > > index b5f0adae8293..2340ba967444 100644
-> > > --- a/kernel/bpf/helpers.c
-> > > +++ b/kernel/bpf/helpers.c
-> > > @@ -3023,6 +3023,9 @@ BTF_ID_FLAGS(func, bpf_preempt_enable)
-> > >   BTF_ID_FLAGS(func, bpf_iter_bits_new, KF_ITER_NEW)
-> > >   BTF_ID_FLAGS(func, bpf_iter_bits_next, KF_ITER_NEXT |
-> > > KF_RET_NULL)
-> > >   BTF_ID_FLAGS(func, bpf_iter_bits_destroy, KF_ITER_DESTROY)
-> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
-> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
-> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
-> > >   BTF_KFUNCS_END(common_btf_ids)
-> > > 
-> > >   static const struct btf_kfunc_id_set common_kfunc_set = {
-> > > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> > > index 9672a70c24b0..cda09bbfd617 100644
-> > > --- a/net/mptcp/bpf.c
-> > > +++ b/net/mptcp/bpf.c
-> > > @@ -204,6 +204,63 @@ static const struct btf_kfunc_id_set
-> > > bpf_mptcp_fmodret_set = {
-> > >       .set   = &bpf_mptcp_fmodret_ids,
-> > >   };
-> > > 
-> > > +struct bpf_iter__mptcp_subflow {
-> > > +     __bpf_md_ptr(struct bpf_iter_meta *, meta);
-> > > +     __bpf_md_ptr(struct mptcp_sock *, msk);
-> > > +     __bpf_md_ptr(struct list_head *, pos);
-> > > +};
-> > > +
-> > > +DEFINE_BPF_ITER_FUNC(mptcp_subflow, struct bpf_iter_meta *meta,
-> > > +                  struct mptcp_sock *msk, struct list_head *pos)
-> 
-> this is defining BPF iterator *program type* (effectively), which is
-> different from open-coded iterator. Do you need a BPF iterator
-> program
-> type for this? Or open-coded iterator called from other BPF program
-> types would be sufficient?
+We introduce the same handling for potential data races with the
+'fully_established' flag in subflow as previously done for
+msk->fully_established.
 
-Yes, no need to define DEFINE_BPF_ITER_FUNC here, will drop it in v2.
+Additionally, we make a crucial change:  convert the subflow's
+'fully_established' from 'bit_field' to 'bool' type. This is
+necessary because methods for avoiding data races don't work well
+with 'bit_field'. Specifically, the 'READ_ONCE' needs to know
+the size of the variable being accessed, which is not supported in
+'bit_field'. Also, 'test_bit' expect the address of 'bit_field'.
+ This change was prompted by compilation errors we encountered,
+as detailed below.
 
-> 
-> > > +
-> > > +struct bpf_iter_mptcp_subflow {
-> > > +     __u64 __opaque[3];
-> > > +} __attribute__((aligned(8)));
-> > > +
-> > > +struct bpf_iter_mptcp_subflow_kern {
-> > > +     struct mptcp_sock *msk;
-> > > +     struct list_head *pos;
-> > > +} __attribute__((aligned(8)));
-> 
-> opaque[3], but you are using two pointers here. Why the difference?
+'''
+READ_ONCE:
 
-Should be 2, not 3. will update in v2.
+  477 |         (sizeof(t) == sizeof(char) || \
+      |		       ^
+		 			sizeof(t) == sizeof(short)|| \
+././include/linux/compiler_types.h:490:23:
+				note: in definition of macro ‘__compiletime_assert’
+  490 |                 if (!(condition))\
+      |                       ^~~~~~~~~
+././include/linux/compiler_types.h:510:9:
+				note: in expansion of macro ‘_compiletime_assert’
+  510 |         _compiletime_assert(condition, msg, \
+				__compiletime_assert_, __COUNTER__)
+      |         ^~~~~~~~~~~~~~~~~~~
+./include/asm-generic/rwonce.h:36:9:
+				note: in expansion of macro ‘compiletime_assert’
+   36 |         compiletime_assert(__native_word(t) ||  \
+				    sizeof(t) == sizeof(long long),  \
+      |         ^~~~~~~~~~~~~~~~~~
+./include/asm-generic/rwonce.h:36:28:
+				note: in expansion of macro ‘__native_word’
+   36 |         compiletime_assert(__native_word(t) || \
+      |				       ^~~~~~~~~~~~~
+					 sizeof(t) == sizeof(long long),  \
+./include/asm-generic/rwonce.h:49:9:
+				note: in expansion of macro ‘compiletime_assert_rwonce_type’
+   49 |         compiletime_assert_rwonce_type(x); \
+      |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+net/mptcp/protocol.h:781:39:
+				note: in expansion of macro ‘READ_ONCE’
+  781 |         if (subflow->request_join && \
+      |					   !READ_ONCE(subflow->fully_established))
+      |                                       ^~~~~~~~~
 
-Thanks,
--Geliang
+test_bit:
+ error: cannot take address of bit-field 'fully_established'
+   50 |         if (test_bit(1, &sf->fully_established))
+      |
+'''
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/516
+Signed-off-by: YANGANG <yangang@kylinos.cn>
+---
+ net/mptcp/diag.c     | 2 +-
+ net/mptcp/options.c  | 4 ++--
+ net/mptcp/protocol.c | 2 +-
+ net/mptcp/protocol.h | 6 +++---
+ net/mptcp/subflow.c  | 6 +++---
+ 5 files changed, 10 insertions(+), 10 deletions(-)
 
-> 
-> > > +
-> > > +__bpf_kfunc_start_defs();
-> > > +
-> > > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
-> > > bpf_iter_mptcp_subflow *it,
-> > > +                                        struct mptcp_sock *msk)
-> > > +{
-> > > +     struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > > +
-> > > +     kit->msk = msk;
-> > > +     kit->pos = &msk->conn_list;
-> > > +     spin_lock_bh(&msk->pm.lock);
-> > 
-> > I don't think spin_lock here without unlock can be used. e.g. What
-> > if
-> > bpf_iter_mptcp_subflow_new() is called twice back-to-back.
-> > 
-> > I haven't looked at the mptcp details, some questions:
-> > The list is protected by msk->pm.lock?
-> > What happen to the sk_lock of the msk?
-> > Can this be rcu-ify? or it needs some cares when walking the
-> > established TCP
-> > subflow?
-> > 
-> > 
-> > [ Please cc the bpf list. Helping to review patches is a good way
-> > to contribute
-> > back to the mailing list. ]
-> > 
-> > > +
-> > > +     return 0;
-> > > +}
-> > > +
-> > > +__bpf_kfunc struct mptcp_subflow_context *
-> > > +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
-> > > +{
-> > > +     struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > > +     struct mptcp_subflow_context *subflow;
-> > > +     struct mptcp_sock *msk = kit->msk;
-> > > +
-> > > +     subflow = list_entry((kit->pos)->next, struct
-> > > mptcp_subflow_context, node);
-> > > +     if (list_entry_is_head(subflow, &msk->conn_list, node))
-> > > +             return NULL;
-> > > +
-> > > +     kit->pos = &subflow->node;
-> > > +     return subflow;
-> > > +}
-> > > +
-> > > +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
-> > > bpf_iter_mptcp_subflow *it)
-> > > +{
-> > > +     struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > > +     struct mptcp_sock *msk = kit->msk;
-> > > +
-> > > +     spin_unlock_bh(&msk->pm.lock);
-> > > +}
-> > > +
-> > > +__bpf_kfunc_end_defs();
-> > > +
-> > >   __diag_push();
-> > >   __diag_ignore_all("-Wmissing-prototypes",
-> > >                 "kfuncs which will be used in BPF programs");
-> > 
-> > 
+diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+index 2d3efb405437..02205f7994d7 100644
+--- a/net/mptcp/diag.c
++++ b/net/mptcp/diag.c
+@@ -47,7 +47,7 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
+ 		flags |= MPTCP_SUBFLOW_FLAG_BKUP_REM;
+ 	if (sf->request_bkup)
+ 		flags |= MPTCP_SUBFLOW_FLAG_BKUP_LOC;
+-	if (sf->fully_established)
++	if (READ_ONCE(sf->fully_established))
+ 		flags |= MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED;
+ 	if (sf->conn_finished)
+ 		flags |= MPTCP_SUBFLOW_FLAG_CONNECTED;
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index 66eab2cdb702..ad22622843a2 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -461,7 +461,7 @@ static bool mptcp_established_options_mp(struct sock *sk, struct sk_buff *skb,
+ 		return false;
+ 
+ 	/* MPC/MPJ needed only on 3rd ack packet, DATA_FIN and TCP shutdown take precedence */
+-	if (subflow->fully_established || snd_data_fin_enable ||
++	if (READ_ONCE(subflow->fully_established) || snd_data_fin_enable ||
+ 	    subflow->snd_isn != TCP_SKB_CB(skb)->seq ||
+ 	    sk->sk_state != TCP_ESTABLISHED)
+ 		return false;
+@@ -930,7 +930,7 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+ 	/* here we can process OoO, in-window pkts, only in-sequence 4th ack
+ 	 * will make the subflow fully established
+ 	 */
+-	if (likely(subflow->fully_established)) {
++	if (likely(READ_ONCE(subflow->fully_established))) {
+ 		/* on passive sockets, check for 3rd ack retransmission
+ 		 * note that msk is always set by subflow_syn_recv_sock()
+ 		 * for mp_join subflows
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 7ef59e17d03a..1854049f4e6a 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -3493,7 +3493,7 @@ static void schedule_3rdack_retransmission(struct sock *ssk)
+ 	struct tcp_sock *tp = tcp_sk(ssk);
+ 	unsigned long timeout;
+ 
+-	if (mptcp_subflow_ctx(ssk)->fully_established)
++	if (READ_ONCE(mptcp_subflow_ctx(ssk)->fully_established))
+ 		return;
+ 
+ 	/* reschedule with a timeout above RTT, as we must look only for drop */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d25d2dac88a5..99642d343e66 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -513,7 +513,6 @@ struct mptcp_subflow_context {
+ 		request_bkup : 1,
+ 		mp_capable : 1,	    /* remote is MPTCP capable */
+ 		mp_join : 1,	    /* remote is JOINing */
+-		fully_established : 1,	    /* path validated */
+ 		pm_notified : 1,    /* PM hook called for established status */
+ 		conn_finished : 1,
+ 		map_valid : 1,
+@@ -531,9 +530,10 @@ struct mptcp_subflow_context {
+ 		valid_csum_seen : 1,        /* at least one csum validated */
+ 		is_mptfo : 1,	    /* subflow is doing TFO */
+ 		close_event_done : 1,       /* has done the post-closed part */
+-		__unused : 9;
++		__unused : 10;
+ 	bool	data_avail;
+ 	bool	scheduled;
++	bool    fully_established;	/* path validated */
+ 	u32	remote_nonce;
+ 	u64	thmac;
+ 	u32	local_nonce;
+@@ -778,7 +778,7 @@ static inline bool __tcp_can_send(const struct sock *ssk)
+ static inline bool __mptcp_subflow_active(struct mptcp_subflow_context *subflow)
+ {
+ 	/* can't send if JOIN hasn't completed yet (i.e. is usable for mptcp) */
+-	if (subflow->request_join && !subflow->fully_established)
++	if (subflow->request_join && !READ_ONCE(subflow->fully_established))
+ 		return false;
+ 
+ 	return __tcp_can_send(mptcp_subflow_tcp_sock(subflow));
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index b9b14e75e8c2..dcaf807013f6 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -785,7 +785,7 @@ void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
+ 				       const struct mptcp_options_received *mp_opt)
+ {
+ 	subflow_set_remote_key(msk, subflow, mp_opt);
+-	subflow->fully_established = 1;
++	WRITE_ONCE(subflow->fully_established, true);
+ 	WRITE_ONCE(msk->fully_established, true);
+ 
+ 	if (subflow->is_mptfo)
+@@ -1276,7 +1276,7 @@ static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
+ 	else if (READ_ONCE(msk->csum_enabled))
+ 		return !subflow->valid_csum_seen;
+ 	else
+-		return !subflow->fully_established;
++		return !READ_ONCE(subflow->fully_established);
+ }
+ 
+ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+@@ -2045,7 +2045,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
+ 	} else if (subflow_req->mp_join) {
+ 		new_ctx->ssn_offset = subflow_req->ssn_offset;
+ 		new_ctx->mp_join = 1;
+-		new_ctx->fully_established = 1;
++		WRITE_ONCE(new_ctx->fully_established, true);
+ 		new_ctx->remote_key_valid = 1;
+ 		new_ctx->backup = subflow_req->backup;
+ 		new_ctx->request_bkup = subflow_req->request_bkup;
+-- 
+2.43.0
 
