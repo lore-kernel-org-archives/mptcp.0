@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA8A19478
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:28:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D943C1758F
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:50:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725899331; cv=none; b=ZzZyMw08+mcnYL3pMB9zY0/7UN3UauP0zuCJkNsxa/V/iO1dDnKGZFfJDSMKGisL03sBsf32L7EPUIoad5leNWWVOMRc8ZJ782GpjV0QTApeqrpkgDAYV17tnFy0jDiourYVYyxhedMmWD+FwTb4XtgI2HNgXBPySQ8Hg6hV1SY=
+	t=1725900600; cv=none; b=GyNwyIuMslWHmn5H1tDD3RHmrAtrsHEBLMNaF4w8nE7nluO2DgbJrpAMPHTMCb6UNcUiD1dzSoh60VNt33wmU/8triODYgD95Es6/K4n+a95B00xgCIM1OW2xCWWR03+W2tvIr/oe26eRwUjB3hOmUDsYVaXoryfvLg2dH+yDWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725899331; c=relaxed/simple;
-	bh=VY1MWarA+93KDRPxYuD3HMUZh6PckT7nxPvTWN/trtw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CfFYMl3X3gwjKXUUIm42QI9H+wj/Nh+2le5el8p5uoB+EIT2I2WBI34ss9Ak/2TlUd6PXnFKto1lBE53pclBqZ9iqrai0oQrzBDBTedretBuPPEcyw3Jj3BBiV51jeT7MM00fWtWRz5boEYTBewuLy9cZE7YDgN6cinUbV1nfHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pm9m8KdO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725900600; c=relaxed/simple;
+	bh=K8NXXZ8EDphiablOrAVv62Y4Z7F2Y79eN6OpjwJkoKE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=aya6RL4t2hjqkVked6xXrNVA6+FimB5rKhV7KZyECnh9t9oaL4etHZhYqsKdm2dwLioXseDxh2yFFX2iKyh5NZIiMxBMqv4UDjttvyplODrqP7j2fhT4aiD/bcJw79syWogqgsCfETPWddANqKezYE7blAMOWXfP/QNJpNT2ce4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ce0A9wc2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pm9m8KdO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84725C4CEC5;
-	Mon,  9 Sep 2024 16:28:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ce0A9wc2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0DD14C4CEC5
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:49:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725899331;
-	bh=VY1MWarA+93KDRPxYuD3HMUZh6PckT7nxPvTWN/trtw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pm9m8KdOJJwEmrTrP+/SFQtCy3f9LZ0+GIcynW5rfUtmGIfbINd5zNpAzjq2XcMVB
-	 VSI6I4leCkH5Vx0M8C0NYNX+GmeBcr3yJCzTRbz3Y8xWAsHGDFXX7BP8zlLQd44vfQ
-	 WpUx5WJT2EEe/f3ny6t3Po5w0NXGSKG1n5ASTFUn5ldT0dDfWviY+SvPOvVAgG/wjW
-	 3evGD5jUhOHOA8/08tk7gXwh0QMsX+pf/94gOjKZhFrTvKuR10ihOro/VHGHfjqAap
-	 Of4qKvUL41cigqgrhGL0oLcyW1sBicc8CA/5DILaSeUJ9SIOqW6ATA9DihLvQp4tUT
-	 dVGTAabA8PAVw==
-Message-ID: <251e4685-1905-4989-864c-8c1ae94a0092@kernel.org>
-Date: Mon, 9 Sep 2024 18:28:48 +0200
+	s=k20201202; t=1725900600;
+	bh=K8NXXZ8EDphiablOrAVv62Y4Z7F2Y79eN6OpjwJkoKE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=Ce0A9wc2fD9k9iWs84teof2mZe4YXUiFAWhrxrfAC0f56fBbS9lheHvoU+ZudbDEk
+	 KYLhHRDvbYasy7V0qqOgHnWFapatCNTmnLMdJOE4X2vTYW0/egFyVXc1vlKUijTMSi
+	 NOLTupI2kIKpQR5dzri8gq79wr+PYSlgqHB0XwFIdcOs6pflpBsC/okmefnx/kZW0v
+	 8EjR29ZezkIJC6BjnOLOcVe6QkXMgjg8q9/QgNgAT/Nzd+Jdlgs2Vnqw0lOUbKT1um
+	 rajgrgzijaHqgbqnNitkgucBX2OHq7I125ciq6LxcOlj+zKjtcblU/LkhNBlZrrLxS
+	 Op8vhDttppxJg==
+Message-ID: <86a8a9ee-1dd8-41f6-984f-240bf83ce596@kernel.org>
+Date: Mon, 9 Sep 2024 18:49:58 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/4] cleanups for bpf schedulers
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: fallback to TCP after 3 MPC drop +
+ cache
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1725846806.git.tanggeliang@kylinos.cn>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20240902-mptcp-fallback-x-mpc-v1-0-86d9170ddff7@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,42 +85,68 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1725846806.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20240902-mptcp-fallback-x-mpc-v1-0-86d9170ddff7@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 09/09/2024 03:55, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 02/09/2024 11:09, Matthieu Baerts (NGI0) wrote:
+> The SYN + MPTCP_CAPABLE packets could be explicitly dropped by firewall
+> somewhere in the network, e.g. with:
 > 
-> v2:
->  - include two more squash-to patches into this set.
+>   iptables -t filter -A FORWARD -p tcp --tcp-option 30 -j DROP
 > 
-> Two cleanups for bpf schedulers.
+> The idea of this series is to fallback to TCP after 3 SYN+MPC drop
+> (patch 2). If the connection succeeds after the fallback, it very likely
+> means a blackhole has been detected. In this case (patch 3), MPTCP can
+> be disabled for a certain period of time, 1h by default. If after this
+> period, MPTCP is still blocked, the period is doubled.
 > 
-> Geliang Tang (4):
->   Squash to "bpf: Add bpf_mptcp_sched_ops"
->   Squash to "selftests/bpf: Add mptcp subflow subtest"
->   Squash to "selftests/bpf: Add bpf scheduler test"
->   Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+> This should help applications which want to use MPTCP by default on the
+> client side if available.
+> 
+> This series has been validated by a new packetdrill test:
+> 
+>   https://github.com/multipath-tcp/packetdrill/pull/156
+> 
+> Some questions:
+> 
+> - Should we let the user changes the number of retransmissions (2)
+>   before falling back to TCP? For TFO, the data are never retransmitted
+>   in a SYN. Maybe that's different here? A sysctl knob could always be
+>   added later on.
+> - Should we globally disable all MPTCP connections if any retransmission
+>   after the fallback is a success instead of only the first one? I guess
+>   we reduce risks of accidents by only looking at the following
+>   retransmission after the fallback.
+> - Is one hour a good time for the fallback?
+> 
+> For later:
+> 
+> - The restriction could be done per oif (sk_dst_get(ssk)->dev), but we
+>   would need to store it somehow, or per MPTCP entrypoint. Or let the PM
+>   calling mptcp_active_enable() when a new endpoint is added.
+> - Other cases could trigger mptcp_active_disable(): e.g. some fallbacks
+>   or corruptions in the middle of the connections.
 
-Thank you for the clean-up patches. Now in our tree:
+I suggest addressing these questions later. Due to some external
+circumstances, it is not possible to have more reviews for the moment. I
+think there is no need to block that longer, fixes can always be
+addressed later on.
 
 New patches for t/upstream:
-- 07a029a9a232: "squashed" patch 1/4 in "bpf: Add bpf_mptcp_sched_ops"
-- 05c716b8999b: "squashed" patch 2/4 in "selftests/bpf: Add mptcp
-subflow subtest"
-- 0aed3898d704: "squashed" patch 3/4 in "selftests/bpf: Add bpf
-scheduler test"
-- 56ed019f23ff: "squashed" patch 4/4 in "selftests/bpf: Add bpf_burst
-scheduler & test"
-- Results: 2e425b685ff0..29da3bae8ab9 (export)
+- a09026a9e8c4: mptcp: export mptcp_subflow_early_fallback()
+- 4216aa51fb10: mptcp: fallback to TCP after SYN+MPC drops
+- d0c7c7172eac: mptcp: disable active MPTCP in case of blackhole
+- 0fd52c49c60b: conflict in
+t/mptcp-annotate-data-races-around-subflow-fully_established
+- Results: 29da3bae8ab9..fc8995744495 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/358ee20f1a04d81f5f8332dafe8692d97e6c2d1a/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/ca4d36d160ee56fa9bd50dc0006ad34d454d8f48/checks
 
 Cheers,
 Matt
