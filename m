@@ -1,186 +1,170 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4EB1B81DA
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 13:07:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C43AB13AF9
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 14:22:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725887251; cv=none; b=SWVctamfChgeeh/6RR5RKqK0MrRkcdCeRZEBY9/pf2Yjlnv5dS+M7eJxLCIQ/HjjLB8244PS94a+lmAf4xtN6wYK0k5JFjUrXOdB8qOm/r+telB/nw+Xwv47/YO78jmqv0d1vgCYud/fz4tlcaaB0Gj5nCrJEqA3XAGae2zDUtw=
+	t=1725891732; cv=none; b=iADdRLwcY5yUrNn9Cx3Mf+4hfLj76l7t8qz63UWZssUQKcehFRdAXEvljFrdRxBs5PLz9FqZcsGavFx5TE72TLj0SYi5Ib6z3W+bEjdI4N4ai/N7/BA9FGY82u6m3N+CVHse5cBK8l9f/kW8rAQxsf0lfRO7a3pvU1GSRo6E74g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725887251; c=relaxed/simple;
-	bh=CHbpMMgrI2xFY2pHl/Kg9xkP9E8Jysrml3rFwxJwjB8=;
+	s=arc-20240116; t=1725891732; c=relaxed/simple;
+	bh=QPuHabZp6gpSKxZQHR8en0iGP2Yuh72a0rZdbO0b+F4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lrwo7BZHolVo1ps+fP7FpIUf019Z6fyx+TPUIYDSoOqo97RhMt9tUPPy1aL3gLsCqj3BT2tG68MJZ3NrKoyi/IruOOO71z4kvFO6j+iBx3Ksl0NmrPJ3pRj5wAvFkIcaMtrr/ZqNOKrKm4lthBhk1D1pkWNF+WAj/iu13LSxfNI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJ4WSlJF; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=AO1kG+YbKdwySTW7coWCjrUJa16pVXGuYSxg1wjbhipM3Kz7ct++GVfIvJARRHkFL+GfOTRt8lJ9hapvSgp0gZeJkeTeYtVoLzDKzvTMVgIpPYUx4g4jAC9G1ZHumofJF9ocHfa/Cj6HT19zRMB38Zl3tXJycPuCPx693GRzEm0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Yr2bQ1Co; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJ4WSlJF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1725887247;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=JyZBj0EVD3PSNBPRSECSDTeknIIQ/mA6Gy6EUmKX6vY=;
-	b=UJ4WSlJFNEPGTLaF6/+SkEBEonvDmA8bz4cM9XgW94fogoLpfptayrDTK6KhAXOvA9/k/9
-	g0Q5K0m2oCnC87wpr+OFTCMEFL1k3Y/4JVsUHdOCs0bXbgsRCI8Rsb0DFqSDn7EJfFyC6A
-	iQa5jiaUXXCatqZ5bDpOgkqoeO09Ias=
-Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
- [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-659-VJoUWHrXO1WqT5zjuBfQcg-1; Mon, 09 Sep 2024 09:07:26 -0400
-X-MC-Unique: VJoUWHrXO1WqT5zjuBfQcg-1
-Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5365cd47e2eso1735945e87.3
-        for <mptcp@lists.linux.dev>; Mon, 09 Sep 2024 06:07:26 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725887244; x=1726492044;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=JyZBj0EVD3PSNBPRSECSDTeknIIQ/mA6Gy6EUmKX6vY=;
-        b=uO+TnPSdRjou7Qx0wX1PtXupRMQgVpD3OeH5Cp2fcBKr/UPxqKo0taIsIOSasnwiBX
-         oVHFUCcHR8RBH0BpEbVGFnt6y3ea9VDObHsZws9VACnd8jOxCR+75DZ8IlYBHccK+xi0
-         SnwBLMCvKfowXH6WOsI8tXx4ofAYegoM/S5FxaC8hYTjGRiJFAgVls65+L1xpGAmicd3
-         1iPmnkJGABlOPw9bdzHNM0XAJUY7GIKJAprvb7m6pyfBTNfF5csnz7zU/DBJnU5nx75D
-         pHqBCJRxW/5ha9rdVAbuTrz49wDwvhldkQryFOSMHS/iNmHMHPmpelifY/Srmqxg/FEF
-         3tdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVOWX0scnlCVpSafu4+eKdlT8dYqyYrQB01iDs3aszt2JzzDivGEXxPQ2P5vgOcdwahiwR7JQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yw1qIjEWOfuaMXdn4qVCRANVFMKqblGZisbFQgBGiAp8Uzr8DXH
-	BgetyfffKVaWBi/ubWFCetanJ9JW8IlfM7ANMFvaBLUXtMsJ2J6TA2Nss4SWA87dh42XW0WlMWo
-	CaJZjEf7YMXjaDooIS9WNJwfPhiXGSoIdx+2Q3gA4mC/0bkb1P71G
-X-Received: by 2002:a05:6512:3a85:b0:536:55b3:470e with SMTP id 2adb3069b0e04-536587ac230mr7673704e87.19.1725887244041;
-        Mon, 09 Sep 2024 06:07:24 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IFrEiK+GlRfgFHvybT+tm+AdL0oMjLeOS3CiaqtMSqNP6YCmiedgWU9dh7LOXLTK74rlvza6Q==
-X-Received: by 2002:a05:6512:3a85:b0:536:55b3:470e with SMTP id 2adb3069b0e04-536587ac230mr7673667e87.19.1725887243418;
-        Mon, 09 Sep 2024 06:07:23 -0700 (PDT)
-Received: from [192.168.88.27] (146-241-69-130.dyn.eolo.it. [146.241.69.130])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb21d3asm77098165e9.5.2024.09.09.06.07.22
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 09 Sep 2024 06:07:22 -0700 (PDT)
-Message-ID: <4e74f641-a4a0-4668-b77a-94082f0ea6f1@redhat.com>
-Date: Mon, 9 Sep 2024 15:07:21 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Yr2bQ1Co"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B232C4CEC7;
+	Mon,  9 Sep 2024 14:22:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725891732;
+	bh=QPuHabZp6gpSKxZQHR8en0iGP2Yuh72a0rZdbO0b+F4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Yr2bQ1Co4vWgybr2OBfLxduySU6xMROxAJMmYROJepZR+Q7lIVi5Sfto7D6jwU0r/
+	 VseUgL+4JFm5is6OLwGnyIayXjCy6bQNC+rZSP52YA0HKqz8r1lsREf660HiRSiXNd
+	 yWFi6ehrY2WIhqBYJIKCI7VdqxEq/SzPEL5BrESU0gs+Ckeawb9TyCk+Y37RIOi7cv
+	 17A8sJq3AtL+jlFgDLVjKx9YSl91HLZ+TKWQu/0Qsu0IjinBrJEf/vqpPanGCQdaV8
+	 hG7VkYbZO4LdXeWcsadchS67kTknyBwekfl5rdBR8VJfJh3lwL8KqLEvXcFK8fg+CZ
+	 OtsvNZulp2K+Q==
+Message-ID: <ba918d63-cc5f-4d9e-9c0a-e37af685db4e@kernel.org>
+Date: Mon, 9 Sep 2024 16:22:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net v3] mptcp: pm: Fix uaf in __timer_delete_sync
-To: Edward Adam Davis <eadavis@qq.com>, matttbe@kernel.org
-Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
- kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
- mptcp@lists.linux.dev, netdev@vger.kernel.org,
- syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com
-References: <e4a13002-f471-4951-9180-14f0f8b30bd2@kernel.org>
- <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [mptcp-next] mptcp: Add data race when accessing the
+ fully_established of subflow
+Content-Language: en-GB
+To: gang_yan@foxmail.com, mptcp@lists.linux.dev
+Cc: YANGANG <yangang@kylinos.cn>
+References: <tencent_604F30643CD92D084CEB0AA3BE951B30C009@qq.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <tencent_604F30643CD92D084CEB0AA3BE951B30C009@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 9/5/24 14:27, Edward Adam Davis wrote:
-> There are two paths to access mptcp_pm_del_add_timer, result in a race
-> condition:
+Hi Gang Yan,
+
+On 09/09/2024 03:14, gang_yan@foxmail.com wrote:
+> From: YANGANG <yangang@kylinos.cn>
 > 
->       CPU1				CPU2
->       ====                               ====
->       net_rx_action
->       napi_poll                          netlink_sendmsg
->       __napi_poll                        netlink_unicast
->       process_backlog                    netlink_unicast_kernel
->       __netif_receive_skb                genl_rcv
->       __netif_receive_skb_one_core       netlink_rcv_skb
->       NF_HOOK                            genl_rcv_msg
->       ip_local_deliver_finish            genl_family_rcv_msg
->       ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
->       tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
->       tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
->       tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
->       tcp_data_queue                     remove_anno_list_by_saddr
->       mptcp_incoming_options             mptcp_pm_del_add_timer
->       mptcp_pm_del_add_timer             kfree(entry)
+> We introduce the same handling for potential data races with the
+> 'fully_established' flag in subflow as previously done for
+> msk->fully_established.
+
+Thank you for this patch!
+
+> Additionally, we make a crucial change:  convert the subflow's
+> 'fully_established' from 'bit_field' to 'bool' type. This is
+> necessary because methods for avoiding data races don't work well
+> with 'bit_field'. Specifically, the 'READ_ONCE' needs to know
+> the size of the variable being accessed, which is not supported in
+> 'bit_field'. Also, 'test_bit' expect the address of 'bit_field'.
+
+Indeed, bitfields cannot be used with READ/WRITE_ONCE.
+
+
+(I think we can remove the following text from the commit message ...)
+
+>  This change was prompted by compilation errors we encountered,
+> as detailed below.
 > 
-> In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-> zone protected by "pm.lock", the entry will be released, which leads to the
-> occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
+> '''
+> READ_ONCE:
 > 
-> Keeping a reference to add_timer inside the lock, and calling
-> sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
+>   477 |         (sizeof(t) == sizeof(char) || \
+>       |		       ^
+> 		 			sizeof(t) == sizeof(short)|| \
+> ././include/linux/compiler_types.h:490:23:
+> 				note: in definition of macro ‘__compiletime_assert’
+>   490 |                 if (!(condition))\
+>       |                       ^~~~~~~~~
+> ././include/linux/compiler_types.h:510:9:
+> 				note: in expansion of macro ‘_compiletime_assert’
+>   510 |         _compiletime_assert(condition, msg, \
+> 				__compiletime_assert_, __COUNTER__)
+>       |         ^~~~~~~~~~~~~~~~~~~
+> ./include/asm-generic/rwonce.h:36:9:
+> 				note: in expansion of macro ‘compiletime_assert’
+>    36 |         compiletime_assert(__native_word(t) ||  \
+> 				    sizeof(t) == sizeof(long long),  \
+>       |         ^~~~~~~~~~~~~~~~~~
+> ./include/asm-generic/rwonce.h:36:28:
+> 				note: in expansion of macro ‘__native_word’
+>    36 |         compiletime_assert(__native_word(t) || \
+>       |				       ^~~~~~~~~~~~~
+> 					 sizeof(t) == sizeof(long long),  \
+> ./include/asm-generic/rwonce.h:49:9:
+> 				note: in expansion of macro ‘compiletime_assert_rwonce_type’
+>    49 |         compiletime_assert_rwonce_type(x); \
+>       |         ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> net/mptcp/protocol.h:781:39:
+> 				note: in expansion of macro ‘READ_ONCE’
+>   781 |         if (subflow->request_join && \
+>       |					   !READ_ONCE(subflow->fully_established))
+>       |                                       ^~~~~~~~~
 > 
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Cc: stable@vger.kernel.org
-> Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-> ---
->   net/mptcp/pm_netlink.c | 14 ++++++++++----
->   1 file changed, 10 insertions(+), 4 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 3e4ad801786f..7ddb373cc6ad 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -329,17 +329,21 @@ struct mptcp_pm_add_entry *
->   mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->   		       const struct mptcp_addr_info *addr, bool check_id)
->   {
-> -	struct mptcp_pm_add_entry *entry;
->   	struct sock *sk = (struct sock *)msk;
-> +	struct timer_list *add_timer = NULL;
-> +	struct mptcp_pm_add_entry *entry;
->   
->   	spin_lock_bh(&msk->pm.lock);
->   	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> +	if (entry && (!check_id || entry->addr.id == addr->id)) {
->   		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-> +		add_timer = &entry->add_timer;
-> +	}
->   	spin_unlock_bh(&msk->pm.lock);
->   
-> -	if (entry && (!check_id || entry->addr.id == addr->id))
-> -		sk_stop_timer_sync(sk, &entry->add_timer);
-> +	/* no lock, because sk_stop_timer_sync() is calling del_timer_sync() */
-> +	if (add_timer)
-> +		sk_stop_timer_sync(sk, add_timer);
->   
->   	return entry;
->   }
-> @@ -1430,8 +1434,10 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
->   
->   	entry = mptcp_pm_del_add_timer(msk, addr, false);
->   	if (entry) {
-> +		spin_lock_bh(&msk->pm.lock);
->   		list_del(&entry->list);
->   		kfree(entry);
-> +		spin_unlock_bh(&msk->pm.lock);
+> test_bit:
+>  error: cannot take address of bit-field 'fully_established'
+>    50 |         if (test_bit(1, &sf->fully_established))
+>       |
+> '''
 
-I'm sorry for the late feedback.
+(... and add a blank line here: I can fix that when applying the patch)
 
-I think this is not enough to fix races for good, i.e.
+The rest looks good to me:
 
-mptcp_nl_remove_subflow_and_signal_addr() -> mptcp_pm_remove_anno_addr()
--> remove_anno_list_by_saddr()
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-could race with:
-
-mptcp_pm_remove_addrs() -> remove_anno_list_by_saddr()
-
-and both CPUs could see the same 'entry' returned by
-mptcp_pm_del_add_timer().
-
-I think the list_del() in remove_anno_list_by_saddr() should moved under
-the pm lock protection inside mptcp_pm_del_add_timer(), and no need to 
-add spin_lock_bh() around the kfree call.
-
-Thanks,
-
-Paolo
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
