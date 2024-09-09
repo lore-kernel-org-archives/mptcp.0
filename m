@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14B486A039
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 15:39:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E223381B8
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 15:55:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725896388; cv=none; b=FPQO5VNKF7xuyt6LZCc94RcITI31GK7r6TiEjRkdNE9NCDDLDqxi+HqujsmntB7p6/zCMu3Tw92/LU+18A+r5JF0SoPIUwIscc/o66++DTjkbFk7BhmdMbU3p5mGIdtHP7GuQzYuZjcfvJnpcPFDOyNrMLP4j/e2of9WFqGp1qg=
+	t=1725897310; cv=none; b=uoYM+2upOpfPw9Zq6iP3R9l3iBiU11s8Sp4783ZlsIMMUSd/vyZH+1fv8qaT2n6GKJpPO8tKf96OE63oUsEstmqR19xvla3ZxFCr4parrNfSGWtmkwfdda/rRP8qREZjDLwF5u5veDk8lH8OY9cczZFw5y7ssVjV4Fy9scrR/pY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725896388; c=relaxed/simple;
-	bh=a1Un+2q3UoMqnXvlBQrs9iuzLW7sGsULJH7rBwpLbro=;
+	s=arc-20240116; t=1725897310; c=relaxed/simple;
+	bh=WgyyWKjZPR6McjrtggITP9p8T4A+J9xDO08eLhwY4dU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZKvz97zsOwzP16642lEdYIM12mKksOKVM0MqT+P6eOfmSDjOwqtDID3aPxcA1+liI97C7b9PpaAmEna5XNDpYdFCNzTYbSd6PUkWL7RuUK6syUQ62nOnTdguuWYpR23T9JrU21AaP8B4ZZNPJkTzAKyxclbINWhAPI7whdbGUKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MO99gINC; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Mo3ZO8lPaYmX6r+g+n5ahN+S6sc8T0SPRcCgjPg07h8LLglcOje/oOipeV0TxIqxaYGGLWR0TcuaYFP1y2S3mlFa/d7YoXheHCO2UI6V0vP1bwmZ17WvXdW7Zi3Vuzwcv2AFmHayB2KnojPQEhWdd0APq6B93qvSIRz89N7rt2g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lux/45Zz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MO99gINC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E19BDC4CEC8;
-	Mon,  9 Sep 2024 15:39:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lux/45Zz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09B68C4CEC5;
+	Mon,  9 Sep 2024 15:55:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725896387;
-	bh=a1Un+2q3UoMqnXvlBQrs9iuzLW7sGsULJH7rBwpLbro=;
+	s=k20201202; t=1725897309;
+	bh=WgyyWKjZPR6McjrtggITP9p8T4A+J9xDO08eLhwY4dU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MO99gINCH2Ogl5S+OlOMhh7v4ZFrhcb0SGXed4lkHolldWAAaNX/KOWS5stZIoGiQ
-	 neoi+W0sFvS/JA3BPe+cR3ft+iompelhEtT/iQhne+jDc6FurldtMw77IFQPhwk7Wg
-	 CPjA/CHv8wMpFnSyqVnW9Y5z2rUcmtf0BwENXiKrt8dMGus940yTiR/djnQIGlFhWK
-	 u12ZE5/0QyEn8BjpFvGnYoVVErz8W0B6ue7ztRloMIcJkFYtKp6Vj0zfmGPzONM9mA
-	 tUFYyINwWFlCayImDDysRewg7a2KhhzHkoQ9cUkreLMKF/jW+eCzibUm1sP3atW4TG
-	 7fxDkbJxkRCdQ==
-Message-ID: <d9f3f461-b1dd-4410-977e-2dc34d0d485a@kernel.org>
-Date: Mon, 9 Sep 2024 17:39:45 +0200
+	b=lux/45Zz3EIMQwa5rgmnqJxWEeUFkr09jTBSTuSGoXfkjvVnewS3eMnZxxmK363Rl
+	 z4PDGZSNaA0LyQGdZi+MWvkT7f4Ni5VAYpRZZ/9hhSmFlSbGu+4/CMjKzG9D40fxbk
+	 yO0NMMvY3pb90V7l1ayg/uiCtGy0wIO/i5Yq+Z9ObJovcOEW+NtPam/B1AvjhXXR4m
+	 han36guejYZT1Vq7H+e4cOEXldU2YN2NXf/5RejgpA0KglpL1mPSYGg1eJkfF+x554
+	 fNL/OKwNq0TCbKnmQIJBPP5gir4QW1icNosBi+1snp2CYrjye/SXUMRtQ56uEaaYc+
+	 2DqPWCY4MhQ2w==
+Message-ID: <3f4323b9-c057-4d84-ab4d-7384c1bd18db@kernel.org>
+Date: Mon, 9 Sep 2024 17:55:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next] mptcp: Add data race when accessing the
- fully_established of subflow
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: add back mptcp_pm_subflow_closed
 Content-Language: en-GB
-To: gang_yan@foxmail.com, mptcp@lists.linux.dev
-Cc: YANGANG <yangang@kylinos.cn>
-References: <tencent_604F30643CD92D084CEB0AA3BE951B30C009@qq.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1725853370.git.tanggeliang@kylinos.cn>
+ <eaf475e7335131061c3a0cea0e6320e956657084.1725853370.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,31 +86,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <tencent_604F30643CD92D084CEB0AA3BE951B30C009@qq.com>
+In-Reply-To: <eaf475e7335131061c3a0cea0e6320e956657084.1725853370.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang Yan,
+Hi Geliang,
 
-On 09/09/2024 03:14, gang_yan@foxmail.com wrote:
-> From: YANGANG <yangang@kylinos.cn>
+On 09/09/2024 05:45, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> We introduce the same handling for potential data races with the
-> 'fully_established' flag in subflow as previously done for
-> msk->fully_established.
-Thank you for this patch!
+> The MPTCP path manager event handler mptcp_pm_subflow_closed interface
+> is added in the commit "mptcp: Add path manager interface", but removed
+> in the commit "mptcp: do not block subflows creation on errors".
+> 
+> This patch adds it back and changes its 2nd parameter from "u8 id" to
+> "struct sock *ssk". Invoke mptcp_event with the MPTCP_EVENT_SUB_CLOSED
+> event type in it.
 
-Now in our tree (feat. for net-next) with the suggested modifications
-from my previous review, but also a different subject, I hope that's OK:
+Please *always* add a reason: why is better to add it back? Is it to
+avoid duplicated code? To move have all the event triggered from pm.c? etc.
 
-New patches for t/upstream:
-- 633d4f19df42: mptcp: annotate data-races around subflow->fully_established
-- Results: 2272658b40f1..42ffd3cd6ef4 (export)
+Also, I'm less sure about that one: mptcp_pm_subflow_check_next() is
+called just after. Why not having only one call to the PM side and
+handle both? (or leave it as it is for the moment if you don't need to
+change stuff around)
 
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f1203796582877704db22e3519e514d0864a131b/checks
+I'm then going to apply only the first patch if that's OK.
 
 Cheers,
 Matt
