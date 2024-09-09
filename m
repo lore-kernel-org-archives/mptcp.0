@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CE8312E48
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 01:59:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9254D134AB
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 02:01:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725847171; cv=none; b=cpdRYR2ZZ41iqagtihNkQUEsGpZZn1CNRMyY3cGFq4YGyl6b3X1jBf5Pmh50XCLXCW8NP6YgteO5mk3OnaLyXYQuDUxmHL3X/B/MjAeJ1JhLHKmDF7JQDSISlQxsLEhn891M9Z0qn2W9TceZbEAdNEXy4iMu6UO6oMfH3GcuFmg=
+	t=1725847294; cv=none; b=SuePz3YWXwZGljgNeOJtkC1biFdGHGBZwfBc1H90k43o6LHFwoUZKHPQDfpHFfhtZKdJ7MVYRIMD/C8Zt6JLYGXJAI7O2f1Hp4IZZtr3UXv7JznZNx6KayycyZSuKtes2UP907syScL8/f0DCttpHdQoVrq8IRchI9FraKLJldU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725847171; c=relaxed/simple;
-	bh=uC3Q03+dYgbwdHKYvoXmL/EcdltHi4FJ2sGwK+Wv4rA=;
+	s=arc-20240116; t=1725847294; c=relaxed/simple;
+	bh=wFgN82aDs7fBbgm+vwQPgpwRab7P/zrD4FMDHluWbsA=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=k8HJENpiPcf1KRoGZZFRQAzg3/EPsGjY+Wp9+TvYOGK/6OS3PAVr/rjsRYm5iExVOLeaIBiukAWs9HZhLq796eIMSoidQJrG6a74VFJ1GzacCALgBN3e3rhktGZJxYjoZX3Q7Xr+BsiiD1dP25HTX9ZqCofMxgpi8n7lh63PB1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HgRgBlzp; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=KszlkdFpx/FbLeYh2LVOH8LFujzviHMF3lCtZ+kbRbV+TS2aLVhOZ6jlf2rQwkb3Ss/CLlEQ5TaqZdCQGEktn9O3L6dhrUwqK8LbfkHk+kdp2KxCckFt23s5k3z2YnN2HUr+cvW6+OzwvcLxutdy3J3Yfbi96sMz8F6uSyoBdtw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pWjf04wG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HgRgBlzp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32FDBC4CEC3;
-	Mon,  9 Sep 2024 01:59:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pWjf04wG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 53877C4CEC3;
+	Mon,  9 Sep 2024 02:01:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725847171;
-	bh=uC3Q03+dYgbwdHKYvoXmL/EcdltHi4FJ2sGwK+Wv4rA=;
+	s=k20201202; t=1725847294;
+	bh=wFgN82aDs7fBbgm+vwQPgpwRab7P/zrD4FMDHluWbsA=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HgRgBlzpmpSIZWGE9apXYDu0WBpmXVHgPlmq6NRYK8Uj0/4oVnAbkTqrnaNL2hhYK
-	 hWwmBc6ExJ32Y1Dkthdseg979vx5juSxJktZVx5eGXyvyJGoM1gjuXI6dvW3mPy5Sc
-	 8mYcm8Wr+SdiTRA27NUjdjc8jd9hvHiEd+fOTkRxo0W0uG8ardEuNYLAbQ5tLFKAg4
-	 XsREp/1OPlGJ5FvdiMzFhLFdYitT6bf2sPu1lObeuqzNTIgsh58FDSX2CMupuWd6n1
-	 HSMvsGecd82EkYjq2WZicdKSrXMIouUYcAlJeP5xPbADZQ39nUT5ME3QqiWzM2+vba
-	 DUyUQsrX0VWtA==
-Message-ID: <2a5f12511ca3f8a2952b661a10e52c939beb2686.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add mptcp subflow
- subtest"
+	b=pWjf04wGHt9ZH4FPHzmskv1QEjS9sk03ufJme2J/IDOAVm1cCIhXfbXzqwRK7ziOs
+	 G9AaKR4LPpUDxHFeDOgdUR7U1oEdYVLDXj3eqB9B0aLkOWtqUPIy1FGWvk0maO/+qV
+	 B1Tx5YlTFu5SjRZLF8zDncM7p1elYcPg2mw7FKhL5/PBWdBwiiwq4F557WaEDquC+o
+	 wFSfnqCDYKrP0y2RY707Ysn4Zp8kwe//wWusFU1aMcQcsYlr6msdd1YMrDyp/mW6h0
+	 eloXYsYMWlbxx5tIiFVsquOVvtcFiBiEIVJIpuBBrquDL8984ZDNGA/9n+QHRUSZY1
+	 Vl0ScQhb3/+Rg==
+Message-ID: <32fef373600d8d96c90819d7fd8731ed91fc4c25.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 3/4] Squash to "selftests/bpf: Add bpf
+ scheduler test"
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Mon, 09 Sep 2024 09:59:25 +0800
-In-Reply-To: <d5598209aecfc8fe58f9a93dc802817b041785a9.1725680751.git.tanggeliang@kylinos.cn>
-References: 
-	<d5598209aecfc8fe58f9a93dc802817b041785a9.1725680751.git.tanggeliang@kylinos.cn>
+Date: Mon, 09 Sep 2024 10:01:30 +0800
+In-Reply-To: <bc0240881dcbd9400e128cd9e4024a12b86aec9e.1725846806.git.tanggeliang@kylinos.cn>
+References: <cover.1725846806.git.tanggeliang@kylinos.cn>
+	 <bc0240881dcbd9400e128cd9e4024a12b86aec9e.1725846806.git.tanggeliang@kylinos.cn>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -79,47 +79,37 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Superseded. Move into "cleanups for bpf schedulers" set v2.
-
-Thanks,
--Geliang
-
-On Sat, 2024-09-07 at 11:45 +0800, Geliang Tang wrote:
+On Mon, 2024-09-09 at 09:55 +0800, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Should use dedicated ASSERT_OK_FD() to check the fds.
+
+Should use dedicated ASSERT_OK_FD() to check the fds.
+
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/bpf/prog_tests/mptcp.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 > b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index 93869c873cad..987692863fde 100644
+> index 987692863fde..2476f0a083bc 100644
 > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -394,11 +394,11 @@ static void run_subflow(void)
->  	socklen_t len;
+> @@ -507,11 +507,11 @@ static void send_data_and_verify(char *sched,
+> bool addr1, bool addr2)
+>  	unsigned int delta_ms;
 >  
 >  	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-> -	if (!ASSERT_GE(server_fd, 0, "start_mptcp_server"))
+> -	if (CHECK(server_fd < 0, sched, "start_mptcp_server: %d\n",
+> errno))
 > +	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
 >  		return;
 >  
 >  	client_fd = connect_to_fd(server_fd, 0);
-> -	if (!ASSERT_GE(client_fd, 0, "connect to fd"))
+> -	if (CHECK(client_fd < 0, sched, "connect_to_fd: %d\n",
+> errno))
 > +	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
->  		goto close_server;
+>  		goto fail;
 >  
->  	send_byte(client_fd);
-> @@ -429,7 +429,7 @@ static void test_subflow(void)
->  	struct bpf_link *link;
->  
->  	cgroup_fd = test__join_cgroup("/mptcp_subflow");
-> -	if (!ASSERT_GE(cgroup_fd, 0, "join_cgroup: mptcp_subflow"))
-> +	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: mptcp_subflow"))
->  		return;
->  
->  	skel = mptcp_subflow__open_and_load();
+>  	if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
 
