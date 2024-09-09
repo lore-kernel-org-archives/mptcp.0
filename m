@@ -1,230 +1,186 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 788941B6521;
-	Mon,  9 Sep 2024 11:57:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4D4EB1B81DA
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 13:07:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725883034; cv=none; b=kl2bZaPIovThEVFO3qJ4EomWdHeL/wANOs+Ksgj/aTgOYTQDWtEq8X2Ya9Mjo3m44JHKTlQPVhw7M4ndCg29271sP6vvvqP6SSln8kdUuUjL/kK3PpZslTttM4zmDAscweOglR2e86HQ2V9bk2+3MRyAftBdmjyPSFtbucKYHtI=
+	t=1725887251; cv=none; b=SWVctamfChgeeh/6RR5RKqK0MrRkcdCeRZEBY9/pf2Yjlnv5dS+M7eJxLCIQ/HjjLB8244PS94a+lmAf4xtN6wYK0k5JFjUrXOdB8qOm/r+telB/nw+Xwv47/YO78jmqv0d1vgCYud/fz4tlcaaB0Gj5nCrJEqA3XAGae2zDUtw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725883034; c=relaxed/simple;
-	bh=Xs1ma3py/kYQl+X+Z1t4uxsWvuP6OYkETY78e8ZgRGc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nZ+Z9z518AxjYvIXmRI7Tek3LNf2bSFT98f+ci1Q6of6xlGICln0iupEIAIMj0nIhL14c6cCD1flUnFX4DBRAOhZ8FYyro/L+L6nX7VUrHuTdJR0T4MaJeGJQzHLg4dIaQT/pejbEew87wKYoMSIWHG/hb5ATjcjK+csOcSlpt4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EunNC8rt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725887251; c=relaxed/simple;
+	bh=CHbpMMgrI2xFY2pHl/Kg9xkP9E8Jysrml3rFwxJwjB8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lrwo7BZHolVo1ps+fP7FpIUf019Z6fyx+TPUIYDSoOqo97RhMt9tUPPy1aL3gLsCqj3BT2tG68MJZ3NrKoyi/IruOOO71z4kvFO6j+iBx3Ksl0NmrPJ3pRj5wAvFkIcaMtrr/ZqNOKrKm4lthBhk1D1pkWNF+WAj/iu13LSxfNI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=UJ4WSlJF; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EunNC8rt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F040FC4CEC5;
-	Mon,  9 Sep 2024 11:57:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725883034;
-	bh=Xs1ma3py/kYQl+X+Z1t4uxsWvuP6OYkETY78e8ZgRGc=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=EunNC8rtl0pHf0fMNVqfew4abZDFXZd9Euf//3xorzLJsPEwXXptrJEaFFooTq02+
-	 Ma2/HmtZh1BMoT4o8sv5QX11wBFvdgnPQXU8RnoTqFnfWrrjqPuT2v9C7ZqLSu2ZDH
-	 V36dsM8KBFh2LX/tBIBiIR1ktKXLy46DtofdSCK7SQaLjdgp4eJPloF8KISw6WtyCD
-	 RvIEkolAxl9RdRvVW+sAaaDQXm/ye1y/Di+qQw/xPwh9wSBkC3u3WNQmun9NOHbk5I
-	 PgFxaDItCfAV5eZkd8yAGNfdL82IGPHFHU6Zqf8jwXm5UuQGkDp6EegE6GKhUxftm7
-	 6X7v/r4x2JtSA==
-Message-ID: <332e79e8eb212de91c848ef0d99a2f3326a8153f.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 1/4] bpf: Add mptcp_subflow bpf_iter
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, bpf <bpf@vger.kernel.org>, Martin
- KaFai Lau <martin.lau@kernel.org>
-Date: Mon, 09 Sep 2024 19:57:10 +0800
-In-Reply-To: <a4a0e759b9f82a17ddd2eac68f6cd99788248683.1725845619.git.tanggeliang@kylinos.cn>
-References: <cover.1725845619.git.tanggeliang@kylinos.cn>
-	 <a4a0e759b9f82a17ddd2eac68f6cd99788248683.1725845619.git.tanggeliang@kylinos.cn>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="UJ4WSlJF"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1725887247;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=JyZBj0EVD3PSNBPRSECSDTeknIIQ/mA6Gy6EUmKX6vY=;
+	b=UJ4WSlJFNEPGTLaF6/+SkEBEonvDmA8bz4cM9XgW94fogoLpfptayrDTK6KhAXOvA9/k/9
+	g0Q5K0m2oCnC87wpr+OFTCMEFL1k3Y/4JVsUHdOCs0bXbgsRCI8Rsb0DFqSDn7EJfFyC6A
+	iQa5jiaUXXCatqZ5bDpOgkqoeO09Ias=
+Received: from mail-lf1-f70.google.com (mail-lf1-f70.google.com
+ [209.85.167.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-659-VJoUWHrXO1WqT5zjuBfQcg-1; Mon, 09 Sep 2024 09:07:26 -0400
+X-MC-Unique: VJoUWHrXO1WqT5zjuBfQcg-1
+Received: by mail-lf1-f70.google.com with SMTP id 2adb3069b0e04-5365cd47e2eso1735945e87.3
+        for <mptcp@lists.linux.dev>; Mon, 09 Sep 2024 06:07:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725887244; x=1726492044;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=JyZBj0EVD3PSNBPRSECSDTeknIIQ/mA6Gy6EUmKX6vY=;
+        b=uO+TnPSdRjou7Qx0wX1PtXupRMQgVpD3OeH5Cp2fcBKr/UPxqKo0taIsIOSasnwiBX
+         oVHFUCcHR8RBH0BpEbVGFnt6y3ea9VDObHsZws9VACnd8jOxCR+75DZ8IlYBHccK+xi0
+         SnwBLMCvKfowXH6WOsI8tXx4ofAYegoM/S5FxaC8hYTjGRiJFAgVls65+L1xpGAmicd3
+         1iPmnkJGABlOPw9bdzHNM0XAJUY7GIKJAprvb7m6pyfBTNfF5csnz7zU/DBJnU5nx75D
+         pHqBCJRxW/5ha9rdVAbuTrz49wDwvhldkQryFOSMHS/iNmHMHPmpelifY/Srmqxg/FEF
+         3tdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVOWX0scnlCVpSafu4+eKdlT8dYqyYrQB01iDs3aszt2JzzDivGEXxPQ2P5vgOcdwahiwR7JQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw1qIjEWOfuaMXdn4qVCRANVFMKqblGZisbFQgBGiAp8Uzr8DXH
+	BgetyfffKVaWBi/ubWFCetanJ9JW8IlfM7ANMFvaBLUXtMsJ2J6TA2Nss4SWA87dh42XW0WlMWo
+	CaJZjEf7YMXjaDooIS9WNJwfPhiXGSoIdx+2Q3gA4mC/0bkb1P71G
+X-Received: by 2002:a05:6512:3a85:b0:536:55b3:470e with SMTP id 2adb3069b0e04-536587ac230mr7673704e87.19.1725887244041;
+        Mon, 09 Sep 2024 06:07:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFrEiK+GlRfgFHvybT+tm+AdL0oMjLeOS3CiaqtMSqNP6YCmiedgWU9dh7LOXLTK74rlvza6Q==
+X-Received: by 2002:a05:6512:3a85:b0:536:55b3:470e with SMTP id 2adb3069b0e04-536587ac230mr7673667e87.19.1725887243418;
+        Mon, 09 Sep 2024 06:07:23 -0700 (PDT)
+Received: from [192.168.88.27] (146-241-69-130.dyn.eolo.it. [146.241.69.130])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42caeb21d3asm77098165e9.5.2024.09.09.06.07.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Mon, 09 Sep 2024 06:07:22 -0700 (PDT)
+Message-ID: <4e74f641-a4a0-4668-b77a-94082f0ea6f1@redhat.com>
+Date: Mon, 9 Sep 2024 15:07:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH net v3] mptcp: pm: Fix uaf in __timer_delete_sync
+To: Edward Adam Davis <eadavis@qq.com>, matttbe@kernel.org
+Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com
+References: <e4a13002-f471-4951-9180-14f0f8b30bd2@kernel.org>
+ <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <tencent_F85DEC5DED99554FB28DEF258F8DB8120D07@qq.com>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-On Mon, 2024-09-09 at 09:36 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 9/5/24 14:27, Edward Adam Davis wrote:
+> There are two paths to access mptcp_pm_del_add_timer, result in a race
+> condition:
 > 
-> It's necessary to traverse all subflows on the conn_list of an MPTCP
-> socket and then call kfunc to modify the fields of each subflow. In
-> kernel space, mptcp_for_each_subflow() helper is used for this:
+>       CPU1				CPU2
+>       ====                               ====
+>       net_rx_action
+>       napi_poll                          netlink_sendmsg
+>       __napi_poll                        netlink_unicast
+>       process_backlog                    netlink_unicast_kernel
+>       __netif_receive_skb                genl_rcv
+>       __netif_receive_skb_one_core       netlink_rcv_skb
+>       NF_HOOK                            genl_rcv_msg
+>       ip_local_deliver_finish            genl_family_rcv_msg
+>       ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
+>       tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
+>       tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
+>       tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
+>       tcp_data_queue                     remove_anno_list_by_saddr
+>       mptcp_incoming_options             mptcp_pm_del_add_timer
+>       mptcp_pm_del_add_timer             kfree(entry)
 > 
-> 	mptcp_for_each_subflow(msk, subflow)
-> 		kfunc(subflow);
+> In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
+> zone protected by "pm.lock", the entry will be released, which leads to the
+> occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
 > 
-> But in the MPTCP BPF program, this has not yet been implemented. As
-> Martin suggested recently, this conn_list walking + modify-by-kfunc
-> usage fits the bpf_iter use case. So this patch adds a new bpf_iter
-> type named "mptcp_subflow" to do this and implements its helpers
-> bpf_iter_mptcp_subflow_new()/_next()/_destroy().
+> Keeping a reference to add_timer inside the lock, and calling
+> sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
 > 
-> Then bpf_for_each() for mptcp_subflow can be used in BPF program like
-> this:
-> 
-> 	bpf_rcu_read_lock();
-> 	bpf_for_each(mptcp_subflow, subflow, msk)
-> 		kfunc(subflow);
-> 	bpf_rcu_read_unlock();
-> 
-> Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
+> Cc: stable@vger.kernel.org
+> Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
 > ---
->  net/mptcp/bpf.c      | 51
-> ++++++++++++++++++++++++++++++++++++++++++++
->  net/mptcp/protocol.h |  6 ++++++
->  2 files changed, 57 insertions(+)
+>   net/mptcp/pm_netlink.c | 14 ++++++++++----
+>   1 file changed, 10 insertions(+), 4 deletions(-)
 > 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 9672a70c24b0..799264119891 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -204,10 +204,59 @@ static const struct btf_kfunc_id_set
-> bpf_mptcp_fmodret_set = {
->  	.set   = &bpf_mptcp_fmodret_ids,
->  };
->  
-> +struct bpf_iter__mptcp_subflow {
-> +	__bpf_md_ptr(struct bpf_iter_meta *, meta);
-> +	__bpf_md_ptr(struct mptcp_sock *, msk);
-> +	__bpf_md_ptr(struct list_head *, pos);
-> +};
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 3e4ad801786f..7ddb373cc6ad 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -329,17 +329,21 @@ struct mptcp_pm_add_entry *
+>   mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>   		       const struct mptcp_addr_info *addr, bool check_id)
+>   {
+> -	struct mptcp_pm_add_entry *entry;
+>   	struct sock *sk = (struct sock *)msk;
+> +	struct timer_list *add_timer = NULL;
+> +	struct mptcp_pm_add_entry *entry;
+>   
+>   	spin_lock_bh(&msk->pm.lock);
+>   	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
+> -	if (entry && (!check_id || entry->addr.id == addr->id))
+> +	if (entry && (!check_id || entry->addr.id == addr->id)) {
+>   		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
+> +		add_timer = &entry->add_timer;
+> +	}
+>   	spin_unlock_bh(&msk->pm.lock);
+>   
+> -	if (entry && (!check_id || entry->addr.id == addr->id))
+> -		sk_stop_timer_sync(sk, &entry->add_timer);
+> +	/* no lock, because sk_stop_timer_sync() is calling del_timer_sync() */
+> +	if (add_timer)
+> +		sk_stop_timer_sync(sk, add_timer);
+>   
+>   	return entry;
+>   }
+> @@ -1430,8 +1434,10 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
+>   
+>   	entry = mptcp_pm_del_add_timer(msk, addr, false);
+>   	if (entry) {
+> +		spin_lock_bh(&msk->pm.lock);
+>   		list_del(&entry->list);
+>   		kfree(entry);
+> +		spin_unlock_bh(&msk->pm.lock);
 
-This bpf_iter__mptcp_subflow struct should be dropped too.
+I'm sorry for the late feedback.
 
-> +
-> +struct bpf_iter_mptcp_subflow {
-> +	__u64 __opaque[2];
-> +} __attribute__((aligned(8)));
-> +
-> +struct bpf_iter_mptcp_subflow_kern {
-> +	struct mptcp_sock *msk;
-> +	struct list_head *pos;
-> +} __attribute__((aligned(8)));
-> +
->  __diag_push();
->  __diag_ignore_all("-Wmissing-prototypes",
->  		  "kfuncs which will be used in BPF programs");
+I think this is not enough to fix races for good, i.e.
 
-Duplicate with __bpf_kfunc_start_defs/__bpf_kfunc_end_defs,
-__diag_push, __diag_pop and __diag_ignore_all should be dropped.
+mptcp_nl_remove_subflow_and_signal_addr() -> mptcp_pm_remove_anno_addr()
+-> remove_anno_list_by_saddr()
 
->  
-> +__bpf_kfunc_start_defs();
-> +
-> +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
-> bpf_iter_mptcp_subflow *it,
-> +					   struct mptcp_sock *msk)
-> +{
-> +	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> +
-> +	if (!msk)
-> +		return -EINVAL;
-> +
-> +	kit->msk = msk;
-> +	kit->pos = &msk->conn_list;
-> +	return 0;
-> +}
-> +
-> +__bpf_kfunc struct mptcp_subflow_context *
-> +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
-> +{
-> +	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> +	struct mptcp_subflow_context *subflow;
-> +	struct mptcp_sock *msk = kit->msk;
-> +
-> +	subflow = list_entry((kit->pos)->next, struct
-> mptcp_subflow_context, node);
-> +	if (!msk || list_entry_is_head(subflow, &msk->conn_list,
-> node))
-> +		return NULL;
-> +
-> +	kit->pos = &subflow->node;
-> +	return subflow;
-> +}
-> +
-> +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
-> bpf_iter_mptcp_subflow *it)
-> +{
-> +}
-> +
->  __bpf_kfunc struct mptcp_subflow_context *
->  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data,
-> unsigned int pos)
->  {
-> @@ -221,6 +270,8 @@ __bpf_kfunc bool
-> bpf_mptcp_subflow_queues_empty(struct sock *sk)
->  	return tcp_rtx_queue_empty(sk);
->  }
->  
-> +__bpf_kfunc_end_defs();
-> +
->  __diag_pop();
->  
->  BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d25d2dac88a5..b3f5254e3c0d 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -715,6 +715,12 @@ void mptcp_subflow_queue_clean(struct sock *sk,
-> struct sock *ssk);
->  void mptcp_sock_graft(struct sock *sk, struct socket *parent);
->  u64 mptcp_wnd_end(const struct mptcp_sock *msk);
->  void mptcp_set_timeout(struct sock *sk);
-> +struct bpf_iter_mptcp_subflow;
-> +int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-> +			       struct mptcp_sock *msk);
-> +struct mptcp_subflow_context *
-> +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it);
-> +void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow
-> *it);
+could race with:
 
-No need to add these declarations, since "-Wmissing-declarations" is
-ignored in __bpf_kfunc_start_defs.
+mptcp_pm_remove_addrs() -> remove_anno_list_by_saddr()
 
-Will update in v3.
+and both CPUs could see the same 'entry' returned by
+mptcp_pm_del_add_timer().
+
+I think the list_del() in remove_anno_list_by_saddr() should moved under
+the pm lock protection inside mptcp_pm_del_add_timer(), and no need to 
+add spin_lock_bh() around the kfree call.
 
 Thanks,
--Geliang
 
->  bool bpf_mptcp_subflow_queues_empty(struct sock *sk);
->  struct mptcp_subflow_context *
->  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data,
-> unsigned int pos);
+Paolo
 
