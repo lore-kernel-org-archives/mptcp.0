@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E5B139587
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:09:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABA8A19478
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:28:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725898186; cv=none; b=oShmnuF+TMRea8DXXLOlCZ+osX8jRcmryqHXh0bcQ8J4gOsuJDni5UdkMJrgGWRuDApDFKrPPR8uq5rba+kqUyc12omK0C/YqRkyg6AubffILzHbRvvRxHLv3CurpUP5g5VrBfvTxdqk1Zv8r1+fnxAjb0mE8LFsh5Yk8lcolX0=
+	t=1725899331; cv=none; b=ZzZyMw08+mcnYL3pMB9zY0/7UN3UauP0zuCJkNsxa/V/iO1dDnKGZFfJDSMKGisL03sBsf32L7EPUIoad5leNWWVOMRc8ZJ782GpjV0QTApeqrpkgDAYV17tnFy0jDiourYVYyxhedMmWD+FwTb4XtgI2HNgXBPySQ8Hg6hV1SY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725898186; c=relaxed/simple;
-	bh=yb+mTinVhTAyKBzFe4LQNdHI7oloHGfKkd4pviUd0MQ=;
+	s=arc-20240116; t=1725899331; c=relaxed/simple;
+	bh=VY1MWarA+93KDRPxYuD3HMUZh6PckT7nxPvTWN/trtw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CCuXCIUMJOx+riAn7Uaca7DcmBHwxvxq1yJe1pBAQbXsxQEwf4DZIfEBto2+wyiVFl357NtV+hIY1gPTHcgVXzdrtZMoOvypESE5KjXQ9lCh7onKPQiBC2UEsAD2PdWvuZhYKlxC21GMfTiRkmAHJVm3iB6/e4OG/IZT3xFFRc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DetJvpbV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CfFYMl3X3gwjKXUUIm42QI9H+wj/Nh+2le5el8p5uoB+EIT2I2WBI34ss9Ak/2TlUd6PXnFKto1lBE53pclBqZ9iqrai0oQrzBDBTedretBuPPEcyw3Jj3BBiV51jeT7MM00fWtWRz5boEYTBewuLy9cZE7YDgN6cinUbV1nfHQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pm9m8KdO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DetJvpbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B4FC4CEC8;
-	Mon,  9 Sep 2024 16:09:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pm9m8KdO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 84725C4CEC5;
+	Mon,  9 Sep 2024 16:28:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725898185;
-	bh=yb+mTinVhTAyKBzFe4LQNdHI7oloHGfKkd4pviUd0MQ=;
+	s=k20201202; t=1725899331;
+	bh=VY1MWarA+93KDRPxYuD3HMUZh6PckT7nxPvTWN/trtw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DetJvpbVrP0PLqYLoamICFuoXBp1tA5eFvTzWoyFiC9Krs41C9BGFFEOZNrtuNe2P
-	 CtMDttO3IYqFSzRYgrD+dQ+G5h3jaddyji+sxktdPfLWAcOtsScFHFmw+eUlGwimQv
-	 E1keI29vgyvtsQ0n/SCI0kJqqQRUcViyXDPeImfkG6t2ZfvxqFftT8yC7iTB1DxE48
-	 tzvJFc4iE1kuxID6aX/zFl32H6D4/Y7NlbyLYjnbNpyB+a4dktlig5zuP4OnGLcaLL
-	 ZKCnSm5Y2WoS0/tFbWBA0qBp8HYgJUM0tBG5Z6kt1RtB5BbaN/RbU40GY1ASyMs25w
-	 XwVFhPU6NfdYg==
-Message-ID: <5badcd60-6456-4ea7-8149-d08b251254ca@kernel.org>
-Date: Mon, 9 Sep 2024 18:09:43 +0200
+	b=pm9m8KdOJJwEmrTrP+/SFQtCy3f9LZ0+GIcynW5rfUtmGIfbINd5zNpAzjq2XcMVB
+	 VSI6I4leCkH5Vx0M8C0NYNX+GmeBcr3yJCzTRbz3Y8xWAsHGDFXX7BP8zlLQd44vfQ
+	 WpUx5WJT2EEe/f3ny6t3Po5w0NXGSKG1n5ASTFUn5ldT0dDfWviY+SvPOvVAgG/wjW
+	 3evGD5jUhOHOA8/08tk7gXwh0QMsX+pf/94gOjKZhFrTvKuR10ihOro/VHGHfjqAap
+	 Of4qKvUL41cigqgrhGL0oLcyW1sBicc8CA/5DILaSeUJ9SIOqW6ATA9DihLvQp4tUT
+	 dVGTAabA8PAVw==
+Message-ID: <251e4685-1905-4989-864c-8c1ae94a0092@kernel.org>
+Date: Mon, 9 Sep 2024 18:28:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] update PM event CLOSED handlers
+Subject: Re: [PATCH mptcp-next v2 0/4] cleanups for bpf schedulers
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1725853370.git.tanggeliang@kylinos.cn>
+References: <cover.1725846806.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,33 +85,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1725853370.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1725846806.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 09/09/2024 05:45, Geliang Tang wrote:
+On 09/09/2024 03:55, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Update two MPTCP PM event handlers: mptcp_pm_connection_closed and
-> mptcp_pm_subflow_closed.
+> v2:
+>  - include two more squash-to patches into this set.
 > 
-> Geliang Tang (2):
->   mptcp: implement mptcp_pm_connection_closed
+> Two cleanups for bpf schedulers.
+> 
+> Geliang Tang (4):
+>   Squash to "bpf: Add bpf_mptcp_sched_ops"
+>   Squash to "selftests/bpf: Add mptcp subflow subtest"
+>   Squash to "selftests/bpf: Add bpf scheduler test"
+>   Squash to "selftests/bpf: Add bpf_burst scheduler & test"
 
-As mentioned in the individual reviews, I only applied the first patch:
+Thank you for the clean-up patches. Now in our tree:
 
 New patches for t/upstream:
-- 272ee90e0bd8: mptcp: implement mptcp_pm_connection_closed
-- Results: 42ffd3cd6ef4..2e425b685ff0 (export)
+- 07a029a9a232: "squashed" patch 1/4 in "bpf: Add bpf_mptcp_sched_ops"
+- 05c716b8999b: "squashed" patch 2/4 in "selftests/bpf: Add mptcp
+subflow subtest"
+- 0aed3898d704: "squashed" patch 3/4 in "selftests/bpf: Add bpf
+scheduler test"
+- 56ed019f23ff: "squashed" patch 4/4 in "selftests/bpf: Add bpf_burst
+scheduler & test"
+- Results: 2e425b685ff0..29da3bae8ab9 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3073eb594e0b71e81f2e6db6b883a9baca2c9d86/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/358ee20f1a04d81f5f8332dafe8692d97e6c2d1a/checks
 
->   mptcp: add back mptcp_pm_subflow_closed
 Cheers,
 Matt
 -- 
