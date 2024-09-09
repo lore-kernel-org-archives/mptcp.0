@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E1F669DFF
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 15:55:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28E5B139587
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 16:09:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725897312; cv=none; b=nBKshCSiK3u0QfmaVZ4XPLbq/lZ0JzebzTjty8h8aDxvKqVtct4eEbTFieIxtlZRndrCtGPIc9CeI4tA4ZR3y0F4B6l+9ix3pEoIRE4j0YrDW4iavO8ptx0WJy6/V34H0DXRAdUsQbhVrmvAKCSsTcAwBXHXtNoG1ck21shUAa0=
+	t=1725898186; cv=none; b=oShmnuF+TMRea8DXXLOlCZ+osX8jRcmryqHXh0bcQ8J4gOsuJDni5UdkMJrgGWRuDApDFKrPPR8uq5rba+kqUyc12omK0C/YqRkyg6AubffILzHbRvvRxHLv3CurpUP5g5VrBfvTxdqk1Zv8r1+fnxAjb0mE8LFsh5Yk8lcolX0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725897312; c=relaxed/simple;
-	bh=jXMCdAsLpCyl3q3CpZUFTKoYveOsaMRFvDC2GajGgCE=;
+	s=arc-20240116; t=1725898186; c=relaxed/simple;
+	bh=yb+mTinVhTAyKBzFe4LQNdHI7oloHGfKkd4pviUd0MQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lOKaJKXlZHn4C0ilXqn00huxootSYpl9/bc2nKvys562Ofr9HlxCffarCVNAqikmgHgANM7/xn61iMj0aMR1kzCPqEORBCvlfXI66W17mjVLPORjmJTrCzbXs5N6aBSuie+xpaBL+GP32iNEvK3+lsLuKFHZLn8JPicCGn6pHcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OpiQi1Wo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CCuXCIUMJOx+riAn7Uaca7DcmBHwxvxq1yJe1pBAQbXsxQEwf4DZIfEBto2+wyiVFl357NtV+hIY1gPTHcgVXzdrtZMoOvypESE5KjXQ9lCh7onKPQiBC2UEsAD2PdWvuZhYKlxC21GMfTiRkmAHJVm3iB6/e4OG/IZT3xFFRc4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DetJvpbV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OpiQi1Wo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64C89C4CEC5;
-	Mon,  9 Sep 2024 15:55:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DetJvpbV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F1B4FC4CEC8;
+	Mon,  9 Sep 2024 16:09:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725897312;
-	bh=jXMCdAsLpCyl3q3CpZUFTKoYveOsaMRFvDC2GajGgCE=;
+	s=k20201202; t=1725898185;
+	bh=yb+mTinVhTAyKBzFe4LQNdHI7oloHGfKkd4pviUd0MQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=OpiQi1WonKgLsGOBXNDSua9ehGg9i9tBV6xIyTFr8PKRbbiVKM6eATIylCtAsEj0h
-	 v0qHvEpUIVHoL3RaWSs2ySbXqWJrw5pBdvvIcjhKbyBfdigesAdfXcCFIa5TTLTQxP
-	 CTqXJT3ig8p0G+K5/MWW29TKV2u8pLYPWf58x/eC1omB+pney7oUuorW8iSf3xtJZi
-	 u4iBQHPfSYVr/OQ4AAJrp4BWR0pu3MPr0lSR633HWHWB4+d3mrygBYH97760LozrPC
-	 DCfe0g51IEj8+SsiTGymj5sNU8gSKAdeAbSUE9zjy8SQHshJKHBwygcyQ3CUPjQneR
-	 ++7ojjwwENGQQ==
-Message-ID: <44d18327-08a9-493b-a5af-e54a7c7d0f83@kernel.org>
-Date: Mon, 9 Sep 2024 17:55:08 +0200
+	b=DetJvpbVrP0PLqYLoamICFuoXBp1tA5eFvTzWoyFiC9Krs41C9BGFFEOZNrtuNe2P
+	 CtMDttO3IYqFSzRYgrD+dQ+G5h3jaddyji+sxktdPfLWAcOtsScFHFmw+eUlGwimQv
+	 E1keI29vgyvtsQ0n/SCI0kJqqQRUcViyXDPeImfkG6t2ZfvxqFftT8yC7iTB1DxE48
+	 tzvJFc4iE1kuxID6aX/zFl32H6D4/Y7NlbyLYjnbNpyB+a4dktlig5zuP4OnGLcaLL
+	 ZKCnSm5Y2WoS0/tFbWBA0qBp8HYgJUM0tBG5Z6kt1RtB5BbaN/RbU40GY1ASyMs25w
+	 XwVFhPU6NfdYg==
+Message-ID: <5badcd60-6456-4ea7-8149-d08b251254ca@kernel.org>
+Date: Mon, 9 Sep 2024 18:09:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] mptcp: implement
- mptcp_pm_connection_closed
+Subject: Re: [PATCH mptcp-next 0/2] update PM event CLOSED handlers
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1725853370.git.tanggeliang@kylinos.cn>
- <c073a099d8e00c3183d2e4a15adfcde4fffd7fb1.1725853370.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,31 +85,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c073a099d8e00c3183d2e4a15adfcde4fffd7fb1.1725853370.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1725853370.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the patch.
-
 On 09/09/2024 05:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The MPTCP path manager event handler mptcp_pm_connection_closed interface
-> is added in the commit "mptcp: Add path manager interface", but it was an
+> Update two MPTCP PM event handlers: mptcp_pm_connection_closed and
+> mptcp_pm_subflow_closed.
+> 
+> Geliang Tang (2):
+>   mptcp: implement mptcp_pm_connection_closed
 
-I think it is better to add the SHA:
+As mentioned in the individual reviews, I only applied the first patch:
 
-  in the commit 1b1c7a0ef7f3 ("mptcp: Add path manager interface"), but
+New patches for t/upstream:
+- 272ee90e0bd8: mptcp: implement mptcp_pm_connection_closed
+- Results: 42ffd3cd6ef4..2e425b685ff0 (export)
 
-I can fix that when applying the patch.
+Tests are now in progress:
 
-> empty function from then on. It makes sense to invoke mptcp_event with
-> the MPTCP_EVENT_CLOSED event type in it.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3073eb594e0b71e81f2e6db6b883a9baca2c9d86/checks
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+>   mptcp: add back mptcp_pm_subflow_closed
 Cheers,
 Matt
 -- 
