@@ -1,120 +1,162 @@
-Received: from mail-qt1-f171.google.com (mail-qt1-f171.google.com [209.85.160.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B6404C74
-	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 04:34:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38BBB1741C3
+	for <mptcp@lists.linux.dev>; Mon,  9 Sep 2024 05:41:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725856490; cv=none; b=XWDn7ud5iVylldWGfNcg2rvHvmWTeEXQP0EgibkNl0XkKUj4CTBJcz5Fhx9qgNhaRYDm7VSXIE8VzqiM1dolx0KKx+j1rszMiYoxUTdmj+EkbsHPI6JeibFZBTk4ndbc7FaVE5mLr9L4vIjyYgqFdvNAtNlNFh76PX9Lsjmhjts=
+	t=1725860508; cv=none; b=q/0rv79M7JDkAmbuiXyV60Ep7n/VMTRs4G0DRpoOyzK/dWswZOlU9YvUJ0nklxyNt5HnPCvT3QjIAV4IDeW2yDNyveHqGiVFIwdwfwzdflGmyurTPXHH9kjJnWxXtXqEINvK3fjTQZeYFkwjF77kczu0R8KPDaegL8c4h8uF/VM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725856490; c=relaxed/simple;
-	bh=e1DvljF/KQrprtCo/2iOLbjA9CSlppq5YNcWqUvVPkM=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=EMvKA35gk7MmucT3yGo3k7/g5jSOMhzzqHm6zYez87nMvU9U3n1pNG4WZGxClJeZ8HNdqmqX9fkKp7mZnnryK1LFUWpFjv1WV76KDaM3DjISymejnvqFRt+6wM0tEnozY8wttwhcRZM96BkTZoi6KHVP4x0D0Rku03X4fGsbw+A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Um+1S+Mu; arc=none smtp.client-ip=209.85.160.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1725860508; c=relaxed/simple;
+	bh=kBVxyqYOmHdGiyAY+Y9864bNHYCAYEVF+L/vno2P87g=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=ei2FIRD6XPPDSnTmLcxC35MdL5hSPqxU23Nrt3htx+2Ewmp6pe73Jgy6vzEf0nkagx1U5sEQ4zw2WD1t0mA5jZvkQ95VcVJajE0nxjD+j+YAppxZTWziWYqoaZ39n14cuI2X6j3SWvyRg8DQbs1SXCaG+PhERfvNh4qzDq1BVN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W0yJuqkk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Um+1S+Mu"
-Received: by mail-qt1-f171.google.com with SMTP id d75a77b69052e-4582a0b438aso9128691cf.0
-        for <mptcp@lists.linux.dev>; Sun, 08 Sep 2024 21:34:49 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1725856488; x=1726461288; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4hWWlZcf28XPRdA8dACs9pDVfpajezPCAf4Zfgbzzao=;
-        b=Um+1S+Mu6UuUQrfhea3+GSix3ZUxKMq41hfrYLtoHydraD42C1wujNu+o44+qFcaYA
-         qCFPO96ePvIWMZ0j/Nd1G/N9ki+tMW0awNlSAsp0DTseRFxvMT/8BjORV2kk0I0Ikor+
-         wwyV2oSPrsGyN5J67p4pc9mPyYpHoHB6Le+mf+KRCE/828WQblcGvoRssLqKhYRBZjSB
-         BC46lobClXFc+cdPSmeWMEpJrx98cIZSNUtIGD9O5MJYSHG1CbdkU4pWJaQQAyRcdPDs
-         zT5kZJZwps7tkIxyd0iI+8mgsbT1bBXiZogeQkaYA64uXR7Cia3WJrSvmDQxeJNQGV+K
-         i9+A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1725856488; x=1726461288;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4hWWlZcf28XPRdA8dACs9pDVfpajezPCAf4Zfgbzzao=;
-        b=wMTs0A1UTc50gw9dbPfg93lJIS2kKK7XwGbX58te57gB+YQUtbtsb4i21j3AIx56vR
-         RfjdqOzBfTe4tHdiwmcBt3dbhP5GN+/USa3W5onvI8OehTOzytiafgxhmBd5+GHViNIw
-         ANtRaKb6guUpsoftniV8B3FNX5E6Rh6NselSnt4gUtOUpOdJC4y7vyeIPeHpqvuolnXR
-         e3dJk1VdZVRCHUPCRQeWMZ0Qr1BFUWUGXH6sWSDLBwKKEZVDwYvqhhzDvxQ4EWBx5Nbv
-         Fcs4qsuKMEvCM8+j2Uqf6deynWnP3LUGB0MTPfwhIbG3ofijd7fLCbsNj6lzjo0/Q7SI
-         KyDg==
-X-Gm-Message-State: AOJu0YzWEJaygoKW0yXfU716Owh97f8U1rgI8sB3Wkri2etahklpjlV9
-	cUJ/c24wqSQ7/cu9xL+BsQCzADCbGZh2vIXK7l/0upvkGogry4fdCoeP
-X-Google-Smtp-Source: AGHT+IFc/9FgSmysIS9Gl8dEF8VvMo/jiDF8Wn6xqWl6m1fTMzQkGnWFuoIS2PAzzMpd87lklmamig==
-X-Received: by 2002:a05:622a:1448:b0:458:2a24:6ed6 with SMTP id d75a77b69052e-4582a24719fmr79967131cf.21.1725856488085;
-        Sun, 08 Sep 2024 21:34:48 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.37.83])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-45822f61ac7sm16938791cf.71.2024.09.08.21.34.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 08 Sep 2024 21:34:47 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1725853370.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W0yJuqkk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10FF6C4CEC5;
+	Mon,  9 Sep 2024 05:41:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1725860507;
+	bh=kBVxyqYOmHdGiyAY+Y9864bNHYCAYEVF+L/vno2P87g=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=W0yJuqkkFQOhxM0QFu1nEast3AuZv5zq5d1HgU4Do08Xbrtm9gIS1M7vJ+w9CPrB4
+	 wDOYkkI1HgNzTcBwy9jJqtjiNtO+YT90B0umEbbIsFpHFzKk7xediihH044XHQ0dAP
+	 IkV7A3+K75wpdD6NAebXy2QOfuKf+PWYYyni67qYbO0WalGbg78VWryB2S4HjJoppJ
+	 oGHSXDLgFDJtxXsvptBFCRZe9Mq8fFypvei90L1GPQMOm91iQZIj2OIxPFvJ6RqtBM
+	 Q5CKdFwukbcrKgO0YN6KYuqwzAAPGA2ZQEfA7+PP4/fnMZTyarsWqhOSd4tNC2nRch
+	 6dHsExsbYyK9w==
+Message-ID: <e8c52d53384dcac0ab6ff81fdf2033bdca86b642.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 2/2] mptcp: add back mptcp_pm_subflow_closed
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Mon, 09 Sep 2024 13:41:43 +0800
+In-Reply-To: <eaf475e7335131061c3a0cea0e6320e956657084.1725853370.git.tanggeliang@kylinos.cn>
 References: <cover.1725853370.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next 0/2] update PM event CLOSED handlers
-Message-ID: <5ece1524-b88f-1db8-0128-1a480859d4cd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Sep 2024 04:34:46 +0000
+	 <eaf475e7335131061c3a0cea0e6320e956657084.1725853370.git.tanggeliang@kylinos.cn>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+On Mon, 2024-09-09 at 11:45 +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> The MPTCP path manager event handler mptcp_pm_subflow_closed
+> interface
+> is added in the commit "mptcp: Add path manager interface", but
+> removed
+> in the commit "mptcp: do not block subflows creation on errors".
+> 
+> This patch adds it back and changes its 2nd parameter from "u8 id" to
+> "struct sock *ssk". Invoke mptcp_event with the
+> MPTCP_EVENT_SUB_CLOSED
+> event type in it.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c       | 7 +++++++
+>  net/mptcp/protocol.c | 2 +-
+>  net/mptcp/protocol.h | 1 +
+>  3 files changed, 9 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 16c336c51940..23f73f07a9e7 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -176,6 +176,13 @@ void mptcp_pm_subflow_established(struct
+> mptcp_sock *msk)
+>  	spin_unlock_bh(&pm->lock);
+>  }
+>  
+> +void mptcp_pm_subflow_closed(struct mptcp_sock *msk, struct sock
+> *ssk)
+> +{
+> +	pr_debug("msk=%p", msk);
 
-Thank you for your modifications, that's great!
+"\n" is missing, should be:
 
-Our CI did some validations and here is its report:
+	pr_debug("msk=%p\n", msk);
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/10766245271
+Thanks,
+-Geliang
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/81049f6b01c7
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D888215
+> +
+> +	mptcp_event(MPTCP_EVENT_SUB_CLOSED, msk, ssk, GFP_KERNEL);
+> +}
+> +
+>  void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  				 const struct mptcp_subflow_context
+> *subflow)
+>  {
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index a12149d8f718..69859eb2d891 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2515,7 +2515,7 @@ void mptcp_close_ssk(struct sock *sk, struct
+> sock *ssk,
+>  	subflow->close_event_done = true;
+>  
+>  	if (sk->sk_state == TCP_ESTABLISHED)
+> -		mptcp_event(MPTCP_EVENT_SUB_CLOSED, mptcp_sk(sk),
+> ssk, GFP_KERNEL);
+> +		mptcp_pm_subflow_closed(mptcp_sk(sk), ssk);
+>  
+>  	/* subflow aborted before reaching the fully_established
+> status
+>  	 * attempt the creation of the next subflow
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index d25d2dac88a5..0c8ab6071a3f 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -996,6 +996,7 @@ void mptcp_pm_fully_established(struct mptcp_sock
+> *msk, const struct sock *ssk);
+>  bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk);
+>  void mptcp_pm_connection_closed(struct mptcp_sock *msk);
+>  void mptcp_pm_subflow_established(struct mptcp_sock *msk);
+> +void mptcp_pm_subflow_closed(struct mptcp_sock *msk, struct sock
+> *ssk);
+>  bool mptcp_pm_nl_check_work_pending(struct mptcp_sock *msk);
+>  void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  				 const struct mptcp_subflow_context
+> *subflow);
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
