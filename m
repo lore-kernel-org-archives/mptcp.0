@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93AA7188CB1;
-	Tue, 10 Sep 2024 14:29:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B07F189903;
+	Tue, 10 Sep 2024 14:55:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725978586; cv=none; b=ttfCk+324ejDsJ6e7zsJvp0QldgOjGVoVM9iwQ4A3NpnPKD9Fv9nYl2dwX+xLo3i80x9Yprz6uQr4kKjK0smXjML+4XTl5bAox2sF/j2SQv+UPp7sFGFanePLCvbRTUAA0n2tJT8cQ3ov+RAgHA1woh+PyGd595rIKBg2ao46m8=
+	t=1725980135; cv=none; b=D62i2AeObanv2yyOKB4awIPTn8io6e5z6G10IWOlq1u5J0QTrpgvtnvD8MlIgsZoepOqcaFGoYguAcYTUTWOqp2sWNMjXwwgu83+dyRr1qaji49LZGbZJvDNF9ZZVO1ucZQvub/ts6Hu/j3H2892a3IJmNl6JZBM5uaQMxkY+tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725978586; c=relaxed/simple;
-	bh=vY1Jz/iNW8rD4ftl82lDwp8W3DQ6526OfIQWJPSpGhM=;
+	s=arc-20240116; t=1725980135; c=relaxed/simple;
+	bh=U1H5UjDwEAvnyXdqEJPmbXEa33TZuT0QfjD2PpoqWa8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CWj0ETYBHFQ90SZl+3uWm+3McxldN8zV5rN0PnWljZDFEwymzY3mujAocNKHPtoi86gTf8MCpI2Y5FVBvicBJPdd41DX9VcgcraB8U6S8zRWtS74pW6810vj2EXiRvRVPPPJDDjQX4l+mndpRL3tYRnh0LDiB0Ngc0wl9bSE94Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=du7ZEAq9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iKAu+DR86C3Za+wRSaBfO+7m2Q2qGSRV6hfKnGOKxBkJk1wKAb4rA/NT40eU6lt5JeU1Fpyk0E7HMjdvoACXePQd85eb8SjTApTpJOYvEbdRwiFRgjdnE7r7oNxPwRB2TQZS249FG10IbBteEy5C/Mw0MduD87LkH/rTqprKO88=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bt/hZ6KX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="du7ZEAq9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AA0FFC4CECE;
-	Tue, 10 Sep 2024 14:29:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bt/hZ6KX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC009C4CEC3;
+	Tue, 10 Sep 2024 14:55:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725978586;
-	bh=vY1Jz/iNW8rD4ftl82lDwp8W3DQ6526OfIQWJPSpGhM=;
+	s=k20201202; t=1725980135;
+	bh=U1H5UjDwEAvnyXdqEJPmbXEa33TZuT0QfjD2PpoqWa8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=du7ZEAq9BgDS2Wir7l0S6HhcUJLddeeEQk2ADx3BGjCR8IUN1yz8eat3aGNNHI5mE
-	 kS5Mbse1YYCBOx1ImXqp5s9bmY5sAHKjppFXMNDLSimIKfYJm7Ny9Vmo9Itzkbt3Hd
-	 N5SbUCZBTl1sNm437nM3ZoYr3olYJVAwB+oT72LBqcJkjhU0QEBdoreEI0UrAJFOwV
-	 dT/UfHcWp/fRMNeq7xblSQXEB067HXgZuSB9d0cRYPD0CzNUhscLRTnfmgJt4c1YGM
-	 LwyRxe13TOvB4w/YycKc1ZxVqc29xXFeMliLgUACH+GxK2PWQNiMOxplmfG2Tqf04T
-	 JdOpQdGzIEZPA==
-Message-ID: <8ad4406e-cdd3-4204-928e-6ac6dd628cbc@kernel.org>
-Date: Tue, 10 Sep 2024 16:29:38 +0200
+	b=Bt/hZ6KXwP+aol2aTvTh5LXiCvjSWI5d8SoV/ZC4RRmrXQKPVWfDg6S1Btf8jvgyU
+	 2stb8pYRbkGPKk504CbatNriAAW04RUPBWeFr6ASd6hkhG6iHDtFXFifLTFo4Y0joV
+	 Do06HD2a94IsXFc+Hg4NQ2tZ7DN6kiF82eQf17qpTm1l/tcqusLxT2Fg3oIN1fCrKS
+	 YmlDX7Cfa8eBzKgAkzZxXb/J9/Kx1LPJjteqYlg6sAU6Pwc7Tiib3RkXmNPOcaqkeR
+	 5XhUJFYil6y7Dv7U8F/dZa6IQ5JU4T23BxDbzIzVT4vrvDVr5OQjRLm6GDt72WR2DF
+	 mAAqwj4OglWmg==
+Message-ID: <77443af4-c16e-4bcc-84bd-d808f12b9770@kernel.org>
+Date: Tue, 10 Sep 2024 16:55:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net V4] mptcp: pm: Fix uaf in __timer_delete_sync
+Subject: Re: [PATCH bpf-next/net v5 3/3] selftests/bpf: Add mptcp subflow
+ subtest
 Content-Language: en-GB
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
- kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
- mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com,
- syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com
-References: <tencent_272542BA3FBB37337F9EE91B384BB21BF008@qq.com>
- <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Eduard Zingerman <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>, Song Liu <song@kernel.org>,
+ Yonghong Song <yonghong.song@linux.dev>,
+ John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
+ Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
+ Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>
+Cc: linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, linux-kselftest@vger.kernel.org
+References: <20240910-upstream-bpf-next-20240506-mptcp-subflow-test-v5-0-2c664a7da47c@kernel.org>
+ <20240910-upstream-bpf-next-20240506-mptcp-subflow-test-v5-3-2c664a7da47c@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,55 +96,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
+In-Reply-To: <20240910-upstream-bpf-next-20240506-mptcp-subflow-test-v5-3-2c664a7da47c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Edward,
+Hello,
 
-On 10/09/2024 11:58, Edward Adam Davis wrote:
-> There are two paths to access mptcp_pm_del_add_timer, result in a race
-> condition:
+On 10/09/2024 16:13, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->      CPU1				CPU2
->      ====                               ====
->      net_rx_action
->      napi_poll                          netlink_sendmsg
->      __napi_poll                        netlink_unicast
->      process_backlog                    netlink_unicast_kernel
->      __netif_receive_skb                genl_rcv
->      __netif_receive_skb_one_core       netlink_rcv_skb
->      NF_HOOK                            genl_rcv_msg
->      ip_local_deliver_finish            genl_family_rcv_msg
->      ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
->      tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
->      tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
->      tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
->      tcp_data_queue                     remove_anno_list_by_saddr
->      mptcp_incoming_options             mptcp_pm_del_add_timer
->      mptcp_pm_del_add_timer             kfree(entry)
+> This patch adds a subtest named test_subflow in test_mptcp to load and
+> verify the newly added MPTCP subflow BPF program. To goal is to make
+> sure it is possible to set different socket options per subflows, while
+> the userspace socket interface only lets the application to set the same
+> socket options for the whole MPTCP connection and its multiple subflows.
 > 
-> In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-> zone protected by "pm.lock", the entry will be released, which leads to the
-> occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
-> 
-> Keeping a reference to add_timer inside the lock, and calling
-> sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
-> 
-> Move list_del(&entry->list) to mptcp_pm_del_add_timer and inside the pm lock,
-> do not directly access any members of the entry outside the pm lock, which
-> can avoid similar "entry->x" uaf.
-> 
-> Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-> Cc: stable@vger.kernel.org
-> Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-> Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-It looks also good to me, but no need for me to add a reviewed-by tag I
-suppose.
+> To check that, a client and a server are started in a dedicated netns,
+> with veth interfaces to simulate multiple paths. They will exchange data
+> to allow the creation of an additional subflow.
 
-This v4 can be applied in netdev directly.
+(...)
+
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index d2ca32fa3b21..c30f032edaca 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -335,10 +339,132 @@ static void test_mptcpify(void)
+>  	close(cgroup_fd);
+>  }
+
+(...)
+
+> +static void wait_for_new_subflows(int fd)
+> +{
+> +	socklen_t len;
+> +	u8 subflows;
+> +	int err, i;
+> +
+> +	len = sizeof(subflows);
+> +	/* Wait max 1 sec for new subflows to be created */
+> +	for (i = 0; i < 10; i++) {
+> +		err = getsockopt(fd, SOL_MPTCP, MPTCP_INFO, &subflows, &len);
+> +		if (!err && subflows > 0)
+> +			break;
+> +
+> +		sleep(0.1);
+
+As reported by the CI, we are not in Python, usleep() should be used
+here. I missed that one during my review. I will send a new version with
+the fix tomorrow. Sorry for the noise.
 
 Cheers,
 Matt
