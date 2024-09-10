@@ -1,156 +1,124 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167A117BB01
-	for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 09:59:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA67B1991B5
+	for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 10:04:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725962367; cv=none; b=VGOTLWl18c9sz4xUpNJNM7h6UGuf5tW0SrYodxSexxN47Xb8RsPx8VQEScqW6BpDwerPoggnGieq/2jIv1haJ8b/aVBTPHeGZhvzmjlLMogchv7piC4q+IkMjCAEwIL8DKHkzBMnQruggNaYueZepfZu3uHJoYd3GVPjqT401MA=
+	t=1725962678; cv=none; b=iV5AqDrSO0br572GEZB5E+WVDwlDxy0OHDwoiMSWXVydEnjBzEw2exzNolLuaLji1v+bnWOnea4Fr0gBi8n+ZGRh+fCVqs0Xl7YR548W8/P8NLHyVdOi/NLdmvYt1eHB1Sd5QzSuvVCSmfmA1WyPrqov6zgfHVkrOdIHjZ3K/ug=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725962367; c=relaxed/simple;
-	bh=9+c9pvgoddnrMvDhdI6Wh8Iz8hbCY/65n/sGOMz/UlA=;
-	h=Message-ID:From:To:Cc:Subject:Date:In-Reply-To:References:
-	 MIME-Version; b=R5rKWebfrcYoEeGXOnfDDvWdUS22vuzLV4r7xuufYLV7e4MhQH5WWj2cz3GFIzO51CxwqSkAbFkPDzhCojjxThQcjI8nh737SZuBsbuBmgmF1rPfl8F4NrAUD65BS2wfmihVVLt+3+IeTs/oOi4+D031h4fn9DpY1V7ytLZ4D6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com; spf=pass smtp.mailfrom=qq.com; dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b=mE/7RZL9; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=qq.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=qq.com
+	s=arc-20240116; t=1725962678; c=relaxed/simple;
+	bh=hvYZPoksyJeSiwXW4sexulhuh70zY7e7laaItBuFtwE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=nVEun6z5BHGApyd4Bn1bQjB1T+V+F5jgbH9Ku16mApLOx38IvfoPGu8e7no/nMhff/vzlvaPXJyB/81D2Hp4EAFCGS0Lc2ZxyiM7jeXRm96b6nqHwc2MeA4OZYhBjTyUGYY56oBQtvE5dOorFpHQzaiat3MUAPZZtadtWunhw2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=VKHRUGis; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=qq.com header.i=@qq.com header.b="mE/7RZL9"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=qq.com; s=s201512;
-	t=1725962359; bh=SH5quYrxe+ydY/dZue9zWjjQGockMw3uC6pR6yuHmC0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References;
-	b=mE/7RZL9SSyX+8LX5Gqgy1zsEyt48XMCxJ3FGFxF++AGNlS8p64khpKcEFLcCncnf
-	 ufiBb+XnA1MZma3g7G40D4w5kZbjN2TaDmUxweJn00j/uyfBTOQDKjbA+ovmtbAX0l
-	 oREQyB1/JR9eCfbz+aSVcOoBp/foDagt9fzmIEos=
-Received: from pek-lxu-l1.wrs.com ([111.198.224.50])
-	by newxmesmtplogicsvrszb9-1.qq.com (NewEsmtp) with SMTP
-	id EB82C6BA; Tue, 10 Sep 2024 17:58:56 +0800
-X-QQ-mid: xmsmtpt1725962336tey4kg212
-Message-ID: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
-X-QQ-XMAILINFO: MoTnVqEimZYUDPMNuaEEYD1qKiYGKR18HtjHTCrT9DFB6E6aYK2PWPueA8De56
-	 P5jrFDiiQQqQQFd8Cxr6HKaKZyl1Z3fyvyHD8pwgAKbXJ5ZwF3mH+GCFFnEIChpjNneSaKRu9NQc
-	 7WbFeayXT4kaQevoB9LajPHWxkAEmzaEB1lw75XEhiArRrbQ3NnBAknTMNGR0lM3L0B50LxBObm/
-	 ifIzj7bXQOc/1hX7NmCPpN8kc/e2xGyCIW8yH4ZWiVMLUbAPuXM8krf9Ypk3rQTkOYCa2Q/RfNIq
-	 DwdGOX8aJjYXF9SRecYLKQDVo9D7b3jPEW+/vfnp+No4kxo3dIJGoRs+BcmBY3v3J0Wo1e5FNuaq
-	 VF5lCBuNTD42I3GxXBRGKSuAQ9fgElF4zk3iueDv9arxK58cA5r/+9kXj69lniegPw3sFei75C9T
-	 UwIKWhgf0RV+74swfUUrqG5BuolVXntmBhJA1UPDZPQQAJAiSWGy1lkK1Y9CVAzb/46c04ssDRkl
-	 Cx4RSH3buQK00B7Osb/+FHXZ2FVJS36fiMZctefRod+kuH7uRts9Zo2meXRckT+9pzpomlAkXb2Q
-	 YdLgTG/QkHnEr0L3Qj57u9d3ZuP9KY/rP9Wf/Aq7wLHjr8Zt1DLgoHvuwrRv0mhGvWQmuAoJNonr
-	 iv1O7m9aDFa6ojTOiT9rrDHFPgfS9rb2DH5YGOcuSl1fBzRTJBxYmEtry+y9t+rnJWsLtlzMihfL
-	 jDJvNlwY+xSu0gIWNfHENwKgIdsD2T319KGuN6NUGhyT/ki1rFYxqwVyWBRkx80LiIIxyHuDcOvL
-	 SY8U+rYd0muh0wYg4boHX9FlvIbpbPS2WSxFPvenM00N1paEXhy9QgV0U6g7zxO9uQPOQD6XH22/
-	 kGs6tOUZIEL3QSqaOZRUUsgujLGxoUIUHF5DoupAX5SJ5X/zPDP/c1A4djpNioqZgt/Zno8fYQCn
-	 cf4F4kklhD/LcmnhKrUyB/NVRyfpz+tMgUsNKx4keYV2G2C1sK4TSGH1TKFHY4u3BgF4p+ss50DN
-	 vHi7LKz1YKozdRep8GjLl33xUFZZkCaNI4eJKo7VBHzhc5wKyv6CXnOsJ1qUQ=
-X-QQ-XMRINFO: M/715EihBoGSf6IYSX1iLFg=
-From: Edward Adam Davis <eadavis@qq.com>
-To: eadavis@qq.com
-Cc: davem@davemloft.net,
-	edumazet@google.com,
-	geliang@kernel.org,
-	kuba@kernel.org,
-	linux-kernel@vger.kernel.org,
-	martineau@kernel.org,
-	matttbe@kernel.org,
-	mptcp@lists.linux.dev,
-	netdev@vger.kernel.org,
-	pabeni@redhat.com,
-	syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
-	syzkaller-bugs@googlegroups.com
-Subject: [PATCH net V4] mptcp: pm: Fix uaf in __timer_delete_sync
-Date: Tue, 10 Sep 2024 17:58:56 +0800
-X-OQ-MSGID: <20240910095855.2618606-2-eadavis@qq.com>
-X-Mailer: git-send-email 2.46.0
-In-Reply-To: <tencent_272542BA3FBB37337F9EE91B384BB21BF008@qq.com>
-References: <tencent_272542BA3FBB37337F9EE91B384BB21BF008@qq.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VKHRUGis"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d8a7c50607so3476857a91.1
+        for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 03:04:36 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1725962676; x=1726567476; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=G4ZR6b9MMDPYQ4UKaopwlB8Li1ktOHkotp+HZeJsqmA=;
+        b=VKHRUGisGJDugLdpY5fpwX2t9SBT7WJVwOBBjQuxUFe2AY4ZCvSU8jKr+Coa8M3csL
+         4AyZuajRfcq+y6u/I1LzVnJpOv4gz+UZ7S3+QerQAUD0KqQJjUf71GOeH3ImB8lhH4RR
+         gYHpfaHH2kJiKbJG4+PiswMLMVGpScTiFJrqpojRTN7piYpSHXHO/0czdX0N1WWd8GZU
+         Sf3+gamRNGny80Jt7AmUN/JoFCjyTvNmfaB4S54V53OI3yPFJ2I2HNEB/CzgkmUaiJwN
+         c/rS/eWs0KaVPsMHsed2FmmtIAgzNk9oInmcOvd2ROdDJRIOBR8/9oghNF69Qd0t076D
+         Or/g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1725962676; x=1726567476;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=G4ZR6b9MMDPYQ4UKaopwlB8Li1ktOHkotp+HZeJsqmA=;
+        b=Y2goxQrtijCO+ALV1c+WZUn1V0Lj2Hq1ShlGuniDAmY+tQt9sqXQa/QHZSept3Gfts
+         i3L9h7VhXbcnDaA2Q7tD0S64WRf5BTtM2vEPh8/H0MC1znddxtw/3eJaA/65eT8yxwkG
+         tKXVqdzQQBLe/B9tNm7Rp9UdEZojelcb8WGdZ1onDrkeeR8ZuGW+vkrMPjVddo7AVL+V
+         H9/82/aM4rnHx0xCb8+AMBVSYMBwTkmW0IUPB3P3Rr3wzXRpl1eIoxfQMVzNaR4MCW/b
+         mMIqSzmL4blvGlJ3JSq8c6wCEp6vWD4zUXEoWB0Q5MBBo3ho8trkULuJbKu2/P0E4SN9
+         1Chw==
+X-Gm-Message-State: AOJu0Yx9q3/KvL3pwDxDkhD9IpsDDcO/2Krgkvz+L4SibBCeWb3txU3c
+	9bGRNbVDSxqeJosUThbBH5Q48KFVvAMbqcsdfMSez6IED2S1kB3m30Q3
+X-Google-Smtp-Source: AGHT+IH6+yBnUesAHG65foV4IoyjAWDHIwFZESxbjNORhrnRbflZE5UESB46LW/UFYTCfhsGZlc0Jg==
+X-Received: by 2002:a17:90b:1c08:b0:2d3:da82:28e0 with SMTP id 98e67ed59e1d1-2dad4ef2197mr15235224a91.9.1725962675770;
+        Tue, 10 Sep 2024 03:04:35 -0700 (PDT)
+Received: from [127.0.0.1] ([52.238.29.201])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-2dadc12a1d9sm8067717a91.54.2024.09.10.03.04.34
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 03:04:35 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <f27360078ccfc5c9324d2f2fbd3207e3bc553b3c.1725959373.git.tanggeliang@kylinos.cn>
+References:
+ <f27360078ccfc5c9324d2f2fbd3207e3bc553b3c.1725959373.git.tanggeliang@kylinos.cn>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v2=5D_Squash_t?=
+ =?UTF-8?Q?o_=22selftests/bpf=3A_Add_bpf_scheduler_?=
+ =?UTF-8?Q?test=22_-_drop_has=5Fbytes=5Fsent?=
+Message-ID: <f7c7385b-093d-8af6-17e5-02473ae75595@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 10 Sep 2024 10:04:34 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-There are two paths to access mptcp_pm_del_add_timer, result in a race
-condition:
+Hi Geliang,
 
-     CPU1				CPU2
-     ====                               ====
-     net_rx_action
-     napi_poll                          netlink_sendmsg
-     __napi_poll                        netlink_unicast
-     process_backlog                    netlink_unicast_kernel
-     __netif_receive_skb                genl_rcv
-     __netif_receive_skb_one_core       netlink_rcv_skb
-     NF_HOOK                            genl_rcv_msg
-     ip_local_deliver_finish            genl_family_rcv_msg
-     ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
-     tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
-     tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
-     tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
-     tcp_data_queue                     remove_anno_list_by_saddr
-     mptcp_incoming_options             mptcp_pm_del_add_timer
-     mptcp_pm_del_add_timer             kfree(entry)
+Thank you for your modifications, that's great!
 
-In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-zone protected by "pm.lock", the entry will be released, which leads to the
-occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
+Our CI did some validations and here is its report:
 
-Keeping a reference to add_timer inside the lock, and calling
-sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/10789624804
 
-Move list_del(&entry->list) to mptcp_pm_del_add_timer and inside the pm lock,
-do not directly access any members of the entry outside the pm lock, which
-can avoid similar "entry->x" uaf.
-
-Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
----
- net/mptcp/pm_netlink.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 3e4ad801786f..f195b577c367 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -331,15 +331,21 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- {
- 	struct mptcp_pm_add_entry *entry;
- 	struct sock *sk = (struct sock *)msk;
-+	struct timer_list *add_timer = NULL;
- 
- 	spin_lock_bh(&msk->pm.lock);
- 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
--	if (entry && (!check_id || entry->addr.id == addr->id))
-+	if (entry && (!check_id || entry->addr.id == addr->id)) {
- 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-+		add_timer = &entry->add_timer;
-+	}
-+	if (!check_id && entry)
-+		list_del(&entry->list);
- 	spin_unlock_bh(&msk->pm.lock);
- 
--	if (entry && (!check_id || entry->addr.id == addr->id))
--		sk_stop_timer_sync(sk, &entry->add_timer);
-+	/* no lock, because sk_stop_timer_sync() is calling del_timer_sync() */
-+	if (add_timer)
-+		sk_stop_timer_sync(sk, add_timer);
- 
- 	return entry;
- }
-@@ -1430,7 +1436,6 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 
- 	entry = mptcp_pm_del_add_timer(msk, addr, false);
- 	if (entry) {
--		list_del(&entry->list);
- 		kfree(entry);
- 		return true;
- 	}
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/47676907625b
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D888786
 
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
