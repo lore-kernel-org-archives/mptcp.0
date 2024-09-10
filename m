@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA16A142911
-	for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 07:56:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 001CE18757F
+	for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 08:35:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725954988; cv=none; b=Dxw0pwicaa6VR7tvgVd7S40XL41JgSiAr1Fz72uuvApKGN6cck1V9VqtD/uJg87iBNxzyBgICSU01KBR9ZEhYXXcj4PYUUVCu3GRS++AeoVrkmrMIHVW/EzqWrFZ5+l/e1BaX/Oswb7HjdTve08PyJ5uu1h5ulyjQ8Vkcm+pq6w=
+	t=1725957342; cv=none; b=ltQWcmSUSeF1DrlL4WqLuvLuCSw5nHJN/IMbt36SSQiWFTl6EBeM1rdA8+Vu6Vn+fYKhMguoJmU7QYlYn97qLeCavAT7oHwj0zWOamRxdso5VeQ8N9kf+v5Kmut4fa8QAl8YZ1zOYX+FEKKy7J1HX1B469FM3N85cF9IiZFyFaY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725954988; c=relaxed/simple;
-	bh=aD9SPoslerrKtfHJyhXFEHpn9h/uSTWnxW/3S6ITmWo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Q6Nfj8c4SqS0GQXc0l0gtnFZ6PtkeRLt2yYHyZfJrUBHXO44vfvHRG/iwtOYyUqZxjlwBVhrfU2XJ1QzbsqKZLNum1FK3Hfix9h6w1KGqZnoYpejmpjZTvjzZLgEAmr4H8RSEf3LXm0qV0gqIhmcW+Sjlwqkw3SKUET9ePNmCxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=esrY/6eo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1725957342; c=relaxed/simple;
+	bh=pBSJi/yuzJfZjKDLQCNcqN6X3x2nGX2eyStr3qfYW4Q=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=eg2ZKfqrNJCC+BeOk5vieA5sYjm4kVIkdnrzjahOcjVRMZXSksKiHLt4KhEexlRLJ/lq/16BF4L+lBaWVA+GUy43eIUG6/Fg19kswKm3MgIw9Fgo33ZS2H/Fal75ge8voqbiUW4YPPdoStCh0g9l084vDJzy4jsuWNLTtCs0Nog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UClYJsyA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="esrY/6eo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8DB36C4CEC3;
-	Tue, 10 Sep 2024 07:56:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UClYJsyA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E0BAC4CECC;
+	Tue, 10 Sep 2024 08:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725954988;
-	bh=aD9SPoslerrKtfHJyhXFEHpn9h/uSTWnxW/3S6ITmWo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=esrY/6eoNXSsNyjFwukhcax2WNvn6HLFu/WxKN3VKhohUL1UrPskvLTtwsnAMCx3b
-	 UoEaxx2H+kBfpAm36dKo3KFnQ84qLnxeJNmxqyWJ2bCgWe4V8/ZcHymJMAZ02sWA6A
-	 VYAmaOxSE6mp5r0tpsQ+XXVGHlf1Qpr347AThKMrCZ1KAAn2zZ6H1apDusfK+EJBRu
-	 b4ucYz5mvcV+e3LXVTPzfVbTSn0pJ7Ypli9nAZW/LJMDTYl6gtMXeMGCg1ZGUqgV+o
-	 VVQplsMUYkea8yWm1JQRJeLrmnp2ac7+fShC0OR28Gt2o6mix+dTEs770m4Vms6raR
-	 vOACHD6ZqKkBg==
-Message-ID: <b3897b35-29ee-4b33-8a79-813642cb6554@kernel.org>
-Date: Tue, 10 Sep 2024 09:56:25 +0200
+	s=k20201202; t=1725957341;
+	bh=pBSJi/yuzJfZjKDLQCNcqN6X3x2nGX2eyStr3qfYW4Q=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=UClYJsyAUb6FMhcdZ1UTNg6nElYCs6MNAnL4IhxixwTbYhfyD0HZ2NZ/AKoKt8/W4
+	 0NsEAypMMJQ9zx+eLBI/6lzQb/1Hs4jYs5NxLK5EKjYEZEb5xIh3m1t4GIJH6LcBYf
+	 Qh7Vwhs0RJYBHz3CxMdAdJHBnQJQTSIsE2T788Jb2OzvDq7EZfghSGEDJY+n1mlr6d
+	 W8UfxRNWUTlUPMwBO+3t62vHqHH1SclWukZXthLTfeV0BjIykLSbEd+nY/rWqfqLgp
+	 he9Dn3avYjQ7luKMj2RDKKyGFSCw4l38X2FOyMpGmxxH+T0yhlHzumHg8XAQq+09+S
+	 CpgorsrFATn9g==
+Message-ID: <1b4d71dd-6320-4155-bc16-96024d83a80e@kernel.org>
+Date: Tue, 10 Sep 2024 10:35:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/5] add mptcp_subflow bpf_iter
+Subject: Re: [PATCH mptcp-next] Squash to "selftests/bpf: Add bpf scheduler
+ test" - drop has_bytes_sent
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1725946276.git.tanggeliang@kylinos.cn>
- <34c218c7-bab6-28b3-1940-949977146e87@gmail.com>
- <7bfdec07684954b812924b51f7295ef3a8ef7226.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <bae090f6945a2621f9ed4de2cb0e29d772a0e760.1725948163.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,49 +86,87 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7bfdec07684954b812924b51f7295ef3a8ef7226.camel@kernel.org>
+In-Reply-To: <bae090f6945a2621f9ed4de2cb0e29d772a0e760.1725948163.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/09/2024 08:30, Geliang Tang wrote:
-> On Tue, 2024-09-10 at 06:02 +0000, MPTCP CI wrote:
->> Hi Geliang,
->>
->> Thank you for your modifications, that's great!
->>
->> But sadly, our CI spotted some issues with it when trying to build
->> it.
->>
->> You can find more details there:
->>
->>  
->> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/10786552828
->>
->> Status: failure
+On 10/09/2024 08:03, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> These errors reported by CI should be ignored:
-> 
-> Unable to compile mptcp source code with make C=1 net/mptcp/bpf.o:
-> net/mptcp/bpf.c:215:17: warning: symbol 'bpf_iter_mptcp_subflow_new'
-> was not declared. Should it be static?
-> Unable to compile mptcp source code with make C=1 net/mptcp/bpf.o:
-> net/mptcp/bpf.c:228:42: warning: symbol 'bpf_iter_mptcp_subflow_next'
-> was not declared. Should it be static?
-> Unable to compile mptcp source code with make C=1 net/mptcp/bpf.o:
-> net/mptcp/bpf.c:243:18: warning: symbol
-> 'bpf_iter_mptcp_subflow_destroy' was not declared. Should it be static?
-> Unable to compile mptcp source code with make C=1 net/mptcp/bpf.o:
-> net/mptcp/bpf.c:247:42: warning: symbol 'bpf_mptcp_subflow_ctx_by_pos'
-> was not declared. Should it be static?
+> Drop ss_search() and has_bytes_sent(), add a new bpf program to check
+> the bytes_sent.
 
-Can we not squash patch 1/5 and 3/5 together?
+Thank you for the follow-up.
 
-It is strange to add the helpers but not using them, then register them
-in another patch.
+(...)
 
-Or did you split them to ease the review on BPF side?
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c
+> new file mode 100644
+> index 000000000000..93672e00d23e
+> --- /dev/null
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c
+> @@ -0,0 +1,36 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2024, Kylin Software */
+> +
+> +/* vmlinux.h, bpf_helpers.h and other 'define' */
+> +#include "bpf_tracing_net.h"
+> +#include "mptcp_bpf.h"
+> +
+> +char _license[] SEC("license") = "GPL";
+> +unsigned int bytes_sent_1 = 0;
+> +unsigned int bytes_sent_2 = 0;
+
+Can you not use u64, similar to tp->bytes_sent?
+
+> +int pid;
+> +
+> +SEC("fentry/mptcp_sched_get_send")
+
+Would it not be better to get 'fexit' instead? If you hook before the
+function, the first time there will not be any bytes being sent, and you
+will miss the last ones, no?
+
+(Note that you could also hook where the connection is being closed, to
+only check the bytes once, not each time more bytes are sent, no? But I
+guess for such test, it is fine like that.)
+
+> +int BPF_PROG(trace_mptcp_sched_get_send, struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_subflow_context *subflow;
+> +
+> +	if (bpf_get_current_pid_tgid() >> 32 != pid)
+> +		return 0;
+> +
+> +	mptcp_for_each_subflow(msk, subflow) {
+> +		struct tcp_sock *tsk;
+
+(usually called *tp, not *tsk)
+
+> +		struct sock *ssk;
+> +
+> +		subflow = bpf_core_cast(subflow, struct mptcp_subflow_context);
+> +		ssk = mptcp_subflow_tcp_sock(subflow);
+> +		tsk = bpf_core_cast(ssk, struct tcp_sock);
+> +
+> +		if (subflow->subflow_id == 1)
+> +			bytes_sent_1 += tsk->bytes_sent;
+
+It looks strange to increment the bytes here: 'bytes_sent' is the total,
+no? Then you should
+
+  bytes_sent_1 = tp->bytes_sent;
+
+no?
+
+> +		else if (subflow->subflow_id == 2)
+> +			bytes_sent_2 += tsk->bytes_sent;
+> +	}
+> +
+> +	return 0;
+> +}
 
 Cheers,
 Matt
