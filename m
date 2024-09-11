@@ -1,69 +1,158 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35487224CF
-	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 03:03:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D918651
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 03:14:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726023795; cv=none; b=ad+ELfFRZ//swFcWIsy3jVGFHQU/KFgr9TfD5EEUM0MoHe+hWkDzOD0qzZUfqN0g3/orxbL8h+XU/PAsy85c5SK5fLxjy+7s5Arsm5jvrQQyE9x3uq/3x5MWA03jB8xl7lxlik+ISXhlvzInC9hGnh0Zq2OB5r05Bewy3P9vhiQ=
+	t=1726024472; cv=none; b=RVUkZ4wSSpUtlpRbEd/PdMTH5IhC5iNPsunLXGVsmljy9QVQDWtLUqZ6vt7DmOCI8axdbRK6e9PaYipcOQL/fBSt740V7lnJgnPPxWjezVYVemA8gGwa/Sn6I4c8xpA4BBWhxlGlS+0y4+Vg2wJ1uAzNEGeM59W+UMpqaM9yyNU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726023795; c=relaxed/simple;
-	bh=Zb+32JUdCvzFr6YS3HVWxtO3o2fz5/zgF4mbGXoaSRA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KsiraJBY4RD0MNMMwPdGKty/pU2REbf7g/Yn1kc/4/CCFEkzo2R3Up5j8kE8y1vnQV80GdHhy9w2jwN7tnVZvpJLBTjMinLaOwlnvN35/6QvY1VrAh61dcnJhoAyb9Sd4rk3c+Sk/LO6H6fJZhkLlHVHU6KFkw4qOCl9kjv0Z2o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s59e5XGN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726024472; c=relaxed/simple;
+	bh=6V1kRDSCwhUqW2k5A38cBuPnVrnvoQRSqjDkAAFWA1c=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=UBb6iKOtcNeXCzfGUbK9YxSeQex8VxkM9z6tRfcD1X0iwjR/fpygz10f5tfUW1K8kQPgEjGapxY+zebZyUpyz/J71qfcW6uyjVl5kwtofxvp2N5NSGhEMiF80rLKBGM45FfLghakAxUQsMD7k/BCa4H+f3bckXocYvPuSkcho2k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIx3Hx0x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s59e5XGN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C619C4CEC3;
-	Wed, 11 Sep 2024 03:03:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIx3Hx0x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D1ABC4CEC5;
+	Wed, 11 Sep 2024 03:14:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726023794;
-	bh=Zb+32JUdCvzFr6YS3HVWxtO3o2fz5/zgF4mbGXoaSRA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=s59e5XGNestBf1gSD4f7bvSqzlIugOvQISy93oPqCO5S3Rz0ksi+XwK674TouSP00
-	 3qCSejjZFy44n2fhTFVC0vv3U7ohPBZvSKjcmDsQlLM6Za08sIMfEFhsWBxXnICYMm
-	 3OgVKZsZI4bIYZf0otpnWNh6ZdC4lPcdwkQSA0/oMCpJNrQXH6u+WHynMjab/cfx7w
-	 y8ToKwDYQsJX/3gA3DkBtLb8YlcvXHLTHK8H0U+pu0zGPWVBVWd1PLecbPJzGubHXq
-	 91VwRXLsUfZOagK6dAPDHdHKq1zQwEEbGAV+e1KexfyO1vygnlKFRC1U+U9ESIZ0rY
-	 6QxT8X0CR28Eg==
+	s=k20201202; t=1726024471;
+	bh=6V1kRDSCwhUqW2k5A38cBuPnVrnvoQRSqjDkAAFWA1c=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gIx3Hx0xWSfqN0zL4KbPfeRq8fFO8jxQbb3uwPvOtRnviBnrzHfRiq72yXpHebPm4
+	 7Cxt6570LlnUW+cYKwIxeLlqc4TjYBi80hteigy0fIzSlavYmUC9nObZO0ZTVZuEYx
+	 E4MyxAh7j9gIhtBncLDTibg5kwnPBEPLNApMX9KbuvmQiisaJKywAP6RKb4s7cTSyX
+	 2XPAM+9wUJxDUHoIlK718MgSlFNFxRz7TOBdo9sdKO7ayFVsq15P68lLP8yBFR6hO6
+	 E0lU0G9m4s1xQYjLU9B8Z33lWPH1hYnL3s+sm0a6Ri8j5pw7x63+Ass6UxlHgkE0uM
+	 loLoT5ABL6hDA==
+Message-ID: <9b7f550c2287d9fe3e07053c0098790e993ea69f.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 1/2] Squash to "bpf: Add mptcp_subflow
+ bpf_iter"
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 5/5] Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-Date: Wed, 11 Sep 2024 11:02:59 +0800
-Message-ID: <d43bb458e1cac93d13202ad86b54de926c1fa3ae.1726023577.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1726023577.git.tanggeliang@kylinos.cn>
-References: <cover.1726023577.git.tanggeliang@kylinos.cn>
+Date: Wed, 11 Sep 2024 11:14:21 +0800
+In-Reply-To: <7040e6bd-2257-48dc-99a1-3dacbdb1993f@kernel.org>
+References: <cover.1725958296.git.tanggeliang@kylinos.cn>
+	 <cb7ca604cdc487d1f9a2f03a3a14904b003227fd.1725958296.git.tanggeliang@kylinos.cn>
+	 <a1822c37-3c2d-4865-848c-e6d92fa439aa@kernel.org>
+	 <72458d8097fa7ee4f8b783c51ec70376fc1234e2.camel@kernel.org>
+	 <7040e6bd-2257-48dc-99a1-3dacbdb1993f@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-Drop mptcp_subflow_active declaration.
+On Tue, 2024-09-10 at 11:33 +0200, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 10/09/2024 11:27, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > On Tue, 2024-09-10 at 11:12 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang,
+> > > 
+> > > On 10/09/2024 10:53, Geliang Tang wrote:
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > > 
+> > > > Register mptcp_subflow bpf_iter helpers in common_btf_ids in
+> > > > kernel/bpf/helpers.c, then they can be used on a larger scale,
+> > > > not only in types BPF_PROG_TYPE_TRACING and
+> > > > BPF_PROG_TYPE_STRUCT_OPS.
+> > > 
+> > > Why could they not be used in these types? I find it good to have
+> > > them
+> > > defined in net/mptcp, from a maintenance point of view.
+> > > 
+> > > Also, the different bpf_iter_xxx helpers defined there look
+> > > generic.
+> > > While here, it is specific to MPTCP, I'm not even sure that would
+> > > be
+> > > OK
+> > > to add them there. Is it not OK to define them only in
+> > > net/mptcp/bpf.c?
+> > 
+> > Yes, a new test for #484 (BPF: setsockopt on an MPTCP socket: check
+> > support) will use these helpers in "cgroup/setsockopt", that is the
+> > BPF_PROG_TYPE_CGROUP_SOCKOPT type.
+> > 
+> > register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCKOPT,
+> > 		&bpf_mptcp_sched_kfunc_set);
+> > 
+> > will fail, since BPF_PROG_TYPE_CGROUP_SOCKOPT is not allow to
+> > register
+> > more kfuncs (see bpf_prog_type_to_kfunc_hook() in
+> > kernel/bpf/btf.c).
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 1 -
- 1 file changed, 1 deletion(-)
+I rethought it again, we can easily extend bpf_prog_type_to_kfunc_hook:
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-index eb21119aa8f7..dcab196867fe 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-@@ -16,7 +16,6 @@ struct bpf_subflow_send_info {
- 	__u64 linger_time;
- };
- 
--extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
- extern void mptcp_set_timeout(struct sock *sk) __ksym;
- extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
- extern bool tcp_stream_memory_free(const struct sock *sk, int wake) __ksym;
--- 
-2.43.0
++++ b/kernel/bpf/btf.c
+@@ -8310,6 +8310,7 @@ static int bpf_prog_type_to_kfunc_hook(enum
+bpf_prog_type prog_type)
+                return BTF_KFUNC_HOOK_SYSCALL;
+        case BPF_PROG_TYPE_CGROUP_SKB:
+        case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
++       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
+                return BTF_KFUNC_HOOK_CGROUP_SKB;
+        case BPF_PROG_TYPE_SCHED_ACT:
+                return BTF_KFUNC_HOOK_SCHED_ACT;
+
+So we can still define and register mptcp_subflow bpf_iter helpers only
+in net/mptcp/bpf.c. v4 is sent, this patch is superseded.
+
+Thanks,
+-Geliang
+
+> > 
+> > So I have to move them into common_btf_ids in kernel/bpf/helpers.c
+> > to
+> > allow them can be used in almost every BPF program type.
+> 
+> OK, but then I guess these helpers can be upstreamed before the
+> packet
+> schedulers, right?
+> 
+> Cheers,
+> Matt
 
