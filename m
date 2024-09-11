@@ -1,158 +1,100 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B78D918651
-	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 03:14:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E33338FB0
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 03:26:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726024472; cv=none; b=RVUkZ4wSSpUtlpRbEd/PdMTH5IhC5iNPsunLXGVsmljy9QVQDWtLUqZ6vt7DmOCI8axdbRK6e9PaYipcOQL/fBSt740V7lnJgnPPxWjezVYVemA8gGwa/Sn6I4c8xpA4BBWhxlGlS+0y4+Vg2wJ1uAzNEGeM59W+UMpqaM9yyNU=
+	t=1726025217; cv=none; b=ph+FHRCLVloaSUDH6UadqHpbfwpq+PJ4SVzExpV1Vq6W2K8hDBGqnYYOLzsJvsq/PlhVB2LWrMYVNGSL5qQIdq3sQnxpZ4z+HwRxSlJmaFlBTVpMs+PUSwHdYxSwlmwOxTNiM2ZMBJykHfk1ynM3iuXhT0sz+wsH9tjWlQvWTNQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726024472; c=relaxed/simple;
-	bh=6V1kRDSCwhUqW2k5A38cBuPnVrnvoQRSqjDkAAFWA1c=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UBb6iKOtcNeXCzfGUbK9YxSeQex8VxkM9z6tRfcD1X0iwjR/fpygz10f5tfUW1K8kQPgEjGapxY+zebZyUpyz/J71qfcW6uyjVl5kwtofxvp2N5NSGhEMiF80rLKBGM45FfLghakAxUQsMD7k/BCa4H+f3bckXocYvPuSkcho2k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gIx3Hx0x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726025217; c=relaxed/simple;
+	bh=qV5nLn4dCFBE71p0ixAKi3rna3T5qsv92RR4qefluSk=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=nVmWRFnpRT+m/gTQAL/OST9WlnvmqqltCdsxztIo8lo1bH0Mztxdmvs5qCOsVhcYLSDdRu1U48/2MJ0oAbATNOjL51smijGR3z5MRF27qJdRrK3RthY7NEwBovG5fwTADzW6/v/2b5sdtAslSP04DcqtLEOWrTsEYq7WnbfwBBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cJUIOu3s; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gIx3Hx0x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8D1ABC4CEC5;
-	Wed, 11 Sep 2024 03:14:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726024471;
-	bh=6V1kRDSCwhUqW2k5A38cBuPnVrnvoQRSqjDkAAFWA1c=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=gIx3Hx0xWSfqN0zL4KbPfeRq8fFO8jxQbb3uwPvOtRnviBnrzHfRiq72yXpHebPm4
-	 7Cxt6570LlnUW+cYKwIxeLlqc4TjYBi80hteigy0fIzSlavYmUC9nObZO0ZTVZuEYx
-	 E4MyxAh7j9gIhtBncLDTibg5kwnPBEPLNApMX9KbuvmQiisaJKywAP6RKb4s7cTSyX
-	 2XPAM+9wUJxDUHoIlK718MgSlFNFxRz7TOBdo9sdKO7ayFVsq15P68lLP8yBFR6hO6
-	 E0lU0G9m4s1xQYjLU9B8Z33lWPH1hYnL3s+sm0a6Ri8j5pw7x63+Ass6UxlHgkE0uM
-	 loLoT5ABL6hDA==
-Message-ID: <9b7f550c2287d9fe3e07053c0098790e993ea69f.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 1/2] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 11 Sep 2024 11:14:21 +0800
-In-Reply-To: <7040e6bd-2257-48dc-99a1-3dacbdb1993f@kernel.org>
-References: <cover.1725958296.git.tanggeliang@kylinos.cn>
-	 <cb7ca604cdc487d1f9a2f03a3a14904b003227fd.1725958296.git.tanggeliang@kylinos.cn>
-	 <a1822c37-3c2d-4865-848c-e6d92fa439aa@kernel.org>
-	 <72458d8097fa7ee4f8b783c51ec70376fc1234e2.camel@kernel.org>
-	 <7040e6bd-2257-48dc-99a1-3dacbdb1993f@kernel.org>
-Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
- keydata=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
- Px+2P2cKc7LXXedb/qQ3M
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cJUIOu3s"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7a9af813f6cso309259885a.3
+        for <mptcp@lists.linux.dev>; Tue, 10 Sep 2024 20:26:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726025215; x=1726630015; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=79M314Cj6ydBzbi68Kdra62IdV//JXaDeCCnbAmD+6o=;
+        b=cJUIOu3spp020o7jzFZ5l8pT3nA594VwAKRJZFSerKVIFFdy896n0a33nUGx8FUWJb
+         Fwnfjb3Esk4azWjXgnrr7t8nfwYkD/3o53BgqLMMvkyAaEx1XXsZy/QdHYyNMG69UQNY
+         lxN2rq5XjUvv9iAwuPeEWlVhNEz04jMY5MhW1R2KSp1+1JnQ2872oOf5V/X9FqFPLdSM
+         0guEiSR/aZurIsjeJQXZ5uEzcfAra67NhyST8P2eSDB6qi8yfyq026SrGhMHnCX/Gv25
+         vb2MhrsCbVu48BfDe66DOjMxjwigjnc9QwB+HSvl9iARRkt7Uewlk2Q2eNmTzCSefhoK
+         OMBw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726025215; x=1726630015;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=79M314Cj6ydBzbi68Kdra62IdV//JXaDeCCnbAmD+6o=;
+        b=Vb/Sd66pyL5w5NM+77i6QB9hMRWwShO3vktpbuVCR0H44MSmgAWBDCB5rjaPUTv1lF
+         UjtcL82hnibIS1YBERv7UAODs6ZLdK1QjZLOPAsDXbHQHhKOO6jLEfxQX/3FH2kNL2Zk
+         uh0whCWRybDZWiPuINh9sEx6MXMFCZ+Jxhuy/CplRF8Y/Lji8kYMCNCvMEmqeuetib1t
+         ZwJYesDKDNsjZBVnPKyfR7k/FwYS1o4LJPapVhak3PUmwDkqpmn03UqF633rvjX4WYms
+         B2vlvAf6eFtrpVrhZyFoBcgsnxo9LvNml24WTNKwwpa5Qy7vFqrzoHPQDzMlLsZsMC1h
+         xlKg==
+X-Gm-Message-State: AOJu0YydScXUk82xPeI/85NoTjYqy22WI+fuQA69kZ2buH4jClzugd0i
+	BZt16qGT5ID28KRvZN+Gwxz0vOIZpS0CLN+J90z/bUiaWlLUt3gvhtqH
+X-Google-Smtp-Source: AGHT+IG2ZjvVgtAuyFNMqFQ4wgZK7jxiQGfxJqaB7GAH4j6AvEVCHv8eEMKtZOR1XQJfI/0EjmD4Sg==
+X-Received: by 2002:a05:620a:448e:b0:7a9:dbaf:ddfa with SMTP id af79cd13be357-7a9dbafdf8dmr42375485a.51.1726025214484;
+        Tue, 10 Sep 2024 20:26:54 -0700 (PDT)
+Received: from [127.0.0.1] ([20.102.210.220])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a9a796ad20sm369170785a.32.2024.09.10.20.26.53
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 10 Sep 2024 20:26:54 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1726023577.git.tanggeliang@kylinos.cn>
+References: <cover.1726023577.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v4 0/5] add mptcp_subflow bpf_iter
+Message-ID: <9e8585ad-c303-038a-9ae9-c8c041371e60@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Sep 2024 03:26:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Geliang,
 
-On Tue, 2024-09-10 at 11:33 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 10/09/2024 11:27, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > On Tue, 2024-09-10 at 11:12 +0200, Matthieu Baerts wrote:
-> > > Hi Geliang,
-> > > 
-> > > On 10/09/2024 10:53, Geliang Tang wrote:
-> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > > 
-> > > > Register mptcp_subflow bpf_iter helpers in common_btf_ids in
-> > > > kernel/bpf/helpers.c, then they can be used on a larger scale,
-> > > > not only in types BPF_PROG_TYPE_TRACING and
-> > > > BPF_PROG_TYPE_STRUCT_OPS.
-> > > 
-> > > Why could they not be used in these types? I find it good to have
-> > > them
-> > > defined in net/mptcp, from a maintenance point of view.
-> > > 
-> > > Also, the different bpf_iter_xxx helpers defined there look
-> > > generic.
-> > > While here, it is specific to MPTCP, I'm not even sure that would
-> > > be
-> > > OK
-> > > to add them there. Is it not OK to define them only in
-> > > net/mptcp/bpf.c?
-> > 
-> > Yes, a new test for #484 (BPF: setsockopt on an MPTCP socket: check
-> > support) will use these helpers in "cgroup/setsockopt", that is the
-> > BPF_PROG_TYPE_CGROUP_SOCKOPT type.
-> > 
-> > register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCKOPT,
-> > 		&bpf_mptcp_sched_kfunc_set);
-> > 
-> > will fail, since BPF_PROG_TYPE_CGROUP_SOCKOPT is not allow to
-> > register
-> > more kfuncs (see bpf_prog_type_to_kfunc_hook() in
-> > kernel/bpf/btf.c).
+Thank you for your modifications, that's great!
 
-I rethought it again, we can easily extend bpf_prog_type_to_kfunc_hook:
+But sadly, our CI spotted some issues with it when trying to build it.
 
-+++ b/kernel/bpf/btf.c
-@@ -8310,6 +8310,7 @@ static int bpf_prog_type_to_kfunc_hook(enum
-bpf_prog_type prog_type)
-                return BTF_KFUNC_HOOK_SYSCALL;
-        case BPF_PROG_TYPE_CGROUP_SKB:
-        case BPF_PROG_TYPE_CGROUP_SOCK_ADDR:
-+       case BPF_PROG_TYPE_CGROUP_SOCKOPT:
-                return BTF_KFUNC_HOOK_CGROUP_SKB;
-        case BPF_PROG_TYPE_SCHED_ACT:
-                return BTF_KFUNC_HOOK_SCHED_ACT;
+You can find more details there:
 
-So we can still define and register mptcp_subflow bpf_iter helpers only
-in net/mptcp/bpf.c. v4 is sent, this patch is superseded.
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/10804410957
 
-Thanks,
--Geliang
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/e8=
+2320bba409
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D889124
 
-> > 
-> > So I have to move them into common_btf_ids in kernel/bpf/helpers.c
-> > to
-> > allow them can be used in almost every BPF program type.
-> 
-> OK, but then I guess these helpers can be upstreamed before the
-> packet
-> schedulers, right?
-> 
-> Cheers,
-> Matt
+Feel free to reply to this email if you cannot access logs=
+, if you need
+some support to fix the error, if this doesn't seem to be =
+caused by your
+modifications or if the error is a false positive one.
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
