@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E7414D6EE;
-	Wed, 11 Sep 2024 08:17:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 015A6AD24
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 08:25:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726042646; cv=none; b=n4h50ZbxSdLsclOR600/2TWC1z7xt1I+JZhr4CB285Fa/y7WQtybH3LRWTBMTWAU4XW2MwkNyCunHA8SAvA87POyokCLFhAWDTWhSqQSg2m/LmDEHZwy6572aZfYS3URut/xY7nP4NzW2ThxnR4TSfpAXuR1zYmoxDsUZoALu8Q=
+	t=1726043134; cv=none; b=Ln2GOqAY+JF+ycr42C4gypBStpn3M945Z3SMMNcRYlfZygpXTpsN/mNVstDDssRB1uNH7jy2Jhf2FDH1pYUHAsTV8bskfSo1vrtpifGs+gA3uw00p5Q3/hOOMGjpMGq8adI3xZKJGlg+xyxCwlmQWVUVHPaX/ugcwPRbv5NqSi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726042646; c=relaxed/simple;
-	bh=LAnhnqSJorMXdmlXOE4uW9NRjVDEJin07Zgq4Qrj4/4=;
+	s=arc-20240116; t=1726043134; c=relaxed/simple;
+	bh=1eMm0683JOAXoLqXx2ETU47Z4cfqGUnFu+iE37ACNao=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N9cB2NxT1Ky8J7csLdnW/rtSt8BozHNuIwZ4m74oT9O5ayBM2EEah8wCrFV3nAaKAC+ihd/iBGeSdnd6yPOVldV13iIWH9g4esQ+Fi6Q8MXNTWUKwRhrYr85WBI9sYLIYLy/UoVYKELYolWfmux9UkjFVLTeYDmnNQQTHu+Tpr8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XFP0pnT4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CtjEEigTob9SPRxevoI57XOgKeRH3qQbnEIKRP8d9R+lKqDqtEE6rW3soQ+tUV9y94a4YBe5kWd2+l20QGx9oFXYCrSYe456r1MDCaV+pTCNjgdXpno9q+EhjTdy3i8XpahHSdIlZNPrknbf2XmZ0WwEX6v7IDc+YV8O6EM24Z8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GhzF7oZE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XFP0pnT4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9861DC4CECC;
-	Wed, 11 Sep 2024 08:17:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GhzF7oZE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 14078C4CEC6;
+	Wed, 11 Sep 2024 08:25:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726042646;
-	bh=LAnhnqSJorMXdmlXOE4uW9NRjVDEJin07Zgq4Qrj4/4=;
+	s=k20201202; t=1726043133;
+	bh=1eMm0683JOAXoLqXx2ETU47Z4cfqGUnFu+iE37ACNao=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XFP0pnT4VJeRIX3mVVC4UHG1EUeNQYTrWLuYWnG+6G+gs49WhmbZI2ejx93VeXE+R
-	 ynqkpxcgIak6oGU5MsT8tpxb6ACnUM2+FKWTSr1nRKdTbiUHoUVmZTy/ZpvS3yCeFQ
-	 qcEg2IxbPOAC1eAk0Rj3daz2Pkgi7yyFeHsYhlYeiE/q0va9WJaoQhO73t2da+HDWL
-	 Z9CC52ixz/K2N2fBvCSwOhqq0TauPMjL1DL2NdeQlDknxj19IR60n2p/DNpvo/IZaE
-	 ZaV4BgExi47uYX3DTEEAebXHzSM7C/szirJvciKAAXEVO4HdM16RPnMq53CaUHxo2W
-	 U8q1REGq0IAZQ==
-Message-ID: <fb706667-c907-4d9d-a37d-8ad68b26e2bd@kernel.org>
-Date: Wed, 11 Sep 2024 10:17:22 +0200
+	b=GhzF7oZEhKhAEyfKSkwleSoq29Mdiftv9zl6HTRfBe6nYpAexWnXUETLD84FkjVRs
+	 W74LZc30KlfcbwsbWJb4EgBz3EPwbJN6dmz+YHQ0zkv+T6WZOLs1WCZ3X8w8Am7YGw
+	 grjN5tEnqyAIsYKZb1MJwx+Mcp6GDCTytLIqhJzwF7ZivAdUHvWx/lYhQm9L3eXFG3
+	 NVXMswH18bQlIhs2eZfi9vi840QlIV67GcbKPzgC/l/FswHP/QzFHRw0ivPRKEC15Q
+	 Hq+PCG2ImEtC0lf99O29l2n7Qn4ao7MvsukZtpNuho3sllF7keQ18zrTwLipg1VuuE
+	 X/NLQfXzOXq6g==
+Message-ID: <81746edb-cf37-4c36-b23a-3aee2a6bd995@kernel.org>
+Date: Wed, 11 Sep 2024 10:25:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [Patch net] mptcp: initialize sock lock with its own lockdep keys
+Subject: Re: [Patch net v2] mptcp: initialize sock lock with its own lockdep
+ keys
 Content-Language: en-GB
-To: Cong Wang <xiyou.wangcong@gmail.com>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- Cong Wang <cong.wang@bytedance.com>,
+To: Cong Wang <xiyou.wangcong@gmail.com>, mptcp@lists.linux.dev
+Cc: Cong Wang <cong.wang@bytedance.com>,
  syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com,
  Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-References: <20240908180620.822579-1-xiyou.wangcong@gmail.com>
- <c332e3f8-3758-43ce-87a7-f1290d9692bc@kernel.org>
- <ZuEPsZ3yrLqHNRUt@pop-os.localdomain>
+References: <20240911042425.978665-1-xiyou.wangcong@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,84 +88,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ZuEPsZ3yrLqHNRUt@pop-os.localdomain>
+In-Reply-To: <20240911042425.978665-1-xiyou.wangcong@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Cong Wang,
 
-On 11/09/2024 05:34, Cong Wang wrote:
-> On Mon, Sep 09, 2024 at 05:03:32PM +0200, Matthieu Baerts wrote:
->> Hi Cong Wang,
->>
->> On 08/09/2024 20:06, Cong Wang wrote:
->>> From: Cong Wang <cong.wang@bytedance.com>
->>>
->>> In mptcp_pm_nl_create_listen_socket(), we already initialize mptcp sock
->>> lock with mptcp_slock_keys and mptcp_keys. But that is not sufficient,
->>> at least mptcp_init_sock() and mptcp_sk_clone_init() still miss it.
->>>
->>> As reported by syzbot, mptcp_sk_clone_init() is challenging due to that
->>> sk_clone_lock() immediately locks the new sock after preliminary
->>> initialization. To fix that, introduce ->init_clone() for struct proto
->>> and call it right after the sock_lock_init(), so now mptcp sock could
->>> initialize the sock lock again with its own lockdep keys.
->>
->> Thank you for this patch!
->>
->> The fix looks good to me, but I need to double-check if we can avoid
->> modifying the proto structure. Here is a first review.
->>
->>
->> From what I understand, it looks like syzbot reported a lockdep false
->> positive issue, right? In this case, can you clearly mention that in the
->> commit message, to avoid misinterpretations?
->>
->>> Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
->>
->> checkpatch.pl reports that "Reported-by: should be immediately followed
->> by Closes: with a URL to the report".
+On 11/09/2024 06:24, Cong Wang wrote:
+> From: Cong Wang <cong.wang@bytedance.com>
 > 
-> Sure, didn't know this is helpful.
-
-It is useful for the reviewers/devs to find more info about the issue,
-and for other bots to mark a bug report as closed.
-
->> Also, even if it is a false positive, it sounds better to consider this
->> as a fix, to avoid having new bug reports about that. In this case, can
->> you please add a "Fixes: <commit>" tag and a "Cc: stable" tag here please?
+> In mptcp_pm_nl_create_listen_socket(), we already initialize mptcp sock
+> lock with mptcp_slock_keys and mptcp_keys. But that is not sufficient,
+> at least mptcp_init_sock() and mptcp_sk_clone_init() still miss it.
 > 
-> I intended not to provide one because I don't think this needs to go to
-> -stable, it only fixes a lockdep warning instead of a real deadlock.
-> Please let me know if you prefer to target -stable.
+> As reported by syzbot, mptcp_sk_clone_init() is challenging due to that
+> sk_clone_lock() immediately locks the new sock after preliminary
+> initialization. To amend that, introduce ->init_clone() for struct proto
+> and call it right after the sock_lock_init(), so now mptcp sock could
+> initialize the sock lock again with its own lockdep keys.
+> 
+> This patch does not fix any real deadlock, it only makes lockdep happy.
+> 
+> Fixes: 58b09919626b ("mptcp: create msk early")
+> Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=f4aacdfef2c6a6529c3e
+> Cc: Matthieu Baerts <matttbe@kernel.org>
+> Cc: Mat Martineau <martineau@kernel.org>
+> Cc: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Cong Wang <cong.wang@bytedance.com>
+> ---
+> v2: Address Matthieu's comments
 
-Yes, it is useful. Because if it is not backported, it is likely we will
-get this bug report again with stable versions. And such bug reports are
-always taking time to analyse.
+Thank you for the v2!
 
 (...)
 
->>> diff --git a/net/core/sock.c b/net/core/sock.c
->>> index 9abc4fe25953..747d7e479d69 100644
->>> --- a/net/core/sock.c
->>> +++ b/net/core/sock.c
->>> @@ -2325,6 +2325,8 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
->>>  	}
->>>  	sk_node_init(&newsk->sk_node);
->>>  	sock_lock_init(newsk);
->>> +	if (prot->init_clone)
->>> +		prot->init_clone(newsk);
->>
->> If the idea is to introduce a new ->init_clone(), should it not be
->> called ->lock_init() (or ->init_lock()) and replace the call to
->> sock_lock_init() when defined?
-> 
-> 'lock_init' or 'init_lock' reads like we are initalizing a lock. :)
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index 9abc4fe25953..747d7e479d69 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -2325,6 +2325,8 @@ struct sock *sk_clone_lock(const struct sock *sk, const gfp_t priority)
+>  	}
+>  	sk_node_init(&newsk->sk_node);
+>  	sock_lock_init(newsk);
+> +	if (prot->init_clone)
+> +		prot->init_clone(newsk);
+As mentioned on the v1, if the idea is to introduce a new hook here,
+maybe it can replace the call to sock_lock_init() when this new function
+pointer is defined. In this case, it could be renamed 'lock_init' or
+'init_lock'. But no need to send a new version for the moment, please
+see below.
 
-If it is replacing sock_lock_init() call when ->init_lock is defined, it
-will be about initializing a lock ;)
-
-Thank you for the v2 (in MPTCP ML), I will continue the reviews there.
+I suggest the following plan if that OK: because the initial report was
+a false positive, there are modification of the core, and because we are
+a bit in the middle of other things, I suggest not rushing up with this
+patch. We can look at it in more details when the other things will calm
+down, very likely in ~2 weeks, after LPC.
 
 Cheers,
 Matt
