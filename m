@@ -1,139 +1,115 @@
-Received: from szxga04-in.huawei.com (szxga04-in.huawei.com [45.249.212.190])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47BD9156993
-	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 11:31:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.190
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F4017187FEB
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 12:42:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726054282; cv=none; b=lulZSmpmyJXg5o4kvfoIdJnYaHeKKFetXlT2sqWcSi3nvxoh9f5SqjPuUw/Lql7lCTUBmlfIAtFF60OIfTe1vTgfHwZsfXJ1cgbji6bps39YsF5q19vQZ1/d+7TrTTz1u/asNeUGHawW7HMH4oZzqDw5c7D51iVXXcpDRNisWyU=
+	t=1726058527; cv=none; b=FjQVXAj6KqmVvrcpTc7vGCBxqbUNLvEjbfTmtOKmdPMvrr7M5hgEi0yBZ4DWYM2mihZ94MoYvm/8G+srVxVsCw9bLprB7/HPt9gzsUdEkTZrMnQdLDnZeYaN6/Eb7DUChD9BC6/3rq2ThYP4TJYWUyv2GTYaSDR99vwm9Oam2t8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726054282; c=relaxed/simple;
-	bh=RNMWO2WtthbJKl9msB3Y5qZod76Z7zlwONaoHt/pM3w=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=Gpie8H4BaAFtKEdM2ohbXV2dE3tsuESuzncgCY6cCOGcUDz6rc4G/wvd6UkBzoymOn/jIXB5HSEMzjRYhsngyCgJxGHXtle0hct7xIYQU00hnMkbWrMyOcRKfIenGRxIGDTKsGUfI30/W/CMLZlQeCbEUC95lk/CdtXvBG6Ohrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.190
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
-Received: from mail.maildlp.com (unknown [172.19.163.44])
-	by szxga04-in.huawei.com (SkyGuard) with ESMTP id 4X3dfv3VlSz2Cp5l;
-	Wed, 11 Sep 2024 19:30:47 +0800 (CST)
-Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
-	by mail.maildlp.com (Postfix) with ESMTPS id D79FF14010C;
-	Wed, 11 Sep 2024 19:31:16 +0800 (CST)
-Received: from [10.67.120.129] (10.67.120.129) by
- dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.11; Wed, 11 Sep 2024 19:31:16 +0800
-Message-ID: <15d963c2-1854-4fb7-a7a4-d8ed8cafead3@huawei.com>
-Date: Wed, 11 Sep 2024 19:31:16 +0800
+	s=arc-20240116; t=1726058527; c=relaxed/simple;
+	bh=68M9wWQ6D0/4boJfmPkluVdt1rWMxJpu6wIq5jUm6wM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 In-Reply-To:Content-Type:Content-Disposition; b=coWS1I4CU9sHcSfgp9snpWFkdAM0fgAd+BZMsIp+ZMRXT5z0k8uae02ZrdvtZv/PQmg5T4edN2iHT5asV3c633kaZGjRWi96SJxOPtBRZk7ChsOpcf8/PrqgGgKP9rwenGwbsO+ws6jB+ABWyYZBCXA6BCSu99r5//7DqdS9cmc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=b2wL9wXW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="b2wL9wXW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1726058524;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=u0ptzBQhQOoA0oeKPkPmWFxxMGMZSMXArLR2ZEqlrxY=;
+	b=b2wL9wXW74NHPipATGLUmFk+RI34c1G49BksEQQdCe+HtoXpGjftkFnh8Dl5xzXbBzdxWW
+	y9jpypxdNjHfId13sxFM3EbQthSnBiZSphV9IkBxtzoBGeBSYF0ZnUiE3Qkb+YRVZbq88G
+	+e33UzvlCF+0JKiKzg34jNsUMUQURLU=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-411-PRb6tvr-MKSMNwxLBlu87A-1; Wed, 11 Sep 2024 08:42:03 -0400
+X-MC-Unique: PRb6tvr-MKSMNwxLBlu87A-1
+Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-42cb479fab2so4452905e9.1
+        for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 05:42:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726058522; x=1726663322;
+        h=in-reply-to:content-transfer-encoding:content-disposition
+         :mime-version:references:message-id:subject:cc:to:from:date
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=u0ptzBQhQOoA0oeKPkPmWFxxMGMZSMXArLR2ZEqlrxY=;
+        b=HQwsxBFKinUe50hpkOO+4KmoQhNxAqp3qZWf3wMtcBr/6aO8o5J9O4VpPaqpx46dik
+         pA++rugjfQ8p66Gb3+h6gIC+H59j5hhfoqN4wRJM4EK1t9Iy8ObOJdr2wXHX5z8Rv9s1
+         jkiCbeClgvf7HP7Lnk1h6FOiL1KjyQqag78ErAZ8us8hC/pF33cjB9OkGxCuSYGFpzFU
+         u8XaitYfrKK6mW9Po2VhWMP9wC5mjrMS7RHksQLvIDbLMDVPfIW0yvXxjOoONnIPFkKL
+         XjTRsKC2dNPK144z2tC9QLT/bW0qHrX+FB7ypAQwh9Ay8yYtyVoB0WR55mBLba87KciR
+         AAPg==
+X-Forwarded-Encrypted: i=1; AJvYcCXs965NM8I6P4WltTzK4achZSD+oA6mmNGK/n092+0a8Y8350zjNXT40C+9Qw73Afzbdo9wlQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywg531R2KskJCd3Mz8n+fWDFZOCft3cGxwwO456KjCEyRWskSwA
+	kyep29cD10HhE9EUViQ+mnUOtmZaiBLA3CVuN/Czv4FGrvSyVE07UD/8u9ReTp/0ZKU4hnq9uZf
+	fc1ke0HvKxzu3pqPUrSMXLO5+K1JSqfcu1eGQshffw0e6cUYFsvoZ
+X-Received: by 2002:a05:600c:3b9c:b0:42c:b332:1619 with SMTP id 5b1f17b1804b1-42cbddb7904mr38733145e9.2.1726058522434;
+        Wed, 11 Sep 2024 05:42:02 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IHyWqZ1yjNpZ6SU2nZ/H8bqXLB+fc34r7zTlF3XmhhAnRSHVIk8h1MkTxjZqwZOwfY9aj9Ymw==
+X-Received: by 2002:a05:600c:3b9c:b0:42c:b332:1619 with SMTP id 5b1f17b1804b1-42cbddb7904mr38732785e9.2.1726058521473;
+        Wed, 11 Sep 2024 05:42:01 -0700 (PDT)
+Received: from localhost ([81.56.90.2])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-42cc01a8ee7sm58414305e9.0.2024.09.11.05.42.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Sep 2024 05:42:01 -0700 (PDT)
+Date: Wed, 11 Sep 2024 14:42:00 +0200
+From: Davide Caratti <dcaratti@redhat.com>
+To: =?iso-8859-1?Q?Asbj=F8rn_Sloth_T=F8nnesen?= <ast@fiberby.net>
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Donald Hunter <donald.hunter@gmail.com>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net] netlink: specs: mptcp: fix port endianness
+Message-ID: <ZuGQGPDUS6o2B5ai@dcaratti.users.ipa.redhat.com>
+References: <20240911091003.1112179-1-ast@fiberby.net>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH net-next v18 12/14] net: replace page_frag with
- page_frag_cache
-To: Paolo Abeni <pabeni@redhat.com>, <davem@davemloft.net>, <kuba@kernel.org>
-CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Alexander Duyck
-	<alexander.duyck@gmail.com>, Ayush Sawal <ayush.sawal@chelsio.com>, Eric
- Dumazet <edumazet@google.com>, Willem de Bruijn
-	<willemdebruijn.kernel@gmail.com>, Jason Wang <jasowang@redhat.com>, Ingo
- Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Juri Lelli
-	<juri.lelli@redhat.com>, Vincent Guittot <vincent.guittot@linaro.org>,
-	Dietmar Eggemann <dietmar.eggemann@arm.com>, Steven Rostedt
-	<rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel Gorman
-	<mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, John Fastabend
-	<john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>, David
- Ahern <dsahern@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Mat
- Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, Jamal
- Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri
- Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>,
-	<bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
-References: <20240906073646.2930809-1-linyunsheng@huawei.com>
- <20240906073646.2930809-13-linyunsheng@huawei.com>
- <1884e171-cc87-4238-abd1-0f6be1e0b279@redhat.com>
-Content-Language: en-US
-From: Yunsheng Lin <linyunsheng@huawei.com>
-In-Reply-To: <1884e171-cc87-4238-abd1-0f6be1e0b279@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20240911091003.1112179-1-ast@fiberby.net>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
- dggpemf200006.china.huawei.com (7.185.36.61)
 
-On 2024/9/10 22:04, Paolo Abeni wrote:
-> On 9/6/24 09:36, Yunsheng Lin wrote:
->> diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
->> index 49811c9281d4..6190d9bfd618 100644
->> --- a/net/ipv4/ip_output.c
->> +++ b/net/ipv4/ip_output.c
->> @@ -953,7 +953,7 @@ static int __ip_append_data(struct sock *sk,
->>                   struct flowi4 *fl4,
->>                   struct sk_buff_head *queue,
->>                   struct inet_cork *cork,
->> -                struct page_frag *pfrag,
->> +                struct page_frag_cache *nc,
->>                   int getfrag(void *from, char *to, int offset,
->>                       int len, int odd, struct sk_buff *skb),
->>                   void *from, int length, int transhdrlen,
->> @@ -1228,13 +1228,19 @@ static int __ip_append_data(struct sock *sk,
->>               copy = err;
->>               wmem_alloc_delta += copy;
->>           } else if (!zc) {
->> +            struct page_frag page_frag, *pfrag;
->>               int i = skb_shinfo(skb)->nr_frags;
->> +            void *va;
->>                 err = -ENOMEM;
->> -            if (!sk_page_frag_refill(sk, pfrag))
->> +            pfrag = &page_frag;
->> +            va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
->> +            if (!va)
->>                   goto error;
->>                 skb_zcopy_downgrade_managed(skb);
->> +            copy = min_t(int, copy, pfrag->size);
->> +
->>               if (!skb_can_coalesce(skb, i, pfrag->page,
->>                             pfrag->offset)) {
->>                   err = -EMSGSIZE;
->> @@ -1242,18 +1248,18 @@ static int __ip_append_data(struct sock *sk,
->>                       goto error;
->>                     __skb_fill_page_desc(skb, i, pfrag->page,
->> -                             pfrag->offset, 0);
->> +                             pfrag->offset, copy);
->>                   skb_shinfo(skb)->nr_frags = ++i;
->> -                get_page(pfrag->page);
->> +                page_frag_commit(nc, pfrag, copy);
->> +            } else {
->> +                skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1],
->> +                          copy);
->> +                page_frag_commit_noref(nc, pfrag, copy);
->>               }
->> -            copy = min_t(int, copy, pfrag->size - pfrag->offset);
->> -            if (getfrag(from,
->> -                    page_address(pfrag->page) + pfrag->offset,
->> -                    offset, copy, skb->len, skb) < 0)
->> +
->> +            if (getfrag(from, va, offset, copy, skb->len, skb) < 0)
->>                   goto error_efault;
-> 
-> Should the 'commit' happen only when 'getfrag' is successful?
-> 
-> Similar question in the ipv6 code.
+hello Asbj�rn,
 
-Good question.
-First of all, even it fails, the 'goto' will handle it correctly as the
-skb_shinfo(skb)->nr_frags is setup correctly.
-And then 'getfrag' being failure is an unlikely case, right?
+On Wed, Sep 11, 2024 at 09:10:02AM +0000, Asbj�rn Sloth T�nnesen wrote:
+> The MPTCP port attribute is in host endianness, but was documented
+> as big-endian in the ynl specification.
+> 
+> Below are two examples from net/mptcp/pm_netlink.c showing that the
+> attribute is converted to/from host endianness for use with netlink.
+> 
+> Import from netlink:
+>   addr->port = htons(nla_get_u16(tb[MPTCP_PM_ADDR_ATTR_PORT]))
+> 
+> Export to netlink:
+>   nla_put_u16(skb, MPTCP_PM_ADDR_ATTR_PORT, ntohs(addr->port))
+> 
+> Where addr->port is defined as __be16.
+> 
+> No functional change intended.
+> 
+> Fixes: bc8aeb2045e2 ("Documentation: netlink: add a YAML spec for mptcp")
+> Signed-off-by: Asbj�rn Sloth T�nnesen <ast@fiberby.net>
 
-I thought about moving it when coding, but decided not to mainly get_page()
-is also called before 'getfrag' as above, and I guess 'getfrag' might
-involve memcpy'ing causing the cache eviction for the above data, so it
-might make sense to do the likely case before 'getfrag'.
+not sure why we are doing addresses in network byte order
+and ports in host byte order for endpoints. But it's like this since the
+very beginning, so this host ordering in spec is correct.
 
-> 
-> Thanks,
-> 
-> Paolo
-> 
-> 
+Reviewed-by: Davide Caratti <dcaratti@redhat.com>
+
