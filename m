@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AD51BC07B;
-	Wed, 11 Sep 2024 23:20:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC821BB6A0;
+	Wed, 11 Sep 2024 23:20:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726096834; cv=none; b=ImnZrT3zjcitzYJhQbBcoku4ZCm4tqa8gPQprAWxlhvRgRmhhsaJaqq7TtEmCciko8MWduHZXSLLYAVP9e+EPBc9bKl6jI8a8utHdrHHY8/FW/iuHsTrwaTMfRuoMbZI0+rCSyKGMHkHuBA0akPnPEwvNglLw4+EO1OHSxbq4A0=
+	t=1726096845; cv=none; b=GxVeXkjU+Fq/atxevTIpORdL5qYf1TC8R+rtMjEvcy9RAP6Xq5q5dt+CwnUMmflrevHp+uxfyWZjIY25d0V9SYSHP2zg50hqIBTYX4T6mYBlMIi7qlnHymAusqdZgTZ449e9hCVOrknB1+9xbXE2GzBBuUDU+Z6nAXId+JCoAVM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726096834; c=relaxed/simple;
-	bh=T+Xk9de/KDBxm3BAUHKnu2gHLOOciVSNBTtQ8HkA9as=;
+	s=arc-20240116; t=1726096845; c=relaxed/simple;
+	bh=xoeaEsUH4Gbw86lnyllWO3ymn3uzNxvFhzCkvRXqd+U=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=GllAfpPkZOl7o4wdvxDks3O52AqZEUGYXONmpMOIxqto9fazzqi2b+gd26axqmC3Y0qvxeJYENWt62Dvn+P7qEJHFgpa0larMwAcDR5uOOlkjNC17WgYPgv2GMqEz4HMYGye4RbxMbQJNqz93/VmtpkwIYRzgTu9mJw/cmgCwPw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLvVlj8m; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=H3CRZCLXr5a6K71Khly5pi1FGOFP9PzyBkeTFE+QKbi31MBsIxsJyh9p2njVAS22clr7WndhJkyblcayAwGTd+lDXlUxC9dZyCiJEAfimnxSDvORhoniT+Ca84X8eV1NOH40qnAiPJsaX1+hPAyyqTKKXQqMW7X6u+M6w95zjO4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjuPVQZb; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLvVlj8m"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59C6C4CEC0;
-	Wed, 11 Sep 2024 23:20:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjuPVQZb"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C446C4CEC0;
+	Wed, 11 Sep 2024 23:20:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726096833;
-	bh=T+Xk9de/KDBxm3BAUHKnu2gHLOOciVSNBTtQ8HkA9as=;
+	s=k20201202; t=1726096844;
+	bh=xoeaEsUH4Gbw86lnyllWO3ymn3uzNxvFhzCkvRXqd+U=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=OLvVlj8mYSixA5P6WQq6QZXi3dIYgPQvMVIsiREQgjYDGt2KYSwmCkMcqvJqs18fO
-	 yvnhoH0wS94gRvnANjcQJFA5naTdO1FNBNIg3GLFTrVwAumC57UtQga3Ur9i4y4PAD
-	 jMp2C8dFrqSoMgUBka8KP25MD9kdWB+nSOjnoVBzlu3f7vU16FiWhZsPrE/RyPTrpw
-	 QRPzbb+DKfJcVskBwAJRgQi0xZTSNlkRTQN/fzbQXJrYrH7hmyBNadeRagQ3EOZd/v
-	 nsAp62RuHErr2c8CFkiYDph8/3mwk6s9cxUPmatYvxHaxZvSSNtTex9mkQKsaPMyH8
-	 mBXKJ+lKPdzLQ==
+	b=ZjuPVQZbgIymAz3FeMIpwl3wl8mEpI+zZdL8Pm/UTJEego+gEOXwcJ1xU9ewzE+yD
+	 pZTM3HtdD7N7dBXe7LHPci0SgW0IaAzFjFJdtRP1n75l9Cu+DMEvVI9KuTdZipZoXd
+	 XQNmsuqbtXnH9Aig/LvKJbpGVbqtxZshG97bJ89aPdUOgh8WKO4H0DOJ10PpRWPMqK
+	 JE9PX2DgiJVtCru1RrwAaFjOo+IJpBmcUvkJKqoNleTbrRZbVX/WwqeaZCPx39N86y
+	 xT0SIZsSFUx4WpGSRyH/T1ccrTPwYVwwqyfbCMR8HWNs/3x3KZ6GUsCwOS/QnTiNOW
+	 XpJrjRYk3sPTQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D123806656;
-	Wed, 11 Sep 2024 23:20:36 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0263806656;
+	Wed, 11 Sep 2024 23:20:46 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,52 +37,46 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net V4] mptcp: pm: Fix uaf in __timer_delete_sync
+Subject: Re: [PATCH net-next 0/3] mptcp: fallback to TCP after 3 MPC drop +
+ cache
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <172609683476.1105624.7683534378726526616.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Sep 2024 23:20:34 +0000
-References: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
-In-Reply-To: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
-To: Edward Adam Davis <eadavis@qq.com>
-Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
- kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
- matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
- pabeni@redhat.com, syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
- syzkaller-bugs@googlegroups.com
+ <172609684550.1105624.18253068127743198847.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Sep 2024 23:20:45 +0000
+References: <20240909-net-next-mptcp-fallback-x-mpc-v1-0-da7ebb4cd2a3@kernel.org>
+In-Reply-To: <20240909-net-next-mptcp-fallback-x-mpc-v1-0-da7ebb4cd2a3@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ dsahern@kernel.org, corbet@lwn.net, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
 Hello:
 
-This patch was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 10 Sep 2024 17:58:56 +0800 you wrote:
-> There are two paths to access mptcp_pm_del_add_timer, result in a race
-> condition:
+On Mon, 09 Sep 2024 22:09:20 +0200 you wrote:
+> The SYN + MPTCP_CAPABLE packets could be explicitly dropped by firewalls
+> somewhere in the network, e.g. if they decide to drop packets based on
+> the TCP options, instead of stripping them off.
 > 
->      CPU1				CPU2
->      ====                               ====
->      net_rx_action
->      napi_poll                          netlink_sendmsg
->      __napi_poll                        netlink_unicast
->      process_backlog                    netlink_unicast_kernel
->      __netif_receive_skb                genl_rcv
->      __netif_receive_skb_one_core       netlink_rcv_skb
->      NF_HOOK                            genl_rcv_msg
->      ip_local_deliver_finish            genl_family_rcv_msg
->      ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
->      tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
->      tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
->      tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
->      tcp_data_queue                     remove_anno_list_by_saddr
->      mptcp_incoming_options             mptcp_pm_del_add_timer
->      mptcp_pm_del_add_timer             kfree(entry)
+> The idea of this series is to fallback to TCP after 3 SYN+MPC drop
+> (patch 2). If the connection succeeds after the fallback, it very likely
+> means a blackhole has been detected. In this case (patch 3), MPTCP can
+> be disabled for a certain period of time, 1h by default. If after this
+> period, MPTCP is still blocked, the period is doubled. This technique is
+> inspired by the one used by TCP FastOpen.
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,V4] mptcp: pm: Fix uaf in __timer_delete_sync
-    https://git.kernel.org/netdev/net/c/b4cd80b03389
+  - [net-next,1/3] mptcp: export mptcp_subflow_early_fallback()
+    https://git.kernel.org/netdev/net-next/c/65b02260a0e0
+  - [net-next,2/3] mptcp: fallback to TCP after SYN+MPC drops
+    https://git.kernel.org/netdev/net-next/c/6982826fe5e5
+  - [net-next,3/3] mptcp: disable active MPTCP in case of blackhole
+    https://git.kernel.org/netdev/net-next/c/27069e7cb3d1
 
 You are awesome, thank you!
 -- 
