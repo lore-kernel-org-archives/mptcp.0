@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D9E7224CF;
-	Wed, 11 Sep 2024 22:30:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05AD51BC07B;
+	Wed, 11 Sep 2024 23:20:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726093830; cv=none; b=XCq8s2MfDXS1Txki2kA3S5KpXtMO4OkSosWIoxaEIAHAG3Y7ISOIunWAXVFqo0F5WUCIgsSPR/1iySCQhNTkdpdhbBWrR19Qd10dBC46S132yAWxOP9yUBvE2D+JSx0ELumX2N6iIEuSgDbH5I5zERLQ2fzbpQCWE9lvyrpzgtI=
+	t=1726096834; cv=none; b=ImnZrT3zjcitzYJhQbBcoku4ZCm4tqa8gPQprAWxlhvRgRmhhsaJaqq7TtEmCciko8MWduHZXSLLYAVP9e+EPBc9bKl6jI8a8utHdrHHY8/FW/iuHsTrwaTMfRuoMbZI0+rCSyKGMHkHuBA0akPnPEwvNglLw4+EO1OHSxbq4A0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726093830; c=relaxed/simple;
-	bh=9CY7jtiBhyePSX79v/9ohwRq9HgavX2rGlMwlGxscd0=;
+	s=arc-20240116; t=1726096834; c=relaxed/simple;
+	bh=T+Xk9de/KDBxm3BAUHKnu2gHLOOciVSNBTtQ8HkA9as=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gJftPhebrXFbcQyYKsk/goN4n3aiki1+kJjLirbsjgzckVUgGTG/k4lnxn95PQlY44PAuvMMd3MGD1BoxfC5Ogio0vHoiV7JitpaiAVr4vrGsvReEj+PyKMBAVTGsw7GilwD/YFOBfVqDeiY6yoqrH8T3IM88sfrIObl9I+GUTI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T09dSuDV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=GllAfpPkZOl7o4wdvxDks3O52AqZEUGYXONmpMOIxqto9fazzqi2b+gd26axqmC3Y0qvxeJYENWt62Dvn+P7qEJHFgpa0larMwAcDR5uOOlkjNC17WgYPgv2GMqEz4HMYGye4RbxMbQJNqz93/VmtpkwIYRzgTu9mJw/cmgCwPw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OLvVlj8m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T09dSuDV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DE67C4CEC0;
-	Wed, 11 Sep 2024 22:30:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OLvVlj8m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D59C6C4CEC0;
+	Wed, 11 Sep 2024 23:20:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726093829;
-	bh=9CY7jtiBhyePSX79v/9ohwRq9HgavX2rGlMwlGxscd0=;
+	s=k20201202; t=1726096833;
+	bh=T+Xk9de/KDBxm3BAUHKnu2gHLOOciVSNBTtQ8HkA9as=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=T09dSuDVfXTXLXyPX/PYSlJS8rQOJqPKUmkttN7s8u3oHDbkVQ+UZ+a/MjQHUxb1m
-	 4kmJUapHfZwGp7rnxo+fASXtisrz2Qus1BnysPIxZc1qtKKuF90EzUp3Dnj/MnqvAI
-	 IxKpQ8BXd0i4d4d0GXlT0+RIIjtyl4IwPiem3eYVC/AoCpkugMRp9EZ+aS9/QXfZZQ
-	 /JFM1jSgKg4BVozTUgWOgHKhGZWEqIb8QTYA7zmOYOtPGTtkPWUz57MpbGoWwwQ0Vd
-	 vaF8rfYo23jDH+3o+m/+0lZKMknDyP0aM1JBOJPHZZjPQ4xvo2XMiy4fnyiHnJvCoI
-	 d42Ij0O3OJCEQ==
+	b=OLvVlj8mYSixA5P6WQq6QZXi3dIYgPQvMVIsiREQgjYDGt2KYSwmCkMcqvJqs18fO
+	 yvnhoH0wS94gRvnANjcQJFA5naTdO1FNBNIg3GLFTrVwAumC57UtQga3Ur9i4y4PAD
+	 jMp2C8dFrqSoMgUBka8KP25MD9kdWB+nSOjnoVBzlu3f7vU16FiWhZsPrE/RyPTrpw
+	 QRPzbb+DKfJcVskBwAJRgQi0xZTSNlkRTQN/fzbQXJrYrH7hmyBNadeRagQ3EOZd/v
+	 nsAp62RuHErr2c8CFkiYDph8/3mwk6s9cxUPmatYvxHaxZvSSNtTex9mkQKsaPMyH8
+	 mBXKJ+lKPdzLQ==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70E373806656;
-	Wed, 11 Sep 2024 22:30:31 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 33D123806656;
+	Wed, 11 Sep 2024 23:20:36 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,43 +37,52 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] selftests: mptcp: misc. small fixes
+Subject: Re: [PATCH net V4] mptcp: pm: Fix uaf in __timer_delete_sync
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <172609383002.1065358.12169361654383136843.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Sep 2024 22:30:30 +0000
-References: <20240910-net-selftests-mptcp-fix-install-v1-0-8f124aa9156d@kernel.org>
-In-Reply-To: <20240910-net-selftests-mptcp-fix-install-v1-0-8f124aa9156d@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
- linux-kernel@vger.kernel.org, stable@vger.kernel.org
+ <172609683476.1105624.7683534378726526616.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Sep 2024 23:20:34 +0000
+References: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
+In-Reply-To: <tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com>
+To: Edward Adam Davis <eadavis@qq.com>
+Cc: davem@davemloft.net, edumazet@google.com, geliang@kernel.org,
+ kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org,
+ matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ pabeni@redhat.com, syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
+ syzkaller-bugs@googlegroups.com
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This patch was applied to netdev/net.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Tue, 10 Sep 2024 21:06:35 +0200 you wrote:
-> Here are some various fixes for the MPTCP selftests.
+On Tue, 10 Sep 2024 17:58:56 +0800 you wrote:
+> There are two paths to access mptcp_pm_del_add_timer, result in a race
+> condition:
 > 
-> Patch 1 fixes a recently modified test to continue to work as expected
-> on older kernels. This is a fix for a recent fix that can be backported
-> up to v5.15.
-> 
-> Patch 2 and 3 include dependences when exporting or installing the
-> tests. Two fixes for v6.11-rc1.
+>      CPU1				CPU2
+>      ====                               ====
+>      net_rx_action
+>      napi_poll                          netlink_sendmsg
+>      __napi_poll                        netlink_unicast
+>      process_backlog                    netlink_unicast_kernel
+>      __netif_receive_skb                genl_rcv
+>      __netif_receive_skb_one_core       netlink_rcv_skb
+>      NF_HOOK                            genl_rcv_msg
+>      ip_local_deliver_finish            genl_family_rcv_msg
+>      ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
+>      tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
+>      tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
+>      tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
+>      tcp_data_queue                     remove_anno_list_by_saddr
+>      mptcp_incoming_options             mptcp_pm_del_add_timer
+>      mptcp_pm_del_add_timer             kfree(entry)
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/3] selftests: mptcp: join: restrict fullmesh endp on 1st sf
-    https://git.kernel.org/netdev/net/c/49ac6f05ace5
-  - [net,2/3] selftests: mptcp: include lib.sh file
-    https://git.kernel.org/netdev/net/c/1a5a2d19e827
-  - [net,3/3] selftests: mptcp: include net_helper.sh file
-    https://git.kernel.org/netdev/net/c/c66c08e51b55
+  - [net,V4] mptcp: pm: Fix uaf in __timer_delete_sync
+    https://git.kernel.org/netdev/net/c/b4cd80b03389
 
 You are awesome, thank you!
 -- 
