@@ -1,99 +1,112 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-ua1-f54.google.com (mail-ua1-f54.google.com [209.85.222.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0EE21A3021
-	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 15:46:45 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3B7919CC15
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 16:36:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726069605; cv=none; b=K3ZL0RLuI6mExPu/4xML6Iy81bi21W47MgsK0+6DM2+7Ko+QxGqOp1bq8XvmcsUxxSfIHRMwei8hm7Kid58WBCv/6D+Bgwts56uiMrePnHHMIqAe6MrRTBSAv+qpHy/8LjEAwr8p2MASSiM2q5NFXeL/6w3mnHMqgeeaLRG5HDM=
+	t=1726072580; cv=none; b=BWxSt5NQU3vVub9toC8SNMURF/07cQbHKfMyitmZDPdg7YNpvlKJqMFZCCxrg9iPYDrhKjyaweoubA6GtMtkMgf4h3NCNySkwC1H4C351ltqPAI7WtWWY1F3Jj+iYescFQbMH7GnQuqmP9xOdF3hc62z9atczHT0IZ57lzB/sV4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726069605; c=relaxed/simple;
-	bh=womKYaQjSu8aGgvVWg+xS1PfkqR9cOc/NsaBgvnc17U=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=IW7rFvah75LM7BrVe/8qxfWsOL6FyKG11bA6TunK6Tg3eKDceE4xeA2U+6p2OcRqfZ0nEQT0JEr0rAt7VyFZWuPDkD2BE/t2mfDaYlDVEpqRT65DANN7JWtlKbjInDEFO61rWzHiLibO/5laYU/bzj5al36nHnf39+2vsgOKndU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sZ7500T9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726072580; c=relaxed/simple;
+	bh=M4/iFn28Od+6Cd2KcRs8NJ3WmDuoCaCTZ8vC36WHXrw=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=O3P3ICT9E1pwLcQHvqr49JtpsnUPCX5EKN31rWCXiTacFIIFjJkKuKPHzbJdOan0HPnP6/4nKZ4CirbBqsffW3oeFWRV3mPNACDrQ4RUtw6S1UplaYjTxZpi9ajfH6HdwuYThhkCPGJT/58woZxVg7QLfrdsLla+uyt4hSWe/mY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aRevS0vg; arc=none smtp.client-ip=209.85.222.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sZ7500T9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4492C4CEC5
-	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 15:46:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726069605;
-	bh=womKYaQjSu8aGgvVWg+xS1PfkqR9cOc/NsaBgvnc17U=;
-	h=Date:To:From:Subject:From;
-	b=sZ7500T9THq1DqUfOrcxEDmZtKcDf70mqCYXNurRKEpVZ/LRLRAZEIlBzCQnc3qFJ
-	 wSdJhDDDv1KsMyozyB7Kv8VWuecPhU9Ap8ikcheqIcrpRMKMZahpt8B3mD0YS3dra4
-	 oY1cJZa3LuC1HFOw1WbTloRzJxyZq/30F9w1TbXZ/ChtlQdwlusTIbCfGiBifQCs68
-	 OW+ryflI6l7ohnv4q8xTDehbe4iYNfPA//9v+zG1hCrVhpwwbEh1Ipal0I75yswruI
-	 nZhMD82VeWK9QWfyfB9lhfKCH+VT2clr77xC0Yb2LjasAKLKvI46M5uWlN1GtFqxhp
-	 52uVvZW6CeQ1w==
-Message-ID: <9abccc64-bffa-418e-82aa-b45e382a3b7a@kernel.org>
-Date: Wed, 11 Sep 2024 17:46:43 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aRevS0vg"
+Received: by mail-ua1-f54.google.com with SMTP id a1e0cc1a2514c-846b934981aso9222241.3
+        for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 09:36:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726072577; x=1726677377; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WOXwG9rzSbHF4+3vXYNmuuV9HXBKhiP8rgnDE421J6s=;
+        b=aRevS0vgv9RYtq8CPu9CwKgHjD1AIHF11Qes/UkslD5NiHWQBgOpFi3OddgEHxlaEL
+         xor5sBW54lyGLTxPmOIGKVAWzvvjk2hguvzduQjMjpqKFJ3pktHEgEX4C8vZyIzvBuJw
+         6WMpM2zbypZ47rgP1/6kUEpcDg9jx5D/q1L2pH2S2sPJSUynXVdVL634qyRT1aykzeie
+         hh15F9mRJN2b8DVpxvwwjP1eATWeqjB5HPja7FjMFPJZUrykBcl40vvJPYpth53wTbh6
+         jKsqBKQTEV0vculYTKer+UwtGrmGgulO3nLo+j31g0Dj/mp5Q3YrGWYIbgUYFaTUIB5y
+         arZQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726072577; x=1726677377;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=WOXwG9rzSbHF4+3vXYNmuuV9HXBKhiP8rgnDE421J6s=;
+        b=OstkfIWVk6B0cCia9nvNdlvJeQ0azGsVVPMI52i9xWO8+1PQYK/k7QppnkycflMzwb
+         W0nKei/S0tkr2Bt/PQgS9tsfdibak7/3hlAxL/BWoee+VIk3sNmS8/JRwsh/qBOXACdO
+         3v1dprVrYFlH9QgTaXQHpauq+4GqHsqebIiNtDqSBqmqmSwpzm/dxAwJUhUoOpLjIT02
+         4i6jb5WmB5HK0fQpgTszkbzNO5btBayDQhBWqXa9YeoP1FsKFkSyahsCeB4judDSVOlv
+         sLL+8dyOZrW/5LGOkrTxexbQEhC2/FIMKyo0OmNQSx8VtnGOnx0bY7bHIVnBENrrXjOR
+         t7zQ==
+X-Gm-Message-State: AOJu0YwGU+mzJ82WJNKtCqKUn5XkxbRaoxuyiSbROM7tyURZxSGLa1B2
+	Eb2ZmWbGkps/fcEjNibCbL2133FIiHU7SnxEtrzGmFB2g69G1krdwolrA1VqIDh7t4/1MFTqDAd
+	ccXa08lSbzrSHpL5r5diWqTLMKRs=
+X-Google-Smtp-Source: AGHT+IFlrEh4yFyBVh1p/AqSpyGkTMPgPiuXU+UkvPQ3zSNnv+fHH9D1ljnqs2FP5w0wjqF0f+aNSpBzV3e7cnkQCBs=
+X-Received: by 2002:a05:6122:318d:b0:4ef:65b6:f3b5 with SMTP id
+ 71dfb90a1353d-5032d51900fmr191489e0c.10.1726072577307; Wed, 11 Sep 2024
+ 09:36:17 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Content-Language: en-GB
-To: MPTCP Linux <mptcp@lists.linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [Weekly meetings] no meeting today
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20240911042425.978665-1-xiyou.wangcong@gmail.com> <81746edb-cf37-4c36-b23a-3aee2a6bd995@kernel.org>
+In-Reply-To: <81746edb-cf37-4c36-b23a-3aee2a6bd995@kernel.org>
+From: Cong Wang <xiyou.wangcong@gmail.com>
+Date: Wed, 11 Sep 2024 09:36:05 -0700
+Message-ID: <CAM_iQpUMahuiFtuw9N0B6nV1hdAVZpGezEyrBxLeOhJwn2RvQQ@mail.gmail.com>
+Subject: Re: [Patch net v2] mptcp: initialize sock lock with its own lockdep keys
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Cong Wang <cong.wang@bytedance.com>, 
+	syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com, 
+	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hello,
+On Wed, Sep 11, 2024 at 1:25=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
+> wrote:
+> > diff --git a/net/core/sock.c b/net/core/sock.c
+> > index 9abc4fe25953..747d7e479d69 100644
+> > --- a/net/core/sock.c
+> > +++ b/net/core/sock.c
+> > @@ -2325,6 +2325,8 @@ struct sock *sk_clone_lock(const struct sock *sk,=
+ const gfp_t priority)
+> >       }
+> >       sk_node_init(&newsk->sk_node);
+> >       sock_lock_init(newsk);
+> > +     if (prot->init_clone)
+> > +             prot->init_clone(newsk);
+> As mentioned on the v1, if the idea is to introduce a new hook here,
+> maybe it can replace the call to sock_lock_init() when this new function
+> pointer is defined. In this case, it could be renamed 'lock_init' or
+> 'init_lock'. But no need to send a new version for the moment, please
+> see below.
 
-Due to unexpected events, today's meeting has also just been cancelled.
+Two reasons why I don't think it is a better name:
 
-The meeting next week will also probably be cancelled due to the LPC. I
-guess the next one will then be on the 25th of September.
+1. It indicates we only initialize the lock, but the parameter we pass to i=
+t
+is struct sock pointer, not any lock pointer.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+2. We have to distinguish clone path from regular sock init path,
+otherwise people may interpret as if it were called for every initializatio=
+n.
+Hence, mentioning 'clone' in the name is very necessary.
 
+>
+> I suggest the following plan if that OK: because the initial report was
+> a false positive, there are modification of the core, and because we are
+> a bit in the middle of other things, I suggest not rushing up with this
+> patch. We can look at it in more details when the other things will calm
+> down, very likely in ~2 weeks, after LPC.
+
+Sure, no rush at all. Like I already mentioned, this patch should not targe=
+t
+-stable, possibly not even -net.
+
+Thanks.
