@@ -1,103 +1,80 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE27C1A7048;
-	Tue, 10 Sep 2024 19:07:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2103224CF
+	for <mptcp@lists.linux.dev>; Wed, 11 Sep 2024 03:03:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1725995230; cv=none; b=AgdoRLFKf3YmdyJ9ZUfBzaNuZdG6j+b5zLBzSgrRD0GCXEzsfjI5DpfIR22cTmU3rqhF0fksHpbCojk8Sjf5xUbG7B4ZG3FWLv9N8Tjmb363VdG0KMELxnJAwZnc0QhsZ2bKfJmhAiTijC+iDsYimMVNRm3X9Rd+vedV6Rzjo3I=
+	t=1726023785; cv=none; b=XKBiIQWONRMrNexDUnu5M+6pNxo3S8BX9E6w1Ql3UljhlzJCTIXfS6duTWIjjn3aq4gJ86KodAinJf51Fcny43wlnR7HCEHU12ejiiqanzcyc5uNcHb7rm5aRL1HfmC4fNwfG0huDmSvAaE1tl//s4sHjcdPIapACcXMe2ljaGg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1725995230; c=relaxed/simple;
-	bh=AqPu88ul23g8vqXHRoSXpzTMwp8/lrE6zGfqa11fWfg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=khVv3ikrcxqjBtKeDtJ5AITHB+ylyzI7njIkW7TFlywXeCAXzCsUfmP+1FgH30WtltxtCZnFxqeaZ6eDK6nNmYt2XSHjr9vOnPzvKsI/Mojlp0a/SbLiLRgQWgDlTWfliirZ3zctv2JhywGtHkzyPTWKH3+jnN4/DVL5+2ReKB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P6gtvCzG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726023785; c=relaxed/simple;
+	bh=tuVZJIfNQcbjugH+lD3xpEQVp35muFTBF8IPJaNWBqU=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I8sm3I8iGWexgjhfgCWR+B5HZbOUneMeqpodWWprWoerMfG9A/kILKVO90X0ovu2z3Sdq0cfJ3/VDxXgyWGdZn5dDKRQ/L84TCwdMmYTbMFGTIHcLdeEdOz/a/ClHnYBn4u1R2HFhFcuHjNZt9WyKJmNkKC3FqGTFge/7zViUoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Xf0GOK35; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P6gtvCzG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3B7FC4CECD;
-	Tue, 10 Sep 2024 19:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Xf0GOK35"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 463C8C4CEC3;
+	Wed, 11 Sep 2024 03:03:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1725995229;
-	bh=AqPu88ul23g8vqXHRoSXpzTMwp8/lrE6zGfqa11fWfg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=P6gtvCzGxO5Y0e2RnUdHCFSr5LLlSv72Sti7fTWVOcCjiyYu7Z3rE2JkM2BchUWyq
-	 ex0GOtesJtDIJgSqihW9VKI+41CA6Sv9vZ78fcujf5VPx4DOs1PxSbDXrW4iXDRhco
-	 lpjroNSHpdjyrD1Csw0i2ocNXdJ/x/Q4hSnN5RxdXw7zxSrwWl9nGOnrHwCWDqrhSk
-	 zgF6EFpMFIiK747wulc7srIf4RRY6UJIW/LlCt3D+2JWLePWeL/xozEBofhgrVv/tW
-	 YbBSMLLH6VHNdpl/fwN18ZH/KqWMDauqXIsIK6eRV4glLTZ4A31MAAZQSUPucXGVV7
-	 GTZIrAVi42ciA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 10 Sep 2024 21:06:38 +0200
-Subject: [PATCH net 3/3] selftests: mptcp: include net_helper.sh file
+	s=k20201202; t=1726023785;
+	bh=tuVZJIfNQcbjugH+lD3xpEQVp35muFTBF8IPJaNWBqU=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Xf0GOK35e/+2Y5G+XCXCbA7j+EAgPAfgNSrjPlP6DyevBxEsVAW87KZXg7r/wFrsA
+	 htWDDevjWZ02NdBAJGgsF7WLsmlKZR4W1/+EZgtyUfBFz6+BrGSsAYtjZAqUdfacEa
+	 b5xtcP0z4pZ08l33ayaI8QcbTS0vpvHNgpe6IzduCcT24UIIGto+ZMcjybnKSZg/mk
+	 zz/eusU2fTh6J+usOXubacj+2l6vMS0bbZ3Oe/to5FHBKsNjyWeHPsRB8sGZ6vhyA0
+	 7Eu63zkzUFQVZ1/KBvuWVS7lUMA0piGdZNrTcensGdraC/D5/KCHHKelTSdGVI7mLz
+	 8i1dGjH+l31fg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 0/5] add mptcp_subflow bpf_iter
+Date: Wed, 11 Sep 2024 11:02:54 +0800
+Message-ID: <cover.1726023577.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240910-net-selftests-mptcp-fix-install-v1-3-8f124aa9156d@kernel.org>
-References: <20240910-net-selftests-mptcp-fix-install-v1-0-8f124aa9156d@kernel.org>
-In-Reply-To: <20240910-net-selftests-mptcp-fix-install-v1-0-8f124aa9156d@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1211; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=AqPu88ul23g8vqXHRoSXpzTMwp8/lrE6zGfqa11fWfg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm4JjRLyUOkbW8YPrnCLArXrvqiNJsK74wn5pqZ
- 22BnQBxbF6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZuCY0QAKCRD2t4JPQmmg
- c5MAEACsaR2u56Kl4zwkCtHtRZoVuBNtTlAkyiz8Kd5q5r5VfGquW9QrY1vNnfWh75be7jiCbti
- zK74NRqcGRsd/Jn4Q13EDMx89iO9vN70/zrwyccUh8EkII8b2DaFSoP2t3fVnaPMrkyuzY6n/cc
- 35aOdBLHfLTSH1C9dqDe5ec01TWogsBQhUXVeLzXrOz4KWvlnQl7/AlNaJqxDCfluYzkjRat7Jv
- gGxg3X3BoFIAnis1dmsg22m4KaaCSLyXuxI8mkSkhfkbdTDHXf0/f0bK1NFU2p8ma6FYoztgodG
- bohV9lXpgfadEk/kGY6klDenQg9wNBYDQ80ScknfhZM29PoXtoF6ZO4hszgWyO9+29J7vX7cChY
- 0tuGew0vBbKUz4NMAzY3LGnBIH1bKPAzTXpr2BfCy9R9yFBk151Woi5tNUjaHW1sqGzAYkKM8/P
- u3zf6Eod9daIA1CYeJNAYX0SmmtX3xd59VIpEZ3yXjj9h/o7B52SjWQXf+2dHTsB9ruxvzlM6SU
- rMOkY7GDuxUiU7hltsMyg/AK+shRY7QuRW+9sKvoBQMnEfajS9rrn7P68qI21SHZzJjE9+AW6++
- 299uVSaZB0NTPUNG+KwLokMHaZxGn+vvqQsflLNC3k0C5VtA228hpYMu+N6u7nyabKyGqSjbvhj
- Hf2SKyDyYpVaBcA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Similar to the previous commit, the net_helper.sh file from the parent
-directory is used by the MPTCP selftests and it needs to be present when
-running the tests.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This file then needs to be listed in the Makefile to be included when
-exporting or installing the tests, e.g. with:
+v4:
+ - squash patch 1/5 and 3/5 in v3 together as Matt suggested.
+ - a new squash-to patch to drop mptcp_subflow_active declaration in
+   bpf_burst.
 
-  make -C tools/testing/selftests \
-          TARGETS=net/mptcp \
-          install INSTALL_PATH=$KSFT_INSTALL_PATH
+v3:
+ - drop bpf_iter__mptcp_subflow, __diag_push, __diag_pop and
+ __diag_ignore_all
+ - drop declarations for bpf kfuncs
 
-  cd $KSFT_INSTALL_PATH
-  ./run_kselftest.sh -c net/mptcp
+v2:
+ - update patch 1 as Martin and Andrii suggested.
+ - fix warnings and errors reported by MPTCP CI.
 
-Fixes: 1af3bc912eac ("selftests: mptcp: lib: use wait_local_port_listen helper")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This patch set adds a mptcp_subflow type bpf_iter, and self tests.
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index 68924053a1e6..5d796622e730 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -11,7 +11,7 @@ TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq
- 
- TEST_FILES := mptcp_lib.sh settings
- 
--TEST_INCLUDES := ../lib.sh
-+TEST_INCLUDES := ../lib.sh ../net_helper.sh
- 
- EXTRA_CLEAN := *.pcap
- 
+Geliang Tang (5):
+  bpf: Add mptcp_subflow bpf_iter
+  selftests/bpf: Add mptcp_subflow bpf_iter test prog
+  selftests/bpf: Add mptcp_subflow bpf_iter subtest
+  Squash to "mptcp: add sched_data helpers"
+  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+
+ net/mptcp/bpf.c                               | 54 ++++++++++--
+ net/mptcp/protocol.h                          |  2 -
+ .../testing/selftests/bpf/bpf_experimental.h  |  7 ++
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 85 +++++++++++++++++++
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  4 +
+ .../selftests/bpf/progs/mptcp_bpf_burst.c     |  1 -
+ .../selftests/bpf/progs/mptcp_bpf_iter.c      | 38 +++++++++
+ 7 files changed, 183 insertions(+), 8 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c
 
 -- 
-2.45.2
+2.43.0
 
