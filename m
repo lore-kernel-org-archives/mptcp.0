@@ -1,206 +1,230 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
+Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2E8A21C0DD1
-	for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 18:21:39 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E58D1BF7FE
+	for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 18:25:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726165300; cv=none; b=YFsosj820ju2LXI8ZqH+5pP59W6p/IYD5TLVswR0QfCJmDUE+nbDH/l0QElestOHfxGV2ni+Iug6B94I5jeF3yQ4pHyXs8fwWngUPvwmGxrgWg2cJmLs6QRqGL2vw4I+cmGVhbXvl/W1WJU9brjJh5c495GbbOuiXz5hZFHbKtc=
+	t=1726165506; cv=none; b=Pg9rVqKJudgtA56nTkA/qQZd/MMI3h0HMbFXbEcl9uO+htSR7ewCmNDHRCbJgJAVg9MVnBo7VphQ6ggdZhIU28Xkx61cjRibRJRwSB03ED9lQscv9Jnv8Gr38Xu/YmgMz81sLGIbaiCBAo0mLWwe1mmH62VdpBoRcwQkSIOndlo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726165300; c=relaxed/simple;
-	bh=p/gq/CW9SsZCWw/rFyaYSuBTd6L5vMoAbxTuysSTuuM=;
+	s=arc-20240116; t=1726165506; c=relaxed/simple;
+	bh=CqgKJoU70/zaNBXLmS7MX8pWs9zwUqIvB69GsgVsNas=;
 	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=kRZrmrttbKgUw9wiNaQ82UfSl5sFU/5U15LHPgmKWqI6Fig8br6Ee+lFhppw8fCl5jpF+nu8ldiglaflE3SHrvN7JgVo0idnaWzkFC+bKJuDE99YdIsVTEBuLBpenVApYMwpiT59aJfTLQoN3HahlXiMlOndBN+J6Irgj1MEOgE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=fMo5v32J; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	 To:Cc:Content-Type; b=IO9LPoDKqxQMiafsS3f3FRcIrDR81esZVQ0WCHndOMd08bB+ONqquXUGWRTnMYqwku2JmErIXC+ZPAKRFDje5CY0fkInHeMlPanDbuuG2oiW0cWoxhlBwJfBQiNxC/OUmtO2M41DXwx057/MopwDNWzF4fCLPlsK++EKjBATSSk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nF0GFVH3; arc=none smtp.client-ip=209.85.216.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fMo5v32J"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4581cec6079so40031cf.0
-        for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 11:21:39 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nF0GFVH3"
+Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2d87f34a650so919744a91.1
+        for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 11:25:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1726165298; x=1726770098; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1726165503; x=1726770303; darn=lists.linux.dev;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=ppRney/4jGQpW6a37DhJ8+kAp0WczyW6xnrNGRl/XJw=;
-        b=fMo5v32Jy9w4YlYf6m0Bsu35UgZqK+5HjdKQIhTh/8/6dRMbVtieFesqrOVjRa6GPn
-         oTxQg+oWe/OheHJmIpdY6hQR49OPhDnpK3+dkvSkcQZaFR0X0zxlFDxh3TWtaG0mI0fS
-         GlKcjtS5g18VemHrxA/AKuvwjLyJIwEw0IgpjEeAPmr/dhoMzkXBhj9GOynY5w6L7HnE
-         AI5YbuKXLpzY9oPHnFGjRVa33wkDBMdEWFmIdw03lhHFuWdLFkIvTdDXKLfsFj3QkLXX
-         JEseiC/nboykju81VGapEwIpYyuiY8O28TjZdJJJP6wL73j0YRptXdCbjUEaOi2DHhq3
-         4KQw==
+        bh=Xx4ywAvrCZYPD4eVBSgg3GbZmRWxGgFxGIcgKq1xC+4=;
+        b=nF0GFVH3Qdj4zvTnJd4HfGy84tTdTFZDzCca/ZyWBpNJEwOoNshn136edWrnYnCvsa
+         cfzFt+brU3qsZcQvGxAEdv1g/EiTHTkqWsdxPsnL25qTmBvueKyo9jbRY7QhqHHutRWJ
+         WlyDpPzgzaXKtFE80BOLOGajPqtf30eZYckRyM9LiXkl1Yj7tMfufQhaLD3N4J81XOHZ
+         LLlPZ68vCM9tfn7fTf0TPsFXXq0pJ0Dena1q68EB/v1UqFl7Ra0UKsDzZ2eif1q2Bdb/
+         PLMh3Otnqa98ojGmtOlZb37vMjEL66w/SKguWBp17+lDHLWIwhcEBhMLt62FH8TQ4CuU
+         JMlw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726165298; x=1726770098;
+        d=1e100.net; s=20230601; t=1726165503; x=1726770303;
         h=content-transfer-encoding:cc:to:subject:message-id:date:from
          :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=ppRney/4jGQpW6a37DhJ8+kAp0WczyW6xnrNGRl/XJw=;
-        b=MnDWie9zffszt43C6eRKNicAeGakvPAUwSp6h84z16ZLdQdoRT1nsAlamBW89SgNR2
-         7DnFZ38TWknpTYItKMpzIZejDEGq0h7TPbNfsfHqEXizi367Nlf3mRyRR9TNrRsjeb5i
-         2ur/EF84oz/mfYOHP9ObmrlEvE1QqjdLJkSY7vOoTG/GHkwDVfjrZ8TlXQ+i/KR7ie1E
-         IjcDyvcStEs47cv39hT0qVcudAOOYDBoRAsAHnYz7EFYBLHrMM4IfkvWLejW3BGn0E0b
-         +b+/KRB/MDD4fLwTM4pQCOT/cUPKNEyCkTQUWxIA61vdS3qfcCAp/YMX7aY1zmmSg/e2
-         cHCw==
-X-Gm-Message-State: AOJu0YwmnLkqFGWYNvt5OeXHI4OKzXn8Um6nr4YD0S4UxWRzaoHcFlW2
-	+ez8EgSnFyQ3kk2WFYHM4tNaGwufjQNZLVXyhDMYMsM7oMDuHUbnzsrlUtMDj7hNF++5BJh3/Gh
-	cvU1dgBsRyJ3JJQDh+Iqm4CcX/6Lmibjiim5p
-X-Google-Smtp-Source: AGHT+IEiDUGqxZVfqgS2lhZx6D//y9/VnB7axc7qguCSr867pXQTVePOCTRxp3C6vdlwPdINoIgDAIvmR9uxhpniHM4=
-X-Received: by 2002:a05:622a:24f:b0:456:7d9f:2af8 with SMTP id
- d75a77b69052e-458645121e9mr3751071cf.7.1726165297692; Thu, 12 Sep 2024
- 11:21:37 -0700 (PDT)
+        bh=Xx4ywAvrCZYPD4eVBSgg3GbZmRWxGgFxGIcgKq1xC+4=;
+        b=iqudUIR85WMkyV0aPERyW79IcaGw0lzwxZOp7FPARBHAIJ3DwAPry4Un7dZ7WsLKij
+         aZ23M88d1mKHuFM1oCxWyGGhiSS3oVFNz/tlTyKTeJ8SewioknkCJRhum5WmPghodG3O
+         VzXggIrhK+0yB8nHOi7+qwWhU/saYPc7MVy9JttamhCV9g+mztt0WUrjcOaxKcQqfPHD
+         lJQKXOHn/+WFhmFq3UwHXwxefSdZm5vKoCGRqBoRynaCn05lWLmX/cVqmcw8VZEOdFNz
+         I/hxuYO1bKV8c11Hs5h8+xpIo2V0bNMZ2fp44nd7TkFSQkFrtrOV2OMprh+tkqUdmQtl
+         +Q7Q==
+X-Gm-Message-State: AOJu0YyUJJFl65RTSj4r2DhJRaByKBYvim53jcKnEkrKJMuKx2rxhMKi
+	Gbn0Pb5+OuZq1TI3H9tvn+OOes2QyMDWZkiEoDL9337oUz5f1qSJzzYJ7Wi7WrKugpOqEtew3wS
+	z3x+SMIXrcDVDCZpzwWU286GFLVA=
+X-Google-Smtp-Source: AGHT+IHvzcPyknydMfiYIEZ1M+ai1N0iMQd0+KlJbmGq9bHrJWaDfXL0p8iLCO3JQKPPk1o400N0yqoUYbEMMXful4w=
+X-Received: by 2002:a17:90a:2c0f:b0:2d8:25ce:e6e3 with SMTP id
+ 98e67ed59e1d1-2db6718d8b4mr18054090a91.5.1726165503593; Thu, 12 Sep 2024
+ 11:25:03 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20240912-net-next-fix-get_netdev_rx_queue_index-v1-1-d73a1436be8c@kernel.org>
- <CAHS8izOkpnLM_Uev79skrmdQjdOGwy_oYWV7xb3hNpSb=yYZ6g@mail.gmail.com> <73a104e0-d73f-4836-92fd-4bef415900d4@kernel.org>
-In-Reply-To: <73a104e0-d73f-4836-92fd-4bef415900d4@kernel.org>
-From: Mina Almasry <almasrymina@google.com>
-Date: Thu, 12 Sep 2024 11:21:23 -0700
-Message-ID: <CAHS8izMEzug_c+LYG3=tPq6ARQjsXQqCwkO+t0hPpWiivxTB1A@mail.gmail.com>
-Subject: Re: [PATCH net-next] memory-provider: fix compilation issue without SYSFS
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
-	Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
-	Kaiyuan Zhang <kaiyuanz@google.com>, Willem de Bruijn <willemb@google.com>, 
-	Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org
+References: <cover.1726132802.git.tanggeliang@kylinos.cn> <5e5b91efc6e06a90fb4d2440ddcbe9b55ee464be.1726132802.git.tanggeliang@kylinos.cn>
+In-Reply-To: <5e5b91efc6e06a90fb4d2440ddcbe9b55ee464be.1726132802.git.tanggeliang@kylinos.cn>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Thu, 12 Sep 2024 11:24:51 -0700
+Message-ID: <CAEf4BzaVzVhoqhzpq-FD5GGJT1wW5=LbZ4ADs2+NdLO5rcJMMw@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v5 1/5] bpf: Add mptcp_subflow bpf_iter
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org, 
+	Martin KaFai Lau <martin.lau@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
 
-On Thu, Sep 12, 2024 at 8:26=E2=80=AFAM Matthieu Baerts <matttbe@kernel.org=
-> wrote:
+On Thu, Sep 12, 2024 at 2:26=E2=80=AFAM Geliang Tang <geliang@kernel.org> w=
+rote:
 >
-> Hi Mina,
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> Thank you for your reply!
+> It's necessary to traverse all subflows on the conn_list of an MPTCP
+> socket and then call kfunc to modify the fields of each subflow. In
+> kernel space, mptcp_for_each_subflow() helper is used for this:
 >
-> On 12/09/2024 14:49, Mina Almasry wrote:
-> > On Thu, Sep 12, 2024 at 3:25=E2=80=AFAM Matthieu Baerts (NGI0)
-> > <matttbe@kernel.org> wrote:
-> >>
-> >> When CONFIG_SYSFS is not set, the kernel fails to compile:
-> >>
-> >>      net/core/page_pool_user.c:368:45: error: implicit declaration of =
-function 'get_netdev_rx_queue_index' [-Werror=3Dimplicit-function-declarati=
-on]
-> >>       368 |                 if (pool->slow.queue_idx =3D=3D get_netdev=
-_rx_queue_index(rxq)) {
-> >>           |                                             ^~~~~~~~~~~~~~=
-~~~~~~~~~~~
-> >>
-> >> When CONFIG_SYSFS is not set, get_netdev_rx_queue_index() is not defin=
-ed
-> >> as well. In this case, page_pool_check_memory_provider() cannot check
-> >> the memory provider, and a success answer can be returned instead.
-> >>
-> >
-> > Thanks Matthieu, and sorry about that.
-> >
-> > I have reproduced the build error and the fix resolves it. But...
-> >
-> >> Fixes: 0f9214046893 ("memory-provider: dmabuf devmem memory provider")
-> >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> >> ---
-> >>  net/core/page_pool_user.c | 4 ++++
-> >>  1 file changed, 4 insertions(+)
-> >>
-> >> diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-> >> index 48335766c1bf..a98c0a76b33f 100644
-> >> --- a/net/core/page_pool_user.c
-> >> +++ b/net/core/page_pool_user.c
-> >> @@ -353,6 +353,7 @@ void page_pool_unlist(struct page_pool *pool)
-> >>  int page_pool_check_memory_provider(struct net_device *dev,
-> >>                                     struct netdev_rx_queue *rxq)
-> >>  {
-> >> +#ifdef CONFIG_SYSFS
-> >>         struct net_devmem_dmabuf_binding *binding =3D rxq->mp_params.m=
-p_priv;
-> >>         struct page_pool *pool;
-> >>         struct hlist_node *n;
-> >> @@ -372,6 +373,9 @@ int page_pool_check_memory_provider(struct net_dev=
-ice *dev,
-> >>         }
-> >>         mutex_unlock(&page_pools_lock);
-> >>         return -ENODATA;
-> >> +#else
-> >> +       return 0;
-> >
-> > ...we can't assume success when we cannot check the memory provider.
-> > The memory provider check is somewhat critical; we rely on it to
-> > detect that the driver does not support memory providers or is not
-> > doing the right thing, and report that to the user. I don't think we
-> > can silently disable the check when the CONFIG_SYSFS is disabled.
-> > Please return -ENODATA or some other error here.
+>         mptcp_for_each_subflow(msk, subflow)
+>                 kfunc(subflow);
 >
-> I initially returned 0 to have the same behaviour as when
-> CONFIG_PAGE_POOL is not defined. But thanks to your explanations, I
-> understand it seems better to return -ENODATA here. Or another errno, to
-> let the userspace understanding there is a different error? I can send a
-> v2 after the 24h rate-limit period if you are OK with that.
+> But in the MPTCP BPF program, this has not yet been implemented. As
+> Martin suggested recently, this conn_list walking + modify-by-kfunc
+> usage fits the bpf_iter use case. So this patch adds a new bpf_iter
+> type named "mptcp_subflow" to do this and implements its helpers
+> bpf_iter_mptcp_subflow_new()/_next()/_destroy().
+>
+> Since these bpf_iter mptcp_subflow helpers are invoked in its selftest
+> in a ftrace hook for mptcp_sched_get_send(), it's necessary to register
+> them into a BPF_PROG_TYPE_TRACING type kfunc set together with other
+> two used kfuncs mptcp_subflow_active() and mptcp_subflow_set_scheduled().
+>
+> Then bpf_for_each() for mptcp_subflow can be used in BPF program like
+> this:
+>
+>         i =3D 0;
+>         bpf_rcu_read_lock();
+>         bpf_for_each(mptcp_subflow, subflow, msk) {
+>                 if (i++ >=3D MPTCP_SUBFLOWS_MAX)
+>                         break;
+>                 kfunc(subflow);
+>         }
+>         bpf_rcu_read_unlock();
+>
+> v2: remove msk->pm.lock in _new() and _destroy() (Martin)
+>     drop DEFINE_BPF_ITER_FUNC, change opaque[3] to opaque[2] (Andrii)
+> v3: drop bpf_iter__mptcp_subflow
+> v4: if msk is NULL, initialize kit->msk to NULL in _new() and check it in
+>     _next() (Andrii)
+>
+> Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/bpf.c | 57 ++++++++++++++++++++++++++++++++++++++++++++-----
+>  1 file changed, 52 insertions(+), 5 deletions(-)
 >
 
-Yes, -EOPNOTSUPP would be my preference here. I think it makes sense,
-we should not support memory-providers on configs where core can't
-verify that the driver did the right thing.
+Looks ok from setting up open-coded iterator things, but I can't speak
+for other aspects I mentioned below.
 
-[...]
-
-> > However, I'm looking at the definition of get_netdev_rx_queue_index()
-> > and at first glance I don't see anything there that is actually
-> > dependent on CONFIG_SYSFS. Can we do this instead? I have build-tested
-> > it and it resolves the build issue as well:
-> >
-> > ```
-> > diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queu=
-e.h
-> > index ac34f5fb4f71..596836abf7bf 100644
-> > --- a/include/net/netdev_rx_queue.h
-> > +++ b/include/net/netdev_rx_queue.h
-> > @@ -45,7 +45,6 @@ __netif_get_rx_queue(struct net_device *dev, unsigned=
- int rxq)
-> >         return dev->_rx + rxq;
-> >  }
-> >
-> > -#ifdef CONFIG_SYSFS
-> >  static inline unsigned int
-> >  get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
-> >  {
-> > @@ -55,7 +54,6 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *que=
-ue)
-> >         BUG_ON(index >=3D dev->num_rx_queues);
-> >         return index;
-> >  }
-> > -#endif
-> >  ```
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 6414824402e6..fec18e7e5e4a 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -201,9 +201,51 @@ static const struct btf_kfunc_id_set bpf_mptcp_fmodr=
+et_set =3D {
+>         .set   =3D &bpf_mptcp_fmodret_ids,
+>  };
 >
-> I briefly looked at taking this path when I saw what this helper was
-> doing, but then I saw all operations related to the received queues were
-> enabled only when CONFIG_SYSFS is set, see commit a953be53ce40
-> ("net-sysfs: add support for device-specific rx queue sysfs
-> attributes"). I understood from that it is better not to look at
-> dev->_rx or dev->num_rx_queues when CONFIG_SYSFS is not set. I'm not
-> very familiar to that part of the code, but it feels like removing this
-> #ifdef might be similar to the "return 0" I suggested: silently
-> disabling the check, no?
+> -__diag_push();
+> -__diag_ignore_all("-Wmissing-prototypes",
+> -                 "kfuncs which will be used in BPF programs");
+> +struct bpf_iter_mptcp_subflow {
+> +       __u64 __opaque[2];
+> +} __attribute__((aligned(8)));
+> +
+> +struct bpf_iter_mptcp_subflow_kern {
+> +       struct mptcp_sock *msk;
+> +       struct list_head *pos;
+> +} __attribute__((aligned(8)));
+> +
+> +__bpf_kfunc_start_defs();
+> +
+> +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow=
+ *it,
+> +                                          struct mptcp_sock *msk)
+> +{
+> +       struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> +
+> +       kit->msk =3D msk;
+> +       if (!msk)
+> +               return -EINVAL;
+> +
+> +       kit->pos =3D &msk->conn_list;
+> +       return 0;
+> +}
+> +
+> +__bpf_kfunc struct mptcp_subflow_context *
+> +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
+> +{
+> +       struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> +       struct mptcp_subflow_context *subflow;
+> +       struct mptcp_sock *msk =3D kit->msk;
+> +
+> +       if (!msk)
+> +               return NULL;
+> +
+> +       subflow =3D list_entry(kit->pos->next, struct mptcp_subflow_conte=
+xt, node);
+> +       if (!subflow || list_entry_is_head(subflow, &msk->conn_list, node=
+))
+
+it's a bit weird that you need both !subflow and list_entry_is_head().
+Can you have NULL subflow at all? But this is the question to
+msk->conn_list semantics.
+
+> +               return NULL;
+> +
+> +       kit->pos =3D &subflow->node;
+> +       return subflow;
+> +}
+> +
+> +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_su=
+bflow *it)
+> +{
+> +}
 >
-> I *think* it might be clearer to return an error when SYSFS is not set.
+>  __bpf_kfunc struct mptcp_subflow_context *
+>  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsign=
+ed int pos)
+> @@ -218,12 +260,15 @@ __bpf_kfunc bool bpf_mptcp_subflow_queues_empty(str=
+uct sock *sk)
+>         return tcp_rtx_queue_empty(sk);
+>  }
 >
+> -__diag_pop();
+> +__bpf_kfunc_end_defs();
+>
+>  BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
 
-FWIW it looks like commit e817f85652c1 ("xdp: generic XDP handling of
-xdp_rxq_info") reverted almost all the CONFIG_SYSFS checks set by
-commit a953be53ce40 ("net-sysfs: add support for device-specific rx
-queue sysfs attributes"), at least from a quick look.
+I'm not 100% sure, but I suspect you might need to specify
+KF_TRUSTED_ARGS here to ensure that `struct mptcp_sock *msk` is a
+valid owned kernel object. Other BPF folks might help to clarify this.
 
-But I understand your CI is probably very annoyed by the build
-failure. I would be happy to reviewed-by a patch with just the change
-to the error return value, and I can look into making this work with
-CONFIG_SYSFS after the merge window.
-
-
---=20
-Thanks,
-Mina
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
+> +BTF_ID_FLAGS(func, mptcp_subflow_active)
+>  BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+>  BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx_by_pos)
+> -BTF_ID_FLAGS(func, mptcp_subflow_active)
+>  BTF_ID_FLAGS(func, mptcp_set_timeout)
+>  BTF_ID_FLAGS(func, mptcp_wnd_end)
+>  BTF_ID_FLAGS(func, tcp_stream_memory_free)
+> @@ -241,6 +286,8 @@ static int __init bpf_mptcp_kfunc_init(void)
+>         int ret;
+>
+>         ret =3D register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
+> +       ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING,
+> +                                              &bpf_mptcp_sched_kfunc_set=
+);
+>         ret =3D ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS=
+,
+>                                                &bpf_mptcp_sched_kfunc_set=
+);
+>  #ifdef CONFIG_BPF_JIT
+> --
+> 2.43.0
+>
+>
