@@ -1,111 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E2E219F122
-	for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 09:54:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836FD1E51D;
+	Thu, 12 Sep 2024 10:25:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726134855; cv=none; b=VvKK1OuH/9oWFDEmJdPRnbo3uN9UlGPW3uE1KMSWJsjL7taFzG9k1KKCNjI6XFmqz5sZFGRl4nXS+eQfOj1EU4XVN7Rno0/7NNWWzPptw4JhubYTtbnspQM3OzcnSL8JMzi4Ou/ose2FT1D7vDbGRH5gKpBS4d6kZWK3lIXx1/c=
+	t=1726136742; cv=none; b=O41NiAwpM4/diSIc4CGiBiXm3UBc/v9un3ty0wg+oIduPzXy8siOlzt2SMbR6SmVJ66rt6o2r/N6VF1Q7Ux5fWlu0470Owgu09gmmkMAGB0tm9cS5+raL8epzSN0Zb3eijwkJAgcoJyEvgIfrWT7MAYVzOWVd24jh7Ala25rVsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726134855; c=relaxed/simple;
-	bh=FCFYNVFH0ZZvGH05hX6beLfcI1ZTgybT2b1l0FPr/JM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gyGTgMGS4PYlHnkCi3aL6mprXChqlYGqmQfLDS0uifxboCjvNBFImRGR2YgxvSI4uOP/eHK2Z19AOg3gSGGo0TWqlNdqSCDlxh35Bb+/Zq0JaXLN0MWZpTq7NqkuhXOtZinq2D8XL+2nuRpMO8hkvejZ1cxCA6tEXFqgGJO6wdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsRUd+wj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726136742; c=relaxed/simple;
+	bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=unTuLXDgz1erUvRG8ZHhAoTuNm0hl+73cEyyZZRKf3IyDFBcV2NYbPEF18npPnNN11TwXxESRG7txg/NGbskbBiqXHY9efEjQKzyH+h0bhdBvRT/Qrh7MzQpK7S7wA7zIE1psCB3CkoyMTnafu5ySc3OexRe2InKM8uau1Ndncc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7FqY+Fv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsRUd+wj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C66FC4CEC3;
-	Thu, 12 Sep 2024 09:54:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7FqY+Fv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D2FC4CEC3;
+	Thu, 12 Sep 2024 10:25:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726134854;
-	bh=FCFYNVFH0ZZvGH05hX6beLfcI1ZTgybT2b1l0FPr/JM=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=JsRUd+wjtqnXrmXWnWC9kLWcMGZcdd04Pr84fGv7n8J+KYX1MA0X2EvtI5lyCn0tR
-	 DLkHRwLIBSxlpyvIXJJoRNCPD7lZcsz6y5GleKN9bK9EmLMEzM7YiCHr+pWJpYifhJ
-	 c+QfjAy62eFxTwkXpjkfzyJgoUgzCVWVRxps04sQS2VBJzOZHzxZsm2AwSamq1QW4F
-	 YEm7RbSCZnEczeaz5sL1gF9y2oq4l7eJQKtS+t6Q24nnQU7qrEWyykC/Im7LuWlNWY
-	 3EL7og19Ze/CUr+C4JcktWYhNHWmuKB5gm0n1IpkeFOwPBkq36x61398hYfbbfuVgN
-	 esKt31wwL6udA==
-Message-ID: <f0eeee36-1e8b-4a5e-a64c-ceda3fa50861@kernel.org>
-Date: Thu, 12 Sep 2024 11:54:12 +0200
+	s=k20201202; t=1726136741;
+	bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
+	h=From:Date:Subject:To:Cc:From;
+	b=t7FqY+FvUxu5OXhh7crKNG3iZ69w6gsY11E4Fc4nnFrRyZP3v72IrJDFe786PvFXN
+	 yaMuaf6O+ecwbn5MM1NAxHZtFEBtmy4wp0D4QHEXxaXvj2dQIlzAvYdY77pai42aHL
+	 9ykfpxzIwQvOWWcQFQMzUXOoWXJIknJLTvK6IS5vLpzMCbLCpz+CgPfbe6yJOI4/oA
+	 +3VZagcKlzkWs609XgXKeknvjAhbiJAg0juPYMte6VqTL+KjMD1PDnES/nBMWgj+Wu
+	 ECfm+prS4CL5x5sLfpqOV1pAXGJtpin7+tlfC+YvtihO1jF/LoTMTx+dvZyDT7r44g
+	 s2/gzx7wmzc5g==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Thu, 12 Sep 2024 12:25:29 +0200
+Subject: [PATCH net-next] memory-provider: fix compilation issue without
+ SYSFS
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 0/5] add mptcp_subflow bpf_iter
-Content-Language: en-GB
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1726132802.git.tanggeliang@kylinos.cn>
- <0b731f42-6061-f819-7e7f-b1cd5cba7c2c@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <0b731f42-6061-f819-7e7f-b1cd5cba7c2c@gmail.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+Message-Id: <20240912-net-next-fix-get_netdev_rx_queue_index-v1-1-d73a1436be8c@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAJjB4mYC/zWNwQrCMBBEf6Xs2YUkFqH9FZEQm7HdS9QkLYHSf
+ +8ieJjDG5g3OxVkQaGx2yljkyLvpGAvHU1LSDNYojI543ozWMcJVdMqv6TxjOq1iNh8bv67YoW
+ XFNE4WHPto30ONxdIZZ8MHfyO7vR30OM4TmV5KWuCAAAA
+To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
+ Mina Almasry <almasrymina@google.com>, 
+ Willem de Bruijn <willemb@google.com>, 
+ Pavel Begunkov <asml.silence@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.1
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1752; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm4sGib91L7eitagSjw9kzYEQxKTG4nYn9I3RM0
+ ZQGJMyTVQuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZuLBogAKCRD2t4JPQmmg
+ cy/zEACpAeui9HGTi1xdx8pVB8E+XEFoUDJUe31hBfp+Nx7GDqwWDHYqOTxyN50HA7vX/H4/K2h
+ djQAXjz62oMzcvKiE7HnQMRi5vBQ4MRCmRR8AO0A8dowTrZXWYnnk1gKX1mt8iiMr02Jl5lBU3M
+ iLivXq3dcrGyh9/fWKx89ZVZ3X0U88oYgjAjwurtjTfCungTHwbdpDcO/kBqmnoqLzHBrZqalu5
+ 8RERGJlG9gvUR1L1s92iYujaMQk8qd9e85bIkXFO+nmpe4uiqhit/iiUpHLfO731iBcvAA6DWxU
+ Mb19OPpLtu+/tBBVJj6swvaOn/fg2nuVF4uj8hvHTnZEetq7btHOKhJZNXxze1QDInWFUmIjpEU
+ 1rbe7PjHAeXsAogJWaE+rxvxC2SNpwGjZ2SiKlXdwciNpGFC5b5wBt9TCiZtpkkCLIaOr1/fP+J
+ Vva9D1jNWF8qvLPHZbUUdL7PqJsV3UC6C08byd1GDWTsDQ68fgpm/Z8o5pzGI2AU31FbQB0iGg6
+ BH5InEpyH7MDBbTNV+x9Pa+0w8QTFovsy7Ph2YluH+MhSOJBbYXyq26Ccq1g/+rKNR84UeCB4xB
+ c1UWnZvjIcPtHDu1dG2vP8ei2pzNzxgoU/d2D7LZ+C7S6euNE2iHdkpbHNtNDM9WHDVD9ZNQDn3
+ dGN8srlZ9HhXrIg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+When CONFIG_SYSFS is not set, the kernel fails to compile:
 
-On 12/09/2024 11:52, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/10828370093
+     net/core/page_pool_user.c:368:45: error: implicit declaration of function 'get_netdev_rx_queue_index' [-Werror=implicit-function-declaration]
+      368 |                 if (pool->slow.queue_idx == get_netdev_rx_queue_index(rxq)) {
+          |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~
 
-Please ignore, it is due to an issue upstream. I'm on it.
+When CONFIG_SYSFS is not set, get_netdev_rx_queue_index() is not defined
+as well. In this case, page_pool_check_memory_provider() cannot check
+the memory provider, and a success answer can be returned instead.
 
-Cheers,
-Matt
+Fixes: 0f9214046893 ("memory-provider: dmabuf devmem memory provider")
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/core/page_pool_user.c | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
+index 48335766c1bf..a98c0a76b33f 100644
+--- a/net/core/page_pool_user.c
++++ b/net/core/page_pool_user.c
+@@ -353,6 +353,7 @@ void page_pool_unlist(struct page_pool *pool)
+ int page_pool_check_memory_provider(struct net_device *dev,
+ 				    struct netdev_rx_queue *rxq)
+ {
++#ifdef CONFIG_SYSFS
+ 	struct net_devmem_dmabuf_binding *binding = rxq->mp_params.mp_priv;
+ 	struct page_pool *pool;
+ 	struct hlist_node *n;
+@@ -372,6 +373,9 @@ int page_pool_check_memory_provider(struct net_device *dev,
+ 	}
+ 	mutex_unlock(&page_pools_lock);
+ 	return -ENODATA;
++#else
++	return 0;
++#endif
+ }
+ 
+ static void page_pool_unreg_netdev_wipe(struct net_device *netdev)
+
+---
+base-commit: 3cfb5aa10cb78571e214e48a3a6e42c11d5288a1
+change-id: 20240912-net-next-fix-get_netdev_rx_queue_index-a1034d1b962a
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
