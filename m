@@ -1,116 +1,119 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 836FD1E51D;
-	Thu, 12 Sep 2024 10:25:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CAA1339BC
+	for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 10:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726136742; cv=none; b=O41NiAwpM4/diSIc4CGiBiXm3UBc/v9un3ty0wg+oIduPzXy8siOlzt2SMbR6SmVJ66rt6o2r/N6VF1Q7Ux5fWlu0470Owgu09gmmkMAGB0tm9cS5+raL8epzSN0Zb3eijwkJAgcoJyEvgIfrWT7MAYVzOWVd24jh7Ala25rVsg=
+	t=1726137957; cv=none; b=JTjLLquZZt51112tXycARdbnCVvbKJji7dBHZh884a2WWfsKl5+bfx3jrxPk7S7dnEfoiWW75gk969/ojbeZG3cu9OTaPJBqBXEhLtMc2nbYs54aHbQzR+cBf7OkeGbGpc544FmyWTWosvJyws/FuoQEqYGT6kzIrwUK5CMjWSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726136742; c=relaxed/simple;
-	bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=unTuLXDgz1erUvRG8ZHhAoTuNm0hl+73cEyyZZRKf3IyDFBcV2NYbPEF18npPnNN11TwXxESRG7txg/NGbskbBiqXHY9efEjQKzyH+h0bhdBvRT/Qrh7MzQpK7S7wA7zIE1psCB3CkoyMTnafu5ySc3OexRe2InKM8uau1Ndncc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7FqY+Fv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726137957; c=relaxed/simple;
+	bh=U624MWPFav9SlVzXGX54Jggaoa7iDKlupBsQUyb+btc=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=UnG33qL5yKWE4rIP4WXaj0/KkbG0PUXdUGe6HG0/sF2n75YVzNC4CeIDNqQVlH2vKpXL5C0dVAres5xZqAOrUNVSf3Y7F2cFTw4ugCrQZwdgvd134YgpP0iFTtv2H97vSYJMlI+bDkRKgWO8JJx9wJjYb9lOOpVr9LXuagp7kUs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TDbfqKCM; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7FqY+Fv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D2FC4CEC3;
-	Thu, 12 Sep 2024 10:25:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726136741;
-	bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=t7FqY+FvUxu5OXhh7crKNG3iZ69w6gsY11E4Fc4nnFrRyZP3v72IrJDFe786PvFXN
-	 yaMuaf6O+ecwbn5MM1NAxHZtFEBtmy4wp0D4QHEXxaXvj2dQIlzAvYdY77pai42aHL
-	 9ykfpxzIwQvOWWcQFQMzUXOoWXJIknJLTvK6IS5vLpzMCbLCpz+CgPfbe6yJOI4/oA
-	 +3VZagcKlzkWs609XgXKeknvjAhbiJAg0juPYMte6VqTL+KjMD1PDnES/nBMWgj+Wu
-	 ECfm+prS4CL5x5sLfpqOV1pAXGJtpin7+tlfC+YvtihO1jF/LoTMTx+dvZyDT7r44g
-	 s2/gzx7wmzc5g==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 12 Sep 2024 12:25:29 +0200
-Subject: [PATCH net-next] memory-provider: fix compilation issue without
- SYSFS
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TDbfqKCM"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7a95efbaf49so82506585a.3
+        for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 03:45:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726137955; x=1726742755; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=YRj8lNLif8nQu0anrkfA/bF9jp94pCNpth+WYBxBabQ=;
+        b=TDbfqKCMDPe5K3RsfeRk3qeEvEVjaHlZQrbaFJD8wqqq5tpZpNAMatKp1QH/ymAI24
+         tsJa08YdbA5Q8pe+bWK0yKpGs7Xwlibe1+Z/UWAkNnm75J4dDqwbQFWXvGD1FMNQ8ThX
+         DuRYoSxFwX+xPADEOF0zq5q3CCaimKWIa0bzDiHfW0KxOHSg3ISggFIt/R0I4XQJnrNe
+         exFy9xHr6eiuOCIgU5oNQaAoKaKqCJwuE2BRPns8lMeUNUTZdaC8eJSPTndRZuv6hu7F
+         KMpXSm4/TFDhFW3eK0qWa7oTYvuzSHvu/49/zJM/nyLzEh8CI1BouEwO8T6Ke2bbd0jI
+         bgVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726137955; x=1726742755;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=YRj8lNLif8nQu0anrkfA/bF9jp94pCNpth+WYBxBabQ=;
+        b=KGvAVkGf25HLToUb16KZpXzRI65FzO9OCKPFu+5QKsUWgahvbGjnWYXYiH+xMLsLF7
+         qvJ5ANIzQl5qZE9sk5t9Tk/BZYm6BR3LDK53yMowr0huHZGhC8e39PzMAclxiwyMYCF5
+         Ub3oYrfA0jT+isH1J+meziSE3h2RnhnGj81hGTC4FwuQQCK6eD/Q86NnNUwjrVb2mksE
+         QVdrCB5WdUnj/cr98/2+KBGQhTLDEzrlGcQMAi8sKHqeG9px4vnsw6Xryyr8KjwQedVI
+         T4s5KRhoDDuAeaz5KxU+vN6m+9Oo5cuZYoQ4+3LCJpISsMlCYq0bL5yYWb/TUx8Erdaf
+         iUqA==
+X-Gm-Message-State: AOJu0YzbULVJcooy+Cb1bNgPSMNFgnQtMFNuZS/kdWfP9gyF+HTCYLVv
+	nzVntN44BBn+yq9HDFxW2U0IhYX7G+P4bakuXiyDJPx0/5Ri4IuofH3o
+X-Google-Smtp-Source: AGHT+IGNA+Bv31tKX15Tgtv0nFnnJBtmu+TxD4cz35bjpYDbSQUIV/94OEV7b4XgV3x36aIRcmDunQ==
+X-Received: by 2002:a05:620a:44c4:b0:7a9:bc9b:b5d with SMTP id af79cd13be357-7a9e5ee5524mr386402185a.11.1726137954912;
+        Thu, 12 Sep 2024 03:45:54 -0700 (PDT)
+Received: from [127.0.0.1] ([74.235.135.241])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7a9a794557asm522878485a.1.2024.09.12.03.45.54
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 12 Sep 2024 03:45:54 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1726132802.git.tanggeliang@kylinos.cn>
+References: <cover.1726132802.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v5 0/5] add mptcp_subflow bpf_iter
+Message-ID: <b83074bc-4407-abea-ef13-a1e7908b3126@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 12 Sep 2024 10:45:53 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20240912-net-next-fix-get_netdev_rx_queue_index-v1-1-d73a1436be8c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAJjB4mYC/zWNwQrCMBBEf6Xs2YUkFqH9FZEQm7HdS9QkLYHSf
- +8ieJjDG5g3OxVkQaGx2yljkyLvpGAvHU1LSDNYojI543ozWMcJVdMqv6TxjOq1iNh8bv67YoW
- XFNE4WHPto30ONxdIZZ8MHfyO7vR30OM4TmV5KWuCAAAA
-To: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Kaiyuan Zhang <kaiyuanz@google.com>, 
- Mina Almasry <almasrymina@google.com>, 
- Willem de Bruijn <willemb@google.com>, 
- Pavel Begunkov <asml.silence@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.1
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1752; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=oXbbTjOHGHmZtZvnO4Qfes2ALZT/UJIHdI3bDDQzfLQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm4sGib91L7eitagSjw9kzYEQxKTG4nYn9I3RM0
- ZQGJMyTVQuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZuLBogAKCRD2t4JPQmmg
- cy/zEACpAeui9HGTi1xdx8pVB8E+XEFoUDJUe31hBfp+Nx7GDqwWDHYqOTxyN50HA7vX/H4/K2h
- djQAXjz62oMzcvKiE7HnQMRi5vBQ4MRCmRR8AO0A8dowTrZXWYnnk1gKX1mt8iiMr02Jl5lBU3M
- iLivXq3dcrGyh9/fWKx89ZVZ3X0U88oYgjAjwurtjTfCungTHwbdpDcO/kBqmnoqLzHBrZqalu5
- 8RERGJlG9gvUR1L1s92iYujaMQk8qd9e85bIkXFO+nmpe4uiqhit/iiUpHLfO731iBcvAA6DWxU
- Mb19OPpLtu+/tBBVJj6swvaOn/fg2nuVF4uj8hvHTnZEetq7btHOKhJZNXxze1QDInWFUmIjpEU
- 1rbe7PjHAeXsAogJWaE+rxvxC2SNpwGjZ2SiKlXdwciNpGFC5b5wBt9TCiZtpkkCLIaOr1/fP+J
- Vva9D1jNWF8qvLPHZbUUdL7PqJsV3UC6C08byd1GDWTsDQ68fgpm/Z8o5pzGI2AU31FbQB0iGg6
- BH5InEpyH7MDBbTNV+x9Pa+0w8QTFovsy7Ph2YluH+MhSOJBbYXyq26Ccq1g/+rKNR84UeCB4xB
- c1UWnZvjIcPtHDu1dG2vP8ei2pzNzxgoU/d2D7LZ+C7S6euNE2iHdkpbHNtNDM9WHDVD9ZNQDn3
- dGN8srlZ9HhXrIg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When CONFIG_SYSFS is not set, the kernel fails to compile:
+Hi Geliang,
 
-     net/core/page_pool_user.c:368:45: error: implicit declaration of function 'get_netdev_rx_queue_index' [-Werror=implicit-function-declaration]
-      368 |                 if (pool->slow.queue_idx == get_netdev_rx_queue_index(rxq)) {
-          |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~
+Thank you for your modifications, that's great!
 
-When CONFIG_SYSFS is not set, get_netdev_rx_queue_index() is not defined
-as well. In this case, page_pool_check_memory_provider() cannot check
-the memory provider, and a success answer can be returned instead.
+Our CI did some validations and here is its report:
 
-Fixes: 0f9214046893 ("memory-provider: dmabuf devmem memory provider")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/core/page_pool_user.c | 4 ++++
- 1 file changed, 4 insertions(+)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): mptcp_connect_mmap =F0=9F=94=B4
+- KVM Validation: btf (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/108283=
+70091
 
-diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
-index 48335766c1bf..a98c0a76b33f 100644
---- a/net/core/page_pool_user.c
-+++ b/net/core/page_pool_user.c
-@@ -353,6 +353,7 @@ void page_pool_unlist(struct page_pool *pool)
- int page_pool_check_memory_provider(struct net_device *dev,
- 				    struct netdev_rx_queue *rxq)
- {
-+#ifdef CONFIG_SYSFS
- 	struct net_devmem_dmabuf_binding *binding = rxq->mp_params.mp_priv;
- 	struct page_pool *pool;
- 	struct hlist_node *n;
-@@ -372,6 +373,9 @@ int page_pool_check_memory_provider(struct net_device *dev,
- 	}
- 	mutex_unlock(&page_pools_lock);
- 	return -ENODATA;
-+#else
-+	return 0;
-+#endif
- }
- 
- static void page_pool_unreg_netdev_wipe(struct net_device *netdev)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8e5f73626f7f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D889689
 
----
-base-commit: 3cfb5aa10cb78571e214e48a3a6e42c11d5288a1
-change-id: 20240912-net-next-fix-get_netdev_rx_queue_index-a1034d1b962a
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
