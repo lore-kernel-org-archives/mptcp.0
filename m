@@ -1,35 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CC821BB6A0;
-	Wed, 11 Sep 2024 23:20:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DD2AC22EE5;
+	Thu, 12 Sep 2024 03:06:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726096845; cv=none; b=GxVeXkjU+Fq/atxevTIpORdL5qYf1TC8R+rtMjEvcy9RAP6Xq5q5dt+CwnUMmflrevHp+uxfyWZjIY25d0V9SYSHP2zg50hqIBTYX4T6mYBlMIi7qlnHymAusqdZgTZ449e9hCVOrknB1+9xbXE2GzBBuUDU+Z6nAXId+JCoAVM=
+	t=1726110372; cv=none; b=u1MeZl9UkN27/CK/piKXA6qmz0SvWHWFJp8fgSvlzMUOKQtV+0v87gD0Jbmrjl7NmW76pIviVYL0SJhDKwxoxMEU7EXTI/MEsRwjT8uG2W9gx9QoZ6GHFIdlpijSmKAXYFfWLwIBvatsACVLIXaSyfWwXM8BkkKP08+2scHPOrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726096845; c=relaxed/simple;
-	bh=xoeaEsUH4Gbw86lnyllWO3ymn3uzNxvFhzCkvRXqd+U=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=H3CRZCLXr5a6K71Khly5pi1FGOFP9PzyBkeTFE+QKbi31MBsIxsJyh9p2njVAS22clr7WndhJkyblcayAwGTd+lDXlUxC9dZyCiJEAfimnxSDvORhoniT+Ca84X8eV1NOH40qnAiPJsaX1+hPAyyqTKKXQqMW7X6u+M6w95zjO4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZjuPVQZb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726110372; c=relaxed/simple;
+	bh=0YdpvGTczmIbRkZk+V7qWJYh5oR6u9o2xOsH6ZmNXXw=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=QUx7m5t1QjR4OB6FM1SwgqOD2TusIhpFtgPDSYIUpmESNXdfh/zA5UywwQhjar3qQKKjxZWAcH81PIbzCvGzSuo19C7/xUi9K2ERHjW89934RGpptf95qTrzkjYkrg5yiqnCJnPte3f36wli8SbwyczFnXXKpmu6ZqL0lUj9JSQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fGmNITUo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZjuPVQZb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C446C4CEC0;
-	Wed, 11 Sep 2024 23:20:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fGmNITUo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 88997C4CEC0;
+	Thu, 12 Sep 2024 03:06:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726096844;
-	bh=xoeaEsUH4Gbw86lnyllWO3ymn3uzNxvFhzCkvRXqd+U=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=ZjuPVQZbgIymAz3FeMIpwl3wl8mEpI+zZdL8Pm/UTJEego+gEOXwcJ1xU9ewzE+yD
-	 pZTM3HtdD7N7dBXe7LHPci0SgW0IaAzFjFJdtRP1n75l9Cu+DMEvVI9KuTdZipZoXd
-	 XQNmsuqbtXnH9Aig/LvKJbpGVbqtxZshG97bJ89aPdUOgh8WKO4H0DOJ10PpRWPMqK
-	 JE9PX2DgiJVtCru1RrwAaFjOo+IJpBmcUvkJKqoNleTbrRZbVX/WwqeaZCPx39N86y
-	 xT0SIZsSFUx4WpGSRyH/T1ccrTPwYVwwqyfbCMR8HWNs/3x3KZ6GUsCwOS/QnTiNOW
-	 XpJrjRYk3sPTQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0263806656;
-	Wed, 11 Sep 2024 23:20:46 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1726110371;
+	bh=0YdpvGTczmIbRkZk+V7qWJYh5oR6u9o2xOsH6ZmNXXw=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=fGmNITUogNiddUa8fMEm/Du/GPFk+ZI6fQZZBg28vmUuxWvK/iuNg/o9lckWeVQaP
+	 mwafMe0sLeDTbbrKZIoiiOwi13skYVkEXE5mN+LLR89DS/mMc3TrZMRGRkFigqHNpn
+	 RFbDfjyzuLWK9TcqX4kV3iypo39Xgb19U0SCRpNGDnxQtb/wiKinhOJtoUF9l0fTRB
+	 1o0s6/C/D0mwy1IIPe38XDA+eK75DdQhMIysVYq4GG4fJzdQTehdODV9so3/mWNQym
+	 +3ttizTB4ePj5v9dBT2FL4VNMjuFAXIQR3M2O3lfndL6r9Teiz234D+0L+zwa3+LU3
+	 9Q/cimbbmsq2w==
+Message-ID: <914e4b84caae7fc14ace9dc6e82a6f94e4cdd4dc.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 1/5] bpf: Add mptcp_subflow bpf_iter
+From: Geliang Tang <geliang@kernel.org>
+To: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, bpf
+	 <bpf@vger.kernel.org>, Martin KaFai Lau <martin.lau@kernel.org>
+Date: Thu, 12 Sep 2024 11:06:05 +0800
+In-Reply-To: <CAEf4BzamHdsUnRJN1sVA2rrotug8dFOrSUdE6GZAaF83nU58Og@mail.gmail.com>
+References: <cover.1725946276.git.tanggeliang@kylinos.cn>
+	 <026dce3d6903ad189e4b0518a64b60c910e660c0.1725946276.git.tanggeliang@kylinos.cn>
+	 <CAEf4BzamHdsUnRJN1sVA2rrotug8dFOrSUdE6GZAaF83nU58Og@mail.gmail.com>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,50 +79,198 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/3] mptcp: fallback to TCP after 3 MPC drop +
- cache
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172609684550.1105624.18253068127743198847.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Sep 2024 23:20:45 +0000
-References: <20240909-net-next-mptcp-fallback-x-mpc-v1-0-da7ebb4cd2a3@kernel.org>
-In-Reply-To: <20240909-net-next-mptcp-fallback-x-mpc-v1-0-da7ebb4cd2a3@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- dsahern@kernel.org, corbet@lwn.net, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org
 
-Hello:
+Hi Andrii,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Mon, 09 Sep 2024 22:09:20 +0200 you wrote:
-> The SYN + MPTCP_CAPABLE packets could be explicitly dropped by firewalls
-> somewhere in the network, e.g. if they decide to drop packets based on
-> the TCP options, instead of stripping them off.
+On Wed, 2024-09-11 at 14:00 -0700, Andrii Nakryiko wrote:
+> On Mon, Sep 9, 2024 at 10:37 PM Geliang Tang <geliang@kernel.org>
+> wrote:
+> > 
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > It's necessary to traverse all subflows on the conn_list of an
+> > MPTCP
+> > socket and then call kfunc to modify the fields of each subflow. In
+> > kernel space, mptcp_for_each_subflow() helper is used for this:
+> > 
+> >         mptcp_for_each_subflow(msk, subflow)
+> >                 kfunc(subflow);
+> > 
+> > But in the MPTCP BPF program, this has not yet been implemented. As
+> > Martin suggested recently, this conn_list walking + modify-by-kfunc
+> > usage fits the bpf_iter use case. So this patch adds a new bpf_iter
+> > type named "mptcp_subflow" to do this and implements its helpers
+> > bpf_iter_mptcp_subflow_new()/_next()/_destroy().
+> > 
+> > Then bpf_for_each() for mptcp_subflow can be used in BPF program
+> > like
+> > this:
+> > 
+> >         bpf_rcu_read_lock();
+> >         bpf_for_each(mptcp_subflow, subflow, msk)
+> >                 kfunc(subflow);
+> >         bpf_rcu_read_unlock();
+> > 
+> > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/bpf.c | 47 +++++++++++++++++++++++++++++++++++++++++++--
+> > --
+> >  1 file changed, 43 insertions(+), 4 deletions(-)
+> > 
 > 
-> The idea of this series is to fallback to TCP after 3 SYN+MPC drop
-> (patch 2). If the connection succeeds after the fallback, it very likely
-> means a blackhole has been detected. In this case (patch 3), MPTCP can
-> be disabled for a certain period of time, 1h by default. If after this
-> period, MPTCP is still blocked, the period is doubled. This technique is
-> inspired by the one used by TCP FastOpen.
+> Not sure why, but only this patch made it to the BPF mailing list?
+> Did
+> you cc bpf@vger on all patches?
+
+This patch is for "mptcp-next" [1], it depends on the "new MPTCP
+subflow subtest" which is under review on the bpf list. We will send it
+to the bpf list very soon.
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1726023577.git.tanggeliang@kylinos.cn/
+
 > 
-> [...]
+> > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> > index 6414824402e6..350672e24a3d 100644
+> > --- a/net/mptcp/bpf.c
+> > +++ b/net/mptcp/bpf.c
+> > @@ -201,9 +201,48 @@ static const struct btf_kfunc_id_set
+> > bpf_mptcp_fmodret_set = {
+> >         .set   = &bpf_mptcp_fmodret_ids,
+> >  };
+> > 
+> > -__diag_push();
+> > -__diag_ignore_all("-Wmissing-prototypes",
+> > -                 "kfuncs which will be used in BPF programs");
+> > +struct bpf_iter_mptcp_subflow {
+> > +       __u64 __opaque[2];
+> > +} __attribute__((aligned(8)));
+> > +
+> > +struct bpf_iter_mptcp_subflow_kern {
+> > +       struct mptcp_sock *msk;
+> > +       struct list_head *pos;
+> > +} __attribute__((aligned(8)));
+> > +
+> > +__bpf_kfunc_start_defs();
+> > +
+> > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
+> > bpf_iter_mptcp_subflow *it,
+> > +                                          struct mptcp_sock *msk)
+> > +{
+> > +       struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+> > +
+> > +       if (!msk)
+> > +               return -EINVAL;
+> 
+> you still need to initialize at least kit->msk to NULL to prevent
+> next
+> implementation below doing the wrong thing
+> 
+> keep in mind, iterator constructor returning error doesn't prevent
+> BPF
+> program from still calling next() and destroy(), so implementation
+> has
+> to set iterator state such that next can return NULL if iterator was
+> never successfully initialized
+> 
 
-Here is the summary with links:
-  - [net-next,1/3] mptcp: export mptcp_subflow_early_fallback()
-    https://git.kernel.org/netdev/net-next/c/65b02260a0e0
-  - [net-next,2/3] mptcp: fallback to TCP after SYN+MPC drops
-    https://git.kernel.org/netdev/net-next/c/6982826fe5e5
-  - [net-next,3/3] mptcp: disable active MPTCP in case of blackhole
-    https://git.kernel.org/netdev/net-next/c/27069e7cb3d1
+I'll move "kit->msk = msk;" earlier like this:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+{
+        struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
 
+        kit->msk = msk;
+        if (!msk)
+                return -EINVAL;
+
+        kit->pos = &msk->conn_list;
+        return 0;
+}
+
+> pw-bot: cr
+> 
+> > +
+> > +       kit->msk = msk;
+> > +       kit->pos = &msk->conn_list;
+> > +       return 0;
+> > +}
+> > +
+> > +__bpf_kfunc struct mptcp_subflow_context *
+> > +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
+> > +{
+> > +       struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+> > +       struct mptcp_subflow_context *subflow;
+> > +       struct mptcp_sock *msk = kit->msk;
+> > +
+> 
+> you should check if (!msk) early here, before accessing kit->pos-
+> >next below
+> 
+> > +       subflow = list_entry((kit->pos)->next, struct
+> > mptcp_subflow_context, node);
+> 
+> nit: why () around kit->pos?
+> 
+> > +       if (!msk || list_entry_is_head(subflow, &msk->conn_list,
+> > node))
+> 
+> as I mentioned, !msk check seems too late. Maybe list_entry_is_head()
+> is a bit too late as well?
+
+We can use list_is_last() to check kit->pos earlier. But here we use
+list_entry_is_head(), it should be after list_entry().
+
+I'll move "if (!msk)" check earlier like this:
+
+{
+        struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+        struct mptcp_subflow_context *subflow;
+        struct mptcp_sock *msk = kit->msk;
+
+        if (!msk)
+                return NULL;
+
+        subflow = list_entry(kit->pos->next, struct
+mptcp_subflow_context, node);
+        if (!subflow || list_entry_is_head(subflow, &msk->conn_list,
+node))
+                return NULL;
+
+        kit->pos = &subflow->node;
+        return subflow;
+}
+
+Thanks,
+-Geliang
+
+> 
+> > +               return NULL;
+> > +
+> > +       kit->pos = &subflow->node;
+> > +       return subflow;
+> > +}
+> > +
+> > +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
+> > bpf_iter_mptcp_subflow *it)
+> > +{
+> > +}
+> > 
+> >  __bpf_kfunc struct mptcp_subflow_context *
+> >  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data,
+> > unsigned int pos)
+> > @@ -218,7 +257,7 @@ __bpf_kfunc bool
+> > bpf_mptcp_subflow_queues_empty(struct sock *sk)
+> >         return tcp_rtx_queue_empty(sk);
+> >  }
+> > 
+> > -__diag_pop();
+> > +__bpf_kfunc_end_defs();
+> > 
+> >  BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+> >  BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+> > --
+> > 2.43.0
+> > 
+> > 
 
