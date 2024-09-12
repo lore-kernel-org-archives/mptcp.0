@@ -1,240 +1,213 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6227E1BAEF0
-	for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 15:19:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B84044C8F;
+	Thu, 12 Sep 2024 15:26:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726154376; cv=none; b=RVRYrgC2EON4UTOdthr+5MER0me0z/0EslpIQ9juCdTRPv5H/WhRA22/Qyh0PaF+Ph8nSID3b6TIJz27+A49BVZ6UtijzHS6bneoPK1iPo/byCqSl9F5QEBmrpHc/XydDU4unXVxZV1IOB3z4GQ//Wv1P5L8ksGOZs3WF92s7o0=
+	t=1726154774; cv=none; b=TLbTnTGtlIWqi3d4vqc0hHMVFaraNnlG5JcO5KNM1eroNHDKP1OGTIh7jxvPcE2RePnuvdTx4Z3pG7CCrCOTnTsuPxESCgEo/9NqYznr7BxwIBz9U4WljhoynqacDKXASsfzsXwNqiSaC/6RM+jmqXEIjHYVHoQtUeGADdSy83E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726154376; c=relaxed/simple;
-	bh=AyN+ANVQFTnMp5X80VgP5QvvUuU5T0xdI29S2OHwLk4=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=tj0zXrgaxqZy2PmqqPNZ6x6rpWEryQEbMJCb3R4XXWmXcOb5KhwJDToJc2PR3nCQPkYGdlMIdvTtqc5Z6VKHKtiOYq6e/RCRTlC2PcPSUOwk7t+BANMDpmqAUY1P5SJ15KyfSG0qDvz7FuP9oHzl+DM/LsW6IYVRxK2KgWULAeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=student.unisi.it; spf=pass smtp.mailfrom=student.unisi.it; dkim=pass (2048-bit key) header.d=student.unisi.it header.i=@student.unisi.it header.b=BkAHQ/z+; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=student.unisi.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=student.unisi.it
+	s=arc-20240116; t=1726154774; c=relaxed/simple;
+	bh=eT5iKufiEqBrOOHnVVD75u4spQv2bu9zWq9lPSq8HXQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kJFZPeDBme2cs801sPs+f97uARdrrbML8YMqr4AwqPtqaizSPBftpDjCVnknGZ6XOnEE1ZnYGPRWZ3OK/iLBr1o5TJLaNcNaNaKNqjk839BVIWmJqRGzdmFfyOsbgCygjqkye+OuQztSTV2GQEBG6mBFQVavZ+Ug0A+Ehqow6Tg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a2/oqNWI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=student.unisi.it header.i=@student.unisi.it header.b="BkAHQ/z+"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-206aee40676so10250405ad.0
-        for <mptcp@lists.linux.dev>; Thu, 12 Sep 2024 08:19:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=student.unisi.it; s=google; t=1726154370; x=1726759170; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=v0rReUhwoO9avj3WvS1VoAe30OjdZSea9g+ajAajjA0=;
-        b=BkAHQ/z+Ice8j13uGt4uxyvX9MyWQLbVvNpUKTtD8eGtqFKZ5xk1KhJ835azCKUOus
-         LuTTb1SEcHXmeSO0Ev1SUSELiX6J3ercmaObZQtZHh57IkJozsicrHczfLfmTItnKoy9
-         NxG3OveXpKIvUCaPJEgeGUkIxBDN5QYGIZ4Z1H5pOnwXkITZlwsQmK6lLzPZePp6BFgo
-         FrJDIujVAjFaRQMRZ90u/bnl2zj4LoHiO9GeVl0wku0f5DG0NO8QyDki04i304XCEGDR
-         SL8XuZuJkXEUPxA6o6asLTwJrHBY7lC6OfVKnUT6F+4FyYkNdOabUv0oXxgD0khCHGBI
-         HALw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1726154370; x=1726759170;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=v0rReUhwoO9avj3WvS1VoAe30OjdZSea9g+ajAajjA0=;
-        b=IIWeL67glzjTrzCmVjo6nJs2WWMobek6y7zKOZb+xToBJNJX3oPVaaO8aWHFpxFiy3
-         CK1H9WPhgGo7LYSq3Qb+nDxrPtUPXzOxHjZp8wuvD++tX3NhIJOPZR03mjlBIzfBzCX4
-         2VCNPUAinVpyNVvhFpEA+dw+twHHuoXEyxIkBHuOR8QHnSQVtfoOrKI6FLmZlNMKVNvV
-         DgXIe3QwSgWEZ4YPPwPwn/NJDQFzUz3rPEi19hsRfpzE4o3eYImbqZT6/s60ph60RJYW
-         mywgX1Fqe3u46YnSu2JatmA7XufKuJF15kap++DfQ+1DpBsD/gZve436zZszhAKDfRr0
-         f7WQ==
-X-Gm-Message-State: AOJu0YxkDnKafmgBWrrPjtXavLJWuNaTdd2inCFYX70UkxMVzWwl9bb4
-	5b98jdYKkCpCYKLlLXX72DvkoCjArg8NUvQJXeqGWUG3pPGPKMhy6XIT5N/wgXT9ZDDHTTWcK7a
-	l4dQvNfOegRXeHXJwhMb3p7RUidLkeNVnB9/UePO+pGLc/pJMZ+tCNJeh0OGQmz8xLbNs06AmOn
-	tKMgL3NOdfktKFXRAW60Hx/c2NQEUejt70Lw==
-X-Google-Smtp-Source: AGHT+IHP5eueMVStGSbVlsMY0gWbkjibNwGTth+/zWEcfwOkmZHKsVJ5TX9BOYkHiwzcE5qnm0beuhKZQantKML1Cf8=
-X-Received: by 2002:a17:903:1cf:b0:205:6566:cb07 with SMTP id
- d9443c01a7336-2076e34806bmr30295215ad.17.1726154370212; Thu, 12 Sep 2024
- 08:19:30 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a2/oqNWI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1DF6AC4CEC3;
+	Thu, 12 Sep 2024 15:26:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726154773;
+	bh=eT5iKufiEqBrOOHnVVD75u4spQv2bu9zWq9lPSq8HXQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=a2/oqNWImsRF63TtKZfRJokrnQh4veCjTbq8hYaoS9r9/Yla+QR4K3v5VSPGCCS0i
+	 +yoIRYu5jYInrsMx4sav4baIgWZoq2sBsmviRHLGnm/HKuIgMAgA8GLOp4ipAeJZZC
+	 3ZhR/LjYn8m1a1NLPKFYxeMmnGPmZzKhbmtHxqy/CIbNjMpwZy9HdPz9hMAlpBZAjl
+	 g62bFol1VIR/rCH2bMlqFDbj7IOQlltbhGCbDfPggFVZ0spBs+f/vLCm6Hf6ynSBX2
+	 6Yu4zhB7Bq2QHE4aLFsinS9rgN5mIoyQ8YO4jzFEC+1wabGY8125ICWZFUwZWav4PN
+	 dilesEWC9lkOg==
+Message-ID: <73a104e0-d73f-4836-92fd-4bef415900d4@kernel.org>
+Date: Thu, 12 Sep 2024 17:26:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <CAOU6Dw9xnP2ha8Csj47_zQQEHg7_FUrgVRW+CrTon-aPLokKog@mail.gmail.com>
- <45634fda-f0d0-4bc7-99a3-97bb979d0494@kernel.org> <CAOU6Dw9doa_aH8bzLmUxQjFrxn3ThHunDKEzXFmdEcE1w+5CmA@mail.gmail.com>
- <8f355da2-5667-412b-b3fd-1ce8f7571fa8@kernel.org> <CAOU6Dw-P_RRcVJqf2bGY=d8Vsas+H-9Y0tWLRmyTuFxA+5wsMw@mail.gmail.com>
- <CAOU6Dw8j5hhWeXc9dXYW_BKr7WYC-1_-7HfeP31f8vDYhZ5dmg@mail.gmail.com> <023b7d8e-6793-45f8-94b4-51a043d7a114@kernel.org>
-In-Reply-To: <023b7d8e-6793-45f8-94b4-51a043d7a114@kernel.org>
-From: ROSHITH SEBASTIAN <roshith.sebastian@student.unisi.it>
-Date: Thu, 12 Sep 2024 17:19:17 +0200
-Message-ID: <CAOU6Dw_hFnE2zY9=m9skt0j5+SWAh7BwKck6HH2jSaOvme97DQ@mail.gmail.com>
-Subject: Re: mptcpd Usersapce PM
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
-X-Gm-Unisi: student.unisi.it
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next] memory-provider: fix compilation issue without
+ SYSFS
+Content-Language: en-GB
+To: Mina Almasry <almasrymina@google.com>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Kaiyuan Zhang <kaiyuanz@google.com>,
+ Willem de Bruijn <willemb@google.com>,
+ Pavel Begunkov <asml.silence@gmail.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20240912-net-next-fix-get_netdev_rx_queue_index-v1-1-d73a1436be8c@kernel.org>
+ <CAHS8izOkpnLM_Uev79skrmdQjdOGwy_oYWV7xb3hNpSb=yYZ6g@mail.gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <CAHS8izOkpnLM_Uev79skrmdQjdOGwy_oYWV7xb3hNpSb=yYZ6g@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hello Matt,
+Hi Mina,
 
-I am able to see that the local and remote addresses are different, my mistake.
-Thank you for the explanation regarding the ID.
+Thank you for your reply!
 
-The issue that I am facing now is that the additional local addresses
-associated with the hosts are not getting announced so that subflows
-can be created. I tried the codes in both addr_adv and sspi to
-understand how to announce the local addresses. On trying to print the
-addresses being passed on creating a new connection, the server passes
-random IPs (changes on each run) which do not have any interface.
+On 12/09/2024 14:49, Mina Almasry wrote:
+> On Thu, Sep 12, 2024 at 3:25 AM Matthieu Baerts (NGI0)
+> <matttbe@kernel.org> wrote:
+>>
+>> When CONFIG_SYSFS is not set, the kernel fails to compile:
+>>
+>>      net/core/page_pool_user.c:368:45: error: implicit declaration of function 'get_netdev_rx_queue_index' [-Werror=implicit-function-declaration]
+>>       368 |                 if (pool->slow.queue_idx == get_netdev_rx_queue_index(rxq)) {
+>>           |                                             ^~~~~~~~~~~~~~~~~~~~~~~~~
+>>
+>> When CONFIG_SYSFS is not set, get_netdev_rx_queue_index() is not defined
+>> as well. In this case, page_pool_check_memory_provider() cannot check
+>> the memory provider, and a success answer can be returned instead.
+>>
+> 
+> Thanks Matthieu, and sorry about that.
+> 
+> I have reproduced the build error and the fix resolves it. But...
+> 
+>> Fixes: 0f9214046893 ("memory-provider: dmabuf devmem memory provider")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>>  net/core/page_pool_user.c | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/net/core/page_pool_user.c b/net/core/page_pool_user.c
+>> index 48335766c1bf..a98c0a76b33f 100644
+>> --- a/net/core/page_pool_user.c
+>> +++ b/net/core/page_pool_user.c
+>> @@ -353,6 +353,7 @@ void page_pool_unlist(struct page_pool *pool)
+>>  int page_pool_check_memory_provider(struct net_device *dev,
+>>                                     struct netdev_rx_queue *rxq)
+>>  {
+>> +#ifdef CONFIG_SYSFS
+>>         struct net_devmem_dmabuf_binding *binding = rxq->mp_params.mp_priv;
+>>         struct page_pool *pool;
+>>         struct hlist_node *n;
+>> @@ -372,6 +373,9 @@ int page_pool_check_memory_provider(struct net_device *dev,
+>>         }
+>>         mutex_unlock(&page_pools_lock);
+>>         return -ENODATA;
+>> +#else
+>> +       return 0;
+> 
+> ...we can't assume success when we cannot check the memory provider.
+> The memory provider check is somewhat critical; we rely on it to
+> detect that the driver does not support memory providers or is not
+> doing the right thing, and report that to the user. I don't think we
+> can silently disable the check when the CONFIG_SYSFS is disabled.
+> Please return -ENODATA or some other error here.
 
-Considering an example with sspi plugin, the mptcpd plugin operation
-sspi_new_connection calls sspi_interface_info_lookup which returns
-null as the address passed (in below example - 218.91.0.0) to it does
-not exist. Hence, the code to inform the kernel about the additional
-local addresses is skipped. To add to this, the remote address passed
-by the server in the function is 0.0.0.0. I do not understand why a
-random IP along with 0.0.0.0, and not the local IP address 192.168.0.2
-is passed.
+I initially returned 0 to have the same behaviour as when
+CONFIG_PAGE_POOL is not defined. But thanks to your explanations, I
+understand it seems better to return -ENODATA here. Or another errno, to
+let the userspace understanding there is a different error? I can send a
+v2 after the 24h rate-limit period if you are OK with that.
 
-The output from both the client and server are given below:
+> If we disable devmem TCP for !CONFIG_SYSFS we should probably add
+> something to the docs saying this. I can do that in a follow up
+> change.
 
-Client:
+Good point, thank you.
 
-h1-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 10.0.0.1  netmask 255.0.0.0  broadcast 10.255.255.255
-        inet6 fe80::fc32:ffff:fe22:ccb4  prefixlen 64  scopeid 0x20<link>
-        ether fe:32:ff:22:cc:b4  txqueuelen 1000  (Ethernet)
-        RX packets 2208  bytes 166802 (166.8 KB)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 2283  bytes 6457403 (6.4 MB)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+> However, I'm looking at the definition of get_netdev_rx_queue_index()
+> and at first glance I don't see anything there that is actually
+> dependent on CONFIG_SYSFS. Can we do this instead? I have build-tested
+> it and it resolves the build issue as well:
+> 
+> ```
+> diff --git a/include/net/netdev_rx_queue.h b/include/net/netdev_rx_queue.h
+> index ac34f5fb4f71..596836abf7bf 100644
+> --- a/include/net/netdev_rx_queue.h
+> +++ b/include/net/netdev_rx_queue.h
+> @@ -45,7 +45,6 @@ __netif_get_rx_queue(struct net_device *dev, unsigned int rxq)
+>         return dev->_rx + rxq;
+>  }
+> 
+> -#ifdef CONFIG_SYSFS
+>  static inline unsigned int
+>  get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+>  {
+> @@ -55,7 +54,6 @@ get_netdev_rx_queue_index(struct netdev_rx_queue *queue)
+>         BUG_ON(index >= dev->num_rx_queues);
+>         return index;
+>  }
+> -#endif
+>  ```
 
-h1-eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 192.168.0.1  netmask 255.0.0.0  broadcast 192.255.255.255
-        inet6 fe80::dc07:48ff:fea3:a0e4  prefixlen 64  scopeid 0x20<link>
-        ether de:07:48:a3:a0:e4  txqueuelen 1000  (Ethernet)
-        RX packets 14  bytes 1116 (1.1 KB)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 11  bytes 866 (866.0 B)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+I briefly looked at taking this path when I saw what this helper was
+doing, but then I saw all operations related to the received queues were
+enabled only when CONFIG_SYSFS is set, see commit a953be53ce40
+("net-sysfs: add support for device-specific rx queue sysfs
+attributes"). I understood from that it is better not to look at
+dev->_rx or dev->num_rx_queues when CONFIG_SYSFS is not set. I'm not
+very familiar to that part of the code, but it feels like removing this
+#ifdef might be similar to the "return 0" I suggested: silently
+disabling the check, no?
 
-root@mpath-VirtualBox:/home/mpath/Python_Projects/MCTestBed# ip mptcp
-endpoint show
-192.168.0.1 id 1 subflow dev h1-eth1
+I *think* it might be clearer to return an error when SYSFS is not set.
 
-root@mpath-VirtualBox:/home/mpath/Python_Projects/MCTestBed#
-LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib
-/usr/local/libexec/mptcpd -d
-configuration.c:mptcpd_config_create() path manager plugin directory:
-/usr/local/lib/mpath_plugin
-configuration.c:mptcpd_config_create() default path manager plugin: sspi
-configuration.c:mptcpd_config_create() address flags: subflow,signal
-configuration.c:mptcpd_config_create() notify flags:
-existing,skip_link_local,skip_loopback
-configuration.c:mptcpd_config_create() plugins to load: sspi
-path_manager.c:family_appeared() "mptcp_pm" generic netlink family appeared
-path_manager.c:dump_addrs_callback() ID sync: 1 | 192.168.0.1
-MPTCP single-subflow-per-interface path manager initialized.
----------New Connection in sspi_new_connection
-Address : 10.0.0.1
-sspi_connection_established is unimplemented.
----------New Connection in sspi_new_connection
-Address : 10.0.0.1
-sspi_connection_established is unimplemented.
+> Matthieu, I'm happy to follow up with v2 of this fix if you don't have time.
+If you prefer to explore other ways than returning an error in
+page_pool_check_memory_provider() when SYSFS is not set, yes please do
+the follow-up if you don't mind. My main goal is to stop my CI to
+complain about that when compiling with 'make tinyconfig' + MPTCP :)
 
-Server:
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-h2-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 10.0.0.2  netmask 255.0.0.0  broadcast 10.255.255.255
-        inet6 fe80::b052:ff:fe3b:7c3d  prefixlen 64  scopeid 0x20<link>
-        ether b2:52:00:3b:7c:3d  txqueuelen 1000  (Ethernet)
-        RX packets 2284  bytes 6457473 (6.4 MB)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 2209  bytes 166872 (166.8 KB)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
-h2-eth1: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
-        inet 192.168.0.2  netmask 255.0.0.0  broadcast 192.255.255.255
-        inet6 fe80::282d:7bff:fe65:54f0  prefixlen 64  scopeid 0x20<link>
-        ether 2a:2d:7b:65:54:f0  txqueuelen 1000  (Ethernet)
-        RX packets 12  bytes 936 (936.0 B)
-        RX errors 0  dropped 0  overruns 0  frame 0
-        TX packets 14  bytes 1116 (1.1 KB)
-        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
-
-root@mpath-VirtualBox:/home/mpath/Python_Projects/MCTestBed# ip mptcp
-endpoint show
-192.168.0.2 id 1 signal dev h2-eth1
-
-root@mpath-VirtualBox:/home/mpath/Python_Projects/MCTestBed# LD_LIB
-RARY_PATH=$LD_LIBRARY_PATH:/usr/local/lib /usr/local/libexec/mptcpd -d
-configuration.c:mptcpd_config_create() path manager plugin directory:
-/usr/local/lib/mpath_plugin
-configuration.c:mptcpd_config_create() default path manager plugin: sspi
-configuration.c:mptcpd_config_create() address flags: subflow,signal
-configuration.c:mptcpd_config_create() notify flags:
-existing,skip_link_local,skip_loopback
-configuration.c:mptcpd_config_create() plugins to load: sspi
-path_manager.c:family_appeared() "mptcp_pm" generic netlink family appeared
-path_manager.c:dump_addrs_callback() ID sync: 1 | 192.168.0.2
-MPTCP single-subflow-per-interface path manager initialized.
-Unhandled MPTCP event: 15
----------New Connection in sspi_new_connection
-Address : 218.91.0.0
-No network interface with given IP address.
-Unable to track new connection
-sspi_connection_established is unimplemented.
----------New Connection in sspi_new_connection
-Address : 218.91.0.0
-No network interface with given IP address.
-Unable to track new connection
-sspi_connection_established is unimplemented.
-Untracked connection closed.
-Untracked connection closed.
-
-Thanks and Regards,
-Roshith Sebastian
-
-On Fri, 6 Sept 2024 at 17:30, Matthieu Baerts <matttbe@kernel.org> wrote:
->
-> Hi,
->
-> On 06/09/2024 16:58, ROSHITH SEBASTIAN wrote:
-> > I have been trying to create a PM using the plugins using the template
-> > already present in the page as a starting point.
-> > The following code snippet was inserted into the xxx_new_connection
-> > and xxx_connection_established functions to identify the remote and
-> > local addresses being passed to the function:
-> >
-> >     struct sockaddr_in *l_addr = (struct sockaddr_in *)laddr;
-> >     struct sockaddr_in *r_addr = (struct sockaddr_in *)raddr;
-> >     char *l_a = inet_ntoa(l_addr->sin_addr);
-> >     char *r_a = inet_ntoa(r_addr->sin_addr);
->
-> I don't think your issue is related to mptcpd: inet_ntoa() is
-> deprecated, and it is probably causing the issue here. See 'man inet_ntoa':
->
->   The inet_ntoa() function converts the Internet host address in, given
->   in network byte order, to a string in IPv4 dotted-decimal notation.
->   The string is returned in a statically allocated buffer, which
->   **subsequent calls will overwrite**.
->
-> (...)
->
-> > The function to create a subflow - mptcpd_pm_add_subflow, takes
-> > mptcpd_aid_t as a parameter. Can you also please let me know where I
-> > can find the documentation to identify which value has to be used
-> > here?
->
-> You need to provide the local and remote address ID you want to use. 0
-> correspond to the addresses of the initial subflow. Apart from this
-> special local address, you are free to use any ID with the other address
-> you want to use. When establishing a new subflow, each peer shares its
-> local address ID. The server can announce address, with an ID. When
-> sending a RM_ADDR, the ID corresponds to the local address being
-> removed, so the other peer to which address it corresponds.
->
-> The concept of ID is explained in more details in the RFC:
->
->
-> https://www.rfc-editor.org/rfc/rfc8684.html#name-associating-a-new-subflow-w
->
-> Cheers,
-> Matt
-> --
-> Sponsored by the NGI0 Core fund.
->
