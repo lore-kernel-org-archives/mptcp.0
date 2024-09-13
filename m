@@ -1,165 +1,401 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.11])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FF4318A6D6;
-	Fri, 13 Sep 2024 10:24:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.11
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 381306F2E3
+	for <mptcp@lists.linux.dev>; Fri, 13 Sep 2024 20:58:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726223093; cv=none; b=Add3ElKGQQ1Jw3JiCS/pzAfL0X2KQWm7Nc/+L85uA0pBNOzKL0/dO1hzMh9c0NjBA71ONvOTA9LpohasN7eIrEPZ0EH4wHt/WEZA82w6gDaMYbNCGwwUN9OlyzgB6CL5DfoMWVViQycFw/bEM9+11JtE0y+O07DHFoUZRSZ0+4k=
+	t=1726261089; cv=none; b=HBGnMGfZrcEtPbpek/PoP1xOGDdXmqvtKHZebHzD7jE+IJU+DhE5kMCf/CYREdQIbx6akfzSIq+uN7gp3L52uLEVJ4XR8aQvDkT+tyEi17k4fKV4eJ9Gr5eay/UcWbzpY7hqCzCPnB088c6Uxo2i0wWBjGe+v+831T0IfUXwpg8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726223093; c=relaxed/simple;
-	bh=bHWWspaeNRa1cb6JheJmd+M2tHxQzhIIig9KrFmdyQ0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Xykw8AbOaCx2+51rVzUT99EBKW2AIGdxdt6gtbUCXixzzu/P8gKjGa+kzJ7GZxjrt3gIiQx3rHMJ8LXTgpJ0ifPexuiTsBzR7lmujl+JymOFzngdvnMwD7kYxKgTz7EWkPZnrG1CoaDUdXQxkl+t8EcD6I+c7y93R0sxCeQd5uA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=WayrqcnU; arc=none smtp.client-ip=198.175.65.11
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1726261089; c=relaxed/simple;
+	bh=1c0L09Qx22mq/ZD5i5LJFCqAYGwzXGjmXQAMrwGv00A=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=Hw4Wf8v0wQYxmsQCWWM3C4OO/NIK8MeEZmn2OPSbQln7/sffsLRh4PEYb717Hb6g01tcETsyArH+6LHMuNrw1AjoCdUDHcJCYEFQZwMM3icuL1gEHBNp3D9Kt1Tuj/hq3HcI7rcTmKNvxf83t0GHDfCrnQ+I524sk4g9h3DX/uw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fXq5dw5g; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="WayrqcnU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1726223091; x=1757759091;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=bHWWspaeNRa1cb6JheJmd+M2tHxQzhIIig9KrFmdyQ0=;
-  b=WayrqcnUGU9PgvYCArwMIQcQFUokfGh4p6fN5TqSiC6yA47U7DNJ0Xwk
-   tWtNXGAcpx/Mj8f7OAAMsi3xkLg9dYdsRHTbw11qwI7lSYCbIqd+x8EnH
-   Q2uu1BusqdXscBKbrPkWF75OcCU6XjYyFVO3jFzu4/fxw8llextCjQNrM
-   fvjy6aXAs0PlLMJaSTs1+xacJDdAbOG78Xtsr6SCkYIuFGL0R4zk2jvlL
-   lonl+vA4yp/nxXv4XXevtLw9KWyV17nQ7vBmxriByPhRqoLr1hRBrvfxf
-   0HpuYzPQvWuvyBmsFFLnlLHBuRCbTE6tJCdz4JzoD+/6lecoGvCRK5sK5
-   Q==;
-X-CSE-ConnectionGUID: kwLYtD4zQfKjf7eL2wuJUw==
-X-CSE-MsgGUID: rq6fWXsGQZaD+HQPQVKO1Q==
-X-IronPort-AV: E=McAfee;i="6700,10204,11193"; a="35690850"
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="35690850"
-Received: from fmviesa006.fm.intel.com ([10.60.135.146])
-  by orvoesa103.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Sep 2024 03:24:50 -0700
-X-CSE-ConnectionGUID: yHtwFEMERayTnhuhGPKQGA==
-X-CSE-MsgGUID: JNXrs7VgRoada+4rMmiehQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.10,225,1719903600"; 
-   d="scan'208";a="67629738"
-Received: from lkp-server01.sh.intel.com (HELO 53e96f405c61) ([10.239.97.150])
-  by fmviesa006.fm.intel.com with ESMTP; 13 Sep 2024 03:24:48 -0700
-Received: from kbuild by 53e96f405c61 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1sp3Tp-0006Lf-2Y;
-	Fri, 13 Sep 2024 10:24:45 +0000
-Date: Fri, 13 Sep 2024 18:24:45 +0800
-From: kernel test robot <lkp@intel.com>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	mptcp@lists.linux.dev
-Subject: [mptcp:export 6/29] net/hsr/hsr_slave.c:74:22: error: no member
- named 'seqnr_lock' in 'struct hsr_priv'
-Message-ID: <202409131819.Lpi4A47e-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fXq5dw5g"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2d87a1f0791so1045909a91.2
+        for <mptcp@lists.linux.dev>; Fri, 13 Sep 2024 13:58:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1726261087; x=1726865887; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=XxPPwiDegDxin6YRoGsOSYyWMCa3hpbc7r/1/A2gOC4=;
+        b=fXq5dw5gbLCjJSuB9/KfCdVmMc3oJxpSwMifDHOhIkrAFvRPj6Fzmn5MJnc3Z07NIJ
+         Kq4eC1V5SMb1tz1oZPqtZgvRTOW92v7+Rw4eyNVuTqh9Tm7CwzvRGvDha5PFhpl4EnfI
+         M5bB19iL4nRzml17ZMqA/SsnH379rdGpfmEbjiQvibS0aEYMVcDLY7k3yjQE8QnK9ZAe
+         j7ST53umPbsvKXtZ+b32z56kPsIwCNL17V1PgsiWOk9PmuCUcyj6+5H7wVYfDsH2Y00j
+         pCMsGDibM1xkZcIS6tltnLqtHygq4M5LdE/77LJPpwz3i2JHHXZILulUlXB6YPBFD58O
+         S/dA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1726261087; x=1726865887;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=XxPPwiDegDxin6YRoGsOSYyWMCa3hpbc7r/1/A2gOC4=;
+        b=iGIP0GWjDP+lTGWqD+ZrvshwK60aUY7k8i66xu32+WrccyxnvQkQZwQ7IQrMDX9ZlA
+         Z156T2gqVY0WN+OPlkPo1F5HQh9+M+r4DCXTgmgeGHdU89esIR5M9jKDk6KtQyowXIC/
+         RoWFcxeyNQimB+aQnNcWKMF7nha+JjLCrsytNaEl+vx+8sEJgRbMtOOk7dIMJdGGHUWv
+         EorWgyR1Tp1RUWDEUSEvYLsO+ipdr9o7Aqe81BKEelslovkzsax2BXAlaqvxgQahNxZZ
+         OTcIwhEuc4PSP4MSzEg4x0xQ8Bre4bMOoaNQYsFM/YDNiL+0719OU5FeARmznBTT16kk
+         4D2Q==
+X-Gm-Message-State: AOJu0Yzmk+9Cc4yVglnpPctnWk3gUmwW+7/twtqi8S+V+arsmWEIYiyJ
+	1ImOCAhFTa0hO9sRiUvUfUhOxMibG9yw0/LGPvrDfkrUoRkvGWEIkE0NLJ63AuaX19oFZFafj/4
+	3oIJb3hGsqbeXmT0d20vGyqjIxLU=
+X-Google-Smtp-Source: AGHT+IF8emqpz1aElnbsUB7erdNF7dkR7N/GQv+i2foPBOZIA7YDFi7jRnjTZLok2rhiYunocyb+q571isv8OwN4BbM=
+X-Received: by 2002:a17:90a:12c4:b0:2d3:de40:d767 with SMTP id
+ 98e67ed59e1d1-2dbb9e22f1amr4995706a91.24.1726261087472; Fri, 13 Sep 2024
+ 13:58:07 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+References: <cover.1726132802.git.tanggeliang@kylinos.cn> <5e5b91efc6e06a90fb4d2440ddcbe9b55ee464be.1726132802.git.tanggeliang@kylinos.cn>
+ <CAEf4BzaVzVhoqhzpq-FD5GGJT1wW5=LbZ4ADs2+NdLO5rcJMMw@mail.gmail.com> <a9bd9aa00c702f98d86f5d7acd305cc477a4c91b.camel@kernel.org>
+In-Reply-To: <a9bd9aa00c702f98d86f5d7acd305cc477a4c91b.camel@kernel.org>
+From: Andrii Nakryiko <andrii.nakryiko@gmail.com>
+Date: Fri, 13 Sep 2024 13:57:55 -0700
+Message-ID: <CAEf4Bza4qtP5EVOk08XmGOjWgy1-671gciK5j5vg5Lr=5ggm0Q@mail.gmail.com>
+Subject: Re: [PATCH mptcp-next v5 1/5] bpf: Add mptcp_subflow bpf_iter
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org, 
+	Martin KaFai Lau <martin.lau@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   c5b5a7a0aee30449ff22ac8cca06d6d6d61dfa55
-commit: f9cd7819a1b49a8eaa14f5ca178290bdb4258133 [6/29] TopGit-driven merge of branches:
-config: i386-buildonly-randconfig-001-20240913 (https://download.01.org/0day-ci/archive/20240913/202409131819.Lpi4A47e-lkp@intel.com/config)
-compiler: clang version 18.1.8 (https://github.com/llvm/llvm-project 3b5b5c1ec4a3095ab096dd780e84d7ab81f3d7ff)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20240913/202409131819.Lpi4A47e-lkp@intel.com/reproduce)
+On Thu, Sep 12, 2024 at 9:04=E2=80=AFPM Geliang Tang <geliang@kernel.org> w=
+rote:
+>
+> Hi Andrii,
+>
+> On Thu, 2024-09-12 at 11:24 -0700, Andrii Nakryiko wrote:
+> > On Thu, Sep 12, 2024 at 2:26=E2=80=AFAM Geliang Tang <geliang@kernel.or=
+g>
+> > wrote:
+> > >
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > >
+> > > It's necessary to traverse all subflows on the conn_list of an
+> > > MPTCP
+> > > socket and then call kfunc to modify the fields of each subflow. In
+> > > kernel space, mptcp_for_each_subflow() helper is used for this:
+> > >
+> > >         mptcp_for_each_subflow(msk, subflow)
+> > >                 kfunc(subflow);
+> > >
+> > > But in the MPTCP BPF program, this has not yet been implemented. As
+> > > Martin suggested recently, this conn_list walking + modify-by-kfunc
+> > > usage fits the bpf_iter use case. So this patch adds a new bpf_iter
+> > > type named "mptcp_subflow" to do this and implements its helpers
+> > > bpf_iter_mptcp_subflow_new()/_next()/_destroy().
+> > >
+> > > Since these bpf_iter mptcp_subflow helpers are invoked in its
+> > > selftest
+> > > in a ftrace hook for mptcp_sched_get_send(), it's necessary to
+> > > register
+> > > them into a BPF_PROG_TYPE_TRACING type kfunc set together with
+> > > other
+> > > two used kfuncs mptcp_subflow_active() and
+> > > mptcp_subflow_set_scheduled().
+> > >
+> > > Then bpf_for_each() for mptcp_subflow can be used in BPF program
+> > > like
+> > > this:
+> > >
+> > >         i =3D 0;
+> > >         bpf_rcu_read_lock();
+> > >         bpf_for_each(mptcp_subflow, subflow, msk) {
+> > >                 if (i++ >=3D MPTCP_SUBFLOWS_MAX)
+> > >                         break;
+> > >                 kfunc(subflow);
+> > >         }
+> > >         bpf_rcu_read_unlock();
+> > >
+> > > v2: remove msk->pm.lock in _new() and _destroy() (Martin)
+> > >     drop DEFINE_BPF_ITER_FUNC, change opaque[3] to opaque[2]
+> > > (Andrii)
+> > > v3: drop bpf_iter__mptcp_subflow
+> > > v4: if msk is NULL, initialize kit->msk to NULL in _new() and check
+> > > it in
+> > >     _next() (Andrii)
+> > >
+> > > Suggested-by: Martin KaFai Lau <martin.lau@kernel.org>
+> > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > > ---
+> > >  net/mptcp/bpf.c | 57 ++++++++++++++++++++++++++++++++++++++++++++-
+> > > ----
+> > >  1 file changed, 52 insertions(+), 5 deletions(-)
+> > >
+> >
+> > Looks ok from setting up open-coded iterator things, but I can't
+> > speak
+> > for other aspects I mentioned below.
+> >
+> > > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> > > index 6414824402e6..fec18e7e5e4a 100644
+> > > --- a/net/mptcp/bpf.c
+> > > +++ b/net/mptcp/bpf.c
+> > > @@ -201,9 +201,51 @@ static const struct btf_kfunc_id_set
+> > > bpf_mptcp_fmodret_set =3D {
+> > >         .set   =3D &bpf_mptcp_fmodret_ids,
+> > >  };
+> > >
+> > > -__diag_push();
+> > > -__diag_ignore_all("-Wmissing-prototypes",
+> > > -                 "kfuncs which will be used in BPF programs");
+> > > +struct bpf_iter_mptcp_subflow {
+> > > +       __u64 __opaque[2];
+> > > +} __attribute__((aligned(8)));
+> > > +
+> > > +struct bpf_iter_mptcp_subflow_kern {
+> > > +       struct mptcp_sock *msk;
+> > > +       struct list_head *pos;
+> > > +} __attribute__((aligned(8)));
+> > > +
+> > > +__bpf_kfunc_start_defs();
+> > > +
+> > > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
+> > > bpf_iter_mptcp_subflow *it,
+> > > +                                          struct mptcp_sock *msk)
+> > > +{
+> > > +       struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> > > +
+> > > +       kit->msk =3D msk;
+> > > +       if (!msk)
+> > > +               return -EINVAL;
+> > > +
+> > > +       kit->pos =3D &msk->conn_list;
+> > > +       return 0;
+> > > +}
+> > > +
+> > > +__bpf_kfunc struct mptcp_subflow_context *
+> > > +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it)
+> > > +{
+> > > +       struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+> > > +       struct mptcp_subflow_context *subflow;
+> > > +       struct mptcp_sock *msk =3D kit->msk;
+> > > +
+> > > +       if (!msk)
+> > > +               return NULL;
+> > > +
+> > > +       subflow =3D list_entry(kit->pos->next, struct
+> > > mptcp_subflow_context, node);
+> > > +       if (!subflow || list_entry_is_head(subflow, &msk-
+> > > >conn_list, node))
+> >
+> > it's a bit weird that you need both !subflow and
+> > list_entry_is_head().
+> > Can you have NULL subflow at all? But this is the question to
+> > msk->conn_list semantics.
+>
+> Do you mean to return subflow regardless of whether subflow is NULL? If
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202409131819.Lpi4A47e-lkp@intel.com/
+Can you have a NULL subflow in the middle of the list and some more
+items after that? If yes, then you should *skip* NULL subflow.
 
-All errors (new ones prefixed by >>):
+But if the NULL subflow is always last, then do you even need
+list_entry_is_head() or list_is_last()?
 
->> net/hsr/hsr_slave.c:74:22: error: no member named 'seqnr_lock' in 'struct hsr_priv'
-      74 |                 spin_lock_bh(&hsr->seqnr_lock);
-         |                               ~~~  ^
-   net/hsr/hsr_slave.c:76:24: error: no member named 'seqnr_lock' in 'struct hsr_priv'
-      76 |                 spin_unlock_bh(&hsr->seqnr_lock);
-         |                                 ~~~  ^
-   2 errors generated.
+But ultimately, I have no idea what the data looks like, just
+double-check that the stopping condition is correct, that's all. Has
+nothing to do with BPF open-coded iterators.
 
+> so, we need to use list_is_last() instead of list_entry_is_head():
+>
+> {
+>     struct bpf_iter_mptcp_subflow_kern *kit =3D (void *)it;
+>
+>     if (!kit->msk || list_is_last(kit->pos, &kit->msk->conn_list))
+>             return NULL;
+>
+>     kit->pos =3D kit->pos->next;
+>     return list_entry(kit->pos, struct mptcp_subflow_context, node);
+> }
+>
+> Hope this is a better version.
 
-vim +74 net/hsr/hsr_slave.c
+ok, works for me as well
 
-451d8123f89791 Murali Karicheri          2020-07-22  23  
-f266a683a4804d Arvid Brodin              2014-07-04  24  static rx_handler_result_t hsr_handle_frame(struct sk_buff **pskb)
-51f3c605318b05 Arvid Brodin              2014-07-04  25  {
-f266a683a4804d Arvid Brodin              2014-07-04  26  	struct sk_buff *skb = *pskb;
-f266a683a4804d Arvid Brodin              2014-07-04  27  	struct hsr_port *port;
-451d8123f89791 Murali Karicheri          2020-07-22  28  	struct hsr_priv *hsr;
-f5dda315b63775 Murali Karicheri          2020-05-06  29  	__be16 protocol;
-51f3c605318b05 Arvid Brodin              2014-07-04  30  
-451d8123f89791 Murali Karicheri          2020-07-22  31  	/* Packets from dev_loopback_xmit() do not have L2 header, bail out */
-451d8123f89791 Murali Karicheri          2020-07-22  32  	if (unlikely(skb->pkt_type == PACKET_LOOPBACK))
-451d8123f89791 Murali Karicheri          2020-07-22  33  		return RX_HANDLER_PASS;
-451d8123f89791 Murali Karicheri          2020-07-22  34  
-f266a683a4804d Arvid Brodin              2014-07-04  35  	if (!skb_mac_header_was_set(skb)) {
-f266a683a4804d Arvid Brodin              2014-07-04  36  		WARN_ONCE(1, "%s: skb invalid", __func__);
-f266a683a4804d Arvid Brodin              2014-07-04  37  		return RX_HANDLER_PASS;
-51f3c605318b05 Arvid Brodin              2014-07-04  38  	}
-51f3c605318b05 Arvid Brodin              2014-07-04  39  
-f266a683a4804d Arvid Brodin              2014-07-04  40  	port = hsr_port_get_rcu(skb->dev);
-2b5b8251bc9fe2 Eric Dumazet              2020-02-03  41  	if (!port)
-2b5b8251bc9fe2 Eric Dumazet              2020-02-03  42  		goto finish_pass;
-451d8123f89791 Murali Karicheri          2020-07-22  43  	hsr = port->hsr;
-51f3c605318b05 Arvid Brodin              2014-07-04  44  
-f266a683a4804d Arvid Brodin              2014-07-04  45  	if (hsr_addr_is_self(port->hsr, eth_hdr(skb)->h_source)) {
-f266a683a4804d Arvid Brodin              2014-07-04  46  		/* Directly kill frames sent by ourselves */
-f266a683a4804d Arvid Brodin              2014-07-04  47  		kfree_skb(skb);
-f266a683a4804d Arvid Brodin              2014-07-04  48  		goto finish_consume;
-51f3c605318b05 Arvid Brodin              2014-07-04  49  	}
-51f3c605318b05 Arvid Brodin              2014-07-04  50  
-dcf0cd1cc58b8e George McCollister        2021-02-09  51  	/* For HSR, only tagged frames are expected (unless the device offloads
-dcf0cd1cc58b8e George McCollister        2021-02-09  52  	 * HSR tag removal), but for PRP there could be non tagged frames as
-dcf0cd1cc58b8e George McCollister        2021-02-09  53  	 * well from Single attached nodes (SANs).
-451d8123f89791 Murali Karicheri          2020-07-22  54  	 */
-ee1c2797728490 Peter Heise               2016-04-13  55  	protocol = eth_hdr(skb)->h_proto;
-dcf0cd1cc58b8e George McCollister        2021-02-09  56  
-dcf0cd1cc58b8e George McCollister        2021-02-09  57  	if (!(port->dev->features & NETIF_F_HW_HSR_TAG_RM) &&
-5055cccfc2d1cc Lukasz Majewski           2024-04-23  58  	    port->type != HSR_PT_INTERLINK &&
-dcf0cd1cc58b8e George McCollister        2021-02-09  59  	    hsr->proto_ops->invalid_dan_ingress_frame &&
-451d8123f89791 Murali Karicheri          2020-07-22  60  	    hsr->proto_ops->invalid_dan_ingress_frame(protocol))
-f266a683a4804d Arvid Brodin              2014-07-04  61  		goto finish_pass;
-51f3c605318b05 Arvid Brodin              2014-07-04  62  
-f266a683a4804d Arvid Brodin              2014-07-04  63  	skb_push(skb, ETH_HLEN);
-48b491a5cc7433 George McCollister        2021-05-24  64  	skb_reset_mac_header(skb);
-48b491a5cc7433 George McCollister        2021-05-24  65  	if ((!hsr->prot_version && protocol == htons(ETH_P_PRP)) ||
-48b491a5cc7433 George McCollister        2021-05-24  66  	    protocol == htons(ETH_P_HSR))
-48b491a5cc7433 George McCollister        2021-05-24  67  		skb_set_network_header(skb, ETH_HLEN + HSR_HLEN);
-48b491a5cc7433 George McCollister        2021-05-24  68  	skb_reset_mac_len(skb);
-451d8123f89791 Murali Karicheri          2020-07-22  69  
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  70  	/* Only the frames received over the interlink port will assign a
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  71  	 * sequence number and require synchronisation vs other sender.
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  72  	 */
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  73  	if (port->type == HSR_PT_INTERLINK) {
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06 @74  		spin_lock_bh(&hsr->seqnr_lock);
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  75  		hsr_forward_skb(skb, port);
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  76  		spin_unlock_bh(&hsr->seqnr_lock);
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  77  	} else {
-f266a683a4804d Arvid Brodin              2014-07-04  78  		hsr_forward_skb(skb, port);
-430d67bdcb04ee Sebastian Andrzej Siewior 2024-09-06  79  	}
-81ba6afd6e6443 Arvid Brodin              2014-07-04  80  
-f266a683a4804d Arvid Brodin              2014-07-04  81  finish_consume:
-f266a683a4804d Arvid Brodin              2014-07-04  82  	return RX_HANDLER_CONSUMED;
-81ba6afd6e6443 Arvid Brodin              2014-07-04  83  
-f266a683a4804d Arvid Brodin              2014-07-04  84  finish_pass:
-f266a683a4804d Arvid Brodin              2014-07-04  85  	return RX_HANDLER_PASS;
-81ba6afd6e6443 Arvid Brodin              2014-07-04  86  }
-81ba6afd6e6443 Arvid Brodin              2014-07-04  87  
+>
+> >
+> > > +               return NULL;
+> > > +
+> > > +       kit->pos =3D &subflow->node;
+> > > +       return subflow;
+> > > +}
+> > > +
+> > > +__bpf_kfunc void bpf_iter_mptcp_subflow_destroy(struct
+> > > bpf_iter_mptcp_subflow *it)
+> > > +{
+> > > +}
+> > >
+> > >  __bpf_kfunc struct mptcp_subflow_context *
+> > >  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data,
+> > > unsigned int pos)
+> > > @@ -218,12 +260,15 @@ __bpf_kfunc bool
+> > > bpf_mptcp_subflow_queues_empty(struct sock *sk)
+> > >         return tcp_rtx_queue_empty(sk);
+> > >  }
+> > >
+> > > -__diag_pop();
+> > > +__bpf_kfunc_end_defs();
+> > >
+> > >  BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
+> >
+> > I'm not 100% sure, but I suspect you might need to specify
+> > KF_TRUSTED_ARGS here to ensure that `struct mptcp_sock *msk` is a
+>
+> KF_TRUSTED_ARGS breaks the selftest in patch 2 [1]:
 
-:::::: The code at line 74 was first introduced by commit
-:::::: 430d67bdcb04ee8502c2b10dcbaced4253649189 net: hsr: Use the seqnr lock for frames received via interlink port.
+Please, for the next revision, CC bpf@vger.kernel.org on *all* patches
+in your series, so we don't have to search for the selftests in
+another mailing list.
 
-:::::: TO: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-:::::: CC: Jakub Kicinski <kuba@kernel.org>
+>
+> '''
+> libbpf: prog 'trace_mptcp_sched_get_send': BPF program load failed:
+> Invalid argument
+> libbpf: prog 'trace_mptcp_sched_get_send': -- BEGIN PROG LOAD LOG --
+> 0: R1=3Dctx() R10=3Dfp0
+> ; int BPF_PROG(trace_mptcp_sched_get_send, struct mptcp_sock *msk) @
+> mptcp_bpf_iter.c:13
+> 0: (79) r6 =3D *(u64 *)(r1 +0)
+> func 'mptcp_sched_get_send' arg0 has btf_id 28019 type STRUCT
+> 'mptcp_sock'
+> 1: R1=3Dctx() R6_w=3Dptr_mptcp_sock()
+> ; if (bpf_get_current_pid_tgid() >> 32 !=3D pid) @ mptcp_bpf_iter.c:17
+> 1: (85) call bpf_get_current_pid_tgid#14      ; R0_w=3Dscalar()
+> 2: (77) r0 >>=3D 32                     ;
+> R0_w=3Dscalar(smin=3D0,smax=3Dumax=3D0xffffffff,var_off=3D(0x0; 0xfffffff=
+f))
+> 3: (18) r1 =3D 0xffffb766c1684004       ;
+> R1_w=3Dmap_value(map=3Dmptcp_bp.bss,ks=3D4,vs=3D8,off=3D4)
+> 5: (61) r1 =3D *(u32 *)(r1 +0)          ;
+> R1_w=3Dscalar(smin=3D0,smax=3Dumax=3D0xffffffff,var_off=3D(0x0; 0xfffffff=
+f))
+> 6: (67) r1 <<=3D 32                     ;
+> R1_w=3Dscalar(smax=3D0x7fffffff00000000,umax=3D0xffffffff00000000,smin32=
+=3D0,sm
+> ax32=3Dumax32=3D0,var_off=3D(0x0; 0xffffffff00000000))
+> 7: (c7) r1 s>>=3D 32                    ;
+> R1_w=3Dscalar(smin=3D0xffffffff80000000,smax=3D0x7fffffff)
+> 8: (5d) if r0 !=3D r1 goto pc+39        ;
+> R0_w=3Dscalar(smin=3Dsmin32=3D0,smax=3Dumax=3Dumax32=3D0x7fffffff,var_off=
+=3D(0x0;
+> 0x7fffffff))
+> R1_w=3Dscalar(smin=3Dsmin32=3D0,smax=3Dumax=3Dumax32=3D0x7fffffff,var_off=
+=3D(0x0;
+> 0x7fffffff))
+> ; iter =3D 0; @ mptcp_bpf_iter.c:20
+> 9: (18) r8 =3D 0xffffb766c1684000       ;
+> R8_w=3Dmap_value(map=3Dmptcp_bp.bss,ks=3D4,vs=3D8)
+> 11: (b4) w1 =3D 0                       ; R1_w=3D0
+> 12: (63) *(u32 *)(r8 +0) =3D r1         ; R1_w=3D0
+> R8_w=3Dmap_value(map=3Dmptcp_bp.bss,ks=3D4,vs=3D8)
+> ; bpf_rcu_read_lock(); @ mptcp_bpf_iter.c:22
+> 13: (85) call bpf_rcu_read_lock#84967         ;
+> 14: (bf) r7 =3D r10                     ; R7_w=3Dfp0 R10=3Dfp0
+> ; iter =3D 0; @ mptcp_bpf_iter.c:20
+> 15: (07) r7 +=3D -16                    ; R7_w=3Dfp-16
+> ; bpf_for_each(mptcp_subflow, subflow, msk) { @ mptcp_bpf_iter.c:23
+> 16: (bf) r1 =3D r7                      ; R1_w=3Dfp-16 R7_w=3Dfp-16
+> 17: (bf) r2 =3D r6                      ; R2_w=3Dptr_mptcp_sock()
+> R6=3Dptr_mptcp_sock()
+> 18: (85) call bpf_iter_mptcp_subflow_new#62694
+> R2 must be referenced or trusted
+> processed 17 insns (limit 1000000) max_states_per_insn 0 total_states 1
+> peak_states 1 mark_read 1
+> -- END PROG LOAD LOG --
+> libbpf: prog 'trace_mptcp_sched_get_send': failed to load: -22
+> libbpf: failed to load object 'mptcp_bpf_iter'
+> libbpf: failed to load BPF skeleton 'mptcp_bpf_iter': -22
+> test_bpf_iter:FAIL:skel_open_load: mptcp_iter unexpected error: -22
+> #169/4   mptcp/bpf_iter:FAIL
+> '''
+>
+> I don't know how to fix it yet.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+And the verifier is pointing out the real problem (selftest is at [0]
+for those interested).
+
+struct mptcp_sock *msk argument for fentry/mptcp_sched_get_send can't
+be trusted to be valid and be properly protected from being freed,
+etc. You need to have kfuncs that will have KF_ACQUIRE semantics and
+will take refcount or whatnot (or KF_RCU for RCU-protection).
+
+See some examples where we do the same with tasks or maybe sockets,
+I'm not very familiar with this area.
+
+  [0] https://lore.kernel.org/mptcp/4467ab3af0f1a6c378778ca6be72753b16a1532=
+c.1726132802.git.tanggeliang@kylinos.cn/
+
+>
+> > valid owned kernel object. Other BPF folks might help to clarify
+> > this.
+> >
+> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next)
+> > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy)
+> > > +BTF_ID_FLAGS(func, mptcp_subflow_active)
+>
+> But we do need to add KF_ITER_NEW/NEXT/DESTROY flags here:
+>
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW)
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT |
+> KF_RET_NULL)
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+>
+> With these flags, we can drop this additional test in loop:
+>
+>         if (i++ >=3D MPTCP_SUBFLOWS_MAX)
+>                 break;
+>
+>
+> This problem has been bothering me for a while. I got "infinite loop
+> detected" errors when walking the list with
+> bpf_for_each(mptcp_subflow). So I had to use this additional test to
+> break it.
+>
+> With these KF_ITER_NEW/NEXT/DESTROY flags, no need to use this
+> additional test anymore.
+>
+
+These flags is what makes those functions an open-coded iterator
+implementation, yes.
+
+> Thanks,
+> -Geliang
+>
+> [1]
+> https://patchwork.kernel.org/project/mptcp/patch/4467ab3af0f1a6c378778ca6=
+be72753b16a1532c.1726132802.git.tanggeliang@kylinos.cn/
+>
+> > >  BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+> > >  BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx_by_pos)
+> > > -BTF_ID_FLAGS(func, mptcp_subflow_active)
+> > >  BTF_ID_FLAGS(func, mptcp_set_timeout)
+> > >  BTF_ID_FLAGS(func, mptcp_wnd_end)
+> > >  BTF_ID_FLAGS(func, tcp_stream_memory_free)
+> > > @@ -241,6 +286,8 @@ static int __init bpf_mptcp_kfunc_init(void)
+> > >         int ret;
+> > >
+> > >         ret =3D register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
+> > > +       ret =3D ret ?:
+> > > register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING,
+> > > +
+> > > &bpf_mptcp_sched_kfunc_set);
+> > >         ret =3D ret ?:
+> > > register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+> > >
+> > > &bpf_mptcp_sched_kfunc_set);
+> > >  #ifdef CONFIG_BPF_JIT
+> > > --
+> > > 2.43.0
+> > >
+> > >
+>
