@@ -1,160 +1,60 @@
-Received: from mail1.fiberby.net (mail1.fiberby.net [193.104.135.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89C8315443F
-	for <mptcp@lists.linux.dev>; Fri, 13 Sep 2024 08:57:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.104.135.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1743B84D2C
+	for <mptcp@lists.linux.dev>; Fri, 13 Sep 2024 09:04:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726217867; cv=none; b=YLBEeVZAm/kEFuauFY4sp8kZ2fmF1zGGtv4TCX1acOW8ddgHC4crDkVaaxGelTQNK/neGye8c0D0BcdzE8RjUucYCPi4DmhibGMny1+OhlnvmYMQbgiZytmzVE1nxMndPKtNK7QjgnXDVCusBk5xl7POea2jezCRQod903YQQ1E=
+	t=1726218272; cv=none; b=JahMw+sukFtV8sd+qwlxB889wBgRahBVaWjTvSlvPh89/xUpYEIZPe0pgNc9gkiWaRWQN4BDSSbKEXgVW2UGJfmpyGRuWd0Y4FMoOZmK+iqHUyN7HYFGXVgcidTQDol7+0+tWVexF63OaoH6Dh3SvioiVRu5roCuNqaZsERIadk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726217867; c=relaxed/simple;
-	bh=M5El9EyA9A0fefWeLaVcaVsb2FjaARGsqbpvDqpFzAo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version:Content-Type; b=YmbgyIT2drdIJsJaqVYvFhl158sLJKN597UBvBaTAYs1V7PpiOdOVJ7Pav1S2YB0mKzna0OzM9zZfmwm3NQqAzdFLThsflFd0pAb5l4CYEV24hkKuwyp31l+04CW2onOSz5wmEepEG626eSOM/iSEdkVdEv/L0dywTJ4lwEkvZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net; spf=pass smtp.mailfrom=fiberby.net; dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b=rA5SK0O1; arc=none smtp.client-ip=193.104.135.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=fiberby.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=fiberby.net
+	s=arc-20240116; t=1726218272; c=relaxed/simple;
+	bh=uCbjJOxxAGUw+C1Ru8xV6LbbCKPIr6eCiL/ewFoV924=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=bywq3jLu8kjY2iSBZxc2yOfOwbMnnyDfUgH3O+740pBgQ3lfnG9GfA1FD6U69FoU5Bfv5sMzG5bJa1eBGM769EOM+sk6nB1BrCvK9vrWgNtouwmYK6cVSREjd/URrNqOyJP8TCa+0aQTSrauCVjahStkZsULALZdzzUTBY00r18=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ba52yt0y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=fiberby.net header.i=@fiberby.net header.b="rA5SK0O1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=fiberby.net;
-	s=202008; t=1726217861;
-	bh=M5El9EyA9A0fefWeLaVcaVsb2FjaARGsqbpvDqpFzAo=;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ba52yt0y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82AC2C4CEC0;
+	Fri, 13 Sep 2024 09:04:30 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1726218271;
+	bh=uCbjJOxxAGUw+C1Ru8xV6LbbCKPIr6eCiL/ewFoV924=;
 	h=From:To:Cc:Subject:Date:From;
-	b=rA5SK0O1sLh8ZhNZX1jQIbZmA2PToy6epTTsj8CW9l1r4pw1Nvbf6FkucOQ9zQa+z
-	 N+N1Qfo2AK975ZnXLwxGLMgJ9RjDY3cp95T6FU5d6itglP7KT3xVu3XY1EwP29sX4H
-	 xDJ9msjaZFzLSZBYclBGpsioX4FyLbAY7qw6oUEUwWB74YYXDQ97UqLNBKnfiESc9Y
-	 wJjMyKnqIGct+rzwb0coEd22i9pZs9WAm8vHt3nZUD7qUfTrfckVULVtLUrQmk7JAy
-	 ummm/9xyCTvaJuPkLNig0BFonZOsDLViWZJ6TGg5i0Vm1gnr/EoFy10orssbVHXPEm
-	 oeNspWgu9kYUg==
-Received: from x201s (193-104-135-243.ip4.fiberby.net [193.104.135.243])
-	by mail1.fiberby.net (Postfix) with ESMTPSA id DA61E60078;
-	Fri, 13 Sep 2024 08:57:40 +0000 (UTC)
-Received: by x201s (Postfix, from userid 1000)
-	id C08512018C7; Fri, 13 Sep 2024 08:56:11 +0000 (UTC)
-From: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>
-To: Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: =?UTF-8?q?Asbj=C3=B8rn=20Sloth=20T=C3=B8nnesen?= <ast@fiberby.net>,
-	David Ahern <dsahern@kernel.org>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Donald Hunter <donald.hunter@gmail.com>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [PATCH net-next] tools: ynl-gen: use big-endian netlink attribute types
-Date: Fri, 13 Sep 2024 08:55:54 +0000
-Message-ID: <20240913085555.134788-1-ast@fiberby.net>
-X-Mailer: git-send-email 2.45.2
+	b=Ba52yt0y3gOIxLIIBCw+ZywLmG6lEduXu/qN66/8LGL+VLjG//tBWhOJVbGY2VDJm
+	 F7BoYVHwKGmogjXnqKRTj/4soRXcONCud9WteOMwuqeb4TinvPjoExHIFAzbY6ebU7
+	 xOdHmTnVBd2SV7tvcev++9bEUN3mH9u0Io9Ne0PNeNUrcC0oJKQLGF9XROBS+KpG+q
+	 7gf9FbS8nVTcZaqsGSQai2ngICyOuhDCRMHfqsLz6FoVrBqdxv6yJYxV0TC9HOWB32
+	 gm/Fc6xVfKpDlw4lqiSZLEgu18A6dj6rpqOEcVSZGI3vdf+z85mfhdUg/pSJCZ6/Ys
+	 BSaV0G2dtsg4A==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 0/2] cleanups for endpoint_init
+Date: Fri, 13 Sep 2024 17:04:23 +0800
+Message-ID: <cover.1726217806.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Change ynl-gen-c.py to use NLA_BE16 and NLA_BE32 types to represent
-big-endian u16 and u32 ynl types.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Doing this enables those attributes to have range checks applied, as
-the validator will then convert to host endianness prior to validation.
+Patch 1 adds a new parameter "subflows" for endpoint_init() to make it
+more flexible.
 
-The autogenerated kernel/uapi code have been regenerated by running:
-  ./tools/net/ynl/ynl-regen.sh -f
+I'm not sure if patch 1 should be as a squash-to patch for
+"selftests/bpf: Add mptcp subflow subtest" which is under review.
 
-This changes the policy types of the following attributes:
+Geliang Tang (2):
+  selftests/bpf: More subflows for endpoint_init
+  Squash to "selftests/bpf: Add bpf scheduler test"
 
-  FOU_ATTR_PORT (NLA_U16 -> NLA_BE16)
-  FOU_ATTR_PEER_PORT (NLA_U16 -> NLA_BE16)
-    These two are used with nla_get_be16/nla_put_be16().
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 27 ++++++++++++++++---
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
-  MPTCP_PM_ADDR_ATTR_ADDR4 (NLA_U32 -> NLA_BE32)
-    This one is used with nla_get_in_addr/nla_put_in_addr(),
-    which uses nla_get_be32/nla_put_be32().
-
-IOWs the generated changes are AFAICT aligned with their implementations.
-
-The generated userspace code remains identical, and have been verified
-by comparing the output generated by the following command:
-  make -C tools/net/ynl/generated
-
-Signed-off-by: Asbjørn Sloth Tønnesen <ast@fiberby.net>
----
- net/ipv4/fou_nl.c          | 4 ++--
- net/mptcp/mptcp_pm_gen.c   | 2 +-
- tools/net/ynl/ynl-gen-c.py | 6 +++++-
- 3 files changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/net/ipv4/fou_nl.c b/net/ipv4/fou_nl.c
-index 98b90107b5abc..3d9614609b2d3 100644
---- a/net/ipv4/fou_nl.c
-+++ b/net/ipv4/fou_nl.c
-@@ -12,7 +12,7 @@
- 
- /* Global operation policy for fou */
- const struct nla_policy fou_nl_policy[FOU_ATTR_IFINDEX + 1] = {
--	[FOU_ATTR_PORT] = { .type = NLA_U16, },
-+	[FOU_ATTR_PORT] = { .type = NLA_BE16, },
- 	[FOU_ATTR_AF] = { .type = NLA_U8, },
- 	[FOU_ATTR_IPPROTO] = { .type = NLA_U8, },
- 	[FOU_ATTR_TYPE] = { .type = NLA_U8, },
-@@ -21,7 +21,7 @@ const struct nla_policy fou_nl_policy[FOU_ATTR_IFINDEX + 1] = {
- 	[FOU_ATTR_LOCAL_V6] = { .len = 16, },
- 	[FOU_ATTR_PEER_V4] = { .type = NLA_U32, },
- 	[FOU_ATTR_PEER_V6] = { .len = 16, },
--	[FOU_ATTR_PEER_PORT] = { .type = NLA_U16, },
-+	[FOU_ATTR_PEER_PORT] = { .type = NLA_BE16, },
- 	[FOU_ATTR_IFINDEX] = { .type = NLA_S32, },
- };
- 
-diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-index c30a2a90a1925..5a6b2b4510d37 100644
---- a/net/mptcp/mptcp_pm_gen.c
-+++ b/net/mptcp/mptcp_pm_gen.c
-@@ -14,7 +14,7 @@
- const struct nla_policy mptcp_pm_address_nl_policy[MPTCP_PM_ADDR_ATTR_IF_IDX + 1] = {
- 	[MPTCP_PM_ADDR_ATTR_FAMILY] = { .type = NLA_U16, },
- 	[MPTCP_PM_ADDR_ATTR_ID] = { .type = NLA_U8, },
--	[MPTCP_PM_ADDR_ATTR_ADDR4] = { .type = NLA_U32, },
-+	[MPTCP_PM_ADDR_ATTR_ADDR4] = { .type = NLA_BE32, },
- 	[MPTCP_PM_ADDR_ATTR_ADDR6] = NLA_POLICY_EXACT_LEN(16),
- 	[MPTCP_PM_ADDR_ATTR_PORT] = { .type = NLA_U16, },
- 	[MPTCP_PM_ADDR_ATTR_FLAGS] = { .type = NLA_U32, },
-diff --git a/tools/net/ynl/ynl-gen-c.py b/tools/net/ynl/ynl-gen-c.py
-index 717530bc9c52e..e26f2c3c40891 100755
---- a/tools/net/ynl/ynl-gen-c.py
-+++ b/tools/net/ynl/ynl-gen-c.py
-@@ -48,6 +48,7 @@ class Type(SpecAttr):
-         self.attr = attr
-         self.attr_set = attr_set
-         self.type = attr['type']
-+        self.nla_type = self.type
-         self.checks = attr.get('checks', {})
- 
-         self.request = False
-@@ -157,7 +158,7 @@ class Type(SpecAttr):
-         return '{ .type = ' + policy + ', }'
- 
-     def attr_policy(self, cw):
--        policy = c_upper('nla-' + self.attr['type'])
-+        policy = c_upper('nla-' + self.nla_type)
- 
-         spec = self._attr_policy(policy)
-         cw.p(f"\t[{self.enum_name}] = {spec},")
-@@ -300,6 +301,9 @@ class TypeScalar(Type):
-         self.byte_order_comment = ''
-         if 'byte-order' in attr:
-             self.byte_order_comment = f" /* {attr['byte-order']} */"
-+            if self.attr['byte-order'] == 'big-endian':
-+                if self.type in {'u16', 'u32'}:
-+                    self.nla_type = f'be{self.type[1:]}'
- 
-         if 'enum' in self.attr:
-             enum = self.family.consts[self.attr['enum']]
 -- 
-2.45.2
+2.43.0
 
