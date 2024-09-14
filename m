@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 682C310E9
-	for <mptcp@lists.linux.dev>; Sat, 14 Sep 2024 08:59:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CE5A10E9
+	for <mptcp@lists.linux.dev>; Sat, 14 Sep 2024 08:59:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726304378; cv=none; b=Bzn1A3YiHhk+QRF5FZZNAptOGysNmdc3kqsFcY3geYaxd1zHUlwTudYIz8QgmzvtMGvcZD2/oRLG/ZduMVeLznjvRA9NI3ns8mZKpSUivEGTTZ/tM1Apt/hD9BSucEAmE6TQYLEwjaEjh1rqcEMBO2vVvJk8kRrO6JAok1qw+lM=
+	t=1726304380; cv=none; b=RxnGrofwYJjo5oY4uEk56XwgZGRh9MBzwDp6o4WMGUlds6CHUsHoYhXvRsdOSBQ3aeNdVtzPpE7UVv2dd4tO3cStB+QyOsbO26fC+jVla26mUOMLxgt3ZMkB19IE5rBq21fQYHuEsrLQNOwRf29LzPgdQ22IfgMsF3Z3xjM9VAo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726304378; c=relaxed/simple;
-	bh=JrjP+cxxwQctHpBi6PyjZFtDkVVFpWStd9Gbslehly0=;
+	s=arc-20240116; t=1726304380; c=relaxed/simple;
+	bh=HiTklz2CFtiZTKDWh6s7UXBVztznjLS28ql2Yd/Fphk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=uIo83XLgLaUGSeVIGd8wCJv+uoxwzZwuukxMDiFQXoYxQCqOvDffkhR2R9XwPKCZ4NHdaseGvGkHkIyg2CLzc28ed3X4hC6w1AcweEvRU0nF7gXiqt6liRQAezT9w19FUuf7cKicAuVnn12BhpMQYcJo0Rg8Xne5+Eez+zjPPSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dduljdT8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gAAt5nNKSC5StyrCbc6sOs6r79Z1nvUbqPOUfhz4CUPZHHCwe5UIwIDd1MJAoTNo0S3y67IdmKfb1z5v/x3yQFDCSZs+OBJGdzSxaLEruqDCRAY2mBrQ9SJsLPu8BbGLd0SkBjKCisDkTyE8jI/P/XOXJlzaVrOTB0GcPteafPo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hh+wmI7i; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dduljdT8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D34CAC4CEC0;
-	Sat, 14 Sep 2024 08:59:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hh+wmI7i"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95B60C4CEC0;
+	Sat, 14 Sep 2024 08:59:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726304377;
-	bh=JrjP+cxxwQctHpBi6PyjZFtDkVVFpWStd9Gbslehly0=;
+	s=k20201202; t=1726304379;
+	bh=HiTklz2CFtiZTKDWh6s7UXBVztznjLS28ql2Yd/Fphk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dduljdT8XNkT4OsN/D9b4HRd5NbygeeIZ1GqJwXFqa6ZtSuYkjInVuHB7XG626Cdl
-	 xrO5x0hq8F/pCSab0nWFOXcpdp1vep5Myw1xDx7t5f4q/FyAx0tYQsKuUs34OWB5zW
-	 huBJvFnlxdtM+WVMIrdw+Dur1/hOd6Aice68rDKSYpy8eE8ir9JRawRzwsXWE/hU3V
-	 Gh+0nrV4DskzLKZLA6Wztow2hmpyjLDohAd7sRJuZBQfkqGxafbcU+9XSrkwVSuIuR
-	 mSRgTqWTR1OwokgcFPAEpsKuWWf42nSlGa/vO3umq4/NCMmLOvZUz1FNMKdgK5pg3X
-	 2w+07nYs4bQiQ==
+	b=hh+wmI7iDrN4LzvGx5tT/sBgaFN2Y2cevmqLqv1pb4rx6bBd7wy6tTxAkO/3jGORF
+	 4ZkR4k7FyXXvTPFpJFtsD7A0W9UYRmExHHIOj6oiI++1eHcpqChZ2CvNkoezYvsw1G
+	 9LYhvDKxBt95CDe8VOauNGne2isqf2R51fM/SI85ZCBNBTheTj739g/heva33WKOJK
+	 IC33kruXTff9rdcSh2jNkLtGQI9iHharNFDXr0rNCh4R4LzM3m7i5MMpvLr8Ob+DDE
+	 tFC96RhrRRqUeczuCn8Fwx4lcxTv2PFJSSTDqYN/a1J6q+N5eY8shIJcGeIM+YgVfI
+	 3N4jpERzfFn6g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/4] Squash to "selftests/bpf: Add getsockopt to inspect mptcp subflow"
-Date: Sat, 14 Sep 2024 16:59:27 +0800
-Message-ID: <0568d6aac109835392a348e548d3b97a4ffa626c.1726304196.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/4] Squash to "selftests/bpf: Add mptcp subflow subtest"
+Date: Sat, 14 Sep 2024 16:59:28 +0800
+Message-ID: <dc81fdee81e3ef2ba3db036ae35b1811dfe10c36.1726304196.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1726304196.git.tanggeliang@kylinos.cn>
 References: <cover.1726304196.git.tanggeliang@kylinos.cn>
@@ -45,30 +45,69 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Use can_loop instead of cond_break as Martin suggested.
+Address Martin's comments:
+
+Drop mptcp_subflow__attach.
+Use bpf_program__attach_cgroup instead of bpf_prog_attach.
+Use the skel->links.{mptcp_subflow, _getsockopt_subflow}, instead of declaring a
+local "link".
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/progs/mptcp_bpf.h | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 20 +++++++------------
+ 1 file changed, 7 insertions(+), 13 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index 928a1e5ad8db..c3800f986ae1 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -26,10 +26,10 @@ static inline int list_is_head(const struct list_head *list,
- #define list_entry_is_head(pos, head, member)				\
- 	list_is_head(&pos->member, (head))
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index a3e68bc6afa3..acd79be134cd 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -424,10 +424,9 @@ static void run_subflow(void)
  
--/* small difference: 'cond_break' has been added in the conditions */
-+/* small difference: 'can_loop' has been added in the conditions */
- #define list_for_each_entry(pos, head, member)				\
- 	for (pos = list_first_entry(head, typeof(*pos), member);	\
--	     cond_break, !list_entry_is_head(pos, head, member);	\
-+	     !list_entry_is_head(pos, head, member) && can_loop;	\
- 	     pos = list_next_entry(pos, member))
+ static void test_subflow(void)
+ {
+-	int cgroup_fd, prog_fd, err;
+ 	struct mptcp_subflow *skel;
+ 	struct nstoken *nstoken;
+-	struct bpf_link *link;
++	int cgroup_fd;
  
- /* mptcp helpers from protocol.h */
+ 	cgroup_fd = test__join_cgroup("/mptcp_subflow");
+ 	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: mptcp_subflow"))
+@@ -439,13 +438,14 @@ static void test_subflow(void)
+ 
+ 	skel->bss->pid = getpid();
+ 
+-	err = mptcp_subflow__attach(skel);
+-	if (!ASSERT_OK(err, "skel_attach: mptcp_subflow"))
++	skel->links.mptcp_subflow =
++		bpf_program__attach_cgroup(skel->progs.mptcp_subflow, cgroup_fd);
++	if (!ASSERT_OK_PTR(skel->links.mptcp_subflow, "attach mptcp_subflow"))
+ 		goto skel_destroy;
+ 
+-	prog_fd = bpf_program__fd(skel->progs.mptcp_subflow);
+-	err = bpf_prog_attach(prog_fd, cgroup_fd, BPF_CGROUP_SOCK_OPS, 0);
+-	if (!ASSERT_OK(err, "prog_attach"))
++	skel->links._getsockopt_subflow =
++		bpf_program__attach_cgroup(skel->progs._getsockopt_subflow, cgroup_fd);
++	if (!ASSERT_OK_PTR(skel->links._getsockopt_subflow, "attach _getsockopt_subflow"))
+ 		goto skel_destroy;
+ 
+ 	nstoken = create_netns();
+@@ -455,14 +455,8 @@ static void test_subflow(void)
+ 	if (endpoint_init("subflow") < 0)
+ 		goto close_netns;
+ 
+-	link = bpf_program__attach_cgroup(skel->progs._getsockopt_subflow,
+-					  cgroup_fd);
+-	if (!ASSERT_OK_PTR(link, "getsockopt prog"))
+-		goto close_netns;
+-
+ 	run_subflow();
+ 
+-	bpf_link__destroy(link);
+ close_netns:
+ 	cleanup_netns(nstoken);
+ skel_destroy:
 -- 
 2.43.0
 
