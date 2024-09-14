@@ -1,39 +1,48 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D530F154426
-	for <mptcp@lists.linux.dev>; Sat, 14 Sep 2024 09:01:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FE1513B280;
+	Sat, 14 Sep 2024 10:12:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726304496; cv=none; b=VdYHHv1i2emTWBCC9QHsUx5acRvOPVAqIASKnwX7F1l2+U9k8CO4am6bG7jp0YRlMcHzMvOQr2CcNRd2tiQrskkCTZANRII1B+qPq/Dpf4pDQ1mAvbFup8VkjSKibosttusnqXWrFIpwl1NUj5YQ+lKfIFtpQupDIon8mfb0AyM=
+	t=1726308763; cv=none; b=GCjZqSjyNAiio4iX1STW0vP2umOoy2Nq0MSlegRIF7Z+/Svb+IN4okZyv0dkdRayh+2mTZaxMoYcG6cappJRfyoA4WwT4D3EkvPmHwIGeCH1SfPWMy3q0vO9mE4J+GxcGU3sMBedV5R4XIFH6UMCBDwBaCdb4/d+K1u9m0hWIR4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726304496; c=relaxed/simple;
-	bh=w8Dq0xO7hE3tHqgmBPfVjKHnswHGFI9Lu1n7oh9GyW0=;
+	s=arc-20240116; t=1726308763; c=relaxed/simple;
+	bh=/wvBbstadsYKOA9TpfXl2WOHHiShhGngkgmK4RiUXLw=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nLg6/siKN9wO45WKr+pVbhr0SDk2g7Fl9MXYN4VvZosnRAennfyZ+SzSpxmrLtH33PMcCdbpjSYYtTHDKjMLkRFaTMrAlE7/uurUwqA02m8bw+3fajZLUFD3Da71GileqmY2ku+BZTN41T3k2vkguoWZLcX7IfYoFsY9q35y19g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eCO6HUKT; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=IWdDwk9heiNxn5EMovmIKu0Uik1IQvWZmSrqaDk0BWQt+4zkss/F3hNJjLJAfq1744s4vVjtG2CidFjB2CtsUfJa3GlYiFSP+admoZ7EQ9ODRvxLqOW1XQY2MHIrh34gP+RWtGaSeFfYQ3XbVUQHGdtpKxF2+nBp3jHL8j8drXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HFNWIMHx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eCO6HUKT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0E88C4CEC0;
-	Sat, 14 Sep 2024 09:01:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HFNWIMHx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57F77C4CEC0;
+	Sat, 14 Sep 2024 10:12:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726304496;
-	bh=w8Dq0xO7hE3tHqgmBPfVjKHnswHGFI9Lu1n7oh9GyW0=;
+	s=k20201202; t=1726308762;
+	bh=/wvBbstadsYKOA9TpfXl2WOHHiShhGngkgmK4RiUXLw=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=eCO6HUKTNrWf6NGe1U9XAmRfLN8mQLePBicldCPLJLkfQ8WQ437b3kpEzUqQ+zB+/
-	 DjIzRk+0edVN6aUms+Kgu7Ju1QZJBLx5SePagb4BQW+dE4Y3/lbs3L8lg9YEjAYdHh
-	 ISZYknRq+Q2//f8CmmwBRQqw57LIbZ+XRRAdMC3yQQudtjKh7csXaYFdiNykOSYwwn
-	 Nna6ZAMQM2GfKokqhIBiePIatz5EwImxwFjosvQSuM1bAxAVltlVANcjqYHvv7qzCE
-	 pKPgcqp2HPo9wqvkrcj8X8Qat915/GPQKFaJ0GAsIzR6vi9uJzV/wRa590UyD0uRLV
-	 txH3Cvo/QQF9Q==
-Message-ID: <7ab0896541582f851040c273d99e4bbd20f6b987.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next 0/2] cleanups for endpoint_init
+	b=HFNWIMHx+Mp4SXtPRaZxlvwChVk+C78KCG6SdHsfv588X2fJ5uHjGgwP/us9QxZHX
+	 VuZo2GwKAlbFiz3zv5vr1slcWQx3KChCJ5Nuk6GW6rBnZi3XEW2si1IM6PtFJihtMd
+	 HsyoqWTQt7fiant+Z/BwsIGBgXsLRBtF5iSgXWQFK5i91sGi3cJVCFX+eBUTB62jqt
+	 TSLYQAhHO88oiZw/3Pe4hAbIBBpSZzlMo0f8Bdh6VNxm6SaoYrljh8UgqgWU7cbcIs
+	 a3OEaMK8pwQJ4SVGDlQJR2xONd0OOm47t0RxcB76i6bpbEbfrSirp1OgeS0szPR1e8
+	 KLtKgDmsfyiDg==
+Message-ID: <b623745d19dd1d9743674def8d565ef779ef0952.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 1/5] bpf: Add mptcp_subflow bpf_iter
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Sat, 14 Sep 2024 17:01:31 +0800
-In-Reply-To: <cover.1726217806.git.tanggeliang@kylinos.cn>
-References: <cover.1726217806.git.tanggeliang@kylinos.cn>
+To: Martin KaFai Lau <martin.lau@linux.dev>, Matthieu Baerts
+	 <matttbe@kernel.org>
+Cc: Andrii Nakryiko <andrii.nakryiko@gmail.com>, mptcp@lists.linux.dev, 
+ Geliang Tang <tanggeliang@kylinos.cn>, bpf@vger.kernel.org, Martin KaFai
+ Lau <martin.lau@kernel.org>
+Date: Sat, 14 Sep 2024 18:12:36 +0800
+In-Reply-To: <766062c8fd8920dcc51e7ab2c097541d96bb8ab8.camel@kernel.org>
+References: <cover.1726132802.git.tanggeliang@kylinos.cn>
+	 <5e5b91efc6e06a90fb4d2440ddcbe9b55ee464be.1726132802.git.tanggeliang@kylinos.cn>
+	 <CAEf4BzaVzVhoqhzpq-FD5GGJT1wW5=LbZ4ADs2+NdLO5rcJMMw@mail.gmail.com>
+	 <a9bd9aa00c702f98d86f5d7acd305cc477a4c91b.camel@kernel.org>
+	 <CAEf4Bza4qtP5EVOk08XmGOjWgy1-671gciK5j5vg5Lr=5ggm0Q@mail.gmail.com>
+	 <849457c0-5a34-4d5d-9c4f-ba004809269b@linux.dev>
+	 <766062c8fd8920dcc51e7ab2c097541d96bb8ab8.camel@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -77,27 +86,152 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Superseded.
+On Sat, 2024-09-14 at 16:40 +0800, Geliang Tang wrote:
+> Hi Martin, Andrii, Matt,
+> 
+> On Fri, 2024-09-13 at 17:41 -0700, Martin KaFai Lau wrote:
+> > On 9/13/24 1:57 PM, Andrii Nakryiko wrote:
+> > > > > > +__bpf_kfunc int bpf_iter_mptcp_subflow_new(struct
+> > > > > > bpf_iter_mptcp_subflow *it,
+> > > > > > +                                          struct
+> > > > > > mptcp_sock
+> > > > > > *msk)
+> > > > > > +{
+> > > > > > +       struct bpf_iter_mptcp_subflow_kern *kit = (void
+> > > > > > *)it;
+> > > > > > +
+> > > > > > +       kit->msk = msk;
+> > > > > > +       if (!msk)
+> > > > > > +               return -EINVAL;
+> > > > > > +
+> > > > > > +       kit->pos = &msk->conn_list;
+> > > > > > +       return 0;
+> > > > > > +}
+> > 
+> > [ ... ]
+> > 
+> > > > > >   BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+> > > > > > +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new)
+> > > > > 
+> > > > > I'm not 100% sure, but I suspect you might need to specify
+> > > > > KF_TRUSTED_ARGS here to ensure that `struct mptcp_sock *msk`
+> > > > > is
+> > > > > a
+> > 
+> > +1
+> 
+> So we must add KF_TRUSTED_ARGS flag, right?
+> 
+> > 
+> > > > > > @@ -241,6 +286,8 @@ static int __init
+> > > > > > bpf_mptcp_kfunc_init(void)
+> > > > > >          int ret;
+> > > > > > 
+> > > > > >          ret =
+> > > > > > register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
+> > > > > > +       ret = ret ?:
+> > > > > > register_btf_kfunc_id_set(BPF_PROG_TYPE_TRACING,
+> > > > > > +
+> > > > > > &bpf_mptcp_sched_kfunc_set);
+> > 
+> > This cannot be used in tracing.
+> 
+> Actually, we don’t need to use mptcp_subflow bpf_iter in tracing.
+> 
+> We plan to use it in MPTCP BPF packet schedulers, which are not
+> tracing, but "struct_ops" types. And they work well with
+> KF_TRUSTED_ARGS flag in bpf_iter_mptcp_subflow_new:
+> 
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW |
+> KF_TRUSTED_ARGS);
+> 
+> An example of the scheduler is:
+> 
+> SEC("struct_ops")
+> int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
+>              struct mptcp_sched_data *data)
+> {
+>         struct mptcp_subflow_context *subflow;
+> 
+>         bpf_rcu_read_lock();
+>         bpf_for_each(mptcp_subflow, subflow, msk) {
+>                 mptcp_subflow_set_scheduled(subflow, true);
+>                 break;
+>         }
+>         bpf_rcu_read_unlock();
+> 
+>         return 0;
+> }
+> 
+> SEC(".struct_ops")
+> struct mptcp_sched_ops first = { 
+>         .init           = (void *)mptcp_sched_first_init,
+>         .release        = (void *)mptcp_sched_first_release,
+>         .get_subflow    = (void *)bpf_first_get_subflow,
+>         .name           = "bpf_first",
+> };
+> 
+> But BPF mptcp_sched_ops code has not been merged into bpf-next yet,
+> so
+> I simply test this bpf_for_each(mptcp_subflow) in tracing since I
+> noticed other bpf_iter selftests are using tracing too:
+> 
+> progs/iters_task.c
+> SEC("fentry.s/" SYS_PREFIX "sys_getpgid")
+> 
+> progs/iters_css.c
+> SEC("fentry.s/" SYS_PREFIX "sys_getpgid")
+> 
+> If this bpf_for_each(mptcp_subflow) can only be used in struct_ops, I
+> will try to move the selftest into a struct_ops.
+> 
+> > 
+> > Going back to my earlier question in v1. How is the msk->conn_list
+> > protected?
+> > 
+> 
+> msk->conn_list is protected by msk socket lock. (@Matt, am I right?)
+> We
+> use this in kernel code:
+> 
+> 	struct sock *sk = (struct sock *)msk;
+> 
+> 	lock_sock(sk);
+> 	kfunc(&msk->conn_list);
+> 	release_sock(sk);
+> 
+> If so, should we also use lock_sock/release_sock in
+> bpf_iter_mptcp_subflow_next()?
 
-On Fri, 2024-09-13 at 17:04 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Patch 1 adds a new parameter "subflows" for endpoint_init() to make
-> it
-> more flexible.
-> 
-> I'm not sure if patch 1 should be as a squash-to patch for
-> "selftests/bpf: Add mptcp subflow subtest" which is under review.
+bpf_for_each(mptcp_subflow) is expected to be used in the get_subflow()
+interface of mptcp_sched_ops to traverse all subflows and then pick one
+subflow to send data. This interface is invoked in
+mptcp_sched_get_send(), here the msk socket lock is hold already:
 
-Move into "fixes for "new MPTCP subflow subtest" v6".
+int mptcp_sched_get_send(struct mptcp_sock *msk)
+{
+        struct mptcp_subflow_context *subflow;
+        struct mptcp_sched_data data;
 
-> 
-> Geliang Tang (2):
->   selftests/bpf: More subflows for endpoint_init
->   Squash to "selftests/bpf: Add bpf scheduler test"
-> 
->  .../testing/selftests/bpf/prog_tests/mptcp.c  | 27 ++++++++++++++++-
-> --
->  1 file changed, 23 insertions(+), 4 deletions(-)
-> 
+        msk_owned_by_me(msk);
+
+	... ...
+
+        mptcp_for_each_subflow(msk, subflow) {
+                if (READ_ONCE(subflow->scheduled))
+                        return 0;
+        }
+
+        data.reinject = false;
+        if (msk->sched == &mptcp_sched_default || !msk->sched)
+                return mptcp_sched_default_get_subflow(msk, &data);
+        return msk->sched->get_subflow(msk, &data);
+}
+
+So no need to hold msk socket lock again in BPF schedulers. This means
+we can walk the conn_list without any lock. bpf_rcu_read_lock() and
+bpf_rcu_read_unlock() can be dropped in BPF schedulers too. Am I right?
+
+Thanks,
+-Geliang
 
