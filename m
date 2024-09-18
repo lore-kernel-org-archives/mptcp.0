@@ -1,142 +1,68 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30E9244C77;
-	Tue, 17 Sep 2024 07:26:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 264072233A
+	for <mptcp@lists.linux.dev>; Wed, 18 Sep 2024 08:25:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726557995; cv=none; b=OIraNWA42NSHobF/nrCTjkUCHfhlRCZ/QUMqZ8fEMbj0Vvv6f4bgyliCcR7Xo91/Yq99dmTS3C5JxRPBKXgMaT6Sf1i84zwILYugzBMVyLJ+uBMXswaeQqlzyLKr656jtapKzI/gbhHRnXK2yErQ8zEB64+oDd+BYdMU8PTcjug=
+	t=1726647926; cv=none; b=OUusd3RMV5S3Br2prDF1WoCWTvQ1+5geIxeJDDR/HGcWUoFJvWHR2OIZ3dNVaRQK8XdZoIMtsRBlD71tlq2nsvTMQQXI++fQjwAoRTXjEARrDx0hOs2SgKRVbDnztxJzpnODGIhj9ERrGepfFF94GGgkCNN/7/uMJ/lQOXDjvqE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726557995; c=relaxed/simple;
-	bh=yQC6C1oDs8N8CJpFVeygXzUckUyvbnj/h5KN8aDjUKw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=S+uhlDJGhaA5ZaEq9sbMUyGJilTGsdShLZckWuVCOVH/m97YaPpOubEzQD8i1BPDtZKMN/gs7YtQRpktiXH2HyhIEVhDwddl91/HVUnepH1ehHrJBj4f/hl9XEOz4IsnIydHcJHskFeobu4neMy1YtM2qctTYtZUPOqr9eSlwr0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TCTWeGvs; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726647926; c=relaxed/simple;
+	bh=ZUXfjEgwZLJ97CD5fEnjUy1S8BMxS9i6ZHKP89IO080=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=UhyyCB6LDbBaVyu8tjvEPWg0FCT3xCDrdV5a/GrZex2wai+nQHqXfSt0HaYkTczFAYb0jnn8Lr5SQncwBvgCVMBtpFjj42sn+31DZbID3RHkbVIl+ZQrFcAsumXPwWPL8qUxc2AqrtGAr7v+sBTl70wuc3PBbyXfiwHR8W+MH4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhKmXiI9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TCTWeGvs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CADF4C4CECE;
-	Tue, 17 Sep 2024 07:26:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhKmXiI9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D963C4CEC3;
+	Wed, 18 Sep 2024 08:25:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726557994;
-	bh=yQC6C1oDs8N8CJpFVeygXzUckUyvbnj/h5KN8aDjUKw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=TCTWeGvsX08YKrg8NbD36/UCXgQzWHRP5tcRQ80YdcWv6d3dEugQc8bARjX8+XNj2
-	 BiNFSEaqgSnOiV6z7m2GgZXu97G41javViccalYIcyS8609bYCNarUDCFnUr6yRbIo
-	 oM+sZQxrSd+VZs/RKk6WTwam7QkzRV4qHC2XjZfG/ct9Psk+nrbqlqLlE0i7B1mytl
-	 T+AJxhw3QYcOgY53APCEe5H9EjRL/tf9S/MpynTjw+jWg/5lc/1A7gjtVVK+Fs67GF
-	 BexgIzPQXJMSCEhQwTez4JgmAzbZswcD7iyTKcLMPEj9GWjcaK7vkxEm0ND8scPzIU
-	 kh4tHUnnePgwA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Edward Adam Davis <eadavis@qq.com>,
-	syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 5.10.y 3/3] mptcp: pm: Fix uaf in __timer_delete_sync
-Date: Tue, 17 Sep 2024 09:26:11 +0200
-Message-ID: <20240917072607.799536-8-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024091330-reps-craftsman-ab67@gregkh>
-References: <2024091330-reps-craftsman-ab67@gregkh>
+	s=k20201202; t=1726647925;
+	bh=ZUXfjEgwZLJ97CD5fEnjUy1S8BMxS9i6ZHKP89IO080=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lhKmXiI9uxsMc2I7PRIHE2v9cuZYC4+4nBI+8VEm6jO8w+clNR+vE10s9mb5FjjK7
+	 QUXsJnTXpvwJoryaRsbsg3JhtKCUm+ZBvdRYyma/Faj5MLiOM2iW1klpB/iYdiQFmM
+	 eSIs7/TkwDAgvzA6pjTef0yyDtqomt5ZKJBa4btAtypWTnFYCDetj8hIDaZz7VgNmP
+	 ttvZagsIqdz5HeWtnFlIN1xWOkL5HOm7o3qDb5yp/Ugg145E+NejrSX2X5WQM20baf
+	 OM/lON/xhniQp28kaas8Vb5NXPwAY9PwiLqqKtTizrajl9z55lzyx9/2A7nQCLGfRq
+	 zynxz9IIkAnrw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/6] fixes for "new MPTCP subflow subtest v6"
+Date: Wed, 18 Sep 2024 16:25:12 +0800
+Message-ID: <cover.1726647599.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3594; i=matttbe@kernel.org; h=from:subject; bh=/XXALFUu8RPVQI5mU5wv9GlF5LNXN/xsZH23tllMpa0=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm6S8Q+ceFwtcEWOGj5LrFncR4y5x+eyqvEyHX0 Xq1nWVTvWWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZukvEAAKCRD2t4JPQmmg c1E3D/92EWPaXUVJR8TY+Wqgel/QAM7492r1jd8YgUVpatX3qA3+WOQ/d+jIsnyWNrzuv+NG+Q+ jSVcXEd4pbEwjycEdQH32YNEaoFLaqM8Df9txBALQHoI+G978eYTaLUweFbEMnmK73R67tLYWqD S07CpyW7lYivGK8+ra+ADONVKQeyk+RSwG2yxzRrZjTd8OJFeedJx9qFDsdAJZzbO3U/FTjzXcX 5kfJR8xKg4TGKsXwz0fmuJaVpt23r2krT1IFavG7OlWf7qEkgTaBKzuGKhPQ0c0eRp1i2Nf3zcR k+bzZVGG29zui633vVbURes1/4z55E+HGfmilQ/wijTG9FffU4B8RFhvFmZsbobYtS9rkIv7e8F 7pZ5pUOFqxTOJD5b9UaCTCXXoTsvPCrKeozkb17k6vpbDkoE8Ku0a02O5glIXTPiQbtIh3PUyPq UW3Xol3pCGfGxnnFsKnF1t46u7dwjaa4ypM7oWP/8F1DMPnLne7E1F9pNPDQ7bcG90GKre2aKFI Jqd9RoI97MLdnyOfl8xH5rx1jrjChWM7xwNtSk4RRHyRWAh5I6kNEt/6wpQCVTjSBd54ilIxUgj v4NJckifT55HJ3HlZ93c6n0i8dN/OkPBGLi6sGFou4zkdCenDSt66rMsYdwyAGFYhfG+Vq4P55F LMEfkgEpiNvImqA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Edward Adam Davis <eadavis@qq.com>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-There are two paths to access mptcp_pm_del_add_timer, result in a race
-condition:
+v2:
+ - two more cleanups, 5-6, use __bpf_kfunc_start_defs/__bpf_kfunc_end_defs
+ and drop the declarations of __bpf_kfunc.
 
-     CPU1				CPU2
-     ====                               ====
-     net_rx_action
-     napi_poll                          netlink_sendmsg
-     __napi_poll                        netlink_unicast
-     process_backlog                    netlink_unicast_kernel
-     __netif_receive_skb                genl_rcv
-     __netif_receive_skb_one_core       netlink_rcv_skb
-     NF_HOOK                            genl_rcv_msg
-     ip_local_deliver_finish            genl_family_rcv_msg
-     ip_protocol_deliver_rcu            genl_family_rcv_msg_doit
-     tcp_v4_rcv                         mptcp_pm_nl_flush_addrs_doit
-     tcp_v4_do_rcv                      mptcp_nl_remove_addrs_list
-     tcp_rcv_established                mptcp_pm_remove_addrs_and_subflows
-     tcp_data_queue                     remove_anno_list_by_saddr
-     mptcp_incoming_options             mptcp_pm_del_add_timer
-     mptcp_pm_del_add_timer             kfree(entry)
+1-2 address Martin's comments
+3-4 cleanups for endpoint_init
 
-In remove_anno_list_by_saddr(running on CPU2), after leaving the critical
-zone protected by "pm.lock", the entry will be released, which leads to the
-occurrence of uaf in the mptcp_pm_del_add_timer(running on CPU1).
+Geliang Tang (6):
+  Squash to "selftests/bpf: Add getsockopt to inspect mptcp subflow"
+  Squash to "selftests/bpf: Add mptcp subflow subtest"
+  selftests/bpf: More subflows for endpoint_init
+  Squash to "selftests/bpf: Add bpf scheduler test"
+  Squash to "mptcp: add sched_data helpers"
+  Squash to "bpf: Export more bpf_burst related functions"
 
-Keeping a reference to add_timer inside the lock, and calling
-sk_stop_timer_sync() with this reference, instead of "entry->add_timer".
+ net/mptcp/bpf.c                               |  6 +--
+ net/mptcp/protocol.h                          |  3 --
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 47 ++++++++++++-------
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  4 +-
+ 4 files changed, 34 insertions(+), 26 deletions(-)
 
-Move list_del(&entry->list) to mptcp_pm_del_add_timer and inside the pm lock,
-do not directly access any members of the entry outside the pm lock, which
-can avoid similar "entry->x" uaf.
-
-Fixes: 00cfd77b9063 ("mptcp: retransmit ADD_ADDR when timeout")
-Cc: stable@vger.kernel.org
-Reported-and-tested-by: syzbot+f3a31fb909db9b2a5c4d@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f3a31fb909db9b2a5c4d
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Edward Adam Davis <eadavis@qq.com>
-Acked-by: Paolo Abeni <pabeni@redhat.com>
-Link: https://patch.msgid.link/tencent_7142963A37944B4A74EF76CD66EA3C253609@qq.com
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-(cherry picked from commit b4cd80b0338945a94972ac3ed54f8338d2da2076)
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f4f5cc76870a..bd03fb6df729 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -253,15 +253,21 @@ mptcp_pm_del_add_timer(struct mptcp_sock *msk,
- {
- 	struct mptcp_pm_add_entry *entry;
- 	struct sock *sk = (struct sock *)msk;
-+	struct timer_list *add_timer = NULL;
- 
- 	spin_lock_bh(&msk->pm.lock);
- 	entry = mptcp_lookup_anno_list_by_saddr(msk, addr);
--	if (entry && (!check_id || entry->addr.id == addr->id))
-+	if (entry && (!check_id || entry->addr.id == addr->id)) {
- 		entry->retrans_times = ADD_ADDR_RETRANS_MAX;
-+		add_timer = &entry->add_timer;
-+	}
-+	if (!check_id && entry)
-+		list_del(&entry->list);
- 	spin_unlock_bh(&msk->pm.lock);
- 
--	if (entry && (!check_id || entry->addr.id == addr->id))
--		sk_stop_timer_sync(sk, &entry->add_timer);
-+	/* no lock, because sk_stop_timer_sync() is calling del_timer_sync() */
-+	if (add_timer)
-+		sk_stop_timer_sync(sk, add_timer);
- 
- 	return entry;
- }
-@@ -766,7 +772,6 @@ static bool remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 
- 	entry = mptcp_pm_del_add_timer(msk, addr, false);
- 	if (entry) {
--		list_del(&entry->list);
- 		kfree(entry);
- 		return true;
- 	}
 -- 
-2.45.2
+2.43.0
 
