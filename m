@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1520F1917C4
-	for <mptcp@lists.linux.dev>; Sun, 22 Sep 2024 01:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 796B81917CB
+	for <mptcp@lists.linux.dev>; Sun, 22 Sep 2024 01:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1726966832; cv=none; b=iR1Yc4sb24KF55Bf3eHge6lO7yNcKsfpgrcLhrQ65W21A47dt46KDygksDvnXyldH2H/b+DI0vptsI4xtcx63wMnMQFUL5oppSvCKeTQY/QGktt6cQ1/NftKiE6Oai0EOcxgaeoRYkNYa6gCF/n2ilhMqr5WMgDOa/D51Gfamzc=
+	t=1726966833; cv=none; b=SWt1nfl6f45slRTq4Zz4S+oFAi/pq+aqTgf4VjuGqrW+AAp2JyqcRvL0uypkti7oikmDFoLpGtTw4H8ZRLw6JYQ+QQyGfinMKmA5XcfXCuzOZcMSI3/XkMO2qEljpcBmOPdgoMvZwFGcPpLDe02wCZRaZJtnTc7t9eljKxnPttI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1726966832; c=relaxed/simple;
-	bh=a/dEE3hWPns0fAy4xKHVzFrtUeO5JjhQE+pm1ZNq8tI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=h2RM3BWGxoOUxJNd8HaZ4dh7kLG4x5LpW7SB21dfzPyTipdOg4iMwsbzexQqRj7OjiEStdDyujv4r9jF8/90MV40R1YRgGJsrBvdokKylCqoFSWOb6SuEePJnkhe8Mi8Sm+FZvFRYaphlhz/+NELsblSivXr4f/WPt7pmFs26Mw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R1/8YiGU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1726966833; c=relaxed/simple;
+	bh=JrjP+cxxwQctHpBi6PyjZFtDkVVFpWStd9Gbslehly0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=c31bK5W8FfyiBPU8dIhnP0A0GpK6pKxyVDWEGPR8l1cQRyuN+erscsir97FjuPX+JdljlRN0W6aXaelFqqcrcPor00ZdicQmBiFtTJ3Dx9jxuG5X1M7fY3pi/xgmIqEpIIlvtz4C86jKe6XMb12usXwfvw9uAKYo5Q7x9Ta0D6k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Fw+yn29N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R1/8YiGU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76972C4CEC2;
-	Sun, 22 Sep 2024 01:00:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Fw+yn29N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E3CC4CEC6;
+	Sun, 22 Sep 2024 01:00:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1726966831;
-	bh=a/dEE3hWPns0fAy4xKHVzFrtUeO5JjhQE+pm1ZNq8tI=;
-	h=From:To:Cc:Subject:Date:From;
-	b=R1/8YiGUCk5gjBePmnoD04IKDddm7kQlguXHtuJdNnaMon0dYHwruh0i7yDVRU5jh
-	 8WOKmFdJIZyxMMd5zyOPF9crC968zRe1B0986ELb/i0fWo5j5Qv6V945m+8l1EOFQo
-	 ZQnJDdgx5egDD4LYE4JkGy6/ej+EnzsrJamMonnL7QDAZ9koXxINgO+H4igmvDvBGJ
-	 17dMdqivQ+Ye/wlluwN0POcRBKnAID3xwZ2NGmueB0S/bI0khIekDUjufXw9dbARxT
-	 EDGA4YAIEogQ4GDhvcJxRc8il0S+aAMCNWbFhKz2/oc1kOvndxjvb6x4eyzzh4cxSo
-	 K2azS15xsG/JA==
+	s=k20201202; t=1726966833;
+	bh=JrjP+cxxwQctHpBi6PyjZFtDkVVFpWStd9Gbslehly0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Fw+yn29NqbG6ChUtcYwCKeFRwmY9x+2qDYq8+J7L4WVoIrWL2WnDAxfasC89onOmY
+	 PYFzS6PrEPpCe7YTfES45MSufzFUOadEH2WWUniZCQhIeVdaujaJChQPopCgqGRAUQ
+	 11d+H7fr96ElQVf7fPa0BDbiUY+oJWe8UpbzfCq2tr62ubTFCXYcY84uyon7Q/87Xt
+	 P9yNaYy0iFsFy9LBqMz7WQ4nWde2GxkoF8f+x9oe0k2DmYCrwPybhd4o2zrney50fA
+	 dWdyRCEVkrOyA572g4sosE4Jbe29G89z/4hoxulW474nxeUg/7EmGOQXiiuV0mcosS
+	 b8iMKQuCSJH9w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 0/3] fixes for "new MPTCP subflow subtest v6"
-Date: Sun, 22 Sep 2024 09:00:23 +0800
-Message-ID: <cover.1726966638.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 1/3] Squash to "selftests/bpf: Add getsockopt to inspect mptcp subflow"
+Date: Sun, 22 Sep 2024 09:00:24 +0800
+Message-ID: <351e163948d4d7fb1608585074561f56730d18f3.1726966638.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1726966638.git.tanggeliang@kylinos.cn>
+References: <cover.1726966638.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,27 +45,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v3:
- - update endpoint_init
- - squash 2-3 into one
- - drop 5-6, they will be sent in the next series.
+Use can_loop instead of cond_break as Martin suggested.
 
-v2:
- - two more cleanups, 5-6, use __bpf_kfunc_start_defs/__bpf_kfunc_end_defs
- and drop the declarations of __bpf_kfunc.
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-1-2 address Martin's comments
-3-4 cleanups for endpoint_init
-
-Geliang Tang (3):
-  Squash to "selftests/bpf: Add getsockopt to inspect mptcp subflow"
-  Squash to "selftests/bpf: Add mptcp subflow subtest"
-  Squash to "selftests/bpf: Add bpf scheduler test"
-
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 58 +++++++++++++------
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |  4 +-
- 2 files changed, 41 insertions(+), 21 deletions(-)
-
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+index 928a1e5ad8db..c3800f986ae1 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+@@ -26,10 +26,10 @@ static inline int list_is_head(const struct list_head *list,
+ #define list_entry_is_head(pos, head, member)				\
+ 	list_is_head(&pos->member, (head))
+ 
+-/* small difference: 'cond_break' has been added in the conditions */
++/* small difference: 'can_loop' has been added in the conditions */
+ #define list_for_each_entry(pos, head, member)				\
+ 	for (pos = list_first_entry(head, typeof(*pos), member);	\
+-	     cond_break, !list_entry_is_head(pos, head, member);	\
++	     !list_entry_is_head(pos, head, member) && can_loop;	\
+ 	     pos = list_next_entry(pos, member))
+ 
+ /* mptcp helpers from protocol.h */
 -- 
 2.43.0
 
