@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6BD8146A86
-	for <mptcp@lists.linux.dev>; Mon, 23 Sep 2024 15:54:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 045F9197A8A
+	for <mptcp@lists.linux.dev>; Mon, 23 Sep 2024 16:09:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727106857; cv=none; b=fpeaaruVvVvnXg7J0H6XbdBWbbFUEO/JYTMAroAkmws1/vcXZKRj9aOAbIVjSpnnm8mVEF8/sdypi8LZGVLV4CPbRTX/RjaMPDoefvXGmZojGHT7rdNIwDYU3Jl0SNHzN1BHJrnhiVgTLsh6CW1VN0nJ7GYCgrlCy6/7UCDl3OE=
+	t=1727107745; cv=none; b=MXmAq3Nq9RGJWHu8dvIxV2I40zg4BsSjCbN4dFO2UZyrldggWF3xnraIeWV20gBFHFn/KvtELZRo+cWoAcDa1VYAnj2WLGE1X6yjjv8Uy/e6oG51VEJ/2RTXckKxMyomC8rLP/VlROfyIyiOyRli1twvSgdw7M5Qgf0vJdCiIyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727106857; c=relaxed/simple;
-	bh=/3cjjYD66X9o/c457JNW0PWcxPbUpyXt1U6UomwmcxU=;
+	s=arc-20240116; t=1727107745; c=relaxed/simple;
+	bh=hxoPAjZpV+JN3sQ39dGr6TH7wia7M25Gi7Cvoj6rBhE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=OoWnJ+qx2vKO6BvCCGEc2go/DzUgZYMl3wSdYqFv29nu+bfvZinxJhmYtz4hiY7p95RX/OXNrg7ikNzq9NOzIio96sMa8hwJaCcBrLS9i+oxuLDm6/wiYq2mLMduDs2cXLHKnaOMRE3j0RSDX6DilW4JVqitq+T6TyfPtrgRHAI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GycmTWI3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=BnjVMhT0YdjSvbV0xG7L4e/ZG8iaAmKm4UmBpcfZY24OXJ0zYdHiNn8Rhwlc07MFjxbwA1AKcQu5YxSwXo510JN53Qs+x8n7hhpieRyjkLE6Y3WycluJ6v6sCuzArYtJPWqIEdNH5d6NUDnDKepHqW6ee2NZOtV0Hg18n/ZIwgw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PYOtHOsi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GycmTWI3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D750C4CEC4;
-	Mon, 23 Sep 2024 15:54:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PYOtHOsi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C32ADC4CEC4;
+	Mon, 23 Sep 2024 16:09:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727106856;
-	bh=/3cjjYD66X9o/c457JNW0PWcxPbUpyXt1U6UomwmcxU=;
+	s=k20201202; t=1727107744;
+	bh=hxoPAjZpV+JN3sQ39dGr6TH7wia7M25Gi7Cvoj6rBhE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GycmTWI3WSklJkQpaUGTKqGXsEES4GBEAuAMNCX3wASOURnAU13IDRy5Bbu8SY7Sv
-	 1VlurB4YavJGU8BZXiJ73Vu3yvYmqRuJ0ZOsVB75v50NhNEJv3A6MTTw64KL5qQnJ6
-	 Y+rv0m7WAUT7aClxgkxeHCRXbZmCbHgiT2U93gCUDg3Xlf0lA4Sof+XzT6W2QnMyW+
-	 oXLDa/CvpMS+2sfl7hOH3KW2X5lE9D9uxSQ8KCY958/lDL/UP1sTSccEfHouiFFANa
-	 xt2pDa+2HRnLu5IgwSufIfh7iFqOK3rE0Wo59Tx1fmRSWiym4a3SfnVBLOHb2q6aXr
-	 DPTafjDy6qhiw==
-Message-ID: <87e60e70-288b-424b-b646-62aefbfcfde2@kernel.org>
-Date: Mon, 23 Sep 2024 17:54:13 +0200
+	b=PYOtHOsiWuCRRQDJzU067QDWPY5ofTz63H3QCq8CzKNiUn5V5vpLfP1TtvCfOGz7f
+	 ecI3NEX+riv3KfUk86oWdRWDkQbtTlpf0y/0scgRXQPfOc257ROOWvr7sVqC+sfPPD
+	 6gD5twR8pZ4R41VwO47m/ST/8wlGC5sKy4zruLB6Zt2F9v96g7+LtMfALd7MeP5ZFI
+	 Q6VBuSfATVk0YHrVRPsI/vpL10CMCi2AQhZjj8YiuCimw+ir6lEZrFtGiYTizApbvp
+	 ORIPZvFxYNCe/8UOqRKYtU7m9FDyyRSkNVoKShtiSPoYhQxEFphefJx6ZMfVTxGfW3
+	 l/5GUFcAPes5A==
+Message-ID: <51c6ca50-bf8f-47a1-a71c-7dbc30631288@kernel.org>
+Date: Mon, 23 Sep 2024 18:09:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 2/3] Squash to "selftests/bpf: Add mptcp
- subflow subtest"
+Subject: Re: [PATCH mptcp-next v2 0/6] fixes for "new MPTCP subflow subtest
+ v6"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1726966638.git.tanggeliang@kylinos.cn>
- <eb6e2006358f2d3bc629b262ade7b86b234b18d5.1726966638.git.tanggeliang@kylinos.cn>
+References: <cover.1726647599.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,40 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <eb6e2006358f2d3bc629b262ade7b86b234b18d5.1726966638.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1726647599.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 22/09/2024 03:00, Geliang Tang wrote:
+On 18/09/2024 10:25, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Address Martin's comments:
-
-Thank you for that!
-
-> Drop mptcp_subflow__attach.
-> Use bpf_program__attach_cgroup instead of bpf_prog_attach.
-> Use the skel->links.{mptcp_subflow, _getsockopt_subflow}, instead of declaring a
-> local "link".
+> v2:
+>  - two more cleanups, 5-6, use __bpf_kfunc_start_defs/__bpf_kfunc_end_defs
+>  and drop the declarations of __bpf_kfunc.
 > 
-> More subflows for endpoint_init:
-> 
-> Add two more test addresses ADDR_3 and ADDR_4, and adds a new parameter
-> "subflows" for endpoint_init() to control how many subflows are used for the
-> tests. This makes it more flexible.
+> 1-2 address Martin's comments
 
-Should we not split that and keep it for later? I mean: I think it would
-be better to only address Martin's comments, and modify endpoint_init()
-later because this is not needed for the moment if I'm not mistaken.
-When we will need more than 2 subflows, we can add these patches, no?
+As mentioned in my previous email, I only applied these two patches:
 
-It's just to minimise the differences between the versions already
-reviewed by Martin, and the future one. WDYT?
+New patches for t/upstream:
+- a3694ad627fb: "squashed" patch 1/6 in "selftests/bpf: Add getsockopt
+to inspect mptcp subflow"
+- f75b0ee082dd: "squashed" patch 2/6 in "selftests/bpf: Add mptcp
+subflow subtest"
+- Results: 1ca27609ee8b..988c8bf8afee (export)
 
-I can already apply patches 1 and 2/6 from your v2. Then check later
-what is preferred before sending a new version upstream.
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3236a730ea9b8d63a159d47275f4408432e492fd/checks
 
 Cheers,
 Matt
