@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E59B80C13
-	for <mptcp@lists.linux.dev>; Tue, 24 Sep 2024 09:10:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B1F280C13
+	for <mptcp@lists.linux.dev>; Tue, 24 Sep 2024 09:10:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727169009; cv=none; b=sJ7vxlJXgGx4JWpVzm/sJ8CbYsshSvc+HlAru6yQ+ejrSoxjzU3HZlR7b2urKhD45sbCyRh6d2Uv+62eZS46wvHOJj4v1BAh+Id26woJZlPSWpLRsehRaI44z9tpAaf6LtSAjqqNaHcBq0sb4Rtcm/IwYPxKsh3m5BaADZ89fHw=
+	t=1727169011; cv=none; b=l1gC/raAlShJvyUy/lA4OlwK79pdTYmm9Bm2c7KfB3bw4AyWETTdS8oEQpaEBNpdyxHF2NzTAt2B482ynQW3UG/7rbR6gZov7Qsji3ehjTDyVEuHLfMxpLvZk60A09qS/zWcfcKTAISds5weS+0H4xUhASsZUyg+xYfvitsyL3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727169009; c=relaxed/simple;
-	bh=5fLCxGFpHjELiPu/sDDRqRb7EBs7tE1st2nT3+IP+T0=;
+	s=arc-20240116; t=1727169011; c=relaxed/simple;
+	bh=PqhL1+HJ5QSdK+L/sMvyJR56R2rzBeswxSui00kjs7k=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oLox18naOMHlBhvraDF9wj7obm3sx0t5R1H2qUq7LkW1bXJyJiodjtouubVQeUFYr5Mhz84C6Iaa5m6BZLDtZIR2EAItMpTFIs7TIj7RTQiw5dOthS31yCnJDZ9dtr+69jtvX/qfHfuMMWK1BBCpyjyXLFAzazvzWj4QnlAu8/g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ni46VGq+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=uVxhcx3OMw/Yrvr40/kLmvts0PCxjGKolxCys+oVDOD1wVyMmB+ES/Il6AfS/APjEAqYPYavPsGFbIvYrOu9CkNvsOFEYVW1yIv3T0qF7EZSHtfJOfc+hMFb6ql5AlycxsP/DDk5o3/X3HcOzn+LoDbOi5mU921u5tUK4pOAFuI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sEvBaC3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ni46VGq+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A709C4CEC5;
-	Tue, 24 Sep 2024 09:10:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sEvBaC3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 047FCC4CEC5;
+	Tue, 24 Sep 2024 09:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727169009;
-	bh=5fLCxGFpHjELiPu/sDDRqRb7EBs7tE1st2nT3+IP+T0=;
+	s=k20201202; t=1727169011;
+	bh=PqhL1+HJ5QSdK+L/sMvyJR56R2rzBeswxSui00kjs7k=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ni46VGq+8eGNGNU1ZZ3EJAw7erz7gI98Xg0PAGCmhZULGF8kQnZZSnNRSrnPD0gJw
-	 KBDU8EtaM6gNHSVKkwR1l0o4cRgwXH+8brKOVSdd04H5znx4VhP1YpJYd6D0rE5bGH
-	 6HVFlfHXn/zkAc1PpkuN38UB/Dm25uJtUGZFQwrDmVqiLQUsEFNfh1S7Da4rXvoUeS
-	 bEq4TyZouOsJLmVnbVk2nK1bpuJ3ErIHZ+tUfMZI5gQ/GiNfQRqh3aBUv+/ZWqZb3H
-	 9RYcSLnXPDPC9fds6taiIAO54XGJTgkQXwmy6llRc98cPRRm/2enAihbO+fKByEf5l
-	 kdrn8QRWYR59A==
+	b=sEvBaC3ORMDOBdehw26yOY/qF2CtazLBgdYvi7GK2SwYEqMKNMRK/jw2pdrdbLc8s
+	 ZUSxgP0RZJ4wgM4t74oYBBjM7HYl60k8Htv4/l2gCWmvh6avN0uluzIbi6MleKIDEf
+	 weBe+uV1KQltMb0qG/QI6oVtXsraF2lfyaK8QawHORsW1tIGTPfM15SpXKXFWVIRUV
+	 q8AHaTFb0mM4OQz7gUNAZwgu25MQMpHRLs9OLwD59AhjUylPNG1b/+pJKfplrgAJkI
+	 58ZHz1sQvB4esVbIME2muG/G4q7tLOTNBHSELzt6/O/4dfL04dRsYsPt2cHDSA/jCn
+	 YzGRL21yYT+VA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 04/10] selftests/bpf: Add mptcp_subflow bpf_iter test prog
-Date: Tue, 24 Sep 2024 17:09:48 +0800
-Message-ID: <6b52ba4a67304ccb3b36f9e098a8e26d9ffb58ff.1727168628.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 05/10] selftests/bpf: More endpoints for endpoint_init
+Date: Tue, 24 Sep 2024 17:09:49 +0800
+Message-ID: <59ad691caaab9468b15faa4300b05890fcddb792.1727168628.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1727168628.git.tanggeliang@kylinos.cn>
 References: <cover.1727168628.git.tanggeliang@kylinos.cn>
@@ -45,110 +45,102 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a new mptcp bpf selftest program in "cgroup/getsockopt"
-for the newly added mptcp_subflow bpf_iter.
+This patch adds two more test addresses ADDR_3 and ADDR_4, and adds a new
+helper address_init() to initialize all these addresses.
 
-Export bpf_mptcp_sk, bpf_iter_mptcp_subflow_new/_next/_destroy and
-bpf_mptcp_sock_acquire/_release into bpf_experimental.h, then use
-bpf_for_each(mptcp_subflow, subflow, msk) to walk the mptcp subflow list.
-Invoke kfuncs mptcp_subflow_active() and mptcp_subflow_set_scheduled() in
-bpf_for_each loop.
+Add a new parameter "endpoints" for endpoint_init() to control how many
+endpoints are used for the tests. This makes it more flexible.
+
+Update the parameters of endpoint_init() in test_subflow().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/bpf_experimental.h  |  7 +++
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |  6 +++
- .../selftests/bpf/progs/mptcp_bpf_iter.c      | 46 +++++++++++++++++++
- 3 files changed, 59 insertions(+)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 46 +++++++++++++++++--
+ 1 file changed, 41 insertions(+), 5 deletions(-)
 
-diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 828556cdc2f0..97aad95c90c6 100644
---- a/tools/testing/selftests/bpf/bpf_experimental.h
-+++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -549,6 +549,13 @@ extern int bpf_iter_css_new(struct bpf_iter_css *it,
- extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __weak __ksym;
- extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
- 
-+struct bpf_iter_mptcp_subflow;
-+extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-+				      struct mptcp_sock *msk) __weak __ksym;
-+extern struct mptcp_subflow_context *
-+bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
-+extern void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
-+
- extern int bpf_wq_init(struct bpf_wq *wq, void *p__map, unsigned int flags) __weak __ksym;
- extern int bpf_wq_start(struct bpf_wq *wq, unsigned int flags) __weak __ksym;
- extern int bpf_wq_set_callback_impl(struct bpf_wq *wq,
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index c3800f986ae1..ab46b66422c4 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -43,6 +43,12 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index acd79be134cd..076903680e75 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -20,6 +20,8 @@
+ #define NS_TEST "mptcp_ns"
+ #define ADDR_1	"10.0.1.1"
+ #define ADDR_2	"10.0.1.2"
++#define ADDR_3	"10.0.1.3"
++#define ADDR_4	"10.0.1.4"
+ #define PORT_1	10001
+ #define WITH_DATA	true
+ #define WITHOUT_DATA	false
+@@ -351,22 +353,56 @@ static void test_mptcpify(void)
+ 	close(cgroup_fd);
  }
  
- /* ksym */
-+extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
-+extern struct mptcp_sock *bpf_mptcp_sk(struct sock *sk) __ksym;
+-static int endpoint_init(char *flags)
++static int address_init(void)
+ {
+ 	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
+ 	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
+ 	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
+ 	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
+ 	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
+-	if (SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, ADDR_2, flags)) {
 +
-+extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
-+extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
++	SYS(fail, "ip -net %s link add veth3 type veth peer name veth4", NS_TEST);
++	SYS(fail, "ip -net %s addr add %s/24 dev veth3", NS_TEST, ADDR_3);
++	SYS(fail, "ip -net %s link set dev veth3 up", NS_TEST);
++	SYS(fail, "ip -net %s addr add %s/24 dev veth4", NS_TEST, ADDR_4);
++	SYS(fail, "ip -net %s link set dev veth4 up", NS_TEST);
 +
- extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 					bool scheduled) __ksym;
- 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c
-new file mode 100644
-index 000000000000..39240df5bc3c
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c
-@@ -0,0 +1,46 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024, Kylin Software */
-+
-+/* vmlinux.h, bpf_helpers.h and other 'define' */
-+#include "bpf_tracing_net.h"
-+#include "mptcp_bpf.h"
-+
-+char _license[] SEC("license") = "GPL";
-+int subflows;
-+int pid;
-+
-+SEC("cgroup/getsockopt")
-+int mptcp_getsockopt(struct bpf_sockopt *ctx)
-+{
-+	struct mptcp_subflow_context *subflow;
-+	struct bpf_sock *sk = ctx->sk;
-+	struct mptcp_sock *msk;
-+
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 1;
-+
-+	if (!sk || sk->protocol != IPPROTO_MPTCP ||
-+	    ctx->level != SOL_TCP || ctx->optname != TCP_CONGESTION)
-+		return 1;
-+
-+	msk = bpf_mptcp_sock_acquire(bpf_mptcp_sk((struct sock *)sk));
-+	if (!msk)
-+		return 1;
-+
-+	subflows = 0;
-+
-+	bpf_for_each(mptcp_subflow, subflow, msk) {
-+		if (subflow->token != msk->token) {
-+			ctx->retval = -1;
-+			break;
-+		}
-+
-+		if (!mptcp_subflow_active(subflow))
-+			continue;
-+
-+		subflows++;
-+	}
-+	bpf_mptcp_sock_release(msk);
-+
-+	return 1;
++	return 0;
++fail:
++	return -1;
 +}
++
++static int endpoint_add(char *addr, char *flags)
++{
++	return SYS_NOFAIL("ip -net %s mptcp endpoint add %s %s", NS_TEST, addr, flags);
++}
++
++static int endpoint_init(char *flags, u8 endpoints)
++{
++	int ret = -1;
++
++	if (!endpoints || endpoints > 4)
++		goto fail;
++
++	if (address_init())
++		goto fail;
++
++	if (SYS_NOFAIL("ip -net %s mptcp limits set add_addr_accepted 4 subflows 4",
++		       NS_TEST)) {
+ 		printf("'ip mptcp' not supported, skip this test.\n");
+ 		test__skip();
+ 		goto fail;
+ 	}
+ 
+-	return 0;
++	if (endpoints > 1)
++		ret = endpoint_add(ADDR_2, flags);
++	if (endpoints > 2)
++		ret = ret ?: endpoint_add(ADDR_3, flags);
++	if (endpoints > 3)
++		ret = ret ?: endpoint_add(ADDR_4, flags);
++
+ fail:
+-	return -1;
++	return ret;
+ }
+ 
+ static void wait_for_new_subflows(int fd)
+@@ -452,7 +488,7 @@ static void test_subflow(void)
+ 	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
+ 		goto skel_destroy;
+ 
+-	if (endpoint_init("subflow") < 0)
++	if (endpoint_init("subflow", 2) < 0)
+ 		goto close_netns;
+ 
+ 	run_subflow();
 -- 
 2.43.0
 
