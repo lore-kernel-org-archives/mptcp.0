@@ -1,118 +1,113 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9E6450EE
-	for <mptcp@lists.linux.dev>; Tue, 24 Sep 2024 16:39:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4A31A265D
+	for <mptcp@lists.linux.dev>; Tue, 24 Sep 2024 16:48:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727195963; cv=none; b=j8+OQ+VK2aAvGdDHmyjSpFMLiyo54U4Iek8Inz7U36IX+k821RdWGTxX4aVWwhj64a5iAbuvcWGdoGNzwzXu4kJcR6cZZ9by4jCphMZ9gpW7t5h+jCVh7pNly9hG3FghOZDfLlazbGp5IWZ6gCK8YCk/QaQyPExU911mHsJJz1Y=
+	t=1727196504; cv=none; b=qEBDgGpMXpwswy7dVC9BLbPOeKT9tQ9MUldV6+UgITHYKlWiP2/fv87s6ekV/ZymJ0P0BY2AR7jRs5Pl44zRTSrc0pM2tE/8352JhUBcpuwGTQyRRsfJc49Xodw8ILGVuctVByYs42DtUK5R5o6+pmaWZJV+wCBA4gL3jAvBR8I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727195963; c=relaxed/simple;
-	bh=jX0Cpx7XHymXuGVHyTcL9KfAtZlnZp6YZ+71/YCjZyI=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=qp8ZS1x1P8yjG8jbVvfJRdqZx4bei9f/OBSae6YIfiWk/nGJR1znS+Y585wdwOZaiqR8eKvoOZJ4zSLNLcBgj2s6aPrGsdFNuA+f5oRYT5oGSNjCQ0T9XC/UHdP8CnrdSP+LOzLFeITzQ6O0ACQfT29sskjhIm9nJmkdSFqwqnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d9XVbOhn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727196504; c=relaxed/simple;
+	bh=SRgCOQKMPB6dCquFqMjbwOB33RN7J9oUAvQXs860m5A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=qYpUbM9Yjdzol7HO3KIMcwphcng6FxGOVVWnpUQtCn4SiPK44WqBb+acizLfc0YJPAHgdGCHAx7ouW059m4MERea2EdyIHCeN+zWuNQf1AQC1PLtuHmUDg8qIO1jrop+q6H+waO1VOmCYnHXcJFYJ2GH9FYKbLtWoSyfX8nDYUA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qNedgedi; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d9XVbOhn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6BFB6C4CEC4;
-	Tue, 24 Sep 2024 16:39:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qNedgedi"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23AF6C4CEC4
+	for <mptcp@lists.linux.dev>; Tue, 24 Sep 2024 16:48:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727195963;
-	bh=jX0Cpx7XHymXuGVHyTcL9KfAtZlnZp6YZ+71/YCjZyI=;
-	h=From:Date:Subject:To:Cc:From;
-	b=d9XVbOhnCc5p5zIg3rtHUYJbApW9xsK3hLHDsjn30rydcrTi6Sg5gn74TMcgiREc+
-	 HfzcZdhNqguWyO1KJatcmT755TqxojFvSSZo4BXsU+XwCEvq0LabC5gtQfFdyi58Fr
-	 EN1sdDsch6sJxuD58wn9UbSSAXPAfPmfk+4WMyt4zlRIWn3OndKSR3GllpY5gDZW67
-	 yV2U79DJFfZN+TX3HO7/vUFxHW0XLVcuZfhTtofjWr3NZLIQvQDy++DI9+y8QrLQtP
-	 L4bd/Usbd2co8A5JgwTA8pP/3sa5a0BmFKhO03B/JQB3S89gzvAyJeItsPrKPJrtMi
-	 8mN3b2zcuP71w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 24 Sep 2024 18:39:15 +0200
-Subject: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
- coverage for CI"
+	s=k20201202; t=1727196503;
+	bh=SRgCOQKMPB6dCquFqMjbwOB33RN7J9oUAvQXs860m5A=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=qNedgediFMXnAraP85WnRWZNUSPvePCcu6r35ES9L9lEoIjyO7odxRDD0uJL7nfLV
+	 bV7x50FThvVCebFRWvxyGXtGSgXVPLgml0qcN7Im/qwDGxrYS3Igm8/MwZZctBAIG2
+	 HQ4SFzobAf1f/X8/eHS7hqjCeCBtiGOmZx9q+dfTtpc0pqpJJ1wgsHbb8aeASSlKxn
+	 EoHqrVuyYCwJiwSN36kBpvhcp+sn4H693TBxdM/jajFWWlFVrnyywmULYStfOwGF0t
+	 VgLCTVLnwF00lkQ69AHzxCfliFrj3C5DLQRDrMf4Xs/nCQf6dH7TrpMj9PNFzVFR1C
+	 29dybZQFMjs3Q==
+Message-ID: <e24d0b52-35f4-40f5-97e3-35448c8c1b9b@kernel.org>
+Date: Tue, 24 Sep 2024 18:48:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
+ coverage for CI"
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20240924-mptcp-gcov-v1-1-b259d5dc5fa6@kernel.org>
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20240924-mptcp-gcov-v1-1-b259d5dc5fa6@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20240924-mptcp-gcov-v1-1-b259d5dc5fa6@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADLr8mYC/yWMQQqAIBAAvxJ7TqhNIvtKdCjdag+ZqEgg/T2p4
- 8DMZAjkmQKMVQZPiQNftkBbV6CPxe4k2BQGbFA2CqU4XdRO7PpKQqquH0yrVsQNSuA8bXx/swl
- +z9IdYX6eF54QIhpoAAAA
-X-Change-ID: 20240924-mptcp-gcov-49368d19b22f
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1663; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=jX0Cpx7XHymXuGVHyTcL9KfAtZlnZp6YZ+71/YCjZyI=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm8us6l9SjhItQnsIwVAwiGooOmfMGkzFEvmkBR
- f34YHiyWhGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZvLrOgAKCRD2t4JPQmmg
- c+n0D/4ynGBBZO9cRXPZVDpWYhB97uo+6Dg1Hf9P1+CMvGJ2+1fpS3C5ILZPkMougDz1R8f+9lu
- CH8u7izJ188IpHE7euednh/VL35pQ/F6MN985Yh0ECyH5LkjLcWCdPiO0renRFcciwzAJWXRGhd
- 5Ru/UlhQkyO/qI4RuXVLWY2AkazNasoMlLVVtPe5sEM6pCaBQzUEevVlgpHK+kWsTxstei2QsMR
- hoIddyTX9l7vIwKaoIym//JwvUzCwGhst48oX4m4o07W+muTzsu7w3GCBiKkec38jPAf+hyJgqo
- jI5lEsxnHu+Cq0W2OOhMjwlGllTrC9R/Bw234dvUfzAyGD6uVGOm8uCJ9+eqxTe0iOAnmgKrt60
- hn0y1i2cH03n1plKfaSohFawhwAtQBNCsHcoKaOKLYZWfn2kCY8fweLjsTA9EYmJBOFCu5nIVD8
- IQ4GDPEoq5nmRE4N+/g7gxOy/YP+qB3HSlCjRfCTPLG39xdiH+L4C9serpHZWPPm7E/QdJoAKKa
- ziuVzlVmw37zLlVef75AhrRUuXsWxczqOQ6cggE84tmGmRi/tPafAAn5rlZxs9M8gfsD0PjkdsL
- hqFidIMNTVaUPnbY/i6fBSR75R99CALC6igr66eIvqN2IG1aLteaJXQ4byFg3bBj7dzpPkvlt3N
- mNgQTFnHXnM3K1w==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-And in "DO-NOT-MERGE: mptcp: improve code coverage for CI (net)".
+Hello,
 
-This is similar to commit bc75dcc3cea7 ("net: rds: add option for GCOV
-profiling"), but I don't think we need to upstream that. Or not for the
-moment as the selftests don't depend on GCOV support.
+On 24/09/2024 18:39, Matthieu Baerts (NGI0) wrote:
+> And in "DO-NOT-MERGE: mptcp: improve code coverage for CI (net)".
+> 
+> This is similar to commit bc75dcc3cea7 ("net: rds: add option for GCOV
+> profiling"), but I don't think we need to upstream that. Or not for the
+> moment as the selftests don't depend on GCOV support.
+> 
+> If we do, we will also need to update Documentation/dev-tools/gcov.rst.
+FYI, I just applied this patch in our tree
 
-If we do, we will also need to update Documentation/dev-tools/gcov.rst.
+- 66b668896210: "squashed" in "DO-NOT-MERGE: mptcp: improve code
+coverage for CI (net)"
+- 07234ab477d3: "squashed" in "DO-NOT-MERGE: mptcp: improve code
+coverage for CI"
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/Kconfig  | 9 +++++++++
- net/mptcp/Makefile | 5 +++++
- 2 files changed, 14 insertions(+)
-
-diff --git a/net/mptcp/Kconfig b/net/mptcp/Kconfig
-index 10c97e19a7da5cbb1538b34a8eeca2e89795dfae..f674915dc31e521e6fe9dbcef03e65bdba10dd3d 100644
---- a/net/mptcp/Kconfig
-+++ b/net/mptcp/Kconfig
-@@ -37,4 +37,13 @@ config MPTCP_KUNIT_TEST
- 
- 	  If unsure, say N.
- 
-+config GCOV_PROFILE_MPTCP
-+	bool "Enable GCOV profiling on MPTCP"
-+	depends on GCOV_KERNEL
-+	help
-+	  Enable GCOV profiling on MPTCP for checking which functions/lines
-+	  are executed.
-+
-+	  If unsure, say N.
-+
- endif
-diff --git a/net/mptcp/Makefile b/net/mptcp/Makefile
-index bcf1dbf3a432f7423b048e985667f199797042b3..5dbc37d38d7a4b0779c71e7b291ef83a49e46648 100644
---- a/net/mptcp/Makefile
-+++ b/net/mptcp/Makefile
-@@ -13,3 +13,8 @@ mptcp_token_test-objs := token_test.o
- obj-$(CONFIG_MPTCP_KUNIT_TEST) += mptcp_crypto_test.o mptcp_token_test.o
- 
- obj-$(CONFIG_BPF_SYSCALL) += bpf.o
-+
-+# for GCOV coverage profiling
-+ifdef CONFIG_GCOV_PROFILE_MPTCP
-+GCOV_PROFILE := y
-+endif
-
----
-base-commit: d269ec78a30bc7a57999838c477a83b0e0101a57
-change-id: 20240924-mptcp-gcov-49368d19b22f
-
-Best regards,
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
