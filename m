@@ -1,60 +1,56 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 989AE156661
-	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:02:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B586136E01
+	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:04:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727254933; cv=none; b=jGLq6GEernyq+uYXk8vRIs+D/yOJQ+eIo3s18G+13gPha4ki0iXsl8TEA0QGgWu6AP57CxJaZGPDPoOz80aEZ/xNguiz/n0GsXB+edVU9f1PQDyeWQEUai9I9iz2anv/qL4I9LFMi5zJhXWvBVugQ7w3qubUZWGxp8tnSC6ZGrc=
+	t=1727255054; cv=none; b=NCozYJR0RCdVCk5r4KchoiLhUm1lWcYNF5O/7NmDwfd7iIKpFzASc0r26ZfNJSLsoHWvqFJedHBK0DNZp3o0BxWdPr65Tp6+CB9Zm3fd/eBmh0pk2Jau34kgF9zfHNBruZnUdpc3bBSe3HhQTck/gQO9uGMDLZmogLhKmN0HLz8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727254933; c=relaxed/simple;
+	s=arc-20240116; t=1727255054; c=relaxed/simple;
 	bh=NVqR+Wgtewap361pN0IyYMIAK46rn2xsNGiffXaL7i4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=YFTjIhCsTQg2HXBjDKgbmcUfrlfmG+qWACtWdp3gugnC97K7DqTvpJMcNyMxytlaYExaGh4EcNMLi00dCZhyNvnwxv7xxK2DBVnYT3VlyJTHQycRn3fIcz/08PAM6vbI1+nvtfxDb+A8VHnFURQPgOrlzA21YMib79ypq73W+6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=GZ3a++yc; arc=none smtp.client-ip=170.10.133.124
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=MM01J87YtV7K0f21EwQPrlDIlsAqyjQZFznwQo7Qd7MdfCGTiibjlx6KiyEbANvOST7/qyoLF14JR/xUsCrwTJw4Ie7nR+UJBihs0kUJuU6JbSdmxkbhM8+dBH0D600o5FLWpaK8H/6nsrhdi4UZZT2zmCOMgQqBMBtvFADTRpM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Bip5GM3R; arc=none smtp.client-ip=170.10.133.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="GZ3a++yc"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Bip5GM3R"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727254930;
+	s=mimecast20190719; t=1727255051;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
+	 content-transfer-encoding:content-transfer-encoding;
 	bh=u7ehqEsFl2urZJBpCGRrN0YAlpbFyK6j5utAMrCA9hU=;
-	b=GZ3a++yc2YWnRJ4dwYYJWTIeAUaI5HuFpC161zwwS1sKvZiA85JSwvuK5HlcB1EGh0FG3C
-	M5rTB1L1OgelLEUtH9zks+4dgC0YCT0H+/+GnBJ4Nif90fQIQF/m6XAT1T+60b/IqKlP2V
-	m7wPYKH5Djr9Vi2sfFrw9v+ECwcWGL4=
-Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+	b=Bip5GM3RlqDtFcUmaUfDrHSVDdkupu453AFDE0xZ3dFTgcWYWVl09gg/SYWU0ZW4k8c6sT
+	KGVk3NPEF4+0I+hyUdkMB7xrBZax3qTQ3J4bAl8pqVPYhRcvIMi6XHJdSZZ9rjWxhl4ycm
+	SW0DrwrqWFcYB+6QG/rbt1HJeeKtpzw=
+Received: from mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com
  (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-538-GnT0qtoVOvafnGF3rtAEXw-1; Wed,
- 25 Sep 2024 05:02:09 -0400
-X-MC-Unique: GnT0qtoVOvafnGF3rtAEXw-1
-Received: from mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.15])
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-402-EtYnSXNvPrqQiHH-SzwQVw-1; Wed,
+ 25 Sep 2024 05:04:10 -0400
+X-MC-Unique: EtYnSXNvPrqQiHH-SzwQVw-1
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.12])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7AD9B1977039
-	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:02:08 +0000 (UTC)
+	by mx-prod-mc-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 6ABF41944DE6
+	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:04:09 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.45.225.57])
-	by mx-prod-int-02.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7B71A1956094
-	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:02:07 +0000 (UTC)
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 7C35C19560AA
+	for <mptcp@lists.linux.dev>; Wed, 25 Sep 2024 09:04:08 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH mptcp-net 2/2] tcp: fix mptcp DSS corruption due to large pmtu xmit.
-Date: Wed, 25 Sep 2024 11:01:50 +0200
-Message-ID: <bb54c97dcc2b2d4ca80d03127b9b0e9a610929a8.1727254866.git.pabeni@redhat.com>
-In-Reply-To: <e2c96390fa3980d3aca9c41671b90f645eab6523.1727254866.git.pabeni@redhat.com>
-References: <e2c96390fa3980d3aca9c41671b90f645eab6523.1727254866.git.pabeni@redhat.com>
+Subject: [PATCH mptcp-net] tcp: fix mptcp DSS corruption due to large pmtu xmit.
+Date: Wed, 25 Sep 2024 11:04:03 +0200
+Message-ID: <bb54c97dcc2b2d4ca80d03127b9b0e9a610929a8.1727255036.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.15
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 X-Mimecast-Spam-Score: 0
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
