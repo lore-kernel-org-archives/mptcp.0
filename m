@@ -1,188 +1,67 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FA5D17BB34
-	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 08:44:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84943189903
+	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 09:45:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727685886; cv=none; b=WrHRTx8ljllrPNA85HaOm6U41daDeW1ow+LDzkO8e5LFsbwUF01k8S0tPHJM1E/JuHGBoYoppkdx2wI8zX+2rRLATCgBOC5xLS39bFvSqJZuhfRHC6M7vd7s8UatwPv2SIV7MW50ep4Q2GEVoiD5rWpObyGp+ExNxW+1DF6I4hM=
+	t=1727689508; cv=none; b=LzG/NbKcQFBKbSNS/NjX1m6kwQeHMHV+MTRjyv7mGSuCDRhYI6oYlMW4xF8/1cVLX3ofdxdr0EzrP9CwPs/U8/7OndugTKvyKtuXv9GMGBqU2AS3b3Rg9mT7OrhIkOGbIHGsCy7O/oS4XsSrFzSpEbQwBcf9oCvlqqC2KOGBxaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727685886; c=relaxed/simple;
-	bh=NVqR+Wgtewap361pN0IyYMIAK46rn2xsNGiffXaL7i4=;
-	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=SOinfwsbxoYqGQVnlLagxSriQdVoMxf//xEnUQsTKyrshb/+qPIc+2j8jfGYJLuana4LbMGHTdBPGeZnV/k8UckVGrmZ1XOhDlewsLOetcmxKqYoIpxNF2E+qAHVz3DfraHwpaNVPQGniaxiYbDJskqUQq4BBorv5SJBfgAuTWk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=jVA2V1sa; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1727689508; c=relaxed/simple;
+	bh=P+QRr4EilN8x1rhX4xw8EtCjQeXZ33m5tTjfYqlnPlg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CIW5CY2wqZxr6RHAzFx98un7QuEi9abpGFW2FvTCpeoQ8dO+l8QwChnHDr4jSPiC2d6y5QlSsM8ydsYLdgqais1fafyhvHGS5qpqD8tfNa2gZcgcDUxEut3sdu7+aSHMwkoCCzFgj6ajZ/hYcKaE/QTGm7DaIJZAVInEz2qIN0A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAcMb4Kn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="jVA2V1sa"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1727685883;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=u7ehqEsFl2urZJBpCGRrN0YAlpbFyK6j5utAMrCA9hU=;
-	b=jVA2V1safM/NGEjuD8+BQH63NLW/090M7sdqF/PDM0t8WUwJbvd+SjmMe8KL+r4tJ6xgLm
-	qcDWObFlBNMZhNDUY5D8PyBC4hVY0LNISfhCCz18nUNLRPnkelfAW+kL88QoSd1VfmFe/S
-	ou3LNJbWY7jrHOWbxpIGaF3bixOQl00=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
- relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-687-diu8BVObM02o7YLhIKLpVA-1; Mon,
- 30 Sep 2024 04:44:42 -0400
-X-MC-Unique: diu8BVObM02o7YLhIKLpVA-1
-Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (unknown [10.30.177.40])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 97AB0190DE1C
-	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 08:44:41 +0000 (UTC)
-Received: from gerbillo.redhat.com (unknown [10.45.224.210])
-	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 8EA8B196CA8E
-	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 08:44:33 +0000 (UTC)
-From: Paolo Abeni <pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAcMb4Kn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD80AC4CEC7;
+	Mon, 30 Sep 2024 09:45:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1727689508;
+	bh=P+QRr4EilN8x1rhX4xw8EtCjQeXZ33m5tTjfYqlnPlg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KAcMb4KnMq4VAkegasIlQoQZOM8uaqt4vbAYIjH034mCsDtzs2PEKfMM9bgCdVoZI
+	 bCO+LxHXTyxwwWsnfeGXPFtKBhsk1zfPkNeXLDMnfJiA7W8ux4gu7Za3BOZ94jHIJa
+	 ivisGQ9IyLIIcdM2DOFuT9kWT/xHg3ywF5sBVrf8r0vJ4hF9oV7ZHod1APtEgUBREF
+	 MbFuN7MVctxH7+tHugLehbBy6zSJ1JBbmJ+BEx+LXedFsy7PDXIN1n4kcJYhV4N1uv
+	 A5rGjb9+ZCzt/tN207YHaPhdmodRpc89DZnDz8kF5JswF/cSZJwomd6EvuRa6ChI4p
+	 CoXS15bSbOngQ==
+From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject: [Patch v2 mptcp-net 2/2] tcp: fix mptcp DSS corruption due to large pmtu xmit.
-Date: Mon, 30 Sep 2024 10:44:26 +0200
-Message-ID: <55c07402fc274a8ac97d301bcf7d1cdb5ba51700.1727685608.git.pabeni@redhat.com>
-In-Reply-To: <c32cac999a1e87b93d48d42e6eb9dea8d51f61e6.1727685608.git.pabeni@redhat.com>
-References: <c32cac999a1e87b93d48d42e6eb9dea8d51f61e6.1727685608.git.pabeni@redhat.com>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 0/7] refactor PM interfaces
+Date: Mon, 30 Sep 2024 17:44:55 +0800
+Message-ID: <cover.1727689369.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Syzkaller was able to trigger a DSS corruption:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-TCP: request_sock_subflow_v4: Possible SYN flooding on port [::]:20002. Sending cookies.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 5227 at net/mptcp/protocol.c:695 __mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-Modules linked in:
-CPU: 0 UID: 0 PID: 5227 Comm: syz-executor350 Not tainted 6.11.0-syzkaller-08829-gaf9c191ac2a0 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
-RIP: 0010:__mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-Code: 0f b6 dc 31 ff 89 de e8 b5 dd ea f5 89 d8 48 81 c4 50 01 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 98 da ea f5 90 <0f> 0b 90 e9 47 ff ff ff e8 8a da ea f5 90 0f 0b 90 e9 99 e0 ff ff
-RSP: 0018:ffffc90000006db8 EFLAGS: 00010246
-RAX: ffffffff8ba9df18 RBX: 00000000000055f0 RCX: ffff888030023c00
-RDX: 0000000000000100 RSI: 00000000000081e5 RDI: 00000000000055f0
-RBP: 1ffff110062bf1ae R08: ffffffff8ba9cf12 R09: 1ffff110062bf1b8
-R10: dffffc0000000000 R11: ffffed10062bf1b9 R12: 0000000000000000
-R13: dffffc0000000000 R14: 00000000700cec61 R15: 00000000000081e5
-FS:  000055556679c380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 0000000020287000 CR3: 0000000077892000 CR4: 00000000003506f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <IRQ>
- move_skbs_to_msk net/mptcp/protocol.c:811 [inline]
- mptcp_data_ready+0x29c/0xa90 net/mptcp/protocol.c:854
- subflow_data_ready+0x34a/0x920 net/mptcp/subflow.c:1490
- tcp_data_queue+0x20fd/0x76c0 net/ipv4/tcp_input.c:5283
- tcp_rcv_established+0xfba/0x2020 net/ipv4/tcp_input.c:6237
- tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
- tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2350
- ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
- ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
- NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
- NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
- __netif_receive_skb_one_core net/core/dev.c:5662 [inline]
- __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
- process_backlog+0x662/0x15b0 net/core/dev.c:6107
- __napi_poll+0xcb/0x490 net/core/dev.c:6771
- napi_poll net/core/dev.c:6840 [inline]
- net_rx_action+0x89b/0x1240 net/core/dev.c:6962
- handle_softirqs+0x2c5/0x980 kernel/softirq.c:554
- do_softirq+0x11b/0x1e0 kernel/softirq.c:455
- </IRQ>
- <TASK>
- __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
- local_bh_enable include/linux/bottom_half.h:33 [inline]
- rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
- __dev_queue_xmit+0x1764/0x3e80 net/core/dev.c:4451
- dev_queue_xmit include/linux/netdevice.h:3094 [inline]
- neigh_hh_output include/net/neighbour.h:526 [inline]
- neigh_output include/net/neighbour.h:540 [inline]
- ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:236
- ip_local_out net/ipv4/ip_output.c:130 [inline]
- __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:536
- __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
- tcp_transmit_skb net/ipv4/tcp_output.c:1484 [inline]
- tcp_mtu_probe net/ipv4/tcp_output.c:2547 [inline]
- tcp_write_xmit+0x641d/0x6bf0 net/ipv4/tcp_output.c:2752
- __tcp_push_pending_frames+0x9b/0x360 net/ipv4/tcp_output.c:3015
- tcp_push_pending_frames include/net/tcp.h:2107 [inline]
- tcp_data_snd_check net/ipv4/tcp_input.c:5714 [inline]
- tcp_rcv_established+0x1026/0x2020 net/ipv4/tcp_input.c:6239
- tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
- sk_backlog_rcv include/net/sock.h:1113 [inline]
- __release_sock+0x214/0x350 net/core/sock.c:3072
- release_sock+0x61/0x1f0 net/core/sock.c:3626
- mptcp_push_release net/mptcp/protocol.c:1486 [inline]
- __mptcp_push_pending+0x6b5/0x9f0 net/mptcp/protocol.c:1625
- mptcp_sendmsg+0x10bb/0x1b10 net/mptcp/protocol.c:1903
- sock_sendmsg_nosec net/socket.c:730 [inline]
- __sock_sendmsg+0x1a6/0x270 net/socket.c:745
- ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2603
- ___sys_sendmsg net/socket.c:2657 [inline]
- __sys_sendmsg+0x2aa/0x390 net/socket.c:2686
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb06e9317f9
-Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007ffe2cfd4f98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fb06e97f468 RCX: 00007fb06e9317f9
-RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
-RBP: 00007fb06e97f446 R08: 0000555500000000 R09: 0000555500000000
-R10: 0000555500000000 R11: 0000000000000246 R12: 00007fb06e97f406
-R13: 0000000000000001 R14: 00007ffe2cfd4fe0 R15: 0000000000000003
- </TASK>
+In order to implement BPF path manager, this set refactors get_addr
+and dump_addr interfaces of PM.
 
-Additionally syzkaller provided a nice reproducer. The repro enables
-pmtu on the loopback device, leading to tcp_mtu_probe() generating
-very large probe packets.
+Depends on:
+ - cleanups for PM interfaces
 
-tcp_can_coalesce_send_queue_head() currently does not check for
-mptcp-level invariants, and allowed the creation of cross-DSS probes,
-leading to the mentioned corruption.
+Geliang Tang (7):
+  mptcp: add id parameter for get_addr
+  mptcp: add addr parameter for get_addr
+  mptcp: reuse sending nlmsg code in get_addr
+  mptcp: change info of get_addr as const
+  mptcp: refactor dump_addr with id bitmap
+  mptcp: reuse sending nlmsg code in dump_addr
+  mptcp: add loc and rem for set_flags
 
-Address the issue teaching tcp_can_coalesce_send_queue_head() about
-mptcp using the tcp_skb_can_collapse(), also reducing the code
-duplication.
+ net/mptcp/pm_netlink.c   | 153 +++++++++++++++++++++++----------------
+ net/mptcp/pm_userspace.c | 121 +++++++++----------------------
+ net/mptcp/protocol.h     |  11 ++-
+ 3 files changed, 132 insertions(+), 153 deletions(-)
 
-Fixes: 85712484110d ("tcp: coalesce/collapse must respect MPTCP extensions")
-Reported-by: syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/513
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
----
- net/ipv4/tcp_output.c | 5 +----
- 1 file changed, 1 insertion(+), 4 deletions(-)
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 4fd746bd4d54..68804fd01daf 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2342,10 +2342,7 @@ static bool tcp_can_coalesce_send_queue_head(struct sock *sk, int len)
- 		if (len <= skb->len)
- 			break;
- 
--		if (unlikely(TCP_SKB_CB(skb)->eor) ||
--		    tcp_has_tx_tstamp(skb) ||
--		    !skb_pure_zcopy_same(skb, next) ||
--		    skb_frags_readable(skb) != skb_frags_readable(next))
-+		if (tcp_has_tx_tstamp(skb) || !tcp_skb_can_collapse(skb, next))
- 			return false;
- 
- 		len -= skb->len;
 -- 
-2.45.2
+2.43.0
 
