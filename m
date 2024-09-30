@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84943189903
-	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 09:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B61E183094
+	for <mptcp@lists.linux.dev>; Mon, 30 Sep 2024 09:45:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727689508; cv=none; b=LzG/NbKcQFBKbSNS/NjX1m6kwQeHMHV+MTRjyv7mGSuCDRhYI6oYlMW4xF8/1cVLX3ofdxdr0EzrP9CwPs/U8/7OndugTKvyKtuXv9GMGBqU2AS3b3Rg9mT7OrhIkOGbIHGsCy7O/oS4XsSrFzSpEbQwBcf9oCvlqqC2KOGBxaQ=
+	t=1727689510; cv=none; b=I+38qOls6slNkKJxpzFNleGNghDe5IOTjdnJPlk1NZHrEmw+tm6fk6ITDk8ux15bhvV5fU3Lbfd1lhiIVYE8rVEFpL2pPjTQ3Uz63mb9QvG8AzgmuGdYew3yakVay/H/btIQ4MhCeOVF+O6HLKfIjPMFm7+wgRo6R+8rv8ttLc0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727689508; c=relaxed/simple;
-	bh=P+QRr4EilN8x1rhX4xw8EtCjQeXZ33m5tTjfYqlnPlg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CIW5CY2wqZxr6RHAzFx98un7QuEi9abpGFW2FvTCpeoQ8dO+l8QwChnHDr4jSPiC2d6y5QlSsM8ydsYLdgqais1fafyhvHGS5qpqD8tfNa2gZcgcDUxEut3sdu7+aSHMwkoCCzFgj6ajZ/hYcKaE/QTGm7DaIJZAVInEz2qIN0A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KAcMb4Kn; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727689510; c=relaxed/simple;
+	bh=sxJS1FyqJyyN68VI6S7BHgGdcimwlwVLTCn0MRa9MZo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=puERw/FZc08W0iK39q8glZT/x0rqzRMz4Xlt+t7/nvUsW92gTzkpM3BSDZeBBPifjVj1BztIEclO6K2schs9h2Ejg80evc5qvQ4Y6pLPSHcSJJIIy8keSTlNvWURy0LI6BkGQVbjk9NyoKvmGSNmnMyR/jNBQJu30FQoGVlgZMg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I5l72q9N; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KAcMb4Kn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD80AC4CEC7;
-	Mon, 30 Sep 2024 09:45:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I5l72q9N"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A6FB2C4CEC7;
+	Mon, 30 Sep 2024 09:45:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727689508;
-	bh=P+QRr4EilN8x1rhX4xw8EtCjQeXZ33m5tTjfYqlnPlg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=KAcMb4KnMq4VAkegasIlQoQZOM8uaqt4vbAYIjH034mCsDtzs2PEKfMM9bgCdVoZI
-	 bCO+LxHXTyxwwWsnfeGXPFtKBhsk1zfPkNeXLDMnfJiA7W8ux4gu7Za3BOZ94jHIJa
-	 ivisGQ9IyLIIcdM2DOFuT9kWT/xHg3ywF5sBVrf8r0vJ4hF9oV7ZHod1APtEgUBREF
-	 MbFuN7MVctxH7+tHugLehbBy6zSJ1JBbmJ+BEx+LXedFsy7PDXIN1n4kcJYhV4N1uv
-	 A5rGjb9+ZCzt/tN207YHaPhdmodRpc89DZnDz8kF5JswF/cSZJwomd6EvuRa6ChI4p
-	 CoXS15bSbOngQ==
+	s=k20201202; t=1727689509;
+	bh=sxJS1FyqJyyN68VI6S7BHgGdcimwlwVLTCn0MRa9MZo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=I5l72q9NoJpJO6D9eBbw9l6VebypOCROCTwicyU0UlH5r8nXZYz74yWtRbD63cdn/
+	 iRd1dCmdBHZtbLW2bxis2S2mIc11uZQEb9cP3pkr4Z+whvGAeenhcRj6KA0r6gzzPN
+	 3eiNGsp1yZz4KPdImTZsDgLuYgzxuf44pgaw3HrPivHeqDdIAq6eqOG6l6a7aTIGtB
+	 McNywQtNuPLWYz3V8zDghTFAST6CDmmJBqHmimcKXDHxoRHGBrfLBxRpUAh9TiOixR
+	 GtOpk0Yq4FPdZRo0LegD2t+j87zmpsBoA4RwZqEdVPES/YH3Gudx/KeHJiCvxZiHNR
+	 86186qnWTKG2A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 0/7] refactor PM interfaces
-Date: Mon, 30 Sep 2024 17:44:55 +0800
-Message-ID: <cover.1727689369.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 1/7] mptcp: add id parameter for get_addr
+Date: Mon, 30 Sep 2024 17:44:56 +0800
+Message-ID: <8d989e26c6152d643da02fbac764bc415f3f2404.1727689369.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1727689369.git.tanggeliang@kylinos.cn>
+References: <cover.1727689369.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,26 +45,136 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In order to implement BPF path manager, this set refactors get_addr
-and dump_addr interfaces of PM.
+The address id is parsed both in mptcp_pm_nl_get_addr() and
+mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
+So this patch adds a new parameter "id" for all get_addr() interfaces.
+The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then pass
+it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
 
-Depends on:
- - cleanups for PM interfaces
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm_netlink.c   | 28 ++++++++++++++++------------
+ net/mptcp/pm_userspace.c | 11 +++--------
+ net/mptcp/protocol.h     |  2 +-
+ 3 files changed, 20 insertions(+), 21 deletions(-)
 
-Geliang Tang (7):
-  mptcp: add id parameter for get_addr
-  mptcp: add addr parameter for get_addr
-  mptcp: reuse sending nlmsg code in get_addr
-  mptcp: change info of get_addr as const
-  mptcp: refactor dump_addr with id bitmap
-  mptcp: reuse sending nlmsg code in dump_addr
-  mptcp: add loc and rem for set_flags
-
- net/mptcp/pm_netlink.c   | 153 +++++++++++++++++++++++----------------
- net/mptcp/pm_userspace.c | 121 +++++++++----------------------
- net/mptcp/protocol.h     |  11 ++-
- 3 files changed, 132 insertions(+), 153 deletions(-)
-
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 0f2fe64fd568..9b09ec22eeca 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1790,19 +1790,14 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
+ 	return -EMSGSIZE;
+ }
+ 
+-static int mptcp_pm_nl_get_addr(struct genl_info *info)
++static int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info)
+ {
+-	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+-	struct mptcp_pm_addr_entry addr, *entry;
++	struct mptcp_pm_addr_entry *entry;
+ 	struct sk_buff *msg;
+ 	void *reply;
+ 	int ret;
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+-	if (ret < 0)
+-		return ret;
+-
+ 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+ 	if (!msg)
+ 		return -ENOMEM;
+@@ -1816,7 +1811,7 @@ static int mptcp_pm_nl_get_addr(struct genl_info *info)
+ 	}
+ 
+ 	spin_lock_bh(&pernet->lock);
+-	entry = __lookup_addr_by_id(pernet, addr.addr.id);
++	entry = __lookup_addr_by_id(pernet, id);
+ 	if (!entry) {
+ 		GENL_SET_ERR_MSG(info, "address not found");
+ 		ret = -EINVAL;
+@@ -1840,16 +1835,25 @@ static int mptcp_pm_nl_get_addr(struct genl_info *info)
+ 	return ret;
+ }
+ 
+-static int mptcp_pm_get_addr(struct genl_info *info)
++static int mptcp_pm_get_addr(u8 id, struct genl_info *info)
+ {
+ 	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
+-		return mptcp_userspace_pm_get_addr(info);
+-	return mptcp_pm_nl_get_addr(info);
++		return mptcp_userspace_pm_get_addr(id, info);
++	return mptcp_pm_nl_get_addr(id, info);
+ }
+ 
+ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	return mptcp_pm_get_addr(info);
++	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
++	struct mptcp_pm_addr_entry addr;
++	int ret;
++
++	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
++	if (ret < 0)
++		return ret;
++
++	ret = mptcp_pm_get_addr(addr.addr.id, info);
++	return ret;
+ }
+ 
+ static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 703d13ef50ad..22ea1b8a11e3 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -668,12 +668,11 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 	return ret;
+ }
+ 
+-int mptcp_userspace_pm_get_addr(struct genl_info *info)
++int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info)
+ {
+-	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+ 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+-	struct mptcp_pm_addr_entry addr, *entry;
+ 	struct net *net = genl_info_net(info);
++	struct mptcp_pm_addr_entry *entry;
+ 	struct mptcp_sock *msk;
+ 	struct sk_buff *msg;
+ 	int ret = -EINVAL;
+@@ -693,10 +692,6 @@ int mptcp_userspace_pm_get_addr(struct genl_info *info)
+ 		goto out;
+ 	}
+ 
+-	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+-	if (ret < 0)
+-		goto out;
+-
+ 	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+ 	if (!msg) {
+ 		ret = -ENOMEM;
+@@ -713,7 +708,7 @@ int mptcp_userspace_pm_get_addr(struct genl_info *info)
+ 
+ 	lock_sock(sk);
+ 	spin_lock_bh(&msk->pm.lock);
+-	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, addr.addr.id);
++	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
+ 	if (!entry) {
+ 		GENL_SET_ERR_MSG(info, "address not found");
+ 		ret = -EINVAL;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 41d01a046e27..07cb80be98cb 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1127,7 +1127,7 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 				 struct netlink_callback *cb);
+-int mptcp_userspace_pm_get_addr(struct genl_info *info);
++int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info);
+ 
+ static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflow)
+ {
 -- 
 2.43.0
 
