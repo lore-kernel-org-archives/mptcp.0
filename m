@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 47C0F63D
-	for <mptcp@lists.linux.dev>; Tue,  1 Oct 2024 06:47:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 98777CA62
+	for <mptcp@lists.linux.dev>; Tue,  1 Oct 2024 06:47:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727765242; cv=none; b=DvZKMMjHAy6ORRjOzU6/zJUC17KU+8Is0TzlKKhLCvUDl0elN+0+BGr+nrhofLdimjdD3Ie4hFzvW5+kRr6crs7HA3FQ8yQVhj4fQRBe/e2FRR/11a+5KTD2y4QqR7GA+wDpD2sr6kJbDX69z4sdltfUUz8T8srPGpFG/XXDsmQ=
+	t=1727765243; cv=none; b=riwBL7eySyCEFp/J/TvAA3zjVFySJI9fk6PkVuNmmBCO1k6CgAJ7T49qTmCNg+jn6RkOmlTxlPC8AoOqcr6IBOw0H6G5fNg0I3uKFmQK52mBZr5Xjy6kArbcKUkWDKaCheHR45zyIdCRRNPbkVUMMN3Wn3h/icXsAEQZMIo7d/U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727765242; c=relaxed/simple;
-	bh=XVIjjSdwpHuDqOi2ja4i7qVwKMc1oPDPKPe6rIqN+iM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=PrcgnjeZGn/Dfy9OXLmknMAbzCA0qdIpHJtayUuMrGWpyxdTcK87sS2ZkDTd14AFN6JG+/kVs0i53Rd4rPZwfg1/VexPHVjcgDlaVMVYcnfMUsNanq/7+TS1OP9fhaWxc5KLQDf8053123sQ6hpdK6wSpCXwBv4h72l49PvDFAw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jIYSMCaG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727765243; c=relaxed/simple;
+	bh=kQqAiddCeIlBAqXA4dHyUYa56F4hufNbrB/31+DwG+g=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=YMjjndaZwrbWOrDU164nci7fvh4dRnWIwkJCR1oIcOPbsH9Eum/yVT64nbkGJf4vvOav7gJVmTohF8hzgHwnlBA25nrkD2VOIJJtN3lGSVI6rpZ+3Lz5sbv8dV++LQZ75Bi/06UhLC6rPXv+YMoSclc9ey5wGKtay7rg1w5Juqc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n7Wh6u61; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jIYSMCaG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 150BEC4CEC6;
-	Tue,  1 Oct 2024 06:47:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n7Wh6u61"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C737C4CEC7;
+	Tue,  1 Oct 2024 06:47:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727765241;
-	bh=XVIjjSdwpHuDqOi2ja4i7qVwKMc1oPDPKPe6rIqN+iM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=jIYSMCaGArLuEgZIlYO8f95OSIwE87OXt4hfqafEW9GnHTAT9eKdfyRj2762XUYZs
-	 cgF8SMG0841rFk1XubnJxddm6VemRhQYm4gU9oKzs56LIzAjzr8uZMWlTl+VBPCHxR
-	 aU4LbgmBY8pZo1OddoFiKeRh5bdkuaWIGVEPHuS4JV6UnkilVv166FC5Zy/KV6DcMc
-	 kznWANCheRSXYKxgUUhE7VuKx0SS2GFL5tJD5ZSM7gpU1SlPfi7yNAbYBNfaElUhBc
-	 NdzfZOLdUBsne+x+GH6JqyktGcKTTdCyza+K1BNzHFEPNg+fadDs2YXijpKNBi93G0
-	 1ENXmwUmiASGw==
+	s=k20201202; t=1727765243;
+	bh=kQqAiddCeIlBAqXA4dHyUYa56F4hufNbrB/31+DwG+g=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=n7Wh6u61HCNABuldudGPCcA4MxbEEjulvXCH/r0bfKSz7wl+fS7XIVuB9jQGDkaUp
+	 lr+vINnQeIerNmJl3DdDaOjmGuxwXfSlihsNj6kzMZpLex9gMk3IRbacsKayopnPtP
+	 72WGyBwd7n+jxaumORyXwc7VkcNrv8YvPvGCu7Tk7ru3ITTTpfLq5G28RmHy9kux1Q
+	 pX7dteoLkS6EzrjD1eIGQYBFF8v5nJ2q26kWSkP+BlvTSI7pjVCo7yALgncPpDA31w
+	 xYeueHTKUydL2xFhnuwkxzguEsqwPOIniH/C5pkScIGa5gi+DUvyEt/dQWwdjKSn6o
+	 L+DYVbfSayLSg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 0/7] add mptcp_subflow bpf_iter
-Date: Tue,  1 Oct 2024 14:47:07 +0800
-Message-ID: <cover.1727764822.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v7 1/7] bpf: Register mptcp common kfunc set
+Date: Tue,  1 Oct 2024 14:47:08 +0800
+Message-ID: <ecca7b1ec62ef28edecea7f4bb13272e7448143e.1727764822.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1727764822.git.tanggeliang@kylinos.cn>
+References: <cover.1727764822.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,53 +45,49 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v7:
- - As Martin recently replied, mptcp_stubflow bpf_iter can still be
-used in tracing. So go back to the tracing selftest.
+The mptcp kfuncs mptcp_subflow_active() and mptcp_subflow_set_scheduled()
+are going to be used in BPF selftests, so put them into mptcp common kfunc
+set and register it with BPF_PROG_TYPE_UNSPEC.
 
-v6:
- - add KF_TRUSTED_ARGS flag in patch 2 (Andrii, Martin), then acquire
-and release helpers (patch 3) are needed to be implemented.
- - test mptcp_subflow bpf_iter in "cgroup/getsockopt" (patch 5),
-instead of testing them in "tracing" (Martin).
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/bpf.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-v5:
- - update patch 1 as Andrii suggested: if msk is NULL, initialize
-kit->msk to NULL in _new() and check it in _next().
-
-v4:
- - squash patch 1/5 and 3/5 in v3 together as Matt suggested.
- - a new squash-to patch to drop mptcp_subflow_active declaration in
-   bpf_burst.
-
-v3:
- - drop bpf_iter__mptcp_subflow, __diag_push, __diag_pop and
- __diag_ignore_all
- - drop declarations for bpf kfuncs
-
-v2:
- - update patch 1 as Martin and Andrii suggested.
- - fix warnings and errors reported by MPTCP CI.
-
-This patch set adds a mptcp_subflow type bpf_iter, and self tests.
-
-Geliang Tang (7):
-  bpf: Register mptcp common kfunc set
-  bpf: Add mptcp_subflow bpf_iter
-  bpf: Add mptcp_sock acquire and release helpers
-  selftests/bpf: Add mptcp_subflow bpf_iter test prog
-  selftests/bpf: More endpoints for endpoint_init
-  Squash to "selftests/bpf: Add bpf scheduler test"
-  selftests/bpf: Add mptcp_subflow bpf_iter subtest
-
- net/mptcp/bpf.c                               |  81 ++++++++++-
- .../testing/selftests/bpf/bpf_experimental.h  |   7 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 126 +++++++++++++++++-
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |   4 +
- .../selftests/bpf/progs/mptcp_bpf_iter.c      |  39 ++++++
- 5 files changed, 245 insertions(+), 12 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iter.c
-
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index 6414824402e6..41937fde0bb6 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -220,10 +220,18 @@ __bpf_kfunc bool bpf_mptcp_subflow_queues_empty(struct sock *sk)
+ 
+ __diag_pop();
+ 
+-BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
++BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
++BTF_ID_FLAGS(func, mptcp_subflow_active)
+ BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
++BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
++
++static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
++	.owner	= THIS_MODULE,
++	.set	= &bpf_mptcp_common_kfunc_ids,
++};
++
++BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+ BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx_by_pos)
+-BTF_ID_FLAGS(func, mptcp_subflow_active)
+ BTF_ID_FLAGS(func, mptcp_set_timeout)
+ BTF_ID_FLAGS(func, mptcp_wnd_end)
+ BTF_ID_FLAGS(func, tcp_stream_memory_free)
+@@ -241,6 +249,8 @@ static int __init bpf_mptcp_kfunc_init(void)
+ 	int ret;
+ 
+ 	ret = register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
++	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_UNSPEC,
++					       &bpf_mptcp_common_kfunc_set);
+ 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+ 					       &bpf_mptcp_sched_kfunc_set);
+ #ifdef CONFIG_BPF_JIT
 -- 
 2.43.0
 
