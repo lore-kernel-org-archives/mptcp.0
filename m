@@ -1,151 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f169.google.com (mail-pl1-f169.google.com [209.85.214.169])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF63A1AB524
-	for <mptcp@lists.linux.dev>; Thu,  3 Oct 2024 18:43:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B46347F5F
+	for <mptcp@lists.linux.dev>; Thu,  3 Oct 2024 19:39:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1727981017; cv=none; b=S+1/OF8PYr4CyxCufub13iz0nTdaBNb8XKSGXmjY/H7D1rA1fs77ojS4AHm20ZsUiUwuLW4MH4wTybnf1+Q6re8DZzt/4U4e3KvgZjMDpmTBhd0CLiiagcCA43fYUyBZ/4ftgQWctUdhz+cc6kIMW+ULj8LRUS3aBfZq9xb2LH8=
+	t=1727984362; cv=none; b=nAKE+ZSnzZDazMiMlQJQBD4U0LjPHLiJSqNYbwZt0KxaUr/rZnFNZTnPDwKFnXDwsuiB3FMCm3cnTmTzvS/BFNYA+aMlqNgCbCB0eW1VRefKoROt3FHJfuAaK84pEm2q+ayeVuwv70xeldlzjBqhAzL0aA6xHwAJPQNQYC92jrw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1727981017; c=relaxed/simple;
-	bh=h0wRHcFcaT7CZCqTrblI6xcGJNedD0UIyQs0m//Qmco=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Qs920UVCqHTjdnckfrxVipJKBd732QmTJtKAaH0bKO+tDN9WzySE3eJ1efDeCwpiZMuHDDi45lhXgRoXFJHSb2ZVuTudcX3hebHLO/mwNvQgFMlHUdscaFjQNLf0f9R3hw9huEZlewpvZoTZ+OEuspgtMPB5kmvz0tf1Puw7plE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nfCwaJje; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1727984362; c=relaxed/simple;
+	bh=veMSYoFqIPGvJerds1bMlQju5EuNxd71smmSjNBZGpE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=AjIl9AocOUNG6RAApxUSeaa3QZ52r8Q4H1k6H1zSny7edWG7OQR7IL/G+wLKF8ir+K1JFoKOI7ai54qNy722xmmvTFRKKZ495//vGVfr15M+4lZA1V6MN858wTl4mD5cA16VLLsRposHOlolKcWwT5gpQ/HXfUwQLjVwaRVwaVg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ZSaDEhzK; arc=none smtp.client-ip=209.85.214.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nfCwaJje"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42299C4CEC5;
-	Thu,  3 Oct 2024 18:43:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1727981017;
-	bh=h0wRHcFcaT7CZCqTrblI6xcGJNedD0UIyQs0m//Qmco=;
-	h=From:Date:Subject:To:Cc:From;
-	b=nfCwaJjeEDMPTG4z12Fl1XUjNDQ/FkID7m4NWUpnw86847b0VB92634HgNr4ZjD1M
-	 PMJrRbExCHHYJHx+rwcAjTmLENtua2bqBCMcDsAFYPZ+chGztd2jo4xX4quKjlXaEi
-	 c+wQRbJAOuQE3Pozx7AUIzOdcWYyRwnFW+NeSDnQ0tjyBCYhFaINddIwLGGlJw0jlu
-	 OVYbZ3rXCAvkhWar0KW25GK0b+4JO4VoYZXU8IOc13DzM7uNObMwiSh59Txtm9Kz4T
-	 kpT6SX5Jj0bCZD8TM3239OorpSNB2fnmE+cvPdl+R1yOS562r3n4E61ZX/FkPI+S0H
-	 V0xFSICKAoXIg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 03 Oct 2024 20:43:25 +0200
-Subject: [PATCH mptcp-net] mptcp: fallback if MPTCP opts are dropped after
- 1st data
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ZSaDEhzK"
+Received: by mail-pl1-f169.google.com with SMTP id d9443c01a7336-20b95359440so12272715ad.0
+        for <mptcp@lists.linux.dev>; Thu, 03 Oct 2024 12:39:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1727984360; x=1728589160; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=LGdaAWOcoQoC7tkEytGyngf6aew1AnD9hpI8ci0gAXM=;
+        b=ZSaDEhzK4z9JkvKzASnMaG2MSFa2/OiMEUnMVKmQvxQY25tk5nehnzJDdH5a8VhBxY
+         DhNSp00wHzaYTwYEtX9HI20jzF8VMhJsaLuLvQhMnNDSxamg4dNKVG1iJDVMoIQmDHAy
+         MELutghDrPzoC7yFafZ3kqzauZxkx3SV7PjFU1BAY09T/al51a4mo+WWKMp6rDhDVHt8
+         kPSgyZh7HskL+XBaec4+oz/zJ8lMSF+kCt7t60HR0QFvSdnQ8TxN4KBtJ1gDkD04Cz+Y
+         IksmiFefojnq7IZJwFV0SofLrIzXNc6f9d12Hj7tpZHYa3EabReHE77KDZTLGFMB9mkA
+         uUSw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1727984360; x=1728589160;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=LGdaAWOcoQoC7tkEytGyngf6aew1AnD9hpI8ci0gAXM=;
+        b=CNrorahIvS/nvVqDoD3OiuvFmhnKiGTnY8kA4Q2WX1j3sM91ceJTdOHw8jObNId5Xb
+         UqVWq2In1eHPz0jUobahfDvi3avYWmbwCuytd3txxC9PWCOOkWJ37YdWeQAec+hlLh6x
+         FhY9P0I55YI34S8BLDYf/ij2FD2C1kfaApxSuYNQ+QIiV8zV8XVwVoMGNrhKBo4rWnVi
+         Qi+9lG8V0mIKEftJHAlAxqDAxfNBh6FC10WEnY2y5aRG8gyLiQkZE4geFqQCtutGF949
+         aL2Cj9CoUKv4ScQmldLBqnicg7mp4EGT86chQTe/wH/7iN62pvSxwonEnOCRufw20t71
+         Gz4g==
+X-Gm-Message-State: AOJu0YwDPoGSafRpbq2VKD6KOe1D51M3h1cGUTCeJFRKhYjEiQsgLCPL
+	LnN+mzxgXknorDbNbz1uPJVEtqoOJrcc2xW6QTJwRCDU3skYl+Y=
+X-Google-Smtp-Source: AGHT+IFgrafTJfWjVueguOZQSmVvS33b46zAHVp95dfhmguOremYbNWTc52Dcv6ZyTlWm1JrBxba5A==
+X-Received: by 2002:a17:902:fc4f:b0:20b:7ed8:3986 with SMTP id d9443c01a7336-20bfdff58a3mr3749275ad.24.1727984360180;
+        Thu, 03 Oct 2024 12:39:20 -0700 (PDT)
+Received: from [127.0.0.1] ([20.172.6.163])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20beefb3b5fsm12351955ad.237.2024.10.03.12.39.19
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 03 Oct 2024 12:39:19 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
+References:
+ <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: join: add test-case
+ for MPC attempt towards signl ep
+Message-ID: <e1a3adbe-b2dc-cda8-66a5-c8430f903086@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 03 Oct 2024 19:39:18 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241003-mptcp-gh-518-v1-1-e79e1f6434ad@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAMzl/mYC/yWMSQqAMAwAvyI5G2hcQP2KeNCaaA7W0ooI4t8te
- hyYmRsiB+UIXXZD4FOj7i4B5RnYdXQLo86JoTBFRcaUuPnDelxWrKnBqSURW00kViAlPrDo9e1
- 6+E3HBwzP8wJzlet6aQAAAA==
-X-Change-ID: 20241003-mptcp-gh-518-b91ffc4b1fcf
-To: mptcp@lists.linux.dev
-Cc: Christoph Paasch <cpaasch@apple.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Davide Caratti <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3933; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=h0wRHcFcaT7CZCqTrblI6xcGJNedD0UIyQs0m//Qmco=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBm/uXXEu6HvAbvRmPZyWBG1CoZVWyS39ceTDOa9
- om+Stp+rr+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZv7l1wAKCRD2t4JPQmmg
- c9cID/9rx1/2tUr/h67zbRwC8nkcXOv7rVsHNHq79/ZYZCcb4TF2MZI+GAhSOKv7HIp4as4QXzL
- 6Y0J8Mkoah3UpSXWEUffpTjd+ID38ifmiw4RAD+B5Mk0cSvRseEpx4czTdBkdO+tXzF6dG3KcUY
- gxysPpUjtU2GUZcpKGjzaMQH9uPoDVlK6y6BiJ0/dgCIlk/1NG3l+Bc7uZBoLa4/kPXZHlpak22
- zbQkDCkJ6m59IOc8ksYhfId+dHeH75kBweC4j+dfq9Pq5loePsY8IhRUN3M1LnZhhVhRnzilErc
- Y0pAglYK3kR7CkT+gM8Q4FGrojcZrA9MpRUPwaosV/BuqdOYp7lrB62v0t9Pl0IaGqjqBQHG4OJ
- mSu08Df/ALkQzeps84Op2PFxUkfYz7/ItQcARwkLQDsgfg1dlaXaENAlJLHj3EJ3VGNK5L25pv9
- jtJgap9SD0Y8l2Gqed8HGYRHPVMFdBa0HvDmoqASpv2UwyZLIeJDkC8vIj/PUTSHRANequqGoxQ
- EtYYz5P0MCFm1UhUOgwnmua7BgUW2jVg7kyMOJwYBr2Pen6Ai0rImbQshdOEJkUhxuhsUx0vJ3w
- HBHueySGa0CTifSPhfKAaYZn1txwR7NmbhOIlD1KiInd57iXCt4knx8fEkySpcWWH9brUXKc1z+
- VM65FeS+PWkEdKA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-As reported by Christoph [1], before this patch, an MPTCP connection was
-wrongly reset when a host received a first data packet with MPTCP
-options after the 3wHS, but got the next ones without.
+Hi Paolo,
 
-According to the MPTCP v1 specs [2], a fallback should happen in this
-case, because the host didn't receive a DATA_ACK from the other peer,
-nor receive data for more than the initial window which implies a
-DATA_ACK being received by the other peer.
+Thank you for your modifications, that's great!
 
-The patch here re-uses the same logic as the one used in other places:
-by looking at allow_infinite_fallback, which is disabled at the creation
-of an additional subflow. It's not looking at the first DATA_ACK (or
-implying one received from the other side) as suggested by the RFC, but
-it is in continuation with what was already done, which is safer, and it
-fixes the reported issue. The next step, looking at this first DATA_ACK,
-is tracked in [4].
+Our CI did some validations and here is its report:
 
-This patch has been validated using the following Packetdrill script:
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/11166495934
 
-   0 socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
-  +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
-  +0 bind(3, ..., ...) = 0
-  +0 listen(3, 1) = 0
+Initiator: Matthieu Baerts (NGI0)
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/fc448b976b8c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D895272
 
-  // 3WHS is OK
-  +0.0 < S  0:0(0)       win 65535  <mss 1460, sackOK, nop, nop, nop, wscale 6, mpcapable v1 flags[flag_h] nokey>
-  +0.0 > S. 0:0(0) ack 1            <mss 1460, nop, nop, sackOK, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
-  +0.1 <  . 1:1(0) ack 1 win 2048                                              <mpcapable v1 flags[flag_h] key[ckey=2, skey]>
-  +0 accept(3, ..., ...) = 4
 
-  // Data from the client with valid MPTCP options (no DATA_ACK: normal)
-  +0.1 < P. 1:501(500) ack 1 win 2048 <mpcapable v1 flags[flag_h] key[skey, ckey] mpcdatalen 500, nop, nop>
-  // From here, the MPTCP options will be dropped by a middlebox
-  +0.0 >  . 1:1(0)     ack 501        <dss dack8=501 dll=0 nocs>
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-  +0.1 read(4, ..., 500) = 500
-  +0   write(4, ..., 100) = 100
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-  // The server replies with data, still thinking MPTCP is being used
-  +0.0 > P. 1:101(100)   ack 501          <dss dack8=501 dsn8=1 ssn=1 dll=100 nocs, nop, nop>
-  // But the client already did a fallback to TCP, because the two previous packets have been received without MPTCP options
-  +0.1 <  . 501:501(0)   ack 101 win 2048
+For more details:
 
-  +0.0 < P. 501:601(100) ack 101 win 2048
-  // The server should fallback to TCP, not reset: it didn't get a DATA_ACK, nor data for more than the initial window
-  +0.0 >  . 101:101(0)   ack 601
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Note that this script requires Packetdrill with MPTCP support, see [3].
 
-Fixes: dea2b1ea9c70 ("mptcp: do not reset MP_CAPABLE subflow on mapping errors")
-Reported-by: Christoph Paasch <cpaasch@apple.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/518 [1]
-Link: https://datatracker.ietf.org/doc/html/rfc8684#name-fallback [2]
-Link: https://github.com/multipath-tcp/packetdrill [3]
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/519 [4]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Cc: Davide Caratti <dcaratti@redhat.com>
-Cc: Paolo Abeni <pabeni@redhat.com>
----
- net/mptcp/subflow.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a1e28e1d8b4e39e14bc8f98164013d302d62595c..61482f8b425b5dde17a4f3272d04973ae5ec7849 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -1282,7 +1282,7 @@ static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
- 	else if (READ_ONCE(msk->csum_enabled))
- 		return !subflow->valid_csum_seen;
- 	else
--		return !READ_ONCE(subflow->fully_established);
-+		return READ_ONCE(msk->allow_infinite_fallback);
- }
- 
- static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
-
----
-base-commit: 8567c53ad205aa6e13f8d6c2739522907da3504a
-change-id: 20241003-mptcp-gh-518-b91ffc4b1fcf
-
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
