@@ -1,120 +1,206 @@
-Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+Received: from rn-mx04.apple.com (rn-mx04.apple.com [17.132.108.6])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61E16215F59
-	for <mptcp@lists.linux.dev>; Fri,  4 Oct 2024 14:08:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A293C4CDEC
+	for <mptcp@lists.linux.dev>; Fri,  4 Oct 2024 16:57:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=17.132.108.6
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728050920; cv=none; b=HXNukqRDnUUtCs/gF3ee0vw0q92GIF+qQ+zdazSw/vzKZIU2PJsE+E3803Co9LLlgHfOJoCB1/LFBS5EapirR2hgeXp8M0hcrkm4a0+TmYoIXabMynmLyxIQVn1LONTswA+TbA1DcnJGlC3ucHEbWnV00HQ0Nd4QTWYiTD+/7Xg=
+	t=1728061057; cv=none; b=kbGq2jE1uGdnM7/DTwXV5t2mlFtRC+jFBWn3UwvlY85nGr0yqigY87i8OgDNOPaFw9SRFhc8V7vmb5oIKTG1yFm0CWvBJr7Hr7RMahguA5B9uBPv+ofTuVJYqElCbeowVVnGjBn4c4AD+OBYpOchsjCuWQDX5RhrwVYMbnYrmhs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728050920; c=relaxed/simple;
-	bh=wOaEotLoIoUv/jxuYrySyxlkkuj2rNbHlxSrDlBKIV4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=FYGPQ9dJKIUHwc/Al7PY+rz+8xE2EnxFexabbFt9CPmPkIW1bwRdNEPTZEjwXgCQag745dwpW3jxduWnXv+JfkOgAAfl0i31aQD3hkRQTbtU7VdjGwML0OHPI/eIil9l/uZXkmXQ4XPhPy8FLo/dLZ37pppE81ba2j+SWtMw8Io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=amGJe82U; arc=none smtp.client-ip=209.85.222.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728061057; c=relaxed/simple;
+	bh=U0mScmhh28h+3vONvV2rNTsgyrE0YGnGK1S0SbPITzo=;
+	h=Content-type:MIME-version:Subject:From:In-reply-to:Date:Cc:
+	 Message-id:References:To; b=hSx6OL5fwF/AXfaHxilUwoBuLmyJr4SJWcUQAU3NwqmD4uRFBniMTQ+GZoY4ja4l5/chuQHPo4mljHfay1xe7ec6K7NuvCkrI+m4eVVfLXDbUTNExBp0XHoNIiOk5lUeovB7Jbls8Lzvlgv0PtVYUkfKEy0G8bjRCKTBJPZoQ2I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com; spf=pass smtp.mailfrom=apple.com; dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b=IlHtaJdW; arc=none smtp.client-ip=17.132.108.6
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=apple.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=apple.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="amGJe82U"
-Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7a99fd0535bso168442185a.3
-        for <mptcp@lists.linux.dev>; Fri, 04 Oct 2024 07:08:38 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728050917; x=1728655717; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UojmtarP9SS5uCY3s0wGT/r6L8ReiZVUyqdnbUEK7bg=;
-        b=amGJe82U1E/RUB5HdaOWXqiW5V6KN697YD5AYjRv4ZyxYdfvUSGQWFXUDYvPBVfmtu
-         60GkzAXN/Yyet39Y/3WCfc5q1VyziUS4XUTNMjM/etsXrvWl4PsihnDMKmOHhJXpSxZJ
-         GqI8AKjXUSuBRVxVarTH/i11Z8LGBi4RPlWP50aCLBkBHzdmePzBVyra9ur+WrgkvdP7
-         +l9U4w/apFEIyDREJZNEwNtAuiZX4etozPLdQiX33X0wZ5X35c/L+9r8IMgtdBV5KDJn
-         7jeHohxe7CFKBDN07/0dWO0WiXL9OOVprB6/DSd0kfV2j3hVs/tj1/aYZZxpfMpJZzKP
-         L0HA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728050917; x=1728655717;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UojmtarP9SS5uCY3s0wGT/r6L8ReiZVUyqdnbUEK7bg=;
-        b=gbY4Ne2rrT1Y/riBs+jsm+3HO5hzeiJB0dfBxPvsvvvnRuUqJaphgydWztVaqUx3zy
-         BENnoGBT78bzqZtBbXMSJtGplUfG7dD5oCUoCEWPyGusudTDhjVfxEivcoOtIE6NED+L
-         dQoWQy4UcDi8NBhMeNFH0UdBYDTFcOuWQYAa0g5FnL7cVKhmw6sJS1NvQ0HKcaAvdGYb
-         h+IgaLdcOluirZMBVkiuGXvT9r3QvkQXTbw0paYWxRewx10zYcpDHLU2nP5PP8DIT0mc
-         TgWyzAvld2hW/saG+pCGnCv/x/SIk/F4RYjbAdsOcozsoJ5HpQ4prvv58TyghtoYikmC
-         IjOA==
-X-Gm-Message-State: AOJu0YxcOLr1vm5XitAO+oWtJotWm7Hk9mcUCS3FbZAxCy9og/wFj5QL
-	WsH8rNOvr43burGAtjKIYJxdm9ZooSK0KzTJ9NLx/Obi+syOeZ5Mm/mb
-X-Google-Smtp-Source: AGHT+IHGbyVUX04deRFvdcuf5EWRPUl2h6VHeJHVhzcpNDBq0mOUwAkzE6RafVz7vCSQRPQiNzuroQ==
-X-Received: by 2002:a05:620a:29d2:b0:7a9:bf31:dbc7 with SMTP id af79cd13be357-7ae6f493a39mr441706085a.53.1728050916953;
-        Fri, 04 Oct 2024 07:08:36 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.113.202])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7ae6b3dadb2sm140196185a.114.2024.10.04.07.08.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 04 Oct 2024 07:08:36 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1728046021.git.tanggeliang@kylinos.cn>
-References: <cover.1728046021.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v8 0/7] add mptcp_subflow bpf_iter
-Message-ID: <6e28aaf6-8c5a-10a8-f0dc-17947600c8b1@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 04 Oct 2024 14:08:35 +0000
+	dkim=pass (2048-bit key) header.d=apple.com header.i=@apple.com header.b="IlHtaJdW"
+Received: from rn-mailsvcp-mta-lapp04.rno.apple.com
+ (rn-mailsvcp-mta-lapp04.rno.apple.com [10.225.203.152])
+ by mr55p01nt-mxp04.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SKU0TKN5CFW9710@mr55p01nt-mxp04.apple.com> for
+ mptcp@lists.linux.dev; Fri, 04 Oct 2024 16:57:35 +0000 (GMT)
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-04_14,2024-10-04_01,2024-09-30_01
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=apple.com; h=cc :
+ content-transfer-encoding : content-type : date : from : in-reply-to :
+ message-id : mime-version : references : subject : to; s=20180706;
+ bh=b3w8cK9+VpNGU+zDuPsciQk8Ryv5sU4jk7JunLrNXM8=;
+ b=IlHtaJdWO3lgC3kTOlrca706coAtbv5/yrnRJ8vFIvX2Jk1Oxbb6/lNrW2I5h6+yGL/A
+ uA/cGHif9b5OWCCOxHtph2O2LzEdv+A3BLp7KdwJS78iyGu4lzisLI6B17y/tJe9z77y
+ 47gHWtioLWAnMFh29pua7oO8RBp7seGtverbH2J4q5NfDdCFvh/1D2fwx/89AN+6YCjS
+ J2vz9EBG9BSc7rnkbCVWZdziO5Vp5qBNZX/hpurgEif9K8eJCdq+KaomLPHLBv+2ckTW
+ dVRzUOp28EZyyjUre8Mt55lqUBYYLDw3sxR4NDVWSHBfguhOMFrGQQ2JiLwHRhcTv8Yw iw==
+Received: from mr55p01nt-mmpp07.apple.com
+ (mr55p01nt-mmpp07.apple.com [10.170.185.196])
+ by rn-mailsvcp-mta-lapp04.rno.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPS id <0SKU00REVCFY7AP0@rn-mailsvcp-mta-lapp04.rno.apple.com>;
+ Fri, 04 Oct 2024 09:57:34 -0700 (PDT)
+Received: from process_milters-daemon.mr55p01nt-mmpp07.apple.com by
+ mr55p01nt-mmpp07.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) id <0SKU02P00C6SL300@mr55p01nt-mmpp07.apple.com>; Fri,
+ 04 Oct 2024 16:57:34 +0000 (GMT)
+X-Va-A:
+X-Va-T-CD: 4e447c9e81b145b613229683db9d49f9
+X-Va-E-CD: e6baaedccdb0fc0c1d69103afc7342d3
+X-Va-R-CD: 1889d4c959161808f881ae2f19dda8d8
+X-Va-ID: fb41d6e5-ebca-4e92-9f40-b1aee5fd7537
+X-Va-CD: 0
+X-V-A:
+X-V-T-CD: 4e447c9e81b145b613229683db9d49f9
+X-V-E-CD: e6baaedccdb0fc0c1d69103afc7342d3
+X-V-R-CD: 1889d4c959161808f881ae2f19dda8d8
+X-V-ID: 5fe9360f-f667-4147-9bf3-fe63a599500e
+X-V-CD: 0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1051,Hydra:6.0.680,FMLib:17.12.62.30
+ definitions=2024-10-04_14,2024-10-04_01,2024-09-30_01
+Received: from smtpclient.apple ([17.192.155.171])
+ by mr55p01nt-mmpp07.apple.com
+ (Oracle Communications Messaging Server 8.1.0.23.20230328 64bit (built Mar 28
+ 2023)) with ESMTPSA id <0SKU0320UCFY3B00@mr55p01nt-mmpp07.apple.com>; Fri,
+ 04 Oct 2024 16:57:34 +0000 (GMT)
+Content-type: text/plain; charset=utf-8
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
-
-Hi Geliang,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11180592738
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b8cf8908f57e
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D895563
+MIME-version: 1.0 (Mac OS X Mail 16.0 \(3826.200.55\))
+Subject: Re: [PATCH mptcp-net] mptcp: fallback if MPTCP opts are dropped after
+ 1st data
+From: Christoph Paasch <cpaasch@apple.com>
+In-reply-to: <d22ff620-d244-4ce1-8b2d-6ed6c8aefc35@kernel.org>
+Date: Fri, 04 Oct 2024 09:57:23 -0700
+Cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>,
+ Paolo Abeni <pabeni@redhat.com>
+Content-transfer-encoding: quoted-printable
+Message-id: <49803E32-C2F2-42A1-AF5F-2C82E49D792C@apple.com>
+References: <20241003-mptcp-gh-518-v1-1-e79e1f6434ad@kernel.org>
+ <1393FB5B-A830-48C8-9E56-2C9DDA122F83@apple.com>
+ <d22ff620-d244-4ce1-8b2d-6ed6c8aefc35@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, Craig Taylor <cmtaylor@apple.com>
+X-Mailer: Apple Mail (2.3826.200.55)
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+> On Oct 3, 2024, at 2:29=E2=80=AFPM, Matthieu Baerts =
+<matttbe@kernel.org> wrote:
+>=20
+> Hi Christoph,
+>=20
+> 3 Oct 2024 23:14:07 Christoph Paasch <cpaasch@apple.com>:
+>=20
+>> +Craig from Apple
+>>=20
+>> Hello,
+>>=20
+>>> On Oct 3, 2024, at 11:43=E2=80=AFAM, Matthieu Baerts (NGI0) =
+<matttbe@kernel.org> wrote:
+>>>=20
+>>> As reported by Christoph [1], before this patch, an MPTCP connection =
+was
+>>> wrongly reset when a host received a first data packet with MPTCP
+>>> options after the 3wHS, but got the next ones without.
+>>>=20
+>>> According to the MPTCP v1 specs [2], a fallback should happen in =
+this
+>>> case, because the host didn't receive a DATA_ACK from the other =
+peer,
+>>> nor receive data for more than the initial window which implies a
+>>> DATA_ACK being received by the other peer.
+>>>=20
+>>> The patch here re-uses the same logic as the one used in other =
+places:
+>>> by looking at allow_infinite_fallback, which is disabled at the =
+creation
+>>> of an additional subflow. It's not looking at the first DATA_ACK (or
+>>> implying one received from the other side) as suggested by the RFC, =
+but
+>>> it is in continuation with what was already done, which is safer, =
+and it
+>>> fixes the reported issue. The next step, looking at this first =
+DATA_ACK,
+>>> is tracked in [4].
+>>>=20
+>>> This patch has been validated using the following Packetdrill =
+script:
+>>>=20
+>>>   0 socket(..., SOCK_STREAM, IPPROTO_MPTCP) =3D 3
+>>> +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) =3D 0
+>>> +0 bind(3, ..., ...) =3D 0
+>>> +0 listen(3, 1) =3D 0
+>>>=20
+>>> // 3WHS is OK
+>>> +0.0 < S  0:0(0)       win 65535  <mss 1460, sackOK, nop, nop, nop, =
+wscale 6, mpcapable v1 flags[flag_h] nokey>
+>>> +0.0 > S. 0:0(0) ack 1            <mss 1460, nop, nop, sackOK, nop, =
+wscale 8, mpcapable v1 flags[flag_h] key[skey]>
+>>> +0.1 <  . 1:1(0) ack 1 win 2048                                      =
+        <mpcapable v1 flags[flag_h] key[ckey=3D2, skey]>
+>>> +0 accept(3, ..., ...) =3D 4
+>>>=20
+>>> // Data from the client with valid MPTCP options (no DATA_ACK: =
+normal)
+>>> +0.1 < P. 1:501(500) ack 1 win 2048 <mpcapable v1 flags[flag_h] =
+key[skey, ckey] mpcdatalen 500, nop, nop>
+>>> // =46rom here, the MPTCP options will be dropped by a middlebox
+>>> +0.0 >  . 1:1(0)     ack 501        <dss dack8=3D501 dll=3D0 nocs>
+>>>=20
+>>> +0.1 read(4, ..., 500) =3D 500
+>>> +0   write(4, ..., 100) =3D 100
+>>>=20
+>>> // The server replies with data, still thinking MPTCP is being used
+>>> +0.0 > P. 1:101(100)   ack 501          <dss dack8=3D501 dsn8=3D1 =
+ssn=3D1 dll=3D100 nocs, nop, nop>
+>>> // But the client already did a fallback to TCP, because the two =
+previous packets have been received without MPTCP options
+>>> +0.1 <  . 501:501(0)   ack 101 win 2048
+>>>=20
+>>> +0.0 < P. 501:601(100) ack 101 win 2048
+>>> // The server should fallback to TCP, not reset: it didn't get a =
+DATA_ACK, nor data for more than the initial window
+>>> +0.0 >  . 101:101(0)   ack 601
+>>>=20
+>>> Note that this script requires Packetdrill with MPTCP support, see =
+[3].
+>>>=20
+>>> Fixes: dea2b1ea9c70 ("mptcp: do not reset MP_CAPABLE subflow on =
+mapping errors")
+>>> Reported-by: Christoph Paasch <cpaasch@apple.com>
+>>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/518 =
+[1]
+>>> Link: https://datatracker.ietf.org/doc/html/rfc8684#name-fallback =
+[2]
+>>> Link: https://github.com/multipath-tcp/packetdrill [3]
+>>> Link: https://github.com/multipath-tcp/mptcp_net-next/issues/519 [4]
+>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>> ---
+>>> Cc: Davide Caratti <dcaratti@redhat.com>
+>>> Cc: Paolo Abeni <pabeni@redhat.com>
+>>=20
+>> awesome! Is this ready to be tested or does this need to go through =
+the CI,=E2=80=A6 first ?
+>=20
+> To me, it looks ready to be tested, and reviewed :)
+>=20
+> It already went through the CI, everything was OK there:
+>=20
+> =
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11167965968
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Thanks! Will get the testing going internally. And I will get back on =
+syzkaller one day =F0=9F=98=85
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Christoph
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>=20
+> Cheers,
+> Matt
+
