@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E9BD91C1AAA
-	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 18:22:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F91C1AAA
+	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 18:22:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728325335; cv=none; b=MH9Eo/beqSUI/h7V1yum2imU1d6u0MF/YHgPrBDR0Sk8ivKVS+4xtSgKpgfdQ5t2vLkncjbLCkWxS6uO3Ff4F0+mIIWPaKhEN/i8vyu9LWnyizcUtt2XjhdfrrDWktmHiJFpuWZB35oxr7/sWH7qSh5LqXppjb2sWFz4GC3Je20=
+	t=1728325339; cv=none; b=lAsTWfh4PZQ5wuk7jgSD6LCHZbvb8x727AbivAPd54mwOfn0kee3ES4DPevIFdQ4RVs2G7sQZIQmKsZJ2TrgCROe97aTnfQsxoAZ9Ou4aWHytlVzHyd0JxqLu9lIRpdk30TJGdAhdiCasofassoxpVVOGF2EXq3jbB0S8ckXyfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728325335; c=relaxed/simple;
-	bh=YTQ/xf1TL1ClrPwThJDutLeCnJIOac6v5giUJhoyZWc=;
+	s=arc-20240116; t=1728325339; c=relaxed/simple;
+	bh=+PDkwdfB/rIAkhplfqoAuHSE665gwjecZfyvAZTK3Uo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=H8mjOF682m8Gy/zxC3C7A2TOaV1XI/CMiYRhL9WjebY28LS6swp9wkVjprv9v+N4xesTVJfcpGHHufQORQYGDICg4UW+DW2eZX0N5trKj/0fKU04KbM/8Mx7FVha+rQNFhU1JnVk39BqNGaxlgoHgyv8gsHXNNArGv5YD7YqXk8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LdDB5ZCf; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Fns+ye2AZq5TzrUBAIoTNyCcSFSdz+t/XdKiwNVs5ewGytzcPdOhtXvD6ayMq1mrfyc31GDvY+CFYEwwIy7hyxtMPyd92q6hniE9jpayOnLHt3OwJLgePFhZKeI3wkrgVxFFdI1qwwDgGJGp9YORfIhzudTWFmkWEh6IG1d9m4M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mroi6WDU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LdDB5ZCf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5C96C4CEC6;
-	Mon,  7 Oct 2024 18:22:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mroi6WDU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54715C4CEC6;
+	Mon,  7 Oct 2024 18:22:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728325334;
-	bh=YTQ/xf1TL1ClrPwThJDutLeCnJIOac6v5giUJhoyZWc=;
+	s=k20201202; t=1728325338;
+	bh=+PDkwdfB/rIAkhplfqoAuHSE665gwjecZfyvAZTK3Uo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LdDB5ZCfcNYDNSd6Wqi05fkYDjbkY/WF8amG5ui8JnK+8yoXrVMR2BC6cf15SNoQB
-	 jcMQOeGBeh+eS8GfGLVUZk23zI6NFo6bLosn/58hSFLjiNBljgyV0jH5bgcec+FqvN
-	 NSuBd9eHFc4tKSE0rxQs5xUX6tb1AOcP8pETwVvKIb4x2n6CIkPhIn0nQ+mVl3dlJS
-	 arfu9L7y+QQRxZAvouHWcWDAI2tto3AbXc68JG95e36FVBEuPxsQUFak/oy1O8t5a5
-	 cOJniBuvIlbdxpXxAxvWpVLBvn3tuMi0yaWvZo5iX4wx0WTSBflD9Bf+WbnRveA6kg
-	 HzWvBkMePptAQ==
-Message-ID: <11f4a475-02d4-4a5e-bf49-4eb235a6e645@kernel.org>
-Date: Mon, 7 Oct 2024 20:22:11 +0200
+	b=mroi6WDUuQ1Q2jjj4+sVdkiZ6q25V2jIOZ/0G8jD3awIfN5bSER/WdA3S6KNvNkWh
+	 c3/9caxvZjs9ibSjsj9HCnsRF4ZqZ6DETCQCSWfAJhsnh16AHNxsqu69mV+3XWU9D/
+	 Lczk72dtJzuQDqgL2isEbFRysF8ldalWB/HnlGSeJ8jSW0f+hQbnwVqxFey/+MaYaF
+	 st1jtutbI69FKjuSvgvjQ3YeB4nJa1dFO39zQmX60wcFgLC6qeL37Zxd6X+8KOTdgu
+	 JH0EtO5obyJbrkJ19KyNt3eNGA+zFe0fKNvC+PHZSl868s8oHWz7TcBfM+kNdYQX5u
+	 x0erFDGZVvsPw==
+Message-ID: <35a0cbbe-4b64-49e1-bc65-4a68cfd99485@kernel.org>
+Date: Mon, 7 Oct 2024 20:22:16 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/2] mptcp: prevent MPC handshake on port-based
- signal endpoints
+Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: join: add test-case for
+ MPC attempt towards signl ep
+Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 Cc: Cong Wang <xiyou.wangcong@gmail.com>
 References: <833cae5982ac5d5b3236845c6db4315e634f5705.1727974826.git.pabeni@redhat.com>
-Content-Language: en-GB
+ <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,146 +87,193 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <833cae5982ac5d5b3236845c6db4315e634f5705.1727974826.git.pabeni@redhat.com>
+In-Reply-To: <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 03/10/2024 19:02, Paolo Abeni wrote:
-> Syzkaller reported a lockdep splat:
+> Explicitly verify that MPC connection attempts towards a port-based
+> signal endpoint fail with a reset.
 
-(...)
+Thank you for this fix!
 
-> As noted by Cong Wang, the splat is false positive, but the code
-> path leading to the report is an unexpected one: a client is
-> attempting an MPC handshake towards the in-kernel listener created
-> by the in-kernel PM for a port based signal endpoint.
+Same here, the code looks good to me, but I have some small suggestions,
+and I can send them in a v2.
+
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 80 ++++++++++++++-----
+>  1 file changed, 58 insertions(+), 22 deletions(-)
 > 
-> Such connection will be never accepted; many of them can make the
-> listener queue full and preventing the creation of MPJ subflow via
-> such listener - its intended role.
-> 
-> Explicitly detect this scenario at initial-syn time and drop the
-> incoming MPC request.
-
-Thank you for this patch!
-
-The code looks good to me! I have some small suggestions here below. I
-can send them in a new version of the patch if that's easier and OK for you.
-
-> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-> index ad88bd3c58df..c1455ec8d3db 100644
-> --- a/net/mptcp/mib.c
-> +++ b/net/mptcp/mib.c
-> @@ -78,6 +78,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->  	SNMP_MIB_ITEM("RcvWndConflict", MPTCP_MIB_RCVWNDCONFLICT),
->  	SNMP_MIB_ITEM("MPCurrEstab", MPTCP_MIB_CURRESTAB),
->  	SNMP_MIB_ITEM("Blackhole", MPTCP_MIB_BLACKHOLE),
-> +	SNMP_MIB_ITEM("MPCAttemptOnEndpoint", MPTCP_MIB_ENDPOINTMPC),
-
-I suggest moving it above with the other ones related to MPC, also to
-ease the backports.
-
-While at it, I suggest this name, similar to others:
-
-  SNMP_MIB_ITEM("MPCapableEndpAttempt", MPTCP_MIB_MPCAPABLEENDPATTEMPT),
-
-
->  	SNMP_MIB_SENTINEL
->  };
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index e8d0a01b4144..5e2ab7dfb182 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -41,6 +41,7 @@ evts_ns2_pid=0
+>  last_test_failed=0
+>  last_test_skipped=0
+>  last_test_ignored=1
+> +cappid=""
 >  
-> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-> index 3206cdda8bb1..cb899d26c415 100644
-> --- a/net/mptcp/mib.h
-> +++ b/net/mptcp/mib.h
-> @@ -79,6 +79,9 @@ enum linux_mptcp_mib_field {
->  	MPTCP_MIB_RCVWNDCONFLICT,	/* Conflict with while updating msk rcv wnd */
->  	MPTCP_MIB_CURRESTAB,		/* Current established MPTCP connections */
->  	MPTCP_MIB_BLACKHOLE,		/* A blackhole has been detected */
-> +	MPTCP_MIB_ENDPOINTMPC,		/* A peer attmpted MPC towards a port-based signal
-> +					 * endpoint (not allowed)
-> +					 */
-
-Same here to move it above. The comment could go on one line I think:
-
-  /* Prohibited MPC attempted towards a port-based signal endp */
-
->  	__MPTCP_MIB_MAX
->  };
->  
-
-(...)
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index c3942416fa3a..e0b3c297ca7c 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -532,6 +532,9 @@ struct mptcp_subflow_context {
->  		close_event_done : 1,       /* has done the post-closed part */
->  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
->  		__unused : 9;
-> +	bool	pm_listener;	    /* subflow is a listener managed by the
-> +				     * in-kernel PM
-> +				     */
-
-The comment could go on a single line.
-
->  	bool	data_avail;
->  	bool	scheduled;
->  	bool	fully_established;  /* path validated */
-> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> index a1e28e1d8b4e..c022a39d7160 100644
-> --- a/net/mptcp/subflow.c
-> +++ b/net/mptcp/subflow.c
-> @@ -132,6 +132,14 @@ static void subflow_add_reset_reason(struct sk_buff *skb, u8 reason)
->  	}
+>  declare -A all_tests
+>  declare -a only_tests_ids
+> @@ -887,6 +888,34 @@ check_cestab()
+>  	fi
 >  }
 >  
-> +static int subflow_reset_req(struct request_sock *req,
-> +			      struct sk_buff *skb)
-
-Checkpatch is complaining about the alignment: I guess the parameters
-could go on a single line.
-
-Maybe the helper could be called "subflow_reset_req_endp()" (or similar)
-as it is specific to this case?
-
+> +cond_start_capture()
 > +{
-> +	SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_ENDPOINTMPC);
-> +	subflow_add_reset_reason(skb, MPTCP_RST_EMPTCP);
+> +	if $capture; then
+> +		local capuser
+> +		if [ -z $SUDO_USER ] ; then
+> +			capuser=""
+> +		else
+> +			capuser="-Z $SUDO_USER"
+> +		fi
+> +
+> +		local capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
 
-Maybe we can use: MPTCP_RST_EPROHIBIT?
+Shellcheck is complaining here:
+  > SC2155 (warning): Declare and assign separately to avoid masking
+return values.
 
-> +	return -EPERM;
+So 'local capfile' should be declared before.
+
+> +
+> +		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
+> +		ip netns exec $1 tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
+> +		cappid=$!
+> +
+> +		sleep 1
+> +	fi
 > +}
 > +
->  /* Init mptcp request socket.
->   *
->   * Returns an error code if a JOIN has failed and a TCP reset
-> @@ -165,6 +173,8 @@ static int subflow_check_req(struct request_sock *req,
->  	if (opt_mp_capable) {
->  		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
->  
-> +		if (unlikely(listener->pm_listener))
-> +			return subflow_reset_req(req, skb);
->  		if (opt_mp_join)
->  			return 0;
->  	} else if (opt_mp_join) {
-> @@ -172,7 +182,8 @@ static int subflow_check_req(struct request_sock *req,
->  
->  		if (mp_opt.backup)
->  			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
-> -	}
-> +	} else if (unlikely(listener->pm_listener))
+> +cond_stop_capture()
+> +{
+> +	if $capture; then
+> +	    sleep 1
+> +	    kill $cappid
 
-(I don't know if a '{' is needed on this line, Checkpatch didn't
-complain, but I thought it was doing that before.)
+(while at it, we can fix the indentation using tabs)
 
-> +		return subflow_reset_req(req, skb);
+> +	fi
+> +}
+> +
+>  do_transfer()
+>  {
+>  	local listener_ns="$1"
+> @@ -896,7 +925,6 @@ do_transfer()
+>  	local connect_addr="$5"
 >  
->  	if (opt_mp_capable && listener->request_mptcp) {
->  		int err, retries = MPTCP_TOKEN_MAX_RETRIES;
+>  	local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
+> -	local cappid
+>  	local FAILING_LINKS=${FAILING_LINKS:-""}
+>  	local fastclose=${fastclose:-""}
+>  	local speed=${speed:-"fast"}
+> @@ -905,22 +933,7 @@ do_transfer()
+>  	:> "$sout"
+>  	:> "$capout"
+
+This line should be moved too I suppose, and the 'cat' should be done at
+the end.
+
+>  
+> -	if $capture; then
+> -		local capuser
+> -		if [ -z $SUDO_USER ] ; then
+> -			capuser=""
+> -		else
+> -			capuser="-Z $SUDO_USER"
+> -		fi
+> -
+> -		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
+> -
+> -		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
+> -		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
+> -		cappid=$!
+> -
+> -		sleep 1
+> -	fi
+> +	cond_start_capture ${listener_ns}
+>  
+>  	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+>  		nstat -n
+> @@ -1007,11 +1020,6 @@ do_transfer()
+>  	wait $spid
+>  	local rets=$?
+>  
+> -	if $capture; then
+> -	    sleep 1
+> -	    kill $cappid
+> -	fi
+
+I guess you still want to stop the capture here.
+
+  cond_stop_capture
+
+> -
+>  	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+>  		nstat | grep Tcp > /tmp/${listener_ns}.out
+>  	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
+> @@ -2160,6 +2168,34 @@ signal_address_tests()
+>  			chk_add_nr 3 3
+>  		fi
+>  	fi
+> +
+> +	if reset "port-based signal endpoint must not accept mpc"; then
+
+Can we move this test at the end of the add_addr_ports_tests section?
+
+> +		local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
+
+(detail: maybe we can have a helper for this, just to show we use the
+same one as in do_transfer())
+
+> +
+> +		cond_start_capture ${ns1}
+> +
+> +		pm_nl_add_endpoint ${ns1} 10.0.2.1 flags signal port ${port}
+> +		mptcp_lib_wait_local_port_listen ${ns1} ${port}
+> +
+> +		timeout 1 ip netns exec ${ns2} \
+> +			./mptcp_connect -t ${timeout_poll} -p $port -s MPTCP 10.0.2.1 >/dev/null 2>&1
+> +		local ret=$?
+> +
+> +		cond_stop_capture
+> +
+> +		if [ ${ret} = 124 ]; then
+> +			fail_test "timeout on connect"
+
+A check name is missing here (print_check()) like in the other validations.
+
+> +		elif [ ! ${ret} ]; then
+> +			fail_test "unexpected successful connect"
+> +		else
+> +			local count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPCAttemptOnEndpoint")
+
+(shellcheck is complaining about the same error here)
+
+> +			if [ "${count}" != 1 ]; then
+> +				fail_test "got ${count} MPC attempts on port-based enpoint, expected 1"
+
+We should skip the test if the counter is not available, like in the
+other validations.
+
+> +			else
+> +				print_ok
+> +			fi
+> +		fi
+
+Maybe we should move the validation to another helper, just to keep only
+the declaration here, and the validation elsewhere, just like other
+tests (even here it is not going to be used by other tests)?
+
+> +	fi
+>  }
+>  
+>  link_failure_tests()
 
 Cheers,
 Matt
