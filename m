@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D6FD18CC16
-	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 09:12:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E7A3231CAF
+	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 09:19:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728292340; cv=none; b=Lc7w5g6/c+06/gYNHN2x6INm4VsXGX6gz3qVRz9K70Ctm9rGr9Cn3Xh7LZSDpQwgegjyn4Hm1/DExtt3y9DRfGxxXuMVzzsD9hXW6G3hRFNcHm47DD381BXCyjWkWKKzY4rkK/vQ9tktiB685ddcM/h/ZmTZyJYjki4KCAsZsXs=
+	t=1728292784; cv=none; b=Y+4kJJQACik/Znt7kjDPzIty+9hmKAfjrqRWNql17G0vf3HHpglXw4YM23CdNTi3+FcrLLZNwhIKInsChoSixUepJ4+v5EAwQad1EKvRRMBrcsdBc87IWENygKBXchnYF7g7utoE9jHDwgJmKUmFzFzEUes+7WP34f2E+Wn79oA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728292340; c=relaxed/simple;
-	bh=92hwSAKVHQodj2umggIb9SAI/y01eS5EvrLZqvNit5I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=JPU8Dt/d3AuUc0nvf6OLSxqSc9zVG8FdnbtymFs/9CsAmkCU8sGxhHNzfY/2LW0RxzQ5BORB9p/1ImWwfnJy8CMZZy0J3MShMRtK9QdLzPJCEIuDR57UaoX1JcW33cii8Y4o0WiyhLrsiiGkk/L4HWhBIL8Mx7XSwBqikZ9GYhM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qe7WfQ4t; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728292784; c=relaxed/simple;
+	bh=U8PVogr770W8DvWQJ3Li9ydKl+4SjII7Sk/d3v9APko=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=afE+pa+bWOd0ylTqWOh5traDvA5nEez+G/vwcBUzZTsThj087Sqmy27/b3HMOgluXETiouAOooAKkPv5HQaNRV3txC6/htWdL2C7kfDgx+epCbyGgj8eIHonzwJWOIXXJesiqBOlTbiOeJ1vLT7M6DcGhEvjWbg0ObSq2D/R9+Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A8qrMoPn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qe7WfQ4t"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 27D90C4CEC6;
-	Mon,  7 Oct 2024 09:12:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A8qrMoPn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A0BBC4CEC6;
+	Mon,  7 Oct 2024 09:19:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728292339;
-	bh=92hwSAKVHQodj2umggIb9SAI/y01eS5EvrLZqvNit5I=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=qe7WfQ4t2b0bEH1KZ+Db6XscDr0/MmhewTzb5u4yNhJ2OkSsXRbbgX/XqnLGTlsLA
-	 rI0Mst9sVbAx84w8ZUXQGVxyOvnndgLJqxYHRVBPZk92RN5mfw3x70w4WKpRqg6asr
-	 XCNGYeKrwBF0I6X7zP6wKhLQm03e9cEoHvk9xkLCeBl6pHDnhiKS5D/7FZM028Nlg4
-	 3mBLxeY6l/HpRrdooIfxMYQsVfREWe+QXTz/YQe3jq+obc12TvgDkkoYDY6sx9mPjd
-	 UUFe3sUaFACi39CzGjSceQFrWa7lzm6rZcdGoGVUGXQRGRA3GJrmahE7dTAf5FFo5N
-	 ln69vjRSL16+Q==
-Message-ID: <81e28cc5-45b5-4a6a-be52-c1d5a62d8143@kernel.org>
-Date: Mon, 7 Oct 2024 11:12:17 +0200
+	s=k20201202; t=1728292783;
+	bh=U8PVogr770W8DvWQJ3Li9ydKl+4SjII7Sk/d3v9APko=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A8qrMoPnmyrWkDn6ukJMvO5GmwQwRiB/bjwhErpkJ+DAJD77TGGF9RvNczToOetnC
+	 Li/zqPebnzPsatdRokdhfkQDivb/Hl2fL1PgW/T11gT3/NJNpXCYJOkwWoPAEs2H2h
+	 JNnehz5We6/osviQ2/VvcMKPvcrHn1EIVcbWxT6N7rHe5az0avG73UUYabcf4xqCoS
+	 N+VejHwq9iJG2LnpVH0tWJUSWABTB4KIRbd37wh4eA/jA8QPu3nzNuogIgqx9bv8xz
+	 EMlOdH/KRjQg7bcBkbx8PGBs1IMnfGnLckh3RY76iHs15/ZD0GoQH+0UA1t2g/TlkD
+	 aAsfzdn0rXDjA==
+Message-ID: <5954761a-575b-4df2-ad11-92ab6ba788dd@kernel.org>
+Date: Mon, 7 Oct 2024 11:19:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] Squash-to: "mptcp: handle consistently DSS
- corruption"
+Subject: Re: [PATCH mptcp-net] mptcp: pm: do not remove closing subflows
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-References: <dfce01586ff42d63cffce0a2ca10149e30ec71fe.1727881810.git.pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+References: <20240830-mptcp-pm-minor-fixes-v1-1-89737b847a8d@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,33 +85,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <dfce01586ff42d63cffce0a2ca10149e30ec71fe.1727881810.git.pabeni@redhat.com>
+In-Reply-To: <20240830-mptcp-pm-minor-fixes-v1-1-89737b847a8d@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 02/10/2024 17:10, Paolo Abeni wrote:
-> Instead of re-inventing the wheel, use the flag we already
-> track to easily check if fallback is allowed.
+On 30/08/2024 17:36, Matthieu Baerts (NGI0) wrote:
+> In a previous fix, the in-kernel path-manager has been modified not to
+> retrigger the removal of a subflow if it was already closed, e.g. when
+> the initial subflow is removed, but kept in the subflows list.
 > 
-> Note that we could not check conn_list in a reliable way,
-> as the call side is not under the msk socket lock.
-Thank you for the fix!
+> To be complete, this fix should also skip the subflows that are in any
+> closing state: mptcp_close_ssk() will initiate the closure, but the
+> switch to the TCP_CLOSE state depends on the other peer.
 
-Now in our tree:
+As discussed at the last meeting, the patch looks OK. I then just
+applied it with Paolo's Acked-by:
 
 New patches for t/upstream-net and t/upstream:
-- 0752f9d4d42a: "squashed" in "mptcp: handle consistently DSS corruption"
-- Results: 0a6d0fb8fae4..98b1e473ae39 (export-net)
-- Results: 624ef948c8bd..48a08655247c (export)
+- 0986f9be4a5c: mptcp: pm: do not remove closing subflows
+- Results: 98b1e473ae39..400d24177d84 (export-net)
+- Results: 48a08655247c..2ce52e0f26d3 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3faf828e7f45c82863516b4c157433c1c343349e/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/7ff625c9345c4313b66dba10977bbfa1f5350a3f/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b4046d581b70c4a32d20a1a582db9a6d256a6849/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/f024f47bc584b29fa1f211c82317c41ef7ac2d01/checks
+
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Fixes: Fixes: 58e1b66b4e4b ("mptcp: pm: do not remove already closed subflows")
+
+... and I removed the duplicated 'Fixes' word.
 
 Cheers,
 Matt
