@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E3F91C1AAA
-	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 18:22:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 909251DDC0C
+	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 18:26:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728325339; cv=none; b=lAsTWfh4PZQ5wuk7jgSD6LCHZbvb8x727AbivAPd54mwOfn0kee3ES4DPevIFdQ4RVs2G7sQZIQmKsZJ2TrgCROe97aTnfQsxoAZ9Ou4aWHytlVzHyd0JxqLu9lIRpdk30TJGdAhdiCasofassoxpVVOGF2EXq3jbB0S8ckXyfM=
+	t=1728325599; cv=none; b=dv6m5jsa8+o2U5IyUozy5UlZD8FrdEkXHZM66FFn2Ui53kYzI0YzIW7Iz5fJGGFQItT8LeAc9bsnpRQOFygLaV1YwHcrxrd/lBtB2QCQEHgY19/l5jMaJouV0VavqSfnTnrJaBkhknJ/SsaUKELmGCSC+ESjXuEZ+ZAV16TlPu0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728325339; c=relaxed/simple;
-	bh=+PDkwdfB/rIAkhplfqoAuHSE665gwjecZfyvAZTK3Uo=;
+	s=arc-20240116; t=1728325599; c=relaxed/simple;
+	bh=iRPoOpc566+jntx5Qdm9IyyqChGlZeyRDbBCkgEyCgk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Fns+ye2AZq5TzrUBAIoTNyCcSFSdz+t/XdKiwNVs5ewGytzcPdOhtXvD6ayMq1mrfyc31GDvY+CFYEwwIy7hyxtMPyd92q6hniE9jpayOnLHt3OwJLgePFhZKeI3wkrgVxFFdI1qwwDgGJGp9YORfIhzudTWFmkWEh6IG1d9m4M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mroi6WDU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mphqZ8zPGkeALqhmWc/LC6sobuo96xEnEz9ovchM9Vo2TymumcQUISxLW09K7r6V4q+gdiFYMWwWW85sPE9d8gYr1T1WWmpg/s+4IQ6VVQbreaSWkJWoqx8+z/Z4tVosK/zGO3HofUE1L9+pyqVzynnhPXfGtWjlJtRpnOf7ge0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTqbpZwl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mroi6WDU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54715C4CEC6;
-	Mon,  7 Oct 2024 18:22:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTqbpZwl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 43D56C4CEC6;
+	Mon,  7 Oct 2024 18:26:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728325338;
-	bh=+PDkwdfB/rIAkhplfqoAuHSE665gwjecZfyvAZTK3Uo=;
+	s=k20201202; t=1728325599;
+	bh=iRPoOpc566+jntx5Qdm9IyyqChGlZeyRDbBCkgEyCgk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mroi6WDUuQ1Q2jjj4+sVdkiZ6q25V2jIOZ/0G8jD3awIfN5bSER/WdA3S6KNvNkWh
-	 c3/9caxvZjs9ibSjsj9HCnsRF4ZqZ6DETCQCSWfAJhsnh16AHNxsqu69mV+3XWU9D/
-	 Lczk72dtJzuQDqgL2isEbFRysF8ldalWB/HnlGSeJ8jSW0f+hQbnwVqxFey/+MaYaF
-	 st1jtutbI69FKjuSvgvjQ3YeB4nJa1dFO39zQmX60wcFgLC6qeL37Zxd6X+8KOTdgu
-	 JH0EtO5obyJbrkJ19KyNt3eNGA+zFe0fKNvC+PHZSl868s8oHWz7TcBfM+kNdYQX5u
-	 x0erFDGZVvsPw==
-Message-ID: <35a0cbbe-4b64-49e1-bc65-4a68cfd99485@kernel.org>
-Date: Mon, 7 Oct 2024 20:22:16 +0200
+	b=OTqbpZwlztyDzrJShoMFQU1B7bM4WZ6C0H4/2yJywpg0JgSmzM+tg0U2aS6XeZAfj
+	 bhgMNQpH3wljovq24ejLWfBj6CaVUnLxDP/LehpJvheC0MlB+Gm6Iu7J1zRqUJ6m/r
+	 /ob1xmOM/LVZTlXe10swjeKqcaS5KKRSCjUI6AocQtiJyS8gtyDHk15QhNfjKL9aZf
+	 sGgmZj3mCbmfFRhMdHcBj9daf2CVn7yE2Cpy4/61a32zv/8RBTun1od9FaN0hc4kbW
+	 2eoWXXMaNKAlAt36zG2p7rio4jEVDTdV8PXPINAcsJPJSohEtHMbSDtyUOfbZTNqly
+	 YHOKOQ7kDUubg==
+Message-ID: <4e7fbc5f-3521-436b-a25e-007d5ce5c972@kernel.org>
+Date: Mon, 7 Oct 2024 20:26:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/2] selftests: mptcp: join: add test-case for
- MPC attempt towards signl ep
+Subject: Re: [PATCH mptcp-net] mptcp: fallback if MPTCP opts are dropped after
+ 1st data
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: Cong Wang <xiyou.wangcong@gmail.com>
-References: <833cae5982ac5d5b3236845c6db4315e634f5705.1727974826.git.pabeni@redhat.com>
- <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Cc: Christoph Paasch <cpaasch@apple.com>, Davide Caratti
+ <dcaratti@redhat.com>, Paolo Abeni <pabeni@redhat.com>
+References: <20241003-mptcp-gh-518-v1-1-e79e1f6434ad@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,193 +87,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <66cfbfdf241fb43c51bf3c7d35c92f79a92b025d.1727974826.git.pabeni@redhat.com>
+In-Reply-To: <20241003-mptcp-gh-518-v1-1-e79e1f6434ad@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 03/10/2024 19:02, Paolo Abeni wrote:
-> Explicitly verify that MPC connection attempts towards a port-based
-> signal endpoint fail with a reset.
+On 03/10/2024 20:43, Matthieu Baerts (NGI0) wrote:
+> As reported by Christoph [1], before this patch, an MPTCP connection was
+> wrongly reset when a host received a first data packet with MPTCP
+> options after the 3wHS, but got the next ones without.
 
-Thank you for this fix!
+I would like to send this patch tomorrow to netdev: we already talked
+about it at the last meeting. Any objections?
 
-Same here, the code looks good to me, but I have some small suggestions,
-and I can send them in a v2.
-
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 80 ++++++++++++++-----
->  1 file changed, 58 insertions(+), 22 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index e8d0a01b4144..5e2ab7dfb182 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -41,6 +41,7 @@ evts_ns2_pid=0
->  last_test_failed=0
->  last_test_skipped=0
->  last_test_ignored=1
-> +cappid=""
->  
->  declare -A all_tests
->  declare -a only_tests_ids
-> @@ -887,6 +888,34 @@ check_cestab()
->  	fi
->  }
->  
-> +cond_start_capture()
-> +{
-> +	if $capture; then
-> +		local capuser
-> +		if [ -z $SUDO_USER ] ; then
-> +			capuser=""
-> +		else
-> +			capuser="-Z $SUDO_USER"
-> +		fi
-> +
-> +		local capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
-
-Shellcheck is complaining here:
-  > SC2155 (warning): Declare and assign separately to avoid masking
-return values.
-
-So 'local capfile' should be declared before.
-
-> +
-> +		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
-> +		ip netns exec $1 tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
-> +		cappid=$!
-> +
-> +		sleep 1
-> +	fi
-> +}
-> +
-> +cond_stop_capture()
-> +{
-> +	if $capture; then
-> +	    sleep 1
-> +	    kill $cappid
-
-(while at it, we can fix the indentation using tabs)
-
-> +	fi
-> +}
-> +
->  do_transfer()
->  {
->  	local listener_ns="$1"
-> @@ -896,7 +925,6 @@ do_transfer()
->  	local connect_addr="$5"
->  
->  	local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
-> -	local cappid
->  	local FAILING_LINKS=${FAILING_LINKS:-""}
->  	local fastclose=${fastclose:-""}
->  	local speed=${speed:-"fast"}
-> @@ -905,22 +933,7 @@ do_transfer()
->  	:> "$sout"
->  	:> "$capout"
-
-This line should be moved too I suppose, and the 'cat' should be done at
-the end.
-
->  
-> -	if $capture; then
-> -		local capuser
-> -		if [ -z $SUDO_USER ] ; then
-> -			capuser=""
-> -		else
-> -			capuser="-Z $SUDO_USER"
-> -		fi
-> -
-> -		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
-> -
-> -		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
-> -		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
-> -		cappid=$!
-> -
-> -		sleep 1
-> -	fi
-> +	cond_start_capture ${listener_ns}
->  
->  	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
->  		nstat -n
-> @@ -1007,11 +1020,6 @@ do_transfer()
->  	wait $spid
->  	local rets=$?
->  
-> -	if $capture; then
-> -	    sleep 1
-> -	    kill $cappid
-> -	fi
-
-I guess you still want to stop the capture here.
-
-  cond_stop_capture
-
-> -
->  	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
->  		nstat | grep Tcp > /tmp/${listener_ns}.out
->  	NSTAT_HISTORY=/tmp/${connector_ns}.nstat ip netns exec ${connector_ns} \
-> @@ -2160,6 +2168,34 @@ signal_address_tests()
->  			chk_add_nr 3 3
->  		fi
->  	fi
-> +
-> +	if reset "port-based signal endpoint must not accept mpc"; then
-
-Can we move this test at the end of the add_addr_ports_tests section?
-
-> +		local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
-
-(detail: maybe we can have a helper for this, just to show we use the
-same one as in do_transfer())
-
-> +
-> +		cond_start_capture ${ns1}
-> +
-> +		pm_nl_add_endpoint ${ns1} 10.0.2.1 flags signal port ${port}
-> +		mptcp_lib_wait_local_port_listen ${ns1} ${port}
-> +
-> +		timeout 1 ip netns exec ${ns2} \
-> +			./mptcp_connect -t ${timeout_poll} -p $port -s MPTCP 10.0.2.1 >/dev/null 2>&1
-> +		local ret=$?
-> +
-> +		cond_stop_capture
-> +
-> +		if [ ${ret} = 124 ]; then
-> +			fail_test "timeout on connect"
-
-A check name is missing here (print_check()) like in the other validations.
-
-> +		elif [ ! ${ret} ]; then
-> +			fail_test "unexpected successful connect"
-> +		else
-> +			local count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPCAttemptOnEndpoint")
-
-(shellcheck is complaining about the same error here)
-
-> +			if [ "${count}" != 1 ]; then
-> +				fail_test "got ${count} MPC attempts on port-based enpoint, expected 1"
-
-We should skip the test if the counter is not available, like in the
-other validations.
-
-> +			else
-> +				print_ok
-> +			fi
-> +		fi
-
-Maybe we should move the validation to another helper, just to keep only
-the declaration here, and the validation elsewhere, just like other
-tests (even here it is not going to be used by other tests)?
-
-> +	fi
->  }
->  
->  link_failure_tests()
+Can I add any Acked-by/Reviewed-by by chance? :)
 
 Cheers,
 Matt
