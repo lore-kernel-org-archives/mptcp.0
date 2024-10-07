@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E347615D5C1
-	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 10:53:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A5E7D18BC1C
+	for <mptcp@lists.linux.dev>; Mon,  7 Oct 2024 10:53:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728298418; cv=none; b=fOSMXAVX51X9KBK1wrdLD8odhzYpBNshXElvZ2WUU1PXV/Iib/V6MiU1TfHIb4E0sbwDtEK5QoupuNOeOL5muoymJ63F3saD11N5oQy1P4wamrQdX13zfMn/w/+1e6oDg0ZGEfawgd/stCCGzvMg8yB1yaGkkLBDpFa5BoOBqvM=
+	t=1728298419; cv=none; b=KAz/XU5W3I9NfNXiC8YmlsqpNjaKefsaehquu+ZEfaWzY1DqPzZSBD7n2MIwkUf3Qv3IBC/oMhr/IPp1SJn/lOx88v30H0nstrMxvg3bxkG/Lz5mQkXq2uEXcj+EeNVVOPcD92Ocoo/7EdKdQFDcV7RDym49eqbx5CLQ1Qf//JY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728298418; c=relaxed/simple;
-	bh=kEMmc02kMK6FOx1V+tinbaU1Ku0mDwmcrqsRmCrdqOc=;
+	s=arc-20240116; t=1728298419; c=relaxed/simple;
+	bh=VCj8skfMlHHGk08KV+De8lYpKM477DBc/su6MnYOkL0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OVzIJKsrAlCLr6yTUXaMRw7zEdlzqLb2Yg3oJTjP0nR3r3XmMq4ozdHPJ2wTAxxVcjJTIS7JxGfMFhmRmH+KY+jhhsVcol7ikkjfd0vwLu7Sw/PKlOQYxNvZ1VM+1djWMm0vjJ+GMP/jRgS9YRK59xX/zizgbeSGrR9UB0Lg8tY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DM9pBq9A; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=TXrtSFOR7BuZvLrV5OSwzJLz2AY8rkAT7EgF2Kd7wtg1KY4QhFQeMr906WUh8w8wW2wb/9uLWRxt94xatR3/F/VUQAtJfaEoTDkAyzeUIRiCD7IW1zQlyb5uesUw7QVkJ5sGCd7hKGJfqXF1WgwPL0HmTy48/lEulAV6pi4QNyY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fvYdbNEa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DM9pBq9A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B87F8C4CEC6;
-	Mon,  7 Oct 2024 10:53:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fvYdbNEa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF39C4CEC6;
+	Mon,  7 Oct 2024 10:53:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728298417;
-	bh=kEMmc02kMK6FOx1V+tinbaU1Ku0mDwmcrqsRmCrdqOc=;
+	s=k20201202; t=1728298419;
+	bh=VCj8skfMlHHGk08KV+De8lYpKM477DBc/su6MnYOkL0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DM9pBq9A8dHr9KrSXhLgMndN9j2WpUxZNRqe1LUL7eNqzLtOLFj4Nfvhlj8RRFQwm
-	 3f/cTAw5oeJvtbaGj+C75Y+w43jSTOyDSdJ5HHCPswgwBdHdCzgf6AsuziP1f4LvCP
-	 r0tHRcyG+vzn6tqCZvo3rg8GlAqE7lmpWdbMcitF1Y12/Z0rNxm8ULHgJwmZDGrY3u
-	 BbZcLzkOOTIZqa6mmg2OTJQ+tp897oHjaEFsuH9Yz2bVjIB+D/TjnfdDOCn/ahmGYS
-	 4ON5XMtf1oH5VLD85TiJqlVpqu1ZaSHQlUD2lTTpcgAi0BIvcspw9UpJM7t/kapqEc
-	 zkr3oVDV3CG+w==
+	b=fvYdbNEapQsQbGPh7kCl7NXcTShIFEAvkzt3HaStQWtOk2KNfa3+JdMqsan6qy3EL
+	 6WB0aW/D/j56u7p8V5d5qj1mzz9HK4aP1r3iAL9zA56yCD95G+9BeaRGvG2QD0/iqJ
+	 ZN2RzxEKwE0uFjPwqvo6IWAt7Iih0ZHSdYoP37N3HfQDIjjj/dZlOlLZMtv9wDPVJQ
+	 N1dBFkVrVyfGz4jW2RvAFO6bjdUL9FQs6y2kGYqse6W5FzP+UjVQmsZgbzzd446rVK
+	 tk/TePdg2C/9a7G9NY9yp50TBhBsSlPoCkjCxG8FRl8oAMYE4eyUki/oFs8OZUbfVX
+	 A/03AIvkkV6gg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 06/10] mptcp: change remote as mptcp_addr_info
-Date: Mon,  7 Oct 2024 18:53:18 +0800
-Message-ID: <c3c3da2bc59d9fb46cbf3fc2ea6196c2622a5bc6.1728298100.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 07/10] mptcp: change local as mptcp_pm_addr_entry
+Date: Mon,  7 Oct 2024 18:53:19 +0800
+Message-ID: <9e69cd9e599a65f6f0b69d56e65197bd15f4ebdc.1728298100.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1728298100.git.tanggeliang@kylinos.cn>
 References: <cover.1728298100.git.tanggeliang@kylinos.cn>
@@ -49,57 +49,84 @@ Generally, in the path manager interfaces, the local address is defined as
 an mptcp_pm_addr_entry type address, while the remote address is defined as
 an mptcp_addr_info one:
 
-	(struct mptcp_pm_addr_entry *local, struct mptcp_addr_info *remote)
+        (struct mptcp_pm_addr_entry *local, struct mptcp_addr_info *remote)
 
-But the set_flags() interface uses two mptcp_pm_addr_entry type parameters.
-This patch changes the second one to mptcp_addr_info type and use helper
-mptcp_pm_parse_addr() to parse it instead of using mptcp_pm_parse_entry().
+But subflow_destroy() interface uses two mptcp_addr_info type parameters.
+This patch changes the first one to mptcp_pm_addr_entry type and use helper
+mptcp_pm_parse_entry() to parse it instead of using mptcp_pm_parse_addr().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/pm_userspace.c | 23 +++++++++++------------
+ 1 file changed, 11 insertions(+), 12 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 58599f32b279..3c5591af0a80 100644
+index 3c5591af0a80..5d6801ff48ca 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -540,9 +540,9 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+@@ -463,7 +463,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
  {
- 	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
--	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
- 	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
- 	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
+ 	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+-	struct mptcp_addr_info addr_l;
++	struct mptcp_pm_addr_entry local;
+ 	struct mptcp_addr_info addr_r;
  	struct mptcp_sock *msk;
- 	int ret = -EINVAL;
- 	struct sock *sk;
-@@ -559,13 +559,13 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 		goto set_flags_err;
+ 	struct sock *sk, *ssk;
+@@ -480,7 +480,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
  
- 	if (attr_rem) {
--		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
-+		ret = mptcp_pm_parse_addr(attr_rem, info, &rem);
- 		if (ret < 0)
- 			goto set_flags_err;
+ 	sk = (struct sock *)msk;
+ 
+-	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
++	err = mptcp_pm_parse_entry(laddr, info, true, &local);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+ 		goto destroy_err;
+@@ -493,35 +493,34 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
  	}
  
- 	if (loc.addr.family == AF_UNSPEC ||
--	    rem.addr.family == AF_UNSPEC) {
-+	    rem.family == AF_UNSPEC) {
- 		GENL_SET_ERR_MSG(info, "invalid address families");
- 		ret = -EINVAL;
- 		goto set_flags_err;
-@@ -575,7 +575,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 		bkup = 1;
+ #if IS_ENABLED(CONFIG_MPTCP_IPV6)
+-	if (addr_l.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
+-		ipv6_addr_set_v4mapped(addr_l.addr.s_addr, &addr_l.addr6);
+-		addr_l.family = AF_INET6;
++	if (local.addr.family == AF_INET && ipv6_addr_v4mapped(&addr_r.addr6)) {
++		ipv6_addr_set_v4mapped(local.addr.addr.s_addr, &local.addr.addr6);
++		local.addr.family = AF_INET6;
+ 	}
+-	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&addr_l.addr6)) {
+-		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &addr_r.addr6);
++	if (addr_r.family == AF_INET && ipv6_addr_v4mapped(&local.addr.addr6)) {
++		ipv6_addr_set_v4mapped(addr_r.addr.s_addr, &local.addr.addr6);
+ 		addr_r.family = AF_INET6;
+ 	}
+ #endif
+-	if (addr_l.family != addr_r.family) {
++	if (local.addr.family != addr_r.family) {
+ 		GENL_SET_ERR_MSG(info, "address families do not match");
+ 		err = -EINVAL;
+ 		goto destroy_err;
+ 	}
+ 
+-	if (!addr_l.port || !addr_r.port) {
++	if (!local.addr.port || !addr_r.port) {
+ 		GENL_SET_ERR_MSG(info, "missing local or remote port");
+ 		err = -EINVAL;
+ 		goto destroy_err;
+ 	}
  
  	lock_sock(sk);
--	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
-+	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem, bkup);
- 	release_sock(sk);
+-	ssk = mptcp_nl_find_ssk(msk, &addr_l, &addr_r);
++	ssk = mptcp_nl_find_ssk(msk, &local.addr, &addr_r);
+ 	if (ssk) {
+ 		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+-		struct mptcp_pm_addr_entry entry = { .addr = addr_l };
  
- set_flags_err:
+ 		spin_lock_bh(&msk->pm.lock);
+-		mptcp_userspace_pm_delete_local_addr(msk, &entry);
++		mptcp_userspace_pm_delete_local_addr(msk, &local);
+ 		spin_unlock_bh(&msk->pm.lock);
+ 		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+ 		mptcp_close_ssk(sk, ssk, subflow);
 -- 
 2.43.0
 
