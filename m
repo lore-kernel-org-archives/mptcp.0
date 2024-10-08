@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0501B433D0
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 15:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61AC41E04B3
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 15:35:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728401741; cv=none; b=gGqIRUpG1EayR/R0R0V0z9N4RcsVj4wBdYbjioathLZpiImg56Md9uM7Pl8Q30jCesyJDqY+GyUrE49YKGRQiBBriql/V3W//a98eJ/HWHPSZOKaWJZiePZPVmsfzVBTyNA4eGyW6iYn6LfaBum0j890Ua6fQB9NRXw5t9qfK4E=
+	t=1728401742; cv=none; b=TyCMAyLNCK9W7lXT/9nnUVWXyheQgPnTpiJZtksh9PIPoI8BJImHoMsqOCfD/4+cC9jlcB6J86PLFsLpzhPdDa4vvToTXizQy+D93F4t4eyBvUvyr+PVnk0c/t7CqhZwxE6lLri2PiOfO7WCUe/4iRcGb2U0Ra76r1HFQJwhXlA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728401741; c=relaxed/simple;
-	bh=W2isWgo/irG+y9Hyc5+66nAlTKSKSd4RQ5h38pwbXs8=;
+	s=arc-20240116; t=1728401742; c=relaxed/simple;
+	bh=QDVEK6f/a0QWZeV8OL0OPS1L1BV2lSBuqsXL7W1FIKk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ktra+VILfIMhn5ll1nXLyKNCuEDXMRrac8qJAlfoeeWlXPePubS3PRE81tqQ8wqRzmJ9yAlOPzF/sOdBs3A/l70day74QDx/7/RUFZ70LgHHq2V2vSNUP6Nr9fxYoDmQkLUS0gERUUCBGeexju5VMGowacfL9BdknNOh8Kd3MWU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4kPm/np; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=UL6DijyazsSJP9+zcim0mJX2JmTUzBHhokpyuOHz0Sx4KKp6JbCTSyUNYw54m++AAJS6XAgwzibtXlAicY7jk6+ephBJmKm/zLWBC1Sc2+MWiLL0qiMpGEaMTZ5IcRFGPE5t9s3zouWYUUqATZ2QX+8YGKaLXprrnt4CJnC39Qg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=flKn82Jd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4kPm/np"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F2EC4CED6;
-	Tue,  8 Oct 2024 15:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="flKn82Jd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE980C4CED4;
+	Tue,  8 Oct 2024 15:35:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728401740;
-	bh=W2isWgo/irG+y9Hyc5+66nAlTKSKSd4RQ5h38pwbXs8=;
+	s=k20201202; t=1728401741;
+	bh=QDVEK6f/a0QWZeV8OL0OPS1L1BV2lSBuqsXL7W1FIKk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=h4kPm/npi7EfVx9g/NEksy5VvmcDjWZ0ZPQQHV4JE97LpuQEDlaUzHjGs2BaS1gD0
-	 LfJlV3a14woAvv056Nl3pePACRrW40BEIdMadaoSk8Rxc8tCOOI3Kt/Z3TfiRU5sJ4
-	 ou7N/H3bc0frWuEwxS02q7+HfQBGx+PW8XzWyF1wrwT0OwowphTsNoxdUKeyi2az1L
-	 OP68TBU3JsV9/texwDKYOw+eRVnC65LeS7QPFa5oK3pFhJqygZLVDgjywEkW/YoJzp
-	 9XoM8dwQ5dSgPky8LxbYceufqCmPZ8E2A0sQjDWjkuRvXVd8hRjOcpIHJW0c3G7O26
-	 cZ+CYcUqMRoxw==
+	b=flKn82Jd1sY8kgoGE8YeIfXMQqjrRox/wZPciOSMhtSF1iaJKY1f0Zio4V4CLUsve
+	 8mUM2ZMEQCQ8w4zhsJMe73Dly2ugCxAIH9o3uioSUib6HIAD4i2usbPobZLkIRyD3F
+	 6hGFm4P+sSSzPM3OqbJsI79BJtzXMx24vk/S+Xul+MSTdTown7nzlmwYmYmGWi1+iy
+	 3WAaymdaCrgVgm4A5Nd8rUivW1gW32xdwLbpEQ/xJezGFr2D6eF21nXtPkX8RF/g8o
+	 wGBtE+v3EQxyScnSCENEemd6JAeDUktWb/SSTzf9tMruYMnqScANwOTaReOunKkrUp
+	 YckhsvTaniMcA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 08 Oct 2024 17:35:23 +0200
-Subject: [PATCH mptcp-net v3 1/2] mptcp: prevent MPC handshake on
- port-based signal endpoints
+Date: Tue, 08 Oct 2024 17:35:24 +0200
+Subject: [PATCH mptcp-net v3 2/2] selftests: mptcp: join: add test-case for
+ MPC attempt towards signl ep
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,261 +38,239 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241008-mpc-hs-port-v3-1-cec1363f0353@kernel.org>
+Message-Id: <20241008-mpc-hs-port-v3-2-cec1363f0353@kernel.org>
 References: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
 In-Reply-To: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, Cong Wang <cong.wang@bytedance.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12021; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=+phYfsSU4RuMtrZp/cLkHYtgA5fHrcEGLiQp1n9Bllg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnBVFJDAx4FUsv8bq1ezOLIUbj+pRZ9DDS77WCE
- jH+usUjFreJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZwVRSQAKCRD2t4JPQmmg
- c9X7EADVJsP7RAk/2J06OOr8R0CMRH/i5u9P4ehlSW5B4yaVUOe20QztBDLNFgTbYEuMO6SSy+R
- kk0Gfr73lz8HnTJFKAe2ivedKfbiRC+xlyX5bosue6r7zALY8s9lo36lVYlazqrSnDYIvikaqrp
- FgMDwWB/J2Dc2fVE/heyRXS/ythJuelNPjrnQjC4zHkFTMfA4HEVIsglWCPSUTRyO29IUozQw/S
- /aATLi/v9YzH4alA+flZnrQ3abe/rZT50GVn/D25inz6LVV7uspDqqUsR6RTAxnSsgHotL+GXZl
- jEAkXPxWmt+VKkTCnxVapSojATaD+mRi41WtscIAc4q3xmBd56MCU5WQeH3lpawM0NGUelwnMd3
- 9e4Kxk2JPoxqa+EmKDh5FirNjGc4l0SnoHN11wpTzk0KQjUI6NFMCpalgC93eMD14MvF0Jj2nH8
- t2NXfQJNdQ4raqpcA3vUKc+7HHRo+P4Igl3oJsCUDeZo2rKeqaCXjJ1s5Go8G8ZZ1Al6DD8D6hk
- F2GBKci8w9qGlVxo3418xBYZwM8i/5HY7vfAK7VehmWWjApbx+fpkhWcKwpV+eiSTWSC5ihCD8N
- ArUE6rhZeIA/Xdf4yvsgZYJHWvgykMSPBBEFAbKuudZA/iVTS/jqgXaNU2joMh90A9iQy3jKYYx
- MnbxqQywC6VPWyQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=5231; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=fijrEaVyiORbB6ITUB0XKzktTFa2CynDZifwgxvmQTw=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnBVFJqfFVwa+dduOaM1DOOaby5TdXayQsCGRR4
+ SvBrlNYTbqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZwVRSQAKCRD2t4JPQmmg
+ c7suEACrznKp7UI5kakQo1UDtC7V6wxL5FTnLVrf9S6fAU1yp/D3HQc5/bxcSRodoMpr3ymPjBG
+ mdzmiewV+NK6kpFdfiDtrydpMfLuCeb6u2j1RYOfE48yCOUezbOA3+DOAEc92BDsSYyw7m1wB3s
+ u+sCFWnmMrN7WNAam6VeKucRlkFQSGxIC3x6xWDR+nySobX+PTWsFZwsAgY5l60VD9Ud4jRil8u
+ 0EtBHeFMXB145NEM+K0MXxU4ZC/+RcwyQRrcqnsi1dH4XAoFs9Ha4+xssoLQVe1zfEVjdrsNkSm
+ U8zOy7rlP+De+iiXbrXLVxnMSxiYhgaPJQeaFFvuwBzJcGMXH6fNRzAXifxdMLhUHrOy+LIQAHs
+ +s0+xyOBj+AnG9DkVG+afpfxzjdQwEOW5IS4mSGSNbNIVQju3l5bg8PsXf0Kw12vq1FmCj68Vlx
+ tRSqWYJG5GjUgSGIgaF7hP8TsrgerZTzXGlx4BD4DdAfSbZ345nyjnPAXRVwgyBe03Bham90hnL
+ zgcep3oA6K9hrLStNw+HB29wPeR1RYy9m6ajUIA8z5mVzMRGFsspBPffVkTEovOf58bs2A88sC0
+ 0Lo9KL9intdlZTc7VCXwnTrq6gS7a4hhNK0xiza4fk+M0HHrwa6NmBas8PiaGzlR41GezlSiLdM
+ 2COr+TV2Lllmahg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 From: Paolo Abeni <pabeni@redhat.com>
 
-Syzkaller reported a lockdep splat:
+Explicitly verify that MPC connection attempts towards a port-based
+signal endpoint fail with a reset.
 
-  ============================================
-  WARNING: possible recursive locking detected
-  6.11.0-rc6-syzkaller-00019-g67784a74e258 #0 Not tainted
-  --------------------------------------------
-  syz-executor364/5113 is trying to acquire lock:
-  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+Note that this new test is a bit different from the other ones, not
+using 'run_tests'. It is then needed to add the capture capability, and
+the picking the right port which have been extracted into three new
+helpers. The info about the capture can also be printed from a single
+point, which simplifies the exit paths in do_transfer().
 
-  but task is already holding lock:
-  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
-
-  other info that might help us debug this:
-   Possible unsafe locking scenario:
-
-         CPU0
-         ----
-    lock(k-slock-AF_INET);
-    lock(k-slock-AF_INET);
-
-   *** DEADLOCK ***
-
-   May be due to missing lock nesting notation
-
-  7 locks held by syz-executor364/5113:
-   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
-   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x153/0x1b10 net/mptcp/protocol.c:1806
-   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
-   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg_fastopen+0x11f/0x530 net/mptcp/protocol.c:1727
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: __ip_queue_xmit+0x5f/0x1b80 net/ipv4/ip_output.c:470
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_finish_output2+0x45f/0x1390 net/ipv4/ip_output.c:228
-   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: process_backlog+0x33b/0x15b0 net/core/dev.c:6104
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish+0x230/0x5f0 net/ipv4/ip_input.c:232
-   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
-
-  stack backtrace:
-  CPU: 0 UID: 0 PID: 5113 Comm: syz-executor364 Not tainted 6.11.0-rc6-syzkaller-00019-g67784a74e258 #0
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-  Call Trace:
-   <IRQ>
-   __dump_stack lib/dump_stack.c:93 [inline]
-   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:119
-   check_deadlock kernel/locking/lockdep.c:3061 [inline]
-   validate_chain+0x15d3/0x5900 kernel/locking/lockdep.c:3855
-   __lock_acquire+0x137a/0x2040 kernel/locking/lockdep.c:5142
-   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5759
-   __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-   _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-   spin_lock include/linux/spinlock.h:351 [inline]
-   sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
-   mptcp_sk_clone_init+0x32/0x13c0 net/mptcp/protocol.c:3279
-   subflow_syn_recv_sock+0x931/0x1920 net/mptcp/subflow.c:874
-   tcp_check_req+0xfe4/0x1a20 net/ipv4/tcp_minisocks.c:853
-   tcp_v4_rcv+0x1c3e/0x37f0 net/ipv4/tcp_ipv4.c:2267
-   ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
-   ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   __netif_receive_skb_one_core net/core/dev.c:5661 [inline]
-   __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
-   process_backlog+0x662/0x15b0 net/core/dev.c:6108
-   __napi_poll+0xcb/0x490 net/core/dev.c:6772
-   napi_poll net/core/dev.c:6841 [inline]
-   net_rx_action+0x89b/0x1240 net/core/dev.c:6963
-   handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
-   do_softirq+0x11b/0x1e0 kernel/softirq.c:455
-   </IRQ>
-   <TASK>
-   __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
-   local_bh_enable include/linux/bottom_half.h:33 [inline]
-   rcu_read_unlock_bh include/linux/rcupdate.h:908 [inline]
-   __dev_queue_xmit+0x1763/0x3e90 net/core/dev.c:4450
-   dev_queue_xmit include/linux/netdevice.h:3105 [inline]
-   neigh_hh_output include/net/neighbour.h:526 [inline]
-   neigh_output include/net/neighbour.h:540 [inline]
-   ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:235
-   ip_local_out net/ipv4/ip_output.c:129 [inline]
-   __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:535
-   __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
-   tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6542 [inline]
-   tcp_rcv_state_process+0x2c32/0x4570 net/ipv4/tcp_input.c:6729
-   tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1934
-   sk_backlog_rcv include/net/sock.h:1111 [inline]
-   __release_sock+0x214/0x350 net/core/sock.c:3004
-   release_sock+0x61/0x1f0 net/core/sock.c:3558
-   mptcp_sendmsg_fastopen+0x1ad/0x530 net/mptcp/protocol.c:1733
-   mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1812
-   sock_sendmsg_nosec net/socket.c:730 [inline]
-   __sock_sendmsg+0x1a6/0x270 net/socket.c:745
-   ____sys_sendmsg+0x525/0x7d0 net/socket.c:2597
-   ___sys_sendmsg net/socket.c:2651 [inline]
-   __sys_sendmmsg+0x3b2/0x740 net/socket.c:2737
-   __do_sys_sendmmsg net/socket.c:2766 [inline]
-   __se_sys_sendmmsg net/socket.c:2763 [inline]
-   __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2763
-   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7f04fb13a6b9
-  Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007ffd651f42d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-  RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f04fb13a6b9
-  RDX: 0000000000000001 RSI: 0000000020000d00 RDI: 0000000000000004
-  RBP: 00007ffd651f4310 R08: 0000000000000001 R09: 0000000000000001
-  R10: 0000000020000080 R11: 0000000000000246 R12: 00000000000f4240
-  R13: 00007f04fb187449 R14: 00007ffd651f42f4 R15: 00007ffd651f4300
-   </TASK>
-
-As noted by Cong Wang, the splat is false positive, but the code
-path leading to the report is an unexpected one: a client is
-attempting an MPC handshake towards the in-kernel listener created
-by the in-kernel PM for a port based signal endpoint.
-
-Such connection will be never accepted; many of them can make the
-listener queue full and preventing the creation of MPJ subflow via
-such listener - its intended role.
-
-Explicitly detect this scenario at initial-syn time and drop the
-incoming MPC request.
+The 'Fixes' tag here below is the same as the one from the previous
+commit: this patch here is not fixing anything wrong in the selftests,
+but it validates the previous fix for an issue introduced by this commit
+ID.
 
 Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f4aacdfef2c6a6529c3e
-Cc: Cong Wang <cong.wang@bytedance.com>
+Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/mib.c        |  1 +
- net/mptcp/mib.h        |  1 +
- net/mptcp/pm_netlink.c |  1 +
- net/mptcp/protocol.h   |  1 +
- net/mptcp/subflow.c    | 11 +++++++++++
- 5 files changed, 15 insertions(+)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 117 +++++++++++++++++-------
+ 1 file changed, 86 insertions(+), 31 deletions(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index ad88bd3c58dffed8335eedb43ca6290418e3c4f4..19eb9292bd6093a760b41f98c1774fd2490c48e3 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -17,6 +17,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPCapableFallbackSYNACK", MPTCP_MIB_MPCAPABLEACTIVEFALLBACK),
- 	SNMP_MIB_ITEM("MPCapableSYNTXDrop", MPTCP_MIB_MPCAPABLEACTIVEDROP),
- 	SNMP_MIB_ITEM("MPCapableSYNTXDisabled", MPTCP_MIB_MPCAPABLEACTIVEDISABLED),
-+	SNMP_MIB_ITEM("MPCapableEndpAttempt", MPTCP_MIB_MPCAPABLEENDPATTEMPT),
- 	SNMP_MIB_ITEM("MPFallbackTokenInit", MPTCP_MIB_TOKENFALLBACKINIT),
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 3206cdda8bb1067f9a8354fd45deed86b67ac7da..128282982843a07614a46f9b2c2f7c708306c769 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -12,6 +12,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_MPCAPABLEACTIVEFALLBACK, /* Client-side fallback during 3-way handshake */
- 	MPTCP_MIB_MPCAPABLEACTIVEDROP,	/* Client-side fallback due to a MPC drop */
- 	MPTCP_MIB_MPCAPABLEACTIVEDISABLED, /* Client-side disabled due to past issues */
-+	MPTCP_MIB_MPCAPABLEENDPATTEMPT,	/* Prohibited MPC to port-based endp */
- 	MPTCP_MIB_TOKENFALLBACKINIT,	/* Could not init/allocate token */
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c738330ba403a75dae0a47a34abc3b9b65b36655..d37fefbaf34f50c16f6c36d785e064797d5df7ad 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1129,6 +1129,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	 */
- 	inet_sk_state_store(newsk, TCP_LISTEN);
- 	lock_sock(ssk);
-+	WRITE_ONCE(mptcp_subflow_ctx(ssk)->pm_listener, true);
- 	err = __inet_listen_sk(ssk, backlog);
- 	if (!err)
- 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c3942416fa3ab46a0e72dd4aed851a6e716398fc..6d7035a6b30e55b0852d896c06e7e00bd7770bd8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -532,6 +532,7 @@ struct mptcp_subflow_context {
- 		close_event_done : 1,       /* has done the post-closed part */
- 		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
- 		__unused : 9;
-+	bool	pm_listener;	    /* a listener managed by the kernel PM? */
- 	bool	data_avail;
- 	bool	scheduled;
- 	bool	fully_established;  /* path validated */
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index a1e28e1d8b4e39e14bc8f98164013d302d62595c..5958b63f84469b980bb1af472117643baf740713 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -132,6 +132,13 @@ static void subflow_add_reset_reason(struct sk_buff *skb, u8 reason)
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index e8d0a01b4144264615d92b953a69ebd934ce468e..c07e2bd3a315aac9c422fed85c3196ec46e060f7 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -23,6 +23,7 @@ tmpfile=""
+ cout=""
+ err=""
+ capout=""
++cappid=""
+ ns1=""
+ ns2=""
+ iptables="iptables"
+@@ -887,6 +888,44 @@ check_cestab()
+ 	fi
  }
  
-+static int subflow_reset_req_endp(struct request_sock *req, struct sk_buff *skb)
++cond_start_capture()
 +{
-+	SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEENDPATTEMPT);
-+	subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
-+	return -EPERM;
++	local ns="$1"
++
++	:> "$capout"
++
++	if $capture; then
++		local capuser capfile
++		if [ -z $SUDO_USER ]; then
++			capuser=""
++		else
++			capuser="-Z $SUDO_USER"
++		fi
++
++		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "$ns")
++
++		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
++		ip netns exec "$ns" tcpdump -i any -s 65535 -B 32768 $capuser -w "$capfile" > "$capout" 2>&1 &
++		cappid=$!
++
++		sleep 1
++	fi
 +}
 +
- /* Init mptcp request socket.
-  *
-  * Returns an error code if a JOIN has failed and a TCP reset
-@@ -165,6 +172,8 @@ static int subflow_check_req(struct request_sock *req,
- 	if (opt_mp_capable) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
++cond_stop_capture()
++{
++	if $capture; then
++		sleep 1
++		kill $cappid
++		cat "$capout"
++	fi
++}
++
++get_port()
++{
++	echo "$((10000 + MPTCP_LIB_TEST_COUNTER - 1))"
++}
++
+ do_transfer()
+ {
+ 	local listener_ns="$1"
+@@ -894,33 +933,17 @@ do_transfer()
+ 	local cl_proto="$3"
+ 	local srv_proto="$4"
+ 	local connect_addr="$5"
++	local port
  
-+		if (unlikely(listener->pm_listener))
-+			return subflow_reset_req_endp(req, skb);
- 		if (opt_mp_join)
- 			return 0;
- 	} else if (opt_mp_join) {
-@@ -172,6 +181,8 @@ static int subflow_check_req(struct request_sock *req,
+-	local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
+-	local cappid
+ 	local FAILING_LINKS=${FAILING_LINKS:-""}
+ 	local fastclose=${fastclose:-""}
+ 	local speed=${speed:-"fast"}
++	port=$(get_port)
  
- 		if (mp_opt.backup)
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
-+	} else if (unlikely(listener->pm_listener)) {
-+		return subflow_reset_req_endp(req, skb);
- 	}
+ 	:> "$cout"
+ 	:> "$sout"
+-	:> "$capout"
  
- 	if (opt_mp_capable && listener->request_mptcp) {
+-	if $capture; then
+-		local capuser
+-		if [ -z $SUDO_USER ] ; then
+-			capuser=""
+-		else
+-			capuser="-Z $SUDO_USER"
+-		fi
+-
+-		capfile=$(printf "mp_join-%02u-%s.pcap" "$MPTCP_LIB_TEST_COUNTER" "${listener_ns}")
+-
+-		echo "Capturing traffic for test $MPTCP_LIB_TEST_COUNTER into $capfile"
+-		ip netns exec ${listener_ns} tcpdump -i any -s 65535 -B 32768 $capuser -w $capfile > "$capout" 2>&1 &
+-		cappid=$!
+-
+-		sleep 1
+-	fi
++	cond_start_capture ${listener_ns}
+ 
+ 	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+ 		nstat -n
+@@ -1007,10 +1030,7 @@ do_transfer()
+ 	wait $spid
+ 	local rets=$?
+ 
+-	if $capture; then
+-	    sleep 1
+-	    kill $cappid
+-	fi
++	cond_stop_capture
+ 
+ 	NSTAT_HISTORY=/tmp/${listener_ns}.nstat ip netns exec ${listener_ns} \
+ 		nstat | grep Tcp > /tmp/${listener_ns}.out
+@@ -1026,7 +1046,6 @@ do_transfer()
+ 		ip netns exec ${connector_ns} ss -Menita 1>&2 -o "dport = :$port"
+ 		cat /tmp/${connector_ns}.out
+ 
+-		cat "$capout"
+ 		return 1
+ 	fi
+ 
+@@ -1043,13 +1062,7 @@ do_transfer()
+ 	fi
+ 	rets=$?
+ 
+-	if [ $retc -eq 0 ] && [ $rets -eq 0 ];then
+-		cat "$capout"
+-		return 0
+-	fi
+-
+-	cat "$capout"
+-	return 1
++	[ $retc -eq 0 ] && [ $rets -eq 0 ]
+ }
+ 
+ make_file()
+@@ -2873,6 +2886,32 @@ verify_listener_events()
+ 	fail_test
+ }
+ 
++chk_mpc_endp_attempt()
++{
++	local retl=$1
++	local attempts=$2
++
++	print_check "Connect"
++
++	if [ ${retl} = 124 ]; then
++		fail_test "timeout on connect"
++	elif [ ${retl} = 0 ]; then
++		fail_test "unexpected successful connect"
++	else
++		print_ok
++
++		print_check "Attempts"
++		count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPCapableEndpAttempt")
++		if [ -z "$count" ]; then
++			print_skip
++		elif [ "$count" != "$attempts" ]; then
++			fail_test "got ${count} MPC attempt[s] on port-based endpoint, expected ${attempts}"
++		else
++			print_ok
++		fi
++	fi
++}
++
+ add_addr_ports_tests()
+ {
+ 	# signal address with port
+@@ -2963,6 +3002,22 @@ add_addr_ports_tests()
+ 		chk_join_nr 2 2 2
+ 		chk_add_nr 2 2 2
+ 	fi
++
++	if reset "port-based signal endpoint must not accept mpc"; then
++		local port retl count
++		port=$(get_port)
++
++		cond_start_capture ${ns1}
++		pm_nl_add_endpoint ${ns1} 10.0.2.1 flags signal port ${port}
++		mptcp_lib_wait_local_port_listen ${ns1} ${port}
++
++		timeout 1 ip netns exec ${ns2} \
++			./mptcp_connect -t ${timeout_poll} -p $port -s MPTCP 10.0.2.1 >/dev/null 2>&1
++		retl=$?
++		cond_stop_capture
++
++		chk_mpc_endp_attempt ${retl} 1
++	fi
+ }
+ 
+ syncookies_tests()
 
 -- 
 2.45.2
