@@ -1,121 +1,120 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 33ADC1DFE11
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 16:45:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5789420ADEA
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 17:32:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728405917; cv=none; b=aE318twNdx/YTeOocoXzvl5tb1hbpXpYuI7C9CA2ekKP2bssy1L9fkM4wDaAkvmgsL3BSK78H06KMh0cEXcvsB4OY6CbHMwDj7y+GQOpQ0wlIpXLQ2fmuA53BN5Yg7vkvf8EAmm9h3xcQcke+yYqKgSh+WMhQ7fGRsU99c4j0Js=
+	t=1728408747; cv=none; b=lUu5DnxFmBnA4CiW/s1mh57I5fuV34w+6UFsrdqJ/EOLeFcL7INJl/BE7EhfASK9ZkjZB/avcNNqsW/I03JaAuhJj3l7NU1pwkf/mRGK2yT6J6jk4cu0bz2rhY1Ey+akmTImB+uLhtv95URm6ieC2db5uUTiQ+1VZx+C1Vk8838=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728405917; c=relaxed/simple;
-	bh=8Pi4b/Kowhmc02hpcn//4CvLV4GXtvPwETXS6HNRqnc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SJr7HMarN/62iONorzBctJK64r2Oja+jPFDiFyEShRFN8hqBVJ1AJ4NxJiKJRydvwT5vvOwHgBB0sxx0+BmwYJR8TaH2EY8nYVZeizP8uuwwUKweHHgqN+IiFX1WBUGB4nM9YbQjmxTuDqnLqGphVdUj9e0Vqyeb0NUJVZPyqL8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JQs3TTno; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728408747; c=relaxed/simple;
+	bh=kEX81wnVgfpvL97ttAXc3+HDiq5VfbxHHcg0ow9dcyU=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=OzAkgGWGh7uD2d5k/djn290cYKEl1oK5g0WHF/1PbXLym3HVFl86HFwcnMe/q1yOBMDiamfln0DePR5Eg/xrakwgENPKaJd5/ey2tFPuuh6XLOxmSOdVbcv7YcCg0N7Er2XfTtb23VWitg+BJGbUOyHoSQyhQkj16jLM02hJADk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZCmizZcy; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JQs3TTno"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-20b58f2e1f4so39851145ad.2
-        for <mptcp@lists.linux.dev>; Tue, 08 Oct 2024 09:45:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728405915; x=1729010715; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=UbGv50usW4sG38zXcVyQFNaCC2AjNSArZJ6q5XTmSoo=;
-        b=JQs3TTnoOqqn/MSbVSnXKbHJObCe290TvPFXoZRh02Qbm7IBRTff5aqp5yvqUnaCcL
-         b59sYy64RX4BsvkTz29qMlxlPP7EtXFB70Q10JoILCMMlTrKsCuT7CyRr2S1pypwpoKh
-         O5P2cACpM/YoH8o34srdOw/fI8ZXBfUsEPq42FKJS+eXxV5V+KuCuJyUNdh4yHjIjqK8
-         P6rbM0EiXO3kXPIwZoVHyc/nDGVT+RL5rY6C8sswg+5wI8PW/Ammz6BArvlSvDiWNtdM
-         QRUVDgDogo+Jisb/2sPntly57KWZShxgPKrxx3OPdpjHPH+SWO2j90dJTV66ifrtErWS
-         MZmw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728405915; x=1729010715;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=UbGv50usW4sG38zXcVyQFNaCC2AjNSArZJ6q5XTmSoo=;
-        b=iOwT/cvIlr4x7TQTRKNPHf0gUWatzO6MOzMlBU205jttOIUgpbPI7c3+o0afOPL+xc
-         QvP2eBerOo//+5Rm+/AUlyAx9UnzPTRwmW1d7tq1GBuImVvDtSaYRsVLxlMpPVEKko84
-         v+mfV5gkRfYBRSD8OhPHoroIZdcjwvRGUrOwJuwRTVsnoz5Q7k7DH4Hnz7CktCnAYNHh
-         XAw2rGu4UwRp+RMRmVfdfTct/wwrRI0lPUyEuu5Qga5B1YNsXdcQkAc9qpDITT3KrNjU
-         UDpgb0JLunWYYLkXDwqqSvfEmdk3wbyJIZxPyV20mxsXXEZ2HfkkiVNSPCddSWybzn9L
-         97ig==
-X-Gm-Message-State: AOJu0Yx9knAfceLYS+JK0NyqKIiln99XqdxpddlrWvE5MwavCIQSKFcm
-	PLEKvygn2Iu0oy5jUQk5khvZA/VVHSN1Qa8cNUt4SBJ4wlb8qhY=
-X-Google-Smtp-Source: AGHT+IF81cjb2dtBcsHFbHv1EhdLymg+rKh/ezCPq43L6UrM7quXBA3ad6IY9P9/s80mf0FYbzr1Bw==
-X-Received: by 2002:a17:902:e891:b0:20b:8c13:5307 with SMTP id d9443c01a7336-20bff0396b5mr239315295ad.33.1728405915399;
-        Tue, 08 Oct 2024 09:45:15 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.38.251])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c13939c3bsm57545175ad.151.2024.10.08.09.45.14
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 08 Oct 2024 09:45:14 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
-References: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
-Subject: Re: [PATCH mptcp-net v3 0/2] mptcp: prevent MPC handshake on
- port-based signal endpoints
-Message-ID: <f4f143fe-0fe8-45c5-3014-7f8398f2e1bd@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 08 Oct 2024 16:45:13 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZCmizZcy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1728408745;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=+RlX8vyw+i0RIcRrnrZudVuNUymipXRi1wFQ/92vHiA=;
+	b=ZCmizZcyFhfOXYbW8aMAfnDvXLoN6LK4tlSbQJ5FH9JK26M3txmOhmKYfYkiV/BeVQj87D
+	b+RVXDGCwJhMoSrn2hoZkEakezWG6nsi6PpsZ3DG7tCAdjzXqcwzfweOiLgYk7Hohia5gr
+	jGQTLVA7skOzhpAwOa+M5UbxmnCmnn0=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-439-klMFQt3TP5KE6Z53Ehn-ZA-1; Tue,
+ 08 Oct 2024 13:32:24 -0400
+X-MC-Unique: klMFQt3TP5KE6Z53Ehn-ZA-1
+Received: from mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.17])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 3FB0019560AA
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 17:32:23 +0000 (UTC)
+Received: from dcaratti.users.ipa.redhat.com (unknown [10.45.225.139])
+	by mx-prod-int-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 5334619560A3
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 17:32:22 +0000 (UTC)
+From: Davide Caratti <dcaratti@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next] mptcp: use "middlebox interference" for MP_TCPRST in case map_valid is false
+Date: Tue,  8 Oct 2024 19:31:00 +0200
+Message-ID: <4b2cee91613e597a172b46bb0d9d3143053c52da.1728408247.git.dcaratti@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.17
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Paolo,
+RFC8684 suggests use of "Middlebox interference (code 0x06)" in case of
+MPJ subflow that carries data at TCP level with no DSS sub-option. This
+is generally the case when mpext is NULL or mpext->use_map is 0: use a
+dedicated value of 'mapping_status' and use it before closing the socket
+in subflow_check_data_avail().
 
-Thank you for your modifications, that's great!
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/518#issuecomment-2389156143
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+---
+ net/mptcp/subflow.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-Our CI did some validations and here is its report:
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index 61482f8b425b..77da7a33598a 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -960,7 +960,8 @@ enum mapping_status {
+ 	MAPPING_EMPTY,
+ 	MAPPING_DATA_FIN,
+ 	MAPPING_DUMMY,
+-	MAPPING_BAD_CSUM
++	MAPPING_BAD_CSUM,
++	MAPPING_NODSS
+ };
+ 
+ static void dbg_bad_map(struct mptcp_subflow_context *subflow, u32 ssn)
+@@ -1118,7 +1119,7 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 		}
+ 
+ 		if (!subflow->map_valid)
+-			return MAPPING_INVALID;
++			return MAPPING_NODSS;
+ 
+ 		goto validate_seq;
+ 	}
+@@ -1332,7 +1333,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 		status = get_mapping_status(ssk, msk);
+ 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
+ 		if (unlikely(status == MAPPING_INVALID || status == MAPPING_DUMMY ||
+-			     status == MAPPING_BAD_CSUM))
++			     status == MAPPING_BAD_CSUM || status == MAPPING_NODSS))
+ 			goto fallback;
+ 
+ 		if (status != MAPPING_OK)
+@@ -1385,7 +1386,13 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			 * subflow_error_report() will introduce the appropriate barriers
+ 			 */
+ 			subflow->reset_transient = 0;
+-			subflow->reset_reason = MPTCP_RST_EMPTCP;
++			switch (status) {
++			case MAPPING_NODSS:
++				subflow->reset_reason = MPTCP_RST_EMIDDLEBOX;
++				break;
++			default:
++				subflow->reset_reason = MPTCP_RST_EMPTCP;
++			}
+ 
+ reset:
+ 			WRITE_ONCE(ssk->sk_err, EBADMSG);
+-- 
+2.46.0
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11239121123
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/d11f11dec586
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D896784
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
