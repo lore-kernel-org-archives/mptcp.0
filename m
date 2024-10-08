@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB16A18BC03
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 09:58:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9696818BC03
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 09:58:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728381516; cv=none; b=h1kheECa1bRzLe7DYv3vBNLvZsDR+qy9LlLVqUJmoEH9xXxvntZ1We86cDJZFsdPBt9xWKjqFWJQMwOIqVyx8hQSjhGUTF3b7sJO0tk3jMohv7k9cbY+NR23WzzgD12k4siEmSg8z9NRHAv1O33kNmS8d1QCLtGvkURAggIJhHc=
+	t=1728381518; cv=none; b=Fi8vn5MgyfqK+wQFoLC4dgfRMQ/FGofx1wBdm2f8o2/vuccXuUBJSZFPpcB6k0wQbp+3c+nN4ag38fm7n01DDvpwGBNqz0B82rwmVCv04dXa6mtU+TkdlSP8WEy0XUB8CjQkDGXWH8pH5ZnYjJzPhYcLzNk23/5ZXpQsBbHNEMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728381516; c=relaxed/simple;
-	bh=Qa09CNLFIWC3rTR+k0zQzrj9qeydL721G+2djdFNGBA=;
+	s=arc-20240116; t=1728381518; c=relaxed/simple;
+	bh=yKHlvMtyNVXIKlhb728cLdgX6pfxlFojxlZbKIbyfUc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UBzdXX9EEIZBpkjCbgm+r9zVp0NAnkGVgmhBbSXtFZTTod1Yk59jUtezBfeMnYsglZ7A5xgcPgArXXOl1yuewdXWyrhb1nungYleZWuSGYLXgzJ67PKwAraDNCTmQAA6ct62cYVj6nA36oVXj/gEETJ1xA4N9PYXOQkqiWjVVzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcDU+tdw; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NZ3yK6M+Svuunet2gqlxcSiPaafYeFRpCS7IUxxegE3Ozj2gvTwql7vHppovjMMUmJCxpRoZtca9VENCpcFlRnA2PdG7gvDAvi5o/yyRVd9Fw/FDN8l+qGX4DlFtyU/M5LcUsBNJTbTe8FFBW3wIcAKCLSDIIKniYtKft73/raU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p2tsg/pJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcDU+tdw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42F1BC4CEC7;
-	Tue,  8 Oct 2024 09:58:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p2tsg/pJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 033A8C4CECC;
+	Tue,  8 Oct 2024 09:58:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728381516;
-	bh=Qa09CNLFIWC3rTR+k0zQzrj9qeydL721G+2djdFNGBA=;
+	s=k20201202; t=1728381518;
+	bh=yKHlvMtyNVXIKlhb728cLdgX6pfxlFojxlZbKIbyfUc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rcDU+tdwdNOWgaCby0yt1cvt5NuLp4/p54VCSv4S0ADjN2NKwME2jHezQpydNEtV/
-	 bj2tOAKg/vQyz67MBmAdpzV51yeRDbz6HHcUI97a9HXU+4bP4ilcvPB9/Bi6NO+nj1
-	 cdCamfv+cJraXmMty+Ci1+zoPM6rinJQYi2QTumb4Dvw8Z/zs0K66Bgff8H/tUvvY8
-	 f/NXzl9X6uu4igu1u/p0xelr+HPudJEv/jScsOYsCcfSSrltcg7ev7W6zPf36bsWqQ
-	 5DQmU1BDQw7hygx6yZTRCz+ljOH8dgaYYsMyx9l6Kus7uoHGwWBCrfkegads01ILf2
-	 QD88z/Z9feYZQ==
+	b=p2tsg/pJMjcV0t0b5xatO0d7bAmaisICofIwjDAeCUY20T4dClr+HZ1TA8R6IGUTO
+	 xdBY5YlHQZZCW5RSP2qERB+4VBUCS/w6Cf3Ta3x6N5AC6TKX958FegxnjirSbOw2RU
+	 GOp7D/RWQyPP8tbAT8f0NS+rog86LbGChikk/jkfphFBQX/Dvat4fKs6OjIGqO37Xw
+	 a8kLGOnkr8GK982rRV3ltwkxNGp4eYuXEz1IBtEOAkNomR5ItMqZ3Ne/1WZYxKzLnV
+	 D/Qkv7D9SpuY+xM/72s4XwfuIrl1P/MS+9EQDYvAgbaOWlT21L/BDa+PqBPe19+/pc
+	 JrrVjjFhoDS2Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 06/13] mptcp: refactor dump_addr with get_addr
-Date: Tue,  8 Oct 2024 17:58:10 +0800
-Message-ID: <1eff3615defa58a09e307874d3b30c6d6431d271.1728381245.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 07/13] mptcp: reuse sending nlmsg code in dump_addr
+Date: Tue,  8 Oct 2024 17:58:11 +0800
+Message-ID: <096eb4419b3467b4fd6c8c2d164e9457eb00ae2b.1728381245.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1728381245.git.tanggeliang@kylinos.cn>
 References: <cover.1728381245.git.tanggeliang@kylinos.cn>
@@ -45,149 +45,195 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch is the second part of refactoring dump_addr().
-
-With the help of get_addr(), only copy the address list to an id
-bitmap while holding the lock, then release the lock immediately.
-
-After that, without locking, walking the copied id bitmap to get
-every copy of entry by using get_addr(), and send each one looply:
-
-	lock();
-	for_each_entry(entry)
-		set_bit(bitmap);
-	unlock();
-
-	for_each_bit(bitmap) {
-		copy = get_addr();
-		send_nlmsg(copy);
-	}
+With the previous commit, we can reuse the send_nlmsg() code in
+dump_addr interfaces between the netlink PM and userspace PM.
+They only need to implement their own dump_addr() interfaces to
+hold the different locks, copy the different address lists to an
+id bitmap, then release the locks.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_netlink.c   | 20 +++++++++++---------
- net/mptcp/pm_userspace.c | 23 ++++++++++++-----------
- 2 files changed, 23 insertions(+), 20 deletions(-)
+ net/mptcp/pm_netlink.c   | 56 +++++++++++++++++++++-------------------
+ net/mptcp/pm_userspace.c | 50 +++++------------------------------
+ net/mptcp/protocol.h     |  4 +--
+ 3 files changed, 38 insertions(+), 72 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 9d502ab4d91d..bcee83306e40 100644
+index bcee83306e40..15ec8a193279 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1866,8 +1866,9 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
- static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 				 struct netlink_callback *cb)
- {
-+	const struct genl_info *info = genl_info_dump(cb);
- 	struct net *net = sock_net(msg->sk);
--	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_pm_addr_entry entry;
- 	struct mptcp_id_bitmap *bitmap;
- 	struct pm_nl_pernet *pernet;
- 	int id = cb->args[0];
-@@ -1877,16 +1878,18 @@ static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 	bitmap = (struct mptcp_id_bitmap *)cb->ctx;
- 	pernet = pm_nl_get_pernet(net);
+@@ -1863,33 +1863,50 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return ret;
+ }
  
--	spin_lock_bh(&pernet->lock);
--	if (!id)
-+	if (!id) {
-+		spin_lock_bh(&pernet->lock);
- 		bitmap_copy(bitmap->map, pernet->id_bitmap.map, MPTCP_PM_MAX_ADDR_ID + 1);
-+		spin_unlock_bh(&pernet->lock);
-+	}
+-static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+-				 struct netlink_callback *cb)
++static int mptcp_pm_nl_dump_addr(struct mptcp_id_bitmap *bitmap,
++				 const struct genl_info *info)
++{
++	struct net *net = genl_info_net(info);
++	struct pm_nl_pernet *pernet;
 +
- 	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
- 		if (test_bit(i, bitmap->map)) {
--			entry = __lookup_addr_by_id(pernet, i);
--			if (!entry)
-+			if (mptcp_pm_nl_get_addr(i, &entry, info))
- 				break;
- 
--			if (entry->addr.id <= id)
-+			if (entry.addr.id <= id)
- 				continue;
- 
- 			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-@@ -1895,16 +1898,15 @@ static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 			if (!hdr)
- 				break;
- 
--			if (mptcp_nl_fill_addr(msg, entry) < 0) {
-+			if (mptcp_nl_fill_addr(msg, &entry) < 0) {
- 				genlmsg_cancel(msg, hdr);
- 				break;
- 			}
- 
--			id = entry->addr.id;
-+			id = entry.addr.id;
- 			genlmsg_end(msg, hdr);
- 		}
- 	}
--	spin_unlock_bh(&pernet->lock);
- 
- 	cb->args[0] = id;
- 	return msg->len;
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 2f1afb719ecf..ad011a4fad4e 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -601,7 +601,7 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- 				 struct netlink_callback *cb)
++	pernet = pm_nl_get_pernet(net);
++
++	spin_lock_bh(&pernet->lock);
++	bitmap_copy(bitmap->map, pernet->id_bitmap.map, MPTCP_PM_MAX_ADDR_ID + 1);
++	spin_unlock_bh(&pernet->lock);
++
++	return 0;
++}
++
++static int mptcp_pm_dump_addr(struct mptcp_id_bitmap *bitmap,
++			      const struct genl_info *info)
++{
++	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
++		return mptcp_userspace_pm_dump_addr(bitmap, info);
++	return mptcp_pm_nl_dump_addr(bitmap, info);
++}
++
++int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
++				struct netlink_callback *cb)
  {
  	const struct genl_info *info = genl_info_dump(cb);
--	struct mptcp_pm_addr_entry *entry;
-+	struct mptcp_pm_addr_entry entry;
+-	struct net *net = sock_net(msg->sk);
+ 	struct mptcp_pm_addr_entry entry;
  	struct mptcp_id_bitmap *bitmap;
- 	struct mptcp_sock *msk;
+-	struct pm_nl_pernet *pernet;
  	int id = cb->args[0];
-@@ -618,17 +618,20 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 	void *hdr;
+ 	int i;
  
- 	sk = (struct sock *)msk;
+ 	bitmap = (struct mptcp_id_bitmap *)cb->ctx;
+-	pernet = pm_nl_get_pernet(net);
  
--	lock_sock(sk);
--	spin_lock_bh(&msk->pm.lock);
--	if (!id)
-+	if (!id) {
-+		lock_sock(sk);
-+		spin_lock_bh(&msk->pm.lock);
- 		ret = mptcp_userspace_pm_set_bitmap(msk, bitmap);
-+		spin_unlock_bh(&msk->pm.lock);
-+		release_sock(sk);
-+	}
-+
+-	if (!id) {
+-		spin_lock_bh(&pernet->lock);
+-		bitmap_copy(bitmap->map, pernet->id_bitmap.map, MPTCP_PM_MAX_ADDR_ID + 1);
+-		spin_unlock_bh(&pernet->lock);
+-	}
++	if (!id)
++		mptcp_pm_dump_addr(bitmap, info);
+ 
  	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
  		if (test_bit(i, bitmap->map)) {
--			entry = mptcp_userspace_pm_lookup_addr_by_id(msk, i);
--			if (!entry)
-+			if (mptcp_userspace_pm_get_addr(i, &entry, info))
+-			if (mptcp_pm_nl_get_addr(i, &entry, info))
++			if (mptcp_pm_get_addr(i, &entry, info))
  				break;
  
--			if (id && entry->addr.id <= id)
+-			if (entry.addr.id <= id)
 +			if (id && entry.addr.id <= id)
  				continue;
  
  			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-@@ -637,18 +640,16 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- 			if (!hdr)
- 				break;
+@@ -1912,21 +1929,6 @@ static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+ 	return msg->len;
+ }
  
--			if (mptcp_nl_fill_addr(msg, entry) < 0) {
-+			if (mptcp_nl_fill_addr(msg, &entry) < 0) {
- 				genlmsg_cancel(msg, hdr);
- 				break;
- 			}
+-static int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
+-{
+-	const struct genl_info *info = genl_info_dump(cb);
+-
+-	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
+-		return mptcp_userspace_pm_dump_addr(msg, cb);
+-	return mptcp_pm_nl_dump_addr(msg, cb);
+-}
+-
+-int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+-				struct netlink_callback *cb)
+-{
+-	return mptcp_pm_dump_addr(msg, cb);
+-}
+-
+ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
+ {
+ 	struct nlattr *attr = info->attrs[id];
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index ad011a4fad4e..8858877d82b0 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -597,20 +597,12 @@ static int mptcp_userspace_pm_set_bitmap(struct mptcp_sock *msk,
+ 	return 0;
+ }
  
--			id = entry->addr.id;
-+			id = entry.addr.id;
- 			genlmsg_end(msg, hdr);
- 		}
- 	}
- 	cb->args[0] = id;
--	spin_unlock_bh(&msk->pm.lock);
--	release_sock(sk);
- 	ret = msg->len;
+-int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+-				 struct netlink_callback *cb)
++int mptcp_userspace_pm_dump_addr(struct mptcp_id_bitmap *bitmap,
++				 const struct genl_info *info)
+ {
+-	const struct genl_info *info = genl_info_dump(cb);
+-	struct mptcp_pm_addr_entry entry;
+-	struct mptcp_id_bitmap *bitmap;
+ 	struct mptcp_sock *msk;
+-	int id = cb->args[0];
+ 	int ret = -EINVAL;
+ 	struct sock *sk;
+-	void *hdr;
+-	int i;
+-
+-	bitmap = (struct mptcp_id_bitmap *)cb->ctx;
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -618,39 +610,11 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 
+ 	sk = (struct sock *)msk;
+ 
+-	if (!id) {
+-		lock_sock(sk);
+-		spin_lock_bh(&msk->pm.lock);
+-		ret = mptcp_userspace_pm_set_bitmap(msk, bitmap);
+-		spin_unlock_bh(&msk->pm.lock);
+-		release_sock(sk);
+-	}
+-
+-	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
+-		if (test_bit(i, bitmap->map)) {
+-			if (mptcp_userspace_pm_get_addr(i, &entry, info))
+-				break;
+-
+-			if (id && entry.addr.id <= id)
+-				continue;
+-
+-			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+-					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+-					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+-			if (!hdr)
+-				break;
+-
+-			if (mptcp_nl_fill_addr(msg, &entry) < 0) {
+-				genlmsg_cancel(msg, hdr);
+-				break;
+-			}
+-
+-			id = entry.addr.id;
+-			genlmsg_end(msg, hdr);
+-		}
+-	}
+-	cb->args[0] = id;
+-	ret = msg->len;
++	lock_sock(sk);
++	spin_lock_bh(&msk->pm.lock);
++	ret = mptcp_userspace_pm_set_bitmap(msk, bitmap);
++	spin_unlock_bh(&msk->pm.lock);
++	release_sock(sk);
  
  	sock_put(sk);
+ 	return ret;
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index be2028ffebde..0a4edb7ee1ed 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1125,8 +1125,8 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_in
+ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
+ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+-int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+-				 struct netlink_callback *cb);
++int mptcp_userspace_pm_dump_addr(struct mptcp_id_bitmap *bitmap,
++				 const struct genl_info *info);
+ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
+ 				const struct genl_info *info);
+ 
 -- 
 2.43.0
 
