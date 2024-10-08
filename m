@@ -1,117 +1,138 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6C5651E04BA
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 14:24:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF803165F08
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 14:57:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728397459; cv=none; b=kQx+ZJbFnggULpYmnY2LwmKo9GKYJ6GdlTN44j+ceNk3J0cdTQYqecAmS5TuzLyEsIH+Y5B5MEFzxgtvR9OEQ/uQiIsvJKYoYSTQnYZDO3hQJTP5+o5flO9GPLcjyXcng6w7FcPjqdkpo95zSI4DiaR3PF868IiqZw2fUNJJ2do=
+	t=1728399455; cv=none; b=UI0BzXW2t4NjBUF96iPRIegMZDYRL9e+cAprbK88X3zsH5dR9KNr6QZXPn4UtHqL9Y9R7YGR7dVAV48ojjJaJlRcs9KHrMnNFbDZEQCF/cMxn40U7Nrn0Jy8yOML+eoBKGaf7UxqAu/c/nKwBCNOzNW+KFJDGWXosvBedm6JynQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728397459; c=relaxed/simple;
-	bh=zKtUCt25YjoDv+04wKiWsHZV00fYPj0fllZjhy818UU=;
+	s=arc-20240116; t=1728399455; c=relaxed/simple;
+	bh=neqfgmKOWKroVYiGitrbSXnIVBSnZhojlp1fn8nndDc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ErWjSd3D80cDclsWYWTikXtMNR9EBcWE+/zLZSfv4ytWPlhpCNsW6plCB3MPgCj6k5TpBYx245gp3aJmYihUVMHd38k13XqEYNbUb3zQ3U4RmN6Dlduun3AYyBCOhFmtzgMPb3VSD2PPXcFcBrGOpb80xu4iW6/fZpH7/tpNo4s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=X0VXrXRT; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=RX1n14+eMmQi6KuxxVI8GBcfl8qNTRP9EGVojlC2znSoAWQ5/ozM/gIYQuSwL0rTwkZNbhb895PkepGprjWmzur4x/o8DRJiIi8U4zz2AxonMHu5qf5eiXjSj4r0dPNTryubB0/xfD494xBg/y7o0ZOtD1JBpagK1A9+w671tm8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=efFrEdTE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="X0VXrXRT"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1728397456;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=UYK7CEZOb6pQqYQKx8SlAXXKDlf7UPUGtZ9GnhryBQU=;
-	b=X0VXrXRT1NR9M2BcciqZXwkq9T9Lb8lYo20Mgv+gPpfaFVoh01U1jb+WcBLaP4zlST9qlT
-	YL1/3BQrmgjZVDYixoVrwP6msMXskbYfD7B4ie2sCPhv61U3vw3sCWwbmAVAb0Z+jrCZX8
-	6XHm762lktEOhWq1bViB8LYnbvYD//o=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-693-UEbUffhDNKy6eJ-j1eZqbA-1; Tue, 08 Oct 2024 10:24:14 -0400
-X-MC-Unique: UEbUffhDNKy6eJ-j1eZqbA-1
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-37d2e66cf9fso319312f8f.1
-        for <mptcp@lists.linux.dev>; Tue, 08 Oct 2024 07:24:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728397453; x=1729002253;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=UYK7CEZOb6pQqYQKx8SlAXXKDlf7UPUGtZ9GnhryBQU=;
-        b=l4B7/HEtKGa0BufhVLFSk+3+zQpeKqpajqploQLS7cnvJdl5OwJK7yeppcPSC+MC+u
-         WifQJU0V0GX6e9jZpJc/U/GT78AwidfCxHg/KrkNSvpSrXBkwW0I/+jVQubdvEjdSGNH
-         5n6nvlPWfJooHZR2/0sOByQ20TSDpvqMOxKtvH8C2OwRmtL1F+bboCbHel2uYhcRjD5y
-         DWaxAD2QOi9bjl5pMXAb9RrcTJnv62ZXzI4p5NCgFAALG6el9Ch+bPuc0B3+cAI80/wZ
-         2sGPzoEMlpaQLD+zZOnLOdteMfIHpSzoT9pWyoxBuhmTwG3fW4QK+zDNqEjBV7JBoxIs
-         4WGQ==
-X-Gm-Message-State: AOJu0Yy0P2idglDiPHhTGtdO8vBTspZFti6MEYQWhZ47oAU6HsmJFv92
-	Lq/u+c3ISR8VyrAVj2mVCSR46NDp+oA9Fd9IOHJsyL1pEqN5Vt6EolcH5PdAaiM7XmqRRidRBuf
-	5FgYyJ4AIvT2Bj06vhwF3IktduahLCo3EUJeYQ8Uq//i/izMLqqQ4t7SJ6ej7Rsc=
-X-Received: by 2002:adf:f603:0:b0:37c:d567:7c8c with SMTP id ffacd0b85a97d-37d0e7781c5mr7046490f8f.30.1728397453402;
-        Tue, 08 Oct 2024 07:24:13 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHnZgQuJCX0qF994Fzpfqc2q8UovoYQlFR5+20EeNxyZTXN3fJXY2DPN55tXnNGUL/mpzGXwA==
-X-Received: by 2002:adf:f603:0:b0:37c:d567:7c8c with SMTP id ffacd0b85a97d-37d0e7781c5mr7046474f8f.30.1728397453004;
-        Tue, 08 Oct 2024 07:24:13 -0700 (PDT)
-Received: from [192.168.88.248] (146-241-37-211.dyn.eolo.it. [146.241.37.211])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-37d1691a541sm8237681f8f.34.2024.10.08.07.24.12
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Oct 2024 07:24:12 -0700 (PDT)
-Message-ID: <fe5476b8-b763-4088-86ce-b4ce7c4983b6@redhat.com>
-Date: Tue, 8 Oct 2024 16:24:11 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="efFrEdTE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 82E83C4CEC7;
+	Tue,  8 Oct 2024 14:57:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728399454;
+	bh=neqfgmKOWKroVYiGitrbSXnIVBSnZhojlp1fn8nndDc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=efFrEdTEran8v4PMoKY05BhAWodcbRYU9wYjHaeiM0c6Hg8ALGZ8yd4FexQVTU7SU
+	 FJnTd7PgDFrbYUjR0YerFR/L7I8NZgsWcP6qtn/ICaWE8lToqeQgJOXH+iT4UX8lq1
+	 vqz7LFaMSsJthhANVCaDAWddmwcPQE0xpgrydr9W3VBUkloCB3qtJvQmbnhw72mo7j
+	 zIR+V3/RXUlswjm32YSu10nJJ6jid7WAu4PEJWW3IyR+g+D+DIwFnWRt7sfVpY0/Zz
+	 3xRQjwwyXgayhzWoZXU53gBmyrFOgPuDiDa4ybc9mkYvMW5MV9aXdU9e1rm7KHIfPz
+	 rzZ085ezDKPwQ==
+Message-ID: <a8ced3da-def4-4aa6-be35-26a6194c42bf@kernel.org>
+Date: Tue, 8 Oct 2024 16:57:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: prevent MPC handshake on
  port-based signal endpoints
-To: Matthieu Baerts <matttbe@kernel.org>
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
 References: <20241007-mpc-hs-port-v2-0-0c9e7827bd0f@kernel.org>
  <20241007-mpc-hs-port-v2-1-0c9e7827bd0f@kernel.org>
  <5e4bcf88-58cb-4691-9c60-3fb0a9acbd48@redhat.com>
  <9ffd0d59-fe64-4155-b421-1de96edf77eb@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <9ffd0d59-fe64-4155-b421-1de96edf77eb@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+ <fe5476b8-b763-4088-86ce-b4ce7c4983b6@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <fe5476b8-b763-4088-86ce-b4ce7c4983b6@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On 10/8/24 11:29, Matthieu Baerts wrote:
->> On 10/7/24 20:22, Matthieu Baerts (NGI0) wrote:
->> Side note: Jakub still strongly prefers not exceeding the 80 chars per
->> column. A couple of comments and the above line are now above such
->> threshold.
+On 08/10/2024 16:24, Paolo Abeni wrote:
+> On 10/8/24 11:29, Matthieu Baerts wrote:
+>>> On 10/7/24 20:22, Matthieu Baerts (NGI0) wrote:
+>>> Side note: Jakub still strongly prefers not exceeding the 80 chars per
+>>> column. A couple of comments and the above line are now above such
+>>> threshold.
+>>
+>> Mmh, I think we mostly followed the default 100 chars max per line in
+>> our code. We don't abuse it though: we use more than 80 to improve the
+>> readability, e.g. when the opening parenthesis is "too close" to the end
+>> of the line, when each line needs a comment next to, most multilines
+>> comments are under 80 chars, etc. In other words, if we want to enforce
+>> the max of 80 chars per line, we might uniform that, but I don't think
+>> that's worth it. Or do you think we should?
 > 
-> Mmh, I think we mostly followed the default 100 chars max per line in
-> our code. We don't abuse it though: we use more than 80 to improve the
-> readability, e.g. when the opening parenthesis is "too close" to the end
-> of the line, when each line needs a comment next to, most multilines
-> comments are under 80 chars, etc. In other words, if we want to enforce
-> the max of 80 chars per line, we might uniform that, but I don't think
-> that's worth it. Or do you think we should?
+> My take is that we should avoid adding more lines exceeding 80 chars,
+> when possible.
 
-My take is that we should avoid adding more lines exceeding 80 chars, 
-when possible.
+OK, I will try to find something to have the new lines under 80 chars,
+and keep the consistency with the current code style.
 
+>> In this patch, only the comments are above 80 chars, but they are
+>> aligned with the ones just above and below. I can still reduce them I
+>> see:
+>>
+>>    /* Prohibited MPC attempted towards a port-based signal endp */
+>>    /* Prohibited MPC towards a port-based signal endp */
+>>
+>>    /* subflow is a listener managed by the in-kernel PM */
+>>    /* a listener managed by the kernel PM? */
+>>
+>> No hurry, I guess we can send this patch later on.
 > 
-> In this patch, only the comments are above 80 chars, but they are
-> aligned with the ones just above and below. I can still reduce them I see:
-> 
->    /* Prohibited MPC attempted towards a port-based signal endp */
->    /* Prohibited MPC towards a port-based signal endp */
-> 
->    /* subflow is a listener managed by the in-kernel PM */
->    /* a listener managed by the kernel PM? */
-> 
-> No hurry, I guess we can send this patch later on.
+> I would opt for the multi-line comment.
 
-I would opt for the multi-line comment.
+OK!
 
-/P
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
