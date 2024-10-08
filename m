@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36989433D0
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 15:35:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0501B433D0
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 15:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728401739; cv=none; b=Si2ny5TyujlGzcvXLlTXfjLfd2pF3pnbt0p7IVI4rTscKWpt3o88lmZ4v4AxWvxIIfi3XvsdzK2vRp/7l5Dt4jtAr24s94kq5iKay6RsT9Vh8q6+Mw4SuO6omfTHDd/BGa2MsE42u+GjPHoNKyjIVhXIxW4nsHNi3RGfEBf0mhc=
+	t=1728401741; cv=none; b=gGqIRUpG1EayR/R0R0V0z9N4RcsVj4wBdYbjioathLZpiImg56Md9uM7Pl8Q30jCesyJDqY+GyUrE49YKGRQiBBriql/V3W//a98eJ/HWHPSZOKaWJZiePZPVmsfzVBTyNA4eGyW6iYn6LfaBum0j890Ua6fQB9NRXw5t9qfK4E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728401739; c=relaxed/simple;
-	bh=w9np0LF+pWWBLKL8IX6dWzwtjTlJSKUSQjRJdqQ7ojo=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=E2HS7qrjZ8eBV36wYoXm8NyBXaAapQbBfGttym9Gd8lbQrNlPo93Y+vtOAxRFTfR6RNpKk7OvNQ3iQ8THfwh/B3bg4+Od0nK6pBQsoaDWb72UA/qVK5z2lSrHAPBSKU6nIoxbz4HNl29++/veM+bXaSXAdKT/z2XAbcqHbzuucs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ktpKrdpO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728401741; c=relaxed/simple;
+	bh=W2isWgo/irG+y9Hyc5+66nAlTKSKSd4RQ5h38pwbXs8=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=ktra+VILfIMhn5ll1nXLyKNCuEDXMRrac8qJAlfoeeWlXPePubS3PRE81tqQ8wqRzmJ9yAlOPzF/sOdBs3A/l70day74QDx/7/RUFZ70LgHHq2V2vSNUP6Nr9fxYoDmQkLUS0gERUUCBGeexju5VMGowacfL9BdknNOh8Kd3MWU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=h4kPm/np; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ktpKrdpO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AB1AEC4CED3;
-	Tue,  8 Oct 2024 15:35:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="h4kPm/np"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49F2EC4CED6;
+	Tue,  8 Oct 2024 15:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728401738;
-	bh=w9np0LF+pWWBLKL8IX6dWzwtjTlJSKUSQjRJdqQ7ojo=;
-	h=From:Subject:Date:To:Cc:From;
-	b=ktpKrdpOzG8oiekq6CW3+Ddnx1l0ZFi0fHYhM/ec5Ew4ypuRA2OtbzkwIqvi9GpeM
-	 cstp8tVZVNpSl21fbC5g0bUnS+s7+eoZXF4+nFiBv2IscLDCvcu5tGHRy5RKKUpGNO
-	 Yi0TlwZiq7+gH+18CFeIs4vzBiokcAvyR+vDA3u+HGJtCkt//8jVYT0UOQyJmdcF0r
-	 XfTymwMBcS3qzNa2X6msknPxqeK/1+Bu+N9XQUBVQPuqUVyPxoBVyX9UaDa0Wwp5+d
-	 dB97SdkfsygDUYKfkoShsbTMVKnzrZid48pBwvSHUrjrYnVFhZxsSpxgeOqrHF3qDu
-	 Fh3FYghN3uyuQ==
+	s=k20201202; t=1728401740;
+	bh=W2isWgo/irG+y9Hyc5+66nAlTKSKSd4RQ5h38pwbXs8=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=h4kPm/npi7EfVx9g/NEksy5VvmcDjWZ0ZPQQHV4JE97LpuQEDlaUzHjGs2BaS1gD0
+	 LfJlV3a14woAvv056Nl3pePACRrW40BEIdMadaoSk8Rxc8tCOOI3Kt/Z3TfiRU5sJ4
+	 ou7N/H3bc0frWuEwxS02q7+HfQBGx+PW8XzWyF1wrwT0OwowphTsNoxdUKeyi2az1L
+	 OP68TBU3JsV9/texwDKYOw+eRVnC65LeS7QPFa5oK3pFhJqygZLVDgjywEkW/YoJzp
+	 9XoM8dwQ5dSgPky8LxbYceufqCmPZ8E2A0sQjDWjkuRvXVd8hRjOcpIHJW0c3G7O26
+	 cZ+CYcUqMRoxw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v3 0/2] mptcp: prevent MPC handshake on
+Date: Tue, 08 Oct 2024 17:35:23 +0200
+Subject: [PATCH mptcp-net v3 1/2] mptcp: prevent MPC handshake on
  port-based signal endpoints
-Date: Tue, 08 Oct 2024 17:35:22 +0200
-Message-Id: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,89 +38,262 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIADpRBWcC/22PS27DIBiErxKxLog3uKvco8qCx28btQYEyGoV+
- e5xvO5yNJpvZp6oQ0vQ0eftiRrsqaeSTyE+biisLi+AUzw14pRLRqnBWw147biWNjATTgcdGPP
- CojNRG8zp96J9oa2OUHGGgR6nNbey4bE2cBfOChEcqMlyF1RUXnChrVRBRy8FU6CFnJWhijDDz
- WSk5ZosaZDqPOR0bxBXN0go27t2TX2U9nd92PlV/u/cnWOKaZjAWG58pPP9G1qGH1Lagh7Hcbw
- AePA0yg4BAAA=
-X-Change-ID: 20241007-mpc-hs-port-13a6c6c11b38
+Message-Id: <20241008-mpc-hs-port-v3-1-cec1363f0353@kernel.org>
+References: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
+In-Reply-To: <20241008-mpc-hs-port-v3-0-cec1363f0353@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, Cong Wang <cong.wang@bytedance.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2324; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=w9np0LF+pWWBLKL8IX6dWzwtjTlJSKUSQjRJdqQ7ojo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnBVFJRbwdENfB/2NLV3npp16sPQ4G4IcHSMUpg
- TKIhzXwTmqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZwVRSQAKCRD2t4JPQmmg
- c1SwD/4sbhcaGnCID51I6k9Bj+4o9ZMSnO0XppJtogR3Wg5zJcAQFASjsoo56GuEmRZ5M/29VDt
- fSba8tFSBjQTuuuWkuznkGC9yB9SaBissmunevIyzvBPsACrIhiGq1tiECma3lJCIcGw10x6V3c
- 6fkIMxG4DmkqhdwqeY7lNKk9+1k8fiSjIu7VLDM8T9K2xFZANjL6zTdmh0XihcNnUdldH8Hg0Z1
- d90t7IRdDMiY5Zb6y//+vsg2fNDOK85tVHsNbNNsrc2VKBh34Ro30E8j/Iy6wbESLw9XjLE0Gdu
- h6mp2ZHmXB/oSXVC/t4HLBNqG273VkVKBroe7Yk09bSvnrue4SVz9GFG+RXeFVdwz7uA0TgeSyP
- VM4kVBT9r2bPrCpMDJM0jfd9uYXbVDoaxTzgoqNA9Ty5yNWhX5jYkf3oNPCXB6dyJwPbPOUXJLm
- bjmOT7ACg60Rtjprh0adSW2bwdmDd+qdF9Qs49xo12IxaEd+fubyDLe0MnqoA72xPN/DZoqZLWt
- X8vaJAMm5c0Pj1P6oxQo2ZqvHLNl7Vu4hgt66Ax9yxY3QHLBDDbTYpcwNTS0WIzfkIl9b3Gs3Tc
- 8A773CyC5qEbX5jBYxaTFUESflqTrae09JDHulL8QDz48aHK4hE9TEE4M6R1hAIHeg7zfFpD06Z
- TVAb6BJP99Bm2dg==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=12021; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=+phYfsSU4RuMtrZp/cLkHYtgA5fHrcEGLiQp1n9Bllg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnBVFJDAx4FUsv8bq1ezOLIUbj+pRZ9DDS77WCE
+ jH+usUjFreJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZwVRSQAKCRD2t4JPQmmg
+ c9X7EADVJsP7RAk/2J06OOr8R0CMRH/i5u9P4ehlSW5B4yaVUOe20QztBDLNFgTbYEuMO6SSy+R
+ kk0Gfr73lz8HnTJFKAe2ivedKfbiRC+xlyX5bosue6r7zALY8s9lo36lVYlazqrSnDYIvikaqrp
+ FgMDwWB/J2Dc2fVE/heyRXS/ythJuelNPjrnQjC4zHkFTMfA4HEVIsglWCPSUTRyO29IUozQw/S
+ /aATLi/v9YzH4alA+flZnrQ3abe/rZT50GVn/D25inz6LVV7uspDqqUsR6RTAxnSsgHotL+GXZl
+ jEAkXPxWmt+VKkTCnxVapSojATaD+mRi41WtscIAc4q3xmBd56MCU5WQeH3lpawM0NGUelwnMd3
+ 9e4Kxk2JPoxqa+EmKDh5FirNjGc4l0SnoHN11wpTzk0KQjUI6NFMCpalgC93eMD14MvF0Jj2nH8
+ t2NXfQJNdQ4raqpcA3vUKc+7HHRo+P4Igl3oJsCUDeZo2rKeqaCXjJ1s5Go8G8ZZ1Al6DD8D6hk
+ F2GBKci8w9qGlVxo3418xBYZwM8i/5HY7vfAK7VehmWWjApbx+fpkhWcKwpV+eiSTWSC5ihCD8N
+ ArUE6rhZeIA/Xdf4yvsgZYJHWvgykMSPBBEFAbKuudZA/iVTS/jqgXaNU2joMh90A9iQy3jKYYx
+ MnbxqQywC6VPWyQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This is a new version for the series sent by Paolo, related to the
-lockdep splat Syzbot reported a few weeks ago, and for which Cong Wang
-sent a different attempt (Thanks both!).
+From: Paolo Abeni <pabeni@redhat.com>
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Syzkaller reported a lockdep splat:
+
+  ============================================
+  WARNING: possible recursive locking detected
+  6.11.0-rc6-syzkaller-00019-g67784a74e258 #0 Not tainted
+  --------------------------------------------
+  syz-executor364/5113 is trying to acquire lock:
+  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+
+  but task is already holding lock:
+  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+
+  other info that might help us debug this:
+   Possible unsafe locking scenario:
+
+         CPU0
+         ----
+    lock(k-slock-AF_INET);
+    lock(k-slock-AF_INET);
+
+   *** DEADLOCK ***
+
+   May be due to missing lock nesting notation
+
+  7 locks held by syz-executor364/5113:
+   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
+   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x153/0x1b10 net/mptcp/protocol.c:1806
+   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
+   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg_fastopen+0x11f/0x530 net/mptcp/protocol.c:1727
+   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
+   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
+   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: __ip_queue_xmit+0x5f/0x1b80 net/ipv4/ip_output.c:470
+   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
+   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
+   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_finish_output2+0x45f/0x1390 net/ipv4/ip_output.c:228
+   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
+   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: process_backlog+0x33b/0x15b0 net/core/dev.c:6104
+   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
+   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
+   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish+0x230/0x5f0 net/ipv4/ip_input.c:232
+   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
+   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+
+  stack backtrace:
+  CPU: 0 UID: 0 PID: 5113 Comm: syz-executor364 Not tainted 6.11.0-rc6-syzkaller-00019-g67784a74e258 #0
+  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+  Call Trace:
+   <IRQ>
+   __dump_stack lib/dump_stack.c:93 [inline]
+   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:119
+   check_deadlock kernel/locking/lockdep.c:3061 [inline]
+   validate_chain+0x15d3/0x5900 kernel/locking/lockdep.c:3855
+   __lock_acquire+0x137a/0x2040 kernel/locking/lockdep.c:5142
+   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5759
+   __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
+   _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
+   spin_lock include/linux/spinlock.h:351 [inline]
+   sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+   mptcp_sk_clone_init+0x32/0x13c0 net/mptcp/protocol.c:3279
+   subflow_syn_recv_sock+0x931/0x1920 net/mptcp/subflow.c:874
+   tcp_check_req+0xfe4/0x1a20 net/ipv4/tcp_minisocks.c:853
+   tcp_v4_rcv+0x1c3e/0x37f0 net/ipv4/tcp_ipv4.c:2267
+   ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
+   ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
+   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+   __netif_receive_skb_one_core net/core/dev.c:5661 [inline]
+   __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
+   process_backlog+0x662/0x15b0 net/core/dev.c:6108
+   __napi_poll+0xcb/0x490 net/core/dev.c:6772
+   napi_poll net/core/dev.c:6841 [inline]
+   net_rx_action+0x89b/0x1240 net/core/dev.c:6963
+   handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
+   do_softirq+0x11b/0x1e0 kernel/softirq.c:455
+   </IRQ>
+   <TASK>
+   __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
+   local_bh_enable include/linux/bottom_half.h:33 [inline]
+   rcu_read_unlock_bh include/linux/rcupdate.h:908 [inline]
+   __dev_queue_xmit+0x1763/0x3e90 net/core/dev.c:4450
+   dev_queue_xmit include/linux/netdevice.h:3105 [inline]
+   neigh_hh_output include/net/neighbour.h:526 [inline]
+   neigh_output include/net/neighbour.h:540 [inline]
+   ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:235
+   ip_local_out net/ipv4/ip_output.c:129 [inline]
+   __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:535
+   __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
+   tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6542 [inline]
+   tcp_rcv_state_process+0x2c32/0x4570 net/ipv4/tcp_input.c:6729
+   tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1934
+   sk_backlog_rcv include/net/sock.h:1111 [inline]
+   __release_sock+0x214/0x350 net/core/sock.c:3004
+   release_sock+0x61/0x1f0 net/core/sock.c:3558
+   mptcp_sendmsg_fastopen+0x1ad/0x530 net/mptcp/protocol.c:1733
+   mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1812
+   sock_sendmsg_nosec net/socket.c:730 [inline]
+   __sock_sendmsg+0x1a6/0x270 net/socket.c:745
+   ____sys_sendmsg+0x525/0x7d0 net/socket.c:2597
+   ___sys_sendmsg net/socket.c:2651 [inline]
+   __sys_sendmmsg+0x3b2/0x740 net/socket.c:2737
+   __do_sys_sendmmsg net/socket.c:2766 [inline]
+   __se_sys_sendmmsg net/socket.c:2763 [inline]
+   __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2763
+   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7f04fb13a6b9
+  Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007ffd651f42d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
+  RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f04fb13a6b9
+  RDX: 0000000000000001 RSI: 0000000020000d00 RDI: 0000000000000004
+  RBP: 00007ffd651f4310 R08: 0000000000000001 R09: 0000000000000001
+  R10: 0000000020000080 R11: 0000000000000246 R12: 00000000000f4240
+  R13: 00007f04fb187449 R14: 00007ffd651f42f4 R15: 00007ffd651f4300
+   </TASK>
+
+As noted by Cong Wang, the splat is false positive, but the code
+path leading to the report is an unexpected one: a client is
+attempting an MPC handshake towards the in-kernel listener created
+by the in-kernel PM for a port based signal endpoint.
+
+Such connection will be never accepted; many of them can make the
+listener queue full and preventing the creation of MPJ subflow via
+such listener - its intended role.
+
+Explicitly detect this scenario at initial-syn time and drop the
+incoming MPC request.
+
+Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
+Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
+Closes: https://syzkaller.appspot.com/bug?extid=f4aacdfef2c6a6529c3e
+Cc: Cong Wang <cong.wang@bytedance.com>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v3:
-- patch 1: reduce comments to fit under 80 chars
-- patch 2:
-  - Add Fixes tag + comment about it
-  - Add my Co-dev tag instead of RvB
-  - Add a note about the new helpers in the commit message
-  - move cappid declaration under capout
-  - move 'cat $capout' to cond_stop_capture
-  - move 'local port' declaration above to keep the reversed Xmas tree
-  - use 'retl' var instead of 'ret' to avoid a clash with the one used
-    in fail_test(), which would not have marked the whole selftest as
-    failed in case of problem only with this test.
-- Link to v2: https://lore.kernel.org/r/20241007-mpc-hs-port-v2-0-0c9e7827bd0f@kernel.org
+ net/mptcp/mib.c        |  1 +
+ net/mptcp/mib.h        |  1 +
+ net/mptcp/pm_netlink.c |  1 +
+ net/mptcp/protocol.h   |  1 +
+ net/mptcp/subflow.c    | 11 +++++++++++
+ 5 files changed, 15 insertions(+)
 
-Changes in v2:
-- patch 1:
-  - moving and renaming the MIB counters
-  - move comments/functions on one line when possbile
-  - rename subflow_reset_req -> _endp
-  - use MPTCP_RST_EPROHIBIT reason
-- patch 2:
-  - fix shellcheck issues
-  - capture: handle $capout
-  - fix indentation issue
-  - helper for the port
-  - stop the capture after transfer like before
-  - move new test to 'add addr ports' ones
-  - move the validation part to a new helper
-  - add missing 'check' names (subtitles)
-  - skip if no counters
-- Link to v1: https://lore.kernel.org/r/833cae5982ac5d5b3236845c6db4315e634f5705.1727974826.git.pabeni@redhat.com
+diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
+index ad88bd3c58dffed8335eedb43ca6290418e3c4f4..19eb9292bd6093a760b41f98c1774fd2490c48e3 100644
+--- a/net/mptcp/mib.c
++++ b/net/mptcp/mib.c
+@@ -17,6 +17,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+ 	SNMP_MIB_ITEM("MPCapableFallbackSYNACK", MPTCP_MIB_MPCAPABLEACTIVEFALLBACK),
+ 	SNMP_MIB_ITEM("MPCapableSYNTXDrop", MPTCP_MIB_MPCAPABLEACTIVEDROP),
+ 	SNMP_MIB_ITEM("MPCapableSYNTXDisabled", MPTCP_MIB_MPCAPABLEACTIVEDISABLED),
++	SNMP_MIB_ITEM("MPCapableEndpAttempt", MPTCP_MIB_MPCAPABLEENDPATTEMPT),
+ 	SNMP_MIB_ITEM("MPFallbackTokenInit", MPTCP_MIB_TOKENFALLBACKINIT),
+ 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
+ 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
+diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+index 3206cdda8bb1067f9a8354fd45deed86b67ac7da..128282982843a07614a46f9b2c2f7c708306c769 100644
+--- a/net/mptcp/mib.h
++++ b/net/mptcp/mib.h
+@@ -12,6 +12,7 @@ enum linux_mptcp_mib_field {
+ 	MPTCP_MIB_MPCAPABLEACTIVEFALLBACK, /* Client-side fallback during 3-way handshake */
+ 	MPTCP_MIB_MPCAPABLEACTIVEDROP,	/* Client-side fallback due to a MPC drop */
+ 	MPTCP_MIB_MPCAPABLEACTIVEDISABLED, /* Client-side disabled due to past issues */
++	MPTCP_MIB_MPCAPABLEENDPATTEMPT,	/* Prohibited MPC to port-based endp */
+ 	MPTCP_MIB_TOKENFALLBACKINIT,	/* Could not init/allocate token */
+ 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
+ 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index c738330ba403a75dae0a47a34abc3b9b65b36655..d37fefbaf34f50c16f6c36d785e064797d5df7ad 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1129,6 +1129,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	 */
+ 	inet_sk_state_store(newsk, TCP_LISTEN);
+ 	lock_sock(ssk);
++	WRITE_ONCE(mptcp_subflow_ctx(ssk)->pm_listener, true);
+ 	err = __inet_listen_sk(ssk, backlog);
+ 	if (!err)
+ 		mptcp_event_pm_listener(ssk, MPTCP_EVENT_LISTENER_CREATED);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index c3942416fa3ab46a0e72dd4aed851a6e716398fc..6d7035a6b30e55b0852d896c06e7e00bd7770bd8 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -532,6 +532,7 @@ struct mptcp_subflow_context {
+ 		close_event_done : 1,       /* has done the post-closed part */
+ 		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+ 		__unused : 9;
++	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+ 	bool	data_avail;
+ 	bool	scheduled;
+ 	bool	fully_established;  /* path validated */
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index a1e28e1d8b4e39e14bc8f98164013d302d62595c..5958b63f84469b980bb1af472117643baf740713 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -132,6 +132,13 @@ static void subflow_add_reset_reason(struct sk_buff *skb, u8 reason)
+ 	}
+ }
+ 
++static int subflow_reset_req_endp(struct request_sock *req, struct sk_buff *skb)
++{
++	SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEENDPATTEMPT);
++	subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
++	return -EPERM;
++}
++
+ /* Init mptcp request socket.
+  *
+  * Returns an error code if a JOIN has failed and a TCP reset
+@@ -165,6 +172,8 @@ static int subflow_check_req(struct request_sock *req,
+ 	if (opt_mp_capable) {
+ 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
+ 
++		if (unlikely(listener->pm_listener))
++			return subflow_reset_req_endp(req, skb);
+ 		if (opt_mp_join)
+ 			return 0;
+ 	} else if (opt_mp_join) {
+@@ -172,6 +181,8 @@ static int subflow_check_req(struct request_sock *req,
+ 
+ 		if (mp_opt.backup)
+ 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
++	} else if (unlikely(listener->pm_listener)) {
++		return subflow_reset_req_endp(req, skb);
+ 	}
+ 
+ 	if (opt_mp_capable && listener->request_mptcp) {
 
----
-Paolo Abeni (2):
-      mptcp: prevent MPC handshake on port-based signal endpoints
-      selftests: mptcp: join: add test-case for MPC attempt towards signl ep
-
- net/mptcp/mib.c                                 |   1 +
- net/mptcp/mib.h                                 |   1 +
- net/mptcp/pm_netlink.c                          |   1 +
- net/mptcp/protocol.h                            |   1 +
- net/mptcp/subflow.c                             |  11 +++
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 117 +++++++++++++++++-------
- 6 files changed, 101 insertions(+), 31 deletions(-)
----
-base-commit: 2ce52e0f26d35f97f56615bb7854afa633f5d231
-change-id: 20241007-mpc-hs-port-13a6c6c11b38
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.45.2
 
