@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C96A166F29
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 09:29:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42DAE1684A4
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 09:42:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728379785; cv=none; b=djaepHKOE5Tf06FVTVMldhjRiH2o5FItYHPIDICQVFkoja0WhzB5tK7oTdMGJOdIKBvebTpTewpIFHuJWYLFzC6nUL3tMOkmTIN4yoj762cIT/OkVMvNKlZygThvJ1prsgTTZs3nddK2QpuViv4AHST4L7hNWzfsgV5X4ePX/eo=
+	t=1728380545; cv=none; b=H/ssUP96i3aSbAjKC6SweC1WQpbginHXNfj2fDGt2DuDy6A3iMfplpacz85GMWFqHKypmZZ2tC0kg+wq4mk9fJWwIa0PO5RkJojjN1tRL3aIgfYXG9O18zl1dnNCViQ0hOpBGInjjDv1d5F23lKoiF8HdPi/HbCp6IrrnBY6kEQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728379785; c=relaxed/simple;
-	bh=8A1gjBD2R2gRuHi+H3t8G6O6VVM3a7AaafScXbm1cdg=;
+	s=arc-20240116; t=1728380545; c=relaxed/simple;
+	bh=CmN6GPKduiUZdyBMnOqiifgeKtyUXcKu2ZIsvS9uvM4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=GLHitQTVNt4Rr2FvIqQFVzZmPLNfy89IHy23wOP5RoJrxB0qSqv3i5k08lnRALyXUSTFAG4Z6qEKsq29MFJJOvr0a1so58CudTuxVGVZcGeYaBmQj7QHe157qYl0pNoMZbkiviOUCYMwOuYcCS1mo1/4PuPPJJtBSHR5KdZvXns=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WinO01Dr; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uHziCHu5YQUt/4Lt+VqNP8dFRJ16NGYS6nE2mA/qiRaQFO1QikfFqIboKkhmCvpoJ0mq6EynkpTM1Ux3EQC8QoNsHu5mZIwmXzJH5rdQ/HIVF6ldQNUkNVKj6PQc9kkGbW0RvzE0R7a/ulvMJvgrNkHjEMP2ZlYDeVbzrRsw4k0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lIFmvWb4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WinO01Dr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7A2DC4CEC7;
-	Tue,  8 Oct 2024 09:29:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lIFmvWb4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B66C4CEC7;
+	Tue,  8 Oct 2024 09:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728379784;
-	bh=8A1gjBD2R2gRuHi+H3t8G6O6VVM3a7AaafScXbm1cdg=;
+	s=k20201202; t=1728380544;
+	bh=CmN6GPKduiUZdyBMnOqiifgeKtyUXcKu2ZIsvS9uvM4=;
 	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=WinO01DrpYtA3vrXzlRsiZrUNdQ1SQ13T2r1K21XyAHZqsK5Zjyx2ZWKiyTb2GXqE
-	 jgYH5kuBfytmfX68rBlD2cJ9gIxFXY5erP/gBPTzx/KslRa4K739IYEECZ3lqYCA1r
-	 qjCeZRf+rETVMRhkz0ZmiC4UUIIV9qoP6T2UaVj5IDacFu6+TgO94xeLYBscWXZBay
-	 wpHYI8Qo4lLDoMlKfsmLYUeOXis/em7Ard/k/G2t17mt3QsyViBMCI6k6X17xx1vN1
-	 ZxW2EJsTjRY44366nqPvgUHYIk2yaCbtPGw4JHJIjuMBWrAajdnSF5C3XJINi9gAMx
-	 6KhtQoHS8XNwQ==
-Message-ID: <9ffd0d59-fe64-4155-b421-1de96edf77eb@kernel.org>
-Date: Tue, 8 Oct 2024 11:29:42 +0200
+	b=lIFmvWb4i8BFYRAwB00Soeoj+1ADJuha9PU7cVo0LfvL0bprVowDJJ//ad9VImNcK
+	 3omkqLFf3xWYygf19wRzEVwzHEauA2PY3w3MKQEAcFsbZtTMzJo/w4FOY2dYY9PLI5
+	 bvYazPsrjhIp7mE2Pn4PzRfvasEjm1BXyfPa3O72CUEzjit9dIxNyL5h9SONGjVnlJ
+	 nvenanM9pyYbYMS3bveRSo3/8e92xlYjOhU+g9g7EItSgWNFV60UemHrxiIe+NWGEZ
+	 F1jqwoM/pm+KPw7PypuTirFJIsH/tlnHjgrNKUDnjoiUdpLeMhcqd7OGrDy4smxkBj
+	 qvesrPLJWHkmg==
+Message-ID: <2cf1db4f-bb8c-4674-b31e-1bd6217301a7@kernel.org>
+Date: Tue, 8 Oct 2024 11:42:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 1/2] mptcp: prevent MPC handshake on
- port-based signal endpoints
+Subject: Re: [PATCH mptcp-net v2 2/2] selftests: mptcp: join: add test-case
+ for MPC attempt towards signl ep
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>
 References: <20241007-mpc-hs-port-v2-0-0c9e7827bd0f@kernel.org>
- <20241007-mpc-hs-port-v2-1-0c9e7827bd0f@kernel.org>
- <5e4bcf88-58cb-4691-9c60-3fb0a9acbd48@redhat.com>
+ <20241007-mpc-hs-port-v2-2-0c9e7827bd0f@kernel.org>
+ <dcf6cbb3-7521-4969-88d9-7f98c1afe292@redhat.com>
 Cc: MPTCP Linux <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -88,7 +88,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5e4bcf88-58cb-4691-9c60-3fb0a9acbd48@redhat.com>
+In-Reply-To: <dcf6cbb3-7521-4969-88d9-7f98c1afe292@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
@@ -96,73 +96,67 @@ Hi Paolo,
 
 (I guess you dropped the MPTCP ML from Cc by mistake, re-adding it)
 
-On 08/10/2024 08:40, Paolo Abeni wrote:
+On 08/10/2024 08:47, Paolo Abeni wrote:
 > On 10/7/24 20:22, Matthieu Baerts (NGI0) wrote:
 >> From: Paolo Abeni <pabeni@redhat.com>
 >>
->> Syzkaller reported a lockdep splat:
-
-(...)
-
->> Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
->> Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
->> Closes: https://syzkaller.appspot.com/bug?extid=f4aacdfef2c6a6529c3e
->> Cc: Cong Wang <cong.wang@bytedance.com>
+>> Explicitly verify that MPC connection attempts towards a port-based
+>> signal endpoint fail with a reset.
+>>
 >> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 >> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Please add your co-dev tag instead here.
+> Please put your co-dev tag above.
 
-I only cleaned-up comments, etc. without changing the behaviour, I sent
-the v2 mainly because I had the suggested changes on my side already
-(when checking if comments could go on one line, checking shellcheck
-with the other patch, etc.). I can add it on the other patch, because I
-might have done more modifications changing a bit the behaviour, but I
-can add my co-dev tag here as well if you prefer.
+Sure, thank you, I can add that when applying the patch.
 
-(...)
-
->> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
->> index
->> a1e28e1d8b4e39e14bc8f98164013d302d62595c..5958b63f84469b980bb1af472117643baf740713 100644
->> --- a/net/mptcp/subflow.c
->> +++ b/net/mptcp/subflow.c
->> @@ -132,6 +132,13 @@ static void subflow_add_reset_reason(struct
->> sk_buff *skb, u8 reason)
->>       }
->>   }
->>   +static int subflow_reset_req_endp(struct request_sock *req, struct
->> sk_buff *skb)
+> [...]
+>> @@ -895,32 +933,16 @@ do_transfer()
+>>       local srv_proto="$4"
+>>       local connect_addr="$5"
+>>   -    local port=$((10000 + MPTCP_LIB_TEST_COUNTER - 1))
+>> -    local cappid
+>>       local FAILING_LINKS=${FAILING_LINKS:-""}
+>>       local fastclose=${fastclose:-""}
+>>       local speed=${speed:-"fast"}
+>> +    local port
+>> +    port=$(get_port)
 > 
-> I used a different name because I was wondering about to re-using this
-> helper in future patches for other req reset - passing explicitly reason
-> and mib. I guess we can rename it as needed later.
+> At this point I would respect the reverse xmas tree order ;)
 
-Good point. But yes, probably better to rename it later on if we want
-something more generic, taking different parameters.
+:)
 
-> Side note: Jakub still strongly prefers not exceeding the 80 chars per
-> column. A couple of comments and the above line are now above such
-> threshold.
+Yes, probably best to move 'local port' above. Just to fix a
+non-interesting warning from shellcheck.
 
-Mmh, I think we mostly followed the default 100 chars max per line in
-our code. We don't abuse it though: we use more than 80 to improve the
-readability, e.g. when the opening parenthesis is "too close" to the end
-of the line, when each line needs a comment next to, most multilines
-comments are under 80 chars, etc. In other words, if we want to enforce
-the max of 80 chars per line, we might uniform that, but I don't think
-that's worth it. Or do you think we should?
+> @@ -2963,6 +3008,25 @@ add_addr_ports_tests()
+>>           chk_join_nr 2 2 2
+>>           chk_add_nr 2 2 2
+>>       fi
+>> +
+>> +    if reset "port-based signal endpoint must not accept mpc"; then
+>> +        local port ret count
+>> +        port=$(get_port)
+>> +
+>> +        cond_start_capture ${ns1}
+>> +
+>> +        pm_nl_add_endpoint ${ns1} 10.0.2.1 flags signal port ${port}
+>> +        mptcp_lib_wait_local_port_listen ${ns1} ${port}
+>> +
+>> +        timeout 1 ip netns exec ${ns2} \
+>> +            ./mptcp_connect -t ${timeout_poll} -p $port -s MPTCP
+>> 10.0.2.1 >/dev/null 2>&1
+>> +        ret=$?
+>> +
+>> +        cond_stop_capture
+>> +        cat "$capout"
+> 
+> Perhaps worthy to move cat "$capout" into cond_stop_capture()
 
-In this patch, only the comments are above 80 chars, but they are
-aligned with the ones just above and below. I can still reduce them I see:
-
-  /* Prohibited MPC attempted towards a port-based signal endp */
-  /* Prohibited MPC towards a port-based signal endp */
-
-  /* subflow is a listener managed by the in-kernel PM */
-  /* a listener managed by the kernel PM? */
-
-No hurry, I guess we can send this patch later on.
+I should have mentioned that in the changelog: I wanted to, but then it
+would change the behaviour for the other cases in do_transfer() where
+'cat "$capout"' is used in 3 different places. I can suggest a patch for
+net-next, not to add more complexity in this patch if that's OK.
 
 Cheers,
 Matt
