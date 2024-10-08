@@ -1,694 +1,1396 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from szxga05-in.huawei.com (szxga05-in.huawei.com [45.249.212.191])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0496E1DC759
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 11:09:42 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 41F0C1D2B23
+	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 11:27:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.249.212.191
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728385783; cv=none; b=p+gPIFaC8mDU+FMVg98M0n9GofknGo2ePsQivhjbhybyR5WpQ6cC2I+LUopsw0JIdQVmx0rJWvx1U9JK/EWvzNorPcfqj8KsdtLgW/A9DG6X7iSZqD1Ha5ULG6WzEjWwFlfLBxGyqLqA5+bS20uZHaBjahkxZYAC6posVIPqVrs=
+	t=1728386852; cv=none; b=gD+H7LK0bVAro8Dkjcx1triwMiDFzFQYkWO4RTLAGG8U9dz7uBhlGCX0PXMlplwL3SH751meYad+EftTwLjc4m1Qqlmz17RsmAhhdGTBeBYu9phj83BxiUTWs4EmKkhcFXcOGiwcXZFa83TTFGv0m/NKfK0Ybi+lE3lqDXkXYhQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728385783; c=relaxed/simple;
-	bh=lIJ1cbFSmeNjQuagjB7TLvuVOlnZOsWwG0umMhMnvnQ=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=HWyS8RzR3y+it22P4R7cMQDR+wR7IGQ5TRyy6wlYcczC2i/kKxRUsmIr6jw14xbtTJWk1M/cCKM2j9a8icQL80hsbW1cawvz7pKMQm6TxQaC77YNH+XZs0gw+kXRvJ6WM+1DR86xVy+wXBgul/1syEGqshIplhMEEAq8Af4JdvQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyO60qXD; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyO60qXD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE0AFC4CEC7
-	for <mptcp@lists.linux.dev>; Tue,  8 Oct 2024 11:09:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728385782;
-	bh=lIJ1cbFSmeNjQuagjB7TLvuVOlnZOsWwG0umMhMnvnQ=;
-	h=Date:From:Subject:To:From;
-	b=dyO60qXDQWRL/sg55saA/1QW9YgIfz6xNmSGIXeWUglLrDFIuGpt0dPHHr2aky2/A
-	 NWQzbbEiBcFuPaJ35PCdowzeOktzdCteP6LL/GelAdZHUb5Nxb3uRwr1B7uEVbwfGC
-	 QZRMdrU5/OdK1MqFtun7TsPiL68XloVJJgZt1moKBlMdKLOFrvqry8MTIxUc42XzIb
-	 2v5J81c7acssF871LY8/XqSSp/pYZ+pisI8k2CVzxJxsHWfd3IK6/BP2ZzHeoM9bYV
-	 ijXoA5mDtQ7W7mHBIzoZp00NZB+w6nXBRWGZCZRWhSmnTkegeGoLOXa5WbkR7u68NE
-	 V1sJfP3VbblfA==
-Message-ID: <7cd3ea34-551f-4126-be9d-0c45db4e4a23@kernel.org>
-Date: Tue, 8 Oct 2024 13:09:40 +0200
+	s=arc-20240116; t=1728386852; c=relaxed/simple;
+	bh=Zn7ndbiR5yKkaTMQ2Dxyffg/ZpTX5/8RwY1v6YCw4fY=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=PP7JTmD4fNIR0nRlj74pMubybTVv9+jz1WTNrX3S3+h61JZgsLDladyY2yD8kZsi2KfWEruXW21LxnaqBOfZZj8KeVruho6MhzZMU2vluewp8Svx28Do/9gs+LrmjY4iDITFSoSVKiGQC1p+YsWyWhiX6qz/JrUnPRhfD1zTQ8o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com; spf=pass smtp.mailfrom=huawei.com; arc=none smtp.client-ip=45.249.212.191
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei.com
+Received: from mail.maildlp.com (unknown [172.19.88.214])
+	by szxga05-in.huawei.com (SkyGuard) with ESMTP id 4XNDCs0gj6z1HKPM;
+	Tue,  8 Oct 2024 19:23:21 +0800 (CST)
+Received: from dggpemf200006.china.huawei.com (unknown [7.185.36.61])
+	by mail.maildlp.com (Postfix) with ESMTPS id BA7711A016C;
+	Tue,  8 Oct 2024 19:27:25 +0800 (CST)
+Received: from localhost.localdomain (10.90.30.45) by
+ dggpemf200006.china.huawei.com (7.185.36.61) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1544.11; Tue, 8 Oct 2024 19:27:25 +0800
+From: Yunsheng Lin <linyunsheng@huawei.com>
+To: <davem@davemloft.net>, <kuba@kernel.org>, <pabeni@redhat.com>
+CC: <netdev@vger.kernel.org>, <linux-kernel@vger.kernel.org>, Yunsheng Lin
+	<linyunsheng@huawei.com>, Alexander Duyck <alexander.duyck@gmail.com>, Ayush
+ Sawal <ayush.sawal@chelsio.com>, Eric Dumazet <edumazet@google.com>, Willem
+ de Bruijn <willemdebruijn.kernel@gmail.com>, Jason Wang
+	<jasowang@redhat.com>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra
+	<peterz@infradead.org>, Juri Lelli <juri.lelli@redhat.com>, Vincent Guittot
+	<vincent.guittot@linaro.org>, Dietmar Eggemann <dietmar.eggemann@arm.com>,
+	Steven Rostedt <rostedt@goodmis.org>, Ben Segall <bsegall@google.com>, Mel
+ Gorman <mgorman@suse.de>, Valentin Schneider <vschneid@redhat.com>, John
+ Fastabend <john.fastabend@gmail.com>, Jakub Sitnicki <jakub@cloudflare.com>,
+	David Ahern <dsahern@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Mat
+ Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, Jamal
+ Hadi Salim <jhs@mojatatu.com>, Cong Wang <xiyou.wangcong@gmail.com>, Jiri
+ Pirko <jiri@resnulli.us>, Boris Pismenny <borisp@nvidia.com>,
+	<bpf@vger.kernel.org>, <mptcp@lists.linux.dev>
+Subject: [PATCH net-next v20 12/14] net: replace page_frag with page_frag_cache
+Date: Tue, 8 Oct 2024 19:20:46 +0800
+Message-ID: <20241008112049.2279307-13-linyunsheng@huawei.com>
+X-Mailer: git-send-email 2.30.0
+In-Reply-To: <20241008112049.2279307-1-linyunsheng@huawei.com>
+References: <20241008112049.2279307-1-linyunsheng@huawei.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
-Subject: [Weekly meetings] MoM - 2nd of October 2024
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-To: MPTCP Linux <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-
-Hello everyone,
-
-Last week, we had our new meeting with Christoph (Apple), Paolo and
-Davide (Redhat), and myself (NGI0 Core).
-
-
-Thanks again for this new good meeting!
-
-Here are the minutes of the meeting:
-
-
-
-Accepted patches:
-    - The list of accepted patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=3
-
-
-    netdev (if mptcp ML is in cc) (by: Matthieu Baerts):
-
-13805597: [6.1.y] selftests: mptcp: join: restrict fullmesh endp on 1st sf:
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20240916154836.565586-2-matttbe@kernel.org/
-
-13805928: [5.10.y,1/3] mptcp: export lookup_anno_list_by_saddr
-13805929: [5.10.y,2/3] mptcp: validate 'id' when stopping the ADD_ADDR
-retransmit timer
-13805930: [5.10.y,3/3] mptcp: pm: Fix uaf in __timer_delete_sync:
-    - Series: Backport of "mptcp: pm: Fix uaf in __timer_delete_sync"
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=890839&state=*&archive=both
-
-13813554: [bpf-next/net,v7,1/3] selftests/bpf: Add mptcp subflow example
-13813555: [bpf-next/net,v7,2/3] selftests/bpf: Add getsockopt to inspect
-mptcp subflow
-13813556: [bpf-next/net,v7,3/3] selftests/bpf: Add mptcp subflow subtest:
-    - Series: selftests/bpf: new MPTCP subflow subtest
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=893225&state=*&archive=both
-
-13816679: [5.10.y] mptcp: fix sometimes-uninitialized warning:
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20240930162345.3938790-2-matttbe@kernel.org/
-
-
-    our repo (by: Paolo Abeni):
-
-13815622: [v2,mptcp-net,1/2] mptcp: handle consistently DSS corruption.
-13815623: [v2,mptcp-net,2/2] tcp: fix mptcp DSS corruption due to large
-pmtu xmit.:
-    - Series: [v2,mptcp-net,1/2] mptcp: handle consistently DSS corruption.
-    - Submitter: Paolo Abeni
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=893930&state=*&archive=both
-
-
-
-Pending patches:
-    - The list of pending patches can be seen on PatchWork:
-      https://patchwork.kernel.org/project/mptcp/list/?state=*
-
-
-    netdev (if mptcp ML is in cc) (by: Geliang Tang, Yunsheng Lin):
-
-13665648: [bpf-next,v2,1/8] selftests/bpf: Add unshare_netns helper
-13665649: [bpf-next,v2,2/8] selftests/bpf: Use unshare_netns helper
-13665650: [bpf-next,v2,3/8] selftests/bpf: Drop duplicate create_netns
-13665651: [bpf-next,v2,4/8] selftests/bpf: Export create_netns helper
-13665652: [bpf-next,v2,5/8] selftests/bpf: Use create_netns helper
-13665653: [bpf-next,v2,6/8] selftests/bpf: Export cleanup_netns helper
-13665654: [bpf-next,v2,7/8] selftests/bpf: Use cleanup_netns helper
-13665655: [bpf-next,v2,8/8] selftests/bpf: Use netns helpers in lwt tests:
-    - Series: add netns helpers
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=853539&state=*&archive=both
-    - @Geliang: What should we do with that?
-
-13689188: [RESEND,v2] checkpatch: skip warnings for symbol links:
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/dc502b1b45cb27fda48d72d73e3267a32db023d8.1717722648.git.tanggeliang@kylinos.cn/
-    - New reminder sent.
-
-13817621: [net-next,v19,12/14] net: replace page_frag with page_frag_cache:
-    - to be reviewed when we have time
-
-
-    our repo (by: Asbjørn Sloth Tønnesen, Cong Wang, Geliang Tang,
-Gregory Detal, Matthieu Baerts, Paolo Abeni):
-
-12282219: [RESEND,RFC,2/4] tcp: move selected mptcp helpers to tcp.h/mptcp.h
-12282221: [RESEND,RFC,4/4] tcp: parse tcp options contained in reset
-packets:
-12282223: [RESEND,RFC,mptpcp-next] mptcp: add ooo prune support:
-12282225: [RESEND,1/5] tcp: make two mptcp helpers available to tcp stack
-12282227: [RESEND,5/5] mptcp: send fastclose if userspace closes socket
-with unread data:
-
-13070467: [mptcp-next,v4,1/2] mptcp: update mptcp_push_release
-13070468: [mptcp-next,v4,2/2] mptcp: retrans for redundant sends:
-    - State: Changes requested
-    - Series: BPF redundant scheduler, part 3
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=703615&state=*&archive=both
-
-13305089: [mptcp-next,1/6] mptcp: sockopt: move tcp_inq code to a
-dedicated function
-13305091: [mptcp-next,2/6] mptcp: sockopt: update supported list
-13305093: [mptcp-next,3/6] mptcp: sockopt: get val in a generic way
-13305090: [mptcp-next,4/6] mptcp: sockopt: add missing getsockopt() options
-13305094: [mptcp-next,5/6] mptcp: sockopt: set val in a generic way
-13305092: [mptcp-next,6/6] mptcp: sockopt: support IP_TTL &
-IPV6_UNICAST_HOPS:
-    - State: Changes requested
-    - Series: mptcp: sockopt: uniform code to get/set values
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=763505&state=*&archive=both
-
-13583230: [RFC] mptcp: react scheduler when subflow events pop up:
-    - State: Changes requested
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/433320c3a9db77bea53a34fc9c43a3c7e3320399.1709693691.git.tanggeliang@kylinos.cn/
-
-13656189: [mptcp-net,v2] mptcp: fix the default value of scaling_ratio:
-    - State: Changes requested
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn/
-
-13675217: [mptcp-next,RFC,1/4] mptcp: add push sched callback
-13675218: [mptcp-next,RFC,2/4] mptcp: use new push callback to schedule
-chunks
-13675219: [mptcp-next,RFC,3/4] mptcp: bpf: allow to write to
-mptcp_sched_chunk
-13675220: [mptcp-next,RFC,4/4] selftests/bpf: mptcp RR: send 1 MSS on
-each subflow:
-    - State: RFC
-    - Series: mptcp: update scheduler API
-    - Submitter: Gregory Detal
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=856158&state=*&archive=both
-    - Matt will try to take over
-
-13729347: [mptcp-next,1/3] mptcp: add mptcp_snd_nxt helper
-13729348: [mptcp-next,2/3] Squash to "bpf: Export more bpf_burst related
-functions"
-13729349: [mptcp-next,3/3] Squash to "selftests/bpf: Add bpf_burst
-scheduler":
-    - State: Changes requested
-    - Series: get msk->snd_nxt with READ_ONCE
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=870130&state=*&archive=both
-
-13750069: [mptcp-next,1/4] selftests: mptcp: add cfg_timeo for mptcp_connect
-13750070: [mptcp-next,2/4] selftests: mptcp: add io thread mode for
-mptcp_connect
-13750071: [mptcp-next,3/4] selftests: mptcp: enable io thread mode
-13750072: [mptcp-next,4/4] selftests: mptcp: join: add io thread tests:
-    - State: Changes requested
-    - Series: add io thread mode tests
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=875830&state=*&archive=both
-    - https://github.com/multipath-tcp/mptcp_net-next/issues/487
-
-13785276: [mptcp-net] mptcp: pm: do not remove closing subflows:
-    - State: Needs ack
-    - Submitter: Matthieu Baerts
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20240830-mptcp-pm-minor-fixes-v1-1-89737b847a8d@kernel.org/:
-        - Add Paolo's Ack
-        - TODO: Matth: apply it → Done
-
-13795803: [mptcp-next,2/2] mptcp: add back mptcp_pm_subflow_closed:
-    - State: Changes requested
-    - Series: update PM event CLOSED handlers
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=888215&state=*&archive=both
-    - Drop this patch?
-
-13799664: [mptcp-next,v3] Squash to "selftests/bpf: Add bpf scheduler
-test" - drop has_bytes_sent:
-    - State: Needs ack
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/a92cdca650b2e3e6ea40e783331d1fe83ac9aae6.1726026758.git.tanggeliang@kylinos.cn/
-    - To be reviewed
-
-13799666: [net,v2] mptcp: initialize sock lock with its own lockdep keys:
-    - State: Needs ack
-    - Submitter: Cong Wang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20240911042425.978665-1-xiyou.wangcong@gmail.com/
-    - Paolo will look at that → Done
-
-13803165: [net-next] tools: ynl-gen: use big-endian netlink attribute types:
-    - State: Changes requested
-    - Submitter: Asbjørn Sloth Tønnesen
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/20240913085555.134788-1-ast@fiberby.net/
-    - reviewed on netdev
-
-13810582: [mptcp-next,1/8] Squash to "mptcp: add sched_data helpers"
-13810583: [mptcp-next,2/8] Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
-13810584: [mptcp-next,3/8] Squash to "selftests/bpf: Add bpf_first
-scheduler & test"
-13810585: [mptcp-next,4/8] Squash to "selftests/bpf: Add bpf_bkup
-scheduler & test
-13810586: [mptcp-next,5/8] Squash to "selftests/bpf: Add bpf_rr
-scheduler & test"
-13810587: [mptcp-next,6/8] Squash to "selftests/bpf: Add bpf_red
-scheduler & test"
-13810588: [mptcp-next,7/8] Squash to "selftests/bpf: Add bpf_burst
-scheduler & test"
-13810589: [mptcp-next,8/8] mptcp: drop subflow contexts in mptcp_sched_data:
-    - State: Needs ack
-    - Series: use bpf_iter in bpf schedulers
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=892365&state=*&archive=both
-    - To be reviewed
-
-13815776: [mptcp-next,1/7] mptcp: add id parameter for get_addr
-13815777: [mptcp-next,2/7] mptcp: add addr parameter for get_addr
-13815778: [mptcp-next,3/7] mptcp: reuse sending nlmsg code in get_addr
-13815779: [mptcp-next,4/7] mptcp: change info of get_addr as const
-13815780: [mptcp-next,5/7] mptcp: refactor dump_addr with id bitmap
-13815781: [mptcp-next,6/7] mptcp: reuse sending nlmsg code in dump_addr
-13815782: [mptcp-next,7/7] mptcp: add loc and rem for set_flags:
-    - State: New
-    - Series: refactor PM interfaces
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=893966&state=*&archive=both
-    - To be reviewed
-
-13817551: [mptcp-next,v7,1/7] bpf: Register mptcp common kfunc set
-13817552: [mptcp-next,v7,2/7] bpf: Add mptcp_subflow bpf_iter
-13817553: [mptcp-next,v7,3/7] bpf: Add mptcp_sock acquire and release
-helpers
-13817554: [mptcp-next,v7,4/7] selftests/bpf: Add mptcp_subflow bpf_iter
-test prog
-13817555: [mptcp-next,v7,5/7] selftests/bpf: More endpoints for
-endpoint_init
-13817556: [mptcp-next,v7,6/7] Squash to "selftests/bpf: Add bpf
-scheduler test"
-13817557: [mptcp-next,v7,7/7] selftests/bpf: Add mptcp_subflow bpf_iter
-subtest:
-    - State: New
-    - Series: add mptcp_subflow bpf_iter
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=894364&state=*&archive=both
-    - To be reviewed
-
-13819900: [mptcp-next,v2,1/9] mptcp: add struct mptcp_id_bitmap
-13819901: [mptcp-next,v2,2/9] mptcp: add mptcp_userspace_pm_get_sock helper
-13819902: [mptcp-next,v2,3/9] mptcp: use __lookup_addr in pm_netlink
-13819903: [mptcp-next,v2,4/9] mptcp: add lookup_addr for userspace pm
-13819904: [mptcp-next,v2,5/9] mptcp: change remote as mptcp_addr_info
-13819905: [mptcp-next,v2,6/9] mptcp: change local as mptcp_pm_addr_entry
-13819906: [mptcp-next,v2,7/9] mptcp: make pm wrappers static
-13819907: [mptcp-next,v2,8/9] mptcp: drop skb parameter of get_addr
-13819908: [mptcp-next,v2,9/9] mptcp: drop skb parameter of set_flags:
-    - State: New
-    - Series: cleanups for PM interfaces
-    - Submitter: Geliang Tang
-    - URL:
-https://patchwork.kernel.org/project/mptcp/list/?series=894874&state=*&archive=both
-    - To be reviewed
-
-13819917: [mptcp-net] Squash-to: "mptcp: handle consistently DSS
-corruption":
-    - State: New
-    - Submitter: Paolo Abeni
-    - URL:
-https://patchwork.kernel.org/project/mptcp/patch/dfce01586ff42d63cffce0a2ca10149e30ec71fe.1727881810.git.pabeni@redhat.com/
-    - can be applied → Done
-
-
-
-Issues on GitHub:
-    https://github.com/multipath-tcp/mptcp_net-next/issues/
-
-    Recently opened (latest from the last meeting: 515):
-
-
-  518  Connection is RST if data (< init window) with MPTCP options
-received, then MPTCP options are dropped [bug]:
-      - with a packetdrill script to reproduce the issue
-      - the server is marking the subflow as 'fully_established' too
-early, it should do that:
-          - after having received a first DATA_ACK
-          - or after having received more than the initial window
-(implying DATA_ACK have been received by the client)
-      - For the moment, the server is sending an MP_TCPRST with
-"MPTCP-specific error" reason, but it should be "Middlebox
-interference", see Davide's patch on the ticket
-      - It would be interesting to have MIB counters for the
-fallback/RST cases:
-https://github.com/multipath-tcp/mptcp_net-next/issues/514
-      - Plan:
-          - Check the impact of removing these two lines:
-https://elixir.bootlin.com/linux/v6.11.1/source/net/mptcp/protocol.c#L3345
-          - It might change the behaviour (or not work)
-          - If the impact is too important, we can do that incrementally
-and starts by using the code from ticket #518
-          - Probably we should review how allow_infinite_fallback is
-being used: it should not be needed → only fallback if we have the
-initial subflow not in fully_established → Ticket #519 has been created
-          - TODO: Matth: update the ticket → Done
-
-
-    Bugs (opened, flagged as "bug" and assigned)
-
-  487  `send()` fails with `EAGAIN` in blocking IO mode [bug]
-[selftests] [sched] @geliangtang:
-     - to be checked
-
-  484  BPF: `setsockopt` on an MPTCP socket: check support [bug] [bpf]
-@geliangtang
-  445  MPTCP Info counters: start seq numbers ones from 0 [bug] @geliangtang
-  403  userspace pm: only remove entry from `local_addr_list` when
-sending a `REMOVE_ADDR` [bug] [pm] @geliangtang
-  343  scheduler: react when subflow-level events pop up (ACK/RTO) [bug]
-[sched] @geliangtang
-
-
-    Bugs (opened and flagged as "bug" and not assigned)
-
-  518  Connection is RST if data (< init window) with MPTCP options
-received, then MPTCP options are dropped [bug]
-  508  Divide error on device removal [bug] [feedback-needed]
-  505  Subflows won't be used when the interface for the main flow is a
-subinterface [bug] [feedback-needed]
-  501  Why do endpoint tcp connections close? [bug] [feedback-needed]
-  499  selftests: `mptcp_connect.sh`: disconnect test timed out [bug]
-[selftests]
-  498  in-kernel PM: closed subflows before `RM_ADDR` will not decrement
-`add_addr_accepted` [bug] [pm]
-  495  [syzkaller] KASAN: slab-use-after-free Read in
-`__inet6_lookup_established` [bug] [syzkaller]
-  494  [syzkaller] WARNING in `__skb_flow_dissect` [bug] [syzkaller]
-  492  userspace pm: subflows counter: not updated when a subflows is
-removed from the other end [bug]
-  491  selftests: `mptcp_join`: tests `Infinite map` & `MP_FAIL MP_RST`
-are unstable [bug] [selftests]
-  483  [6.1] selftests: `mptcp_connect.sh` failures with
-`copyfd_io_poll: poll timed out` errors [bug] [selftests]
-  476  packetdrill: coalescing feature doesn't take into account MPTCP
-options [bug] [packetdrill]
-  475  `simult_flows`: unbalanced bwidth tests are unstable [bug]
-[selftests]
-  439  mptcp vs net.ipv4.tcp_shrink_window [bug]
-  416  No new subflow when removing an endpoint and adding a new one
-[bug] [feedback-needed]
-  336  Issues with BPF packet scheduler [bug] [sched] [bpf]
-  325  selftests: `mptcp_join`: test 18 `signal addresses race test` is
-sometimes failing [bug] [selftests]
-  324  selftests: `mptcp_join`: tests `fastclose test` & `fastclose
-server test` are sometimes failing [bug] [selftests]
-  315  Issues with backup flow [bug]
-
-
-    In Progress (opened, new feature and assigned)
-
-  480  MPTCP and KTLS support [enhancement] @geliangtang
-  434  in-kernel PM: increase subflows limit [enhancement] [pm] @matttbe
-  353  sockopt: uniform code to get/set values [enhancement] @matttbe
-  349  scheduler: (un)mark a subflow as "stale" [enhancement] [sched]
-@geliangtang
-  296  Support IP_TTL & IPV6_UNICAST_HOPS [enhancement] @matttbe
-  234  Packetdrill: Support MPC+DATA+checksum error [enhancement]
-[packetdrill] @spoorva
-  167  packetdrill: add coverage for RM_ADDR [enhancement] [packetdrill]
-@dcaratti
-   75  BPF: packet scheduler [enhancement] [sched] [bpf] @geliangtang
-   74  BPF: path manager [enhancement] [pm] [bpf] @geliangtang
-
-
-    Assigned Questions (opened, questions and assigned)
-
-None.
-
-
-    Open questions (opened, questions and not assigned)
-
-  502  Question for ip-mptcp command [question]
-  489  IPv6 Rejoin Subflow [question]
-  459  Are the endpoint flags `signal` and `subflow` meant to be
-exclusive? or how to get MPTCP to work for both directions? [question]
-  452  mptcp causes the network to become very slow [question]
-  412  shadowsocks-libev not working, need guidance for PM configuration
-[question]
-  411  Problem with IPROTO [question]
-
-
-    For later (opened and not assigned)
-
-  515  Add `TCP_MAXSEG` socket option support [enhancement]
-  514  Add MIB counters for fallback to TCP [enhancement]
-  511  Add MIB counters for sent `MPTCP_RST_EMPTCP` [enhancement]
-  503  in-kernel PM: use endpoints only to create subflows with received
-`ADD_ADDR` [enhancement] [pm]
-  497  in-kernel PM: check to create new subflows when some are
-destroyed [enhancement] [pm]
-  496  in-kernel PM: store received `ADD_ADDR` [enhancement] [pm]
-  481  remove refcount on TCP sockets for the timers [enhancement]
-  467  Scheduler: add redundant scheduler support in BPF [enhancement]
-[sched]
-  462  selftests: print (and set?) random seed [enhancement] [selftests]
-  461  Protocol: extend Data-Level Length field [enhancement] [protocol]
-  448  Allow sending ADD_ADDR IPv6 with port-number if TCP-timestamps
-are enabled [enhancement]
-  441  optimize established options generation [enhancement]
-  440  in-kernel PM: re-establish subflows after "network" errors
-[enhancement] [pm]
-  426  selftests: validate listener sockets with multiple accepts
-[enhancement] [selftests]
-  397  Doc and guidance for users [enhancement] [documentation]
-  396  ci: periodically run selftests from the export branch on stable
-kernels [enhancement] [selftests]
-  389  packetdrill: increase coverage for "early `close()`" cases
-[enhancement] [packetdrill]
-  350  scheduler: API changes (tasks) [enhancement] [sched]
-  348  scheduler: frequently probe "stale" subflow with reinjected data
-[enhancement] [sched]
-  345  scheduler: "penalise" some subflows by sending less than their
-cwnd [enhancement] [sched]
-  344  scheduler: new callback to initiate optimisations [enhancement]
-[sched]
-  337  in-kernel PM: listen socket: support "behind a NAT" use case
-[enhancement] [pm]
-  335  Server to Client subflows: option to allow joining the initial
-address and port [enhancement] [pm]
-  334  in-kernel PM: send >1 ADD_ADDR before the establishment of a new
-subflow [enhancement] [pm]
-  333  New MIBs to help understanding issues when PM cannot create new
-subflows [enhancement] [pm]
-  332  scheduler: implement a "opportunistic retransmission"
-[enhancement] [sched]
-  298  CG Memory accounting for passive MPTCP socket [enhancement]
-  289  mptcp: audit comments for non inclusive language [enhancement]
-  273  Packetdrill: test outgoing MP_FASTCLOSE [enhancement] [packetdrill]
-  266  Packetdrill: add MP_FAIL coverage [packetdrill]
-  236  Review supported sockopts list [enhancement]
-  222  Netlink event API: add SUBFLOW_CREATED event [enhancement]
-  215  TCP Urgent pointer and MPTCP [enhancement]
-  213  add MPTCP man page [enhancement]
-  208  better handing of ssk memory pressure in the TX path [enhancement]
-  202  Add sendmsg support for ancillary data [enhancement]
-  197  more mibs needed [enhancement]
-  180  Get an update when MPTCP fall back to TCP [enhancement]
-  177  improve retransmit subflow selection [enhancement]
-  169  packetdrill: add coverage for ADD_ADDR and MP_JOIN on a different
-port [enhancement] [packetdrill]
-  150  remove completely workqueue usage [enhancement]
-  141  avoid acquiring mptcp_data_lock() twice in the receive path
-[enhancement]
-   78  notify the application (userspace) when a subflow is
-added/removed [enhancement]
-   41  reduce indirect call usage [enhancement]
-   24  Revisit layout of struct mptcp_subflow_context [enhancement]
-
-
-    Recently closed (since 2024-09-25)
-
-  513  [syzbot] WARNING in `__mptcp_move_skbs_from_subflow` [bug]
-[syzkaller]
-  477  Client: fallback to TCP after X MPC [bug] [enhancement] @matttbe
-  469  CI: add code coverage support [enhancement] [CI] @matttbe
-   57  After a few attempts of failed MPTCP, directly fallback to TCP
-for new connections [enhancement] @matttbe
-
-
-    Packetdrill PRs
-
-  153  2 months ago  matttbe   mptcp: tfo: inject DFIN without delay
-  52   3 years ago   dcaratti  Add initial coverage for RM_ADDR
-
-
-    mptcp.dev PRs
-
-/
-
-    mptcpd PRs
-
-/
-
-
-FYI: Current Roadmap:
-    - Bugs:
-https://github.com/multipath-tcp/mptcp_net-next/issues?q=is%3Aissue+is%3Aopen+label%3Abug
-    - Current/Coming merge window (6.13):
-https://github.com/orgs/multipath-tcp/projects/11
-    - For later: https://github.com/orgs/multipath-tcp/projects/1
-    - ChangeLog has been updated:
-https://github.com/multipath-tcp/mptcp_net-next/wiki#changelog
-
-
-
-Patches to send to NetDev:
-
-    - Fixes for other trees:: /
-
-    - Fixes for -net:
-
-        - [e2def95c9554] mptcp: handle consistently DSS corruption
-(Paolo Abeni):
-            - update coming, best to wait
-        - [4cfb19217206] tcp: fix mptcp DSS corruption due to large pmtu
-xmit (Paolo Abeni)
-
-    - Fixes for net-next: /
-
-    - Features for net-next:
-
-        - [32e5fcfef099] mptcp: pm: send ACK on non stale subflows
-(Matthieu Baerts (NGI0)):
-            - should be fine: modified under msk's lock
-        - [8a10ec28fcd6] mptcp: annotate data-races around
-subflow->fully_established (Gang Yan):
-            - maybe best to wait to avoid conflicts with the patch for #518
-        - [e3e121d062f2] mptcp: implement mptcp_pm_connection_closed
-(Geliang Tang)
-
-    - Features for net-next (next):
-
-
-    - Features for other trees:
-
-        - [f3e80f7bd142] mptcp: add sched_data helpers (Geliang Tang)
-        - [817790c08875] bpf: Add bpf_mptcp_sched_ops (Geliang Tang)
-        - [1bec65aec25a] bpf: Add bpf_mptcp_sched_kfunc_set (Geliang Tang)
-
-        - [92fea78146cf] selftests/bpf: Add mptcp subflow example
-(Nicolas Rybowski)
-        - [907e2e9558ef] selftests/bpf: Add getsockopt to inspect mptcp
-subflow (Geliang Tang):
-        - [0dbbd2db22be] selftests/bpf: Add mptcp subflow subtest
-(Geliang Tang):
-            - have been upstreamed
-
-        - [7bc1042d2da2] selftests/bpf: Add bpf scheduler test (Geliang
-Tang)
-        - [9be4562110cd] selftests/bpf: Add bpf_first scheduler & test
-(Geliang Tang)
-        - [d272fa9c9f81] selftests/bpf: Add bpf_bkup scheduler & test
-(Geliang Tang)
-        - [ca8e8e12a171] selftests/bpf: Add bpf_rr scheduler & test
-(Geliang Tang)
-        - [5ddf4361bb0c] selftests/bpf: Add bpf_red scheduler & test
-(Geliang Tang)
-        - [7d6122868574] bpf: Export more bpf_burst related functions
-(Geliang Tang)
-        - [6d16b1ba9109] selftests/bpf: Add bpf_burst scheduler & test
-(Geliang Tang)
-
-
-
-Extra tests:
-    - news about Syzkaller? (Christoph):
-        - Christoph will look at having it running again
-
-    - Packetdrill (Davide):
-        - https://github.com/multipath-tcp/packetdrill/pull/153
-
-    - Patchew (Davide):
-        - any idea if Patchew is still maintained?
-        - Davide will check with Paolo Bonzini
-        - Just to be told in advanced if the service is going to be removed
-
-    - CI (Matth):
-        - https://ci-results.mptcp.dev/flakes.html
-        - https://netdev.bots.linux.dev/flakes.html?tn-needle=mptcp
-
-        - GCOV support:
-            - https://ci-results.mptcp.dev/lcov/export/index.html
-            - https://coveralls.io/github/multipath-tcp/mptcp_net-next
-
-
-
-Next meeting:
-    - Next one on Wednesday, the 9th of October.
-    - 17:30 UTC (8.30am PDT, 5.30pm CEST, 11.30pm CST)
-    - Still open to everyone!
-    - https://annuel2.framapad.org/p/mptcp_upstreaming_20241009
-
-
-
-Feel free to comment on these topics and suggest new ones for the next
-meeting!
-
-Talk to you on Wednesday,
-Matt
+Content-Type: text/plain
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemf200006.china.huawei.com (7.185.36.61)
+
+Use the newly introduced prepare/probe/commit API to
+replace page_frag with page_frag_cache for sk_page_frag().
+
+CC: Alexander Duyck <alexander.duyck@gmail.com>
+Signed-off-by: Yunsheng Lin <linyunsheng@huawei.com>
+---
+ .../chelsio/inline_crypto/chtls/chtls.h       |   3 -
+ .../chelsio/inline_crypto/chtls/chtls_io.c    | 101 +++++-------------
+ .../chelsio/inline_crypto/chtls/chtls_main.c  |   3 -
+ drivers/net/tun.c                             |  47 ++++----
+ include/linux/sched.h                         |   2 +-
+ include/net/sock.h                            |  21 ++--
+ kernel/exit.c                                 |   3 +-
+ kernel/fork.c                                 |   3 +-
+ net/core/skbuff.c                             |  58 +++++-----
+ net/core/skmsg.c                              |  12 ++-
+ net/core/sock.c                               |  32 ++++--
+ net/ipv4/ip_output.c                          |  28 +++--
+ net/ipv4/tcp.c                                |  23 ++--
+ net/ipv4/tcp_output.c                         |  25 +++--
+ net/ipv6/ip6_output.c                         |  28 +++--
+ net/kcm/kcmsock.c                             |  18 ++--
+ net/mptcp/protocol.c                          |  47 ++++----
+ net/sched/em_meta.c                           |   2 +-
+ net/tls/tls_device.c                          | 100 ++++++++++-------
+ 19 files changed, 294 insertions(+), 262 deletions(-)
+
+diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
+index 7ff82b6778ba..fe2b6a8ef718 100644
+--- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
++++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls.h
+@@ -234,7 +234,6 @@ struct chtls_dev {
+ 	struct list_head list_node;
+ 	struct list_head rcu_node;
+ 	struct list_head na_node;
+-	unsigned int send_page_order;
+ 	int max_host_sndbuf;
+ 	u32 round_robin_cnt;
+ 	struct key_map kmap;
+@@ -453,8 +452,6 @@ enum {
+ 
+ /* The ULP mode/submode of an skbuff */
+ #define skb_ulp_mode(skb)  (ULP_SKB_CB(skb)->ulp_mode)
+-#define TCP_PAGE(sk)   (sk->sk_frag.page)
+-#define TCP_OFF(sk)    (sk->sk_frag.offset)
+ 
+ static inline struct chtls_dev *to_chtls_dev(struct tls_toe_device *tlsdev)
+ {
+diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
+index d567e42e1760..48a61b1142a3 100644
+--- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
++++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_io.c
+@@ -825,12 +825,6 @@ void skb_entail(struct sock *sk, struct sk_buff *skb, int flags)
+ 	ULP_SKB_CB(skb)->flags = flags;
+ 	__skb_queue_tail(&csk->txq, skb);
+ 	sk->sk_wmem_queued += skb->truesize;
+-
+-	if (TCP_PAGE(sk) && TCP_OFF(sk)) {
+-		put_page(TCP_PAGE(sk));
+-		TCP_PAGE(sk) = NULL;
+-		TCP_OFF(sk) = 0;
+-	}
+ }
+ 
+ static struct sk_buff *get_tx_skb(struct sock *sk, int size)
+@@ -882,16 +876,12 @@ static void push_frames_if_head(struct sock *sk)
+ 		chtls_push_frames(csk, 1);
+ }
+ 
+-static int chtls_skb_copy_to_page_nocache(struct sock *sk,
+-					  struct iov_iter *from,
+-					  struct sk_buff *skb,
+-					  struct page *page,
+-					  int off, int copy)
++static int chtls_skb_copy_to_va_nocache(struct sock *sk, struct iov_iter *from,
++					struct sk_buff *skb, char *va, int copy)
+ {
+ 	int err;
+ 
+-	err = skb_do_copy_data_nocache(sk, skb, from, page_address(page) +
+-				       off, copy, skb->len);
++	err = skb_do_copy_data_nocache(sk, skb, from, va, copy, skb->len);
+ 	if (err)
+ 		return err;
+ 
+@@ -1114,82 +1104,45 @@ int chtls_sendmsg(struct sock *sk, struct msghdr *msg, size_t size)
+ 			if (err)
+ 				goto do_fault;
+ 		} else {
++			struct page_frag_cache *nc = &sk->sk_frag;
++			struct page_frag page_frag, *pfrag;
+ 			int i = skb_shinfo(skb)->nr_frags;
+-			struct page *page = TCP_PAGE(sk);
+-			int pg_size = PAGE_SIZE;
+-			int off = TCP_OFF(sk);
+-			bool merge;
+-
+-			if (page)
+-				pg_size = page_size(page);
+-			if (off < pg_size &&
+-			    skb_can_coalesce(skb, i, page, off)) {
++			bool merge = false;
++			void *va;
++
++			pfrag = &page_frag;
++			va = page_frag_alloc_refill_prepare(nc, 32U, pfrag,
++							    sk->sk_allocation);
++			if (unlikely(!va))
++				goto wait_for_memory;
++
++			if (skb_can_coalesce(skb, i, pfrag->page,
++					     pfrag->offset))
+ 				merge = true;
+-				goto copy;
+-			}
+-			merge = false;
+-			if (i == (is_tls_tx(csk) ? (MAX_SKB_FRAGS - 1) :
+-			    MAX_SKB_FRAGS))
++			else if (i == (is_tls_tx(csk) ? (MAX_SKB_FRAGS - 1) :
++				       MAX_SKB_FRAGS))
+ 				goto new_buf;
+ 
+-			if (page && off == pg_size) {
+-				put_page(page);
+-				TCP_PAGE(sk) = page = NULL;
+-				pg_size = PAGE_SIZE;
+-			}
+-
+-			if (!page) {
+-				gfp_t gfp = sk->sk_allocation;
+-				int order = cdev->send_page_order;
+-
+-				if (order) {
+-					page = alloc_pages(gfp | __GFP_COMP |
+-							   __GFP_NOWARN |
+-							   __GFP_NORETRY,
+-							   order);
+-					if (page)
+-						pg_size <<= order;
+-				}
+-				if (!page) {
+-					page = alloc_page(gfp);
+-					pg_size = PAGE_SIZE;
+-				}
+-				if (!page)
+-					goto wait_for_memory;
+-				off = 0;
+-			}
+-copy:
+-			if (copy > pg_size - off)
+-				copy = pg_size - off;
++			copy = min_t(int, copy, pfrag->size);
+ 			if (is_tls_tx(csk))
+ 				copy = min_t(int, copy, csk->tlshws.txleft);
+ 
+-			err = chtls_skb_copy_to_page_nocache(sk, &msg->msg_iter,
+-							     skb, page,
+-							     off, copy);
+-			if (unlikely(err)) {
+-				if (!TCP_PAGE(sk)) {
+-					TCP_PAGE(sk) = page;
+-					TCP_OFF(sk) = 0;
+-				}
++			err = chtls_skb_copy_to_va_nocache(sk, &msg->msg_iter,
++							   skb, va, copy);
++			if (unlikely(err))
+ 				goto do_fault;
+-			}
++
+ 			/* Update the skb. */
+ 			if (merge) {
+ 				skb_frag_size_add(
+ 						&skb_shinfo(skb)->frags[i - 1],
+ 						copy);
++				page_frag_commit_noref(nc, pfrag, copy);
+ 			} else {
+-				skb_fill_page_desc(skb, i, page, off, copy);
+-				if (off + copy < pg_size) {
+-					/* space left keep page */
+-					get_page(page);
+-					TCP_PAGE(sk) = page;
+-				} else {
+-					TCP_PAGE(sk) = NULL;
+-				}
++				skb_fill_page_desc(skb, i, pfrag->page,
++						   pfrag->offset, copy);
++				page_frag_commit(nc, pfrag, copy);
+ 			}
+-			TCP_OFF(sk) = off + copy;
+ 		}
+ 		if (unlikely(skb->len == mss))
+ 			tx_skb_finalize(skb);
+diff --git a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
+index 455a54708be4..ba88b2fc7cd8 100644
+--- a/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
++++ b/drivers/net/ethernet/chelsio/inline_crypto/chtls/chtls_main.c
+@@ -34,7 +34,6 @@ static DEFINE_MUTEX(notify_mutex);
+ static RAW_NOTIFIER_HEAD(listen_notify_list);
+ static struct proto chtls_cpl_prot, chtls_cpl_protv6;
+ struct request_sock_ops chtls_rsk_ops, chtls_rsk_opsv6;
+-static uint send_page_order = (14 - PAGE_SHIFT < 0) ? 0 : 14 - PAGE_SHIFT;
+ 
+ static void register_listen_notifier(struct notifier_block *nb)
+ {
+@@ -273,8 +272,6 @@ static void *chtls_uld_add(const struct cxgb4_lld_info *info)
+ 	INIT_WORK(&cdev->deferq_task, process_deferq);
+ 	spin_lock_init(&cdev->listen_lock);
+ 	spin_lock_init(&cdev->idr_lock);
+-	cdev->send_page_order = min_t(uint, get_order(32768),
+-				      send_page_order);
+ 	cdev->max_host_sndbuf = 48 * 1024;
+ 
+ 	if (lldi->vr->key.size)
+diff --git a/drivers/net/tun.c b/drivers/net/tun.c
+index d7a865ef370b..13113a1dca29 100644
+--- a/drivers/net/tun.c
++++ b/drivers/net/tun.c
+@@ -1599,21 +1599,19 @@ static bool tun_can_build_skb(struct tun_struct *tun, struct tun_file *tfile,
+ }
+ 
+ static struct sk_buff *__tun_build_skb(struct tun_file *tfile,
+-				       struct page_frag *alloc_frag, char *buf,
+-				       int buflen, int len, int pad)
++				       char *buf, int buflen, int len, int pad)
+ {
+ 	struct sk_buff *skb = build_skb(buf, buflen);
+ 
+-	if (!skb)
++	if (!skb) {
++		page_frag_free(buf);
+ 		return ERR_PTR(-ENOMEM);
++	}
+ 
+ 	skb_reserve(skb, pad);
+ 	skb_put(skb, len);
+ 	skb_set_owner_w(skb, tfile->socket.sk);
+ 
+-	get_page(alloc_frag->page);
+-	alloc_frag->offset += buflen;
+-
+ 	return skb;
+ }
+ 
+@@ -1661,8 +1659,8 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 				     struct virtio_net_hdr *hdr,
+ 				     int len, int *skb_xdp)
+ {
+-	struct page_frag *alloc_frag = &current->task_frag;
+ 	struct bpf_net_context __bpf_net_ctx, *bpf_net_ctx;
++	struct page_frag_cache *nc = &current->task_frag;
+ 	struct bpf_prog *xdp_prog;
+ 	int buflen = SKB_DATA_ALIGN(sizeof(struct skb_shared_info));
+ 	char *buf;
+@@ -1677,16 +1675,16 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 	buflen += SKB_DATA_ALIGN(len + pad);
+ 	rcu_read_unlock();
+ 
+-	alloc_frag->offset = ALIGN((u64)alloc_frag->offset, SMP_CACHE_BYTES);
+-	if (unlikely(!skb_page_frag_refill(buflen, alloc_frag, GFP_KERNEL)))
++	buf = page_frag_alloc_align(nc, buflen, GFP_KERNEL,
++				    SMP_CACHE_BYTES);
++	if (unlikely(!buf))
+ 		return ERR_PTR(-ENOMEM);
+ 
+-	buf = (char *)page_address(alloc_frag->page) + alloc_frag->offset;
+-	copied = copy_page_from_iter(alloc_frag->page,
+-				     alloc_frag->offset + pad,
+-				     len, from);
+-	if (copied != len)
++	copied = copy_from_iter(buf + pad, len, from);
++	if (copied != len) {
++		page_frag_alloc_abort(nc, buflen);
+ 		return ERR_PTR(-EFAULT);
++	}
+ 
+ 	/* There's a small window that XDP may be set after the check
+ 	 * of xdp_prog above, this should be rare and for simplicity
+@@ -1694,8 +1692,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 	 */
+ 	if (hdr->gso_type || !xdp_prog) {
+ 		*skb_xdp = 1;
+-		return __tun_build_skb(tfile, alloc_frag, buf, buflen, len,
+-				       pad);
++		return __tun_build_skb(tfile, buf, buflen, len, pad);
+ 	}
+ 
+ 	*skb_xdp = 0;
+@@ -1712,21 +1709,23 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 		xdp_prepare_buff(&xdp, buf, pad, len, false);
+ 
+ 		act = bpf_prog_run_xdp(xdp_prog, &xdp);
+-		if (act == XDP_REDIRECT || act == XDP_TX) {
+-			get_page(alloc_frag->page);
+-			alloc_frag->offset += buflen;
+-		}
+ 		err = tun_xdp_act(tun, xdp_prog, &xdp, act);
+ 		if (err < 0) {
+-			if (act == XDP_REDIRECT || act == XDP_TX)
+-				put_page(alloc_frag->page);
++			if (act == XDP_REDIRECT || act == XDP_TX) {
++				page_frag_alloc_abort(nc, 0);
++				goto out;
++			}
++
++			page_frag_alloc_abort(nc, buflen);
+ 			goto out;
+ 		}
+ 
+ 		if (err == XDP_REDIRECT)
+ 			xdp_do_flush();
+-		if (err != XDP_PASS)
++		if (err != XDP_PASS) {
++			page_frag_alloc_abort(nc, buflen);
+ 			goto out;
++		}
+ 
+ 		pad = xdp.data - xdp.data_hard_start;
+ 		len = xdp.data_end - xdp.data;
+@@ -1735,7 +1734,7 @@ static struct sk_buff *tun_build_skb(struct tun_struct *tun,
+ 	rcu_read_unlock();
+ 	local_bh_enable();
+ 
+-	return __tun_build_skb(tfile, alloc_frag, buf, buflen, len, pad);
++	return __tun_build_skb(tfile, buf, buflen, len, pad);
+ 
+ out:
+ 	bpf_net_ctx_clear(bpf_net_ctx);
+diff --git a/include/linux/sched.h b/include/linux/sched.h
+index e6ee4258169a..d4a4273d015e 100644
+--- a/include/linux/sched.h
++++ b/include/linux/sched.h
+@@ -1379,7 +1379,7 @@ struct task_struct {
+ 	/* Cache last used pipe for splice(): */
+ 	struct pipe_inode_info		*splice_pipe;
+ 
+-	struct page_frag		task_frag;
++	struct page_frag_cache		task_frag;
+ 
+ #ifdef CONFIG_TASK_DELAY_ACCT
+ 	struct task_delay_info		*delays;
+diff --git a/include/net/sock.h b/include/net/sock.h
+index e0b4e2daca5d..23355f7d2040 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -303,7 +303,7 @@ struct sk_filter;
+   *	@sk_stamp: time stamp of last packet received
+   *	@sk_stamp_seq: lock for accessing sk_stamp on 32 bit architectures only
+   *	@sk_tsflags: SO_TIMESTAMPING flags
+-  *	@sk_use_task_frag: allow sk_page_frag() to use current->task_frag.
++  *	@sk_use_task_frag: allow sk_page_frag_cache() to use current->task_frag.
+   *			   Sockets that can be used under memory reclaim should
+   *			   set this to false.
+   *	@sk_bind_phc: SO_TIMESTAMPING bind PHC index of PTP virtual clock
+@@ -462,7 +462,7 @@ struct sock {
+ 	struct sk_buff_head	sk_write_queue;
+ 	u32			sk_dst_pending_confirm;
+ 	u32			sk_pacing_status; /* see enum sk_pacing */
+-	struct page_frag	sk_frag;
++	struct page_frag_cache	sk_frag;
+ 	struct timer_list	sk_timer;
+ 
+ 	unsigned long		sk_pacing_rate; /* bytes per second */
+@@ -2478,22 +2478,22 @@ static inline void sk_stream_moderate_sndbuf(struct sock *sk)
+ }
+ 
+ /**
+- * sk_page_frag - return an appropriate page_frag
++ * sk_page_frag_cache - return an appropriate page_frag_cache
+  * @sk: socket
+  *
+- * Use the per task page_frag instead of the per socket one for
++ * Use the per task page_frag_cache instead of the per socket one for
+  * optimization when we know that we're in process context and own
+  * everything that's associated with %current.
+  *
+  * Both direct reclaim and page faults can nest inside other
+- * socket operations and end up recursing into sk_page_frag()
+- * while it's already in use: explicitly avoid task page_frag
++ * socket operations and end up recursing into sk_page_frag_cache()
++ * while it's already in use: explicitly avoid task page_frag_cache
+  * when users disable sk_use_task_frag.
+  *
+  * Return: a per task page_frag if context allows that,
+  * otherwise a per socket one.
+  */
+-static inline struct page_frag *sk_page_frag(struct sock *sk)
++static inline struct page_frag_cache *sk_page_frag_cache(struct sock *sk)
+ {
+ 	if (sk->sk_use_task_frag)
+ 		return &current->task_frag;
+@@ -2501,7 +2501,12 @@ static inline struct page_frag *sk_page_frag(struct sock *sk)
+ 	return &sk->sk_frag;
+ }
+ 
+-bool sk_page_frag_refill(struct sock *sk, struct page_frag *pfrag);
++bool sk_page_frag_refill_prepare(struct sock *sk, struct page_frag_cache *nc,
++				 struct page_frag *pfrag);
++
++void *sk_page_frag_alloc_refill_prepare(struct sock *sk,
++					struct page_frag_cache *nc,
++					struct page_frag *pfrag);
+ 
+ /*
+  *	Default write policy as shown to user space via poll/select/SIGIO
+diff --git a/kernel/exit.c b/kernel/exit.c
+index 619f0014c33b..5f9b7f58098d 100644
+--- a/kernel/exit.c
++++ b/kernel/exit.c
+@@ -974,8 +974,7 @@ void __noreturn do_exit(long code)
+ 	if (tsk->splice_pipe)
+ 		free_pipe_info(tsk->splice_pipe);
+ 
+-	if (tsk->task_frag.page)
+-		put_page(tsk->task_frag.page);
++	page_frag_cache_drain(&tsk->task_frag);
+ 
+ 	exit_task_stack_account(tsk);
+ 
+diff --git a/kernel/fork.c b/kernel/fork.c
+index 60c0b4868fd4..a197ccfac468 100644
+--- a/kernel/fork.c
++++ b/kernel/fork.c
+@@ -81,6 +81,7 @@
+ #include <linux/tty.h>
+ #include <linux/fs_struct.h>
+ #include <linux/magic.h>
++#include <linux/page_frag_cache.h>
+ #include <linux/perf_event.h>
+ #include <linux/posix-timers.h>
+ #include <linux/user-return-notifier.h>
+@@ -1159,10 +1160,10 @@ static struct task_struct *dup_task_struct(struct task_struct *orig, int node)
+ 	tsk->btrace_seq = 0;
+ #endif
+ 	tsk->splice_pipe = NULL;
+-	tsk->task_frag.page = NULL;
+ 	tsk->wake_q.next = NULL;
+ 	tsk->worker_private = NULL;
+ 
++	page_frag_cache_init(&tsk->task_frag);
+ 	kcov_task_init(tsk);
+ 	kmsan_task_create(tsk);
+ 	kmap_local_fork(tsk);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index ca01880c7ad0..97e02892bed8 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3062,25 +3062,6 @@ static void sock_spd_release(struct splice_pipe_desc *spd, unsigned int i)
+ 	put_page(spd->pages[i]);
+ }
+ 
+-static struct page *linear_to_page(struct page *page, unsigned int *len,
+-				   unsigned int *offset,
+-				   struct sock *sk)
+-{
+-	struct page_frag *pfrag = sk_page_frag(sk);
+-
+-	if (!sk_page_frag_refill(sk, pfrag))
+-		return NULL;
+-
+-	*len = min_t(unsigned int, *len, pfrag->size - pfrag->offset);
+-
+-	memcpy(page_address(pfrag->page) + pfrag->offset,
+-	       page_address(page) + *offset, *len);
+-	*offset = pfrag->offset;
+-	pfrag->offset += *len;
+-
+-	return pfrag->page;
+-}
+-
+ static bool spd_can_coalesce(const struct splice_pipe_desc *spd,
+ 			     struct page *page,
+ 			     unsigned int offset)
+@@ -3091,6 +3072,37 @@ static bool spd_can_coalesce(const struct splice_pipe_desc *spd,
+ 		 spd->partial[spd->nr_pages - 1].len == offset);
+ }
+ 
++static bool spd_fill_linear_page(struct splice_pipe_desc *spd,
++				 struct page *page, unsigned int offset,
++				 unsigned int *len, struct sock *sk)
++{
++	struct page_frag_cache *nc = sk_page_frag_cache(sk);
++	struct page_frag page_frag, *pfrag;
++	void *va;
++
++	pfrag = &page_frag;
++	va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
++	if (!va)
++		return true;
++
++	*len = min_t(unsigned int, *len, pfrag->size);
++	memcpy(va, page_address(page) + offset, *len);
++
++	if (spd_can_coalesce(spd, pfrag->page, pfrag->offset)) {
++		spd->partial[spd->nr_pages - 1].len += *len;
++		page_frag_commit_noref(nc, pfrag, *len);
++		return false;
++	}
++
++	page_frag_commit(nc, pfrag, *len);
++	spd->pages[spd->nr_pages] = pfrag->page;
++	spd->partial[spd->nr_pages].len = *len;
++	spd->partial[spd->nr_pages].offset = pfrag->offset;
++	spd->nr_pages++;
++
++	return false;
++}
++
+ /*
+  * Fill page/offset/length into spd, if it can hold more pages.
+  */
+@@ -3103,11 +3115,9 @@ static bool spd_fill_page(struct splice_pipe_desc *spd,
+ 	if (unlikely(spd->nr_pages == MAX_SKB_FRAGS))
+ 		return true;
+ 
+-	if (linear) {
+-		page = linear_to_page(page, len, &offset, sk);
+-		if (!page)
+-			return true;
+-	}
++	if (linear)
++		return spd_fill_linear_page(spd, page, offset, len,  sk);
++
+ 	if (spd_can_coalesce(spd, page, offset)) {
+ 		spd->partial[spd->nr_pages - 1].len += *len;
+ 		return false;
+diff --git a/net/core/skmsg.c b/net/core/skmsg.c
+index b1dcbd3be89e..b19eafeeb8ac 100644
+--- a/net/core/skmsg.c
++++ b/net/core/skmsg.c
+@@ -27,23 +27,25 @@ static bool sk_msg_try_coalesce_ok(struct sk_msg *msg, int elem_first_coalesce)
+ int sk_msg_alloc(struct sock *sk, struct sk_msg *msg, int len,
+ 		 int elem_first_coalesce)
+ {
+-	struct page_frag *pfrag = sk_page_frag(sk);
++	struct page_frag_cache *nc = sk_page_frag_cache(sk);
+ 	u32 osize = msg->sg.size;
+ 	int ret = 0;
+ 
+ 	len -= msg->sg.size;
+ 	while (len > 0) {
++		struct page_frag page_frag, *pfrag;
+ 		struct scatterlist *sge;
+ 		u32 orig_offset;
+ 		int use, i;
+ 
+-		if (!sk_page_frag_refill(sk, pfrag)) {
++		pfrag = &page_frag;
++		if (!sk_page_frag_refill_prepare(sk, nc, pfrag)) {
+ 			ret = -ENOMEM;
+ 			goto msg_trim;
+ 		}
+ 
+ 		orig_offset = pfrag->offset;
+-		use = min_t(int, len, pfrag->size - orig_offset);
++		use = min_t(int, len, pfrag->size);
+ 		if (!sk_wmem_schedule(sk, use)) {
+ 			ret = -ENOMEM;
+ 			goto msg_trim;
+@@ -57,6 +59,7 @@ int sk_msg_alloc(struct sock *sk, struct sk_msg *msg, int len,
+ 		    sg_page(sge) == pfrag->page &&
+ 		    sge->offset + sge->length == orig_offset) {
+ 			sge->length += use;
++			page_frag_commit_noref(nc, pfrag, use);
+ 		} else {
+ 			if (sk_msg_full(msg)) {
+ 				ret = -ENOSPC;
+@@ -66,13 +69,12 @@ int sk_msg_alloc(struct sock *sk, struct sk_msg *msg, int len,
+ 			sge = &msg->sg.data[msg->sg.end];
+ 			sg_unmark_end(sge);
+ 			sg_set_page(sge, pfrag->page, use, orig_offset);
+-			get_page(pfrag->page);
++			page_frag_commit(nc, pfrag, use);
+ 			sk_msg_iter_next(msg, end);
+ 		}
+ 
+ 		sk_mem_charge(sk, use);
+ 		msg->sg.size += use;
+-		pfrag->offset += use;
+ 		len -= use;
+ 	}
+ 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index 846f494a17cf..5afee5468130 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -2275,10 +2275,7 @@ static void __sk_destruct(struct rcu_head *head)
+ 		pr_debug("%s: optmem leakage (%d bytes) detected\n",
+ 			 __func__, atomic_read(&sk->sk_omem_alloc));
+ 
+-	if (sk->sk_frag.page) {
+-		put_page(sk->sk_frag.page);
+-		sk->sk_frag.page = NULL;
+-	}
++	page_frag_cache_drain(&sk->sk_frag);
+ 
+ 	/* We do not need to acquire sk->sk_peer_lock, we are the last user. */
+ 	put_cred(sk->sk_peer_cred);
+@@ -3037,16 +3034,33 @@ bool skb_page_frag_refill(unsigned int sz, struct page_frag *pfrag, gfp_t gfp)
+ }
+ EXPORT_SYMBOL(skb_page_frag_refill);
+ 
+-bool sk_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
++bool sk_page_frag_refill_prepare(struct sock *sk, struct page_frag_cache *nc,
++				 struct page_frag *pfrag)
+ {
+-	if (likely(skb_page_frag_refill(32U, pfrag, sk->sk_allocation)))
++	if (likely(page_frag_refill_prepare(nc, 32U, pfrag, sk->sk_allocation)))
+ 		return true;
+ 
+ 	sk_enter_memory_pressure(sk);
+ 	sk_stream_moderate_sndbuf(sk);
+ 	return false;
+ }
+-EXPORT_SYMBOL(sk_page_frag_refill);
++EXPORT_SYMBOL(sk_page_frag_refill_prepare);
++
++void *sk_page_frag_alloc_refill_prepare(struct sock *sk,
++					struct page_frag_cache *nc,
++					struct page_frag *pfrag)
++{
++	void *va;
++
++	va = page_frag_alloc_refill_prepare(nc, 32U, pfrag, sk->sk_allocation);
++	if (likely(va))
++		return va;
++
++	sk_enter_memory_pressure(sk);
++	sk_stream_moderate_sndbuf(sk);
++	return NULL;
++}
++EXPORT_SYMBOL(sk_page_frag_alloc_refill_prepare);
+ 
+ void __lock_sock(struct sock *sk)
+ 	__releases(&sk->sk_lock.slock)
+@@ -3568,8 +3582,8 @@ void sock_init_data_uid(struct socket *sock, struct sock *sk, kuid_t uid)
+ 	sk->sk_error_report	=	sock_def_error_report;
+ 	sk->sk_destruct		=	sock_def_destruct;
+ 
+-	sk->sk_frag.page	=	NULL;
+-	sk->sk_frag.offset	=	0;
++	page_frag_cache_init(&sk->sk_frag);
++
+ 	sk->sk_peek_off		=	-1;
+ 
+ 	sk->sk_peer_pid 	=	NULL;
+diff --git a/net/ipv4/ip_output.c b/net/ipv4/ip_output.c
+index e5c55a95063d..5e5f4e7350ee 100644
+--- a/net/ipv4/ip_output.c
++++ b/net/ipv4/ip_output.c
+@@ -953,7 +953,7 @@ static int __ip_append_data(struct sock *sk,
+ 			    struct flowi4 *fl4,
+ 			    struct sk_buff_head *queue,
+ 			    struct inet_cork *cork,
+-			    struct page_frag *pfrag,
++			    struct page_frag_cache *nc,
+ 			    int getfrag(void *from, char *to, int offset,
+ 					int len, int odd, struct sk_buff *skb),
+ 			    void *from, int length, int transhdrlen,
+@@ -1233,13 +1233,19 @@ static int __ip_append_data(struct sock *sk,
+ 			copy = err;
+ 			wmem_alloc_delta += copy;
+ 		} else if (!zc) {
++			struct page_frag page_frag, *pfrag;
+ 			int i = skb_shinfo(skb)->nr_frags;
++			void *va;
+ 
+ 			err = -ENOMEM;
+-			if (!sk_page_frag_refill(sk, pfrag))
++			pfrag = &page_frag;
++			va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
++			if (!va)
+ 				goto error;
+ 
+ 			skb_zcopy_downgrade_managed(skb);
++			copy = min_t(int, copy, pfrag->size);
++
+ 			if (!skb_can_coalesce(skb, i, pfrag->page,
+ 					      pfrag->offset)) {
+ 				err = -EMSGSIZE;
+@@ -1247,18 +1253,18 @@ static int __ip_append_data(struct sock *sk,
+ 					goto error;
+ 
+ 				__skb_fill_page_desc(skb, i, pfrag->page,
+-						     pfrag->offset, 0);
++						     pfrag->offset, copy);
+ 				skb_shinfo(skb)->nr_frags = ++i;
+-				get_page(pfrag->page);
++				page_frag_commit(nc, pfrag, copy);
++			} else {
++				skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1],
++						  copy);
++				page_frag_commit_noref(nc, pfrag, copy);
+ 			}
+-			copy = min_t(int, copy, pfrag->size - pfrag->offset);
+-			if (getfrag(from,
+-				    page_address(pfrag->page) + pfrag->offset,
+-				    offset, copy, skb->len, skb) < 0)
++
++			if (getfrag(from, va, offset, copy, skb->len, skb) < 0)
+ 				goto error_efault;
+ 
+-			pfrag->offset += copy;
+-			skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+ 			skb_len_add(skb, copy);
+ 			wmem_alloc_delta += copy;
+ 		} else {
+@@ -1373,7 +1379,7 @@ int ip_append_data(struct sock *sk, struct flowi4 *fl4,
+ 	}
+ 
+ 	return __ip_append_data(sk, fl4, &sk->sk_write_queue, &inet->cork.base,
+-				sk_page_frag(sk), getfrag,
++				sk_page_frag_cache(sk), getfrag,
+ 				from, length, transhdrlen, flags);
+ }
+ 
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index bc36f02cac0d..2c66c016a54c 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -1193,9 +1193,13 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 		if (zc == 0) {
+ 			bool merge = true;
+ 			int i = skb_shinfo(skb)->nr_frags;
+-			struct page_frag *pfrag = sk_page_frag(sk);
++			struct page_frag_cache *nc = sk_page_frag_cache(sk);
++			struct page_frag page_frag, *pfrag;
++			void *va;
+ 
+-			if (!sk_page_frag_refill(sk, pfrag))
++			pfrag = &page_frag;
++			va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
++			if (!va)
+ 				goto wait_for_space;
+ 
+ 			if (!skb_can_coalesce(skb, i, pfrag->page,
+@@ -1207,7 +1211,7 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 				merge = false;
+ 			}
+ 
+-			copy = min_t(int, copy, pfrag->size - pfrag->offset);
++			copy = min_t(int, copy, pfrag->size);
+ 
+ 			if (unlikely(skb_zcopy_pure(skb) || skb_zcopy_managed(skb))) {
+ 				if (tcp_downgrade_zcopy_pure(sk, skb))
+@@ -1220,20 +1224,19 @@ int tcp_sendmsg_locked(struct sock *sk, struct msghdr *msg, size_t size)
+ 				goto wait_for_space;
+ 
+ 			err = skb_add_frag_nocache(sk, &msg->msg_iter, skb,
+-						   page_address(pfrag->page) +
+-						   pfrag->offset, copy);
++						   va, copy);
+ 			if (err)
+ 				goto do_error;
+ 
+ 			/* Update the skb. */
+ 			if (merge) {
+ 				skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
++				page_frag_commit_noref(nc, pfrag, copy);
+ 			} else {
+ 				skb_fill_page_desc(skb, i, pfrag->page,
+ 						   pfrag->offset, copy);
+-				page_ref_inc(pfrag->page);
++				page_frag_commit(nc, pfrag, copy);
+ 			}
+-			pfrag->offset += copy;
+ 		} else if (zc == MSG_ZEROCOPY)  {
+ 			/* First append to a fragless skb builds initial
+ 			 * pure zerocopy skb
+@@ -3393,11 +3396,7 @@ int tcp_disconnect(struct sock *sk, int flags)
+ 
+ 	WARN_ON(inet->inet_num && !icsk->icsk_bind_hash);
+ 
+-	if (sk->sk_frag.page) {
+-		put_page(sk->sk_frag.page);
+-		sk->sk_frag.page = NULL;
+-		sk->sk_frag.offset = 0;
+-	}
++	page_frag_cache_drain(&sk->sk_frag);
+ 	sk_error_report(sk);
+ 	return 0;
+ }
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 08772395690d..d53d77500204 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -3973,9 +3973,11 @@ static int tcp_send_syn_data(struct sock *sk, struct sk_buff *syn)
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 	struct tcp_fastopen_request *fo = tp->fastopen_req;
+-	struct page_frag *pfrag = sk_page_frag(sk);
++	struct page_frag_cache *nc = sk_page_frag_cache(sk);
++	struct page_frag page_frag, *pfrag;
+ 	struct sk_buff *syn_data;
+ 	int space, err = 0;
++	void *va;
+ 
+ 	tp->rx_opt.mss_clamp = tp->advmss;  /* If MSS is not cached */
+ 	if (!tcp_fastopen_cookie_check(sk, &tp->rx_opt.mss_clamp, &fo->cookie))
+@@ -3994,21 +3996,25 @@ static int tcp_send_syn_data(struct sock *sk, struct sk_buff *syn)
+ 
+ 	space = min_t(size_t, space, fo->size);
+ 
+-	if (space &&
+-	    !skb_page_frag_refill(min_t(size_t, space, PAGE_SIZE),
+-				  pfrag, sk->sk_allocation))
+-		goto fallback;
++	if (space) {
++		pfrag = &page_frag;
++		va = page_frag_alloc_refill_prepare(nc,
++						    min_t(size_t, space, PAGE_SIZE),
++						    pfrag, sk->sk_allocation);
++		if (!va)
++			goto fallback;
++	}
++
+ 	syn_data = tcp_stream_alloc_skb(sk, sk->sk_allocation, false);
+ 	if (!syn_data)
+ 		goto fallback;
+ 	memcpy(syn_data->cb, syn->cb, sizeof(syn->cb));
+ 	if (space) {
+-		space = min_t(size_t, space, pfrag->size - pfrag->offset);
++		space = min_t(size_t, space, pfrag->size);
+ 		space = tcp_wmem_schedule(sk, space);
+ 	}
+ 	if (space) {
+-		space = copy_page_from_iter(pfrag->page, pfrag->offset,
+-					    space, &fo->data->msg_iter);
++		space = _copy_from_iter(va, space, &fo->data->msg_iter);
+ 		if (unlikely(!space)) {
+ 			tcp_skb_tsorted_anchor_cleanup(syn_data);
+ 			kfree_skb(syn_data);
+@@ -4016,8 +4022,7 @@ static int tcp_send_syn_data(struct sock *sk, struct sk_buff *syn)
+ 		}
+ 		skb_fill_page_desc(syn_data, 0, pfrag->page,
+ 				   pfrag->offset, space);
+-		page_ref_inc(pfrag->page);
+-		pfrag->offset += space;
++		page_frag_commit(nc, pfrag, space);
+ 		skb_len_add(syn_data, space);
+ 		skb_zcopy_set(syn_data, fo->uarg, NULL);
+ 	}
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 205673179b3c..f48ee0096a31 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -1416,7 +1416,7 @@ static int __ip6_append_data(struct sock *sk,
+ 			     struct sk_buff_head *queue,
+ 			     struct inet_cork_full *cork_full,
+ 			     struct inet6_cork *v6_cork,
+-			     struct page_frag *pfrag,
++			     struct page_frag_cache *nc,
+ 			     int getfrag(void *from, char *to, int offset,
+ 					 int len, int odd, struct sk_buff *skb),
+ 			     void *from, size_t length, int transhdrlen,
+@@ -1762,13 +1762,19 @@ static int __ip6_append_data(struct sock *sk,
+ 			copy = err;
+ 			wmem_alloc_delta += copy;
+ 		} else if (!zc) {
++			struct page_frag page_frag, *pfrag;
+ 			int i = skb_shinfo(skb)->nr_frags;
++			void *va;
+ 
+ 			err = -ENOMEM;
+-			if (!sk_page_frag_refill(sk, pfrag))
++			pfrag = &page_frag;
++			va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
++			if (!va)
+ 				goto error;
+ 
+ 			skb_zcopy_downgrade_managed(skb);
++			copy = min_t(int, copy, pfrag->size);
++
+ 			if (!skb_can_coalesce(skb, i, pfrag->page,
+ 					      pfrag->offset)) {
+ 				err = -EMSGSIZE;
+@@ -1776,18 +1782,18 @@ static int __ip6_append_data(struct sock *sk,
+ 					goto error;
+ 
+ 				__skb_fill_page_desc(skb, i, pfrag->page,
+-						     pfrag->offset, 0);
++						     pfrag->offset, copy);
+ 				skb_shinfo(skb)->nr_frags = ++i;
+-				get_page(pfrag->page);
++				page_frag_commit(nc, pfrag, copy);
++			} else {
++				skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1],
++						  copy);
++				page_frag_commit_noref(nc, pfrag, copy);
+ 			}
+-			copy = min_t(int, copy, pfrag->size - pfrag->offset);
+-			if (getfrag(from,
+-				    page_address(pfrag->page) + pfrag->offset,
+-				    offset, copy, skb->len, skb) < 0)
++
++			if (getfrag(from, va, offset, copy, skb->len, skb) < 0)
+ 				goto error_efault;
+ 
+-			pfrag->offset += copy;
+-			skb_frag_size_add(&skb_shinfo(skb)->frags[i - 1], copy);
+ 			skb->len += copy;
+ 			skb->data_len += copy;
+ 			skb->truesize += copy;
+@@ -1850,7 +1856,7 @@ int ip6_append_data(struct sock *sk,
+ 	}
+ 
+ 	return __ip6_append_data(sk, &sk->sk_write_queue, &inet->cork,
+-				 &np->cork, sk_page_frag(sk), getfrag,
++				 &np->cork, sk_page_frag_cache(sk), getfrag,
+ 				 from, length, transhdrlen, flags, ipc6);
+ }
+ EXPORT_SYMBOL_GPL(ip6_append_data);
+diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+index e74ad63f0189..96243f74f499 100644
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -804,9 +804,13 @@ static int kcm_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 	while (msg_data_left(msg)) {
+ 		bool merge = true;
+ 		int i = skb_shinfo(skb)->nr_frags;
+-		struct page_frag *pfrag = sk_page_frag(sk);
++		struct page_frag_cache *nc = sk_page_frag_cache(sk);
++		struct page_frag page_frag, *pfrag;
++		void *va;
+ 
+-		if (!sk_page_frag_refill(sk, pfrag))
++		pfrag = &page_frag;
++		va = sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
++		if (!va)
+ 			goto wait_for_memory;
+ 
+ 		if (!skb_can_coalesce(skb, i, pfrag->page,
+@@ -851,14 +855,12 @@ static int kcm_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 			if (head != skb)
+ 				head->truesize += copy;
+ 		} else {
+-			copy = min_t(int, msg_data_left(msg),
+-				     pfrag->size - pfrag->offset);
++			copy = min_t(int, msg_data_left(msg), pfrag->size);
+ 			if (!sk_wmem_schedule(sk, copy))
+ 				goto wait_for_memory;
+ 
+ 			err = skb_add_frag_nocache(sk, &msg->msg_iter, skb,
+-						   page_address(pfrag->page) +
+-						   pfrag->offset, copy);
++						   va, copy);
+ 			if (err)
+ 				goto out_error;
+ 
+@@ -866,13 +868,13 @@ static int kcm_sendmsg(struct socket *sock, struct msghdr *msg, size_t len)
+ 			if (merge) {
+ 				skb_frag_size_add(
+ 					&skb_shinfo(skb)->frags[i - 1], copy);
++				page_frag_commit_noref(nc, pfrag, copy);
+ 			} else {
+ 				skb_fill_page_desc(skb, i, pfrag->page,
+ 						   pfrag->offset, copy);
+-				get_page(pfrag->page);
++				page_frag_commit(nc, pfrag, copy);
+ 			}
+ 
+-			pfrag->offset += copy;
+ 		}
+ 
+ 		copied += copy;
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index e85862352084..128b0670f2b8 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -960,7 +960,6 @@ static bool mptcp_skb_can_collapse_to(u64 write_seq,
+ }
+ 
+ /* we can append data to the given data frag if:
+- * - there is space available in the backing page_frag
+  * - the data frag tail matches the current page_frag free offset
+  * - the data frag end sequence number matches the current write seq
+  */
+@@ -969,7 +968,6 @@ static bool mptcp_frag_can_collapse_to(const struct mptcp_sock *msk,
+ 				       const struct mptcp_data_frag *df)
+ {
+ 	return df && pfrag->page == df->page &&
+-		pfrag->size - pfrag->offset > 0 &&
+ 		pfrag->offset == (df->offset + df->data_len) &&
+ 		df->data_seq + df->data_len == msk->write_seq;
+ }
+@@ -1085,14 +1083,20 @@ static void mptcp_enter_memory_pressure(struct sock *sk)
+ /* ensure we get enough memory for the frag hdr, beyond some minimal amount of
+  * data
+  */
+-static bool mptcp_page_frag_refill(struct sock *sk, struct page_frag *pfrag)
++static void *mptcp_page_frag_alloc_refill_prepare(struct sock *sk,
++						  struct page_frag_cache *nc,
++						  struct page_frag *pfrag)
+ {
+-	if (likely(skb_page_frag_refill(32U + sizeof(struct mptcp_data_frag),
+-					pfrag, sk->sk_allocation)))
+-		return true;
++	unsigned int fragsz = 32U + sizeof(struct mptcp_data_frag);
++	void *va;
++
++	va = page_frag_alloc_refill_prepare(nc, fragsz, pfrag,
++					    sk->sk_allocation);
++	if (likely(va))
++		return va;
+ 
+ 	mptcp_enter_memory_pressure(sk);
+-	return false;
++	return NULL;
+ }
+ 
+ static struct mptcp_data_frag *
+@@ -1795,7 +1799,7 @@ static u32 mptcp_send_limit(const struct sock *sk)
+ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+-	struct page_frag *pfrag;
++	struct page_frag_cache *nc;
+ 	size_t copied = 0;
+ 	int ret = 0;
+ 	long timeo;
+@@ -1829,14 +1833,16 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 	if (unlikely(sk->sk_err || (sk->sk_shutdown & SEND_SHUTDOWN)))
+ 		goto do_error;
+ 
+-	pfrag = sk_page_frag(sk);
++	nc = sk_page_frag_cache(sk);
+ 
+ 	while (msg_data_left(msg)) {
++		struct page_frag page_frag, *pfrag;
+ 		int total_ts, frag_truesize = 0;
+ 		struct mptcp_data_frag *dfrag;
+ 		bool dfrag_collapsed;
+-		size_t psize, offset;
+ 		u32 copy_limit;
++		size_t psize;
++		void *va;
+ 
+ 		/* ensure fitting the notsent_lowat() constraint */
+ 		copy_limit = mptcp_send_limit(sk);
+@@ -1847,21 +1853,26 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		 * page allocator
+ 		 */
+ 		dfrag = mptcp_pending_tail(sk);
+-		dfrag_collapsed = mptcp_frag_can_collapse_to(msk, pfrag, dfrag);
++		pfrag = &page_frag;
++		va = page_frag_alloc_refill_probe(nc, 1, pfrag);
++		dfrag_collapsed = va && mptcp_frag_can_collapse_to(msk, pfrag,
++								   dfrag);
+ 		if (!dfrag_collapsed) {
+-			if (!mptcp_page_frag_refill(sk, pfrag))
++			va = mptcp_page_frag_alloc_refill_prepare(sk, nc,
++								  pfrag);
++			if (!va)
+ 				goto wait_for_memory;
+ 
+ 			dfrag = mptcp_carve_data_frag(msk, pfrag, pfrag->offset);
+ 			frag_truesize = dfrag->overhead;
++			va += dfrag->overhead;
+ 		}
+ 
+ 		/* we do not bound vs wspace, to allow a single packet.
+ 		 * memory accounting will prevent execessive memory usage
+ 		 * anyway
+ 		 */
+-		offset = dfrag->offset + dfrag->data_len;
+-		psize = pfrag->size - offset;
++		psize = pfrag->size - frag_truesize;
+ 		psize = min_t(size_t, psize, msg_data_left(msg));
+ 		psize = min_t(size_t, psize, copy_limit);
+ 		total_ts = psize + frag_truesize;
+@@ -1869,8 +1880,7 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		if (!sk_wmem_schedule(sk, total_ts))
+ 			goto wait_for_memory;
+ 
+-		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter,
+-					   page_address(dfrag->page) + offset);
++		ret = do_copy_data_nocache(sk, psize, &msg->msg_iter, va);
+ 		if (ret)
+ 			goto do_error;
+ 
+@@ -1879,7 +1889,6 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		copied += psize;
+ 		dfrag->data_len += psize;
+ 		frag_truesize += psize;
+-		pfrag->offset += frag_truesize;
+ 		WRITE_ONCE(msk->write_seq, msk->write_seq + psize);
+ 
+ 		/* charge data on mptcp pending queue to the msk socket
+@@ -1887,10 +1896,12 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 		 */
+ 		sk_wmem_queued_add(sk, frag_truesize);
+ 		if (!dfrag_collapsed) {
+-			get_page(dfrag->page);
++			page_frag_commit(nc, pfrag, frag_truesize);
+ 			list_add_tail(&dfrag->list, &msk->rtx_queue);
+ 			if (!msk->first_pending)
+ 				WRITE_ONCE(msk->first_pending, dfrag);
++		} else {
++			page_frag_commit_noref(nc, pfrag, frag_truesize);
+ 		}
+ 		pr_debug("msk=%p dfrag at seq=%llu len=%u sent=%u new=%d\n", msk,
+ 			 dfrag->data_seq, dfrag->data_len, dfrag->already_sent,
+diff --git a/net/sched/em_meta.c b/net/sched/em_meta.c
+index 8996c73c9779..4da465af972f 100644
+--- a/net/sched/em_meta.c
++++ b/net/sched/em_meta.c
+@@ -590,7 +590,7 @@ META_COLLECTOR(int_sk_sendmsg_off)
+ 		*err = -1;
+ 		return;
+ 	}
+-	dst->value = sk->sk_frag.offset;
++	dst->value = page_frag_cache_page_offset(&sk->sk_frag);
+ }
+ 
+ META_COLLECTOR(int_sk_write_pend)
+diff --git a/net/tls/tls_device.c b/net/tls/tls_device.c
+index dc063c2c7950..0ea2cee5dffe 100644
+--- a/net/tls/tls_device.c
++++ b/net/tls/tls_device.c
+@@ -253,8 +253,8 @@ static void tls_device_resync_tx(struct sock *sk, struct tls_context *tls_ctx,
+ }
+ 
+ static void tls_append_frag(struct tls_record_info *record,
+-			    struct page_frag *pfrag,
+-			    int size)
++			    struct page_frag_cache *nc,
++			    struct page_frag *pfrag, int size)
+ {
+ 	skb_frag_t *frag;
+ 
+@@ -262,15 +262,34 @@ static void tls_append_frag(struct tls_record_info *record,
+ 	if (skb_frag_page(frag) == pfrag->page &&
+ 	    skb_frag_off(frag) + skb_frag_size(frag) == pfrag->offset) {
+ 		skb_frag_size_add(frag, size);
++		page_frag_commit_noref(nc, pfrag, size);
+ 	} else {
+ 		++frag;
+ 		skb_frag_fill_page_desc(frag, pfrag->page, pfrag->offset,
+ 					size);
+ 		++record->num_frags;
++		page_frag_commit(nc, pfrag, size);
++	}
++
++	record->len += size;
++}
++
++static void tls_append_dummy_frag(struct tls_record_info *record,
++				  struct page_frag *pfrag, int size)
++{
++	skb_frag_t *frag;
++
++	frag = &record->frags[record->num_frags - 1];
++	if (skb_frag_page(frag) == pfrag->page &&
++	    skb_frag_off(frag) + skb_frag_size(frag) == pfrag->offset) {
++		skb_frag_size_add(frag, size);
++	} else {
++		++frag;
++		skb_frag_fill_page_desc(frag, pfrag->page, pfrag->offset, size);
++		++record->num_frags;
+ 		get_page(pfrag->page);
+ 	}
+ 
+-	pfrag->offset += size;
+ 	record->len += size;
+ }
+ 
+@@ -311,11 +330,11 @@ static int tls_push_record(struct sock *sk,
+ static void tls_device_record_close(struct sock *sk,
+ 				    struct tls_context *ctx,
+ 				    struct tls_record_info *record,
+-				    struct page_frag *pfrag,
++				    struct page_frag_cache *nc,
+ 				    unsigned char record_type)
+ {
+ 	struct tls_prot_info *prot = &ctx->prot_info;
+-	struct page_frag dummy_tag_frag;
++	struct page_frag dummy_tag_frag, *pfrag;
+ 
+ 	/* append tag
+ 	 * device will fill in the tag, we just need to append a placeholder
+@@ -323,13 +342,16 @@ static void tls_device_record_close(struct sock *sk,
+ 	 * increases frag count)
+ 	 * if we can't allocate memory now use the dummy page
+ 	 */
+-	if (unlikely(pfrag->size - pfrag->offset < prot->tag_size) &&
+-	    !skb_page_frag_refill(prot->tag_size, pfrag, sk->sk_allocation)) {
++	pfrag = &dummy_tag_frag;
++	if (unlikely(!page_frag_refill_probe(nc, prot->tag_size, pfrag) &&
++		     !page_frag_refill_prepare(nc, prot->tag_size, pfrag,
++					       sk->sk_allocation))) {
+ 		dummy_tag_frag.page = dummy_page;
+ 		dummy_tag_frag.offset = 0;
+-		pfrag = &dummy_tag_frag;
++		tls_append_dummy_frag(record, pfrag, prot->tag_size);
++	} else {
++		tls_append_frag(record, nc, pfrag, prot->tag_size);
+ 	}
+-	tls_append_frag(record, pfrag, prot->tag_size);
+ 
+ 	/* fill prepend */
+ 	tls_fill_prepend(ctx, skb_frag_address(&record->frags[0]),
+@@ -338,6 +360,7 @@ static void tls_device_record_close(struct sock *sk,
+ }
+ 
+ static int tls_create_new_record(struct tls_offload_context_tx *offload_ctx,
++				 struct page_frag_cache *nc,
+ 				 struct page_frag *pfrag,
+ 				 size_t prepend_size)
+ {
+@@ -352,8 +375,7 @@ static int tls_create_new_record(struct tls_offload_context_tx *offload_ctx,
+ 	skb_frag_fill_page_desc(frag, pfrag->page, pfrag->offset,
+ 				prepend_size);
+ 
+-	get_page(pfrag->page);
+-	pfrag->offset += prepend_size;
++	page_frag_commit(nc, pfrag, prepend_size);
+ 
+ 	record->num_frags = 1;
+ 	record->len = prepend_size;
+@@ -361,33 +383,34 @@ static int tls_create_new_record(struct tls_offload_context_tx *offload_ctx,
+ 	return 0;
+ }
+ 
+-static int tls_do_allocation(struct sock *sk,
+-			     struct tls_offload_context_tx *offload_ctx,
+-			     struct page_frag *pfrag,
+-			     size_t prepend_size)
++static void *tls_do_allocation(struct sock *sk,
++			       struct tls_offload_context_tx *offload_ctx,
++			       struct page_frag_cache *nc,
++			       size_t prepend_size, struct page_frag *pfrag)
+ {
+ 	int ret;
+ 
+ 	if (!offload_ctx->open_record) {
+-		if (unlikely(!skb_page_frag_refill(prepend_size, pfrag,
+-						   sk->sk_allocation))) {
++		void *va;
++
++		if (unlikely(!page_frag_refill_prepare(nc, prepend_size, pfrag,
++						       sk->sk_allocation))) {
+ 			READ_ONCE(sk->sk_prot)->enter_memory_pressure(sk);
+ 			sk_stream_moderate_sndbuf(sk);
+-			return -ENOMEM;
++			return NULL;
+ 		}
+ 
+-		ret = tls_create_new_record(offload_ctx, pfrag, prepend_size);
++		ret = tls_create_new_record(offload_ctx, nc, pfrag,
++					    prepend_size);
+ 		if (ret)
+-			return ret;
++			return NULL;
+ 
+-		if (pfrag->size > pfrag->offset)
+-			return 0;
++		va = page_frag_alloc_refill_probe(nc, 1, pfrag);
++		if (va)
++			return va;
+ 	}
+ 
+-	if (!sk_page_frag_refill(sk, pfrag))
+-		return -ENOMEM;
+-
+-	return 0;
++	return sk_page_frag_alloc_refill_prepare(sk, nc, pfrag);
+ }
+ 
+ static int tls_device_copy_data(void *addr, size_t bytes, struct iov_iter *i)
+@@ -424,8 +447,8 @@ static int tls_push_data(struct sock *sk,
+ 	struct tls_prot_info *prot = &tls_ctx->prot_info;
+ 	struct tls_offload_context_tx *ctx = tls_offload_ctx_tx(tls_ctx);
+ 	struct tls_record_info *record;
++	struct page_frag_cache *nc;
+ 	int tls_push_record_flags;
+-	struct page_frag *pfrag;
+ 	size_t orig_size = size;
+ 	u32 max_open_record_len;
+ 	bool more = false;
+@@ -454,7 +477,7 @@ static int tls_push_data(struct sock *sk,
+ 			return rc;
+ 	}
+ 
+-	pfrag = sk_page_frag(sk);
++	nc = sk_page_frag_cache(sk);
+ 
+ 	/* TLS_HEADER_SIZE is not counted as part of the TLS record, and
+ 	 * we need to leave room for an authentication tag.
+@@ -462,8 +485,12 @@ static int tls_push_data(struct sock *sk,
+ 	max_open_record_len = TLS_MAX_PAYLOAD_SIZE +
+ 			      prot->prepend_size;
+ 	do {
+-		rc = tls_do_allocation(sk, ctx, pfrag, prot->prepend_size);
+-		if (unlikely(rc)) {
++		struct page_frag page_frag, *pfrag;
++		void *va;
++
++		pfrag = &page_frag;
++		va = tls_do_allocation(sk, ctx, nc, prot->prepend_size, pfrag);
++		if (unlikely(!va)) {
+ 			rc = sk_stream_wait_memory(sk, &timeo);
+ 			if (!rc)
+ 				continue;
+@@ -512,16 +539,15 @@ static int tls_push_data(struct sock *sk,
+ 
+ 			zc_pfrag.offset = off;
+ 			zc_pfrag.size = copy;
+-			tls_append_frag(record, &zc_pfrag, copy);
++			tls_append_dummy_frag(record, &zc_pfrag, copy);
+ 		} else if (copy) {
+-			copy = min_t(size_t, copy, pfrag->size - pfrag->offset);
++			copy = min_t(size_t, copy, pfrag->size);
+ 
+-			rc = tls_device_copy_data(page_address(pfrag->page) +
+-						  pfrag->offset, copy,
+-						  iter);
++			rc = tls_device_copy_data(va, copy, iter);
+ 			if (rc)
+ 				goto handle_error;
+-			tls_append_frag(record, pfrag, copy);
++
++			tls_append_frag(record, nc, pfrag, copy);
+ 		}
+ 
+ 		size -= copy;
+@@ -539,7 +565,7 @@ static int tls_push_data(struct sock *sk,
+ 		if (done || record->len >= max_open_record_len ||
+ 		    (record->num_frags >= MAX_SKB_FRAGS - 1)) {
+ 			tls_device_record_close(sk, tls_ctx, record,
+-						pfrag, record_type);
++						nc, record_type);
+ 
+ 			rc = tls_push_record(sk,
+ 					     tls_ctx,
 -- 
-Sponsored by the NGI0 Core fund.
+2.33.0
 
