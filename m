@@ -1,40 +1,74 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F19928EF
-	for <mptcp@lists.linux.dev>; Wed,  9 Oct 2024 09:46:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 750CD38DD3
+	for <mptcp@lists.linux.dev>; Wed,  9 Oct 2024 09:59:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728467180; cv=none; b=Sej1PtaZ/sWj3Aj1zeG+YwfhF3YW5n+9xHzU+EbHRqAwqzD874PbzgTbPR5JVhQ5vKPuJW3CCRClrAGQnZ6Vs7g3xixoQT00Ng2eYAmF6kgXvcUSaI1g4Di4NkOClw87wAEIMAvpuJvj4HxrFkfaNCl/DxRAbuU8k6fBNrd+P2g=
+	t=1728467968; cv=none; b=kEMF0PIbmH1h5VIfys3qeEv66wQEsEIapR7d5ImQL2VTYedJqHshaR+3Fbzr5WGLZZcmTXt5eKhaPU7nobpO5LmKrzozBiFn1Q9zjgiV9zqAl/1esXP33P90bS5ju/I3q3LYEoIa0GGlWvNFwTGO4NPZnFmFW0Lh3Sj6fL47hbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728467180; c=relaxed/simple;
-	bh=oumnZN7lfeBZipt/q7v7JY9vEXkhK5S+dRHfm39SAWA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=RJ2bUp8LCfy5U39Xs/iJiS+xToM9Fqc/QWuFTBWQVg8mQWP4xW88cRr7GmQMTpQen6qXm1HE2Z08YfyHb5or/MUU8XSp3O7+DmCckSNv3xks87sxyeEBYYfI8cZXk8Y0j5aXR2Z11VgE9OKm0t3SFzCOAx0QhfxjugmiwBgTPUw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PzuKt8d6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728467968; c=relaxed/simple;
+	bh=g5BgCs/zXelw3IWOBS8u/cMWunemG/uv+VP0MWSM1b0=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=aS2ECoXFbQ6iFZdL+Jfc0ian8iVWIZ7Yuc+bcrMtMvBoosY70vyd/MVEnt80gIRb/taY8FF16/P/uYAvDsGNsQLDmiE8qmm2kh/lt6pouwsTt1E+//Y/vX/dqbvORQywgbhUcpl1kAjGaEthT7lHy+5rS679unQMhFb7JZeEF9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qY4FSidV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PzuKt8d6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2564DC4CECF;
-	Wed,  9 Oct 2024 09:46:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qY4FSidV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF456C4CECE;
+	Wed,  9 Oct 2024 09:59:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728467180;
-	bh=oumnZN7lfeBZipt/q7v7JY9vEXkhK5S+dRHfm39SAWA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=PzuKt8d6P+GzuDXkrZiA0jEI6QjY1UzAn42P5ZD08aMJZi4Qconwh2T5KzZujrwQy
-	 yZd3FfjrTyvjH/NvPuPfW5eCpiA+RIU+D2JeR331/EUYJGeFtYN1H13yyKrsHSWmsY
-	 Ti683E5J+s5dPwdU6IiK9GraaxS8ZIBuIcWde0m/25j/kGpetxEVibxJCJLhuWshHX
-	 iJSZmoPrQ9UkVZz6ELfQ/PGuDOa4iNM6cJBDTluqlDGRCTVP19mV5cwk9La2BTvKex
-	 5xLbu9VzclVZbqjZ2HnqzpLmUqfxMkOD22ciyb/EUF4JH9lrmpq2z6YxWC4kpN9SaO
-	 bf5u1IFOah3qA==
+	s=k20201202; t=1728467965;
+	bh=g5BgCs/zXelw3IWOBS8u/cMWunemG/uv+VP0MWSM1b0=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=qY4FSidVLoXSw/SI8bnvzPfwmKA05kLkout0yAqD2b7S28vBD+5zfiPITm5BpNWsv
+	 sNlkUK/psM0PjaZd7X4k8JYKQTehxdjeiyZUMO6yyxnR8EQeMHQ/gEsCVt6IoUEz8W
+	 rCDRZnCxHraL4BWnJ8jLk3RcUcniKntgj1b1ewmfBMML4xmeb4kS+70PyvocPu3SaA
+	 c3REiE+9QIXyr+dgEnM2SDeNh2UkS+ccTZmfKk+5vg6leeCXZjtEOFN3yWzMHlcDwO
+	 GklORRHwBPoJYot+MN49X3lWoLbbCtiEI5f5BJA39ragahvenGweeqHtwQNLwgSzsU
+	 UrcdVc1DVDUzQ==
+Message-ID: <60e02d26d9b5dd133bc51ef005a9deabfbeb2d79.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 00/13] refactor PM interfaces
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 7/7] selftests/bpf: Add mptcp_subflow bpf_iter subtest
-Date: Wed,  9 Oct 2024 17:45:49 +0800
-Message-ID: <faec8ca119ef4fdefb28f44b8c699e38c3eb8daa.1728466623.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1728466623.git.tanggeliang@kylinos.cn>
-References: <cover.1728466623.git.tanggeliang@kylinos.cn>
+Date: Wed, 09 Oct 2024 17:59:20 +0800
+In-Reply-To: <cover.1728381245.git.tanggeliang@kylinos.cn>
+References: <cover.1728381245.git.tanggeliang@kylinos.cn>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,132 +77,42 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Tue, 2024-10-08 at 17:58 +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v2:
+>  - split patch 5 into two.
+>  - new patches 9-13.
+> 
+> In order to implement BPF path manager, this set refactors get_addr
+> and dump_addr interfaces of PM.
+> 
+> Depends on:
+>  - cleanups for PM interfaces, v3
 
-This patch adds a subtest named test_iters_subflow to load and verify the
-newly added mptcp_subflow type bpf_iter example in test_mptcp. Use the
-helper endpoint_init() to add 3 new subflow endpoints. Send a byte of
-message to start the mptcp connection, a new helper recv_byte() is added
-to receive this message. send_byte() is invoked again to trigger the ftrace
-hook for mptcp_sched_get_send() after wait_for_new_subflows(). Check if
-skel->bss->subflows equals 4 to verify whether the "fentry" program loops
-fourth as expected.
+Based-on: <1728298100.git.tanggeliang@kylinos.cn>
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 78 +++++++++++++++++++
- 1 file changed, 78 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 64b5ce25e1a1..589420f42845 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -11,6 +11,7 @@
- #include "mptcp_sock.skel.h"
- #include "mptcpify.skel.h"
- #include "mptcp_subflow.skel.h"
-+#include "mptcp_bpf_iters_subflow.skel.h"
- #include "mptcp_bpf_first.skel.h"
- #include "mptcp_bpf_bkup.skel.h"
- #include "mptcp_bpf_rr.skel.h"
-@@ -261,6 +262,19 @@ static void send_byte(int fd)
- 	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
- }
- 
-+static int recv_byte(int fd)
-+{
-+	char buf[1];
-+	ssize_t n;
-+
-+	n = recv(fd, buf, sizeof(buf), 0);
-+	if (CHECK(n <= 0, "recv_byte", "recv")) {
-+		log_err("failed/partial recv");
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- static int verify_mptcpify(int server_fd, int client_fd)
- {
- 	struct __mptcp_info info;
-@@ -501,6 +515,68 @@ static void test_subflow(void)
- 	close(cgroup_fd);
- }
- 
-+static void run_iters_subflow(void)
-+{
-+	int server_fd, client_fd, accept_fd;
-+
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	accept_fd = accept(server_fd, NULL, NULL);
-+	if (!ASSERT_OK_FD(accept_fd, "accept"))
-+		goto close_client;
-+
-+	send_byte(client_fd);
-+	wait_for_new_subflows(client_fd);
-+	recv_byte(accept_fd);
-+	send_byte(client_fd);
-+
-+	close(accept_fd);
-+close_client:
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+}
-+
-+static void test_iters_subflow(void)
-+{
-+	struct mptcp_bpf_iters_subflow *skel;
-+	struct nstoken *nstoken;
-+	int subflows = 4;
-+	int err;
-+
-+	skel = mptcp_bpf_iters_subflow__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: iters_subflow"))
-+		return;
-+
-+	skel->bss->pid = getpid();
-+
-+	err = mptcp_bpf_iters_subflow__attach(skel);
-+	if (!ASSERT_OK(err, "skel_attach: iters_subflow"))
-+		goto skel_destroy;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns: iters_subflow"))
-+		goto skel_destroy;
-+
-+	if (endpoint_init("subflow", subflows) < 0)
-+		goto close_netns;
-+
-+	run_iters_subflow();
-+
-+	ASSERT_EQ(skel->bss->subflows, subflows, "subflows");
-+
-+close_netns:
-+	cleanup_netns(nstoken);
-+skel_destroy:
-+	mptcp_bpf_iters_subflow__destroy(skel);
-+}
-+
- static struct nstoken *sched_init(char *flags, char *sched)
- {
- 	struct nstoken *nstoken;
-@@ -682,6 +758,8 @@ void test_mptcp(void)
- 		test_mptcpify();
- 	if (test__start_subtest("subflow"))
- 		test_subflow();
-+	if (test__start_subtest("iters_subflow"))
-+		test_iters_subflow();
- 	if (test__start_subtest("default"))
- 		test_default();
- 	if (test__start_subtest("first"))
--- 
-2.43.0
+> 
+> Geliang Tang (13):
+>   mptcp: add id parameter for get_addr
+>   mptcp: add addr parameter for get_addr
+>   mptcp: reuse sending nlmsg code in get_addr
+>   mptcp: change info of get_addr as const
+>   mptcp: refactor dump_addr with id bitmap
+>   mptcp: refactor dump_addr with get_addr
+>   mptcp: reuse sending nlmsg code in dump_addr
+>   mptcp: add loc and rem for set_flags
+>   mptcp: update address type of get_local_id
+>   mptcp: change is_backup interfaces as get_flags
+>   mptcp: hold pm lock when deleting entry
+>   mptcp: rename mptcp_pm_remove_addrs
+>   mptcp: drop free_list for deleting entries
+> 
+>  net/mptcp/pm.c           |  17 +++-
+>  net/mptcp/pm_netlink.c   | 197 ++++++++++++++++++++++---------------
+> --
+>  net/mptcp/pm_userspace.c | 161 ++++++++++----------------------
+>  net/mptcp/protocol.h     |  22 +++--
+>  4 files changed, 185 insertions(+), 212 deletions(-)
+> 
 
