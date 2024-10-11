@@ -1,120 +1,115 @@
-Received: from mail-pl1-f178.google.com (mail-pl1-f178.google.com [209.85.214.178])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2408920FA83
-	for <mptcp@lists.linux.dev>; Fri, 11 Oct 2024 10:39:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2AF51C8FAA
+	for <mptcp@lists.linux.dev>; Fri, 11 Oct 2024 22:27:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728643149; cv=none; b=i1AzTGvJjelDQ5DclXsOuoLTuDas8yT8kIKU/931xvxix/mmp2lig8FUFT2sbm/soJMrf6ORTQ7eT6iygoP9rtBanJ1P1TlDGAtDGuB0utf62iYhBAbXEovpmWvoDTuJh10mIXckszofLFh9SGzAJUD2o6T0h+/jKcHEYcuK/fw=
+	t=1728685653; cv=none; b=Yne88sytEu/mW6sWMPOPHPTEW6NQc5CeJlhCdyeXEx5LE7JUbgwTzm91wEo7FtF5WZVOJkVMoUS82TqElj5LqeXbycjvXjsS6ge3XR/x2QQKZYx3WvScCdoyjcRyfLAsvMgrplJegfRdPNB8o2L6EccuNz5BP3FXS9ztOQ5FUZ0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728643149; c=relaxed/simple;
-	bh=SI+LDaACaYRsivzOY+B90UGG2lS3KO3mcuciIPSI4MU=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=KOiqtbzfn2zJhHg7vbzkd0EuDLycTJox0y+wW+MRaU93IwfGRxqsrv1vXzieOEITvJSEN/kXkQqZepBYSLTbPKDDCRkLa0mlcVuAoPp8BDFXA6OMxOZCzFdFEgukePRBJGE1JJBQ5fSLcHYC78KAX+aJk2hqfi4LDxwHmO7gd+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=cT0rLn0k; arc=none smtp.client-ip=209.85.214.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1728685653; c=relaxed/simple;
+	bh=vNV4X50SFfRrSzhpR4T+p2NYWPEI1YuCRluNlPKz/yI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ZhoCf2QZfoLCpCwsnR+QhQQicSak7txzqolTZMAkNJhdxCc2O9MDYcGGWKc2mDHr1bZKLOQLPDi795mHHWAtrJfuof0PCaiae55kUp1owP5lGossjv0pcjPFqjoTZKaBfv6YmNcySD2mlK9k3kPcacvzldxO/C2ZRjw0PXUWKhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n11iyzJY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cT0rLn0k"
-Received: by mail-pl1-f178.google.com with SMTP id d9443c01a7336-20c8b557f91so12482275ad.2
-        for <mptcp@lists.linux.dev>; Fri, 11 Oct 2024 03:39:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1728643147; x=1729247947; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=ta+3tLCjWMRam5b17FI/8H36xgrBh7SKnI3dpte9fLE=;
-        b=cT0rLn0kA1IvL1pny9m7Ey5IgTWkaolHzkfx6iOMYG72VQsfGtEcTEENVPscZUG/Ht
-         2NDp+QN/AtOnEwkiBWmGvcXa2rP7a/lK7kMyOXK2O8wVyCGO/lazfhBePXZ4etIyHkWY
-         qO/0P9Qzj8FoqNOdxCWcbzHnoxYZ272T11wDVLbSJt8lKLRLWbg/f22mQ4oC2KA5EIUj
-         WhLrnQTwMjpJVmnDBZCBud1IoDRIp5lNR+jClDQj7tFq3pG4nfMf93yo+0a7O6s4uxus
-         73xlDYi55yPBADZVJXJtNDWvordMBBt8E2xSlfX7oFdwuJ8OVOS2akHkub8Sma9KLjKh
-         +6OA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1728643147; x=1729247947;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=ta+3tLCjWMRam5b17FI/8H36xgrBh7SKnI3dpte9fLE=;
-        b=hZO540NPprauXyEZ+AWrCjrpWc51lOvdw53oPzrl8UUzZ5Tu/a6iDGYAWkvwdF1GWZ
-         NxJiioFEm1iUVMoy162RRRYa9yY76vNCTdeyoFiBRVc8XCuuR1Usmzhf8aTGMlo2qgy6
-         Afzj8sem4anl+R3BngKWtKiMXcledwyegXsyE7gKdhiTU6Zwff/BqTWwaQfrC31aF/Pb
-         IhQoFC3i5BR53lNzXwdnainNBS8qz4GWJ8Ck79bXDONtj6IyRBMXKx4ndet1KYCh2BOD
-         GxHGj3kPHtUjREWrnkMmhEqIXYfzzLwFqC6HFPt5x18m6LZm8hUZPvmeoulPVuCalVcI
-         8mrQ==
-X-Gm-Message-State: AOJu0YzCKi4VzOyE7qsCz18ADLNmtPDj4mI6LMaw5ctfdLq8nYeJ7EAj
-	GR+ot3JYjYzVdLh+n9MZtr9ze8RX8TzVRFf9YXjcOLaycf7x4FnsfzNA
-X-Google-Smtp-Source: AGHT+IGIbpEAQryOZYrp4q2JHfyugJDrVn7rmt1pZwCxheXzY9YjooYCIcOPI4IVyWiMtMiNO+Dq1Q==
-X-Received: by 2002:a17:903:2343:b0:206:aac4:b844 with SMTP id d9443c01a7336-20ca142a1b4mr25828795ad.6.1728643147297;
-        Fri, 11 Oct 2024 03:39:07 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.122.177])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20c8bae3f87sm21328745ad.9.2024.10.11.03.39.06
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Oct 2024 03:39:06 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1728638310.git.tanggeliang@kylinos.cn>
-References: <cover.1728638310.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4 00/11] use bpf_iter in bpf schedulers
-Message-ID: <d675a18c-18d6-1640-a8b3-a6cd354828f9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Oct 2024 10:39:05 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n11iyzJY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7F5DDC4CEC3;
+	Fri, 11 Oct 2024 22:27:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1728685652;
+	bh=vNV4X50SFfRrSzhpR4T+p2NYWPEI1YuCRluNlPKz/yI=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=n11iyzJYbDJsblU/DSKCn8g1rUV7SsrVPjV87fx9PFNMwLlMGfXRLbCF4d48YXo+Y
+	 z37A16UD3lwjwRfj9xdW89Q/DpZGu1Jig33xJL5vBmdSv9jqXvg7cz1W6MpmdX1Em3
+	 QxQw7DIPhnsG0NFLXIPbfXn6i2FeKP241LFwextD0w1YAzTByX8EUDdJZIzjJeLXK0
+	 h1PGj3DQYppnIP/TPUpFxdJY6OlRsH+2GnNLiUijJIsHL2XyuTlBWbZP3dXBRuNGDc
+	 9iZ5yg/qLJFF7t1V2ArNSsed4GbojSCodaHfKmV+wWVyFUZdej9EcXp92V72i7PVN9
+	 hwYFz7Bc+c8vw==
+Date: Fri, 11 Oct 2024 15:27:31 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
+In-Reply-To: <cover.1728466623.git.tanggeliang@kylinos.cn>
+Message-ID: <6e9260a4-b83b-0916-e5f1-0834955e6f0f@kernel.org>
+References: <cover.1728466623.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Geliang,
+On Wed, 9 Oct 2024, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> v9:
+> - rename bpf prog to "mptcp_bpf_iters_subflow.c"
+> - drop the helper bpf_mptcp_sk(), it's not used in this test.
+>
 
-Our CI did some validations and here is its report:
+Hi Geliang -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11290149421
+Series LGTM, thanks for all the updates.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/fbfdd224fa01
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D898148
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> v8:
+> - Make the test prog in patch 4 more like a bpf packet scheduler.
+> - Export more mptcp helpers into BPF in patch 1.
+>
+> v7:
+> - As Martin recently replied, mptcp_stubflow bpf_iter can still be
+> used in tracing. So go back to the tracing selftest.
+>
+> v6:
+> - add KF_TRUSTED_ARGS flag in patch 2 (Andrii, Martin), then acquire
+> and release helpers (patch 3) are needed to be implemented.
+> - test mptcp_subflow bpf_iter in "cgroup/getsockopt" (patch 5),
+> instead of testing them in "tracing" (Martin).
+>
+> v5:
+> - update patch 1 as Andrii suggested: if msk is NULL, initialize
+> kit->msk to NULL in _new() and check it in _next().
+>
+> v4:
+> - squash patch 1/5 and 3/5 in v3 together as Matt suggested.
+> - a new squash-to patch to drop mptcp_subflow_active declaration in
+>   bpf_burst.
+>
+> v3:
+> - drop bpf_iter__mptcp_subflow, __diag_push, __diag_pop and
+> __diag_ignore_all
+> - drop declarations for bpf kfuncs
+>
+> v2:
+> - update patch 1 as Martin and Andrii suggested.
+> - fix warnings and errors reported by MPTCP CI.
+>
+> This patch set adds a mptcp_subflow type bpf_iter, and self tests.
+>
+> Geliang Tang (7):
+>  bpf: Register mptcp common kfunc set
+>  bpf: Add mptcp_subflow bpf_iter
+>  bpf: Add mptcp_sock acquire and release helpers
+>  selftests/bpf: Add mptcp_subflow bpf_iter test prog
+>  selftests/bpf: More endpoints for endpoint_init
+>  Squash to "selftests/bpf: Add bpf scheduler test"
+>  selftests/bpf: Add mptcp_subflow bpf_iter subtest
+>
+> net/mptcp/bpf.c                               |  95 ++++++++++++-
+> .../testing/selftests/bpf/bpf_experimental.h  |   7 +
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 126 +++++++++++++++++-
+> tools/testing/selftests/bpf/progs/mptcp_bpf.h |   9 ++
+> .../bpf/progs/mptcp_bpf_iters_subflow.c       |  42 ++++++
+> 5 files changed, 267 insertions(+), 12 deletions(-)
+> create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
+>
+> -- 
+> 2.43.0
+>
+>
+>
