@@ -1,40 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B36C1E511
-	for <mptcp@lists.linux.dev>; Sat, 12 Oct 2024 13:42:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8537D38384
+	for <mptcp@lists.linux.dev>; Sat, 12 Oct 2024 14:20:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728740568; cv=none; b=pC7HYMiePlk28ki/A38PrqhbpI1vFCcN+u6ynYfu7ya3pHrOSSBm1cqZDFIizUTuxMuwIfPk3DnGbBohijZBgiXZmaN8q8J2VLcClKjw42zISUwfNT6Ql5MhituDZyVMyQ7XFYfA4KswrDwEgUoqMPJBWei2CvUIhhiuc3cAsyU=
+	t=1728742800; cv=none; b=gXODCrb4FX5YKAr5HH2DKdsiknHlSAe80eMh7C2U5saFA4MH1IPjoo8FR/KphqkFF5oAgKLdb4F9tmkZBRz73U4nfMg0/b5Zhs4kQg3U2/zZFzjMYYKPGSoUOI8pUShCEOqmxEsLDLyHrQ9NUa6CDp8u00S+XhwxcGAzmKq2ydI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728740568; c=relaxed/simple;
-	bh=VIVEwNvERqY60UURI9H4hBSdCZTchsvxsrk48ITuZgg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SqubG9sGe73b2guTrM1kCKGZDfZiLfifwSdL7xsgE7GBRu3u55M11IVj2M+0xeEtj02vccMzpqY79duzmUFtO9MDFxvctwijisWd1l329w0dO5tiWlgT9x3oZDs5gd7bLMFixP0RgGb85cqBq8JyoOKf9mPQGA7ecAEL98VxCkg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZGsSjiaj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728742800; c=relaxed/simple;
+	bh=KvUh/Go673qgUoieRa6QswUg249fg3neqwIQjxKn+rg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Ly57mkih4ikgpDYbLKJ637gzv27zmUfFkBI0R/UZ4hIOdx/oUhF+gpiurXWODtjd/YAsQBganYZI05VOPo39LSyq/yf24TjLi/fySp6PJS3V5BdYvJ1se8ehfVZXnlzIPhCIOQLzZXxHkIs8m6C2cjkM6SOS2nvgjDJNBlYQCRw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rCXvW7Zq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZGsSjiaj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1EBB7C4CEC6;
-	Sat, 12 Oct 2024 13:42:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rCXvW7Zq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CD50C4CEC6;
+	Sat, 12 Oct 2024 14:19:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728740568;
-	bh=VIVEwNvERqY60UURI9H4hBSdCZTchsvxsrk48ITuZgg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZGsSjiajpo0kxzswshWARs4SjuKo5TtrDg2xLjxK3dFJJpjf64poQbg2qMKaaOhBU
-	 vhkk43P5l8sf+9ObBds3e9FDiTDmNaJ74BuzSa/D3MhFPfOIPDOcjV0TP3nx2bUpPP
-	 9bZcpAZaD5rJv21VNRtpqyf3fR3yjEauVnFwPAiS9nPC+nB5T0ci7YgafZwh2CtYc2
-	 ZFD2vHlYyGjYqyvPautVc3F18IHeFzOKR2YWx5OApFDkBVyibSJw2ohzqOU+pesvef
-	 k699TMppiiq1bQwdFsX8/DePLnh0/Wdt50S1kFNxzwX3XD2Y40PNE7K1Fa4eWdQEd2
-	 BtLIvHaHRPlZw==
+	s=k20201202; t=1728742800;
+	bh=KvUh/Go673qgUoieRa6QswUg249fg3neqwIQjxKn+rg=;
+	h=From:To:Cc:Subject:Date:From;
+	b=rCXvW7ZqfwsZ27f6jJ2UV65OYrmSde288MCI1s8j86GNLk0LSg0TZr1jtCpmCH1h/
+	 bDcleQnxwr4a+sGhEXxyTFrNk/QhLDRy7PXi/4jGG9OmeULOqS93oVIAdIYS2qfiAE
+	 jrQYocmXe0uJvAQ1oAEhNH/rhp0RtlgK3+nkC2uQFzG4G1wEPUFZ3Br93pyqGrqP/s
+	 7G6eR33JgqXOndmDS9+uYaVJdWGXj3a74kDtSFLMpeoSx5VjEwc+EBFhAu7J7ZuGsj
+	 nGxxGMGe7oapPO3sMPEmGbYNY5PHGRJ1m0jaTJR2KKmmN9cDEkdIBuTJ0z3eshkoCJ
+	 LujSlW8WObpog==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 11/11] Squash to "selftests/bpf: Add bpf scheduler test" - drop has_bytes_sent
-Date: Sat, 12 Oct 2024 21:42:16 +0800
-Message-ID: <fad82e4c6b211b8f8d2c7f375d57b3b9ee9ae7cb.1728738220.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 00/11] cleanups for PM interfaces
+Date: Sat, 12 Oct 2024 22:19:40 +0800
+Message-ID: <cover.1728742591.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1728738219.git.tanggeliang@kylinos.cn>
-References: <cover.1728738219.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,155 +42,70 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Drop ss_search() and has_bytes_sent(), add a new bpf program to check
-the bytes_sent.
+v4:
+ - a new patch, add mptcp_for_each_address() and
+   mptcp_for_each_address_safe() macros.
+ - update commit logs.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 48 ++++++++++---------
- .../selftests/bpf/progs/mptcp_bpf_bytes.c     | 39 +++++++++++++++
- 2 files changed, 65 insertions(+), 22 deletions(-)
- create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c
+v3:
+ - a new patch, use sock_kfree_s instead of kfree.
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 2738951842f6..cb0511e62df8 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -12,6 +12,7 @@
- #include "mptcpify.skel.h"
- #include "mptcp_subflow.skel.h"
- #include "mptcp_bpf_iters_subflow.skel.h"
-+#include "mptcp_bpf_bytes.skel.h"
- #include "mptcp_bpf_first.skel.h"
- #include "mptcp_bpf_bkup.skel.h"
- #include "mptcp_bpf_rr.skel.h"
-@@ -603,56 +604,59 @@ static struct nstoken *sched_init(char *flags, char *sched)
- 	return NULL;
- }
- 
--static int ss_search(char *src, char *dst, char *port, char *keyword)
--{
--	return SYS_NOFAIL("ip netns exec %s ss -enita src %s dst %s %s %d | grep -q '%s'",
--			  NS_TEST, src, dst, port, PORT_1, keyword);
--}
--
--static int has_bytes_sent(char *dst)
--{
--	return ss_search(ADDR_1, dst, "sport", "bytes_sent:");
--}
--
- static void send_data_and_verify(char *sched, bool addr1, bool addr2)
- {
-+	int server_fd, client_fd, err;
-+	struct mptcp_bpf_bytes *skel;
- 	struct timespec start, end;
--	int server_fd, client_fd;
- 	unsigned int delta_ms;
- 
-+	skel = mptcp_bpf_bytes__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "open_and_load: bytes"))
-+		return;
-+
-+	skel->bss->pid = getpid();
-+
-+	err = mptcp_bpf_bytes__attach(skel);
-+	if (!ASSERT_OK(err, "skel_attach: bytes"))
-+		goto skel_destroy;
-+
- 	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
- 	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
--		return;
-+		goto skel_destroy;
- 
- 	client_fd = connect_to_fd(server_fd, 0);
- 	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
--		goto fail;
-+		goto close_server;
- 
- 	if (clock_gettime(CLOCK_MONOTONIC, &start) < 0)
--		goto fail;
-+		goto close_client;
- 
- 	if (!ASSERT_OK(send_recv_data(server_fd, client_fd, total_bytes),
- 		       "send_recv_data"))
--		goto fail;
-+		goto close_client;
- 
- 	if (clock_gettime(CLOCK_MONOTONIC, &end) < 0)
--		goto fail;
-+		goto close_client;
- 
- 	delta_ms = (end.tv_sec - start.tv_sec) * 1000 + (end.tv_nsec - start.tv_nsec) / 1000000;
- 	printf("%s: %u ms\n", sched, delta_ms);
- 
- 	if (addr1)
--		CHECK(has_bytes_sent(ADDR_1), sched, "should have bytes_sent on addr1\n");
-+		ASSERT_GT(skel->bss->bytes_sent_1, 0, "should have bytes_sent on addr1");
- 	else
--		CHECK(!has_bytes_sent(ADDR_1), sched, "shouldn't have bytes_sent on addr1\n");
-+		ASSERT_EQ(skel->bss->bytes_sent_1, 0, "shouldn't have bytes_sent on addr1");
- 	if (addr2)
--		CHECK(has_bytes_sent(ADDR_2), sched, "should have bytes_sent on addr2\n");
-+		ASSERT_GT(skel->bss->bytes_sent_2, 0, "should have bytes_sent on addr2");
- 	else
--		CHECK(!has_bytes_sent(ADDR_2), sched, "shouldn't have bytes_sent on addr2\n");
-+		ASSERT_EQ(skel->bss->bytes_sent_2, 0, "shouldn't have bytes_sent on addr2");
- 
-+close_client:
- 	close(client_fd);
--fail:
-+close_server:
- 	close(server_fd);
-+skel_destroy:
-+	mptcp_bpf_bytes__destroy(skel);
- }
- 
- static void test_default(void)
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c
-new file mode 100644
-index 000000000000..95770b0ebcf0
---- /dev/null
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_bytes.c
-@@ -0,0 +1,39 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/* Copyright (c) 2024, Kylin Software */
-+
-+/* vmlinux.h, bpf_helpers.h and other 'define' */
-+#include "bpf_tracing_net.h"
-+#include "mptcp_bpf.h"
-+
-+char _license[] SEC("license") = "GPL";
-+u64 bytes_sent_1 = 0;
-+u64 bytes_sent_2 = 0;
-+int pid;
-+
-+SEC("fexit/mptcp_sched_get_send")
-+int BPF_PROG(trace_mptcp_sched_get_send, struct mptcp_sock *msk)
-+{
-+	struct mptcp_subflow_context *subflow;
-+
-+	if (bpf_get_current_pid_tgid() >> 32 != pid)
-+		return 0;
-+
-+	if (!msk->pm.server_side)
-+		return 0;
-+
-+	mptcp_for_each_subflow(msk, subflow) {
-+		struct tcp_sock *tp;
-+		struct sock *ssk;
-+
-+		subflow = bpf_core_cast(subflow, struct mptcp_subflow_context);
-+		ssk = mptcp_subflow_tcp_sock(subflow);
-+		tp = bpf_core_cast(ssk, struct tcp_sock);
-+
-+		if (subflow->subflow_id == 1)
-+			bytes_sent_1 = tp->bytes_sent;
-+		else if (subflow->subflow_id == 2)
-+			bytes_sent_2 = tp->bytes_sent;
-+	}
-+
-+	return 0;
-+}
+v2:
+ - add a new helper mptcp_userspace_pm_get_sock.
+
+In order to implement BPF userspace path manager, it is necessary to
+unify the interfaces of the path manager. This set contains some
+cleanups for unify the interfaces.
+
+struct mptcp_pm_ops {
+        int (*address_announce)(struct mptcp_sock *msk,
+                                struct mptcp_pm_addr_entry *local);
+        int (*address_remove)(struct mptcp_sock *msk, u8 id);
+        int (*subflow_create)(struct mptcp_sock *msk,
+                              struct mptcp_pm_addr_entry *local,
+                              struct mptcp_addr_info *remote);
+        int (*subflow_destroy)(struct mptcp_sock *msk,
+                               struct mptcp_pm_addr_entry *local,
+                               struct mptcp_addr_info *remote);
+        int (*get_local_id)(struct mptcp_sock *msk,
+                            struct mptcp_pm_addr_entry *local);
+        u8 (*get_flags)(struct mptcp_sock *msk,
+                        struct mptcp_addr_info *skc);
+        struct mptcp_pm_addr_entry *(*get_addr)(struct mptcp_sock *msk,
+                                                u8 id);
+        int (*dump_addr)(struct mptcp_sock *msk,
+                         struct mptcp_id_bitmap *bitmap);
+        int (*set_flags)(struct mptcp_sock *msk,
+                         struct mptcp_pm_addr_entry *local,
+                         struct mptcp_addr_info *remote);
+
+        u8                      type;
+        struct module           *owner;
+        struct list_head        list;
+
+        void (*init)(struct mptcp_sock *msk);
+        void (*release)(struct mptcp_sock *msk);
+} ____cacheline_aligned_in_smp;
+
+Geliang Tang (11):
+  mptcp: add struct mptcp_id_bitmap
+  mptcp: add mptcp_userspace_pm_get_sock helper
+  mptcp: use __lookup_addr in pm_netlink
+  mptcp: add mptcp_for_each_address macros
+  mptcp: use sock_kfree_s instead of kfree
+  mptcp: add lookup_addr for userspace pm
+  mptcp: change remote as mptcp_addr_info
+  mptcp: change local as mptcp_pm_addr_entry
+  mptcp: make three pm wrappers static
+  mptcp: drop skb parameter of get_addr
+  mptcp: drop skb parameter of set_flags
+
+ net/mptcp/pm.c           |  25 +---
+ net/mptcp/pm_netlink.c   |  99 +++++++++-------
+ net/mptcp/pm_userspace.c | 250 ++++++++++++++++-----------------------
+ net/mptcp/protocol.h     |  23 ++--
+ 4 files changed, 171 insertions(+), 226 deletions(-)
+
 -- 
 2.43.0
 
