@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FAC31AB53A
-	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 16:06:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1156D288B1
+	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 16:08:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728922018; cv=none; b=WvnhLzbhmGuewdGfU0BJdDnmAq9PkwX0o8dUypF7Rlcgj+FsX/ujYxBpqLzwxSn8nPjiZdnSTWXqO/scaTEFNRPHL8k63ofGuowIUtaOjKvawRTXqjUwkiFlDME2B9L7RacmMVxwrZUuyHZJyIhufX73tLqW5gpTHLaN+uQn5f8=
+	t=1728922086; cv=none; b=qJKVHWSYhIgXcpQEHxyKmd/ctcZP3ZUDqBTAcxyxr5s6KhctM+kHSs51qsaFoJxYj4zlSMCKVStpAaObg7P4/g7qiX5MGzrgqda4uA7/Ty9viDvTkbgTYPwXw31CMRofycyi/daTrcY2TwkMrl/s9rBUq6o6wtoo5faIxBgcAIs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728922018; c=relaxed/simple;
-	bh=/AzncVDmfY05+4NwiXNMHDrfqyjPp0P53YeQoCwNtOY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tPD7hUagOOmPjLki57AkqsAIbelIgYec+wQXPfABiCRWKxjQ6nkO/CKRQ919NO7b6RfbY1+b1Ya3zCtUktgl9kVRO076bGaePEvEkUYlfk3HQCde8CQmo8JjTFIP/Vy+/En0OScmWEZC68kX7JhsIS2iEAyXZwzF/vy8Od8XjMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W7X0u8zc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728922086; c=relaxed/simple;
+	bh=McjVfiLoisb3n1fzNW3B5ZU6wrn4aQCIE4tUUaNN9Qg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=keJbMirF4wGkulwO4PGQbnHzcOTUla4ffjV65zD/JH19fXEU6UA46zJOWeXLZHcRGHyGmDPbDgDHfwLcL/Fo2wIWxnIIWf1rS7TRqqOzS44CbfZce2RNyGblYM6JYA0xQsDF6lq016VoUGs/ZAsU+Qq4Uj0p4btIxrgqak8Lm0c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2PMdfIh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W7X0u8zc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46939C4CEC3;
-	Mon, 14 Oct 2024 16:06:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2PMdfIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00310C4CEC3;
+	Mon, 14 Oct 2024 16:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728922018;
-	bh=/AzncVDmfY05+4NwiXNMHDrfqyjPp0P53YeQoCwNtOY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W7X0u8zcedLG9Yv41iS950MO8MoQELiCsV2ab1gjnFdziGym0l52WcWBt5rpIsXbV
-	 6EnDQGj8GiDp3ZQyXa4/KKworWtGkjLYsuHEWqfdGbo9fQKbQ0GYl6KPt69x0vKXIH
-	 VVz590UtiQHp+quQ1MqlAA60606m2tDF31SE9j9RcwIomkLtlzjZ9Dy9S3j1mWba1J
-	 t1PATaDozLABBoA6S9Zv4XKAJTly3jfKZj9sQK67IxYDj+UyoUpsudLqFfhvKc15Pl
-	 sr4zVkmuSU1vfPdtcY+PcJD7UWVMSLhJNsucd111mpuZFrkP+T/Y87ajQADFV6o9dP
-	 z/clWzMFY0W3w==
-Message-ID: <22b299af-150b-450c-b2c8-6710cf321c2d@kernel.org>
-Date: Mon, 14 Oct 2024 18:06:55 +0200
+	s=k20201202; t=1728922085;
+	bh=McjVfiLoisb3n1fzNW3B5ZU6wrn4aQCIE4tUUaNN9Qg=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=E2PMdfIhAoZ4NZ7lqbp5z8BqLqrAgS3XQ5JCMUjuL6sIgCST9lO3/pkRg9ToUHQQz
+	 dOAPmDTTVkhKDpxyEUz5dYz3LUMnjnclSZUsWtbSk0L0wueS3DH+yCK+wnPSWXcQPt
+	 f0/BaxdSm/cqIeHbLIKDipoyVCqPg0OG/Jvmop3DWFuIAgJBJA1N3rHd0r1UyDbXh+
+	 mE6hg6cMnz5eyzEedFCFgk9G+t9NS696UChri8Te0gQprrMrXVBmq9lP5zoa0edkz/
+	 L9A2YllsQf8xf9a/BEWtTNI3m7mJ//pjS4H19cVJEEmTxpeQ/C+HVkJrQo3oMrTgni
+	 Br/jBSWHsczQA==
+Message-ID: <953bf596-94e5-4829-adec-5997e1557487@kernel.org>
+Date: Mon, 14 Oct 2024 18:08:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 4/7] selftests/bpf: Add mptcp_subflow
- bpf_iter test prog
+Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1728466623.git.tanggeliang@kylinos.cn>
- <dffa6284797ec2e3e8c8a1f6891f012bd1efdc20.1728466623.git.tanggeliang@kylinos.cn>
+ <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,169 +85,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <dffa6284797ec2e3e8c8a1f6891f012bd1efdc20.1728466623.git.tanggeliang@kylinos.cn>
+In-Reply-To: <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 09/10/2024 11:45, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 09/10/2024 12:05, MPTCP CI wrote:
+> Hi Geliang,
 > 
-> This patch adds a ftrace hook for mptcp_sched_get_send() to test the newly
-> added mptcp_subflow bpf_iter. This test simulates a typical mptcp packet
-> scheduler, which selects a subflow from multiple subflows of an mptcp
-> socket to send data.
+> Thank you for your modifications, that's great!
 > 
-> Export mptcp_subflow helpers bpf_iter_mptcp_subflow_new/_next/_destroy,
-> bpf_mptcp_sock_acquire/_release and other helpers into bpf_experimental.h.
+> But sadly, our CI spotted some issues with it when trying to build it.
 > 
-> Use _acquire() to acquire the msk, then use bpf_for_each(mptcp_subflow) to
-> walk the subflow list of this msk. Invoke kfuncs mptcp_subflow_active() and
-> bpf_mptcp_subflow_tcp_sock() in the loop to pick a subsocket. Finally use
-> bpf_mptcp_subflow_ctx() to get the subflow context of this subsocket and
-> use mptcp_subflow_set_scheduled() to set it as being scheduled.
-
-Do you think we could have a test not depending on scheduler helpers?
-Without this dependence, we could already upstream this series, and get
-feedback without having to wait for the new scheduler API.
-
-If you remove the use of mptcp_subflow_active() and
-mptcp_subflow_set_scheduled(), that's enough, no?
-
+> You can find more details there:
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/bpf/bpf_experimental.h  |  7 ++++
->  tools/testing/selftests/bpf/progs/mptcp_bpf.h |  9 ++++
->  .../bpf/progs/mptcp_bpf_iters_subflow.c       | 42 +++++++++++++++++++
->  3 files changed, 58 insertions(+)
->  create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
-> 
-> diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-> index b0668f29f7b3..d43690b17468 100644
-> --- a/tools/testing/selftests/bpf/bpf_experimental.h
-> +++ b/tools/testing/selftests/bpf/bpf_experimental.h
-> @@ -575,6 +575,13 @@ extern int bpf_iter_css_new(struct bpf_iter_css *it,
->  extern struct cgroup_subsys_state *bpf_iter_css_next(struct bpf_iter_css *it) __weak __ksym;
->  extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
->  
-> +struct bpf_iter_mptcp_subflow;
-> +extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-> +				      struct mptcp_sock *msk) __weak __ksym;
-> +extern struct mptcp_subflow_context *
-> +bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
-> +extern void bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
-> +
->  extern int bpf_wq_init(struct bpf_wq *wq, void *p__map, unsigned int flags) __weak __ksym;
->  extern int bpf_wq_start(struct bpf_wq *wq, unsigned int flags) __weak __ksym;
->  extern int bpf_wq_set_callback_impl(struct bpf_wq *wq,
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> index c3800f986ae1..e18796361394 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> @@ -43,9 +43,18 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
->  }
->  
->  /* ksym */
-> +extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
->  extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
->  					bool scheduled) __ksym;
->  
-> +extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
-> +extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
-> +
-> +extern struct mptcp_subflow_context *
-> +bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
-> +extern struct sock *
-> +bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow) __ksym;
-> +
->  extern struct mptcp_subflow_context *
->  bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos) __ksym;
->  
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
-> new file mode 100644
-> index 000000000000..4268e4604c5a
-> --- /dev/null
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
-> @@ -0,0 +1,42 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2024, Kylin Software */
-> +
-> +/* vmlinux.h, bpf_helpers.h and other 'define' */
-> +#include "bpf_tracing_net.h"
-> +#include "mptcp_bpf.h"
-> +
-> +char _license[] SEC("license") = "GPL";
-> +int subflows;
-> +int pid;
-> +
-> +SEC("fentry/mptcp_sched_get_send")
+>   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11252652867
 
-If I understand correctly, this hook will be called twice on the client
-connection for this test because the client is sending two times one
-byte, right?
+I was looking at applying this series, but there are some issues
+reported by the CI:
 
-> +int BPF_PROG(trace_mptcp_sched_get_send, struct mptcp_sock *msk)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct sock *ssk = NULL;
-> +
-> +	if (bpf_get_current_pid_tgid() >> 32 != pid)
-> +		return 0;
-> +
-> +	msk = bpf_mptcp_sock_acquire(msk);
-> +	if (!msk)
-> +		return 0;
-> +	bpf_for_each(mptcp_subflow, subflow, msk) {
-> +		if (subflow->token != msk->token)
-> +			break;
+  warning: symbol 'bpf_*mptcp_*' was not declared. Should it be static?
 
-Out of curiosity, why is this needed? Is it needed for the verifier? Or
-just an extra check?
-Can you add a comment here explaining why this is there please?
+Could it be possible to have a fix for that please before applying the
+series?
 
-> +
-> +		if (!mptcp_subflow_active(subflow))
-> +			continue;
-> +
-> +		ssk = bpf_mptcp_subflow_tcp_sock(subflow);
+I guess you are missing __bpf_kfunc_start_defs() and
+__bpf_kfunc_end_defs() around the declaration of the BPF dedicated
+kfunc, no?
 
-Do you get 'ssk' just to use bpf_mptcp_subflow_tcp_sock() and
-bpf_mptcp_subflow_ctx()?
 
-> +	}
-> +	bpf_mptcp_sock_release(msk);
-> +
-> +	if (!ssk)
-> +		return 0;
-> +	subflow = bpf_mptcp_subflow_ctx(ssk);
-> +	mptcp_subflow_set_scheduled(subflow, true);
-> +	subflows = subflow->subflow_id;
-
-Here, it looks like you only check if the last subflow is in the list.
-
-Would it not be better to count the number of subflows in the list? Or
-if you want to read something from 'subflow', you could add all subflow_id?
-
-  subflows = 0;
-
-  (...)
-
-  bpf_for_each(mptcp_subflow, subflow, msk)
-      subflows += subflow->subflow_id;
-
-By doing that, we will catch if one is missing, and the order is not
-important.
-
-If still want to use bpf_mptcp_subflow_tcp_sock() and
-bpf_mptcp_subflow_ctx(), maybe you can save other fields from the last
-subflow: the token to compare it with the one in the msk? Or the port
-number or the address?
-
-> +
-> +	return 0;
-> +}
+Also, where should I apply these patches? Before "mptcp: add sched_data
+helpers"? But then there should not be any dependences on the BPF
+scheduler work (and I think that would be better without this
+dependence, see my comment on patch 4/7)
 
 Cheers,
 Matt
