@@ -1,106 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B506BE4F
-	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 13:19:10 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F314A3E
+	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 13:44:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728911951; cv=none; b=sf/OgL5Bf2AYhbgqlPMW9DtwBHBx3hFuppgVh34781vosL7fJHFh4eyrsXe7y+3nLBF9P39jKDXEX97TKLAY8F1Fh+2+NfB+LoMq+mxUOcs/OUyp331U/uuPG03dlWM2xYG9Ta8Olm9mE9TujuBN4pIGNVcx4DBfvgIAJGToFvs=
+	t=1728913460; cv=none; b=nHVHjbxG7T9H6thDc1s7UEr1s0K+XnWw2Nn2WStmCtLBomWFW/5P6HwvmSPyoE9va8u+baDSu3MK5I3gxy8zJU/xFEl47WV/+jlHW0WBfWCuSQWeWL9MxsLgN4zyMQ5Oi6n2r3kzDsaQ18kF5f2CezTcg3kbUJSTOGN2abgpo8E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728911951; c=relaxed/simple;
-	bh=fTBiz2W/jcGSFPiTa0wuFagt8X1+us6/hCC4ARe85l0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iTcERKeU/yBzoiHYXDl2N9STpRbuS+ZSI3KYY/DfHizX2J3qNnyIiLncLC3EWzqZX03Sd2p0pDz8hCqm1kS/5x5HSAUtmEwVgk6Zy2KrsJWDHT6F5+m5Dfu+vXfXpHGUsTwa3n8qgk5kzWqELoiY111IrVcPkDKTrzwUg3+B2uc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INfzXDUl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728913460; c=relaxed/simple;
+	bh=jnHZsruZFknXoSdVTcB9Rzh8kUCO8i4PmBiGU9vX4DA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=LxOKArGF9qMUxf1UUouGgi+cN8IpEfrUY9gX77z9niMsOyrlh/nebggd7g1X7ku97PBQliQZRiv707bbsYslcWLk4zzRUF2YVLb4k+ACFR9wz6RJ0kXhkRae+vdiwqPppWlg8siByGg0E/DfrS4HX9N2Vq55AAsJAxZrtmE/Nww=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GC+GgE+Y; arc=none smtp.client-ip=209.85.222.170
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INfzXDUl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E50F9C4CEC6;
-	Mon, 14 Oct 2024 13:19:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728911950;
-	bh=fTBiz2W/jcGSFPiTa0wuFagt8X1+us6/hCC4ARe85l0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=INfzXDUlhHEg4s8JvgQFJQMRxSyVxInehHbTMSzSBJyvYZ4/gvTOTrlUWOtvknBaI
-	 i8A6rzrXIwjjQQtEARL3jYBGhXcg6YBp96qsrlZ5x3HIWKG6ffVLlCgZdxYeP9frgg
-	 gap6G8xxIKJGOG3+dLQEW1oxalI/GOvVY2+IqP9SYxkVaPLD0B66U58XX/AQdG1JWn
-	 6tReZz9e+D6g4SOz6pk6McGAuPYUcZMtCc0HDw7sOzmVDo/E82xI74PN61sK17TWZk
-	 L73rVOrkpTZe6AtBhxWk96GRag4cnlMETFPQdxvmD7x6rUb3DjyKlPSwOuludCSGTq
-	 Twk0rHg/R7Uqg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next] Squash to "selftests/bpf: More endpoints for endpoint_init"
-Date: Mon, 14 Oct 2024 21:19:05 +0800
-Message-ID: <9cde7341aac14f85ba9741e70e2d542edae5a1ad.1728911803.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GC+GgE+Y"
+Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7afcf50e2d0so206506585a.3
+        for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 06:44:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1728913457; x=1729518257; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=pvDFmCdYui8BARwj2zmWOaSPFSJl0joEOycANWQ12n0=;
+        b=GC+GgE+YVJdwd73d2xchrDQj8w2s9en34q+0zMAu4lHMxVLpYUMFjS6lTQ8yqOhQkG
+         OIC7reSxJqVsv2Jych8caRjM9agPvE1kHlMb0xNa0TL1FIs3bkoB5j4v2M7ccLUegPMj
+         d8p+6CKePax6+Lvcxt2VmNLhy3v6GdI/pHHe8o+wCNUyz3pCVDImsY9d1csta6WLlc3q
+         fjQcRyTJb+CGYLiw2MBF7lHbTxcLJVfuuT6LYU0VvyEWElR4IOd0YD1XHNeZf5jSZP0Z
+         BuhabPEGnKTmw/TBEQyziOK8HUzg7i0sG1c6CCEeZ5FlEKle7H1x4YD6gAY8dmG+410L
+         Q+eg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728913457; x=1729518257;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=pvDFmCdYui8BARwj2zmWOaSPFSJl0joEOycANWQ12n0=;
+        b=wzIXzGsnVZRqkg6+X3NVOKrseuUgfJGpoXlDw/3ywg9fI8KIN+SsgotqkrKK8sWdfj
+         4+DSYSWP+Wc1NfXiaDTq/bNJzOXmJJdPrvOC3r6ZqzGIQ5eL00t0Lqs+qSipe/x8ZJLQ
+         Vxqf/FNmvpxoLRhHR52+SxEneD5kd/6Y46jbtP+k9f5sT0/DwZsDOvsnhqkHatOSNM+o
+         aTb03bg/p8SGP6LsurgfwGNezz2dmx+R9VctKb7n+UI9b2buOl0qTaGpjPKFQLGFj6dc
+         4QfJWg08K0c5rHYs3ji3z3/UrTeufMTiBxeeYTLPV/Z7DoknweCfUMwv7bF74bSo0Uv2
+         1f4Q==
+X-Gm-Message-State: AOJu0YyIppuvtRdfEcHduA/sVNYb3PjkSvKc7Lvc0EJhHqCjE9a8V65P
+	2O4NGc5fZF0tf47O/U6MR3K8Vr9WrdgQl6k2+AQ//MMrV0ID03XrdiUnEFQ=
+X-Google-Smtp-Source: AGHT+IEK1TzzMrd+aENg1Lk0/NIQurfMP2V3RnuLe4GzI5+9Ao6RUBdx4AdNrxBqpHqjJ7e6rrZ9Ow==
+X-Received: by 2002:a05:6214:33ca:b0:6cb:e6cd:82fb with SMTP id 6a1803df08f44-6cbeffe5aeemr199155826d6.22.1728913457491;
+        Mon, 14 Oct 2024 06:44:17 -0700 (PDT)
+Received: from [127.0.0.1] ([52.252.195.227])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6cbe8608e90sm45745706d6.99.2024.10.14.06.44.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 14 Oct 2024 06:44:16 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <9cde7341aac14f85ba9741e70e2d542edae5a1ad.1728911803.git.tanggeliang@kylinos.cn>
+References:
+ <9cde7341aac14f85ba9741e70e2d542edae5a1ad.1728911803.git.tanggeliang@kylinos.cn>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
+ =?UTF-8?Q?=22selftests/bpf=3A_More_endpoints_for_e?=
+ =?UTF-8?Q?ndpoint=5Finit=22?=
+Message-ID: <b4b6e006-0f9f-68f8-5f69-c60196d23973@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 14 Oct 2024 13:44:16 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-IPv6 addresses will be used in BPF path manager tests, add them in
-address_init().
+Thank you for your modifications, that's great!
 
-Please update the commit log:
+But sadly, our CI spotted some issues with it when trying to build it.
 
-'''
-This patch adds two more IPv4 test addresses ADDR_3 - ADDR_4, and four
-IPv6 addresses ADDR6_1 - ADDR6_4. Add a new helper address_init() to
-initialize all these addresses.
+You can find more details there:
 
-Add a new parameter "endpoints" for endpoint_init() to control how many
-endpoints are used for the tests. This makes it more flexible. Update the
-parameters of endpoint_init() in test_subflow().
-'''
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/11328728635
 
-Depends on:
- - "add mptcp_subflow bpf_iter" v9
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/64=
+5e77d4357c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D898896
 
-Based-on: <cover.1728466623.git.tanggeliang@kylinos.cn>
+Feel free to reply to this email if you cannot access logs=
+, if you need
+some support to fix the error, if this doesn't seem to be =
+caused by your
+modifications or if the error is a false positive one.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/prog_tests/mptcp.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 2738951842f6..161459ba6194 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -23,6 +23,10 @@
- #define ADDR_2	"10.0.1.2"
- #define ADDR_3	"10.0.1.3"
- #define ADDR_4	"10.0.1.4"
-+#define ADDR6_1	"dead:beef:1::1"
-+#define ADDR6_2	"dead:beef:1::2"
-+#define ADDR6_3	"dead:beef:1::3"
-+#define ADDR6_4	"dead:beef:1::4"
- #define PORT_1	10001
- #define WITH_DATA	true
- #define WITHOUT_DATA	false
-@@ -378,14 +382,18 @@ static int address_init(void)
- {
- 	SYS(fail, "ip -net %s link add veth1 type veth peer name veth2", NS_TEST);
- 	SYS(fail, "ip -net %s addr add %s/24 dev veth1", NS_TEST, ADDR_1);
-+	SYS(fail, "ip -net %s addr add %s/64 dev veth1 nodad", NS_TEST, ADDR6_1);
- 	SYS(fail, "ip -net %s link set dev veth1 up", NS_TEST);
- 	SYS(fail, "ip -net %s addr add %s/24 dev veth2", NS_TEST, ADDR_2);
-+	SYS(fail, "ip -net %s addr add %s/64 dev veth2 nodad", NS_TEST, ADDR6_2);
- 	SYS(fail, "ip -net %s link set dev veth2 up", NS_TEST);
- 
- 	SYS(fail, "ip -net %s link add veth3 type veth peer name veth4", NS_TEST);
- 	SYS(fail, "ip -net %s addr add %s/24 dev veth3", NS_TEST, ADDR_3);
-+	SYS(fail, "ip -net %s addr add %s/64 dev veth3 nodad", NS_TEST, ADDR6_3);
- 	SYS(fail, "ip -net %s link set dev veth3 up", NS_TEST);
- 	SYS(fail, "ip -net %s addr add %s/24 dev veth4", NS_TEST, ADDR_4);
-+	SYS(fail, "ip -net %s addr add %s/64 dev veth4 nodad", NS_TEST, ADDR6_4);
- 	SYS(fail, "ip -net %s link set dev veth4 up", NS_TEST);
- 
- 	return 0;
--- 
-2.43.0
-
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
