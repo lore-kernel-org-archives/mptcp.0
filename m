@@ -1,127 +1,340 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f198.google.com (mail-il1-f198.google.com [209.85.166.198])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1156D288B1
-	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 16:08:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 474E61C8776
+	for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 19:38:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.198
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728922086; cv=none; b=qJKVHWSYhIgXcpQEHxyKmd/ctcZP3ZUDqBTAcxyxr5s6KhctM+kHSs51qsaFoJxYj4zlSMCKVStpAaObg7P4/g7qiX5MGzrgqda4uA7/Ty9viDvTkbgTYPwXw31CMRofycyi/daTrcY2TwkMrl/s9rBUq6o6wtoo5faIxBgcAIs=
+	t=1728934714; cv=none; b=mwmAS00mcF38bQNFcgNfE3tSx/74sASR6i2u60SGWBr9RgKYdVd+XiY2jNBqpRY189FNHUybIu/HpAKlteTWbdcwaAfC4vTBgufUFPsVZ3VKtQO/tgFmmB3hpNxwCnmpGswuoXpJ2NK2jV2ZXdoG9rTBnyAu2aplbGjFVr6aVj8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728922086; c=relaxed/simple;
-	bh=McjVfiLoisb3n1fzNW3B5ZU6wrn4aQCIE4tUUaNN9Qg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=keJbMirF4wGkulwO4PGQbnHzcOTUla4ffjV65zD/JH19fXEU6UA46zJOWeXLZHcRGHyGmDPbDgDHfwLcL/Fo2wIWxnIIWf1rS7TRqqOzS44CbfZce2RNyGblYM6JYA0xQsDF6lq016VoUGs/ZAsU+Qq4Uj0p4btIxrgqak8Lm0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E2PMdfIh; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E2PMdfIh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00310C4CEC3;
-	Mon, 14 Oct 2024 16:08:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728922085;
-	bh=McjVfiLoisb3n1fzNW3B5ZU6wrn4aQCIE4tUUaNN9Qg=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=E2PMdfIhAoZ4NZ7lqbp5z8BqLqrAgS3XQ5JCMUjuL6sIgCST9lO3/pkRg9ToUHQQz
-	 dOAPmDTTVkhKDpxyEUz5dYz3LUMnjnclSZUsWtbSk0L0wueS3DH+yCK+wnPSWXcQPt
-	 f0/BaxdSm/cqIeHbLIKDipoyVCqPg0OG/Jvmop3DWFuIAgJBJA1N3rHd0r1UyDbXh+
-	 mE6hg6cMnz5eyzEedFCFgk9G+t9NS696UChri8Te0gQprrMrXVBmq9lP5zoa0edkz/
-	 L9A2YllsQf8xf9a/BEWtTNI3m7mJ//pjS4H19cVJEEmTxpeQ/C+HVkJrQo3oMrTgni
-	 Br/jBSWHsczQA==
-Message-ID: <953bf596-94e5-4829-adec-5997e1557487@kernel.org>
-Date: Mon, 14 Oct 2024 18:08:03 +0200
+	s=arc-20240116; t=1728934714; c=relaxed/simple;
+	bh=0WQF7lisMpeQoZ6Vzt20eNEXwYlvyd0XXwW36bK6458=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Jj15suaizRzYqGA+Nc4dBOnknulB7ajZzNps2/TXZ3TJ/OnH0b0ox+VwMv1fzuVWDAfWOzM5ofSZaxn0M1gKrtAq3b9ET3A5cM9tmrT58mbRLx5sWbXx6gzcLRp9fXgvFweOUcuZx2dJD3CqKZxK4NAiA9NYjGmVbqoelCgsvd0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.198
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f198.google.com with SMTP id e9e14a558f8ab-3a3b4395dedso35613685ab.1
+        for <mptcp@lists.linux.dev>; Mon, 14 Oct 2024 12:38:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1728934711; x=1729539511;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=QRMDhsZaxmGq8pjOwXYAE71BATwJ2LteU/iuCYeFH5A=;
+        b=EsDtgX3/LY0Tr3tsmHrAvkD4WVIiIhjF1nhHXOXjRdKSnwFgA3izjnMIqzCu9V6PL7
+         xwAto1JMxDwHCveMd9ZmAA2DMvURjKvDR7kG553btd9RPJWN3/S9Jcd0NDFPZR/SqFpt
+         AKvae/EiVXzk2mAW87kCT93L1Pkm81+4u2RyyXUDAZrorgL6d4LcKZ93/FQnnOW4f8QS
+         BTgXHmnR7Psz/v2LbTXWtAODQicFG0IaovsC1ulnWQnQf0lLvcbJqClo6R9Gw73sidVO
+         EpVOSIh/FWhnCJ07K2N8ygUm9liWtKDTJpgIH5oNXtzKQfgOhA/u3W8JMVS8DNSq5hfX
+         HDPw==
+X-Forwarded-Encrypted: i=1; AJvYcCWWYC+1zyOVFhSVZUov/YbMrF2s24ZOXJRff22dprYhCeb1wihYhQetVvU73m8je2DCBUVy8Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywfa5dUnLSt4cHbYdqYYo+mbRrBNlthUAiAZR0Nd8isA7WzW902
+	RC8mt82akw34KrxlS2D6h5GeGiiHYDtSGgq0JJ/flOvHDwdyxurG+6cRuaCkCoTx7oal5Lccn1b
+	CnWaVhCCQo6O5g0En8rwlBGBEeEbyqac4jnW8sGBOhYa6v4prirkoE+M=
+X-Google-Smtp-Source: AGHT+IExGDDXrGa9w84iUxruMsqt6v7Gh7hUudajp1YFSVs5PI5FTeXqMAy2vDvwJ1xdKYAWen3X5WJPf/Xo7PgOF4/9YGvhIrkp
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
-Content-Language: en-GB
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1728466623.git.tanggeliang@kylinos.cn>
- <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a05:6e02:1a6d:b0:3a3:a3a9:c1ae with SMTP id
+ e9e14a558f8ab-3a3b6020fbcmr94640155ab.20.1728934711400; Mon, 14 Oct 2024
+ 12:38:31 -0700 (PDT)
+Date: Mon, 14 Oct 2024 12:38:31 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <670d7337.050a0220.4cbc0.004f.GAE@google.com>
+Subject: [syzbot] [mptcp?] KASAN: slab-use-after-free Read in mptcp_pm_nl_rm_addr_or_subflow
+From: syzbot <syzbot+3c8b7a8e7df6a2a226ca@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	kuba@kernel.org, linux-kernel@vger.kernel.org, martineau@kernel.org, 
+	matttbe@kernel.org, mptcp@lists.linux.dev, netdev@vger.kernel.org, 
+	pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+Hello,
 
-On 09/10/2024 12:05, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11252652867
+syzbot found the following issue on:
 
-I was looking at applying this series, but there are some issues
-reported by the CI:
+HEAD commit:    36c254515dc6 Merge tag 'powerpc-6.12-4' of git://git.kerne..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=11831440580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=667b897270c8ae6
+dashboard link: https://syzkaller.appspot.com/bug?extid=3c8b7a8e7df6a2a226ca
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+userspace arch: i386
 
-  warning: symbol 'bpf_*mptcp_*' was not declared. Should it be static?
+Unfortunately, I don't have any reproducer for this issue yet.
 
-Could it be possible to have a fix for that please before applying the
-series?
+Downloadable assets:
+disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/7feb34a89c2a/non_bootable_disk-36c25451.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/0a357f9d2448/vmlinux-36c25451.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/fba8311d450b/bzImage-36c25451.xz
 
-I guess you are missing __bpf_kfunc_start_defs() and
-__bpf_kfunc_end_defs() around the declaration of the BPF dedicated
-kfunc, no?
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+3c8b7a8e7df6a2a226ca@syzkaller.appspotmail.com
+
+==================================================================
+BUG: KASAN: slab-use-after-free in mptcp_pm_nl_rm_addr_or_subflow+0xb44/0xcc0 net/mptcp/pm_netlink.c:881
+Read of size 4 at addr ffff8880569ac858 by task syz.1.2799/14662
+
+CPU: 0 UID: 0 PID: 14662 Comm: syz.1.2799 Not tainted 6.12.0-rc2-syzkaller-00307-g36c254515dc6 #0
+Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
+Call Trace:
+ <TASK>
+ __dump_stack lib/dump_stack.c:94 [inline]
+ dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
+ print_address_description mm/kasan/report.c:377 [inline]
+ print_report+0xc3/0x620 mm/kasan/report.c:488
+ kasan_report+0xd9/0x110 mm/kasan/report.c:601
+ mptcp_pm_nl_rm_addr_or_subflow+0xb44/0xcc0 net/mptcp/pm_netlink.c:881
+ mptcp_pm_nl_rm_subflow_received net/mptcp/pm_netlink.c:914 [inline]
+ mptcp_nl_remove_id_zero_address+0x305/0x4a0 net/mptcp/pm_netlink.c:1572
+ mptcp_pm_nl_del_addr_doit+0x5c9/0x770 net/mptcp/pm_netlink.c:1603
+ genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2551
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+ netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
+ sock_sendmsg_nosec net/socket.c:729 [inline]
+ __sock_sendmsg net/socket.c:744 [inline]
+ ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2607
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2661
+ __sys_sendmsg+0x117/0x1f0 net/socket.c:2690
+ do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
+ __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+RIP: 0023:0xf7fe4579
+Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
+RSP: 002b:00000000f574556c EFLAGS: 00000296 ORIG_RAX: 0000000000000172
+RAX: ffffffffffffffda RBX: 000000000000000b RCX: 0000000020000140
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000296 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+ </TASK>
+
+Allocated by task 5387:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
+ __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
+ kmalloc_noprof include/linux/slab.h:878 [inline]
+ kzalloc_noprof include/linux/slab.h:1014 [inline]
+ subflow_create_ctx+0x87/0x2a0 net/mptcp/subflow.c:1803
+ subflow_ulp_init+0xc3/0x4d0 net/mptcp/subflow.c:1956
+ __tcp_set_ulp net/ipv4/tcp_ulp.c:146 [inline]
+ tcp_set_ulp+0x326/0x7f0 net/ipv4/tcp_ulp.c:167
+ mptcp_subflow_create_socket+0x4ae/0x10a0 net/mptcp/subflow.c:1764
+ __mptcp_subflow_connect+0x3cc/0x1490 net/mptcp/subflow.c:1592
+ mptcp_pm_create_subflow_or_signal_addr+0xbda/0x23a0 net/mptcp/pm_netlink.c:642
+ mptcp_pm_nl_fully_established net/mptcp/pm_netlink.c:650 [inline]
+ mptcp_pm_nl_work+0x3a1/0x4f0 net/mptcp/pm_netlink.c:943
+ mptcp_worker+0x15a/0x1240 net/mptcp/protocol.c:2777
+ process_one_work+0x958/0x1b30 kernel/workqueue.c:3229
+ process_scheduled_works kernel/workqueue.c:3310 [inline]
+ worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Freed by task 113:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
+ poison_slab_object mm/kasan/common.c:247 [inline]
+ __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
+ kasan_slab_free include/linux/kasan.h:230 [inline]
+ slab_free_hook mm/slub.c:2342 [inline]
+ slab_free mm/slub.c:4579 [inline]
+ kfree+0x14f/0x4b0 mm/slub.c:4727
+ kvfree+0x47/0x50 mm/util.c:701
+ kvfree_rcu_list+0xf5/0x2c0 kernel/rcu/tree.c:3423
+ kvfree_rcu_drain_ready kernel/rcu/tree.c:3563 [inline]
+ kfree_rcu_monitor+0x503/0x8b0 kernel/rcu/tree.c:3632
+ kfree_rcu_shrink_scan+0x245/0x3a0 kernel/rcu/tree.c:3966
+ do_shrink_slab+0x44f/0x11c0 mm/shrinker.c:435
+ shrink_slab+0x32b/0x12a0 mm/shrinker.c:662
+ shrink_one+0x47e/0x7b0 mm/vmscan.c:4818
+ shrink_many mm/vmscan.c:4879 [inline]
+ lru_gen_shrink_node mm/vmscan.c:4957 [inline]
+ shrink_node+0x2452/0x39d0 mm/vmscan.c:5937
+ kswapd_shrink_node mm/vmscan.c:6765 [inline]
+ balance_pgdat+0xc19/0x18f0 mm/vmscan.c:6957
+ kswapd+0x5ea/0xbf0 mm/vmscan.c:7226
+ kthread+0x2c1/0x3a0 kernel/kthread.c:389
+ ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
+ ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+
+Last potentially related work creation:
+ kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
+ __kasan_record_aux_stack+0xba/0xd0 mm/kasan/generic.c:541
+ kvfree_call_rcu+0x74/0xbe0 kernel/rcu/tree.c:3810
+ subflow_ulp_release+0x2ae/0x350 net/mptcp/subflow.c:2009
+ tcp_cleanup_ulp+0x7c/0x130 net/ipv4/tcp_ulp.c:124
+ tcp_v4_destroy_sock+0x1c5/0x6a0 net/ipv4/tcp_ipv4.c:2541
+ inet_csk_destroy_sock+0x1a3/0x440 net/ipv4/inet_connection_sock.c:1293
+ tcp_done+0x252/0x350 net/ipv4/tcp.c:4870
+ tcp_rcv_state_process+0x379b/0x4f30 net/ipv4/tcp_input.c:6933
+ tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1938
+ sk_backlog_rcv include/net/sock.h:1115 [inline]
+ __release_sock+0x31b/0x400 net/core/sock.c:3072
+ __tcp_close+0x4f3/0xff0 net/ipv4/tcp.c:3142
+ __mptcp_close_ssk+0x331/0x14d0 net/mptcp/protocol.c:2489
+ mptcp_close_ssk net/mptcp/protocol.c:2543 [inline]
+ mptcp_close_ssk+0x150/0x220 net/mptcp/protocol.c:2526
+ mptcp_pm_nl_rm_addr_or_subflow+0x2be/0xcc0 net/mptcp/pm_netlink.c:878
+ mptcp_pm_nl_rm_subflow_received net/mptcp/pm_netlink.c:914 [inline]
+ mptcp_nl_remove_id_zero_address+0x305/0x4a0 net/mptcp/pm_netlink.c:1572
+ mptcp_pm_nl_del_addr_doit+0x5c9/0x770 net/mptcp/pm_netlink.c:1603
+ genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2551
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
+ netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
+ netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
+ sock_sendmsg_nosec net/socket.c:729 [inline]
+ __sock_sendmsg net/socket.c:744 [inline]
+ ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2607
+ ___sys_sendmsg+0x135/0x1e0 net/socket.c:2661
+ __sys_sendmsg+0x117/0x1f0 net/socket.c:2690
+ do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
+ __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
+ do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
+ entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+
+The buggy address belongs to the object at ffff8880569ac800
+ which belongs to the cache kmalloc-512 of size 512
+The buggy address is located 88 bytes inside of
+ freed 512-byte region [ffff8880569ac800, ffff8880569aca00)
+
+The buggy address belongs to the physical page:
+page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x569ac
+head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
+flags: 0x4fff00000000040(head|node=1|zone=1|lastcpupid=0x7ff)
+page_type: f5(slab)
+raw: 04fff00000000040 ffff88801ac42c80 dead000000000100 dead000000000122
+raw: 0000000000000000 0000000080100010 00000001f5000000 0000000000000000
+head: 04fff00000000040 ffff88801ac42c80 dead000000000100 dead000000000122
+head: 0000000000000000 0000000080100010 00000001f5000000 0000000000000000
+head: 04fff00000000002 ffffea00015a6b01 ffffffffffffffff 0000000000000000
+head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+page_owner tracks the page as allocated
+page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 10238, tgid 10238 (kworker/u32:6), ts 597403252405, free_ts 597177952947
+ set_page_owner include/linux/page_owner.h:32 [inline]
+ post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1537
+ prep_new_page mm/page_alloc.c:1545 [inline]
+ get_page_from_freelist+0x101e/0x3070 mm/page_alloc.c:3457
+ __alloc_pages_noprof+0x223/0x25a0 mm/page_alloc.c:4733
+ alloc_pages_mpol_noprof+0x2c9/0x610 mm/mempolicy.c:2265
+ alloc_slab_page mm/slub.c:2412 [inline]
+ allocate_slab mm/slub.c:2578 [inline]
+ new_slab+0x2ba/0x3f0 mm/slub.c:2631
+ ___slab_alloc+0xd1d/0x16f0 mm/slub.c:3818
+ __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3908
+ __slab_alloc_node mm/slub.c:3961 [inline]
+ slab_alloc_node mm/slub.c:4122 [inline]
+ __kmalloc_cache_noprof+0x2c5/0x310 mm/slub.c:4290
+ kmalloc_noprof include/linux/slab.h:878 [inline]
+ kzalloc_noprof include/linux/slab.h:1014 [inline]
+ mld_add_delrec net/ipv6/mcast.c:743 [inline]
+ igmp6_leave_group net/ipv6/mcast.c:2625 [inline]
+ igmp6_group_dropped+0x4ab/0xe40 net/ipv6/mcast.c:723
+ __ipv6_dev_mc_dec+0x281/0x360 net/ipv6/mcast.c:979
+ addrconf_leave_solict net/ipv6/addrconf.c:2253 [inline]
+ __ipv6_ifa_notify+0x3f6/0xc30 net/ipv6/addrconf.c:6283
+ addrconf_ifdown.isra.0+0xef9/0x1a20 net/ipv6/addrconf.c:3982
+ addrconf_notify+0x220/0x19c0 net/ipv6/addrconf.c:3781
+ notifier_call_chain+0xb9/0x410 kernel/notifier.c:93
+ call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
+ call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
+ call_netdevice_notifiers net/core/dev.c:2048 [inline]
+ dev_close_many+0x333/0x6a0 net/core/dev.c:1589
+page last free pid 13136 tgid 13136 stack trace:
+ reset_page_owner include/linux/page_owner.h:25 [inline]
+ free_pages_prepare mm/page_alloc.c:1108 [inline]
+ free_unref_page+0x5f4/0xdc0 mm/page_alloc.c:2638
+ stack_depot_save_flags+0x2da/0x900 lib/stackdepot.c:666
+ kasan_save_stack+0x42/0x60 mm/kasan/common.c:48
+ kasan_save_track+0x14/0x30 mm/kasan/common.c:68
+ unpoison_slab_object mm/kasan/common.c:319 [inline]
+ __kasan_slab_alloc+0x89/0x90 mm/kasan/common.c:345
+ kasan_slab_alloc include/linux/kasan.h:247 [inline]
+ slab_post_alloc_hook mm/slub.c:4085 [inline]
+ slab_alloc_node mm/slub.c:4134 [inline]
+ kmem_cache_alloc_noprof+0x121/0x2f0 mm/slub.c:4141
+ skb_clone+0x190/0x3f0 net/core/skbuff.c:2084
+ do_one_broadcast net/netlink/af_netlink.c:1462 [inline]
+ netlink_broadcast_filtered+0xb11/0xef0 net/netlink/af_netlink.c:1540
+ netlink_broadcast+0x39/0x50 net/netlink/af_netlink.c:1564
+ uevent_net_broadcast_untagged lib/kobject_uevent.c:331 [inline]
+ kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
+ kobject_uevent_env+0xacd/0x1670 lib/kobject_uevent.c:608
+ device_del+0x623/0x9f0 drivers/base/core.c:3882
+ snd_card_disconnect.part.0+0x58a/0x7c0 sound/core/init.c:546
+ snd_card_disconnect+0x1f/0x30 sound/core/init.c:495
+ snd_usx2y_disconnect+0xe9/0x1f0 sound/usb/usx2y/usbusx2y.c:417
+ usb_unbind_interface+0x1e8/0x970 drivers/usb/core/driver.c:461
+ device_remove drivers/base/dd.c:569 [inline]
+ device_remove+0x122/0x170 drivers/base/dd.c:561
+
+Memory state around the buggy address:
+ ffff8880569ac700: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+ ffff8880569ac780: fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc fc
+>ffff8880569ac800: fa fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                                                    ^
+ ffff8880569ac880: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8880569ac900: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+----------------
+Code disassembly (best guess), 2 bytes skipped:
+   0:	10 06                	adc    %al,(%rsi)
+   2:	03 74 b4 01          	add    0x1(%rsp,%rsi,4),%esi
+   6:	10 07                	adc    %al,(%rdi)
+   8:	03 74 b0 01          	add    0x1(%rax,%rsi,4),%esi
+   c:	10 08                	adc    %cl,(%rax)
+   e:	03 74 d8 01          	add    0x1(%rax,%rbx,8),%esi
+  1e:	00 51 52             	add    %dl,0x52(%rcx)
+  21:	55                   	push   %rbp
+  22:	89 e5                	mov    %esp,%ebp
+  24:	0f 34                	sysenter
+  26:	cd 80                	int    $0x80
+* 28:	5d                   	pop    %rbp <-- trapping instruction
+  29:	5a                   	pop    %rdx
+  2a:	59                   	pop    %rcx
+  2b:	c3                   	ret
+  2c:	90                   	nop
+  2d:	90                   	nop
+  2e:	90                   	nop
+  2f:	90                   	nop
+  30:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
+  37:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
 
 
-Also, where should I apply these patches? Before "mptcp: add sched_data
-helpers"? But then there should not be any dependences on the BPF
-scheduler work (and I think that would be better without this
-dependence, see my comment on patch 4/7)
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
