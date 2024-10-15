@@ -1,121 +1,82 @@
-Received: from mail-yw1-f174.google.com (mail-yw1-f174.google.com [209.85.128.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B60E1F6677
-	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 16:30:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112731B3950;
+	Tue, 15 Oct 2024 18:00:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729009807; cv=none; b=LDZnjgc7NZuHuoTcoLevW3tBQP/+fNcx+LwbvvzsT3vCY8WD3+yba2NKuJd/L3rio8kru4vbOkzRG3IePoCLD8/jm6FBggFxNc8X+7qTUh5gkZSpz5LrpGInJ1tlHiAJhS38VraREu+kyH1vA2SZpUxm+k/bWP3KshS/NqJ04UQ=
+	t=1729015230; cv=none; b=Oc1tcRBI7feudVYKSpbB11qbxoG/+HYhH3HLIPJVqWM6aMhM6ElXjboyIfIJInbo/QjieRIynSZddBzOjbW0jBkSEhkpk+/7HEgQGcEB2caQViLf03GbijzIXC53p9psEkAiodB/p3wLRIBtwqa5Mk/m94PoXLY+ErzxGm/Gxow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729009807; c=relaxed/simple;
-	bh=eKYPXXAqlwfhDH9g7xx6Pr7+PvGyiCLKpzfIeNPZvO0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SpTASexuXDCtetTTZkmNmI0u2wTcsU1qYoIAeyQWVhUNjOUDrShagzLqbBxcwi7Aa4lKxoPcsU95gZQefk72hrGieE/vVW1Dp5FqqitkiBm0zPHt9irpaETgjCFnr6WtrzOjLoXpPtHUoGY0wogTcDgFJ3HbG7NZywKfQbG0tS0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=MprbgVhK; arc=none smtp.client-ip=209.85.128.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729015230; c=relaxed/simple;
+	bh=lpbB4zBvabiC+qAlL68upeccQ4XTAZm+z7OB3LiXtIY=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=p5rV3dCnSuZoRFtsFEuBaRrmDwrWXkN07aQT5nu8+pogbWsqMunhCePCqed5psjMsHHLx8a060wczlOoRA3DCXT8m4qasK2bjFm/0+zpKn9nLGqNjsR62/8Wq/sa2kMpdCBZwrGeT31rBZnNDsQZysODNGegMO1vRaajF6BImuE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EatNm/cB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MprbgVhK"
-Received: by mail-yw1-f174.google.com with SMTP id 00721157ae682-6e2e508bd28so43052857b3.2
-        for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 09:30:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729009805; x=1729614605; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=N+FEU5CyW+CryAH0sU8GFvFYox1+yQ/lHAk5rFV4ISA=;
-        b=MprbgVhKoav0pn92cgKYwYy4jUiIkPS4hH2r9Mo5e9i811WD2/Z0iedect3TIjzaua
-         Gkj9BUpvft1J99Dt2zBndXFZxTlsyuwd91pl9KRN79UN0hmOz6qW8dzN5BhvXseM5k6u
-         VcrPeia+8Mh/dgive6rrc7D8r44m+c6bdYo+7lngC1gMTmGS79YlVTAPlBz5DWtwT21t
-         NJS0jlcAP2V2cPGOlN8ZR0Iye9kbw4kfXf6RzJtG78TSUTDeH/QloIHq2PWALhwaMj01
-         LEefKWeCi1aoDLUOLyEXzRQOysc+mO8HkXlvTSqtUXePmFNTb/sgkOQnCKr+KAtRBISW
-         3G/g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729009805; x=1729614605;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=N+FEU5CyW+CryAH0sU8GFvFYox1+yQ/lHAk5rFV4ISA=;
-        b=WRuLAUo7q1q+ogtVlK0eepXPbD6in9RdbGsAfziJPS4zZNQlODL+QpbDve2SYsaRao
-         Kp6UnOJJwzxgENnrkN0SH9HHBvKV0dV0D8IN3rk0NpZJmt/Gg6q4yLJuRJyli7TBf02k
-         TOY35wv6uYO+1Q3x6eeC8NE1nRLqpvdXZUwQPecnFDP2+8rowPi7/3G8kik7lTEYCb/3
-         yfnvV0S62JzjbOQJhiYmrBv9Dw2EAlvettZVK29ZtSKkk5s3yNKQa3kZ6/32p7I/V5UB
-         AMNf9FDMUYzNcvL4PDbKUvMK8AhtHfLNps/NUoW0GuBH4DcqMwkrgRUWbxR6obAvyGJs
-         JYUQ==
-X-Gm-Message-State: AOJu0Yy5An64FJIdvJVHQPQw74A0ByE/eVuegjL9nZ8bOMyrEUowhKLG
-	Pv6jaZTAk/qPgC6GAloDDZvFZ0M3w95SugDsly0d3C++48kkaDsOyH81
-X-Google-Smtp-Source: AGHT+IELTgpyHZAjbSozu3a043R+D0ajmcY+B0yTtiyM6PwNf7Wdj6Ndx95mQjMlAmgWWI/Pp/VTdg==
-X-Received: by 2002:a05:690c:2e82:b0:6de:c0e:20ef with SMTP id 00721157ae682-6e3d407f916mr11499427b3.7.1729009804842;
-        Tue, 15 Oct 2024 09:30:04 -0700 (PDT)
-Received: from [127.0.0.1] ([20.98.6.132])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4607b38cec2sm8176051cf.85.2024.10.15.09.30.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 15 Oct 2024 09:30:03 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20241015151737.4111686-2-matttbe@kernel.org>
-References: <20241015151737.4111686-2-matttbe@kernel.org>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next=5D_Squash_to_?=
- =?UTF-8?Q?=22add_mptcp=5Fsubflow_bpf=5Fiter=22_v9?=
-Message-ID: <465fc398-2e39-8a64-2ae0-567015c7e0bc@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 15 Oct 2024 16:30:01 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EatNm/cB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4ABC4CED0;
+	Tue, 15 Oct 2024 18:00:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729015229;
+	bh=lpbB4zBvabiC+qAlL68upeccQ4XTAZm+z7OB3LiXtIY=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=EatNm/cB8Ug5PL8M8DCox35cExWgIaqGH2Sa9LYNCQy9IjRzt0eTV1+xfUAsUzlsa
+	 /3V2DhyXsqcwcvv3/Se6D8iGctkkzcqx/GCPBEbdvFM/3pPa8gdM6E8ejEtW76A/de
+	 DX3LCH0CaasGt4Z3EgATy7jICY59ZXAfLiMI/91vG3WCpEoC+EuTDrN7DW6F+oEa9G
+	 qBX1KFtwwi/jPskGD0EXydzKC1cop4//x+AgTfC/wtdX3dw6JXlYqKU50iX3ey5Zco
+	 afkMS0jmJ184G3vOo3DNhea+4O3OX1YYDfMou3TgjlXCkKYw+WGy9n+0l9wDHpTLbi
+	 8x+UIBPyWytFw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0813809A8A;
+	Tue, 15 Oct 2024 18:00:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/2] mptcp: prevent MPC handshake on port-based
+ signal endpoints
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <172901523474.1243233.15564285937564337583.git-patchwork-notify@kernel.org>
+Date: Tue, 15 Oct 2024 18:00:34 +0000
+References: <20241014-net-mptcp-mpc-port-endp-v2-0-7faea8e6b6ae@kernel.org>
+In-Reply-To: <20241014-net-mptcp-mpc-port-endp-v2-0-7faea8e6b6ae@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, cong.wang@bytedance.com,
+ stable@vger.kernel.org, syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
 
-Hi Matthieu,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Mon, 14 Oct 2024 16:05:59 +0200 you wrote:
+> MPTCP connection requests toward a listening socket created by the
+> in-kernel PM for a port based signal endpoint will never be accepted,
+> they need to be explicitly rejected.
+> 
+> - Patch 1: Explicitly reject such requests. A fix for >= v5.12.
+> 
+> - Patch 2: Cover this case in the MPTCP selftests to avoid regressions.
+> 
+> [...]
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11349477323
+Here is the summary with links:
+  - [net,v2,1/2] mptcp: prevent MPC handshake on port-based signal endpoints
+    https://git.kernel.org/netdev/net/c/3d041393ea8c
+  - [net,v2,2/2] selftests: mptcp: join: test for prohibited MPC to port-based endp
+    https://git.kernel.org/netdev/net/c/5afca7e996c4
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3a3642f20e95
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D899379
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
