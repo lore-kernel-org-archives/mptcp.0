@@ -1,325 +1,198 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81C0718A6B7;
-	Tue, 15 Oct 2024 08:39:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADB3D29A0
+	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 09:01:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728981575; cv=none; b=bIf70+CMwGJqxF/kydVkuZmFRR9qpzD9a0EYFwuKi5qzcslW8OKojkou2jPZYIvvq2FGtuMnOR8t1eoLr7DVGfPvNVCQDtmD/Kixn3PGUAuGjjIVVK5PneeIPoitGlqzAv4PzR93n/yHcueAG4ti5I1D3UuftGjlxoxmvJ0B6OY=
+	t=1728982899; cv=none; b=S141GfpLLI0T3hjmHKVK1V9G37aF9nc8f0VzR5GEdO/QoNg3j5F5sQ3Xd3iWOvpQ+K2vVjy4eO5yiiy1CsJtHOiHa+JNuUhgUcTjngHtU5Wh1SrURGwI5YIHk8saaQzYAo8ydAkoNvWLHQawmVLd0osK/9zpzkhB0zLt0PjAM5g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728981575; c=relaxed/simple;
-	bh=rnxu/sS5vyuM3fGU8UjfQLVOKTqIz0qs+9SS+rEMwog=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=ut88PTYZ6Ihc8OGGhu9wPcmFWfB55IkXgw0f7exS8kp7k1Zd1X7Yx/3nFu5kHv2awa9eyFDozxJK/+wMQweu1WqYvqma0ohWMnz+skGmS9cK4ywnjv4u11R6A7QFNUr5dCDxDCMu9bSI4Auv1FHkTwO5Z4oNHc2xoizfEDk/cAM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EBXZEQy5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728982899; c=relaxed/simple;
+	bh=BlD/GoPAHAQaSbOG0QLNfGFxkbyYmH5JzSwFT0ltjkQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=AUhlAAnvQAYOASbtF7cohLtxOIAMEdNE9rAeNgwAC9Diik+LvBovfJEItYmeGvI/6GAVe12GQDeG8JanT0fMegYxkFcqH85h+tF/UXPJ4j02zNuKjqvOiTYruEUtC3x+pfopvu6RZ9yUz5VKLwKiIGoaanEs9qGnRt9wH+YIGwQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwlTBhNh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EBXZEQy5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8AC6C4CECD;
-	Tue, 15 Oct 2024 08:39:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwlTBhNh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E767C4CEC6;
+	Tue, 15 Oct 2024 09:01:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728981575;
-	bh=rnxu/sS5vyuM3fGU8UjfQLVOKTqIz0qs+9SS+rEMwog=;
-	h=From:Date:Subject:To:Cc:From;
-	b=EBXZEQy54IxcIW9tbYMpTnn+qCX2fQ+QzKBjG3hLnP/6JDsgo9PWthZczLuvL9NL+
-	 tj2EcvHjXrCEVdFfJCBSBxAAwBl3EgXpN4k3JLaDczHIUWpLw9Ldo6yen4tF1UNZ9o
-	 F27AIIsgT+PpLIsKXnkdbREflgJYQDxhfipAQ2ApVfE5H4MqMppvwHsMGzXyi4h97h
-	 Lvu/VVKItGyde1OAhM+yEEEDEN3P4/ccqpORESi7piw3pupIadpM984+cTMBVJ9eGS
-	 kn0ouUlp40O/TPwr9X90W5EXgkn45q/j3WZ3Aa23h5zBpe04mchIomLsm+Oj+uoBOA
-	 Zo9WHifBEMouQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 15 Oct 2024 10:38:47 +0200
-Subject: [PATCH net] mptcp: pm: fix UaF read in
- mptcp_pm_nl_rm_addr_or_subflow
+	s=k20201202; t=1728982899;
+	bh=BlD/GoPAHAQaSbOG0QLNfGFxkbyYmH5JzSwFT0ltjkQ=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=EwlTBhNhMf/qdx4KwZo9aaQ+UTLWMXr8/sNnqrtyZ8b9KJKQKlrScPoVgbimCFbZr
+	 HKfKSrKa4whoTvDZqNkzJMZ2tbx+GGZg5zPzpPpnYXVbqBMSESW2l0Nmj8JOaG6QM1
+	 +CCCboziCwhX3eUu5yMAjHUbv2baDlkshxzMR3kOYvEpjOyrE3LkU5sXNzBrgq2XKu
+	 yanPO5GDMyy/foQdSa3Tj36oe7bMSSpzsF1X9DHBIiVnC/4kHLSX2w1qj0JZMgHZQp
+	 u6duFmtunvO+cI6bURzxsnpMLOWxIEHD7tjNuJt/8Eck4qdg/pHwihalF8ehwV/RIA
+	 qSNKGqXi4TL4A==
+Message-ID: <48326975-95fc-4255-80f2-8583749194e5@kernel.org>
+Date: Tue, 15 Oct 2024 11:01:36 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241015-net-mptcp-uaf-pm-rm-v1-1-c4ee5d987a64@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABYqDmcC/x3MTQqAIBBA4avErBtQS/q5SrSQGmsWmqhFEN09a
- fkW33sgUWRKMFYPRLo48eFLyLqCZTd+I+S1NCihWimkRk8ZXchLwNNYDA6jw66XYrWmIa0HKDJ
- Esnz/1wkKgPl9Pz8LHodqAAAA
-X-Change-ID: 20241015-net-mptcp-uaf-pm-rm-7810dfa3e559
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- stable@vger.kernel.org, 
- syzbot+3c8b7a8e7df6a2a226ca@syzkaller.appspotmail.com, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=13619; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=rnxu/sS5vyuM3fGU8UjfQLVOKTqIz0qs+9SS+rEMwog=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnDipCK75Oc68F3idBgNfnhwea0TWrX5rMe2wMk
- R57rFGxWZaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZw4qQgAKCRD2t4JPQmmg
- cwbxEADv0Rd4rL4A4WKNAp4xcvRLo7dhDk4TKl8u0uf3C7x0RHKk7oh52mXbOyISzc4/M2waLD6
- NZPOPqSH3lTbeQ4icAj/5F7cbqFfgrUtfEOojP8cjGXbwbeNPhvUkJHuSOOfjM1s9yHrCJDsznm
- d+Q18czhq0yYOuvIGId7ACuBCJO/sndvzSfhq7T6vcaSpE1+klfrgefssUKXaSTIB0lyDyENqZ9
- a8AJHxTbBKByu2QUXq9W/sWLXPKO4OPirg4BMmu+/RNnQJgn8QTdZ2hgTfSjRs/txwIB0ojbiVW
- P18jTHPqzKhZj/KaNHXuMGZbAQkafKXSDYPxEaXI9xoIpbCE8Lc166ZekFkPkgm5ZqwrABzvO1D
- aoMJcebORw9SCzQzKm+5/CYN+k/r6ndHYtdKfqX5WskA0295w8MzuRcqOi14IwkKIb63mS6ltYh
- vyq7sq6wWITmPq8CQtGVpOgOL47fYMvdEVwU1q0HDBd3r7QuJh151dLFsnQJdszgQ83cCyUb+od
- 1Tw5TjQ/s8VTNmxjIcPUtpizYrwW/3A+6X0wGiaGaY2QY3agcopA6BQVA0W53pEWc7+X2IQrShZ
- XBHqu50EFH7HjKzPtKlxSdtw1rXBxILr0Bj9OmEb42HJDGqMP9W8szGuXbpTUh/9HE8ph7vClPp
- b6t7Qrl+PD67Bgw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1728466623.git.tanggeliang@kylinos.cn>
+ <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
+ <953bf596-94e5-4829-adec-5997e1557487@kernel.org>
+ <c011f12106022a519cba25ce18d2a83a12dca184.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <c011f12106022a519cba25ce18d2a83a12dca184.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Syzkaller reported this splat:
+Hi Geliang,
 
-  ==================================================================
-  BUG: KASAN: slab-use-after-free in mptcp_pm_nl_rm_addr_or_subflow+0xb44/0xcc0 net/mptcp/pm_netlink.c:881
-  Read of size 4 at addr ffff8880569ac858 by task syz.1.2799/14662
+Thank you for your reply!
 
-  CPU: 0 UID: 0 PID: 14662 Comm: syz.1.2799 Not tainted 6.12.0-rc2-syzkaller-00307-g36c254515dc6 #0
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-  Call Trace:
-   <TASK>
-   __dump_stack lib/dump_stack.c:94 [inline]
-   dump_stack_lvl+0x116/0x1f0 lib/dump_stack.c:120
-   print_address_description mm/kasan/report.c:377 [inline]
-   print_report+0xc3/0x620 mm/kasan/report.c:488
-   kasan_report+0xd9/0x110 mm/kasan/report.c:601
-   mptcp_pm_nl_rm_addr_or_subflow+0xb44/0xcc0 net/mptcp/pm_netlink.c:881
-   mptcp_pm_nl_rm_subflow_received net/mptcp/pm_netlink.c:914 [inline]
-   mptcp_nl_remove_id_zero_address+0x305/0x4a0 net/mptcp/pm_netlink.c:1572
-   mptcp_pm_nl_del_addr_doit+0x5c9/0x770 net/mptcp/pm_netlink.c:1603
-   genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
-   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-   genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
-   netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2551
-   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-   netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
-   netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
-   netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
-   sock_sendmsg_nosec net/socket.c:729 [inline]
-   __sock_sendmsg net/socket.c:744 [inline]
-   ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2607
-   ___sys_sendmsg+0x135/0x1e0 net/socket.c:2661
-   __sys_sendmsg+0x117/0x1f0 net/socket.c:2690
-   do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-   __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
-   do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
-   entry_SYSENTER_compat_after_hwframe+0x84/0x8e
-  RIP: 0023:0xf7fe4579
-  Code: b8 01 10 06 03 74 b4 01 10 07 03 74 b0 01 10 08 03 74 d8 01 00 00 00 00 00 00 00 00 00 00 00 00 00 51 52 55 89 e5 0f 34 cd 80 <5d> 5a 59 c3 90 90 90 90 8d b4 26 00 00 00 00 8d b4 26 00 00 00 00
-  RSP: 002b:00000000f574556c EFLAGS: 00000296 ORIG_RAX: 0000000000000172
-  RAX: ffffffffffffffda RBX: 000000000000000b RCX: 0000000020000140
-  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-  RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
-  R10: 0000000000000000 R11: 0000000000000296 R12: 0000000000000000
-  R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
-   </TASK>
+On 15/10/2024 09:27, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this review.
+> 
+> On Mon, 2024-10-14 at 18:08 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 09/10/2024 12:05, MPTCP CI wrote:
+>>> Hi Geliang,
+>>>
+>>> Thank you for your modifications, that's great!
+>>>
+>>> But sadly, our CI spotted some issues with it when trying to build
+>>> it.
+>>>
+>>> You can find more details there:
+>>>
+>>>  
+>>> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11252652867
+>>
+>> I was looking at applying this series, but there are some issues
+>> reported by the CI:
+>>
+>>   warning: symbol 'bpf_*mptcp_*' was not declared. Should it be
+>> static?
+>>
+>> Could it be possible to have a fix for that please before applying
+>> the
+>> series?
+> 
+> No fix is ​​needed, just ignore these warnings.
 
-  Allocated by task 5387:
-   kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
-   kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-   poison_kmalloc_redzone mm/kasan/common.c:377 [inline]
-   __kasan_kmalloc+0xaa/0xb0 mm/kasan/common.c:394
-   kmalloc_noprof include/linux/slab.h:878 [inline]
-   kzalloc_noprof include/linux/slab.h:1014 [inline]
-   subflow_create_ctx+0x87/0x2a0 net/mptcp/subflow.c:1803
-   subflow_ulp_init+0xc3/0x4d0 net/mptcp/subflow.c:1956
-   __tcp_set_ulp net/ipv4/tcp_ulp.c:146 [inline]
-   tcp_set_ulp+0x326/0x7f0 net/ipv4/tcp_ulp.c:167
-   mptcp_subflow_create_socket+0x4ae/0x10a0 net/mptcp/subflow.c:1764
-   __mptcp_subflow_connect+0x3cc/0x1490 net/mptcp/subflow.c:1592
-   mptcp_pm_create_subflow_or_signal_addr+0xbda/0x23a0 net/mptcp/pm_netlink.c:642
-   mptcp_pm_nl_fully_established net/mptcp/pm_netlink.c:650 [inline]
-   mptcp_pm_nl_work+0x3a1/0x4f0 net/mptcp/pm_netlink.c:943
-   mptcp_worker+0x15a/0x1240 net/mptcp/protocol.c:2777
-   process_one_work+0x958/0x1b30 kernel/workqueue.c:3229
-   process_scheduled_works kernel/workqueue.c:3310 [inline]
-   worker_thread+0x6c8/0xf00 kernel/workqueue.c:3391
-   kthread+0x2c1/0x3a0 kernel/kthread.c:389
-   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+If possible, I would prefer not to ignore these warnings, because other
+CI might report the same issue. I didn't check, but can you not simply
+declare these new helpers as "static"? It looks like we can have kfunc
+declared as static, no?
 
-  Freed by task 113:
-   kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
-   kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-   kasan_save_free_info+0x3b/0x60 mm/kasan/generic.c:579
-   poison_slab_object mm/kasan/common.c:247 [inline]
-   __kasan_slab_free+0x51/0x70 mm/kasan/common.c:264
-   kasan_slab_free include/linux/kasan.h:230 [inline]
-   slab_free_hook mm/slub.c:2342 [inline]
-   slab_free mm/slub.c:4579 [inline]
-   kfree+0x14f/0x4b0 mm/slub.c:4727
-   kvfree+0x47/0x50 mm/util.c:701
-   kvfree_rcu_list+0xf5/0x2c0 kernel/rcu/tree.c:3423
-   kvfree_rcu_drain_ready kernel/rcu/tree.c:3563 [inline]
-   kfree_rcu_monitor+0x503/0x8b0 kernel/rcu/tree.c:3632
-   kfree_rcu_shrink_scan+0x245/0x3a0 kernel/rcu/tree.c:3966
-   do_shrink_slab+0x44f/0x11c0 mm/shrinker.c:435
-   shrink_slab+0x32b/0x12a0 mm/shrinker.c:662
-   shrink_one+0x47e/0x7b0 mm/vmscan.c:4818
-   shrink_many mm/vmscan.c:4879 [inline]
-   lru_gen_shrink_node mm/vmscan.c:4957 [inline]
-   shrink_node+0x2452/0x39d0 mm/vmscan.c:5937
-   kswapd_shrink_node mm/vmscan.c:6765 [inline]
-   balance_pgdat+0xc19/0x18f0 mm/vmscan.c:6957
-   kswapd+0x5ea/0xbf0 mm/vmscan.c:7226
-   kthread+0x2c1/0x3a0 kernel/kthread.c:389
-   ret_from_fork+0x45/0x80 arch/x86/kernel/process.c:147
-   ret_from_fork_asm+0x1a/0x30 arch/x86/entry/entry_64.S:244
+> This error is also
+> reported in other places:
+> 
+> $ make C=1 -o net/socket.o
+>   CALL    scripts/checksyscalls.sh
+>   DESCEND objtool
+>   INSTALL libsubcmd_headers
+>   DESCEND bpf/resolve_btfids
+>   INSTALL libsubcmd_headers
+>   CC      net/socket.o
+>   CHECK   net/socket.c
+> net/socket.c:1704:21: warning: symbol 'update_socket_protocol' was not
+> declared. Should it be static?
 
-  Last potentially related work creation:
-   kasan_save_stack+0x33/0x60 mm/kasan/common.c:47
-   __kasan_record_aux_stack+0xba/0xd0 mm/kasan/generic.c:541
-   kvfree_call_rcu+0x74/0xbe0 kernel/rcu/tree.c:3810
-   subflow_ulp_release+0x2ae/0x350 net/mptcp/subflow.c:2009
-   tcp_cleanup_ulp+0x7c/0x130 net/ipv4/tcp_ulp.c:124
-   tcp_v4_destroy_sock+0x1c5/0x6a0 net/ipv4/tcp_ipv4.c:2541
-   inet_csk_destroy_sock+0x1a3/0x440 net/ipv4/inet_connection_sock.c:1293
-   tcp_done+0x252/0x350 net/ipv4/tcp.c:4870
-   tcp_rcv_state_process+0x379b/0x4f30 net/ipv4/tcp_input.c:6933
-   tcp_v4_do_rcv+0x1ad/0xa90 net/ipv4/tcp_ipv4.c:1938
-   sk_backlog_rcv include/net/sock.h:1115 [inline]
-   __release_sock+0x31b/0x400 net/core/sock.c:3072
-   __tcp_close+0x4f3/0xff0 net/ipv4/tcp.c:3142
-   __mptcp_close_ssk+0x331/0x14d0 net/mptcp/protocol.c:2489
-   mptcp_close_ssk net/mptcp/protocol.c:2543 [inline]
-   mptcp_close_ssk+0x150/0x220 net/mptcp/protocol.c:2526
-   mptcp_pm_nl_rm_addr_or_subflow+0x2be/0xcc0 net/mptcp/pm_netlink.c:878
-   mptcp_pm_nl_rm_subflow_received net/mptcp/pm_netlink.c:914 [inline]
-   mptcp_nl_remove_id_zero_address+0x305/0x4a0 net/mptcp/pm_netlink.c:1572
-   mptcp_pm_nl_del_addr_doit+0x5c9/0x770 net/mptcp/pm_netlink.c:1603
-   genl_family_rcv_msg_doit+0x202/0x2f0 net/netlink/genetlink.c:1115
-   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
-   genl_rcv_msg+0x565/0x800 net/netlink/genetlink.c:1210
-   netlink_rcv_skb+0x165/0x410 net/netlink/af_netlink.c:2551
-   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
-   netlink_unicast_kernel net/netlink/af_netlink.c:1331 [inline]
-   netlink_unicast+0x53c/0x7f0 net/netlink/af_netlink.c:1357
-   netlink_sendmsg+0x8b8/0xd70 net/netlink/af_netlink.c:1901
-   sock_sendmsg_nosec net/socket.c:729 [inline]
-   __sock_sendmsg net/socket.c:744 [inline]
-   ____sys_sendmsg+0x9ae/0xb40 net/socket.c:2607
-   ___sys_sendmsg+0x135/0x1e0 net/socket.c:2661
-   __sys_sendmsg+0x117/0x1f0 net/socket.c:2690
-   do_syscall_32_irqs_on arch/x86/entry/common.c:165 [inline]
-   __do_fast_syscall_32+0x73/0x120 arch/x86/entry/common.c:386
-   do_fast_syscall_32+0x32/0x80 arch/x86/entry/common.c:411
-   entry_SYSENTER_compat_after_hwframe+0x84/0x8e
+In this example, you are showing one symbol that has been added for
+MPTCP, maybe we forgot something :)
 
-  The buggy address belongs to the object at ffff8880569ac800
-   which belongs to the cache kmalloc-512 of size 512
-  The buggy address is located 88 bytes inside of
-   freed 512-byte region [ffff8880569ac800, ffff8880569aca00)
+> It seems that it is because "-Wmissing-declarations" is not recognized
+> by sparse
 
-  The buggy address belongs to the physical page:
-  page: refcount:1 mapcount:0 mapping:0000000000000000 index:0x0 pfn:0x569ac
-  head: order:2 mapcount:0 entire_mapcount:0 nr_pages_mapped:0 pincount:0
-  flags: 0x4fff00000000040(head|node=1|zone=1|lastcpupid=0x7ff)
-  page_type: f5(slab)
-  raw: 04fff00000000040 ffff88801ac42c80 dead000000000100 dead000000000122
-  raw: 0000000000000000 0000000080100010 00000001f5000000 0000000000000000
-  head: 04fff00000000040 ffff88801ac42c80 dead000000000100 dead000000000122
-  head: 0000000000000000 0000000080100010 00000001f5000000 0000000000000000
-  head: 04fff00000000002 ffffea00015a6b01 ffffffffffffffff 0000000000000000
-  head: 0000000000000004 0000000000000000 00000000ffffffff 0000000000000000
-  page dumped because: kasan: bad access detected
-  page_owner tracks the page as allocated
-  page last allocated via order 2, migratetype Unmovable, gfp_mask 0xd20c0(__GFP_IO|__GFP_FS|__GFP_NOWARN|__GFP_NORETRY|__GFP_COMP|__GFP_NOMEMALLOC), pid 10238, tgid 10238 (kworker/u32:6), ts 597403252405, free_ts 597177952947
-   set_page_owner include/linux/page_owner.h:32 [inline]
-   post_alloc_hook+0x2d1/0x350 mm/page_alloc.c:1537
-   prep_new_page mm/page_alloc.c:1545 [inline]
-   get_page_from_freelist+0x101e/0x3070 mm/page_alloc.c:3457
-   __alloc_pages_noprof+0x223/0x25a0 mm/page_alloc.c:4733
-   alloc_pages_mpol_noprof+0x2c9/0x610 mm/mempolicy.c:2265
-   alloc_slab_page mm/slub.c:2412 [inline]
-   allocate_slab mm/slub.c:2578 [inline]
-   new_slab+0x2ba/0x3f0 mm/slub.c:2631
-   ___slab_alloc+0xd1d/0x16f0 mm/slub.c:3818
-   __slab_alloc.constprop.0+0x56/0xb0 mm/slub.c:3908
-   __slab_alloc_node mm/slub.c:3961 [inline]
-   slab_alloc_node mm/slub.c:4122 [inline]
-   __kmalloc_cache_noprof+0x2c5/0x310 mm/slub.c:4290
-   kmalloc_noprof include/linux/slab.h:878 [inline]
-   kzalloc_noprof include/linux/slab.h:1014 [inline]
-   mld_add_delrec net/ipv6/mcast.c:743 [inline]
-   igmp6_leave_group net/ipv6/mcast.c:2625 [inline]
-   igmp6_group_dropped+0x4ab/0xe40 net/ipv6/mcast.c:723
-   __ipv6_dev_mc_dec+0x281/0x360 net/ipv6/mcast.c:979
-   addrconf_leave_solict net/ipv6/addrconf.c:2253 [inline]
-   __ipv6_ifa_notify+0x3f6/0xc30 net/ipv6/addrconf.c:6283
-   addrconf_ifdown.isra.0+0xef9/0x1a20 net/ipv6/addrconf.c:3982
-   addrconf_notify+0x220/0x19c0 net/ipv6/addrconf.c:3781
-   notifier_call_chain+0xb9/0x410 kernel/notifier.c:93
-   call_netdevice_notifiers_info+0xbe/0x140 net/core/dev.c:1996
-   call_netdevice_notifiers_extack net/core/dev.c:2034 [inline]
-   call_netdevice_notifiers net/core/dev.c:2048 [inline]
-   dev_close_many+0x333/0x6a0 net/core/dev.c:1589
-  page last free pid 13136 tgid 13136 stack trace:
-   reset_page_owner include/linux/page_owner.h:25 [inline]
-   free_pages_prepare mm/page_alloc.c:1108 [inline]
-   free_unref_page+0x5f4/0xdc0 mm/page_alloc.c:2638
-   stack_depot_save_flags+0x2da/0x900 lib/stackdepot.c:666
-   kasan_save_stack+0x42/0x60 mm/kasan/common.c:48
-   kasan_save_track+0x14/0x30 mm/kasan/common.c:68
-   unpoison_slab_object mm/kasan/common.c:319 [inline]
-   __kasan_slab_alloc+0x89/0x90 mm/kasan/common.c:345
-   kasan_slab_alloc include/linux/kasan.h:247 [inline]
-   slab_post_alloc_hook mm/slub.c:4085 [inline]
-   slab_alloc_node mm/slub.c:4134 [inline]
-   kmem_cache_alloc_noprof+0x121/0x2f0 mm/slub.c:4141
-   skb_clone+0x190/0x3f0 net/core/skbuff.c:2084
-   do_one_broadcast net/netlink/af_netlink.c:1462 [inline]
-   netlink_broadcast_filtered+0xb11/0xef0 net/netlink/af_netlink.c:1540
-   netlink_broadcast+0x39/0x50 net/netlink/af_netlink.c:1564
-   uevent_net_broadcast_untagged lib/kobject_uevent.c:331 [inline]
-   kobject_uevent_net_broadcast lib/kobject_uevent.c:410 [inline]
-   kobject_uevent_env+0xacd/0x1670 lib/kobject_uevent.c:608
-   device_del+0x623/0x9f0 drivers/base/core.c:3882
-   snd_card_disconnect.part.0+0x58a/0x7c0 sound/core/init.c:546
-   snd_card_disconnect+0x1f/0x30 sound/core/init.c:495
-   snd_usx2y_disconnect+0xe9/0x1f0 sound/usb/usx2y/usbusx2y.c:417
-   usb_unbind_interface+0x1e8/0x970 drivers/usb/core/driver.c:461
-   device_remove drivers/base/dd.c:569 [inline]
-   device_remove+0x122/0x170 drivers/base/dd.c:561
+I don't see complains about that when introducing new kfunc, maybe we
+are supposed to do something else to avoid that?
 
-That's because 'subflow' is used just after 'mptcp_close_ssk(subflow)',
-which will initiate the release of its memory. Even if it is very likely
-the release and the re-utilisation will be done later on, it is of
-course better to avoid any issues and read the content of 'subflow'
-before closing it.
+>> I guess you are missing __bpf_kfunc_start_defs() and
+>> __bpf_kfunc_end_defs() around the declaration of the BPF dedicated
+>> kfunc, no?
+> 
+> No. __bpf_kfunc_start_defs() and __bpf_kfunc_end_defs() are indeed used
+> in patch 2.
 
-Fixes: 1c1f72137598 ("mptcp: pm: only decrement add_addr_accepted for MPJ req")
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+3c8b7a8e7df6a2a226ca@syzkaller.appspotmail.com
-Closes: https://lore.kernel.org/670d7337.050a0220.4cbc0.004f.GAE@google.com
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thanks, I missed that.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f6f0a38a0750f82bc909f02a75beec980d951f1f..4dd61284afc5f7f70708827056fb4530c8879502 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -873,12 +873,12 @@ static void mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
- 				 i, rm_id, id, remote_id, msk->mpc_endpoint_id);
- 			spin_unlock_bh(&msk->pm.lock);
- 			mptcp_subflow_shutdown(sk, ssk, how);
-+			removed |= subflow->request_join;
- 
- 			/* the following takes care of updating the subflows counter */
- 			mptcp_close_ssk(sk, ssk, subflow);
- 			spin_lock_bh(&msk->pm.lock);
- 
--			removed |= subflow->request_join;
- 			if (rm_type == MPTCP_MIB_RMSUBFLOW)
- 				__MPTCP_INC_STATS(sock_net(sk), rm_type);
- 		}
+>> Also, where should I apply these patches? Before "mptcp: add
+>> sched_data
+>> helpers"?
+> 
+> Yes, before "mptcp: add sched_data helpers", after "selftests/bpf: Add
+> mptcp subflow subtest".
 
----
-base-commit: 25c12b459db8365fee84b63f3dd7910f70627f29
-change-id: 20241015-net-mptcp-uaf-pm-rm-7810dfa3e559
+OK!
 
-Best regards,
+>> But then there should not be any dependences on the BPF
+>> scheduler work (and I think that would be better without this
+>> dependence, see my comment on patch 4/7)
+> 
+> This set doesn't have any dependence on the BPF packet scheduler since
+> the selftest is added as a ftrace. It somehow depends on packet
+> scheduler since it invoke some packet scheduler functions such as
+> mptcp_subflow_active() and bpf_mptcp_subflow_tcp_sock().
+
+OK, but if I insert the series just after "selftests/bpf: Add mptcp
+subflow subtest", it will not have access to mptcp_subflow_active(). I
+still need to check your reply on the patch 4/7, but it would be easier
+if the test doesn't depend on "mptcp_subflow_active()": it's just a test
+in preparation to the packet scheduler, it is fine if it is not doing
+interesting for the moment I think.
+
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
