@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 049BD1C7608
-	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 10:47:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBD5E1E1335
+	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 10:59:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728989249; cv=none; b=fkiomHIBUZQRVYvHaQFOXByHF5TX0RCLvdbOQRd7X74lGu4Yv9JlY7Eh5FVWUd/bxvvD3/6a0QG/GyYKCH4BrUx671ZXytTbshB61yFNFY4JvGaLLtypmLiXmCgMyMmpECtJSVgRdMjEImDEpX4G2S5glXc9CgWiSQBWTObQg7Y=
+	t=1728989971; cv=none; b=A9OpZG15QxLEEHMnz3waQ77go5n9s5dyknX251gp/tvUzNCR/Tj0WO8FykMXO84BA5LoHL5MOXAUSRSHk7kk/rFceWbSAmMAADYej5BJ1OdsuqYUQtSi8pSvzO61OidIxaelEP/7p8qEDQ/bRu7vbO8tr2JpXps4YoiFxrJUOms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728989249; c=relaxed/simple;
-	bh=zhVqtDdyRYUAi33fZA0+cw6mkQ1Q3ijyACjY68Q/Acg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FNExJrZAMqAeSf9S5yxU8J1jxPcrND8Y0BmXsXdmL6ZrDblBF7sg4rMwCaX/TcyQsFxRkw4uQqTLWK9m7KE4hkFnhaYW9+KE1Fgkf6nJnv5foW6m7KlZorjRW9nvUlUTV7tgDXzS02cbg9fgFD88EG7w/lainY6DcOqUsMeiLFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBV++jdq; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728989971; c=relaxed/simple;
+	bh=jqfUhgkOVeGFlI83ZWYuGAxv35s4RXYKR0GEvtV3UAE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=q3gRDECuovxsxDhBIDsUyZDR/SBWSBE6aXD2uyHJU5EEvFPMTITy5pp6hZbMl5xor0f2x85m5CNFeThzgh5M1InoQ/WBeYZb7/oqM0XBz1VVuDd8BQmE2iglzsnjfcmiide/YYTvIieBKYAm1gbw1HtgsBoJ/3mljWhQNLqJJTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kNaWwVa4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBV++jdq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92D24C4CEC6;
-	Tue, 15 Oct 2024 10:47:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kNaWwVa4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DB0BC4CEC6;
+	Tue, 15 Oct 2024 10:59:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728989248;
-	bh=zhVqtDdyRYUAi33fZA0+cw6mkQ1Q3ijyACjY68Q/Acg=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mBV++jdqyjb8JU/yd3yTs2iQH0W/mZko+qqCAeZalPr6/v8dlQDKJZtjirng6wphL
-	 HcVByduLjGDW4JzHn87yENSGCns6459Qrc/aQdoEgolDsI/eR83DmppwD5RD8hVsjK
-	 TQNfcRk0q56UzrkJO34Hh/W/HV5tFs26UYA/KV5CMtu7Afp2WqFk4XvhGnKhUV2iRg
-	 sjGqnIJ3GElj2hpdVEJ7M78ZlUpx8Pz2m0Hv/gtPsSQ6Mo4eVFVgKnz2WVkKKk6IWP
-	 CuKJMMWZfZQq3KOKYURpDBmoQgBVgoaowlTzS2GGBcAFBYQdFhk14ebB0Fe08jfTwa
-	 NzpaIUbjhDF5w==
-Message-ID: <56da8840-51d5-4b5b-9c43-7ebfdaed25c6@kernel.org>
-Date: Tue, 15 Oct 2024 12:47:24 +0200
+	s=k20201202; t=1728989971;
+	bh=jqfUhgkOVeGFlI83ZWYuGAxv35s4RXYKR0GEvtV3UAE=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=kNaWwVa4vSvXC+vaQlebdM+fkcBZ9BX8SecWWYtdXS/UIi+CAf3EHXPR7Yyn6P0Cl
+	 2L05sqQ6IW4TX/t+wuvg+/S7+ozw1rp/647llqM54KoMTuEo6X849mDd7NUXKnYhny
+	 WWd1qKTvAdrIzqyR1y4xbvOP1kgJ73gUdFQRtbH0DYs9vSpHKp465804HeAGUpQ7JY
+	 mJq59+IfyVGlq5VFbuRgLWbcjZpBRaszYu1rfjMj4clXVHWP6TIbU+PsJYplIF/ABX
+	 A0Ii8o/N6VqEhbv3nDWSNPdmLyRNrXvGS3Ox1l1KxisuYrX/9QREjuE5v3scEzx57D
+	 xJN+KIjDZozGQ==
+Message-ID: <c869bcb2-121d-49dc-9da4-199ad8f8a692@kernel.org>
+Date: Tue, 15 Oct 2024 12:59:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 4/7] selftests/bpf: Add mptcp_subflow
- bpf_iter test prog
+Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1728466623.git.tanggeliang@kylinos.cn>
- <dffa6284797ec2e3e8c8a1f6891f012bd1efdc20.1728466623.git.tanggeliang@kylinos.cn>
- <22b299af-150b-450c-b2c8-6710cf321c2d@kernel.org>
- <c1b0c2e2a421c8fcfd5b29542ffabc60651c08f1.camel@kernel.org>
+ <30504191-4b5f-1a69-08a3-5ae0f444c802@gmail.com>
+ <953bf596-94e5-4829-adec-5997e1557487@kernel.org>
+ <c011f12106022a519cba25ce18d2a83a12dca184.camel@kernel.org>
+ <48326975-95fc-4255-80f2-8583749194e5@kernel.org>
+ <651738088acd25abefb3f20f4120d608a1ac3966.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,298 +90,172 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c1b0c2e2a421c8fcfd5b29542ffabc60651c08f1.camel@kernel.org>
+In-Reply-To: <651738088acd25abefb3f20f4120d608a1ac3966.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
-
-On 15/10/2024 09:59, Geliang Tang wrote:
-> On Mon, 2024-10-14 at 18:06 +0200, Matthieu Baerts wrote:
+On 15/10/2024 11:20, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Tue, 2024-10-15 at 11:01 +0200, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
->> On 09/10/2024 11:45, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>> Thank you for your reply!
+>>
+>> On 15/10/2024 09:27, Geliang Tang wrote:
+>>> Hi Matt,
 >>>
->>> This patch adds a ftrace hook for mptcp_sched_get_send() to test
->>> the newly
->>> added mptcp_subflow bpf_iter. This test simulates a typical mptcp
->>> packet
->>> scheduler, which selects a subflow from multiple subflows of an
->>> mptcp
->>> socket to send data.
+>>> Thanks for this review.
 >>>
->>> Export mptcp_subflow helpers
->>> bpf_iter_mptcp_subflow_new/_next/_destroy,
->>> bpf_mptcp_sock_acquire/_release and other helpers into
->>> bpf_experimental.h.
+>>> On Mon, 2024-10-14 at 18:08 +0200, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 09/10/2024 12:05, MPTCP CI wrote:
+>>>>> Hi Geliang,
+>>>>>
+>>>>> Thank you for your modifications, that's great!
+>>>>>
+>>>>> But sadly, our CI spotted some issues with it when trying to
+>>>>> build
+>>>>> it.
+>>>>>
+>>>>> You can find more details there:
+>>>>>
+>>>>>  
+>>>>> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11252652867
+>>>>
+>>>> I was looking at applying this series, but there are some issues
+>>>> reported by the CI:
+>>>>
+>>>>   warning: symbol 'bpf_*mptcp_*' was not declared. Should it be
+>>>> static?
+>>>>
+>>>> Could it be possible to have a fix for that please before
+>>>> applying
+>>>> the
+>>>> series?
 >>>
->>> Use _acquire() to acquire the msk, then use
->>> bpf_for_each(mptcp_subflow) to
->>> walk the subflow list of this msk. Invoke kfuncs
->>> mptcp_subflow_active() and
->>> bpf_mptcp_subflow_tcp_sock() in the loop to pick a subsocket.
->>> Finally use
->>> bpf_mptcp_subflow_ctx() to get the subflow context of this
->>> subsocket and
->>> use mptcp_subflow_set_scheduled() to set it as being scheduled.
+>>> No fix is ​​needed, just ignore these warnings.
 >>
->> Do you think we could have a test not depending on scheduler helpers?
->> Without this dependence, we could already upstream this series, and
->> get
->> feedback without having to wait for the new scheduler API.
+>> If possible, I would prefer not to ignore these warnings, because
+>> other
+>> CI might report the same issue. I didn't check, but can you not
+>> simply
+>> declare these new helpers as "static"? It looks like we can have
+>> kfunc
+>> declared as static, no?
 > 
-> This set can be upstream as is, no need to wait for the new scheduler
-> API.
-> 
-> If no scheduler helpers are used in this test, no need to add this
-> mptcp_subflow bpf_iter at all. mptcp_for_each_subflow() helper in
-> progs/mptcp_bpf.h can do that.
-> 
-> mptcp_for_each_subflow(msk, subflow) {
-> 	subflow = bpf_core_cast(subflow, struct
-> mptcp_subflow_context);
-> 	subflows += subflow->subflow_id;
-> }
-> 
-> No need to use this:
-> 
-> bpf_for_each(mptcp_subflow, subflow, msk)
-> 	subflows += subflow->subflow_id;
+> No, "static" doesn't work.
 
-I agree, but for me, I see this as a preparation step, and then it is
-fine if this test is not doing anything useful for the moment. I think
-it would be enough to add a comment in the code like:
+Could we declare them in protocol.h? Or is it not enough?
 
-  /* Here MPTCP-specific kfunc can be called */
-
-And add in the commit message that these kfunc will be added later one,
-as a next step.
-
->> If you remove the use of mptcp_subflow_active() and
->> mptcp_subflow_set_scheduled(), that's enough, no?
-> 
-> But "subflow" in mptcp_for_each_subflow() loop can't be passed to a
-> kernel function:
-> 
-> mptcp_for_each_subflow(msk, subflow) {
-> 	subflow = bpf_core_cast(subflow, struct
-> mptcp_subflow_context);
-> 	mptcp_subflow_active(subflows);
-> }
-> 
-> This is not allowed by BPF.
-> 
-> So we add this iter to do this:
-> 
-> bpf_for_each(mptcp_subflow, subflow, msk)
-> 	kfunc(subflow);
-> 
-> In this test, I must pick some kfuncs accepted "subflow" argument to do
-> this test, so mptcp_subflow_active and mptcp_subflow_set_scheduled are
-> picked.
-
-I think that can be done later on, the first step is to have these MPTCP
-bpf_iter upstreamed I think.
-
-> Also, This iter is for the BPF packet scheduler, why not test the
-> actual usage of scheduler helpers in this test?
-
-I understand that, but I think it will be easier to avoid these helpers
-for the moment, and make the test as simpler as possible.
-
-(...)
-
->>> diff --git
->>> a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
->>> b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
->>> new file mode 100644
->>> index 000000000000..4268e4604c5a
->>> --- /dev/null
->>> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters_subflow.c
->>> @@ -0,0 +1,42 @@
->>> +// SPDX-License-Identifier: GPL-2.0
->>> +/* Copyright (c) 2024, Kylin Software */
->>> +
->>> +/* vmlinux.h, bpf_helpers.h and other 'define' */
->>> +#include "bpf_tracing_net.h"
->>> +#include "mptcp_bpf.h"
->>> +
->>> +char _license[] SEC("license") = "GPL";
->>> +int subflows;
->>> +int pid;
->>> +
->>> +SEC("fentry/mptcp_sched_get_send")
+>>> This error is also
+>>> reported in other places:
+>>>
+>>> $ make C=1 -o net/socket.o
+>>>   CALL    scripts/checksyscalls.sh
+>>>   DESCEND objtool
+>>>   INSTALL libsubcmd_headers
+>>>   DESCEND bpf/resolve_btfids
+>>>   INSTALL libsubcmd_headers
+>>>   CC      net/socket.o
+>>>   CHECK   net/socket.c
+>>> net/socket.c:1704:21: warning: symbol 'update_socket_protocol' was
+>>> not
+>>> declared. Should it be static?
 >>
->> If I understand correctly, this hook will be called twice on the
->> client
->> connection for this test because the client is sending two times one
->> byte, right?
+>> In this example, you are showing one symbol that has been added for
+>> MPTCP, maybe we forgot something :)
 > 
-> Yes, in the first call, the subflows are not been added yet, so it is
-> called twice. I will add this check to skip the first call:
+> Do you mean we should name it as "mptcp_update_socket_protocol"? No
+> need. It's a public hook for any protocol.
+
+No sorry, I just wanted to say that it is probably not a good example,
+because this helper has been introduced by you, and we have maybe missed
+something to avoid the warning.
+
+>>> It seems that it is because "-Wmissing-declarations" is not
+>>> recognized
+>>> by sparse
+>>
+>> I don't see complains about that when introducing new kfunc, maybe we
+>> are supposed to do something else to avoid that?
 > 
->        if (msk->pm.server_side || !msk->pm.subflows)
->                return 0;
+> I have no idea yet. You can listen to the opinions of BPF maintainers
+> when you are in upstream.
 
-Good idea! Please add a comment above to explain you added that to only
-do the rest once.
+I will try to get an answer before, just not to have to modify the CI to
+ignore all these cases if there is no need to.
 
-If we want to have a simpler test without the scheduler helpers, we can
-also use another hook, e.g. just before closing the different subflows?
-Up to you.
-
-Also, just to be sure: is this BPF program only used (loaded, running)
-by the corresponding test?
-Can you remind me why is there a PID check? Is it because all BPF
-programs are always loaded for all tests?
-
->>> +int BPF_PROG(trace_mptcp_sched_get_send, struct mptcp_sock *msk)
->>> +{
->>> +	struct mptcp_subflow_context *subflow;
->>> +	struct sock *ssk = NULL;
->>> +
->>> +	if (bpf_get_current_pid_tgid() >> 32 != pid)
->>> +		return 0;
->>> +
->>> +	msk = bpf_mptcp_sock_acquire(msk);
->>> +	if (!msk)
->>> +		return 0;
->>> +	bpf_for_each(mptcp_subflow, subflow, msk) {
->>> +		if (subflow->token != msk->token)
->>> +			break;
+>>>> I guess you are missing __bpf_kfunc_start_defs() and
+>>>> __bpf_kfunc_end_defs() around the declaration of the BPF
+>>>> dedicated
+>>>> kfunc, no?
+>>>
+>>> No. __bpf_kfunc_start_defs() and __bpf_kfunc_end_defs() are indeed
+>>> used
+>>> in patch 2.
 >>
->> Out of curiosity, why is this needed? Is it needed for the verifier?
->> Or
->> just an extra check?
->> Can you add a comment here explaining why this is there please?
+>> Thanks, I missed that.
+>>
+>>>> Also, where should I apply these patches? Before "mptcp: add
+>>>> sched_data
+>>>> helpers"?
+>>>
+>>> Yes, before "mptcp: add sched_data helpers", after "selftests/bpf:
+>>> Add
+>>> mptcp subflow subtest".
+>>
+>> OK!
+>>
+>>>> But then there should not be any dependences on the BPF
+>>>> scheduler work (and I think that would be better without this
+>>>> dependence, see my comment on patch 4/7)
+>>>
+>>> This set doesn't have any dependence on the BPF packet scheduler
+>>> since
+>>> the selftest is added as a ftrace. It somehow depends on packet
+>>> scheduler since it invoke some packet scheduler functions such as
+>>> mptcp_subflow_active() and bpf_mptcp_subflow_tcp_sock().
+>>
+>> OK, but if I insert the series just after "selftests/bpf: Add mptcp
+>> subflow subtest", 
 > 
-> I'll drop it.
-
-Just to be clear: I'm not asking to drop it, but to understand why it is
-needed. The main reason is to have other people using it in future
-programs, because they saw it was used here. If it is here as an
-"assert", something that cannot be wrong, that's fine, as long as it is
-marked (by a comment) as is.
-
->>> +
->>> +		if (!mptcp_subflow_active(subflow))
->>> +			continue;
->>> +
->>> +		ssk = bpf_mptcp_subflow_tcp_sock(subflow);
->>
->> Do you get 'ssk' just to use bpf_mptcp_subflow_tcp_sock() and
->> bpf_mptcp_subflow_ctx()?
+> "selftests/bpf: Add mptcp subflow subtest" has been upstreamed. It
+> should be before "mptcp: add sched_data helpers".
 > 
-> Yes, almost every BPF scheduler use these helpers, so test them here.
-
-For me, that's fine to keep using these helpers, even if their usage is
-limited in the test. You can keep it here, and keep
-bpf_mptcp_subflow_ctx(ssk) below, then use 'subflow' below to compare
-the token with the one of the msk for example. Feel free to add a
-comment mentioning that it is just to show these helpers can be used in
-the 'bpf_for_each()' and outside.
-
->>> +	}
->>> +	bpf_mptcp_sock_release(msk);
->>> +
->>> +	if (!ssk)
->>> +		return 0;
->>> +	subflow = bpf_mptcp_subflow_ctx(ssk);
->>> +	mptcp_subflow_set_scheduled(subflow, true);
->>> +	subflows = subflow->subflow_id;
->>
->> Here, it looks like you only check if the last subflow is in the
->> list.
->>
->> Would it not be better to count the number of subflows in the list?
->> Or
->> if you want to read something from 'subflow', you could add all
->> subflow_id?
->>
->>   subflows = 0;
->>
->>   (...)
->>
->>   bpf_for_each(mptcp_subflow, subflow, msk)
->>       subflows += subflow->subflow_id;
->>
->> By doing that, we will catch if one is missing, and the order is not
->> important.
+>> it will not have access to mptcp_subflow_active().
 > 
-> Yes, "subflows += subflow->subflow_id" is much better.
+> The access to mptcp_subflow_active() is added in patch 1 "bpf: Register
+> mptcp common kfunc set" in this set.
+
+Ah OK, I didn't know I had to include them in patch 1: the commit
+message mentions them, but it was not clear to me that I had to import
+them from another patch when resolving the conflicts.
+Next time, don't hesitate to add a squash-to patch before, removing the
+code from one commit (even if it is going to be placed after), and
+mention the order ;)
+
+
 > 
->>
->> If still want to use bpf_mptcp_subflow_tcp_sock() and
->> bpf_mptcp_subflow_ctx(), maybe you can save other fields from the
->> last
->> subflow: the token to compare it with the one in the msk? Or the port
->> number or the address?
+> The whole order is (from bottom to top):
 > 
-> Sorry, I don't fully understand your last paragraph. But I stored the
-> dport number in the code below. Is it the same as what you thought? If
-> so, I'll send a squash-to patch for it.
+> selftests/bpf: Add bpf scheduler test
+> bpf: Add bpf_mptcp_sched_kfunc_set
+> bpf: Add bpf_mptcp_sched_ops
+> mptcp: add sched_data helpers
+> selftests/bpf: Add mptcp_subflow bpf_iter subtest
+> Squash to "selftests/bpf: Add bpf scheduler test"
+> selftests/bpf: More endpoints for endpoint_init
+> selftests/bpf: Add mptcp_subflow bpf_iter test prog
+> bpf: Add mptcp_sock acquire and release helpers
+> bpf: Add mptcp_subflow bpf_iter
+> bpf: Register mptcp common kfunc set
+> selftests/bpf: Add mptcp subflow subtest
+> selftests/bpf: Add getsockopt to inspect mptcp subflow
+> selftests/bpf: Add mptcp subflow example
 
-I was just thinking about something you could do to keep using these new
-helpers: keep the ref to the last subflow, and compare with data from
-the msk, e.g.
-
-  struct mptcp_subflow_context *subflow;
-  struct sock *sk = (struct sock *)msk;
-  struct sock *ssk = NULL;
-  int all_ids = 0;
-
-  /* TODO: why is it needed? */
-  if (bpf_get_current_pid_tgid() >> 32 != pid)
-      return 0;
-
-  /* to do the test only once: on the client side, at the 2nd send */
-  if (msk->pm.server_side || !msk->pm.subflows)
-      return 0;
-
-  msk = bpf_mptcp_sock_acquire(msk);
-  if (!msk)
-      return 0;
-
-  bpf_for_each(mptcp_subflow, subflow, msk) {
-      /* Here MPTCP-specific kfunc can be called: this test is not doing
-       * anything really useful, only to verify the iteration works.
-       */
-
-      /* assert: if not OK, something wrong on the kernel side */
-      if (subflow->token != msk->token)
-          break;
-
-      /* to check we iterate over all subflows */
-      local_ids += subflow->subflow_id;
-
-      /* only to check the following kfunc works */
-      ssk = bpf_mptcp_subflow_tcp_sock(subflow);
-  }
-
-  if (!ssk)
-      goto out;
-
-  /* assert: if not OK, something wrong on the kernel side */
-  if (ssk->sk_dport != sk->sk_dport)
-      goto out;
-
-  /* only to check the following kfunc works */
-  subflow = bpf_mptcp_subflow_ctx(ssk);
-  if (subflow->token != msk->token)
-      goto out;
-
-  ids = local_ids;
-
-
-(not tested)
-
-→ So not using anything linked to the packet scheduler, just very simple
-check to make sure 'bpf_iter' + bpf_mptcp_subflow_tcp_sock() and
-bpf_mptcp_subflow_ctx() work as expected. Like that, it sounds easier to
-upstream as it is.
-
-WDYT?
+Thanks, that's clearer!
 
 Cheers,
 Matt
