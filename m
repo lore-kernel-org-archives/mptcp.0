@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 36AA01D89F5
-	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 11:07:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 63BF71E6339
+	for <mptcp@lists.linux.dev>; Tue, 15 Oct 2024 11:10:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1728990425; cv=none; b=DGauvUCH/5kiEwdOzUCITENEveRswwZBt8ve+sEcbhTfqTPc40r+h3jDf/3//G8KLjjGu4scozw20P651lwqHWQ4GAkZdCmKQT3ug11GaUQFjch/IxYSN2HuqhQ25KbehhTDRUmo/wx1suMetVrkIR6eHLi/D0tOGUDyMQWqekA=
+	t=1728990658; cv=none; b=ju+Z+PfCLky46qrncZ2QcRwlhpHuxhOjxbvGFOUcfrQHkniURDBZpk2RpIW/CaJLsP4/FFWdPXElwyaUmwjMsK5ERgjVUeksxglyMrPYuan3vsk/zk8iQi97Hah3TppPXiBGJsIF9Svy98nG9oA4ytbGNzAfAGo6AkbPhZAVz7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1728990425; c=relaxed/simple;
-	bh=R+PTt6or9e15jCKQ9ozqUn7VC8Xnv9ISNyMVpvXAnIM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=JlWZRohD+4CONoJEmy/xUo0GO76jgxKo6xOlocbAZewSMlHfVvGxR19DeHHzwzmrlv6XgQU5jIfZbLalYsQmX5s26C9xLTcLSD+f7dnZ8a0L/TXnBAYpwaRgwLzRbOHhgMXQE0kJlSG0j/1d1rEMKzvgD/dQi5IDetX8TLWcvow=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Olvi6+tO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1728990658; c=relaxed/simple;
+	bh=ShDD1K5Yxz36M6PkVGkAg1GNikJma3qep1qYIIsqxvk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gGFU8I9vGxOmkV8bUupU4/iOtWeLXt3Xzf1RFbGEx6SGdTh/TC4/wFa431Hqg+2sn0tyBYHn3NLauzNrqnVy4EbgqCrFdN3aTgaC+3Utg6O4vFgzfmkHT1O2viyz2kKkqDCp3T71h9vEn+m78bMTnP6Y14ffFM2OuvEz621yH2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cd4UO2I6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Olvi6+tO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F21F1C4CEC6;
-	Tue, 15 Oct 2024 11:07:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cd4UO2I6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33F70C4CEC6;
+	Tue, 15 Oct 2024 11:10:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1728990424;
-	bh=R+PTt6or9e15jCKQ9ozqUn7VC8Xnv9ISNyMVpvXAnIM=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=Olvi6+tOG/xZmji1DGXsra0ScOyaYkByfIn/MfKxUqWEzdP+sMhKznVSbJU9BffS5
-	 8um18gywA3JjFkhNgpwMqIecLDCI+43k8ceboaRB3sEALj0XdMXji/wEhSk7ecWBIn
-	 XL1wmzuPQSHUqsBi+95+NXHegj7GuLKaQJu0lP7UbCoALMpCsgbZP67fCNLYf7S5NZ
-	 Xs6kxk4NQfREtehKioNSUxMFFZ1QP9cE9qL83WkwTTaJUVQ+GvirUCMtwunHWvgcKK
-	 AblRnffmtAMi7uKBVoPKCCfJ051ia9XCJMHYQVFShhOp3cTTIG1vp6nnljkbJyjS3V
-	 ZK3g7HwwQKOEA==
-Message-ID: <33c9b4af-be2b-4991-91a2-4219d591cace@kernel.org>
-Date: Tue, 15 Oct 2024 13:07:01 +0200
+	s=k20201202; t=1728990658;
+	bh=ShDD1K5Yxz36M6PkVGkAg1GNikJma3qep1qYIIsqxvk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cd4UO2I6oClGa2fYMgO1Qe1drELnQ1/t3G1s3wGmVdS2vw5N0QKlqJs41qLtZpXIe
+	 lfSUlxVmRhe2UH/lv5DfYvyUzlebFWlxsAVjREWbsej64EiUbZ2M16GKiBO5ja92/z
+	 B+ggsKY6RLX/Cl6pbPkKbAZZbQlVYIb0WRpus3jKP+FR73y8jIHkiBw16J4/daQYj7
+	 1Gq59V3oAgl1U5xbuzNpufCAddnbqZjXCmGUi/lNRFqaM96H7hIQvJhxf8TK6WLB3M
+	 IajABHj6iNXePXamOAx3ZMcNY/VFRw7p0i35+RMdUpzM/kHXlmATVrpMTE2tOxqlTq
+	 YOMMOMal6R2VQ==
+Message-ID: <4f8e6390-447f-4a7b-93b5-5d17c894f8ff@kernel.org>
+Date: Tue, 15 Oct 2024 13:10:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,7 +37,6 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v9 0/7] add mptcp_subflow bpf_iter
 Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
  Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1728466623.git.tanggeliang@kylinos.cn>
@@ -45,8 +44,8 @@ References: <cover.1728466623.git.tanggeliang@kylinos.cn>
  <953bf596-94e5-4829-adec-5997e1557487@kernel.org>
  <c011f12106022a519cba25ce18d2a83a12dca184.camel@kernel.org>
  <48326975-95fc-4255-80f2-8583749194e5@kernel.org>
- <651738088acd25abefb3f20f4120d608a1ac3966.camel@kernel.org>
- <c869bcb2-121d-49dc-9da4-199ad8f8a692@kernel.org>
+ <cae74d0b020f3f694d8e2f4892ca5121bbb07c67.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -91,40 +90,166 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c869bcb2-121d-49dc-9da4-199ad8f8a692@kernel.org>
+In-Reply-To: <cae74d0b020f3f694d8e2f4892ca5121bbb07c67.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 15/10/2024 12:59, Matthieu Baerts wrote:
-> On 15/10/2024 11:20, Geliang Tang wrote:
-
-(...)
-
->> The whole order is (from bottom to top):
+On 15/10/2024 11:38, Geliang Tang wrote:
+> On Tue, 2024-10-15 at 11:01 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
 >>
->> selftests/bpf: Add bpf scheduler test
->> bpf: Add bpf_mptcp_sched_kfunc_set
->> bpf: Add bpf_mptcp_sched_ops
->> mptcp: add sched_data helpers
->> selftests/bpf: Add mptcp_subflow bpf_iter subtest
->> Squash to "selftests/bpf: Add bpf scheduler test"
->> selftests/bpf: More endpoints for endpoint_init
->> selftests/bpf: Add mptcp_subflow bpf_iter test prog
->> bpf: Add mptcp_sock acquire and release helpers
->> bpf: Add mptcp_subflow bpf_iter
->> bpf: Register mptcp common kfunc set
->> selftests/bpf: Add mptcp subflow subtest
->> selftests/bpf: Add getsockopt to inspect mptcp subflow
->> selftests/bpf: Add mptcp subflow example
+>> Thank you for your reply!
+>>
+>> On 15/10/2024 09:27, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Thanks for this review.
+>>>
+>>> On Mon, 2024-10-14 at 18:08 +0200, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 09/10/2024 12:05, MPTCP CI wrote:
+>>>>> Hi Geliang,
+>>>>>
+>>>>> Thank you for your modifications, that's great!
+>>>>>
+>>>>> But sadly, our CI spotted some issues with it when trying to
+>>>>> build
+>>>>> it.
+>>>>>
+>>>>> You can find more details there:
+>>>>>
+>>>>>  
+>>>>> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11252652867
+>>>>
+>>>> I was looking at applying this series, but there are some issues
+>>>> reported by the CI:
+>>>>
+>>>>   warning: symbol 'bpf_*mptcp_*' was not declared. Should it be
+>>>> static?
+>>>>
+>>>> Could it be possible to have a fix for that please before
+>>>> applying
+>>>> the
+>>>> series?
+>>>
+>>> No fix is ​​needed, just ignore these warnings.
+>>
+>> If possible, I would prefer not to ignore these warnings, because
+>> other
+>> CI might report the same issue. I didn't check, but can you not
+>> simply
+>> declare these new helpers as "static"? It looks like we can have
+>> kfunc
+>> declared as static, no?
+>>
+>>> This error is also
+>>> reported in other places:
+>>>
+>>> $ make C=1 -o net/socket.o
+>>>   CALL    scripts/checksyscalls.sh
+>>>   DESCEND objtool
+>>>   INSTALL libsubcmd_headers
+>>>   DESCEND bpf/resolve_btfids
+>>>   INSTALL libsubcmd_headers
+>>>   CC      net/socket.o
+>>>   CHECK   net/socket.c
+>>> net/socket.c:1704:21: warning: symbol 'update_socket_protocol' was
+>>> not
+>>> declared. Should it be static?
+>>
+>> In this example, you are showing one symbol that has been added for
+>> MPTCP, maybe we forgot something :)
+>>
+>>> It seems that it is because "-Wmissing-declarations" is not
+>>> recognized
+>>> by sparse
+>>
+>> I don't see complains about that when introducing new kfunc, maybe we
+>> are supposed to do something else to avoid that?
+>>
+>>>> I guess you are missing __bpf_kfunc_start_defs() and
+>>>> __bpf_kfunc_end_defs() around the declaration of the BPF
+>>>> dedicated
+>>>> kfunc, no?
+>>>
+>>> No. __bpf_kfunc_start_defs() and __bpf_kfunc_end_defs() are indeed
+>>> used
+>>> in patch 2.
+>>
+>> Thanks, I missed that.
+>>
+>>>> Also, where should I apply these patches? Before "mptcp: add
+>>>> sched_data
+>>>> helpers"?
+>>>
+>>> Yes, before "mptcp: add sched_data helpers", after "selftests/bpf:
+>>> Add
+>>> mptcp subflow subtest".
+>>
+>> OK!
+>>
+>>>> But then there should not be any dependences on the BPF
+>>>> scheduler work (and I think that would be better without this
+>>>> dependence, see my comment on patch 4/7)
+>>>
+>>> This set doesn't have any dependence on the BPF packet scheduler
+>>> since
+>>> the selftest is added as a ftrace. It somehow depends on packet
+>>> scheduler since it invoke some packet scheduler functions such as
+>>> mptcp_subflow_active() and bpf_mptcp_subflow_tcp_sock().
+>>
+>> OK, but if I insert the series just after "selftests/bpf: Add mptcp
+>> subflow subtest", it will not have access to mptcp_subflow_active().
+>> I
+>> still need to check your reply on the patch 4/7, but it would be
+>> easier
+>> if the test doesn't depend on "mptcp_subflow_active()": it's just a
 > 
-> Thanks, that's clearer!
+> Do you mean only drop "mptcp_subflow_active" and
+> "mptcp_subflow_set_scheduled" in the test or drop all the helpers,
+> include "bpf_mptcp_subflow_tcp_sock" and "bpf_mptcp_subflow_ctx"?
 
-I just noticed Daniel sent a pull request to include bpf-net/next into
-net-next: it means the 3 last patches from your list will be dropped
-from our tree. In this case, I don't have to re-order commit, and simply
-apply this series before "mptcp: add sched_data helpers".
+I initially didn't understand these kfunc would be included in patch 1,
+so I thought the test would not work if this series was placed before
+the other BPF scheduler patches we have in the tree.
 
-Cheers,
+But thinking about that, I still think it is better to avoid using
+anything linked to the BPF scheduler. So yes, I think it is best not to
+include these scheduler-related kfunc in this series: not in the kernel
+code, nor in the BPF selftests.
+
+
+> If it is the latter, the test is simplified like this, right?
+> 
+>         if (bpf_get_current_pid_tgid() >> 32 != pid)
+>                 return 0;
+> 
+>         if (msk->pm.server_side || !msk->pm.subflows)
+>                 return 0;
+> 
+>         ids = 0;
+> 
+>         msk = bpf_mptcp_sock_acquire(msk);
+>         if (!msk)
+>                 return 0;
+>         bpf_for_each(mptcp_subflow, subflow, msk) {
+>                 ids += subflow->subflow_id;
+>         bpf_mptcp_sock_release(msk);
+> 
+>         return 0;
+> 
+> To me both are fine, which one do you prefer? I can refactor the code
+> and send the squash-to patches. Or maybe a v10 is better?
+
+Yes for the simpler test (see my reply attached to the patch 4/7)
+without any references to the packet scheduler.
+
+And yes for the v10, it will be easier. Also including your other
+squash-to patch you sent: Squash to "selftests/bpf: More endpoints for
+endpoint_init".
+
+Thanks!
 Matt
 -- 
 Sponsored by the NGI0 Core fund.
