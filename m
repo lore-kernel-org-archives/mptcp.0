@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 112731B3950;
-	Tue, 15 Oct 2024 18:00:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073BF433CE
+	for <mptcp@lists.linux.dev>; Wed, 16 Oct 2024 07:33:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729015230; cv=none; b=Oc1tcRBI7feudVYKSpbB11qbxoG/+HYhH3HLIPJVqWM6aMhM6ElXjboyIfIJInbo/QjieRIynSZddBzOjbW0jBkSEhkpk+/7HEgQGcEB2caQViLf03GbijzIXC53p9psEkAiodB/p3wLRIBtwqa5Mk/m94PoXLY+ErzxGm/Gxow=
+	t=1729064004; cv=none; b=A+h34MJ7U5trsZ9hY3b0xZYLC4s78w7jPZZ6VvIehuWELXQHXe/hZIAxZM/7guqB7UZu3gggeHAQAbXfEXT/sjpZFeDX5SpM9wuGGvDQMzFrWAYTRGg8lLSByuOXUZ7vjK7tzNgVspA78poAeTxU5bZ7huY/O3HpWO9bTQtc3ks=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729015230; c=relaxed/simple;
-	bh=lpbB4zBvabiC+qAlL68upeccQ4XTAZm+z7OB3LiXtIY=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=p5rV3dCnSuZoRFtsFEuBaRrmDwrWXkN07aQT5nu8+pogbWsqMunhCePCqed5psjMsHHLx8a060wczlOoRA3DCXT8m4qasK2bjFm/0+zpKn9nLGqNjsR62/8Wq/sa2kMpdCBZwrGeT31rBZnNDsQZysODNGegMO1vRaajF6BImuE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EatNm/cB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729064004; c=relaxed/simple;
+	bh=f2ekFtVmUWkCDiODpxrqa6AxlcHS1d7x2zLuePh5qwo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=u81bQ2Gs/UjQUz0Go5G5F5Sqf0mLvkbQbmSptf2/0h21U9kR2aopMBqu/Fyd91gjp07Hpxr8VMD70MGx/YxFdwMX4q4916tNCjNbgdYUb376mpe1Wi2oREvLm3IZv8xqYjDRLb7qRNGAiytUz9K5/uwNd/1FZfFH/ZONdOJUKFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OISio+Tz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EatNm/cB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7C4ABC4CED0;
-	Tue, 15 Oct 2024 18:00:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OISio+Tz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 51F93C4CEC5;
+	Wed, 16 Oct 2024 07:33:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729015229;
-	bh=lpbB4zBvabiC+qAlL68upeccQ4XTAZm+z7OB3LiXtIY=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=EatNm/cB8Ug5PL8M8DCox35cExWgIaqGH2Sa9LYNCQy9IjRzt0eTV1+xfUAsUzlsa
-	 /3V2DhyXsqcwcvv3/Se6D8iGctkkzcqx/GCPBEbdvFM/3pPa8gdM6E8ejEtW76A/de
-	 DX3LCH0CaasGt4Z3EgATy7jICY59ZXAfLiMI/91vG3WCpEoC+EuTDrN7DW6F+oEa9G
-	 qBX1KFtwwi/jPskGD0EXydzKC1cop4//x+AgTfC/wtdX3dw6JXlYqKU50iX3ey5Zco
-	 afkMS0jmJ184G3vOo3DNhea+4O3OX1YYDfMou3TgjlXCkKYw+WGy9n+0l9wDHpTLbi
-	 8x+UIBPyWytFw==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0813809A8A;
-	Tue, 15 Oct 2024 18:00:35 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1729064003;
+	bh=f2ekFtVmUWkCDiODpxrqa6AxlcHS1d7x2zLuePh5qwo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=OISio+TzF+V/DAzkgXAsbFUhaWp3f0RyFBycfQ+gQOkrqQBeILraFbwyCMasHoiom
+	 pPuNCYCARm7AvtBNAO6U6weMctnjkntnMRoZQqdbg3Ng6hysnB7hnofBYrclPqx32c
+	 pDgmyPRl66Js5bjy6uZtv2qevuck3WdQDXw+EX2JiptZ4GThd6VClMRqDh5SxS8Y9k
+	 YyCiAap3NIW3pAzuS3CP0s2aCOFjdK05IfoBLG/sKQ8Vpnxs8wCCm3O1O3JjyDV0jP
+	 fmymOZSBe1718V0BknYfP+albH8RZL1qFBt/IojYhumdGA7tGXpg/bKNzoXg9Td9gi
+	 0wBYfpvlp1FmQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 0/9] add mptcp_subflow bpf_iter
+Date: Wed, 16 Oct 2024 15:33:07 +0800
+Message-ID: <cover.1729063444.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,46 +39,79 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net v2 0/2] mptcp: prevent MPC handshake on port-based
- signal endpoints
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <172901523474.1243233.15564285937564337583.git-patchwork-notify@kernel.org>
-Date: Tue, 15 Oct 2024 18:00:34 +0000
-References: <20241014-net-mptcp-mpc-port-endp-v2-0-7faea8e6b6ae@kernel.org>
-In-Reply-To: <20241014-net-mptcp-mpc-port-endp-v2-0-7faea8e6b6ae@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- shuah@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, cong.wang@bytedance.com,
- stable@vger.kernel.org, syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
 
-Hello:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+v10:
+ - rename bpf prog to "mptcp_bpf_iters.c" and change it as
+   "cgroup/getsockopt" type. Since another bpf_iter "mptcp_address",
+   to traverse all address entries on userspace_pm_local_addr_list of
+   an MPTCP socket for implementing the MPTCP BPF path manager, will be
+   added in the next set. The test program for "mptcp_address" bpf_iter
+   will be added into this "mptcp_bpf_iters.c" file too and also defined
+   as "cgroup/getsockopt" type.
+ - change all bpf kfunc static as Matt suggested.
+ - drop mptcp_subflow_active and mptcp_subflow_set_scheduled from the
+   test program as Matt suggested.
 
-On Mon, 14 Oct 2024 16:05:59 +0200 you wrote:
-> MPTCP connection requests toward a listening socket created by the
-> in-kernel PM for a port based signal endpoint will never be accepted,
-> they need to be explicitly rejected.
-> 
-> - Patch 1: Explicitly reject such requests. A fix for >= v5.12.
-> 
-> - Patch 2: Cover this case in the MPTCP selftests to avoid regressions.
-> 
-> [...]
+v9:
+ - rename bpf prog to "mptcp_bpf_iters_subflow.c"
+ - drop the helper bpf_mptcp_sk(), it's not used in this test.
 
-Here is the summary with links:
-  - [net,v2,1/2] mptcp: prevent MPC handshake on port-based signal endpoints
-    https://git.kernel.org/netdev/net/c/3d041393ea8c
-  - [net,v2,2/2] selftests: mptcp: join: test for prohibited MPC to port-based endp
-    https://git.kernel.org/netdev/net/c/5afca7e996c4
+v8:
+ - Make the test prog in patch 4 more like a bpf packet scheduler.
+ - Export more mptcp helpers into BPF in patch 1.
 
-You are awesome, thank you!
+v7:
+ - As Martin recently replied, mptcp_stubflow bpf_iter can still be
+used in tracing. So go back to the tracing selftest.
+
+v6:
+ - add KF_TRUSTED_ARGS flag in patch 2 (Andrii, Martin), then acquire
+and release helpers (patch 3) are needed to be implemented.
+ - test mptcp_subflow bpf_iter in "cgroup/getsockopt" (patch 5),
+instead of testing them in "tracing" (Martin).
+
+v5:
+ - update patch 1 as Andrii suggested: if msk is NULL, initialize
+kit->msk to NULL in _new() and check it in _next().
+
+v4:
+ - squash patch 1/5 and 3/5 in v3 together as Matt suggested.
+ - a new squash-to patch to drop mptcp_subflow_active declaration in
+   bpf_burst.
+
+v3:
+ - drop bpf_iter__mptcp_subflow, __diag_push, __diag_pop and
+ __diag_ignore_all
+ - drop declarations for bpf kfuncs
+
+v2:
+ - update patch 1 as Martin and Andrii suggested.
+ - fix warnings and errors reported by MPTCP CI.
+
+This patch set adds a mptcp_subflow type bpf_iter, and self tests.
+
+Geliang Tang (9):
+  bpf: Register mptcp common kfunc set
+  bpf: Add mptcp_subflow bpf_iter
+  bpf: Acquire and release mptcp socket
+  selftests/bpf: Add mptcp_subflow bpf_iter test prog
+  selftests/bpf: More endpoints for endpoint_init
+  selftests/bpf: Add mptcp_subflow bpf_iter subtest
+  Squash to "selftests/bpf: Add bpf scheduler test"
+  Revert "bpf: Export more bpf_burst related functions"
+  Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+
+ net/mptcp/bpf.c                               |  93 ++++++++++++-
+ net/mptcp/protocol.h                          |   1 -
+ .../testing/selftests/bpf/bpf_experimental.h  |   7 +
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 126 +++++++++++++++++-
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |   8 ++
+ .../selftests/bpf/progs/mptcp_bpf_iters.c     |  60 +++++++++
+ 6 files changed, 283 insertions(+), 12 deletions(-)
+ create mode 100644 tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.43.0
 
