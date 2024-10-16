@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D199C433CE
-	for <mptcp@lists.linux.dev>; Wed, 16 Oct 2024 07:33:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC69218FC61
+	for <mptcp@lists.linux.dev>; Wed, 16 Oct 2024 07:33:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729064014; cv=none; b=X99HPSOKBCkiwiOQi9ZdvHW54doegyvqcWvE1eCTfd6cMFV7c/+tXy9xeJOdt7/zbjtOwmI/bFUhPoGNPmethGj+Qcb5QITTYB47Yp7EnmhSUwmhgwHBsKfO5fArqIIfOX2MLQ/pEbzWfHF1K0EeojxwlFHod86q+e+LjXJDEDY=
+	t=1729064016; cv=none; b=gkG3iXUg8p5zdOTvV2p0gL2krWyZCaO3m8Kz/49AfEUsPcEkL+Poe78oRuwULwibmjxDsk58Le4Ym7/puM4XtnyRYJ1PGTzBMbI6MJXTaeesJ8O75+79upQJG2fYFlhwXk6dgdjNeY3naj5IUoM5gTPa8rqvLEtM9LteGWQOo0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729064014; c=relaxed/simple;
-	bh=hRHA5enc7gK7LON2CvND444dftAJXg42kRE1AVGnjZE=;
+	s=arc-20240116; t=1729064016; c=relaxed/simple;
+	bh=wIhmKLx50uCzoCDPi/07gUtp3YgKrJHJXGI5pw0ZgRs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=WTqfavsK94JpQdn7btPFSX4PDBVDZVJVk9bwEKZyhkI6G38x5iTcmsgDHebOEqL84hToArub51BmGYrnscNw2U0SIms6yfROdwitJ/+LxWuVbQeklDnB9h6vy1pb3ur+svR0cSETFbbOb6GabT39tBtDxvaHqE8m/yiHuzZLaHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ibOqcL19; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HsEV1AfZUonvvsywwy3YvEgJ6J+tZDYZOYSDvk4lL0GKVhpxOfCJbdPh93Bx8F+mHsoWUzYtieLmsVutEEYqkIkhYwndmPwZEumc0/qDDqPQc0I0388yzttaiIdwLR3etPNo6Ro83fpbq+X+4fUcjNbogVeA0aMWbY677CIxba4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EwS+Qbju; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ibOqcL19"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77C83C4CED0;
-	Wed, 16 Oct 2024 07:33:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EwS+Qbju"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50443C4CECE;
+	Wed, 16 Oct 2024 07:33:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729064014;
-	bh=hRHA5enc7gK7LON2CvND444dftAJXg42kRE1AVGnjZE=;
+	s=k20201202; t=1729064016;
+	bh=wIhmKLx50uCzoCDPi/07gUtp3YgKrJHJXGI5pw0ZgRs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ibOqcL19Wc3l5Wsjp2Lv2KzLSqaJGmPT3bKT3O6g+fbSIQqLlVxvTuJ74/79+z1up
-	 MDPtA3/ZSdaNI4ruYvqjsZhw4dnL6AcCkHnEDX80tQw36AoVTo1ZGgdeUCQ/cNSmlZ
-	 bste8IibTzN0c6iNKWhwO6cpa6sNa/yJuwGQgyUcHYET+vNYAA3OaiQhRwIcFXGyd/
-	 mKSaIdtd9kz7MEQw2scCzkGVAj+a4yAVhFhQDxuD/jsfI4rddMdYd2LBjAwsuyDW9p
-	 4AucqWRg2OjOsIafhG51MJgMxg2+W1E/fKH9owOLD8qc+nk2jR8Jmla0akma+mWV78
-	 EtUAxulaQIWXw==
+	b=EwS+QbjuNFiLAGqufs2YvzhYn8S1dEh1za4eIfLLLhqNrdXx+d+jtU+NXOCbCRnTF
+	 N9hpeR1ltvIFOPu5e+e/OjIpv+7Dj/c3K3Ld0QUZHIeec6lebdoGbEO33kLZ1CDQ9L
+	 Lu0z22YGSW1bd5dK13RmiGVVc00w+YO7SqDhz7UK4xJfYr8rByK8Ao6NBEIznNzpYf
+	 FXRA8MHQ/5wWFLuN6u7c1yLWntROj7vwcKLusuzHhqFQcNU5RD5luB11BC/CaHe3V6
+	 CF98UsswHlcyR22ZjIqi+wWhiWNR2+72SNiu6ElNt4Dw59169P6xGdFlwOKGiZLsli
+	 curt1sPwg6EcA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 6/9] selftests/bpf: Add mptcp_subflow bpf_iter subtest
-Date: Wed, 16 Oct 2024 15:33:13 +0800
-Message-ID: <4527c30ba381a5dcb84bcb33b3a05c7d8d19ab87.1729063444.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 7/9] Squash to "selftests/bpf: Add bpf scheduler test"
+Date: Wed, 16 Oct 2024 15:33:14 +0800
+Message-ID: <66bc528ea6e3a0857ed7cd764fb36ed2622641d3.1729063444.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1729063444.git.tanggeliang@kylinos.cn>
 References: <cover.1729063444.git.tanggeliang@kylinos.cn>
@@ -45,114 +45,26 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a subtest named test_iters_subflow to load and verify the
-newly added mptcp_subflow type bpf_iter example in test_mptcp. Use the
-helper endpoint_init() to add 3 new subflow endpoints. Send a byte of
-message to start the mptcp connection, and wait for new subflows to be
-added. getsockopt() is invoked to trigger the "cgroup/getsockopt" test
-program "iters_subflow". Check if skel->bss->ids equals 10 to verify
-whether this mptcp_subflow bpf_iter loops correctly as expected.
+Update endpoint_init() in sched_init().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 70 +++++++++++++++++++
- 1 file changed, 70 insertions(+)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 9a903f2fd52e..0f92dfa95869 100644
+index 0f92dfa95869..6c76f7aac035 100644
 --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
 +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -11,6 +11,7 @@
- #include "mptcp_sock.skel.h"
- #include "mptcpify.skel.h"
- #include "mptcp_subflow.skel.h"
-+#include "mptcp_bpf_iters.skel.h"
- #include "mptcp_bpf_first.skel.h"
- #include "mptcp_bpf_bkup.skel.h"
- #include "mptcp_bpf_rr.skel.h"
-@@ -509,6 +510,73 @@ static void test_subflow(void)
- 	close(cgroup_fd);
- }
+@@ -585,7 +585,7 @@ static struct nstoken *sched_init(char *flags, char *sched)
+ 	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
+ 		return NULL;
  
-+static void run_iters_subflow(void)
-+{
-+	int server_fd, client_fd;
-+	char cc[TCP_CA_NAME_MAX];
-+	socklen_t len;
-+	int err;
-+
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	send_byte(client_fd);
-+	wait_for_new_subflows(client_fd);
-+
-+	len = sizeof(cc);
-+	err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-+	if (ASSERT_OK(err, "getsockopt(client_fd, TCP_CONGESTION)"))
-+		ASSERT_STREQ(cc, "cubic", "cc");
-+
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+}
-+
-+static void test_iters_subflow(void)
-+{
-+	struct mptcp_bpf_iters *skel;
-+	struct nstoken *nstoken;
-+	int cgroup_fd;
-+	int err;
-+
-+	cgroup_fd = test__join_cgroup("/iters_subflow");
-+	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: iters_subflow"))
-+		return;
-+
-+	skel = mptcp_bpf_iters__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: iters_subflow"))
-+		goto close_cgroup;
-+
-+	skel->links.iters_subflow = bpf_program__attach_cgroup(skel->progs.iters_subflow,
-+							       cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.iters_subflow, "attach getsockopt"))
-+		goto skel_destroy;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns: iters_subflow"))
-+		goto skel_destroy;
-+
-+	if (endpoint_init("subflow", 4) < 0)
-+		goto close_netns;
-+
-+	run_iters_subflow();
-+
-+	ASSERT_EQ(skel->bss->ids, 10, "subflow ids");
-+
-+close_netns:
-+	cleanup_netns(nstoken);
-+skel_destroy:
-+	mptcp_bpf_iters__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- static struct nstoken *sched_init(char *flags, char *sched)
- {
- 	struct nstoken *nstoken;
-@@ -690,6 +758,8 @@ void test_mptcp(void)
- 		test_mptcpify();
- 	if (test__start_subtest("subflow"))
- 		test_subflow();
-+	if (test__start_subtest("iters_subflow"))
-+		test_iters_subflow();
- 	if (test__start_subtest("default"))
- 		test_default();
- 	if (test__start_subtest("first"))
+-	if (endpoint_init("subflow") < 0)
++	if (endpoint_init("subflow", 2) < 0)
+ 		goto fail;
+ 
+ 	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.scheduler=%s", NS_TEST, sched);
 -- 
 2.43.0
 
