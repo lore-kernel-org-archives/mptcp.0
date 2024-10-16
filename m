@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8906A1C07E7
-	for <mptcp@lists.linux.dev>; Wed, 16 Oct 2024 09:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7CC191C07E7
+	for <mptcp@lists.linux.dev>; Wed, 16 Oct 2024 09:34:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729071242; cv=none; b=HKPv+KTaSlPPH9bWuyIIyzrEY6tT8NWiTsTwIMMhZxeY0AEFuHBPLgP2BdHe3hQeCny/WQaCU19sPnf6rS3WapjKMJi+8gAGZh8bddkOKdrWuP1tFIUb2kZa1tjy/o9corgO9Qeqrf58bs1+tPRQoXWd2K8m0UH6nnqFbpXCGiY=
+	t=1729071245; cv=none; b=XX4T5ZlJQl21s+RB9lditlO+edhu2Ge4zmDZpGOw415a9hIMckNyouG6P4VRTvQ7fv2jPv1Zj1s7UcRd2x6nCCvxsMAU7g/rGSma8XpeHJWf6qLR3pF45shiNYrl4CM9Cdcb9Ab4r/SC7GZxRli+hvo/bE1wWBpdFoFrjdO4ixU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729071242; c=relaxed/simple;
-	bh=Utn5Dy0UyeKR/dvlbz7Vc2G7oDOPq7AWnlJpMCXlohk=;
+	s=arc-20240116; t=1729071245; c=relaxed/simple;
+	bh=u2R+HeIVIPP5vQ9bQJlNHgd4TqYBFJQZ0/PAz1R4RKw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bjCOMZwEGvAjAgUO2+Wv1ApQD2DXA1Wr8kFNQeQbEvvwaz/1OeApIn2TdOyMxytiaRy7hXJMTjzKhtxejsi6m8zhsmAG0BpUXtC/DKJkhsfv91cl8ufHVuDww/pfTUmHVjFe4J4IcBqkJ4N4R397F7kYTYwZPm62THgyOJA2Ue0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=O6lcEFJA; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=oge1pf9RuVudv/6QcQItb5PmDg5SAxKcRAFmnN05YHLvRwUMkPhapFCtOP0aVixzDx0qaeyco/njrKsw5LjjSQlahtcvgXEmqvZDzNLgpyn9+09uP1apUuRzQmaixlqT8SL9CgCPUvPzFonkuykMUFpb6B9gcA3vKFjocwJxtQU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i2DZ83Br; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="O6lcEFJA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF439C4CEC5;
-	Wed, 16 Oct 2024 09:34:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i2DZ83Br"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 568EFC4CEC5;
+	Wed, 16 Oct 2024 09:34:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729071242;
-	bh=Utn5Dy0UyeKR/dvlbz7Vc2G7oDOPq7AWnlJpMCXlohk=;
+	s=k20201202; t=1729071244;
+	bh=u2R+HeIVIPP5vQ9bQJlNHgd4TqYBFJQZ0/PAz1R4RKw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=O6lcEFJAeyGqrDrFfLVnEOVlcewqXwsKBJSCo1GRIgSCOY2og7IjdhLkVr7onXoLJ
-	 PeDIqss+PLiMoZtXMoLbbEXkoZk1OnAnS9u3Cpwmix3hR2a8JHUOFs22JjHQJLmM/D
-	 QLxQdZs2UKjiNmgIYTUT2J5CpynfTviwof5CtYdc2PsdUXDbk6mCk5aG7yjMQTHBqS
-	 IcuO3L5GIUd21m0ceL5rgqHeXDqZ6fNjJbomSsHzJq5g+Ts2PasmHzefqc1ckWWQPu
-	 7OSOhLWG2CQRb45gFSXrqiG10Si1P2jbWMHv7Ij0qMv92R5PpKOTbYv/abmsm7Q95h
-	 c2qiNUlLFGmag==
+	b=i2DZ83BrilQWRBIQEoT/rWJJdLoDRJO5gTfchMwqUA8LemGTzbFE7PmtGsJgdvHal
+	 XbIT4ft1JwMnE10kocHunBGN0jnLfrjc+8/vPZrboTRSSKRtkZn7GVvMoA0czvm5oq
+	 FeyU+Qiri809vHx4+nG+J3In10k2IvBoUf9Tky/7N/2I6OS2a2nmYiWIpvnouy1UQH
+	 0r2ZxjNm+t/4H52sXDZlB9FdvI6bnzT+MHIi8hw1bqAoGV9CrUrKCjnGoClVeXYZlf
+	 tA1W0OSFtTbmf+yJagDlKVdYz0xQr5zogUSgk3l2ZVoz6SfUROb2n4uI6wJQdkz8UL
+	 /7MRJXnmSZZlQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 02/10] Squash to "bpf: Add bpf_mptcp_sched_ops"
-Date: Wed, 16 Oct 2024 17:33:38 +0800
-Message-ID: <eabb0268eb16719b459ccc1d351d743e646583a5.1729070999.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 03/10] Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+Date: Wed, 16 Oct 2024 17:33:39 +0800
+Message-ID: <dec1ae17427085ae496aec54fa5ee4237b14a045.1729070999.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1729070999.git.tanggeliang@kylinos.cn>
 References: <cover.1729070999.git.tanggeliang@kylinos.cn>
@@ -47,79 +47,27 @@ From: Geliang Tang <tanggeliang@kylinos.cn>
 
 Please update the subject to
 
-	bpf: Add mptcp packet scheduler struct_ops
+	"bpf: Export mptcp packet scheduler helpers"
 
-Drop mptcp_sock_type and mptcp_subflow_type.
+Remove bpf_mptcp_subflow_ctx_by_pos from BPF kfunc set.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 15 ++++++---------
- 1 file changed, 6 insertions(+), 9 deletions(-)
+ net/mptcp/bpf.c | 1 -
+ 1 file changed, 1 deletion(-)
 
 diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index bca8b5332737..9f264b37ca94 100644
+index 9f264b37ca94..ba36d624671d 100644
 --- a/net/mptcp/bpf.c
 +++ b/net/mptcp/bpf.c
-@@ -18,9 +18,10 @@
+@@ -292,7 +292,6 @@ static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
  
- #ifdef CONFIG_BPF_JIT
- static struct bpf_struct_ops bpf_mptcp_sched_ops;
--static const struct btf_type *mptcp_sock_type, *mptcp_subflow_type __read_mostly;
- static u32 mptcp_sock_id, mptcp_subflow_id;
- 
-+/* MPTCP BPF packet scheduler */
-+
- static const struct bpf_func_proto *
- bpf_mptcp_sched_get_func_proto(enum bpf_func_id func_id,
- 			       const struct bpf_prog *prog)
-@@ -43,12 +44,10 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 					     const struct bpf_reg_state *reg,
- 					     int off, int size)
- {
--	const struct btf_type *t;
-+	u32 id = reg->btf_id;
- 	size_t end;
- 
--	t = btf_type_by_id(reg->btf, reg->btf_id);
--
--	if (t == mptcp_sock_type) {
-+	if (id == mptcp_sock_id) {
- 		switch (off) {
- 		case offsetof(struct mptcp_sock, snd_burst):
- 			end = offsetofend(struct mptcp_sock, snd_burst);
-@@ -58,7 +57,7 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 				off);
- 			return -EACCES;
- 		}
--	} else if (t == mptcp_subflow_type) {
-+	} else if (id == mptcp_subflow_id) {
- 		switch (off) {
- 		case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
- 			end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
-@@ -75,7 +74,7 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 
- 	if (off + size > end) {
- 		bpf_log(log, "access beyond %s at off %u size %u ended at %zu",
--			t == mptcp_sock_type ? "mptcp_sock" : "mptcp_subflow_context",
-+			id == mptcp_sock_id ? "mptcp_sock" : "mptcp_subflow_context",
- 			off, size, end);
- 		return -EACCES;
- 	}
-@@ -140,14 +139,12 @@ static int bpf_mptcp_sched_init(struct btf *btf)
- 	if (type_id < 0)
- 		return -EINVAL;
- 	mptcp_sock_id = type_id;
--	mptcp_sock_type = btf_type_by_id(btf, mptcp_sock_id);
- 
- 	type_id = btf_find_by_name_kind(btf, "mptcp_subflow_context",
- 					BTF_KIND_STRUCT);
- 	if (type_id < 0)
- 		return -EINVAL;
- 	mptcp_subflow_id = type_id;
--	mptcp_subflow_type = btf_type_by_id(btf, mptcp_subflow_id);
- 
- 	return 0;
- }
+ BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
+ BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+-BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx_by_pos)
+ BTF_ID_FLAGS(func, mptcp_subflow_active)
+ BTF_ID_FLAGS(func, mptcp_set_timeout)
+ BTF_ID_FLAGS(func, mptcp_wnd_end)
 -- 
 2.43.0
 
