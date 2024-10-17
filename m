@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C76C779FD
-	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 10:22:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C0D779FD
+	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 10:22:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729160569; cv=none; b=RIIrJhSi8tHU8ozFdK/tzyw/18AiPoKDAcANKl1YFY9AvrYQ5g6owJOfu86t4hNkgr+nP6DLR5SCKrzMQ5VPrgK/cNQAyY26U/znHYIbwore1qQJQ0eWFRGRx9mFoouvZGntEF7oK+FykyqpE2GOXVBM4j1O4WXLK6NZ+u9CklQ=
+	t=1729160571; cv=none; b=cUiB7WECpBa/2nPvpnm/21S58q4aRIDW+s5kpo6HQJZMzWnZqp0Piiw840aw1obRbV1sTwq49BOAbN1hXydbn1Ob9GQaJaAM5aBHO+nES2UlaL5+BeQXKfX9zePC08itqfTinR7S6e5AzofksLWnIhHUexgAgvuJdgnTMyBFBpY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729160569; c=relaxed/simple;
-	bh=PfB1yZw9mAsYcFrfCWKV3G1mUHHCMm+98nIELBImSJQ=;
+	s=arc-20240116; t=1729160571; c=relaxed/simple;
+	bh=SBYyz3UfP8B09or0JY+xbymOV/Qj9iiPUqV3IalP6FU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=J8oDCj07DOx+A/K58oGOg3ZW6zjE2NBOq4e7rQ5EBrNVJ+B60dcOZc9/jmvdvn9m9HOEBw6fYQ2YYSAcTsoqmxYQFhrxlwMn4RuYtjXplkFq4pte8mom5XGBWF1bN+dtlc5fC8eJW5RSf2I+qDnzctbrdaySIXV6FXJvAAfagYw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UyGJwKrM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Qw8zj+HouSproZecLC2Lu9WQxQKyiqUboehLRrjRshAcFil9uWzxMBc78DuZX2B5wLMkQazfAhPdQPMVYBhJxyfRcBxrfhouePwRbQ9gyJcJiOqbXXQCR6ofhkpqi8ERh5nOY2fHJjI+x6+5bLaZSTxsap9osxS3BD3vSE6ATMs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fyJij44M; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UyGJwKrM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16B4FC4CEC3;
-	Thu, 17 Oct 2024 10:22:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fyJij44M"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E431FC4CEC7;
+	Thu, 17 Oct 2024 10:22:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729160569;
-	bh=PfB1yZw9mAsYcFrfCWKV3G1mUHHCMm+98nIELBImSJQ=;
+	s=k20201202; t=1729160571;
+	bh=SBYyz3UfP8B09or0JY+xbymOV/Qj9iiPUqV3IalP6FU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=UyGJwKrMdtd7xTJK4DmQJf1Siv/gtnPM9xGIwoD3cRL7jAnM94j7vUtR16p+GHbsJ
-	 I/XEvj/n+ZhGhm59Yc08M5yYfU0Hy1IlEFAARgtFGkvTEAu9B55pBFw0Z+Vw8mu4py
-	 xIFYjXNDnPbsjo983W6TLUwfaDNs/vscYQPgKjc/diNPghHxd7vZ5IY44ipTIxt3lD
-	 foTL1w4B6oqqBOTy4+RhJgGlRfzydg4CGOrZoriNsa6JS/VZ/wqXgbrF0qW0llwSks
-	 Mv3yvpSvbj9MR/6U6ZpHlq+PSJzZNXiwxV205/MQv4TwZX4akD+tJhxQNOIfKkyTBm
-	 Y2hwYuQlRXnQQ==
+	b=fyJij44MEFpDaFFblhYaBOQHd46T0hvdmJZDKZerW1idgH+mOuK/7lzEX9Pv91wVO
+	 /dJavqn07W4Jz1Z4n99NawH9dz7y5SvcAOYe3/Eo898bRjeUfAOxAx6JZdU8J+UF9n
+	 dyG7oCyJ8TEtTEesi9L0WtKz7PqXW9cjM4hO65WguIv8a0Pkkm6zelvy7uRlG5JdvI
+	 V8kulHgVqrhPe5m28EKOKmB/QnChCDHMJYlLPFBrwC1i+S1m6pftgaFQaYGOEHtmuR
+	 vzI62ent7dJROV8DGasNOKG/220lPDQuWPCBO+KB/ym7QNUHUXXMtDP0zClCIzpPj+
+	 Sk9VSZldjTrbA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 1/2] Squash to "bpf: Register mptcp common kfunc set"
-Date: Thu, 17 Oct 2024 18:21:41 +0800
-Message-ID: <41f7542b3fce0903d12f05dbdbd884b7bf0b9797.1729159086.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 2/2] Squash to "selftests/bpf: Add mptcp_subflow bpf_iter test prog"
+Date: Thu, 17 Oct 2024 18:21:42 +0800
+Message-ID: <01292808c07fdaa9925d3be09a4ed1d8b82887f4.1729159086.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1729159086.git.tanggeliang@kylinos.cn>
 References: <cover.1729159086.git.tanggeliang@kylinos.cn>
@@ -45,49 +45,25 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-bpf_mptcp_sk() definition is missing. It will be used in patch 4.
-
-Please update the commit log:
-
-'''
-MPTCP helper mptcp_sk() is used to convert struct sock to mptcp_sock.
-Helpers mptcp_subflow_ctx() and mptcp_subflow_tcp_sock() are used to
-convert between struct mptcp_subflow_context and sock. They all will
-be used in MPTCP BPF programs too. This patch defines corresponding
-wrappers of them, and put the wrappers into mptcp common kfunc set
-and register the set with the flag BPF_PROG_TYPE_UNSPEC to let them
-accessible to all types of BPF programs.
-'''
+Export bpf_mptcp_sk(), it is used in this test program.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index a2fd62c2777a..1ad7f703abb2 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -216,6 +216,11 @@ struct bpf_iter_mptcp_subflow_kern {
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+index b1f6e1fb467e..3b20cfd44505 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+@@ -46,6 +46,7 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+ extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
+ extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
  
- __bpf_kfunc_start_defs();
- 
-+__bpf_kfunc static struct mptcp_sock *bpf_mptcp_sk(struct sock *sk)
-+{
-+	return mptcp_sk(sk);
-+}
-+
- __bpf_kfunc static struct mptcp_subflow_context *
- bpf_mptcp_subflow_ctx(const struct sock *sk)
- {
-@@ -291,6 +296,7 @@ __bpf_kfunc static bool bpf_mptcp_subflow_queues_empty(struct sock *sk)
- __bpf_kfunc_end_defs();
- 
- BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
-+BTF_ID_FLAGS(func, bpf_mptcp_sk)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
++extern struct mptcp_sock *bpf_mptcp_sk(struct sock *sk) __ksym;
+ extern struct mptcp_subflow_context *
+ bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
+ extern struct sock *
 -- 
 2.43.0
 
