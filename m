@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CFAB1C695
-	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 12:18:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4ACA51DB346;
+	Thu, 17 Oct 2024 12:59:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729167483; cv=none; b=O7FDMfhO/WnRPUHNMYQ3WdwpB+ZtIpZQCVVOnp9JXsq5GhQJ/SVg01utuq84/Yc+JtjDSPmDRfD4zofkoSLVIMcW2F2EwxaU1DpnHsfgajn5XEzrVC3XlLyMUWyQ7CtZvW71A65Fxv0djXLXrWDb1G/L2+QCP0Ccmi/1Sf1aDio=
+	t=1729169999; cv=none; b=QPhOTcFfy3u98fUVuJRd6Y3n/FAGBpcNLUW2QOS676UF/YjqNmnCLxLo4hHYRDb6o+vK6Z/ZqRHeq21HhFpqrXZ7bocjIzqzsZ/MBac4YE0dvuhDkVd+OHaDYRmL45Yrwco8sHp9vwQah6CLTsH4M3mTgyx5I46hNiuJKpyciUs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729167483; c=relaxed/simple;
-	bh=tb1EncvSe9v0b0Mp8ZrdTHXrBq0oAZpe3K+8xJEuxyA=;
-	h=Message-ID:Date:MIME-Version:To:From:Subject:Content-Type; b=etPs1tXwp9l70KyrZceAKyyB07dh7jcrRwKWUvBFHTdUvJWFfNSFpqKZBIm/rB3J574nU4xI/ZAUoBwdxPziqQAbyaIS+Gp6oI7sIvcd/vgVeccooLsbNwhSeZyLcGyu0UDovMdWoAI3+HlFq35azzBmxdfPwlACFZP8Vs7dqHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KbJWDuSm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729169999; c=relaxed/simple;
+	bh=YOZCH60pS1Se/2HsDojbhYFYSgrcFk/30n+UQMt0dZ8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=lpcmDM6zpcbCY3m2BsmA9kE0cdtsFYxiidmnN+B1Nx6JxPenqPIFKfPr4+sP4Euk7of1rOBPukE59TerYcRqV1OoxzJYY4rU0/0NCRyCS/U9mqlmbut0hUvzdPfopel3gJQWt7TW6XIp3VYcTKaBWJ+bfaZtmDku1qvGNid+REQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IdPqZ8at; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KbJWDuSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A999C4CEC3
-	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 12:18:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IdPqZ8at"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69657C4CEC3;
+	Thu, 17 Oct 2024 12:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729167483;
-	bh=tb1EncvSe9v0b0Mp8ZrdTHXrBq0oAZpe3K+8xJEuxyA=;
-	h=Date:To:From:Subject:From;
-	b=KbJWDuSmAstkJ2JJPW9fWFh42hHP2yxqYTRdcxg9+vnlXufamt5tZBbMFjl69iVZV
-	 oXnKtHmFTyt2D6A9HLQWFOyJ4JEQ80LTHadAolIKBcc3CqvWKEoSNw1rPZf5YYIeDo
-	 DfV9jCHv8obRumMZsqlmdNl0sTrX3CTCeucXmCKwbuIfGEiQI93DSi0ql1XAv3tQwE
-	 mzMJCnbl93/Ms+iodxxVCT2TQEolzO+OmibL5jRKZXoyU4AsMdN8LrLZLXl0HWdXDK
-	 aC30kIniLiaY7s4jGH7Mkj2kcsTZPhXI6207I4LH86d82JWqOqGRTajlyQzCmFBW0s
-	 /BjLXcVPKamZg==
-Message-ID: <9927767d-781f-4459-b1a1-6b053b0c6993@kernel.org>
-Date: Thu, 17 Oct 2024 14:17:59 +0200
+	s=k20201202; t=1729169998;
+	bh=YOZCH60pS1Se/2HsDojbhYFYSgrcFk/30n+UQMt0dZ8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=IdPqZ8atudZ9qKVqW7AlhqQOQJrTUZBkXcpP6cCrBieF+KEsw7ZZiexSd0+lqehRP
+	 5hkzdoqE/aycN6EJYpX8eIckN6wwo4anAoQQSM+8Ily0XolrP92Oe/ShbMuMPpWMmF
+	 eInmrFKvBy7nvRK8glJ7GU53jzGhLvB5UAl1kvIFsfJmkVWPXctkOca8znJV5HKtnB
+	 PTeRtjFsBGt/UeimPMEBK3oCm/iBMTwoHr+s0MxBv4XUXK7lmFLIh+4HqoQWB6mQEj
+	 fwvzmdQpGP3E0ssid0xxQP+WB4jYmAmHcz1NGgVyeIRvLiXKnR4XPnFrjsn9g+wmCF
+	 XIPwyygrAtaKA==
+Message-ID: <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+Date: Thu, 17 Oct 2024 14:59:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,10 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
 Content-Language: en-GB
-To: MPTCP Linux <mptcp@lists.linux.dev>
+To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, mic@digikod.net,
+ gnoack@google.com
+Cc: willemdebruijn.kernel@gmail.com, matthieu@buffet.re,
+ linux-security-module@vger.kernel.org, netdev@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, yusongping@huawei.com,
+ artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
+ <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: MPTCP: CI: now validating MPTCP BPF tests with a debug kernel
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -82,22 +91,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
+In-Reply-To: <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Mikhail and Landlock maintainers,
 
-FYI, I just modified the CI to validate the MPTCP BPF tests with a debug
-kernel, so it can hopefully help to catch more nasty issues.
++cc MPTCP list.
 
-Now we have an extra job in parallel, with an additional summary:
+On 17/10/2024 13:04, Mikhail Ivanov wrote:
+> Do not check TCP access right if socket protocol is not IPPROTO_TCP.
+> LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
+> should not restrict bind(2) and connect(2) for non-TCP protocols
+> (SCTP, MPTCP, SMC).
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11381763784
+Thank you for the patch!
 
-The dev docker image has new parameters: auto-btf-debug and
-manual-btf-debug:
+I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
+treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
+see TCP packets with extra TCP options. On Linux, there is indeed a
+dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
+because we needed such dedicated socket to talk to the userspace.
 
-https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
+I don't know Landlock well, but I think it is important to know that an
+MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
+will do a fallback to "plain" TCP if MPTCP is not supported by the other
+peer or by a middlebox. It means that with this patch, if TCP is blocked
+by Landlock, someone can simply force an application to create an MPTCP
+socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
+certainly work, even when connecting to a peer not supporting MPTCP.
+
+Please note that I'm not against this modification -- especially here
+when we remove restrictions around MPTCP sockets :) -- I'm just saying
+it might be less confusing for users if MPTCP is considered as being
+part of TCP. A bit similar to what someone would do with a firewall: if
+TCP is blocked, MPTCP is blocked as well.
+
+I understand that a future goal might probably be to have dedicated
+restrictions for MPTCP and the other stream protocols (and/or for all
+stream protocols like it was before this patch), but in the meantime, it
+might be less confusing considering MPTCP as being part of TCP (I'm not
+sure about the other stream protocols).
+
+
+> sk_is_tcp() is used for this to check address family of the socket
+> before doing INET-specific address length validation. This is required
+> for error consistency.
+> 
+> Closes: https://github.com/landlock-lsm/linux/issues/40
+> Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
+
+I don't know how fixes are considered in Landlock, but should this patch
+be considered as a fix? It might be surprising for someone who thought
+all "stream" connections were blocked to have them unblocked when
+updating to a minor kernel version, no?
+
+(Personally, I would understand such behaviour change when upgrading to
+a major version, and still, maybe only if there were alternatives to
+continue having the same behaviour, e.g. a way to restrict all stream
+sockets the same way, or something per stream socket. But that's just me
+:) )
 
 Cheers,
 Matt
