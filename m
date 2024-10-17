@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 650EE1DAC9B
-	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 10:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B74B71DAC9F
+	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 10:56:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729162557; cv=none; b=fydUotvwl70Sxm3SXESjNM2wusPeyutCi9djtV6raFuLVLNlbMDEkx6M+xeUbYceryHcZ4ZmC8iFZ4mrIfmJl1ss2kZ4BUD6rvYGZpS/QMoIi2IrlJl1QTCCyEm0ujCk9XoCrwgXrrwF8no2T3OFw8Dcb4vXaFLQINelxG6L3+g=
+	t=1729162561; cv=none; b=Psl3wOzyVDJAGR2+3EZC/XZTJu48j9urLRcjEUeQ5+tqP9ivgCv882HWhkw6DkIIMKOi0lmC0Yd78j0A//J50xelBFcTKYHd5ksf26TP+mWRscTWVcCwVBSgxHtqOwO+VCwhnAfAhN8F9UhbbtBjHbsa8bpz2zb1YCLMPj6K7eI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729162557; c=relaxed/simple;
-	bh=SBYyz3UfP8B09or0JY+xbymOV/Qj9iiPUqV3IalP6FU=;
+	s=arc-20240116; t=1729162561; c=relaxed/simple;
+	bh=hKQHcwvQPd4LoZMLqmnoTXI6VkLicWJ3JecdnYNwr68=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mOcmQ+M69oSug1ZSQNEYnkOaOGe3MP/S2m/qSO2vtNx4EWFSwOfoPjbTOk0HuXGOxCCLhv6crvc2XNz8nD/cX7vuZj9NGjcgQEH4BuE8SHZxUvxNYhxDiSQWeOio1CDVn4ZzxoSiydfGR3+bcdpS5URzFNeH5gkGO0MlUac6AoY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dVGew4Ze; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=GqWQb2DzJj0j1m2jcJUwty7Sz+m5kJfyaDEUgARJoQOt4fuaaYRWzP5roLHsihbcpRt4bjnUYu4eWy0w9lywZy2qPVXfRHnF9G6HwbPFm1wLrf/eFK+YB75Wd2OKpjJlgtnmcFAsE6Rd8S8ghrv54QqYFUwwlMCniSdGiUdpe/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dFLJ7YZ9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dVGew4Ze"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F9B2C4CEC3;
-	Thu, 17 Oct 2024 10:55:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dFLJ7YZ9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A6D8C4CEC3;
+	Thu, 17 Oct 2024 10:55:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729162557;
-	bh=SBYyz3UfP8B09or0JY+xbymOV/Qj9iiPUqV3IalP6FU=;
+	s=k20201202; t=1729162561;
+	bh=hKQHcwvQPd4LoZMLqmnoTXI6VkLicWJ3JecdnYNwr68=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=dVGew4ZetdcyjllArZvSBueWJnPbkjUfVA19kpglxiVXYRBRC3CNQBVRlhqxM8mFJ
-	 RPtSSc9ANeewd6x5YzXvrsGaJ4C3aHS0IjTyRRe8nhIP5nl2v1LFCwaMLrLr7ne39h
-	 9lZx3auQ34/Z7EreWqtuHN5X5f94jlQBzvGMCDk16IBTpp9QwndxEqVW4UkkCTVZ1j
-	 ffJY700JdJOeOFWk0kSwfEv4uvOFKn7Xj7mGL6r0BdGhsMwRebFXSyguGeuTbFh7WD
-	 GrVTE8nhXS8Qm+KkmG30r/BcplcW80gxRQ4pgtDyF/MQKJq8vaUGTsCYhkQuecdt9H
-	 uG5zjLN5ckZ1g==
+	b=dFLJ7YZ96R76Fg/FZ+cW+ooYESvumjPrfywS4JTwft5nXDK6o1dxkDfDrQUHy3oju
+	 S7+58jPWZSpp3m7+ylY/EKed1RbYiRWJKJ/6ffMTiuS/y7a2MvrNlboYyelzdI5tnZ
+	 k9MymnGhrZb2iD0eIzd1DTb0DpIzzbw6vBZ1iG3YtuTkpfJNWOYb2jkwUkZ8RMztWV
+	 zdQnf36jy9zkxKIFCBeWbvMpVNgd4SS32jErSuOjUALOhzDwU7BTuKDRH7AyCQK8yV
+	 mDLdP7sULi9U2RV1NWHsIp77kjrpZoyPaX4Hl2++u+T+fxC+t86dEvTbcrwMUB367p
+	 +JOIv4GlmLTJg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/3] Squash to "selftests/bpf: Add mptcp_subflow bpf_iter test prog"
-Date: Thu, 17 Oct 2024 18:55:31 +0800
-Message-ID: <01292808c07fdaa9925d3be09a4ed1d8b82887f4.1729162349.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 3/3] Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
+Date: Thu, 17 Oct 2024 18:55:32 +0800
+Message-ID: <5c6243ea7e2429c75ff2cba228416194601d7ae6.1729162349.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1729162349.git.tanggeliang@kylinos.cn>
 References: <cover.1729162349.git.tanggeliang@kylinos.cn>
@@ -45,25 +45,29 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Export bpf_mptcp_sk(), it is used in this test program.
+/home/tgl/mptcp_net-next/tools/testing/selftests/bpf/prog_tests/mptcp.c: In function 'test_iters_subflow':
+/home/tgl/mptcp_net-next/tools/testing/selftests/bpf/prog_tests/mptcp.c:546:13: error: unused variable 'err' [-Werror=unused-variable]
+  546 |         int err;
+      |             ^~~
+  TEST-OBJ [test_progs] pe_preserve_elems.test.o
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/bpf/progs/mptcp_bpf.h | 1 +
- 1 file changed, 1 insertion(+)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index b1f6e1fb467e..3b20cfd44505 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -46,6 +46,7 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
- extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
- extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 6644fdaa10a5..7282e98a8f51 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -543,7 +543,6 @@ static void test_iters_subflow(void)
+ 	struct mptcp_bpf_iters *skel;
+ 	struct nstoken *nstoken;
+ 	int cgroup_fd;
+-	int err;
  
-+extern struct mptcp_sock *bpf_mptcp_sk(struct sock *sk) __ksym;
- extern struct mptcp_subflow_context *
- bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
- extern struct sock *
+ 	cgroup_fd = test__join_cgroup("/iters_subflow");
+ 	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: iters_subflow"))
 -- 
 2.43.0
 
