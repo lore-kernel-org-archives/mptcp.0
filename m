@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 811371D079F
-	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 08:09:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6AFA1D47A2
+	for <mptcp@lists.linux.dev>; Thu, 17 Oct 2024 09:06:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729152551; cv=none; b=EcJSgCqC2bAw1pGwsYXFqqOXnqjFRA/y/zS64REEuYVsN7rcipP3lkZn4D2LHn04A8Z+8Obso0nQemUfyvrbcuN0FN/dVfxlck5kPAcDYAWcPGfcaSMBfzMbARuLlvk8vxxn5OZ8ZZLkbs2H8ozGUbV1i9/KcjFLE3CUVYsbmsg=
+	t=1729155972; cv=none; b=tB6Pxp9I156ijnjaDi9dT5OZaSbofoYxo23RoKXcsD2p25xiuplq95mUA+ZcG/DxO2XamlkEO6RyIOXEPoR/obfSN72cOOy/4E+02LwWTZxSi9pHEqp/ygM5ggY+6MdeCOJQCXsw+0NLUfQSnBanTtqXiOvrV2dJwQwewJM3I4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729152551; c=relaxed/simple;
-	bh=sopR6HJTpcGK0NCl8//Mfu0jzdylv5Xk1n8fq12yAIo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=igzrFq/kzIApzR+QGtxvfZle4QSjFqhBHl4ngE9kVyJ6ea25v2SE0bFHKg8h04GnHUDBDR9crr2YuvH7UDXDx4g/00Hd2EbjI/S9sooUuJElPsYXAsdjd52BgRthhgFO6ovYT88J3ksj2ONTwDPzIjPpURKWEQCE+iVgHlFEEwc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VnFaQ6MP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729155972; c=relaxed/simple;
+	bh=pHGDuJyy42ShvH1YeSjsuUpcq9CFwvqbbWyiFQGDYpU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=j5veO8++EM3TY8keNyukSsbb02Xz/hhqGNa8wTLRN4Kr3GRN8HPUqSGc68OIDV3hVEoTAw4I3k2ZjoU9MJN0uN3x24objE11IOLkp7BeItNzBYbltQaoJ2ohhv2MxjIwPHTgnjiqiQ3SAYP5udMqCUZAWShFZM5kfJsHy0kdOXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BYq7KOfQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VnFaQ6MP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6B7B2C4CEC3;
-	Thu, 17 Oct 2024 08:09:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BYq7KOfQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834C0C4CEC3;
+	Thu, 17 Oct 2024 09:06:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729152551;
-	bh=sopR6HJTpcGK0NCl8//Mfu0jzdylv5Xk1n8fq12yAIo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=VnFaQ6MP1rDva3QvdWTMjVSUV2bOsDb9/efv99y8Iqsf4IDJNG6HxHQjXfj7uw9pE
-	 vjbZfjAnDs+CKvO1/1uuQJ4uNIu4soQgBFrgF7xJC/vJLws5wCrdW0IEZSticqQ99V
-	 rkcsf4pmq/34bA5r55MsRVTmqDz/ytyckOC1CgGmp1Ikh1iaqcGmYNbeVc9BdmB0TC
-	 w4LqWi9oEufs+YIJ67tFfCthLcVyDA5R5s7tvZQ9U7xjIZSRbA/ihl8nUL9lGI9OFn
-	 57L29LAautaQIosD2IgBkPFzwOV9KHguVqzcqUN+F+OHh6YxfEVc364LSqNYbezc56
-	 glsrBkMY80dOA==
-Message-ID: <719a24cb-bdc1-43cb-b008-855b09e630d6@kernel.org>
-Date: Thu, 17 Oct 2024 10:09:06 +0200
+	s=k20201202; t=1729155972;
+	bh=pHGDuJyy42ShvH1YeSjsuUpcq9CFwvqbbWyiFQGDYpU=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=BYq7KOfQ2FgQqJpJ8L6b/EQdMAtvdnwgRsh4FHlfga+vzcmJ89xJ0mMVEMwK+EAL1
+	 j8yh1Af5Fll3Wct9NPPKRZlI1ZNVjTNQ+HPExBzneyxunUINleGa3Z5Y9zbeVOez7X
+	 psr7ndmLg4WsIUlcgG/Et4rzF7IoP1TSfHmbRtvhlX448LExi5MdvLkKFYXpFhEike
+	 kQTyqTOwg1u7Df19l0gyJsYS8bTL1XrDaGN5VngZT5tirCOTJfF2n5aCUjeUAXNECn
+	 IeMEOyGx5YFAqGXA6GKl87+dnJ36ndXLaTQoP9P9tKWk+j1PtF4MYzkTw9Ixorbjr2
+	 Q5uyGFB6tT0Mw==
+Message-ID: <ca4f0cd2-4399-47da-a3b6-cf0c35e339de@kernel.org>
+Date: Thu, 17 Oct 2024 11:06:09 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/2] Squash to "bpf: Add bpf_mptcp_sched_ops"
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: "fix suspicious RCU usage" warnings
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>
 References: <20241016-mptcp-sched-find-rcu-v1-0-5e9af4fbce11@kernel.org>
- <20241016-mptcp-sched-find-rcu-v1-2-5e9af4fbce11@kernel.org>
- <3aa7ba9211ce89a31eb61def9a0c51ce2cdb1c5d.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,130 +84,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3aa7ba9211ce89a31eb61def9a0c51ce2cdb1c5d.camel@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>, Davide Caratti <dcaratti@redhat.com>
+In-Reply-To: <20241016-mptcp-sched-find-rcu-v1-0-5e9af4fbce11@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the review!
-
-On 17/10/2024 03:29, Geliang Tang wrote:
-> On Wed, 2024-10-16 at 21:05 +0200, Matthieu Baerts (NGI0) wrote:
->> Similar to the previous commit, this splat can be seen:
->>
->>   =============================
->>   WARNING: suspicious RCU usage
->>   6.12.0-rc2+ #1 Tainted: G           OE
->>   -----------------------------
->>   net/mptcp/sched.c:44 RCU-list traversed in non-reader section!!
->>
->>   other info that might help us debug this:
->>
->>   rcu_scheduler_active = 2, debug_locks = 1
->>   1 lock held by test_progs/323:
->>   ffff888007e16a40 (&st_map->lock){+.+.}-{3:3}, at:
->> bpf_struct_ops_map_update_elem (kernel/bpf/bpf_struct_ops.c:632)
->>
->>   stack backtrace:
->>   CPU: 0 UID: 0 PID: 323 Comm: test_progs Tainted: G          
->> OE      6.12.0-rc2+ #1
->>   Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
->>   Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
->>   Call Trace:
->>    <TASK>
->>    dump_stack_lvl (lib/dump_stack.c:123)
->>    lockdep_rcu_suspicious (kernel/locking/lockdep.c:6822)
->>    mptcp_sched_find (net/mptcp/sched.c:44 (discriminator 7))
->>    bpf_mptcp_sched_init_member (net/mptcp/bpf.c:128
->> net/mptcp/bpf.c:109)
->>    ? btf_type_resolve_ptr (include/linux/btf.h:252
->> kernel/bpf/btf.c:637)
->>    bpf_struct_ops_map_update_elem (kernel/bpf/bpf_struct_ops.c:658)
->>    ? __might_fault (mm/memory.c:6700 (discriminator 5)
->> mm/memory.c:6693 (discriminator 5))
->>    ? __pfx_bpf_struct_ops_map_update_elem
->> (kernel/bpf/bpf_struct_ops.c:591)
->>    ? __pfx___might_resched (kernel/sched/core.c:8593)
->>    ? kasan_save_track (arch/x86/include/asm/current.h:49
->> (discriminator 1) mm/kasan/common.c:60 (discriminator 1)
->> mm/kasan/common.c:69 (discriminator 1))
->>    bpf_map_update_value (kernel/bpf/syscall.c:169)
->>    map_update_elem (kernel/bpf/syscall.c:1627)
->>    ? __pfx_map_update_elem (kernel/bpf/syscall.c:1586)
->>    __sys_bpf (kernel/bpf/syscall.c:5622)
->>    ? __pfx___sys_bpf (kernel/bpf/syscall.c:5596)
->>    __x64_sys_bpf (kernel/bpf/syscall.c:5739)
->>    ? lockdep_hardirqs_on_prepare (kernel/locking/lockdep.c:4347
->> kernel/locking/lockdep.c:4406)
->>    do_syscall_64 (arch/x86/entry/common.c:52 (discriminator 1)
->> arch/x86/entry/common.c:83 (discriminator 1))
->>    entry_SYSCALL_64_after_hwframe (arch/x86/entry/entry_64.S:130)
->>
->> Also similar to the previous commit, this can be fixed by adding the
->> missing rcu_read_lock().
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/bpf.c | 10 +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
->> index
->> 6414824402e6449ba01efb9093b2293232a67915..a9d6b5b939a2631f17a468ee6ba
->> 4867dc33dda63 100644
->> --- a/net/mptcp/bpf.c
->> +++ b/net/mptcp/bpf.c
->> @@ -113,6 +113,7 @@ static int bpf_mptcp_sched_init_member(const
->> struct btf_type *t,
->>  	const struct mptcp_sched_ops *usched;
->>  	struct mptcp_sched_ops *sched;
->>  	u32 moff;
->> +	int ret;
->>  
->>  	usched = (const struct mptcp_sched_ops *)udata;
->>  	sched = (struct mptcp_sched_ops *)kdata;
->> @@ -123,9 +124,12 @@ static int bpf_mptcp_sched_init_member(const
->> struct btf_type *t,
->>  		if (bpf_obj_name_cpy(sched->name, usched->name,
->>  				     sizeof(sched->name)) <= 0)
->>  			return -EINVAL;
->> -		if (mptcp_sched_find(usched->name))
->> -			return -EEXIST;
+On 16/10/2024 21:05, Matthieu Baerts (NGI0) wrote:
+> Enabling PROVE_RCU_LIST (and RCU_EXPERT) shows list_for_each_entry_rcu()
+> from mptcp_sched_find() not being used with RCU read lock held.
 > 
-> This part of mptcp_sched_find() code comes from bpf_tcp_ca_init_member,
-
-When big chunks of code are copied from somewhere else in the kernel, do
-you mind adding a comment on top of the new code: this would help
-reviewers, but also developers and maintainers later when there are some
-adaptations to do, e.g. to stay in sync. In case of issue, we don't lose
-time trying to understand what's wrong on our side if we can quickly
-compare to another part of the kernel doing something very similar.
-
-> but it was recently deleted by commit 68b04864ca42 ("bpf: Create links
-> for BPF struct_ops maps.").
+> The first patch is a fix for -net. The other one is for a commit that is
+> only in our tree.
 > 
-> --- a/net/ipv4/bpf_tcp_ca.c
-> +++ b/net/ipv4/bpf_tcp_ca.c
-> @@ -239,8 +239,6 @@ static int bpf_tcp_ca_init_member(const struct
-> btf_type *t,
->                 if (bpf_obj_name_cpy(tcp_ca->name, utcp_ca->name,
->                                      sizeof(tcp_ca->name)) <= 0)
->                         return -EINVAL;
-> -               if (tcp_ca_find(utcp_ca->name))
-> -                       return -EEXIST;
->                 return 1;
->         }
-> 
-> So we should also delete this part directly instead of adding
-> rcu_read_lock.
-> 
-> .validate interface is added in bpf_struct_ops by commit 68b04864ca42,
-> I'll implement it in both mptcp_sched_ops and mptcp_pm_ops too.
+> Link: https://lore.kernel.org/20241016011144.3058445-1-kuba@kernel.org
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Matthieu Baerts (NGI0) (2):
+>       mptcp: init: protect sched with rcu_read_lock
+>       Squash to "bpf: Add bpf_mptcp_sched_ops"
 
-Indeed, it looks better to implement this ".validate" interface. If
-that's OK, I'm planning to add the rcu_read_lock() now to avoid the
-warning I mentioned. We can move this to the validation part later on.
+Thank you for the review! I just applied these two patches in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- e80dfc53fa3d: mptcp: init: protect sched with rcu_read_lock
+- Results: 32fda8b8e0f1..4367da1fbf63 (export-net)
+- 8e293a58ad78: "squashed" patch 2/2 in "bpf: Add bpf_mptcp_sched_ops"
+- Results: baccd7675477..0004ac084daf (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/6b56229c81f9ee84435f808186d11e9bcb7ad6c3/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e8bb62da034e057e6d778b8d7c8c0c9c5cd5d5ab/checks
 
 Cheers,
 Matt
