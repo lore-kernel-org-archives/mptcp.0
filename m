@@ -1,193 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 748611DE8B7;
-	Thu, 17 Oct 2024 14:32:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D201B20E300
+	for <mptcp@lists.linux.dev>; Fri, 18 Oct 2024 01:07:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729175554; cv=none; b=AeNPW8l5kEpPYV0nsrFbAkQe8pFmJeX18blW+D3sx+RXE/a58+6vFwRECzMowo2uGUF06kFTf/9GVJ467zxuVZis49ePhzPeLM5KlHeTgnz7GaZN3/OSXKVua5XKfcd2FJR89dssbBd7BysIYtScPdiYEKQH29K9jx+uXlk/IoQ=
+	t=1729213676; cv=none; b=WU1nv1N64oDgz9emYrjktMQvxKrnmoD2xZeNVyE0VAhOKLRhrqdgi/EAClYt5KvcmlVj+OKCUbYSq9j2KoHk4iYJCIXfKKHOr7S79kUw1l7gySmkbDQBphWeoquxv8K22d+lrIUORInVor8JxSepjAzQCx5TnVYpMx3PY8+7R4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729175554; c=relaxed/simple;
-	bh=1Ii5jSLhjY68B9QdyqxXGOO5gIsDocD++fd8h+qAjkU=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=ivI0838LwCMgX3vym20jP0w5jhpvS/GWC3jWDVSP8GzJWNwHx6kVIIadfr7pTnInkNVk56Y+YfVACdhDbUGa8sUu641xNR21WjZh/hMlaf3sPu70tD7cS2pjSIw7jIL4XtbhUSjXp8rtvfmjmvLEvKo0awhmeJjRSO0/1BxI4nY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p9yrosgt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729213676; c=relaxed/simple;
+	bh=SgCEy8GOCgSqTxO2G4KONZBj/ekyls8nAsYsrvq7CnE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Wt6hgHMzveHRtMYuQdO06OdP651EDqj6znWDw1HGucMWVUjYSDdmsSErJ5whx7+glV9kxgVfk5FF6x3ln5kH6WHLcUR4pKTkdflUeQM3b6W7L1Rk3N/OQZLNXnzoI+Qj07GJnzFApUQBpRiBHXuWeh7SPrOu/YPTlVWsRah9Mjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TjUIQyBh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p9yrosgt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6075AC4CEC3;
-	Thu, 17 Oct 2024 14:32:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TjUIQyBh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 54150C4CEC3;
+	Fri, 18 Oct 2024 01:07:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729175554;
-	bh=1Ii5jSLhjY68B9QdyqxXGOO5gIsDocD++fd8h+qAjkU=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=p9yrosgt6bUnF8XDrlkfQMH1Q/0zL5ZG5bT6gNLhAgJ86ykE+mv/8rzFHf2Dhvq4Z
-	 WTCiy2KB+MWF2dqv9BG0wjSoL1SI8vVJ8yT3UMhCDfCMMe0SVS24PRNjgTcgp7xOF2
-	 1K/x0hvOrZx2MEJT1C6/C8+rfMEg8Gv3dZnOyVaCeI9rG/08eVXZL2oU9CKOiLOhJe
-	 KCwoevAMMSV0TxQJ4zCJ/m6XmSl99Xp+JAEu5R9D3JlAAwgeAPFUfn08Af7/eLPoJ6
-	 rFibo0+jjVjgofFe2rg/ByGhmMTiu9gEkz+IXdtf47KJm7rfR+nYcmylfsWPGCLUuX
-	 3tx5SUIN1HEvA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.11.y] tcp: fix mptcp DSS corruption due to large pmtu xmit
-Date: Thu, 17 Oct 2024 16:32:19 +0200
-Message-ID: <20241017143218.1428691-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <2024101432-shucking-snagged-7c42@gregkh>
-References: <2024101432-shucking-snagged-7c42@gregkh>
+	s=k20201202; t=1729213676;
+	bh=SgCEy8GOCgSqTxO2G4KONZBj/ekyls8nAsYsrvq7CnE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TjUIQyBhfCc9A1y+AJsWvBAbOduMnwUAyOpXaaWv7CCbjuSElXOtqw+ap9LRIC4JI
+	 K2dAEUlD51lg3awEIu8WVoefm0jcHldNTzM01uZxfGnJG5+46R91PETcOYjPVrKecw
+	 kwdZo24K/WP1Aj2yH6MU0VPIUdxm0ZBjvRc5pkD9USjmhrZr89Y4iraWkx2bKybeE8
+	 yXCn3+loDWrgdoQaTmVzxuqvxkxGJec0m3bBZGLDXAN04rFuhLHJyhUnAWHwbjH+dh
+	 ZuENVlDrwXcEcHImDSpgjyhTXlGXh05Lp22sR5SDxf0c3u4jAnD6VdG7vFkl7BzKYZ
+	 S4BibM9L+o8bg==
+Message-ID: <a21162662aca34dc4d3891f5d372b13822848df9.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 1/2] mptcp: remove unneeded lock when listing
+ scheds
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>
+Date: Fri, 18 Oct 2024 09:07:52 +0800
+In-Reply-To: <20241017-mptcp-sched-avail-lock-v1-1-028ef592c6f4@kernel.org>
+References: <20241017-mptcp-sched-avail-lock-v1-0-028ef592c6f4@kernel.org>
+	 <20241017-mptcp-sched-avail-lock-v1-1-028ef592c6f4@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7325; i=matttbe@kernel.org; h=from:subject; bh=wnqQKZKfXqUPG5G/qORJmV0dXfCXY8VjZ/oekCYRa6o=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnER/yMfetgVOGKRvwlmaQEiT0EphO4JYiAafJy T6sjYY8JY6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxEf8gAKCRD2t4JPQmmg c4exD/9uBl88FX0SVx44EuYeMZu4y+j6hz5o4trqwrvC0fmuRyrRifLEO53cr0dRbvL8trsJteE f+9gVGzj9bGdQRtYTT4lzA/kC/qCpJGFMc+GHIpXI+2UK2yNr0HuK82duRgbYm+mCilNl4TvLMA +Eh1VZ46Hxqwx0rJWaNtZnagyiwIWnvkoOY+im4a26MFc2rKSfasgIp7C/QTvdlyhCKlLjT8uGg +9Bqa/a6BMmCGFgPiqJE8OBHiyeGlRnlHoFjzJo3MzOqT+y0tHso1FotC/osCGR7dxzxjB+blTt d+nlbJew250AmjEubKegXcw7KF7Fayw6Ut7lv4ZS4mtY36DOPl7ChPHAORm1YzeQMW2jFUZ1dhU OLq/AuEukG5PpstdfQpNao0jkAeAtnS+YEzwmtqGbGzAS3XMXCSUuPPZCzfxxlmQaJBg1bWs8WV mfqsABIyIcairkXc3fGo7mocdUK5+vym5MygfetgzOD/wuwGB2bhs7D0igSeVcRBfzLhNn2QrkX fgcxJFIPkTvR0NVE0EK9rrDK/FpbUl4GSDPJBTp0RQWyEQbRipM+hCK4jzJ+1ds5v5mAzk+CEZ+ uA43r/c8jyd+P2yuH77l/EBwgqDYgHaH5YpGB1gTVxGHoZlKohp319cRJ4xsxzMDoLN0dmi3xmU 1vePeqXvMFb90ZA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
-From: Paolo Abeni <pabeni@redhat.com>
+Hi Matt,
 
-commit 4dabcdf581217e60690467a37c956a5b8dbc6bd9 upstream.
+Thanks for this fix.
 
-Syzkaller was able to trigger a DSS corruption:
+On Thu, 2024-10-17 at 12:16 +0200, Matthieu Baerts (NGI0) wrote:
+> mptcp_get_available_schedulers() needs to iterate over the
+> schedulers'
+> list only to read the names: it doesn't modify anything there.
+> 
+> In this case, it is enough to hold the RCU read lock, no need to
+> combine
+> this with the associated spin lock.
+> 
+> Fixes: 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers")
+> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-  TCP: request_sock_subflow_v4: Possible SYN flooding on port [::]:20002. Sending cookies.
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 5227 at net/mptcp/protocol.c:695 __mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-  Modules linked in:
-  CPU: 0 UID: 0 PID: 5227 Comm: syz-executor350 Not tainted 6.11.0-syzkaller-08829-gaf9c191ac2a0 #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
-  RIP: 0010:__mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-  Code: 0f b6 dc 31 ff 89 de e8 b5 dd ea f5 89 d8 48 81 c4 50 01 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 98 da ea f5 90 <0f> 0b 90 e9 47 ff ff ff e8 8a da ea f5 90 0f 0b 90 e9 99 e0 ff ff
-  RSP: 0018:ffffc90000006db8 EFLAGS: 00010246
-  RAX: ffffffff8ba9df18 RBX: 00000000000055f0 RCX: ffff888030023c00
-  RDX: 0000000000000100 RSI: 00000000000081e5 RDI: 00000000000055f0
-  RBP: 1ffff110062bf1ae R08: ffffffff8ba9cf12 R09: 1ffff110062bf1b8
-  R10: dffffc0000000000 R11: ffffed10062bf1b9 R12: 0000000000000000
-  R13: dffffc0000000000 R14: 00000000700cec61 R15: 00000000000081e5
-  FS:  000055556679c380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000020287000 CR3: 0000000077892000 CR4: 00000000003506f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <IRQ>
-   move_skbs_to_msk net/mptcp/protocol.c:811 [inline]
-   mptcp_data_ready+0x29c/0xa90 net/mptcp/protocol.c:854
-   subflow_data_ready+0x34a/0x920 net/mptcp/subflow.c:1490
-   tcp_data_queue+0x20fd/0x76c0 net/ipv4/tcp_input.c:5283
-   tcp_rcv_established+0xfba/0x2020 net/ipv4/tcp_input.c:6237
-   tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
-   tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2350
-   ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
-   ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   __netif_receive_skb_one_core net/core/dev.c:5662 [inline]
-   __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
-   process_backlog+0x662/0x15b0 net/core/dev.c:6107
-   __napi_poll+0xcb/0x490 net/core/dev.c:6771
-   napi_poll net/core/dev.c:6840 [inline]
-   net_rx_action+0x89b/0x1240 net/core/dev.c:6962
-   handle_softirqs+0x2c5/0x980 kernel/softirq.c:554
-   do_softirq+0x11b/0x1e0 kernel/softirq.c:455
-   </IRQ>
-   <TASK>
-   __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
-   local_bh_enable include/linux/bottom_half.h:33 [inline]
-   rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
-   __dev_queue_xmit+0x1764/0x3e80 net/core/dev.c:4451
-   dev_queue_xmit include/linux/netdevice.h:3094 [inline]
-   neigh_hh_output include/net/neighbour.h:526 [inline]
-   neigh_output include/net/neighbour.h:540 [inline]
-   ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:236
-   ip_local_out net/ipv4/ip_output.c:130 [inline]
-   __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:536
-   __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
-   tcp_transmit_skb net/ipv4/tcp_output.c:1484 [inline]
-   tcp_mtu_probe net/ipv4/tcp_output.c:2547 [inline]
-   tcp_write_xmit+0x641d/0x6bf0 net/ipv4/tcp_output.c:2752
-   __tcp_push_pending_frames+0x9b/0x360 net/ipv4/tcp_output.c:3015
-   tcp_push_pending_frames include/net/tcp.h:2107 [inline]
-   tcp_data_snd_check net/ipv4/tcp_input.c:5714 [inline]
-   tcp_rcv_established+0x1026/0x2020 net/ipv4/tcp_input.c:6239
-   tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
-   sk_backlog_rcv include/net/sock.h:1113 [inline]
-   __release_sock+0x214/0x350 net/core/sock.c:3072
-   release_sock+0x61/0x1f0 net/core/sock.c:3626
-   mptcp_push_release net/mptcp/protocol.c:1486 [inline]
-   __mptcp_push_pending+0x6b5/0x9f0 net/mptcp/protocol.c:1625
-   mptcp_sendmsg+0x10bb/0x1b10 net/mptcp/protocol.c:1903
-   sock_sendmsg_nosec net/socket.c:730 [inline]
-   __sock_sendmsg+0x1a6/0x270 net/socket.c:745
-   ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2603
-   ___sys_sendmsg net/socket.c:2657 [inline]
-   __sys_sendmsg+0x2aa/0x390 net/socket.c:2686
-   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fb06e9317f9
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007ffe2cfd4f98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-  RAX: ffffffffffffffda RBX: 00007fb06e97f468 RCX: 00007fb06e9317f9
-  RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
-  RBP: 00007fb06e97f446 R08: 0000555500000000 R09: 0000555500000000
-  R10: 0000555500000000 R11: 0000000000000246 R12: 00007fb06e97f406
-  R13: 0000000000000001 R14: 00007ffe2cfd4fe0 R15: 0000000000000003
-   </TASK>
+Good catch!
 
-Additionally syzkaller provided a nice reproducer. The repro enables
-pmtu on the loopback device, leading to tcp_mtu_probe() generating
-very large probe packets.
+Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-tcp_can_coalesce_send_queue_head() currently does not check for
-mptcp-level invariants, and allowed the creation of cross-DSS probes,
-leading to the mentioned corruption.
+-Geliang
 
-Address the issue teaching tcp_can_coalesce_send_queue_head() about
-mptcp using the tcp_skb_can_collapse(), also reducing the code
-duplication.
-
-Fixes: 85712484110d ("tcp: coalesce/collapse must respect MPTCP extensions")
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/513
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20241008-net-mptcp-fallback-fixes-v1-2-c6fb8e93e551@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflict in tcp_output.c, because the commit 65249feb6b3d ("net: add
-  support for skbs with unreadable frags") is not in this version. This
-  commit is linked to a new feature (Devmem TCP) and introduces a new
-  condition which causes the conflicts. Resolving this is easy: we can
-  ignore the missing new condition, and use tcp_skb_can_collapse() like
-  in the original patch. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/ipv4/tcp_output.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 16c48df8df4c..8f67eea34779 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2342,9 +2342,7 @@ static bool tcp_can_coalesce_send_queue_head(struct sock *sk, int len)
- 		if (len <= skb->len)
- 			break;
- 
--		if (unlikely(TCP_SKB_CB(skb)->eor) ||
--		    tcp_has_tx_tstamp(skb) ||
--		    !skb_pure_zcopy_same(skb, next))
-+		if (tcp_has_tx_tstamp(skb) || !tcp_skb_can_collapse(skb, next))
- 			return false;
- 
- 		len -= skb->len;
--- 
-2.45.2
+> ---
+>  net/mptcp/sched.c | 2 --
+>  1 file changed, 2 deletions(-)
+> 
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index
+> 5257bc6c8cd6e8ca674c9beccaf7b27c989da76a..6da60e35932ffd8a92ad7a8b128
+> e5eaf09219b82 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -60,7 +60,6 @@ void mptcp_get_available_schedulers(char *buf,
+> size_t maxlen)
+>  	size_t offs = 0;
+>  
+>  	rcu_read_lock();
+> -	spin_lock(&mptcp_sched_list_lock);
+>  	list_for_each_entry_rcu(sched, &mptcp_sched_list, list) {
+>  		offs += snprintf(buf + offs, maxlen - offs,
+>  				 "%s%s",
+> @@ -69,7 +68,6 @@ void mptcp_get_available_schedulers(char *buf,
+> size_t maxlen)
+>  		if (WARN_ON_ONCE(offs >= maxlen))
+>  			break;
+>  	}
+> -	spin_unlock(&mptcp_sched_list_lock);
+>  	rcu_read_unlock();
+>  }
+>  
+> 
 
