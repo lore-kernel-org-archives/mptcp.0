@@ -1,292 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E66020263D
-	for <mptcp@lists.linux.dev>; Fri, 18 Oct 2024 10:52:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DEA2022C3
+	for <mptcp@lists.linux.dev>; Fri, 18 Oct 2024 10:56:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729248737; cv=none; b=a2fIcXVYhhW/5mFrwdOXfwo6XRU9ExdSBsswS4tQvHNrG/mq3UCjKdEdSqKfGEEj25aptihTfhFFEfOIq9Oo1UFfBHtS4cE0gFeaDdRhmgVmuJrjLBYd1KWEfFwYRRmBZD7GXimzwwSOzQC4tU6Wa40qaDshwOmiIyWirvFTO4E=
+	t=1729248966; cv=none; b=K6ArjXd4qdbxkG8bx4yws2gZ10+Oj15/QK9GDvUrHYlKtkDfmtY2PdFwWvWUn2+15I0faWo6Bys6izdl4zQkVofjdTPutOp6SLDlSszCVngi9oEPxdKhAYAEstjBagvj8h7xtZNYPRlsX1VhT6F3L4Fa+IzHMWxDI1v3v1q1Fkg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729248737; c=relaxed/simple;
-	bh=W1fF6zR56V1CSSFP+NlA8nMT8WbVcn9lIW0M935KqEY=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=qo1PYLiZb2Arm15+0WrAPEPP/AeK2dAluGD34eqYRbHv2Dl1DcFSs0sy+FN6N1NruIuJax6JpZOLRbaMYHP6SfxLxo1VL9C/G4uUqOe9BX+Ts3/M5EFBPsRUCI4GAigo6Yk4Zvq47XdqQVn7dxMMhKz62J9K+DAq9FhVjeNYis8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LSYsizod; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729248966; c=relaxed/simple;
+	bh=s2FHOQMwb3On/8/u0n1UuVmYVm0RsHyAnRaKWUTndoA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bfWUb4aGm6jiLHllZ10NozwiVqqiDCnQC6TlduGqFiNvBb1ePm14kotlyyiEz5q1mLfbwt/dCWGtVqZykPZmgt9xMMNQ+vU6bJ0IrGdKf/leud3OORthb2JtBLTxkihEbQgJ+N6qOnEv0Y7wSdhcp+qB4UMi4gRJQ1Me5Xfu8ts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KqV++hZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LSYsizod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD766C4CEC6;
-	Fri, 18 Oct 2024 10:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KqV++hZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E83FC4CEC3;
+	Fri, 18 Oct 2024 10:56:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729248737;
-	bh=W1fF6zR56V1CSSFP+NlA8nMT8WbVcn9lIW0M935KqEY=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LSYsizodF6jMlVr7OjrzfVca71nJ1GwAnS2523qTPNndbfQsw+9VGTOTbMabQzWTx
-	 bi/SJkltHbeBjhjMDbPv/O3XFQagqQrrqSoh/HozClr9G5jzzaaeqFv1zL23ke0Az0
-	 nKQ/0ZGjyoJ8oFWUMdAOYMCuKx4zWT4mMLAj0vWeibWtw9r+QejWQzU/NZYY4uMaXw
-	 OpEK+Ji4dcxIv3EXl9O+D/1IUDtVhJgmVxYfZtH1zdD8DIFdTTtKwXt8Z6Db38MCoa
-	 d7MPOx6gzu/dZmDmSajmO48kltdJu0FQ0Cowg6L4ZkGLGIqfykSkY4NhodidRSNl0g
-	 pSZfvImpLqxgw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 6/6] selftests/bpf: Add mptcp_address bpf_iter subtest
-Date: Fri, 18 Oct 2024 18:51:58 +0800
-Message-ID: <5a583f06e60dff7fef8bd918e2dd23e08dee7dcc.1729248083.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1729248083.git.tanggeliang@kylinos.cn>
-References: <cover.1729248083.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1729248966;
+	bh=s2FHOQMwb3On/8/u0n1UuVmYVm0RsHyAnRaKWUTndoA=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=KqV++hZ+Rlz01D4AwM+PsIJtWXM/r9QYZElYbXQBbPYAoVhKBm2FydoJuYIFTup0x
+	 f/vFZSxmn0r7zpatNVKI+kfvu67SyR21Dz+/QDwCuV2aFolZM7cQPA8erLhlCPxL0Q
+	 PALHY6tHleQXGQTs2ylp5b4j19MgfVcW+GI1Y7DXn0WgSKdVcx9TBWMQT7SkaFimga
+	 +RvC9rd70yebAii186F2uT8vFuJOsTi3T2shN6QK9qmLMsqLMvLFGoYU1VlaNqcNwU
+	 kdJkh1YoQeTn9Tvjbj7T40u1QbquBdav88i0ssdUGa8XKS4YoedomfjU7DvpruomDz
+	 dLyuANdbzsf1w==
+Message-ID: <f929c45e-b72e-456d-8ff8-24b67f6fb4b6@kernel.org>
+Date: Fri, 18 Oct 2024 12:56:03 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v9 4/7] selftests/bpf: Add mptcp_subflow
+ bpf_iter test prog
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1728466623.git.tanggeliang@kylinos.cn>
+ <dffa6284797ec2e3e8c8a1f6891f012bd1efdc20.1728466623.git.tanggeliang@kylinos.cn>
+ <22b299af-150b-450c-b2c8-6710cf321c2d@kernel.org>
+ <c1b0c2e2a421c8fcfd5b29542ffabc60651c08f1.camel@kernel.org>
+ <56da8840-51d5-4b5b-9c43-7ebfdaed25c6@kernel.org>
+ <7282e8ad1563f72dead70651ddff4959b91bf18c.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <7282e8ad1563f72dead70651ddff4959b91bf18c.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch adds a subtest named test_iters_address to load and verify
-the newly added mptcp_address type bpf_iter example in test_mptcp.
+On 18/10/2024 03:22, Geliang Tang wrote:
+> On Tue, 2024-10-15 at 12:47 +0200, Matthieu Baerts wrote:
+>>   /* TODO: why is it needed? */
+> 
+> This test program is a ftrace hook, it may affect other programs, so
+> the pid limitation is needed. v10 has changed the test program as
+> "cgroup/getsockopt", no need to add this limitation any more.
 
-Since mptcp_address bpf_iter iterates over all address entries on the
-local address list of userspace PM. A set of userspace PM helpers are
-added.
+OK. Do you mean that when running the BPF selftests, all BPF test
+programs are loaded? Even the non MPTCP ones? Or only the ftrace ones?
 
-Set pm_type and start "pm_nl_ctl events" command to save pm events into
-the log file /tmp/bpf_userspace_pm_events in userspace_pm_init(). Kill
-"pm_nl_ctl" command and remove the log file in userspace_pm_cleanup().
-Parse the log file in userspace_pm_add_subflow() to get the token, sport
-and dport values, then use "pm_nl_ctl csf" command to create a subflow.
+Why is "cgroup/getsockopt" safer? Because it is only executed for a
+specific CGroup?
 
-Use the helper userspace_pm_add_subflow() to add 3 new subflow endpoints.
-Send a byte of message to start the mptcp connection, and receive the
-message.
+(...)
 
-getsockopt() is invoked to trigger the "cgroup/getsockopt" test program.
-Check if skel->bss->ids equals 60 to verify whether the program loops
-three times as expected.
+>>   /* only to check the following kfunc works */
+>>   subflow = bpf_mptcp_subflow_ctx(ssk);
+>>   if (subflow->token != msk->token)
+>>       goto out;
+> 
+> token is checked twice. I dropped the first one in v10.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 177 ++++++++++++++++++
- 1 file changed, 177 insertions(+)
+OK!
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 439dfee42ffd..a8f49041aaf1 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -29,6 +29,7 @@
- #define ADDR6_4	"dead:beef:4::1"
- #define PORT_1	10001
- #define PM_CTL		"./mptcp_pm_nl_ctl"
-+#define PM_EVENTS	"/tmp/bpf_userspace_pm_events"
- #define WITH_DATA	true
- #define WITHOUT_DATA	false
- 
-@@ -54,6 +55,14 @@
- #endif
- #define MPTCP_SCHED_NAME_MAX	16
- 
-+enum mptcp_pm_type {
-+	MPTCP_PM_TYPE_KERNEL = 0,
-+	MPTCP_PM_TYPE_USERSPACE,
-+
-+	__MPTCP_PM_TYPE_NR,
-+	__MPTCP_PM_TYPE_MAX = __MPTCP_PM_TYPE_NR - 1,
-+};
-+
- static const unsigned int total_bytes = 10 * 1024 * 1024;
- static int duration;
- 
-@@ -267,6 +276,19 @@ static void send_byte(int fd)
- 	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
- }
- 
-+static int recv_byte(int fd)
-+{
-+	char buf[1];
-+	ssize_t n;
-+
-+	n = recv(fd, buf, sizeof(buf), 0);
-+	if (CHECK(n <= 0, "recv_byte", "recv")) {
-+		log_err("failed/partial recv");
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- static int verify_mptcpify(int server_fd, int client_fd)
- {
- 	struct __mptcp_info info;
-@@ -581,6 +603,159 @@ static void test_iters_subflow(void)
- 	close(cgroup_fd);
- }
- 
-+static int userspace_pm_init(enum mptcp_pm_type pm_type)
-+{
-+	if (address_init())
-+		goto fail;
-+
-+	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.pm_type=%u",
-+	    NS_TEST, pm_type);
-+	SYS(fail, "ip netns exec %s %s limits 4 4",
-+	    NS_TEST, PM_CTL);
-+	SYS(fail, "ip netns exec %s %s events >> %s 2>&1 &",
-+	    NS_TEST, PM_CTL, PM_EVENTS);
-+
-+	return 0;
-+fail:
-+	return -1;
-+}
-+
-+static void userspace_pm_cleanup(void)
-+{
-+	SYS_NOFAIL("ip netns exec %s killall %s > /dev/null 2>&1",
-+		   NS_TEST, PM_CTL);
-+	SYS_NOFAIL("ip netns exec %s rm -rf %s", NS_TEST, PM_EVENTS);
-+}
-+
-+static char *get_events_str(char *type)
-+{
-+	char buf[1024];
-+	size_t len;
-+	int fd;
-+
-+	fd = open(PM_EVENTS, O_RDONLY);
-+	if (!ASSERT_OK_FD(fd, "failed to open pm events"))
-+		return NULL;
-+
-+	len = read(fd, buf, sizeof(buf));
-+	ASSERT_GT(len, 0, "failed to read pm events");
-+
-+	close(fd);
-+
-+	return strstr(buf, type);
-+}
-+
-+static int userspace_pm_add_subflow(char *addr, __u8 id)
-+{
-+	bool ipv6 = strstr(addr, ":");
-+	__u32 token, sport, dport;
-+	char *str;
-+	int n;
-+
-+	str = get_events_str("type:2");
-+	if (!str)
-+		return -1;
-+
-+	n = sscanf(strstr(str, "token"), "token:%u,", &token);
-+	if (n != 1)
-+		return -1;
-+	n = sscanf(strstr(str, "sport"), "sport:%u,dport:%u,", &sport, &dport);
-+	if (n != 2)
-+		return -1;
-+	str = ipv6 ? (strstr(addr, ".") ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
-+	SYS_NOFAIL("ip netns exec %s %s csf lip %s lid %u rip %s rport %u token %u",
-+		   NS_TEST, PM_CTL, addr, id, str, dport, token);
-+
-+	return 0;
-+}
-+
-+static void run_iters_address(void)
-+{
-+	int server_fd, client_fd, accept_fd;
-+	char cc[TCP_CA_NAME_MAX];
-+	socklen_t len;
-+	int err;
-+
-+	server_fd = start_mptcp_server(AF_INET6, "::ffff:"ADDR_1, PORT_1, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	accept_fd = accept(server_fd, NULL, NULL);
-+	if (!ASSERT_OK_FD(accept_fd, "accept"))
-+		goto close_client;
-+
-+	usleep(100000);
-+	send_byte(client_fd);
-+	recv_byte(accept_fd);
-+	usleep(100000);
-+
-+	err = userspace_pm_add_subflow("::ffff:"ADDR_2, 10);
-+	err = err ?: userspace_pm_add_subflow("::ffff:"ADDR_3, 20);
-+	err = err ?: userspace_pm_add_subflow("::ffff:"ADDR_4, 30);
-+	if (!ASSERT_OK(err, "userspace_pm_add_subflow"))
-+		goto close_accept;
-+
-+	send_byte(accept_fd);
-+	recv_byte(client_fd);
-+
-+	len = sizeof(cc);
-+	err = getsockopt(client_fd, SOL_TCP, TCP_CONGESTION, cc, &len);
-+	if (ASSERT_OK(err, "getsockopt(client_fd, TCP_CONGESTION)"))
-+		ASSERT_STREQ(cc, "cubic", "cc");
-+
-+close_accept:
-+	close(accept_fd);
-+close_client:
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+}
-+
-+static void test_iters_address(void)
-+{
-+	struct mptcp_bpf_iters *skel;
-+	struct nstoken *nstoken;
-+	int cgroup_fd;
-+	int err;
-+
-+	cgroup_fd = test__join_cgroup("/iters_address");
-+	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: iters_address"))
-+		return;
-+
-+	skel = mptcp_bpf_iters__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: iters_address"))
-+		goto close_cgroup;
-+
-+	skel->links.iters_address = bpf_program__attach_cgroup(skel->progs.iters_address,
-+							       cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.iters_address, "attach getsockopt"))
-+		goto skel_destroy;
-+
-+	nstoken = create_netns();
-+	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
-+		goto skel_destroy;
-+
-+	err = userspace_pm_init(MPTCP_PM_TYPE_USERSPACE);
-+	if (!ASSERT_OK(err, "userspace_pm_init: iters_address"))
-+		goto close_netns;
-+
-+	run_iters_address();
-+
-+	ASSERT_EQ(skel->bss->ids, 60, "address ids");
-+
-+	userspace_pm_cleanup();
-+close_netns:
-+	cleanup_netns(nstoken);
-+skel_destroy:
-+	mptcp_bpf_iters__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- static struct nstoken *sched_init(char *flags, char *sched)
- {
- 	struct nstoken *nstoken;
-@@ -764,6 +939,8 @@ void test_mptcp(void)
- 		test_subflow();
- 	if (test__start_subtest("iters_subflow"))
- 		test_iters_subflow();
-+	if (test__start_subtest("iters_address"))
-+		test_iters_address();
- 	if (test__start_subtest("default"))
- 		test_default();
- 	if (test__start_subtest("first"))
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
