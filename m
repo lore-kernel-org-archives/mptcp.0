@@ -1,309 +1,147 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DBDCA2022D6;
-	Fri, 18 Oct 2024 17:37:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87B620400F
+	for <mptcp@lists.linux.dev>; Fri, 18 Oct 2024 18:08:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729273027; cv=none; b=W2uBW9+FODLoJXbzB8vgDWmaM/CxG5ARKGxQsumlgs3UAjAlxz4Qi2LYVw9ROfIwf7X5q07GZ2yDFdede7KQLFXGScOzi8ImmU5gfhmWR5wD0jQB6UInGMlhYJKYRm1rtRZyC6Gd1kWgnyRCAmd6FSzsUTArfkDaPmzya2QG2yk=
+	t=1729274904; cv=none; b=Apiyo9S7IvAJvSrjNL9PiJINUfZJGeiq8V1+mLQWlpvsjhzmxEPyCiei8BdwBapeyUcJslNlXJFKvgYi9KpfMBGC6GLdxe5PiFEhE293OtRHzrXGiJGRXSMloYRD5ngionidl8d8eKxKINMk2KO2eyl5oLPPebmOC/nZgzpOwdo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729273027; c=relaxed/simple;
-	bh=T7sV6cS9AVOpbMvuUrx6xIfy4KhE8KAAl48hPy0R40Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=TpoES2wDH8VlJFdv43VxNsIGvrJlipemFxHKpMcDF/bufbgSSb9XVdsXBR11BVd37WCIpRGZb7ZRc0qllRY6VLhqOJ9sSV+7+1bg6YbiMH2SWh247AudlBBLIV/bklxDGAzZvMSvuIE6X+DSSbK3eZ1z1ebd2Ye8gSAGMaaDZBU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lDN3hfnx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729274904; c=relaxed/simple;
+	bh=b8RDOb0eqMg8kr7/h2Rvqmv6d6GX6jwaOxyJBbHi39I=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=iG+ufM2snF6unXOP+tStjM83XO71WkWFlQqR3jawHM+9lqnWIKVpw/IlbJzow08b7IYQUY5TJok+YRx7RBEkRKt+CCnUjv3cAMjCbqr31KJajmmmKSBpG+8yan4VzDjHz17g5AsALbnu0p84Vq4DN8MNMZq29DHOwrbm9GPzTlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=LQd7RQqY; arc=none smtp.client-ip=84.16.66.169
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lDN3hfnx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4AEDBC4CEC3;
-	Fri, 18 Oct 2024 17:37:04 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729273026;
-	bh=T7sV6cS9AVOpbMvuUrx6xIfy4KhE8KAAl48hPy0R40Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lDN3hfnxaQtU2DYkTMrx0/cWbe66dNIcLgGKLBXFDtzoQHL3ABXPQFbbAQ0kULQei
-	 rg0o6lbMgx4lB2oFlrmXt8f5W+Z4rvotfDfGxc7Qlzqqc3nejklAjJNyuvzQhPB+ZZ
-	 oy9MaCxnOdXmfNBda6sbN4QaVBXVyII56bFpkyiqJOeEwlLu/w5jW304EThlhDbGmH
-	 RVnAF9a8cPtMnX3SQoTMXe2rJoRzvi/llrc0lg4G/QQSDacavQAmrNGER1orNORr+w
-	 Io9VxUlZagdKeSALDOSiNSChCS3p6fk4Zda9N4PUBE3nHaWrDJElv123yGahju7QsM
-	 0g1Vkk8WbgxKw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>,
-	sashal@kernel.org,
-	syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com,
-	Cong Wang <cong.wang@bytedance.com>,
-	Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.1.y 2/2] mptcp: prevent MPC handshake on port-based signal endpoints
-Date: Fri, 18 Oct 2024 19:36:59 +0200
-Message-ID: <20241018173656.2813913-6-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241018173656.2813913-4-matttbe@kernel.org>
-References: <20241018173656.2813913-4-matttbe@kernel.org>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="LQd7RQqY"
+Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XVXkN3lLNzgmj;
+	Fri, 18 Oct 2024 20:08:12 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1729274892;
+	bh=KEYQT5PqdF1JYcj4P2uuZFLVTpuMdKZe8EXn59nZbKw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=LQd7RQqYMPUrGzcA8/jm7IUkseYIIA4NA3fGRyC88MUo4RLMBFuOy9CF+h9Qo28BY
+	 YXzwwHFm83C5dE6Apmzy8vTi9G2x973pxxtpoBYKF3UoyjpqhZL8xZfMx7VQ3TpOKO
+	 DNyZgWtvPR7IKd5ONkSyZYCd/9tb+XO7BmARcaeI=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XVXkL6rspzLv4;
+	Fri, 18 Oct 2024 20:08:10 +0200 (CEST)
+Date: Fri, 18 Oct 2024 20:08:10 +0200
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	gnoack@google.com, willemdebruijn.kernel@gmail.com, matthieu@buffet.re, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	yusongping@huawei.com, artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
+	MPTCP Linux <mptcp@lists.linux.dev>
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Message-ID: <20241018.Kahdeik0aaCh@digikod.net>
+References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
+ <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
+ <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=12952; i=matttbe@kernel.org; h=from:subject; bh=Zp0A3XnWGfNazXTKRaOc4diTorXtgxd1zLsS9cpuXF0=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnEpy4KArvoLAdo4uNzHRLMu/ERXIBbnpkqNjcZ mqxgk5o0uWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxKcuAAKCRD2t4JPQmmg c3BOEACbYESRmmt7CP6fOcDMU04RmgcSkN7eJm40YcQrA+U9hiUg/E57k2ZT840k9auow/RU7x6 tlAPPW/byMaOqdy+Y9LejQwwT1p7VN52PcCCTqIQroBRLhgtqqI3xeidI/Y8KyeUp6kWBKgKpeu yU1pIHiwbW7PvXSancWnieszXzl91wO2d+hS/APHT1JVIp+gV83cCekj1HaGnX1K5THU+xQoOuV TAprpRVFF/BkStPsmiAJnTIBQm5fCO7XqWpOuxOxvmCFa0XOWd4Z9hCa44FWsnF8OJaQRcw+zBO n84TuF122N+6CtN9WDoGKw0O9Q7FyunbSkdtGHDfk40yFjewoqJSSkeXIf0z+xg0F9poo5JGsJa 16YrgXLXNGJf1FiBz3DWfvlCOHAeJV6w5VVCHI0N7eCVWbYK1YNc4tuTfPAQse5Q7XuxF7IIVIQ K92J15i+iLXKkHBq49TFh8PcV0NigvqwgZlpO3rzjRJiIuDdRAOOCb2U71g1iIawYoTE2RjUqmy c6psyE8tCjTMeZHEn+2UNvVKz79xYYTOphNfcADRG72NrKXpo0HwUNvWwd7YTJwfxnodioT1oBq KGfu7Bdqtfgv5jR+DAT1EE1Mo9t0aYXu8RSj8Mh60yJ2P1yx/SEmvQh0bSSjB4cdX9RUMYZhpNe f6fBdyKnRnDinsA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+X-Infomaniak-Routing: alpha
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
+> Hi Mikhail and Landlock maintainers,
+> 
+> +cc MPTCP list.
 
-commit 3d041393ea8c815f773020fb4a995331a69c0139 upstream.
+Thanks, we should include this list in the next series.
 
-Syzkaller reported a lockdep splat:
+> 
+> On 17/10/2024 13:04, Mikhail Ivanov wrote:
+> > Do not check TCP access right if socket protocol is not IPPROTO_TCP.
+> > LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
+> > should not restrict bind(2) and connect(2) for non-TCP protocols
+> > (SCTP, MPTCP, SMC).
+> 
+> Thank you for the patch!
+> 
+> I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
+> treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
+> see TCP packets with extra TCP options. On Linux, there is indeed a
+> dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
+> because we needed such dedicated socket to talk to the userspace.
+> 
+> I don't know Landlock well, but I think it is important to know that an
+> MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
+> will do a fallback to "plain" TCP if MPTCP is not supported by the other
+> peer or by a middlebox. It means that with this patch, if TCP is blocked
+> by Landlock, someone can simply force an application to create an MPTCP
+> socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
+> certainly work, even when connecting to a peer not supporting MPTCP.
+> 
+> Please note that I'm not against this modification -- especially here
+> when we remove restrictions around MPTCP sockets :) -- I'm just saying
+> it might be less confusing for users if MPTCP is considered as being
+> part of TCP. A bit similar to what someone would do with a firewall: if
+> TCP is blocked, MPTCP is blocked as well.
 
-  ============================================
-  WARNING: possible recursive locking detected
-  6.11.0-rc6-syzkaller-00019-g67784a74e258 #0 Not tainted
-  --------------------------------------------
-  syz-executor364/5113 is trying to acquire lock:
-  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-  ffff8880449f1958 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+Good point!  I don't know well MPTCP but I think you're right.  Given
+it's close relationship with TCP and the fallback mechanism, it would
+make sense for users to not make a difference and it would avoid bypass
+of misleading restrictions.  Moreover the Landlock rules are simple and
+only control TCP ports, not peer addresses, which seems to be the main
+evolution of MPTCP.
 
-  but task is already holding lock:
-  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-  ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+> 
+> I understand that a future goal might probably be to have dedicated
+> restrictions for MPTCP and the other stream protocols (and/or for all
+> stream protocols like it was before this patch), but in the meantime, it
+> might be less confusing considering MPTCP as being part of TCP (I'm not
+> sure about the other stream protocols).
 
-  other info that might help us debug this:
-   Possible unsafe locking scenario:
+We need to take a closer look at the other stream protocols indeed.
 
-         CPU0
-         ----
-    lock(k-slock-AF_INET);
-    lock(k-slock-AF_INET);
+> 
+> 
+> > sk_is_tcp() is used for this to check address family of the socket
+> > before doing INET-specific address length validation. This is required
+> > for error consistency.
+> > 
+> > Closes: https://github.com/landlock-lsm/linux/issues/40
+> > Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
+> 
+> I don't know how fixes are considered in Landlock, but should this patch
+> be considered as a fix? It might be surprising for someone who thought
+> all "stream" connections were blocked to have them unblocked when
+> updating to a minor kernel version, no?
 
-   *** DEADLOCK ***
+Indeed.  The main issue was with the semantic/definition of
+LANDLOCK_ACCESS_FS_NET_{CONNECT,BIND}_TCP.  We need to synchronize the
+code with the documentation, one way or the other, preferably following
+the principle of least astonishment.
 
-   May be due to missing lock nesting notation
+> 
+> (Personally, I would understand such behaviour change when upgrading to
+> a major version, and still, maybe only if there were alternatives to
 
-  7 locks held by syz-executor364/5113:
-   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
-   #0: ffff8880449f0e18 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg+0x153/0x1b10 net/mptcp/protocol.c:1806
-   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock include/net/sock.h:1607 [inline]
-   #1: ffff88803fe39ad8 (k-sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_sendmsg_fastopen+0x11f/0x530 net/mptcp/protocol.c:1727
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #2: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: __ip_queue_xmit+0x5f/0x1b80 net/ipv4/ip_output.c:470
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #3: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_finish_output2+0x45f/0x1390 net/ipv4/ip_output.c:228
-   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: local_lock_acquire include/linux/local_lock_internal.h:29 [inline]
-   #4: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: process_backlog+0x33b/0x15b0 net/core/dev.c:6104
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_lock_acquire include/linux/rcupdate.h:326 [inline]
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: rcu_read_lock include/linux/rcupdate.h:838 [inline]
-   #5: ffffffff8e938320 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish+0x230/0x5f0 net/ipv4/ip_input.c:232
-   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: spin_lock include/linux/spinlock.h:351 [inline]
-   #6: ffff88803fe3cb58 (k-slock-AF_INET){+.-.}-{2:2}, at: sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
+This "fix" needs to be backported, but we're not clear yet on what it
+should be. :)
 
-  stack backtrace:
-  CPU: 0 UID: 0 PID: 5113 Comm: syz-executor364 Not tainted 6.11.0-rc6-syzkaller-00019-g67784a74e258 #0
-  Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-  Call Trace:
-   <IRQ>
-   __dump_stack lib/dump_stack.c:93 [inline]
-   dump_stack_lvl+0x241/0x360 lib/dump_stack.c:119
-   check_deadlock kernel/locking/lockdep.c:3061 [inline]
-   validate_chain+0x15d3/0x5900 kernel/locking/lockdep.c:3855
-   __lock_acquire+0x137a/0x2040 kernel/locking/lockdep.c:5142
-   lock_acquire+0x1ed/0x550 kernel/locking/lockdep.c:5759
-   __raw_spin_lock include/linux/spinlock_api_smp.h:133 [inline]
-   _raw_spin_lock+0x2e/0x40 kernel/locking/spinlock.c:154
-   spin_lock include/linux/spinlock.h:351 [inline]
-   sk_clone_lock+0x2cd/0xf40 net/core/sock.c:2328
-   mptcp_sk_clone_init+0x32/0x13c0 net/mptcp/protocol.c:3279
-   subflow_syn_recv_sock+0x931/0x1920 net/mptcp/subflow.c:874
-   tcp_check_req+0xfe4/0x1a20 net/ipv4/tcp_minisocks.c:853
-   tcp_v4_rcv+0x1c3e/0x37f0 net/ipv4/tcp_ipv4.c:2267
-   ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
-   ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   __netif_receive_skb_one_core net/core/dev.c:5661 [inline]
-   __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
-   process_backlog+0x662/0x15b0 net/core/dev.c:6108
-   __napi_poll+0xcb/0x490 net/core/dev.c:6772
-   napi_poll net/core/dev.c:6841 [inline]
-   net_rx_action+0x89b/0x1240 net/core/dev.c:6963
-   handle_softirqs+0x2c4/0x970 kernel/softirq.c:554
-   do_softirq+0x11b/0x1e0 kernel/softirq.c:455
-   </IRQ>
-   <TASK>
-   __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
-   local_bh_enable include/linux/bottom_half.h:33 [inline]
-   rcu_read_unlock_bh include/linux/rcupdate.h:908 [inline]
-   __dev_queue_xmit+0x1763/0x3e90 net/core/dev.c:4450
-   dev_queue_xmit include/linux/netdevice.h:3105 [inline]
-   neigh_hh_output include/net/neighbour.h:526 [inline]
-   neigh_output include/net/neighbour.h:540 [inline]
-   ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:235
-   ip_local_out net/ipv4/ip_output.c:129 [inline]
-   __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:535
-   __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
-   tcp_rcv_synsent_state_process net/ipv4/tcp_input.c:6542 [inline]
-   tcp_rcv_state_process+0x2c32/0x4570 net/ipv4/tcp_input.c:6729
-   tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1934
-   sk_backlog_rcv include/net/sock.h:1111 [inline]
-   __release_sock+0x214/0x350 net/core/sock.c:3004
-   release_sock+0x61/0x1f0 net/core/sock.c:3558
-   mptcp_sendmsg_fastopen+0x1ad/0x530 net/mptcp/protocol.c:1733
-   mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1812
-   sock_sendmsg_nosec net/socket.c:730 [inline]
-   __sock_sendmsg+0x1a6/0x270 net/socket.c:745
-   ____sys_sendmsg+0x525/0x7d0 net/socket.c:2597
-   ___sys_sendmsg net/socket.c:2651 [inline]
-   __sys_sendmmsg+0x3b2/0x740 net/socket.c:2737
-   __do_sys_sendmmsg net/socket.c:2766 [inline]
-   __se_sys_sendmmsg net/socket.c:2763 [inline]
-   __x64_sys_sendmmsg+0xa0/0xb0 net/socket.c:2763
-   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7f04fb13a6b9
-  Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 01 1a 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007ffd651f42d8 EFLAGS: 00000246 ORIG_RAX: 0000000000000133
-  RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 00007f04fb13a6b9
-  RDX: 0000000000000001 RSI: 0000000020000d00 RDI: 0000000000000004
-  RBP: 00007ffd651f4310 R08: 0000000000000001 R09: 0000000000000001
-  R10: 0000000020000080 R11: 0000000000000246 R12: 00000000000f4240
-  R13: 00007f04fb187449 R14: 00007ffd651f42f4 R15: 00007ffd651f4300
-   </TASK>
+> continue having the same behaviour, e.g. a way to restrict all stream
+> sockets the same way, or something per stream socket. But that's just me
+> :) )
 
-As noted by Cong Wang, the splat is false positive, but the code
-path leading to the report is an unexpected one: a client is
-attempting an MPC handshake towards the in-kernel listener created
-by the in-kernel PM for a port based signal endpoint.
+The documentation and the initial idea was to control TCP bind and
+connect.  The kernel implementation does more than that, so we need to
+synthronize somehow.
 
-Such connection will be never accepted; many of them can make the
-listener queue full and preventing the creation of MPJ subflow via
-such listener - its intended role.
-
-Explicitly detect this scenario at initial-syn time and drop the
-incoming MPC request.
-
-Fixes: 1729cf186d8a ("mptcp: create the listening socket for new port")
-Cc: stable@vger.kernel.org
-Reported-by: syzbot+f4aacdfef2c6a6529c3e@syzkaller.appspotmail.com
-Closes: https://syzkaller.appspot.com/bug?extid=f4aacdfef2c6a6529c3e
-Cc: Cong Wang <cong.wang@bytedance.com>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20241014-net-mptcp-mpc-port-endp-v2-1-7faea8e6b6ae@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflicts in mib.[ch], because commit 6982826fe5e5 ("mptcp: fallback
-  to TCP after SYN+MPC drops"), and commit 27069e7cb3d1 ("mptcp: disable
-  active MPTCP in case of blackhole") are linked to new features, not
-  available in this version. Resolving the conflicts is easy, simply
-  adding the new lines declaring the new "endpoint attempt" MIB entry.
-  Also a conflict in protocol.h, because commit fce68b03086f ("mptcp:
-  add scheduled in mptcp_subflow_context") is not in this version, and
-  changes the context by introducing 'scheduled' variable just before.
-  Also a conflict in pm_netlink.c, because commit 3aa362494170 ("mptcp:
-  avoid ssock usage in mptcp_pm_nl_create_listen_socket()") is not in
-  this version, and refactor the function: that's fine, we can still set
-  pm_listener before doing the 'listen()', taking 'ssock->sk' as 'ssk'
-  is not defined before this refactoring. ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/mib.c        |  1 +
- net/mptcp/mib.h        |  1 +
- net/mptcp/pm_netlink.c |  1 +
- net/mptcp/protocol.h   |  1 +
- net/mptcp/subflow.c    | 11 +++++++++++
- 5 files changed, 15 insertions(+)
-
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 691d7c1e8504..fbac6f652701 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -15,6 +15,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPCapableACKRX", MPTCP_MIB_MPCAPABLEPASSIVEACK),
- 	SNMP_MIB_ITEM("MPCapableFallbackACK", MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK),
- 	SNMP_MIB_ITEM("MPCapableFallbackSYNACK", MPTCP_MIB_MPCAPABLEACTIVEFALLBACK),
-+	SNMP_MIB_ITEM("MPCapableEndpAttempt", MPTCP_MIB_MPCAPABLEENDPATTEMPT),
- 	SNMP_MIB_ITEM("MPFallbackTokenInit", MPTCP_MIB_TOKENFALLBACKINIT),
- 	SNMP_MIB_ITEM("MPTCPRetrans", MPTCP_MIB_RETRANSSEGS),
- 	SNMP_MIB_ITEM("MPJoinNoTokenFound", MPTCP_MIB_JOINNOTOKEN),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index bd3d72e1eb24..ff08d41149f4 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -8,6 +8,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_MPCAPABLEPASSIVEACK,	/* Received third ACK with MP_CAPABLE */
- 	MPTCP_MIB_MPCAPABLEPASSIVEFALLBACK,/* Server-side fallback during 3-way handshake */
- 	MPTCP_MIB_MPCAPABLEACTIVEFALLBACK, /* Client-side fallback during 3-way handshake */
-+	MPTCP_MIB_MPCAPABLEENDPATTEMPT,	/* Prohibited MPC to port-based endp */
- 	MPTCP_MIB_TOKENFALLBACKINIT,	/* Could not init/allocate token */
- 	MPTCP_MIB_RETRANSSEGS,		/* Segments retransmitted at the MPTCP-level */
- 	MPTCP_MIB_JOINNOTOKEN,		/* Received MP_JOIN but the token was not found */
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 34fab06af744..c5743dc6d18f 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1111,6 +1111,7 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- 	}
- 
- 	inet_sk_state_store(newsk, TCP_LISTEN);
-+	WRITE_ONCE(mptcp_subflow_ctx(ssock->sk)->pm_listener, true);
- 	err = kernel_listen(ssock, backlog);
- 	if (err) {
- 		pr_warn("kernel_listen error, err=%d", err);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ee3974b10ef0..d39ad72ac8e8 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -483,6 +483,7 @@ struct mptcp_subflow_context {
- 		close_event_done : 1,       /* has done the post-closed part */
- 		__unused : 9;
- 	enum mptcp_data_avail data_avail;
-+	bool	pm_listener;	    /* a listener managed by the kernel PM? */
- 	u32	remote_nonce;
- 	u64	thmac;
- 	u32	local_nonce;
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e77b4e6021e8..884abe3cde53 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -131,6 +131,13 @@ static void subflow_add_reset_reason(struct sk_buff *skb, u8 reason)
- 	}
- }
- 
-+static int subflow_reset_req_endp(struct request_sock *req, struct sk_buff *skb)
-+{
-+	SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEENDPATTEMPT);
-+	subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
-+	return -EPERM;
-+}
-+
- /* Init mptcp request socket.
-  *
-  * Returns an error code if a JOIN has failed and a TCP reset
-@@ -162,6 +169,8 @@ static int subflow_check_req(struct request_sock *req,
- 	if (opt_mp_capable) {
- 		SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_MPCAPABLEPASSIVE);
- 
-+		if (unlikely(listener->pm_listener))
-+			return subflow_reset_req_endp(req, skb);
- 		if (opt_mp_join)
- 			return 0;
- 	} else if (opt_mp_join) {
-@@ -169,6 +178,8 @@ static int subflow_check_req(struct request_sock *req,
- 
- 		if (mp_opt.backup)
- 			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINSYNBACKUPRX);
-+	} else if (unlikely(listener->pm_listener)) {
-+		return subflow_reset_req_endp(req, skb);
- 	}
- 
- 	if (opt_mp_capable && listener->request_mptcp) {
--- 
-2.45.2
-
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
+> 
+> 
