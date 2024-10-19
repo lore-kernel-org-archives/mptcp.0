@@ -1,147 +1,98 @@
-Received: from smtp-42a9.mail.infomaniak.ch (smtp-42a9.mail.infomaniak.ch [84.16.66.169])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87B620400F
-	for <mptcp@lists.linux.dev>; Fri, 18 Oct 2024 18:08:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=84.16.66.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 024A120E30B;
+	Sat, 19 Oct 2024 09:30:54 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729274904; cv=none; b=Apiyo9S7IvAJvSrjNL9PiJINUfZJGeiq8V1+mLQWlpvsjhzmxEPyCiei8BdwBapeyUcJslNlXJFKvgYi9KpfMBGC6GLdxe5PiFEhE293OtRHzrXGiJGRXSMloYRD5ngionidl8d8eKxKINMk2KO2eyl5oLPPebmOC/nZgzpOwdo=
+	t=1729330255; cv=none; b=eMgdfEDQ77Jrf57LDdh0kg2oxc9FzGt9qaIqhFKfMyi/O9fvop5zofKEwguJ+BWl3SeQV2M4Ey8uSNkprykPsKu8UkvfwsHHhfyxrFSB7Pk5Yt+dpEMcWGZ28nuUx6hRDdAwqm9qrWSjJOkaM8+Rf3x234LbSc847dc0dJqWGmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729274904; c=relaxed/simple;
-	bh=b8RDOb0eqMg8kr7/h2Rvqmv6d6GX6jwaOxyJBbHi39I=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=iG+ufM2snF6unXOP+tStjM83XO71WkWFlQqR3jawHM+9lqnWIKVpw/IlbJzow08b7IYQUY5TJok+YRx7RBEkRKt+CCnUjv3cAMjCbqr31KJajmmmKSBpG+8yan4VzDjHz17g5AsALbnu0p84Vq4DN8MNMZq29DHOwrbm9GPzTlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=LQd7RQqY; arc=none smtp.client-ip=84.16.66.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1729330255; c=relaxed/simple;
+	bh=0My0whXDQH06lynWlRyLmzuIXr/nPZNmBYCppcqKwIc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=sJBwI3bIE1Zsi6mcZP5ssgApPh+6KXYeCavLacK1KZ4iJdoLj5EWM3KrN3/GhiXKWZncvlNSGrH6qptTP9WlvX2W/t8rT21fALR3pperGBXnAcIl7251nuWuhJcvB1HcpGE25KDHkrsklgRwicd2LG6Nnxj49uXH4qG3skLL82o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lWEN378y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="LQd7RQqY"
-Received: from smtp-4-0001.mail.infomaniak.ch (smtp-4-0001.mail.infomaniak.ch [10.7.10.108])
-	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4XVXkN3lLNzgmj;
-	Fri, 18 Oct 2024 20:08:12 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1729274892;
-	bh=KEYQT5PqdF1JYcj4P2uuZFLVTpuMdKZe8EXn59nZbKw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=LQd7RQqYMPUrGzcA8/jm7IUkseYIIA4NA3fGRyC88MUo4RLMBFuOy9CF+h9Qo28BY
-	 YXzwwHFm83C5dE6Apmzy8vTi9G2x973pxxtpoBYKF3UoyjpqhZL8xZfMx7VQ3TpOKO
-	 DNyZgWtvPR7IKd5ONkSyZYCd/9tb+XO7BmARcaeI=
-Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4XVXkL6rspzLv4;
-	Fri, 18 Oct 2024 20:08:10 +0200 (CEST)
-Date: Fri, 18 Oct 2024 20:08:10 +0200
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	gnoack@google.com, willemdebruijn.kernel@gmail.com, matthieu@buffet.re, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	yusongping@huawei.com, artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
-	MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Message-ID: <20241018.Kahdeik0aaCh@digikod.net>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lWEN378y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F3E9C4CEC5;
+	Sat, 19 Oct 2024 09:30:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729330254;
+	bh=0My0whXDQH06lynWlRyLmzuIXr/nPZNmBYCppcqKwIc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=lWEN378yWETs1F6NxPtvJVTkQPa8FAY54mqYNV2eYq/PJLkNw8Hw2V/yumXq+pM7F
+	 YT6LKa+vpdVqW7+LG6NFPZH0H6+f1BZoTkwYv09JR6i5gBdFc4m+Q26+H7G1jxL1xn
+	 8ZZWHPwPDRq50YBUQ7icyauUuKw53Qrzqb7PtSLde6MDeneFdCzPX4tB4yyMR2PfBl
+	 5CKp1uQ40TvM1EL3WcetYcJogsJavij0Ph1x+3eozES8ISAmJ4r5b0UsrwJiDYsdNT
+	 9vrwsS4HVZNEfIyZxja89fWve+IwDjuWYJDKDLlY4O1GwOl0xWtDsmD0HtaMgm869d
+	 mdMrXdjjYxNfA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 5.15.y 0/6] mptcp: fix recent failed backports
+Date: Sat, 19 Oct 2024 11:30:46 +0200
+Message-ID: <20241019093045.3181989-8-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
-X-Infomaniak-Routing: alpha
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1890; i=matttbe@kernel.org; h=from:subject; bh=0My0whXDQH06lynWlRyLmzuIXr/nPZNmBYCppcqKwIc=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnE3xFZkZVKZ4ojbiF8Y5rbmUWiUyjEC9yWCJIm Llk/DKdf2mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxN8RQAKCRD2t4JPQmmg c9/zD/0VLZkYBGNhUvkqvxduBXbHggSRoAOJ9oBw6u0RoV3SrtU5z1gP5Du+VsgX72wJU6RCGYc 1uYWQGgk0FuPjkdcNMWcCemVY8uLx+lQr38cqk3LgCx9+Rl+4IgqPoQQZDDqKVhVpjXVSM/bX7W 5au/k73U3GSTPx05quDHy0pZ158doSLvDPGD7corUwlH93mj/rimFGZsLObeqm9Kny9PrdlSf+o ZDlIwmjoA8w8Xvt5FbXx1rMUcUKDZV3WdBKe5pJlpnv+tPOfcn/s/6f2n6q6BaXjK1I6p9ug6uH ueqtRls5ffhE4oxPCalnKMpNbPQrcyrAbHgHF4sxrsfkdBy2qCY7u0RS3fkelgtmFkZmpPkayQd tMhH7+Xb5wg5b6ZvTamCpunlJ5DAkvqYCtz1o6wAXj1IrrqPUI1qen1U1EmI4R3kReQE6yWdeKG smZPgVh5bzS8fUpHsLKcEd2s+ARxe915Nupk8HboX4iiQF0fBDPWn8Penp7iKTPMSP9emYHffyX mol5ylyqklO2AzTh3i9amuTm61dLUL+JqliuKYU3xFiPwDQEV/bZPP1HxOKX82W2AdQeZohohD/ c+Dm1P3SrBZZxwGQ6scmCybqUtnBcCrykDBSZTxg2Yf/n1IJNWTZ8eDcn4RciWZO5xEZ9joME0J UjjTZKpbG2mVm0g==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
-> Hi Mikhail and Landlock maintainers,
-> 
-> +cc MPTCP list.
+Greg recently reported 6 patches that could not be applied without
+conflicts in v5.15:
 
-Thanks, we should include this list in the next series.
+ - e32d262c89e2 ("mptcp: handle consistently DSS corruption")
+ - 4dabcdf58121 ("tcp: fix mptcp DSS corruption due to large pmtu xmit")
+ - 119d51e225fe ("mptcp: fallback when MPTCP opts are dropped after 1st
+   data")
+ - 7decd1f5904a ("mptcp: pm: fix UaF read in mptcp_pm_nl_rm_addr_or_subflow")
+ - 3d041393ea8c ("mptcp: prevent MPC handshake on port-based signal
+   endpoints")
+ - 5afca7e996c4 ("selftests: mptcp: join: test for prohibited MPC to
+   port-based endp")
 
-> 
-> On 17/10/2024 13:04, Mikhail Ivanov wrote:
-> > Do not check TCP access right if socket protocol is not IPPROTO_TCP.
-> > LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
-> > should not restrict bind(2) and connect(2) for non-TCP protocols
-> > (SCTP, MPTCP, SMC).
-> 
-> Thank you for the patch!
-> 
-> I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
-> treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
-> see TCP packets with extra TCP options. On Linux, there is indeed a
-> dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
-> because we needed such dedicated socket to talk to the userspace.
-> 
-> I don't know Landlock well, but I think it is important to know that an
-> MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
-> will do a fallback to "plain" TCP if MPTCP is not supported by the other
-> peer or by a middlebox. It means that with this patch, if TCP is blocked
-> by Landlock, someone can simply force an application to create an MPTCP
-> socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
-> certainly work, even when connecting to a peer not supporting MPTCP.
-> 
-> Please note that I'm not against this modification -- especially here
-> when we remove restrictions around MPTCP sockets :) -- I'm just saying
-> it might be less confusing for users if MPTCP is considered as being
-> part of TCP. A bit similar to what someone would do with a firewall: if
-> TCP is blocked, MPTCP is blocked as well.
+Conflicts have been resolved for the 5 first ones, and documented in
+each patch.
 
-Good point!  I don't know well MPTCP but I think you're right.  Given
-it's close relationship with TCP and the fallback mechanism, it would
-make sense for users to not make a difference and it would avoid bypass
-of misleading restrictions.  Moreover the Landlock rules are simple and
-only control TCP ports, not peer addresses, which seems to be the main
-evolution of MPTCP.
+The last patch has not been backported: this is an extra test for the
+selftests validating the previous commit, and there are a lot of
+conflicts. That's fine not to backport this test, it is still possible
+to use the selftests from a newer version and run them on this older
+kernel.
 
-> 
-> I understand that a future goal might probably be to have dedicated
-> restrictions for MPTCP and the other stream protocols (and/or for all
-> stream protocols like it was before this patch), but in the meantime, it
-> might be less confusing considering MPTCP as being part of TCP (I'm not
-> sure about the other stream protocols).
+One extra commit has been backported, to support allow_infinite_fallback
+which is used by two commits from the list above:
 
-We need to take a closer look at the other stream protocols indeed.
+ - 0530020a7c8f ("mptcp: track and update contiguous data status")
 
-> 
-> 
-> > sk_is_tcp() is used for this to check address family of the socket
-> > before doing INET-specific address length validation. This is required
-> > for error consistency.
-> > 
-> > Closes: https://github.com/landlock-lsm/linux/issues/40
-> > Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
-> 
-> I don't know how fixes are considered in Landlock, but should this patch
-> be considered as a fix? It might be surprising for someone who thought
-> all "stream" connections were blocked to have them unblocked when
-> updating to a minor kernel version, no?
+Geliang Tang (1):
+  mptcp: track and update contiguous data status
 
-Indeed.  The main issue was with the semantic/definition of
-LANDLOCK_ACCESS_FS_NET_{CONNECT,BIND}_TCP.  We need to synchronize the
-code with the documentation, one way or the other, preferably following
-the principle of least astonishment.
+Matthieu Baerts (NGI0) (2):
+  mptcp: fallback when MPTCP opts are dropped after 1st data
+  mptcp: pm: fix UaF read in mptcp_pm_nl_rm_addr_or_subflow
 
-> 
-> (Personally, I would understand such behaviour change when upgrading to
-> a major version, and still, maybe only if there were alternatives to
+Paolo Abeni (3):
+  mptcp: handle consistently DSS corruption
+  tcp: fix mptcp DSS corruption due to large pmtu xmit
+  mptcp: prevent MPC handshake on port-based signal endpoints
 
-This "fix" needs to be backported, but we're not clear yet on what it
-should be. :)
+ net/ipv4/tcp_output.c  |  2 +-
+ net/mptcp/mib.c        |  3 +++
+ net/mptcp/mib.h        |  3 +++
+ net/mptcp/pm_netlink.c |  3 ++-
+ net/mptcp/protocol.c   | 23 ++++++++++++++++++++---
+ net/mptcp/protocol.h   |  2 ++
+ net/mptcp/subflow.c    | 19 ++++++++++++++++---
+ 7 files changed, 47 insertions(+), 8 deletions(-)
 
-> continue having the same behaviour, e.g. a way to restrict all stream
-> sockets the same way, or something per stream socket. But that's just me
-> :) )
+-- 
+2.45.2
 
-The documentation and the initial idea was to control TCP bind and
-connect.  The kernel implementation does more than that, so we need to
-synthronize somehow.
-
-> 
-> Cheers,
-> Matt
-> -- 
-> Sponsored by the NGI0 Core fund.
-> 
-> 
