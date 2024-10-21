@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 560751E47CC;
-	Mon, 21 Oct 2024 09:51:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26E6F1E3DCD;
+	Mon, 21 Oct 2024 09:51:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729504267; cv=none; b=A4slbAK5vkxdW6Q/sMHq09FVjOyokemTluqDlCbzAprIshj554Nt5Veiv07eFqKoCkHlDteTDkZ+vhZlgUPrnbUX+Q/Z/YjYEmXCgl/gsw2BQQ7VEQCnjOTekMeNNWuXXX8JRIkZuHwWPcK9XWes9sdHaHtCm8K0YTrE1u8Cl6w=
+	t=1729504273; cv=none; b=EfRyPAsQaiiGGF7LCe1NkguPmWmKJSui3npayRwmMsOSKpaJtrSdTjzfWxCFouD6pPrw/Gti8SFsCOW8I4AiZ33BPYqDZ+liogevMzA9LNO4NdTZPKKJbLKK1YaZxGTJ5wHHhlR/3ED8Cwix0nWfIU9jJMzo9+DbXO1SznXZkFY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729504267; c=relaxed/simple;
-	bh=sCOua4fv4i/v/PluGbROih3voxugvc4tEs1Nr0Xx/Js=;
+	s=arc-20240116; t=1729504273; c=relaxed/simple;
+	bh=Xg+xi/uRwm7bvOdrakHhjn7mtuyHIMY5zonwugoyJP4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=vEpQl3cEV0bknANe6JBSZGlLKHv92+svyiQ4TfsRO5dZUlMwOs8WwH268mvrXgIlXjTJrvgSdkLdLFe2HxLt2NBWBaJUUTQi6EXdbBDCO+6DrwR+ihX81vwyx1IgGXvVywganl09M1jUj9lN929XvWNi4dL57sK0PDO2TLe9tJI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=HyLk4V/E; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=MOaB0WRDS+rCMwF4OSz4+KJHXRkr8Z5yX3/drDXERW4UMxeVyOHVPOAVX6ZX3qD5991mz2xs+2REb9vX8dFpoVkliM6wPmeNDozLhQUUZRLIlXcu3fG2a8doqFLJpVbdyUhKq5sniaEDUUvT8xV4VrRuhK6J8AnnYSFXODEaWQE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=UZzLNzTI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="HyLk4V/E"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 843EBC4CEC3;
-	Mon, 21 Oct 2024 09:51:06 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="UZzLNzTI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97689C4CEC3;
+	Mon, 21 Oct 2024 09:51:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729504266;
-	bh=sCOua4fv4i/v/PluGbROih3voxugvc4tEs1Nr0Xx/Js=;
+	s=korg; t=1729504273;
+	bh=Xg+xi/uRwm7bvOdrakHhjn7mtuyHIMY5zonwugoyJP4=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=HyLk4V/EP0WlTkcfnPVnADIUq3O6j/vuhY6AG1fC1FWkKl2brbqetPDJLxHrdFf0F
-	 PmspC2S6gSvcZMaRnsl4elhqGWoIrdruOKi3dA4vkys7kfOeU3QHdue62G+nCuFg75
-	 zBNIQN/+ii8m1VSn0AqAtpRerfXqj5cyjnpj1Vok=
-Subject: Patch "tcp: fix mptcp DSS corruption due to large pmtu xmit" has been added to the 5.10-stable tree
-To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org,syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com
+	b=UZzLNzTIojWKO5FICQPOOpjcDeiS2qFbBziXz8z1w51oU3zcvcbyPf4Y6EjDmviOA
+	 ho6b6WHX71IK8AOVphyewJn8F6ucyNngUBZDM85Xqri/C8Yq0PGgcHfKfD6YiA8wu6
+	 06634mKa4yfK3CjxmxDWdQVU8RKzKo5/B//OAj/I=
+Subject: Patch "mptcp: fallback when MPTCP opts are dropped after 1st data" has been added to the 5.15-stable tree
+To: cpaasch@apple.com,gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
-Date: Mon, 21 Oct 2024 11:50:48 +0200
-In-Reply-To: <20241019102905.3383483-8-matttbe@kernel.org>
-Message-ID: <2024102148-chosen-throat-bc1f@gregkh>
+Date: Mon, 21 Oct 2024 11:50:57 +0200
+In-Reply-To: <20241019093045.3181989-12-matttbe@kernel.org>
+Message-ID: <2024102157-crisped-blah-5272@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,167 +44,115 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    tcp: fix mptcp DSS corruption due to large pmtu xmit
+    mptcp: fallback when MPTCP opts are dropped after 1st data
 
-to the 5.10-stable tree which can be found at:
+to the 5.15-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     tcp-fix-mptcp-dss-corruption-due-to-large-pmtu-xmit.patch
-and it can be found in the queue-5.10 subdirectory.
+     mptcp-fallback-when-mptcp-opts-are-dropped-after-1st-data.patch
+and it can be found in the queue-5.15 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-86911-greg=kroah.com@vger.kernel.org Sat Oct 19 12:29:21 2024
+From stable+bounces-86904-greg=kroah.com@vger.kernel.org Sat Oct 19 11:31:12 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 19 Oct 2024 12:29:09 +0200
-Subject: tcp: fix mptcp DSS corruption due to large pmtu xmit
+Date: Sat, 19 Oct 2024 11:30:50 +0200
+Subject: mptcp: fallback when MPTCP opts are dropped after 1st data
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com, Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
-Message-ID: <20241019102905.3383483-8-matttbe@kernel.org>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, sashal@kernel.org, Christoph Paasch <cpaasch@apple.com>, Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20241019093045.3181989-12-matttbe@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-commit 4dabcdf581217e60690467a37c956a5b8dbc6bd9 upstream.
+commit 119d51e225febc8152476340a880f5415a01e99e upstream.
 
-Syzkaller was able to trigger a DSS corruption:
+As reported by Christoph [1], before this patch, an MPTCP connection was
+wrongly reset when a host received a first data packet with MPTCP
+options after the 3wHS, but got the next ones without.
 
-  TCP: request_sock_subflow_v4: Possible SYN flooding on port [::]:20002. Sending cookies.
-  ------------[ cut here ]------------
-  WARNING: CPU: 0 PID: 5227 at net/mptcp/protocol.c:695 __mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-  Modules linked in:
-  CPU: 0 UID: 0 PID: 5227 Comm: syz-executor350 Not tainted 6.11.0-syzkaller-08829-gaf9c191ac2a0 #0
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 08/06/2024
-  RIP: 0010:__mptcp_move_skbs_from_subflow+0x20a9/0x21f0 net/mptcp/protocol.c:695
-  Code: 0f b6 dc 31 ff 89 de e8 b5 dd ea f5 89 d8 48 81 c4 50 01 00 00 5b 41 5c 41 5d 41 5e 41 5f 5d c3 cc cc cc cc e8 98 da ea f5 90 <0f> 0b 90 e9 47 ff ff ff e8 8a da ea f5 90 0f 0b 90 e9 99 e0 ff ff
-  RSP: 0018:ffffc90000006db8 EFLAGS: 00010246
-  RAX: ffffffff8ba9df18 RBX: 00000000000055f0 RCX: ffff888030023c00
-  RDX: 0000000000000100 RSI: 00000000000081e5 RDI: 00000000000055f0
-  RBP: 1ffff110062bf1ae R08: ffffffff8ba9cf12 R09: 1ffff110062bf1b8
-  R10: dffffc0000000000 R11: ffffed10062bf1b9 R12: 0000000000000000
-  R13: dffffc0000000000 R14: 00000000700cec61 R15: 00000000000081e5
-  FS:  000055556679c380(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: 0000000020287000 CR3: 0000000077892000 CR4: 00000000003506f0
-  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-  Call Trace:
-   <IRQ>
-   move_skbs_to_msk net/mptcp/protocol.c:811 [inline]
-   mptcp_data_ready+0x29c/0xa90 net/mptcp/protocol.c:854
-   subflow_data_ready+0x34a/0x920 net/mptcp/subflow.c:1490
-   tcp_data_queue+0x20fd/0x76c0 net/ipv4/tcp_input.c:5283
-   tcp_rcv_established+0xfba/0x2020 net/ipv4/tcp_input.c:6237
-   tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
-   tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2350
-   ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
-   ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
-   __netif_receive_skb_one_core net/core/dev.c:5662 [inline]
-   __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5775
-   process_backlog+0x662/0x15b0 net/core/dev.c:6107
-   __napi_poll+0xcb/0x490 net/core/dev.c:6771
-   napi_poll net/core/dev.c:6840 [inline]
-   net_rx_action+0x89b/0x1240 net/core/dev.c:6962
-   handle_softirqs+0x2c5/0x980 kernel/softirq.c:554
-   do_softirq+0x11b/0x1e0 kernel/softirq.c:455
-   </IRQ>
-   <TASK>
-   __local_bh_enable_ip+0x1bb/0x200 kernel/softirq.c:382
-   local_bh_enable include/linux/bottom_half.h:33 [inline]
-   rcu_read_unlock_bh include/linux/rcupdate.h:919 [inline]
-   __dev_queue_xmit+0x1764/0x3e80 net/core/dev.c:4451
-   dev_queue_xmit include/linux/netdevice.h:3094 [inline]
-   neigh_hh_output include/net/neighbour.h:526 [inline]
-   neigh_output include/net/neighbour.h:540 [inline]
-   ip_finish_output2+0xd41/0x1390 net/ipv4/ip_output.c:236
-   ip_local_out net/ipv4/ip_output.c:130 [inline]
-   __ip_queue_xmit+0x118c/0x1b80 net/ipv4/ip_output.c:536
-   __tcp_transmit_skb+0x2544/0x3b30 net/ipv4/tcp_output.c:1466
-   tcp_transmit_skb net/ipv4/tcp_output.c:1484 [inline]
-   tcp_mtu_probe net/ipv4/tcp_output.c:2547 [inline]
-   tcp_write_xmit+0x641d/0x6bf0 net/ipv4/tcp_output.c:2752
-   __tcp_push_pending_frames+0x9b/0x360 net/ipv4/tcp_output.c:3015
-   tcp_push_pending_frames include/net/tcp.h:2107 [inline]
-   tcp_data_snd_check net/ipv4/tcp_input.c:5714 [inline]
-   tcp_rcv_established+0x1026/0x2020 net/ipv4/tcp_input.c:6239
-   tcp_v4_do_rcv+0x96d/0xc70 net/ipv4/tcp_ipv4.c:1915
-   sk_backlog_rcv include/net/sock.h:1113 [inline]
-   __release_sock+0x214/0x350 net/core/sock.c:3072
-   release_sock+0x61/0x1f0 net/core/sock.c:3626
-   mptcp_push_release net/mptcp/protocol.c:1486 [inline]
-   __mptcp_push_pending+0x6b5/0x9f0 net/mptcp/protocol.c:1625
-   mptcp_sendmsg+0x10bb/0x1b10 net/mptcp/protocol.c:1903
-   sock_sendmsg_nosec net/socket.c:730 [inline]
-   __sock_sendmsg+0x1a6/0x270 net/socket.c:745
-   ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2603
-   ___sys_sendmsg net/socket.c:2657 [inline]
-   __sys_sendmsg+0x2aa/0x390 net/socket.c:2686
-   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
-   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
-   entry_SYSCALL_64_after_hwframe+0x77/0x7f
-  RIP: 0033:0x7fb06e9317f9
-  Code: ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b8 ff ff ff f7 d8 64 89 01 48
-  RSP: 002b:00007ffe2cfd4f98 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-  RAX: ffffffffffffffda RBX: 00007fb06e97f468 RCX: 00007fb06e9317f9
-  RDX: 0000000000000000 RSI: 0000000020000080 RDI: 0000000000000005
-  RBP: 00007fb06e97f446 R08: 0000555500000000 R09: 0000555500000000
-  R10: 0000555500000000 R11: 0000000000000246 R12: 00007fb06e97f406
-  R13: 0000000000000001 R14: 00007ffe2cfd4fe0 R15: 0000000000000003
-   </TASK>
+According to the MPTCP v1 specs [2], a fallback should happen in this
+case, because the host didn't receive a DATA_ACK from the other peer,
+nor receive data for more than the initial window which implies a
+DATA_ACK being received by the other peer.
 
-Additionally syzkaller provided a nice reproducer. The repro enables
-pmtu on the loopback device, leading to tcp_mtu_probe() generating
-very large probe packets.
+The patch here re-uses the same logic as the one used in other places:
+by looking at allow_infinite_fallback, which is disabled at the creation
+of an additional subflow. It's not looking at the first DATA_ACK (or
+implying one received from the other side) as suggested by the RFC, but
+it is in continuation with what was already done, which is safer, and it
+fixes the reported issue. The next step, looking at this first DATA_ACK,
+is tracked in [4].
 
-tcp_can_coalesce_send_queue_head() currently does not check for
-mptcp-level invariants, and allowed the creation of cross-DSS probes,
-leading to the mentioned corruption.
+This patch has been validated using the following Packetdrill script:
 
-Address the issue teaching tcp_can_coalesce_send_queue_head() about
-mptcp using the tcp_skb_can_collapse(), also reducing the code
-duplication.
+   0 socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
+  +0 setsockopt(3, SOL_SOCKET, SO_REUSEADDR, [1], 4) = 0
+  +0 bind(3, ..., ...) = 0
+  +0 listen(3, 1) = 0
 
-Fixes: 85712484110d ("tcp: coalesce/collapse must respect MPTCP extensions")
+  // 3WHS is OK
+  +0.0 < S  0:0(0)       win 65535  <mss 1460, sackOK, nop, nop, nop, wscale 6, mpcapable v1 flags[flag_h] nokey>
+  +0.0 > S. 0:0(0) ack 1            <mss 1460, nop, nop, sackOK, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
+  +0.1 <  . 1:1(0) ack 1 win 2048                                              <mpcapable v1 flags[flag_h] key[ckey=2, skey]>
+  +0 accept(3, ..., ...) = 4
+
+  // Data from the client with valid MPTCP options (no DATA_ACK: normal)
+  +0.1 < P. 1:501(500) ack 1 win 2048 <mpcapable v1 flags[flag_h] key[skey, ckey] mpcdatalen 500, nop, nop>
+  // From here, the MPTCP options will be dropped by a middlebox
+  +0.0 >  . 1:1(0)     ack 501        <dss dack8=501 dll=0 nocs>
+
+  +0.1 read(4, ..., 500) = 500
+  +0   write(4, ..., 100) = 100
+
+  // The server replies with data, still thinking MPTCP is being used
+  +0.0 > P. 1:101(100)   ack 501          <dss dack8=501 dsn8=1 ssn=1 dll=100 nocs, nop, nop>
+  // But the client already did a fallback to TCP, because the two previous packets have been received without MPTCP options
+  +0.1 <  . 501:501(0)   ack 101 win 2048
+
+  +0.0 < P. 501:601(100) ack 101 win 2048
+  // The server should fallback to TCP, not reset: it didn't get a DATA_ACK, nor data for more than the initial window
+  +0.0 >  . 101:101(0)   ack 601
+
+Note that this script requires Packetdrill with MPTCP support, see [3].
+
+Fixes: dea2b1ea9c70 ("mptcp: do not reset MP_CAPABLE subflow on mapping errors")
 Cc: stable@vger.kernel.org
-Reported-by: syzbot+d1bff73460e33101f0e7@syzkaller.appspotmail.com
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/513
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reported-by: Christoph Paasch <cpaasch@apple.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/518 [1]
+Link: https://datatracker.ietf.org/doc/html/rfc8684#name-fallback [2]
+Link: https://github.com/multipath-tcp/packetdrill [3]
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/519 [4]
+Reviewed-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20241008-net-mptcp-fallback-fixes-v1-2-c6fb8e93e551@kernel.org
+Link: https://patch.msgid.link/20241008-net-mptcp-fallback-fixes-v1-3-c6fb8e93e551@kernel.org
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-[ Conflict in tcp_output.c, because commit 65249feb6b3d ("net: add
-  support for skbs with unreadable frags"), and commit 9b65b17db723
-  ("net: avoid double accounting for pure zerocopy skbs") are not in
-  this version. These commits are linked to new features and introduce
-  new conditions which cause the conflicts. Resolving this is easy: we
-  can ignore the missing new condition, and use tcp_skb_can_collapse()
-  like in the original patch. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_output.c |    2 +-
+ net/mptcp/subflow.c |    2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -2305,7 +2305,7 @@ static bool tcp_can_coalesce_send_queue_
- 		if (len <= skb->len)
- 			break;
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1152,7 +1152,7 @@ static bool subflow_can_fallback(struct
+ 	else if (READ_ONCE(msk->csum_enabled))
+ 		return !subflow->valid_csum_seen;
+ 	else
+-		return !subflow->fully_established;
++		return READ_ONCE(msk->allow_infinite_fallback);
+ }
  
--		if (unlikely(TCP_SKB_CB(skb)->eor) || tcp_has_tx_tstamp(skb))
-+		if (tcp_has_tx_tstamp(skb) || !tcp_skb_can_collapse(skb, next))
- 			return false;
- 
- 		len -= skb->len;
+ static bool subflow_check_data_avail(struct sock *ssk)
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
 
-queue-5.10/mptcp-track-and-update-contiguous-data-status.patch
-queue-5.10/mptcp-handle-consistently-dss-corruption.patch
-queue-5.10/tcp-fix-mptcp-dss-corruption-due-to-large-pmtu-xmit.patch
+queue-5.15/mptcp-track-and-update-contiguous-data-status.patch
+queue-5.15/mptcp-fallback-when-mptcp-opts-are-dropped-after-1st-data.patch
+queue-5.15/mptcp-handle-consistently-dss-corruption.patch
+queue-5.15/tcp-fix-mptcp-dss-corruption-due-to-large-pmtu-xmit.patch
+queue-5.15/mptcp-pm-fix-uaf-read-in-mptcp_pm_nl_rm_addr_or_subflow.patch
+queue-5.15/mptcp-prevent-mpc-handshake-on-port-based-signal-endpoints.patch
