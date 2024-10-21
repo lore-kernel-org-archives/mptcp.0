@@ -1,134 +1,139 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A681C1F9EA4;
-	Mon, 21 Oct 2024 15:14:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B562B1EABDA
+	for <mptcp@lists.linux.dev>; Mon, 21 Oct 2024 17:37:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729523680; cv=none; b=EqRvD+u7/Et8DDcQNEKZdgh74vbtymbOPAfemlALvI9x64UrPYGkekp8QY9XIGRpOX5mDya8TO8EIWxJHvOpRy8pfUcB3YETWUCImae+npoKOJ962JZjMrh6Gm4XjkL+Yvu7faa7qaQpnm34/p/JPBPLMZCs29gfBk2BDjMxIWE=
+	t=1729532266; cv=none; b=KmYD0wk9kyH+r6GNoONL3KvSsYXPvY+iL1ocG1T/10F8BEx4piVunsCLXPxYaONjLAFFrfrR36E7cg37FI3PF6JgjTMo8lliFkMpe29Xu+xdzkF5CEXrmGVldpMQDaWnBjDw7bzdfO5IKvqJwqFkH1mEhFKAyX2N89lSY1/CwgU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729523680; c=relaxed/simple;
-	bh=4sqNqcl6enA2uep5yPbqNRkltc0niKW2hhqA/FLbO5s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=U80xk8svMVm76zPkjC5wRCxGTdsccJR4IlzMwHec0h04wd++K4oKzmVj04/Ha2omHQg1+2KqGtMTph9NXdU6rkPQsS8JBgrDvb0sREiHcE86ygz8bvY7FxGHJgbMpcpMrme55ahOL21l1h4fMcFkBb/cUPNpMZK2xSNCkyt7pAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H6dBmo4B; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729532266; c=relaxed/simple;
+	bh=q0cC9jPOnwrqMg4M1nhFNunvaHpGuOS4rfxrFtCyTF8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Eybhtq059a/pM36j9ht2gM4I0TS0JlD5LMK478O9UMelHpsI93VwTdVpiTpaFMGE84kzvOFAKOqSg+9GrJUQ746eLMV3Hq7tZfdnCSKIjdMlak27NxMrR9bSjplFNpH3277Yla58WgOLV0SutCUmJyThfIbgjhbeV+V+e5EPzRc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRIAqzqB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H6dBmo4B"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 41C6FC4CEE6;
-	Mon, 21 Oct 2024 15:14:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRIAqzqB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73151C4CEC3;
+	Mon, 21 Oct 2024 17:37:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729523680;
-	bh=4sqNqcl6enA2uep5yPbqNRkltc0niKW2hhqA/FLbO5s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=H6dBmo4Bul+vk/CYUyLi43MWU4cp9Ypmuvx6iBWBdhcgBtV392XpeR1MX6qXFtJOb
-	 oyChvjaLNC/fMTa3CJwzSolCXx7skGo/RfJPst8dASmnVWpaIb6Yl46Qi9xgb1O7Gb
-	 47oSYZi6WgrxEZOGxYYNaKlJIzRgbfgrTxnKMkR4qxudgC38zQu+Oh5inTu2ELrA4B
-	 3fuPetX1ZYUHEXclM0K/ZVVT5x5nJaqgMhe5UUjdTCAYRiimh1Z37Gt8DlgnCJhm6O
-	 YlKTFOjQymuKAXFv7JD/hoiQBUJc5NeqpisuBk59SCQhIbv9EKmWVdjVy1GgZAyIyI
-	 FBtV6EAEUK/XA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 21 Oct 2024 17:14:06 +0200
-Subject: [PATCH net-next 4/4] mptcp: use "middlebox interference" RST when
- no DSS
+	s=k20201202; t=1729532266;
+	bh=q0cC9jPOnwrqMg4M1nhFNunvaHpGuOS4rfxrFtCyTF8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=DRIAqzqB1qT1WyQXQa9WRRkeHWL7PDBS8x3ZnFLwdA3cHlQwcIdNDTgB7QHjth1S6
+	 ojRIZ5tyC8HSq0aj5UkXT0eusYKIkF6gVPOdpXNYcYYG2JX4z4RgiFCKhGJ4jY8A0R
+	 R3WI24Y6eGyC5+DTMrqyopPZIczwVnhAWyDYl4Q1TCCupMSdabKE9Zib44J+JFu6hD
+	 4ap4sD0FpgRXFJtwyDw5nkBt8jHqhxazVWgVzq95maqEOhR5G4WOpkMaIclKrTKw15
+	 h5QTIphm9C+PKvKWydjfv0Zj2l+Zre8AEzSXWmllh7b/dqPOAjfOvn7GQKNuYknnhP
+	 w0ERicu2soEYg==
+Message-ID: <e2ef3aec-d42c-4791-aa47-f35be0c6a5dd@kernel.org>
+Date: Mon, 21 Oct 2024 19:37:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v12 0/8] add mptcp_subflow bpf_iter
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1729267039.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1729267039.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241021-net-next-mptcp-misc-6-13-v1-4-1ef02746504a@kernel.org>
-References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
-In-Reply-To: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Davide Caratti <dcaratti@redhat.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2222; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=kl9DK7HD7r1EeUzN5KT2dnyn50jJCyFp2AMSo9gs1og=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnFm/TO9aj5czQ2jOGmTdUgveys84TK2SLiS6BN
- 8U7BbZRd3OJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxZv0wAKCRD2t4JPQmmg
- c3nCEACyOlH8DW5LM8a1tjOtVTJFSV8slTWiHnS/Rr+DiPD206bxZCOhH5QLBp4HRezF3NZh5LB
- lDq0+XMAwJ39M4AIm5W0YDPlTk2pN5WvM3P41iKFoy2Yn3M1BLm4lv7GYq9tHYj1YUVjJifmowM
- McGAMmBANwz5iZ2gbLolwPXZVpAJutMYRb3enPAgEJKKQVq6HeL46eiS1qS5yylIWP6aZBd/Lib
- Rf3Mjf3Vtv3KJQ/luPGNIVgHrGQ8NzkZc0bJbGUKJxPx/AZtYayJ6y6PAyO0sAc2sT+u5Ksl0Fg
- oF9waAxr6JJM+2Va2DMLFvPIfbvd28CCdY10r4AAYG+PxfBoSMHctGE6oW8aW67OZBTKUvqox+k
- O0/Mg/KznETAbfF55G/67iYBn1kx6AgTVgFWfPx2kpYw4FOQMKgsAtTbE1poPK3ei7lprFQ1Izp
- jZGFbpMwfmozqMqgFTmkDD+KONkqTq0b+Vt4LbOplklaFox5+zonvCShoVYRFJWN38tRpa+yy6e
- lg7gOv63KhC/jivoKDkXp1FiQZapvk0ygawmp1vF72qBo3xcuW7tO3XZn+SeA9+um7L4S6isF+n
- 5qtt3SSP24woGDN2h23KOJO0SPd89dxnCBYwiYjarfQZnxsmCRB3ZuFJoK47Msx48c49ejk9Tl3
- wp6F3x6Ou17Hr2A==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Davide Caratti <dcaratti@redhat.com>
+Hi Geliang,
 
-RFC8684 suggests use of "Middlebox interference (code 0x06)" in case of
-fully established subflow that carries data at TCP level with no DSS
-sub-option.
+On 18/10/2024 18:00, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v12:
+>  - squash patch 4 and patch 6 into one.
+>  - use TCP_IS_MPTCP instead of TCP_CONGESTION.
 
-This is generally the case when mpext is NULL or mpext->use_map is 0:
-use a dedicated value of 'mapping_status' and use it before closing the
-socket in subflow_check_data_avail().
+Thank you for the new version. The new test looks good to me.
 
-Link: https://github.com/multipath-tcp/mptcp_net-next/issues/518
-Signed-off-by: Davide Caratti <dcaratti@redhat.com>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/subflow.c | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
+I just applied the series in our tree, before the BPF sched patches.
+There were quite a few conflicts I had to resolve, and code to move from
+already applied patches, to the new ones here. I also fixed a few issues
+reported by checkpatch while at it: __aligned(), s/veriable/variable/,
+and go to the new lines for some long lines. Can you please check
+everything has been applied as expected?
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 860903e0642255cf9efb39da9e24c39f6547481f..07352b15f145832572a4203ab4d0427c37675e94 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -971,7 +971,8 @@ enum mapping_status {
- 	MAPPING_EMPTY,
- 	MAPPING_DATA_FIN,
- 	MAPPING_DUMMY,
--	MAPPING_BAD_CSUM
-+	MAPPING_BAD_CSUM,
-+	MAPPING_NODSS
- };
- 
- static void dbg_bad_map(struct mptcp_subflow_context *subflow, u32 ssn)
-@@ -1128,8 +1129,9 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 			return MAPPING_EMPTY;
- 		}
- 
-+		/* If the required DSS has likely been dropped by a middlebox */
- 		if (!subflow->map_valid)
--			return MAPPING_INVALID;
-+			return MAPPING_NODSS;
- 
- 		goto validate_seq;
- 	}
-@@ -1343,7 +1345,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		status = get_mapping_status(ssk, msk);
- 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
- 		if (unlikely(status == MAPPING_INVALID || status == MAPPING_DUMMY ||
--			     status == MAPPING_BAD_CSUM))
-+			     status == MAPPING_BAD_CSUM || status == MAPPING_NODSS))
- 			goto fallback;
- 
- 		if (status != MAPPING_OK)
-@@ -1396,7 +1398,9 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 			 * subflow_error_report() will introduce the appropriate barriers
- 			 */
- 			subflow->reset_transient = 0;
--			subflow->reset_reason = MPTCP_RST_EMPTCP;
-+			subflow->reset_reason = status == MAPPING_NODSS ?
-+						MPTCP_RST_EMIDDLEBOX :
-+						MPTCP_RST_EMPTCP;
- 
- reset:
- 			WRITE_ONCE(ssk->sk_err, EBADMSG);
+New patches for t/upstream:
+- d5e58ecf7fa8: Squash to "selftests/bpf: Add bpf scheduler test"
+- 5a74aa7f2e5e: Revert "bpf: Export more bpf_burst related functions"
+- 5ad76db0b5cb: Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
+- 11fcde02a32a: tg:msg: update after the recent squash-to patch
+- dae167c2e8d9: conflict in t/mptcp-add-sched_data-helpers-2
+- e5a676e5c48d: conflict in t/mptcp-add-bpf_mptcp_sched_ops
+- 0f852643d30d: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
+- 0bb27f0be108: conflict in t/selftests-bpf-Add-bpf-scheduler-test
+- 637c2378c777: conflict in t/selftests-bpf-add-bpf_first-scheduler
+- 5ac242f7d4d0: conflict in t/bpf-Export-more-bpf_burst-related-functions
+- Results: 096928239c3d..cb54960b2b51 (export)
 
+- d5e58ecf7fa8: "squashed" patch 6/8 in "selftests/bpf: Add bpf
+scheduler test"
+- 5a74aa7f2e5e: "squashed" patch 7/8 in "bpf: Export more bpf_burst
+related functions"
+- 5ad76db0b5cb: "squashed" patch 8/8 in "bpf: Add bpf_mptcp_sched_kfunc_set"
+- Results: cb54960b2b51..95f1f908edb3 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f2798ec6af402483b2dde42f108c05363fef8706/checks
+
+Cheers,
+Matt
 -- 
-2.45.2
+Sponsored by the NGI0 Core fund.
 
