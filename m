@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B09A1E3775;
-	Mon, 21 Oct 2024 09:38:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA0BC1E32D2;
+	Mon, 21 Oct 2024 09:41:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729503486; cv=none; b=gOmBzxdtZOjUd7nkdzkb+zcspVcTwjK0qdeHRbgvNqwuo6CQ+gqcRssxj171jU36U678/GiVO8FYjTP28Nx8RTXiBfujZNVb4ivfb1XbIp5G4VRS+13P7AHEiFwUiRGOuNmDXWoh+DO0ABEEjPmQKqp+JdSe9ic3pcJZVthaj2M=
+	t=1729503698; cv=none; b=MI4MQepalDnbw5uUxwFbuT4cKDFRl6cKCdT8sFLhtC1ocpr6+RcUolYrjeGks/adnzpnDHdUdpaTMaNaJNhwAJqyRu2w37/mC2rCkJjO3opKyNC4DgpmpVMLTmWdLHsw65/DMY2QLLQHSjenQvHu5PnXrB2K5BePKVxcbl0DyE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729503486; c=relaxed/simple;
-	bh=8gQTVo/QYO3uKadqGBAxsgft4BziE+jiZEdRfqos2XM=;
+	s=arc-20240116; t=1729503698; c=relaxed/simple;
+	bh=Ua5MoeIJUOXxBBJW5sH5Y+XAP1QFbyAAuPgKa1cHEBs=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=NSENZYnfOMwJcv/QsHDgkMkXA7rIlfJXF9VHzdJqnnUyvBXwWWykqFtm1Z5qoCLfdrQuKIvIZ3K4IiH6JQkhov9OFNwTvml29QI9hdDoCcJZPWi75T3br0mFMUMpfEo/rwqRhlcyKRFGDxSn3NVxtHZyeRCqo+TnmObug4xAwBs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=nzPbGMz0; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=qXkQSmm7ry88K45hsY90LiUu5SjENPo+4WSUZXIXzeTsCr+3fxZ1TukAnJyYRNiU8Mel6f3WWn5T6wvYc6CZfoZkM2WpKDoFdMPeciCLECysrkGlsI2U8dC//iznEsTSlbAjaSw5592H7Py7hBtvXKVTMGVoagak7tIcpck9Ijs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=er/Rt96o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="nzPbGMz0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A12A1C4CEC7;
-	Mon, 21 Oct 2024 09:38:05 +0000 (UTC)
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="er/Rt96o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEFD9C4CEC3;
+	Mon, 21 Oct 2024 09:41:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1729503486;
-	bh=8gQTVo/QYO3uKadqGBAxsgft4BziE+jiZEdRfqos2XM=;
+	s=korg; t=1729503698;
+	bh=Ua5MoeIJUOXxBBJW5sH5Y+XAP1QFbyAAuPgKa1cHEBs=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=nzPbGMz0VFNG7ab7pLU72pK5VALYfuZAxpMJotXkNIolKJXlOlGEGvSSf/TSw2i5J
-	 NAPuYcDYI7PX8Ngm3iKZa/3fD74T4IL+ml0cBU1ehgfL+rVxYs8clesoeFQYtyn3ga
-	 2tLdSPfr+FNG+DuPv83yOwZdTw+t5P98FWg+dYS4=
-Date: Mon, 21 Oct 2024 11:38:03 +0200
+	b=er/Rt96ok9KZ+rgD1ofk9TxYNc/sco4gplkwyYXeoKLYeJGqbzyQcPPj9VR4hC33/
+	 bLhvP7xOAwyRLq6v7DYLG5MKu3MYQz9SAEWR+S68h+W62DukGAmmGpdLy060snqW4f
+	 jZbjMCJglRCLrGZTYIKB/8MTYMVxwa16JqmiIDwE=
+Date: Mon, 21 Oct 2024 11:41:35 +0200
 From: Greg KH <gregkh@linuxfoundation.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev, stable@vger.kernel.org, sashal@kernel.org
-Subject: Re: [PATCH 6.1.y 0/2] mptcp: fix recent failed backports
-Message-ID: <2024102156-scrounger-unaligned-1157@gregkh>
-References: <20241018173656.2813913-4-matttbe@kernel.org>
+Subject: Re: [PATCH 5.15.y 0/6] mptcp: fix recent failed backports
+Message-ID: <2024102123-pruning-demystify-d187@gregkh>
+References: <20241019093045.3181989-8-matttbe@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,44 +38,25 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20241018173656.2813913-4-matttbe@kernel.org>
+In-Reply-To: <20241019093045.3181989-8-matttbe@kernel.org>
 
-On Fri, Oct 18, 2024 at 07:36:57PM +0200, Matthieu Baerts (NGI0) wrote:
-> Greg recently reported 3 patches that could not be applied without
-> conflicts in v6.1:
+On Sat, Oct 19, 2024 at 11:30:46AM +0200, Matthieu Baerts (NGI0) wrote:
+> Greg recently reported 6 patches that could not be applied without
+> conflicts in v5.15:
 > 
+>  - e32d262c89e2 ("mptcp: handle consistently DSS corruption")
 >  - 4dabcdf58121 ("tcp: fix mptcp DSS corruption due to large pmtu xmit")
+>  - 119d51e225fe ("mptcp: fallback when MPTCP opts are dropped after 1st
+>    data")
+>  - 7decd1f5904a ("mptcp: pm: fix UaF read in mptcp_pm_nl_rm_addr_or_subflow")
 >  - 3d041393ea8c ("mptcp: prevent MPC handshake on port-based signal
 >    endpoints")
 >  - 5afca7e996c4 ("selftests: mptcp: join: test for prohibited MPC to
 >    port-based endp")
 > 
-> Conflicts have been resolved for the two first ones, and documented in
+> Conflicts have been resolved for the 5 first ones, and documented in
 > each patch.
-> 
-> The last patch has not been backported: this is an extra test for the
-> selftests validating the previous commit, and there are a lot of
-> conflicts. That's fine not to backport this test, it is still possible
-> to use the selftests from a newer version and run them on this older
-> kernel.
-> 
-> Paolo Abeni (2):
->   tcp: fix mptcp DSS corruption due to large pmtu xmit
->   mptcp: prevent MPC handshake on port-based signal endpoints
-> 
->  net/ipv4/tcp_output.c  |  4 +---
->  net/mptcp/mib.c        |  1 +
->  net/mptcp/mib.h        |  1 +
->  net/mptcp/pm_netlink.c |  1 +
->  net/mptcp/protocol.h   |  1 +
->  net/mptcp/subflow.c    | 11 +++++++++++
->  6 files changed, 16 insertions(+), 3 deletions(-)
-> 
-> -- 
-> 2.45.2
-> 
-> 
 
-All queued up, thanks.
+Now queued up, thanks!
 
 greg k-h
