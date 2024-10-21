@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B562B1EABDA
-	for <mptcp@lists.linux.dev>; Mon, 21 Oct 2024 17:37:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09A4B1EB9EF
+	for <mptcp@lists.linux.dev>; Mon, 21 Oct 2024 17:50:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729532266; cv=none; b=KmYD0wk9kyH+r6GNoONL3KvSsYXPvY+iL1ocG1T/10F8BEx4piVunsCLXPxYaONjLAFFrfrR36E7cg37FI3PF6JgjTMo8lliFkMpe29Xu+xdzkF5CEXrmGVldpMQDaWnBjDw7bzdfO5IKvqJwqFkH1mEhFKAyX2N89lSY1/CwgU=
+	t=1729533016; cv=none; b=O/G9KJxwHI8LLGZiAPCJ/krhLL176dWMk3Q0Y7g0s3NXpYfDWwr/jLfLTigcXgWSZ0Rz91YpRRKqYz+EZ9ChztHxFE6nfsQb/pFWXuExgKw6ouxZ+WX7b6t10NhuRdzVgUyQyS3DAcM/3XQrEmEC5WXcPHmhYAFwqLs5y9heQKc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729532266; c=relaxed/simple;
-	bh=q0cC9jPOnwrqMg4M1nhFNunvaHpGuOS4rfxrFtCyTF8=;
+	s=arc-20240116; t=1729533016; c=relaxed/simple;
+	bh=PH5No5iYViBm4r9XoUQFLbxoj9BKKbsiBKd8jK0CkrM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Eybhtq059a/pM36j9ht2gM4I0TS0JlD5LMK478O9UMelHpsI93VwTdVpiTpaFMGE84kzvOFAKOqSg+9GrJUQ746eLMV3Hq7tZfdnCSKIjdMlak27NxMrR9bSjplFNpH3277Yla58WgOLV0SutCUmJyThfIbgjhbeV+V+e5EPzRc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DRIAqzqB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qDgvFiYxpuVB+ylxDZT+TxiExILpHHBogD+erqlqtRxX6Xi7/W+MAjAP4bYSnE/lcwxN2l/yyxhEOOHGt1VhjyuKEV6xveel7hPnJDpKde2gXD7Ax9AxE67fpRnDew81pf3C+49b9kl0Dx2yrO3wYZUADgiHNxjyi964tevlA5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0LAjsLQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DRIAqzqB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 73151C4CEC3;
-	Mon, 21 Oct 2024 17:37:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0LAjsLQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAECEC4CEC3;
+	Mon, 21 Oct 2024 17:50:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729532266;
-	bh=q0cC9jPOnwrqMg4M1nhFNunvaHpGuOS4rfxrFtCyTF8=;
+	s=k20201202; t=1729533015;
+	bh=PH5No5iYViBm4r9XoUQFLbxoj9BKKbsiBKd8jK0CkrM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DRIAqzqB1qT1WyQXQa9WRRkeHWL7PDBS8x3ZnFLwdA3cHlQwcIdNDTgB7QHjth1S6
-	 ojRIZ5tyC8HSq0aj5UkXT0eusYKIkF6gVPOdpXNYcYYG2JX4z4RgiFCKhGJ4jY8A0R
-	 R3WI24Y6eGyC5+DTMrqyopPZIczwVnhAWyDYl4Q1TCCupMSdabKE9Zib44J+JFu6hD
-	 4ap4sD0FpgRXFJtwyDw5nkBt8jHqhxazVWgVzq95maqEOhR5G4WOpkMaIclKrTKw15
-	 h5QTIphm9C+PKvKWydjfv0Zj2l+Zre8AEzSXWmllh7b/dqPOAjfOvn7GQKNuYknnhP
-	 w0ERicu2soEYg==
-Message-ID: <e2ef3aec-d42c-4791-aa47-f35be0c6a5dd@kernel.org>
-Date: Mon, 21 Oct 2024 19:37:43 +0200
+	b=t0LAjsLQbP1zbIqqJVGtX4fo+Ai+E//ZGv5NHismwoaY148s3IIMPl0vNPPUIsBbb
+	 4uJE5aXQaXUnpLvvWR0c3eAQFdtK9ebQ+/PKtkxHLvOI2/haZqkruOWilif1KPhZsu
+	 owHpHVP3VcelltIuA10HwgIr0ghfOp8MEek2OM8cgFt5u/zt/AX0dLySAju8zw0+Sn
+	 f8GvFupIanhysCILYNUpN03GOEssYSwyGtRr9i5BcyvA6J/MppK/59ro+e4024Spex
+	 6pYIe67zazGnNk+PI4UPbOBZDlrexav3M2xNhUqIrPg4HbpLLxEcMYzWjc6wzKHKbY
+	 Jj8xntCoUPQuw==
+Message-ID: <8782252c-c851-4034-b094-c4d13b14c69b@kernel.org>
+Date: Mon, 21 Oct 2024 19:50:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v12 0/8] add mptcp_subflow bpf_iter
+Subject: Re: [PATCH mptcp-next v3 1/1] selftests/bpf: Use make/remove netns
+ helpers in mptcp
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729267039.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1728530836.git.tanggeliang@kylinos.cn>
+ <af42ab81074d8a56f5fac8bcb4637400777f5ad5.1728530836.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,52 +87,81 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1729267039.git.tanggeliang@kylinos.cn>
+In-Reply-To: <af42ab81074d8a56f5fac8bcb4637400777f5ad5.1728530836.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 18/10/2024 18:00, Geliang Tang wrote:
+On 10/10/2024 05:31, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v12:
->  - squash patch 4 and patch 6 into one.
->  - use TCP_IS_MPTCP instead of TCP_CONGESTION.
+> New netns selftest helpers make_netns() and remove_netns() are added in
 
-Thank you for the new version. The new test looks good to me.
+(s/are/have been/)
 
-I just applied the series in our tree, before the BPF sched patches.
-There were quite a few conflicts I had to resolve, and code to move from
-already applied patches, to the new ones here. I also fixed a few issues
-reported by checkpatch while at it: __aligned(), s/veriable/variable/,
-and go to the new lines for some long lines. Can you please check
-everything has been applied as expected?
+> network_helpers.c, let's use them in mptcp selftests too.
 
-New patches for t/upstream:
-- d5e58ecf7fa8: Squash to "selftests/bpf: Add bpf scheduler test"
-- 5a74aa7f2e5e: Revert "bpf: Export more bpf_burst related functions"
-- 5ad76db0b5cb: Squash to "bpf: Add bpf_mptcp_sched_kfunc_set"
-- 11fcde02a32a: tg:msg: update after the recent squash-to patch
-- dae167c2e8d9: conflict in t/mptcp-add-sched_data-helpers-2
-- e5a676e5c48d: conflict in t/mptcp-add-bpf_mptcp_sched_ops
-- 0f852643d30d: conflict in t/bpf-Add-bpf_mptcp_sched_kfunc_set
-- 0bb27f0be108: conflict in t/selftests-bpf-Add-bpf-scheduler-test
-- 637c2378c777: conflict in t/selftests-bpf-add-bpf_first-scheduler
-- 5ac242f7d4d0: conflict in t/bpf-Export-more-bpf_burst-related-functions
-- Results: 096928239c3d..cb54960b2b51 (export)
+Thank you for the patch!
 
-- d5e58ecf7fa8: "squashed" patch 6/8 in "selftests/bpf: Add bpf
-scheduler test"
-- 5a74aa7f2e5e: "squashed" patch 7/8 in "bpf: Export more bpf_burst
-related functions"
-- 5ad76db0b5cb: "squashed" patch 8/8 in "bpf: Add bpf_mptcp_sched_kfunc_set"
-- Results: cb54960b2b51..95f1f908edb3 (export)
+I have one small comment below. The rest looks good to me:
 
-Tests are now in progress:
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f2798ec6af402483b2dde42f108c05363fef8706/checks
+Because it is just a single patch, and just a clean-up, do you mind
+sending it directly to BPF maintainers please?
+
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  tools/testing/selftests/bpf/prog_tests/mptcp.c | 17 ++++++++++++-----
+>  1 file changed, 12 insertions(+), 5 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index acd79be134cd..7f70f8ec76aa 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -82,12 +82,19 @@ struct mptcp_storage {
+>  
+>  static struct nstoken *create_netns(void)
+>  {
+> -	SYS(fail, "ip netns add %s", NS_TEST);
+> -	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
+> +	struct nstoken *nstoken = NULL;
+> +
+> +	if (make_netns(NS_TEST))
+
+I think it is clearer to explicitly add "< 0", so people would interpret
+this line as "if there is an error when creating the netns". Otherwise,
+it is not clear if we are going to take the error or the success branch:
+
+  if (make_netns(NS_TEST) < 0)
+
+> +		goto fail;
+
+Maybe clearer with either:
+
+  return NULL;
+
+or below, also use a goto just for the error path:
+
+
+      struct nstoken *nstoken = NULL;
+
+      if (make_netns(NS_TEST) < 0)
+          goto fail;
+
+      nstoken = open_netns(NS_TEST);
+      if (!nstoken)
+          goto fail;
+
+      return nstoken;
+
+  fail:
+      log_err("open netns %s failed", NS_TEST);
+      remove_netns(NS_TEST);
+      return NULL;
+
+Up to you.
 
 Cheers,
 Matt
