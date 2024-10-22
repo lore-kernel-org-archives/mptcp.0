@@ -1,56 +1,56 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-vk1-f177.google.com (mail-vk1-f177.google.com [209.85.221.177])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBB99145B24
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 10:12:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 97E1D18BBA9
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 10:24:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729591953; cv=none; b=ap586vJJdgTs/zQDKj1T1dpHfP7rXadH+ICpn2qavp69bm5MmCtfxaUqgyazUG2b764+50KM6B3JRm+h9FI8sC4z5XlOUUDsMiZ8jf1yTW6sRZD5zSeBWQwZv2aBO5Jtg2JPUg3j08hoCcP2nT2v+C4osXkcMrevMvc+dSUAgM0=
+	t=1729592694; cv=none; b=SwZY4ZiJCp9Mu7pBLYeBg2hjKK5p/DKNiH//KWWXirzgNlA8l1wX6nUeFWUAhdU1GnuTCWzljxbCx6eBd1sp7VfdJt/WPm3SOgn3UmJ0MZSpqb1QUIJk89Rn4hPNHEdqq+KJFwkbSNrHqbwLZxR+frVFSkj7J//8B80tCC5pMHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729591953; c=relaxed/simple;
-	bh=jvJCeaLzB1VBanMh8S09bUXfqLyAJwE09uzkkh6RCE0=;
+	s=arc-20240116; t=1729592694; c=relaxed/simple;
+	bh=WOuqLKOigc2kEpG/E4h+jBRCHkwbBBcXleo97P31Vy4=;
 	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=tv/Xp8yrscYvwhlIP3pKuLmXGv5udvKy5S+/DE3fk6qiXe/mwjgM2EGcXMeonbngK0VT+CyHJ1uaNTivY8rMWPAi19cjaBc5oQctJx+l0OXxJKT7kthqE7ZX1qbFh+6SkutnnDSKYFaEvVwB6o2cdihXaio4sWMZn9OW/IZpwgw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m+qcl5Os; arc=none smtp.client-ip=209.85.214.179
+	 Date:MIME-Version; b=VUto+PAFENaN+FIM8v3a2jQ8V3wKU+vQ/aJjfdGQ0DoEXYK/MpQEs7ZZXtXAwkoPn2PwsFCVTFZHTX3OXvLV3ytVdNN140imoLka//692+kBZaLYSRrhGhvJiM9+PKbn6Wb9YQ/8XT31omJSeQROod5IXwdnovTp8BfGGpRl6Wg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=bnsVAUNL; arc=none smtp.client-ip=209.85.221.177
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m+qcl5Os"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20cbcd71012so48790515ad.3
-        for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 03:12:31 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bnsVAUNL"
+Received: by mail-vk1-f177.google.com with SMTP id 71dfb90a1353d-50d487a93a5so1420005e0c.3
+        for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 03:24:52 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729591951; x=1730196751; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1729592691; x=1730197491; darn=lists.linux.dev;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=tjtE6ly4WQKDH+ULXGBVrhY7boc1B35rCtBCvQx5ag0=;
-        b=m+qcl5OsP8W3ouYveDCh8cGNuuAL2dIoiMImaXMXc7rGScX/NyLsaJYi7izlqhT19s
-         10V4m/S9YLbNnzuwuSu/AYXqKzDCOW5OgFHFSdMvnmlpcLmPBPry5DK+YRyP0nccUk8Y
-         /bwGBXCuwr3/ZEUpJBr+qPF6U0TkMIiUYD5O5D2W0D5KPNAUshSEy6Yh+Uj5iT39rocu
-         u12UpprNnWCmB0NzBUl3xgy7Y6laXeW/8IPf6YhKgsxivLS19ZwMl+IBn/ytaE1++1KZ
-         absWf+pbqQJmIdIQf/MsUuOexvXk5rC4H5yAj3His57vbeTGgFXl3CRvXgh91U1ibKCC
-         rR1w==
+        bh=32S6Gw9AB6cb7GOLdA6ZnvOIklM3/+ra83ppxvc0JYs=;
+        b=bnsVAUNLa6Iljui9sHSHdVODH3FnRl1NhT0clMPUPGr+yZ6MFb81n1QyFVEcFsKUDG
+         soGvVV+UgV7R1vRYlbF+js0b5gegU8TZKVSuij0/EuEHYQd4fFLa3E2Vj1Tzk2vKYlx9
+         icR8BWAtYmnp4w1ebZLDJ6GyI7xQSPLss4dsu8p1UIj7n/IhqwAuFA3S5EQOCTIGberU
+         R8xoAyWAfCesrA97eRyXx/vr64/fzcxrCQOiTM3pp+q/IvbY94L2fkZx28CM2DlNFBnA
+         luJOP9tW8paa+1iWfAGpTZfQqCOHy32E5LpfaukmjtkqqcoATjqX8XHhPXZBZMfSuIhL
+         WfAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729591951; x=1730196751;
+        d=1e100.net; s=20230601; t=1729592691; x=1730197491;
         h=mime-version:date:content-transfer-encoding:message-id:subject
          :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
          :to:cc:subject:date:message-id:reply-to;
-        bh=tjtE6ly4WQKDH+ULXGBVrhY7boc1B35rCtBCvQx5ag0=;
-        b=xGtbCIK9Apuv11OLnrQjRm2RlnyNE6HdaTHbHaU1UgBiOR3r7VIgTGyAh2WJ6/lZz+
-         EYg+tNR1iBjhinF+7hPeFoQAvxqW/hSe52UCplmedc37tkRuJ4D8ki4mrv59EdMbPYS+
-         h+I2jTT3zlPw2Oglh6Mp4lKGFZndxyEghbNc7KTsqEn006xmVonj5FZB4qSNM69EYgut
-         PjjlWIegG1TXG4XjQUkayThvk75fZUIBoJ89Qhp90XP4bBhF+EqO/KiqwYTnGK+DkWlT
-         Ggs8fkNBvlYwlRY/A3w/6p2hzQ1GHlauJQHKN3IfediXEtkMwDXdmMWgUpSQphOXcnp/
-         VMfg==
-X-Gm-Message-State: AOJu0YxCyyk8wIhy7iDnrTgxFaJnL9Po7/LegBQcxTAfNypZ6AL6/6Lb
-	6ZKsMqqBicp3SBhL9WqbWzbl1VEYj3fvHS/S3jFwqgn/WdoSjwQij1L1
-X-Google-Smtp-Source: AGHT+IG9T7MF40SCWs7N5y5PL6NwzQTbLMEff9rQ7u++MyZCYmWtnL5DtE8+EYhTYjV3aSN3JVvImw==
-X-Received: by 2002:a17:903:244e:b0:20c:9da6:65b0 with SMTP id d9443c01a7336-20e5a8d64fdmr196580655ad.35.1729591950978;
-        Tue, 22 Oct 2024 03:12:30 -0700 (PDT)
-Received: from [127.0.0.1] ([52.238.25.48])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7eee65e9sm39769215ad.42.2024.10.22.03.12.30
+        bh=32S6Gw9AB6cb7GOLdA6ZnvOIklM3/+ra83ppxvc0JYs=;
+        b=fAgL6GITPp9uFWmZuwxwZmjSLhtM53RX1onPkl2sfX2XaJ0UW0xkA7YnEJhnKDRb1y
+         54dNKMKTymlRxvVtzssObQrob4eleaujQWRECShy5cmq1EbsTl5Vh61JPUROEdUrgFLT
+         i3Q2XsbTJbXLADIw1nlWiYLB68nqAc6Ds3jpL1C+ff7JSE3whAfFE5BarypQRdsp0AVx
+         LrVO3iaCIh3+Mv3Kl/+fDj0dFNlZd7Ri5Q6BVuddgQQJJEa2yVxXureBinjZsM3TZmrn
+         i2ZzrReadA98Fc2ncALGETOD5obGXfT2lFhQu0VOOP1OmQ3QeiwP9m6ITgiBQMhbRbr/
+         FLwQ==
+X-Gm-Message-State: AOJu0YxlGX5GiAFFc+hykM0Hy1gN2ovsjJcLMZ6VMjlWVKNI74SdaWHx
+	zQVfExkIUGVMaMuB1xCIkWBbYAwkshXTvDBcG36RNtbcH737n8FwzJzf518=
+X-Google-Smtp-Source: AGHT+IH7ocPvD78E9RR1HAXULhns+TM0L8MoxJs6/zfBuZgvcl1g8iiVaAejH7U7Ymc/oV7Bn1DRiA==
+X-Received: by 2002:a05:6122:2521:b0:50d:74af:d480 with SMTP id 71dfb90a1353d-50dda1bb590mr12168092e0c.1.1729592691325;
+        Tue, 22 Oct 2024 03:24:51 -0700 (PDT)
+Received: from [127.0.0.1] ([20.55.86.176])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b165a0347asm263816585a.59.2024.10.22.03.24.50
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 03:12:30 -0700 (PDT)
+        Tue, 22 Oct 2024 03:24:50 -0700 (PDT)
 Content-Type: text/plain; charset=utf-8
 From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Geliang Tang <tanggeliang@kylinos.cn>
@@ -59,9 +59,9 @@ Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1729588019.git.tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
 Subject: Re: [PATCH mptcp-next v2 00/36] BPF path manager
-Message-ID: <c3f79064-ae6c-1e07-4806-68fcbc8fbe14@gmail.com>
+Message-ID: <6831e570-f8a0-da79-a52e-80e02d7731fb@gmail.com>
 Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Oct 2024 10:12:29 +0000
+Date: Tue, 22 Oct 2024 10:24:50 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -73,26 +73,48 @@ Hi Geliang,
 
 Thank you for your modifications, that's great!
 
-But sadly, our CI spotted some issues with it when trying to build it.
+Our CI did some validations and here is its report:
 
-You can find more details there:
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/11457329343
 
-  https://github.com/multipath-tcp/mptcp_=
-net-next/actions/runs/11457329322
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/9def5a043f12
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D901761
 
-Status: failure
-Initiator: Patchew =
-Applier
-Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/9d=
-ef5a043f12
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
-series=3D901761
 
-Feel free to reply to this email if you cannot access logs=
-, if you need
-some support to fix the error, if this doesn't seem to be =
-caused by your
-modifications or if the error is a false positive one.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
 MPTCP GH Action bot
