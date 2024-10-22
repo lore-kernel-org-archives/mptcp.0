@@ -1,120 +1,141 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36DE1A08DB
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 16:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3128842AB3
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 17:01:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729615402; cv=none; b=REW47yF0HkT4tv/DX+SS9PEfQEMZ2LAxiDOG9QU2VM0RayJK52Mx5wxZt/V80gu5DK7gWxaZMT8KwvMY4BfDJ2+FbzsIgQXTO0J5W3CYMyvMbatAQW+8vQ8E48TcMyz9HgFgAB0b5917+LVJ6S3Udhy+MFAOEZJa4I5tZzMv+wY=
+	t=1729616470; cv=none; b=cJIdfUHKJllgQTwQwDH39Mvcn6hiX0+LlBeMzuwvmzi+MUFlgeSUyPlKLnDJe5p4OyRhzKhOaKrfkolTjZ8Xil3IYeTpGbK7RntmZ/zYXduaXnXaW+6ZH2Go2gU77XxAQTsGGcPzNaSORgkU9HAA5VewH3rgzmAU9sEb0BLbMEM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729615402; c=relaxed/simple;
-	bh=yzdeFLazRT4M0G8gEpKnDHPg0IiDgr+vUh17bkhfMm4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=JATVXSwgvmjUg8wIlYrT6xzHTDS2u1Fl2L1Hw1MhSGCEzm+pS3iUN+sy3nNzvfYBNcgwoJfYp8RpfZjx8JyPWQcHkcbyO02fiw/n1hOK+c7bgTfY3rFaKU7WMc5nXMyk8RiLQ8a529SKbk0HbtJQiXDuR8tARZRZbWZzsHgh2io=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F+X+tEtj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729616470; c=relaxed/simple;
+	bh=K96UTYcC+XZna7mgSrVc/R1dKxdqSiGvyhTtutsCTvs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hM3wZywX9YMM8392CYYfHnL+VDu4lbOOkNPnN7Ok+fq75UKXrVv7o/jbhQaXg81It3NdKOg5U5OkmNRp6qXNAkQyKfkTNXjs8WwMUbEGUyDol2hjPVffkwBZZkETmJRlYvSJDrM4bQ6R56GB325F9BUSNrPn/H2pbVMaWOL/QGc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxoTK4P8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F+X+tEtj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 76BDCC4CEC3;
-	Tue, 22 Oct 2024 16:43:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxoTK4P8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0758AC4CEC7;
+	Tue, 22 Oct 2024 17:01:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729615402;
-	bh=yzdeFLazRT4M0G8gEpKnDHPg0IiDgr+vUh17bkhfMm4=;
-	h=From:Date:Subject:To:Cc:From;
-	b=F+X+tEtjJFLSaUTr3KFJ1JyWj1Wf0+tgLgR9HT3eAHMSK5LY8ctWNRhrIsmLNZ/As
-	 rucRAvQb5qWGjWLExNKd4IH2Mi7S1DKTv6MtdNS12CYN1N1+X9rdaIkAgnCk6dLDhE
-	 +a0hoVTBD77h3Xp5o/ymL6X0145Ik0sp5XXvuRuVB24hmUXmrICKr3aBY3iXaRd9LE
-	 0Hl4pvDfhMBxsZdt65tsdkp29Ux/GTXqbbTH9RR7y6WBcv1riweQjecn8MEcmHv5Nr
-	 ROm45aqHECKe8Y04WUJWHfk426qtxorr5zTdm1YbGkHpMPOj1QZ5Ymgcqktbdcl85S
-	 pDViBvx5U90eA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 22 Oct 2024 18:43:08 +0200
-Subject: [PATCH mptcp-net] mptcp: no admin perm to list endpoints
+	s=k20201202; t=1729616469;
+	bh=K96UTYcC+XZna7mgSrVc/R1dKxdqSiGvyhTtutsCTvs=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=GxoTK4P8ku0gxuFFKuc1Vg0C3Z/esb2MGsf53lxSy0l52YAPaIyu5GXBo6iG7rEXU
+	 Imvoe3URl+wNI+jkYiotMONhNiSY7PjQ1q9TipUf18Kuiihx7ysh8P4h5prvCojFis
+	 +ocTDALi5C9+iX7ukXk/9+gcJug3nit1tZOZ8alVzHpprbhNYZZsJLU19+J97zpV0y
+	 /bH1q4hgJ4ScSxhc278YoFwLZqax+P8KlVisbLeRybk210Nw5pyusUOGMiGkLDW9Pv
+	 vGt1hhY721XnWhcrjopsKo6MbQEF5/EdXMNcsSnvoEyrXHBphgyG651RmaLGsunkw/
+	 Qp+GUGdVwap5w==
+Message-ID: <f7bc8980-37b1-414b-9f1f-4e9d46979916@kernel.org>
+Date: Tue, 22 Oct 2024 19:01:06 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 01/36] mptcp: drop else in
+ mptcp_pm_addr_families_match
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+ <2274e7768f2534184f675b86b61c2f434290f98a.1729588019.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2274e7768f2534184f675b86b61c2f434290f98a.1729588019.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
-X-B4-Tracking: v=1; b=H4sIABvWF2cC/yWMywqEMAwAf0Vy3kANuj5+ZfGgNmoOraFVEcR/t
- 7iXgTnMXBA5CEdoswsCHxJl9UnyTwbj0vuZUWxyIENFbojQ6TYqqkO7O8Xe2pDgxKMZiL5VWXM
- zlZByDTzJ+a5/8K88b9Dd9wOk6/A0dQAAAA==
-X-Change-ID: 20241022-mptcp-pm-dump-addr-admin-0b226758e9f5
-To: mptcp@lists.linux.dev
-Cc: Davide Caratti <dcaratti@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2125; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=yzdeFLazRT4M0G8gEpKnDHPg0IiDgr+vUh17bkhfMm4=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnF9Yp5sGN9ovz3o+0Y1HJuCdXTXS5FAkl6y5DA
- /SiBo5cb+mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxfWKQAKCRD2t4JPQmmg
- c9ClD/9TilHuabBIgStoahqpCfusJYiu/kUUgRFIsxKgulF8O2N8Z0WmF8MXEmkLa8zXIHA1+8N
- i/3P172UJQRxNX+8wpil46yFjk4eYEdhbV6W4qCoYy5QGrPr4MMm+113oR3R1amu6dv4debu+J8
- VmhkPRFHCYrWdji0NVeApplKZCX2CXOTMbXwdJSDDxZuhW8k84uJk6TASzMMn5QHHrapQqlWqrc
- lBfhv02QpxWd0ERsAaX+eYCelDOz3ghEKTS3qaIazxmTj1cWJeiQ2ykkPOg1Nvu3+TURVCocvRU
- 6r34RhtaM83m9QUe8qufW+AssqK5ioo7ZVlUmZQ0ddXMCovdemIZycZrLAeSvbAppxQElXweh16
- ZNmHEbmR7Doc17baJ1yvWTfsnqjpStvePgYHmCnpRBQbU7UW0LCed62/Sr6jWWJUcH2k/JRzorZ
- 62VZExm7YRoKqBVjoPSEl7/AEkuACqcs+10ocGaDfhR3eOjaBtobRTioCiY0sWVnOnlWaALj4S7
- 9Nj9hiMP/iEAT+21R2RguQ404errqKKKbTt4e0PHzwIR1PLb0Lf2uRAtx2GOz1qohNr4ebU4dgE
- gI8BXGWAN3SkSVXafYhFlfaeUpWy+dilhZyZj0t4b3HA8oIEFm0L34aaG8BrMv/y3opJ7KRqYTd
- XAA7lsMi1XBnfOw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-During the switch to YNL, the command to list all endpoints has been
-accidentally restricted to users with admin permissions.
+Hi Geliang,
 
-It looks like there are no reasons to have this restriction which makes
-it harder for a user to quickly check if the endpoint list has been
-correctly populated by an automated tool. Best to go back to the
-previous behaviour then.
+On 22/10/2024 11:14, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> The helper mptcp_pm_addr_families_match() uses "if-else" to handle IPv6
+> and IPv4 addresses separately. But the last line of "if" code block is
+> a "return" statement. In this case, no need to use an "else" statement.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 16c336c51940..f3d354a72c94 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -495,9 +495,8 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
+>  		return !loc_is_v4 && !rem_is_v4;
+>  
+>  	return loc_is_v4 == rem_is_v4;
+> -#else
+> -	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
+>  #endif
+> +	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
 
-mptcp_pm_gen.c has been modified using ynl-gen-c.py:
+I think some static analytic tools will complain because if
+CONFIG_MPTCP_IPV6 is enabled, the code will look like this:
 
-   $ ./tools/net/ynl/ynl-gen-c.py --mode kernel \
-     --spec Documentation/netlink/specs/mptcp_pm.yaml --source \
-     -o net/mptcp/mptcp_pm_gen.c
+  return loc_is_v4 == rem_is_v4;
+  return mptcp_is_v4 && (...)
 
-The header file doesn't need to be regenerated.
+Two 'return' in a row, the 2nd return is never used, there will be a
+warning somewhere.
 
-Fixes: 1d0507f46843 ("net: mptcp: convert netlink from small_ops to ops")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- Documentation/netlink/specs/mptcp_pm.yaml | 1 -
- net/mptcp/mptcp_pm_gen.c                  | 1 -
- 2 files changed, 2 deletions(-)
+Also, I don't it is worth it, and it looks clearer with the #else. Is it
+OK to drop this patch when applying the series?
 
-diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-index 30d8342cacc8704c42b84c9e03f96c906e81733e..dc190bf838fec6add28b61e5e2cac8dee601b012 100644
---- a/Documentation/netlink/specs/mptcp_pm.yaml
-+++ b/Documentation/netlink/specs/mptcp_pm.yaml
-@@ -293,7 +293,6 @@ operations:
-       doc: Get endpoint information
-       attribute-set: attr
-       dont-validate: [ strict ]
--      flags: [ uns-admin-perm ]
-       do: &get-addr-attrs
-         request:
-           attributes:
-diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-index c30a2a90a19252dd41a74109d5762a091129269d..bfb37c5a88c4ef90740699dfda345b52e206966b 100644
---- a/net/mptcp/mptcp_pm_gen.c
-+++ b/net/mptcp/mptcp_pm_gen.c
-@@ -112,7 +112,6 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
- 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
- 		.policy		= mptcp_pm_get_addr_nl_policy,
- 		.maxattr	= MPTCP_PM_ATTR_TOKEN,
--		.flags		= GENL_UNS_ADMIN_PERM,
- 	},
- 	{
- 		.cmd		= MPTCP_PM_CMD_FLUSH_ADDRS,
+>  }
+>  
+>  void mptcp_pm_data_reset(struct mptcp_sock *msk)
 
----
-base-commit: 66bee427d4db76bd1afbf0184a2fd1f238a4ee27
-change-id: 20241022-mptcp-pm-dump-addr-admin-0b226758e9f5
-
-Best regards,
+Cheers,
+Matt
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Sponsored by the NGI0 Core fund.
 
