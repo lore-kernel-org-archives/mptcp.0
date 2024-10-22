@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3128842AB3
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 17:01:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199F41BC091
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 17:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616470; cv=none; b=cJIdfUHKJllgQTwQwDH39Mvcn6hiX0+LlBeMzuwvmzi+MUFlgeSUyPlKLnDJe5p4OyRhzKhOaKrfkolTjZ8Xil3IYeTpGbK7RntmZ/zYXduaXnXaW+6ZH2Go2gU77XxAQTsGGcPzNaSORgkU9HAA5VewH3rgzmAU9sEb0BLbMEM=
+	t=1729616975; cv=none; b=rhEYiM8MsE6C9OSDtckGkQzCrwVwbkDqMGG9wEEyyNWtZFU99v3K11istO/qMAhlhuPxW+pd8c/Wj36fu7xsBeK/RDCljwJVkF+DQM21Z6lTk8yAaaF9FWY044JjQtf6y6e3bcaclCR74TPI/eZKRpze3mN9OrUY6F0LwQmkUbk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616470; c=relaxed/simple;
-	bh=K96UTYcC+XZna7mgSrVc/R1dKxdqSiGvyhTtutsCTvs=;
+	s=arc-20240116; t=1729616975; c=relaxed/simple;
+	bh=IBbKwjP7rKtb8BPmKCema+bEsOX/tBrYnvSd6F9Cvds=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hM3wZywX9YMM8392CYYfHnL+VDu4lbOOkNPnN7Ok+fq75UKXrVv7o/jbhQaXg81It3NdKOg5U5OkmNRp6qXNAkQyKfkTNXjs8WwMUbEGUyDol2hjPVffkwBZZkETmJRlYvSJDrM4bQ6R56GB325F9BUSNrPn/H2pbVMaWOL/QGc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GxoTK4P8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ET1h3fZ0MiCniG84A5D18GsRLEc4h/HiSg1ymPNCd5Tpg5o7PtTahR/w9QWHAlLYL4Dvy01WvxsmR++HGe4Wcuj++EcwcNRi+69eFoU9GIKTL7WjhLIS7gPqsZajI7YRAv+E/hYOxPiw+w3cl3m519TM2fa5sBkYcohBy9d5kxQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oc9/ZFtP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GxoTK4P8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0758AC4CEC7;
-	Tue, 22 Oct 2024 17:01:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oc9/ZFtP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04D8C4CEC3;
+	Tue, 22 Oct 2024 17:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729616469;
-	bh=K96UTYcC+XZna7mgSrVc/R1dKxdqSiGvyhTtutsCTvs=;
+	s=k20201202; t=1729616973;
+	bh=IBbKwjP7rKtb8BPmKCema+bEsOX/tBrYnvSd6F9Cvds=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GxoTK4P8ku0gxuFFKuc1Vg0C3Z/esb2MGsf53lxSy0l52YAPaIyu5GXBo6iG7rEXU
-	 Imvoe3URl+wNI+jkYiotMONhNiSY7PjQ1q9TipUf18Kuiihx7ysh8P4h5prvCojFis
-	 +ocTDALi5C9+iX7ukXk/9+gcJug3nit1tZOZ8alVzHpprbhNYZZsJLU19+J97zpV0y
-	 /bH1q4hgJ4ScSxhc278YoFwLZqax+P8KlVisbLeRybk210Nw5pyusUOGMiGkLDW9Pv
-	 vGt1hhY721XnWhcrjopsKo6MbQEF5/EdXMNcsSnvoEyrXHBphgyG651RmaLGsunkw/
-	 Qp+GUGdVwap5w==
-Message-ID: <f7bc8980-37b1-414b-9f1f-4e9d46979916@kernel.org>
-Date: Tue, 22 Oct 2024 19:01:06 +0200
+	b=oc9/ZFtP0hLU2I22Z98oWawfErmH7K3W/Z54oOuNO1VgWOL7oI3uY1t1Ah7491lc0
+	 PVnYqKXWQW0YslUzxorqIZNqgHopQY2BmUI/uHVHLyK4xohQOjE9WyeBz3t/ZFUfE6
+	 fhcL7Dwvs6ZXILPNEe0gLdnKOcd9G4z4HCqHc+q/mjUWPJlKhknotUkWXkrYnsnIVJ
+	 wbGyRZE33PMkL0b3WIs6+GX8pSfymzHtzU2fqDkhiz13GSKwabVTlO9fUbdxSZZ2um
+	 Sa1TIYY5Z9UBAkYOuF3aPepa0+p5Y/Az3DaSZuADp4grE65YkaHcPdBgn02LiB2l1V
+	 SRM7soNPUVSYg==
+Message-ID: <2d40c9a5-9ebc-4621-ab81-1f46b2a6d190@kernel.org>
+Date: Tue, 22 Oct 2024 19:09:31 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 01/36] mptcp: drop else in
- mptcp_pm_addr_families_match
+Subject: Re: [PATCH mptcp-next v2 02/36] mptcp: use __lookup_addr in
+ pm_netlink
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <2274e7768f2534184f675b86b61c2f434290f98a.1729588019.git.tanggeliang@kylinos.cn>
+ <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2274e7768f2534184f675b86b61c2f434290f98a.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,43 +96,22 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The helper mptcp_pm_addr_families_match() uses "if-else" to handle IPv6
-> and IPv4 addresses separately. But the last line of "if" code block is
-> a "return" statement. In this case, no need to use an "else" statement.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 16c336c51940..f3d354a72c94 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -495,9 +495,8 @@ bool mptcp_pm_addr_families_match(const struct sock *sk,
->  		return !loc_is_v4 && !rem_is_v4;
->  
->  	return loc_is_v4 == rem_is_v4;
-> -#else
-> -	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
->  #endif
-> +	return mptcp_is_v4 && loc->family == AF_INET && rem->family == AF_INET;
+> The helper __lookup_addr() can be used in mptcp_pm_nl_get_local_id()
+> and mptcp_pm_nl_is_backup() to simplify the code if using
+> list_for_each_entry_rcu() instead of list_for_each_entry() in it.
 
-I think some static analytic tools will complain because if
-CONFIG_MPTCP_IPV6 is enabled, the code will look like this:
+Mmh, please justify why it is OK to use the _rcu() variant without
+having to modify the caller.
 
-  return loc_is_v4 == rem_is_v4;
-  return mptcp_is_v4 && (...)
+Did you check everything was OK when running the tests with these kconfig:
 
-Two 'return' in a row, the 2nd return is never used, there will be a
-warning somewhere.
+  CONFIG_RCU_EXPERT=y
+  CONFIG_PROVE_RCU_LIST=y
 
-Also, I don't it is worth it, and it looks clearer with the #else. Is it
-OK to drop this patch when applying the series?
+I guess you will get new issues, no?
 
->  }
->  
->  void mptcp_pm_data_reset(struct mptcp_sock *msk)
+We might need to have __lookup_addr() and __lookup_addr_rcu() if you
+want to avoid duplicated code.
 
 Cheers,
 Matt
