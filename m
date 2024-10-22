@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F2AE1152166
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 09:15:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A7D4161302
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 09:15:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729588521; cv=none; b=GC4dVWRcz9NDXE2zWLS4quJbui+Xrt64S88hic3XtTjyjji4V95bSr5k45UfU8oDUPiynOoDcuOMA4eueOC9s4rNorPYN2sqY1oouPzwubx8jepHGBeO3AOzw7Fk6BhfvfcUJFvB4OtPf6737PBIAQsJ/slz82zCTGaujXchgHo=
+	t=1729588522; cv=none; b=aZ5bYSaA3c7oYIdcHnid/ss40X5SMHRn118QJZ5tbOpEmXmY1dz52ZtKDBlPDtAd/feo5jEqpcCR8NzRLGYsM6lT/+FdrNmcmQsueeYSQpYt0zguGYpkVcxQEB0msBIxcVmFvJBxrp5XalNy7shS3VjmI/FoLe5+2v92UkC+kig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729588521; c=relaxed/simple;
-	bh=ZjREbHxhOIy+A7ttd4+oVrbw067GkUlxYaXjFcOshvU=;
+	s=arc-20240116; t=1729588522; c=relaxed/simple;
+	bh=TrO3hZdUM1LRJu1284LtEC2Bzf6jQydLeF7xIrndI6M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Zdp1yWft7RgVury09wUyi5U67CLJKynRdl4AbgnnGz3c3FS+s9xcPFxN5JouvET1YC5qsX28fhLrigyChy6S/kmusN1jxcUKc2KNu4ZWi43rB62XCmAk9A9xovT6dgfejQ0PSV3mynbgobLJbFn/2LBEOMhMv8jl26Eh/x8H/fo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=b8/Jz/sh; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NmV/VdYRwHTF+N9SE+u5So/BzCmqDACUWwAOJ7bhYiELAOjanftEg5vueDUrUQaliqwgAM332nwMMwe75D5MarbnP2d4XbPqW59yijz4OEtgULiiFio3hBd9vLda8ZL7ijEEzM+4ZlhkbzQmLOmnO7HoGrM6nFrRakl5vkdnXsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nb1AJ8CQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="b8/Jz/sh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 91D8DC4CEE3;
-	Tue, 22 Oct 2024 09:15:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nb1AJ8CQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13C37C4CEC3;
+	Tue, 22 Oct 2024 09:15:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729588520;
-	bh=ZjREbHxhOIy+A7ttd4+oVrbw067GkUlxYaXjFcOshvU=;
+	s=k20201202; t=1729588521;
+	bh=TrO3hZdUM1LRJu1284LtEC2Bzf6jQydLeF7xIrndI6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=b8/Jz/shvwjudcLn/olY6jVj52v55zE7rAL+uLkyujTlaWoYPWNU5mSnvWyssmwiD
-	 RK4F4TvZmEu5Hxv9b3K8nECe+rw4jz5GX0fMigXyP4iyhBnmEKIanc2GgyroWGqWfQ
-	 Hl2twbfA1JL2LaMGYVhwA0AG5Er2zga4YPo4+veTdh5ZYY4u+RoE6EeqS5vLJwH9zg
-	 3nkMsUvhWJHHI5T+k8KpdObtsXopxX0gZcrCYOYWsUXySfip7WyWYw6XsYESuUj/OW
-	 4HO/KzUdYyly7yC3ZlUt7dOtLv6U2UKX3iz7F0qlm2hXcUB75l8XQA1GVw9GdgPgj3
-	 18+c8ElchnEKQ==
+	b=nb1AJ8CQBbQh5keS6XBOC+kiWYWchwOJJZbVy1lEkTEA3pAhg3nj9otKAWT4vcQgm
+	 lEA4Cl2xEmu5EOaY8GHydifudkhbqrYsV087zkABp7sIlBw7Bn8DrOGKl7LnXdsM+g
+	 nO4zJORzixZYBEyyTbIDidsDMuvzhvwyeIA5GJZFIooOQ4W69avUa+ZpVoRiX8xjFG
+	 hIgxUvI5jGMM6aG6boIYa7DQw4DTJ4Fz6MugJthwAZ70rqQJghRkEfErWMOsOlQAxw
+	 DBMq1rsdCUhutgpCiKkhn3tC6xq3/8r1hztewROvY1vineyNiBk3Bv5nnoQ9fcMbhc
+	 tzUwczM+on0Tw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 17/36] mptcp: update local address flags when setting it
-Date: Tue, 22 Oct 2024 17:14:25 +0800
-Message-ID: <7ab7696f338aa9ac73d65439350b38412c2e613d.1729588019.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 18/36] mptcp: change rem type of set_flags
+Date: Tue, 22 Oct 2024 17:14:26 +0800
+Message-ID: <2cb23f8a0ef052f9e37c2199982ec749e33e7e47.1729588019.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1729588019.git.tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
@@ -45,45 +45,61 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Just like in-kernel pm, when userspace pm does set_flags, it needs to send
-out MP_PRIO signal, and also modify the flags of the corresponding address
-entry in the local address list. This patch implements the missing logic.
+Generally, in the path manager interfaces, the local address is defined as
+an mptcp_pm_addr_entry type address, while the remote address is defined as
+an mptcp_addr_info type one:
 
-Fixes: 892f396c8e68 ("mptcp: netlink: issue MP_PRIO signals from userspace PMs")
+	(struct mptcp_pm_addr_entry *local, struct mptcp_addr_info *remote)
+
+But the set_flags() interface uses two mptcp_pm_addr_entry type parameters.
+This patch changes the second one to mptcp_addr_info type and use helper
+mptcp_pm_parse_addr() to parse it instead of using mptcp_pm_parse_entry().
+
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ net/mptcp/pm_userspace.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index d815bfa57532..ec2ac0f9c8f5 100644
+index ec2ac0f9c8f5..b83f4af632b5 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -543,6 +543,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
+@@ -540,9 +540,9 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ {
+ 	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
+-	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
  	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	struct mptcp_pm_addr_entry *entry;
++	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
+ 	struct mptcp_pm_addr_entry *entry;
  	struct mptcp_sock *msk;
  	int ret = -EINVAL;
- 	struct sock *sk;
-@@ -574,6 +575,16 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
+@@ -560,13 +560,13 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 		goto set_flags_err;
  
-+	spin_lock_bh(&msk->pm.lock);
-+	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
-+	if (entry) {
-+		if (bkup)
-+			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-+		else
-+			entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-+	}
-+	spin_unlock_bh(&msk->pm.lock);
-+
+ 	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
++		ret = mptcp_pm_parse_addr(attr_rem, info, &rem);
+ 		if (ret < 0)
+ 			goto set_flags_err;
+ 	}
+ 
+ 	if (loc.addr.family == AF_UNSPEC ||
+-	    rem.addr.family == AF_UNSPEC) {
++	    rem.family == AF_UNSPEC) {
+ 		GENL_SET_ERR_MSG(info, "invalid address families");
+ 		ret = -EINVAL;
+ 		goto set_flags_err;
+@@ -586,7 +586,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
  	lock_sock(sk);
- 	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
+-	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
++	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem, bkup);
  	release_sock(sk);
+ 
+ set_flags_err:
 -- 
 2.45.2
 
