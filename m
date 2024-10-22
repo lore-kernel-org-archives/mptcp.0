@@ -1,120 +1,90 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 199F41BC091
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 17:09:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F199D1BC091
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 17:11:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729616975; cv=none; b=rhEYiM8MsE6C9OSDtckGkQzCrwVwbkDqMGG9wEEyyNWtZFU99v3K11istO/qMAhlhuPxW+pd8c/Wj36fu7xsBeK/RDCljwJVkF+DQM21Z6lTk8yAaaF9FWY044JjQtf6y6e3bcaclCR74TPI/eZKRpze3mN9OrUY6F0LwQmkUbk=
+	t=1729617103; cv=none; b=ORfjGfNZF/dic2FVE9E6KoLzW0KWY2vF5kVv0Fg3tsj79SLw9F8dGyTRV1oYrgg3SGOG+0jjSSPnjRtb0aiWi+FPemnS43fKxfOCihif7jb+kDjx+K63okxVvoi8EF0tSQvnSPj46a7SYn0PVNSr6uB850PSbwsXOekt8/ARZHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729616975; c=relaxed/simple;
-	bh=IBbKwjP7rKtb8BPmKCema+bEsOX/tBrYnvSd6F9Cvds=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ET1h3fZ0MiCniG84A5D18GsRLEc4h/HiSg1ymPNCd5Tpg5o7PtTahR/w9QWHAlLYL4Dvy01WvxsmR++HGe4Wcuj++EcwcNRi+69eFoU9GIKTL7WjhLIS7gPqsZajI7YRAv+E/hYOxPiw+w3cl3m519TM2fa5sBkYcohBy9d5kxQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oc9/ZFtP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729617103; c=relaxed/simple;
+	bh=wvA+kM7C97UwQvYrcYlFrX7guraQiKdqhQdK5LdpmDY=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=eImaWkOycz3jGnlqqG4z/nbtGVdDCVsYwkP+EgoGWLiE91vGsCa59aNssRzLhdZN+w0pWLE9lBuUIL/vwI7HfCOUnHsSYmWRbnURLkBfElF5ErXjxhz26Dq0zJgmTKEtLaQaRxOdyhWpstRBZz5E0JtC6Yh5V+nkyzOP55zfWh8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=NGT9wW8v; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oc9/ZFtP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E04D8C4CEC3;
-	Tue, 22 Oct 2024 17:09:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729616973;
-	bh=IBbKwjP7rKtb8BPmKCema+bEsOX/tBrYnvSd6F9Cvds=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oc9/ZFtP0hLU2I22Z98oWawfErmH7K3W/Z54oOuNO1VgWOL7oI3uY1t1Ah7491lc0
-	 PVnYqKXWQW0YslUzxorqIZNqgHopQY2BmUI/uHVHLyK4xohQOjE9WyeBz3t/ZFUfE6
-	 fhcL7Dwvs6ZXILPNEe0gLdnKOcd9G4z4HCqHc+q/mjUWPJlKhknotUkWXkrYnsnIVJ
-	 wbGyRZE33PMkL0b3WIs6+GX8pSfymzHtzU2fqDkhiz13GSKwabVTlO9fUbdxSZZ2um
-	 Sa1TIYY5Z9UBAkYOuF3aPepa0+p5Y/Az3DaSZuADp4grE65YkaHcPdBgn02LiB2l1V
-	 SRM7soNPUVSYg==
-Message-ID: <2d40c9a5-9ebc-4621-ab81-1f46b2a6d190@kernel.org>
-Date: Tue, 22 Oct 2024 19:09:31 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="NGT9wW8v"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1729617100;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=wvA+kM7C97UwQvYrcYlFrX7guraQiKdqhQdK5LdpmDY=;
+	b=NGT9wW8v87z1gaejEBZ5ixcwuUqGSvIDY6Pr6js51/T08hgvHDFF6VcpZM3PAVIdIWXNkn
+	bvYNMsNuSGDSwz6A/7iIjzpXZpGD17/cGic8gaPhxCZqKJBKlGbnaSwxFC8QgcW8V2VcAZ
+	hfVfzOZjFgMsnGdZ5YfRVx8ZFt6ddEY=
+Received: from mail-pg1-f198.google.com (mail-pg1-f198.google.com
+ [209.85.215.198]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-91-sO2gF6PXNIaY7zqJJzX6UQ-1; Tue, 22 Oct 2024 13:11:39 -0400
+X-MC-Unique: sO2gF6PXNIaY7zqJJzX6UQ-1
+Received: by mail-pg1-f198.google.com with SMTP id 41be03b00d2f7-7ea8c2b257bso5524333a12.1
+        for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 10:11:38 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1729617097; x=1730221897;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=wvA+kM7C97UwQvYrcYlFrX7guraQiKdqhQdK5LdpmDY=;
+        b=FZ/PFODebiCzFxBWeXk1oSK1G8wT0Rg+my1iTBBiQjVa5pzu7Lyfrzi0esSWB/DTmL
+         GLC5wPt46zOi8mU1R4o5ym8sB84HEuVfUAxgR5NlOdoRIzobKVXiq/8smAQak9c4zmAW
+         LtXuwkJQ9Es63rxtchXA7Bd7DqMBSs52FhR8F2v3r9U2U2+rL3mjPXOyWIryJp+Dp3oG
+         bjvjAkGXt5sntjl1ARoc+hylZg89YyUFi3LNUPMu6rp/OOT082dw0HfqpdxEd1CDAGOc
+         0qzDyStbGntH9qjPn+xkawvcth2vcbPo26cafpuPsX95nDqvFXWQ3lhaVCD1Or78AgQo
+         WRLA==
+X-Gm-Message-State: AOJu0Yy72zMI+D9x9gsaYzuuBfbLGqHh21hk4KY/nybGOvvdZwMlOIDU
+	yDkfso03dNB1FYlGSwc/BaPWghF54Nkm/jBa+rY519UQ+Pl+EwAFcML1wCQKnOiBfdcFdkDpihQ
+	9msogFJImyVtHFaE1npmJjIpVocs4w3IHmh49+v15HfVpYHY6YbCXNVX+BZmxEkjRUZ4LSv7MWo
+	FkTxyvE+eh4XG9a36el/P9q/xRUL3md25pvkHLYMSI
+X-Received: by 2002:a05:6a21:388a:b0:1d9:2292:8730 with SMTP id adf61e73a8af0-1d96dece206mr3413361637.27.1729617097254;
+        Tue, 22 Oct 2024 10:11:37 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFa5X5KS7prF7JFHUUJ3CZBiAHNzBf/MwrjqsjCMaN+LrF3WJv1OfP+HgtSQrP52Hmlk94/yw8ACdegj5e2Z+Y=
+X-Received: by 2002:a05:6a21:388a:b0:1d9:2292:8730 with SMTP id
+ adf61e73a8af0-1d96dece206mr3413336637.27.1729617096986; Tue, 22 Oct 2024
+ 10:11:36 -0700 (PDT)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 02/36] mptcp: use __lookup_addr in
- pm_netlink
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
+In-Reply-To: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
+From: Davide Caratti <dcaratti@redhat.com>
+Date: Tue, 22 Oct 2024 19:11:25 +0200
+Message-ID: <CAKa-r6sP-zzHWxvCyoHj0jCExF+bay1n_io8TXzFQp=qWwAWzQ@mail.gmail.com>
+Subject: Re: [PATCH mptcp-net] mptcp: no admin perm to list endpoints
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-Hi Geliang,
+hello,
 
-On 22/10/2024 11:14, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> The helper __lookup_addr() can be used in mptcp_pm_nl_get_local_id()
-> and mptcp_pm_nl_is_backup() to simplify the code if using
-> list_for_each_entry_rcu() instead of list_for_each_entry() in it.
+On Tue, Oct 22, 2024 at 6:43=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> During the switch to YNL, the command to list all endpoints has been
+> accidentally restricted to users with admin permissions.
+>
 
-Mmh, please justify why it is OK to use the _rcu() variant without
-having to modify the caller.
+right _ the permission was preserved with MPTCP_PM_CMD_GET_LIMITS but
+not with MPTCP_PM_CMD_GET_ADDR.
 
-Did you check everything was OK when running the tests with these kconfig:
-
-  CONFIG_RCU_EXPERT=y
-  CONFIG_PROVE_RCU_LIST=y
-
-I guess you will get new issues, no?
-
-We might need to have __lookup_addr() and __lookup_addr_rcu() if you
-want to avoid duplicated code.
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+Reviewed-by: Davide Caratti <dcaratti@redhat.com>
 
