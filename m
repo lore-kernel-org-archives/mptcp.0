@@ -1,125 +1,131 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A61711CDA35
-	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 22:02:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB84F126C05
+	for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 23:52:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729634557; cv=none; b=C2pyDcqU+PFCTJeBklk/DN/nYdFC0j2UX1qW9056oPOwNHGVwvvkL/bv0tLy55VjZlGRHCCle6atPlL0/BPI61L9JrB2PLF1ar8wudYiqaFeQQlVMXxs0YoC6f6dAieHyb3+7f5PQ55PIBF9nePh29CwmaPibu0pRIwbZtHc0jw=
+	t=1729641121; cv=none; b=Xvoy4O/NakRSTrG39bWfayNdXYH5BVlsy13ahB1t473t3PlzKqpXCCRtD9xqpjWkExDtg7FyCM4ZQHDFy91zek5y4xV7pibNrz5FN2KsuorwLTVhZvFQlVt6QSvaDjBVv/pSE0pJG9OfG4gOODUKU5eX6sSUwpGFPS8IFEg2SjM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729634557; c=relaxed/simple;
-	bh=XzZZuTh1T8+uPyxVMmj3nswGvPx7Ds5lzzBjK44HXHU=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=el/1I9pLOj8SprY+CkAJaxqSQO7PCYAGqT1gAiNjqe0VT/7IOyTFcXqfO+bDUjOS62xUkyckBNHH2fltHJsvw9FeOCGKYqJXebEiEfRlWsGw9szSOxRJlCyzamVGqTBz89dxsR5MjWlGPPnb+RD7zFLbegWKjY3SuArtJ8Wq49E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HPAdB089; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729641121; c=relaxed/simple;
+	bh=gX2Se1jHJlIEdkFVt+w1ixKIOTk90g8Zv0FanK97qkY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=ES8wfwfzDOvdhYD1nRHPzSp3ZQipCQhUNqrj30stEJL5nOYcQ2SZBuTp5aa40bYPpBZSpGZzrFD5MjdehF1MVfpbXXzGM0CYg6/v0qTGp57vqANvQ3wtzeGPoMro7hqPSmEbrkjb6DFTWS11o4Y+xcTl0IopwxL+67G1x+cejKs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6tYSv5x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HPAdB089"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-20c714cd9c8so61449735ad.0
-        for <mptcp@lists.linux.dev>; Tue, 22 Oct 2024 15:02:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729634555; x=1730239355; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=HUEdvOnHZa7c1943/U4mTGWaxlCw7ssc9A+g4TdrZm4=;
-        b=HPAdB089lUvQYFFBJP394YO7kMumMUHCAW2ibJDuVdTbMseTA17IvHLXCu5ihqrNwE
-         NNJ/bLNlxkg733hAMtdf80wSttuNRDq6hA29d5JLIx9eMRThB+VL5aEingNu+SGlXcs0
-         jSjfEPX7ymdEvj77EtNQ+fs/T/RbjPaHdiuVuBUJ3oSoSR5Y7yrtevHDobEysH/W/gBj
-         RAH+1VFRSA+ldNAGe67CQ7iTJrVsdani3ojFN3nGXaVpehB0H9QodFwFuWHJo/7cR+Jr
-         qiuI4w7DRJACWhdg4WsDLLWjodxCHxSyp9jF7otRchTZVQoOrswlZE1ox8cGTsjLNFZQ
-         XdcQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729634555; x=1730239355;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=HUEdvOnHZa7c1943/U4mTGWaxlCw7ssc9A+g4TdrZm4=;
-        b=qMJdJ6N97Jjwxxqv8vTQnP/GBnlPRc+qTiATPX/M9yfWr/jp1RV/OKnuezpJp2LWSy
-         wddZUv+HLwQFm/T2oC/K4zLhLfvBx5NR3SlkN834sINMaIPe5fAanbvzyTNkwn6b0y6y
-         +pKOIWlVBWLEtuep31ZQPqcUWXI0isvfCmsXNUtHG+o8hsz00CJED6BvMxfYbujL5BOg
-         dbJ1dUT61CmoqXioFz+17XRUvvjlbdOEFCcN17FlOw9sCpzBR7SR8yRRywuhtBsCLrbB
-         jNVNSGKlDwarKV12VjGXXPqdAEN2OAFE0aYkFFYt3Uvwv2U9LZR2fNnthPXL7al5hY+l
-         EWSQ==
-X-Gm-Message-State: AOJu0Yxn0be9DZbJuXmTM8F1/RniwWcbGcZGaL/P92dVgiVSKR/zQnJ+
-	Fa18bZktQA3DT+LHFA+rvXUm/b1gika+wbAYM0uPbtbP4S5M8Zm7tg/2
-X-Google-Smtp-Source: AGHT+IFIRgzRRpCAgL6EW/0vFq56WsmZ/fPZg5w/93I75n1MpTGxEv1i2GQ5XlsWsiNca6SHDhpNaQ==
-X-Received: by 2002:a17:902:fc8e:b0:20c:7485:891c with SMTP id d9443c01a7336-20fa9eb5b1dmr9239025ad.54.1729634554633;
-        Tue, 22 Oct 2024 15:02:34 -0700 (PDT)
-Received: from [127.0.0.1] ([138.91.70.180])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-20e7f0f83f1sm47048655ad.298.2024.10.22.15.02.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 22 Oct 2024 15:02:34 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
-References:
- <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
-Subject: Re: [PATCH mptcp-net] mptcp: pm: use _rcu variant under
- rcu_read_lock
-Message-ID: <cf88d9a2-c132-adb7-98f3-8428c327fa40@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 22 Oct 2024 22:02:33 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6tYSv5x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3752FC4CEC3;
+	Tue, 22 Oct 2024 23:52:01 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729641121;
+	bh=gX2Se1jHJlIEdkFVt+w1ixKIOTk90g8Zv0FanK97qkY=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=u6tYSv5xW45vgiVbapMetUAj61EONZM217IRzYkDUyLW9RNXIeQfPaoVYINjma+F8
+	 1V8fBvLjfbAYZLWrXSSigygF9btJQjf6QF/0tCY0cnCn02bqk4kkx8bcQ0PthBZ++Z
+	 z5amPBxyWmSVbVfjb3YUTBRRQSbVNzxtXVj87X8uk8n0VshuTHq65ks5VOg1ibFZMZ
+	 iPeDW/eFHMJ65MO8yZiL58gtCNALG7jkaanwx8Lbd4mxilYJJhdAcMYjrIGWKswzqD
+	 IHz/IXlGVEvo6A6QLykJ7QF6QgReDEqwI2nayVu32O+EQgcTFYl/aApNJDh+QuqxNX
+	 9akg3JeLJEPBw==
+Date: Tue, 22 Oct 2024 16:52:00 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v7 2/5] Squash to "selftests/bpf: Add bpf_rr
+ scheduler & test"
+In-Reply-To: <cc23cd700d88642bf4396739181286262e208d8b.1729583414.git.tanggeliang@kylinos.cn>
+Message-ID: <1dfa37e3-f26d-d55c-2ee1-9cd877e1042b@kernel.org>
+References: <cover.1729583414.git.tanggeliang@kylinos.cn> <cc23cd700d88642bf4396739181286262e208d8b.1729583414.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Matthieu,
+On Tue, 22 Oct 2024, Geliang Tang wrote:
 
-Thank you for your modifications, that's great!
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Use the newly added bpf_for_each() helper to walk the conn_list.
+>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 26 ++++++++-----------
+> 1 file changed, 11 insertions(+), 15 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> index 638ea6aa63b7..e02b8cfb262b 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> @@ -34,10 +34,9 @@ SEC("struct_ops")
+> int BPF_PROG(bpf_rr_get_subflow, struct mptcp_sock *msk,
+> 	     struct mptcp_sched_data *data)
+> {
+> -	struct mptcp_subflow_context *subflow;
+> +	struct mptcp_subflow_context *subflow, *next;
+> 	struct mptcp_rr_storage *ptr;
+> 	struct sock *last_snd = NULL;
+> -	int nr = 0;
+>
+> 	ptr = bpf_sk_storage_get(&mptcp_rr_map, msk, 0,
+> 				 BPF_LOCAL_STORAGE_GET_F_CREATE);
 
-Our CI did some validations and here is its report:
+Hi Geliang -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11468538757
+Thanks for the series. The bpf_iter code simplifies these scheduler 
+patches significantly!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/4c879c6d556f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D901964
+> @@ -45,31 +44,28 @@ int BPF_PROG(bpf_rr_get_subflow, struct mptcp_sock *msk,
+> 		return -1;
+>
+> 	last_snd = ptr->last_snd;
+> +	next = bpf_mptcp_subflow_ctx(msk->first);
+>
+> -	for (int i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
+> -		subflow = bpf_mptcp_subflow_ctx_by_pos(data, i);
+> -		if (!last_snd || !subflow)
+> +	bpf_for_each(mptcp_subflow, subflow, msk) {
+> +		if (!last_snd)
 
+last_snd is never changed inside the loop, it's more efficient to check it 
+before bpf_for_each().
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+- Mat
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+> 			break;
+>
+> -		if (mptcp_subflow_tcp_sock(subflow) == last_snd) {
+> -			if (i + 1 == MPTCP_SUBFLOWS_MAX ||
+> -			    !bpf_mptcp_subflow_ctx_by_pos(data, i + 1))
+> +		if (bpf_mptcp_subflow_tcp_sock(subflow) == last_snd) {
+> +			subflow = bpf_iter_mptcp_subflow_next(&___it);
+> +			if (!subflow)
+> 				break;
+>
+> -			nr = i + 1;
+> +			next = subflow;
+> 			break;
+> 		}
+> 	}
+>
+> -	subflow = bpf_mptcp_subflow_ctx_by_pos(data, nr);
+> -	if (!subflow)
+> -		return -1;
+> -	mptcp_subflow_set_scheduled(subflow, true);
+> -	ptr->last_snd = mptcp_subflow_tcp_sock(subflow);
+> +	mptcp_subflow_set_scheduled(next, true);
+> +	ptr->last_snd = bpf_mptcp_subflow_tcp_sock(next);
+> 	return 0;
+> }
+>
+> -SEC(".struct_ops")
+> +SEC(".struct_ops.link")
+> struct mptcp_sched_ops rr = {
+> 	.init		= (void *)mptcp_sched_rr_init,
+> 	.release	= (void *)mptcp_sched_rr_release,
+> -- 
+> 2.45.2
+>
+>
+>
