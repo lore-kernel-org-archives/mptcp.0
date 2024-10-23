@@ -1,118 +1,185 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93C4A24
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 00:31:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E2EA15E5D4
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 08:32:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729643477; cv=none; b=DFXLV13WnkvESwHuHc/yLsJATFrXkkfKZ5dkC7RTOPxpJSjgxJSUN6ugT+aUiWUe2+Yu2AO/oP89wPOhzPsVApMZSby58g6VJ/ukQ2T9mW+2qxzVmPaQnL7hBgTpSEF3w/Ebj6/NjV17TiWS7hS3h5QQVYcwC38VWrYPA9/zVYw=
+	t=1729672339; cv=none; b=F+8kGD6i9P40BK/apEZ7AhdSCUEB8ZoN8uHxEVrd/4E7xzBvdv50z4dOqHuUgyUPOhhqYEiRxshFcTL0zclBHndS0zgCBgxAEGKNOYj3GJLejhuiEGvU1lt8fUyluuBZ1zbrxm091yAfEt0nFS09wL3SsXsRgwbsD6FzMunPQlU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729643477; c=relaxed/simple;
-	bh=cG90TB4Hykf/8jJ3gzYLolUuXuVv4xdP8dVLirrup4A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=XBmbvvyvTDEoSbUqFm0YP6hFlq/0k+NX+HAoX8GscGXPRdDFX20InO8kRZL6XspSb/5AiZVgdW1+8gCanF26EQqzGLgPpsVxOuN4KmyBrF9G9zNYwUbaqEaAA4zXcJ1KmNUWnZ126BXYonkBJBPZEJ2lVhEuIZg7l/FdEaS5G4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTmPjdPv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729672339; c=relaxed/simple;
+	bh=EtXHd5v6/glWwCdZQDUvjFtw913n4uxZfScZUo9DdTg=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=EhucluGq/vLgcp6EotcNoVq2UIPlMqkRjqb2fiUvUo3RaYh9yHRYa83wEfhl6s4b0NtnLLBd5PqXqchRvSMBm5rWGoRWpmdY4s066vg9XQj8D4ab527KLOCsC5NHSRGNgZC9lM+8r9yZ1EjBLRWkyJQ50Nu4x4hYApUO/78bnhc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gqt7jgl4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTmPjdPv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C12C4CEC3;
-	Wed, 23 Oct 2024 00:31:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gqt7jgl4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BF318C4CEE7;
+	Wed, 23 Oct 2024 08:32:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729643476;
-	bh=cG90TB4Hykf/8jJ3gzYLolUuXuVv4xdP8dVLirrup4A=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=hTmPjdPv8Ma6pBSoAoX3sS8G6rMdnZcjryLP7g6SDrgNcQOYQugMX5u9Zi6bTx2Zq
-	 YWwgoURtMVVUGGrW1u4rWuM+3x/0DQng6kEh4Z9K4vxTa9hn9u9USQkA7DLNERfQrN
-	 PCODZhhVEyMz0pMa3AD4SW2dgyn4YjSILB5kRTVSFWITMuk6ysnMoNfrEgAOiEIJk5
-	 OOaG/7Q6XAXL5axCXmdAHX0e3RDh19YjfpnfR6VjThpwHjqA16yanPis+OcxxOCnsp
-	 CReDWaXGVv80e82C3oEaoOiAtnU122HODdvjnmwPaFE8IiG3mneyL4Qq6cOHUJUem/
-	 W9OfwSfBExwUA==
-Date: Tue, 22 Oct 2024 17:31:15 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: pm: use _rcu variant under
- rcu_read_lock
-In-Reply-To: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
-Message-ID: <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
-References: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
+	s=k20201202; t=1729672338;
+	bh=EtXHd5v6/glWwCdZQDUvjFtw913n4uxZfScZUo9DdTg=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=gqt7jgl4Vnwggi/tWcO6a3WJW7nzfO05Tw/QUebBIbYj3X0bvtGm5XyQuc1/TnaEq
+	 7L9uLOaiSS+wXhAKNYPtpQC34zpLCKdCoxq5QmSsC9/F6a2lEPqEcxyb3azwtOqApF
+	 JAweKHi6ovOhOtLclWsDfqxgGpsqsCOXGWhc2SFkI6Mkpvoxn6hz5LK/05vOMivwz1
+	 yYBqRwZrrLpM2wD6+JWToe6+cjOz8oHHIf+97GX+I8+uq3GfwMLRmpyPFEeDYs95E+
+	 17NM2FpDSbPBx6NCjzhrqSQDRhBbZLPQtwlunGugLjeZHNShNZOtH/PJdHq1tuL+rT
+	 FDa4s5S+oJTpg==
+Message-ID: <a62bb904f005dcfc98662ad23cc92b09005e983c.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v7 2/5] Squash to "selftests/bpf: Add bpf_rr
+ scheduler & test"
+From: Geliang Tang <geliang@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 23 Oct 2024 16:32:14 +0800
+In-Reply-To: <1dfa37e3-f26d-d55c-2ee1-9cd877e1042b@kernel.org>
+References: <cover.1729583414.git.tanggeliang@kylinos.cn>
+	 <cc23cd700d88642bf4396739181286262e208d8b.1729583414.git.tanggeliang@kylinos.cn>
+	 <1dfa37e3-f26d-d55c-2ee1-9cd877e1042b@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
 
-On Tue, 22 Oct 2024, Matthieu Baerts (NGI0) wrote:
+Hi Mat,
 
-> In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
-> used as expected to iterate over the list of local addresses, but
-> list_for_each_entry() was used instead of list_for_each_entry_rcu() in
-> __lookup_addr() (and lookup_id_by_addr() before). It is important to use
-> this variant which adds the required READ_ONCE() (and diagnostic checks
-> if enabled).
->
-> Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
-> is called under the pernet->lock because the returned entry might be
-> modified, the _rcu variant cannot be used in all cases. It is then
-> required to create a new helper. Note that this new helper can be reused
-> later to reduce some duplicated code elsewhere in this file.
+Thanks for your review.
 
-Hi Matthieu -
+On Tue, 2024-10-22 at 16:52 -0700, Mat Martineau wrote:
+> On Tue, 22 Oct 2024, Geliang Tang wrote:
+> 
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > Use the newly added bpf_for_each() helper to walk the conn_list.
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> > .../selftests/bpf/progs/mptcp_bpf_rr.c        | 26 ++++++++--------
+> > ---
+> > 1 file changed, 11 insertions(+), 15 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> > b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> > index 638ea6aa63b7..e02b8cfb262b 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_rr.c
+> > @@ -34,10 +34,9 @@ SEC("struct_ops")
+> > int BPF_PROG(bpf_rr_get_subflow, struct mptcp_sock *msk,
+> > 	     struct mptcp_sched_data *data)
+> > {
+> > -	struct mptcp_subflow_context *subflow;
+> > +	struct mptcp_subflow_context *subflow, *next;
+> > 	struct mptcp_rr_storage *ptr;
+> > 	struct sock *last_snd = NULL;
+> > -	int nr = 0;
+> > 
+> > 	ptr = bpf_sk_storage_get(&mptcp_rr_map, msk, 0,
+> > 				 BPF_LOCAL_STORAGE_GET_F_CREATE);
+> 
+> Hi Geliang -
+> 
+> Thanks for the series. The bpf_iter code simplifies these scheduler 
+> patches significantly!
+> 
+> > @@ -45,31 +44,28 @@ int BPF_PROG(bpf_rr_get_subflow, struct
+> > mptcp_sock *msk,
+> > 		return -1;
+> > 
+> > 	last_snd = ptr->last_snd;
+> > +	next = bpf_mptcp_subflow_ctx(msk->first);
+> > 
+> > -	for (int i = 0; i < data->subflows && i <
+> > MPTCP_SUBFLOWS_MAX; i++) {
+> > -		subflow = bpf_mptcp_subflow_ctx_by_pos(data, i);
+> > -		if (!last_snd || !subflow)
+> > +	bpf_for_each(mptcp_subflow, subflow, msk) {
+> > +		if (!last_snd)
+> 
+> last_snd is never changed inside the loop, it's more efficient to
+> check it 
+> before bpf_for_each().
 
-I'm not sure this is the case, if you add rcu read lock/unlocks to 
-mptcp_pm_nl_set_flags() then the _rcu variant could be used there (and 
-then only one __lookup_addr() would be needed).
+This is indeed better, updated in v8.
 
-- Mat
+> 
+> - Mat
+> 
+> > 			break;
+> > 
+> > -		if (mptcp_subflow_tcp_sock(subflow) == last_snd) {
+> > -			if (i + 1 == MPTCP_SUBFLOWS_MAX ||
+> > -			    !bpf_mptcp_subflow_ctx_by_pos(data, i
+> > + 1))
+> > +		if (bpf_mptcp_subflow_tcp_sock(subflow) ==
+> > last_snd) {
+> > +			subflow =
+> > bpf_iter_mptcp_subflow_next(&___it);
+> > +			if (!subflow)
+> > 				break;
+> > 
+> > -			nr = i + 1;
+> > +			next = subflow;
+> > 			break;
+> > 		}
+> > 	}
+> > 
+> > -	subflow = bpf_mptcp_subflow_ctx_by_pos(data, nr);
+> > -	if (!subflow)
+> > -		return -1;
+> > -	mptcp_subflow_set_scheduled(subflow, true);
+> > -	ptr->last_snd = mptcp_subflow_tcp_sock(subflow);
+> > +	mptcp_subflow_set_scheduled(next, true);
+> > +	ptr->last_snd = bpf_mptcp_subflow_tcp_sock(next);
+> > 	return 0;
+> > }
+> > 
+> > -SEC(".struct_ops")
+> > +SEC(".struct_ops.link")
+> > struct mptcp_sched_ops rr = {
+> > 	.init		= (void *)mptcp_sched_rr_init,
+> > 	.release	= (void *)mptcp_sched_rr_release,
+> > -- 
+> > 2.45.2
+> > 
+> > 
+> > 
 
->
-> Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/pm_netlink.c | 14 +++++++++++++-
-> 1 file changed, 13 insertions(+), 1 deletion(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 618289aac0ab7f558d55d8b2ebb00dc62fc72f88..fe84a11cfbab1afa34ee3586ecc29658931e9a4c 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -531,6 +531,18 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
-> 	return NULL;
-> }
->
-> +static struct mptcp_pm_addr_entry *
-> +__lookup_addr_rcu(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
-> +{
-> +	struct mptcp_pm_addr_entry *entry;
-> +
-> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-> +		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
-> +			return entry;
-> +	}
-> +	return NULL;
-> +}
-> +
-> static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
-> {
-> 	struct sock *sk = (struct sock *)msk;
-> @@ -556,7 +568,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
->
-> 		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
-> 		rcu_read_lock();
-> -		entry = __lookup_addr(pernet, &mpc_addr);
-> +		entry = __lookup_addr_rcu(pernet, &mpc_addr);
-> 		if (entry) {
-> 			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
-> 			msk->mpc_endpoint_id = entry->addr.id;
->
-> ---
-> base-commit: 66bee427d4db76bd1afbf0184a2fd1f238a4ee27
-> change-id: 20241022-mptcp-pm-lookup_addr_rcu-01833ea95155
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
