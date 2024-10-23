@@ -1,39 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E25C4A32
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 00:17:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC93C4A24
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 00:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729642627; cv=none; b=qKb7anGYA8G7sGz6RT09d/88jDgaf/Ma/VrzC2znGeCTEdOlf6pnWptVMjQ6lZOx7FNzrpLZzDSFC7t7GCcb0Gl4xANq2QVm1+VRRhJQ2fV5PU4BnBwJUgGR3NYjEVRrCRHCH7N5YAMH1ADeLK947UBioPn90Pcum1C65YzXBBQ=
+	t=1729643477; cv=none; b=DFXLV13WnkvESwHuHc/yLsJATFrXkkfKZ5dkC7RTOPxpJSjgxJSUN6ugT+aUiWUe2+Yu2AO/oP89wPOhzPsVApMZSby58g6VJ/ukQ2T9mW+2qxzVmPaQnL7hBgTpSEF3w/Ebj6/NjV17TiWS7hS3h5QQVYcwC38VWrYPA9/zVYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729642627; c=relaxed/simple;
-	bh=ZMvpJNvNE/LgeS0ZIfibBAWuUyiYfKzb3jc75kADiuQ=;
+	s=arc-20240116; t=1729643477; c=relaxed/simple;
+	bh=cG90TB4Hykf/8jJ3gzYLolUuXuVv4xdP8dVLirrup4A=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=H4GYklHj7lI0qvA4u4Lw9OJoS8AjjS2d/zrMA3TklkZXMfKWEj4lJyOYHsh4dGL2Y7GOgbNMlGxSVWX+zautht319pFz5HP1rVZF9rkix5amkHdULaFGtmPGatRKCohnPkE8J5FHIU1ddW/ENPsa8N8hA+WAb1okYxnHb/Fp/iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru07TIzv; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=XBmbvvyvTDEoSbUqFm0YP6hFlq/0k+NX+HAoX8GscGXPRdDFX20InO8kRZL6XspSb/5AiZVgdW1+8gCanF26EQqzGLgPpsVxOuN4KmyBrF9G9zNYwUbaqEaAA4zXcJ1KmNUWnZ126BXYonkBJBPZEJ2lVhEuIZg7l/FdEaS5G4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hTmPjdPv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru07TIzv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BF4C4CEC3;
-	Wed, 23 Oct 2024 00:17:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hTmPjdPv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69C12C4CEC3;
+	Wed, 23 Oct 2024 00:31:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729642627;
-	bh=ZMvpJNvNE/LgeS0ZIfibBAWuUyiYfKzb3jc75kADiuQ=;
+	s=k20201202; t=1729643476;
+	bh=cG90TB4Hykf/8jJ3gzYLolUuXuVv4xdP8dVLirrup4A=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ru07TIzveag9iMXKS2k/UD+xL1F3wzXazHDalpqEOul8yA/Dqo8dRjR+f/RFcb+6F
-	 uJIY8ibi0n+B0JQQker2V+roxdNhaQ1HpCF+Zp5GeJ2ZD6lr2O/ZEcbOq7H3u+PJ3N
-	 GP0NeFkbe/NF2Uvp/gLcPQTe24cnJlvAf+eZd/WRimu0qiY8DWMtcwxSFQpDpIy+0z
-	 hIyrB8q06SlvCI2r/55B3AB/+K1lVbVewSLknFo+5YhrPuD9bTxWktpM0DRoE3IYp3
-	 af7+UNaHsQ7pjDJNwJnsVpAchCPWkMXjFL/3Yjei6PB60YBVTiQpj16dbdOUGP9Kde
-	 fNyidricSF+AQ==
-Date: Tue, 22 Oct 2024 17:17:06 -0700 (PDT)
+	b=hTmPjdPv8Ma6pBSoAoX3sS8G6rMdnZcjryLP7g6SDrgNcQOYQugMX5u9Zi6bTx2Zq
+	 YWwgoURtMVVUGGrW1u4rWuM+3x/0DQng6kEh4Z9K4vxTa9hn9u9USQkA7DLNERfQrN
+	 PCODZhhVEyMz0pMa3AD4SW2dgyn4YjSILB5kRTVSFWITMuk6ysnMoNfrEgAOiEIJk5
+	 OOaG/7Q6XAXL5axCXmdAHX0e3RDh19YjfpnfR6VjThpwHjqA16yanPis+OcxxOCnsp
+	 CReDWaXGVv80e82C3oEaoOiAtnU122HODdvjnmwPaFE8IiG3mneyL4Qq6cOHUJUem/
+	 W9OfwSfBExwUA==
+Date: Tue, 22 Oct 2024 17:31:15 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: no admin perm to list endpoints
-In-Reply-To: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
-Message-ID: <bcc3660e-8978-1163-fc68-9e707bb5ebe0@kernel.org>
-References: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
+cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: pm: use _rcu variant under
+ rcu_read_lock
+In-Reply-To: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
+Message-ID: <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
+References: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,62 +45,70 @@ Content-Type: text/plain; charset=US-ASCII; format=flowed
 
 On Tue, 22 Oct 2024, Matthieu Baerts (NGI0) wrote:
 
-> During the switch to YNL, the command to list all endpoints has been
-> accidentally restricted to users with admin permissions.
+> In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
+> used as expected to iterate over the list of local addresses, but
+> list_for_each_entry() was used instead of list_for_each_entry_rcu() in
+> __lookup_addr() (and lookup_id_by_addr() before). It is important to use
+> this variant which adds the required READ_ONCE() (and diagnostic checks
+> if enabled).
 >
-> It looks like there are no reasons to have this restriction which makes
-> it harder for a user to quickly check if the endpoint list has been
-> correctly populated by an automated tool. Best to go back to the
-> previous behaviour then.
+> Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
+> is called under the pernet->lock because the returned entry might be
+> modified, the _rcu variant cannot be used in all cases. It is then
+> required to create a new helper. Note that this new helper can be reused
+> later to reduce some duplicated code elsewhere in this file.
+
+Hi Matthieu -
+
+I'm not sure this is the case, if you add rcu read lock/unlocks to 
+mptcp_pm_nl_set_flags() then the _rcu variant could be used there (and 
+then only one __lookup_addr() would be needed).
+
+- Mat
+
 >
-> mptcp_pm_gen.c has been modified using ynl-gen-c.py:
->
->   $ ./tools/net/ynl/ynl-gen-c.py --mode kernel \
->     --spec Documentation/netlink/specs/mptcp_pm.yaml --source \
->     -o net/mptcp/mptcp_pm_gen.c
->
-> The header file doesn't need to be regenerated.
->
-> Fixes: 1d0507f46843 ("net: mptcp: convert netlink from small_ops to ops")
+> Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-Looks good to me:
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
 > ---
-> Documentation/netlink/specs/mptcp_pm.yaml | 1 -
-> net/mptcp/mptcp_pm_gen.c                  | 1 -
-> 2 files changed, 2 deletions(-)
+> net/mptcp/pm_netlink.c | 14 +++++++++++++-
+> 1 file changed, 13 insertions(+), 1 deletion(-)
 >
-> diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-> index 30d8342cacc8704c42b84c9e03f96c906e81733e..dc190bf838fec6add28b61e5e2cac8dee601b012 100644
-> --- a/Documentation/netlink/specs/mptcp_pm.yaml
-> +++ b/Documentation/netlink/specs/mptcp_pm.yaml
-> @@ -293,7 +293,6 @@ operations:
->       doc: Get endpoint information
->       attribute-set: attr
->       dont-validate: [ strict ]
-> -      flags: [ uns-admin-perm ]
->       do: &get-addr-attrs
->         request:
->           attributes:
-> diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
-> index c30a2a90a19252dd41a74109d5762a091129269d..bfb37c5a88c4ef90740699dfda345b52e206966b 100644
-> --- a/net/mptcp/mptcp_pm_gen.c
-> +++ b/net/mptcp/mptcp_pm_gen.c
-> @@ -112,7 +112,6 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
-> 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
-> 		.policy		= mptcp_pm_get_addr_nl_policy,
-> 		.maxattr	= MPTCP_PM_ATTR_TOKEN,
-> -		.flags		= GENL_UNS_ADMIN_PERM,
-> 	},
-> 	{
-> 		.cmd		= MPTCP_PM_CMD_FLUSH_ADDRS,
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 618289aac0ab7f558d55d8b2ebb00dc62fc72f88..fe84a11cfbab1afa34ee3586ecc29658931e9a4c 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -531,6 +531,18 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
+> 	return NULL;
+> }
+>
+> +static struct mptcp_pm_addr_entry *
+> +__lookup_addr_rcu(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
+> +
+> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+> +		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
+> +			return entry;
+> +	}
+> +	return NULL;
+> +}
+> +
+> static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+> {
+> 	struct sock *sk = (struct sock *)msk;
+> @@ -556,7 +568,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>
+> 		mptcp_local_address((struct sock_common *)msk->first, &mpc_addr);
+> 		rcu_read_lock();
+> -		entry = __lookup_addr(pernet, &mpc_addr);
+> +		entry = __lookup_addr_rcu(pernet, &mpc_addr);
+> 		if (entry) {
+> 			__clear_bit(entry->addr.id, msk->pm.id_avail_bitmap);
+> 			msk->mpc_endpoint_id = entry->addr.id;
 >
 > ---
 > base-commit: 66bee427d4db76bd1afbf0184a2fd1f238a4ee27
-> change-id: 20241022-mptcp-pm-dump-addr-admin-0b226758e9f5
+> change-id: 20241022-mptcp-pm-lookup_addr_rcu-01833ea95155
 >
 > Best regards,
 > -- 
