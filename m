@@ -1,111 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F1B7380
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 00:10:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8E25C4A32
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 00:17:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729642203; cv=none; b=FGhRBPwIEWBwuqG7hhiXzYfwTFjZ00BejZ0EkKEPR98YxoaCfBCu2A5MJ0IAMFYzYiqgFxvWg4ppTECU7OfKWcr9b+9xEAyWEpOwDp8ft9XznOeoJwkBTmsODJPzyUjyDIrN08QlWEo+s195JXVXKrznOEf064DeTu8hmUzGmco=
+	t=1729642627; cv=none; b=qKb7anGYA8G7sGz6RT09d/88jDgaf/Ma/VrzC2znGeCTEdOlf6pnWptVMjQ6lZOx7FNzrpLZzDSFC7t7GCcb0Gl4xANq2QVm1+VRRhJQ2fV5PU4BnBwJUgGR3NYjEVRrCRHCH7N5YAMH1ADeLK947UBioPn90Pcum1C65YzXBBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729642203; c=relaxed/simple;
-	bh=PJkClbZDaiSYpHPbqPxaSibEpuiHJHDShjuUwY0QwqA=;
+	s=arc-20240116; t=1729642627; c=relaxed/simple;
+	bh=ZMvpJNvNE/LgeS0ZIfibBAWuUyiYfKzb3jc75kADiuQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=lBOKZzQPYSxPn2AS6eQFTO7SeghZFJFO7B4Ohvq3/mSipYBRny4rRuoEN4TESzttvCTil+ZaFPefKsLSK+XoQeenZ0s8i2E0BGtX7N7rMjmqRIgY2AKZdvOTG/aAgOY4XpNgYVICertd/TFUWVgThrsff5TThexeCAUm//So+As=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YK67Nn/p; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=H4GYklHj7lI0qvA4u4Lw9OJoS8AjjS2d/zrMA3TklkZXMfKWEj4lJyOYHsh4dGL2Y7GOgbNMlGxSVWX+zautht319pFz5HP1rVZF9rkix5amkHdULaFGtmPGatRKCohnPkE8J5FHIU1ddW/ENPsa8N8hA+WAb1okYxnHb/Fp/iw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru07TIzv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YK67Nn/p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7BDCC4CEC3;
-	Wed, 23 Oct 2024 00:10:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru07TIzv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 15BF4C4CEC3;
+	Wed, 23 Oct 2024 00:17:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729642202;
-	bh=PJkClbZDaiSYpHPbqPxaSibEpuiHJHDShjuUwY0QwqA=;
+	s=k20201202; t=1729642627;
+	bh=ZMvpJNvNE/LgeS0ZIfibBAWuUyiYfKzb3jc75kADiuQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=YK67Nn/p6jYcmm5YioexmHmZb6DH/r9HpMnmI9D5h6ozci11lWXumbeN6pgsslMRC
-	 OKYaKyYONav36q0rLAs+XvMr9my7GFRuBs3aKEYGZAiSd6bhEHzr2rQa2fL/P8dvuh
-	 fzChO2Dp15vXHz9bNFzJFFnVA6kPZUNzECETO5hfMRDWxAANo+OLvoX5tNnMsV5Sr8
-	 SghuuevnWJxukQ6bJ2/BLYizZWaV9KiPj3qOm7NBNm8wck6mJ6sh/6vBJ+C1iuH7e7
-	 sijTMaQUqMTPhGTEN6O2Ae17j60wUDn+DbTuONg1qq1i5V2C1W15328h0ZOBpVJZ7D
-	 mc5Oa6l+5CyyQ==
-Date: Tue, 22 Oct 2024 17:10:02 -0700 (PDT)
+	b=ru07TIzveag9iMXKS2k/UD+xL1F3wzXazHDalpqEOul8yA/Dqo8dRjR+f/RFcb+6F
+	 uJIY8ibi0n+B0JQQker2V+roxdNhaQ1HpCF+Zp5GeJ2ZD6lr2O/ZEcbOq7H3u+PJ3N
+	 GP0NeFkbe/NF2Uvp/gLcPQTe24cnJlvAf+eZd/WRimu0qiY8DWMtcwxSFQpDpIy+0z
+	 hIyrB8q06SlvCI2r/55B3AB/+K1lVbVewSLknFo+5YhrPuD9bTxWktpM0DRoE3IYp3
+	 af7+UNaHsQ7pjDJNwJnsVpAchCPWkMXjFL/3Yjei6PB60YBVTiQpj16dbdOUGP9Kde
+	 fNyidricSF+AQ==
+Date: Tue, 22 Oct 2024 17:17:06 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v7 5/5] Squash to "selftests/bpf: Add bpf_first
- scheduler & test"
-In-Reply-To: <47d89319cf58196896a25ae6b3199b27ad73fe97.1729583414.git.tanggeliang@kylinos.cn>
-Message-ID: <66d3e0b9-cafe-30c2-4d2a-09f29c3f1b52@kernel.org>
-References: <cover.1729583414.git.tanggeliang@kylinos.cn> <47d89319cf58196896a25ae6b3199b27ad73fe97.1729583414.git.tanggeliang@kylinos.cn>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
+Subject: Re: [PATCH mptcp-net] mptcp: no admin perm to list endpoints
+In-Reply-To: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
+Message-ID: <bcc3660e-8978-1163-fc68-9e707bb5ebe0@kernel.org>
+References: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Tue, 22 Oct 2024, Geliang Tang wrote:
+On Tue, 22 Oct 2024, Matthieu Baerts (NGI0) wrote:
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> During the switch to YNL, the command to list all endpoints has been
+> accidentally restricted to users with admin permissions.
 >
-> Use the newly added bpf_for_each() helper to walk the conn_list.
+> It looks like there are no reasons to have this restriction which makes
+> it harder for a user to quickly check if the endpoint list has been
+> correctly populated by an automated tool. Best to go back to the
+> previous behaviour then.
 >
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> mptcp_pm_gen.c has been modified using ynl-gen-c.py:
+>
+>   $ ./tools/net/ynl/ynl-gen-c.py --mode kernel \
+>     --spec Documentation/netlink/specs/mptcp_pm.yaml --source \
+>     -o net/mptcp/mptcp_pm_gen.c
+>
+> The header file doesn't need to be regenerated.
+>
+> Fixes: 1d0507f46843 ("net: mptcp: convert netlink from small_ops to ops")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Looks good to me:
+
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
 > ---
-> tools/testing/selftests/bpf/progs/mptcp_bpf.h       |  3 ---
-> tools/testing/selftests/bpf/progs/mptcp_bpf_first.c | 10 ++++++++--
-> 2 files changed, 8 insertions(+), 5 deletions(-)
+> Documentation/netlink/specs/mptcp_pm.yaml | 1 -
+> net/mptcp/mptcp_pm_gen.c                  | 1 -
+> 2 files changed, 2 deletions(-)
 >
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> index 376979a9c4f0..52bc8ac03508 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> @@ -60,7 +60,4 @@ extern bool bpf_ipv6_addr_v4mapped(const struct mptcp_addr_info *a) __ksym;
-> extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
-> 					bool scheduled) __ksym;
+> diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
+> index 30d8342cacc8704c42b84c9e03f96c906e81733e..dc190bf838fec6add28b61e5e2cac8dee601b012 100644
+> --- a/Documentation/netlink/specs/mptcp_pm.yaml
+> +++ b/Documentation/netlink/specs/mptcp_pm.yaml
+> @@ -293,7 +293,6 @@ operations:
+>       doc: Get endpoint information
+>       attribute-set: attr
+>       dont-validate: [ strict ]
+> -      flags: [ uns-admin-perm ]
+>       do: &get-addr-attrs
+>         request:
+>           attributes:
+> diff --git a/net/mptcp/mptcp_pm_gen.c b/net/mptcp/mptcp_pm_gen.c
+> index c30a2a90a19252dd41a74109d5762a091129269d..bfb37c5a88c4ef90740699dfda345b52e206966b 100644
+> --- a/net/mptcp/mptcp_pm_gen.c
+> +++ b/net/mptcp/mptcp_pm_gen.c
+> @@ -112,7 +112,6 @@ const struct genl_ops mptcp_pm_nl_ops[11] = {
+> 		.dumpit		= mptcp_pm_nl_get_addr_dumpit,
+> 		.policy		= mptcp_pm_get_addr_nl_policy,
+> 		.maxattr	= MPTCP_PM_ATTR_TOKEN,
+> -		.flags		= GENL_UNS_ADMIN_PERM,
+> 	},
+> 	{
+> 		.cmd		= MPTCP_PM_CMD_FLUSH_ADDRS,
 >
-
-Hi Geliang -
-
-> -extern struct mptcp_subflow_context *
-> -bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos) __ksym;
-> -
-
-After this is removed, there are no remaining users of 
-bpf_mptcp_subflow_ctx_by_pos(). I suggest removing that function.
-
-> #endif
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-> index d57399b407a7..f2f9e66455b6 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
-> @@ -20,11 +20,17 @@ SEC("struct_ops")
-> int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
-> 	     struct mptcp_sched_data *data)
-> {
-> -	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx_by_pos(data, 0), true);
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	bpf_for_each(mptcp_subflow, subflow, msk) {
-> +		mptcp_subflow_set_scheduled(subflow, true);
-> +		break;
-> +	}
-> +
-
-The iterator makes this more complicated. Use 
-bpf_mptcp_subflow_ctx(msk->first) like bpf_rr_get_subflow()?
-
-- Mat
-
-> 	return 0;
-> }
+> ---
+> base-commit: 66bee427d4db76bd1afbf0184a2fd1f238a4ee27
+> change-id: 20241022-mptcp-pm-dump-addr-admin-0b226758e9f5
 >
-> -SEC(".struct_ops")
-> +SEC(".struct_ops.link")
-> struct mptcp_sched_ops first = {
-> 	.init		= (void *)mptcp_sched_first_init,
-> 	.release	= (void *)mptcp_sched_first_release,
+> Best regards,
 > -- 
-> 2.45.2
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >
 >
 >
