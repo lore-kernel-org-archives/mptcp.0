@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A2F1A2658
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:52:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E7A71BDDF
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:55:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729680744; cv=none; b=BGVAEAWULWANJnbTAJvOktidhMQ0L/GOonTRKcsPM0iEPUEIAFjaxjoDgsCTr8CVnAJJA5zeloXEGcfup9AucezVTb8vskQwEHua8Pl4oYXn5qvC67u1G+AF8LbbmUo8hm3dcSsz6o3BaIPjtsl+aqOGBzl2uIwRCoM8juNelC8=
+	t=1729680952; cv=none; b=pquge5yK1UG5ax7/3NBY+n0ITegVN3kToVjUyMFoP5Y+8SymdwTSvkGDV8HxWZlNw6PdTueYvMQrDj8V8R68tI98Sq2H4+zVNajHU/V5dMBN4xVodrJcCB6UaATU2ZZ2YVDMOfXgmwwCWZWCLDV/7ACmrhEWDd6n80oCecNXbAU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729680744; c=relaxed/simple;
-	bh=D1+DaFLksWxDrHnsZIKLje4Qsj5IzpUtFAGUwn8gct0=;
+	s=arc-20240116; t=1729680952; c=relaxed/simple;
+	bh=+CaSF9hT8Z8emfxPnM59op85rbiIWtFj0OkkrUemMXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MMvJZwJUYx0z2KVntquYvPA2ZYCaisTGvJtBUABQLFNRbD9Q/TA//XNSBq0LEIIJiVYEM8cD0TVwVD73k6ibqswG+46wQerlnF1UMKQwNGJ0h6IgvcrH+U8RQ0E14oiuPY5KMyCmTGxBdN7NwO2vgKNmE0bijnpaYCpy+2ujNmY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDuC9f3j; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qW5XEGwkaoBf2dK351p5JC4FCzMTm883Kd9Cdm0eYc7dix6UTZiRRqnazUh0MZMC0fSnaXNmhVwq+fBXD8Z7AXOxprirZjB9JjjHH3XrekWes/+olRZx80Hai/Xg2neBA/+qamx6QAcdMZkwHcOCppcZzcViWFfXmKoS+thM7Nw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TvUVWElK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDuC9f3j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66032C4CEE7;
-	Wed, 23 Oct 2024 10:52:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TvUVWElK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD0EAC4CECD;
+	Wed, 23 Oct 2024 10:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729680744;
-	bh=D1+DaFLksWxDrHnsZIKLje4Qsj5IzpUtFAGUwn8gct0=;
+	s=k20201202; t=1729680951;
+	bh=+CaSF9hT8Z8emfxPnM59op85rbiIWtFj0OkkrUemMXs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MDuC9f3jZ3SIa/wlfNw7YmolcvBsM6xXxCacnF6zXAcfhzPge5iCAP5uk4osIge8F
-	 1ZLmVz3rnzlQtNlgpewov6Qyk3d+I0WrKGyGIMO3X2J8jIP9N3eDTDdVKZBZEaRtbZ
-	 LSDxhxq4uW463C+X4uzPhp3cYb5bmRpTh/Pysk6115xFBQ+XEvEAa0JAnNjkAs6zu6
-	 xt4jjlWCBi4vjCSkT5Daowk1CI8jLC7hBPhtCCnPNT69EiHooAqG3wknl8ldV0Xn1i
-	 awub8lrV/OVwH1eQg2mQY8awo2GSlKULyfHYcKjG6U1Z3I9XiaMXGcgfYZp2CPNSAd
-	 aFwBHJM6CbcXQ==
-Message-ID: <8c190d1e-05a4-4913-a774-e95e394a4719@kernel.org>
-Date: Wed, 23 Oct 2024 12:52:21 +0200
+	b=TvUVWElKiQrjG4CP4fdH3XTEcWg62Nb3O+zQ5WIVKQxLQkMJrYYiMej/YwjwzhCPi
+	 w6raiYbqe8U47CjT6paTWuSMCFLukpH6dVdVUujNijY9w6kV6nJgokqYoXx3qde63s
+	 1BCMeI/0rp4AVppD42zHXzweTlHMNdFH+m8q/egCyDoEwJVONt6LCX1x2EG4sdnUKf
+	 nDi6E36j74dIsff+r5Qm8KvSghLIcXJ0Z2qZeSEufsz2FKDuLHnEqBDojhujIa1XzY
+	 VJswq39NjyR8X+VaFUzw/rK8OZbUnj2DmC3gFOLOOZScVpkq5TrADcFpR4H2FGCL1o
+	 SEZHSBs0m323A==
+Message-ID: <24923be1-5073-4520-8254-2f968158fc86@kernel.org>
+Date: Wed, 23 Oct 2024 12:55:49 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,98 +35,43 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pm: use _rcu variant under rcu_read_lock
+Subject: Re: [PATCH mptcp-net] mptcp: no admin perm to list endpoints
+To: Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
-References: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
- <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
+In-Reply-To: <20241022-mptcp-pm-dump-addr-admin-v1-1-9ad328d01817@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Davide, Mat,
 
-Thank you for the review!
-
-On 23/10/2024 02:31, Mat Martineau wrote:
-> On Tue, 22 Oct 2024, Matthieu Baerts (NGI0) wrote:
+On 22/10/2024 18:43, Matthieu Baerts (NGI0) wrote:
+> During the switch to YNL, the command to list all endpoints has been
+> accidentally restricted to users with admin permissions.
 > 
->> In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
->> used as expected to iterate over the list of local addresses, but
->> list_for_each_entry() was used instead of list_for_each_entry_rcu() in
->> __lookup_addr() (and lookup_id_by_addr() before). It is important to use
->> this variant which adds the required READ_ONCE() (and diagnostic checks
->> if enabled).
->>
->> Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
->> is called under the pernet->lock because the returned entry might be
->> modified, the _rcu variant cannot be used in all cases. It is then
->> required to create a new helper. Note that this new helper can be reused
->> later to reduce some duplicated code elsewhere in this file.
-> 
-> I'm not sure this is the case, if you add rcu read lock/unlocks to
-> mptcp_pm_nl_set_flags() then the _rcu variant could be used there (and
-> then only one __lookup_addr() would be needed).
+> It looks like there are no reasons to have this restriction which makes
+> it harder for a user to quickly check if the endpoint list has been
+> correctly populated by an automated tool. Best to go back to the
+> previous behaviour then.
 
-If I'm not mistaken, I don't think we can add rcu_read_(un)lock() to
-mptcp_pm_nl_set_flags(), because it is not only doing a read of the
-data, right?
+Thank you for the quick review!
 
-On the other hand, when re-reading the code, in some conditions,
-entry->flags will be modified directly. It is done under the pernet
-lock, but it is not done by creating a new entry, and use
-list_replace_rcu(). Is it not what we are supposed to do, otherwise
-there is still a risk of data race with readers of entry->flags, no?
+Now in our tree:
 
-(Or maybe this data race is not an issue here? But even if it is not an
-issue, can we really use rcu_read_lock() here with the pernet lock to
-update an item of the list?)
+New patches for t/upstream-net and t/upstream:
+- 983e36f915c9: mptcp: no admin perm to list endpoints
+- Results: 92052b68f397..0a8a1adbb6dc (export-net)
+- Results: 00ca859b77be..608ba5fe2f44 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9050db2fb737cfee7cbea717bfce23c98a493f7d/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e11b0188e765c92ab69435e015ab77a3e94b769c/checks
 
 Cheers,
 Matt
