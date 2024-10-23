@@ -1,121 +1,135 @@
-Received: from mail-qt1-f170.google.com (mail-qt1-f170.google.com [209.85.160.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 03D1A1A76C8
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:46:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96A2F1A2658
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:52:24 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729680406; cv=none; b=O4/t2ByS/4JZASC6TZn3mpmn5iahIlEISLa1L2KssdKJ6hpkD5q7UfKxMJECHSH7mbrgUE9Yj/7l+5ZMcgWUjf16lZHNiUpccRL1RVdsLDyhx4IyjnJ3JPCXZ4i+8KN3AwmEeWorJI79gKdAIc026r9BRz+H1OuD2Y7L0W88qkU=
+	t=1729680744; cv=none; b=BGVAEAWULWANJnbTAJvOktidhMQ0L/GOonTRKcsPM0iEPUEIAFjaxjoDgsCTr8CVnAJJA5zeloXEGcfup9AucezVTb8vskQwEHua8Pl4oYXn5qvC67u1G+AF8LbbmUo8hm3dcSsz6o3BaIPjtsl+aqOGBzl2uIwRCoM8juNelC8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729680406; c=relaxed/simple;
-	bh=UC6QrgulNGfb1l0jGD5xUMHdZgMo6vpM2LjQgZ0tiqI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=neXEVPUpkMXztiZai3+XNeEgBLBuuL99aootFzfHuTDGHI0lWStO5/k7ys3qr1IxQ/BEp+qzo13WLZw2wtqtHclyyfraBFq65Z5QIiIoybXnACEFVIcy5SwdMpPfOEFVOLvQHcalX2P+YS/bsPW0ZNaYGldxbr95yco0p86oGdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kGUO8POZ; arc=none smtp.client-ip=209.85.160.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1729680744; c=relaxed/simple;
+	bh=D1+DaFLksWxDrHnsZIKLje4Qsj5IzpUtFAGUwn8gct0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MMvJZwJUYx0z2KVntquYvPA2ZYCaisTGvJtBUABQLFNRbD9Q/TA//XNSBq0LEIIJiVYEM8cD0TVwVD73k6ibqswG+46wQerlnF1UMKQwNGJ0h6IgvcrH+U8RQ0E14oiuPY5KMyCmTGxBdN7NwO2vgKNmE0bijnpaYCpy+2ujNmY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MDuC9f3j; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kGUO8POZ"
-Received: by mail-qt1-f170.google.com with SMTP id d75a77b69052e-4609d75e2f8so5852121cf.1
-        for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 03:46:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1729680404; x=1730285204; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=fYo6oduLlf3Cy2B296+PVAcwmVQwAZURdPv7RR0BjkQ=;
-        b=kGUO8POZQhRnDBQlK5MXu6xMaOBiVeqGYNxh2CvrdLD2CMleqXmHz8fahTG5d1mXXM
-         ZJ33rUNNirEdAjTqGq3vRZfrI2TY8tOPWV/heLy5iRwuntZsS2czxXD6tvpo3S30L/5l
-         5nfZ23UHU6s2jn4/XT8/wUE2qr5NsbKVDveWt6a89PJLV1y1ge1DisSYloz3XMkeOSG9
-         i8lAEp4O+0P3JJlmxlK7K+OcdAr0zKXh8oWzvf8/zvtc47QHD3uhZo8Y+vNpnuyHsuda
-         /TFVu8C5hD8O9NtDcqld0dXYW71kUPx4IhXpYsAAD81H+LT64HKOczW5fQLq8U0PFMEW
-         rUiA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1729680404; x=1730285204;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=fYo6oduLlf3Cy2B296+PVAcwmVQwAZURdPv7RR0BjkQ=;
-        b=cRUaj9D+6mA0qCn4UeYSFBEq5Hv9VZOtXJkC1H//LvzN7qmYTFKla0o3iwW/34SoRq
-         UifzgukfgCCQBNS5NAAS7HijderqhzU3jNVPFfGOF4q9nYnF/pC9pZJtddLNVFXTFwW/
-         67aPnSIMfxX/uADrzR73Xa76N+8sBruooLagIvY10BcG8ysvVa9UkeyUo91LKMnWbHdR
-         6BVqVG8l8Ms+j+kf/2icj9xkDuLJz0jSOrG7Xzrh4toXiW/4Utb8Ib7krWibypfjH5GR
-         XseVjya5AHhJwyHplZUCoFe2OpDc122n4aXnfcD3Ew4osnUjNH1W+kTOymsAqcyvhKyz
-         rdTA==
-X-Gm-Message-State: AOJu0YyTrb+sk6EJcH8lrkx0G8F6PVVnNQ4MaflwNcnOllRYNilqFoxJ
-	vkyzz+5XVpbK6+LGGCKoGk3VQ0eqDowzVcFn3BsRKSJ7k2uuEiHzrxzzmzw=
-X-Google-Smtp-Source: AGHT+IGn8PAQGOShEKfR68xmnWa9QsnSkySw8gaJemQVioL02efEJSrz19Qut+yjVtJ7MqK7CQpY/w==
-X-Received: by 2002:a05:622a:5a0f:b0:460:d10d:aab7 with SMTP id d75a77b69052e-4611411ce6cmr37983041cf.28.1729680403716;
-        Wed, 23 Oct 2024 03:46:43 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.147.206])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-460d3d69448sm39054471cf.65.2024.10.23.03.46.42
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 23 Oct 2024 03:46:42 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1729676320.git.tanggeliang@kylinos.cn>
-References: <cover.1729676320.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v8 00/13] use bpf_iter in bpf schedulers
-Message-ID: <3fa75887-01d7-4a3e-8e88-55c473938ff4@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 23 Oct 2024 10:46:41 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MDuC9f3j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 66032C4CEE7;
+	Wed, 23 Oct 2024 10:52:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1729680744;
+	bh=D1+DaFLksWxDrHnsZIKLje4Qsj5IzpUtFAGUwn8gct0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MDuC9f3jZ3SIa/wlfNw7YmolcvBsM6xXxCacnF6zXAcfhzPge5iCAP5uk4osIge8F
+	 1ZLmVz3rnzlQtNlgpewov6Qyk3d+I0WrKGyGIMO3X2J8jIP9N3eDTDdVKZBZEaRtbZ
+	 LSDxhxq4uW463C+X4uzPhp3cYb5bmRpTh/Pysk6115xFBQ+XEvEAa0JAnNjkAs6zu6
+	 xt4jjlWCBi4vjCSkT5Daowk1CI8jLC7hBPhtCCnPNT69EiHooAqG3wknl8ldV0Xn1i
+	 awub8lrV/OVwH1eQg2mQY8awo2GSlKULyfHYcKjG6U1Z3I9XiaMXGcgfYZp2CPNSAd
+	 aFwBHJM6CbcXQ==
+Message-ID: <8c190d1e-05a4-4913-a774-e95e394a4719@kernel.org>
+Date: Wed, 23 Oct 2024 12:52:21 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: pm: use _rcu variant under rcu_read_lock
+Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Paolo Abeni <pabeni@redhat.com>
+References: <20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org>
+ <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <58a788f7-1703-ac02-e307-08f26efc0e9c@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-Thank you for your modifications, that's great!
+Thank you for the review!
 
-Our CI did some validations and here is its report:
+On 23/10/2024 02:31, Mat Martineau wrote:
+> On Tue, 22 Oct 2024, Matthieu Baerts (NGI0) wrote:
+> 
+>> In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
+>> used as expected to iterate over the list of local addresses, but
+>> list_for_each_entry() was used instead of list_for_each_entry_rcu() in
+>> __lookup_addr() (and lookup_id_by_addr() before). It is important to use
+>> this variant which adds the required READ_ONCE() (and diagnostic checks
+>> if enabled).
+>>
+>> Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
+>> is called under the pernet->lock because the returned entry might be
+>> modified, the _rcu variant cannot be used in all cases. It is then
+>> required to create a new helper. Note that this new helper can be reused
+>> later to reduce some duplicated code elsewhere in this file.
+> 
+> I'm not sure this is the case, if you add rcu read lock/unlocks to
+> mptcp_pm_nl_set_flags() then the _rcu variant could be used there (and
+> then only one __lookup_addr() would be needed).
 
-- KVM Validation: normal: Unstable: 1 failed test(s): selftest_mptcp_join =
-=F0=9F=94=B4
-- KVM Validation: debug: Unstable: 2 failed test(s): =
-packetdrill_regressions selftest_mptcp_join =F0=9F=94=B4
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/114774=
-58493
+If I'm not mistaken, I don't think we can add rcu_read_(un)lock() to
+mptcp_pm_nl_set_flags(), because it is not only doing a read of the
+data, right?
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/71b79d10031a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D902168
+On the other hand, when re-reading the code, in some conditions,
+entry->flags will be modified directly. It is done under the pernet
+lock, but it is not done by creating a new entry, and use
+list_replace_rcu(). Is it not what we are supposed to do, otherwise
+there is still a risk of data race with readers of entry->flags, no?
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+(Or maybe this data race is not an issue here? But even if it is not an
+issue, can we really use rcu_read_lock() here with the pernet lock to
+update an item of the list?)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
