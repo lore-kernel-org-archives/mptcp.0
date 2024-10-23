@@ -1,145 +1,143 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68DCF1990D2
-	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:03:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C34C19E7ED
+	for <mptcp@lists.linux.dev>; Wed, 23 Oct 2024 10:06:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729677839; cv=none; b=X+1mtgl+l+jVOGYsavqj7GE1I72MNs5AhILtcf11g7laReSvuc/3FtfL3wExC/P8qFBgizX/yRDiEJUrDCyhucvkPVZMdoAMajFUbK2zoIbRakYYiG3AyxoivpJfbwPVgc02ygwanNXHMnxyHhWzfzdXYk7HPFcPaRP9BYMy2vM=
+	t=1729677984; cv=none; b=A3uIcssQiRQVdwRGAW8k+dQWc03x1s6ZppYoAYUMeACNvAOEc6jx9JTIv2FLr1y/fj0T8ZTjPZbir12kwF3EKeZf4ZvOWnyK7ZE3zbOw5PjkpXUyKP0yD1nTUE5x49Y234eeQAJYqnXSdR77wLHb+uAPEkTWQv3pjFclH9kUd00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729677839; c=relaxed/simple;
-	bh=2qy7ipL/1t+CDGGt/ShO03vSjHut4JfTdx1kKlF+bYo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DTpv1BgufKhGzRtdQI+XAO6ZX68IGfQlfMoDnfpw5FPxQ1wOcLn5kGip/Vj8ElKnADKJ2NZTp5pVCgzLTyllA8Kv4MkQFFBvC2ebjxWeAVPSlFMl9xl7xxmcupW5MNzEf8Zs+CJFb/aHzbO8hnO2ySRw8p8Fl9P6lEjDTfoZ7/8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocQHZ817; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729677984; c=relaxed/simple;
+	bh=aiE/dJt1BeWNup+OQgmOs4sHP2t80r1v/f3Vp8ukjoQ=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=dgqCLtIXypHY1dUSLL2ll67P1oIUljzCnkO7pgAQXpfDngpV/kcLiGRS6Am5R0UPT/6sxpGJpTDkNSyKODE7P9dyjnmceGdxSfbgRLTHlZHR0bkFDhzlBHwc7Sfku5zTBct8lsfKr+rGdVACu2Vzo7o4nazOxYGKcUrgpKfIxfY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rfsY03Kl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocQHZ817"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46172C4CEC6;
-	Wed, 23 Oct 2024 10:03:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rfsY03Kl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0343C4CEC7;
+	Wed, 23 Oct 2024 10:06:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729677839;
-	bh=2qy7ipL/1t+CDGGt/ShO03vSjHut4JfTdx1kKlF+bYo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ocQHZ817ScaB+Sq8X/5W/52YsYQjoiRY/pDON/tyPa1c/JnA0OS/ZRnf5/alI5rHQ
-	 HFiOk+R4uBmLuf9XXcvJOTWT7M/c6Ri8yUe2w+TdsV+96kRsfbQR9Yhxz0rpxMaCNr
-	 p+I7KxfMGnpKxIiQ7UxFrK/cUAJmztySYMzDwJiA/+I3wzRnLCmnuejBBk1d7cLO9F
-	 8BvTIxHF3RMAlJEOjPgYlnOi+KD0FTUo0vusaM5Kh43yp49zj9cyFclHsogcq7mj/r
-	 hJE8mpSnZnQ0ySEXnzOgslOR3g5ydcmTq7zNIP0eI2E60i7cn6DTSFYXCYOnyJcQ2e
-	 8ooGAL8I7MLvQ==
-Message-ID: <78c3d9f2-089d-4a17-ba59-a33a6dc8e5c6@kernel.org>
-Date: Wed, 23 Oct 2024 12:03:56 +0200
+	s=k20201202; t=1729677984;
+	bh=aiE/dJt1BeWNup+OQgmOs4sHP2t80r1v/f3Vp8ukjoQ=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rfsY03Klc97j2dgI9p94iIk2LH9DJkEW23qwwFeUmNKXFEfZ/9gViQ9Z0wcRmPQ6k
+	 OnKZqPYsCRAU0Txqw0rdiPezzTV4zNHXOTS1fwSUWImOk+H5V2iHI6pCGcZyd1CLM+
+	 7jc82jfWY/9RrW8vaALGAowo2XnJThc+RQDpH95xhEe3BUV7damrrmB7OECsJdAq2Y
+	 OhY6UIbPAqgrEK41FLwSxfm3SboYsmWd001zR1HqxSpXPDfCGIhb2AfaQlWipVEC9s
+	 Qc5+wttvhoCKyzodwRU6C6JJBO/d4SqST032XQ0mWP9H+IsO288RGGQsEALUkUoZ3B
+	 GqMnAUjbMffMQ==
+Message-ID: <6a54a3cf9e30e82ad7f51b97299a194a587688a7.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 02/36] mptcp: use __lookup_addr in
+ pm_netlink
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 23 Oct 2024 18:06:19 +0800
+In-Reply-To: <78c3d9f2-089d-4a17-ba59-a33a6dc8e5c6@kernel.org>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+	 <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
+	 <2d40c9a5-9ebc-4621-ab81-1f46b2a6d190@kernel.org>
+	 <6d1eb8491740d176463f559dcfd83d34e80b0835.camel@kernel.org>
+	 <78c3d9f2-089d-4a17-ba59-a33a6dc8e5c6@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 02/36] mptcp: use __lookup_addr in
- pm_netlink
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <63ed0d182630250fda144a5ee3770a34384003fa.1729588019.git.tanggeliang@kylinos.cn>
- <2d40c9a5-9ebc-4621-ab81-1f46b2a6d190@kernel.org>
- <6d1eb8491740d176463f559dcfd83d34e80b0835.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <6d1eb8491740d176463f559dcfd83d34e80b0835.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 23/10/2024 11:59, Geliang Tang wrote:
-> On Tue, 2024-10-22 at 19:09 +0200, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 22/10/2024 11:14, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> The helper __lookup_addr() can be used in
->>> mptcp_pm_nl_get_local_id()
->>> and mptcp_pm_nl_is_backup() to simplify the code if using
->>> list_for_each_entry_rcu() instead of list_for_each_entry() in it.
->>
->> Mmh, please justify why it is OK to use the _rcu() variant without
->> having to modify the caller.
->>
->> Did you check everything was OK when running the tests with these
->> kconfig:
->>
->>   CONFIG_RCU_EXPERT=y
->>   CONFIG_PROVE_RCU_LIST=y
->>
->> I guess you will get new issues, no?
+On Wed, 2024-10-23 at 12:03 +0200, Matthieu Baerts wrote:
+> On 23/10/2024 11:59, Geliang Tang wrote:
+> > On Tue, 2024-10-22 at 19:09 +0200, Matthieu Baerts wrote:
+> > > Hi Geliang,
+> > > 
+> > > On 22/10/2024 11:14, Geliang Tang wrote:
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > > 
+> > > > The helper __lookup_addr() can be used in
+> > > > mptcp_pm_nl_get_local_id()
+> > > > and mptcp_pm_nl_is_backup() to simplify the code if using
+> > > > list_for_each_entry_rcu() instead of list_for_each_entry() in
+> > > > it.
+> > > 
+> > > Mmh, please justify why it is OK to use the _rcu() variant
+> > > without
+> > > having to modify the caller.
+> > > 
+> > > Did you check everything was OK when running the tests with these
+> > > kconfig:
+> > > 
+> > >   CONFIG_RCU_EXPERT=y
+> > >   CONFIG_PROVE_RCU_LIST=y
+> > > 
+> > > I guess you will get new issues, no?
+> > 
+> > Indeed.
+> > 
+> > > 
+> > > We might need to have __lookup_addr() and __lookup_addr_rcu() if
+> > > you
+> > > want to avoid duplicated code.
+> > 
+> > Also remove this patch from this series, it has nothing to do with
+> > the
+> > entire BPF path manager set, and other paths have no dependencies
+> > on
+> > it.
 > 
-> Indeed.
+> Will do!
 > 
->>
->> We might need to have __lookup_addr() and __lookup_addr_rcu() if you
->> want to avoid duplicated code.
+> Note that you could use __lookup_addr_rcu() that is being added with
+> the
+> following patch (if it is accepted):
 > 
-> Also remove this patch from this series, it has nothing to do with the
-> entire BPF path manager set, and other paths have no dependencies on
-> it.
+> https://patchwork.kernel.org/project/mptcp/patch/20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org/
+> 
+> > I will release a v2 later separately.
+> 
+> Please wait for the v3, I'm still looking at the series (... doing
+> that
+> slowly, when I have time :-/)
 
-Will do!
+Great, I appreciate it.
 
-Note that you could use __lookup_addr_rcu() that is being added with the
-following patch (if it is accepted):
-
-https://patchwork.kernel.org/project/mptcp/patch/20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org/
-
-> I will release a v2 later separately.
-
-Please wait for the v3, I'm still looking at the series (... doing that
-slowly, when I have time :-/)
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> 
+> Cheers,
+> Matt
 
