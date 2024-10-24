@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BA7F3399F
-	for <mptcp@lists.linux.dev>; Thu, 24 Oct 2024 10:22:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 266D13399F
+	for <mptcp@lists.linux.dev>; Thu, 24 Oct 2024 10:22:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729765370; cv=none; b=gl+Cpm7yuKYt2ekbniyK/mo7kpgXRTZXjOBbfQtYPoCxN3T6TZaRWbsfWUZXjtY0FHGnDNz5GDrZTyITETIBUxmJp0+Jm4uMXL1ihXUG6oSH3fB0ZEdHRsY+i5uDTdkMIVcXfMSHbNzOewaZeL64Hfk0BeMrC3wToQKn6BocL7g=
+	t=1729765372; cv=none; b=aqZSl5YeRb+nc/y1A4qbBsRvAuGL4ZGenLmdRhXz+k+fd+76enn4kUA/5m16kM7ZmUUgmZhYETk3YbU+2oz8rf4QP5IPjsvzX68UKKVcTi8zty/bYrz2EEMyQjXxf2Km6YFbfhXj1NAncnE9feRGlRTC2BMZgweROTJEg7QKVyc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729765370; c=relaxed/simple;
-	bh=VT43MGQuTuntnrzOsd2zKMJLJlTGKEs3kCyDsZa1odY=;
+	s=arc-20240116; t=1729765372; c=relaxed/simple;
+	bh=w6pzZgUEQKDHCrJ5SZzqhNjOmGuJ5Vq13ySobUnLoqk=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=UZ8fnUBsK0y3BKHnf6W7FB2DzGufu89qTI4mJkoJilwFhtRchqbrbHiNZDcOHBlNL264ZQd8hLE6b2P6tmhwkUcMRBB3OdDXRAq3blsfcpn14l5erADwdq9yzSXmnKH81a4L6rR4xQ9ciOdjZcT/gbv/J9dyg+kr1VeapAMkpL4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mu/NvehG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=bC1ZCkz6MWO7thdIT4KSaqptucK/TSnaoenz1OFgfvDyIhwtJTsvUCMJW0obxm5IR7YSGfLwRSTGi+FqRdqwi4kJe2tGzZ+4HfuEKb4kZvCMIDkL+k6oLKWTcC1LKeccYvvsuUqIMmVV8rRplGBKbYb5bns/BUw6WeoQpwrCxS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LZZ+HzuI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mu/NvehG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 013F5C4CEE7;
-	Thu, 24 Oct 2024 10:22:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LZZ+HzuI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CD9D3C4CEC7;
+	Thu, 24 Oct 2024 10:22:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729765370;
-	bh=VT43MGQuTuntnrzOsd2zKMJLJlTGKEs3kCyDsZa1odY=;
+	s=k20201202; t=1729765372;
+	bh=w6pzZgUEQKDHCrJ5SZzqhNjOmGuJ5Vq13ySobUnLoqk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Mu/NvehGExxDBw3aynDIcL1SH2GlJB+ap8mXrCBsW7xl7uZ5/CRoe46SzA9C/gFNS
-	 v0zVR1ScnlxfZ4rPKsEdWtzZLX3xlVoWZDaRS13YvZw22NE/n6T2mDMv0rpfqGEO1T
-	 d9NRJM3NFDNS3EsFE3Rqjk1wh7HCzXPSy4MhhdajH4ZgxZRupt4A3iE7G8Ya5Uap/y
-	 mNGA/W3JSOEhb/sjPIrCyrk3JU2/Hu+gwULqykDOcmz8RStz0r4WBAungM9/idXgKi
-	 1DEMLH3r5qmEwnHOcgmymU8IFIvfd0oR8WDb7aLlin8jlHi6MeucJTMY1PI84bfbe0
-	 7MRv1xEMS9B8g==
+	b=LZZ+HzuIUugPmHiRQLlIo7lUrH/VjikOLP81y3mc1uK4mPQfo7W/0eQrVmvmQteKX
+	 Z7O6cCYk5TqSSICJB0U1ptJYxgXuJO6+pbUftDvlG6fjYfwhOCcDZxfimztLP9yy3i
+	 9SQtO9dLWd9aWAZm+35t9sEZOzlp6s+xgWIim7UFnPQfCoeB//4INo7B76LXSCNAwZ
+	 z2ETu8nNhmT0/iJiOLBL3EMJFDNJu/Iuu61I04UaLYpLe/6ZEEL5HzEzSF22ggtrFt
+	 UD9iJ7H3bzCJuM1tJJXKAF3T9LIVfVa9xOX1CxvcSiluYS5UxKamkptxu6/dE/q2I0
+	 d21MtXgHse0Jw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/3] Squash to "bpf: Export mptcp packet scheduler helpers"
-Date: Thu, 24 Oct 2024 18:22:03 +0800
-Message-ID: <02394532426ceb8b5d9baa3d6ed25c1dfe60208c.1729765157.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 3/3] Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+Date: Thu, 24 Oct 2024 18:22:04 +0800
+Message-ID: <f7cc83a335efc23ca65b825062c804914c9227db.1729765157.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1729765157.git.tanggeliang@kylinos.cn>
 References: <cover.1729765157.git.tanggeliang@kylinos.cn>
@@ -45,39 +45,57 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Should use mptcp_stream_memory_free in burst scheduler, not
-tcp_stream_memory_free. Add a wrapper for it.
+Move sk_stream_memory_free check before "send_info[backup].subflow
+= subflow".
+
+Use mptcp_stream_memory_free instead of using tcp_stream_memory_free.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+ tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 13bdcbe34e1f..72d8be2f3853 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -284,6 +284,11 @@ __bpf_kfunc static void bpf_mptcp_sock_release(struct mptcp_sock *msk)
- 	WARN_ON_ONCE(!sk || !refcount_dec_not_one(&sk->sk_refcnt));
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+index 6242430d0330..1157921d2f0b 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
+@@ -23,7 +23,7 @@ struct bpf_subflow_send_info {
+ extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
+ extern void mptcp_set_timeout(struct sock *sk) __ksym;
+ extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
+-extern bool tcp_stream_memory_free(const struct sock *sk, int wake) __ksym;
++extern bool bpf_mptcp_stream_memory_free(const struct sock *sk, int wake) __ksym;
+ extern bool bpf_mptcp_subflow_queues_empty(struct sock *sk) __ksym;
+ extern void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk) __ksym;
+ 
+@@ -49,7 +49,7 @@ static __always_inline bool __sk_stream_memory_free(const struct sock *sk, int w
+ 	if (sk->sk_wmem_queued >= sk->sk_sndbuf)
+ 		return false;
+ 
+-	return tcp_stream_memory_free(sk, wake);
++	return bpf_mptcp_stream_memory_free(sk, wake);
  }
  
-+__bpf_kfunc bool bpf_mptcp_stream_memory_free(const struct sock *sk, int wake)
-+{
-+	return mptcp_stream_memory_free(sk, wake);
-+}
-+
- __bpf_kfunc static bool bpf_mptcp_subflow_queues_empty(struct sock *sk)
- {
- 	return tcp_rtx_queue_empty(sk);
-@@ -311,7 +316,7 @@ BTF_KFUNCS_START(bpf_mptcp_sched_kfunc_ids)
- BTF_ID_FLAGS(func, mptcp_subflow_active)
- BTF_ID_FLAGS(func, mptcp_set_timeout)
- BTF_ID_FLAGS(func, mptcp_wnd_end)
--BTF_ID_FLAGS(func, tcp_stream_memory_free)
-+BTF_ID_FLAGS(func, bpf_mptcp_stream_memory_free)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_queues_empty)
- BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale)
- BTF_KFUNCS_END(bpf_mptcp_sched_kfunc_ids)
+ static __always_inline bool sk_stream_memory_free(const struct sock *sk)
+@@ -87,8 +87,7 @@ static int bpf_burst_get_send(struct mptcp_sock *msk)
+ 		bool backup = subflow->backup || subflow->request_bkup;
+ 
+ 		ssk = mptcp_subflow_tcp_sock(subflow);
+-		if (!mptcp_subflow_active(subflow) ||
+-		    !sk_stream_memory_free(ssk))
++		if (!mptcp_subflow_active(subflow))
+ 			continue;
+ 
+ 		nr_active += !backup;
+@@ -103,6 +102,8 @@ static int bpf_burst_get_send(struct mptcp_sock *msk)
+ 
+ 		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
+ 		if (linger_time < send_info[backup].linger_time) {
++			if (!sk_stream_memory_free(ssk))
++				continue;
+ 			send_info[backup].subflow = subflow;
+ 			send_info[backup].linger_time = linger_time;
+ 		}
 -- 
 2.45.2
 
