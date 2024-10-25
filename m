@@ -1,129 +1,132 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC41CB9F6
-	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 09:32:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 464D718B484;
+	Fri, 25 Oct 2024 09:55:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729848775; cv=none; b=JvBqBuDxSURm9AvaQGt76cWxRj5FHApYll8tkIW1WJ4L2kL07+uZwe4+pQcSFFA8c6IJvI61qrJXi/PcTS7Bd/zyZiY5gd+4Y4CcMU/ICccYgZytxVTVv/+anes0gM8augVlzIWgip7EsM1WF+DJdvQkWo98iikxBvBAvf06Wn8=
+	t=1729850153; cv=none; b=Jr0SuGGVT9POE4RrdngD2cV/SuFDD3NpjeWApTWbF3TBjuuUAIor2YfSxowMGJESxZ7RfSpQeIxFj9MkHzmwIBHTceHoRqBU0e85gVQ1bvln3OWLG4ZgaBkw84e2YRiN69hXG3SWRVru7bJ5jJCZDb0cyFF9Vh47M7+G+qxCKmY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729848775; c=relaxed/simple;
-	bh=MKdNsixnE0//0EK+oCzvPayH9T7YIceGSZoLgh00jSE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ou3SeABE37i3k1+Nih6Jf6G5rxguXpRGzBqX6MpH/yz+hbR8cKl+dPBnT6qp9r+1BGuai9ZBfHHXYa292EsGWf1O/yLZqWY9DGZiicgOphWgO3CT18Vj6wKPaV3aLde6rB3+m7Y7Jx/qhFwfsZ4QGJ2+O8XRiS3yNtwRz4R48BE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVOcbko+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1729850153; c=relaxed/simple;
+	bh=wlrY1vs1nsbCxzDxxcd+OFmhf/hbqWWSnOFh0CqZsKA=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=J8CRzI5bVumB2IB4qrQMeCZ20Uu/6tZNlzI9+QhEqL56RuAuJmGTDWlyw129gSnoa6dHxfRwTvZRiCLJ2Ttgh9LfAz2Y0KIjCDKHdMe8dUsJNkT/xc4AvUATdgyPIoogqx3UB6UM9Q3s4KB0aQwhtHRQCB8Svasu/IwUP/piJTQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ClC8C93m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVOcbko+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D103C4CECD;
-	Fri, 25 Oct 2024 09:32:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ClC8C93m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AB9C4CEC3;
+	Fri, 25 Oct 2024 09:55:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729848775;
-	bh=MKdNsixnE0//0EK+oCzvPayH9T7YIceGSZoLgh00jSE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=uVOcbko+18EEO5W1RmhFAcZYMNVr3RH0vXnk0/XrkGmO5EuaVfBHMAGobjynIQVsx
-	 yd7NUFY+K0g6lTAiBaX8QglqRqbl1FzZbFKT2D5uSoXGe9ETZMAU8GYQWxeUJDDkpE
-	 P+44EhbHGvqqV6o3t2yyb5HWYJ3lNi3MLBim+Jxhfhbutg0Ei5zBJOr11cn6AHHjWi
-	 gl1gDu71CkCW7I5AbVnTKfSlsnaypVqRHCWMW8MmgswSgxW++7SeR/wZOizGs5fVoV
-	 dORS5dtZsDceZ/YzRqje3KXc0PoG3mGpupJ209hwcoNcG4DHQQc3/iUmGjCs5+OtTt
-	 SLUWEvm3kEKWA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 25 Oct 2024 11:32:31 +0200
-Subject: [PATCH mptcp-net v2 3/3] mptcp: pm: avoid code duplication to
- lookup endp
+	s=k20201202; t=1729850152;
+	bh=wlrY1vs1nsbCxzDxxcd+OFmhf/hbqWWSnOFh0CqZsKA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=ClC8C93mBMEkehGC8+JVia7Rds7TISRgEVnosgYtW195/YEuAuBO8rE2Dgw4WIVET
+	 MCeq2H52MDBCDyy3j4rTHh0L33quPPA9TN3unMVEBSecmnbOKNqSkMeve4i+upDl8C
+	 4U9s9ODz5pQXG5v7OjgDECQt1yZ70t0Ng5KNGhD4p/g5bx/WcYxK7nIa4jTNGMfXUn
+	 fC/J92lnbVa50MBNvyEAhJVle/LHzJ3IRm1JwppYgOZhitokZwAZfvBCQDJqh3NpZO
+	 kwjLhqjTA3eZJKBGDx3Aa/knKkDb/6F5evQDHTBkI3lyRGe8OsSSE5fabGk4RkbMoF
+	 QV7AFB7XAogAA==
+Date: Fri, 25 Oct 2024 10:55:48 +0100
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+	Gang Yan <yangang@kylinos.cn>
+Subject: Re: [PATCH net-next 2/4] mptcp: annotate data-races around
+ subflow->fully_established
+Message-ID: <20241025095548.GM1202098@kernel.org>
+References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
+ <20241021-net-next-mptcp-misc-6-13-v1-2-1ef02746504a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241025-mptcp-pm-lookup_addr_rcu-v2-3-1478f6c4b205@kernel.org>
-References: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
-In-Reply-To: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1968; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qN92RkiNi/OxsiAmYdeZ53c4pXGuGE8QPi9XPouJqxo=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnG2XC2PAR/k8VRNFTiWCaA5OQmTq6eWKEQfhNT
- LdUJH0OIn+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxtlwgAKCRD2t4JPQmmg
- c55VEADYQ5LeVoGUrqLGjPoO6rJDQCdDafZ9t0K3Sn3fP8VRkSqqJa3sA70BRYtu7fgjIPOxC6h
- mILOca9HXc06XYIdQsQVnm4QsJktvGZcWx4BED6AIOKgZIEtoxBddvIqfqF5iA/7Gwahm9tsTS5
- DovFWJK8RFqg/DN5KkKInFcLML2H3k1I6UKOcVuAgrQfWZUz1mFe85n8yy/1bYIq6qbGePiYAun
- nGT7L3HOTOnlQVjV+pByYoIkDn5hDclKJSdl1MT/TYb/bmJf0I9Jro5tICEj0lwHDe7UGD78vTV
- wtoOJGFabM9/D3Kn9fDSHr/3V7aMNupFUhsnJW7wi1NwRzwMKT1k3nzjWNqtQlD/dK5vs0MTLi9
- +BEkwWJQjW4zfp59f+jUitMItQQCIscjOrxOG1N6mCYgNTq3mzz0KpezUTl1OmzUQqyNKrlIjSQ
- XFvxcmBCdg83SkSX4CAsEzQ9nvFBWJSWxPw18zfPPDmk9qkEc9tdSffy4MSrK4k5Nw7BCkb6VqV
- ojV29W1KUWgP+dO8Kl5hAU5zrY+omcdQ9t0utcvqbYshwDmNXUUfy22G149BPGDftycIprIMpvd
- PaQIewVcCxjx1Y3EfELXXjekCh3AXRehp0wanB8ThkMiHP0pqdR254NOIhvp62yRBO9xMwVWCak
- lCWK+XqUtoXHI2Q==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20241021-net-next-mptcp-misc-6-13-v1-2-1ef02746504a@kernel.org>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Mon, Oct 21, 2024 at 05:14:04PM +0200, Matthieu Baerts (NGI0) wrote:
+> From: Gang Yan <yangang@kylinos.cn>
+> 
+> We introduce the same handling for potential data races with the
+> 'fully_established' flag in subflow as previously done for
+> msk->fully_established.
+> 
+> Additionally, we make a crucial change: convert the subflow's
+> 'fully_established' from 'bit_field' to 'bool' type. This is
+> necessary because methods for avoiding data races don't work well
+> with 'bit_field'. Specifically, the 'READ_ONCE' needs to know
+> the size of the variable being accessed, which is not supported in
+> 'bit_field'. Also, 'test_bit' expect the address of 'bit_field'.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/516
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-The helper __lookup_addr_rcu() can be used in mptcp_pm_nl_get_local_id()
-and mptcp_pm_nl_is_backup() to simplify the code, and avoid code
-duplication.
+...
 
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
-Notes:
- - This is also for -next.
----
- net/mptcp/pm_netlink.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 568a72702b080d7610425ce5c3a409c7b88da13a..a93e661ef5c435155066ce9cc109092661f0711c 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -513,7 +513,6 @@ struct mptcp_subflow_context {
+>  		request_bkup : 1,
+>  		mp_capable : 1,	    /* remote is MPTCP capable */
+>  		mp_join : 1,	    /* remote is JOINing */
+> -		fully_established : 1,	    /* path validated */
+>  		pm_notified : 1,    /* PM hook called for established status */
+>  		conn_finished : 1,
+>  		map_valid : 1,
+> @@ -532,10 +531,11 @@ struct mptcp_subflow_context {
+>  		is_mptfo : 1,	    /* subflow is doing TFO */
+>  		close_event_done : 1,       /* has done the post-closed part */
+>  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+> -		__unused : 8;
+> +		__unused : 9;
+>  	bool	data_avail;
+>  	bool	scheduled;
+>  	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+> +	bool	fully_established;  /* path validated */
+>  	u32	remote_nonce;
+>  	u64	thmac;
+>  	u32	local_nonce;
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index f38e1ccd34e95cd88b179a8b50e6965731542871..7c6e664b236d1659a554d003c78c72ec91895ba5 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1154,17 +1154,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
- {
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
--	int ret = -1;
-+	int ret;
- 
- 	pernet = pm_nl_get_pernet_from_msk(msk);
- 
- 	rcu_read_lock();
--	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
--			ret = entry->addr.id;
--			break;
--		}
--	}
-+	entry = __lookup_addr_rcu(pernet, skc);
-+	ret = entry ? entry->addr.id : -1;
- 	rcu_read_unlock();
- 	if (ret >= 0)
- 		return ret;
-@@ -1191,15 +1187,11 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
- {
- 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
- 	struct mptcp_pm_addr_entry *entry;
--	bool backup = false;
-+	bool backup;
- 
- 	rcu_read_lock();
--	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
--			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
--			break;
--		}
--	}
-+	entry = __lookup_addr_rcu(pernet, skc);
-+	backup = entry && !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
- 	rcu_read_unlock();
- 
- 	return backup;
+...
 
--- 
-2.45.2
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 6170f2fff71e4f9d64837f2ebf4d81bba224fafb..860903e0642255cf9efb39da9e24c39f6547481f 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -800,7 +800,7 @@ void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
+>  				       const struct mptcp_options_received *mp_opt)
+>  {
+>  	subflow_set_remote_key(msk, subflow, mp_opt);
+> -	subflow->fully_established = 1;
+> +	WRITE_ONCE(subflow->fully_established, true);
+>  	WRITE_ONCE(msk->fully_established, true);
+>  
+>  	if (subflow->is_mptfo)
+> @@ -2062,7 +2062,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
+>  	} else if (subflow_req->mp_join) {
+>  		new_ctx->ssn_offset = subflow_req->ssn_offset;
+>  		new_ctx->mp_join = 1;
+> -		new_ctx->fully_established = 1;
+> +		WRITE_ONCE(new_ctx->fully_established, true);
+>  		new_ctx->remote_key_valid = 1;
+>  		new_ctx->backup = subflow_req->backup;
+>  		new_ctx->request_bkup = subflow_req->request_bkup;
+
+My understanding is that 1) fully_established is now a single byte and
+2) WRITE_ONCE is not necessary for a single byte, as if I understand Eric's
+comment in [1] correctly, tearing is not possible in this case.
+
+[1] https://lore.kernel.org/netdev/CANn89i+8myPgn61bn7DBqcnK5kXX2XvPo2oc2TfzntPUkeqQ6w@mail.gmail.com/
+
 
