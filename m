@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B190E21A4BB
-	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 15:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B561A165EF8;
+	Fri, 25 Oct 2024 15:52:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729870009; cv=none; b=Z9zvZZ2IIuVesb6i2hxG330awL+N2jyXnPHAgwq6Fa0e5LrEYSPIHvkGzOW7mLis144b2Uxf9aC6hMQgkgXpagupg0BlnB/TFVL9OLlpj53hnLNnqstrEWUNHD21/F434IWIIjLf6pyLv7R109NQCI9MfRSCVxB7mRgOlxdGHCY=
+	t=1729871553; cv=none; b=TRcQlIyRjC+TTW9nTHds0bAAJ8hUA1UBoIc++AUucaYbuMa1Mc3l1sOaNvITnxR+MoIBR6VWcFN2k+08wT4vVuCj1SN8oO5Gp/1EJzWfUbxJwf91YJYoBku53XhBkLFcG57ARdN3GJZ394og7DSstK91wgXaSOkccXNfM3b4cgY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729870009; c=relaxed/simple;
-	bh=Tq4NRwP1OhYsfT6k2oMrKq8ECS66eXRRkxu5+shtEXQ=;
+	s=arc-20240116; t=1729871553; c=relaxed/simple;
+	bh=tZGjiCDpW51uCZKGL5brHwQQtM4jv1AtwQwvZbtlDpM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Wvu7r1euibZCIDd33h6vpjdgt2OsOdujkKvC/zB5nnhGBCZT/cNUplNi5Vyt0pNFd5c6Wm+gkg31ML6satNnFdv/IH0pCeCOSxkBFZirFN7Gy3kaIJydxs5TNryVyTcCDFxrP9jnV332x3KpA6J15BdLpStZZTY8jV2hZyje4/Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Amcqb9Y7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ewB0awRbYuksJrc68EUdpzU7ku52ZnDaexvwZLL+N8t6naTMVg0qvqQZkC7GH7Mv1ZoxBiNoM6al4Vq7mf2maoUKIAUtPhpTGDen4Puwo6vUqA2ny4wr5mVLLn0TZbRBVQ/kBTtwircmx00A9ffqF/JyUiO/VzdwdbbMBsEX9bU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgYSQvUS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Amcqb9Y7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61ECEC4CEC3;
-	Fri, 25 Oct 2024 15:26:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgYSQvUS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F0B50C4CEC3;
+	Fri, 25 Oct 2024 15:52:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729870009;
-	bh=Tq4NRwP1OhYsfT6k2oMrKq8ECS66eXRRkxu5+shtEXQ=;
+	s=k20201202; t=1729871553;
+	bh=tZGjiCDpW51uCZKGL5brHwQQtM4jv1AtwQwvZbtlDpM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Amcqb9Y7BzPd2/HHzkYTlCzYheSVWWV3Qs9h1GkBLXN8f8hYgyy9rl+Qp5xThOTZb
-	 j6bTUkcrSNBDPtmqGmDU31EbR1MeTdtckLmDzja8WwLD+itKMfD/xLMOXJaAn3jAs5
-	 xnfbSnqsJ1hx3xtJYb0T2DvY1BJpBvL7oCEuF2gnaQak7qt58/vMuRQAvI8puofKOu
-	 IbL+NsmwI6GfBng3xnZ+OJK9kP9nYqYRemRQS/aDkFsDdKezurEz5rRbGpRPO+lgu5
-	 4mu5ZBHMDxISW25IAa6LCzjCWS56jo4u5Ov7imh6RwwX3cIc+kKINfBUCE9GghZVTP
-	 aMZPtZXWdDepg==
-Message-ID: <b303b3d0-1c0a-4c0a-8031-77023a2de005@kernel.org>
-Date: Fri, 25 Oct 2024 17:26:46 +0200
+	b=CgYSQvUSllOaLGqdbEOxBaDcU4xvq7QSKPHjbJU/X8VcMko0HBkdiF/SQPZ+Jr9gQ
+	 l5A3m6r7goPKkeL3woAIFtOj/h7OGF0o37M+dt0T+c1vlj2pNc0Tc5bAfAc/AXEKGy
+	 LG1M+nhMOUA9GKhOwmeCWzPhffuQ5SEJecadWWPHG5AehEWSOsS/ai+FXAQws0VysB
+	 U3shwhp5CE7kvIiczz3bD4Viy3mDncctK4L1XOETaCPQLQcQ4lMY96/cxT2j5/I94q
+	 zw0R0x6ymfUibb1NevuqB3+pUC15U+Ch7RoXgh4XOLBs5MXD1tmqPW8L+uzbwr7MNe
+	 Ri9JH4J3j9E1w==
+Message-ID: <805bd3a1-ae85-4d87-8678-0bf63a261c66@kernel.org>
+Date: Fri, 25 Oct 2024 17:52:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,18 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 2/3] mptcp: pm: lockless list traversal
+Subject: Re: [PATCH net-next 2/4] mptcp: annotate data-races around
+ subflow->fully_established
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>
-References: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
- <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
- <48c030b9f5156dddec50e8727062b8350a53f8a0.camel@kernel.org>
+To: Simon Horman <horms@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, Gang Yan <yangang@kylinos.cn>
+References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
+ <20241021-net-next-mptcp-misc-6-13-v1-2-1ef02746504a@kernel.org>
+ <20241025095548.GM1202098@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,94 +92,110 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <48c030b9f5156dddec50e8727062b8350a53f8a0.camel@kernel.org>
+In-Reply-To: <20241025095548.GM1202098@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Simon,
 
 Thank you for the review!
 
-On 25/10/2024 16:25, Geliang Tang wrote:
-> On Fri, 2024-10-25 at 11:32 +0200, Matthieu Baerts (NGI0) wrote:
->> In a few places -- to get an endpoint, dump all of them, and change
->> their flags -- the list is iterated while holding the pernet->lock,
->> but
->> only to read the content of the list. In these cases, we can replace
->> the
->> spin locks, by RCU read ones, and use the _rcu variants to iterate
->> over
->> the entries list in a lockless way.
+On 25/10/2024 11:55, Simon Horman wrote:
+> On Mon, Oct 21, 2024 at 05:14:04PM +0200, Matthieu Baerts (NGI0) wrote:
+>> From: Gang Yan <yangang@kylinos.cn>
 >>
->> To make it clear, the lookup helpers using the _rcu variant are
->> renamed
->> with a _rcu suffix. The previous __lookup_addr() helper can then be
->> removed, but __lookup_addr_by_id() is still needed.
+>> We introduce the same handling for potential data races with the
+>> 'fully_established' flag in subflow as previously done for
+>> msk->fully_established.
 >>
->> While at it, the IDs bitmap is copied before iterating the list to
->> dump
->> the different addresses, to avoid any consistencies.
+>> Additionally, we make a crucial change: convert the subflow's
+>> 'fully_established' from 'bit_field' to 'bool' type. This is
+>> necessary because methods for avoiding data races don't work well
+>> with 'bit_field'. Specifically, the 'READ_ONCE' needs to know
+>> the size of the variable being accessed, which is not supported in
+>> 'bit_field'. Also, 'test_bit' expect the address of 'bit_field'.
 >>
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/516
+>> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Notes:
->>  - This is not a fix, a small improvement for -next.
->> ---
->>  net/mptcp/pm_netlink.c | 36 +++++++++++++++++++-----------------
->>  1 file changed, 19 insertions(+), 17 deletions(-)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index
->> a93b9b7776b48781a883673fe5fd521a978487ff..f38e1ccd34e95cd88b179a8b50e
->> 6965731542871 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
-
-(...)
-
->> @@ -1872,16 +1872,18 @@ int mptcp_pm_nl_dump_addr(struct sk_buff
->> *msg,
->>  	struct net *net = sock_net(msg->sk);
->>  	struct mptcp_pm_addr_entry *entry;
->>  	struct pm_nl_pernet *pernet;
->> +	unsigned long id_bitmap[4];
->>  	int id = cb->args[0];
->>  	void *hdr;
->>  	int i;
->>  
->>  	pernet = pm_nl_get_pernet(net);
->> +	bitmap_copy(id_bitmap, pernet->id_bitmap,
->> MPTCP_PM_MAX_ADDR_ID + 1);
 > 
-> I think the id bitmap should only be copied when id is 0:
+> ...
 > 
-> if (!id)
->   bitmap_copy(id_bitmap, pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index 568a72702b080d7610425ce5c3a409c7b88da13a..a93e661ef5c435155066ce9cc109092661f0711c 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -513,7 +513,6 @@ struct mptcp_subflow_context {
+>>  		request_bkup : 1,
+>>  		mp_capable : 1,	    /* remote is MPTCP capable */
+>>  		mp_join : 1,	    /* remote is JOINing */
+>> -		fully_established : 1,	    /* path validated */
+>>  		pm_notified : 1,    /* PM hook called for established status */
+>>  		conn_finished : 1,
+>>  		map_valid : 1,
+>> @@ -532,10 +531,11 @@ struct mptcp_subflow_context {
+>>  		is_mptfo : 1,	    /* subflow is doing TFO */
+>>  		close_event_done : 1,       /* has done the post-closed part */
+>>  		mpc_drop : 1,	    /* the MPC option has been dropped in a rtx */
+>> -		__unused : 8;
+>> +		__unused : 9;
+>>  	bool	data_avail;
+>>  	bool	scheduled;
+>>  	bool	pm_listener;	    /* a listener managed by the kernel PM? */
+>> +	bool	fully_established;  /* path validated */
+>>  	u32	remote_nonce;
+>>  	u64	thmac;
+>>  	u32	local_nonce;
 > 
-> Since this mptcp_pm_nl_dump_addr() may be called repeatedly when the
-> dump information is very long. We only copy it the first time it is
-> called, and subsequent calls cannot copy it again. WDYT?
+> ...
+> 
+>> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+>> index 6170f2fff71e4f9d64837f2ebf4d81bba224fafb..860903e0642255cf9efb39da9e24c39f6547481f 100644
+>> --- a/net/mptcp/subflow.c
+>> +++ b/net/mptcp/subflow.c
+>> @@ -800,7 +800,7 @@ void __mptcp_subflow_fully_established(struct mptcp_sock *msk,
+>>  				       const struct mptcp_options_received *mp_opt)
+>>  {
+>>  	subflow_set_remote_key(msk, subflow, mp_opt);
+>> -	subflow->fully_established = 1;
+>> +	WRITE_ONCE(subflow->fully_established, true);
+>>  	WRITE_ONCE(msk->fully_established, true);
+>>  
+>>  	if (subflow->is_mptfo)
+>> @@ -2062,7 +2062,7 @@ static void subflow_ulp_clone(const struct request_sock *req,
+>>  	} else if (subflow_req->mp_join) {
+>>  		new_ctx->ssn_offset = subflow_req->ssn_offset;
+>>  		new_ctx->mp_join = 1;
+>> -		new_ctx->fully_established = 1;
+>> +		WRITE_ONCE(new_ctx->fully_established, true);
+>>  		new_ctx->remote_key_valid = 1;
+>>  		new_ctx->backup = subflow_req->backup;
+>>  		new_ctx->request_bkup = subflow_req->request_bkup;
+> 
+> My understanding is that 1) fully_established is now a single byte and
+> 2) WRITE_ONCE is not necessary for a single byte, as if I understand Eric's
+> comment in [1] correctly, tearing is not possible in this case.
 
-Sorry, I'm not sure to understand. Here, I did a local copy of
-'id_bitmap' just to keep a certain consistency if the bitmap is changed
-during the RCU read section below: not to have this bitmap being changed
-during the for loop here below. Before, we had this protection because
-pernet->lock was held.
+Good point, I appreciate this note, I didn't realise it was always not
+necessary to use it for a single byte!
 
-Are you suggesting here to keep a copy in the cb, not a local one, to do
-the copy only once? Are you sure it is worth it (and safe)?
+Just to be sure: is it an issue to keep them?
 
->>  
->> -	spin_lock_bh(&pernet->lock);
->> +	rcu_read_lock();
->>  	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
->> -		if (test_bit(i, pernet->id_bitmap)) {
->> -			entry = __lookup_addr_by_id(pernet, i);
->> +		if (test_bit(i, id_bitmap)) {
->> +			entry = __lookup_addr_by_id_rcu(pernet, i);
->>  			if (!entry)
->>  				break;
->>  
+I mean: here, we are not in the fast path, and I think it "feels" better
+to see WRITE_ONCE() being used when all the readers use READ_ONCE(). Do
+you see what I mean? Not to have to think "strange, no WRITE_ONCE() here
+; oh but that's fine here because it is a single byte when I look at its
+definition".
+
+Also, many other single byte variables in MPTCP structures are being
+used with WRITE_ONCE(): "msk->fully_established" (used just above), but
+also the other booleans declared above the new one in the subflow
+context structure, and in other structures declared in protocol.h.
+
+(Note that WRITE_ONCE() could also be a NOOP when used with a single
+byte to keep the consistency, if it is always useless in this case.)
+
 Cheers,
 Matt
 -- 
