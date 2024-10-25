@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D205220D51B
-	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 15:17:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B190E21A4BB
+	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 15:26:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729869450; cv=none; b=NOc/gMk5xgXGzA4KJG+BK3fGBT52kojlPzEYSQbJTP5cQHP+iCBZ21ow1i0hEB/Rf5+kvjwFIZQD28M5nyg/idiYB9PaEyBSAVanimHDpTnxLu0BtP1N55tApnRb3QahwThM94P4mByZ3w9/nEbQXFsFAlykMGbF+RGapCfOeCQ=
+	t=1729870009; cv=none; b=Z9zvZZ2IIuVesb6i2hxG330awL+N2jyXnPHAgwq6Fa0e5LrEYSPIHvkGzOW7mLis144b2Uxf9aC6hMQgkgXpagupg0BlnB/TFVL9OLlpj53hnLNnqstrEWUNHD21/F434IWIIjLf6pyLv7R109NQCI9MfRSCVxB7mRgOlxdGHCY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729869450; c=relaxed/simple;
-	bh=urfwP4uGmdRBzVymv5IfBHNWNqc7pqQaJUTDp03a5tM=;
+	s=arc-20240116; t=1729870009; c=relaxed/simple;
+	bh=Tq4NRwP1OhYsfT6k2oMrKq8ECS66eXRRkxu5+shtEXQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lhIJlhTboX9tLrmrS98c/+4Z6qwXu4HUYABbwKijW5TZyL3/kixe6a3+9uuzdJnYn934ibzmPsBTyqvg4C4PVYmeVMUqy0fm3onzlZXMCwT+384BuQgZF1dLNxmXePwoJGUORoQJQWgGsWvbslWg0VpmyEpq52JjKvT4Qr7x/h8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QpyqBHiR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Wvu7r1euibZCIDd33h6vpjdgt2OsOdujkKvC/zB5nnhGBCZT/cNUplNi5Vyt0pNFd5c6Wm+gkg31ML6satNnFdv/IH0pCeCOSxkBFZirFN7Gy3kaIJydxs5TNryVyTcCDFxrP9jnV332x3KpA6J15BdLpStZZTY8jV2hZyje4/Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Amcqb9Y7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QpyqBHiR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7622C4CEC3;
-	Fri, 25 Oct 2024 15:17:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Amcqb9Y7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61ECEC4CEC3;
+	Fri, 25 Oct 2024 15:26:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729869450;
-	bh=urfwP4uGmdRBzVymv5IfBHNWNqc7pqQaJUTDp03a5tM=;
+	s=k20201202; t=1729870009;
+	bh=Tq4NRwP1OhYsfT6k2oMrKq8ECS66eXRRkxu5+shtEXQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QpyqBHiRreMPPw6gNh6ec5s7n+TjffglpAOlx40rQSeRC98HGG6IY+4frB1AHkMKw
-	 Y3n+MtvlBC3zqPiX7ZPRRzwK5dB+frpxLZtLkgFY0Ur3nfS7DLzUPlUCty+3uWrLt5
-	 J36OWV0cxTAXSnuBzxL6+BnWiykUIiypXwiBKp3NsbUBH2DKXjMagvc0zqGo5POEzx
-	 KK0LmoB+Z6MKFovsBNgrYVxwic7WYqo4ONEmKDjLpx2Y/rw2I0aAy61hZdiFPd7pIa
-	 i5YiXUuga/6XL/P0hbBSztCFIqmSPv+cPbC7+PFYMtR9GDtLuXIPEV8H9uH4Za/k9r
-	 XLXQmfAGBJr/w==
-Message-ID: <3bc0cbec-e8d8-4981-8318-14976170d58e@kernel.org>
-Date: Fri, 25 Oct 2024 17:17:27 +0200
+	b=Amcqb9Y7BzPd2/HHzkYTlCzYheSVWWV3Qs9h1GkBLXN8f8hYgyy9rl+Qp5xThOTZb
+	 j6bTUkcrSNBDPtmqGmDU31EbR1MeTdtckLmDzja8WwLD+itKMfD/xLMOXJaAn3jAs5
+	 xnfbSnqsJ1hx3xtJYb0T2DvY1BJpBvL7oCEuF2gnaQak7qt58/vMuRQAvI8puofKOu
+	 IbL+NsmwI6GfBng3xnZ+OJK9kP9nYqYRemRQS/aDkFsDdKezurEz5rRbGpRPO+lgu5
+	 4mu5ZBHMDxISW25IAa6LCzjCWS56jo4u5Ov7imh6RwwX3cIc+kKINfBUCE9GghZVTP
+	 aMZPtZXWdDepg==
+Message-ID: <b303b3d0-1c0a-4c0a-8031-77023a2de005@kernel.org>
+Date: Fri, 25 Oct 2024 17:26:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,10 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v2 2/3] mptcp: pm: lockless list traversal
 Content-Language: en-GB
-To: mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>
 References: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
  <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
+ <48c030b9f5156dddec50e8727062b8350a53f8a0.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,78 +87,94 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
+In-Reply-To: <48c030b9f5156dddec50e8727062b8350a53f8a0.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-On 25/10/2024 11:32, Matthieu Baerts (NGI0) wrote:
-> In a few places -- to get an endpoint, dump all of them, and change
-> their flags -- the list is iterated while holding the pernet->lock, but
-> only to read the content of the list. In these cases, we can replace the
-> spin locks, by RCU read ones, and use the _rcu variants to iterate over
-> the entries list in a lockless way.
-> 
-> To make it clear, the lookup helpers using the _rcu variant are renamed
-> with a _rcu suffix. The previous __lookup_addr() helper can then be
-> removed, but __lookup_addr_by_id() is still needed.
-> 
-> While at it, the IDs bitmap is copied before iterating the list to dump
-> the different addresses, to avoid any consistencies.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Notes:
->  - This is not a fix, a small improvement for -next.
-> ---
->  net/mptcp/pm_netlink.c | 36 +++++++++++++++++++-----------------
->  1 file changed, 19 insertions(+), 17 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index a93b9b7776b48781a883673fe5fd521a978487ff..f38e1ccd34e95cd88b179a8b50e6965731542871 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -520,12 +520,12 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
->  }
->  
->  static struct mptcp_pm_addr_entry *
-> -__lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
-> +__lookup_addr_by_id_rcu(struct pm_nl_pernet *pernet, unsigned int id)
->  {
->  	struct mptcp_pm_addr_entry *entry;
->  
-> -	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-> -		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
-> +	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+Hi Geliang,
 
-I didn't see the following in the RCU doc -- but it is quite big, so I
-probably missed it -- but I suppose we don't need to keep the two
-helpers here with and without the _rcu variant (__lookup_addr_by_id())
-if here we add an extra lockdep condition:
+Thank you for the review!
 
-  list_for_each_entry_rcu(entry, &pernet->local_addr_list, list,
-                          lockdep_is_held(&pernet->lock)) {
-
-WDYT?
-
-> +		if (entry->addr.id == id)
->  			return entry;
->  	}
->  	return NULL;
+On 25/10/2024 16:25, Geliang Tang wrote:
+> On Fri, 2024-10-25 at 11:32 +0200, Matthieu Baerts (NGI0) wrote:
+>> In a few places -- to get an endpoint, dump all of them, and change
+>> their flags -- the list is iterated while holding the pernet->lock,
+>> but
+>> only to read the content of the list. In these cases, we can replace
+>> the
+>> spin locks, by RCU read ones, and use the _rcu variants to iterate
+>> over
+>> the entries list in a lockless way.
+>>
+>> To make it clear, the lookup helpers using the _rcu variant are
+>> renamed
+>> with a _rcu suffix. The previous __lookup_addr() helper can then be
+>> removed, but __lookup_addr_by_id() is still needed.
+>>
+>> While at it, the IDs bitmap is copied before iterating the list to
+>> dump
+>> the different addresses, to avoid any consistencies.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Notes:
+>>  - This is not a fix, a small improvement for -next.
+>> ---
+>>  net/mptcp/pm_netlink.c | 36 +++++++++++++++++++-----------------
+>>  1 file changed, 19 insertions(+), 17 deletions(-)
+>>
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index
+>> a93b9b7776b48781a883673fe5fd521a978487ff..f38e1ccd34e95cd88b179a8b50e
+>> 6965731542871 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
 
 (...)
 
-> @@ -1872,16 +1872,18 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
->  	struct net *net = sock_net(msg->sk);
->  	struct mptcp_pm_addr_entry *entry;
->  	struct pm_nl_pernet *pernet;
-> +	unsigned long id_bitmap[4];
+>> @@ -1872,16 +1872,18 @@ int mptcp_pm_nl_dump_addr(struct sk_buff
+>> *msg,
+>>  	struct net *net = sock_net(msg->sk);
+>>  	struct mptcp_pm_addr_entry *entry;
+>>  	struct pm_nl_pernet *pernet;
+>> +	unsigned long id_bitmap[4];
+>>  	int id = cb->args[0];
+>>  	void *hdr;
+>>  	int i;
+>>  
+>>  	pernet = pm_nl_get_pernet(net);
+>> +	bitmap_copy(id_bitmap, pernet->id_bitmap,
+>> MPTCP_PM_MAX_ADDR_ID + 1);
+> 
+> I think the id bitmap should only be copied when id is 0:
+> 
+> if (!id)
+>   bitmap_copy(id_bitmap, pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+> 
+> Since this mptcp_pm_nl_dump_addr() may be called repeatedly when the
+> dump information is very long. We only copy it the first time it is
+> called, and subsequent calls cannot copy it again. WDYT?
 
-Oops, I left my temp declaration, it should be the following line, which
-will result in the same thing anyway on x86_64, no need to re-run the
-tests → I can fix that when applying the patches, or in a future version:
+Sorry, I'm not sure to understand. Here, I did a local copy of
+'id_bitmap' just to keep a certain consistency if the bitmap is changed
+during the RCU read section below: not to have this bitmap being changed
+during the for loop here below. Before, we had this protection because
+pernet->lock was held.
 
-  DECLARE_BITMAP(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+Are you suggesting here to keep a copy in the cb, not a local one, to do
+the copy only once? Are you sure it is worth it (and safe)?
 
+>>  
+>> -	spin_lock_bh(&pernet->lock);
+>> +	rcu_read_lock();
+>>  	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
+>> -		if (test_bit(i, pernet->id_bitmap)) {
+>> -			entry = __lookup_addr_by_id(pernet, i);
+>> +		if (test_bit(i, id_bitmap)) {
+>> +			entry = __lookup_addr_by_id_rcu(pernet, i);
+>>  			if (!entry)
+>>  				break;
+>>  
 Cheers,
 Matt
 -- 
