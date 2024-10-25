@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48DB61D356E
-	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 09:32:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58FC41CB9F6
+	for <mptcp@lists.linux.dev>; Fri, 25 Oct 2024 09:32:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1729848774; cv=none; b=iqjzRfQwPHGDI8ta7sB1IF37HJYLwkSpDTtLz6QezNJM11K1rtyoTJrV/mYkXYQW6WpogUf0/vmxjPdIB4zJrSPI7oY8Uh73NybfrFjmGPzNCP7mj2Sy9qR97iMkNKl4yY+QYEWVyM/8CFgXg4XcRdTxgNBISsJGFFqRByLrVDo=
+	t=1729848775; cv=none; b=JvBqBuDxSURm9AvaQGt76cWxRj5FHApYll8tkIW1WJ4L2kL07+uZwe4+pQcSFFA8c6IJvI61qrJXi/PcTS7Bd/zyZiY5gd+4Y4CcMU/ICccYgZytxVTVv/+anes0gM8augVlzIWgip7EsM1WF+DJdvQkWo98iikxBvBAvf06Wn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1729848774; c=relaxed/simple;
-	bh=pe0ozo/m4xULdH9orv2JKinsOrPLim+Ex/qUym0rLrs=;
+	s=arc-20240116; t=1729848775; c=relaxed/simple;
+	bh=MKdNsixnE0//0EK+oCzvPayH9T7YIceGSZoLgh00jSE=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p7Ch4cRV09Z2AV/yvc1zFKA0YSu+RTmlRzwS/nD69jPHWLDK8zAfoudTqqUtiWx2jhJyWrMN/r21R1ALBxTSn4hT3Koip3cKk12oTXMeSGIEguymuNv8K8kfy0r2pRYX44/KHEhyXqeEeaU9a+SlzYL2T/X2fXdFUZirR9U9dWY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rI2nByDP; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=ou3SeABE37i3k1+Nih6Jf6G5rxguXpRGzBqX6MpH/yz+hbR8cKl+dPBnT6qp9r+1BGuai9ZBfHHXYa292EsGWf1O/yLZqWY9DGZiicgOphWgO3CT18Vj6wKPaV3aLde6rB3+m7Y7Jx/qhFwfsZ4QGJ2+O8XRiS3yNtwRz4R48BE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uVOcbko+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rI2nByDP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D06BC4CEE7;
-	Fri, 25 Oct 2024 09:32:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uVOcbko+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4D103C4CECD;
+	Fri, 25 Oct 2024 09:32:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1729848773;
-	bh=pe0ozo/m4xULdH9orv2JKinsOrPLim+Ex/qUym0rLrs=;
+	s=k20201202; t=1729848775;
+	bh=MKdNsixnE0//0EK+oCzvPayH9T7YIceGSZoLgh00jSE=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=rI2nByDPeYGZd8hz4KbZasbSOlldh0O9PQlCKcRQnUihkyPC5h2GiHrH7te10kkoS
-	 xZtt0rwwqqfRAtwjeMCyrhf69BbJjtF2Z4x9+aTO9VhsiyaTV5zlYZ70ojYZi1U+HH
-	 +eNQv9Smpi9/Lz19Ny8K9AhWsDaegNxiuBkmRkm4RWrm/KKPVrpjnJVNWpj6DPsKgG
-	 JzUuGO+Lp54vSlHD/mttQ+AUlsKeR7njp2q1CAaCZjrpipjRZqIXOMY58IVXBdVNK7
-	 3qjPEOGeRk2CLTVbOyL2xJpxtgnUYoqb892Ij40UXPbecnFBWdluqpnjelHKgxUaTW
-	 kvxTpRg/0FO+A==
+	b=uVOcbko+18EEO5W1RmhFAcZYMNVr3RH0vXnk0/XrkGmO5EuaVfBHMAGobjynIQVsx
+	 yd7NUFY+K0g6lTAiBaX8QglqRqbl1FzZbFKT2D5uSoXGe9ETZMAU8GYQWxeUJDDkpE
+	 P+44EhbHGvqqV6o3t2yyb5HWYJ3lNi3MLBim+Jxhfhbutg0Ei5zBJOr11cn6AHHjWi
+	 gl1gDu71CkCW7I5AbVnTKfSlsnaypVqRHCWMW8MmgswSgxW++7SeR/wZOizGs5fVoV
+	 dORS5dtZsDceZ/YzRqje3KXc0PoG3mGpupJ209hwcoNcG4DHQQc3/iUmGjCs5+OtTt
+	 SLUWEvm3kEKWA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 25 Oct 2024 11:32:30 +0200
-Subject: [PATCH mptcp-net v2 2/3] mptcp: pm: lockless list traversal
+Date: Fri, 25 Oct 2024 11:32:31 +0200
+Subject: [PATCH mptcp-net v2 3/3] mptcp: pm: avoid code duplication to
+ lookup endp
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,159 +38,91 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
+Message-Id: <20241025-mptcp-pm-lookup_addr_rcu-v2-3-1478f6c4b205@kernel.org>
 References: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
 In-Reply-To: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4532; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=pe0ozo/m4xULdH9orv2JKinsOrPLim+Ex/qUym0rLrs=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnG2XCE6q5DSbhHdp5/RJ3uYMBZYsNP19UFWnll
- KZH9yq5xdqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxtlwgAKCRD2t4JPQmmg
- cxrtD/4pC8G1SWeVVX6GdIxSxAA0xUaRfb5mLG7HrU9b1tvKn0x+8K5nJVi1yuYw8MmT6X3aHxd
- X8vyC8GgxwJk3zXosPVn9fOyUtPtNNnuMwtKnAqzVs0W7WbxANROmtxrqcTeefMJxKiTnteWMnV
- Iu5X1jC/Vs74+84NO1hY0nHJb0V02ooONuAY4+99YpGKTCamyFAfeyCIndQmDlxzh0u1Bc7SL14
- TmNis40CYuemAf2FpvPaZ3F9re/zYtQ/Zt5sO/H8pz08Yvz3vIs16VXetFbaEDLv/SeBkQ8IhJZ
- bK4hiRM+N2wdMMC5qUSWR0aJSEMK2X1OkanASZqadIoG2QvVF199ogCTfrTo0S+LsHVG+fbHd3P
- wLs5X2tj4ARgYtoOxbMozLHztgc3YbpmcCRE22CDwteMTwZ+JfuUqTf6CVMuFyt3B8CKT7Vya1k
- 1s59KTVzsbapF7iKDchcFjkH/mEZEaqumQS+Oo8i2xMRikIs/qFEU7UhOLbmdWkbH/elsKwsDc1
- yzZR9SaR/kCk/NcuTex/9Wcc58B9WfYYE9cq7nhEkBfh1+IfgzWg/CuP1UoNEVGwMzCY+k5QIYI
- 53DiSy66FI0OYwunhpCqKdh7tF1bKXb8Af9zZy4adOc6MeN7tmo6k1V6HanLAqrolRX70CS2s/j
- 47JKRc1mO01bD0g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1968; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=qN92RkiNi/OxsiAmYdeZ53c4pXGuGE8QPi9XPouJqxo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnG2XC2PAR/k8VRNFTiWCaA5OQmTq6eWKEQfhNT
+ LdUJH0OIn+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZxtlwgAKCRD2t4JPQmmg
+ c55VEADYQ5LeVoGUrqLGjPoO6rJDQCdDafZ9t0K3Sn3fP8VRkSqqJa3sA70BRYtu7fgjIPOxC6h
+ mILOca9HXc06XYIdQsQVnm4QsJktvGZcWx4BED6AIOKgZIEtoxBddvIqfqF5iA/7Gwahm9tsTS5
+ DovFWJK8RFqg/DN5KkKInFcLML2H3k1I6UKOcVuAgrQfWZUz1mFe85n8yy/1bYIq6qbGePiYAun
+ nGT7L3HOTOnlQVjV+pByYoIkDn5hDclKJSdl1MT/TYb/bmJf0I9Jro5tICEj0lwHDe7UGD78vTV
+ wtoOJGFabM9/D3Kn9fDSHr/3V7aMNupFUhsnJW7wi1NwRzwMKT1k3nzjWNqtQlD/dK5vs0MTLi9
+ +BEkwWJQjW4zfp59f+jUitMItQQCIscjOrxOG1N6mCYgNTq3mzz0KpezUTl1OmzUQqyNKrlIjSQ
+ XFvxcmBCdg83SkSX4CAsEzQ9nvFBWJSWxPw18zfPPDmk9qkEc9tdSffy4MSrK4k5Nw7BCkb6VqV
+ ojV29W1KUWgP+dO8Kl5hAU5zrY+omcdQ9t0utcvqbYshwDmNXUUfy22G149BPGDftycIprIMpvd
+ PaQIewVcCxjx1Y3EfELXXjekCh3AXRehp0wanB8ThkMiHP0pqdR254NOIhvp62yRBO9xMwVWCak
+ lCWK+XqUtoXHI2Q==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-In a few places -- to get an endpoint, dump all of them, and change
-their flags -- the list is iterated while holding the pernet->lock, but
-only to read the content of the list. In these cases, we can replace the
-spin locks, by RCU read ones, and use the _rcu variants to iterate over
-the entries list in a lockless way.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To make it clear, the lookup helpers using the _rcu variant are renamed
-with a _rcu suffix. The previous __lookup_addr() helper can then be
-removed, but __lookup_addr_by_id() is still needed.
+The helper __lookup_addr_rcu() can be used in mptcp_pm_nl_get_local_id()
+and mptcp_pm_nl_is_backup() to simplify the code, and avoid code
+duplication.
 
-While at it, the IDs bitmap is copied before iterating the list to dump
-the different addresses, to avoid any consistencies.
-
+Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
 Notes:
- - This is not a fix, a small improvement for -next.
+ - This is also for -next.
 ---
- net/mptcp/pm_netlink.c | 36 +++++++++++++++++++-----------------
- 1 file changed, 19 insertions(+), 17 deletions(-)
+ net/mptcp/pm_netlink.c | 20 ++++++--------------
+ 1 file changed, 6 insertions(+), 14 deletions(-)
 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index a93b9b7776b48781a883673fe5fd521a978487ff..f38e1ccd34e95cd88b179a8b50e6965731542871 100644
+index f38e1ccd34e95cd88b179a8b50e6965731542871..7c6e664b236d1659a554d003c78c72ec91895ba5 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -520,12 +520,12 @@ __lookup_addr_by_id(struct pm_nl_pernet *pernet, unsigned int id)
- }
- 
- static struct mptcp_pm_addr_entry *
--__lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
-+__lookup_addr_by_id_rcu(struct pm_nl_pernet *pernet, unsigned int id)
+@@ -1154,17 +1154,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
  {
  	struct mptcp_pm_addr_entry *entry;
- 
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
-+	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
-+		if (entry->addr.id == id)
- 			return entry;
- 	}
- 	return NULL;
-@@ -1836,8 +1836,8 @@ int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
- 		goto fail;
- 	}
- 
--	spin_lock_bh(&pernet->lock);
--	entry = __lookup_addr_by_id(pernet, addr.addr.id);
-+	rcu_read_lock();
-+	entry = __lookup_addr_by_id_rcu(pernet, addr.addr.id);
- 	if (!entry) {
- 		GENL_SET_ERR_MSG(info, "address not found");
- 		ret = -EINVAL;
-@@ -1850,11 +1850,11 @@ int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
- 
- 	genlmsg_end(msg, reply);
- 	ret = genlmsg_reply(msg, info);
--	spin_unlock_bh(&pernet->lock);
-+	rcu_read_unlock();
- 	return ret;
- 
- unlock_fail:
--	spin_unlock_bh(&pernet->lock);
-+	rcu_read_unlock();
- 
- fail:
- 	nlmsg_free(msg);
-@@ -1872,16 +1872,18 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 	struct net *net = sock_net(msg->sk);
- 	struct mptcp_pm_addr_entry *entry;
  	struct pm_nl_pernet *pernet;
-+	unsigned long id_bitmap[4];
- 	int id = cb->args[0];
- 	void *hdr;
- 	int i;
+-	int ret = -1;
++	int ret;
  
- 	pernet = pm_nl_get_pernet(net);
-+	bitmap_copy(id_bitmap, pernet->id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+ 	pernet = pm_nl_get_pernet_from_msk(msk);
  
--	spin_lock_bh(&pernet->lock);
-+	rcu_read_lock();
- 	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
--		if (test_bit(i, pernet->id_bitmap)) {
--			entry = __lookup_addr_by_id(pernet, i);
-+		if (test_bit(i, id_bitmap)) {
-+			entry = __lookup_addr_by_id_rcu(pernet, i);
- 			if (!entry)
- 				break;
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+-		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
+-			ret = entry->addr.id;
+-			break;
+-		}
+-	}
++	entry = __lookup_addr_rcu(pernet, skc);
++	ret = entry ? entry->addr.id : -1;
+ 	rcu_read_unlock();
+ 	if (ret >= 0)
+ 		return ret;
+@@ -1191,15 +1187,11 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+ {
+ 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+ 	struct mptcp_pm_addr_entry *entry;
+-	bool backup = false;
++	bool backup;
  
-@@ -1903,7 +1905,7 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 			genlmsg_end(msg, hdr);
- 		}
- 	}
--	spin_unlock_bh(&pernet->lock);
-+	rcu_read_unlock();
+ 	rcu_read_lock();
+-	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
+-		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
+-			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+-			break;
+-		}
+-	}
++	entry = __lookup_addr_rcu(pernet, skc);
++	backup = entry && !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+ 	rcu_read_unlock();
  
- 	cb->args[0] = id;
- 	return msg->len;
-@@ -2060,17 +2062,17 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
--	spin_lock_bh(&pernet->lock);
--	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
--			       __lookup_addr(pernet, &addr.addr);
-+	rcu_read_lock();
-+	entry = lookup_by_id ? __lookup_addr_by_id_rcu(pernet, addr.addr.id) :
-+			       __lookup_addr_rcu(pernet, &addr.addr);
- 	if (!entry) {
--		spin_unlock_bh(&pernet->lock);
-+		rcu_read_unlock();
- 		GENL_SET_ERR_MSG(info, "address not found");
- 		return -EINVAL;
- 	}
- 	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
--		spin_unlock_bh(&pernet->lock);
-+		rcu_read_unlock();
- 		GENL_SET_ERR_MSG(info, "invalid addr flags");
- 		return -EINVAL;
- 	}
-@@ -2078,7 +2080,7 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	changed = (addr.flags ^ entry->flags) & mask;
- 	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
- 	addr = *entry;
--	spin_unlock_bh(&pernet->lock);
-+	rcu_read_unlock();
- 
- 	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
- 	return 0;
+ 	return backup;
 
 -- 
 2.45.2
