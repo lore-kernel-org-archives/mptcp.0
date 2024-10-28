@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 318691F4FA9;
-	Mon, 28 Oct 2024 23:00:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CB78200B88;
+	Mon, 28 Oct 2024 23:00:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730156426; cv=none; b=g92tE+fXXat+Cp3hfcW4XlJIDC6HA7jXbZH9kO0BwGsAHtNtQQ9WWEOo+iqf6yC3mbs/RjSomBX7wQGXrod4vLUfECm3uchs+qAzjngbdct5V59m2jvVsYo8BlIfPvNQs27b7oDpyb76p2uIL18CsCAYP/PwK+sKOrWLWh53lIg=
+	t=1730156433; cv=none; b=h07dzHE1j2itNjoegPWPhB7/nvr4fiy9JKYPhJAyaruZW7qhEyPEn4q43bNmKKGsKpgbSt94tjWHelEKv/SEv/4HE7m/ajLHKN/q07JKoOyD7/tYC7A3OfJWSlm5d1ekevXHmWu7d/FvpuzMukehx0Hifs4CyfGMOkJBr8kxP6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730156426; c=relaxed/simple;
-	bh=cg9CZXqHngvKMWowCf81kXPpkp+T2UCnj7qICB56XI0=;
+	s=arc-20240116; t=1730156433; c=relaxed/simple;
+	bh=GmaFwd1bU7p8CTe5kTFK1oVgCOqvgOs0dkvkJP3wm7I=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=kSUoSk2xo2Jp6TGTdZynshfdCxzhlLznslYfInuASdGJZz6DQyYrQXf/RWAxWVfU+rBAElDfpHjJpq7KWIapu/hCy9gFv6Uonai2PWNrFQjLS/Y4Duu0Tlo1EzQV8RA10kNYdMMdMTWuPk9x5gKxkbVx7/CzCHz26wZxMj++KqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AzO9N6g9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=U72XbYMgLRT3hjwrXfvRn5Jq/vYvDLihHv12rV3Nx1t1P9eAhXDJrhUY7D0xtj7m1JPUOhZRFPRApFDDnTP9lp2ExoF0JqT8gfnNXwwlRVLsulYx4b7kTw3cwnWCN+XRgj2TDj9j5JyAvezWzdR4ciLKQCmtjgMO6gXnTMM2Fxs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tZmwo9uT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AzO9N6g9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C096EC4CEC3;
-	Mon, 28 Oct 2024 23:00:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tZmwo9uT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A41BC4CEC3;
+	Mon, 28 Oct 2024 23:00:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730156425;
-	bh=cg9CZXqHngvKMWowCf81kXPpkp+T2UCnj7qICB56XI0=;
+	s=k20201202; t=1730156433;
+	bh=GmaFwd1bU7p8CTe5kTFK1oVgCOqvgOs0dkvkJP3wm7I=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=AzO9N6g9xskN/S0YcPwYiu08rM+y7jxPahRx3MAioobtQU+jZMuJdb5F+xdZmeBcp
-	 k1Fu+zXFQqGQlmcB2fOTG464Qt4PyLGPqpCqKH/9mW5hYYLauYPYsjmzTv7v7vQocv
-	 I7Lo6sDsEXGnSzKgSYjuIKwh531clJmSrt7jgNI9T2dyHf3MNwaVjFRiguKF/m1o9b
-	 gGBGarLYZ0tU2aHIr0ZfOI9+WBGRMu//++R7THijbg4F/RinlClLuqPWsPOkWXcZbP
-	 VOOlu3fMmOwel23FWCPR4LHXxKefe3YnX+dErH+cQy3vNHVSPo2Hbdp/qDm6odxumH
-	 D138uoxCN6Sng==
+	b=tZmwo9uTYDHZjvLdQIfSbjFepLeWsO3+Dy831Op1/NHM+85HMRAJyjomcdqVPmk3l
+	 L2ANn0RQCav2TAkskjS6IfelxZ0nwsnZcQRtEB1yz9fKFXf8su52txaOgYZACFGyFR
+	 wvG9f10ADDhf3PHNitcPVckWPoUARo0LoMWifeNUPIMmF6BcL+QjWAjCwvlaq8fT3v
+	 EWN/lh2q2nAEQORtmLZpI2HrhZk0eP0plWIFGfBE7Gg9CYoZ5LnKDftK6Wq+A6ZrQf
+	 Bw1JheFu7IPGGQUWjr6DZgocdwyqEpJrdelcVBuGs1ApuJDGLh7IzNR7nXFIOlfu+O
+	 hQdMAkvGwzUxA==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7100A380AC1C;
-	Mon, 28 Oct 2024 23:00:34 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB2C1380AC1C;
+	Mon, 28 Oct 2024 23:00:41 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,42 +37,44 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] mptcp: sched: fix some lock issues
+Subject: Re: [PATCH net-next 0/4] mptcp: various small improvements
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <173015643324.206744.11515451937132958633.git-patchwork-notify@kernel.org>
-Date: Mon, 28 Oct 2024 23:00:33 +0000
-References: <20241021-net-mptcp-sched-lock-v1-0-637759cf061c@kernel.org>
-In-Reply-To: <20241021-net-mptcp-sched-lock-v1-0-637759cf061c@kernel.org>
+ <173015644054.206744.1312496729926430347.git-patchwork-notify@kernel.org>
+Date: Mon, 28 Oct 2024 23:00:40 +0000
+References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
+In-Reply-To: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
  davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, gregory.detal@gmail.com, shuah@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, stable@vger.kernel.org
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, yangang@kylinos.cn,
+ dcaratti@redhat.com
 
 Hello:
 
-This series was applied to netdev/net.git (main)
+This series was applied to netdev/net-next.git (main)
 by Jakub Kicinski <kuba@kernel.org>:
 
-On Mon, 21 Oct 2024 12:25:25 +0200 you wrote:
-> Two small fixes related to the MPTCP packets scheduler:
+On Mon, 21 Oct 2024 17:14:02 +0200 you wrote:
+> The following patches are not related to each other.
 > 
-> - Patch 1: add missing rcu_read_(un)lock(). A fix for >= 6.6.
+> - Patch 1: Avoid sending advertisements on stale subflows, reducing
+>   risks on loosing them.
 > 
-> - Patch 2: remove unneeded lock when listing packets schedulers. A fix
->   for >= 6.10.
+> - Patch 2: Annotate data-races around subflow->fully_established, using
+>   READ/WRITE_ONCE().
 > 
 > [...]
 
 Here is the summary with links:
-  - [net,1/3] mptcp: init: protect sched with rcu_read_lock
-    https://git.kernel.org/netdev/net/c/3deb12c788c3
-  - [net,2/3] mptcp: remove unneeded lock when listing scheds
-    (no matching commit)
-  - [net,3/3] selftests: mptcp: list sysctl data
-    https://git.kernel.org/netdev/net/c/5513dc1d8fec
+  - [net-next,1/4] mptcp: pm: send ACK on non-stale subflows
+    https://git.kernel.org/netdev/net-next/c/a42f3076648e
+  - [net-next,2/4] mptcp: annotate data-races around subflow->fully_established
+    https://git.kernel.org/netdev/net-next/c/581c8cbfa934
+  - [net-next,3/4] mptcp: implement mptcp_pm_connection_closed
+    https://git.kernel.org/netdev/net-next/c/5add80bfdc46
+  - [net-next,4/4] mptcp: use "middlebox interference" RST when no DSS
+    https://git.kernel.org/netdev/net-next/c/46a3282b87b1
 
 You are awesome, thank you!
 -- 
