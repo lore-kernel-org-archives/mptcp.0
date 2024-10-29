@@ -1,115 +1,68 @@
-Received: from out-179.mta1.migadu.com (out-179.mta1.migadu.com [95.215.58.179])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE4BD2076A2
-	for <mptcp@lists.linux.dev>; Tue, 29 Oct 2024 19:36:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 723D020ADE6;
+	Tue, 29 Oct 2024 23:50:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730230584; cv=none; b=qFiIS2zgewLrU4Y2sbkQ8XcUaFe88DXEBrPH3UJmJwKkAa2DCEEXU9js5Ec5EJIHp0hWhmIWoyrgMgLisj/yCHrcC+sWklHY8k/HNyeyXhCKnksVNpPd/RLUw1+deHWTLha5EmPuUx/684IM4xNf0YLl2lURhz04WlPQMADJqVM=
+	t=1730245818; cv=none; b=YlU/VYjabilY9qAJyfR1B+WX8EIJeBsKDKI0Dcr5e1c751HMgJqkGeqHzv+VcB+lONYNn6QeJQdYD40oDcJNfgJRujGd8EP0cT2VuA6IvmjL+csl5Dq/HBJ2UNEdeX+B7vGIu26xkTkIOsakTqnrFTsEpi9wgyRg7M74IzXbHWk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730230584; c=relaxed/simple;
-	bh=RwWoWVgaDpPPX60vTGGSi501SyjRryOxD96ACvk1Ufc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VCuMTZdmpqubOgVA+k63Hvi6pM+gM5bwHHXHJKM3hqks5ifLfrJrQkscyjTRFUroqpycpHtKPPoUayEip8I5C4R4+OYSxThCO6BViLGtg7qBkE43qyozmAPm51EfJzEDM28XytX1M9Ua1dPqxlTIprdgplDtwU9AFDqT1YyAo+4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=chyg9Pjg; arc=none smtp.client-ip=95.215.58.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1730245818; c=relaxed/simple;
+	bh=yCR2Z+Z6hYhzHCaXbkJsDBqya3WiyH2zWb5yh5pkiLE=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=BUxpPDmN698VjTctqOT1qoG3VccaRWv3QydyKvSStakTH8qvOdQNN41OOB2AiM9FMF0FkOgL8gaaXATZ4gc2fUc6T3CkXEhoY+dssGBxgZR9Hf2eyUZPSRqc8X4XRSbRmjXvU7LbXL3eBJH0WvUryfzNl3OX6lTr5UKuU0/gQwE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s/p4UaAK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="chyg9Pjg"
-Message-ID: <1d6b9d1d-6ce4-488b-9884-3025f06c5e3f@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1730230577;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0fdfkYeCo2M3OehFrjF+LyPfFmwW+N0QFnqT8DPIsjw=;
-	b=chyg9Pjgq1SJVlFlHn5zNxEjGIt/xyKo85vJXNJKxgpZlGt4kJT/aSMnJRwZDtILOA/oap
-	rP2TohvqW4s+Rma9KgqxLB2BahZWk8I7GZD6DB3n6drJck7syb2dmYycqGTw28D9l36bGd
-	5CW9QHgqS7DrZy7DIyxMemBxfwAh25g=
-Date: Tue, 29 Oct 2024 12:36:07 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s/p4UaAK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 985DBC4CEE3;
+	Tue, 29 Oct 2024 23:50:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730245818;
+	bh=yCR2Z+Z6hYhzHCaXbkJsDBqya3WiyH2zWb5yh5pkiLE=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=s/p4UaAKqTWNo2gEJeBaEM5GCtAXiFo+ZyY/UTsK7/ON438Gr7RKlMYS9XjmLqWO6
+	 oQ1ZozgcZJEaqWcMK2GUqM86FJvTsRRXwes+mAVE6oNnl5tREVoDus+4j0TwidUAgj
+	 5MTGJHGo8AUYHjfpEfE92ibvk53ZFShHhwDDgCCLEMuZjUFrFAUH+RChmhfi+pbV9g
+	 qTIGU9pS2cva6ZMbHny2eZ79YMuOLOrWtrMl7VM9Q8vCNJcJZckXvagh/RiTefiLzu
+	 eRwSOJTugaF0WZk9i2ajU3KfFGlZ1D0NBV5sPKS0FEEmjWpyyN+mCV8+Rl/ebbzD6A
+	 iz3RJQ63v8LCg==
+Date: Tue, 29 Oct 2024 16:50:16 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org, Gang Yan
+ <yangang@kylinos.cn>, Davide Caratti <dcaratti@redhat.com>
+Subject: Re: [PATCH net-next 0/4] mptcp: various small improvements
+Message-ID: <20241029165016.568f01bd@kernel.org>
+In-Reply-To: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
+References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] selftests/bpf: Use make/remove netns helpers in
- mptcp
-To: Geliang Tang <geliang@kernel.org>
-Cc: Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman
- <eddyz87@gmail.com>, Mykola Lysenko <mykolal@fb.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Shuah Khan <shuah@kernel.org>,
- Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, bpf@vger.kernel.org, linux-kselftest@vger.kernel.org,
- Matthieu Baerts <matttbe@kernel.org>
-References: <99e57c7470ac338da18f02ef3af5936c8b21f5a7.1729757268.git.tanggeliang@kylinos.cn>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <99e57c7470ac338da18f02ef3af5936c8b21f5a7.1729757268.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
 
-On 10/24/24 1:11 AM, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On Mon, 21 Oct 2024 17:14:02 +0200 Matthieu Baerts (NGI0) wrote:
+> The following patches are not related to each other.
 > 
-> New netns selftest helpers make_netns() and remove_netns() has been added
-> in network_helpers.c, let's use them in mptcp selftests too.
+> - Patch 1: Avoid sending advertisements on stale subflows, reducing
+>   risks on loosing them.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
->   tools/testing/selftests/bpf/prog_tests/mptcp.c | 18 ++++++++++++------
->   1 file changed, 12 insertions(+), 6 deletions(-)
+> - Patch 2: Annotate data-races around subflow->fully_established, using
+>   READ/WRITE_ONCE().
 > 
-> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> index d2ca32fa3b21..8276398f7d6a 100644
-> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-> @@ -66,12 +66,18 @@ struct mptcp_storage {
->   
->   static struct nstoken *create_netns(void)
->   {
-> -	SYS(fail, "ip netns add %s", NS_TEST);
-> -	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
-> +	struct nstoken *nstoken;
->   
-> -	return open_netns(NS_TEST);
-> -fail:
-> -	return NULL;
-> +	if (make_netns(NS_TEST) < 0)
-> +		return NULL;
-> +
-> +	nstoken = open_netns(NS_TEST);
-> +	if (!nstoken) {
-> +		log_err("open netns %s failed", NS_TEST);
-> +		remove_netns(NS_TEST);
-> +	}
-> +
-> +	return nstoken;
->   }
+> - Patch 3: A small clean-up on the PM side, avoiding a bit of duplicated
+>   code.
+> 
+> - Patch 4: Use "Middlebox interference" MP_TCPRST code in reaction to a
+>   packet received without MPTCP options in the middle of a connection.
 
-This can be further simplified by using the netns_new() and netns_free(). Then 
-create_netns() and remove_netns() can be removed from mptcp.c. Take a look at a 
-recent usage in prog_tests/btf_skc_cls_ingress.c.
-
-pw-bot: cr
-
->   
->   static void cleanup_netns(struct nstoken *nstoken)
-> @@ -79,7 +85,7 @@ static void cleanup_netns(struct nstoken *nstoken)
->   	if (nstoken)
->   		close_netns(nstoken);
->   
-> -	SYS_NOFAIL("ip netns del %s", NS_TEST);
-> +	remove_netns(NS_TEST);
->   }
->   
->   static int start_mptcp_server(int family, const char *addr_str, __u16 port,
-
+Could be a coincidence but looks like we got two flakes in mptcp-join
+since yesterday (different sub-cases). What's more sad is that it looks
+like our subcase parsing is broken, when I look at the subcase view
+all sub-cases are marked as passing :( Could you take a look?
