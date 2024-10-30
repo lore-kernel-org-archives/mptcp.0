@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC14A1BD9C1
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 17:34:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B479A1B373A
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 18:20:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730309666; cv=none; b=ZuaAfBI7/Jik3Lnw9N8JbqAg2pntrPkOyNKh+soKgY9S6V0nYYo8b795AxBw8VY+CJ1j6xMKV6Nh+KWXQPGNLh8fKhPV0M2DOk6f2ApUff6oaXokzmoV9rz6h4B8nWKFnYuC++zhxvEUSpUEsUqle33q7LSdhTqW/pKjCuZnRhc=
+	t=1730312436; cv=none; b=ux6Ny97A/OArT+wUtVpURXyPDc2e6hNwtogVsMuuQgu9X6awW6n5Y8Ppbuko9neAcm+tS/AuqlJsQtY/HdeIfmEjmo8R3/EW3RitVQNkwfAYPwA7fsE6HjSNdUh5UQ/PZG30kTyoskXdLb6j4R0P6kVJjB+ffp0fDJIRUxLBMyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730309666; c=relaxed/simple;
-	bh=9XfQxj5m2+9dvRhGPEmNUuGP1hEJSM0PH7sJ2GgEM1s=;
+	s=arc-20240116; t=1730312436; c=relaxed/simple;
+	bh=VUmo5mUrYRR29MHKka33ZKdJ8Q4Xh+PcXr/uUw8BfOw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lVPVqUKb2xbxseQCD5TArwfKc8Ba3sbYq9w+qZugpAfY0bXViRhhGmWdboJskwmPmrO02phwxz4o6d28bJ/HXYV5kpSQRQAhqB9Lin4+xd04/FCIJL+w6fvaArzyJbdJ9ZL1ewgRdQTyB1uqbgRgHNx0SqwbnGj1am9lyp2CgeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKTUPV/2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lyTva6wcnwKRqmU3w8kQjcJfrBbrRP3lvM0Jf8XIZuu70Myw6z819pjwtco4orQ8pXTYq7/LkwMVvOYSfiVaQ6Q3T9KBJGeBcZyF1+/JgLdKLcRvBsGtwvRSXTsPRZbPnqAzerZR4NDFE/iJeF93lXXxod029vB3PyQp0v6Hf7E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J6G7HYH5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKTUPV/2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E3C4CECE;
-	Wed, 30 Oct 2024 17:34:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J6G7HYH5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 683ABC4CECE;
+	Wed, 30 Oct 2024 18:20:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730309666;
-	bh=9XfQxj5m2+9dvRhGPEmNUuGP1hEJSM0PH7sJ2GgEM1s=;
+	s=k20201202; t=1730312436;
+	bh=VUmo5mUrYRR29MHKka33ZKdJ8Q4Xh+PcXr/uUw8BfOw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gKTUPV/2cAdU4NTtUG2887QSnqZaG5GxYga6V7iOmwjdNaM+w2rxo11ZfGLLibf5B
-	 XZ8PSZg9xG33kGo/WC0pCz4rgvogB2oe4+Q7Z089xmgIm8NSGVNBDt5Rnf06tyoV3N
-	 7eJ7kymWVvLG+Gu/QR/bGNNQCCrG3KTkvFKw9KVSjYYKlpCC3DLmod6xGrJChSrxES
-	 7f98PFjfOjzxA7vpEbYqErg9ukXTHD3V8K0HsEGs6/YChVE8ImvNEZqldj3k8QAC2j
-	 5HSUM/kzWPgKac5w+0r3jhmAD2rYE5LGYknuO3UA2hv1j7UcY+nDfVOuWd7uA9H120
-	 c1GLarQwdsY2A==
-Message-ID: <5952d268-5c4d-4623-b91c-44e6db4395a6@kernel.org>
-Date: Wed, 30 Oct 2024 18:34:23 +0100
+	b=J6G7HYH599JYedfwmeB043KRDGSCdDDDMQjAcSdSOzdmU6/+K7tXaZ1WDMIb9J5fl
+	 Oe1bfYyrp2AyAA1Jk0K+wRO8QJiA66VjBROeYUAk099U/c8bydiFmYYZte2SDhnxUW
+	 k2jJtmCiik26z5crpW/WuKV6z0VJfekMB/XEkC5jr8uzjCWRCaHF87VsAOlnGuWU2t
+	 +NiexSzYEqe9+y+FpOUhkrvyHsigbbvYa4e3SJ0ttxPbU4Mc5a6cdsbgM8pRlRBmS8
+	 ++QhiTObUbgLL8NdrIaBvFHZnt2YwAEeJhrtIFscRjZEg14cbJqfgKH8Rx/UpHcXPw
+	 5LMiOww2rYlow==
+Message-ID: <293210ee-ef7c-4ad7-a46d-82beb1dec193@kernel.org>
+Date: Wed, 30 Oct 2024 19:20:33 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/4] add netns helpers
+Subject: Re: [PATCH mptcp-next v2 03/36] mptcp: add mptcp_for_each_address
+ macros
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1730260715.git.tanggeliang@kylinos.cn>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+ <b6b53fd730a0edd0024963468d078488ad5e67aa.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,30 +87,111 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1730260715.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b6b53fd730a0edd0024963468d078488ad5e67aa.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 30/10/2024 05:03, Geliang Tang wrote:
+On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v4:
->  - Use netns_new/netns_free instead of create_netns/cleanup_netns as
-> Martin suggested.
+> Similar to mptcp_for_each_subflow() and mptcp_for_each_subflow_safe()
+> macros, this patch adds two new macros mptcp_for_each_address() and
+> mptcp_for_each_address_safe() to iterate over the address entries on
+> userspace_pm_local_addr_list of the mptcp socket.
 > 
-> The commit 1e115a58be0ff ("selftests/bpf: netns_new() and netns_free()
-> helpers.") now in bpf-next makes v2 of this set useless. v3 only uses
-> these new helpers in mptcp selftests and drops other patches.
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 12 ++++++------
+>  net/mptcp/protocol.h     |  5 +++++
+>  2 files changed, 11 insertions(+), 6 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 2cceded3a83a..00a7f9dd90cf 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -41,7 +41,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
+>  	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+> -	list_for_each_entry(e, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address(msk, e) {
+>  		addr_match = mptcp_addresses_equal(&e->addr, &entry->addr, true);
+>  		if (addr_match && entry->addr.id == 0 && needs_id)
+>  			entry->addr.id = e->addr.id;
+> @@ -92,7 +92,7 @@ static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+>  {
+>  	struct mptcp_pm_addr_entry *entry, *tmp;
+>  
+> -	list_for_each_entry_safe(entry, tmp, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address_safe(msk, entry, tmp) {
+>  		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
+>  			/* TODO: a refcount is needed because the entry can
+>  			 * be used multiple times (e.g. fullmesh mode).
+> @@ -112,7 +112,7 @@ mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
+>  {
+>  	struct mptcp_pm_addr_entry *entry;
+>  
+> -	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address(msk, entry) {
+>  		if (entry->addr.id == id)
+>  			return entry;
+>  	}
+> @@ -127,7 +127,7 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+>  			     inet_sk((struct sock *)msk))->inet_sport;
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+> -	list_for_each_entry(e, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address(msk, e) {
+>  		if (mptcp_addresses_equal(&e->addr, skc, false)) {
+>  			entry = e;
+>  			break;
+> @@ -155,7 +155,7 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+>  	bool backup = false;
+>  
+>  	spin_lock_bh(&msk->pm.lock);
+> -	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address(msk, entry) {
+>  		if (mptcp_addresses_equal(&entry->addr, skc, false)) {
+>  			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+>  			break;
+> @@ -642,7 +642,7 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  
+>  	lock_sock(sk);
+>  	spin_lock_bh(&msk->pm.lock);
+> -	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
+> +	mptcp_for_each_address(msk, entry) {
+>  		if (test_bit(entry->addr.id, bitmap->map))
+>  			continue;
+>  
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index b4c72a73594f..ce3b12778b3f 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -354,6 +354,11 @@ struct mptcp_sock {
+>  #define mptcp_for_each_subflow_safe(__msk, __subflow, __tmp)			\
+>  	list_for_each_entry_safe(__subflow, __tmp, &((__msk)->conn_list), node)
+>  
+> +#define mptcp_for_each_address(__msk, __entry)			\
+> +	list_for_each_entry(__entry, &((__msk)->pm.userspace_pm_local_addr_list), list)
+> +#define mptcp_for_each_address_safe(__msk, __entry, __tmp)			\
+> +	list_for_each_entry_safe(__entry, __tmp, &((__msk)->pm.userspace_pm_local_addr_list), list)
 
-Thank you for the modifications! The new version looks good to me:
+If it is specific to the userspace PM, maybe best to declare them in
+pm_userspace.c, no?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Also, the name is very generic for something so specific. Maybe:
 
-If that's OK, I will wait for a review from the BPF maintainers before
-applying these patches in our repo, not to do too many manipulations
-just in case an (unexpected) new version is required.
+  mptcp_for_each_pm_userspace_local_addr(_safe)
+
+Otherwise, if we see "mptcp_for_each_address(msk, entry)" in the code,
+it is really not clear what you are looking at I think, no?
+
+> +
+>  extern struct genl_family mptcp_genl_family;
+>  
+>  static inline void msk_owned_by_me(const struct mptcp_sock *msk)
 
 Cheers,
 Matt
