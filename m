@@ -1,121 +1,124 @@
-Received: from mail-pf1-f181.google.com (mail-pf1-f181.google.com [209.85.210.181])
+Received: from mail-ej1-f51.google.com (mail-ej1-f51.google.com [209.85.218.51])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA54E4D8A7
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 11:42:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF3451E411D
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 14:02:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730288578; cv=none; b=KOrAzoSSIhnSbDIv9sJFIxPzFGRjZI8eDC10IoHiGJrxnqZBqEyptr21SE/JuAxz+qLANsUjroc6pkkhj5fZzpibcK9354Jfncj8O8e2GhDTdV0JeUQREdFJLpjaXJXZtjdliMpdSchl7d2Em5zIJZEnlULJZTAoCRb4Fu7fVY4=
+	t=1730296965; cv=none; b=UNfn4nc2sRHZpbp/SS61kmc3ny7WIGpg2nmMG7mrm8y0Mdniqo8O0Ep9yvkZLh0l0cD3+ZramvVP2EXmfhStjsndDAjPPSN9R51Jzjv4svhtJsrwzyZ3B0nmi3B/sv4qwTsjopTVuco1QZK6Y/gjiTjJBxRS3Ds5xWgb8B1xQBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730288578; c=relaxed/simple;
-	bh=FrL2MOKanZ+8pYlRXNQW3PMytt5eFF2PB89MpM2mAlo=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Y9XWRBdnEMygnJRZMokIq2vYh3ceII5NvD64xcuqr07Hc9q0Iih1+q9bllgKRMlzxwaae7AD/a2jC9f2ru4Rj95jGiFUG4h5nwZWSIFaMAFiM62glq1YAGBdK2nM3FFX7x03ZIRiANp3juKyemMHTxWXrDuqm3sSZCc0o/4cZ7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GycUwJw0; arc=none smtp.client-ip=209.85.210.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+	s=arc-20240116; t=1730296965; c=relaxed/simple;
+	bh=IRPUtmjRRRWTQls7HsvP5G4WzpSHfHn5+ycAibYhoto=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=B9Y0FcP6fUGU9xJnjsfVJvV/YPmmbnzA8vegKSPFu+UF4T9rZagf9hE72jEal0NHTdBqSFF1UTpQhQVKOR3LfaxCxRnes4hD9stoicxokKbcQHule9vZMlwGc3b+uJ+DlUkzZC4IOEEj9jtq0l793RuSDlS8BDVVX5nIebmnjF8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.218.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=debian.org
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GycUwJw0"
-Received: by mail-pf1-f181.google.com with SMTP id d2e1a72fcca58-71e5a1c9071so5066692b3a.0
-        for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 04:42:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730288576; x=1730893376; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bZsCsaYStGB0GqJdJxxeVbXswSMMKgw0FAjH3fAYOag=;
-        b=GycUwJw08uUqinJzyirV1gO3i0Jzkqpwt/o6100Ky4Uqey8ZzGc9PnSxEuhL/mcSQM
-         SoTz4XKD53gF56k/tPt7RES7C7DWMkApiJjcjOFxGen/pTfC68SWvyZ33iSEENC8CBmq
-         8pOgVpjOSYEGuLadZ/9mbkVrFTu4YSFUnnBwpWj+PLhtLJtuzVDh1isMnJOFEqAlgsgg
-         BQm4b4XBWvL2sMQa1u3BJeBExr/4bJCf8EqAtQ8b3dHwgfxPEQz2JcqwKF4e4XijBzsF
-         Tp2eq1QT8+0X7I1a0HF0t278aajqO6l/Gygkfi41HAfyy2kMpHWtRsC8rDOFoqyu1dc1
-         OoWg==
+Received: by mail-ej1-f51.google.com with SMTP id a640c23a62f3a-a9a6b4ca29bso817677766b.3
+        for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 07:02:42 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730288576; x=1730893376;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bZsCsaYStGB0GqJdJxxeVbXswSMMKgw0FAjH3fAYOag=;
-        b=BrqGltvppRW/KJ8pRPU+NsMd8NpAJvUPkhpacGzbux+e4kk+h1MXEQ+9hWE1FreC8U
-         GNMBumCB7QaqOa2YmSl9FPoT1wZh++d/2aYV9Af55tdv4DOK7FWP5cS1R+Ha+TIrhc7G
-         Mad9eTiKDB17ZRwjRsHSRcKI4XEyatJNAceh8rOyi8SLw9VrDBizdZhsUqsyqpyF/ZLz
-         B3vRmvN5TgqECy0JrvSM4o484PanZFLJqU2Ani2jMI6QiPsXjzKdVHZ41C1+zr7NF5eV
-         lT1AHmMinMB7qLcV041aCPmmc68KmuY0sxPArFIARTkrIhpqmKF1z5+M5krn79VbYGBP
-         S8tw==
-X-Gm-Message-State: AOJu0YzcyHmql3V60sNV3iwxLsxK4DtJHTOVDrHOW2L/Kk6yOZilMJo3
-	EF+TDSgXMCU5IVDxahKw2Bi9HWrt7ShSBSLxKzXuchasXFX5rjgKuAb3
-X-Google-Smtp-Source: AGHT+IGQWfKvs15I4F5QsjVB42hCzxBKck6wc6/4+FtYnN1NanSj0ohNigBJ4mzonvtXtPxj4a1YdA==
-X-Received: by 2002:a05:6a00:2195:b0:71e:75c0:2545 with SMTP id d2e1a72fcca58-720ab4c5fcfmr3283874b3a.25.1730288575864;
-        Wed, 30 Oct 2024 04:42:55 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.27.6])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-72057a1eec0sm9357624b3a.143.2024.10.30.04.42.55
+        d=1e100.net; s=20230601; t=1730296961; x=1730901761;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=YGmFgroH7JaHubQUsglUYJKecaiUoqcN47UqSxEZ5cA=;
+        b=WvjiSUOykTKt6hm5PRIf6j0c+1W+R6uYbxpRMwOJAdH76qvP58zP2U9zJ2oYCJo11e
+         NDFpcDjpcimXYciYrrGqNO7u+dFKw92BhCbz+xjzyiDkP2s3tfT6myiUbornFWbz9uQS
+         ln3LaYiURf6kF3jJrZbfIy6BFEiAVvKOC4B7SiHVQq23X83+Bza4nC7vKy4x4N3WlQnh
+         0kB7jGVYasmEZOBkc/2IjD9mH69UrWRcIBwIzXn9Mw254ecPyzoHa4YnE4jsLtPOdDtH
+         Mo68eHA36a5UmPGI3sFmgmhT0AceMtbVNPUi9V3VQ9KoeQ9laoexFu3/4DMilIJEkZM7
+         lpmA==
+X-Forwarded-Encrypted: i=1; AJvYcCUCFPYl5xyaACFm11pt4c3N5yOUDtCAwhrnUG6rw7FbFHQTYrH+IHYlCnA71aiVcv1rsZt5PA==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yy2jxgKP3rlvpwiBEijGDAEBWwyGFn2eHplEEjLCPNJOlpya12/
+	TeB8iz0QmFl1ZojssCcNJLwL/bplXDo8ErSseSIkb3V6jaWqP478LIO06Q==
+X-Google-Smtp-Source: AGHT+IFLheYALN0Q+h1qZVZyYyfGjs+k4p0+ar7AYK/KpTy5X6XvSJSR4jgGNXMTmFntMr8STHZ0mQ==
+X-Received: by 2002:a17:907:7f8b:b0:a99:499f:4cb7 with SMTP id a640c23a62f3a-a9de5ce4e4amr1512071666b.23.1730296960746;
+        Wed, 30 Oct 2024 07:02:40 -0700 (PDT)
+Received: from localhost (fwdproxy-lla-000.fbsv.net. [2a03:2880:30ff::face:b00c])
+        by smtp.gmail.com with ESMTPSA id a640c23a62f3a-a9b1dec7aa9sm576513066b.35.2024.10.30.07.02.39
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 30 Oct 2024 04:42:55 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Tao Chen <chen.dylane@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20241030100108.2443371-1-chen.dylane@gmail.com>
-References: <20241030100108.2443371-1-chen.dylane@gmail.com>
-Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP
- not support
-Message-ID: <a11f7a08-b310-e77a-647b-a8636937b4ce@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Oct 2024 11:42:54 +0000
+        Wed, 30 Oct 2024 07:02:40 -0700 (PDT)
+From: Breno Leitao <leitao@debian.org>
+To: kuba@kernel.org,
+	horms@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org,
+	vlad.wing@gmail.com,
+	max@kutsevol.com,
+	kernel-team@meta.com,
+	aehkn@xenhub.one,
+	stable@vger.kernel.org,
+	mptcp@lists.linux.dev (open list:NETWORKING [MPTCP])
+Subject: [PATCH net] mptcp: Ensure RCU read lock is held when calling mptcp_sched_find()
+Date: Wed, 30 Oct 2024 07:02:23 -0700
+Message-ID: <20241030140224.972565-1-leitao@debian.org>
+X-Mailer: git-send-email 2.43.5
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Tao,
+The mptcp_sched_find() function must be called with the RCU read lock
+held, as it accesses RCU-protected data structures. This requirement was
+not properly enforced in the mptcp_init_sock() function, leading to a
+RCU list traversal in a non-reader section error when
+CONFIG_PROVE_RCU_LIST is enabled.
 
-Thank you for your modifications, that's great!
+	net/mptcp/sched.c:44 RCU-list traversed in non-reader section!!
 
-Our CI did some validations and here is its report:
+Fix it by acquiring the RCU read lock before calling the
+mptcp_sched_find() function. This ensures that the function is invoked
+with the necessary RCU protection in place, as it accesses RCU-protected
+data structures.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Critical: 2 Call Trace(s) - Critical: Global Timeout =E2=9D=8C
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/115911=
-71451
+Additionally, the patch breaks down the mptcp_init_sched() call into
+smaller parts, with the RCU read lock only covering the specific call to
+mptcp_sched_find(). This helps minimize the critical section, reducing
+the time during which RCU grace periods are blocked.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/3ec75e78edda
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D904592
+The mptcp_sched_list_lock is not held in this case, and it is not clear
+if it is necessary.
 
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Fixes: 1730b2b2c5a5 ("mptcp: add sched in mptcp_sock")
+Cc: stable@vger.kernel.org
+---
+ net/mptcp/protocol.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 6d0e201c3eb2..8ece630f80d4 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2854,6 +2854,7 @@ static void mptcp_ca_reset(struct sock *sk)
+ static int mptcp_init_sock(struct sock *sk)
+ {
+ 	struct net *net = sock_net(sk);
++	struct mptcp_sched_ops *sched;
+ 	int ret;
+ 
+ 	__mptcp_init_sock(sk);
+@@ -2864,8 +2865,10 @@ static int mptcp_init_sock(struct sock *sk)
+ 	if (unlikely(!net->mib.mptcp_statistics) && !mptcp_mib_alloc(net))
+ 		return -ENOMEM;
+ 
+-	ret = mptcp_init_sched(mptcp_sk(sk),
+-			       mptcp_sched_find(mptcp_get_scheduler(net)));
++	rcu_read_lock();
++	sched = mptcp_sched_find(mptcp_get_scheduler(net));
++	rcu_read_unlock();
++	ret = mptcp_init_sched(mptcp_sk(sk), sched);
+ 	if (ret)
+ 		return ret;
+ 
+-- 
+2.43.5
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
