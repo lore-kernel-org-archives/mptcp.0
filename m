@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF77218311;
-	Wed, 30 Oct 2024 17:07:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC14A1BD9C1
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 17:34:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730308061; cv=none; b=NKQ63qUUU+s5TgHE3/XsGw5wtn66+P7qJB30fdsRaqGMyPzUuDHz3vUOYvzED5zP3iKhh44vA86G1N0v+J4lfwAk4oJR5M9KoLDjVbMNOGou9zOWKO2zWRlk+JQI7C7ahtFXiMSsskQbfAtOTiJuFOFQIRYEiaVO3B3SGdIp6eg=
+	t=1730309666; cv=none; b=ZuaAfBI7/Jik3Lnw9N8JbqAg2pntrPkOyNKh+soKgY9S6V0nYYo8b795AxBw8VY+CJ1j6xMKV6Nh+KWXQPGNLh8fKhPV0M2DOk6f2ApUff6oaXokzmoV9rz6h4B8nWKFnYuC++zhxvEUSpUEsUqle33q7LSdhTqW/pKjCuZnRhc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730308061; c=relaxed/simple;
-	bh=TNsabS+eN7BZZ6RhmGFFR0ocvmF+Tty/zY4XuGHzLh8=;
+	s=arc-20240116; t=1730309666; c=relaxed/simple;
+	bh=9XfQxj5m2+9dvRhGPEmNUuGP1hEJSM0PH7sJ2GgEM1s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UR2mg8rEAab8ztwCzGyDclFb1hbsZEdvEI8dQ/Rl84j+hdF1TuOMRVU667NP+8Jl0PZq7SV1gjq/FZQcuxZ8ltpnZ69Yp0vlMb0srZatZxZ+ZV13v6QsJR7gLeoFCYvyQhCxCPG1csNYrIZKQt56QgRd8ErVDeRP5wI4W06uHg8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GiajwtYm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lVPVqUKb2xbxseQCD5TArwfKc8Ba3sbYq9w+qZugpAfY0bXViRhhGmWdboJskwmPmrO02phwxz4o6d28bJ/HXYV5kpSQRQAhqB9Lin4+xd04/FCIJL+w6fvaArzyJbdJ9ZL1ewgRdQTyB1uqbgRgHNx0SqwbnGj1am9lyp2CgeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gKTUPV/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GiajwtYm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB87C4CECE;
-	Wed, 30 Oct 2024 17:07:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gKTUPV/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A67E3C4CECE;
+	Wed, 30 Oct 2024 17:34:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730308061;
-	bh=TNsabS+eN7BZZ6RhmGFFR0ocvmF+Tty/zY4XuGHzLh8=;
+	s=k20201202; t=1730309666;
+	bh=9XfQxj5m2+9dvRhGPEmNUuGP1hEJSM0PH7sJ2GgEM1s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=GiajwtYmXgfWxya98TOjLCRdy0IktTlCJg0S+QPAnUmbt1x9gxRx4xrSFBa7OkM4s
-	 mvns/RzgrN924hvRTMj+zV0Wr5wuwyAnj/rig6xHctbB+jmZXp8FsqPK+viFK6GcW4
-	 K9mOveN1N2YdtJtDOeN3FMB7zQ09HfosHdoG3LMJRKhfaAo8tTYoVmmanHtaZ//rvl
-	 uNOuhM8dlYJsZjzRzo4Ebp9uPupTphC+EEL3dPA763ra63Nx6Eyu+MPDPLdB/8QH5B
-	 uqjxE3As79aQTr6e0uAmLmdXk4c1WBsAttPdIVsZ6tuulmF3ENxFS49sM3sUVLmNrO
-	 GKK48vLvmEklA==
-Message-ID: <66de4e7f-96bc-461b-81ca-5182d55308b1@kernel.org>
-Date: Wed, 30 Oct 2024 18:07:36 +0100
+	b=gKTUPV/2cAdU4NTtUG2887QSnqZaG5GxYga6V7iOmwjdNaM+w2rxo11ZfGLLibf5B
+	 XZ8PSZg9xG33kGo/WC0pCz4rgvogB2oe4+Q7Z089xmgIm8NSGVNBDt5Rnf06tyoV3N
+	 7eJ7kymWVvLG+Gu/QR/bGNNQCCrG3KTkvFKw9KVSjYYKlpCC3DLmod6xGrJChSrxES
+	 7f98PFjfOjzxA7vpEbYqErg9ukXTHD3V8K0HsEGs6/YChVE8ImvNEZqldj3k8QAC2j
+	 5HSUM/kzWPgKac5w+0r3jhmAD2rYE5LGYknuO3UA2hv1j7UcY+nDfVOuWd7uA9H120
+	 c1GLarQwdsY2A==
+Message-ID: <5952d268-5c4d-4623-b91c-44e6db4395a6@kernel.org>
+Date: Wed, 30 Oct 2024 18:34:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 0/4] mptcp: various small improvements
+Subject: Re: [PATCH mptcp-next v4 0/4] add netns helpers
 Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- Gang Yan <yangang@kylinos.cn>, Davide Caratti <dcaratti@redhat.com>
-References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
- <20241029165016.568f01bd@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1730260715.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,42 +85,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20241029165016.568f01bd@kernel.org>
+In-Reply-To: <cover.1730260715.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
+Hi Geliang,
 
-On 30/10/2024 00:50, Jakub Kicinski wrote:
-> On Mon, 21 Oct 2024 17:14:02 +0200 Matthieu Baerts (NGI0) wrote:
->> The following patches are not related to each other.
->>
->> - Patch 1: Avoid sending advertisements on stale subflows, reducing
->>   risks on loosing them.
->>
->> - Patch 2: Annotate data-races around subflow->fully_established, using
->>   READ/WRITE_ONCE().
->>
->> - Patch 3: A small clean-up on the PM side, avoiding a bit of duplicated
->>   code.
->>
->> - Patch 4: Use "Middlebox interference" MP_TCPRST code in reaction to a
->>   packet received without MPTCP options in the middle of a connection.
+On 30/10/2024 05:03, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Could be a coincidence but looks like we got two flakes in mptcp-join
-> since yesterday (different sub-cases).
+> v4:
+>  - Use netns_new/netns_free instead of create_netns/cleanup_netns as
+> Martin suggested.
+> 
+> The commit 1e115a58be0ff ("selftests/bpf: netns_new() and netns_free()
+> helpers.") now in bpf-next makes v2 of this set useless. v3 only uses
+> these new helpers in mptcp selftests and drops other patches.
 
-Thank you for having reported this. It looks like a coincidence, but I
-will monitor that.
+Thank you for the modifications! The new version looks good to me:
 
-> What's more sad is that it looks
-> like our subcase parsing is broken, when I look at the subcase view
-> all sub-cases are marked as passing :( Could you take a look?
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-I think the issue is with the 'retry' feature, when the nested tests are
-parsed. I hope I fixed this in:
-
-  https://github.com/linux-netdev/nipa/pull/43
+If that's OK, I will wait for a review from the BPF maintainers before
+applying these patches in our repo, not to do too many manipulations
+just in case an (unexpected) new version is required.
 
 Cheers,
 Matt
