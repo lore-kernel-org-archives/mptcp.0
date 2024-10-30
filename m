@@ -1,130 +1,134 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CA3F1C9B77
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 18:31:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E04215036
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 20:48:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730313067; cv=none; b=DA1wHBCE0BZNPxFcJLe3jNKQT8NUVC0sUKc/cjtLEpRl483L8nWGxdl+fVyRAjsXbjOuu78jDDTwz01EU4U+E1f7afQ//gjhQob6bQylqWPRtxtbvBByyZSzQW+JRJn5l/eNlGtPNaxPMFp/wYDubH1K6llqz7h7wGHbkgUZfqw=
+	t=1730321332; cv=none; b=VC0QrNVUF94c/1tSV5YZqJAf/mUixKOt6u8DiJiypDyceFRZ8oX1h7diKsWOVLPhTtUDsYlXTYPHo+XSH4mMWUeXJBkpyE80ftSfIMhC6ml+SRA9+vfyzIHZf9G6aSvKBg+/6+VpwQ7sFnYXQWSmbtGlXegrRNBvLtpLkzb/Vd0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730313067; c=relaxed/simple;
-	bh=cErfyFVidsDtR7ciJAPdAK3J2O903zVQJEaDiu4RIF0=;
+	s=arc-20240116; t=1730321332; c=relaxed/simple;
+	bh=r7Szs2POrVC2wv7OjarWafvN6De9kKjAB8U9+PxACq8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Dcq2R8euiGM18o2fMxSfMyh7M/eIDfiSHja0D9UyHhdr4vp6ezXTU4FvIbiR2fK3fJW5hJaxw0WbzzIJ87056oOlBgShEkfgKM0XtfLhDyoidcuMIAjYwZm+Zi9r97xPsnVOk5T6hdF6a5aSRAYU+JOcdZXGyIZcs6RVH4xpAeE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KlcydcnB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ffUTrpuQjP+OsDP+v+iMH6vrrpqr7adKhlahqM2JdSCYA9C7wkusyOAgKPaL4HU7cQsCAaVAqvzpugmSjUG93RD0jI/w9Gky4SRLAGenOeDNIe+HQAbhatLrFHMWKn+MsMljy+ZXoxhuR6j9yPz5YA9HSZ2aCuDVGjBefSB+D58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f8SEV7M/; arc=none smtp.client-ip=91.218.175.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KlcydcnB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2CE5EC4CECE;
-	Wed, 30 Oct 2024 18:31:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730313066;
-	bh=cErfyFVidsDtR7ciJAPdAK3J2O903zVQJEaDiu4RIF0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KlcydcnBjP/B3rbDRgPLR+HkjAE2NARcuhD4AFWHpGs21vq2g9g7sL3rEMGZZhouU
-	 e4cP/ucBajvp8lwR73/9adxpnn5ZklBfVnr/JnGaxggQcCiTl1x/6FKgKDNv3a+UKW
-	 2F2Nvy/ISj5/GuViKU5dzT6dt4rNLMXJlQuYWVKtbp3kzs667xacbcJEGnyTGlmIW/
-	 0cLFWMlWmim3q4b1hOWFmpNZY/zE27coGNJ/EZpANUKgrEacY+Wsudw/To5X/YTqde
-	 jWzbZAM421nopJGYrGJBNNcj9rSeSHlGV17ONsgRa7ItyL1GXVkbUJnX5G5zjCSJpZ
-	 SYNHrZJDmg84w==
-Message-ID: <18ade37f-5557-4ff0-ae1f-1b4cd6b66e97@kernel.org>
-Date: Wed, 30 Oct 2024 19:31:04 +0100
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f8SEV7M/"
+Message-ID: <82dff21b-0ba0-4823-bd78-d8d2105941f4@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1730321327;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=sUu3R5NznYIAyWQ0FfKhRx6rfEqKBnePWslIEbBLNsY=;
+	b=f8SEV7M/wGL9Wa/RFdfrDQLa9WkLgkBKgTq5xQBfVLMld16cK5Ywk0XEu9ByyYJx4T7ljw
+	k8pxaqMDbReQUfp+pRE9duT6qKhAjJHDC7gHfzPIfDdZLrJnc6owGXeQA9/Fo5XoaF30tl
+	I7gIJM+4b2UWNRWZETrpebVDQY3tFMw=
+Date: Wed, 30 Oct 2024 13:48:41 -0700
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 07/36] mptcp: make three pm wrappers static
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <6a0fc4027e27a2bdbbaea2997a5489399ea0fc7d.1729588019.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <6a0fc4027e27a2bdbbaea2997a5489399ea0fc7d.1729588019.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP not
+ support
+To: Matthieu Baerts <matttbe@kernel.org>, Tao Chen <chen.dylane@gmail.com>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
+ Daniel Borkmann <daniel@iogearbox.net>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
+ bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
+References: <20241030100108.2443371-1-chen.dylane@gmail.com>
+ <abb72d1b-3347-4493-9a18-43c1655b7449@kernel.org>
+ <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
+ <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Migadu-Flow: FLOW_OUT
 
-Hi Geliang,
-
-(I'm still reviewing the series, thank you for your patience. Please
-wait for me to finish it before sending a v3.)
-
-On 22/10/2024 11:14, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 10/30/24 9:31 AM, Matthieu Baerts wrote:
+> Hi Tao, BPF maintainers,
 > 
-> Three path manager wrappers, mptcp_pm_get_addr(), mptcp_pm_dump_addr() and
-> mptcp_pm_set_flags() are used to switch the interfaces between in-kernel
-> PM and userspace PM. These wrappers are defined in pm.c but only used in
-> pm_netlink.c. It makes more sense to move them to pm_netlink.c and make
-> them all static.
+> On 30/10/2024 12:12, Tao Chen wrote:
+>> 在 2024/10/30 18:49, Matthieu Baerts 写道:
+>>> Hi Tao Chen,
+>>>
+>>> Thank you for having shared this patch.
+>>>
+>>> On 30/10/2024 11:01, Tao Chen wrote:
+>>>> Fix compile error when MPTCP feature not support, though eBPF core check
+>>>> already done which seems invalid in this situation, the error info like:
+>>>> progs/mptcp_sock.c:49:40: error: no member named 'is_mptcp' in 'struct
+>>>> tcp_sock'
+>>>>      49 |         is_mptcp = bpf_core_field_exists(tsk->is_mptcp) ?
+>>>>
+>>>> The filed created in new definitions with eBPF core feature to solve
+>>>> this build problem, and test case result still ok in MPTCP kernel.
+>>>>
+>>>> 176/1   mptcp/base:OK
+>>>> 176/2   mptcp/mptcpify:OK
+>>>> 176     mptcp:OK
+>>>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+>>>>
+>>>> Fixes: 8039d353217c ("selftests/bpf: Add MPTCP test base")
+>>>
+>>> The commit you mentioned here is more than 2 years old, and as far as I
+>>> can see, nobody else reported this compilation issue. I guess that's
+>>> because people used tools/testing/selftests/bpf/config file as expected
+>>> to populate the kernel config, and I suppose you didn't, right?
+>>>
+>>
+>> Hi Matt, thank you for your reply, as you said, i did not use tools/
+>> testing/selftests/bpf/config to compile kernel, i will use this helpful
+>> feature.
+>>
+>>> I don't think other BPF selftests check for missing kernel config if
+>>> they are specified in the 'config' file, but even if it is the case, I
+>>> think it would be better to skip all the MPTCP tests, and not try to
+>>> have them checking something that doesn't exist: no need to validate
+>>> these tests if the expected kernel config has not been enabled.
+>>>
+>>
+>> If i use the kernel not support MPTCP, the compile error still exists,
+>> and i can not build the bpf test successfully. Maybe skill the test case
+>> seems better when kernel not support. Now that bpf_core_field_exists
+>> check already used in the code, i think it is better to use new
+>> definition mode.
+> 
+> I understand it would be better, but it means more code to maintain to
+> handle that (and remembering that in future test cases). If that's not
+> necessary, then no need to do the effort.
+> 
+> @BPF maintainers: do we need to support kernels not respecting the
+> tools/testing/selftests/bpf/config file? Should we detect when a
+> required kernel config is not set and skip some tests?
 
-These three helpers are calling userspace PM code, that looks "strange"
-to do that from pm_netlink.
+I guess it depends on the CONFIG_. Otherwise, it takes out the goodies of using 
+<vmlinux.h> when writing bpf selftests.
 
-I didn't check, but would it not make more sense to move all the _doit()
-functions calling these helpers to pm.c? Also, do we still these helpers
-you were moving? Can we not instead remove them, and move their code
-directly in the _doit() functions if you see what I mean?
+If fixing the config is an option and sounds like it is for Tao, then it is 
+always good to run everything in test_progs.
 
-  int mptcp_pm_nl_get_addr_doit(...)
-  {
-      if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-          return mptcp_userspace_pm_get_addr(skb, info);
-      return mptcp_pm_nl_get_addr(skb, info);
-  }
+There are some "___local" definitions in the selftests. If mptcp test wants to 
+go this path, then Matt's request to at least test__skip() makes sense to me.
 
-(in pm.c)
+pw-bot: cr
 
-WDYT?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+> 
+>>> But again, please correct me if I'm wrong, but I don't think there is
+>>> anything to change here to fix your compilation issue: simply make sure
+>>> to use this tools/testing/selftests/bpf/config file to generate your
+>>> kernel config, no?
+> 
+> Cheers,
+> Matt
 
