@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADF68C1F;
-	Wed, 30 Oct 2024 16:31:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DF77218311;
+	Wed, 30 Oct 2024 17:07:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730305882; cv=none; b=R24CKVCdtwZkdxNbpdckRjupd3s1G46RP/f1y+ZpvOfpoiiHnUOk3tjXG5dP105I+5k5OiyMgXzXp9v/wHa5s1miRpoG1tBLS+VeI5UuEAHGzyttpAcoc5AC3yema22sdqkduoAHrkGplbaYwRgy+NxSprxEFPLByTt1JO/66Ow=
+	t=1730308061; cv=none; b=NKQ63qUUU+s5TgHE3/XsGw5wtn66+P7qJB30fdsRaqGMyPzUuDHz3vUOYvzED5zP3iKhh44vA86G1N0v+J4lfwAk4oJR5M9KoLDjVbMNOGou9zOWKO2zWRlk+JQI7C7ahtFXiMSsskQbfAtOTiJuFOFQIRYEiaVO3B3SGdIp6eg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730305882; c=relaxed/simple;
-	bh=oO8e/qytpViysImJ2eTakDtB0b0Ol/dLIvB1fQFw8Ww=;
+	s=arc-20240116; t=1730308061; c=relaxed/simple;
+	bh=TNsabS+eN7BZZ6RhmGFFR0ocvmF+Tty/zY4XuGHzLh8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=QbGJUAlLpeWeqgvxPjJJ8nNSM0AFNyyEcw60/gxRE/lAtVrPyLb8ltPg2cW2L3XLUkaz0jMrpDhOzg2eGNsoAIh9teevjkYkyqTw04iQwCVP0lfgRUHUtHKkQQrvyvD+EKaYTL+8mthg9ruHZRblI5v8S2OaTyEcOFgAazc+hgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciSt+G/C; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UR2mg8rEAab8ztwCzGyDclFb1hbsZEdvEI8dQ/Rl84j+hdF1TuOMRVU667NP+8Jl0PZq7SV1gjq/FZQcuxZ8ltpnZ69Yp0vlMb0srZatZxZ+ZV13v6QsJR7gLeoFCYvyQhCxCPG1csNYrIZKQt56QgRd8ErVDeRP5wI4W06uHg8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GiajwtYm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciSt+G/C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22D6C4CECE;
-	Wed, 30 Oct 2024 16:31:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GiajwtYm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BBB87C4CECE;
+	Wed, 30 Oct 2024 17:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730305881;
-	bh=oO8e/qytpViysImJ2eTakDtB0b0Ol/dLIvB1fQFw8Ww=;
+	s=k20201202; t=1730308061;
+	bh=TNsabS+eN7BZZ6RhmGFFR0ocvmF+Tty/zY4XuGHzLh8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ciSt+G/CDYMj9JF989JWCb0qe/e8mg9VVp7vv0YPzDMdGPEnYGnb3vRdjoYbJ3qsK
-	 mX7HMq6efm2oi5vL5WeKkSgnCnO0BLJ5YhhisDEo/qEGWaNI0EBYrmc3f9Tq18e7UZ
-	 xFmIwkD2eYaMil6laBElh9xu7WR2RY67PjK87fVKhWDf7WpiAbyKIBTle3j6p1Fz0B
-	 BPSflJ+JP7dvSuxOykFLss1FlY0uCWq0pH2SRvwCOL0DYDyoo4caQfWvzmcOx/deKm
-	 GQBx7u/OMRetmRvYmzU3aTjfS4sPuRD8V1XuLo52T0B4+wNo/7y/L4tVzLXQ4n0N7D
-	 3aFoUz4CrWJgg==
-Message-ID: <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
-Date: Wed, 30 Oct 2024 17:31:15 +0100
+	b=GiajwtYmXgfWxya98TOjLCRdy0IktTlCJg0S+QPAnUmbt1x9gxRx4xrSFBa7OkM4s
+	 mvns/RzgrN924hvRTMj+zV0Wr5wuwyAnj/rig6xHctbB+jmZXp8FsqPK+viFK6GcW4
+	 K9mOveN1N2YdtJtDOeN3FMB7zQ09HfosHdoG3LMJRKhfaAo8tTYoVmmanHtaZ//rvl
+	 uNOuhM8dlYJsZjzRzo4Ebp9uPupTphC+EEL3dPA763ra63Nx6Eyu+MPDPLdB/8QH5B
+	 uqjxE3As79aQTr6e0uAmLmdXk4c1WBsAttPdIVsZ6tuulmF3ENxFS49sM3sUVLmNrO
+	 GKK48vLvmEklA==
+Message-ID: <66de4e7f-96bc-461b-81ca-5182d55308b1@kernel.org>
+Date: Wed, 30 Oct 2024 18:07:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,19 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP not
- support
+Subject: Re: [PATCH net-next 0/4] mptcp: various small improvements
 Content-Language: en-GB
-To: Tao Chen <chen.dylane@gmail.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Martin KaFai Lau <martin.lau@linux.dev>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>
-Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
-References: <20241030100108.2443371-1-chen.dylane@gmail.com>
- <abb72d1b-3347-4493-9a18-43c1655b7449@kernel.org>
- <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ Gang Yan <yangang@kylinos.cn>, Davide Caratti <dcaratti@redhat.com>
+References: <20241021-net-next-mptcp-misc-6-13-v1-0-1ef02746504a@kernel.org>
+ <20241029165016.568f01bd@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -93,70 +90,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
+In-Reply-To: <20241029165016.568f01bd@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Tao, BPF maintainers,
+Hi Jakub,
 
-On 30/10/2024 12:12, Tao Chen wrote:
-> 在 2024/10/30 18:49, Matthieu Baerts 写道:
->> Hi Tao Chen,
+On 30/10/2024 00:50, Jakub Kicinski wrote:
+> On Mon, 21 Oct 2024 17:14:02 +0200 Matthieu Baerts (NGI0) wrote:
+>> The following patches are not related to each other.
 >>
->> Thank you for having shared this patch.
+>> - Patch 1: Avoid sending advertisements on stale subflows, reducing
+>>   risks on loosing them.
 >>
->> On 30/10/2024 11:01, Tao Chen wrote:
->>> Fix compile error when MPTCP feature not support, though eBPF core check
->>> already done which seems invalid in this situation, the error info like:
->>> progs/mptcp_sock.c:49:40: error: no member named 'is_mptcp' in 'struct
->>> tcp_sock'
->>>     49 |         is_mptcp = bpf_core_field_exists(tsk->is_mptcp) ?
->>>
->>> The filed created in new definitions with eBPF core feature to solve
->>> this build problem, and test case result still ok in MPTCP kernel.
->>>
->>> 176/1   mptcp/base:OK
->>> 176/2   mptcp/mptcpify:OK
->>> 176     mptcp:OK
->>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->>>
->>> Fixes: 8039d353217c ("selftests/bpf: Add MPTCP test base")
+>> - Patch 2: Annotate data-races around subflow->fully_established, using
+>>   READ/WRITE_ONCE().
 >>
->> The commit you mentioned here is more than 2 years old, and as far as I
->> can see, nobody else reported this compilation issue. I guess that's
->> because people used tools/testing/selftests/bpf/config file as expected
->> to populate the kernel config, and I suppose you didn't, right?
+>> - Patch 3: A small clean-up on the PM side, avoiding a bit of duplicated
+>>   code.
 >>
+>> - Patch 4: Use "Middlebox interference" MP_TCPRST code in reaction to a
+>>   packet received without MPTCP options in the middle of a connection.
 > 
-> Hi Matt, thank you for your reply, as you said, i did not use tools/
-> testing/selftests/bpf/config to compile kernel, i will use this helpful
-> feature.
-> 
->> I don't think other BPF selftests check for missing kernel config if
->> they are specified in the 'config' file, but even if it is the case, I
->> think it would be better to skip all the MPTCP tests, and not try to
->> have them checking something that doesn't exist: no need to validate
->> these tests if the expected kernel config has not been enabled.
->>
-> 
-> If i use the kernel not support MPTCP, the compile error still exists,
-> and i can not build the bpf test successfully. Maybe skill the test case
-> seems better when kernel not support. Now that bpf_core_field_exists
-> check already used in the code, i think it is better to use new
-> definition mode.
+> Could be a coincidence but looks like we got two flakes in mptcp-join
+> since yesterday (different sub-cases).
 
-I understand it would be better, but it means more code to maintain to
-handle that (and remembering that in future test cases). If that's not
-necessary, then no need to do the effort.
+Thank you for having reported this. It looks like a coincidence, but I
+will monitor that.
 
-@BPF maintainers: do we need to support kernels not respecting the
-tools/testing/selftests/bpf/config file? Should we detect when a
-required kernel config is not set and skip some tests?
+> What's more sad is that it looks
+> like our subcase parsing is broken, when I look at the subcase view
+> all sub-cases are marked as passing :( Could you take a look?
 
->> But again, please correct me if I'm wrong, but I don't think there is
->> anything to change here to fix your compilation issue: simply make sure
->> to use this tools/testing/selftests/bpf/config file to generate your
->> kernel config, no?
+I think the issue is with the 'retry' feature, when the nested tests are
+parsed. I hope I fixed this in:
+
+  https://github.com/linux-netdev/nipa/pull/43
 
 Cheers,
 Matt
