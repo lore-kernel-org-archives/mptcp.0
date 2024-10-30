@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1CED1D0F51
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 06:11:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9011D3398E
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 06:11:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730268660; cv=none; b=IEqvis1wEyeKi/O9JZoEiA/cOdZVrgaXktTH6VWHVNjfcZGjCYvw/X0XP51mSYo81e+bQl/U0mthr/9QRtGIVT0+wMRHhfZszHL/jaGXR6uuYINf+OCvgwe6Xq70AtCacO4P6hb9/Ihqd87Plk+KQT1hUkwW79c2SOWF8IfRHKs=
+	t=1730268662; cv=none; b=SFjLlPWYpc9xNA6zBrT14upmgch1qCbV1StpmkcUbijdywpuzSeoz5Tr+9d6MbY6JKsJQd1vI5+vLnqEf0iivYj2ooBc0doyT4dttlUatcvcfnCqcSGjujhFlSAmFm/yLpfkm2SSBj2A9K8TOKj1GPeLYmoToO38VeKeDAfQPko=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730268660; c=relaxed/simple;
-	bh=dJcPCgbGiTa4yy5psNCb78HvU99dRnZgn8tP3b+U/b0=;
+	s=arc-20240116; t=1730268662; c=relaxed/simple;
+	bh=UVCSjBGP/+cKzmmPkyzOqkuWiLSr68m8qV2V8UJdsms=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=kVK9+Y3E+X8KF4cc9ti9Mg2nN5/rwzitXQ44+4wCoFQvogy4K4ohnHLekxsIP0050pW/IRsux3uoAS/SdBHVccvGSaL38VnQiiTubCvKVJSCTH+Mp+L1KCAtJnwuRIKfnJ5MvoVFiwnsFXkvxdjlu6kvlJJ2niHaRNgqsIx3JHo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t4S1GwW+; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=JOgw7jUw+xdri59+oKKujc8/F59MVxfrkgfmPOplJWnG1PwUXvq6JLNHKob8VHaaGrWR2UEissV39jf5qd9YZgJLRAqWjCPM/T6fsCAfJygvaMe3hvpFCzVffeQC70JjTcjWu5swzzBWJzG9wt4CJrlBx/wuCDyumzDFMBQv1kc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JcVMFyrf; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t4S1GwW+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C1C8C4CEE5;
-	Wed, 30 Oct 2024 06:10:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JcVMFyrf"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E116FC4CEE4;
+	Wed, 30 Oct 2024 06:11:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730268660;
-	bh=dJcPCgbGiTa4yy5psNCb78HvU99dRnZgn8tP3b+U/b0=;
+	s=k20201202; t=1730268662;
+	bh=UVCSjBGP/+cKzmmPkyzOqkuWiLSr68m8qV2V8UJdsms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t4S1GwW+Stb+68YU6Nm7QF+/p0iAPDrLdQR5H2VXYfLxCn+Pih7hx0G+5LcbI6JAv
-	 o2FiWvj1M9EtYOHl2tOSYQ1WwgBMbtL+SJOdP3dtSF5OAkxWVeodkMAo+EDGYQWWc5
-	 N2aas+DrMNKOcHwDwVs2mjEdxbnmSn2pQD+jBDGP3PtI28cX8iESDuRD3Id7dmfuPN
-	 QSBKmjWvNVc5RJxppSnjuHn1Ggh7Y88R5X2n3X0++qjqnsZ7CFZ/8CVvVc4vOtx/4o
-	 3ipjnNd8pYH7vEvFapRdM48ABWgmwQW8XqZazTIqbgE8HHMtGGZDHyNUj5wlSKsNRG
-	 PXsoS5YMUtLLw==
+	b=JcVMFyrfZ+hG2oQaRVgtMwCr6K5V9jMrfgxNKrWJT/2X52gOuVigi0K0hmDrPRNvo
+	 8ahs0ES9So3pTOGsXoUfBxt2KL5nx9V3+aPvONoeU8Unu1QVuc5Z01diQVgsem7rRT
+	 2wiQPcoBeemUJfx+i/0Sp7h7zcKvR3dTAM2siAVl809Rzsw+XQZ+mRIYAu3f8dY7cs
+	 BaeE4M1oSMQD4fdYoZomWa7bid8A7rWz2b5XaXhvC5qRIpDbCWmVr9bN/vrjOsHW8i
+	 oxPO9BJ7YL6Qvvt2FBHthu71mKS1oEvX69jbhO0xHYCrxD1hr6VK4TQoqAAA0SfY7t
+	 JDJLHPhVfoe8Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 04/13] Squash to "bpf: Add bpf_mptcp_sched_ops"
-Date: Wed, 30 Oct 2024 14:10:28 +0800
-Message-ID: <9bd1f2cf77ff6be354c89f37cefb37bf981ee1e9.1730268415.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 05/13] Squash to "selftests/bpf: Add bpf scheduler test"
+Date: Wed, 30 Oct 2024 14:10:29 +0800
+Message-ID: <8641dcb7e7de4d503a82b3bdcde27290c3ea233c.1730268415.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1730268415.git.tanggeliang@kylinos.cn>
 References: <cover.1730268415.git.tanggeliang@kylinos.cn>
@@ -45,137 +45,63 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Please update the subject to
-
-        bpf: Add mptcp packet scheduler struct_ops
-
-1. validate interface is added in bpf_struct_ops by commit 68b04864ca42
-("bpf: Create links for BPF struct_ops maps."), implement it in
-mptcp_sched_ops.
-
-2. Drop mptcp_sched_find. This part of mptcp_sched_find() code comes from
-bpf_tcp_ca_init_member, but it was recently deleted by commit 68b04864ca42.
-
-3. Add write access for scheduled of mptcp_subflow_context.
-
-4. Drop mptcp_sock_type and mptcp_subflow_type.
+A cleanup, move netns_new() out of sched_init().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 35 ++++++++++++++++++-----------------
- 1 file changed, 18 insertions(+), 17 deletions(-)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 22 +++++++++----------
+ 1 file changed, 10 insertions(+), 12 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index e9db856972cb..c6d2efc6cf0e 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -18,8 +18,10 @@
- 
- #ifdef CONFIG_BPF_JIT
- static struct bpf_struct_ops bpf_mptcp_sched_ops;
--static const struct btf_type *mptcp_sock_type, *mptcp_subflow_type __read_mostly;
--static u32 mptcp_sock_id, mptcp_subflow_id;
-+static u32 mptcp_sock_id,
-+	   mptcp_subflow_id;
-+
-+/* MPTCP BPF packet scheduler */
- 
- static const struct bpf_func_proto *
- bpf_mptcp_sched_get_func_proto(enum bpf_func_id func_id,
-@@ -43,12 +45,10 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 					     const struct bpf_reg_state *reg,
- 					     int off, int size)
- {
--	const struct btf_type *t;
-+	u32 id = reg->btf_id;
- 	size_t end;
- 
--	t = btf_type_by_id(reg->btf, reg->btf_id);
--
--	if (t == mptcp_sock_type) {
-+	if (id == mptcp_sock_id) {
- 		switch (off) {
- 		case offsetof(struct mptcp_sock, snd_burst):
- 			end = offsetofend(struct mptcp_sock, snd_burst);
-@@ -58,11 +58,14 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 				off);
- 			return -EACCES;
- 		}
--	} else if (t == mptcp_subflow_type) {
-+	} else if (id == mptcp_subflow_id) {
- 		switch (off) {
- 		case offsetof(struct mptcp_subflow_context, avg_pacing_rate):
- 			end = offsetofend(struct mptcp_subflow_context, avg_pacing_rate);
- 			break;
-+		case offsetof(struct mptcp_subflow_context, scheduled):
-+			end = offsetofend(struct mptcp_subflow_context, scheduled);
-+			break;
- 		default:
- 			bpf_log(log, "no write support to mptcp_subflow_context at off %d\n",
- 				off);
-@@ -75,7 +78,7 @@ static int bpf_mptcp_sched_btf_struct_access(struct bpf_verifier_log *log,
- 
- 	if (off + size > end) {
- 		bpf_log(log, "access beyond %s at off %u size %u ended at %zu",
--			t == mptcp_sock_type ? "mptcp_sock" : "mptcp_subflow_context",
-+			id == mptcp_sock_id ? "mptcp_sock" : "mptcp_subflow_context",
- 			off, size, end);
- 		return -EACCES;
- 	}
-@@ -113,7 +116,6 @@ static int bpf_mptcp_sched_init_member(const struct btf_type *t,
- 	const struct mptcp_sched_ops *usched;
- 	struct mptcp_sched_ops *sched;
- 	u32 moff;
--	int ret;
- 
- 	usched = (const struct mptcp_sched_ops *)udata;
- 	sched = (struct mptcp_sched_ops *)kdata;
-@@ -124,12 +126,7 @@ static int bpf_mptcp_sched_init_member(const struct btf_type *t,
- 		if (bpf_obj_name_cpy(sched->name, usched->name,
- 				     sizeof(sched->name)) <= 0)
- 			return -EINVAL;
--
--		rcu_read_lock();
--		ret = mptcp_sched_find(usched->name) ? -EEXIST : 1;
--		rcu_read_unlock();
--
--		return ret;
-+		return 1;
- 	}
- 
- 	return 0;
-@@ -144,18 +141,21 @@ static int bpf_mptcp_sched_init(struct btf *btf)
- 	if (type_id < 0)
- 		return -EINVAL;
- 	mptcp_sock_id = type_id;
--	mptcp_sock_type = btf_type_by_id(btf, mptcp_sock_id);
- 
- 	type_id = btf_find_by_name_kind(btf, "mptcp_subflow_context",
- 					BTF_KIND_STRUCT);
- 	if (type_id < 0)
- 		return -EINVAL;
- 	mptcp_subflow_id = type_id;
--	mptcp_subflow_type = btf_type_by_id(btf, mptcp_subflow_id);
- 
- 	return 0;
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 1d68bbda3370..b00af99c5c9d 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -562,23 +562,16 @@ static void test_iters_subflow(void)
+ 	close(cgroup_fd);
  }
  
-+static int bpf_mptcp_sched_validate(void *kdata)
-+{
-+	return mptcp_validate_scheduler(kdata);
-+}
-+
- static int __bpf_mptcp_sched_get_subflow(struct mptcp_sock *msk,
- 					 struct mptcp_sched_data *data)
+-static struct netns_obj *sched_init(char *flags, char *sched)
++static int sched_init(char *flags, char *sched)
  {
-@@ -183,6 +183,7 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
- 	.check_member	= bpf_mptcp_sched_check_member,
- 	.init_member	= bpf_mptcp_sched_init_member,
- 	.init		= bpf_mptcp_sched_init,
-+	.validate	= bpf_mptcp_sched_validate,
- 	.name		= "mptcp_sched_ops",
- 	.cfi_stubs	= &__bpf_mptcp_sched_ops,
- };
+-	struct netns_obj *netns;
+-
+-	netns = netns_new(NS_TEST, true);
+-	if (!ASSERT_OK_PTR(netns, "netns_new"))
+-		return NULL;
+-
+-	if (endpoint_init("subflow", 2) < 0)
++	if (endpoint_init(flags, 2) < 0)
+ 		goto fail;
+ 
+ 	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.scheduler=%s", NS_TEST, sched);
+ 
+-	return netns;
++	return 0;
+ fail:
+-	netns_free(netns);
+-	return NULL;
++	return -1;
+ }
+ 
+ static int ss_search(char *src, char *dst, char *port, char *keyword)
+@@ -636,11 +629,16 @@ static void send_data_and_verify(char *sched, bool addr1, bool addr2)
+ static void test_default(void)
+ {
+ 	struct netns_obj *netns;
++	int err;
+ 
+-	netns = sched_init("subflow", "default");
++	netns = netns_new(NS_TEST, true);
+ 	if (!netns)
+ 		goto fail;
+ 
++	err = sched_init("subflow", "default");
++	if (!ASSERT_OK(err, "sched_init"))
++		goto fail;
++
+ 	send_data_and_verify("default", WITH_DATA, WITH_DATA);
+ 
+ fail:
 -- 
 2.45.2
 
