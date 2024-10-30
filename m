@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02CF71990CD
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 10:22:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A978A1E3DD7;
+	Wed, 30 Oct 2024 10:50:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730283740; cv=none; b=ZroijUif0tpH/Ufr5nbmqf/GtI7dgGIH0Lq32vDOusJZJvd3FcvfUAiNgJQsuSYWt7YqKH/R/5/cfvDhefQfpbmFsrSlVkYDkBa6i/DpJ/f9TvCN3CHORAMo1p+0RocSNEI9WrsKAqFkh165PCTUzaxSqXj3gToUQpPTTpGlyZk=
+	t=1730285409; cv=none; b=VJMqJmNrPBHEsD7OKGMDsGHoV9mpWQn8T2CR1R8xCe5tqal5aH30XqqbzMmZ0lSDy3sBlwqlLAJAr0KIuS6eBBatCD4Z2KhTXgsOcHlhozaEoolBDH91n2HZ7gcz0qzXCTSrBaa268U/RXEsLO0W8Vow6TUVbBuP9zhJxieP3Tc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730283740; c=relaxed/simple;
-	bh=B2UwtXzSfGMIE75WsAG7j3MS/JOvTicHCxHL8wLRpHI=;
+	s=arc-20240116; t=1730285409; c=relaxed/simple;
+	bh=Xa2VhNuRqurWKjZDUhItHsHTIqISQSRfeYbdKkKyzuE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AwWOjJ+VJpyDtzE9KANlcuzF1snk35liRLxaGIOtaaYG/ue2K1LGnYwT58PciXRZvSZXVYaOe8b6QmxF+9llS9KTHEvnkxHnACJK4JWaqU2RbcM+ANBNw5p1X9t8Yza+3gVK7Uu9XGtZCbZ4l4wtqxondk61sdWD7DZ3taOEKso=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oOmuOXd4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eB+u+X5ykgTiet9QEsloAMIm1Npbzq4/+GwuDnsWFV/WgO3VuasMD3enRWDzTUkVNw+CmxDr41OG7qbpE8lLERHo4SSs9aGPaeHgx49nnHN2nWk56vfEegT8Zmqgw9Zm9UapWGA6Kwo0MvdmZ2+GUZg6hKRVF3VspviC9x7ar5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZYBpdp2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oOmuOXd4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 398EDC4CEE3;
-	Wed, 30 Oct 2024 10:22:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZYBpdp2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 731F4C4CEE3;
+	Wed, 30 Oct 2024 10:50:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730283739;
-	bh=B2UwtXzSfGMIE75WsAG7j3MS/JOvTicHCxHL8wLRpHI=;
+	s=k20201202; t=1730285409;
+	bh=Xa2VhNuRqurWKjZDUhItHsHTIqISQSRfeYbdKkKyzuE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oOmuOXd4WihZDvrpYsfJYikMksPxf0VLvYm+uN+q49ccJesantdSyyTV6AWkcxP9g
-	 ICwf7sOVD4Rw8mGOX/YhQ3OmCosjNfxxhziVwH2ShaK6dbS0KB40E/1Lkl5VDFSK79
-	 o8cseYAEIoTubo5qXeV6GANMB5//hjDt+3EjIQvCz1yttdhXD76opYXL1EySqbfe2l
-	 sd1HTjc4r4oRD/zT1arQ+ZEixgtXpdYl8aTE514bvNoBN3iwdTzCg3EZLaiChRSRr5
-	 +0Vlzc9GglDC0fj/CgNfmc243TD++bQx3FNLyY8mEKNkl2lLGb3BN3IIwJZqEKY5x3
-	 Le+AOdfwGmg3A==
-Message-ID: <f509af58-2394-4cd4-99c1-736fe38951a7@kernel.org>
-Date: Wed, 30 Oct 2024 11:22:16 +0100
+	b=RZYBpdp2FqmbqoQGHHgqRFB+1ruwRqT4jtnTn+xVCWgM5nEIIdZqb6IA9EzsDKHkG
+	 txSjS+AxZo9+ZnqUMbEB8Onxf7B6mlhlg4xHnIzQ1dypxL8OR8bgNnU7Y7uXU7fvag
+	 1J59kYE4pfkrTynf02u/GvWy/6L1B5S2Zfz/oUSrUkduxQbDGhN6lVBz6W0KdpCO1y
+	 MjTaFA2fTth8urohJHIfUcLuGODoKntqtjCYR85i/0rESU6+AWWMTudFXa5MhE73Sv
+	 U02foHSPjWOlL7R1KC2Kouimootz59e39s5CjYgMz35Yps10+BtU1S9yCjfkbcCOli
+	 f2d6Lnu1PZ/5w==
+Message-ID: <abb72d1b-3347-4493-9a18-43c1655b7449@kernel.org>
+Date: Wed, 30 Oct 2024 11:49:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,69 +35,59 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Drop netns helpers in mptcp
+Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP not
+ support
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <70c1f95bae8ec4884be50e08053364c1d152170c.1730262704.git.tanggeliang@kylinos.cn>
- <1b2079c54c089a4d0e55dcb3814f0bdfee7d37faf43a24627fa65b496b21ecf4@mail.kernel.org>
- <83561ed71dd7dd44571bb71c6dc5ac634fb1d9a8.camel@kernel.org>
+To: Tao Chen <chen.dylane@gmail.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
+References: <20241030100108.2443371-1-chen.dylane@gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Organization: NGI0 Core
-In-Reply-To: <83561ed71dd7dd44571bb71c6dc5ac634fb1d9a8.camel@kernel.org>
+In-Reply-To: <20241030100108.2443371-1-chen.dylane@gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Tao Chen,
 
-On 30/10/2024 10:37, Geliang Tang wrote:
-> Hi Matt,
+Thank you for having shared this patch.
+
+On 30/10/2024 11:01, Tao Chen wrote:
+> Fix compile error when MPTCP feature not support, though eBPF core check
+> already done which seems invalid in this situation, the error info like:
+> progs/mptcp_sock.c:49:40: error: no member named 'is_mptcp' in 'struct
+> tcp_sock'
+>    49 |         is_mptcp = bpf_core_field_exists(tsk->is_mptcp) ?
 > 
-> I need some help.
+> The filed created in new definitions with eBPF core feature to solve
+> this build problem, and test case result still ok in MPTCP kernel.
 > 
-> On Wed, 2024-10-30 at 05:50 +0000, bot+bpf-ci@kernel.org wrote:
->> Dear patch submitter,
->>
->> CI has tested the following submission:
->> Status:     CONFLICT
->> Name:       [bpf-next,v2] selftests/bpf: Drop netns helpers in mptcp
->> Patchwork: 
->> https://patchwork.kernel.org/project/netdevbpf/list/?series=904505&state=*
->> PR:         https://github.com/kernel-patches/bpf/pull/7982
->>
->> Please rebase your submission onto the most recent upstream change
->> and resubmit
->> the patch to get it tested again.
+> 176/1   mptcp/base:OK
+> 176/2   mptcp/mptcpify:OK
+> 176     mptcp:OK
+> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
 > 
-> BPF CI complains that this patch cannot be merged.
-> 
-> This patch needs to be merged into "for-next" branch of bpf-next, not
-> "master" branch. But CI defaults to merging into "master" branch, so
-> the merge cannot succeed. Do you know how I should handle this?
+> Fixes: 8039d353217c ("selftests/bpf: Add MPTCP test base")
 
-I guess what you need is to specify 'bpf-next/net' in the subject:
+The commit you mentioned here is more than 2 years old, and as far as I
+can see, nobody else reported this compilation issue. I guess that's
+because people used tools/testing/selftests/bpf/config file as expected
+to populate the kernel config, and I suppose you didn't, right?
 
-  [PATCH bpf-next/net v3] (...)
+I don't think other BPF selftests check for missing kernel config if
+they are specified in the 'config' file, but even if it is the case, I
+think it would be better to skip all the MPTCP tests, and not try to
+have them checking something that doesn't exist: no need to validate
+these tests if the expected kernel config has not been enabled.
 
-And rebase your patch on top of bpf/bpf-next.git, but the 'net' branch.
-
-That's because they did some changes in their BPF trees:
-
-
-https://lore.kernel.org/netdev/CAADnVQJgwGh+Jf=DUFuX28R2bpWVezigQYObNoKJT8UbqekOHA@mail.gmail.com/
-
-In short, in bpf/bpf-next.git you have 3 branches:
-
-- master: that will be use to send PR to Linus directly, and not netdev
-
-- net: new: this was still depend on net-next, PR will be sent to netdev
-
-- for-next: this one should be a merge of the two ↑, for linux-next
-
-For all modifications linked to BPF and MPTCP, I guess they will need to
-be tagged "bpf-next/net" (or "bpf" for the fixes).
-
-I guess you should not use the 'for-next' branch.
+But again, please correct me if I'm wrong, but I don't think there is
+anything to change here to fix your compilation issue: simply make sure
+to use this tools/testing/selftests/bpf/config file to generate your
+kernel config, no?
 
 Cheers,
 Matt
