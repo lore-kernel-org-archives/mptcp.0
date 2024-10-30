@@ -1,122 +1,192 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BA821BA4A
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 05:14:19 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37152193402;
+	Wed, 30 Oct 2024 05:45:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730265261; cv=none; b=GW6+9IBiuN3vC8/utmP0rL8QaKMBOniahel07ElHfGMknXRaZYSpapajY4l7LCNMnINUmGSVM2ZW/TCgCiKKzm320zrTcSXEr+juXsqQXkLE6nATuWWqKyiRxU8Yu8N6jgQcXUEqXOuFQ6VMe9ZT6K0Ort71kFm/FTNFCqxYl1M=
+	t=1730267149; cv=none; b=hE6eKNws4LmwYfuO/k6CY0SBbh6W6yT+myLE4AozkRcPXgvwmXdWU0STVeTpl5J6Wc5vWDZ6C6l1b9Y5dceQvrznShq0/3uQRqkPCkrh/K/tfNra09xDzcGJKbUhxD7IVusnaec+uNlgXWmQY/og7L6COW0naz/4gNqDwJy4cuk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730265261; c=relaxed/simple;
-	bh=aoKVUB+G2pNjXr3Dx57gBKafhITUFli3PzFDTUkiCnI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=gGhRC37R3u0zK5WfrtCgevAzW184gf3YFj1o40ZWs14UIj0E2rfhdw0XC9jq5xgysOROmk+waGov3kXxHbLCgO4W5EFmsIVwQoADuqLyo0nckbEWoy8AomlSDL7+QyRipfRl95tGY+6o4mhQ9EJYNyqPWLicFHWhp+knIKRbn6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OjdVkh+x; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730267149; c=relaxed/simple;
+	bh=nmYJaCm7uEXLwKIA6rFcBkFf3FoMgYkZMq0qidsFzPc=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iLt/hn88buTj4p//347joLmpfieZMYSHzglo/OvV7+Pbk16jURHYzQ90Av7jiqPoXAIZtmUJejW7UYvc17n7GusN7m83Pk524+COCsK5X5V1vH0IvuJIwFHivw0ualj+46edjaIW8hK4Uw/rVZXr6+FInDmF2boxGHzzA0/Uyaw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AL7pWLGc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OjdVkh+x"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7b15d330ce1so499841985a.1
-        for <mptcp@lists.linux.dev>; Tue, 29 Oct 2024 22:14:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730265258; x=1730870058; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=unYCzH1moVkBwTO641bpTejumbkqqXNkIOnm6kP1Xqo=;
-        b=OjdVkh+xC8yGBYtR6/IbAP5yBSyH27v5X4zMJ9xmWke8BS00q+h4Wa0TP6eH2ADwwn
-         WY9OOr69mlvnHi/UQ9eYjvI+qyzros3hf6pbQPxVkWXsY62AROxADXslEQGnW2sqAcRl
-         aqacMFEFXp3qAhrZj2i8zdZdFzsn4jmDKNSg9eO1JdPbv8dvJPs/bik4Al3CWMqUwpKO
-         ZQIJQSVf3AY/6qXb17Bqs23OssKyo+xHtAcD2umhKdBb0hxFciBZiYYb4SXmhh9f3oB+
-         uGIqudmS+IzmuytRdjjsE3KUKZJ3LjFT3T3bBJVbGJeySHHpYn+cjZcvW8ubonjbblAg
-         7pIg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730265258; x=1730870058;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=unYCzH1moVkBwTO641bpTejumbkqqXNkIOnm6kP1Xqo=;
-        b=dDBBdTfgT4RLSTAm/cG/kByhDk72CZAf//WfRU4PC1T9H0Lu32Ify4KJhfdYrL4MRB
-         rZLSOEZWx6P7nXiLOoQ2To+TCK3lk8UbklSIeITRxIgikztrHJ1tWVqITrBwEAAdPm7n
-         1znwR4twcAMOOcnBLqlg0ZUFdGKIAMTlHbmt7Wf4t08TEYo50Pxe2MP1X/6fxPi+5uM4
-         YSULfRdSUnlCIYcWiarOo36wEHGb5XLHSJBf4kYmpHLvaRGzanTuRjO5KdvEhATez2mX
-         mbA/JLz48opBkA0p2UUU45dtBYJq9HK7A8qGV5UF2+j9dtoCJou/LTLGp/Qw4lrhsdZ0
-         0gaA==
-X-Gm-Message-State: AOJu0Yx2J4S9/YYBghPjxsa3NurXGVokib/yX6TLfW40kBwHh/ae3x7h
-	PkMLFutpOZ6GdGN0Lb8HZ0jAxZvJnTPIu7ulqPxunAjU96wUMlFtfs5Q
-X-Google-Smtp-Source: AGHT+IGhSXB2d8U0ekp3vtXDTgqCDnzX+fvYqwQlzw8Rmfv4ELClbP3utqPNE1fAhJc33VuXMi0uEw==
-X-Received: by 2002:a05:620a:2454:b0:7a9:b739:3763 with SMTP id af79cd13be357-7b193efc1ecmr1912565885a.28.1730265258640;
-        Tue, 29 Oct 2024 22:14:18 -0700 (PDT)
-Received: from [127.0.0.1] ([20.84.127.27])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b18d27b98csm482826885a.6.2024.10.29.22.14.17
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 29 Oct 2024 22:14:17 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1730260715.git.tanggeliang@kylinos.cn>
-References: <cover.1730260715.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v4 0/4] add netns helpers
-Message-ID: <9ae80455-5437-5127-a23f-bb5f037e07bc@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 30 Oct 2024 05:14:16 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AL7pWLGc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8A149C4CEE4;
+	Wed, 30 Oct 2024 05:45:42 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730267148;
+	bh=nmYJaCm7uEXLwKIA6rFcBkFf3FoMgYkZMq0qidsFzPc=;
+	h=From:To:Cc:Subject:Date:From;
+	b=AL7pWLGchQpStOwdgLfKXl4qWfPcCsXtfTiBWxB+8xyF5B/ldPyuwaJXLym1XMtw6
+	 UfX5B2CfjRUpdTzkywNDh5NsyqM2BdCso6q46pD5JAZ+Itp+biSAoVLqWRkTwRD0tj
+	 rWzXJC0gMJcQ2WBVR6vH8XQdUkVGm7xpRjmN3jeuIST6lk5Ju7pTJMvk6WH5rcnsWB
+	 nMHUqEkLGSFlcMiVZ51qZRlSjylsIdVkFWmSAGZtd+2CYf2NLqcbBgt0MBb5ZnXDuP
+	 CE8UlGoYkq8TF9GTBuVJpkOWfXud+k18P94/ey1e2yL1jhUsk+ZJ53FlHJkXd+qDeu
+	 kKzwF8XXV9oOw==
+From: Geliang Tang <geliang@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org
+Subject: [PATCH bpf-next v2] selftests/bpf: Drop netns helpers in mptcp
+Date: Wed, 30 Oct 2024 13:45:28 +0800
+Message-ID: <70c1f95bae8ec4884be50e08053364c1d152170c.1730262704.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Thank you for your modifications, that's great!
+New netns selftest helpers netns_new() and netns_free() has been added
+in network_helpers.c, let's use them in mptcp selftests too instead of
+using MPTCP's own helpers create_netns() and cleanup_netns().
 
-Our CI did some validations and here is its report:
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v2:
+ - Use netns_new/netns_free instead of create_netns/cleanup_netns as
+Martin suggested.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11586931001
+v1:
+  selftests/bpf: Use make/remove netns helpers in mptcp
+---
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 42 ++++++-------------
+ 1 file changed, 12 insertions(+), 30 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/639f675bca10
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D904491
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index be3cad2aff77..f8eb7f9d4fd2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -69,24 +69,6 @@ struct mptcp_storage {
+ 	char ca_name[TCP_CA_NAME_MAX];
+ };
+ 
+-static struct nstoken *create_netns(void)
+-{
+-	SYS(fail, "ip netns add %s", NS_TEST);
+-	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
+-
+-	return open_netns(NS_TEST);
+-fail:
+-	return NULL;
+-}
+-
+-static void cleanup_netns(struct nstoken *nstoken)
+-{
+-	if (nstoken)
+-		close_netns(nstoken);
+-
+-	SYS_NOFAIL("ip netns del %s", NS_TEST);
+-}
+-
+ static int start_mptcp_server(int family, const char *addr_str, __u16 port,
+ 			      int timeout_ms)
+ {
+@@ -206,15 +188,15 @@ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+ 
+ static void test_base(void)
+ {
+-	struct nstoken *nstoken = NULL;
++	struct netns_obj *netns = NULL;
+ 	int server_fd, cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcp");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+ 		return;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
+ 		goto fail;
+ 
+ 	/* without MPTCP */
+@@ -237,7 +219,7 @@ static void test_base(void)
+ 	close(server_fd);
+ 
+ fail:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ 	close(cgroup_fd);
+ }
+ 
+@@ -322,21 +304,21 @@ static int run_mptcpify(int cgroup_fd)
+ 
+ static void test_mptcpify(void)
+ {
+-	struct nstoken *nstoken = NULL;
++	struct netns_obj *netns = NULL;
+ 	int cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcpify");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+ 		return;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
+ 		goto fail;
+ 
+ 	ASSERT_OK(run_mptcpify(cgroup_fd), "run_mptcpify");
+ 
+ fail:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ 	close(cgroup_fd);
+ }
+ 
+@@ -414,7 +396,7 @@ static void run_subflow(void)
+ static void test_subflow(void)
+ {
+ 	struct mptcp_subflow *skel;
+-	struct nstoken *nstoken;
++	struct netns_obj *netns;
+ 	int cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcp_subflow");
+@@ -437,8 +419,8 @@ static void test_subflow(void)
+ 	if (!ASSERT_OK_PTR(skel->links._getsockopt_subflow, "attach _getsockopt_subflow"))
+ 		goto skel_destroy;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new: mptcp_subflow"))
+ 		goto skel_destroy;
+ 
+ 	if (endpoint_init("subflow") < 0)
+@@ -447,7 +429,7 @@ static void test_subflow(void)
+ 	run_subflow();
+ 
+ close_netns:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ skel_destroy:
+ 	mptcp_subflow__destroy(skel);
+ close_cgroup:
+-- 
+2.45.2
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
