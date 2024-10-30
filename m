@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A72C51C6882
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 18:21:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95AEB1C7B68
+	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 18:23:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730312505; cv=none; b=Y9Vycr8zM4ACeJFaRgz4R2djjZyn9kEFU3b1hkJlZcwQcmpAiKAg6LK8xYg+uTV4eD4/2lHSIW8sr5GIfAhxaXjNOiwblaPOJhSRoHbzOYEzRm8PgqhzMFQ8Lb4X1qT+9y4Bk7LoTIKYNFWn4mu/IlIVToSlfOREkNoqUX1/5ms=
+	t=1730312588; cv=none; b=GSXx4wgaBG/QHC36pIt2Dw+dJZfSktMmIRihfmG2+S701UEbwex3bPEJ00QnKQ9cdZ5VUU5HbpR1xeTfq5/o0YE9BZSvb6zviHgk0EIAZIkaPSeoQ1oiOLTgGZFh59jWlpCazb5m/7cfs95drRP8syF/Rbc6X7dS6xuimpIm31o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730312505; c=relaxed/simple;
-	bh=tysjKI1lM60HXbATBbrmFFxv960HxRmsHxBqpjVRY0M=;
+	s=arc-20240116; t=1730312588; c=relaxed/simple;
+	bh=wy3nSusVwupfHNYopJVUoEiG24ZBFX9jrs+77oLK9Qg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kSoACj72QD1Fy4KCkuo4LTFr057Tx7qMMy+EUP3cPXMUHkttJ5OtPp+eJvsEAMAKVqFkuknrKAHdMREhxOw+apadaMFiQR9n/aDOLsKEpBdh+nBWpY0PVngbMD4Ewg6NT/5KPjPOEMHoz62zCL1js8mOPMPfKgFTtAyxqQln9SY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ta5WZ7sg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=OPrkey3PRROpO2ncx2QFNcSA1V/jxY478iRvNCEnan5+gHkYluia4NQBwZ9vnBXFuX/rGGznCHEkI90e7dDQBJqavw5QPMdJolA4urCS9NdeKPo4I4mfLkooDUwsxICDLr3KnpG1jW8kjI3enacVEWW7w99QDB2y8YaOqXd6ekQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkIDcc7+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ta5WZ7sg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86105C4CECE;
-	Wed, 30 Oct 2024 18:21:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkIDcc7+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 213FFC4CED1;
+	Wed, 30 Oct 2024 18:23:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730312505;
-	bh=tysjKI1lM60HXbATBbrmFFxv960HxRmsHxBqpjVRY0M=;
+	s=k20201202; t=1730312588;
+	bh=wy3nSusVwupfHNYopJVUoEiG24ZBFX9jrs+77oLK9Qg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ta5WZ7sgZXQPWdWU7DXHToZz7OtroqHYPfyt8zFirrUanhmNAQd3sfLlPpGVbDriF
-	 6omQU5MNqW1RaAAcGp1CDDHpdL7P3wofBhhSe+zjxmTAnvEux55fbkLoOubyWEPTb0
-	 JTRM7IKyOSDN4AHfcU54pNQ2hKmEMvE+GP9Tlj2D4kLrNvyndbh8GYz6vDjCu2id8T
-	 hZBjlMZQ7EDbknEbX58hhlYoNPgYFYJ+qfXmOZBJgRD5aOwJiexYvoOu5+yeH79gCE
-	 CAdBkzBVFbvjS5HXoLWvwoNFQ5XVtZC1MYmuS7gIVI+mC+p9GiBtkWg7m+jL0R8FGt
-	 Bqh4znlJNQ/BA==
-Message-ID: <af13381b-4bc8-4735-8c0d-abca4ae6c48e@kernel.org>
-Date: Wed, 30 Oct 2024 19:21:42 +0100
+	b=VkIDcc7+tNb+HpMTNjbNpTksQGIiD2p6ryva0/dE0n0Am0FI26hxEyRRFz19pmf/8
+	 0SOoMhR3nVWuUNAUci1GilL1r9eMjBBkNECLXzfq4lNorlLE5AALXGr0xVaU+zrFwn
+	 2rlVdof+ADZsbiHF7k3pNJoZq/kmCB1pAuWsW2gGMEmJ30APIO3gZsb3TVgy7YTkPs
+	 l1J7yGHbl7iR4p34v9VsiP3cjyhJ82oi/QB1Mim5IwzqUPOfIkca75HRd5gg71xKQ0
+	 Ac2gaIJPo0pcY0MuGYORn1nB4HqwoiYxfQYfb2NwR/4Mps8qRU8gW9gE4Dxt2N6JW9
+	 uncdw1EFr8AHA==
+Message-ID: <8833171c-167d-4f5e-99a6-dc4b2a26e119@kernel.org>
+Date: Wed, 30 Oct 2024 19:23:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 05/36] mptcp: add lookup_addr for userspace
- pm
+Subject: Re: [PATCH mptcp-next v2 06/36] mptcp: add
+ mptcp_userspace_pm_get_sock helper
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <6d30431fd64e8c17d163ab5656838e1c3be78b97.1729588019.git.tanggeliang@kylinos.cn>
+ <020b0eb4dff6e4b19dba43609c758e49d1f38a08.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6d30431fd64e8c17d163ab5656838e1c3be78b97.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <020b0eb4dff6e4b19dba43609c758e49d1f38a08.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,148 +96,355 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Like __lookup_addr() helper in pm_netlink.c, a new helper
-> mptcp_userspace_pm_lookup_addr() is also defined in pm_userspace.c.
-> It looks up the corresponding mptcp_pm_addr_entry address in
-> userspace_pm_local_addr_list through the passed "addr" parameter
-> and returns it.
-> 
-> This helper can be used in mptcp_userspace_pm_delete_local_addr(),
-> mptcp_userspace_pm_get_local_id() and mptcp_userspace_pm_is_backup()
-> to simplify the code.
+> Each userspace pm netlink function uses nla_get_u32() to get the msk
+> token value, then pass it to mptcp_token_get_sock() to get the msk.
+> Finally check whether userspace PM is selected on this msk. It makes
+> sense to wrap them into a helper, named mptcp_userspace_pm_get_sock(),
+> to do this.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm_userspace.c | 56 +++++++++++++++++++++-------------------
->  1 file changed, 29 insertions(+), 27 deletions(-)
+>  net/mptcp/pm_userspace.c | 137 +++++++++++++--------------------------
+>  1 file changed, 44 insertions(+), 93 deletions(-)
+
+Looks like a good refactoring!
+
 > 
 > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 3fb5713cd988..ce0f7131c701 100644
+> index ce0f7131c701..79ae32c921b7 100644
 > --- a/net/mptcp/pm_userspace.c
 > +++ b/net/mptcp/pm_userspace.c
-> @@ -26,6 +26,18 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
->  	}
+> @@ -169,36 +169,51 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+>  	return backup;
 >  }
 >  
-> +static struct mptcp_pm_addr_entry *
-> +mptcp_userspace_pm_lookup_addr(struct mptcp_sock *msk, const struct mptcp_addr_info *addr)
+> -int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+> +static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
+>  {
+>  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+> +	struct mptcp_sock *msk = NULL;
 
-When possible, can you try to limit to 80 chars per line?
+(no need to set it to NULL, see below)
 
-See: https://github.com/linux-netdev/nipa/pull/41
-
-Using more than 80 is allowed, but it should be restricted to cases
-where using less than 80 chars affects the readability, e.g. not to
-break 'entry->flags & MY_SPECIFIC_FLAG' in two lines, etc. The idea is
-not to abuse of that.
-
-Here for example, it is easy to go to the new line after the ','.
-
-> +{
-> +	struct mptcp_pm_addr_entry *entry, *tmp;
 > +
-> +	mptcp_for_each_address_safe(msk, entry, tmp) {
+> +	if (!token) {
+> +		GENL_SET_ERR_MSG(info, "missing required inputs");
 
-Why do you need the '_safe' alternative here? You only return an entry
-from the list, and you stop: no need to continue after having modified
-the list here as far as I can see, no?
+Maybe we can take this opportunity to mention the token: "missing
+required token".
 
-Also, something very important: here you are presenting the modification
-as a simple refactoring, but it does change the behaviour: the '_safe'
-version is used everywhere, which was not the case before. When you do
-something like that, please mention it in the commit message! Without
-that, a reviewer might not notice it "OK, just a refactoring", and
-developers might wonder later why this was done. I then recommend to
-always add either something like:
-- "No behaviour change intended here."
-- or "Please note that now <something different is done> for <these
-cases>, but that's OK to do so <because ...>."
+> +		goto out;
 
-> +		if (mptcp_addresses_equal(&entry->addr, addr, false))
-> +			return entry;
+Detail: simply return 'NULL' here, there is no clean-up to do, no?
+
 > +	}
-> +	return NULL;
+> +
+> +	msk = mptcp_token_get_sock(genl_info_net(info), nla_get_u32(token));
+
+I see that below, we were also using sock_net(skb->sk) or even
+sock_net(msg->sk). Please mention such modifications in the commit
+message, explaining why it is OK to use only genl_info_net(). I guess it
+is the same info, but better to be sure and not hide that.
+
+> +	if (!msk) {
+> +		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +		goto out;
+
+Same here.
+
+> +	}
+> +
+> +	if (!mptcp_pm_is_userspace(msk)) {
+> +		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> +		sock_put((struct sock *)msk);
+
+Mmh, I was not sure if it would be a good idea to do this check and
+sock_put() here, but I guess that's OK as we just got the msk with the
+previous call. (no need to change then)
+
+> +		msk = NULL;
+
+I guess you can also simply return NULL here, and remove the 'out' label.
+
+> +	}
+> +
+> +out:
+> +	return msk;
 > +}
 > +
->  static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
->  						    struct mptcp_pm_addr_entry *entry,
->  						    bool needs_id)
-> @@ -90,22 +102,20 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
->  static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
->  						struct mptcp_pm_addr_entry *addr)
->  {
-> -	struct mptcp_pm_addr_entry *entry, *tmp;
->  	struct sock *sk = (struct sock *)msk;
-> +	struct mptcp_pm_addr_entry *entry;
+> +int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+> +{
+>  	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+>  	struct mptcp_pm_addr_entry addr_val;
+>  	struct mptcp_sock *msk;
+>  	int err = -EINVAL;
+>  	struct sock *sk;
+> -	u32 token_val;
 >  
-> -	mptcp_for_each_address_safe(msk, entry, tmp) {
-> -		if (mptcp_addresses_equal(&entry->addr, &addr->addr, false)) {
-> -			/* TODO: a refcount is needed because the entry can
-> -			 * be used multiple times (e.g. fullmesh mode).
-> -			 */
-> -			list_del_rcu(&entry->list);
-> -			sock_kfree_s(sk, entry, sizeof(*entry));
-> -			msk->pm.local_addr_used--;
-> -			return 0;
-> -		}
+> -	if (!addr || !token) {
+> +	if (!addr) {
+>  		GENL_SET_ERR_MSG(info, "missing required inputs");
+
+Same here, "missing required address".
+
+>  		return err;
+>  	}
+>  
+> -	token_val = nla_get_u32(token);
+> -
+> -	msk = mptcp_token_get_sock(sock_net(skb->sk), token_val);
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return err;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto announce_err;
 > -	}
 > -
-> -	return -EINVAL;
-> +	entry = mptcp_userspace_pm_lookup_addr(msk, &addr->addr);
-> +	if (!entry)
-> +		return -EINVAL;
-> +
-> +	/* TODO: a refcount is needed because the entry can
-> +	 * be used multiple times (e.g. fullmesh mode).
-> +	 */
-
-(Not related to this commit: I wonder if the TODO still makes sense. We
-had some discussions with Mat, and I think the conclusion was that it
-was OK, but I don't remember why)
-
-> +	list_del_rcu(&entry->list);
-> +	sock_kfree_s(sk, entry, sizeof(*entry));
-> +	msk->pm.local_addr_used--;
-> +	return 0;
->  }
+>  	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
+>  	if (err < 0) {
+>  		GENL_SET_ERR_MSG(info, "error parsing local address");
+> @@ -271,7 +286,6 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
 >  
->  static struct mptcp_pm_addr_entry *
-> @@ -123,17 +133,12 @@ mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
->  int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
->  				    struct mptcp_addr_info *skc)
+>  int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
 >  {
-> -	struct mptcp_pm_addr_entry *entry = NULL, *e, new_entry;
-> +	struct mptcp_pm_addr_entry *entry = NULL, new_entry;
->  	__be16 msk_sport =  ((struct inet_sock *)
->  			     inet_sk((struct sock *)msk))->inet_sport;
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+>  	struct mptcp_pm_addr_entry *match;
+>  	struct mptcp_pm_addr_entry *entry;
+> @@ -279,30 +293,21 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  	LIST_HEAD(free_list);
+>  	int err = -EINVAL;
+>  	struct sock *sk;
+> -	u32 token_val;
+>  	u8 id_val;
 >  
->  	spin_lock_bh(&msk->pm.lock);
-> -	mptcp_for_each_address(msk, e) {
-> -		if (mptcp_addresses_equal(&e->addr, skc, false)) {
-> -			entry = e;
-> -			break;
-> -		}
+> -	if (!id || !token) {
+> +	if (!id) {
+>  		GENL_SET_ERR_MSG(info, "missing required inputs");
+
+Same here, "missing required ID".
+
+>  		return err;
+>  	}
+>  
+>  	id_val = nla_get_u8(id);
+> -	token_val = nla_get_u32(token);
+>  
+> -	msk = mptcp_token_get_sock(sock_net(skb->sk), token_val);
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return err;
 > -	}
-> +	entry = mptcp_userspace_pm_lookup_addr(msk, skc);
->  	spin_unlock_bh(&msk->pm.lock);
->  	if (entry)
->  		return entry->addr.id;
-> @@ -156,12 +161,9 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
->  	bool backup = false;
 >  
->  	spin_lock_bh(&msk->pm.lock);
-> -	mptcp_for_each_address(msk, entry) {
-> -		if (mptcp_addresses_equal(&entry->addr, skc, false)) {
-> -			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> -			break;
-> -		}
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto out;
 > -	}
-> +	entry = mptcp_userspace_pm_lookup_addr(msk, skc);
-> +	if (entry)
-> +		backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
->  	spin_unlock_bh(&msk->pm.lock);
+> -
+>  	if (id_val == 0) {
+>  		err = mptcp_userspace_pm_remove_id_zero_address(msk, info);
+>  		goto out;
+> @@ -336,7 +341,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+>  	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+>  	struct mptcp_pm_addr_entry entry = { 0 };
+>  	struct mptcp_addr_info addr_r;
+> @@ -344,28 +348,18 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+>  	struct mptcp_sock *msk;
+>  	int err = -EINVAL;
+>  	struct sock *sk;
+> -	u32 token_val;
 >  
->  	return backup;
+> -	if (!laddr || !raddr || !token) {
+> +	if (!laddr || !raddr) {
+>  		GENL_SET_ERR_MSG(info, "missing required inputs");
+
+I guess here, you could have "missing required address(es)".
+
+>  		return err;
+>  	}
+>  
+> -	token_val = nla_get_u32(token);
+> -
+> -	msk = mptcp_token_get_sock(genl_info_net(info), token_val);
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return err;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto create_err;
+> -	}
+> -
+>  	err = mptcp_pm_parse_entry(laddr, info, true, &entry);
+>  	if (err < 0) {
+>  		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+> @@ -468,35 +462,24 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
+>  int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+>  	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+>  	struct mptcp_addr_info addr_l;
+>  	struct mptcp_addr_info addr_r;
+>  	struct mptcp_sock *msk;
+>  	struct sock *sk, *ssk;
+>  	int err = -EINVAL;
+> -	u32 token_val;
+>  
+> -	if (!laddr || !raddr || !token) {
+> +	if (!laddr || !raddr) {
+
+I guess here, you could have "missing required address(es)".
+
+>  		GENL_SET_ERR_MSG(info, "missing required inputs");
+>  		return err;
+>  	}
+>  
+> -	token_val = nla_get_u32(token);
+> -
+> -	msk = mptcp_token_get_sock(genl_info_net(info), token_val);
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return err;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto destroy_err;
+> -	}
+> -
+>  	err = mptcp_pm_parse_addr(laddr, info, &addr_l);
+>  	if (err < 0) {
+>  		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+> @@ -559,30 +542,18 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
+>  	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
+>  	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+> -	struct net *net = sock_net(skb->sk);
+>  	struct mptcp_sock *msk;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+> -	u32 token_val;
+>  	u8 bkup = 0;
+>  
+> -	token_val = nla_get_u32(token);
+> -
+> -	msk = mptcp_token_get_sock(net, token_val);
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return ret;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "userspace PM not selected");
+> -		goto set_flags_err;
+> -	}
+> -
+>  	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
+>  	if (ret < 0)
+>  		goto set_flags_err;
+> @@ -619,30 +590,20 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  		DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
+>  	} *bitmap;
+>  	const struct genl_info *info = genl_info_dump(cb);
+> -	struct net *net = sock_net(msg->sk);
+>  	struct mptcp_pm_addr_entry *entry;
+>  	struct mptcp_sock *msk;
+> -	struct nlattr *token;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+>  	void *hdr;
+>  
+>  	bitmap = (struct id_bitmap *)cb->ctx;
+> -	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  
+> -	msk = mptcp_token_get_sock(net, nla_get_u32(token));
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return ret;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto out;
+> -	}
+> -
+>  	lock_sock(sk);
+>  	spin_lock_bh(&msk->pm.lock);
+>  	mptcp_for_each_address(msk, entry) {
+> @@ -667,7 +628,6 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  	release_sock(sk);
+>  	ret = msg->len;
+>  
+> -out:
+>  	sock_put(sk);
+>  	return ret;
+>  }
+> @@ -676,28 +636,19 @@ int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
+>  				struct genl_info *info)
+>  {
+>  	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct mptcp_pm_addr_entry addr, *entry;
+> -	struct net *net = sock_net(skb->sk);
+>  	struct mptcp_sock *msk;
+>  	struct sk_buff *msg;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+>  	void *reply;
+>  
+> -	msk = mptcp_token_get_sock(net, nla_get_u32(token));
+> -	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +	msk = mptcp_userspace_pm_get_sock(info);
+> +	if (!msk)
+>  		return ret;
+> -	}
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	if (!mptcp_pm_is_userspace(msk)) {
+> -		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
+> -		goto out;
+> -	}
+> -
+>  	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+>  	if (ret < 0)
+>  		goto out;
 
 Cheers,
 Matt
