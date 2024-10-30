@@ -1,82 +1,165 @@
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F34F2C6A3
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 15:38:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EADF68C1F;
+	Wed, 30 Oct 2024 16:31:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730302683; cv=none; b=p2OYmjq3BjQBZTAD36FKuQyCGubbu3SSLVqlesKA2ukS/dQoNlBNCRlBPEAy0F/ULXoDNTkS6xvBebqHHu3k34nODhYdyknUa2RbeZbaFgb/j5axPPFLOXok56e0VOEfo9U6E/3MnKwMqKlKCFANuZdhyrLSPJv/yFb9pwdX8Ls=
+	t=1730305882; cv=none; b=R24CKVCdtwZkdxNbpdckRjupd3s1G46RP/f1y+ZpvOfpoiiHnUOk3tjXG5dP105I+5k5OiyMgXzXp9v/wHa5s1miRpoG1tBLS+VeI5UuEAHGzyttpAcoc5AC3yema22sdqkduoAHrkGplbaYwRgy+NxSprxEFPLByTt1JO/66Ow=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730302683; c=relaxed/simple;
-	bh=lWLNB6NauvSC3irEBTZhZs6g8sLTn5D2zaDYEGJJkAk=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=fhc0hK8E/Xdji6TqFOAaU7kY8nrMtyhmJ/Qk1wyT1kOyxV2LTjtipSfId1DNbpun6qq8jAzrF5JrhUR5g1dKHVyQTL65vzlGxktuW+MWqUJ7xaMUkF5XRZIedvkOJL2L8gD7cWfnAI+Y+Hnv1k0DGeNFCvcKlh/oJEBOES9B54s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=KwHrSRP4; arc=none smtp.client-ip=209.85.208.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1730305882; c=relaxed/simple;
+	bh=oO8e/qytpViysImJ2eTakDtB0b0Ol/dLIvB1fQFw8Ww=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=QbGJUAlLpeWeqgvxPjJJ8nNSM0AFNyyEcw60/gxRE/lAtVrPyLb8ltPg2cW2L3XLUkaz0jMrpDhOzg2eGNsoAIh9teevjkYkyqTw04iQwCVP0lfgRUHUtHKkQQrvyvD+EKaYTL+8mthg9ruHZRblI5v8S2OaTyEcOFgAazc+hgY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciSt+G/C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="KwHrSRP4"
-Received: by mail-lj1-f176.google.com with SMTP id 38308e7fff4ca-2fb388e64b0so67907221fa.0
-        for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 08:38:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1730302679; x=1730907479; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=LrMCWRpczwyRTmnrS6nIF4HKYVkA9torv7EN4XtnnJI=;
-        b=KwHrSRP4EePe0qLCMDeP5aSBovGOqL7n27yeUGIMrRv/0cR4aS/7ng/pWpK+S4icsr
-         TWHSi6m4Y5KsSor413iJaHxM5d1ZfNxzyI2/Xrq313U4hbpjnmBochNgAq391VSln9wm
-         x9GIVpYGXM1It3WpVRa6T4cHEcPSX0Bmb+Ssp9elp9eOIbnD+vPXVEMXzSfRgMBAheXe
-         ZkSSr3QOOKs1lpuO0+IX9OFX00Qet6hGgdJ+d0gwIjzu4B8NgvtarME+/7X6AJZhVktJ
-         z2BqNlofNVn5m5Pi8WWiLgaG7hy1h/4PP0NrmcO7DYiQU86fMeSZUn+wR5MX6Dcxyzay
-         SefQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730302679; x=1730907479;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=LrMCWRpczwyRTmnrS6nIF4HKYVkA9torv7EN4XtnnJI=;
-        b=JuQ80tykJRrxxF3oH3QJDzDbRepzojJLkXnmTeLEHNKDKkx9eYA3/b+JfiXtr9v0YP
-         x1tT6WcAOW5qCAXlIo4hom9IlCV0/fCaimC/6S8vyPGxq1IavpTNr9nHukhJerwDmmOX
-         atqKkZB2agtaY94gCjM/fFb43jzNadycRAyKQKrQPZ1Jbx7t35Uj+fLtZu+o6YRpxUHL
-         iDCrbOEb9pPUDX07axyomnSxzjeI72i5xN8O4lPJxNb2B8RkOwdJk6jrygaNtZXI+F+C
-         zygvZ7zQxTSeiwWjD2wIQtdCrwsZ+ge1YS/UdFpBvIEJML9GphssM9RdrOk2DyhmT2aj
-         gyxA==
-X-Forwarded-Encrypted: i=1; AJvYcCUH1idup5j/98o27MpBxTxbLXdx/pWYHrjFitkYuL6R/aN9Z43C9hrF6mrN7qdPZwhQFVy/mA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzpTsbqAgJdZC42UI1+3mVm820Vf1w6L6EIRf4WReIfhOW2CmWV
-	DRLWq+0b/CliY8wK7V4aDgck8q6Y0eg0m76ZaofNKIljJ6CXxxv8zElOIIARz2UAwJeYYPnIva/
-	9L1QI/Xkn9IvCsh2dKTnbPrG0YwZ6DpPvym2h
-X-Google-Smtp-Source: AGHT+IG7DRpQ0VVMTcG6EnMiWykyPu51ceO5M4tUaSNQltNn+7su5SexoUVL9I4k/XDx6ioEftGeQAPKiITlI5Hsoro=
-X-Received: by 2002:a2e:4611:0:b0:2fb:382e:410b with SMTP id
- 38308e7fff4ca-2fd059d31f3mr18514061fa.32.1730302679117; Wed, 30 Oct 2024
- 08:37:59 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciSt+G/C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B22D6C4CECE;
+	Wed, 30 Oct 2024 16:31:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730305881;
+	bh=oO8e/qytpViysImJ2eTakDtB0b0Ol/dLIvB1fQFw8Ww=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ciSt+G/CDYMj9JF989JWCb0qe/e8mg9VVp7vv0YPzDMdGPEnYGnb3vRdjoYbJ3qsK
+	 mX7HMq6efm2oi5vL5WeKkSgnCnO0BLJ5YhhisDEo/qEGWaNI0EBYrmc3f9Tq18e7UZ
+	 xFmIwkD2eYaMil6laBElh9xu7WR2RY67PjK87fVKhWDf7WpiAbyKIBTle3j6p1Fz0B
+	 BPSflJ+JP7dvSuxOykFLss1FlY0uCWq0pH2SRvwCOL0DYDyoo4caQfWvzmcOx/deKm
+	 GQBx7u/OMRetmRvYmzU3aTjfS4sPuRD8V1XuLo52T0B4+wNo/7y/L4tVzLXQ4n0N7D
+	 3aFoUz4CrWJgg==
+Message-ID: <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
+Date: Wed, 30 Oct 2024 17:31:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241030140224.972565-1-leitao@debian.org> <CANn89iLbTAwG-GM-UBFv4fNJ+1RuUZLMFNDCbUumbXx3SxxfBA@mail.gmail.com>
- <20241030-keen-vicugna-of-effort-bd3ab8@leitao>
-In-Reply-To: <20241030-keen-vicugna-of-effort-bd3ab8@leitao>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 30 Oct 2024 16:37:44 +0100
-Message-ID: <CANn89i+1ddxa3aQH=1ev2fX5+T=PBT2C0i0YwqQzWaJuMfVi=A@mail.gmail.com>
-Subject: Re: [PATCH net] mptcp: Ensure RCU read lock is held when calling mptcp_sched_find()
-To: Breno Leitao <leitao@debian.org>
-Cc: kuba@kernel.org, horms@kernel.org, davem@davemloft.net, pabeni@redhat.com, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	vlad.wing@gmail.com, max@kutsevol.com, kernel-team@meta.com, aehkn@xenhub.one, 
-	stable@vger.kernel.org, 
-	"open list:NETWORKING [MPTCP]" <mptcp@lists.linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP not
+ support
+Content-Language: en-GB
+To: Tao Chen <chen.dylane@gmail.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Andrii Nakryiko <andrii@kernel.org>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Martin KaFai Lau <martin.lau@linux.dev>,
+ Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>
+Cc: bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
+References: <20241030100108.2443371-1-chen.dylane@gmail.com>
+ <abb72d1b-3347-4493-9a18-43c1655b7449@kernel.org>
+ <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-On Wed, Oct 30, 2024 at 4:05=E2=80=AFPM Breno Leitao <leitao@debian.org> wr=
-ote:
+Hi Tao, BPF maintainers,
 
-> Thanks.  I got the impression that the scheduler list was append-only,
-> and the entries were never freed.
+On 30/10/2024 12:12, Tao Chen wrote:
+> 在 2024/10/30 18:49, Matthieu Baerts 写道:
+>> Hi Tao Chen,
+>>
+>> Thank you for having shared this patch.
+>>
+>> On 30/10/2024 11:01, Tao Chen wrote:
+>>> Fix compile error when MPTCP feature not support, though eBPF core check
+>>> already done which seems invalid in this situation, the error info like:
+>>> progs/mptcp_sock.c:49:40: error: no member named 'is_mptcp' in 'struct
+>>> tcp_sock'
+>>>     49 |         is_mptcp = bpf_core_field_exists(tsk->is_mptcp) ?
+>>>
+>>> The filed created in new definitions with eBPF core feature to solve
+>>> this build problem, and test case result still ok in MPTCP kernel.
+>>>
+>>> 176/1   mptcp/base:OK
+>>> 176/2   mptcp/mptcpify:OK
+>>> 176     mptcp:OK
+>>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
+>>>
+>>> Fixes: 8039d353217c ("selftests/bpf: Add MPTCP test base")
+>>
+>> The commit you mentioned here is more than 2 years old, and as far as I
+>> can see, nobody else reported this compilation issue. I guess that's
+>> because people used tools/testing/selftests/bpf/config file as expected
+>> to populate the kernel config, and I suppose you didn't, right?
+>>
+> 
+> Hi Matt, thank you for your reply, as you said, i did not use tools/
+> testing/selftests/bpf/config to compile kernel, i will use this helpful
+> feature.
+> 
+>> I don't think other BPF selftests check for missing kernel config if
+>> they are specified in the 'config' file, but even if it is the case, I
+>> think it would be better to skip all the MPTCP tests, and not try to
+>> have them checking something that doesn't exist: no need to validate
+>> these tests if the expected kernel config has not been enabled.
+>>
+> 
+> If i use the kernel not support MPTCP, the compile error still exists,
+> and i can not build the bpf test successfully. Maybe skill the test case
+> seems better when kernel not support. Now that bpf_core_field_exists
+> check already used in the code, i think it is better to use new
+> definition mode.
 
-mptcp_unregister_scheduler() is there, and could be used at some point.
+I understand it would be better, but it means more code to maintain to
+handle that (and remembering that in future test cases). If that's not
+necessary, then no need to do the effort.
+
+@BPF maintainers: do we need to support kernels not respecting the
+tools/testing/selftests/bpf/config file? Should we detect when a
+required kernel config is not set and skip some tests?
+
+>> But again, please correct me if I'm wrong, but I don't think there is
+>> anything to change here to fix your compilation issue: simply make sure
+>> to use this tools/testing/selftests/bpf/config file to generate your
+>> kernel config, no?
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
