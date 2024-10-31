@@ -1,134 +1,200 @@
-Received: from out-182.mta0.migadu.com (out-182.mta0.migadu.com [91.218.175.182])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B9E04215036
-	for <mptcp@lists.linux.dev>; Wed, 30 Oct 2024 20:48:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C75145025;
+	Thu, 31 Oct 2024 01:41:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730321332; cv=none; b=VC0QrNVUF94c/1tSV5YZqJAf/mUixKOt6u8DiJiypDyceFRZ8oX1h7diKsWOVLPhTtUDsYlXTYPHo+XSH4mMWUeXJBkpyE80ftSfIMhC6ml+SRA9+vfyzIHZf9G6aSvKBg+/6+VpwQ7sFnYXQWSmbtGlXegrRNBvLtpLkzb/Vd0=
+	t=1730338863; cv=none; b=inDNPA6RDo95Bod3IwI/7PnnpUhpirRkJM+dxYfTqEqBGzFa/S9MBvKh8/dVjJeMXMMaKx2PMPb6FsxhqYCNp02ZlmQPWJ/bLYeDGbfY+Tk6qtbaHRg2Z9JK0/gFUv0rNqWOXD2KL/m6vXFQeQhThS/grvrWreJRS7D+CwZcAvE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730321332; c=relaxed/simple;
-	bh=r7Szs2POrVC2wv7OjarWafvN6De9kKjAB8U9+PxACq8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ffUTrpuQjP+OsDP+v+iMH6vrrpqr7adKhlahqM2JdSCYA9C7wkusyOAgKPaL4HU7cQsCAaVAqvzpugmSjUG93RD0jI/w9Gky4SRLAGenOeDNIe+HQAbhatLrFHMWKn+MsMljy+ZXoxhuR6j9yPz5YA9HSZ2aCuDVGjBefSB+D58=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=f8SEV7M/; arc=none smtp.client-ip=91.218.175.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1730338863; c=relaxed/simple;
+	bh=PruUELLs5uKbkikgD7DNfTVa6rqlhMSedYgBFpijzEA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=a4B39vIazAyot8CpcqX32KIIPe6D9I/Ou02cMG1blrT/vZmE9UOMtXuNPvP1oMZ/sDMbVlX72n/Hp8wO2k7hEOTqQBgu5gu1eqEHaAwrNdBTdqGuA15xxaAmMdGW6vPI9nHk/KJb7idKURGHZ9nX0kFjU95dwW3CqR54ddAFHGw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBxghj98; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="f8SEV7M/"
-Message-ID: <82dff21b-0ba0-4823-bd78-d8d2105941f4@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1730321327;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=sUu3R5NznYIAyWQ0FfKhRx6rfEqKBnePWslIEbBLNsY=;
-	b=f8SEV7M/wGL9Wa/RFdfrDQLa9WkLgkBKgTq5xQBfVLMld16cK5Ywk0XEu9ByyYJx4T7ljw
-	k8pxaqMDbReQUfp+pRE9duT6qKhAjJHDC7gHfzPIfDdZLrJnc6owGXeQA9/Fo5XoaF30tl
-	I7gIJM+4b2UWNRWZETrpebVDQY3tFMw=
-Date: Wed, 30 Oct 2024 13:48:41 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBxghj98"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0583C4CECE;
+	Thu, 31 Oct 2024 01:40:57 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730338863;
+	bh=PruUELLs5uKbkikgD7DNfTVa6rqlhMSedYgBFpijzEA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=tBxghj98kyqm1zlyAqSMRpfTJeXOiqUe8TOP3xp6jVLVDbpvHy6M0O6BcyF5snRPZ
+	 hyIbnj/M6A3V2oGOOM7KwxU6JgEjwNKOAEOc69Or4hWXbMNFouyOQ51TT1F3bniYF/
+	 8wOPIxWDo5ghAlJeP24x2k3lo/FwOVQ+PGrUpvxhg1OGqOyzjBRrFmn+3+beiyP1xv
+	 Gq38w+40sZYQtJH+zWi5XaFTbn/GuS3qG/14tlGX9PxQnLPxb+/71tG9hy7Kfd+ZdY
+	 ExzMPpTrHEUT1wuWpWYOmShrn7mVR9hzOt8UeEL/NkAG85XSKYJSjYAeak+zqLDY5B
+	 iKquI++45LLhg==
+From: Geliang Tang <geliang@kernel.org>
+To: Andrii Nakryiko <andrii@kernel.org>,
+	Eduard Zingerman <eddyz87@gmail.com>,
+	Mykola Lysenko <mykolal@fb.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Martin KaFai Lau <martin.lau@linux.dev>,
+	Song Liu <song@kernel.org>,
+	Yonghong Song <yonghong.song@linux.dev>,
+	John Fastabend <john.fastabend@gmail.com>,
+	KP Singh <kpsingh@kernel.org>,
+	Stanislav Fomichev <sdf@fomichev.me>,
+	Hao Luo <haoluo@google.com>,
+	Jiri Olsa <jolsa@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	bpf@vger.kernel.org,
+	linux-kselftest@vger.kernel.org,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH bpf-next/net v3] selftests/bpf: Drop netns helpers in mptcp
+Date: Thu, 31 Oct 2024 09:40:46 +0800
+Message-ID: <c02fda3177b34f9e74a044833fda9761627f4d07.1730338692.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] selftests/bpf: Fix compile error when MPTCP not
- support
-To: Matthieu Baerts <matttbe@kernel.org>, Tao Chen <chen.dylane@gmail.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- Andrii Nakryiko <andrii@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>,
- Yonghong Song <yonghong.song@linux.dev>, Jiri Olsa <jolsa@kernel.org>,
- bpf@vger.kernel.org, linux-kernel@vger.kernel.org,
- linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev
-References: <20241030100108.2443371-1-chen.dylane@gmail.com>
- <abb72d1b-3347-4493-9a18-43c1655b7449@kernel.org>
- <3bc02b33-421e-4c95-8f69-33ec89782621@gmail.com>
- <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <9b2b3c98-503b-45ae-bcdd-ac2fcc62e14c@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
 
-On 10/30/24 9:31 AM, Matthieu Baerts wrote:
-> Hi Tao, BPF maintainers,
-> 
-> On 30/10/2024 12:12, Tao Chen wrote:
->> 在 2024/10/30 18:49, Matthieu Baerts 写道:
->>> Hi Tao Chen,
->>>
->>> Thank you for having shared this patch.
->>>
->>> On 30/10/2024 11:01, Tao Chen wrote:
->>>> Fix compile error when MPTCP feature not support, though eBPF core check
->>>> already done which seems invalid in this situation, the error info like:
->>>> progs/mptcp_sock.c:49:40: error: no member named 'is_mptcp' in 'struct
->>>> tcp_sock'
->>>>      49 |         is_mptcp = bpf_core_field_exists(tsk->is_mptcp) ?
->>>>
->>>> The filed created in new definitions with eBPF core feature to solve
->>>> this build problem, and test case result still ok in MPTCP kernel.
->>>>
->>>> 176/1   mptcp/base:OK
->>>> 176/2   mptcp/mptcpify:OK
->>>> 176     mptcp:OK
->>>> Summary: 1/2 PASSED, 0 SKIPPED, 0 FAILED
->>>>
->>>> Fixes: 8039d353217c ("selftests/bpf: Add MPTCP test base")
->>>
->>> The commit you mentioned here is more than 2 years old, and as far as I
->>> can see, nobody else reported this compilation issue. I guess that's
->>> because people used tools/testing/selftests/bpf/config file as expected
->>> to populate the kernel config, and I suppose you didn't, right?
->>>
->>
->> Hi Matt, thank you for your reply, as you said, i did not use tools/
->> testing/selftests/bpf/config to compile kernel, i will use this helpful
->> feature.
->>
->>> I don't think other BPF selftests check for missing kernel config if
->>> they are specified in the 'config' file, but even if it is the case, I
->>> think it would be better to skip all the MPTCP tests, and not try to
->>> have them checking something that doesn't exist: no need to validate
->>> these tests if the expected kernel config has not been enabled.
->>>
->>
->> If i use the kernel not support MPTCP, the compile error still exists,
->> and i can not build the bpf test successfully. Maybe skill the test case
->> seems better when kernel not support. Now that bpf_core_field_exists
->> check already used in the code, i think it is better to use new
->> definition mode.
-> 
-> I understand it would be better, but it means more code to maintain to
-> handle that (and remembering that in future test cases). If that's not
-> necessary, then no need to do the effort.
-> 
-> @BPF maintainers: do we need to support kernels not respecting the
-> tools/testing/selftests/bpf/config file? Should we detect when a
-> required kernel config is not set and skip some tests?
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-I guess it depends on the CONFIG_. Otherwise, it takes out the goodies of using 
-<vmlinux.h> when writing bpf selftests.
+New netns selftest helpers netns_new() and netns_free() has been added
+in network_helpers.c, let's use them in mptcp selftests too instead of
+using MPTCP's own helpers create_netns() and cleanup_netns().
 
-If fixing the config is an option and sounds like it is for Tao, then it is 
-always good to run everything in test_progs.
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+v3:
+ - No code has changed.
+ - Change subject prefix as "bpf-next/net" since CI complains that this
+patch cannot be merged.
+ - Add Matt's Reviewed-by tag.
 
-There are some "___local" definitions in the selftests. If mptcp test wants to 
-go this path, then Matt's request to at least test__skip() makes sense to me.
+v2:
+ - Use netns_new/netns_free instead of create_netns/cleanup_netns as
+Martin suggested.
 
-pw-bot: cr
+v1:
+  selftests/bpf: Use make/remove netns helpers in mptcp
+---
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 42 ++++++-------------
+ 1 file changed, 12 insertions(+), 30 deletions(-)
 
-> 
->>> But again, please correct me if I'm wrong, but I don't think there is
->>> anything to change here to fix your compilation issue: simply make sure
->>> to use this tools/testing/selftests/bpf/config file to generate your
->>> kernel config, no?
-> 
-> Cheers,
-> Matt
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index be3cad2aff77..f8eb7f9d4fd2 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -69,24 +69,6 @@ struct mptcp_storage {
+ 	char ca_name[TCP_CA_NAME_MAX];
+ };
+ 
+-static struct nstoken *create_netns(void)
+-{
+-	SYS(fail, "ip netns add %s", NS_TEST);
+-	SYS(fail, "ip -net %s link set dev lo up", NS_TEST);
+-
+-	return open_netns(NS_TEST);
+-fail:
+-	return NULL;
+-}
+-
+-static void cleanup_netns(struct nstoken *nstoken)
+-{
+-	if (nstoken)
+-		close_netns(nstoken);
+-
+-	SYS_NOFAIL("ip netns del %s", NS_TEST);
+-}
+-
+ static int start_mptcp_server(int family, const char *addr_str, __u16 port,
+ 			      int timeout_ms)
+ {
+@@ -206,15 +188,15 @@ static int run_test(int cgroup_fd, int server_fd, bool is_mptcp)
+ 
+ static void test_base(void)
+ {
+-	struct nstoken *nstoken = NULL;
++	struct netns_obj *netns = NULL;
+ 	int server_fd, cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcp");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+ 		return;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
+ 		goto fail;
+ 
+ 	/* without MPTCP */
+@@ -237,7 +219,7 @@ static void test_base(void)
+ 	close(server_fd);
+ 
+ fail:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ 	close(cgroup_fd);
+ }
+ 
+@@ -322,21 +304,21 @@ static int run_mptcpify(int cgroup_fd)
+ 
+ static void test_mptcpify(void)
+ {
+-	struct nstoken *nstoken = NULL;
++	struct netns_obj *netns = NULL;
+ 	int cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcpify");
+ 	if (!ASSERT_GE(cgroup_fd, 0, "test__join_cgroup"))
+ 		return;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
+ 		goto fail;
+ 
+ 	ASSERT_OK(run_mptcpify(cgroup_fd), "run_mptcpify");
+ 
+ fail:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ 	close(cgroup_fd);
+ }
+ 
+@@ -414,7 +396,7 @@ static void run_subflow(void)
+ static void test_subflow(void)
+ {
+ 	struct mptcp_subflow *skel;
+-	struct nstoken *nstoken;
++	struct netns_obj *netns;
+ 	int cgroup_fd;
+ 
+ 	cgroup_fd = test__join_cgroup("/mptcp_subflow");
+@@ -437,8 +419,8 @@ static void test_subflow(void)
+ 	if (!ASSERT_OK_PTR(skel->links._getsockopt_subflow, "attach _getsockopt_subflow"))
+ 		goto skel_destroy;
+ 
+-	nstoken = create_netns();
+-	if (!ASSERT_OK_PTR(nstoken, "create_netns: mptcp_subflow"))
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new: mptcp_subflow"))
+ 		goto skel_destroy;
+ 
+ 	if (endpoint_init("subflow") < 0)
+@@ -447,7 +429,7 @@ static void test_subflow(void)
+ 	run_subflow();
+ 
+ close_netns:
+-	cleanup_netns(nstoken);
++	netns_free(netns);
+ skel_destroy:
+ 	mptcp_subflow__destroy(skel);
+ close_cgroup:
+-- 
+2.45.2
 
