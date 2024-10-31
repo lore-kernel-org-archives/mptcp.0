@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 93EF41386C9
-	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 16:33:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 552D519CCEA
+	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 16:37:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730392383; cv=none; b=miPIcq6ANGqGcurhPppGzPL0jlEcSTvIrMA/cuFJ+nWEX9TqzPaZQOQ3jYpOvdDwDON90pC94UPFRCfvD2LuEIXjqw4O7f/JzubsuLA63TOCn6970iXF/D1GFTTQs0S/VQH3xFAfbmf2jSwLRC2rOpfYNtKWHXjgeI/hRVbm+Fo=
+	t=1730392656; cv=none; b=Jxr8/g7tDWLccfxsHOJbkA2UvMrvED1VDJ3jov4UIQAQ09PW+hQtihBC4Zvdf7YsfOmGjjCvh5pBRBliSc+MVxmtMJ6/B8n6BC7/wRmpOJ1sjjEZ+NAEHa3ohwt1xxrl/VZvP0VKmUZoqYPIUa9+3+6jtbN2tZo4zcBB0fxLqA0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730392383; c=relaxed/simple;
-	bh=GXgUskfp6llZhhIxyLc/+lKhvRKxIRXzIcni0wj9n3I=;
+	s=arc-20240116; t=1730392656; c=relaxed/simple;
+	bh=dgnwhvpKIV2/Zs/s+XY6PBixHJ7Q+foqjGJ7VBb3WGY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=GfBkdnU07IHPOSTGelT5/SjOsqa/eV42kVq5/sRsYm9HzMzVEMSZ3FftjMx1bOWeO15YdBrqderVOtTs7hK7OojAHI/zcNGTrzImDUK1eJWBwD+DgrFzYtndjkbuZzi9iPJXiclQ5AQ4yMpE2iIvMCIV41a9x5H783ydnqwY5zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=me2xsZNw; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=g1yG0rV2dAou4QfMzPmp+zjQT1m7WSL/MtYIlH2sS7rTq9qPMrEgBKR3qZe9M12pkSMi5Dr1fMvtfMmDz1hZGRLvCVMFbQZKXNO+M7xkx14i+lxmnMlp3nbQoHrssHxR05kX1hFKrljE9lclSiG996bvZ8uhCpqf4K4KfxUJGqM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ltcthLZl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="me2xsZNw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 65AF7C4CED2;
-	Thu, 31 Oct 2024 16:33:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ltcthLZl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 509A2C4CEDF;
+	Thu, 31 Oct 2024 16:37:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730392383;
-	bh=GXgUskfp6llZhhIxyLc/+lKhvRKxIRXzIcni0wj9n3I=;
+	s=k20201202; t=1730392656;
+	bh=dgnwhvpKIV2/Zs/s+XY6PBixHJ7Q+foqjGJ7VBb3WGY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=me2xsZNw8ObXILT8ZuirNFcqIZHS/BvCx7ebcldttkUdPuQwulzhm09cG/2nmUv5U
-	 oFzwxp6sKFLUaFFhASoixRvkLChK/JbtIwsKHz8vgHQZxtluBvGpt6NzSteaJINexE
-	 XyyXwsM55g9cHEQbedBDc6rqqHfTbyRuSFSOpKDndIhR1HCJiLGMelC1Pm3+mcfMTH
-	 D79vRiYlFjuN56BMrA36ydQXYqccApyRNc2jrrqKKOMqBakCOVch0miWU74GJ2PAzQ
-	 Iyqasui0HcUZCWOiCDITRxmjgM6rohh6yxBeY/zNfyXj4LOb06lQdKfeCNTOP6QIIO
-	 RF1oaAU7xUfOQ==
-Message-ID: <af5828ff-5cc6-44e6-8857-591cf73c6468@kernel.org>
-Date: Thu, 31 Oct 2024 17:33:00 +0100
+	b=ltcthLZlP9MVOU2UYnOU8OsRldpzGOE2VnYL/xk86pWMg8KYn2dADgrJGYGDwc6v9
+	 WeFiL3EDHD6NW3Z4ZPflE2l1Kp8sOjzGbxLzugqIAm3dq0FlJI1fDnTwz0t4ehKJgq
+	 4tJ6cAU22098zNrc4voEzgLBCtbpmDZSrG1tNrgv06JskGROcknNK20jGpiZGtBNwe
+	 7JTtZfPYSSY5i/5Zdt9dGPUcx+RKptujzjzTUln4RbTwIIltLUKmUrbTHbO7GDalAY
+	 b7Js5svPwQmCkhxoH3CDbBHns7/9Hg7DHIfM4ISH1C3SUDpCHp4MWjWN/suP0F5DhI
+	 5kEm/LdisVcpg==
+Message-ID: <efd7914e-153f-422f-91e2-8d7611b13e19@kernel.org>
+Date: Thu, 31 Oct 2024 17:37:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 07/36] mptcp: make three pm wrappers static
-Content-Language: en-GB
+Subject: Re: [PATCH mptcp-net] mptcp: use sock_kfree_s instead of kfree
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <6a0fc4027e27a2bdbbaea2997a5489399ea0fc7d.1729588019.git.tanggeliang@kylinos.cn>
- <18ade37f-5557-4ff0-ae1f-1b4cd6b66e97@kernel.org>
- <00cbea0123cece1f64b198a9f8109075f6f74f59.camel@kernel.org>
+References: <6a3e3dd94642cf24f3d6f97fb869d77d7315d5af.1730360928.git.tanggeliang@kylinos.cn>
+Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,63 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <00cbea0123cece1f64b198a9f8109075f6f74f59.camel@kernel.org>
+In-Reply-To: <6a3e3dd94642cf24f3d6f97fb869d77d7315d5af.1730360928.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 31/10/2024 08:58, Geliang Tang wrote:
-> On Wed, 2024-10-30 at 19:31 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> (I'm still reviewing the series, thank you for your patience. Please
->> wait for me to finish it before sending a v3.)
->>
->> On 22/10/2024 11:14, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> Three path manager wrappers, mptcp_pm_get_addr(),
->>> mptcp_pm_dump_addr() and
->>> mptcp_pm_set_flags() are used to switch the interfaces between in-
->>> kernel
->>> PM and userspace PM. These wrappers are defined in pm.c but only
->>> used in
->>> pm_netlink.c. It makes more sense to move them to pm_netlink.c and
->>> make
->>> them all static.
->>
->> These three helpers are calling userspace PM code, that looks
->> "strange"
->> to do that from pm_netlink.
+On 31/10/2024 08:49, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> I agree.
-> 
->>
->> I didn't check, but would it not make more sense to move all the
->> _doit()
->> functions calling these helpers to pm.c? Also, do we still these
->> helpers
->> you were moving? Can we not instead remove them, and move their code
->> directly in the _doit() functions if you see what I mean?
->>
->>   int mptcp_pm_nl_get_addr_doit(...)
->>   {
->>       if (info->attrs[MPTCP_PM_ATTR_TOKEN])
->>           return mptcp_userspace_pm_get_addr(skb, info);
->>       return mptcp_pm_nl_get_addr(skb, info);
->>   }
->>
->> (in pm.c)
->>
->> WDYT?
-> 
-> I prefer to drop this patch and keep the code as is.
+> The local address entries on userspace_pm_local_addr_list are allocated
+> by sock_kmalloc(). It's better to use sock_kfree_s() to free each of them
+> and adjust the allocated size, instead of using kfree().
 
-Up to you. I think it still makes sense not to have a "public" function
-simply calling another "public" one with the same arguments.
+Thank you for the fix!
 
-But the code can also stay like that for the moment, no problem.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+Now in our tree (I slightly modified the commit message to say it is
+"required" to use sock_kfree_s()):
+
+New patches for t/upstream-net and t/upstream:
+- 10225fa09def: mptcp: use sock_kfree_s instead of kfree
+- Results: d72fc6f97589..b3a5bd8682ef (export-net)
+- Results: 2e11fab4d3e0..e696c82b4c5f (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/06c3fa1ec4966b86c8be0ced5e3764460451ea2c/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/06709216e8b6bb4c80db23131714e85c8043be18/checks
 
 Cheers,
 Matt
