@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58A6419D089
-	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 18:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F254F360
+	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 18:45:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730400088; cv=none; b=Vv2hHO0UIwbO4oR8W1ea5Jy5Kr5u+DLB8BcXcvfqNcqsV9dsGEFZ9WgpScBDff3EmB8RU73FFVOkbin91Y1nFT17OI9WCux+CdcSjHMo7vxqD4S6sc6s0VSUE4X6J4kHdhzPLdfhUkfDXCdJs+BUtm8eRQ7ZiGUKbmx6pjPytfk=
+	t=1730400315; cv=none; b=uHM5h2GZNRx4Fc46p5evnHdWxpk2fSwH6eBgxF1rPgOsn6SCTQNM12xnsOuPaCuVmpGU77rrFfA66HAtIikEPmXQmD+xrrGTVHZePU7le1P3RnfLjiTSYnhq8qt7CEAgQtEuamao4igvxhPY/WO5+m/BBWmsZHx/ng2y1WlroaM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730400088; c=relaxed/simple;
-	bh=hCPfbDRgdJA6fvIsuB+i/4dtmJRhqUdweF9nt8A2FQM=;
+	s=arc-20240116; t=1730400315; c=relaxed/simple;
+	bh=gIX9OjJ1I1nfYqZhZs9K4BNeg4cEU11PvZnD/e0tA2s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=L4DC8yDbBrSGQrDM10S8uL7kmB71W4CHwn21ckTkBUVGyk/ggKgeDATf51uRA95npUzu2G3IZvdZdMeiTt/qkyptKV6t3ouTJRqg2+C3o4i2GZadFLnFpjnsEfjeltOHc9lLsIRvqqda4nk7Kp0zz6DP2omVu8EbWecv2b0Gfc4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pk2PzbUg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=g3R+uZmPP4r42r1wAyJ8s11fLafMADvpjlbWhEgN+ct8OMtv6BuTTQeK+gbhgXC290BiLaNDJCBJDD8x+q57WTsbvGZyegPIjSKvV2POae1WM+uoPqhLO4wLqQUsCh3UAZPYqxsSYKUrZkY5cD5S4C1ikzGuaDD9k/MFuXnZIQw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tTSltS/s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pk2PzbUg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5F765C4CEC3;
-	Thu, 31 Oct 2024 18:41:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tTSltS/s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE34DC4CEC3;
+	Thu, 31 Oct 2024 18:45:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730400085;
-	bh=hCPfbDRgdJA6fvIsuB+i/4dtmJRhqUdweF9nt8A2FQM=;
+	s=k20201202; t=1730400314;
+	bh=gIX9OjJ1I1nfYqZhZs9K4BNeg4cEU11PvZnD/e0tA2s=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pk2PzbUgZgBqDQ/nOqqk7qu7L9HrsZgPe2YwjWSENitzDpabHhH48EcQrtSg6XKvn
-	 u2p34yeqyl/IPN7/zsPnDx1FdP/6vdgAQAaN4zpOhl9shGiJuJB78gX07QV9lb2GQv
-	 At5QQPCGBLPo6CFFRld76F+hwoJ1z8406JHIlaxfEGsHWWgEdbRVuI8ieLZbEQn68z
-	 C0QAYDqHgOno6ADpXpfq20FPm5GTKXOeqnNjwiPvAAvZ6jvl7ga80Kj7H3ffvfK2iL
-	 awOV+0W5vWEsI79dUO+CPuApgcEX0dbR9ACFv7jOGTNZwZdYeLKl51LYu7s7lHYHrA
-	 c92cGFa8/NC3w==
-Message-ID: <e7d3fd10-73ae-4f5d-a758-5726d7fa30b1@kernel.org>
-Date: Thu, 31 Oct 2024 19:41:21 +0100
+	b=tTSltS/sBsfm6Y32IGuPbtB5u5IiTtAmreIqtt1mj2WFwZSeRLdkzO4Slu6Nroaku
+	 gSNOmseUtbuQBCmsqNTt4TvZs4p4m1k93hVy3cRpJUFyVKcOHz3YHsUTvtfxraq9UV
+	 /bLpI/imm8X5LNshgHJF1kmcy83N0EyinH+RBKBhXWipqtCy4YkTSMGLC5Ni7hp1vK
+	 F2uBys2d1l7d+dEyGT8nGqmo8uTcsdUl3ypppGWr2KtupbHknMiSfyMoOIBVcwTKDO
+	 R+Th3N73gJSQM2mrShjNjd9sSRY/GAtJGLpQOQe132VuzwU7ngmfgfF2ubZuHe/DAn
+	 dmd/Rr78hPg2g==
+Message-ID: <cbd9eaa2-e236-421e-82e9-784ae7054dca@kernel.org>
+Date: Thu, 31 Oct 2024 19:45:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 12/36] mptcp: change info of get_addr as
- const
+Subject: Re: [PATCH mptcp-next v2 13/36] mptcp: add struct mptcp_id_bitmap
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <c099997f32d07dbd2c9db09a392cf6868f397f97.1729588019.git.tanggeliang@kylinos.cn>
+ <344964d66ab0250ae027ffd46a0e6782d572c33d.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c099997f32d07dbd2c9db09a392cf6868f397f97.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <344964d66ab0250ae027ffd46a0e6782d572c33d.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,45 +95,58 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> get_addr() interfeces will be invoked by dump_addr(), which using const
-
-(typo: s/interfeces/interfaces/)
-
-> parameters "info", so this patch changes "info" parameters of get_addr()
-> as const too.
+> A new struct mptcp_id_bitmap is defined to unify all bitmap type of address
+> IDs for both in-kernel PM and userspace PM.
+> 
+> This type can be used to easily refactor dump_addr() interface of the path
+> managers to accept an mptcp_id_bitmap type parameter. It also allows this
+> parameter of dump_addr() can be modified by BPF program when implementing
+> this interface of a BFP path manager.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_netlink.c   | 9 ++++++---
->  net/mptcp/pm_userspace.c | 2 +-
->  net/mptcp/protocol.h     | 2 +-
->  3 files changed, 8 insertions(+), 5 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 064fe4d494eb..02e4dda0dc13 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1793,12 +1793,15 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
->  }
->  
->  static int mptcp_pm_nl_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-> -				struct genl_info *info)
-> +				const struct genl_info *info)
->  {
-> -	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
-> +	struct net *net = genl_info_net(info);
->  	struct mptcp_pm_addr_entry *entry;
-> +	struct pm_nl_pernet *pernet;
->  	int ret = -EINVAL;
->  
-> +	pernet = pm_nl_get_pernet(net);
 
-Please mention this modification in the commit message: you didn't only
-add the 'const' attribute, you had to do some adaptations.
+(...)
 
-I guess you can no longer use genl_info_pm_nl() because it doesn't
-accept a 'const' variable, but that's OK to get pernet via
-genl_info_net(), right? I think that's clearer if we don't have to guess.
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 8282a6355765..4358a9a21270 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -211,6 +211,10 @@ enum mptcp_addr_signal_status {
+>  /* max value of mptcp_addr_info.id */
+>  #define MPTCP_PM_MAX_ADDR_ID		U8_MAX
+>  
+> +struct mptcp_id_bitmap {
+
+This name is too generic, while here this bitmap is specific to the
+path-manager and its PM address:
+
+  mptcp_pm_addr_avail_id?
+
+> +	DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
+
+Sorry, I'm not sure to understand this modification: why do you need a
+specific structure with only one field? I didn't check the next patches
+yet, but I saw that at the end of the series, the structure still only
+has one field.
+
+Do you require this dedicated structure because of a limitation of BPF?
+Can we not use a typedef, a macro or something else to avoid all these
+modifications here?
+
+> +};
+> +
+>  struct mptcp_pm_data {
+>  	struct mptcp_addr_info local;
+>  	struct mptcp_addr_info remote;
+> @@ -231,7 +235,7 @@ struct mptcp_pm_data {
+>  	u8		pm_type;
+>  	u8		subflows;
+>  	u8		status;
+> -	DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+> +	struct mptcp_id_bitmap id_avail_bitmap;
+>  	struct mptcp_rm_list rm_list_tx;
+>  	struct mptcp_rm_list rm_list_rx;
+>  };
 
 Cheers,
 Matt
