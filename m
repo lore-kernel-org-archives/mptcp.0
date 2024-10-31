@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 66C60148850
-	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 07:38:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 876B714AD29
+	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 07:43:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730360296; cv=none; b=KvZDL5iexOXDqApSKjhCIctYe4vRYj/4S/HegNXtFkJBys57xa3QKJxXlUnSwsqNnTthauRXql4x+rzZ1KM1htOzIU3iZXNfmxJN5c4LJCTQkZB2LHuKCPsutyfTaGNfsH8FGx0fAstcHexvBoVwaWI2mG4Y978UMbxZ61SxOS0=
+	t=1730360588; cv=none; b=Izh1ObMPXn3iRfUPnfME5B6ay+Cr6wFjYtsqBZoMQABjDSW/PN9IDCrHxPa3XR4GtkTA9OWlPHpe5kaZzALju1lhwR5KlKaW2qVgihEaJi1IT7bAHKUTWf/5pF7jsDVw4+rE+e/2xSK4aN04hVx+lfqD1EigNHeX6wma2yfTx/8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730360296; c=relaxed/simple;
-	bh=335vERGUAzeeJvrkY7rNhEgxN2vFRUjYT07AdOASyWw=;
+	s=arc-20240116; t=1730360588; c=relaxed/simple;
+	bh=4idSFVIXGeZnzXY8TAOl1U9ozTXt47Gf3SINqwEXIx8=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rbXcI77NbedspnsZ0dWUD/WMxxf8fRSwsflCnNgH/72zBDB7s++rNuzg8usifBrxTcpPvbfwHZQyRbwlZEnZCfrQHvLUERhihyflzglJH04Vu2rsOUuaI0+b4ENqccHug9ratwCyf9AlIlJLEyg2Tf7ICNgtGFl1zErOkWsjBGo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plGarCcw; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=bPBEapH/gnxWRfW+SjI6CQ3Kuv32y8+GqwcmSy9bpWwV7LE6DbPIuYg9+ZlxXQS6vr8Q0fNlji06MQRquOb67XZ5cIougN3jM7/rqmP5rmaNz6phkOJrlyLuBaL8K9rkciJJYRGnWuNosucc2Gkvj2KXac8/lfsf12VmZY7/7YQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bxOwegmC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plGarCcw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F599C4CEC3;
-	Thu, 31 Oct 2024 07:38:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bxOwegmC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D8838C4CEC3;
+	Thu, 31 Oct 2024 07:43:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730360296;
-	bh=335vERGUAzeeJvrkY7rNhEgxN2vFRUjYT07AdOASyWw=;
+	s=k20201202; t=1730360588;
+	bh=4idSFVIXGeZnzXY8TAOl1U9ozTXt47Gf3SINqwEXIx8=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=plGarCcwAq7Xn46oSEdbLW+/HT1+IhNa8vNnwy3eb1caFWQQ5fuZWjtctVuoy2l/h
-	 iUv5ZQ+SVzFzbUMUwGWQ/ssg32QFu1SoT0tLcdQsgzZhtcdFCc9jqBKw14p+89Tcp3
-	 CvhHWnYafW9yycXryoBka+ye4sUtSILjucKDQBnSIotTU/KEZKsmHUYRRJyKGSqreX
-	 /22APPE95C/qIlqerM7tTbEyS3pY3WQuog2NbLcWG0rq2Nmxpi7021NzYUHFq8qS2i
-	 3vpsxNMi3OXJaPBQNIRIazu/6KYaAnhBDtVPiG64DXqPiGnlkLEtIhCvwSr7Ve8LsX
-	 fSJrgXrpKhQlQ==
-Message-ID: <4c88d0e6319e1bbc0814628d053bf1e99177d5a5.camel@kernel.org>
-Subject: Re: [PATCH bpf-next v2] selftests/bpf: Drop netns helpers in mptcp
+	b=bxOwegmC+u7kR/A5XK+FunO2yzY/HzzuIH4hba3ZKk0IjjBg3m/iteWYazGAjhMrN
+	 z6NY/tonbEEV3jY1iaJ3cXAo0WMdMfdkieQ7ED9pXvkVHb/dQoYrWaZuL7XeN7o6Q3
+	 tEo7XusDSeNOmNXRbGb/CeUzDfGG7XkuN2ZuzIB+dSDj8kWUYsrsgXayFi1X8XWyCj
+	 M+m1gKi4onUEI0875MKs52HuX/s3gUiWznWV6YsfoMHcQHgYUxSwG0iqd9v37lLa9u
+	 +FPwXqzTEP7BjBan+cRYm5SjN7jJ5lJ2Ls/Wz8uP7wwUNLmYulfj6Tk9k/4Y3W/ElU
+	 YeGy0bSemRFiQ==
+Message-ID: <c08bac5660266af7adaf0f1f2d225320cbf99753.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 04/36] mptcp: use sock_kfree_s instead of
+ kfree
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Date: Thu, 31 Oct 2024 15:38:11 +0800
-In-Reply-To: <f509af58-2394-4cd4-99c1-736fe38951a7@kernel.org>
-References: 
-	<70c1f95bae8ec4884be50e08053364c1d152170c.1730262704.git.tanggeliang@kylinos.cn>
-	 <1b2079c54c089a4d0e55dcb3814f0bdfee7d37faf43a24627fa65b496b21ecf4@mail.kernel.org>
-	 <83561ed71dd7dd44571bb71c6dc5ac634fb1d9a8.camel@kernel.org>
-	 <f509af58-2394-4cd4-99c1-736fe38951a7@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Thu, 31 Oct 2024 15:43:03 +0800
+In-Reply-To: <705f9119-8570-4f5c-a0c5-7be55f1ca1c7@kernel.org>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+	 <a42d735295ec53ca466b7c274e6d1c465010d960.1729588019.git.tanggeliang@kylinos.cn>
+	 <705f9119-8570-4f5c-a0c5-7be55f1ca1c7@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -81,70 +80,69 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-10-30 at 11:22 +0100, Matthieu Baerts wrote:
+Hi Matt,
+
+Thanks for your review.
+
+On Wed, 2024-10-30 at 19:21 +0100, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> On 30/10/2024 10:37, Geliang Tang wrote:
-> > Hi Matt,
+> On 22/10/2024 11:14, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > I need some help.
-> > 
-> > On Wed, 2024-10-30 at 05:50 +0000, bot+bpf-ci@kernel.org wrote:
-> > > Dear patch submitter,
-> > > 
-> > > CI has tested the following submission:
-> > > Status:     CONFLICT
-> > > Name:       [bpf-next,v2] selftests/bpf: Drop netns helpers in
-> > > mptcp
-> > > Patchwork: 
-> > > https://patchwork.kernel.org/project/netdevbpf/list/?series=904505&state=*
-> > > PR:         https://github.com/kernel-patches/bpf/pull/7982
-> > > 
-> > > Please rebase your submission onto the most recent upstream
-> > > change
-> > > and resubmit
-> > > the patch to get it tested again.
-> > 
-> > BPF CI complains that this patch cannot be merged.
-> > 
-> > This patch needs to be merged into "for-next" branch of bpf-next,
-> > not
-> > "master" branch. But CI defaults to merging into "master" branch,
-> > so
-> > the merge cannot succeed. Do you know how I should handle this?
+> > The local address entries on the userspace_pm_local_addr_list are
+> > allocated
+> > by sock_kmalloc(). It's better to use sock_kfree_s() to free them,
+> > instead
 > 
-> I guess what you need is to specify 'bpf-next/net' in the subject:
+> Good catch! Do you mind developing a bit why "it is better to use
+> sock_kfree_s()"?
 > 
->   [PATCH bpf-next/net v3] (...)
-> 
-> And rebase your patch on top of bpf/bpf-next.git, but the 'net'
-> branch.
-> 
-> That's because they did some changes in their BPF trees:
-> 
-> 
-> https://lore.kernel.org/netdev/CAADnVQJgwGh+Jf=DUFuX28R2bpWVezigQYObNoKJT8UbqekOHA@mail.gmail.com/
-> 
-> In short, in bpf/bpf-next.git you have 3 branches:
-> 
-> - master: that will be use to send PR to Linus directly, and not
-> netdev
-> 
-> - net: new: this was still depend on net-next, PR will be sent to
-> netdev
-> 
-> - for-next: this one should be a merge of the two ↑, for linux-next
-> 
-> For all modifications linked to BPF and MPTCP, I guess they will need
-> to
-> be tagged "bpf-next/net" (or "bpf" for the fixes).
-> 
-> I guess you should not use the 'for-next' branch.
+> To me, it looks like a bug fix: we should use sock_kfree_s() to
+> adjust
+> the allocated size. In this case, a 'Fixes' tag should be added, and
+> target mptcp-net. WDYT?
 
-Got it. Thanks very much.
+I'll send a v2 of this patch alone out of "BPF path manager" set to our
+ML, with "mptcp-net" prefix and "Fixes" tag, and update the commit log
+too.
 
 -Geliang
 
+> 
+> > of using kfree().
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/pm_userspace.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> > index 00a7f9dd90cf..3fb5713cd988 100644
+> > --- a/net/mptcp/pm_userspace.c
+> > +++ b/net/mptcp/pm_userspace.c
+> > @@ -91,6 +91,7 @@ static int
+> > mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+> >  						struct
+> > mptcp_pm_addr_entry *addr)
+> >  {
+> >  	struct mptcp_pm_addr_entry *entry, *tmp;
+> > +	struct sock *sk = (struct sock *)msk;
+> >  
+> >  	mptcp_for_each_address_safe(msk, entry, tmp) {
+> >  		if (mptcp_addresses_equal(&entry->addr, &addr-
+> > >addr, false)) {
+> > @@ -98,7 +99,7 @@ static int
+> > mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
+> >  			 * be used multiple times (e.g. fullmesh
+> > mode).
+> >  			 */
+> >  			list_del_rcu(&entry->list);
+> > -			kfree(entry);
+> > +			sock_kfree_s(sk, entry, sizeof(*entry));
+> >  			msk->pm.local_addr_used--;
+> >  			return 0;
+> >  		}
 > 
 > Cheers,
 > Matt
