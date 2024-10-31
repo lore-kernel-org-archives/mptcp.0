@@ -1,42 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1630014B08C
-	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 07:55:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE18D154426
+	for <mptcp@lists.linux.dev>; Thu, 31 Oct 2024 07:58:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730361353; cv=none; b=ijUk/NM6luf/LFhKRehCBledYCWEQYnmvT1tmS2BnGRZVXBgkjOrn3kry8ymli7exEgRDumOL+7olhrlQnlLQOljV/OmB4hKBdTUG0RS2pEt6cEjr+Oz4fFFVujjpd5rVdfjUdgXxXcRnpiK3yEsHJz7TseqBzLriqLVE7nD93E=
+	t=1730361508; cv=none; b=Yq27EFwSNPH9fS9iBIMQQ6w3dUog7YMEWEcXQThUD0WF2Ad7hv+Yj4Vgiy8RcqKWqj/9Dr4f4y2fF0SYKV0/rLKDGRSnbC5OEWM/2cCVeHyZBLxCaDcVPLiI5xFWS4E6xgvaQ7ze9qy4hKOkf5Ex9YOXrpM+LkVhrmmwy4uMcW8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730361353; c=relaxed/simple;
-	bh=G/bfYZW70geHFuDGU9mJluMK5imaYirrcnkMVJV5MHk=;
+	s=arc-20240116; t=1730361508; c=relaxed/simple;
+	bh=CCB6SWBVxxtxlJfODzhrVejpvSQCU1oc41MfZ7pSKBM=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=AZXCb3jXycxPDXRYPGvPFGZWytd+x7a1I242mA5o3r9dASTZ2FfcnyR84OEVwQLH+FtABvZdo7Zvzhee6HHHxlSWDQc7bb518cDNabKBIMgVjQukXUDhbVPde7W2aDwqE/DAGRjyRBb+u9F8HEEv1aFciwd+zUOcPG0aalM2Vdo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pmvogcEN; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=NxyjEu6HYF0v2reoitzMj+4K7Qib8X3LzzpZJU3ZZ9vwwh7NkDEan2edeqZD6vf3DDIROC1ixilI6xmZXn+jgBlUhN8AJioHOrHd7P6z38KDVU2bVi/sAdQjgP79LSPtPWaAXUPAQ82WTBFFQSuAlLF9jDRTF4D/xRN1lCpnnmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=edWUlL+z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pmvogcEN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1386C4CEC3;
-	Thu, 31 Oct 2024 07:55:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="edWUlL+z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 197D0C4CEC3;
+	Thu, 31 Oct 2024 07:58:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730361352;
-	bh=G/bfYZW70geHFuDGU9mJluMK5imaYirrcnkMVJV5MHk=;
+	s=k20201202; t=1730361508;
+	bh=CCB6SWBVxxtxlJfODzhrVejpvSQCU1oc41MfZ7pSKBM=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=pmvogcEN4LFSoaQ8S+iEAorkwjpKZ9PhkopTJT7QQXSYEBo/ARJHwh6udPxUA7Trv
-	 iPct+JqqtJX6s+oI8g3BH/2cHClGE1gdCxIRwpDrQWFyMP1fa7h0jmK8Wj++3r40x5
-	 sSj8d8qe70C9jMBqwCFizbu6HDi8CLDwX7nuM4juWREob/osW4R7zWMFuEPV7MiNJR
-	 U8w+lZSPLOUvCeWgvF5tRKtLPAKfquqMQ4wnYSS5Mo39a8qHLLQ7UGEn3DhuT+Xobh
-	 Bc6YjQDOh4jXk+ixNoT3vOGhn+0+gw9QcBSUy/e5c8n/G0LIuUSo71VV3Viw+8SEg+
-	 J6sA0skxeoN4A==
-Message-ID: <dcf330f030ea45dbd06058e95de119bc94e81e3d.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 03/36] mptcp: add mptcp_for_each_address
- macros
+	b=edWUlL+zarieGVCCBB7KiUizVn7Z0nqbfBPlZ3/6Fv7c5GEo1N/3ZdNFS6mHnckt9
+	 D6A0jSv0lluCFqnooeXR7RVtqkAXv6FsSA5rhGPgQT3b9e5zF9M9o9pe82krM+DVFr
+	 Z4+xx70WrpfjN8+Gav1Sd5psxeApMDjmc70yLnifdeYRG+xZxuwgvk8ysYTZXtYWzp
+	 XZ8RmobHJKN3e9SkE2qkZJuVHpZy5HG6Fme7im68wvWAjN+cE20+dErQlbVvf81NUh
+	 RCn7A+hsXqOV4Yyb2tzTt4bw9kmzR2b2IMGRy7OVSH9veH6pz3dYdz4ixnFND33Uxr
+	 yYWIJE0nxNFPg==
+Message-ID: <00cbea0123cece1f64b198a9f8109075f6f74f59.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 07/36] mptcp: make three pm wrappers static
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 31 Oct 2024 15:55:49 +0800
-In-Reply-To: <293210ee-ef7c-4ad7-a46d-82beb1dec193@kernel.org>
+Date: Thu, 31 Oct 2024 15:58:24 +0800
+In-Reply-To: <18ade37f-5557-4ff0-ae1f-1b4cd6b66e97@kernel.org>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
-	 <b6b53fd730a0edd0024963468d078488ad5e67aa.1729588019.git.tanggeliang@kylinos.cn>
-	 <293210ee-ef7c-4ad7-a46d-82beb1dec193@kernel.org>
+	 <6a0fc4027e27a2bdbbaea2997a5489399ea0fc7d.1729588019.git.tanggeliang@kylinos.cn>
+	 <18ade37f-5557-4ff0-ae1f-1b4cd6b66e97@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -80,146 +79,55 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-10-30 at 19:20 +0100, Matthieu Baerts wrote:
+On Wed, 2024-10-30 at 19:31 +0100, Matthieu Baerts wrote:
 > Hi Geliang,
+> 
+> (I'm still reviewing the series, thank you for your patience. Please
+> wait for me to finish it before sending a v3.)
 > 
 > On 22/10/2024 11:14, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > Similar to mptcp_for_each_subflow() and
-> > mptcp_for_each_subflow_safe()
-> > macros, this patch adds two new macros mptcp_for_each_address() and
-> > mptcp_for_each_address_safe() to iterate over the address entries
-> > on
-> > userspace_pm_local_addr_list of the mptcp socket.
-> > 
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/pm_userspace.c | 12 ++++++------
-> >  net/mptcp/protocol.h     |  5 +++++
-> >  2 files changed, 11 insertions(+), 6 deletions(-)
-> > 
-> > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> > index 2cceded3a83a..00a7f9dd90cf 100644
-> > --- a/net/mptcp/pm_userspace.c
-> > +++ b/net/mptcp/pm_userspace.c
-> > @@ -41,7 +41,7 @@ static int
-> > mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
-> >  	bitmap_zero(id_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-> >  
-> >  	spin_lock_bh(&msk->pm.lock);
-> > -	list_for_each_entry(e, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address(msk, e) {
-> >  		addr_match = mptcp_addresses_equal(&e->addr,
-> > &entry->addr, true);
-> >  		if (addr_match && entry->addr.id == 0 && needs_id)
-> >  			entry->addr.id = e->addr.id;
-> > @@ -92,7 +92,7 @@ static int
-> > mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
-> >  {
-> >  	struct mptcp_pm_addr_entry *entry, *tmp;
-> >  
-> > -	list_for_each_entry_safe(entry, tmp, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address_safe(msk, entry, tmp) {
-> >  		if (mptcp_addresses_equal(&entry->addr, &addr-
-> > >addr, false)) {
-> >  			/* TODO: a refcount is needed because the
-> > entry can
-> >  			 * be used multiple times (e.g. fullmesh
-> > mode).
-> > @@ -112,7 +112,7 @@ mptcp_userspace_pm_lookup_addr_by_id(struct
-> > mptcp_sock *msk, unsigned int id)
-> >  {
-> >  	struct mptcp_pm_addr_entry *entry;
-> >  
-> > -	list_for_each_entry(entry, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address(msk, entry) {
-> >  		if (entry->addr.id == id)
-> >  			return entry;
-> >  	}
-> > @@ -127,7 +127,7 @@ int mptcp_userspace_pm_get_local_id(struct
-> > mptcp_sock *msk,
-> >  			     inet_sk((struct sock *)msk))-
-> > >inet_sport;
-> >  
-> >  	spin_lock_bh(&msk->pm.lock);
-> > -	list_for_each_entry(e, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address(msk, e) {
-> >  		if (mptcp_addresses_equal(&e->addr, skc, false)) {
-> >  			entry = e;
-> >  			break;
-> > @@ -155,7 +155,7 @@ bool mptcp_userspace_pm_is_backup(struct
-> > mptcp_sock *msk,
-> >  	bool backup = false;
-> >  
-> >  	spin_lock_bh(&msk->pm.lock);
-> > -	list_for_each_entry(entry, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address(msk, entry) {
-> >  		if (mptcp_addresses_equal(&entry->addr, skc,
-> > false)) {
-> >  			backup = !!(entry->flags &
-> > MPTCP_PM_ADDR_FLAG_BACKUP);
-> >  			break;
-> > @@ -642,7 +642,7 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff
-> > *msg,
-> >  
-> >  	lock_sock(sk);
-> >  	spin_lock_bh(&msk->pm.lock);
-> > -	list_for_each_entry(entry, &msk-
-> > >pm.userspace_pm_local_addr_list, list) {
-> > +	mptcp_for_each_address(msk, entry) {
-> >  		if (test_bit(entry->addr.id, bitmap->map))
-> >  			continue;
-> >  
-> > diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> > index b4c72a73594f..ce3b12778b3f 100644
-> > --- a/net/mptcp/protocol.h
-> > +++ b/net/mptcp/protocol.h
-> > @@ -354,6 +354,11 @@ struct mptcp_sock {
-> >  #define mptcp_for_each_subflow_safe(__msk, __subflow,
-> > __tmp)			\
-> >  	list_for_each_entry_safe(__subflow, __tmp, &((__msk)-
-> > >conn_list), node)
-> >  
-> > +#define mptcp_for_each_address(__msk, __entry)			\
-> > +	list_for_each_entry(__entry, &((__msk)-
-> > >pm.userspace_pm_local_addr_list), list)
-> > +#define mptcp_for_each_address_safe(__msk, __entry,
-> > __tmp)			\
-> > +	list_for_each_entry_safe(__entry, __tmp, &((__msk)-
-> > >pm.userspace_pm_local_addr_list), list)
+> > Three path manager wrappers, mptcp_pm_get_addr(),
+> > mptcp_pm_dump_addr() and
+> > mptcp_pm_set_flags() are used to switch the interfaces between in-
+> > kernel
+> > PM and userspace PM. These wrappers are defined in pm.c but only
+> > used in
+> > pm_netlink.c. It makes more sense to move them to pm_netlink.c and
+> > make
+> > them all static.
 > 
-> If it is specific to the userspace PM, maybe best to declare them in
-> pm_userspace.c, no?
-> 
-> Also, the name is very generic for something so specific. Maybe:
-> 
->   mptcp_for_each_pm_userspace_local_addr(_safe)
-> 
-> Otherwise, if we see "mptcp_for_each_address(msk, entry)" in the
-> code,
-> it is really not clear what you are looking at I think, no?
+> These three helpers are calling userspace PM code, that looks
+> "strange"
+> to do that from pm_netlink.
 
-Good idea! I moved it into pm_userspace.c and renamed it as
-mptcp_for_each_userspace_pm_addr.
+I agree.
 
-Furthermore, I renamed mptcp_address bpf_iter in another set "add
-mptcp_address bpf_iter" as mptcp_userspace_pm_addr bpf_iter to keep it
-consistent with this patch.
+> 
+> I didn't check, but would it not make more sense to move all the
+> _doit()
+> functions calling these helpers to pm.c? Also, do we still these
+> helpers
+> you were moving? Can we not instead remove them, and move their code
+> directly in the _doit() functions if you see what I mean?
+> 
+>   int mptcp_pm_nl_get_addr_doit(...)
+>   {
+>       if (info->attrs[MPTCP_PM_ATTR_TOKEN])
+>           return mptcp_userspace_pm_get_addr(skb, info);
+>       return mptcp_pm_nl_get_addr(skb, info);
+>   }
+> 
+> (in pm.c)
+> 
+> WDYT?
+
+I prefer to drop this patch and keep the code as is.
 
 Thanks,
 -Geliang
 
-> 
-> > +
-> >  extern struct genl_family mptcp_genl_family;
-> >  
-> >  static inline void msk_owned_by_me(const struct mptcp_sock *msk)
 > 
 > Cheers,
 > Matt
