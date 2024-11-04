@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FEA18C926
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:13:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 230EEAD2D
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:17:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730747589; cv=none; b=ee8V/zXuDTU4Xnx3wm0A1qJ2Nb/KT8pQUkC/Nnv/hSsuLEQJgNI8kuhEyNWiX5j5PcSN7iziyVWvb6l/9pOOla+Zvv51mfXCV2gOQPHVBYNzeGQPM/L/hBZaNfStxrb7/rBu7OM6+n0EWyXcX33Abc4BuI3CoGkkhspvG8Ljc84=
+	t=1730747836; cv=none; b=bI8GJOFneAQhWqxATYBcKf2D7od5bCE4Zg5QejxYqecWH0Q8UsFtiQfJ6eL2eIReViQ2kQYH9xk57Ax4K7obU7cD1maFACDvowhON5umhcPJTnHjfNvihnvxB2Fa69hF+jsLEHMCQFiWkJWYeTBlYijHmNIsXPSWUIF69HO/pzc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730747589; c=relaxed/simple;
-	bh=XF1ZE634gKk9ype/9/LKPN+LVz9WTaSENBRonuEt98o=;
+	s=arc-20240116; t=1730747836; c=relaxed/simple;
+	bh=hAwIu6YEUBsoRdJlZap3oMrhAxQbVXFFjn2dTrkFnE4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qkT36WyOUAZH3ib6iemFZrriLj1I5UnjZEX5jLSG1DNHsvNULoCO6/6zgsYcj89S5giyU1utf0dytWQ4aTQ2rAzkU253Nq4/gufgnvQhL6C5gBQ8fpG7z7rC8eJ7+Wg7eBGNtXJANVsMJVuaNm+TWgwbKNURUFzvaLDGQpX7/Cg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDWVzEAN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aLnAdwgQ+5ULeF/qsE2WrMnNugnKKFlgT6sOHrwI4hwOf2gkp8E88FvpHWzjLUZePDWobFcx/cV08Qv/XGv9Qj0b3Bji7wXbXOjwkJxDGi8jeDrGgvsVceieDecgNIAS4FdSQKtZYmOQKYDIJtg6/K8mQM+b4VwbM4vIV4fXzPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FbE22nVZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDWVzEAN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B9CC4CECE;
-	Mon,  4 Nov 2024 19:13:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FbE22nVZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5D5EC4CED1;
+	Mon,  4 Nov 2024 19:17:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730747588;
-	bh=XF1ZE634gKk9ype/9/LKPN+LVz9WTaSENBRonuEt98o=;
+	s=k20201202; t=1730747835;
+	bh=hAwIu6YEUBsoRdJlZap3oMrhAxQbVXFFjn2dTrkFnE4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BDWVzEANLSbFq1j8V+Y1YcAN/TFfQD45UZkk6Bc9y67P5ZwBWD1AgYMSZkDMyidC1
-	 kqAsLBJEgnnX91+hR0nNDsibNHbKWkuGoGSnVgpx6OEpeIySWEi3QP+9zfYNv1B5IG
-	 Dl3EA/NSNr8QB0LS/aQ5uLQY8K/IvhD2kCpSytd9KHh5ORqorcoMiwRt6G3DHqg+qT
-	 3HK4QM4BHFALVHsDKVJ9HN/Ssm5PbVp07AUTfS78QDSH5+euHyeb6RtmsT2SVnovqX
-	 J420lOcCQ0rdCYmYl8qmNlkWL3zOPYDRKtcNRh2CYDZKPnYZc72qOG6fC1TTIU3YfH
-	 Gqrzqz0pxycKw==
-Message-ID: <0cf4c951-4a66-4ad3-b403-2b966d657f1b@kernel.org>
-Date: Mon, 4 Nov 2024 20:13:06 +0100
+	b=FbE22nVZgeU/PdN9ZidG6QWyhcuRlK64ZFgZFl+4tiIUjiG9o4Xow2r/RZ9tauy+w
+	 tYcSIsvCrTF3qTKZcDexJPSpKi7uzbN6AvxTPyOaeljf+YKCJUbWd4Kfp8eJF0NkZd
+	 3VvWgQF8/WoGSIzOMjsWa/KktGQoXUMiwkwm+jArFYkZZtkatQyjwjxTWt7jvfP+Tj
+	 dxyBq1SI05hTRuA592TryZnxZPWCoXfEyNFW1mEYJrun2fCALqd+RXxQSCW32Kk14H
+	 N+d+6xzN1xH1qEHgcEC0R6vQOdit55U3VG212Vv5Oljt8ahajBAiHiyLFIHFnHF2p4
+	 qsMVcELpzafmw==
+Message-ID: <e26f169e-64a8-498b-83d1-4194cd440718@kernel.org>
+Date: Mon, 4 Nov 2024 20:17:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 24/36] mptcp: drop struct mptcp_pm_add_entry
+Subject: Re: [PATCH mptcp-next v2 26/36] mptcp: hold pm lock when deleting
+ entry
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <c1a57a18940b94c6db9ce423fe3d84e050397589.1729588019.git.tanggeliang@kylinos.cn>
+ <c6c136da73ad1b5f33b8c77c14296b045966dc7f.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,72 +87,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c1a57a18940b94c6db9ce423fe3d84e050397589.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c6c136da73ad1b5f33b8c77c14296b045966dc7f.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
+Good catch!
+
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> There is no need to add a dedicated address entry type "mptcp_pm_add_entry"
-> to represent ADD_ADDR addresses. Additional fields for ADD_ADDR addresses
-> can be added into struct mptcp_pm_addr_entry directly. This makes the path
-> manager code simpler.
+> When traversing userspace_pm_local_addr_list and deleting an entry from
+> it in mptcp_pm_nl_remove_doit(), msk->pm.lock should be held.
 > 
-> Here "union" can be used to merge struct mptcp_pm_addr_entry and struct
-> mptcp_pm_add_entry into one. Then all mptcp_pm_add_entry can be replaced by
-> mptcp_pm_addr_entry.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
 
-(...)
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index d9badf270b15..9dc01140af23 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -243,9 +243,19 @@ struct mptcp_pm_data {
->  struct mptcp_pm_addr_entry {
->  	struct list_head	list;
->  	struct mptcp_addr_info	addr;
-> -	u8			flags;
-> -	int			ifindex;
-> -	struct socket		*lsk;
-> +	union {
-> +		struct {
-> +			u8			flags;
-> +			int			ifindex;
-> +			struct socket		*lsk;
-> +		};
-> +		/* mptcp_pm_add_entry */
-> +		struct {
-> +			u8			retrans_times;
-> +			struct timer_list	add_timer;
-
-This will increase the size of the structure even more. Please make sure
-it is not used in an array (linked to my comment on the previous commit).
-
-> +			struct mptcp_sock	*sock;
-> +		};
-> +	};
->  };
->  
->  struct mptcp_data_frag {
-> @@ -1028,10 +1038,10 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
->  			      const struct mptcp_addr_info *addr);
->  void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
->  bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
-> -struct mptcp_pm_add_entry *
-> +struct mptcp_pm_addr_entry *
->  mptcp_pm_del_add_timer(struct mptcp_sock *msk,
->  		       const struct mptcp_addr_info *addr, bool check_id);
-> -struct mptcp_pm_add_entry *
-> +struct mptcp_pm_addr_entry *
->  mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
->  				const struct mptcp_addr_info *addr);
->  int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *loc,
+Same here, because it is a fix, please extract this patch and target
+mptcp-net.
 
 Cheers,
 Matt
