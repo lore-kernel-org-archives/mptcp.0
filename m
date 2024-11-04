@@ -1,117 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-vk1-f176.google.com (mail-vk1-f176.google.com [209.85.221.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 284901B0F3E;
-	Mon,  4 Nov 2024 12:44:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 31F2E1DFD8
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 12:44:43 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730724246; cv=none; b=IPlEx2s2ptLUMF4gVOpQiwPESRidTa9S69z6vgom7/HaACZLy/lgT/JTYb3NFsPkilCiyHLrZ3r7D5hTUpCnfmbcKu0XONkKJUDoiV3y8BSUhia0e8GD/Un3yVpNMVKSzx0Idu7d4HKI7z6UnK0MjU2b2cJoeA2d4O3Oz2d2zUc=
+	t=1730724284; cv=none; b=rv9pmPvbordYAb7N1wik0pIhqGx+SZOVm2DZOKE+NcLR8PrRjXfo/NdUsS3NnWkSyXOGORAzX46iBhzfih89V2HO242+vQwzuikXbqsKaMgL6xkCrtW4TW0rZ+QZv/0XHYtUFIZkARSlU5/5lkE5+o944mbZVOtRNoznXZSRAT4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730724246; c=relaxed/simple;
-	bh=lXtPD88/DLwgONUoZ+tzULrPtqdUA7Jgmsh/kJjJ43w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Lg0/zNcSqhe4wcM4OeDOjw/6/6kt8tHMDMCK1uEXpqKaALgGb8lBm7lNGzBItPMY4VYiHP/OMZBKHmaJhQJD9KptX0ci44Qgdg1y7QnKQR0bGpn9Eu7G42tzcapYha4Tp5YOBelcxpKCfksK6YhC1hDkrnHnnZ6idirKoV7BAbI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FIpai+nc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730724284; c=relaxed/simple;
+	bh=OsJsnNj3B+McvIa3vMq8W3BGbYaDsPTqfWpONqQS5+o=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=HSZFSx2Q+l3+JHXtwdbh2X5QAKp8mkzbf9rgIWP+xnXR7DMa7ILe7XEIMCJKHt1OjKA21rxFksYekzlbAFKcKSK0L8tAQtT3yB6r2RfeKmzdnmJ7P3MqK846lPa1AU9CZY1nYu0RImODTlVYiBaPjxxLOVKdviCLLiRGeajxE5w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PmLarQfr; arc=none smtp.client-ip=209.85.221.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FIpai+nc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6278CC4CECE;
-	Mon,  4 Nov 2024 12:44:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730724245;
-	bh=lXtPD88/DLwgONUoZ+tzULrPtqdUA7Jgmsh/kJjJ43w=;
-	h=From:Date:Subject:To:Cc:From;
-	b=FIpai+ncM6rfCSAP5JEy1GXo8SHGD2paXxiCvFoIvTkcPy/a1vU3K3qslEsgcqi9f
-	 35bYZzNjytnC8lpK63OMl+7comQpLFmqf2UiUEqvewLv6fP8iMQ135iRlJg4KWRj5c
-	 qO+RZB56pdja1stgPoiMOKD1ufSmpFIInlnV2Pg5txBdaDxk/ioNYd2n6c/cAH2gP0
-	 coIIK/QUPCDv2Fn2eyr7kWNxIUpu4cRhu1LsQMyT0hT7/Mf6rOP04wT4E90CFMQr5f
-	 xy3GUcVn1y9W28WdMD4XNFrMQhHpAqaDygRViYSpcFMQ5WCSXndVS/AgQ+v2n0U7ON
-	 Rw4K/fZC06f8Q==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 04 Nov 2024 13:43:47 +0100
-Subject: [PATCH net-next v2] mptcp: remove unneeded lock when listing
- scheds
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PmLarQfr"
+Received: by mail-vk1-f176.google.com with SMTP id 71dfb90a1353d-50d4213c5f6so1511715e0c.3
+        for <mptcp@lists.linux.dev>; Mon, 04 Nov 2024 04:44:43 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730724282; x=1731329082; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=wiBrzt917e40zj4ytvweEPSX74FLlGLwxTtUiht9NFg=;
+        b=PmLarQfrEMRXNAP5G31VWJjgCJ05GJZneEHz0uUp8Sybh1HmGO6SJy8uxr1+a0pUl9
+         3uPeut7qv0f7Yer3fD5QmfKmnGgcYHxawso/TnNNeBXmBVl4r1MKkq3NoRgqqW7Fb8aP
+         dm3Kavi3OS+etM9fNZqs6hcvfwZzOxs8V1LapBsP89D0090IfKsdXRdGNgx7GYdYwL/b
+         3/efZv9dpb+ZpKRtFp+iQrwTzOaoOQS5GPzZi0pjzdMhM5+g1MyV09g2oy2HSR9Z38PK
+         ySeVSrtB41+DK4QElPT1WbklRO6+QVpY0sTp0cWyqQLsffDrIoR9CrbGnQXj0nppaudQ
+         NdFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730724282; x=1731329082;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=wiBrzt917e40zj4ytvweEPSX74FLlGLwxTtUiht9NFg=;
+        b=Y+3xtALQcg8sxY2kAJW6hDAbS1JXVA8dVkjmiIJPkbWC0vJIjBlm5D7VYnqn3nwfcU
+         xGOnBXC39s8+1x87xf9OGRLZkOquTptwtVSoKnB6VQFloDg7IVlT5dIPWkpXdQ613T95
+         N1WEho4W6P7AcgyHd/yTpi04eITu5F++vDAEyTvCJ5AzjFhB5yC3yXL2WARaEX/1rA64
+         iBTXaZ8XA4AJZsw0657P7uSq3sC28JKkjxv+4n06XM2CRaK/hx0UQdAm7l62Bi10tYhQ
+         wbiXLcXI+8d/DUcPRe0RBw0jGdhry3tfPraGlU7VHOQYKMLYIVF6coEVXxgEJFPg1BVT
+         0mVg==
+X-Gm-Message-State: AOJu0YyZvaEXKWHyIDNNrvUkJGgtmPOA72A83eCgR6XpWu6xRhKSKumB
+	MzXsuqbCd+8s1MvTNOGDfQmK0NGfTM3f5z65WnoYhYMkn/unRT4=
+X-Google-Smtp-Source: AGHT+IGaup5bX6TWT07u0f/sDWrWFWw84kkf+6zvdG3x+D7J4+aXM/whOLqKS4BFhaZ5QH/qLF6iLg==
+X-Received: by 2002:a05:6122:893:b0:50d:2317:5b61 with SMTP id 71dfb90a1353d-5106b15d8edmr13984835e0c.6.1730724281971;
+        Mon, 04 Nov 2024 04:44:41 -0800 (PST)
+Received: from [127.0.0.1] ([20.161.78.13])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f3a9bb41sm410307585a.134.2024.11.04.04.44.40
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 04 Nov 2024 04:44:41 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
+References:
+ <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
+Subject: Re: [PATCH net-next] selftests: net: include lib/sh/*.sh with
+ lib.sh
+Message-ID: <55fafcac-1854-9cad-02bd-832cf8208a86@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 04 Nov 2024 12:44:40 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241104-net-next-mptcp-sched-unneeded-lock-v2-1-2ccc1e0c750c@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAILBKGcC/zWNwQrCMBBEf6Xs2YU0lor+inhoN1Mb1G1IohRK/
- 91F8DAw7/BmNirIEYUuzUYZn1jiogb+0JDMg97BMRiTd75rW9exolrWyq9UJXGRGYHfqkCw8lz
- kwc71GI+TnPvxRDaUMqa4/k6u9Pfptu9fb5aZhH4AAAA=
-X-Change-ID: 20241104-net-next-mptcp-sched-unneeded-lock-006eb3fc96b7
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1732; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=lXtPD88/DLwgONUoZ+tzULrPtqdUA7Jgmsh/kJjJ43w=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnKMGSxj8Sm8hkaENq4Ru4DFL4kUK4Tj+SKRnUH
- nnjiQLbiJ2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZyjBkgAKCRD2t4JPQmmg
- c7scEACi+dZ/s9sji/LSCzCoqAVndbIEp/ojB7M+cui38Sj7+iTXIpUBKkkMM6yfedvTFqWaECv
- 8+CW0C4OrsY7VekuaYjde3skbWTCGWF+ziyqtMA/lk8Ee/TvZyy5dHxZ6VNEL924SN2pDQ3zrI1
- 1/RzVzdWJClcgRZ0bEhk//3uL6xrYhvJHUGJhjTJ0meuqUsOVjbOE0aVuDa9fbGAjTnXTHisTv2
- sHiS9Fh4Rf9IQf9pwA2YNddrTldLXVcXIXqhbutcK+PDdVi/7EDd13KF5nedHzrC24LydQAmAfP
- nYZQ36OYQ9mew1qjTPay+X0Zdbk3kvz20lrYBoGmwwD6PruIXqJXQjDoo0+/lJVd7OTqcNNeZZh
- kad+3xFRGFswXheabAv7DP20K9511AgHfexMgnO+hPIICZh3SElLPbG0lpPxaweFH6iPQ487ztT
- 7uLqK2viN5KTtv1OUofUpumgW5VEDWGk/gE6VpskMqyA5/xpiIiKRmNPxlEnq7XaDGJRd+ViIEG
- rTqKOe3HgUB0kt+ikXSkxg0YysAGBf7oM1si6qdaAksRErGJUPk/m3n+KNQ23R9/erTzwfe33BF
- M54o5hNNqhzWAQ+cVibUxwqx5bmdrixQVMnJoL6+ywTEUZc4PMRoHJD66nPMXDKUgkIeJNm+8fC
- ZMlQ2RIRj0iFyYg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-mptcp_get_available_schedulers() needs to iterate over the schedulers'
-list only to read the names: it doesn't modify anything there.
+Hi Matthieu,
 
-In this case, it is enough to hold the RCU read lock, no need to combine
-this with the associated spin lock as it was done since its introduction
-in commit 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers").
+Thank you for your modifications, that's great!
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-v2:
- - Rebased on top of net-next instead of net, same code.
- - Removed the 'Fixes' tag, add Simon's RvB tag.
- - Link to v1: https://lore.kernel.org/20241021-net-mptcp-sched-lock-v1-2-637759cf061c@kernel.org
----
- net/mptcp/sched.c | 2 --
- 1 file changed, 2 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index 78ed508ebc1b8dd9f0e020cca1bdd86f24f0afeb..df7dbcfa3b71370cc4d7e4e4f16cc1e41a50dddf 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -60,7 +60,6 @@ void mptcp_get_available_schedulers(char *buf, size_t maxlen)
- 	size_t offs = 0;
- 
- 	rcu_read_lock();
--	spin_lock(&mptcp_sched_list_lock);
- 	list_for_each_entry_rcu(sched, &mptcp_sched_list, list) {
- 		offs += snprintf(buf + offs, maxlen - offs,
- 				 "%s%s",
-@@ -69,7 +68,6 @@ void mptcp_get_available_schedulers(char *buf, size_t maxlen)
- 		if (WARN_ON_ONCE(offs >= maxlen))
- 			break;
- 	}
--	spin_unlock(&mptcp_sched_list_lock);
- 	rcu_read_unlock();
- }
- 
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/11663626947
 
----
-base-commit: ecf99864ea6b1843773589a935bb026951bf12dd
-change-id: 20241104-net-next-mptcp-sched-unneeded-lock-006eb3fc96b7
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/a7323a43b549
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D906013
 
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
