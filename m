@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8F31CC899
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:08:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09FEA18C926
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:13:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730747287; cv=none; b=h1+4kc8iZT31BGUdQziN7/WrvHQ5MWFJLNn2mkkVq/9VfZJ+zJfa92wrnjO6BXREc7eT/+0DxT9p8Mgpppio+zSnk4YzuoXUiqpOdH/o020Q9gsXIilNkKdg1UDGjBYNVF40by0OztOxqpvz+62UvekxQQm3X5T1MWb7Pilhjv4=
+	t=1730747589; cv=none; b=ee8V/zXuDTU4Xnx3wm0A1qJ2Nb/KT8pQUkC/Nnv/hSsuLEQJgNI8kuhEyNWiX5j5PcSN7iziyVWvb6l/9pOOla+Zvv51mfXCV2gOQPHVBYNzeGQPM/L/hBZaNfStxrb7/rBu7OM6+n0EWyXcX33Abc4BuI3CoGkkhspvG8Ljc84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730747287; c=relaxed/simple;
-	bh=6BGW/GwR6JpPsY46QlcZQ8cIwYneKjUP0696pkozaX8=;
+	s=arc-20240116; t=1730747589; c=relaxed/simple;
+	bh=XF1ZE634gKk9ype/9/LKPN+LVz9WTaSENBRonuEt98o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ETpOKSvYeZf1YClbqy/Nhioam4LkipHJxDy9BU+azXlD6JFOzIpRYFHpHZctXkN+wvc2F7PSUWd6xJSI+OtLFlCrm91fn1QdiTnBrS7TUoQhb5DxzgoUkBiE3lwptkJZl4XvW+C2ugtnC2T64FV7EVUINTzYySh1opYqa8S/P+Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+gpWb0b; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qkT36WyOUAZH3ib6iemFZrriLj1I5UnjZEX5jLSG1DNHsvNULoCO6/6zgsYcj89S5giyU1utf0dytWQ4aTQ2rAzkU253Nq4/gufgnvQhL6C5gBQ8fpG7z7rC8eJ7+Wg7eBGNtXJANVsMJVuaNm+TWgwbKNURUFzvaLDGQpX7/Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BDWVzEAN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+gpWb0b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD6B0C4CECE;
-	Mon,  4 Nov 2024 19:08:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BDWVzEAN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2B9CC4CECE;
+	Mon,  4 Nov 2024 19:13:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730747287;
-	bh=6BGW/GwR6JpPsY46QlcZQ8cIwYneKjUP0696pkozaX8=;
+	s=k20201202; t=1730747588;
+	bh=XF1ZE634gKk9ype/9/LKPN+LVz9WTaSENBRonuEt98o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l+gpWb0bMsKhSkoUH6qmgSiXmrZ8fI/33wGmmvNDrUWgKECV+NQx5LP19OpIwWTEl
-	 hF6MrydVp3Oos7LwxIayjuFpyFx1sSowkGZU1XBZRdCFqcaEzA7YuUYS2MxkYHBAeK
-	 K0r2m+8a73rCkDSP+xqXl5XAyAFQpj7M5DK4ww7/4Xb45tv9b/b8m+90J+1ABm5Hb8
-	 rFj/KCqFVItbdzcMyniC0JhA73lE5t+HoEJoensUGtmZ6ug9zUqEYM4E5flSXgNFJ+
-	 JkfDBlYyPFaKDHjad8497QwfnnvO+oLeX+UNgjMKWNFo8NSJZvQ+RLXLFVfqU4c4BM
-	 3hG9P11PJrahQ==
-Message-ID: <4661b240-9a9c-47c2-9dc0-362d22baad83@kernel.org>
-Date: Mon, 4 Nov 2024 20:08:04 +0100
+	b=BDWVzEANLSbFq1j8V+Y1YcAN/TFfQD45UZkk6Bc9y67P5ZwBWD1AgYMSZkDMyidC1
+	 kqAsLBJEgnnX91+hR0nNDsibNHbKWkuGoGSnVgpx6OEpeIySWEi3QP+9zfYNv1B5IG
+	 Dl3EA/NSNr8QB0LS/aQ5uLQY8K/IvhD2kCpSytd9KHh5ORqorcoMiwRt6G3DHqg+qT
+	 3HK4QM4BHFALVHsDKVJ9HN/Ssm5PbVp07AUTfS78QDSH5+euHyeb6RtmsT2SVnovqX
+	 J420lOcCQ0rdCYmYl8qmNlkWL3zOPYDRKtcNRh2CYDZKPnYZc72qOG6fC1TTIU3YfH
+	 Gqrzqz0pxycKw==
+Message-ID: <0cf4c951-4a66-4ad3-b403-2b966d657f1b@kernel.org>
+Date: Mon, 4 Nov 2024 20:13:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 23/36] mptcp: drop struct mptcp_pm_local
+Subject: Re: [PATCH mptcp-next v2 24/36] mptcp: drop struct mptcp_pm_add_entry
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
+ <c1a57a18940b94c6db9ce423fe3d84e050397589.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <c1a57a18940b94c6db9ce423fe3d84e050397589.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,80 +95,63 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The following code in mptcp_pm_nl_subflow_create_doit() that assigns struct
-> mptcp_pm_addr_entry "entry" to the local struct mptcp_pm_local variable
-> "local" is not allowed in BPF if we use the same code to implement the
-> subflow_create() interface of a BFP path manager:
+> There is no need to add a dedicated address entry type "mptcp_pm_add_entry"
+> to represent ADD_ADDR addresses. Additional fields for ADD_ADDR addresses
+> can be added into struct mptcp_pm_addr_entry directly. This makes the path
+> manager code simpler.
 > 
-> 	struct mptcp_pm_local local;
-> 
-> 	local.addr = entry.addr;
-> 	local.flags = entry.flags;
-> 	local.ifindex = entry.ifindex;
-
-Here as well, I'm not sure to understand the issue. Is it because you
-cannot allocate this structure locally with BPF? No alternatives?
-
-> We should avoid this type of assignment from struct mptcp_pm_addr_entry to
-> struct mptcp_pm_local.
-> 
-> In fact, there is no need to add a dedicated address entry type for local
-> address entry. All its fields are the same as struct mptcp_pm_addr_entry,
-> except that it lacks a "lsk" for the listening socket. So we can use struct
-> mptcp_pm_addr_entry directly. This makes the path manager code simpler.
-
-There was a need for this structure, see this discussion:
-
-
-https://lore.kernel.org/mptcp/587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com/
-
-and the changelog in v5:
-
-
-https://lore.kernel.org/mptcp/20240726-mptcp-pm-avail-v5-13-fb1117ddeef6@kernel.org/
-
-In short ...
-
+> Here "union" can be used to merge struct mptcp_pm_addr_entry and struct
+> mptcp_pm_add_entry into one. Then all mptcp_pm_add_entry can be replaced by
+> mptcp_pm_addr_entry.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_netlink.c   | 22 ++++++++--------------
->  net/mptcp/pm_userspace.c |  7 +------
->  net/mptcp/protocol.h     |  8 +-------
->  net/mptcp/subflow.c      |  2 +-
->  4 files changed, 11 insertions(+), 28 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 287e715bcf68..15f97e7af182 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
 
 (...)
 
-> @@ -721,7 +715,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index d9badf270b15..9dc01140af23 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -243,9 +243,19 @@ struct mptcp_pm_data {
+>  struct mptcp_pm_addr_entry {
+>  	struct list_head	list;
+>  	struct mptcp_addr_info	addr;
+> -	u8			flags;
+> -	int			ifindex;
+> -	struct socket		*lsk;
+> +	union {
+> +		struct {
+> +			u8			flags;
+> +			int			ifindex;
+> +			struct socket		*lsk;
+> +		};
+> +		/* mptcp_pm_add_entry */
+> +		struct {
+> +			u8			retrans_times;
+> +			struct timer_list	add_timer;
+
+This will increase the size of the structure even more. Please make sure
+it is not used in an array (linked to my comment on the previous commit).
+
+> +			struct mptcp_sock	*sock;
+> +		};
+> +	};
+>  };
 >  
->  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
->  {
-> -	struct mptcp_pm_local locals[MPTCP_PM_ADDR_MAX];
-> +	struct mptcp_pm_addr_entry locals[MPTCP_PM_ADDR_MAX];
-
-... we don't want that: that's reserving too much memory, and we don't
-need half of it.
-
-*If* it is really needed to change it for BPF (I'm surprised there are
-no alternatives), then maybe we can change the signature of
-__mptcp_subflow_connect(), but not change the code here.
-
-In this case, only one "struct mptcp_pm_addr_entry" will be needed, and
-the "struct mptcp_pm_local" can be defined in this pm_netlink.c file if
-it is only used here.
-
-But please mention that in the commit message.
-
->  	struct sock *sk = (struct sock *)msk;
->  	unsigned int add_addr_accept_max;
->  	struct mptcp_addr_info remote;
-(...)
+>  struct mptcp_data_frag {
+> @@ -1028,10 +1038,10 @@ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+>  			      const struct mptcp_addr_info *addr);
+>  void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
+>  bool mptcp_pm_sport_in_anno_list(struct mptcp_sock *msk, const struct sock *sk);
+> -struct mptcp_pm_add_entry *
+> +struct mptcp_pm_addr_entry *
+>  mptcp_pm_del_add_timer(struct mptcp_sock *msk,
+>  		       const struct mptcp_addr_info *addr, bool check_id);
+> -struct mptcp_pm_add_entry *
+> +struct mptcp_pm_addr_entry *
+>  mptcp_lookup_anno_list_by_saddr(const struct mptcp_sock *msk,
+>  				const struct mptcp_addr_info *addr);
+>  int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *loc,
 
 Cheers,
 Matt
