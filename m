@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7B7D18C342
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:27:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5137316C687
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:31:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730748436; cv=none; b=VMyPDeNrA+lNbyUMcV/2dcp+1MjbTopjkebEvLjW2Kmt20oVRNML+3bqwQOKCnPTWImzauAqHKuZWKatz98ZN2b8qpmxTx6nrqRreDupSB9+adqsnf43jEkTo5DPcgXbBlneLLg7ouENjH06J+XaIdQZmmsJLtgb0q+BTT1jJ/I=
+	t=1730748707; cv=none; b=m1RlbHwj2XkoBnmCS7q1xL3VJjOxK+T8NrMzsvw2cxBIjOCjgxOz3TBQk5lyatF9q2fG3QnAB6Ou8CHpTV+sBp3Pi6GUPlySaHOKRtTeX5DFT40Oe2UMAxmBeTFNuG4lRiQs2bn+qHdArFe6ik0DsGlbsdDtKOB1COShcdnA02o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730748436; c=relaxed/simple;
-	bh=vNIyD0ki4si2vCn/2X2j5OFxHSoGGLrMGDH5yaiM2Co=;
+	s=arc-20240116; t=1730748707; c=relaxed/simple;
+	bh=ZujghIgJtYXNgKzRCFD9dLhJl58I8/AnqFGSaqnVRv4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WqaAONwNO04KKLWW2yS8WnVpSIU1R8Qifl9Roggmoq1X6HDQU9qD8KfdbBdSkucTTjsCU600e2XJ2MJvj6HyTnsdyIPublJ6EsyBjQowH11tYKOQ5uhUE/veGP95d+SFQ5D02DWo5v3kqZlca+RE6L7vj1unj8q7RqTcrMghYnA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JxZPz/Nh; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=r2PKc7p8Q6QB+6nffvefyTKF/7M/bYYxaUA2N4yK7hS48ZIvNkrMXtUuBbvYS0RM7YIqgPUf3S180F/h1k7TszMuqDWKbl5c5zEwZFnCYLtAcq6Jwxd507dd7+Oz4X7uWLLcx5C9V4MIxHyQq7qdrTX9JDi/Yn0Bnb/+ohQl40A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XIhFfRpo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JxZPz/Nh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B55A1C4CECE;
-	Mon,  4 Nov 2024 19:27:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XIhFfRpo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03F55C4CED1;
+	Mon,  4 Nov 2024 19:31:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730748436;
-	bh=vNIyD0ki4si2vCn/2X2j5OFxHSoGGLrMGDH5yaiM2Co=;
+	s=k20201202; t=1730748706;
+	bh=ZujghIgJtYXNgKzRCFD9dLhJl58I8/AnqFGSaqnVRv4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JxZPz/NhZDCdVxPb3YSVBB+d+z24ZBd4LRBYCXCMTK2jFl4xcLhnFS3NGzqyvLd+G
-	 5h+Jbs9x4ORH/tLWaQnoT7jGi5yQWfKqev0GeR+whPsTmU/px14GzK7goYXukI096l
-	 V6T8T6W7Ed5JQpKIEkfy9u1mDko5nml1jNUEwVGaGdyC8gGg6xlr/5tN3bgN9MEWkA
-	 KMm5fhLQ6b7RXcXLw24jK5z+80CE9Vc5etCWV6mdcfuQUWSBCmAnbk2Na/BM2X0Z1J
-	 OynuaD69/Hs9xsiEV5eIW+vLMRsrEoPHP0B33dVGoQsYmwuaq3p/vosFJzJBlGjQO9
-	 kGTR/MQbpA9zw==
-Message-ID: <541dbd94-6d3f-4ed2-8d58-3313b9f295b9@kernel.org>
-Date: Mon, 4 Nov 2024 20:27:14 +0100
+	b=XIhFfRpoFAA9U2xd5qusffyujuTKP2z3N9L0YCx5mxOSVX+UAkeJUz5UgB+gyM6e8
+	 pjv+v/viz+ZTKPeBgtOjkREgWl7PetpOMx/lcpVV+V0VUfhvfncxTAeGq8Y3MEn4Tf
+	 1JdbSUDGjIW+H87yQ8Td8ixdDPVVMF4yCL4F7WpCaqph0+y0Er9/Bf0c/J4pvkN46l
+	 Qig6gOmqBqjKOh9ocaijTD1C/3yT/5JH0bdUbPj3F/vLBR/ZOsV2Ss5kJYmvtplIf6
+	 1NGVEsaIT/HKs/aRbqm8XHhiGs2ZANC5YCYZpDuzYWiTj/X/LsFvYRJk2GpHHGDhZx
+	 LVHi/rOLlSEMw==
+Message-ID: <c4f02c68-b77a-49d4-93c9-78e6f5daa702@kernel.org>
+Date: Mon, 4 Nov 2024 20:31:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 28/36] mptcp: drop free_list for deleting
- entries
+Subject: Re: [PATCH mptcp-next v2 00/36] BPF path manager
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <9aeee6d70b0b4071765029bc2ac3dd9c2033a85c.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +85,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9aeee6d70b0b4071765029bc2ac3dd9c2033a85c.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,68 +94,14 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> With the help of mptcp_pm_remove_addr_entry(), it's no longer necessary to
-> move the entry to be deleted to free_list and then traverse the list to
-> delete the entry, which is not allowed in BPF. The entry can be directly
-> deleted through list_del_rcu() and sock_kfree_s() now.
+> v2:
+>  - add BPF-related code in this set (32-36).
 
-Maybe clearer to squash this in the previous commit.
+I did a review of the patches up to 28/36 included.
 
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 14 +++++---------
->  1 file changed, 5 insertions(+), 9 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 21b2a3b02cfe..e5dfa1a6db31 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -283,9 +283,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  {
->  	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
->  	struct mptcp_pm_addr_entry *match;
-> -	struct mptcp_pm_addr_entry *entry;
->  	struct mptcp_sock *msk;
-> -	LIST_HEAD(free_list);
->  	int err = -EINVAL;
->  	struct sock *sk;
->  	u8 id_val;
-> @@ -312,23 +310,21 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  
->  	spin_lock_bh(&msk->pm.lock);
->  	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
-
-Can you not remove the entry from the list here (if there is a match?)
-
-> +	spin_unlock_bh(&msk->pm.lock);
->  	if (!match) {
->  		GENL_SET_ERR_MSG(info, "address with specified id not found");
-> -		spin_unlock_bh(&msk->pm.lock);
->  		release_sock(sk);
->  		goto out;
->  	}
->  
-> -	list_move(&match->list, &free_list);
-
-(or keep the del here, no?)
-
-> -	spin_unlock_bh(&msk->pm.lock);
-> -
->  	mptcp_pm_remove_addr_entry(msk, match);
->  
->  	release_sock(sk);
->  
-> -	list_for_each_entry_safe(match, entry, &free_list, list) {
-> -		sock_kfree_s(sk, match, sizeof(*match));
-> -	}
-> +	spin_lock_bh(&msk->pm.lock);
-> +	list_del_rcu(&match->list);
-> +	sock_kfree_s(sk, match, sizeof(*match));
-> +	spin_unlock_bh(&msk->pm.lock);
->  
->  	err = 0;
->  out:
+If you want, you can send a v3 without patches 29-36: the series is very
+long, that's hard to review such long series. We can check this part
+later. WDYT?
 
 Cheers,
 Matt
