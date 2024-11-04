@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CADFC1CF8B
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 18:36:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B1D18D642
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 18:48:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730745387; cv=none; b=V/JdhjfS4AlLSy6igAD0zsOFK0HaviUBBGWn+dQo4tHe3H6ft6/sYcX/7Bejpmn1JdNdUV45zb8+c57hb7u4z/v90JSBK/g3kWcl2rYUHTmB7aO4c6XZO0923E8tEgfEfwNb8eCDuDYtfrHIBKadYt3uOKTV0JY0wzH/xDNEQpQ=
+	t=1730746089; cv=none; b=hbXnDwnZCSIdBCU9Px2ewY0SShSl0AX4v/aV9ZmskEXqpb31xxUVabl9M6lDZy8mLHg3Xl4TPEb/xoKNPqq4jAk2tYySX9mXUs7ltW0OkZv83RIihEIL08AIVo13mI7+ylicaetpAAE+4gXvv8jBz3vrJeIEfI26nVht6PtU+fc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730745387; c=relaxed/simple;
-	bh=oXnNzTRH5LFuT5hWQo2ErZcpEED4IWYNFEuBboAnqYA=;
+	s=arc-20240116; t=1730746089; c=relaxed/simple;
+	bh=BAvSgNyWsgGhQc8Hm+bYNrjIOdez6vPMU+m4h9E2QTg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m0fTcJZe58r4mE1c7k5xzHSEAxFYHYulFiBku3uYUZdXIP91TDl5TU0Vg/TsVJPCOxUkVx9fPkp3nM5Y7HlKbNYiu6N8OfX7CSQMR3/G7IVi7muy0WIJkAOTTV/+KVDlmbvzVb5pVhAZgPaH3wJMowuEtKPuz/tT8qG8wSeAUq8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SJC1UX19; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=csAG7O/hd8U7ZeZ7LSQwQ4U6GJZ4z7W2husUqelN47AHDna9trInt9zbuzE/qrCmRIXfa2B/k1j1c64kaUWlbokMrM3vkOTQg3QhOyr81yhFllkP0ZvGeVKf7n3o1mBb3nt9EorJcqtf2W9aIcnJlHXMFGSo1/MHqbwSHtP0ths=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7fSf1ws; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SJC1UX19"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81F4FC4CECE;
-	Mon,  4 Nov 2024 18:36:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7fSf1ws"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D2B1C4CECE;
+	Mon,  4 Nov 2024 18:48:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730745387;
-	bh=oXnNzTRH5LFuT5hWQo2ErZcpEED4IWYNFEuBboAnqYA=;
+	s=k20201202; t=1730746088;
+	bh=BAvSgNyWsgGhQc8Hm+bYNrjIOdez6vPMU+m4h9E2QTg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SJC1UX19w1H9KsdBgTk1ICJZS7LNezIlc5Zhp7AObBbI7xx97yZxzDHfgcOHP0PqS
-	 I3dJXGUnZ0lYKErcJtB8TDK6VZ8yIw1NkNe9B79H6PtnU7kZiVMI8gTEDWIfmY8k2R
-	 iSlKmkTFdiIAmR2/3HXA9MpWMycdE7juZscc6zJLMClYmHRPhAamRkRT1pFX8ah9y6
-	 IM2jPKUUgyki3ka3CcI7nM/KeuXGu2OcO4p8qObzoPbilz3GBUk3ig1EGAfBCUsze1
-	 f6mgK/8M8um+IcllG5Jr73KFm56sb4hliMrKNWvdWRP7TGE4E2p9k2+Gjs05ybWdU2
-	 9yBF69s+qPxhw==
-Message-ID: <9f8bcf92-64c5-4020-be77-a2bc0fe1c83c@kernel.org>
-Date: Mon, 4 Nov 2024 19:36:24 +0100
+	b=V7fSf1ws3CyKJ8inKeNfPtKRxPPfdEsY9DounJsj7tGsbdqtUmimH/KtE0ez6pUni
+	 qV46eA5uj+2ryFEx2wOQudYoQ0OH7xzxGM3fRWvSU+B83crZ8dPmnde9ZQIqpcbtLo
+	 hLcsViDPoeFsaRtXStATFT7U20v6DwPFPOgjfEri88fsWE5beSaQ7BQabhWeHSJ8OW
+	 BC9Drh1HbPW0yQG+MwsaRUPSG7PNW+7GfPh0hF55Wr6IgDZ0wSerJxNZSFUQma3EVT
+	 3INotUu3YtCpEYFIw3E2lfALMdEkUivwXqCnQir7pmqEcvgUgmzV0Fuv5JlAE8HpLv
+	 Ul1uVDzImgHeg==
+Message-ID: <8c422b14-719a-447d-a24e-61ef40dbd72e@kernel.org>
+Date: Mon, 4 Nov 2024 19:48:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 20/36] mptcp: add loc and rem for set_flags
+Subject: Re: [PATCH mptcp-next v2 21/36] mptcp: update address type of
+ get_local_id
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <0941887ad2ba9451d89c0409b40b945d57a4c56c.1729588019.git.tanggeliang@kylinos.cn>
+ <697ad8ffc8987b12a232b3855e6960b49c186d4b.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0941887ad2ba9451d89c0409b40b945d57a4c56c.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <697ad8ffc8987b12a232b3855e6960b49c186d4b.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,144 +96,77 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch updates the interfaces set_flags to reduce repetitive code,
-> adds two more parameters "loc" and "rem" for them. These addresses are
-> parsed in public helper mptcp_pm_nl_set_flags_doit(), then pass them
-> to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
+> The following code in mptcp_userspace_pm_get_local_id() that assigns "skc"
+> to "new_entry" is not allowed in BPF if we use the same code to implement
+> the get_local_id() interface of a BFP path manager:
+
+Can you give more details about the fact it is not allowed please?
+
+Do you mean you cannot do the following code in BPF? Why?
+
+> 	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
+> 	new_entry.addr = *skc;
+> 	new_entry.addr.id = 0;
+> 	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+> 
+> To solve the issue, this patch moves this assignment to "new_entry" forward
+> to mptcp_pm_get_local_id(), and then passing "new_entry" as a parameter to
+> both mptcp_pm_nl_get_local_id() and mptcp_userspace_pm_get_local_id().
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm_netlink.c   | 57 ++++++++++++++++++++++++----------------
->  net/mptcp/pm_userspace.c | 28 ++++++--------------
->  net/mptcp/protocol.h     |  4 ++-
->  3 files changed, 46 insertions(+), 43 deletions(-)
+>  net/mptcp/pm.c           | 10 ++++++++--
+>  net/mptcp/pm_netlink.c   | 11 +++--------
+>  net/mptcp/pm_userspace.c | 17 ++++++-----------
+>  net/mptcp/protocol.h     |  4 ++--
+>  4 files changed, 19 insertions(+), 23 deletions(-)
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 5fb1d5d8bf57..5cd5241da3c6 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -2045,10 +2045,10 @@ static int mptcp_nl_set_flags(struct net *net,
->  	return ret;
->  }
->  
-> -static int mptcp_pm_nl_set_flags(struct genl_info *info)
-> +static int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *loc,
-> +				 struct mptcp_addr_info *rem,
-> +				 struct genl_info *info)
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index b6e6859903ef..d28e844eba2d 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -404,6 +404,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
 >  {
-> -	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
-> -	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
->  	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
->  			   MPTCP_PM_ADDR_FLAG_FULLMESH;
->  	struct net *net = genl_info_net(info);
-> @@ -2056,59 +2056,72 @@ static int mptcp_pm_nl_set_flags(struct genl_info *info)
->  	struct pm_nl_pernet *pernet;
->  	u8 lookup_by_id = 0;
->  	u8 bkup = 0;
-> -	int ret;
+>  	struct mptcp_addr_info skc_local;
+>  	struct mptcp_addr_info msk_local;
+> +	struct mptcp_pm_addr_entry local;
 >  
->  	pernet = pm_nl_get_pernet(net);
+>  	if (WARN_ON_ONCE(!msk))
+>  		return -1;
+> @@ -416,9 +417,14 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+>  	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
+>  		return 0;
 >  
-> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	if (addr.addr.family == AF_UNSPEC) {
-> +	if (loc->addr.family == AF_UNSPEC) {
->  		lookup_by_id = 1;
-> -		if (!addr.addr.id) {
-> +		if (!loc->addr.id) {
->  			GENL_SET_ERR_MSG(info, "missing required inputs");
->  			return -EOPNOTSUPP;
->  		}
->  	}
->  
-> -	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> +	if (loc->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
->  		bkup = 1;
->  
->  	spin_lock_bh(&pernet->lock);
-> -	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
-> -			       __lookup_addr(pernet, &addr.addr);
-> +	entry = lookup_by_id ? __lookup_addr_by_id(pernet, loc->addr.id) :
-> +			       __lookup_addr(pernet, &loc->addr);
->  	if (!entry) {
->  		spin_unlock_bh(&pernet->lock);
->  		GENL_SET_ERR_MSG(info, "address not found");
->  		return -EINVAL;
->  	}
-> -	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-> +	if ((loc->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
->  	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
->  		spin_unlock_bh(&pernet->lock);
->  		GENL_SET_ERR_MSG(info, "invalid addr flags");
->  		return -EINVAL;
->  	}
->  
-> -	changed = (addr.flags ^ entry->flags) & mask;
-> -	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
-> -	addr = *entry;
-> +	changed = (loc->flags ^ entry->flags) & mask;
-> +	entry->flags = (entry->flags & ~mask) | (loc->flags & mask);
-> +	*loc = *entry;
->  	spin_unlock_bh(&pernet->lock);
->  
-> -	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
-> +	mptcp_nl_set_flags(net, &loc->addr, bkup, changed);
->  	return 0;
+> +	memset(&local, 0, sizeof(struct mptcp_pm_addr_entry));
+
+Out of curiosity: do you need to call memset() here? Can you not init
+"local" when you declare it?
+
+  struct mptcp_pm_addr_entry local = { 0 };
+
+(Or maybe that's not working with C99 with inner structures? I thought
+it was, but not sure).
+
+> +	local.addr = skc_local;
+
+Do you still need skc_local? Can you not use 'local.addr' directly
+instead above?
+
+> +	local.addr.id = 0;
+
+In pm_netlink.c, 'addr.port' is also reset. Should you not do that here
+too? I guess that's fine for the userspace pm, no?
+
+> +	local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+> +
+>  	if (mptcp_pm_is_userspace(msk))
+> -		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
+> -	return mptcp_pm_nl_get_local_id(msk, &skc_local);
+> +		return mptcp_userspace_pm_get_local_id(msk, &local);
+> +	return mptcp_pm_nl_get_local_id(msk, &local);
 >  }
 >  
-> -static int mptcp_pm_set_flags(struct genl_info *info)
-> +static int mptcp_pm_set_flags(struct mptcp_pm_addr_entry *loc,
-> +			      struct mptcp_addr_info *rem,
-> +			      struct genl_info *info)
->  {
->  	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-> -		return mptcp_userspace_pm_set_flags(info);
-> -	return mptcp_pm_nl_set_flags(info);
-> +		return mptcp_userspace_pm_set_flags(loc, rem, info);
-> +	return mptcp_pm_nl_set_flags(loc, rem, info);
->  }
->  
->  int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
->  {
-> -	return mptcp_pm_set_flags(info);
-> +	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
-> +	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-> +	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
-
-(detail: maybe clearer to call it "attr_loc", similar to "attr_rem")
-
-> +	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
-> +	int ret;
-> +
-> +	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (attr_rem) {
-> +		ret = mptcp_pm_parse_addr(attr_rem, info, &rem);
-> +		if (ret < 0)
-> +			return ret;
-> +	}
-> +
-> +	return mptcp_pm_set_flags(&loc, &rem, info);
-
-Nothing to change here, but linked to a previous comment for another
-patch of this series: I think it would be clearer to move
-mptcp_pm_nl_set_flags_doit() and similar (mptcp_pm_nl_get_addr_dumpit()
-+ mptcp_pm_nl_get_addr_doit()) to pm.c: these helpers are generic,
-implemented for each PM.
-
-Similarly, we can move the content of their linked function
-(mptcp_pm_set_flags(), mptcp_pm_dump_addr() and mptcp_pm_get_addr()) in
-there. If this last step makes sense for the future changes of course,
-but for the moment, these helpers are only used in one place, just next
-to, and only 3 basic lines: 'if (X) return A; return B'.
-
->  }
->  
->  static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, gfp_t gfp)
+>  bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
 (...)
 
 Cheers,
