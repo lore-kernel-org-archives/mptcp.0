@@ -1,168 +1,288 @@
-Received: from NAM04-BN8-obe.outbound.protection.outlook.com (mail-bn8nam04on2081.outbound.protection.outlook.com [40.107.100.81])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 612632AE77
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 14:03:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=40.107.100.81
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730729027; cv=fail; b=fInm1iaEXxoEPNObOUCMM0cIFxvVaruQcUvxsntVvS0+zusIH6oOa78NmM38/yba/HU54g3Znjfyvl3aFRpbaU4ljtWCpBg7RZhANpS4ZNZjFbomXPWYG9nj7FAza79NUjpgo0rW13bClGeIWr1yI+pEWeF3vdzC+VQ03ztgsUM=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730729027; c=relaxed/simple;
-	bh=fjov0DoALudy4DauWEZZ1O56U6akARpNIXdHAf4ohw4=;
-	h=References:From:To:CC:Subject:Date:In-Reply-To:Message-ID:
-	 MIME-Version:Content-Type; b=HXdMbhGgra2BwWUpvvFdoiEpuQhQnEavtWTVFVm+0R3RIjYO7D3Z1BxOoyJ5yiQpQ2UY40rICneT0KdLwgf+jgBbIpeL8wYDx29TMDj6JlNf04Q80xBTYXzAMXdE4PIQoAS+MoXhpdhBhxdBxHJLkg2EigrMjbG3U7KN98sc+rk=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com; spf=fail smtp.mailfrom=nvidia.com; dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b=fDMlNsvR; arc=fail smtp.client-ip=40.107.100.81
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=nvidia.com
-Authentication-Results: smtp.subspace.kernel.org; spf=fail smtp.mailfrom=nvidia.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7582217583
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 17:18:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1730740727; cv=none; b=cyPJcdqFz21g9X05uCVj8ONLrbU8Fwqkq5JaMtjD43lj3/sfxThW0V8gieOfP9RpE87B00PWfelO55jyo/hR0UJny8KjlvMorq0MqiqwNLyNQdbOtKJSYz3N3XlLUIxqqv/po/qw2DDd9SHjRnHsawfmtDpykATlhsofXMTj4Tw=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1730740727; c=relaxed/simple;
+	bh=qdPLjf5Jl12UDEoe7/3iqaqpDGV7k9Xv4jg114ZmHmo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=s93mTF8iQyqoZHaMkGMWUcA00KCrM0eDAOrWJCqAFsFz+chvZPnfUrLkNmlx7bCWns1HViuLdNkvtzg8HLia3hAaHpp8l8X1+eId6V3uaTNbDxHJ1WTXpuaR2yeRhPGGF1BL59DPEdyf7QYQTaB3rR2gX8zumDZpN3gABgJvEZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A6riwfBa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=Nvidia.com header.i=@Nvidia.com header.b="fDMlNsvR"
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=YC39uGXkwq9A+lHUNm6ZvDJ6F9FefmTxT6T8WKsKEDKB2KXpFzLsVp3JzHSgyesqiz5q4hypEs1YX37EddoRB/zxNX4zMI1GkUgLGzjwq2f62VZzYaO8pbWLUFHsidEN/OVml2hGBobavFhU+eV7o4jyNceGQubgMSYD9904of5V0Lg9sc3Tbf5JZbz8z5kqXS6O+rTzIAqYQGgT+fJVuGDFdU9qHWFBOfho4jeIHzMY6JtU01D95vDXnosKm+/bZKw31U9UgT4kgf7kDJ/bjP20DyfHn1PGf1pYNvbgGWob8bg0Kkbky8KTwkP6DVxXFdWjgG7mwZGsgbpzfq3bWw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=AbkTKEe+Nh0mH4f0gUv+mMPPA89EyQE//ySB7a7XUME=;
- b=dhCxwS8EZHNNZSnIH2Vlx6xpdgtWH+++qi/T12rFDs+UVvD22+YmzT2XeYvCQHFwTe9Z0MQlJu5E78jzz3gXKASpbL9Fp7yDFhe+JkIOq+0Qs6KkWOYSA1ZmZs6vxl7So7PFMatMYDlNa+u8TN3fdw/Wy+2rwbcRG/R9a5mqPNYeFqs30uNgj4yTkJynVOhOIvr0KPCTcnMnbG5d86vbEYSDB0frIqipMObmKoLcoOLa0Un+547HNHL2jhrWb6RGPTH/SA4jq4UUjfD0VL5vzVp1IL06HpMgrfTz/kXe1sY73IGp0aNBTuONOOJfGHZgC/oLmamOZDIiXeWq4alO9A==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass (sender ip is
- 216.228.117.161) smtp.rcpttodomain=netfilter.org smtp.mailfrom=nvidia.com;
- dmarc=pass (p=reject sp=reject pct=100) action=none header.from=nvidia.com;
- dkim=none (message not signed); arc=none (0)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Nvidia.com;
- s=selector2;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=AbkTKEe+Nh0mH4f0gUv+mMPPA89EyQE//ySB7a7XUME=;
- b=fDMlNsvRUIKDhccohM8bj5A6dLtqQnQ5Gsw4Wd//unR0oBN5naiRWws4ILcVEaXUPH8Kz5/53cuKyia7mQtBZy0elQOYiqdOMu4HiFxjAb66yVWOZXF1O7wP1JADKNM4/hl3sBWBU9Di0aQYqX5AwUULLvAhIb4uSt/+nxxf5bIG5APEJoYXVUV4hbtEg9QblIgxASXVLhOCEAPYYVQkMGS8zQUVJDFXwvRwK0mYCMt+dFbr9G4zW27auxopS9uwaGYmIt6nt2TaW98I3ecnGdTa5HfEGHBnETHNN0U4DNJA0s20pG+MunecXmuJryvVHIWC5nC+VxJilT5DdEfGgw==
-Received: from DS7PR03CA0141.namprd03.prod.outlook.com (2603:10b6:5:3b4::26)
- by CH3PR12MB8354.namprd12.prod.outlook.com (2603:10b6:610:12f::21) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.31; Mon, 4 Nov
- 2024 14:03:23 +0000
-Received: from DS2PEPF0000343F.namprd02.prod.outlook.com
- (2603:10b6:5:3b4:cafe::79) by DS7PR03CA0141.outlook.office365.com
- (2603:10b6:5:3b4::26) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8114.30 via Frontend
- Transport; Mon, 4 Nov 2024 14:03:23 +0000
-X-MS-Exchange-Authentication-Results: spf=pass (sender IP is 216.228.117.161)
- smtp.mailfrom=nvidia.com; dkim=none (message not signed)
- header.d=none;dmarc=pass action=none header.from=nvidia.com;
-Received-SPF: Pass (protection.outlook.com: domain of nvidia.com designates
- 216.228.117.161 as permitted sender) receiver=protection.outlook.com;
- client-ip=216.228.117.161; helo=mail.nvidia.com; pr=C
-Received: from mail.nvidia.com (216.228.117.161) by
- DS2PEPF0000343F.mail.protection.outlook.com (10.167.18.42) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.8137.17 via Frontend Transport; Mon, 4 Nov 2024 14:03:23 +0000
-Received: from rnnvmail201.nvidia.com (10.129.68.8) by mail.nvidia.com
- (10.129.200.67) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 4 Nov 2024
- 06:02:56 -0800
-Received: from fedora (10.126.230.35) by rnnvmail201.nvidia.com (10.129.68.8)
- with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.2.1544.4; Mon, 4 Nov 2024
- 06:02:48 -0800
-References: <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
-User-agent: mu4e 1.8.14; emacs 29.4
-From: Petr Machata <petrm@nvidia.com>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-CC: <mptcp@lists.linux.dev>, "David S. Miller" <davem@davemloft.net>, "Eric
- Dumazet" <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, "Paolo
- Abeni" <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, Shuah Khan
-	<shuah@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
-	<geliang@kernel.org>, Pablo Neira Ayuso <pablo@netfilter.org>, "Jozsef
- Kadlecsik" <kadlec@netfilter.org>, Petr Machata <petrm@nvidia.com>,
-	<netdev@vger.kernel.org>, <linux-kselftest@vger.kernel.org>,
-	<linux-kernel@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<coreteam@netfilter.org>
-Subject: Re: [PATCH net-next] selftests: net: include lib/sh/*.sh with lib.sh
-Date: Mon, 4 Nov 2024 15:00:03 +0100
-In-Reply-To: <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
-Message-ID: <87h68nksfw.fsf@nvidia.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A6riwfBa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 59C20C4CECE;
+	Mon,  4 Nov 2024 17:18:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730740727;
+	bh=qdPLjf5Jl12UDEoe7/3iqaqpDGV7k9Xv4jg114ZmHmo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=A6riwfBajcw16djO6ntfjdILfLCS8RS3Pi3j4QYxyMOUKufiVkdvuSOS+jd9AyxL/
+	 SU3+RrPLvERpkH6G9PPqZ7e/1u+aaZH469qfG69dfMkao9NeDJymsd2j8HkUjKFXY9
+	 IJBPrklEqFj+xsarAtdMxxEKNg5avyBeIbhkPmuU4tfI72Mr/6t7JXmaoDcF0pJTBl
+	 qCXwABE4ohI91LkbELx3SGEH3/fWQLbRHfD8n49p9yd88N5Yd+/Sngyav4CQWvsE5d
+	 Z9qCSxNnWcRFxYKjP94TCJliFAiFzyVtG3S3kZpXFISGAg5jlRXCIhTPgebMwlG4ng
+	 N2VC7o2sVdM6w==
+Message-ID: <783c5e16-e040-4094-be19-9f64695164f3@kernel.org>
+Date: Mon, 4 Nov 2024 18:18:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-ClientProxiedBy: rnnvmail201.nvidia.com (10.129.68.8) To
- rnnvmail201.nvidia.com (10.129.68.8)
-X-EOPAttributedMessage: 0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: DS2PEPF0000343F:EE_|CH3PR12MB8354:EE_
-X-MS-Office365-Filtering-Correlation-Id: 496264ff-7e62-40d5-134c-08dcfcd97224
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam:
-	BCL:0;ARA:13230040|376014|7416014|1800799024|82310400026|36860700013;
-X-Microsoft-Antispam-Message-Info:
-	=?us-ascii?Q?AA77q/L8siZ9oFK/LRaTvO+Q3bAIovgF/KnjiXYSBLLDg9YWS63Mb8vt6CvG?=
- =?us-ascii?Q?eBmw8PXKqhy5Drg4LioWq1uEFQyfgnnmeIVAI5LeAEVDxvDbh7+uJQto5O8A?=
- =?us-ascii?Q?WvBgxUyBRX0IyZ18p23YKyR/hXdKSrLTKLKCUhN22LJVQDgu0EcwqA/6U+sO?=
- =?us-ascii?Q?kJQ9ePW3khCdyN5oRZd3zGfxjxLUJFRzg9nzuJD9ewVa88YtAiDdExIVlSjy?=
- =?us-ascii?Q?3tnazLpIRH5ZqlMfZIceTbRKOvalwkJaT/TRtg76odChxNuricV6JVZW/V+X?=
- =?us-ascii?Q?nW3h+tLLgyaO6O+mPARMwBLk3xmXcujGOrvVHS7v8SLmBUiC/k85j1s9iU12?=
- =?us-ascii?Q?9LRvut0Y8HKFt7S8LmK0G246Wa/uHbdNKh+qKGQE5flsvXKbZLHVGBqBPtzO?=
- =?us-ascii?Q?330dYD7TpJiDt8HBpQJtthKvktjOP+Bf5RbzSCVudHxozVh7Lk0mqRDCdjni?=
- =?us-ascii?Q?KssJy8sDfMtFGw1BHxKEpn7bKNsDxOKxF2o38BF1pnmMVYR/NN5cVqlBZth0?=
- =?us-ascii?Q?3VtRZd8gG+CrtoGtPZjdXd5pKZfJxpfJK2iuFtHstyxZKNtjRERLFWlSMm3b?=
- =?us-ascii?Q?VjJ6VJpcI5dOcXWBqNwBEssHbckgxeqYnsNLsrhmtK8QvFlZ53RXKwb7ofr3?=
- =?us-ascii?Q?/xJnBEbjKQP2WNaejkZk0uiQw1LQxXxYTa3KPBsg6v2rDvhhUnKckkxo3uN3?=
- =?us-ascii?Q?q/T4Z33udkFJEWWco/ACeADn90qH2jXITkz8H79MR5aY+pcMTS/fsEmU+l3l?=
- =?us-ascii?Q?PYPUSnNw547x8823W6Ysikm8zNmKs5kKQTcaNCah+CA2pcZhpW33R1MmsGYs?=
- =?us-ascii?Q?Wf/Y6dYHxlzXxNEmGnr5lpAYWOP1pyd+/HM8DoEGlDOF3C3TlFwV4m3qGgJg?=
- =?us-ascii?Q?3pppOZIEraWexjxH6MZbMctz7DBjNSd+geCV+6kHwo9RjqLnQiFk+ZTLY3wh?=
- =?us-ascii?Q?5Xs6TqS0vV9aff4e0mJTmkUxRuCwBQvrY16Xx4iLkMIZa4jUNKN27FqrKeg0?=
- =?us-ascii?Q?vh3eWmP+vMsSnsx59xss7mwl+GnBDPHTQ0sTl6p7BGrYCiFWNIDAgJk2MjJx?=
- =?us-ascii?Q?CQ7waO1H3pDXr9XR1AvWXfGwrChXnptOhHDqF54/TG9Y2cqeALfhj0Z12vlO?=
- =?us-ascii?Q?N17HOnIedUEobFLydak4xPmxzGHa3h1jcAUQb5L+oGNPlZ5UpIaBYkLwgVCC?=
- =?us-ascii?Q?ezQouNHhb9prm1RpgasRgy1DrZObteyjAerFGF+XSGRBQ6F3dsbk2QYKtUIn?=
- =?us-ascii?Q?e3M7Fq13HynqyIKyzrdQhWPhpou83MgVz5QVYM8Sm9P4lhdskE83IdQUlBq2?=
- =?us-ascii?Q?60Nonm7546UCCNR2audpZxPiPV+TABDlm1hmT6C48QdtUquvjs8lxolB6daz?=
- =?us-ascii?Q?GbouH2oAKxCbGZJt5n2z8h9uiEkjenfx6cM48TNB3oxWwKIUlQ=3D=3D?=
-X-Forefront-Antispam-Report:
-	CIP:216.228.117.161;CTRY:US;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:mail.nvidia.com;PTR:dc6edge2.nvidia.com;CAT:NONE;SFS:(13230040)(376014)(7416014)(1800799024)(82310400026)(36860700013);DIR:OUT;SFP:1101;
-X-OriginatorOrg: Nvidia.com
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 04 Nov 2024 14:03:23.1274
- (UTC)
-X-MS-Exchange-CrossTenant-Network-Message-Id: 496264ff-7e62-40d5-134c-08dcfcd97224
-X-MS-Exchange-CrossTenant-Id: 43083d15-7273-40c1-b7db-39efd9ccc17a
-X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=43083d15-7273-40c1-b7db-39efd9ccc17a;Ip=[216.228.117.161];Helo=[mail.nvidia.com]
-X-MS-Exchange-CrossTenant-AuthSource:
-	DS2PEPF0000343F.namprd02.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Anonymous
-X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: CH3PR12MB8354
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v2 14/36] mptcp: refactor dump_addr with id
+ bitmap
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+ <10ff1d448f136c4f180af819762becb1beeff69b.1729588019.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <10ff1d448f136c4f180af819762becb1beeff69b.1729588019.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
+Hi Geliang,
 
-"Matthieu Baerts (NGI0)" <matttbe@kernel.org> writes:
+(I only see this patch now, and better understand the reaction you had
+in [1])
 
-> Recently, the net/lib.sh file has been modified to include defer.sh from
-> net/lib/sh/ directory. The Makefile from net/lib has been modified
-> accordingly, but not the ones from the sub-targets using net/lib.sh.
->
-> Because of that, the new file is not installed as expected when
-> installing the Forwarding, MPTCP, and Netfilter targets, e.g.
->
->   # make -C tools/testing/selftests TARGETS=net/mptcp install \
->         INSTALL_PATH=/tmp/kself
->   # cd /tmp/kself/
->   # ./run_kselftest.sh -c net/mptcp
->     TAP version 13
->     1..7
->     # timeout set to 1800
->     # selftests: net/mptcp: mptcp_connect.sh
->     # ./../lib.sh: line 5: /tmp/kself/net/lib/sh/defer.sh: No such file
->       or directory
->     # (...)
->
-> This can be fixed simply by adding all the .sh files from net/lib/sh
-> directory to the TEST_INCLUDES variable in the different Makefile's.
->
-> Fixes: a6e263f125cd ("selftests: net: lib: Introduce deferred commands")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+[1]
+https://lore.kernel.org/mptcp/20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org/T/#u
 
-Gah, I knew moving this to a separate module would end up biting us.
-Well, hopefully the wildcard takes care of this once and for all.
-Thanks for the fix!
+On 22/10/2024 11:14, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> Subject: mptcp: refactor dump_addr with id bitmap
 
-Reviewed-by: Petr Machata <petrm@nvidia.com>
+Be careful when you use this 'refactor' word: if I'm not mistaken,
+generally it means that you modified the code around to ease integration
+of a new feature or the maintenance, but without changing the behaviour
+or fixing anything. Here, yes you moved the code around, but to fix
+something, to change the behaviour.
+
+> With the help of get_addr(), we can refactor dump_addr() interfaces to
+> reuse send_nlmsg code between the netlink PM and userspace PM.
+> 
+> The current dump_addr() flow looks like this:
+> 
+> 	lock();
+> 	for_each_entry(entry)
+> 		send_nlmsg(entry);
+> 	unlock();
+> 
+> After holding the lock, get every entry by walking the address list,
+> send each one looply, and finally release the lock.
+> 
+> This set changes the process by copying the address list to an id
+> bitmap while holding the lock, then release the lock immediately.
+> After that, without locking, walking the copied id bitmap to get
+> every copy of entry by using get_addr(), and send each one looply.
+> 
+> This patch is the first part of refactoring dump_addr().
+> 
+> Without changing the position of the locks, the dump process is split
+> into two parts: copying the ID bitmap first, and then traversing the
+> ID bitmap, use lookup_addr_by_id() to get the entry, then send each
+> one through nlmsg:
+> 
+> 	lock();
+> 	for_each_entry(entry)
+> 		set_bit(bitmap);
+> 	for_each_bit(bitmap) {
+> 		entry = lookup_addr_by_id();
+> 		send_nlmsg(entry);
+> 	}
+> 	unlock();
+
+After the discussions we had on [1], do you still think this
+modification is needed? Do you do that for the consistency, to unify the
+code, or because you require this for the BPF PM?
+
+If it is for the consistency, please check the last question from Mat on
+[1]:
+
+> Do you see a reason that bitmap/addr_list inconsistencies would cause issues?
+
+Also, with the modification here (mainly with the next patch), can we
+not have more inconsistencies? The bitmap can point to ID that have been
+freed/should not be read, no?
+
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_netlink.c   |  6 ++++-
+>  net/mptcp/pm_userspace.c | 54 +++++++++++++++++++++++++++++-----------
+>  2 files changed, 45 insertions(+), 15 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index c030a79cd1dd..4cee5942200c 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1869,16 +1869,20 @@ static int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+>  {
+>  	struct net *net = sock_net(msg->sk);
+>  	struct mptcp_pm_addr_entry *entry;
+> +	struct mptcp_id_bitmap *bitmap;
+>  	struct pm_nl_pernet *pernet;
+>  	int id = cb->args[0];
+>  	void *hdr;
+>  	int i;
+>  
+> +	bitmap = (struct mptcp_id_bitmap *)cb->ctx;
+>  	pernet = pm_nl_get_pernet(net);
+>  
+>  	spin_lock_bh(&pernet->lock);
+> +	if (!id)
+> +		bitmap_copy(bitmap->map, pernet->id_bitmap.map, MPTCP_PM_MAX_ADDR_ID + 1);
+>  	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
+> -		if (test_bit(i, pernet->id_bitmap.map)) {
+> +		if (test_bit(i, bitmap->map)) {
+>  			entry = __lookup_addr_by_id(pernet, i);
+>  			if (!entry)
+>  				break;
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index cb4f2a174d0d..237383cfd12e 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -583,6 +583,21 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	return ret;
+>  }
+>  
+> +static int mptcp_userspace_pm_set_bitmap(struct mptcp_sock *msk,
+> +					 struct mptcp_id_bitmap *bitmap)
+> +{
+> +	struct mptcp_pm_addr_entry *entry;
+> +
+> +	mptcp_for_each_address(msk, entry) {
+> +		if (test_bit(entry->addr.id, bitmap->map))
+> +			continue;
+> +
+> +		__set_bit(entry->addr.id, bitmap->map);
+
+It is not clear to me what you are trying to do here. Is this helper
+(the name is not clear) only called the first time, then when the bitmap
+is reset, no? Then why do you need the 'test_bit'?
+
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+>  int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  				 struct netlink_callback *cb)
+>  {
+> @@ -590,9 +605,11 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  	struct mptcp_pm_addr_entry *entry;
+>  	struct mptcp_id_bitmap *bitmap;
+>  	struct mptcp_sock *msk;
+> +	int id = cb->args[0];
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+>  	void *hdr;
+> +	int i;
+>  
+>  	bitmap = (struct mptcp_id_bitmap *)cb->ctx;
+>  
+> @@ -604,24 +621,33 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  
+>  	lock_sock(sk);
+>  	spin_lock_bh(&msk->pm.lock);
+> -	mptcp_for_each_address(msk, entry) {
+> -		if (test_bit(entry->addr.id, bitmap->map))
+> -			continue;
+> +	if (!id)
+> +		ret = mptcp_userspace_pm_set_bitmap(msk, bitmap);
+> +	for (i = id; i < MPTCP_PM_MAX_ADDR_ID + 1; i++) {
+> +		if (test_bit(i, bitmap->map)) {
+> +			entry = mptcp_userspace_pm_lookup_addr_by_id(msk, i);
+> +			if (!entry)
+> +				break;
+> +
+> +			if (id && entry->addr.id <= id)
+> +				continue;
+>  
+> -		hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> -				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> -				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> -		if (!hdr)
+> -			break;
+> +			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> +					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> +					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> +			if (!hdr)
+> +				break;
+>  
+> -		if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> -			genlmsg_cancel(msg, hdr);
+> -			break;
+> -		}
+> +			if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> +				genlmsg_cancel(msg, hdr);
+> +				break;
+> +			}
+>  
+> -		__set_bit(entry->addr.id, bitmap->map);
+> -		genlmsg_end(msg, hdr);
+> +			id = entry->addr.id;
+> +			genlmsg_end(msg, hdr);
+> +		}
+>  	}
+> +	cb->args[0] = id;
+>  	spin_unlock_bh(&msk->pm.lock);
+>  	release_sock(sk);
+>  	ret = msg->len;
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
