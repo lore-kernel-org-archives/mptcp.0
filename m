@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B35F21B2199
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 11:58:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C4A9B1B6CEF
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 12:07:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730721538; cv=none; b=Y1TLmHLmZx9ZU4CaLyfTWCc/n3WpzG9OrCyKZ37juCJZ8eEr/WAipcIOUf/b3OH5rWjdxU6WmNLOItvpxz/B8kJwjqW/yEbB2pFqerKdseDBDrutvXQX9zlZQ/BukeEZLdlMCeSo7VXzluRexfAPHVHH4AKOnYtd30uRrdXDrhU=
+	t=1730722078; cv=none; b=hgYB9Ett+7E+b06/RAgfGTKepBA5SW1v3KeANHu/eJDA5SCJX/oYqnAjsgl6uT7EDlU7CDXEQBB+sootw44fBKBP4XgJKfE3KhlHC8qWnxvZfsB3HalDMZ+95ZeMheUUuz+bjIjh/WoEdzPeqSgbFaWoo5rz8OYTRYzRNGH+AY4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730721538; c=relaxed/simple;
-	bh=IhNEz/OD/FGaIFgz+MPVKP6AWr1xeK982e9zohJ2bwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ZkwVe6H3DmmpH3kvfpYqnENuMAx8zRn/jHkvg48LgNMPVuSfymgGi0cGmjKD8gnxbHWCIXcOUC4cN64v3z9+vqGc5Y6IAQxytlTi6clec2UAxRw+3meOR7kc/yc5IciumjEdhEwHNOyzhAyPI+cdmxDALxAzAHglUCIgtH0cN1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vODKzVt0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730722078; c=relaxed/simple;
+	bh=RI6yt7x8NAUXiYY2zxis4l26rO8FUYVCd3GMXnVPl9M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=tbyRoVQBftLdz1EuZFBq6nLM7xDepcjTbRP9ydOXzm34zs+Z7iDW+o2aw2WyCH/aNpEGZmdUsFyLEwWl6NJpsHqQzpAnoDYQVrOX44NzPV3bPpxnqjvkhQJdaKiaxA6m5UOe0c+j4y1LPiEuLLfDGeFhwF5zk6wWKzmiuJMMGG0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s2RZKEKT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vODKzVt0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B51A7C4CECE;
-	Mon,  4 Nov 2024 11:58:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s2RZKEKT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 13446C4CECE;
+	Mon,  4 Nov 2024 12:07:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730721537;
-	bh=IhNEz/OD/FGaIFgz+MPVKP6AWr1xeK982e9zohJ2bwY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=vODKzVt06uo2NTBeqntk22B1G2MbR3jcVjdsp0N0R2INRNEuB1uUMQh/kT6kn5Lgk
-	 40J+HAJSBWC/QcgQ7ofr0FaB0HpMOKkJCLzVRvZERM8Fp9Bjz8OCpVMrENal0JMVJ4
-	 U05ODoZk1ibFj/TtsuyrjoXnM5aDEx7yc9vuM4x/nW3p6KD/v86fuB/bC5KdQ+pU8V
-	 d8FKNOvjsrfgWJQ6/MI8PgbIFoPpHBj6SUBQ+pI64rcimxZGsadaK5/OfLw7V6ZvYY
-	 Dlrubh7n9LHhTbzTkbNMWhWb/8iIrzrEcMQSVcuGLOE8tVcjYuadCfL4qGtvcrcT6j
-	 OXXTT/zs6WfOQ==
-Message-ID: <26b229f0-9b4d-43ca-b06d-0d2ff1271c6c@kernel.org>
-Date: Mon, 4 Nov 2024 12:58:54 +0100
+	s=k20201202; t=1730722078;
+	bh=RI6yt7x8NAUXiYY2zxis4l26rO8FUYVCd3GMXnVPl9M=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=s2RZKEKT5mUzagY5MWwVDHizPtsWCWj4IvQ6k1RQ7JOkwO4F24jaV5wbKZxSNNpII
+	 J4yU0l3VULZX6jZ/eoyQ9Fkv9+08GVTYsGj37nMdLUODd0/zfAQpO2miS1Khg/awqz
+	 TuySlAGZ+MsfSToAA088vDDofBJt4x2RQlfLcTsAeHeqpNO9C7wSUUEJWUxmb3LP6U
+	 VE0Yisg+kTOaTmi4jd4eQtm6LuYehV5CBmtrHmR2bm2iOy1TsvTnCWIIcLigKx3AyD
+	 ml1lKrcBEf1Tc88IMluUBSEGi6EFfRDR92cmAhYmra9OWlTjB7GUxB3hDNEev3tDJ7
+	 oVAc81PqNmR/w==
+Message-ID: <21137b33-9b79-403a-8032-6aec174e91f2@kernel.org>
+Date: Mon, 4 Nov 2024 13:07:56 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,9 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next] Squash to "DO-NOT-MERGE: mptcp: improve code
  coverage for CI"
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <ab62e7d2f50512594416acb973dcaf3d4ec85fe3.1730708911.git.geliang@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <26b229f0-9b4d-43ca-b06d-0d2ff1271c6c@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,45 +86,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ab62e7d2f50512594416acb973dcaf3d4ec85fe3.1730708911.git.geliang@kernel.org>
+In-Reply-To: <26b229f0-9b4d-43ca-b06d-0d2ff1271c6c@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 04/11/2024 09:28, Geliang Tang wrote:
-> When our bpf_selftests are re-built, this error occurs:
+On 04/11/2024 12:58, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
->  make[1]: *** No rule to make target 'atomics.lskel.h',
-> 			needed by '.../atomics.test.o'.  Stop.
->  make[1]: *** Waiting for unfinished jobs....
->  make[1]: Leaving directory 'tools/testing/selftests/bpf'
->  make: *** [Makefile:259: install] Error 2
->  make: Leaving directory 'tools/testing/selftests'
+> On 04/11/2024 09:28, Geliang Tang wrote:
+>> When our bpf_selftests are re-built, this error occurs:
+>>
+>>  make[1]: *** No rule to make target 'atomics.lskel.h',
+>> 			needed by '.../atomics.test.o'.  Stop.
+>>  make[1]: *** Waiting for unfinished jobs....
+>>  make[1]: Leaving directory 'tools/testing/selftests/bpf'
+>>  make: *** [Makefile:259: install] Error 2
+>>  make: Leaving directory 'tools/testing/selftests'
+> 
+> Ah yes, I already noticed that when checking some stuffs, but I didn't
+> investigate. Thank you for having looked at this!
+> 
+>> In this case, I had to remove the cache directory .virtme and recompile it
+>> again. This was very time-consuming.
+> 
+> You don't need to remove the whole ".virtme" directory, you can remove
+> ".virtme/build*" instead, so you still have CCache (from ".virtme/ccache*").
+> 
+>> A workaround patch for this is found in [1]. I don't know why this patch
+>> has not been upstreamed, but it's in BPF CI environment. I think it's
+>> necessary to synchronize this modification to MPTCP CI environment as well.
+> 
+> It looks like another version has been applied in bpf-next, even if it
+> is a fix:
+> 
+>   https://lore.kernel.org/bpf/20240916195919.1872371-2-ihor.solodrai@pm.me/
+> 
+> Do you mind checking it please?
 
-Ah yes, I already noticed that when checking some stuffs, but I didn't
-investigate. Thank you for having looked at this!
+Just in case, their bpf-next/master branch has been rewritten in
+between. The last ref I have is:
 
-> In this case, I had to remove the cache directory .virtme and recompile it
-> again. This was very time-consuming.
+  fd4a0e67838c ("selftests/bpf: Set vpath in Makefile to search for skels")
 
-You don't need to remove the whole ".virtme" directory, you can remove
-".virtme/build*" instead, so you still have CCache (from ".virtme/ccache*").
-
-> A workaround patch for this is found in [1]. I don't know why this patch
-> has not been upstreamed, but it's in BPF CI environment. I think it's
-> necessary to synchronize this modification to MPTCP CI environment as well.
-
-It looks like another version has been applied in bpf-next, even if it
-is a fix:
-
-  https://lore.kernel.org/bpf/20240916195919.1872371-2-ihor.solodrai@pm.me/
-
-Do you mind checking it please?
-
-If it works, I can backport it to our tree, and ask BPF maintainers if
-they can add these two patches in 'bpf' (fix) instead, because this
-issue is present in v6.12, but only fixed in next (v6.13).
+> If it works, I can backport it to our tree, and ask BPF maintainers if
+> they can add these two patches in 'bpf' (fix) instead, because this
+> issue is present in v6.12, but only fixed in next (v6.13).
+> 
+> Cheers,
+> Matt
 
 Cheers,
 Matt
