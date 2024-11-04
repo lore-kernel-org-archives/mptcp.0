@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B1D18D642
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 18:48:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4623918622
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 18:55:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730746089; cv=none; b=hbXnDwnZCSIdBCU9Px2ewY0SShSl0AX4v/aV9ZmskEXqpb31xxUVabl9M6lDZy8mLHg3Xl4TPEb/xoKNPqq4jAk2tYySX9mXUs7ltW0OkZv83RIihEIL08AIVo13mI7+ylicaetpAAE+4gXvv8jBz3vrJeIEfI26nVht6PtU+fc=
+	t=1730746522; cv=none; b=fUH8zI/vkDpyvbxYnl6wr+Y17zuRE2jvg2ilbJQwwC1po6bmeZZM5RJh45jvBqykzH8gAklLBcWFu1icSCRmu5bMUTGDpgW0BcK5sNuanDlKEO6Zjw2430EebdZci6hAEu418ThHlk7n7Uksq8VYgeTwKIw+M4VWObjW4cd1FE4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730746089; c=relaxed/simple;
-	bh=BAvSgNyWsgGhQc8Hm+bYNrjIOdez6vPMU+m4h9E2QTg=;
+	s=arc-20240116; t=1730746522; c=relaxed/simple;
+	bh=kawe3mNR9aWthH7dvmS0x3e7NN0VfR4Q9fLTOicYPk4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=csAG7O/hd8U7ZeZ7LSQwQ4U6GJZ4z7W2husUqelN47AHDna9trInt9zbuzE/qrCmRIXfa2B/k1j1c64kaUWlbokMrM3vkOTQg3QhOyr81yhFllkP0ZvGeVKf7n3o1mBb3nt9EorJcqtf2W9aIcnJlHXMFGSo1/MHqbwSHtP0ths=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=V7fSf1ws; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZoTKgAU3fcgTvlX4Ng4KTo+tANQhZKWpVwlqRbVNyyB8i3cURSy79yT488rccGA5EuuDPDyv2ow2aXA/YGlgvgUzeHEXAdRNFAD+YY04eiThkVkfpDxFBgiS8CQhoqe5cCGXmnO+AqXW9xb3fc2WCM9yUP1s2NTG6oqWTMNKGB0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qq/+aTlB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="V7fSf1ws"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D2B1C4CECE;
-	Mon,  4 Nov 2024 18:48:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qq/+aTlB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CF3C4CECE;
+	Mon,  4 Nov 2024 18:55:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730746088;
-	bh=BAvSgNyWsgGhQc8Hm+bYNrjIOdez6vPMU+m4h9E2QTg=;
+	s=k20201202; t=1730746521;
+	bh=kawe3mNR9aWthH7dvmS0x3e7NN0VfR4Q9fLTOicYPk4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=V7fSf1ws3CyKJ8inKeNfPtKRxPPfdEsY9DounJsj7tGsbdqtUmimH/KtE0ez6pUni
-	 qV46eA5uj+2ryFEx2wOQudYoQ0OH7xzxGM3fRWvSU+B83crZ8dPmnde9ZQIqpcbtLo
-	 hLcsViDPoeFsaRtXStATFT7U20v6DwPFPOgjfEri88fsWE5beSaQ7BQabhWeHSJ8OW
-	 BC9Drh1HbPW0yQG+MwsaRUPSG7PNW+7GfPh0hF55Wr6IgDZ0wSerJxNZSFUQma3EVT
-	 3INotUu3YtCpEYFIw3E2lfALMdEkUivwXqCnQir7pmqEcvgUgmzV0Fuv5JlAE8HpLv
-	 Ul1uVDzImgHeg==
-Message-ID: <8c422b14-719a-447d-a24e-61ef40dbd72e@kernel.org>
-Date: Mon, 4 Nov 2024 19:48:06 +0100
+	b=qq/+aTlBgKdf/fQUVtERjkaaNNCPB0wMXIf0NvwAqps8OJTZqo0CF2Lj4JH4eTjNl
+	 PIigWtu/1rwIYVgh3IHTGMwG8WGKTJBgi71AkB30Wa79PwNzN0HWSP0Q/nAZiu58Xc
+	 zqtsi9+NlMdS2AtMLJq+015acGXIhXI7S0rM5EpNY9/HNyDaFkIw47qj9AyJ2GOwDG
+	 QS5hzqD2tTmHahHlSg1/QgXDtEnaqf/m4vf9b3Nt0JRfbOiQ2ahKOeZ00si718RvgU
+	 PaEvjlZf4pchQoKirqlSHkNpwhSbYojAqPwsmIejCoAt1q/p2qY4uhGoVQINZxQ3EO
+	 DB2K2wDD1FfYA==
+Message-ID: <1ab2187a-7858-42c9-9aa6-a8425cf20bdf@kernel.org>
+Date: Mon, 4 Nov 2024 19:55:19 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 21/36] mptcp: update address type of
- get_local_id
+Subject: Re: [PATCH mptcp-next v2 22/36] mptcp: change is_backup interfaces as
+ get_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <697ad8ffc8987b12a232b3855e6960b49c186d4b.1729588019.git.tanggeliang@kylinos.cn>
+ <d8538f628ff2264b75c6c5e64e28147cb5793497.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <697ad8ffc8987b12a232b3855e6960b49c186d4b.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d8538f628ff2264b75c6c5e64e28147cb5793497.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,78 +96,20 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The following code in mptcp_userspace_pm_get_local_id() that assigns "skc"
-> to "new_entry" is not allowed in BPF if we use the same code to implement
-> the get_local_id() interface of a BFP path manager:
+> The is_backup() interface of path manager is not very common. A more
+> common approach is to add a get_flags() interface to obtain the flags
+> value of a given address. Then is_backup() can be implemented through
+> get_flags() by test whether backup flag is set in the flags value.
 
-Can you give more details about the fact it is not allowed please?
+Out of curiosity, is this going to simplify something later on? Because
+with this description, it is hard to see the value of this patch.
 
-Do you mean you cannot do the following code in BPF? Why?
+The backup flag is special: that's the only one that is linked to a bit
+that will appear in the packets, the only one that needs to be known by
+the other peer. In this case, I think it makes sense to have dedicated
+helpers to retrieve this info, and not the rest.
 
-> 	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
-> 	new_entry.addr = *skc;
-> 	new_entry.addr.id = 0;
-> 	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> 
-> To solve the issue, this patch moves this assignment to "new_entry" forward
-> to mptcp_pm_get_local_id(), and then passing "new_entry" as a parameter to
-> both mptcp_pm_nl_get_local_id() and mptcp_userspace_pm_get_local_id().
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c           | 10 ++++++++--
->  net/mptcp/pm_netlink.c   | 11 +++--------
->  net/mptcp/pm_userspace.c | 17 ++++++-----------
->  net/mptcp/protocol.h     |  4 ++--
->  4 files changed, 19 insertions(+), 23 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index b6e6859903ef..d28e844eba2d 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -404,6 +404,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
->  {
->  	struct mptcp_addr_info skc_local;
->  	struct mptcp_addr_info msk_local;
-> +	struct mptcp_pm_addr_entry local;
->  
->  	if (WARN_ON_ONCE(!msk))
->  		return -1;
-> @@ -416,9 +417,14 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
->  	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
->  		return 0;
->  
-> +	memset(&local, 0, sizeof(struct mptcp_pm_addr_entry));
-
-Out of curiosity: do you need to call memset() here? Can you not init
-"local" when you declare it?
-
-  struct mptcp_pm_addr_entry local = { 0 };
-
-(Or maybe that's not working with C99 with inner structures? I thought
-it was, but not sure).
-
-> +	local.addr = skc_local;
-
-Do you still need skc_local? Can you not use 'local.addr' directly
-instead above?
-
-> +	local.addr.id = 0;
-
-In pm_netlink.c, 'addr.port' is also reset. Should you not do that here
-too? I guess that's fine for the userspace pm, no?
-
-> +	local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> +
->  	if (mptcp_pm_is_userspace(msk))
-> -		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
-> -	return mptcp_pm_nl_get_local_id(msk, &skc_local);
-> +		return mptcp_userspace_pm_get_local_id(msk, &local);
-> +	return mptcp_pm_nl_get_local_id(msk, &local);
->  }
->  
->  bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
-(...)
+Except if you think we will need to extract the other flags later?
 
 Cheers,
 Matt
