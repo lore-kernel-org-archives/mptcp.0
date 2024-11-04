@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4623918622
-	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 18:55:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE8F31CC899
+	for <mptcp@lists.linux.dev>; Mon,  4 Nov 2024 19:08:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730746522; cv=none; b=fUH8zI/vkDpyvbxYnl6wr+Y17zuRE2jvg2ilbJQwwC1po6bmeZZM5RJh45jvBqykzH8gAklLBcWFu1icSCRmu5bMUTGDpgW0BcK5sNuanDlKEO6Zjw2430EebdZci6hAEu418ThHlk7n7Uksq8VYgeTwKIw+M4VWObjW4cd1FE4=
+	t=1730747287; cv=none; b=h1+4kc8iZT31BGUdQziN7/WrvHQ5MWFJLNn2mkkVq/9VfZJ+zJfa92wrnjO6BXREc7eT/+0DxT9p8Mgpppio+zSnk4YzuoXUiqpOdH/o020Q9gsXIilNkKdg1UDGjBYNVF40by0OztOxqpvz+62UvekxQQm3X5T1MWb7Pilhjv4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730746522; c=relaxed/simple;
-	bh=kawe3mNR9aWthH7dvmS0x3e7NN0VfR4Q9fLTOicYPk4=;
+	s=arc-20240116; t=1730747287; c=relaxed/simple;
+	bh=6BGW/GwR6JpPsY46QlcZQ8cIwYneKjUP0696pkozaX8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZoTKgAU3fcgTvlX4Ng4KTo+tANQhZKWpVwlqRbVNyyB8i3cURSy79yT488rccGA5EuuDPDyv2ow2aXA/YGlgvgUzeHEXAdRNFAD+YY04eiThkVkfpDxFBgiS8CQhoqe5cCGXmnO+AqXW9xb3fc2WCM9yUP1s2NTG6oqWTMNKGB0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qq/+aTlB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ETpOKSvYeZf1YClbqy/Nhioam4LkipHJxDy9BU+azXlD6JFOzIpRYFHpHZctXkN+wvc2F7PSUWd6xJSI+OtLFlCrm91fn1QdiTnBrS7TUoQhb5DxzgoUkBiE3lwptkJZl4XvW+C2ugtnC2T64FV7EVUINTzYySh1opYqa8S/P+Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l+gpWb0b; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qq/+aTlB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16CF3C4CECE;
-	Mon,  4 Nov 2024 18:55:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l+gpWb0b"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD6B0C4CECE;
+	Mon,  4 Nov 2024 19:08:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730746521;
-	bh=kawe3mNR9aWthH7dvmS0x3e7NN0VfR4Q9fLTOicYPk4=;
+	s=k20201202; t=1730747287;
+	bh=6BGW/GwR6JpPsY46QlcZQ8cIwYneKjUP0696pkozaX8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qq/+aTlBgKdf/fQUVtERjkaaNNCPB0wMXIf0NvwAqps8OJTZqo0CF2Lj4JH4eTjNl
-	 PIigWtu/1rwIYVgh3IHTGMwG8WGKTJBgi71AkB30Wa79PwNzN0HWSP0Q/nAZiu58Xc
-	 zqtsi9+NlMdS2AtMLJq+015acGXIhXI7S0rM5EpNY9/HNyDaFkIw47qj9AyJ2GOwDG
-	 QS5hzqD2tTmHahHlSg1/QgXDtEnaqf/m4vf9b3Nt0JRfbOiQ2ahKOeZ00si718RvgU
-	 PaEvjlZf4pchQoKirqlSHkNpwhSbYojAqPwsmIejCoAt1q/p2qY4uhGoVQINZxQ3EO
-	 DB2K2wDD1FfYA==
-Message-ID: <1ab2187a-7858-42c9-9aa6-a8425cf20bdf@kernel.org>
-Date: Mon, 4 Nov 2024 19:55:19 +0100
+	b=l+gpWb0bMsKhSkoUH6qmgSiXmrZ8fI/33wGmmvNDrUWgKECV+NQx5LP19OpIwWTEl
+	 hF6MrydVp3Oos7LwxIayjuFpyFx1sSowkGZU1XBZRdCFqcaEzA7YuUYS2MxkYHBAeK
+	 K0r2m+8a73rCkDSP+xqXl5XAyAFQpj7M5DK4ww7/4Xb45tv9b/b8m+90J+1ABm5Hb8
+	 rFj/KCqFVItbdzcMyniC0JhA73lE5t+HoEJoensUGtmZ6ug9zUqEYM4E5flSXgNFJ+
+	 JkfDBlYyPFaKDHjad8497QwfnnvO+oLeX+UNgjMKWNFo8NSJZvQ+RLXLFVfqU4c4BM
+	 3hG9P11PJrahQ==
+Message-ID: <4661b240-9a9c-47c2-9dc0-362d22baad83@kernel.org>
+Date: Mon, 4 Nov 2024 20:08:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 22/36] mptcp: change is_backup interfaces as
- get_flags
+Subject: Re: [PATCH mptcp-next v2 23/36] mptcp: drop struct mptcp_pm_local
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <d8538f628ff2264b75c6c5e64e28147cb5793497.1729588019.git.tanggeliang@kylinos.cn>
+ <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d8538f628ff2264b75c6c5e64e28147cb5793497.1729588019.git.tanggeliang@kylinos.cn>
+In-Reply-To: <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,20 +95,80 @@ Hi Geliang,
 On 22/10/2024 11:14, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The is_backup() interface of path manager is not very common. A more
-> common approach is to add a get_flags() interface to obtain the flags
-> value of a given address. Then is_backup() can be implemented through
-> get_flags() by test whether backup flag is set in the flags value.
+> The following code in mptcp_pm_nl_subflow_create_doit() that assigns struct
+> mptcp_pm_addr_entry "entry" to the local struct mptcp_pm_local variable
+> "local" is not allowed in BPF if we use the same code to implement the
+> subflow_create() interface of a BFP path manager:
+> 
+> 	struct mptcp_pm_local local;
+> 
+> 	local.addr = entry.addr;
+> 	local.flags = entry.flags;
+> 	local.ifindex = entry.ifindex;
 
-Out of curiosity, is this going to simplify something later on? Because
-with this description, it is hard to see the value of this patch.
+Here as well, I'm not sure to understand the issue. Is it because you
+cannot allocate this structure locally with BPF? No alternatives?
 
-The backup flag is special: that's the only one that is linked to a bit
-that will appear in the packets, the only one that needs to be known by
-the other peer. In this case, I think it makes sense to have dedicated
-helpers to retrieve this info, and not the rest.
+> We should avoid this type of assignment from struct mptcp_pm_addr_entry to
+> struct mptcp_pm_local.
+> 
+> In fact, there is no need to add a dedicated address entry type for local
+> address entry. All its fields are the same as struct mptcp_pm_addr_entry,
+> except that it lacks a "lsk" for the listening socket. So we can use struct
+> mptcp_pm_addr_entry directly. This makes the path manager code simpler.
 
-Except if you think we will need to extract the other flags later?
+There was a need for this structure, see this discussion:
+
+
+https://lore.kernel.org/mptcp/587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com/
+
+and the changelog in v5:
+
+
+https://lore.kernel.org/mptcp/20240726-mptcp-pm-avail-v5-13-fb1117ddeef6@kernel.org/
+
+In short ...
+
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_netlink.c   | 22 ++++++++--------------
+>  net/mptcp/pm_userspace.c |  7 +------
+>  net/mptcp/protocol.h     |  8 +-------
+>  net/mptcp/subflow.c      |  2 +-
+>  4 files changed, 11 insertions(+), 28 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 287e715bcf68..15f97e7af182 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+
+(...)
+
+> @@ -721,7 +715,7 @@ static unsigned int fill_local_addresses_vec(struct mptcp_sock *msk,
+>  
+>  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+>  {
+> -	struct mptcp_pm_local locals[MPTCP_PM_ADDR_MAX];
+> +	struct mptcp_pm_addr_entry locals[MPTCP_PM_ADDR_MAX];
+
+... we don't want that: that's reserving too much memory, and we don't
+need half of it.
+
+*If* it is really needed to change it for BPF (I'm surprised there are
+no alternatives), then maybe we can change the signature of
+__mptcp_subflow_connect(), but not change the code here.
+
+In this case, only one "struct mptcp_pm_addr_entry" will be needed, and
+the "struct mptcp_pm_local" can be defined in this pm_netlink.c file if
+it is only used here.
+
+But please mention that in the commit message.
+
+>  	struct sock *sk = (struct sock *)msk;
+>  	unsigned int add_addr_accept_max;
+>  	struct mptcp_addr_info remote;
+(...)
 
 Cheers,
 Matt
