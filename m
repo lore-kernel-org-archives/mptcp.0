@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 167A813D601
-	for <mptcp@lists.linux.dev>; Tue,  5 Nov 2024 17:31:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288FC13D601
+	for <mptcp@lists.linux.dev>; Tue,  5 Nov 2024 17:31:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730827875; cv=none; b=ikEbrzaPpxCPJsxOKFlT4PguGiut9bbG/dRntjxzNrjcGP7gPEMF7INvLQnxkUArqz1k0pJ5MlWoKAZhRMozev5pCBI16+TFLXgL/OuXSOeDs1+q3d64r+zwfWyMYwLGqE1OOb/crV6Boghmu7vaD2i5Ec+SMdTKmrDnGp+S9A8=
+	t=1730827876; cv=none; b=NKM9UsZxprFWhaPlhU9qlypgJ6DAA5UdOOAyEbyyu9DlgTWOmyiADZHb4VbagV6SVqKupP0sObU2hYUmTJdWGAT27Sk8TDhNu6Op1xgrYtAIL5J8+0d3CbDH8lMDjuT2NvJfgc21Z6L+97Y36fXRKpRzW1E7a1u+hb6aICHK5q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730827875; c=relaxed/simple;
-	bh=H7F9g7RVZrJM16fy1TL5KwxGCymTmSKSQwOTjQlQzAU=;
+	s=arc-20240116; t=1730827876; c=relaxed/simple;
+	bh=wYOHIDelt+W0nA/naLszsG1hWiJ9yjRbv32CXVjToow=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b8rr7F6LCrLHUJQ5l1atHNZB0ZZLd0P8hUvBcvyc9AkXCAg8wwR7r8RSt3y5ou2jIkPZze1bo8C3QuuZ2D3aUuKJpyUkFrpbAZAwFrBMDP61dLOKJeo9MbxzNLk0U28W5/IrkBEEHiyH7v//XP+0Bee9GVYS7ZcpjAFHLB6ifn0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oDO4n68O; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kKYonqj6eoGwdu+6eggVanJywmLRWxMnHOzS4z55aGireKzRWcaE5OM6/31a242MH/nNN/pyVMkLWLiwL25zPvSthrzlmPYMKyBY7iZYMN/9ufWDdvLM0NQoHkL7opBY9igjDVFP8wKRw92JC2OixzM6UDlEZr74XKxzHENRkQc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBdAIOAP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oDO4n68O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0787DC4CED1;
-	Tue,  5 Nov 2024 17:31:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBdAIOAP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E95C4CED5;
+	Tue,  5 Nov 2024 17:31:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730827874;
-	bh=H7F9g7RVZrJM16fy1TL5KwxGCymTmSKSQwOTjQlQzAU=;
+	s=k20201202; t=1730827876;
+	bh=wYOHIDelt+W0nA/naLszsG1hWiJ9yjRbv32CXVjToow=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oDO4n68OvCTUx56vDbNRjjP5Yz2N5TOa+AJLHFoWkV/FB9ier8A6XGBvDJaOD6eFE
-	 BlfvYbqr+V0maMu0OfhRO0ECgox6cbFwUUJgSHkrsq2RLmzm/XACQjsrWsAQ8aPXIL
-	 Jem1aGy1m4zBk1OJDJnw2UKqY9zmyE5o1p0F/l/xUM9dg4NNDN0UsHMXhIRyzaHvxz
-	 jn2wqHEc3UjYlqgnZvwCmFFCaAlxxyKwCm89eedbPap78luskfAjIlR7OlI1wCkXVi
-	 Oz671UwULI2A13bAxoWMvuOCjdCb1z7geYuIRQ8tJHw9kCWO1PCD6MO7NahCXacdd2
-	 fcMaxtH65VxHg==
-Message-ID: <e939014a-de58-41fd-b9b7-8a39b1530c1c@kernel.org>
-Date: Tue, 5 Nov 2024 18:31:10 +0100
+	b=dBdAIOAPxG0DE28P4WHajymbQKWIfVBSdpSH3jjTP1pjAfULI0iee7U1+3hl+rEpB
+	 pIvp5w8IiiqvH4NgSwipQj/inrFU9OnT6Zdm6mVnifcg3RR1hh5dplI5381Hltz81H
+	 MNgDLE7dxDoJtrRv/CQXn9nmCLzVq4WXmkHnqeoUen/dSYn0iL+4J5+VvTD+g9bgvA
+	 6EPzbjn5DffDRLxTZ41dSZknWk3wM3cpkOGk44f7ovTHm/+BgHRb20rq19QCvB473x
+	 YEz/n5ocS7iu1Xj2XMqoLFNJeoofAMzkc9Pr9FF2EMGO8liwLuvBpm+AotqlLSiLDv
+	 3nnXCw0d5vSNg==
+Message-ID: <97e320e9-d466-4837-85b0-912686794912@kernel.org>
+Date: Tue, 5 Nov 2024 18:31:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 1/3] mptcp: add lookup_addr for userspace pm
+Subject: Re: [PATCH mptcp-net 2/3] mptcp: update local address flags when
+ setting it
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1730799589.git.tanggeliang@kylinos.cn>
- <9ef5e8b9d589488850f31cb6dbd1da0f39e21210.1730799589.git.tanggeliang@kylinos.cn>
+ <72998c181b94560b3d1e1e5843250ee2815869ac.1730799589.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,30 +87,67 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9ef5e8b9d589488850f31cb6dbd1da0f39e21210.1730799589.git.tanggeliang@kylinos.cn>
+In-Reply-To: <72998c181b94560b3d1e1e5843250ee2815869ac.1730799589.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the patches!
-
 On 05/11/2024 10:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Like __lookup_addr() helper in pm_netlink.c, a new helper
-> mptcp_userspace_pm_lookup_addr() is also defined in pm_userspace.c.
-> It looks up the corresponding mptcp_pm_addr_entry address in
-> userspace_pm_local_addr_list through the passed "addr" parameter
-> and returns it.
+> Just like in-kernel pm, when userspace pm does set_flags, it needs to send
+> out MP_PRIO signal, and also modify the flags of the corresponding address
+> entry in the local address list. This patch implements the missing logic.
 > 
-> This helper can be used in mptcp_userspace_pm_delete_local_addr(),
-> mptcp_userspace_pm_get_local_id() and mptcp_userspace_pm_is_backup()
-> to simplify the code.
+> Use mptcp_userspace_pm_lookup_addr() helper to find the address entry on
+> userspace_pm_local_addr_list, if bkup is true, set the flags of the address
+> entry with FLAG_BACKUP, otherwise, clear FLAG_BACKUP.
+> 
+> Fixes: 892f396c8e68 ("mptcp: netlink: issue MP_PRIO signals from userspace PMs")
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 9c622b0e3e6e..0c0f6f65accb 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -562,6 +562,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+>  	struct net *net = sock_net(skb->sk);
+> +	struct mptcp_pm_addr_entry *entry;
+>  	struct mptcp_sock *msk;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+> @@ -603,6 +604,16 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+>  		bkup = 1;
+>  
+> +	spin_lock_bh(&msk->pm.lock);
+> +	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
 
-I would prefer to avoid the refactoring for -net if it is not needed:
-this will make the next fix harder to backport. Please see my comment on
-the next patch.
+(Linked to my comment from the previous patch) Adding only the helper,
+and squashing that in this patch here might be an option, but even that
+can cause conflicts.
+
+I think the simplest is not to add this small helper only used once for
+the moment: so simply calling list_for_each_entry() here, and add the
+following code inside it. WDYT?
+
+> +	if (entry) {
+> +		if (bkup)
+> +			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
+> +		else
+> +			entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
+> +	}
+> +	spin_unlock_bh(&msk->pm.lock);
+> +
+>  	lock_sock(sk);
+>  	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
+>  	release_sock(sk);
 
 Cheers,
 Matt
