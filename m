@@ -1,156 +1,131 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 288FC13D601
-	for <mptcp@lists.linux.dev>; Tue,  5 Nov 2024 17:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DF66B13D51E
+	for <mptcp@lists.linux.dev>; Tue,  5 Nov 2024 18:21:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730827876; cv=none; b=NKM9UsZxprFWhaPlhU9qlypgJ6DAA5UdOOAyEbyyu9DlgTWOmyiADZHb4VbagV6SVqKupP0sObU2hYUmTJdWGAT27Sk8TDhNu6Op1xgrYtAIL5J8+0d3CbDH8lMDjuT2NvJfgc21Z6L+97Y36fXRKpRzW1E7a1u+hb6aICHK5q8=
+	t=1730830913; cv=none; b=HdziB8WWFsi/aWNxdSj57n6hIQCOm+Ked/ONq738gENoQsf0dNCw6nFgvZD6Y5poowVFdSCV9XKMDdY+tL93v3Pp0dRnWy3kGVf+tqlQ8da4WhD4r6VZxtmsfvxofH5bQdQ5MLgdDQR9gxT1PIzs2cHxPKt00TeA0mfXl7NP6Do=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730827876; c=relaxed/simple;
-	bh=wYOHIDelt+W0nA/naLszsG1hWiJ9yjRbv32CXVjToow=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kKYonqj6eoGwdu+6eggVanJywmLRWxMnHOzS4z55aGireKzRWcaE5OM6/31a242MH/nNN/pyVMkLWLiwL25zPvSthrzlmPYMKyBY7iZYMN/9ufWDdvLM0NQoHkL7opBY9igjDVFP8wKRw92JC2OixzM6UDlEZr74XKxzHENRkQc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dBdAIOAP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730830913; c=relaxed/simple;
+	bh=wQ/+TWmB19UC3lxDrGoVUztHISHUynMOoZj21RXKbzI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=klnqxM/amUxd8x1aGjwmlUMokLc2BvsPlOiJlkceOxvftZ03T0h2sEJPIGOLkI5++yeIhUQHU9kfO4YHTVvYXlvqnNWy9StX/qRtHvCVtjzKdPdGpO2aSPcYfGakllqISKSBVAvcRLcm4dSnxRUuEoU5JABWNL3SbwSU2Qw2YoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LsUNhjnR; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dBdAIOAP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40E95C4CED5;
-	Tue,  5 Nov 2024 17:31:15 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730827876;
-	bh=wYOHIDelt+W0nA/naLszsG1hWiJ9yjRbv32CXVjToow=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dBdAIOAPxG0DE28P4WHajymbQKWIfVBSdpSH3jjTP1pjAfULI0iee7U1+3hl+rEpB
-	 pIvp5w8IiiqvH4NgSwipQj/inrFU9OnT6Zdm6mVnifcg3RR1hh5dplI5381Hltz81H
-	 MNgDLE7dxDoJtrRv/CQXn9nmCLzVq4WXmkHnqeoUen/dSYn0iL+4J5+VvTD+g9bgvA
-	 6EPzbjn5DffDRLxTZ41dSZknWk3wM3cpkOGk44f7ovTHm/+BgHRb20rq19QCvB473x
-	 YEz/n5ocS7iu1Xj2XMqoLFNJeoofAMzkc9Pr9FF2EMGO8liwLuvBpm+AotqlLSiLDv
-	 3nnXCw0d5vSNg==
-Message-ID: <97e320e9-d466-4837-85b0-912686794912@kernel.org>
-Date: Tue, 5 Nov 2024 18:31:13 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LsUNhjnR"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1730830911;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=GvMTADZQrfTgsHV5SsEO4rBb9btCw3+cfbmsPWE51Ys=;
+	b=LsUNhjnRtYD6BWUxGhhjQ3+seQOsGf4Z2iqTYVEkyy3/zLyDa2Jl4SiQinqBNqynJVSB5F
+	06n6H8mxj+6+a5zphvBd3GHy8kxTRDRU3dEAVaMl/Zkg9kpgCL8Y8p9/+RyzdbBl5G3fLi
+	YJ52H3cInVUIqxx4xnSOY7up1Q0UebM=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-451-ujS6cN5PNXG267klbNYP9Q-1; Tue, 05 Nov 2024 13:21:49 -0500
+X-MC-Unique: ujS6cN5PNXG267klbNYP9Q-1
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4316e2dde9eso49168615e9.2
+        for <mptcp@lists.linux.dev>; Tue, 05 Nov 2024 10:21:49 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730830908; x=1731435708;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=GvMTADZQrfTgsHV5SsEO4rBb9btCw3+cfbmsPWE51Ys=;
+        b=ngWplW2OHEvAeLvallrQw5AqzMlV8LSsyAxecywsDPbgWiEcFw51YOZipKOVgxTAwo
+         HXqEQh69nPqKUQqi6PlVOx9qQV3kLWcNH9vXOlHYEpRTuFeezg5O/ifJkADk4upboOoc
+         LQ991U5dB1Xag82xSM1TKSeYz0pnGAi8mw/QCVq8+B2dxcUeNCfxzMPaVfnnqWZQ2NJ2
+         1xBPGxnZlgm5s4s42uz7ys5QPPlX4zdhZZo3zWkyBSaIZzk4FEQqpsNyH52032kHgok7
+         5TswZHvYGeoM/JXUj7nKevwQb8FIJspyMl2bERVpikZ0hogCfeObGIJDoF5xwTJnDYSU
+         ZHmw==
+X-Forwarded-Encrypted: i=1; AJvYcCUhweey7XY5VOGo1mJvGSlMD4Tp6vbG2lJb4W14d9mjkbJOoqv/k8D7A9WOfpvp3D5lAj+6Ww==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxRmiSuadnqd9EHJjL7FER37brfNtpiK78mDjVudnggxLZhd96t
+	UhFJmUp1eery5CgSsmIOaJjUf3R7RktctKDLsnnNY1iQxrdzIcjz8zTBjCMAQTCQknJu2k0Ughp
+	0QDGxWJzGxQp7Gi5d87rsXntHZu2goyeWtQzpt8iDZ91xuGu/gi5x
+X-Received: by 2002:a05:600c:354f:b0:431:518a:6826 with SMTP id 5b1f17b1804b1-43283255a71mr182946625e9.19.1730830908673;
+        Tue, 05 Nov 2024 10:21:48 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IFLjjL5L/vZ8lhXACNjfpXNDyjxQNV4SxQx0FjAWubAfrWY5W6dnTYgNAt/7WbdGQhpOCOJhg==
+X-Received: by 2002:a05:600c:354f:b0:431:518a:6826 with SMTP id 5b1f17b1804b1-43283255a71mr182946375e9.19.1730830908252;
+        Tue, 05 Nov 2024 10:21:48 -0800 (PST)
+Received: from [192.168.88.24] (146-241-44-112.dyn.eolo.it. [146.241.44.112])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-4327d5bf4b0sm195714595e9.14.2024.11.05.10.21.47
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 05 Nov 2024 10:21:47 -0800 (PST)
+Message-ID: <053267b3-a22e-4c3d-833b-55edda46ba25@redhat.com>
+Date: Tue, 5 Nov 2024 19:21:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 2/3] mptcp: update local address flags when
- setting it
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1730799589.git.tanggeliang@kylinos.cn>
- <72998c181b94560b3d1e1e5843250ee2815869ac.1730799589.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <72998c181b94560b3d1e1e5843250ee2815869ac.1730799589.git.tanggeliang@kylinos.cn>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH mptcp-net v2 2/3] mptcp: pm: lockless list traversal
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+References: <20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org>
+ <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <20241025-mptcp-pm-lookup_addr_rcu-v2-2-1478f6c4b205@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 05/11/2024 10:40, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Just like in-kernel pm, when userspace pm does set_flags, it needs to send
-> out MP_PRIO signal, and also modify the flags of the corresponding address
-> entry in the local address list. This patch implements the missing logic.
-> 
-> Use mptcp_userspace_pm_lookup_addr() helper to find the address entry on
-> userspace_pm_local_addr_list, if bkup is true, set the flags of the address
-> entry with FLAG_BACKUP, otherwise, clear FLAG_BACKUP.
-> 
-> Fixes: 892f396c8e68 ("mptcp: netlink: issue MP_PRIO signals from userspace PMs")
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 9c622b0e3e6e..0c0f6f65accb 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -562,6 +562,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
->  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
->  	struct net *net = sock_net(skb->sk);
-> +	struct mptcp_pm_addr_entry *entry;
->  	struct mptcp_sock *msk;
->  	int ret = -EINVAL;
->  	struct sock *sk;
-> @@ -603,6 +604,16 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
+On 10/25/24 11:32, Matthieu Baerts (NGI0) wrote:
+> @@ -2060,17 +2062,17 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
 >  		bkup = 1;
 >  
-> +	spin_lock_bh(&msk->pm.lock);
-> +	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
+> -	spin_lock_bh(&pernet->lock);
+> -	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
+> -			       __lookup_addr(pernet, &addr.addr);
+> +	rcu_read_lock();
+> +	entry = lookup_by_id ? __lookup_addr_by_id_rcu(pernet, addr.addr.id) :
+> +			       __lookup_addr_rcu(pernet, &addr.addr);
+>  	if (!entry) {
+> -		spin_unlock_bh(&pernet->lock);
+> +		rcu_read_unlock();
+>  		GENL_SET_ERR_MSG(info, "address not found");
+>  		return -EINVAL;
+>  	}
+>  	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
+>  	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
+> -		spin_unlock_bh(&pernet->lock);
+> +		rcu_read_unlock();
+>  		GENL_SET_ERR_MSG(info, "invalid addr flags");
+>  		return -EINVAL;
+>  	}
+> @@ -2078,7 +2080,7 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	changed = (addr.flags ^ entry->flags) & mask;
+>  	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
+>  	addr = *entry;
+> -	spin_unlock_bh(&pernet->lock);
+> +	rcu_read_unlock();
+>  
+>  	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
+>  	return 0;
+> 
 
-(Linked to my comment from the previous patch) Adding only the helper,
-and squashing that in this patch here might be an option, but even that
-can cause conflicts.
+I think we must retain the lock in this function, otherwise we could
+end-up with an unexpected flag combination.
 
-I think the simplest is not to add this small helper only used once for
-the moment: so simply calling list_for_each_entry() here, and add the
-following code inside it. WDYT?
+i.e. set_flag(MPTCP_PM_ADDR_FLAG_FULLMESH) and
+set_flag(MPTCP_PM_ADDR_FLAG_SIGNAL) run concurrently on CPU1 and CPU2.
+entry->flags could end-up having a single bit set instead of both, if
+both CPUs read the entry before the other would store the new value.
 
-> +	if (entry) {
-> +		if (bkup)
-> +			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> +		else
-> +			entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> +	}
-> +	spin_unlock_bh(&msk->pm.lock);
-> +
->  	lock_sock(sk);
->  	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
->  	release_sock(sk);
+I don't think _ONCE() annotations will be enough to avoid such thing
+without a lock.
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+
+Paolo
 
