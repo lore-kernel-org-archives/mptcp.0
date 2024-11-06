@@ -1,78 +1,121 @@
-Received: from m16.mail.163.com (m16.mail.163.com [220.197.31.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 50284653
-	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 07:11:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=220.197.31.3
+Received: from mail-qk1-f179.google.com (mail-qk1-f179.google.com [209.85.222.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 074F11D9668
+	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 09:44:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730877076; cv=none; b=Id2jZTKHUWV1tI+wFyrfjgPH9hHeTHe9dHBUM2RD+NWOOBpg2aeGwRDkjiWybyHQaP4wZIkVZfowYwaTozGYsGWdaiu3U99qQzj9XyFPH3Sgf3yKlju0z2CK2IW8whpHHvLg7kA1+y54Sb5ecfMq+sJ4ig/iF40vG4dUEkro86c=
+	t=1730886272; cv=none; b=RmKrM4pOtbFWvIurKOheYN74AnCA14qUQEfoguQvHBNkbaTPPQY9onShv45kC2V8XsiK1Wn5RH0+WXnny2oXyPwvxzTHCyAb+4JWDtjCPC1D0F9tuDoKrzRH38F2mhNx0vjeEEXXqF5GZ5667DXlLy5N5BDd137kMpSebZ292Qg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730877076; c=relaxed/simple;
-	bh=bic8U/7EprTF5tO0m+FTNPsSXiyFSKnhDFBIh5HETFg=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=R1yRPlCEux3k5f3KPufUbeV2rtJzllVWp3PmyEIDb3URAzxIfOeMvpNSiq+KxDFBxYV95QghAoN1I4oL6whQHzuc5f038/Tjk1xhj8tXrpEVdMFH/T45cb+04FBVzEFOYW2iF8D/I3csnkl+VqbB2l3D+whZJ5XF3Zh792C2at0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=aZ3sg9R/; arc=none smtp.client-ip=220.197.31.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1730886272; c=relaxed/simple;
+	bh=rqymGM2g9fxhufjqoGk0tVZ8VBhYPZV+Ir80dpAulP0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Qn62NvXp38ap3e0oSThTP5Av0pvgfNWgeToImTeZaK06SDcY0Gh41NrC8WU/elBZgSOUaLEyvXgetI6ROSEqQuAmPNHfSAOxmVKPj+KdtDWu2SsbV2OYIDe2s7EPFZ59lTR37o2AfISr5c/YonQxgVSWu/+7EM8Tw0AB/54OCqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=RJCcjiIH; arc=none smtp.client-ip=209.85.222.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="aZ3sg9R/"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=From:Subject:Date:Message-Id:MIME-Version; bh=uivsu
-	ld9fyepD+tXzzr88CQjezyhiA9keWMJ873haXQ=; b=aZ3sg9R/2RdxrofC5jyiH
-	T8XyXyc5USvUzpCDHg5OVBzQVfTYefszgwO8M1kChpNn2FxDMPm0I5BPC6pXCti0
-	++p/Ksb4ZXk3obtHf65qhk9mTNmQ+Meb7RhzWnFkyMLKc4aGLtfIkgEKg73Gcwxo
-	p9+0JPD+nwljVpssUSm4/A=
-Received: from localhost.localdomain (unknown [14.153.182.146])
-	by gzga-smtp-mtada-g1-4 (Coremail) with SMTP id _____wDnT8duFitnbBgcCw--.18643S2;
-	Wed, 06 Nov 2024 15:10:39 +0800 (CST)
-From: MoYuanhao <moyuanhao3676@163.com>
-To: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	pabeni@redhat.com,
-	horms@kernel.org
-Cc: netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	MoYuanhao <moyuanhao3676@163.com>
-Subject: [PATCH] mptcp: remove the redundant assignment of 'new_ctx->tcp_sock' in subflow_ulp_clone()
-Date: Wed,  6 Nov 2024 15:10:35 +0800
-Message-Id: <20241106071035.2591-1-moyuanhao3676@163.com>
-X-Mailer: git-send-email 2.25.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RJCcjiIH"
+Received: by mail-qk1-f179.google.com with SMTP id af79cd13be357-7b14077ec5aso60716185a.1
+        for <mptcp@lists.linux.dev>; Wed, 06 Nov 2024 01:44:30 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730886270; x=1731491070; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=7F/PTuG4aKX2P3zpB3EXfkNXjcDUwoc2DoWILGqQuGw=;
+        b=RJCcjiIHquYDsX2/Fe2Y38neKBuNT/hfmp8DmFerf0QIRJ4pi7mF4Y3NA53FDl5JYj
+         N4JO1t7ehoFLXcZtjl/yZ9+vAvZDVb7u9qGfpNCtJKdPSVCixOP8yPuJSo8zRW9ZHyl4
+         UmyOYcfFdaGHu1HoqDudjvP4hou0MDwmCm7GIXcLFEa+nL4dpk71GJB0iW84loHG1l7M
+         j8vrA+zKDW2DqZqqi/kOnVxssbUiTd2o+/57VlSjVmSZoLmam69/xjcRVtaei5HRGLBn
+         WdRG1OVwD1LyG1oDrZdOlOyKjuOSSCzigE/RGZumKGTEi1gs9jcnBTxcNr8lK4//ITwL
+         aWWg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730886270; x=1731491070;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=7F/PTuG4aKX2P3zpB3EXfkNXjcDUwoc2DoWILGqQuGw=;
+        b=vHR9rX8lN6tZdstCJPmW5LhP1Q7QzdVC223758w9wJuLbyW17r4NUNRcRG4wD0p7qJ
+         1Dn7RKEt8KsSa+DC9ktrDUASpRlOgjPnaJHgwzCFXhUUVKoAErzftOrc/v7q3lwcuhfa
+         wzM/GWKyGibiedApsBqK6uBCVLFpSthI9PNs2UsGn/YXQwjjcUdM+3eF1iQsqMH8rSuJ
+         b3A9d8vCZF29RqyK3yR9iePx499vYxu3Y6aS3wKWMgmFw2O81MJZvvfVnNUc4QGOUdIg
+         4p4X/YV20sbUVOl9VLfLDbNGqCirH3Kf1aNshWTXIsLE6xy5+kqM4RVCnKVauqEkRtUo
+         qwvg==
+X-Gm-Message-State: AOJu0YwAKxVIqncSPvKxoNxXMnL+++J+SL3SaYZXL7JrQcrDZrfwfLN9
+	gkEsTLZRxemzRMHBZtUtuA9YXh94n6QWB3rE+TQNwQddA51/xfc=
+X-Google-Smtp-Source: AGHT+IEJa5XZulgxjLFIAS8J/bBsRnsXWw7/euvF/vuNbnUI9jdM4LpJIiZnB+SRAFBBhxTBZqFvbw==
+X-Received: by 2002:a05:620a:254f:b0:7ac:b197:4037 with SMTP id af79cd13be357-7b3217d084cmr339514185a.18.1730886269877;
+        Wed, 06 Nov 2024 01:44:29 -0800 (PST)
+Received: from [127.0.0.1] ([20.55.14.224])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f3a112edsm606748085a.58.2024.11.06.01.44.29
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 01:44:29 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: MoYuanhao <moyuanhao3676@163.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20241106071035.2591-1-moyuanhao3676@163.com>
+References: <20241106071035.2591-1-moyuanhao3676@163.com>
+Subject: Re: [PATCH] mptcp: remove the redundant assignment of
+ 'new_ctx->tcp_sock' in subflow_ulp_clone()
+Message-ID: <428d6f98-58f3-4a1d-c5f6-3a9ea5aad152@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 06 Nov 2024 09:44:28 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-CM-TRANSID:_____wDnT8duFitnbBgcCw--.18643S2
-X-Coremail-Antispam: 1Uf129KBjvdXoWrtw13Aw45tFWUKry7KFy8Xwb_yoW3Zwc_Xw
-	s7KrWxX3yYvrZF9F4UZw4ft395Ga9rJ3ykZr95tFZ7t3WFqa4kAr18Kryruryfua17u3y7
-	Ca15Aa40kr1j9jkaLaAFLSUrUUUUjb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
-	9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjnNVtUUUUU==
-X-CM-SenderInfo: 5pr13t5qkd0jqwxwqiywtou0bp/1tbioAGPfmcrDATNlAAAsN
 
-The variable has already been assigned in the subflow_create_ctx(),
-So we don't need to reassign this variable in the subflow_ulp_clone().
+Hi MoYuanhao,
 
-Signed-off-by: MoYuanhao <moyuanhao3676@163.com>
----
- net/mptcp/subflow.c | 1 -
- 1 file changed, 1 deletion(-)
+Thank you for your modifications, that's great!
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 07352b15f145..fd021cf8286e 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -2049,7 +2049,6 @@ static void subflow_ulp_clone(const struct request_sock *req,
- 	new_ctx->tcp_state_change = old_ctx->tcp_state_change;
- 	new_ctx->tcp_error_report = old_ctx->tcp_error_report;
- 	new_ctx->rel_write_seq = 1;
--	new_ctx->tcp_sock = newsk;
- 
- 	if (subflow_req->mp_capable) {
- 		/* see comments in subflow_syn_recv_sock(), MPTCP connection
--- 
-2.25.1
+Our CI did some validations and here is its report:
 
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): mptcp_connect_mmap =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/116990=
+95104
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/4a7996ada8e4
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D906766
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
