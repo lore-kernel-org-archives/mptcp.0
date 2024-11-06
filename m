@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE07A1898E9
-	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 14:00:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5258116CD29
+	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 15:34:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730901638; cv=none; b=MaQOE2h7LIRR9i9UnUvUA+pb7i6+HhqxNM/UwO/sjPw89BRdE1LwevBHc6VOk0zu0obAKLE14VnuY/9BfMdSmbjBDr4BQgs9UdcHAI5Vpxs47Vhf/LaTI8lEfnAyAvU2nhJNBmapQAoqssYGWjtQaBr6MZ5ocV/xzkMWAszwGm8=
+	t=1730907271; cv=none; b=Mjr3NIgA40n6R+8GOIDc5bVsuPL7oabwxtnWzOcVtIibRDSU/foweLk0oySdNCCiAs46HE8eszVOq/FQ/GCxONcJp10gZpW5IyLEdDFPVoAmBQmcnmtRSA1BifGi002ckLvKiM7fhEK5Kkg69GtL/DDykYmxM44F59xk6uddcDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730901638; c=relaxed/simple;
-	bh=D95TAGCsIQDjAysSIYj3mB5ofFXuwL5IDB4a5TyoULs=;
+	s=arc-20240116; t=1730907271; c=relaxed/simple;
+	bh=/PDqHBHU6o7C4YWne1ybn6UGQw41jLYWpu41MKbFxI0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NbTj0ym7LsyY/10nzxP0LW7gyRJyxezrCl9qVOv1FGVUD0RBwTfQRjc67f3nWC0lGGbHGdaFiMGpsUwcbYPMs2T3aRjqzInAmfLw2Fh9CwlnePQqzNAiVIwpqB03Fr0YY/hRXjaTz7XWYLcf4u0crgKKLP5Jd/VSz2cwbUCpGj0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHlyhhHn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Olz5cOGxFoiuaRxi9Gcqu1iSm6d3SCpgMF+8naDYCacMTMCukXvW1O+pLaruDJGtSdrO13UzMCjkpHPhew/Q8wPpV642uhNmRxaJ23N08cvZRq+ffMKhlkl1AKfNqmxkFuQsM3aumMZDtcjd5/TKJHZoxRpBBsFj9U1wJ+hkEYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hMdXTyDq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHlyhhHn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8FBC4CEC6;
-	Wed,  6 Nov 2024 14:00:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hMdXTyDq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67AB9C4CEC6;
+	Wed,  6 Nov 2024 15:34:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730901638;
-	bh=D95TAGCsIQDjAysSIYj3mB5ofFXuwL5IDB4a5TyoULs=;
+	s=k20201202; t=1730907271;
+	bh=/PDqHBHU6o7C4YWne1ybn6UGQw41jLYWpu41MKbFxI0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kHlyhhHnnsQ/YJgYgTUp/VTLUsGWel8Uo1J/qBiBZ7DwCm9QDoQKjAe/WBC7Nmak7
-	 osrX1ql/JBlJFxn5P2gkqSP+BimA7/ndnSeEtsxRVkACM/Aj/8LaTySl3dAVKUpoHf
-	 peIFTh+ivV9DNdS/87qkxZ4RQM0uGwUMLAUPUEYlmgs51GZkPEG23dD/9KfWnCkTNS
-	 iLWQFotRFp4dL8MgAVGPyOc2sSKdjL9K3xjCleMe+J3tw1qGdVCecNUPienXe7S1Nj
-	 jK+22BAS1mjWKdr0qwWBzo/N9qPEK/jXEMq/os8gbPVeUrVdVww0X/KbOPj71r0GSi
-	 TokejBDNkkYAQ==
-Message-ID: <28288bb4-92e4-4e34-8413-3370b98e7c16@kernel.org>
-Date: Wed, 6 Nov 2024 15:00:35 +0100
+	b=hMdXTyDqCaqSXLiirr0LSvwzhNionZxlTkbv3ohI8E/VNNfE/dfnktMTuH4saa763
+	 LgZs5D6pE9Xbv6NcOqmHq0XCTDhkGERgwC0GGxJ86xhc3CAs59fjdq4YI2LpH69ceO
+	 hs2Tek7QpgLG1Dn/aFpJk8Bh2DPADbN1317Kqzb+RVVuuzA1OoA+YCR1Aaag8ja1Dq
+	 zLP7GVJVQzB3g+R2fNawymdDW5N7L/sZss9cwsgn6SAsvxS5aoRNj/a/YwFD3Jpo8V
+	 XCjNx1gdwNxcs7Bdlx3WaRaPBp1Fv/sDzd37/9IuTlqezWWYiv2Ud+wY5nQqNaHUSV
+	 /5FSMBECeF7Qw==
+Message-ID: <434661c8-374c-4ce7-ab3e-2e385a89b3c5@kernel.org>
+Date: Wed, 6 Nov 2024 16:34:28 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -96,10 +96,25 @@ On 06/11/2024 04:43, Geliang Tang wrote:
 > 
 > v2:
 >  - move "add lookup_addr for userspace pm" out of this set.
+> 
+> Two fixes for userspace pm extract from "BPF path manager" series.
 
-Thank you for the new version, that will be easier to backport!
+Thank you for the patches!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Now in our tree:
+
+New patches for t/upstream-net and t/upstream:
+- 4cc0bb30ea08: mptcp: update local address flags when setting it
+- f084b1c81ee0: mptcp: hold pm lock when deleting entry
+- Results: a54ff4f9af98..36fd4e465722 (export-net)
+- Results: 370ec37a4049..ca26062fcd85 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/1243f63870234a0da9483ac30bf8e5ac56f5363e/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/d632a6992fcb583953f094dc46a417cf33e61303/checks
 
 Cheers,
 Matt
