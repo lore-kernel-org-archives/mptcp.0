@@ -1,35 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E1A24199243;
-	Wed,  6 Nov 2024 02:20:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 627E0190468
+	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 03:43:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730859630; cv=none; b=f9uX530alsgXhgtJoCjUrebMpi+48r4MRlgsGuR8RE5O9sWQOqT8vPadElnbbKJH0U4+bCmI1/imJddyZZu7uCHNey3iCOtAPy0oHYYK2x6YnUDK36DdcEpgF7MmvMWMAPDdfERmU7QgHKDSqoQUvUKvHFKDBqPiylkBNjNpn6s=
+	t=1730864615; cv=none; b=MiLpdyXa+L0BgLPxeoVePuqASD3dsu0xk+cKdHpOfI4nfYMIwk5+uexGQzs/LwtY7N8Yl09GdrwebCpuFNnf9R0MYzbuaHtzhyKwNWw/+gm9AFspgY7b+L2IEKbTViRS4LV9H/T1ln2x4yLWtqpk0ntD1q6DMkNg55mSxiiYbfU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730859630; c=relaxed/simple;
-	bh=Qt1zgFDEMv60yXO2yc/tU7kWdfS4qflcLxIkgOrXbKA=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=gONlmNHi7IfkIuvGBoYFjd3osfuO4X9kPTqKY88ZChg7TsPa4WrU2Rm/a1od3/0WoAzUci0Mvth/xJH3StBpNPKVEHjLbY6euiOzRFVRFzXSM4lZpOIjn7f2X/073Avja3zssbC6Zf2G04rxosr/xjDfLJy6xpajMac/jEoQRCI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGc4CTVX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730864615; c=relaxed/simple;
+	bh=12B/kSKT9v/2W4uBG1Kk2eyRptZvMxDqzFZoj+9kxw0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=O/xMwDtfAhY7rUBxoRIS12cTZSaARvw4eWw28LFHsG06NZSWOGkVQfPAoW9/8MQhOsTmCALmtks5dSThN9SGNpcp7veY09lsDh9T9nccNtTaJkZVo2B3CuJjnC2J/qXlGquqfHXcR9sYPnlym1D+raDdex3dKOy9o4cdZczHr3A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WmxSIVXA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGc4CTVX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5E51BC4CECF;
-	Wed,  6 Nov 2024 02:20:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WmxSIVXA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B906DC4CECD;
+	Wed,  6 Nov 2024 03:43:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730859629;
-	bh=Qt1zgFDEMv60yXO2yc/tU7kWdfS4qflcLxIkgOrXbKA=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=EGc4CTVX4VDNpZvRi010iT82jR2msDZrY2atjEpl21Yl0KwqkkrhjlxxnQ4syXi4C
-	 K8KHHHYNvRBNaOSIx4beIIPne3D/PfI51ndY6gVLBDz9UP9Tdzebil96XQwgecTv7y
-	 5HuCue11QIE7sDfkH4j2VDX/X92pjIsQdEE1MLYA3ay7hwh10TBVobM3/xPTzbpjSo
-	 V+Bp8LJSY8ecz86OiqN/pMuljBtMQMxQb7Rqi5V73dTqnpdI/Bds8CQnrqHflPIFbQ
-	 iw4UiBMdhRTzD9LUPJueuF8q4Xxojv9Dc9rqPYFMtSP4inS3nEJfZzXE9InJLAMKsF
-	 Whw4BfFiiNaqA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70EB03809A80;
-	Wed,  6 Nov 2024 02:20:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1730864613;
+	bh=12B/kSKT9v/2W4uBG1Kk2eyRptZvMxDqzFZoj+9kxw0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WmxSIVXA5d7O8QlXE2eL7KdYWlouGXrKp3is2zIV0CKVnbqNbGxWCgVHPsZuJEQto
+	 nKQc6URP7zvSm6nZvRUHfO+xIy3kL1tIdGHWgDNzBCcjkaXHtCNdwmDUm6+RInvBSO
+	 PMdqXlQbBa7H9beXCQcbm9QVbs9hXxwgtOO6CfDXLQDoInX+y+SM7Z+16fcbQ9nR2q
+	 zRqq+tRrSN3V+3yCqhWG/phTCJsBbDLLzElkyjmxQd75Kv4YMAPacs6gx3YTRLEDGW
+	 oVd/7bYTwwFV9e5g+qY+71bMDVY2ws87dA2/olbarA+68wqlC/Bi6jOK7WiGiX9uvt
+	 e41+ZyBbIwmyQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-net v2 0/2] fixes for userspace pm
+Date: Wed,  6 Nov 2024 11:43:22 +0800
+Message-ID: <cover.1730864444.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,41 +39,21 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v2] mptcp: remove unneeded lock when listing
- scheds
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173085963799.771890.13823159671393094471.git-patchwork-notify@kernel.org>
-Date: Wed, 06 Nov 2024 02:20:37 +0000
-References: <20241104-net-next-mptcp-sched-unneeded-lock-v2-1-2ccc1e0c750c@kernel.org>
-In-Reply-To: <20241104-net-next-mptcp-sched-unneeded-lock-v2-1-2ccc1e0c750c@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+v2:
+ - move "add lookup_addr for userspace pm" out of this set.
 
-On Mon, 04 Nov 2024 13:43:47 +0100 you wrote:
-> mptcp_get_available_schedulers() needs to iterate over the schedulers'
-> list only to read the names: it doesn't modify anything there.
-> 
-> In this case, it is enough to hold the RCU read lock, no need to combine
-> this with the associated spin lock as it was done since its introduction
-> in commit 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers").
-> 
-> [...]
+Two fixes for userspace pm extract from "BPF path manager" series.
 
-Here is the summary with links:
-  - [net-next,v2] mptcp: remove unneeded lock when listing scheds
-    https://git.kernel.org/netdev/net-next/c/f2c71c49da8f
+Geliang Tang (2):
+  mptcp: update local address flags when setting it
+  mptcp: hold pm lock when deleting entry
 
-You are awesome, thank you!
+ net/mptcp/pm_userspace.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.45.2
 
