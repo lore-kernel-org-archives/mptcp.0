@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3198D14A4FF;
-	Wed,  6 Nov 2024 00:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D0BD18BBB9;
+	Wed,  6 Nov 2024 01:40:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730853021; cv=none; b=lotPyFDJnumb/sm2gOEJelYGwdW4KA+ow4ufdIAep+H6E9fmH3I/cIziXBnz6kRrzlwNoUdQw52lbU+KF3J6XO2jQKRJA0lSd3v9aD/7Y1VSfRw+BqYgyaRPY8ugzjw4dBtDb4xzE0SO9hl0jm5cMZBpKKwEj4RVV6HYAKQ53i4=
+	t=1730857229; cv=none; b=tEDqJNb8yPoz81ZVR90ERSMvFiWez7KkIGoowSQBBQEiT/IGaNUk79KxTTiZZO2du959rsiMGDb8esz57Tzi5BzK8golnpspt8aTk0D5qaypwbA43I3vgU7CohWVdzg9VZUYzhNwl+JPsjO/dJZB8sBrUzikVOy7S0grG6eJkZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730853021; c=relaxed/simple;
-	bh=c9V3aD4p8PP7Lw62hg1olACyeMbtZ7mnNz7niMzylDA=;
+	s=arc-20240116; t=1730857229; c=relaxed/simple;
+	bh=esOnjkeufN8HAPgjP5fkn+3SUM3+jIm1xlaaK6Sx+ns=;
 	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=o9J6Fjy4/lknqHp7BaBho4KyN5KPj9IPHqakxhHSi1ccUMgA9zsTZ1R+Zn/la/PXCxha8zGIrODDJ27JZ1HTc/NHMCEYU/vXKgoFEvNDAfmodT4e0aHBDutCy/N2OnO3fCbS4+lNBXvNd+Ls2y7xA4tiV6zh9MaHRptF7YAsF8I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GXvEEeO9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=HQQnbisAEdI5HabTORVHsHCGktWfU2MPI3+5TVUHgmCtAsxkzdSEl+i6Wbg9ANduZ9+2lGhQt1twUiqZmSdzyhdYriAiAc98zZK77KcCuoTDGh2KvwxiM0n75BFDRA3QLKzi5QVTAMiCIKVcrTWVa6VZ4qExLZtzihcjqTJ/whE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aITdy0qr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GXvEEeO9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 977D9C4CECF;
-	Wed,  6 Nov 2024 00:30:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aITdy0qr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CCA1AC4CECF;
+	Wed,  6 Nov 2024 01:40:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730853020;
-	bh=c9V3aD4p8PP7Lw62hg1olACyeMbtZ7mnNz7niMzylDA=;
+	s=k20201202; t=1730857228;
+	bh=esOnjkeufN8HAPgjP5fkn+3SUM3+jIm1xlaaK6Sx+ns=;
 	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=GXvEEeO98FQQpmcFH6ySrf7wZ6CenyFfbgLd6blVYesJ3sCCuRkwxRBeUybvCugYN
-	 y2km8YI3f/+mDrTGWJIoSqYJ+nlfryc8Hptc/coWcBM/p+QNLFy8YE8LZSFlYQVNSb
-	 Cc7LMsU9sFyMEoXvFo4w1c4VHZo9JeFE5S88kj/VVLJtqdaSxdsemgmuLN6TwImvsC
-	 e/fmS0PQOr4O4Xj0jDvSeeau6BpMjyN2/Y0TuvnEEJGPkAA3Z0dpJcIyAlzvSgNbcO
-	 a1OozBIaNLI5+RX2J/TZdHnLJUgs3/rLNLWKiFukGzyvoOhD6tv5oQPd1qhJsr/uRB
-	 4jhRz+ZtGLi0g==
+	b=aITdy0qr3NafHRwWdPWIzf1OVlqZgNQX8jtQltYDCTl6063O6Mffjrv6TG73w0Hk9
+	 u2F1Z/D8WvTv8kjIJqBvapfhdIhry1a6+7OeRTs8Y7ZKtYFPejgCTktnsRrVH0vN+7
+	 pagV/8e6F9gBRUytiVNh+On2qtDkTgvYa9eht/xwpqS5leukK/nnnfBY6huh7lOCwX
+	 quNd4oBy0BhtHaprF8jyo3MwuD2QnewVkTB1lWNGBQ+S2dOhyQb2/JCLRYb1e3agvU
+	 S5Gjfnkk/6y0sp0GzKrJkudVRp0o6kZbjcVNbpZdFKlVNZm34mB8xWAcapI6TRKQ63
+	 3ia/jU+8SHswg==
 Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADF793809A80;
-	Wed,  6 Nov 2024 00:30:30 +0000 (UTC)
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0D93809A80;
+	Wed,  6 Nov 2024 01:40:38 +0000 (UTC)
 Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -37,41 +37,39 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH bpf-next/net v3] selftests/bpf: Drop netns helpers in mptcp
+Subject: Re: [PATCH net-next] selftests: net: include lib/sh/*.sh with lib.sh
 From: patchwork-bot+netdevbpf@kernel.org
 Message-Id: 
- <173085302951.742987.15552199829339581477.git-patchwork-notify@kernel.org>
-Date: Wed, 06 Nov 2024 00:30:29 +0000
-References: <c02fda3177b34f9e74a044833fda9761627f4d07.1730338692.git.tanggeliang@kylinos.cn>
-In-Reply-To: <c02fda3177b34f9e74a044833fda9761627f4d07.1730338692.git.tanggeliang@kylinos.cn>
-To: Geliang Tang <geliang@kernel.org>
-Cc: andrii@kernel.org, eddyz87@gmail.com, mykolal@fb.com, ast@kernel.org,
- daniel@iogearbox.net, martin.lau@linux.dev, song@kernel.org,
- yonghong.song@linux.dev, john.fastabend@gmail.com, kpsingh@kernel.org,
- sdf@fomichev.me, haoluo@google.com, jolsa@kernel.org, shuah@kernel.org,
- tanggeliang@kylinos.cn, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- bpf@vger.kernel.org, linux-kselftest@vger.kernel.org, matttbe@kernel.org
+ <173085723778.759302.10510309486670038114.git-patchwork-notify@kernel.org>
+Date: Wed, 06 Nov 2024 01:40:37 +0000
+References: <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
+In-Reply-To: <20241104-net-next-selftests-lib-sh-deps-v1-1-7c9f7d939fc2@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, pablo@netfilter.org,
+ kadlec@netfilter.org, petrm@nvidia.com, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ netfilter-devel@vger.kernel.org, coreteam@netfilter.org
 
 Hello:
 
-This patch was applied to bpf/bpf-next.git (net)
-by Martin KaFai Lau <martin.lau@kernel.org>:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-On Thu, 31 Oct 2024 09:40:46 +0800 you wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On Mon, 04 Nov 2024 12:34:26 +0100 you wrote:
+> Recently, the net/lib.sh file has been modified to include defer.sh from
+> net/lib/sh/ directory. The Makefile from net/lib has been modified
+> accordingly, but not the ones from the sub-targets using net/lib.sh.
 > 
-> New netns selftest helpers netns_new() and netns_free() has been added
-> in network_helpers.c, let's use them in mptcp selftests too instead of
-> using MPTCP's own helpers create_netns() and cleanup_netns().
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Because of that, the new file is not installed as expected when
+> installing the Forwarding, MPTCP, and Netfilter targets, e.g.
 > 
 > [...]
 
 Here is the summary with links:
-  - [bpf-next/net,v3] selftests/bpf: Drop netns helpers in mptcp
-    https://git.kernel.org/bpf/bpf-next/c/ac1bd50164b7
+  - [net-next] selftests: net: include lib/sh/*.sh with lib.sh
+    https://git.kernel.org/netdev/net-next/c/f72aa1b27628
 
 You are awesome, thank you!
 -- 
