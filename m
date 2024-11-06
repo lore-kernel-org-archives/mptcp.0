@@ -1,105 +1,122 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B541209695;
-	Wed,  6 Nov 2024 18:49:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC14205AB4
+	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 19:57:37 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730918996; cv=none; b=ci39HK2VrM0PYZ/ljTy7z9/iZZKHbqGkJ2YJufCOcatss2BrT2M21MR59+L22PwrZzhorLnOknvuDWbh+6+Mxxig5wJTt8fW8CzElItkkH0BFKPutZ7iL8TEnDXjfGnKtzK7Yt4jdqgyabq48dvMCvi24LrManMxOFyAJUG4SMU=
+	t=1730923059; cv=none; b=Ib28m4rEU74cn1sexLZm6I9cAaagEtSjLjOiUmQOXHxLKvsnbqyRVW9GfHcBE1ovNmPrNKdVL6JfD2ylrWl2PL08SZ45ozjEHEfErQZpU6WwKFKINjZYGTHQjYoVIyxG4x2vn2PWH1N6R4zqhjU8LRhIvWibI/mztuCvbfUSiHs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730918996; c=relaxed/simple;
-	bh=hUXnHZwdxyXGHKs/xhNvNy/CJiyEexLZlYu0RRseBcs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XN3TJRcMoF/PoP6unCwVVq6WHjB1/rFpSPeKB/2GAxF0lwXrH9hvmOTH4SlC7SrKxceqf4NV/FgDaTnAal3XB25+59Q1ter/eWXJxB1xGR0SWrSS4ThOTooikWWirDzbhrNEusNrnuj+DSjpVPAJnRNPG8I4BAa2fws4rgImTfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JhmxUkMG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730923059; c=relaxed/simple;
+	bh=u+95mg2q/JhhGW+TPkWTpFhnSAYwTsjG+5Tvzpa9mF8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=liZ2uPsoSmcuK+W3zILhlDBu9uFbkvFoCgjJLnCPguuEOJDEVynVFjRlHWkFGYkOYKahQZXSZhkYu7xmNT48GZm5IxrsNjI1FmgLRWYH4cilQPwCZvqlEdnmYnDN73zHGmaU66rMCzJWCcP0y4TeeJrLwDBwMmbFhHP9e2cpMJ4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XxoS6hND; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JhmxUkMG"
-Received: by smtp.kernel.org (Postfix) with ESMTPS id DEE18C4CEE1;
-	Wed,  6 Nov 2024 18:49:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730918996;
-	bh=hUXnHZwdxyXGHKs/xhNvNy/CJiyEexLZlYu0RRseBcs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:Reply-To:From;
-	b=JhmxUkMG9i19apfIq+dUrff90TNz5ygITK22+ILWBtJOjLiLKs7J/dunyG9Y5ICG8
-	 v0t9/D7kHGrpVyoXEUsCIUftXvrfrl8/YFXyV/nBC6kC0s4wshkZi+k/GjWa8ZpcEV
-	 D3TuBObS6l3IwbPXdm5ZSCwDxzDidv7hQ4AfAm4BSAGn2T7QzTdy7r8yv2rWUJDrLj
-	 8lF8sIRPtNdvoRAC2OtddRzCM8GpluTlJqD84Hl0u1dBmZzyqPmuPbTvwZDUuHvfKX
-	 LPx6TL8+yZH2MhamG6QyavjUY92B4nbkjPbsOPctxOw5ckm5NTeHPuVunDEPWqv07I
-	 P6XaQzlV7CpeA==
-Received: from aws-us-west-2-korg-lkml-1.web.codeaurora.org (localhost.localdomain [127.0.0.1])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2807D59F65;
-	Wed,  6 Nov 2024 18:49:55 +0000 (UTC)
-From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Date: Wed, 06 Nov 2024 18:10:19 +0000
-Subject: [PATCH net 6/6] net/netlink: Correct the comment on netlink
- message max cap
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxoS6hND"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7b15d7b7a32so14233685a.1
+        for <mptcp@lists.linux.dev>; Wed, 06 Nov 2024 11:57:37 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730923056; x=1731527856; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=uN2/M1rXVfxi5HoBRlFEz4UtKAMxhFgR65Ed9Q0vwc4=;
+        b=XxoS6hND0WLrqvVh6y0LFpL4M11Rtcf1lsFjm2OQt82A21EyC//aZ+Yvonhd6RkiBY
+         UG18VakMqDvIUyezjSSHhhq3mG472DuGMVKuF8pg29elEqLODAtfN5DOhvEVIpaiq2Cn
+         NXzMFpC5bk3Fq7g/2sOv8Ux6Kw/TqeWG0PkurLA96QEupBAJAlilQI7rW5orKIbkziB0
+         8CcYXo8cNgr7eAKJjEmZgyceZ4iGOLxgsEfkM5d7F3ghShNZP5wRHNXcH0vvOgmI1sH1
+         NliECd0KM7DV46YgFX6GXrYx/kQZwAx/HP8X7FKzY5RlgTxufljzr31PSXmXliBuDoZV
+         wWSg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730923056; x=1731527856;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=uN2/M1rXVfxi5HoBRlFEz4UtKAMxhFgR65Ed9Q0vwc4=;
+        b=tuQanfrKxlqH6tM2rJh+4noIGzizeTGFxE2RUt0MaXnH/uof39kT0p0I6mNTgIDPM0
+         SPdVjXlhrsRmd6F+DD5h7VdXgG1aSEZEdLApXsul8Gwo99arVm/WoPk6KilTFzG7R0Ul
+         G1lz1wh3/JRDbHB2e2SiPNq13KNq5vhN4UY5sZWOyC0yMPfmx4TGqufclk8NZiETVAu6
+         TvE1+NwcHRWhbLS5t+eP5oXc7i9Al0T/IK4MZvb1Zmvnt54us5x/f6NTEsg3Jh7XFKpJ
+         E7D1lzYRcBZVknNy+S86k2gW58Gd9hQntNMWhhnSsBYzMHZTuv45jveFM1bbyMkSV68M
+         jVmA==
+X-Gm-Message-State: AOJu0YwJDJIQiKVQ7rreqVC78pRIn6vQvUaCbWG8Vxw+Nk9C0Qm/b5VA
+	r6/6eDEWOF/SZs4CHsu8wy9rWvPXS1YU8TAIqq4HezmoKDNYYs5rTMqs
+X-Google-Smtp-Source: AGHT+IGxIkNO3yEaJX7Uxpn03O/PzXvkwkPxvPK3rwSP5O2/Cru4pBqT9O6t8W/M9FCYWMfUe9si/w==
+X-Received: by 2002:a05:620a:1a05:b0:7a9:c24e:4df8 with SMTP id af79cd13be357-7b193f514c1mr5442167785a.44.1730923056433;
+        Wed, 06 Nov 2024 11:57:36 -0800 (PST)
+Received: from [127.0.0.1] ([40.79.247.225])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f3a10bd0sm664376985a.56.2024.11.06.11.57.35
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 11:57:35 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
+References: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
+Subject: Re: [PATCH net 0/6] Make TCP-MD5-diag slightly less broken
+Message-ID: <2dedfcef-41c0-f487-02aa-229ae143185e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 06 Nov 2024 19:57:35 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241106-tcp-md5-diag-prep-v1-6-d62debf3dded@gmail.com>
-References: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
-In-Reply-To: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
-To: "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- David Ahern <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, 
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
- John Fastabend <john.fastabend@gmail.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- mptcp@lists.linux.dev, Dmitry Safonov <0x7f454c46@gmail.com>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=ed25519-sha256; t=1730918994; l=1447;
- i=0x7f454c46@gmail.com; s=20240410; h=from:subject:message-id;
- bh=Kmj21DwNJNOs65kiQumd7s7cSWkgFWMCJrFg+lJ9ggE=;
- b=ITm5BD/vJrJwTvNmV1V6c7esw02waru8s1F/KcRHpnPwih8VvLb5zrhOJkimS2VHKQBziP56v
- jdM9oPDoaHECjZpmFpJOoueAzKPXBTDCuVXLCz8+ouoidSykBvuUtd8
-X-Developer-Key: i=0x7f454c46@gmail.com; a=ed25519;
- pk=cFSWovqtkx0HrT5O9jFCEC/Cef4DY8a2FPeqP4THeZQ=
-X-Endpoint-Received: by B4 Relay for 0x7f454c46@gmail.com/20240410 with
- auth_id=152
-X-Original-From: Dmitry Safonov <0x7f454c46@gmail.com>
-Reply-To: 0x7f454c46@gmail.com
 
-From: Dmitry Safonov <0x7f454c46@gmail.com>
+Hi Dmitry,
 
-Since commit d35c99ff77ec ("netlink: do not enter direct reclaim from
-netlink_dump()") the cap is 32KiB.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
----
- net/netlink/af_netlink.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/netlink/af_netlink.c b/net/netlink/af_netlink.c
-index 0a9287fadb47a2afaf0babe675738bc43051c5a7..27979cefc06256bde052898d193ed99f710c2087 100644
---- a/net/netlink/af_netlink.c
-+++ b/net/netlink/af_netlink.c
-@@ -2279,7 +2279,7 @@ static int netlink_dump(struct sock *sk, bool lock_taken)
- 		goto errout_skb;
- 
- 	/* NLMSG_GOODSIZE is small to avoid high order allocations being
--	 * required, but it makes sense to _attempt_ a 16K bytes allocation
-+	 * required, but it makes sense to _attempt_ a 32KiB allocation
- 	 * to reduce number of system calls on dump operations, if user
- 	 * ever provided a big enough buffer.
- 	 */
-@@ -2301,7 +2301,7 @@ static int netlink_dump(struct sock *sk, bool lock_taken)
- 		goto errout_skb;
- 
- 	/* Trim skb to allocated size. User is expected to provide buffer as
--	 * large as max(min_dump_alloc, 16KiB (mac_recvmsg_len capped at
-+	 * large as max(min_dump_alloc, 32KiB (max_recvmsg_len capped at
- 	 * netlink_recvmsg())). dump will pack as many smaller messages as
- 	 * could fit within the allocated skb. skb is typically allocated
- 	 * with larger space than required (could be as much as near 2x the
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 =
+failed test(s): bpftest_test_progs_mptcp =F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/117101=
+60691
 
--- 
-2.42.2
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/67a329533b43
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D907077
 
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
