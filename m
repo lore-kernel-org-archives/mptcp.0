@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 280AA200CB7
-	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 13:59:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE07A1898E9
+	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 14:00:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730901547; cv=none; b=OWs7VeMNCXS/ui6y/IkQ8tkHy1Zyghal3jrZXUg6hdKFFoucb2CgM3Eud5A57wdXPPG4W4jEQte7oU+2QQ/1uqLc56Hnh9wCVJoQSzzTCl+NM9TTd/LeQlflWuFjpDZ8wYmRQqZ4dW/VLD3A3+wj0SjVhUKiQVY4HC3yxoaGbXA=
+	t=1730901638; cv=none; b=MaQOE2h7LIRR9i9UnUvUA+pb7i6+HhqxNM/UwO/sjPw89BRdE1LwevBHc6VOk0zu0obAKLE14VnuY/9BfMdSmbjBDr4BQgs9UdcHAI5Vpxs47Vhf/LaTI8lEfnAyAvU2nhJNBmapQAoqssYGWjtQaBr6MZ5ocV/xzkMWAszwGm8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730901547; c=relaxed/simple;
-	bh=WT5PPkPsCVXy2dRMNaf4fVIGP1ymXqNp+dAKEMV229Q=;
+	s=arc-20240116; t=1730901638; c=relaxed/simple;
+	bh=D95TAGCsIQDjAysSIYj3mB5ofFXuwL5IDB4a5TyoULs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TRbG3lR/xHzubpgpEBU2mHmFELZZbIAH/JHlSDx6ZPuacy2WWkWVEaEYp9vKy3FQumd5pbuBTaiIytsJ8Wpq282v5reP58Xs/RsubEQUfPjhSa6VXnVdcL4dLOv+LI1SQhEIQBc+MXUjt/LKPLZd+p7tHifY8YkzUZbaQIjXe/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kE8Wg9NB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NbTj0ym7LsyY/10nzxP0LW7gyRJyxezrCl9qVOv1FGVUD0RBwTfQRjc67f3nWC0lGGbHGdaFiMGpsUwcbYPMs2T3aRjqzInAmfLw2Fh9CwlnePQqzNAiVIwpqB03Fr0YY/hRXjaTz7XWYLcf4u0crgKKLP5Jd/VSz2cwbUCpGj0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kHlyhhHn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kE8Wg9NB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E1A89C4CEC6;
-	Wed,  6 Nov 2024 13:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kHlyhhHn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9D8FBC4CEC6;
+	Wed,  6 Nov 2024 14:00:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730901546;
-	bh=WT5PPkPsCVXy2dRMNaf4fVIGP1ymXqNp+dAKEMV229Q=;
+	s=k20201202; t=1730901638;
+	bh=D95TAGCsIQDjAysSIYj3mB5ofFXuwL5IDB4a5TyoULs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kE8Wg9NB3cr9dNkFhpILhIHgICxbvvTpnx8GvihfGlQjel2V5uA+rYFvjXGKC7TZ9
-	 a510H537SFlCpSVuESeBwvFhhjFbaLISMUGgGTo8kdqLXgA9X1N7ed/wFzSCU9U8Tl
-	 OSbBAzoXf6ErztnNWZdF1DwaVQ9A10ZinOyKYFSwLIRG7icmAoalPAJFm/NL2fZfWq
-	 pqh8VHmB7NBZbWnginUPkaer990h0NuYZYYoo1lc4y8EcxmtUGO6qd/tN2POjSi3bb
-	 b5YVnBtoe9yBOBauNXnpqcZV/QSrkpojjlTAsjChW5EUGMCqGMCIyqDdSYAiJTaTsR
-	 WAGyRbY3FddXA==
-Message-ID: <7f14a27f-e29d-4cc6-9502-8f6122143c7f@kernel.org>
-Date: Wed, 6 Nov 2024 14:59:03 +0100
+	b=kHlyhhHnnsQ/YJgYgTUp/VTLUsGWel8Uo1J/qBiBZ7DwCm9QDoQKjAe/WBC7Nmak7
+	 osrX1ql/JBlJFxn5P2gkqSP+BimA7/ndnSeEtsxRVkACM/Aj/8LaTySl3dAVKUpoHf
+	 peIFTh+ivV9DNdS/87qkxZ4RQM0uGwUMLAUPUEYlmgs51GZkPEG23dD/9KfWnCkTNS
+	 iLWQFotRFp4dL8MgAVGPyOc2sSKdjL9K3xjCleMe+J3tw1qGdVCecNUPienXe7S1Nj
+	 jK+22BAS1mjWKdr0qwWBzo/N9qPEK/jXEMq/os8gbPVeUrVdVww0X/KbOPj71r0GSi
+	 TokejBDNkkYAQ==
+Message-ID: <28288bb4-92e4-4e34-8413-3370b98e7c16@kernel.org>
+Date: Wed, 6 Nov 2024 15:00:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/4] add netns helpers
+Subject: Re: [PATCH mptcp-net v2 0/2] fixes for userspace pm
+Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1730260715.git.tanggeliang@kylinos.cn>
- <5952d268-5c4d-4623-b91c-44e6db4395a6@kernel.org>
- <809731d55c0df18e07a1847d7638a10c66c1d264.camel@kernel.org>
-Content-Language: en-GB
+References: <cover.1730864444.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,63 +85,21 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <809731d55c0df18e07a1847d7638a10c66c1d264.camel@kernel.org>
+In-Reply-To: <cover.1730864444.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 06/11/2024 04:52, Geliang Tang wrote:
-> Hi Matt,
+On 06/11/2024 04:43, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Wed, 2024-10-30 at 18:34 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 30/10/2024 05:03, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> v4:
->>>  - Use netns_new/netns_free instead of create_netns/cleanup_netns
->>> as
->>> Martin suggested.
->>>
->>> The commit 1e115a58be0ff ("selftests/bpf: netns_new() and
->>> netns_free()
->>> helpers.") now in bpf-next makes v2 of this set useless. v3 only
->>> uses
->>> these new helpers in mptcp selftests and drops other patches.
->>
->> Thank you for the modifications! The new version looks good to me:
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> If that's OK, I will wait for a review from the BPF maintainers
->> before
->> applying these patches in our repo, not to do too many manipulations
->> just in case an (unexpected) new version is required.
-> 
-> Patch 1 has been merged into bpf-next/net by Martin today. Please apply
-> this set in our repo too. After this, the "add mptcp_subflow bpf_iter"
-> series in our repo is ready to be sent to upstream.
+> v2:
+>  - move "add lookup_addr for userspace pm" out of this set.
 
-Thanks!
+Thank you for the new version, that will be easier to backport!
 
-New patches for t/upstream:
-- c786bfbfa13f: selftests/bpf: Drop netns helpers in mptcp
-- Results: b4f136198f02..ac39b3f1d92b (export)
-
-- de2a335efeba: "squashed" patch 2/4 in "selftests/bpf: Add
-mptcp_subflow bpf_iter subtest"
-- ea4672e6e042: "squashed" (with conflicts) patch 3/4 in "selftests/bpf:
-Add bpf scheduler test"
-- 8c6acd6502af: "squashed" patch 4/4 in "selftests/bpf: Add bpf_first
-scheduler & test"
-- Results: ac39b3f1d92b..370ec37a4049 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3fd30039804ef2d1b62fd95d7cadd5a61dd7f542/checks
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
