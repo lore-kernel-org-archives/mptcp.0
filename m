@@ -1,122 +1,289 @@
-Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp-fw-80007.amazon.com (smtp-fw-80007.amazon.com [99.78.197.218])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AC14205AB4
-	for <mptcp@lists.linux.dev>; Wed,  6 Nov 2024 19:57:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA40F4A06
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 00:21:42 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=99.78.197.218
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730923059; cv=none; b=Ib28m4rEU74cn1sexLZm6I9cAaagEtSjLjOiUmQOXHxLKvsnbqyRVW9GfHcBE1ovNmPrNKdVL6JfD2ylrWl2PL08SZ45ozjEHEfErQZpU6WwKFKINjZYGTHQjYoVIyxG4x2vn2PWH1N6R4zqhjU8LRhIvWibI/mztuCvbfUSiHs=
+	t=1730938904; cv=none; b=oMkY+cT6PvEQGAhgODo/CE6+6X16LXhaMof5DecsmAmoU6+H9+r7qg+sXOMoC4lOMSaxKXjE1TCM4AAUGt+Yz84N+uhERtN4p55u2qeWgVbfBmtGJb+NdP0Mp1ADedrkfl2AOqG5uHN2MsKE2D8Li18pVQomOPCp39aRAOCP+CA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730923059; c=relaxed/simple;
-	bh=u+95mg2q/JhhGW+TPkWTpFhnSAYwTsjG+5Tvzpa9mF8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=liZ2uPsoSmcuK+W3zILhlDBu9uFbkvFoCgjJLnCPguuEOJDEVynVFjRlHWkFGYkOYKahQZXSZhkYu7xmNT48GZm5IxrsNjI1FmgLRWYH4cilQPwCZvqlEdnmYnDN73zHGmaU66rMCzJWCcP0y4TeeJrLwDBwMmbFhHP9e2cpMJ4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=XxoS6hND; arc=none smtp.client-ip=209.85.222.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1730938904; c=relaxed/simple;
+	bh=VSAZykUkzn0QfpeHn3yDWUkuKnS1I/96+PhSFxCvzwg=;
+	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=Y6JxsZ+RaCssHQg3dG4MGeG2Nl8gyZAxyCspvVSGI4RwqzMGhhUMEZvjQnXIkxRsT4JOvCYgN49RJlmUQoAxjTJBlBD02ZYRh2N+XOad3xTZmOEZcfK+5MLJFav5HwvgD/7AHhfcyVDkwhMUa+PvUzUoOqYcqt8f+YZR5koAbQo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=PLJzwfQj; arc=none smtp.client-ip=99.78.197.218
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XxoS6hND"
-Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7b15d7b7a32so14233685a.1
-        for <mptcp@lists.linux.dev>; Wed, 06 Nov 2024 11:57:37 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="PLJzwfQj"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730923056; x=1731527856; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=uN2/M1rXVfxi5HoBRlFEz4UtKAMxhFgR65Ed9Q0vwc4=;
-        b=XxoS6hND0WLrqvVh6y0LFpL4M11Rtcf1lsFjm2OQt82A21EyC//aZ+Yvonhd6RkiBY
-         UG18VakMqDvIUyezjSSHhhq3mG472DuGMVKuF8pg29elEqLODAtfN5DOhvEVIpaiq2Cn
-         NXzMFpC5bk3Fq7g/2sOv8Ux6Kw/TqeWG0PkurLA96QEupBAJAlilQI7rW5orKIbkziB0
-         8CcYXo8cNgr7eAKJjEmZgyceZ4iGOLxgsEfkM5d7F3ghShNZP5wRHNXcH0vvOgmI1sH1
-         NliECd0KM7DV46YgFX6GXrYx/kQZwAx/HP8X7FKzY5RlgTxufljzr31PSXmXliBuDoZV
-         wWSg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730923056; x=1731527856;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=uN2/M1rXVfxi5HoBRlFEz4UtKAMxhFgR65Ed9Q0vwc4=;
-        b=tuQanfrKxlqH6tM2rJh+4noIGzizeTGFxE2RUt0MaXnH/uof39kT0p0I6mNTgIDPM0
-         SPdVjXlhrsRmd6F+DD5h7VdXgG1aSEZEdLApXsul8Gwo99arVm/WoPk6KilTFzG7R0Ul
-         G1lz1wh3/JRDbHB2e2SiPNq13KNq5vhN4UY5sZWOyC0yMPfmx4TGqufclk8NZiETVAu6
-         TvE1+NwcHRWhbLS5t+eP5oXc7i9Al0T/IK4MZvb1Zmvnt54us5x/f6NTEsg3Jh7XFKpJ
-         E7D1lzYRcBZVknNy+S86k2gW58Gd9hQntNMWhhnSsBYzMHZTuv45jveFM1bbyMkSV68M
-         jVmA==
-X-Gm-Message-State: AOJu0YwJDJIQiKVQ7rreqVC78pRIn6vQvUaCbWG8Vxw+Nk9C0Qm/b5VA
-	r6/6eDEWOF/SZs4CHsu8wy9rWvPXS1YU8TAIqq4HezmoKDNYYs5rTMqs
-X-Google-Smtp-Source: AGHT+IGxIkNO3yEaJX7Uxpn03O/PzXvkwkPxvPK3rwSP5O2/Cru4pBqT9O6t8W/M9FCYWMfUe9si/w==
-X-Received: by 2002:a05:620a:1a05:b0:7a9:c24e:4df8 with SMTP id af79cd13be357-7b193f514c1mr5442167785a.44.1730923056433;
-        Wed, 06 Nov 2024 11:57:36 -0800 (PST)
-Received: from [127.0.0.1] ([40.79.247.225])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b2f3a10bd0sm664376985a.56.2024.11.06.11.57.35
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 06 Nov 2024 11:57:35 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
-References: <20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com>
-Subject: Re: [PATCH net 0/6] Make TCP-MD5-diag slightly less broken
-Message-ID: <2dedfcef-41c0-f487-02aa-229ae143185e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 06 Nov 2024 19:57:35 +0000
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1730938903; x=1762474903;
+  h=from:to:cc:subject:date:message-id:in-reply-to:
+   references:mime-version:content-transfer-encoding;
+  bh=OTjeIdVulWbQu3nrI57tuZ3r0pWUY6MySRzDp7sNdb8=;
+  b=PLJzwfQj7LiFJ47COnHgu0d6xgQCdoP2ySdXU9ZOarLUl3olx+ygpLLJ
+   2YIQbPvZA2pTPlcqYhhFMh4P+ff/K/9242oTiYdS4OyREdOIabV23vWfe
+   HsrYnxzGFVeMHpms36ouGdDcaK/T2an5O0KwZTsDT9+hhgmxn5gpZf7+Y
+   o=;
+X-IronPort-AV: E=Sophos;i="6.11,264,1725321600"; 
+   d="scan'208";a="350019291"
+Received: from pdx4-co-svc-p1-lb2-vlan2.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.25.36.210])
+  by smtp-border-fw-80007.pdx80.corp.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 00:21:41 +0000
+Received: from EX19MTAUWB002.ant.amazon.com [10.0.38.20:1306]
+ by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.54.53:2525] with esmtp (Farcaster)
+ id b1978bea-88aa-49f0-8df9-932d424d3100; Thu, 7 Nov 2024 00:21:40 +0000 (UTC)
+X-Farcaster-Flow-ID: b1978bea-88aa-49f0-8df9-932d424d3100
+Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
+ EX19MTAUWB002.ant.amazon.com (10.250.64.231) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
+ Thu, 7 Nov 2024 00:21:40 +0000
+Received: from 6c7e67c6786f.amazon.com (10.106.101.27) by
+ EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
+ Thu, 7 Nov 2024 00:21:36 +0000
+From: Kuniyuki Iwashima <kuniyu@amazon.com>
+To: <devnull+0x7f454c46.gmail.com@kernel.org>
+CC: <0x7f454c46@gmail.com>, <borisp@nvidia.com>, <colona@arista.com>,
+	<davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
+	<geliang@kernel.org>, <horms@kernel.org>, <john.fastabend@gmail.com>,
+	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <martineau@kernel.org>,
+	<matttbe@kernel.org>, <mptcp@lists.linux.dev>, <netdev@vger.kernel.org>,
+	<pabeni@redhat.com>
+Subject: Re: [PATCH net 4/6] net/diag: Always pre-allocate tcp_ulp info
+Date: Wed, 6 Nov 2024 16:21:33 -0800
+Message-ID: <20241107002133.56595-1-kuniyu@amazon.com>
+X-Mailer: git-send-email 2.39.5 (Apple Git-154)
+In-Reply-To: <20241106-tcp-md5-diag-prep-v1-4-d62debf3dded@gmail.com>
+References: <20241106-tcp-md5-diag-prep-v1-4-d62debf3dded@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-ClientProxiedBy: EX19D038UWC001.ant.amazon.com (10.13.139.213) To
+ EX19D004ANA001.ant.amazon.com (10.37.240.138)
 
-Hi Dmitry,
+From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Date: Wed, 06 Nov 2024 18:10:17 +0000
+> From: Dmitry Safonov <0x7f454c46@gmail.com>
+> 
+> Currently there is a theoretical race between netlink one-socket dump
+> and allocating icsk->icsk_ulp_ops.
+> 
+> Simplify the expectations by always allocating maximum tcp_ulp-info.
+> With the previous patch the typical netlink message allocation was
+> decreased for kernel replies on requests without idiag_ext flags,
+> so let's use it.
+>
 
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 =
-failed test(s): bpftest_test_progs_mptcp =F0=9F=94=B4
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/117101=
-60691
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/67a329533b43
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D907077
+I think Fixes tag is needed.
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+> ---
+>  include/net/tcp.h    |  1 -
+>  net/ipv4/inet_diag.c | 48 ++++++++++++++++++++++++++++++++++++++++++++++++
+>  net/ipv4/tcp_diag.c  | 13 -------------
+>  net/mptcp/diag.c     | 20 --------------------
+>  net/tls/tls_main.c   | 17 -----------------
+>  5 files changed, 48 insertions(+), 51 deletions(-)
+> 
+> diff --git a/include/net/tcp.h b/include/net/tcp.h
+> index d1948d357dade0842777265d3397842919f9eee0..757711aa5337ae7e6abee62d303eb66d37082e19 100644
+> --- a/include/net/tcp.h
+> +++ b/include/net/tcp.h
+> @@ -2568,7 +2568,6 @@ struct tcp_ulp_ops {
+>  	void (*release)(struct sock *sk);
+>  	/* diagnostic */
+>  	int (*get_info)(struct sock *sk, struct sk_buff *skb);
+> -	size_t (*get_info_size)(const struct sock *sk);
+>  	/* clone ulp */
+>  	void (*clone)(const struct request_sock *req, struct sock *newsk,
+>  		      const gfp_t priority);
+> diff --git a/net/ipv4/inet_diag.c b/net/ipv4/inet_diag.c
+> index 2dd173a73bd1e2657957e5e4ecb70401cc85dfda..97862971d552216e574cac3dd2a8fc8c893888d3 100644
+> --- a/net/ipv4/inet_diag.c
+> +++ b/net/ipv4/inet_diag.c
+> @@ -97,6 +97,53 @@ void inet_diag_msg_common_fill(struct inet_diag_msg *r, struct sock *sk)
+>  }
+>  EXPORT_SYMBOL_GPL(inet_diag_msg_common_fill);
+>  
+> +static size_t tls_get_info_size(void)
+> +{
+> +	size_t size = 0;
+> +
+> +#ifdef CONFIG_TLS
+> +	size += nla_total_size(0) +             /* INET_ULP_INFO_TLS */
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+It seems '\t' after '+' was converted to '\s' by copy-and-paste.
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+> +		nla_total_size(sizeof(u16)) +   /* TLS_INFO_VERSION */
+> +		nla_total_size(sizeof(u16)) +   /* TLS_INFO_CIPHER */
+> +		nla_total_size(sizeof(u16)) +   /* TLS_INFO_RXCONF */
+> +		nla_total_size(sizeof(u16)) +   /* TLS_INFO_TXCONF */
+> +		nla_total_size(0) +             /* TLS_INFO_ZC_RO_TX */
+> +		nla_total_size(0) +             /* TLS_INFO_RX_NO_PAD */
+> +		0;
+> +#endif
+> +
+> +	return size;
+> +}
+> +
+> +static size_t subflow_get_info_size(void)
+> +{
+> +	size_t size = 0;
+> +
+> +#ifdef CONFIG_MPTCP
+> +	size += nla_total_size(0) +     /* INET_ULP_INFO_MPTCP */
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_TOKEN_REM */
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_TOKEN_LOC */
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ */
+> +		nla_total_size_64bit(8) +       /* MPTCP_SUBFLOW_ATTR_MAP_SEQ */
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+While at it, let's adjust tabs to match with MPTCP_SUBFLOW_ATTR_MAP_SEQ.
+
+
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_MAP_SFSEQ */
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_SSN_OFFSET */
+> +		nla_total_size(2) +     /* MPTCP_SUBFLOW_ATTR_MAP_DATALEN */
+> +		nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_FLAGS */
+> +		nla_total_size(1) +     /* MPTCP_SUBFLOW_ATTR_ID_REM */
+> +		nla_total_size(1) +     /* MPTCP_SUBFLOW_ATTR_ID_LOC */
+> +		0;
+> +#endif
+> +
+> +	return size;
+> +}
+> +
+> +static size_t tcp_ulp_ops_size(void)
+> +{
+> +	size_t size = max(tls_get_info_size(), subflow_get_info_size());
+> +
+> +	return size + nla_total_size(0) + nla_total_size(TCP_ULP_NAME_MAX);
+
+Is nla_total_size(0) for INET_DIAG_ULP_INFO ?
+
+It would be better to break them down in the same format with comment
+like tls_get_info_size() and subflow_get_info_size().
+
+
+> +}
+> +
+>  static size_t inet_sk_attr_size(struct sock *sk,
+>  				const struct inet_diag_req_v2 *req,
+>  				bool net_admin)
+> @@ -115,6 +162,7 @@ static size_t inet_sk_attr_size(struct sock *sk,
+>  	ret += nla_total_size(sizeof(struct tcp_info))
+>  	     + nla_total_size(sizeof(struct inet_diag_msg))
+>  	     + inet_diag_msg_attrs_size()
+> +	     + tcp_ulp_ops_size()
+>  	     + 64;
+>  
+>  	if (ext & (1 << (INET_DIAG_MEMINFO - 1)))
+> diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+> index 36606a19b451f059e32c58c0d76a878dc9be5ff0..722dbfd54d247b4def1e77b1674c5b207c5a939d 100644
+> --- a/net/ipv4/tcp_diag.c
+> +++ b/net/ipv4/tcp_diag.c
+> @@ -154,7 +154,6 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+>  
+>  static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+>  {
+> -	struct inet_connection_sock *icsk = inet_csk(sk);
+>  	size_t size = 0;
+>  
+>  #ifdef CONFIG_TCP_MD5SIG
+> @@ -174,18 +173,6 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+>  				       sizeof(struct tcp_diag_md5sig));
+>  	}
+>  #endif
+> -
+> -	if (net_admin && sk_fullsock(sk)) {
+> -		const struct tcp_ulp_ops *ulp_ops;
+> -
+> -		ulp_ops = icsk->icsk_ulp_ops;
+> -		if (ulp_ops) {
+> -			size += nla_total_size(0) +
+> -				nla_total_size(TCP_ULP_NAME_MAX);
+> -			if (ulp_ops->get_info_size)
+> -				size += ulp_ops->get_info_size(sk);
+> -		}
+> -	}
+>  	return size;
+>  }
+>  
+> diff --git a/net/mptcp/diag.c b/net/mptcp/diag.c
+> index 2d3efb405437d85c0bca70d7a92ca3a7363365e1..8b36867e4ddd5f45cebcf60e9093a061d5208756 100644
+> --- a/net/mptcp/diag.c
+> +++ b/net/mptcp/diag.c
+> @@ -84,27 +84,7 @@ static int subflow_get_info(struct sock *sk, struct sk_buff *skb)
+>  	return err;
+>  }
+>  
+> -static size_t subflow_get_info_size(const struct sock *sk)
+> -{
+> -	size_t size = 0;
+> -
+> -	size += nla_total_size(0) +	/* INET_ULP_INFO_MPTCP */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_TOKEN_REM */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_TOKEN_LOC */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ */
+> -		nla_total_size_64bit(8) +	/* MPTCP_SUBFLOW_ATTR_MAP_SEQ */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_MAP_SFSEQ */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_SSN_OFFSET */
+> -		nla_total_size(2) +	/* MPTCP_SUBFLOW_ATTR_MAP_DATALEN */
+> -		nla_total_size(4) +	/* MPTCP_SUBFLOW_ATTR_FLAGS */
+> -		nla_total_size(1) +	/* MPTCP_SUBFLOW_ATTR_ID_REM */
+> -		nla_total_size(1) +	/* MPTCP_SUBFLOW_ATTR_ID_LOC */
+> -		0;
+> -	return size;
+> -}
+> -
+>  void mptcp_diag_subflow_init(struct tcp_ulp_ops *ops)
+>  {
+>  	ops->get_info = subflow_get_info;
+> -	ops->get_info_size = subflow_get_info_size;
+>  }
+> diff --git a/net/tls/tls_main.c b/net/tls/tls_main.c
+> index 6b4b9f2749a6fd6de495940c5cb3f2154a5a451e..f3491c4e942e08dc882cb81eef071203384b2b37 100644
+> --- a/net/tls/tls_main.c
+> +++ b/net/tls/tls_main.c
+> @@ -1072,22 +1072,6 @@ static int tls_get_info(struct sock *sk, struct sk_buff *skb)
+>  	return err;
+>  }
+>  
+> -static size_t tls_get_info_size(const struct sock *sk)
+> -{
+> -	size_t size = 0;
+> -
+> -	size += nla_total_size(0) +		/* INET_ULP_INFO_TLS */
+> -		nla_total_size(sizeof(u16)) +	/* TLS_INFO_VERSION */
+> -		nla_total_size(sizeof(u16)) +	/* TLS_INFO_CIPHER */
+> -		nla_total_size(sizeof(u16)) +	/* TLS_INFO_RXCONF */
+> -		nla_total_size(sizeof(u16)) +	/* TLS_INFO_TXCONF */
+> -		nla_total_size(0) +		/* TLS_INFO_ZC_RO_TX */
+> -		nla_total_size(0) +		/* TLS_INFO_RX_NO_PAD */
+> -		0;
+> -
+> -	return size;
+> -}
+> -
+>  static int __net_init tls_init_net(struct net *net)
+>  {
+>  	int err;
+> @@ -1123,7 +1107,6 @@ static struct tcp_ulp_ops tcp_tls_ulp_ops __read_mostly = {
+>  	.init			= tls_init,
+>  	.update			= tls_update,
+>  	.get_info		= tls_get_info,
+> -	.get_info_size		= tls_get_info_size,
+>  };
+>  
+>  static int __init tls_register(void)
+> 
+> -- 
+> 2.42.2
+> 
