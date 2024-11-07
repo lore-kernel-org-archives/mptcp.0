@@ -1,123 +1,146 @@
-Received: from mail-yw1-f177.google.com (mail-yw1-f177.google.com [209.85.128.177])
+Received: from mail-pg1-f178.google.com (mail-pg1-f178.google.com [209.85.215.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4313620C48C
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 11:51:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.177
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0850818FDAF
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 17:36:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730980282; cv=none; b=V4v1QQ7Jo8D7q3uMAtmxHYqQthmlnSL5P6WV9UIQEMOE2VwLZlWkcJLX3a2vU8+VFgfxULkjpgxBL52Z2U6GiO5hDjSha1NeU1F53FaQETZ0krmMs2Kr1xRBX63eg5HjJpnypffWiRv7F319oZKvm4RDTXJNWBXunIiKVdsRRLE=
+	t=1731000967; cv=none; b=nWzQkGpNw5rodeX7pEfKyyXCsU3EeoXC1udW+4mDg3Yc9MpLTpqZ2inii+UiRc5j+wT3TlbLZPsbG3nUxMmkSJcHQXbeKVausQBUCKqxmI9aXPhFdfIA0CVNOe3BiGm9n1r3k1A04FJjthvTKPwtiCzqwAsJx8wOLy+v+Jq4ss4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730980282; c=relaxed/simple;
-	bh=M1wp/T1K5sewczJqOfhDZfv/2S14At+/33CFQIvuqis=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=ADKHy5zMVsREigos/0ukKTC/4cAz2Ea3HuMDmNsU7dKXhI+ogGsKBRyddqz9UDGwMRNqJEjQS0k97RRdmaAC4ljuaf+t03AXJIBlU7ke2vM1LuvNvXxBJuDVR4f8ietudi+OZC610coqc5y/EaTQTd6zyR5oJ2o611zTu4gvPcg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=TzQcTTz7; arc=none smtp.client-ip=209.85.128.177
+	s=arc-20240116; t=1731000967; c=relaxed/simple;
+	bh=UKuYG8FwCoF6QshUo8ov5ArilZTdcaVcHFVwlxyNXm0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=ru2DrRFXRX1jbTwEXfegFejCVrAaju8hFaB7KICmy2wv5+0KMxXZHry52yaIoo2PPAaGEWjUSqxR96ohcvr6AdfMTYs/Lszu2Ly9ZYo34OWIfm92rsGZQG1hBspXRtSGoz5++EofYp7rCmSlA6U0lzl8nWP/BcE2skMmykCpcvA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ggP7u5FT; arc=none smtp.client-ip=209.85.215.178
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TzQcTTz7"
-Received: by mail-yw1-f177.google.com with SMTP id 00721157ae682-6e9f69cc576so6392107b3.0
-        for <mptcp@lists.linux.dev>; Thu, 07 Nov 2024 03:51:21 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ggP7u5FT"
+Received: by mail-pg1-f178.google.com with SMTP id 41be03b00d2f7-7ea76a12c32so944278a12.1
+        for <mptcp@lists.linux.dev>; Thu, 07 Nov 2024 09:36:05 -0800 (PST)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1730980280; x=1731585080; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XS8NWOuMwuFUTSNWiAj0LJBdrzyQH0aZoPak1wWfzWo=;
-        b=TzQcTTz7rqPJ9TEBMzBxxUF8sEHdSIULvYR8fXpYmZMJu9nmW2U4E/qG5KPaJMl27D
-         fc5ETxN4aRUeGn/tfL8HKZOxmGthsqKM929cfsgZOt/6BWLSVujqunmC8vlOqvAVrj9I
-         diuUTuMmW+meTo0DKE1qpzahuvszfwT6NLWJTm7z7JKmOfR4yQKK2zmkVIhH9Arybik5
-         kZsTeFxvy+EKg9yalOEb3XuRIthRLtyKG2yhyic3JDWw+is+UQTD8F37eew+Ys1FChvY
-         2ICoGhHjkCVjRIklCmzjaCVUraT6OJnzSxJzQoF5gZlgRT5VCJ530JcnPrxf+D996aHo
-         aP+A==
+        d=gmail.com; s=20230601; t=1731000965; x=1731605765; darn=lists.linux.dev;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:from:to:cc:subject:date:message-id:reply-to;
+        bh=Q+BKvueAMurCuyYxOiQu6I3rkTTp3EWgPYTH4la0hQU=;
+        b=ggP7u5FTv0teTeldi/G8kk5Hc0N4j7scPqw/uNgOE/Mrg9FWh1I9MD3CB30gni762U
+         cv2tTZ6fuUqpgD8VuG/PHVzBhpwM9LnAQyuBLwri8KBrm9sx3eJKhrMOKAcd4n63s2PY
+         jWTrdjev46ZLtTvvjDYK5MpCC0Ylq2BJSeiUB7/wEPd84+mU+zuJvF5GZFm1HPjS/5Z4
+         L7SEw0bYADFgyHS7t/ORG+YvQrzgtODwk5PTvPvIeIEPSrQg2u4tlSgHKZwK8g1lm2fD
+         tO4nAbyLnAzbb6JRcBtHsvzx9knhIyxp6wSCWY04ZeZsqDX9VeAyGVVxWOMpG3n0Y8kn
+         IluA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1730980280; x=1731585080;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XS8NWOuMwuFUTSNWiAj0LJBdrzyQH0aZoPak1wWfzWo=;
-        b=or4ja/zXQn63R1JThJT17nMv4S7BoCzfNQzLyJhq8Siiq6+CYWDzJhYSelX9dr1r2Y
-         y1GV4qoOUT3Uler4dLDQyAB2PGeLaYK6mdxaMTZRXEGxspx6k57iQv7roMLWChDA7sd9
-         rY4KA3bShvt25sUx8o6V2OvZBLl2jydtKcvWbTDKMLC5xWfc112/smk/VUu95jOo0tih
-         PPKYiKjwkoKdlGROG4dh948Y5cBp6t7Kv5RHcVAtHuwkypeZYRgzcPq4VrikfNsdBR4o
-         bnwTjVprCeScp0ObnHDea2nLVw+9uVTTpUcyiEcRAXnKmUKx7WfUQKxeVd6hGC9eeD2W
-         rtFg==
-X-Gm-Message-State: AOJu0YxKpQVkPyC8GxsR7pBc+mDhnWD4NbOVRYidu93dK3aLGKReJOwv
-	ZKAFpwanWlLL9PvVJAmJUDDlg9isKDg6/j5pqsZVDMD981Xt7Yk=
-X-Google-Smtp-Source: AGHT+IECvTk4K235ZLa8j+rKtMo8B+MSvFR0vptiYsHDM/h7emYy5N2cvkDR1wJuOYP+8eJqUbrrgA==
-X-Received: by 2002:a05:690c:2a41:b0:6dd:d25c:f043 with SMTP id 00721157ae682-6e9d89b96e0mr318105067b3.17.1730980280309;
-        Thu, 07 Nov 2024 03:51:20 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.53.182])
-        by smtp.gmail.com with ESMTPSA id 00721157ae682-6eace8d543bsm2500917b3.24.2024.11.07.03.51.19
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 07 Nov 2024 03:51:19 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Dmitry Kandybka <d.kandybka@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20241107103657.1560536-1-d.kandybka@gmail.com>
-References: <20241107103657.1560536-1-d.kandybka@gmail.com>
-Subject: Re: [PATCH] mptcp: fix possible integer overflow in
- mptcp_reset_tout_timer
-Message-ID: <5a6400ff-3a5f-c6fe-a6a2-72acb13ab361@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 07 Nov 2024 11:51:18 +0000
+        d=1e100.net; s=20230601; t=1731000965; x=1731605765;
+        h=cc:to:subject:message-id:date:from:in-reply-to:references
+         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Q+BKvueAMurCuyYxOiQu6I3rkTTp3EWgPYTH4la0hQU=;
+        b=dyMQZ9j7t1W1UeTMz94E9oyElOzrEmYbXMco9fHS+tPQNugERNr0o/gT7ZptWRvIbR
+         mo/rt+vEiM4oPkuwR3SrX3OjW0TujeqOGTbJa0ctgU77LKrk/VZul8o57Cj7ZJatgdq6
+         JTUrpcH8hrxwVZCCogUk8RWL5OKSPnPLdLbg/vPu+gTEKxr6KBf7GiaiV6VkrSPWq2xc
+         2ErOv7wq2UsIZX60hBBdcNkyJSKCeWoDkhXg+/i/9z10jGOJv8r5xTHjLI3IwAXPSkzX
+         kKktu+Sbpd3IDfebtSXRThIeHAZlM71HRNXVZBWjAJ2P6PqpqVAZJ9HUkb5Y5A2grgEG
+         JPVQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUuPdmLds6sfFFduYe/957tGeH7dr9vmBNic2pVQYWhOe8N1ZJe+LEt4sC1R48ZaEjbga08yg==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyzriXNOPYYkq1KFZOZDwBko9NjOiaThnH4Feh/PqueNR1ly+Of
+	HaqX1jtoBqbih5i0XhoWiYeMiVbkgf2dPpzgHoShILyyBGYmNeLsdYgiC/kIGDv5pH2V4WV21e0
+	PGvaC0TPcjnShCMmOING6xoKpt9k=
+X-Google-Smtp-Source: AGHT+IFHHsqtP1ozsre70rwHiZZJRlOml9ng0+oaLj617ngkIPN4BI70Dx9d93qcde0Zwp8covoqQhifviG9JAPqKoI=
+X-Received: by 2002:a17:90b:3890:b0:2e2:ca4d:9164 with SMTP id
+ 98e67ed59e1d1-2e9b168241fmr9018a91.12.1731000965342; Thu, 07 Nov 2024
+ 09:36:05 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+References: <20241106-tcp-md5-diag-prep-v1-4-d62debf3dded@gmail.com> <20241107002133.56595-1-kuniyu@amazon.com>
+In-Reply-To: <20241107002133.56595-1-kuniyu@amazon.com>
+From: Dmitry Safonov <0x7f454c46@gmail.com>
+Date: Thu, 7 Nov 2024 17:35:53 +0000
+Message-ID: <CAJwJo6bnYm9cuJ=-xXw4n5dscq+CG4mpbtOc_vLMFmWKD2GD1g@mail.gmail.com>
+Subject: Re: [PATCH net 4/6] net/diag: Always pre-allocate tcp_ulp info
+To: Kuniyuki Iwashima <kuniyu@amazon.com>
+Cc: devnull+0x7f454c46.gmail.com@kernel.org, borisp@nvidia.com, 
+	colona@arista.com, davem@davemloft.net, dsahern@kernel.org, 
+	edumazet@google.com, geliang@kernel.org, horms@kernel.org, 
+	john.fastabend@gmail.com, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Dmitry,
+Hi Kuniyuki,
 
-Thank you for your modifications, that's great!
+thanks for your review,
 
-Our CI did some validations and here is its report:
+On Thu, 7 Nov 2024 at 00:21, Kuniyuki Iwashima <kuniyu@amazon.com> wrote:
+>
+> From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+> Date: Wed, 06 Nov 2024 18:10:17 +0000
+> > From: Dmitry Safonov <0x7f454c46@gmail.com>
+> >
+> > Currently there is a theoretical race between netlink one-socket dump
+> > and allocating icsk->icsk_ulp_ops.
+> >
+> > Simplify the expectations by always allocating maximum tcp_ulp-info.
+> > With the previous patch the typical netlink message allocation was
+> > decreased for kernel replies on requests without idiag_ext flags,
+> > so let's use it.
+> >
+>
+> I think Fixes tag is needed.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/11721572197
+Yeah, probably, wasn't sure if it's -stable material as I didn't
+attempt to create a reproducer for this.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/92d0607638c3
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D907289
+[..]
+> > @@ -97,6 +97,53 @@ void inet_diag_msg_common_fill(struct inet_diag_msg *r, struct sock *sk)
+> >  }
+> >  EXPORT_SYMBOL_GPL(inet_diag_msg_common_fill);
+> >
+> > +static size_t tls_get_info_size(void)
+> > +{
+> > +     size_t size = 0;
+> > +
+> > +#ifdef CONFIG_TLS
+> > +     size += nla_total_size(0) +             /* INET_ULP_INFO_TLS */
+>
+> It seems '\t' after '+' was converted to '\s' by copy-and-paste.
 
+Thanks, will correct
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+[..]
+> > +static size_t subflow_get_info_size(void)
+> > +{
+> > +     size_t size = 0;
+> > +
+> > +#ifdef CONFIG_MPTCP
+> > +     size += nla_total_size(0) +     /* INET_ULP_INFO_MPTCP */
+> > +             nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_TOKEN_REM */
+> > +             nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_TOKEN_LOC */
+> > +             nla_total_size(4) +     /* MPTCP_SUBFLOW_ATTR_RELWRITE_SEQ */
+> > +             nla_total_size_64bit(8) +       /* MPTCP_SUBFLOW_ATTR_MAP_SEQ */
+>
+> While at it, let's adjust tabs to match with MPTCP_SUBFLOW_ATTR_MAP_SEQ.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Sure
 
-For more details:
+[..]
+> > +static size_t tcp_ulp_ops_size(void)
+> > +{
+> > +     size_t size = max(tls_get_info_size(), subflow_get_info_size());
+> > +
+> > +     return size + nla_total_size(0) + nla_total_size(TCP_ULP_NAME_MAX);
+>
+> Is nla_total_size(0) for INET_DIAG_ULP_INFO ?
+>
+> It would be better to break them down in the same format with comment
+> like tls_get_info_size() and subflow_get_info_size().
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Good idea! Will do in v2.
 
+[..]
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Thanks,
+             Dmitry
