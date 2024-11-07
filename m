@@ -1,154 +1,125 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f176.google.com (mail-qk1-f176.google.com [209.85.222.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3D51D5CCD
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 10:00:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB85118A95A
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 10:19:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730973644; cv=none; b=pzDeNRqDj/DWw0TkqnfBcnnwFjxSbQEyc3hMLgnprttkynhEeXw6ykw+KhWUhUuFpjFM+HSvkDTOxQ3t6WEwhqI2db8iU/usuxHpvtDhD+F++iPA6fWy3Zg3/L7n7w2ZTGC9l6U0r7Zbg51eEUXxj+Aho4yLUdPGMc58fHso3v4=
+	t=1730974744; cv=none; b=qrIPaTifyJQPDqIrIFIBc6Hx1/ZLmSsj3qBPd+YHIxDjR1T+zU+OLFIZi3N1eHQkvjbe3RDcQX7zlCEb+m8CMY7PgVRSiBN7HfUQPgNdntKGF3hq0ygfC6ms/F6y4ICe7IOQx8VfFghKhsbYv1gJmjmGIa4Zfmlsvkom76BX6q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730973644; c=relaxed/simple;
-	bh=kstKyXexeqL3kbr3H/DKVkLIy3GgaCLfPGdMGfvUBRM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VHCZY+z6eJ/mYH+AAUn6RXKUnvvpl5soDEzREBZLl9zqHqq4H9MnK4bReh+iHbSbOk280d6OJhO3NSS4fA+6Bl2Il6gChThbGxKd9OOJrfn/NgGO3BSQyD2ZuuwKGfk5uKt8HL/fouJ0V/8HPwiAWrn4MYDByh8OoelXBDSvmu0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MqGLeNUH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730974744; c=relaxed/simple;
+	bh=zJWapzhVyixj9MZcIyFJQqjIksBKnQrcWLhOrk8NyFE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Of+vAKZ77RvcIMHG71t8h3FOMATSJ/3RLn/UHsIvFDR3XUuBakYd41E/tUbVtJU6TcpydPF7hxJzQ56afMBXSqv9ULCYeuUz8ZD294mzbtZcSPFSMNaMu4dUQ5hpzZrOZF0Y40BiAa8zzQdLym1+Yffg04bEc0zatPkLaQ/3oeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JMZ/GLmT; arc=none smtp.client-ip=209.85.222.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MqGLeNUH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E05E2C4CECC;
-	Thu,  7 Nov 2024 10:00:42 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730973643;
-	bh=kstKyXexeqL3kbr3H/DKVkLIy3GgaCLfPGdMGfvUBRM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=MqGLeNUHCK6DiaZjGE2sLIAoMtkwyjKYo5SEYT/EmMvWRAUeGJ/NHRjulQdreyksR
-	 U97b+SgZDKrDddXbm3PXfS2nHnR7hCkgpFbxajoPS+aNn8UU/U1pC+etMIQZSOlr5I
-	 zt8ppqFJf5NOph2foysBojBOI6VJrgknnRAMywWe/cyYgaHIxLP0FVPBDxL9LyoWRk
-	 Xfm9mQvlfuuEPLlcfsA6dmQ1rqTPnbtsOcc830upxHVmh14i6uLe9eFZj8zmZ9SD9r
-	 w0EnfaOuayrMTOb4hGs9/LDfnI66b171qUzlZYAjARWXIudC6VFuKG/a5OmnQ5kk2E
-	 wpn0T4ioF4LWg==
-Message-ID: <f1e9d825-189f-4a86-91be-59492ef80ce0@kernel.org>
-Date: Thu, 7 Nov 2024 11:00:40 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JMZ/GLmT"
+Received: by mail-qk1-f176.google.com with SMTP id af79cd13be357-7b1507c42faso144564985a.0
+        for <mptcp@lists.linux.dev>; Thu, 07 Nov 2024 02:19:02 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730974741; x=1731579541; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ynr6g/CauEhS2GfzRS2iYA47Avxk04RomRxSQZzCV2s=;
+        b=JMZ/GLmTjbOXrED9bCsyKjBNz/vA38L/BGyTLRLa4nfRqvQZBAaXRRykGQxQ4E2By0
+         YGu+3iBZBmXfHT9siTQUjNolSSUIRD1tPRxeRtSYbNpFKVduZEfZUrlV6APk4v2BAh3M
+         vMbHSmuLS0XO3UXC4hIvLd2W+dvMOfdDhIYGSjxI10ukHPIvydOnsZCrC/mmhhvHPwMI
+         uAUY9e3H/OazO5e2DC8wyEHZTNxb53HxNY/p2ODgJe2FoJP8eYeYOBCv63am+U+jSTfd
+         iFK8OvgQ0ijzS52/2XwWIyp3cBoCqYzZqm5xqr33Op0VVA4MldOdMcGbSpuQKeYce2Yu
+         xAxg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730974741; x=1731579541;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ynr6g/CauEhS2GfzRS2iYA47Avxk04RomRxSQZzCV2s=;
+        b=DOXAOP29y7s26mYd/XEci8lWCZSVB5yDEgcB+BQF/dBbLZNMnnX7590ZJU/95H/LbJ
+         qwMq5VhMib0J0W0k3QbmpqfzggKolxuwxf3CxglryqPEDIISyhxIfKcyBdVPPvW4Mj3p
+         ZYXGh+Q3bH2sIDXpychXQFFf2KGy4z/3yR4GrZKWVEdFJreMDv8mXl1eA51vBl+L80xP
+         mzuS/x8BlBpQa5uYWOQ6ib2COhpNAWyyxrtm7mJycc6IHD+69CcM9HNyfe0LAwdw5uqZ
+         /AygZWEsALWIaqxg9DTROO4NZz3iTTeP7ycIoAv339sZZfeHc8gfj6jdkG3ResbhmJb8
+         w1+w==
+X-Gm-Message-State: AOJu0YyhlRdI1/GPhp95X0qm+maXS/v2FO0RDOT4j+eGfRmnWKdDnDb7
+	wkv2RFCMR258nnyvPcc0T5vkfwAjxdE2nbNfWVwYFr0yz7LXohXKobhK
+X-Google-Smtp-Source: AGHT+IEwioMDeXIC0pfKo4zQ9XiH9p8pfFfK/qEdT0f503C1YAlgs7jhUvEctKkvHIcPg24dVZ/AHw==
+X-Received: by 2002:a05:620a:1a07:b0:7a9:95f6:e372 with SMTP id af79cd13be357-7b32dfbd49amr71065285a.2.1730974741497;
+        Thu, 07 Nov 2024 02:19:01 -0800 (PST)
+Received: from [127.0.0.1] ([20.161.77.206])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b32acb0546sm48676285a.82.2024.11.07.02.19.00
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 07 Nov 2024 02:19:00 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
+References:
+ <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
+Subject: Re: [PATCH mptcp-net v3 0/3] mptcp: pm: use _rcu variant under
+ rcu_read_lock
+Message-ID: <db4ae0dd-845b-fc87-aad0-80450d7b29d8@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 07 Nov 2024 10:19:00 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 23/36] mptcp: drop struct mptcp_pm_local
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
- <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
- <4661b240-9a9c-47c2-9dc0-362d22baad83@kernel.org>
- <a77c02db831525e2e1ec5371aaea4b9869441c0b.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <a77c02db831525e2e1ec5371aaea4b9869441c0b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 07/11/2024 08:29, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Mon, 2024-11-04 at 20:08 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 22/10/2024 11:14, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> The following code in mptcp_pm_nl_subflow_create_doit() that
->>> assigns struct
->>> mptcp_pm_addr_entry "entry" to the local struct mptcp_pm_local
->>> variable
->>> "local" is not allowed in BPF if we use the same code to implement
->>> the
->>> subflow_create() interface of a BFP path manager:
->>>
->>> 	struct mptcp_pm_local local;
->>>
->>> 	local.addr = entry.addr;
->>> 	local.flags = entry.flags;
->>> 	local.ifindex = entry.ifindex;
->>
->> Here as well, I'm not sure to understand the issue. Is it because you
->> cannot allocate this structure locally with BPF? No alternatives?
-> 
-> Here "struct mptcp_pm_local local" is a "scalar", when passing it to
-> __mptcp_subflow_connect(), this error occurs:
-> 
-> # ; err = __mptcp_subflow_connect(sk, &local, remote); @
-> mptcp_bpf_userspace_pm.c:242
-> # 53: (bf) r1 = r6                      ; R1_w=trusted_ptr_mptcp_sock()
-> R6=trusted_ptr_mptcp_sock()
-> # 54: (bf) r3 = r8                      ;
-> R3_w=trusted_ptr_mptcp_addr_info() R8=trusted_ptr_mptcp_addr_info()
-> # 55: (85) call __mptcp_subflow_connect#34404
-> # max struct nesting depth exceeded
-> # arg#1 pointer type STRUCT mptcp_pm_local must point to scalar, or
-> struct with scalar
-> 
-> Also, assigning an address to an address like this is not allowed in
-> BPF:
-> 
-> 	local.addr = entry.addr;
+Thank you for your modifications, that's great!
 
-OK, thank you, that's a bit clearer (even if it is not clear what BPF
-code was causing that). For this kind of issue, would it work to add a
-BPF-specific kfunc, eventually with additional annotations or arguments,
-or taking a "struct mptcp_pm_addr_entry" in argument, and "simply"
-calling __mptcp_subflow_connect() with a "struct mptcp_pm_local"?
+Our CI did some validations and here is its report:
 
-So something specific to BPF, without impacting the rest?
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/11720123635
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/e0cfb9d208fa
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D907253
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
