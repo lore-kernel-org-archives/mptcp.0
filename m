@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A124BA2D
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 04:29:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF096BA2D
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 04:29:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730953765; cv=none; b=F1DCsNM3qP61xHbjfS9fgSG+G4T3/hr+reJoUhiW3Pfl3XJydaU8arpH91wFGVdU/g8PGS1P1tu8VqKWJqHEf4ul7wci02IRdOrdDWxImRb0XyYaIfH67sw9WJfnvK3Mamlk/IQlFLcP5olTmn93jjJtr4Vj+s5+NQXaHUJdwqQ=
+	t=1730953766; cv=none; b=ZgJ8cv+9K8dLQdnGbqAGyKDu8q9ZSq8rKdL17zjctiQv1/9b1MFZYZwNhx2ajFaIX+86zA8/ZDsqkoWF4YBAW/MPNeNmMznc2YBCfYahTuqxXr/2fpZtiCfdmScC6FBYbHxhXq/5BAft4jjRWD54KQIvcPJOfuwUHZu4tCvhKwE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730953765; c=relaxed/simple;
-	bh=6jAeo9bgsyZFFUGuANsZ6laBPC4E8CX/YQCdXEnYE4w=;
+	s=arc-20240116; t=1730953766; c=relaxed/simple;
+	bh=0qNYKKGrTWHlM2l3gNRxl1Dta1+AqGADYbaq8jEftvc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=C6ZlIVa1SObR4NHSq9cZ0xsvGJ1PxaxG99f1vJ+1Lg8gnw2vV+Xo+JjpEZJ0+EUdKNbIkthpOQITpx5dV7eEOYR6vMYT5EFRCTMHOOB4EodPLK7iUaSU0a3txXJBcIB+QRhStREk2xCEuKe69UoV3K/wDoykgRcgu2POeY13esE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rieIypk/; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AM0DhXonVfIYxUekVWDH8cXKRwjyBemPMa8Z332jO5fvhYpugp1t0NeFO5FBotOHgCqVhE13Bg5/clTJE7biSK95qaI049MmYebeCv7KHfgvSe/3PWXHYH9ROcWzE1NPScO6JQgfTwvRZZsrHjctqNXSsha5blLphdhMghk6Nq4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XBW5Etsm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rieIypk/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3AA6C4CECC;
-	Thu,  7 Nov 2024 04:29:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XBW5Etsm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7DF26C4CECC;
+	Thu,  7 Nov 2024 04:29:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730953764;
-	bh=6jAeo9bgsyZFFUGuANsZ6laBPC4E8CX/YQCdXEnYE4w=;
+	s=k20201202; t=1730953766;
+	bh=0qNYKKGrTWHlM2l3gNRxl1Dta1+AqGADYbaq8jEftvc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=rieIypk/vMgh9tsvVMfLveYS1mFSJIzd7lDzEIAEvVS6K1IWfw8kVBkk4I8bOLG9o
-	 huUVtkdKb4g+Afr+TVlsYCp/5VH/t1o7k6Dn3hQiQLxCwVID1JPuWfCwe5N6XiuMRx
-	 hOAlvg/WNPGOoYaa1NacroLa4wgXgywvOsOmfL883oqSWHtDsmSAtO08xhJsKUTXtx
-	 zGKErftEAkjYYBagYzZcKK4lHXG2CiDkkM+1cA1m1A6ymaHiJvuPxsSSR9s2LEac6I
-	 0QGjwNVxs32TgC7IzeCAWJT92rAtFu0ZrUApMsK1iykpekcbfggDPi606cGTegXhYA
-	 AGpg3eKTJyKFQ==
+	b=XBW5EtsmyiHWrGWNaUPWbq2BonsvXH9EfA8ovJHitrJUhZTTW/46CqPe6ef+5iNuh
+	 eAALBmC7lqMc+PJH1lMWUeoj9Zr1+N6vaedd6Om5alWst2CseMS1wbMaR26iikIGu9
+	 l6VIIa+IA/efARzC1IWv5gQd6Ih4HcdwVe0VfqnexI6JDlUBah29y8EiHBLbSLofkR
+	 4RN5NwfADkJpvj2PFEfYHfKNHSHH59x+CetkUkD9NtJbMxKsqYRmpSfZo01kVnPLOi
+	 cxdjBEGVn7R/PY3ZoYVV+3sf7zweT4he9/a7P2IrGbNC3jpPPjbhPweTjN1R0wp9vE
+	 dzsQovwbO4JBA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 3/5] bpf: Add mptcp_userspace_pm_addr bpf_iter
-Date: Thu,  7 Nov 2024 12:29:08 +0800
-Message-ID: <b7e3f523165ecc1456af06842c0e4631188fbcc8.1730953242.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 4/5] bpf: Export more helpers for mptcp_userspace_pm_addr test
+Date: Thu,  7 Nov 2024 12:29:09 +0800
+Message-ID: <ea7e5fe9651149f3f0eb09fbd70f7942d3049b8b.1730953242.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1730953242.git.tanggeliang@kylinos.cn>
 References: <cover.1730953242.git.tanggeliang@kylinos.cn>
@@ -45,102 +45,59 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Just like the mptcp_subflow bpf_iter used to implement the MPTCP
-BPF packet scheduler, another bpf_iter is also needed, named
-mptcp_userspace_pm_addr, to traverse all address entries on
-userspace_pm_local_addr_list of an MPTCP socket for implementing
-the MPTCP BPF path manager.
+The mptcp_userspace_pm_addr bpf_iter should be invoked under holding the
+msk pm lock, so spin_lock_bh() and spin_unlock_bh() are needed in BPF
+program to hold or release the msk pm lock. And bpf_ipv6_addr_v4mapped()
+helper is also needed by the mptcp_userspace_pm_addr bpf_iter selftest
+program.
 
-In kernel space, we walk this list like this:
-
-        mptcp_for_each_userspace_pm_addr(msk, entry)
-                kfunc(entry);
-
-With the mptcp_userspace_pm_addr bpf_iter, bpf_for_each() can be
-used to do the same thing in BPF program:
-
-        bpf_for_each(mptcp_userspace_pm_addr, entry, msk)
-                kfunc(entry);
-
-This bpf_iter should be invoked under holding the msk pm lock, so
-use lockdep_assert_held() to assert the lock is holding.
+This patch adds the corresponding BPF wrappers for these helpers and adds
+them to the mptcp common kfunc_set.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ net/mptcp/bpf.c | 21 +++++++++++++++++++++
+ 1 file changed, 21 insertions(+)
 
 diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index e9db856972cb..2c0701f5b0c9 100644
+index 2c0701f5b0c9..6352b2b4f505 100644
 --- a/net/mptcp/bpf.c
 +++ b/net/mptcp/bpf.c
-@@ -214,6 +214,15 @@ struct bpf_iter_mptcp_subflow_kern {
- 	struct list_head *pos;
- } __aligned(8);
- 
-+struct bpf_iter_mptcp_userspace_pm_addr {
-+	__u64 __opaque[2];
-+} __aligned(8);
-+
-+struct bpf_iter_mptcp_userspace_pm_addr_kern {
-+	struct mptcp_sock *msk;
-+	struct list_head *pos;
-+} __aligned(8);
-+
- __bpf_kfunc_start_defs();
- 
- __bpf_kfunc static struct mptcp_sock *bpf_mptcp_sk(struct sock *sk)
-@@ -266,6 +275,40 @@ bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
- {
+@@ -326,6 +326,24 @@ __bpf_kfunc static void bpf_mptcp_sock_release(struct mptcp_sock *msk)
+ 	WARN_ON_ONCE(!sk || !refcount_dec_not_one(&sk->sk_refcnt));
  }
  
-+__bpf_kfunc static int
-+bpf_iter_mptcp_userspace_pm_addr_new(struct bpf_iter_mptcp_userspace_pm_addr *it,
-+				     struct mptcp_sock *msk)
++__bpf_kfunc static void bpf_spin_lock_bh(spinlock_t *lock)
 +{
-+	struct bpf_iter_mptcp_userspace_pm_addr_kern *kit = (void *)it;
-+
-+	kit->msk = msk;
-+	if (!msk)
-+		return -EINVAL;
-+
-+	lockdep_assert_held(&msk->pm.lock);
-+
-+	kit->pos = &msk->pm.userspace_pm_local_addr_list;
-+	return 0;
++	spin_lock_bh(lock);
 +}
 +
-+__bpf_kfunc static struct mptcp_pm_addr_entry *
-+bpf_iter_mptcp_userspace_pm_addr_next(struct bpf_iter_mptcp_userspace_pm_addr *it)
++__bpf_kfunc static void bpf_spin_unlock_bh(spinlock_t *lock)
 +{
-+	struct bpf_iter_mptcp_userspace_pm_addr_kern *kit = (void *)it;
-+
-+	if (!kit->msk || list_is_last(kit->pos,
-+				      &kit->msk->pm.userspace_pm_local_addr_list))
-+		return NULL;
-+
-+	kit->pos = kit->pos->next;
-+	return list_entry(kit->pos, struct mptcp_pm_addr_entry, list);
++	spin_unlock_bh(lock);
 +}
 +
-+__bpf_kfunc static void
-+bpf_iter_mptcp_userspace_pm_addr_destroy(struct bpf_iter_mptcp_userspace_pm_addr *it)
++__bpf_kfunc static bool bpf_ipv6_addr_v4mapped(const struct mptcp_addr_info *a)
 +{
++#if IS_ENABLED(CONFIG_MPTCP_IPV6)
++	return ipv6_addr_v4mapped(&a->addr6);
++#endif
++	return false;
 +}
 +
- __bpf_kfunc static struct
- mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk)
+ __bpf_kfunc struct mptcp_subflow_context *
+ bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos)
  {
-@@ -305,6 +348,9 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_userspace_pm_addr_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_userspace_pm_addr_next, KF_ITER_NEXT | KF_RET_NULL)
-+BTF_ID_FLAGS(func, bpf_iter_mptcp_userspace_pm_addr_destroy, KF_ITER_DESTROY)
+@@ -353,6 +371,9 @@ BTF_ID_FLAGS(func, bpf_iter_mptcp_userspace_pm_addr_next, KF_ITER_NEXT | KF_RET_
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_userspace_pm_addr_destroy, KF_ITER_DESTROY)
  BTF_ID_FLAGS(func, bpf_mptcp_sock_acquire, KF_ACQUIRE | KF_RET_NULL)
  BTF_ID_FLAGS(func, bpf_mptcp_sock_release, KF_RELEASE)
++BTF_ID_FLAGS(func, bpf_spin_lock_bh)
++BTF_ID_FLAGS(func, bpf_spin_unlock_bh)
++BTF_ID_FLAGS(func, bpf_ipv6_addr_v4mapped)
  BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+ 
+ static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
 -- 
 2.45.2
 
