@@ -1,166 +1,123 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f179.google.com (mail-qt1-f179.google.com [209.85.160.179])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0866414293
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 07:35:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 993AF199FBB
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 07:56:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.179
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730964960; cv=none; b=N9CtRS8OUJuNXcmVFY9g4PDEfjWSFDw6YPwgBa7HbvZppAiwMtzAqEkXc1XP+X3yFgZrWURSuy0AKA0RT4bN16O/FQew+P6ceMoW5805ZCtEgOM8yyuHIu6cZsBBn4DFtJpSzrSKpadwdmg1LUu+Ve9ga+n0zmfD37d0ewi0tvg=
+	t=1730966177; cv=none; b=irqdchvPAOPORi002VhhwOTUQ7nnqcq+qLsCtSg5NLh7na4hG/6MqykVlXsLC5dHsKdBxe+XDiHzid4+KsZ+5Jw1F4NUQxbcY+2YbgUC8VyijKx95wDwRl1Qwlh9n4keSEIALp8P10Res4oT6Uuph15lp87+yBzccOZdRXnbDUQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730964960; c=relaxed/simple;
-	bh=3vWXhNwtbgum8egc6HzSFbbkU4DkU/lPU4UBCtw3kRM=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=MTh4I7Zbd70/ITwgxEJh9v+feGqErdJL7PrwHnOGuZNb5OfHjuXv/JrKtUd969nojpZqPL62eu2muavFAZLj1DTgqKdVhxjJL4hHk2NaL5kAUz+xbXlkC+HHC/vmFwPIt0qUQnldtpy8gNJxAKXkgQRwI/CVv+ThNR2yrQV2nc8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UIu7tt29; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730966177; c=relaxed/simple;
+	bh=8Zt6Q5HDpBQqbUtpFQOrYviPA/G7z9DPu+JOvwReoFo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=GVG231TDL27Nx42p1nR4yn+RTmhMmN+wYG4Xm2rhQkmtHBISzPPwVL9BPeF6OoLQsV2aDRgsD4MPDG1vF71cBG4aDPaNSy/Xh51WGJ9aSkStJM5s3Apo6BXaOzEn0elI2B1qhS6DHV7Kko3iRivDF0EQ+85IflCbW2sY4Lor+4A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=JSWCLqYl; arc=none smtp.client-ip=209.85.160.179
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UIu7tt29"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F10BC4CECC;
-	Thu,  7 Nov 2024 07:35:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730964959;
-	bh=3vWXhNwtbgum8egc6HzSFbbkU4DkU/lPU4UBCtw3kRM=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=UIu7tt29QucxkDEGRt34YtGUZdsT35G4mccDhLAzO4SMGGWtGSMAToR5rd9e16cX9
-	 zOprM7GbwZv3NfxkzpsDUj/L1IK5uAnxxVAw+SuSfeD2uGnUXAXkAe5/zN7921waKr
-	 t2Haepl7A0BB/Wett+p6LogzriQYIiVDbYNbl4TEOGPKWKQOShJ+GsEsEm5ghPqkpM
-	 TWClijqKjxfLV0ZNe6jQpYBVia1m+MIZh1NJKxPvEjraUxxOQFR9/Yde0s5GFYn/QM
-	 1lMov9FAuCeL8Asy/+xdSZzp2RArLhFSXp4xYGkcCFxBaYTyK6l3Qr/32/jgAWRRGb
-	 wuHHw7eur/kvw==
-Message-ID: <9142b79f7de9cbffe5ee861864d176c24584f59f.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 21/36] mptcp: update address type of
- get_local_id
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 07 Nov 2024 15:35:55 +0800
-In-Reply-To: <8c422b14-719a-447d-a24e-61ef40dbd72e@kernel.org>
-References: <cover.1729588019.git.tanggeliang@kylinos.cn>
-	 <697ad8ffc8987b12a232b3855e6960b49c186d4b.1729588019.git.tanggeliang@kylinos.cn>
-	 <8c422b14-719a-447d-a24e-61ef40dbd72e@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JSWCLqYl"
+Received: by mail-qt1-f179.google.com with SMTP id d75a77b69052e-460e6d331d6so4096681cf.2
+        for <mptcp@lists.linux.dev>; Wed, 06 Nov 2024 23:56:15 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1730966174; x=1731570974; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=eB981zUkNTMSFFE32VQ51Cuh4/AzsAxY4MeUcnVr5hU=;
+        b=JSWCLqYlSZ87R5AR9Q0SxogLfmwssgYKouXBupsLLL5oVxg2HPv+CahdOR2kDqFlU/
+         oNcapmV4xRkQUjm2iCWNvv06G11BkxWundp2VCMfaG32dXNoRIhcWppNXTr0f6XCPRfG
+         jCPc4MqztgpUxvvO+uifHbdKlqmz529cid4y60gS/iRNa7DQFzpdwd8lNJa+Is3wnmOg
+         jC62M+YZoGc9/wm2Gg0DHe5sND6CS/TxOtGCQIROzEB+KLqEA4SlQLJnVTpNCbFJuLb6
+         sehsJeHMTAEkEm21TZcuLnStBm/8mqOq1tMSe2Uw6b7yz3DxX74fEFvUDliTf+QwONWv
+         e4LA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1730966174; x=1731570974;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=eB981zUkNTMSFFE32VQ51Cuh4/AzsAxY4MeUcnVr5hU=;
+        b=TnN+vJgBx1xOSJ6g4u6c2U5Oy6eQD7Plw6nYovzSxl46nkecx9lQZ/j11HnovQgI+s
+         JNKdH5UnfKAjxE6e/AkA6U0rOuPGURETjjvXpvczyuCHaC4KW/nIOH6EeXzZmWK2pwki
+         xCaaKo9QnVpLS9WqvLadEH9P4Xu8GHcHPPE3Eob6TQ2CdHSVB4R6Q91sP7I0jrKmlYd+
+         JJ5o7fzienisDLmOsbcASJ/jRQSyK9EnBF9sW5jwRhLB+faF9aOXOa6RNz3Ir9tkyH2A
+         VhLitejZO2evfEu6nICClCksCdEtPqSnLgrnc3Yc6T8SuiklxAd9iKEDPcj6YNvijmVw
+         7NNA==
+X-Gm-Message-State: AOJu0YzXyCREXCJaTr/NsCUtpZOtTzf4hyKVENHP6q/lE3NqA2jwGhGe
+	vJfr8wLvTQClo0dXgkkaovTxELVWllsX5PE+6E07VwJ5+xYZ+ula40hh
+X-Google-Smtp-Source: AGHT+IE6ItqZrrU3gUsvBNmqKgdNF8QjNWfTcwPDBJDFRhUc6Qs7uWb/Ioxq88KFYZ7ljJhQA9BeRA==
+X-Received: by 2002:a05:622a:1988:b0:45f:8ee:1859 with SMTP id d75a77b69052e-4613be77e58mr631178371cf.0.1730966174532;
+        Wed, 06 Nov 2024 23:56:14 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.154.246])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-462ff3df017sm4867751cf.17.2024.11.06.23.56.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 06 Nov 2024 23:56:13 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1730961809.git.tanggeliang@kylinos.cn>
+References: <cover.1730961809.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v3 0/9] BPF path manager, part 1
+Message-ID: <e3c7c283-bb41-03d4-9761-e3aa67b4f243@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 07 Nov 2024 07:56:12 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Geliang,
 
-On Mon, 2024-11-04 at 19:48 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 22/10/2024 11:14, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > The following code in mptcp_userspace_pm_get_local_id() that
-> > assigns "skc"
-> > to "new_entry" is not allowed in BPF if we use the same code to
-> > implement
-> > the get_local_id() interface of a BFP path manager:
-> 
-> Can you give more details about the fact it is not allowed please?
-> 
-> Do you mean you cannot do the following code in BPF? Why?
+Thank you for your modifications, that's great!
 
-Same as in patch 23, passing "new_entry" to
-mptcp_userspace_pm_append_new_local_addr() will get an error:
+Our CI did some validations and here is its report:
 
-"pointer type STRUCT mptcp_pm_addr_entry must point to scalar, or
-struct with scalar".
+- KVM Validation: normal: Unstable: 1 failed test(s): =
+selftest_mptcp_connect =F0=9F=94=B4
+- KVM Validation: debug: Success! =
+=E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =
+=E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 =
+failed test(s): bpftest_test_progs-cpuv4_mptcp =F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/117181=
+16131
 
-And assigning an address to an address like this is not allowed in
-BPF:
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/c83e8073fbae
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D907218
 
-	new_entry.addr = *skc;
 
-> 
-> > 	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
-> > 	new_entry.addr = *skc;
-> > 	new_entry.addr.id = 0;
-> > 	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> > 
-> > To solve the issue, this patch moves this assignment to "new_entry"
-> > forward
-> > to mptcp_pm_get_local_id(), and then passing "new_entry" as a
-> > parameter to
-> > both mptcp_pm_nl_get_local_id() and
-> > mptcp_userspace_pm_get_local_id().
-> > 
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/pm.c           | 10 ++++++++--
-> >  net/mptcp/pm_netlink.c   | 11 +++--------
-> >  net/mptcp/pm_userspace.c | 17 ++++++-----------
-> >  net/mptcp/protocol.h     |  4 ++--
-> >  4 files changed, 19 insertions(+), 23 deletions(-)
-> > 
-> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > index b6e6859903ef..d28e844eba2d 100644
-> > --- a/net/mptcp/pm.c
-> > +++ b/net/mptcp/pm.c
-> > @@ -404,6 +404,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock
-> > *msk, struct sock_common *skc)
-> >  {
-> >  	struct mptcp_addr_info skc_local;
-> >  	struct mptcp_addr_info msk_local;
-> > +	struct mptcp_pm_addr_entry local;
-> >  
-> >  	if (WARN_ON_ONCE(!msk))
-> >  		return -1;
-> > @@ -416,9 +417,14 @@ int mptcp_pm_get_local_id(struct mptcp_sock
-> > *msk, struct sock_common *skc)
-> >  	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
-> >  		return 0;
-> >  
-> > +	memset(&local, 0, sizeof(struct mptcp_pm_addr_entry));
-> 
-> Out of curiosity: do you need to call memset() here? Can you not init
-> "local" when you declare it?
-> 
->   struct mptcp_pm_addr_entry local = { 0 };
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Updated in v3.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> 
-> (Or maybe that's not working with C99 with inner structures? I
-> thought
-> it was, but not sure).
-> 
-> > +	local.addr = skc_local;
-> 
-> Do you still need skc_local? Can you not use 'local.addr' directly
-> instead above?
-> 
-> > +	local.addr.id = 0;
-> 
-> In pm_netlink.c, 'addr.port' is also reset. Should you not do that
-> here
-> too? I guess that's fine for the userspace pm, no?
+For more details:
 
-Updated in v3.
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-Thanks,
--Geliang
 
-> 
-> > +	local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
-> > +
-> >  	if (mptcp_pm_is_userspace(msk))
-> > -		return mptcp_userspace_pm_get_local_id(msk,
-> > &skc_local);
-> > -	return mptcp_pm_nl_get_local_id(msk, &skc_local);
-> > +		return mptcp_userspace_pm_get_local_id(msk,
-> > &local);
-> > +	return mptcp_pm_nl_get_local_id(msk, &local);
-> >  }
-> >  
-> >  bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common
-> > *skc)
-> (...)
-> 
-> Cheers,
-> Matt
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
 
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
