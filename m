@@ -1,140 +1,55 @@
-Received: from smtp-fw-2101.amazon.com (smtp-fw-2101.amazon.com [72.21.196.25])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 224B97F9
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 00:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=72.21.196.25
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AEF4714A85;
+	Thu,  7 Nov 2024 01:18:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730939168; cv=none; b=jOJQU3TRkFQvLB18kWorxAyGB5wwj5ybG2HMGcr0V9txSzFiVyuJelnjb/ZLRBv1af5uGnp1GwG1vM+cPfSdWy3udV6cdnlK7U45mdw438rPrOunf+sSnFRYJj+s5h0xVeHbk9z6xSdbf3UHzsFJULAWZI4s0eSQO5G3kUvPFRk=
+	t=1730942299; cv=none; b=foOW6Qc4EkMone5UjtAgIWe0Fcv7Ob51EV6H0NqUrg7cbdrZVhzssbEwnSQRSRgfVeCcs6XNqOa62rUiwt6PkWMWs8Y5A0lGFGoYDt79qiSMh9rcpXtG24RUQrMpBpy87Ps2tpGACS4yTf/LAGUcCkYL1+0pi9nHGf6iBDLggdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730939168; c=relaxed/simple;
-	bh=V24g0XjdSR3KmWIINIhNa7poMXefzESQmJIU/pn1fvY=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=iQdkc5zf7qZmk+cEdt52hW13HzAE0IeiN+6nS3oM0zZLq+fbLIIit/ySI2hKBd1c945ENtOqvD3ebA/AZT2PV+nxxvL5r9EEw1QH8crupNDR2+8c0/4ksM17wfVMvGUJxEfL+XXVreOavj5usaEl0eOdePtD0cIxm9JPaAZYKks=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=GcuEPhOU; arc=none smtp.client-ip=72.21.196.25
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1730942299; c=relaxed/simple;
+	bh=2WGhUL3zHxIt2Ajp3s/4Md6bHmoTMKZIldbExqa92B8=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=fuZ6aeR92ByZ9+o+y5yb1F41HMarKNH+f02dEEugF7Lk3Aiu8NHTrgLIp1+QffzXzo4JxMB5KF9/IJhFhaBOFNn4b+ZJky1bxlvapvGSRVdyVxdHmIzjkFkWe7fBzQzIouVCt3VFu6CoMsmnNurLf9SE0n2McXsNUvrA/VCZkjM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pr4TeLC6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="GcuEPhOU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1730939167; x=1762475167;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=o5X7qYpliwdH19RR4mFHMESmrmvrEXsbWaPIcg8nulk=;
-  b=GcuEPhOUlgqTYMEgkC6e3DRWt+mnIrigSylhoH28864yaXWs73HzTf70
-   AEo61eOWN6WejInQx8IDlPUTlNUyd0i8KhoPHluQj+d6tlwuKUCkQpuIW
-   vpbA6eXeZ8I3VtAN932RXUBflUdBx6tc2Qe483/RkJ61qHD/LAswk8foP
-   M=;
-X-IronPort-AV: E=Sophos;i="6.11,264,1725321600"; 
-   d="scan'208";a="440863737"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-2101.iad2.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 Nov 2024 00:26:03 +0000
-Received: from EX19MTAUWC002.ant.amazon.com [10.0.7.35:54833]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.34.224:2525] with esmtp (Farcaster)
- id 0136e4bc-95e4-44c1-b368-efeaa6636554; Thu, 7 Nov 2024 00:26:02 +0000 (UTC)
-X-Farcaster-Flow-ID: 0136e4bc-95e4-44c1-b368-efeaa6636554
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWC002.ant.amazon.com (10.250.64.143) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.34;
- Thu, 7 Nov 2024 00:26:01 +0000
-Received: from 6c7e67c6786f.amazon.com (10.106.101.27) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1258.35;
- Thu, 7 Nov 2024 00:25:57 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <devnull+0x7f454c46.gmail.com@kernel.org>
-CC: <0x7f454c46@gmail.com>, <borisp@nvidia.com>, <colona@arista.com>,
-	<davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<geliang@kernel.org>, <horms@kernel.org>, <john.fastabend@gmail.com>,
-	<kuba@kernel.org>, <linux-kernel@vger.kernel.org>, <martineau@kernel.org>,
-	<matttbe@kernel.org>, <mptcp@lists.linux.dev>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>
-Subject: Re: [PATCH net 5/6] net/diag: Limit TCP-MD5-diag array by max attribute length
-Date: Wed, 6 Nov 2024 16:25:55 -0800
-Message-ID: <20241107002555.57247-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <20241106-tcp-md5-diag-prep-v1-5-d62debf3dded@gmail.com>
-References: <20241106-tcp-md5-diag-prep-v1-5-d62debf3dded@gmail.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pr4TeLC6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1978C4CEC6;
+	Thu,  7 Nov 2024 01:18:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1730942299;
+	bh=2WGhUL3zHxIt2Ajp3s/4Md6bHmoTMKZIldbExqa92B8=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=pr4TeLC6WS7ddzmEA9UXp9Qr4EXDphHbUqknJjurGpOoYtjKk8G3ihTERMZYwrylH
+	 kn9r/sLo5PtHt4vqXrJvXIUIRvM55u0RSnjZoNcybIk6sV3uZKUbNbd3uqDWnLVohV
+	 apiwvUyh7ITl2m591PjCG5b40/Xhjudpbu3BPHRWVM4dAhi50WDvOUjdWqn6eJKb7U
+	 mtvh932JefWkOD1OxH20iQTS6XWoLgJqeFuZ2DwECfZ/adqzLeWb5+0CD2xjj9h9qL
+	 RnuUZv/q17ofn1NV93U91fjsMdOW/WqVqG9/gxkl+eWie/nbBQ64HTZ/PeWwSb2k8K
+	 i/tHUk/JKrLBw==
+Date: Wed, 6 Nov 2024 17:18:17 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: MoYuanhao <moyuanhao3676@163.com>, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, horms@kernel.org
+Subject: Re: [PATCH] mptcp: remove the redundant assignment of
+ 'new_ctx->tcp_sock' in subflow_ulp_clone()
+Message-ID: <20241106171817.4903bf94@kernel.org>
+In-Reply-To: <9b265c9b-f101-4ea3-83b6-7709e8f2ea47@kernel.org>
+References: <20241106071035.2591-1-moyuanhao3676@163.com>
+	<9b265c9b-f101-4ea3-83b6-7709e8f2ea47@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D040UWB003.ant.amazon.com (10.13.138.8) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-From: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Date: Wed, 06 Nov 2024 18:10:18 +0000
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
-> 
-> Currently TCP-MD5 keys are dumped as an array of
-> (struct tcp_diag_md5sig). All the keys from a socket go
-> into the same netlink attribute. The maximum amount of TCP-MD5 keys on
-> any socket is limited by /proc/sys/net/core/optmem_max, which post
-> commit 4944566706b2 ("net: increase optmem_max default value") is now by
-> default 128 KB. With the help of selftest I've figured out that equals
-> to 963 keys, without user having to increase optmem_max:
-> > test_set_md5() [963/1024]: Cannot allocate memory
-> 
-> The maximum length of nlattr is limited by typeof(nlattr::nla_len),
-> which is (U16_MAX - 1). When there are too many keys the array written
-> overflows the netlink attribute. Here is what one can see on a test,
-> with no adjustments to optmem_max defaults:
-> 
-> > recv() = 65180
-> > socket: 10.0.254.1:7013->0.0.0.0:0 (intf 3)
-> >      family: 2 state: 10 timer: 0 retrans: 0
-> >      expires: 0 rqueu: 0 wqueue: 1 uid: 0 inode: 456
-> >              attr type: 8 (5)
-> >              attr type: 15 (8)
-> >              attr type: 21 (12)
-> >              attr type: 22 (6)
-> >              attr type: 2 (252)
-> >              attr type: 18 (64804)
-> > recv() = 130680
-> > socket: 10.0.254.1:7013->0.0.0.0:0 (intf 3)
-> >      family: 2 state: 10 timer: 0 retrans: 0
-> >      expires: 0 rqueu: 0 wqueue: 1 uid: 0 inode: 456
-> >              attr type: 8 (5)
-> >              attr type: 15 (8)
-> >              attr type: 21 (12)
-> >              attr type: 22 (6)
-> >              attr type: 2 (252)
-> >              attr type: 18 (64768)
-> >              attr type: 29555 (25966)
-> > recv() = 130680
-> > socket: 10.0.254.1:7013->0.0.0.0:0 (intf 3)
-> >      family: 2 state: 10 timer: 0 retrans: 0
-> >      expires: 0 rqueu: 0 wqueue: 1 uid: 0 inode: 456
-> >              attr type: 8 (5)
-> >              attr type: 15 (8)
-> >              attr type: 21 (12)
-> >              attr type: 22 (6)
-> >              attr type: 2 (252)
-> >              attr type: 18 (64768)
-> >              attr type: 29555 (25966)
-> >              attr type: 8265 (8236)
-> 
-> Here attribute type 18 is INET_DIAG_MD5SIG, the following nlattr types
-> are junk made of tcp_diag_md5sig's content.
-> 
-> Here is the overflow of the nlattr size:
-> >>> hex(64768)
-> '0xfd00'
-> >>> hex(130300)
-> '0x1fcfc'
-> 
-> Limit the size of (struct tcp_diag_md5sig) array in the netlink reply by
-> maximum attribute length. Not perfect as NLM_F_DUMP_INTR will be set on
-> the netlink header flags, but the userspace can differ if it's due to
-> inconsistency or due to maximum size of the netlink attribute.
-> 
-> In a following patch set, I'm planning to address this and re-introduce
-> TCP-MD5-diag that actually works.
+On Wed, 6 Nov 2024 16:41:10 +0100 Matthieu Baerts wrote:
+> @Netdev maintainers: is it OK for you to apply this small patch in
+> net-next directly?
 
-Given the issue has not been reported so far (I think), we can wait for
-the series rather than backporting this.
+Too soon for me to take it right now but yes.
