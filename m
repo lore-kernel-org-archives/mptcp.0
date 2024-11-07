@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42981BA2D
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 04:29:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95F10BA2D
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 04:29:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730953759; cv=none; b=pYp1aJmSXPL5nqTK3TFMBI8PrX3hdnFYokuoHrBTFeZpI/5BZfTj96GK+Dzsu1xIE9ZtY2wxTOZ6UYlKlUkXZa0HdbExRoO1EjGllrdJiwFi0LkvgLlRKx0wggpgqqtH/DRDmlFTeC7CjX5PaDqXRts61bC4dx0aKR2Se/IGh2o=
+	t=1730953761; cv=none; b=Db7FBEOaJUowJNRxvGk2eV3WgDQ9QG5whJtHgsRmXtpXjYsL5ZGw66I9ArVzJEJquK3Drk6I2J/86ZtNB04RYPIF3HfMTZswZBBty9ViSb7a3ogSrkbEeg6KPFiODou2ebQtotcSagEsefbyKUKm1uTcVA3adJD2NsmH4MOfpOs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730953759; c=relaxed/simple;
-	bh=jAwi+OKarWNBiLrHSYpVEd5QWV1kyHTEBeT6erDWqc0=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=oomlYWCOBP7v+Kpy/v1KyN6xlzlhgWTi0fuHh1yxXx39FbsfBr3edO9th26aZ4bzQKq+fN3eEKl7USStA55oxJguT1U0AV5Hib0GN6EgiqlNBjMwm5aQT6+lSS2+a7xhlZZ/r8g3b/iO9OF4Eu4lbKfeq4nL6Mb3vf1UpNY5Tp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EGPOABdi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730953761; c=relaxed/simple;
+	bh=09RdaCTiv49TW2GFGfzTktARHICJTs4jmSlv0PoS7Ck=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Q6CpvSqZv6N3iYaQJggp3Kn78PG515ZIDzXo0kQQgwh4oYra2glzi8Mb5iLObSVY3FBiJfaN9HI7/VHYeg9X71yh2+9BXGJiA26WjEGWTwpXV7iYWtfomrX4gJfGNpfEEZtqaCwYODg3kdy8slWU9DJgfb2iJf28hmBUTFqnShM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YTts4nqF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EGPOABdi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CEDDAC4CECC;
-	Thu,  7 Nov 2024 04:29:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YTts4nqF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5A91C4CED2;
+	Thu,  7 Nov 2024 04:29:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730953759;
-	bh=jAwi+OKarWNBiLrHSYpVEd5QWV1kyHTEBeT6erDWqc0=;
-	h=From:To:Cc:Subject:Date:From;
-	b=EGPOABdigCtbxaBFNH2Uq53BBuUvre4yN/EF1mdes0SnH02rEsVLMdMnhXM3CSwv2
-	 X3m3rYzkgVEbQmUNyMMleQayUqtD0WXYlNwp5C7Nn1LAp4ZT8IAY/zcwDY06x4lPrU
-	 bUZ/A+gOknqfXaqNy1Dhdd6T5O+ZVsn0u6moIkepr02/84Zz+EG0om3CidHRV3DnT7
-	 owbEq9J0f5+2/5OX1U4f3FB1wDC2qDAIcu+OUFww/GFJCkyfZTLRX4i4FpKvuHRHin
-	 LY7DPyq1QcTbcJcJURjiVJmgF6L6o0rYxHwAR5HZgvdF4neKKhvhgIXb/GxPkL2wVl
-	 uHX2F0jJa1bew==
+	s=k20201202; t=1730953761;
+	bh=09RdaCTiv49TW2GFGfzTktARHICJTs4jmSlv0PoS7Ck=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=YTts4nqFTMg9TnAgfaEs3q1SL86Ujg7MEzHzMGx2ft5UnL03PIJa/ROTpbIygLjCy
+	 z1cxm0eS0Ho9BU8u/uCeypv9uWl5FhsRgfuS4G2IaunYsvU3Ycue4tBrLBmm7uTQ9c
+	 4DBF5oyYhVVlybls/KXsWcGw+ylQBCiCWulTe19ge1FE3O9nOyp9C6it3uhO5f7eqw
+	 OurlbQ198hSTSObO1Y9jhaQFrYDa10a1r4zkL4ZeZ6exF90nuAduSRLtzrRK0I1LwC
+	 XjxA1bGJN/WGRE6xCgrsAwVuMo0IFgCYn3SVZ1d+yPD0w2pJp3vnnUM148ErnjRCyI
+	 BHiCUhUbyVCdw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 0/5] add mptcp_address bpf_iter
-Date: Thu,  7 Nov 2024 12:29:05 +0800
-Message-ID: <cover.1730953242.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v3 1/5] selftests/bpf: Add mptcp pm_nl_ctl link
+Date: Thu,  7 Nov 2024 12:29:06 +0800
+Message-ID: <2aee2d298df0e490293d8940017bbba0dd2b799e.1730953242.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1730953242.git.tanggeliang@kylinos.cn>
+References: <cover.1730953242.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,41 +46,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v3:
- - rename mptcp_address to mptcp_userspace_pm_addr as I mentioned in [1].
- - rebased.
+This patch adds a symlink to MPTCP's pm_nl_ctl tool into bpf selftests,
+and updates Makefile to compile it.
 
-[1]
-https://patchwork.kernel.org/project/mptcp/patch/b6b53fd730a0edd0024963468d078488ad5e67aa.1729588019.git.tanggeliang@kylinos.cn/
+This is useful to run MPTCP BPF selftests on systems with an old version
+of IPRoute2. This tool can be used as an alternative to 'ip mptcp'.
 
-v2:
- - squash patches 5,6 of v1 into one.
- - patch 3, use lockdep_assert_held instead of spin_is_locked.
- - update patch 5 to make it run normally in btf-debug mode.
+In addition, this tool is used as userspace path manager. "csf" and "dsf"
+commands of pm_nl_ctl for creating and destroying subflows, and "ann" and
+"rem" commands for signaling ADD_ADDR and RM_ADDR. These commands are not
+currently supported in 'ip mptcp' yet.
 
-Another bpf_iter for BPF path manager to traverse all address entries
-on userspace_pm_local_addr_list of an MPTCP socket is added in this set.
-Userspace pm tool is needed by the self test, so add pm_nl_ctl link in
-patch 1.
+MAINTAINERS needs to be updated since a new file is added in a non
+covered place.
 
-Geliang Tang (5):
-  selftests/bpf: Add mptcp pm_nl_ctl link
-  selftests/bpf: Use pm_nl_ctl if ip mptcp not supported
-  bpf: Add mptcp_userspace_pm_addr bpf_iter
-  bpf: Export more helpers for mptcp_userspace_pm_addr test
-  selftests/bpf: Add mptcp_userspace_pm_addr bpf_iter subtest
-
- MAINTAINERS                                   |   1 +
- net/mptcp/bpf.c                               |  67 +++++
- tools/testing/selftests/bpf/Makefile          |   4 +-
- .../testing/selftests/bpf/bpf_experimental.h  |   8 +
- tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c |   1 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 235 +++++++++++++++++-
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |   5 +
- .../selftests/bpf/progs/mptcp_bpf_iters.c     |  39 +++
- 8 files changed, 351 insertions(+), 9 deletions(-)
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ MAINTAINERS                                   | 1 +
+ tools/testing/selftests/bpf/Makefile          | 4 +++-
+ tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c | 1 +
+ 3 files changed, 5 insertions(+), 1 deletion(-)
  create mode 120000 tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 58b49ad6657f..89ce2a480a41 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -16211,6 +16211,7 @@ F:	include/trace/events/mptcp.h
+ F:	include/uapi/linux/mptcp*.h
+ F:	net/mptcp/
+ F:	tools/testing/selftests/bpf/*/*mptcp*.[ch]
++F:	tools/testing/selftests/bpf/*mptcp*.[ch]
+ F:	tools/testing/selftests/net/mptcp/
+ 
+ NETWORKING [TCP]
+diff --git a/tools/testing/selftests/bpf/Makefile b/tools/testing/selftests/bpf/Makefile
+index 5c1fba253b72..a963c298f034 100644
+--- a/tools/testing/selftests/bpf/Makefile
++++ b/tools/testing/selftests/bpf/Makefile
+@@ -168,7 +168,8 @@ TEST_GEN_PROGS_EXTENDED = \
+ 	xdp_redirect_multi \
+ 	xdp_synproxy \
+ 	xdping \
+-	xskxceiver
++	xskxceiver \
++	mptcp_pm_nl_ctl
+ 
+ TEST_GEN_FILES += liburandom_read.so urandom_read sign-file uprobe_multi
+ 
+@@ -752,6 +753,7 @@ TRUNNER_EXTRA_FILES := $(OUTPUT)/urandom_read $(OUTPUT)/bpf_testmod.ko	\
+ 		       $(OUTPUT)/xdp_synproxy				\
+ 		       $(OUTPUT)/sign-file				\
+ 		       $(OUTPUT)/uprobe_multi				\
++		       $(OUTPUT)/mptcp_pm_nl_ctl			\
+ 		       ima_setup.sh 					\
+ 		       verify_sig_setup.sh				\
+ 		       $(wildcard progs/btf_dump_test_case_*.c)		\
+diff --git a/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
+new file mode 120000
+index 000000000000..5a08c255b278
+--- /dev/null
++++ b/tools/testing/selftests/bpf/mptcp_pm_nl_ctl.c
+@@ -0,0 +1 @@
++../net/mptcp/pm_nl_ctl.c
+\ No newline at end of file
 -- 
 2.45.2
 
