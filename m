@@ -1,40 +1,43 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8ADFD18FDBC
-	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 06:46:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B69A4198831
+	for <mptcp@lists.linux.dev>; Thu,  7 Nov 2024 07:29:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1730961967; cv=none; b=cg0okBwQMC4jr/qY93Ih8KDAUSpcrp4lpRAiJ9hmytqgphx8Js3ex/YBr2DEA9c1WAVl+AYXt/OYRr7RzKns/Wqlgj7+6IdGNjHb3KQKBHsPoDHNgck+e0R1TpNZYmAiE9encAoPVAdFhTyiL/cMpqXcvLgUzM5WOfM6k1Ibs3Y=
+	t=1730964549; cv=none; b=JO+pDhHEwfdZ9vFw7gtxQybBj2PGgk81J+7eAT4x0fRZSJklKXCVDWx+wI7O4cZcn9A6Md79Flfi+xOutbEiADKUNiL2+TaWbn16dLj/2u5run46vPm1yhml8QmNRTcGthJJYmun+CJbLyje7myC/Wz46S+Gbpx4wNTvE9zn/Rg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1730961967; c=relaxed/simple;
-	bh=4G7vkWbUjhcSLDVJQOpc7SWXGApXZs5Ohe/M3yBF87k=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oJvk5TKC6KThody8TbNJdwEIvCLKG9YR5XTkM0tquTCrp/HJeI906zF33sjw52WL+9XiT8H+K92n3UfQ4lMycLAPnNPjNGpDuCOwUOnuKkuHeEr7tmIcfbj7vU6bWbK1eu7pBtdBgglUDWcjw6K68nzjL/RH1BZkMfUGgVSRmGI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aaDGT1zJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1730964549; c=relaxed/simple;
+	bh=gehH2gz2V9/kUvPT1jtOES2WSsWhOfoWHOeTy4vBns4=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=BDoW7ki7q/INM6scsIoVf3cFjmPKfy5WRWHwjZFWXuhwDQ40+pF4euQn44LxDvj7x4PgH5kZ2ju4YgrR6zakmqQRC76iVchinfkg+eG1a2FhP/ULQiRDXYJxI4VFBESXmucuLUG1uVvrfRkV6c2jUZqyDLPurJ+S+t36YMjFeDI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjOSCQrO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aaDGT1zJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC221C4CECC;
-	Thu,  7 Nov 2024 06:46:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjOSCQrO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ECB6C4CECC;
+	Thu,  7 Nov 2024 07:29:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1730961967;
-	bh=4G7vkWbUjhcSLDVJQOpc7SWXGApXZs5Ohe/M3yBF87k=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=aaDGT1zJZlP7kxW3nG1EgkMWHQkYMqDQPzSCFzjtmIv/1zRxKVzsakbFET74Akqrp
-	 st93fkpYO7sZgAKlRjMxkqoEVCHIqpXOghY4gQpYMh0U4RM36dmocgfUsN117GxvOu
-	 EWlpfn5HbwtRjYew4/355Nz55LbOvkFcG8YrXpRxwjNRQ99gZSlkl+WPWKKGjOS62V
-	 T/zNA8CuyofX6QqnKTj4OhL0Jc+aNd6EnzPSJcHlwrgumCjml6jNgX1QVsDpnIdrMt
-	 DYSutD3PbdbufQFLPPFyEsVq5JXLtN7jwv+G9xw/4iLC9qPLnkneEOqBcfWgTqYhCU
-	 ZFmQP5w+YJLDA==
+	s=k20201202; t=1730964549;
+	bh=gehH2gz2V9/kUvPT1jtOES2WSsWhOfoWHOeTy4vBns4=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=rjOSCQrOjBL8q1L/tzAYidFYPbDwWuFnkPXrcaxFXbqsIruFQ3hgcYZMhbzCk8rBn
+	 kcVFRYkLxZHU2a/CALX52ubDLM11dtujdQbAu0lm9nTpgNyT033jgg1oeJk0qKLOGK
+	 fy7sg21IUiRcDzIX9rp4Bhg3KyBcTJrvTU5n01y/lc/XdOfGc6SFVO27Ber2V8lCNk
+	 Hxp8oLXqlvJGzy9qfE/lPesY4YGp1SFQnHHibf5jc5a7UGguZT7ilFCq/dB8eMljzs
+	 ou6HNGUcUsWZ5VM7tDGwmOTIJD1WWXw1CSVjqn9cE/tDt2rQklQgLvvVYpdgRHBPa7
+	 VBO8/hndKBufA==
+Message-ID: <a77c02db831525e2e1ec5371aaea4b9869441c0b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 23/36] mptcp: drop struct mptcp_pm_local
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 9/9] mptcp: drop useless "err = 0" in subflow_destroy
-Date: Thu,  7 Nov 2024 14:45:43 +0800
-Message-ID: <6606e2c5b8b3536cad35baf722175a932242d820.1730961810.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <cover.1730961809.git.tanggeliang@kylinos.cn>
-References: <cover.1730961809.git.tanggeliang@kylinos.cn>
+Date: Thu, 07 Nov 2024 15:29:05 +0800
+In-Reply-To: <4661b240-9a9c-47c2-9dc0-362d22baad83@kernel.org>
+References: <cover.1729588019.git.tanggeliang@kylinos.cn>
+	 <5b8a8e318c9d661f495b6d0be2b7a776de7da7a1.1729588019.git.tanggeliang@kylinos.cn>
+	 <4661b240-9a9c-47c2-9dc0-362d22baad83@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,57 +46,131 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-Upon successful return, mptcp_pm_parse_addr() returns 0. There is no need
-to set "err = 0" after this. So after mptcp_nl_find_ssk() returns, just
-need to set "err = -ESRCH", then release and free msk socket if it returns
-NULL.
+On Mon, 2024-11-04 at 20:08 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 22/10/2024 11:14, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > The following code in mptcp_pm_nl_subflow_create_doit() that
+> > assigns struct
+> > mptcp_pm_addr_entry "entry" to the local struct mptcp_pm_local
+> > variable
+> > "local" is not allowed in BPF if we use the same code to implement
+> > the
+> > subflow_create() interface of a BFP path manager:
+> > 
+> > 	struct mptcp_pm_local local;
+> > 
+> > 	local.addr = entry.addr;
+> > 	local.flags = entry.flags;
+> > 	local.ifindex = entry.ifindex;
+> 
+> Here as well, I'm not sure to understand the issue. Is it because you
+> cannot allocate this structure locally with BPF? No alternatives?
 
-Also, no need to define the veriable "subflow" in subflow_destroy(), use
-mptcp_subflow_ctx(ssk) directly.
+Here "struct mptcp_pm_local local" is a "scalar", when passing it to
+__mptcp_subflow_connect(), this error occurs:
 
-This patch doesn't change the behaviour of the code, just refactoring.
+# ; err = __mptcp_subflow_connect(sk, &local, remote); @
+mptcp_bpf_userspace_pm.c:242
+# 53: (bf) r1 = r6                      ; R1_w=trusted_ptr_mptcp_sock()
+R6=trusted_ptr_mptcp_sock()
+# 54: (bf) r3 = r8                      ;
+R3_w=trusted_ptr_mptcp_addr_info() R8=trusted_ptr_mptcp_addr_info()
+# 55: (85) call __mptcp_subflow_connect#34404
+# max struct nesting depth exceeded
+# arg#1 pointer type STRUCT mptcp_pm_local must point to scalar, or
+struct with scalar
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/pm_userspace.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+Also, assigning an address to an address like this is not allowed in
+BPF:
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 07e0c7259494..8545212f023e 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -535,19 +535,18 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 
- 	lock_sock(sk);
- 	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
--	if (ssk) {
--		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
--
--		spin_lock_bh(&msk->pm.lock);
--		mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
--		spin_unlock_bh(&msk->pm.lock);
--		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
--		mptcp_close_ssk(sk, ssk, subflow);
--		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
--		err = 0;
--	} else {
-+	if (!ssk) {
- 		err = -ESRCH;
-+		release_sock(sk);
-+		goto destroy_err;
- 	}
-+
-+	spin_lock_bh(&msk->pm.lock);
-+	mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
-+	spin_unlock_bh(&msk->pm.lock);
-+	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
-+	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
- 	release_sock(sk);
- 
- destroy_err:
--- 
-2.45.2
+	local.addr = entry.addr;
+
+> 
+> > We should avoid this type of assignment from struct
+> > mptcp_pm_addr_entry to
+> > struct mptcp_pm_local.
+> > 
+> > In fact, there is no need to add a dedicated address entry type for
+> > local
+> > address entry. All its fields are the same as struct
+> > mptcp_pm_addr_entry,
+> > except that it lacks a "lsk" for the listening socket. So we can
+> > use struct
+> > mptcp_pm_addr_entry directly. This makes the path manager code
+> > simpler.
+> 
+> There was a need for this structure, see this discussion:
+> 
+> 
+> https://lore.kernel.org/mptcp/587e096f-0e76-40fd-9220-6d8dd2930838@redhat.com/
+> 
+> and the changelog in v5:
+> 
+> 
+> https://lore.kernel.org/mptcp/20240726-mptcp-pm-avail-v5-13-fb1117ddeef6@kernel.org/
+> 
+> In short ...
+> 
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/pm_netlink.c   | 22 ++++++++--------------
+> >  net/mptcp/pm_userspace.c |  7 +------
+> >  net/mptcp/protocol.h     |  8 +-------
+> >  net/mptcp/subflow.c      |  2 +-
+> >  4 files changed, 11 insertions(+), 28 deletions(-)
+> > 
+> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> > index 287e715bcf68..15f97e7af182 100644
+> > --- a/net/mptcp/pm_netlink.c
+> > +++ b/net/mptcp/pm_netlink.c
+> 
+> (...)
+> 
+> > @@ -721,7 +715,7 @@ static unsigned int
+> > fill_local_addresses_vec(struct mptcp_sock *msk,
+> >  
+> >  static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+> >  {
+> > -	struct mptcp_pm_local locals[MPTCP_PM_ADDR_MAX];
+> > +	struct mptcp_pm_addr_entry locals[MPTCP_PM_ADDR_MAX];
+> 
+> ... we don't want that: that's reserving too much memory, and we
+> don't
+> need half of it.
+
+Thanks for your information.
+
+> 
+> *If* it is really needed to change it for BPF (I'm surprised there
+> are
+> no alternatives), then maybe we can change the signature of
+> __mptcp_subflow_connect(), but not change the code here.
+> 
+> In this case, only one "struct mptcp_pm_addr_entry" will be needed,
+> and
+> the "struct mptcp_pm_local" can be defined in this pm_netlink.c file
+> if
+> it is only used here.
+> 
+> But please mention that in the commit message.
+
+I updated it in v3 as you suggested.
+
+Thanks,
+-Geliang
+
+> 
+> >  	struct sock *sk = (struct sock *)msk;
+> >  	unsigned int add_addr_accept_max;
+> >  	struct mptcp_addr_info remote;
+> (...)
+> 
+> Cheers,
+> Matt
 
