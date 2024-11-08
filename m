@@ -1,89 +1,109 @@
-Received: from eu-smtp-delivery-151.mimecast.com (eu-smtp-delivery-151.mimecast.com [185.58.86.151])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail.ispras.ru (mail.ispras.ru [83.149.199.84])
+	(using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 445EA1940AA
-	for <mptcp@lists.linux.dev>; Fri,  8 Nov 2024 17:16:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.58.86.151
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 18E3C29CF4
+	for <mptcp@lists.linux.dev>; Fri,  8 Nov 2024 21:42:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.149.199.84
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731086221; cv=none; b=gqc0kHf0N2cHidRIf+h7Wky5t3hA7ApC1OmbYg+waychxtRkWjI7uywMNhUBnC2dSVpmGRTi9tIXe8jywyjRHh4OVS8Wj3u2Fsb94d857UH+5HvGwg8jstXD5Wz2+oG7uRrDPKy8NmxWtZVwYy87RmEXjjEsANh8T8Jm/k7sImc=
+	t=1731102183; cv=none; b=Olu4MXFNR64MI9h6g7of5YzmipHY0HHwMK39eLB/+vjR3EfoKk/EVI3NIwowRMBlZZxtmIi32ZzVypEjFNVYEV4+HGsrZ1xjNHAfLQAzpNPHy7ZlQuiGCcRnD4Be8uGcubNQ0XWE09kKY3fB3EcdoMhjcvi0CPYoBP2tWgeHgeg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731086221; c=relaxed/simple;
-	bh=3o/CgnvuqxB1cU56EknF1ysiJ7ooQ7MT5bXdMyiKBiA=;
-	h=From:To:CC:Subject:Date:Message-ID:References:In-Reply-To:
-	 MIME-Version:Content-Type; b=iCmHr7ulFZvbZQpdud8QRsSH6pLuJM0Zj5qbOGGYuPUjyMjV60EI964WL73bhT7JsT1pK3hcs6Do2MVih3V9mdPkQ7VLIeOPZAs/qc+z1irLQP2xevZqlTaYJoMtqnmoEGOqstbb3c/G3OMlu2CS9I4h/wgU3fyWk0xsFUXbaec=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM; spf=pass smtp.mailfrom=aculab.com; arc=none smtp.client-ip=185.58.86.151
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ACULAB.COM
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=aculab.com
-Received: from AcuMS.aculab.com (156.67.243.121 [156.67.243.121]) by
- relay.mimecast.com with ESMTP with both STARTTLS and AUTH (version=TLSv1.2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- uk-mta-191-SiG0YL4AOpCoTeJ7l5iHpg-1; Fri, 08 Nov 2024 17:16:51 +0000
-X-MC-Unique: SiG0YL4AOpCoTeJ7l5iHpg-1
-X-Mimecast-MFC-AGG-ID: SiG0YL4AOpCoTeJ7l5iHpg
-Received: from AcuMS.Aculab.com (10.202.163.6) by AcuMS.aculab.com
- (10.202.163.6) with Microsoft SMTP Server (TLS) id 15.0.1497.48; Fri, 8 Nov
- 2024 17:16:50 +0000
-Received: from AcuMS.Aculab.com ([::1]) by AcuMS.aculab.com ([::1]) with mapi
- id 15.00.1497.048; Fri, 8 Nov 2024 17:16:50 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-To: 'Mikhail Ivanov' <ivanov.mikhail1@huawei-partners.com>,
-	=?utf-8?B?TWlja2HDq2wgU2FsYcO8bg==?= <mic@digikod.net>, Matthieu Baerts
-	<matttbe@kernel.org>, "linux-sctp@vger.kernel.org"
-	<linux-sctp@vger.kernel.org>
-CC: "gnoack@google.com" <gnoack@google.com>, "willemdebruijn.kernel@gmail.com"
-	<willemdebruijn.kernel@gmail.com>, "matthieu@buffet.re" <matthieu@buffet.re>,
-	"linux-security-module@vger.kernel.org"
-	<linux-security-module@vger.kernel.org>, "netdev@vger.kernel.org"
-	<netdev@vger.kernel.org>, "netfilter-devel@vger.kernel.org"
-	<netfilter-devel@vger.kernel.org>, "yusongping@huawei.com"
-	<yusongping@huawei.com>, "artem.kuzin@huawei.com" <artem.kuzin@huawei.com>,
-	"konstantin.meskhidze@huawei.com" <konstantin.meskhidze@huawei.com>, "MPTCP
- Linux" <mptcp@lists.linux.dev>
-Subject: RE: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Thread-Topic: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Thread-Index: AQHbK7ERAltPFf8wxU+8YQqG109nhrKtq6zw
-Date: Fri, 8 Nov 2024 17:16:50 +0000
-Message-ID: <ed94e1e51c4545a7b4be6a756dcdc44d@AcuMS.aculab.com>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
- <20241018.Kahdeik0aaCh@digikod.net>
- <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
-In-Reply-To: <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
-Accept-Language: en-GB, en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
+	s=arc-20240116; t=1731102183; c=relaxed/simple;
+	bh=bOgIvEqIQP7aAWFCAUyT2Vzn/DkbaczDZuukumHrHmM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=bu22LJ6caOdxo3hLVjzUChkHpSYCVEMgNCEKPdmg0pHcWYHDo9h7Au3V3n0syuaR5COW6VhCG90MUcsfEd4iv4egIMOKN4CqSjPv9v9Fzl80YTtmz74s3FyNunxE5UHaHJSnfaFClQNtCB2u0NGty5XB9y92LzJzwoSK8OHo+4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru; spf=pass smtp.mailfrom=ispras.ru; dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b=CgoC3yPi; arc=none smtp.client-ip=83.149.199.84
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ispras.ru
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (1024-bit key) header.d=ispras.ru header.i=@ispras.ru header.b="CgoC3yPi"
+Received: from fpc (unknown [10.10.165.14])
+	by mail.ispras.ru (Postfix) with ESMTPSA id D163A40B227F;
+	Fri,  8 Nov 2024 21:42:57 +0000 (UTC)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mail.ispras.ru D163A40B227F
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ispras.ru;
+	s=default; t=1731102177;
+	bh=gfIh3bXKCybmNGisNtzYVK2moedKhWkf28cL8IRdeS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=CgoC3yPiQAYfVs+EyYyJgrVWnYsmQe6AUzYqXpLIMCvp8fIsikoptjmo17zyWJjJi
+	 V3LfG1XpTwBmDJt2yMLSeID77J1V3l34HU3Ezzmp7+9UvCGNN/JK0sXUZNPmmxmvgM
+	 xzZCOkUMYAE2ThbwPlx5zI7RNAWnQI1qcOPvxAWE=
+Date: Sat, 9 Nov 2024 00:42:53 +0300
+From: Fedor Pchelkin <pchelkin@ispras.ru>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Dmitry Kandybka <d.kandybka@gmail.com>, netdev@vger.kernel.org,
+	Dmitry Antipov <dmantipov@yandex.ru>, mptcp@lists.linux.dev,
+	lvc-project@linuxtesting.org, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH] mptcp: fix possible integer overflow in
+ mptcp_reset_tout_timer
+Message-ID: <20241109-46edd978694b7d9a2f89b9f6-pchelkin@ispras.ru>
+References: <20241107103657.1560536-1-d.kandybka@gmail.com>
+ <5f51673a-e19b-45e8-bb1c-a6d3427213c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: t4Xi7zuKcJVKIU9vVNe3_Z6aiAlzW14NUBYys3Tuwk4_1731086210
-X-Mimecast-Originator: aculab.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <5f51673a-e19b-45e8-bb1c-a6d3427213c1@kernel.org>
 
-RnJvbTogTWlraGFpbCBJdmFub3YNCj4gU2VudDogMzEgT2N0b2JlciAyMDI0IDE2OjIyDQo+IA0K
-PiBPbiAxMC8xOC8yMDI0IDk6MDggUE0sIE1pY2thw6tsIFNhbGHDvG4gd3JvdGU6DQo+ID4gT24g
-VGh1LCBPY3QgMTcsIDIwMjQgYXQgMDI6NTk6NDhQTSArMDIwMCwgTWF0dGhpZXUgQmFlcnRzIHdy
-b3RlOg0KPiA+PiBIaSBNaWtoYWlsIGFuZCBMYW5kbG9jayBtYWludGFpbmVycywNCj4gPj4NCj4g
-Pj4gK2NjIE1QVENQIGxpc3QuDQo+ID4NCj4gPiBUaGFua3MsIHdlIHNob3VsZCBpbmNsdWRlIHRo
-aXMgbGlzdCBpbiB0aGUgbmV4dCBzZXJpZXMuDQo+ID4NCj4gPj4NCj4gPj4gT24gMTcvMTAvMjAy
-NCAxMzowNCwgTWlraGFpbCBJdmFub3Ygd3JvdGU6DQo+ID4+PiBEbyBub3QgY2hlY2sgVENQIGFj
-Y2VzcyByaWdodCBpZiBzb2NrZXQgcHJvdG9jb2wgaXMgbm90IElQUFJPVE9fVENQLg0KPiA+Pj4g
-TEFORExPQ0tfQUNDRVNTX05FVF9CSU5EX1RDUCBhbmQgTEFORExPQ0tfQUNDRVNTX05FVF9DT05O
-RUNUX1RDUA0KPiA+Pj4gc2hvdWxkIG5vdCByZXN0cmljdCBiaW5kKDIpIGFuZCBjb25uZWN0KDIp
-IGZvciBub24tVENQIHByb3RvY29scw0KPiA+Pj4gKFNDVFAsIE1QVENQLCBTTUMpLg0KDQpJIHN1
-c3BlY3QgeW91IHNob3VsZCBjaGVjayBhbGwgSVAgcHJvdG9jb2xzLg0KQWZ0ZXIgYWxsIGlmIFRD
-UCBpcyBiYW5uZWQgd2h5IHNob3VsZCBTQ1RQIGJlIGFsbG93ZWQ/DQpNYXliZSB5b3Ugc2hvdWxk
-IGhhdmUgYSBkaWZmZXJlbnQgKHByb2JhYmx5IG1vcmUgc2V2ZXJlKSByZXN0cmljdGlvbiBvbiBT
-Q1RQLg0KWW91J2QgYWxzbyBuZWVkIHRvIGxvb2sgYXQgdGhlIHNvY2tldCBvcHRpb25zIHVzZWQg
-dG8gYWRkIGFkZGl0aW9uYWwNCmxvY2FsIGFuZCByZW1vdGUgSVAgYWRkcmVzc2VzIHRvIGEgY29u
-bmVjdCBhdHRlbXB0Lg0KDQoJRGF2aWQNCg0KLQ0KUmVnaXN0ZXJlZCBBZGRyZXNzIExha2VzaWRl
-LCBCcmFtbGV5IFJvYWQsIE1vdW50IEZhcm0sIE1pbHRvbiBLZXluZXMsIE1LMSAxUFQsIFVLDQpS
-ZWdpc3RyYXRpb24gTm86IDEzOTczODYgKFdhbGVzKQ0K
+Hi,
 
+Cc'ing more people.
+
+On Fri, 08. Nov 12:43, Matthieu Baerts wrote:
+> Hi Dmitry,
+> 
+> On 07/11/2024 11:36, Dmitry Kandybka wrote:
+> > In 'mptcp_reset_tout_timer', promote 'probe_timestamp' to unsigned long
+> > to avoid possible integer overflow. Compile tested only.
+> > 
+> > Found by Linux Verification Center (linuxtesting.org) with SVACE.
+> > 
+> > Signed-off-by: Dmitry Kandybka <d.kandybka@gmail.com>
+> > ---
+> >  net/mptcp/protocol.c | 4 ++--
+> >  1 file changed, 2 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index e978e05ec8d1..ff2b8a2bfe18 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -2722,8 +2722,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+> >  	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
+> >  		return;
+> >  
+> > -	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
+> > -			mptcp_close_timeout(sk);
+> > +	close_timeout = (unsigned long)inet_csk(sk)->icsk_mtup.probe_timestamp -
+> > +			tcp_jiffies32 + jiffies + mptcp_close_timeout(sk);
+> 
+> If I'm not mistaken, "jiffies" is an "unsigned long", which makes this
+> modification not necessary, no?
+
+inet_csk(sk)->icsk_mtup.probe_timestamp and tcp_jiffies32 are both of u32
+type.
+
+'inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32' will be computed
+first in u32, only then the result will be converted to unsigned long for
+further calculations with 'jiffies'.
+
+Looking at how probe_timestamp is initialized, seems it will always be less
+than the current tcp_jiffies32 value.
+
+So 'inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32' will wrap in
+u32, and then converted to unsigned long. It's not clear actually whether
+this is considered to be an expected behavior... Goes all the way down to
+76a13b315709 ("mptcp: invoke MP_FAIL response when needed").
+
+> 
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
