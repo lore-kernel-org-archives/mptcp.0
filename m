@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D4421E6DC2;
-	Fri,  8 Nov 2024 12:35:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E884B1E47D9
+	for <mptcp@lists.linux.dev>; Fri,  8 Nov 2024 12:38:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731069323; cv=none; b=fHxdZxQKGk49cnkbALFmYrYejCH0f+QbCcKkaZK/Pf4uq6RgPjor1J+XXxCoHOoJVKfovFjwyDdGbaYyBkjVA7+AT2gpcMLUEhs/SvERMeCJfZu6T6rX3rHkKhK66puLEArOtHJxZQuh2Mox/hHzYSUbbq3ndmRDrGZyeaviz5A=
+	t=1731069521; cv=none; b=kaj+5hgHbupxXGzehEe2YPeY05tPsjEvwhW9/dSvm5kj6McS6Yi4hpk+wzHEo4KRErI6aCDEqeILzfp/eGT0t16qas7D2pheQsACuu81WM53RVb/wrliEehbPOduy+G3IB0xSpRlVSTK7RusJCzjAQuIandEF9XpZR04AYFVkkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731069323; c=relaxed/simple;
-	bh=4m2I6aeuCoEFLcGiO83TcAhndU+Pitbz1bmGr/HxeJU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TbDb0913uY5u4BzAmuA/vPBBY5jv0WTVJUDvq6DKj8BzBJ2NJg2ubfZUiAQVAH1ZEEVmDFZNIDLClXWczwh8BqDXRWmT7gt9OzNyLT5ClSIWi098EpzKnlxd9GFWvE+f91OxbBWK3poONtqA4axDnLsEV+4uSGneEX/UHQDT4Dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=utyTxDlu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731069521; c=relaxed/simple;
+	bh=rBlzUfBKFUQ7xNRQ6CqA3CMJaEWknJGg62TS2CcNDTA=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GodUptTBNIYpnCUHsMWJdgkW8/9PLMV7UulL5TSoof8KctK9Am1/aTiVoJY7Tc058rnFTLudhJGOb2PS+uwZoxJEE0zA4CNjJ9hkquvEOMHyBvF5y/n/jn6HIsuzlywrE1A88jn1Fj83BRn9ePo6CMeGCjA+kZO3LRAbDBJdE7o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iIas80CS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="utyTxDlu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 56C2BC4CECD;
-	Fri,  8 Nov 2024 12:35:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iIas80CS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19CEDC4CED2;
+	Fri,  8 Nov 2024 12:38:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731069323;
-	bh=4m2I6aeuCoEFLcGiO83TcAhndU+Pitbz1bmGr/HxeJU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=utyTxDlu1runBGW33lTYzxxrPZE5mtfpchYPq884CBMZE93Vv7qV7fMzqEuSjUEGJ
-	 QMjxN6bmpf94vPi7E1/NGHjCShZ+f5ien1HNsDmBjzBNA6RuyKb3+sHfqZsCFpenWq
-	 hl2w0nvUx6m8y8oRrlgIpV1ieAIfzrJZN38SxCrvWJhkDIfSMiJ0XIcJlcJhMq0YbP
-	 X4V0mOyQXhCVCPnvpaiR4AfiVwpzq69GMAfVv4VLPt9IWbNWkpPvM4if4gWULZD+8N
-	 e1ftaJIor8Mfaz3tnF3bfXORoDMKL+oKwZSECJEGNYctTUH5mOa2A87ElIhFsyHimv
-	 ASygwu5UuyYRg==
-Message-ID: <4e134d6c-645c-4b2a-8f52-845c25e53de6@kernel.org>
-Date: Fri, 8 Nov 2024 13:35:18 +0100
+	s=k20201202; t=1731069520;
+	bh=rBlzUfBKFUQ7xNRQ6CqA3CMJaEWknJGg62TS2CcNDTA=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=iIas80CS7sO59jEgA2riPde5Fge0FVmBS6eOXZ3WaF+QH/Y/NmavGrzsLMGhP8BKe
+	 2GDknJjyyo7VmX5N2dgXvCSV/p/p1uJ82kyopFkoGEA6Nk3fiJyxibLDuIL9IUCJ9f
+	 2sVq1g4pV46UqMiOz+ELKxGPowk7Wzss5zumVlF/Bgd7j66XbkxpEGPk1nMWiXJGko
+	 bihHYtHyoBvlYgIIrW6Plh/ORKcl22+n+m7621Q25Hlla5uwl0dV4zezf9MFMRJezV
+	 NbIoL63DJKA5y0GBmrlEEvxyPYPMbtyfmh6ExqivfrASTFxt/14M9CX5UML60SbL41
+	 cSyUo0SslJ1tQ==
+Message-ID: <a02f2713-1b8f-4a25-b5c8-ffbe427b682d@kernel.org>
+Date: Fri, 8 Nov 2024 13:38:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,13 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH net 0/2] mptcp: fix a couple of races
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- mptcp@lists.linux.dev
-References: <cover.1731060874.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1731060874.git.pabeni@redhat.com>
+ <4e134d6c-645c-4b2a-8f52-845c25e53de6@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,25 +86,43 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1731060874.git.pabeni@redhat.com>
+In-Reply-To: <4e134d6c-645c-4b2a-8f52-845c25e53de6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hello,
 
-On 08/11/2024 11:58, Paolo Abeni wrote:
-> The first patch addresses a division by zero issue reported by Eric,
-> the second one solves a similar issue found by code inspection while
-> investigating the former.
+(MPTCP ML only)
+
+On 08/11/2024 13:35, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> Paolo Abeni (2):
->   mptcp: error out earlier on disconnect
->   mptcp: cope racing subflow creation in mptcp_rcv_space_adjust
+> On 08/11/2024 11:58, Paolo Abeni wrote:
+>> The first patch addresses a division by zero issue reported by Eric,
+>> the second one solves a similar issue found by code inspection while
+>> investigating the former.
+>>
+>> Paolo Abeni (2):
+>>   mptcp: error out earlier on disconnect
+>>   mptcp: cope racing subflow creation in mptcp_rcv_space_adjust
+> 
+> Thank you for the patches! This looks good to me and can be applied in
+> 'net' directly.
+FYI, I also applied these patches in our tree, fixes for -net:
 
-Thank you for the patches! This looks good to me and can be applied in
-'net' directly.
+New patches for t/upstream-net and t/upstream:
+- b189b3050a9d: mptcp: error out earlier on disconnect
+- 8f738a68cd74: mptcp: cope racing subflow creation in
+mptcp_rcv_space_adjust
+- Results: 3cb39141befa..3f011e8dae3c (export-net)
+- Results: 2c114d530011..fe15020312c8 (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4ebfa44b9230463c69b57a0b2b0a91ec4b0ad10d/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/95e17c17557397eafcd64d7af7e7e2c8f9b01025/checks
 
 Cheers,
 Matt
