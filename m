@@ -1,122 +1,123 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B8382076D2
-	for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 17:02:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D29213ED1
+	for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 17:35:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731430949; cv=none; b=Q1Awnb4C9EuYyYbd31oDJsBeZFanQ2735nSpV0DA24NSDBNVerrCpEKI35G0ceNiVuT931tcftwh0MydMcYmzeQ0+8eVoRWmDMDqN40t0C3/RsAo9ieIQgeWV8LEOzZfq0lVZ/d4QAz31c8xLHPsRZnxR6EqLCuKEuGGG2evDYM=
+	t=1731432930; cv=none; b=jzV1TMDHT2NTUDbD7XJYZj82rVSph1G1Mfx8bkciIhcrd7qOEt/KhnyuKK8tAAo3nTbkGFY0sdAsuwq6S2SH45Gw0VdmdfiJb6t6tOCZ1PW2oZfWTFVUN0UQp/JexQyEaxHV7R9+cQ3lNPcAmj5aU8QvXhdB6dnrijrARjPJmPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731430949; c=relaxed/simple;
-	bh=JeXjAZr2wRoz3xTGHRQYQ2MNpYSv4rQ/Nof57ctSuRI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pMwtl4cEYOanR2reeHE13PC0xw3UieClNUWTTSxoCgFD0VA6DHcRSY8jNI7ot/pPIpytRHoliB8FmWpjoe0eyX86tmN9Lbj9VyGVjqQ4F/slc5bx/EFH0R4h08yld23Z1OMvTbPlupkoIMXUGdUX8/YvD1NRmawP8ENwa1e24k4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=BdH7m6FF; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1731432930; c=relaxed/simple;
+	bh=MPobuDFeW86BO3uuQn/DNlZIsC4coAjYsUXRCWR74tw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=G2BLC+CoSRyH6H+O+BzLp6LSM+wRCKn++gobxC2xOmV5hEYVX3qlNRnDoDE9+96QbbiJ24kvqT+8ukF2cxI/kAMxiuqhcfG4bpDu5bsvlEhyoSiSSUu1zNXlajEnGCmmLHSxYqJqudyRqvP0wjIo0H3JwCoByk9qG26QbJzNVUo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZ0hACyJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="BdH7m6FF"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1731430947;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PbC8eqsqKu6FAXLTd5RD3HsXApcxAbHLjaQXJV6qD40=;
-	b=BdH7m6FF+S4QXVQBIUdQiBPduqIacppQT2aBpzeYZdR160yvzBnP24dg6Hf+cFm8uhOgvq
-	aUn3xLQR6GLET8DtM9/6j7xFASqDxyHHiq5LTBcAkR0kMOuToey7clmsDdnd0SwR1Qlw91
-	eU8xgnOjq7r31AwsUXxKBV2i0CmiB9U=
-Received: from mail-qv1-f69.google.com (mail-qv1-f69.google.com
- [209.85.219.69]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-616-H9_8oThZNyW3Pq2waAeeLw-1; Tue, 12 Nov 2024 12:02:25 -0500
-X-MC-Unique: H9_8oThZNyW3Pq2waAeeLw-1
-X-Mimecast-MFC-AGG-ID: H9_8oThZNyW3Pq2waAeeLw
-Received: by mail-qv1-f69.google.com with SMTP id 6a1803df08f44-6cbd12b8b60so132601726d6.0
-        for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 09:02:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1731430945; x=1732035745;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=PbC8eqsqKu6FAXLTd5RD3HsXApcxAbHLjaQXJV6qD40=;
-        b=ZPK+Hj68OR93Xa6RqzWj9kWEW4I67dfiTZpUIg3UXEzk2l1xLQEXlc7ZOYnCPZ5mrG
-         wVAxT5vB5v6Z6EsPuJnAFdsmK6B81/tyB56/h7ogpzRr3KLjl5auMQq/YuBFeOpNM9yM
-         L0vyzCNs6Y9nqyCB9CHyEthzdl3jEVxMgSno4yy667sR5akBXTOMVUhA48NROVMKBvPK
-         sKxKCQUa/qhJbuH71awc1UTXeTOQczZ9qNwkn82tIheoZJh205ast/GpFSQ1cpQrD+bB
-         zyNo/KU5pifIW/5B4DBfN5anGrVelF09AOmozWvqd5jEg0hegN2r9YlXCWrN8fS5MNe6
-         +RcA==
-X-Forwarded-Encrypted: i=1; AJvYcCXa20lulRfxzDHOvW4Z2vKAAPxMOA/XT10AbM2vPsZ32sztI99+fQL27yLZbhmeDZ9L7SwQMg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzI7o4yLBVg8V6ghXArNit2XoeQaVvSa0XVaTnbApUcWsT4TGWx
-	A9Z3lghqXE6H9CydBF5ebdCOu0irTykLYcc2WSz4cMEz6keZM7/SRmjxJkFaFhk+HoOb+TnZZA6
-	jW2AdqSaaEVNbVeOOVX46EMhBYPxqDgX8ozNBzhwwTiRsEBtH8c7JwOINLC80TkI=
-X-Received: by 2002:a05:6214:2f8a:b0:6d3:5bee:33c9 with SMTP id 6a1803df08f44-6d39e564f78mr249237186d6.21.1731430944902;
-        Tue, 12 Nov 2024 09:02:24 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IH4S9lQaXNJBXj1y7lH464SKIaV4pNIdSkE5cwURjTn3oqYZi+9/V5PfoiZpLahUF3u4tPq/Q==
-X-Received: by 2002:a05:6214:2f8a:b0:6d3:5bee:33c9 with SMTP id 6a1803df08f44-6d39e564f78mr249236596d6.21.1731430944413;
-        Tue, 12 Nov 2024 09:02:24 -0800 (PST)
-Received: from [192.168.88.24] (146-241-44-112.dyn.eolo.it. [146.241.44.112])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d39643b458sm73222166d6.71.2024.11.12.09.02.23
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 12 Nov 2024 09:02:23 -0800 (PST)
-Message-ID: <24956e31-9a86-4b7b-91b6-b95265aa359b@redhat.com>
-Date: Tue, 12 Nov 2024 18:02:22 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZ0hACyJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08AA7C4CECD;
+	Tue, 12 Nov 2024 17:35:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1731432929;
+	bh=MPobuDFeW86BO3uuQn/DNlZIsC4coAjYsUXRCWR74tw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=EZ0hACyJ561anE8PBOsiAGaFZHfQgrD/lkpu7elT/y3lljHHwBv/eCqah5I+XFAvh
+	 UPSyeMfDndRc61SZ3z9RIyZRLC4Vhk/cp7ffpZbVSYZgg8jBxjiQsl6JOez0OgDRyz
+	 fnEeb0OSiZHPwIE4GZA2QtM+02RhanIiZcibN15ZDrY9VXdBdRJL9ABdz0L/iXlNPs
+	 yhJYQCERfT8HUcr9IbSArO06hrwsADQmPEOQ2DvVKlWgcmz2mYhF0glF8JnS/+PBNJ
+	 UPvfvyfuY94xrZUNlv9NuHOcAE5mCW6wsQldGFz7xtMN6HISWDw0ienOVw+6JhWrw3
+	 Wcyn5EzURSKrQ==
+Message-ID: <288d39a5-9534-4954-b39c-aec13926b8f9@kernel.org>
+Date: Tue, 12 Nov 2024 18:35:27 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v3 0/3] mptcp: pm: use _rcu variant under
  rcu_read_lock
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ Geliang Tang <tanggeliang@kylinos.cn>
 References: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: pG97gBM7dAs9_afjqeBjyADm2eo5HJcqcROboBuiCHo_1731430945
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+ <db4ae0dd-845b-fc87-aad0-80450d7b29d8@gmail.com>
+ <0ae4ad33e6099d4983083122bf4ac434d0fe93f0.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <0ae4ad33e6099d4983083122bf4ac434d0fe93f0.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
+Hi Geliang,
 
+On 08/11/2024 02:47, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for this v3. LGTM!
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-On 11/7/24 10:04, Matthieu Baerts (NGI0) wrote:
-> When looking at something else, I noticed that the local endpoint
-> entries list was iterated under rcu_read_lock, but using
-> list_for_each_entry() instead of the _rcu variant. That's what patch 1
-> is fixing.
-> 
-> At the previous meeting, Mat and Christoph mentioned we could use the
-> RCU variant elsewhere. That's what is done in patch 2, for -next then.
-> 
-> Patch 3 is a simple change to remove duplicated code.
-> 
-> Note: I see that we are using spin_lock_bh(), but the RCU read "locks"
-> are always used without the _bh() variant. Is that OK here, or did we
-> miss something?
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Changes in v3:
-> - Use list_for_each_entry_rcu() with a 4th parameter: lockdep_is_held()
-> - See individual changelog in the different patches.
-> - Link to v2: https://lore.kernel.org/r/20241025-mptcp-pm-lookup_addr_rcu-v2-0-1478f6c4b205@kernel.org
-> 
-> Changes in v2:
-> - Add patch 2 and 3
-> - Patch 1: avoid > 80 chars per line in __lookup_addr_rcu() + update
->   commit message.
-> - Link to v1: https://lore.kernel.org/r/20241022-mptcp-pm-lookup_addr_rcu-v1-1-19d45f26c872@kernel.org
-> 
+Thank you for the review!
 
-FWIW, LGTM, too.
+> nit:
+> 
+> How about writing the abbreviation "endp" in the subject of patch 3 as
+> "endpoint"? Just like it in patch 2. Then their subject lengths are the
+> same:
+> 
+> mptcp: pm: avoid code duplication to lookup endpoint
+> mptcp: pm: lockless list traversal to dump endpoints
 
-I don't add my explicit formal ack just to avoid possibly weird-looking
-tag areas after merge on netdev ;)
+I suggest the opposite: use 'endp' for both, to have commit titles that
+are under 50 chars, as it is usually recommended by the 50/72 rules (as
+long as it is still understandable).
 
-/P
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
