@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 39D29213ED1
-	for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 17:35:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9674621314D
+	for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 17:43:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731432930; cv=none; b=jzV1TMDHT2NTUDbD7XJYZj82rVSph1G1Mfx8bkciIhcrd7qOEt/KhnyuKK8tAAo3nTbkGFY0sdAsuwq6S2SH45Gw0VdmdfiJb6t6tOCZ1PW2oZfWTFVUN0UQp/JexQyEaxHV7R9+cQ3lNPcAmj5aU8QvXhdB6dnrijrARjPJmPk=
+	t=1731433422; cv=none; b=WajB4W0gEhQ0Rae3pJkH+dmZOiuVuSPATcNQ6BIWIIm9AhVEIrPcyvknZiSMxjLouUBNIUimWqkt5CQnnjQvM7hBNAfUOPjAfXAyKO8ecud6KRzG/j2J3AajZLGUMr6rZ5nBDwN7hK6KnsBmDBUQITsW6Kbt4dCxxWnRzUGsfgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731432930; c=relaxed/simple;
-	bh=MPobuDFeW86BO3uuQn/DNlZIsC4coAjYsUXRCWR74tw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=G2BLC+CoSRyH6H+O+BzLp6LSM+wRCKn++gobxC2xOmV5hEYVX3qlNRnDoDE9+96QbbiJ24kvqT+8ukF2cxI/kAMxiuqhcfG4bpDu5bsvlEhyoSiSSUu1zNXlajEnGCmmLHSxYqJqudyRqvP0wjIo0H3JwCoByk9qG26QbJzNVUo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EZ0hACyJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731433422; c=relaxed/simple;
+	bh=eAoZ2XRYXWYLb0Gspi1rOM4QX+fXwzawLD4UDYGno1U=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=u55FUwE7r5JZbuLqjCi4ySuf19/p+YUlnU5iL8YvP+YMfYsRCB7zLdmSBAvzG1vdW8GiPH225djfCNuT+ndeIduwedy2Bs64InSAJYTyi/19yvxPhG2jvaSqOonNgeXPTUEo6lZgIG0xm7jbQ3QQUxlUWTYjVDshNqnS1WoeAio=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHroNmg/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EZ0hACyJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08AA7C4CECD;
-	Tue, 12 Nov 2024 17:35:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHroNmg/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272AFC4CECD;
+	Tue, 12 Nov 2024 17:43:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731432929;
-	bh=MPobuDFeW86BO3uuQn/DNlZIsC4coAjYsUXRCWR74tw=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=EZ0hACyJ561anE8PBOsiAGaFZHfQgrD/lkpu7elT/y3lljHHwBv/eCqah5I+XFAvh
-	 UPSyeMfDndRc61SZ3z9RIyZRLC4Vhk/cp7ffpZbVSYZgg8jBxjiQsl6JOez0OgDRyz
-	 fnEeb0OSiZHPwIE4GZA2QtM+02RhanIiZcibN15ZDrY9VXdBdRJL9ABdz0L/iXlNPs
-	 yhJYQCERfT8HUcr9IbSArO06hrwsADQmPEOQ2DvVKlWgcmz2mYhF0glF8JnS/+PBNJ
-	 UPvfvyfuY94xrZUNlv9NuHOcAE5mCW6wsQldGFz7xtMN6HISWDw0ienOVw+6JhWrw3
-	 Wcyn5EzURSKrQ==
-Message-ID: <288d39a5-9534-4954-b39c-aec13926b8f9@kernel.org>
-Date: Tue, 12 Nov 2024 18:35:27 +0100
+	s=k20201202; t=1731433422;
+	bh=eAoZ2XRYXWYLb0Gspi1rOM4QX+fXwzawLD4UDYGno1U=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=oHroNmg/8yo79tst/mV5B0Bxzlh8RwJ8/Q5pZmXY8NMpBYdeHhHBodw2/j1YUdJGN
+	 +xR+CkxWYfdaqcSAczE2C8+/qhO/eIUTs34/ZwlDtUyZkOV3CncthxVvly3OBvoGuD
+	 YvXKHc/+DaXzbsWSiTHzLqzXzcNc7a9VeTQ3eoCCsmSy2YBawTH8RQpMO+uF5xPYzM
+	 5p2DzEL7zGLm6pb6a07MPLwHXSExodm/Ag90xy5pDhZSWY4ACflp2BToEAxNsgaH7w
+	 duSHKi2IEWl+O3bWiSDpBoAdCRZkVi0gJhYN6c9/MA6nCQ6Ol4b6SmymLEi64ZYfyo
+	 yp1IBjVNUUQbg==
+Message-ID: <69c3b560-fdd0-411a-9ae0-b4510dde5c15@kernel.org>
+Date: Tue, 12 Nov 2024 18:43:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,9 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-net v3 0/3] mptcp: pm: use _rcu variant under
  rcu_read_lock
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- Geliang Tang <tanggeliang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>
 References: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
- <db4ae0dd-845b-fc87-aad0-80450d7b29d8@gmail.com>
- <0ae4ad33e6099d4983083122bf4ac434d0fe93f0.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,33 +86,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0ae4ad33e6099d4983083122bf4ac434d0fe93f0.camel@kernel.org>
+In-Reply-To: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 08/11/2024 02:47, Geliang Tang wrote:
-> Hi Matt,
+On 07/11/2024 10:04, Matthieu Baerts (NGI0) wrote:
+> When looking at something else, I noticed that the local endpoint
+> entries list was iterated under rcu_read_lock, but using
+> list_for_each_entry() instead of the _rcu variant. That's what patch 1
+> is fixing.
 > 
-> Thanks for this v3. LGTM!
+> At the previous meeting, Mat and Christoph mentioned we could use the
+> RCU variant elsewhere. That's what is done in patch 2, for -next then.
 > 
-> Reviewed-by: Geliang Tang <geliang@kernel.org>
+> Patch 3 is a simple change to remove duplicated code.
 
-Thank you for the review!
+Now in our tree (fixes for -net, and feat. for -next):
 
-> nit:
-> 
-> How about writing the abbreviation "endp" in the subject of patch 3 as
-> "endpoint"? Just like it in patch 2. Then their subject lengths are the
-> same:
-> 
-> mptcp: pm: avoid code duplication to lookup endpoint
-> mptcp: pm: lockless list traversal to dump endpoints
+New patches for t/upstream-net and t/upstream:
+- 562b779666e2: mptcp: pm: use _rcu variant under rcu_read_lock
+- Results: 41c594936cc0..d67f9238deda (export-net)
 
-I suggest the opposite: use 'endp' for both, to have commit titles that
-are under 50 chars, as it is usually recommended by the 50/72 rules (as
-long as it is still understandable).
+New patches for t/upstream:
+- bd3a08dc4788: mptcp: pm: lockless list traversal to dump endpoints
+- (7045c531565f: tg:msg: title under < 50)
+- 26fc0949dd21: mptcp: pm: avoid code duplication to lookup endp
+- Results: 19f842ec6498..17e34effcf7b (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/5855ee9f27ce230c846422d4106358907c313f09/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9a258dc7072ac24b37a8c6a8d03533981747ba6a/checks
 
 Cheers,
 Matt
