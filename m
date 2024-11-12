@@ -1,129 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9674621314D
-	for <mptcp@lists.linux.dev>; Tue, 12 Nov 2024 17:43:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37CBF20B1F7;
+	Tue, 12 Nov 2024 19:18:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731433422; cv=none; b=WajB4W0gEhQ0Rae3pJkH+dmZOiuVuSPATcNQ6BIWIIm9AhVEIrPcyvknZiSMxjLouUBNIUimWqkt5CQnnjQvM7hBNAfUOPjAfXAyKO8ecud6KRzG/j2J3AajZLGUMr6rZ5nBDwN7hK6KnsBmDBUQITsW6Kbt4dCxxWnRzUGsfgk=
+	t=1731439130; cv=none; b=cUh8l4Su0GSExj0+Aq7OS8pmhQ0tmxmN3A/TJWjQkl7kLMKJlMvKIPUn8wtqOIttzk1I2KPBcx3uA8iVlwh8rthiM+6zcmaM6LDMuIuNKVS1+/5/gvdNSsdT4x6sSjah0P9CbpxiLKkeBg7Hyy2yFvpBTI2SsH0iDIqjIgGUbGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731433422; c=relaxed/simple;
-	bh=eAoZ2XRYXWYLb0Gspi1rOM4QX+fXwzawLD4UDYGno1U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u55FUwE7r5JZbuLqjCi4ySuf19/p+YUlnU5iL8YvP+YMfYsRCB7zLdmSBAvzG1vdW8GiPH225djfCNuT+ndeIduwedy2Bs64InSAJYTyi/19yvxPhG2jvaSqOonNgeXPTUEo6lZgIG0xm7jbQ3QQUxlUWTYjVDshNqnS1WoeAio=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oHroNmg/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731439130; c=relaxed/simple;
+	bh=t/ULDxIOnVNYpvWy2HWygKMe4lSTaPF0cPuEZyDxLl4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=HRbRQYR0RlFlKJbZKSF4zBkzFrRocO5tKuX71BXc/SdWv6kE3zRZSxRn+B+rX1xOoqhtxsw+vodRFaJ8cmPxo273ngW82xAnJh7riGe6IgjzpELL2TaHPJsqxSsWflcQwJ/07vtWnt/3XXhnFMV9wLo777JVQO3PAE59GCZ5aUI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PKTjLnkc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oHroNmg/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 272AFC4CECD;
-	Tue, 12 Nov 2024 17:43:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PKTjLnkc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 037F8C4CECD;
+	Tue, 12 Nov 2024 19:18:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731433422;
-	bh=eAoZ2XRYXWYLb0Gspi1rOM4QX+fXwzawLD4UDYGno1U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oHroNmg/8yo79tst/mV5B0Bxzlh8RwJ8/Q5pZmXY8NMpBYdeHhHBodw2/j1YUdJGN
-	 +xR+CkxWYfdaqcSAczE2C8+/qhO/eIUTs34/ZwlDtUyZkOV3CncthxVvly3OBvoGuD
-	 YvXKHc/+DaXzbsWSiTHzLqzXzcNc7a9VeTQ3eoCCsmSy2YBawTH8RQpMO+uF5xPYzM
-	 5p2DzEL7zGLm6pb6a07MPLwHXSExodm/Ag90xy5pDhZSWY4ACflp2BToEAxNsgaH7w
-	 duSHKi2IEWl+O3bWiSDpBoAdCRZkVi0gJhYN6c9/MA6nCQ6Ol4b6SmymLEi64ZYfyo
-	 yp1IBjVNUUQbg==
-Message-ID: <69c3b560-fdd0-411a-9ae0-b4510dde5c15@kernel.org>
-Date: Tue, 12 Nov 2024 18:43:38 +0100
+	s=k20201202; t=1731439129;
+	bh=t/ULDxIOnVNYpvWy2HWygKMe4lSTaPF0cPuEZyDxLl4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=PKTjLnkc60x6+hpJPk12RssWE/VaWTGWxdo6BkNmTTmLa8XtUB8MUaw19TqPy9Ey2
+	 Wf7IjrRgpmKK3mR5GVSl2evQ/0G8v/VEWYQYVshHFUqRwA1EAeeWGqAvA0BZM4eHjq
+	 gOxV80Qx8jLtN4r4jauHLaRSsCFx0FJWqBcSp+wOiRV493EpdHODtf1QaEKuMzieYd
+	 0bwlsO7P5SOyPlXL2qQlZdDSL5/myQjKahfZMKzcgJfq6gtKF6mr804i1Wd1UXcoXV
+	 LtBhS63WM2TelvCTz6yCR8olFYoUoLvEp72SL2lbVrflb8tRPiYQRaj/VEuXXglQ7d
+	 hwCAiZ52xKphQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/3] mptcp: pm: a few more fixes
+Date: Tue, 12 Nov 2024 20:18:32 +0100
+Message-Id: <20241112-net-mptcp-misc-6-12-pm-v1-0-b835580cefa8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v3 0/3] mptcp: pm: use _rcu variant under
- rcu_read_lock
-Content-Language: en-GB
-To: mptcp@lists.linux.dev
-Cc: Paolo Abeni <pabeni@redhat.com>, Geliang Tang <geliang@kernel.org>
-References: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20241107-mptcp-pm-lookup_addr_rcu-v3-0-3c458d025de4@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAiqM2cC/x2MQQqAMAzAviI9W1iHOOZXxIPMqj1sjk1EEP9u8
+ ZhA8kDlIlxhaB4ofEmVIylQ20DY57QxyqIM1tiOiCwmPjHmM2SMUgP2qC5H9I5nw4EW7zxonAu
+ vcv/jEbSB6X0/kuGWrG0AAAA=
+X-Change-ID: 20241112-net-mptcp-misc-6-12-pm-97ea0ec1d979
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+ Kishen Maloor <kishen.maloor@intel.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1100; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=t/ULDxIOnVNYpvWy2HWygKMe4lSTaPF0cPuEZyDxLl4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnM6oVkJaEmlDHyOi72cwB7OHlH+J9iqP5AL9L8
+ VmVxpbUPLCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZzOqFQAKCRD2t4JPQmmg
+ c5niEACLFCbPPcwtLpfnh8/MaouhA8uEtW67eVX+donESp+LxYp8MN4ypfeJ20DZyTrxxsA7l5u
+ l8010gwld7mEhGVKkVQTtZz2IRZR/Sb8QZa1mlnknZSRLqS2RkJMhuY1/eeNbY2p9tw+DoMkdJ0
+ 7i/cAvWRQps/dUYcCPqJjejH5pYfAsKasiIeGCk/Sywpo05nX1BJI0bABuYxw+wlA1MewahK5tb
+ XdHD+DUSLBnKc+WxdgDXYID7gaI/hDWmaLaF/qinVd36+p2LDYpO0XcqJ29gCDna+Kto3Vr+xps
+ tPNcTJx00f+v9nOt4q/GideEDD8Q/owFvuxDZHQr9rUHICe+YtuEA1uAhYobIVk75R03P3eSRz0
+ C6GqxCi3UfLdrtG2pr7v0vPuf7/IM+WUgbuJlkgOi+9kiRr7PX9WFs6r+K0wIFUJkzLBiZGXyNO
+ MEAVTBX/a5uBb3y4Cj2MftTnxXoJDBazwu6kgHgME7MBvAEccjC3i8Poe3bkkNqPPUO+vwnmwq0
+ NrNQwwVCb8xCHp7Bw7UKHrI7Q/iQUYodG+jRLdXgupSiIHY2Ozc/j+vB53VNdEGii4m14uLnlSh
+ oseBGWU2OUDgeV/Jkyzl39av0D0faO1fRPzr9UxGy9gEuALB2w1U90UoED8zbzE+Ke6uwnh+HxD
+ EtJkjfkYnWeGSjA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello,
+Three small fixes related to the MPTCP path-manager:
 
-On 07/11/2024 10:04, Matthieu Baerts (NGI0) wrote:
-> When looking at something else, I noticed that the local endpoint
-> entries list was iterated under rcu_read_lock, but using
-> list_for_each_entry() instead of the _rcu variant. That's what patch 1
-> is fixing.
-> 
-> At the previous meeting, Mat and Christoph mentioned we could use the
-> RCU variant elsewhere. That's what is done in patch 2, for -next then.
-> 
-> Patch 3 is a simple change to remove duplicated code.
+- Patch 1: correctly reflect the backup flag to the corresponding local
+  address entry of the userspace path-manager. A fix for v5.19.
 
-Now in our tree (fixes for -net, and feat. for -next):
+- Patch 2: hold the PM lock when deleting an entry from the local
+  addresses of the userspace path-manager to avoid messing up with this
+  list. A fix for v5.19.
 
-New patches for t/upstream-net and t/upstream:
-- 562b779666e2: mptcp: pm: use _rcu variant under rcu_read_lock
-- Results: 41c594936cc0..d67f9238deda (export-net)
+- Patch 3: use _rcu variant to iterate the in-kernel path-manager's
+  local addresses list, when under rcu_read_lock(). A fix for v5.17.
 
-New patches for t/upstream:
-- bd3a08dc4788: mptcp: pm: lockless list traversal to dump endpoints
-- (7045c531565f: tg:msg: title under < 50)
-- 26fc0949dd21: mptcp: pm: avoid code duplication to lookup endp
-- Results: 19f842ec6498..17e34effcf7b (export)
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (2):
+      mptcp: update local address flags when setting it
+      mptcp: hold pm lock when deleting entry
 
-Tests are now in progress:
+Matthieu Baerts (NGI0) (1):
+      mptcp: pm: use _rcu variant under rcu_read_lock
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5855ee9f27ce230c846422d4106358907c313f09/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9a258dc7072ac24b37a8c6a8d03533981747ba6a/checks
+ net/mptcp/pm_netlink.c   |  3 ++-
+ net/mptcp/pm_userspace.c | 15 +++++++++++++++
+ 2 files changed, 17 insertions(+), 1 deletion(-)
+---
+base-commit: 20bbe5b802494444791beaf2c6b9597fcc67ff49
+change-id: 20241112-net-mptcp-misc-6-12-pm-97ea0ec1d979
 
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
