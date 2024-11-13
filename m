@@ -1,104 +1,201 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F35219E47;
-	Tue, 12 Nov 2024 19:19:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8D4670812
+	for <mptcp@lists.linux.dev>; Wed, 13 Nov 2024 02:07:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731439140; cv=none; b=sw2B52P1tan6P3J6kf1ooKe5Q6XttcM66qsxOn52QP8RDng4NV/ujxJc3rJzy9YQ8xL1yXMaGQR3Ayz/qSBC6FsTFy7DnFMJM0pYAazi2Bd0mgbYXgXVG9/dyvikCM7g0XLU820XPBptXlyuPpeD9XGJITPTP/fy3rKG+bD09gA=
+	t=1731463671; cv=none; b=tlNz6mKpvEbgGB0yi+QZfNmIDtbx/mPIFaYoqQimYkI2EbSLfUVuf77bLi1bEHDKjyraDFMi6AxwgxyOEZCPP29u18qki5nL2mqwcvx33ei0CfxMeohfvQIcLXoafkLg1RaL1xEJV1hXZ5yvPZYLB1tqEmYu0xaMGJYfIUB9nWc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731439140; c=relaxed/simple;
-	bh=g/gbsWd8fhwoyqT2FxBJClkryyLXaAzRPJ4kz1+rAQs=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=f3jKLc027CNxmdUu4lL6tncuVD8JBFfF1K3VwUkF6jSxBUs8TzBrC6R9LL2J7iats0faBReJZP0ha7oTNi71odobZtKpEqCD/e/mLYgh7ScUInm/mya/QlCu8/aoJbrXdHS2Wfw4nd1NhUUctRz9toTSiP49P34TBdtKF73ZwCo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c9y5NWEC; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731463671; c=relaxed/simple;
+	bh=fTp/uGpc0yMepKwBIGNgzdJ9WKrqd2uMcnbj870ELcw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=Bjztk3KuuH53G9X+lVO5eR9xI413Wk8O/ZRjDD+5esw6sCBK9AH4xTG3O7SlPMWx6wC7ezSojJn9vyztwhUAS6IEEjyngzEb1fDYxAvPMNmAFk8OGM/9K3m07yRyOr4oJpMUhBVfcsI/zBlXPMXD43L+myhg2MznDCjAgxdxTdg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oUF3gBQo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c9y5NWEC"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5074CC4CECD;
-	Tue, 12 Nov 2024 19:18:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oUF3gBQo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31E86C4CECD;
+	Wed, 13 Nov 2024 02:07:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731439140;
-	bh=g/gbsWd8fhwoyqT2FxBJClkryyLXaAzRPJ4kz1+rAQs=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=c9y5NWECVt36S1pJfBpPMEgQ4r6v24VWQqWiQCh1gjGgYOJtgHXP173JqLIJFUxyR
-	 rnMaku86UVgZ29QODrrqjblg3G81yN0cJxfIAVSf7mQPXZ1JLb8LGU3oVZ1pbh0EaC
-	 mdWR6nZUYvrF+KDCHutWiAZavyj6xwiRmCo7cS0n2oELX8kCYcIY41lS95AZXUMpAs
-	 a3bO+inqETiJdzJBhywr4zRqIVvrLG4xuScnzcLPP+5Czt6KO4rMY2ydo/KP8oeta6
-	 AMFMeEMQSZ8gDu9S4hNVNPkosPj5qkgGcsl8E014jjbrmBaP305nfdMGzKAZFCQFaY
-	 PrHb3roZ1Qp+A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 12 Nov 2024 20:18:35 +0100
-Subject: [PATCH net 3/3] mptcp: pm: use _rcu variant under rcu_read_lock
+	s=k20201202; t=1731463671;
+	bh=fTp/uGpc0yMepKwBIGNgzdJ9WKrqd2uMcnbj870ELcw=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=oUF3gBQoI84lBknXucrpcrNNH7nbzuswa9cadl+dTkS22xy5Nv+TQ69XvLNnUzbfH
+	 E//tMxlb5chL4UxQ5S+L+3zdHdlDTNxXxJ7caZQSPoJiMDXitTqdYKbt5Uqdm5JuJM
+	 f1Ex6SkngjQ6xcW90kKOg7AwuEXozTxmK4Vouk8BzSNp1oeLV91BnGO18p3NLySxRU
+	 8kv37+K0369uJjNBWLxB1NISE+WckgI6ZgzF7XwtP7BNCnLebS4T2uePMIsWXAwE80
+	 ecnhT/gO877jCLrgTA8p5kTwN1ygylQM2D4dSZPaMcNyvfJr9s47iZEDMGCXC112JI
+	 Ze8XDZwT0kACQ==
+Date: Tue, 12 Nov 2024 18:07:50 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v9 06/13] Squash to "selftests/bpf: Add
+ bpf_first scheduler & test"
+In-Reply-To: <f3155bd767936df549ff0aaa094b44f9e70323ba.1730268415.git.tanggeliang@kylinos.cn>
+Message-ID: <aad320b2-aeb4-12b1-5621-2e803827ec77@kernel.org>
+References: <cover.1730268415.git.tanggeliang@kylinos.cn> <f3155bd767936df549ff0aaa094b44f9e70323ba.1730268415.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241112-net-mptcp-misc-6-12-pm-v1-3-b835580cefa8@kernel.org>
-References: <20241112-net-mptcp-misc-6-12-pm-v1-0-b835580cefa8@kernel.org>
-In-Reply-To: <20241112-net-mptcp-misc-6-12-pm-v1-0-b835580cefa8@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Kishen Maloor <kishen.maloor@intel.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1565; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=g/gbsWd8fhwoyqT2FxBJClkryyLXaAzRPJ4kz1+rAQs=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnM6oVWI78RYZjhBSzAJ9i43Zzj6B5XBHtI+8u7
- jRX8SWKoV6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZzOqFQAKCRD2t4JPQmmg
- c/DTEACPJSoP9uUyllHdYQNBOBZ5L87YTE9Uw76HQCk3yT2kV6najF7R8gd4edofctVsmIZ09j1
- 7FGtDWFgvMAFZU/KWBA0zZcz4vgJuaIyDwdBCZn6tsLN4ivym3lc+Exwvwy0l3ffUyCkyiBNV+h
- bEhgT0GfR8i2qDi5k+jNSWWMZZX7dAqoWH0IM5mgwvS7kRdENi6YG4BN5oSzBw0ViqcAXdebCo5
- 7fuoZRFS8DY3w4dBDDj6QM3MWZOJNuUryhoCp96q5hNShz6yf5K1V0+DKZPbb8LWlCUWwxQ73wK
- VgIzJla0pCqqqO4VgKG/4TRgjAsboWlGWDbAhqvyu0FbgG/r9QD93FQUq+8GLv7pHcDovTnr5D/
- XD3KpeS1kw0xN3l2UGrC4ycaOiFuSJrebxYCjCfhUkNra5VkVoOlI/f33FlCStmZcNJz9HAGivC
- dktMkSY1uaktqbHzw1IeQIly6Joku7ZWCC6YShBwoE+LmBRNqsG1SmI9naJETFtG9DY7hRtyJwr
- yhDkGrS+HkmX0sz4T8IPVLmxnEmAZhYjdGNtnN1gy+qdy/fSeEKKAXlH6dkflIB0dJ2j8LhTpnN
- Bb6oXqhvpwpsSYUljx3BjobnamLs1vRfJ7D9KF2jCv0IVw+hJo22L2bFy16C3nWh6wqE2FjoG05
- DV18/19kehirnBg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
-used as expected to iterate over the list of local addresses, but
-list_for_each_entry() was used instead of list_for_each_entry_rcu() in
-__lookup_addr(). It is important to use this variant which adds the
-required READ_ONCE() (and diagnostic checks if enabled).
+On Wed, 30 Oct 2024, Geliang Tang wrote:
 
-Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
-is called under the pernet->lock and not rcu_read_lock(), an extra
-condition is then passed to help the diagnostic checks making sure
-either the associated spin lock or the RCU lock is held.
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> 1. Update sched_init.
+>
+> 2. For drop bpf_object__find_map_by_name in test_bpf_sched(), change the
+> first parameter of it as bpf_map.
+>
+> 3. Implement mptcp_subflow_set_scheduled in BPF.
+>
+> 4. Drop bpf_mptcp_subflow_ctx_by_pos.
+>
+> 5. Use the newly added bpf_for_each() helper to walk the conn_list.
+>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> tools/testing/selftests/bpf/prog_tests/mptcp.c    | 15 +++++++++------
+> tools/testing/selftests/bpf/progs/mptcp_bpf.h     | 14 ++++++++------
+> .../testing/selftests/bpf/progs/mptcp_bpf_first.c |  4 ++--
+> 3 files changed, 19 insertions(+), 14 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index b00af99c5c9d..a6574a537679 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -645,27 +645,30 @@ static void test_default(void)
+> 	netns_free(netns);
+> }
+>
+> -static void test_bpf_sched(struct bpf_object *obj, char *sched,
+> +static void test_bpf_sched(struct bpf_map *map, char *sched,
+> 			   bool addr1, bool addr2)
+> {
+> 	char bpf_sched[MPTCP_SCHED_NAME_MAX] = "bpf_";
+> 	struct netns_obj *netns;
+> 	struct bpf_link *link;
+> -	struct bpf_map *map;
+> +	int err;
+>
+> 	if (!ASSERT_LT(strlen(bpf_sched) + strlen(sched),
+> 		       MPTCP_SCHED_NAME_MAX, "Scheduler name too long"))
+> 		return;
+>
+> -	map = bpf_object__find_map_by_name(obj, sched);
+> 	link = bpf_map__attach_struct_ops(map);
+> -	if (CHECK(!link, sched, "attach_struct_ops: %d\n", errno))
+> +	if (!ASSERT_OK_PTR(link, "attach_struct_ops"))
+> 		return;
+>
+> -	netns = sched_init("subflow", strcat(bpf_sched, sched));
+> +	netns = netns_new(NS_TEST, true);
+> 	if (!netns)
+> 		goto fail;
+>
+> +	err = sched_init("subflow", strcat(bpf_sched, sched));
+> +	if (!ASSERT_OK(err, "sched_init"))
+> +		goto fail;
+> +
+> 	send_data_and_verify(sched, addr1, addr2);
+>
+> fail:
+> @@ -681,7 +684,7 @@ static void test_first(void)
+> 	if (!ASSERT_OK_PTR(skel, "open_and_load: first"))
+> 		return;
+>
+> -	test_bpf_sched(skel->obj, "first", WITH_DATA, WITHOUT_DATA);
+> +	test_bpf_sched(skel->maps.first, "first", WITH_DATA, WITHOUT_DATA);
+> 	mptcp_bpf_first__destroy(skel);
+> }
+>
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> index 3b20cfd44505..f8c917dc2c1c 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> @@ -42,6 +42,14 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
+> 	return subflow->tcp_sock;
+> }
+>
 
-Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+Hi Geliang -
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index db586a5b3866f66a24431d7f2cab566f89102885..45a2b5f05d38b0e7f334578f5ee6923a8ff8f7b2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -524,7 +524,8 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
- {
- 	struct mptcp_pm_addr_entry *entry;
- 
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list,
-+				lockdep_is_held(&pernet->lock)) {
- 		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
- 			return entry;
- 	}
+Thanks for the updates to this series. The change to a BPF-based helper 
+does work around the pointer-handling issue, but it's important to be sure 
+WRITE_ONCE() is being handled correctly.
 
--- 
-2.45.2
+> +#define WRITE_ONCE(x, val) ((*(volatile typeof(x) *) &(x)) = (val))
 
+We initially added the C version of the mptcp_subflow_set_scheduled() 
+helper because it wasn't clear how to handle WRITE_ONCE() in BPF. The only 
+other implementation I found is in the cilium code (also GPLv2):
+
+https://github.com/cilium/cilium/blob/main/bpf/include/bpf/compiler.h
+
+It's a lot more complex than the macro added above (using an asm statement 
+to set up the memory barrier). I don't know enough about low-level BPF and 
+BPF toolchains to know that the cilium WRITE_ONCE() technique works 
+everywhere - anyone else have a comment on this?
+
+Another concern I have is that a lot of boilerplate BPF code is needed to 
+set the scheduled bit in every BPF scheduler, and it's easy for a 
+scheduler author to just skip the WRITE_ONCE() stuff and possibly 
+introduce subtle write-ordering bugs. The C helper was easy to use 
+correctly.
+
+I'm not sure what the correct solution is yet. Geliang, do you have any 
+ideas for an approach that works around the kfunc pointer limitations and 
+also prevents WRITE_ONCE() bugs?
+
+- Mat
+
+
+> +
+> +static __always_inline void
+> +mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow, bool scheduled)
+> +{
+> +	WRITE_ONCE(subflow->scheduled, scheduled);
+> +}
+> +
+> /* ksym */
+> extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
+> extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
+> @@ -52,10 +60,4 @@ bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
+> extern struct sock *
+> bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow) __ksym;
+>
+> -extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+> -					bool scheduled) __ksym;
+> -
+> -extern struct mptcp_subflow_context *
+> -bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos) __ksym;
+> -
+> #endif
+> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> index d57399b407a7..5d0f89c636f0 100644
+> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> @@ -20,11 +20,11 @@ SEC("struct_ops")
+> int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
+> 	     struct mptcp_sched_data *data)
+> {
+> -	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx_by_pos(data, 0), true);
+> +	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx(msk->first), true);
+> 	return 0;
+> }
+>
+> -SEC(".struct_ops")
+> +SEC(".struct_ops.link")
+> struct mptcp_sched_ops first = {
+> 	.init		= (void *)mptcp_sched_first_init,
+> 	.release	= (void *)mptcp_sched_first_release,
+> -- 
+> 2.45.2
+>
+>
+>
