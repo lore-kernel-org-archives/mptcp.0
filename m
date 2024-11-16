@@ -1,130 +1,88 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7C6781D63E0;
-	Fri, 15 Nov 2024 16:52:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56F7036D;
+	Sat, 16 Nov 2024 00:08:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731689573; cv=none; b=sk86kvDsNIr4o8LQylgNE/u3IOvLfVlECRitq7OTGZL+1/1eEGhvfRxZqm0a7ykO6vrGFy81H+XzKJ6HpOhZwYfDAECFRf6DRqGuNIYNzxQIveYEcWeR5EwNfu7TCWT4cX2Amz5HU7dgE87lndagkGzBvbdET7IWVF2PyxoReVU=
+	t=1731715699; cv=none; b=mxXaz9OPPclgiuxjMshKtU1OoqfuuBdyd9LJsVIGWK0A6XzcDpYYkA8Wzopg9Ybf8u8BKjBzPQv+g6IpRkLSljCkEhhD/v1aKSsRjHN81sAY2biMHU1jNyDeO9TPhpNEfKYUJ0/oBxqYmK6QI127OLmGQxvFnbARzdoH2MxmFtU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731689573; c=relaxed/simple;
-	bh=KmFQIPqrunG4ak8MKbdja0liL+Kg5SrJXxe1wOz+7gY=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=p7f5SG4rgfUr3p81PEPUyOh1xxSxQMU5RPRgy4+nwwO4wg2PPopAMhxcnKIXrAktIPnR2S4WXgzj1XR71tugp0DdScjfn/OHs5WD66Gy+4XBGGAc/fya9iQG629Yhc49Gb1YbPC7dyEPDHb+tZPZlyn+AwtorFP/sqI+2opzZQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GpFVHUOL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731715699; c=relaxed/simple;
+	bh=c8v8xPbDc/4iwirqSmQJaogTdm/AhEGIo+tQMRM8OQY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=d4bDgv69GMRi+awApH/cyy8S4JRsLaQL3D8oeTHN2QunhLmwEJeSQW2vf8xiznJJIyT81SfHAojWfmie1gSJ+ioFrh/EC+VMbzoB/nUFNyQEkuhaY2xp8d+D8vHAbj5uM85Q/RM4nu2ThskMNH1b/sadr+f4A0hHnXlB5VdsKHI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dm0XF7ME; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GpFVHUOL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D723CC4CED0;
-	Fri, 15 Nov 2024 16:52:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dm0XF7ME"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2158DC4CECF;
+	Sat, 16 Nov 2024 00:08:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731689573;
-	bh=KmFQIPqrunG4ak8MKbdja0liL+Kg5SrJXxe1wOz+7gY=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GpFVHUOL6XkAyNBmxv2aKUOvgpMMp2Wesvur5mFB9hEDoSploEXuY4CKvBhN+LxZr
-	 YK1DIGadS+3g8i395ldRnq7fCoO5jzLvB+UxvRfs842e93WMGPkr//f4pYLtBtw61g
-	 zbLCix56VWLPnsu0Yx1TymKgd5lbb8fWbdmNmGq5PVlcthH/Y1rs1fjq9fjb322DTq
-	 nbQPR/1Ef5YnICOHDr1GbI4kCfMnjSTt/vUjGd6mfeyDVURH8PNBmD+yxmYubcq3hA
-	 pXrQiC7ANssgF34XOPOaVruFoyBIHF1ajx5T4g/ofHtZ8oUhRQd+yXrIUsAGwYEOjS
-	 IMS6w3mZBNj1Q==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 15 Nov 2024 17:52:35 +0100
-Subject: [PATCH net-next 2/2] mptcp: pm: avoid code duplication to lookup
- endp
+	s=k20201202; t=1731715698;
+	bh=c8v8xPbDc/4iwirqSmQJaogTdm/AhEGIo+tQMRM8OQY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=dm0XF7ME7O2ruIlmQRmGirE5rDBOoCgmDlamxXJlYjHlweWrdgutxXeGTZzIt+fku
+	 6ili11KJ2KgDRG7/vuXp+Kca8el/PnkeI1KkbUvQT7Rs1d/JR++mc+lYoIFQCvX4BF
+	 WIsLlz8NxPcPbLaZeULIIAfQPip8lO5PFW+IiLwVfmAd2fAbO053YIeiCnBizDENb4
+	 xqpWmvkTJ/30vlNqJxLZCm/vb/uYNOjwhHlQ/318Uqdy5gpd9sCRgYclzWqwSi7qFr
+	 sAoFbOGmGqbR44mVTEhSic5nPtuBXW76W+1udJsxy9HdaapwvGZgQmNu0wPaAaVFth
+	 +elYkTvRzJzpw==
+Date: Fri, 15 Nov 2024 16:08:16 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Cc: 0x7f454c46@gmail.com, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, Ivan Delalande
+ <colona@arista.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, Kuniyuki
+ Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, Johannes Berg
+ <johannes@sipsolutions.net>
+Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
+Message-ID: <20241115160816.09df40eb@kernel.org>
+In-Reply-To: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241115-net-next-mptcp-pm-lockless-dump-v1-2-f4a1bcb4ca2c@kernel.org>
-References: <20241115-net-next-mptcp-pm-lockless-dump-v1-0-f4a1bcb4ca2c@kernel.org>
-In-Reply-To: <20241115-net-next-mptcp-pm-lockless-dump-v1-0-f4a1bcb4ca2c@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1975; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=O/z/Hsnsu0LR75JFQ4U+yjYL7PiLIn4Ce3jB0lRGo68=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnN3xdydDjCMxxodmAEg7nruMUclT9BHZ93cVyJ
- TmDdIH8x1+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZzd8XQAKCRD2t4JPQmmg
- c+CuEACSxEujOpkJttoIF3f9j5rKquyF0TJ0EYDQuXkpOMPUZLPq73ZtfD2EMjK/EPRAmP5fljp
- 4aQhKqhwqYfoK8tboi/UiIarV5bdmRkanCRJpc1N6+lFR4YtP9JBrAkSH6mfANJcfLMcMJYpUh+
- 66Bcfe1Q7zm25XbBBnRW+YGicF+7yK7Dhc73e962bOgEXocPTKvu1aWYchIgfOba2BA+TCuweS7
- jo9J1t0kqvxGmZ2XgxRPCSnw7OHjU9gjhwQtnledSYtQqJ0fX6Of8i5k+Q18kVjojzgnGYMlaTQ
- APZKbSL/OCTo7W5r93YxpAX9ylgCpw4M70gTPat5rDNRNgVIVzvtGFVvVwXH451kyQ507AAaqB+
- ugJ8EYAa85BDWYJ5Bp2xLEZxj9NpM88KSDTQ6Oijw5mssKbN/elHVaDnEZUGFFZ135KsjjCh2js
- cnfYCg6vmwwDb6ulhgKNQzOkaabCWCyUTtjwOIwVTst5Q3rBof40NWkGFEBi+vQZ4OE3SHuUnEe
- KZ78aCxnkt55wXz2Npp8iWT3pkCyUdE/broaKYQP6llkZSXAP1l5ebBvETKAw70prSnUv4iqCvQ
- f4jTXfBmiasz1HpDMY+91+GZG3j6cG+rUbPRDxDS4aygxYglYnNyuhBDOKt7a6i+7HJeLmMWTMi
- uDL4e5qyCCB6sMQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On Wed, 13 Nov 2024 18:46:39 +0000 Dmitry Safonov via B4 Relay wrote:
+> 2. Inet-diag allocates netlink message for sockets in
+>    inet_diag_dump_one_icsk(), which uses a TCP-diag callback
+>    .idiag_get_aux_size(), that pre-calculates the needed space for
+>    TCP-diag related information. But as neither socket lock nor
+>    rcu_readlock() are held between allocation and the actual TCP
+>    info filling, the TCP-related space requirement may change before
+>    reaching tcp_diag_put_md5sig(). I.e., the number of TCP-MD5 keys on
+>    a socket. Thankfully, TCP-MD5-diag won't overwrite the skb, but will
+>    return EMSGSIZE, triggering WARN_ON() in inet_diag_dump_one_icsk().
 
-The helper __lookup_addr() can be used in mptcp_pm_nl_get_local_id()
-and mptcp_pm_nl_is_backup() to simplify the code, and avoid code
-duplication.
+Would it be too ugly if we simply retried with a 32kB skb if the initial
+dump failed with EMSGSIZE?
 
-Co-developed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 20 ++++++--------------
- 1 file changed, 6 insertions(+), 14 deletions(-)
+Another option would be to automatically grow the skb. The size
+accounting is an endless source of bugs. We'd just need to scan
+the codebase to make sure there are no cases where someone does
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 2b005ddfd2d365b66abf42065289d74630e604f6..7a0f7998376a5bb73a37829f9a6b3cdb9a3236a2 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1143,17 +1143,13 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
- {
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
--	int ret = -1;
-+	int ret;
- 
- 	pernet = pm_nl_get_pernet_from_msk(msk);
- 
- 	rcu_read_lock();
--	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
--			ret = entry->addr.id;
--			break;
--		}
--	}
-+	entry = __lookup_addr(pernet, skc);
-+	ret = entry ? entry->addr.id : -1;
- 	rcu_read_unlock();
- 	if (ret >= 0)
- 		return ret;
-@@ -1180,15 +1176,11 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
- {
- 	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
- 	struct mptcp_pm_addr_entry *entry;
--	bool backup = false;
-+	bool backup;
- 
- 	rcu_read_lock();
--	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list) {
--		if (mptcp_addresses_equal(&entry->addr, skc, entry->addr.port)) {
--			backup = !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
--			break;
--		}
--	}
-+	entry = __lookup_addr(pernet, skc);
-+	backup = entry && !!(entry->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
- 	rcu_read_unlock();
- 
- 	return backup;
+	ptr = __nla_reserve();
+	nla_put();
+	*ptr = 0;
 
--- 
-2.45.2
+Which may be too much of a project and source of bugs in itself.
 
+Or do both, retry as a fix, and auto-grow in net-next.
+
+> In order to remove the new limit from (4) solution, my plan is to
+> convert the dump of TCP-MD5 keys from an array to
+> NL_ATTR_TYPE_NESTED_ARRAY (or alike), which should also address (1).
+> And for (3), it's needed to teach tcp-diag how-to remember not only
+> socket on which previous recvmsg() stopped, but potentially TCP-MD5
+> key as well.
+
+Just putting the same attribute type multiple times is preferable
+to array types.
