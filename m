@@ -1,63 +1,90 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 81FE936D;
-	Sat, 16 Nov 2024 00:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5753F610C;
+	Sat, 16 Nov 2024 00:20:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731716030; cv=none; b=d7qOkq0jA5AmPe34a3+9MhPMJV4H9hKlb+1eBNaYloInIP2TmbUw+HImo3X1goBGFWcddzq+ZNjV2oemsaxrx+ciYsFJ46n/PF31NEaksPAaUcLacfG0dWRe8oiST1w7cwHcuERAt4a6z/kWI8xrBtLNzvnTWSkSfh+35rR5fNI=
+	t=1731716418; cv=none; b=XHvFDOW/1QebZPD8Z9cUIHVhJfJY7GhgKfBBoRNfjEGpIaItCw04lP6l73y/vBFJYlqsVwW0b1GQYBLBifFyOIdJcDnP8xjytdhdsZVq2kCktpXm9pKofv9hY2Ajun/2fpPo3EmqWO7BKpnOxt8otUaoqxdVtOGFPPtcO30qxMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731716030; c=relaxed/simple;
-	bh=bhgxwkHRViK3jkSy2IanwbEGS325jUf3R1U0Xjcn2A0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=uD6MYc2YmQYX79o6+WRlL9xZkwcoAA5pktbS3fYLqa6m0XSIL3cm4Okw+AAUZZo9Q3fnPJiPvP69SxAT4TMArbCoSi9P/EiV4XPsuOiCJNjFadq6v7LaTr50tO09EzSyHPQUXNyBG6Ez3B4yEc1jURnj7ltsQKBuc9bcVsLJgp0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rkTYohWe; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731716418; c=relaxed/simple;
+	bh=m0P9y5uzjWBx5KyJViLFUiCTpqqo0oDCzfKKh559ndc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=AB65srRpajy53y9cfdmNV+KwcvYU3IUwfRJAOid5akqME9LJFFkE3c0wMq6eX3eFecamecsLbJEd8jV1v+gLR8MLdR4QXu6p1fV3y34hmrpoP/ZhVAffF/NWuBIwf5DxpvHDt5MzaCbVZt5S189kZ5OLKw2sIsdIvgyoMzF0E3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SVqdyyxO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rkTYohWe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 396BEC4CECF;
-	Sat, 16 Nov 2024 00:13:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SVqdyyxO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DDD30C4CED8;
+	Sat, 16 Nov 2024 00:20:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731716029;
-	bh=bhgxwkHRViK3jkSy2IanwbEGS325jUf3R1U0Xjcn2A0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=rkTYohWenM36KAYozGo5drV55cSOYn+FaiDGMMYmuG0Rj8wwKeQu6gN1NozLdf1Aj
-	 6v+abKp+7tVtD3hqA887PIqohSe9m8q5RuQdZ83XeV3Og9d2maNoJJWELvUbCcuM+E
-	 izHrGm6KZqjRMdoWEL2+Ixqt/cQKWvlUHyYsruG+y2MOdwK01L6Qu7CiPnaNwzzSR8
-	 U69gFHvxh6n75yXtorPjFyXV/UMgkg9cSHmT6shq04kRyHi7b0hRgUb/uAKsjXCklA
-	 qGcidtJ6fk4/ocCiWncRkBAebKh6/ftG4cTToUiyfl2okSiouNLynWSIdN6zh0Aeh4
-	 R9qBhRKddP7VA==
-Date: Fri, 15 Nov 2024 16:13:48 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
-Cc: 0x7f454c46@gmail.com, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, Ivan Delalande
- <colona@arista.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
- <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, Boris Pismenny
- <borisp@nvidia.com>, John Fastabend <john.fastabend@gmail.com>, Davide
- Caratti <dcaratti@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH net v2 5/5] net/netlink: Correct the comment on netlink
- message max cap
-Message-ID: <20241115161348.517ed20d@kernel.org>
-In-Reply-To: <20241113-tcp-md5-diag-prep-v2-5-00a2a7feb1fa@gmail.com>
-References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
-	<20241113-tcp-md5-diag-prep-v2-5-00a2a7feb1fa@gmail.com>
+	s=k20201202; t=1731716417;
+	bh=m0P9y5uzjWBx5KyJViLFUiCTpqqo0oDCzfKKh559ndc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=SVqdyyxOrql21t8B3oNaUItWO7RMY7E/YVO9+/xC/vfyhBcMc3vcHbSbl9d01gjXV
+	 VAUsIz9pYYKWJPJNyVmyW5qFDAfX5qyOqYdb2pwLCQSSCQLxGps5IrXwj3RZXugZ7L
+	 SGWy2xbauZp3m5fXsB4FV6LHLmpE6PaHNxl8Ir3hBzfuLbzR/I94ix+1Vs5BQL6Axl
+	 UAh89/q7S7BAHwyQtkO+28APEg3hz52Bi8uDkCOAnr8Wy0iu6C6CS/0ratc5kVden6
+	 53ItggshuQbrdmNVgl4L5jtaXRmzM9E6vVPe3HYW+7Pd7vTc3KRRh5CaAClv9AunrD
+	 0LKFx4zo6visw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EACD13809A80;
+	Sat, 16 Nov 2024 00:20:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173171642849.2779297.12522283090326488509.git-patchwork-notify@kernel.org>
+Date: Sat, 16 Nov 2024 00:20:28 +0000
+References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+In-Reply-To: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+To: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>
+Cc: davem@davemloft.net, edumazet@google.com, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, dsahern@kernel.org, colona@arista.com,
+ matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ borisp@nvidia.com, john.fastabend@gmail.com, dcaratti@redhat.com,
+ kuniyu@amazon.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ mptcp@lists.linux.dev, 0x7f454c46@gmail.com, stable@vger.kernel.org
 
-On Wed, 13 Nov 2024 18:46:44 +0000 Dmitry Safonov via B4 Relay wrote:
-> From: Dmitry Safonov <0x7f454c46@gmail.com>
-> 
-> Since commit d35c99ff77ec ("netlink: do not enter direct reclaim from
-> netlink_dump()") the cap is 32KiB.
-> 
-> Signed-off-by: Dmitry Safonov <0x7f454c46@gmail.com>
+Hello:
 
-I'll apply this one already, looks obviously correct (tm)
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 13 Nov 2024 18:46:39 +0000 you wrote:
+> Changes in v2:
+> - Fixup for uninitilized md5sig_count stack variable
+>   (Oops! Kudos to kernel test robot <lkp@intel.com>)
+> - Correct space damage, add a missing Fixes tag &
+>   reformat tcp_ulp_ops_size() (Kuniyuki Iwashima)
+> - Take out patch for maximum attribute length, see (4) below.
+>   Going to send it later with the next TCP-AO-diag part
+>   (Kuniyuki Iwashima)
+> - Link to v1: https://lore.kernel.org/r/20241106-tcp-md5-diag-prep-v1-0-d62debf3dded@gmail.com
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,v2,1/5] net/diag: Do not race on dumping MD5 keys with adding new MD5 keys
+    (no matching commit)
+  - [net,v2,2/5] net/diag: Warn only once on EMSGSIZE
+    (no matching commit)
+  - [net,v2,3/5] net/diag: Pre-allocate optional info only if requested
+    (no matching commit)
+  - [net,v2,4/5] net/diag: Always pre-allocate tcp_ulp info
+    (no matching commit)
+  - [net,v2,5/5] net/netlink: Correct the comment on netlink message max cap
+    https://git.kernel.org/netdev/net-next/c/e51edeaf3506
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
