@@ -1,93 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 073D42E3EB;
-	Mon, 18 Nov 2024 18:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58D3A4C79;
+	Tue, 19 Nov 2024 00:12:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731954476; cv=none; b=cs4Vw+4tMuMOgG7NMeZt21AJ1LePVjP1V5uTLwJ0G/s7aytZtfSLUhV3nPja8WsaIIshkohdUSX0YkYmjyYqvnzolNxq8R0a4YUs9sGckD5/NwuUx8pe7sNAefvWyn1TDuUvL6fIdnp6/8n/8719675/k+YH7NIUwQwGB2z2+VY=
+	t=1731975165; cv=none; b=ahM3vK0NhHrdJuoVETtg2HmArRDaF/v96qYFiOy1LKCYXVOlGxtzgotlTVHkemBtwmQTg/xd3roVmPvtL/gAxYYLvWBLMf4uXf2nT1Xwig44/Sq4+YllwyWHW0ixZdJlJn1erMOjlHPAILkTifYLTNdBBZ1sbPabNcmpFhehILo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731954476; c=relaxed/simple;
-	bh=oUHl9syWz+l50YB6iHaH/W3xamw75kFCBtFIDuz+ldw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PDWE1Hj6RrNRsgK43ZXvLEMXnqCJSNMXUULkppETSHU2wiUfs3jpSE7rjsylrluzW5+vvXe9QtGySENsz2U5F/RC+ycyJk1WrRInCbjjPaAb3mOg9uh9QF7wNcqyQi90rWU//9yMIubS4I2yio6BpFAGaAdbIQU+9KnXdz0x9lQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nq8WJjFm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1731975165; c=relaxed/simple;
+	bh=DGHPR51uRHUPukb2rIe3ofMbIuCZTjfafAGw9yjHnVU=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=gjmlmkLzXBg8Z/6gX8Kazj9dWZbTzH07rWv4j3I25q3letDFIfSdCGJhfVvpy5XNKT0BE5Nxmy6spNXSsBwQdSgdIC6K/Tl5X0upBgMUpYxSiRsXqoTJWAwCdSTYOrHiDVq2MprFTDtr3eLqG8nBuq0LUqcgmw1KxGkaJeFimKk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=en+BIKAF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nq8WJjFm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ADCFFC4CECC;
-	Mon, 18 Nov 2024 18:27:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="en+BIKAF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44E3FC4CECC;
+	Tue, 19 Nov 2024 00:12:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731954475;
-	bh=oUHl9syWz+l50YB6iHaH/W3xamw75kFCBtFIDuz+ldw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nq8WJjFm/VL11yuPxAiW7/4d/0xhF3JdiM7sAHIuRLG5f+qDH4v59y3zQxUvIr40P
-	 /ByJPreyn/XIuPW47+xJPBz0jwO7gUU3fO9f3R/n7day8pezFq2vNq9ddGvJUQmX7f
-	 bNQtKLP+9TZCvMnWdRQ6ptg53rOqCz3nOzwXigFh2fv3Y6kNN8sQQQ6ikicdpogP3y
-	 VC3YuXtJ5Hp88bJdN7DZe4i/6Hniql6Rp8RssEEmREQ68/0Lwe/4DJsIffFX3u9skR
-	 LLWHcvbbKNADS5/7HdilWIxb88LLwpy0jH3XEwTgqnZ8eOJjGTqFbMm3QWpJoP15+F
-	 VwvgQ5tJofj0w==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: mptcp@lists.linux.dev,
-	stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	sashal@kernel.org,
-	Geliang Tang <geliang@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.6.y 6/6] mptcp: pm: use _rcu variant under rcu_read_lock
-Date: Mon, 18 Nov 2024 19:27:24 +0100
-Message-ID: <20241118182718.3011097-14-matttbe@kernel.org>
-X-Mailer: git-send-email 2.45.2
-In-Reply-To: <20241118182718.3011097-8-matttbe@kernel.org>
-References: <20241118182718.3011097-8-matttbe@kernel.org>
+	s=k20201202; t=1731975164;
+	bh=DGHPR51uRHUPukb2rIe3ofMbIuCZTjfafAGw9yjHnVU=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=en+BIKAF8n7fR0snuOjMQUX4q4c/2kQqy1qCHU00WxCejJIG3MR+0K4GgpW3T0nuG
+	 AO6vYyglaok8B0PMRDvkdU91D+It4CNlf92R+naXukCGZS9njHKWrPcTISI1aUjYnX
+	 S4wJ9WEkoGfdvEJYJVyxfzPDfJfkPFc5fBZSv4kCsSkAIXsHwxeePvz7iMn11PM2Gb
+	 s4t6Ihkj9rtQTL2KgTLX9tpCpfGzBiHWpSdF3A1CRGZLKDiwxs1t3TK8vFbm4jmO0B
+	 2EzL118tY1ucdfQJaBoC+Yl1C2mnjpDRZLWtohEuIXints0HzCF7fg8IEkS9ByPsCw
+	 8OdEMvoCdQPgg==
+Date: Mon, 18 Nov 2024 16:12:43 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Dmitry Safonov <0x7f454c46@gmail.com>
+Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet
+ <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon Horman
+ <horms@kernel.org>, David Ahern <dsahern@kernel.org>, Ivan Delalande
+ <colona@arista.com>, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, John Fastabend
+ <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, Kuniyuki
+ Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, Johannes Berg
+ <johannes@sipsolutions.net>
+Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
+Message-ID: <20241118161243.21dd9bc0@kernel.org>
+In-Reply-To: <CAJwJo6YdAEj1GscO-DQ2hAHeS3cvqU_xev3TKbpLSqf-EqiMiQ@mail.gmail.com>
+References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+	<20241115160816.09df40eb@kernel.org>
+	<CAJwJo6ax-Ltpa2xY7J7VxjDkUq_5NJqYx_g+yNn9yfrNHfWeYA@mail.gmail.com>
+	<20241115175838.4dec771a@kernel.org>
+	<CAJwJo6YdAEj1GscO-DQ2hAHeS3cvqU_xev3TKbpLSqf-EqiMiQ@mail.gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1770; i=matttbe@kernel.org; h=from:subject; bh=oUHl9syWz+l50YB6iHaH/W3xamw75kFCBtFIDuz+ldw=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnO4cG8kNSj4r+UMJypWr51PC0SKuCn7EsWI6FZ bjEY7CrvrCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZzuHBgAKCRD2t4JPQmmg cwKFD/0U/S4zOye0ab02Ca9LVqhM2yC/rQEfO3O4WL8s6ekxFQAxyrkt/KUxrM+ntFjLZ0q2ENg 9wazA2pSAMwwwtC7RJ4vuGJ1KWgVHDwuSaCNaffqvWtsq+qbewxTDTUMUsn7zW/d89wLc2bCmqi bQCSemaB5wDuH+BvgfGPAcvjSyfb/va3WiqhhxJT2LNvgbwB9h1UgI0fFv1sgeDwyFRJCzwNRGs X/aTrMJZh+oKvA2DMDV5NirBEM35DQUCPP49YmOBu2RaOxx16YU3dgeej4pyuY5u7V4MHkKNRDk 05TAvnDr4UXFyj/qYL5qq4iZRv8Zh6HyoANA5zn1oKXcCaojdExUyHm7xSlokBlJNrGRkVIEcPP xSP+qwaR27BsKLFAD7xEo5yTG8X7+4f3knB9u21rXq9Mcqz8vJcNcDix9nEXQlS27HqQzjnehP4 owj+HxF/RSi9jRYlW2fCqiIgvdALsLKsKyLf6GQ7kyYwkyBxDGv1/v8nV2e4eogSEenWRps/hVQ y+/aA22kNon3okLHVk7ZCanYtUabtCa2yWwG5YeEMlQwOySCDk/KlNvXXxIGRE1EYgnknuyw5+H 2a5ReYWOcOWC6hzLfr8DEZTK3Qut3xn/CIJRln/jvLWth6INRl0Jym2D+ROTiY84RzvrILDlTu7 kDg+h9yXHQQSedA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-commit db3eab8110bc0520416101b6a5b52f44a43fb4cf upstream.
+On Sat, 16 Nov 2024 03:52:47 +0000 Dmitry Safonov wrote:
+> On Sat, 16 Nov 2024 at 01:58, Jakub Kicinski <kuba@kernel.org> wrote:
+> > On Sat, 16 Nov 2024 00:48:17 +0000 Dmitry Safonov wrote:  
+> > > Yeah, I'm not sure. I thought of keeping it simple and just marking
+> > > the nlmsg "inconsistent". This is arguably a change of meaning for
+> > > NLM_F_DUMP_INTR because previously, it meant that the multi-message
+> > > dump became inconsistent between recvmsg() calls. And now, it is also
+> > > utilized in the "do" version if it raced with the socket setsockopts()
+> > > in another thread.  
+> >
+> > NLM_F_DUMP_INTR is an interesting idea, but exactly as you say NLM_F_DUMP_INTR
+> > was a workaround for consistency of the dump as a whole. Single message
+> > we can re-generate quite easily in the kernel, so forcing the user to
+> > handle INTR and retry seems unnecessarily cruel ;)  
+> 
+> Kind of agree. But then, it seems to be quite rare. Even on a
+> purposely created selftest it fires not each time (maybe I'm not
+> skilful enough). Yet somewhat sceptical about a re-try in the kernel:
+> the need for it is caused by another thread manipulating keys, so we
+> may need another re-try after the first re-try... So, then we would
+> have to introduce a limit on retries :D
 
-In mptcp_pm_create_subflow_or_signal_addr(), rcu_read_(un)lock() are
-used as expected to iterate over the list of local addresses, but
-list_for_each_entry() was used instead of list_for_each_entry_rcu() in
-__lookup_addr(). It is important to use this variant which adds the
-required READ_ONCE() (and diagnostic checks if enabled).
+Wouldn't be the first time ;)
+But I'd just retry once with a "very large" buffer.
 
-Because __lookup_addr() is also used in mptcp_pm_nl_set_flags() where it
-is called under the pernet->lock and not rcu_read_lock(), an extra
-condition is then passed to help the diagnostic checks making sure
-either the associated spin lock or the RCU lock is held.
+> Hmm, what do you think about a kind of middle-ground/compromise
+> solution: keeping this NLM_F_DUMP_INTR flag and logic, but making it
+> hardly ever/never happen by purposely allocating larger skb. I don't
+> want to set some value in stone as one day it might become not enough
+> for all different socket infos, but maybe just add 4kB more to the
+> initial allocation? So, for it to reproduce, another thread would have
+> to add 4kB/sizeof(tcp_diag_md5sig) = 4kB/100 ~= 40 MD5 keys on the
+> socket between this thread's skb allocation and filling of the info
+> array. I'd call it "attempting to be nice to a user, but not at their
+> busylooping expense".
 
-Fixes: 86e39e04482b ("mptcp: keep track of local endpoint still available for each msk")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20241112-net-mptcp-misc-6-12-pm-v1-3-b835580cefa8@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+The size of the retry buffer should be larger than any valid size.
+We can add a warning if calculated size >= 32kB.
+If we support an inf number of md5 keys we need to cap it.
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 76be4f4412df..2cf4393e48dc 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -525,7 +525,8 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
- {
- 	struct mptcp_pm_addr_entry *entry;
- 
--	list_for_each_entry(entry, &pernet->local_addr_list, list) {
-+	list_for_each_entry_rcu(entry, &pernet->local_addr_list, list,
-+				lockdep_is_held(&pernet->lock)) {
- 		if (mptcp_addresses_equal(&entry->addr, info, entry->addr.port))
- 			return entry;
- 	}
--- 
-2.45.2
+Eric is back later this week, perhaps we should wait for his advice.
 
+> > Right, the table based parsing doesn't work well with multi-attr,
+> > but other table formats aren't fundamentally better. Or at least
+> > I never came up with a good way of solving this. And the multi-attr
+> > at least doesn't suffer from the u16 problem.  
+> 
+> Yeah, also an array of structs that makes it impossible to extend such
+> an ABI with new members.
+> 
+> And with regards to u16, I was thinking of this diff for net-next, but
+> was not sure if it's worth it:
+> 
+> diff --git a/lib/nlattr.c b/lib/nlattr.c
+> index be9c576b6e2d..01c5a49ffa34 100644
+> --- a/lib/nlattr.c
+> +++ b/lib/nlattr.c
+> @@ -903,6 +903,9 @@ struct nlattr *__nla_reserve(struct sk_buff *skb,
+> int attrtype, int attrlen)
+>  {
+>   struct nlattr *nla;
+> 
+> + DEBUG_NET_WARN_ONCE(attrlen >= U16_MAX,
+> +     "requested nlattr::nla_len %d >= U16_MAX", attrlen);
+> +
+>   nla = skb_put(skb, nla_total_size(attrlen));
+>   nla->nla_type = attrtype;
+>   nla->nla_len = nla_attr_size(attrlen);
+
+I'm slightly worried that this can be triggered already from user
+space, but we can try DEBUG_NET_* and see. Here and in nla_nest_end().
