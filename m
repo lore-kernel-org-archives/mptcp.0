@@ -1,79 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84E65153838;
-	Tue, 19 Nov 2024 04:00:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA95819ABC3;
+	Tue, 19 Nov 2024 08:35:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1731988832; cv=none; b=dmLOAfruAS00UhftDdblHKJGWmK0fC3dSIo4n0O815T34Ql7N5hEZPDoL0Eho97LCNw1cWb/Gove+eGH+eFpauaFtzlEzqGxHvAr3R1bD5UGzZjXaGT5wckOcSC1jqJ3qKuc/Mt6Fx03UYVo7BuSyagm9XUXiyXwAXGXaG0l4ss=
+	t=1732005356; cv=none; b=h0h/96muifc9MqZS2V36QR/pO8McUZthP2sIZ6BwJbiavIuUWwpl9O9ebeMc39N8Vccx6HFCWq5Olrhiy5LQktKhltoND18KoRKkS7RGmKeuu8joaKrc6mR9WOGMCIUW9LyHMRe0UPJJWCJ83i1JI29ulP1pLirojaWKGfuxBTQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1731988832; c=relaxed/simple;
-	bh=H1kLKdwcGqzUJh4OBxCqwmIQb5jANwoCU/UDgo9BkBE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=LVqrm5bKRYujdpx20q9KFt7jNJmPu0nEQDwoxYW+VCF4gp2+qkPDB6l1Fpji3xY+Yp5HOxaje6SbbopJIemhvBfSxR4WgX7gXMbMVxjAS0ngf3npA/xPB3gbKRWknd/2NekOdNhdGwRLYrxAL89iFmU9qi1jE74pRaFCZnn+j/s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aAFqwoTk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732005356; c=relaxed/simple;
+	bh=XeSq6g08rYcyGJPUGhZKPGFUNTzIhSo4GdUbpdQC7yk=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=XDKLn9lO35xkOkEtpeq3dSO9BfXy0BxyveG5K50OW+75bevVkkt2HiRAMLtpt7pwwvuHSu1qWly/2MaIjdNKoGiQoLhkCZNYxyC1nDPkCZ5LfcDPim0ukSIivVB2u8BTgaWHNu9VykwC5+TFhkEO13AK10nBkF5fbMyNSEbMLys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=paiECvLE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aAFqwoTk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DBCFC4AF1D;
-	Tue, 19 Nov 2024 04:00:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="paiECvLE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22EF6C4CECF;
+	Tue, 19 Nov 2024 08:35:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1731988832;
-	bh=H1kLKdwcGqzUJh4OBxCqwmIQb5jANwoCU/UDgo9BkBE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=aAFqwoTk6kHCZlMGoom3OmSsA1pIok5fa3C/FgJuZvvC9wgYmHgqSSWoUhIn5CUoF
-	 NYF4wMob+CRh2mUbS+v6Cyva287tnLx9qyYv961tNnJTvZX5mzXtfwAXKOrTWOnFia
-	 GGYsyv1mo8gq13Q2eCu1kYCBfXByBvwXKFa8JsM0UoxxzcIc1oKw3fKzzpknUotM1i
-	 qaAgodK6nxH0ZYyKW1xoVbc/E+DwoS6/T5oSKFMwMcRxyeATOld3La/a3q246k5TTG
-	 CPiOPPuUUzEruwPhIX0CiS2/FU1tYok2STVPSjhXJElJ/6siEzvtM60Xuh57A/S8Jf
-	 UOi3bm/HNC0EA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB0733809A80;
-	Tue, 19 Nov 2024 04:00:44 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1732005356;
+	bh=XeSq6g08rYcyGJPUGhZKPGFUNTzIhSo4GdUbpdQC7yk=;
+	h=From:To:Cc:Subject:Date:From;
+	b=paiECvLE607jyQ9nCU9GzHdLKI0VWq2Tsp60UBue7jV3r5VxDrgYTiWxOR2J3ISfA
+	 G2nwvOsNSwwSPG7rr3Ki6bqzH4dS8QDbtUXHbzvI0cqw3iZHJSdtQHPr1bK48sFqrq
+	 7MzueudRouBO6ToAwef9AZrrXMvtBeoYzO+5fFOe6042goVJR0O8WlYyghateFKeku
+	 aczC+eNMOnBPx0FpYPQin8x+V3wKwS+wDd/LDvC4uUQIhCsRNPEGE3GyrbUpGLllu8
+	 DdS51qJt+xiHtj0TDBwXbTlHjDJu9j5G+cUJuZYWYMPkKPU1xhmHHkQwifPqSqtqfd
+	 IYAOQVPpEFYug==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 6.1.y 0/7] mptcp: fix recent failed backports
+Date: Tue, 19 Nov 2024 09:35:48 +0100
+Message-ID: <20241119083547.3234013-9-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1541; i=matttbe@kernel.org; h=from:subject; bh=XeSq6g08rYcyGJPUGhZKPGFUNTzIhSo4GdUbpdQC7yk=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnPE3ja0kt8bdWm/nnUgNd5WeywbroOc47vwRPE TZTPHWoIneJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZzxN4wAKCRD2t4JPQmmg c9AOD/0Uiakfoornwx9HdgS9QzeFBgzG5BypWxP3Zn2V+ayBHvsvnb+T5kJFwqLDo/09XgBUU1m VQVjn5xpDNexQqD8SsbPakMeGf7kSO9o+tg99tizXvxKpAKq0eQ2N0i/S9TbKGaybdAsIQuo+zD 2Y3UPJJajdcPTtKrmhtQBN2oG7sZMWmyC8envSYl/CDEMrWBrr8KqY2NVwsGzRbJ+phW+QT4H6f GQLZ02EWUl8hSYLN6Yjr/aj6bV6hkZqSlt12JqFsZUUC2adnfj4wvEukrKvNhXMUgp1VO9UAkWX yBdubGR2e9c9Yqf62PuDsSMcoOyx1dZuA7JiFgOS6jFF7lvGi47NjA7HGavYJIkqAhypfbHUjET gVo19j3VE7aUYjnzEjkImzTtdl6b4Xng0UYRPB7pjVxys3ciRMWC2UccBpCPKG/Nwm8oOhraYCI GKtJks4HEbTArGSWhe8wb8EjqfHRZBWQ61Udwsu9CaqB5CoQ7524f10s1OqVd5XQQCGJ0+drEQn 1n17BCzykLwdudRZrTIjx65TSYZLuYcCSZ4tSJ1e6RSGS8kBBKKOfedFc38v26S/mMFu412guPW +vMf7su6KZpd2PZceLm1onif1mUuL7/71W2v5I45Clh/udBBjCPGKYdiWNdwoEO7IKy34cfEABu jWTdG5SPq1+k8QA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 0/2] mptcp: pm: lockless list traversal and
- cleanup
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173198884352.97799.1737627825332928151.git-patchwork-notify@kernel.org>
-Date: Tue, 19 Nov 2024 04:00:43 +0000
-References: <20241115-net-next-mptcp-pm-lockless-dump-v1-0-f4a1bcb4ca2c@kernel.org>
-In-Reply-To: <20241115-net-next-mptcp-pm-lockless-dump-v1-0-f4a1bcb4ca2c@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Greg recently reported 3 patches that could not be applied without
+conflict in v6.1:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+ - e0266319413d ("mptcp: update local address flags when setting it")
+ - f642c5c4d528 ("mptcp: hold pm lock when deleting entry")
+ - db3eab8110bc ("mptcp: pm: use _rcu variant under rcu_read_lock")
 
-On Fri, 15 Nov 2024 17:52:33 +0100 you wrote:
-> Here are two patches improving the MPTCP in-kernel path-manager.
-> 
-> - Patch 1: the get and dump endpoints operations are iterating over the
->   endpoints list in a lockless way.
-> 
-> - Patch 2: reduce the code duplication to lookup an endpoint.
-> 
-> [...]
+Conflicts, if any, have been resolved, and documented in each patch.
 
-Here is the summary with links:
-  - [net-next,1/2] mptcp: pm: lockless list traversal to dump endp
-    https://git.kernel.org/netdev/net-next/c/3fbb27b7f87e
-  - [net-next,2/2] mptcp: pm: avoid code duplication to lookup endp
-    https://git.kernel.org/netdev/net-next/c/1d7fa6ceb91f
+Note that there are 3 extra patches added to avoid some conflicts:
 
-You are awesome, thank you!
+ - 14cb0e0bf39b ("mptcp: define more local variables sk")
+ - 06afe09091ee ("mptcp: add userspace_pm_lookup_addr_by_id helper")
+ - af250c27ea1c ("mptcp: drop lookup_by_id in lookup_addr")
+
+The Stable-dep-of tags have been added to these patches.
+
+1 extra patch has been included, it is supposed to be backported, but it
+was missing the Cc stable tag and it had conflicts:
+
+ - ce7356ae3594 ("mptcp: cope racing subflow creation in
+   mptcp_rcv_space_adjust")
+
+Geliang Tang (5):
+  mptcp: define more local variables sk
+  mptcp: add userspace_pm_lookup_addr_by_id helper
+  mptcp: update local address flags when setting it
+  mptcp: hold pm lock when deleting entry
+  mptcp: drop lookup_by_id in lookup_addr
+
+Matthieu Baerts (NGI0) (1):
+  mptcp: pm: use _rcu variant under rcu_read_lock
+
+Paolo Abeni (1):
+  mptcp: cope racing subflow creation in mptcp_rcv_space_adjust
+
+ net/mptcp/pm_netlink.c   | 15 ++++----
+ net/mptcp/pm_userspace.c | 77 ++++++++++++++++++++++++++--------------
+ net/mptcp/protocol.c     |  3 +-
+ 3 files changed, 60 insertions(+), 35 deletions(-)
+
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+2.45.2
 
