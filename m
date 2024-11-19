@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE6151CCEE5;
-	Tue, 19 Nov 2024 13:13:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758D61CCEE5;
+	Tue, 19 Nov 2024 13:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732021991; cv=none; b=hkP2QCric7PCl88TeEtBjoP1ibdjHZ8DSyh1DskeUN3hvd7YrlheIQSjYXCfNpmYkfVB2d4487njhBFQsbudwpcjTfLtNXd/TqN8K9vbpxPAnXAveT/0JeM5H6RigjRMM7R8P+uBBL0qdTZYAuvKQ+9IF8Wh7DU+BKKyrKY6MC0=
+	t=1732021992; cv=none; b=YykaEDcdLuisFtZmYSle6ek3M1VAeS7dxkq07arvAgOfypcLkAFuQooMn2SbJPBQnBX3HJtKgalWA8lV2gYt4u60FLcmHBksbOFBjistdguFo/AyuZPoR/4kpi2Ok1znwMHemcXBuJcz4JSFiymrs/E3GL6AX/HZN4ZQhX75XFw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732021991; c=relaxed/simple;
-	bh=+A4G+jh25rjbt/tJK3FV/vsOAHCTcdwSqCZhyGjjKoo=;
+	s=arc-20240116; t=1732021992; c=relaxed/simple;
+	bh=W3qMn1OOVOXsCWy/tu3buRGsYLzRNzkzpDd+47QSwJ0=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
-	 Content-Type; b=rUgmIIC260lKVUfizeHBudJTxS/rcbanOgb/2i61SVZT3EzJ6PteSTrpzb/ZUDGimp1hpNnPO6MtZSEXBDBHfw2tv0YdAr1A+VAHzP57TqjdHbk7cevKi+LG0Pz0ejRTIjzGSRJ4Cj3SlSdSvlJjQD2BDeTKZQD5Dh7y7MOJaHw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=P+xuIREn; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type; b=XF4DNcwZRI8RtJwj6BuEas3uMsF5ZXYGZF6jETiqxR06SvjUHr1YplM5X4X0rdnK/JCcvW4yluGLKjzKPmtE4lr4wLxik6PBHJQCQi/jsoaB5SvZ1Xq0ldXfCULjLVr0rV0TBLsU/CnDo9qKj91NahXPQMORw5Ds7YnTRI8kZ8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=WvspOBM4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="P+xuIREn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 30A6CC4CECF;
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="WvspOBM4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04D7AC4CECF;
 	Tue, 19 Nov 2024 13:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1732021991;
-	bh=+A4G+jh25rjbt/tJK3FV/vsOAHCTcdwSqCZhyGjjKoo=;
+	s=korg; t=1732021992;
+	bh=W3qMn1OOVOXsCWy/tu3buRGsYLzRNzkzpDd+47QSwJ0=;
 	h=Subject:To:Cc:From:Date:In-Reply-To:From;
-	b=P+xuIREnGjCPDaRM3xZScAXVqODFSYT0mDCqGshD6PL7/+QM4c3g74TCn8ou5pUBR
-	 Ns3/itR36tYMBf2zdY90a1o7491ElAITiiMV+JhxhD48B8etnA+2kXEQi8xBHI1r6X
-	 npHhxoymc27Wb9BJo3Qjh528GfwlPZ5GGGS8vz3c=
-Subject: Patch "mptcp: add userspace_pm_lookup_addr_by_id helper" has been added to the 6.1-stable tree
-To: davem@davemloft.net,gregkh@linuxfoundation.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,sashal@kernel.org,tanggeliang@kylinos.cn
+	b=WvspOBM4oJUjkbwgQDO90vwVh6ymRrw+WqIofRP2fhObFu5hEjz3LTYC0OfUS3wHq
+	 Yx+xXLBeneTtCQoLTrEzhbSfOjj31V+9JfkvIXyWT9L1n3JdXpQwtsUEXf2zUo8+5W
+	 M1kJGgOAw58S4Br6tP/gHl9jRIwHy9LXpF6Qoy5E=
+Subject: Patch "mptcp: cope racing subflow creation in mptcp_rcv_space_adjust" has been added to the 6.1-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,pabeni@redhat.com,sashal@kernel.org
 Cc: <stable-commits@vger.kernel.org>
 From: <gregkh@linuxfoundation.org>
 Date: Tue, 19 Nov 2024 14:12:46 +0100
-In-Reply-To: <20241119083547.3234013-12-matttbe@kernel.org>
-Message-ID: <2024111946-resend-vending-8670@gregkh>
+In-Reply-To: <20241119083547.3234013-10-matttbe@kernel.org>
+Message-ID: <2024111946-length-tactful-0f53@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,111 +44,70 @@ X-Patchwork-Hint: ignore
 
 This is a note to let you know that I've just added the patch titled
 
-    mptcp: add userspace_pm_lookup_addr_by_id helper
+    mptcp: cope racing subflow creation in mptcp_rcv_space_adjust
 
 to the 6.1-stable tree which can be found at:
     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
 
 The filename of the patch is:
-     mptcp-add-userspace_pm_lookup_addr_by_id-helper.patch
+     mptcp-cope-racing-subflow-creation-in-mptcp_rcv_space_adjust.patch
 and it can be found in the queue-6.1 subdirectory.
 
 If you, or anyone else, feels it should not be added to the stable tree,
 please let <stable@vger.kernel.org> know about it.
 
 
-From stable+bounces-93938-greg=kroah.com@vger.kernel.org Tue Nov 19 09:36:45 2024
+From stable+bounces-93936-greg=kroah.com@vger.kernel.org Tue Nov 19 09:36:20 2024
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 19 Nov 2024 09:35:51 +0100
-Subject: mptcp: add userspace_pm_lookup_addr_by_id helper
+Date: Tue, 19 Nov 2024 09:35:49 +0100
+Subject: mptcp: cope racing subflow creation in mptcp_rcv_space_adjust
 To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, sashal@kernel.org, Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, "David S . Miller" <davem@davemloft.net>
-Message-ID: <20241119083547.3234013-12-matttbe@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, sashal@kernel.org, Matthieu Baerts <matttbe@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20241119083547.3234013-10-matttbe@kernel.org>
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: Paolo Abeni <pabeni@redhat.com>
 
-commit 06afe09091ee69dc7ab058b4be9917ae59cc81e5 upstream.
+commit ce7356ae35943cc6494cc692e62d51a734062b7d upstream.
 
-Corresponding __lookup_addr_by_id() helper in the in-kernel netlink PM,
-this patch adds a new helper mptcp_userspace_pm_lookup_addr_by_id() to
-lookup the address entry with the given id on the userspace pm local
-address list.
+Additional active subflows - i.e. created by the in kernel path
+manager - are included into the subflow list before starting the
+3whs.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+A racing recvmsg() spooling data received on an already established
+subflow would unconditionally call tcp_cleanup_rbuf() on all the
+current subflows, potentially hitting a divide by zero error on
+the newly created ones.
+
+Explicitly check that the subflow is in a suitable state before
+invoking tcp_cleanup_rbuf().
+
+Fixes: c76c6956566f ("mptcp: call tcp_cleanup_rbuf on subflows")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Stable-dep-of: f642c5c4d528 ("mptcp: hold pm lock when deleting entry")
+Link: https://patch.msgid.link/02374660836e1b52afc91966b7535c8c5f7bafb0.1731060874.git.pabeni@redhat.com
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts in protocol.c, because commit f410cbea9f3d ("tcp: annotate
+  data-races around tp->window_clamp") has not been backported to this
+  version. The conflict is easy to resolve, because only the context is
+  different, but not the line to modify. ]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/mptcp/pm_userspace.c |   31 ++++++++++++++++---------------
- 1 file changed, 16 insertions(+), 15 deletions(-)
+ net/mptcp/protocol.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -106,22 +106,29 @@ static int mptcp_userspace_pm_delete_loc
- 	return -EINVAL;
- }
- 
-+static struct mptcp_pm_addr_entry *
-+mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
-+		if (entry->addr.id == id)
-+			return entry;
-+	}
-+	return NULL;
-+}
-+
- int mptcp_userspace_pm_get_flags_and_ifindex_by_id(struct mptcp_sock *msk,
- 						   unsigned int id,
- 						   u8 *flags, int *ifindex)
- {
--	struct mptcp_pm_addr_entry *entry, *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
- 
- 	*flags = 0;
- 	*ifindex = 0;
- 
- 	spin_lock_bh(&msk->pm.lock);
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (id == entry->addr.id) {
--			match = entry;
--			break;
--		}
--	}
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
- 	spin_unlock_bh(&msk->pm.lock);
- 	if (match) {
- 		*flags = match->flags;
-@@ -282,7 +289,7 @@ int mptcp_nl_cmd_remove(struct sk_buff *
- {
- 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
- 	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
--	struct mptcp_pm_addr_entry *match = NULL;
-+	struct mptcp_pm_addr_entry *match;
- 	struct mptcp_pm_addr_entry *entry;
- 	struct mptcp_sock *msk;
- 	LIST_HEAD(free_list);
-@@ -319,13 +326,7 @@ int mptcp_nl_cmd_remove(struct sk_buff *
- 
- 	lock_sock(sk);
- 
--	list_for_each_entry(entry, &msk->pm.userspace_pm_local_addr_list, list) {
--		if (entry->addr.id == id_val) {
--			match = entry;
--			break;
--		}
--	}
--
-+	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
- 	if (!match) {
- 		GENL_SET_ERR_MSG(info, "address with specified id not found");
- 		release_sock(sk);
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2057,7 +2057,8 @@ static void mptcp_rcv_space_adjust(struc
+ 				slow = lock_sock_fast(ssk);
+ 				WRITE_ONCE(ssk->sk_rcvbuf, rcvbuf);
+ 				tcp_sk(ssk)->window_clamp = window_clamp;
+-				tcp_cleanup_rbuf(ssk, 1);
++				if (tcp_can_send_ack(ssk))
++					tcp_cleanup_rbuf(ssk, 1);
+ 				unlock_sock_fast(ssk, slow);
+ 			}
+ 		}
 
 
 Patches currently in stable-queue which might be from matttbe@kernel.org are
