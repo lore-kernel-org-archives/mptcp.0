@@ -1,148 +1,135 @@
-Received: from mail-pg1-f173.google.com (mail-pg1-f173.google.com [209.85.215.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC7B54B5C1
-	for <mptcp@lists.linux.dev>; Wed, 20 Nov 2024 16:13:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8DA91E515
+	for <mptcp@lists.linux.dev>; Wed, 20 Nov 2024 18:08:30 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732119236; cv=none; b=kWNRb/iUBC/Eh2GV8XlDHlsjWN2PEkdDMwxiTZDmgDPBGU3vIN1cPFmDzW3ATtihumVWl4v0ANHpYnsjPEFv8ok2ovB+9j47N80vThAWG9tvzE4gcz1YA64BX50dHi9G78wOYtdvoYxzSpbuaQ6zUzRSLO7N89izhpj6z7L0xmY=
+	t=1732126110; cv=none; b=NVXS14XcE56xdthRM461H3fpuHuNrJF4xfqW7q9vGjexdMOHY1QfGkXeO1gDT5/3Fe7Akwqjc9A/zoPW+fUq1CP89ihqxixMfmpe2tvnhWAMgarga228jCi6UWQWmSHwzAi5S1QKwfWuv5CsU7GxK16YWjHZ8SLG/zkN3bDJ+iw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732119236; c=relaxed/simple;
-	bh=6dquPXmcvzZwZ7UNLGSo/e4SmGcQLkWTt1lEOQ8mB38=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=t/s5nuKoaghxdV5flRsYcGuiBga6fPLOOnm0itVtwMetr3lWhanCa9f/x9HmMEhgN3jgFcEO72TxIlh02MvEiNl2Q1mFIO7amBIYnWKO8KVK1Req3hk5BRhPRcKI+wzhykaXwGpAp7g/PlwbNmDmoPT0GG+HzctlpefCNb40P6s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=m382IvdR; arc=none smtp.client-ip=209.85.215.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1732126110; c=relaxed/simple;
+	bh=Y62IHU4iy367fY3NtN/9x7F8Fa1pJOtm/to+5Voa5aA=;
+	h=Message-ID:Date:MIME-Version:To:Cc:From:Subject:Content-Type; b=Y82BONPhPbVjGkE91YInJyEQJmqmAM6O6zXaAPy2Y1ALBSzU6koDN1/NheWl7oFaOE9rPg4UGf6VUm06dV1/5zAKpSoWB56oE9B4U9IoNAzgAILsQNhAzNpCOqi7NgSfgEeZYX5l316RL+8nXEwbGGtBwiWgwdwkyFZJCo3ENFA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t0IpVGH8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="m382IvdR"
-Received: by mail-pg1-f173.google.com with SMTP id 41be03b00d2f7-7f8cc29aaf2so1696850a12.3
-        for <mptcp@lists.linux.dev>; Wed, 20 Nov 2024 08:13:54 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1732119234; x=1732724034; darn=lists.linux.dev;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:from:to:cc:subject:date:message-id:reply-to;
-        bh=e/HvFtGjqZ7DcsQBtPnZM2lJlY596mswDKkJjhdWmKo=;
-        b=m382IvdRbgbSAfvYkAmHSDaxHHcGn1ZofqS+JEydrl3/Jf0uaw9gVcprQ71m5E3ivw
-         SF7fRe3u6Oap4cFOFDlmkTBCu0cosfu9DzzJiSWh+UTRv2h6Zr0E2V78hp9gqlfqCqFX
-         CT8S2JnT5t9zaFyj2oKA0Ct7nprz18oDdOicsHhN+zmnvUnqKDt5ioQ8IRpiSAFdFAF6
-         04BtlpBUMrcpUAIVUmLboZt/VXbPU4JFyaIQc2lTciIMDrekF7eF/tWW5n5xcTVZVndb
-         FW6sim9SQWX7px14GapsvBdJQvyrrQTH9XNM5z1ZoM7liGE///mi8/+7jSJJMzS7JqLt
-         1Biw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1732119234; x=1732724034;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=e/HvFtGjqZ7DcsQBtPnZM2lJlY596mswDKkJjhdWmKo=;
-        b=v3tMdmC6mAc2gHx8QT6u+QED7dvUNnBd9MKvpbgpY4h4oddJtJTdOAO1Go0z1r+ed/
-         Nb6HYTrHwFdIrbXSQkRxIdHJYT3SdlLKi9GEfI8jIFybi0G2NrgCsDOEOE0B0wxx4JrS
-         hGHlBq5vIYWvin68ADVMLXHKE8a0rOWx8q21jfM4LCR4xpcLffb+Q6zpGkFOjmpxnfTo
-         2PPQibY5/is1CJC6VJ33AXiR/qqWpC8d9rHh7dZAKWSG3U4p2iQQjukCzFIrj68tAyJu
-         l2Av2uYDmORQRc10WyXY2WfE5yFcvN2EnLTyYx+8QG4R4hAtv+7gQQmhZfGY4Wyizs5y
-         mS+A==
-X-Forwarded-Encrypted: i=1; AJvYcCWAM6CIbQZ81yMBqF46hnzxpRFDbyBYuJcBF8a2EeX27Ktvmlre3IEyQI6Bw9gIBWRfCA5rTw==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyZBymrQre2Rxd+bs+yGFjL50xmmbvB9x4NheDrAS8vlHqDAyo3
-	jQy9IRl0G3HafgwwSoHw5w7DJUUf+f2M+0F2UEs0Ty61eeF9TeyNOdj3yLOnP18+Il+Yey4C79J
-	9IzShiNjxJQeCTIjN0IeLAuauu4M=
-X-Gm-Gg: ASbGncuUKPRDV6SwTjhncc1eLFKyeYdUCjaAPKhLafxx3XcR6wGBKXqbk0aTzQKB62f
-	nC49/lp4nBb7CtiSKn6u4umv7P66TJqBPQV73ikLfgce5XjO6VEHqlVRrhTKWDtFx6w==
-X-Google-Smtp-Source: AGHT+IErlhHptHLWUZGmZIkis6XudrtzEe2+Y6fasY0LMn8WKG3iKlKQo1A0945v3nmksbHGL01UbUnKq6YQMAdMEdA=
-X-Received: by 2002:a17:90b:5310:b0:2ea:819e:9126 with SMTP id
- 98e67ed59e1d1-2eaca7cef44mr3317485a91.26.1732119234049; Wed, 20 Nov 2024
- 08:13:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t0IpVGH8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D3C8C4CECD;
+	Wed, 20 Nov 2024 18:08:28 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732126110;
+	bh=Y62IHU4iy367fY3NtN/9x7F8Fa1pJOtm/to+5Voa5aA=;
+	h=Date:To:Cc:From:Subject:From;
+	b=t0IpVGH8iTdHa7lO+Zmksd1EpPyF9QGuP3O8a1xwsDQVdqxrfpMKO+gffUlX1CVuf
+	 aMXArH8xtGoU3gyx34fpCHECJM93nTXcRShlYH+CVs46Med3QObGJypcn/H2qUnZi8
+	 6AbWz18JU1MeKREJ5CU8H6qqBx6ftetXe0LH5NUQ1oQH4TdbPIS7RvNsc8HGTFhI3P
+	 viW6oA3yyFFXQRIzDOCTFIEkZ+k/B+dF+ffN/pkmV4BHADykEhVJ35ah+yEmSDEMdg
+	 MTV4t5AR9fMnt93A51o/WXL1vluCrgCV2PKrwFcZ4dXblw4tZSCCMpU8URX4TbANef
+	 nJaQARJHrfE5g==
+Message-ID: <31aee33c-386e-4270-9a08-f12668f8970b@kernel.org>
+Date: Wed, 20 Nov 2024 19:08:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
- <20241115160816.09df40eb@kernel.org> <7fb38122abcbcf28f7af8b9891d0b0852c01f088.camel@sipsolutions.net>
-In-Reply-To: <7fb38122abcbcf28f7af8b9891d0b0852c01f088.camel@sipsolutions.net>
-From: Dmitry Safonov <0x7f454c46@gmail.com>
-Date: Wed, 20 Nov 2024 16:13:42 +0000
-Message-ID: <CAJwJo6ZTT28XZ1HFhC77KrPeFmwVWDkFzYsg7YU1MD0PESAWrw@mail.gmail.com>
-Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
-To: Johannes Berg <johannes@sipsolutions.net>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
-	Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
-	Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>, 
-	Ivan Delalande <colona@arista.com>, Matthieu Baerts <matttbe@kernel.org>, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	John Fastabend <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mptcp@lists.linux.dev
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-GB
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Cc: Paolo Abeni <pabeni@redhat.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: CI: new actions in case of timeout
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Wed, 20 Nov 2024 at 08:44, Johannes Berg <johannes@sipsolutions.net> wrote:
->
-> (Sorry, late to the party)
+Hello,
 
-Thanks for joining! :-)
+As discussed at the last meeting, I recently modified the CI to get more
+debug info before stopping the VM after a timeout.
 
-> On Fri, 2024-11-15 at 16:08 -0800, Jakub Kicinski wrote:
-> > Would it be too ugly if we simply retried with a 32kB skb if the initial
-> > dump failed with EMSGSIZE?
->
-> We have min_dump_alloc, which a number of places are setting much higher
-> than the default, partially at least because there were similar issues,
-> e.g. in nl80211. See e.g. nl80211_dump_wiphy() doing it dynamically.
+This was necessary, because, in this cycle, we had a few jobs ([1] [2]
+[3] etc.) that got blocked, and no more details were available. I don't
+think that was directly caused by MPTCP, or the tests, but still, it
+sounds better to extract some debug info when this happens.
 
-Yeah, your example seems alike what netlink_dump() does with
-min_dump_alloc and max_recvmsg_len. You have there
-.doit = nl80211_get_wiphy,
-.dumpit = nl80211_dump_wiphy,
+In short, there is now a background script running inside the test VM
+that will wait, and then run:
 
-So at this initial patch set, I'm trying to fix
-inet_diag_handler::dump_one() callback, which is to my understanding
-same as .doit() for generic netlink [should we just rename struct
-inet_diag_handler callbacks to match the generics?]. See
-inet_diag_handler_cmd() and NLM_F_DUMP in
-Documentation/userspace-api/netlink/intro.rst
-For TCP-MD5-diag even the single message reply may have a variable
-number of keys on a socket's dump. For multi-messages dump, my plan is
-to use netlink_callback::ctx[] and add an iterator type that will
-allow to stop on N-th key between recvmsg() calls.
+  echo w > /proc/sysrq-trigger
+  echo d > /proc/sysrq-trigger
+  echo l > /proc/sysrq-trigger
+  echo t > /proc/sysrq-trigger
 
-> Kind of ugly? Sure! And we shouldn't use it now with newer userspace
-> that knows to request a more finely split dump. For older userspace it's
-> the only way though.
+Doc: https://www.kernel.org/doc/html/latest/admin-guide/sysrq.html
 
-Heh, the comment in nl80211_dump_wiphy() on sending an empty message
-and retrying is ouch!
+CI:
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker/commit/ba46718
 
->
-> Also, we don't even give all the data to older userspace (it must
-> support split dumps to get information about the more modern features, 6
-> GHz channels, etc.), but I gather that's not an option here.
->
-> > Another option would be to automatically grow the skb. The size
-> > accounting is an endless source of bugs. We'd just need to scan
-> > the codebase to make sure there are no cases where someone does
-> >
-> >       ptr = __nla_reserve();
-> >       nla_put();
-> >       *ptr = 0;
-> >
-> > Which may be too much of a project and source of bugs in itself.
-> >
-> > Or do both, retry as a fix, and auto-grow in net-next.
->
-> For auto-grow you'd also have to have information about the userspace
-> buffer, I think? It still has to fit there, might as well fail anyway if
-> that buffer is too small? I'm not sure we have that link back? But I'm
-> not really sure right now, just remember this as an additional wrinkle
-> from the above-mentioned nl80211 problem.
+WDYT?
 
-Yeah, netlink_recvmsg() attempts to track what the userspace is asking:
+- Will this work? (background script inside the test VM)
+- Or do I need to access another tty, or the QEmu console, etc.?
+- sysrq-t can trigger a lot of info, maybe too much and cause other issues?
+- Any other interesting sysrq that I missed?
+- Or something else to get?
 
-:        /* Record the max length of recvmsg() calls for future allocations */
-:        max_recvmsg_len = max(READ_ONCE(nlk->max_recvmsg_len), len);
-:        max_recvmsg_len = min_t(size_t, max_recvmsg_len,
-:                                SKB_WITH_OVERHEAD(32768));
-:        WRITE_ONCE(nlk->max_recvmsg_len, max_recvmsg_len);
+(To test locally with the virtme image, you need to set the
+INPUT_EXPECT_TIMEOUT env var to a value above 60)
 
-Thanks,
-             Dmitry
+[1]
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11834706526/job/32975942269
+[2]
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11802728376/job/32879029307
+[3]
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/11473893644/job/31928844677#step:7:5346
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
