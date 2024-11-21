@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502FB5695
-	for <mptcp@lists.linux.dev>; Thu, 21 Nov 2024 02:45:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DCB3A230998
+	for <mptcp@lists.linux.dev>; Thu, 21 Nov 2024 02:45:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732157155; cv=none; b=g0oIGMRgcu07jKcdKHWLihhZgjI7t4S1UHSliqcDCfHpSLVq+TGTYEanSWJy5zhwEPLvRnLzOqaH2zn4nD2fh406LedhUo03cBXo0N2VmtOa0zo0PL2wFbzJSo7gzkpR/4nYaCqqb31n1+J2Lp1VvG1y9+xj2nMy/ReJ0dUPDxM=
+	t=1732157157; cv=none; b=bD15ijc9L+l+hlk/Us4sBxMUceWtpAW0/5nXsZQElWfuEaQ16z9B9WUSBYS//LGHuTVJF8hnP5wqLw961c4sa5enKh/kSNIJuAcfJyJkE7iP0DeU4oQfJenXO7O/CoU1lqp1obgVlrTQtsfY4NDKobEqJ7lt42twsTS7fbFR+y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732157155; c=relaxed/simple;
-	bh=wHBc7xz6xpjMgBf/rE/QXFWiDM58CjoHj56l66/9kFo=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EcjuUA3Yq3TS4em2DIoWZtE3JCZSozODqRm5DbRnQQZOk6ZK0Z/FepMAVWbXaYvU/tT3RKwsuT6TNCxQQDuuwIwfdivj1Qwbcj9nGmrDQ41ai08gqVKoAO/UqglW9159KhXMFki+TjdGGtOzU8VGErPIi4Ad+Q3+qwH+AnTzcsE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNQ9U9xh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732157157; c=relaxed/simple;
+	bh=G9iZystPsNcfAOCqxBnP/CMJaZbsw80HcpJNOP2iml8=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=EhbIC12BdXalPoA8OJgp1GcSSPwsV7QjNawX/NkgQgNvpqyFEOcG6wF7zD+O183fg0GIVyEwxlmGy6gdjoeWYtHqLE5CXncGWzWpEZ+FZw39YQFkc6mvhYzHqk05mW2me6Cs3p6paLXpc2YAAinPrt9XRSXAjxdtNOJOViVWM7c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oGVw67Rs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNQ9U9xh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C403C4CECD;
-	Thu, 21 Nov 2024 02:45:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oGVw67Rs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FEF4C4CECD;
+	Thu, 21 Nov 2024 02:45:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732157154;
-	bh=wHBc7xz6xpjMgBf/rE/QXFWiDM58CjoHj56l66/9kFo=;
-	h=From:To:Cc:Subject:Date:From;
-	b=aNQ9U9xh3ueMzCEF20290w/NwzNE/iNNbRo7mkfH/abTAdRm4XpK9hIN3O7lwIr7A
-	 lfHxjVUxZaQ2MBfJ+tUc/7EhEkcUiF5OTqCHf8RnrKvmqI5xinZNdLgcIJ2tuAvJ7f
-	 ouaVIgudz8rVvzCeKngsfaMDZtfujSLLn8lTiOvFoqWNbVfT8OMzCxn/J8aSZ09SuQ
-	 kcE4jj39LgloIKlpX5rzFg0wgyGVEPLlf2w10tnNw10oQXUOmok/sZFR+mtyJlYLra
-	 oDqlcrAfIBhwdUJMKlQVTOuHAswG0c1Ax1n8Fm4VzBivHaBpVRa6iIdIzFc5nSHvZc
-	 /5jj5WNAwO9sA==
+	s=k20201202; t=1732157157;
+	bh=G9iZystPsNcfAOCqxBnP/CMJaZbsw80HcpJNOP2iml8=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=oGVw67Rsby2+gw3+8qxYlRKtOWXiKPpbTfhJLginSLLBWMYjK1zbfa4nAP33gBXFN
+	 ITNd1lV/TQUTaaVGXygJSw364JyCoKdjKxCr4lE3PWhTaqYxfC7kvNmgMlGg7nIRCO
+	 cRWP5SwfZRGBCnjr5HAqQkXskJvx8XYqYtsDpKWu/XDxqYdqrgMLMzgVpLqY1vy3pe
+	 9W+sPDDy1QUjsVZOSVhp3qGgEzDXqtNuaMFXbyHyhqSOPeSPyzWS731z/rM+BG8ppZ
+	 L32x7T1G3AHDYkW3CEQLp8du4u5oDA2GV1FFWYVtm64n3z3FnuYAoAb2H7mTtfnqGg
+	 9ZsneS8N9AM6g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: baohua@kernel.org,
 	Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 0/8] split get_subflow interface into two
-Date: Thu, 21 Nov 2024 10:45:39 +0800
-Message-ID: <cover.1732153672.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 1/8] mptcp: split get_subflow interface into two
+Date: Thu, 21 Nov 2024 10:45:40 +0800
+Message-ID: <5887e174fc52db76e9ce6a4683a694a693f8567a.1732153672.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
+In-Reply-To: <cover.1732153672.git.tanggeliang@kylinos.cn>
+References: <cover.1732153672.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,87 +46,10 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-I got the following error when running bpf burst sched selftests in auto-btf-debug mode:
-
-[  167.258293][   T49] BUG: sleeping function called from invalid context at net/core/sock.c:3652
-[  167.258981][   T49] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 49, name: kworker/0:2
-[  167.259547][   T49] preempt_count: 0, expected: 0
-[  167.259826][   T49] RCU nest depth: 1, expected: 0
-[  167.259975][   T49] 5 locks held by kworker/0:2/49:
-[  167.260137][   T49]  #0: ffff888001130948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x7e4/0x16b0
-[  167.260741][   T49]  #1: ffffc90000347d90 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: process_one_work+0xdf9/0x16b0
-[  167.261206][   T49]  #2: ffff88800c620e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_worker+0x7b/0xad0
-[  167.261476][   T49]  #3: ffffffff8977e620 (rcu_read_lock){....}-{1:2}, at: __bpf_prog_enter+0x1f/0x170
-[  167.261742][   T49]  #4: ffff88800b6f8258 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-[  167.262309][   T49] CPU: 0 UID: 0 PID: 49 Comm: kworker/0:2 Tainted: G           OE      6.12.0-rc6+ #9
-[  167.262591][   T49] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-[  167.262774][   T49] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-[  167.262950][   T49] Workqueue: events mptcp_worker
-[  167.263097][   T49] Call Trace:
-[  167.263211][   T49]  <TASK>
-[  167.263301][   T49]  dump_stack_lvl+0x9e/0xe0
-[  167.263453][   T49]  __might_resched+0x35d/0x590
-[  167.263599][   T49]  ? __pfx___might_resched+0x10/0x10
-[  167.263829][   T49]  __lock_sock_fast+0x2f/0xd0
-[  167.264035][   T49]  mptcp_pm_nl_subflow_chk_stale+0x1e2/0x3c0
-[  167.264304][   T49]  ? bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-[  167.264604][   T49]  bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-[  167.264995][   T49]  ? mptcp_sched_get_retrans+0x1f8/0x330
-[  167.265215][   T49]  ? __pfx_mptcp_sched_get_retrans+0x10/0x10
-[  167.265432][   T49]  ? mark_lock+0x371/0x3c0
-[  167.265678][   T49]  ? __mptcp_retrans+0xf4/0x9a0
-[  167.265973][   T49]  ? mptcp_worker+0x7b/0xad0
-
-mptcp_pm_subflow_chk_stale is a sleeping function, it shouldn't be
-invoked under BPF rcu_read_lock.
-
-One solution is to set mptcp_pm_subflow_chk_stale with KF_SLEEPABLE
-flag:
-
-BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
-
-Then set bpf_burst_get_subflow with BPF_F_SLEEPABLE:
-
-      err = bpf_program__set_flags(skel->progs.bpf_burst_get_subflow,
-                                   BPF_F_SLEEPABLE);
-
-But another error ocurrs:
-
-[  101.732098][    C0] BUG: sleeping function called from invalid context at kernel/bpf/trampoline.c:968
-[  101.732781][    C0] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1640, name: test_progs-no_a
-[  101.733477][    C0] preempt_count: 303, expected: 0
-[  101.733793][    C0] RCU nest depth: 2, expected: 0
-[  101.734043][    C0] 6 locks held by test_progs-no_a/1640:
-[  101.734187][    C0] #0: ffff888007526e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: sk_wait_data (net/core/sock.c:3131 (discriminator 2)) 
-[  101.734440][    C0] #1: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: process_backlog (include/linux/local_lock_internal.h:38 (discriminator 1) net/core/dev.c:6115 (discriminator 1)) 
-[  101.734728][    C0] #2: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate.h:849 (discriminator 1) net/ipv4/ip_input.c:232 (discriminator 1)) 
-[  101.735103][    C0] #3: ffff888008eb8e58 (k-slock-AF_INET/1){+.-.}-{2:2}, at: tcp_v4_rcv (include/linux/skbuff.h:1670 include/net/tcp.h:2530 net/ipv4/tcp_ipv4.c:2348) 
-[  101.735560][    C0] #4: ffff8880075261d8 (slock-AF_INET){+.-.}-{2:2}, at: mptcp_incoming_options (net/mptcp/options.c:1053 net/mptcp/options.c:1203) 
-[  101.736023][    C0] #5: ffffffff95b7d980 (rcu_read_lock_trace){....}-{0:0}, at: __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1)) 
-[  101.736325][    C0] CPU: 0 UID: 0 PID: 1640 Comm: test_progs-no_a Tainted: G           OE      6.12.0-rc7+ #5
-[  101.736676][    C0] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-[  101.736940][    C0] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-[  101.737146][    C0] Call Trace:
-[  101.737259][    C0]  <IRQ>
-[  101.737331][    C0] dump_stack_lvl (lib/dump_stack.c:123) 
-[  101.737489][    C0] __might_resched (kernel/sched/core.c:8657) 
-[  101.737625][    C0] ? __lock_acquire (kernel/locking/lockdep.c:5202 (discriminator 1)) 
-[  101.737772][    C0] ? __pfx___might_resched (kernel/sched/core.c:8611) 
-[  101.737919][    C0] __might_fault (mm/memory.c:6715 (discriminator 1)) 
-[  101.738051][    C0] __bpf_prog_enter_sleepable (include/linux/bpf.h:2089 (discriminator 1) kernel/bpf/trampoline.c:970 (discriminator 1)) 
-[  101.738195][    C0] ? __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1)) 
-[  101.738357][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:183) 
-[  101.738511][    C0] ? __pfx_mptcp_sched_get_send (net/mptcp/sched.c:158) 
-[  101.738641][    C0] ? __bpf_tramp_enter (include/linux/rcupdate.h:347 (discriminator 1) include/linux/rcupdate.h:880 (discriminator 1) include/linux/percpu-refcount.h:209 (discriminator 1) include/linux/percpu-refcount.h:222 (discriminator 1) kernel/bpf/trampoline.c:1010 (discriminator 1)) 
-[  101.738774][    C0] ? bpf_trampoline_6442561300+0x31/0xd7 
-[  101.738911][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:158) 
-[  101.739067][    C0] ? __mptcp_subflow_push_pending (net/mptcp/protocol.c:1682 (discriminator 1)) 
-[  101.739231][    C0] ? __pfx___mptcp_subflow_push_pending (net/mptcp/protocol.c:1655) 
-[  101.739378][    C0] ? do_raw_spin_lock (arch/x86/include/asm/atomic.h:107 (discriminator 1) include/linux/atomic/atomic-arch-fallback.h:2170 (discriminator 1) include/linux/atomic/atomic-instrumented.h:1302 (discriminator 1) include/asm-generic/qspinlock.h:111 (discriminator 1) kernel/locking/spinlock_debug.c:116 (discriminator 1)) 
-[  101.739556][    C0] ? __pfx_do_raw_spin_lock (kernel/locking/spinlock_debug.c:114) 
-[  101.739743][    C0] ? mptcp_incoming_options (net/mptcp/options.c:1067 net/mptcp/options.c:1203) 
-
-This means get_send() interface of this scheduler can't be set with
+get_retrans() interface of the burst packet scheduler invokes a sleeping
+function mptcp_pm_subflow_chk_stale(), which calls __lock_sock_fast().
+So get_retrans() interface should be set with BPF_F_SLEEPABLE flag in
+BPF. But get_send() interface of this scheduler can't be set with
 BPF_F_SLEEPABLE flag since it's invoked in ack_update_msk() under mptcp
 data lock.
 
@@ -131,32 +57,141 @@ So this patch has to split get_subflow() interface of packet scheduer into
 two interfaces: get_send() and get_retrans(). Then we can set get_retrans()
 interface alone with BPF_F_SLEEPABLE flag.
 
-Thanks to Barry for helping me solve this issue.
-Cc: Barry Song <baohua@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ include/net/mptcp.h |  5 +++--
+ net/mptcp/bpf.c     | 11 +++++++++--
+ net/mptcp/sched.c   | 33 ++++++++++++++++++++++-----------
+ 3 files changed, 34 insertions(+), 15 deletions(-)
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/529
-
-Geliang Tang (8):
-  mptcp: split get_subflow interface into two
-  Squash to "selftests/bpf: Add bpf_first scheduler & test"
-  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
-  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
-  Squash to "selftests/bpf: Add bpf_red scheduler & test"
-  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-  Squash to "bpf: Export mptcp packet scheduler helpers"
-  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-
- include/net/mptcp.h                           |  5 +--
- net/mptcp/bpf.c                               | 13 ++++++--
- net/mptcp/sched.c                             | 33 ++++++++++++-------
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 14 ++++++--
- .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 24 +++++++++++---
- .../selftests/bpf/progs/mptcp_bpf_burst.c     | 32 ++++++++----------
- .../selftests/bpf/progs/mptcp_bpf_first.c     | 24 +++++++++++---
- .../selftests/bpf/progs/mptcp_bpf_red.c       | 24 +++++++++++---
- .../selftests/bpf/progs/mptcp_bpf_rr.c        | 24 +++++++++++---
- 9 files changed, 136 insertions(+), 57 deletions(-)
-
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 814b5f2e3ed5..2c85ca92bb1c 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -103,13 +103,14 @@ struct mptcp_out_options {
+ #define MPTCP_SUBFLOWS_MAX	8
+ 
+ struct mptcp_sched_data {
+-	bool	reinject;
+ 	u8	subflows;
+ 	struct mptcp_subflow_context *contexts[MPTCP_SUBFLOWS_MAX];
+ };
+ 
+ struct mptcp_sched_ops {
+-	int (*get_subflow)(struct mptcp_sock *msk,
++	int (*get_send)(struct mptcp_sock *msk,
++			struct mptcp_sched_data *data);
++	int (*get_retrans)(struct mptcp_sock *msk,
+ 			   struct mptcp_sched_data *data);
+ 
+ 	char			name[MPTCP_SCHED_NAME_MAX];
+diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+index e9db856972cb..ab1de189ba4b 100644
+--- a/net/mptcp/bpf.c
++++ b/net/mptcp/bpf.c
+@@ -156,7 +156,13 @@ static int bpf_mptcp_sched_init(struct btf *btf)
+ 	return 0;
+ }
+ 
+-static int __bpf_mptcp_sched_get_subflow(struct mptcp_sock *msk,
++static int __bpf_mptcp_sched_get_send(struct mptcp_sock *msk,
++				      struct mptcp_sched_data *data)
++{
++	return 0;
++}
++
++static int __bpf_mptcp_sched_get_retrans(struct mptcp_sock *msk,
+ 					 struct mptcp_sched_data *data)
+ {
+ 	return 0;
+@@ -171,7 +177,8 @@ static void __bpf_mptcp_sched_release(struct mptcp_sock *msk)
+ }
+ 
+ static struct mptcp_sched_ops __bpf_mptcp_sched_ops = {
+-	.get_subflow	= __bpf_mptcp_sched_get_subflow,
++	.get_send	= __bpf_mptcp_sched_get_send,
++	.get_retrans	= __bpf_mptcp_sched_get_retrans,
+ 	.init		= __bpf_mptcp_sched_init,
+ 	.release	= __bpf_mptcp_sched_release,
+ };
+diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+index 6da60e35932f..7560693e5b7a 100644
+--- a/net/mptcp/sched.c
++++ b/net/mptcp/sched.c
+@@ -16,13 +16,25 @@
+ static DEFINE_SPINLOCK(mptcp_sched_list_lock);
+ static LIST_HEAD(mptcp_sched_list);
+ 
+-static int mptcp_sched_default_get_subflow(struct mptcp_sock *msk,
++static int mptcp_sched_default_get_send(struct mptcp_sock *msk,
++					struct mptcp_sched_data *data)
++{
++	struct sock *ssk;
++
++	ssk = mptcp_subflow_get_send(msk);
++	if (!ssk)
++		return -EINVAL;
++
++	mptcp_subflow_set_scheduled(mptcp_subflow_ctx(ssk), true);
++	return 0;
++}
++
++static int mptcp_sched_default_get_retrans(struct mptcp_sock *msk,
+ 					   struct mptcp_sched_data *data)
+ {
+ 	struct sock *ssk;
+ 
+-	ssk = data->reinject ? mptcp_subflow_get_retrans(msk) :
+-			       mptcp_subflow_get_send(msk);
++	ssk = mptcp_subflow_get_retrans(msk);
+ 	if (!ssk)
+ 		return -EINVAL;
+ 
+@@ -31,7 +43,8 @@ static int mptcp_sched_default_get_subflow(struct mptcp_sock *msk,
+ }
+ 
+ static struct mptcp_sched_ops mptcp_sched_default = {
+-	.get_subflow	= mptcp_sched_default_get_subflow,
++	.get_send	= mptcp_sched_default_get_send,
++	.get_retrans	= mptcp_sched_default_get_retrans,
+ 	.name		= "default",
+ 	.owner		= THIS_MODULE,
+ };
+@@ -73,7 +86,7 @@ void mptcp_get_available_schedulers(char *buf, size_t maxlen)
+ 
+ int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
+ {
+-	if (!sched->get_subflow)
++	if (!sched->get_send || !sched->get_retrans)
+ 		return -EINVAL;
+ 
+ 	spin_lock(&mptcp_sched_list_lock);
+@@ -184,11 +197,10 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
+ 			return 0;
+ 	}
+ 
+-	data.reinject = false;
+ 	if (msk->sched == &mptcp_sched_default || !msk->sched)
+-		return mptcp_sched_default_get_subflow(msk, &data);
++		return mptcp_sched_default_get_send(msk, &data);
+ 	mptcp_sched_data_set_contexts(msk, &data);
+-	return msk->sched->get_subflow(msk, &data);
++	return msk->sched->get_send(msk, &data);
+ }
+ 
+ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+@@ -207,9 +219,8 @@ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+ 			return 0;
+ 	}
+ 
+-	data.reinject = true;
+ 	if (msk->sched == &mptcp_sched_default || !msk->sched)
+-		return mptcp_sched_default_get_subflow(msk, &data);
++		return mptcp_sched_default_get_retrans(msk, &data);
+ 	mptcp_sched_data_set_contexts(msk, &data);
+-	return msk->sched->get_subflow(msk, &data);
++	return msk->sched->get_retrans(msk, &data);
+ }
 -- 
 2.43.0
 
