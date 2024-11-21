@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6D6270811
-	for <mptcp@lists.linux.dev>; Thu, 21 Nov 2024 02:46:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EBF431292CE
+	for <mptcp@lists.linux.dev>; Thu, 21 Nov 2024 02:46:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732157170; cv=none; b=SCbTUksgtglABKnVybJ7L/ppDlcL2geABp90boxYXzCW8WPR7CZndHV3JwI+YSsPva7cMNGix/+CJ3YwyF6BoNAp8dEU6Oib+wu93ouf8rVPPPPzyxCnTFqkxEU2ZmZ0j6A18SV3uTKY/GCbqoPrUfCcsz7GIOTj7a5C4grVEY4=
+	t=1732157173; cv=none; b=J5KQ//8AGzPmkjhSVutckOnK5eJ20rCOlmaqVRXbcg0i7CupIxSzhLLbjLvd2q96M2KveXLO2MwtmWtwnG5ZnnGNYN1tuA7yufr39OSLqy8gc4kSV7Ybg+ltxaYBy/WORwa8T7CSm6ROmEJhhP4ncqrPsp79rvMJZufurI7Lelc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732157170; c=relaxed/simple;
-	bh=A1iLh4aSCA8bGIG5PLWjdNZCaBIqRTbyK6HDgi5vfNg=;
+	s=arc-20240116; t=1732157173; c=relaxed/simple;
+	bh=5uEXXgeIwPZVlEiJnHGp+xETFVnXEEebqDugI0rqlBU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=p0o43oKGvGLdP/bkH6G1JSK/yqZ8J33oQ1qCQWBG5P5r4cvWjmhUbvVyNwoCgMQU0L3WEJqrwiVmYkF318ieDwCNhIUeHz6OYd93M6P1kfYZIak7gCLtKndRaimJmQi3PZmVrmo4BgWjJUN9ETZS/z7gMhhUltZZWPulUH4BQzc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EORtkCod; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HdNPErZ23Z/ENbM5jPuoPLJCHQDR0GigY+2LAU7f9opk94K62Ozr9RgeePzxJotvYNNahWndGJdQD3z8GE1uDZlka78ivrwawMrCjcjDelWwUm4PlaO/dxYKYerCWJXTvYBX1OLDf+IPTtcAuiB6TCC7+M4H6dDMJLVq7w6z89k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NkWQsF8X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EORtkCod"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2DBAC4CECD;
-	Thu, 21 Nov 2024 02:46:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NkWQsF8X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7856C4CECD;
+	Thu, 21 Nov 2024 02:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732157170;
-	bh=A1iLh4aSCA8bGIG5PLWjdNZCaBIqRTbyK6HDgi5vfNg=;
+	s=k20201202; t=1732157172;
+	bh=5uEXXgeIwPZVlEiJnHGp+xETFVnXEEebqDugI0rqlBU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EORtkCodBzaiFD1OKUdUqhdYziAqNg/tPGyHFrAY/hMMGNJyqnKQg8lFPZ8TpAnaQ
-	 bl5HhB4BVu1cZZEfLhnM5nv38aoATrkrDhNKW/8i2Mr8QKCOEt7AOr3gB9rXCXsGaY
-	 UL9UpswgQ/CYOn6NA4/rgYx2MCh9fdwWdat7pa4wAByzraWQMdH9FEexZzVUMVFcjO
-	 VGeRQcr4d2X0/V4oJX4tx0vXv5+q4ALJVKJYV4NGVlA8cT89eclRxgB8ZQf6m4jRhj
-	 daIE7LPahLPMD+E4ZOlXTYTIhi9SELp/iYUeKiDZ46YifD0bDuFFVgv81HvqzC7oD6
-	 Y4GOliUWnLTDQ==
+	b=NkWQsF8XGjDdsAYwPCuYE/MX5ey/MYYxcaqzPvkKvqqTd7HWT2M8WHOfEUTrJ3wqp
+	 MKPbIKmwLEYl0da4os0Lb85DeRAlE33NAqSW1N73In2Oaq8t49A4RAK8pGL+qSIUo2
+	 6fZ0EwTdtru9NqGTYNZiZBvZw4LPrZZPxfnkqbGRqNZ7QJS0f5M7UsMRCB6eOrQTCp
+	 wweS1jSDzbff/8s8NCGJk7BIgVvvaCrUvkOs6XLqB7XlOLgBv85DxcSj+Pf7KaG3MO
+	 fpbVNFhVBhbzcd9Xi4E5BpR/VmgvT9ed/OsmPsWvN9JYNGErE1ey2obv+khHeyg0mU
+	 +qMxq003mU8Iw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: baohua@kernel.org,
 	Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 7/8] Squash to "bpf: Export mptcp packet scheduler helpers"
-Date: Thu, 21 Nov 2024 10:45:46 +0800
-Message-ID: <c5e53dd0a8ad0f88cc58fe42976fec9aa469a3d7.1732153672.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 8/8] Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+Date: Thu, 21 Nov 2024 10:45:47 +0800
+Message-ID: <3cfad7412c5d2fc439614357519855887a638ec6.1732153672.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1732153672.git.tanggeliang@kylinos.cn>
 References: <cover.1732153672.git.tanggeliang@kylinos.cn>
@@ -46,26 +46,42 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Set KF_SLEEPABLE flag for mptcp_pm_subflow_chk_stale.
+Set BPF_F_SLEEPABLE flags for bpf_burst_get_retrans.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/testing/selftests/bpf/prog_tests/mptcp.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index ab1de189ba4b..a6cf4d1a48a9 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -329,7 +329,7 @@ BTF_ID_FLAGS(func, mptcp_set_timeout)
- BTF_ID_FLAGS(func, mptcp_wnd_end)
- BTF_ID_FLAGS(func, tcp_stream_memory_free)
- BTF_ID_FLAGS(func, bpf_mptcp_subflow_queues_empty)
--BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale)
-+BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
- BTF_KFUNCS_END(bpf_mptcp_sched_kfunc_ids)
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 1d68bbda3370..d7a640dce7da 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -726,12 +726,22 @@ static void test_red(void)
+ static void test_burst(void)
+ {
+ 	struct mptcp_bpf_burst *skel;
++	int err;
  
- static const struct btf_kfunc_id_set bpf_mptcp_sched_kfunc_set = {
+-	skel = mptcp_bpf_burst__open_and_load();
+-	if (!ASSERT_OK_PTR(skel, "open_and_load: burst"))
++	skel = mptcp_bpf_burst__open();
++	if (!ASSERT_OK_PTR(skel, "open: burst"))
+ 		return;
+ 
++	err = bpf_program__set_flags(skel->progs.bpf_burst_get_retrans,
++				     BPF_F_SLEEPABLE);
++	if (!ASSERT_OK(err, "set sleepable flags"))
++		goto skel_destroy;
++
++	if (!ASSERT_OK(mptcp_bpf_burst__load(skel), "load: burst"))
++		goto skel_destroy;
++
+ 	test_bpf_sched(skel->obj, "burst", WITH_DATA, WITH_DATA);
++skel_destroy:
+ 	mptcp_bpf_burst__destroy(skel);
+ }
+ 
 -- 
 2.43.0
 
