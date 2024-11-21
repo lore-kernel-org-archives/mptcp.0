@@ -1,132 +1,162 @@
-Received: from sipsolutions.net (s3.sipsolutions.net [168.119.38.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0FBE13D62B;
-	Wed, 20 Nov 2024 19:36:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=168.119.38.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 502FB5695
+	for <mptcp@lists.linux.dev>; Thu, 21 Nov 2024 02:45:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732131389; cv=none; b=XUvbjqmw2QavB9opY76JntuBHCnsnQRL6IgkLu6urvjD+R4NJQSOTckRFf07jH6XQiS5XThXPCV2OuRG6SS6YNE6rm40+pzbJK1c+/AVqWYMnyBOYCsK60H/uDm/pFuIAegoryJsMa6ApflkWgUNOVK8UQWx+veDbVXDO+3PqgE=
+	t=1732157155; cv=none; b=g0oIGMRgcu07jKcdKHWLihhZgjI7t4S1UHSliqcDCfHpSLVq+TGTYEanSWJy5zhwEPLvRnLzOqaH2zn4nD2fh406LedhUo03cBXo0N2VmtOa0zo0PL2wFbzJSo7gzkpR/4nYaCqqb31n1+J2Lp1VvG1y9+xj2nMy/ReJ0dUPDxM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732131389; c=relaxed/simple;
-	bh=aRpQcbkVqiBnz8nY1bX54yPQRo/vdzAIJPxGVAmUThc=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=XpbK3YADyuk5iETNmyqIBgrNrU5FW3NrLFrCg9FSWmMt8i7VT7XHxDfHGqF0F/LEcsrE0bh5w6GzxivZsC+1HWYdNdSrtv2SGVMXhWygwRS7ks2lyWRYhA0tF1BF+u4m9E3xN1kauTXpaapgxV8t2Qduo3nvBwv97p3ryG99A8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net; spf=pass smtp.mailfrom=sipsolutions.net; dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b=BChJXpUX; arc=none smtp.client-ip=168.119.38.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=sipsolutions.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=sipsolutions.net
+	s=arc-20240116; t=1732157155; c=relaxed/simple;
+	bh=wHBc7xz6xpjMgBf/rE/QXFWiDM58CjoHj56l66/9kFo=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EcjuUA3Yq3TS4em2DIoWZtE3JCZSozODqRm5DbRnQQZOk6ZK0Z/FepMAVWbXaYvU/tT3RKwsuT6TNCxQQDuuwIwfdivj1Qwbcj9nGmrDQ41ai08gqVKoAO/UqglW9159KhXMFki+TjdGGtOzU8VGErPIi4Ad+Q3+qwH+AnTzcsE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aNQ9U9xh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=sipsolutions.net header.i=@sipsolutions.net header.b="BChJXpUX"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=sipsolutions.net; s=mail; h=MIME-Version:Content-Transfer-Encoding:
-	Content-Type:References:In-Reply-To:Date:Cc:To:From:Subject:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:Resent-To:
-	Resent-Cc:Resent-Message-ID; bh=ST+APZ99Qe4bKjcu9QKrBi7ZzZBX6OR6yLTKY5NyDCw=;
-	t=1732131388; x=1733340988; b=BChJXpUXVwjTSlXYwNEcLR2Vh4A0CPvwgfa6HaNBh/CQiRs
-	GNeeCRK7JZW0y5bPzl4C3sf5Af6ReCvqftABs99Job9Dza5R5s29HLnRzdLBbtvccXw/RMOgmPQXY
-	ujojTwFMhY1ottqqrExLha1Ti+qGBQopz9eAhqIZ6qw8kxQQIMxLMgXmajzlV51Qq449lRVdYbndU
-	iGweGKwhOhtk8TS9EEJ4PbWZc9R4+bFxUOP/tzRMf8VwBRHEkmMMcGWBmFkxvuYWI8PnLowYSvlOx
-	cegRvNfoREdoBYbC17Fg2PUdE7eZ5ST/DHIywLCZ9weOqfMNhgYWBGh8gifrrg1w==;
-Received: by sipsolutions.net with esmtpsa (TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_256_GCM:256)
-	(Exim 4.98)
-	(envelope-from <johannes@sipsolutions.net>)
-	id 1tDqUu-00000009sE7-3vf3;
-	Wed, 20 Nov 2024 20:36:21 +0100
-Message-ID: <cf62d3121e50919dafc94d1b89f194799bc4fbcd.camel@sipsolutions.net>
-Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
-From: Johannes Berg <johannes@sipsolutions.net>
-To: Dmitry Safonov <0x7f454c46@gmail.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, Dmitry Safonov via B4 Relay
- <devnull+0x7f454c46.gmail.com@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, John Fastabend <john.fastabend@gmail.com>, Davide
- Caratti <dcaratti@redhat.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev
-Date: Wed, 20 Nov 2024 20:36:19 +0100
-In-Reply-To: <CAJwJo6ZTT28XZ1HFhC77KrPeFmwVWDkFzYsg7YU1MD0PESAWrw@mail.gmail.com>
-References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
-	 <20241115160816.09df40eb@kernel.org>
-	 <7fb38122abcbcf28f7af8b9891d0b0852c01f088.camel@sipsolutions.net>
-	 <CAJwJo6ZTT28XZ1HFhC77KrPeFmwVWDkFzYsg7YU1MD0PESAWrw@mail.gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-User-Agent: Evolution 3.52.4 (3.52.4-2.fc40) 
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aNQ9U9xh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6C403C4CECD;
+	Thu, 21 Nov 2024 02:45:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1732157154;
+	bh=wHBc7xz6xpjMgBf/rE/QXFWiDM58CjoHj56l66/9kFo=;
+	h=From:To:Cc:Subject:Date:From;
+	b=aNQ9U9xh3ueMzCEF20290w/NwzNE/iNNbRo7mkfH/abTAdRm4XpK9hIN3O7lwIr7A
+	 lfHxjVUxZaQ2MBfJ+tUc/7EhEkcUiF5OTqCHf8RnrKvmqI5xinZNdLgcIJ2tuAvJ7f
+	 ouaVIgudz8rVvzCeKngsfaMDZtfujSLLn8lTiOvFoqWNbVfT8OMzCxn/J8aSZ09SuQ
+	 kcE4jj39LgloIKlpX5rzFg0wgyGVEPLlf2w10tnNw10oQXUOmok/sZFR+mtyJlYLra
+	 oDqlcrAfIBhwdUJMKlQVTOuHAswG0c1Ax1n8Fm4VzBivHaBpVRa6iIdIzFc5nSHvZc
+	 /5jj5WNAwO9sA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: baohua@kernel.org,
+	Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 0/8] split get_subflow interface into two
+Date: Thu, 21 Nov 2024 10:45:39 +0800
+Message-ID: <cover.1732153672.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-malware-bazaar: not-scanned
+Content-Transfer-Encoding: 8bit
 
-On Wed, 2024-11-20 at 16:13 +0000, Dmitry Safonov wrote:
-> > We have min_dump_alloc, which a number of places are setting much highe=
-r
-> > than the default, partially at least because there were similar issues,
-> > e.g. in nl80211. See e.g. nl80211_dump_wiphy() doing it dynamically.
->=20
-> Yeah, your example seems alike what netlink_dump() does with
-> min_dump_alloc and max_recvmsg_len. You have there
-> .doit =3D nl80211_get_wiphy,
-> .dumpit =3D nl80211_dump_wiphy,
->=20
-> So at this initial patch set, I'm trying to fix
-> inet_diag_handler::dump_one() callback, which is to my understanding
-> same as .doit() for generic netlink [should we just rename struct
-> inet_diag_handler callbacks to match the generics?].
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-dump_one() doesn't sound like doit(), it sounds more like dump one
-object? In generic netlink dumpit has to handle that internally, and
-doit() is for commands, without F_DUMP.
+I got the following error when running bpf burst sched selftests in auto-btf-debug mode:
 
-But also generic netlink is just one netlink family, so I wouldn't
-really rename anything to match it anyway.
+[  167.258293][   T49] BUG: sleeping function called from invalid context at net/core/sock.c:3652
+[  167.258981][   T49] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 49, name: kworker/0:2
+[  167.259547][   T49] preempt_count: 0, expected: 0
+[  167.259826][   T49] RCU nest depth: 1, expected: 0
+[  167.259975][   T49] 5 locks held by kworker/0:2/49:
+[  167.260137][   T49]  #0: ffff888001130948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x7e4/0x16b0
+[  167.260741][   T49]  #1: ffffc90000347d90 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: process_one_work+0xdf9/0x16b0
+[  167.261206][   T49]  #2: ffff88800c620e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_worker+0x7b/0xad0
+[  167.261476][   T49]  #3: ffffffff8977e620 (rcu_read_lock){....}-{1:2}, at: __bpf_prog_enter+0x1f/0x170
+[  167.261742][   T49]  #4: ffff88800b6f8258 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
+[  167.262309][   T49] CPU: 0 UID: 0 PID: 49 Comm: kworker/0:2 Tainted: G           OE      6.12.0-rc6+ #9
+[  167.262591][   T49] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+[  167.262774][   T49] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+[  167.262950][   T49] Workqueue: events mptcp_worker
+[  167.263097][   T49] Call Trace:
+[  167.263211][   T49]  <TASK>
+[  167.263301][   T49]  dump_stack_lvl+0x9e/0xe0
+[  167.263453][   T49]  __might_resched+0x35d/0x590
+[  167.263599][   T49]  ? __pfx___might_resched+0x10/0x10
+[  167.263829][   T49]  __lock_sock_fast+0x2f/0xd0
+[  167.264035][   T49]  mptcp_pm_nl_subflow_chk_stale+0x1e2/0x3c0
+[  167.264304][   T49]  ? bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
+[  167.264604][   T49]  bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
+[  167.264995][   T49]  ? mptcp_sched_get_retrans+0x1f8/0x330
+[  167.265215][   T49]  ? __pfx_mptcp_sched_get_retrans+0x10/0x10
+[  167.265432][   T49]  ? mark_lock+0x371/0x3c0
+[  167.265678][   T49]  ? __mptcp_retrans+0xf4/0x9a0
+[  167.265973][   T49]  ? mptcp_worker+0x7b/0xad0
 
->  See
-> inet_diag_handler_cmd() and NLM_F_DUMP in
-> Documentation/userspace-api/netlink/intro.rst
-> For TCP-MD5-diag even the single message reply may have a variable
-> number of keys on a socket's dump.
+mptcp_pm_subflow_chk_stale is a sleeping function, it shouldn't be
+invoked under BPF rcu_read_lock.
 
-Right.
+One solution is to set mptcp_pm_subflow_chk_stale with KF_SLEEPABLE
+flag:
 
-> For multi-messages dump, my plan is
-> to use netlink_callback::ctx[] and add an iterator type that will
-> allow to stop on N-th key between recvmsg() calls.
+BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
 
-Right, so userspace has to understand that format. In nl80211 we've made
-an input flag attribute (inputs are often unused with dump, but are
-present) to request that split format.
+Then set bpf_burst_get_subflow with BPF_F_SLEEPABLE:
 
-> > Kind of ugly? Sure! And we shouldn't use it now with newer userspace
-> > that knows to request a more finely split dump. For older userspace it'=
-s
-> > the only way though.
->=20
-> Heh, the comment in nl80211_dump_wiphy() on sending an empty message
-> and retrying is ouch!
+      err = bpf_program__set_flags(skel->progs.bpf_burst_get_subflow,
+                                   BPF_F_SLEEPABLE);
 
-Yeah ... Luckily we basically converted all userspace to request split
-dumps, so we shouldn't ever get there now.
+But another error ocurrs:
 
-> > For auto-grow you'd also have to have information about the userspace
-> > buffer, I think? It still has to fit there, might as well fail anyway i=
-f
-> > that buffer is too small? I'm not sure we have that link back? But I'm
-> > not really sure right now, just remember this as an additional wrinkle
-> > from the above-mentioned nl80211 problem.
->=20
-> Yeah, netlink_recvmsg() attempts to track what the userspace is asking:
->=20
-> :        /* Record the max length of recvmsg() calls for future allocatio=
-ns */
-> :        max_recvmsg_len =3D max(READ_ONCE(nlk->max_recvmsg_len), len);
-> :        max_recvmsg_len =3D min_t(size_t, max_recvmsg_len,
-> :                                SKB_WITH_OVERHEAD(32768));
-> :        WRITE_ONCE(nlk->max_recvmsg_len, max_recvmsg_len);
+[  101.732098][    C0] BUG: sleeping function called from invalid context at kernel/bpf/trampoline.c:968
+[  101.732781][    C0] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1640, name: test_progs-no_a
+[  101.733477][    C0] preempt_count: 303, expected: 0
+[  101.733793][    C0] RCU nest depth: 2, expected: 0
+[  101.734043][    C0] 6 locks held by test_progs-no_a/1640:
+[  101.734187][    C0] #0: ffff888007526e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: sk_wait_data (net/core/sock.c:3131 (discriminator 2)) 
+[  101.734440][    C0] #1: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: process_backlog (include/linux/local_lock_internal.h:38 (discriminator 1) net/core/dev.c:6115 (discriminator 1)) 
+[  101.734728][    C0] #2: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate.h:849 (discriminator 1) net/ipv4/ip_input.c:232 (discriminator 1)) 
+[  101.735103][    C0] #3: ffff888008eb8e58 (k-slock-AF_INET/1){+.-.}-{2:2}, at: tcp_v4_rcv (include/linux/skbuff.h:1670 include/net/tcp.h:2530 net/ipv4/tcp_ipv4.c:2348) 
+[  101.735560][    C0] #4: ffff8880075261d8 (slock-AF_INET){+.-.}-{2:2}, at: mptcp_incoming_options (net/mptcp/options.c:1053 net/mptcp/options.c:1203) 
+[  101.736023][    C0] #5: ffffffff95b7d980 (rcu_read_lock_trace){....}-{0:0}, at: __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1)) 
+[  101.736325][    C0] CPU: 0 UID: 0 PID: 1640 Comm: test_progs-no_a Tainted: G           OE      6.12.0-rc7+ #5
+[  101.736676][    C0] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
+[  101.736940][    C0] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
+[  101.737146][    C0] Call Trace:
+[  101.737259][    C0]  <IRQ>
+[  101.737331][    C0] dump_stack_lvl (lib/dump_stack.c:123) 
+[  101.737489][    C0] __might_resched (kernel/sched/core.c:8657) 
+[  101.737625][    C0] ? __lock_acquire (kernel/locking/lockdep.c:5202 (discriminator 1)) 
+[  101.737772][    C0] ? __pfx___might_resched (kernel/sched/core.c:8611) 
+[  101.737919][    C0] __might_fault (mm/memory.c:6715 (discriminator 1)) 
+[  101.738051][    C0] __bpf_prog_enter_sleepable (include/linux/bpf.h:2089 (discriminator 1) kernel/bpf/trampoline.c:970 (discriminator 1)) 
+[  101.738195][    C0] ? __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1)) 
+[  101.738357][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:183) 
+[  101.738511][    C0] ? __pfx_mptcp_sched_get_send (net/mptcp/sched.c:158) 
+[  101.738641][    C0] ? __bpf_tramp_enter (include/linux/rcupdate.h:347 (discriminator 1) include/linux/rcupdate.h:880 (discriminator 1) include/linux/percpu-refcount.h:209 (discriminator 1) include/linux/percpu-refcount.h:222 (discriminator 1) kernel/bpf/trampoline.c:1010 (discriminator 1)) 
+[  101.738774][    C0] ? bpf_trampoline_6442561300+0x31/0xd7 
+[  101.738911][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:158) 
+[  101.739067][    C0] ? __mptcp_subflow_push_pending (net/mptcp/protocol.c:1682 (discriminator 1)) 
+[  101.739231][    C0] ? __pfx___mptcp_subflow_push_pending (net/mptcp/protocol.c:1655) 
+[  101.739378][    C0] ? do_raw_spin_lock (arch/x86/include/asm/atomic.h:107 (discriminator 1) include/linux/atomic/atomic-arch-fallback.h:2170 (discriminator 1) include/linux/atomic/atomic-instrumented.h:1302 (discriminator 1) include/asm-generic/qspinlock.h:111 (discriminator 1) kernel/locking/spinlock_debug.c:116 (discriminator 1)) 
+[  101.739556][    C0] ? __pfx_do_raw_spin_lock (kernel/locking/spinlock_debug.c:114) 
+[  101.739743][    C0] ? mptcp_incoming_options (net/mptcp/options.c:1067 net/mptcp/options.c:1203) 
 
-Right, OK, so that's sorted then :)
+This means get_send() interface of this scheduler can't be set with
+BPF_F_SLEEPABLE flag since it's invoked in ack_update_msk() under mptcp
+data lock.
 
-johannes
+So this patch has to split get_subflow() interface of packet scheduer into
+two interfaces: get_send() and get_retrans(). Then we can set get_retrans()
+interface alone with BPF_F_SLEEPABLE flag.
+
+Thanks to Barry for helping me solve this issue.
+Cc: Barry Song <baohua@kernel.org>
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/529
+
+Geliang Tang (8):
+  mptcp: split get_subflow interface into two
+  Squash to "selftests/bpf: Add bpf_first scheduler & test"
+  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
+  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
+  Squash to "selftests/bpf: Add bpf_red scheduler & test"
+  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+  Squash to "bpf: Export mptcp packet scheduler helpers"
+  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+
+ include/net/mptcp.h                           |  5 +--
+ net/mptcp/bpf.c                               | 13 ++++++--
+ net/mptcp/sched.c                             | 33 ++++++++++++-------
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 14 ++++++--
+ .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 24 +++++++++++---
+ .../selftests/bpf/progs/mptcp_bpf_burst.c     | 32 ++++++++----------
+ .../selftests/bpf/progs/mptcp_bpf_first.c     | 24 +++++++++++---
+ .../selftests/bpf/progs/mptcp_bpf_red.c       | 24 +++++++++++---
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        | 24 +++++++++++---
+ 9 files changed, 136 insertions(+), 57 deletions(-)
+
+-- 
+2.43.0
+
