@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F9317D8BF
-	for <mptcp@lists.linux.dev>; Fri, 22 Nov 2024 10:02:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C3A3E1ABEB0;
+	Fri, 22 Nov 2024 11:50:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732269767; cv=none; b=QK9c5v6Cc3p2Koe/X6goWGqZ6tz0VAkOB61j2BOY2eHibjOhoAioF9mmbeJ9FpYsH4OgHFeSRHjPP5naaaZbmlJCdV8WOgfqoUV+KjEnKywUZUO3i5N741e19A6x9/tQR3TMSPQOA0JbdR5vAhl5lxQpHkSsqU/aKST7EAg/9do=
+	t=1732276247; cv=none; b=aapCJ/f8kaAMzVKaEldvUvpadzBx5xaPwnvz1Im+01o/bowE6S0dy8jLMC/wWfCgrS755+JavDJZniz54VqsQ4zWgqGi2IdsKKPa2ohv2J0OK/CYa19bQezFWWVpi6U6pi2zdyMuqHhOVHWG1OsMKboA6hYkvKWwK0B0H2FHDxw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732269767; c=relaxed/simple;
-	bh=qRNzWzmFBRGx7CEot1NnSAj3wxi/jDxriuSA6mfpnrU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hZKmoRdxQlss1YltGFFX77deX/NwDyPTrKq/8BqzskDOZwvM6hH6k03d718+T+1Oe2dDUOE6UUsFrjbl2i32wob9YwNLmM15tHhX/Ww6qf4FnMGbShbDvcNZCfVXlxvYFsMCvutEUEStZ6H4U9rHxI8bL+sa4+iROfGpEVjWDz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oPTdYvgV; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732276247; c=relaxed/simple;
+	bh=FeraCYzH8lC4L4m2qc0ZBAPWUcPF7/P8lzNtAcBkKkw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UCe6dVqwXM5Ey1lhMb+XnB1KCbnJf0u6jkL8RXhzKZ6p5GEb6XvHx2gWWUco4JtMeTfbnCwC3z7HeHfpFlqmtxrZMTb1m/bwQ/VyKXt9qQrhTxDkgum5FnqtnAHM7TkJREPnOe7YjqjzlRZWIq7eQggC9xAqWOIpHvdg/OtscPA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cvVZKeYt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oPTdYvgV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A40BEC4CECE;
-	Fri, 22 Nov 2024 10:02:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cvVZKeYt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1594AC4CECE;
+	Fri, 22 Nov 2024 11:50:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732269767;
-	bh=qRNzWzmFBRGx7CEot1NnSAj3wxi/jDxriuSA6mfpnrU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=oPTdYvgVjDFlxVabRxoZ92m+SlvgvmJrjuVW6Xq8x475njv8wDfzFKB5KtXaTWSfW
-	 iP+qMbMXbV37J6N1rc8EPMj9KPfWVW+BTmNSXl4URKThZomZ4ivHE+ATTJIAM0ZdCP
-	 ffMClEdt2i2asU3isFzk/hsPY0dGX0xZ3oel7TsbnGA+84O3mbB0oWaoLmCKVXFFpO
-	 yy9+YEcXxpVE37IMCaX42sCTc+scL1/u04iwI7moISXx3b59AhLGNGScnOY26AVutq
-	 oumx6VJugKxe4WpwAPyQSlboSdpEwFoQAdvaLdcJrc+D1vgk8CEHmBeUtwd/UC8EDu
-	 /2RqS1lymno1g==
-Message-ID: <b149e886-179e-4111-b0bc-0e944b1ed011@kernel.org>
-Date: Fri, 22 Nov 2024 11:02:44 +0100
+	s=k20201202; t=1732276247;
+	bh=FeraCYzH8lC4L4m2qc0ZBAPWUcPF7/P8lzNtAcBkKkw=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cvVZKeYtqowKKuc9HKirpk0KrdFKpfKQ4jl7xmWDjoOrsGdCm9uQUNwLftzEsIqbp
+	 UFmI2cikiopJeR8doLplR779jR8k1XqR/7tNIKItKfMgh0f0tfYPb8cQLvcACPSluA
+	 fGF/jVBgdp4QAC1n1zX2mJS2EUvwtG8Mh1JSj7CZuoq53UST0QmByKIRdlYpw9FjVa
+	 /vCoYIe86Xl0sYTXHHxOl/cjc4Xn61v8j3BuVGs6aw3UkoN/RSj1weqJNsYNsxFw//
+	 2sIlNW+Uokp9+mZQusDhwkwk6dJp2jq86ncuExRerDUh0CNs+hjSynojpnxumqbHBD
+	 Bd8h6EWTmd1fA==
+Message-ID: <27e36417-9c22-476b-a9be-f22deeb0d774@kernel.org>
+Date: Fri, 22 Nov 2024 12:50:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/3] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
+Subject: Re: Data race in net/mptcp/pm_netlink.c
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1732181419.git.tanggeliang@kylinos.cn>
- <c98deccb13e527c3fc120e9f6f6627db3b3cf6ab.1732181419.git.tanggeliang@kylinos.cn>
+To: clingfei <clf700383@gmail.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ netdev@vger.kernel.org, mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+References: <CADPKJ-7==Bo=Wu6cHQ_y2qQVsPoJGeP3x0GztMXYcDaKCfmrkQ@mail.gmail.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,52 +88,30 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c98deccb13e527c3fc120e9f6f6627db3b3cf6ab.1732181419.git.tanggeliang@kylinos.cn>
+In-Reply-To: <CADPKJ-7==Bo=Wu6cHQ_y2qQVsPoJGeP3x0GztMXYcDaKCfmrkQ@mail.gmail.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 21/11/2024 10:36, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Address Martin's comments in v1:
-> 
-> - bpf_iter_mptcp_subflow_new returns -EINVAL when msk socket lock isn't
->   held.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/bpf.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index 02038db59956..89a7a482368d 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -252,7 +252,10 @@ bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
->  	if (!msk)
->  		return -EINVAL;
->  
-> -	msk_owned_by_me(msk);
-> +#ifdef CONFIG_LOCKDEP
-> +	if (!lockdep_sock_is_held((const struct sock *)msk))
-> +		return -EINVAL;
+On 22/11/2024 08:34, clingfei wrote:
+> linux-next weekly scan reports that there might be data race in
+> net/mptcp/pm_netlink.c, when mptcp_pm_nl_flush_addrs_doit
+> bitmap_zeroing pernet->id_bit_map at line 1748, there might be a
+> concurrent read at line 1864.
+> Should we add a lock to protect pernet->id_bit_map?
 
-This feels wrong: lockdep is a debugging tool, the goal is usually to
-WARN in case of issue, not to take a different path.
+I don't think there is an issue here: if the flush is being done in
+parallel to an in progress dump (max 255 addresses), I don't know what
+the userspace can really expect. What's important is not to access freed
+data, which should be prevented by the 'rcu_read_lock()'.
 
-Maybe you want to use spin_is_locked(), but still, I'm not sure whether
-that's the direction to take: it means the msk always needs to be locked
-when iterating over the different subflow → is it always the case? Maybe
-yes if it is used only to modify update it?
+So it looks like no lock or id_bitmap duplication is needed here. Even
+if there was a need for a certain consistency there, these 2 operations
+should not happen in parallel, because the MPTCP generic NL family
+doesn't have ".parallel_ops = true".
 
-(If not, maybe you just need to check the sk_refcnt as a safety measure?
-But that's maybe not enough for all cases.)
-
-Did you check what was being done for the BPF TCP CA? I guess they need
-a way to prevent calling some kfunc without the required locks or
-refcount, no?
+So I think this report is a false positive, no?
 
 Cheers,
 Matt
