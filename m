@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B56A51E883E;
-	Sun, 24 Nov 2024 13:38:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A898B20E336;
+	Sun, 24 Nov 2024 13:45:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732455508; cv=none; b=uufYeT10s8cEZ7VLCGtFNJH1sCi8R65M+R3MkX7e7dhUflTiRcE7kJ4wUzYpK3j0dSlPv7KmoCyuCRP+RMx+IpN/N92U75QmkT6tfTlEvSek5bk56FSStrUWcCsc8oJ52tf9y1GpKA0dNgyTSGEf+DJZzowf5Vyv2FVBSOvZGTQ=
+	t=1732455906; cv=none; b=OjmKwCEHe2WVju9bBMg+7xjs/teCrrALWNJwCUETcRjw0QSxiPY4r6SnqeTbAXtnLmX/yraAedvmt9HdVA7L0MwAHUezkjBjq+uZUvv4NzE9vyPUBBcEQifw28P/rwB/1TS01gbUhQl96YNLyTZL3sXO4C2G0NzCyVSZ0XKVHL8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732455508; c=relaxed/simple;
-	bh=iSb+7DbzMIYQt/U5PSNHLMhXdEZt6hKvzRV2z5eiQw8=;
+	s=arc-20240116; t=1732455906; c=relaxed/simple;
+	bh=hdqRIr8JPrP6KkBfW641DB4VEjMrTEqRrJovrjFcl6M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=hxsPtyzNwiB/CFXsPkyXg1Xunc6kG2yAwDUBAtujjRo1OOHiTNxMtd34TFc7/RFAHMJkmPVosIHbNPm1fV4aes5Qz5JiRoJL5PUBid2SkQEM3Bs15QCyNxs6nc1odGjdU9063zCiR6w1NonjwriAm7bc+aGMrzM+NMrJKcYvfcw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YbYtD7UM; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=dewr2mEDOcWgFkX9te7QYAQPS0G4m3D0nbB4hLldpi6K+EIqXImK4n8SLm3jlNxpBckV70U5Ia3ilHtfd+MS+5uVOqLgbmp3efCCFzEuWhciXVGQulD5qwlSA0ZvVftsNOebQ0yKrLODb/4y5JwXvPkRrOYzNbDunxfravKbczQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1QIA39p; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YbYtD7UM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4C0FFC4CECC;
-	Sun, 24 Nov 2024 13:38:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1QIA39p"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A86C4CED7;
+	Sun, 24 Nov 2024 13:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732455508;
-	bh=iSb+7DbzMIYQt/U5PSNHLMhXdEZt6hKvzRV2z5eiQw8=;
+	s=k20201202; t=1732455906;
+	bh=hdqRIr8JPrP6KkBfW641DB4VEjMrTEqRrJovrjFcl6M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=YbYtD7UM38kpoIhN85REbqki55tH6WaFLI3zpEP+Q4zS65NoljTYPYwsaCgUMkien
-	 Cm5Uh78gVCoJCyv26rdYKdIir1zf0DgaUXmUIWqvlldAImOoBnvJ4/zCLJ5Y8JUKE/
-	 YyQpPu4RPzAjhMseGibXy3F9QyowOFPDRmazJbJMB+eX3D8D2N8aCLBK7SlbTX1x+3
-	 Q2WrPX9a4EdFIqeA+mYyHJjoqtHebLDRDBQADwcj9HUZz130FgoG6KBYFo9qMMf+WU
-	 LZlyEa1oUs/ouND2bL36oDf3oBYDFHH0bEXagwh8/23WDAdE4qiVhvurBf8nPrXcQk
-	 Y0GpZnItcbKsw==
+	b=g1QIA39pKDF7oRsatCZpe58glhqxm1CQ/cIMrUBgSqbmg6uhHSGowRgIORtxplWvd
+	 5k/v7J7THxxoKYbxMpwq0Ol1JZ/mxtGTrfPHKjD09ExKPJkYpOKY/3AyejjuQckt0g
+	 TPSfSzREqjAzQwSYSrYsoZmWdymBmzejklKYGfcve3zF7u7Ka9Z0+sMb8QWKLskIFG
+	 /BT/1QwiI7tQG/4VQmPIVmrBLSQ5c/DvHI8Se7vMAq5o5fEbAZ4yXBcis5XlHZAznS
+	 SQwsr+aI0NPHchoLkdGFOrA8EMtVxUGQQXsgEx2L++VFP37Cmujuod1ftqA1AoQDw6
+	 J2UYdBSPcr5Gg==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -39,12 +39,12 @@ Cc: Dmitry Kandybka <d.kandybka@gmail.com>,
 	pabeni@redhat.com,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 090/107] mptcp: fix possible integer overflow in mptcp_reset_tout_timer
-Date: Sun, 24 Nov 2024 08:29:50 -0500
-Message-ID: <20241124133301.3341829-90-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.11 73/87] mptcp: fix possible integer overflow in mptcp_reset_tout_timer
+Date: Sun, 24 Nov 2024 08:38:51 -0500
+Message-ID: <20241124134102.3344326-73-sashal@kernel.org>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241124133301.3341829-1-sashal@kernel.org>
-References: <20241124133301.3341829-1-sashal@kernel.org>
+In-Reply-To: <20241124134102.3344326-1-sashal@kernel.org>
+References: <20241124134102.3344326-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -53,7 +53,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.1
+X-stable-base: Linux 6.11.10
 Content-Transfer-Encoding: 8bit
 
 From: Dmitry Kandybka <d.kandybka@gmail.com>
@@ -74,7 +74,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 47ee616f69c2d..8a8e8fee337f5 100644
+index 7913ba6b5daa3..31a7302c02a68 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
 @@ -2728,8 +2728,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
