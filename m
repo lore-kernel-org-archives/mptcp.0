@@ -1,64 +1,55 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A898B20E336;
-	Sun, 24 Nov 2024 13:45:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A0093376E0;
+	Mon, 25 Nov 2024 14:05:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732455906; cv=none; b=OjmKwCEHe2WVju9bBMg+7xjs/teCrrALWNJwCUETcRjw0QSxiPY4r6SnqeTbAXtnLmX/yraAedvmt9HdVA7L0MwAHUezkjBjq+uZUvv4NzE9vyPUBBcEQifw28P/rwB/1TS01gbUhQl96YNLyTZL3sXO4C2G0NzCyVSZ0XKVHL8=
+	t=1732543510; cv=none; b=GoC0q6HG8O1e+ANce1ioowESKEWS5KDatQ2UgQ+SzsKJQAFSkVjDLgIDrufZ8DsSVX7Adg/R9F8jcOcutVo1uh+sVCHVmZwLHdtGmXVn1Ba5PRznAvH/4QDR+fK8qL5oKB4KcQHKysyd783cs66xStM6uaWX5w3ogoImWq/t7wE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732455906; c=relaxed/simple;
-	bh=hdqRIr8JPrP6KkBfW641DB4VEjMrTEqRrJovrjFcl6M=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dewr2mEDOcWgFkX9te7QYAQPS0G4m3D0nbB4hLldpi6K+EIqXImK4n8SLm3jlNxpBckV70U5Ia3ilHtfd+MS+5uVOqLgbmp3efCCFzEuWhciXVGQulD5qwlSA0ZvVftsNOebQ0yKrLODb/4y5JwXvPkRrOYzNbDunxfravKbczQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g1QIA39p; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1732543510; c=relaxed/simple;
+	bh=ER6BK/74S4G1DUMCprZWg698DiwXO4Dr+rnOqRuNX1M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=cs9CM5yn1jTvl2wm6mnFd6y6Hj69fYBP0AGKRVeIZ+Rume4NqLAja7vQT1kpg6XzNiDELy1mn+xzRQ+vXmCKJGMFR8ZZTdbfHhSE5Lo0ZLnjjUho0WA5aJr4OMpHyx5ThBVNMLmiSsORhYT7dEpfVomznYir5iBLaRVRnb/rmYE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uc42ExnI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g1QIA39p"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A86C4CED7;
-	Sun, 24 Nov 2024 13:45:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uc42ExnI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FAA3C4CECE;
+	Mon, 25 Nov 2024 14:05:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732455906;
-	bh=hdqRIr8JPrP6KkBfW641DB4VEjMrTEqRrJovrjFcl6M=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=g1QIA39pKDF7oRsatCZpe58glhqxm1CQ/cIMrUBgSqbmg6uhHSGowRgIORtxplWvd
-	 5k/v7J7THxxoKYbxMpwq0Ol1JZ/mxtGTrfPHKjD09ExKPJkYpOKY/3AyejjuQckt0g
-	 TPSfSzREqjAzQwSYSrYsoZmWdymBmzejklKYGfcve3zF7u7Ka9Z0+sMb8QWKLskIFG
-	 /BT/1QwiI7tQG/4VQmPIVmrBLSQ5c/DvHI8Se7vMAq5o5fEbAZ4yXBcis5XlHZAznS
-	 SQwsr+aI0NPHchoLkdGFOrA8EMtVxUGQQXsgEx2L++VFP37Cmujuod1ftqA1AoQDw6
-	 J2UYdBSPcr5Gg==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: Dmitry Kandybka <d.kandybka@gmail.com>,
+	s=k20201202; t=1732543510;
+	bh=ER6BK/74S4G1DUMCprZWg698DiwXO4Dr+rnOqRuNX1M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=Uc42ExnIQO0LRxiMs3xQ+F/NVW49ta39ByiW+AErf6oq/HDQrrik37kw20quaaIzI
+	 CJy6mpdt+jqAK6e1YEReDjJ+v0Yt+xIIVGxKUetRMWBvvXGN3Z7dw/gq+umWbw/+18
+	 xL3WmTiBVinbDorQfLoUt/N+9PAHXhqXsoaF0QUU+Pi7CLtpFBLqWt0qMhOTaZ8I+L
+	 fD/4dld4pwyyHZ1JFZkRVm0y/FHa6/3Zub86fTM/+bZixzSKu2vvo3hPJ4FcZUjKyS
+	 MUaZC1AG2Q5/FzNI/HDR54hhR1nwTX33o2r3f6Am5hucOdp/C4SJnwTLSUOP2pDCY/
+	 Nt1rSAO/Zg72Q==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: sashal@kernel.org,
+	MPTCP Upstream <mptcp@lists.linux.dev>,
+	Dmitry Kandybka <d.kandybka@gmail.com>,
 	Jakub Kicinski <kuba@kernel.org>,
-	Sasha Levin <sashal@kernel.org>,
-	matttbe@kernel.org,
-	martineau@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	pabeni@redhat.com,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.11 73/87] mptcp: fix possible integer overflow in mptcp_reset_tout_timer
-Date: Sun, 24 Nov 2024 08:38:51 -0500
-Message-ID: <20241124134102.3344326-73-sashal@kernel.org>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <20241124134102.3344326-1-sashal@kernel.org>
-References: <20241124134102.3344326-1-sashal@kernel.org>
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH 6.6.y] mptcp: fix possible integer overflow in mptcp_reset_tout_timer
+Date: Mon, 25 Nov 2024 15:04:51 +0100
+Message-ID: <20241125140450.3752859-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.11.10
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1580; i=matttbe@kernel.org; h=from:subject; bh=5FqTq52xl8VsAEX/Pg7TynecMuw7MwwqjB0J/nAGOWU=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnRIQCzJj3UIdKq3Frn7JlFsA0HL8Eh9VJ+3bk3 YppBbRoOsaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ0SEAgAKCRD2t4JPQmmg cxbZD/4s4YB95wMV8MrObS9zd38Uetyk+WvKkRdL2u4ilqul5iOKvke60xVDjVzGw1cTV3PAWw/ fPMw6MU6FASTAI5r//697rpyZivsrBZfu9502JxwY8eWAOnUzYmSN3yXf5uCJ7TN2sEJgXy1/M3 Mnxr7ezQq22+8nukDO9YOlD4B1JQhx1HMbPWBjCQzw+6MAC6lzUr6esUFNZ4VjjZJlCzQR0vUmY J+c47EaU1Mw1s2wfdHNnC2m3ocrvYsnIhcxFa5oxZzPXR5u9bgTjRRtRCsrG9TOYZ2pcfBHxQfi uEAweFJ2AItuvTz/kYNbxo77vc7+TGoYwzPL50IbdeYwfWWagA94V0DS/aqi01KArmezr30qrqx paywH3OtAM3R+bIviEB0g92xlZKs4s9kRirEfA1kTUycLvIAQbWrXoOeBIdY280/4eu4+YFcsET TsW3PSOr5y6e3x1FNluo6d76LrvTFmVVH6Ddr06f7a0M9pK5coXjF/1Fwuo5XeOLadHtGtVV6gt nX55lSsxW20rDG24W6D/OTd5lTTh4c25ICaj2ovnD3bDgQKZMnobcUvB3yUTxi6myp34HndJSug BsAN0uW5aLSkcF0WQu13c4f7Jq06d8eul2zysQ5q+c86zNebYzV/w4lKMLXQOiwl38ev/0DswIf OHqEEfTATYWeqww==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 Content-Transfer-Encoding: 8bit
 
 From: Dmitry Kandybka <d.kandybka@gmail.com>
 
-[ Upstream commit b169e76ebad22cbd055101ee5aa1a7bed0e66606 ]
+commit b169e76ebad22cbd055101ee5aa1a7bed0e66606 upstream.
 
 In 'mptcp_reset_tout_timer', promote 'probe_timestamp' to unsigned long
 to avoid possible integer overflow. Compile tested only.
@@ -68,26 +59,31 @@ Found by Linux Verification Center (linuxtesting.org) with SVACE.
 Signed-off-by: Dmitry Kandybka <d.kandybka@gmail.com>
 Link: https://patch.msgid.link/20241107103657.1560536-1-d.kandybka@gmail.com
 Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ Conflict in this version because commit d866ae9aaa43 ("mptcp: add a
+  new sysctl for make after break timeout") is not in this version, and
+  replaced TCP_TIMEWAIT_LEN in the expression. The fix can still be
+  applied the same way: by forcing a cast to unsigned long for the first
+  item. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
  net/mptcp/protocol.c | 4 ++--
  1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7913ba6b5daa3..31a7302c02a68 100644
+index b8357d7c6b3a..01f6ce970918 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2728,8 +2728,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
+@@ -2691,8 +2691,8 @@ void mptcp_reset_tout_timer(struct mptcp_sock *msk, unsigned long fail_tout)
  	if (!fail_tout && !inet_csk(sk)->icsk_mtup.probe_timestamp)
  		return;
  
 -	close_timeout = inet_csk(sk)->icsk_mtup.probe_timestamp - tcp_jiffies32 + jiffies +
--			mptcp_close_timeout(sk);
+-			TCP_TIMEWAIT_LEN;
 +	close_timeout = (unsigned long)inet_csk(sk)->icsk_mtup.probe_timestamp -
-+			tcp_jiffies32 + jiffies + mptcp_close_timeout(sk);
++			tcp_jiffies32 + jiffies + TCP_TIMEWAIT_LEN;
  
  	/* the close timeout takes precedence on the fail one, and here at least one of
  	 * them is active
 -- 
-2.43.0
+2.45.2
 
