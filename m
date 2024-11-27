@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D05A1BC3F
-	for <mptcp@lists.linux.dev>; Wed, 27 Nov 2024 02:20:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9619259B71
+	for <mptcp@lists.linux.dev>; Wed, 27 Nov 2024 02:55:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1732674024; cv=none; b=dy6/hs/GH59Z21x68gEyUObV/1voWdtiymagQnuqCUI1/ThnSCahuhztdOmSLd2ZNS5aomp1N7SmsGILZprYAIY5ngzpjnPNZpOF2Dy9y28oxDfoO/y1b09VqUIYbxz4bECfhIPL9Dl/IhgE+8X280HyTAPzcFxPbS0aB7wP1UY=
+	t=1732676133; cv=none; b=OaXiBjai4x2nM0JDRZOToKw9Bx+SrW0emkb5HfWpwybmEQ0Gxruiq41BeFNk/FI+vYs308ywfYZg6fn2QQED3eTY3lQ/MTsDqEQgQTK6kufpoA+e4XOsxzxYMlrQOlrmEj1H6kPlQ74WuUuWA77FBKlb9Dx5WgqfYgGCkU1HxB4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1732674024; c=relaxed/simple;
-	bh=o7EdXpWJ8QEc9luDXoQ3B4Yt2D+3ZzlaxEag8gbvWCo=;
+	s=arc-20240116; t=1732676133; c=relaxed/simple;
+	bh=TenZQXRVLawZ0NEkzq92CurTrBjJ9+GI3Sh4Bt8RidU=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=iA3Ouzz6N3JUkaZVN8J7QAiiAMZzv2sbUIuk5FWKf16+KC5bVMAPdsAHoJ07pa7rEj7tyXji/cBwDNjk/WUZt8g0DQl/HllBT7Za9Tu1kR/WgcPB6ZB/FqpTqYCn09OYRWODXqK6YvX45Oc6UPxQpt//gvPeA6L2gK33n7YNZTc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OnuF16kI; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=QbyT9bVe7YbjQqW2YAwXIG4iAZybs80iA26q3hYK2DIc9Rk1kYNm2BSjKrSsLoAu+x351mkcPajsHxYB1MPt9I/r9GdAcs6LtUgknma/lVt2CY7bO7+8GkxPMcBqlYhcap4ugiHNAYosLo98JjB1PSuaHUf+jQDxq9sDjj05D3g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mgLhjUVo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OnuF16kI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6EB29C4CECF;
-	Wed, 27 Nov 2024 02:20:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mgLhjUVo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D968CC4CED2;
+	Wed, 27 Nov 2024 02:55:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1732674022;
-	bh=o7EdXpWJ8QEc9luDXoQ3B4Yt2D+3ZzlaxEag8gbvWCo=;
+	s=k20201202; t=1732676133;
+	bh=TenZQXRVLawZ0NEkzq92CurTrBjJ9+GI3Sh4Bt8RidU=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=OnuF16kI1xdk1zUSeofpkq7O0EvYr8/kQ0f8O9ApxX1RwHZ2y1mNhc0KoPJ/oGZk/
-	 PxUGsMA6xW7GcJ5yLpb1CJqdXPBzeCsHZ+g+jTdvrs6ocwnGLkXjDxtTJofYKkklC+
-	 K69JstBE12BboUWqZorG5XuXq/zdHIo5lVBrW/SavbQwVNqJsnuD3QUHw0MG1C9DQE
-	 pZ4QEsqQrfdl+G+cwJhmrvjto92pWhpR/j9WC1BIg/ycdpdIv+6fJL5sEuJ9c4TuJZ
-	 dc5CNieB0SmNteYcejUJi2cQZW5mtHiXJO2FJA5vBN0t6ENyxxFde/kapRJfT0Bb3a
-	 KO151tiuToyuw==
-Message-ID: <a8edc8b7d34db222a39879df4c23adfb532d5279.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/3] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
+	b=mgLhjUVol42fNg8XjENC6Q9V2QkzaGbuwdUBxPHxkZoT2PrfZCMOtOONCHBxFxaBE
+	 BObl9cL48Yd0G9QZdLAHtYCcXugXPE9QdyALa2n5ukFMfydC2NmOhStPbeUHNmxMXm
+	 0PP+Szbo8gLWMJSOld31mwBG51xIyHL6zKye+9vzXBXtujHY2JYMO9jrQFdyWWp/Wj
+	 wcNPG4Y1d/UYPz+bo5OBlvedy4k9w8o0GxvepD0DQ3kR+POdr+w7CV6TuuHVqI8q6L
+	 +YvILHbj2GrRbFLHKuWDyHoNxZElQhdVuZvfRAapv6DeL5hvyTLCBjN8l1yVFXeBau
+	 fA+ovKnvBxy3w==
+Message-ID: <6ba2d31f4a3fbd72287ac690206f137914e88a0a.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v9 06/13] Squash to "selftests/bpf: Add
+ bpf_first scheduler & test"
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 27 Nov 2024 10:20:18 +0800
-In-Reply-To: <b149e886-179e-4111-b0bc-0e944b1ed011@kernel.org>
-References: <cover.1732181419.git.tanggeliang@kylinos.cn>
-	 <c98deccb13e527c3fc120e9f6f6627db3b3cf6ab.1732181419.git.tanggeliang@kylinos.cn>
-	 <b149e886-179e-4111-b0bc-0e944b1ed011@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Wed, 27 Nov 2024 10:55:24 +0800
+In-Reply-To: <aad320b2-aeb4-12b1-5621-2e803827ec77@kernel.org>
+References: <cover.1730268415.git.tanggeliang@kylinos.cn>
+	 <f3155bd767936df549ff0aaa094b44f9e70323ba.1730268415.git.tanggeliang@kylinos.cn>
+	 <aad320b2-aeb4-12b1-5621-2e803827ec77@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -80,83 +80,270 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+Hi Mat,
 
-On Fri, 2024-11-22 at 11:02 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
+On Tue, 2024-11-12 at 18:07 -0800, Mat Martineau wrote:
+> On Wed, 30 Oct 2024, Geliang Tang wrote:
 > 
-> On 21/11/2024 10:36, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > Address Martin's comments in v1:
+> > 1. Update sched_init.
 > > 
-> > - bpf_iter_mptcp_subflow_new returns -EINVAL when msk socket lock
-> > isn't
-> >   held.
+> > 2. For drop bpf_object__find_map_by_name in test_bpf_sched(),
+> > change the
+> > first parameter of it as bpf_map.
+> > 
+> > 3. Implement mptcp_subflow_set_scheduled in BPF.
+> > 
+> > 4. Drop bpf_mptcp_subflow_ctx_by_pos.
+> > 
+> > 5. Use the newly added bpf_for_each() helper to walk the conn_list.
 > > 
 > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > > ---
-> >  net/mptcp/bpf.c | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > tools/testing/selftests/bpf/prog_tests/mptcp.c    | 15 +++++++++---
+> > ---
+> > tools/testing/selftests/bpf/progs/mptcp_bpf.h     | 14 ++++++++----
+> > --
+> > .../testing/selftests/bpf/progs/mptcp_bpf_first.c |  4 ++--
+> > 3 files changed, 19 insertions(+), 14 deletions(-)
 > > 
-> > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> > index 02038db59956..89a7a482368d 100644
-> > --- a/net/mptcp/bpf.c
-> > +++ b/net/mptcp/bpf.c
-> > @@ -252,7 +252,10 @@ bpf_iter_mptcp_subflow_new(struct
-> > bpf_iter_mptcp_subflow *it,
-
-Other bpf_iter have added "sizeof" and "alignof" checks, I think
-mptcp_subflow bpf_iter also needs to add them too:
-
-      BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) !=
-                   sizeof(struct bpf_iter_mptcp_subflow));
-      BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
-                   __alignof__(struct bpf_iter_mptcp_subflow));
-
-> >  	if (!msk)
-> >  		return -EINVAL;
-> >  
-> > -	msk_owned_by_me(msk);
-> > +#ifdef CONFIG_LOCKDEP
-> > +	if (!lockdep_sock_is_held((const struct sock *)msk))
-> > +		return -EINVAL;
+> > diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > index b00af99c5c9d..a6574a537679 100644
+> > --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> > @@ -645,27 +645,30 @@ static void test_default(void)
+> > 	netns_free(netns);
+> > }
+> > 
+> > -static void test_bpf_sched(struct bpf_object *obj, char *sched,
+> > +static void test_bpf_sched(struct bpf_map *map, char *sched,
+> > 			   bool addr1, bool addr2)
+> > {
+> > 	char bpf_sched[MPTCP_SCHED_NAME_MAX] = "bpf_";
+> > 	struct netns_obj *netns;
+> > 	struct bpf_link *link;
+> > -	struct bpf_map *map;
+> > +	int err;
+> > 
+> > 	if (!ASSERT_LT(strlen(bpf_sched) + strlen(sched),
+> > 		       MPTCP_SCHED_NAME_MAX, "Scheduler name too
+> > long"))
+> > 		return;
+> > 
+> > -	map = bpf_object__find_map_by_name(obj, sched);
+> > 	link = bpf_map__attach_struct_ops(map);
+> > -	if (CHECK(!link, sched, "attach_struct_ops: %d\n", errno))
+> > +	if (!ASSERT_OK_PTR(link, "attach_struct_ops"))
+> > 		return;
+> > 
+> > -	netns = sched_init("subflow", strcat(bpf_sched, sched));
+> > +	netns = netns_new(NS_TEST, true);
+> > 	if (!netns)
+> > 		goto fail;
+> > 
+> > +	err = sched_init("subflow", strcat(bpf_sched, sched));
+> > +	if (!ASSERT_OK(err, "sched_init"))
+> > +		goto fail;
+> > +
+> > 	send_data_and_verify(sched, addr1, addr2);
+> > 
+> > fail:
+> > @@ -681,7 +684,7 @@ static void test_first(void)
+> > 	if (!ASSERT_OK_PTR(skel, "open_and_load: first"))
+> > 		return;
+> > 
+> > -	test_bpf_sched(skel->obj, "first", WITH_DATA,
+> > WITHOUT_DATA);
+> > +	test_bpf_sched(skel->maps.first, "first", WITH_DATA,
+> > WITHOUT_DATA);
+> > 	mptcp_bpf_first__destroy(skel);
+> > }
+> > 
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > index 3b20cfd44505..f8c917dc2c1c 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+> > @@ -42,6 +42,14 @@ mptcp_subflow_tcp_sock(const struct
+> > mptcp_subflow_context *subflow)
+> > 	return subflow->tcp_sock;
+> > }
+> > 
 > 
-> This feels wrong: lockdep is a debugging tool, the goal is usually to
-> WARN in case of issue, not to take a different path.
+> Hi Geliang -
 > 
-> Maybe you want to use spin_is_locked(), but still, I'm not sure
-> whether
-
-spin_is_locked() doesn't work, since this msk socket lock isn't a
-spinlock, right?
-
-> that's the direction to take: it means the msk always needs to be
-> locked
-> when iterating over the different subflow → is it always the case?
-> Maybe
-> yes if it is used only to modify update it?
+> Thanks for the updates to this series. The change to a BPF-based
+> helper 
+> does work around the pointer-handling issue, but it's important to be
+> sure 
+> WRITE_ONCE() is being handled correctly.
 > 
-> (If not, maybe you just need to check the sk_refcnt as a safety
-> measure?
-> But that's maybe not enough for all cases.)
-
-I think the answer is no, sometimes locking is not necessary when
-iterating over the different subflows. Does this mean we can simply
-drop msk_owned_by_me() here?
-
+> > +#define WRITE_ONCE(x, val) ((*(volatile typeof(x) *) &(x)) =
+> > (val))
 > 
-> Did you check what was being done for the BPF TCP CA? I guess they
-> need
-> a way to prevent calling some kfunc without the required locks or
-> refcount, no?
+> We initially added the C version of the mptcp_subflow_set_scheduled()
+> helper because it wasn't clear how to handle WRITE_ONCE() in BPF. The
+> only 
+> other implementation I found is in the cilium code (also GPLv2):
+> 
+> https://github.com/cilium/cilium/blob/main/bpf/include/bpf/compiler.h
+> 
+> It's a lot more complex than the macro added above (using an asm
+> statement 
+> to set up the memory barrier). I don't know enough about low-level
+> BPF and 
+> BPF toolchains to know that the cilium WRITE_ONCE() technique works 
+> everywhere - anyone else have a comment on this?
+> 
+> Another concern I have is that a lot of boilerplate BPF code is
+> needed to 
+> set the scheduled bit in every BPF scheduler, and it's easy for a 
+> scheduler author to just skip the WRITE_ONCE() stuff and possibly 
+> introduce subtle write-ordering bugs. The C helper was easy to use 
+> correctly.
+> 
+> I'm not sure what the correct solution is yet. Geliang, do you have
+> any 
+> ideas for an approach that works around the kfunc pointer limitations
+> and 
+> also prevents WRITE_ONCE() bugs?
 
-Not found in BPF TCP CA.
+I finally found another solution. We need to define a new BPF function
+bpf_mptcp_ssk_cast() here and set its parameter type to ARG_ANYTHING,
+so that in bpf_burst_get_send(), we don't need to use bpf_core_cast()
+for read-only cast. In this way, the pointer returned by
+bpf_mptcp_ssk_cast() can be passed to any kfuncs, and there is no need
+to implement mptcp_subflow_set_scheduled() and WRITE_ONCE() in BPF.
+
++BPF_CALL_1(bpf_mptcp_ssk_cast, struct sock *, sk)
++{
++       BTF_TYPE_EMIT(struct sock);
++       if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP &&
+sk_is_mptcp(sk))
++               return (unsigned long)sk;
++       return (unsigned long)NULL;
++}
++
++static const struct bpf_func_proto bpf_mptcp_ssk_cast_proto = {
++       .func           = bpf_mptcp_ssk_cast,
++       .gpl_only       = false,
++       .ret_type       = RET_PTR_TO_BTF_ID_OR_NULL,
++       .arg1_type      = ARG_ANYTHING,
++       .ret_btf_id     = &btf_sock_ids[BTF_SOCK_TYPE_SOCK],
++};
+
+With this bpf_mptcp_ssk_cast() function, we can define struct
+subflow_send_info in mptcp_bpf_burst.c the same as in
+net/mptcp/protocol.c:
+
+ struct subflow_send_info {
+         struct sock *ssk;
+         u64 linger_time;
+ };
+
+without defining a special struct bpf_subflow_send_info like in this v9
+version:
+
+ struct bpf_subflow_send_info {
+	struct mptcp_subflow_context *subflow;
+ 	__u64 linger_time;
+ };
+
+And invoke this bpf_mptcp_ssk_cast() function in bpf_burst_get_send()
+like this:
+
+        /* pick the best backup if no other subflow is active */
+        if (!nr_active)
+                send_info[SSK_MODE_ACTIVE].ssk =
+send_info[SSK_MODE_BACKUP].ssk;
+
+        ssk = bpf_mptcp_ssk_cast(send_info[SSK_MODE_ACTIVE].ssk);
+        if (!ssk || !sk_stream_memory_free(ssk))
+                return -1; 
+
+        subflow = bpf_mptcp_subflow_ctx(ssk);
+        if (!subflow)
+                return -1; 
+
+        burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk-
+>snd_nxt);
+        wmem = ssk->sk_wmem_queued;
+        if (!burst)
+                goto out;
+
+        subflow->avg_pacing_rate = div_u64((__u64)subflow-
+>avg_pacing_rate * wmem +
+                                           ssk->sk_pacing_rate * burst,
+                                           burst + wmem);
+        msk->snd_burst = burst;
+
+out:
+        mptcp_subflow_set_scheduled(subflow, true);
+
+The only concern is that this bpf_mptcp_ssk_cast() function is not
+general enough. It's only used in bpf_burst. I'm not sure whether BPF
+upstream will accept adding this function.
 
 Thanks,
 -Geliang
 
 > 
-> Cheers,
-> Matt
+> - Mat
+> 
+> 
+> > +
+> > +static __always_inline void
+> > +mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+> > bool scheduled)
+> > +{
+> > +	WRITE_ONCE(subflow->scheduled, scheduled);
+> > +}
+> > +
+> > /* ksym */
+> > extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock
+> > *msk) __ksym;
+> > extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
+> > @@ -52,10 +60,4 @@ bpf_mptcp_subflow_ctx(const struct sock *sk)
+> > __ksym;
+> > extern struct sock *
+> > bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context
+> > *subflow) __ksym;
+> > 
+> > -extern void mptcp_subflow_set_scheduled(struct
+> > mptcp_subflow_context *subflow,
+> > -					bool scheduled) __ksym;
+> > -
+> > -extern struct mptcp_subflow_context *
+> > -bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data,
+> > unsigned int pos) __ksym;
+> > -
+> > #endif
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > index d57399b407a7..5d0f89c636f0 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > @@ -20,11 +20,11 @@ SEC("struct_ops")
+> > int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
+> > 	     struct mptcp_sched_data *data)
+> > {
+> > -
+> > 	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx_by_pos(data, 0),true);
+> > +	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx(msk-
+> > >first), true);
+> > 	return 0;
+> > }
+> > 
+> > -SEC(".struct_ops")
+> > +SEC(".struct_ops.link")
+> > struct mptcp_sched_ops first = {
+> > 	.init		= (void *)mptcp_sched_first_init,
+> > 	.release	= (void *)mptcp_sched_first_release,
+> > -- 
+> > 2.45.2
+> > 
+> > 
+> > 
 
