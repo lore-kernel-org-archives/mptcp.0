@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 664A7163A97
-	for <mptcp@lists.linux.dev>; Mon,  2 Dec 2024 16:56:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 768E8163A97
+	for <mptcp@lists.linux.dev>; Mon,  2 Dec 2024 16:56:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733158589; cv=none; b=HquIO6m8k+Mf71YzDNdk2KR3z0wfFJygSMFNPkNEO29PjmIZfWUIS9BLeppE885fGujOPlSnfYnTrgnSbkpUqhe1RB0kYPyn2QqfiWkuYK7P1TAZ7R3nMal1SFk2w3ovDR1tww48MMlGccP4qUEMj3Odewb928ilSx7NjwCyzeU=
+	t=1733158590; cv=none; b=PBgipk7bGeZi7kn3NxFxT+oww8CQ2zAi60bMXuUcbO5IKIi1/Ne+JgkggdYBWIL3IIXfHE/HU528PHgvMe4l6nZdeB0/ZG84HveYOZd7tztSqRH6gwfc9INT18LGYBUDzZYlTgQO5IWkwbWtRHBll8zrysvQj7v1VWQVpIz5+WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733158589; c=relaxed/simple;
-	bh=geLL7+iFeU3cvQSiEu4ChRDalLZro3WlumR8vRhu1og=;
+	s=arc-20240116; t=1733158590; c=relaxed/simple;
+	bh=ClIlITh/o7P+f/tLYcc7SK1GE9Ppa4qwE+oM68TtWJE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Nh+gU9KOT5V6IDYyseLQscWegqO04GIINeXeqcKTAlEyF4FJcFm7m51H1eG8Po6GFgJOkWqZmDozTdHzRGjIQn1DF8eGwX+0isT45KdIATGaI/0rDqM+fyvzPwUaU9MOzMyCth4tESWtyiKGfZgYI3dxvXnjLKqdN+plAPzTgAg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o7rY2RsQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=P2psfEL/kfa682zygZ/YvglRlxVj7Wq3pMay7TCB8SiA0mso/TcEC9wZR/AUj7l4o1ErwtwjrceO7L63AeZ5a/Z6COpukPQKTqyWe03LnzAwh+eoL72SyEdjFO36ZQQTvasCt4UkPZftW9fm3l8gOU4R6DUDkGWZ70SinI2Zg5I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZIk9citk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o7rY2RsQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 61E27C4CED1;
-	Mon,  2 Dec 2024 16:56:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZIk9citk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6648DC4CED2;
+	Mon,  2 Dec 2024 16:56:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733158588;
-	bh=geLL7+iFeU3cvQSiEu4ChRDalLZro3WlumR8vRhu1og=;
+	s=k20201202; t=1733158589;
+	bh=ClIlITh/o7P+f/tLYcc7SK1GE9Ppa4qwE+oM68TtWJE=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=o7rY2RsQH7XRKOk0iSdGj5Rc8B2FXx8wVTyScz2qj8qvd43dl/sAP1I76qDeyt8ev
-	 aOI1n0ZNyc+KiA77/ip5DO6oD05o4HmiMDK6S2iRl/fPC62VNdjtoEpnNZK1Ct6fPU
-	 wp1B1N7XFPp13R8sp68Cp6XcextDfE9FmO2FjaYJ8Mbj0XdW1zcHB+qwpC6JqkFZxT
-	 /3/NJSNuZJV7HSn0DQcyivvRYrIWwLUcYYx1obGfzJIzXKF9CL7KEYeeeTEFS4dfEr
-	 HE7fqAbq7j9F4deEj4y3GFmph2qB5h6PQzmz76mo99josCDD3dzzzny7WVJiIlEoLb
-	 r5qhRLlFjIuGQ==
-Message-ID: <712e8c7d-d0d5-4418-90ee-3517fcbdda08@kernel.org>
-Date: Mon, 2 Dec 2024 17:56:26 +0100
+	b=ZIk9citkCzK6yt4YHnd97QGoOKa8veDH2dw7gESJAbXrmNnE+W3wmXubTpiVQxWM0
+	 jiNYqAPDrl1zcP4Qr8NyjGmd0+M3bo57mWVSb3kFq6OFnaRuK4bJ8RaEMJQJbDG7tW
+	 grt2XLfiYJjkT/iZWHjCNRZ229mgp6ZwhoUVralL7c6MXHSjEtCaLb+2L3eTKohtfi
+	 QJq0GXs+SkHnyWCHtFedtgMrW7wBGA9WBD5uxPxBqkzr0gWvS1R/M37lVTpStxlaPC
+	 SyWRwW60z/C2wmvxsncO+1WU0XO6AAFnfJwIKAo8B4orp0yvsdgk6AE9an4uW5tZTX
+	 53dKEyobObhfQ==
+Message-ID: <ed1926c2-feaa-4e95-966f-e095ae4c445d@kernel.org>
+Date: Mon, 2 Dec 2024 17:56:27 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next-next 0/3] mptcp: rx path refactor
-Content-Language: en-GB
+Subject: Re: [PATCH mptcp-next-next 2/3] mptcp: move the whole rx path under
+ msk socket lock protection
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1732902181.git.pabeni@redhat.com>
+ <19310c3f96743f3298c029ec5a89b4e4f1ed10b9.1732902181.git.pabeni@redhat.com>
+Content-Language: en-GB
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,50 +86,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1732902181.git.pabeni@redhat.com>
+In-Reply-To: <19310c3f96743f3298c029ec5a89b4e4f1ed10b9.1732902181.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 29/11/2024 18:45, Paolo Abeni wrote:
-> This is a batch of changes I had sitting in my local tree for a while.
-> Why another refactor you may ask? Two main resons:
+> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") it's
+> pretty straight forward move the whole MPTCP rx path under the socket
+> lock leveraging the release_cb.
 > 
-> - currently the mptcp RX path introduces quite a bit of 'exceptional'
->  accounting/locking processing WRT to plain TCP, adding up to the
->  implementation complexity in a misurable way
-> - the performance gap WRT plain TCP for single subflow connections is
->  quite measurable.
+> We can drop a bunch of spin_lock pairs in the receive functions, use
+> a single receive queue and invoke __mptcp_move_skbs only when subflows
+> ask for it.
 > 
-> The present refactor addresses both the above items: most of the
-> additional complexity is dropped, and single stream performances
-> increase measurably - from 55Gbps to 71Gbps in my loopback test. As a
-> reference, plain TCP is around 84Gps on the same host.
+> This will allow more cleanup in the next patch
 
-Nice clean-up, with an excellent improvement!
+(...)
 
-> The above comes to a price: the patch are invasive, even in subtle ways:
-> the chance of destabilizing the implementation is real (ence the
-> additional, intentional '-next' into the subj).
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index f768aa4473fb..159add48f6d9 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
 
-Because we are only at the beginning of a new cycle, do we need to have
-this in '-next'? If we can have syzkaller validating this for a couple
-of weeks, would it not be OK to send that to netdev, to have it in
-linux-next for a few weeks?
+(...)
 
-> In any case keeping the patch hidden for longer was not going to do any
-> good, so here we are.
-> 
-> Paolo Abeni (3):
->   mptcp: consolidate subflow cleanup
->   mptcp: move the whole rx path under msk socket lock protection
->   mptcp: cleanup mem accounting.
+> @@ -2290,9 +2283,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+>  		}
+>  	}
+>  
+> -	pr_debug("msk=%p rx queue empty=%d:%d copied=%d\n",
+> -		 msk, skb_queue_empty_lockless(&sk->sk_receive_queue),
+> -		 skb_queue_empty(&msk->receive_queue), copied);
+> +	pr_debug("msk=%p rx queue empty=%d copied=%d",
 
-The series look good to me: the modifications seem to make sense, but I
-don't know well this part that we usually avoid modifying :)
+A small detail: the '\n' at the end is missing: no need to delay the
+output if it is not supposed to be used with a pr_cont().
 
-@Mat: do you mind having a look please?
+(Something we can fix when applying the patches.)
 
 Cheers,
 Matt
