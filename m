@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C28207DE7
-	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:49:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC3D207DE7
+	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:49:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733334544; cv=none; b=Rp3qdKUrgnTuVUN4eZHveyUca0OwJP8/EKDBpq9Uvt9W1EAjRA4tCbCzmBNuN6ZnVjYdgA263R29jqU/lEa9zAJkdCpfdPbPmRT+CcKTxGN6ltifoKEj6HUkTZ5ktsKfCZg5E4LqRoWf4bszVmQHWLyr8vjqEwGMt9NbM4guEWQ=
+	t=1733334548; cv=none; b=ZS5RLJoNiPnctjvkvZNt+VvHR0YUkmO0PqUZIF4F4a83xMYjfLKikIXP9XfpQBU2BfF7LQH4LEw7ZQj8BGUqcCTnsvLZqwAqqvmK0N/gOpFk9XrxhkoCtUYRl9+eiawJsQzFJuraQJP+CXRFq6BO7fWzLle9c6F1Uw/9SUcq8As=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733334544; c=relaxed/simple;
-	bh=ZRVThppBbqvGu7dVQsJMRzkt36FF29Vhe6sf5x+nhqk=;
+	s=arc-20240116; t=1733334548; c=relaxed/simple;
+	bh=aOQXFaLJDAgeUZzwkAwAvsnV1UdAcxmI8jaPn1D5U/A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XNoTkpEKgoVGTPBe6HGcGcrT3EV7e+weswt69KQwARdeGvSI4IIJTnUkDDVuRRU/1y7z+xDNWncjK9EK86vHzPt7aFM4kE5OvjhN8eXbR3rmOpuZfi05ViH7OhWKJqBzJ42qpRoAZuiTkkGY3n8YTqtHmRQkOiGCghlZwaQBhjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sg1Vvfz8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bf7RMHLnOQdxpmZKVaOUhpRSTkVRschIVd2vLYIi+Oli8bDRALutvvGlTZXycfuUvrns9D8SmErhaPqQl4mSl1Env9K73QY77OOEhBnvyiz03qM8b5ex2cuczMkFfigNB4j8+nAjmIKq6IDef9qzv94x7bwkz0YgALc74P1Qpyk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5JMYhD3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sg1Vvfz8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6A1C4CECD;
-	Wed,  4 Dec 2024 17:49:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5JMYhD3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE76EC4CECD;
+	Wed,  4 Dec 2024 17:49:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733334544;
-	bh=ZRVThppBbqvGu7dVQsJMRzkt36FF29Vhe6sf5x+nhqk=;
+	s=k20201202; t=1733334547;
+	bh=aOQXFaLJDAgeUZzwkAwAvsnV1UdAcxmI8jaPn1D5U/A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sg1Vvfz8hsoUL5H5kEtXnAPkn6IR37a9mQF+Yony7nrW3kN+coJRt3nVRwMZ4CEVZ
-	 wQROET9xkUNlakZ1NU/6r5VhddLOVJlbYBLCp+f0xXyqUu1rVn6ROCLjlRAQqwvS40
-	 iinBxJDoHWcNN+HXzZe/3PEGlJe0+XjhjyOT6T8Fe8CUb7DgsI+KWTpyq2xQC4gtOE
-	 bsjqkZe5uNRIi9Y35qzz2HFBN8lxJZhgnoQeIOYiSwjqRwgz+CGsyDpcPa7fx5jBPb
-	 iqQKwpLoEI6s/JfefCrMmhbztc6E/qIQPOsu5PNpB8wKI8gEU3esY01HbGwDU1CFuZ
-	 8NG9zUgPndxgQ==
-Message-ID: <0df84759-abb5-4030-bb2b-1e73ab2b8693@kernel.org>
-Date: Wed, 4 Dec 2024 18:49:01 +0100
+	b=K5JMYhD3UTEywgNmWPz2VoTuujg688xZFJ7Kno/Ix7lHzwAXR96i61giLkksB02CK
+	 UQK4ajH/tTQ5zRr8e+kGJvwVc18CPEErL2sXrsDx/4vL8bbZaAacvuAx280vUCwLUD
+	 OKBdSqsCp2P4J1TohjmWSzfEtIrDfJ13EQQuHWpoGywVQz7/Lc9BlS1lJmGCiAQXUr
+	 i0oabm/NREcRahGdRzhOKuM59qej0nBi6kdM2+OYSL3OVIXHyQO2GO1tE2htoZA9bY
+	 h7maHEofaWXaMdwBrZ8ztUfaFX7jOCCU3Iw9GD2Y6zkqcL+PGldyTxhOiDFevUs070
+	 b10P6RN0h41Pg==
+Message-ID: <7d33f358-4893-4e2d-bcdd-89403a8855de@kernel.org>
+Date: Wed, 4 Dec 2024 18:49:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 5/9] mptcp: drop free_list for deleting
- entries
+Subject: Re: [PATCH mptcp-next v3 7/9] mptcp: drop struct mptcp_pm_add_entry
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1730961809.git.tanggeliang@kylinos.cn>
- <68e7a3deaea7319b4fb36b9ee8a6073a8bbfa37d.1730961810.git.tanggeliang@kylinos.cn>
+ <b881437711fb806cbe9aa7a0b2e36b5bb3cc1c84.1730961810.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,79 +86,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <68e7a3deaea7319b4fb36b9ee8a6073a8bbfa37d.1730961810.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b881437711fb806cbe9aa7a0b2e36b5bb3cc1c84.1730961810.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+
 
 On 07/11/2024 07:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_pm_remove_addrs() actually only deletes one address, which does
-> not match its name. This patch renames it to mptcp_pm_remove_addr_entry()
-> and changes the parameter "rm_list" to "entry".
+> There is no need to add a dedicated address entry type "mptcp_pm_add_entry"
+> to represent ADD_ADDR addresses. Additional fields for ADD_ADDR addresses
+> can be added into struct mptcp_pm_addr_entry directly. This makes the path
+> manager code simpler.
+
+To be honest, I don't know if the "union" simplifies stuff: we will need
+to make sure some fields are not overridden by mistake. Always a bit risky.
+
+Do you need this to simplify another patch later on?
+
+> Here "union" can be used to merge struct mptcp_pm_addr_entry and struct
+> mptcp_pm_add_entry into one. Then all mptcp_pm_add_entry can be replaced by
+> mptcp_pm_addr_entry.
 > 
-> With the help of mptcp_pm_remove_addr_entry(), it's no longer necessary to
-> move the entry to be deleted to free_list and then traverse the list to
-> delete the entry, which is not allowed in BPF. The entry can be directly
-> deleted through list_del_rcu() and sock_kfree_s() now.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 33 ++++++++++++---------------------
->  net/mptcp/protocol.h     |  3 ++-
->  2 files changed, 14 insertions(+), 22 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 737a07f5defe..a98da9a44bfa 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -286,26 +286,21 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
->  	return err;
->  }
->  
-> -void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
-> +void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
-> +				struct mptcp_pm_addr_entry *entry)
->  {
->  	struct mptcp_rm_list alist = { .nr = 0 };
-> -	struct mptcp_pm_addr_entry *entry;
->  	int anno_nr = 0;
->  
-> -	list_for_each_entry(entry, rm_list, list) {
-> -		if (alist.nr >= MPTCP_RM_IDS_MAX)
-> -			break;
-> -
-> -		/* only delete if either announced or matching a subflow */
-> -		if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
-> -			anno_nr++;
-> -		else if (!mptcp_lookup_subflow_by_saddr(&msk->conn_list,
-> -							&entry->addr))
-> -			continue;
-> +	/* only delete if either announced or matching a subflow */
-> +	if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
-> +		anno_nr++;
-> +	else if (!mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-> +		goto out;
-
-Here, you can 'return', no need to use this new 'out' label.
-
->  
-> -		alist.ids[alist.nr++] = entry->addr.id;
-> -	}
-> +	alist.ids[alist.nr++] = entry->addr.id;
->  
-> +out:
->  	if (alist.nr) {
-
-If the 'out' label is removed, you can also remove this if-statement.
-
->  		spin_lock_bh(&msk->pm.lock);
->  		msk->pm.add_addr_signaled -= anno_nr;
-
-(...)
-
+> Although this increases the size of the structure even more, but that's OK
+> to do so because it is not used in an array.
 Cheers,
 Matt
 -- 
