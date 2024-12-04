@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C5FB1AF0AE;
-	Wed,  4 Dec 2024 11:01:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51E71207DF4
+	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:48:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733310098; cv=none; b=uPOKtkE8KVvWwAPOT6HGOZ9EHHMxZdH/Q/78xR42USdxPNORVZSIWUUG4tnt/3aCfJ/iba3iZ9VwNuetkSXF1nZm5B/iYDbjoqYuMUbhUJI1qoHuKUfwob21qwYiIvJA38XpN8JRQ9S/EHZaWVesnTAtPNp+Swz/7Ob4DJ7h8XM=
+	t=1733334509; cv=none; b=Q49mX8Rvjr35sDDTogieiIVlCzl56assITCrcz+PAwGLvepx6DO05OxUkTQIT8ogvxnfoKWGvfRzPgyDiikPVg89cxEk6M/UT9Y8opatTGE21/LzIiWh1b0a8+TTOLvEsVJrmIjizLfhfzQ5582A1akvkX3yqPMEdsfMJRL9OC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733310098; c=relaxed/simple;
-	bh=z1HFY+L1IO4WPUG9WzHJoKxu2wP+G47aGlRxHp7HWF8=;
+	s=arc-20240116; t=1733334509; c=relaxed/simple;
+	bh=twwaD6ZgQswX8Z/Yb83uniQ1Vk6VggOQnA/zC0f2QLg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oe7CttzIIVwJZRaNDfBoyxFjnMR+COladEXdF3mPsvm2hN76Td4QCHYMS2gbyvzg3+9k97ECeU7kUrU8UTBAYp55M2Sv0FnFDvib+Qc2J7Rjl6o2r/xWMiRvZT9YzToL3xjWvRicbHVOvlNMvumjZ6GlO9lnY8WnS6OYmZ6u6iw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pkh4e012; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mNViYwQPgfyQQNuLjwunqrqff/uQBL8oUUlCUuy6v/DCRibcVRAZm2+P2UTtel39Pi7W/JkqI/iPLLdfs8c3alG558Ss0gklxq+O3t2OtJY6rDuKtMqHfZTWGvRh5g4Ec3M+Hy9WuFOZQJEJ3Oj9fnTK4EMcPgXvQtbjfhKaEZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Shtzm/XK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pkh4e012"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31192C4CED1;
-	Wed,  4 Dec 2024 11:01:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Shtzm/XK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D5483C113D0;
+	Wed,  4 Dec 2024 17:48:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733310098;
-	bh=z1HFY+L1IO4WPUG9WzHJoKxu2wP+G47aGlRxHp7HWF8=;
+	s=k20201202; t=1733334507;
+	bh=twwaD6ZgQswX8Z/Yb83uniQ1Vk6VggOQnA/zC0f2QLg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Pkh4e012awYuobGmVqxNqBoekFIvIsI0yCxWj1ISx9OgkGJWLQUTT/vgX4D9ukvyO
-	 ps8Ii7qwjm4XRj0J/MPFPIiOunjW38AcrAakW7sJjGnn9c+vtjrbsbZmcrEc4P8WwE
-	 2uL3vB84zpzBS373JgGy4k1Ca592sqNMKmaMe6i9BmusaZyTQPak5OxmS74dWfIZok
-	 mt0KKEzDLamXQPv4Z4sccQ5c7DnTl3Y4DxYbRlVI1o1CJ+0vd4Tu49sP7G3OQ+j5Su
-	 plLJHwIoAJaJpA+Uwzh9I2wnCOIkVtqZ9upYnsu+WV3G6zBcL06c8jviD1zCeMrcvt
-	 4oCd8BtR+0wPg==
-Message-ID: <80b6603d-ed52-43b7-a434-0253e5de784a@kernel.org>
-Date: Wed, 4 Dec 2024 12:01:32 +0100
+	b=Shtzm/XKXBRledBM+Vo0LLmZWSu/moULtzvbbUOf7eSLORwTmQmOZLvJdh90Vs9Ev
+	 WddOFP5yifm90kChkb1Jgc5zMWaOT1KIPxfCZEe8GfBL6TU17g1GbBzJkTa8eYjsNH
+	 fimIcdZOtJTXlFi3EoleMS3SSDJ5+EYR1K3TSHQdYKYb19P0DA+8/msKyDI9Ztl0Jy
+	 A32DXozZo3NP/aLydbOtw8o3kxBWxBhy3RTo10mw0uP4ycGwYTTbecAiX09ZPXAEMu
+	 ffUDQBb+SYPpedtO7qdXWmn/f5Twy2m44iRAzTnXbTHCRP0muGrw3zX/3BiaTj7hXF
+	 H2eeCAsH8dayg==
+Message-ID: <587a1643-0cf2-43e7-bd37-3108e9ef1d6c@kernel.org>
+Date: Wed, 4 Dec 2024 18:48:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] tcp: Check space before adding MPTCP options
+Subject: Re: [PATCH mptcp-next v3 0/9] BPF path manager, part 1
 Content-Language: en-GB
-To: MoYuanhao <moyuanhao3676@163.com>, edumazet@google.com,
- davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- martineau@kernel.org, geliang@kernel.org, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20241204085801.11563-1-moyuanhao3676@163.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1730961809.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,57 +85,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20241204085801.11563-1-moyuanhao3676@163.com>
+In-Reply-To: <cover.1730961809.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi MoYuanhao,
+Hi Geliang,
 
-+Cc MPTCP mailing list.
+On 07/11/2024 07:45, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v3:
 
-(Please cc the MPTCP list next time)
+Thank you for the v3. Sorry, I forgot about this series...
 
-On 04/12/2024 09:58, MoYuanhao wrote:
-> Ensure enough space before adding MPTCP options in tcp_syn_options()
-> Added a check to verify sufficient remaining space
-> before inserting MPTCP options in SYN packets.
-> This prevents issues when space is insufficient.
+>  - address Matt's comments in v2 (thanks)
 
-Thank you for this patch. I'm surprised we all missed this check, but
-yes it is missing.
+Please next time add a short individual changelog in each modified
+patch: here I obviously forgot my previous comments, but even when the
+review of the new version is done the day after, I don't think I would
+remember all of them :)
 
-As mentioned by Eric in his previous email, please add a 'Fixes' tag.
-For bug-fixes, you should also Cc stable and target 'net', not 'net-next':
+>  - only include cleanups and refactoring patches in this set.
 
-Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing
-connections")
-Cc: stable@vger.kernel.org
+Good idea!
 
-
-Regarding the code, it looks OK to me, as we did exactly that with
-mptcp_synack_options(). In mptcp_established_options(), we pass
-'remaining' because many MPTCP options can be set, but not here. So I
-guess that's fine to keep the code like that, especially for the 'net' tree.
-
-
-Also, and linked to Eric's email, did you have an issue with that, or is
-it to prevent issues in the future?
-
-
-One last thing, please don’t repost your patches within one 24h period, see:
-
-  https://docs.kernel.org/process/maintainer-netdev.html
-
-
-Because the code is OK to me, and the same patch has already been sent
-twice to the netdev ML within a few hours, I'm going to apply this patch
-in our MPTCP tree with the suggested modifications. Later on, we will
-send it for inclusion in the net tree.
-
-pw-bot: awaiting-upstream
-
-(Not sure this pw-bot instruction will work as no net/mptcp/* files have
-been modified)
+I had just a few small comments, but globally it looks good.
 
 Cheers,
 Matt
