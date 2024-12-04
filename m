@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EC3D207DE7
-	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:49:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E3FDC207DF1
+	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:49:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733334548; cv=none; b=ZS5RLJoNiPnctjvkvZNt+VvHR0YUkmO0PqUZIF4F4a83xMYjfLKikIXP9XfpQBU2BfF7LQH4LEw7ZQj8BGUqcCTnsvLZqwAqqvmK0N/gOpFk9XrxhkoCtUYRl9+eiawJsQzFJuraQJP+CXRFq6BO7fWzLle9c6F1Uw/9SUcq8As=
+	t=1733334553; cv=none; b=VNUxbeTW/6TDHVf0FdvwXk2EyH1pdrtxDuxmBoFhCk8S9T6orHG3PMbYQeaoYVueE8mcLA2vhtzLI9BYqeA7gLv/tY10RKyHY3zHflfDqfWdJDxgj5MQ+1QmpHK7sT9hgbKHcUjNdbN6B+q82SsgAep4yDy36i+0xj74xGsRfGY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733334548; c=relaxed/simple;
-	bh=aOQXFaLJDAgeUZzwkAwAvsnV1UdAcxmI8jaPn1D5U/A=;
+	s=arc-20240116; t=1733334553; c=relaxed/simple;
+	bh=CNB10lF6RH4rDjgTSL4Wzla24lpI3nRyRCPDj7083+8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bf7RMHLnOQdxpmZKVaOUhpRSTkVRschIVd2vLYIi+Oli8bDRALutvvGlTZXycfuUvrns9D8SmErhaPqQl4mSl1Env9K73QY77OOEhBnvyiz03qM8b5ex2cuczMkFfigNB4j8+nAjmIKq6IDef9qzv94x7bwkz0YgALc74P1Qpyk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K5JMYhD3; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=O3o62LCytyQqexMHCDriGD+QciHbsoiN15X7f4emSrN6RFX4n2TVLWvfhuG0qkZ5Xa/NEaByiHumtLL6BoubZz8/1FQiT00h3kRzuMovbhF66d4L05/h5xqpwLrrKbecW0dMKbB81TH9Plh02uCPPbtpClD3EfycXmjAAqn938I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sN783jms; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K5JMYhD3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AE76EC4CECD;
-	Wed,  4 Dec 2024 17:49:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sN783jms"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95D6FC4CECD;
+	Wed,  4 Dec 2024 17:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733334547;
-	bh=aOQXFaLJDAgeUZzwkAwAvsnV1UdAcxmI8jaPn1D5U/A=;
+	s=k20201202; t=1733334552;
+	bh=CNB10lF6RH4rDjgTSL4Wzla24lpI3nRyRCPDj7083+8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K5JMYhD3UTEywgNmWPz2VoTuujg688xZFJ7Kno/Ix7lHzwAXR96i61giLkksB02CK
-	 UQK4ajH/tTQ5zRr8e+kGJvwVc18CPEErL2sXrsDx/4vL8bbZaAacvuAx280vUCwLUD
-	 OKBdSqsCp2P4J1TohjmWSzfEtIrDfJ13EQQuHWpoGywVQz7/Lc9BlS1lJmGCiAQXUr
-	 i0oabm/NREcRahGdRzhOKuM59qej0nBi6kdM2+OYSL3OVIXHyQO2GO1tE2htoZA9bY
-	 h7maHEofaWXaMdwBrZ8ztUfaFX7jOCCU3Iw9GD2Y6zkqcL+PGldyTxhOiDFevUs070
-	 b10P6RN0h41Pg==
-Message-ID: <7d33f358-4893-4e2d-bcdd-89403a8855de@kernel.org>
-Date: Wed, 4 Dec 2024 18:49:06 +0100
+	b=sN783jms2O1bHIZ5trgeCvgMOZsxpEXeYOixOYH4rWlVmhhH3x5Tmsj8bkh8uRfcl
+	 N21yxLGWpNa7HqeR9G0oRR6uCssSodq4EPoNyjro1+Il/cZETwrGHHO2j0Ki86RZWx
+	 lNWy5HGW7XYQhC49fqxW0yk3puJnAQR9lk4gqCmVSIBVEQn/d2yety3BLuDsVF4u+p
+	 iiJwizlgDCDQvJ8J5X2SyBTOe32Is9AzKOHarhPFjVmzQtd0uxTTZ+A4eQO7sit6sw
+	 qqQ6AMmmT0Nz9T+y+n1a8jG3dXTdXTjYC+OGI+1dIytdyPv9/cZlf7WrAsdmCCjZ0X
+	 aTUs/rSmbPJ0Q==
+Message-ID: <8ae81fdd-e402-4514-a446-0989bd49c32d@kernel.org>
+Date: Wed, 4 Dec 2024 18:49:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 7/9] mptcp: drop struct mptcp_pm_add_entry
+Subject: Re: [PATCH mptcp-next v3 9/9] mptcp: drop useless "err = 0" in
+ subflow_destroy
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1730961809.git.tanggeliang@kylinos.cn>
- <b881437711fb806cbe9aa7a0b2e36b5bb3cc1c84.1730961810.git.tanggeliang@kylinos.cn>
+ <6606e2c5b8b3536cad35baf722175a932242d820.1730961810.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,31 +87,89 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b881437711fb806cbe9aa7a0b2e36b5bb3cc1c84.1730961810.git.tanggeliang@kylinos.cn>
+In-Reply-To: <6606e2c5b8b3536cad35baf722175a932242d820.1730961810.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
+Hi Geliang,
 
 On 07/11/2024 07:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> There is no need to add a dedicated address entry type "mptcp_pm_add_entry"
-> to represent ADD_ADDR addresses. Additional fields for ADD_ADDR addresses
-> can be added into struct mptcp_pm_addr_entry directly. This makes the path
-> manager code simpler.
-
-To be honest, I don't know if the "union" simplifies stuff: we will need
-to make sure some fields are not overridden by mistake. Always a bit risky.
-
-Do you need this to simplify another patch later on?
-
-> Here "union" can be used to merge struct mptcp_pm_addr_entry and struct
-> mptcp_pm_add_entry into one. Then all mptcp_pm_add_entry can be replaced by
-> mptcp_pm_addr_entry.
+> Upon successful return, mptcp_pm_parse_addr() returns 0. There is no need
+> to set "err = 0" after this. So after mptcp_nl_find_ssk() returns, just
+> need to set "err = -ESRCH", then release and free msk socket if it returns
+> NULL.
 > 
-> Although this increases the size of the structure even more, but that's OK
-> to do so because it is not used in an array.
+> Also, no need to define the veriable "subflow" in subflow_destroy(), use
+> mptcp_subflow_ctx(ssk) directly.
+> 
+> This patch doesn't change the behaviour of the code, just refactoring.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 21 ++++++++++-----------
+>  1 file changed, 10 insertions(+), 11 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 07e0c7259494..8545212f023e 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -535,19 +535,18 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+>  
+>  	lock_sock(sk);
+>  	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
+> -	if (ssk) {
+> -		struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+> -
+> -		spin_lock_bh(&msk->pm.lock);
+> -		mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
+> -		spin_unlock_bh(&msk->pm.lock);
+> -		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+> -		mptcp_close_ssk(sk, ssk, subflow);
+> -		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+> -		err = 0;
+
+OK to drop 'err = 0' but...
+
+> -	} else {
+> +	if (!ssk) {
+>  		err = -ESRCH;
+> +		release_sock(sk);
+> +		goto destroy_err;
+
+... I think it is always best to reduce the number of exit path: so
+here, I think it is best to add a new label before release_sock(sk)
+below, instead of duplicating this release_sock(sk). Something like:
+
+      ssk = mptcp_nl_find_ssk(...);
+      if (!ssk) {
+          err = -ESRCH;
+          goto release_sock;
+      }
+
+      (...)
+
+  release_sock:
+      release_sock(sk);
+
+  destroy_err:
+      (...)
+
+WDYT?
+
+>  	}
+> +
+> +	spin_lock_bh(&msk->pm.lock);
+> +	mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
+> +	spin_unlock_bh(&msk->pm.lock);
+> +	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
+> +	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
+> +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+>  	release_sock(sk);
+>  
+>  destroy_err:
+
 Cheers,
 Matt
 -- 
