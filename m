@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E2435207DE7
-	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:48:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A4C28207DE7
+	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 17:49:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733334532; cv=none; b=DqBYXGcoGSIZhTOeX00SGtArH0TZOmKD35dGjM1D8FeIHEepaQbX//Ved66LOs8hdNNX4u8KDgFBI3l2a48cVKDxU9A3FucVPmKgQr7FVGkOZ7I1j51gw1D3tI/+hVBorXnT7c0AiRbK4fMCdbAwVVWZCFEdCMBzD3VhzdG9Kzw=
+	t=1733334544; cv=none; b=Rp3qdKUrgnTuVUN4eZHveyUca0OwJP8/EKDBpq9Uvt9W1EAjRA4tCbCzmBNuN6ZnVjYdgA263R29jqU/lEa9zAJkdCpfdPbPmRT+CcKTxGN6ltifoKEj6HUkTZ5ktsKfCZg5E4LqRoWf4bszVmQHWLyr8vjqEwGMt9NbM4guEWQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733334532; c=relaxed/simple;
-	bh=Fh56RI+PokF5syEn79zM4QMBveem3wqLuP9fQHr4kkA=;
+	s=arc-20240116; t=1733334544; c=relaxed/simple;
+	bh=ZRVThppBbqvGu7dVQsJMRzkt36FF29Vhe6sf5x+nhqk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KQ7DADW8TDXaYzjWiPF/I3h60gFnyxfKHGMTwwgcKf0nb7OUMbpIcdc+uMm5gvqssqa6/NHDp43wuA6l+EjCO+Y2cnz8ihV5vfpFwl1qwFYC/f0V74lKbhnfj0RcLrjIvSBnO0QJVJjSsRHbkNUy8zJWOVxMkqhbiISwLN5IQkw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PxBdOEv9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XNoTkpEKgoVGTPBe6HGcGcrT3EV7e+weswt69KQwARdeGvSI4IIJTnUkDDVuRRU/1y7z+xDNWncjK9EK86vHzPt7aFM4kE5OvjhN8eXbR3rmOpuZfi05ViH7OhWKJqBzJ42qpRoAZuiTkkGY3n8YTqtHmRQkOiGCghlZwaQBhjk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sg1Vvfz8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PxBdOEv9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBF0C4CECD;
-	Wed,  4 Dec 2024 17:48:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sg1Vvfz8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6D6A1C4CECD;
+	Wed,  4 Dec 2024 17:49:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733334531;
-	bh=Fh56RI+PokF5syEn79zM4QMBveem3wqLuP9fQHr4kkA=;
+	s=k20201202; t=1733334544;
+	bh=ZRVThppBbqvGu7dVQsJMRzkt36FF29Vhe6sf5x+nhqk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PxBdOEv9+xgKbVtuR00duyrC0381wcLo1ghECKWGtmEPmGfnNXzKe17OS31khSIgS
-	 hnrlzTUA6E/Ga1B5a9SpobmwK24/iKMV2VrbIufALbmOFC6L1LenNnxfGz+tK1snMx
-	 zD3lwquiE3a+sEEbz0Jod5KuNSUtKB38iXOJF7XPtU4FfmUDNy1uRu1KvIbk5QGJQ+
-	 TS9PMH5P2GDePMF+dTESJWG7iIDqKkK19VWq89zf5qL1d/rGKhYkFAoKZK3aGSh9oF
-	 pdxORPfBV3DnDE4Dufi21cniuQZiYe/4+exOHAJqlyq8e9vwPXHlgF/k51intn2oRv
-	 ZTLL45tmkzGhg==
-Message-ID: <b1024055-405e-426d-a5d1-2a6b16054191@kernel.org>
-Date: Wed, 4 Dec 2024 18:48:47 +0100
+	b=sg1Vvfz8hsoUL5H5kEtXnAPkn6IR37a9mQF+Yony7nrW3kN+coJRt3nVRwMZ4CEVZ
+	 wQROET9xkUNlakZ1NU/6r5VhddLOVJlbYBLCp+f0xXyqUu1rVn6ROCLjlRAQqwvS40
+	 iinBxJDoHWcNN+HXzZe/3PEGlJe0+XjhjyOT6T8Fe8CUb7DgsI+KWTpyq2xQC4gtOE
+	 bsjqkZe5uNRIi9Y35qzz2HFBN8lxJZhgnoQeIOYiSwjqRwgz+CGsyDpcPa7fx5jBPb
+	 iqQKwpLoEI6s/JfefCrMmhbztc6E/qIQPOsu5PNpB8wKI8gEU3esY01HbGwDU1CFuZ
+	 8NG9zUgPndxgQ==
+Message-ID: <0df84759-abb5-4030-bb2b-1e73ab2b8693@kernel.org>
+Date: Wed, 4 Dec 2024 18:49:01 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 4/9] mptcp: move mptcp_pm_remove_addrs into
- pm_userspace
+Subject: Re: [PATCH mptcp-next v3 5/9] mptcp: drop free_list for deleting
+ entries
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1730961809.git.tanggeliang@kylinos.cn>
- <92ab4cbf71a2be676481b20c662b2f602aa346e2.1730961809.git.tanggeliang@kylinos.cn>
+ <68e7a3deaea7319b4fb36b9ee8a6073a8bbfa37d.1730961810.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <92ab4cbf71a2be676481b20c662b2f602aa346e2.1730961809.git.tanggeliang@kylinos.cn>
+In-Reply-To: <68e7a3deaea7319b4fb36b9ee8a6073a8bbfa37d.1730961810.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,95 +96,67 @@ Hi Geliang,
 On 07/11/2024 07:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Since mptcp_pm_remove_addrs is only called from the userspace PM, this
-> patch moves it into pm_userspace.c.
+> mptcp_pm_remove_addrs() actually only deletes one address, which does
+> not match its name. This patch renames it to mptcp_pm_remove_addr_entry()
+> and changes the parameter "rm_list" to "entry".
 > 
-> For this, lookup_subflow_by_saddr() and remove_anno_list_by_saddr()
-> helpers need to be exported in protocol.h. Also add "mptcp_" prefix for
-> these helpers.
-> 
-> This patch doesn't change the behaviour of the code, just refactoring.
+> With the help of mptcp_pm_remove_addr_entry(), it's no longer necessary to
+> move the entry to be deleted to free_list and then traverse the list to
+> delete the entry, which is not allowed in BPF. The entry can be directly
+> deleted through list_del_rcu() and sock_kfree_s() now.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm_netlink.c   | 45 +++++++---------------------------------
->  net/mptcp/pm_userspace.c | 28 +++++++++++++++++++++++++
->  net/mptcp/protocol.h     |  4 ++++
->  3 files changed, 40 insertions(+), 37 deletions(-)
+>  net/mptcp/pm_userspace.c | 33 ++++++++++++---------------------
+>  net/mptcp/protocol.h     |  3 ++-
+>  2 files changed, 14 insertions(+), 22 deletions(-)
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 618289aac0ab..8aba7670345d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-
-(...)
-
-> @@ -1639,35 +1639,6 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
->  	return ret;
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 737a07f5defe..a98da9a44bfa 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -286,26 +286,21 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
+>  	return err;
 >  }
 >  
-> -/* Called from the userspace PM only */
 > -void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
-> -{
-> -	struct mptcp_rm_list alist = { .nr = 0 };
+> +void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+> +				struct mptcp_pm_addr_entry *entry)
+>  {
+>  	struct mptcp_rm_list alist = { .nr = 0 };
 > -	struct mptcp_pm_addr_entry *entry;
-> -	int anno_nr = 0;
-> -
+>  	int anno_nr = 0;
+>  
 > -	list_for_each_entry(entry, rm_list, list) {
 > -		if (alist.nr >= MPTCP_RM_IDS_MAX)
 > -			break;
 > -
 > -		/* only delete if either announced or matching a subflow */
-> -		if (remove_anno_list_by_saddr(msk, &entry->addr))
+> -		if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
 > -			anno_nr++;
-> -		else if (!lookup_subflow_by_saddr(&msk->conn_list,
-> -						  &entry->addr))
+> -		else if (!mptcp_lookup_subflow_by_saddr(&msk->conn_list,
+> -							&entry->addr))
 > -			continue;
-> -
+> +	/* only delete if either announced or matching a subflow */
+> +	if (mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
+> +		anno_nr++;
+> +	else if (!mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
+> +		goto out;
+
+Here, you can 'return', no need to use this new 'out' label.
+
+>  
 > -		alist.ids[alist.nr++] = entry->addr.id;
 > -	}
-> -
-> -	if (alist.nr) {
-> -		spin_lock_bh(&msk->pm.lock);
-> -		msk->pm.add_addr_signaled -= anno_nr;
-> -		mptcp_pm_remove_addr(msk, &alist);
-> -		spin_unlock_bh(&msk->pm.lock);
-> -	}
-> -}
-> -
->  /* Called from the in-kernel PM only */
-
-I guess we can remove this command as well.
-
-(Something I can change when applying the patch if there is nothing else.)
-
->  static void mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
->  					      struct list_head *rm_list)
-> @@ -1677,11 +1648,11 @@ static void mptcp_pm_flush_addrs_and_subflows(struct mptcp_sock *msk,
+> +	alist.ids[alist.nr++] = entry->addr.id;
 >  
->  	list_for_each_entry(entry, rm_list, list) {
->  		if (slist.nr < MPTCP_RM_IDS_MAX &&
-> -		    lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
-> +		    mptcp_lookup_subflow_by_saddr(&msk->conn_list, &entry->addr))
->  			slist.ids[slist.nr++] = mptcp_endp_get_local_id(msk, &entry->addr);
->  
->  		if (alist.nr < MPTCP_RM_IDS_MAX &&
-> -		    remove_anno_list_by_saddr(msk, &entry->addr))
-> +		    mptcp_remove_anno_list_by_saddr(msk, &entry->addr))
->  			alist.ids[alist.nr++] = mptcp_endp_get_local_id(msk, &entry->addr);
->  	}
->  
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index a6de837d8958..737a07f5defe 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -286,6 +286,34 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
->  	return err;
->  }
->  
-> +void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct list_head *rm_list)
+> +out:
+>  	if (alist.nr) {
 
-Can it not be 'static' now that it is only used in the userspace pm?
+If the 'out' label is removed, you can also remove this if-statement.
+
+>  		spin_lock_bh(&msk->pm.lock);
+>  		msk->pm.add_addr_signaled -= anno_nr;
 
 (...)
 
