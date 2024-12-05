@@ -1,41 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 55666193
-	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 07:28:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6CBED7E0FF
+	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 07:30:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733383737; cv=none; b=P9TrJ1ZHWyIwBricT2Tqf/d7BRjhD1aPeqCo9NhdbrmqcOSzwA7uVNOECzBsE354CyMxITqha9/w+EVzzeAO1vsyhl5VlitWcV2bSIivWvJWiYapw0Jb8JDaIpFctSmCg+u+0PjWVJv3HEvF6bJm9bJo2fyadEfIoPWIg7rDeg4=
+	t=1733383805; cv=none; b=fT/cekoAP8meL2rezy9S8lgRi7HeC9vkxd4JMJBq7cFUy9/tJfiUsRTWM7/b5Cw2lWb0jEnF3laYMyCHkNsd6j3yz5boDk4yj+CcNt6LRMwLbZZWCktR4YnRYs5o6spyv0gBQHNHukVqYEQiFJLFBYiCvNRjm23814g4SoWc3no=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733383737; c=relaxed/simple;
-	bh=9only1/1hB4Z3/JnPlc6lWgpaY9NQxn/1egsbJK7hHA=;
+	s=arc-20240116; t=1733383805; c=relaxed/simple;
+	bh=/8Zs+DTe0xTKSeb6Ur1N4yHlNjk34e7h/VfMMEZ6Fbs=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=E+wIZY0hVbp1O6Pgdq26oE5NbnD3Byw+TNHp6WpRovzSjfSOZoZ2Jx/j4c+1QH4rAxydg/bkfy2RWpUFmTbo8aiH+NxhFwyU9cctMnvMzpB5ZSA3wxUPVuHIakYHbn/FOmGIjVKiqdxEo8GigU383ITxLF6+Cr3+RhWLOsxZYOM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=twBEHVw9; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=JHyLLgLXS9QxbfJgrBMNuaxDhyMosdER9y2WYV1BpIliTEJb8XO+h376ntyAp+MfppT8VjHZXuDbUF3C8wJRhVB7T5RmggnIjy2NGvRxgN9CPZlLcu+roZENE0Qbtxkf5WP5G73+hvNuJnBysItNdRonJh7A+wgyAe5oTSuJVAE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VsV+gNFo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="twBEHVw9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68AF0C4CEE0;
-	Thu,  5 Dec 2024 07:28:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VsV+gNFo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2A58C4CED1;
+	Thu,  5 Dec 2024 07:30:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733383737;
-	bh=9only1/1hB4Z3/JnPlc6lWgpaY9NQxn/1egsbJK7hHA=;
+	s=k20201202; t=1733383804;
+	bh=/8Zs+DTe0xTKSeb6Ur1N4yHlNjk34e7h/VfMMEZ6Fbs=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=twBEHVw9JFxSeWXno6D/LOObzFSjdFWcHbU1Mz7k8oMoPmqTn0PAGTcFmf6Wawh8N
-	 DcxAsn5VZI4aZma5E+0jx2F5r9HsnopjqGK8WsWFwHMfT+Io6Hfl3v/HzXRusW8TBa
-	 wr/ooni6KP2QUFBD6gzeTHfQ8NtKomuOQwbYgbgJR9Wr0C5H/gF1zbaViEIvz/eKnQ
-	 ikWc3vW02PRwXJVGkgOAm8v1yRErsdudG/9D6mGlxVLMp/qjGEfJxM3WHBigCxPdM+
-	 hVOZWIlMLbaN9rML87BOzzHt5dou80m412/NreqkkPjmh2Mrja8/SW4GeSbixVQaI9
-	 2+8dfM5xcXMwA==
-Message-ID: <58bbf5825b1e26e7bc111ed46a4795ec80772e57.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 7/9] mptcp: drop struct mptcp_pm_add_entry
+	b=VsV+gNFoShp/Q8E3CS/FBMpwmaVd+7lTWRnLNhHd1xJNhgz1BVtcwhkEQuW4KYXgE
+	 EcRWYfaUxgPWGewOUofa4FOU5msaSH6IuyjlrUTpC8QdcOV/288xGWAwQobkBHyAfe
+	 so8ehccVqn2UB/riazXfKvx5hvs+0/jgNLPH0ua5aU/ImKiS7sVrYsgVRi5zB9bfYA
+	 8qtTtVAy5IuLjNxe2uivcJhmz1gtSgS2anAbXD6FFlSnN1h/PH8ZO8gsRy6hkqoCb8
+	 MB3jWXlP50NuWJofjoPPF9BewHgC3+DcjsWJ328uUx24TqhBIp3++O+Fm/ixJp4u16
+	 5LmEowYRgP3Pg==
+Message-ID: <068c58b2652b39a95ea72ce0b58b1c30741ffdc5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 9/9] mptcp: drop useless "err = 0" in
+ subflow_destroy
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 05 Dec 2024 15:28:53 +0800
-In-Reply-To: <7d33f358-4893-4e2d-bcdd-89403a8855de@kernel.org>
+Date: Thu, 05 Dec 2024 15:30:01 +0800
+In-Reply-To: <8ae81fdd-e402-4514-a446-0989bd49c32d@kernel.org>
 References: <cover.1730961809.git.tanggeliang@kylinos.cn>
-	 <b881437711fb806cbe9aa7a0b2e36b5bb3cc1c84.1730961810.git.tanggeliang@kylinos.cn>
-	 <7d33f358-4893-4e2d-bcdd-89403a8855de@kernel.org>
+	 <6606e2c5b8b3536cad35baf722175a932242d820.1730961810.git.tanggeliang@kylinos.cn>
+	 <8ae81fdd-e402-4514-a446-0989bd49c32d@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -77,41 +78,105 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 On Wed, 2024-12-04 at 18:49 +0100, Matthieu Baerts wrote:
-> 
+> Hi Geliang,
 > 
 > On 07/11/2024 07:45, Geliang Tang wrote:
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > There is no need to add a dedicated address entry type
-> > "mptcp_pm_add_entry"
-> > to represent ADD_ADDR addresses. Additional fields for ADD_ADDR
-> > addresses
-> > can be added into struct mptcp_pm_addr_entry directly. This makes
-> > the path
-> > manager code simpler.
-> 
-> To be honest, I don't know if the "union" simplifies stuff: we will
-> need
-> to make sure some fields are not overridden by mistake. Always a bit
-> risky.
-> 
-> Do you need this to simplify another patch later on?
-
-No one needs it, just a cleanup. I dropped it in v4.
-
-> 
-> > Here "union" can be used to merge struct mptcp_pm_addr_entry and
-> > struct
-> > mptcp_pm_add_entry into one. Then all mptcp_pm_add_entry can be
-> > replaced by
-> > mptcp_pm_addr_entry.
+> > Upon successful return, mptcp_pm_parse_addr() returns 0. There is
+> > no need
+> > to set "err = 0" after this. So after mptcp_nl_find_ssk() returns,
+> > just
+> > need to set "err = -ESRCH", then release and free msk socket if it
+> > returns
+> > NULL.
 > > 
-> > Although this increases the size of the structure even more, but
-> > that's OK
-> > to do so because it is not used in an array.
+> > Also, no need to define the veriable "subflow" in
+> > subflow_destroy(), use
+> > mptcp_subflow_ctx(ssk) directly.
+> > 
+> > This patch doesn't change the behaviour of the code, just
+> > refactoring.
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/pm_userspace.c | 21 ++++++++++-----------
+> >  1 file changed, 10 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> > index 07e0c7259494..8545212f023e 100644
+> > --- a/net/mptcp/pm_userspace.c
+> > +++ b/net/mptcp/pm_userspace.c
+> > @@ -535,19 +535,18 @@ int mptcp_pm_nl_subflow_destroy_doit(struct
+> > sk_buff *skb, struct genl_info *info
+> >  
+> >  	lock_sock(sk);
+> >  	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
+> > -	if (ssk) {
+> > -		struct mptcp_subflow_context *subflow =
+> > mptcp_subflow_ctx(ssk);
+> > -
+> > -		spin_lock_bh(&msk->pm.lock);
+> > -		mptcp_userspace_pm_delete_local_addr(msk,
+> > &addr_l);
+> > -		spin_unlock_bh(&msk->pm.lock);
+> > -		mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN |
+> > SEND_SHUTDOWN);
+> > -		mptcp_close_ssk(sk, ssk, subflow);
+> > -		MPTCP_INC_STATS(sock_net(sk),
+> > MPTCP_MIB_RMSUBFLOW);
+> > -		err = 0;
+> 
+> OK to drop 'err = 0' but...
+> 
+> > -	} else {
+> > +	if (!ssk) {
+> >  		err = -ESRCH;
+> > +		release_sock(sk);
+> > +		goto destroy_err;
+> 
+> ... I think it is always best to reduce the number of exit path: so
+> here, I think it is best to add a new label before release_sock(sk)
+> below, instead of duplicating this release_sock(sk). Something like:
+> 
+>       ssk = mptcp_nl_find_ssk(...);
+>       if (!ssk) {
+>           err = -ESRCH;
+>           goto release_sock;
+>       }
+> 
+>       (...)
+> 
+>   release_sock:
+>       release_sock(sk);
+> 
+>   destroy_err:
+>       (...)
+> 
+> WDYT?
+
+I agree. Updated in v4.
+
+Thanks,
+-Geliang
+
+> 
+> >  	}
+> > +
+> > +	spin_lock_bh(&msk->pm.lock);
+> > +	mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
+> > +	spin_unlock_bh(&msk->pm.lock);
+> > +	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN |
+> > SEND_SHUTDOWN);
+> > +	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
+> > +	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+> >  	release_sock(sk);
+> >  
+> >  destroy_err:
+> 
 > Cheers,
 > Matt
 
