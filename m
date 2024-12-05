@@ -1,184 +1,200 @@
-Received: from m16.mail.163.com (m16.mail.163.com [117.135.210.3])
-	by smtp.subspace.kernel.org (Postfix) with ESMTP id 4469C5028C
-	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 07:32:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=117.135.210.3
+Received: from mail-ej1-f49.google.com (mail-ej1-f49.google.com [209.85.218.49])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+	(No client certificate requested)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 422D0193064
+	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 07:54:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.218.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733383948; cv=none; b=dK+u0BeQcC0P1CxgEnrUkbeMvZiJaeM/4qR+UZz+hnlWF/rcXKQ2OPFaGiufHa+wBfS9rhy3X02r7s8HbzhJ5Yfx7kDdAxcKTqPhVytk5w6GbL9CmAiqMZaBpjrZSedaInlTB08TnXSajlneDgA7v2X948jM+mYigCOswyVxEpA=
+	t=1733385295; cv=none; b=FVS84BaQ95mPzZEwmJJGvD1SgHaD8PSFXyURILLejfNLLTK5svUl0UJ9pfr1+irvq62Us2bRltsZ4yYyv/IUjoQiLVcGqFKsbqeh4OHiIzyi1pSRVFe3sep5wXk24nnNlDAFeFcpTxzG6bBNHsrbvPfPTwyIp3n2QpYTFC88FvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733383948; c=relaxed/simple;
-	bh=QP/wqp6Ij1Z7DZhBDfa6gv+EOrB5ILBBIm4EoiR84ds=;
-	h=Content-Type:Message-ID:Date:MIME-Version:Subject:To:References:
-	 From:Cc:In-Reply-To; b=Yb2MiUoO0xFwohLyM60DhejOynzQygfG8nlT+Qjn7ikQ3g78N9m3gVJEKz35CJ23S64e4IuRo12PDw0o8LYgtHrCBbtvVf20mKxiRzLFcCwhhbj9vOfbvYa3bHYPTe9GZzsGv5MbFIRobh5B46zhcO/gVURS4Q0HzEQgXz7Kvao=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com; spf=pass smtp.mailfrom=163.com; dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b=XtRnLJJp; arc=none smtp.client-ip=117.135.210.3
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=163.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=163.com
+	s=arc-20240116; t=1733385295; c=relaxed/simple;
+	bh=vx5+qBh850FNYmcGamqyfPmnZAHBfCD8QuI0kcDQPpI=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=I01sMfZuJv0ZJZifWdZ1LLVriRrtmOUslzwFB0ZKcG6Lu+MdaEbvvngifZEBZ+ZZLhuqTF4cjYxY5Sva2Q/jI7wA2MWsOf6r0WFwbiarb7+MswbPY64BKXQF3IOcXBfb/NjQJr1p0Ymngedkaumgg/783Wkv6yMA/L4uGZwmo9E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=YpXeyYfn; arc=none smtp.client-ip=209.85.218.49
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="XtRnLJJp"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-	s=s110527; h=Content-Type:Message-ID:Date:MIME-Version:Subject:
-	From; bh=lwIb7lYxLhF0mY4AbJgOSUXB84EqcKDHlgRExWuAjlM=; b=XtRnLJJ
-	pUaAyKFF0Fa9iK6ljmpjYAeOyvN4BwRK+lTan7QUTSXUmudwvD4ScqdDoo0ayxco
-	Dggbj2G7RLXvhyEzwjKA9Cgc+Vwb0ZdrU94JGtFmXIDPTZDT33+/nKTnESq4Zr6v
-	mZCuLPhajMcvCdB7btriZkJKKzXjp4/r5i6Y=
-Received: from [10.100.3.67] (unknown [14.153.182.146])
-	by gzga-smtp-mtada-g0-3 (Coremail) with SMTP id _____wD3P+bjVlFnpDZvGQ--.6053S2;
-	Thu, 05 Dec 2024 15:31:48 +0800 (CST)
-Content-Type: multipart/mixed; boundary="------------eeeusMGOxTWC0yGMAG98c7bD"
-Message-ID: <dcdeaf17-c3ce-4677-a0c0-c391d8bd951f@163.com>
-Date: Thu, 5 Dec 2024 15:31:47 +0800
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="YpXeyYfn"
+Received: by mail-ej1-f49.google.com with SMTP id a640c23a62f3a-aa55da18f89so85487266b.0
+        for <mptcp@lists.linux.dev>; Wed, 04 Dec 2024 23:54:53 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733385292; x=1733990092; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=iPoveC5NiFJebUr6H/XvuyS4HCl5gaDQMYyE2e5JSYo=;
+        b=YpXeyYfnP85e/ascwc/C6lVSJuhsQpHI4NJoeB44EWB9niDDng5oihsXeeSHzXKFTe
+         cyi/zLunrT0MJiciLD9K9cSD5kd9/t1xQAQ7bRpXDVDCmQ1iUiN5+v8Vv59zygGusEiM
+         vPXycjVFwHSabGP2y21zvqVn6EbRoo7uRi5XJaj+jopnDqqE7yVQFx5UgxIVC9eoO/Nq
+         omIao2eQW1Hu9Ik1Ll0ccGfW9toOAe0GXMdjL4+GjTgznj4zLsHdO7m++7RX3qAJ+266
+         8DL9C6hRY0TCQqz+I8y//BWsbFBhMHEuDPO3KjrDxc/f8mXjmc91X2R5Fizb4AZRJIxz
+         648A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733385292; x=1733990092;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=iPoveC5NiFJebUr6H/XvuyS4HCl5gaDQMYyE2e5JSYo=;
+        b=Vcm7E+7PjemdLKlG6R95beeP5iIGloKdCXNFu7d0NuGGWSeOnI+ZYrigTtUYYSRBl+
+         f72dISYyz/nhzyIA7zr/gVbuB7VrGsnFxbhPxod4N56rovS5yBdGqFNY0kOUj4+99su/
+         MJLs8yReW6OJlETFf/lSfSj0ma8Jtw586gfGGRNSWVIkE3eBJvaALVpHhk20znKEJcrR
+         bZ3N7D/LusLUYKvQbKB5AXvRQ5ZuHb9sEeUN2rwnJm7T5lSKQ8znf3jOmD+zTYCC+9fa
+         QYGs29ba0KK5IdG7IklEXIuJHRabwwbLLwAQB1Dz9WiLpXrzvjJ0bEeznbr4C5vmUPPR
+         Q/EQ==
+X-Forwarded-Encrypted: i=1; AJvYcCU6nPiEIHyQKKj+5+PGBfXLkpzrmDY7HQbiVfDbXG+D/JQwhoQ/sodkgiRLExatGkG8gxi2iw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzYjzdZ3srZO5zMT9CIGbMBwhHZZhTpeTPAaKOyzToMnmastC0l
+	is3vbtuvN4sp74bSnnF1JX9Er/uukAuT40IaAgib/WNpIzz8sEGBC00OKOb7SwHmDgJmtwDYJvL
+	Pc/AyqLmF+mMIHU1ysYnHJVCMYqN4EzVaNuth
+X-Gm-Gg: ASbGncsvGjr0UIC4tK/N/SKg4+uc0eGbkQ3ifX8DAJfbN+4YoqUKx4pjg0W0+EStNJ/
+	ZRROOkOYvoooS5dpYmIkPMBmMWHjmFx8=
+X-Google-Smtp-Source: AGHT+IEkMEJuQYoavObqjfF1Dm1ARxtTM3In+7tdetfMxymzqpHnS3ICi4gVSe4yccpc3ySQA05ZVBU8SNk46yxZksY=
+X-Received: by 2002:a17:906:23f1:b0:aa5:639d:7cdb with SMTP id
+ a640c23a62f3a-aa5f7d4ec79mr647034466b.22.1733385291482; Wed, 04 Dec 2024
+ 23:54:51 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
+References: <20241204085801.11563-1-moyuanhao3676@163.com> <80b6603d-ed52-43b7-a434-0253e5de784a@kernel.org>
+ <dcdeaf17-c3ce-4677-a0c0-c391d8bd951f@163.com>
+In-Reply-To: <dcdeaf17-c3ce-4677-a0c0-c391d8bd951f@163.com>
+From: Eric Dumazet <edumazet@google.com>
+Date: Thu, 5 Dec 2024 08:54:40 +0100
+Message-ID: <CANn89iLjhnxkOY7p3zQsyupGowjMt0beWE3=WHTVC2NSM_-2hw@mail.gmail.com>
 Subject: Re: [PATCH net-next] tcp: Check space before adding MPTCP options
-To: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- edumazet@google.com, davem@davemloft.net, dsahern@kernel.org,
- kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
-References: <20241204085801.11563-1-moyuanhao3676@163.com>
- <80b6603d-ed52-43b7-a434-0253e5de784a@kernel.org>
-Content-Language: en-US
-From: Mo Yuanhao <moyuanhao3676@163.com>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- mptcp@lists.linux.dev, stable@vger.kernel.org
-In-Reply-To: <80b6603d-ed52-43b7-a434-0253e5de784a@kernel.org>
-X-CM-TRANSID:_____wD3P+bjVlFnpDZvGQ--.6053S2
-X-Coremail-Antispam: 1Uf129KBjvJXoWxArWxtryDZFWkZrWkXry3twb_yoW5Ar45pF
-	98KrnYkr4kJa48Gw4xX3Wvyr1rZa1rCrZ8K3W5Ww12ywn8WFyI9ryIkw4YvrnrWr48tw12
-	vr47Z3s3ua1UAFJanT9S1TB71UUUUU7qnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07jxMa8UUUUU=
-X-CM-SenderInfo: 5pr13t5qkd0jqwxwqiywtou0bp/xtbBZxCsfmdRKpMBzwABsl
+To: Mo Yuanhao <moyuanhao3676@163.com>
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org, 
+	davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, 
+	horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mptcp@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-This is a multi-part message in MIME format.
---------------eeeusMGOxTWC0yGMAG98c7bD
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
+On Thu, Dec 5, 2024 at 8:31=E2=80=AFAM Mo Yuanhao <moyuanhao3676@163.com> w=
+rote:
+>
+> =E5=9C=A8 2024/12/4 19:01, Matthieu Baerts =E5=86=99=E9=81=93:
+> > Hi MoYuanhao,
+> >
+> > +Cc MPTCP mailing list.
+> >
+> > (Please cc the MPTCP list next time)
+> >
+> > On 04/12/2024 09:58, MoYuanhao wrote:
+> >> Ensure enough space before adding MPTCP options in tcp_syn_options()
+> >> Added a check to verify sufficient remaining space
+> >> before inserting MPTCP options in SYN packets.
+> >> This prevents issues when space is insufficient.
+> >
+> > Thank you for this patch. I'm surprised we all missed this check, but
+> > yes it is missing.
+> >
+> > As mentioned by Eric in his previous email, please add a 'Fixes' tag.
+> > For bug-fixes, you should also Cc stable and target 'net', not 'net-nex=
+t':
+> >
+> > Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing
+> > connections")
+> > Cc: stable@vger.kernel.org
+> >
+> >
+> > Regarding the code, it looks OK to me, as we did exactly that with
+> > mptcp_synack_options(). In mptcp_established_options(), we pass
+> > 'remaining' because many MPTCP options can be set, but not here. So I
+> > guess that's fine to keep the code like that, especially for the 'net' =
+tree.
+> >
+> >
+> > Also, and linked to Eric's email, did you have an issue with that, or i=
+s
+> > it to prevent issues in the future?
+> >
+> >
+> > One last thing, please don=E2=80=99t repost your patches within one 24h=
+ period, see:
+> >
+> >    https://docs.kernel.org/process/maintainer-netdev.html
+> >
+> >
+> > Because the code is OK to me, and the same patch has already been sent
+> > twice to the netdev ML within a few hours, I'm going to apply this patc=
+h
+> > in our MPTCP tree with the suggested modifications. Later on, we will
+> > send it for inclusion in the net tree.
+> >
+> > pw-bot: awaiting-upstream
+> >
+> > (Not sure this pw-bot instruction will work as no net/mptcp/* files hav=
+e
+> > been modified)
+> >
+> > Cheers,
+> > Matt
+> Hi Matt,
+>
+> Thank you for your feedback!
+>
+> I have made the suggested updates to the patch (version 2):
+>
+> I=E2=80=99ve added the Fixes tag and Cc'd the stable@vger.kernel.org list=
+.
+> The target branch has been adjusted to net as per your suggestion.
+> I will make sure to Cc the MPTCP list in future submissions.
+>
+> Regarding your question, this patch was created to prevent potential
+> issues related to insufficient space for MPTCP options in the future. I
+> didn't encounter a specific issue, but it seemed like a necessary
+> safeguard to ensure robustness when handling SYN packets with MPTCP optio=
+ns.
+>
+> Additionally, I have made further optimizations to the patch, which are
+> included in the attached version. I believe it would be more elegant to
+> introduce a new function, mptcp_set_option(), similar to
+> mptcp_set_option_cond(), to handle MPTCP options.
+>
+> This is my first time replying to a message in a Linux mailing list, so
+> if there are any formatting issues or mistakes, please point them out
+> and I will make sure to correct them in future submissions.
+>
+> Thanks again for your review and suggestions. Looking forward to seeing
+> the patch applied to the MPTCP tree and later inclusion in the net tree.
 
-在 2024/12/4 19:01, Matthieu Baerts 写道:
-> Hi MoYuanhao,
-> 
-> +Cc MPTCP mailing list.
-> 
-> (Please cc the MPTCP list next time)
-> 
-> On 04/12/2024 09:58, MoYuanhao wrote:
->> Ensure enough space before adding MPTCP options in tcp_syn_options()
->> Added a check to verify sufficient remaining space
->> before inserting MPTCP options in SYN packets.
->> This prevents issues when space is insufficient.
-> 
-> Thank you for this patch. I'm surprised we all missed this check, but
-> yes it is missing.
-> 
-> As mentioned by Eric in his previous email, please add a 'Fixes' tag.
-> For bug-fixes, you should also Cc stable and target 'net', not 'net-next':
-> 
-> Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing
-> connections")
-> Cc: stable@vger.kernel.org
-> 
-> 
-> Regarding the code, it looks OK to me, as we did exactly that with
-> mptcp_synack_options(). In mptcp_established_options(), we pass
-> 'remaining' because many MPTCP options can be set, but not here. So I
-> guess that's fine to keep the code like that, especially for the 'net' tree.
-> 
-> 
-> Also, and linked to Eric's email, did you have an issue with that, or is
-> it to prevent issues in the future?
-> 
-> 
-> One last thing, please don’t repost your patches within one 24h period, see:
-> 
->    https://docs.kernel.org/process/maintainer-netdev.html
-> 
-> 
-> Because the code is OK to me, and the same patch has already been sent
-> twice to the netdev ML within a few hours, I'm going to apply this patch
-> in our MPTCP tree with the suggested modifications. Later on, we will
-> send it for inclusion in the net tree.
-> 
-> pw-bot: awaiting-upstream
-> 
-> (Not sure this pw-bot instruction will work as no net/mptcp/* files have
-> been modified)
-> 
-> Cheers,
-> Matt
-Hi Matt,
+We usually do not refactor for a patch targeting a net tree.
 
-Thank you for your feedback!
+Also, please do not add attachments, we need the patch inline as you did in=
+ v1.
 
-I have made the suggested updates to the patch (version 2):
+As you can see, v2 is not avail in
+https://patchwork.kernel.org/project/netdevbpf/list/
 
-I’ve added the Fixes tag and Cc'd the stable@vger.kernel.org list.
-The target branch has been adjusted to net as per your suggestion.
-I will make sure to Cc the MPTCP list in future submissions.
+Documentation/process/submitting-patches.rst
 
-Regarding your question, this patch was created to prevent potential 
-issues related to insufficient space for MPTCP options in the future. I 
-didn't encounter a specific issue, but it seemed like a necessary 
-safeguard to ensure robustness when handling SYN packets with MPTCP options.
+No MIME, no links, no compression, no attachments.  Just plain text
+-------------------------------------------------------------------
 
-Additionally, I have made further optimizations to the patch, which are 
-included in the attached version. I believe it would be more elegant to 
-introduce a new function, mptcp_set_option(), similar to 
-mptcp_set_option_cond(), to handle MPTCP options.
+Linus and other kernel developers need to be able to read and comment
+on the changes you are submitting.  It is important for a kernel
+developer to be able to "quote" your changes, using standard e-mail
+tools, so that they may comment on specific portions of your code.
 
-This is my first time replying to a message in a Linux mailing list, so 
-if there are any formatting issues or mistakes, please point them out 
-and I will make sure to correct them in future submissions.
+For this reason, all patches should be submitted by e-mail "inline". The
+easiest way to do this is with ``git send-email``, which is strongly
+recommended.  An interactive tutorial for ``git send-email`` is available a=
+t
+https://git-send-email.io.
 
-Thanks again for your review and suggestions. Looking forward to seeing 
-the patch applied to the MPTCP tree and later inclusion in the net tree.
+If you choose not to use ``git send-email``:
 
-Best regards,
+.. warning::
 
-MoYuanhao
---------------eeeusMGOxTWC0yGMAG98c7bD
-Content-Type: text/x-patch; charset=UTF-8;
- name="0001-tcp-Check-space-before-adding-MPTCP-options.patch"
-Content-Disposition: attachment;
- filename="0001-tcp-Check-space-before-adding-MPTCP-options.patch"
-Content-Transfer-Encoding: base64
+  Be wary of your editor's word-wrap corrupting your patch,
+  if you choose to cut-n-paste your patch.
 
-RnJvbSAxMjkwNGRiNTQ4YmRkODAxMTg5NWZlMDcxZDdhNDIwY2NjNjU4NGY4IE1vbiBTZXAg
-MTcgMDA6MDA6MDAgMjAwMQpGcm9tOiBNb1l1YW5oYW8gPG1veXVhbmhhbzM2NzZAMTYzLmNv
-bT4KRGF0ZTogVGh1LCA1IERlYyAyMDI0IDEwOjE4OjE1ICswODAwClN1YmplY3Q6IFtQQVRD
-SCBuZXQgdjJdIHRjcDogQ2hlY2sgc3BhY2UgYmVmb3JlIGFkZGluZyBNUFRDUCBvcHRpb25z
-CgpFbnN1cmUgZW5vdWdoIHNwYWNlIGJlZm9yZSBhZGRpbmcgTVBUQ1Agb3B0aW9ucyBpbiB0
-Y3Bfc3luX29wdGlvbnMoKQpBZGRlZCBhIGNoZWNrIHRvIHZlcmlmeSBzdWZmaWNpZW50IHJl
-bWFpbmluZyBzcGFjZQpiZWZvcmUgaW5zZXJ0aW5nIE1QVENQIG9wdGlvbnMgaW4gU1lOIHBh
-Y2tldHMuClRoaXMgcHJldmVudHMgaXNzdWVzIHdoZW4gc3BhY2UgaXMgaW5zdWZmaWNpZW50
-LgoKRml4ZXM6IGNlYzM3YTZlNDFhYSAoIm1wdGNwOiBIYW5kbGUgTVBfQ0FQQUJMRSBvcHRp
-b25zIGZvciBvdXRnb2luZyBjb25uZWN0aW9ucyIpClNpZ25lZC1vZmYtYnk6IE1vWXVhbmhh
-byA8bW95dWFuaGFvMzY3NkAxNjMuY29tPgotLS0KIG5ldC9pcHY0L3RjcF9vdXRwdXQuYyB8
-IDI0ICsrKysrKysrKysrKysrKystLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDE2IGluc2Vy
-dGlvbnMoKyksIDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvbmV0L2lwdjQvdGNwX291
-dHB1dC5jIGIvbmV0L2lwdjQvdGNwX291dHB1dC5jCmluZGV4IDU0ODVhNzBiNWZlNS4uNDAx
-ZWIxNGM4NzBkIDEwMDY0NAotLS0gYS9uZXQvaXB2NC90Y3Bfb3V0cHV0LmMKKysrIGIvbmV0
-L2lwdjQvdGNwX291dHB1dC5jCkBAIC03OTIsNiArNzkyLDIxIEBAIHN0YXRpYyB2b2lkIHNt
-Y19zZXRfb3B0aW9uX2NvbmQoY29uc3Qgc3RydWN0IHRjcF9zb2NrICp0cCwKICNlbmRpZgog
-fQogCitzdGF0aWMgdm9pZCBtcHRjcF9zZXRfb3B0aW9uKHN0cnVjdCBzb2NrICpzaywgY29u
-c3Qgc3RydWN0IHNrX2J1ZmYgKnNrYiwKKwkJCQlzdHJ1Y3QgdGNwX291dF9vcHRpb25zICpv
-cHRzLCB1bnNpZ25lZCBpbnQgKnJlbWFpbmluZykKK3sKKwlpZiAoc2tfaXNfbXB0Y3Aoc2sp
-KSB7CisJCXVuc2lnbmVkIGludCBzaXplOworCisJCWlmIChtcHRjcF9zeW5fb3B0aW9ucyhz
-aywgc2tiLCAmc2l6ZSwgJm9wdHMtPm1wdGNwKSkgeworCQkJaWYgKCpyZW1haW5pbmcgPj0g
-c2l6ZSkgeworCQkJCW9wdHMtPm9wdGlvbnMgfD0gT1BUSU9OX01QVENQOworCQkJCSpyZW1h
-aW5pbmcgLT0gc2l6ZTsKKwkJCX0KKwkJfQorCX0KK30KKwogc3RhdGljIHZvaWQgbXB0Y3Bf
-c2V0X29wdGlvbl9jb25kKGNvbnN0IHN0cnVjdCByZXF1ZXN0X3NvY2sgKnJlcSwKIAkJCQkg
-IHN0cnVjdCB0Y3Bfb3V0X29wdGlvbnMgKm9wdHMsCiAJCQkJICB1bnNpZ25lZCBpbnQgKnJl
-bWFpbmluZykKQEAgLTg3OSwxNCArODk0LDcgQEAgc3RhdGljIHVuc2lnbmVkIGludCB0Y3Bf
-c3luX29wdGlvbnMoc3RydWN0IHNvY2sgKnNrLCBzdHJ1Y3Qgc2tfYnVmZiAqc2tiLAogCiAJ
-c21jX3NldF9vcHRpb24odHAsIG9wdHMsICZyZW1haW5pbmcpOwogCi0JaWYgKHNrX2lzX21w
-dGNwKHNrKSkgewotCQl1bnNpZ25lZCBpbnQgc2l6ZTsKLQotCQlpZiAobXB0Y3Bfc3luX29w
-dGlvbnMoc2ssIHNrYiwgJnNpemUsICZvcHRzLT5tcHRjcCkpIHsKLQkJCW9wdHMtPm9wdGlv
-bnMgfD0gT1BUSU9OX01QVENQOwotCQkJcmVtYWluaW5nIC09IHNpemU7Ci0JCX0KLQl9CisJ
-bXB0Y3Bfc2V0X29wdGlvbihzayxza2Isb3B0cywgJnJlbWFpbmluZyk7CiAKIAlicGZfc2tv
-cHNfaGRyX29wdF9sZW4oc2ssIHNrYiwgTlVMTCwgTlVMTCwgMCwgb3B0cywgJnJlbWFpbmlu
-Zyk7CiAKLS0gCjIuMjUuMQoK
-
---------------eeeusMGOxTWC0yGMAG98c7bD--
-
+Do not attach the patch as a MIME attachment, compressed or not.
+Many popular e-mail applications will not always transmit a MIME
+attachment as plain text, making it impossible to comment on your
+code.  A MIME attachment also takes Linus a bit more time to process,
+decreasing the likelihood of your MIME-attached change being accepted.
