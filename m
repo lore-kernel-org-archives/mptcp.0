@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 217D51D3566;
-	Thu,  5 Dec 2024 09:24:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FF718E028
+	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 09:27:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733390666; cv=none; b=O8OdXc77MpWBH2kLRuqnBO4H3pm5br7XM8jKrC61QQ+KbV8mWuc/0uI6smZRpeHm6m567qBRY6rLaOoBmpdH13ASj/9N8ELUqc/sr/Txuh+ARYQ7RciwA32JKJdqkLocNNIDL3zvXkLIWUEDYeLIysfSK1KeyDikcFrXA+7Pd94=
+	t=1733390876; cv=none; b=LPI35aEfHyIWrL1z97M0crk5SIiZNc9M8Y2YHQWG9WvYd/daIa+MgnMnfrXVhyJqvzsnXM98+ApmzDfgt9SCA7Gua4U1+90SWANQiwAPI5aYh2P7Zgt+cCAWDAlD2Xhx3/0Ho3jfprZM3mRjp6N5Onj7RkWfULbDJCvLsz4ZFHc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733390666; c=relaxed/simple;
-	bh=cxFYSQQ5LcnRKyXdrDH1BoaRM9MtIMnb4DyaV45f1Bc=;
+	s=arc-20240116; t=1733390876; c=relaxed/simple;
+	bh=nsh26lWQukbsoTg3VYkrJgigjcPcNrkFlzepvCBrLBA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K/M8Q/AN4yaJGL2UAuou5tc2apxPWEpvpAj41Eb1BRT8mnTiyx4GTjR8M3r71eK3Yx4PuvB/2f9U8rS/cq9LBEuudwyKHsWQAyP7mo03rHpYTLShp4Ffn3CBgwTbS9aMUb7L92UUFrC19WMmq2vUOaysiKQlJotEswbhgl4MIjk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FzD77ljE; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=WlcMxbDTeWhh/aHqz7k6DR4zveIm7mOv9z1bxWLIGMzpPrQ8jjzbS/FLRHbUrkTA5IRsEzX5SLFVJlTFc83mww6rBYo1f953U7aTH5YY4Ayb2bQ8B1kkq3plGYKVqmsUJkBtp36au0D/Hd0ztcrUDPlyOw1weOTfXRpC/UkNWo0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/WGpFYy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FzD77ljE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA971C4CED6;
-	Thu,  5 Dec 2024 09:24:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/WGpFYy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAADAC4CED1;
+	Thu,  5 Dec 2024 09:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733390665;
-	bh=cxFYSQQ5LcnRKyXdrDH1BoaRM9MtIMnb4DyaV45f1Bc=;
+	s=k20201202; t=1733390875;
+	bh=nsh26lWQukbsoTg3VYkrJgigjcPcNrkFlzepvCBrLBA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FzD77ljENiZ+ljuA89DGZ4YEL0purKsI+Ut5BV2BeTJoj1TdLCMjQ1BnBHEILfPO2
-	 rOtuNGQaSqSz/+nZEcQFHb0uYJ2vxBksDCxN9kHAbfpjhxePSQaLqwvfPcAn5n7WOu
-	 MWqsudJR6pmiF97rZIwOpdRvXiKBhM7kc7sOP+wbZP3Ecg4+N+MtklOXNll27VOBVF
-	 7ONCEioOfv8Wy3Eqjt4HSV9jSuOOCa8ECOrBNwLCXbUCifV9l2f65fRGoXAmnQCcHL
-	 XIWdVGNYqe17nJqu4RyybxB3sR8Op3aWh7JodcXbe1HDOa28M/bRqslrS+0F7mKy7M
-	 /9bqEBrngQT/w==
-Message-ID: <0f07b584-1013-4932-b155-cc0883ca7061@kernel.org>
-Date: Thu, 5 Dec 2024 10:24:20 +0100
+	b=q/WGpFYyfhiTwsYD5ir2zUy37XaHNBfmY/0Msd8bG1Ce3rUpoKZGFctbLo0dX5B5k
+	 UhQBHdv9pvCCmNB1/NWk0ifRQhYEGAz8Lj1HB8CT1d11pvWRIBycjpLiyWjTWvywP+
+	 l3hmWhHBYejZ2lgR9AHjgwqa4NURjBA4Mug0hFFbbai5Qneqy8VPLYGKv/dOD/Bzxi
+	 I3fopK4FcKO3mwogghf3j3xH35yh39wvg3YE1L+/C8FRMAnr5qRNCubRSGUzr6hquJ
+	 mqBf1WS2C0sGWHMBglN4cydhHNelQEL5wGtziDb6nPa8oH0B3COfN4RRNSG+4kmgLk
+	 m9WZ7z0rEN5iw==
+Message-ID: <24b958fa-b61a-44c6-825a-7108792054b2@kernel.org>
+Date: Thu, 5 Dec 2024 10:27:52 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,17 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] tcp: Check space before adding MPTCP options
+Subject: Re: [PATCH mptcp-next v3 4/9] mptcp: move mptcp_pm_remove_addrs into
+ pm_userspace
 Content-Language: en-GB
-To: Mo Yuanhao <moyuanhao3676@163.com>
-Cc: martineau@kernel.org, geliang@kernel.org, davem@davemloft.net,
- dsahern@kernel.org, kuba@kernel.org, pabeni@redhat.com, horms@kernel.org,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, mptcp@lists.linux.dev,
- stable@vger.kernel.org, Eric Dumazet <edumazet@google.com>
-References: <20241204085801.11563-1-moyuanhao3676@163.com>
- <80b6603d-ed52-43b7-a434-0253e5de784a@kernel.org>
- <dcdeaf17-c3ce-4677-a0c0-c391d8bd951f@163.com>
- <CANn89iLjhnxkOY7p3zQsyupGowjMt0beWE3=WHTVC2NSM_-2hw@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1730961809.git.tanggeliang@kylinos.cn>
+ <92ab4cbf71a2be676481b20c662b2f602aa346e2.1730961809.git.tanggeliang@kylinos.cn>
+ <b1024055-405e-426d-a5d1-2a6b16054191@kernel.org>
+ <e041dcecfe0c9080b91b49546ec29a49061e39c6.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -91,114 +89,35 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CANn89iLjhnxkOY7p3zQsyupGowjMt0beWE3=WHTVC2NSM_-2hw@mail.gmail.com>
+In-Reply-To: <e041dcecfe0c9080b91b49546ec29a49061e39c6.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi MoYuanhao,
+Hi Geliang,
 
-On 05/12/2024 08:54, Eric Dumazet wrote:
-> On Thu, Dec 5, 2024 at 8:31 AM Mo Yuanhao <moyuanhao3676@163.com> wrote:
+On 05/12/2024 08:26, Geliang Tang wrote:
+> On Wed, 2024-12-04 at 18:48 +0100, Matthieu Baerts wrote:
+>> On 07/11/2024 07:45, Geliang Tang wrote:
+
+(...)
+
+>>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+>>> index a6de837d8958..737a07f5defe 100644
+>>> --- a/net/mptcp/pm_userspace.c
+>>> +++ b/net/mptcp/pm_userspace.c
+>>> @@ -286,6 +286,34 @@ static int
+>>> mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
+>>>  	return err;
+>>>  }
+>>>  
+>>> +void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct
+>>> list_head *rm_list)
 >>
->> 在 2024/12/4 19:01, Matthieu Baerts 写道:
->>> Hi MoYuanhao,
->>>
->>> +Cc MPTCP mailing list.
->>>
->>> (Please cc the MPTCP list next time)
->>>
->>> On 04/12/2024 09:58, MoYuanhao wrote:
->>>> Ensure enough space before adding MPTCP options in tcp_syn_options()
->>>> Added a check to verify sufficient remaining space
->>>> before inserting MPTCP options in SYN packets.
->>>> This prevents issues when space is insufficient.
->>>
->>> Thank you for this patch. I'm surprised we all missed this check, but
->>> yes it is missing.
->>>
->>> As mentioned by Eric in his previous email, please add a 'Fixes' tag.
->>> For bug-fixes, you should also Cc stable and target 'net', not 'net-next':
->>>
->>> Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing
->>> connections")
->>> Cc: stable@vger.kernel.org
->>>
->>>
->>> Regarding the code, it looks OK to me, as we did exactly that with
->>> mptcp_synack_options(). In mptcp_established_options(), we pass
->>> 'remaining' because many MPTCP options can be set, but not here. So I
->>> guess that's fine to keep the code like that, especially for the 'net' tree.
->>>
->>>
->>> Also, and linked to Eric's email, did you have an issue with that, or is
->>> it to prevent issues in the future?
->>>
->>>
->>> One last thing, please don’t repost your patches within one 24h period, see:
->>>
->>>    https://docs.kernel.org/process/maintainer-netdev.html
->>>
->>>
->>> Because the code is OK to me, and the same patch has already been sent
->>> twice to the netdev ML within a few hours, I'm going to apply this patch
->>> in our MPTCP tree with the suggested modifications. Later on, we will
->>> send it for inclusion in the net tree.
->>>
->>> pw-bot: awaiting-upstream
->>>
->>> (Not sure this pw-bot instruction will work as no net/mptcp/* files have
->>> been modified)
->>>
->>> Cheers,
->>> Matt
->> Hi Matt,
->>
->> Thank you for your feedback!
->>
->> I have made the suggested updates to the patch (version 2):
->>
->> I’ve added the Fixes tag and Cc'd the stable@vger.kernel.org list.
->> The target branch has been adjusted to net as per your suggestion.
->> I will make sure to Cc the MPTCP list in future submissions.
->>
->> Regarding your question, this patch was created to prevent potential
->> issues related to insufficient space for MPTCP options in the future. I
->> didn't encounter a specific issue, but it seemed like a necessary
->> safeguard to ensure robustness when handling SYN packets with MPTCP options.
->>
->> Additionally, I have made further optimizations to the patch, which are
->> included in the attached version. I believe it would be more elegant to
->> introduce a new function, mptcp_set_option(), similar to
->> mptcp_set_option_cond(), to handle MPTCP options.
->>
->> This is my first time replying to a message in a Linux mailing list, so
->> if there are any formatting issues or mistakes, please point them out
->> and I will make sure to correct them in future submissions.
->>
->> Thanks again for your review and suggestions. Looking forward to seeing
->> the patch applied to the MPTCP tree and later inclusion in the net tree.
+>> Can it not be 'static' now that it is only used in the userspace pm?
 > 
-> We usually do not refactor for a patch targeting a net tree.
+> It will be invoked in BPF path manager, 'static' doesn't work.
 
-Indeed, I agree with Eric. Even if the code looks good, more lines have
-been modified, maybe more risks, but also harder to backport to stable.
-
-Also, I already applied your previous patches with the modifications I
-suggested -- the code is the same as in v1, only the commit message has
-been modified -- in the MPTCP tree:
-
-New patches for t/upstream-net and t/upstream:
-- 06dcf123ebe0: tcp: check space before adding MPTCP SYN options
-- Results: 4fdf39fbfdb4..05c0ade28862 (export-net)
-- Results: 0de5663a2d56..993a44eee93f (export)
-
-Tests have been running too:
-
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/12158569520
-
-Is this patch not OK for you?
-
-https://github.com/multipath-tcp/mptcp_net-next/commit/06dcf123ebe0
+OK. Hopefully people will not send a patch in between to add 'static'.
 
 Cheers,
 Matt
