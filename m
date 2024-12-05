@@ -1,70 +1,112 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4FD14286;
-	Thu,  5 Dec 2024 01:13:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D90D1AB510
+	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 07:15:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733361235; cv=none; b=AQjz8+1YbD/X2fiXdZj1MZoy0+z0RNDZ9kATeUVitMcPnvCWZCnvIcWHX2W5ScqnAbuHbF/bwJjWNkzH4RzPllHHMxspDYajx47U8pRjbfTIuThjmf+Z6c3rsA5DsIGmq7VKlp4yz+l2vfzOxsjdD7/E+xZhzG4K0uyKwjVbcfo=
+	t=1733382909; cv=none; b=j9qQ03iZSSUN6MEUEC8eES2qql2J3Ue8ro2v+JHVvg93P6chTLg9MGtuGPGeicShsA2Cmd/Y6Mh2CUcaGsBJ/KpQCalT44KwOQp6+hXYeS/bP1CqsShI+4kH2h+n76WrlgRvf8nhbzhwSMNXL/r3lFtg4jJxQdFMau/zPy4JKMA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733361235; c=relaxed/simple;
-	bh=3VfDxlcE8yFxXY59qEiQsyJF7h0mIJ5Z2wg79rfO+Q0=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=jJsPQZZdufTBZNHKtc4kH86cmR642CleHMMYrzETFwK+vP0AeMyA5jbRQYRfUASXZGlPFN4wdeQ6sUpe2fu+VAie7+mPYP17OZ34eTnHxaXWOzEDJwO8F3u40oOY/UWOD26D4qVOs/Jb/3oo6g5DQltv9eSru+wyP1kWS8X9gAc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaXIHxmc; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733382909; c=relaxed/simple;
+	bh=OdNHHAyBCG+G8eGB1zNRa9ydyLmQWoPOFUmiCbqzXh0=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IlGcT91W7Pgl2ovoYha45ODaMZkZ4ilBu569JTsV+MxdA9t4U8KLV6uDNpvjRZ14IBe9BsZgmPlToRcXi/nWZOoTukM95Q9CzPxcQL1A2+ShOnagT/NtJ2T+cI6bnBwWqNPx9swUmOHyURb+L/GcyF6Bz0nR5m0QFndBw5sUvY0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n99A1pz2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaXIHxmc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D55C4CED2;
-	Thu,  5 Dec 2024 01:13:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n99A1pz2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E1CDC4CED1;
+	Thu,  5 Dec 2024 07:15:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733361233;
-	bh=3VfDxlcE8yFxXY59qEiQsyJF7h0mIJ5Z2wg79rfO+Q0=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=NaXIHxmcxsL44N2kme3qQxu8Swy8AWe8TwMG/1c0JpnJ9Guw5FNz6lScn9mcMw1QI
-	 F3AfuxXxuADk7itmJ86+ZW5HzPzvdZjmhsgI16WCGxaxzzpSblCYXEdFZhWfP3+1F6
-	 QZrW1xhVrro8fbiGQLJjcZ2nY1Lry000Lde8jQaDIbpdkkwbbwgtne+FYNLB4FJ8al
-	 iFoD88s9HkioBAsOym0n+D+vTvfwWCLmSqXt3jgfMNKfzG6mKGkM5ofeUwjVYOGjoA
-	 BsmAG1c8Vht6jzNbKLigze7rpHTc7N5ucDlru8EQphA/Rn7t8UyT3Swz8gCN2+Yztp
-	 OPfR36/luH3IQ==
-Date: Wed, 4 Dec 2024 17:13:51 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Eric Dumazet <edumazet@google.com>
-Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>,
- 0x7f454c46@gmail.com, "David S. Miller" <davem@davemloft.net>, Paolo Abeni
- <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern
- <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, Matthieu Baerts
- <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
- <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, Kuniyuki
- Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org
-Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
-Message-ID: <20241204171351.52b8bb36@kernel.org>
-In-Reply-To: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
-References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+	s=k20201202; t=1733382908;
+	bh=OdNHHAyBCG+G8eGB1zNRa9ydyLmQWoPOFUmiCbqzXh0=;
+	h=From:To:Cc:Subject:Date:From;
+	b=n99A1pz2LzjY7Vp1OD2dY1Gt4qbmAV7qIAs7Qmm+hJimcXf/gJpx0xwphmILuTbDP
+	 XsejiCONf5n2uu9p1pugEriTbYlsHx+8mtXTdpSZ476se2G61SrgenPrBxz0jSVB+U
+	 f8pIV1WFYGpfCg7EvR7B9kcMUh3ZS48Su0RJdkMLBQ2wv8twQIa4jfShowW/S2WB8C
+	 VUJ+V9W12Pkr1ri/ojWz3pMz+4B6yGlzUxLseZIlb0rtbxkuet25xoqCMp7Depwgv/
+	 2V5pxB134aONnDd6aheaX3q7HjH+N098kmWD3ETvGoogjVDZDy4VmGnQCJpXCQ1BTy
+	 9KY51d2Gjay4w==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 0/7] BPF path manager, part 1
+Date: Thu,  5 Dec 2024 15:14:52 +0800
+Message-ID: <cover.1733382222.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On Wed, 13 Nov 2024 18:46:39 +0000 Dmitry Safonov via B4 Relay wrote:
-> 2. Inet-diag allocates netlink message for sockets in
->    inet_diag_dump_one_icsk(), which uses a TCP-diag callback
->    .idiag_get_aux_size(), that pre-calculates the needed space for
->    TCP-diag related information. But as neither socket lock nor
->    rcu_readlock() are held between allocation and the actual TCP
->    info filling, the TCP-related space requirement may change before
->    reaching tcp_diag_put_md5sig(). I.e., the number of TCP-MD5 keys on
->    a socket. Thankfully, TCP-MD5-diag won't overwrite the skb, but will
->    return EMSGSIZE, triggering WARN_ON() in inet_diag_dump_one_icsk().
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Hi Eric! 
+v4:
+ - #4 drop "/* Called from the in-kernel PM only */" commend too.
+ - #5 drop 'out' label and if-statement in mptcp_pm_remove_addr_entry.
+ - drop #6 and #7.
+ - the last patch, add 'release_sock' label as Matt suggested.
 
-This was posted while you were away -- any thoughts or recommendation on
-how to address the required nl message size changing? Or other problems
-pointed out by Dmitry? My suggestion in the subthread is to re-dump
-with a fixed, large buffer on EMSGSIZE, but that's not super clean..
+v3:
+ - address Matt's comments in v2 (thanks)
+ - only include cleanups and refactoring patches in this set.
+
+v2:
+ - add BPF-related code in this set (32-36).
+
+In order to implement BPF userspace path manager, it is necessary to
+unify the interfaces of the path manager. This set contains some
+cleanups and refactoring to unify the interfaces in kernel space.
+Finally, define a struct mptcp_pm_ops for a userspace path manager
+like this:
+
+struct mptcp_pm_ops {
+        int (*address_announce)(struct mptcp_sock *msk,
+                                struct mptcp_pm_addr_entry *local);
+        int (*address_remove)(struct mptcp_sock *msk, u8 id);
+        int (*subflow_create)(struct mptcp_sock *msk,
+                              struct mptcp_pm_addr_entry *local,
+                              struct mptcp_addr_info *remote);
+        int (*subflow_destroy)(struct mptcp_sock *msk,
+                               struct mptcp_pm_addr_entry *local,
+                               struct mptcp_addr_info *remote);
+        int (*get_local_id)(struct mptcp_sock *msk,
+                            struct mptcp_pm_addr_entry *local);
+        u8 (*get_flags)(struct mptcp_sock *msk,
+                        struct mptcp_addr_info *skc);
+        struct mptcp_pm_addr_entry *(*get_addr)(struct mptcp_sock *msk,
+                                                u8 id);
+	int (*dump_addr)(struct mptcp_sock *msk,
+			 mptcp_pm_addr_id_bitmap_t *bitmap);
+        int (*set_flags)(struct mptcp_sock *msk,
+                         struct mptcp_pm_addr_entry *local,
+                         struct mptcp_addr_info *remote);
+
+        u8                      type;
+        struct module           *owner;
+        struct list_head        list;
+
+        void (*init)(struct mptcp_sock *msk);
+        void (*release)(struct mptcp_sock *msk);
+} ____cacheline_aligned_in_smp;
+
+Link: https://github.com/multipath-tcp/mptcp_net-next/issues/74
+
+Geliang Tang (7):
+  mptcp: add mptcp_userspace_pm_lookup_addr helper
+  mptcp: add mptcp_for_each_userspace_pm_addr macro
+  mptcp: add mptcp_userspace_pm_get_sock helper
+  mptcp: move mptcp_pm_remove_addrs into pm_userspace
+  mptcp: drop free_list for deleting entries
+  mptcp: change local addr type of subflow_destroy
+  mptcp: drop useless "err = 0" in subflow_destroy
+
+ net/mptcp/pm_netlink.c   |  46 ++----
+ net/mptcp/pm_userspace.c | 296 +++++++++++++++++----------------------
+ net/mptcp/protocol.h     |   7 +-
+ 3 files changed, 146 insertions(+), 203 deletions(-)
+
+-- 
+2.45.2
+
