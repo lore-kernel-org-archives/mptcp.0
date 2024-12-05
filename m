@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07FF718E028
-	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 09:27:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A18D18FC70
+	for <mptcp@lists.linux.dev>; Thu,  5 Dec 2024 09:36:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733390876; cv=none; b=LPI35aEfHyIWrL1z97M0crk5SIiZNc9M8Y2YHQWG9WvYd/daIa+MgnMnfrXVhyJqvzsnXM98+ApmzDfgt9SCA7Gua4U1+90SWANQiwAPI5aYh2P7Zgt+cCAWDAlD2Xhx3/0Ho3jfprZM3mRjp6N5Onj7RkWfULbDJCvLsz4ZFHc=
+	t=1733391361; cv=none; b=jzVpAePZYjkMuY192dtOFtRw5oeYqQnMh8sK0P7dkMWU1YGyKyLAI3x4IdqpvCa+CuJCcf4Rwxso/HNkc8zCjtOd38LNiw5cKbgSb4IZI/HYL+aKxDNFU3hFFkoS8e67655qbJA7DMQH9G8f795VsLewLcYHRMOjTIBXAKH+gaE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733390876; c=relaxed/simple;
-	bh=nsh26lWQukbsoTg3VYkrJgigjcPcNrkFlzepvCBrLBA=;
+	s=arc-20240116; t=1733391361; c=relaxed/simple;
+	bh=W8m1e9OpKU3Js/jpQauQi3cnqzhi+9y2KI2jA8nE20c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WlcMxbDTeWhh/aHqz7k6DR4zveIm7mOv9z1bxWLIGMzpPrQ8jjzbS/FLRHbUrkTA5IRsEzX5SLFVJlTFc83mww6rBYo1f953U7aTH5YY4Ayb2bQ8B1kkq3plGYKVqmsUJkBtp36au0D/Hd0ztcrUDPlyOw1weOTfXRpC/UkNWo0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/WGpFYy; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lBu9+K793AzVPs0fXqnFMgPFUotmbzXUi3BzQphlVsX9eL0nlT56TZ+Hw4GUb1/IzR3MW5ZbjrbwsYrN5f46ChvHCVmdjBv8Xt1/7iu3Lf9JRJgarKPgFbwnnpfPDmrRjy1/vfLUsHiTacmvGtd0Kse4kIhS2/XMqQLOJFINenY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=quUuqr8v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/WGpFYy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DAADAC4CED1;
-	Thu,  5 Dec 2024 09:27:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="quUuqr8v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4B154C4CED1;
+	Thu,  5 Dec 2024 09:36:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733390875;
-	bh=nsh26lWQukbsoTg3VYkrJgigjcPcNrkFlzepvCBrLBA=;
+	s=k20201202; t=1733391361;
+	bh=W8m1e9OpKU3Js/jpQauQi3cnqzhi+9y2KI2jA8nE20c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q/WGpFYyfhiTwsYD5ir2zUy37XaHNBfmY/0Msd8bG1Ce3rUpoKZGFctbLo0dX5B5k
-	 UhQBHdv9pvCCmNB1/NWk0ifRQhYEGAz8Lj1HB8CT1d11pvWRIBycjpLiyWjTWvywP+
-	 l3hmWhHBYejZ2lgR9AHjgwqa4NURjBA4Mug0hFFbbai5Qneqy8VPLYGKv/dOD/Bzxi
-	 I3fopK4FcKO3mwogghf3j3xH35yh39wvg3YE1L+/C8FRMAnr5qRNCubRSGUzr6hquJ
-	 mqBf1WS2C0sGWHMBglN4cydhHNelQEL5wGtziDb6nPa8oH0B3COfN4RRNSG+4kmgLk
-	 m9WZ7z0rEN5iw==
-Message-ID: <24b958fa-b61a-44c6-825a-7108792054b2@kernel.org>
-Date: Thu, 5 Dec 2024 10:27:52 +0100
+	b=quUuqr8vD4JWj74oH87fhUWD8s48oJOMVRhsY0LUX8KsTLUa/srRDfE4maf7mcZB/
+	 GiPeg/wn8DOsLgbKhNaZCxElG+1/0kybBjNHbneMu7rR2QFSrpQ+4NLSuoVQPRpRY1
+	 oInLcXgjGCbLGOyyK251hQNmq6JIxX20HU818WXbZJsOUnySPcDLExFGebpW7HHaxQ
+	 xtlwhqK2DhvASWj7MMEK1Rqfo9OKEiYIQ4u+os/6gE0lYF1+m9ES7aqgzTkyyLnjBJ
+	 h4kIIzCvCmxLspEBRPMnq5yH7k1cuBjtYqx1PBO9CcyFcr8RFNx8la7I+X9Kxmd5iJ
+	 lVmvmDr9kTs0g==
+Message-ID: <a0dd6c6d-e839-4566-9b79-aa8874516f27@kernel.org>
+Date: Thu, 5 Dec 2024 10:35:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 4/9] mptcp: move mptcp_pm_remove_addrs into
- pm_userspace
+Subject: Re: [PATCH mptcp-next v4 0/7] BPF path manager, part 1
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1730961809.git.tanggeliang@kylinos.cn>
- <92ab4cbf71a2be676481b20c662b2f602aa346e2.1730961809.git.tanggeliang@kylinos.cn>
- <b1024055-405e-426d-a5d1-2a6b16054191@kernel.org>
- <e041dcecfe0c9080b91b49546ec29a49061e39c6.camel@kernel.org>
+References: <cover.1733382222.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,35 +85,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e041dcecfe0c9080b91b49546ec29a49061e39c6.camel@kernel.org>
+In-Reply-To: <cover.1733382222.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 05/12/2024 08:26, Geliang Tang wrote:
-> On Wed, 2024-12-04 at 18:48 +0100, Matthieu Baerts wrote:
->> On 07/11/2024 07:45, Geliang Tang wrote:
-
-(...)
-
->>> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->>> index a6de837d8958..737a07f5defe 100644
->>> --- a/net/mptcp/pm_userspace.c
->>> +++ b/net/mptcp/pm_userspace.c
->>> @@ -286,6 +286,34 @@ static int
->>> mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
->>>  	return err;
->>>  }
->>>  
->>> +void mptcp_pm_remove_addrs(struct mptcp_sock *msk, struct
->>> list_head *rm_list)
->>
->> Can it not be 'static' now that it is only used in the userspace pm?
+On 05/12/2024 08:14, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> It will be invoked in BPF path manager, 'static' doesn't work.
+> v4:
+>  - #4 drop "/* Called from the in-kernel PM only */" commend too.
+>  - #5 drop 'out' label and if-statement in mptcp_pm_remove_addr_entry.
+>  - drop #6 and #7.
+>  - the last patch, add 'release_sock' label as Matt suggested.
 
-OK. Hopefully people will not send a patch in between to add 'static'.
+Thank you for the new version, the individual changelog, and the replies!
+
+There are a few complains from checkpatch.pl, probably I can fix some of
+them when applying the patches
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
