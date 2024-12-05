@@ -1,134 +1,70 @@
-Received: from smtp-bc08.mail.infomaniak.ch (smtp-bc08.mail.infomaniak.ch [45.157.188.8])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE5701C3BF4
-	for <mptcp@lists.linux.dev>; Wed,  4 Dec 2024 19:36:35 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.8
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA4FD14286;
+	Thu,  5 Dec 2024 01:13:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733340998; cv=none; b=bFScfiIm58sjkJlYPnye0u/GpaLg4TrxGjTqPEilLPK3xv0tl3MNlfwjX4wHnnjEmrpeuxFe0BPiOj1CsBB2iQ9Pi5ohRXsOLSQUYFJ/h7JKNIz61wvnCUVT9VaRmT6mGGSz3w9/pbT0NarOI142WCdSUQWzGGKDH/VMNyu8NBE=
+	t=1733361235; cv=none; b=AQjz8+1YbD/X2fiXdZj1MZoy0+z0RNDZ9kATeUVitMcPnvCWZCnvIcWHX2W5ScqnAbuHbF/bwJjWNkzH4RzPllHHMxspDYajx47U8pRjbfTIuThjmf+Z6c3rsA5DsIGmq7VKlp4yz+l2vfzOxsjdD7/E+xZhzG4K0uyKwjVbcfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733340998; c=relaxed/simple;
-	bh=gVf/mBxTJvebnqEdIle6xkNZAvjDrLxAz+i2Ut8HxyQ=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=WC3zhQ5g6vm42QoIwavVuE081v0gxU6E4tgfocoqui4RshtKLyd8XjXUIE6+xRSORtuQkQJ+hvr6dTmy9B8XJx7w4WTIzAYnvsOD3QB81ZxRNJd6JUPfUjYwTXmAmzYTN16c646dPN6VIMAXAzYJFEPmflAWLbXKsZvszIAPUGQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=yC1l2Qed; arc=none smtp.client-ip=45.157.188.8
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
+	s=arc-20240116; t=1733361235; c=relaxed/simple;
+	bh=3VfDxlcE8yFxXY59qEiQsyJF7h0mIJ5Z2wg79rfO+Q0=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=jJsPQZZdufTBZNHKtc4kH86cmR642CleHMMYrzETFwK+vP0AeMyA5jbRQYRfUASXZGlPFN4wdeQ6sUpe2fu+VAie7+mPYP17OZ34eTnHxaXWOzEDJwO8F3u40oOY/UWOD26D4qVOs/Jb/3oo6g5DQltv9eSru+wyP1kWS8X9gAc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NaXIHxmc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="yC1l2Qed"
-Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Y3SGl1wkfzXvV;
-	Wed,  4 Dec 2024 20:27:59 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1733340479;
-	bh=K6b7RkVHa81TH/U1AVRf2JXY8+WHDWPpbx+OOiCCbFE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=yC1l2QedjWBXPi2WNHZJ/QvF/BU0TzsyXnWrh6KkpD5KMJ370QTmWCuHpHgCjCA+t
-	 6jbtXLxbmKl6g+VO9dbqsCOTumZbVjS6+Alfdm6/NGXvrugGxMaQbm0hET1cD/dg/i
-	 TPMli8FpzCIJA9s8n7hThfpW+R6Db/JZsVBEG1Sc=
-Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Y3SGk2Q7cz1h6;
-	Wed,  4 Dec 2024 20:27:58 +0100 (CET)
-Date: Wed, 4 Dec 2024 20:27:57 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
-	gnoack@google.com, willemdebruijn.kernel@gmail.com, matthieu@buffet.re, 
-	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
-	yusongping@huawei.com, artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
-	MPTCP Linux <mptcp@lists.linux.dev>, David Laight <David.Laight@aculab.com>
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Message-ID: <20241204.fahVio7eicim@digikod.net>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
- <20241018.Kahdeik0aaCh@digikod.net>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NaXIHxmc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68D55C4CED2;
+	Thu,  5 Dec 2024 01:13:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733361233;
+	bh=3VfDxlcE8yFxXY59qEiQsyJF7h0mIJ5Z2wg79rfO+Q0=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=NaXIHxmcxsL44N2kme3qQxu8Swy8AWe8TwMG/1c0JpnJ9Guw5FNz6lScn9mcMw1QI
+	 F3AfuxXxuADk7itmJ86+ZW5HzPzvdZjmhsgI16WCGxaxzzpSblCYXEdFZhWfP3+1F6
+	 QZrW1xhVrro8fbiGQLJjcZ2nY1Lry000Lde8jQaDIbpdkkwbbwgtne+FYNLB4FJ8al
+	 iFoD88s9HkioBAsOym0n+D+vTvfwWCLmSqXt3jgfMNKfzG6mKGkM5ofeUwjVYOGjoA
+	 BsmAG1c8Vht6jzNbKLigze7rpHTc7N5ucDlru8EQphA/Rn7t8UyT3Swz8gCN2+Yztp
+	 OPfR36/luH3IQ==
+Date: Wed, 4 Dec 2024 17:13:51 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Eric Dumazet <edumazet@google.com>
+Cc: Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>,
+ 0x7f454c46@gmail.com, "David S. Miller" <davem@davemloft.net>, Paolo Abeni
+ <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, David Ahern
+ <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, Matthieu Baerts
+ <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, Geliang Tang
+ <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, Kuniyuki
+ Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, mptcp@lists.linux.dev, stable@vger.kernel.org
+Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
+Message-ID: <20241204171351.52b8bb36@kernel.org>
+In-Reply-To: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20241018.Kahdeik0aaCh@digikod.net>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-On Fri, Oct 18, 2024 at 08:08:12PM +0200, Mickaël Salaün wrote:
-> On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
-> > Hi Mikhail and Landlock maintainers,
-> > 
-> > +cc MPTCP list.
-> 
-> Thanks, we should include this list in the next series.
-> 
-> > 
-> > On 17/10/2024 13:04, Mikhail Ivanov wrote:
-> > > Do not check TCP access right if socket protocol is not IPPROTO_TCP.
-> > > LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
-> > > should not restrict bind(2) and connect(2) for non-TCP protocols
-> > > (SCTP, MPTCP, SMC).
-> > 
-> > Thank you for the patch!
-> > 
-> > I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
-> > treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
-> > see TCP packets with extra TCP options. On Linux, there is indeed a
-> > dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
-> > because we needed such dedicated socket to talk to the userspace.
-> > 
-> > I don't know Landlock well, but I think it is important to know that an
-> > MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
-> > will do a fallback to "plain" TCP if MPTCP is not supported by the other
-> > peer or by a middlebox. It means that with this patch, if TCP is blocked
-> > by Landlock, someone can simply force an application to create an MPTCP
-> > socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
-> > certainly work, even when connecting to a peer not supporting MPTCP.
-> > 
-> > Please note that I'm not against this modification -- especially here
-> > when we remove restrictions around MPTCP sockets :) -- I'm just saying
-> > it might be less confusing for users if MPTCP is considered as being
-> > part of TCP. A bit similar to what someone would do with a firewall: if
-> > TCP is blocked, MPTCP is blocked as well.
-> 
-> Good point!  I don't know well MPTCP but I think you're right.  Given
-> it's close relationship with TCP and the fallback mechanism, it would
-> make sense for users to not make a difference and it would avoid bypass
-> of misleading restrictions.  Moreover the Landlock rules are simple and
-> only control TCP ports, not peer addresses, which seems to be the main
-> evolution of MPTCP.
+On Wed, 13 Nov 2024 18:46:39 +0000 Dmitry Safonov via B4 Relay wrote:
+> 2. Inet-diag allocates netlink message for sockets in
+>    inet_diag_dump_one_icsk(), which uses a TCP-diag callback
+>    .idiag_get_aux_size(), that pre-calculates the needed space for
+>    TCP-diag related information. But as neither socket lock nor
+>    rcu_readlock() are held between allocation and the actual TCP
+>    info filling, the TCP-related space requirement may change before
+>    reaching tcp_diag_put_md5sig(). I.e., the number of TCP-MD5 keys on
+>    a socket. Thankfully, TCP-MD5-diag won't overwrite the skb, but will
+>    return EMSGSIZE, triggering WARN_ON() in inet_diag_dump_one_icsk().
 
-Thinking more about this, this makes sense from the point of view of the
-network stack, but looking at external (potentially bogus) firewalls or
-malware detection systems, it is something different.  If we don't
-provide a way for users to differenciate the control of SCTP from TCP,
-malicious use of SCTP could still bypass this kind of bogus security
-appliances.  It would then be safer to stick to the protocol semantic by
-clearly differenciating TCP from MPTCP (or any other protocol).
+Hi Eric! 
 
-Mikhail, could you please send a new patch series containing one patch
-to fix the kernel and another to extend tests?  We should also include
-this rationale in the commit message.
-
-> 
-> > 
-> > I understand that a future goal might probably be to have dedicated
-> > restrictions for MPTCP and the other stream protocols (and/or for all
-> > stream protocols like it was before this patch), but in the meantime, it
-> > might be less confusing considering MPTCP as being part of TCP (I'm not
-> > sure about the other stream protocols).
-> 
-> We need to take a closer look at the other stream protocols indeed.
-
-It would be nice to add support for MPTCP too, but this will be treated
-as a new Landlock feature (with a proper ABI bump).
-
-> 
-> > 
-> > 
-> > > sk_is_tcp() is used for this to check address family of the socket
-> > > before doing INET-specific address length validation. This is required
-> > > for error consistency.
-> > > 
-> > > Closes: https://github.com/landlock-lsm/linux/issues/40
-> > > Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
+This was posted while you were away -- any thoughts or recommendation on
+how to address the required nl message size changing? Or other problems
+pointed out by Dmitry? My suggestion in the subthread is to re-dump
+with a fixed, large buffer on EMSGSIZE, but that's not super clean..
