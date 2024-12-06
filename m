@@ -1,137 +1,110 @@
-Received: from mail-pj1-f46.google.com (mail-pj1-f46.google.com [209.85.216.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8CBB0189F20
-	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 02:49:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00EF11FF7A1
+	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 12:10:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733453400; cv=none; b=pULnlypQf2V/nGnjxRUvrEvW1Wj0aKb2ZgnDgYTAYDfJh/joWp0olSKsM5H3uOxO0RLLDvzqx5oh688n5TuoII2EbxDwNJPPjMocdjZlz2ey5t5OTRLJ0++uPKWfmO33w5kSEVdY6vICeBNUl9DI56HOfKdl/KykLe9MfHNSm1Y=
+	t=1733487017; cv=none; b=qCyI0E8ehX/xop8IL+ICoDQNxk2fmtZ2/Xvk/sycGQKwrRt+/qmRYqJOfBmpLFkUTeN2+B1G9uS3S5eUUyAQLBT9z+hd73X6HuLDg14fSSxVejXEFNCXpu00Ju/ljnW952sBvbSH9dXGE8DQozdr/shoiOvq9RwQIlEGQLZjTcs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733453400; c=relaxed/simple;
-	bh=d1mlV6zQCgCyxHwYY1PXH9w0PynEoomgfBQSdBZwFno=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=EKEBnZ2x75D5Swc5B40t1p7m0EbDemLUdminF8JlPYMOUd1Nhr6LSt1TeGLgxMJmkH+I1Dv7NijQxWzMyjWsS8k1ewIYedqPKEYm02WVYq8Skp31CPY/slAldl5dqub73RRDoQ6PaYuzTMnZhhFlCqNT7x8dx0LwnMn2c4DmN+E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GUaJEZuh; arc=none smtp.client-ip=209.85.216.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733487017; c=relaxed/simple;
+	bh=nkwmfx7NPa3JZxNPzZkwS0ns+pGRpYbeHKQS6yPUwvo=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=TPgJuLV3JP/YfjuTQBBnhNH7kk2n/yqInGGXhnomaJCdu90wl9IwmsVVpP7z6HxU0MqR/ysq/uIZlxw5cgTl0eCrCI9BK4B0a7QwASaNFb35RBx/q0ZAtXrLvTjs8BUb8gGgEP0MIJF7f4WPYyP1/24vBShEpP83hhH700I0n2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=R55P60PW; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GUaJEZuh"
-Received: by mail-pj1-f46.google.com with SMTP id 98e67ed59e1d1-2ee989553c1so1385724a91.3
-        for <mptcp@lists.linux.dev>; Thu, 05 Dec 2024 18:49:58 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733453398; x=1734058198; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=jFcBusQAgop/cJ9zHlAC34d6C2cvFm40FRSAV1uCAPY=;
-        b=GUaJEZuhPc+cCgs73TIw90PvMIDP7114Z78OsV2gog0EXmuEZM6f8kHlr82LgyBbQc
-         3SfHzyodHPV6m88ibqpBgbBAo9rBjiwGhrO3XgKsd0lRuSptK1lGetIU0tehAQCO62+V
-         uheGgAX5PaQRIkFviPjpY6S9sBabgzXTXu9wvlaJInvPHj9fyGQ0lwPzVcrhgcy2JZ+X
-         P6zHzROFJ1TERTPNQbotafkyLpjlrNJz55HNloFelCJxAYEbL5sSkkHasynSIofIgvi0
-         1C+OaC0LHryJx7a461NHt3Ooip7lXy2uGiYfAnc2V/+XY+mtq/aVGpWi6DD9O1hr8ME6
-         t2pg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733453398; x=1734058198;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=jFcBusQAgop/cJ9zHlAC34d6C2cvFm40FRSAV1uCAPY=;
-        b=VtfiUqAaO+5EOrA9Rce30cGgjZBXsr1kINp7/AoElEufDyqz5eeLqkRoQyi32ONWc2
-         FX2QNZj/Fxa0AvtN/BZF4knDYq3em0xystowj1bthQPAiLGIOwtQhcToelsDEs5ZxgY1
-         8kyTxRFX7zM800dJmzTUasyLNnbNmiOvrf2dcXKx5NcUdm0X/Go2qAiumC8VI7BJBy2D
-         df1nfGtd5p2ra94NpSAFjP1gn5MKMHsV4hvDfis0MiDSJAM3wu9cQNCCSxNcOPgA/0AU
-         dlYCwknx200pWJNOaPvYcegyA0SMWBP5lO+52l0Cx+eXcwA5c0TvJgXQF1xHuHQUrK3P
-         XhFA==
-X-Forwarded-Encrypted: i=1; AJvYcCWEzko53W+ukv6IcCLNfy3seJt/XRiGdORbu1SUK54FDkuvcd4ThTcrezRXod1DhlhD7w3l5w==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yzb8s8Qh3zR+i0qhT1JPVti3cXtJoVIcnPXNBKOCMHW5eglqj8n
-	/k6LTf//rPq91SVKV0PwJeYtumH5/zwpuzwe1WRg1NhWgazQQ2yyF6MBkErF/meCenjLCgjvpe/
-	chyLeOBFibTc/lhZLL5SZoAcDd+k=
-X-Gm-Gg: ASbGnct7ZtJlrW9irJznL3gV5vosfgsbzxvy5QUw5mf6vXudX9Vpwz2w5VedrRbSxYS
-	pZfLjgCeQCoRBmN0x8VvVarU31t3Z3g==
-X-Google-Smtp-Source: AGHT+IEA11huRP+Trp19deRlrQWYZoOM5ceG9+1zVCv7r7Tsw6HHVVGPX/+z5mIMkkizPeSriAQ8V5bZRdiioL1KesA=
-X-Received: by 2002:a17:90b:33c4:b0:2ee:863e:9fff with SMTP id
- 98e67ed59e1d1-2ef69e15339mr2443280a91.10.1733453397711; Thu, 05 Dec 2024
- 18:49:57 -0800 (PST)
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="R55P60PW"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1733487013;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=x6wF4RP8IbYDTw5M02z/JdjS8TXF9CGDu8ng3Uep4RE=;
+	b=R55P60PWSJE1ThcorsFJ+0LZvyQnyHQFyNXsjHUK9bh2MQN+fQQB6doezOEAiJc2EYjD1h
+	cagto5jNkFZwAQ/zofjtQEV75JiUOzurhtZ0cXsfPf29Bp3bS8M3CuREFzLfwtNLrGhzRw
+	r32HwqsySH6tNdEkpU88vGVACTzYnnE=
+Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-75-DG0EmBcVPoebgd0dZuVh9g-1; Fri,
+ 06 Dec 2024 07:10:12 -0500
+X-MC-Unique: DG0EmBcVPoebgd0dZuVh9g-1
+X-Mimecast-MFC-AGG-ID: DG0EmBcVPoebgd0dZuVh9g
+Received: from mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.40])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0F1741964CE7
+	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 12:10:12 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.243])
+	by mx-prod-int-04.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 114F41955F3F
+	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 12:10:10 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH mptcp-next v2 0/7] mptcp: rx path refactor
+Date: Fri,  6 Dec 2024 13:09:44 +0100
+Message-ID: <cover.1733486870.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
- <20241204171351.52b8bb36@kernel.org> <CANn89iL5_2iW5U_8H43g7vXi0Ky=fkwadvTtmT3fvBdbaJ1BAw@mail.gmail.com>
-In-Reply-To: <CANn89iL5_2iW5U_8H43g7vXi0Ky=fkwadvTtmT3fvBdbaJ1BAw@mail.gmail.com>
-From: Dmitry Safonov <0x7f454c46@gmail.com>
-Date: Fri, 6 Dec 2024 02:49:46 +0000
-Message-ID: <CAJwJo6amrAt+uBMWRvwBu=VdcTyDuEMtkAx0=_ittUj0KCa-zw@mail.gmail.com>
-Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
-To: Eric Dumazet <edumazet@google.com>
-Cc: Jakub Kicinski <kuba@kernel.org>, 
-	Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	David Ahern <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, 
-	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
-	John Fastabend <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, 
-	Kuniyuki Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
-	mptcp@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.40
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: FIzelznZFAR3fZd30SAakkWYTyFY8tZVw-b4IwmueBk_1733487012
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Jakub, Eric,
+This is a batch of changes I had sitting in my local tree for a while.
+Why another refactor you may ask? Two main resons:
 
-On Thu, 5 Dec 2024 at 09:09, Eric Dumazet <edumazet@google.com> wrote:
-> On Thu, Dec 5, 2024 at 2:13=E2=80=AFAM Jakub Kicinski <kuba@kernel.org> w=
-rote:
-> >
-> > Hi Eric!
-> >
-> > This was posted while you were away -- any thoughts or recommendation o=
-n
-> > how to address the required nl message size changing? Or other problems
-> > pointed out by Dmitry? My suggestion in the subthread is to re-dump
-> > with a fixed, large buffer on EMSGSIZE, but that's not super clean..
->
-> Hi Jakub
->
-> inet_diag_dump_one_icsk() could retry, doubling the size until the
-> ~32768 byte limit is reached ?
->
-> Also, we could make sure inet_sk_attr_size() returns at least
-> NLMSG_DEFAULT_SIZE, there is no
-> point trying to save memory for a single skb in inet_diag_dump_one_icsk()=
-.
+- currently the mptcp RX path introduces quite a bit of 'exceptional'
+ accounting/locking processing WRT to plain TCP, adding up to the
+ implementation complexity in a misurable way
+- the performance gap WRT plain TCP for single subflow connections is
+ quite measurable.
 
-Starting from NLMSG_DEFAULT_SIZE sounds like a really sane idea! :-)
+The present refactor addresses both the above items: most of the
+additional complexity is dropped, and single stream performances
+increase measurably - from 55Gbps to 71Gbps in my loopback test. As a
+reference, plain TCP is around 84Gps on the same host.
 
-[..]
-> @@ -585,8 +589,14 @@ int inet_diag_dump_one_icsk(struct inet_hashinfo *ha=
-shinfo,
->
->         err =3D sk_diag_fill(sk, rep, cb, req, 0, net_admin);
->         if (err < 0) {
-> -               WARN_ON(err =3D=3D -EMSGSIZE);
->                 nlmsg_free(rep);
-> +               if (err =3D=3D -EMSGSIZE) {
-> +                       attr_size <<=3D 1;
-> +                       if (attr_size + NLMSG_HDRLEN <=3D
-> SKB_WITH_OVERHEAD(32768)) {
-> +                               cond_resched();
-> +                               goto retry;
-> +                       }
-> +               }
->                 goto out;
->         }
->         err =3D nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb).por=
-tid);
+The above comes to a price: the patch are invasive, even in subtle ways:
+the chance of destabilizing the implementation is real (ence the
+additional, intentional '-next' into the subj).
 
-To my personal taste on larger than 327 md5 keys scale, I'd prefer to
-see "dump may be inconsistent, retry if you need consistency" than
--EMSGSIZE fail, yet userspace potentially may use the errno as a
-"retry" signal.
+In any case keeping the patch hidden for longer was not going to do any
+good, so here we are.
 
-Do you plan to re-send it as a proper patch? Or I can send it with my
-next patches for TCP-MD5-diag issues (1), (3), (4) and TCP-AO-diag.
+Changes from v1:
+  - fixed several data stream corruption and wake-up misses due
+    to multi subflows races
+  - added patches 1-3 mainly to address the above
+  - added an additional follow-up patch (patch 7) with more cleanup
 
-Thanks,
-             Dmitry
+Paolo Abeni (7):
+  mptcp: prevent excessive coalescing on receive
+  tcp: fix recvbuffer adjust on sleeping rcvmsg
+  mptcp: don't always assume copied data in mptcp_cleanup_rbuf()
+  mptcp: consolidate subflow cleanup
+  mptcp: move the whole rx path under msk socket lock protection
+  mptcp: cleanup mem accounting.
+  net: dismiss sk_forward_alloc_get()
+
+ include/net/sock.h   |  13 ---
+ net/core/sock.c      |   2 +-
+ net/ipv4/af_inet.c   |   2 +-
+ net/ipv4/inet_diag.c |   2 +-
+ net/mptcp/fastopen.c |   4 +-
+ net/mptcp/protocol.c | 259 +++++++++++++------------------------------
+ net/mptcp/protocol.h |   6 +-
+ net/mptcp/subflow.c  |  33 +++---
+ net/sched/em_meta.c  |   2 +-
+ 9 files changed, 104 insertions(+), 219 deletions(-)
+
+-- 
+2.45.2
+
