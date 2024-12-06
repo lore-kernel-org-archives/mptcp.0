@@ -1,112 +1,151 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f47.google.com (mail-pj1-f47.google.com [209.85.216.47])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B88D206262
-	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 16:41:58 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6B3B1C549F
+	for <mptcp@lists.linux.dev>; Fri,  6 Dec 2024 20:35:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.47
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733503319; cv=none; b=aRcvVxwQsfa6oEjGd2Mow/Ua63v6ezuu4mUVNb5FMeVubc2mlayTBilkp4EBrUYPMs+d5IKWmqurOtRsTLC5UMPXuHAU6xvWZniTnpHE02nfYbzX02viWTTRH0xrZe8WTvhCKESZEdElLD923oGHiPlCr7/63ZaVBER8baJEwOo=
+	t=1733517336; cv=none; b=HKa9PrbOfsA7wckBQUerI3rpMAUSr7ZYl2D2HkPYeCucOJG1ZUBjSd2krOHBfIbgiQJcyu6RPhFWnTX3shktSJTxMyvfSPGp1kx8vT33RpF/ZXOUY37+21SMGiz6FTqzmOfkd8YzUAGE3iyaEIgnlYI9S0r+06eF2CSZx53l32k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733503319; c=relaxed/simple;
-	bh=cpyiiIfax4i7KdsymKWuJhkFoJ78p1xocP7/pp0TJHQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=HRv2Us5z26hT0FvcGOYaLSRz+P/1G4uh3VIof+32hq64d3mbbzf+hITE2QDcKqOPR2e2oEQrcg0t+k++/yn7GXfYBrI2Ca7m/8/hZBDqGGYahEotsqFww20kslDZLRLQuNjeDDZmtVL7lgL0Qy64RlXcBufaIxnjfALQVcLlZsU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=JqQUtF+i; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1733517336; c=relaxed/simple;
+	bh=KfHWQu6liIdf7TzsYbc9sbR4p1miYi4VnYm5haG6c2g=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=MpEon6TM6Sm8/hPwUxNx6ydppQl3uocH5sG4DNS1EUqcrOh0Itw27kQE29hMKg38ccmEbuUQjccsw18AMrv0zkPXHLeRowIx1spi9Ay/zkJ3uek35FyfCkiRS/wHkz+6JFY2NkcdUr4+vuZWMqqiASvez5qJYXOVGinMaFqEI/U=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EHrn3Zmw; arc=none smtp.client-ip=209.85.216.47
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="JqQUtF+i"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733503317;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=cpyiiIfax4i7KdsymKWuJhkFoJ78p1xocP7/pp0TJHQ=;
-	b=JqQUtF+iIojJMuHmYceIVBZcPPpPpFjd+6h4iABh01y3zOqPyMXk+sWVLJL3Gu8BjRon4B
-	dc7KgiC0Ra2ZF33/Ir/rEPZk8Org11bDAU8PW8h5P3ceJ7tm1ecKdHcZ6resg13MnehGLl
-	yYp9d5T/rFnDh7HwUr6gHKvj9RVmtcc=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-115-IrzWWDJsOeGrkQPgl9Otfg-1; Fri, 06 Dec 2024 11:41:56 -0500
-X-MC-Unique: IrzWWDJsOeGrkQPgl9Otfg-1
-X-Mimecast-MFC-AGG-ID: IrzWWDJsOeGrkQPgl9Otfg
-Received: by mail-wm1-f70.google.com with SMTP id 5b1f17b1804b1-434a37a57dfso5554195e9.0
-        for <mptcp@lists.linux.dev>; Fri, 06 Dec 2024 08:41:56 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EHrn3Zmw"
+Received: by mail-pj1-f47.google.com with SMTP id 98e67ed59e1d1-2ee9a780de4so2089792a91.3
+        for <mptcp@lists.linux.dev>; Fri, 06 Dec 2024 12:35:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733517334; x=1734122134; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=9WSYKgnoISSMoL6c1SM0OSo8i8y8ZqVOfOOSDtnT9Wo=;
+        b=EHrn3ZmwCgJzwKH74eZwPo7QEHdCc1fBRrMRKk/cq9Okn/roAeSLwnYv48yioi/48a
+         yTvTQT/HgobI3MXEZ9UjHb32gY49TtYUrZdgKEnyTEy7cHfHFqJdM5Q5AMU3gSwA4Pav
+         JZrFR5YeN5jF6sezGrHxPRCb9yzRt1fEDOCMaTSzNoY67KT59B6zmbt68ncdYVbtIZ1q
+         gNFYnDfIVOSByCeH7G5li1NbBxJW0zx8xXHxbHdeaQb0vJSuZmDgsWf45hTBLdOOhbKa
+         hRQ78fj+Q/NFSxXrvr9h2m07mzbPSnsxVYF/h11YkeiDwaLWn83xBEptxbUz6JF91NLm
+         7zdg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733503315; x=1734108115;
-        h=content-transfer-encoding:in-reply-to:content-language:references
-         :to:from:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=cpyiiIfax4i7KdsymKWuJhkFoJ78p1xocP7/pp0TJHQ=;
-        b=XRcHfvz/qI//zMQf4H0TCX1o/hPdd8Fq531MOJvmvk+P1QVZ9mQMMbu5n6viZ14weR
-         Y3iNyGww4ZiNoAwCP9KVl1ZGvdJKUseJLZQxENpGhUTPA/j+uxqZ9O8wbI1nDEIpEMKl
-         3dfbDXSp+NoSU8TMPQ5l3+qByDjamgr7RAOItzVotSIux7ekIz09zcDIWg4wQbh/CBN2
-         6tHxRxlORQT8CD2BycfYRntXnF4+G4C2mt5q6zli31E1PNwIn9j8Zr77Whg2F9Wv2P+n
-         n8e3TbfTsqNwCFAl/mQ8mtv5A5ZjMPFzAUNA8OS7S5rIW/BwWfey0O9H/xrBg4rQ2tgv
-         SJqA==
-X-Gm-Message-State: AOJu0YyT34KW2oVcHlMnwIs3tCtw6QnCZtXl+1OHASi73sn2Lqbzumqp
-	f08qMt8zb8TIMO38jEI0gKSB6lOL+0eWRtEDT3gRsVt3nmX5igUpvaE/NNeX3EslBRVj5YRLqvc
-	jrWD9csQB3fyfUmyQpqZ6Qqvp3gYOs6JRCM4YII0LJI6Fw4g9O6H0yhdwemU1NWpM0As7w3yyjg
-	zIUy/cwkK2eOeMG68xRuaAq70+SeJ+vU1dzg==
-X-Gm-Gg: ASbGncsOdqTU8khKkuzIiD8llgZoG1uVak8pQ5jPcNhS8mKdJZpcFa8eqJvl2Ilcena
-	n77LBUQMJ75zB5z9E37UrYcj05haDbvVOEqakchoJPAgN9A9mqm1ck+V+5pmvEAiz3xlmFl5TCQ
-	ByQVnj/YBO3IRhWdwQurGwudky2TD1djge/QumXPY0KzAHsFXEKB+R4exIYlRdTOXQ/A+npH+hH
-	cS/YYCf4QjAE9+N11I0fkFQWfaXs3scHD2VgR+zEXHFrpRhiHp5CfPmaquOWGo6SbVmOeHhR0Tu
-X-Received: by 2002:a05:600c:3ca3:b0:42c:c28c:e477 with SMTP id 5b1f17b1804b1-434ddecb0f7mr30053595e9.23.1733503314860;
-        Fri, 06 Dec 2024 08:41:54 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG/Zu0GHNPkQMvKdkHj84Ent91BpUKLoTMsGOvsPLiwucGr/59h2dKZ44cIt/rWPFU54Lrxtw==
-X-Received: by 2002:a05:600c:3ca3:b0:42c:c28c:e477 with SMTP id 5b1f17b1804b1-434ddecb0f7mr30053425e9.23.1733503314473;
-        Fri, 06 Dec 2024 08:41:54 -0800 (PST)
-Received: from [192.168.88.24] (146-241-38-31.dyn.eolo.it. [146.241.38.31])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3861fd46844sm4877833f8f.53.2024.12.06.08.41.53
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 06 Dec 2024 08:41:53 -0800 (PST)
-Message-ID: <a16d1dbc-5a57-486d-8820-a2a4999c8399@redhat.com>
-Date: Fri, 6 Dec 2024 17:41:52 +0100
+        d=1e100.net; s=20230601; t=1733517334; x=1734122134;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=9WSYKgnoISSMoL6c1SM0OSo8i8y8ZqVOfOOSDtnT9Wo=;
+        b=sWFfnDZ7Nbx0jcoRpCLZQcIyeu80W2zvRIp4z6HIPJHWwbtiqG0dqbUn99QhWfzk1D
+         JfDcceWD0r6iV3ytw8rjMX8asZu4Fqi+03kaNiv7z+RgygkCcZdsebujUatmUUOCZiUL
+         VlSEZzYHhgFDt3w4DWTbUccjtA4hInr/l0uh/0PZeIgU+Q17YdLV1PGGVnS8PVCKzOmF
+         EBt7D5xd4Hw0AtCmRVgoKwdlfk3+vhpmM7HLcSXHQr2pF0Kvejpm2RYdm6ExhqslKw8n
+         y8+eUjAVICB6Yjjt1BMxnlACZt/exWwTnnYucMzMMH5WrVwz8ry8GbsTjezhjHsPapZf
+         7Yjg==
+X-Forwarded-Encrypted: i=1; AJvYcCUS/FCg2gmUSQ5Jy6e/bHm4DVVeqOPygsUHtq8nAaF8nOq/Ju8En4Nyv7c3GbUsMKh2ywaytw==@lists.linux.dev
+X-Gm-Message-State: AOJu0YwKtFi+wvdaxHfz2pabruKqdyeCOuKOLjEn79+j1LYcLODBVFEG
+	UXIdEx9D3eEdAncKHKB7ydQb9E1h8nx2HNEBCJv4K7NXPLfTQxx/IKL1afw2RkTyE++NXhuZ2eB
+	K4ipC4m18le+AWnz2XdSk94U2OAA=
+X-Gm-Gg: ASbGncv2YFpBfKcF7lElNblAk6yUbz0LDkIUJqbjblGSVWmHfwP68Y+ZHyquv3H/OGs
+	BjNHsAIQtPMByY3Bdb4LUEOXb3/zpow==
+X-Google-Smtp-Source: AGHT+IEpzaK/NG2+IvtIdZyl1H8wLBBipy2MsvnS1vHIIgei1Y3hj+929YdX4hnkWtIF7aUOoa4AmVt8HXwZErvXBiE=
+X-Received: by 2002:a17:90b:524e:b0:2ea:853b:2761 with SMTP id
+ 98e67ed59e1d1-2ef6aaddd08mr5902936a91.37.1733517333959; Fri, 06 Dec 2024
+ 12:35:33 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 0/7] mptcp: rx path refactor
-From: Paolo Abeni <pabeni@redhat.com>
-To: mptcp@lists.linux.dev
-References: <cover.1733486870.git.pabeni@redhat.com>
-In-Reply-To: <cover.1733486870.git.pabeni@redhat.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: UpLW6Pd21bK53jGXiWyEJhl0n2o2envf2PiEoZrREmU_1733503315
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+References: <20241113-tcp-md5-diag-prep-v2-0-00a2a7feb1fa@gmail.com>
+ <20241204171351.52b8bb36@kernel.org> <CANn89iL5_2iW5U_8H43g7vXi0Ky=fkwadvTtmT3fvBdbaJ1BAw@mail.gmail.com>
+ <CAJwJo6amrAt+uBMWRvwBu=VdcTyDuEMtkAx0=_ittUj0KCa-zw@mail.gmail.com> <CANn89iJzwe+Wds=otY-iFL9C9eNFVqGi62q085AehnYa3sET7w@mail.gmail.com>
+In-Reply-To: <CANn89iJzwe+Wds=otY-iFL9C9eNFVqGi62q085AehnYa3sET7w@mail.gmail.com>
+From: Dmitry Safonov <0x7f454c46@gmail.com>
+Date: Fri, 6 Dec 2024 20:35:22 +0000
+Message-ID: <CAJwJo6aeza8omfs+GbVz-KoGV-4vgZzBU1oa+PBTxe+W-YxtJw@mail.gmail.com>
+Subject: Re: [PATCH net v2 0/5] Make TCP-MD5-diag slightly less broken
+To: Eric Dumazet <edumazet@google.com>
+Cc: Jakub Kicinski <kuba@kernel.org>, 
+	Dmitry Safonov via B4 Relay <devnull+0x7f454c46.gmail.com@kernel.org>, 
+	"David S. Miller" <davem@davemloft.net>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
+	David Ahern <dsahern@kernel.org>, Ivan Delalande <colona@arista.com>, 
+	Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+	Geliang Tang <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+	John Fastabend <john.fastabend@gmail.com>, Davide Caratti <dcaratti@redhat.com>, 
+	Kuniyuki Iwashima <kuniyu@amazon.com>, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+	mptcp@lists.linux.dev, stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-On 12/6/24 13:09, Paolo Abeni wrote:
-> The present refactor addresses both the above items: most of the
-> additional complexity is dropped, and single stream performances
-> increase measurably - from 55Gbps to 71Gbps in my loopback test. As a
-> reference, plain TCP is around 84Gps on the same host.
+On Fri, 6 Dec 2024 at 15:15, Eric Dumazet <edumazet@google.com> wrote:
+>
+> On Fri, Dec 6, 2024 at 3:49=E2=80=AFAM Dmitry Safonov <0x7f454c46@gmail.c=
+om> wrote:
+> >
+ [..]
+> > > @@ -585,8 +589,14 @@ int inet_diag_dump_one_icsk(struct inet_hashinfo=
+ *hashinfo,
+> > >
+> > >         err =3D sk_diag_fill(sk, rep, cb, req, 0, net_admin);
+> > >         if (err < 0) {
+> > > -               WARN_ON(err =3D=3D -EMSGSIZE);
+> > >                 nlmsg_free(rep);
+> > > +               if (err =3D=3D -EMSGSIZE) {
+> > > +                       attr_size <<=3D 1;
+> > > +                       if (attr_size + NLMSG_HDRLEN <=3D
+> > > SKB_WITH_OVERHEAD(32768)) {
+> > > +                               cond_resched();
+> > > +                               goto retry;
+> > > +                       }
+> > > +               }
+> > >                 goto out;
+> > >         }
+> > >         err =3D nlmsg_unicast(net->diag_nlsk, rep, NETLINK_CB(in_skb)=
+.portid);
+> >
+> > To my personal taste on larger than 327 md5 keys scale, I'd prefer to
+> > see "dump may be inconsistent, retry if you need consistency" than
+> > -EMSGSIZE fail, yet userspace potentially may use the errno as a
+> > "retry" signal.
+> >
+>
+> I do not yet understand this point. I will let you send a patch for
+> further discussion.
 
-I forgot to update this section.
+Let me explain my view. It's based on two points:
+(a) TCP-MD5/AO-diag interfaces are mostly used for
+debugging/investigating/monitoring by tools alike ss. Without a
+side-synchronisation, they can't be used by BGP or other tools/tests
+to make decisions as the socket is controlled by another process and
+the resulting dump may be incomplete, inconsistent or outdated.
+(b) The current default of optmem_max limit (128Kb) allows to allocate
+on a socket 655 TCP-AO keys and even more TCP-MD5 keys. Some of
+Arista's customers (I'd guess the same for other BGP users) have 1000
+peers (for MD5 it's one key per peer on a listen socket, for AO might
+be higher).
 
-I did some additional test with multiple links, differences vs the
-existing codebase is within the noise range.
+I think the situation that's being addressed here is a race and
+potentially it's rare to hit (I have to run a reproducer in a loop to
+hit it). That's why in my view a re-try jump is too big of a hammer.
+And failing with -EMSGSIZE on 327+ keys scale sounds slighly worse
+than just marking the resulting dump as inconsistent and letting the
+user decide if he wants to re-run the dump or if the dump is "good
+enough" to get a sense of the situation. I would even say "the dump is
+inconsistent" has its value as a signal that the keys on a socket
+change right now, which may be useful.
 
-Disclaimer: tests over multiple veth pairs, with RPS to use multiple
-cores for the forwarding. This is a somewhat decent approximation of a
-real setup with multiple H/W links but I still have to try the latter.
+Regarding the patch, my attempt was in this thread:
+https://lore.kernel.org/all/20241113-tcp-md5-diag-prep-v2-1-00a2a7feb1fa@gm=
+ail.com/
 
-I think the issue reported by the CI in the previous iteration should be
-addressed here - or at least this iteration addresses the closest
-problem I was able to reproduce locally.
+However, I should note that I'm fine with either of the approaches
+(userspace to retry on EMSGSIZE or to get an inconsistent dump and
+decide what to do with that). I'm somewhat looking forward to
+switching to problems (1)/(3)/(4) from the cover-letter and adding
+TCP-AO-diag, rather than being stuck arguing about what's the best
+solution for quite a rare race :-)
 
-I'm not aware of any standing issue, but I would bet a few coins this is
-not bug-free.
-
-Paolo
-
-
+Thanks,
+             Dmitry
