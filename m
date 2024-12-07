@@ -1,110 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1CEDC22C6C2
-	for <mptcp@lists.linux.dev>; Sat,  7 Dec 2024 01:45:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3BB4323D
+	for <mptcp@lists.linux.dev>; Sat,  7 Dec 2024 02:10:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733535942; cv=none; b=gpg8DjPedRSMIzKqly0t+xDFL9Bi+pmBsk6lLBs4ikq+KXigd2shKrm8gEGgIpmogQF5aS1UYLIzbB4qt8uUcnog8cPBLtoMCoS2Q4LmI5lRlf3MOpEhcfNZ459LTVSia2zZHbjtl6nrTs9OZsqHAdgJHxRLGOO3DZ5tqv7JOtA=
+	t=1733537428; cv=none; b=OInPnwC/NInzfdpCWMx0ZkjKKm2NuCTwXgrSu50ynQ59uhnh6cebp+35QxiRZpZf/BQGLG5JT6dBlvMKZMGIGfJK++enUA2q6Hv/rfH+Y7VA8xhQZOayt8a1yMHYrIRvv+5AEXXfkT2rHIeYDAZVbwpa2AzPRI3Q4ZYtDTmaP6E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733535942; c=relaxed/simple;
-	bh=3B9wYauNsdy+dtcMCJ5A12M6lF7rh/eWp7M1cNCnY/M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=P8U3BRDXIMqfP0q/OhI5C9mT4gJCIw2ZXwVLVjFArDLXC7FVfGYch4GsFr7eIJ1+9jVWfc/jqAtnjt5zYLBn7I+HJApo+Sc42+nIMnh3fj3+sjVbTT6IQmNUSlg4p14hOag7LGylnpx4ELKhOYm1JsYaNMArAlMXcf/XQSpIDHQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ufNRUXaf; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733537428; c=relaxed/simple;
+	bh=3J2EF9YtQT2peRcQrmwArqJaQm9OgkK2kKRfxO+0Fbs=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=sLSxlIDywN1HQN44pM5iGSSMkYaDeXz7a/TT/bzSPRpxpTFzM3jmXIDiSoKuhzZj+SFmyXygxGTtTUWTtCHdT0YK9alKMERPjY/htYq6vn8jp/t8vvhwm4DshCHvIsjxsA0wBOcbuy3iGVdWf3/lhdCLYdoeUX/AgOgoRyIaems=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KY4QOta5; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ufNRUXaf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7C22C4CED1;
-	Sat,  7 Dec 2024 01:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733535941;
-	bh=3B9wYauNsdy+dtcMCJ5A12M6lF7rh/eWp7M1cNCnY/M=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ufNRUXafqEFBNDL/Vw+HgivSK+GQtsTlhN80kSf4e6z+C2MmvNcjuDixLii0hobGB
-	 1hHiWoEN92uSWA/xThjTRDgz3JCO5EmtFT9vagKsB3n/RPKA0btfXa85fODuv/uWms
-	 5ElV39Di748YelRB1KTotaLfIsHL9RPuC1g6gZuTFe+6806QghRiNfISuuxT449TbQ
-	 sQEUmyUKMqwduPqe2ElKL9dfCxq3WUB3b/oS7xP48QfnTJHrUKNgffstxB3mbqDKzb
-	 HdKGsnDoSLwThrUSOqX0M4noXGwwu1mgjhibhqVaiFxfTMFsbdt1C6TQJW1ZqHe4pt
-	 SRkZEKVt9CHNQ==
-Date: Fri, 6 Dec 2024 17:45:40 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next v2 6/7] mptcp: cleanup mem accounting.
-In-Reply-To: <152364cf85476115c84f435d76a8f04da9e2d089.1733486870.git.pabeni@redhat.com>
-Message-ID: <7eb7bd25-b6b2-9561-bec3-7b51020a21fb@kernel.org>
-References: <cover.1733486870.git.pabeni@redhat.com> <152364cf85476115c84f435d76a8f04da9e2d089.1733486870.git.pabeni@redhat.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KY4QOta5"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b6c375b4f0so37468185a.3
+        for <mptcp@lists.linux.dev>; Fri, 06 Dec 2024 18:10:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733537425; x=1734142225; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O3huexnSo0VMBIfPynxY6EUYCT3Tqpm3F2h9wiN6epY=;
+        b=KY4QOta5aA8xm4FzGKAc8gZr/u5z3Iv4cMpPwgMxd3PoQQgJnRMfc9wfbuQ1HnqiWX
+         Z4DF6Q0gH6bIu/oI3kHBbE9/yKRgwdAtnwU1lXb8HSfDqw6x0l6z4BE4fBIw6Y/sW07k
+         A+HaJferfssJ1pntTgZ3J+dcJMKmUDkObAKeIL9VZwdAMtSKjfJuUBeESr1SpK8nYr7+
+         u61heVeZ7SWRMTdCWmnhU3ohNQ0wvC5Iu5e3A+R68myYjfYc/VPx63ioRcNCb8I5Mq51
+         EfPzasfVhJcvEjOB4jqh+6VkAH0tWDWJUM4rO+bQWdzTJusAfyw35Oy8BDiC3pRlLPRB
+         FyNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733537425; x=1734142225;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=O3huexnSo0VMBIfPynxY6EUYCT3Tqpm3F2h9wiN6epY=;
+        b=FrcjVZ49uGfzTyf0kwKt16LCBDApBCBQR4cMa3aBWBITE75dNX0moas51rzeymFbFr
+         SikPnFCpwSom+skGNItva2/W79PGEtivdpO5AGHWmaaZa48p+sBFZwBaefLA9suy0OMw
+         pC59Ucq7dTjrBqqs7pcvjnJXqWvhRJfV6Z8Y9Mg7YJDknQEG76TnrQEVuH68HO2lYcXq
+         uMBzQugPMITZ7/K1SYO4scReTIDYeNxp9sw15+o0RNf2C/m0tAwxV3faHmDG1wVIhI+Z
+         gS334yEek6i11tSpYYnX2QhTE4LF0cdOvDVmgN64vwXtMrKZrAxojxqhGt10qCgsaV+4
+         y6Vw==
+X-Gm-Message-State: AOJu0Yw88pxhyoMKlz5U73S+A+I7lxhJugeH95dTljmkC61MIzdP/6nn
+	7OueRNcfff5wCMS5FbhgWgtzt6iJfCJITTHlTl4ufT5PzoVRBkoN8JvL
+X-Gm-Gg: ASbGncsB1+Fhrhyl77B6DviMeOkmrYRPBa8toPhlScbCqRewsZuRbMqbhLFS2U1kHlN
+	PoKt6u/q9BeWuHTFUckcw0WG1vV5ntXgI6tR3fQOctDwcFRi5PJp3B6mDtvXSmpqnR0arjDPkZP
+	1gJLuUkALfWvomEttbXV6uJYjV9wMPR5pbrTRdGk7+M241x7Vy7+gpnGaa5B3+XRPkgua45NrGa
+	r5+O+cPGRpGHVduJ6KQdMMysUZjWVZ6rfKisTX+TBrou2xdPW5zhXCLX+0kEA==
+X-Google-Smtp-Source: AGHT+IELVfnT5albVS8f2CDrZmRU33jfKi/0/1mDyZA1yncBHp10BJ96/WBiOa3gFMI84c4/temoPg==
+X-Received: by 2002:a05:620a:2956:b0:7b6:6c46:550 with SMTP id af79cd13be357-7b6bcae3e75mr646597085a.20.1733537425398;
+        Fri, 06 Dec 2024 18:10:25 -0800 (PST)
+Received: from [127.0.0.1] ([20.55.14.168])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b6b5a465f6sm230682985a.19.2024.12.06.18.10.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 06 Dec 2024 18:10:24 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1733533215.git.geliang@kernel.org>
+References: <cover.1733533215.git.geliang@kernel.org>
+Subject: Re: [PATCH mptcp-next 0/7] BPF path manager, part 2
+Message-ID: <70d0e4b6-743b-b1d4-86f5-a573bcad684f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 07 Dec 2024 02:10:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Fri, 6 Dec 2024, Paolo Abeni wrote:
+Hi Geliang,
 
-> After the previous patch, updating sk_forward_memory is cheap and
-> we can drop a lot of complexity from the MPTCP memory acconting,
-> removing the custom fwd mem allocations for rmem.
->
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> v1 -> v2:
-> - keep 'snd_una' and recovery-related fields under the msk
->   data lock
-> - dropped unneeded code in __mptcp_move_skbs()
-> ---
-> net/mptcp/fastopen.c |   2 +-
-> net/mptcp/protocol.c | 115 +++----------------------------------------
-> net/mptcp/protocol.h |   4 +-
-> 3 files changed, 10 insertions(+), 111 deletions(-)
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index ad940cc1f26f..a0d46b69746d 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -278,7 +278,6 @@ struct mptcp_sock {
-> 	u64		rcv_data_fin_seq;
-> 	u64		bytes_retrans;
-> 	u64		bytes_consumed;
-> -	int		rmem_fwd_alloc;
-> 	int		snd_burst;
-> 	int		old_wspace;
-> 	u64		recovery_snd_nxt;	/* in recovery mode accept up to this seq;
-> @@ -293,7 +292,6 @@ struct mptcp_sock {
-> 	u32		last_ack_recv;
-> 	unsigned long	timer_ival;
-> 	u32		token;
-> -	int		rmem_released;
-> 	unsigned long	flags;
-> 	unsigned long	cb_flags;
-> 	bool		recovery;		/* closing subflow write queue reinjected */
-> @@ -384,7 +382,7 @@ static inline void msk_owned_by_me(const struct mptcp_sock *msk)
->  */
-> static inline int __mptcp_rmem(const struct sock *sk)
-> {
-> -	return atomic_read(&sk->sk_rmem_alloc) - READ_ONCE(mptcp_sk(sk)->rmem_released);
-> +	return atomic_read(&sk->sk_rmem_alloc);
-> }
+Thank you for your modifications, that's great!
 
-Hi Paolo -
+Our CI did some validations and here is its report:
 
-Minor change: this helper is now exactly the same as sk_rmem_alloc_get(), 
-so use that existing helper instead.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/12208688734
 
-Thats actually the only suggestion I have for v2! Good to delete code and 
-improve performance. I also think the release_cb approach on rx is a good 
-idea because it could be further leveraged to help with redundant 
-schedulers (our main problem there was trying to trigger sends on other 
-subflows when we couldn't acquire the msk lock).
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/ebd7946b8eb8
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D915561
 
-- Mat
 
->
-> static inline int mptcp_win_from_space(const struct sock *sk, int space)
-> -- 
-> 2.45.2
->
->
->
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
