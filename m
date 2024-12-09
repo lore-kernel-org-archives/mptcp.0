@@ -1,126 +1,125 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C57714F12D
-	for <mptcp@lists.linux.dev>; Mon,  9 Dec 2024 10:19:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D466F130AC8
+	for <mptcp@lists.linux.dev>; Mon,  9 Dec 2024 10:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733739569; cv=none; b=bUiDdnWiM+lXFf8hX4QbTfUjsrWqzJ40SZLV0bKTlSi6uzIgfr8QXkwY1UmUi+aOZ5y1yWDzVdBIbgvEW12j1sp4JYdWybRO8kyP5UGVFGdWq96DxMdAm2c26iNIXD4Kk0m/Aidu552NIL9VnUxWTU4LQ39mZ8wALmOeXx/JlKw=
+	t=1733741616; cv=none; b=hc4ofXtZf5G581GKcQ6wvRFsJjKI3gfAc6bVxNv26cjbDtzCnz/66viQluI+SLtksT8JVn9M8y79lMdkCdNAPy5AVPpEx2VMW7q47o2MGFM+CB2BXeEDkbEU8YSNkmB6tOGTSfjomQxuM7V75H/jt5qC9LWepNfwM2C5D63ujYU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733739569; c=relaxed/simple;
-	bh=ir0eMn2cU5E1ZYPf41J9jPgI7dgJxqUiO/AYVDz2kdI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=UtVvxwuehjJeRvRMjHOw6FhoCBCItaURXmR6QrilOWZ/qyPm8TJcUOrLLiGiNVcYUN5HM+hSffuy3Wg57Y434zYMIC3CdE+LSe6saX4lpMksQsX45QEwnBBKWmj53BSuy7x8YmW1R2bMrwhl2Z73PviMSZKpL3aXAn73aK3rMzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
-Received: from mail.maildlp.com (unknown [172.18.186.31])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y6Hnn6XVrz6K9NY;
-	Mon,  9 Dec 2024 18:16:13 +0800 (CST)
-Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
-	by mail.maildlp.com (Postfix) with ESMTPS id 38B411403A1;
-	Mon,  9 Dec 2024 18:19:24 +0800 (CST)
-Received: from [10.123.123.159] (10.123.123.159) by
- mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Mon, 9 Dec 2024 13:19:21 +0300
-Message-ID: <a24b33c1-57c8-11bb-f3aa-32352b289a5c@huawei-partners.com>
-Date: Mon, 9 Dec 2024 13:19:19 +0300
+	s=arc-20240116; t=1733741616; c=relaxed/simple;
+	bh=bHHYAydWdM/M/UnzrxvmoD0HEAVSxRyNxvA9QGNXcaI=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=T2hzCAGUaWWHnWAdLKbKu4t+pnFhbcYmHfGBt79ZeKi664mX6YRhGVh38g25+dzGoRkUHuKE3GXWNifd+fKpeoqvaa+RmAYAcS0xqCcd8EQvY4G2hXseixCOH5jXrWLfJt8KSvkfgo6HgWO+h4xzABJKMpOJaUYTDdU1/LkY/qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dE0pSVfd; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dE0pSVfd"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2166651f752so1924305ad.3
+        for <mptcp@lists.linux.dev>; Mon, 09 Dec 2024 02:53:34 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733741614; x=1734346414; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=W0+V7gouupcjEBhlKS7vOX7/aPmR9PE9kYjsTrDaPdY=;
+        b=dE0pSVfdhLSuPokC4ODMnv1UVkCrMniRn22xgQ1Eu41LD/BuMdE30oHHI9EfrjsiTp
+         22RVynGcQ84huly7mNuWqguR/inSHm9KAGZy7EVtqxKs4Tn1SvgIHn8tm4vmoVu7kWs7
+         XIS2hK8Q9QTJBcqIOwEuRAtHQFg3BIXjqVe0/VupNmPZPTor126HRG5joUd1ThVUU4mb
+         lSxnwlIBw71IMhYQ9akk2EwpZctK8v4nPQHmhKJ94W7dK9/o4KnceIfaAKt4laDV8mz/
+         OBGYXWyuPGkJoBCiT5v0Mhd5t1PuJDjcMHCdwVR3kI6+USUfmWKNKm2ZGd4pv+eEvvAW
+         1q8g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733741614; x=1734346414;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=W0+V7gouupcjEBhlKS7vOX7/aPmR9PE9kYjsTrDaPdY=;
+        b=DcEsdPAClLn+tSisg9ow4Lk8APPjClmemFmF7jw5vjmzWMGZQoc/deiT3V561WqQ0o
+         Tn5xpcWMJSJkKvRbuu3qoBbaOd9eRTfebkuIXqfvdQxAHdLIvZ91q4fUiixu3Af83UcL
+         0Vl4MkT+cOn3Sfxj6rCUcl5NvuqFrZGz917xY7U2hJxZ5cUpTKqdCbLBYDDCUAPr7CAT
+         Wq7cf+HASa3kxLPr1pepJVNa/EQQf7xj1utna61TIv3Y8Y/4sO6QYhGdnJpSISBnGwSL
+         5Zm6vq/2+HqsPM+cxHp5/8++bBLvR+ui60bDb2+PL3BMSax483y22uwKdCRh+SBLpSlc
+         XzWw==
+X-Gm-Message-State: AOJu0YxAKd5DdUGVe8qw1dW5eK405zycsEdf8BWeX6njBCYkdbADzBKk
+	C1go2J9BnoefDt5K3P+getuLLbBd3PfaMfE5wh1Vo/yfYWOwSnuKtCaQ
+X-Gm-Gg: ASbGnctPdIvZSA37TzEy6usgTDkA89suV8GG5zzGaZzBeeecmf2P/R2H7Qwx78raElL
+	g2Hb7O6I1ALD9QeZ4lh4nd3VGee26+p+sCV3QAesfuY7BgRNByZLfLbYHTSUgSs/PLi7l3E2WvG
+	v2CvioXgf40x5c2ESCpXanz+U9EQVP+wGsebCuAg/9Yb5yCJljNznjGa7o6X0SFyiCiqk8Xt5UN
+	W/KQ5cld/X6FdMvhWgHjryu3Z805Koy/9/S7RG8WJNdw7HXVZIO3J1YJ+PPyY4=
+X-Google-Smtp-Source: AGHT+IF06pfTn492A2Sc0leY0ZIwOeU/a5j3IMqiKwhsGINkZEE1dxoN5WmDd1HaRsKEZefqPuxIAg==
+X-Received: by 2002:a17:902:d4cf:b0:215:9649:635a with SMTP id d9443c01a7336-21614d6998fmr139998815ad.17.1733741614053;
+        Mon, 09 Dec 2024 02:53:34 -0800 (PST)
+Received: from [127.0.0.1] ([4.227.115.138])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8f29c17sm70203535ad.244.2024.12.09.02.53.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 09 Dec 2024 02:53:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1733737459.git.tanggeliang@kylinos.cn>
+References: <cover.1733737459.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v10 0/9] use bpf_iter in bpf schedulers
+Message-ID: <907a5024-30f2-17e9-a36e-6e40cc996435@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 09 Dec 2024 10:53:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Content-Language: ru
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>, Matthieu Baerts
-	<matttbe@kernel.org>
-CC: <gnoack@google.com>, <willemdebruijn.kernel@gmail.com>,
-	<matthieu@buffet.re>, <linux-security-module@vger.kernel.org>,
-	<netdev@vger.kernel.org>, <netfilter-devel@vger.kernel.org>,
-	<yusongping@huawei.com>, <artem.kuzin@huawei.com>,
-	<konstantin.meskhidze@huawei.com>, MPTCP Linux <mptcp@lists.linux.dev>, David
- Laight <David.Laight@aculab.com>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
- <20241018.Kahdeik0aaCh@digikod.net> <20241204.fahVio7eicim@digikod.net>
- <20241204.acho8AiGh6ai@digikod.net>
-From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
-In-Reply-To: <20241204.acho8AiGh6ai@digikod.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: lhrpeml500010.china.huawei.com (7.191.174.240) To
- mscpeml500004.china.huawei.com (7.188.26.250)
 
-On 12/4/2024 10:35 PM, Mickaël Salaün wrote:
-> On Wed, Dec 04, 2024 at 08:27:58PM +0100, Mickaël Salaün wrote:
->> On Fri, Oct 18, 2024 at 08:08:12PM +0200, Mickaël Salaün wrote:
->>> On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
->>>> Hi Mikhail and Landlock maintainers,
->>>>
->>>> +cc MPTCP list.
->>>
->>> Thanks, we should include this list in the next series.
->>>
->>>>
->>>> On 17/10/2024 13:04, Mikhail Ivanov wrote:
->>>>> Do not check TCP access right if socket protocol is not IPPROTO_TCP.
->>>>> LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
->>>>> should not restrict bind(2) and connect(2) for non-TCP protocols
->>>>> (SCTP, MPTCP, SMC).
->>>>
->>>> Thank you for the patch!
->>>>
->>>> I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
->>>> treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
->>>> see TCP packets with extra TCP options. On Linux, there is indeed a
->>>> dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
->>>> because we needed such dedicated socket to talk to the userspace.
->>>>
->>>> I don't know Landlock well, but I think it is important to know that an
->>>> MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
->>>> will do a fallback to "plain" TCP if MPTCP is not supported by the other
->>>> peer or by a middlebox. It means that with this patch, if TCP is blocked
->>>> by Landlock, someone can simply force an application to create an MPTCP
->>>> socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
->>>> certainly work, even when connecting to a peer not supporting MPTCP.
->>>>
->>>> Please note that I'm not against this modification -- especially here
->>>> when we remove restrictions around MPTCP sockets :) -- I'm just saying
->>>> it might be less confusing for users if MPTCP is considered as being
->>>> part of TCP. A bit similar to what someone would do with a firewall: if
->>>> TCP is blocked, MPTCP is blocked as well.
->>>
->>> Good point!  I don't know well MPTCP but I think you're right.  Given
->>> it's close relationship with TCP and the fallback mechanism, it would
->>> make sense for users to not make a difference and it would avoid bypass
->>> of misleading restrictions.  Moreover the Landlock rules are simple and
->>> only control TCP ports, not peer addresses, which seems to be the main
->>> evolution of MPTCP.
->>
->> Thinking more about this, this makes sense from the point of view of the
->> network stack, but looking at external (potentially bogus) firewalls or
->> malware detection systems, it is something different.  If we don't
->> provide a way for users to differenciate the control of SCTP from TCP,
->> malicious use of SCTP could still bypass this kind of bogus security
->> appliances.  It would then be safer to stick to the protocol semantic by
->> clearly differenciating TCP from MPTCP (or any other protocol).
+Hi Geliang,
 
-You mean that these firewals have protocol granularity (e.g. different
-restrictions for MPTCP and TCP sockets)?
+Thank you for your modifications, that's great!
 
->>
->> Mikhail, could you please send a new patch series containing one patch
->> to fix the kernel and another to extend tests?
-> 
-> No need to squash them in one, please keep the current split of the test
-> patches.  However, it would be good to be able to easily backport them,
-> or at least the most relevant for this fix, which means to avoid
-> extended refactoring.
+Our CI did some validations and here is its report:
 
-No problem, I'll remove the fix of error consistency from this patchset.
-BTW, what do you think about second and third commits? Should I send the
-new version of them as well (in separate patch)?
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): =
+Unstable: 1 failed test(s): bpftest_test_progs_mptcp =F0=9F=94=B4
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/122332=
+29582
+
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/1ea2234c1f8a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D915852
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
