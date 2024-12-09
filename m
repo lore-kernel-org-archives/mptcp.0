@@ -1,114 +1,95 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f182.google.com (mail-il1-f182.google.com [209.85.166.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C7F215182;
-	Mon,  9 Dec 2024 12:28:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CFEF233135
+	for <mptcp@lists.linux.dev>; Mon,  9 Dec 2024 13:34:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733747309; cv=none; b=noMoK5Didh0D2mdUqXAFL4csfRAdb/f1/cJeA2Z/9HnD2Q13iJxjPwlITrgOpkq/nP84Caja32Y5PSaIMSdq8XAD/s/Htf6hH51UeqN+UjgoM2nbCUWo7zLZuOEuBzU0OBymGZu0WPb5+tFni2e/tiSk/FMA7a9+w5ns9xv/Uys=
+	t=1733751263; cv=none; b=PWjsDe7d+uekJElun7HjBDTi56rTXAhd6TksvfRvwTL9eEZM/8aAuq5SyTY5Ro7GgN+8hu81H02B+Ver9bfpLg5SX+4FsdRPZtsofBPOpRuYIO5Nna3buHHSgVPtgYy+zbfnKVyk5HQ7rfW40BLCKQSvEvAfyw+DPSiGKKd+gZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733747309; c=relaxed/simple;
-	bh=96qekPURRT9CPv7EaITNBsfs8R1g6rJjI3dvF1dWY50=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QnDU0Z9y77RafOV6mjXNBWPBhwitrJBSsKXCjdFN7gDO6IMPO6uGidSiFsFir3HX/akCkgrPYMlf2W0bTNo2BnUjZaXP+brgNir03ILOPbduQycbxcrPfy8b8hxNqKmh2eoYdt4j3dUff0nKD5/JVoSWHDDvwhuwIAYPrmfS33o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaOtwx72; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733751263; c=relaxed/simple;
+	bh=2XnCJO2Ir1RkGS9FPuM9lx46jfc3ddfFDKFy3P8d4s0=;
+	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
+	 To:Cc:Content-Type; b=XL6sGB4K6Mtnc9mRGOZeAQNWjtXGP3n8QNHb51lLPr9BRnW/J0Ea6e2J/3wrPB42GaqGqvqxR4x/AC3JZIvufNyfFkD4uS5IELyOVUQWVX8y59jwNzUcDE9vxCK3nF7fpzHppR6TycYwU94l2F9vIXhgpKW/KmxTyAkfF1NrtSc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=H+gAb2HB; arc=none smtp.client-ip=209.85.166.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaOtwx72"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FB2C4CED1;
-	Mon,  9 Dec 2024 12:28:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733747308;
-	bh=96qekPURRT9CPv7EaITNBsfs8R1g6rJjI3dvF1dWY50=;
-	h=From:Date:Subject:To:Cc:From;
-	b=IaOtwx72TJOM8FmSNwX9UPVH33o/eXVfCbayMh3fN6atkwilJHVARJleAOMnuV+zU
-	 Tfu9/eYaSCYjjMl9m5aB7Yr0tJaYJbQD5OicivPISp4E/33izR6WjF0Ar5ZfM1qCUo
-	 1ZVyvQqc905YetYJk+Rw+EIah2UIwI+ILuObDe8dw5P0r4WZzrA867zmx19ymhgb+c
-	 cD1Wny0HMD62CK5FiXAhMPG27a2efDeiClTTT+dYgbADPwPJPqmO+0yeed5QmtWxTu
-	 LBN5VK+6/8t3PTpQnogsFuZAJj1mRf8JdlKotZqC/vPcaxPne6WCD7FsQ+9kV8Heuw
-	 MfqmehcqC704A==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 09 Dec 2024 13:28:14 +0100
-Subject: [PATCH net] tcp: check space before adding MPTCP SYN options
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="H+gAb2HB"
+Received: by mail-il1-f182.google.com with SMTP id e9e14a558f8ab-3a8160382d4so11257215ab.0
+        for <mptcp@lists.linux.dev>; Mon, 09 Dec 2024 05:34:21 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20230601; t=1733751260; x=1734356060; darn=lists.linux.dev;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=2XnCJO2Ir1RkGS9FPuM9lx46jfc3ddfFDKFy3P8d4s0=;
+        b=H+gAb2HBr5p2rEh3EKXfEH9EurSPVJNETeyKSYb+lLjVjHH8BbeU4rI99Iinfp1aQK
+         RMDVzWtAdN/BN5wsdhac+raTdIuhHVphM/Jv1IG8lf5Stj1ThdqWDaT9WsG6Si2bvh/k
+         J2mCIXQxvLjhwQmZHCRrNrzsVqh0E4eouelW2tKCC5rOKcqsi/AaNpw0AsmdpaKPiLeb
+         wK1nyOq1CHXJRFuXllfnF8+RKbf7w7BWtAnUnv6hDXvRuJ34QWPx3ENyrEt3MVAsJr0+
+         ZpzNGXTDi+2DU2ycziZWSt80t0lmG6f/YjOG9QDokOxGwZWQvqJ9/cKCua4bU1YZ1d6A
+         3CBQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733751260; x=1734356060;
+        h=content-transfer-encoding:cc:to:subject:message-id:date:from
+         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=2XnCJO2Ir1RkGS9FPuM9lx46jfc3ddfFDKFy3P8d4s0=;
+        b=r8jg6+logTYMbCjcOSke7/eCgpmljTvApfvbEy1XR2RhLHXQtbxxZ6B88j1LA+PMop
+         teBM6WEZrjeZo7M8NFlQuVl2GMkLkE/zHr5nWQuWRdn4mfWtbig+8El5QZZteDP6+GEh
+         sdGzudNed6wLIbBiSgloG0f0aN/L0NN0R3WaDEKwOyIWNvmlTASVFVALx3dR9w2p1EeV
+         THwEUPT9SGPCSl11YdyzQnyVSYLFy3tVC/5d7t5y8xVoPYU+TBIvWK1ClRU7BNbs4S/A
+         jK6brZBvzoyZ2exWdqhwNGc73o0+zANvLqJF07io7Psxy7DkdD17VdQCdg86K43tS1uy
+         OXpg==
+X-Gm-Message-State: AOJu0YzjY5TeBGTevcuxht8Cw85Xxfb4JB9V4Srek9aXCv7tL8SeaJQU
+	WlFgXtnQCugP6KSwLhX7qE4omiBHDX/llo3lm7Ou1oMYS6THtFHYgs/zdhXDJN/QKAJwgqJr3th
+	QKeJ0dDKRNy3PEeayd7anBtJR32l4qR4X3DqL
+X-Gm-Gg: ASbGnctV8BUB/lTkXBZFUAQcHJ7bfBGiok0u8sVgSB4J9VCKp0n5EPrH57TCLI+5YPu
+	B3wO07CBjpuvZmzvC/0LkrCvA0O1WmA==
+X-Google-Smtp-Source: AGHT+IHRSd8liIwypeFGnJ2w4GP4iNsA1tFPI9rJi5aQdzanGH/U1dY5+7Sdd0pd0DZsUi7LvwuAbNc3wqFv/AS0+bQ=
+X-Received: by 2002:a05:6e02:1e06:b0:3a7:d082:651 with SMTP id
+ e9e14a558f8ab-3a811db1f7amr136023395ab.12.1733751260168; Mon, 09 Dec 2024
+ 05:34:20 -0800 (PST)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241209-net-mptcp-check-space-syn-v1-1-2da992bb6f74@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAF3iVmcC/x3MQQqEMAxA0atI1gZsUaFzlcGFxlSDTKc0Ikrx7
- haXf/F+BuUkrPCpMiQ+ROUfSpi6AlrHsDDKXBpsY1tjG4eBd/zFnSLSyrShxpEY9QrY9a41rvd
- +6jwUHxN7Od/3FwqD4b4fGSO2xnAAAAA=
-X-Change-ID: 20241209-net-mptcp-check-space-syn-5694196ffb5f
-To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
- Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>, 
- Christoph Paasch <cpaasch@apple.com>, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- MoYuanhao <moyuanhao3676@163.com>, stable@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1389; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=nPCn6NBI0G48CtFzPs6PjBztA1k4CjQRRvkUc0fG6I8=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnVuJpMV9nONeuraPornfimYUUzwPN62jJQcYJ7
- Jpiiz37qnKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ1biaQAKCRD2t4JPQmmg
- c0gQD/9ubKh62pWZgyumVBXpB07M57FiRTzFtYqJK7sFEpJU4CQy+zAFuAL1hjOudhbgM3Jr0bo
- Ppx+sEY0hoRzyyrxWl1da5OrPBfdMXH74ikF0seJ/AQDFgYSo9hYRq/6lAewKi35aTLcXRiwbYy
- IfUTVDeJSFITAJjw/xFZSkulEolusrg7sH4ZbBJNfiEBTTA6QbpvswNe19nHi9rOlzJT63n9u71
- HXXZPERhYx+7F0kXA93W2P9sUQTOt6JcZRheYbqZgLFcYR3/zK1ebhRRequygHiPZ9tLZlyC2CA
- Mw2mceD66DMYtZ5d/+ZeJlkYGztW8lpRnZPq9O8x3JbZzpcdRE7znn2qHgWZ+GblnEY75mAxUsU
- 6nce6vT083NnOHD7XkGzsxnT6gLFOOaheu6jyWxJlk1Lh7YMZuRYwPpk9sTiuu67mxHnSktSNM9
- RhbFT1I2rZEeDsF9RdrBspFu1852OavD5hHv/gvNhy+bkfvFc+qPWNo1f9FDI9yWrZtnFRr5U3+
- uE7OY8KlzsbiB+Wf2xpH0OgrWcppCrCCXYCsFJ1AAk2tB4NjwLeppDUaV2IYZGT8N/NugzW36LL
- ZIaeQP/CjkNRXH3N1TuP50A7jcgnlduVSY56ZYyANULlUuXdzjcMeThkjMgTAZOzqntvJ+n0biQ
- dBqbqdTyE2aLdiQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+References: <20241209-net-mptcp-check-space-syn-v1-1-2da992bb6f74@kernel.org>
+In-Reply-To: <20241209-net-mptcp-check-space-syn-v1-1-2da992bb6f74@kernel.org>
+From: Eric Dumazet <edumazet@google.com>
+Date: Mon, 9 Dec 2024 14:34:06 +0100
+Message-ID: <CANn89iLipfRa2jj7bXNQzx4ocgbD2C+z8+cYChQfPRwQ2SoiEw@mail.gmail.com>
+Subject: Re: [PATCH net] tcp: check space before adding MPTCP SYN options
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, "David S. Miller" <davem@davemloft.net>, 
+	David Ahern <dsahern@kernel.org>, Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+	Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>, Christoph Paasch <cpaasch@apple.com>, 
+	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, netdev@vger.kernel.org, 
+	linux-kernel@vger.kernel.org, MoYuanhao <moyuanhao3676@163.com>, 
+	stable@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 
-From: MoYuanhao <moyuanhao3676@163.com>
+On Mon, Dec 9, 2024 at 1:28=E2=80=AFPM Matthieu Baerts (NGI0)
+<matttbe@kernel.org> wrote:
+>
+> From: MoYuanhao <moyuanhao3676@163.com>
+>
+> Ensure there is enough space before adding MPTCP options in
+> tcp_syn_options().
+>
+> Without this check, 'remaining' could underflow, and causes issues. If
+> there is not enough space, MPTCP should not be used.
+>
+> Signed-off-by: MoYuanhao <moyuanhao3676@163.com>
+> Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing conne=
+ctions")
+> Cc: stable@vger.kernel.org
+> Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> [ Matt: Add Fixes, cc Stable, update Description ]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Ensure there is enough space before adding MPTCP options in
-tcp_syn_options().
-
-Without this check, 'remaining' could underflow, and causes issues. If
-there is not enough space, MPTCP should not be used.
-
-Signed-off-by: MoYuanhao <moyuanhao3676@163.com>
-Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing connections")
-Cc: stable@vger.kernel.org
-Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-[ Matt: Add Fixes, cc Stable, update Description ]
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/ipv4/tcp_output.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
-index 5485a70b5fe5a6039d19f4321c3c2ec8ecc6ffea..0e5b9a654254b32907ee9739f3443791104bd611 100644
---- a/net/ipv4/tcp_output.c
-+++ b/net/ipv4/tcp_output.c
-@@ -883,8 +883,10 @@ static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
- 		unsigned int size;
- 
- 		if (mptcp_syn_options(sk, skb, &size, &opts->mptcp)) {
--			opts->options |= OPTION_MPTCP;
--			remaining -= size;
-+			if (remaining >= size) {
-+				opts->options |= OPTION_MPTCP;
-+				remaining -= size;
-+			}
- 		}
- 	}
- 
-
----
-base-commit: 09310cfd4ea5c3ab2c7a610420205e0a1660bf7e
-change-id: 20241209-net-mptcp-check-space-syn-5694196ffb5f
-
-Best regards,
--- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
+Reviewed-by: Eric Dumazet <edumazet@google.com>
