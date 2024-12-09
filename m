@@ -1,125 +1,114 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D466F130AC8
-	for <mptcp@lists.linux.dev>; Mon,  9 Dec 2024 10:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 56C7F215182;
+	Mon,  9 Dec 2024 12:28:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733741616; cv=none; b=hc4ofXtZf5G581GKcQ6wvRFsJjKI3gfAc6bVxNv26cjbDtzCnz/66viQluI+SLtksT8JVn9M8y79lMdkCdNAPy5AVPpEx2VMW7q47o2MGFM+CB2BXeEDkbEU8YSNkmB6tOGTSfjomQxuM7V75H/jt5qC9LWepNfwM2C5D63ujYU=
+	t=1733747309; cv=none; b=noMoK5Didh0D2mdUqXAFL4csfRAdb/f1/cJeA2Z/9HnD2Q13iJxjPwlITrgOpkq/nP84Caja32Y5PSaIMSdq8XAD/s/Htf6hH51UeqN+UjgoM2nbCUWo7zLZuOEuBzU0OBymGZu0WPb5+tFni2e/tiSk/FMA7a9+w5ns9xv/Uys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733741616; c=relaxed/simple;
-	bh=bHHYAydWdM/M/UnzrxvmoD0HEAVSxRyNxvA9QGNXcaI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=T2hzCAGUaWWHnWAdLKbKu4t+pnFhbcYmHfGBt79ZeKi664mX6YRhGVh38g25+dzGoRkUHuKE3GXWNifd+fKpeoqvaa+RmAYAcS0xqCcd8EQvY4G2hXseixCOH5jXrWLfJt8KSvkfgo6HgWO+h4xzABJKMpOJaUYTDdU1/LkY/qs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dE0pSVfd; arc=none smtp.client-ip=209.85.214.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1733747309; c=relaxed/simple;
+	bh=96qekPURRT9CPv7EaITNBsfs8R1g6rJjI3dvF1dWY50=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=QnDU0Z9y77RafOV6mjXNBWPBhwitrJBSsKXCjdFN7gDO6IMPO6uGidSiFsFir3HX/akCkgrPYMlf2W0bTNo2BnUjZaXP+brgNir03ILOPbduQycbxcrPfy8b8hxNqKmh2eoYdt4j3dUff0nKD5/JVoSWHDDvwhuwIAYPrmfS33o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IaOtwx72; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dE0pSVfd"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-2166651f752so1924305ad.3
-        for <mptcp@lists.linux.dev>; Mon, 09 Dec 2024 02:53:34 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733741614; x=1734346414; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W0+V7gouupcjEBhlKS7vOX7/aPmR9PE9kYjsTrDaPdY=;
-        b=dE0pSVfdhLSuPokC4ODMnv1UVkCrMniRn22xgQ1Eu41LD/BuMdE30oHHI9EfrjsiTp
-         22RVynGcQ84huly7mNuWqguR/inSHm9KAGZy7EVtqxKs4Tn1SvgIHn8tm4vmoVu7kWs7
-         XIS2hK8Q9QTJBcqIOwEuRAtHQFg3BIXjqVe0/VupNmPZPTor126HRG5joUd1ThVUU4mb
-         lSxnwlIBw71IMhYQ9akk2EwpZctK8v4nPQHmhKJ94W7dK9/o4KnceIfaAKt4laDV8mz/
-         OBGYXWyuPGkJoBCiT5v0Mhd5t1PuJDjcMHCdwVR3kI6+USUfmWKNKm2ZGd4pv+eEvvAW
-         1q8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733741614; x=1734346414;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W0+V7gouupcjEBhlKS7vOX7/aPmR9PE9kYjsTrDaPdY=;
-        b=DcEsdPAClLn+tSisg9ow4Lk8APPjClmemFmF7jw5vjmzWMGZQoc/deiT3V561WqQ0o
-         Tn5xpcWMJSJkKvRbuu3qoBbaOd9eRTfebkuIXqfvdQxAHdLIvZ91q4fUiixu3Af83UcL
-         0Vl4MkT+cOn3Sfxj6rCUcl5NvuqFrZGz917xY7U2hJxZ5cUpTKqdCbLBYDDCUAPr7CAT
-         Wq7cf+HASa3kxLPr1pepJVNa/EQQf7xj1utna61TIv3Y8Y/4sO6QYhGdnJpSISBnGwSL
-         5Zm6vq/2+HqsPM+cxHp5/8++bBLvR+ui60bDb2+PL3BMSax483y22uwKdCRh+SBLpSlc
-         XzWw==
-X-Gm-Message-State: AOJu0YxAKd5DdUGVe8qw1dW5eK405zycsEdf8BWeX6njBCYkdbADzBKk
-	C1go2J9BnoefDt5K3P+getuLLbBd3PfaMfE5wh1Vo/yfYWOwSnuKtCaQ
-X-Gm-Gg: ASbGnctPdIvZSA37TzEy6usgTDkA89suV8GG5zzGaZzBeeecmf2P/R2H7Qwx78raElL
-	g2Hb7O6I1ALD9QeZ4lh4nd3VGee26+p+sCV3QAesfuY7BgRNByZLfLbYHTSUgSs/PLi7l3E2WvG
-	v2CvioXgf40x5c2ESCpXanz+U9EQVP+wGsebCuAg/9Yb5yCJljNznjGa7o6X0SFyiCiqk8Xt5UN
-	W/KQ5cld/X6FdMvhWgHjryu3Z805Koy/9/S7RG8WJNdw7HXVZIO3J1YJ+PPyY4=
-X-Google-Smtp-Source: AGHT+IF06pfTn492A2Sc0leY0ZIwOeU/a5j3IMqiKwhsGINkZEE1dxoN5WmDd1HaRsKEZefqPuxIAg==
-X-Received: by 2002:a17:902:d4cf:b0:215:9649:635a with SMTP id d9443c01a7336-21614d6998fmr139998815ad.17.1733741614053;
-        Mon, 09 Dec 2024 02:53:34 -0800 (PST)
-Received: from [127.0.0.1] ([4.227.115.138])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-215f8f29c17sm70203535ad.244.2024.12.09.02.53.33
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 09 Dec 2024 02:53:33 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1733737459.git.tanggeliang@kylinos.cn>
-References: <cover.1733737459.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v10 0/9] use bpf_iter in bpf schedulers
-Message-ID: <907a5024-30f2-17e9-a36e-6e40cc996435@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 09 Dec 2024 10:53:32 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IaOtwx72"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0FB2C4CED1;
+	Mon,  9 Dec 2024 12:28:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733747308;
+	bh=96qekPURRT9CPv7EaITNBsfs8R1g6rJjI3dvF1dWY50=;
+	h=From:Date:Subject:To:Cc:From;
+	b=IaOtwx72TJOM8FmSNwX9UPVH33o/eXVfCbayMh3fN6atkwilJHVARJleAOMnuV+zU
+	 Tfu9/eYaSCYjjMl9m5aB7Yr0tJaYJbQD5OicivPISp4E/33izR6WjF0Ar5ZfM1qCUo
+	 1ZVyvQqc905YetYJk+Rw+EIah2UIwI+ILuObDe8dw5P0r4WZzrA867zmx19ymhgb+c
+	 cD1Wny0HMD62CK5FiXAhMPG27a2efDeiClTTT+dYgbADPwPJPqmO+0yeed5QmtWxTu
+	 LBN5VK+6/8t3PTpQnogsFuZAJj1mRf8JdlKotZqC/vPcaxPne6WCD7FsQ+9kV8Heuw
+	 MfqmehcqC704A==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Mon, 09 Dec 2024 13:28:14 +0100
+Subject: [PATCH net] tcp: check space before adding MPTCP SYN options
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20241209-net-mptcp-check-space-syn-v1-1-2da992bb6f74@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAF3iVmcC/x3MQQqEMAxA0atI1gZsUaFzlcGFxlSDTKc0Ikrx7
+ haXf/F+BuUkrPCpMiQ+ROUfSpi6AlrHsDDKXBpsY1tjG4eBd/zFnSLSyrShxpEY9QrY9a41rvd
+ +6jwUHxN7Od/3FwqD4b4fGSO2xnAAAAA=
+X-Change-ID: 20241209-net-mptcp-check-space-syn-5694196ffb5f
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Florian Westphal <fw@strlen.de>, 
+ Christoph Paasch <cpaasch@apple.com>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ MoYuanhao <moyuanhao3676@163.com>, stable@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1389; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=nPCn6NBI0G48CtFzPs6PjBztA1k4CjQRRvkUc0fG6I8=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnVuJpMV9nONeuraPornfimYUUzwPN62jJQcYJ7
+ Jpiiz37qnKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ1biaQAKCRD2t4JPQmmg
+ c0gQD/9ubKh62pWZgyumVBXpB07M57FiRTzFtYqJK7sFEpJU4CQy+zAFuAL1hjOudhbgM3Jr0bo
+ Ppx+sEY0hoRzyyrxWl1da5OrPBfdMXH74ikF0seJ/AQDFgYSo9hYRq/6lAewKi35aTLcXRiwbYy
+ IfUTVDeJSFITAJjw/xFZSkulEolusrg7sH4ZbBJNfiEBTTA6QbpvswNe19nHi9rOlzJT63n9u71
+ HXXZPERhYx+7F0kXA93W2P9sUQTOt6JcZRheYbqZgLFcYR3/zK1ebhRRequygHiPZ9tLZlyC2CA
+ Mw2mceD66DMYtZ5d/+ZeJlkYGztW8lpRnZPq9O8x3JbZzpcdRE7znn2qHgWZ+GblnEY75mAxUsU
+ 6nce6vT083NnOHD7XkGzsxnT6gLFOOaheu6jyWxJlk1Lh7YMZuRYwPpk9sTiuu67mxHnSktSNM9
+ RhbFT1I2rZEeDsF9RdrBspFu1852OavD5hHv/gvNhy+bkfvFc+qPWNo1f9FDI9yWrZtnFRr5U3+
+ uE7OY8KlzsbiB+Wf2xpH0OgrWcppCrCCXYCsFJ1AAk2tB4NjwLeppDUaV2IYZGT8N/NugzW36LL
+ ZIaeQP/CjkNRXH3N1TuP50A7jcgnlduVSY56ZYyANULlUuXdzjcMeThkjMgTAZOzqntvJ+n0biQ
+ dBqbqdTyE2aLdiQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+From: MoYuanhao <moyuanhao3676@163.com>
 
-Thank you for your modifications, that's great!
+Ensure there is enough space before adding MPTCP options in
+tcp_syn_options().
 
-Our CI did some validations and here is its report:
+Without this check, 'remaining' could underflow, and causes issues. If
+there is not enough space, MPTCP should not be used.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): =
-Unstable: 1 failed test(s): bpftest_test_progs_mptcp =F0=9F=94=B4
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/122332=
-29582
+Signed-off-by: MoYuanhao <moyuanhao3676@163.com>
+Fixes: cec37a6e41aa ("mptcp: Handle MP_CAPABLE options for outgoing connections")
+Cc: stable@vger.kernel.org
+Acked-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+[ Matt: Add Fixes, cc Stable, update Description ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/ipv4/tcp_output.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1ea2234c1f8a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D915852
+diff --git a/net/ipv4/tcp_output.c b/net/ipv4/tcp_output.c
+index 5485a70b5fe5a6039d19f4321c3c2ec8ecc6ffea..0e5b9a654254b32907ee9739f3443791104bd611 100644
+--- a/net/ipv4/tcp_output.c
++++ b/net/ipv4/tcp_output.c
+@@ -883,8 +883,10 @@ static unsigned int tcp_syn_options(struct sock *sk, struct sk_buff *skb,
+ 		unsigned int size;
+ 
+ 		if (mptcp_syn_options(sk, skb, &size, &opts->mptcp)) {
+-			opts->options |= OPTION_MPTCP;
+-			remaining -= size;
++			if (remaining >= size) {
++				opts->options |= OPTION_MPTCP;
++				remaining -= size;
++			}
+ 		}
+ 	}
+ 
 
+---
+base-commit: 09310cfd4ea5c3ab2c7a610420205e0a1660bf7e
+change-id: 20241209-net-mptcp-check-space-syn-5694196ffb5f
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
