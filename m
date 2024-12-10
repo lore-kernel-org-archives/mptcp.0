@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7297778F4E
-	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:44:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD04678F39
+	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:46:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733831069; cv=none; b=Mwmo43eLr1GbN24cIQb51x0NbDk5eSH6955OiR8P+LXSPTqyCkOdKJRf2FTHymApN9mYo1YVjp6iFHOmUCwis6oIyskmsG91A7y1wQ2xmwLHvUr6f/bgBalEejssz1C/7mn7My/d8vFIPqLDBRzeVSNwnIuoc1qTGk8nwggiR78=
+	t=1733831163; cv=none; b=Gs6Hc4Kr3DByGmV3aNtbdAXt/N7VA+NWBVKQW3Rhhb6g0wLzGmayvE2OoEHfy2kTmUEuGQq8C1d7IRxTmgrlThqXESDbyMfPAlEwl4sUckXMSNech3lXd4CHMOugrUjfUHszv05s5AifutGFTpGbiPA0FfEU2CSvxZAgVNkUtcA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733831069; c=relaxed/simple;
-	bh=Kg8G6rOcjZ1kzbx0XBapOuhRzyCySDz114hK+ydktVw=;
+	s=arc-20240116; t=1733831163; c=relaxed/simple;
+	bh=2vnhEUl2NmutpHR6cmq+AitqzZSlldyBsoXiyVuuqX8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b4a4gB/nLxW7ruA4saIt9IUt9qId/IbH+qnSAiD04QJfWSn7lxigfS4lzc/y+6tELYwEQnFfK1CA66/PVNjEFDxpErn5kPUBcMLrUJQ7WGY2thOBdwmnyTT7k+JvvlDgwLQagkhUacNR3DbUUalqW/E67tarjMwuQQrgQAH0q8w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvfNRh4T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SGus7e4d2yydZbXrG5kv0fMEBesRZNs8kyp0nxH2Z2Mwk/nnTJwQ+zpnku1G/g8QUOkn6QeJ6CGST99Trfys1BV+kht1IRCBUt5WuQBi4Kam+PAgcLcnUWgNEhqpFv8tAkefGajXATde6+Vu+dCc7pQeIu/aZxa4bL8HFFOsVNw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyeFD5zQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvfNRh4T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44958C4CED6;
-	Tue, 10 Dec 2024 11:44:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyeFD5zQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94664C4CED6;
+	Tue, 10 Dec 2024 11:46:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733831069;
-	bh=Kg8G6rOcjZ1kzbx0XBapOuhRzyCySDz114hK+ydktVw=;
+	s=k20201202; t=1733831163;
+	bh=2vnhEUl2NmutpHR6cmq+AitqzZSlldyBsoXiyVuuqX8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kvfNRh4ThEI90zxQ6owbHMzZCIJUvEoomtEgWI7Lgw8zHo0QUYOXSrLHVQTDFp54J
-	 mhbW9sjm42J85/785XI8vfclJ/VwFzSpolIC3fFCgAc0LgmQKwQ2eR9E9/MdqAQgCX
-	 8c0QuA3kOFMWBjt1tnRtc2NVjkG2yC/or97+p0DlbL3TdENoxe8ulJdTgyAwjyzelW
-	 FUQzBSJTzAbMCDj0cYB+K9MN8HOOtBQZhi4AYEhw2kCvCjw0p6Q8xzirjBRKiRNJ4u
-	 ayKlpj13W4UBrFrKDxxQg47EahJRbMiV54Bud2+YVlLvkqS+PniC+nBbhxZOwONTGE
-	 fgpeasB9fyuvw==
-Message-ID: <c6206aad-94e5-4b4b-8e8f-a2926035c197@kernel.org>
-Date: Tue, 10 Dec 2024 12:44:26 +0100
+	b=NyeFD5zQV6kGnY5VfBgtRqWg1LxkfzH2qgiN4tNYxUfzeYP23oIqEhW20B5ADy1ol
+	 kt6N+RKx1hs2a85isqqwzh4aV4GxF4132S3rIKBcD6Y7+AyDGc+U56mWHFoA3Chalm
+	 bjQElklmm0qNYKiuHRBiGlIuNgP1Q/OIg4cNIO7Tz3XU0m/EOUhzj/VGxZp01svRIU
+	 CV4FbjRcsKUuctQV2vUcq51UeZwKzgsrJWj7hU1kZcHTH9fU97wNufHkw1G3p00go7
+	 w1/F2xUWuXIPYa21OeeL7wUH21H75q7NLKqPNHxsLnwrEv8Hek7+HvaDAVCJIjo4Kb
+	 n+omIUlMZmQvQ==
+Message-ID: <b21b4b4c-48ab-460e-8e41-1782ca9a28a7@kernel.org>
+Date: Tue, 10 Dec 2024 12:46:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/5] bpf: Allow use of skc_to_mptcp_sock in
- cg_sockopt
+Subject: Re: [PATCH mptcp-next v4 3/5] Squash to "bpf: Register mptcp common
+ kfunc set"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1733733573.git.tanggeliang@kylinos.cn>
- <b9f5c91345d3f545372463f0880c2617b2756728.1733733573.git.tanggeliang@kylinos.cn>
+ <1de02f9ee30ee67ec5eb4bfd9bdef9737e6cd4d8.1733733573.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,23 +87,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b9f5c91345d3f545372463f0880c2617b2756728.1733733573.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1de02f9ee30ee67ec5eb4bfd9bdef9737e6cd4d8.1733733573.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 On 09/12/2024 09:47, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Currently, bpf_skc_to_mptcp_sock() helper is not allowed to be used
-> in cg_sockopt. This patch adds this permission.
+> Drop bpf_mptcp_sk() and bpf_mptcp_subflow_tcp_sock() definitions. Use
+> bpf_skc_to_mptcp_sock() and mptcp_subflow_tcp_sock() in mptcp_subflow
+> bpf_iter selftests instead.
+> 
+> Address Martin's comments in v1:
+> 
+> - add null-check for bpf_mptcp_subflow_ctx.
+> - add KF_RET_NULL flags for bpf_mptcp_subflow_ctx.
+> - register this kfunc set to BPF_PROG_TYPE_CGROUP_SOCKOPT only,
+>   not BPF_PROG_TYPE_UNSPEC.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/bpf.c | 20 +++++---------------
+>  1 file changed, 5 insertions(+), 15 deletions(-)
+> 
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index a0f49af85d57..f9ba0a46a9f1 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -218,21 +218,13 @@ struct bpf_iter_mptcp_subflow_kern {
+>  
+>  __bpf_kfunc_start_defs();
+>  
+> -__bpf_kfunc static struct mptcp_sock *bpf_mptcp_sk(struct sock *sk)
+> -{
+> -	return mptcp_sk(sk);
+> -}
+> -
+>  __bpf_kfunc static struct mptcp_subflow_context *
+>  bpf_mptcp_subflow_ctx(const struct sock *sk)
+>  {
+> -	return mptcp_subflow_ctx(sk);
+> -}
+> +	if (!sk)
+> +		return NULL;
 
-Clearer to add the reason: why is it useful?
+Is it enough for the restrictions?
 
-Something like this?
+I mean, from what I understood, this helper can be used from any CGROUP
+SOCKOPT hooks, with any type of 'struct sock *': then it could be called
+from a non MPTCP subflow socket, e.g. a socket with ULP data, no?
 
-Thanks to the previous patch allowing skc_to_mptcp_sock() to be used
-with MPTCP sockets, this permission allows this helper to be use it in
-CGroup BPF hooks, e.g. [gs]etsocktopt.
+Then should we not check this?
+
+  sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)
+
+(and even sk_fullsock(sk)?)
+
+(...)
 
 Cheers,
 Matt
