@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0E278F39
-	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:48:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3110423DEBA
+	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 12:03:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733831301; cv=none; b=o6TGozCEya2CoB7VQKujGBRYeTdLmCLKUZgCHiotiakpMDnyXuATRZx3CHW7uYD50DRNuicw6U5Kl99R8pgp64p2auk1xMTu+1bLaMFNtt9hlPbL9+GIqbFJ+qQaZXE41ipnIRPqzaLFGvjzF1O1Tjvn+Lm9u0ysLU7Fll5POag=
+	t=1733832188; cv=none; b=SiSqfaakUkNZtfpJjQ8lXUqiB9ekv8MwhP1S7JrnljN/v3B54vqX+etLeU/BusDb2AURiUqH71TobsgGQz7K70TUYPmfesMOdGlPatJgENygAMdzpsZn+SbUQufKoOM790qonzBnZvOe4fwplVu0SmCiVQ/CVheJo+KmgdZrlGE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733831301; c=relaxed/simple;
-	bh=L5Xk8jDjISpLLIw+P+EAh4Z1uVMmRoUDUmHL/CKyU6Y=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Aaa4y1ehCFtQfhU7r0MW5l4FveevE7OeiHG9aGvzT5AvVUUhJz4604wPkPAiwJ/LPANX6tLkgHX+H0eikbNnoIqqI5bXj2nwKTnih8Y/FpYigSNWVCSlOyOAxqZJIMk5cNsqY370rG+iD+K+Bn7U2cQZBWi1vp4G8yX87p4yThs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVthfNae; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1733832188; c=relaxed/simple;
+	bh=MSLmfQbkb1ZLQVnwXt1z/jWB1ffxioY5hZN3b/u8wnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=kXl/l1NOC+lmvNg7HemIXpZAz0wbDo2/zdBvi8mKPVqTymGcGnaQ4snoWUb7C158JqIU+DPZAA+vMZ/izW3iBy2reCkxwcmkwgJ3MJUD8/jHMd49/rm+AmvtiiaILHFUx33nVbhTriDVgshcEQ3Zxa4jIsvPaJGCxM8Bw9kQ9Kg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GFOGqt/v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVthfNae"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0852C4CED6;
-	Tue, 10 Dec 2024 11:48:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GFOGqt/v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38C74C4CEDE;
+	Tue, 10 Dec 2024 12:03:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733831300;
-	bh=L5Xk8jDjISpLLIw+P+EAh4Z1uVMmRoUDUmHL/CKyU6Y=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iVthfNaeyxkjuwcWbRFykLAbgmRMzhoxkmG7F1a31JV4YwKtpC5xY58u4Eiedz4gt
-	 1y4blSvjZHtShiSsij7z3mKlbHrgbSCVUYZR9BhpmJtOl1220Wxi9nF7KjFa3UQe9h
-	 C+aSNkrbgKZ/dBkmLvr7vw2jtDKYfUHA4ZEzwne2/RO56n3YbMwmcFcpAtU+ZdNZDA
-	 yDkVMH9xleqiXiD8ID1o+Tb1QWEBIvh3QJ8kH3Wongc+xvCfvptGD2KGLeBmWyqHX+
-	 Psb4u4Khvi2ltMnF4E64Ja39KhG0hppCcM1/SbJb4TGodh/WRRUW2329j2EDDyYr46
-	 0vXgqhV3G3CUA==
-Message-ID: <0bf1ea97-64d2-4e0a-b4e7-9627a7d8aa0a@kernel.org>
-Date: Tue, 10 Dec 2024 12:48:17 +0100
+	s=k20201202; t=1733832187;
+	bh=MSLmfQbkb1ZLQVnwXt1z/jWB1ffxioY5hZN3b/u8wnI=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=GFOGqt/v0x2n8JGZgs3D+3BPsiN8CAj1MUJwOCG9c9UE0V80ZjbCctd9FgJR6cO66
+	 /CzOsyZ3XdCRorEdJ0asUa7IfyOXYs3q9ee/bAyukwt3u6rtRW81eNgfYsbIIKqvft
+	 clkCUNdyJde+DB++G5hLLL/DdRpGWpR8lGyqhwgFKdv6tRhIbqr1I1rJf9FyvZIuFK
+	 vJpQ9732t7l73TtqJgN3cAnMrlYtYoJ8kMlouL9npWUQADhYRncqJeehDbxmSL6qCP
+	 UmcN0+KaxuoMFal7dE6gHAUOu8KgDrZ01Q25WbEUDCsVAZrgH9q/xnNB8lQfSPo4Jq
+	 mb+UUDltfsXdg==
+Message-ID: <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
+Date: Tue, 10 Dec 2024 13:03:05 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 4/5] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
+Subject: Re: [PATCH mptcp-next v2 1/7] mptcp: prevent excessive coalescing on
+ receive
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1733733573.git.tanggeliang@kylinos.cn>
- <f62b51d57b363348f46b6a77d427fbf121a7e944.1733733573.git.tanggeliang@kylinos.cn>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1733486870.git.pabeni@redhat.com>
+ <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,55 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f62b51d57b363348f46b6a77d427fbf121a7e944.1733733573.git.tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 09/12/2024 09:47, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Add "sizeof" and "alignof" checks.
-> 
-> Address Martin's comments in v1:
-> 
-> - bpf_iter_mptcp_subflow_new returns -EINVAL when msk socket lock isn't
->   held.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+On 06/12/2024 13:10, Paolo Abeni wrote:
+> Currently the skb size after coalescing is only limited by the skb
+> layout (the skb must not carry frag_list). A single coalesced skb
+> covering several MSS can potentially fill completely the receive
+> buffer. In such a case, the snd win will zero until the receive buffer
+> will be empty again, affecting tput badly.
+
+Good idea! Thank you for having looked at this!
+
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->  net/mptcp/bpf.c | 10 +++++++++-
->  1 file changed, 9 insertions(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index f9ba0a46a9f1..0563d3c6d9d3 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -232,12 +232,20 @@ bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
->  			   struct mptcp_sock *msk)
->  {
->  	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> +	struct sock *sk = (struct sock *)msk;
-> +
-> +	BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
-> +		     sizeof(struct bpf_iter_mptcp_subflow));
-> +	BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
-> +		     __alignof__(struct bpf_iter_mptcp_subflow));
->  
->  	kit->msk = msk;
->  	if (!msk)
->  		return -EINVAL;
->  
-> -	msk_owned_by_me(msk);
-> +	if (!sock_owned_by_user_nocheck(sk) &&
-> +	    !spin_is_locked(&sk->sk_lock.slock))
-> +		return -EINVAL;
+> No fixes tag because the problem is not very visible in practice
+> currently, but will be apparent after the rx refactor.
+> Still I hope this could affect positively the simlut flows self-tests
 
-Just to be sure, did you check it was always the case with the WIP
-scheduler and path-manager BPF programs you have?
+The modification looks safe enough to me: it should not make thing worst.
 
-We don't want to be too restrictive. (Or we need different helpers)
+If it helps, a Fixes tag can be added and next to the 'Cc: stable' tag,
+we can ask to backport this patch after a few weeks, no? e.g.
+
+  Cc: <stable@vger.kernel.org> # after -rc6
 
 Cheers,
 Matt
