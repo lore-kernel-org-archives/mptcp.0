@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BD04678F39
-	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:46:03 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0E278F39
+	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:48:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733831163; cv=none; b=Gs6Hc4Kr3DByGmV3aNtbdAXt/N7VA+NWBVKQW3Rhhb6g0wLzGmayvE2OoEHfy2kTmUEuGQq8C1d7IRxTmgrlThqXESDbyMfPAlEwl4sUckXMSNech3lXd4CHMOugrUjfUHszv05s5AifutGFTpGbiPA0FfEU2CSvxZAgVNkUtcA=
+	t=1733831301; cv=none; b=o6TGozCEya2CoB7VQKujGBRYeTdLmCLKUZgCHiotiakpMDnyXuATRZx3CHW7uYD50DRNuicw6U5Kl99R8pgp64p2auk1xMTu+1bLaMFNtt9hlPbL9+GIqbFJ+qQaZXE41ipnIRPqzaLFGvjzF1O1Tjvn+Lm9u0ysLU7Fll5POag=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733831163; c=relaxed/simple;
-	bh=2vnhEUl2NmutpHR6cmq+AitqzZSlldyBsoXiyVuuqX8=;
+	s=arc-20240116; t=1733831301; c=relaxed/simple;
+	bh=L5Xk8jDjISpLLIw+P+EAh4Z1uVMmRoUDUmHL/CKyU6Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=SGus7e4d2yydZbXrG5kv0fMEBesRZNs8kyp0nxH2Z2Mwk/nnTJwQ+zpnku1G/g8QUOkn6QeJ6CGST99Trfys1BV+kht1IRCBUt5WuQBi4Kam+PAgcLcnUWgNEhqpFv8tAkefGajXATde6+Vu+dCc7pQeIu/aZxa4bL8HFFOsVNw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NyeFD5zQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Aaa4y1ehCFtQfhU7r0MW5l4FveevE7OeiHG9aGvzT5AvVUUhJz4604wPkPAiwJ/LPANX6tLkgHX+H0eikbNnoIqqI5bXj2nwKTnih8Y/FpYigSNWVCSlOyOAxqZJIMk5cNsqY370rG+iD+K+Bn7U2cQZBWi1vp4G8yX87p4yThs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVthfNae; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NyeFD5zQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94664C4CED6;
-	Tue, 10 Dec 2024 11:46:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVthfNae"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A0852C4CED6;
+	Tue, 10 Dec 2024 11:48:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733831163;
-	bh=2vnhEUl2NmutpHR6cmq+AitqzZSlldyBsoXiyVuuqX8=;
+	s=k20201202; t=1733831300;
+	bh=L5Xk8jDjISpLLIw+P+EAh4Z1uVMmRoUDUmHL/CKyU6Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NyeFD5zQV6kGnY5VfBgtRqWg1LxkfzH2qgiN4tNYxUfzeYP23oIqEhW20B5ADy1ol
-	 kt6N+RKx1hs2a85isqqwzh4aV4GxF4132S3rIKBcD6Y7+AyDGc+U56mWHFoA3Chalm
-	 bjQElklmm0qNYKiuHRBiGlIuNgP1Q/OIg4cNIO7Tz3XU0m/EOUhzj/VGxZp01svRIU
-	 CV4FbjRcsKUuctQV2vUcq51UeZwKzgsrJWj7hU1kZcHTH9fU97wNufHkw1G3p00go7
-	 w1/F2xUWuXIPYa21OeeL7wUH21H75q7NLKqPNHxsLnwrEv8Hek7+HvaDAVCJIjo4Kb
-	 n+omIUlMZmQvQ==
-Message-ID: <b21b4b4c-48ab-460e-8e41-1782ca9a28a7@kernel.org>
-Date: Tue, 10 Dec 2024 12:46:00 +0100
+	b=iVthfNaeyxkjuwcWbRFykLAbgmRMzhoxkmG7F1a31JV4YwKtpC5xY58u4Eiedz4gt
+	 1y4blSvjZHtShiSsij7z3mKlbHrgbSCVUYZR9BhpmJtOl1220Wxi9nF7KjFa3UQe9h
+	 C+aSNkrbgKZ/dBkmLvr7vw2jtDKYfUHA4ZEzwne2/RO56n3YbMwmcFcpAtU+ZdNZDA
+	 yDkVMH9xleqiXiD8ID1o+Tb1QWEBIvh3QJ8kH3Wongc+xvCfvptGD2KGLeBmWyqHX+
+	 Psb4u4Khvi2ltMnF4E64Ja39KhG0hppCcM1/SbJb4TGodh/WRRUW2329j2EDDyYr46
+	 0vXgqhV3G3CUA==
+Message-ID: <0bf1ea97-64d2-4e0a-b4e7-9627a7d8aa0a@kernel.org>
+Date: Tue, 10 Dec 2024 12:48:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 3/5] Squash to "bpf: Register mptcp common
- kfunc set"
+Subject: Re: [PATCH mptcp-next v4 4/5] Squash to "bpf: Add mptcp_subflow
+ bpf_iter"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1733733573.git.tanggeliang@kylinos.cn>
- <1de02f9ee30ee67ec5eb4bfd9bdef9737e6cd4d8.1733733573.git.tanggeliang@kylinos.cn>
+ <f62b51d57b363348f46b6a77d427fbf121a7e944.1733733573.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,63 +87,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1de02f9ee30ee67ec5eb4bfd9bdef9737e6cd4d8.1733733573.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f62b51d57b363348f46b6a77d427fbf121a7e944.1733733573.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
+
+Hi Geliang,
 
 On 09/12/2024 09:47, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Drop bpf_mptcp_sk() and bpf_mptcp_subflow_tcp_sock() definitions. Use
-> bpf_skc_to_mptcp_sock() and mptcp_subflow_tcp_sock() in mptcp_subflow
-> bpf_iter selftests instead.
+> Add "sizeof" and "alignof" checks.
 > 
 > Address Martin's comments in v1:
 > 
-> - add null-check for bpf_mptcp_subflow_ctx.
-> - add KF_RET_NULL flags for bpf_mptcp_subflow_ctx.
-> - register this kfunc set to BPF_PROG_TYPE_CGROUP_SOCKOPT only,
->   not BPF_PROG_TYPE_UNSPEC.
+> - bpf_iter_mptcp_subflow_new returns -EINVAL when msk socket lock isn't
+>   held.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/bpf.c | 20 +++++---------------
->  1 file changed, 5 insertions(+), 15 deletions(-)
+>  net/mptcp/bpf.c | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 > 
 > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index a0f49af85d57..f9ba0a46a9f1 100644
+> index f9ba0a46a9f1..0563d3c6d9d3 100644
 > --- a/net/mptcp/bpf.c
 > +++ b/net/mptcp/bpf.c
-> @@ -218,21 +218,13 @@ struct bpf_iter_mptcp_subflow_kern {
->  
->  __bpf_kfunc_start_defs();
->  
-> -__bpf_kfunc static struct mptcp_sock *bpf_mptcp_sk(struct sock *sk)
-> -{
-> -	return mptcp_sk(sk);
-> -}
-> -
->  __bpf_kfunc static struct mptcp_subflow_context *
->  bpf_mptcp_subflow_ctx(const struct sock *sk)
+> @@ -232,12 +232,20 @@ bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
+>  			   struct mptcp_sock *msk)
 >  {
-> -	return mptcp_subflow_ctx(sk);
-> -}
-> +	if (!sk)
-> +		return NULL;
+>  	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
+> +	struct sock *sk = (struct sock *)msk;
+> +
+> +	BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
+> +		     sizeof(struct bpf_iter_mptcp_subflow));
+> +	BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
+> +		     __alignof__(struct bpf_iter_mptcp_subflow));
+>  
+>  	kit->msk = msk;
+>  	if (!msk)
+>  		return -EINVAL;
+>  
+> -	msk_owned_by_me(msk);
+> +	if (!sock_owned_by_user_nocheck(sk) &&
+> +	    !spin_is_locked(&sk->sk_lock.slock))
+> +		return -EINVAL;
 
-Is it enough for the restrictions?
+Just to be sure, did you check it was always the case with the WIP
+scheduler and path-manager BPF programs you have?
 
-I mean, from what I understood, this helper can be used from any CGROUP
-SOCKOPT hooks, with any type of 'struct sock *': then it could be called
-from a non MPTCP subflow socket, e.g. a socket with ULP data, no?
-
-Then should we not check this?
-
-  sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)
-
-(and even sk_fullsock(sk)?)
-
-(...)
+We don't want to be too restrictive. (Or we need different helpers)
 
 Cheers,
 Matt
