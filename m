@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EE62478F4E
-	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:43:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7297778F4E
+	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:44:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733831039; cv=none; b=gHP+fPPFGSL/cNDUXTuXf7WCCxwZJrK7gerxRinuUlSOjNrxevWb2tRTwX0onlfnUnQuAmL70r0dYfSlfpmHjHOuEjk3pnLfA8EC3O54nK13qZl9fufnXs94oZ4eKyo/hEoYlo2zIosYu+iOSqGfGLC47JDpHb2GQmqsvWyae1g=
+	t=1733831069; cv=none; b=Mwmo43eLr1GbN24cIQb51x0NbDk5eSH6955OiR8P+LXSPTqyCkOdKJRf2FTHymApN9mYo1YVjp6iFHOmUCwis6oIyskmsG91A7y1wQ2xmwLHvUr6f/bgBalEejssz1C/7mn7My/d8vFIPqLDBRzeVSNwnIuoc1qTGk8nwggiR78=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733831039; c=relaxed/simple;
-	bh=etmHtKHbplj8a6fdAebEfuNDtiKWAMfTWL4HAswtOwg=;
+	s=arc-20240116; t=1733831069; c=relaxed/simple;
+	bh=Kg8G6rOcjZ1kzbx0XBapOuhRzyCySDz114hK+ydktVw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xy/YRYG49kztWhdJrFHN24OAvH1SWGt5QMLb3L5xwIq0eMkd9t5QcDfk9gCDY1XamVGq6lnzeLy1SLR4oq5/1TXanm2Kkz6eUgiCIqPJ+xq3dSw6vYj8gz/jxn5LYnuYq6aZuFtClpiTLV7YagH2gaQFkP+sm6Xqx3ugyNjDxR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N2e8QtqV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=b4a4gB/nLxW7ruA4saIt9IUt9qId/IbH+qnSAiD04QJfWSn7lxigfS4lzc/y+6tELYwEQnFfK1CA66/PVNjEFDxpErn5kPUBcMLrUJQ7WGY2thOBdwmnyTT7k+JvvlDgwLQagkhUacNR3DbUUalqW/E67tarjMwuQQrgQAH0q8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kvfNRh4T; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N2e8QtqV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8ECBC4CEE3;
-	Tue, 10 Dec 2024 11:43:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kvfNRh4T"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 44958C4CED6;
+	Tue, 10 Dec 2024 11:44:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1733831038;
-	bh=etmHtKHbplj8a6fdAebEfuNDtiKWAMfTWL4HAswtOwg=;
+	s=k20201202; t=1733831069;
+	bh=Kg8G6rOcjZ1kzbx0XBapOuhRzyCySDz114hK+ydktVw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N2e8QtqVajCLS5cgGNG5Ns/HFdWEyLCoP+z4bh7OkwqCgvoRuaqhvcoK2GbpZ/iwq
-	 tWf4D9VHr9Yo4Ian7TbgbRSY/cChfZEaM2zp2mxEj6Bjo+NqFR4SAK+oULmyHQpXvy
-	 PCHGYgUBzUuCySF1DOdVv0jN+2Zrz3xkxFcWesvmOOaxI7xcLI9NE4KbQ+OrLQ3YJC
-	 UVRCmmhfDn/ACPbwdvdEjDOlVGmjHr1tU3gz5fszkSnayH980b/nqtf9bElLhWrbK/
-	 z+lqJHyQmBExKzK7Rj+H7xcTzdpfcAs2CX1KSdirUpBkMu5SmB8GRoYl4kISZADSv8
-	 Sd5q0wuz8gKxg==
-Message-ID: <63a651c3-0b8a-470f-a283-f70ae9c87870@kernel.org>
-Date: Tue, 10 Dec 2024 12:43:55 +0100
+	b=kvfNRh4ThEI90zxQ6owbHMzZCIJUvEoomtEgWI7Lgw8zHo0QUYOXSrLHVQTDFp54J
+	 mhbW9sjm42J85/785XI8vfclJ/VwFzSpolIC3fFCgAc0LgmQKwQ2eR9E9/MdqAQgCX
+	 8c0QuA3kOFMWBjt1tnRtc2NVjkG2yC/or97+p0DlbL3TdENoxe8ulJdTgyAwjyzelW
+	 FUQzBSJTzAbMCDj0cYB+K9MN8HOOtBQZhi4AYEhw2kCvCjw0p6Q8xzirjBRKiRNJ4u
+	 ayKlpj13W4UBrFrKDxxQg47EahJRbMiV54Bud2+YVlLvkqS+PniC+nBbhxZOwONTGE
+	 fgpeasB9fyuvw==
+Message-ID: <c6206aad-94e5-4b4b-8e8f-a2926035c197@kernel.org>
+Date: Tue, 10 Dec 2024 12:44:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 1/5] mptcp: update
- bpf_mptcp_sock_from_subflow
+Subject: Re: [PATCH mptcp-next v4 2/5] bpf: Allow use of skc_to_mptcp_sock in
+ cg_sockopt
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1733733573.git.tanggeliang@kylinos.cn>
- <8f9c34611d46f96a0047928ac41b385faf743805.1733733573.git.tanggeliang@kylinos.cn>
+ <b9f5c91345d3f545372463f0880c2617b2756728.1733733573.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,81 +87,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8f9c34611d46f96a0047928ac41b385faf743805.1733733573.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b9f5c91345d3f545372463f0880c2617b2756728.1733733573.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 09/12/2024 09:47, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The input parameter of bpf_mptcp_sock_from_subflow() is an msk subsocket
-> of type IPPROTO_TCP. This patch extends it to accept an IPPROTO_MPTCP
-> socket. With this change, the function name bpf_mptcp_sock_from_subflow
-> is no longer appropriate, and it is renamed to bpf_mptcp_sock_from_sock.
+> Currently, bpf_skc_to_mptcp_sock() helper is not allowed to be used
+> in cg_sockopt. This patch adds this permission.
 
-It took me a bit of time to find the reason: why do you need this, why
-not adding a new helper, especially because you don't directly use it in
-this series.
+Clearer to add the reason: why is it useful?
 
-Please always clearly mention the reason, probably the most important
-bit in a commit message, even if it is obvious to you. I then suggest
-having a (hopefully) clearer commit message:
+Something like this?
 
-================================== 8< ==================================
-bpf: extend bpf_skc_to_mptcp_sock to MPTCP sock
-
-Currently, bpf_skc_to_mptcp_sock() can only be used with sockets that
-are MPTCP subflows: TCP sockets with tp->is_mptcp, created by the kernel
-from an MPTCP socket (IPPROTO_MPTCP). Typically used with BPF sock_ops
-operators.
-
-Here, this helper is extended to support MPTCP sockets, the ones created
-by the userspace (IPPROTO_MPTCP). This is useful for BPF hooks involving
-these sockets, e.g. [gs]etsocktopt.
-
-bpf_skc_to_mptcp_sock() uses bpf_mptcp_sock_from_subflow(). The former
-suggests any MPTCP type/subtype can be used, but the latter only accepts
-subflow ones. So bpf_mptcp_sock_from_subflow is modified here to support
-MPTCP socket, and renamed to avoid confusions.
-================================== 8< ==================================
-
-WDYT? Here the reason (bpf_skc_to_mptcp_sock supporting MPTCP sockets)
-is explained, and the title is clearer ("update X" is too vague).
-
-(...)
-
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index e9db856972cb..a0f49af85d57 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -188,8 +188,10 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
->  };
->  #endif /* CONFIG_BPF_JIT */
->  
-> -struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
-> +struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk)
->  {
-> +	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_MPTCP)
-> +		return mptcp_sk(sk);
->  	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
->  		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-
-Maybe we should avoid repeating some checks?
-
-  if (unlikely(!sk || !sk_fullsock(sk)))
-      return NULL;
-
-  if (sk->sk_protocol == IPPROTO_MPTCP)
-      return mptcp_sk(sk);
-
-  if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-      return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
-
-  return NULL;
-
-
+Thanks to the previous patch allowing skc_to_mptcp_sock() to be used
+with MPTCP sockets, this permission allows this helper to be use it in
+CGroup BPF hooks, e.g. [gs]etsocktopt.
 
 Cheers,
 Matt
