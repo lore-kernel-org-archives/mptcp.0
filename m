@@ -1,104 +1,121 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 42D5A79FD
-	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 09:00:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2CC8B1DC9A3
+	for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 11:42:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733821229; cv=none; b=ToJ+w9cN4JoAqvSdOUcMZLMgD+NX3vVW2NAdkzHVD5zwnmcnZ55b8LD7UxjjY7z+poVDGMJzb7FbLj2jqLOuQIKBsB1+KcgC6KgFzJCQFP0IJnBg+LaRxfUxo2R86SL8dSwp4TqRioYFnaFsk5u5p20/wzT2yzSBs4AOpykfN+8=
+	t=1733830953; cv=none; b=ZQkBs6UhqpiFpoYkgdBeKEKTbbWw1y83eLhRvtUgp+djGhFyO33YOdJkjHUuiN2DD2UBYT4qgJbgtwThI2wbME/yvNvxo8gaFehImtFcQIQ2oCszNIOod6MPDWfDBcnhUkSjXetaIDZpKJdILN/oMMlDLnWsVpDsMMeap9cbpfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733821229; c=relaxed/simple;
-	bh=+3Y6ekhb1DgE/vGrN9+ae8B6hV11aHxZAiKa/szBs2E=;
+	s=arc-20240116; t=1733830953; c=relaxed/simple;
+	bh=+N+ndlHg/veIKHnwO9YXHhJKq9GUhMkZRXw/2T3WjCg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=aZRxpQY34+/0T6vq8w+QVWcEAev4LhYNeV5khmZrvCUEACv8GDH2HaJtErXpxD86jSx+11Ncw/YYeJDEd5BzNRLAQRNyOefb3NDx2FTOC30Vy9o6O7gKQ3CL2CjyEgaDlGwtuach212wvRbK4XP4pwaKDNO1bnNjXBcs5IWiaf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=Vf1lhK+P; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=R8tHLhZQXCjH4xq72QS7QjGy3ZD6MCPQPlLRIE30Fl+FT31kqgYvqOXFdQNGwSybh3wxR1oJqANPAXeSHAjJYVPnJyX5LiPgelCEmXYiYyN7ZnpihzItDbkeK5IbUWMGFJTRY92LyflE8Fo47HEpwDK+HioSA1vw7xKV8zwiUFY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eY3SZO9o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="Vf1lhK+P"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1733821225;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=r/A7z091+Ipn5ZrHz4Xw0vmSlbf/xOK3qfiqNqA3/mk=;
-	b=Vf1lhK+POkaoRq+le3UXMcbUb48nAXQ43OjMctA+T77ygYhpHi3t/7zUyNgdt8gxXv5oxi
-	5niPWKh6tkNsjKSRW4SuLazRlg8jREgyKV5nT3qyM2/XM+Rz+t1/m15UjXIaM4NbN8Er+w
-	qYkMgl01paKZIQf2SHVvyYQNOc3aJpM=
-Received: from mail-qk1-f197.google.com (mail-qk1-f197.google.com
- [209.85.222.197]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-652-LsNf9sfpMeOpmnE8eUAuWQ-1; Tue, 10 Dec 2024 04:00:23 -0500
-X-MC-Unique: LsNf9sfpMeOpmnE8eUAuWQ-1
-X-Mimecast-MFC-AGG-ID: LsNf9sfpMeOpmnE8eUAuWQ
-Received: by mail-qk1-f197.google.com with SMTP id af79cd13be357-7b6e59d6638so35208885a.1
-        for <mptcp@lists.linux.dev>; Tue, 10 Dec 2024 01:00:23 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733821223; x=1734426023;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=r/A7z091+Ipn5ZrHz4Xw0vmSlbf/xOK3qfiqNqA3/mk=;
-        b=pDd5XE0p1h/bBZvHnWcmFAwFua9kodqqXZMG6HKy9VkxXKL3Kv3faAH3A7fKvpB6QC
-         AEIv/iGRUw69n2EaKL/VgqSyPVioII9590+95Yz0BEENscB0eLOR5amXdKcPHhbMUBN1
-         5bqWff5FNMqs+XOSyosWszake7v6fXcnidp+ZpesGf7Zu4yX4t7I00HbXl3J99Ee5ToW
-         Y3IdvsKYCVvMehMN+BUPg15YL7UCDGkuZ9JnjqGiOK5cr7C3Bz7qvkmSG8K/PSSWKKs+
-         gWpp8rgJu4TsvYfkCK1k4ZQ+gFQ+2zumrAbwxXueOuOs3NVfBfcZ5HRtz9XSNKAN7gzm
-         U+og==
-X-Gm-Message-State: AOJu0YyMswpOj3QWf6lGonLnRHHH8yHtp966kkTfGUQy9igtnJC5fHuX
-	6DKQtOa2amDyFuceqFUaiz6lBDfF5JLhekNHK/gGpyf3Nzo800CZXVhMUdTsDDKHdp99X2V6jxU
-	fBjm/XHGxT2yGOftEkTgHhbsGNkPBDY9wgoxhn9Vr/+CHvWv+mOLuFNgQIrk+
-X-Gm-Gg: ASbGnctAeZMiMS+rKhoBU5ffQH65QrdJw8Jaz0zpHPAcjlO/3c/XjHkCEcOaiC/yUz/
-	By+VOajsyZba/yltZJUoC/qTXb6eX2W6cU8hLg74ZlwXGc2dhpjqpZX51ok/YEUQRNIEaS3ai9r
-	7aEkYVD3IKyI/5oYqMOKfWChteCO6I/641+a9AGlDjPBbwGLO9DVm91uRoPf6oYwxWH0xHp9Diw
-	DWgMAbi2axRJOZ32gdfIJ1LCwLx8wa0WUFvqHXnOpmBcLLnVW6wHXRYmb2EMijTMBwpAv5X0xrZ
-	rLHSbh0XX20K+TE2HXv2/q39YA==
-X-Received: by 2002:a05:622a:1a26:b0:45d:82a0:5028 with SMTP id d75a77b69052e-46734ca2bcfmr247449351cf.1.1733821223238;
-        Tue, 10 Dec 2024 01:00:23 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IGbQ0JwgDHUdOJhOy8SD4lM626+T81hhlZUgESJqzmfaQydl18BqbCiAV97QKCuvsnZe0UKhg==
-X-Received: by 2002:a05:622a:1a26:b0:45d:82a0:5028 with SMTP id d75a77b69052e-46734ca2bcfmr247448931cf.1.1733821222902;
-        Tue, 10 Dec 2024 01:00:22 -0800 (PST)
-Received: from [192.168.1.14] (host-82-49-164-239.retail.telecomitalia.it. [82.49.164.239])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4676f1a44a7sm11669531cf.69.2024.12.10.01.00.21
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 10 Dec 2024 01:00:22 -0800 (PST)
-Message-ID: <b1aec5d2-0be6-42b2-811e-ba21038df9e7@redhat.com>
-Date: Tue, 10 Dec 2024 10:00:19 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eY3SZO9o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001B0C4CED6;
+	Tue, 10 Dec 2024 11:42:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1733830952;
+	bh=+N+ndlHg/veIKHnwO9YXHhJKq9GUhMkZRXw/2T3WjCg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eY3SZO9oosltkEFdS8UWXnm36vqcP73epOyDjv8Se/VrUEgL0NHZl8ZT66z6UyPlb
+	 IrEPD++5QoVf3WxZW62t7+vEwfTwGOEho3vIh6bIG1SfBuzFFCvq5f6P8bv7B+OMvk
+	 GZMfawh/QBnIAL9Hv+ACDFvUj6ZNMkkPtAwYcIlJ5HwPlhMOiabgPC315XSxise+1T
+	 NN/aFTTItyQIth/p+kYmiGn70iFmrMSTq71LP+kNxiD+U4VMud4lbWDSPEEXjIUzwO
+	 KLWKIMq/bbRVUnRmduIfWNJMUOAS3SVU7Qk78c7yVrWNTUR5nZcGd21CrZOj9qTJrz
+	 mf3UI56Rwd/Vg==
+Message-ID: <423e6c05-f564-4853-bb62-0b09c7ceb68f@kernel.org>
+Date: Tue, 10 Dec 2024 12:42:29 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 6/7] mptcp: cleanup mem accounting.
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1733486870.git.pabeni@redhat.com>
- <152364cf85476115c84f435d76a8f04da9e2d089.1733486870.git.pabeni@redhat.com>
- <7eb7bd25-b6b2-9561-bec3-7b51020a21fb@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <7eb7bd25-b6b2-9561-bec3-7b51020a21fb@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: z6XAhSH9mUkSlxGqgzF222qbTetH2G-INvQXZWHiSRg_1733821223
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
+ support"
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1733733573.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1733733573.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi,
+Hi Geliang,
 
-On 12/7/24 02:45, Mat Martineau wrote:
-> Minor change: this helper is now exactly the same as sk_rmem_alloc_get(), 
-> so use that existing helper instead.
+On 09/12/2024 09:47, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v4:
+>  - CI reports the following BUILD_BUG_ON fails on i386:
+> 
+>  BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) !=
+>  	      sizeof(struct bpf_iter_mptcp_subflow))
+> 
+>  Just like in bpf_iter_task_new(), change this "!=" to ">".
+> 
+> v3:
+>  - check sock_owned_by_user_nocheck(sk)/spin_is_locked(&sk->sk_lock.slock),
+>    instead of lockdep_sock_is_held(sk).
+>  - add "sizeof" and "alignof" checks.
+>  - drop bpf_mptcp_sk() and bpf_mptcp_subflow_tcp_sock() definitions. Use
+>    bpf_skc_to_mptcp_sock() and mptcp_subflow_tcp_sock() in mptcp_subflow
+>    bpf_iter selftests instead.
 
-If there are no strong opinion against that, I think it would be
-preferrable to do the removal in a separate patch. In fact, I have 2
-more follow-up patches doing the __mptcp_rmem() removal and some
-micro-optimization/cleanup for __mptcp_move_skb().
+Thank you for the new versions. I have some additional questions, see my
+comment on the individual patches.
 
 Cheers,
-
-Paolo
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
