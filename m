@@ -1,127 +1,183 @@
-Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A5B238E2C
-	for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 12:01:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43222246356
+	for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 15:25:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733918520; cv=none; b=rhKMR4i4d/oEDXUAggW7IqAq5foNFB9jpL9UBW1F+XrXEi0wx/cFiJhDBpPcBDveWAujZpn79APic7Ue9Vv/fSap23/XmZ02dqmODDlCqA+PwOxXbRamJNkX6dNOnMByZHv5Toihxpdr2UOgc78a2wAVcFRrTdKt6/pEHQVFFsg=
+	t=1733930703; cv=none; b=BQvH2oWYBhfJwfYP3cuw5EMWWgeRunU8O+U9Szgaz2LLSwDODK22EwK/jToOycjyli2Q9wHobU6F5RkNlC4dxloC44+52WbB66bKYwlsp5GV6vYlRxHjblanDMIriumVzlSoaruA3I6r4jG1sAj6ks1txHVshAi/EED2QIYOo/g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733918520; c=relaxed/simple;
-	bh=73wcfsW5B/TtiYDJZN0a7ryOP9iebtI/7Tj8j4TRAC8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=uQ+T3ynV448dNQ/qdcZ84BO9ZGCJzzOl5Gm/8HmXKG/N2UO73X9HHq8B8MukoVHNwKE3BYqLZmObZmLwRTzZth1s/lWRClT5rQZwlgTpsT7W1XZ9D/9tLJQ3iJ1M8yZt+/ShLp4KSCtiFN7euQzBZvfaxyt/WPiz4wEhZPgL4U0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMlMBRkV; arc=none smtp.client-ip=209.85.219.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMlMBRkV"
-Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6d8fa32d3d6so52911226d6.2
-        for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 04:01:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1733918518; x=1734523318; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=gQoawCMw9sjLfDi2RG3GRbnzbMRfrgOZklD5cWLFL/o=;
-        b=gMlMBRkVnhf08BYsfMcX8+ZX4MUcIe6v1jTso+LJC6iQppLrQWGHEQBAiuaLx0wLjl
-         t+saInJh/EBr6qC+b6mGFo/u4HPZTY2Yaxe3HWGjJJB9GRJvVmAE8eED0YK0biskLApY
-         3x1gy8dK8r07bgmqIIihUbrn4PhJ39V7p2o0Nn5MsMj3B6ZPeQvs6JD4b+TlV8UTjED0
-         BEZJKw0Be/UAvRRifkz5XX/biH7XwmWjGaEIO6pApL7s9QJU2tSomWnOKKsFSMTd3HFG
-         6P7uTTWMe3g0HPXpPVY+ZDxfRTLIr19aV81YTql2nUHL2ZM1Zr/4LJJN4kDOYQkQT9Bg
-         gjew==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1733918518; x=1734523318;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=gQoawCMw9sjLfDi2RG3GRbnzbMRfrgOZklD5cWLFL/o=;
-        b=MpC3hWsXgoQvCooAHBh4GzRnj9bWWc85JCtOXYoIs4RvU7VpEiWs5UAci3Uyx/2zPv
-         aEhzgmXsSvN4MXtDcFEhPebU918rfPLL0kxTbQC9UdNPKsmesh8MtGuHDALNPR73CFMZ
-         8JBz/k5LUL4ZulcMycQm5/M5uNZ6Qc/4ZaPtdCRybjSjL25gtwK3anYJFOYlH7SWyvPy
-         aWKpE//PQdgvldd5Soz39zcR+EvdcAUIrULEGE7OGZVmA+tSxJn9JUXJ10ZOrGslXZLR
-         szFOOFsU2HBxs0EMBYneEYwrrCwzrDQ/AjkN93LBesf1Vaz3uE3FEtbT3AQP//CsLCWw
-         3Vlw==
-X-Gm-Message-State: AOJu0YwtWj2XyRIO2NAhKt4UgpZg1v0xLOvGxfdt4UjB1FMxq6SMWSE/
-	gA/zG/AXbTvQOrvh8RX9Yh7pcdyRFHCy8Dpx0LFoo69xT1aUPi65CXqU
-X-Gm-Gg: ASbGncsB23iaL4LZLqZkRskhPln1eFZBe6jyylyktjEEQQAyGhD4mP5EY7m4ZQjAIik
-	LDcvA85831VcRZHweWYVVjMyIJFrSoqkPyB/CYlSo6rDOvghQeNyvi55TXu/cvYkcE0PKEyJTf5
-	tLfBKi3TdpLWDLRYHP6tbA7ngVmOp4ET+l4nnAcpOxmPFy61537/5CUsEcA3k6tOTV9jZr+mAPp
-	3dun8C8ymB2gJ+9XiQhiFnjDBEY0Ja/QIhR9v5bCzw9zirO+HM+Phy39bYJc3QsZh8YUg==
-X-Google-Smtp-Source: AGHT+IGKID+Bkohb0HH7x2B0YgteHHTtk7ytFF/EP8evIc9o5hwjEoDPIc8KxjjVen1hYvz/LYeQ9Q==
-X-Received: by 2002:a05:6214:e47:b0:6d1:7433:3670 with SMTP id 6a1803df08f44-6d934ad2d36mr51158016d6.4.1733918518167;
-        Wed, 11 Dec 2024 04:01:58 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.131.129])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8dabff3e7sm69635706d6.108.2024.12.11.04.01.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Dec 2024 04:01:57 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
-References: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
-Subject: Re: [mptcp-next] mptcp: fix invalid addr occupy
- 'add_addr_accepted'
-Message-ID: <3b0fc60e-4439-d281-9dc5-a3ab133b5d40@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Dec 2024 12:01:56 +0000
+	s=arc-20240116; t=1733930703; c=relaxed/simple;
+	bh=QhGvNRhHf+EfKH/Jqa3KlRs6b3KhLVO6NCuc/z2HsaY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=t8kfxNtWcthEgiUCM4A/qIgm52BasuOYO1bYzHM/81+AK64vP7G+8pVKrC+b3Coz4pdTxh8cr4NWyqQvXUBEKij8msBEv45UBn0qH768Va8tTOx2zpGStC8QQGkb3zADbT8x4PKavrOAhtTMqUWIdoP5iJIivYtLtuSMDepD3V4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4Y7fX342dwz6D930;
+	Wed, 11 Dec 2024 23:24:03 +0800 (CST)
+Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
+	by mail.maildlp.com (Postfix) with ESMTPS id D1FC11400C9;
+	Wed, 11 Dec 2024 23:24:57 +0800 (CST)
+Received: from [10.123.123.159] (10.123.123.159) by
+ mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Wed, 11 Dec 2024 18:24:55 +0300
+Message-ID: <b8726b37-8819-2289-40ec-81d875b13eba@huawei-partners.com>
+Date: Wed, 11 Dec 2024 18:24:53 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Content-Language: ru
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+CC: Matthieu Baerts <matttbe@kernel.org>, <gnoack@google.com>,
+	<willemdebruijn.kernel@gmail.com>, <matthieu@buffet.re>,
+	<linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <yusongping@huawei.com>,
+	<artem.kuzin@huawei.com>, <konstantin.meskhidze@huawei.com>, MPTCP Linux
+	<mptcp@lists.linux.dev>, David Laight <David.Laight@aculab.com>
+References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
+ <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
+ <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+ <20241018.Kahdeik0aaCh@digikod.net> <20241204.fahVio7eicim@digikod.net>
+ <20241204.acho8AiGh6ai@digikod.net>
+ <a24b33c1-57c8-11bb-f3aa-32352b289a5c@huawei-partners.com>
+ <20241210.Eenohkipee9f@digikod.net> <20241210.ohC4die2hi8v@digikod.net>
+From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+In-Reply-To: <20241210.ohC4die2hi8v@digikod.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: lhrpeml500003.china.huawei.com (7.191.162.67) To
+ mscpeml500004.china.huawei.com (7.188.26.250)
 
-Hi Gang,
+On 12/10/2024 9:05 PM, Mickaël Salaün wrote:
+> On Tue, Dec 10, 2024 at 07:04:15PM +0100, Mickaël Salaün wrote:
+>> On Mon, Dec 09, 2024 at 01:19:19PM +0300, Mikhail Ivanov wrote:
+>>> On 12/4/2024 10:35 PM, Mickaël Salaün wrote:
+>>>> On Wed, Dec 04, 2024 at 08:27:58PM +0100, Mickaël Salaün wrote:
+>>>>> On Fri, Oct 18, 2024 at 08:08:12PM +0200, Mickaël Salaün wrote:
+>>>>>> On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
+>>>>>>> Hi Mikhail and Landlock maintainers,
+>>>>>>>
+>>>>>>> +cc MPTCP list.
+>>>>>>
+>>>>>> Thanks, we should include this list in the next series.
+>>>>>>
+>>>>>>>
+>>>>>>> On 17/10/2024 13:04, Mikhail Ivanov wrote:
+>>>>>>>> Do not check TCP access right if socket protocol is not IPPROTO_TCP.
+>>>>>>>> LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
+>>>>>>>> should not restrict bind(2) and connect(2) for non-TCP protocols
+>>>>>>>> (SCTP, MPTCP, SMC).
+>>>>>>>
+>>>>>>> Thank you for the patch!
+>>>>>>>
+>>>>>>> I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
+>>>>>>> treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
+>>>>>>> see TCP packets with extra TCP options. On Linux, there is indeed a
+>>>>>>> dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
+>>>>>>> because we needed such dedicated socket to talk to the userspace.
+>>>>>>>
+>>>>>>> I don't know Landlock well, but I think it is important to know that an
+>>>>>>> MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
+>>>>>>> will do a fallback to "plain" TCP if MPTCP is not supported by the other
+>>>>>>> peer or by a middlebox. It means that with this patch, if TCP is blocked
+>>>>>>> by Landlock, someone can simply force an application to create an MPTCP
+>>>>>>> socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
+>>>>>>> certainly work, even when connecting to a peer not supporting MPTCP.
+>>>>>>>
+>>>>>>> Please note that I'm not against this modification -- especially here
+>>>>>>> when we remove restrictions around MPTCP sockets :) -- I'm just saying
+>>>>>>> it might be less confusing for users if MPTCP is considered as being
+>>>>>>> part of TCP. A bit similar to what someone would do with a firewall: if
+>>>>>>> TCP is blocked, MPTCP is blocked as well.
+>>>>>>
+>>>>>> Good point!  I don't know well MPTCP but I think you're right.  Given
+>>>>>> it's close relationship with TCP and the fallback mechanism, it would
+>>>>>> make sense for users to not make a difference and it would avoid bypass
+>>>>>> of misleading restrictions.  Moreover the Landlock rules are simple and
+>>>>>> only control TCP ports, not peer addresses, which seems to be the main
+>>>>>> evolution of MPTCP.
+>>>>>
+>>>>> Thinking more about this, this makes sense from the point of view of the
+>>>>> network stack, but looking at external (potentially bogus) firewalls or
+>>>>> malware detection systems, it is something different.  If we don't
+>>>>> provide a way for users to differenciate the control of SCTP from TCP,
+>>>>> malicious use of SCTP could still bypass this kind of bogus security
+>>>>> appliances.  It would then be safer to stick to the protocol semantic by
+>>>>> clearly differenciating TCP from MPTCP (or any other protocol).
+>>>
+>>> You mean that these firewals have protocol granularity (e.g. different
+>>> restrictions for MPTCP and TCP sockets)?
+>>
+>> Yes, and more importantly they can miss the MTCP semantic and then not
+>> properly filter such packet, which can be use to escape the network
+>> policy.  See some issues here:
+>> https://en.wikipedia.org/wiki/Multipath_TCP
+>>
+>> The point is that we cannot assume anything about other networking
+>> stacks, and if Landlock can properly differentiate between TCP and MTCP
+>> (e.g. with new LANDLOCK_ACCESS_NET_CONNECT_MTCP) users of such firewalls
+>> could still limit the impact of their firewall's bugs.  However, if
+>> Landlock treats TCP and MTCP the same way, we'll not be able to only
+>> deny MTCP.  In most use cases, the network policy should treat both TCP
+>> and MTCP the same way though, but we should let users decide according
+>> to their context.
+>>
+>>  From an implementation point of view, adding MTCP support should be
+>> simple, mainly tests will grow.
+> 
+> s/MTCP/MPTCP/g of course.
 
-Thank you for your modifications, that's great!
+That's reasonable, thanks for explanation!
 
-Our CI did some validations and here is its report:
+We should also consider control of other protocols that use TCP
+internally [1], since it should be easy to bypass TCP restriction by
+using them (e.g. provoking a fallback of MPTCP or SMC connection to
+TCP).
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12275226711
+The simplest solution is to implement separate access rights for SMC and
+RDS, as well as for MPTCP. I think we should stick to it.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/5ad61844af3a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D916728
+I was worried if there was a case where it would be useful to allow only
+SMC (and deny TCP). If there are any, it would be more correct to
+restrict only the fallback SMC -> TCP with TCP access rights. But such
+logic seems too complicated for the kernel and implicit for SMC
+applications that can rely on a TCP connection.
 
+[1] 
+https://lore.kernel.org/all/62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com/
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+> 
+>>
+>>>
+>>>>>
+>>>>> Mikhail, could you please send a new patch series containing one patch
+>>>>> to fix the kernel and another to extend tests?
+>>>>
+>>>> No need to squash them in one, please keep the current split of the test
+>>>> patches.  However, it would be good to be able to easily backport them,
+>>>> or at least the most relevant for this fix, which means to avoid
+>>>> extended refactoring.
+>>>
+>>> No problem, I'll remove the fix of error consistency from this patchset.
+>>> BTW, what do you think about second and third commits? Should I send the
+>>> new version of them as well (in separate patch)?
+>>
+>> According to the description, patch 2 may be included in this series if
+>> it can be tested with any other LSM, but I cannot read these patches:
+>> https://lore.kernel.org/all/20241017110454.265818-3-ivanov.mikhail1@huawei-partners.com/
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Ok I'll do this, since this patch doesn't make any functional changes.
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+About readability, a lot of code blocks were moved in this patch, and
+because of this, the regular diff file has become too unreadable.
+So, I decided to re-generate it with --break-rewrites option of git
+format- patch. Do you have any advice on how best to compose a diff for
+this patch?
