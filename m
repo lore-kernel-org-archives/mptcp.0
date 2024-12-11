@@ -1,108 +1,127 @@
-Received: from out162-62-58-211.mail.qq.com (out162-62-58-211.mail.qq.com [162.62.58.211])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qv1-f46.google.com (mail-qv1-f46.google.com [209.85.219.46])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0512F23FA09
-	for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 09:04:18 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.58.211
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44A5B238E2C
+	for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 12:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.46
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1733907863; cv=none; b=pKFlb+Ibd3PHZviQuwr9fhdqHi6RgGWBwhwMPVblYpPLK/I2n4d0YeZZCL8T0kybnEIRS8Fa0LuZ75Ga4X/xtemcFWpsB9v2bO4uXh7511Z7ZwFdbUC1haMdcaEX4IqmMTWbObDNCqC1Pq6Z8y9C1jS6OJbf1oQ7CnCv6AfvrPA=
+	t=1733918520; cv=none; b=rhKMR4i4d/oEDXUAggW7IqAq5foNFB9jpL9UBW1F+XrXEi0wx/cFiJhDBpPcBDveWAujZpn79APic7Ue9Vv/fSap23/XmZ02dqmODDlCqA+PwOxXbRamJNkX6dNOnMByZHv5Toihxpdr2UOgc78a2wAVcFRrTdKt6/pEHQVFFsg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1733907863; c=relaxed/simple;
-	bh=GTn8h1cILJZxRD/WPjB/UJpuuiM1eVhQlkQeJgDh5NM=;
-	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=OL6mOpHc7ReYY9gUn+CKK4Sgj2Dqz3gZK0XCbzxhHNShhaC8A7vyGk67ipLq2YzoiHdNejtSWdokXIZaodOQqy8ECMrl8cbYEftTvVk328lKyS5cDmxqsIACCILQ6TgCLaMObEfj+8J36hvFBwkrtWPcNlIoS4zF7OKn1wlYGXA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=P9Awzop1; arc=none smtp.client-ip=162.62.58.211
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1733918520; c=relaxed/simple;
+	bh=73wcfsW5B/TtiYDJZN0a7ryOP9iebtI/7Tj8j4TRAC8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=uQ+T3ynV448dNQ/qdcZ84BO9ZGCJzzOl5Gm/8HmXKG/N2UO73X9HHq8B8MukoVHNwKE3BYqLZmObZmLwRTzZth1s/lWRClT5rQZwlgTpsT7W1XZ9D/9tLJQ3iJ1M8yZt+/ShLp4KSCtiFN7euQzBZvfaxyt/WPiz4wEhZPgL4U0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=gMlMBRkV; arc=none smtp.client-ip=209.85.219.46
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="P9Awzop1"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1733907844;
-	bh=cqjMnbVmK1LhKXPepmKCsyi8lbW9EtlYn+9I8xwf1ms=;
-	h=From:To:Cc:Subject:Date;
-	b=P9Awzop1+LURX6XLI5RG5393fB2fHo26kgS/KTf1kQ2RiiqC99iZp3D/JClSgPger
-	 V1z6jnpHaCNNOT6iC2BIl7HtqtmUJALGvY0KJ69OasEqakBq+NnbWlhtc4NaohUoX2
-	 o3vHucvLMWk+BmeYHlFxM20Z9OGXhpIsgCP+CgrA=
-Received: from yangang-TM1701.. ([223.70.159.239])
-	by newxmesmtplogicsvrszc25-0.qq.com (NewEsmtp) with SMTP
-	id 1011BCCC; Wed, 11 Dec 2024 17:04:01 +0800
-X-QQ-mid: xmsmtpt1733907841tzs7a4spc
-Message-ID: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
-X-QQ-XMAILINFO: Ni8Yhdca2hoVflPFEakEGBA6MZIsGTtyedeHR6Bjr8xZsS8Ftp/KmRfYPTocQY
-	 dAjPEpChLf3eygMKsdRHTNa0mzWUI3OhiqBBod/+j4YIA0RHYhftZwzlj7KAeQDhNZyZcRXu4nfe
-	 4ASDtftpblDf9yDGmlvX/6FKHe8SlQZOp+UU6eqoUDpbH/OAUix9i57OXrJgFdXoMUFh/2lZkQ9y
-	 8VdHPLbF3S9fOMhOptuF3zGHP/m2Uz1tD1a/eGJ02+jY8tMqJ7AOx7GU85KPUiF/3+oJx9HXCmCT
-	 LUM4ckSmOwMSY06xK7Cn+puH27Mb45yH0O9X7mInLMUsByP9TN6wIQrg3gG7N/eMq0F6NPp2U9Iw
-	 oQtk/De7aQweLL0lrdU4A73Y5YED5mhV9KlKtam+DuqAzs3N7sClRuVD6f2gVymjoWBzmvhIp8hM
-	 Wv2JfINXg1Ynf7/61ZW9GxgyZUvv1hbL0VJzqVv97/m7y50SUrymPRCToCei2cgqwIUu39QvIXoI
-	 vkMhp+7dVKWTqK8gi9guo32FSEM/jF1HIVUOyQKV/B4eplxThvIm8e6xIXIykZbwqoOhZwiwqfG8
-	 3Ye268FLWtygR39u3NwFzWodk88in9sGFDeaLtheuC6URKLhivRDiivAsFFN+JUfT0SXD4MlXkNG
-	 u6QPt388m0N60YzpDJ9OOC3v8fI0C6aPr6Lt/PNYOMsh8ztTcQRYemNemI8dxfCu7K4fA2fYQz2R
-	 YqGYqp8dzKzIuFnji5Img0JAuuTGoFSPRyQf0+Nhu6on8pBr0Zfqn1o3dRcVWNTOQOyvURAWYW/C
-	 +YNdWAFv/NuTFISRGJpCeZDujOqZte6FQy8tffkYvB9cfJbI0msicBqzVoTnuaSkwFYYBrSxG3d3
-	 NmmudrE/Oi9Ea6iB/rlpePhVSlF9eHQU/LLCwBBwoUFIjtMO/zWrl/yHwHTpq4tsKK0+wZC8lyXB
-	 p64OirwF4=
-X-QQ-XMRINFO: MSVp+SPm3vtS1Vd6Y4Mggwc=
-From: Gang Yan <gang_yan@foxmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>
-Cc: Gang Yan <yangang@kylinos.cn>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org
-Subject: [mptcp-next] mptcp: fix invalid addr occupy 'add_addr_accepted'
-Date: Wed, 11 Dec 2024 17:03:58 +0800
-X-OQ-MSGID: <20241211090400.4646-1-gang_yan@foxmail.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="gMlMBRkV"
+Received: by mail-qv1-f46.google.com with SMTP id 6a1803df08f44-6d8fa32d3d6so52911226d6.2
+        for <mptcp@lists.linux.dev>; Wed, 11 Dec 2024 04:01:59 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1733918518; x=1734523318; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gQoawCMw9sjLfDi2RG3GRbnzbMRfrgOZklD5cWLFL/o=;
+        b=gMlMBRkVnhf08BYsfMcX8+ZX4MUcIe6v1jTso+LJC6iQppLrQWGHEQBAiuaLx0wLjl
+         t+saInJh/EBr6qC+b6mGFo/u4HPZTY2Yaxe3HWGjJJB9GRJvVmAE8eED0YK0biskLApY
+         3x1gy8dK8r07bgmqIIihUbrn4PhJ39V7p2o0Nn5MsMj3B6ZPeQvs6JD4b+TlV8UTjED0
+         BEZJKw0Be/UAvRRifkz5XX/biH7XwmWjGaEIO6pApL7s9QJU2tSomWnOKKsFSMTd3HFG
+         6P7uTTWMe3g0HPXpPVY+ZDxfRTLIr19aV81YTql2nUHL2ZM1Zr/4LJJN4kDOYQkQT9Bg
+         gjew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1733918518; x=1734523318;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=gQoawCMw9sjLfDi2RG3GRbnzbMRfrgOZklD5cWLFL/o=;
+        b=MpC3hWsXgoQvCooAHBh4GzRnj9bWWc85JCtOXYoIs4RvU7VpEiWs5UAci3Uyx/2zPv
+         aEhzgmXsSvN4MXtDcFEhPebU918rfPLL0kxTbQC9UdNPKsmesh8MtGuHDALNPR73CFMZ
+         8JBz/k5LUL4ZulcMycQm5/M5uNZ6Qc/4ZaPtdCRybjSjL25gtwK3anYJFOYlH7SWyvPy
+         aWKpE//PQdgvldd5Soz39zcR+EvdcAUIrULEGE7OGZVmA+tSxJn9JUXJ10ZOrGslXZLR
+         szFOOFsU2HBxs0EMBYneEYwrrCwzrDQ/AjkN93LBesf1Vaz3uE3FEtbT3AQP//CsLCWw
+         3Vlw==
+X-Gm-Message-State: AOJu0YwtWj2XyRIO2NAhKt4UgpZg1v0xLOvGxfdt4UjB1FMxq6SMWSE/
+	gA/zG/AXbTvQOrvh8RX9Yh7pcdyRFHCy8Dpx0LFoo69xT1aUPi65CXqU
+X-Gm-Gg: ASbGncsB23iaL4LZLqZkRskhPln1eFZBe6jyylyktjEEQQAyGhD4mP5EY7m4ZQjAIik
+	LDcvA85831VcRZHweWYVVjMyIJFrSoqkPyB/CYlSo6rDOvghQeNyvi55TXu/cvYkcE0PKEyJTf5
+	tLfBKi3TdpLWDLRYHP6tbA7ngVmOp4ET+l4nnAcpOxmPFy61537/5CUsEcA3k6tOTV9jZr+mAPp
+	3dun8C8ymB2gJ+9XiQhiFnjDBEY0Ja/QIhR9v5bCzw9zirO+HM+Phy39bYJc3QsZh8YUg==
+X-Google-Smtp-Source: AGHT+IGKID+Bkohb0HH7x2B0YgteHHTtk7ytFF/EP8evIc9o5hwjEoDPIc8KxjjVen1hYvz/LYeQ9Q==
+X-Received: by 2002:a05:6214:e47:b0:6d1:7433:3670 with SMTP id 6a1803df08f44-6d934ad2d36mr51158016d6.4.1733918518167;
+        Wed, 11 Dec 2024 04:01:58 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.131.129])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6d8dabff3e7sm69635706d6.108.2024.12.11.04.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 11 Dec 2024 04:01:57 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
+References: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
+Subject: Re: [mptcp-next] mptcp: fix invalid addr occupy
+ 'add_addr_accepted'
+Message-ID: <3b0fc60e-4439-d281-9dc5-a3ab133b5d40@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 11 Dec 2024 12:01:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Gang Yan <yangang@kylinos.cn>
+Hi Gang,
 
-This patch fixes an issue where an invalid address is announce as a
-signal, the 'add_addr_accepted' is incorrectly added several times
-when 'retransmit ADD_ADDR'. So we need to update this variable
-when the connection is removed from conn_list by mptcp_worker. So that
-the available address can be added in time.
+Thank you for your modifications, that's great!
 
-In fact, the 'add_addr_accepted' is only declined when 'RM_ADDR'
-by now, so when subflows are getting closed from the other peer,
-the new signal is not accepted as well.
+Our CI did some validations and here is its report:
 
-We noticed there have exist some problems related to this.I think
-this patch effectively resolves them.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/12275226711
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- net/mptcp/protocol.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/5ad61844af3a
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D916728
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 21bc3586c33e..f99dddca859d 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2569,6 +2569,10 @@ static void __mptcp_close_subflow(struct sock *sk)
- 			continue;
- 
- 		mptcp_close_ssk(sk, ssk, subflow);
-+
-+		if (READ_ONCE(subflow->remote_id) &&
-+		    --msk->pm.add_addr_accepted < mptcp_pm_get_add_addr_accept_max(msk))
-+			WRITE_ONCE(msk->pm.accept_addr, true);
- 	}
- 
- }
--- 
-2.25.1
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
