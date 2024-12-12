@@ -1,180 +1,201 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-190c.mail.infomaniak.ch (smtp-190c.mail.infomaniak.ch [185.125.25.12])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0A8D320ADD9;
-	Thu, 12 Dec 2024 18:23:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84F8D218594
+	for <mptcp@lists.linux.dev>; Thu, 12 Dec 2024 18:43:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.125.25.12
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734027789; cv=none; b=gkNr71BIEO6n3rQS1axOCauS41CW7F2l8KhrSENS1KuXAV6yRvpOV6LGwH/V6r+OFjl8xx0Q3sBnyxVWqO/5K+A2xDNit0FdPH0zljZ2xR7BXVo8Dh6J9ZkmxccCxFuiG/sITDCJQGvWY5pSSv09iokm5KGWF2q0SXcbFtQGRJU=
+	t=1734028994; cv=none; b=t0Gf3syMF9U8TQgn/w6CApJ9Nq2kbvKC4KNAEkEAxOO+OnRffrTmsF60ticgnJtIC5ropj0RQ2RrDGfBUsWObYAGUzwGeX6PVLiCA2FoxGG/cqeRxj+RJ8qZ4FNLmfcVAshPgz9LbklD/T1QyUlZrp6COmB3geYaqiVVeGpXWIw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734027789; c=relaxed/simple;
-	bh=0tBw7FNXXDhn1NgrGqLM8/xV/nKYvK9yh4IKaphBUWI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uGHEExHIfLBF+78JCX55yZ0mtk/n+VL6wGVNQe2zIf8ewpJyC9L913IoTU2/L+hYdtQ8iHrjLdaozwf9n/aneG+nayCZ4+LiFXlHrM/iq0VE7ay4zlnHEEyazgTyLV+dt/J/fqq8JXDm6yatelvu0ebMy3kBzXrYb8fk1jb/6Ew=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pNZovEhM; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734028994; c=relaxed/simple;
+	bh=o2bVeZbhajJiWN0U8WTCLKosJC2kpjq4OkmKZ9+CpAo=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=QDa93w4KLeacFtjw0IRHl5hvCk5Omehnluv5AEeCKI40UGpicLpsdewmdV6Q5XYrkgsXy0OPDNHntYWkmxoXKEAKEwx9fSWqmO/xF8ednN83KTQlOaOxAJF2nIMO0hKnI2fsdxb5zcqRrcraBJfRm1ZJ7SaiZfZfUxiQ22WRB/A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=0hnM4hc8; arc=none smtp.client-ip=185.125.25.12
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pNZovEhM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDE45C4CECE;
-	Thu, 12 Dec 2024 18:23:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734027788;
-	bh=0tBw7FNXXDhn1NgrGqLM8/xV/nKYvK9yh4IKaphBUWI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pNZovEhMBtBv1codrEhTlVVBz2gNZM0C8/t1bfXEJm7ozwBpDmFqMVNcuyCB3NGsm
-	 QOgVuWe8/Gu/V+Cxfh0XSm8HZ+xwwQz3GToI9mOyHwHLWj18qV2Vt8fzGmRzRICDAF
-	 KlcvVxAeBFYj0ufDspbH37JgFCbvBjVGHly6Ewfeb7cIA4JeJBhL1xNnrA/nrh5LWe
-	 wPanizlTgZixZoGKehgzRRHLWeUaCUI7S8wbouoLboq4pMkMNmrhzLtGZvHCvcEVMF
-	 +NJW36umAYO5++8W6gLjeFCE1NS7KSwwP1Cw0l9W17AJDO6/hvLaQqivxEKc4lQ+PF
-	 dWEJhaAbdvTPQ==
-Message-ID: <902d0bec-abca-4e7c-be43-be2fa1c6ce02@kernel.org>
-Date: Thu, 12 Dec 2024 19:23:02 +0100
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="0hnM4hc8"
+Received: from smtp-3-0001.mail.infomaniak.ch (smtp-3-0001.mail.infomaniak.ch [10.4.36.108])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Y8LvJ3g1lzRfV;
+	Thu, 12 Dec 2024 19:43:08 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1734028988;
+	bh=Mmtm9fyTo5/r0MKZuqf9t/MEms75sx9RiuSVOLDMjIM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=0hnM4hc8hqjkyoqr9BFrIZOoT0mF0wylgwIGNE6Igbk3XV5TtYm5XJqDuONfX9XFf
+	 VzdGhGE99QhQevM9+D6EoQsGHcArpLQ+dul8AJb7xCLaUMkmF39xvioQxaatZFj7DY
+	 KFAL9We+7K5tDAg+3OyUOsh8AhM0pHEs1uA+egqQ=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4Y8LvH45x0zQ3r;
+	Thu, 12 Dec 2024 19:43:07 +0100 (CET)
+Date: Thu, 12 Dec 2024 19:43:04 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+Cc: Matthieu Baerts <matttbe@kernel.org>, gnoack@google.com, 
+	willemdebruijn.kernel@gmail.com, matthieu@buffet.re, linux-security-module@vger.kernel.org, 
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, yusongping@huawei.com, 
+	artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
+	MPTCP Linux <mptcp@lists.linux.dev>, David Laight <David.Laight@aculab.com>
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Message-ID: <20241212.ief4eingaeVa@digikod.net>
+References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
+ <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
+ <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
+ <20241018.Kahdeik0aaCh@digikod.net>
+ <20241204.fahVio7eicim@digikod.net>
+ <20241204.acho8AiGh6ai@digikod.net>
+ <a24b33c1-57c8-11bb-f3aa-32352b289a5c@huawei-partners.com>
+ <20241210.Eenohkipee9f@digikod.net>
+ <20241210.ohC4die2hi8v@digikod.net>
+ <b8726b37-8819-2289-40ec-81d875b13eba@huawei-partners.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next] mptcp: fix invalid addr occupy 'add_addr_accepted'
-Content-Language: en-GB
-To: Gang Yan <gang_yan@foxmail.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: Gang Yan <yangang@kylinos.cn>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
-References: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b8726b37-8819-2289-40ec-81d875b13eba@huawei-partners.com>
+X-Infomaniak-Routing: alpha
 
-Hi Gang Yan,
-
-Thank you for this patch!
-
-I have a few suggestions below. Do you mind sending the next version(s)
-to the MPTCP list only, no need to include the netdev ML and the net
-maintainers for the moment I think.
-
-On 11/12/2024 10:03, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On Wed, Dec 11, 2024 at 06:24:53PM +0300, Mikhail Ivanov wrote:
+> On 12/10/2024 9:05 PM, Mickaël Salaün wrote:
+> > On Tue, Dec 10, 2024 at 07:04:15PM +0100, Mickaël Salaün wrote:
+> > > On Mon, Dec 09, 2024 at 01:19:19PM +0300, Mikhail Ivanov wrote:
+> > > > On 12/4/2024 10:35 PM, Mickaël Salaün wrote:
+> > > > > On Wed, Dec 04, 2024 at 08:27:58PM +0100, Mickaël Salaün wrote:
+> > > > > > On Fri, Oct 18, 2024 at 08:08:12PM +0200, Mickaël Salaün wrote:
+> > > > > > > On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
+> > > > > > > > Hi Mikhail and Landlock maintainers,
+> > > > > > > > 
+> > > > > > > > +cc MPTCP list.
+> > > > > > > 
+> > > > > > > Thanks, we should include this list in the next series.
+> > > > > > > 
+> > > > > > > > 
+> > > > > > > > On 17/10/2024 13:04, Mikhail Ivanov wrote:
+> > > > > > > > > Do not check TCP access right if socket protocol is not IPPROTO_TCP.
+> > > > > > > > > LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
+> > > > > > > > > should not restrict bind(2) and connect(2) for non-TCP protocols
+> > > > > > > > > (SCTP, MPTCP, SMC).
+> > > > > > > > 
+> > > > > > > > Thank you for the patch!
+> > > > > > > > 
+> > > > > > > > I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
+> > > > > > > > treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
+> > > > > > > > see TCP packets with extra TCP options. On Linux, there is indeed a
+> > > > > > > > dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
+> > > > > > > > because we needed such dedicated socket to talk to the userspace.
+> > > > > > > > 
+> > > > > > > > I don't know Landlock well, but I think it is important to know that an
+> > > > > > > > MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
+> > > > > > > > will do a fallback to "plain" TCP if MPTCP is not supported by the other
+> > > > > > > > peer or by a middlebox. It means that with this patch, if TCP is blocked
+> > > > > > > > by Landlock, someone can simply force an application to create an MPTCP
+> > > > > > > > socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
+> > > > > > > > certainly work, even when connecting to a peer not supporting MPTCP.
+> > > > > > > > 
+> > > > > > > > Please note that I'm not against this modification -- especially here
+> > > > > > > > when we remove restrictions around MPTCP sockets :) -- I'm just saying
+> > > > > > > > it might be less confusing for users if MPTCP is considered as being
+> > > > > > > > part of TCP. A bit similar to what someone would do with a firewall: if
+> > > > > > > > TCP is blocked, MPTCP is blocked as well.
+> > > > > > > 
+> > > > > > > Good point!  I don't know well MPTCP but I think you're right.  Given
+> > > > > > > it's close relationship with TCP and the fallback mechanism, it would
+> > > > > > > make sense for users to not make a difference and it would avoid bypass
+> > > > > > > of misleading restrictions.  Moreover the Landlock rules are simple and
+> > > > > > > only control TCP ports, not peer addresses, which seems to be the main
+> > > > > > > evolution of MPTCP.
+> > > > > > 
+> > > > > > Thinking more about this, this makes sense from the point of view of the
+> > > > > > network stack, but looking at external (potentially bogus) firewalls or
+> > > > > > malware detection systems, it is something different.  If we don't
+> > > > > > provide a way for users to differenciate the control of SCTP from TCP,
+> > > > > > malicious use of SCTP could still bypass this kind of bogus security
+> > > > > > appliances.  It would then be safer to stick to the protocol semantic by
+> > > > > > clearly differenciating TCP from MPTCP (or any other protocol).
+> > > > 
+> > > > You mean that these firewals have protocol granularity (e.g. different
+> > > > restrictions for MPTCP and TCP sockets)?
+> > > 
+> > > Yes, and more importantly they can miss the MTCP semantic and then not
+> > > properly filter such packet, which can be use to escape the network
+> > > policy.  See some issues here:
+> > > https://en.wikipedia.org/wiki/Multipath_TCP
+> > > 
+> > > The point is that we cannot assume anything about other networking
+> > > stacks, and if Landlock can properly differentiate between TCP and MTCP
+> > > (e.g. with new LANDLOCK_ACCESS_NET_CONNECT_MTCP) users of such firewalls
+> > > could still limit the impact of their firewall's bugs.  However, if
+> > > Landlock treats TCP and MTCP the same way, we'll not be able to only
+> > > deny MTCP.  In most use cases, the network policy should treat both TCP
+> > > and MTCP the same way though, but we should let users decide according
+> > > to their context.
+> > > 
+> > >  From an implementation point of view, adding MTCP support should be
+> > > simple, mainly tests will grow.
+> > 
+> > s/MTCP/MPTCP/g of course.
 > 
-> This patch fixes an issue where an invalid address is announce as a
-> signal, the 'add_addr_accepted' is incorrectly added several times
-> when 'retransmit ADD_ADDR'. So we need to update this variable
-> when the connection is removed from conn_list by mptcp_worker. So that
-> the available address can be added in time.
+> That's reasonable, thanks for explanation!
 > 
-> In fact, the 'add_addr_accepted' is only declined when 'RM_ADDR'
-> by now, so when subflows are getting closed from the other peer,
-
-Does it mean that in this case, the counter will be decreased twice:
-when the RM_ADDR is received, and when the subflow is closed, no?
-
-I guess no because you hooked this in a different path, right?
-
-> the new signal is not accepted as well.
+> We should also consider control of other protocols that use TCP
+> internally [1], since it should be easy to bypass TCP restriction by
+> using them (e.g. provoking a fallback of MPTCP or SMC connection to
+> TCP).
 > 
-> We noticed there have exist some problems related to this.I think
-> this patch effectively resolves them.
-
-Please add new test cases for these problems in the MPTCP selftests: to
-better understand what is being fixed, and to avoid regressions later.
-
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  net/mptcp/protocol.c | 4 ++++
->  1 file changed, 4 insertions(+)
+> The simplest solution is to implement separate access rights for SMC and
+> RDS, as well as for MPTCP. I think we should stick to it.
 > 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 21bc3586c33e..f99dddca859d 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2569,6 +2569,10 @@ static void __mptcp_close_subflow(struct sock *sk)
->  			continue;
->  
->  		mptcp_close_ssk(sk, ssk, subflow);
-> +
-> +		if (READ_ONCE(subflow->remote_id) &&
-> +		    --msk->pm.add_addr_accepted < mptcp_pm_get_add_addr_accept_max(msk))
-> +			WRITE_ONCE(msk->pm.accept_addr, true);
+> I was worried if there was a case where it would be useful to allow only
+> SMC (and deny TCP). If there are any, it would be more correct to
+> restrict only the fallback SMC -> TCP with TCP access rights. But such
+> logic seems too complicated for the kernel and implicit for SMC
+> applications that can rely on a TCP connection.
+> 
+> [1] https://lore.kernel.org/all/62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com/
 
-Mmh, I don't think it can be that simple: potentially, an accepted
-ADD_ADDR can trigger multiple subflows (i.e. when the fullmesh flag is
-used). In this case, the counter has been incremented once, not once for
-each created subflow. So before decrementing the counter, it should then
-be needed to check if no other subflows connected to the same remote ID
-are still alive.
+Let's continue the discussion on this thread.
 
-I think it is better not to decrement this counter in "unusual
-situations" -- the situation before this patch -- than wrongly
-decrementing it, and ended up with an underflow.
+> 
+> > 
+> > > 
+> > > > 
+> > > > > > 
+> > > > > > Mikhail, could you please send a new patch series containing one patch
+> > > > > > to fix the kernel and another to extend tests?
+> > > > > 
+> > > > > No need to squash them in one, please keep the current split of the test
+> > > > > patches.  However, it would be good to be able to easily backport them,
+> > > > > or at least the most relevant for this fix, which means to avoid
+> > > > > extended refactoring.
+> > > > 
+> > > > No problem, I'll remove the fix of error consistency from this patchset.
+> > > > BTW, what do you think about second and third commits? Should I send the
+> > > > new version of them as well (in separate patch)?
+> > > 
+> > > According to the description, patch 2 may be included in this series if
+> > > it can be tested with any other LSM, but I cannot read these patches:
+> > > https://lore.kernel.org/all/20241017110454.265818-3-ivanov.mikhail1@huawei-partners.com/
+> 
+> Ok I'll do this, since this patch doesn't make any functional changes.
+> 
+> About readability, a lot of code blocks were moved in this patch, and
+> because of this, the regular diff file has become too unreadable.
+> So, I decided to re-generate it with --break-rewrites option of git
+> format- patch. Do you have any advice on how best to compose a diff for
+> this patch?
 
-Another thing is that subflows might have not been created upon the
-reception of an ADD_ADDR: typically if you take the view of a server,
-the subflows have been initiated by the client, and not because the
-server got an ADD_ADDR. If I'm not mistaken, the counter would be
-decremented here as well. We could restrict this by checking
-"subflow->request_join" I suppose. Still, I'm wondering if that's
-covering all cases, and if we should not track ADD_ADDR that are received:
+The changes are not clear to me so I don't know.  If a lot of parts are
+changed, maybe splitting this patch into a few patches would help.  I'm
+a bit worried that too much parts are changed though.
 
-  https://github.com/multipath-tcp/mptcp_net-next/issues/496
+When I try to apply this series I get:
 
-(which is more complex)
-
-Also, because this counter is specific to the in-kernel PM, I think it
-would be cleaner f its manipulation is done in pm_netlink.c.
-
-pw-bot: cr
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+  Patch failed at 0002 landlock: Make network stack layer checks explicit
+  for each TCP action
+  error: patch failed: security/landlock/net.c:1
+  error: security/landlock/net.c: patch does not apply
