@@ -1,71 +1,77 @@
-Received: from arara2.ipen.br (arara2.ipen.br [200.136.52.33])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC036F30F
-	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 05:52:53 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.136.52.33
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA6C8188CC9
+	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 07:35:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734069175; cv=none; b=rK5XiC8kJuh0nu2LbwihpiT/MK8NKSTym6VE8f/kdK2uaY9R1gsCdJx/RCw+yXUOI6gc5VE/Og5fAtAPT/vGtQu1HuMIF0OChw996weUEOWTl2NEWV4prSI/mOf/dFsf6gOyaEQpB3LaMl28YUoqYRqfq9XdXtGfNdkSitfae0U=
+	t=1734075340; cv=none; b=Y1oqrZ/CruEgKQmIPKY6z5K7W5eY8GE4kqP6gQRsYqE2aIe8udDkyo99NekafmGBLBzPkUZfgtEjbh2EBwtnemhk+fsaiUTrS5gFapnEWARdorKSY4DX8N6lqCH1nNho6HCOzaQBTD2nummcxhCO//+QzfZ49fBsxutixu93+jE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734069175; c=relaxed/simple;
-	bh=Cgr97JBiSX1QIcd2ZZZsKVChGTY1ZlWJ/4AhaVFA7Wc=;
-	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NdvwhUY0s4gC7ywh+lIfrFuAbfLadbprItIpL+HzYeIyh+NV8QBRS29N5Xj+HbWFQfynN2NlYxMfsWBQhcQoSEfC7td/RUi3SejFHoVgDZG93gXLfvm550lNFu43lOGXSRaUcBA45+ROAQ46wgB8Fum7fguoPz0kJGMX1uuCkiQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipen.br; spf=pass smtp.mailfrom=ipen.br; arc=none smtp.client-ip=200.136.52.33
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipen.br
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipen.br
-X-ASG-Debug-ID: 1734069158-055fc729ec14857b0002-4JfMIm
-Received: from arara.ipen.br (webmail.ip.ipen.br [10.0.10.11]) by arara2.ipen.br with ESMTP id 60sEGQ39xiRd3Akp for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 02:52:45 -0300 (BRT)
-X-Barracuda-Envelope-From: TCWM179713@ipen.br
-X-Barracuda-RBL-Trusted-Forwarder: 10.0.10.11
-Received: from ipen.br (unknown [102.129.145.191])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by arara.ipen.br (Postfix) with ESMTPSA id 0587BFBE6C6
-	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 01:25:57 -0300 (-03)
-Reply-To: t.mazowieckie@mazowieckie.org
-X-Barracuda-Effective-Source-IP: UNKNOWN[102.129.145.191]
-X-Barracuda-Apparent-Source-IP: 102.129.145.191
-X-Barracuda-RBL-IP: 102.129.145.191
-From: <TCWM179713@ipen.br>
+	s=arc-20240116; t=1734075340; c=relaxed/simple;
+	bh=HS9V7yrvNUqsqaK5mw4D+ceOSizHRo8jf+8Ufqe0Rz4=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KkHsPX+Q3oUKJmzqR0DientLDtmNEQWN/WYmRbcd4Cdq67YLdW2U5gRzg12bTmrzRvOqpwcU88307xb4x/V5MOZnPRA4tXEUxbRrlhTMDpOVdyQ9JF/nsecCYq+Vc1sIQdRAY/anPC+vZv3Xx/jinhP+vblYKIXSrBNXO8gJhPE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KMuo46P5; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KMuo46P5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 535BCC4CED0;
+	Fri, 13 Dec 2024 07:35:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734075339;
+	bh=HS9V7yrvNUqsqaK5mw4D+ceOSizHRo8jf+8Ufqe0Rz4=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KMuo46P52hMAlASQdpcM5qGDfGLHlEQlA4u3ZyXByD+TM6XbHT40xYSPx9rU4hOdw
+	 1XZLnUN9ZZqmqpzRfE3hxP6hHRTeaFKB5YSjBl8EbrF+waqomyJyYn8qTmUMdcJveF
+	 3za0Iy92eqeUK09kzavIEU8TQeLk05aDFidwwe8iAx//bMjyCQcvYemP6BkjnVE3kL
+	 DRsYYlUJYheiM6//XHkYIq4KOvKvkUfgUhJ/NVi+HXCTdNEwxTRJvHF1CShv1NUDNg
+	 q0vt4R5OVTwqJK18D3CFkjcr36Smo7MMcYmeFZ0aWNHYrr+kbuJyA26PWWsfvtvUkT
+	 kaBigGYCa6kfA==
+From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Subject:  I urge you to understand my viewpoint accurately.
-Date: 13 Dec 2024 12:25:57 +0800
-X-ASG-Orig-Subj: I urge you to understand my viewpoint accurately.
-Message-ID: <20241213122557.5B57874871FA4F54@ipen.br>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/8] BPF path manager, part 2
+Date: Fri, 13 Dec 2024 15:35:21 +0800
+Message-ID: <cover.1734074788.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain;
-	charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-X-Barracuda-Connect: webmail.ip.ipen.br[10.0.10.11]
-X-Barracuda-Start-Time: 1734069165
-X-Barracuda-URL: https://10.40.40.18:443/cgi-mod/mark.cgi
-X-Barracuda-Scan-Msg-Size: 512
-X-Barracuda-BRTS-Status: 1
-X-Barracuda-BRTS-Evidence: 34fbb5788938ad5710ad28835fd12206-499-txt
-X-Virus-Scanned: by bsmtpd at ipen.br
-X-Barracuda-Spam-Score: 0.00
-X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=NO_REAL_NAME
-X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.45577
-	Rule breakdown below
-	 pts rule name              description
-	---- ---------------------- --------------------------------------------------
-	0.00 NO_REAL_NAME           From: does not include a real name
+Content-Transfer-Encoding: 8bit
 
-I am Tomasz Chmielewski, a Portfolio Manager and Chartered=20
-Financial Analyst affiliated with Iwoca Poland Sp. Z OO in=20
-Poland. I have the privilege of working with distinguished=20
-investors who are eager to support your company's current=20
-initiatives, thereby broadening their investment portfolios. If=20
-this proposal aligns with your interests, I invite you to=20
-respond, and I will gladly share more information to assist you.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-=20
-Yours sincerely,=20
-Tomasz Chmielewski Warsaw, Mazowieckie,
-=20
-Poland.
+v2:
+ - split patch 7 of v1 into two.
+ - patches 1-6 have no code changes, only the commit logs have been
+updated.
+ - more commit log to explain why mptcp_pm_addr_id_bitmap_t needs to
+be defined.
+ - use mptcp_pm_addr_id_bitmap_t in userspace_pm_append_new_local_addr
+too.
+
+In order to implement BPF userspace path manager, it is necessary to
+unify the interfaces of the path manager. This set updates get_addr()
+and dump_addr() interfaces.
+
+Geliang Tang (8):
+  mptcp: make three pm wrappers static
+  mptcp: drop skb parameter of get_addr
+  mptcp: add id parameter for get_addr
+  mptcp: reuse sending nlmsg code in get_addr
+  mptcp: change info of get_addr as const
+  mptcp: add info parameter for dump_addr
+  mptcp: add mptcp_pm_addr_id_bitmap_t type
+  mptcp: reuse sending nlmsg code in dump_addr
+
+ include/net/mptcp.h      |   7 +++
+ net/mptcp/pm.c           | 108 ++++++++++++++++++++++++++++++++++++---
+ net/mptcp/pm_netlink.c   | 105 ++++++-------------------------------
+ net/mptcp/pm_userspace.c | 102 ++++++++++--------------------------
+ net/mptcp/protocol.h     |  21 +++-----
+ 5 files changed, 157 insertions(+), 186 deletions(-)
+
+-- 
+2.45.2
+
