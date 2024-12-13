@@ -1,129 +1,110 @@
-Received: from mail-pj1-f44.google.com (mail-pj1-f44.google.com [209.85.216.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A2511EB9E1
-	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 18:51:31 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8394918027;
+	Fri, 13 Dec 2024 19:54:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734115893; cv=none; b=SficxQA4Ml2XJLUsEOw0Orr0izpR1RF1x9U0TCYke4FvuCqv9yKKcgeJC2j4lO902XLEDSmCKaus/THSIbVAvn2f+p6zvVhmuI4e130Z8rCDKtMT+aF71j7NfN0kFeul30nhBpPMLy+Nj592XFHj2ZrqTP9xjqq4R0yhSVkeYaE=
+	t=1734119669; cv=none; b=o8OuQq45X8JgYAn87q0GRC+QiGbqUFSQNi/C20EismdxNqUwczHimg578v6VarS9Y0BqYC4lPRPlfQm07RLD+6gQpD3zs+jMFmslw0zBQI+0b6YdhnDSkA3QGpoB577ve7XtoavpSYLLYRyc3XrlsJGFFCEsJbQT5Jb0UmVfUYo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734115893; c=relaxed/simple;
-	bh=bcpZS60wj5SJ0jCtscqBqtcUmu0HRZkBqVJKyTFLkw0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=gFZCCa5bB85bUqHnJZtreinQshyGm3eGpMYb3X6ldyj/i4PBUpw/RjC0QMVZmlwz3PtKyyhrUzmcRAVi0eKPIsFVDj+/p9If2P3sK4dCOT4HFPNyOaTr243rdrW49LJulm2J8wXa9Q9xvZy3clhx4gOI4U0GYDjjWUBO4Nsuf6k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=OQFFVd68; arc=none smtp.client-ip=209.85.216.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734119669; c=relaxed/simple;
+	bh=1SuCCczWgEEZPVHAwfNRApsTYS5wZY7OUO6nCzu4LLc=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=rfsAzSMqnKqndmiMxKBFgrE0PBrXVmut27NbVzLzIioYfUenbYQ9TQKDNbi/QlIyxEK1vx/jZRN6LRccPUNhqY55IYe9ZQ4IvMeixeOrfUdolsYlObNGLw61uUIkD1vQlDinQbzaCqq07+aZBiuIZQvFalqRm30iuEDfQ5EFlRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RZfrCs8G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OQFFVd68"
-Received: by mail-pj1-f44.google.com with SMTP id 98e67ed59e1d1-2ef6af22ea8so1822297a91.0
-        for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 10:51:31 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734115891; x=1734720691; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=qaRE7M1Phs3OO0SBAFccapdnqwo8ftoW3ZJUY4D5Abg=;
-        b=OQFFVd68WKlIcnKc3dcwSNah8Prr7E1MeNKxqFNF07tvJuyhVr5hB5bu82/Q/x2EXa
-         RMRPn6Va828anSj42hEzKcVPbHvCUT5R9R4LOCBdnwZfn+4iw7PrT4xdEv6+rXWDg3Ov
-         7ITg5FlGzVf5REbJckJ598Zt8py7P30asVQX6B4uyXSL2QmpGf3TlnrBkRYQtso6nrpC
-         WgZiXQrGD6jW2JLNKkafBdssuIUBXZ7b6xusTtszOxZ//AF49tlaqBDmVQhA4pCcz3RP
-         hpR2HdrQeGonZ4GcZ1xY03ZtK3i/h7ow+X6p2A/hNjHCgPQ7GTQVTn3bhLj09hECpeVW
-         XqVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734115891; x=1734720691;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=qaRE7M1Phs3OO0SBAFccapdnqwo8ftoW3ZJUY4D5Abg=;
-        b=PdYHhJJ2Zja2q9Sf9CfmJYyp8SsW0E+LtdoiTtPoiMwm9Nz/rVNDFazp+5S1wzJMC/
-         d1us1Sg6q10VGxLNwFdWYdnqRwG1rDFE56xOFS3SVPtFHS8+i03o+QlWkptYjSCK3jt1
-         LsKq/kgqtEBpNKCY3Mdp4VHZyHAh548NSLuRq+fB51ygtrKE8iW/8wdEwNAyn+hKUD5L
-         OBFna14tkP6J9MZWp05tpe3s64LWRC/iPiKcb2Yq2E6LeJJka/4lzfutu9Df/wLHWuss
-         oRAQIVOVyCpA8yaeCSzfBo36MwiA8KJAuXZn7c0Ws1NPY2cCR0WAQD/wXN/AW/uePHlc
-         xkPw==
-X-Gm-Message-State: AOJu0YyqFiZ7Cn6uHBPA2Zl7OyE++OGoBeZ5t1RDdwP3N6Ae9zvNKxfo
-	dgPPPHbc3T8XyKh/CraT6CJrXnbdu5trgyWTAwr24bqkPeIcojxyMVRs
-X-Gm-Gg: ASbGncsNTsBj+x5hqmqdK1wpltnkp67dRVUwQBIN9zIF+OQ22OA6Ceot0ha1B8JrpRc
-	UjpwOAns8lHnX0scNFw5M7f7ZpHtcsjPJ0OzaOjmkoQr4Ci380WHbAbMaOql5XVoumpH7/ZQ792
-	VnMxbc4j9J7eFmD5ivqM/Lc2nHS2/7C8iqD0DkD88NOdUF/eBJb7XfqGNLg46TClvA62pc2rIU4
-	5wyokTG0roOXds5OZMqfgp9bMQnspy5tvr9+/Eor0d1jWcobSsimtidOoVSAGKG2eE3
-X-Google-Smtp-Source: AGHT+IG6Bx4RRnUgcbyxrE2P7Wutmm0NgZcACr15bKB6yIecwCb6P6rnVbrGg535ynxUhGrKoa5OvQ==
-X-Received: by 2002:a17:902:ecc9:b0:215:a3fd:61f5 with SMTP id d9443c01a7336-21892981131mr54411995ad.5.1734115890822;
-        Fri, 13 Dec 2024 10:51:30 -0800 (PST)
-Received: from [127.0.0.1] ([20.171.70.51])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-218a1dcb420sm977855ad.70.2024.12.13.10.51.30
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 13 Dec 2024 10:51:30 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org>
-References:
- <20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/2] netlink: specs: mptcp: events: missing
- and clearer attr
-Message-ID: <912e3e86-1563-e2cb-98ef-9d16c53d2d22@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 13 Dec 2024 18:51:29 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RZfrCs8G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D256DC4CED0;
+	Fri, 13 Dec 2024 19:54:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734119668;
+	bh=1SuCCczWgEEZPVHAwfNRApsTYS5wZY7OUO6nCzu4LLc=;
+	h=From:Subject:Date:To:Cc:From;
+	b=RZfrCs8GfBm7Vp+KkrxEc0Ifk+T5Kv7IfJhVx4+OXjc/FV6z0olv57E7MFf7gWVVq
+	 EzmxrwyzapA63/nIM8szWZWgtgdcPFv1DxRGhvNweNkJ09NgT06nKFUpQdHaV8AGk8
+	 i5127ICo/4/SqTqCctx6Yq9irl8Vw/Y6sW05jHlyY7rkqq0JNjeRlQqRNA+QkhT5sJ
+	 VwSnevorynNH1WLcJuXkghpTOXOGJpsZYi6QepYsBkJdw2sY3XYP8R/QCfN+FMXa6F
+	 YtARWNgaKXGZfpovh+2gdmO6yJj8PiyTMufnfwT6TCH9DKkfW0pbItapd21czZ17pQ
+	 Qv4lEXBFPNGsw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/7] mptcp: pm: userspace: misc cleanups
+Date: Fri, 13 Dec 2024 20:52:51 +0100
+Message-Id: <20241213-net-next-mptcp-pm-misc-cleanup-v1-0-ddb6d00109a8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAJOQXGcC/zWNQQqDMBBFryKzdsBEa8GrFBfpONaBJg5JLIJ4d
+ 0PBxVu8xfv/gMRROMFQHRD5J0nWUMTUFdDiwodRpuJgG9sZa1oMnAt7Rq+ZFNWjl0RIX3ZhU7Q
+ 9tQ/n3s+OeygjGnmW/X/wgruF8TwvdPju9HoAAAA=
+X-Change-ID: 20241213-net-next-mptcp-pm-misc-cleanup-26c35aab74e6
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1544; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1SuCCczWgEEZPVHAwfNRApsTYS5wZY7OUO6nCzu4LLc=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnXJDxqkRJPFt42+cynphJw8LIFCeCpke6RvE+f
+ yKn3p9o42SJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ1yQ8QAKCRD2t4JPQmmg
+ c0ETD/9UtNP0gtkaIb4NaZc4AfjMAtMoliJI2+B9purXNdxXXsXpMJlVXgOrmGWHUSCCBVI3R9F
+ cT4SnsTpjQi7AmXf21G+5EfVQP8IuwBYragiQSRNu5wXJPlVkIT9+sg1vcbwHkl5Or9iBjEn1WK
+ mPVdo5D7/hz0wKc8CiokzwAyjLIAwHcZK1oiAG4WSGjYDX6vgbxGVFwXRLRysejq8VjicE0cVRN
+ 87jFhWBpGC1/hSbysqjkZFfoQQAM1bHTqSkU8zOQW/O9thumZZ2qdR7ySvlLCIA8jDyZ2ZZg/4N
+ 7oX49y68Iu9tDsCWmednyOyH0fsuxOcPJI9pewfkFba6zr3gs3irtpzPatYgkwVjujFjuvIGWex
+ 9i2/frTcRMRAhBjFeTHMJHOFGThBoX6wvaEQ2UcKtwVmdd/8jra/xPvhnu8ntNOrWI4s1eHcfCv
+ K29w7baY/5gX95w8HvW7O+w+QIXMQEvvZ3ZdDew9Y4ckCEsWUJN6+3j0ShP1H/HLJIib4rUSNYn
+ UFE68DBtAeJawhNO58janfMeD2GfQ2trnoZUUxyIblRdF0UtM/d7DgUak8bCYDYGHsRtFmEVwA2
+ AdXF/DIBM8afTnhWzlttCytR98mJElasE6UAPIiTN1vhORDksjgb35YhVH/lYgoxMu2Okvljuxh
+ c5BB6HaY4UxwaJQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Matthieu,
+These cleanups lead the way to the unification of the path-manager
+interfaces, and allow future extensions. The following patches are not
+linked to each others, but are all related to the userspace
+path-manager.
 
-Thank you for your modifications, that's great!
+- Patch 1: add a new helper to reduce duplicated code.
 
-Our CI did some validations and here is its report:
+- Patch 2: add a macro to iterate over the address list, clearer.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12320759664
+- Patch 3: reduce duplicated code to get the corresponding MPTCP socket.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/df4e95cfd61a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D917716
+- Patch 4: move userspace PM specific code out of the in-kernel one.
 
+- Patch 5: pass an entry instead of a list with always one entry.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+- Patch 6: uniform struct type used for the local addresses.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+- Patch 7: simplify error handling.
 
-For more details:
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (7):
+      mptcp: add mptcp_userspace_pm_lookup_addr helper
+      mptcp: add mptcp_for_each_userspace_pm_addr macro
+      mptcp: add mptcp_userspace_pm_get_sock helper
+      mptcp: move mptcp_pm_remove_addrs into pm_userspace
+      mptcp: drop free_list for deleting entries
+      mptcp: change local addr type of subflow_destroy
+      mptcp: drop useless "err = 0" in subflow_destroy
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+ net/mptcp/pm_netlink.c   |  46 ++------
+ net/mptcp/pm_userspace.c | 295 +++++++++++++++++++++--------------------------
+ net/mptcp/protocol.h     |   7 +-
+ 3 files changed, 146 insertions(+), 202 deletions(-)
+---
+base-commit: 2c27c7663390d28bc71e97500eb68e0ce2a7223f
+change-id: 20241213-net-next-mptcp-pm-misc-cleanup-26c35aab74e6
 
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
