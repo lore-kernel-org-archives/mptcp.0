@@ -1,265 +1,71 @@
-Received: from smtp-8fa8.mail.infomaniak.ch (smtp-8fa8.mail.infomaniak.ch [83.166.143.168])
+Received: from arara2.ipen.br (arara2.ipen.br [200.136.52.33])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E503223C79
-	for <mptcp@lists.linux.dev>; Thu, 12 Dec 2024 18:43:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.168
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CBC036F30F
+	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 05:52:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=200.136.52.33
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734029008; cv=none; b=esnH3Fdk5+1Lo2xChUEdHwTKnPA+rC6dgQosdwWeT+r1xj+NoECxTa0MSi3JcAUCysmeqhEwQ5GGAUctswgABEfSBzRYr4MaiIAiMg3wYKiHOwpbMyPKGKdjIU6t3Y2M74GwF4GHsiVQ64zuIruwlDLbN/MfkBvetWwuXGYp+CE=
+	t=1734069175; cv=none; b=rK5XiC8kJuh0nu2LbwihpiT/MK8NKSTym6VE8f/kdK2uaY9R1gsCdJx/RCw+yXUOI6gc5VE/Og5fAtAPT/vGtQu1HuMIF0OChw996weUEOWTl2NEWV4prSI/mOf/dFsf6gOyaEQpB3LaMl28YUoqYRqfq9XdXtGfNdkSitfae0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734029008; c=relaxed/simple;
-	bh=WPeW8EtRRjSbM3Gqryl/zTV+zOBFy8rVXNkNkq6vbaU=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=phCWNNqi7wypDvHmDtwDc6rZRVxiIOXSJM3JtxZf5dNypuhXQd1XHVA8OpNqOFHnradoaE2O9UjL29i+IusH79Cc4ekIMpzQuFOr0CAoMH5irpvJkjFol0s2BsihNFOR+ZH18spK9WZjcyrt9SS1p7hhp7EIvTNGxLEWXGOZxfM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=m24QQ47l; arc=none smtp.client-ip=83.166.143.168
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="m24QQ47l"
-Received: from smtp-3-0000.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246b])
-	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4Y8LvZ4XyDzP0L;
-	Thu, 12 Dec 2024 19:43:22 +0100 (CET)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
-	s=20191114; t=1734029002;
-	bh=gi+0AwcCOHahZNLJJenN1xCfRyjgS8Yj9+bAEXIwqeA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=m24QQ47lA21IyeVRO1g4qdx+y3lpapylGxWZ9whxVxCsyAIGPNwY6mrnhqxfOMqly
-	 qBGFHKXIlBrDPDJVf0N05D8184Foax0zykYxSAuIHXRcIXsc4h96gTHjCSSKAv+1Sj
-	 WYBVqGuNPuJ+yxA04OrrbkR9+PEk4PElNJE9eRzY=
-Received: from unknown by smtp-3-0000.mail.infomaniak.ch (Postfix) with ESMTPA id 4Y8LvZ0GqRzQyh;
-	Thu, 12 Dec 2024 19:43:22 +0100 (CET)
-Date: Thu, 12 Dec 2024 19:43:18 +0100
-From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
-Cc: Matthieu Baerts <matttbe@kernel.org>, gnoack@google.com, 
-	willemdebruijn.kernel@gmail.com, matthieu@buffet.re, linux-security-module@vger.kernel.org, 
-	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, yusongping@huawei.com, 
-	artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
-	MPTCP Linux <mptcp@lists.linux.dev>, linux-nfs@vger.kernel.org
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Message-ID: <20241212.qua0Os3sheev@digikod.net>
-References: <20241017110454.265818-1-ivanov.mikhail1@huawei-partners.com>
- <20241017110454.265818-2-ivanov.mikhail1@huawei-partners.com>
- <49bc2227-d8e1-4233-8bc4-4c2f0a191b7c@kernel.org>
- <20241018.Kahdeik0aaCh@digikod.net>
- <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
+	s=arc-20240116; t=1734069175; c=relaxed/simple;
+	bh=Cgr97JBiSX1QIcd2ZZZsKVChGTY1ZlWJ/4AhaVFA7Wc=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:Content-Type; b=NdvwhUY0s4gC7ywh+lIfrFuAbfLadbprItIpL+HzYeIyh+NV8QBRS29N5Xj+HbWFQfynN2NlYxMfsWBQhcQoSEfC7td/RUi3SejFHoVgDZG93gXLfvm550lNFu43lOGXSRaUcBA45+ROAQ46wgB8Fum7fguoPz0kJGMX1uuCkiQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipen.br; spf=pass smtp.mailfrom=ipen.br; arc=none smtp.client-ip=200.136.52.33
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=ipen.br
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=ipen.br
+X-ASG-Debug-ID: 1734069158-055fc729ec14857b0002-4JfMIm
+Received: from arara.ipen.br (webmail.ip.ipen.br [10.0.10.11]) by arara2.ipen.br with ESMTP id 60sEGQ39xiRd3Akp for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 02:52:45 -0300 (BRT)
+X-Barracuda-Envelope-From: TCWM179713@ipen.br
+X-Barracuda-RBL-Trusted-Forwarder: 10.0.10.11
+Received: from ipen.br (unknown [102.129.145.191])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by arara.ipen.br (Postfix) with ESMTPSA id 0587BFBE6C6
+	for <mptcp@lists.linux.dev>; Fri, 13 Dec 2024 01:25:57 -0300 (-03)
+Reply-To: t.mazowieckie@mazowieckie.org
+X-Barracuda-Effective-Source-IP: UNKNOWN[102.129.145.191]
+X-Barracuda-Apparent-Source-IP: 102.129.145.191
+X-Barracuda-RBL-IP: 102.129.145.191
+From: <TCWM179713@ipen.br>
+To: mptcp@lists.linux.dev
+Subject:  I urge you to understand my viewpoint accurately.
+Date: 13 Dec 2024 12:25:57 +0800
+X-ASG-Orig-Subj: I urge you to understand my viewpoint accurately.
+Message-ID: <20241213122557.5B57874871FA4F54@ipen.br>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <62336067-18c2-3493-d0ec-6dd6a6d3a1b5@huawei-partners.com>
-X-Infomaniak-Routing: alpha
+Content-Type: text/plain;
+	charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+X-Barracuda-Connect: webmail.ip.ipen.br[10.0.10.11]
+X-Barracuda-Start-Time: 1734069165
+X-Barracuda-URL: https://10.40.40.18:443/cgi-mod/mark.cgi
+X-Barracuda-Scan-Msg-Size: 512
+X-Barracuda-BRTS-Status: 1
+X-Barracuda-BRTS-Evidence: 34fbb5788938ad5710ad28835fd12206-499-txt
+X-Virus-Scanned: by bsmtpd at ipen.br
+X-Barracuda-Spam-Score: 0.00
+X-Barracuda-Spam-Status: No, SCORE=0.00 using global scores of TAG_LEVEL=1000.0 QUARANTINE_LEVEL=1000.0 KILL_LEVEL=1000.0 tests=NO_REAL_NAME
+X-Barracuda-Spam-Report: Code version 3.2, rules version 3.2.3.45577
+	Rule breakdown below
+	 pts rule name              description
+	---- ---------------------- --------------------------------------------------
+	0.00 NO_REAL_NAME           From: does not include a real name
 
-On Thu, Oct 31, 2024 at 07:21:44PM +0300, Mikhail Ivanov wrote:
-> On 10/18/2024 9:08 PM, Mickaël Salaün wrote:
-> > On Thu, Oct 17, 2024 at 02:59:48PM +0200, Matthieu Baerts wrote:
-> > > Hi Mikhail and Landlock maintainers,
-> > > 
-> > > +cc MPTCP list.
-> > 
-> > Thanks, we should include this list in the next series.
-> > 
-> > > 
-> > > On 17/10/2024 13:04, Mikhail Ivanov wrote:
-> > > > Do not check TCP access right if socket protocol is not IPPROTO_TCP.
-> > > > LANDLOCK_ACCESS_NET_BIND_TCP and LANDLOCK_ACCESS_NET_CONNECT_TCP
-> > > > should not restrict bind(2) and connect(2) for non-TCP protocols
-> > > > (SCTP, MPTCP, SMC).
-> > > 
-> > > Thank you for the patch!
-> > > 
-> > > I'm part of the MPTCP team, and I'm wondering if MPTCP should not be
-> > > treated like TCP here. MPTCP is an extension to TCP: on the wire, we can
-> > > see TCP packets with extra TCP options. On Linux, there is indeed a
-> > > dedicated MPTCP socket (IPPROTO_MPTCP), but that's just internal,
-> > > because we needed such dedicated socket to talk to the userspace.
-> > > 
-> > > I don't know Landlock well, but I think it is important to know that an
-> > > MPTCP socket can be used to discuss with "plain" TCP packets: the kernel
-> > > will do a fallback to "plain" TCP if MPTCP is not supported by the other
-> > > peer or by a middlebox. It means that with this patch, if TCP is blocked
-> > > by Landlock, someone can simply force an application to create an MPTCP
-> > > socket -- e.g. via LD_PRELOAD -- and bypass the restrictions. It will
-> > > certainly work, even when connecting to a peer not supporting MPTCP.
-> > > 
-> > > Please note that I'm not against this modification -- especially here
-> > > when we remove restrictions around MPTCP sockets :) -- I'm just saying
-> > > it might be less confusing for users if MPTCP is considered as being
-> > > part of TCP. A bit similar to what someone would do with a firewall: if
-> > > TCP is blocked, MPTCP is blocked as well.
-> > 
-> > Good point!  I don't know well MPTCP but I think you're right.  Given
-> > it's close relationship with TCP and the fallback mechanism, it would
-> > make sense for users to not make a difference and it would avoid bypass
-> > of misleading restrictions.  Moreover the Landlock rules are simple and
-> > only control TCP ports, not peer addresses, which seems to be the main
-> > evolution of MPTCP. >
-> > > 
-> > > I understand that a future goal might probably be to have dedicated
-> > > restrictions for MPTCP and the other stream protocols (and/or for all
-> > > stream protocols like it was before this patch), but in the meantime, it
-> > > might be less confusing considering MPTCP as being part of TCP (I'm not
-> > > sure about the other stream protocols).
-> > 
-> > We need to take a closer look at the other stream protocols indeed.
-> Hello! Sorry for the late reply, I was on a small business trip.
-> 
-> Thanks a lot for this catch, without doubt MPTCP should be controlled
-> with TCP access rights.
-> 
-> In that case, we should reconsider current semantics of TCP control.
-> 
-> Currently, it looks like this:
-> * LANDLOCK_ACCESS_NET_BIND_TCP: Bind a TCP socket to a local port.
-> * LANDLOCK_ACCESS_NET_CONNECT_TCP: Connect an active TCP socket to a
->   remote port.
-> 
-> According to these definitions only TCP sockets should be restricted and
-> this is already provided by Landlock (considering observing commit)
-> (assuming that "TCP socket" := user space socket of IPPROTO_TCP
-> protocol).
-> 
-> AFAICS the two objectives of TCP access rights are to control
-> (1) which ports can be used for sending or receiving TCP packets
->     (including SYN, ACK or other service packets).
-> (2) which ports can be used to establish TCP connection (performed by
->     kernel network stack on server or client side).
-> 
-> In most cases denying (2) cause denying (1). Sending or receiving TCP
-> packets without initial 3-way handshake is only possible on RAW [1] or
-> PACKET [2] sockets. Usage of such sockets requires root privilligies, so
-> there is no point to control them with Landlock.
+I am Tomasz Chmielewski, a Portfolio Manager and Chartered=20
+Financial Analyst affiliated with Iwoca Poland Sp. Z OO in=20
+Poland. I have the privilege of working with distinguished=20
+investors who are eager to support your company's current=20
+initiatives, thereby broadening their investment portfolios. If=20
+this proposal aligns with your interests, I invite you to=20
+respond, and I will gladly share more information to assist you.
 
-I agree.
-
-> 
-> Therefore Landlock should only take care about case (2). For now
-> (please correct me if I'm wrong), we only considered control of
-> connection performed on user space plain TCP sockets (created with
-> IPPROTO_TCP).
-
-Correct. Landlock is dedicated to sandbox user space processes and the
-related access rights should focus on restricting what is possible
-through syscalls (mainly).
-
-> 
-> TCP kernel sockets are generally used in the following ways:
-> * in a couple of other user space protocols (MPTCP, SMC, RDS)
-> * in a few network filesystems (e.g. NFS communication over TCP)
-> 
-> For the second case TCP connection is currently not restricted by
-> Landlock. This approach is may be correct, since NFS should not have
-> access to a plain TCP communication and TCP restriction of NFS may
-> be too implicit. Nevertheless, I think that restriction via current
-> access rights should be considered.
-
-I'm not sure what you mean here.  I'm not familiar with NFS in the
-kernel.  AFAIK there is no socket type for NFS.
-
-> 
-> For the first case, each protocol use TCP differently, so they should
-> be considered separately.
-
-Yes, for user-accessible protocols.
-
-> 
-> In the case of MPTCP TCP internal sockets are used to establish
-> connection and exchange data between two network interfaces. MPTCP
-> allows to have multiple TCP connections between two MPTCP sockets by
-> connecting different network interfaces (e.g. WIFI and 3G).
-> 
-> Shared Memory Communication is a protocol that allows TCP applications
-> transparently use RDMA for communication [3]. TCP internal socket is
-> used to exchange service CLC messages when establishing SMC connection
-> (which seems harmless for sandboxing) and for communication in the case
-> of fallback. Fallback happens only if RDMA communication became
-> impossible (e.g. if RDMA capable RNIC card went down on host or peer
-> side). So, preventing TCP communication may be achieved by controlling
-> fallback mechanism.
-> 
-> Reliable Datagram Socket is connectionless protocol implemented by
-> Oracle [4]. It uses TCP stack or Infiniband to reliably deliever
-> datagrams. For every sendmsg(2), recvmsg(2) it establishes TCP
-> connection and use it to deliever splitted message.
-> 
-> In comparison with previous protocols, RDS sockets cannot be binded or
-> connected to special TCP ports (e.g. with bind(2), connect(2)). 16385
-> port is assigned to receiving side and sending side is binded to the
-> port allocated by the kernel (by using zero as port number).
-> 
-> It may be useful to restrict RDS-over-TCP with current access rights,
-> since it allows to perform TCP communication from user-space. But it
-> would be only possible to fully allow or deny sending/receiving
-> (since used ports are not controlled from user space).
-
-Thanks for these explanations.  The ability to fine-control specific
-protocol operations (e.g. connect, bind) can be useful for widely used
-protocol such as TCP and UDP (or if someone wants to implement it for
-another protocol), but this approach would not scale with all protocols
-because of their own semantic and the development efforts.  The Landlock
-access rights should be explicit, and we should also be able to deny
-access to a whole set of protocols.  This should be partially possible
-with your socket creation patch series.  I guess the remaining cases
-would be to cover transformation of one socket type to another.  I think
-we could control such transformation by building on top of the socket
-creation control foundation: instead of controlling socket creation, add
-a new access right to control socket transformation.  What do you think?
-
-> 
-> Restricting any TCP connection in the kernel is probably simplest
-> design, but we should consider above cases to provide the most useful
-> one.
-> 
-> [1] https://man7.org/linux/man-pages/man7/raw.7.html
-> [2] https://man7.org/linux/man-pages/man7/packet.7.html
-> [3] https://datatracker.ietf.org/doc/html/rfc7609
-> [4] https://oss.oracle.com/projects/rds/dist/documentation/rds-3.1-spec.html
-> 
-> > 
-> > > 
-> > > 
-> > > > sk_is_tcp() is used for this to check address family of the socket
-> > > > before doing INET-specific address length validation. This is required
-> > > > for error consistency.
-> > > > 
-> > > > Closes: https://github.com/landlock-lsm/linux/issues/40
-> > > > Fixes: fff69fb03dde ("landlock: Support network rules with TCP bind and connect")
-> > > 
-> > > I don't know how fixes are considered in Landlock, but should this patch
-> > > be considered as a fix? It might be surprising for someone who thought
-> > > all "stream" connections were blocked to have them unblocked when
-> > > updating to a minor kernel version, no?
-> > 
-> > Indeed.  The main issue was with the semantic/definition of
-> > LANDLOCK_ACCESS_FS_NET_{CONNECT,BIND}_TCP.  We need to synchronize the
-> > code with the documentation, one way or the other, preferably following
-> > the principle of least astonishment.
-> > 
-> > > 
-> > > (Personally, I would understand such behaviour change when upgrading to
-> > > a major version, and still, maybe only if there were alternatives to
-> > 
-> > This "fix" needs to be backported, but we're not clear yet on what it
-> > should be. :)
-> > 
-> > > continue having the same behaviour, e.g. a way to restrict all stream
-> > > sockets the same way, or something per stream socket. But that's just me
-> > > :) )
-> > 
-> > The documentation and the initial idea was to control TCP bind and
-> > connect.  The kernel implementation does more than that, so we need to
-> > synthronize somehow.
-> > 
-> > > 
-> > > Cheers,
-> > > Matt
-> > > -- 
-> > > Sponsored by the NGI0 Core fund.
-> > > 
-> > > 
-> 
+=20
+Yours sincerely,=20
+Tomasz Chmielewski Warsaw, Mazowieckie,
+=20
+Poland.
