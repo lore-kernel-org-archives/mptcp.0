@@ -1,129 +1,160 @@
-Received: from mail-qv1-f52.google.com (mail-qv1-f52.google.com [209.85.219.52])
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88F8020550B
-	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 13:12:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.52
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BD914B086
+	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 16:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734354737; cv=none; b=ekJPPVF0QNrvPkTQa6UN1WQWPq7SX6Qev844R8LptbW7ZSwbZvRuc88BKY6vREL22S/K1UatogOyCmLhBUIdv6IgyNvagtqDrhYruihlQjNpDVpg8ETVPJiDN42BSxNR6ux1382fMtWsHZfytGmfDZwfJv9al+TW3HaViSjUdXA=
+	t=1734367347; cv=none; b=iaDxmg00nbS9gsBMHKAC1+4Bjm6aUZW5Eh7R0g4smjfbpXDIBo9dZYBbIobwNs7SXqUp/huA/fKvWX10p27zn1Q0IYQVOTX9ibkJsl/hqgx/l/Oa0TNcZMh6u9dgQ5Gmm1ltxQkfirs5Ru9bHx71va2ItjqeHPl+XOQpbiHmnLA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734354737; c=relaxed/simple;
-	bh=juI8HfvsH1YrPqDh78vdgkoZMD6v2VNo4YwgygHYEFc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=OHPJJwvfwSGDU25ZesbXhe3vjaDHihxYIJr/nkQ0zOMYi4WkDYIDDbQMWAy7n9iOiCFK9IJNlIGoUyvFqjnEO5ESw+rcNUddPXJE5hDvh4A0BbTX40Dtn81dau9dWAZdvqjDrsS2LVgJVwSOdiapVIQxJvFFRhZS8uv9DCP5rPo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=QYsAAYs2; arc=none smtp.client-ip=209.85.219.52
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QYsAAYs2"
-Received: by mail-qv1-f52.google.com with SMTP id 6a1803df08f44-6d8f99cb0d9so35947066d6.0
-        for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 05:12:15 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734354734; x=1734959534; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IZkoSp2saKIXN8GFm/almqbxNFIEF2utBQnEVafl2wY=;
-        b=QYsAAYs2dcUFi4ZqTLv75dGEMQF7wFbmuptADzySJydzimVW79sNXkSXApFbKOGSyc
-         XtBL9iyUUafzQLVjwGgd6Aar73ofJw19J1nCYtUsMhAa6Azb4vLWKh/ko/5qn19JfcVw
-         SChMG0BX/QxLFDTgm3i+1pZc8EpT5/FxHjDyTzLox4kZ6pMppGn4NEjPRT5symhhREZ+
-         UGHFCYhXenUJUaTqVjbzzQtAW1V8vbFgEDYH1v+EzT6V4sIh0yI5a9wAruA4t7u1yMUr
-         HRrF9dYyPVsmtyNiQaBVCyrj0/MXx7EAgyJ58AiPGD8NCbH4v61xMQ75DPRK4ta6nEqd
-         RoFg==
+	s=arc-20240116; t=1734367347; c=relaxed/simple;
+	bh=+2A5q8NooEqm05JzMq3tUoF04pXhbxQmr813UKPX0G4=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QHjpy/r6tCr7ltFq/crf+wl8snXQ4BI9v30uJuJFtnyw9+BlMxHqyrXQpPQVBTkhdT2EYbsnIA7aH/aWbDsqYbTS2Z0EmSOGhup8mlqAVyk5n/ctYTtIOwKR8mnzGDfEbAszZVChzTLf43C20aMPYy0puLdJArj/PZKReiD5YtA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3a81684bac0so85523985ab.0
+        for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 08:42:25 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734354734; x=1734959534;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IZkoSp2saKIXN8GFm/almqbxNFIEF2utBQnEVafl2wY=;
-        b=uypiQYvGZHUdrW6y5aWE3E591bHkVZMgLrlwl/j3igxr4V4zQYooQBKofn/CJmAEBl
-         6X/Sxhp5Q0rqOw4VR4l5zo215FmNF0HIkbZoamsDl24Qe9PZL0wnwAJqbZPOpyxcrFvd
-         ibkxnOobMbQB6XXS0tjAzPYmAVBIoReOp6ntGD3UsfRH1zPsoSQVHtYCBBAm50N5YkKB
-         n32Il7H4h9IemB7QFBqCZKRXqDlXCGFUZKG4s5bfAqez3g8EokS6JHxsybxsHXWPJ5tx
-         W4wRKslD+DzZxozHGaVT1r9cY3NdSF26vTmAuw6P72o2bN3OSZpV1Iae5uC310uqDItu
-         0bow==
-X-Gm-Message-State: AOJu0YynwAApThm7cxEoF3IBt7/E4G0JuTZC1wtJX1IN0a5YjKT7FBKh
-	pEUWFRwLqUZsx6yH7DA5MLIbBiYEt1Ry7QG8pJ7BuJzeLq2WPnswWvca
-X-Gm-Gg: ASbGncsHKPSmt5MkH/fTPc7upZRtLOEJrzgxb0FVu8/1naUN63YsSY7wq5Itt4s9isZ
-	lh3RpilWkb8EJFQ3GR+xtg97k7xW68hzxlx4EVm6ge7uzNRxx5/S257/Qr/S88q/S758O6GIl70
-	BPvg8nUOq/PjxvtRmTUV1uV01vsQfYZiVD+hLgkVIE11qd1t5JsSbeyrscxeGfF+zN/Dt5RoRA/
-	0zpa7dNOIcS978h4D4S3jnWzIpdkLWXWT2imOGEUeeUcsVPIVADWGAMl4Iyq0GuhSe/jp0=
-X-Google-Smtp-Source: AGHT+IEmr37qTjQXqmwgmDDcD3vFdkhHow8jF3o0k5ZKtGS03idA/AVIsBwNWeF5KXAO7wa+5RTG5g==
-X-Received: by 2002:a05:6214:c28:b0:6d4:215d:91b9 with SMTP id 6a1803df08f44-6dc8ca508d7mr229880716d6.11.1734354734365;
-        Mon, 16 Dec 2024 05:12:14 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.138.58])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dccd366238sm27000446d6.77.2024.12.16.05.12.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 16 Dec 2024 05:12:13 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <20241216-mptcp-pm-nl-spec-doc-attr-v2-0-68807f55d42c@kernel.org>
-References:
- <20241216-mptcp-pm-nl-spec-doc-attr-v2-0-68807f55d42c@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 0/3] netlink: specs: mptcp: events:
- missing and clearer attr
-Message-ID: <ed6f7545-39f3-4975-96ff-10ece7c32d16@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 16 Dec 2024 13:12:12 +0000
+        d=1e100.net; s=20230601; t=1734367344; x=1734972144;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=xQWogq1JLSCeTRuMywH+apCWqE09emlrsEIy9hrKPMQ=;
+        b=hZDg+1nxzv6SLO88l6Zkttgw65vvGKgg2qZkv5F2glXR5UZlnLTmQ3R5ou8CB9V+mC
+         jPVpZNPg6BHl9rEyRbjSk6966wNjDMEK1RADauDalpd3QNx2U+V2C7hfPR5SyyoQPnlp
+         37nEIEVj0WUOnCSH9nfzmf70kkKGKkkg8K3O6i3GyKfK3paz9NfYbmPmypBQyPjqOYlB
+         Xb138oC6SdCJIqGC1q05aZ3fpYL9gjorcQhokvQV45JMuwAWjMM8yBHIaqrrpjeXtuiF
+         ht5Q2yY76Pvl5LR3ZYc0z1sjZZ/2fo7djJcMDntQvLN4k0AihTujKIulov7aZDb+NKZU
+         fHfw==
+X-Forwarded-Encrypted: i=1; AJvYcCVtzQ+yx0NZreAuCSOqA7FoeRB8tmTomQTvptCQMnz61DaHzxlsYoh/vTCx64N8x6HV+yvUEQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyG/hm0Z4Df3P79vXtEyskVAFl+YrnlxOUQj0rR+McG63DDudCO
+	tOr7nnsWl5UDNRHlXibeNwkvFrfbs18h5BKJSKVULg3D0q2y5IDHuefvHq/8Kqo5wfXqySbLmBJ
+	MTIZTKBYOC/sFnXm57zm7e62i1MrnRPyC/94+7sAKu+8H6Q58a87La/E=
+X-Google-Smtp-Source: AGHT+IFvubeG006//sC4Q12Uq2eaVtr0/8+9odVPr3h15PHP6y8s2Yy1O5KqFXGIVHN5toRZdy7ELj+A/+Wg2RMBT2m3Bn6Tqee5
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:156e:b0:3a7:9860:d7e5 with SMTP id
+ e9e14a558f8ab-3aff8aa31c7mr134936625ab.23.1734367344278; Mon, 16 Dec 2024
+ 08:42:24 -0800 (PST)
+Date: Mon, 16 Dec 2024 08:42:24 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67605870.050a0220.37aaf.0137.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in __mptcp_clean_una (2)
+From: syzbot <syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang.tang@linux.dev, 
+	geliang@kernel.org, horms@kernel.org, kuba@kernel.org, 
+	linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
+	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Matthieu,
+Hello,
 
-Thank you for your modifications, that's great!
+syzbot found the following issue on:
 
-Our CI did some validations and here is its report:
+HEAD commit:    00a5acdbf398 bpf: Fix configuration-dependent BTF function..
+git tree:       bpf-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=148de730580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=fee25f93665c89ac
+dashboard link: https://syzkaller.appspot.com/bug?extid=ebc0b8ae5d3590b2c074
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d82344580000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179654f8580000
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12351088918
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/fc306c95490c/disk-00a5acdb.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/e17d5125ee77/vmlinux-00a5acdb.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/65f791a7fd14/bzImage-00a5acdb.xz
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/0e0d28f4501a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D918161
+The issue was bisected to:
+
+commit 3f83d8a77eeeb47011b990fd766a421ee64f1d73
+Author: Paolo Abeni <pabeni@redhat.com>
+Date:   Thu Feb 8 18:03:51 2024 +0000
+
+    mptcp: fix more tx path fields initialization
+
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d2c7e8580000
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=11d2c7e8580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=16d2c7e8580000
+
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com
+Fixes: 3f83d8a77eee ("mptcp: fix more tx path fields initialization")
+
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 9846 at net/mptcp/protocol.c:1024 __mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
+Modules linked in:
+CPU: 0 UID: 0 PID: 9846 Comm: syz-executor351 Not tainted 6.13.0-rc2-syzkaller-00059-g00a5acdbf398 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
+RIP: 0010:__mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
+Code: fa ff ff 48 8b 4c 24 18 80 e1 07 fe c1 38 c1 0f 8c 8e fa ff ff 48 8b 7c 24 18 e8 e0 db 54 f6 e9 7f fa ff ff e8 e6 80 ee f5 90 <0f> 0b 90 4c 8b 6c 24 40 4d 89 f4 e9 04 f5 ff ff 44 89 f1 80 e1 07
+RSP: 0018:ffffc9000c0cf400 EFLAGS: 00010293
+RAX: ffffffff8bb0dd5a RBX: ffff888033f5d230 RCX: ffff888059ce8000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000c0cf518 R08: ffffffff8bb0d1dd R09: 1ffff110170c8928
+R10: dffffc0000000000 R11: ffffed10170c8929 R12: 0000000000000000
+R13: ffff888033f5d220 R14: dffffc0000000000 R15: ffff8880592b8000
+FS:  00007f6e866496c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f6e86f491a0 CR3: 00000000310e6000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ __mptcp_clean_una_wakeup+0x7f/0x2d0 net/mptcp/protocol.c:1074
+ mptcp_release_cb+0x7cb/0xb30 net/mptcp/protocol.c:3493
+ release_sock+0x1aa/0x1f0 net/core/sock.c:3640
+ inet_wait_for_connect net/ipv4/af_inet.c:609 [inline]
+ __inet_stream_connect+0x8bd/0xf30 net/ipv4/af_inet.c:703
+ mptcp_sendmsg_fastopen+0x2a2/0x530 net/mptcp/protocol.c:1755
+ mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1830
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg+0x1a6/0x270 net/socket.c:726
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2583
+ ___sys_sendmsg net/socket.c:2637 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2669
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f6e86ebfe69
+Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f6e86649168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f6e86f491b8 RCX: 00007f6e86ebfe69
+RDX: 0000000030004001 RSI: 0000000020000080 RDI: 0000000000000003
+RBP: 00007f6e86f491b0 R08: 00007f6e866496c0 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6e86f491bc
+R13: 000000000000006e R14: 00007ffe445d9420 R15: 00007ffe445d9508
+ </TASK>
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
 
-For more details:
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+If you want to undo deduplication, reply with:
+#syz undup
