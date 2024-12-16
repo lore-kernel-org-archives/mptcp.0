@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D76EC204570
-	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 11:11:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6855E2040BA
+	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 11:24:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734347499; cv=none; b=QN88wahjfbk6XUK33pFsw0pT7OJl0+kKoATg7rpJNyErFYdHbB7eAPBk4Y7oI6lxlJkuLc9U9tFgbB/JNGKsYRzDhd1sLCbLQm3RCrqNQHy1xAlZUy2LtmI265qLB9ZklDTmAiuzRkz7hxqseicEwHV5YtawwBCatDY1mE8Au4o=
+	t=1734348283; cv=none; b=GY7rTzsYkptYp1YgivUr7xFSGcGC1/OTIqEPGqiQtr2/Lrftg6Y18McDKlcP+jfcQGP4LT6t1tceyZbvPE9xrHEWUUDo6x71THJGPpsxqcEAJKqjpzL8Se9yz12kiqIztkfhd3V46N9GxCNaqTTyZt4ZZRwkTMKmVmthBsBJDhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734347499; c=relaxed/simple;
-	bh=MHcL0ZvZMRu+ylpjeT4f8BvAyzeqsWIrlniQh96IdI8=;
+	s=arc-20240116; t=1734348283; c=relaxed/simple;
+	bh=CuYndHZf50amggpu7iRU6+rzMUfOUbgIEdgsrbUMx7Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iYLvmX9a1Wbn7GuUTO+g18EShfTn6weajaLlC2+euViW05/w8XabPg8TnlqEIF7KPWsgg1Fxmzmlo7YhQQ3uY9rxkAsy36C+6ifbcmRxOufSM2MTHxErZGDWAmuPKaGnA47H1T5r1OeTXaMZv48atJN02ch4mcQ1bqILy1qH57Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X8h2t+IM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=JMEQXSjZISTZ9HrCuIOglGN1ypSfu4oan1zCFiyxFn3/QEQqUX2Wtha9dFKPXokCaXUYjojbCQTVmTbBRbx+eyA2j1lpYJUAPG2Kv6iUurTZ3j9yrUZ3GZXjhbHlT24Ry0wC4gychiJ5ZVCa3Qbsp/+jA+XSWNzmUVNusp5Q/BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXlbyz3q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X8h2t+IM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46896C4CED0;
-	Mon, 16 Dec 2024 11:11:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXlbyz3q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1664EC4CED3;
+	Mon, 16 Dec 2024 11:24:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734347499;
-	bh=MHcL0ZvZMRu+ylpjeT4f8BvAyzeqsWIrlniQh96IdI8=;
+	s=k20201202; t=1734348283;
+	bh=CuYndHZf50amggpu7iRU6+rzMUfOUbgIEdgsrbUMx7Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=X8h2t+IM0vlZ34kf7RV7gf39Z7Xr0NF/VHMhvRGhnFx5yWB6lSE2KQLOXb3rP+L/j
-	 aKY6WJNjJ3kPzWjZZ5DT9TfXiQiu/PrVeLYaAT0fZsc+GmyJ/2DpEmD3Gm17YjuoKZ
-	 YXWU7Q/bjcedu9Vc+eEncLeE++ygr70xNAt6y2wQEv/PnNF1afwLHHTnYQ/B4sSJ3T
-	 Y5HQeIxx8veE5/JJy9oBGEDdeksUp/4TMfDty+3HhUJbJZ5TYxC5W1s28rxwov1WMe
-	 TM+4prO4YMQrl4DZpkSPArwR5gZnvrE/FPccijko/hIiY2b7ARcAQmJgfKBaV0WvZ8
-	 aVKCePlQouasw==
-Message-ID: <d9d05508-02ec-4394-8dbe-4ed8da8facce@kernel.org>
-Date: Mon, 16 Dec 2024 12:11:36 +0100
+	b=LXlbyz3q2zfgC++Jdiym+fkfyih2NyxEwFqVWlP+A2Py3QrWviYO++nlznCLErKtv
+	 uxSxlAGJJgA5S1qo+teEdKzgnqruyijtVEbXJotfr5RzuXU1VKqHWhbOvb48cu+bHq
+	 rfhNhXqEfv/nBsChpZqgS1xvicMENodPnTylqz1Fj9TXakpfBJGqV4D02zAwYANguu
+	 RApMETSpK6Yf4JIbUgv186ATtd5c7wPFLM/m39w0Jt6cxX/3JceJdCzGg+6rKGeof8
+	 W9gM3vV1kQYlSD5psBk6UvJyRhIa1HfmJf1JCRm1hcMmN+UuKQLU63LM1jzOFnbcB3
+	 ewDDlWOdoXt/A==
+Message-ID: <93b46bed-cc91-46bc-9cc3-fff79cb3dac9@kernel.org>
+Date: Mon, 16 Dec 2024 12:24:40 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next] mptcp: fix invalid addr occupy 'add_addr_accepted'
+Subject: Re: [PATCH mptcp-next v3] mptcp: use GENL_REQ_ATTR_CHECK for token
 Content-Language: en-GB
-To: Gang Yan <gang_yan@foxmail.com>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>
-References: <tencent_0FE3ED0442E69C9D86C0AEEE338A49F90305@qq.com>
- <902d0bec-abca-4e7c-be43-be2fa1c6ce02@kernel.org>
- <tencent_943B1CC15D1D5654BEB20306FB499F0C3106@qq.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <d9c76c6c008c770046f665a4a4e93735fd121399.1734337790.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,192 +85,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <tencent_943B1CC15D1D5654BEB20306FB499F0C3106@qq.com>
+In-Reply-To: <d9c76c6c008c770046f665a4a4e93735fd121399.1734337790.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Geliang,
 
-On 16/12/2024 10:05, Gang Yan wrote:
-> On Mon, Dec 16, 2024 at 5:00:03PM +0800, Gang Yan wrote:
+On 16/12/2024 09:31, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Hi Matthieu,
+> A more general way to check if MPTCP_PM_ATTR_TOKEN exists in 'info'
+> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN) instead of
+> directly reading info->attrs[MPTCP_PM_ATTR_TOKEN] and then checking
+> if it's NULL.
 > 
-> Happy to receive your reply!
->> On Thu, Dec 12, 2024 at 07:23:02PM +0100, Matthieu Baerts wrote:
->> Hi Gang Yan,
->>
->> Thank you for this patch!
->>
->> I have a few suggestions below. Do you mind sending the next version(s)
->> to the MPTCP list only, no need to include the netdev ML and the net
->> maintainers for the moment I think.
->>
+> So this patch uses GENL_REQ_ATTR_CHECK() for 'token' in 'info' in
+> mptcp_userspace_pm_get_sock().
 > 
-> OK,  sorry for this. I'll be careful next time.
+> 'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v3:
+>  - use GENL_REQ_ATTR_CHECK in mptcp_userspace_pm_get_sock only
+>  - drop GENL_SET_ERR_MSG as Matt suggested (thanks)
 
-For (urgent/small/occasional) fixes, that's fine to send them directly
-to netdev. For new features, I think it is better to reduce the audience
-first, and suggest something reviewed to netdev maintainers.
+Thank you for the v3. While at it, do you want to do a similar change
+everywhere we do:
 
->> On 11/12/2024 10:03, Gang Yan wrote:
->>> From: Gang Yan <yangang@kylinos.cn>
->>>
->>> This patch fixes an issue where an invalid address is announce as a
->>> signal, the 'add_addr_accepted' is incorrectly added several times
->>> when 'retransmit ADD_ADDR'. So we need to update this variable
->>> when the connection is removed from conn_list by mptcp_worker. So that
->>> the available address can be added in time.
->>>
->>> In fact, the 'add_addr_accepted' is only declined when 'RM_ADDR'
->>> by now, so when subflows are getting closed from the other peer,
->>
->> Does it mean that in this case, the counter will be decreased twice:
->> when the RM_ADDR is received, and when the subflow is closed, no?
->>
->> I guess no because you hooked this in a different path, right?
-> 
-> Yes, the counter will not be declined twice.  The RM_ADDR will invoke
-> mptcp_pm_nl_rm_addr_or_subflow() in pm_netlink.c, which will ignore
-> the subflow of state '(TCPF_FIN_WAIT1 | TCPF_FIN_WAIT2 | TCPF_CLOSING | 
-> TCPF_CLOSE)' ,  the subflow of these states will turn into 'TCPF_CLOSE'
-> and finally closed in __mptcp_close_subflow() because of mptcp_worker.
+  struct nlattr *X = info->attrs[MPTCP_PM_ATTR_Y]:
+  if (!X) {
+      GENL_SET_ERR_MSG(info, "missing ...");
+      return Z;
+  }
 
-Thank you for having checked.
+e.g. in mptcp_pm_nl_announce_doit() (addr), mptcp_pm_nl_remove_doit()
+(id), mptcp_pm_nl_subflow_create_doit() (raddr, laddr),
+mptcp_pm_nl_subflow_destroy_doit() (raddr, laddr).
+(and maybe mptcp_pm_parse_pm_addr_attr(), but it needs more changes
+around to pass the attribute ID, probably best not to change that)
 
->>> the new signal is not accepted as well.
->>>
->>> We noticed there have exist some problems related to this.I think
->>> this patch effectively resolves them.
->>
->> Please add new test cases for these problems in the MPTCP selftests: to
->> better understand what is being fixed, and to avoid regressions later.
->>
-> 
-> Actually, I noticed this issue due to "./mptcp_join.sh 28" running failed in my
-> machine, but passed in docker-virtme, and it can be reproduced very easily. 
-> That's mainly because the status of  invalid_addr's tcp connection is different. 
-> It is 'TCPF_SYNC_SENT' in virtme, but  'TCPF_CLOSE' in another.
-
-Strange, do you know why? Is it due to a different kernel configuration?
-Do you have more details about that?
-
-> So the 
-> differences  of states will cause a different return value of 
-> lookup_subflow_by_daddr() in mptcp_pm_nl_add_addr_received() which will add 
-> the counter twice when retransmit 'ADD_ADDR'.
-
-Sounds like a bug that needs to be addressed first, no?
-
-> Further, I'll add a new test for covering the specific scene.
-
-Thanks!
-
->>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
->>> Signed-off-by: Gang Yan <yangang@kylinos.cn>
->>> ---
->>>  net/mptcp/protocol.c | 4 ++++
->>>  1 file changed, 4 insertions(+)
->>>
->>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->>> index 21bc3586c33e..f99dddca859d 100644
->>> --- a/net/mptcp/protocol.c
->>> +++ b/net/mptcp/protocol.c
->>> @@ -2569,6 +2569,10 @@ static void __mptcp_close_subflow(struct sock *sk)
->>>                     continue;
->>>  
->>>             mptcp_close_ssk(sk, ssk, subflow);
->>> +
->>> +           if (READ_ONCE(subflow->remote_id) &&
->>> +               --msk->pm.add_addr_accepted < mptcp_pm_get_add_addr_accept_max(msk))
->>> +                   WRITE_ONCE(msk->pm.accept_addr, true);
->> Mmh, I don't think it can be that simple: potentially, an accepted
->> ADD_ADDR can trigger multiple subflows (i.e. when the fullmesh flag is
->> used). In this case, the counter has been incremented once, not once for
->> each created subflow. So before decrementing the counter, it should then
->> be needed to check if no other subflows connected to the same remote ID
->> are still alive.
-> 
-> Thanks for your advice,  sorry for not considering the 'fullmesh' situations, 
-> the check seems necessary.
-> 
->> I think it is better not to decrement this counter in "unusual
->> situations" -- the situation before this patch -- than wrongly
->> decrementing it, and ended up with an underflow.
-> 
-> As the description beyond, the invalid address has caused not accepting
-> an available address due to this counter, I think we should ensure the
-> available address can be added at least. And an restrict condition can solve
-> the underflow problem.
-
-OK, there is maybe another issue to fix first. But what I meant is that:
-if it is not possible to have a perfect solution, I think it is better
-not to decrement the counter than wrongly decrementing it, and get other
-issues.
-
->> Another thing is that subflows might have not been created upon the
->> reception of an ADD_ADDR: typically if you take the view of a server,
->> the subflows have been initiated by the client, and not because the
->> server got an ADD_ADDR. If I'm not mistaken, the counter would be
->> decremented here as well. We could restrict this by checking
->> "subflow->request_join" I suppose. Still, I'm wondering if that's
->> covering all cases, 
-> 
-> But does the subflow in server side have 'remote id'? if doesn't, the counter
-> will not be declined in server side.
-
-It can be >0, e.g. a client has two addresses (C1, C2), and the server
-one (S1) → the client might open 2 subflows:
-
-- C1-S1 → IDs: 0-0
-- C2-S1 → IDs: 1-0
-
-From the server side, the second subflow will have a remote ID of 1.
-
-> For covering all cases, I suppose put the 
-> patch code in '__mptcp_close_ssk', do you think so?
-
-Could it be possible to have a hook from there? e.g.
-mptcp_pm_subflow_closed_external() ("_external" to clarify that it has
-been closed by an external factor: this hook will not be called when the
-PM itself asks to close the subflow). Then each PM can do extra actions
-if needed.
-
->> and if we should not track ADD_ADDR that are received:
->>
->>   https://github.com/multipath-tcp/mptcp_net-next/issues/496
->>
->> (which is more complex)
-> 
-> For the problem 1 and 3, I noticed there exists 'anno_list' in server side,
-> and we have timer  for retransmitting 'add_addr', do you think we can 
-> modify the two modules to fix these problems rather than add a new list.
-> For the 'add_addr_accepted', I think  using a restrict condition to update 
-> the counter is enough.
-
-There are quite a few cases that are possible, I cannot say at 100% that
-a restrict condition is enough. I think it is, but best to double-check:
-with the in-kernel PM, in which cases can we have a subflow created to
-an address announced by the server? (+ be careful with the "corner"
-cases: what if the server sends a RM_ADDR for its first address (ID 0),
-then re-announce it later on?)
-Maybe enough to check for 'subflow->remote_id > 0' and
-'subflow->request_join'?
-
-Could we have concurrency issues here? e.g. the other host sends a
-RM_ADDR, followed by the closure of the subflow: I guess it is fine
-because the receiver will treat the RM_ADDR first, close the subflow,
-then handle the closure from the other side. What if there is are
-reordering: first the closure, then the RM_ADDR? Will the kernel discard
-the RM_ADDR? (I didn't check, but I guess yes, I recently added a check
-of the state: if it is closed/closing, ignore the RM_ADDR, no?)
-
->> Also, because this counter is specific to the in-kernel PM, I think it
->> would be cleaner f its manipulation is done in pm_netlink.c.
-
-Something else to take into consideration: this counter will only be
-incremented with the in-kernel PM. We should then not decrement it when
-the userspace PM is used.
+Also, do you know if 'pm_nl_ctl' will continue to indicate a helpful
+message if such attribute is missing (that's a message more for
+userspace app dev)? Or does it need to be modified to display the
+missing argument set by GENL_REQ_ATTR_CHECK()?
 
 Cheers,
 Matt
