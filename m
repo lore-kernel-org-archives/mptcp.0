@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6855E2040BA
-	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 11:24:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0A738FA6
+	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 12:06:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734348283; cv=none; b=GY7rTzsYkptYp1YgivUr7xFSGcGC1/OTIqEPGqiQtr2/Lrftg6Y18McDKlcP+jfcQGP4LT6t1tceyZbvPE9xrHEWUUDo6x71THJGPpsxqcEAJKqjpzL8Se9yz12kiqIztkfhd3V46N9GxCNaqTTyZt4ZZRwkTMKmVmthBsBJDhg=
+	t=1734350789; cv=none; b=MbuswqUPMi6ZY65K439mm8HEyXJiey06dIbOYQVxM+Jv9SJ5mxgVVfaBBgePnIbQeMfe10N5sccCmEGcXhIuDyQLHh/+OyDi+S+z1gxSMLzWytJcZ31UlsKe7bOIyvB7Z+3BSbFmC6OF7iIiZrebI+tnuyBp2rP4UsWxXYLDWaQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734348283; c=relaxed/simple;
-	bh=CuYndHZf50amggpu7iRU6+rzMUfOUbgIEdgsrbUMx7Q=;
+	s=arc-20240116; t=1734350789; c=relaxed/simple;
+	bh=JnmyfVc4SLrLD1cMeBN+hhcWEB9dFrNjL6dDT0yWgRw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JMEQXSjZISTZ9HrCuIOglGN1ypSfu4oan1zCFiyxFn3/QEQqUX2Wtha9dFKPXokCaXUYjojbCQTVmTbBRbx+eyA2j1lpYJUAPG2Kv6iUurTZ3j9yrUZ3GZXjhbHlT24Ry0wC4gychiJ5ZVCa3Qbsp/+jA+XSWNzmUVNusp5Q/BY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LXlbyz3q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=T+Qe2zpFbiIbhwCMhnPhAOkANhA6g3O9P9jg8eCRu8boIuxNSBdSD92WxPWpAly4cEsZWLo0wORsiiqj320/eY3OiRWhif426pGKtSP/RC+Sz6ZZCenBHR76ijrj2IhoK55WQg9TReTW8aPlGkl0g+9XI61ByWzUSiPgEjT4dFg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dutj1RYB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LXlbyz3q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1664EC4CED3;
-	Mon, 16 Dec 2024 11:24:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dutj1RYB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182EAC4CED0;
+	Mon, 16 Dec 2024 12:06:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734348283;
-	bh=CuYndHZf50amggpu7iRU6+rzMUfOUbgIEdgsrbUMx7Q=;
+	s=k20201202; t=1734350789;
+	bh=JnmyfVc4SLrLD1cMeBN+hhcWEB9dFrNjL6dDT0yWgRw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=LXlbyz3q2zfgC++Jdiym+fkfyih2NyxEwFqVWlP+A2Py3QrWviYO++nlznCLErKtv
-	 uxSxlAGJJgA5S1qo+teEdKzgnqruyijtVEbXJotfr5RzuXU1VKqHWhbOvb48cu+bHq
-	 rfhNhXqEfv/nBsChpZqgS1xvicMENodPnTylqz1Fj9TXakpfBJGqV4D02zAwYANguu
-	 RApMETSpK6Yf4JIbUgv186ATtd5c7wPFLM/m39w0Jt6cxX/3JceJdCzGg+6rKGeof8
-	 W9gM3vV1kQYlSD5psBk6UvJyRhIa1HfmJf1JCRm1hcMmN+UuKQLU63LM1jzOFnbcB3
-	 ewDDlWOdoXt/A==
-Message-ID: <93b46bed-cc91-46bc-9cc3-fff79cb3dac9@kernel.org>
-Date: Mon, 16 Dec 2024 12:24:40 +0100
+	b=Dutj1RYBjOw+D5bbUalqDGXyoPZMYThmtAZHvNwfY8mOCXEd3gj2cWFJ3pO8I8MKN
+	 VKV5wyv5oZmvPNipNgvkNOYU4lqTSProRNs6yyB+jSNx1kjOAtH6b/K1aysqibNJ2p
+	 Fch+iQ1y6FDn9m6CL9qmb/YkTy1zsKx2mvQWt/SfKGcHoU1X2n9tqkGDfdYPORG53I
+	 g1XMc8dXfIO2yntAph1Pwz+TrkDo5n2sAnYCxzyPMeT5WFQeauRcj0DquY9PsYV3Gc
+	 TpQS1DlI1+qySTyiRTzobirDLnPvJ06G+Gne7xPllJztayOPH/uXbhi/EEXPI8aH1L
+	 yj1Xf3LoarZWA==
+Message-ID: <0d846e66-532c-4958-881e-38a793d596e5@kernel.org>
+Date: Mon, 16 Dec 2024 13:06:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] mptcp: use GENL_REQ_ATTR_CHECK for token
+Subject: Re: [PATCH mptcp-next v5 0/5] Squash to "Add mptcp_subflow bpf_iter
+ support"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <d9c76c6c008c770046f665a4a4e93735fd121399.1734337790.git.tanggeliang@kylinos.cn>
+References: <cover.1733886326.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,49 +86,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d9c76c6c008c770046f665a4a4e93735fd121399.1734337790.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1733886326.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 16/12/2024 09:31, Geliang Tang wrote:
+On 11/12/2024 04:11, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> A more general way to check if MPTCP_PM_ATTR_TOKEN exists in 'info'
-> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN) instead of
-> directly reading info->attrs[MPTCP_PM_ATTR_TOKEN] and then checking
-> if it's NULL.
-> 
-> So this patch uses GENL_REQ_ATTR_CHECK() for 'token' in 'info' in
-> mptcp_userspace_pm_get_sock().
-> 
-> 'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> v3:
->  - use GENL_REQ_ATTR_CHECK in mptcp_userspace_pm_get_sock only
->  - drop GENL_SET_ERR_MSG as Matt suggested (thanks)
+> v5:
+>  - update subjects and commit logs as Matt suggested (thanks).
+>  - avoid repeating checks in patch 1.
+>  - do stricter checks on subflows in patch 3.
 
-Thank you for the v3. While at it, do you want to do a similar change
-everywhere we do:
+Thank you for the new version, it looks good to me!
 
-  struct nlattr *X = info->attrs[MPTCP_PM_ATTR_Y]:
-  if (!X) {
-      GENL_SET_ERR_MSG(info, "missing ...");
-      return Z;
-  }
-
-e.g. in mptcp_pm_nl_announce_doit() (addr), mptcp_pm_nl_remove_doit()
-(id), mptcp_pm_nl_subflow_create_doit() (raddr, laddr),
-mptcp_pm_nl_subflow_destroy_doit() (raddr, laddr).
-(and maybe mptcp_pm_parse_pm_addr_attr(), but it needs more changes
-around to pass the attribute ID, probably best not to change that)
-
-Also, do you know if 'pm_nl_ctl' will continue to indicate a helpful
-message if such attribute is missing (that's a message more for
-userspace app dev)? Or does it need to be modified to display the
-missing argument set by GENL_REQ_ATTR_CHECK()?
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
