@@ -1,133 +1,98 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BC9A203D51
-	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 10:02:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DDE7A1C07D1
+	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 10:40:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734343370; cv=none; b=PHTz7/NkMBh1waRelE7NMCfiQ4XehmiVne6Zv/K08YTEB+3XWeAfjCB1TpGcO+Le7niFxJsuknzf3xv5uQABAb7vvY73/7fJL6cfVtm/Qb5Zg96VHLwkktGm9o1eMHWoEw9OWATdcrSu5xuK7gp0MO2ReLaDgbgROEGBn7uHdsw=
+	t=1734345600; cv=none; b=vDqtkWH9W9GSRgqyKu5DwOaS+cGCfiCQQ5LMO5j8Y3uerEwmBabmUVtV1d3oG0fO0J+ebot9vLM91hdJ2OXWOVBXUlwySU9Tln0OBSHRLzeq1oppx/xh8UgC/o564QZTs8eerd9ze2ybvH/0+CUiFZoFIlij83OhQivTpighJC0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734343370; c=relaxed/simple;
-	bh=07KFN1R0qlXFiBhHQI5clun37C9cQiqe6UP3OwhDwT0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=fd48KqCxkjlAnU/dBZrM0XeFeJXVDAj/5wcAdzUl8Q/wJtPpSC2vdhyqTC5Qe9c4jaYulGw5tbFzaauwRZvNc3yiQxLFG5BdlvjTmhANBwId76RYys/duHWVFYqr9Lo1Bz9BKg+hVPWhhkzeSMzidCn4PxlX5g62ZqIi61NFcj4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U5zdX9fN; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734345600; c=relaxed/simple;
+	bh=FixsQWlZJG6Z5BSRQpmgwqVEjV4jQbAvDT2ucxf/hl4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=ZMRK/yZhpQW3Cy0ZnFC+H3eopdsCOGLldBdAGQiPt4iup2XlIQodrmNGluR58VJ4Hz7HAkmqEUMUwkLmHhDII5FV0YQZmsA19oKoM5aTWR1tuAMJwzycVkRTxCeAaXYh5HVIwDpuLdexdhr3D33aErK3G7b7DeFiwFGIiTbJoMY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=X6I+DLBq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U5zdX9fN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0ACAC4CED0;
-	Mon, 16 Dec 2024 10:02:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="X6I+DLBq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F00FEC4CED0;
+	Mon, 16 Dec 2024 10:39:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734343370;
-	bh=07KFN1R0qlXFiBhHQI5clun37C9cQiqe6UP3OwhDwT0=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=U5zdX9fNT/3V5S0DSExJFTLA8EDhRqmM6LCZhsIx761xcEt6H3SVqTuJNa/dGLEmz
-	 BB0hJ31pxkzpeAdnyjgfkfLijOGglxBR2E2VrDKoyPAMsGmiWLuu5Nb+3JKVH9TcOn
-	 GwBsFgBLnydRuCG8m7gMz13LcZrkkaQlzAGsMm5uBXXYO7A4CxHhYVpErEKWAlPM3I
-	 g7fujCP6bjPdERmG9wnDi9RRUQD1EvOxLgHce4QdWqrzUywO+rU4uUue0Qz0TsjQEO
-	 47ZOVUOPAagtTTZTpz0q3MWYETP7XY2qUfwEAMs7y/KOeZ6D1lOzciG0A86+gSXKlG
-	 MQ0tE/A7q3gWA==
-Message-ID: <260220a4-8c58-4720-a566-7d7221502ecf@kernel.org>
-Date: Mon, 16 Dec 2024 11:02:47 +0100
+	s=k20201202; t=1734345600;
+	bh=FixsQWlZJG6Z5BSRQpmgwqVEjV4jQbAvDT2ucxf/hl4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=X6I+DLBq7O0/2LPHIFgodo3jAYUbK33Q9//1laSLsr2y48OpkpUnvR+15njnm+Adh
+	 CynBBzJqXzkXyHLwdhKGps9aZNazZ53oCG9Pqmu6alTHJZYAJS73n/WC1/m+wm+hkO
+	 EMLL7RNp0Ecx3vni4ca1/QI4BAMH/eJwDvBZUtDPS3HEqe2ZOtrjkddbgykIFZzrFZ
+	 HjdddEM/GrBSH71JkZwcIxOeuEd+6EHANRyq5my8V/5AhNZq9Yx1ihsMMPx4vJ4idQ
+	 bHLrytZKjFYMwCK7/bZBY9rflPRb6g/f/OeC1LS25tvr2RqW/GFy9V73/RdQ/53wNT
+	 gL2jxEg/N/ncg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/3] netlink: specs: mptcp: events: missing
+ and clearer attr
+Date: Mon, 16 Dec 2024 11:39:55 +0100
+Message-Id: <20241216-mptcp-pm-nl-spec-doc-attr-v2-0-68807f55d42c@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 0/2] netlink: specs: mptcp: events: missing and
- clearer attr
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org>
- <8f52bcf88666a0ef05df372d48e0132790aab90f.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <8f52bcf88666a0ef05df372d48e0132790aab90f.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAHsDYGcC/42NTQ6CMBCFr0Jm7Rj6IwIr72FYkGGARmibtiEaw
+ t1t8AIuX9773rdD5GA4QlvsEHgz0Tibg7wUQHNvJ0Yz5AyylFpIoXD1iTz6Fe2C0TPh4Aj7lAJ
+ WlSK6N7VWNELmfeDRvM/vJ/wwywm6XM0mJhc+p3UT5+APwSawRNZKVDdqNNfi8eJgebm6MEF3H
+ McXQIQ1Ws4AAAA=
+X-Change-ID: 20241213-mptcp-pm-nl-spec-doc-attr-663cc79843cf
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1033; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=FixsQWlZJG6Z5BSRQpmgwqVEjV4jQbAvDT2ucxf/hl4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnYAN/rbIQEdRTAgYME8rwJaQC2eYqVFaUQNB0k
+ BT5BOHC0CGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ2ADfwAKCRD2t4JPQmmg
+ c7HVD/95GHBKiI1o7Gd1rpueDFwhIbkbWB3ZLyD91YoYB41ERb0QqGzygRt/lbGzX4dRTQFGHKJ
+ jzmPx7y0IKd7E/nAlW7Fco4CvPa5MQf3aCg0uyKi/42qC9QtajjvqqA9D7Rl/QSCbI/LPCMO0Ef
+ kTBJq5RQTEGf8yQ8XpvUfRGUXbEP4KjPgCs/BXwrFnzsRHy9EsNEHo63NhJkeRycC3pB17u1h4v
+ dEzqSK8z494RoxKn6m9Yvh6XaJOURRpO8Cy88B81GlV7CYkC6QvoaVig14IH7TC30cilFJHzkOR
+ 98QriDcdCkYp5jZmefN4NhyHpmQ3Lf6MjuDb0WAPqgxuEdsqL51QP/yanUz7UZHkq/59ICXnCFQ
+ VHbv6KYTZcQyinitXwcDOxhnydEzECzR2vBdCks45+9RucRIunnlXN4yZWbDSJx9Ub2rTtUFvNb
+ dtqNcS6QhWlhLf3Tbd8WkGOj9TWB2gyLCcAiCAwIQlOFwX14EwANMkBmSxJalnB90NnIMW9Tzt7
+ WQM2v7qzeKIbJWKXqPu1ZYTdvQA8BQM+tR3QEq8q1Js1mKN6q/lG3FrBvRYshcTrbM46JAjQive
+ Wkh/kYZIYHA+G4iY6WYKqdPxejAVMAxPRgdp1/9C+ouywWlheKFi9e9aC5NT7WG03rbiHCkpj77
+ xZlL2XaehFqyz/w==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Three small fixes for the documentation:
 
-Thank you for the review.
+- The 'server-side' attribute was missing for two events
 
-On 16/12/2024 10:22, Geliang Tang wrote:
-> Hi Matt,
-> 
-> Thanks for this set.
-> 
-> On Fri, 2024-12-13 at 18:55 +0100, Matthieu Baerts (NGI0) wrote:
->> Two small fixes for the documentation:
->>
->> - The 'server-side' attribute was missing for two events
->>
->> - Attributes were written at the beginning, but without explaining
->> what
->>   they were.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> Matthieu Baerts (NGI0) (2):
->>       netlink: specs: mptcp: add missing 'server-side' attr
->>       netlink: specs: mptcp: clearly mention attributes
-> 
-> I think we should swap the positions of these two patches, first move
-> these attributes to the end, then add missing 'server-side' attribute.
-> WDYT?
+- Attributes were written at the beginning, but without explaining what
+  they were.
 
-It would make sense if these patches were for net-next, but for fixes
-modifying the same area, I think it is better to order them by commits
-they fix.
+- Replace two "todo".
 
-The first one is for 5.19, and the second one is for 6.7. Of course,
-here, there will be conflicts for the first one with < 6.7 versions. But
-still, better not to increase the complexity of the backports.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Patch 2: shorter prefix: "Attributes:" instead of "The defined
+  attributes are"
+- Patch 3: new patch
+- Link to v1: https://lore.kernel.org/r/20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org
 
-Cheers,
-Matt
+---
+Matthieu Baerts (NGI0) (3):
+      netlink: specs: mptcp: add missing 'server-side' attr
+      netlink: specs: mptcp: clearly mention attributes
+      netlink: specs: mptcp: fix missing doc
+
+ Documentation/netlink/specs/mptcp_pm.yaml | 52 ++++++++++++++++---------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
+---
+base-commit: abd143d0ceebde7465127242f5eeef1e9ea4e253
+change-id: 20241213-mptcp-pm-nl-spec-doc-attr-663cc79843cf
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
