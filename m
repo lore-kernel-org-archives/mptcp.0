@@ -1,160 +1,133 @@
-Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88BD914B086
-	for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 16:42:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A958BF8
+	for <mptcp@lists.linux.dev>; Tue, 17 Dec 2024 06:26:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734367347; cv=none; b=iaDxmg00nbS9gsBMHKAC1+4Bjm6aUZW5Eh7R0g4smjfbpXDIBo9dZYBbIobwNs7SXqUp/huA/fKvWX10p27zn1Q0IYQVOTX9ibkJsl/hqgx/l/Oa0TNcZMh6u9dgQ5Gmm1ltxQkfirs5Ru9bHx71va2ItjqeHPl+XOQpbiHmnLA=
+	t=1734416795; cv=none; b=Hb8DeIPaL6joq2t23CHV4Y9GcXRn5K2skadYy5Zsu2teTFRZa0p8+SUFDKL76YWtrl/n1VCEUeKiAezr+lyYLH5s5lzpg8neUtu7SpKFqVoIWR66QhY9iCZjZXyNXRf0ncuI0hHYFu+7VHADPeKlQ4IUPeSP5Q8rBh5HuXo9luo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734367347; c=relaxed/simple;
-	bh=+2A5q8NooEqm05JzMq3tUoF04pXhbxQmr813UKPX0G4=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QHjpy/r6tCr7ltFq/crf+wl8snXQ4BI9v30uJuJFtnyw9+BlMxHqyrXQpPQVBTkhdT2EYbsnIA7aH/aWbDsqYbTS2Z0EmSOGhup8mlqAVyk5n/ctYTtIOwKR8mnzGDfEbAszZVChzTLf43C20aMPYy0puLdJArj/PZKReiD5YtA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3a81684bac0so85523985ab.0
-        for <mptcp@lists.linux.dev>; Mon, 16 Dec 2024 08:42:25 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734367344; x=1734972144;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=xQWogq1JLSCeTRuMywH+apCWqE09emlrsEIy9hrKPMQ=;
-        b=hZDg+1nxzv6SLO88l6Zkttgw65vvGKgg2qZkv5F2glXR5UZlnLTmQ3R5ou8CB9V+mC
-         jPVpZNPg6BHl9rEyRbjSk6966wNjDMEK1RADauDalpd3QNx2U+V2C7hfPR5SyyoQPnlp
-         37nEIEVj0WUOnCSH9nfzmf70kkKGKkkg8K3O6i3GyKfK3paz9NfYbmPmypBQyPjqOYlB
-         Xb138oC6SdCJIqGC1q05aZ3fpYL9gjorcQhokvQV45JMuwAWjMM8yBHIaqrrpjeXtuiF
-         ht5Q2yY76Pvl5LR3ZYc0z1sjZZ/2fo7djJcMDntQvLN4k0AihTujKIulov7aZDb+NKZU
-         fHfw==
-X-Forwarded-Encrypted: i=1; AJvYcCVtzQ+yx0NZreAuCSOqA7FoeRB8tmTomQTvptCQMnz61DaHzxlsYoh/vTCx64N8x6HV+yvUEQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyG/hm0Z4Df3P79vXtEyskVAFl+YrnlxOUQj0rR+McG63DDudCO
-	tOr7nnsWl5UDNRHlXibeNwkvFrfbs18h5BKJSKVULg3D0q2y5IDHuefvHq/8Kqo5wfXqySbLmBJ
-	MTIZTKBYOC/sFnXm57zm7e62i1MrnRPyC/94+7sAKu+8H6Q58a87La/E=
-X-Google-Smtp-Source: AGHT+IFvubeG006//sC4Q12Uq2eaVtr0/8+9odVPr3h15PHP6y8s2Yy1O5KqFXGIVHN5toRZdy7ELj+A/+Wg2RMBT2m3Bn6Tqee5
+	s=arc-20240116; t=1734416795; c=relaxed/simple;
+	bh=biJtf1POXgY3GR1kz7UDAjd/5Id+QmXtIJT/kZ/alWI=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Mvfxve8eoOGvSNoX7Y+3ERnyam0fQ/MIUVVOe6zODc6wzRQqmKNPTQIEv0GN6vV5q7m/tlPAsWEnAnmV0qWXSxzmSeKMBO87bVBx3YcWtdWN+yxfE+v2hkDoTGuirtMfw3VU6vjmpwTSeXL/hAGTgKttoNZAdddJuueyZzmTwZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtP3vV5C; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtP3vV5C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9462BC4CED3;
+	Tue, 17 Dec 2024 06:26:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734416795;
+	bh=biJtf1POXgY3GR1kz7UDAjd/5Id+QmXtIJT/kZ/alWI=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=RtP3vV5Cg7W6VQxxHCMBvXiyGLjJjazmEQ81IAinG/OH4jTk/IPIc8wILWiDYMaX0
+	 q16i+NDkmY7M4GSIe0ctdhTdG5U56ZRwCafqQdBUepGotGnhLsASfy0i/17YqHCJJ8
+	 jv6TZsYH2lT8MjfanMQnk547q4+ZDf2rcXql+cVGs8REvd9eDTajJnSOUxrGipsqlJ
+	 IFf83OSF6/dpVU0qOCSoj2QbE6MOB7fv089JRpdrfH6Tk9zQGEo6gdIOpfGJxbjbtj
+	 p0Rfvmkc83YV9ffXh7zMjadW4DCglsIBhic+wogD5LeDmwPWLlDJWfDlVQ3e4XVw4C
+	 hidJInQl1NZmw==
+Message-ID: <05d20115cc82e9b0bb29769509cf5ca893d3c6a6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/2] netlink: specs: mptcp: events: missing
+ and clearer attr
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Tue, 17 Dec 2024 14:26:31 +0800
+In-Reply-To: <260220a4-8c58-4720-a566-7d7221502ecf@kernel.org>
+References: 
+	<20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org>
+	 <8f52bcf88666a0ef05df372d48e0132790aab90f.camel@kernel.org>
+	 <260220a4-8c58-4720-a566-7d7221502ecf@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:156e:b0:3a7:9860:d7e5 with SMTP id
- e9e14a558f8ab-3aff8aa31c7mr134936625ab.23.1734367344278; Mon, 16 Dec 2024
- 08:42:24 -0800 (PST)
-Date: Mon, 16 Dec 2024 08:42:24 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67605870.050a0220.37aaf.0137.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in __mptcp_clean_una (2)
-From: syzbot <syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang.tang@linux.dev, 
-	geliang@kernel.org, horms@kernel.org, kuba@kernel.org, 
-	linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
-	mptcp@lists.linux.dev, netdev@vger.kernel.org, pabeni@redhat.com, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+On Mon, 2024-12-16 at 11:02 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> Thank you for the review.
+> 
+> On 16/12/2024 10:22, Geliang Tang wrote:
+> > Hi Matt,
+> > 
+> > Thanks for this set.
+> > 
+> > On Fri, 2024-12-13 at 18:55 +0100, Matthieu Baerts (NGI0) wrote:
+> > > Two small fixes for the documentation:
+> > > 
+> > > - The 'server-side' attribute was missing for two events
+> > > 
+> > > - Attributes were written at the beginning, but without
+> > > explaining
+> > > what
+> > >   they were.
+> > > 
+> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> > > ---
+> > > Matthieu Baerts (NGI0) (2):
+> > >       netlink: specs: mptcp: add missing 'server-side' attr
+> > >       netlink: specs: mptcp: clearly mention attributes
+> > 
+> > I think we should swap the positions of these two patches, first
+> > move
+> > these attributes to the end, then add missing 'server-side'
+> > attribute.
+> > WDYT?
+> 
+> It would make sense if these patches were for net-next, but for fixes
+> modifying the same area, I think it is better to order them by
+> commits
+> they fix.
+> 
+> The first one is for 5.19, and the second one is for 6.7. Of course,
+> here, there will be conflicts for the first one with < 6.7 versions.
+> But
+> still, better not to increase the complexity of the backports.
 
-syzbot found the following issue on:
+If so, this set LGTM. I'll add my reviewed-by tag for v2.
 
-HEAD commit:    00a5acdbf398 bpf: Fix configuration-dependent BTF function..
-git tree:       bpf-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=148de730580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=fee25f93665c89ac
-dashboard link: https://syzkaller.appspot.com/bug?extid=ebc0b8ae5d3590b2c074
-compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
-syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d82344580000
-C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179654f8580000
+Thanks,
+-Geliang
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/fc306c95490c/disk-00a5acdb.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/e17d5125ee77/vmlinux-00a5acdb.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/65f791a7fd14/bzImage-00a5acdb.xz
+> 
+> Cheers,
+> Matt
 
-The issue was bisected to:
-
-commit 3f83d8a77eeeb47011b990fd766a421ee64f1d73
-Author: Paolo Abeni <pabeni@redhat.com>
-Date:   Thu Feb 8 18:03:51 2024 +0000
-
-    mptcp: fix more tx path fields initialization
-
-bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d2c7e8580000
-final oops:     https://syzkaller.appspot.com/x/report.txt?x=11d2c7e8580000
-console output: https://syzkaller.appspot.com/x/log.txt?x=16d2c7e8580000
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com
-Fixes: 3f83d8a77eee ("mptcp: fix more tx path fields initialization")
-
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 9846 at net/mptcp/protocol.c:1024 __mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
-Modules linked in:
-CPU: 0 UID: 0 PID: 9846 Comm: syz-executor351 Not tainted 6.13.0-rc2-syzkaller-00059-g00a5acdbf398 #0
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-RIP: 0010:__mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
-Code: fa ff ff 48 8b 4c 24 18 80 e1 07 fe c1 38 c1 0f 8c 8e fa ff ff 48 8b 7c 24 18 e8 e0 db 54 f6 e9 7f fa ff ff e8 e6 80 ee f5 90 <0f> 0b 90 4c 8b 6c 24 40 4d 89 f4 e9 04 f5 ff ff 44 89 f1 80 e1 07
-RSP: 0018:ffffc9000c0cf400 EFLAGS: 00010293
-RAX: ffffffff8bb0dd5a RBX: ffff888033f5d230 RCX: ffff888059ce8000
-RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
-RBP: ffffc9000c0cf518 R08: ffffffff8bb0d1dd R09: 1ffff110170c8928
-R10: dffffc0000000000 R11: ffffed10170c8929 R12: 0000000000000000
-R13: ffff888033f5d220 R14: dffffc0000000000 R15: ffff8880592b8000
-FS:  00007f6e866496c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f6e86f491a0 CR3: 00000000310e6000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- __mptcp_clean_una_wakeup+0x7f/0x2d0 net/mptcp/protocol.c:1074
- mptcp_release_cb+0x7cb/0xb30 net/mptcp/protocol.c:3493
- release_sock+0x1aa/0x1f0 net/core/sock.c:3640
- inet_wait_for_connect net/ipv4/af_inet.c:609 [inline]
- __inet_stream_connect+0x8bd/0xf30 net/ipv4/af_inet.c:703
- mptcp_sendmsg_fastopen+0x2a2/0x530 net/mptcp/protocol.c:1755
- mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1830
- sock_sendmsg_nosec net/socket.c:711 [inline]
- __sock_sendmsg+0x1a6/0x270 net/socket.c:726
- ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2583
- ___sys_sendmsg net/socket.c:2637 [inline]
- __sys_sendmsg+0x269/0x350 net/socket.c:2669
- do_syscall_x64 arch/x86/entry/common.c:52 [inline]
- do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f6e86ebfe69
-Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f6e86649168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f6e86f491b8 RCX: 00007f6e86ebfe69
-RDX: 0000000030004001 RSI: 0000000020000080 RDI: 0000000000000003
-RBP: 00007f6e86f491b0 R08: 00007f6e866496c0 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6e86f491bc
-R13: 000000000000006e R14: 00007ffe445d9420 R15: 00007ffe445d9508
- </TASK>
-
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-For information about bisection process see: https://goo.gl/tpsmEJ#bisection
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want syzbot to run the reproducer, reply with:
-#syz test: git://repo/address.git branch-or-commit-hash
-If you attach or paste a git patch, syzbot will apply it before testing.
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
