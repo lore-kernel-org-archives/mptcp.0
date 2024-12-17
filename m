@@ -1,42 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6A958BF8
-	for <mptcp@lists.linux.dev>; Tue, 17 Dec 2024 06:26:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1060214C5AF
+	for <mptcp@lists.linux.dev>; Tue, 17 Dec 2024 06:37:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734416795; cv=none; b=Hb8DeIPaL6joq2t23CHV4Y9GcXRn5K2skadYy5Zsu2teTFRZa0p8+SUFDKL76YWtrl/n1VCEUeKiAezr+lyYLH5s5lzpg8neUtu7SpKFqVoIWR66QhY9iCZjZXyNXRf0ncuI0hHYFu+7VHADPeKlQ4IUPeSP5Q8rBh5HuXo9luo=
+	t=1734417451; cv=none; b=thTX2HCascjndcEsUBxGRCJ8N1WfbU5fS/4d8+qPFFHQ3zdoXxfOTWC4+6rE4zJ046+pLJ1wEnDO9Gwa4B32Q/gEcuIuKIa+6S6oxDNZejHBaoeFpt8EV8Qx3WDTiC/f8HLxhHZOt2fH8lJ6g5naoqAQDw2TgHnbzNh/0S0ezFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734416795; c=relaxed/simple;
-	bh=biJtf1POXgY3GR1kz7UDAjd/5Id+QmXtIJT/kZ/alWI=;
+	s=arc-20240116; t=1734417451; c=relaxed/simple;
+	bh=lF65tprIYtl2IDGuum0Hleabv1KIb6uIPru7G//KOsU=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Mvfxve8eoOGvSNoX7Y+3ERnyam0fQ/MIUVVOe6zODc6wzRQqmKNPTQIEv0GN6vV5q7m/tlPAsWEnAnmV0qWXSxzmSeKMBO87bVBx3YcWtdWN+yxfE+v2hkDoTGuirtMfw3VU6vjmpwTSeXL/hAGTgKttoNZAdddJuueyZzmTwZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RtP3vV5C; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=NfZaES75tq9qp0yvzkais6MznpwmnrZ+X9m7Qt5PeZkWu9AYxyiEe2rmrv9oqpe/Gw9xLO4BoNB7b5mF3r24tTy0Gl52kEUU8SIhlofVbbBNtKwk8IS4/ZhwfxU03alfVPmj06HCmtdE93/k0Nu19RMSU/fcRAeJKZ2j7hiv8II=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=khTCfQ9O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RtP3vV5C"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9462BC4CED3;
-	Tue, 17 Dec 2024 06:26:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="khTCfQ9O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB17AC4CED3;
+	Tue, 17 Dec 2024 06:37:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734416795;
-	bh=biJtf1POXgY3GR1kz7UDAjd/5Id+QmXtIJT/kZ/alWI=;
+	s=k20201202; t=1734417450;
+	bh=lF65tprIYtl2IDGuum0Hleabv1KIb6uIPru7G//KOsU=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=RtP3vV5Cg7W6VQxxHCMBvXiyGLjJjazmEQ81IAinG/OH4jTk/IPIc8wILWiDYMaX0
-	 q16i+NDkmY7M4GSIe0ctdhTdG5U56ZRwCafqQdBUepGotGnhLsASfy0i/17YqHCJJ8
-	 jv6TZsYH2lT8MjfanMQnk547q4+ZDf2rcXql+cVGs8REvd9eDTajJnSOUxrGipsqlJ
-	 IFf83OSF6/dpVU0qOCSoj2QbE6MOB7fv089JRpdrfH6Tk9zQGEo6gdIOpfGJxbjbtj
-	 p0Rfvmkc83YV9ffXh7zMjadW4DCglsIBhic+wogD5LeDmwPWLlDJWfDlVQ3e4XVw4C
-	 hidJInQl1NZmw==
-Message-ID: <05d20115cc82e9b0bb29769509cf5ca893d3c6a6.camel@kernel.org>
-Subject: Re: [PATCH mptcp-net 0/2] netlink: specs: mptcp: events: missing
- and clearer attr
+	b=khTCfQ9O7eZhv4cTNIxy5i2PdoFFUMEUzSipUTb+SKx55oW6LaBp1wqjg7cz3lL5s
+	 sxxYAbC6uQUx1h25csD2WUD63Mxlp5ME3KNqTEsSlclkBpG/uH+Lyk6h5xIS9gMk93
+	 oKz94+j70Ib6jG5w8JlNCrtucnhu8VRmUMjiF5swzdoUkJOnWBO1MyAG692+EToEiv
+	 iVvaB1tUtDXkCsGnzrONW/q2c+rEKSARV+gVrjqHdm4t/uJrNIFw6Rfz/Q6IV0WTeJ
+	 jQ7KhyCxr+uIcoAxHOULpLsYlJrLskP60iRDvUayS893Vn65PD3SnSkuf5tZtVfF/l
+	 k2pKy0C46OUOQ==
+Message-ID: <08c74ee545c76173c523a5839c4e714ba29c40b5.camel@kernel.org>
+Subject: Re: [PATCH mptcp-net v2 3/3] netlink: specs: mptcp: fix missing doc
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Tue, 17 Dec 2024 14:26:31 +0800
-In-Reply-To: <260220a4-8c58-4720-a566-7d7221502ecf@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Tue, 17 Dec 2024 14:37:27 +0800
+In-Reply-To: <20241216-mptcp-pm-nl-spec-doc-attr-v2-3-68807f55d42c@kernel.org>
 References: 
-	<20241213-mptcp-pm-nl-spec-doc-attr-v1-0-e43165c94e81@kernel.org>
-	 <8f52bcf88666a0ef05df372d48e0132790aab90f.camel@kernel.org>
-	 <260220a4-8c58-4720-a566-7d7221502ecf@kernel.org>
+	<20241216-mptcp-pm-nl-spec-doc-attr-v2-0-68807f55d42c@kernel.org>
+	 <20241216-mptcp-pm-nl-spec-doc-attr-v2-3-68807f55d42c@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -80,54 +78,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Mon, 2024-12-16 at 11:02 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for the review.
-> 
-> On 16/12/2024 10:22, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for this set.
-> > 
-> > On Fri, 2024-12-13 at 18:55 +0100, Matthieu Baerts (NGI0) wrote:
-> > > Two small fixes for the documentation:
-> > > 
-> > > - The 'server-side' attribute was missing for two events
-> > > 
-> > > - Attributes were written at the beginning, but without
-> > > explaining
-> > > what
-> > >   they were.
-> > > 
-> > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > ---
-> > > Matthieu Baerts (NGI0) (2):
-> > >       netlink: specs: mptcp: add missing 'server-side' attr
-> > >       netlink: specs: mptcp: clearly mention attributes
-> > 
-> > I think we should swap the positions of these two patches, first
-> > move
-> > these attributes to the end, then add missing 'server-side'
-> > attribute.
-> > WDYT?
-> 
-> It would make sense if these patches were for net-next, but for fixes
-> modifying the same area, I think it is better to order them by
-> commits
-> they fix.
-> 
-> The first one is for 5.19, and the second one is for 6.7. Of course,
-> here, there will be conflicts for the first one with < 6.7 versions.
-> But
-> still, better not to increase the complexity of the backports.
+Hi Matt,
 
-If so, this set LGTM. I'll add my reviewed-by tag for v2.
+On Mon, 2024-12-16 at 11:39 +0100, Matthieu Baerts (NGI0) wrote:
+> Two operations didn't have a small description. It looks like
+> something
+> that has been missed in the original commit introducing this file.
+> 
+> Replace the two 'todo' by a small and simple description:
+> Create/Destroy
+> subflow.
+> 
+> Fixes: bc8aeb2045e2 ("Documentation: netlink: add a YAML spec for
+> mptcp")
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  Documentation/netlink/specs/mptcp_pm.yaml | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/netlink/specs/mptcp_pm.yaml
+> b/Documentation/netlink/specs/mptcp_pm.yaml
+> index
+> 59087a23056510dfb939b702e231b6e97ae042c7..a9519ae77d38ce2af58de77c059
+> ef22cd2e3f563 100644
+> --- a/Documentation/netlink/specs/mptcp_pm.yaml
+> +++ b/Documentation/netlink/specs/mptcp_pm.yaml
+> @@ -375,7 +375,7 @@ operations:
+>             - loc-id
+>      -
+>        name: subflow-create
+> -      doc: todo
+> +      doc: Create subflow
+>        attribute-set: attr
+>        dont-validate: [ strict ]
+>        flags: [ uns-admin-perm ]
+> @@ -387,7 +387,7 @@ operations:
+>              - addr-remote
+>      -
+>        name: subflow-destroy
+> -      doc: todo
+> +      doc: Destroy subflow
+>        attribute-set: attr
+>        dont-validate: [ strict ]
+>        flags: [ uns-admin-perm ]
 
-Thanks,
+This patch looks good! Thanks.
+
+I think other three doc needs to be updated too:
+
+"flush addresses", "announce new sf", "announce removal"
+
+->
+
+"Flush addresses", "Announce new address (?)", "Remove address (?)"
+
+WDYT?
+
 -Geliang
-
-> 
-> Cheers,
-> Matt
 
