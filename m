@@ -1,70 +1,174 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED0251799B
-	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 02:13:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73B871A0B08
+	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 08:53:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734747231; cv=none; b=mhaReMYu1qIS36Yp28rKnjq/E+7sxWGyNSTwtLC7vMdWrh+paQVRUPy1IM4KcKjCaiScHa05FYAs3CQ488y7sUc5DtToiSwLZoEZUbjSiVrNwFGq+mzZ+PB9N91Ff0Tc5nBx/CuqF3o68HOHaNoBqJIT2xOp+Kin+vwX8HHFGfE=
+	t=1734771183; cv=none; b=eTWhaW06edcPeJmL87SMGloT7dw8INdrnDXPYdWFIP7rfOUS3CD4X9dVTw/pYnrWj06QK3xGYg9nLL8qYmkRQQVamCzcG/Hz5PxCD50t8vTdqt6OAdhbiSnrBvk5RFnB4kQIaCS0CfZMYuVYkqungiseaQmX6G8J0uaGsOhzVVk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734747231; c=relaxed/simple;
-	bh=h1REstVmm/2nr1Dx5BzeVAs1Z+yl8BgQyNUJ5ov7sXk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=FzVljEvHeb60MjYavJT2g3lMcdEcd2pO66ps2a1YckhGHjuuOWk4Q22J2J0S09ZF5FJU3ytLV6gAWC1N/jaOFr58NAABoTzRRTERQqzV4mEdrJrK2bI1kay7ysdA+DqSQJ84ERZCyuTBjimvss206RIK1jH846IrkHDIqKoUY1k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WT1d654K; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734771183; c=relaxed/simple;
+	bh=cjKF2C9TZmQVmts5DW4GLLkPodNlIEAgBCccDDu79Is=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=KBimanAHJGLi/MfLNGnrR5Kittk4HgioUTE93IJwt1dCO5iItKWPfB4+GNj4Wr2ZfhN8Ps7KaPk8DxHcczOekEdjdgbi0k2AnaSo7oVzC2WtBe3MOva8rEZcG+41QpDJ1N7d3bbDagL+DbZrwlvqbe5sidgHzY87NAgSlYLTAV4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=RGRiTUck; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WT1d654K"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 64F0AC4CECD;
-	Sat, 21 Dec 2024 02:13:50 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734747230;
-	bh=h1REstVmm/2nr1Dx5BzeVAs1Z+yl8BgQyNUJ5ov7sXk=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=WT1d654KPOBTfUNla8E5XTq/9Exx9QqiwQKyM4/jAc5s/am1SxIHQIaM7kPIFcmSB
-	 9HancaRD+RjtoWvujj7P9U6yf78bU+g1hbPe1r5HXpssWp1bOCWEPihtYSpBAofIGF
-	 zzYsedNlCKrUL0u0lvS/gj5wNKv5LwJUaOBlrW9tzYkAUgJt5ScHoTbBbTakEFGt3d
-	 +gWL1hpNmZsFwnlXMGYSY9wfQmpxuhmo5LaHrtvLMFv4n9/T/6MKR0BmhUP+NT3RH4
-	 T+DOO4P7TFBWQU3Y61hCcmsoxGGraWOMTRtiQzKNDTXpUwoCMu6gPrvST0B269AJE+
-	 AzpsWEX9oyVig==
-Date: Fri, 20 Dec 2024 18:13:49 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: rx refactor follow-ups
-In-Reply-To: <cover.1734022547.git.pabeni@redhat.com>
-Message-ID: <3e426ce7-aedc-df66-80f2-e541423ba4e9@kernel.org>
-References: <cover.1734022547.git.pabeni@redhat.com>
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="RGRiTUck"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1734771180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=5u7ODnEiVmrU6NmFwmTtOY2PwDk2M+piTrUPkLuAqSY=;
+	b=RGRiTUckqQSW6USzK3cw8PvnWjmxbtfGM0wJYBIS/kRoCN4joIplGheASEj6yWpxF8ONeF
+	ixiWmkAU7GLmAdE0f/s8mZ8m/iH3t2OgSjsgrwCPDg5uIomq8wbK4WbZ/HTfoG5BZOT/87
+	hJ3uXYEDHuwBy5WZOfwChhvdqQwZedg=
+Received: from mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-492-uDYhupN2OKC2e8CdgsnKUg-1; Sat,
+ 21 Dec 2024 03:52:56 -0500
+X-MC-Unique: uDYhupN2OKC2e8CdgsnKUg-1
+X-Mimecast-MFC-AGG-ID: uDYhupN2OKC2e8CdgsnKUg
+Received: from mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.12])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-01.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 7012B1956096;
+	Sat, 21 Dec 2024 08:52:54 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.39.192.36])
+	by mx-prod-int-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 1373A19560A2;
+	Sat, 21 Dec 2024 08:52:50 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: netdev@vger.kernel.org
+Cc: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	mptcp@lists.linux.dev
+Subject: [PATCH net] mptcp: fix TCP options overflow.
+Date: Sat, 21 Dec 2024 09:51:46 +0100
+Message-ID: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 3.0 on 10.30.177.12
 
-On Thu, 12 Dec 2024, Paolo Abeni wrote:
+Syzbot reported the following splat:
 
-> a couple of incremental improvements on top of the pending rx path
-> refactor: patch 1 dismiss __mptcp_rmem(), patch 2 optimize a bit
-> __mptcp_move_skbs()
->
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+CPU: 1 UID: 0 PID: 5836 Comm: sshd Not tainted 6.13.0-rc3-syzkaller #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
+RIP: 0010:_compound_head include/linux/page-flags.h:242 [inline]
+RIP: 0010:put_page+0x23/0x260 include/linux/mm.h:1552
+Code: 90 90 90 90 90 90 90 55 41 57 41 56 53 49 89 fe 48 bd 00 00 00 00 00 fc ff df e8 f8 5e 12 f8 49 8d 5e 08 48 89 d8 48 c1 e8 03 <80> 3c 28 00 74 08 48 89 df e8 8f c7 78 f8 48 8b 1b 48 89 de 48 83
+RSP: 0000:ffffc90003916c90 EFLAGS: 00010202
+RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff888030458000
+RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: dffffc0000000000 R08: ffffffff898ca81d R09: 1ffff110054414ac
+R10: dffffc0000000000 R11: ffffed10054414ad R12: 0000000000000007
+R13: ffff88802a20a542 R14: 0000000000000000 R15: 0000000000000000
+FS:  00007f34f496e800(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007f9d6ec9ec28 CR3: 000000004d260000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ skb_page_unref include/linux/skbuff_ref.h:43 [inline]
+ __skb_frag_unref include/linux/skbuff_ref.h:56 [inline]
+ skb_release_data+0x483/0x8a0 net/core/skbuff.c:1119
+ skb_release_all net/core/skbuff.c:1190 [inline]
+ __kfree_skb+0x55/0x70 net/core/skbuff.c:1204
+ tcp_clean_rtx_queue net/ipv4/tcp_input.c:3436 [inline]
+ tcp_ack+0x2442/0x6bc0 net/ipv4/tcp_input.c:4032
+ tcp_rcv_state_process+0x8eb/0x44e0 net/ipv4/tcp_input.c:6805
+ tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1939
+ tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2351
+ ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
+ ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
+ NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+ NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+ __netif_receive_skb_one_core net/core/dev.c:5672 [inline]
+ __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5785
+ process_backlog+0x662/0x15b0 net/core/dev.c:6117
+ __napi_poll+0xcb/0x490 net/core/dev.c:6883
+ napi_poll net/core/dev.c:6952 [inline]
+ net_rx_action+0x89b/0x1240 net/core/dev.c:7074
+ handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
+ __do_softirq kernel/softirq.c:595 [inline]
+ invoke_softirq kernel/softirq.c:435 [inline]
+ __irq_exit_rcu+0xf7/0x220 kernel/softirq.c:662
+ irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
+ instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+ sysvec_apic_timer_interrupt+0x57/0xc0 arch/x86/kernel/apic/apic.c:1049
+ asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+RIP: 0033:0x7f34f4519ad5
+Code: 85 d2 74 0d 0f 10 02 48 8d 54 24 20 0f 11 44 24 20 64 8b 04 25 18 00 00 00 85 c0 75 27 41 b8 08 00 00 00 b8 0f 01 00 00 0f 05 <48> 3d 00 f0 ff ff 76 75 48 8b 15 24 73 0d 00 f7 d8 64 89 02 48 83
+RSP: 002b:00007ffec5b32ce0 EFLAGS: 00000246
+RAX: 0000000000000001 RBX: 00000000000668a0 RCX: 00007f34f4519ad5
+RDX: 00007ffec5b32d00 RSI: 0000000000000004 RDI: 0000564f4bc6cae0
+RBP: 0000564f4bc6b5a0 R08: 0000000000000008 R09: 0000000000000000
+R10: 00007ffec5b32de8 R11: 0000000000000246 R12: 0000564f48ea8aa4
+R13: 0000000000000001 R14: 0000564f48ea93e8 R15: 00007ffec5b32d68
+ </TASK>
 
-Both LGTM, thanks Paolo.
+Eric noted a probable shinfo->nr_frags corruption, which indeed
+occurs.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+The root cause is a buggy MPTCP option len computation in some
+circumstances: the ADD_ADDR option should be mutually exclusive
+with DSS since the blamed commit.
 
-> Based-on: <cover.1733486870.git.pabeni@redhat.com>
->
-> Paolo Abeni (2):
->  mptcp: dismiss __mptcp_rmem()
->  mptcp: micro-optimize __mptcp_move_skb()
->
-> net/mptcp/protocol.c | 113 +++++++++++++++++++------------------------
-> net/mptcp/protocol.h |  13 ++---
-> 2 files changed, 55 insertions(+), 71 deletions(-)
->
-> -- 
-> 2.45.2
->
->
->
+Still, mptcp_established_options_add_addr() tries to set the
+relevant info in mptcp_out_options, if the remaining space is
+large enough even when DSS is present.
+
+Since the ADD_ADDR infos and the DSS share the same union
+fields, adding first corrupts the latter. In the worst-case
+scenario, such corruption increases the DSS binary layout,
+exceeding the computed length and possibly overwriting the
+skb shared info.
+
+Address the issue by enforcing mutual exclusion in
+mptcp_established_options_add_addr(), too.
+
+Reported-by: syzbot+38a095a81f30d82884c1@syzkaller.appspotmail.com
+Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+---
+ net/mptcp/options.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index ad22622843a2..9ea7356d9fab 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -667,8 +667,15 @@ static bool mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+ 		    &echo, &drop_other_suboptions))
+ 		return false;
+ 
++	/*
++	 * Later on, mptcp_write_options() will enforce mutually exclusion with
++	 * DSS, bail out if such option is set and we can't drop it.
++	 */
+ 	if (drop_other_suboptions)
+ 		remaining += opt_size;
++	else if (opts->suboptions & OPTION_MPTCP_DSS)
++		return false;
++
+ 	len = mptcp_add_addr_len(opts->addr.family, echo, !!opts->addr.port);
+ 	if (remaining < len)
+ 		return false;
+-- 
+2.45.2
+
