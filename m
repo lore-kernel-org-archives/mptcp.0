@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE95B1F1908
-	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 10:00:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB8CA5A;
+	Sat, 21 Dec 2024 10:28:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734775221; cv=none; b=GZ+bOamKDEb/fIY5l0Q+kVrKUX32fp311K0cufrE+spwahpB33Meh8RlIS+tNV2aU9sZ1+3wEqqbuN9FN0zN8HdbqHeKTHj1XWn5lAAIH8ScMcq+ps9YLeC8BvW0giMdA9med1T5+ooYsCs7K4UW8uIT9UxlGbTZT3KSBpMAgEI=
+	t=1734776910; cv=none; b=Zd/hiES75pzMXxL6Db3PMwbnEzOkHGBZVMg4TVFpZDrsx5EQHTzgWsypI5Csej+DTHVYm3P3DHa5zwEtN3CwBe9jhvgPw1/HXJrJJUaUv6QQRpz9ztgsb1sPdxmsv/B1xwwYCo6FXCx75bNYlmaJHnZqj3Et/vFHPhFL283DAOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734775221; c=relaxed/simple;
-	bh=MzG4dVCWMyGD3SNCG1F++IPkIjJb3t++Vfk0Qkl4tFU=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=AiS28qylM/nrL2YkiF1KSrz8i8nG26SJUNRYes0XHBwFIJ3+FGJlxeavTSIMcBkBwT2NuYxW5+6RbaFZEnVCHU/BtcmUSotR5H2tbB3ApryuG21qBTRo3o6tlhhdmkChOeIfm8IBjZ+0EjMw7P9bRYvi0hlhce7VXmajmrDD0JU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSH2LKMj; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734776910; c=relaxed/simple;
+	bh=F8qyLk2tQa0JK3a0b5tK09o53tJ+d/qyRpNct4qmXKc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Lyh7CZ+OsVfETbIr3OQMvopUNpB09q4/fYQul8I4/hzfcovsCkFMcbXb65KFhkM7uMzmK7vOVBRRZ51MJEU65dLohoGKkhilGawJactqi8rJ2qABBINVTv778OK3YFQVMPGA9K6QgberYdpqLR+2M+1GOtJ9Q75w/rdYDhh/keg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyLdsT/n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSH2LKMj"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B29C4CECE;
-	Sat, 21 Dec 2024 10:00:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyLdsT/n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E52BC4CECE;
+	Sat, 21 Dec 2024 10:28:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734775221;
-	bh=MzG4dVCWMyGD3SNCG1F++IPkIjJb3t++Vfk0Qkl4tFU=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=CSH2LKMj2iNWxH3VZSTefk771G399+6j/PzXhYxxOaQEqxpiFxdDrMM99eujlQZ5s
-	 /DxvxSEyJOgDpWvkcFSCAZH3v4x6oCV260RGxcpXluCOuWepIagip8oimFh7PScsA9
-	 JLg47lGHLPBr6yOSrf1XamJv0hh2OqmYdU7Qfz2XSDU5r2gUm6JQh6yM0z+koL7iTY
-	 7o82CwAyTBnZyCmGyPO27/G3DZhpnQonyS7uWbz3XUYPW+jfBl2b5R00BV+0z4j5jU
-	 GiB2UOAyHjl4BK0Ly1DZ6ZtyIAJwnmuerfjEHkd6PloPQnsRXgWqEPRhOk8xgR7+c4
-	 FaZ8Ki3BUjhLg==
-Message-ID: <22fe2214-b009-46b1-84b9-84559ebe339c@kernel.org>
-Date: Sat, 21 Dec 2024 11:00:18 +0100
+	s=k20201202; t=1734776910;
+	bh=F8qyLk2tQa0JK3a0b5tK09o53tJ+d/qyRpNct4qmXKc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iyLdsT/nJrKFR2MLsSwIx9L76rSuuFPuR6fMP9dPZq/A1D/KZRdIS/Wn3TYdCURnR
+	 l8lWD9JEVFQif/1NPHwDT/Og/Uc6kM6zV942nE4m/Fm0f35js8twbgbeCpFyak0NB3
+	 CTpwtCR5su71BwQqwdGeOG37PY7eKMfywfsWr6raPne7Ac+IXVATKTb9lr+8VRYvqJ
+	 7t/hnBrSdse3ZoUlgm0MFuaBCduoM9W6pAMPll6so04wbG4K5fyTtQgonKEstOrY3y
+	 co5H2+3veYjslLNWH1VLzgy60ywWIqTXJ8HGsHqSCDVoqWXmN/y8is8G/13+FY3HRy
+	 R8NV2h+GbfYTQ==
+Message-ID: <047cb3ef-f0c0-43e4-82e9-dc0073c8b953@kernel.org>
+Date: Sat, 21 Dec 2024 11:28:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/7] mptcp: prevent excessive coalescing on
- receive
+Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
 Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
+ mptcp@lists.linux.dev, stable@vger.kernel.org
+References: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1733486870.git.pabeni@redhat.com>
- <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
- <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,35 +88,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
+In-Reply-To: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 10/12/2024 13:03, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> On 06/12/2024 13:10, Paolo Abeni wrote:
->> Currently the skb size after coalescing is only limited by the skb
->> layout (the skb must not carry frag_list). A single coalesced skb
->> covering several MSS can potentially fill completely the receive
->> buffer. In such a case, the snd win will zero until the receive buffer
->> will be empty again, affecting tput badly.
-> 
-> Good idea! Thank you for having looked at this!
-> 
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> ---
->> No fixes tag because the problem is not very visible in practice
->> currently, but will be apparent after the rx refactor.
->> Still I hope this could affect positively the simlut flows self-tests
-> 
-> The modification looks safe enough to me: it should not make thing worst.
+On 21/12/2024 09:51, Paolo Abeni wrote:
+> Syzbot reported the following splat:
 
-Do you still prefer not targetting -net for this patch here? Or is it OK
-to do so and add a Fixes tag?
+(...)
 
+> Eric noted a probable shinfo->nr_frags corruption, which indeed
+> occurs.
+> 
+> The root cause is a buggy MPTCP option len computation in some
+> circumstances: the ADD_ADDR option should be mutually exclusive
+> with DSS since the blamed commit.
+> 
+> Still, mptcp_established_options_add_addr() tries to set the
+> relevant info in mptcp_out_options, if the remaining space is
+> large enough even when DSS is present.
+> 
+> Since the ADD_ADDR infos and the DSS share the same union
+> fields, adding first corrupts the latter. In the worst-case
+> scenario, such corruption increases the DSS binary layout,
+> exceeding the computed length and possibly overwriting the
+> skb shared info.
+> 
+> Address the issue by enforcing mutual exclusion in
+> mptcp_established_options_add_addr(), too.
+
+Thank you for the investigation and the fix, it looks good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> Reported-by: syzbot+38a095a81f30d82884c1@syzkaller.appspotmail.com
+
+If you don't mind, can you please add these two tags when applying the
+patches to help to track the backports?
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/538
+Cc: stable@vger.kernel.org
+
+> Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 Cheers,
 Matt
 -- 
