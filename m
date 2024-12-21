@@ -1,126 +1,175 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306FA646
-	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 10:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D76A191F88
+	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 10:39:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734777208; cv=none; b=byYarWZx2D4Zc9n1TSwm+UZfTkRwFfQp1Xh5G47Ub6dUXFFyr09elEIk2VsDJOkH/XZB+1xSBD2mGi722r9EQ8CPfu+pJ4y3izrhw7dcpV97vJN1Iy8tlKP0JNVFeRtcNSCYAAwp3EF5ENfD8ZbUiY5NdtlbMtG1skgfGk1Rh88=
+	t=1734777561; cv=none; b=TBKxGRAoYJnMhCMYBgympbZOXPUY3c/umPeAgvqNtkisnItnnK8yGY1v449Co194tzjnKQYx/J/jOVDtBzd93W1rYcm+WuKQrhS45blg6zKn8rNCUIMF5ipbMNX5A1Bwx1gSc48fAM3qpc4BEfETX7AYxeMO/4y64+ucBTpS+24=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734777208; c=relaxed/simple;
-	bh=aTizTX68mT5g55/dYWHbzMxLKVFyjmvzqsGor+4ViGU=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=CqabPNdYYPK5INRn2shPOrgMFceqq5XQb40n1FM1PQsrMijxzXj3FyZFkrKf7qsyHcMw/KrB3WFOchVU31P6euNSLZ2/JW+zTlpfp0LpbG7Red1DIYmy+6APSsMsnsrtEWLiUXDwMUnaCZT0mbOcDSWNjrlNBT58Edkzf69zn2Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zc7X5Nl7; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1734777561; c=relaxed/simple;
+	bh=+3sLKX5Zv5MzFVrNCfllbTz3SL7psHYttfUilZEQY6M=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=gDqgWX//eDntSF+g2BrARCEM8BKDlB4glV2C2KRKMwLY/o1xxQ8HRRFXxbQpaSDNxbR/0jbh+4paZuBKwOMjDYqOoJ2fi6aqqk9TW3EjczTwKCknk0rYlP5mllQlQkRhWeLZS5SwzTdPdbmq0rrfz/Fbnv7A3iR2nS0Ggp3AEKo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dY7uhBH3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zc7X5Nl7"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6f53c12adso204764085a.1
-        for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 02:33:26 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1734777206; x=1735382006; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=O5dE378wnRTIZW5hFoh4us4GhxfbUMlb9QtOs65eAYo=;
-        b=Zc7X5Nl7wPPJH9RHOg8XhwgE/brcZtb0MkeqK3nCzoRD9eejm6C0PQMfOo7Dtd0Lu8
-         1eI9xQa/ESxrBaiudMD1dPMvMZij9qHrtKiDGtNHE0lGU2sxvAhxj7meYzSJBLamPCL9
-         QIJZ8Cb4gWLXOp7mDg8TC8wRKYybPPIwqwE4PpsdxSnGmcRyBD20QjL0vd0xvltijNrI
-         O4fQJvt/t//DY3yFsXO03Apq2AImuAdGPfG7s+s//qlDjpmmL2ZhHhkcdfvwZV723g5K
-         9Vdy1joHlN0byGTjyUYwd+d8RRMvYxeAmfS5hkyrSUT7CGQWviOF/uSFcvZtQbpmsbcn
-         pqAg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734777206; x=1735382006;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=O5dE378wnRTIZW5hFoh4us4GhxfbUMlb9QtOs65eAYo=;
-        b=kc+9V+Npm9krTWCoJVFgQm7vJ4hGUgn7XZ4vxNsBmQmE9dcNRSDXzaaSzZ6zSvXNK9
-         lAeu2fj1ihlj5Aq34hoJEAe28YRs3Ym7BHuLF2+CaX7VgrwwT2HdVRzGUOHqKsqBLwFB
-         snodlK/uLmwVLR+9hHwApI2dFdBGCBlpQo0YvVUbjgq2GfSqhTyhCxCwUV5lbHP2C8G/
-         OPplyWDapvbPgTrsUNh6XCg0dl4/Nf8KKTlOp7Ab2HB53cHkX9we5fX7ZL4V8yHuEG5d
-         JV480rYBS11/3FtYYsTHK1XcTESQuhmiWLqftyx0afwNljH6tT+99x1z6AJpKt9s0yq5
-         LfrA==
-X-Gm-Message-State: AOJu0Ywm2vazlxLMoP4vDfAJYmrcAVLPLXjj6usWjY5MWzsWEdV3JHMh
-	vNsnt5oIXwgKVP6udbXzyz1JhZ23rcWe8mvdjC6Vg6dXrjkDULA=
-X-Gm-Gg: ASbGnct80PQmgaMhUUFn2cAEYphWUIr0tsWEpXtkocgCh8KgKcW1NxDzN7F6yQ5aXtg
-	UHzK6lBT1OBTLKk9cIl16ykS29n1S08o+mjtSK20rrppE33FUIFKkAnFavxyNi4gzzam82c43Cw
-	McCuPROZvTq4VQiyroNzu6b2nkVpurOXI21oVyjp6meEgDYWTUI20shHif1yWp6tMQUVROj8hYH
-	zoiCRI4N4qyRqXwcZJqUfQPhiqRGDrQZLKuvy4dmICYc6PlcgkUuZ4vmgWdE+SRnNJfKQ==
-X-Google-Smtp-Source: AGHT+IE73SyhYIL6oFh8i/Gkd6NFsIKueOrAFfLK8sVg1u3ls7DHbgT7JdI04oOw4uiEFVaRy1JIPQ==
-X-Received: by 2002:a05:620a:178d:b0:7b6:e8c3:4b60 with SMTP id af79cd13be357-7b9ba79e0fdmr735797185a.28.1734777205918;
-        Sat, 21 Dec 2024 02:33:25 -0800 (PST)
-Received: from [127.0.0.1] ([20.55.214.247])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3e64d9c1sm25363571cf.2.2024.12.21.02.33.24
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 21 Dec 2024 02:33:25 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-References:
- <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
-Message-ID: <6197955b-99e1-d191-c8d0-9b6da48f6263@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 21 Dec 2024 10:33:24 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dY7uhBH3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 384B3C4CECE;
+	Sat, 21 Dec 2024 10:39:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734777560;
+	bh=+3sLKX5Zv5MzFVrNCfllbTz3SL7psHYttfUilZEQY6M=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=dY7uhBH30UV+hc6a0uQDpRoOcVik/ov634xvhUfK6B6kiRhnYGBDE5zSSQJAiH+tb
+	 v+Sv+1z857wwMjUmdSaldHdQFobaj+JQlVgaW3XsB/Nbo6vtBA08B8+QdOU1HcDCmy
+	 emX0hqYugaWgjq9jp/O1XzuMPoiWRewJpjfn3fa/4XJ+wPvh+Pp86BkDi4Z8sRppZy
+	 5WTPMX6OOKeWn6eGWRvrIskEXo2MVg0T1SurhfPyfF3YzBwied+voyDQqBRpTZG0tw
+	 aqbGAKG7Ewd0bXtnwj71oz8IdbjQOsAiJfDbr6Rrs2BU+dKcnRDpbpdaS+a954P5Q8
+	 06nHWfWcKtCDg==
+Message-ID: <c5d1e778-7989-4ed4-ac90-cf8334604cc3@kernel.org>
+Date: Sat, 21 Dec 2024 11:39:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v3] mptcp: use GENL_REQ_ATTR_CHECK for token
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <d9c76c6c008c770046f665a4a4e93735fd121399.1734337790.git.tanggeliang@kylinos.cn>
+ <93b46bed-cc91-46bc-9cc3-fff79cb3dac9@kernel.org>
+ <f10fd4d16e3fe406dbac0c8dc17d37c5ab2431b6.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <f10fd4d16e3fe406dbac0c8dc17d37c5ab2431b6.camel@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Geliang,
 
-Thank you for your modifications, that's great!
+On 20/12/2024 10:50, Geliang Tang wrote:
+> Hi Matt,
+> 
+> On Mon, 2024-12-16 at 12:24 +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 16/12/2024 09:31, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> A more general way to check if MPTCP_PM_ATTR_TOKEN exists in 'info'
+>>> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN) instead of
+>>> directly reading info->attrs[MPTCP_PM_ATTR_TOKEN] and then checking
+>>> if it's NULL.
+>>>
+>>> So this patch uses GENL_REQ_ATTR_CHECK() for 'token' in 'info' in
+>>> mptcp_userspace_pm_get_sock().
+>>>
+>>> 'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
+>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>> ---
+>>> v3:
+>>>  - use GENL_REQ_ATTR_CHECK in mptcp_userspace_pm_get_sock only
+>>>  - drop GENL_SET_ERR_MSG as Matt suggested (thanks)
+>>
+>> Thank you for the v3. While at it, do you want to do a similar change
+>> everywhere we do:
+>>
+>>   struct nlattr *X = info->attrs[MPTCP_PM_ATTR_Y]:
+>>   if (!X) {
+>>       GENL_SET_ERR_MSG(info, "missing ...");
+>>       return Z;
+>>   }
+>>
+>> e.g. in mptcp_pm_nl_announce_doit() (addr), mptcp_pm_nl_remove_doit()
+>> (id), mptcp_pm_nl_subflow_create_doit() (raddr, laddr),
+>> mptcp_pm_nl_subflow_destroy_doit() (raddr, laddr).
+>> (and maybe mptcp_pm_parse_pm_addr_attr(), but it needs more changes
+>> around to pass the attribute ID, probably best not to change that)
+> 
+> Thanks for this suggestion, I updated this in v4.
 
-Our CI did some validations and here is its report:
+Thank you!
 
-- KVM Validation: normal: Critical: Global Timeout =E2=9D=8C
-- KVM Validation: debug: Success! =E2=9C=85
-- KVM Validation: btf-normal =
-(only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/12443930793
+>> Also, do you know if 'pm_nl_ctl' will continue to indicate a helpful
+>> message if such attribute is missing (that's a message more for
+> 
+> 'pm_nl_ctl' can't display nl error msg, this is a bug in nl_error():
+> 
+>  $ sudo ip mptcp endpoint del id 100
+>  Error: address not found.
+>  $ sudo ./pm_nl_ctl del 100
+>  netlink error -22 (Invalid argument)
+>  ./pm_nl_ctl: bailing out due to netlink error[s]
+> 
+> Look at this test, nl error msg "address not found" in
+> mptcp_pm_nl_del_addr_doit() can be displayed in 'ip mptcp', but not in
+> 'pm_nl_ctl'. I'll try to fix it.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/54b09e873b02
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D920093
+It might help developers if pm_nl_ctl could also print errors generated
+by GENL_REQ_ATTR_CHECK(), not only the ones generated with
+GENL_SET_ERR_MSG().
 
+>> userspace app dev)? Or does it need to be modified to display the
+>> missing argument set by GENL_REQ_ATTR_CHECK()?
+> 
+> I think no need to modify this, since after GENL_REQ_ATTR_CHECK(), we
+> will also call NL_SET_ERR_MSG_ATTR/GENL_SET_ERR_MSG to set nl error msg
+> in the error paths.
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
+If GENL_REQ_ATTR_CHECK() is used, it should no longer needed to use
+NL_SET_ERR_MSG_ATTR/GENL_SET_ERR_MSG. I guess the userspace should be
+able to find the arguments that are missing, no?
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+This can be done in another series of course.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
