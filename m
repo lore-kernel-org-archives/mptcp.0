@@ -1,140 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A8EB8CA5A;
-	Sat, 21 Dec 2024 10:28:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 306FA646
+	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 10:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734776910; cv=none; b=Zd/hiES75pzMXxL6Db3PMwbnEzOkHGBZVMg4TVFpZDrsx5EQHTzgWsypI5Csej+DTHVYm3P3DHa5zwEtN3CwBe9jhvgPw1/HXJrJJUaUv6QQRpz9ztgsb1sPdxmsv/B1xwwYCo6FXCx75bNYlmaJHnZqj3Et/vFHPhFL283DAOQ=
+	t=1734777208; cv=none; b=byYarWZx2D4Zc9n1TSwm+UZfTkRwFfQp1Xh5G47Ub6dUXFFyr09elEIk2VsDJOkH/XZB+1xSBD2mGi722r9EQ8CPfu+pJ4y3izrhw7dcpV97vJN1Iy8tlKP0JNVFeRtcNSCYAAwp3EF5ENfD8ZbUiY5NdtlbMtG1skgfGk1Rh88=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734776910; c=relaxed/simple;
-	bh=F8qyLk2tQa0JK3a0b5tK09o53tJ+d/qyRpNct4qmXKc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lyh7CZ+OsVfETbIr3OQMvopUNpB09q4/fYQul8I4/hzfcovsCkFMcbXb65KFhkM7uMzmK7vOVBRRZ51MJEU65dLohoGKkhilGawJactqi8rJ2qABBINVTv778OK3YFQVMPGA9K6QgberYdpqLR+2M+1GOtJ9Q75w/rdYDhh/keg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iyLdsT/n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734777208; c=relaxed/simple;
+	bh=aTizTX68mT5g55/dYWHbzMxLKVFyjmvzqsGor+4ViGU=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=CqabPNdYYPK5INRn2shPOrgMFceqq5XQb40n1FM1PQsrMijxzXj3FyZFkrKf7qsyHcMw/KrB3WFOchVU31P6euNSLZ2/JW+zTlpfp0LpbG7Red1DIYmy+6APSsMsnsrtEWLiUXDwMUnaCZT0mbOcDSWNjrlNBT58Edkzf69zn2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Zc7X5Nl7; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iyLdsT/n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E52BC4CECE;
-	Sat, 21 Dec 2024 10:28:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734776910;
-	bh=F8qyLk2tQa0JK3a0b5tK09o53tJ+d/qyRpNct4qmXKc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iyLdsT/nJrKFR2MLsSwIx9L76rSuuFPuR6fMP9dPZq/A1D/KZRdIS/Wn3TYdCURnR
-	 l8lWD9JEVFQif/1NPHwDT/Og/Uc6kM6zV942nE4m/Fm0f35js8twbgbeCpFyak0NB3
-	 CTpwtCR5su71BwQqwdGeOG37PY7eKMfywfsWr6raPne7Ac+IXVATKTb9lr+8VRYvqJ
-	 7t/hnBrSdse3ZoUlgm0MFuaBCduoM9W6pAMPll6so04wbG4K5fyTtQgonKEstOrY3y
-	 co5H2+3veYjslLNWH1VLzgy60ywWIqTXJ8HGsHqSCDVoqWXmN/y8is8G/13+FY3HRy
-	 R8NV2h+GbfYTQ==
-Message-ID: <047cb3ef-f0c0-43e4-82e9-dc0073c8b953@kernel.org>
-Date: Sat, 21 Dec 2024 11:28:26 +0100
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Zc7X5Nl7"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7b6f53c12adso204764085a.1
+        for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 02:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734777206; x=1735382006; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=O5dE378wnRTIZW5hFoh4us4GhxfbUMlb9QtOs65eAYo=;
+        b=Zc7X5Nl7wPPJH9RHOg8XhwgE/brcZtb0MkeqK3nCzoRD9eejm6C0PQMfOo7Dtd0Lu8
+         1eI9xQa/ESxrBaiudMD1dPMvMZij9qHrtKiDGtNHE0lGU2sxvAhxj7meYzSJBLamPCL9
+         QIJZ8Cb4gWLXOp7mDg8TC8wRKYybPPIwqwE4PpsdxSnGmcRyBD20QjL0vd0xvltijNrI
+         O4fQJvt/t//DY3yFsXO03Apq2AImuAdGPfG7s+s//qlDjpmmL2ZhHhkcdfvwZV723g5K
+         9Vdy1joHlN0byGTjyUYwd+d8RRMvYxeAmfS5hkyrSUT7CGQWviOF/uSFcvZtQbpmsbcn
+         pqAg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734777206; x=1735382006;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=O5dE378wnRTIZW5hFoh4us4GhxfbUMlb9QtOs65eAYo=;
+        b=kc+9V+Npm9krTWCoJVFgQm7vJ4hGUgn7XZ4vxNsBmQmE9dcNRSDXzaaSzZ6zSvXNK9
+         lAeu2fj1ihlj5Aq34hoJEAe28YRs3Ym7BHuLF2+CaX7VgrwwT2HdVRzGUOHqKsqBLwFB
+         snodlK/uLmwVLR+9hHwApI2dFdBGCBlpQo0YvVUbjgq2GfSqhTyhCxCwUV5lbHP2C8G/
+         OPplyWDapvbPgTrsUNh6XCg0dl4/Nf8KKTlOp7Ab2HB53cHkX9we5fX7ZL4V8yHuEG5d
+         JV480rYBS11/3FtYYsTHK1XcTESQuhmiWLqftyx0afwNljH6tT+99x1z6AJpKt9s0yq5
+         LfrA==
+X-Gm-Message-State: AOJu0Ywm2vazlxLMoP4vDfAJYmrcAVLPLXjj6usWjY5MWzsWEdV3JHMh
+	vNsnt5oIXwgKVP6udbXzyz1JhZ23rcWe8mvdjC6Vg6dXrjkDULA=
+X-Gm-Gg: ASbGnct80PQmgaMhUUFn2cAEYphWUIr0tsWEpXtkocgCh8KgKcW1NxDzN7F6yQ5aXtg
+	UHzK6lBT1OBTLKk9cIl16ykS29n1S08o+mjtSK20rrppE33FUIFKkAnFavxyNi4gzzam82c43Cw
+	McCuPROZvTq4VQiyroNzu6b2nkVpurOXI21oVyjp6meEgDYWTUI20shHif1yWp6tMQUVROj8hYH
+	zoiCRI4N4qyRqXwcZJqUfQPhiqRGDrQZLKuvy4dmICYc6PlcgkUuZ4vmgWdE+SRnNJfKQ==
+X-Google-Smtp-Source: AGHT+IE73SyhYIL6oFh8i/Gkd6NFsIKueOrAFfLK8sVg1u3ls7DHbgT7JdI04oOw4uiEFVaRy1JIPQ==
+X-Received: by 2002:a05:620a:178d:b0:7b6:e8c3:4b60 with SMTP id af79cd13be357-7b9ba79e0fdmr735797185a.28.1734777205918;
+        Sat, 21 Dec 2024 02:33:25 -0800 (PST)
+Received: from [127.0.0.1] ([20.55.214.247])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3e64d9c1sm25363571cf.2.2024.12.21.02.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 21 Dec 2024 02:33:25 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
+References:
+ <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
+Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
+Message-ID: <6197955b-99e1-d191-c8d0-9b6da48f6263@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 21 Dec 2024 10:33:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- mptcp@lists.linux.dev, stable@vger.kernel.org
-References: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 21/12/2024 09:51, Paolo Abeni wrote:
-> Syzbot reported the following splat:
+Thank you for your modifications, that's great!
 
-(...)
+Our CI did some validations and here is its report:
 
-> Eric noted a probable shinfo->nr_frags corruption, which indeed
-> occurs.
-> 
-> The root cause is a buggy MPTCP option len computation in some
-> circumstances: the ADD_ADDR option should be mutually exclusive
-> with DSS since the blamed commit.
-> 
-> Still, mptcp_established_options_add_addr() tries to set the
-> relevant info in mptcp_out_options, if the remaining space is
-> large enough even when DSS is present.
-> 
-> Since the ADD_ADDR infos and the DSS share the same union
-> fields, adding first corrupts the latter. In the worst-case
-> scenario, such corruption increases the DSS binary layout,
-> exceeding the computed length and possibly overwriting the
-> skb shared info.
-> 
-> Address the issue by enforcing mutual exclusion in
-> mptcp_established_options_add_addr(), too.
+- KVM Validation: normal: Critical: Global Timeout =E2=9D=8C
+- KVM Validation: debug: Success! =E2=9C=85
+- KVM Validation: btf-normal =
+(only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only =
+bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/12443930793
 
-Thank you for the investigation and the fix, it looks good to me:
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/54b09e873b02
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D920093
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-> Reported-by: syzbot+38a095a81f30d82884c1@syzkaller.appspotmail.com
+If there are some issues, you can=
+ reproduce them using the same environment as
+the one used by the CI thanks=
+ to a docker image, e.g.:
 
-If you don't mind, can you please add these two tags when applying the
-patches to help to track the backports?
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/538
-Cc: stable@vger.kernel.org
+For more details:
 
-> Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
 Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
