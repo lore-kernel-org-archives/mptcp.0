@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 393CD40BF5
-	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 09:33:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE95B1F1908
+	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 10:00:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734773636; cv=none; b=JbBVdBsHzlMdjDCpCNar5YTMxXGDiHsJiUzJUMoIt8maeBfFf0GZMY7YBSQD5Fjb0rs8W8fmsApYYr5sj1Tde0VR8Xy+RkmsUR6ko7on5YXgN25OFqZTBXQNF05Y3MqarsyXHbnracQNmefDERgB/SqSWTcJFcWbWiuW7XzVf4o=
+	t=1734775221; cv=none; b=GZ+bOamKDEb/fIY5l0Q+kVrKUX32fp311K0cufrE+spwahpB33Meh8RlIS+tNV2aU9sZ1+3wEqqbuN9FN0zN8HdbqHeKTHj1XWn5lAAIH8ScMcq+ps9YLeC8BvW0giMdA9med1T5+ooYsCs7K4UW8uIT9UxlGbTZT3KSBpMAgEI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734773636; c=relaxed/simple;
-	bh=fPHpSp4A/HChyqZnb//Fw1Z69hGUcQs0iqinkk6tu/0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nFeKGa9kfqHSj87zF1hDF9mk90lOoOfsZcWx+qz/3/fgI1mJ0MzZVr/oO69keQg23QCTHhZyXHMcEXN793rXbyPPQgMLlI7YBy4+cNFWQH4LI1Uvhb+IddK3keVBFDeWe73acuYeww7UupY/XSZlMD6CoQbJHwFd28GxdpjmFkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K9b8kbsD; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734775221; c=relaxed/simple;
+	bh=MzG4dVCWMyGD3SNCG1F++IPkIjJb3t++Vfk0Qkl4tFU=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=AiS28qylM/nrL2YkiF1KSrz8i8nG26SJUNRYes0XHBwFIJ3+FGJlxeavTSIMcBkBwT2NuYxW5+6RbaFZEnVCHU/BtcmUSotR5H2tbB3ApryuG21qBTRo3o6tlhhdmkChOeIfm8IBjZ+0EjMw7P9bRYvi0hlhce7VXmajmrDD0JU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CSH2LKMj; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K9b8kbsD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F176BC4CECE;
-	Sat, 21 Dec 2024 09:33:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CSH2LKMj"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87B29C4CECE;
+	Sat, 21 Dec 2024 10:00:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734773635;
-	bh=fPHpSp4A/HChyqZnb//Fw1Z69hGUcQs0iqinkk6tu/0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=K9b8kbsDnOvGbkzsN2H6SoPxFLkQ6dDXEcus4fbJQEd9gphzokuvKzCLqljQ+ZAuY
-	 hbg60mneidRgsli9RiDtmedyfh1Yo3a9CYsi2UjPP3BvhrmExYntjoCIua7wszg+C1
-	 FCShh0x/jmyXDN0jFxplKPQWJ8dHnLeKdBK8+802UAAbF5C/DWBWbVghExPCUJmPIB
-	 9BR+1qP2ZgzksohtgpD5vDnatkAePOOJxxGAuFkW7PeemDTTLE0C8kEyt4Y93du/My
-	 i6vISism/eZgTJDM9eG/OxzNedPh7F9lUbYxTsg0Wc5cSbClB0KQ+THHrN7PZrh9gb
-	 2id2fbHrRAXPA==
-Message-ID: <c9262b37-bdb6-4513-9f71-2c9fba7d0292@kernel.org>
-Date: Sat, 21 Dec 2024 10:33:53 +0100
+	s=k20201202; t=1734775221;
+	bh=MzG4dVCWMyGD3SNCG1F++IPkIjJb3t++Vfk0Qkl4tFU=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=CSH2LKMj2iNWxH3VZSTefk771G399+6j/PzXhYxxOaQEqxpiFxdDrMM99eujlQZ5s
+	 /DxvxSEyJOgDpWvkcFSCAZH3v4x6oCV260RGxcpXluCOuWepIagip8oimFh7PScsA9
+	 JLg47lGHLPBr6yOSrf1XamJv0hh2OqmYdU7Qfz2XSDU5r2gUm6JQh6yM0z+koL7iTY
+	 7o82CwAyTBnZyCmGyPO27/G3DZhpnQonyS7uWbz3XUYPW+jfBl2b5R00BV+0z4j5jU
+	 GiB2UOAyHjl4BK0Ly1DZ6ZtyIAJwnmuerfjEHkd6PloPQnsRXgWqEPRhOk8xgR7+c4
+	 FaZ8Ki3BUjhLg==
+Message-ID: <22fe2214-b009-46b1-84b9-84559ebe339c@kernel.org>
+Date: Sat, 21 Dec 2024 11:00:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4] mptcp: use GENL_REQ_ATTR_CHECK in userspace
- pm
+Subject: Re: [PATCH mptcp-next v2 1/7] mptcp: prevent excessive coalescing on
+ receive
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <a2efcb64bcd072611eac0dff346af2392b3bcb96.1734684556.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
+References: <cover.1733486870.git.pabeni@redhat.com>
+ <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
+ <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,64 +88,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a2efcb64bcd072611eac0dff346af2392b3bcb96.1734684556.git.tanggeliang@kylinos.cn>
+In-Reply-To: <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 20/12/2024 09:50, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 10/12/2024 13:03, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
-> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
-> directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
-> if it's NULL.
+> On 06/12/2024 13:10, Paolo Abeni wrote:
+>> Currently the skb size after coalescing is only limited by the skb
+>> layout (the skb must not carry frag_list). A single coalesced skb
+>> covering several MSS can potentially fill completely the receive
+>> buffer. In such a case, the snd win will zero until the receive buffer
+>> will be empty again, affecting tput badly.
 > 
-> So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
-> mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
-> mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
-> and mptcp_userspace_pm_get_sock().
+> Good idea! Thank you for having looked at this!
 > 
-> 'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> v4:
->  - use GENL_REQ_ATTR_CHECK in more functions as Matt suggested (thanks)
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>> No fixes tag because the problem is not very visible in practice
+>> currently, but will be apparent after the rx refactor.
+>> Still I hope this could affect positively the simlut flows self-tests
+> 
+> The modification looks safe enough to me: it should not make thing worst.
 
-Thank you for the v4!
-
-(...)
-
-> @@ -309,18 +307,17 @@ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
->  
->  int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  {
-> -	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
->  	struct mptcp_pm_addr_entry *match;
->  	struct mptcp_sock *msk;
-> +	struct nlattr *id;
->  	int err = -EINVAL;
->  	struct sock *sk;
->  	u8 id_val;
->  
-> -	if (!id) {
-> -		GENL_SET_ERR_MSG(info, "missing required ID");
-> +	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_LOC_ID))
->  		return err;
-> -	}
->  
-> +	id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
->  	id_val = nla_get_u8(id);
-
-Small detail: do we still need the 'struct nlattr *' variables? Here it
-looks like you could directly have:
-
-  id_val = nla_get_u8(info->attrs[MPTCP_PM_ATTR_LOC_ID]);
-
-Same in the other functions, no? Up to you.
-
-(...)
+Do you still prefer not targetting -net for this patch here? Or is it OK
+to do so and add a Fixes tag?
 
 Cheers,
 Matt
