@@ -1,121 +1,191 @@
-Received: from mail-ed1-f46.google.com (mail-ed1-f46.google.com [209.85.208.46])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2EA01199FD0
-	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 09:46:55 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.46
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 614A7192D6C
+	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 09:49:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734947218; cv=none; b=EkFq4Tqp0nf6WWb8pg2jqmiHip9e1KYNEanf9uEInZi7STI24E4gcFBpFrsRHgl1Sa29YWCwhd/6oc7Qt+xeH5xE6Lim81u70f5TFjI9JJmeA/0rZ9IsdLuOKBvn+6VHbM5dyttJWYjiELJcI6V718OQ1KsJfZn2taqAgdcwPLc=
+	t=1734947353; cv=none; b=fmY41GjGDDGd8KMb2ZJH+9ZTvMK5jjrmudzgV2SugPsAH/XdGRdQTDxIsssHr2uhrsTin1F9nfp9nDR8WJxEHIpaMmitX51OhD7dI8r0+IkYC3EqQSO6pCPk5/5bqi5BtZefVEqqct1jXmgSMkiM4ZMukeLnwxuTl3M9BiFaCOM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734947218; c=relaxed/simple;
-	bh=mu4qagGJN6FxX6LV8CsL3UN+YeIhrQ3BOxn2WE6b2Ps=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=CxDKH06apJ2oOY5gnEliCEepYenznuXMjARWYCDcEnKY+Eg9qlPkXnUnF8cHhx8pP4nP4cmSVXImWCG8QJtW0p6HKBVuxFP5/XzvRrFoiRz5VkxZFffT/PUKfzzaC+THk9OQkCkj67kbbsOD3NuQj6OwS4HqsgCTKlM3hDxz8cA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=aTepjp3r; arc=none smtp.client-ip=209.85.208.46
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1734947353; c=relaxed/simple;
+	bh=ILoBGbWdjkiAvwVl8EVvqaF2c+2IjBCsIzeUWpLnPJo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=k2ncK/qMK1ZufszyWJPzvd2Ko2s1tW/9wlyJV7XwGRSOkSWZBUA+oQ7VITBx07exfVfb30QYyfsqxT1Xlv5Q7EaRJB+Gi9Q40otUQlb95OmRnIOCqvhiO9YMhXgbIZwH3tJYXkgO+puiH7ZSBWPUpodceNyiEZwtr6oWLGXiUZU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eG2tuZkS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="aTepjp3r"
-Received: by mail-ed1-f46.google.com with SMTP id 4fb4d7f45d1cf-5d3e6f6cf69so6327265a12.1
-        for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 01:46:55 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1734947214; x=1735552014; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=mu4qagGJN6FxX6LV8CsL3UN+YeIhrQ3BOxn2WE6b2Ps=;
-        b=aTepjp3r2mjrl5yYzng6iTIrnrlTHd3JwdQQobDtWTSom3urCjzURUqUjpn9zqtvyw
-         qoYQEpoz8darVDbBW6eRHzPrmCbhVNash+q3uKs1WI7TYmNbKUDSc4qNydIub+3Bfk/m
-         ab3kF7etuScb99j4Kf2l0b/HY/rAyD6Von0abgkFfecvPpprbpxnVQsDPj4AedBCKHnr
-         Ew1xk7xFBCj86sLD2AHYR0iD91LHAIReRFIbshJzs42Kz9JGlQRgUmbJonD8vKJTI/9r
-         Le7+bcC0sQJYCUHQWNpiXC+0UKf1nWecZfDGqyiHjBqTJhmR69/QyEPT9rUce1u6ee7F
-         Qr1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1734947214; x=1735552014;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=mu4qagGJN6FxX6LV8CsL3UN+YeIhrQ3BOxn2WE6b2Ps=;
-        b=tJw26u7GASpBJ4lYBZBU9Yh+UCgzPl6JWvioVrw/vcvnIRho6tLl2D9xzGbmQKhrmH
-         PYyMk3so0FMnB+NYYaxrp5vqwf0lwiodaRLFB8iXhNdr58yeZSxmiXO+qLIw+sUnkZ2Y
-         IOADk+L5uQQ8/wPVeQKqKvYxkA7yKKkefJNhdUmcaM+5E1+Zanxcq5JUpHjvY9B1r3Z/
-         ZJpR96TQXZlpx7O2yMbMvnT48Y2Gh6UItMUgl8unIyP9z3k+x+FdruQmySKg6tCnQT+J
-         6td7bNDcdMscI+qhingcD8FTh2aysx3w5d4lyl/Ot2xg5f1TUMr1uyftQjdDI4ytd7PD
-         0Y9Q==
-X-Forwarded-Encrypted: i=1; AJvYcCVnr1j7n2gaOD7XNQHGGityuiZSLSepeQiQMA1t/p++jMBplj06rHqEo8APF9GQ1R3ULGNDEg==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yxi8vXFQNAfBodK2THcbEI7YxCPJWkvygn4LUtAsq0VLQ6qUYZF
-	N2ISjnMXq+hpVlW+MtdzvgOHTjjuW/wzpI4w4IDBsOToVpgFCDAcqFSAFLppgsmRzpxw7exUa2U
-	oJZWqlQDkZ/GePbI5sImSy9Zh3/HI7zhe4RSH
-X-Gm-Gg: ASbGncskR0oGMyYD9kkOgJDaxeXogNB+/8S3jqopzIyUXiwJpcDx9y5HV+zFDMgNIi4
-	ZDp0n+u0OJneece0tvkReLggzCqTC4mXwDr+6FKI=
-X-Google-Smtp-Source: AGHT+IH3+egfWLTE78YKlmwPqtWef5YTuB2kERtTaCX1dCwBHcNtCa+1pJDYxvd4T1CwOvzn7Bqjqihb96SfUcymHm0=
-X-Received: by 2002:a05:6402:270d:b0:5d0:bcdd:ffa8 with SMTP id
- 4fb4d7f45d1cf-5d81dd83b92mr9613064a12.1.1734947214306; Mon, 23 Dec 2024
- 01:46:54 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eG2tuZkS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CECCC4CED3;
+	Mon, 23 Dec 2024 09:49:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1734947352;
+	bh=ILoBGbWdjkiAvwVl8EVvqaF2c+2IjBCsIzeUWpLnPJo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=eG2tuZkS8AA2YSlTthIoIL7mNpd0kzTpbsFD6LOHzUSbUl6J/3+yJ7pz/ZYMB/1Eo
+	 R+AIMjTfkEfCVM6LUocjG79W8u+ec60kzsAI99eBKrWGf6q3IvL7o6XvvvFV9xqlMw
+	 wTUMmOvHaxF4nGUoOtubWMCVtt7aB0eE/IF799T7mfpkZ10LrSWtH1ecMrV7+tFtiK
+	 Bl4nHvADY9KQdi+T6hfjKJO5xBbrUuB0hYdDtQIF2nj/1jJduOZtC1OucjcZFpQj42
+	 opjq8tmmrG8i5I66wjTITY9szsFPJ2T5OfwlmblCer1pHpCI0sPrwDp/nSyNB/rupG
+	 rAz1qEaILueRA==
+Message-ID: <2e5968e1c5b213b633c1c844269d1c55c2a43ffb.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 2/8] Squash to "selftests/bpf: Add bpf_first
+ scheduler & test"
+From: Geliang Tang <geliang@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, baohua@kernel.org, Geliang Tang
+	 <tanggeliang@kylinos.cn>
+Date: Mon, 23 Dec 2024 17:49:09 +0800
+In-Reply-To: <b5ca9ddf-77a9-dd73-e485-71ec6f354054@kernel.org>
+References: <cover.1732153672.git.tanggeliang@kylinos.cn>
+	 <e57ac76105430bab4bbc5ac4f62c77e883dd7f29.1732153672.git.tanggeliang@kylinos.cn>
+	 <b5ca9ddf-77a9-dd73-e485-71ec6f354054@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.54.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
- <047cb3ef-f0c0-43e4-82e9-dc0073c8b953@kernel.org>
-In-Reply-To: <047cb3ef-f0c0-43e4-82e9-dc0073c8b953@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Mon, 23 Dec 2024 10:46:43 +0100
-Message-ID: <CANn89iKU8TwoiZHPwdEAy2w=RhmbDci3n6Wux=oM1YzrkfdzpQ@mail.gmail.com>
-Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org, 
-	Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
-	"David S. Miller" <davem@davemloft.net>, Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>, 
-	mptcp@lists.linux.dev, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 
-On Sat, Dec 21, 2024 at 11:28=E2=80=AFAM Matthieu Baerts <matttbe@kernel.or=
-g> wrote:
->
-> Hi Paolo,
->
-> On 21/12/2024 09:51, Paolo Abeni wrote:
-> > Syzbot reported the following splat:
->
-> (...)
->
-> > Eric noted a probable shinfo->nr_frags corruption, which indeed
-> > occurs.
-> >
-> > The root cause is a buggy MPTCP option len computation in some
-> > circumstances: the ADD_ADDR option should be mutually exclusive
-> > with DSS since the blamed commit.
-> >
-> > Still, mptcp_established_options_add_addr() tries to set the
-> > relevant info in mptcp_out_options, if the remaining space is
-> > large enough even when DSS is present.
-> >
-> > Since the ADD_ADDR infos and the DSS share the same union
-> > fields, adding first corrupts the latter. In the worst-case
-> > scenario, such corruption increases the DSS binary layout,
-> > exceeding the computed length and possibly overwriting the
-> > skb shared info.
-> >
-> > Address the issue by enforcing mutual exclusion in
-> > mptcp_established_options_add_addr(), too.
->
-> Thank you for the investigation and the fix, it looks good to me:
->
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
-> > Reported-by: syzbot+38a095a81f30d82884c1@syzkaller.appspotmail.com
->
-> If you don't mind, can you please add these two tags when applying the
-> patches to help to track the backports?
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/538
-> Cc: stable@vger.kernel.org
->
+Hi Mat,
 
-Thanks for the fix !
+Thanks for your review.
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+On Fri, 2024-12-20 at 17:28 -0800, Mat Martineau wrote:
+> On Thu, 21 Nov 2024, Geliang Tang wrote:
+> 
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > Split get_subflow() interface into two: get_send() and
+> > get_retrans().
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> > .../selftests/bpf/progs/mptcp_bpf_first.c     | 24 +++++++++++++++-
+> > ---
+> > 1 file changed, 19 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > index d57399b407a7..36bf9adffb2c 100644
+> > --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+> > @@ -16,18 +16,32 @@ void BPF_PROG(mptcp_sched_first_release, struct
+> > mptcp_sock *msk)
+> > {
+> > }
+> > 
+> > -SEC("struct_ops")
+> > -int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
+> > -	     struct mptcp_sched_data *data)
+> > +static int bpf_first_get_subflow(struct mptcp_sock *msk,
+> > +				 struct mptcp_sched_data *data)
+> > {
+> > 	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx_by_pos(d
+> > ata, 0), true);
+> > 	return 0;
+> > }
+> > 
+> > -SEC(".struct_ops")
+> > +SEC("struct_ops")
+> > +int BPF_PROG(bpf_first_get_send, struct mptcp_sock *msk,
+> > +	     struct mptcp_sched_data *data)
+> > +{
+> > +	return bpf_first_get_subflow(msk, data);
+> > +}
+> > +
+> > +SEC("struct_ops")
+> > +int BPF_PROG(bpf_first_get_retrans, struct mptcp_sock *msk,
+> > +	     struct mptcp_sched_data *data)
+> > +{
+> > +	return bpf_first_get_subflow(msk, data);
+> > +}
+> 
+> Hi Geliang -
+> 
+> If my suggestion in patch 1 (use get_send for retransmit scheduling
+> if 
+> get_retrans is NULL) doesn't seem like clear enough behavior for BPF
+
+The suggestion in patch 1 works well, I updated it in v2.
+
+>  
+> scheduler authors, this code and the following patches could be
+> simplified 
+> by removing the duplicate _retrans function above...
+> 
+> > +
+> > +SEC(".struct_ops.link")
+> > struct mptcp_sched_ops first = {
+> > 	.init		= (void *)mptcp_sched_first_init,
+> > 	.release	= (void *)mptcp_sched_first_release,
+> > -	.get_subflow	= (void *)bpf_first_get_subflow,
+> > +	.get_send	= (void *)bpf_first_get_send,
+> > +	.get_retrans	= (void *)bpf_first_get_retrans,
+> 
+> ... and setting get_retrans like this:
+>  	.get_retrans	= (void *)bpf_first_get_send,
+
+If we do this, libbpf will report the following error:
+
+# libbpf: struct_ops init_kern first func ptr get_retrans: invalid
+reuse of prog bpf_first_get_send in sec struct_ops with type 27:
+expected_attach_type 0 != kern_member_idx 1
+# libbpf: failed to load object 'mptcp_bpf_first'
+# libbpf: failed to load BPF skeleton 'mptcp_bpf_first': -EINVAL
+# test_first:FAIL:open_and_load: first unexpected error: -22
+
+So in v2, I didn't set this get_retrans ptr, but let it be NULL.
+
+Thanks,
+-Geliang
+
+> 
+> Then there would be example code for BPF scheduler programmers to see
+> that 
+> it's ok to use the same function pointer in both fields.
+> 
+> - Mat
+> 
+> > 	.name		= "bpf_first",
+> > };
+> > -- 
+> > 2.43.0
+> > 
+> > 
+> > 
+
