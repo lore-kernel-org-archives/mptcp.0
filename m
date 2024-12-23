@@ -1,205 +1,104 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f176.google.com (mail-qt1-f176.google.com [209.85.160.176])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA0B62207A
-	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 10:06:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B4B818DF6D
+	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 10:39:00 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734948383; cv=none; b=pt8UvfsOUjjH6rm/K+BiB3WAho1LhOh37X4T16XbzTr0neoyXdbpA3oGhY/e6oPsAmsbvbosvwDGiK7OE06Y90MJfggJ4XuMNqBkIyWZhb90fTVqfO5S+HhNIYwtU0/xhAx55+Aq7oLBfhuxkGEleBDsb00pJFFkIYSgFm1LhyY=
+	t=1734950342; cv=none; b=HfBefu+FICay6QIK8ZAY7mvI615hzwKSU6hCbmZZEhS3Cib8uiIsCDqL/sAJsCo5XHDlaVytHtAXQOegrJ5JDXZHKsxeTGq2UldUxf0ZQSVsnywrRVvDvQY2hmsy8QjWn43Dbk75cOcWTWtVg99L8RSgwt3hj4D8HwkMNNInIfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734948383; c=relaxed/simple;
-	bh=I9ih24Wn5nxLDHWk9KOMY35fDvWUZbWxOpMl0ccGzTI=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=dwpIzWar0jJT4cmW4/ULcP144oT+EjdHhe+pERQ6GpXJJQR1k0XhEeOrxBe3yqn3BVJtR6uHVz9T9dMpVI50rEIy3obVkQK4f61MwsbkQhtfmi8IYdn5WvpzYJJaZewaPwl6AIOlLoKyNPsWPU3xltblSpQlNKInkMSQwMIGjLg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBpcnOgm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734950342; c=relaxed/simple;
+	bh=wI9/F+jmQxNrSNkED4OLQHOcWMCvU/qfMia3fkJ19Ag=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=JCMl7c5DS6K8ZoNepQJSQQqTmFVoFRNniqITtwy3VAY6iZGm+23x6bacC4ca3dV7cD9OkzfVAvt4ayevnXJtTfL/hX9rRWCNyX+FyBEOZUnptl2lDNoPgsSTvDozZLIUMmCPie947P2+drnOGwVD8EYBQVJJ5aIEE+PMLDfq7S0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=YGvESsPR; arc=none smtp.client-ip=209.85.160.176
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBpcnOgm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE9EDC4CED3;
-	Mon, 23 Dec 2024 10:06:21 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734948383;
-	bh=I9ih24Wn5nxLDHWk9KOMY35fDvWUZbWxOpMl0ccGzTI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=BBpcnOgm54c8K7n+t+1LyIk68B8zWm55EUyKi92OSI8rKsgmDhmsjgoGaK39ASiNj
-	 n6atWruZy/6B16ngc7AOp3Zcy1tmyK605hWckH1OTb/DYcCRTnIQBD3dn01WW7TXim
-	 GE6Ma3E1fBXac3lOgSEuSO1Hj5J0VG2fe9MMHjLSuiXjf04H8mTvsD/z82GihAlXAf
-	 +UbkPPQ+ueU+GIyZfyLtp0BY837tZqvGl2PvMQDHSNA7B9BVY9UA1SkBg7TJcdEG+z
-	 rwDxJHQV0EzL4RQuy7eDVVg9ewx1lRaiDu8mVp4Mz5146ziocKJRsRpvhKNvK3zNxc
-	 RiQPp86+WmVgQ==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v12 10/10] Squash to "selftests/bpf: Add bpf_burst scheduler & test"
-Date: Mon, 23 Dec 2024 18:05:52 +0800
-Message-ID: <66a4b211db4f06b8c6fddf62bc900d886d8b707b.1734947922.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.45.2
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YGvESsPR"
+Received: by mail-qt1-f176.google.com with SMTP id d75a77b69052e-467a17055e6so43298071cf.3
+        for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 02:39:00 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1734950340; x=1735555140; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=bVMJRwpKy+HC63qKmPRsEU6sMgJxThg1oplcB4oRZHo=;
+        b=YGvESsPRemW8PFGSK6UUlx+1RlmArb5YidbTEHxstanfi1Z3Z99Ld7dFQe2Xo2zyga
+         kRDD8RzQMipofDTkjenu7QIm5tCcChvRhhmjtl0SekSX70wIuci/swjWM2xAk1S0oJtg
+         CuIjPKQxC2Q+tX0Q3NNtMtBTQH7PGlwuSmilYsimfADemE0E+bKm2AzGxshkanNiNfr6
+         1pSGfbwecs9x9HaLHft8LaVk1BFZlSv+0j6Z9CTruo8Dg5lDXNoAA0IIPDb/GqeW+2fD
+         Q2KKBRfnJGBab9KFatOT9v+CStkn4/e8QztgEvB+R8Ofmw4QwJUw+UtTQKZEeGXI5R0j
+         VLNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1734950340; x=1735555140;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=bVMJRwpKy+HC63qKmPRsEU6sMgJxThg1oplcB4oRZHo=;
+        b=sUHtfrR5jMLkDQMWGQYOhTcsBzsfEUnncQIna3b2DoCJT91G2oUeBsJCFDlUi784gQ
+         biuUQSyWRwofvWtMkjiUm8mAfsYDXyoeQ5L163r1R1VVOivDq/V/XyxODR9mfel8efOe
+         13PNUHPs2E5w3Y2mdpKusin2eSSoMc9jriobFKq016Rb8jfRIcM4nuhKxONSyYeJ/OwA
+         hmvhsOphkQfyJmRiH7dEul0QlWYjuM+l4Z16vg+ZUYgATaHFk7oXdDtKGOEQ7JxLjmkx
+         zf6sfVn9x3YNBolHs+GJyYGoakzJ3RLyjaX5oFwfKGPgtYntF9utyQys+lP2w4RwTU/0
+         w19w==
+X-Gm-Message-State: AOJu0YzYGPUTEqAQAMMD3actSBX9CzbxZLtnGFIWIm/4mGgNH6uB5YMz
+	oqTqLWDgOtMw6q1tiPQDQTnNJuhuNt0wW9YIHeICibcn0Kab1rnNHKi7
+X-Gm-Gg: ASbGnctUwaqSkCD0ai/DkA2syW+C12NwKIvMVIqd57KkQEggkTfwCCyhjHkZ4JTqjzK
+	K78h6xd5X0xgKJ6uOPXqJIzrGhTSl1A8UUDtf6q5WLAmAOd+F0smGegRweyJQ7/wQrEtoqnZseQ
+	tqv5JxsLZc0oVkHNZPyTr3NONptf9BV9e/vatRLOXpQBx9mgBmBr4HTC/WuFjAIlkhpzv0YCzgu
+	X2r0w6HI6lvlRdIUIdjDmUwt+w5hiODHAdGwrKQkV2O/HRGZfqScTx48Yd95jvMEZs=
+X-Google-Smtp-Source: AGHT+IHYps5xKtImnA8ey9cRkGWUTWwBoQEG2I6x/O/8G2yprXJZBGKtsBBR9D4W0ah56ZXHh3pFjQ==
+X-Received: by 2002:a05:622a:287:b0:45d:82a0:5028 with SMTP id d75a77b69052e-46a4a8b879cmr188687761cf.1.1734950340056;
+        Mon, 23 Dec 2024 02:39:00 -0800 (PST)
+Received: from [127.0.0.1] ([74.249.5.98])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dd181373f6sm42678256d6.62.2024.12.23.02.38.59
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 23 Dec 2024 02:38:59 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1734947922.git.tanggeliang@kylinos.cn>
 References: <cover.1734947922.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v12 00/10] use bpf_iter in bpf schedulers
+Message-ID: <f660d27e-d20c-5ff2-e59f-dfe6203fb329@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 23 Dec 2024 10:38:59 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Use the newly added bpf_for_each() helper to walk the conn_list.
+Thank you for your modifications, that's great!
 
-Use bpf_mptcp_send_info_to_ssk() helper.
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Drop bpf_subflow_send_info, use subflow_send_info instead.
+You can find more details there:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/bpf/progs/mptcp_bpf_burst.c     | 68 +++++++------------
- 1 file changed, 26 insertions(+), 42 deletions(-)
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/12465256771
 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-index 5743601df9dc..a33c5f302b76 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_burst.c
-@@ -11,11 +11,6 @@ char _license[] SEC("license") = "GPL";
- 
- #define min(a, b) ((a) < (b) ? (a) : (b))
- 
--struct bpf_subflow_send_info {
--	__u8 subflow_id;
--	__u64 linger_time;
--};
--
- extern bool mptcp_subflow_active(struct mptcp_subflow_context *subflow) __ksym;
- extern void mptcp_set_timeout(struct sock *sk) __ksym;
- extern __u64 mptcp_wnd_end(const struct mptcp_sock *msk) __ksym;
-@@ -68,10 +63,9 @@ void BPF_PROG(mptcp_sched_burst_release, struct mptcp_sock *msk)
- }
- 
- SEC("struct_ops")
--int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk,
--	     struct mptcp_sched_data *data)
-+int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk)
- {
--	struct bpf_subflow_send_info send_info[SSK_MODE_MAX];
-+	struct subflow_send_info send_info[SSK_MODE_MAX];
- 	struct mptcp_subflow_context *subflow;
- 	struct sock *sk = (struct sock *)msk;
- 	__u32 pace, burst, wmem;
-@@ -81,18 +75,12 @@ int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk,
- 
- 	/* pick the subflow with the lower wmem/wspace ratio */
- 	for (i = 0; i < SSK_MODE_MAX; ++i) {
--		send_info[i].subflow_id = MPTCP_SUBFLOWS_MAX;
-+		send_info[i].ssk = NULL;
- 		send_info[i].linger_time = -1;
- 	}
- 
--	for (i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
--		bool backup;
--
--		subflow = bpf_mptcp_subflow_ctx_by_pos(data, i);
--		if (!subflow)
--			break;
--
--		backup = subflow->backup || subflow->request_bkup;
-+	bpf_for_each(mptcp_subflow, subflow, msk) {
-+		bool backup = subflow->backup || subflow->request_bkup;
- 
- 		ssk = mptcp_subflow_tcp_sock(subflow);
- 		if (!mptcp_subflow_active(subflow))
-@@ -110,7 +98,7 @@ int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk,
- 
- 		linger_time = div_u64((__u64)ssk->sk_wmem_queued << 32, pace);
- 		if (linger_time < send_info[backup].linger_time) {
--			send_info[backup].subflow_id = i;
-+			send_info[backup].ssk = ssk;
- 			send_info[backup].linger_time = linger_time;
- 		}
- 	}
-@@ -118,15 +106,16 @@ int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk,
- 
- 	/* pick the best backup if no other subflow is active */
- 	if (!nr_active)
--		send_info[SSK_MODE_ACTIVE].subflow_id = send_info[SSK_MODE_BACKUP].subflow_id;
-+		send_info[SSK_MODE_ACTIVE].ssk = send_info[SSK_MODE_BACKUP].ssk;
- 
--	subflow = bpf_mptcp_subflow_ctx_by_pos(data, send_info[SSK_MODE_ACTIVE].subflow_id);
--	if (!subflow)
--		return -1;
--	ssk = mptcp_subflow_tcp_sock(subflow);
-+	ssk = bpf_mptcp_send_info_to_ssk(&send_info[SSK_MODE_ACTIVE]);
- 	if (!ssk || !sk_stream_memory_free(ssk))
- 		return -1;
- 
-+	subflow = bpf_mptcp_subflow_ctx(ssk);
-+	if (!subflow)
-+		return -1;
-+
- 	burst = min(MPTCP_SEND_BURST_SIZE, mptcp_wnd_end(msk) - msk->snd_nxt);
- 	wmem = ssk->sk_wmem_queued;
- 	if (!burst)
-@@ -143,23 +132,18 @@ int BPF_PROG(bpf_burst_get_send, struct mptcp_sock *msk,
- }
- 
- SEC("struct_ops")
--int BPF_PROG(bpf_burst_get_retrans, struct mptcp_sock *msk,
--	     struct mptcp_sched_data *data)
-+int BPF_PROG(bpf_burst_get_retrans, struct mptcp_sock *msk)
- {
--	int backup = MPTCP_SUBFLOWS_MAX, pick = MPTCP_SUBFLOWS_MAX, subflow_id;
-+	struct sock *backup = NULL, *pick = NULL;
- 	struct mptcp_subflow_context *subflow;
- 	int min_stale_count = INT_MAX;
--	struct sock *ssk;
- 
--	for (int i = 0; i < data->subflows && i < MPTCP_SUBFLOWS_MAX; i++) {
--		subflow = bpf_mptcp_subflow_ctx_by_pos(data, i);
--		if (!subflow)
--			break;
-+	bpf_for_each(mptcp_subflow, subflow, msk) {
-+		struct sock *ssk = bpf_mptcp_subflow_tcp_sock(subflow);
- 
--		if (!mptcp_subflow_active(subflow))
-+		if (!ssk || !mptcp_subflow_active(subflow))
- 			continue;
- 
--		ssk = mptcp_subflow_tcp_sock(subflow);
- 		/* still data outstanding at TCP level? skip this */
- 		if (!tcp_rtx_and_write_queues_empty(ssk)) {
- 			mptcp_pm_subflow_chk_stale(msk, ssk);
-@@ -168,23 +152,23 @@ int BPF_PROG(bpf_burst_get_retrans, struct mptcp_sock *msk,
- 		}
- 
- 		if (subflow->backup || subflow->request_bkup) {
--			if (backup == MPTCP_SUBFLOWS_MAX)
--				backup = i;
-+			if (!backup)
-+				backup = ssk;
- 			continue;
- 		}
- 
--		if (pick == MPTCP_SUBFLOWS_MAX)
--			pick = i;
-+		if (!pick)
-+			pick = ssk;
- 	}
- 
--	if (pick < MPTCP_SUBFLOWS_MAX) {
--		subflow_id = pick;
-+	if (pick)
- 		goto out;
--	}
--	subflow_id = min_stale_count > 1 ? backup : MPTCP_SUBFLOWS_MAX;
-+	pick = min_stale_count > 1 ? backup : NULL;
- 
- out:
--	subflow = bpf_mptcp_subflow_ctx_by_pos(data, subflow_id);
-+	if (!pick)
-+		return -1;
-+	subflow = bpf_mptcp_subflow_ctx(pick);
- 	if (!subflow)
- 		return -1;
- 	mptcp_subflow_set_scheduled(subflow, true);
--- 
-2.45.2
+Status: failure
+Initiator: Patchew =
+Applier
+Commits: https://github.com/multipath-tcp/mptcp_net-next/commits/dc=
+de3004d226
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?=
+series=3D920379
 
+Feel free to reply to this email if you cannot access logs=
+, if you need
+some support to fix the error, if this doesn't seem to be =
+caused by your
+modifications or if the error is a false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
