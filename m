@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D59BA1514CC
-	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 08:30:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E7819006B
+	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 08:30:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734942626; cv=none; b=oDHEt1yJFxnmRUmjlqVhXFsxZb9IMkwWTQdRGaB8WDtFFLuLp4uejPz9MOVV6KZMlTiqwubru2gRqJUxtWaq+jecBP7GmE8LSCCL3l1HXL5HmjGKAOJB4afAl5kzhUwOBFQi1wHpC1YzW9or7QDT+zaq9oI1wnUOaVbRZgfSWrU=
+	t=1734942628; cv=none; b=CB/d6goyiJVjpTX1dIwcuoGB1Tq6PFJapmb0wMwMDTcjBn2ukgyhodMnFml6Ue3Wjcvp9b25mnC6e3j93KHVMuJ4wzO/SB02GBTXQzL1p/k1eZLkUc8dCIJsWEyzuDkpMvyaNk3eeaVAkoXjiObgKzyIRICQcavoDuQiFrGjoKw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734942626; c=relaxed/simple;
-	bh=MnplbIa5aZflN54kg3ewAWhVKcNBCX6oRBVowXEqfZc=;
+	s=arc-20240116; t=1734942628; c=relaxed/simple;
+	bh=W4wLhdV6SVB3Zm49Q3kdDFdiJYEuZLkT8leQz+0HI9w=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=E4JboEcwUh/bTQJqFl8gTCH4zf8w1U6ICVlUh4TPO3gva9fNHT8BdOrAtVu2OmuAdHEK0pDUKyN68bgRCG/54biNcd3mzUDQTeodKmVqApP6Rqbzvg5B4+X+QJY0a3PGeCmIQXNFKRYS1hOAqYPLHSHilonzMk++XpqtmC1X8Q0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OxOpJawo; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=IKVw16TltVagNP+gho3DwKS61fkhX+EzD1b5Nq8OFw4lI8rUyXN2cX4zSuK13CTKNWI4cruVKhg8oThnOje9cGEYI0Vg9cL5cUsq7g4QCI3K2unoYkt0rvUeLedPetSNc5RAqvdloj4KzdSc4UIe3qZ9hniMUUPG5YGDXTNnnoM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BqBwLktW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OxOpJawo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28A17C4AF0B;
-	Mon, 23 Dec 2024 08:30:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BqBwLktW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0137BC4CED3;
+	Mon, 23 Dec 2024 08:30:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734942626;
-	bh=MnplbIa5aZflN54kg3ewAWhVKcNBCX6oRBVowXEqfZc=;
+	s=k20201202; t=1734942628;
+	bh=W4wLhdV6SVB3Zm49Q3kdDFdiJYEuZLkT8leQz+0HI9w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OxOpJawoQos68atz0Y/Gi15LhU9QT715dDCvmZJxQjOrDUzijglnbKzRnIZbZ6fOj
-	 R9gQWy8SvKxoGxrTljVUeb88wtxbmpK5LsWx6VM0NBFLRNUK3vM1TlyPm7zlUKekeC
-	 y/6Qi31Q5/Wk9pF8zJwlJUstJ2mwR+KTOQRHZbNfkKfAypc8ZpTONRZltZVPkHwXdM
-	 i2bqA2aGWy2GSpfpSPQclmmIsMLoMIPo5Vi7nG9kHgm23mbJNnz3TmZeFyNN1qzu3Y
-	 TbXpp5ub468u1urSdx1Lkr2fOHFBf9lQh3rsepjBhIhpgnbK5IKLI6051OYfrWDZkN
-	 8ESHN/VFtz11A==
+	b=BqBwLktW26BMDrLj+6ESDu0A/V+sceLa34d272pTFILx3770A9bJ5dy7kchAjNZE/
+	 W//LPle3ZE3vBvlJJ+RPjVTj2lw+DtS4Ja1eY9D3G0Xwl9aJSf4qeww1wxS4WlcMGg
+	 RBXRTh7hoZqljysmt8/HZfct6A7huqvM+fxmQJwGfpmqvaqp/2ByVK0SbVkjp9VIRc
+	 xNXPmu/TrJhDLvPm1zjQA9NA6fLEjGcRIfHWyQ/2Kkc6sS0pXNCrq8Il48VFhBcupK
+	 0ulpEqouhaUKwB95XSNCCS550qNtV9vKYTG747fzdvSn/nBbSgjqO0F69FNqje77Q2
+	 xDIzgFpnO6hgg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/9] Squash to "bpf: Add bpf_mptcp_sched_ops"
-Date: Mon, 23 Dec 2024 16:30:08 +0800
-Message-ID: <abe1b5ea6fd9e6913979cdbf6c249115d894f340.1734942318.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 3/9] Squash to "selftests/bpf: Add bpf_first scheduler & test"
+Date: Mon, 23 Dec 2024 16:30:09 +0800
+Message-ID: <c4d649fd2e914ea1bc63b5307ff1b17a15414ad5.1734942318.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1734942318.git.tanggeliang@kylinos.cn>
 References: <cover.1734942318.git.tanggeliang@kylinos.cn>
@@ -45,45 +45,33 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Please update the subject to
-
-        bpf: Add mptcp packet scheduler struct_ops
-
-Split get_subflow interface into two.
+Use new interface get_send() instead of get_subflow().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 11 +++++++++--
- 1 file changed, 9 insertions(+), 2 deletions(-)
+ tools/testing/selftests/bpf/progs/mptcp_bpf_first.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 923895322b2c..8d4865177037 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -156,7 +156,13 @@ static int bpf_mptcp_sched_init(struct btf *btf)
- 	return 0;
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+index d57399b407a7..ab71ae3c6506 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_first.c
+@@ -17,7 +17,7 @@ void BPF_PROG(mptcp_sched_first_release, struct mptcp_sock *msk)
  }
  
--static int __bpf_mptcp_sched_get_subflow(struct mptcp_sock *msk,
-+static int __bpf_mptcp_sched_get_send(struct mptcp_sock *msk,
-+				      struct mptcp_sched_data *data)
-+{
-+	return 0;
-+}
-+
-+static int __bpf_mptcp_sched_get_retrans(struct mptcp_sock *msk,
- 					 struct mptcp_sched_data *data)
+ SEC("struct_ops")
+-int BPF_PROG(bpf_first_get_subflow, struct mptcp_sock *msk,
++int BPF_PROG(bpf_first_get_send, struct mptcp_sock *msk,
+ 	     struct mptcp_sched_data *data)
  {
- 	return 0;
-@@ -171,7 +177,8 @@ static void __bpf_mptcp_sched_release(struct mptcp_sock *msk)
- }
- 
- static struct mptcp_sched_ops __bpf_mptcp_sched_ops = {
--	.get_subflow	= __bpf_mptcp_sched_get_subflow,
-+	.get_send	= __bpf_mptcp_sched_get_send,
-+	.get_retrans	= __bpf_mptcp_sched_get_retrans,
- 	.init		= __bpf_mptcp_sched_init,
- 	.release	= __bpf_mptcp_sched_release,
+ 	mptcp_subflow_set_scheduled(bpf_mptcp_subflow_ctx_by_pos(data, 0), true);
+@@ -28,6 +28,6 @@ SEC(".struct_ops")
+ struct mptcp_sched_ops first = {
+ 	.init		= (void *)mptcp_sched_first_init,
+ 	.release	= (void *)mptcp_sched_first_release,
+-	.get_subflow	= (void *)bpf_first_get_subflow,
++	.get_send	= (void *)bpf_first_get_send,
+ 	.name		= "bpf_first",
  };
 -- 
 2.45.2
