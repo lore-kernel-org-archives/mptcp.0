@@ -1,119 +1,254 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A32261DEFF8
-	for <mptcp@lists.linux.dev>; Sat, 21 Dec 2024 11:35:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6CCC7462
+	for <mptcp@lists.linux.dev>; Mon, 23 Dec 2024 08:24:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1734780937; cv=none; b=OxzLkkxTdoWR7/SAETyB7cfInA0OjSormQ4lvtRFJbn2uQR7t+fwrPRewvQHmOYJ9tZZQwFGVmGLeAHo1+9l8iVgDCo/10ud8udbMHDX5fhqmhCRpK4kV5Q7CHTnLVCp7PrvD3Sw78ZHklNbGfa09ezEYqO1tKJW4MfNXHZCalg=
+	t=1734942281; cv=none; b=kkiBSa7EYwTdexBmtSdstZgoBagDvRANRwMWWTwBjXUbvkTXgrL0Kpv57Bd0ajqLduAZxHWVdOEJ9p+IY/zmaWSYwpiLizVQtoIu20GWupz1/zVu9NtyA0GXM5tBdMrG4a4h13vSi3IeNRQaXa05rk8uEeftQjELcbAAZ2jYA5U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1734780937; c=relaxed/simple;
-	bh=jQ9qh3GiFjjgogAEzRhDRy5kF3aPeqqncSvQmpyvhoA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=g6asbRQlWkkmFlVpTZpg9Toxk87oDzoLnBxsoc71uCahfynXayWUntw7yKcAN68oNTTzf85MM7y4TIUf745pTygoKrjXHEQG/UU47KiGHwoczAaDTEUh6kmFAFvgCYkjDzfehIYWHZcwDZun62PPow5qbXjZ9gaFfIlCpDYERHY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YqEq3b+D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1734942281; c=relaxed/simple;
+	bh=fz5SaDHvJxIFOFiZ/axMZwcmu8FoKw5ExSWjiiTKsbE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=RiVZZz11HUKeV563NEruGQ4MuN0V8XRu7UKDIJlGdh5Ga5w2OwBcxNGC0g1ObXe7F89xG70UM7box3hF0ESRVQ104QpZCoYESJB3opl4oqIPO18DLfMD30dRQMvD46Pqh0EXxWVBd/1Zk4DwIufn7wVxyCgxXzKmnNZ0B1z/1Lg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J0+IRm08; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YqEq3b+D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48161C4CECE;
-	Sat, 21 Dec 2024 11:35:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J0+IRm08"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 834D4C4CED3;
+	Mon, 23 Dec 2024 08:24:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1734780937;
-	bh=jQ9qh3GiFjjgogAEzRhDRy5kF3aPeqqncSvQmpyvhoA=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=YqEq3b+DUN3dJpCacJl2ZISD0h3qGJ/CTlPgYVZetJz2n/rOqRfFMsrYv+/myvPx2
-	 YOtA8UOx5iKrk/+R7TMk0l2RkL2jaeT7WcplyPORZBsHJIdFlXUeM9jfGWif2bdDq7
-	 xYhDJ56h1MqlTiru6cnonNmAKU2lmSNS1lVV7l+4iL5zlWmTYBZChOsFedHX6TEQbK
-	 hGz+xo4FZKe2IJb2qVqtdt4iyl467Tt+o0iu3K1bJhDZ3vi6F7hLzTNQ+6oEEZ0Uf8
-	 Ri774G/yXbdpc8A19/p8R7PKJWxHN/n+86Gx/aGSAOfVG1c9rE/NPLQSrr+O6Tz4bb
-	 tmSLx88TbcVMg==
-Message-ID: <4f051296-542a-40ab-b251-47d3403c74d7@kernel.org>
-Date: Sat, 21 Dec 2024 12:35:33 +0100
+	s=k20201202; t=1734942280;
+	bh=fz5SaDHvJxIFOFiZ/axMZwcmu8FoKw5ExSWjiiTKsbE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=J0+IRm08HEPLI+qFun6RowfL0j6JUVzbzrrvOMUQerzzbE8IKZ+IXU7M9ikbpJVlM
+	 2MgKN1LJhjF6W/5RCSpTHk6ppTzp1LTChnj/GTNMA0qyQ/gRme3GhwxheT1S6UgEAm
+	 OQh9Ktp8l0Dvt8j4felr7piHI+VJkG1Ak2Y9rvOqUjgvZrPEJ4PgJ9/4aZ4n6gLcdi
+	 Xc7Wmm5COObN22WyKXjGodwv224GJgmizTQn9p4SgFLlp5f84Sy85ODIbp+qj00/+U
+	 P1jcz9B60QgxvWp+VucWH+KYaJDMoA4D9Dnn+x4Wa9Fp9O9vs5GF0IXWniod4/MR/e
+	 LLJyg7F2yajRw==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5] mptcp: use GENL_REQ_ATTR_CHECK in userspace pm
+Date: Mon, 23 Dec 2024 16:24:34 +0800
+Message-ID: <ef87c8dd40c8dac4b946bf77e272d01ca64cc9dd.1734941967.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.45.2
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/2] mptcp: rx refactor follow-ups
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1734022547.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1734022547.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo, Mat,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 12/12/2024 17:58, Paolo Abeni wrote:
-> a couple of incremental improvements on top of the pending rx path
-> refactor: patch 1 dismiss __mptcp_rmem(), patch 2 optimize a bit 
-> __mptcp_move_skbs()
+A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
+is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
+directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
+if it's NULL.
 
-Thank you for the patches and the reviews!
+So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
+mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
+mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
+and mptcp_userspace_pm_get_sock().
 
-Now in our tree (with a small modification of mptcp_next_subflow() as
-suggested by CheckPatch [1])
+'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+v5:
+ - drop 'struct nlattr *' variables as Matt suggested (thanks)
 
-[1] https://github.com/multipath-tcp/mptcp_net-next/actions/runs/12301307406
+v4:
+ - use GENL_REQ_ATTR_CHECK in more functions as Matt suggested (thanks)
 
-New patches for t/upstream:
-- 94c0aa6980ba: mptcp: dismiss __mptcp_rmem()
-- 515e071ef7f6: mptcp: micro-optimize __mptcp_move_skb()
-- Results: 9213903d77ba..51bd6a121e25 (export)
+v3:
+ - use GENL_REQ_ATTR_CHECK in mptcp_userspace_pm_get_sock only
+ - drop GENL_SET_ERR_MSG as Matt suggested (thanks)
 
-Tests are now in progress:
+v2:
+ - use GENL_REQ_ATTR_CHECK in get_addr(), dump_addr() and set_flags()
+   too.
+---
+ net/mptcp/pm_userspace.c | 69 ++++++++++++++++++++--------------------
+ 1 file changed, 35 insertions(+), 34 deletions(-)
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/fd12ae115620bb5aed8fa1c1182edb9ab226494a/checks
-
-Cheers,
-Matt
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 740a10d669f8..42dda8877372 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -175,17 +175,17 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+ 
+ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
+ {
+-	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct mptcp_sock *msk;
+ 
+-	if (!token) {
+-		GENL_SET_ERR_MSG(info, "missing required token");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN))
+ 		return NULL;
+-	}
+ 
+-	msk = mptcp_token_get_sock(genl_info_net(info), nla_get_u32(token));
++	msk = mptcp_token_get_sock(genl_info_net(info),
++				   nla_get_u32(info->attrs[MPTCP_PM_ATTR_TOKEN]));
+ 	if (!msk) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    info->attrs[MPTCP_PM_ATTR_TOKEN],
++				    "invalid token");
+ 		return NULL;
+ 	}
+ 
+@@ -200,16 +200,13 @@ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *in
+ 
+ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry addr_val;
+ 	struct mptcp_sock *msk;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 
+-	if (!addr) {
+-		GENL_SET_ERR_MSG(info, "missing required address");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -217,7 +214,8 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	sk = (struct sock *)msk;
+ 
+-	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
++	err = mptcp_pm_parse_entry(info->attrs[MPTCP_PM_ATTR_ADDR],
++				   info, true, &addr_val);
+ 	if (err < 0) {
+ 		GENL_SET_ERR_MSG(info, "error parsing local address");
+ 		goto announce_err;
+@@ -309,19 +307,16 @@ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+ 
+ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+ 	struct mptcp_pm_addr_entry *match;
+ 	struct mptcp_sock *msk;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 	u8 id_val;
+ 
+-	if (!id) {
+-		GENL_SET_ERR_MSG(info, "missing required ID");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_LOC_ID))
+ 		return err;
+-	}
+ 
+-	id_val = nla_get_u8(id);
++	id_val = nla_get_u8(info->attrs[MPTCP_PM_ATTR_LOC_ID]);
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -362,8 +357,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+-	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry entry = { 0 };
+ 	struct mptcp_addr_info addr_r;
+ 	struct mptcp_pm_local local;
+@@ -371,10 +364,9 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 
+-	if (!laddr || !raddr) {
+-		GENL_SET_ERR_MSG(info, "missing required address(es)");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
++	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -382,9 +374,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	sk = (struct sock *)msk;
+ 
+-	err = mptcp_pm_parse_entry(laddr, info, true, &entry);
++	err = mptcp_pm_parse_entry(info->attrs[MPTCP_PM_ATTR_ADDR],
++				   info, true, &entry);
+ 	if (err < 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    info->attrs[MPTCP_PM_ATTR_ADDR],
++				    "error parsing local addr");
+ 		goto create_err;
+ 	}
+ 
+@@ -395,9 +390,12 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 	entry.flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 
+-	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
++	err = mptcp_pm_parse_addr(info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE],
++				  info, &addr_r);
+ 	if (err < 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE],
++				    "error parsing remote addr");
+ 		goto create_err;
+ 	}
+ 
+@@ -483,18 +481,15 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
+ 
+ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+-	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry addr_l;
+ 	struct mptcp_addr_info addr_r;
+ 	struct mptcp_sock *msk;
+ 	struct sock *sk, *ssk;
+ 	int err = -EINVAL;
+ 
+-	if (!laddr || !raddr) {
+-		GENL_SET_ERR_MSG(info, "missing required address(es)");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
++	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -502,15 +497,21 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 
+ 	sk = (struct sock *)msk;
+ 
+-	err = mptcp_pm_parse_entry(laddr, info, true, &addr_l);
++	err = mptcp_pm_parse_entry(info->attrs[MPTCP_PM_ATTR_ADDR],
++				   info, true, &addr_l);
+ 	if (err < 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    info->attrs[MPTCP_PM_ATTR_ADDR],
++				    "error parsing local addr");
+ 		goto destroy_err;
+ 	}
+ 
+-	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
++	err = mptcp_pm_parse_addr(info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE],
++				  info, &addr_r);
+ 	if (err < 0) {
+-		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
++		NL_SET_ERR_MSG_ATTR(info->extack,
++				    info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE],
++				    "error parsing remote addr");
+ 		goto destroy_err;
+ 	}
+ 
 -- 
-Sponsored by the NGI0 Core fund.
+2.45.2
 
