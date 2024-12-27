@@ -1,121 +1,82 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D960525777
-	for <mptcp@lists.linux.dev>; Fri, 27 Dec 2024 09:40:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57CB71F8AF3;
+	Fri, 27 Dec 2024 19:30:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735292420; cv=none; b=iq5f+NyL5VgWYu6soRWWscCPtxCtu/gVtvs1oVQ2/Gr8uLxqQQJ8U9lxjslOHe0yq63v9gW/R2jHwtfmcdP2DQKX50ltJkEKq2XUa0da2KtLEH7CemlsAXTgKeMBViCVb1tIkrSPVZAKlhO8vJsVAcg6cK8lHlA5kmduZ2iNKBU=
+	t=1735327813; cv=none; b=loiLxqJZWuD2YTp5b5n9Kkh/+iKmq7mIdtjdTtUoxw4FxmpYGNgp6aUXs7B/Iut28BZ9rL9ag7CkIDVfdAYmjwlJ+RMw30uLcrGA6uph7llyFitj1MD+OZ3yZMx3iWt353jiIxt35sDWUeP3zRgaNOVVyHeXscMz4/zX9OOEyyw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735292420; c=relaxed/simple;
-	bh=Y6rhWEIkHjy5haKsA8k4i3dQuRlN2rQKse2iLIdQrwU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Qnu6Tq7TqnpUB2len6LgfOF24W1AvnvWFDsPYO9VQsFgcv2ZpvjyeCJkwou9aCRDvSTAyMgmv4/SY8sj4lGsg9m1YQyCguIdZQSrUOwoGQ7FHigQ25FXsKIZ/4UiFqZBXLiasd4ewC2g2aippvQ1cG6EWnaJQTa5zOknwN4ZcEI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=ZrWhFRAW; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1735327813; c=relaxed/simple;
+	bh=QAQcu0WRZ3ePW3JDQly6Lnvr7DD08UKWzYy47eQyZJk=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZJnwiWTTE2qiBh6YOBzd8AnTAtXAetnmqWbA/agrqIGJbj0a3RvVHY2atbmndUcEF/hNRBAFmshaw+xI5c7bna9/2fdCUWhzC61/1YQRWfRY4HwLKxYCfucrJlWxn87R7DHsLcW0FdPTIgeh64k+dWEoJ3yDNBPVvRpk/pQ7H8c=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vJSwEEnM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="ZrWhFRAW"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1735292416;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Ejz+b/024iaJwUINppSQw939RgGENyUyShNtGokxfEI=;
-	b=ZrWhFRAWBxm5nnWonJgG56VaO75NFG819rIPGOzHtnPrsB6CJM/UVb8iWd2Kn/Ssz8xCg9
-	Lc63QqOgkVew+nUOYrctO929lSQoW4em/PWZ221p+JaRVqUcZhxRJMyGzRU2BA33i0glUc
-	+ipG7NFSu1ZzYNwg5EZ3qkrJt9VFTh8=
-Received: from mail-qt1-f200.google.com (mail-qt1-f200.google.com
- [209.85.160.200]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-504-6Ft3gOSmOLe_A44aCGQC_w-1; Fri, 27 Dec 2024 04:40:15 -0500
-X-MC-Unique: 6Ft3gOSmOLe_A44aCGQC_w-1
-X-Mimecast-MFC-AGG-ID: 6Ft3gOSmOLe_A44aCGQC_w
-Received: by mail-qt1-f200.google.com with SMTP id d75a77b69052e-4675c482d6cso124225941cf.2
-        for <mptcp@lists.linux.dev>; Fri, 27 Dec 2024 01:40:15 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1735292414; x=1735897214;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Ejz+b/024iaJwUINppSQw939RgGENyUyShNtGokxfEI=;
-        b=DDCDbd/tQ6DDF7ikAYQoC0mLTAGNpzmuc8e2RcP5QIAh1MYg47wPYh3Wrn2GZlZ1r5
-         uHopZihnSKQ8pyXhIWFnZHG3dTl22yLl8lfbL8+Oj2lAljgF0bXI75vxkaWUjNziKzZ0
-         pKL9tunn1PgP4dDr91t4m4KmKKv3s8sVUFq8IX4IYu54aTMRe9eh7orehrtlfD5n7SLg
-         west5wfzRWsnt7hJJkU2x7H2f3xga48QmkZzj748dgJyOSBw5aiTAxKE4QbKUpfgxo6d
-         NjhPRwA9+hwIQrkgJZv+ENbniU08AXK8D2JUTO98v2k0bJDT+WdWGvbQOX1cXbAT9D93
-         j0BQ==
-X-Gm-Message-State: AOJu0YwkD5vLHSTTRiBgKDDcmJl/oeHKJAfQgYOHSrBSIhsgDVTEplEZ
-	EFXiqs7IHLRJf//Vr+gmHgKKozpd+wDvBpDyBdvsoKsoGq6G5nch7dC/6ksXBdAj6R6kTBmasdk
-	/uyJIervZOw22bv2/ltrTBLVCncxc6qBlYadVDo+yN2oDX2pGH5vx
-X-Gm-Gg: ASbGncuUJza3AQGiWcqaVBwFDxMhAaTlxHNrZp5FYmqp5CGLmZtwqSUKSBiAb86WB9m
-	TC/ZrVtZ/eU4lYlCUcDzxNUG9cM5c5Uq+D48bCaVYZGwDQhRlzl0yi80D3clLi3ET2TND9f5x0R
-	F543pBRVIGBIXNdV2QVb3RrRw/58uzQ0FyTS01M6c/gdOUsD2M6AiMbALOxSIDuxL492l/KnKs/
-	TNO1+d3mgLaLFnAu7suioo4peHc+YO4HMx8B8vhGJtEJLahZxQHNitxUv/wJ0gADlLuM/i+Lbem
-	He3gMCY=
-X-Received: by 2002:ac8:7fc1:0:b0:467:5d0b:c744 with SMTP id d75a77b69052e-46a4a8cb0ffmr428695601cf.16.1735292414663;
-        Fri, 27 Dec 2024 01:40:14 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IECVfDTc4SSiTol4an3+eZe5t0onmbtEfxMbyV29RIycbKvx099BAPC5PueSSigimRt6lgTGA==
-X-Received: by 2002:ac8:7fc1:0:b0:467:5d0b:c744 with SMTP id d75a77b69052e-46a4a8cb0ffmr428695421cf.16.1735292414294;
-        Fri, 27 Dec 2024 01:40:14 -0800 (PST)
-Received: from [192.168.88.24] (146-241-75-10.dyn.eolo.it. [146.241.75.10])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46a3e6a6d1dsm78195321cf.45.2024.12.27.01.40.13
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 27 Dec 2024 01:40:13 -0800 (PST)
-Message-ID: <e50db525-cf52-4ff1-94bc-3314878b64e4@redhat.com>
-Date: Fri, 27 Dec 2024 10:40:11 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vJSwEEnM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BED82C4CED0;
+	Fri, 27 Dec 2024 19:30:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1735327812;
+	bh=QAQcu0WRZ3ePW3JDQly6Lnvr7DD08UKWzYy47eQyZJk=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=vJSwEEnM994JBQWan5e+RdD2q8JTWT4r0vo9ZO1N9WK/Ma/zlZdrAR5p3FDaXLSWX
+	 yLtqV42w0wxfyrjdVEYjA+EluPbH5pg2SeONFoElj38jmod9PSwNtlnNPKYM1LoToe
+	 j1OsMEy/3zN7r+TOTpWnRmKHNUpX2dOt28J6qrk1oGT4nJvBq0KwH9mVHjaNqhUw8Y
+	 7nGV+zK8iRyafTZ7HTdlyimBfOSYyFzRtFkHYrt4YqRO4kiaAliWdcwQZtLlBU2Skw
+	 NBcDZ/324fqliT+uGAEaOzbjgMlKPKcbDpMw/B7JeQiHbTMoPG+tpWenGulWOU9P5o
+	 9zbWbZ3cmlwlQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 34064380A955;
+	Fri, 27 Dec 2024 19:30:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v2 1/7] mptcp: prevent excessive coalescing on
- receive
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net v2 0/3] netlink: specs: mptcp: fixes for some
+ descriptions
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173532783201.575952.5509666590486709337.git-patchwork-notify@kernel.org>
+Date: Fri, 27 Dec 2024 19:30:32 +0000
+References: <20241221-net-mptcp-netlink-specs-pm-doc-fixes-v2-0-e54f2db3f844@kernel.org>
+In-Reply-To: <20241221-net-mptcp-netlink-specs-pm-doc-fixes-v2-0-e54f2db3f844@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <cover.1733486870.git.pabeni@redhat.com>
- <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
- <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
- <22fe2214-b009-46b1-84b9-84559ebe339c@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <22fe2214-b009-46b1-84b9-84559ebe339c@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: oUJK-iM2usKP6g0oeWmMoGefwrinKlyTqYyHr-Av79M_1735292414
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ donald.hunter@gmail.com, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+ dcaratti@redhat.com, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-On 12/21/24 11:00, Matthieu Baerts wrote:
-> On 10/12/2024 13:03, Matthieu Baerts wrote:
->> On 06/12/2024 13:10, Paolo Abeni wrote:
->>> Currently the skb size after coalescing is only limited by the skb
->>> layout (the skb must not carry frag_list). A single coalesced skb
->>> covering several MSS can potentially fill completely the receive
->>> buffer. In such a case, the snd win will zero until the receive buffer
->>> will be empty again, affecting tput badly.
->>
->> Good idea! Thank you for having looked at this!
->>
->>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>> ---
->>> No fixes tag because the problem is not very visible in practice
->>> currently, but will be apparent after the rx refactor.
->>> Still I hope this could affect positively the simlut flows self-tests
->>
->> The modification looks safe enough to me: it should not make thing worst.
+Hello:
+
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sat, 21 Dec 2024 12:09:13 +0100 you wrote:
+> When looking at the MPTCP PM Netlink specs rendered version [1], a few
+> small issues have been found with the descriptions, and fixed here:
 > 
-> Do you still prefer not targetting -net for this patch here? Or is it OK
-> to do so and add a Fixes tag?
+> - Patch 1: add a missing attribute for two events. For >= v5.19.
+> 
+> - Patch 2: clearly mention the attributes. For >= v6.7.
+> 
+> [...]
 
-Whatever is easier to do in practice works for me. Perhaps monitoring
-the simult_flows ST flakes could give an idea - if that get more
-stable/less unstable we should possibly target 'net'.
+Here is the summary with links:
+  - [net,v2,1/3] netlink: specs: mptcp: add missing 'server-side' attr
+    https://git.kernel.org/netdev/net/c/6b830c6a023f
+  - [net,v2,2/3] netlink: specs: mptcp: clearly mention attributes
+    https://git.kernel.org/netdev/net/c/bea87657b5ee
+  - [net,v2,3/3] netlink: specs: mptcp: fix missing doc
+    https://git.kernel.org/netdev/net/c/4f363fe9f6b2
 
-Cheers,
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
-Paolo
 
