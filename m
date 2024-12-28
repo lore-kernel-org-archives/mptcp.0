@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C15C8DF
-	for <mptcp@lists.linux.dev>; Sat, 28 Dec 2024 12:19:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 839802111
+	for <mptcp@lists.linux.dev>; Sat, 28 Dec 2024 16:16:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735388400; cv=none; b=gORIoZXmZ02R8CAoRyPWP5oJey43+4m4j18tabN8CXRgf5zE2j+f2KorURnyPpGe0gRBRX426Dm/sNDrAP6MAH508OAQiB8pu5PnM/gUYqXfs9/myv8RZh4qfqLoSHIzzg0iV3eBWrKFwM2DsJ9pddpl8twXNet2aS3InCbywfI=
+	t=1735402566; cv=none; b=Wv9eeJNkvXDZsHI7HLjMs4I7Wu6HgW/tNeRr5xm76/SOBng7Z+W303SI+7XBGwaBjkby2kEeF9sq+tt99mVp0YEDmYCJcn80A1ip9nVQgwK/SD56tUrjMYLUo1jcEy/XZbasWFPiikUgWCHlA78/liuHHO0k0kS67oeLCbL3fRI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735388400; c=relaxed/simple;
-	bh=1yA6XkEyndGlSejlzyc4qYF+ypQAFT8d0k20cfxPt8A=;
+	s=arc-20240116; t=1735402566; c=relaxed/simple;
+	bh=+WI8YkvzWQ8fTQLcEhHrKdxcR3P+cqG7nV3ZwW4Vayc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HLrU7XTObxcqHMcubUzofB7wVi+ym9Lgs2k42Hu3p+S5q4bwz7SlhzJcAV01wHlcP7AEcyBma5n1K+EYctioZFxd6eVk5NMa5SulyrNnj6QGBANeTNcLo6W7wxBNbhcLGf1KTG12udqSsP+/D6vDMBhMmS6a7tCbbzLKifh22EU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4wO2JnY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=X4Ffwtehf/ukm8nyJjQ9Y0g0HtP9pXkPdttPF+ICge6v6MR0kVy/srrAClo6ssbhcnXP4GljY/gHx7jLk6RFEBTP1r+ysJI8ZqmwT3ckN/f694W6RSYIMjfRUfUOjWOpx4qCRLsFchjHqsFb4vpnrLTe3nb0TH30ieJOJORGuXU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T3iR4Vt0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4wO2JnY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FC45C4CECD;
-	Sat, 28 Dec 2024 12:19:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T3iR4Vt0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68E56C4CECD;
+	Sat, 28 Dec 2024 16:16:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735388399;
-	bh=1yA6XkEyndGlSejlzyc4qYF+ypQAFT8d0k20cfxPt8A=;
+	s=k20201202; t=1735402566;
+	bh=+WI8YkvzWQ8fTQLcEhHrKdxcR3P+cqG7nV3ZwW4Vayc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=C4wO2JnYT36Zw6HhqA5O81TtrAvYt3puP6EiN9mMbYz2YLD8hd53J8gzCcU6Qnq0q
-	 N6WRaP72MvEnyEy+53wWXjoekT5aWqlJCmCNiQ7d0qYKSOfkoP4OngePdG3hiZVawT
-	 VZsREqxZdYXSpGgz0C18w/XfBUNuXuJqRSkzqHLFhij6lwVYOikt2eWwEJPI2w3Quj
-	 4tscr3DFf0kzUFwkQfye2bvfv1vbRfty5ExcyeDpST6CCzALVQs9bFrgdedCA3bDT0
-	 KyrYlpuF2dAUhgXhjGf6eoHk1uw88g+NlSxobjFPsnq2+yh8Yrg5L1FMeBa8wk1ofL
-	 rlnB/NJl1y3eQ==
-Message-ID: <3e177765-67ff-4aeb-ae01-fc187bd929de@kernel.org>
-Date: Sat, 28 Dec 2024 13:19:56 +0100
+	b=T3iR4Vt0H53bgGm9BlKkyj4siglm85D+bfNcZhoryNT9sRgwuMjPA1x+rgAZsHpKw
+	 zakyqZbDldUPNJaRmRzLyY6fHmCZdJkJ/JA8md5aXAJDKKBXQukqLF1+kzg2KGyI4R
+	 k02lh3NHiaWW20TXMW5u9kN0L+EG09Qrhb+0KP1VdXkfIhK3FXPh3SVdvBnECSgZFv
+	 Ue7THRu8hA/kIj3CHu2iVftGESkq0kw9/AwU5Pa+BMSDEangvO0VPP3yORgyhY+VMF
+	 S7rkn5zce5EawY4HBvDb2awPJf0lk8bMuurwlZg0S1fFQy1Ih/qdcnQmwCtSbfU6CP
+	 24rVXZZiMgSgw==
+Message-ID: <bb281101-ad9c-4710-ae8e-eab3abd6819b@kernel.org>
+Date: Sat, 28 Dec 2024 17:16:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: fix for setting remote ipv4mapped
- address
+Subject: Re: [PATCH mptcp-next v5] mptcp: use GENL_REQ_ATTR_CHECK in userspace
+ pm
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <35436a387650236cce065f198b89bb5afb23f708.1735205514.git.tanggeliang@kylinos.cn>
+References: <ef87c8dd40c8dac4b946bf77e272d01ca64cc9dd.1734941967.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,38 +86,88 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <35436a387650236cce065f198b89bb5afb23f708.1735205514.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ef87c8dd40c8dac4b946bf77e272d01ca64cc9dd.1734941967.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-(-cc Jakub)
-
-On 26/12/2024 10:33, Geliang Tang wrote:
+On 23/12/2024 09:24, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Commit 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
-> introduced a bug in mptcp_pm_nl_subflow_destroy_doit().
+> A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
+> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
+> directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
+> if it's NULL.
 > 
-> ipv6_addr_set_v4mapped() should be called to set the remote ipv4 address
-> 'addr_r.addr.s_addr' to the remote ipv6 address 'addr_r.addr6', not
-> 'addr_l.addr.addr6', which is the local ipv6 address.
+> So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
+> mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
+> mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
+> and mptcp_userspace_pm_get_sock().
 > 
-> Fixes: 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
+> 'Suggested-by: Jakub Kicinski <kuba@kernel.org>'
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v5:
+>  - drop 'struct nlattr *' variables as Matt suggested (thanks)
 
-Now in our tree (fixes for next):
+Thank you for the v5!
 
-New patches for t/upstream:
-- 9da48b72c233: mptcp: fix for setting remote ipv4mapped address
-- Results: 472bd4bb9bf0..f770d70d123d (export)
+> v4:
+>  - use GENL_REQ_ATTR_CHECK in more functions as Matt suggested (thanks)
+> 
+> v3:
+>  - use GENL_REQ_ATTR_CHECK in mptcp_userspace_pm_get_sock only
+>  - drop GENL_SET_ERR_MSG as Matt suggested (thanks)
+> 
+> v2:
+>  - use GENL_REQ_ATTR_CHECK in get_addr(), dump_addr() and set_flags()
+>    too.
+> ---
+>  net/mptcp/pm_userspace.c | 69 ++++++++++++++++++++--------------------
+>  1 file changed, 35 insertions(+), 34 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 740a10d669f8..42dda8877372 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -175,17 +175,17 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+>  
+>  static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
+>  {
+> -	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+>  	struct mptcp_sock *msk;
+>  
+> -	if (!token) {
+> -		GENL_SET_ERR_MSG(info, "missing required token");
+> +	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN))
+>  		return NULL;
+> -	}
+>  
+> -	msk = mptcp_token_get_sock(genl_info_net(info), nla_get_u32(token));
+> +	msk = mptcp_token_get_sock(genl_info_net(info),
+> +				   nla_get_u32(info->attrs[MPTCP_PM_ATTR_TOKEN]));
+>  	if (!msk) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+> +		NL_SET_ERR_MSG_ATTR(info->extack,
+> +				    info->attrs[MPTCP_PM_ATTR_TOKEN],
+> +				    "invalid token");
 
-Tests are now in progress:
+Arf, sorry, I didn't notice the 'struct nlattr *' variables were used in
+multiple places: I guess I only looked at mptcp_pm_nl_remove_doit()
+where in the v4, we had:
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/280f4e69601cbcb770ac1095b6e3c968de2de6a3/checks
+ 	id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+ 	id_val = nla_get_u8(id);
 
-I will send it later, when net-next will re-open.
+... and 'id' was only used there. But maybe that's not normal to use
+'id' only once: probably because we used GENL_SET_ERR_MSG() instead of
+NL_SET_ERR_MSG_ATTR() which seems better, no?
+(same in mptcp_pm_nl_announce_doit())
+
+I can send a quick patch for that, and place your v4 on top of it.
+
+(...)
 
 Cheers,
 Matt
