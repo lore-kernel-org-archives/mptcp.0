@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B836B4D8C8
-	for <mptcp@lists.linux.dev>; Sat, 28 Dec 2024 12:12:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1C15C8DF
+	for <mptcp@lists.linux.dev>; Sat, 28 Dec 2024 12:19:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735387959; cv=none; b=JnVZDLs3t1f5y+K1wuXekNBVDqY3lt43hw2LPLhVhiKL0nWd+3/5ykooRsdySKbtB7Jh0I6nNfTIqPaWde+4vXU/rBnvAlSMBWAgHHDNXeBtyE0HtzDfJaJFQmQB2j4SUP2JkGFUbvRFR+V7txMizpnMbvJYumEJez8fpfYqH44=
+	t=1735388400; cv=none; b=gORIoZXmZ02R8CAoRyPWP5oJey43+4m4j18tabN8CXRgf5zE2j+f2KorURnyPpGe0gRBRX426Dm/sNDrAP6MAH508OAQiB8pu5PnM/gUYqXfs9/myv8RZh4qfqLoSHIzzg0iV3eBWrKFwM2DsJ9pddpl8twXNet2aS3InCbywfI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735387959; c=relaxed/simple;
-	bh=FU3GpirL/Fbpjb0HXQA0HCnFexCl6SmKc7bbUs+hLQM=;
+	s=arc-20240116; t=1735388400; c=relaxed/simple;
+	bh=1yA6XkEyndGlSejlzyc4qYF+ypQAFT8d0k20cfxPt8A=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VeCQYuu51+u1e13BQCBWCT5I7x4WSqbcZmGkd94mXIotIec9R5OamTJ44cIRfFqtPI7JhEer3Yky5dBFDT01sCEXmcuqej3KCHP3NgFA6Klv1PFA4o2kqmaG+DA6FXpWyapdzo22qSXuWY3wPXxaa0zVyLvUUiPkpm9XxkN8Ps8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=r5osSvMu; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HLrU7XTObxcqHMcubUzofB7wVi+ym9Lgs2k42Hu3p+S5q4bwz7SlhzJcAV01wHlcP7AEcyBma5n1K+EYctioZFxd6eVk5NMa5SulyrNnj6QGBANeTNcLo6W7wxBNbhcLGf1KTG12udqSsP+/D6vDMBhMmS6a7tCbbzLKifh22EU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=C4wO2JnY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="r5osSvMu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 551C6C4CED4;
-	Sat, 28 Dec 2024 12:12:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="C4wO2JnY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FC45C4CECD;
+	Sat, 28 Dec 2024 12:19:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735387959;
-	bh=FU3GpirL/Fbpjb0HXQA0HCnFexCl6SmKc7bbUs+hLQM=;
+	s=k20201202; t=1735388399;
+	bh=1yA6XkEyndGlSejlzyc4qYF+ypQAFT8d0k20cfxPt8A=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=r5osSvMu+M8zf+Wf7jk9BFC0VJrLkGTydr1U893A1sRfN++bjuM88PKcp1ZUZ4nvH
-	 TX2Uh4zdmaUKDtzLcOrZt3aKhyZzyS1GFmKau58FuHaqVKtbcpyccU70lOZtENOuV0
-	 DUTzSA6lNLSKA3Kicaz5+Jq+8NtGwlJS1YazX7BxGQpEjs1BUBmLf65q0pB0nBcQ3L
-	 jfXh2kmWH84juMRC1+AkOBS7GrprSqccHHXleWfB2IOEDjjKKoxsQ7PnpHY/v9+FiZ
-	 uuNUSiseoU2GHzT+k/scouc2ioOabr9QPibESpeT15lielEfIuyCTzrhSSAMzfls/R
-	 tEspmpcJ9PsCA==
-Message-ID: <19f950e5-f5d1-4ee4-85d9-9e8c7d189481@kernel.org>
-Date: Sat, 28 Dec 2024 13:12:36 +0100
+	b=C4wO2JnYT36Zw6HhqA5O81TtrAvYt3puP6EiN9mMbYz2YLD8hd53J8gzCcU6Qnq0q
+	 N6WRaP72MvEnyEy+53wWXjoekT5aWqlJCmCNiQ7d0qYKSOfkoP4OngePdG3hiZVawT
+	 VZsREqxZdYXSpGgz0C18w/XfBUNuXuJqRSkzqHLFhij6lwVYOikt2eWwEJPI2w3Quj
+	 4tscr3DFf0kzUFwkQfye2bvfv1vbRfty5ExcyeDpST6CCzALVQs9bFrgdedCA3bDT0
+	 KyrYlpuF2dAUhgXhjGf6eoHk1uw88g+NlSxobjFPsnq2+yh8Yrg5L1FMeBa8wk1ofL
+	 rlnB/NJl1y3eQ==
+Message-ID: <3e177765-67ff-4aeb-ae01-fc187bd929de@kernel.org>
+Date: Sat, 28 Dec 2024 13:19:56 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -39,7 +39,7 @@ Subject: Re: [PATCH mptcp-net] mptcp: fix for setting remote ipv4mapped
  address
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: kuba@kernel.org, Geliang Tang <tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <35436a387650236cce065f198b89bb5afb23f708.1735205514.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
@@ -92,8 +92,7 @@ Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-No need to cc Jakub for patches that are in review only on MPTCP side.
-Please remove his address from the Cc list for the next replies.
+(-cc Jakub)
 
 On 26/12/2024 10:33, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
@@ -104,20 +103,21 @@ On 26/12/2024 10:33, Geliang Tang wrote:
 > ipv6_addr_set_v4mapped() should be called to set the remote ipv4 address
 > 'addr_r.addr.s_addr' to the remote ipv6 address 'addr_r.addr6', not
 > 'addr_l.addr.addr6', which is the local ipv6 address.
-
-Good catch! How did you notice that? It looks like we are currently not
-validating this part:
-
-https://ci-results.mptcp.dev/lcov/export/mptcp/pm_userspace.c.gcov.html#L519
-
-Is it because you are looking at adding tests covering this?
-
+> 
 > Fixes: 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
 
-This commit is only in net-next, not in -net. So I'm going to apply it
-in "Fixes for net-next" ("mptcp-next" then).
+Now in our tree (fixes for next):
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 9da48b72c233: mptcp: fix for setting remote ipv4mapped address
+- Results: 472bd4bb9bf0..f770d70d123d (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/280f4e69601cbcb770ac1095b6e3c968de2de6a3/checks
+
+I will send it later, when net-next will re-open.
 
 Cheers,
 Matt
