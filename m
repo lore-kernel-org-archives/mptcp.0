@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3413219ABA3
-	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 16:28:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DB10719ABA3
+	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 16:29:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735576082; cv=none; b=uIGUX6N+/6ypzeMtpDjP+SKTAw5kVw0OtTyPBTFhHzXO3Oa0OF69mB+Jv8DSjH+G08QUqQpLUcgMuST1+GiU/pEa3W7Ivv1LLfUYWn8tKuuVuOWelf9w5+Ds5EFRiNMfFECk+ZXW6TkxbVCO/cyjQ40XMJ7rXwj6VyQWdpZxDVw=
+	t=1735576159; cv=none; b=YQtY/+Or5ZCh18K9DOvW0B7IEm+dfjFnK8jpArsyr2seTrXeFSJDWrYvjGL0Zdwv0w/M3WG4+QTJz2RZmEpmuXuLjSJo2n/8ZvGSyRrYdmX2TajA/pqiUHjApNPdyj4SwDSdU9aSF0eudFCMd10jMepfGLM9pfBj1ZrVcCpjRAw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735576082; c=relaxed/simple;
-	bh=HKEHsiWakgs9ry0L2mIneLSxvyPjWQrUvxvJdx56F0c=;
+	s=arc-20240116; t=1735576159; c=relaxed/simple;
+	bh=dWaOgoWo607jbTMLD6Fybvln0T4c4bU+f1oNE5Lvcr0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nUm9MzqcEJTD0rtVQ8KOZZWzW8fa0SgQabwDaUYct2f+Qs7g0tjZSdsFb11ZcHpJ+4eKGYdaeZDQHu7pvO0ocRkPysMDjQVw7rq/bMIT5l3/+BLhpLvkOyoAj10Ruq45qR4TloUpwlijzkQPnP49s12GjArOwWmxFBYl3M9M6GU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWgrqKP4; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Q6BRG99bE8Trkw58bOhxLuqxWYXzysX0b/SoYttFWJQ/ncoBTVSPyhVmTAc/JTdoCZ25akXjoQKPUbF1w3F/1uO084d1L1/+U5/mdSPdcaN1DOyzKC+t8A+53byYgQlajLxsej6MmIUlPV32F/Of3hFSMXURUFLpd3/b1dHu7J8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MRD4AA4X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWgrqKP4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AC65C4CED0;
-	Mon, 30 Dec 2024 16:28:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MRD4AA4X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B035FC4CED0;
+	Mon, 30 Dec 2024 16:29:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735576081;
-	bh=HKEHsiWakgs9ry0L2mIneLSxvyPjWQrUvxvJdx56F0c=;
+	s=k20201202; t=1735576159;
+	bh=dWaOgoWo607jbTMLD6Fybvln0T4c4bU+f1oNE5Lvcr0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YWgrqKP4eoXSkAV67ykg568d8aK5HhRPK2K3xZEYcxPGvAFFzC/e6w2ZJ0D46R8Eg
-	 AusoV7ymuvmj3NlGkiFXq/iRg+WNtWqHgVVoJy4P8CY0L+yqgfrBrG52Ab04TWmxBu
-	 m42rDDhVdNNMF9aVc168ZMTlUmnPbobmQaL0u+5Js1EGyzFYTuM3xCi0lD8MZ+D4ea
-	 lKErme5ghvNcrTC11h1GqUChJFBl1YA9yGnj+G354Vg8HC4MHhGLUgAEjLOzK3prqj
-	 7+eRyEPpljKVOneg1qf7edj4yLyZ2HVZl182esa7XJGGGjcU/VfS6xtyxXwN940HJW
-	 IiPh+5POpCL2g==
-Message-ID: <c6a051fe-6fdc-49a4-aeaf-5defafaa0a7b@kernel.org>
-Date: Mon, 30 Dec 2024 17:27:58 +0100
+	b=MRD4AA4XmXeHchgMISgGDyAbfrp6yBriStf2SzW+57pftVk7XJWl8RR45ONLGFFbp
+	 QInvL8j0jkHsTKJgGmpc7B18Anld//MkZNaek6Us59AJW09BRVqEu5j+dlKBiZjYzC
+	 Z+5B3gzAFFxSWKRRZQ0rd1pcTP/mHV0K+nL4YeXv4fv8dpveDMdflYhWPXZHhDBbTw
+	 sfRmc/c6TmapM80BkTaIWaQRPBGK5TbOmtNjutR6rVLNmlhxXLkSBmhIzzgYefWeL9
+	 gJY51MKPrk7Gf15I0D7xRg0p3HUggPUNK9LNh25Met0XaXrSwU+DFSbPh4O9GqEYH5
+	 VojxRbP/CMArw==
+Message-ID: <1e38f357-3fe3-4a0a-8dd9-715f879caa82@kernel.org>
+Date: Mon, 30 Dec 2024 17:29:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/8] BPF path manager, part 2
+Subject: Re: [PATCH mptcp-next v2 3/8] mptcp: add id parameter for get_addr
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1734074788.git.tanggeliang@kylinos.cn>
+ <737e168d74af571f6740cbe64b3a7f46ac981f7b.1734074788.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,62 +86,186 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1734074788.git.tanggeliang@kylinos.cn>
+In-Reply-To: <737e168d74af571f6740cbe64b3a7f46ac981f7b.1734074788.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
+Sorry, I just noticed this will cause conflicts with the series I just sent:
+
+
+https://lore.kernel.org/all/20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org/T/
+
 On 13/12/2024 08:35, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v2:
->  - split patch 7 of v1 into two.
->  - patches 1-6 have no code changes, only the commit logs have been
-> updated.
->  - more commit log to explain why mptcp_pm_addr_id_bitmap_t needs to
-> be defined.
->  - use mptcp_pm_addr_id_bitmap_t in userspace_pm_append_new_local_addr
-> too.
+> The address id is parsed both in mptcp_pm_nl_get_addr() and
+> mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
+> So this patch adds a new parameter 'id' for all get_addr() interfaces.
+> The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then pass
+> it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c           | 16 ++++++++++++----
+>  net/mptcp/pm_netlink.c   | 11 +++--------
+>  net/mptcp/pm_userspace.c | 11 +++--------
+>  net/mptcp/protocol.h     |  4 ++--
+>  4 files changed, 20 insertions(+), 22 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 526e5bca1fa1..c7d323c7c7aa 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -434,16 +434,24 @@ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
+>  	return mptcp_pm_nl_is_backup(msk, &skc_local);
+>  }
+>  
+> -static int mptcp_pm_get_addr(struct genl_info *info)
+> +static int mptcp_pm_get_addr(u8 id, struct genl_info *info)
+>  {
+>  	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
+> -		return mptcp_userspace_pm_get_addr(info);
+> -	return mptcp_pm_nl_get_addr(info);
+> +		return mptcp_userspace_pm_get_addr(id, info);
+> +	return mptcp_pm_nl_get_addr(id, info);
+>  }
+>  
+>  int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+>  {
+> -	return mptcp_pm_get_addr(info);
+> +	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+> +	struct mptcp_pm_addr_entry addr;
+> +	int ret;
+> +
+> +	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
 
-Sorry for the delay: I was waiting for the CI to do the validation, but
-somehow, it didn't even start. An issue on Patchew side apparently:
+Could you first check if the attribute is set (to report a more precise
+error), before parsing it please?
 
-  https://patchew.org/MPTCP/cover.1734074788.git.tanggeliang@kylinos.cn/
+  if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
+        return -EINVAL;
 
-The 6 first patches look good to me (just one small thing, and a rebase
-might be needed).
+  attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+  ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+  (...)
 
-It is unclear to me if we need the 2 last patches. Maybe patch 7/8 is
-needed for the BPF path-manager? Not even sure, please see below.
+So similar to this:
 
-Regarding patch 8/8, it looks like it introduces new issues, and solving
-them increases the complexity, and I don't think it is worth saving a
-bit of duplicated code there. WDYT?
 
-> In order to implement BPF userspace path manager, it is necessary to
-> unify the interfaces of the path manager. This set updates get_addr()
-> and dump_addr() interfaces.
-The modifications you are proposing here makes sense. Now, regarding the
-BPF path-manager, to me, they don't really need to implement get_addr()
-and dump_addr() because these interfaces are only useful for the userspace:
+https://lore.kernel.org/all/20241230-genl_req_attr_check-v6-7-3ec9103559e7@kernel.org/
 
-- with the in-kernel PM, it is useful to list the different endpoints to
-be able to change the configuration if needed (or to check how endpoints
-got configured).
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return mptcp_pm_get_addr(addr.addr.id, info);
+>  }
+>  
+>  static int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 92b4dcc310d3..de6a8e7a4a1a 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1762,19 +1762,14 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
+>  	return -EMSGSIZE;
+>  }
+>  
+> -int mptcp_pm_nl_get_addr(struct genl_info *info)
+> +int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info)
+>  {
+> -	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+>  	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+> -	struct mptcp_pm_addr_entry addr, *entry;
+> +	struct mptcp_pm_addr_entry *entry;
+>  	struct sk_buff *msg;
+>  	void *reply;
+>  	int ret;
+>  
+> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+>  	if (!msg)
+>  		return -ENOMEM;
+> @@ -1788,7 +1783,7 @@ int mptcp_pm_nl_get_addr(struct genl_info *info)
+>  	}
+>  
+>  	rcu_read_lock();
+> -	entry = __lookup_addr_by_id(pernet, addr.addr.id);
+> +	entry = __lookup_addr_by_id(pernet, id);
+>  	if (!entry) {
+>  		GENL_SET_ERR_MSG(info, "address not found");
 
-- with the userspace one, it can be useful to retrieve addresses when
-the daemon got restarted, to get info about previously created connections.
+Mmh, I switched this to NL_SET_ERR_MSG_ATTR() in:
 
-- with the BPF PM, I'm not sure if there is really a need to dump
-addresses to the userspace. Or do you see a case where these interfaces
-can be useful? I guess BPF PMs will be configured via BPF, and if there
-is a need, the addresses can also be dumped via BPF, but I don't see the
-point of exporting them via Netlink.
 
-Maybe there is no need to do much around these interfaces, and the last
-two patches can be dropped? Or maybe mptcp_pm_addr_id_bitmap_t can be
-defined in protocol.h instead of in include/net/mptcp.h?
+https://patchwork.kernel.org/project/mptcp/patch/20241230-genl_req_attr_check-v6-1-3ec9103559e7@kernel.org/
+
+... which requires 'attr'. We could not do the conversion here in the
+patch I sent. But because you are also moving this part to pm.c in the
+next patch, I suggest to temporally pass the pointer to 'attr' here in
+this patch 3, and remove it in patch 4.
+
+WDYT?
+
+>  		ret = -EINVAL;
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index ab92efec6618..40a018be243e 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -663,10 +663,9 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  	return ret;
+>  }
+>  
+> -int mptcp_userspace_pm_get_addr(struct genl_info *info)
+> +int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info)
+>  {
+> -	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+> -	struct mptcp_pm_addr_entry addr, *entry;
+> +	struct mptcp_pm_addr_entry *entry;
+>  	struct mptcp_sock *msk;
+>  	struct sk_buff *msg;
+>  	int ret = -EINVAL;
+> @@ -679,10 +678,6 @@ int mptcp_userspace_pm_get_addr(struct genl_info *info)
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+> -	if (ret < 0)
+> -		goto out;
+> -
+>  	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+>  	if (!msg) {
+>  		ret = -ENOMEM;
+> @@ -699,7 +694,7 @@ int mptcp_userspace_pm_get_addr(struct genl_info *info)
+>  
+>  	lock_sock(sk);
+>  	spin_lock_bh(&msk->pm.lock);
+> -	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, addr.addr.id);
+> +	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
+>  	if (!entry) {
+>  		GENL_SET_ERR_MSG(info, "address not found");
+
+Same here for GENL_SET_ERR_MSG() vs NL_SET_ERR_MSG_ATTR().
+
+>  		ret = -EINVAL;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index dd673b41f0ce..76a0cfe54723 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1131,8 +1131,8 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+>  			  struct netlink_callback *cb);
+>  int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  				 struct netlink_callback *cb);
+> -int mptcp_pm_nl_get_addr(struct genl_info *info);
+> -int mptcp_userspace_pm_get_addr(struct genl_info *info);
+> +int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info);
+> +int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info);
+>  
+>  static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflow)
+>  {
 
 Cheers,
 Matt
