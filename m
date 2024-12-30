@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BCC31A83FB
-	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 13:24:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1BC741A83ED
+	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 13:24:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735565067; cv=none; b=QjJEz9DtkDBAlFCtj5+HCsijJIhlUu9uV958LpPI6C+HjJVVzxbJh7DapteuHp9yKFlbPygY4ttgyV/FDd6p7Ausn+Ck/wJvFZqfi0p1r14G++EKWb8LX2Z6pJqopiwgseCOF3XTGwFGAAqzcLH7RpxG4V8K2OZpZdmadAwplSU=
+	t=1735565067; cv=none; b=uBIQEBt9kkzotH5ofykZi3xt4YtOTPZNLI6FohpRVVDumuGGG4Fncsm8P1P5U4SoWcD7MULs5JX0SaadVi580nFCgBJnXGr2faq1tvLKzAXk+Um07xnuyYfngI0WihWK9M4SOUAJu+O0//VPUdTThnEqOq/C/OBircycCDBCNbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1735565067; c=relaxed/simple;
-	bh=ME2LpurMH8/i1zBciCwO+JKPkbJaoLsObzAYsTNbxXU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nUPajKb0ypZSLRhV4MSQtAn7J/+9hy2xLbhaurjjeiL4G//11uqQNIoPCwMHBwgDBfHen7Oq6ICTCOVQtfD4UsN40nkDkIUZKFiVND0IA0yrfNSxNkXWUj6CqeplnhPkmgi5EDEvdAvaB4YkI0udeEkBdsULyl43cUg2jYWEKfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e7/ZsxYf; arc=none smtp.client-ip=10.30.226.201
+	bh=Es71Mr1nub8axQ0kH7x3XSOub9QelhmHRvIeImNKxK4=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LWh7oOsf8cSCkQv7c3lzQwWvHsVdTQkgWhWpl+f185hvhOtpYlfMEdNcam5OVNkjrRHdPGdTkCCdEkoYlPRVHlqGl/UmbyICFp19suyLVMLc1D/dU+lko6quMdJmtYzjYKxTI+8I01jRuMh/EhgmfAaqeRJcKkERn57Iq3dHYR0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DxzR0XfZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e7/ZsxYf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 12716C4CED0;
-	Mon, 30 Dec 2024 13:24:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DxzR0XfZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1108BC4CED4;
+	Mon, 30 Dec 2024 13:24:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735565066;
-	bh=ME2LpurMH8/i1zBciCwO+JKPkbJaoLsObzAYsTNbxXU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=e7/ZsxYfrKGyIlqPpDdue9ym3ONzb4MDfyVQ9GNhJKGrB4GlR/GzkWLYUNiB+gc3L
-	 FR6WtqfH6QyCC/IF8XLVOwTBQgrCyh7GBfLgWJB6dcp4qylEUJINw56npHA82puxf2
-	 vWW6GYFXKP4wW5UG/r8ZFUcym+qi2O1HNzOmjmGSzi2q4JRQr0kz2Lu5DAdit0f9a3
-	 9SyqWXwFho1V+A/6kWDAfiCBG1LjnIQqWxX/XPGVm6Pbimw0i6tMnY+NB8bM9M0GkI
-	 GYyGB7H90GVNUMdt7FcfjU5K0t42wdPEcH8OGuO981/GO7Dw3Gm39H59bjPSiIHHjs
-	 86T4yZ2+J4kgQ==
+	s=k20201202; t=1735565065;
+	bh=Es71Mr1nub8axQ0kH7x3XSOub9QelhmHRvIeImNKxK4=;
+	h=From:Subject:Date:To:Cc:From;
+	b=DxzR0XfZlkmBDcdkOVvdrD8/sOLZ9uZusIEuGhJIFptIgwoM3nqnQG/EFkPHweeEQ
+	 ma1jjrGv8/FATFWbnGS40W7GwEd41xVZRXIn9DZJFycrFSxhrlsOoXXBcLppprckR5
+	 HZW4OBbOaqGi5DUQnIrGDaRWa0k7eCK6bE/8roq12NHtqnrw0gaTS64P3ua0wsEEd4
+	 5/wMLjwZ0cHdtEtoUCliE1jfET6dUvC635KIBzru7R8zTZKdjP5CBQLO/BZTcbjVzc
+	 60CHyOrzoQySQQ9aXXFc87AaZvZdwq9wjiB08FiObSxa/ZqhW6L067BcjWdkiSVVcv
+	 Zo/6Qe0NSRcNQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 30 Dec 2024 14:24:08 +0100
-Subject: [PATCH mptcp-next v6 1/7] mptcp: pm: use NL_SET_ERR_MSG_ATTR when
- possible
+Subject: [PATCH mptcp-next v6 0/7] mptcp: use GENL_REQ_ATTR_CHECK in
+ userspace pm
+Date: Mon, 30 Dec 2024 14:24:07 +0100
+Message-Id: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,229 +38,56 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20241230-genl_req_attr_check-v6-1-3ec9103559e7@kernel.org>
-References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
-In-Reply-To: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAPeecmcC/x2OwQ6CMBBEf8Xs2RJYagVP/ocxZLtsoREKlsZgj
+ P9u42nyZjKT+cAm0csGl8MHorz85peQwRwPwCOFQZTvMwOWqCvERg0Spi7Ks6OUYsej8EMhMRP
+ p1jXaQW6uUZzf/6s3mNfEqwqyJ7jnzMVlVmmMQv9dQnFsjbbcl2c0VSXEZe9crQ05rFu0tWXbm
+ qI6Z6vRp5MpBp+KlL8NMvks18d78mHZCg7w/f4ApKJk3dIAAAA=
+X-Change-ID: 20241228-genl_req_attr_check-2accaa49f84f
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7581; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=ME2LpurMH8/i1zBciCwO+JKPkbJaoLsObzAYsTNbxXU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBncp8JvQbtCrRzLD3GF3gIUUQPgFljtFVFY6zyI
- 1jBjMllqgKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ3KfCQAKCRD2t4JPQmmg
- c9uWEADmjXDXZ+7I0JOSfW1arteZmdxGxVTRhsIHLKQ/tOp+Ss6HnvDFpFqVbsIch+CXhREE/a2
- S0FIvfe1US9AOGfSFYSMqgIFiPOLsKBeNV0BK7vrVBs4V0XTZcEV4AYLRrt05uBgS2nL3tdjbPt
- FVk9mCRSwpdKtsn9U4pYNhnXfMwzbKmkiaBhlu1VtAjfqDswRN5zTzcZmcm32OW/g6Vgvcqdrw7
- 0MxqnEs8esV8YA72r1OR1Tzcu1uu3yGz5IfpEZJriWoXgvLLss/aKpvwoaBXbBpEgDoC7BjNVLV
- bOYYHAiQtQ9IljsXyBrgzxLHu5hP3Qnv0w9yNpFUyEOirIUXU2aUBr2yYKhftirQo2BksS+e1hG
- njPWwVSRwGWKfx4e5XKZ1wmx0HiH5YyPrH04u8H+feYbo4xb10rt9m4YZEdv17WsTL2nzvyQMBt
- 7FZhMuwFFrRkON2MLNbF0ebxvirDUf8PDodsOG1jr52t5lx5trItzYadNn6D5nUcR7CYbDS/vM4
- S4QwKGJEVvcVKLXS2jLnhdIn0UrN49ry/PdMmAnuKEDAJyTJPpxV6zM+GXN8moV9/aNtyCTNKBC
- y5cAXqF4uOqv9pm7fgFZ09z9H8NpAXwbd1N65MtT/eq3294byGfLpctFqLifYQ30vzEki+vUuHQ
- Z1gjbLlo2WR5/Ew==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1027; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Es71Mr1nub8axQ0kH7x3XSOub9QelhmHRvIeImNKxK4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBncp8J82E6PLpm+V4TrC3hAL3t1Qr8XVgYPVjDh
+ RF4oobVcyuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ3KfCQAKCRD2t4JPQmmg
+ c844D/9CdjZdkoYYM4MxhR2T9TFap1EX2LPrMlL9GCNU9roKcxyfyiolsw+3vSCjx8mlF6z6kNP
+ p7ve30CL1M9y5/2spK/dhXSBTcRhikWMMxyUWXAMBRnDyNRSxw1XrhjlJx4ndCDXDPj8ihw0890
+ l2XSfEdP/YhxPYKQnD7+HMxNfDMXg4v11l1t233rjJsCVGP7UoPOO4gra8uFBQrGBAtS/aazfAO
+ Ey0EOSGmSLO2yCskpZkDSq0ghcsrdIhLhcK537s1eCxKNaxu41RKRwWU9SM+IIj19apVF+yKPUI
+ +ccQYBDbPe+BLQ+l59wiXnZq0rMKR1NMqBBcQVmHDMWFRduDqEpvD9bJRnnq7aDLgFVkswC5N2A
+ c1KnLAcqAXRFnqUxhDUzs1ASFufa1UbZz3sxpb3/Nwg3/AwGCfH+B8prxNusaOqsisBc/zGA/54
+ uVLGCrIMfBO5qUEjwwT59m0/Ossmnl91jXiyZc8iMpvT5ol7/Az9SvxTlWryBn7ScktzTLIMk7Y
+ xG56CCgJEg1rz1xEMg2aNVuHSo9iAj3ls/MEC+f8ti3ncWeRcJQzpXIxM6g9sJwKSEtvb7q4uIS
+ D3GloiY7WR5SYUIaXTy5njB+weWCzwP4QjdbfskB/GiXDhueZ8omKel2BXpAvsWIBHfCXDI+zW2
+ k4ckvYxxdoqdKCw==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Instead of only returning a text message with GENL_SET_ERR_MSG(),
-NL_SET_ERR_MSG_ATTR() can help the userspace developers by also
-reporting which attribute is faulty.
-
-When the error is specific to an attribute, NL_SET_ERR_MSG_ATTR() is now
-used. The error messages have not been modified in this commit.
-
-mptcp_userspace_pm_remove_id_zero_address() has been modified to set the
-missing attribute.
+This is a newer version of the series started by Geliang, now making
+them more uniform on how the NL errors are set, and giving more hints to
+the userspace about what's wrong.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_netlink.c   | 23 ++++++++++++++---------
- net/mptcp/pm_userspace.c | 27 +++++++++++++++++----------
- 2 files changed, 31 insertions(+), 19 deletions(-)
+Geliang Tang (1):
+      mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 98ac73938bd8196e196d5ee8c264784ba8d37645..49c34494e156ff6c3277b107c3840ee29dd3afbb 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1403,18 +1403,21 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 		return ret;
- 
- 	if (addr.addr.port && !address_use_port(&addr)) {
--		GENL_SET_ERR_MSG(info, "flags must have signal and not subflow when using port");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+				    "flags must have signal and not subflow when using port");
- 		return -EINVAL;
- 	}
- 
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_SIGNAL &&
- 	    addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) {
--		GENL_SET_ERR_MSG(info, "flags mustn't have both signal and fullmesh");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+				    "flags mustn't have both signal and fullmesh");
- 		return -EINVAL;
- 	}
- 
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_IMPLICIT) {
--		GENL_SET_ERR_MSG(info, "can't create IMPLICIT endpoint");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+				    "can't create IMPLICIT endpoint");
- 		return -EINVAL;
- 	}
- 
-@@ -1608,7 +1611,7 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&pernet->lock);
- 	entry = __lookup_addr_by_id(pernet, addr.addr.id);
- 	if (!entry) {
--		GENL_SET_ERR_MSG(info, "address not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		spin_unlock_bh(&pernet->lock);
- 		return -EINVAL;
- 	}
-@@ -1790,7 +1793,7 @@ int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
- 	rcu_read_lock();
- 	entry = __lookup_addr_by_id(pernet, addr.addr.id);
- 	if (!entry) {
--		GENL_SET_ERR_MSG(info, "address not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		ret = -EINVAL;
- 		goto unlock_fail;
- 	}
-@@ -1875,7 +1878,8 @@ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
- 
- 	*limit = nla_get_u32(attr);
- 	if (*limit > MPTCP_PM_ADDR_MAX) {
--		GENL_SET_ERR_MSG(info, "limit greater than maximum");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+				    "limit greater than maximum");
- 		return -EINVAL;
- 	}
- 	return 0;
-@@ -2003,7 +2007,8 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (addr.addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
- 		if (!addr.addr.id) {
--			GENL_SET_ERR_MSG(info, "missing required inputs");
-+			NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+					    "missing required inputs");
- 			return -EOPNOTSUPP;
- 		}
- 	}
-@@ -2016,13 +2021,13 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 			       __lookup_addr(pernet, &addr.addr);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
--		GENL_SET_ERR_MSG(info, "address not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		return -EINVAL;
- 	}
- 	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		spin_unlock_bh(&pernet->lock);
--		GENL_SET_ERR_MSG(info, "invalid addr flags");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "invalid addr flags");
- 		return -EINVAL;
- 	}
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index a3d477059b11c3a5618dbb6256434a8e55845995..72d4861e497eef5a516fc1c3ec1659807ffedd53 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -190,7 +190,8 @@ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *in
- 	}
- 
- 	if (!mptcp_pm_is_userspace(msk)) {
--		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		NL_SET_ERR_MSG_ATTR(info->extack, token,
-+				    "invalid request; userspace PM not selected");
- 		sock_put((struct sock *)msk);
- 		return NULL;
- 	}
-@@ -224,14 +225,16 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	if (addr_val.addr.id == 0 || !(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
--		GENL_SET_ERR_MSG(info, "invalid addr id or flags");
-+		NL_SET_ERR_MSG_ATTR(info->extack, addr,
-+				    "invalid addr id or flags");
- 		err = -EINVAL;
- 		goto announce_err;
- 	}
- 
- 	err = mptcp_userspace_pm_append_new_local_addr(msk, &addr_val, false);
- 	if (err < 0) {
--		GENL_SET_ERR_MSG(info, "did not match address and id");
-+		NL_SET_ERR_MSG_ATTR(info->extack, addr,
-+				    "did not match address and id");
- 		goto announce_err;
- 	}
- 
-@@ -254,7 +257,8 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- }
- 
- static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
--						     struct genl_info *info)
-+						     struct genl_info *info,
-+						     struct nlattr *attr)
- {
- 	struct mptcp_rm_list list = { .nr = 0 };
- 	struct mptcp_subflow_context *subflow;
-@@ -270,7 +274,8 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
- 		}
- 	}
- 	if (!has_id_0) {
--		GENL_SET_ERR_MSG(info, "address with id 0 not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-+				    "address with id 0 not found");
- 		goto remove_err;
- 	}
- 
-@@ -330,7 +335,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	sk = (struct sock *)msk;
- 
- 	if (id_val == 0) {
--		err = mptcp_userspace_pm_remove_id_zero_address(msk, info);
-+		err = mptcp_userspace_pm_remove_id_zero_address(msk, info, id);
- 		goto out;
- 	}
- 
-@@ -339,7 +344,8 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&msk->pm.lock);
- 	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
- 	if (!match) {
--		GENL_SET_ERR_MSG(info, "address with specified id not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, id,
-+				    "address with specified id not found");
- 		spin_unlock_bh(&msk->pm.lock);
- 		release_sock(sk);
- 		goto out;
-@@ -389,7 +395,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	if (entry.flags & MPTCP_PM_ADDR_FLAG_SIGNAL) {
--		GENL_SET_ERR_MSG(info, "invalid addr flags");
-+		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "invalid addr flags");
- 		err = -EINVAL;
- 		goto create_err;
- 	}
-@@ -409,7 +415,8 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	err = mptcp_userspace_pm_append_new_local_addr(msk, &entry, false);
- 	if (err < 0) {
--		GENL_SET_ERR_MSG(info, "did not match address and id");
-+		NL_SET_ERR_MSG_ATTR(info->extack, laddr,
-+				    "did not match address and id");
- 		goto create_err;
- 	}
- 
-@@ -702,7 +709,7 @@ int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
- 	spin_lock_bh(&msk->pm.lock);
- 	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, addr.addr.id);
- 	if (!entry) {
--		GENL_SET_ERR_MSG(info, "address not found");
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		ret = -EINVAL;
- 		goto unlock_fail;
- 	}
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
+      mptcp: pm: more precise error messages
+      mptcp: pm: improve error messages
+      mptcp: pm: userspace: flags: clearer msg if no remote addr
+      mptcp: pm: remove duplicated error messages
+      mptcp: pm: mark missing address attributes
 
+ net/mptcp/pm_netlink.c   |  50 +++++++++++-----
+ net/mptcp/pm_userspace.c | 144 ++++++++++++++++++++++++++++-------------------
+ 2 files changed, 121 insertions(+), 73 deletions(-)
+---
+base-commit: f770d70d123db1907d419f715117245d7060816b
+change-id: 20241228-genl_req_attr_check-2accaa49f84f
+
+Best regards,
 -- 
-2.47.1
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
