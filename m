@@ -1,239 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f182.google.com (mail-pl1-f182.google.com [209.85.214.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF0B11A9B32
-	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 13:24:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 428F61A9B53
+	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 14:21:20 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735565072; cv=none; b=UZaqMX2BO/aBFtCiQf6EEwgoxz/muKPpf8khy/U67AfdtY7Q/I+eU3NSX4lDsSinFl2KrRjbYfe3vUyqz9gtVYhSysYbeRJYQdd57bIOAtZBXcsgLwCnhXG2zK4p/xSoWNa7TpV8xHlEkf65Sm9i89t4hqIP6Dpx8BQKHvCQqdU=
+	t=1735568482; cv=none; b=Ez6qHso64bk545LRGoB90grYjQ8+Thm3bIa8Re5eh1nvH4c7OaY3CTOxSg8JWMkocFOWaM32I6NozCm2kZN/mZklYMIKvObQ1sCT3WjtSAgQITZkT01b5rBDRjK9GsTaqZ3XYLV/1QipIWiMDxwIl0iC8gbdNrY9XSwBPnNeGS0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735565072; c=relaxed/simple;
-	bh=qG9KX7q0Egfe+Y0A5OUlue3yr+URZ6TAi5q24fBvYbg=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=AXr9C9FK9031qhlWFDkQkaptQZ4wxFHZ2xNQ1a8Ga0MPQPsoIsm9YRqjhcNolDF5NS+mcAtoBa2Ys2ylYeb+QK5AzsV2Fm+eKoMNqjBwBJD6eYjnieFnbpKX7jCi/bXLG6v8PFP41D8vfr/Ez1ZlSNlhwYaUsKbL1cOCoBDaAmk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mJRf+AEF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735568482; c=relaxed/simple;
+	bh=ma3EPt/hMnxK+8olq9zbUVxHTOPtAYwr+NxBjeFcZlQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=b2Z2IGPSUYtlczPD7FFYhwhzsFcDUQwcYaefmC/BhwnVTfbGIeI2Ff1uz9kim/16MGI5VAiHj1WrNQVGShaYGUC156S6HOWQCABzCKyoyNxck6YfCIgyQhQuqGH4MME0XwrNf8xCX0cfpvY1LsCdfd/zyVXC+JXt9Z+JD3XTQaY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ANkV15d2; arc=none smtp.client-ip=209.85.214.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mJRf+AEF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 05A9BC4CED0;
-	Mon, 30 Dec 2024 13:24:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735565072;
-	bh=qG9KX7q0Egfe+Y0A5OUlue3yr+URZ6TAi5q24fBvYbg=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=mJRf+AEFFvvcIPAUE/p0yogDJxr92YHUDOgDwwcckW1877LQwTQdFVnhHkaGIy/8w
-	 DXDulcazU6cNSHIb454eXe/Lb9OG0jdjHcL2fMzSc8uccgSjlWMYN4qeC+fz6WBy7D
-	 6moFVt+HkyTIsMsL4IIXb87b7w1oaCxnWcLePxj/uril6zZHtdtYfIe+7ddCS+W35Y
-	 Nv3qYtGZNABmltkSUy7vaA9zS4Fw5nfYUnDRQVTh3t64OFbh0ppwX6wtPoSQzWQ3sy
-	 uOkpSCCLDlskBk1a//vL2rSePb5urxrllqR4djNakKbLorktgmGVSiLjBCXkAkhKa/
-	 AEE9Soj6hmAvg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 30 Dec 2024 14:24:14 +0100
-Subject: [PATCH mptcp-next v6 7/7] mptcp: pm: mark missing address
- attributes
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ANkV15d2"
+Received: by mail-pl1-f182.google.com with SMTP id d9443c01a7336-2167141dfa1so117112195ad.1
+        for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 06:21:20 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1735568479; x=1736173279; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=nK1l+U1hXEzdSr34s70cv/xFBe+ZdAwKdADjnaFbffs=;
+        b=ANkV15d2E6wtSzkJDKNlVu0GYJ/jp1iW6t3vNqqdgZv1vgsLRjdNYLmjmDeCceBWQx
+         4/0iIpGe1ELOPT2D7WlWvDtQN28yKh/btFGjUR3VihBDmMA0R25Jrc3nyOsRXqeOdG4D
+         Rnt7ijf7TkgrwiJM4jc31NSzy8T6J9alxVUVAh8JN3FCmYV/qXMdWrtzzHq0BoY0l6uu
+         B/IpIp0pR8xnK9msaVGiyKEIkQDXLSlwddEkPJrJC2zSRqWVAR1MBqCRkVsIOvs7EFrV
+         CX983a7IE0na14XHrT1MUlUw/Bd1C3x8vJ/HJv8aDLdwzjRj9usjkn17vQrNsyYtzGj9
+         w4Fw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735568479; x=1736173279;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=nK1l+U1hXEzdSr34s70cv/xFBe+ZdAwKdADjnaFbffs=;
+        b=McJQeYENmkSigb06I9dP/jDDVlKMDx9tLOaXRa33C2UkXhomGnm/dGpG17kpTjWRZ5
+         l6HazNeX2U+ldaqtRXrRxbGHFRrg8TqDdpYdKAacITDyrM8WMuMrfeiv8vdZtwkq/HSc
+         gIvxEEs/0bhJqpXac2aiEnYtvalK4lINWweq0MmM6XwSdQqzG340ZMiDruW6n8SW5Y32
+         cEh7iY75SFDue0GWgWDbnYJQOyF/3u+mG9suIe2JsYsNbYFo+LvstTkG5WkdayZA9HSN
+         Gv8uqVySgmLfe6SSrYX/1bomYyYT0cwzpnFbQFwWv0xGLBTHe+j1vbJtt/r9qMV3y4XU
+         h6kA==
+X-Gm-Message-State: AOJu0Yw9lqBmAK55ktUfMIhf/R6aEP91nleERBzM68LbY38WFdzwxolS
+	2mn6jMO2WpYOsD1hLP/kxiNN2ndyZ3tZgmYwOaRVVBjrF7sg1UI=
+X-Gm-Gg: ASbGncs9T/u6bKC/svcAbgWAoh+JXTMDcZ+DARwCT0ZiXRS8AUrrrbO6epirNHnNuqA
+	1L3zGn1+jVj7eqBxznZ6jiYTFholAkV5kKpworAqLnoB58IfEMLWuz8zjUkjeySR+KW+5HEXPHw
+	x9hbTVg6hp3d+3xAnQg89CLTiYAfyTzubGpf33ol6rAwb/Jhyy5htZ71sitOIRV8gUETvJDu2hv
+	V+1FWTIo+ohg907jUfB66zvHOTuN3IGJQ3ys6UlfUa5F9V/EfxxHMDycCxbrL+5P2dG
+X-Google-Smtp-Source: AGHT+IGXE6jbpI67YF0kuKLTAGkN9grqGTNh9FLhjq8jW2+kLXqz/qxenvlJz0iEviODLJ9S0L3QmA==
+X-Received: by 2002:a17:902:c94b:b0:215:ae61:27ca with SMTP id d9443c01a7336-219e6d6b172mr611174715ad.26.1735568479421;
+        Mon, 30 Dec 2024 06:21:19 -0800 (PST)
+Received: from [127.0.0.1] ([20.171.70.63])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-219dc97182dsm179502485ad.82.2024.12.30.06.21.18
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 30 Dec 2024 06:21:18 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
+References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 0/7] mptcp: use GENL_REQ_ATTR_CHECK in
+ userspace pm
+Message-ID: <9b181abc-552f-d0fa-1b04-39599c6cc9eb@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 30 Dec 2024 14:21:18 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20241230-genl_req_attr_check-v6-7-3ec9103559e7@kernel.org>
-References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
-In-Reply-To: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=6102; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qG9KX7q0Egfe+Y0A5OUlue3yr+URZ6TAi5q24fBvYbg=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBncp8KTQv5s7mFJWefiKEWzQiqlScPe2E8ui/le
- DxiW8M+AMSJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ3KfCgAKCRD2t4JPQmmg
- c1hTEAC2fifDJYjrpQlHzNmwKeC849244UQMr5SAhcpkTKaUr785I7fQT54DMIqMB9Vc0zvUaul
- xnwfW9FA7ndrFc8WRnCd9Xo986CPhuxwCdJVuTpW7t/ETCxMBcP5D23a62FWFMqxLZrV5RWJtHU
- frtSvlbxN6n0u/YAxXjSe2WtAwUuYDospyIUW8OqUKoqE0Vm1kweD1Sq48qqw4XqZZAGiu4JT2p
- ksmpHPwrlYD8MgamMSWLjbrFMXBdPJsc6S94JrbdVSdugz2TIbArjIBFy0jYWQ0Lx+yEfETHcVY
- Dk+jkqiUL5VS+XKNDRkGkUoEPMi7DDyt+tT491W9Lxy4bvUL1EJprjqShzXzqxvrJmg0/jjDjnR
- F+rBsUova3BurDL77OQRAA1HbL7S3z2fFa6Kn2rMK2+WptKv1oiguaNhFJSenpLN0/qdyd9jtIw
- RZKNJlEOp921JEHGRxBWYVEd3XVqPtE9sGr5jfY2kDoHb7dnKBS/YzD4T41pTpF/fa3BWOlbkYt
- lbi9lcJyhzM3IlybeDetkG3DjyE0zdQqvL81USepKt0amJxODdFmbM7VXd72689KFnKlQ4vJ0dK
- w1b0zjBuPJRy0os6AkfAqlDrUgwNCcGIvPFS/t7VHha9cB85dft9XT6dkroNYdLfQR3YMIrR5dL
- S7gudptMFq67joQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-mptcp_pm_parse_entry() will check if the given attribute is defined. If
-not, it will return a generic error: "missing address info".
+Hi Matthieu,
 
-It might then not be clear for the userspace developer which attribute
-is missing, especially when the command takes multiple addresses.
+Thank you for your modifications, that's great!
 
-By using GENL_REQ_ATTR_CHECK(), the userspace will get a hint about
-which attribute is missing, making thing clearer. Note that this is what
-was already done for most of the other MPTCP NL commands, this patch
-simply adds the missing ones.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm_netlink.c   | 26 +++++++++++++++++++++-----
- net/mptcp/pm_userspace.c | 15 ++++++++++++---
- 2 files changed, 33 insertions(+), 8 deletions(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Unstable: 1 =
+failed test(s): bpftest_test_progs-no_alu32_mptcp =F0=9F=94=B4
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/125473=
+35119
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 3bb213e2a967e87d4244dc0f1ba58d3ba21fb371..1eaaf91eb978b5e85dd5fc11d616ba48809e2915 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1393,11 +1393,15 @@ static bool mptcp_pm_has_addr_attr_id(const struct nlattr *attr,
- 
- int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- {
--	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
- 	struct mptcp_pm_addr_entry addr, *entry;
-+	struct nlattr *attr;
- 	int ret;
- 
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-+		return -EINVAL;
-+
-+	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, true, &addr);
- 	if (ret < 0)
- 		return ret;
-@@ -1590,12 +1594,16 @@ static int mptcp_nl_remove_id_zero_address(struct net *net,
- 
- int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
- {
--	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
- 	struct mptcp_pm_addr_entry addr, *entry;
- 	unsigned int addr_max;
-+	struct nlattr *attr;
- 	int ret;
- 
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-+		return -EINVAL;
-+
-+	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
- 	if (ret < 0)
- 		return ret;
-@@ -1767,13 +1775,17 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
- 
- int mptcp_pm_nl_get_addr(struct sk_buff *skb, struct genl_info *info)
- {
--	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
- 	struct mptcp_pm_addr_entry addr, *entry;
- 	struct sk_buff *msg;
-+	struct nlattr *attr;
- 	void *reply;
- 	int ret;
- 
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-+		return -EINVAL;
-+
-+	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
- 	if (ret < 0)
- 		return ret;
-@@ -1989,18 +2001,20 @@ static int mptcp_nl_set_flags(struct net *net,
- int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
--	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
- 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
- 	struct net *net = sock_net(skb->sk);
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
-+	struct nlattr *attr;
- 	u8 lookup_by_id = 0;
- 	u8 bkup = 0;
- 	int ret;
- 
--	pernet = pm_nl_get_pernet(net);
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-+		return -EINVAL;
- 
-+	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
- 	if (ret < 0)
- 		return ret;
-@@ -2017,6 +2031,8 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
-+	pernet = pm_nl_get_pernet(net);
-+
- 	spin_lock_bh(&pernet->lock);
- 	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
- 			       __lookup_addr(pernet, &addr.addr);
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 51943ca6ddb607e1dfea393525cccf5cbed7cfac..f5515b2305f41fafa7ef0627ed838b9d0db14aa9 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -570,20 +570,24 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
- 	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
--	struct nlattr *attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
--	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	struct mptcp_pm_addr_entry *entry;
-+	struct nlattr *attr, *attr_rem;
- 	struct mptcp_sock *msk;
- 	int ret = -EINVAL;
- 	struct sock *sk;
- 	u8 bkup = 0;
- 
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
-+	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
-+		return ret;
-+
- 	msk = mptcp_userspace_pm_get_sock(info);
- 	if (!msk)
- 		return ret;
- 
- 	sk = (struct sock *)msk;
- 
-+	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
- 	if (ret < 0)
- 		goto set_flags_err;
-@@ -595,6 +599,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 		goto set_flags_err;
- 	}
- 
-+	attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
- 	ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
- 	if (ret < 0)
- 		goto set_flags_err;
-@@ -683,20 +688,24 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- int mptcp_userspace_pm_get_addr(struct sk_buff *skb,
- 				struct genl_info *info)
- {
--	struct nlattr *attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	struct mptcp_pm_addr_entry addr, *entry;
- 	struct mptcp_sock *msk;
- 	struct sk_buff *msg;
-+	struct nlattr *attr;
- 	int ret = -EINVAL;
- 	struct sock *sk;
- 	void *reply;
- 
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-+		return ret;
-+
- 	msk = mptcp_userspace_pm_get_sock(info);
- 	if (!msk)
- 		return ret;
- 
- 	sk = (struct sock *)msk;
- 
-+	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
- 	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
- 	if (ret < 0)
- 		goto out;
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/70fec43cc6e0
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D921412
 
--- 
-2.47.1
 
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
