@@ -1,133 +1,129 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0B421AE877
-	for <mptcp@lists.linux.dev>; Mon, 30 Dec 2024 18:24:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C5213C809;
+	Tue, 31 Dec 2024 02:00:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735583078; cv=none; b=L3wq+NQNpVYGj5ajKJYxY9MEFtQE3LdkFoBiG4V5EOzgFbFFMONEyTI5HCd1eoC2omIsE9LGV7O2weTrvuDfeXCxATEQhqPOovu/wRWWiHF4oLhiFXe0O+taWfQbBnEQJi0yLQ6isrrY/k0wXG+k8mwrE6N899zzTj2gr6DLHGg=
+	t=1735610408; cv=none; b=dlJWneB4BRykaasywFmZOnGT1Sls9uHJiJh5lTjYOjqh3d6dlBfNvtkbZ7rwsdCgUFuqszTv5oqy+SKUW4kFrrJdf2sZ+WPiBsTAHQWEjxVUv1v3/NkFmRWVNAPrShyW0DPAU9bX/GsA6RzVQZ0JJvOymNddGnBfAUBbMLjDdlM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735583078; c=relaxed/simple;
-	bh=FeCv9nCvbk8qahplJohZAwYrPyKFQKjKOkWrO693p+E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=b+YHPshUGVqh+aiAX26Szi/yooxarjFk+1y8W5Q+efVr0T9DtVy35xfnfuGWN5kI9shRDxrYwnH6u39h/N2wD8R7RzVtn77LMh943QxhA/55WV9+h8QXUiowEL1kqkjiiqdkUBW2g3lod0tazL5jPl03pzhuxnWUfzOvPJlC0zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YPh8WbxJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1735610408; c=relaxed/simple;
+	bh=A4Q/CE5/UTdB0SZ046JdZSHt6y5sFwv15kml4pSIDAc=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=lmf5wPgbt/AIS9CXeLaQCCjNHom27zRX67H1B1pkuFsncKfIZljReaeE53vU4gXT5uIPmn0MnUWEc+TrfVGRlTbgdgNnV+JD2RkcBm9RCwgFXqLVzrY0nfJkCN3PkItFAm7zAJ+RgZEEpNriM1+HNSKgQ5eNHwzUwBfiGQ31MFE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOTjf8WT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YPh8WbxJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA8F8C4CED0;
-	Mon, 30 Dec 2024 18:24:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOTjf8WT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0CBC4CED0;
+	Tue, 31 Dec 2024 02:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735583077;
-	bh=FeCv9nCvbk8qahplJohZAwYrPyKFQKjKOkWrO693p+E=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YPh8WbxJkXiaMt05Jg31JyJx7RyYZ9H33tCQU31uc0By0adnhu9W0sKz9pRK23myX
-	 BnuGED2hQU1lWHzu3DkyUdZG/qZYjDiIMQeaXQReTAXuDHMcLbn0M2FgxHvQYTG3Kv
-	 E3g6y/n4fmKsSer4zC2JDaFUg0VGPkw7XxvJZJLa5ko+i4xNc5+9pecOC7Kr3TNpdQ
-	 GsfOCq8hJkuernIa9052PcDCsBlEYaPEGMPaeJajQeGtm4yUDLTlmuWqJTnMnZA8sU
-	 SsdPkFEE+zzOZNQcaVbuMHpzgh/M1Ok2WymL+SrRBnl2aTR2hGtQnOgJ/CvhFL5P4Y
-	 5E5X0ET3yucXQ==
-Message-ID: <b657cb5a-d374-499c-ab31-92f5f6022f66@kernel.org>
-Date: Mon, 30 Dec 2024 19:24:35 +0100
+	s=k20201202; t=1735610408;
+	bh=A4Q/CE5/UTdB0SZ046JdZSHt6y5sFwv15kml4pSIDAc=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=WOTjf8WTEBhZoCUE/20/U2+hlbqCG0MX5zHZTRSmUhP9JZKrOkiHS7z1vA4xLEmmv
+	 wyl88ym8t5rfE9iE0pTBEtYMSph1uN5hmWygcWD5iNj/r2LsS4aVkabxa7h+vWDntt
+	 8KB3DMDmPBXOujrQEHpyqMK+UzywiIteuX2muUymV+PreCAwxRV8ppaxMe6VEfqF3S
+	 +8Fopz0yJbXtAxy38rEfDC4TM/i8YVGbK1IeKhdv8o2EaYC+lYMzgeoL1NJ+zsAHaQ
+	 wnzME0CP+SEvC1hKOMAvzMkdxKoCo4MDn26NTimWuh9ttS3UTbz3RMlvQ5+1zTNhJj
+	 ni06hpvHmCr7A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEB3380A964;
+	Tue, 31 Dec 2024 02:00:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 1/7] mptcp: prevent excessive coalescing on
- receive
-Content-Language: en-GB
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173561042778.1486033.12049153922688425515.git-patchwork-notify@kernel.org>
+Date: Tue, 31 Dec 2024 02:00:27 +0000
+References: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
+In-Reply-To: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
 To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <cover.1733486870.git.pabeni@redhat.com>
- <9c5947ad3b55695cb6000900acad5471b7314195.1733486870.git.pabeni@redhat.com>
- <70d5e604-26e1-43f0-a36d-504d2b99c584@kernel.org>
- <22fe2214-b009-46b1-84b9-84559ebe339c@kernel.org>
- <e50db525-cf52-4ff1-94bc-3314878b64e4@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <e50db525-cf52-4ff1-94bc-3314878b64e4@redhat.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Cc: netdev@vger.kernel.org, matttbe@kernel.org, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, horms@kernel.org, mptcp@lists.linux.dev
 
-On 27/12/2024 10:40, Paolo Abeni wrote:
-> On 12/21/24 11:00, Matthieu Baerts wrote:
->> On 10/12/2024 13:03, Matthieu Baerts wrote:
->>> On 06/12/2024 13:10, Paolo Abeni wrote:
->>>> Currently the skb size after coalescing is only limited by the skb
->>>> layout (the skb must not carry frag_list). A single coalesced skb
->>>> covering several MSS can potentially fill completely the receive
->>>> buffer. In such a case, the snd win will zero until the receive buffer
->>>> will be empty again, affecting tput badly.
->>>
->>> Good idea! Thank you for having looked at this!
->>>
->>>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->>>> ---
->>>> No fixes tag because the problem is not very visible in practice
->>>> currently, but will be apparent after the rx refactor.
->>>> Still I hope this could affect positively the simlut flows self-tests
->>>
->>> The modification looks safe enough to me: it should not make thing worst.
->>
->> Do you still prefer not targetting -net for this patch here? Or is it OK
->> to do so and add a Fixes tag?
+Hello:
+
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Sat, 21 Dec 2024 09:51:46 +0100 you wrote:
+> Syzbot reported the following splat:
 > 
-> Whatever is easier to do in practice works for me. Perhaps monitoring
-> the simult_flows ST flakes could give an idea - if that get more
-> stable/less unstable we should possibly target 'net'.
+> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
+> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
+> CPU: 1 UID: 0 PID: 5836 Comm: sshd Not tainted 6.13.0-rc3-syzkaller #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
+> RIP: 0010:_compound_head include/linux/page-flags.h:242 [inline]
+> RIP: 0010:put_page+0x23/0x260 include/linux/mm.h:1552
+> Code: 90 90 90 90 90 90 90 55 41 57 41 56 53 49 89 fe 48 bd 00 00 00 00 00 fc ff df e8 f8 5e 12 f8 49 8d 5e 08 48 89 d8 48 c1 e8 03 <80> 3c 28 00 74 08 48 89 df e8 8f c7 78 f8 48 8b 1b 48 89 de 48 83
+> RSP: 0000:ffffc90003916c90 EFLAGS: 00010202
+> RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff888030458000
+> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: dffffc0000000000 R08: ffffffff898ca81d R09: 1ffff110054414ac
+> R10: dffffc0000000000 R11: ffffed10054414ad R12: 0000000000000007
+> R13: ffff88802a20a542 R14: 0000000000000000 R15: 0000000000000000
+> FS:  00007f34f496e800(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f9d6ec9ec28 CR3: 000000004d260000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  skb_page_unref include/linux/skbuff_ref.h:43 [inline]
+>  __skb_frag_unref include/linux/skbuff_ref.h:56 [inline]
+>  skb_release_data+0x483/0x8a0 net/core/skbuff.c:1119
+>  skb_release_all net/core/skbuff.c:1190 [inline]
+>  __kfree_skb+0x55/0x70 net/core/skbuff.c:1204
+>  tcp_clean_rtx_queue net/ipv4/tcp_input.c:3436 [inline]
+>  tcp_ack+0x2442/0x6bc0 net/ipv4/tcp_input.c:4032
+>  tcp_rcv_state_process+0x8eb/0x44e0 net/ipv4/tcp_input.c:6805
+>  tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1939
+>  tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2351
+>  ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
+>  ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
+>  NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+>  NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
+>  __netif_receive_skb_one_core net/core/dev.c:5672 [inline]
+>  __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5785
+>  process_backlog+0x662/0x15b0 net/core/dev.c:6117
+>  __napi_poll+0xcb/0x490 net/core/dev.c:6883
+>  napi_poll net/core/dev.c:6952 [inline]
+>  net_rx_action+0x89b/0x1240 net/core/dev.c:7074
+>  handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
+>  __do_softirq kernel/softirq.c:595 [inline]
+>  invoke_softirq kernel/softirq.c:435 [inline]
+>  __irq_exit_rcu+0xf7/0x220 kernel/softirq.c:662
+>  irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
+>  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
+>  sysvec_apic_timer_interrupt+0x57/0xc0 arch/x86/kernel/apic/apic.c:1049
+>  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
+> RIP: 0033:0x7f34f4519ad5
+> Code: 85 d2 74 0d 0f 10 02 48 8d 54 24 20 0f 11 44 24 20 64 8b 04 25 18 00 00 00 85 c0 75 27 41 b8 08 00 00 00 b8 0f 01 00 00 0f 05 <48> 3d 00 f0 ff ff 76 75 48 8b 15 24 73 0d 00 f7 d8 64 89 02 48 83
+> RSP: 002b:00007ffec5b32ce0 EFLAGS: 00000246
+> RAX: 0000000000000001 RBX: 00000000000668a0 RCX: 00007f34f4519ad5
+> RDX: 00007ffec5b32d00 RSI: 0000000000000004 RDI: 0000564f4bc6cae0
+> RBP: 0000564f4bc6b5a0 R08: 0000000000000008 R09: 0000000000000000
+> R10: 00007ffec5b32de8 R11: 0000000000000246 R12: 0000564f48ea8aa4
+> R13: 0000000000000001 R14: 0000564f48ea93e8 R15: 00007ffec5b32d68
+>  </TASK>
+> 
+> [...]
 
-Thank you for your reply!
+Here is the summary with links:
+  - [net] mptcp: fix TCP options overflow.
+    https://git.kernel.org/netdev/net/c/cbb26f7d8451
 
-It looks OK so far. I just sent this patch to netdev, so we can also get
-some tests over there. I will monitor if it helps on NIPA as well.
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
