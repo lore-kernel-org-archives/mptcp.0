@@ -1,129 +1,181 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f208.google.com (mail-il1-f208.google.com [209.85.166.208])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 72C5213C809;
-	Tue, 31 Dec 2024 02:00:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 524CE1A83F4
+	for <mptcp@lists.linux.dev>; Thu,  2 Jan 2025 14:12:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.208
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1735610408; cv=none; b=dlJWneB4BRykaasywFmZOnGT1Sls9uHJiJh5lTjYOjqh3d6dlBfNvtkbZ7rwsdCgUFuqszTv5oqy+SKUW4kFrrJdf2sZ+WPiBsTAHQWEjxVUv1v3/NkFmRWVNAPrShyW0DPAU9bX/GsA6RzVQZ0JJvOymNddGnBfAUBbMLjDdlM=
+	t=1735827150; cv=none; b=szOuB9nTRUfk5Bxkh1b6AJEr6+U4YIWZvMgg1u5kAruCveptaT922321c5Id2jRVZWMAfn6Qb4itaqF4/YI8Zn3htIVOPm4yA5rkLH9dNsZByeIaccxB+K4Ae2JepMwEYPtLO0gwsr06tHGbEpxxSJOJNRENXfC5ClvNhJwCVDA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1735610408; c=relaxed/simple;
-	bh=A4Q/CE5/UTdB0SZ046JdZSHt6y5sFwv15kml4pSIDAc=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=lmf5wPgbt/AIS9CXeLaQCCjNHom27zRX67H1B1pkuFsncKfIZljReaeE53vU4gXT5uIPmn0MnUWEc+TrfVGRlTbgdgNnV+JD2RkcBm9RCwgFXqLVzrY0nfJkCN3PkItFAm7zAJ+RgZEEpNriM1+HNSKgQ5eNHwzUwBfiGQ31MFE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WOTjf8WT; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WOTjf8WT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF0CBC4CED0;
-	Tue, 31 Dec 2024 02:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1735610408;
-	bh=A4Q/CE5/UTdB0SZ046JdZSHt6y5sFwv15kml4pSIDAc=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=WOTjf8WTEBhZoCUE/20/U2+hlbqCG0MX5zHZTRSmUhP9JZKrOkiHS7z1vA4xLEmmv
-	 wyl88ym8t5rfE9iE0pTBEtYMSph1uN5hmWygcWD5iNj/r2LsS4aVkabxa7h+vWDntt
-	 8KB3DMDmPBXOujrQEHpyqMK+UzywiIteuX2muUymV+PreCAwxRV8ppaxMe6VEfqF3S
-	 +8Fopz0yJbXtAxy38rEfDC4TM/i8YVGbK1IeKhdv8o2EaYC+lYMzgeoL1NJ+zsAHaQ
-	 wnzME0CP+SEvC1hKOMAvzMkdxKoCo4MDn26NTimWuh9ttS3UTbz3RMlvQ5+1zTNhJj
-	 ni06hpvHmCr7A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAEB3380A964;
-	Tue, 31 Dec 2024 02:00:28 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=arc-20240116; t=1735827150; c=relaxed/simple;
+	bh=wPxn59tSgSmcO24LE33kLgcotvUU9ljXLuJfD8vRGuI=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=ol97EOxDpWoU1uzbXVtSV6gLxgTQtBAnLRTXzlQYYew+B60CdU5yliLyb1BrJZUOlQ4mTqTkugMdB0u79TArjKep/fd8sy9IAlVjgC2bteZD68gIgEhgDfMTc2Qf3XW1IYiEERFlez85kCdzGWoGpNYB0IK0mJsCYswVvDmg0fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.208
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f208.google.com with SMTP id e9e14a558f8ab-3a817be161bso108597885ab.1
+        for <mptcp@lists.linux.dev>; Thu, 02 Jan 2025 06:12:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1735827147; x=1736431947;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=rkdKVs5gee22maPZSM64t26mDgvSK7e1wMmhQIaq3IA=;
+        b=qN0Cdc2Wle3NO8BtFYZQV2Q8MexM9Msf16U0MbHCuX20BEH+8vSEBfOSx935xB20QO
+         /Hv9SWj87oo1LlhKGwZSGgCwAQqOd+xUXFrIfOSS2HpL49UVvC/fkNZdBxX6+kdGG5gd
+         P+rtnGlU0CXzQxw/IB+53EQFYOf8AQlb++4jCpLo192vBcPDWuJe5XdwkMROy737omb4
+         K6O8fN3KVxlkHsQh/d6NiMX6HRJzkFrbakv0zwiURk1ieL0lEV/FttVH0zA0ETf8cAmP
+         qQ0ZfSmQ6VFcweVuv0F3Twq0z0xHkdDHqgMR9lkLnr43twQtXxqFBYHXCZcBHhgY5HwL
+         kC2Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVv0YmREmbwOZOWvLn2oFN2sZP3l8A+reMbwQvsf9FmTb8u6wIzZbg1wz9ljFqN955V4jov+Q==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz8Wu24Tv0tsH9JB6P/wxyW3arCgZFOsUb4gOVHXfqIlvW9DjUq
+	90njtBVh3pSJ4XfJ6T8W8PoCfWHdiSH8M4Ap40JaMNW04iqbwHEHXFZSYdz6M3WRHrIL+BbS1lg
+	OSIbQhWLXwGlVuOaR5gPNLVgPRz/JN/XQxtznUSf83csr9WZkvJ+RwlI=
+X-Google-Smtp-Source: AGHT+IH6JAzal0ozoCrSLYDf9NMBl51hwmTv1n3XUr15Z+IqBxFpe5glpZd3aRK+boKDdvRvLv1Fd05FCBYTdbSjcR2mO1xzAZbj
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net] mptcp: fix TCP options overflow.
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173561042778.1486033.12049153922688425515.git-patchwork-notify@kernel.org>
-Date: Tue, 31 Dec 2024 02:00:27 +0000
-References: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-In-Reply-To: <025d9df8cde3c9a557befc47e9bc08fbbe3476e5.1734771049.git.pabeni@redhat.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: netdev@vger.kernel.org, matttbe@kernel.org, martineau@kernel.org,
- geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
- kuba@kernel.org, horms@kernel.org, mptcp@lists.linux.dev
+X-Received: by 2002:a05:6e02:180a:b0:3a7:cf61:ded7 with SMTP id
+ e9e14a558f8ab-3c3024370d0mr355166845ab.10.1735827147518; Thu, 02 Jan 2025
+ 06:12:27 -0800 (PST)
+Date: Thu, 02 Jan 2025 06:12:27 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <67769ecb.050a0220.3a8527.003f.GAE@google.com>
+Subject: [syzbot] [mptcp?] general protection fault in proc_scheduler
+From: syzbot <syzbot+e364f774c6f57f2c86d1@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hello:
+Hello,
 
-This patch was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+syzbot found the following issue on:
 
-On Sat, 21 Dec 2024 09:51:46 +0100 you wrote:
-> Syzbot reported the following splat:
-> 
-> Oops: general protection fault, probably for non-canonical address 0xdffffc0000000001: 0000 [#1] PREEMPT SMP KASAN PTI
-> KASAN: null-ptr-deref in range [0x0000000000000008-0x000000000000000f]
-> CPU: 1 UID: 0 PID: 5836 Comm: sshd Not tainted 6.13.0-rc3-syzkaller #0
-> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
-> RIP: 0010:_compound_head include/linux/page-flags.h:242 [inline]
-> RIP: 0010:put_page+0x23/0x260 include/linux/mm.h:1552
-> Code: 90 90 90 90 90 90 90 55 41 57 41 56 53 49 89 fe 48 bd 00 00 00 00 00 fc ff df e8 f8 5e 12 f8 49 8d 5e 08 48 89 d8 48 c1 e8 03 <80> 3c 28 00 74 08 48 89 df e8 8f c7 78 f8 48 8b 1b 48 89 de 48 83
-> RSP: 0000:ffffc90003916c90 EFLAGS: 00010202
-> RAX: 0000000000000001 RBX: 0000000000000008 RCX: ffff888030458000
-> RDX: 0000000000000100 RSI: 0000000000000000 RDI: 0000000000000000
-> RBP: dffffc0000000000 R08: ffffffff898ca81d R09: 1ffff110054414ac
-> R10: dffffc0000000000 R11: ffffed10054414ad R12: 0000000000000007
-> R13: ffff88802a20a542 R14: 0000000000000000 R15: 0000000000000000
-> FS:  00007f34f496e800(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
-> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> CR2: 00007f9d6ec9ec28 CR3: 000000004d260000 CR4: 00000000003526f0
-> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-> Call Trace:
->  <TASK>
->  skb_page_unref include/linux/skbuff_ref.h:43 [inline]
->  __skb_frag_unref include/linux/skbuff_ref.h:56 [inline]
->  skb_release_data+0x483/0x8a0 net/core/skbuff.c:1119
->  skb_release_all net/core/skbuff.c:1190 [inline]
->  __kfree_skb+0x55/0x70 net/core/skbuff.c:1204
->  tcp_clean_rtx_queue net/ipv4/tcp_input.c:3436 [inline]
->  tcp_ack+0x2442/0x6bc0 net/ipv4/tcp_input.c:4032
->  tcp_rcv_state_process+0x8eb/0x44e0 net/ipv4/tcp_input.c:6805
->  tcp_v4_do_rcv+0x77d/0xc70 net/ipv4/tcp_ipv4.c:1939
->  tcp_v4_rcv+0x2dc0/0x37f0 net/ipv4/tcp_ipv4.c:2351
->  ip_protocol_deliver_rcu+0x22e/0x440 net/ipv4/ip_input.c:205
->  ip_local_deliver_finish+0x341/0x5f0 net/ipv4/ip_input.c:233
->  NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
->  NF_HOOK+0x3a4/0x450 include/linux/netfilter.h:314
->  __netif_receive_skb_one_core net/core/dev.c:5672 [inline]
->  __netif_receive_skb+0x2bf/0x650 net/core/dev.c:5785
->  process_backlog+0x662/0x15b0 net/core/dev.c:6117
->  __napi_poll+0xcb/0x490 net/core/dev.c:6883
->  napi_poll net/core/dev.c:6952 [inline]
->  net_rx_action+0x89b/0x1240 net/core/dev.c:7074
->  handle_softirqs+0x2d4/0x9b0 kernel/softirq.c:561
->  __do_softirq kernel/softirq.c:595 [inline]
->  invoke_softirq kernel/softirq.c:435 [inline]
->  __irq_exit_rcu+0xf7/0x220 kernel/softirq.c:662
->  irq_exit_rcu+0x9/0x30 kernel/softirq.c:678
->  instr_sysvec_apic_timer_interrupt arch/x86/kernel/apic/apic.c:1049 [inline]
->  sysvec_apic_timer_interrupt+0x57/0xc0 arch/x86/kernel/apic/apic.c:1049
->  asm_sysvec_apic_timer_interrupt+0x1a/0x20 arch/x86/include/asm/idtentry.h:702
-> RIP: 0033:0x7f34f4519ad5
-> Code: 85 d2 74 0d 0f 10 02 48 8d 54 24 20 0f 11 44 24 20 64 8b 04 25 18 00 00 00 85 c0 75 27 41 b8 08 00 00 00 b8 0f 01 00 00 0f 05 <48> 3d 00 f0 ff ff 76 75 48 8b 15 24 73 0d 00 f7 d8 64 89 02 48 83
-> RSP: 002b:00007ffec5b32ce0 EFLAGS: 00000246
-> RAX: 0000000000000001 RBX: 00000000000668a0 RCX: 00007f34f4519ad5
-> RDX: 00007ffec5b32d00 RSI: 0000000000000004 RDI: 0000564f4bc6cae0
-> RBP: 0000564f4bc6b5a0 R08: 0000000000000008 R09: 0000000000000000
-> R10: 00007ffec5b32de8 R11: 0000000000000246 R12: 0000564f48ea8aa4
-> R13: 0000000000000001 R14: 0000564f48ea93e8 R15: 00007ffec5b32d68
->  </TASK>
-> 
-> [...]
+HEAD commit:    ccb98ccef0e5 Merge tag 'platform-drivers-x86-v6.13-4' of g..
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=128f6ac4580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=86dd15278dbfe19f
+dashboard link: https://syzkaller.appspot.com/bug?extid=e364f774c6f57f2c86d1
+compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=1245eaf8580000
 
-Here is the summary with links:
-  - [net] mptcp: fix TCP options overflow.
-    https://git.kernel.org/netdev/net/c/cbb26f7d8451
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/d24eb225cff7/disk-ccb98cce.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/dd81532f8240/vmlinux-ccb98cce.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/18b08e4bbf40/bzImage-ccb98cce.xz
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+e364f774c6f57f2c86d1@syzkaller.appspotmail.com
+
+Oops: general protection fault, probably for non-canonical address 0xdffffc0000000005: 0000 [#1] PREEMPT SMP KASAN PTI
+KASAN: null-ptr-deref in range [0x0000000000000028-0x000000000000002f]
+CPU: 1 UID: 0 PID: 5924 Comm: syz-executor Not tainted 6.13.0-rc5-syzkaller-00004-gccb98ccef0e5 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:proc_scheduler+0xc6/0x3c0 net/mptcp/ctrl.c:125
+Code: 03 42 80 3c 38 00 0f 85 fe 02 00 00 4d 8b a4 24 08 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d 7c 24 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 02 00 00 4d 8b 7c 24 28 48 8d 84 24 c8 00 00
+RSP: 0018:ffffc900034774e8 EFLAGS: 00010206
+
+RAX: dffffc0000000000 RBX: 1ffff9200068ee9e RCX: ffffc90003477620
+RDX: 0000000000000005 RSI: ffffffff8b08f91e RDI: 0000000000000028
+RBP: 0000000000000001 R08: ffffc90003477710 R09: 0000000000000040
+R10: 0000000000000040 R11: 00000000726f7475 R12: 0000000000000000
+R13: ffffc90003477620 R14: ffffc90003477710 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fee3cd452d8 CR3: 000000007d116000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ proc_sys_call_handler+0x403/0x5d0 fs/proc/proc_sysctl.c:601
+ __kernel_write_iter+0x318/0xa80 fs/read_write.c:612
+ __kernel_write+0xf6/0x140 fs/read_write.c:632
+ do_acct_process+0xcb0/0x14a0 kernel/acct.c:539
+ acct_pin_kill+0x2d/0x100 kernel/acct.c:192
+ pin_kill+0x194/0x7c0 fs/fs_pin.c:44
+ mnt_pin_kill+0x61/0x1e0 fs/fs_pin.c:81
+ cleanup_mnt+0x3ac/0x450 fs/namespace.c:1366
+ task_work_run+0x14e/0x250 kernel/task_work.c:239
+ exit_task_work include/linux/task_work.h:43 [inline]
+ do_exit+0xad8/0x2d70 kernel/exit.c:938
+ do_group_exit+0xd3/0x2a0 kernel/exit.c:1087
+ get_signal+0x2576/0x2610 kernel/signal.c:3017
+ arch_do_signal_or_restart+0x90/0x7e0 arch/x86/kernel/signal.c:337
+ exit_to_user_mode_loop kernel/entry/common.c:111 [inline]
+ exit_to_user_mode_prepare include/linux/entry-common.h:329 [inline]
+ __syscall_exit_to_user_mode_work kernel/entry/common.c:207 [inline]
+ syscall_exit_to_user_mode+0x150/0x2a0 kernel/entry/common.c:218
+ do_syscall_64+0xda/0x250 arch/x86/entry/common.c:89
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fee3cb87a6a
+Code: Unable to access opcode bytes at 0x7fee3cb87a40.
+RSP: 002b:00007fffcccac688 EFLAGS: 00000202 ORIG_RAX: 0000000000000037
+RAX: 0000000000000000 RBX: 00007fffcccac710 RCX: 00007fee3cb87a6a
+RDX: 0000000000000041 RSI: 0000000000000000 RDI: 0000000000000003
+RBP: 0000000000000003 R08: 00007fffcccac6ac R09: 00007fffcccacac7
+R10: 00007fffcccac710 R11: 0000000000000202 R12: 00007fee3cd49500
+R13: 00007fffcccac6ac R14: 0000000000000000 R15: 00007fee3cd4b000
+ </TASK>
+Modules linked in:
+---[ end trace 0000000000000000 ]---
+RIP: 0010:proc_scheduler+0xc6/0x3c0 net/mptcp/ctrl.c:125
+Code: 03 42 80 3c 38 00 0f 85 fe 02 00 00 4d 8b a4 24 08 09 00 00 48 b8 00 00 00 00 00 fc ff df 49 8d 7c 24 28 48 89 fa 48 c1 ea 03 <80> 3c 02 00 0f 85 cc 02 00 00 4d 8b 7c 24 28 48 8d 84 24 c8 00 00
+RSP: 0018:ffffc900034774e8 EFLAGS: 00010206
+RAX: dffffc0000000000 RBX: 1ffff9200068ee9e RCX: ffffc90003477620
+RDX: 0000000000000005 RSI: ffffffff8b08f91e RDI: 0000000000000028
+RBP: 0000000000000001 R08: ffffc90003477710 R09: 0000000000000040
+R10: 0000000000000040 R11: 00000000726f7475 R12: 0000000000000000
+R13: ffffc90003477620 R14: ffffc90003477710 R15: dffffc0000000000
+FS:  0000000000000000(0000) GS:ffff8880b8700000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fee3cd452d8 CR3: 000000007d116000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+----------------
+Code disassembly (best guess), 1 bytes skipped:
+   0:	42 80 3c 38 00       	cmpb   $0x0,(%rax,%r15,1)
+   5:	0f 85 fe 02 00 00    	jne    0x309
+   b:	4d 8b a4 24 08 09 00 	mov    0x908(%r12),%r12
+  12:	00
+  13:	48 b8 00 00 00 00 00 	movabs $0xdffffc0000000000,%rax
+  1a:	fc ff df
+  1d:	49 8d 7c 24 28       	lea    0x28(%r12),%rdi
+  22:	48 89 fa             	mov    %rdi,%rdx
+  25:	48 c1 ea 03          	shr    $0x3,%rdx
+* 29:	80 3c 02 00          	cmpb   $0x0,(%rdx,%rax,1) <-- trapping instruction
+  2d:	0f 85 cc 02 00 00    	jne    0x2ff
+  33:	4d 8b 7c 24 28       	mov    0x28(%r12),%r15
+  38:	48                   	rex.W
+  39:	8d                   	.byte 0x8d
+  3a:	84 24 c8             	test   %ah,(%rax,%rcx,8)
 
 
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
+
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
