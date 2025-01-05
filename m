@@ -1,35 +1,35 @@
 Received: from zeniv.linux.org.uk (zeniv.linux.org.uk [62.89.141.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2FE925949A;
-	Sun,  5 Jan 2025 20:50:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 840337711F;
+	Sun,  5 Jan 2025 21:12:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=62.89.141.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736110261; cv=none; b=R9/aNYvXD4it7c/xk7m8c7dmKpiAFhFyz0gAMJIgdDNhk5yBYqSRDilFwOYqNiKJ+QeI0sHODioEDH0In/VyxTbEkvDTF0d+xXOHvlqGxhHoRC3w2QJJw9hcKRT52MBIZz8YpOmy/pu7PKb86tzzuMtCB4LxMibn5K+1fCMTpFY=
+	t=1736111523; cv=none; b=OS+6We/vbiiFVWhncpIYtDungpcc2gBerO27zgM6HBHgEutw88NhMXsODrCbZhwwasWGygBwVZ3QywKjwef8xL9oN9qYoLI0XemirHYOgycVSlbzuqM20RfRVHcWh3leXiWp6builtaJqS3J4eTevfpyygheH398lTNOeMMiP74=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736110261; c=relaxed/simple;
-	bh=EPse042UUeIfh1/Xk0/Dus/IQzUwU0c9AFKwBDtxl+o=;
+	s=arc-20240116; t=1736111523; c=relaxed/simple;
+	bh=ZhWfctKgj3qtiYBCml9s6phLQUjTI8M/o71PsEeqG+w=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=b5C5mXryfnQuD4pjAYNT7QLWgsdJYiUpdsyMxel5PsXds2EWBdQDXh+ictU+p6j/SCtpZRJjxwERH1iM3YezF1VBk4rdTeHE4AV8zifRMoj8gAELVPaHKFzXlrj4JUsprz4qCvFHxfNeYZNUu7lJNteVdQBODc1+sNSTghgRr/I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=q5rStHMR; arc=none smtp.client-ip=62.89.141.173
+	 Content-Type:Content-Disposition:In-Reply-To; b=QTRoVoKNXhIjlIZp6/t08mZui5f8LfOfylXG3+wg7sBvLiEIhoWE+62iAUgXhhsKF3CZO0b7KkqOP8qcuQdEHZ9H+v/Tb65Fm9nlpaPMRdobtcg5g8Hqs3JRWQ3AepV1v8grdAMNLTR+NtxnoDgtAzYGgZv46d1OqaxHikjlYzc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk; spf=none smtp.mailfrom=ftp.linux.org.uk; dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b=p3XX0ywc; arc=none smtp.client-ip=62.89.141.173
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=zeniv.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org; spf=none smtp.mailfrom=ftp.linux.org.uk
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="q5rStHMR"
+	dkim=pass (2048-bit key) header.d=linux.org.uk header.i=@linux.org.uk header.b="p3XX0ywc"
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=linux.org.uk; s=zeniv-20220401; h=Sender:In-Reply-To:Content-Type:
 	MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
 	Content-Transfer-Encoding:Content-ID:Content-Description;
-	bh=odL/7VRs88UUO8RamaqZ8On3HuXIHSZ9pipNRIAADSk=; b=q5rStHMREdsvCZFXwb5JOyEqwa
-	IpBpVDUvAlbl6q/TqsjHRAswsZTXUe2SDe+mb93WoSc7Laqg5aeb9wtPQTYRxtnkLpibrNop6J4ML
-	IsyaHs4m62leraKm/7ufXoCZa9DSYvkGtEn/Z/5NSqKBZWXyWtrF88EyU59hQROcu1anASsqyTRTV
-	bGOIEOoPgAGG6DxD3dRE8u/RifXASzOcKVXbTH8ItnaANEqY1XEGji+kzOX/zVriTC/QoEhs5RrC7
-	BbgF68okKauAMTqHGI38VrAGiQ10DGHbgnu3aYxCfc6U6T9tTJxG/POmHQP/LwSiw62GRZ9KhX5nH
-	QJiC22+A==;
+	bh=xYbb/ENgYiAn0WyfxBAKuMrqKO3qIsDuoI9BH02tWmM=; b=p3XX0ywcuMGICeez8Wf/eWYfvM
+	j4dy75A2cZTmxJGJOuApqRgm+OGJ9mNAJPMqK5rAgWwilnWbDP6PAXuodBmhDZiDwEzJ2/5uQP78y
+	Si8VP0cXL9lkQ0NE5mu01Sibfs/p6Nt061Zr1WTfVphQKtyqXS6CtoLrACXwePlPj6RF6l5WYZEn5
+	jehDn4ADWEjo94ArKFlbuoYFmfQjavsesixe0Ztd59seKb/GsDUiaG+C/vdqK7dNQUkLteaqdTa7v
+	3kKgYGscY76VpErMGU78vg2i5Rw4raMxMdKsN/iY+jjubIYktX+rQbqej54E48KcCES5v4ti0ONGx
+	SKJEWhgQ==;
 Received: from viro by zeniv.linux.org.uk with local (Exim 4.98 #2 (Red Hat Linux))
-	id 1tUXaK-0000000FkHb-1Wht;
-	Sun, 05 Jan 2025 20:50:56 +0000
-Date: Sun, 5 Jan 2025 20:50:56 +0000
+	id 1tUXug-0000000FlaX-2Coe;
+	Sun, 05 Jan 2025 21:11:58 +0000
+Date: Sun, 5 Jan 2025 21:11:58 +0000
 From: Al Viro <viro@zeniv.linux.org.uk>
 To: Eric Dumazet <edumazet@google.com>
 Cc: Matthieu Baerts <matttbe@kernel.org>, davem@davemloft.net,
@@ -39,9 +39,8 @@ Cc: Matthieu Baerts <matttbe@kernel.org>, davem@davemloft.net,
 	syzkaller-bugs@googlegroups.com,
 	syzbot <syzbot+e364f774c6f57f2c86d1@syzkaller.appspotmail.com>
 Subject: Re: [syzbot] [mptcp?] general protection fault in proc_scheduler
-Message-ID: <20250105205056.GK1977892@ZenIV>
-References: <CANn89iKVTgzr8kt2sScrfoSbBSGMtLLqEwmA+WFFYUfV-PS--w@mail.gmail.com>
- <cf187558-63d0-4375-8fb2-2cfa8bb8fa03@kernel.org>
+Message-ID: <20250105211158.GL1977892@ZenIV>
+References: <cf187558-63d0-4375-8fb2-2cfa8bb8fa03@kernel.org>
  <CANn89iJEMGYt4YVdGkyb-q81TQU+UBOQaX7jH-2zOqv-4SjZGg@mail.gmail.com>
  <20250104190010.GF1977892@ZenIV>
  <89c2208c-fe23-43eb-89ef-876e55731a50@kernel.org>
@@ -50,6 +49,7 @@ References: <CANn89iKVTgzr8kt2sScrfoSbBSGMtLLqEwmA+WFFYUfV-PS--w@mail.gmail.com>
  <20250105112948.GI1977892@ZenIV>
  <CANn89i+L619t94EybXKsGFGQjPS7k-Qra_vXG-AcLJ=oiU2yYQ@mail.gmail.com>
  <20250105195434.GJ1977892@ZenIV>
+ <20250105205056.GK1977892@ZenIV>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -58,73 +58,26 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250105195434.GJ1977892@ZenIV>
+In-Reply-To: <20250105205056.GK1977892@ZenIV>
 Sender: Al Viro <viro@ftp.linux.org.uk>
 
-On Sun, Jan 05, 2025 at 07:54:34PM +0000, Al Viro wrote:
+On Sun, Jan 05, 2025 at 08:50:56PM +0000, Al Viro wrote:
 
-> So I suspect that current->nsproxy->netns shouldn't be used in
-> per-netns sysctls for consistency sake (note that it can get more
-> serious than just consistency, if you have e.g. a spinlock taken
-> in something hanging off current netns to protect access to
-> something table->data points to).
-> 
-> As for the mitigation in fs/proc/proc_sysctl.c... might be useful,
-> if it comes with a clear comment about the reasons it's there.
+> has max taken from ctl->extra2, which is &net->sctp.rto_max of the
+> opener's netns, but the value capped by that in stored into
+> net->sctp.rto_min of *writer's* netns.  So the logics that is supposed
+> to prevent rto_min > rto_max can be bypassed; no idea how much can that
+> escalate to, but it's clearly not what the code intends.
 
-FWIW, looks like we have two such in mptcp (with sysctls next to
-those definitely accessing the netns of opener rather than reader/writer),
-two in rds (both inconsistent on the write side -
-        struct net *net = current->nsproxy->net_ns;
-        int err;
+Speaking of which, the logics that tries to maintain rto_min <= rto_max is
+broken in another way.  There's no exclusion in those suckers.  IOW, if
+we have set rto_min to 1 and rto_max to 10000, two processes can try to
+write 1000 to rto_min and 10 to rto_max resp., with successful validations
+done against the original state in both, followed by actual stores.
+Result is rto_min == 1000 and rto_max == 10, which is probably not what
+one wants there...
 
-        err = proc_dointvec_minmax(ctl, write, buffer, lenp, fpos);
-        if (err < 0) {
-                pr_warn("Invalid input. Must be >= %d\n",
-                        *(int *)(ctl->extra1));
-                return err;
-        }
-        if (write)
-                rds_tcp_sysctl_reset(net);
-will modify ctl->data, which points to &rtn->{snd,rcv}buf_size, with
-rtn == net_generic(net, rds_tcp_netid) and net being for opener's netns
-and then call rds_tcp_sysctl_reset(net) with net being the writer's
-netns) and 6 in sctp.  At least some of sctp ones are also inconsistent
-on the write side; e.g.
-static int proc_sctp_do_rto_min(const struct ctl_table *ctl, int write,
-                                void *buffer, size_t *lenp, loff_t *ppos)
-{
-        struct net *net = current->nsproxy->net_ns;
-        unsigned int min = *(unsigned int *) ctl->extra1;
-        unsigned int max = *(unsigned int *) ctl->extra2;
-        struct ctl_table tbl;
-        int ret, new_value;
-
-        memset(&tbl, 0, sizeof(struct ctl_table));
-        tbl.maxlen = sizeof(unsigned int);
-
-        if (write)
-                tbl.data = &new_value;
-        else
-                tbl.data = &net->sctp.rto_min;
-
-        ret = proc_dointvec(&tbl, write, buffer, lenp, ppos);
-        if (write && ret == 0) {
-                if (new_value > max || new_value < min)
-                        return -EINVAL;
-
-                net->sctp.rto_min = new_value;
-        }
-
-        return ret;
-}
-has max taken from ctl->extra2, which is &net->sctp.rto_max of the
-opener's netns, but the value capped by that in stored into
-net->sctp.rto_min of *writer's* netns.  So the logics that is supposed
-to prevent rto_min > rto_max can be bypassed; no idea how much can that
-escalate to, but it's clearly not what the code intends.
-
-So I'd rather document the "don't assume that current->nsproxy->netns will
-point to the same netns this ctl is for" and fix those 10 instances - at
-least some smell seriously fishy.  It's not just the acct(2) weirdness and
-the damage may be worse than an oops...
+IOW, the validation and stores should be atomic; the same goes for another
+pair (pf_retrans <= ps_retrans).  Again, I've no idea how severe it is,
+but result seems to be at least contrary to expectation of the code
+authors...
