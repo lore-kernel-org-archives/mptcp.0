@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1C2671D8A12
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:04:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C9F1D63EC
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:08:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736154276; cv=none; b=t6w9WO6G5hIg6PAE+IkuEsctrMk5n0pe3CxYfSNSHgm6DRyf3kpv3ii1ppFTqsaSxtgEosEgNi5S4J7bG8chruMsP1eoxorpP7lsq/v/G1gYso8jfuReE9RYjuc9w9Ed6PgcUoc0yuINFLePFCbOMfbADxNYXBkkrDQP9Z68r2w=
+	t=1736154510; cv=none; b=APuy1IFwxITe9kYQ+DB7x6qbtmpTkJRyAqh8xy2LpBMgtB4n8UphJZfE7Z8bqKXln+UwIzfH8PqgkMuI8hluq+fcgmmed+7cEnUfC+oJdrYaYVZD/Ks4vk1e2cKeqdTKtG2HF3J+L7P8F6JQeInpshjxeH4Jm7AY5YOuQB19m+s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736154276; c=relaxed/simple;
-	bh=WGl0sk9j8OM07xcgcOwe4XlxZ6BkBkXhDVCue1Qc034=;
+	s=arc-20240116; t=1736154510; c=relaxed/simple;
+	bh=EgbQRvUPhxQjjOKaaM2khd68Ygngw4Oq2emd3UQv5Tc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=hj+536yCBSypNm3PwBstG+lgzl/19FDozOtdU2yy62237oueNuVVsGAl0dbkSKuLofAuMX7G0Wx9ejXXkWbPG2Stp6iAI+FB0MnVHm7RcoCYxZ/kQ4ouSl42F8+97EeV+7IyGnnRo97pTKYCPlWS95WYQ7CrvwgFzZFzv6xYvkU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pTJvPaPQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nmS+P2ysSyVl+2yNkbeVpHSeVcm7MoWIvdNdTWBltl6bQ6xabOMvZifhwRKp+orVMpUXfQhL4nVgsK4e1wC2VOlElywEkU5CsQAvTrBOEQr+B4AVbZ0T/O3AgmjK/ybIaounV6G2qRdHa/2xVy32hO+7i2k132cR6pLuoBa1Ffc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAwYmv56; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pTJvPaPQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F13E7C4CEDF;
-	Mon,  6 Jan 2025 09:04:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAwYmv56"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D2BC4CED2;
+	Mon,  6 Jan 2025 09:08:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736154275;
-	bh=WGl0sk9j8OM07xcgcOwe4XlxZ6BkBkXhDVCue1Qc034=;
+	s=k20201202; t=1736154509;
+	bh=EgbQRvUPhxQjjOKaaM2khd68Ygngw4Oq2emd3UQv5Tc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=pTJvPaPQ10jFDmKwk5mD+J54Dax+1FSfi6wG5YZGxHrGc920MGlUv/WQhMzukpzFb
-	 X4m4P6PapkIDBXB6hX7uN3oNPyfb5HI3S3rrXvcRLcGTNMb7Ajat+dwXDq7SWy1fcn
-	 iu/1XdUC9pSJCmYux3l4C2mxqx2f0Km8HZstrIFcF1jq1E6Qxgc3tW4ejUrqQCgZBB
-	 iiXcmEuJryTUBLPudk5+93AbRLHGpNJc/iw/4lhSLsJtoC/uSxtIW5iUNC8aEl9Ry7
-	 E5U8Nrhc+Vi6aWzBbZwUCISORFIxGboY/s0hMpvlSM3uKDKxeouObV2Q5hp0x7Kiqw
-	 sQSt1cyeidQpw==
-Message-ID: <ef4e0d23-4852-452c-85d0-ba2eff5d0d60@kernel.org>
-Date: Mon, 6 Jan 2025 10:04:33 +0100
+	b=QAwYmv56CEH1w8h4bOgBxkkiWbQesrkEtOQycuX0eLMuy5wbISd4vlGt1npNxDH0I
+	 BS9YLbmC9yAElC6WYRN2V9+81qHfNMmUvaTKEgviJ2nJiZe7O+amsIoyu/5b4TR5Ux
+	 F7tytfcECfjElm/I2xbqKI42Kd0OUoRLo3Due16fPQZI2L01JBgM6hvkdCx8uIfSXK
+	 JUyPnGjV66s5+UyoQy3UEp1dopSofj7oxkfnvKA7gJLXhWgLjNV2iCoTm+QRS+DjHc
+	 hLMd5e8y3PLjpLYwiMZeBC9ZyXugzvJGdyk/9/Eh9sxqyiEJPTAvNjPT1qvfyvgfmN
+	 K3k0F2fCXpi/A==
+Message-ID: <55f0cca6-6f45-435e-b947-24b934f2a9bc@kernel.org>
+Date: Mon, 6 Jan 2025 10:08:27 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 07/11] mptcp: pm: use NL_SET_ERR_MSG_ATTR
- when possible
+Subject: Re: [PATCH mptcp-next v6 0/7] mptcp: use GENL_REQ_ATTR_CHECK in
+ userspace pm
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1736150983.git.tanggeliang@kylinos.cn>
- <4ab3a73300cdc4e2f222127e53ca66a696d3e6e6.1736150983.git.tanggeliang@kylinos.cn>
+References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
+ <9e1c9742e62870dd76449299c10b99ec9b85a9f5.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,26 +86,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4ab3a73300cdc4e2f222127e53ca66a696d3e6e6.1736150983.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9e1c9742e62870dd76449299c10b99ec9b85a9f5.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 06/01/2025 09:16, Geliang Tang wrote:
-> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+On 06/01/2025 09:24, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Instead of only returning a text message with GENL_SET_ERR_MSG(),
-> NL_SET_ERR_MSG_ATTR() can help the userspace developers by also
-> reporting which attribute is faulty.
+> Thanks for this new version.
 > 
-> When the error is specific to an attribute, NL_SET_ERR_MSG_ATTR() is now
-> used. The error messages have not been modified in this commit.
+> On Mon, 2024-12-30 at 14:24 +0100, Matthieu Baerts (NGI0) wrote:
+>> This is a newer version of the series started by Geliang, now making
+>> them more uniform on how the NL errors are set, and giving more hints
+>> to
+>> the userspace about what's wrong.
 > 
-> mptcp_userspace_pm_remove_id_zero_address() has been modified to set the
-> missing attribute.
+> This series is useful, but it conflicts with "BPF path manager" series
+> under review, especially with set_flags() interface. So I also added
+> the patches to update set_flags interface into v7.
 
-It is no longer the case. Can you remove these 2 lines please?
+Yes, sorry about that, I noticed that after having sent this series.
 
 Cheers,
 Matt
