@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87F8A35952
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 08:38:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5F8E1BC58
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 08:41:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736152713; cv=none; b=HbbXsugaolCvRDTgqS0Sgyu35z4t0OZUg7Me72lDZbGLpTXcMxhlPnnJlWZ1PcPAtC4a4ek7cKSOQbQiP27pCrqqGZwqVeS9glctJSE97Vy+EH75f8wDEYUv5MDKgVhDdLNfGxTflkwdyU9HPlKhm6hPtq2EHiUgIg5vD2rFTg8=
+	t=1736152903; cv=none; b=rgWBCvX28kjFA++HoEjeL4a/XBYCh/LjOfOLUKNMScTK0kglV466VhD7n4qqTny5bQ32K0hBrG+qGeIYfB1ydFB37K5pKoIHbjIC5TRT4U8cX0RZFtsfPXGLdg0w1mE62SJYJ00nEO89ox9yH0KqE3gWYK012U+GfAbi68oJfDs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736152713; c=relaxed/simple;
-	bh=GvVpxqJZagIaB3XOxgLf9YF0iL6R8XREHrgoKcgrx8A=;
+	s=arc-20240116; t=1736152903; c=relaxed/simple;
+	bh=uWs76edBpk5k4/KgoXa5hlUTU9+7l4uGqRU26LuiIhY=;
 	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=UQpMvnaFeOGpt9xJbgxpbyglMHQOKbCR9oPRMavgAP4z/Dxjk9vbcVd7eCI5Dm+F/sPSyuCm3c3bx8DRgRLeGvMtIaH8kPnwEWyg844AtoPr6UhSxtoA1wBOqqtF49nss86X8tMmPDinOgZ74UIpDOGGfxxWbo1Ity3BdHFGqPA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bB0MoMb1; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=JL6rXy2wOR4v4MKXyojgeKNnvlLUhXVD4q0ie1xlqxSUpoy0268+2I/ihouFNMFRk5UHp1RK0eowOqpw1JC8Xdwlx9km/1JZt1vszwpMInNt/NgyOnmHbEZ+urIX4wumGPdjj3OHB5F2G4QjASDBCK0ym+TOSncqYqxLQdM8TAk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hvnxOMgv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bB0MoMb1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4025EC4CED2;
-	Mon,  6 Jan 2025 08:38:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hvnxOMgv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C85BCC4CED2;
+	Mon,  6 Jan 2025 08:41:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736152713;
-	bh=GvVpxqJZagIaB3XOxgLf9YF0iL6R8XREHrgoKcgrx8A=;
+	s=k20201202; t=1736152903;
+	bh=uWs76edBpk5k4/KgoXa5hlUTU9+7l4uGqRU26LuiIhY=;
 	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=bB0MoMb1KHP3mj1n9HQ4SNivMykW39AXcks5pL+YCXTyg97STEWZzQ1undjyjVSk5
-	 KeNzBabcHjISPbUSCIAou5HBKFKqT2Nr5SOlM78Z5UBuTG5ielrxUcJOYFL55fjvwZ
-	 3vA/GXFitPT8QtPGyJgWXgQwtr9k99W6QwrEKHgVN0lCToLy8zcMzOiFomcZnv7UYM
-	 ug++jvHOXTlOPZglynOjWnje9qodv66GWb8f3pha5+VEh8SrCNxrf3IsJw6LxTpcuD
-	 PdOdV8zbiHh+UPZ+MQWkgmBgbJKXkkydKHgBgzFSVaQD5SEb51HFuvB6Ax4C4/XCVr
-	 1sjvDhxOfHcNw==
-Message-ID: <0152caf3be99da2fe96a6d5e8a672b3ee18f19c7.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v6 2/7] mptcp: pm: more precise error messages
+	b=hvnxOMgvVFt+3oIcerCGhfGEsaNBaZwylPK9UVQVJk9HHGW/7+1i6bCn6JWoTZ1HH
+	 Xtn1/OWxezbNLvF/yVnV1SMTQDIYmEvbDXtxK02ctP/QrWejZFfGXLn/VeJwroEqCm
+	 QeSWlu35SltwkQdL3tCuwPSuaHORa+1TULRm+EZWNPeJFBWruTeHGjkLYwLm5p01k8
+	 I4qYpvJE2IS4Yx32gnVnZh3G2wmR4eKZg2tATgukZAvgpooBzt3iyaQiPfK42Z3GTm
+	 SY6XjKoD/ciS6aVQCcCMQ3NJHRibG3PCqekRhJQgFZSpXf0LA/rJ23Ya/58kgzdVh0
+	 oJGQn9ueXhBTg==
+Message-ID: <e22df271143ccf0dd9d7f20398c37dcd68db01af.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v6 3/7] mptcp: pm: improve error messages
 From: Geliang Tang <geliang@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Mon, 06 Jan 2025 16:38:29 +0800
-In-Reply-To: <20241230-genl_req_attr_check-v6-2-3ec9103559e7@kernel.org>
+Date: Mon, 06 Jan 2025 16:41:39 +0800
+In-Reply-To: <20241230-genl_req_attr_check-v6-3-3ec9103559e7@kernel.org>
 References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
-	 <20241230-genl_req_attr_check-v6-2-3ec9103559e7@kernel.org>
+	 <20241230-genl_req_attr_check-v6-3-3ec9103559e7@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -78,96 +78,109 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 On Mon, 2024-12-30 at 14:24 +0100, Matthieu Baerts (NGI0) wrote:
-> Some errors reported by the userspace PM were vague: "this or that is
-> invalid".
+> Some error messages were:
 > 
-> It is easier for the userspace to know which part is wrong, instead
-> of
-> having to guess that.
+>  - too generic: "missing input", "invalid request"
 > 
-> By splitting some error messages, NL_SET_ERR_MSG_ATTR() can be used
-> instead of GENL_SET_ERR_MSG() in order to give an additional hint to
-> the
-> userspace developers about which attribute is wrong.
+>  - not precise enough: "limit greater than maximum" but what's the
+> max?
+> 
+>  - missing: subflow not found, or connect error.
+> 
+> This can be easily improved by being more precise, or adding new
+> error
+> messages.
 > 
 > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > ---
->  net/mptcp/pm_userspace.c | 34 ++++++++++++++++++++++++++--------
->  1 file changed, 26 insertions(+), 8 deletions(-)
+>  net/mptcp/pm_netlink.c   | 7 ++++---
+>  net/mptcp/pm_userspace.c | 9 ++++++++-
+>  2 files changed, 12 insertions(+), 4 deletions(-)
 > 
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index
+> 49c34494e156ff6c3277b107c3840ee29dd3afbb..3bb213e2a967e87d4244dc0f1ba
+> 58d3ba21fb371 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1878,8 +1878,9 @@ static int parse_limit(struct genl_info *info,
+> int id, unsigned int *limit)
+>  
+>  	*limit = nla_get_u32(attr);
+>  	if (*limit > MPTCP_PM_ADDR_MAX) {
+> -		NL_SET_ERR_MSG_ATTR(info->extack, attr,
+> -				    "limit greater than maximum");
+> +		NL_SET_ERR_MSG_ATTR_FMT(info->extack, attr,
+> +					"limit greater than maximum
+> (%u)",
+> +					MPTCP_PM_ADDR_MAX);
+>  		return -EINVAL;
+>  	}
+>  	return 0;
+> @@ -2008,7 +2009,7 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb,
+> struct genl_info *info)
+>  		lookup_by_id = 1;
+>  		if (!addr.addr.id) {
+>  			NL_SET_ERR_MSG_ATTR(info->extack, attr,
+> -					    "missing required
+> inputs");
+> +					    "missing address ID");
+>  			return -EOPNOTSUPP;
+>  		}
+>  	}
 > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
 > index
-> 72d4861e497eef5a516fc1c3ec1659807ffedd53..9c0bec588c498e0aa78acf4018d
-> b509abe90cad2 100644
+> 9c0bec588c498e0aa78acf4018db509abe90cad2..a8f73b082460ba00f7fa998cf76
+> 46368f8201e2e 100644
 > --- a/net/mptcp/pm_userspace.c
 > +++ b/net/mptcp/pm_userspace.c
-> @@ -224,9 +224,14 @@ int mptcp_pm_nl_announce_doit(struct sk_buff
-> *skb, struct genl_info *info)
->  		goto announce_err;
->  	}
+> @@ -191,7 +191,7 @@ static struct mptcp_sock
+> *mptcp_userspace_pm_get_sock(const struct genl_info *in
 >  
-> -	if (addr_val.addr.id == 0 || !(addr_val.flags &
-> MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> -		NL_SET_ERR_MSG_ATTR(info->extack, addr,
-> -				    "invalid addr id or flags");
-> +	if (addr_val.addr.id == 0) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, addr, "invalid
-> addr id");
-> +		err = -EINVAL;
-> +		goto announce_err;
-> +	}
-> +
-> +	if (!(addr_val.flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, addr, "invalid
-> addr flags");
->  		err = -EINVAL;
->  		goto announce_err;
+>  	if (!mptcp_pm_is_userspace(msk)) {
+>  		NL_SET_ERR_MSG_ATTR(info->extack, token,
+> -				    "invalid request; userspace PM
+> not selected");
+> +				    "userspace PM not selected");
+>  		sock_put((struct sock *)msk);
+>  		return NULL;
 >  	}
-> @@ -537,8 +542,14 @@ int mptcp_pm_nl_subflow_destroy_doit(struct
+> @@ -433,6 +433,9 @@ int mptcp_pm_nl_subflow_create_doit(struct
+> sk_buff *skb, struct genl_info *info)
+>  	err = __mptcp_subflow_connect(sk, &local, &addr_r);
+>  	release_sock(sk);
+>  
+> +	if (err)
+> +		GENL_SET_ERR_MSG_FMT(info, "connect error: %d",
+> err);
+> +
+>  	spin_lock_bh(&msk->pm.lock);
+>  	if (err)
+>  		mptcp_userspace_pm_delete_local_addr(msk, &entry);
+> @@ -557,6 +560,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct
 > sk_buff *skb, struct genl_info *info
->  		goto destroy_err;
+>  	lock_sock(sk);
+>  	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
+>  	if (!ssk) {
+> +		GENL_SET_ERR_MSG(info, "subflow not found");
+>  		err = -ESRCH;
+>  		goto release_sock;
 >  	}
->  
-> -	if (!addr_l.addr.port || !addr_r.port) {
-> -		GENL_SET_ERR_MSG(info, "missing local or remote
-> port");
-> +	if (!addr_l.addr.port) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "missing
-> local port");
-> +		err = -EINVAL;
-> +		goto destroy_err;
-> +	}
-> +
-> +	if (!addr_r.port) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "missing
-> remote port");
->  		err = -EINVAL;
->  		goto destroy_err;
->  	}
-> @@ -592,9 +603,16 @@ int mptcp_userspace_pm_set_flags(struct sk_buff
+> @@ -634,6 +638,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff
 > *skb, struct genl_info *info)
->  			goto set_flags_err;
->  	}
+>  	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr,
+> &rem.addr, bkup);
+>  	release_sock(sk);
 >  
-> -	if (loc.addr.family == AF_UNSPEC ||
-> -	    rem.addr.family == AF_UNSPEC) {
-> -		GENL_SET_ERR_MSG(info, "invalid address families");
-> +	if (loc.addr.family == AF_UNSPEC) {
-> +		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-> +				    "invalid local address family");
-> +		ret = -EINVAL;
-> +		goto set_flags_err;
-> +	}
+> +	if (ret)
+> +		GENL_SET_ERR_MSG(info, "subflow not found");
+
+I guess you don't want to use "subflow not found" here. I changed it as
+"mp_prio send ack failed" in v7.
+
 > +
-> +	if (rem.addr.family == AF_UNSPEC) {
-
-I moved this check into "if (attr_rem) {" block in v7.
-
-> +		NL_SET_ERR_MSG_ATTR(info->extack, attr_rem,
-> +				    "invalid remote address
-> family");
->  		ret = -EINVAL;
->  		goto set_flags_err;
->  	}
+>  set_flags_err:
+>  	sock_put(sk);
+>  	return ret;
 > 
 
