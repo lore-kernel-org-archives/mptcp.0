@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83E9A1DA0FE
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:31:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81D41D9A5D
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:39:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736155890; cv=none; b=SJ25IgAfBKywWEK0TncN4Ul4Soda0QgcM0AJ2K5yWKE+NVrt9hKJlXFSJTnXP6gEhBvmu5b6rPUEMFhFAgniuO6r4dpJsKpMR94yZunUgv+FeroHF/plX/iQleTJhnS7etnCue9rUwnPlTauqllhsx7+0+ZYbM7Z7t6ED4cZrjg=
+	t=1736156369; cv=none; b=X/pYvS9RWRfm2jHnPcN3HlQ9/GrMrnQzNVA0EY4AlAOU4FeiB8CyDkzntebz83t/HH3SBvHbWecu4De+Er8DvPmJcDvg9h5U1oz2MTayBtR11Dm0C7BYJpAg4iFCjyKC9nZXnG7u2qPsmAcBqAD91xqebN5PONx1jLfaftglmec=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736155890; c=relaxed/simple;
-	bh=Lq82igFLt46wobsM4wuI0WMpo4+Bgx+ZNLIT4eLuUcQ=;
+	s=arc-20240116; t=1736156369; c=relaxed/simple;
+	bh=lnsMQJblRVxOOoRHLZVMChKlf8KJ+JSXqKPakJIyekg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nwF2myQNJsnWcGJz8h8ZNQ2o6sClQ4BbU5YgAFvEe5slr7tqnIJ9rqJwDOBqvgGQjHe0GxmIsIbI9Y5Y/Q4wyjvTYCIJAAqmnNaw/4GNJtB++M9pdEt2GD3TIzUVVg0lsmqKAPF4eT79qOHmiwwEqodRNxMFGtjR6PhgZ23sWrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=deH53q08; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nUc5dZyWe38lvCEgjnPwAgJGXzFafbPjVgOV9fqeQRimvqfeFTenPyi2L9IIsM0EbEqQMNHd2vNA10Z4KOYms2cP4M95xGmGdCRWM773v8S4g9/VVds7KXgEQ5JGZlrawh4OTWematK1EgF8mz9QFR2dB/7qnLZf56wNcW6LEWQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7GLgcFM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="deH53q08"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 31178C4CED2;
-	Mon,  6 Jan 2025 09:31:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7GLgcFM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCBDC4CED2;
+	Mon,  6 Jan 2025 09:39:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736155889;
-	bh=Lq82igFLt46wobsM4wuI0WMpo4+Bgx+ZNLIT4eLuUcQ=;
+	s=k20201202; t=1736156369;
+	bh=lnsMQJblRVxOOoRHLZVMChKlf8KJ+JSXqKPakJIyekg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=deH53q08bgpg6w/U2vaN2C6JJYZ4pMKztomlPy0t4tY3vo2WzQeTV8sMAgHTEQGak
-	 FbtTXCrZXUkUqMjZw4Rm+6e/YoJZ2U+do5tF29viRFIwZtDBdBsbvC+1ltbZA3q9CV
-	 ovy78+WnL2KkT1rS94H4ekjppguN/3wTgKD7oooGayieOXjDKfp5Zvz5kMAMQ+ylu4
-	 Zt+1ucGFHp/JW5vy+Y4mAY3lFUoqaoNe9V73s2JNcGYNtSoSLzhJRJJFyj2zFsxWEH
-	 NVS+1zbngKc5U0MedQotFsPHSsAv9K2Etxr4R5hqBHm5TuYIVREBURQfwuRtBy/6We
-	 KABakEOg3GLLQ==
-Message-ID: <d01d0e8a-5606-4152-aabe-32e4402adeeb@kernel.org>
-Date: Mon, 6 Jan 2025 10:31:27 +0100
+	b=J7GLgcFMbtZsYbZ4y4NtzE+yZr1GFUcuamn3U1VQ1o+iY8i0eRosWbNyz7gLIJu1R
+	 kG+ttb7D47HvCQ6xf4apl8oOp6blU1tDWLCH72bG78p8u6i0GouJ9WAp6YuyeEMvQi
+	 hbIOvLLlSis+7SfmIgXBiMbP8YpkSSvF/Dny3XdkJuYVKN4f2HtSl8gx9EWISjs3wG
+	 vRt1zD/Lte9lGgZfS0op5pmfPdr0bOAPiFm6OZPa9ihTKQOHzGnbVjMMLEavDMdq55
+	 bW5p77fTcYyOfXDhSoQbXWSr1WToLVdxcwmjvlHJYC3cSeFaemtIjDcMqZDWxoT9qu
+	 Z34Ug0kpbteKg==
+Message-ID: <9f7a607d-2553-4a8f-a694-b9c7212d46b8@kernel.org>
+Date: Mon, 6 Jan 2025 10:39:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 02/11] mptcp: userspace pm set_flags id
- support
+Subject: Re: [PATCH mptcp-next v7 05/11] mptcp: add local & remote parameters
+ for set_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736150983.git.tanggeliang@kylinos.cn>
- <0d06955f697e484c18262a9806520132f07110cf.1736150983.git.tanggeliang@kylinos.cn>
+ <fd0daf0d017e8b60c2503ddcbda67254c57ee6e7.1736150983.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0d06955f697e484c18262a9806520132f07110cf.1736150983.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fd0daf0d017e8b60c2503ddcbda67254c57ee6e7.1736150983.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,96 +96,19 @@ Hi Geliang,
 On 06/01/2025 09:16, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Similar to in-kernel PM, this patch adds address ID support to set_flags()
-> interface of userspace PM, allowing it to work with either an address or
-> an address ID.
-> 
-> When an address ID is used, mptcp_userspace_pm_lookup_addr_by_id() helper
-> is used to look up the address entry in the local address list instead of
-> using mptcp_userspace_pm_lookup_addr().
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 31 ++++++++++++++++++++-----------
->  1 file changed, 20 insertions(+), 11 deletions(-)
-> 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 40fd2f788196..60db72060e6e 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -577,6 +577,7 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
->  	struct mptcp_pm_addr_entry *entry;
->  	struct mptcp_sock *msk;
-> +	u8 lookup_by_id = 0;
->  	int ret = -EINVAL;
->  	struct sock *sk;
->  	u8 bkup = 0;
-> @@ -592,10 +593,13 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  		goto set_flags_err;
->  
->  	if (loc.addr.family == AF_UNSPEC) {
-> -		NL_SET_ERR_MSG_ATTR(info->extack, attr,
-> -				    "invalid local address family");
-> -		ret = -EINVAL;
-> -		goto set_flags_err;
-> +		lookup_by_id = 1;
-> +		if (!loc.addr.id) {
-> +			NL_SET_ERR_MSG_ATTR(info->extack, attr,
-> +					    "missing address ID");
-> +			ret = -EOPNOTSUPP;
-> +			goto set_flags_err;
-> +		}
->  	}
->  
->  	if (attr_rem) {
-> @@ -615,17 +619,22 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
->  		bkup = 1;
->  
->  	spin_lock_bh(&msk->pm.lock);
-> -	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
-> -	if (entry) {
-> -		if (bkup)
-> -			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> -		else
-> -			entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
-> +	entry = lookup_by_id ? mptcp_userspace_pm_lookup_addr_by_id(msk, loc.addr.id) :
-> +			       mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
-> +	if (!entry) {
-> +		spin_unlock_bh(&msk->pm.lock);
-> +		ret = -EINVAL;
-> +		goto set_flags_err;
+> This patch updates the interfaces set_flags to reduce repetitive code,
+> adds two more parameters 'local' and 'remote' for them. These addresses
+> are parsed in public helper mptcp_pm_nl_set_flags_doit(), then pass them
+> to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
 
-Mmh, you are changing the behaviour here by making it mandatory to have
-an entry, and I don't think you can: if I'm not mistaken, with the
-userspace PM, it is possible not to find any entries here, e.g. if a
-subflow using this address has not been added or the address has not
-been announced (I guess the initial address is not there then).
+Because the in-kernel and userspace PM have different requirements:
+token and remote addr only for the userspace PM, search by local addr ID
+probably only for the in-kernel, etc. it might be clearer to keep them
+separated.
 
-Also, with the userspace PM, it is possible to have an entry with an
-ADDR ID == 0.
-
-
-Do you think this patch is worth it? Setting by ID for the in-kernel PM
-makes sense: unique ID for the netns, easier to type the ID than the
-full address. While for the userspace PM, it will be managed by a daemon
-that will have to track addresses anyway.
-
-
->  	}
-> +
-> +	if (bkup)
-> +		entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-> +	else
-> +		entry->flags &= ~MPTCP_PM_ADDR_FLAG_BACKUP;
->  	spin_unlock_bh(&msk->pm.lock);
->  
->  	lock_sock(sk);
-> -	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
-> +	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &entry->addr, &rem.addr, bkup);
->  	release_sock(sk);
->  
->  set_flags_err:
+At the end, I think only the parsing of the local address can be done
+for both (mptcp_pm_parse_entry()). Maybe not worth it to move only this
+part? WDYT?
 
 Cheers,
 Matt
