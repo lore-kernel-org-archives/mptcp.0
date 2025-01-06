@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBBD1CCEF8
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:55:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43A0A1D959E
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 10:01:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736157320; cv=none; b=kRpMH+d6dJryPspLIZogf0Z0vmmklAY1aGbsyPxHKiiccBf1u26aNxCMREPlP3ZbgrioOS4YizPd3zLYlGVKz6u+lvlkYhKonHUHM9gfSeCgIePqnfomN9+OCwNDCvEi/uxgXVdn1cUYf1wS6xaIsWcYQrtj9I1t7iObbP/jjBw=
+	t=1736157667; cv=none; b=ZxGLyb1u+1V0bQyBrU5+ThaU6g/drfAFGau0+v8fmEtLnr1nhTm77zPzKVNefRjLxzVGQdZaRRuw6xdOgqgZHu2RQ+mB5I4fh3+c+VncvNu+ZCG7vMDTEbie8XgRVrfvyfYGkqAobY7z+6JGK9E2b3JJFixJuLrDAWXLEfORV7Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736157320; c=relaxed/simple;
-	bh=Y0zqTZ/JpBjjE9osjus31LETwHHGZ8G4O4YkinobRRk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Xuoup5umVnr2WN98XTGymXjawXTGa1NgG13oLuRpwtE64N2+i1XjEwwX9g6bHjeZEl9PLfy0ZfT4Ht/J2yjQpwpBYvZ8feU9nORUrnXzsXWgdUkLMZI0PWrZqulG5QPzZ4s4VOvoxikt18uq9U91plrPaAM53APO3FFvpVWTYI8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbSkH3Gd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736157667; c=relaxed/simple;
+	bh=aq3/xW3CgP65Fuvh6mKpeulqo2U4FfS0sXNRSfdotUc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=WxVXxA+AkDHz8O8e+fUty/GuVFTqzYJ/s3zsvDZhjj8Ovm5IqLvOLO5O+es+4KM0158kd3ZrJtwwlegv50eeoSmlfDg0BrZckEQ0iMu8+VpRHv2pUP/9ov7vpCMvE91CFBtFAEWMySKjc6W+TPIIh3PzCgfNjvMqIiegu0oaNz0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ExVyvb73; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbSkH3Gd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE336C4CED2;
-	Mon,  6 Jan 2025 09:55:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ExVyvb73"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED403C4CED2;
+	Mon,  6 Jan 2025 10:01:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736157320;
-	bh=Y0zqTZ/JpBjjE9osjus31LETwHHGZ8G4O4YkinobRRk=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=AbSkH3GdDWHPzwBx3q2ku362DsEgi11qFs4EXUm4BGXHZqFzwz5Eucii3TTqyAOU3
-	 1FcxxE5XkpA+u7QOEEcA5/A3nADNpxx2OgOCIWXI7E62xuvdUdYj7W6G4XHgj/vlrq
-	 DlLJmH+RHXrPqBfrPKATzb9q59WdZ1X6YhZ0x+4sR2dxOHQ8azpy/bl1c8jEF8F/6W
-	 n0tjRZb3Xk8PoyQp/wmGfJc52D4coNiMrcx37O40eOZ29K1UXqyfyQHcIeAGyNcqkL
-	 aG3FSBgZJ8kPiSNu7Q2jpXuke7+E/tvnNXzjV5JFhYK6JwtTIiD1oOyJgXsmGV1pWB
-	 n7z9WsWoPfODQ==
-Message-ID: <c7bacada-9121-492d-bc23-264d56155f8e@kernel.org>
-Date: Mon, 6 Jan 2025 10:55:17 +0100
+	s=k20201202; t=1736157666;
+	bh=aq3/xW3CgP65Fuvh6mKpeulqo2U4FfS0sXNRSfdotUc=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ExVyvb73FQhchs82tKVERx9aM3kn7yzT7JkP9tZiYRg21r0DLFn+3zAtaxsb/rrgw
+	 r4T8DaT2fAZcNqoy3jgTKx+lyBHSZme4cxA6CwxEg33b+vNm+FC57uIE0YONKj4AwP
+	 7DxG7qTIFNL3qb9v0ip7QSpgVzIbiJM1VsiDktHqJXyrCaUPwZI0hSjkBKJFQ9akNV
+	 41ercfVauUvlM0A7MGNgrrBm2v+8cQEqxm95VMRs5NkL2MUz2Rf25tZTwnKtUREqah
+	 53ngt0EVp/Vfs1z0RG9+54KyH8dKjuApoYlKQULaYsC8qR1GQ7AGwQSr0HUW/2eXQU
+	 Gr2bhI/2yKw8w==
+Message-ID: <945e4bc2-92e5-4acb-8fc3-f7a7ebbe2c77@kernel.org>
+Date: Mon, 6 Jan 2025 11:01:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 08/11] mptcp: pm: improve error messages
+Subject: Re: [PATCH mptcp-next v7 05/11] mptcp: add local & remote parameters
+ for set_flags
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1736150983.git.tanggeliang@kylinos.cn>
- <4078a76f5e18d55532f87e4d8a936876d356222c.1736150983.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1736150983.git.tanggeliang@kylinos.cn>
+ <fd0daf0d017e8b60c2503ddcbda67254c57ee6e7.1736150983.git.tanggeliang@kylinos.cn>
+ <9f7a607d-2553-4a8f-a694-b9c7212d46b8@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,51 +88,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4078a76f5e18d55532f87e4d8a936876d356222c.1736150983.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9f7a607d-2553-4a8f-a694-b9c7212d46b8@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 06/01/2025 09:16, Geliang Tang wrote:
-> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+On 06/01/2025 10:39, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Some error messages were:
+> On 06/01/2025 09:16, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> This patch updates the interfaces set_flags to reduce repetitive code,
+>> adds two more parameters 'local' and 'remote' for them. These addresses
+>> are parsed in public helper mptcp_pm_nl_set_flags_doit(), then pass them
+>> to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
 > 
->  - too generic: "missing input", "invalid request"
+> Because the in-kernel and userspace PM have different requirements:
+> token and remote addr only for the userspace PM, search by local addr ID
+> probably only for the in-kernel, etc. it might be clearer to keep them
+> separated.
 > 
->  - not precise enough: "limit greater than maximum" but what's the max?
-> 
->  - missing: subflow not found, or connect error.
-> 
-> This can be easily improved by being more precise, or adding new error
-> messages.
+> At the end, I think only the parsing of the local address can be done
+> for both (mptcp_pm_parse_entry()). Maybe not worth it to move only this
+> part? WDYT?
 
-(...)
+Just in case you drop this patch, please note that in my v6, I was also
+modifying the two set_flags() helpers in different patches:
 
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 066fd89b1691..341db3bc191b 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
+- The split without changing the behaviour in "mptcp: pm: more precise
+error messages"
+- Keeping "mptcp: pm: userspace: flags: clearer msg if no remote addr"
+- Using NL_SET_ERR_MSG_ATTR() in "mptcp: pm: use NL_SET_ERR_MSG_ATTR
+when possible"
+- "missing address ID" message in "mptcp: pm: improve error messages"
+- Adding GENL_REQ_ATTR_CHECK() in "mptcp: pm: mark missing address
+attributes"
 
-(...)
-
-> @@ -613,6 +616,8 @@ int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
->  	lock_sock(sk);
->  	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &entry->addr, remote, bkup);
->  	release_sock(sk);
-> +	if (ret)
-> +		GENL_SET_ERR_MSG(info, "mp_prio send ack failed");
-
-As mentioned on my comment on the v6, it might be better to have:
-
-  /* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
-  if (ret < 0)
-          GENL_SET_ERR_MSG(info, "subflow not found");
-
->  
->  set_flags_err:
->  	sock_put(sk);
+Make sure to compare your future v8 with the v6 ;)
 
 Cheers,
 Matt
