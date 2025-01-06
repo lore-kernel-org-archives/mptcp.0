@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2291E505
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:48:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADBBD1CCEF8
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:55:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736156903; cv=none; b=krTxxklyW332ziGPNJ+etOOiY67xxE/ebH04iLyANPSbxXFMXzGrUo/BktlIOPIUvM19Bmf+ospzHvyRbx068mCaWHtafAJdIDIW8y/VDVSqllBo+ipVMI7GZ5Iac7jlogzXzrX078p8oA5gcc2wXAIdUKnhAu3Fwq2U/ANOw4A=
+	t=1736157320; cv=none; b=kRpMH+d6dJryPspLIZogf0Z0vmmklAY1aGbsyPxHKiiccBf1u26aNxCMREPlP3ZbgrioOS4YizPd3zLYlGVKz6u+lvlkYhKonHUHM9gfSeCgIePqnfomN9+OCwNDCvEi/uxgXVdn1cUYf1wS6xaIsWcYQrtj9I1t7iObbP/jjBw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736156903; c=relaxed/simple;
-	bh=y1ShWcyGo876pNfYt6T2f5acX/i+oDFlaQXxupwXLnw=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=r2cGl8WKslqiGFXa490pJ4rfHF1FxWdszhme5vfK7SSyEIvvACmJkrfWvhk8fRnLffYVuvJfqUpPhhlTo4U8GTCcB0zIRKHYauaCt8actZyA16TQg+goCElw7XmBvQjcNwdcT0R7o41PPmi2dbvibau9qujBPs8qt7RPNwPFEOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/JUhqqH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736157320; c=relaxed/simple;
+	bh=Y0zqTZ/JpBjjE9osjus31LETwHHGZ8G4O4YkinobRRk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Xuoup5umVnr2WN98XTGymXjawXTGa1NgG13oLuRpwtE64N2+i1XjEwwX9g6bHjeZEl9PLfy0ZfT4Ht/J2yjQpwpBYvZ8feU9nORUrnXzsXWgdUkLMZI0PWrZqulG5QPzZ4s4VOvoxikt18uq9U91plrPaAM53APO3FFvpVWTYI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AbSkH3Gd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/JUhqqH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182BFC4CED2;
-	Mon,  6 Jan 2025 09:48:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AbSkH3Gd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BE336C4CED2;
+	Mon,  6 Jan 2025 09:55:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736156902;
-	bh=y1ShWcyGo876pNfYt6T2f5acX/i+oDFlaQXxupwXLnw=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=q/JUhqqHqrZYBwv6QUP3tVobacAUUBYl7mA3WF0A/V9PH2Th4S8zNMX8oOHBKFDkW
-	 djrVbE+j858gQOCdCd8xXhHHqF5bX+KGiI9mL9A8FvL8ygEBcUSHLkmgBq6B411O30
-	 yvas7u4FVHcfBHdNYJlJAR6iLyxJesQPQzbeNf4mnAU5yHo31wDslwHrZZIjzt8BB7
-	 SNb1AJHHMo80oGlXngJcfm4EBAnGspDsaIGGogI8HgoRseZORQ7sCHMJLeM9K9aDr0
-	 TUK4bHA7ZCk8NgePYwV+S6QknmHkq0DlRi5bnTN4KHsP5YCifDKTY0zy5JW7+jCEJf
-	 7WCs3NJT9XShA==
-Message-ID: <72e4b271-3d16-419a-a4ba-94fb027deac2@kernel.org>
-Date: Mon, 6 Jan 2025 10:48:20 +0100
+	s=k20201202; t=1736157320;
+	bh=Y0zqTZ/JpBjjE9osjus31LETwHHGZ8G4O4YkinobRRk=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=AbSkH3GdDWHPzwBx3q2ku362DsEgi11qFs4EXUm4BGXHZqFzwz5Eucii3TTqyAOU3
+	 1FcxxE5XkpA+u7QOEEcA5/A3nADNpxx2OgOCIWXI7E62xuvdUdYj7W6G4XHgj/vlrq
+	 DlLJmH+RHXrPqBfrPKATzb9q59WdZ1X6YhZ0x+4sR2dxOHQ8azpy/bl1c8jEF8F/6W
+	 n0tjRZb3Xk8PoyQp/wmGfJc52D4coNiMrcx37O40eOZ29K1UXqyfyQHcIeAGyNcqkL
+	 aG3FSBgZJ8kPiSNu7Q2jpXuke7+E/tvnNXzjV5JFhYK6JwtTIiD1oOyJgXsmGV1pWB
+	 n7z9WsWoPfODQ==
+Message-ID: <c7bacada-9121-492d-bc23-264d56155f8e@kernel.org>
+Date: Mon, 6 Jan 2025 10:55:17 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 06/11] mptcp: drop info of
- userspace_pm_remove_id_zero_address
+Subject: Re: [PATCH mptcp-next v7 08/11] mptcp: pm: improve error messages
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736150983.git.tanggeliang@kylinos.cn>
- <ee4732a33038d9d16df114dd278278112219c5ca.1736150983.git.tanggeliang@kylinos.cn>
+ <4078a76f5e18d55532f87e4d8a936876d356222c.1736150983.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,98 +85,51 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ee4732a33038d9d16df114dd278278112219c5ca.1736150983.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4078a76f5e18d55532f87e4d8a936876d356222c.1736150983.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
+Hi Geliang,
 
 On 06/01/2025 09:16, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 > 
-> The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
-> is to set an error message into it.
-
-Can you add:
-
-Plus, this helper will only fail when it cannot find any subflows with a
-local address ID 0.
-
-(Because if there were different types of errors, you could not drop
-'info').
-
+> Some error messages were:
 > 
-> This patch drops this parameter and sets the error message where this
-> function is called in mptcp_pm_nl_remove_doit().
+>  - too generic: "missing input", "invalid request"
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_userspace.c | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
+>  - not precise enough: "limit greater than maximum" but what's the max?
 > 
+>  - missing: subflow not found, or connect error.
+> 
+> This can be easily improved by being more precise, or adding new error
+> messages.
+
+(...)
+
 > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 0f703e06d771..a6580942e628 100644
+> index 066fd89b1691..341db3bc191b 100644
 > --- a/net/mptcp/pm_userspace.c
 > +++ b/net/mptcp/pm_userspace.c
-> @@ -259,8 +259,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
->  	return err;
->  }
->  
-> -static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
-> -						     struct genl_info *info)
-> +static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
->  {
->  	struct mptcp_rm_list list = { .nr = 0 };
->  	struct mptcp_subflow_context *subflow;
-> @@ -275,10 +274,8 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
->  			break;
->  		}
->  	}
-> -	if (!has_id_0) {
-> -		GENL_SET_ERR_MSG(info, "address with id 0 not found");
-> +	if (!has_id_0)
->  		goto remove_err;
-> -	}
->  
->  	list.ids[list.nr++] = 0;
->  
-> @@ -336,7 +333,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  	sk = (struct sock *)msk;
->  
->  	if (id_val == 0) {
-> -		err = mptcp_userspace_pm_remove_id_zero_address(msk, info);
-> +		err = mptcp_userspace_pm_remove_id_zero_address(msk);
->  		goto out;
->  	}
->  
-> @@ -345,7 +342,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  	spin_lock_bh(&msk->pm.lock);
->  	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
->  	if (!match) {
-> -		GENL_SET_ERR_MSG(info, "address with specified id not found");
->  		spin_unlock_bh(&msk->pm.lock);
->  		release_sock(sk);
->  		goto out;
-> @@ -362,6 +358,11 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
->  
->  	err = 0;
->  out:
-> +	if (err)
-> +		GENL_SET_ERR_MSG_FMT(info,
 
-Can you not use NL_SET_ERR_MSG_ATTR_FMT() here?
+(...)
 
-> +				     "address with id %u not found",
-> +				     id_val);
+> @@ -613,6 +616,8 @@ int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
+>  	lock_sock(sk);
+>  	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &entry->addr, remote, bkup);
+>  	release_sock(sk);
+> +	if (ret)
+> +		GENL_SET_ERR_MSG(info, "mp_prio send ack failed");
 
-Detail: in fact, I don't think it is needed to specify the ID in the
-error message to send to the userspace: the ID has been specified by the
-userspace, it knows what it has set. Up to you.
+As mentioned on my comment on the v6, it might be better to have:
 
-> +
+  /* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
+  if (ret < 0)
+          GENL_SET_ERR_MSG(info, "subflow not found");
+
+>  
+>  set_flags_err:
 >  	sock_put(sk);
->  	return err;
->  }
 
 Cheers,
 Matt
