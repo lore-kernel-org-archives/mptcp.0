@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A81D41D9A5D
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:39:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E2291E505
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:48:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736156369; cv=none; b=X/pYvS9RWRfm2jHnPcN3HlQ9/GrMrnQzNVA0EY4AlAOU4FeiB8CyDkzntebz83t/HH3SBvHbWecu4De+Er8DvPmJcDvg9h5U1oz2MTayBtR11Dm0C7BYJpAg4iFCjyKC9nZXnG7u2qPsmAcBqAD91xqebN5PONx1jLfaftglmec=
+	t=1736156903; cv=none; b=krTxxklyW332ziGPNJ+etOOiY67xxE/ebH04iLyANPSbxXFMXzGrUo/BktlIOPIUvM19Bmf+ospzHvyRbx068mCaWHtafAJdIDIW8y/VDVSqllBo+ipVMI7GZ5Iac7jlogzXzrX078p8oA5gcc2wXAIdUKnhAu3Fwq2U/ANOw4A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736156369; c=relaxed/simple;
-	bh=lnsMQJblRVxOOoRHLZVMChKlf8KJ+JSXqKPakJIyekg=;
+	s=arc-20240116; t=1736156903; c=relaxed/simple;
+	bh=y1ShWcyGo876pNfYt6T2f5acX/i+oDFlaQXxupwXLnw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=nUc5dZyWe38lvCEgjnPwAgJGXzFafbPjVgOV9fqeQRimvqfeFTenPyi2L9IIsM0EbEqQMNHd2vNA10Z4KOYms2cP4M95xGmGdCRWM773v8S4g9/VVds7KXgEQ5JGZlrawh4OTWematK1EgF8mz9QFR2dB/7qnLZf56wNcW6LEWQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J7GLgcFM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=r2cGl8WKslqiGFXa490pJ4rfHF1FxWdszhme5vfK7SSyEIvvACmJkrfWvhk8fRnLffYVuvJfqUpPhhlTo4U8GTCcB0zIRKHYauaCt8actZyA16TQg+goCElw7XmBvQjcNwdcT0R7o41PPmi2dbvibau9qujBPs8qt7RPNwPFEOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q/JUhqqH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J7GLgcFM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5BCBDC4CED2;
-	Mon,  6 Jan 2025 09:39:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q/JUhqqH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 182BFC4CED2;
+	Mon,  6 Jan 2025 09:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736156369;
-	bh=lnsMQJblRVxOOoRHLZVMChKlf8KJ+JSXqKPakJIyekg=;
+	s=k20201202; t=1736156902;
+	bh=y1ShWcyGo876pNfYt6T2f5acX/i+oDFlaQXxupwXLnw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J7GLgcFMbtZsYbZ4y4NtzE+yZr1GFUcuamn3U1VQ1o+iY8i0eRosWbNyz7gLIJu1R
-	 kG+ttb7D47HvCQ6xf4apl8oOp6blU1tDWLCH72bG78p8u6i0GouJ9WAp6YuyeEMvQi
-	 hbIOvLLlSis+7SfmIgXBiMbP8YpkSSvF/Dny3XdkJuYVKN4f2HtSl8gx9EWISjs3wG
-	 vRt1zD/Lte9lGgZfS0op5pmfPdr0bOAPiFm6OZPa9ihTKQOHzGnbVjMMLEavDMdq55
-	 bW5p77fTcYyOfXDhSoQbXWSr1WToLVdxcwmjvlHJYC3cSeFaemtIjDcMqZDWxoT9qu
-	 Z34Ug0kpbteKg==
-Message-ID: <9f7a607d-2553-4a8f-a694-b9c7212d46b8@kernel.org>
-Date: Mon, 6 Jan 2025 10:39:26 +0100
+	b=q/JUhqqHqrZYBwv6QUP3tVobacAUUBYl7mA3WF0A/V9PH2Th4S8zNMX8oOHBKFDkW
+	 djrVbE+j858gQOCdCd8xXhHHqF5bX+KGiI9mL9A8FvL8ygEBcUSHLkmgBq6B411O30
+	 yvas7u4FVHcfBHdNYJlJAR6iLyxJesQPQzbeNf4mnAU5yHo31wDslwHrZZIjzt8BB7
+	 SNb1AJHHMo80oGlXngJcfm4EBAnGspDsaIGGogI8HgoRseZORQ7sCHMJLeM9K9aDr0
+	 TUK4bHA7ZCk8NgePYwV+S6QknmHkq0DlRi5bnTN4KHsP5YCifDKTY0zy5JW7+jCEJf
+	 7WCs3NJT9XShA==
+Message-ID: <72e4b271-3d16-419a-a4ba-94fb027deac2@kernel.org>
+Date: Mon, 6 Jan 2025 10:48:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 05/11] mptcp: add local & remote parameters
- for set_flags
+Subject: Re: [PATCH mptcp-next v7 06/11] mptcp: drop info of
+ userspace_pm_remove_id_zero_address
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736150983.git.tanggeliang@kylinos.cn>
- <fd0daf0d017e8b60c2503ddcbda67254c57ee6e7.1736150983.git.tanggeliang@kylinos.cn>
+ <ee4732a33038d9d16df114dd278278112219c5ca.1736150983.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,28 +87,98 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fd0daf0d017e8b60c2503ddcbda67254c57ee6e7.1736150983.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ee4732a33038d9d16df114dd278278112219c5ca.1736150983.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+
 
 On 06/01/2025 09:16, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch updates the interfaces set_flags to reduce repetitive code,
-> adds two more parameters 'local' and 'remote' for them. These addresses
-> are parsed in public helper mptcp_pm_nl_set_flags_doit(), then pass them
-> to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
+> The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
+> is to set an error message into it.
 
-Because the in-kernel and userspace PM have different requirements:
-token and remote addr only for the userspace PM, search by local addr ID
-probably only for the in-kernel, etc. it might be clearer to keep them
-separated.
+Can you add:
 
-At the end, I think only the parsing of the local address can be done
-for both (mptcp_pm_parse_entry()). Maybe not worth it to move only this
-part? WDYT?
+Plus, this helper will only fail when it cannot find any subflows with a
+local address ID 0.
+
+(Because if there were different types of errors, you could not drop
+'info').
+
+> 
+> This patch drops this parameter and sets the error message where this
+> function is called in mptcp_pm_nl_remove_doit().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_userspace.c | 15 ++++++++-------
+>  1 file changed, 8 insertions(+), 7 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 0f703e06d771..a6580942e628 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -259,8 +259,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+>  	return err;
+>  }
+>  
+> -static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
+> -						     struct genl_info *info)
+> +static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_rm_list list = { .nr = 0 };
+>  	struct mptcp_subflow_context *subflow;
+> @@ -275,10 +274,8 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
+>  			break;
+>  		}
+>  	}
+> -	if (!has_id_0) {
+> -		GENL_SET_ERR_MSG(info, "address with id 0 not found");
+> +	if (!has_id_0)
+>  		goto remove_err;
+> -	}
+>  
+>  	list.ids[list.nr++] = 0;
+>  
+> @@ -336,7 +333,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  	sk = (struct sock *)msk;
+>  
+>  	if (id_val == 0) {
+> -		err = mptcp_userspace_pm_remove_id_zero_address(msk, info);
+> +		err = mptcp_userspace_pm_remove_id_zero_address(msk);
+>  		goto out;
+>  	}
+>  
+> @@ -345,7 +342,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  	spin_lock_bh(&msk->pm.lock);
+>  	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
+>  	if (!match) {
+> -		GENL_SET_ERR_MSG(info, "address with specified id not found");
+>  		spin_unlock_bh(&msk->pm.lock);
+>  		release_sock(sk);
+>  		goto out;
+> @@ -362,6 +358,11 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+>  
+>  	err = 0;
+>  out:
+> +	if (err)
+> +		GENL_SET_ERR_MSG_FMT(info,
+
+Can you not use NL_SET_ERR_MSG_ATTR_FMT() here?
+
+> +				     "address with id %u not found",
+> +				     id_val);
+
+Detail: in fact, I don't think it is needed to specify the ID in the
+error message to send to the userspace: the ID has been specified by the
+userspace, it knows what it has set. Up to you.
+
+> +
+>  	sock_put(sk);
+>  	return err;
+>  }
 
 Cheers,
 Matt
