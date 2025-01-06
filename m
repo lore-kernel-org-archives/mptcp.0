@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07C9F1D63EC
-	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:08:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 322DE1D90BD
+	for <mptcp@lists.linux.dev>; Mon,  6 Jan 2025 09:17:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736154510; cv=none; b=APuy1IFwxITe9kYQ+DB7x6qbtmpTkJRyAqh8xy2LpBMgtB4n8UphJZfE7Z8bqKXln+UwIzfH8PqgkMuI8hluq+fcgmmed+7cEnUfC+oJdrYaYVZD/Ks4vk1e2cKeqdTKtG2HF3J+L7P8F6JQeInpshjxeH4Jm7AY5YOuQB19m+s=
+	t=1736155031; cv=none; b=e7shoZAw6/AVwQiTOdWBsWD0GJ7Sv3nF3q+M+uwVz9v+SBJeQSTDmoYC6OdNuMASNrcHSkYoAw+mlU3kI92rf7r37xl6LNf8Jbo6B9YbMFNmNsoW56xyFnpwlrwFuq/bJDAylRQcHHudx8RQV/cQRKjx2MdeDhAAnLG0lDenLVQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736154510; c=relaxed/simple;
-	bh=EgbQRvUPhxQjjOKaaM2khd68Ygngw4Oq2emd3UQv5Tc=;
+	s=arc-20240116; t=1736155031; c=relaxed/simple;
+	bh=7ucUAMtsOMJS2uClZUPruSKLMsqrFXE8M0Oijspp7H8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=nmS+P2ysSyVl+2yNkbeVpHSeVcm7MoWIvdNdTWBltl6bQ6xabOMvZifhwRKp+orVMpUXfQhL4nVgsK4e1wC2VOlElywEkU5CsQAvTrBOEQr+B4AVbZ0T/O3AgmjK/ybIaounV6G2qRdHa/2xVy32hO+7i2k132cR6pLuoBa1Ffc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QAwYmv56; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mNg3V6LFjc9dfgXIeNKYn2ZELBBzBrhV5PT4lvdtTM0VAIYRi5vNtdqOicnG6JvVjG3yXAZ8UkBmQFUE2jeCtDq3Sh+gfWz0BtScOF26C+81yWp5HELsxMHIXNTAZl33bLIFCasWedWym0slyyV40Ju6kulArI/KMx+8fKRGCsY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KEYXsUMW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QAwYmv56"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55D2BC4CED2;
-	Mon,  6 Jan 2025 09:08:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KEYXsUMW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3863CC4CED2;
+	Mon,  6 Jan 2025 09:17:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736154509;
-	bh=EgbQRvUPhxQjjOKaaM2khd68Ygngw4Oq2emd3UQv5Tc=;
+	s=k20201202; t=1736155030;
+	bh=7ucUAMtsOMJS2uClZUPruSKLMsqrFXE8M0Oijspp7H8=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=QAwYmv56CEH1w8h4bOgBxkkiWbQesrkEtOQycuX0eLMuy5wbISd4vlGt1npNxDH0I
-	 BS9YLbmC9yAElC6WYRN2V9+81qHfNMmUvaTKEgviJ2nJiZe7O+amsIoyu/5b4TR5Ux
-	 F7tytfcECfjElm/I2xbqKI42Kd0OUoRLo3Due16fPQZI2L01JBgM6hvkdCx8uIfSXK
-	 JUyPnGjV66s5+UyoQy3UEp1dopSofj7oxkfnvKA7gJLXhWgLjNV2iCoTm+QRS+DjHc
-	 hLMd5e8y3PLjpLYwiMZeBC9ZyXugzvJGdyk/9/Eh9sxqyiEJPTAvNjPT1qvfyvgfmN
-	 K3k0F2fCXpi/A==
-Message-ID: <55f0cca6-6f45-435e-b947-24b934f2a9bc@kernel.org>
-Date: Mon, 6 Jan 2025 10:08:27 +0100
+	b=KEYXsUMWRx0djU8EOvF6sE40yemv+rAiBhm8U7ksw3e6Ib0adzsNB0uy3kptb0ypw
+	 LYNEIJZXPYVLAiMv+/zX0pQHjmmCaTAuHlmXHCVtakv3+IvGn5azlA9CbYBcdxn8Fd
+	 LU1WAYbsgR5aoUEiB8Wt0G0NwKxguF6VJXoV0yfFM8ozLV4NoiqOLQ5DJ41Eq67DaN
+	 /BKmaIvq2q3DUNUQAh7FuQnosxbY8du0+cGKeYNooP19jhEkrjrsxzJBNJ9LsKR03y
+	 vY2kri7oVL2Sb/cxTdJFdWCF6Sm/yT5tGnnM/nYXULs94RlvGmpdx5ICH3Pjvzzar+
+	 FaOjIWub5z6rg==
+Message-ID: <664bedcc-a172-46b6-8c0e-a023477ce98a@kernel.org>
+Date: Mon, 6 Jan 2025 10:17:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 0/7] mptcp: use GENL_REQ_ATTR_CHECK in
- userspace pm
+Subject: Re: [PATCH mptcp-next v7 01/11] mptcp: pm: more precise error
+ messages
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20241230-genl_req_attr_check-v6-0-3ec9103559e7@kernel.org>
- <9e1c9742e62870dd76449299c10b99ec9b85a9f5.camel@kernel.org>
+References: <cover.1736150983.git.tanggeliang@kylinos.cn>
+ <702733ca36c469e621a3d4e9173eeda587dba85c.1736150983.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,28 +86,87 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9e1c9742e62870dd76449299c10b99ec9b85a9f5.camel@kernel.org>
+In-Reply-To: <702733ca36c469e621a3d4e9173eeda587dba85c.1736150983.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 06/01/2025 09:24, Geliang Tang wrote:
-> Hi Matt,
+On 06/01/2025 09:16, Geliang Tang wrote:
+> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 > 
-> Thanks for this new version.
+> Some errors reported by the userspace PM were vague: "this or that is
+> invalid".
 > 
-> On Mon, 2024-12-30 at 14:24 +0100, Matthieu Baerts (NGI0) wrote:
->> This is a newer version of the series started by Geliang, now making
->> them more uniform on how the NL errors are set, and giving more hints
->> to
->> the userspace about what's wrong.
+> It is easier for the userspace to know which part is wrong, instead of
+> having to guess that.
 > 
-> This series is useful, but it conflicts with "BPF path manager" series
-> under review, especially with set_flags() interface. So I also added
-> the patches to update set_flags interface into v7.
+> By splitting some error messages, NL_SET_ERR_MSG_ATTR() can be used
+> instead of GENL_SET_ERR_MSG() in order to give an additional hint to the
+> userspace developers about which attribute is wrong.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Yes, sorry about that, I noticed that after having sent this series.
+If you modify the behaviour of a patch, you can add your 'co-dev' +
+'sob' tags.
+
+Also, please add an individual changelog, easier for the reviewers to
+spot what has changed.
+
+> ---
+>  net/mptcp/pm_userspace.c | 39 +++++++++++++++++++++++++++++----------
+>  1 file changed, 29 insertions(+), 10 deletions(-)
+> 
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index a3d477059b11..40fd2f788196 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+
+(...)
+
+> @@ -579,17 +591,24 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+>  	if (ret < 0)
+>  		goto set_flags_err;
+>  
+> +	if (loc.addr.family == AF_UNSPEC) {
+> +		NL_SET_ERR_MSG_ATTR(info->extack, attr,
+> +				    "invalid local address family");
+> +		ret = -EINVAL;
+> +		goto set_flags_err;
+> +	}
+> +
+>  	if (attr_rem) {
+>  		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
+>  		if (ret < 0)
+>  			goto set_flags_err;
+> -	}
+>  
+> -	if (loc.addr.family == AF_UNSPEC ||
+> -	    rem.addr.family == AF_UNSPEC) {
+> -		GENL_SET_ERR_MSG(info, "invalid address families");
+> -		ret = -EINVAL;
+> -		goto set_flags_err;
+> +		if (rem.addr.family == AF_UNSPEC) {
+
+As I mentioned in a previous version, this is changing the behaviour:
+this remote attribute is no longer mandatory. I'm still unsure about
+making it optional, because mptcp_pm_nl_mp_prio_send_ack() will pick
+only one subflow, not all the ones with the specified local address. It
+looks better to keep it mandatory.
+
+At least here, you should not move it under "if (attr_rem)".
+
+(and maybe it makes more sense to have this patch after 07/11 ("mptcp:
+pm: use NL_SET_ERR_MSG_ATTR when possible"), but that's a detail, fine here)
+
+> +			NL_SET_ERR_MSG_ATTR(info->extack, attr_rem,
+> +					    "invalid remote address family");
+> +			ret = -EINVAL;
+> +			goto set_flags_err;
+> +		}
+>  	}
+>  
+>  	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
 
 Cheers,
 Matt
