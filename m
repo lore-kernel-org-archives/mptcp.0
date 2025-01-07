@@ -1,173 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BDBB018B463
-	for <mptcp@lists.linux.dev>; Tue,  7 Jan 2025 17:09:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 363AD86330
+	for <mptcp@lists.linux.dev>; Tue,  7 Jan 2025 18:23:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736269796; cv=none; b=OACSWJ/WR3JR+SgrDII7sJNiYP3pAVDVgcvZzR70lMKyjDzOkw9zTsMiVJyvTruEhtZyowmlo3iBIrwMVLgSiEjvv3rTp0sUnur5v+E8sQrrBTqPON5p1a7VNS95wM3MbBUYF9QSmmtXv7nBMRlhtfVrwBYkThstbSeaXJqe7/Q=
+	t=1736274216; cv=none; b=N03Nf59WIZ611K/4S6EhmeUt15iFXY1KWJc8/DMK0DPvVPiJu7cmoxEpEhRKVM8USQYkrV+FWGduErjvCtQ16Tpm8ejzEcnF/jaO2MF86QJQbdrJoY8MCddmzu1SfKx6SuBYhd3ubSN0EEqNzU30w2SvTbL6wQamLJ5Lv0n37b8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736269796; c=relaxed/simple;
-	bh=G73D+Bht6+hcOIxbDDu7QISkUjUhFAswMUSI8nRg8zU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=b0nW41N9QglBXJCp60wfuzreetfO92aampiJL3uLhbMiEQHDARb+f4Faehga4jpjJwonPyCYJz2L9RJC4F+Ly3I4JxGsDLkho7jvIZ9AtrqAXzf061ugbvkbYUD/AZez02jyCsAK+YVyLWlIj8quFgbTNpeL82MtU1ZuKquJR4A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bpUUoYZt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736274216; c=relaxed/simple;
+	bh=6alccVq/tyIOiaxTHabujM5RAlLDwm1fZGsd89KLcjQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=auIEIpYKG/KAqPdE9jC5SJmYXwzH/ycP+y583/NjPCEUD/5I+Qcg3f3sePNuea13s1tTuq1P/s3tiTxaGtY14azpBbps6xhvK1WBkhWofM9pU27WOqfel2Nnl/yUgYU7Pmyc0OHhTp3B3mojsjSVSTkGAAupHW4SumiehbYrTJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nE5YsVn9; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bpUUoYZt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18DB5C4CEDD;
-	Tue,  7 Jan 2025 17:09:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736269796;
-	bh=G73D+Bht6+hcOIxbDDu7QISkUjUhFAswMUSI8nRg8zU=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=bpUUoYZtqwkLrOyLzAyIfNyE4hhK+p6Mo/XdMSgefXT8SFIb4LGTb9x1izxf/mtil
-	 Z/g0Wcyvil8bxNBDnC18wnjoAFsgviLTqFnLC8rN0rh9BNZGFHVP0ZAy11pRqHaguk
-	 ewyR9RRD6SNKN9AAn/q23D/iHeJ0593MHXnQ0jIczC+7N1dr0DlqKHKUyY9pABTsaZ
-	 lsoZI5CoougjFS/eN8tAd/IlrLCvkr4HvOrzis3hQOVemEIkVYuutO31Sl7PjYTX0M
-	 5XZ5Z/1yLBI+CjlMXng2+5NZAqs7zm9RGAeXcvZzdvWx0GfxXTazIvN7pSkf0Fnm5Q
-	 s8rzgSq7lWvkA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 07 Jan 2025 18:09:33 +0100
-Subject: [PATCH mptcp-net 9/9] rds: sysctl: rds_tcp_{rcv,snd}buf: avoid
- using current->nsproxy
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nE5YsVn9"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7b6e8814842so1368643985a.0
+        for <mptcp@lists.linux.dev>; Tue, 07 Jan 2025 10:23:35 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736274214; x=1736879014; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=70MxEfSbLjqdV8/J4ij5J1VENf95CdNnfjKQomoPL24=;
+        b=nE5YsVn9ZhEujDfh1XJpQ28NJDeRzdb2rjnq+8Pb21TZV3dC1LvLtmr0XmYc9Wuh5+
+         h3oB7MTqcuT1aeVkOtc80zHWd+SIL3FsX5QfDfUiUL0MneDElTUkkwqb+Ng/p27FhYTk
+         E8c9ZF9HIHpsvc7B8haaApgx9Wnk7Uskgbj3QeD6gffDaGE9ZIAK4nOvjLOZjYptdTls
+         ry9uWYw+708BPhuoV4NFmdPM+KHl+RguSONyM8hY5vQ5PloNehO0bBOKa4Q6ernZhxqk
+         dpFoBs33dMCKxGZKRU2wJEjAeMi8wyd38r7fzu3ltVeJJtnTtiooSh2eT5jy18Xm75KF
+         CLtQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736274214; x=1736879014;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=70MxEfSbLjqdV8/J4ij5J1VENf95CdNnfjKQomoPL24=;
+        b=IN6tAwCzl+ezPsUgggjQPYiD8U4JZpR2pCcl5EE2lil2okFUpxSwSQ3EEDbYlVlVIG
+         U+IaeV24zzVTw12U996EVk4cP6ZJT9KebhOu6QVRksjURR6mhIWtTisd4ZHWbHVyS7tR
+         T/3iBA7LxYREyIJg9Upbm3e/B1Bukor/LEzL8L35bkPMZeaXzLwTLyNc02/Bb3bPP3WH
+         0ckFjcSb1+IWETgg7gzr9bd2jZA/7fXI628U1ZW1ncQT4DI6fen9ZN+RhZOJQGMDIknG
+         /odr9n8JrY53f8Mb58GOvO3pnP31n63coQteFGHZgzA2ZBfPWSBlmH3PeGupzhTVomSn
+         jSFw==
+X-Gm-Message-State: AOJu0YyxbGUMTLakAC1cmU233uzVyUhlz6QPpUBZYKbC6mg5zxDfHtAU
+	8PrcgDggts88wTnKVL6Q6ooelj2pQN7RYi3cwXOBbVSPa5DaGTc=
+X-Gm-Gg: ASbGncsl31+hO76K8/FeDDKQzQu4KyxAL75FgQhnSrbxKMOisignlumQeHS/oZPUHWO
+	f1Ph8ECa50iIXp9JZsK2/JcjZNFilzEGI3VXiodeUIzRYtO/W3GHfFa6dYg2hiKSrbq3+IMfGam
+	+B5AmexUJqxaY8c3CXaUn6lVB47DXBzcpuYc+GmeAc5Z2kXRV48bgLYEOwdNVz850k2fLr55pod
+	XW4u+EvvWsguMrK2RCNmuerI3YA33OlATqmK2kaNu3bN7Ts+4DNcDPc20jCUljCYHxDo74=
+X-Google-Smtp-Source: AGHT+IEQCb23OBhjgi/nmtVALWsNrrBBqe7pVNiVju7tBLy5qwJ934AgCb4ri1Yp2WKO4FTIOcdMSg==
+X-Received: by 2002:a05:620a:28d2:b0:7b6:e872:421c with SMTP id af79cd13be357-7b9ba703203mr9244008885a.9.1736274214109;
+        Tue, 07 Jan 2025 10:23:34 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.77.251])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7b9ac4cc3f2sm1612178785a.110.2025.01.07.10.23.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 07 Jan 2025 10:23:33 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250107-mptcp-sysfs-netns-v1-0-2fa7075d9970@kernel.org>
+References: <20250107-mptcp-sysfs-netns-v1-0-2fa7075d9970@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/9] net: sysctl: avoid using
+ current->nsproxy
+Message-ID: <b58cb0d4-9704-f595-b8d6-5550e60be476@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 07 Jan 2025 18:23:32 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250107-mptcp-sysfs-netns-v1-9-2fa7075d9970@kernel.org>
-References: <20250107-mptcp-sysfs-netns-v1-0-2fa7075d9970@kernel.org>
-In-Reply-To: <20250107-mptcp-sysfs-netns-v1-0-2fa7075d9970@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3944; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=G73D+Bht6+hcOIxbDDu7QISkUjUhFAswMUSI8nRg8zU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnfV/aE+7MU+fLfJLn41H1lfKYwzxL++aziPHBE
- +EWVhujigOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ31f2gAKCRD2t4JPQmmg
- cxxREAC04uBLGO6GcWzg0buDiUXsvMhTEUhbPSsxEwY/H1tWEQ9++yxKlc2Zcz0WQH2eLu637EH
- oSaTSv6rgYc9HLocFVm1gJ8DGD4eKCZZJs/lD5SsyT4s3KPPOTDa/xLh9Ti2qOoJy0UMR+CsBeT
- flqUOP28JJGGwaTBw0FNp3fyT/c+6PgDtUxQt+URqSZpanJCBNSrX0Wtevme5HABSHe5BlJbdPx
- pJl6WNwDM7wf5E7S16ZV44SJzBcbSRiAe+QcYXVWU45zcHNpW3QcygI8pr2YCp9HVQS9XJS9A2e
- 5G831isozNgsqKbNkCwyfdM2qCD3dCIhSiLIqdmagIwmyTSbrQe1uZ+53CjZ5dDLy9u6EjKqZO2
- DzPU99vqt7OaU/JmHSkXXM0w/MFFHgSPqOq3Grmj9uFAD8KEx2TF0FAbQu4Z4P/X3PSx3zkxxLr
- SLJ0ELVXFqpKWaR6pJEB2RADmRAsgnxI3ylboEV8KnmWvx6X10reCJdimdtv3vk08/ROshwfVuA
- ibFLq7qN8/oHyPTajdFHkKRHsl0m5odBhdyjCZQul63A8VNTZTgGhgiLgPSa4W6M6fqGXjJrQUC
- mPcBhb4Z+zBWPZrmj8Jh3e8HhlX2F75NJ7VirQnaL0dYT4sjuDsPJaaMRIe6TlTx5Orvm1E9fKY
- r0+f4OoLgz8432Q==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-As mentioned in a previous commit of this series, using the 'net'
-structure via 'current' is not recommended for different reasons:
+Hi Matthieu,
 
-- Inconsistency: getting info from the reader's/writer's netns vs only
-  from the opener's netns.
+Thank you for your modifications, that's great!
 
-- current->nsproxy can be NULL in some cases, resulting in an 'Oops'
-  (null-ptr-deref), e.g. when the current task is exiting, as spotted by
-  syzbot [1] using acct(2).
+Our CI did some validations and here is its report:
 
-The per-netns structure can be obtained from the table->data using
-container_of(), then the 'net' one can be retrieved from the listen
-socket (if available).
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/12656267762
 
-Fixes: c6a58ffed536 ("RDS: TCP: Add sysctl tunables for sndbuf/rcvbuf on rds-tcp socket")
-Link: https://lore.kernel.org/67769ecb.050a0220.3a8527.003f.GAE@google.com [1]
-Suggested-by: Al Viro <viro@zeniv.linux.org.uk>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/rds/tcp.c | 39 ++++++++++++++++++++++++++++++++-------
- 1 file changed, 32 insertions(+), 7 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6e18f999ad48
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D923074
 
-diff --git a/net/rds/tcp.c b/net/rds/tcp.c
-index 351ac1747224a3a1c8b0e297ba53cdbbcbc55401..0581c53e6517043ad6c2ad4207b26ab169989ed8 100644
---- a/net/rds/tcp.c
-+++ b/net/rds/tcp.c
-@@ -61,8 +61,10 @@ static atomic_t rds_tcp_unloading = ATOMIC_INIT(0);
- 
- static struct kmem_cache *rds_tcp_conn_slab;
- 
--static int rds_tcp_skbuf_handler(const struct ctl_table *ctl, int write,
--				 void *buffer, size_t *lenp, loff_t *fpos);
-+static int rds_tcp_sndbuf_handler(const struct ctl_table *ctl, int write,
-+				  void *buffer, size_t *lenp, loff_t *fpos);
-+static int rds_tcp_rcvbuf_handler(const struct ctl_table *ctl, int write,
-+				  void *buffer, size_t *lenp, loff_t *fpos);
- 
- static int rds_tcp_min_sndbuf = SOCK_MIN_SNDBUF;
- static int rds_tcp_min_rcvbuf = SOCK_MIN_RCVBUF;
-@@ -74,7 +76,7 @@ static struct ctl_table rds_tcp_sysctl_table[] = {
- 		/* data is per-net pointer */
- 		.maxlen         = sizeof(int),
- 		.mode           = 0644,
--		.proc_handler   = rds_tcp_skbuf_handler,
-+		.proc_handler   = rds_tcp_sndbuf_handler,
- 		.extra1		= &rds_tcp_min_sndbuf,
- 	},
- #define	RDS_TCP_RCVBUF	1
-@@ -83,7 +85,7 @@ static struct ctl_table rds_tcp_sysctl_table[] = {
- 		/* data is per-net pointer */
- 		.maxlen         = sizeof(int),
- 		.mode           = 0644,
--		.proc_handler   = rds_tcp_skbuf_handler,
-+		.proc_handler   = rds_tcp_rcvbuf_handler,
- 		.extra1		= &rds_tcp_min_rcvbuf,
- 	},
- };
-@@ -682,10 +684,10 @@ static void rds_tcp_sysctl_reset(struct net *net)
- 	spin_unlock_irq(&rds_tcp_conn_lock);
- }
- 
--static int rds_tcp_skbuf_handler(const struct ctl_table *ctl, int write,
-+static int rds_tcp_skbuf_handler(struct rds_tcp_net *rtn,
-+				 const struct ctl_table *ctl, int write,
- 				 void *buffer, size_t *lenp, loff_t *fpos)
- {
--	struct net *net = current->nsproxy->net_ns;
- 	int err;
- 
- 	err = proc_dointvec_minmax(ctl, write, buffer, lenp, fpos);
-@@ -694,11 +696,34 @@ static int rds_tcp_skbuf_handler(const struct ctl_table *ctl, int write,
- 			*(int *)(ctl->extra1));
- 		return err;
- 	}
--	if (write)
-+
-+	if (write && rtn->rds_tcp_listen_sock && rtn->rds_tcp_listen_sock->sk) {
-+		struct net *net = sock_net(rtn->rds_tcp_listen_sock->sk);
-+
- 		rds_tcp_sysctl_reset(net);
-+	}
-+
- 	return 0;
- }
- 
-+static int rds_tcp_sndbuf_handler(const struct ctl_table *ctl, int write,
-+				  void *buffer, size_t *lenp, loff_t *fpos)
-+{
-+	struct rds_tcp_net *rtn = container_of(ctl->data, struct rds_tcp_net,
-+					       sndbuf_size);
-+
-+	return rds_tcp_skbuf_handler(rtn, ctl, write, buffer, lenp, fpos);
-+}
-+
-+static int rds_tcp_rcvbuf_handler(const struct ctl_table *ctl, int write,
-+				  void *buffer, size_t *lenp, loff_t *fpos)
-+{
-+	struct rds_tcp_net *rtn = container_of(ctl->data, struct rds_tcp_net,
-+					       rcvbuf_size);
-+
-+	return rds_tcp_skbuf_handler(rtn, ctl, write, buffer, lenp, fpos);
-+}
-+
- static void rds_tcp_exit(void)
- {
- 	rds_tcp_set_unloading();
 
--- 
-2.47.1
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
