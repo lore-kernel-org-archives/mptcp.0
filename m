@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE45317C7B1;
-	Wed,  8 Jan 2025 10:07:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DAA21F8ADF
+	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 11:57:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736330841; cv=none; b=egdAUYU+mUhnzq2eE91xaU0aFNqfe2Fa4Ln5Zb33B+ZaCVUsMpP59FItzrfTiOJ3/2PdX0eN9XOELsxrlNI9maOFUC9WVws+mTF4eUHfrEwye43E4R+74Y0NABD1ud+2RKQA8+gWD8WM5PXGtW3qQ4fK9o1NflQoOqbU5cLFB7w=
+	t=1736337471; cv=none; b=uqHIELfynknLBtqjYT8KxyTJxa279wYcb7au61vAi90/1Z6juW4srLxqmBwIFRbVtJMRHMl4nbPWipu4saLWXSYRiHlKr1mVNDNLcR0GjHOe0zeRdlocChhsf3bHqopnYAYnoq/gSrOWW7BvtnZQoUaAiRKSXqvA2vCSX9/sv1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736330841; c=relaxed/simple;
-	bh=kRy3NkapERa2jfPakFO6GuKPXGrT5j/wmYz9guJZFoc=;
+	s=arc-20240116; t=1736337471; c=relaxed/simple;
+	bh=D5YzjvdjB3RXvjfxcHfXm82Xqr86PT3LxoQW3rjiYF4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qu2ywGEiVHVmwPVhqDjHY2B3JMjhcnnaxIt2ZVtPjJ6Yyd7ShzTxbgT11i5VX0p/oC14FwbatXikWd87fcVAejaWZl0EqQFsxmvuVBXWkNPMoAZ+AAFL3YaBfmoT9iq1/zsrqqavyZOUDDvXotRhFV352zyuu148QGUwmluUwwU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CNuhXv1M; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Oe88nHYpdd60eh7KIVb7p9vA+ZPI14LWo5+CWHc+9jeBohgivHd8Gz/ZRBwQEFcDHwINnvKkPln54xZrsD6UFAIq0UhZ1k6BSMAO9BM93WU68AanMceiifZRKr1u26aX7DpckPE/62Zv8s+g9KNbYQQnihzlhwEFRkUZpVlhCkM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qLFWDOau; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CNuhXv1M"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EA1DC4CEE0;
-	Wed,  8 Jan 2025 10:07:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qLFWDOau"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19906C4CEDD;
+	Wed,  8 Jan 2025 11:57:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736330841;
-	bh=kRy3NkapERa2jfPakFO6GuKPXGrT5j/wmYz9guJZFoc=;
+	s=k20201202; t=1736337470;
+	bh=D5YzjvdjB3RXvjfxcHfXm82Xqr86PT3LxoQW3rjiYF4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CNuhXv1MlCJ0j9NnYZq2yG8Rpf5FZcOjsP7QHZx2nBcXRaXiEZ750SADOyjv9XKDa
-	 xaDGG1VYqAp/2UbJQaRpWLkkW8652Igqab/sq5oFRg4Ma9vfGqyd2J83SzkN5vuXOI
-	 cIdA0HWvYa3kXcpmjY6TxCyKmjGFwybBru/Y9ErsQe+mNOFvALKVe/vCLRv3mvFtjy
-	 E2UnwP/MRPAuQejf2/o3owlrU2AmdMWLHqN0R5kTnDRedTUiQz7cAPsCrVFjx0p1ME
-	 fucl9WSYOyBT73wBGz4q+0W+9C5RTrJRPup65WsUiH93S8p85GVjcHaPaKZqJCiJdZ
-	 G+6tsKWgSlRIQ==
-Message-ID: <1ac62b6e-ee3d-499a-8817-f7cdfd2f2db5@kernel.org>
-Date: Wed, 8 Jan 2025 11:07:18 +0100
+	b=qLFWDOauRk18QCNyr6Vep/UqalniaGRyBx4toTRphH6HAZx2+66ujzgT4s7ZiNsE2
+	 a7pcn6t7Zqxa0G73uK9ny1qp4SPD7Mip1+/vX2Gcsyc7iwupHu8Hcg47ZAIgq15noT
+	 lt7vyZkUJ23VntNiKtFnORTDwQYrH4uGqvsCl6uzZbsxVl/2Yoo1wbNiae0i15hVRN
+	 s64wy+HlBqHD4OfoSkr6fIh1L3i+h7mhfQzWkPXenkRIKxgl0l0lfkT/LD4ZNecdFO
+	 DqQWdFawj2+oPYlASFXt9blR+tkGttr9CIelb2/SPj5C5MEPPQcza+RlmRN2PCaTBO
+	 zphFKBsbt6p+Q==
+Message-ID: <e0a09148-2b5a-43e3-941b-e9bc381a424c@kernel.org>
+Date: Wed, 8 Jan 2025 12:57:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [TEST] mptcp-connect
+Subject: Re: [PATCH mptcp-net 0/9] net: sysctl: avoid using current->nsproxy
 Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
- MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250107131845.5e5de3c5@kernel.org>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250107-mptcp-sysfs-netns-v1-0-2fa7075d9970@kernel.org>
+ <d79d6baa-7215-a7f3-df35-c802fafb073e@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,28 +86,81 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250107131845.5e5de3c5@kernel.org>
+In-Reply-To: <d79d6baa-7215-a7f3-df35-c802fafb073e@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Jakub,
+Hi Mat,
 
-(+cc MPTCP list)
+On 08/01/2025 02:49, Mat Martineau wrote:
+> On Tue, 7 Jan 2025, Matthieu Baerts (NGI0) wrote:
+> 
+>> As pointed out by Al Viro and Eric Dumazet in [1], using the 'net'
+>> structure via 'current' is not recommended for different reasons:
+>>
+>> - Inconsistency: getting info from the reader's/writer's netns vs only
+>>  from the opener's netns.
+>>
+>> - current->nsproxy can be NULL in some cases, resulting in an 'Oops'
+>>  (null-ptr-deref), e.g. when the current task is exiting, as spotted by
+>>  syzbot [1] using acct(2).
+>>
+>> The 'net' or 'pernet' structure can be obtained from the table->data
+>> using container_of().
+>>
+>> Note that table->data could also be used directly in more places, but
+>> that would increase the size of this fix to replace all accesses via
+>> 'net'.
+>>
+>> Patches 2-9 remove access of net via current->nsproxy in sysfs handlers
+>> in MPTCP, SCTP and RDS. There are multiple patches to ease the
+>> backports.
+>>
+>> Patch 1 is not directly linked to this, but it is a small fix for MPTCP
+>> available_schedulers sysctl knob to explicitly mark it as read-only.
+>>
+>> Please note that this series does not address Al's comment [2]. In SCTP,
+>> some sysctl knobs set other sysfs-exposed variables for the min/max: two
+>> processes could then write two linked values at the same time, resulting
+>> in new values being outside the new boundaries.
+> 
+> 
+> Thanks Matthieu,
+> 
+> The mptcp patches (1-3) LGTM:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> 
+> 
+> The sctp and rds patches look fine as well.
 
-On 07/01/2025 22:18, Jakub Kicinski wrote:
-> Unfortunately mptcp_connect.sh has started flaking again :(
-> Looks like it started around Dec 30th, so one of the recent PRs
+Thank you for this review!
 
-Thank you for the heads-up!
+Patches are now in our tree (fixes for -net) with your RvB tag on the 3
+first ones. I will upstream them later on today.
 
-After the last PR, I was focussing on monitoring simult_flows.sh -- the
-recent behaviour changes could have affected it -- and forgot to look at
-the others, sorry about that...
+New patches for t/upstream-net and t/upstream:
+- 968e9bb5a4cd: mptcp: sysctl: avail sched: remove write access
+- eda363130f80: mptcp: sysctl: sched: avoid using current->nsproxy
+- c838529f87ee: mptcp: sysctl: blackhole timeout: avoid using
+current->nsproxy
+- fb1a7a8fb16c: sctp: sysctl: cookie_hmac_alg: avoid using current->nsproxy
+- a18c9552dca0: sctp: sysctl: rto_min/max: avoid using current->nsproxy
+- 8408f9182e52: sctp: sysctl: auth_enable: avoid using current->nsproxy
+- c45cb99c9aa0: sctp: sysctl: udp_port: avoid using current->nsproxy
+- 3df3f684ee7e: sctp: sysctl: plpmtud_probe_interval: avoid using
+current->nsproxy
+- a77b912deb35: rds: sysctl: rds_tcp_{rcv,snd}buf: avoid using
+current->nsproxy
+- Results: bd3d4b1ab1bc..d66993cd4a59 (export-net)
+- Results: ebe8ebeee62e..f289bc80702c (export)
 
-It looks like our CI doesn't have this issue, but the builds are less
-frequent [1]. I'm going to investigate that ASAP.
+Tests are now in progress:
 
-[1] https://ci-results.mptcp.dev/flakes.html?branch=export-net
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/6c101bff7e1613c0087472d2ee78c986e221435e/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0e96d0da96b041f087c5c0b46bc34978572ccffe/checks
 
 Cheers,
 Matt
