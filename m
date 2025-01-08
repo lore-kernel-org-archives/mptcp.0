@@ -1,99 +1,98 @@
-Received: from mail-ed1-f47.google.com (mail-ed1-f47.google.com [209.85.208.47])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 270DE1FECD0
-	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 16:26:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.208.47
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F05E0201256
+	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 18:40:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736353569; cv=none; b=BjWBrX2C7d84t7SFfhN/t8H8aVX9bYB7QmSWigeaennNv3//x1jpiAyhxnSk8jvWweRTlbEMXNVPf6szSgtswdrzTchDYIKYYPXqV459QXk9EVu1jBTngG3QW831necxPrWE595E8kA36ZAXvQZAhHkyiCYVs6Jw7aiYTGSs4VI=
+	t=1736361651; cv=none; b=dEEKkiBDWUikCSIRO+v8I0/57AxgVn1A0eqMhdNpeZbKTIBZbe3TQtlA414dkDZjv8jItNLzkpf14OwyqTwXiHjWktdvvyPth8swXSeEjMTZGdERSNSaSxfFniF+WggufV8rpepwLm/gkLRiGhXnEFloOgPPvr1bakLEy6ihymQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736353569; c=relaxed/simple;
-	bh=Vrpja7gLp8wClJr7WGS7vASHEC8+FJW4qOfjHyBB1O0=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=i17Xd4R6NkM46V9bDkLNpctWvK3kJXCfjF4f6d4PHM5gTB76OXHs1b/G3tOGvP9cnzVYrG+Drhxy2gygS2kgF+ymsQvOAPIribFDqxR3+eEh3veE0Lvofeb69nzGgBgJWXhpHIs+Qoi8V6GnmHZQEVY0RhZDZjceGXxfXRfxTqo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com; spf=pass smtp.mailfrom=google.com; dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b=M3Dm3E2S; arc=none smtp.client-ip=209.85.208.47
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=reject dis=none) header.from=google.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=google.com
+	s=arc-20240116; t=1736361651; c=relaxed/simple;
+	bh=ENIWuUnFtlglcI85cbMSDTbDgJd1qyTkhEqXWDmg9ws=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=LcE5b5TrFo1ZdHJiM0c/iARTXhDfAFRboDk9XK7ePODP90xSsdLW7834W1tOZMjPzSrWuxFhzhHwfx/HlQNpeesfoZo0BCzyxZBf5Nhy3x802ov2wUDmC3Ot+9j7o1p1mXrZbZmSaQuzh1c/tEXCj0cJz0iz7JktTQfcrnPm2MU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZwqHY0Pt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="M3Dm3E2S"
-Received: by mail-ed1-f47.google.com with SMTP id 4fb4d7f45d1cf-5d3e6274015so29918127a12.0
-        for <mptcp@lists.linux.dev>; Wed, 08 Jan 2025 08:26:06 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20230601; t=1736353565; x=1736958365; darn=lists.linux.dev;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=Vrpja7gLp8wClJr7WGS7vASHEC8+FJW4qOfjHyBB1O0=;
-        b=M3Dm3E2SchX1yOkQwp2CYawwQ1Mu9PZ7PnRlCNJnjfV3r86qMUgP39M6cRo2WZaNC2
-         zBO1JH1otClQgBAWATyl0ZLFXr8V8PDEzbRm8A3cyR3XmNNTRuMWEZUyY9y5RmnLeKdj
-         KSmzr2h+h5Oc1x/mNFza3up3uNO9OMVxAcx4FecczL8QsBO85q52Vb4yjK/bP+VZetDk
-         HKBCSo+hv2mW+HUAbbSTk1ocy5jF1aqX1hbNLnz0H0rZOy6nnmuRpxF8lqBUswYNULgZ
-         oQnJ9RZvH8zTq3Rb1+ut+NE83ux+EnpBu6wqLu/kyu6bEQVvN+n2rvtIDGR+Q+k9LOhC
-         0HpA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736353565; x=1736958365;
-        h=content-transfer-encoding:cc:to:subject:message-id:date:from
-         :in-reply-to:references:mime-version:x-gm-message-state:from:to:cc
-         :subject:date:message-id:reply-to;
-        bh=Vrpja7gLp8wClJr7WGS7vASHEC8+FJW4qOfjHyBB1O0=;
-        b=ll80lLMgFGG51+zd4NkpAJGOZBS94ghb8E4Mizlh2pIuq6N7LfFie2borMZ/3WD00j
-         lGFUCwvwrJXFLnnirkj+Ys8AoZD5OXACZJPZzFeBkimDecou6ycYeMfYGlaZFFp0MU80
-         3Aj0dauErYaPQCqTU5WNbTZAVg0tPL81jHqJLv8J2XJZRKpN5S9At0137B/xdVOwiMbw
-         5yy6f/GCXFm7gFvQRdcnK/S2Bu2Pa2/9zmsDW0XtloJKYGfNpngy5Tz8uuPcIFWhzvmV
-         0WP44XVr1TxyOsRQ+4yDfEgeZPJUCOFD5/8rvJAoxdsX2RwmAvEhXVkj1grZg5EIcwHm
-         OS/g==
-X-Gm-Message-State: AOJu0YxRvr/npCj81d/UbRTi4PGgGSnwFqpcd/+jnLc2y36pDG/8LMJM
-	hnGdz88sny6gHilSsGM1Ws4+4gWeTQ9XB6//Yi4a7mYnPbBIvi8Q0VPRLCXAOvdAarY3sPU1dD6
-	h+nr8UePWiD60ZhAMGi0uZEQHKEjT8w4764C6
-X-Gm-Gg: ASbGncthHkf8/Oqr97Q2piSovto8QqU3idspyy7IB4EXVU0wgy3Xq1GohgU7ArZ5Lr/
-	4d72kdvtCmTFnRn+6aIqplDBGJOPE79iaOa+nABk=
-X-Google-Smtp-Source: AGHT+IGeGF4vh8DxTEjN7tESfGNU41x6ofqkC+fyq/M8TSO5+w5+umwB8ua4y8BitM97QdgJt25Wf0pnzPSZGjKvuUs=
-X-Received: by 2002:a05:6402:280e:b0:5d3:e9fd:9a15 with SMTP id
- 4fb4d7f45d1cf-5d972e6f473mr3265028a12.32.1736353565288; Wed, 08 Jan 2025
- 08:26:05 -0800 (PST)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZwqHY0Pt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA08FC4CED3;
+	Wed,  8 Jan 2025 18:40:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1736361649;
+	bh=ENIWuUnFtlglcI85cbMSDTbDgJd1qyTkhEqXWDmg9ws=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ZwqHY0Pt70kh4VvXbkbAWtbOtQZq/lDnYf1MLrqd4LDqKXKLK74gcRq3XXbqGItPv
+	 fp8ec7/gx3CF0WF016kHEaB44PXAWZHIoqIR3kQbaCAHjPh0hQtFzLvFQ3yiz6pK4j
+	 ZwSiDk3OF05P2FoIKciKgV0vm4dNtAcdIHwc6MFNVgz2KqY5uW6D0ECZi/Bfvps7jJ
+	 6fJGlxl6EU3NsRYvx1PJHNVY+m+t2+W4dg2oox0QYtVt/v02gY1Iik8m9XUV2B1dCh
+	 TJEKcG2bWvezxwA8odIvo87zgAratGVGr4+dFe7qFj5DdDvuMj+n8Di4ctaPUMV0Lh
+	 XLcR82kTr1TMg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/5] selftests: mptcp: more info in case of
+ errors
+Date: Wed, 08 Jan 2025 19:40:36 +0100
+Message-Id: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <20250108-net-sysctl-current-nsproxy-v1-0-5df34b2083e8@kernel.org> <20250108-net-sysctl-current-nsproxy-v1-1-5df34b2083e8@kernel.org>
-In-Reply-To: <20250108-net-sysctl-current-nsproxy-v1-1-5df34b2083e8@kernel.org>
-From: Eric Dumazet <edumazet@google.com>
-Date: Wed, 8 Jan 2025 17:25:54 +0100
-X-Gm-Features: AbW1kvaWCFc1GR9QJN1q6qk-A8PrW0sTYcPB5wSHtxPxsBwUlmaJfdU5wH_8KII
-Message-ID: <CANn89iLPDTRYEGO0C=gtbHnM=OUPhfdK3RoLzzWMOMLEgmT0Tw@mail.gmail.com>
-Subject: Re: [PATCH net 1/9] mptcp: sysctl: avail sched: remove write access
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
-	Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
-	Gregory Detal <gregory.detal@gmail.com>, 
-	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>, Xin Long <lucien.xin@gmail.com>, 
-	Vlad Yasevich <vyasevich@gmail.com>, Neil Horman <nhorman@tuxdriver.com>, 
-	wangweidong <wangweidong1@huawei.com>, Daniel Borkmann <daniel@iogearbox.net>, 
-	Vlad Yasevich <vyasevic@redhat.com>, Allison Henderson <allison.henderson@oracle.com>, 
-	Sowmini Varadhan <sowmini.varadhan@oracle.com>, Al Viro <viro@zeniv.linux.org.uk>, 
-	Joel Granados <joel.granados@kernel.org>, netdev@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org, 
-	linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, stable@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAKTGfmcC/yXMwQqDMAyA4VeRnBeolTLZq4wdNEtnwMbSFBHEd
+ 1/Zjv/h+08wLsIGj+6EwruYbNqiv3VAy6QfRnm3Bu98cL0b0dZYMeVKGWlTxSRGKCkXdEQhDPd
+ pnKOH5nPhKMfv/YS/UD4qvK7rC1CIGWZ3AAAA
+X-Change-ID: 20250108-slft-mptcp-conn-misc-impr-0cc5537a8bf2
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1358; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ENIWuUnFtlglcI85cbMSDTbDgJd1qyTkhEqXWDmg9ws=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnfsawSd6SydonceN/G4HyNPS5rKJPi6USvguNR
+ Oo9tEH44sGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ37GsAAKCRD2t4JPQmmg
+ c5vlD/0UTnXzgs8a56kyzPEH61FCgrLd+crAYIiZJlrZtZ/J42+doYUm3ln1+tXTJ30m07i6zo0
+ flMydBADJWB03ZMMiZO9Rl2uSP1uuGBQMH1VKLbx69yUh/kDHkKy9Y2F3Er/lWduPRSErpb+9vN
+ GB3EVyX/lGiK4avkwEjH4wbnKFYMSFDnZ275RBWFAnxXI0RmoWM1QFimiRlm0aZ91a2d2ZfLZqf
+ ACzpixMJ8fIQS6Gcb7y/4FkkgnzWtH4ri5BhtDhBjwBzIbjQqFlAted41Pn+P12ZfeJ+Y9ptjB8
+ d+uDm8WZGBkcx/34w3SUBo5jiy5+eX30PbPu/Mtvm+8wLSgTOXfHeelDUXDcr4ssxCGQrMvcC9h
+ pyN8w3aidX44VEtKitU9DjASmuZg/PsRxu1obrCk7F3uaBr4OfnCva739qznOvBGetWytBdxBMi
+ UOb9r0TKWlb+iVKFl6HNyO6YSEnBxfZwXp0DEMiw/sgrsmzsdAD06sT9BcLl49K9VPY23sTg3T+
+ m6yzGRK4HTCjpTOxS83zI1+BzUv+maSNuWr13KdCGZnpmJPU/I8kH+fgnIcFEkI2CIXR8sdfwtA
+ 1KUMSB0f7ZmMMvWnU9g3KCKxHnZZ1LXs7A2MkjjhoZHOikgXxwfcHGAe3p+xmJ8XPwXKHX27/CU
+ UYn9/EKh8bmBGSg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-On Wed, Jan 8, 2025 at 4:35=E2=80=AFPM Matthieu Baerts (NGI0)
-<matttbe@kernel.org> wrote:
->
-> 'net.mptcp.available_schedulers' sysctl knob is there to list available
-> schedulers, not to modify this list.
->
-> There are then no reasons to give write access to it.
->
-> Nothing would have been written anyway, but no errors would have been
-> returned, which is unexpected.
->
-> Fixes: 73c900aa3660 ("mptcp: add net.mptcp.available_schedulers")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Here are just a bunch of small improvements:
 
-Reviewed-by: Eric Dumazet <edumazet@google.com>
+- MIB and 'ss -Me' in simult_flows.sh
+- move common code to lib.sh
+- use 'ss' with '-m'
+- remove unused variable
+- show only the size instead of size + filename
+
+Nothing exiting, but the 3rd one can help investigating some issues like
+https://github.com/multipath-tcp/mptcp_net-next/issues/499
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (5):
+      selftests: mptcp: simult_flows: unify errors msgs
+      selftests: mptcp: move stats info in case of errors to lib.sh
+      selftests: mptcp: add -m with ss in case of errors
+      selftests: mptcp: connect: remove unused variable
+      selftests: mptcp: connect: better display the files size
+
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 13 ++++---------
+ tools/testing/selftests/net/mptcp/mptcp_join.sh    |  9 ++-------
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh     | 21 +++++++++++++++++++++
+ tools/testing/selftests/net/mptcp/mptcp_sockopt.sh |  6 +-----
+ tools/testing/selftests/net/mptcp/simult_flows.sh  | 21 ++++++++++++++-------
+ 5 files changed, 42 insertions(+), 28 deletions(-)
+---
+base-commit: f289bc80702ce603593169e80f339e9ffc48cafc
+change-id: 20250108-slft-mptcp-conn-misc-impr-0cc5537a8bf2
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
