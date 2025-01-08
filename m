@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CACF6139D1B
-	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 01:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AE93A2C80
+	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 01:44:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736300660; cv=none; b=g7h55WHCJaeak9+XWfNZ60f8hKSgkESOjFiCVGfR26N4CD5oVFmlWRqsOk9X7bQdCvuO/xrYmno0m6iL7GRajx8GTCCcpRPb1Cyd+U6tzYplL+J9020k6pxYuH2TGf7zr9gw8AZSQL6XbQ5S0xWJOTUY1j88ICjemi+3+ihQYR8=
+	t=1736300661; cv=none; b=d1g2ddlksWolicGBEapBl1PihrAOZ+eVQGt8jb93ygF6EPFXXKFLlhoG0h1U735Pk2kp6/If+ONPA3OBt51qrNSnjt0V+bChGdeoHSkchnGEEGbQqnG0Kdv88X2GsU2BvDVHifR/2eTEZ76wfFzY15kbhMJvtZvNrD5wEhmyh0A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736300660; c=relaxed/simple;
-	bh=5ZwuEaCyrh7/4JVc+sYIO1AdjSTMJWmfCVu+Im7GrHc=;
+	s=arc-20240116; t=1736300661; c=relaxed/simple;
+	bh=cQ5/ht1MhEKJnGUiCvumlLsoSzZ7WkaoBBdCe30201g=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Al6RyotYSZEHpsLALeoNkXuaOy5Hx+kpFQ3NmsgVjLqwqvZFMupJRfQDB6kD7MPMeFRpAS4gQeBkQ4QZxcqQ+XInr2I+xoPC4kNgvgm/XJtyaNsj/2qsyZeHMWkZDlR3WmnliKlPuMPIxHScIuFLMo6BDLSwoGYJmOlt+rAyvbg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWaN2f/P; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=OBDTjVyooS8fgKjaUTaVDjzcseB3K/UgFcrRjN6YiJxTozVkjtHoJUCworlCuHFhbMYhlVHHKXRwngVju2OQNn/xvt+OFEVJO/CY2wc4OQyLvHBPHGFWlGI9GNnG7A+v/4LVZWHd30CNvOBgDFtA4UJmpJbSb+qE4/F7z9Nqq5A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vO61Pv8H; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWaN2f/P"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0E8E5C4CED6;
-	Wed,  8 Jan 2025 01:44:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vO61Pv8H"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 00877C4CEDF;
+	Wed,  8 Jan 2025 01:44:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736300659;
-	bh=5ZwuEaCyrh7/4JVc+sYIO1AdjSTMJWmfCVu+Im7GrHc=;
+	s=k20201202; t=1736300661;
+	bh=cQ5/ht1MhEKJnGUiCvumlLsoSzZ7WkaoBBdCe30201g=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=ZWaN2f/Phx7IYST52WGUHWIrzLqa83OUyDbAVd4Pn4wiOzNkIuDL0RP6MWp5vkGYD
-	 9wdpT8/cvBylJCHxuyt8XpLyHJ/qSM5lavovGmkotz1VAnoG1PQ7hflBmwgHepZTLm
-	 wnf6OAYAosdmI43siy+dG3iHluG6Davp9CELGYSo9bos5zmNHaj2bIdcxzOaZmuPgp
-	 vFeUAp6OUkm2JqdwPLIcSx50Be/jDOl71Y+4YDeWikVi6fHsMhGCp4UY/8XU8fRWjI
-	 Z56LiFpYWylTnGMZN8ysTyGceAogbhiOPHRL/0WQJce70fT1RG2C3WeyDHxfJfdeU0
-	 KTR2SDeDX22ow==
+	b=vO61Pv8HwAJwwTD3bxc9kEO0k1T1YLyPktzSLtEN0prq6RPVIYOJ0bGgOC51vnOFY
+	 YQnyVY/90U1Q6hNdc5PFFzFSWdj1QFqkk4LS0u5Q/0CPNZK9tz4hSEwUHF/0p57Y8w
+	 HHHJIkmVZgqG0D+rF1J692x8lExsOwZBl2Gletr5ot3Zjp8tTOBwS1SwtQ+yocf8X8
+	 5kyR6SbA8k5Edi75+Z3xcbI1hGePrihwZFGijRiEBXqsRC0Y7WO/OPY5/MHjmSACn4
+	 qUEsGFlGmX85ZfCuFV3S/25c54EkaoIwMjb7FhjSifAwlho9IbgQFu4yvPGI33HiT5
+	 TfhzZ34OWZayA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v8 1/8] mptcp: drop info of userspace_pm_remove_id_zero_address
-Date: Wed,  8 Jan 2025 09:44:02 +0800
-Message-ID: <8eb1ce6b0fc86ce30746bdd0e309806494615ac6.1736299989.git.tanggeliang@kylinos.cn>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v8 2/8] mptcp: pm: userspace: flags: clearer msg if no remote addr
+Date: Wed,  8 Jan 2025 09:44:03 +0800
+Message-ID: <0151403138cac7363208c011580d9c1e92b34a4d.1736299989.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1736299989.git.tanggeliang@kylinos.cn>
 References: <cover.1736299989.git.tanggeliang@kylinos.cn>
@@ -43,77 +43,47 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
-is to set an error message into it.
+Since its introduction in commit 892f396c8e68 ("mptcp: netlink: issue
+MP_PRIO signals from userspace PMs"), it was mandatory to specify the
+remote address, because of the 'if (rem->addr.family == AF_UNSPEC)'
+check done later one.
 
-Plus, this helper will only fail when it cannot find any subflows with a
-local address ID 0.
+In theory, this attribute can be optional, but it sounds better to be
+precise to avoid sending the MP_PRIO on the wrong subflow, e.g. if there
+are multiple subflows attached to the same local ID. This can be relaxed
+later on if there is a need to act on multiple subflows with one
+command.
 
-This patch drops this parameter and sets the error message where this
-function is called in mptcp_pm_nl_remove_doit().
+For the moment, the check to see if attr_rem is NULL can be removed,
+because mptcp_pm_parse_entry() will do this check as well, no need to do
+that differently here.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm_userspace.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+ net/mptcp/pm_userspace.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index a3d477059b11..4de38bc03ab8 100644
+index 4de38bc03ab8..b6cf8ea1161d 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -253,8 +253,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 	return err;
- }
+@@ -580,11 +580,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		goto set_flags_err;
  
--static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
--						     struct genl_info *info)
-+static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
- {
- 	struct mptcp_rm_list list = { .nr = 0 };
- 	struct mptcp_subflow_context *subflow;
-@@ -269,10 +268,8 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk,
- 			break;
- 		}
- 	}
--	if (!has_id_0) {
--		GENL_SET_ERR_MSG(info, "address with id 0 not found");
-+	if (!has_id_0)
- 		goto remove_err;
+-	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
+-		if (ret < 0)
+-			goto set_flags_err;
 -	}
++	ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
++	if (ret < 0)
++		goto set_flags_err;
  
- 	list.ids[list.nr++] = 0;
- 
-@@ -330,7 +327,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	sk = (struct sock *)msk;
- 
- 	if (id_val == 0) {
--		err = mptcp_userspace_pm_remove_id_zero_address(msk, info);
-+		err = mptcp_userspace_pm_remove_id_zero_address(msk);
- 		goto out;
- 	}
- 
-@@ -339,7 +336,6 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	spin_lock_bh(&msk->pm.lock);
- 	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
- 	if (!match) {
--		GENL_SET_ERR_MSG(info, "address with specified id not found");
- 		spin_unlock_bh(&msk->pm.lock);
- 		release_sock(sk);
- 		goto out;
-@@ -356,6 +352,11 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	err = 0;
- out:
-+	if (err)
-+		GENL_SET_ERR_MSG_FMT(info,
-+				     "address with id %u not found",
-+				     id_val);
-+
- 	sock_put(sk);
- 	return err;
- }
+ 	if (loc.addr.family == AF_UNSPEC ||
+ 	    rem.addr.family == AF_UNSPEC) {
 -- 
 2.45.2
 
