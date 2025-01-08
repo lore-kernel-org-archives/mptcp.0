@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2862838DD1
-	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 18:47:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3C35938DD1
+	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 18:51:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736362073; cv=none; b=h1A5yQMGh+XEkIaIsbhjM8TwfmdmczfpsrbtJRhvB4JWSr+YDobcvhsT2mcEnR7Ai4HvLa5qm7LLei46OxWpUtd+F0/4CAHCSRF0L0coPe5udMf2oUzFnVbdbH74pZa7d2lJUkRzu4T1uXGLVzmZKL8ESIinRGc2zWFonIQynCQ=
+	t=1736362313; cv=none; b=IVvjaN2ih3c+0spEWmoYmDSs40y1zcklxRGw4m/rOx79QnxCjy8xIjDV+HsOSM3SurjFbMAk6hmCNnAWhSHRFEspqnWJoT9YGjRkPZxW5xV1eOTvfLr2nXM6Cn48MPY5SmWk8zzd7+TmmqpsMm+25NaN0uGBc6zl6hGU5mAhrs4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736362073; c=relaxed/simple;
-	bh=M67s+VvBZRWDHFamZZOfx9SzQj5XP51XnrTOu3BO0Yk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lMnZtbZY8OcFs3F7d+SoXMN0rfadAisrreiBSGMZCTpbZHDQ5/Vjmva/wynx022E4gQz+TXcI2HpocGr0hfnUUL3g28zNQskKtKwTkuYhhmHBkjQCk5DQxTro0dlCwPkcQpx7oHM1yQ22c333rdmdEkD1uHzQkuhj84Yix6bGSE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i5TXZmpX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736362313; c=relaxed/simple;
+	bh=4yRTfs4s0JA4fZgv+nwYs1GbVmuIvnGfAAM1xPiA5A4=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=JKTlQcPrwZ3ZOJl27xmiczBENaJFDaspnXIn357bdbp0JmG92u1aJTXX5LCwbrXvizr7grQ91I5PkchxymqP+He54uvRKFeDjAUb0fZrfL2jbabLIPBNXlquWWiTX/4jZuhw6wv9t4qlAjPSyB5EbMg2esvh2/dT7LzvWjXtavM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=azIaEL3O; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i5TXZmpX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BD311C4CED3;
-	Wed,  8 Jan 2025 18:47:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="azIaEL3O"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26C5BC4CEE2;
+	Wed,  8 Jan 2025 18:51:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736362072;
-	bh=M67s+VvBZRWDHFamZZOfx9SzQj5XP51XnrTOu3BO0Yk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i5TXZmpXZkUw5TJ9zeqetFpmtV8f/my6W1tyaknzda8KIzktmqS5n+pEaw7L4x54v
-	 zchmJiqZmsdafZy9ELmTZEY06XtvZ87lsZ0R9oNxkJz+yW281nx2yEMfJ03g0fAoGn
-	 y3yr4g7R8bNmgH4YSSKtJBVxfD/KiqLxXEtE+nzml2oFjSeDsz0t04WCMMqHwHD0uz
-	 6umeMWD+vXdVlmePViGfaO0FIkgDqc8FLLjwLLKZiyo/X6O+ArFlSLg3jNE+zhVTig
-	 NBiDZxrR8mRLBICGSss+f06gWTkIsxdWZ8YMvOZQvkK+17T5RSuEfcBrPDbPCN/6xc
-	 40PT1eBYgRlgA==
-Message-ID: <f3e45b8c-54e4-44af-bad2-63b6221cbcf0@kernel.org>
-Date: Wed, 8 Jan 2025 19:47:49 +0100
+	s=k20201202; t=1736362312;
+	bh=4yRTfs4s0JA4fZgv+nwYs1GbVmuIvnGfAAM1xPiA5A4=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=azIaEL3OsUve5zOSlP/27SkHxMEtyxBlZqxJPGaNxI1YHPxkCKdWo1mRKgBUuEYSN
+	 MVypdv1WRfd6n8OZbgoObP1H0HoGNk/36+CX0DErhbjctmAAjeSIWirYzWBlw6BkVQ
+	 lB9FU3YPPKAgBoQGS5vbIuNrATOiMS1zsfjYIKmT97L69PFx7odXgxTkysFRqiciTa
+	 bFhnIpOCx0m/UTsfMLsnQ7sT9+ta9EwQc+Kq1T995lDFuGENboZ42iuoURgBcbB+2q
+	 YGlU/PicbpF7+As2f//mtQTRQHokNe316fXIncS1OWuJM8bHqXr71DXukW5pyh4x8e
+	 KZ0hPS9jB9rqg==
+Message-ID: <3284b879-8844-4324-ae92-970c4fe5d686@kernel.org>
+Date: Wed, 8 Jan 2025 19:51:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,12 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v3 5/8] mptcp: userspace pm set_flags id
  support
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736308884.git.tanggeliang@kylinos.cn>
  <30061158e34c4fbf9063150e6aec40c0eed42b6b.1736308884.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <f3e45b8c-54e4-44af-bad2-63b6221cbcf0@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,40 +88,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <30061158e34c4fbf9063150e6aec40c0eed42b6b.1736308884.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f3e45b8c-54e4-44af-bad2-63b6221cbcf0@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 08/01/2025 05:21, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 08/01/2025 19:47, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Similar to in-kernel PM, this patch adds address ID support to set_flags()
-> interface of userspace PM, allowing it to work with either an address or
-> an address ID.
+> On 08/01/2025 05:21, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Similar to in-kernel PM, this patch adds address ID support to set_flags()
+>> interface of userspace PM, allowing it to work with either an address or
+>> an address ID.
+>>
+>> When an address ID is used, mptcp_userspace_pm_lookup_addr_by_id() helper
+>> is used to look up the address entry in the local address list instead of
+>> using mptcp_userspace_pm_lookup_addr().
 > 
-> When an address ID is used, mptcp_userspace_pm_lookup_addr_by_id() helper
-> is used to look up the address entry in the local address list instead of
-> using mptcp_userspace_pm_lookup_addr().
+> Mmh, I'm still not sure about that. As I was saying in [1], if I'm not
+> mistaken, with the userspace PM, it is possible not to find any entries
+> here, e.g.: if a subflow using this address has not been added or the
+> address has not been announced. (I guess the initial address is not
+> there then).
+> 
+> Do you think this patch is worth it? Setting by ID for the in-kernel PM
+> makes sense: unique ID for the netns, easier to type the ID than the
+> full address. While for the userspace PM, it will be managed by a daemon
+> that will have to track addresses anyway.
+> 
+> Or in other words, do you have a use-case for this? To me, it looks like
+> "yes, you can only set the ID, but it might not always work". Then maybe
+> better to always set the full address, no?
+> 
+> [1]
+> https://lore.kernel.org/mptcp/d01d0e8a-5606-4152-aabe-32e4402adeeb@kernel.org/
 
-Mmh, I'm still not sure about that. As I was saying in [1], if I'm not
-mistaken, with the userspace PM, it is possible not to find any entries
-here, e.g.: if a subflow using this address has not been added or the
-address has not been announced. (I guess the initial address is not
-there then).
-
-Do you think this patch is worth it? Setting by ID for the in-kernel PM
-makes sense: unique ID for the netns, easier to type the ID than the
-full address. While for the userspace PM, it will be managed by a daemon
-that will have to track addresses anyway.
-
-Or in other words, do you have a use-case for this? To me, it looks like
-"yes, you can only set the ID, but it might not always work". Then maybe
-better to always set the full address, no?
-
-[1]
-https://lore.kernel.org/mptcp/d01d0e8a-5606-4152-aabe-32e4402adeeb@kernel.org/
+Note: if we drop this patch (I think it is better), maybe patch 8/8 is
+not worth it: not to have a "common" section with plenty of 'if
+(token)', no? Or do you really need them for the BPF PM?
 
 Cheers,
 Matt
