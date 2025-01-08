@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CCEE20127D
-	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 18:40:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A18C420126A
+	for <mptcp@lists.linux.dev>; Wed,  8 Jan 2025 18:40:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736361653; cv=none; b=QSlIlWKTHEqUEH/L1To6+WEVDGNYOXMw7MSohF1Iz6eC91VL841fFeKf5uD7OJ8mOYlaMMRbskEcC+I1muYG4UkpNqVsF6k7tWafplWlLR5f8/F9ndoukH6iYKVs7obKqAo8zGAmWoceyyaXDjg511Ic4gklax79t88tBF8bhow=
+	t=1736361653; cv=none; b=utY49w4h7HURp7Ll63+rn+3F4D+ylsKQc3miuSI9e3t7R3RnZ4dhig/SQpwZwJTny+AKrvxa61PByaZjXcIHDa2QwwacUqdTPpiavMAZtnjh+6vy1uqPQy+Mckq+OrmPOdEIpK/az3abQ9S+f4L18wx/kdkfJ9Wa8oH+ZjBZt2E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1736361653; c=relaxed/simple;
-	bh=jZkqChmu9ePLM1fa7rNUJvFCnQbqLD0cF/N/c0hN6/s=;
+	bh=mTW6JkSxVzk1rEcOBRZptH409j4KIfEelzbeUwH2AJM=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NCVVk10OpV8AtDxbH2ci4Np/JFwPe+t+f6/gagYF1dIeLpbfyI/j8kXLgZc0mHxCrHn1eBWz2bEXR4BJM82D63r8qMOdF/QS5ocTXFGYRPVPfUYjeNq34YsZgO0xXD9W0ddfjsza3HpAar7TD9IMzW25mKvzo8OG9Zosr6Qya+I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kEI1HyIb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=hRCCbnG6qpwNXizmteQVvshSaJPKMBgkAbcYITLhLNlwfKmb4Duy1IkwffcmiBybq0/o0BLcJtuH8aVoQNDoumBiaD3AS2zpRwn5gYbKYeJIoxhrxnaLG2Z/hvMwul5tq9YrNmsChJksFWezLkGPurMdoRc7NOShTY1kHpJqgRU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mREegjDC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kEI1HyIb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E7016C4CEE2;
-	Wed,  8 Jan 2025 18:40:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mREegjDC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4FABC4CEDF;
+	Wed,  8 Jan 2025 18:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736361652;
-	bh=jZkqChmu9ePLM1fa7rNUJvFCnQbqLD0cF/N/c0hN6/s=;
+	s=k20201202; t=1736361653;
+	bh=mTW6JkSxVzk1rEcOBRZptH409j4KIfEelzbeUwH2AJM=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=kEI1HyIbgdeK5HIjVKQomaAT8uJaS0m/QdHNp/jbywd0odIkWdwrTFMEiX346s71X
-	 sgcW42/2vRKufhmv47V+WEwB2f5s6PVhULvwzd7clog7yvmscJCqC+1tF+9uGOhNFC
-	 GEWSFe7QxSlDI4Msw2B5g6akoSudkpdMJLUN/4q86xsrlmOrJCTrUTkGZR4jtM1vNR
-	 b0I3vN6wdnd3FQfIJImxBgARenvTsYjNdeIfcFoOHt6oVnS8decH9JcIgBRbeEt1t4
-	 fotTuJ066om0tS7sTeUWT+v23QVCjqLxJmBIrM6ZPdubivID5yVXGll8J9l2qVJVj8
-	 Y+nkxTBSdTm0g==
+	b=mREegjDCtwmbKVOw0byhd5eFcniEAzarGx0AOVDs0Snqs5JswVorXeQuyZAJpCeK8
+	 3PNB3LmBPx+emYtc8VDSfEjAlEZFsEOBtHpiT0IiSjzWx8i5j6C/TtoWc9DdMdDTTS
+	 nEtR8+xDircEyIV+C2UBOPvSsptqU89pE8Z6KIMw6uNXmTB5uVAaqWQw/ZfSV+HjJn
+	 OsQERqR+aPSaokEcT+41XRp08HosoSPbahTucIv7EwZjOl+XpRzMKxwxtLJd2PiUd+
+	 ux3YRZa0CvRh1xuFFl/5sNwFIChibzKwKbp4mzQ2J1tcMj8IHfvVdB7mmbyEaEG+zZ
+	 3ZWIPMeSCDClA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 08 Jan 2025 19:40:39 +0100
-Subject: [PATCH mptcp-next 3/5] selftests: mptcp: add -m with ss in case of
- errors
+Date: Wed, 08 Jan 2025 19:40:40 +0100
+Subject: [PATCH mptcp-next 4/5] selftests: mptcp: connect: remove unused
+ variable
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,57 +38,58 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250108-slft-mptcp-conn-misc-impr-v1-3-bdfbdba48a1f@kernel.org>
+Message-Id: <20250108-slft-mptcp-conn-misc-impr-v1-4-bdfbdba48a1f@kernel.org>
 References: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
 In-Reply-To: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1316; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=jZkqChmu9ePLM1fa7rNUJvFCnQbqLD0cF/N/c0hN6/s=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnfsaweR3g8RC6yESsjGYd9MmyN8MkDl7XjaSTo
- T5Y16xwgnaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ37GsAAKCRD2t4JPQmmg
- c7RdEACTnixNS6o+nkckkVdYoknrTPV0DjWrE4AmhGMCTKMklJKTiFLV7YiRtDu5VAazbBAEEPb
- EG5/3/nSwGJm6hT/BBDMTwSRA0kwYdkZAgyF4t9Jb/kBuZ/DWzr+qZD666+na5W2L86ueVjpHM6
- /lhDdDZ1XljGGleMILONP3LSEpbKLaluwy9G+Y96MBuYNBZCWKOeHAAR5e77RplPBBzJkl7izOb
- KaH6EmFFgfZLqpXzqRD/ZeCghU7oqTVAqx+H4nQSV8PiN9XTgzl3+0gjyHtwmo4HoE8OfGee/Fd
- 2xR2czj8rC5YuEXPCEnaqhY5PtLUA9h7TOJWPROoKGn9zAsa8pvAjTftRJxeHJNsgh/uCCY4KEb
- 6r3scqacwu2GR4balFp9D4XGeoHZFZs2tNstbpWA/+5ZLHHPUF7++aLBKgSgRGqIOAMwk914jyx
- I+1x8MVWKrRwDy7t4I5di9FC0eZMkmHuSn9Xv5FdLQ6cqSUtEmhNGuzfomVp48MLA9x/R+UJQo/
- kUP7PVzacAAo1YEOP0zGCUjBnV0VHZ7uEigbA0yWXMSxBy2fVt/Nr4wDutlyDFATcZrFnkg6uW2
- BeLQRYlvSOcKvW/KMPu6yAWR/QH3SCOxTrtgR7mW353vjlMAj0pgMZffbS8mYmygNAI09qwTWCl
- nsiQ5E9XA2/W3Cw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1054; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=mTW6JkSxVzk1rEcOBRZptH409j4KIfEelzbeUwH2AJM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnfsawMB0uE7axkKH9gLBTyY/49uu9I5IQ/xyr9
+ skKCP6t5ZmJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ37GsAAKCRD2t4JPQmmg
+ c/RCEADR/dt+oxI3sUKmyDJp/7DpzpIDPWRCTlPylE2muWjF8ga+wNOyZ2tzyXSWlcRI9Yjw5Dk
+ Hnou4A+jgHnyDXmwsGL50oACu8+daIOEGQJlcrbIoVrsjzyAfgkcffs2g8COmy/EBvfDTpWJtX7
+ MNK6zxid+ecXcnNqrS7BIPJBNwe5xiPnjd0YDZiuiFBUuI8/V4soX9oc8+1JeWlMDDkGCFeH8ba
+ ODkdTJ5Qek0TnzDjXH6CSkhcKZk1BDdomnx/kld1JBSxSF5bP9Vqz+f0SW6DdUs2bLw+oLD4pFN
+ hmhxcYjAD1GezVGOd3/EKqNN5FBLFizfZGHQt4uahZg+D6/X7NihtRGHGGK6mBxJTWbUXIIKmTk
+ oAPCt4M07PVgfL3MZVJELjNLE+ePoIU0iQEqGDYr3ThboxpUh3L2MRqMtOso7WmJEbbKgwztJ3v
+ XYREGKS9Grh27eMDkukZkGEB8NUg24oa+jSZ4l2lwn4Qg0dEMBit+oPL2WLSTSguebZWzvkRLed
+ /08UYLzl5kXxoJHoJpCIzdppqpQEiru9dgXZ/hN/QAeTQNV40OXOjFnh6tB3ZZWYQ/X0ZJZQ7dQ
+ C9/0H3fuU2WQWfkC1MEwiPko0njfDm67P1ctyUi9mzm/z5xFPsHIODAHRCSqunS8y3iPkMhHvvF
+ tXuaUiNzPt8q8gQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Recently, we had an issue where getting info about the memory would have
-helped better understanding what went wrong.
-
-Let add it just in case for later.
+'cin_disconnect' is used in run_tests_disconnect(), but not
+'cout_disconnect', so it is safe to drop it.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/mptcp_lib.sh | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.sh | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-index 50ca64357053b14cd4989e6647d825337978fdba..1f797d5f5156ebc99e5e0be5ea27483bc9cb4c65 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-@@ -118,11 +118,11 @@ mptcp_lib_pr_err_stats() {
- 	echo -en "${MPTCP_LIB_COLOR_RED}"
- 	{
- 		printf "\nnetns %s (listener) socket stat for %d:\n" "${lns}" "${port}"
--		ip netns exec "${lns}" ss -Menita -o "sport = :${port}"
-+		ip netns exec "${lns}" ss -Menitam -o "sport = :${port}"
- 		[ -s "${lstat}" ] && cat "${lstat}"
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.sh b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+index bfdaecd0a6a0564020530345daf91bed296bc15c..e508d356fcdaebbfb95750bba0fa834a8463e32a 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.sh
+@@ -137,7 +137,7 @@ TEST_GROUP=""
+ #shellcheck disable=SC2317
+ cleanup()
+ {
+-	rm -f "$cin_disconnect" "$cout_disconnect"
++	rm -f "$cin_disconnect"
+ 	rm -f "$cin" "$cout"
+ 	rm -f "$sin" "$sout"
+ 	rm -f "$capout"
+@@ -155,7 +155,6 @@ cin=$(mktemp)
+ cout=$(mktemp)
+ capout=$(mktemp)
+ cin_disconnect="$cin".disconnect
+-cout_disconnect="$cout".disconnect
+ trap cleanup EXIT
  
- 		printf "\nnetns %s (connector) socket stat for %d:\n" "${cns}" "${port}"
--		ip netns exec "${cns}" ss -Menita -o "dport = :${port}"
-+		ip netns exec "${cns}" ss -Menitam -o "dport = :${port}"
- 		[ "${lstat}" != "${cstat}" ] && [ -s "${cstat}" ] && cat "${cstat}"
- 	} 1>&2
- 	echo -en "${MPTCP_LIB_COLOR_RESET}"
+ mptcp_lib_ns_init ns1 ns2 ns3 ns4
 
 -- 
 2.47.1
