@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E2B514F98
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:37:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C060221A42C
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:52:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736437077; cv=none; b=rL/NEMIm96HYp6vMxU7D0upgxow2tuz9hqgu/BH5S2JycxwEQxJHdjCd3kSYSuDLAPQw99UUEsSt5TYLHs1hF6cRfIbVSDfNkNcgKlk0xv2vbMzgUwI2aCkzUt2WbatQs6A+neZijIzf9W8vSWdIWISSPKf2S+9Xy/Z72gNq14M=
+	t=1736437935; cv=none; b=qQbennKPKk9ETBVFEVEDrpTotmRtjM28hJm42WQkTqxkERByVE22IXKlmSWb1dWdW0qKf9cozOZw6Bk0D3jDKB6upCL7lPAhO60azorEB0wPo5W17tBJflVGjRv6+TKrmPKstJg4MEy82Dd/bg6pTbfQPJ164TpPSfW2X5Z/Stw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736437077; c=relaxed/simple;
-	bh=1tNufiSXZlJANJgiq805hGcvNXgJwHkkIZlPuutk95A=;
+	s=arc-20240116; t=1736437935; c=relaxed/simple;
+	bh=wCxh7y8vB+wxCnxwzPevcU2yMfPnufF5FYksKIIyiBo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Rm+dxgwwtLXs9ymL7lp3IZg2RNAlelURka88xcaQlJg0zRTUDKj/blo9Nx0DQgcT0zPdh26/nZZ9od3brqgofSP31BhaoDS19kL2NttpFf1q8qqHFKRNfPNL4cseL5x4htGORiaVZmCS8HQlwU2HgVEB4XDb9rIVPyZRCwTCRWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e25XSTnB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AtgVsSs2WrbGzTppHAdk2hZIaiD+IuDzQQL0sxmA1TJ7WAtmAAdxxhyHzKT2K7dpMsXccSSYszxPsAyxkXdZP/g+W3FciLRvmi3gzPj8mFGG8HfVNRGYIHb1NJ6aZ+zF0SL1N/MIk8AWMQv64n4UxAoUJZzKfcWNAvFO/meMjKg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QxaV3w+s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e25XSTnB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E35D3C4CED2;
-	Thu,  9 Jan 2025 15:37:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QxaV3w+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 369CAC4CED2;
+	Thu,  9 Jan 2025 15:52:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736437076;
-	bh=1tNufiSXZlJANJgiq805hGcvNXgJwHkkIZlPuutk95A=;
+	s=k20201202; t=1736437934;
+	bh=wCxh7y8vB+wxCnxwzPevcU2yMfPnufF5FYksKIIyiBo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e25XSTnBy5q+7ze4DznFgxHgnL+sbe3sF3orTWynQhrvF0vBLURDpeW61JY+qThxH
-	 uOV3TJ7FCbk38+hJ3Mum3Ytjpsh43ZaoWegIbC3jtcRHddgkK9lunHeFQvklEWMMdM
-	 /tef9P5EBnHoCvzkAOUgqTbPxcv3VGz/EcNkm7xuh9TPYvrQjm8mbOAqE01bXM/Yf9
-	 fIjHYMIp2Havgr3+bvhRhqlebKSZbW4ZH4YiO6J8rWhe/sr0yGLBMwTEV7t2jHencZ
-	 ePKv0jWU1GFudh7FOWcOlAW7PfOaVCE2E1wGTXdsSj3X9xnroWxN5ooUJTy7r7AY/T
-	 Pz4rym1UtOn5g==
-Message-ID: <41184f6c-cc2c-4059-831b-baccca1cc5f4@kernel.org>
-Date: Thu, 9 Jan 2025 16:37:54 +0100
+	b=QxaV3w+s8Mqqnq/dQ/zbcl9xCq4obPEOsusyZG9NnX8WPUGTvupz6Q7d0wgQIGWFo
+	 fhWx6xpXnl94LMCL2GQ/SekLbxxAVaL+3vTGP9jm/m7eiUWlg86bQjKjZOoMWEa8SZ
+	 9QVUmgF3k8yjGCd3szgdzEwFUNA8iMkUQsdAi5w+FRVOYigJLiG7frXrG4IGu8YqfA
+	 vXP66VtcgL7qER39/6CXMKj1Z2NZZeGa9/pFaBoEnJZGue8XW1KU7/SlXCheNQPGEW
+	 03QRYOE00nt9sdbZIDLFtANcUb+a4QTSmXJhLBzek+ghL98hTiymBjmmTfnb7ecdB5
+	 7IxkUJXV13eug==
+Message-ID: <e1d9bf9d-89c2-4584-92bf-3d142fa9861f@kernel.org>
+Date: Thu, 9 Jan 2025 16:52:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 7/8] mptcp: add mptcp_pm_addr_id_bitmap_t
- type
+Subject: Re: [mptcp-next, v2, 0/3] mptcp: fix the issue of an valid signal can
+ not join in
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1734074788.git.tanggeliang@kylinos.cn>
- <789602f25f9fc73043f85417b6e147c49d894b66.1734074788.git.tanggeliang@kylinos.cn>
- <0a9019be-238d-4b02-ae7e-b510503ff6ac@kernel.org>
- <e0bf78833216705521b8c0e4c696d39f1efba53b.camel@kernel.org>
+To: Gang Yan <gang_yan@foxmail.com>
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev,
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+References: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,105 +87,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e0bf78833216705521b8c0e4c696d39f1efba53b.camel@kernel.org>
+In-Reply-To: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang,
 
-On 09/01/2025 05:15, Geliang Tang wrote:
-> Hi Matt,
+On 09/01/2025 14:31, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> On Mon, 2024-12-30 at 17:30 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 13/12/2024 08:35, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> Similar to defining types such as nodemask_t, dma_cap_mask_t and
->>>    A. > > cpumask_t to simplify the use of bitmap, a new type for
->>>       MPTCP
->>> userspace pm id bitmap, mptcp_pm_addr_id_bitmap_t is defined to
->>> easily modify dump_addr() interface of the path managers to accept
->>> an mptcp_pm_addr_id_bitmap_t type parameter. It also allows this
->>> parameter of dump_addr() can be modified by BPF program when
->>> implementing this interface of a BFP path manager. Because a
->>> dump_addr() interface that accepts an 'unsigned long *bitmap'
->>> or 'unsigned long bitmap[]' parameter is difficult to implement
->>> in BPF program.
->>>
->>> In addition, this also makes it easier for us to implement similar
->>> logic to mptcp_userspace_pm_append_new_local_addr() in BPF path
->>> manager, because there's no way to use DECLARE_BITMAP macro in BPF
->>> program, and it's not easy to reimplement it in BPF.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  include/net/mptcp.h      |  7 +++++++
->>>  net/mptcp/pm_userspace.c | 14 ++++++--------
->>>  net/mptcp/protocol.h     |  3 ---
->>>  3 files changed, 13 insertions(+), 11 deletions(-)
->>>
->>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>> index 814b5f2e3ed5..220b1f60e8c1 100644
->>> --- a/include/net/mptcp.h
->>> +++ b/include/net/mptcp.h
->>> @@ -120,6 +120,13 @@ struct mptcp_sched_ops {
->>>   void (*release)(struct mptcp_sock *msk);
->>>  } ____cacheline_aligned_in_smp;
->>>  
->>> +/* max value of mptcp_addr_info.id */
->>> +#define MPTCP_PM_MAX_ADDR_ID U8_MAX
->>> +
->>> +typedef struct {
->>> + DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
->>> +} mptcp_pm_addr_id_bitmap_t;
->>
->> Why do you need to declare it here and not in protocol.h? Is it for
->> the
->> future BPF PM?
+> When we test the mptcp_join.sh, we find a bug. The 'signal invalid
+> addresses timeout' will be FAIL when run in real test environment,
+> but PASS in virtme. That's mainly because the status of invalid_addr's
+> tcp connection is different. It is TCPF_SYNC_SENT in virtme, but
+> TCPF_CLOSE in another cause the bug of 'add_addr_accepted'.
 > 
-> Yes, it's for the BPF PM. If we define a struct mptcp_pm_addr_id_bitmap
-> as in the previous version [1], we can indeed put it in protocol.h:
+> But in virtme, we can reproduce it through an invalid address
+> in the same LAN, this also result in an error in TCP level. These
+> patches will fix the issue.
 > 
-> struct mptcp_pm_addr_id_bitmap {
-> DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
-> };
-> 
-> and just declare it in include/net/mptcp.h:
-> 
-> struct mptcp_pm_addr_id_bitmap;
-> 
-> But as your comments in [1], 'why do you need a
-> specific structure with only one field?'
-> 
-> This new version uses 'typedef' to define a new type, similar to
-> nodemask_t, dma_cap_mask_t and cpumask_t. I think this is a good way to
-> handle structures with only one field. But on the other hand, we can't
-> declare a 'mptcp_pm_addr_id_bitmap_t' in include/net/mptcp.h, we need
-> to move the entire typedef to include/net/mptcp.h, and the
-> corresponding MPTCP_PM_MAX_ADDR_ID also needs to be moved together.
-> 
-> Which one do you prefer, mptcp_pm_addr_id_bitmap_t or struct
-> mptcp_pm_addr_id_bitmap? I will use it in the next version.
+> Gang Yan (3):
+>   mptcp: fix invalid addr occupy 'add_addr_accepted'
+>   selftests: mptcp: relax conditions in SYN_TX validation
+>   selftests: mptcp: add a testcase for invalid addr timeout
 
-My question was more to know why BPF is not happy if the struct or
-typedef is declared in net/mptcp/protocol.h instead of include/net/mptcp.h.
+I'm not sure how you used 'git send-email', but the 4 emails from your
+series are not "attached" to each others. Did you send the patches one
+by one instead of selecting them all?
 
-If really it has to be declared in 'include', then maybe better to add
-the minimum (struct mptcp_pm_addr_id_bitmap;) and the typedef in protocol.h.
+Please next time make sure all patches references the cover-letter, not
+to have different threads per patch, otherwise the CI, and many tools,
+cannot apply your patches:
 
->> Maybe you don't really need this bitmap if it is only needed for the
->> dump interfaces that are probably not needed with BPF?
->>
->> Then maybe there is no need to change anything here?
-
-Regarding these two questions: why do you need the bitmap? If I'm not
-mistaken, the BPF PM doesn't need to implement the 'dump' and 'get_addr'
-interfaces: no need to expose this to userspace via netlink if the PM is
-handled in kernelspace with BPF, no?
-
-A BPF PM can expose what it wants via BPF.
+https://patchew.org/MPTCP/tencent._5F3C9419313E4EE06582D82709B4EA32A2D009@qq.com/
 
 Cheers,
 Matt
