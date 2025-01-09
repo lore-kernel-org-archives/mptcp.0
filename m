@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF2B644
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 17:39:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15F6EB644
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 17:39:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736444341; cv=none; b=ZRR8gDLjZFCgsz4OBgI7O/w53iiQhsfO9kdcGmhhX+kCLlLFGYt/T4xvaZUfcik8rirDegs/vkfhv8RRkSy6KKW70NHOXr44cCLUBi96vgQVcYx0Kwjcp9QzkNSLuaC1HqNlj/wjXUraUAa+dAtDlbvve7TRGfYVKnRh403tmq4=
+	t=1736444345; cv=none; b=gp3av/i5NEoKMnQQGmhlLJm+VU7w6uJBfgNLVs+fTkL97hEO38TMxDzy4bOgbMWCX7XQjpW7qbI3LuSCaBzfK7Hlmro/3C190NndMYUs1kS1LOpFXcGXdvpkiuK+agHpbIiUj/Ih/f1zPKbyWkPsJcIJlM3vzTyiC3w5d82iJ3E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736444341; c=relaxed/simple;
-	bh=49WQjSRS16xTBINDqaIKyqQODCjeLLA31MTWoQ55iYo=;
+	s=arc-20240116; t=1736444345; c=relaxed/simple;
+	bh=vKCZj4QUGVp3s49GWTgiDH2Cbzt6k90JG1iid4+VJfY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WHe4vX82S4IbQhnf4wj7UWRzJ/i0W8369iZKI2ddrbUJmjUzxzaNoTgO7HmnhJVr12yKoqeHBr9Ss5bbQzMbvlOf4hXmlHv2XYmFClvLbTf3AszUefhxxJpKfEPD7MbmQEu3pm5yDzuGzCykqQVA7LNhigAuy5CCj0kWxEHafJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5l1003R; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=X+6qqt2Gy4EntMebAPWWpyJOBXmnnloyeAxV+UagHpHsXCQpvpZp15nkStpT+unoZldZ+1Gm2AdbpWLZAMs0bNesnG6xLq8Vxty0E1txzlxm4ayBh3IkcNUHKcD9ohlINLKZaKWwvQHT+7O6HZe2abhh3ryeOx91IgofEpJaErs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IBSpIfbM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5l1003R"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E70C2C4CED3;
-	Thu,  9 Jan 2025 17:38:59 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IBSpIfbM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97E75C4CED2;
+	Thu,  9 Jan 2025 17:39:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736444341;
-	bh=49WQjSRS16xTBINDqaIKyqQODCjeLLA31MTWoQ55iYo=;
+	s=k20201202; t=1736444344;
+	bh=vKCZj4QUGVp3s49GWTgiDH2Cbzt6k90JG1iid4+VJfY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=F5l1003Rak5ZtxNXzennbP0TeP1xuaUmEm9W4iDN6yKc9zkGLSkK/z3d+jWhN/11X
-	 CWZfv0xGwv6W5Rm88UteyNYKlt5de9aYNytVM+doUgXuY4Iy6IaP3QuXkA5Zabhl83
-	 MCCqwHtVFAFC1cJOfr8nNhAzQWmvphWnZiN4pk596gGX4TCwJPoH7v/K+/R3zktke6
-	 kYNFK3SDYCSv5Nmn5Zi1rI2tgOoQwurth0yW3QjEmiy2fceuMsqUDfMTPG+sP6AM5j
-	 3j+vxXwVdhEAsmzLUbGSjCXpiYsSwSJoA1iD/YgEusxBXG2VhQzVog2m0n/gUuLkqA
-	 msELUR7u9vgnQ==
-Message-ID: <277ef7d8-01c3-49b1-bc52-d549f5eb5725@kernel.org>
-Date: Thu, 9 Jan 2025 18:38:57 +0100
+	b=IBSpIfbMribmYPfOmIN1eqnp+qOjLFUz0A6+EYQXub5MQ0paiLs3EutBwgtaiHOzL
+	 FAAkb2a01GLbyVYQA0yy97x3SQyoyMIUwaIBuem5z1mVk5wvUErWIJBnY8P37/V5Gj
+	 TzTA1IWNwBezVxIeT+MvRo2VyWTeKQBYQAV5+C18xzKN1T18yWIhUTjHRFmpX35Y1n
+	 VQsGY4w0eveHMyORfhucYp3lCcKuU0Hjs1sbAqmmKHgskDhvnSQM2kjJiL9t8fV6BK
+	 APlwfP0+U4OpKuoGkdVC+ds801LdohuVVewWn+3FyBfhlWh+StXgbY7xGVGhmW+pQM
+	 cwKT5juCDPBJQ==
+Message-ID: <568740da-e742-4b44-bc31-7a1b879d97b4@kernel.org>
+Date: Thu, 9 Jan 2025 18:39:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next, v2, 0/3] mptcp: fix the issue of an valid signal can
- not join in
+Subject: Re: [PATCH 2/3] selftests: mptcp: relax conditions in SYN_TX
+ validation
 Content-Language: en-GB
 To: Gang Yan <gang_yan@foxmail.com>, Mat Martineau <martineau@kernel.org>,
  Geliang Tang <geliang@kernel.org>
 Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
+References: <tencent_501B9947760682D23ADE286C65020C801307@qq.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,45 +87,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
+In-Reply-To: <tencent_501B9947760682D23ADE286C65020C801307@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
-Thank you for the new version.
-
-I have some questions here and in the individual patches:
-
-On 09/01/2025 14:31, Gang Yan wrote:
+On 09/01/2025 14:32, Gang Yan wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> When we test the mptcp_join.sh, we find a bug. The 'signal invalid
-> addresses timeout' will be FAIL when run in real test environment,
-> but PASS in virtme. That's mainly because the status of invalid_addr's
-> tcp connection is different. It is TCPF_SYNC_SENT in virtme, but
-> TCPF_CLOSE in another cause the bug of 'add_addr_accepted'.
+> In ADD_ADDR timeout test cases, the syn_tx MIB counter is not an
+> accurate number.
 
-I still don't understand this. Is it because a test uses some IPs that
-do a different behaviour? But the tests will run inside a closed netns.
-Or because a kernel option is different? Or different sysctl? Or
-something else?
+Please explain why this counter is not an accurate number.
 
-> But in virtme, we can reproduce it through an invalid address
-> in the same LAN, this also result in an error in TCP level. These
-> patches will fix the issue.
-> 
-> Gang Yan (3):
->   mptcp: fix invalid addr occupy 'add_addr_accepted'
->   selftests: mptcp: relax conditions in SYN_TX validation
->   selftests: mptcp: add a testcase for invalid addr timeout
-> 
->  net/mptcp/pm_netlink.c                        | 25 +++++++++++++++++++
->  net/mptcp/protocol.c                          |  3 +++
->  net/mptcp/protocol.h                          |  2 ++
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 ++++++++++++++++-
->  4 files changed, 52 insertions(+), 1 deletion(-)
-> 
+When you say that, it sounds like there is something to fix in the
+kernel, but not in the tests.
+
+(It might help to squash this patch with the next one, or to rephrase it
+to say that a future test will do some retransmissions)
+
+> This patch introduces '+n' to 'join_syn_tx'
+> to relax the strict condition.
+(...)
 
 Cheers,
 Matt
