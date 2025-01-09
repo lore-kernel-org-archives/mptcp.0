@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DD18191499
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 17:39:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DC3E192D66
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 17:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736444347; cv=none; b=Pj4iFL8NSocRUW4EgOFYGRiyq0qudavK9s/1VhSDsDq4ut1aROq0fdQwWOY2ZUf4Hh4JqzGZbkk1Du5hnpL/RrJUlZ53Pdie5oaE1/4Ra2E/e6UdbjJfQ8xu1UdTHoxHPG18d8QiPbm75hhnqmv7Y4CbH8hA43l4ggDIKgzgz88=
+	t=1736444349; cv=none; b=WDfuNKmRstojZLuNR1fit/3oOwjQbjBovnuCwZm1vXC6kWpMuiTEVevO5Wq+q/jECrcTk0FoLlUqmgCKS7dX1P0RufZ/OBYNBVyjTVvrLNBL2Y/pyXjW7pkbsvfms1XkU1kBPp6HD4urDZ1UilpadNB6AytL+JAG2JiS6GjUGZ8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736444347; c=relaxed/simple;
-	bh=gjFc+KwmF1Kh9W/h4unYJ7xo1LNDe4ETKl+ToUOTJYk=;
+	s=arc-20240116; t=1736444349; c=relaxed/simple;
+	bh=L8Pt3OOExHMBTdKMo4uGbp+BDMO9F6GoW7j+RpXWh9k=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lSbnb0SboAJ5Q0PR4viJ/sk5sNgNQ5rc94QQs+d1tzNdElqlWPjeIx7S7o/yAl9sNabHtXBGUnRl5r10K98EsHVVdRmWpy6Td2YphZgRxe4md+FZBR7Kqk0Kh/ax1KF6/xj2lgW8J6X6Rvnv7ygIOiQy6N/TO4jsDka0qFcKUBw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZPl7/l2g; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pdYtJZSLdZz+MU0FKEHq1ebJtbfjr0f71GAM9tCgFhpRhBGvow/SYq2xkbIAk8ZzuhaWDbuHnezi6G++FlkpYjORtCjeSp+koYVxuylX9lkrwaxUI6Hrje20cCV5QSECAtrsUyARPEvdg7kvKv4mBYt4lxrxx7ZCeTD5EeHktCE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VtAUrBor; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZPl7/l2g"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE4C9C4CED2;
-	Thu,  9 Jan 2025 17:39:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VtAUrBor"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7993C4CED3;
+	Thu,  9 Jan 2025 17:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736444347;
-	bh=gjFc+KwmF1Kh9W/h4unYJ7xo1LNDe4ETKl+ToUOTJYk=;
+	s=k20201202; t=1736444349;
+	bh=L8Pt3OOExHMBTdKMo4uGbp+BDMO9F6GoW7j+RpXWh9k=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZPl7/l2gfvqn5FGfodUqykERRnbNzio415FpbAxmV/w8sxahmy9kwHlbjJ8PmbjkQ
-	 tyKexpMoQWL72b1JAsbC4hbtpDMdwAbIe7OBDCTCceYcrhQw/QmveERVMGgmRIYiPp
-	 7vSpBd1hQJtOQ6sN7FB/NZCBFwyXFNxl78n+0z3j9N9rAC8tbSrd9iVs8OoL/hE2gp
-	 oGWOjBIkLdOpz+MPt5dDPOs9Z33dyX8NSh6fGI/WnN2y1qt5qSAhYRfw7+ppcPA97P
-	 kvnzfLZyNG1P+qgmjZO7IshAngpMVdT9yFtebhQ0WgyxUquvSUgakREkPPMU5tZL90
-	 rmp0TqP0CDQxw==
-Message-ID: <c509dab8-8438-422e-b6f8-2b7e956bf73f@kernel.org>
-Date: Thu, 9 Jan 2025 18:39:05 +0100
+	b=VtAUrBoryPcBoiNdzzaEV0vdeJOtBrcak60s4jZZbmQN4QktCmmRDEgDWIuethVHW
+	 LhNvWzDeSsRhEC81238te+1d2fUWtkje9nrzItI6aQM4WrMQ8WnKY+/fA1vKrs2573
+	 9Vj6YKBwCvTjpMWBOmA7gBb6Xlqf8OSJJBXRdazUt/JDL9w9h9lt6cwgrYDZQvL4Z0
+	 hO2vglAaUuCcpU0CRlCxr9m0ofLq7EJFgWpuMbBb/akkRsWkJBHfsucAohsyLP6s23
+	 K5bPX2BzTF4MhymZchCqkzgVOCq4ViMngaF0xvoqeRaM8AXbHWJlLW68/8F6KUWWVK
+	 Llh1kWv0mw0FQ==
+Message-ID: <4665ba1f-fec0-4355-a639-0ce02b8ad95f@kernel.org>
+Date: Thu, 9 Jan 2025 18:39:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 1/3] mptcp: fix invalid addr occupy 'add_addr_accepted'
+Subject: Re: [PATCH 3/3] selftests: mptcp: add a testcase for invalid addr
+ timeout
 Content-Language: en-GB
 To: Gang Yan <gang_yan@foxmail.com>, Mat Martineau <martineau@kernel.org>,
  Geliang Tang <geliang@kernel.org>
 Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <tencent_28A52E260A59791DE3E6C44846805D812005@qq.com>
+References: <tencent_FF589D3CCA6CB1BB13DCD53D469928F3610A@qq.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,163 +87,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <tencent_28A52E260A59791DE3E6C44846805D812005@qq.com>
+In-Reply-To: <tencent_FF589D3CCA6CB1BB13DCD53D469928F3610A@qq.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hi Gang
 
 On 09/01/2025 14:32, Gang Yan wrote:
 > From: Gang Yan <yangang@kylinos.cn>
 > 
-> This patch fixes an issue where an invalid address is announced
-> as a signal, the 'add_addr_accepted' is incorrectly added twice.
-> If reach the limits, even the invalid connection is removed from
-> conn_list by mptcp_worker, the variable is not updated, so the
-> available address can not be added.
-
-Detail: I don't know if this is a fix for an issue (== fix for stable),
-or something new. If it is a fix, it should be for stable, with a
-'Fixes' tag. But I don't know if we want that in stable.
-
-From what I understand, it can help a client when interacting with a
-wrongly configured server. But it will not fix the server's behaviour.
-
-> When 'ADD_ADDR' adds an invalid address in the LAN, it will trigger
-> the 'tcp_done_with_error' at the TCP level due to 'icmp_unreach'.
-> At this point, 'RETRANS_ADDR' will increment 'add_addr_accepted' again.
-
-Do you mean that each time a SYN + MP_JOIN is retransmitted, and if it
-was created upon the reception of an ADD_ADDR, the
-msk->pm.add_addr_accepted counter is incremented? If yes, can you show
-me via which path this is done please? I'm not sure to understand how we
-can get this.
-
-> This patch is also helpful for issue#498.
-
-Can you give a bit more details about how the issue is being fixed here
-please? e.g. what's happening after tcp_done_with_error()?
-
-e.g. the subflow will be closed via (...). It is then possible to hook
-there to check (...) and decrement the counter only if (...).
-
+> This patch adds a timeout testcase, which includes a invalid address
+> within the same LAN, along with another valid address. The invalid
+> address in the LAN triggers a TCP error, leading to an incorrect
+> increment of 'add_addr_accepted'. This test ensures the valid address
+> can still join in this situation.
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/498
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  net/mptcp/pm_netlink.c | 25 +++++++++++++++++++++++++
->  net/mptcp/protocol.c   |  3 +++
->  net/mptcp/protocol.h   |  2 ++
->  3 files changed, 30 insertions(+)
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
 > 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 618289aac0ab..63b5c1d6d87a 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -958,6 +958,31 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
->  	spin_unlock_bh(&msk->pm.lock);
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 6b0705d10840..80ce8daac2a8 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -2318,6 +2318,20 @@ add_addr_timeout_tests()
+>  			chk_join_nr 1 1 1
+>  		chk_add_nr 8 0
+>  	fi
+> +
+> +	# signal invalid LAN addresses, which will cause an error at TCP level
+> +	if reset_with_add_addr_timeout "invalid LAN address, ADD_ADDR timeout"; then
+> +		pm_nl_set_limits $ns1 2 2
+> +		pm_nl_add_endpoint $ns1 10.0.1.3 flags signal
+
+Please add a comment that 10.0.1.3 is invalid: it doesn't look like one
+when you look at it.
+
+> +		pm_nl_add_endpoint $ns1 10.0.3.1 flags signal
+> +		pm_nl_set_limits $ns2 2 2
+
+Should you not put the limit to 1 accepted add_addr? With 2, it should
+be able to connect even without the patch, no?
+
+(or that's maybe what I didn't get with the double increment?)
+
+> +
+> +		speed=10 \
+> +			run_tests $ns1 $ns2 10.0.1.1
+> +		join_syn_tx=+2 \
+
+Is the '+' needed because there might be some retransmissions? Can you
+not prevent them somehow? e.g. by setting a different sysctl knob? If
+yes, it is more reliable, and the previous patch is not needed.
+
+> +			chk_join_nr 1 1 1
+> +		chk_add_nr 8 0
+> +	fi
 >  }
 >  
-> +void mptcp_pm_subflow_closed_external(struct mptcp_sock *msk,
-> +				      struct mptcp_subflow_context *subflow)
-> +{
-> +	u8 remote_id = READ_ONCE(subflow->remote_id);
-> +	s16 local_id = READ_ONCE(subflow->local_id);
-> +	struct mptcp_subflow_context *iter;
-> +
-> +	if (!subflow->request_join || !remote_id)
-
-It might be good to add a comment here above to clearly explain which
-cases are included and/or excluded here. At least mentioning that you
-are looking at the subflows that have been created upon the reception of
-an ADD_ADDR, which means a requested MPJ to a remote ID > 0.
-
-(also, please use 'remote_id > 0', that's clearer in this case, even if
-it is the same)
-
-> +		return;
-> +
-> +	mptcp_for_each_subflow(msk, iter) {
-> +		u8 iter_rmtid = READ_ONCE(iter->remote_id);
-> +		s16 iter_locid = READ_ONCE(iter->local_id);
-> +
-> +		if (remote_id == iter_rmtid && iter->request_join &&
-> +		    local_id != iter_locid)
-> +			return;
-
-Then please add a comment here above as well: you are checking if there
-are other subflows connected to the same remote ID.
-
-Saying that, would it not be better to check that like that?
-
-  mptcp_for_each_subflow(msk, iter) {
-      if (subflow == iter)
-          continue;
-
-      /* other subflows created from the same announced ADD_ADDR? */
-      if (iter->request_join && remote_id == READ_ONCE(iter->remote_id))
-          return;
-  }
-
-  if (!WARN_ON_ONCE(msk->pm.add_addr_accepted == 0))
-      return;
-
-  /* only decr for the last subflow attached to the accepted ADD_ADDR */
-  (...)
-
-> +	}
-> +
-> +	spin_lock_bh(&msk->pm.lock);
-> +	if (--msk->pm.add_addr_accepted < mptcp_pm_get_add_addr_accept_max(msk))
-> +		WRITE_ONCE(msk->pm.accept_addr, true);
-> +	spin_unlock_bh(&msk->pm.lock);
-> +}
-> +
->  static bool address_use_port(struct mptcp_pm_addr_entry *entry)
->  {
->  	return (entry->flags &
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 21bc3586c33e..93c832d7feed 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -2569,6 +2569,9 @@ static void __mptcp_close_subflow(struct sock *sk)
->  			continue;
->  
->  		mptcp_close_ssk(sk, ssk, subflow);
-> +
-> +		if (mptcp_pm_is_kernel(msk))
-> +			mptcp_pm_subflow_closed_external(msk, subflow);
-
-Detail: usually, the core call generic PM functions (in pm.c), which
-calls the proper PM, e.g.
-
-  protocol.c
-    → pm.c
-      → pm_netlink.c
-      → or pm_userspace.c
-
-So:
-
-  __mptcp_close_subflow()
-    → mptcp_pm_subflow_closed_external()
-      → if mptcp_pm_is_kernel(): mptcp_pm_nl_subflow_closed_external()
-
->  	}
->  
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b4c72a73594f..2923a8cafd91 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1148,6 +1148,8 @@ unsigned int mptcp_pm_get_add_addr_signal_max(const struct mptcp_sock *msk);
->  unsigned int mptcp_pm_get_add_addr_accept_max(const struct mptcp_sock *msk);
->  unsigned int mptcp_pm_get_subflows_max(const struct mptcp_sock *msk);
->  unsigned int mptcp_pm_get_local_addr_max(const struct mptcp_sock *msk);
-> +void mptcp_pm_subflow_closed_external(struct mptcp_sock *msk,
-> +				      struct mptcp_subflow_context *closed_subflow);
->  
->  /* called under PM lock */
->  static inline void __mptcp_pm_close_subflow(struct mptcp_sock *msk)
+>  remove_tests()
 
 Cheers,
 Matt
