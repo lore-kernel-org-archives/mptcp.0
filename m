@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 80C9F20469B
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:23:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC00821CA01
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:24:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736436234; cv=none; b=Jbsbmw/G6PoEaD9FD6R4rl8ZX/s5UkycDk5lI1bz53+PZ+LancnScWrPxtuem89cKmqc0YsbYvbNryX+jZLPQzh5sqAs4PJE+503Zj9AGype2snX56bDP09/n8YuN6Iv3ua0smA/xJyKJ1uLiD4sfvJ9NQZ1lnlvJCyfKFxYk/Q=
+	t=1736436252; cv=none; b=FDr3eZEGUX1ujmwBsf9QZZrs238DN9HzofuQFKWg7IwO8IpTGFsSZ5/0DPfkYIIRBB10Os/URbvf/UIJQ0qZ17LMZJcBaJPbEV0f6ry+HZ4OwkAUYavR8X3EK8lQLapDUsdsYqqfohXSkTyhNo659pX6AXazCa6Nk03h9OS8VkU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736436234; c=relaxed/simple;
-	bh=HsG0i3qEltmV0bykhbY9B2IW5AB6jbxflfS5i4KTotc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=pm2KyJlRULRXeI3rmOG19Jx4BYJT2XhUd5vRs7mua51/HzCdZNSk7aeSZ+MKMr9mKbxa5FuG/163zL0wh30OUkosGV2jJ/ppvdCaAW0efAGf49ou9T/ueGTnYmzCI5EdxKIorimmzM9jhv504ecPrP0rRbk31OHg/s1UAvx1OMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k4mu5K8D; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736436252; c=relaxed/simple;
+	bh=d2TuircbpAqEbU7cTvuarIUJPCXRUMBgqlAoQ2a6TTM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MU1E4nKCJF+juVbnvdLmQLTV8fvX39uFlaKLt2m6yQPhefGWYiadTD9NM9YP6mlNOWy0NfTVsmuGu06KVxoFs4on4DDB7rUkBbEtXEXmIE6PPqyN8ruEezT8m2un5XgPpNVzHgRfAHKJ2e0HKcBoMsDSnbGDu/BsDx4DNEE3mOg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exOtaBjY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k4mu5K8D"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86CA5C4CED2;
-	Thu,  9 Jan 2025 15:23:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exOtaBjY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00EEC4CED2;
+	Thu,  9 Jan 2025 15:24:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736436234;
-	bh=HsG0i3qEltmV0bykhbY9B2IW5AB6jbxflfS5i4KTotc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=k4mu5K8DVRXtbpNNyupiGOht2PcYbFRFhdGdIJtxL1aXql0qTOURzPOIwKKAP5j90
-	 8mWJA6JoypuSsBSQspc1PnmO0k9Yy2lnP/Wejl4dEiPpatyZeRzt6CKBZINeyWcQd5
-	 0rbihgkuUlrpx8W0dHlr98h7DRlGvd5Hy5E9NW0hA0KphyfmiZ9pYq7CA+If3CN4NX
-	 VMvAyTCVgYUPXYsZiAKoeS1Umv8bUXytcqwt3ijXOBY+NjPYcaIKwkBHCli2pa4UIr
-	 2ih12tvKOR5JjqVjf9+eb5H5ahSL2P/s3A1gFpQ4uopFMHi56ulrmWjXvIGQh6bOLO
-	 pOte+BDjcI93w==
-Message-ID: <d21944e0-6dca-4c48-8ab4-111a71bfc362@kernel.org>
-Date: Thu, 9 Jan 2025 16:23:51 +0100
+	s=k20201202; t=1736436252;
+	bh=d2TuircbpAqEbU7cTvuarIUJPCXRUMBgqlAoQ2a6TTM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=exOtaBjYn7LwrWr1qCJedidSbF1cJ9pxIkNx7y6OeBggBYF3NQIVE/90AB50fRXyP
+	 nwhZ6i221DSKKekJjWEpJYXG8IzRI8ggQtYFsQV3Nl/Bme9SUnio+4Uq0AamLEHCjR
+	 j910bZQUQpEWWk6ieMLfcvk0l23Bcp8pSYWKAPzud0S3EJAdjJdjLRoLRYaOeAT19B
+	 pbbsfjaYxKHbWzD2bl1OBueYBSKaGg8JW59o3N7KoiA8ApFGGmDAdkHPBOIIqrPE1C
+	 vU6wUzyahA1cNSYxXBqgSooYbbRXESbq5IxrLzYWBdWMhkov7nEyUmME2jbAQu58w1
+	 Fj6TXhrIeNTOA==
+Message-ID: <80a53607-1fb4-457b-9857-9bafe999a52f@kernel.org>
+Date: Thu, 9 Jan 2025 16:24:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 4/8] mptcp: pm: improve error messages
+Subject: Re: [PATCH mptcp-next v8 5/8] mptcp: pm: userspace: use
+ GENL_REQ_ATTR_CHECK
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736299989.git.tanggeliang@kylinos.cn>
- <e874dbaa4aea1b221d9becd0dcf14abda24ac29b.1736299989.git.tanggeliang@kylinos.cn>
+ <fa2c17391e0b6b395503d692e0255687b4d0370f.1736299989.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,48 +87,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e874dbaa4aea1b221d9becd0dcf14abda24ac29b.1736299989.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fa2c17391e0b6b395503d692e0255687b4d0370f.1736299989.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
+-Cc Jakub
+
 On 08/01/2025 02:44, Geliang Tang wrote:
-> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Some error messages were:
+> A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
+> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
+> directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
+> if it's NULL.
 > 
->  - too generic: "missing input", "invalid request"
+> So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
+> mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
+> mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
+> and mptcp_userspace_pm_get_sock().
 > 
->  - not precise enough: "limit greater than maximum" but what's the max?
-> 
->  - missing: subflow not found, or connect error.
-> 
-> This can be easily improved by being more precise, or adding new error
-> messages.
-> 
-> v2: add a comment in mptcp_userspace_pm_set_flags().
+> Suggested-by: Jakub Kicinski <kuba@kernel.org>
 
-Thank you for this in-line comment, I find it very helpful for the
-reviewers compared to a global one in the cover-letter where we don't
-know exactly which patch has been modified.
-
-Just one thing: can you move this changelog comment below the last SoB,
-under a line with '---'? ...
-
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-... so here:
-
-  ---
-  - v2: (...)
-
-(or you can also use 'git notes edit' and the '--notes' option with
-'send-email' or 'format-patch'. If you use it for the first time, you
-will need to set 'notes.rewriteRef' config not to lose notes after a
-rebase, see: https://stackoverflow.com/a/14601464)
-
-Same in patch 7/8 and 8/8.
+Please use 'git send-email' with '--suppress-cc=misc-by' or '=all' or
+equivalent not to Cc Jakub for WIP patches.
 
 Cheers,
 Matt
