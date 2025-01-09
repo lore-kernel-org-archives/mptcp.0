@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CC00821CA01
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:24:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AACB21C17E
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 15:24:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736436252; cv=none; b=FDr3eZEGUX1ujmwBsf9QZZrs238DN9HzofuQFKWg7IwO8IpTGFsSZ5/0DPfkYIIRBB10Os/URbvf/UIJQ0qZ17LMZJcBaJPbEV0f6ry+HZ4OwkAUYavR8X3EK8lQLapDUsdsYqqfohXSkTyhNo659pX6AXazCa6Nk03h9OS8VkU=
+	t=1736436275; cv=none; b=SixnCdJkEnzRVn4xnn72VHYLurbDq6zTtodGDOTY+NMASJgM4hlq4LJxlwBfFFWrICY3RdvPCYoEiPRPl96FmZ+jPZfAMzvcXrvwllM0Iwommar4N9eBEDLy/JFBuZ9YlpkFP2RUM4YawhPHc7BHju4fvo1Kn0dJsa+0kzCUCHk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736436252; c=relaxed/simple;
-	bh=d2TuircbpAqEbU7cTvuarIUJPCXRUMBgqlAoQ2a6TTM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=MU1E4nKCJF+juVbnvdLmQLTV8fvX39uFlaKLt2m6yQPhefGWYiadTD9NM9YP6mlNOWy0NfTVsmuGu06KVxoFs4on4DDB7rUkBbEtXEXmIE6PPqyN8ruEezT8m2un5XgPpNVzHgRfAHKJ2e0HKcBoMsDSnbGDu/BsDx4DNEE3mOg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=exOtaBjY; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736436275; c=relaxed/simple;
+	bh=4wwVeskGEXBRqwYfQfZJMUP6JP3hQVkSQQGUIfDbS4Y=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Reh86x84cwsX6txNpDwLuchfKzPlL81jl9RYkfqHYgjE6D8VazONwhOOvDZKsoaP9y90zJGZPP+jQ+nAIKYFwpvqmzm4g/8KB2ilXPCFecgEvSM8uiAkHFdZykTT0JD+dp+5mYiSLJfoSaeuvMQQs+tihGfvjxCZ7uXue0eW7e0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iKT8FKZe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="exOtaBjY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B00EEC4CED2;
-	Thu,  9 Jan 2025 15:24:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iKT8FKZe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89E9AC4CED2;
+	Thu,  9 Jan 2025 15:24:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736436252;
-	bh=d2TuircbpAqEbU7cTvuarIUJPCXRUMBgqlAoQ2a6TTM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=exOtaBjYn7LwrWr1qCJedidSbF1cJ9pxIkNx7y6OeBggBYF3NQIVE/90AB50fRXyP
-	 nwhZ6i221DSKKekJjWEpJYXG8IzRI8ggQtYFsQV3Nl/Bme9SUnio+4Uq0AamLEHCjR
-	 j910bZQUQpEWWk6ieMLfcvk0l23Bcp8pSYWKAPzud0S3EJAdjJdjLRoLRYaOeAT19B
-	 pbbsfjaYxKHbWzD2bl1OBueYBSKaGg8JW59o3N7KoiA8ApFGGmDAdkHPBOIIqrPE1C
-	 vU6wUzyahA1cNSYxXBqgSooYbbRXESbq5IxrLzYWBdWMhkov7nEyUmME2jbAQu58w1
-	 Fj6TXhrIeNTOA==
-Message-ID: <80a53607-1fb4-457b-9857-9bafe999a52f@kernel.org>
-Date: Thu, 9 Jan 2025 16:24:09 +0100
+	s=k20201202; t=1736436274;
+	bh=4wwVeskGEXBRqwYfQfZJMUP6JP3hQVkSQQGUIfDbS4Y=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=iKT8FKZeL/lW7H0qeVdaC7STYhaDScFz6vGK9xa+aY/j7om0XxuGaW94UabuXEWe3
+	 gUe5wbIUHHAcmTdmjTGLNvtWV8mKFVBBPy1pogKfVlEWsNmfSOE1wRMvAg21kFs8m0
+	 ipImdRPZnGqQLjgAjdjTdVH0Gi60FRqt9jRpKfg9vL480pvx2XzL+y2fWMthaMBWNJ
+	 sx/ni+AI/oF5TSBNaGo/AwDHX03ZJ8n7bQiD/V4qxe9RI6dxq2ZxfmB+wdddQMdeVK
+	 TWMulzTgbve4dGIV3FYgdiL9RMv2dlYkAZUDa8nJdggdZ9CNS/sFA3TmZ9GPO30POi
+	 L9xGTrsukT7qA==
+Message-ID: <800dac0f-16d4-4e89-9d94-0fbef2e22e21@kernel.org>
+Date: Thu, 9 Jan 2025 16:24:32 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 5/8] mptcp: pm: userspace: use
- GENL_REQ_ATTR_CHECK
+Subject: Re: [PATCH mptcp-next v8 7/8] mptcp: pm: mark missing address
+ attributes
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736299989.git.tanggeliang@kylinos.cn>
- <fa2c17391e0b6b395503d692e0255687b4d0370f.1736299989.git.tanggeliang@kylinos.cn>
+ <07fcafc9153f0386b0d7340e193bc73f806e7154.1736299989.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,31 +86,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fa2c17391e0b6b395503d692e0255687b4d0370f.1736299989.git.tanggeliang@kylinos.cn>
+In-Reply-To: <07fcafc9153f0386b0d7340e193bc73f806e7154.1736299989.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
--Cc Jakub
-
 On 08/01/2025 02:44, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 > 
-> A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
-> is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
-> directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
-> if it's NULL.
+> mptcp_pm_parse_entry() will check if the given attribute is defined. If
+> not, it will return a generic error: "missing address info".
 > 
-> So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
-> mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
-> mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
-> and mptcp_userspace_pm_get_sock().
+> It might then not be clear for the userspace developer which attribute
+> is missing, especially when the command takes multiple addresses.
 > 
-> Suggested-by: Jakub Kicinski <kuba@kernel.org>
+> By using GENL_REQ_ATTR_CHECK(), the userspace will get a hint about
+> which attribute is missing, making thing clearer. Note that this is what
+> was already done for most of the other MPTCP NL commands, this patch
+> simply adds the missing ones.
+> 
+> v2:
+>  - keep "pernet = pm_nl_get_pernet(net);" at the beginning of
+> mptcp_pm_nl_set_flags().
 
-Please use 'git send-email' with '--suppress-cc=misc-by' or '=all' or
-equivalent not to Cc Jakub for WIP patches.
+Why did you move it there? The GENL_REQ_ATTR_CHECK() are usually done
+first, no? There is no need to get 'pernet' if some attributes are missing.
 
 Cheers,
 Matt
