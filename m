@@ -1,43 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C32834A2D
-	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 03:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879BC2D052
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 04:15:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736394047; cv=none; b=D6p8Gghre9CXu9IAanqZ8XX3laHxVdz6QzEPm4ybZ5qA4dzkMT9zEvHCNIuyzsa2RNiIRoteCICW2Vmb+RokDVc8SDIayXfIhISQByOUJvM5ZZ+UFfc1JXO8KyF62cd/1V24AXF2MTfNU6FMhFAStx6U71DVrS5U0qjbukyL4FI=
+	t=1736396137; cv=none; b=R5LqNPJFEkM1nCMr5rVFB9YpfTwgX00cdXSjLVS/jCu5Uzxvpuc3sJDrP4EItL/JUhnj6113vOR+casdbKF/Q/Sq5DM8eZbYv/kTF4hp77rQiiJqEdurTGbF7kJ2hrtqImb5LSvNqo7AqhQulBjkUUvP8dg2y3w9w2cphKth+mo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736394047; c=relaxed/simple;
-	bh=awn8yov6lL/A5AGksCpP3/4t03xo8h0tdBKPwkkJA+0=;
+	s=arc-20240116; t=1736396137; c=relaxed/simple;
+	bh=PdceZfMZkfPnind1NE3wIGtbImDEh9UVs+fj5FmaAUI=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=fsi4EHTeas0C6Q0Dp56xVfZLaF36rXd4/dIjxMzk4nZjd9wk9i0RIkxL2903LcwRnTQuxVJjpguUhYb1MKSKpLPTyOQJZJK1qF8BkFFTvglSZVH2Z63Pvc/9bgHOf3gotnCs6n43l8KOL/BSN3jeQYkNcDzVucvfMj8CpZMrKcE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CX6AhpGb; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=b5+48jP0sY0/6xtmuZ+fqLLQn54PQ0iayQEyoPW0jZ179fopkUwSJJTFv/X1q+CTH/N0kAthQqCHcnGudCWmTZl/sZgNQXYJiTcYHqecUypaI1oELtth0lpJK7q/1A9yfmZaQ5kOrRE4aBppLgnlQRyDXg850245LgGnZdxF5jo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ekK7t7XH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CX6AhpGb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F27C4CED2;
-	Thu,  9 Jan 2025 03:40:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ekK7t7XH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CE9DFC4CED2;
+	Thu,  9 Jan 2025 04:15:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736394047;
-	bh=awn8yov6lL/A5AGksCpP3/4t03xo8h0tdBKPwkkJA+0=;
+	s=k20201202; t=1736396137;
+	bh=PdceZfMZkfPnind1NE3wIGtbImDEh9UVs+fj5FmaAUI=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=CX6AhpGbFbzZ/EmxtWrCdRm9Tfp1t2VoxNCDL+yZdPK8PdvtqpXvbGtW6qCjuf9KG
-	 tXoazGl9rUJ4RDaUGiYEKz4gbpZYe+EDjeCAHi0iFKAqyFM5IMldrhc3nTAIPg4jXu
-	 Nmh8gAXG/jbzYzyvrjtH4O/nWaTxSoKVIO8Im/DMKr2Wh4lPQJLr6RBCuh8/zT7lrP
-	 B/1SFBIZD4JdIRpf+NgjKFKV/JQKkE7H0JtJxzMH1qxo4EtE9m07UZJBA5EkSzgez3
-	 1Ob4vbuadKad2yb0LKYM0CnRkkzgDjIY4llrbwcABhsF4ZqQDLdfLZOsQRwVY30if+
-	 kSuyO7DoIrX7Q==
-Message-ID: <51c240cd267760b883bd2749e0a01be5854f62a9.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 5/8] mptcp: userspace pm set_flags id
- support
+	b=ekK7t7XHmpmEdjmM8nGB2B8sNuKuMdGEiOB7x7xTgE68nMHLgG1mFcZaA/YR35pB7
+	 b1lrgDvPUiO1Sm1lj3am/DpIhlpzJBBmb9EylB8mXg//8/xcw36B4HRR8MUoDwJCFY
+	 KCdE2BayRokMVpe8Z4VQ6xDjB4K2P+uDb89d+a6hiF6vdINdMF9L81e83wfupudmUD
+	 1y8GNDG96nxZEpf5XbsAT8AQaZNsBS1Yd5vK7i0WzgcMclb93BmWiIyHDiJR8bvway
+	 Sf8p/7aBcK+PcUVDxofa0d9u2utyTivP4yTEdXi+vk6oKsNC8eARDeBU1/uItuMW5q
+	 nw3peDCPDy/vg==
+Message-ID: <e0bf78833216705521b8c0e4c696d39f1efba53b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v2 7/8] mptcp: add mptcp_pm_addr_id_bitmap_t
+ type
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 09 Jan 2025 11:40:43 +0800
-In-Reply-To: <3284b879-8844-4324-ae92-970c4fe5d686@kernel.org>
-References: <cover.1736308884.git.tanggeliang@kylinos.cn>
-			 <30061158e34c4fbf9063150e6aec40c0eed42b6b.1736308884.git.tanggeliang@kylinos.cn>
-			 <f3e45b8c-54e4-44af-bad2-63b6221cbcf0@kernel.org>
-			 <3284b879-8844-4324-ae92-970c4fe5d686@kernel.org>
+Date: Thu, 09 Jan 2025 12:15:32 +0800
+In-Reply-To: <0a9019be-238d-4b02-ae7e-b510503ff6ac@kernel.org>
+References: <cover.1734074788.git.tanggeliang@kylinos.cn>
+	 <789602f25f9fc73043f85417b6e147c49d894b66.1734074788.git.tanggeliang@kylinos.cn>
+	 <0a9019be-238d-4b02-ae7e-b510503ff6ac@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -79,170 +78,93 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-Thanks for the review!
-
-On Wed, 2025-01-08 at 19:51 +0100, Matthieu Baerts wrote:
-> On 08/01/2025 19:47, Matthieu Baerts wrote:
-> > Hi Geliang,
-> > 
-> > On 08/01/2025 05:21, Geliang Tang wrote:
-> > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > 
-> > > Similar to in-kernel PM, this patch adds address ID support to
-> > > set_flags()
-> > > interface of userspace PM, allowing it to work with either an
-> > > address or
-> > > an address ID.
-> > > 
-> > > When an address ID is used,
-> > > mptcp_userspace_pm_lookup_addr_by_id() helper
-> > > is used to look up the address entry in the local address list
-> > > instead of
-> > > using mptcp_userspace_pm_lookup_addr().
-> > 
-> > Mmh, I'm still not sure about that. As I was saying in [1], if I'm
-> > not
-> > mistaken, with the userspace PM, it is possible not to find any
-> > entries
-> > here, e.g.: if a subflow using this address has not been added or
-> > the
-> > address has not been announced. (I guess the initial address is not
-> > there then).
-
-The previous version (in [1]) did have this issue and userspace_pm.sh
-tests would fail because of it, but this new version has fixed it.
-
- mptcp_pm_nl_mp_prio_send_ack(msk,
-                              entry ? &entry->addr : &local->addr,
-                              remote, bkup);
-
-When the entry is not found, we continue to pass local->addr to ensure
-the same behavior as before.
-
-> > 
-> > Do you think this patch is worth it? Setting by ID for the in-
-> > kernel PM
-> > makes sense: unique ID for the netns, easier to type the ID than
-> > the
-> > full address. While for the userspace PM, it will be managed by a
-> > daemon
-> > that will have to track addresses anyway.
-
-I think it's still useful to extend this functionality while the
-original behavior is not affected, at least it doesn't hurt.
-
-We cannot assume that userspace PM is always managed by a daemon. We
-have exported its interfaces to BPF. We allow users to customize path
-managers. That means we also allow users to use their own userspace PM
-in any way.
-
-Another consideration is that we need to maintain the consistency
-between in-kernel PM and userspace PM. For ease of maintenance, we need
-to make these two PMs use the same code as much as possible, and only
-abstract their differences through PM interfaces such as get_addr,
-dump_addr, set_flags, etc. At present, the biggest difference between
-the two is that they use different linked lists (pernet-
->local_addr_list vs. msk->pm.userspace_pm_local_addr_list) to store
-address entries, so we only need to put the code for operating the
-linked lists into the interfaces of each PM. This is also the goal of
-adjusting the pm interfaces in this series.
-
-> > 
-> > Or in other words, do you have a use-case for this? To me, it looks
-> > like
-> > "yes, you can only set the ID, but it might not always work". Then
-> > maybe
-> > better to always set the full address, no?
-
-If you're worried that this functionality isn't covered by tests, I've
-added a test that covers it in BPF path manager selftests:
-
-        err = userspace_pm_set_flags(token, addr, "backup");
-        if (!ASSERT_OK(err, "userspace_pm_set_flags backup"))
-                goto close_accept;
-
-	...
-
-        err = userspace_pm_set_flags_by_id(token, 100, "nobackup");
-        if (!ASSERT_OK(err, "userspace_pm_set_flags_by_id nobackup"))
-                goto close_accept;
-
-> > 
-> > [1]
-> > https://lore.kernel.org/mptcp/d01d0e8a-5606-4152-aabe-32e4402adeeb@kernel.org/
+On Mon, 2024-12-30 at 17:30 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Note: if we drop this patch (I think it is better), maybe patch 8/8
-> is
-> not worth it: not to have a "common" section with plenty of 'if
-> (token)', no? Or do you really need them for the BPF PM?
+> On 13/12/2024 08:35, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > Similar to defining types such as nodemask_t, dma_cap_mask_t and
+> >    A. > > cpumask_t to simplify the use of bitmap, a new type for
+> >       MPTCP
+> > userspace pm id bitmap, mptcp_pm_addr_id_bitmap_t is defined to
+> > easily modify dump_addr() interface of the path managers to accept
+> > an mptcp_pm_addr_id_bitmap_t type parameter. It also allows this
+> > parameter of dump_addr() can be modified by BPF program when
+> > implementing this interface of a BFP path manager. Because a
+> > dump_addr() interface that accepts an 'unsigned long *bitmap'
+> > or 'unsigned long bitmap[]' parameter is difficult to implement
+> > in BPF program.
+> > 
+> > In addition, this also makes it easier for us to implement similar
+> > logic to mptcp_userspace_pm_append_new_local_addr() in BPF path
+> > manager, because there's no way to use DECLARE_BITMAP macro in BPF
+> > program, and it's not easy to reimplement it in BPF.
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  include/net/mptcp.h      |  7 +++++++
+> >  net/mptcp/pm_userspace.c | 14 ++++++--------
+> >  net/mptcp/protocol.h     |  3 ---
+> >  3 files changed, 13 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > index 814b5f2e3ed5..220b1f60e8c1 100644
+> > --- a/include/net/mptcp.h
+> > +++ b/include/net/mptcp.h
+> > @@ -120,6 +120,13 @@ struct mptcp_sched_ops {
+> >   void (*release)(struct mptcp_sock *msk);
+> >  } ____cacheline_aligned_in_smp;
+> >  
+> > +/* max value of mptcp_addr_info.id */
+> > +#define MPTCP_PM_MAX_ADDR_ID U8_MAX
+> > +
+> > +typedef struct {
+> > + DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
+> > +} mptcp_pm_addr_id_bitmap_t;
+> 
+> Why do you need to declare it here and not in protocol.h? Is it for
+> the
+> future BPF PM?
 
-Here we are only adjusting set_flags interface of in-kernel PM and
-userspace PM, which has nothing to do with the BPF PM implementation.
+Yes, it's for the BPF PM. If we define a struct mptcp_pm_addr_id_bitmap
+as in the previous version [1], we can indeed put it in protocol.h:
 
-It seems that moving the code in mptcp_pm_nl_set_flags_doit() to
-mptcp_pm_set_flags() can remove these 'if (token)':
+struct mptcp_pm_addr_id_bitmap {
+DECLARE_BITMAP(map, MPTCP_PM_MAX_ADDR_ID + 1);
+};
 
-int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info
-*info)
-{
-        return mptcp_pm_set_flags(info);
-}
+and just declare it in include/net/mptcp.h:
 
-static int mptcp_pm_set_flags(struct genl_info *info)
-{
-        struct mptcp_pm_addr_entry loc = { .addr = { .family =
-AF_UNSPEC }, };
-        struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
-        struct nlattr *attr_loc, *attr_rem;
-        int ret;
+struct mptcp_pm_addr_id_bitmap;
 
-        if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-                return -EINVAL;
+But as your comments in [1], 'why do you need a
+specific structure with only one field?'
 
-        attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
-        ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
-        if (ret < 0)
-                return ret;
+This new version uses 'typedef' to define a new type, similar to
+nodemask_t, dma_cap_mask_t and cpumask_t. I think this is a good way to
+handle structures with only one field. But on the other hand, we can't
+declare a 'mptcp_pm_addr_id_bitmap_t' in include/net/mptcp.h, we need
+to move the entire typedef to include/net/mptcp.h, and the
+corresponding MPTCP_PM_MAX_ADDR_ID also needs to be moved together.
 
-        if (info->attrs[MPTCP_PM_ATTR_TOKEN]) {
-                if (GENL_REQ_ATTR_CHECK(info,
-MPTCP_PM_ATTR_ADDR_REMOTE))
-                        return -EINVAL;
+Which one do you prefer, mptcp_pm_addr_id_bitmap_t or struct
+mptcp_pm_addr_id_bitmap? I will use it in the next version.
 
-                attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-                ret = mptcp_pm_parse_addr(attr_rem, info, &rem);
-                if (ret < 0)
-                        return ret;
-
-                if (rem.family == AF_UNSPEC) {
-                        NL_SET_ERR_MSG_ATTR(info->extack, attr_rem,
-                                            "invalid remote address
-family");
-                        return -EINVAL;
-                }
-
-                return mptcp_userspace_pm_set_flags(&loc, &rem, info);
-        }
-
-        if (loc.addr.family == AF_UNSPEC) {
-                if (!loc.addr.id) {
-                        NL_SET_ERR_MSG_ATTR(info->extack, attr_loc,
-                                            "missing address ID");
-                        return -EOPNOTSUPP;
-		}
-        }
-
-        return mptcp_pm_nl_set_flags(&loc, info);
-}
-
-WDYT?
-
+Thanks,
 -Geliang
 
+[1]https://patchwork.kernel.org/project/mptcp/patch/344964d66ab0250ae027ffd46a0e6782d572c33d.1729588019.git.tanggeliang@kylinos.cn/
+
+> 
+> Maybe you don't really need this bitmap if it is only needed for the
+> dump interfaces that are probably not needed with BPF?
+> 
+> Then maybe there is no need to change anything here?
 > 
 > Cheers,
 > Matt
