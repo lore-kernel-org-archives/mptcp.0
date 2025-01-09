@@ -1,99 +1,134 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A3C17273F9;
-	Thu,  9 Jan 2025 17:00:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C0FF2B644
+	for <mptcp@lists.linux.dev>; Thu,  9 Jan 2025 17:39:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736442027; cv=none; b=KX6/JqE5IoXQPNTHPflq2T/yxownLHpouZw8YQoBqX2YBiF/tCCDIdVvjNiYHbXvtnFsewym2wjK3CB3a/PejuhMtSzQGWiEUUh/Hs2/ovZVtOGeZ4uqZ393UFGPSp+eG3+DSefhtKQXVJMfYBpVsq6XM68eVvoPStroryWAjMc=
+	t=1736444341; cv=none; b=ZRR8gDLjZFCgsz4OBgI7O/w53iiQhsfO9kdcGmhhX+kCLlLFGYt/T4xvaZUfcik8rirDegs/vkfhv8RRkSy6KKW70NHOXr44cCLUBi96vgQVcYx0Kwjcp9QzkNSLuaC1HqNlj/wjXUraUAa+dAtDlbvve7TRGfYVKnRh403tmq4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736442027; c=relaxed/simple;
-	bh=6634pWrQTlGcDLuTISOrV8M6pjKmd4U2P6WyzGzAO3s=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=Ze0Qipqvb7sJJDKFZP/0UP8TUSiDlZmLQAiviwbMekKfnH4UppqjJUMyBo+mgGCV6dpzXFcqIuxnT1nGvntZRklCElE+w1IotecuOFwCsJVNs3Va1fdob2RgrabKC7yENghzK06t8i8jOO58RZn+dDhIltcTSt3T9gIdYa37w1A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JE6Xm4jQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736444341; c=relaxed/simple;
+	bh=49WQjSRS16xTBINDqaIKyqQODCjeLLA31MTWoQ55iYo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WHe4vX82S4IbQhnf4wj7UWRzJ/i0W8369iZKI2ddrbUJmjUzxzaNoTgO7HmnhJVr12yKoqeHBr9Ss5bbQzMbvlOf4hXmlHv2XYmFClvLbTf3AszUefhxxJpKfEPD7MbmQEu3pm5yDzuGzCykqQVA7LNhigAuy5CCj0kWxEHafJQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F5l1003R; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JE6Xm4jQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17558C4CED2;
-	Thu,  9 Jan 2025 17:00:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F5l1003R"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E70C2C4CED3;
+	Thu,  9 Jan 2025 17:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736442027;
-	bh=6634pWrQTlGcDLuTISOrV8M6pjKmd4U2P6WyzGzAO3s=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=JE6Xm4jQ6mEZi9FORUN2gyXIXB65b7G0CYX7nJVDbttIb5NGG7z/BXt0cYjUEYeLj
-	 oC61tbkL086I408rPggj+00McFDrRh6u78SgIAErW29sEA8TpoV26qPezD+aDh1Ibr
-	 MsOOucmTu/dPHzb2sLJJQAAQkLLNAAAtT2BE/i5TZnqMoPata8SovE8Aic6YHBGSiZ
-	 Z/AEEp5cL8YG3Vy5tA49WxL9egHPvRoIBnBi4eVykRAYqH4mNTL5ki1JahhOnEpZLx
-	 BqV53oREO3yLsD46pgMNbDRojtyagmslvptpmODgbcLnJmiTPAIiEXicy0VcddIMYL
-	 cWH3DgMcZSCgA==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EB79D380A97E;
-	Thu,  9 Jan 2025 17:00:49 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1736444341;
+	bh=49WQjSRS16xTBINDqaIKyqQODCjeLLA31MTWoQ55iYo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=F5l1003Rak5ZtxNXzennbP0TeP1xuaUmEm9W4iDN6yKc9zkGLSkK/z3d+jWhN/11X
+	 CWZfv0xGwv6W5Rm88UteyNYKlt5de9aYNytVM+doUgXuY4Iy6IaP3QuXkA5Zabhl83
+	 MCCqwHtVFAFC1cJOfr8nNhAzQWmvphWnZiN4pk596gGX4TCwJPoH7v/K+/R3zktke6
+	 kYNFK3SDYCSv5Nmn5Zi1rI2tgOoQwurth0yW3QjEmiy2fceuMsqUDfMTPG+sP6AM5j
+	 3j+vxXwVdhEAsmzLUbGSjCXpiYsSwSJoA1iD/YgEusxBXG2VhQzVog2m0n/gUuLkqA
+	 msELUR7u9vgnQ==
+Message-ID: <277ef7d8-01c3-49b1-bc52-d549f5eb5725@kernel.org>
+Date: Thu, 9 Jan 2025 18:38:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/9] net: sysctl: avoid using current->nsproxy
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173644204876.1449021.3388211513784045754.git-patchwork-notify@kernel.org>
-Date: Thu, 09 Jan 2025 17:00:48 +0000
-References: <20250108-net-sysctl-current-nsproxy-v1-0-5df34b2083e8@kernel.org>
-In-Reply-To: <20250108-net-sysctl-current-nsproxy-v1-0-5df34b2083e8@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, gregory.detal@gmail.com, marcelo.leitner@gmail.com,
- lucien.xin@gmail.com, vyasevich@gmail.com, nhorman@tuxdriver.com,
- wangweidong1@huawei.com, daniel@iogearbox.net, vyasevic@redhat.com,
- allison.henderson@oracle.com, sowmini.varadhan@oracle.com,
- viro@zeniv.linux.org.uk, joel.granados@kernel.org, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com, stable@vger.kernel.org,
- syzbot+e364f774c6f57f2c86d1@syzkaller.appspotmail.com
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [mptcp-next, v2, 0/3] mptcp: fix the issue of an valid signal can
+ not join in
+Content-Language: en-GB
+To: Gang Yan <gang_yan@foxmail.com>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>
+Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <tencent_3C9419313E4EE06582D82709B4EA32A2D009@qq.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello:
+Hi Gang,
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+Thank you for the new version.
 
-On Wed, 08 Jan 2025 16:34:28 +0100 you wrote:
-> As pointed out by Al Viro and Eric Dumazet in [1], using the 'net'
-> structure via 'current' is not recommended for different reasons:
+I have some questions here and in the individual patches:
+
+On 09/01/2025 14:31, Gang Yan wrote:
+> From: Gang Yan <yangang@kylinos.cn>
 > 
-> - Inconsistency: getting info from the reader's/writer's netns vs only
->   from the opener's netns as it is usually done. This could cause
->   unexpected issues when other operations are done on the wrong netns.
+> When we test the mptcp_join.sh, we find a bug. The 'signal invalid
+> addresses timeout' will be FAIL when run in real test environment,
+> but PASS in virtme. That's mainly because the status of invalid_addr's
+> tcp connection is different. It is TCPF_SYNC_SENT in virtme, but
+> TCPF_CLOSE in another cause the bug of 'add_addr_accepted'.
+
+I still don't understand this. Is it because a test uses some IPs that
+do a different behaviour? But the tests will run inside a closed netns.
+Or because a kernel option is different? Or different sysctl? Or
+something else?
+
+> But in virtme, we can reproduce it through an invalid address
+> in the same LAN, this also result in an error in TCP level. These
+> patches will fix the issue.
 > 
-> [...]
+> Gang Yan (3):
+>   mptcp: fix invalid addr occupy 'add_addr_accepted'
+>   selftests: mptcp: relax conditions in SYN_TX validation
+>   selftests: mptcp: add a testcase for invalid addr timeout
+> 
+>  net/mptcp/pm_netlink.c                        | 25 +++++++++++++++++++
+>  net/mptcp/protocol.c                          |  3 +++
+>  net/mptcp/protocol.h                          |  2 ++
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 23 ++++++++++++++++-
+>  4 files changed, 52 insertions(+), 1 deletion(-)
+> 
 
-Here is the summary with links:
-  - [net,1/9] mptcp: sysctl: avail sched: remove write access
-    https://git.kernel.org/netdev/net/c/771ec78dc8b4
-  - [net,2/9] mptcp: sysctl: sched: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/d38e26e36206
-  - [net,3/9] mptcp: sysctl: blackhole timeout: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/92cf7a51bdae
-  - [net,4/9] sctp: sysctl: cookie_hmac_alg: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/ea62dd138391
-  - [net,5/9] sctp: sysctl: rto_min/max: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/9fc17b76fc70
-  - [net,6/9] sctp: sysctl: auth_enable: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/15649fd5415e
-  - [net,7/9] sctp: sysctl: udp_port: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/c10377bbc197
-  - [net,8/9] sctp: sysctl: plpmtud_probe_interval: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/6259d2484d0c
-  - [net,9/9] rds: sysctl: rds_tcp_{rcv,snd}buf: avoid using current->nsproxy
-    https://git.kernel.org/netdev/net/c/7f5611cbc487
-
-You are awesome, thank you!
+Cheers,
+Matt
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Sponsored by the NGI0 Core fund.
 
