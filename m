@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9B19A20C00F
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 11:48:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4AE20ADC3
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 11:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736509692; cv=none; b=htGTPH1s2TYxCAb5DcduWzqySwy9W2n9KF41sJJdsbLxEtxvIAPXvWYSnSaApIleBoUiRfgOt4TEXvOe5nJfNKQmJXQuMt3hqGl5R2vhOmDTRIzP7+KDP7RuDqrdO4B38T/B/reVPcLqfQOTAxuPuLLpGj6ZB+vK0EwzvZRtX94=
+	t=1736509997; cv=none; b=l5tzVsH3PxPPv1mxKZ83genbpQlYHdtUA1LnEXhDFlECVW2NlWrg6ixcydY1BiOYNaiEzCxpKG+mHkLSCWjuZamxpKEGmnZ15gjRgWpiHwhShbKAAz8oLWkr555bfHkAlD5vauWaOKor4bXGfDbKu+LFgSzkfhsKE5hZy6M6uw4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736509692; c=relaxed/simple;
-	bh=1mVxnm4XrqjgJ68mQ9InCJNxfVw2LqvjQrTrHwIP9F8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jlb9rkAdLofZ6mjIY/VonBdn705y5uNq995kpAFXP1KIGRvbuwcl+TdZUbiw2OkSUMamjxx2U6SwCwZ7evHQnbUFeL2UQ7fyTdV7Srgu66S6nX9JLgfXSJLZ4MUYYDIrpsc6VrfSKnsTnjpFBBxP/1qBCwNq2NKhDFwkRZ8LLXo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Y2SNVL5W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736509997; c=relaxed/simple;
+	bh=ZeqlAylA9TH4Wle63sM7Ki7p1iXubHS4j9h3gXMP7Cc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DZc/GPkZoMYNs1wsiLAXrczwf27Ah79m9RLQpK7bJqrkiSimoHlgYykeL2MzKSKcNEzPUG6NZ50dcY86osJvVRu1CSa2gHaxt8+71m7KYu+NbZCJE9yU7oEkCRlG0nzoogg2RAwVCDggQpr0FrXLwiS+avxYvPcqZ7GFYmq6ajc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tyr6CgcZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Y2SNVL5W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A450DC4CED6;
-	Fri, 10 Jan 2025 11:48:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tyr6CgcZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20DEC4CED6;
+	Fri, 10 Jan 2025 11:53:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736509691;
-	bh=1mVxnm4XrqjgJ68mQ9InCJNxfVw2LqvjQrTrHwIP9F8=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Y2SNVL5WPyNG4pFnf9eYeJFU/ALUN3AQNSkgYFZGg2iyDVuQwbqkdu+iQoQRPlauu
-	 5t+DPbV0c737Zoehsy6QO8IChPiOMF79HD438ahbZkuVC9s/+NMi8bcUeNC9/7T9yW
-	 smCA8sGVweMe9qetyHcXVrqB73GF3YZ6ZMRsO2VuUbsSgydJ3YeUwT00V2Zn7E9htP
-	 ZddhnsBH8I9Bhq0iPLUHT/22Y0d5pTDJvRjqoEsarx/YLr63Pwww3gTb+gZ+MwTorJ
-	 ZdNJQYRz0w+wbG41iU7Tj87PRnmMSfAaZO0plUH8MHkVKUUEcOYN09vuoZ8wzr+PBM
-	 BnWZHhtmDqBCQ==
-Message-ID: <43701213-d274-43f7-9205-c530e7fc7d6f@kernel.org>
-Date: Fri, 10 Jan 2025 12:48:08 +0100
+	s=k20201202; t=1736509996;
+	bh=ZeqlAylA9TH4Wle63sM7Ki7p1iXubHS4j9h3gXMP7Cc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Tyr6CgcZ35h4LxW+v2NHmQdL/L6dE8FkIkDFK1969wfIYXRzh3NE1o8e3glRofjFR
+	 QmLDQQfoWE0FYBhSerW5XNx+XV8SXr4BA9dxCRSd7pVCG7a1RtjEqWzmZSkaWv1o+n
+	 pxFCjzikVU1G0/4SH51KagJb4/cdH75YPTT6ZhogVuNcL1OmNy7+9dbRo3Evg+IEzn
+	 GpO/OrCPcyoW3LJJc2HxLct5sVDUkwRq8X9soLnLAaN/fTIx8UA1sneiQdzyDdoBav
+	 jB1VAXIXvRHWPRZz/Rk9z2Sy8BsUbDvxmcWfOOH5b7rUT/hzf1fFV3AU8ej9dbZNS0
+	 3MIkXNKLvTYBg==
+Message-ID: <523f8cec-640b-4ada-87b3-21c86a4b5822@kernel.org>
+Date: Fri, 10 Jan 2025 12:53:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 8/8] mptcp: pm: use NL_SET_ERR_MSG_ATTR when
- possible
+Subject: Re: [PATCH mptcp-next v4 0/7] BPF path manager, part 2
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1736493803.git.tanggeliang@kylinos.cn>
- <0416e719bbf265607b2c8c9065bcf8fbd0bbb685.1736493803.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1736494320.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,42 +85,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0416e719bbf265607b2c8c9065bcf8fbd0bbb685.1736493803.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1736494320.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the new version!
+On 10/01/2025 08:36, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v4:
+>  - move "mptcp: userspace pm set_flags id support" out of this set.
+>  - only add 'local' parameter for set_flags, no 'remote'.
 
-On 10/01/2025 08:30, Geliang Tang wrote:
-> From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-> 
-> Instead of only returning a text message with GENL_SET_ERR_MSG(),
-> NL_SET_ERR_MSG_ATTR() can help the userspace developers by also
-> reporting which attribute is faulty.
-> 
-> When the error is specific to an attribute, NL_SET_ERR_MSG_ATTR() is now
-> used. The error messages have not been modified in this commit.
-> 
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> v2:
->  - update the code related mptcp_userspace_pm_remove_id_zero_address()
->    since a new patch to drop "info" parameter of this patch is added.
-> 
-> v3:
->  - not use NL_SET_ERR_MSG_ATTR in mptcp_pm_nl_set_flags(), since 'attr'
->    will be removed in the commit "mptcp: add local & remote parameters for
->    set_flags".
+Thank you for the new version! It now looks good to me:
 
-It could still be set here, and removed in the other series (or we could
-also use it in the other series, to uniform the errors, the helper has
-access to 'info'), but OK, we had enough versions here.
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Note that in mptcp_pm_nl_remove_doit(), there is one
-GENL_SET_ERR_MSG_FMT() left: NL_SET_ERR_MSG_ATTR_FMT() can be used
-instead. I can fix that when applying the patch if that's OK for you.
+> Based-on: <cover.1736493803.git.tanggeliang@kylinos.cn>
+
+I have just one question on patch 7/7, linked to the one I had on the
+"use GENL_REQ_ATTR_CHECK in userspace pm" series. If you are OK with
+that, I can do the modifications while applying these two series.
 
 Cheers,
 Matt
