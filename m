@@ -1,45 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36D52063F3
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 07:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C8F4257D
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 08:16:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736495116; cv=none; b=g1NrNnT0ub9NwaAvREIjnjNyzMLYFhounSgMbooLKfLuCotCdEas/vE+tVgDO2BL3YO51S7JiQrmSaL3emPVOHdshoC31xofRsZzOG0Ln7/QeZwY0Un899TOmqOt6UWeHiXWR4/YY/o1qVzzmz2M8Holl7eH1mLBNnzcINqMycI=
+	t=1736497019; cv=none; b=FNhgFOEvrwBIHVli8rTeAjx+ZgqHGnwfVt3r36XwNwE2GH+YrPLX0x2pATQTGnQ8XF1NG04/Tl6o1ndFMuIqYdHcprlGMEg4sXjJZXwI47vWelAFcm7/dfP2kHV6Gjn0h8JsRxxiug/AwyLM6nN3TKLlgpiM4FFiC+mhYiOjyBU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736495116; c=relaxed/simple;
-	bh=DwMS8kaenTiCdMrv8BEGo6g7J3m8xjz35I8XDoc13Ww=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ShoWEM5o5UaTIu2ZFzvNQM/GWzldUJWd415K8B7mmEPHW9RnVUmvyg9SMruiMLuJ/oWSwQPgRIZAKz/cQikTqeOOlOHDo9DVNJPe227gmX68wETmw7AwuHq7kLpNW/0w5RDvGIYx2AxWy7jv0Ig2bcelSQsnZmPlfVVWcixnU6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=p71TM2Is; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736497019; c=relaxed/simple;
+	bh=8KFkLP+uSj6xJsQHDCjOrCbGH0aNXMHZw/BRcpcQvpM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=gNPsYFw4JD3BoT5HvJqEauClCnNPuivpJO+7Y1anT6y3DnTAzVz6rGaMOWt5qpM5ZrsRcSP9Qjri1Q2DfKHAzAtgYpQHfHSqUjhOUMYj2Kks6gYkGOLluU1A4pgW85jHKzDEb32xOv5m6WB391fZTdaoXHm5+bL4IGSFpwCcIkg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aP7zL4PG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="p71TM2Is"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2680C4CEDF;
-	Fri, 10 Jan 2025 07:45:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aP7zL4PG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 02796C4CED6;
+	Fri, 10 Jan 2025 08:16:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736495116;
-	bh=DwMS8kaenTiCdMrv8BEGo6g7J3m8xjz35I8XDoc13Ww=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=p71TM2IsCcASpbphN1vtfC8J4XhwoPXjWaAYl/X9KK0YXIF695gE87TIWaoMwA5UD
-	 OZ/1iAnb1oR31ti/89k8ot48JMr0Dq+fxtlTQgcg8ZsAHmmhIEvgzR7LHWTT8A9jLp
-	 1rdgTxZKYPl5wVTcmUkyoqUgxCXq86XsMUQYi8Sw29s/Gd6719G4hhKS0Hb8naZXy9
-	 b6tBrupliD/4L3eHUEnvsSyN8r87aRyx+/Llv4ntU8xuzfLFPFWpW9dX42jlueNhSm
-	 IiocsCBYG8nWZuhLriEccUPCls+8/Oz8uHjpqSPO5ckEquzj7B7ge9eziwyXj4X8+P
-	 AnVbt7gfkQVMw==
-Message-ID: <74351649e55ba9312705aa7a52a2f48750130bfd.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 5/8] mptcp: userspace pm set_flags id
- support
+	s=k20201202; t=1736497018;
+	bh=8KFkLP+uSj6xJsQHDCjOrCbGH0aNXMHZw/BRcpcQvpM=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=aP7zL4PGrQS1MeRstPvGarsGkWSiPf2H8b/tCZP1OYeE6IpCHEA7Xxnl2A439Z4Mo
+	 pCBMoqvD6O4GDN58Yxs4gvakN2PvO2roQj/UZ4Hw/1ZJYUfKU2t3q6bG0bvl5AvPQv
+	 zmQ/UcdvghRKysTumrNqtzoOY1kJrK+s0oXgDztOcIoqxsIgePMKx0t8HGPK43o1ch
+	 kKtbc0/EXDZPhCdlgqJ8HAPCOiUoyw7xINTyVmua13W4AtVS67UZgsGudgUWWzCUa6
+	 32h0RjMxSRYB/6TBRmPvoffZNEpybVVRQEfJpyHjOxnKA/Gt7pEiS7R8U/p/fk1wHX
+	 tiMGJRfW/aISw==
+Message-ID: <e94e771e8993b4b40e151959fccb7716a8d29a86.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 1/5] selftests: mptcp: simult_flows: unify
+ errors msgs
 From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 10 Jan 2025 15:45:11 +0800
-In-Reply-To: <9f8c7031-4f5d-4195-93de-e23491799367@kernel.org>
-References: <cover.1736308884.git.tanggeliang@kylinos.cn>
-	 <30061158e34c4fbf9063150e6aec40c0eed42b6b.1736308884.git.tanggeliang@kylinos.cn>
-	 <f3e45b8c-54e4-44af-bad2-63b6221cbcf0@kernel.org>
-	 <3284b879-8844-4324-ae92-970c4fe5d686@kernel.org>
-	 <51c240cd267760b883bd2749e0a01be5854f62a9.camel@kernel.org>
-	 <9f8c7031-4f5d-4195-93de-e23491799367@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Fri, 10 Jan 2025 16:16:54 +0800
+In-Reply-To: <20250108-slft-mptcp-conn-misc-impr-v1-1-bdfbdba48a1f@kernel.org>
+References:
+	 	<20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
+		 <20250108-slft-mptcp-conn-misc-impr-v1-1-bdfbdba48a1f@kernel.org>
 Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
  keydata=mQINBGWKTg4BEAC/Subk93zbjSYPahLCGMgjylhY/s/R2ebALGJFp13MPZ9qWlbVC8O+X
  lU/4reZtYKQ715MWe5CwJGPyTACILENuXY0FyVyjp/jl2u6XYnpuhw1ugHMLNJ5vbuwkc1I29nNe8
@@ -85,323 +81,104 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Thu, 2025-01-09 at 13:20 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> Thank you for your reply!
-> 
-> On 09/01/2025 04:40, Geliang Tang wrote:
-> > Hi Matt,
-> > 
-> > Thanks for the review!
-> > 
-> > On Wed, 2025-01-08 at 19:51 +0100, Matthieu Baerts wrote:
-> > > On 08/01/2025 19:47, Matthieu Baerts wrote:
-> > > > Hi Geliang,
-> > > > 
-> > > > On 08/01/2025 05:21, Geliang Tang wrote:
-> > > > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > > > 
-> > > > > Similar to in-kernel PM, this patch adds address ID support
-> > > > > to
-> > > > > set_flags()
-> > > > > interface of userspace PM, allowing it to work with either an
-> > > > > address or
-> > > > > an address ID.
-> > > > > 
-> > > > > When an address ID is used,
-> > > > > mptcp_userspace_pm_lookup_addr_by_id() helper
-> > > > > is used to look up the address entry in the local address
-> > > > > list
-> > > > > instead of
-> > > > > using mptcp_userspace_pm_lookup_addr().
-> > > > 
-> > > > Mmh, I'm still not sure about that. As I was saying in [1], if
-> > > > I'm
-> > > > not
-> > > > mistaken, with the userspace PM, it is possible not to find any
-> > > > entries
-> > > > here, e.g.: if a subflow using this address has not been added
-> > > > or
-> > > > the
-> > > > address has not been announced. (I guess the initial address is
-> > > > not
-> > > > there then).
-> > 
-> > The previous version (in [1]) did have this issue and
-> > userspace_pm.sh
-> > tests would fail because of it, but this new version has fixed it.
-> > 
-> >  mptcp_pm_nl_mp_prio_send_ack(msk,
-> >                               entry ? &entry->addr : &local->addr,
-> >                               remote, bkup);
-> > 
-> > When the entry is not found, we continue to pass local->addr to
-> > ensure
-> > the same behavior as before.
-> 
-> Yes indeed, the tests are fixed, but if 'entry' is NULL, the address
-> you
-> will give will be empty, so it will not be able to find any subflow
-> to
-> send the MP_PRIO, right?
-> 
-> > > > Do you think this patch is worth it? Setting by ID for the in-
-> > > > kernel PM
-> > > > makes sense: unique ID for the netns, easier to type the ID
-> > > > than
-> > > > the
-> > > > full address. While for the userspace PM, it will be managed by
-> > > > a
-> > > > daemon
-> > > > that will have to track addresses anyway.
-> > 
-> > I think it's still useful to extend this functionality while the
-> > original behavior is not affected, at least it doesn't hurt.
-> 
-> I'm sorry, I think it is not that simple: if we extend this
-> functionality, it means we will have to maintain it. Here, the
-> interface
-> looks buggy because it will not work with all addresses: the initial
-> ones, the ones not announced but implicitly used, etc.
-> 
-> If the interface does not always work, I don't think we will
-> recommend
-> using it, then why do we need to maintain it?
-> 
-> > We cannot assume that userspace PM is always managed by a daemon.
-> > We
-> > have exported its interfaces to BPF. We allow users to customize
-> > path
-> > managers. That means we also allow users to use their own userspace
-> > PM
-> > in any way.
-> 
-> I think the BPF PM is different: it is a different interface.
-> 
-> To interact with the userspace PM, it is required to monitor the
-> MPTCP
-> events sent via Netlink, e.g. to get the token. When a new subflow is
-> created, the userspace will know which addresses (including the ID)
-> it
-> is linked to. In this case, why only setting the ID in the address
-> structure if it doesn't always work, while setting the address will
-> always work as expected.
-> 
-> > Another consideration is that we need to maintain the consistency
-> > between in-kernel PM and userspace PM.
-> 
-> Not really: when they can do the same thing, yes, but the two
-> interfaces
-> are different. We don't have to keep the consistency if it doesn't
-> make
-> sense to do so.
-> 
-> > For ease of maintenance, we need
-> > to make these two PMs use the same code as much as possible, and
-> > only
-> > abstract their differences through PM interfaces such as get_addr,
-> > dump_addr, set_flags, etc.
-> 
-> Yes but there are some limits: if some code is shared between
-> multiple
-> interfaces, it is important not to break one of them when changing
+On Wed, 2025-01-08 at 19:40 +0100, Matthieu Baerts (NGI0) wrote:
+> In order to unify what is printed in case of error, similar to what
+> is
+> done in mptcp_connect.sh and mptcp_join.sh, it is interesting to do
 > the
-> code. In other words, if the behaviour is very similar (e.g.
-> get_addr),
-> that's fine. But if they start to be too different, you have complex
-> common code where you need to think "OK, this one acts like that, but
-> the other one like that", and complexity is not good for the
-> maintenance. In this case, it sounds better to keep them separated.
+> following modifications in simult_flows.sh:
 > 
-> > At present, the biggest difference between
-> > the two is that they use different linked lists (pernet-
-> > > local_addr_list vs. msk->pm.userspace_pm_local_addr_list) to
-> > > store
-> > address entries, so we only need to put the code for operating the
-> > linked lists into the interfaces of each PM. This is also the goal
-> > of
-> > adjusting the pm interfaces in this series.
+> - Print the rc errors at the end of the line.
 > 
-> Yes, but that's not the only difference, because the interfaces are
-> different.
+> - Print the MIB counters.
 > 
-> With the in-kernel PM, we act per netns, while with the userspace PM,
-> it
-> is per connection. Because of that, addresses lists are managed
-> differently, leading to different concept, e.g. the list not having
-> all
-> addresses, the addresses not having ID 0 in one, but OK in the other,
-> etc. With shared code that acts for both of them, you need to keep
-> thinking about these differences when reading or writing code, and
-> that's a source of error I think.
+> - Use the same ss options: add -M (MPTCP sockets) and -e (detailed
+>   socket information).
 > 
-> > > > Or in other words, do you have a use-case for this? To me, it
-> > > > looks
-> > > > like
-> > > > "yes, you can only set the ID, but it might not always work".
-> > > > Then
-> > > > maybe
-> > > > better to always set the full address, no?
-> > 
-> > If you're worried that this functionality isn't covered by tests,
-> > I've
-> > added a test that covers it in BPF path manager selftests:
-> > 
-> >         err = userspace_pm_set_flags(token, addr, "backup");
-> >         if (!ASSERT_OK(err, "userspace_pm_set_flags backup"))
-> >                 goto close_accept;
-> > 
-> > 	...
-> > 
-> >         err = userspace_pm_set_flags_by_id(token, 100, "nobackup");
-> >         if (!ASSERT_OK(err, "userspace_pm_set_flags_by_id
-> > nobackup"))
-> >                 goto close_accept;
+> While at it, also print of the 'max' time only in case of success,
+> because 'mptcp_connect.c' will already print this info in case of
+> error,
+> e.g.:
 > 
-> I would need to check the BPF PM interface, but for me the userspace
-> PM
-> and BPF PM interfaces don't have to be the same, e.g. why having a
-> dump
-> if the BPF PM can directly access data from the kernel? Same here for
-> the ID: it depends if all IDs are tracked in the corresponding list,
-> e.g. it might not be the case with an "announced" list.
+>   transfer slower than expected! runtime 11948 ms, expected 11921 ms
 > 
-> But also yes, if something is exposed to userspace (via Netlink), it
-> should be covered by a test (using the userspace Netlink interface)
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+>  tools/testing/selftests/net/mptcp/simult_flows.sh | 21
+> ++++++++++++++++-----
+>  1 file changed, 16 insertions(+), 5 deletions(-)
 > 
-> > > > 
-> > > > [1]
-> > > > https://lore.kernel.org/mptcp/d01d0e8a-5606-4152-aabe-32e4402adeeb@kernel.org/
-> > > 
-> > > Note: if we drop this patch (I think it is better), maybe patch
-> > > 8/8
-> > > is
-> > > not worth it: not to have a "common" section with plenty of 'if
-> > > (token)', no? Or do you really need them for the BPF PM?
-> > 
-> > Here we are only adjusting set_flags interface of in-kernel PM and
-> > userspace PM, which has nothing to do with the BPF PM
-> > implementation.
-> > 
-> > It seems that moving the code in mptcp_pm_nl_set_flags_doit() to
-> > mptcp_pm_set_flags() can remove these 'if (token)':
-> > 
-> > int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct
-> > genl_info
-> > *info)
-> > {
-> >         return mptcp_pm_set_flags(info);
-> 
-> I'm not sure whether it is useful to have one function simply calling
-> another function that is only used once.
+> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> index
+> 8fa77c8e9b651171a34c89bfd5c9ded0288a5bde..e98e5907d52c2d0e9c0152efda8
+> 2176861905cf1 100755
+> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
+> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
+> @@ -155,6 +155,11 @@ do_transfer()
+>   sleep 1
+>   fi
+>  
+> + NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
+> + nstat -n
+> + NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
+> + nstat -n
+> +
+>   timeout ${timeout_test} \
+>   ip netns exec ${ns3} \
+>   ./mptcp_connect -jt ${timeout_poll} -l -p $port -T $max_time \
+> @@ -180,25 +185,31 @@ do_transfer()
+>   kill ${cappid_connector}
+>   fi
+>  
+> + NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
+> + nstat | grep Tcp > /tmp/${ns3}.out
+> + NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
+> + nstat | grep Tcp > /tmp/${ns1}.out
 
-I kept this function in v4 to make it consistent with mptcp_pm_get_addr
-and mptcp_pm_dump_addr.
+Here I got "nstat: history is aged out, resetting" warnings, and I
+don't know how to fix it:
 
-And "mptcp: userspace pm set_flags id support" is moved out of this set
-in v4.
+Selftest Test: ./simult_flows.sh
+TAP version 13
+1..1
+[    1.022664] ip (155) used greatest stack depth: 12280 bytes left
+[    1.316990] netem: version 1.3
+# 01 balanced bwidth                                            
+7401nstat: history is aged out, resetting
+# nstat: history is aged out, resetting
+#  max 7906       [ OK ]
+# 02 balanced bwidth - reverse direction                         7394
+max 7906       [ OK ]
 
-Thanks,
--Geliang
-
+> +
+>   cmp $sin $cout > /dev/null 2>&1
+>   local cmps=$?
+>   cmp $cin $sout > /dev/null 2>&1
+>   local cmpc=$?
+>  
+> - printf "%-16s" " max $max_time "
+>   if [ $retc -eq 0 ] && [ $rets -eq 0 ] && \
+>      [ $cmpc -eq 0 ] && [ $cmps -eq 0 ]; then
+> + printf "%-16s" " max $max_time "
+>   mptcp_lib_pr_ok
+>   cat "$capout"
+>   return 0
+>   fi
+>  
+> - mptcp_lib_pr_fail
+> - echo "client exit code $retc, server $rets" 1>&2
+> + mptcp_lib_pr_fail "client exit code $retc, server $rets"
+>   echo -e "\nnetns ${ns3} socket stat for $port:" 1>&2
+> - ip netns exec ${ns3} ss -nita 1>&2 -o "sport = :$port"
+> + ip netns exec ${ns3} ss -Menita 1>&2 -o "sport = :$port"
+> + cat /tmp/${ns3}.out
+>   echo -e "\nnetns ${ns1} socket stat for $port:" 1>&2
+> - ip netns exec ${ns1} ss -nita 1>&2 -o "dport = :$port"
+> + ip netns exec ${ns1} ss -Menita 1>&2 -o "dport = :$port"
+> + cat /tmp/${ns1}.out
+>   ls -l $sin $cout
+>   ls -l $cin $sout
+>  
 > 
-> > }
-> > 
-> > static int mptcp_pm_set_flags(struct genl_info *info)
-> > {
-> >         struct mptcp_pm_addr_entry loc = { .addr = { .family =
-> > AF_UNSPEC }, };
-> >         struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
-> >         struct nlattr *attr_loc, *attr_rem;
-> >         int ret;
-> > 
-> >         if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-> >                 return -EINVAL;
-> > 
-> >         attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
-> >         ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
-> >         if (ret < 0)
-> >                 return ret;
-> > 
-> >         if (info->attrs[MPTCP_PM_ATTR_TOKEN]) {
-> >                 if (GENL_REQ_ATTR_CHECK(info,
-> > MPTCP_PM_ATTR_ADDR_REMOTE))
-> >                         return -EINVAL;
-> > 
-> >                 attr_rem = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
-> >                 ret = mptcp_pm_parse_addr(attr_rem, info, &rem);
-> >                 if (ret < 0)
-> >                         return ret;
-> > 
-> >                 if (rem.family == AF_UNSPEC) {
-> >                         NL_SET_ERR_MSG_ATTR(info->extack, attr_rem,
-> >                                             "invalid remote address
-> > family");
-> >                         return -EINVAL;
-> >                 }
-> > 
-> >                 return mptcp_userspace_pm_set_flags(&loc, &rem,
-> > info);
-> >         }
-> 
-> The problem is the same: ↑ is specific to the userspace PM, why
-> moving
-> the code here in the common section then?
-> 
-> Same for the code ↓.
-> 
-> So at the end, the only common code is the parsing of the local
-> address,
-> so just GENL_REQ_ATTR_CHECK(MPTCP_PM_ATTR_ADDR) and
-> mptcp_pm_parse_entry(MPTCP_PM_ATTR_ADDR). Is it worth it?
-> 
-> So if we want to share code, all we can get I think is this:
-> 
->   int mptcp_pm_nl_set_flags_doit(...)
->   {
->       (...)
-> 
->       if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
->           return -EINVAL;
-> 
->       attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
->       ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
->       if (ret < 0)
->           return ret;
-> 
->       if (info->attrs[MPTCP_PM_ATTR_TOKEN])
->            return mptcp_userspace_pm_set_flags(&loc, info);
-> 
->       return mptcp_pm_nl_set_flags(&loc, info);
->   }
-> 
-> Not a lot to share, but at least there is nothing PM specific here,
-> except to pick the interface to continue with. And yes, that's
-> something
-> that could be done, but that's not much...
-> 
-> > 
-> >         if (loc.addr.family == AF_UNSPEC) {
-> >                 if (!loc.addr.id) {
-> >                         NL_SET_ERR_MSG_ATTR(info->extack, attr_loc,
-> >                                             "missing address ID");
-> >                         return -EOPNOTSUPP;
-> > 		}
-> >         }
-> > 
-> >         return mptcp_pm_nl_set_flags(&loc, info);
-> > }
-> > 
-> > WDYT?
-> > 
-> > -Geliang
-> > 
-> > > 
-> > > Cheers,
-> > > Matt
-> > 
-> 
-> Cheers,
-> Matt
 
