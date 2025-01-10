@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8717220550F
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 10:49:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E920551F
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 10:57:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736506155; cv=none; b=I8OmwsuIfsP4g+w0+1ORzT3/IE3wVj+/rcbmfelQY2y68/Cko7pbIPBcdOCdn7OHghTcGs5LbogCPodUY20pYG+3SNuAdEtZ+xxnXo+qUhxIII41H1HsTwxtG8Dr5wbNkCF/IzZcnjDww/+6nP3QE1ksRNa1xCyFdC7kbfTAjbw=
+	t=1736506646; cv=none; b=Fe8wSokqVPGTqIN7DH77byzZ9mK7HGsPLfYp8rgpFPMzFCe+glpcomQKtXpKemnw7sAV2/Ra0NSuW86IhYkgnwfZPnSixcdchARlXr/n3mg9z77OzP8lOxkYkVOah9//lWy/37UvhvEp2uWSH4zlqwVtbxx9APby9F3omQ0L1wc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736506155; c=relaxed/simple;
-	bh=btOa8jVHc5FGObdZBaaCtZW5SBG/w3yx2S5U6nlo0iU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=n94VET/AX7Etdgagilkjl6sOpvvCWXzc8OgxxaoXxIzhsgJ9l1O9rIt2DXpC8Gddip9zweSu/JRxXXCtwudtZc/Laug/nzAY+6An/jw9QqcOVge6rMLXZ+teUtUcyhJRCDK0MaQkmGeAxhDsECejRih83xyUJzOq6ZwQeMRl+cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyfHYbFd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736506646; c=relaxed/simple;
+	bh=fscYvKxftN+ATNSPALgcearczjff7ULTteU+bL8cRGk=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=LB1ePfB8jYdl6b5n+06qtLAXlaI8hMWDOqnk4j1DqNYQOtIrfTF0mpN9vucCPyiEbQIIkWWwDAFKymkfpncN2s1+q1mMwMpPL+XIq6HtIJDuzSE9zxSxl8TQMg4CW2FJbzmdY78K3Pbx79FTofkmM3S556MOQ9dwsOsRMFn7XlU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv4MmUIu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyfHYbFd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DDC4CED6;
-	Fri, 10 Jan 2025 10:49:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv4MmUIu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E79DC4CED6;
+	Fri, 10 Jan 2025 10:57:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736506154;
-	bh=btOa8jVHc5FGObdZBaaCtZW5SBG/w3yx2S5U6nlo0iU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZyfHYbFdLjbcBA/Tgps3iHk6XMoZpvZqb26akXDnAu9Bk9FOHi96C/OcRwapM4i5g
-	 kNvHUz25M7hV4/sRIwwoGnijN5yjnMukcrVDLFJn7mJgh0+7wPq+WJ3Bl7Kb+P6ihu
-	 BDRReoLrcQFP/PbYUn54spFVYN+cwUCFSXtl2gf0/3IKcjmbBG+N/B+PgxFfIoiywE
-	 qhM6Wa+qTBT2aTPpKMykJ8RRgKnKqyj1tH5wm+7GVtf8D8nxNy2P3MLKGEc7F4XVPc
-	 AcaApXIxsebpdO0gnZQBpPanMVkJShVMCNaWWiQfEvjQsdlvSyVFpiahB6V2meCzNl
-	 MYW02vno4iGrQ==
-Message-ID: <ec4dff48-96c1-4aa1-9a46-6560ac6587e4@kernel.org>
-Date: Fri, 10 Jan 2025 11:49:11 +0100
+	s=k20201202; t=1736506646;
+	bh=fscYvKxftN+ATNSPALgcearczjff7ULTteU+bL8cRGk=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=sv4MmUIulihY/MiApw7DVR6weOpSaIFrd9JVof38mkRDMsjXU6jKBMtNt9hbUr15G
+	 0BQSgV3zZxJDWh48wLo6h2JHb4kRyYNFiGYjDUmIRfN86nCAGvF7+PnQwscJSo4oNV
+	 gzcg3VLn3fDgg2r/h6iBnAOJYj3HiQfSoII0g1y/HwcbE550Q1/9MJlf+XDbY+Djjw
+	 br3CPhKXCLDkz4QfNMA5LGSNTq7J+cePobo5poDksyphud/81m0Ebcbz8FkJZPZ2IV
+	 CUs7PmS8j0nLTU48k7NqeTE3/XWgUQsgNZ4WVN5ZIlLfbz9Gr1/a8eESq2LHn2WIsS
+	 xRTUecC6F18SQ==
+Message-ID: <b4cc0480-1ca9-4660-9ae8-84bdaac08bdf@kernel.org>
+Date: Fri, 10 Jan 2025 11:57:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: sockopt: save nstat infos
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: move stats info
+ in case of errors to lib.sh"
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+References: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
+ <ff9a10bb4359ec77fc0b7499f44b388d737abe0f.1736477907.git.tanggeliang@kylinos.cn>
+ <b6165440-f421-42a7-bc8d-e8e8bcaeb69a@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,34 +88,25 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b6165440-f421-42a7-bc8d-e8e8bcaeb69a@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/01/2025 04:02, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 10/01/2025 08:41, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Similar to the way nstat information is stored in mptcp_connect.sh
-> and mptcp_join.sh scripts, this patch adds a similar way for
-> mptcp_sockopt.sh and displays the nstat information when errors
-> occur.
-
-Thank you for the patch! Even if I'm not sure if it will really help
-debugging issues, at least it is uniformed, and it looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-> Please apply this patch before the commit
+> 10 Jan 2025 04:02:53 Geliang Tang <geliang@kernel.org>:
 > 
-> "selftests: mptcp: simult_flows: unify errors msgs"
+>> Drop the last two arguments "lstat" and "cstat" of mptcp_lib_pr_err_stats.
 > 
-> when merging it.
+> I think it might be better to keep these arguments, not to have the lib assuming the files will be located there, e.g. just in case we move them elsewhere later, to be clear that when reading the code in the tests that these files will be used there, etc. no?
 
-Will do! Or after, it might be easier with the automated scripts.
+Note that, with your previous patch (sockopt: save nstat infos), the 4
+and 5 parameters can no longer be optional, and I can remove the size
+checks ('[ -s <file> ]'). I can do that when applying the patches.
 
-Can I add your Reviewed-by tag on my other patches from this series?
 
 Cheers,
 Matt
