@@ -1,37 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5813814A08E
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 07:30:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4DD314A08E
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 07:30:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736494256; cv=none; b=BjVep9n81+qnSpGp9lGmaABCiic5SadaWsi4fQZwxxbYOFPwIEHaGtyhJ+mwyWR1ZVBusDDfHN+sYUuVxf8NkONcfLcoyEi3foOW1qS7bAxb7PfKg5NBBxfmsi0nKARYbnr8dY5d7xPOs/um5IlvXhNzqUhom1HcMwpCkAHvN8k=
+	t=1736494259; cv=none; b=q5nVrbuR/B2dWLZIDWzDbqYkSAtA6uXP6TsYfX8Fsd8nwNC2yWvtCDQj/VyeHInwEM/JtWHHlvOWm+7t2eDJ3+JGEEnke4l5TzlxMIfBrnrZiJM4IuVYI20yPbzs6Vr/WiUTza4Tij6xKVIiW25RtIdA+DPTm2FeoVJqNF7Pn+A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736494256; c=relaxed/simple;
-	bh=Bs2qqRlQwp4MNUE9DrajrFyHEaBIDfBm4ktap5SzAYU=;
+	s=arc-20240116; t=1736494259; c=relaxed/simple;
+	bh=/v343bsB/x4ZR18kN71yaHGjwhOk50DZDpL64LPrQMA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=EoBk6HzIo7DyOi+Aa7h0wsY5idOfERIadmVaD/B3VbwLuuVh81/t9H2+urZpl8c45OF42oJz6XL+OJ6/8qfAANReX1U9L8lXFUuCjpI/nAa1lx+iMBAEB2j+EPFmHPNHHBFsBuVWt/9hYH/eWhtj0BiOCKpCqVY9PAv//mZmPhI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jt0nFbbG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=NUaaA6xM/YNYlbXExretU3bBV+GNPsiWRuZIkGlDFgALf7NZnjFQ5sOyFv4ncx5YTajbHG8ApzsEti95Pt263SZfJWd9ZF/CzGuv6uEy+iD2AhmTpZ1BM/aKNAWbhQNNk5KZA+zELJztWDzZpzmDeDHQ2BGFAcR4/SmyGiVq8Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=unWsqDZ+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jt0nFbbG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0053EC4CED6;
-	Fri, 10 Jan 2025 07:30:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="unWsqDZ+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8B10C4CEDF;
+	Fri, 10 Jan 2025 07:30:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736494255;
-	bh=Bs2qqRlQwp4MNUE9DrajrFyHEaBIDfBm4ktap5SzAYU=;
+	s=k20201202; t=1736494258;
+	bh=/v343bsB/x4ZR18kN71yaHGjwhOk50DZDpL64LPrQMA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jt0nFbbGGF6Kg//4J7tOu4Kyhdp+p/YldW9/Y0WSghFw85Mm9oUx+VDG6dTE3AP57
-	 WPpEYL6YLJ3d9GeMwCQvenUP09yQ/KN0h7BIElTDpBLnjwNbDeRmgoR9zVT4tf4W2q
-	 tVvCObz2ivI191A1IbsJuHpdJVxuZ7IlivGVSnbxD6Y8HX+TBWLm3aJrJe6bNL1Hj1
-	 ZCBARCTPwu85PjsvUpcsZEnhgPZK7Ren+Yvd1IxeW7ehraO+sUw5XOMbUrKcas4gsj
-	 FtL6eJdkQjj5ikMBs2vf5SabUPGVOeuyQB3sxpCGMi/r9GmZkAVcqQnp9mZRI4et86
-	 nNBmwhYWDN+jg==
+	b=unWsqDZ+tl7rqRcU9pjvKV2x3RQr9JfYLfLj5FoCsbl7LXf6k+JxzBDyhOKKQuP2N
+	 P7uSwJXJ1v0izIyjt9Ux+CaNHcswWWi6QwjSTIZnITG9FDhSb80TKjgSbgzA+Obezv
+	 HRy5cgg09U9qeDi80SsZbz2xO9W0eAK+2CotRWhV4+MlrfFJBOnyzu0qmTVJoWMTZ7
+	 jXMUBzCr4MF3TTpyL3MEYr7sfeDMWe8oQs2JGiTwoxC7DZWi1YJtpByEKxNATrv4aG
+	 fjQiXolbATM6MpBcqK6+B2DrCGpO0EaqClm37Q+B//gO0sLE5/bLAwOQJXH4vvNc4x
+	 bfFg2/UWG2VwA==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v9 4/8] mptcp: pm: improve error messages
-Date: Fri, 10 Jan 2025 15:30:38 +0800
-Message-ID: <43c16e82cdcf607e8dc8ebc19d033bbc364e06f3.1736493803.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v9 5/8] mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
+Date: Fri, 10 Jan 2025 15:30:39 +0800
+Message-ID: <1c97e5116246d09f8978d0355a84b434bf829231.1736493803.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1736493803.git.tanggeliang@kylinos.cn>
 References: <cover.1736493803.git.tanggeliang@kylinos.cn>
@@ -43,93 +44,172 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Some error messages were:
+A more general way to check if MPTCP_PM_ATTR_* exists in 'info'
+is to use GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_*) instead of
+directly reading info->attrs[MPTCP_PM_ATTR_*] and then checking
+if it's NULL.
 
- - too generic: "missing input", "invalid request"
+So this patch uses GENL_REQ_ATTR_CHECK() for userspace PM in
+mptcp_pm_nl_announce_doit(), mptcp_pm_nl_remove_doit(),
+mptcp_pm_nl_subflow_create_doit(), mptcp_pm_nl_subflow_destroy_doit()
+and mptcp_userspace_pm_get_sock().
 
- - not precise enough: "limit greater than maximum" but what's the max?
-
- - missing: subflow not found, or connect error.
-
-This can be easily improved by being more precise, or adding new error
-messages.
-
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+"Suggested-by: Jakub Kicinski <kuba@kernel.org>"
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-v2: add a comment in mptcp_userspace_pm_set_flags().
----
- net/mptcp/pm_netlink.c   |  6 ++++--
- net/mptcp/pm_userspace.c | 10 +++++++++-
- 2 files changed, 13 insertions(+), 3 deletions(-)
+ net/mptcp/pm_userspace.c | 41 +++++++++++++++++++---------------------
+ 1 file changed, 19 insertions(+), 22 deletions(-)
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 98ac73938bd8..a60217faf95d 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1875,7 +1875,9 @@ static int parse_limit(struct genl_info *info, int id, unsigned int *limit)
- 
- 	*limit = nla_get_u32(attr);
- 	if (*limit > MPTCP_PM_ADDR_MAX) {
--		GENL_SET_ERR_MSG(info, "limit greater than maximum");
-+		NL_SET_ERR_MSG_ATTR_FMT(info->extack, attr,
-+					"limit greater than maximum (%u)",
-+					MPTCP_PM_ADDR_MAX);
- 		return -EINVAL;
- 	}
- 	return 0;
-@@ -2003,7 +2005,7 @@ int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (addr.addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
- 		if (!addr.addr.id) {
--			GENL_SET_ERR_MSG(info, "missing required inputs");
-+			GENL_SET_ERR_MSG(info, "missing address ID");
- 			return -EOPNOTSUPP;
- 		}
- 	}
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index cdc83fabb7c2..e350d6cc23bf 100644
+index e350d6cc23bf..4cbd234e2670 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -190,7 +190,7 @@ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *in
- 	}
+@@ -175,14 +175,13 @@ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
  
- 	if (!mptcp_pm_is_userspace(msk)) {
--		GENL_SET_ERR_MSG(info, "invalid request; userspace PM not selected");
-+		GENL_SET_ERR_MSG(info, "userspace PM not selected");
- 		sock_put((struct sock *)msk);
+ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
+ {
+-	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	struct mptcp_sock *msk;
++	struct nlattr *token;
+ 
+-	if (!token) {
+-		GENL_SET_ERR_MSG(info, "missing required token");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_TOKEN))
  		return NULL;
- 	}
-@@ -428,6 +428,9 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	err = __mptcp_subflow_connect(sk, &local, &addr_r);
- 	release_sock(sk);
+-	}
  
-+	if (err)
-+		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
-+
- 	spin_lock_bh(&msk->pm.lock);
- 	if (err)
- 		mptcp_userspace_pm_delete_local_addr(msk, &entry);
-@@ -552,6 +555,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	lock_sock(sk);
- 	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
- 	if (!ssk) {
-+		GENL_SET_ERR_MSG(info, "subflow not found");
- 		err = -ESRCH;
- 		goto release_sock;
- 	}
-@@ -625,6 +629,10 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem.addr, bkup);
- 	release_sock(sk);
++	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
+ 	msk = mptcp_token_get_sock(genl_info_net(info), nla_get_u32(token));
+ 	if (!msk) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, token, "invalid token");
+@@ -200,16 +199,14 @@ static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *in
  
-+	/* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
-+	if (ret < 0)
-+		GENL_SET_ERR_MSG(info, "subflow not found");
-+
- set_flags_err:
- 	sock_put(sk);
- 	return ret;
+ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry addr_val;
+ 	struct mptcp_sock *msk;
++	struct nlattr *addr;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 
+-	if (!addr) {
+-		GENL_SET_ERR_MSG(info, "missing required address");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -217,6 +214,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	sk = (struct sock *)msk;
+ 
++	addr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	err = mptcp_pm_parse_entry(addr, info, true, &addr_val);
+ 	if (err < 0) {
+ 		GENL_SET_ERR_MSG(info, "error parsing local address");
+@@ -312,18 +310,17 @@ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+ 
+ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+ 	struct mptcp_pm_addr_entry *match;
+ 	struct mptcp_sock *msk;
++	struct nlattr *id;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 	u8 id_val;
+ 
+-	if (!id) {
+-		GENL_SET_ERR_MSG(info, "missing required ID");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_LOC_ID))
+ 		return err;
+-	}
+ 
++	id = info->attrs[MPTCP_PM_ATTR_LOC_ID];
+ 	id_val = nla_get_u8(id);
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+@@ -369,19 +366,17 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+-	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry entry = { 0 };
+ 	struct mptcp_addr_info addr_r;
++	struct nlattr *raddr, *laddr;
+ 	struct mptcp_pm_local local;
+ 	struct mptcp_sock *msk;
+ 	int err = -EINVAL;
+ 	struct sock *sk;
+ 
+-	if (!laddr || !raddr) {
+-		GENL_SET_ERR_MSG(info, "missing required address(es)");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
++	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -389,6 +384,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	sk = (struct sock *)msk;
+ 
++	laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	err = mptcp_pm_parse_entry(laddr, info, true, &entry);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+@@ -402,6 +398,7 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 	entry.flags |= MPTCP_PM_ADDR_FLAG_SUBFLOW;
+ 
++	raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
+@@ -493,18 +490,16 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
+ 
+ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
+ {
+-	struct nlattr *raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+-	struct nlattr *laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	struct mptcp_pm_addr_entry addr_l;
+ 	struct mptcp_addr_info addr_r;
++	struct nlattr *raddr, *laddr;
+ 	struct mptcp_sock *msk;
+ 	struct sock *sk, *ssk;
+ 	int err = -EINVAL;
+ 
+-	if (!laddr || !raddr) {
+-		GENL_SET_ERR_MSG(info, "missing required address(es)");
++	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
++	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+ 		return err;
+-	}
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
+ 	if (!msk)
+@@ -512,12 +507,14 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 
+ 	sk = (struct sock *)msk;
+ 
++	laddr = info->attrs[MPTCP_PM_ATTR_ADDR];
+ 	err = mptcp_pm_parse_entry(laddr, info, true, &addr_l);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, laddr, "error parsing local addr");
+ 		goto destroy_err;
+ 	}
+ 
++	raddr = info->attrs[MPTCP_PM_ATTR_ADDR_REMOTE];
+ 	err = mptcp_pm_parse_addr(raddr, info, &addr_r);
+ 	if (err < 0) {
+ 		NL_SET_ERR_MSG_ATTR(info->extack, raddr, "error parsing remote addr");
 -- 
 2.45.2
 
