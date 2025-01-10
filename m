@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 842E920551F
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 10:57:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F2FE20B216
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 11:21:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736506646; cv=none; b=Fe8wSokqVPGTqIN7DH77byzZ9mK7HGsPLfYp8rgpFPMzFCe+glpcomQKtXpKemnw7sAV2/Ra0NSuW86IhYkgnwfZPnSixcdchARlXr/n3mg9z77OzP8lOxkYkVOah9//lWy/37UvhvEp2uWSH4zlqwVtbxx9APby9F3omQ0L1wc=
+	t=1736508080; cv=none; b=lNOUyzNyw19wvQM+EXStS1evtlIqwoucu//GvlqvhOPMFfivIDGth2tAzAcLCpQ+nZmigWNprhXRCAWUmvhyz2jf6db4FTYFKhkFxgw+d+ADiWLktjIrP4syIRApOnqyx3FZBCea0nYpbXWS9p5Gham9/3CMM7H2Bbw6UPrfS3Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736506646; c=relaxed/simple;
-	bh=fscYvKxftN+ATNSPALgcearczjff7ULTteU+bL8cRGk=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=LB1ePfB8jYdl6b5n+06qtLAXlaI8hMWDOqnk4j1DqNYQOtIrfTF0mpN9vucCPyiEbQIIkWWwDAFKymkfpncN2s1+q1mMwMpPL+XIq6HtIJDuzSE9zxSxl8TQMg4CW2FJbzmdY78K3Pbx79FTofkmM3S556MOQ9dwsOsRMFn7XlU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sv4MmUIu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736508080; c=relaxed/simple;
+	bh=EaNMUnMONxLcCzhVtxQt3JP/iwiCbk5J69QpkYDqfCI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RNEWAPouPsC5eSYhWhMkp/5eBuIxpt4BvhUp6+NX1Ea1mqjKIWTaU+lDJdeqrqIaVOWf/40v14yrTrQ48u3FT/PX0F2KYwSQjKJF4lURIfMkCn2/5Lh198N8Dqo0CeRFX71E1dxx6PfmkYwKVHgk6HzTY97M51TOXjTZY7F+2ns=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sgln/13G; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sv4MmUIu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E79DC4CED6;
-	Fri, 10 Jan 2025 10:57:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sgln/13G"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C3E4FC4CEDF;
+	Fri, 10 Jan 2025 11:21:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736506646;
-	bh=fscYvKxftN+ATNSPALgcearczjff7ULTteU+bL8cRGk=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=sv4MmUIulihY/MiApw7DVR6weOpSaIFrd9JVof38mkRDMsjXU6jKBMtNt9hbUr15G
-	 0BQSgV3zZxJDWh48wLo6h2JHb4kRyYNFiGYjDUmIRfN86nCAGvF7+PnQwscJSo4oNV
-	 gzcg3VLn3fDgg2r/h6iBnAOJYj3HiQfSoII0g1y/HwcbE550Q1/9MJlf+XDbY+Djjw
-	 br3CPhKXCLDkz4QfNMA5LGSNTq7J+cePobo5poDksyphud/81m0Ebcbz8FkJZPZ2IV
-	 CUs7PmS8j0nLTU48k7NqeTE3/XWgUQsgNZ4WVN5ZIlLfbz9Gr1/a8eESq2LHn2WIsS
-	 xRTUecC6F18SQ==
-Message-ID: <b4cc0480-1ca9-4660-9ae8-84bdaac08bdf@kernel.org>
-Date: Fri, 10 Jan 2025 11:57:22 +0100
+	s=k20201202; t=1736508076;
+	bh=EaNMUnMONxLcCzhVtxQt3JP/iwiCbk5J69QpkYDqfCI=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Sgln/13GS2MPPigRzd+kXMMMzIRv77qUTigVPiXbMBPQBjNJH2EuLdVK6AFG/7s3x
+	 stQyI8PfZUrIY3+oy6dA3FHlOYcUQXJDIIGdaa+uBBTJ1V6UhvOWc43ETCdhDxDCVH
+	 cfMiv9n3prkoQd5jbBexKw4XKeunozIoEvFTb4kE2FQfaxKyYzTrOXqg0vQi+23fSO
+	 15CFdk4eaJ1Si+bMUfXtR20yD5nCLVx+apQqyAUxdX+0Rp+qKiLVu/T3ZXcixAyNGI
+	 8GAO0F8vT3SsK4/LWasygohdsJYrraEVX/BdkkOLjr88r4xTfOHuKTFa7q4Qqc00MW
+	 /+mhO9BQhSzWw==
+Message-ID: <fd65072a-7bca-4b15-b184-b1213eecafca@kernel.org>
+Date: Fri, 10 Jan 2025 12:21:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: move stats info
- in case of errors to lib.sh"
+Subject: Re: [PATCH mptcp-next v9 0/8] use GENL_REQ_ATTR_CHECK in userspace pm
 Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1736493803.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
- <ff9a10bb4359ec77fc0b7499f44b388d737abe0f.1736477907.git.tanggeliang@kylinos.cn>
- <b6165440-f421-42a7-bc8d-e8e8bcaeb69a@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,25 +85,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b6165440-f421-42a7-bc8d-e8e8bcaeb69a@kernel.org>
+In-Reply-To: <cover.1736493803.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/01/2025 08:41, Matthieu Baerts wrote:
-> Hi Geliang,
+On 10/01/2025 08:30, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> 10 Jan 2025 04:02:53 Geliang Tang <geliang@kernel.org>:
-> 
->> Drop the last two arguments "lstat" and "cstat" of mptcp_lib_pr_err_stats.
-> 
-> I think it might be better to keep these arguments, not to have the lib assuming the files will be located there, e.g. just in case we move them elsewhere later, to be clear that when reading the code in the tests that these files will be used there, etc. no?
+> v9:
+>  patch 3, move the code using NL_SET_ERR_MSG_ATTR into patch 8.
+>  patch 7, adjust the location of "pernet = pm_nl_get_pernet(net);".
 
-Note that, with your previous patch (sockopt: save nstat infos), the 4
-and 5 parameters can no longer be optional, and I can remove the size
-checks ('[ -s <file> ]'). I can do that when applying the patches.
+Thank you for the new version.
 
+I have one small request in patch 8/8, but I can fix that when applying
+the patches if that's OK with you.
+
+I can also do the modifications in set_flags(), and fix the conflicts
+when applying "BPF path manager, part 2" (if it is ready)
 
 Cheers,
 Matt
