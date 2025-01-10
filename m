@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA4AE20ADC3
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 11:53:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77B2220B80D
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 11:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736509997; cv=none; b=l5tzVsH3PxPPv1mxKZ83genbpQlYHdtUA1LnEXhDFlECVW2NlWrg6ixcydY1BiOYNaiEzCxpKG+mHkLSCWjuZamxpKEGmnZ15gjRgWpiHwhShbKAAz8oLWkr555bfHkAlD5vauWaOKor4bXGfDbKu+LFgSzkfhsKE5hZy6M6uw4=
+	t=1736510000; cv=none; b=mlpO8fqTbF8HoKS90/HXfAj0YWE3VazbbAvzvl/wkdUw7O1SO+GMylcgh9JDCnIT10RYu7T9fXnyEYb/lu59NA+q68SmqnFhs5e6P7/U2qPpgdfnZrPyV71Gwsz3GCR0vKMc1gsvfSo8KsBzIc7zZfrjRCLilm03TQR8qSYH88w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736509997; c=relaxed/simple;
-	bh=ZeqlAylA9TH4Wle63sM7Ki7p1iXubHS4j9h3gXMP7Cc=;
+	s=arc-20240116; t=1736510000; c=relaxed/simple;
+	bh=sN/hxhqaM3p4fU9fiRJFinrUjEaJ/0se3mQpKQEfh18=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DZc/GPkZoMYNs1wsiLAXrczwf27Ah79m9RLQpK7bJqrkiSimoHlgYykeL2MzKSKcNEzPUG6NZ50dcY86osJvVRu1CSa2gHaxt8+71m7KYu+NbZCJE9yU7oEkCRlG0nzoogg2RAwVCDggQpr0FrXLwiS+avxYvPcqZ7GFYmq6ajc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tyr6CgcZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=sqwxKu/HbzHLLzjP04Ta3SVQ/x64mTvfupwPFTgz7leRTH2zIKZ8AwYJFeUJYLzv7vwwE2P/x6En3lPc633qrndOkweDwygVggONXAx+yEaPqKuZkiTrm1ujRKiSPWhxifxowz2QrffLg0kfalUBub7jxZvMFl/1XThhB8sPYWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CgAzIVyk; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tyr6CgcZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B20DEC4CED6;
-	Fri, 10 Jan 2025 11:53:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CgAzIVyk"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43C4C4CEE0;
+	Fri, 10 Jan 2025 11:53:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736509996;
-	bh=ZeqlAylA9TH4Wle63sM7Ki7p1iXubHS4j9h3gXMP7Cc=;
+	s=k20201202; t=1736509998;
+	bh=sN/hxhqaM3p4fU9fiRJFinrUjEaJ/0se3mQpKQEfh18=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Tyr6CgcZ35h4LxW+v2NHmQdL/L6dE8FkIkDFK1969wfIYXRzh3NE1o8e3glRofjFR
-	 QmLDQQfoWE0FYBhSerW5XNx+XV8SXr4BA9dxCRSd7pVCG7a1RtjEqWzmZSkaWv1o+n
-	 pxFCjzikVU1G0/4SH51KagJb4/cdH75YPTT6ZhogVuNcL1OmNy7+9dbRo3Evg+IEzn
-	 GpO/OrCPcyoW3LJJc2HxLct5sVDUkwRq8X9soLnLAaN/fTIx8UA1sneiQdzyDdoBav
-	 jB1VAXIXvRHWPRZz/Rk9z2Sy8BsUbDvxmcWfOOH5b7rUT/hzf1fFV3AU8ej9dbZNS0
-	 3MIkXNKLvTYBg==
-Message-ID: <523f8cec-640b-4ada-87b3-21c86a4b5822@kernel.org>
-Date: Fri, 10 Jan 2025 12:53:13 +0100
+	b=CgAzIVykvQtuf2XD1Zq6GdGBxbBzP8X7kGpLUigG2QKVrdWKgZPYNlTYnwi6zoRTD
+	 ykNorkfnOa0mmQjFHUmFnEz4t9j/fAm7QdHAqnBME9LGQYjABCpg2NDu8h3DiSHiIa
+	 relL0faeuxJeN4pUxcr6epQCDKdysWa8ZjUm56MAXwBMlkqOgq5BZRr09pI5FYZ0Ze
+	 BIj5rU1Q6uJhI34uvnDvdCdph/YcYUMAHIxp+nJALwY86e5U64nsQOkp/K+3sInyYw
+	 YyDNaUNKr3lWP0UGhxMS+mQiIW4pUp+Naptr0D+z2VcRN7lfAhMDuw0eJG/k1Z3Ucj
+	 zopTAKr8Cd/yw==
+Message-ID: <68170ee3-dfef-4720-b132-b8f70eafcf7c@kernel.org>
+Date: Fri, 10 Jan 2025 12:53:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/7] BPF path manager, part 2
+Subject: Re: [PATCH mptcp-next v4 7/7] mptcp: add local parameter for
+ set_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1736494320.git.tanggeliang@kylinos.cn>
+ <3613363fc62da1323303ff776fba2914433e95c7.1736494320.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1736494320.git.tanggeliang@kylinos.cn>
+In-Reply-To: <3613363fc62da1323303ff776fba2914433e95c7.1736494320.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,19 +96,114 @@ Hi Geliang,
 On 10/01/2025 08:36, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v4:
->  - move "mptcp: userspace pm set_flags id support" out of this set.
->  - only add 'local' parameter for set_flags, no 'remote'.
+> This patch updates the interfaces set_flags to reduce repetitive
+> code, adds a new parameter 'local' for them. The local address is
+> parsed in public helper mptcp_pm_nl_set_flags_doit(), then pass
+> it to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
 
-Thank you for the new version! It now looks good to me:
+(...)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 52fd9830b685..ec6afa5c3525 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1951,61 +1951,51 @@ static int mptcp_nl_set_flags(struct net *net,
+>  	return ret;
+>  }
+>  
+> -int mptcp_pm_nl_set_flags(struct genl_info *info)
+> +int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
+> +			  struct genl_info *info)
+>  {
+> -	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
+>  	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
+>  			   MPTCP_PM_ADDR_FLAG_FULLMESH;
+>  	struct net *net = genl_info_net(info);
+>  	struct mptcp_pm_addr_entry *entry;
+>  	struct pm_nl_pernet *pernet;
+> -	struct nlattr *attr;
+>  	u8 lookup_by_id = 0;
+>  	u8 bkup = 0;
+> -	int ret;
+> -
+> -	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
+> -		return -EINVAL;
+>  
+>  	pernet = pm_nl_get_pernet(net);
+>  
+> -	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
 
-> Based-on: <cover.1736493803.git.tanggeliang@kylinos.cn>
+As I mentioned in the "use GENL_REQ_ATTR_CHECK in userspace pm" series,
+I think this 'attr' can be kept here -- because we still have access to
+'info' -- ...
 
-I have just one question on patch 7/7, linked to the one I had on the
-"use GENL_REQ_ATTR_CHECK in userspace pm" series. If you are OK with
-that, I can do the modifications while applying these two series.
+> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	if (addr.addr.family == AF_UNSPEC) {
+> +	if (local->addr.family == AF_UNSPEC) {
+>  		lookup_by_id = 1;
+> -		if (!addr.addr.id) {
+> +		if (!local->addr.id) {
+>  			GENL_SET_ERR_MSG(info, "missing address ID");
+
+... and use NL_SET_ERR_MSG_ATTR() here and below.
+
+That way, the code around the reporting of errors would be uniformed
+with the rest, and that could still help userspace devs.
+
+I can do the modifications when applying the patches of the other series
+and this one here.
+
+(...)
+
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 4007f67cc7b1..431454578021 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -564,19 +564,18 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+>  	return err;
+>  }
+>  
+> -int mptcp_userspace_pm_set_flags(struct genl_info *info)
+> +int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
+> +				 struct genl_info *info)
+>  {
+> -	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
+>  	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
+>  	struct mptcp_pm_addr_entry *entry;
+> -	struct nlattr *attr, *attr_rem;
+> +	struct nlattr *attr_rem;
+>  	struct mptcp_sock *msk;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+>  	u8 bkup = 0;
+>  
+> -	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
+> -	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+> +	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
+>  		return ret;
+>  
+>  	msk = mptcp_userspace_pm_get_sock(info);
+> @@ -585,12 +584,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
+>  
+>  	sk = (struct sock *)msk;
+>  
+> -	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
+
+Same here.
+
+> -	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
+> -	if (ret < 0)
+> -		goto set_flags_err;
+> -
+> -	if (loc.addr.family == AF_UNSPEC) {
+> +	if (local->addr.family == AF_UNSPEC) {
+>  		GENL_SET_ERR_MSG(info, "invalid local address family");
+>  		ret = -EINVAL;
+>  		goto set_flags_err;
+(...)
 
 Cheers,
 Matt
