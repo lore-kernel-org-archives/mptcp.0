@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AD43F18FC80
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 10:35:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8717220550F
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 10:49:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736505342; cv=none; b=QJtgH44tJZhMVFEWFiu9bmyZzeEABu1dKpz8a7HPnAeFWfEuTijsXbXRkHhirepldYX6AHURugkVJLi2ez5D3XEtWxZVeWY5ti21gU1X4Cuu2d9RmKwdyftReCQbK3lHGEkVEYTVEWS7YoD+1CPKJ+e03p08ryk25aJBO2zKrN4=
+	t=1736506155; cv=none; b=I8OmwsuIfsP4g+w0+1ORzT3/IE3wVj+/rcbmfelQY2y68/Cko7pbIPBcdOCdn7OHghTcGs5LbogCPodUY20pYG+3SNuAdEtZ+xxnXo+qUhxIII41H1HsTwxtG8Dr5wbNkCF/IzZcnjDww/+6nP3QE1ksRNa1xCyFdC7kbfTAjbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736505342; c=relaxed/simple;
-	bh=fZ8j15ApyrlcTVr7yedIUdWCnme8P5ekiS5dINLCYm4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Dvlwzt2QrCdnx8Ko1eR8+Qq7N4UYeB/Vjh+uyC39z+TBUIUmXwSyAYdCcvleGuqD01m8PZMNRlK9ajKuYuPAqrqa8BqO0Ki3VHF5I6UlRCTdh3o94u8FJLWK9l2nz4xcd8+3o8jevwBY6r5aLq80oxo+QI/5n9CRBef4C+8FWTg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JdMmNnSm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736506155; c=relaxed/simple;
+	bh=btOa8jVHc5FGObdZBaaCtZW5SBG/w3yx2S5U6nlo0iU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=n94VET/AX7Etdgagilkjl6sOpvvCWXzc8OgxxaoXxIzhsgJ9l1O9rIt2DXpC8Gddip9zweSu/JRxXXCtwudtZc/Laug/nzAY+6An/jw9QqcOVge6rMLXZ+teUtUcyhJRCDK0MaQkmGeAxhDsECejRih83xyUJzOq6ZwQeMRl+cs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZyfHYbFd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JdMmNnSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEC9DC4CED6;
-	Fri, 10 Jan 2025 10:35:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZyfHYbFd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 405DDC4CED6;
+	Fri, 10 Jan 2025 10:49:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736505342;
-	bh=fZ8j15ApyrlcTVr7yedIUdWCnme8P5ekiS5dINLCYm4=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=JdMmNnSmAXL/4OoiHB74/LnxK4N7TvBqdeepms74hBBexQO5G135r647c1PMf6O/n
-	 Gfi5r0sLD1NOlJPhdKTbGo3Y6oF459KYh+RT7cTiqH1ecwkNnHyuS96UFj/G7FCip3
-	 p4JCeuyS+zJeeYPdiBtwQ9PS8xbedEBAuGz0v+gWTHmK/gXIrOBukIqB7RUAdhyTtG
-	 GO/5TbZwK9hgJxMhFieOHvAg5KzisMmrlVIqk2uwxbAFfqIKVchh0FXJuWs3Ws4gdk
-	 VSoFFES72xSmQY6pkZgIIvX0p25k+6T6eksaJqRPNrfqrLq3XWwnrzrKHUxqZej8OJ
-	 npCeCv+S8OpXg==
-Message-ID: <8c360ded-d7a4-4149-aa70-854292655073@kernel.org>
-Date: Fri, 10 Jan 2025 11:35:39 +0100
+	s=k20201202; t=1736506154;
+	bh=btOa8jVHc5FGObdZBaaCtZW5SBG/w3yx2S5U6nlo0iU=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ZyfHYbFdLjbcBA/Tgps3iHk6XMoZpvZqb26akXDnAu9Bk9FOHi96C/OcRwapM4i5g
+	 kNvHUz25M7hV4/sRIwwoGnijN5yjnMukcrVDLFJn7mJgh0+7wPq+WJ3Bl7Kb+P6ihu
+	 BDRReoLrcQFP/PbYUn54spFVYN+cwUCFSXtl2gf0/3IKcjmbBG+N/B+PgxFfIoiywE
+	 qhM6Wa+qTBT2aTPpKMykJ8RRgKnKqyj1tH5wm+7GVtf8D8nxNy2P3MLKGEc7F4XVPc
+	 AcaApXIxsebpdO0gnZQBpPanMVkJShVMCNaWWiQfEvjQsdlvSyVFpiahB6V2meCzNl
+	 MYW02vno4iGrQ==
+Message-ID: <ec4dff48-96c1-4aa1-9a46-6560ac6587e4@kernel.org>
+Date: Fri, 10 Jan 2025 11:49:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/5] selftests: mptcp: simult_flows: unify
- errors msgs
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: sockopt: save nstat infos
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
- <20250108-slft-mptcp-conn-misc-impr-v1-1-bdfbdba48a1f@kernel.org>
- <e94e771e8993b4b40e151959fccb7716a8d29a86.camel@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,110 +85,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e94e771e8993b4b40e151959fccb7716a8d29a86.camel@kernel.org>
+In-Reply-To: <5ff48cd1eed9a8b4c51a9ba5d7f9e0d0e8b0389b.1736477880.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 10/01/2025 09:16, Geliang Tang wrote:
-> Hi Matt,
+On 10/01/2025 04:02, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Wed, 2025-01-08 at 19:40 +0100, Matthieu Baerts (NGI0) wrote:
->> In order to unify what is printed in case of error, similar to what
->> is
->> done in mptcp_connect.sh and mptcp_join.sh, it is interesting to do
->> the
->> following modifications in simult_flows.sh:
->>
->> - Print the rc errors at the end of the line.
->>
->> - Print the MIB counters.
->>
->> - Use the same ss options: add -M (MPTCP sockets) and -e (detailed
->>   socket information).
->>
->> While at it, also print of the 'max' time only in case of success,
->> because 'mptcp_connect.c' will already print this info in case of
->> error,
->> e.g.:
->>
->>   transfer slower than expected! runtime 11948 ms, expected 11921 ms
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  tools/testing/selftests/net/mptcp/simult_flows.sh | 21
->> ++++++++++++++++-----
->>  1 file changed, 16 insertions(+), 5 deletions(-)
->>
->> diff --git a/tools/testing/selftests/net/mptcp/simult_flows.sh
->> b/tools/testing/selftests/net/mptcp/simult_flows.sh
->> index
->> 8fa77c8e9b651171a34c89bfd5c9ded0288a5bde..e98e5907d52c2d0e9c0152efda8
->> 2176861905cf1 100755
->> --- a/tools/testing/selftests/net/mptcp/simult_flows.sh
->> +++ b/tools/testing/selftests/net/mptcp/simult_flows.sh
->> @@ -155,6 +155,11 @@ do_transfer()
->>   sleep 1
->>   fi
->>  
->> + NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
->> + nstat -n
->> + NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
->> + nstat -n
->> +
->>   timeout ${timeout_test} \
->>   ip netns exec ${ns3} \
->>   ./mptcp_connect -jt ${timeout_poll} -l -p $port -T $max_time \
->> @@ -180,25 +185,31 @@ do_transfer()
->>   kill ${cappid_connector}
->>   fi
->>  
->> + NSTAT_HISTORY=/tmp/${ns3}.nstat ip netns exec ${ns3} \
->> + nstat | grep Tcp > /tmp/${ns3}.out
->> + NSTAT_HISTORY=/tmp/${ns1}.nstat ip netns exec ${ns1} \
->> + nstat | grep Tcp > /tmp/${ns1}.out
+> Similar to the way nstat information is stored in mptcp_connect.sh
+> and mptcp_join.sh scripts, this patch adds a similar way for
+> mptcp_sockopt.sh and displays the nstat information when errors
+> occur.
+
+Thank you for the patch! Even if I'm not sure if it will really help
+debugging issues, at least it is uniformed, and it looks good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> Please apply this patch before the commit
 > 
-> Here I got "nstat: history is aged out, resetting" warnings, and I
-> don't know how to fix it:
+> "selftests: mptcp: simult_flows: unify errors msgs"
 > 
-> Selftest Test: ./simult_flows.sh
-> TAP version 13
-> 1..1
-> [    1.022664] ip (155) used greatest stack depth: 12280 bytes left
-> [    1.316990] netem: version 1.3
-> # 01 balanced bwidth                                            
-> 7401nstat: history is aged out, resetting
-> # nstat: history is aged out, resetting
-> #  max 7906       [ OK ]
-> # 02 balanced bwidth - reverse direction                         7394
-> max 7906       [ OK ]
+> when merging it.
 
-Interesting: I already saw this message on NIPA, but I could not
-reproduce it on my side.
+Will do! Or after, it might be easier with the automated scripts.
 
-Could you eventually try to find out what it is? Maybe the stats from
-files in /tmp are wrong inside your VM?
-
-The code of nstat is in the iproute2 repo:
-
-https://git.kernel.org/pub/scm/network/iproute2/iproute2-next.git/tree/misc/nstat.c#n691
-
-  if (!ignore_history) {
-      FILE *tfp;
-      long uptime = -1;
-
-      if ((tfp = fopen("/proc/uptime", "r")) != NULL) {
-          if (fscanf(tfp, "%ld", &uptime) != 1)
-              uptime = -1;
-          fclose(tfp);
-      }
-      if (uptime >= 0 && time(NULL) >= stb.st_mtime+uptime) {
-          fprintf(stderr, "nstat: history is aged out, resetting\n");
-          if (ftruncate(fileno(hist_fp), 0) < 0)
-              perror("nstat: ftruncate");
-      }
-  }
+Can I add your Reviewed-by tag on my other patches from this series?
 
 Cheers,
 Matt
