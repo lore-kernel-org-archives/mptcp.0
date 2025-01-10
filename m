@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F66CC2C6
-	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 07:36:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01DD0C2C6
+	for <mptcp@lists.linux.dev>; Fri, 10 Jan 2025 07:36:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736494593; cv=none; b=NJUvlhcgE6B8VYFCraSNi7TlGNexj4cY3glOXTt1STktGEWstsIWX8tBTnv7WLKuvzfuo2B5mkjyHgJCJu2Gb/6IW9ILq1Q+7o7FMGOwbPCFboJ2t5MylIaKjZ26mX9IMhbqF+Pmg5bavhJjHGt6ks3cWk11seW79esbW6tofuc=
+	t=1736494595; cv=none; b=sIyvF5dgdUV7Wtls3/jhmNfxDL6M30lCDvf3hvPuGTIxjHMWw0OWF3trdzVrSs7SuXg8YfWWgTAOKjaGG4hwvmUKNxVu2WJ5k0iUV5ObqzCHgItN+cpdUIUG4ON3xE0BDU7lCTIoUut6Raew/SNeUgZmkB8vLFHg/2e5p4NZaGo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736494593; c=relaxed/simple;
-	bh=4dkcoBMJ0in5La0n6Okqu5Qp0d+bY/UhkK7JOp2i4rA=;
+	s=arc-20240116; t=1736494595; c=relaxed/simple;
+	bh=bTi/AVjc70mAsAvJ4C5NzT/h43K972ZsGTSR78YgYdI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=aS6SLXqpxVPC39SO5lY8a28J+33s4KOr7Ya5E+3HwtESVXpDNxCw82wjTYqNPgn4PoVZS9WZGHMWstN/r8m8nQeAAIboHlCevhPJlxRnooJHAsw9UambsZIxthC4Q3n4o8azLZx0VDDQg/vEq3J8IwMZ2ZMgPYp1/0GmXG/wvGM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Sj/cY26k; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=I+A5eMGOIm91CU6D/iudxcayQvW/1V5/q3mCeQJ2f+EpmOy+IeentyXG9N/IcB4mFZDQEXd4YSmLMPGsVj0lXy0Aa5UVLnl0clZa6C21wOmWY5XD0lQ8cN6nZ5lM1nsi4Yuq1Te4dJLlJkNw5XDWf0IbY4yBHrokzpxF4DQZ/9Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H1YWaXbx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Sj/cY26k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB0C9C4CED6;
-	Fri, 10 Jan 2025 07:36:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H1YWaXbx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 69384C4CEDF;
+	Fri, 10 Jan 2025 07:36:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736494592;
-	bh=4dkcoBMJ0in5La0n6Okqu5Qp0d+bY/UhkK7JOp2i4rA=;
+	s=k20201202; t=1736494594;
+	bh=bTi/AVjc70mAsAvJ4C5NzT/h43K972ZsGTSR78YgYdI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Sj/cY26krS0zGiC9zkOkFyxmxG2asLb4+a4n8u/8jIPaF3lDuFCTdf849ZzlupqE0
-	 Gzc8yH2NHHbHH7x8tDuTzsO7VadaAFiBfUKBrexAHD6lyC8Rc3d4aZ7uwSKiPrMDXL
-	 dz07hQO38KP76/TzTuotX125uXsJ16lvL0W7sdFOohBHbY5RuHzvJeafWqN/BO6Bm/
-	 HY28KsPhURsrLrAza9zKeHOwMiBUUk+TUEwIlXyjP6NTzpjykmGvjsVTc3Qd1VWiEy
-	 tDkEr9xN37MSFoeaFIOEo/PjdSHTBDQmSflWqHjB8IgUgphpWOZSBh7SUURhku8mb3
-	 FxNy2Ea5cc1Kg==
+	b=H1YWaXbxuGHAltc659qfls31oLRXOm2K8BVOphtInCM0AcKigQeS094+BLEoExf+V
+	 LMSBp73Xcgn5nFr/DMWGRxHW7CJX6r0gwZVw1oBbOrv1qWTMjAvpFJwVV9qnh/KMnR
+	 sc52DeTSOydcZy0vwR07qs8z0Su9vead0Xiji1SvkRfNwggc2p7lNCQzgUMXdlrlzW
+	 TtXaxx8w6GGU5MdDoyyamCXRsPVL9cfzvXGXyxXEx1xRQJ1RuIf235FVXyUse6qPXR
+	 06ic4QPkiuwgsuGJj33v1l6si70LDDlsOUiCKPVwAT2k/1zZB6rZ/Oo5T0/agt+eDL
+	 718D+SOJPBdFg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 4/7] mptcp: reuse sending nlmsg code in get_addr
-Date: Fri, 10 Jan 2025 15:36:17 +0800
-Message-ID: <f375a6d78670d1685088a341ab0d97d32ab548f0.1736494320.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 5/7] mptcp: drop skb parameter of set_flags
+Date: Fri, 10 Jan 2025 15:36:18 +0800
+Message-ID: <5632831c6e9e2845ab70c4fd690c39446404a8ce.1736494320.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.45.2
 In-Reply-To: <cover.1736494320.git.tanggeliang@kylinos.cn>
 References: <cover.1736494320.git.tanggeliang@kylinos.cn>
@@ -45,260 +45,91 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The netlink messages are sent both in mptcp_pm_nl_get_addr() and
-mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
-This is because the netlink PM and userspace PM use different locks to
-protect the address entry that needs to be sent via the netlink message.
-The former uses rcu read lock, and the latter uses msk->pm.lock.
-
-The current get_addr() flow looks like this:
-
-	lock();
-	entry = get_entry();
-	send_nlmsg(entry);
-	unlock();
-
-After holding the lock, get the entry from the list, send the entry, and
-finally release the lock.
-
-This patch changes the process by getting the entry while holding the lock,
-then making a copy of the entry so that the lock can be released. Finally,
-the copy of the entry is sent without locking:
-
-	lock();
-	entry = get_entry();
-	*copy = *entry;
-	unlock();
-
-	send_nlmsg(copy);
-
-This way we can reuse the send_nlmsg() code in get_addr() interfaces
-between the netlink PM and userspace PM. They only need to implement their
-own get_addr() interfaces to hold the different locks, get the entry from
-the different lists, then release the locks.
+The first parameter 'skb' in mptcp_pm_nl_set_flags() is only used to
+obtained the network namespace, which can also be obtained through the
+second parameters 'info' by using genl_info_net() helper. This patch
+drops these useless parameters 'skb' in all three set_flags() interfaces.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c           | 39 +++++++++++++++++++++++++++++++++----
- net/mptcp/pm_netlink.c   | 40 ++++++--------------------------------
- net/mptcp/pm_userspace.c | 42 +++++-----------------------------------
- net/mptcp/protocol.h     |  6 ++++--
- 4 files changed, 50 insertions(+), 77 deletions(-)
+ net/mptcp/pm.c           | 8 ++++----
+ net/mptcp/pm_netlink.c   | 4 ++--
+ net/mptcp/pm_userspace.c | 2 +-
+ net/mptcp/protocol.h     | 4 ++--
+ 4 files changed, 9 insertions(+), 9 deletions(-)
 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index caf5bfc3cd1d..ba22d17c1451 100644
+index ba22d17c1451..c213f06bc702 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -434,17 +434,20 @@ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
- 	return mptcp_pm_nl_is_backup(msk, &skc_local);
+@@ -504,16 +504,16 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
+ 	return mptcp_pm_dump_addr(msg, cb);
  }
  
--static int mptcp_pm_get_addr(u8 id, struct genl_info *info)
-+static int mptcp_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+			     struct genl_info *info)
+-static int mptcp_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
++static int mptcp_pm_set_flags(struct genl_info *info)
  {
  	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_get_addr(id, info);
--	return mptcp_pm_nl_get_addr(id, info);
-+		return mptcp_userspace_pm_get_addr(id, addr, info);
-+	return mptcp_pm_nl_get_addr(id, addr, info);
+-		return mptcp_userspace_pm_set_flags(skb, info);
+-	return mptcp_pm_nl_set_flags(skb, info);
++		return mptcp_userspace_pm_set_flags(info);
++	return mptcp_pm_nl_set_flags(info);
  }
  
- int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
  {
- 	struct mptcp_pm_addr_entry addr;
- 	struct nlattr *attr;
-+	struct sk_buff *msg;
-+	void *reply;
- 	int ret;
- 
- 	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-@@ -455,7 +458,35 @@ int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		return ret;
- 
--	return mptcp_pm_get_addr(addr.addr.id, info);
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
-+				  info->genlhdr->cmd);
-+	if (!reply) {
-+		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
-+		ret = -EMSGSIZE;
-+		goto fail;
-+	}
-+
-+	ret = mptcp_pm_get_addr(addr.addr.id, &addr, info);
-+	if (ret) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
-+		goto fail;
-+	}
-+
-+	ret = mptcp_nl_fill_addr(msg, &addr);
-+	if (ret)
-+		goto fail;
-+
-+	genlmsg_end(msg, reply);
-+	ret = genlmsg_reply(msg, info);
-+	return ret;
-+
-+fail:
-+	nlmsg_free(msg);
-+	return ret;
+-	return mptcp_pm_set_flags(skb, info);
++	return mptcp_pm_set_flags(info);
  }
  
- static int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
+ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index ab948a9fcfe8..181d3b87eb25 100644
+index 181d3b87eb25..52fd9830b685 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -1773,49 +1773,21 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
- 	return -EMSGSIZE;
- }
- 
--int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info)
-+int mptcp_pm_nl_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+			 struct genl_info *info)
- {
- 	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
- 	struct mptcp_pm_addr_entry *entry;
--	struct sk_buff *msg;
--	struct nlattr *attr;
--	void *reply;
--	int ret;
--
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
--	if (!msg)
--		return -ENOMEM;
--
--	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
--				  info->genlhdr->cmd);
--	if (!reply) {
--		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
--		ret = -EMSGSIZE;
--		goto fail;
--	}
-+	int ret = -EINVAL;
- 
- 	rcu_read_lock();
- 	entry = __lookup_addr_by_id(pernet, id);
--	if (!entry) {
--		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
--		ret = -EINVAL;
--		goto unlock_fail;
-+	if (entry) {
-+		*addr = *entry;
-+		ret = 0;
- 	}
--
--	ret = mptcp_nl_fill_addr(msg, entry);
--	if (ret)
--		goto unlock_fail;
--
--	genlmsg_end(msg, reply);
--	ret = genlmsg_reply(msg, info);
--	rcu_read_unlock();
--	return ret;
--
--unlock_fail:
- 	rcu_read_unlock();
- 
--fail:
--	nlmsg_free(msg);
+@@ -1951,12 +1951,12 @@ static int mptcp_nl_set_flags(struct net *net,
  	return ret;
  }
  
+-int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info)
++int mptcp_pm_nl_set_flags(struct genl_info *info)
+ {
+ 	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
+ 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
+ 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
+-	struct net *net = sock_net(skb->sk);
++	struct net *net = genl_info_net(info);
+ 	struct mptcp_pm_addr_entry *entry;
+ 	struct pm_nl_pernet *pernet;
+ 	struct nlattr *attr;
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 9a974fe0d992..eaa02879de43 100644
+index eaa02879de43..008c6367a75c 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -683,15 +683,13 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- 	return ret;
+@@ -564,7 +564,7 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
+ 	return err;
  }
  
--int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info)
-+int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+				struct genl_info *info)
+-int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
++int mptcp_userspace_pm_set_flags(struct genl_info *info)
  {
- 	struct mptcp_pm_addr_entry *entry;
- 	struct mptcp_sock *msk;
--	struct sk_buff *msg;
--	struct nlattr *attr;
- 	int ret = -EINVAL;
- 	struct sock *sk;
--	void *reply;
- 
- 	msk = mptcp_userspace_pm_get_sock(info);
- 	if (!msk)
-@@ -699,46 +697,16 @@ int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info)
- 
- 	sk = (struct sock *)msk;
- 
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
--	if (!msg) {
--		ret = -ENOMEM;
--		goto out;
--	}
--
--	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
--				  info->genlhdr->cmd);
--	if (!reply) {
--		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
--		ret = -EMSGSIZE;
--		goto fail;
--	}
--
- 	lock_sock(sk);
- 	spin_lock_bh(&msk->pm.lock);
- 	entry = mptcp_userspace_pm_lookup_addr_by_id(msk, id);
--	if (!entry) {
--		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
--		ret = -EINVAL;
--		goto unlock_fail;
-+	if (entry) {
-+		*addr = *entry;
-+		ret = 0;
- 	}
--
--	ret = mptcp_nl_fill_addr(msg, entry);
--	if (ret)
--		goto unlock_fail;
--
--	genlmsg_end(msg, reply);
--	ret = genlmsg_reply(msg, info);
- 	spin_unlock_bh(&msk->pm.lock);
- 	release_sock(sk);
--	sock_put(sk);
--	return ret;
- 
--unlock_fail:
--	spin_unlock_bh(&msk->pm.lock);
--	release_sock(sk);
--fail:
--	nlmsg_free(msg);
--out:
- 	sock_put(sk);
- 	return ret;
- }
+ 	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
+ 	struct mptcp_pm_addr_entry rem = { .addr = { .family = AF_UNSPEC }, };
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 14d6b6be0483..a43481c40577 100644
+index a43481c40577..aa014f514af3 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1124,8 +1124,10 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 			  struct netlink_callback *cb);
- int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
- 				 struct netlink_callback *cb);
--int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info);
--int mptcp_userspace_pm_get_addr(u8 id, struct genl_info *info);
-+int mptcp_pm_nl_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+			 struct genl_info *info);
-+int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+				struct genl_info *info);
- 
- static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflow)
- {
+@@ -1028,8 +1028,8 @@ bool mptcp_lookup_subflow_by_saddr(const struct list_head *list,
+ 				   const struct mptcp_addr_info *saddr);
+ bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
+ 				     const struct mptcp_addr_info *addr);
+-int mptcp_pm_nl_set_flags(struct sk_buff *skb, struct genl_info *info);
+-int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info);
++int mptcp_pm_nl_set_flags(struct genl_info *info);
++int mptcp_userspace_pm_set_flags(struct genl_info *info);
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+ 			   const struct mptcp_addr_info *addr,
+ 			   bool echo);
 -- 
 2.45.2
 
