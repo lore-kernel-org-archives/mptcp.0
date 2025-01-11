@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5505924B238
-	for <mptcp@lists.linux.dev>; Sat, 11 Jan 2025 11:41:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C20581A23B0
+	for <mptcp@lists.linux.dev>; Sat, 11 Jan 2025 12:52:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736595686; cv=none; b=gX8imKlWpBd6n5k1Htcffyb8Owq1Qa0o8MYpef85IDBXbxXvgPCYzgc5rm4nGSR/k/UOZ1Y+OTe0DgkWjqBftN1DKqNhwM6ZqRVae63uUQxmijx6JGknm49acBut7GYcuPFpFY+UEqeOPYCvx4NsY+sJZHN6gXil8yuatSWNcrI=
+	t=1736599962; cv=none; b=ZD+lBbhs6NtyAqqZlr00VZbXE0m1HIyj0k0OTN+DCd2E3GW0HkOVi8B42iHO7czAR+W1AVQaHIT0MkmbFHuFiKo/Z69621vZGe+aAkZWuyjLqPNvxNFcXce5n0zwX61vhak9mF4G9x1l+YEsAtElwW0SQ50zMDslFcjWcoH1HbA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736595686; c=relaxed/simple;
-	bh=C3CLhAQm4FWKVehiI/8075JVye8famCNSvGKlhiEZ7A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=BmssAkhaAh4VUDxH6NuO1MJKWOU7Q8ZWjeTEaOjFTmaryclfgLRIDh2/ymfT+evxgbsa7jpHZl14b8pCFvjYkHP49Nzxj7q1uR23RhR6XjAepPh0X1tAXnm0eHuZkfW6L1ov05pQdbU7VpboFjn/BXctuE/612MbuSZ5sqgm7eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lQ+BWC3Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736599962; c=relaxed/simple;
+	bh=62ykbvEkDt/GZMlVUk22n5LC/3clF0OjO11NpbxJwQc=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=i70NrVlktbO3WT/NSoZDoJwEUo5vod71oxqrtyycuo5D2HmcydJYS8opctxsJno7g6LpxCXzfPuDvFLoa4rTBEjSb3VRHFoqTt5WL74999UbxhQ2r9WQhw0HfcORq6lheZm3Hb+8z8LFFe7fI5PbzZGifsgV6R79A8axr0dwT2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nue/T0oo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lQ+BWC3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7CAC4CED2;
-	Sat, 11 Jan 2025 11:41:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nue/T0oo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B57ECC4CEDF;
+	Sat, 11 Jan 2025 12:52:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736595685;
-	bh=C3CLhAQm4FWKVehiI/8075JVye8famCNSvGKlhiEZ7A=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=lQ+BWC3QZb0tfML2QDb7h/o15ql5DDShGA/6IbGAhCmQyHRsSpcZiNwyXB5dSjQua
-	 /p9ArOZR7xWlG3JcL/tSq5SAik+V0fQadIiu2jphBLZvNTcD+c/JoW4sGndfKgpMAo
-	 r7lR/XKeheVYrrPRLiUmpyzSg1kaZt9Wjo1fOxb7w/oMVo6vGrRF46D0Za0u+2y1ij
-	 O5a6CEHwx00A3ruuYCZwKwKBD+1dJLKnA4e1Rca5BPzBskOhR/NPI8RKha48oettog
-	 mMqj8F3Slao9f8yKl0RCiCDGvyeKszhSrktxY5/+OnLKdOJk9Jn0yX0uFh86qM9cRl
-	 8aECr8hAigqhw==
-Message-ID: <1a55fc38-7e9a-455b-803a-7760405c2d0e@kernel.org>
-Date: Sat, 11 Jan 2025 12:41:23 +0100
+	s=k20201202; t=1736599962;
+	bh=62ykbvEkDt/GZMlVUk22n5LC/3clF0OjO11NpbxJwQc=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=Nue/T0ooWG9uq6A/LEVTxpuWPLCctjYLsCPn9VnhpIOTLTJANKTzOB/sfIgwMiIHP
+	 jnP6rjTLz8+IlyvX1aruvfAEV0O8ETzcheJ5cuXhzw0QDrouZMWKqqXDVEyAahBf1/
+	 pcwPiwGgk0hM6p4r4SZBFqJ+bd3rBEoR00Tktb0trQQd1Pc3iYPSHgoVulLW2qu84Q
+	 JA7BGnjcxATsCwXp5tN/cJHvZ9wc2O7dljKy6ICRxVgsJGf6LQIyqFWXZaqJ0OaC2I
+	 T+ZvGnpsYiN8FaZOQFKO0rtmo+hMHdnJULEPRkv8t4JUmGDTVx0J+E+gCb2gQXGFPZ
+	 mspzV2o9A0Hnw==
+Message-ID: <86565c4f-9308-4738-acfe-3fab8c9defad@kernel.org>
+Date: Sat, 11 Jan 2025 13:52:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net 3/3] selftests: mptcp: avoid spurious errors on
- disconnect
+Subject: Re: [PATCH mptcp-net 0/3] mptcp: a bunch of fixes for ST flakes
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1736527092.git.pabeni@redhat.com>
- <be1fa3944536edc745e897234a38ace68e912e55.1736527092.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <76550d25-1422-41a1-af00-f65a6ba24505@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,96 +85,47 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <be1fa3944536edc745e897234a38ace68e912e55.1736527092.git.pabeni@redhat.com>
+In-Reply-To: <76550d25-1422-41a1-af00-f65a6ba24505@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 10/01/2025 17:43, Paolo Abeni wrote:
-> The disconnect test-case generates spurious errors:
+On 11/01/2025 12:39, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> NFO: disconnect
-> INFO: extra options: -I 3 -i /tmp/tmp.r43niviyoI
-> 01 ns1 MPTCP -> ns1 (10.0.1.1:10000      ) MPTCP     Unexpected revents: POLLERR/POLLNVAL(19)
-> (duration   140ms) [FAIL] file received by server does not match (in, out):
-> -rw-r--r-- 1 root root 10028676 Jan 10 10:47 /tmp/tmp.r43niviyoI.disconnect
-> Trailing bytes are:
-> ��\����R���!8��u2��5N%w------- 1 root root 9992290 Jan 10 10:47 /tmp/tmp.Os4UbnWbI1
-> Trailing bytes are:
-> ��\����R���!8��u2��5N%2 ns1 MPTCP -> ns1 (dead:beef:1::1:10001) MPTCP     (duration   206ms) [ OK ]
-> 03 ns1 MPTCP -> ns1 (dead:beef:1::1:10002) TCP       (duration    31ms) [ OK ]
-> 04 ns1 TCP   -> ns1 (dead:beef:1::1:10003) MPTCP     (duration    26ms) [ OK ]
-> [FAIL] Tests of the full disconnection have failed
-> Time: 2 seconds
+> On 10/01/2025 17:43, Paolo Abeni wrote:
+>> still under test locally. Sharing early for larger coverage.
+>> Among other things, still to evaluate if patch 1/3 increases the ack
+>> frequency "too much".
+>>
+>> Paolo Abeni (3):
+>>   mptcp: be sure to send ack when mptcp-level window re-opens
+>>   mptcp: fix spurious wake-up on under memory pressure.
+>>   selftests: mptcp: avoid spurious errors on disconnect
 > 
-> The root cause is actually in the user-space bits: the test program
-> currently disconnects as soon as all the pending data has been spooled,
-> generating an FASTCLOSE. If such option reaches the peer before that
-> the latter has reached the closed status, the msk socket will report an
-> error to the user-space, as per protocol specification, causing the above
-> failure.
+> Thank you very much for these fixes!
+> 
+> They look good to me and the CI, and the mptcp_connect.sh has
+> successfully run 1250 times on my side:
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Good catch!
+Now in our tree (fixes for -net) with the small modification I suggested:
 
-> Address the issue explicitly waiting for all the relevant sockets to reach
-> a closed status before performing the disconnect.
-> 
-> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
->  .../selftests/net/mptcp/mptcp_connect.c       | 44 ++++++++++++++-----
->  1 file changed, 33 insertions(+), 11 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 4209b9569039..5cfea1760431 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -25,6 +25,8 @@
->  #include <sys/types.h>
->  #include <sys/mman.h>
->  
-> +#include <arpa/inet.h>
-> +
->  #include <netdb.h>
->  #include <netinet/in.h>
->  
-> @@ -1211,23 +1213,43 @@ static void parse_setsock_options(const char *name)
->  	exit(1);
->  }
->  
-> -void xdisconnect(int fd, int addrlen)
-> +void xdisconnect(int fd)
->  {
-> -	struct sockaddr_storage empty;
-> +	socklen_t addrlen = sizeof(struct sockaddr_storage);
-> +	struct sockaddr_storage addr, empty;
->  	int msec_sleep = 10;
-> -	int queued = 1;
-> -	int i;
-> +	void *raw_addr;
-> +	int i, cmdlen;
-> +	char cmd[128];
-> +
-> +	/* get the local address and convert it to string */
-> +	if (getsockname(fd, (struct sockaddr *)&addr, &addrlen) < 0)
-> +		xerror("getsockname");
-> +
-> +	if (addr.ss_family == AF_INET)
-> +		raw_addr= &(((struct sockaddr_in *)&addr)->sin_addr);
-> +	else if (addr.ss_family == AF_INET6)
-> +		raw_addr = &(((struct sockaddr_in6 *)&addr)->sin6_addr);
-> +	else
-> +		xerror("bad family");
-> +
-> +	strcpy(cmd, "ss -M | grep ");
-> +	cmdlen = strlen(cmd);
-> +	if (!inet_ntop(addr.ss_family , raw_addr, &cmd[cmdlen],
-> +		       sizeof(cmd) - cmdlen))
-> +		xerror("inet_ntop");
-> +	strcat(cmd, " >/dev/null");
+New patches for t/upstream-net and t/upstream:
+- 6c4d6102b5d2: mptcp: be sure to send ack when mptcp-level window re-opens
+- 7114896353d0: mptcp: fix spurious wake-up on under memory pressure
+- f1255ad62bbd: selftests: mptcp: avoid spurious errors on disconnect
+- Results: 33abddb5214c..17f91cba3085 (export-net)
+- Results: dcd1bfd53763..17aabfa75062 (export)
 
-Detail: we can use 'grep -q', so no need to add ">/dev/null".
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ce2b29666dcb17454f9c500eb2aa2c61889f4b01/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b1747a5cf769c578348f5371b105ddb41d4f8b6f/checks
 
 Cheers,
 Matt
