@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A10383C1F
-	for <mptcp@lists.linux.dev>; Sun, 12 Jan 2025 12:57:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 83349224D7
+	for <mptcp@lists.linux.dev>; Sun, 12 Jan 2025 13:09:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736686671; cv=none; b=fqlKcjAebYNHEuHkVm5ld2uzBWbJOgevZEwXDIPFP+Rh7eAvFHqt9RgA+XhMm2ZS1nzazcWRL8pTbFHSRIhUzTCGjJ6sXk500IbiOdSYRaQsegUVxsO+sKq3zNvOMGdpepF6GJ3oHKgbs9ini5mC2I6RL0Kkrq5KQkF83sVur1o=
+	t=1736687373; cv=none; b=RD1Y6TA5eCnWAIwLe59PB9eAnR3RODt5H4XwpIO04G7p4eNkdTgSSCkhu1Lkt0gEJGSguqh/Gyduv6BeXk9iL17eEPGqnxX6ldFb6h4Jb+Pm11b2SZ+wCZvtx/zBYXrdjEhDZ9BG15yYjkukjfAchqDRqakFmoCR5jHPjtuA7aM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736686671; c=relaxed/simple;
-	bh=wZnZHhQANFTWBiJPUGVpA4S1jlHATm/6gzXxDKIwDiQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=VCZBy9z5FMv30fCBdP3DlsDNYuvEBJAVr529SE2ACmHRL6OU6HZUx5l5pMZnaB4kVyXW3eUVlTDX7EUGRohu1FUtTxwVtKWyxq6mgDMsI+RkxRSzkj+vd0apLKU8GyEGbZmR6/qCm+Lwa0+qXMwg0RlomcrIQ8UnErfTCVMT4Zo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8htPOxk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736687373; c=relaxed/simple;
+	bh=iYLgVw5hcj8TZy6HPVcgzN+dwKYtswXorwcaazOoeDQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=fFhRndnwMJteNsPwG94HNkKm/7Wbm7/MSPhG6BrULvvkDSZaaKmtOns/BUSJp+n0xY5QlilGPH9qhQpbwt1d7pevFtLxQ49j8WFaVlLgpotKOQToKwEjZQu+8mvurF9r6Gavo0wKqFl2aw9LrvHmvgWKX7MplOmWhqRx4HbfRes=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lhTtydfF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8htPOxk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EFD5C4CEE2;
-	Sun, 12 Jan 2025 12:57:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lhTtydfF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F441C4CEDF;
+	Sun, 12 Jan 2025 13:09:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736686671;
-	bh=wZnZHhQANFTWBiJPUGVpA4S1jlHATm/6gzXxDKIwDiQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=W8htPOxkoI3zVQsVHrhGIro4mw57b7bXEQwNDqAaO0nTDDgYIMMJZcUUooe5uyNlO
-	 1K1rAnRkt3mf+/X/kchG45SAuH+l1/qxzSfPHM2jMkYUwzrTDMTHEmqlCjlUIXbJes
-	 l4V1M9pzii6WqHnz62xj1Po2+nvASEJA+tjFSbr7fqY+yfc/fILy45Xvu2+dYGwHVT
-	 rmBq4++hHGh6C4d+FYm65YGruse4WqT0k0a4NWP3qgaIj/9YPq0zIIDRRDPBNEyIQp
-	 VtuDd7J9pUICVLp5rndUQulUVHBeUuBPwLpuFU3d8YLgyC/CRR5KTFofuHX3t71Ubl
-	 ySyV2e9Qa/GSg==
-Message-ID: <90124ad5-0195-4b8d-932c-5465de665572@kernel.org>
-Date: Sun, 12 Jan 2025 13:57:48 +0100
+	s=k20201202; t=1736687373;
+	bh=iYLgVw5hcj8TZy6HPVcgzN+dwKYtswXorwcaazOoeDQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lhTtydfFDrj+PbykmdZi30uKD3s0Ndgp0g17NQJB160Ncsz7Dfg2zax2vlgPqL+pQ
+	 ExcKzPTMSuiaqVUF+hJ0nsS1/ozpXz6ob8gvux7M2FW1iIFYbOmA1hD19EboRHGBcq
+	 l1RDRKP6z8YWOekcGyMT3DYl3m2MnWhb4d5lKcF+0m4E8nY127cIRkviqgUD+jRapE
+	 ZJAOKmGtIfOAnEMhcnxu3WCxV8wJnDH1sYirJCAht1N9Xuz7lwZtcQwOfaOSDWe3e2
+	 YPJssLoBZWaFp2D94Upca5U/PWh5+0i57KP4imY392yvZsHlz3lheV3fKzhuMI+poC
+	 6pTUQuwzNYfbA==
+Message-ID: <bae2eda7-b79d-45c3-b6c4-f94d74e2de33@kernel.org>
+Date: Sun, 12 Jan 2025 14:09:30 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 0/8] use GENL_REQ_ATTR_CHECK in userspace pm
+Subject: Re: [PATCH mptcp-next v4 0/7] BPF path manager, part 2
 Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1736493803.git.tanggeliang@kylinos.cn>
- <fd65072a-7bca-4b15-b184-b1213eecafca@kernel.org>
- <1c4ec8dc-bbdf-4e3c-b31d-306286ed9bbf@kernel.org>
+References: <cover.1736494320.git.tanggeliang@kylinos.cn>
+ <523f8cec-640b-4ada-87b3-21c86a4b5822@kernel.org>
+ <e2a3161d3db3bd0d8266056876382a6293da6509.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,55 +87,55 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1c4ec8dc-bbdf-4e3c-b31d-306286ed9bbf@kernel.org>
+In-Reply-To: <e2a3161d3db3bd0d8266056876382a6293da6509.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 12/01/2025 13:43, Matthieu Baerts wrote:
-> Hi Geliang,
+On 10/01/2025 13:40, Geliang Tang wrote:
+> Hi Matt,
 > 
-> On 10/01/2025 12:21, Matthieu Baerts wrote:
+> Thanks for your review.
+> 
+> On Fri, 2025-01-10 at 12:53 +0100, Matthieu Baerts wrote:
 >> Hi Geliang,
 >>
->> On 10/01/2025 08:30, Geliang Tang wrote:
+>> On 10/01/2025 08:36, Geliang Tang wrote:
 >>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>>
->>> v9:
->>>  patch 3, move the code using NL_SET_ERR_MSG_ATTR into patch 8.
->>>  patch 7, adjust the location of "pernet = pm_nl_get_pernet(net);".
+>>> v4:
+>>>  - move "mptcp: userspace pm set_flags id support" out of this set.
+>>>  - only add 'local' parameter for set_flags, no 'remote'.
 >>
->> Thank you for the new version.
+>> Thank you for the new version! It now looks good to me:
 >>
->> I have one small request in patch 8/8, but I can fix that when applying
->> the patches if that's OK with you.
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >>
->> I can also do the modifications in set_flags(), and fix the conflicts
->> when applying "BPF path manager, part 2" (if it is ready)
+>>> Based-on: <cover.1736493803.git.tanggeliang@kylinos.cn>
+>>
+>> I have just one question on patch 7/7, linked to the one I had on the
+>> "use GENL_REQ_ATTR_CHECK in userspace pm" series. If you are OK with
+>> that, I can do the modifications while applying these two series.
 > 
-> As discussed on the "BPF path manager, part 2" thread, I will apply
-> patches from these 2 series with the suggested modifications.
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Sure. Please update these patches for me when applying them.
 
-Now in our tree (feat. for net-next) with my/your RvB tag:
+Done! Now in our tree (feat. for net-next):
 
 New patches for t/upstream:
-- 5e429e15a686: mptcp: drop info of userspace_pm_remove_id_zero_address
-- 81e5a669e7d9: mptcp: pm: userspace: flags: clearer msg if no remote addr
-- 677a8abf8d6c: mptcp: pm: more precise error messages
-- b4609c1a21bc: mptcp: pm: improve error messages
-- b8f41c31bdfc: mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
-- 59b41cafd64c: mptcp: pm: remove duplicated error messages
-- 94f4c18c1bd8: mptcp: pm: mark missing address attributes
-- 04606ffe7837: mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
-- Results: 632bb7330ffe..472c88326ee3 (export)
+- d3401e36d040: mptcp: make three pm wrappers static
+- ebf01bfde1e1: mptcp: drop skb parameter of get_addr
+- 7852370411cf: mptcp: add id parameter for get_addr
+- 8f55135854d2: mptcp: reuse sending nlmsg code in get_addr
+- 8e9d415a217a: mptcp: drop skb parameter of set_flags
+- 6a7efe19ce07: mptcp: change rem type of set_flags
+- 7551b7b78dd7: mptcp: add local parameter for set_flags
+- Results: 472c88326ee3..99ab203e6854 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/2ee1204b47d42c73b7fb3bce9534d89666d24a98/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/9b5e8499e5017c4a434df8ce0f8f983e3eb5a820/checks
 
 Cheers,
 Matt
