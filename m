@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D92303C1F
-	for <mptcp@lists.linux.dev>; Sun, 12 Jan 2025 12:38:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 631791B4144
+	for <mptcp@lists.linux.dev>; Sun, 12 Jan 2025 12:43:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736685494; cv=none; b=DQIwyjK16D0q26dh9DWYKCb7mwzE6S0f8ydGHKOgmQoDRTogO73FSKC9dwV7QJNXpDzNM6hus+8PQcgyK4H/YDBjzFM0yItvT6AjT3lVwxnZYAlmhEdbdDKs8uHAoK2MNwCIURTdSwkF3F8Ceod6N5GrViMnzkjTwUfyBii/55M=
+	t=1736685787; cv=none; b=JU9S/fo7lw+VQBNLfV4M6FhsXy6X7gsuEKriq2nQXS7sEFceCSIvEVVjZxXmw4jbGU/TU6bl5meB5V+PzMScxv5B4FpsQXysvMhhPgesV6y8BI51o+OZmteOrdIG+HhPqaDRk2DHEKz+YtmP8ytImcGsh935ilHeD3djfDNux/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736685494; c=relaxed/simple;
-	bh=hRUpOe2jdC18GBVPYJQLw7YW+3gwpDCUtT0QftpCOhQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=LunNuH5Icf2DJRv9WZLzJQ01DH01DvpIhAcDkueGtG8GeWbauPynmBqiq2bfO8dKZVvicRx3EaakzvUapppUyXus93q5cn+NEjnCbWb1Cb040MZ00l78B4vOuTmdcEu2I95VGSoptlna2nj74wuutBgexyvm5KvVEdpghVaX75E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UBOalyS/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736685787; c=relaxed/simple;
+	bh=n6XtpE4AtiHfrb6M6n+Rnw57KA41uGXOBTB/kXNyFLo=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=GGrJDNa35QslEzqwRWywNaAEQ3X1LcxwRDtegOol2QeTAbpxpiAuuF0knZl0c11WhegLlptQcM6BPsKYAmtNoNrHDayRP3RfKGBzT5SazTNLcbEaSogRxzgMzwXr6P1gSZY2ZlWr6vya5WlgCvxLQE8ZK7X8c/UIbTNMM5Wwwhs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZahSIqHy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UBOalyS/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E5AF4C4CEDF;
-	Sun, 12 Jan 2025 12:38:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZahSIqHy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB783C4CEDF;
+	Sun, 12 Jan 2025 12:43:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736685494;
-	bh=hRUpOe2jdC18GBVPYJQLw7YW+3gwpDCUtT0QftpCOhQ=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=UBOalyS/dxFBCcoNS9pX090e3oD6S9SV2t1+cCk6ZGaW4Sre1d9M0Q7kwqiMlSPwd
-	 L0gwKU3dcbvfMN38zeghZns8I0yE1tXlXrtGH39wePLz5K+KdEvHByPQqT7+fu5uSa
-	 2eITSAObWPkvaFqcHTEeOAXv8eIwjQVuRv65iT0LBwT/HkGEcTwUB/t3sUSyXuTTBD
-	 eenjvsfG27G4NO903qKe8HzopwN/xFXg7ocor3HtYGyCwCo5Ns34Yqu5T/aIdpP9J1
-	 J19bnEg+RajwFJKdgZ2jJrqDtjt3B7RdePBiTF9S8HB0zGjRrC9VDhytLzDvBxHhVB
-	 BCKORUjMJ+E2A==
-Message-ID: <7c6de0fc-5af3-41f0-8ac1-b4816ab7575d@kernel.org>
-Date: Sun, 12 Jan 2025 13:38:11 +0100
+	s=k20201202; t=1736685786;
+	bh=n6XtpE4AtiHfrb6M6n+Rnw57KA41uGXOBTB/kXNyFLo=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=ZahSIqHyOaCtHhZznuZSlUqKQx5rBLkeI1MEzAy9fl3ScCzoDtYMs9P7AeJR3ai6D
+	 hAFNtxh29xLuUh9bl5EexxtRrqLMo1t0LhLWVi3vl8O1K1jEvORcGdefay8Jz2xZn8
+	 DzPUhd43xtGJihhqvkprhnzl3bv6bGvQzyJFPgpsOpKEyWKIyAMdl7UQ3XkbPhY3Kz
+	 okqpAaSGFamYFFyWpzNjyKzl8HVHi778WQ1SNRDoKHelwD1EwVrFDWGzY7KBJt1enA
+	 ApV9h/joJjoB3y3Yfw+9mB3ka5DThGdAtxmDv5MDtvky58mcGI1QxmTAxrTKDyoYJN
+	 h5+IvOcRS8krA==
+Message-ID: <1c4ec8dc-bbdf-4e3c-b31d-306286ed9bbf@kernel.org>
+Date: Sun, 12 Jan 2025 13:43:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/5] selftests: mptcp: more info in case of
- errors
+Subject: Re: [PATCH mptcp-next v9 0/8] use GENL_REQ_ATTR_CHECK in userspace pm
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-References: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1736493803.git.tanggeliang@kylinos.cn>
+ <fd65072a-7bca-4b15-b184-b1213eecafca@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,41 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250108-slft-mptcp-conn-misc-impr-v1-0-bdfbdba48a1f@kernel.org>
+In-Reply-To: <fd65072a-7bca-4b15-b184-b1213eecafca@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 08/01/2025 19:40, Matthieu Baerts (NGI0) wrote:
-> Here are just a bunch of small improvements:
+On 10/01/2025 12:21, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> - MIB and 'ss -Me' in simult_flows.sh
-> - move common code to lib.sh
-> - use 'ss' with '-m'
-> - remove unused variable
-> - show only the size instead of size + filename
+> On 10/01/2025 08:30, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v9:
+>>  patch 3, move the code using NL_SET_ERR_MSG_ATTR into patch 8.
+>>  patch 7, adjust the location of "pernet = pm_nl_get_pernet(net);".
 > 
-> Nothing exiting, but the 3rd one can help investigating some issues like
-> https://github.com/multipath-tcp/mptcp_net-next/issues/499
+> Thank you for the new version.
+> 
+> I have one small request in patch 8/8, but I can fix that when applying
+> the patches if that's OK with you.
+> 
+> I can also do the modifications in set_flags(), and fix the conflicts
+> when applying "BPF path manager, part 2" (if it is ready)
 
-Now in our tree (feat. for net-next) with Geliang's RvB tag (I hope
-that's OK),
+As discussed on the "BPF path manager, part 2" thread, I will apply
+patches from these 2 series with the suggested modifications.
 
-New patches for t/upstream:
-- 5731da7ccbbf: selftests: mptcp: simult_flows: unify errors msgs
-- 668a6c97c2b1: selftests: mptcp: sockopt: save nstat infos
-- 1cb853be929c: selftests: mptcp: move stats info in case of errors to
-lib.sh
-- a97277439285: selftests: mptcp: add -m with ss in case of errors
-- 70019b947cf7: selftests: mptcp: connect: remove unused variable
-- c94beebdce72: selftests: mptcp: connect: better display the files size
-- Results: 17aabfa75062..632bb7330ffe (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3d444e3a3d41f6228c9bcdc5dbf649cc6857c7d3/checks
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
