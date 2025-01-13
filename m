@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27ED818A6CF
-	for <mptcp@lists.linux.dev>; Mon, 13 Jan 2025 08:53:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8AF6F233D7C
+	for <mptcp@lists.linux.dev>; Mon, 13 Jan 2025 08:53:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736758399; cv=none; b=mtzqHkySdXz8TGfLDrmpUWvgKy69oj/iDel/mfJyzsHEAq+U5Ql377NhOGnC9/+0SiCv1xQZh2yM6TCLl8KmFyjQYJolIRSk59y9PPztGF66Huvq1NrVPjAHgfYrupAB9jy732B28bTALhY4mrsRC3TBwrA89yH+2BF6XuSumO0=
+	t=1736758400; cv=none; b=LH1NAHWyNzz2e8EXs7yRYeGverp6d3QqQfxagKAwZZSwZfPsIJIc5EcVVWWDHDJNycIEb6RZ5cuXH9RWHJBhMCK+EQBLl0J3ZqbGV+Jn8/m3bwY2jUGsR2Ino+RNPOJhEe53SqsNPtBORozENrVbPNOjgynRxP9jnRZ4qSewbdc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736758399; c=relaxed/simple;
-	bh=+kYpJ/KVCG2w+X4rMMgBTQbw+Rnog2FhHOywqZR6VLc=;
+	s=arc-20240116; t=1736758400; c=relaxed/simple;
+	bh=RWEeHfG9BQkArbMKfBgICdcmFhIRztEGenKMQAmHmPE=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=u5DppW6r0IU+2S3sBnbRVtuiWzq0q/ZKST29XXNVILeGx2rTt8i31rKH0R+U2Fq1iZZlyZTTHTi9rF2DBkOVZpzUapwykwMfhVN8Pw8gVvyC6D+MBcRkhlDYdPTUXpzU4LrvUI2VuaOlwtXPVsSECJ2U7SLm/nx6i59K8zfpxiU=
+	 MIME-Version; b=D6EwlJ3QVvrq8n22WxWet+ezdjGnTIhIJk56GvUXyRM63rAIZlkMo1S55XPCbnnJJvNvTGPktIJcNf+UzMlpPbn9Bj9r2xbNa9eeD+XrDX29FKfBVWfs9dgWPanMtMKRctiZnhDlKRj/DK4YTSKcTqJJy41rHXu0ArTrhVsrf4Y=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c7e4e5c4d18b11efa216b1d71e6e1362-20250113
+X-UUID: c788b560d18b11efa216b1d71e6e1362-20250113
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
 	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
@@ -22,30 +22,27 @@ X-CTIC-Tags:
 	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
 	HR_TO_DOMAIN_COUNT, HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
 	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO
-	GTI_C_BU, AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU
-	ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:3b6df243-79cf-496c-9ad1-556d10a3544e,IP:15,
+X-CID-O-INFO: VERSION:1.1.45,REQID:fc02180d-d521-490e-9457-56c73f22c610,IP:15,
 	URL:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACT
 	ION:release,TS:-24
-X-CID-INFO: VERSION:1.1.45,REQID:3b6df243-79cf-496c-9ad1-556d10a3544e,IP:15,UR
+X-CID-INFO: VERSION:1.1.45,REQID:fc02180d-d521-490e-9457-56c73f22c610,IP:15,UR
 	L:0,TC:0,Content:0,EDM:-30,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:-24
-X-CID-META: VersionHash:6493067,CLOUDID:ef8c3a63588174d54e3754e1ba308b18,BulkI
-	D:2501131652574KZ42GSN,BulkQuantity:0,Recheck:0,SF:17|19|24|38|45|66|78|81
-	|82|102,TC:nil,Content:0|50,EDM:2,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
+X-CID-META: VersionHash:6493067,CLOUDID:47ea4b778172c04fb58a60f0be9d93df,BulkI
+	D:250113165257UAMC824I,BulkQuantity:1,Recheck:0,SF:17|19|24|38|45|66|78|81
+	|82|102,TC:nil,Content:0|50,EDM:2,IP:-2,URL:0,File:nil,RT:nil,Bulk:43,QS:n
+	il,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC
+	:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: c7e4e5c4d18b11efa216b1d71e6e1362-20250113
+X-UUID: c788b560d18b11efa216b1d71e6e1362-20250113
 X-User: liucong2@kylinos.cn
 Received: from liucong.. [(116.128.244.171)] by mailgw.kylinos.cn
 	(envelope-from <liucong2@kylinos.cn>)
 	(Generic MTA)
-	with ESMTP id 989990396; Mon, 13 Jan 2025 16:52:55 +0800
+	with ESMTP id 1324680574; Mon, 13 Jan 2025 16:52:55 +0800
 From: Cong Liu <liucong2@kylinos.cn>
 To: Matthieu Baerts <matttbe@kernel.org>,
 	Mat Martineau <martineau@kernel.org>,
@@ -61,9 +58,9 @@ Cc: Cong Liu <liucong2@kylinos.cn>,
 	mptcp@lists.linux.dev,
 	linux-kselftest@vger.kernel.org,
 	linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] selftests: mptcp: Fix input fd lifecycle in reconnection loop
-Date: Mon, 13 Jan 2025 16:52:27 +0800
-Message-ID: <20250113085228.121778-3-liucong2@kylinos.cn>
+Subject: [PATCH 1/3] selftests: mptcp: Fix incorrect file descriptor check in main_loop
+Date: Mon, 13 Jan 2025 16:52:26 +0800
+Message-ID: <20250113085228.121778-2-liucong2@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <20250113085228.121778-1-liucong2@kylinos.cn>
 References: <20250113085228.121778-1-liucong2@kylinos.cn>
@@ -75,46 +72,37 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-When both cfg_input and cfg_sockopt_types.mptfo are set, the input file
-descriptor (fd_in) is opened before the reconnection loop but closed
-within the loop. However, when mptfo is enabled, the descriptor is not
-reopened in the loop, causing subsequent iterations to use an invalid
-file descriptor.
-
-Move the file open operation into the loop to ensure fd_in is always
-valid when needed, regardless of mptfo setting.
+Fix a bug where the code was checking the wrong file descriptor
+when opening the input file. The code was checking 'fd' instead
+of 'fd_in', which could lead to incorrect error handling.
 
 Signed-off-by: Cong Liu <liucong2@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +-------
- 1 file changed, 1 insertion(+), 7 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 31f4c5618569..4d4ea4627daa 100644
+index 4209b9569039..31f4c5618569 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1247,12 +1247,6 @@ int main_loop(void)
- 	struct addrinfo *peer;
- 	struct wstate winfo;
+@@ -1249,7 +1249,7 @@ int main_loop(void)
  
--	if (cfg_input && cfg_sockopt_types.mptfo) {
--		fd_in = open(cfg_input, O_RDONLY);
--		if (fd_in < 0)
--			xerror("can't open %s:%d", cfg_input, errno);
--	}
--
- 	memset(&winfo, 0, sizeof(winfo));
- 	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto, &peer, fd_in, &winfo);
- 	if (fd < 0)
-@@ -1270,7 +1264,7 @@ int main_loop(void)
- 	if (cfg_cmsg_types.cmsg_enabled)
- 		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
--	if (cfg_input && !cfg_sockopt_types.mptfo) {
-+	if (cfg_input) {
+ 	if (cfg_input && cfg_sockopt_types.mptfo) {
  		fd_in = open(cfg_input, O_RDONLY);
- 		if (fd_in < 0)
+-		if (fd < 0)
++		if (fd_in < 0)
  			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
+@@ -1272,7 +1272,7 @@ int main_loop(void)
+ 
+ 	if (cfg_input && !cfg_sockopt_types.mptfo) {
+ 		fd_in = open(cfg_input, O_RDONLY);
+-		if (fd < 0)
++		if (fd_in < 0)
+ 			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
 -- 
 2.43.0
 
