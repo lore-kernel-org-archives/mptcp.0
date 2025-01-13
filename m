@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C692B240222;
-	Mon, 13 Jan 2025 16:08:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EFD426AC3;
+	Mon, 13 Jan 2025 16:16:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736784494; cv=none; b=TavPW/3TcqKewioHOeuX0Jo3ffA24u1qfjM6dybMecqfXZgOhxvEmIjmsRobrirri6FFdOYCCxS8dbl4WU1ltnmOE/xk33iaxn3hfX10UiFH5KwB0bmRuX+c8qKqTcdtvnrpiNr+CBXWY+vjEgLa7NgoFF0ok0bSypwmOyR0wUU=
+	t=1736784989; cv=none; b=FYB57dxvBqabS34K8qtzlGa2UcYtrMTYhD5ZVl3YT8rR/10ITcpxETQ5u747A2tCQ4ALiF4DUmPhNn3l879HoqbJeuFBZIuQWKmo/l0uRgyMT/31t7iU8HZ8ggp3zXxr4klUu8J3jaaYP++rjo2weM2Lp6DCPs4sLpFbPOV3bWA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736784494; c=relaxed/simple;
-	bh=dgerstlTpopGh/q8qWlcYF6PwZJwD8pfm+3tMjFphkc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=dEVUVhFkj7J+AuY2zOoJ6ZzA58TH7QP422Cg9HN6xmPMAkPClis1uC8bTgO/ZUgZj3Jeu1gFsnzEEBbpMNj1Qq8IxMd3NaW7rs/wmKDKXfArzb6YT6sBwF4cuhGy5TAO0/UiBCEsjrO/fALzvo7GR4u7MDfft+jAN8ABxuk0Xgk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kFPw+A+u; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736784989; c=relaxed/simple;
+	bh=IEvc23cC3czyXNqETuVossVcOEIiCltxG59+/3Dqy+k=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=DVcDmz6tOudhW5JTiGOwIOQJ5dl3UwW3HgzeRalkQOOG/kMLRK2DAuZHTjPLSGpjzQQlr/Q1/qt98FAncXu/mON3iE8j9ZT8IjUmKTiVAlBYqNJ9yEcd6OE5I2xVuj9Pn0tyHIC0Zi3KDX27gQIY9kRa4E1tDD/STu0cPpj3q+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WaQBIjQK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kFPw+A+u"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46556C4CED6;
-	Mon, 13 Jan 2025 16:08:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WaQBIjQK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 778EDC4CED6;
+	Mon, 13 Jan 2025 16:16:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736784494;
-	bh=dgerstlTpopGh/q8qWlcYF6PwZJwD8pfm+3tMjFphkc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=kFPw+A+uHIzKGjirxoXPYyClS1zzQB078/prUEqdE2keKVSlRWNMp8g8MODeVCCFs
-	 ONruqIPLz9fzHZHPVoGbWmHdI7R0sVd8ER1U8lAFl5LDo7hOp8IbjrzwkRtXwWXPuY
-	 53tBVD/qq6XzZUihTRJIWwvHRAZd3LdbwWmniwEe/uF1sHtUHhPDYHQlHtZkygupua
-	 ZfJyKs+XiOYxvtjLp8BKZJoW6CbbpNA9AtL5qGHt/BibY3r0FAevqA21PuORX4kN6d
-	 P73nF8+qGnnpNi3LQTdm30gC5wGP6zfg8G2qmXwS3cj9TYQyvGT+ow/DFFpk7k9zUF
-	 R8Gdm4KpofeLg==
-Message-ID: <22a1d42b-3015-47cf-b3d9-46d0ceb63ebc@kernel.org>
-Date: Mon, 13 Jan 2025 17:08:02 +0100
+	s=k20201202; t=1736784989;
+	bh=IEvc23cC3czyXNqETuVossVcOEIiCltxG59+/3Dqy+k=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=WaQBIjQKqRDp4iQU/EZPDTZIpQm3MWO4xQEr8qq9zg4/yEkPIJBHI5MIko8FpdSlc
+	 GgYY8zmU226FSh6FBcPySUxwLD33W/7e4NYS9v9+vAc9QHwmjQ9dTajUVHg4uzFH/z
+	 qNvm20+xnu46zOYUyfycbFQECRjr6g0T0PrvpFSpL0GWaKv1JOe5cNmv36ldmcQ45k
+	 wZjsswP/raj3UzHyAagwWFzPlwQmr1fOCvVQdZIM5ChvV0hJIxIQrLROo7VFOz2g2h
+	 7C53IKLeHo8MDVLSudJJQ5e6ZnP87aXLyaaKFRf+lWzRHnKTncayT9vIph0fCKsbxI
+	 nhBCRJMzMqXuw==
+Message-ID: <95b33055-5cb4-4ba0-880f-f39a565c963b@kernel.org>
+Date: Mon, 13 Jan 2025 17:16:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [TEST] mptcp-connect
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Netdev <netdev@vger.kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250107131845.5e5de3c5@kernel.org>
- <1ac62b6e-ee3d-499a-8817-f7cdfd2f2db5@kernel.org>
+Subject: Re: [PATCH net-next v2 1/2] net: remove init_dummy_netdev()
 Content-Language: en-GB
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ pabeni@redhat.com, andrew+netdev@lunn.ch, horms@kernel.org,
+ martineau@kernel.org, geliang@kernel.org, steffen.klassert@secunet.com,
+ herbert@gondor.apana.org.au, mptcp@lists.linux.dev
+References: <20250113003456.3904110-1-kuba@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,46 +88,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1ac62b6e-ee3d-499a-8817-f7cdfd2f2db5@kernel.org>
+In-Reply-To: <20250113003456.3904110-1-kuba@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Jakub,
 
-On 08/01/2025 11:07, Matthieu Baerts wrote:
-> Hi Jakub,
+On 13/01/2025 01:34, Jakub Kicinski wrote:
+> init_dummy_netdev() can initialize statically declared or embedded
+> net_devices. Such netdevs did not come from alloc_netdev_mqs().
+> After recent work by Breno, there are the only two cases where
+> we have do that.
 > 
-> (+cc MPTCP list)
-> 
-> On 07/01/2025 22:18, Jakub Kicinski wrote:
->> Unfortunately mptcp_connect.sh has started flaking again :(
->> Looks like it started around Dec 30th, so one of the recent PRs
-> 
-> Thank you for the heads-up!
-> 
-> After the last PR, I was focussing on monitoring simult_flows.sh -- the
-> recent behaviour changes could have affected it -- and forgot to look at
-> the others, sorry about that...
-> 
-> It looks like our CI doesn't have this issue, but the builds are less
-> frequent [1]. I'm going to investigate that ASAP.
+> Switch those cases to alloc_netdev_mqs() and delete init_dummy_netdev().
+> Dealing with static netdevs is not worth the maintenance burden.
 
-It was not easy to reproduce it, but Paolo managed to find a fix for it [1]!
+Thank you for the patch!
 
-Out of curiosity, is the netdev CI not too overloaded? To reproduce this
-issue on my side, the host had to be quite busy: not dying with
-stress-ng using all resources, but still competing with many other
-processes, e.g. a kernel compilation running in parallel. I'm not
-complaining here, because this situation helped finding this important
-issue, but just curious about what to expect, especially for more
-"sensitive" tests :)
+(...)
 
-On the MPTCP CI, some unessarry KConfig are disabled and ccache is used
-to reduce the build time. Also, RETPOLINE is disabled (+ vng --append
-mitigations=off) to save some CPU cycles during the tests.
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1b2e7cbb577f..c44c89ecaca6 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -47,7 +47,7 @@ static void __mptcp_destroy_sock(struct sock *sk);
+>  static void mptcp_check_send_data_fin(struct sock *sk);
+>  
+>  DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
+> -static struct net_device mptcp_napi_dev;
+> +static struct net_device *mptcp_napi_dev;
+>  
+>  /* Returns end sequence number of the receiver's advertised window */
+>  static u64 mptcp_wnd_end(const struct mptcp_sock *msk)
+> @@ -4147,11 +4147,13 @@ void __init mptcp_proto_init(void)
+>  	if (percpu_counter_init(&mptcp_sockets_allocated, 0, GFP_KERNEL))
+>  		panic("Failed to allocate MPTCP pcpu counter\n");
+>  
+> -	init_dummy_netdev(&mptcp_napi_dev);
+> +	mptcp_napi_dev = alloc_netdev_dummy(0);
 
-[1]
-https://lore.kernel.org/netdev/20250113-net-mptcp-connect-st-flakes-v1-0-0d986ee7b1b6@kernel.org/T/
+This seems to initialise quite a few things that are not needed for the
+MPTCP case. But it doesn't seem to hurt, and the dummy net device
+doesn't seem to be exposed to the userspace (net devices, sysfs). So if
+it helps with the maintenance, it looks fine to do that.
+
+For the modifications in MPTCP code:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> +	if (!mptcp_napi_dev)
+> +		panic("Failed to allocate MPTCP dummy netdev\n");
+>  	for_each_possible_cpu(cpu) {
+>  		delegated = per_cpu_ptr(&mptcp_delegated_actions, cpu);
+>  		INIT_LIST_HEAD(&delegated->head);
+> -		netif_napi_add_tx(&mptcp_napi_dev, &delegated->napi,
+> +		netif_napi_add_tx(mptcp_napi_dev, &delegated->napi,
+>  				  mptcp_napi_poll);
+>  		napi_enable(&delegated->napi);
+>  	}
+
+(...)
 
 Cheers,
 Matt
