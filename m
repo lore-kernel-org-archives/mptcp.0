@@ -1,115 +1,90 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBDCA233134
-	for <mptcp@lists.linux.dev>; Mon, 13 Jan 2025 08:35:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AC54F231A46
+	for <mptcp@lists.linux.dev>; Mon, 13 Jan 2025 08:53:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736757339; cv=none; b=PPtKipOWFrKMFtQNYTg8RbtYT5b58zeAWr88Ok628hYgdRb+87j/q7AYwS1qyZsofvfdDzRKOu/qOUBta474MkL0FFK7NvxGq6V1C1+PUCMhcrxYX63XhIdjyz2GGFLqqSiLMNvN/JAgNiUt7troOgH2krzNcD+p1sBKmmoHpRg=
+	t=1736758399; cv=none; b=KwduY/LJCbK+PNHJThGV48Ea1NH76Fc3G+L6U05Rp8tRVsZOq/+5wKAJaAER/wZsydMR4/Tn6+vmwRuPGi3hp+zbJ0V+fIcRPCiIEC32wZJzHLP+dhuAi1eS5coclOKKZMfgnDC/gn5+mXMK3+xlJt07Ih4mRNly59T3Vujpx5w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736757339; c=relaxed/simple;
-	bh=Fx3aebyuhUfAuPtmJDN1fjP31/gwMpOZ7U7OIn5T2fU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=ha2EDBmjoEBMoJwiP01EwZI7Q/eO4sXymsFIStR+iMN/qzIJgG8lynWqfkRkTl93n4/iFnhJ1n5U9GmQ+QBjLo3LRUdJv7ktmPRkQ2CqlpLM5U7QKvAuAWbsybUhwxzRJwzWSJRi3HAv6/Rj6uF7OqheoEYx+OrnmNxEXxxSNQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=EPpBCNMo; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="EPpBCNMo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1736757336;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=0qmV+w5bMOWBR2Vm257grawinoYe73Zjb5utrQdiVzs=;
-	b=EPpBCNMoL/+JlSgtfxd9CJEs68GYbirVZhwMNsMyMleoiT2hQW/6MBmkKMw2uA+52OMHC3
-	9Lb8tYV0Pv/HYbsajEnxyUfgUDKZ42fcaZbgyFFHc2Ed8L+H9ukZ+nt7+f57jVKR/Aqx0P
-	kK5lWhBe8ZX1PDjaek6KfBQdsd6ei4M=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-538-NIoFRf-uPK6no37Fv9Rfqg-1; Mon, 13 Jan 2025 03:35:32 -0500
-X-MC-Unique: NIoFRf-uPK6no37Fv9Rfqg-1
-X-Mimecast-MFC-AGG-ID: NIoFRf-uPK6no37Fv9Rfqg
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-38a35a65575so2875030f8f.1
-        for <mptcp@lists.linux.dev>; Mon, 13 Jan 2025 00:35:32 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1736757331; x=1737362131;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=0qmV+w5bMOWBR2Vm257grawinoYe73Zjb5utrQdiVzs=;
-        b=A3sZcTIxwXBAT8MFpAt1im84gAnQt+j0H13D++lvue3FRLiR81Hs/IEGeZYKt/I+r8
-         UBNMy5wuyzfpkrClQk3jXDI4DD2/teNhPRiDMZd90xyw9Sb9PNCvGOipyeoh0xycpkXE
-         kv6Ww7ARXLZnRLidz64xe0cg+mybjMhpctWroMC3PqKqwcKbj/k20P635nzEsAwpObHP
-         YzowJFwdnHqC1c6YicJ+jIVXqv4grLiP3N+diWmrZFiNafLEzPXba4BjYmpuuZxI1bQa
-         iSkEvTFTq4fCba48qjcIKTzetNVlsV1GU5OKndF5S/fmUbuQ0gKvBD6A6ooDMSNpYTXh
-         tAtA==
-X-Forwarded-Encrypted: i=1; AJvYcCWlUDH99MZTu0z1NHDqUhj8RHmGdYbhz2sDJA+VtqdOp4OJ6hU36Wssj1fuJT3EwYHOgZhuKA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxofIKF3YPONmx7xeXSaDlokJm5ZEQeIU4Y+0y3xwXFMaroJ8Yo
-	hOh8vFO5OVRcdIaFiAvQHh7EXKf2TMWotz0V69EMBkXddtUgmJAwwGApTSPiUOkg2v9sUsDbR/z
-	5r7BUVlKodQMQclD44VCDGFutVlxwN253wY+I4TFjlDvLmkOSuKb1
-X-Gm-Gg: ASbGncswxdFC0JcANU7HmN+DjNO3kTAT3soatxlqXPFJOAUt/y1O1TVdCUwirxiGlYK
-	TLPkdlsTlINhnf3tcD00eABvrLhKVYYIRlkuLeS0jKA6ycQ6TwTeFP7/8H1J8uPsY+URhWN58dP
-	F98SSrKyc2Gx5uK5h4CE713FK2zWyTqEPF2VNxvLMYdpOvxkX5q/kTnD5DO62dpSoz+g47Az0bS
-	5B6WSRp8MjuHP/14XMhMrkZAnMmMewK63prtQabGKXjALTmzljjR2Nk1kWM6MZPzOL2I+KASNhb
-	KnL1xfDRLYg=
-X-Received: by 2002:a05:6000:1542:b0:38a:a047:6c0b with SMTP id ffacd0b85a97d-38aa0476d5amr7169822f8f.35.1736757331602;
-        Mon, 13 Jan 2025 00:35:31 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IFBQZLWFvAasoP4u7vtzHNQ49++wEYKH4qPDQHay6/gL9PVe8Lt21sXUR06V+i9Sek9hh/Y3g==
-X-Received: by 2002:a05:6000:1542:b0:38a:a047:6c0b with SMTP id ffacd0b85a97d-38aa0476d5amr7169796f8f.35.1736757331274;
-        Mon, 13 Jan 2025 00:35:31 -0800 (PST)
-Received: from [192.168.88.253] (146-241-15-169.dyn.eolo.it. [146.241.15.169])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38a8e4c1f2esm11606821f8f.98.2025.01.13.00.35.30
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 13 Jan 2025 00:35:30 -0800 (PST)
-Message-ID: <6d5ca592-6023-4368-a7e6-8fe99366f426@redhat.com>
-Date: Mon, 13 Jan 2025 09:35:29 +0100
+	s=arc-20240116; t=1736758399; c=relaxed/simple;
+	bh=SY04kThu61ui/keTH3r+cx97vA8etjaV16X/D56CEww=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=IkokAljWmt1dJ1+DIRGPQKZVUnuxnijGdHOlP9cqABjjz/sh/LEFduBZ8yhJ/k6Th48yEoIX8f4pusrXcBIbBsmjSnpp0mhLkTBWwoTwrCsKdze8jIls4JT0EtLkLJ80ViI9ZSeGTd3JT2J+RTqu5P5mj0b/5bfQAOYr7KGlosU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: c72ba0dcd18b11efa216b1d71e6e1362-20250113
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CC_NO_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN
+	HR_FROM_NAME, HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER
+	HR_SJ_NOR_SYM, HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT
+	HR_TO_DOMAIN_COUNT, HR_TO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:38c9a0d8-55cf-4d05-8f86-175a4902945c,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:6
+X-CID-INFO: VERSION:1.1.45,REQID:38c9a0d8-55cf-4d05-8f86-175a4902945c,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:6
+X-CID-META: VersionHash:6493067,CLOUDID:e65afa1dbd25e174982b20796cf13f7d,BulkI
+	D:250113165257UAMC824I,BulkQuantity:0,Recheck:0,SF:17|19|24|38|45|66|78|10
+	2,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,B
+	EC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: c72ba0dcd18b11efa216b1d71e6e1362-20250113
+X-User: liucong2@kylinos.cn
+Received: from liucong.. [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <liucong2@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 1571801971; Mon, 13 Jan 2025 16:52:54 +0800
+From: Cong Liu <liucong2@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"'David S . Miller'" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>
+Cc: Cong Liu <liucong2@kylinos.cn>,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	linux-kselftest@vger.kernel.org,
+	linux-kernel@vger.kernel.org
+Subject: [PATCH 0/3] selftests: mptcp: Fix various issues in main_loop
+Date: Mon, 13 Jan 2025 16:52:25 +0800
+Message-ID: <20250113085228.121778-1-liucong2@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net 0/3] mptcp: a bunch of fixes for ST flakes
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1736527092.git.pabeni@redhat.com>
- <76550d25-1422-41a1-af00-f65a6ba24505@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <76550d25-1422-41a1-af00-f65a6ba24505@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: L8gi3yG25Fifcl4tdriDgAWKihH9RY6H8EpPt-v516E_1736757332
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-On 1/11/25 12:39 PM, Matthieu Baerts wrote:
-> On 10/01/2025 17:43, Paolo Abeni wrote:
->> still under test locally. Sharing early for larger coverage.
->> Among other things, still to evaluate if patch 1/3 increases the ack
->> frequency "too much".
->>
->> Paolo Abeni (3):
->>   mptcp: be sure to send ack when mptcp-level window re-opens
->>   mptcp: fix spurious wake-up on under memory pressure.
->>   selftests: mptcp: avoid spurious errors on disconnect
-> 
-> Thank you very much for these fixes!
-> 
-> They look good to me and the CI, and the mptcp_connect.sh has
-> successfully run 1250 times on my side:
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Fix several issues in the mptcp connect test's main_loop function.
 
-Great! thank you for the additional testing!
+ - Fix a bug where the wrong file descriptor was being checked for errors
+ - Fix the input file descriptor lifecycle in the reconnection loop to
+   prevent use of invalid fd
+ - Add proper resource cleanup in error paths
 
-I suggest to send them to netdev soon, to hit -rc8 and possibly spend
-some more time on upstream PW before.
+Cong Liu (3):
+  selftests: mptcp: Fix incorrect file descriptor check in main_loop
+  selftests: mptcp: Fix input fd lifecycle in reconnection loop
+  selftests: mptcp: Clean up resources properly in main_loop
 
-Cheers,
+ .../selftests/net/mptcp/mptcp_connect.c        | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Paolo
+
+base-commit: 2b88851f583d3c4e40bcd40cfe1965241ec229dd
+-- 
+2.43.0
 
