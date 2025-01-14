@@ -1,127 +1,118 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 293BA232454;
-	Tue, 14 Jan 2025 14:18:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0CFC51C1F0C
+	for <mptcp@lists.linux.dev>; Tue, 14 Jan 2025 17:37:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736864329; cv=none; b=NZE9FOPUBb6Fjqfsv4L07nxjcEkGr251Zf2rolhpbbByrIF+U6IhnidJ7XtK/2yPV3Pn20EQsNy+sZcg5IRgde/WWyGyPgIbsd3rIfaOfr9ECJayqlB18+61lxGKQN/piWqM37+H5XnwO22jU9Q1p8e8fI2foz/7yGI2F3FpCUo=
+	t=1736876274; cv=none; b=ZqsRD8ihf4WspTqXbQfugCd4BtGJAsjUIm9pLQY0CpIFlIVDelnkhKVYRfp3o3I50vwGuiWaiC/eSEs+ClvoOHAo4b0BApGuCeySybt2nSRsLSCxri5imHRUkxjdWbpZ9tzLX9uvAFy2+ydER7u2wu6oQhduRh2qZyEwqzZuF0Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736864329; c=relaxed/simple;
-	bh=XOwxfDieLatk3DMhVmpzyvN9hYCe2oI0k1+5YMEpoPA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rJ0//moX6tMBRubTUJH4tDctDjFwlHGK2+yvsq9lilAy8a9575GLZEDnaBXpxakbzqRpY3G0NAH7LoegbYG75DjbiOf+zY6SmaLeNC4wsjgXG0+zkMPMOE7RL3Q2er/EcNMIWH0IRJVEcS2ne/wu+pBPSA85GUasea3LU0xQNZQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JBtPvu8d; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736876274; c=relaxed/simple;
+	bh=wPVD4C2jCp/XpA5lE2mdnLHhmtEGYtbAJ7dRK4kpJAg=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=X9GpmAxAcnjnlV7FSssF8AZFN2WUXoYpfq4nqR7rP/Do9g1JqJyFJXION+PD9ii4iO4pTvmw4yrFfK7H+2w7C9xFk83wQG52yTWYx7C2b0Bn0vhCfB1cAUazBwLhgea5IG5WOEDUSd0pPVEdadg5AnpatkWA3KRlFTE4Oqr1ri0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Iy4TYE21; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JBtPvu8d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3080C4CEE1;
-	Tue, 14 Jan 2025 14:18:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Iy4TYE21"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E43E6C4CEE3;
+	Tue, 14 Jan 2025 17:37:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736864328;
-	bh=XOwxfDieLatk3DMhVmpzyvN9hYCe2oI0k1+5YMEpoPA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JBtPvu8dE5sFf2jK3/GglmV30EghVptlNT41ZtRfpA29SALTMZ3jTGvww47+9uNcC
-	 pysy4Hr9W0BdKNS/KNHPEQlQUfusFNRyODdJDfECajPTAGa1Nhjgo3CGue3iaXNAaZ
-	 pwAFUk++xENiYAVvAhnWeN+BdZPHctHjz9BnMHR4AJoSjGgTKEckFJWKWVfvaQ69E0
-	 5AK68l2tmPPB9oP2ZGyRtCFHa+FgEoVxL6ahBbO0GUlS6hL6gL5Ba6pkDjyb39bhZK
-	 +JU38N5YNFpgJykp7V9P46DmAeCDGmszyrw8p4Xndho/N0Ao9mBuzC9bL/1QisxyfU
-	 nE987N3I1jMlA==
-Message-ID: <eaef24be-0dce-446a-9eb7-5ae155345c9c@kernel.org>
-Date: Tue, 14 Jan 2025 15:18:36 +0100
+	s=k20201202; t=1736876273;
+	bh=wPVD4C2jCp/XpA5lE2mdnLHhmtEGYtbAJ7dRK4kpJAg=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Iy4TYE21+rQYS/IrJzmzNuTHDXcVhszh3t9c45vfFVTDcfpXNnQu4TFtryOoukcdQ
+	 oo0u4RPEy596bZI7Rxua85aJAu0EaFFrI1Ytqz7fnyqOkNEDt+9wGwt8lgIiJHtuPK
+	 UESNh6Y8P0Ssrn8kqmavw9lvxcU0XKsIMOA73hZHVkHc47duULAL/R55znpP5WFAkl
+	 cnliJcA6o2gs1eladjJBAioi/JX0n+nybOJrtEGBTcHAFM8EIjwqrrWTOGeu4YkRH3
+	 A/h9cPRBrvFs/vnt1Uakbo926XvqYmdrrp4JvQ/hd8F0qZbvdxOAsllayHP0dedR37
+	 BXZfeYoJP+sIA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/3] mptcp: blackhole: sysctl SYN retrans + fix
+ conditions
+Date: Tue, 14 Jan 2025 18:37:46 +0100
+Message-Id: <20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [TEST] mptcp-connect
-Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: Netdev <netdev@vger.kernel.org>, MPTCP Linux <mptcp@lists.linux.dev>
-References: <20250107131845.5e5de3c5@kernel.org>
- <1ac62b6e-ee3d-499a-8817-f7cdfd2f2db5@kernel.org>
- <22a1d42b-3015-47cf-b3d9-46d0ceb63ebc@kernel.org>
- <20250113114406.566f1072@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250113114406.566f1072@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAOqghmcC/x3MQQqAIBBA0avErBtQ0xZdJVqYTTVUKhoRRHdPW
+ r7F/w9kSkwZuuqBRBdnDr5A1hW41fqFkKdiUEIZIaXGIzr0Acfdum0NO6FRrW0lWdE0GkoWE81
+ 8/8sejni6iJ7uE4b3/QBlk7CCbgAAAA==
+X-Change-ID: 20250114-mpc-no-blackhole-526a61ea0334
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2283; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=wPVD4C2jCp/XpA5lE2mdnLHhmtEGYtbAJ7dRK4kpJAg=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnhqDw9x/44FxmyKPXAnJp8M7asRy6uPEvbjfSy
+ ux5mvvOMsqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ4ag8AAKCRD2t4JPQmmg
+ cxtGEADjsBnLKzttUQHO0qHRpnJnVkZm2AoVpOO88Mw7uprAx0qdYK8BPHIlh09qFs4Tu8y2Axh
+ 0ERXbz/sStKu+D83k7eOmSbsR6pKTJ65qaIwF+ZsevbvJeQGQEqXxQ4ZtCwwghBDkTkqmUFU544
+ GaGiWNFeqpT2IFD4WfRr0IvaPz14Qbqw8MwmkMEJ9q8Bgy4uLcxYwwgQIN6SfptyCCKpnkiHEQo
+ w2MwoihwvHPAc2omb4HTAm4GyZRhk6I6CijvB8wr95fdXCEt3w8DF27BxhvN3/tU2OmCkp3NmPu
+ 9o0R5ykOrrtM1JkUJXYz8VkpxJRGK+FIJKE3Yp/2ZDM9X0XMy2lICCSLnmQFJmG8mf30kVcuAX4
+ I3bOFjiaWKP89iyMOtFw+C0HrwbCsEEOXF/r10818Yd3YndYafuyFfglmWc5h7w8QGof6HjC9O+
+ YiWD+Nx4agxV8iB1U+2FWqGNdpLdKfH70UzItDYsnu/ce1dc0lOae+Bal+xg8rdiZzHyk0wNg0b
+ keulEjBhI5IQFkjC679fPLUPy7JXfkGovVlE6v/tTQvLGhAVgAvZSTLxYEQ/7jEdmXqWhjV6oSN
+ 1KZ007pAjLF3J1/uSBuGAbJrSChARhlIAcjl+LnfLK0WyO5xS4idOecTNj4g02BKSLQLLIALOyo
+ /VkZrGWpAQeM7pw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Jakub,
+Recently, I found a network having weird behaviours with MPTCP packets:
 
-On 13/01/2025 20:44, Jakub Kicinski wrote:
-> On Mon, 13 Jan 2025 17:08:02 +0100 Matthieu Baerts wrote:
->> It was not easy to reproduce it, but Paolo managed to find a fix for it [1]!
->>
->> Out of curiosity, is the netdev CI not too overloaded? To reproduce this
->> issue on my side, the host had to be quite busy: not dying with
->> stress-ng using all resources, but still competing with many other
->> processes, e.g. a kernel compilation running in parallel. I'm not
->> complaining here, because this situation helped finding this important
->> issue, but just curious about what to expect, especially for more
->> "sensitive" tests :)
-> 
-> The tests my overlap with other workers still building their kernel.
-> ccache is enabled.
+- The first connection to a server had a successful 3WHS, then MPTCP
+  options got stripped off.
 
-Good to know, thank you.
+- The next one had the first SYN (with or without MPTCP) and 5
+  retransmissions dropped, before being apparently intercepted and
+  proxied to the end server.
 
->> On the MPTCP CI, some unessarry KConfig are disabled and ccache is used
->> to reduce the build time. Also, RETPOLINE is disabled (+ vng --append
->> mitigations=off) to save some CPU cycles during the tests.
-> 
-> Could help. Let's put it on the list of things to do once we migrate
-> the CI to a public set of hosts :)
+- (The next ones were sometimes intercepted, sometimes not, or dropped
+   at the beginning. I'm trying to find out which kind of "optimiser" is
+   causing this.)
 
-Good idea :)
+The result of this was a blackhole being "wrongly" detected, and no ways
+to force connections with quite a few SYN drops to finally use MPTCP at
+the end.
 
-Cheers,
-Matt
+In this series, we have:
+
+- A small fix for the doc.
+
+- A new sysctl to change the number of SYN retransmitted with MPTCP
+  options before falling back to TCP. The modification looks simple
+  enough to still be sent to netdev before the closure I think.
+
+- A fix to only turn on the blackhole protection only when the first SYN
+  retransmitted without MPTCP option is accepted, instead of any after.
+  The blackhole feature was supposed to do that from the beginning, but
+  a check was wrongly placed. I think we should consider this as a fix,
+  even if there are also risks of not detecting a blackhole if the first
+  SYN retransmitted without MPTCP is dropped by accident. But that seems
+  more unlikely for an "MPTCP firewall blackhole", and I guess not all
+  future MPTCP connections will behave exactly like that. It sounds then
+  safer to reduce the possibilities of enabling the blackhole protection
+  by accident, and apply this patch.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (3):
+      doc: mptcp: sysctl: blackhole_timeout is per-netns
+      mptcp: sysctl: add syn_retrans_before_tcp_fallback
+      mptcp: blackhole only if 1st SYN retrans w/o MPC is accepted
+
+ Documentation/networking/mptcp-sysctl.rst | 18 +++++++++++++++++-
+ net/mptcp/ctrl.c                          | 25 +++++++++++++++++++------
+ 2 files changed, 36 insertions(+), 7 deletions(-)
+---
+base-commit: 9336324d1aec351496e048ec5b6bbda07944ad16
+change-id: 20250114-mpc-no-blackhole-526a61ea0334
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
