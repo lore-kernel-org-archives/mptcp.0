@@ -1,153 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-io1-f78.google.com (mail-io1-f78.google.com [209.85.166.78])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4523A2063FF;
-	Tue, 14 Jan 2025 18:17:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E6301FAC25
+	for <mptcp@lists.linux.dev>; Tue, 14 Jan 2025 18:26:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.78
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736878620; cv=none; b=GDQCwT6udBfnwd0QyW7R4Q1c1gy7QgDoWervTVaQf4NypVR4qKNh88zPfRpMIj53lcZpFvULiCn18Gs9wd1fYVYDBi6cLHrvVOrYaI6CIWYB1Tm5+VUNqMYUx1uz8Ds/a/Pyi28xXrfs+W0ELLR8PNRVqcCaoH1KMhWMF341Fpg=
+	t=1736879188; cv=none; b=NrHi01XP2v/rvDGMeK+DJ5SPoyDlDIsYFZKivsJy0mnJhb4S0YxM8gSs1JyKIpx+dj/wZkbe50MqarKOKCpveAV4KH16NOizv+eLFzXIouxKCRCNAga3zo8y2cuXt4OZ7NjZfckhppP1o7CVjFFVhDRwqECS36sUAbb1u38BXt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736878620; c=relaxed/simple;
-	bh=D/SHSgsiMa7Rb7nwePwpbtlLjnB91paCMmxG3twAM0U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j9IKEpiklcKGHSrrYpC4aX2FuGbg+CmQoTi08MWb15D31z+W1wsema2fIHl9jwqqe0C0oEp5B/dSIabfgQOtq8SqNgDld+II+N+E7khgAZSX3Hwa8TGRFGHOHTIW7Qk/DxtKyI6PQiym+Rpsvwq1eMd42m/Z/ZMqdwtuizf3wZo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=grbEg9HZ; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="grbEg9HZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42B0CC4CEDD;
-	Tue, 14 Jan 2025 18:16:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736878620;
-	bh=D/SHSgsiMa7Rb7nwePwpbtlLjnB91paCMmxG3twAM0U=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=grbEg9HZFr7ic23HcKgcX38W0WpdUNeWm4A4ldc8lnNCc4kCFJSoldtNdzPcBUnIT
-	 7NwtszrgHzsaVarRiraZlO6HmxshtdEevhYBwMSo9zg1QsIib3uo5ycjgzJFyv/lUz
-	 JFDv3EMZ4N5THpqFqQEhfrnLgRcd84xPn16L79BpEg0ZCa0BXEi2CCzX3cyt6drOW7
-	 ecIdI8mC1ePpRFXm0wtGwjFEzZnzea4UbXGz5KpsSvssGkioBLfk+pQfztcNLah1Yf
-	 rpJBKCpayU2M0q4R83tRFHRsDyIRU4BJ8358WWuordQdjjmGsbexqAwOQRUwVj98SC
-	 TP7rs4DvGmksg==
-Message-ID: <5e2058ea-2292-4403-a7b9-ace4b21dc9c1@kernel.org>
-Date: Tue, 14 Jan 2025 19:16:46 +0100
+	s=arc-20240116; t=1736879188; c=relaxed/simple;
+	bh=B5pY+ufn/xH67GEdVxsTK/WgzZnh8fXYnsrdNUXqfj8=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=S2SJ9j0iyV/lAHFMMQfwI6uMdVNJb8Fadc5D8AtlclHtooHVYd4tcYhdNytEy0Ys7fXwMrLsnj1Q1+v3y/6pn6WziBy6WapvSDcNPtNqtrKKy+3J7e6aN/GZqEFOnHYNgIUJ8RXGfgRJMR7XUH7Sn3D1bfqwapJnLRllOAzw8sM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.78
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-io1-f78.google.com with SMTP id ca18e2360f4ac-844eac513efso459739739f.2
+        for <mptcp@lists.linux.dev>; Tue, 14 Jan 2025 10:26:25 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736879185; x=1737483985;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=V8M7djTKBUTreTUQBw+M+8bCMKZY3JTKZMEuUeT5Mp4=;
+        b=ot+5f9+w1EU2hkDRgB5kAmlD6z4BjAj6Hmh/j3MdhARtNwcDn81txD7YUhDhb+3aA3
+         4xVqGRP9bW7oocpooYBqhaLeTT7UMk5jW9u3I6ehheTN/Fx4RsoBWXZuIUXd0uwkEQha
+         a7UgR+XZ3qfQ33X6KbDOorgS1Jj0SIkqoST9QdF1xX0mjVeaRbZlUqJkWA2SxMTuI7Cj
+         Y+n3zKDPYEklNUQidpw3tnuJD0COkqaKs671VwpqbJewZAu355UTC/nA9YNesVytIjYH
+         NMoJXlnsWlNJ9UMc/GhMdkUUcX8CrVr6rp86lt+a/+cciG/bsx+i27xOssZPPSxlw8Yf
+         YD9g==
+X-Forwarded-Encrypted: i=1; AJvYcCUK0OeJWGkRbteE/GGfmYId7QIT5kRArSLuD2yjaHE3FqxYND16j6NSiWA8Nz6IxEoyiGtRRg==@lists.linux.dev
+X-Gm-Message-State: AOJu0Ywm99y1l/YqLmMpXFIhdawaSKv/g4tIzyiIYldJs6Hoxj8buR58
+	uPyrbAMfGwihS9vkpERjfKWNvN0qTbN4qQUeaayE63ZAN+4OnYVlbC0UQKVIZMxDQsWtIfUTEmB
+	+jmh4IVtakYRI+zz0YN+RlhOl924hmcG0M/Yho2OrqDzuuzhsfYV3VY0=
+X-Google-Smtp-Source: AGHT+IHxRrg/Wtu6yDvyty8sz+Sd+V3FjLWBseH/20TLQ635MG+ieNY5U079Qs03yvoZovBowvUy9+eJvE+NJV5HvqDGiDBGVXf0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 0/3] selftests: mptcp: Fix various issues in main_loop
-Content-Language: en-GB
-To: Cong Liu <liucong2@kylinos.cn>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "'David S . Miller'"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250113085228.121778-1-liucong2@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250113085228.121778-1-liucong2@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Received: by 2002:a92:ca4b:0:b0:3a7:e8df:3fde with SMTP id
+ e9e14a558f8ab-3ce3a942c00mr178661215ab.9.1736879185189; Tue, 14 Jan 2025
+ 10:26:25 -0800 (PST)
+Date: Tue, 14 Jan 2025 10:26:25 -0800
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <6786ac51.050a0220.216c54.00a6.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_nl_set_flags (2)
+From: syzbot <syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Cong Liu,
+Hello,
 
-On 13/01/2025 09:52, Cong Liu wrote:
-> Fix several issues in the mptcp connect test's main_loop function.
-> 
->  - Fix a bug where the wrong file descriptor was being checked for errors
->  - Fix the input file descriptor lifecycle in the reconnection loop to
->    prevent use of invalid fd
->  - Add proper resource cleanup in error paths
+syzbot found the following issue on:
 
-Thank you for these fixes!
+HEAD commit:    d1bf27c4e176 dt-bindings: net: pse-pd: Fix unusual charact..
+git tree:       net
+console output: https://syzkaller.appspot.com/x/log.txt?x=177e41df980000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1c541fa8af5c9cc7
+dashboard link: https://syzkaller.appspot.com/bug?extid=cd16e79c1e45f3fe0377
+compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11262218580000
 
-Please note that when sending patches to the Netdev mailing list, it is
-asked to follow some specific rules, e.g.
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/a94cbba6b696/disk-d1bf27c4.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/4d5069c51683/vmlinux-d1bf27c4.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/1729677ba0b0/bzImage-d1bf27c4.xz
 
-- designate your patch to a tree - [PATCH net] or [PATCH net-next]
-- for fixes the Fixes: tag is required, regardless of the tree
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com
 
-https://docs.kernel.org/process/maintainer-netdev.html
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 __mark_subflow_endp_available net/mptcp/pm_netlink.c:1496 [inline]
+WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1980 [inline]
+WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_nl_set_flags net/mptcp/pm_netlink.c:2003 [inline]
+WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_pm_nl_set_flags+0x974/0xdc0 net/mptcp/pm_netlink.c:2064
+Modules linked in:
+CPU: 0 UID: 0 PID: 6499 Comm: syz.1.413 Not tainted 6.13.0-rc5-syzkaller-00172-gd1bf27c4e176 #0
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_netlink.c:1496 [inline]
+RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1980 [inline]
+RIP: 0010:mptcp_nl_set_flags net/mptcp/pm_netlink.c:2003 [inline]
+RIP: 0010:mptcp_pm_nl_set_flags+0x974/0xdc0 net/mptcp/pm_netlink.c:2064
+Code: 01 00 00 49 89 c5 e8 fb 45 e8 f5 e9 b8 fc ff ff e8 f1 45 e8 f5 4c 89 f7 be 03 00 00 00 e8 44 1d 0b f9 eb a0 e8 dd 45 e8 f5 90 <0f> 0b 90 e9 17 ff ff ff 89 d9 80 e1 07 38 c1 0f 8c c9 fc ff ff 48
+RSP: 0018:ffffc9000d307240 EFLAGS: 00010293
+RAX: ffffffff8bb72e03 RBX: 0000000000000000 RCX: ffff88807da88000
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+RBP: ffffc9000d307430 R08: ffffffff8bb72cf0 R09: 1ffff1100b842a5e
+R10: dffffc0000000000 R11: ffffed100b842a5f R12: ffff88801e2e5ac0
+R13: ffff88805c214800 R14: ffff88805c2152e8 R15: 1ffff1100b842a5d
+FS:  00005555619f6500(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 0000000020002840 CR3: 00000000247e6000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2542
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
+ netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1347
+ netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1891
+ sock_sendmsg_nosec net/socket.c:711 [inline]
+ __sock_sendmsg+0x221/0x270 net/socket.c:726
+ ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2583
+ ___sys_sendmsg net/socket.c:2637 [inline]
+ __sys_sendmsg+0x269/0x350 net/socket.c:2669
+ do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+ do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7f5fe8785d29
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fff571f5558 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007f5fe8975fa0 RCX: 00007f5fe8785d29
+RDX: 0000000000000000 RSI: 0000000020000480 RDI: 0000000000000007
+RBP: 00007f5fe8801b08 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 00007f5fe8975fa0 R14: 00007f5fe8975fa0 R15: 00000000000011f4
+ </TASK>
 
-If I'm not mistaken, it looks like you have here fixes for net, and the
-Fixes tag is missing.
 
-Do you mind sending a v2 with this being fixed please? Because these
-fixes are not urgent, do you mind sending them only to the MPTCP ML for
-the moment, and not to the other ones (and no other people in CC).
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-> Cong Liu (3):
->   selftests: mptcp: Fix incorrect file descriptor check in main_loop
->   selftests: mptcp: Fix input fd lifecycle in reconnection loop
->   selftests: mptcp: Clean up resources properly in main_loop
-> 
->  .../selftests/net/mptcp/mptcp_connect.c        | 18 +++++++++---------
->  1 file changed, 9 insertions(+), 9 deletions(-)
-> 
-> 
-> base-commit: 2b88851f583d3c4e40bcd40cfe1965241ec229dd
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
-Note that this base-commit doesn't seem to exist. Because of that, our
-MPTCP CI was not able to automatically apply this commit.
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
 
-Talking about our CI, it looks like that 'mptcp_connect' now crashes in
-some cases with:
+If you want syzbot to run the reproducer, reply with:
+#syz test: git://repo/address.git branch-or-commit-hash
+If you attach or paste a git patch, syzbot will apply it before testing.
 
-  free(): double free detected in tcache 2
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
 
-Do you mind checking this please?
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/12751035845
-
-pw-bot: cr
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+If you want to undo deduplication, reply with:
+#syz undup
