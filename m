@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D823D248174
-	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 09:25:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B0048248161
+	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 09:31:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736933136; cv=none; b=Wz/LwGePm9A1Blqa6AsU6X11yVGoWPSlqHQLtg6DWu9Ee1Vv2Td1WZomsioV9CUCxkzGweOnQIvDop13M2w+cE0q6C0rE2s8vaY5K1OjzCxQJ965PJipGjpXstgEjojUIxJhfYybeTqLnSsL6ED2W/ydmQMjDoxjJmJGvhJlOqo=
+	t=1736933510; cv=none; b=J0fTfA/u/57WQPm67h+71/zkXBWSTTU2QLIAeiIIM9Bvr+EtzKx2Zec7wMdmou7eN2orkHwsSV/gMiFwMeONrc3Vw2kx3UrrmvD9F+dg8pNKR9kYzs9gArNpawjgmYDfRKXyMxN2uz7YgleaPkUJye+lwUdKrASvbSTmJErq8UA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736933136; c=relaxed/simple;
-	bh=CnrjwpiuLWwe6VfZD4RfIs+OaF4qxyuHuy2Qk6w3O6E=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=X5ACPlCPI+P+HWzIjHAlqJXEuIiXRxa2WI7ZZkQ0Cengn5qwwtCMa0n0iXXKps4vbCM9k70/muHvAwYsMJmCRmoA7g501Dv+NWcf2BULi8NuOoWRfyZHK+S7Y3QSAgzluv7BU06uFl75MRgiI/qdO1ILZgNQkgGh6JFJy3RUpKk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ovmQDcQ+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736933510; c=relaxed/simple;
+	bh=QpYmRAQ/wtY49X2sBTeWyiFV5mB3z+6uuWqbAHfrZac=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=hh6D/FXAZzjq9rAFX6WsGEjX/NGcmonAGVQP6TowPhKsM6jq+jlGURuQv7bzHXNvamI/ZZR2KpJc4evu2JA9i0tQkUN1KmqOTE2RUThHNwgRD3BTEJOw9TJwv2Nh+tfaaVlGu4Olm6nC2qRKs9+Hfaj047h5+ibLc02wwjsqj8A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ppUZArsc; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ovmQDcQ+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AA7C4CEE4;
-	Wed, 15 Jan 2025 09:25:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ppUZArsc"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A7E7C4CEDF;
+	Wed, 15 Jan 2025 09:31:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736933136;
-	bh=CnrjwpiuLWwe6VfZD4RfIs+OaF4qxyuHuy2Qk6w3O6E=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=ovmQDcQ+ii7Iuw1lXGi7DF51X2nA1o0lTpP9ooT5oMffCVXdX58+PSEB93kahLnD+
-	 hYT8Hd6S7dd5/GeriAfj8NpVyu7uGUY6NoY/uP78WrJ0Ml7FSMAjDiW9WkiV1ShbqJ
-	 Y0nNKvT+qZkQJX+yiiHA/xJ2EKAlqdWWx5wQESxJZVO5bZORxx6CdSFJH9uzly4QM4
-	 LDWE2IaKp7UbLsHT2vHZhvWoVVYqffwQTHupeNjMNjEuXm0l7v/IrpZuaSWM3fwaX9
-	 y0UnMz3+7eGtRnYNSsipfc/Oyfyk+k8SLh3qOZKjzCzI94LYvmi/QAtLYEu8heCJcG
-	 xZwEketcXW4ZA==
-Message-ID: <c8b97326-8cd8-402a-932a-8a0b013eeafa@kernel.org>
-Date: Wed, 15 Jan 2025 10:25:24 +0100
+	s=k20201202; t=1736933510;
+	bh=QpYmRAQ/wtY49X2sBTeWyiFV5mB3z+6uuWqbAHfrZac=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ppUZArscuKChIP6hg2fbk4v+TGXS8PNsMZSdYEnsvkqNUXYCoxzpnUzDUZ2Due2sK
+	 kVsawmtl2vOF8Z65hmEy14hvgKxPe+n5M8/QTN4kJlZb2n0r2+hX6hHFSRCDJZvQ1P
+	 jsFezU8p6Rv/tKaw45Z+0b0RNkmh3VtY3Ye6RpDT2JEYmqAFZCiMVCjB8Lm0X9KA+6
+	 Sdg6zr2+Q2jSAO/ABlgRMXzL11V8snLShuK1Thh2Y9YWEZ5031lMs3YrKxdOzCHEjg
+	 UFhms2oRePe1i6bS/sGVijB+o3CiIFWuAuNRFG2RSiKswIgIh7pdOXdH/0yWK8Ou+W
+	 ncVL0mOHOW2TQ==
+Message-ID: <43488d28-e219-4646-af25-61c40b229074@kernel.org>
+Date: Wed, 15 Jan 2025 10:31:43 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/7] BPF path manager, part 3
+Subject: Re: [PATCH mptcp-next] selftests/bpf: Drop cgroup_fd of run_mptcpify
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-References: <cover.1736924314.git.tanggeliang@kylinos.cn>
- <1efe02ff-3c0e-7a2c-8e80-bee3eec54d68@gmail.com>
-Cc: mptcp@lists.linux.dev
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <38e34a835050f35b7f14f7938b20f86a97ac0836.1736926065.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,30 +85,27 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <1efe02ff-3c0e-7a2c-8e80-bee3eec54d68@gmail.com>
+In-Reply-To: <38e34a835050f35b7f14f7938b20f86a97ac0836.1736926065.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 15/01/2025 09:13, MPTCP CI wrote:
-> Hi Geliang,
+On 15/01/2025 08:28, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal: Unstable: 1 failed test(s): selftest_mptcp_join 🔴
-> - KVM Validation: debug: Unstable: 1 failed test(s): selftest_mptcp_join 🔴
+> The parameter 'cgroup_fd' of run_mptcpify() is useless, drop it.
 
-It looks the CI spot a regression with this series (and the previous
-version as well):
+(detail: s/useless/unused/)
 
-  75 - mptcp_join: remove single address with port
+The modification looks good to me, thank you!
 
-https://github.com/multipath-tcp/mptcp_net-next/actions/runs/12783407981
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Do you mind checking that please?
+Do you want to send it directly to the BPF maintainers, for the
+bpf-next/net tree? We don't have other changes that are ready to send.
+
+Or I park it in our tree, and we send it later (no urgency I guess)?
 
 Cheers,
 Matt
