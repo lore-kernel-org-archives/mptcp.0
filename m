@@ -1,243 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f178.google.com (mail-qk1-f178.google.com [209.85.222.178])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4159C1DB132
-	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 10:09:41 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8426A248BDF
+	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 11:10:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736935781; cv=none; b=qTxP1Bi9eQOs0n7YvVF0ecVzr0Dl75Di/hd6L6NzVSgbYJwZtTJxHlrfHSGHm4moF+NhZ6gzvHz3nDsCh84NZtQsVuYhiujcsFDuZDnCH9jboUt3CBExRfo2xBXi076L0mBPxtDkg5DpmGt8K2CxYkyiq2DzUPhAbDpmMhjIe8o=
+	t=1736939421; cv=none; b=qnNBDmW8DAGAEv72FFKjRo/5+c+DCUrXVINJLlqtlXC6+ia05mHwVnPrKDT6b2jIHlyMPkOoNeCkCFUVMsK+FSbpxhzXx0tPyv97lCG3J+WgmxdYB9rflI+4vmeGQnZTb+FJ9wp0On4N7m2QBQxbZsm9aXgRxnCo4zCrdtmgwmk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736935781; c=relaxed/simple;
-	bh=YemrnA+/owTqMW0077btHRdOZShLTSkU6kbDWJOCJpw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OywSD3rayt6ZoW8pciQgr3bDrXPcAHE4x3irX6nJY8PYQ4xxsiFyRjskdpVFp/pvtN3tA6RtZvFaCVmPPMwyOSOxbTg1ag6eUhfMfKGAb8uFZKkTryHBAc77JY/L3kMRc5CreWjJfrHcfmqUBpd5wl4JyQ1ZufWYnoKPwO5UnAY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lwSxTMzh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736939421; c=relaxed/simple;
+	bh=Fdsc5STeJxRlZY2F8e/pEBbmSyaO6N3iXzj8MT7MMu0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=ASeRP5WU5j0mV5lcJF3/MozIxBzuYIevyclgON8TCdaV3oiQH+vzmj5y9x9qE78wbunB0ti9Lvjj9KGE5g2jOP0/MqbL4ZCewmLel6qPO8RIsr/I50uPr3uPRUrRqBCvpJufxleugH+5yjuW8BwOAF8L1Qf5nZVjWb1X/eEdHSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=P9rEcnPx; arc=none smtp.client-ip=209.85.222.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lwSxTMzh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 251B9C4CEE1;
-	Wed, 15 Jan 2025 10:09:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736935781;
-	bh=YemrnA+/owTqMW0077btHRdOZShLTSkU6kbDWJOCJpw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lwSxTMzhgu0EuTxrn3TDNMa5gve6kWQRHO7F8LMG1MoYbJwkPPV2F8r8RT3bW/cDJ
-	 f0+2PAYqpS1Q3k4GzJVOfGUPuM/IffQhFYj0H9JwDXw+AFA7qeIEFPPP+NgjddvS2+
-	 XohD3jGCE4ze7Fb7vZP0oalfE7GUrOnMFs+R9XaNQeGMM8KeDZvLIGleNrCQvtBvDe
-	 UbpS1T8rCzRHJyBkdUgsgYg3AESaXouUY9qs9jlWdPHQiigYZD9exMBHpVbFBphH/i
-	 cL23LBHUNPlLHk2CRq7axx8yAixHA/xHZ2KmSmbj3d2ZZf07GAHMmfF08neiqqtv7z
-	 Pk312jZTDmZBw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 3/3] mptcp: init and release mptcp_pm_ops
-Date: Wed, 15 Jan 2025 18:09:28 +0800
-Message-ID: <079fff7d1e707986d0a1ee0269af622bf63a8cee.1736935433.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1736935433.git.tanggeliang@kylinos.cn>
-References: <cover.1736935433.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="P9rEcnPx"
+Received: by mail-qk1-f178.google.com with SMTP id af79cd13be357-7b9bc648736so562671885a.1
+        for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 03:10:19 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1736939418; x=1737544218; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=ryN4H8wkIGb2f8o0oo630j9DLup+PqsZakQPltPbaY0=;
+        b=P9rEcnPx4CV1gr8vAB4MACsSC2UnFuyH7hoVEeiPue/bofkNlA0L7nuiGnIl6X9dY7
+         DVDC+rB7c9dbmBwOtOQkrbQaktgEcaN5AVjQ+PTUmYhH3OI/AXD5g4faaPs12DcM5ftU
+         4MMLLfc0Q9UK8ew+3PC87eLMicaVcfns8+RrjKk9OoVsJ9nsGbeh8JzoGmamy94wNXlT
+         fATdTGEy/S6PI8cCArCCdFMw4QUxTQPw97THRGRrb8KkAFvKD50ujnF9/PGlHQIc5jXB
+         z4iSRPnHNpIwqDGAClxPmNdTjZcOhOIuk93w+PE5lAQGTchf5VC9pgHQdM5LtRcORkwQ
+         pGbA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1736939418; x=1737544218;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=ryN4H8wkIGb2f8o0oo630j9DLup+PqsZakQPltPbaY0=;
+        b=Fp0uDX6htRDIg5Ll0xSoU4jYMvIRIzK5c8NHzUw1+4m0ekeFJo7EVw87z6E2FGj2bI
+         YR/En1aklfZqvpCn6rFA4xMmS4IciVinqU/GrVqC1qGf8OkE+NQpsLbYq32ErLWkTg87
+         2JjMlo8ikBPA7xg97wjsZO+RaBjwWTehxupnfb4MW2AZUAnL0fAUCic5e4oRKtAgbVr/
+         +DnnYq+CQqUJZRfDbWOhoYveHIn3I0mumAjEp2tnxWFXPgmMGUGDvtYqgkhBvPOKPH4I
+         Jjz5jb2H9QIxMQTUOUbbfZ38e6RXDRHLd1QTnPunPiE3CPok4gyiqBwGBEQDtyb2+UcU
+         JnOw==
+X-Gm-Message-State: AOJu0YwPhVp6mFcUcbGWlZ2cC77m21lutKn5+4vpMaSe3uY4ceKcg8Rf
+	AnFtmBx4Wwgy5wkHbfKSwflSRj3hNYBdDx51l+1bz7xQEIUlEcjJ/bEni94=
+X-Gm-Gg: ASbGncs78JYBINA/VvCOLQdp0tTpFMFkSAy87+HtLo/pd7xA6uc3unILz/3sfBA9LIL
+	KzjvbeMkRD2GJ6CatKWe0mT8dVGuP8OPSyl5hqpujQEriHpNKv8JIlrCuUGnRku2qCUWfxpsl01
+	hNROxxycPfQRLinz3oYRFpG53DrdHBqBOMNAgN+lpU9DIh9hJ/dikt73x+thyRSTo0zMAFyHkTr
+	Kfi0cIwJtpaPt/jiXfIVkyeAcUIB20JxA76jdsTVFryCHTOra8npzZ3FLL+x4xkisLzJpQn
+X-Google-Smtp-Source: AGHT+IHeBq712TfbDGaAcW3m28OnI0OkP1NH2zdSqhhKqiDCOFA3fUmjz0rqmjhdqlTL3JYewtpOhA==
+X-Received: by 2002:a05:620a:36c3:b0:7be:55f3:32ca with SMTP id af79cd13be357-7be55f332d8mr75722185a.19.1736939418208;
+        Wed, 15 Jan 2025 03:10:18 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.175.205])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7bce327bed4sm703906285a.58.2025.01.15.03.10.16
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jan 2025 03:10:17 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1736935086.git.tanggeliang@kylinos.cn>
+References: <cover.1736935086.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v3 0/6] BPF path manager, part 3
+Message-ID: <c4543747-0c25-7d3d-0b22-5ad4822c7104@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 15 Jan 2025 11:10:16 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Add a struct mptcp_pm_ops pointer "ops" in struct mptcp_pm_data, and two
-functions mptcp_init_pm() and mptcp_release_pm(), to set and release this
-pointer. mptcp_init_pm() is invoked in mptcp_pm_data_reset(), while
-mptcp_release_pm() is invoked in __mptcp_destroy_sock().
+Thank you for your modifications, that's great!
 
-In this way, different userspace path managers can be initialized through
-the pm_type sysctl, and then called into their respective interfaces
-through "ops" of "msk->pm".
+Our CI did some validations and here is its report:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/pm.c           |  7 +++++
- net/mptcp/pm_userspace.c | 58 +++++++++++++++++++++++++++++++++++-----
- net/mptcp/protocol.c     |  1 +
- net/mptcp/protocol.h     |  3 +++
- 4 files changed, 62 insertions(+), 7 deletions(-)
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/12786150574
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 3b47c2380a44..4353498f7396 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -600,6 +600,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- {
- 	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
- 	struct mptcp_pm_data *pm = &msk->pm;
-+	int ret;
- 
- 	pm->add_addr_signaled = 0;
- 	pm->add_addr_accepted = 0;
-@@ -627,6 +628,12 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 		WRITE_ONCE(pm->work_pending, 0);
- 		WRITE_ONCE(pm->accept_addr, 0);
- 		WRITE_ONCE(pm->accept_subflow, 0);
-+
-+		rcu_read_lock();
-+		ret = mptcp_init_pm(msk, mptcp_pm_find(pm_type));
-+		rcu_read_unlock();
-+		if (ret)
-+			return;
- 	}
- 
- 	WRITE_ONCE(pm->addr_signal, 0);
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index c03201c95fea..876411f22d99 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -164,7 +164,9 @@ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
- 	new_entry.addr.id = 0;
- 	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
- 
--	return userspace_pm_get_local_id(msk, &new_entry);
-+	return msk->pm.ops->get_local_id ?
-+	       msk->pm.ops->get_local_id(msk, &new_entry) :
-+	       userspace_pm_get_local_id(msk, &new_entry);
- }
- 
- static u8 userspace_pm_get_flags(struct mptcp_sock *msk,
-@@ -184,7 +186,9 @@ static u8 userspace_pm_get_flags(struct mptcp_sock *msk,
- u8 mptcp_userspace_pm_get_flags(struct mptcp_sock *msk,
- 				struct mptcp_addr_info *skc)
- {
--	return userspace_pm_get_flags(msk, skc);
-+	return msk->pm.ops->get_flags ?
-+	       msk->pm.ops->get_flags(msk, skc) :
-+	       userspace_pm_get_flags(msk, skc);
- }
- 
- static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
-@@ -269,7 +273,9 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	lock_sock(sk);
--	err = userspace_pm_address_announce(msk, &addr_val);
-+	err = msk->pm.ops->address_announce ?
-+	      msk->pm.ops->address_announce(msk, &addr_val) :
-+	      userspace_pm_address_announce(msk, &addr_val);
- 	release_sock(sk);
- 	if (err)
- 		NL_SET_ERR_MSG_ATTR(info->extack, addr,
-@@ -369,7 +375,9 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	sk = (struct sock *)msk;
- 
- 	lock_sock(sk);
--	err = userspace_pm_address_remove(msk, id_val);
-+	err = msk->pm.ops->address_remove ?
-+	      msk->pm.ops->address_remove(msk, id_val) :
-+	      userspace_pm_address_remove(msk, id_val);
- 	release_sock(sk);
- 	if (err)
- 		NL_SET_ERR_MSG_ATTR_FMT(info->extack, id,
-@@ -450,7 +458,9 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	lock_sock(sk);
--	err = userspace_pm_subflow_create(msk, &entry, &addr_r);
-+	err = msk->pm.ops->subflow_create ?
-+	      msk->pm.ops->subflow_create(msk, &entry, &addr_r) :
-+	      userspace_pm_subflow_create(msk, &entry, &addr_r);
- 	release_sock(sk);
- 
- 	if (err)
-@@ -585,7 +595,9 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	}
- 
- 	lock_sock(sk);
--	err = userspace_pm_subflow_destroy(msk, &addr_l, &addr_r);
-+	err = msk->pm.ops->subflow_destroy ?
-+	      msk->pm.ops->subflow_destroy(msk, &addr_l, &addr_r) :
-+	      userspace_pm_subflow_destroy(msk, &addr_l, &addr_r);
- 	release_sock(sk);
- 	if (err)
- 		GENL_SET_ERR_MSG(info, "subflow not found");
-@@ -657,7 +669,9 @@ int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
- 	}
- 
- 	lock_sock(sk);
--	ret = userspace_pm_set_flags(msk, local, &rem);
-+	ret = msk->pm.ops->set_flags ?
-+	      msk->pm.ops->set_flags(msk, local, &rem) :
-+	      userspace_pm_set_flags(msk, local, &rem);
- 	release_sock(sk);
- 
- 	/* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
-@@ -801,6 +815,36 @@ void mptcp_unregister_path_manager(struct mptcp_pm_ops *pm)
- 	spin_unlock(&mptcp_pm_list_lock);
- }
- 
-+int mptcp_init_pm(struct mptcp_sock *msk, struct mptcp_pm_ops *pm)
-+{
-+	if (!pm)
-+		pm = &mptcp_userspace_pm;
-+
-+	if (!bpf_try_module_get(pm, pm->owner))
-+		return -EBUSY;
-+
-+	msk->pm.ops = pm;
-+	if (msk->pm.ops->init)
-+		msk->pm.ops->init(msk);
-+
-+	pr_debug("userspace_pm type %u initialized\n", msk->pm.ops->type);
-+	return 0;
-+}
-+
-+void mptcp_release_pm(struct mptcp_sock *msk)
-+{
-+	struct mptcp_pm_ops *pm = msk->pm.ops;
-+
-+	if (!pm)
-+		return;
-+
-+	msk->pm.ops = NULL;
-+	if (pm->release)
-+		pm->release(msk);
-+
-+	bpf_module_put(pm, pm->owner);
-+}
-+
- void __init mptcp_userspace_pm_init(void)
- {
- 	mptcp_register_path_manager(&mptcp_userspace_pm);
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 5cda189d29f2..bba22c3f7279 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -2940,6 +2940,7 @@ static void __mptcp_destroy_sock(struct sock *sk)
- 	sk_stop_timer(sk, &sk->sk_timer);
- 	msk->pm.status = 0;
- 	mptcp_release_sched(msk);
-+	mptcp_release_pm(msk);
- 
- 	sk->sk_prot->destroy(sk);
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 2492354e34dd..94f412b11a6f 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -221,6 +221,7 @@ struct mptcp_pm_data {
- 	struct mptcp_addr_info remote;
- 	struct list_head anno_list;
- 	struct list_head userspace_pm_local_addr_list;
-+	struct mptcp_pm_ops *ops;
- 
- 	spinlock_t	lock;		/*protects the whole PM data */
- 
-@@ -1052,6 +1053,8 @@ struct mptcp_pm_ops *mptcp_pm_find(enum mptcp_pm_type type);
- int mptcp_validate_path_manager(struct mptcp_pm_ops *pm);
- int mptcp_register_path_manager(struct mptcp_pm_ops *pm);
- void mptcp_unregister_path_manager(struct mptcp_pm_ops *pm);
-+int mptcp_init_pm(struct mptcp_sock *msk, struct mptcp_pm_ops *pm);
-+void mptcp_release_pm(struct mptcp_sock *msk);
- 
- void mptcp_free_local_addr_list(struct mptcp_sock *msk);
- 
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/1647cc52b82c
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D925637
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
