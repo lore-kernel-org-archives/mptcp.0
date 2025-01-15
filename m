@@ -1,43 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A15A35949
-	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 01:13:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0969723243D
+	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 07:01:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736903609; cv=none; b=VWg+xmdcZLHIh9/yaWzAbpK3oTmXoM6sl+cpedyJq3RSq/niLT5mH85TP03thXqv6T+9NA7eoQGCCrqhGHl+O94tC1qOPfnxIsQOpYoAf73WT0nwqogzkpWXWPcR4DmDPgYkl/1mVpXIBLK1mQnooYcadYTwhqeJmOOunAjPm/s=
+	t=1736924508; cv=none; b=lgr0eJxCCUPB1jzoDW8NOXAtrVCfQfK0AoncKDyJdOdJ8K1OixVPSCpR3in+CpdLicQXk0HXtgdCVLwc2Zd8zkSITOuTmYCZ+hg7RrGLvFI6CeuobAW5XR0Y65+d6ej7qe34pnbEtSjwyZVZEvUedvjsYevyniiRg3w3KiAgIVg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736903609; c=relaxed/simple;
-	bh=q4qk4JxmLF8HBsSYb2U/H5vkiZA24WNqmIXmq6QqKq4=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=OxMUeNiN5g26ezITYzEaoal3j6au5lncKj/gHAMNf1v+TWp2vdtbUIuiPcRzRx4Jk1abwkEdUujlJc+z7+GknIk9/CkJJjvr84lEnslM4xuuB1ccpyqkRFG1RnuxwE0mgrbuniT3eD+GRaFnBuoDjzLA5rHpWbF4YaOGfW9+ULg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBCDFOwd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736924508; c=relaxed/simple;
+	bh=5kBKjncnYwmbebsAL0CmgtJPr7xMo64e0zzZW1lBj34=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=CjjBLWN9QzUMYevZmmvnSzUGPam/NPNzzyJw9q35duHgguaU499JwZGEysnHXsGOiqXo2NnG3fxQL1HguVRbQsnviuSt1tfNWEKggp/ku3d0qqzK4SKnyEoTSVjifR62MvuLkEffd00qApLIveWWmQabDzqGLP7wQ89guSlR8p0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k/OO3wwM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBCDFOwd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3F4C4CEE9;
-	Wed, 15 Jan 2025 01:13:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k/OO3wwM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 715D8C4CEDF;
+	Wed, 15 Jan 2025 07:01:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736903608;
-	bh=q4qk4JxmLF8HBsSYb2U/H5vkiZA24WNqmIXmq6QqKq4=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=tBCDFOwd0CMDq+Jurv/ItagSrpE8c7Dym8mlxhICAe5KgGZtcmlRMgdHaX1hcI8gY
-	 xYUVedumLG981lpT1YNXQsKo7HXO5NSgBltHCScmJ2G+rza6IJ6SRd1yLYVLWnEie6
-	 YBpOUYHnhDFXI0EbDi/PkXIrGeVcdbpxset6X+NM80cTapkKvOKT/Rvdt1sZfALuXM
-	 WsmdJ9ZoLJOmxd5o6QRun9rzImTqZM0vtEGlL2/m+WmSrShcKS/5Hwxkl8rNQNER3L
-	 mx4XOpxoG8+Zgpzl/bj3MRNTK3Lp+0eJV0mEDqpYOxwBvxqKKLf6X9ptZIQolx/2XI
-	 ROQL5dWnSrbjw==
-Message-ID: <40ddb2e67cbbd7178c5ad3766b8b51bfa7ab0e03.camel@kernel.org>
-Subject: Re: [PATCH 3/3] selftests: mptcp: Clean up resources properly in
- main_loop
+	s=k20201202; t=1736924507;
+	bh=5kBKjncnYwmbebsAL0CmgtJPr7xMo64e0zzZW1lBj34=;
+	h=From:To:Cc:Subject:Date:From;
+	b=k/OO3wwMlSILQnYSGRwkkoRF8XE3MPCFyX2b/inU0wcqqB4lvAxtLj8z3P5Eofqeo
+	 hAwIb2jqPIxAYMRYQ5xq5Kfc4jSz/9Wd3axqRLDv4RxO9syzZqRbIvPZUF1jFDN8dM
+	 KVoKtyODM5DEtoyK6Qihwtx5FqHoYCtLIGoq5bAlSQFDtoVZeeL6qjrdSEr9xNSmxQ
+	 nb1U/U39G5Mpo0xZqC1wMn7xI8mqe0Re8n4GaqMFOsaSTyAyNENI61s6tXeIpUlnjE
+	 z1jQrlGJSNwFpMmr4sbMesgnSsTGf/uD7yExhm1hy2J61OVN+mPWQLG5QR50iZldqG
+	 UeiqyqQ8z+9gQ==
 From: Geliang Tang <geliang@kernel.org>
-To: Cong Liu <liucong2@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Date: Wed, 15 Jan 2025 09:13:23 +0800
-In-Reply-To: <20250113085228.121778-4-liucong2@kylinos.cn>
-References: <20250113085228.121778-1-liucong2@kylinos.cn>
-	 <20250113085228.121778-4-liucong2@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/7] BPF path manager, part 3
+Date: Wed, 15 Jan 2025 15:01:33 +0800
+Message-ID: <cover.1736924314.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -46,53 +40,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-cc mptcp only.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On Mon, 2025-01-13 at 16:52 +0800, Cong Liu wrote:
-> Add proper cleanup of resources (file descriptors and address info)
-> in error paths to prevent resource leaks.
-> 
-> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++++-
->  1 file changed, 7 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 4d4ea4627daa..e82fde0411b2 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1271,8 +1271,13 @@ int main_loop(void)
->  	}
->  
->  	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
-> -	if (ret)
-> +	if (ret) {
-> +		close(fd);
-> +		if (cfg_input)
-> +			close(fd_in);
+v2:
+ - a new patch "hold msk lock before removing id 0 address"
 
-Should 'listensock' be closed here?
+Drop the patch "mptcp: reuse sending nlmsg code in dump_addr", add a new
+helper mptcp_pm_genl_fill_addr() to save the duplicated code.
 
-> +		freeaddrinfo(peer);
->  		return ret;
-> +	}
->  
->  	if (cfg_truncate > 0) {
->  		xdisconnect(fd, peer->ai_addrlen);
-> @@ -1291,6 +1296,7 @@ int main_loop(void)
->  		goto again;
->  	} else {
->  		close(fd);
+Define struct mptcp_pm_addr_id_bitmap in protocol.h, instead of defining
+mptcp_pm_addr_id_bitmap_t in include/net/mptcp.h, since get_addr() and
+dump_addr() interfaces of BPF userspace pm is dropped as Matt suggested.
 
-Should 'fd_in' be closed here? If so, is it possible to use a 'goto
-out;' to reduce duplication of code?
+Geliang Tang (7):
+  mptcp: add mptcp_pm_genl_fill_addr helper
+  mptcp: add struct mptcp_pm_addr_id_bitmap
+  mptcp: drop inet6_sk in mptcp_nl_find_ssk
+  mptcp: drop match in userspace_pm_append_new_local_addr
+  mptcp: hold msk lock before removing id 0 address
+  mptcp: update address type of get_local_id
+  mptcp: change is_backup interfaces as get_flags
 
-Thanks,
--Geliang
+ net/mptcp/pm.c           | 38 +++++++++++++++---
+ net/mptcp/pm_netlink.c   | 33 +++++-----------
+ net/mptcp/pm_userspace.c | 84 +++++++++++++---------------------------
+ net/mptcp/protocol.h     | 19 +++++++--
+ 4 files changed, 85 insertions(+), 89 deletions(-)
 
-> +		freeaddrinfo(peer);
->  	}
->  
->  	return 0;
+-- 
+2.43.0
 
