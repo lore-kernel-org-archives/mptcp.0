@@ -1,61 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89EB74D599;
-	Wed, 15 Jan 2025 21:21:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2FC691DB375;
+	Wed, 15 Jan 2025 21:30:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736976104; cv=none; b=ap7x4u6IC/hlXm72HlVytQ4pC2UslWpoqY2d84UZYJRIMhox7mBNCaaYDC4Yk/VokPRlUCiWqEdThBSqr2M/jPDX6wS4mXxK0gWCwqWi84Ith/P8KPkiIjmqv1tZFEcz110xnoh7iFja9Zk3BNMwdPMXgfsCgDb8LFbE3Swtbnk=
+	t=1736976624; cv=none; b=sOd74vOXBaevi4+IkQtn7ZdYUd7ehRWB7JwljWwsyA5JqzrCuCXWCupja3kJclTe6vHideYAXA6d+pmUBRb7bpi3Bd4W8hOuOr6oKradu6wf9m8ibpmj+f2NFYYsHMdhU06t7k7pA2Ud72KrceMdV0FtzsAJoTzK5WuWJrtzhYw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736976104; c=relaxed/simple;
-	bh=9TWMahBJxv0Fx7tGkIPVI77bNHYo41nONeIt3qjqxbE=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=QK2mqfeVgQp8sYbnLvKZitZh7n8uWhsijc+kUvSwuWZSi3FDa0HK0aEQ8CUtA9fTKFETBfjnV8JKhMy5y8xhwV32H97Fof3NWzMm0Oq9uN4rmy8RdqOLUBZ5nxTIyF+TwmRPqv1cK4aR1Vjw97jaGkGBhJJd/HEyoNEqP7qvu8o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QoNlwnOi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1736976624; c=relaxed/simple;
+	bh=+Qle6uQadHWaIm6pp9CUrsXp+ZxOu7gfPtu2P0KyXyQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=gYkf8hzm5r7dx09moF1H4UyoNCimwzjx/8mCwA0rX2ssaRWfU8D7cpXmrg40nEJmeaiy0o0/E3eMWUVujbfrPJazSolKdBd1k3/+9C/Drk5VJRMD0LivYC+eMJMi17eheM7DHgiLF+sF/aGjeQyiNjWkeN0uq1CPcLt+ipOncWs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QuPs0veq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QoNlwnOi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD7CEC4CED1;
-	Wed, 15 Jan 2025 21:21:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QuPs0veq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D628C4CED1;
+	Wed, 15 Jan 2025 21:30:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736976104;
-	bh=9TWMahBJxv0Fx7tGkIPVI77bNHYo41nONeIt3qjqxbE=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=QoNlwnOiPqfSlE8B3jdrtQ6z0dNj+TBZVwaz1RQzJB22Hx5VMKwrarrpfefcpGAT2
-	 IypN47XCBrXLOYKSNXUsymQwkTyqMKq2e+aLAeST389haEhwlvoKnZqf3mBYOP0Qh6
-	 M7v4mw2ImDAkx0UiZlmCgOkLikiSl9xlqUdXcztzWZpSDkIUS/5DjNpe3o5R4eOMka
-	 0Zpb2GUKJRsyLB1acfubOobtyJ8v7tXFPFFRbog0+yQa5DKpa2ZAnbogBLkjKm7K6l
-	 PFUecXPgOZfPLeCVZVViOnGlYc7J5L5eo52lFqUrMXTXqb7/lAmef2EMKyEcIPJkuB
-	 U6G86UhClS4Uw==
-Date: Wed, 15 Jan 2025 13:21:42 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
- Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
- Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
- Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next] mptcp: fix for setting remote ipv4mapped
- address
-Message-ID: <20250115132142.53db10b2@kernel.org>
-In-Reply-To: <20250114-net-next-mptcp-fix-remote-addr-v1-1-debcd84ea86f@kernel.org>
-References: <20250114-net-next-mptcp-fix-remote-addr-v1-1-debcd84ea86f@kernel.org>
+	s=k20201202; t=1736976624;
+	bh=+Qle6uQadHWaIm6pp9CUrsXp+ZxOu7gfPtu2P0KyXyQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=QuPs0veqSN6hBMQv3L1aVEiBlxyXwUdOE2s2BV7EkuaS/J02RL2/hcYWYm7nCZ3so
+	 ArJB5S/UkjkseagD5RmmvfmirXwSOC7KrMCC7SVyDaocg4ITA7NyQyZRpiSWTk351C
+	 1mHiyfaZxD54PGdgQmzJtoXP2rJq08MIq4W5t9CZ05VKx5CJ54hGYMIUTLMuTSe7md
+	 frLLiWWm6nidu7/SM+XsaW+xeToGRvCfdm/jvK0LxmLbMbm9jNcy6UsIF3PxInt8Lr
+	 t26LTBui3POxAEL4Io5Jea05pIoX3YtlfjtFt1n9um4SUD+gIywMuakC93npAgfI2E
+	 ADoX/BVdKUYNw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 3421C380AA5F;
+	Wed, 15 Jan 2025 21:30:48 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/6] mptcp: selftests: more debug in case of
+ errors
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173697664689.885620.11280936137681114654.git-patchwork-notify@kernel.org>
+Date: Wed, 15 Jan 2025 21:30:46 +0000
+References: <20250114-net-next-mptcp-st-more-debug-err-v1-0-2ffb16a6cf35@kernel.org>
+In-Reply-To: <20250114-net-next-mptcp-st-more-debug-err-v1-0-2ffb16a6cf35@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-kselftest@vger.kernel.org
 
-On Tue, 14 Jan 2025 19:06:22 +0100 Matthieu Baerts (NGI0) wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Commit 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
-> introduced a bug in mptcp_pm_nl_subflow_destroy_doit().
-> 
-> ipv6_addr_set_v4mapped() should be called to set the remote ipv4 address
-> 'addr_r.addr.s_addr' to the remote ipv6 address 'addr_r.addr6', not
-> 'addr_l.addr.addr6', which is the local ipv6 address.
+Hello:
 
-Wasn't there a syzbot report for this? Just curious.
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Tue, 14 Jan 2025 19:03:10 +0100 you wrote:
+> Here are just a bunch of small improvements for the MPTCP selftests:
+> 
+> Patch 1: Unify errors messages in simult_flows: print MIB and 'ss -Me'.
+> 
+> Patch 2: Unify errors messages in sockopt: print MIB.
+> 
+> Patch 3: Move common code to print debug info to mptcp_lib.sh.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/6] selftests: mptcp: simult_flows: unify errors msgs
+    https://git.kernel.org/netdev/net-next/c/894dae026bf6
+  - [net-next,2/6] selftests: mptcp: sockopt: save nstat infos
+    https://git.kernel.org/netdev/net-next/c/3257d4cb8d5c
+  - [net-next,3/6] selftests: mptcp: move stats info in case of errors to lib.sh
+    https://git.kernel.org/netdev/net-next/c/8c6bb011e188
+  - [net-next,4/6] selftests: mptcp: add -m with ss in case of errors
+    https://git.kernel.org/netdev/net-next/c/5fbea888f8aa
+  - [net-next,5/6] selftests: mptcp: connect: remove unused variable
+    https://git.kernel.org/netdev/net-next/c/b265c5a17423
+  - [net-next,6/6] selftests: mptcp: connect: better display the files size
+    https://git.kernel.org/netdev/net-next/c/540d3f8f1dac
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
