@@ -1,41 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E87E9CA64
-	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 01:06:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A15A35949
+	for <mptcp@lists.linux.dev>; Wed, 15 Jan 2025 01:13:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736903194; cv=none; b=hl97kAyjYwrqDEXvcvqCjDRDNaovkie71EBs1Z86vRHedzrLyiru7wsgZAz1fZ+s7qYDxttUXf7OP/VsgCa6ahuVDgP6CBHTaEv7hveP93R/fKkFj4yehK+lyM8TNjz5Ru3IY1FLfxssErP4u4LLG/fywh9Ir0qPElk1cVUn+BU=
+	t=1736903609; cv=none; b=VWg+xmdcZLHIh9/yaWzAbpK3oTmXoM6sl+cpedyJq3RSq/niLT5mH85TP03thXqv6T+9NA7eoQGCCrqhGHl+O94tC1qOPfnxIsQOpYoAf73WT0nwqogzkpWXWPcR4DmDPgYkl/1mVpXIBLK1mQnooYcadYTwhqeJmOOunAjPm/s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736903194; c=relaxed/simple;
-	bh=A3vbDqaxIUVLZem9iF8l8Ny3BrhZexeu+5TKVCFQ+GU=;
+	s=arc-20240116; t=1736903609; c=relaxed/simple;
+	bh=q4qk4JxmLF8HBsSYb2U/H5vkiZA24WNqmIXmq6QqKq4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=l+pwRb+vC0Ucf74qg8bs6y+39xl/KQCQr8g2nN3yf0MFJimyjkbFRP46JCGs1UtSKTQ1STxmZeK/302KwlG8ArnENVD8t6BKzHDNaR+EKoEV4xgPs4G8PtOPX/FoaeQYxoYaBgvxmU+HcJNOQhaRjyipKoWqtSMr6BCurkbM9NU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AgcGxHKK; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=OxMUeNiN5g26ezITYzEaoal3j6au5lncKj/gHAMNf1v+TWp2vdtbUIuiPcRzRx4Jk1abwkEdUujlJc+z7+GknIk9/CkJJjvr84lEnslM4xuuB1ccpyqkRFG1RnuxwE0mgrbuniT3eD+GRaFnBuoDjzLA5rHpWbF4YaOGfW9+ULg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tBCDFOwd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AgcGxHKK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A638C4CEDD;
-	Wed, 15 Jan 2025 01:06:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tBCDFOwd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE3F4C4CEE9;
+	Wed, 15 Jan 2025 01:13:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736903193;
-	bh=A3vbDqaxIUVLZem9iF8l8Ny3BrhZexeu+5TKVCFQ+GU=;
+	s=k20201202; t=1736903608;
+	bh=q4qk4JxmLF8HBsSYb2U/H5vkiZA24WNqmIXmq6QqKq4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=AgcGxHKKIC9Gze5hyejMUgaCwSnHHHNGih6e8767o6bfnpLB7Y+2jp5CFoUzlZxiA
-	 2Jcn2h+ljsLbvBtPkwML45tJUlf/zt5vzQLjifzHlR856KhE1hmQpMXrzuoqMEWYEL
-	 qlPOT7ZoVX+hcrjI+m78t+iV3W081ECG/yYYok8AvK1MDCbnMnvbjY4red3IC+IiI/
-	 ChfVW98Ns/Qz8q1NhgdkjUVGXmkcE1ciHGso0XzOZoAkOaasptn/ggPLK+H+wJvSc8
-	 3ml8xF7UCNK2EI/QsAk+3Qlag56H+AqXJnaTO30WB7PxXiOIBPJ0SNY9Xa2ljXM2sr
-	 mR4Oi8fhMlLfQ==
-Message-ID: <e6e2731a54a4b56854d4bf61bdda27dde7ea35a3.camel@kernel.org>
-Subject: Re: [PATCH 2/3] selftests: mptcp: Fix input fd lifecycle in
- reconnection loop
+	b=tBCDFOwd0CMDq+Jurv/ItagSrpE8c7Dym8mlxhICAe5KgGZtcmlRMgdHaX1hcI8gY
+	 xYUVedumLG981lpT1YNXQsKo7HXO5NSgBltHCScmJ2G+rza6IJ6SRd1yLYVLWnEie6
+	 YBpOUYHnhDFXI0EbDi/PkXIrGeVcdbpxset6X+NM80cTapkKvOKT/Rvdt1sZfALuXM
+	 WsmdJ9ZoLJOmxd5o6QRun9rzImTqZM0vtEGlL2/m+WmSrShcKS/5Hwxkl8rNQNER3L
+	 mx4XOpxoG8+Zgpzl/bj3MRNTK3Lp+0eJV0mEDqpYOxwBvxqKKLf6X9ptZIQolx/2XI
+	 ROQL5dWnSrbjw==
+Message-ID: <40ddb2e67cbbd7178c5ad3766b8b51bfa7ab0e03.camel@kernel.org>
+Subject: Re: [PATCH 3/3] selftests: mptcp: Clean up resources properly in
+ main_loop
 From: Geliang Tang <geliang@kernel.org>
 To: Cong Liu <liucong2@kylinos.cn>
 Cc: mptcp@lists.linux.dev
-Date: Wed, 15 Jan 2025 09:06:27 +0800
-In-Reply-To: <20250113085228.121778-3-liucong2@kylinos.cn>
+Date: Wed, 15 Jan 2025 09:13:23 +0800
+In-Reply-To: <20250113085228.121778-4-liucong2@kylinos.cn>
 References: <20250113085228.121778-1-liucong2@kylinos.cn>
-	 <20250113085228.121778-3-liucong2@kylinos.cn>
+	 <20250113085228.121778-4-liucong2@kylinos.cn>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -49,54 +49,50 @@ Content-Transfer-Encoding: 8bit
 cc mptcp only.
 
 On Mon, 2025-01-13 at 16:52 +0800, Cong Liu wrote:
-> When both cfg_input and cfg_sockopt_types.mptfo are set, the input
-> file
-> descriptor (fd_in) is opened before the reconnection loop but closed
-> within the loop. However, when mptfo is enabled, the descriptor is
-> not
-> reopened in the loop, causing subsequent iterations to use an invalid
-> file descriptor.
-> 
-> Move the file open operation into the loop to ensure fd_in is always
-> valid when needed, regardless of mptfo setting.
+> Add proper cleanup of resources (file descriptors and address info)
+> in error paths to prevent resource leaks.
 > 
 > Signed-off-by: Cong Liu <liucong2@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +-------
->  1 file changed, 1 insertion(+), 7 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 > b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 31f4c5618569..4d4ea4627daa 100644
+> index 4d4ea4627daa..e82fde0411b2 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1247,12 +1247,6 @@ int main_loop(void)
->  	struct addrinfo *peer;
->  	struct wstate winfo;
+> @@ -1271,8 +1271,13 @@ int main_loop(void)
+>  	}
 >  
-> -	if (cfg_input && cfg_sockopt_types.mptfo) {
-> -		fd_in = open(cfg_input, O_RDONLY);
-> -		if (fd_in < 0)
-> -			xerror("can't open %s:%d", cfg_input,
-> errno);
-> -	}
-> -
->  	memset(&winfo, 0, sizeof(winfo));
->  	fd = sock_connect_mptcp(cfg_host, cfg_port, cfg_sock_proto,
-> &peer, fd_in, &winfo);
+>  	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
+> -	if (ret)
+> +	if (ret) {
+> +		close(fd);
+> +		if (cfg_input)
+> +			close(fd_in);
 
-Is this 'fd_in' here valid if the previous 'fd_in = open(cfg_input,
-O_RDONLY);' is deleted?
+Should 'listensock' be closed here?
 
->  	if (fd < 0)
-> @@ -1270,7 +1264,7 @@ int main_loop(void)
->  	if (cfg_cmsg_types.cmsg_enabled)
->  		apply_cmsg_types(fd, &cfg_cmsg_types);
+> +		freeaddrinfo(peer);
+>  		return ret;
+> +	}
 >  
-> -	if (cfg_input && !cfg_sockopt_types.mptfo) {
-> +	if (cfg_input) {
->  		fd_in = open(cfg_input, O_RDONLY);
->  		if (fd_in < 0)
->  			xerror("can't open %s:%d", cfg_input,
-> errno);
+>  	if (cfg_truncate > 0) {
+>  		xdisconnect(fd, peer->ai_addrlen);
+> @@ -1291,6 +1296,7 @@ int main_loop(void)
+>  		goto again;
+>  	} else {
+>  		close(fd);
+
+Should 'fd_in' be closed here? If so, is it possible to use a 'goto
+out;' to reduce duplication of code?
+
+Thanks,
+-Geliang
+
+> +		freeaddrinfo(peer);
+>  	}
+>  
+>  	return 0;
 
