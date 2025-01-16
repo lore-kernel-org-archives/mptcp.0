@@ -1,277 +1,195 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A38A244FBF;
-	Thu, 16 Jan 2025 16:55:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6585C24A7C6
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 17:38:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737046514; cv=none; b=uARAydlFtEikKZTIO2pquL3EvGqjEOxBbwFA7E2RdJ5ETuHp9hW4zBuuB8qCptcepcm8gr0h3vOCQuSomuTiR0ZnsH0mp/8yJ2l+NQiHZskHWtE7QF6ip4sxqt4n5JSgtnG7R2f1Y6o9i7qjqt79814GsuXVAPW/LIw0C3NWcG8=
+	t=1737049113; cv=none; b=HTnI12pgPIh6NMAnXcnm1gBhJ3ZBGIfk1dRARKNJwnGyLWkxYzAVlixcpnYA6I8+E1u4+KT8US2yiBncqsiC7VcmQShdJ6KiCZZpLdPCzyyomXmWqFX2pvHu+pWAw6lU0S28+bP6eJ/lDsTI5WHNxiSkNRwpDpZks2h6qUah5lo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737046514; c=relaxed/simple;
-	bh=qpx/nK/kNfYWU2WE0IRnrCNR49g6pC5ohkkPOmplINc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=XhaEfEWTiZVlCPu/zNEIoxT8qWeu7qaIJICCWP5Y12Rt/V05CltJLVnk3jXHruHwM5x41JM8v7KbIq7JAgyfbI24Yy7e9RYAwChqJMv2D75q288uT44smjFmTR7aIQN9ytCZRCholer1zzBteTp8/bXEH2NtgUso2n9pGVSoQKg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nHQJGdOE; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737049113; c=relaxed/simple;
+	bh=ewcQtf+ENUYeuMqUhhIvKEebdy7IXJOo4INWI8BgmXE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=oPQUmJRNR4nqAyvyeYfj9GVy+Zr++fn8gVpF1nl7ZCsN54a4KevuVf8gTLdwrPrrBCTe+aieJzLZ5qHxdK3/f5Bzi8edS0fda4X0OLp3L1zAb4+oWG5xOTBoVFP4/xIkU4Z5Ojnbxlpxj1IkhiOKK5Y2tbrq58ikYj0Hx5cD0y0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=hWCqJPcn; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nHQJGdOE"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1F6CC4CEE2;
-	Thu, 16 Jan 2025 16:55:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737046514;
-	bh=qpx/nK/kNfYWU2WE0IRnrCNR49g6pC5ohkkPOmplINc=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=nHQJGdOEGSVEEHhi717mXTMu62ceHjcPpK27ua/wywsKv2NQuugyXAwrXpkjquy+1
-	 cY1jWB7AQb4X73w82JSrsf2z4OlyI7BBMlZt+ORJTCZBIAvSVdqpPQfEC7XDW4MDdF
-	 Q3bSp2eWJzwEq1MelGYLgjTYbTUG9ZIq6/b5Bt+D+opRh9naShhaOzQnfNBGxirFd4
-	 r0GcFTl1hY0MlCauu6fbYgnP4PYc9GzyEmJBpCy3Kx3mP5z+TuUHoyAG00RUQrpskV
-	 fkqN4F5SUDRA7SDasOQ/N3uQVcIwpOwK4ZsvGKktddmSbRbyMfNuiynJTVmejIED+N
-	 6Oiy6KKmeeJZQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 16 Jan 2025 17:51:37 +0100
-Subject: [PATCH net-next 15/15] mptcp: pm: add local parameter for
- set_flags
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="hWCqJPcn"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737049110;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=LZkMhqGs3WN5Nez6mNT/CmbATYYmf5QPhReWlnERyyw=;
+	b=hWCqJPcnpn0pqLnB3/go+hkhMZjkqDleL5OOSi5p1KYqEhzbhHC6sSzWEVS1cYPrnNmoI0
+	z7XS+9AGUYUujBC5srRyX0LgXN2Tt+rWQRoAqtqiRwIrdqEGOsuFdrcBrP7u5x92vXCOBn
+	gpn22PEekiEf8/bl7TILm4FoxvnmImw=
+Received: from mail-wr1-f70.google.com (mail-wr1-f70.google.com
+ [209.85.221.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-qyCpCMZ9Pc6fzzI5oSQxNw-1; Thu, 16 Jan 2025 12:38:28 -0500
+X-MC-Unique: qyCpCMZ9Pc6fzzI5oSQxNw-1
+X-Mimecast-MFC-AGG-ID: qyCpCMZ9Pc6fzzI5oSQxNw
+Received: by mail-wr1-f70.google.com with SMTP id ffacd0b85a97d-385dcadffebso532769f8f.0
+        for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 09:38:28 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737049107; x=1737653907;
+        h=in-reply-to:from:content-language:references:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=4GdbAKVTKiKRveWh4v8kEmQLNGWC8jKIWFnKudm0VRE=;
+        b=ltPn13N8xk84KKYtW2Pu2XHOEU4TzAE4etwYU35zo4+K72oQZy/TxCd322i2iTsXw1
+         Np46DHmYgxooPXWvL+KxX7hRR609zNPl8G8Ib5hoM8my8+DD3FIq64ZJd7md+IV7fBEa
+         R9f6ptDGpcZ2Q/t/LFecBsCVNsFPRTitspdB3FPNehi1mSo/Yw1HHd2jXJRrzO+nqdxW
+         uE4lYGcyJ6eCbeRIbKfTP9tvtywfi0mnQl/jANlQ+hib6JMwlz6OsLcgvTE0AbCIfF1J
+         MO7XsdO4YABhpbrbrofFoKUO7ey7mmW1nJRlUxxhJWlmGS9AP7ben2ku7M0jGk+8+cH0
+         ywqA==
+X-Forwarded-Encrypted: i=1; AJvYcCW2zO2vMdrTgso0pQckef/oPzkozexgfu6z+cRnp7RgnBYjak5eIQr7oEmZsyHCuopE1r12ug==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzUlBivvhu4JZbXrt/1f/QY5gRrhIXANR9OMIv2Urc6mb+3Fx3b
+	3wezH7ZmoBtHz+N4PXUDPyUFd/x6sW+Y0XAjk9+TOwpYlOtgzkyR+YAGLc+feVaq6Znl//5RSps
+	qCGPOCzRNxe8nTF+3DvHxo3gTs2JXCyTC/kLOU6/7hvlYUzVbsNa+fgk4BZwo
+X-Gm-Gg: ASbGncvOOD3qfprEYaC3W4sb/NcP1Tk8vQHC2fbuTWdrPLE9P7STe1ddZK9ADC8SpQ/
+	9zQWnhA6v40f8Ix4yXOoMrWNbtQBhvfOcB4vwYSZ29WHrhsj3JpZVhfVwOreT1fUhuejclAVwA7
+	jlvGdD02B3TPakSWWZU1iDRMwA6RsQUZQXpTr/aONCvzouxO2ReoIheYTDDGl/FnJoG6Ep0PAm7
+	o6dJ1MFNkY2NNlCeCtG4IAzRnr3/oYPjP6BSoLOXnIDzu5g1L5qOoIYTALB+PaocYdAZy5XPDI/
+	iyuEvD1NalU=
+X-Received: by 2002:a5d:648b:0:b0:386:3e3c:ef1 with SMTP id ffacd0b85a97d-38a87312f36mr36590253f8f.35.1737049107427;
+        Thu, 16 Jan 2025 09:38:27 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGW+czCA/X5NSGjWjL3gXd2IlXUZt+HQ3xIDrUGee2V3AUDECVVNbfNRTY+BpbT/Fq8AGiKgQ==
+X-Received: by 2002:a5d:648b:0:b0:386:3e3c:ef1 with SMTP id ffacd0b85a97d-38a87312f36mr36590221f8f.35.1737049106949;
+        Thu, 16 Jan 2025 09:38:26 -0800 (PST)
+Received: from [192.168.88.253] (146-241-15-169.dyn.eolo.it. [146.241.15.169])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-437c752910esm67929305e9.28.2025.01.16.09.38.26
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Thu, 16 Jan 2025 09:38:26 -0800 (PST)
+Message-ID: <1ac7d9c7-9f30-4915-ac6d-fe12b188d3b0@redhat.com>
+Date: Thu, 16 Jan 2025 18:38:25 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mptcp?] WARNING in __mptcp_clean_una (2)
+To: syzbot <syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com>,
+ mptcp@lists.linux.dev, syzkaller-bugs@googlegroups.com
+References: <67605870.050a0220.37aaf.0137.GAE@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <67605870.050a0220.37aaf.0137.GAE@google.com>
+X-Mimecast-Spam-Score: 1
+X-Mimecast-MFC-PROC-ID: N1jFq99xWdBmrn1DsN2BbZ8iIOiDrWNeABT6wH8JGcQ_1737049108
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="------------0eEBxsWJbrfDaYRGucFXg0h8"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------0eEBxsWJbrfDaYRGucFXg0h8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-15-c0b43f18fe06@kernel.org>
-References: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org>
-In-Reply-To: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=7567; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=86fR+WPYPbsLnT25WiPo1DWMfkniQLE3jYOhbnPN5Dk=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBniTnHxdeTowXg3HNuwF5lfWLUBeRK8dGX+XOfb
- 7TGfL9c1qeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ4k5xwAKCRD2t4JPQmmg
- c+2JEACrnKd34lRZ8nqLX8MCexaFT8Zu0j6XTB8Y0ICjEHb2makWJNdvfftnGJjJHBbbrnA0F3Q
- 9YSsTLubz2N7ksG2g0D117UjqrmrdMzeOY3NrOF6isjWZcAZfijKo/iku77zxXnYAMtCraHpipd
- xSkn7zG90c6lZ1DKIyNXwZVSTHuAhVfPycS4wX90k53nvNOIGFoR7IrYXFLaPEVJz9XXHBDs5er
- rTVShDyxffOtJRcC5BvFPi2cWJLDQhyiRnRNqWNb2CJ4kPXl6lUuaKVMpclc2KzpjSXruB0L+2t
- eGFcA1UKISmRAM4ri1KhXdnoJvgrYvnGCeOOlGpR/jW9rE9iW2CfUAUTZbhH1tPRYLNCDKkuD4i
- 5v23/MzpFP8PzMk/jaarQ+8rOFGltzUjh+Ljqpsrn2jKoJOFsqBPREdBSeuyJ6uAaslYcmwPWPV
- XVKgr3yQRcCYfpW9Ky+3/Ht7BiyPt2kta5vn/Yuw/AjEOfvf7W4b8ZhxFBqnqT9q5P9GBnl6CKf
- DEm8+TekKB9zgCknAfaSGaIrMPdy6VqTGas6fwuC+pHIko0E9ns4mdDwptzxg4pbtcU3y8TcQad
- /zK6EOZDJYgLDVUnbVkU0rh7wfsA3/0IbPuImRk2Ie6cSng91Kzhw55QnwMSn8IDs2ghG6Xvemy
- 59VVCMuV629DQHw==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+On 12/16/24 5:42 PM, syzbot wrote:
+> syzbot found the following issue on:
+> 
+> HEAD commit:    00a5acdbf398 bpf: Fix configuration-dependent BTF function..
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=148de730580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fee25f93665c89ac
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ebc0b8ae5d3590b2c074
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d82344580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179654f8580000
+> 
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/fc306c95490c/disk-00a5acdb.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/e17d5125ee77/vmlinux-00a5acdb.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/65f791a7fd14/bzImage-00a5acdb.xz
+> 
+> The issue was bisected to:
+> 
+> commit 3f83d8a77eeeb47011b990fd766a421ee64f1d73
+> Author: Paolo Abeni <pabeni@redhat.com>
+> Date:   Thu Feb 8 18:03:51 2024 +0000
+> 
+>     mptcp: fix more tx path fields initialization
+> 
+> bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=12d2c7e8580000
+> final oops:     https://syzkaller.appspot.com/x/report.txt?x=11d2c7e8580000
+> console output: https://syzkaller.appspot.com/x/log.txt?x=16d2c7e8580000
+> 
+> IMPORTANT: if you fix the issue, please add the following tag to the commit:
+> Reported-by: syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com
+> Fixes: 3f83d8a77eee ("mptcp: fix more tx path fields initialization")
+> 
+> ------------[ cut here ]------------
+> WARNING: CPU: 0 PID: 9846 at net/mptcp/protocol.c:1024 __mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
+> Modules linked in:
+> CPU: 0 UID: 0 PID: 9846 Comm: syz-executor351 Not tainted 6.13.0-rc2-syzkaller-00059-g00a5acdbf398 #0
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 11/25/2024
+> RIP: 0010:__mptcp_clean_una+0xddb/0xff0 net/mptcp/protocol.c:1024
+> Code: fa ff ff 48 8b 4c 24 18 80 e1 07 fe c1 38 c1 0f 8c 8e fa ff ff 48 8b 7c 24 18 e8 e0 db 54 f6 e9 7f fa ff ff e8 e6 80 ee f5 90 <0f> 0b 90 4c 8b 6c 24 40 4d 89 f4 e9 04 f5 ff ff 44 89 f1 80 e1 07
+> RSP: 0018:ffffc9000c0cf400 EFLAGS: 00010293
+> RAX: ffffffff8bb0dd5a RBX: ffff888033f5d230 RCX: ffff888059ce8000
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+> RBP: ffffc9000c0cf518 R08: ffffffff8bb0d1dd R09: 1ffff110170c8928
+> R10: dffffc0000000000 R11: ffffed10170c8929 R12: 0000000000000000
+> R13: ffff888033f5d220 R14: dffffc0000000000 R15: ffff8880592b8000
+> FS:  00007f6e866496c0(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+> CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> CR2: 00007f6e86f491a0 CR3: 00000000310e6000 CR4: 00000000003526f0
+> DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> Call Trace:
+>  <TASK>
+>  __mptcp_clean_una_wakeup+0x7f/0x2d0 net/mptcp/protocol.c:1074
+>  mptcp_release_cb+0x7cb/0xb30 net/mptcp/protocol.c:3493
+>  release_sock+0x1aa/0x1f0 net/core/sock.c:3640
+>  inet_wait_for_connect net/ipv4/af_inet.c:609 [inline]
+>  __inet_stream_connect+0x8bd/0xf30 net/ipv4/af_inet.c:703
+>  mptcp_sendmsg_fastopen+0x2a2/0x530 net/mptcp/protocol.c:1755
+>  mptcp_sendmsg+0x1884/0x1b10 net/mptcp/protocol.c:1830
+>  sock_sendmsg_nosec net/socket.c:711 [inline]
+>  __sock_sendmsg+0x1a6/0x270 net/socket.c:726
+>  ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2583
+>  ___sys_sendmsg net/socket.c:2637 [inline]
+>  __sys_sendmsg+0x269/0x350 net/socket.c:2669
+>  do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+>  do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+>  entry_SYSCALL_64_after_hwframe+0x77/0x7f
+> RIP: 0033:0x7f6e86ebfe69
+> Code: 28 00 00 00 75 05 48 83 c4 28 c3 e8 b1 1f 00 00 90 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 b0 ff ff ff f7 d8 64 89 01 48
+> RSP: 002b:00007f6e86649168 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+> RAX: ffffffffffffffda RBX: 00007f6e86f491b8 RCX: 00007f6e86ebfe69
+> RDX: 0000000030004001 RSI: 0000000020000080 RDI: 0000000000000003
+> RBP: 00007f6e86f491b0 R08: 00007f6e866496c0 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000246 R12: 00007f6e86f491bc
+> R13: 000000000000006e R14: 00007ffe445d9420 R15: 00007ffe445d9508
+>  </TASK>
 
-This patch updates the interfaces set_flags to reduce repetitive
-code, adds a new parameter 'local' for them.
+I can't repro the issue locally on net, please let me double check if
+the bot can reply it on such a tree and additionally add report debug
+info if the splat happens
 
-The local address is parsed in public helper mptcp_pm_nl_set_flags_doit(),
-then pass it to mptcp_pm_nl_set_flags() and mptcp_userspace_pm_set_flags().
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git main
+--------------0eEBxsWJbrfDaYRGucFXg0h8
+Content-Type: text/x-patch; charset=UTF-8;
+ name="mptcp_clean_una_splat_debug.patch"
+Content-Disposition: attachment; filename="mptcp_clean_una_splat_debug.patch"
+Content-Transfer-Encoding: base64
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm.c           | 16 ++++++++++++++--
- net/mptcp/pm_netlink.c   | 35 +++++++++++++----------------------
- net/mptcp/pm_userspace.c | 19 +++++++------------
- net/mptcp/protocol.h     |  6 ++++--
- 4 files changed, 38 insertions(+), 38 deletions(-)
-
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index c213f06bc70234ad3cb84d43971f6eb4aa6ff429..b1f36dc1a09113594324ef0547093a5447664181 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -506,9 +506,21 @@ int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
- 
- static int mptcp_pm_set_flags(struct genl_info *info)
- {
-+	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr_loc;
-+	int ret = -EINVAL;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-+		return ret;
-+
-+	attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
-+	if (ret < 0)
-+		return ret;
-+
- 	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_set_flags(info);
--	return mptcp_pm_nl_set_flags(info);
-+		return mptcp_userspace_pm_set_flags(&loc, info);
-+	return mptcp_pm_nl_set_flags(&loc, info);
- }
- 
- int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c2101f7ca31e648aa72ff0890ba3a0801c1bf674..fef01692eaed404e272359df691264f797240d10 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1951,62 +1951,53 @@ static int mptcp_nl_set_flags(struct net *net,
- 	return ret;
- }
- 
--int mptcp_pm_nl_set_flags(struct genl_info *info)
-+int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-+			  struct genl_info *info)
- {
--	struct mptcp_pm_addr_entry addr = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr = info->attrs[MPTCP_PM_ATTR_ADDR];
- 	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
- 			   MPTCP_PM_ADDR_FLAG_FULLMESH;
- 	struct net *net = genl_info_net(info);
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
--	struct nlattr *attr;
- 	u8 lookup_by_id = 0;
- 	u8 bkup = 0;
--	int ret;
--
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
--		return -EINVAL;
- 
- 	pernet = pm_nl_get_pernet(net);
- 
--	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
--	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
--	if (ret < 0)
--		return ret;
--
--	if (addr.addr.family == AF_UNSPEC) {
-+	if (local->addr.family == AF_UNSPEC) {
- 		lookup_by_id = 1;
--		if (!addr.addr.id) {
-+		if (!local->addr.id) {
- 			NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 					    "missing address ID");
- 			return -EOPNOTSUPP;
- 		}
- 	}
- 
--	if (addr.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+	if (local->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
- 	spin_lock_bh(&pernet->lock);
--	entry = lookup_by_id ? __lookup_addr_by_id(pernet, addr.addr.id) :
--			       __lookup_addr(pernet, &addr.addr);
-+	entry = lookup_by_id ? __lookup_addr_by_id(pernet, local->addr.id) :
-+			       __lookup_addr(pernet, &local->addr);
- 	if (!entry) {
- 		spin_unlock_bh(&pernet->lock);
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
- 		return -EINVAL;
- 	}
--	if ((addr.flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
-+	if ((local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
- 	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
- 		spin_unlock_bh(&pernet->lock);
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr, "invalid addr flags");
- 		return -EINVAL;
- 	}
- 
--	changed = (addr.flags ^ entry->flags) & mask;
--	entry->flags = (entry->flags & ~mask) | (addr.flags & mask);
--	addr = *entry;
-+	changed = (local->flags ^ entry->flags) & mask;
-+	entry->flags = (entry->flags & ~mask) | (local->flags & mask);
-+	*local = *entry;
- 	spin_unlock_bh(&pernet->lock);
- 
--	mptcp_nl_set_flags(net, &addr.addr, bkup, changed);
-+	mptcp_nl_set_flags(net, &local->addr, bkup, changed);
- 	return 0;
- }
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 1af70828c03c21d03a25f3747132014dcdc5c0e8..277cf092a87042a85623470237a8ef24d29e65e6 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -564,9 +564,9 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	return err;
- }
- 
--int mptcp_userspace_pm_set_flags(struct genl_info *info)
-+int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
-+				 struct genl_info *info)
- {
--	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
- 	struct mptcp_addr_info rem = { .family = AF_UNSPEC, };
- 	struct mptcp_pm_addr_entry *entry;
- 	struct nlattr *attr, *attr_rem;
-@@ -575,8 +575,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	struct sock *sk;
- 	u8 bkup = 0;
- 
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
--	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
- 		return ret;
- 
- 	msk = mptcp_userspace_pm_get_sock(info);
-@@ -586,11 +585,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	sk = (struct sock *)msk;
- 
- 	attr = info->attrs[MPTCP_PM_ATTR_ADDR];
--	ret = mptcp_pm_parse_entry(attr, info, false, &loc);
--	if (ret < 0)
--		goto set_flags_err;
--
--	if (loc.addr.family == AF_UNSPEC) {
-+	if (local->addr.family == AF_UNSPEC) {
- 		NL_SET_ERR_MSG_ATTR(info->extack, attr,
- 				    "invalid local address family");
- 		ret = -EINVAL;
-@@ -609,11 +604,11 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 		goto set_flags_err;
- 	}
- 
--	if (loc.flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-+	if (local->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
- 		bkup = 1;
- 
- 	spin_lock_bh(&msk->pm.lock);
--	entry = mptcp_userspace_pm_lookup_addr(msk, &loc.addr);
-+	entry = mptcp_userspace_pm_lookup_addr(msk, &local->addr);
- 	if (entry) {
- 		if (bkup)
- 			entry->flags |= MPTCP_PM_ADDR_FLAG_BACKUP;
-@@ -623,7 +618,7 @@ int mptcp_userspace_pm_set_flags(struct genl_info *info)
- 	spin_unlock_bh(&msk->pm.lock);
- 
- 	lock_sock(sk);
--	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &loc.addr, &rem, bkup);
-+	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &local->addr, &rem, bkup);
- 	release_sock(sk);
- 
- 	/* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 1ac531fb2c70b7b5c7487e3f5aa5313c5e01aa37..a80bb6ef5c5469c4c4ce59ee37d0358d20fff8d9 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1031,8 +1031,10 @@ bool mptcp_lookup_subflow_by_saddr(const struct list_head *list,
- 				   const struct mptcp_addr_info *saddr);
- bool mptcp_remove_anno_list_by_saddr(struct mptcp_sock *msk,
- 				     const struct mptcp_addr_info *addr);
--int mptcp_pm_nl_set_flags(struct genl_info *info);
--int mptcp_userspace_pm_set_flags(struct genl_info *info);
-+int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-+			  struct genl_info *info);
-+int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
-+				 struct genl_info *info);
- int mptcp_pm_announce_addr(struct mptcp_sock *msk,
- 			   const struct mptcp_addr_info *addr,
- 			   bool echo);
-
--- 
-2.47.1
+ZGlmZiAtLWdpdCBhL25ldC9tcHRjcC9wcm90b2NvbC5jIGIvbmV0L21wdGNwL3Byb3RvY29sLmMK
+aW5kZXggMWIyZTdjYmI1NzdmLi4wNjczMWNmZWQzNzQgMTAwNjQ0Ci0tLSBhL25ldC9tcHRjcC9w
+cm90b2NvbC5jCisrKyBiL25ldC9tcHRjcC9wcm90b2NvbC5jCkBAIC0xMDIyLDggKzEwMjIsMTQg
+QEAgc3RhdGljIHZvaWQgX19tcHRjcF9jbGVhbl91bmEoc3RydWN0IHNvY2sgKnNrKQogCiAJCWlm
+ICh1bmxpa2VseShkZnJhZyA9PSBtc2stPmZpcnN0X3BlbmRpbmcpKSB7CiAJCQkvKiBpbiByZWNv
+dmVyeSBtb2RlIGNhbiBzZWUgYWNrIGFmdGVyIHRoZSBjdXJyZW50IHNuZCBoZWFkICovCi0JCQlp
+ZiAoV0FSTl9PTl9PTkNFKCFtc2stPnJlY292ZXJ5KSkKKwkJCWlmICghbXNrLT5yZWNvdmVyeSkg
+eworCQkJCXByX2Vycigic25kX3VuYSAlbGx4IHNuZF9ueHQgJWxseCB3cml0ZV9zZXEgJWxseCBp
+ZHNuICVsbHggZGZyYWcgc2VxICVsbHggbGVuICVkXG4iLAorCQkJCSAgICAgICBzbmRfdW5hLCBt
+c2stPnNuZF9ueHQsIG1zay0+d3JpdGVfc2VxLAorCQkJCSAgICAgICBtcHRjcF9zdWJmbG93X2N0
+eChtc2stPmZpcnN0KS0+aWRzbiwKKwkJCQkgICAgICAgZGZyYWctPmRhdGFfc2VxLCBkZnJhZy0+
+ZGF0YV9sZW4pOworCQkJCVdBUk5fT04oMSk7CiAJCQkJYnJlYWs7CisJCQl9CiAKIAkJCVdSSVRF
+X09OQ0UobXNrLT5maXJzdF9wZW5kaW5nLCBtcHRjcF9zZW5kX25leHQoc2spKTsKIAkJfQo=
+--------------0eEBxsWJbrfDaYRGucFXg0h8--
 
