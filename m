@@ -1,127 +1,169 @@
-Received: from mail-qt1-f182.google.com (mail-qt1-f182.google.com [209.85.160.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 67DCA19E7D0
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 08:52:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 986B426AF6
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 08:55:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737017567; cv=none; b=A/thKskfl1vctCE/YjLR73iGGvopKiZYYz1UTyzzswFZ/mnlobG2aqA9+kSlOJZQg3k5DEe+oJbUSfSOmN1LPSsASS7tTH0xhrZt+eHYj8QRSZZZJgDKf5LRXFhhUCTTw3RSGijJqKXkF7KlHHsZ8U3VSTJdgLty5AZ+HVU09t0=
+	t=1737017741; cv=none; b=U2SGdEhRk0W1mhF4vL2cXRsR1K6yZY0ASU5XSX38CRqMrRTyvZ746n2PnOsRIrZdfCL2qjhOzNr8sGr8no8Dv+kTq2w/YtuvDqwja8lR0l4WIS/QBjzL0U6f/QhL5I2bap33UcqQQCDDfqhX7nOIUHxbBEh3RIHJDGJPQMVNhy4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737017567; c=relaxed/simple;
-	bh=4ClEflJKZ1UemoxiDWzyxW8Gv1mdU8GsKDOD2E1HJfw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Xnh9g0ffLDoqlCN11RHUGW6flcNa5LCnIiwrnnZqu4tGexBfC6wNOk1EDB+eEUeZMS8TRnfbFWyhSE6pIIraRkd6hqAzagPEOrF10LnZ3UdVz/QCCSriHVH50nuSuCZxshlvK1kSMA+X+tHOPj8v7gL4T/jSB3AiUbFBHIYHwfQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Key4RScg; arc=none smtp.client-ip=209.85.160.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Key4RScg"
-Received: by mail-qt1-f182.google.com with SMTP id d75a77b69052e-468f6b3a439so6866511cf.1
-        for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 00:52:46 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737017565; x=1737622365; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=/VjgG2jDTgyvs0hNGtAGahENlpLlEWfND6fWF8e1vUg=;
-        b=Key4RScga8t/0x9dMGcfEpGiILDCqghtwiUomohUDr/nU3QEjpElmbiOQsyjDyMm9K
-         WEoWJqujfPoyCHHh/dk5wTk9Bd9LyM9DOGH1qaXfDAKoykLUu7UcNWiEHzuxMe1Jk1hA
-         eo+SetWWjVXpwrgzzqf08EXTupVPBw3ztzAIOEOoVhzoiFf52dt02dlJyJe1h+tDA4Ai
-         mJ1MSK3BmRWDOpO6nLffGBYo4N13FXXPpH4gXWjVAmKWd5inUFf+CzcH25My1VV9c9Xr
-         tDjhnXuV4gSQMrp1GuENUxearEgrqwx8kO3rC6JjwIMPq6Aswny6h2lEQV2EFalpXHc9
-         jvWQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737017565; x=1737622365;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=/VjgG2jDTgyvs0hNGtAGahENlpLlEWfND6fWF8e1vUg=;
-        b=MdlNVcNU5l6oSv79v6R2eO8eAmZ/5twbA3jyGxjtTJkAvBlf5fqdgco+5PevikB0eH
-         fA0q6hzBdvEIhtLU/eRXo49cTi2ZVyTZg67gWZ7SC+IPBAyijMQ31njBzeG47vYbet9A
-         QDp6ll04fiWSHOQYo0VCuP4DmKjiDpceFCFKu2eKLsoO9K6VI+r635iTbTffSVyNXZvM
-         JbXHEl+Th7rIuXZkxSA0RmVjlSU2mHB1bk7gACh0hooEtr9sPYsIzV5mw1znlP+wT/r5
-         zAH9qHOWAffrZGQaHyOyWyEZb7BZvUX2sg0PBv5/tk3ySw9woyq0JwsnJdp5wuBcVHTV
-         EY6w==
-X-Gm-Message-State: AOJu0Yxcc3qjHU4ssxU+z6wZcTg7a4Fjd6mlQhutrXkCsgvGfEEQ9PMO
-	91O4eP/iRSIBrJ3MVDs+A4wnUphwAY5x2z12x5zJ/EXPDbw24t/5m9cl
-X-Gm-Gg: ASbGncvQT3S5gDob1jypjy5JvopXw6xH688mm6PNV7FhzoXkfXcaqVtxzamP95EKDew
-	/sImjox68TaoSN8LwoGyn2OqiB/AZbi6yiIoLx66KX8uPizdZK/nLPmz/6CoqxY8igtCMKSTWmr
-	a6ytrucdOjihhmIwJ5MX1exceCsj7m+paQRPkad19IvMjMHZyiEJpWhrZ8iCeGBDXFzM4X/DYvF
-	JeSwgLQyJtpxlr9KuJeYMobT0n2FtprNLCCTTM0qjn2ORFGg4cxMJWAfeSi7JPIZVk/
-X-Google-Smtp-Source: AGHT+IFh0Ug0r5Yky7GLXlEhDSO8nW00b9goa5oHVcoqBIqKz+wi3D19lm795njZYDpe4S/QQ97hWw==
-X-Received: by 2002:a05:622a:4d46:b0:46c:72a4:35a5 with SMTP id d75a77b69052e-46c72a43730mr532310781cf.28.1737017565060;
-        Thu, 16 Jan 2025 00:52:45 -0800 (PST)
-Received: from [127.0.0.1] ([20.42.50.231])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6dfad880a1csm74278486d6.28.2025.01.16.00.52.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jan 2025 00:52:44 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1737012662.git.tanggeliang@kylinos.cn>
-References: <cover.1737012662.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 0/3] BPF path manager, part 4
-Message-ID: <d74a7615-2efc-0b01-4dc7-f1e3cbae07c6@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 16 Jan 2025 08:52:44 +0000
+	s=arc-20240116; t=1737017741; c=relaxed/simple;
+	bh=bQrhzdPNxx1A4ULqJnUsDytgr/MXEBkGC4HymU441dQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=kAPfVK+8pM6u8MhisXQX5bkcBO5asAcfBYqnUZG7rw3ZCmVFdKAhy4DySJ1I9/hfzbBKL7gaJp59GOBYQH9ssaiTBREBppOplt0jnY6Iy7sofwUX6ua/wfoXoe+acPoJO6qWt37IZKWknLTY6JbyarBGRzurE52pUpXSJlUCHuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: a30be276d3e711efa216b1d71e6e1362-20250116
+X-CTIC-Tags:
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NO_NAME, HR_CTE_8B, HR_CTT_TXT
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_DIGIT_LEN, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:8029970c-4963-4824-b400-a06cb400d936,IP:15,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:0
+X-CID-INFO: VERSION:1.1.45,REQID:8029970c-4963-4824-b400-a06cb400d936,IP:15,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
+	:release,TS:0
+X-CID-META: VersionHash:6493067,CLOUDID:a0f83af89324e2ecd3ec697aa8996161,BulkI
+	D:250116165530WAAGE3A5,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
+	|102,TC:nil,Content:0|51,EDM:-3,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:ni
+	l,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:
+	0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
+X-UUID: a30be276d3e711efa216b1d71e6e1362-20250116
+X-User: liucong2@kylinos.cn
+Received: from liucong.. [(116.128.244.171)] by mailgw.kylinos.cn
+	(envelope-from <liucong2@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 2071129329; Thu, 16 Jan 2025 16:55:29 +0800
+From: Cong Liu <liucong2@kylinos.cn>
+To: matttbe@kernel.org
+Cc: davem@davemloft.net,
+	edumazet@google.com,
+	geliang@kernel.org,
+	horms@kernel.org,
+	kuba@kernel.org,
+	liucong2@kylinos.cn,
+	martineau@kernel.org,
+	mptcp@lists.linux.dev,
+	pabeni@redhat.com,
+	shuah@kernel.org
+Subject: [PATCH v2] selftests: mptcp: Fix incorrect file descriptor check in main_loop
+Date: Thu, 16 Jan 2025 16:54:48 +0800
+Message-ID: <20250116085459.31419-1-liucong2@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
+In-Reply-To: <5e2058ea-2292-4403-a7b9-ace4b21dc9c1@kernel.org>
+References: <5e2058ea-2292-4403-a7b9-ace4b21dc9c1@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Fix a bug where the code was checking the wrong file descriptor
+when opening the input file. The code was checking 'fd' instead
+of 'fd_in', which could lead to incorrect error handling.
 
-Thank you for your modifications, that's great!
+Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
+Signed-off-by: Cong Liu <liucong2@kylinos.cn>
+---
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Unstable: 1 failed test(s): selftest_mptcp_join - Critical: 1 Call Trace(s)=
- =E2=9D=8C
-- KVM Validation: btf-normal (only bpftest_all): Success! =
-=E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12804456330
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/50059925b7f3
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D925962
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 4209b9569039..31f4c5618569 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1249,7 +1249,7 @@ int main_loop(void)
+ 
+ 	if (cfg_input && cfg_sockopt_types.mptfo) {
+ 		fd_in = open(cfg_input, O_RDONLY);
+-		if (fd < 0)
++		if (fd_in < 0)
+ 			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
+@@ -1272,7 +1272,7 @@ int main_loop(void)
+ 
+ 	if (cfg_input && !cfg_sockopt_types.mptfo) {
+ 		fd_in = open(cfg_input, O_RDONLY);
+-		if (fd < 0)
++		if (fd_in < 0)
+ 			xerror("can't open %s:%d", cfg_input, errno);
+ 	}
+ 
+-- 
+2.43.0
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+When I tried to solve the problem where fd_in was closed in the again
+code block but not reopened in certain scenarios, I encountered some 
+issues. Here's my code, but it causes the disconnect test to fail and I'm
+not sure how to fix this. 
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index 31f4c5618569..fbcb6bf6500c 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -1247,7 +1247,7 @@ int main_loop(void)
+        struct addrinfo *peer;
+        struct wstate winfo;
+ 
+-       if (cfg_input && cfg_sockopt_types.mptfo) {
++       if (cfg_input) {
+                fd_in = open(cfg_input, O_RDONLY);
+                if (fd_in < 0)
+                        xerror("can't open %s:%d", cfg_input, errno);
+@@ -1270,12 +1270,6 @@ int main_loop(void)
+        if (cfg_cmsg_types.cmsg_enabled)
+                apply_cmsg_types(fd, &cfg_cmsg_types);
+ 
+-       if (cfg_input && !cfg_sockopt_types.mptfo) {
+-               fd_in = open(cfg_input, O_RDONLY);
+-               if (fd_in < 0)
+-                       xerror("can't open %s:%d", cfg_input, errno);
+-       }
+-
+        ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
+        if (ret)
+                return ret;
+@@ -1291,8 +1285,6 @@ int main_loop(void)
+                set_nonblock(fd, false);
+                if (connect(fd, peer->ai_addr, peer->ai_addrlen))
+                        xerror("can't reconnect: %d", errno);
+-               if (cfg_input)
+-                       close(fd_in);
+                memset(&winfo, 0, sizeof(winfo));
+                goto again;
+        } else {
+
+
+
+
+INFO: disconnect
+63 ns1 MPTCP -> ns1 (10.0.1.1:20001      ) MPTCP     (duration   103ms) [FAIL] file received by server does not match (in, out):
+-rw-r--r-- 1 root root 18548982  1月 16 16:18 /tmp/tmp.mBbh37L7rj.disconnect
+Trailing bytes are: 
+�ǫ��r�_���m:�!d��v��Pv��-rw------- 1 root root 6182994  1月 16 16:18 /tmp/tmp.mJRvCLPpUi
+Trailing bytes are: 
+�ǫ��r�_���m:�!d��v��Pv��64 ns1 MPTCP -> ns1 (dead:beef:1::1:20002) MPTCP     (duration   149ms) [FAIL] file received by server does not match (in, out):
+-rw-r--r-- 1 root root 18548982  1月 16 16:18 /tmp/tmp.mBbh37L7rj.disconnect
+Trailing bytes are: 
+�ǫ��r�_���m:�!d��v��Pv��-rw------- 1 root root 6182994  1月 16 16:18 /tmp/tmp.mJRvCLPpUi
+Trailing bytes are: 
+�ǫ��r�_���m:�!d��v��Pv��[FAIL] Tests of the full disconnection have failed
+Time: 49 seconds
+
+TAP version 13
