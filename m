@@ -1,100 +1,109 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B2441199FC1
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 07:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3128824A7E8
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 07:39:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737012683; cv=none; b=JKeY4cWrnnbtxfQDzjh2NAvIJ+GzmbnTw/WECJFuRf7rLYjdlG/aRWUnARRkzt4gJWg5bRiSuLk9EBI0zlqiCtL6hfeu67tiN8iaPlNFBUNiNvZEuOZPk+GWES1uBq2T/kv/k+1OgdPiLfC6z1QSeXNYan4iI4+AnjnMuGYUj44=
+	t=1737013141; cv=none; b=g2F1PjtGaQbwPIgsUs62gYpJ66v14ly4nelzAGEhzCI+g/Uc/K/TpnxZw0UJ+7VtnZ8XO8HN0+rcgaQjpoEmSSSqNtBKC7nxnplWJh83xebyraWOoyzLdzISUiupMg3JgIGVk2KIIvYlvHmfaAM7GHwd2jzZxhbO6s/j5fqaIjA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737012683; c=relaxed/simple;
-	bh=pQz8Z3Bty8tZrMNioP2N06J06QoKPM8HciF6SKoqP3o=;
-	h=Date:From:To:Cc:Message-ID:In-Reply-To:References:Subject:
-	 MIME-Version:Content-Type; b=JlUqUxDHi5BDCJlGfJsyF5S04O29txdMuxKSolo2YrcQXec/86pemoNlyGMEH4RuDdTxCzGcfd1babxR7xMvZtbXz7ilp9f8/39EQNRu3aAfSmMWbZJPtLRWFp+irpVfSLJeSg50ilJtd0dxvkJos04/uvYpLrq51WUgaO9ay2M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dpXhW75L; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737013141; c=relaxed/simple;
+	bh=CFSFajDdMiJk+1yUYyQsKgMi4XCSwIi0H5nn+BnCRCs=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=BM7ZN9/S+i8okQLkUKD2KVXCiRagxtOJ7DsPw1//o0danI00GBwlJAYysT+ZdcopQJiAZSSuDC6mc+WdsUcv+0uCTqcAv4KvgEtr2bKY4fgH/lkd+pbQoQyz1CL/lNF4I5FqAnHCuWc5vfhaXPUyJeNuOpEzIH3owXDfBavB1T4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sqOzyxcC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dpXhW75L"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 696F0C4CED6;
-	Thu, 16 Jan 2025 07:31:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sqOzyxcC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 87841C4CED6;
+	Thu, 16 Jan 2025 07:38:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737012683;
-	bh=pQz8Z3Bty8tZrMNioP2N06J06QoKPM8HciF6SKoqP3o=;
-	h=Date:From:To:Cc:In-Reply-To:References:Subject:From;
-	b=dpXhW75LDHh7J0dkICjR3d021slZMkwG8pMZCGPvNEthKrMGOdlY/GbVwxY3wbO60
-	 ileFSDt8Vy0A/GjienONBbsceQy4nxGaXoPd4+2DVGfHh9n3mg4Bp9WM7vtmVblwMF
-	 OJvsXndGv9gAnEq8ld2Cu58pmg00hMhZVYJckM/6dp9HPTNHmSir3bQWnuGW4tK5HF
-	 SOngMHjFrjuwBzZaQjsyqlGR5Lx9vNYeU/NYx8VEvlrE+HYxAwdS92AuL+OfoFks4o
-	 fT8h4w312YtyGPdQIBpGEsWyGnsE/gVAxsO1mO74T+fk44vrlCQ3SdwvLEZb/4laMj
-	 PdLvFXNSmrKPQ==
-Date: Thu, 16 Jan 2025 08:31:18 +0100 (GMT+01:00)
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Message-ID: <09ec2f1c-1a9e-4a6a-a316-3bbf2d713130@kernel.org>
-In-Reply-To: <c12ee9591c031a519dc706987fd78ae8752421f7.camel@kernel.org>
-References: <cover.1736935086.git.tanggeliang@kylinos.cn> <27f1c41a7a532e09596979e895af8dcbaca9313a.1736935086.git.tanggeliang@kylinos.cn> <c12ee9591c031a519dc706987fd78ae8752421f7.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 3/6] mptcp: drop inet6_sk in
- mptcp_nl_find_ssk
+	s=k20201202; t=1737013140;
+	bh=CFSFajDdMiJk+1yUYyQsKgMi4XCSwIi0H5nn+BnCRCs=;
+	h=From:To:Cc:Subject:Date:From;
+	b=sqOzyxcCOZSVP7ZrfrHQTkVgz1EzR38KIpYau9xKffkoeOkhAdx6lBicd2mVCDICF
+	 f4gGTI2Ic2b5HM/mde/VZcA4s6WzMz9IBRZZr99TSOCdtoq/h9ciwCgJp4a2bwY4cX
+	 Qtb3xRqtG/c9v56ckNYOQc3KcwIDDbHUVY2/ptMErLOyRbXp6LG0vT7kGTkRO/vupI
+	 IoUgojJoMFbgteGgkrauc4jmY631K1TwhHCLB0bYflpZ/t2lpYav+FmUTQs0UXFuWe
+	 Y1cahcRXiA0kQDZ2Bsw2cVoBVcC2y+ML81NpczugQ7k/WRSPq2KGBc+8kqOd7YtH2i
+	 LS0CdWU4iA/kg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/3] BPF path manager, part 4
+Date: Thu, 16 Jan 2025 15:38:50 +0800
+Message-ID: <cover.1737012662.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-X-Correlation-ID: <09ec2f1c-1a9e-4a6a-a316-3bbf2d713130@kernel.org>
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-16 Jan 2025 03:41:25 Geliang Tang <geliang@kernel.org>:
+v3:
+ - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
+ - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
+ - return 'err' instead of '0' in userspace_pm_subflow_create().
+ - drop 'ret' variable inmptcp_pm_data_reset().
+ - fix typos in commit log.
 
-> On Wed, 2025-01-15 at 17:59 +0800, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> In mptcp_nl_find_ssk(), 'issk' has already been got through
->> inet_sk(). No
->> need to use inet6_sk() to get 'pinfo' again, just use issk->pinet6
->> instead.
->> This patch also drops this 'pinfo' variable.
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> ---
->> =C2=A0net/mptcp/pm_userspace.c | 4 +---
->> =C2=A01 file changed, 1 insertion(+), 3 deletions(-)
->>
->> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
->> index e53426a5fc52..de17b18b78fe 100644
->> --- a/net/mptcp/pm_userspace.c
->> +++ b/net/mptcp/pm_userspace.c
->> @@ -465,9 +465,7 @@ static struct sock *mptcp_nl_find_ssk(struct
->> mptcp_sock *msk,
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 break=
-;
->> =C2=A0#if IS_ENABLED(CONFIG_MPTCP_IPV6)
->> =C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 case AF_INET6: {
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 const stru=
-ct ipv6_pinfo *pinfo =3D
->> inet6_sk(ssk);
->> -
->> -=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!ipv6_=
-addr_equal(&local->addr6, &pinfo-
->>> saddr) ||
->> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 if (!ipv6_=
-addr_equal(&local->addr6, &issk-
->>> pinet6->saddr) ||
->
-> CI reports a warning here:
->
-> WARNING: line length of 84 exceeds 80 columns
-> #27: FILE: net/mptcp/pm_userspace.c:468:
+Depends on: "BPF path manager, part 3" v4
+Based-on: <cover.1737012165.git.tanggeliang@kylinos.cn>
 
-Please note that this is a recommendation and not a strict rule.
-It means that if going a bit over 80 helps for the clarity, that's
-fine: no need to break lines and have something hard to read.
+v2:
+ - update get_local_id interface in patch 2.
 
-So up to you: check how it looks like when breaking the lines
-before 80 characters.
+get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
+as Matt suggested.
 
-Cheers,
-Matt
+In order to implement BPF userspace path manager, it is necessary to
+unify the interfaces of the path manager. This set contains some
+cleanups and refactoring to unify the interfaces in kernel space.
+Finally, define a struct mptcp_pm_ops for a userspace path manager
+like this:
+
+struct mptcp_pm_ops {
+	int (*address_announce)(struct mptcp_sock *msk,
+				struct mptcp_pm_addr_entry *local);
+	int (*address_remove)(struct mptcp_sock *msk, u8 id);
+	int (*subflow_create)(struct mptcp_sock *msk,
+			      struct mptcp_pm_addr_entry *local,
+			      struct mptcp_addr_info *remote);
+	int (*subflow_destroy)(struct mptcp_sock *msk,
+			       struct mptcp_pm_addr_entry *local,
+			       struct mptcp_addr_info *remote);
+	int (*get_local_id)(struct mptcp_sock *msk,
+			    struct mptcp_pm_addr_entry *skc);
+	u8 (*get_flags)(struct mptcp_sock *msk,
+			struct mptcp_addr_info *skc);
+	int (*set_flags)(struct mptcp_sock *msk,
+			 struct mptcp_pm_addr_entry *local,
+			 struct mptcp_addr_info *remote);
+
+	u8			type;
+	struct module		*owner;
+	struct list_head	list;
+
+	void (*init)(struct mptcp_sock *msk);
+	void (*release)(struct mptcp_sock *msk);
+} ____cacheline_aligned_in_smp;
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/74
+
+Geliang Tang (3):
+  mptcp: define struct mptcp_pm_ops
+  mptcp: register default userspace pm
+  mptcp: init and release mptcp_pm_ops
+
+ include/net/mptcp.h      |  27 +++
+ net/mptcp/pm.c           |   5 +
+ net/mptcp/pm_userspace.c | 374 ++++++++++++++++++++++++++++-----------
+ net/mptcp/protocol.c     |   1 +
+ net/mptcp/protocol.h     |   9 +
+ 5 files changed, 313 insertions(+), 103 deletions(-)
+
+-- 
+2.43.0
+
