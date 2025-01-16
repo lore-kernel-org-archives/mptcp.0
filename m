@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9D522BADD;
-	Thu, 16 Jan 2025 15:06:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43CA78F2B
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 16:29:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737040016; cv=none; b=jbQ1ZtAkBJI6h85BqRpocZnQrJrJy/kvRhDrWe9Mgb7tkZqAHl59KKwJvOI9MFbxpkosP30ylCHW6Dv7aM67msLYWZMJdPtw7ZvLxF/nzlZML//aJq443DwqQmCVIGyvIHtc69jcHymgRs0x0U+npKh3oK828AqLhAE1eS1bFTo=
+	t=1737044974; cv=none; b=nSF6/dfyLeJtGSUx3w9gDPcCCW/iifzHmqZOxPOHcXKYM1y2WsPTgdluHRB0gJdnhZo1DC+sT6Q4DpB4wVOEAFd8XiiiASWISCUauMJ4W1njVcAwkBuHpvCK3gb4xa41yWO1Zaw/UOrs9bz3w8nTZSmUafytxAGNnxqnuLod11I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737040016; c=relaxed/simple;
-	bh=CEqjGv398CG8l702lfEl50ZLvMxfy9XdvVY+Wx8KgMc=;
+	s=arc-20240116; t=1737044974; c=relaxed/simple;
+	bh=Q4I/VKMOndqEib53EtOgc/vucSqT4KwEzQCMR9VrDe0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BXVfVY0LJxOY8aiawi3DYNf7ACcLvBeSHVDP9UEmhqIXNEZsdLDLqej0/xSY1mh1xQokb5cOF8Avzt7MzkyfGARx/QyNjKy7ln9Sznrhme6cZLJ82GWs3kdp3ZsqVhbqXb18el+m/Uppsc0/FTRdUjuGzjhFVczDhr5Lwod8jPU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1dOgX7x; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=KqAdODU5YZPRz8Cl7iKvAfQXNLY7o7M91zP2HqczzXrJ9P1xFNneDRVwKic0SEQL6+IJu3hygE3apzY4PKjC8iXci9/4MHdPkSuCZcsCLB94Y6rUWkBG1Ei3fPbMOMyqW4oWoTC8KHfsjF12Ozfj0ShlU4HKZJTQNuE0KZSE7DM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcgJmqv6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1dOgX7x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B45FC4CEE4;
-	Thu, 16 Jan 2025 15:06:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcgJmqv6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81814C4CED6;
+	Thu, 16 Jan 2025 16:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737040015;
-	bh=CEqjGv398CG8l702lfEl50ZLvMxfy9XdvVY+Wx8KgMc=;
+	s=k20201202; t=1737044974;
+	bh=Q4I/VKMOndqEib53EtOgc/vucSqT4KwEzQCMR9VrDe0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=n1dOgX7xKOzG1/Lbgr7rkHjRi+7R7XU2+6UMqga7DOukJfrN0MsbCog4YShjzNebg
-	 ecH+6SBPK2NPEzl2rWSkFHjU08HD4tbMEek6s02N0xE4GL+ZlDFjzokYmWpqTEGoFO
-	 Mbq8MSQMfxl2w1l2Weu2qJXbmry5vkTz9DbnbtfXX/rTNkNdMu8bcN9QMzTOlyB1tf
-	 5AxS83qnrYbYiFF+2KuJ3gRrl7xqQ7Kqj9ijDbCo2N4+7t7iBEevFsIy3QLTdwX4d5
-	 DF86XkOtkruNsb3FDR+2p6vXvW3IA0G2AbdBYdFcRxwXoKIIQaP3GdATMUsia3HV6G
-	 5KvZ2ytN+vZSA==
-Message-ID: <99b3e4bc-5696-4731-b26c-17fd21087716@kernel.org>
-Date: Thu, 16 Jan 2025 16:06:51 +0100
+	b=fcgJmqv6EjoGkAnSwAjfKJEIWeSpkZ+1gVJJaIOl2qs9C8YbGuDkEV+4JvIaKBMYj
+	 zcwWVeh7GJe7zBCVb5nPe/LAQhO/fdI5VokN9u7zvHlyCMhnzIj7/yFPAxZLJRxENq
+	 b6Vbz8ybsLZFLWuL5pn7pMCehT1k3lrIlY2vyRMCHX41+Xm4Ql4x9MZTACZ0bcsWNE
+	 y5facqGiaHgm/fr+BCROw4ufwtNJNoF+gV1B5svXT4dKIjOJSCvGJpmb4UDW4A+Y5c
+	 2/nxniDAy41C9wrR8CPZOkEriCVGRsvdNVc1uVxMK6DRIQQK6BdykB0xcCscrP68lg
+	 KJKdbBpa/+k2w==
+Message-ID: <b5a01f30-3e9d-4ae7-97d1-0efec4e87ed1@kernel.org>
+Date: Thu, 16 Jan 2025 17:29:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] mptcp: fix for setting remote ipv4mapped address
+Subject: Re: [PATCH v2] selftests: mptcp: Fix incorrect file descriptor check
+ in main_loop
 Content-Language: en-GB
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250114-net-next-mptcp-fix-remote-addr-v1-1-debcd84ea86f@kernel.org>
- <20250115132142.53db10b2@kernel.org>
+To: Cong Liu <liucong2@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+References: <5e2058ea-2292-4403-a7b9-ace4b21dc9c1@kernel.org>
+ <20250116085459.31419-1-liucong2@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,31 +87,64 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250115132142.53db10b2@kernel.org>
+In-Reply-To: <20250116085459.31419-1-liucong2@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Jakub,
+Hi Cong Liu,
 
-On 15/01/2025 22:21, Jakub Kicinski wrote:
-> On Tue, 14 Jan 2025 19:06:22 +0100 Matthieu Baerts (NGI0) wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> Commit 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
->> introduced a bug in mptcp_pm_nl_subflow_destroy_doit().
->>
->> ipv6_addr_set_v4mapped() should be called to set the remote ipv4 address
->> 'addr_r.addr.s_addr' to the remote ipv6 address 'addr_r.addr6', not
->> 'addr_l.addr.addr6', which is the local ipv6 address.
+(-Cc everybody, except the MPTCP ML)
+
+Thank you for the v2.
+
+On 16/01/2025 09:54, Cong Liu wrote:
+> Fix a bug where the code was checking the wrong file descriptor
+> when opening the input file. The code was checking 'fd' instead
+> of 'fd_in', which could lead to incorrect error handling.
 > 
-> Wasn't there a syzbot report for this? Just curious.
+> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
 
-Apparently no :)
+I think the first issue has been introduced in 05be5e273c84 ("selftests:
+mptcp: add disconnect tests"), then in the one you mentioned. Because it
+is just in the selftests, feel free to add the older one, or both.
 
-From what I understood, Geliang spotted that while looking at the code
-around.
+> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index 4209b9569039..31f4c5618569 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -1249,7 +1249,7 @@ int main_loop(void)
+>  
+>  	if (cfg_input && cfg_sockopt_types.mptfo) {
+>  		fd_in = open(cfg_input, O_RDONLY);
+> -		if (fd < 0)
+> +		if (fd_in < 0)
+>  			xerror("can't open %s:%d", cfg_input, errno);
+>  	}
+>  
+> @@ -1272,7 +1272,7 @@ int main_loop(void)
+>  
+>  	if (cfg_input && !cfg_sockopt_types.mptfo) {
+>  		fd_in = open(cfg_input, O_RDONLY);
+> -		if (fd < 0)
+> +		if (fd_in < 0)
+>  			xerror("can't open %s:%d", cfg_input, errno);
+>  	}
 
-Thank you for having applied the patches!
+The CI is not able to apply your patch. On which base are you?
+Do you mind using our 'export' branch from our GitHub repository?
+
+> When I tried to solve the problem where fd_in was closed in the again
+> code block but not reopened in certain scenarios, I encountered some 
+> issues. Here's my code, but it causes the disconnect test to fail and I'm
+> not sure how to fix this. 
+
+Some fixes have been recently applied around the 'disconnect' tests,
+maybe this issue has already been fixed?
 
 Cheers,
 Matt
