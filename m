@@ -1,153 +1,138 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B43CA78F2B
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 16:29:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 680892AE96;
+	Thu, 16 Jan 2025 16:54:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737044974; cv=none; b=nSF6/dfyLeJtGSUx3w9gDPcCCW/iifzHmqZOxPOHcXKYM1y2WsPTgdluHRB0gJdnhZo1DC+sT6Q4DpB4wVOEAFd8XiiiASWISCUauMJ4W1njVcAwkBuHpvCK3gb4xa41yWO1Zaw/UOrs9bz3w8nTZSmUafytxAGNnxqnuLod11I=
+	t=1737046474; cv=none; b=sTTIzOMFlmFeL/USSSqB0joLsRB0Na11UykSJXuC9ydyvJSovKNzuJ7JjJq8kLsy5EC3zkuc1xTcMgFnZ6XvDmYbwvE6JDlj6epPL3eByzmV4yMGMcn7087Uvfz4/eiVHlSJdavP+MjFvCUUEmugfEPfmcs2djBV7OxccxHxwAQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737044974; c=relaxed/simple;
-	bh=Q4I/VKMOndqEib53EtOgc/vucSqT4KwEzQCMR9VrDe0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KqAdODU5YZPRz8Cl7iKvAfQXNLY7o7M91zP2HqczzXrJ9P1xFNneDRVwKic0SEQL6+IJu3hygE3apzY4PKjC8iXci9/4MHdPkSuCZcsCLB94Y6rUWkBG1Ei3fPbMOMyqW4oWoTC8KHfsjF12Ozfj0ShlU4HKZJTQNuE0KZSE7DM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fcgJmqv6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737046474; c=relaxed/simple;
+	bh=Ysa8GOnOkbLdnT1XswsCi8J7b5VsNoEjaoHVXePqvYE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hehWUSYVVgYWGZqB+rtTRAT+UF0M3jyYb4sk4gCtAltax++UOpKo/onlKOZg/n/VHRDaI4aYuGc3uVXJbZDdc4lPufa8TMdInymSVGKKY0ZB4NAG5Z0xp9+r5xH4s4PQdta6AJCjVmaiCx3iagifZdUf/lbBYIE3kjMLLUbSSSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VIinGWU7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fcgJmqv6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81814C4CED6;
-	Thu, 16 Jan 2025 16:29:33 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VIinGWU7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D21C4CED6;
+	Thu, 16 Jan 2025 16:54:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737044974;
-	bh=Q4I/VKMOndqEib53EtOgc/vucSqT4KwEzQCMR9VrDe0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=fcgJmqv6EjoGkAnSwAjfKJEIWeSpkZ+1gVJJaIOl2qs9C8YbGuDkEV+4JvIaKBMYj
-	 zcwWVeh7GJe7zBCVb5nPe/LAQhO/fdI5VokN9u7zvHlyCMhnzIj7/yFPAxZLJRxENq
-	 b6Vbz8ybsLZFLWuL5pn7pMCehT1k3lrIlY2vyRMCHX41+Xm4Ql4x9MZTACZ0bcsWNE
-	 y5facqGiaHgm/fr+BCROw4ufwtNJNoF+gV1B5svXT4dKIjOJSCvGJpmb4UDW4A+Y5c
-	 2/nxniDAy41C9wrR8CPZOkEriCVGRsvdNVc1uVxMK6DRIQQK6BdykB0xcCscrP68lg
-	 KJKdbBpa/+k2w==
-Message-ID: <b5a01f30-3e9d-4ae7-97d1-0efec4e87ed1@kernel.org>
-Date: Thu, 16 Jan 2025 17:29:22 +0100
+	s=k20201202; t=1737046473;
+	bh=Ysa8GOnOkbLdnT1XswsCi8J7b5VsNoEjaoHVXePqvYE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=VIinGWU75Shk9UmFzaZP2uvwWndk4Ww/sQM/Fbl7ZI8P4D5P4Ic/c60WdenqMplpS
+	 lj1fj+vs5or6g8eTdXlXPan5Qu9Cingx2YMexsTh0RZMaqffLZhBEahxvBxoREl9R9
+	 BIGrN7e36ZlxU2ok2KCsfHdMB3c3SoRwF299R9EBlUlFobAWknHyfkj0CxPWzCe4uN
+	 SavoukHTWGueu0m1EXpUv6MDD4b85GqxzHuT81+idtTTI2gjj7lAQsTrAs/R3YLlMV
+	 d0hNuhy552XmNWrIA079ZwN0QZ2/Zd7QN2IOYGfScWcRHVvX9o5avASNdfTi/wVjec
+	 DxlHHpH9hy51w==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/15] mptcp: pm: misc cleanups, part 2
+Date: Thu, 16 Jan 2025 17:51:22 +0100
+Message-Id: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2] selftests: mptcp: Fix incorrect file descriptor check
- in main_loop
-Content-Language: en-GB
-To: Cong Liu <liucong2@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-References: <5e2058ea-2292-4403-a7b9-ace4b21dc9c1@kernel.org>
- <20250116085459.31419-1-liucong2@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250116085459.31419-1-liucong2@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAo5iWcC/zWNQQqDMBBFryKz7sAkaJFeRbqwcWIHmjgksQji3
+ Q2Ci7d4i/f/DpmTcIZXs0Piv2RZYhXzaMB9xzgzylQdLNmOjHli5FLZCgYtTlEDBskO3Y/HuCp
+ a/JDviL3vqW+hzmhiL9t1McBdw/s4TlIrr718AAAA
+X-Change-ID: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2674; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Ysa8GOnOkbLdnT1XswsCi8J7b5VsNoEjaoHVXePqvYE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBniTnGzSBA4VNBEfzPqc+kxVT3hc3yZ/SRZ91Tg
+ WPRoSRFrMKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ4k5xgAKCRD2t4JPQmmg
+ cyMwD/4l8nIaCJkgL0CKbaasJZNVUYY95PDkkV9Xu/LPugBIG66NtZOHvddoqtCd5EYwfk8ygCT
+ uLFqweN/Wez81W0iRYWcXZF7/CuI4+ngCfqDdmevLPCSZWUCol5/Ew0LiAlIKCciYn9oN/yvFRb
+ h5lKANObjU7jHRDYKGAUaKf3ushrOyXMBY/U9gmDtAdmCAYsvjraxsG//DCc7pZqj0S9nMEtX7U
+ D0G4u+1MUjIYjKsST9h52hiMzHuAnPU2Sg5qtKX2wiXh8x9JbsoYRPUE9E93zWBSH2pBd+2dko7
+ P6WfF0sb2FrgC/1abgCQ4uJmOvW86L262InP1RvHYl5jybLSXkkOvPPXrCtBAvnBlPSHztzS2xf
+ I2sRJSDtgfjTssr6qdneRnGWcxRGfBJLQ9WuqM/U0DfYi8wCUnStH44QM5u0k7+I/jH2v9jUK9Y
+ 8FeEElS2C/SHRdm6Q73h0szzrqT8l0VbJHSKJducg3GmqcNtBy0CuMJ6u9R56uFzs5LnWgPGDv1
+ kd6RmZRT/jGA6sEuLWIhSptD9BDfBp8wyGNI0Jo9eME1QvtSeatkqZ5zIf1D5m72Z2dixY/MMKN
+ 8mHxyMAl/wU3QGp1u6EG1utuW9ZBWfLwwgPsXSt7C2i8bSpka2NA+kD8z0lgzAPyllf8uefQDd4
+ yXibOVCVIYjZAWQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Cong Liu,
+These cleanups lead the way to the unification of the path-manager
+interfaces, and allow future extensions. The following patches are not
+all linked to each others, but are all related to the path-managers.
 
-(-Cc everybody, except the MPTCP ML)
+- Patch 1: drop unneeded parameter in a function helper.
 
-Thank you for the v2.
+- Patch 2: clearer NL error message when an NL attribute is missing.
 
-On 16/01/2025 09:54, Cong Liu wrote:
-> Fix a bug where the code was checking the wrong file descriptor
-> when opening the input file. The code was checking 'fd' instead
-> of 'fd_in', which could lead to incorrect error handling.
-> 
-> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
+- Patch 3: more precise NL messages by avoiding 'this or that is NOK'.
 
-I think the first issue has been introduced in 05be5e273c84 ("selftests:
-mptcp: add disconnect tests"), then in the one you mentioned. Because it
-is just in the selftests, feel free to add the older one, or both.
+- Patch 4: improve too vague or missing NL err messages.
 
-> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/mptcp_connect.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 4209b9569039..31f4c5618569 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1249,7 +1249,7 @@ int main_loop(void)
->  
->  	if (cfg_input && cfg_sockopt_types.mptfo) {
->  		fd_in = open(cfg_input, O_RDONLY);
-> -		if (fd < 0)
-> +		if (fd_in < 0)
->  			xerror("can't open %s:%d", cfg_input, errno);
->  	}
->  
-> @@ -1272,7 +1272,7 @@ int main_loop(void)
->  
->  	if (cfg_input && !cfg_sockopt_types.mptfo) {
->  		fd_in = open(cfg_input, O_RDONLY);
-> -		if (fd < 0)
-> +		if (fd_in < 0)
->  			xerror("can't open %s:%d", cfg_input, errno);
->  	}
+- Patch 5: use GENL_REQ_ATTR_CHECK to look for mandatory NL attributes.
 
-The CI is not able to apply your patch. On which base are you?
-Do you mind using our 'export' branch from our GitHub repository?
+- Patch 6: avoid overriding the error message.
 
-> When I tried to solve the problem where fd_in was closed in the again
-> code block but not reopened in certain scenarios, I encountered some 
-> issues. Here's my code, but it causes the disconnect test to fail and I'm
-> not sure how to fix this. 
+- Patch 7: check all mandatory NL attributes with GENL_REQ_ATTR_CHECK.
 
-Some fixes have been recently applied around the 'disconnect' tests,
-maybe this issue has already been fixed?
+- Patch 8: use NL_SET_ERR_MSG_ATTR instead of GENL_SET_ERR_MSG
 
-Cheers,
-Matt
+- Patch 9: move doit callbacks used for both PM to pm.c.
+
+- Patch 10: drop another unneeded parameter in a function helper.
+
+- Patch 11: share the ID parsing code for the 'get_addr' callback.
+
+- Patch 12: share sending NL code for the 'get_addr' callback.
+
+- Patch 13: drop yet another unneeded parameter in a function helper.
+
+- Patch 14: pick the usual structure type for the remote address.
+
+- Patch 15: share the local addr parsing code for the 'set_flags' cb.
+
+The behaviour when there are no errors should then not be modified.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (9):
+      mptcp: pm: drop info of userspace_pm_remove_id_zero_address
+      mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
+      mptcp: pm: make three pm wrappers static
+      mptcp: pm: drop skb parameter of get_addr
+      mptcp: pm: add id parameter for get_addr
+      mptcp: pm: reuse sending nlmsg code in get_addr
+      mptcp: pm: drop skb parameter of set_flags
+      mptcp: pm: change rem type of set_flags
+      mptcp: pm: add local parameter for set_flags
+
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: userspace: flags: clearer msg if no remote addr
+      mptcp: pm: more precise error messages
+      mptcp: pm: improve error messages
+      mptcp: pm: remove duplicated error messages
+      mptcp: pm: mark missing address attributes
+      mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
+
+ net/mptcp/pm.c           |  86 +++++++++++++++++--
+ net/mptcp/pm_netlink.c   | 129 ++++++++++-------------------
+ net/mptcp/pm_userspace.c | 209 +++++++++++++++++++++--------------------------
+ net/mptcp/protocol.h     |  14 ++--
+ 4 files changed, 225 insertions(+), 213 deletions(-)
+---
+base-commit: b44e27b4df1a1cd3fd84cf26c82156ed0301575f
+change-id: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
