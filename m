@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DBF214AD2B
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 19:48:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9772922E409
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 20:25:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737056887; cv=none; b=iZLZwfmDFQxCS9LzgC49RKKij+wt8UgC9rShr9b4ex2VoRDw/tKf1AWZ2slFt0q0hak5J+zbOEnj9LLqwLVxV7HTuIq6W6+72zJBYBJHRnGPzzT08B0uHUfvKuoYyLhvchPMC0Z2r1RHPIWVxOjkG+vGh4z8gPuew0GERTQe7jg=
+	t=1737059118; cv=none; b=t7lIrI0e01MdxJRmxhnk5CxUVkGlyWarfron1Hq9lKGFPB/6kZYAcrcVcVXouxILB8NA84uNszJnJqtsfoXZ3vlCJaQOfz3GehautXAUN87PJr7dW0/Acz2dvfAwUU5m8ShORRLb4KaAu6dXjq034NAP8vlv4tD+zYwVBfZDMjY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737056887; c=relaxed/simple;
-	bh=aSrN1qPETHuhow03K04fum1p427hdVrmGlLCQGXlDrQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ASrQLrIT1FVa9DteLo+u+qsyfPU/46oqEo2yO7iORV9y1uZryqC3+xU+DSJHRg2BECHke2BSACmCc2xbO+1XD+gVMxBCfQrqMnJiSz5fg2O6pNqUggaC5TuTha/8nUiyJjuZKFv79NEDDultmzWjxZRsw2pTgPUjiUCOdS87IsA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evKMElxd; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737059118; c=relaxed/simple;
+	bh=5teObNqXLOz0IfXA103kZZK1fUWI5h06yis+zBUUd0A=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gT3dF1obTeoDY4cG1+yRuw37KrLiUhaOjLgXhoWUYUTwSxcEXNGyjKAtvVxezX83c4enkXbu18Dxz1F1oaBxQ5WCslHNvQwD7PhDJd3O3T03y0PcrbMiwvQpO9oPsEqwcetclT/IDRXV91hpvZ80vgDzmwc6tZD8VkdLQsGB2xo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evdwEq5u; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evKMElxd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF54CC4CED6;
-	Thu, 16 Jan 2025 19:48:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evdwEq5u"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B3D77C4CED6;
+	Thu, 16 Jan 2025 20:25:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737056884;
-	bh=aSrN1qPETHuhow03K04fum1p427hdVrmGlLCQGXlDrQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=evKMElxdbARYsEJsmjhmpyuGZnH1S9EJqXANGW0HcUYM2/rHc3bfduL/ig4D28JWL
-	 MbyWtQAM5I88f5jJVeQRy5etplgtXqgoGogTn+np9wXNiFkgG2XYnPagd3f1eY/01e
-	 1jSfR6x1NxjqgQ7SdWVfKYnnW95mLgCaiLhspzJ1/dJS4XVkQ3SbeNZgl1ZLAWLZe/
-	 XK97g4+W+9j3T4fsE7Uuw15Xt8f54vRHhOkyQ8c8qy81eg3ztIO17qwMvfcLohRCjh
-	 8D/uTxNmauytZrp/AkyROwsxRuJQsiZRxA3//zQxoqgnVDFGGmnIyYLiCUViRaV8Bb
-	 WSw2tZixG6AYw==
-Message-ID: <d4556501-80c9-4e1a-a1f8-15383860eea5@kernel.org>
-Date: Thu, 16 Jan 2025 20:47:52 +0100
+	s=k20201202; t=1737059118;
+	bh=5teObNqXLOz0IfXA103kZZK1fUWI5h06yis+zBUUd0A=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=evdwEq5uFCnV8gr+fhFivxAYShXlvx7I2ahlQwpRiqVP2ld3qoeDduUtOacDU+RuC
+	 6W0zCwYfQiGlxDGengLK1xwQ3pz22a1ECzmHay5XKAhyodQiXP1N0V/gnFd8KRrZ5d
+	 gvaHRm/GYk1vtObD6X23EP3yXvRb9hBc//YTKYRzu4wilyNBZz2BQVSKjR/zl3E6Db
+	 HEgPKIFhprJuuPU9LS1EKbrOReoLb7Y4/h4Bav4uvJHUsrbX7F8zWwMKbIWBi8I/Lf
+	 wkpvAkGUEmFyg9vZ4qocwwQOGb5pmfo1XFYlS75feAIQz9r6vrTUn0WJGqSLeGQM/k
+	 Wf9r7JFcWbfDw==
+Message-ID: <c0576dc7-79f5-46c7-a59d-f70c6acf355f@kernel.org>
+Date: Thu, 16 Jan 2025 21:25:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: pm: only set fullmesh for subflow endp
+Subject: Re: [PATCH mptcp-net] mptcp: consolidate suboption status.
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com,
- mptcp@lists.linux.dev
-References: <20250116-mptcp-issue-540-v1-1-b0ba2c126eb8@kernel.org>
- <e2a7532a-ec79-4d09-ba45-55bda7e60092@redhat.com>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <7c8a258328ed6d235a100e3fa13c2da355119951.1736974476.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,72 +84,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e2a7532a-ec79-4d09-ba45-55bda7e60092@redhat.com>
+In-Reply-To: <7c8a258328ed6d235a100e3fa13c2da355119951.1736974476.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 16/01/2025 19:37, Paolo Abeni wrote:
-> On 1/16/25 7:15 PM, Matthieu Baerts (NGI0) wrote:
->> With the in-kernel path-manager, it is possible to change the 'fullmesh'
->> flag. The code in mptcp_pm_nl_fullmesh() expects to change it only on
->> 'subflow' endpoints, to recreate more or less subflows using the linked
->> address.
->>
->> Unfortunately, the set_flags() hook was a bit more permissive, and
->> allowed 'implicit' endpoints to get the 'fullmesh' flag while it is not
->> allowed before.
->>
->> That's what syzbot found, triggering the following warning:
+On 15/01/2025 22:12, Paolo Abeni wrote:
+> MPTCP maintains the received sub-options status is the bitmask carrying
+> the received suboptions and in several bitfields carrying per suboption
+> additional info.
+> 
+> Zeroing the bitmask before parsing is not enough to ensure a consistent
+> status, and the MPTCP code has to additionally clear some bitfiled
+> depending on the actually parsed suboption.
+> 
+> The above schema is fragile, and syzbot menaged to trigger a path where
+> a relevant bitfield is not cleared/initialized:
 
 (...)
 
->> Fixes: 73c762c1f07d ("mptcp: set fullmesh flag in pm_netlink")
->> Reported-by: syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com
->> Closes: https://lore.kernel.org/6786ac51.050a0220.216c54.00a6.GAE@google.com
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/540
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/pm_netlink.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index fef01692eaed404e272359df691264f797240d10..7131dc2f312d923a31bb4b0460b6b4663376fbd0 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1986,7 +1986,8 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
->>  		return -EINVAL;
->>  	}
->>  	if ((local->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
->> -	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
->> +	    ((entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL) ||
->> +	     (entry->flags & MPTCP_PM_ADDR_FLAG_IMPLICIT))) {
->>  		spin_unlock_bh(&pernet->lock);
->>  		NL_SET_ERR_MSG_ATTR(info->extack, attr, "invalid addr flags");
->>  		return -EINVAL;
-> 
-> LGTM, thanks!
-> 
-> slight preference for:
-> 
-> 		entry->flags & (MPTCP_PM_ADDR_FLAG_SIGNAL ||
-> 			        MPTCP_PM_ADDR_FLAG_IMPLICIT)
-> 
-> but definitely not strong opinion about it.
+> The current schema is too fragile; address the issue grouping all the
+> state-related data together and clearing the whole group instead of
+> just the bitmask. This also cleans-up the code a bit, as there is no
+> need anymore to individually clear "random" bitfield in a couple of
+> places.
 
-Good point! I agree with you. That was in fact my v2, then I switched to
-a version with:
+Good catch, and now cleaner!
 
-  flags & (SUBFLOW | SIGNAL | IMPLICIT) == SUBFLOW
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-but then I realised the case with no "type" (so not subflow, signal nor
-implicit) was OK in fact, even if it will recreate the subflows for no
-reasons, but that was already the case before.
+Hopefully it will not be too difficult to backport, but good you added
+the BUILD_BUG_ON()!
 
-So I switched back to v1, and forgot about v2 :)
+> Fixes: 84dfe3677a6f ("mptcp: send out dedicated ADD_ADDR packet")
+> Reported-by: syzbot+23728c2df58b3bd175ad@syzkaller.appspotmail.com
+> Closes: https://syzkaller.appspot.com/bug?extid=23728c2df58b3bd175ad
 
-Can I add your Acked-by or you prefer not to?
+Just for the internal tracking:
+
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/541
+
+I will try to create a new issue each time there is a new syzbot report,
+just to be sure we don't miss one by accident.
 
 Cheers,
 Matt
