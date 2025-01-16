@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5FFA51990B7
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 07:27:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ED30B1D86F1
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 07:27:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737012435; cv=none; b=Wc9eJsWgNFEmDVp+fKozKa1qN+Ajtg0I5Iw/IehzHcciIbxKYOKd4aluRgI3LGdy7HuJyKEon6mtrZ9FMHFtobuSXj33UHfHuXie+hGduZwuRKT/D6NbNnHISSbiNLskEZEsgLAdUKaE2PyvwXt5+Aeic/hzVLc8X/DuhIOTI5c=
+	t=1737012437; cv=none; b=oa5m1ZqDH7au3ljoB0Icc2xGZeT5PAuqIMQzzR5LEL5Ju0wIoKFE9uUpUAPkd5GZdOHU0pvE/yn+cBrmxz+r6IkcgQui+6bDb2fDuiVyYExgnQngCGbt6uD3LAjCpMyvVyzmFQ8C+9W0JH6L4NF65piSMir818uVNp8qzESTW9k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737012435; c=relaxed/simple;
-	bh=DaI7SQT8GY/NiSZNUbwTbINnuZ4DangVC/mvANmBa2w=;
+	s=arc-20240116; t=1737012437; c=relaxed/simple;
+	bh=uSlZGjqlztPKPok6+ltWM2uKaOzY7i30VS7HCyC+g64=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Q2ONaDkZsBDC6AhISSJw1c3axuy4T8JYfYweMUbJiwLLb92x6xRl3BCfvJR6zPegxOD+hz4gHobBXW2i0+vxvNSGD+QdgtrR6D4w4MxQGPtlY/rPz18q+z+uVmQGo3aItTwc8Nf+xvmU4/8uQ7XsWhHTECTb8W/hFppEkCBZNEQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oqS29tfx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=u/KAYYc/Uf2o7dPx6wUFjecznhWc8XENlSqnW+vw+mvTlfJ+vzvzdR1ytOiajksbxdGbW4rY1E726iBpz5YrEVpZaTml93D1GMWOQ7f9FSIuhaaLTdSRvZ/84ADXI5jH1PoCKxdPT9iyFX3dNJBlGIRQSJ9GCr6OVuyxROetQOY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jx4LQqvV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oqS29tfx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4F223C4CEE3;
-	Thu, 16 Jan 2025 07:27:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jx4LQqvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B4325C4CEE5;
+	Thu, 16 Jan 2025 07:27:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737012435;
-	bh=DaI7SQT8GY/NiSZNUbwTbINnuZ4DangVC/mvANmBa2w=;
+	s=k20201202; t=1737012436;
+	bh=uSlZGjqlztPKPok6+ltWM2uKaOzY7i30VS7HCyC+g64=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=oqS29tfxRtxbIHuzXsEaDLv38xYErOIVGnXSZGgk290iM7ZiZEMlQknJCyn3b6QbD
-	 2GDngZyc60CuO22/i+9j6WS6zd1D3uBBZnsjq48LdxA+rApuYOFLSONbvx69uVTOax
-	 J+B4eV6B56B5JlZy3El5rgj0B8gRqIkrcMxTd9pLp/SNP3pkgYwkeaP/+P0n205Xiw
-	 GrZpX0qdZ9jcTRj1EOLPWuDJ3HbG9opofkslXj53IOtDO3vr5FCGSU0KD4Ti9qPcU3
-	 00uiJql36fMGlvRDXU/8LGEcTk6C6mVudtWosNNMLqBrod8htOqXdopO+bK2wr8dcv
-	 7eZuqJUhZJ7wQ==
+	b=Jx4LQqvVHIXY0YWPYVyXa+HhUYmYmSgxshCRAwzj4jEz6nTK5VSXOXlmzM4K3WHpp
+	 QBs6zGfY89VCv/25s0iEVMQIH8N4iTKl5gLxQfTkV23mR7/PRuJUpE0q6wwzNbqyy9
+	 lwCIBpWynRum7gl9uKg+59xZiVvqsiMmeml7bS0/juBS7phx+DFU98xoF1n3MSXsHp
+	 6o4eQ3bgm6nJjD6UbjbNuEgDHysirWkNabbVNkxlGVVFS0/DK9zKwgkfeCSOhLgTzf
+	 +z+s5bxcc7iZBgF/MhDmxESuej56RQWo33i+ImujE6UtIs/QemU/W+e8Yin8PhzCU5
+	 hNkbPrcryaflg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 5/7] mptcp: drop match in userspace_pm_append_new_local_addr
-Date: Thu, 16 Jan 2025 15:26:57 +0800
-Message-ID: <a6dc4b582e968566d34846237f6647c94c7895c8.1737012165.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 6/7] mptcp: hold msk lock before removing id 0 address
+Date: Thu, 16 Jan 2025 15:26:58 +0800
+Message-ID: <b4335f327203b21ba4622b14b8a0fd8b4991692a.1737012165.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1737012165.git.tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
@@ -45,61 +45,71 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The variable 'match' in mptcp_userspace_pm_append_new_local_addr() is a
-redundant one, and this patch drops it.
-
-No need to define 'match' as 'struct mptcp_pm_addr_entry *' type. In this
-function, it's only used to check whether it's NULL. It can be defined as
-a Boolean one.
-
-Also other variables 'addr_match' and 'id_match' make 'match' a redundant
-one, which can be replaced by directly checking 'addr_match && id_match'.
+In mptcp_pm_nl_remove_doit(), move 'lock_sock(sk)' before invoking the
+function mptcp_userspace_pm_remove_id_zero_address(). Then no need to
+hold and release this lock in this function. And 'sk' and 'err' variables
+and 'remove_err' label in it can be dropped.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 11 +++--------
- 1 file changed, 3 insertions(+), 8 deletions(-)
+ net/mptcp/pm_userspace.c | 16 +++++-----------
+ 1 file changed, 5 insertions(+), 11 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index bd09a637049d..8a0202d8bfa4 100644
+index 8a0202d8bfa4..9a6c17948d7e 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -48,7 +48,6 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 						    bool needs_id)
+@@ -256,11 +256,8 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
  {
- 	struct mptcp_pm_addr_id_bitmap id_bitmap;
--	struct mptcp_pm_addr_entry *match = NULL;
- 	struct sock *sk = (struct sock *)msk;
- 	struct mptcp_pm_addr_entry *e;
- 	bool addr_match = false;
-@@ -63,16 +62,12 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 		if (addr_match && entry->addr.id == 0 && needs_id)
- 			entry->addr.id = e->addr.id;
- 		id_match = (e->addr.id == entry->addr.id);
--		if (addr_match && id_match) {
--			match = e;
-+		if (addr_match || id_match)
- 			break;
--		} else if (addr_match || id_match) {
--			break;
--		}
- 		__set_bit(e->addr.id, id_bitmap.map);
+ 	struct mptcp_rm_list list = { .nr = 0 };
+ 	struct mptcp_subflow_context *subflow;
+-	struct sock *sk = (struct sock *)msk;
+ 	bool has_id_0 = false;
+-	int err = -EINVAL;
+ 
+-	lock_sock(sk);
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		if (READ_ONCE(subflow->local_id) == 0) {
+ 			has_id_0 = true;
+@@ -268,7 +265,7 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
+ 		}
+ 	}
+ 	if (!has_id_0)
+-		goto remove_err;
++		return -EINVAL;
+ 
+ 	list.ids[list.nr++] = 0;
+ 
+@@ -276,11 +273,7 @@ static int mptcp_userspace_pm_remove_id_zero_address(struct mptcp_sock *msk)
+ 	mptcp_pm_remove_addr(msk, &list);
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+-	err = 0;
+-
+-remove_err:
+-	release_sock(sk);
+-	return err;
++	return 0;
+ }
+ 
+ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+@@ -324,13 +317,14 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	sk = (struct sock *)msk;
+ 
++	lock_sock(sk);
++
+ 	if (id_val == 0) {
+ 		err = mptcp_userspace_pm_remove_id_zero_address(msk);
++		release_sock(sk);
+ 		goto out;
  	}
  
--	if (!match && !addr_match && !id_match) {
-+	if (!addr_match && !id_match) {
- 		/* Memory for the entry is allocated from the
- 		 * sock option buffer.
- 		 */
-@@ -90,7 +85,7 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 		list_add_tail_rcu(&e->list, &msk->pm.userspace_pm_local_addr_list);
- 		msk->pm.local_addr_used++;
- 		ret = e->addr.id;
--	} else if (match) {
-+	} else if (addr_match && id_match) {
- 		ret = entry->addr.id;
- 	}
- 
+-	lock_sock(sk);
+-
+ 	spin_lock_bh(&msk->pm.lock);
+ 	match = mptcp_userspace_pm_lookup_addr_by_id(msk, id_val);
+ 	if (!match) {
 -- 
 2.43.0
 
