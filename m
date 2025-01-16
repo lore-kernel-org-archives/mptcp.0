@@ -1,84 +1,123 @@
-Received: from mail-il1-f197.google.com (mail-il1-f197.google.com [209.85.166.197])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0216B1F2C5F
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 13:07:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.197
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B9D522BADD;
+	Thu, 16 Jan 2025 15:06:55 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737032844; cv=none; b=VzV9c8w54K8Sp+QJ0kw62cI7yeOVTah9mbBSOs6QKlVV+zlUtZtstlElFOywUNmkrzOulupCxr/ULWbCVNmj8m3xC8Rw4YzoUDlFtCIL1svrWeBZZLte3cWI2nlhiDDNXWVXZT0nym0CDSAiiXy92wfK7LHYUqdtnmwEyUJ6Grc=
+	t=1737040016; cv=none; b=jbQ1ZtAkBJI6h85BqRpocZnQrJrJy/kvRhDrWe9Mgb7tkZqAHl59KKwJvOI9MFbxpkosP30ylCHW6Dv7aM67msLYWZMJdPtw7ZvLxF/nzlZML//aJq443DwqQmCVIGyvIHtc69jcHymgRs0x0U+npKh3oK828AqLhAE1eS1bFTo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737032844; c=relaxed/simple;
-	bh=bt4Dqaj3KiJm6oOOP/oi3442OiP+mmJ00loVyqbtACo=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=iE6aKaYN1g8B2VfHa/zWfreZeJAlCERqB4zGcjfUIgf1BY8L7+fTQ20pW2TCmLPYF4QWww5r04nne9/vkyOHBaAoOthpn4fzrx0dqqqKMTfizZEBmMK1Chzy0PyxKaL+X+1C95fzknQvdtWbLKFQ/1lDzrXNe3Gu7K1WukL9m8s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.197
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f197.google.com with SMTP id e9e14a558f8ab-3ac98b49e4dso5419335ab.1
-        for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 05:07:21 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737032841; x=1737637641;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=HZnwLAZE1hvc7zr13C8s1bzWnJbdM8KYpOkg+JFZ4GM=;
-        b=DL8NHirGly4ZLt2pMK6I4axiEbS+DgYeE6aB7Azr26V+O0G36wecYjFYrWNIqQxwGr
-         CSg+htkOaENqPEeB1rh3Zv9LwKffkYLY+m9oBCfzl5xRfmkVlY50HUQCs4wJ7Hci3ned
-         PrpGoQBoVBBU767pu3gX5VO9P1WgrGmGSxdPuws9SQJDdF1hlRkk03HU/ArNxU5uxqF5
-         Yok3Bp/sCKtrc8kfFTUvYJEbePQx06gZJnSYllHRhFH+V0lyUQI32WA6MkJaqKgXkwW4
-         HM2Jvx3KVCYppzAoFIUDcbEiCMufziGJeggD6vhjNBsWIJQ+aVX9Fyu4gys9qjT5vpzK
-         Yj7g==
-X-Forwarded-Encrypted: i=1; AJvYcCVkdl9tuvBtU3+JZP7GhLWiieF+EEWQzXRAhYhNAkO14va/ac8euWZujQ+DVNWT5i0MnprFLA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy37dQolr6bun151m7MGbvYFZS0JUOe/qvcVAfMeuOL66hFNEzM
-	Ow9xcM4QJ95lPZ0UV1x661sDm/SLgsCSEDS3LA2aF6xkg0A0CQo6qzfokWOq5CI30miyff4iG4L
-	9aJxKUO89/BsZqDmwCmEBNagIzcyp7IkMhcA9oaqzFAZONMZTZkXC2RY=
-X-Google-Smtp-Source: AGHT+IEyIfUjlHp2v67R/YAXNYsxt5y3Ql3uf8qYNFpqE7tp3+/B8sxZt7KvBlfasEoBjLjX+TxAkyqvfUXjnwvu5VqHMqDcS9/C
+	s=arc-20240116; t=1737040016; c=relaxed/simple;
+	bh=CEqjGv398CG8l702lfEl50ZLvMxfy9XdvVY+Wx8KgMc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=BXVfVY0LJxOY8aiawi3DYNf7ACcLvBeSHVDP9UEmhqIXNEZsdLDLqej0/xSY1mh1xQokb5cOF8Avzt7MzkyfGARx/QyNjKy7ln9Sznrhme6cZLJ82GWs3kdp3ZsqVhbqXb18el+m/Uppsc0/FTRdUjuGzjhFVczDhr5Lwod8jPU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n1dOgX7x; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n1dOgX7x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B45FC4CEE4;
+	Thu, 16 Jan 2025 15:06:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737040015;
+	bh=CEqjGv398CG8l702lfEl50ZLvMxfy9XdvVY+Wx8KgMc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=n1dOgX7xKOzG1/Lbgr7rkHjRi+7R7XU2+6UMqga7DOukJfrN0MsbCog4YShjzNebg
+	 ecH+6SBPK2NPEzl2rWSkFHjU08HD4tbMEek6s02N0xE4GL+ZlDFjzokYmWpqTEGoFO
+	 Mbq8MSQMfxl2w1l2Weu2qJXbmry5vkTz9DbnbtfXX/rTNkNdMu8bcN9QMzTOlyB1tf
+	 5AxS83qnrYbYiFF+2KuJ3gRrl7xqQ7Kqj9ijDbCo2N4+7t7iBEevFsIy3QLTdwX4d5
+	 DF86XkOtkruNsb3FDR+2p6vXvW3IA0G2AbdBYdFcRxwXoKIIQaP3GdATMUsia3HV6G
+	 5KvZ2ytN+vZSA==
+Message-ID: <99b3e4bc-5696-4731-b26c-17fd21087716@kernel.org>
+Date: Thu, 16 Jan 2025 16:06:51 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1d87:b0:3ce:80b8:7328 with SMTP id
- e9e14a558f8ab-3ce80b873d1mr74471705ab.3.1737032841121; Thu, 16 Jan 2025
- 05:07:21 -0800 (PST)
-Date: Thu, 16 Jan 2025 05:07:21 -0800
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <67890489.050a0220.20d369.003a.GAE@google.com>
-Subject: [syzbot] Monthly mptcp report (Jan 2025)
-From: syzbot <syzbot+list199304eb885a80743e78@syzkaller.appspotmail.com>
-To: linux-kernel@vger.kernel.org, martineau@kernel.org, matttbe@kernel.org, 
-	mptcp@lists.linux.dev, netdev@vger.kernel.org, 
-	syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next] mptcp: fix for setting remote ipv4mapped address
+Content-Language: en-GB
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+ Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250114-net-next-mptcp-fix-remote-addr-v1-1-debcd84ea86f@kernel.org>
+ <20250115132142.53db10b2@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250115132142.53db10b2@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hello mptcp maintainers/developers,
+Hi Jakub,
 
-This is a 31-day syzbot report for the mptcp subsystem.
-All related reports/information can be found at:
-https://syzkaller.appspot.com/upstream/s/mptcp
+On 15/01/2025 22:21, Jakub Kicinski wrote:
+> On Tue, 14 Jan 2025 19:06:22 +0100 Matthieu Baerts (NGI0) wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Commit 1c670b39cec7 ("mptcp: change local addr type of subflow_destroy")
+>> introduced a bug in mptcp_pm_nl_subflow_destroy_doit().
+>>
+>> ipv6_addr_set_v4mapped() should be called to set the remote ipv4 address
+>> 'addr_r.addr.s_addr' to the remote ipv6 address 'addr_r.addr6', not
+>> 'addr_l.addr.addr6', which is the local ipv6 address.
+> 
+> Wasn't there a syzbot report for this? Just curious.
 
-During the period, 2 new issues were detected and 0 were fixed.
-In total, 3 issues are still open and 23 have already been fixed.
+Apparently no :)
 
-Some of the still happening issues:
+From what I understood, Geliang spotted that while looking at the code
+around.
 
-Ref Crashes Repro Title
-<1> 11      Yes   WARNING in __mptcp_clean_una (2)
-                  https://syzkaller.appspot.com/bug?extid=ebc0b8ae5d3590b2c074
-<2> 5       No    KMSAN: uninit-value in mptcp_incoming_options (2)
-                  https://syzkaller.appspot.com/bug?extid=23728c2df58b3bd175ad
-<3> 2       Yes   WARNING in mptcp_pm_nl_set_flags (2)
-                  https://syzkaller.appspot.com/bug?extid=cd16e79c1e45f3fe0377
+Thank you for having applied the patches!
 
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
-To disable reminders for individual bugs, reply with the following command:
-#syz set <Ref> no-reminders
-
-To change bug's subsystems, reply with:
-#syz set <Ref> subsystems: new-subsystem
-
-You may send multiple commands in a single email message.
