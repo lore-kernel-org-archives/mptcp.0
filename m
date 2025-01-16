@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C377724A7EE
-	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 02:43:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 29C407082F
+	for <mptcp@lists.linux.dev>; Thu, 16 Jan 2025 03:06:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1736995400; cv=none; b=sC6iz+0VFs1gaxFs1xSWUPCa+2WSRyQv4P25sJrDScXhv7+V5htrwcqhG1M4VXDa1ThzFCrJfL7RFlqzIQdfDTMV8gM+huJpLxzfnGi59PmwTj/3mH/I/Q8FypeC3ogBAGRczk3L/ZBbq5+Uacb/zPageMTf10NILt6qWEOXGj8=
+	t=1736996818; cv=none; b=eSC0+4iQpHMNExt4dRaF1s2s9tE7NUPGAY38QFhgm72yYhXLj9Gr94V2aYQSCZSYxgT7wOJM5HiTwqvxypfbVrWcHAXVn7d2Vg+nnVeHeS2QXJ9H/DT2Wz8DYgKzLd0j4RgdpxZk1gfhfsDDZy79+cB7cpxEUjexQ2C085OJ6jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1736995400; c=relaxed/simple;
-	bh=o5Xgra1xMUCScuGdxQ1GYxjdiKXNerj8pJ6Yvik52CA=;
+	s=arc-20240116; t=1736996818; c=relaxed/simple;
+	bh=WHvt6lDslUzZd4crtptEoNaiw5jBtsaOVfUBLIBPP+4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=tcS7NEOd0rkZRKOJ+eJjN6qUiYdaJMbYGDJy1lyEMpInJw/yB65n+gLjMUboM/qynPOpnqCIZODlechsgL/we2GOjtgxbTbCJjAstpH5QxqU7HKPC9gIvmSRjZcwVG9YYcba3NNvopmZqcEAbF4Y8kwm07ZILvi4k0yLLElMCKI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YMs8WU0Z; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=Pbfh1poqEW/TLy+k9lKm91id9zsvvFcg6OyLxMvnx+WeTijhjRvZ++bg+aaem7kNZ9rP5d1WKW53XfaJUfbGSwCUoqHidCqopgKJU0lkd5fuXZobbuis9wZd91XyJV02aJWdtwYzZ/H5cRzPPdg1J04GUrL8FuDMDXPH2f6XT5Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=M/mG8GzM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YMs8WU0Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FC6FC4CED1;
-	Thu, 16 Jan 2025 02:43:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="M/mG8GzM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8BA3AC4CED1;
+	Thu, 16 Jan 2025 03:06:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1736995400;
-	bh=o5Xgra1xMUCScuGdxQ1GYxjdiKXNerj8pJ6Yvik52CA=;
+	s=k20201202; t=1736996817;
+	bh=WHvt6lDslUzZd4crtptEoNaiw5jBtsaOVfUBLIBPP+4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=YMs8WU0Z42KqFKo+02MyzIvLDENC2Q80uz+ipJJDlkfnZb0wEeAHi8I4N2Tq3W/80
-	 tcKUt0C1ApW7GyCU8JA+knqdNMUhCq5LY43ZVeN6LKneu8CAq7M7VXZr+fYOvmIflD
-	 QkYioZY7xg9ShgXzioAybrV/KFLKcwaJwzW5BfnTn/CyEOPYP1KUqWtWPPpytYYs7b
-	 mSCyPe2ZuTdK92GJRJnpy8S/LLzslRQmuZVeWv3VMPT+DORo4u0iPkOT0B/VdNjaNW
-	 ZzLUMdIYOMGLw1bsSlraZzyoRR+5qYR6/KxMRp1iEeOGzW40GEZyTvImWSyXND0sqz
-	 svFxZQehObQsg==
-Message-ID: <5e8bc63045ccf3ec471624401848a1ad282bd26d.camel@kernel.org>
+	b=M/mG8GzMJQgnmaclVJKBMzbq1lxWuh48V9sGpYw7SWV2ubNcjbX54w6pDRfKl1FWZ
+	 k88wgqilg8VUXVE3F6/Z3i16p1AXszFTjaCZuTjjcS9BMY9tadR6C+n0qdJ1Jcrv8Q
+	 9n4Tfm2A95o2qeMWdtUtdsJUgxzJzwjBVYPc5mCn9n1Fzy2hGRg4HtLXEG+/FGu3wE
+	 v6tHSjtDipgTwQzrTpy5yPyDCpH3k4UQ9MkrcgtJfoAFx3uH3EcO0DrqxNVog31xjf
+	 Xv9MM7duYju9cu+TCQqM7dcl8AYsD8ebliZM21woSZwyiYnWXzVgdI4acJHJx9bhfe
+	 X2JNFB0B+PpMg==
+Message-ID: <0d4373d9a4e51e856cccdf93d0c55aaaf318eacf.camel@kernel.org>
 Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: register default userspace pm
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Thu, 16 Jan 2025 10:43:16 +0800
+Date: Thu, 16 Jan 2025 11:06:54 +0800
 In-Reply-To: <3f09e1c56ab34f1d2d5b2c149d7ba624cec0538b.1736935433.git.tanggeliang@kylinos.cn>
 References: <cover.1736935433.git.tanggeliang@kylinos.cn>
 	 <3f09e1c56ab34f1d2d5b2c149d7ba624cec0538b.1736935433.git.tanggeliang@kylinos.cn>
@@ -55,16 +55,6 @@ On Wed, 2025-01-15 at 18:09 +0800, Geliang Tang wrote:
 > Extract address_announce() interface of the userspace PM from the
 > handler
 > of netlink commond MPTCP_PM_CMD_ANNOUNCE mptcp_pm_nl_announce_doit(),
-
-CI reports some warnings:
-
-WARNING: 'commond' may be misspelled - perhaps 'command'?
-
-Will update them in the next version.
-
-Thanks,
--Geliang
-
 > only
 > leave the code for obtaining msk through "info" and parsing address
 > entry
@@ -379,6 +369,14 @@ Thanks,
 > +	spin_unlock_bh(&msk->pm.lock);
 > +
 > +	return 0;
+
+Should be 'return err;' here.
+
+Will update it in the next version.
+
+Thanks,
+-Geliang
+
 > +}
 > +
 >  int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct
