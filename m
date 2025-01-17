@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 955B620B20;
-	Fri, 17 Jan 2025 17:40:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 263AF1ACEA2;
+	Fri, 17 Jan 2025 18:41:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737135647; cv=none; b=WkJhi6DGVWGV5hK/gLAFp8dZrg12k/baXXLwCNbULkRZZHTloAmCVkAQgY9jE/8Y1S/AneJnrnLZQLRCQwnNhE0Fxd5BsNMXhfwmUnfWHmfJUvjeuNvhM8ZXu82pijQseT1bLu2eDUkzGTw3mdN7r1opTQ3zR5KUg21c0/w3T8k=
+	t=1737139310; cv=none; b=q+eQ7U0vy+HqysPZsJj+JO/WFXP0AcCoxqWrT6kHKhxPk62JSJ6+d4IMljWCHQDLOtsTfGOk6NyJALHinAJWiUiNECBYIrImAi5nSgNYc8Rlh23aFOALSWNBFWEact12xk8pKOMh4BtjHyBNG11oiwF7c4kxP7ooDql2RD9VYgk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737135647; c=relaxed/simple;
-	bh=jFuGDsElHAm0qEIO6nUF5QEJFbi0ENxEj18hPsjBiSQ=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=AQXUKEAE2+xCB0KDz2kLRsyjhGhyadgVcalyCrDmok4Yxe2ngchSuvt0aiYDFTDCRsinBJJUGlskcGNYIbKDTURKpQb0+IuHN/G6d5wflJThaDhJtFVriaBbrQRB+Mqz23IAC8/buTIL/MF/LRtH/IA2QVcaXclf6wlrYVPR8gw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rjsPlveI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737139310; c=relaxed/simple;
+	bh=ppd0S/67u/BA6Vxk5fv3pnmLF9P/Q7DFmrk02Nh+47o=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=kCXpXyOzgQxSusSzN4c4aosq6SvtUqxntejAVEujNYcILcM7Mqwoa1/tEDDcDa9zFUKd1rI5rgbdKmdJhcZ7ognJbeDKxEeK9oLLHeCw/cQvHPCFN4yeVzFWpVz4VHYJmT1R18S3FyHN03xB3KP+1UOFtwmxHjRdUoJe8FCsXXw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZK8HfPhx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rjsPlveI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E047C4CEDD;
-	Fri, 17 Jan 2025 17:40:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZK8HfPhx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67D68C4CEDD;
+	Fri, 17 Jan 2025 18:41:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737135647;
-	bh=jFuGDsElHAm0qEIO6nUF5QEJFbi0ENxEj18hPsjBiSQ=;
-	h=From:Date:Subject:To:Cc:From;
-	b=rjsPlveIpkor21bZPfXy8Tj1XjvOte0yF5+pK2RkTCNSkEnZgshM8FM+GJEIp4uUZ
-	 6NJo92Uk74wCjLni0twuNwszDxkuiRMn7w7eCm3QwJzosoRaAuVmCPxhRkPKqmpsEW
-	 sNqHqP7ln4qI5MvjS5OwponU6N/k7EdI5XubebZybAETjgGyn5EL29989h74GwbbS5
-	 nRcVyofArwFwQxyIHMlxSC39VCQnU3J1Jcnqp0KPi5s+1+jJ0tzEcNB8tsiqnyH8UV
-	 UJrftKn9BBrhNgZ8dAaDfUWiRr+Uu377arpyM0EZHhSdBgy+q75yer7ik97KFVJQPN
-	 rxmaGfBGtBCTQ==
+	s=k20201202; t=1737139309;
+	bh=ppd0S/67u/BA6Vxk5fv3pnmLF9P/Q7DFmrk02Nh+47o=;
+	h=From:Subject:Date:To:Cc:From;
+	b=ZK8HfPhxQaR+5CUvUtp6qDplIgLjk3uyh6KeKzUfyHOTHbUVLT6WSqG8sgFZZxCTS
+	 booGDXJ1fsXaH1qMNR1Y2GLjyQrJzseDZ+qrf/sbICAkVPS8kbaGL5yNtARqmxMIvf
+	 J3o075NFuXt0cFMEez68YFAT24Y6M0MKwBZ+jvEYo5ONUN5tNnHk+R6XkycUbd4iGg
+	 n8BfO//Gd4hKibFAz8mxIJlAhrGHY67OgsfGkGxQl/VyhpA9Og161Sbzk/tbmX9cSr
+	 O/Sxq9lcu82MVAWQHiEeK7bwKA9ADzyG8KZIB9V3QZh30pzwlJm3J2/2i9w00vJvr0
+	 PlAoLKnljJvDA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 17 Jan 2025 18:40:31 +0100
-Subject: [PATCH net-next] mptcp: sysctl: add
- syn_retrans_before_tcp_fallback
+Subject: [PATCH net-next v2 00/15] mptcp: pm: misc cleanups, part 2
+Date: Fri, 17 Jan 2025 19:41:32 +0100
+Message-Id: <20250117-net-next-mptcp-pm-misc-cleanup-2-v2-0-61d4fe0586e8@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,170 +37,109 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250117-net-next-mptcp-syn_retrans_before_tcp_fallback-v1-1-ab4b187099b0@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAA6WimcC/zWNQQrCMBBFr1Jm7UATWixeRSQkcaLBOg0zoVRK7
- 24QXPzF+4v3dlCSTAqXbgehNWteuIE5dRCfnh+E+d4YbG/H3pgzMtW2reK71FhQP+yEqnhWFyg
- tQq7dLvl5Dj6+cEyDCSFOw2QJmrQIpbz9glf4u+B2HF/a6LjuigAAAA==
-X-Change-ID: 20250117-net-next-mptcp-syn_retrans_before_tcp_fallback-5f41bbc8482e
+X-B4-Tracking: v=1; b=H4sIAFykimcC/42NwQqDMBBEf6XsuVs2qYr01P8oHjTd6FKNIUnFI
+ v57g9B7D3N4DDNvg8hBOMLttEHgRaLMLoM+n8AMresZ5ZkZNOmSlKrQccpZE04+GY9+wkmiQTN
+ y694eNXZkS2Jra6oLyDc+sJX1UDzgt4YmN4PENIfP4V7U0f+vWRQSGuqKq1W1ZaruLw6Ox8sce
+ mj2ff8C50VlCtsAAAA=
+X-Change-ID: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-doc@vger.kernel.org, 
- linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=5317; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=jFuGDsElHAm0qEIO6nUF5QEJFbi0ENxEj18hPsjBiSQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnipYcdIvV7UlaIjx/I/1bUxaO31uZKd87UDQkW
- IkDLkWoeXCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ4qWHAAKCRD2t4JPQmmg
- c64/D/9Y04eRrG73ab0V6M0LksxmXeBlo3DMHBWvOs+ar29VF1BTOwgxPvnmTGg4xcd3ZrnyFyJ
- f02ArLHyE8OYOuZwqnsB79bKHB3dmcxfcO4FbTAP7GcZVYn8V9sxrxcTSekIMzeMILZFDVwup6v
- cfEGA5DQJ85VmkOC23d9gkDvEXQbwEH87LisWQ+mF3Zp1lEmYDShC+y/bAnZtnIcFcXbzBri8IH
- 3/OhmIsCsc+B6LXaafwcEpuBCu5809z3c3ckkrExrD5PREoQOR7O42WjXKS1JOzgQOSBvgTSC0M
- AerjjV3MhRKmHWmFHKUgqGEOwlfHB1d84RhrAepJy0HRei3xTCZ8ZAti1nzcpU0fBQsUR9mCkHj
- LJzCWx+wJ+hcU6D9X4UGdvnqAxCnafp/z47Hix+wYtNWiOTNTVT1KeMGSBghkaKQnPDi177mu/L
- 1KRJo8BflSg1I5dK77DXjqNIDATN5rf3NNPbr6qTb9+Hgql9p+FBg1sgKquZ5K1tz8ECxGc67u9
- EDW1lCVrE+A/0bwSsLYF1j2mMVV1F0/fckTAcxW+Nol5PomljHTXzvpl+T7DVqr+xp0PfISGV6j
- e9cnJ/7S4Le+xlAGiVqJERSpGxFr2qmuXYDIuPh4UtDmt621VDDrTNMzI/qhX+QWSHdcV8vpTJ5
- J19V+cFN/s7Hi8g==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3085; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=ppd0S/67u/BA6Vxk5fv3pnmLF9P/Q7DFmrk02Nh+47o=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBniqRq0LTTaFG5TRp7WBhLiAvm3KMyX3dnRVe4S
+ f7XCJT7eJWJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ4qkagAKCRD2t4JPQmmg
+ c5F2EADKoCaGKTXGOwyunaFz2DcytvIbTxUhIQhb/+HXCFpWI/IwxG/2yFIXi5hUUU2HSy/KsMS
+ dTyTQ8TTudxC2GtMj9a4eSmPRNVScs6h8zhvz4yJcJm4RS6zbB6pk//vEcMrInfNBVymLBxXuYs
+ qHOOM2xmoK8e4TO1pZHWTWk6wBKBe1KG9jo820MBz8Fv8F/ZVINXkbxGKW8hD7JKLhJnERweyoX
+ ANJPEek/beIYmPTo7GUz4Q3/7tMrwPfcEdgoIJWGCWV6/srh3I3i+z/FsNDFN4dQ3Ce4A9eR9Sg
+ 3NzVVoubeWZMBB1K3C2cfteeTk69ZvRAgDqKqqXFriyaIvJH5Ov8dRz++m8wKyBN3nVThyUTyXS
+ V/uMmFbb8DZS8nXSLjgt8d6kBC2sjhWWtATLMwOEIYRopbFSJ9p7oRbv2/3t4w0+QBs2GT2W7g8
+ /TWkTj8XsVBQBM5Krx7JikAm5DGqOu1iLh6N8nJd43qLi7Qcm8sOMeVSsh7ZJoYvNQM5lOcnhYR
+ a+/M/Ka8+EI72HwwBV4x0drlbC67HsSkMYACXcUySUWWmMCzL8DjKumSAoYX7QtuwM/ak72hOJc
+ o85p/YujUPOgqxdAawEoCUJ6xPVAXzpOk5iGXg+IKxjJ26/yHTj6eaU8vB3C5p8hc0TtQXL051K
+ cLl0OSSPfah7Xbw==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The number of SYN + MPC retransmissions before falling back to TCP was
-fixed to 2. This is certainly a good default value, but having a fixed
-number can be a problem in some environments.
+These cleanups lead the way to the unification of the path-manager
+interfaces, and allow future extensions. The following patches are not
+all linked to each others, but are all related to the path-managers.
 
-The current behaviour means that if all packets are dropped, there will
-be:
+- Patch 1: drop unneeded parameter in a function helper.
 
-- The initial SYN + MPC
+- Patch 2: clearer NL error message when an NL attribute is missing.
 
-- 2 retransmissions with MPC
+- Patch 3: more precise NL messages by avoiding 'this or that is NOK'.
 
-- The next ones will be without MPTCP.
+- Patch 4: improve too vague or missing NL err messages.
 
-So typically ~3 seconds before falling back to TCP. In some networks
-where some temporally blackholes are unfortunately frequent, or when a
-client tries to initiate connections while the network is not ready yet,
-this can cause new connections not to have MPTCP connections.
+- Patch 5: use GENL_REQ_ATTR_CHECK to look for mandatory NL attributes.
 
-In such environments, it is now possible to increase the number of SYN
-retransmissions with MPTCP options to make sure MPTCP is used.
+- Patch 6: avoid overriding the error message.
 
-Interesting values are:
+- Patch 7: check all mandatory NL attributes with GENL_REQ_ATTR_CHECK.
 
-- 0: the first retransmission will be done without MPTCP options: quite
-     aggressive, but also a higher risk of detecting false-positive
-     MPTCP blackholes.
+- Patch 8: use NL_SET_ERR_MSG_ATTR instead of GENL_SET_ERR_MSG
 
-- >= 128: all SYN retransmissions will keep the MPTCP options: back to
-          the < 6.12 behaviour.
+- Patch 9: move doit callbacks used for both PM to pm.c.
 
-The default behaviour is not changed here.
+- Patch 10: drop another unneeded parameter in a function helper.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+- Patch 11: share the ID parsing code for the 'get_addr' callback.
+
+- Patch 12: share sending NL code for the 'get_addr' callback.
+
+- Patch 13: drop yet another unneeded parameter in a function helper.
+
+- Patch 14: pick the usual structure type for the remote address.
+
+- Patch 15: share the local addr parsing code for the 'set_flags' cb.
+
+The behaviour when there are no errors should then not be modified.
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- Documentation/networking/mptcp-sysctl.rst | 16 ++++++++++++++++
- net/mptcp/ctrl.c                          | 21 +++++++++++++++++----
- 2 files changed, 33 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index 95598c21fc8e8782533bbc6a36de63bb465c297c..dc45c02113537b98dff76a6ed431c0449b5217f8 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -108,3 +108,19 @@ stale_loss_cnt - INTEGER
- 	This is a per-namespace sysctl.
- 
- 	Default: 4
-+
-+syn_retrans_before_tcp_fallback - INTEGER
-+	The number of SYN + MP_CAPABLE retransmissions before falling back to
-+	TCP, i.e. dropping the MPTCP options. In other words, if all the packets
-+	are dropped on the way, there will be:
-+
-+	* The initial SYN with MPTCP support
-+	* This number of SYN retransmitted with MPTCP support
-+	* The next SYN retransmissions will be without MPTCP support
-+
-+	0 means the first retransmission will be done without MPTCP options.
-+	>= 128 means that all SYN retransmissions will keep the MPTCP options. A
-+	lower number might increase false-positive MPTCP blackholes detections.
-+	This is a per-namespace sysctl.
-+
-+	Default: 2
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index b0dd008e2114bce65ee3906bbdc19a5a4316cefa..3999e0ba2c35b50c36ce32277e0b8bfb24197946 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -32,6 +32,7 @@ struct mptcp_pernet {
- 	unsigned int close_timeout;
- 	unsigned int stale_loss_cnt;
- 	atomic_t active_disable_times;
-+	u8 syn_retrans_before_tcp_fallback;
- 	unsigned long active_disable_stamp;
- 	u8 mptcp_enabled;
- 	u8 checksum_enabled;
-@@ -92,6 +93,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
- 	pernet->mptcp_enabled = 1;
- 	pernet->add_addr_timeout = TCP_RTO_MAX;
- 	pernet->blackhole_timeout = 3600;
-+	pernet->syn_retrans_before_tcp_fallback = 2;
- 	atomic_set(&pernet->active_disable_times, 0);
- 	pernet->close_timeout = TCP_TIMEWAIT_LEN;
- 	pernet->checksum_enabled = 0;
-@@ -245,6 +247,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
- 		.proc_handler = proc_blackhole_detect_timeout,
- 		.extra1 = SYSCTL_ZERO,
- 	},
-+	{
-+		.procname = "syn_retrans_before_tcp_fallback",
-+		.maxlen = sizeof(u8),
-+		.mode = 0644,
-+		.proc_handler = proc_dou8vec_minmax,
-+	},
- };
- 
- static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
-@@ -269,6 +277,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
- 	/* table[7] is for available_schedulers which is read-only info */
- 	table[8].data = &pernet->close_timeout;
- 	table[9].data = &pernet->blackhole_timeout;
-+	table[10].data = &pernet->syn_retrans_before_tcp_fallback;
- 
- 	hdr = register_net_sysctl_sz(net, MPTCP_SYSCTL_PATH, table,
- 				     ARRAY_SIZE(mptcp_sysctl_table));
-@@ -392,17 +401,21 @@ void mptcp_active_enable(struct sock *sk)
- void mptcp_active_detect_blackhole(struct sock *ssk, bool expired)
- {
- 	struct mptcp_subflow_context *subflow;
--	u32 timeouts;
- 
- 	if (!sk_is_mptcp(ssk))
- 		return;
- 
--	timeouts = inet_csk(ssk)->icsk_retransmits;
- 	subflow = mptcp_subflow_ctx(ssk);
- 
- 	if (subflow->request_mptcp && ssk->sk_state == TCP_SYN_SENT) {
--		if (timeouts == 2 || (timeouts < 2 && expired)) {
--			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_MPCAPABLEACTIVEDROP);
-+		struct net *net = sock_net(ssk);
-+		u8 timeouts, to_max;
-+
-+		timeouts = inet_csk(ssk)->icsk_retransmits;
-+		to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
-+
-+		if (timeouts == to_max || (timeouts < to_max && expired)) {
-+			MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
- 			subflow->mpc_drop = 1;
- 			mptcp_subflow_early_fallback(mptcp_sk(subflow->conn), subflow);
- 		} else {
+Changes in v2:
+- Patch 11: a variable was no longer assigned, but still used in this
+  patch (and no longer used in the next one). (Simon)
+- I hope it is OK to have this series in parallel of "mptcp: sysctl: add
+  syn_retrans_before_tcp_fallback", we had 16 patches left in the queue :)
+- Link to v1: https://lore.kernel.org/r/20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org
 
 ---
+Geliang Tang (9):
+      mptcp: pm: drop info of userspace_pm_remove_id_zero_address
+      mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
+      mptcp: pm: make three pm wrappers static
+      mptcp: pm: drop skb parameter of get_addr
+      mptcp: pm: add id parameter for get_addr
+      mptcp: pm: reuse sending nlmsg code in get_addr
+      mptcp: pm: drop skb parameter of set_flags
+      mptcp: pm: change rem type of set_flags
+      mptcp: pm: add local parameter for set_flags
+
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: userspace: flags: clearer msg if no remote addr
+      mptcp: pm: more precise error messages
+      mptcp: pm: improve error messages
+      mptcp: pm: remove duplicated error messages
+      mptcp: pm: mark missing address attributes
+      mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
+
+ net/mptcp/pm.c           |  86 +++++++++++++++++--
+ net/mptcp/pm_netlink.c   | 129 ++++++++++-------------------
+ net/mptcp/pm_userspace.c | 209 +++++++++++++++++++++--------------------------
+ net/mptcp/protocol.h     |  14 ++--
+ 4 files changed, 225 insertions(+), 213 deletions(-)
+---
 base-commit: 7d2eba0f83a59d360ed1e77ed2778101a6e3c4a1
-change-id: 20250117-net-next-mptcp-syn_retrans_before_tcp_fallback-5f41bbc8482e
+change-id: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
 
 Best regards,
 -- 
