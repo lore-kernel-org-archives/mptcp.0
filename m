@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A821F95A
-	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 14:33:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A4FC198E7B
+	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 15:10:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737124426; cv=none; b=hDpcMVfokOHwhxq6jzJvXesVLZq83VUxdYbN9dNt8BRgUhptNaJEZCGwbG+W+AvtkBZ+3//Dle0WlaE92vKUUeSbmin5qAPcCVvQHJWXo2yxIRU8oCualcwnhaQOAJHDC0SJjQlXqbVqnxU3SX4L5RLCAfzm5r1iXTZ2QnJbY00=
+	t=1737126657; cv=none; b=tr2qeTPp5vpEWft4ppKb8RVS/2IiIOGIqDIGr3rokQnl8ZevRGOhR41n7kbQTbTGyCjXJKraAZGH3q1OfRrxxby8oO/hLQla7wkQO2JQ7xUThF+EKpUzaRcXBZnhr2LFArwluZmbfUEqXJED5MYjqjmDqqitV7RMDmlsm4y67cE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737124426; c=relaxed/simple;
-	bh=0z+SZUtfssSS8PYqgK9/T7Bm1X5L1dbhjGXJTdSE0k0=;
+	s=arc-20240116; t=1737126657; c=relaxed/simple;
+	bh=tQXK3lmFe4ZMvxCrKKbiDVxRkJQJT8YV6+h8yykrcs8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uBPxOTlLaClEjwAE/ftoTRJd0hpfrjwq/xvNX1UQmZY6UPFgdkeHIcQgCTn16vxpuYjNtd3rpwxjqyMzJFqFSM0dXgwBG4SZj3EDBME2S6Dz36yO+H3TVkC80K/IMCNdQ+88c157Gm3oHyRh8sAMRKqb3Qbs0cDcX/S5GU9qvXM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGo8MzUZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=j63BwvDOExh2Lnf+yG4dwC65FYLkBj0bG4No0Wl5dTPkrxlwr0YQlYQ6IqPHRBB1oA2J2ZgMfEbghT5LabxEX1XKUeAsWIzrUhOk2noKMmideXJBu58g4k8D5ypcx5MbaYo53Xsq298JpKsQOuUkrfmN2cdytCBrepDWgC/ZVEw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=vKy9c8DS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGo8MzUZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E619C4CEE1;
-	Fri, 17 Jan 2025 14:33:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="vKy9c8DS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBD52C4CEE2;
+	Fri, 17 Jan 2025 15:10:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737124425;
-	bh=0z+SZUtfssSS8PYqgK9/T7Bm1X5L1dbhjGXJTdSE0k0=;
+	s=k20201202; t=1737126656;
+	bh=tQXK3lmFe4ZMvxCrKKbiDVxRkJQJT8YV6+h8yykrcs8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=TGo8MzUZjuG2KpO7fuGDvwKijILtbylSCwrxDwcY2oYPA4i9N37K007kKPoOJQlFK
-	 XjK9J+2mIP9rmw8/7lRWQyziLZztaVLVwsUiyWutLvRgmlgHooz0CVVim8WxMVw5lD
-	 xH6RBqZOZAVuM1DIStwS9TfGJF1c4MssoknKeRDyZ8k0Jg57C9/GQELLHYaaiilAFX
-	 8uPJxFdqz7pLz+4Qx09UK8Os4M13+SaeIur3eVVLxbml+wfL1LBexjBrHptlh2/KwI
-	 6cLcp7jrkncyYKGdi58sQDGhZpBaSr3jOLKnE9+9X5oZRGrRetbkxyLNdasj2PN8P/
-	 OREIzyUlhjZzQ==
-Message-ID: <34877829-ddd6-4d2d-858e-d057da9c1dba@kernel.org>
-Date: Fri, 17 Jan 2025 15:33:42 +0100
+	b=vKy9c8DS+t6vF9PHS5CVUgwiBwxFiZSZ5qLw3DJLk7MQZiVojbEmsgMCU8dzP4Oez
+	 QXSMaOgjaTQ9gdZrqY0ygPvyFzPgCZq2iWFB5J/2f0WpCvvsu/4xwhPD0LVYEffws0
+	 uDKNwMvMddI8D1sTGRowQeUVKWUfaKY5xadNDXwqS0jt9lK+0IB5ly8pktbXtf31ER
+	 UzYEKK7su3srJQYkX74OAYT5Cy1kXVtXDU/c4tbfKR64WIH4vFjhITHHH7VY7pOKGh
+	 hwVUkeCdcJgLdj/ftmFLu1apH0k6qQkIpXKUjgGeiZjSzWlHFgNNTrVdvqewjpWoBn
+	 pYVqfStxOLfTg==
+Message-ID: <0ee61322-ca68-4c2f-8b2f-1358630b05dc@kernel.org>
+Date: Fri, 17 Jan 2025 16:10:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/3] mptcp: blackhole: sysctl SYN retrans + fix
- conditions
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: blackhole only if 1st SYN retrans
+ w/o MPC is accepted
 Content-Language: en-GB
 To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
 References: <20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org>
- <99988d16-43a3-bdd3-c9e7-ccc992570eb2@kernel.org>
+ <20250114-mpc-no-blackhole-v1-3-994bd2a357fb@kernel.org>
+ <91ff8079-cb49-0b23-57bd-c18f6dc1ff87@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,66 +88,120 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <99988d16-43a3-bdd3-c9e7-ccc992570eb2@kernel.org>
+In-Reply-To: <91ff8079-cb49-0b23-57bd-c18f6dc1ff87@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-H Mat,
+Hi Mat,
 
-On 17/01/2025 01:13, Mat Martineau wrote:
+On 17/01/2025 01:26, Mat Martineau wrote:
 > On Tue, 14 Jan 2025, Matthieu Baerts (NGI0) wrote:
 > 
->> Recently, I found a network having weird behaviours with MPTCP packets:
+>> The Fixes commit mentioned this:
 >>
->> - The first connection to a server had a successful 3WHS, then MPTCP
->>  options got stripped off.
+>>> An MPTCP firewall blackhole can be detected if the following SYN
+>>> retransmission after a fallback to "plain" TCP is accepted.
 >>
->> - The next one had the first SYN (with or without MPTCP) and 5
->>  retransmissions dropped, before being apparently intercepted and
->>  proxied to the end server.
+>> But in fact, this blackhole was detected if any following SYN
+>> retransmissions after a fallback to TCP was accepted.
 >>
->> - (The next ones were sometimes intercepted, sometimes not, or dropped
->>   at the beginning. I'm trying to find out which kind of "optimiser" is
->>   causing this.)
+>> That's because 'mptcp_subflow_early_fallback()' will set 'request_mptcp'
+>> to 0, and 'mpc_drop' will never be reset to 0 after.
 >>
->> The result of this was a blackhole being "wrongly" detected, and no ways
->> to force connections with quite a few SYN drops to finally use MPTCP at
->> the end.
+>> This is an issue, because some not so unusual situations might cause the
+>> kernel to detect a false-positive blackhole, e.g. a client trying to
+>> connect to a server while the network is not ready yet, causing a few
+>> SYN retransmissions, before reaching the end server.
 >>
->> In this series, we have:
+>> Fixes: 27069e7cb3d1 ("mptcp: disable active MPTCP in case of blackhole")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> net/mptcp/ctrl.c | 4 ++--
+>> 1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> - A small fix for the doc.
->>
->> - A new sysctl to change the number of SYN retransmitted with MPTCP
->>  options before falling back to TCP. The modification looks simple
->>  enough to still be sent to netdev before the closure I think.
->>
+>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>> index
+>> 3999e0ba2c35b50c36ce32277e0b8bfb24197946..2dd81e6c26bdb5220abed68e26d70d2dc3ab14fb 100644
+>> --- a/net/mptcp/ctrl.c
+>> +++ b/net/mptcp/ctrl.c
 > 
-> Hi Matthieu -
+> Some more context before the diff hunk:
 > 
-> Patches 1 and 2 LGTM:
+>>     if (subflow->request_mptcp && ssk->sk_state == TCP_SYN_SENT) {
+>>         struct net *net = sock_net(ssk);
+>>         u8 timeouts, to_max;
+>>
+>>         timeouts = inet_csk(ssk)->icsk_retransmits;
+>>         to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
+>>
+>>         if (timeouts == to_max || (timeouts < to_max && expired)) {
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> I think it would help to change the above code to:
+> 
+>>     if (ssk->sk_state == TCP_SYN_SENT) {
+>>         struct net *net = sock_net(ssk);
+>>         u8 timeouts, to_max;
+>>
+>>         if (!subflow->request_mptcp) {
+>>             subflow->mptcp_drop = 0;
+>>             return;
+>>         }
+>>
+>>         timeouts = inet_csk(ssk)->icsk_retransmits;
+>>         to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
+>>
+>>         if (timeouts == to_max || (timeouts < to_max && expired)) {
+> 
+> (end of added hunk)
+> 
+>> @@ -418,9 +418,9 @@ void mptcp_active_detect_blackhole(struct sock
+>> *ssk, bool expired)
+>>             MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
+>>             subflow->mpc_drop = 1;
+>>             mptcp_subflow_early_fallback(mptcp_sk(subflow->conn),
+>> subflow);
+>> -        } else {
+>> -            subflow->mpc_drop = 0;
+>>         }
+> 
+> And drop this from the patch:
+> 
+>> +    } else if (ssk->sk_state == TCP_SYN_SENT) {
+>> +        subflow->mpc_drop = 0;
+> 
+> That way ssk->sk_state is only checked once.
 
-Thank you for the review!
+Good point!
 
-I already applied these two patches:
+I forgot to mention that, but I duplicated the simple check to avoid
+conflicts with the backports. But on the other hand, it will only
+conflict with the previous patch. So if you prefer, and not to block it
+the patch for net-next, I can also send this fix patch later on.
 
-New patches for t/upstream-net and t/upstream:
-- 34dc1c307f30: doc: mptcp: sysctl: blackhole_timeout is per-netns
-- Results: 1b76b0bd2522..551c1dba2a68 (export-net)
-- Results: 2a6dfa001e66..2d16bea74b90 (export)
+If we decide to go into that direction, I suggest moving the SYN_SENT
+check at the beginning:
 
-New patches for t/upstream:
-- 5fb87b001602: mptcp: sysctl: add syn_retrans_before_tcp_fallback
-- Results: 2d16bea74b90..b7be33140cc3 (export)
+  if (!sk_is_mptcp(ssk) || ssk->sk_state != TCP_SYN_SENT)
+      return;
 
-Tests are now in progress:
+  subflow = mptcp_subflow_ctx(ssk);
 
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/70769bbce0f766c3583cb1caa791722685884f19/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/caa6490e85f954f97ad955a2496c1b1297efee89/checks
+  if (!subflow->request_mptcp) {
+      subflow->mpc_drop = 0;
+      return;
+  }
+
+  timeouts = inet_csk(ssk)->icsk_retransmits;
+  to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
+
+  if (timeouts == to_max || (timeouts < to_max && expired)) {
+
+  (...)
+
+WDYT?
+
+(Or I can also keep the fix like it is for the moment, and add another
+patch containing this refactoring).
 
 Cheers,
 Matt
