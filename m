@@ -1,222 +1,156 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B3B6199E88
-	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 16:35:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D0919D892
+	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 17:01:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737131739; cv=none; b=oAAJJtyOtwsPg7vSlFIl6K3NzGUbv4hQSIRHSnl+vPyKtE67xyp6wK3bvuR29nOzBRWHPl1fS0uWzfjGYpppE4lNpF2FII5/rinsCRnpcQIBXs3PIfqXPh1Zy/kjjQy80p+wyAMpPmZa23HxOrHd+V8b7EUkbcgPDpsaDQgVT0I=
+	t=1737133310; cv=none; b=oIoy2iR4yEcPGHyxPX/DMJ5jvzLPIJVTdkOnGNU7RDLjZ6f6udiCLxwga2f1vsDtcUH442/ub9p96x9j5i7GM8x+539nuIK0wpq5fOio85GwLju74XhNjdVBLg8zMT0a+S/BWRsPLmbfFWeRhuTZk5oZ8WECgUgo4xKqXdIXKFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737131739; c=relaxed/simple;
-	bh=39F9BA/uNbuhIrcpP2fkxlzJm+saNHikUC6spPIP/1g=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PEdnGE6ucWUwx2i480mROcRsB68G+Di6fxMWSk07CjRgbh4y5/B51WuH3tvIHyiGNKcYuh8uL8JXeaCkU9JVsJOvLMwPFUlywycryXyUFVilLe7JzzlMM/AqMs2ae/pkvnXCuq1ujJjYR3jzyHM1tqvk1veTU+/MZRLHT62hDcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lfMt3R5S; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737133310; c=relaxed/simple;
+	bh=3Xj3t5nn9e4wjFDYn3tVqLMDG0fYkTR2lx3sH48RcsU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=U0bIwANJHteuIoeRysj7yl7XSlG3Ad76yoqlXuIyvIcAVYecofhNekmgYffJNa3Ved7xWzufro1qvT6Izn1CJBYnwYRkFpSL9MDcBIsdHl6SpgQzDXflsXY8/DyqLFwdPLurbvzfGafJsywQhnLLVPJWHe1AIZB9OQKr0bIZATo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=LcPK2jwm; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lfMt3R5S"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68485C4CEDD;
-	Fri, 17 Jan 2025 16:35:37 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737131738;
-	bh=39F9BA/uNbuhIrcpP2fkxlzJm+saNHikUC6spPIP/1g=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lfMt3R5SA/BaFIkqi93Y//Jk97i0XMW3XmE5vKGXT6caCW5268VkKhhNtR2cVKjb4
-	 C1szUAGt3J5m8V1C+ffsHDvbW4VAR3q9Bbx9lFOHjmoESdo0hAFz4iiM/ncmdoZnsu
-	 jCtGKL+HUNWEFFuwGcsIuMD62KC4a9NF+YNP/ey28Zd8OnfT1RTv0GT4dy4kbpJQyP
-	 tu/ChTgZVlklHe6NH+pCJLpYwbJLMWaa3dUQIQOFERkvsG04VK33+EUkt9Hi5DItpH
-	 v5pmp2WOjrH86scVMZVw2dRG6UX82xXymDj6mLTzr+QCHtUS3Pv1xJqdGe/ZhNX+tD
-	 azLFJ49WAMfJA==
-Message-ID: <01deae4b-c90e-4aa7-a7f1-dc9fa26b6abd@kernel.org>
-Date: Fri, 17 Jan 2025 17:35:35 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="LcPK2jwm"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737133307;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=b9w0itPnhLXdz++z/K63rWFwG/mRLmfEa8BLhdj6Po8=;
+	b=LcPK2jwmHEuK2N1dqwii8FoVEXbO2aoqLE7YU42WeDL63SJzgdIXFR55l9ZDp0FAi+HOQ5
+	FCofd01xXOFUdnNxp+LoYm0bQPWpOSYit3uL2WvgXIQwt/n18rVazX0nMsvd+1eQ7IxseC
+	JPMU4AzqJPfsESwDLFkWNcoLoPUkPso=
+Received: from mail-wm1-f71.google.com (mail-wm1-f71.google.com
+ [209.85.128.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-325-pqjIFUu_P-qzpsg07JMa1w-1; Fri, 17 Jan 2025 12:01:45 -0500
+X-MC-Unique: pqjIFUu_P-qzpsg07JMa1w-1
+X-Mimecast-MFC-AGG-ID: pqjIFUu_P-qzpsg07JMa1w
+Received: by mail-wm1-f71.google.com with SMTP id 5b1f17b1804b1-436723db6c4so16876675e9.3
+        for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 09:01:45 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737133304; x=1737738104;
+        h=in-reply-to:from:content-language:references:to:subject:user-agent
+         :mime-version:date:message-id:x-gm-message-state:from:to:cc:subject
+         :date:message-id:reply-to;
+        bh=3Q0ZXxkC4N2O25sLExzL9biJmOen8eY0G6kLH2oNAlw=;
+        b=BDeMQO2lkojSgIrHJa/qNq36LsO+fetYXzMnCULbc+Er8xiaH7kgopKP0iuMD6EIfj
+         lJGM2NTVHFQcsudElnASoPO/4ddOU1yZpRbbmhpBqO5O8LlbdPQIW57WlROjo+9+7erA
+         0THUYgsX/hGa7e+9Pg1csrlkoVeB0swVtrx9nZ6tVcy3UzdWoIo+PkLtTqadYAKMxEXQ
+         64Wsen2abWA5RUAC6zfTwhaZxVzwuMWK0ldKAzga8SrpmaM7jjkszNW9zizpJFrpL6/K
+         FyKPLQbp5I02RzhFJvz1c3OFljoIQGEe9UQf+OYIGItVvIVVOaLWpsDJAoZDnIK+Hxt5
+         nN5Q==
+X-Forwarded-Encrypted: i=1; AJvYcCVzdsEmLxx3ITWQFSFqo3LWPeBQnCqkalqbj29b/44REVwnUfqB7t+z2JOU9mN325PQgd3JVQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxci8KON/lKYva4bj7qkL3jLGBcWpuQyiVX3gYXHtnPNH2KzTn/
+	nGcwFtdXWHCaO/TCBko0nmehV/R84+5SfWcR4BYQJMgHF1Z0H30g8x7LxNj7iVDI1ogQOlTQUO3
+	o39TXcjaakN1rnDdNMYGcHL56KUZUBZGOyxCiYOS0nfRhjCDx2a4a
+X-Gm-Gg: ASbGnct2/cZOzRBuTL6vcT2kuQ1fqDYoc2qMmevELeO/fzIuPnmkqXX7ePoiQooIz2o
+	RL5Nz358Bs8budn5AhZiPL5u8nG8dlMLxLoJRN0Rt5E53iCMYX62Pg44qmnE/CJeOpUM7xjrnXK
+	F8uR7+hkKKN6+9Q2jB01Hx6/Qp167IXm8yNJLhs3cgM069m5+SpneK5gDI54wvoQ8XuPmBDmPxG
+	Y+oNGNiUSey+h8HdfduTMoSgY1fHYJMJM2Z+6+detfUhXAhMscaDQ6sVTQR+zITjIxPyrejogcq
+	TBn8Jj8JPZo=
+X-Received: by 2002:a05:6000:1acd:b0:38a:88be:bcb5 with SMTP id ffacd0b85a97d-38bf56555f4mr3168326f8f.5.1737133302971;
+        Fri, 17 Jan 2025 09:01:42 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IE+gWUxs0A9tdilaf0k8FT76TRqrqIZ7JEg82rVAPlJvSGlBWlxaUaRbuHG+WKr2Qsbxygt/g==
+X-Received: by 2002:a05:6000:1acd:b0:38a:88be:bcb5 with SMTP id ffacd0b85a97d-38bf56555f4mr3168126f8f.5.1737133300908;
+        Fri, 17 Jan 2025 09:01:40 -0800 (PST)
+Received: from [192.168.88.253] (146-241-15-169.dyn.eolo.it. [146.241.15.169])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf3214c5csm2971915f8f.8.2025.01.17.09.01.39
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 17 Jan 2025 09:01:40 -0800 (PST)
+Message-ID: <66fa6c80-4383-479d-b17e-234bee6ed7ad@redhat.com>
+Date: Fri, 17 Jan 2025 18:01:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next] selftests: mptcp: cover 'mptcp_diag_dump_one' in
- mptcp_sockopt
-Content-Language: en-GB
-To: Gang Yan <gang_yan@foxmail.com>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>
-Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <tencent_EE06C3EF8440C6905D8EC0B94E3E4A589905@qq.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <tencent_EE06C3EF8440C6905D8EC0B94E3E4A589905@qq.com>
+User-Agent: Mozilla Thunderbird
+Subject: Re: [syzbot] [mptcp?] WARNING in __mptcp_clean_una (2)
+To: syzbot <syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com>,
+ mptcp@lists.linux.dev, netdev@vger.kernel.org,
+ syzkaller-bugs@googlegroups.com
+References: <67605870.050a0220.37aaf.0137.GAE@google.com>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <67605870.050a0220.37aaf.0137.GAE@google.com>
+X-Mimecast-Spam-Score: 1
+X-Mimecast-MFC-PROC-ID: hYZyRt6-6QgHxuoNkMcDuU2oafAsaoXaCCtbhvzosBw_1737133304
+X-Mimecast-Originator: redhat.com
+Content-Type: multipart/mixed; boundary="------------V0dHquHNhoNq0Eokc4Xl32xm"
+Content-Language: en-US
+
+This is a multi-part message in MIME format.
+--------------V0dHquHNhoNq0Eokc4Xl32xm
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang Yan,
-
-On 17/01/2025 07:44, Gang Yan wrote:
-> From: Gang Yan <yangang@kylinos.cn>
+On 12/16/24 5:42 PM, syzbot wrote:
+> syzbot found the following issue on:
 > 
-> Through code coverage analysis, it has been identified that the
-> 'mptcp_diag_dump_one' function lacks test coverage on the testing front.
+> HEAD commit:    00a5acdbf398 bpf: Fix configuration-dependent BTF function..
+> git tree:       bpf-next
+> console output: https://syzkaller.appspot.com/x/log.txt?x=148de730580000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=fee25f93665c89ac
+> dashboard link: https://syzkaller.appspot.com/bug?extid=ebc0b8ae5d3590b2c074
+> compiler:       Debian clang version 15.0.6, GNU ld (GNU Binutils for Debian) 2.40
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=16d82344580000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=179654f8580000
 > 
-> This patch introduces a function in mptcp_sockopt.c, which is built upon
-> the 'inet_diag' module, and integrates it into the 'mptcp_sockopt.sh' to
-> execute the 'mptcp_diag_dump_one' function when server bound a socket.
+> Downloadable assets:
+> disk image: https://storage.googleapis.com/syzbot-assets/fc306c95490c/disk-00a5acdb.raw.xz
+> vmlinux: https://storage.googleapis.com/syzbot-assets/e17d5125ee77/vmlinux-00a5acdb.xz
+> kernel image: https://storage.googleapis.com/syzbot-assets/65f791a7fd14/bzImage-00a5acdb.xz
 
-Thank you for increasing the code coverage!
+Trying again... Mat noted I actually forgot the actual command
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  .../selftests/net/mptcp/mptcp_sockopt.c       | 76 ++++++++++++++++++-
->  .../selftests/net/mptcp/mptcp_sockopt.sh      |  6 ++
->  2 files changed, 81 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index 926b0be87c99..caa0466d827f 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-
-(...)
-
-> +void diag(void)
-> +{
-> +	int fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
-> +
-> +	if (fd < 0)
-> +		die_perror("Netlink socket");
-> +
-> +	send_query(fd);
-
-From what I see, you are sending a request, but you don't look at the
-reply. I understand the objective is to increase the code coverage, but
-while at it, it sounds better to verify the kernel is doing the right
-thing: the reply looks correct.
-
-Do you mind checking the reply? e.g. create a connection, request info
-about it, and compare (a part of) the reply with info you already have.
-
-(Also, is your code here covering mptcp_diag_dump_one() function?)
-
-> +
-> +	close(fd);
-> +}
-> +
->  static void parse_opts(int argc, char **argv)
->  {
->  	int c;
->  
-> -	while ((c = getopt(argc, argv, "h6")) != -1) {
-> +	while ((c = getopt(argc, argv, "h6d")) != -1) {
->  		switch (c) {
->  		case 'h':
->  			die_usage(0);
-> @@ -262,6 +332,10 @@ static void parse_opts(int argc, char **argv)
->  		case '6':
->  			pf = AF_INET6;
->  			break;
-> +		case 'd':
-> +			diag();
-> +			exit(0);
-> +			break;
->  		default:
->  			die_usage(1);
-
-(you didn't update the 'usage' menu)
-
->  			break;
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> index 5e8d5b83e2d0..3f74100bc023 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
-
-(...)
-
-> @@ -356,6 +361,7 @@ run_tests $ns1 $ns2 dead:beef:1::1
->  
->  do_mptcp_sockopt_tests
->  do_tcpinq_tests
-> +do_diag_tests
-
-It sounds strange to do this Netlink request in the MPTCP Socket Option
-test program.
-
-Ideally, this should be done from diag.sh. I guess you modified
-mptcp_sockopt.c because you needed to do some operations in C, right?
-
-Here are some ideas:
-
-- Create a new diag.c file to do these operations, and call the new
-program from diag.sh. In diag.sh, you already have connections that are
-created, you can do an extra check there, e.g. compare info from ss and
-from diag.c.
-
-- Modify 'ss' to be able to query one MPTCP connection having a given
-token. Then use this feature (if available) in diag.sh.
-
-- Modify mptcp_sockopt.c to query info about one connection via netlink,
-e.g. to compare them with info retrieved via getsockopt(MPTCP_INFO) from
-do_getsockopt_mptcp_info(). You could compare them in
-process_one_client() I suppose (to be checked where it sounds better to
-do that).
-
-- ...
+#syz test: git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net.git main
 
 
-The first 2 options might make more sense: it is all about 'diag'. Maybe
-the 3rd option can be justified if the goal is to compare more data from
-getsockopt(MPTCP_INFO).
+--------------V0dHquHNhoNq0Eokc4Xl32xm
+Content-Type: text/x-patch; charset=UTF-8;
+ name="mptcp_clean_una_splat_debug_disc.patch"
+Content-Disposition: attachment;
+ filename="mptcp_clean_una_splat_debug_disc.patch"
+Content-Transfer-Encoding: base64
 
-
-Note that modifying 'ss' to query info about a specific connection seems
-useful anyway. In other words, we could have both option 1 and 2 in
-place. Or only option 1 or 3 + the support in 'ss' but not used in the
-selftests.
-
-WDYT?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+ZGlmZiAtLWdpdCBhL25ldC9tcHRjcC9wcm90b2NvbC5jIGIvbmV0L21wdGNwL3Byb3RvY29sLmMK
+aW5kZXggMWIyZTdjYmI1NzdmLi5mYzhkOWZjMzY5NDIgMTAwNjQ0Ci0tLSBhL25ldC9tcHRjcC9w
+cm90b2NvbC5jCisrKyBiL25ldC9tcHRjcC9wcm90b2NvbC5jCkBAIC0xMDIyLDggKzEwMjIsMTgg
+QEAgc3RhdGljIHZvaWQgX19tcHRjcF9jbGVhbl91bmEoc3RydWN0IHNvY2sgKnNrKQogCiAJCWlm
+ICh1bmxpa2VseShkZnJhZyA9PSBtc2stPmZpcnN0X3BlbmRpbmcpKSB7CiAJCQkvKiBpbiByZWNv
+dmVyeSBtb2RlIGNhbiBzZWUgYWNrIGFmdGVyIHRoZSBjdXJyZW50IHNuZCBoZWFkICovCi0JCQlp
+ZiAoV0FSTl9PTl9PTkNFKCFtc2stPnJlY292ZXJ5KSkKKwkJCWlmICghbXNrLT5yZWNvdmVyeSkg
+eworCQkJCXByX2Vycigic25kX3VuYSAlbGx4IHNuZF9ueHQgJWxseCB3cml0ZV9zZXEgJWxseCAi
+CisJCQkJICAgICAgICJpZHNuICVsbHggZGZyYWcgc2VxICVsbHggbGVuICVkIGRpc2Nvbm5lY3Rz
+ICVkOiVkICIKKwkJCQkJInN0YXRlICVkICVkXG4iLAorCQkJCSAgICAgICBzbmRfdW5hLCBtc2st
+PnNuZF9ueHQsIG1zay0+d3JpdGVfc2VxLAorCQkJCSAgICAgICBtcHRjcF9zdWJmbG93X2N0eCht
+c2stPmZpcnN0KS0+aWRzbiwKKwkJCQkgICAgICAgZGZyYWctPmRhdGFfc2VxLCBkZnJhZy0+ZGF0
+YV9sZW4sCisJCQkJICAgICAgIHNrLT5za19kaXNjb25uZWN0cywgbXNrLT5kaXNjb25uZWN0cywK
+KwkJCQkgICAgICAgc2stPnNrX3N0YXRlLCBzay0+c2tfc29ja2V0ID8gc2stPnNrX3NvY2tldC0+
+c3RhdGU6IC0xKTsKKwkJCQlXQVJOX09OKDEpOwogCQkJCWJyZWFrOworCQkJfQogCiAJCQlXUklU
+RV9PTkNFKG1zay0+Zmlyc3RfcGVuZGluZywgbXB0Y3Bfc2VuZF9uZXh0KHNrKSk7CiAJCX0KQEAg
+LTE3NjcsOCArMTc3NywxMCBAQCBzdGF0aWMgaW50IG1wdGNwX3NlbmRtc2dfZmFzdG9wZW4oc3Ry
+dWN0IHNvY2sgKnNrLCBzdHJ1Y3QgbXNnaGRyICptc2csCiAJCSAqIHNlZSBtcHRjcF9kaXNjb25u
+ZWN0KCkuCiAJCSAqIEF0dGVtcHQgaXQgYWdhaW4gb3V0c2lkZSB0aGUgcHJvYmxlbWF0aWMgc2Nv
+cGUuCiAJCSAqLwotCQlpZiAoIW1wdGNwX2Rpc2Nvbm5lY3Qoc2ssIDApKQorCQlpZiAoIW1wdGNw
+X2Rpc2Nvbm5lY3Qoc2ssIDApKSB7CisJCQlzay0+c2tfZGlzY29ubmVjdHMrKzsKIAkJCXNrLT5z
+a19zb2NrZXQtPnN0YXRlID0gU1NfVU5DT05ORUNURUQ7CisJCX0KIAl9CiAJaW5ldF9jbGVhcl9i
+aXQoREVGRVJfQ09OTkVDVCwgc2spOwogCkBAIC0zMjA4LDYgKzMyMjAsNyBAQCBzdGF0aWMgaW50
+IG1wdGNwX2Rpc2Nvbm5lY3Qoc3RydWN0IHNvY2sgKnNrLCBpbnQgZmxhZ3MpCiAJaWYgKG1zay0+
+ZmFzdG9wZW5pbmcpCiAJCXJldHVybiAtRUJVU1k7CiAKKwltc2stPmRpc2Nvbm5lY3RzKys7CiAJ
+bXB0Y3BfY2hlY2tfbGlzdGVuX3N0b3Aoc2spOwogCW1wdGNwX3NldF9zdGF0ZShzaywgVENQX0NM
+T1NFKTsKIApkaWZmIC0tZ2l0IGEvbmV0L21wdGNwL3Byb3RvY29sLmggYi9uZXQvbXB0Y3AvcHJv
+dG9jb2wuaAppbmRleCA3MzUyNmYxZDc2OGYuLjU5YTZlNTJmMDJhNCAxMDA2NDQKLS0tIGEvbmV0
+L21wdGNwL3Byb3RvY29sLmgKKysrIGIvbmV0L21wdGNwL3Byb3RvY29sLmgKQEAgLTM0MCw2ICsz
+NDAsNyBAQCBzdHJ1Y3QgbXB0Y3Bfc29jayB7CiAJCXU2NAlydHRfdXM7IC8qIGxhc3QgbWF4aW11
+bSBydHQgb2Ygc3ViZmxvd3MgKi8KIAl9IHJjdnFfc3BhY2U7CiAJdTgJCXNjYWxpbmdfcmF0aW87
+CisJdTE2CQlkaXNjb25uZWN0czsKIAogCXUzMgkJc3ViZmxvd19pZDsKIAl1MzIJCXNldHNvY2tv
+cHRfc2VxOwo=
+--------------V0dHquHNhoNq0Eokc4Xl32xm--
 
