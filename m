@@ -1,45 +1,57 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out203-205-221-245.mail.qq.com (out203-205-221-245.mail.qq.com [203.205.221.245])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4068C1F76A1
-	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 06:15:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AD0F1F5618
+	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 06:49:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=203.205.221.245
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737094523; cv=none; b=OQfaWv1tnzThQmi1c8XkLHT+S9U8fh/iS8GqnmtWITHqURWR7TEXKnxcGZaAUskXpPCaKpahrm4lCVTTUv1xfczZtPt6hTueUPVINbUWSazVNFxcx7kFxz7EBFQGl75UzebbK0S/DHCZX1dulJN9cATneXs4HZdyG4FXJRs+DZg=
+	t=1737096576; cv=none; b=P9SzAnwx7cUG43jxXIWvB9FfDxrV6XILhkKTwDRaqc6WbhGy3j33VZ6NHrLa4gZSqAMPc6ZqqC0tMDE0ptLTxbZDCgvMqAp4b2R6qndqlKxN5bHN2d5LFVnows0Jn7QNypwdRF7tKD7jYOZ517rff0CkFKDatpDa6x+0wQ+ce1A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737094523; c=relaxed/simple;
-	bh=OYsILdFszZF+dWbM30QUP26skJ2iPRKqo+DJedWMxmg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=ad7oLG2kVIjS2+B8crvPpPN4NK0bDueQAOtPcqsb/pB7LXU7tgfm/XcFI8ykzbcKptlzm2sNo67UkSlGm8twyNBqy/U3MSSbU6NX1veQ53vQhVJ2fLpkMNdptTqfVMhAEAnOXjiwPOnKcL6s4e2N6jTKICBkr/P2WT/Fkjj3FN0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HI3CN64k; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737096576; c=relaxed/simple;
+	bh=ZxjDsd3u3KFDFo7kZrCXYD65eAMDp3Cq7PWqxmnMd2I=;
+	h=Message-ID:From:To:Cc:Subject:Date:MIME-Version; b=qmFmlVf+9weZjCWBMeCI8LVgbfUMWHC5rtO9l+fZv/pIPFa6UmdKAashH+9sgqquBJ5F8ZARej150nLtsH4sfEe2mteDXxImuVL/ZNvs39otjjuGaxKVrYYWlu68bgDXWST7JXcaIDsqAubU0UcnG8tCJZSMpCGinRpSxbtnBQs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=MNgq0hiy; arc=none smtp.client-ip=203.205.221.245
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HI3CN64k"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8CAB0C4CEE0;
-	Fri, 17 Jan 2025 06:15:20 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737094521;
-	bh=OYsILdFszZF+dWbM30QUP26skJ2iPRKqo+DJedWMxmg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HI3CN64keng/MFyt/BGolW1sKEwBpJjDf/CEhCHHp9jDzoyj0m/KT0D/i//oCk3fi
-	 7GN+2TnKBImsNF9OAHDG8teEIUA4xB0Xg9HHvl05vk/giiQwJlW0N/C174eE99dJCW
-	 WY4YN9J8W92+RFbdEm9mQLEjeV52d/LR2+NIe+nOz4jiYQ6bsyeNH/NnF/6ftY3vCM
-	 SNBh697YFJnxs7CFG38+d2TBQ2slehVxZ32vhJ65pF6XBzkqXbIyoghlNbegTmrf/m
-	 z0MnW2D8evcLTEvs+1gwqRT/VmfoTyW5RNkhXgbGtzmzjP1fBL5cozSi2GUoArhVc8
-	 cRuyH2gGPg5Qw==
-Message-ID: <e07d9d597036de3ba59510446586dfe54bc9fe33.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 3/6] mptcp: drop inet6_sk in
- mptcp_nl_find_ssk
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 17 Jan 2025 14:15:17 +0800
-In-Reply-To: <09ec2f1c-1a9e-4a6a-a316-3bbf2d713130@kernel.org>
-References: <cover.1736935086.git.tanggeliang@kylinos.cn>
-	 <27f1c41a7a532e09596979e895af8dcbaca9313a.1736935086.git.tanggeliang@kylinos.cn>
-	 <c12ee9591c031a519dc706987fd78ae8752421f7.camel@kernel.org>
-	 <09ec2f1c-1a9e-4a6a-a316-3bbf2d713130@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="MNgq0hiy"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
+	s=s201512; t=1737096262;
+	bh=gqNF1UImp4yUCp/wqicd1QbvS4x6eumsM1Qjh2KZeWM=;
+	h=From:To:Cc:Subject:Date;
+	b=MNgq0hiyMMIHfXO26+IXiLBIcMAhf5G2v4vLiXF7GXhLo4o8ywTepg1rm4M82mtq4
+	 MXcfbe1sWsshggbPo8tvHOh8Xxf85bW/yqjwCUutsRkCswLlz6+ANM20jYVa5HwhuR
+	 ey3IvGgLy8US+ZbXePfNxF3lq0N3ZecBy+2YJrYk=
+Received: from localhost.localdomain ([39.156.73.13])
+	by newxmesmtplogicsvrszb16-1.qq.com (NewEsmtp) with SMTP
+	id B14A1ED6; Fri, 17 Jan 2025 14:44:20 +0800
+X-QQ-mid: xmsmtpt1737096260tgsw2ungw
+Message-ID: <tencent_EE06C3EF8440C6905D8EC0B94E3E4A589905@qq.com>
+X-QQ-XMAILINFO: OKkKo7I1HxIef0RnDnGGujEc9aHHu2abC1OzxfEIiwe7QjitF3Z8zPv38ILwBz
+	 oMcscNVD9IYSd5GUjPzHPqniZ0fSmr+tu/wfcFUOYvX6PlTTyK3zokIEkiraTD1pJLan0aZOyOxk
+	 9ScfHKdaaSCc+P7/gvcASwQ72pdB2ioB5Xo+tujAewfFg6DQTHpOM2qD9QWtxf62bTrB5CbII2Lw
+	 WuuQwyFHvlZjp/uQc4Su3SXQc+Za3v2rKaH8VvF9fVNKVywxif+CpVqpNASoizSg3nndz0gqmX5V
+	 u9GBiTzdDNazi983HaoGyy3PsbwtRERdHgk1YnzfYOwnN7u4tX+37xS/vILaHqbqV+ZStFb0FI+1
+	 Gvqc2SCDAa7FWsf3UoQqd5yPHPyx5V+PgEeOLyOwWzGNc9TTEqCI+bmNYrpk6tkfyP2J7UIxcgCp
+	 jLH6E4K5C3Nob+Ickzp0/5c5HLnEDG23Id4yErTPwK29H+qEjWiTJep7+XfoV7h8fcPL//+FfRbS
+	 qvqlo0cSOfODPLDEhrbD7o7zCl/WViq3b6QVrYwRMjJAVzlAmvqlIUTM/BwJlztysA3bsTuYMLYb
+	 M9GLt0SJTfDCbVsGEzoiKBAokAnLCav6b2CvM2p7J/DbpnhG8wHxOaNqiL90W/yiwHcPR5UvqcXf
+	 tP9Dae6GeqaZlv7NPP5mOnff/UJwwAMZMNPfOy2qEhHZTScxTI6HerrS7TjwCkTU0W6CfJHmooNv
+	 SJOGaEBiFYRRklhUq/li2OAWA4JJNTo2yweSbrPo9Lyo3Ix8WuFrSzE9KZiM6nk6p9y26ew6d0rC
+	 FjgG8a7i0nCZOVIdCCs2vFYjvt62OuPVCnzYgyMo7mGWqtkVX2sM/h1gAEFhvIlO7Ku0LYwV1dFD
+	 f9ND/SEWBomtiZo/nwgQMEjCCJniHyJwgBGLzeqhL8CeEd7k4GqYk88wyWLug7UlwiiBgTrccM3n
+	 IXTBioNq8=
+X-QQ-XMRINFO: Mp0Kj//9VHAxr69bL5MkOOs=
+From: Gang Yan <gang_yan@foxmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	mptcp@lists.linux.dev
+Subject: [mptcp-next] selftests: mptcp: cover 'mptcp_diag_dump_one' in mptcp_sockopt
+Date: Fri, 17 Jan 2025 14:44:13 +0800
+X-OQ-MSGID: <20250117064413.133234-1-gang_yan@foxmail.com>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,64 +60,151 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Hi Matt,
+From: Gang Yan <yangang@kylinos.cn>
 
-On Thu, 2025-01-16 at 08:31 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> 16 Jan 2025 03:41:25 Geliang Tang <geliang@kernel.org>:
-> 
-> > On Wed, 2025-01-15 at 17:59 +0800, Geliang Tang wrote:
-> > > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > > 
-> > > In mptcp_nl_find_ssk(), 'issk' has already been got through
-> > > inet_sk(). No
-> > > need to use inet6_sk() to get 'pinfo' again, just use issk-
-> > > >pinet6
-> > > instead.
-> > > This patch also drops this 'pinfo' variable.
-> > > 
-> > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > > ---
-> > >  net/mptcp/pm_userspace.c | 4 +---
-> > >  1 file changed, 1 insertion(+), 3 deletions(-)
-> > > 
-> > > diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> > > index e53426a5fc52..de17b18b78fe 100644
-> > > --- a/net/mptcp/pm_userspace.c
-> > > +++ b/net/mptcp/pm_userspace.c
-> > > @@ -465,9 +465,7 @@ static struct sock *mptcp_nl_find_ssk(struct
-> > > mptcp_sock *msk,
-> > >             break;
-> > >  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
-> > >         case AF_INET6: {
-> > > -           const struct ipv6_pinfo *pinfo =
-> > > inet6_sk(ssk);
-> > > -
-> > > -           if (!ipv6_addr_equal(&local->addr6, &pinfo-
-> > > > saddr) ||
-> > > +           if (!ipv6_addr_equal(&local->addr6, &issk-
-> > > > pinet6->saddr) ||
-> > 
-> > CI reports a warning here:
-> > 
-> > WARNING: line length of 84 exceeds 80 columns
-> > #27: FILE: net/mptcp/pm_userspace.c:468:
-> 
-> Please note that this is a recommendation and not a strict rule.
-> It means that if going a bit over 80 helps for the clarity, that's
-> fine: no need to break lines and have something hard to read.
-> 
-> So up to you: check how it looks like when breaking the lines
-> before 80 characters.
+Through code coverage analysis, it has been identified that the
+'mptcp_diag_dump_one' function lacks test coverage on the testing front.
 
-If so, I prefer not to break the lines and ignore this warning
-(recommendation). 
+This patch introduces a function in mptcp_sockopt.c, which is built upon
+the 'inet_diag' module, and integrates it into the 'mptcp_sockopt.sh' to
+execute the 'mptcp_diag_dump_one' function when server bound a socket.
 
-Thanks,
--Geliang
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ .../selftests/net/mptcp/mptcp_sockopt.c       | 76 ++++++++++++++++++-
+ .../selftests/net/mptcp/mptcp_sockopt.sh      |  6 ++
+ 2 files changed, 81 insertions(+), 1 deletion(-)
 
-> 
-> Cheers,
-> Matt
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+index 926b0be87c99..caa0466d827f 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+@@ -25,6 +25,10 @@
+ #include <netinet/in.h>
+ 
+ #include <linux/tcp.h>
++#include <linux/netlink.h>
++#include <linux/inet_diag.h>
++#include <linux/rtnetlink.h>
++#include <linux/sock_diag.h>
+ 
+ static int pf = AF_INET;
+ 
+@@ -250,11 +254,77 @@ static int sock_connect_mptcp(const char * const remoteaddr,
+ 	return sock;
+ }
+ 
++static void send_query(int fd)
++{
++	struct sockaddr_nl nladdr = {
++		.nl_family = AF_NETLINK
++	};
++	struct {
++		struct nlmsghdr nlh;
++		struct inet_diag_req_v2 r;
++	} req = {
++		.nlh = {
++			.nlmsg_len = sizeof(req),
++			.nlmsg_type = SOCK_DIAG_BY_FAMILY,
++			.nlmsg_flags = NLM_F_REQUEST | NLM_F_ATOMIC
++		},
++		.r = {
++			.sdiag_family = AF_INET,
++			.sdiag_protocol = IPPROTO_MPTCP,
++		}
++	};
++	struct rtattr rta_proto;
++	struct iovec iov[6];
++	int iovlen = 1;
++	__u32 proto;
++
++	proto = IPPROTO_MPTCP;
++	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
++	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
++
++	iov[0] = (struct iovec) {
++		.iov_base = &req,
++		.iov_len = sizeof(req)
++	};
++	iov[iovlen] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
++	iov[iovlen+1] = (struct iovec){ &proto, sizeof(proto)};
++	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
++	iovlen += 2;
++
++	struct msghdr msg = {
++		.msg_name = &nladdr,
++		.msg_namelen = sizeof(nladdr),
++		.msg_iov = iov,
++		.msg_iovlen = iovlen
++	};
++
++	for (;;) {
++		if (sendmsg(fd, &msg, 0) < 0) {
++			if (errno == EINTR)
++				continue;
++			die_perror("sendmsg");
++		}
++		return;
++	}
++}
++
++void diag(void)
++{
++	int fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
++
++	if (fd < 0)
++		die_perror("Netlink socket");
++
++	send_query(fd);
++
++	close(fd);
++}
++
+ static void parse_opts(int argc, char **argv)
+ {
+ 	int c;
+ 
+-	while ((c = getopt(argc, argv, "h6")) != -1) {
++	while ((c = getopt(argc, argv, "h6d")) != -1) {
+ 		switch (c) {
+ 		case 'h':
+ 			die_usage(0);
+@@ -262,6 +332,10 @@ static void parse_opts(int argc, char **argv)
+ 		case '6':
+ 			pf = AF_INET6;
+ 			break;
++		case 'd':
++			diag();
++			exit(0);
++			break;
+ 		default:
+ 			die_usage(1);
+ 			break;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+index 5e8d5b83e2d0..3f74100bc023 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.sh
+@@ -278,6 +278,11 @@ do_mptcp_sockopt_tests()
+ 	mptcp_lib_result_pass "sockopt v6"
+ }
+ 
++do_diag_tests()
++{
++	ip netns exec "$ns_sbox" ./mptcp_sockopt -d
++}
++
+ run_tests()
+ {
+ 	local listener_ns="$1"
+@@ -356,6 +361,7 @@ run_tests $ns1 $ns2 dead:beef:1::1
+ 
+ do_mptcp_sockopt_tests
+ do_tcpinq_tests
++do_diag_tests
+ 
+ mptcp_lib_result_print_all_tap
+ exit $ret
+-- 
+2.25.1
 
