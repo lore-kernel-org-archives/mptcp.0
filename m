@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870E91F95A
-	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 14:28:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23A821F95A
+	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 14:33:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737124116; cv=none; b=AI1qqD9aeyg/L/Xf0MYJuVGcixtpYziF2X4zjTcEPaBBE86RCySNmcHfggubrTDeBw9IpvvPRgxOlfcF+cy35pFmSOYUrNheqttQZpxYrvJNCTNrG8zFAXgTXZuJc7whkM81ttFpZ+rus252yBqJY2q3Of3WHqNdjh2XlgUdJRo=
+	t=1737124426; cv=none; b=hDpcMVfokOHwhxq6jzJvXesVLZq83VUxdYbN9dNt8BRgUhptNaJEZCGwbG+W+AvtkBZ+3//Dle0WlaE92vKUUeSbmin5qAPcCVvQHJWXo2yxIRU8oCualcwnhaQOAJHDC0SJjQlXqbVqnxU3SX4L5RLCAfzm5r1iXTZ2QnJbY00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737124116; c=relaxed/simple;
-	bh=VuRy55BQ2rsBDV5Q/i4coammfe/tD6ojISGY4vjPNvQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=agSJsjD/rjHDgjhS8m3ZXKS18PSzrT//pIECt2xRsueoph6B7a30mmYPxNrUByZMXIGxai7LCPysgy0tYCBAhsKbJ1MrZdX48HrBrho+g5GuJyu7oJssaVHqEOJo30FuAsSgaXVHm6xq5VJErf3pFE+2yCW4mjiHY46rU4hLUz4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imuwL+eJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737124426; c=relaxed/simple;
+	bh=0z+SZUtfssSS8PYqgK9/T7Bm1X5L1dbhjGXJTdSE0k0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=uBPxOTlLaClEjwAE/ftoTRJd0hpfrjwq/xvNX1UQmZY6UPFgdkeHIcQgCTn16vxpuYjNtd3rpwxjqyMzJFqFSM0dXgwBG4SZj3EDBME2S6Dz36yO+H3TVkC80K/IMCNdQ+88c157Gm3oHyRh8sAMRKqb3Qbs0cDcX/S5GU9qvXM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TGo8MzUZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imuwL+eJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643F4C4CEDD;
-	Fri, 17 Jan 2025 14:28:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TGo8MzUZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2E619C4CEE1;
+	Fri, 17 Jan 2025 14:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737124116;
-	bh=VuRy55BQ2rsBDV5Q/i4coammfe/tD6ojISGY4vjPNvQ=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=imuwL+eJQKbr/19YsK7LXVlrj3B3Odfuq5jahERo3mvQj+fkpEt/RhT0G6BH/ybmw
-	 dP8TuJ8+pa5mK8b4YTWGKTMQkxfKV49UiT+9fmGU1iOqEMTB8hMdFwsMP0xRK9yRLl
-	 MZrnge97AgtDN10HitAY/Vp40vzV60368bZS/m7vS4x7vEG0T5XXMe6oNq0FdUwVNV
-	 5qCMMbLLXxmjdW19HwswJ3GGT3dsuIwSSvQ2TfG1eqFV6pOzTxbyLYCUc9JeI4E1jY
-	 FRdxJTgWN7/1RDx4heUIDeL65jV5iQ3meKopJvt3K7HjLXhxVFmRJiRxlmos+Wk5EI
-	 MW3ii4BRap3bQ==
-Message-ID: <efebc4b2-b9ef-451e-afc2-68b21dd40d62@kernel.org>
-Date: Fri, 17 Jan 2025 15:28:24 +0100
+	s=k20201202; t=1737124425;
+	bh=0z+SZUtfssSS8PYqgK9/T7Bm1X5L1dbhjGXJTdSE0k0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=TGo8MzUZjuG2KpO7fuGDvwKijILtbylSCwrxDwcY2oYPA4i9N37K007kKPoOJQlFK
+	 XjK9J+2mIP9rmw8/7lRWQyziLZztaVLVwsUiyWutLvRgmlgHooz0CVVim8WxMVw5lD
+	 xH6RBqZOZAVuM1DIStwS9TfGJF1c4MssoknKeRDyZ8k0Jg57C9/GQELLHYaaiilAFX
+	 8uPJxFdqz7pLz+4Qx09UK8Os4M13+SaeIur3eVVLxbml+wfL1LBexjBrHptlh2/KwI
+	 6cLcp7jrkncyYKGdi58sQDGhZpBaSr3jOLKnE9+9X5oZRGrRetbkxyLNdasj2PN8P/
+	 OREIzyUlhjZzQ==
+Message-ID: <34877829-ddd6-4d2d-858e-d057da9c1dba@kernel.org>
+Date: Fri, 17 Jan 2025 15:33:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: consolidate suboption status.
+Subject: Re: [PATCH mptcp-next 0/3] mptcp: blackhole: sysctl SYN retrans + fix
+ conditions
 Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org>
+ <99988d16-43a3-bdd3-c9e7-ccc992570eb2@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <7c8a258328ed6d235a100e3fa13c2da355119951.1736974476.git.pabeni@redhat.com>
- <c0576dc7-79f5-46c7-a59d-f70c6acf355f@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,53 +87,66 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c0576dc7-79f5-46c7-a59d-f70c6acf355f@kernel.org>
+In-Reply-To: <99988d16-43a3-bdd3-c9e7-ccc992570eb2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+H Mat,
 
-On 16/01/2025 21:25, Matthieu Baerts wrote:
-> Hi Paolo,
+On 17/01/2025 01:13, Mat Martineau wrote:
+> On Tue, 14 Jan 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> On 15/01/2025 22:12, Paolo Abeni wrote:
->> MPTCP maintains the received sub-options status is the bitmask carrying
->> the received suboptions and in several bitfields carrying per suboption
->> additional info.
+>> Recently, I found a network having weird behaviours with MPTCP packets:
 >>
->> Zeroing the bitmask before parsing is not enough to ensure a consistent
->> status, and the MPTCP code has to additionally clear some bitfiled
->> depending on the actually parsed suboption.
+>> - The first connection to a server had a successful 3WHS, then MPTCP
+>>  options got stripped off.
 >>
->> The above schema is fragile, and syzbot menaged to trigger a path where
->> a relevant bitfield is not cleared/initialized:
+>> - The next one had the first SYN (with or without MPTCP) and 5
+>>  retransmissions dropped, before being apparently intercepted and
+>>  proxied to the end server.
+>>
+>> - (The next ones were sometimes intercepted, sometimes not, or dropped
+>>   at the beginning. I'm trying to find out which kind of "optimiser" is
+>>   causing this.)
+>>
+>> The result of this was a blackhole being "wrongly" detected, and no ways
+>> to force connections with quite a few SYN drops to finally use MPTCP at
+>> the end.
+>>
+>> In this series, we have:
+>>
+>> - A small fix for the doc.
+>>
+>> - A new sysctl to change the number of SYN retransmitted with MPTCP
+>>  options before falling back to TCP. The modification looks simple
+>>  enough to still be sent to netdev before the closure I think.
+>>
 > 
-> (...)
+> Hi Matthieu -
 > 
->> The current schema is too fragile; address the issue grouping all the
->> state-related data together and clearing the whole group instead of
->> just the bitmask. This also cleans-up the code a bit, as there is no
->> need anymore to individually clear "random" bitfield in a couple of
->> places.
+> Patches 1 and 2 LGTM:
 > 
-> Good catch, and now cleaner!
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-Now in our tree (fixes for -net) (without 2 spelling mistakes spotted by
-checkpatch.pl --codespell):
+Thank you for the review!
+
+I already applied these two patches:
 
 New patches for t/upstream-net and t/upstream:
-- 818bca988793: mptcp: consolidate suboption status
-- Results: 05dbdeb0df9f..1b76b0bd2522 (export-net)
-- Results: 23e469da2e50..2a6dfa001e66 (export)
+- 34dc1c307f30: doc: mptcp: sysctl: blackhole_timeout is per-netns
+- Results: 1b76b0bd2522..551c1dba2a68 (export-net)
+- Results: 2a6dfa001e66..2d16bea74b90 (export)
+
+New patches for t/upstream:
+- 5fb87b001602: mptcp: sysctl: add syn_retrans_before_tcp_fallback
+- Results: 2d16bea74b90..b7be33140cc3 (export)
 
 Tests are now in progress:
 
 - export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/6522a18009fb2dd2de6badbd6f3a75094ef56c5e/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/70769bbce0f766c3583cb1caa791722685884f19/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/8e6fd4818b81ecebcca1a3eb44a2927845471434/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/caa6490e85f954f97ad955a2496c1b1297efee89/checks
 
 Cheers,
 Matt
