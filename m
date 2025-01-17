@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE21F8905;
-	Fri, 17 Jan 2025 11:00:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 870E91F95A
+	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 14:28:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737111653; cv=none; b=Cog4oa2oVVVMUZAvUjH0n26mO4897jMhM/dpc7iGgl5W519d1p+lDGqphjiyEJMYcv+ELMtAopo9etjz/E41rG35JiV4Lz7+eQXKMABdFM05Scgw6QryAYiFFXP4FYBlSlKj7Vs12HbyQlmL/T7vLtbK+ccIs0I8lZuwpSRD4q8=
+	t=1737124116; cv=none; b=AI1qqD9aeyg/L/Xf0MYJuVGcixtpYziF2X4zjTcEPaBBE86RCySNmcHfggubrTDeBw9IpvvPRgxOlfcF+cy35pFmSOYUrNheqttQZpxYrvJNCTNrG8zFAXgTXZuJc7whkM81ttFpZ+rus252yBqJY2q3Of3WHqNdjh2XlgUdJRo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737111653; c=relaxed/simple;
-	bh=0gwNO16h70l6NqWKLpd0tr5AR9HgvRqD4Li+9VRdGD8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=pwgtIH/H2wqXs2k3B3WuniLVJZjwfv4i9FKUPPHOfVXE8uxJjhsunN3yNk+Wj0Cdu9Ea+HDgQogTi65EBKZfBd7pGbBuAnJa8F7Qf5Xx1HXSODKzlyZM23WX3TTkTtiD5oEXfv2Xd9E2I/ui6wkVkbJl7xHmK8rSHOG6ajsqXlk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dy7LpmlF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737124116; c=relaxed/simple;
+	bh=VuRy55BQ2rsBDV5Q/i4coammfe/tD6ojISGY4vjPNvQ=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=agSJsjD/rjHDgjhS8m3ZXKS18PSzrT//pIECt2xRsueoph6B7a30mmYPxNrUByZMXIGxai7LCPysgy0tYCBAhsKbJ1MrZdX48HrBrho+g5GuJyu7oJssaVHqEOJo30FuAsSgaXVHm6xq5VJErf3pFE+2yCW4mjiHY46rU4hLUz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=imuwL+eJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dy7LpmlF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA3FC4CEDD;
-	Fri, 17 Jan 2025 11:00:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="imuwL+eJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 643F4C4CEDD;
+	Fri, 17 Jan 2025 14:28:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737111653;
-	bh=0gwNO16h70l6NqWKLpd0tr5AR9HgvRqD4Li+9VRdGD8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Dy7LpmlFlptRpzqVNtxcTjlv1kdo9e5N7M5yrzlGrRtZ5loOSdVBucm14zTi0C/Zd
-	 v8IPqt55eCmXeX9uOSBLOWb5d1ZUJcLBFX069k6OpqvN4rj0V82AJ5xOKSkaW26Hbi
-	 ZYaycj34h+B93GuG5mO4h5TK5lx+JrXQZoGRbNR0WAYkJdU9vzLoTfMw8KqC6qVsPk
-	 4F6VwywnGYHjcjTZ1ucK6ZeddOUUN6IGbmHuCq5Z0ukbRqqVYgrvA4uHWycEhbQMar
-	 Z+v5pYpBzgBBLMt0002bLgHqwYjosH5GxBnoQtsMttMTXmXmPenEGW2vlHEmjVskkV
-	 o17jyIw0k8EqA==
-Message-ID: <4453abfb-93ac-470e-b67e-71a918e7825c@kernel.org>
-Date: Fri, 17 Jan 2025 12:00:48 +0100
+	s=k20201202; t=1737124116;
+	bh=VuRy55BQ2rsBDV5Q/i4coammfe/tD6ojISGY4vjPNvQ=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=imuwL+eJQKbr/19YsK7LXVlrj3B3Odfuq5jahERo3mvQj+fkpEt/RhT0G6BH/ybmw
+	 dP8TuJ8+pa5mK8b4YTWGKTMQkxfKV49UiT+9fmGU1iOqEMTB8hMdFwsMP0xRK9yRLl
+	 MZrnge97AgtDN10HitAY/Vp40vzV60368bZS/m7vS4x7vEG0T5XXMe6oNq0FdUwVNV
+	 5qCMMbLLXxmjdW19HwswJ3GGT3dsuIwSSvQ2TfG1eqFV6pOzTxbyLYCUc9JeI4E1jY
+	 FRdxJTgWN7/1RDx4heUIDeL65jV5iQ3meKopJvt3K7HjLXhxVFmRJiRxlmos+Wk5EI
+	 MW3ii4BRap3bQ==
+Message-ID: <efebc4b2-b9ef-451e-afc2-68b21dd40d62@kernel.org>
+Date: Fri, 17 Jan 2025 15:28:24 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 11/15] mptcp: pm: add id parameter for get_addr
+Subject: Re: [PATCH mptcp-net] mptcp: consolidate suboption status.
 Content-Language: en-GB
-To: Simon Horman <horms@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org>
- <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-11-c0b43f18fe06@kernel.org>
- <20250117104336.GJ6206@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <7c8a258328ed6d235a100e3fa13c2da355119951.1736974476.git.pabeni@redhat.com>
+ <c0576dc7-79f5-46c7-a59d-f70c6acf355f@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -91,88 +85,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250117104336.GJ6206@kernel.org>
+In-Reply-To: <c0576dc7-79f5-46c7-a59d-f70c6acf355f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Simon,
+Hi Paolo,
 
-On 17/01/2025 11:43, Simon Horman wrote:
-> On Thu, Jan 16, 2025 at 05:51:33PM +0100, Matthieu Baerts (NGI0) wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 16/01/2025 21:25, Matthieu Baerts wrote:
+> Hi Paolo,
+> 
+> On 15/01/2025 22:12, Paolo Abeni wrote:
+>> MPTCP maintains the received sub-options status is the bitmask carrying
+>> the received suboptions and in several bitfields carrying per suboption
+>> additional info.
 >>
->> The address id is parsed both in mptcp_pm_nl_get_addr() and
->> mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
+>> Zeroing the bitmask before parsing is not enough to ensure a consistent
+>> status, and the MPTCP code has to additionally clear some bitfiled
+>> depending on the actually parsed suboption.
 >>
->> So this patch adds a new parameter 'id' for all get_addr() interfaces.
->> The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then pass
->> it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> The above schema is fragile, and syzbot menaged to trigger a path where
+>> a relevant bitfield is not cleared/initialized:
 > 
-> ...
+> (...)
 > 
->> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
->> index 853b1ea8680ae753fcb882d8b8f4486519798503..392f91dd21b4ce07efb5f44c701f2261afcdc37e 100644
->> --- a/net/mptcp/pm_netlink.c
->> +++ b/net/mptcp/pm_netlink.c
->> @@ -1773,23 +1773,15 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
->>  	return -EMSGSIZE;
->>  }
->>  
->> -int mptcp_pm_nl_get_addr(struct genl_info *info)
->> +int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info)
->>  {
->>  	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
->> -	struct mptcp_pm_addr_entry addr, *entry;
->> +	struct mptcp_pm_addr_entry *entry;
->>  	struct sk_buff *msg;
->>  	struct nlattr *attr;
->>  	void *reply;
->>  	int ret;
->>  
->> -	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
->> -		return -EINVAL;
->> -
->> -	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
->> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
->> -	if (ret < 0)
->> -		return ret;
->> -
+>> The current schema is too fragile; address the issue grouping all the
+>> state-related data together and clearing the whole group instead of
+>> just the bitmask. This also cleans-up the code a bit, as there is no
+>> need anymore to individually clear "random" bitfield in a couple of
+>> places.
 > 
-> Hi Matthieu and Geliang,
+> Good catch, and now cleaner!
 > 
-> This hunk removes the initialisation of attr...
-> 
->>  	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
->>  	if (!msg)
->>  		return -ENOMEM;
->> @@ -1803,7 +1795,7 @@ int mptcp_pm_nl_get_addr(struct genl_info *info)
->>  	}
->>  
->>  	rcu_read_lock();
->> -	entry = __lookup_addr_by_id(pernet, addr.addr.id);
->> +	entry = __lookup_addr_by_id(pernet, id);
->>  	if (!entry) {
->>  		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
-> 
-> ... but attr is still used here.
-> 
-> Flagged by clang-19 W=1 builds and Smatch.
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Thank you for having looked at that!
+Now in our tree (fixes for -net) (without 2 spelling mistakes spotted by
+checkpatch.pl --codespell):
 
-Indeed, I missed that when rebasing and fixing conflicts, my bad, sorry.
+New patches for t/upstream-net and t/upstream:
+- 818bca988793: mptcp: consolidate suboption status
+- Results: 05dbdeb0df9f..1b76b0bd2522 (export-net)
+- Results: 23e469da2e50..2a6dfa001e66 (export)
 
-This part of the code is moved in the patch to pm.c, where 'attr' is
-initialised properly. What's a shame is that, just before sending the
-series, I thought about squashing this patch with the next one :)
+Tests are now in progress:
 
-Anyway, I will fix that in a v2.
-
-I hope that's OK if I add an extra patch in the same series or in parallel.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/6522a18009fb2dd2de6badbd6f3a75094ef56c5e/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8e6fd4818b81ecebcca1a3eb44a2927845471434/checks
 
 Cheers,
 Matt
