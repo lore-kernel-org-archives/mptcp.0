@@ -1,126 +1,181 @@
-Received: from mail-qt1-f169.google.com (mail-qt1-f169.google.com [209.85.160.169])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D9DA1CEAC8
-	for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 10:46:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.169
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BCE21F8905;
+	Fri, 17 Jan 2025 11:00:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737110789; cv=none; b=FxYNQ7nWl4jV6fBGEL4n2Nmp/MvrhZADLOb7vnTlw6Eowd8htfF5ZAHcH9Y6oN8mwOmbFL3w9lEq9+77B01QQSXQ3yxEmhy8H2VuF+TUzcNGANcLWLKJ+JjQaLguQw6Gu8vMNPcimmL6R5ax53OSIVSbBdavdnJgQRUKvAXaNO0=
+	t=1737111653; cv=none; b=Cog4oa2oVVVMUZAvUjH0n26mO4897jMhM/dpc7iGgl5W519d1p+lDGqphjiyEJMYcv+ELMtAopo9etjz/E41rG35JiV4Lz7+eQXKMABdFM05Scgw6QryAYiFFXP4FYBlSlKj7Vs12HbyQlmL/T7vLtbK+ccIs0I8lZuwpSRD4q8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737110789; c=relaxed/simple;
-	bh=Z9Mrd6+HZtOTfcOyRBLkT/QkcI35FecbhZ3dneYYVx0=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=Eb9847BIWIp+lexrKU2VDOQ2mXt6aqo8HPKFpf/DiqDazpMvbn0wjlIEe5lW10y2niegxAQZAQClHHtQRKseyze6DaDLbtgnJPFljNClvGKreoENnZOSMJp9JCKesLpO+UHifZJ5Khj6QyuMrjKp/6LG7PpJ4+X57nJt117HtfA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=iSKt8KOo; arc=none smtp.client-ip=209.85.160.169
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737111653; c=relaxed/simple;
+	bh=0gwNO16h70l6NqWKLpd0tr5AR9HgvRqD4Li+9VRdGD8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=pwgtIH/H2wqXs2k3B3WuniLVJZjwfv4i9FKUPPHOfVXE8uxJjhsunN3yNk+Wj0Cdu9Ea+HDgQogTi65EBKZfBd7pGbBuAnJa8F7Qf5Xx1HXSODKzlyZM23WX3TTkTtiD5oEXfv2Xd9E2I/ui6wkVkbJl7xHmK8rSHOG6ajsqXlk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Dy7LpmlF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iSKt8KOo"
-Received: by mail-qt1-f169.google.com with SMTP id d75a77b69052e-467a63f5d1cso18497421cf.0
-        for <mptcp@lists.linux.dev>; Fri, 17 Jan 2025 02:46:28 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737110787; x=1737715587; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=dOTrwz2IeKyluizhD2dAoccQEDl4psBVQzgSBsZ6K0g=;
-        b=iSKt8KOoo5+ZQ44RSgQO/idbBcDeXdwlSL7SJ7lltOPHnPgbGpDHMnHwLT9VQ0G5b3
-         X0FH62+UTu4zg2b4pG0YDrTkHpdnFPMRyqvwxWlpfj4mrPcy3V3MUKIzOsSegQJEDBxQ
-         9WnkOngFaUwI9s6aEEgPRdZ2eEb3wOKaxwz2bmspH+X3+lbH3NTvi8BcqEpbORV6xT3Y
-         IBrnXT6GoOpzre5rN1WFz1BK0KLFfvUcMO/h411WqepEMONrpkaloZBpHMbS6ouPK0D1
-         N0BT6sCiZsV7ySTi5lg61y8dfDgxcTw/4Bw7sV3FVqBUvMlkkbKzY9aVhPgy/yHjAx/t
-         tPzg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737110787; x=1737715587;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=dOTrwz2IeKyluizhD2dAoccQEDl4psBVQzgSBsZ6K0g=;
-        b=l5hQlFERr86MCix4xZoT/YCLMxmt1JKJwYiVAIaOPZu3lNkc4kv/yzkJnb5nbVHIVc
-         x4DRzfaqJNf4ofM4q4pmYYRBufwncv3X5HLwYQAfrZiOrebrk2TdEbicK0YmXdjxq6zI
-         3T6SPwl9nLLjpKHL4Z8hZFo5l0FVq9BYFVrw22o8zSCeQdY2IC3+TIEiLfVMfK43CEam
-         oAsEVpJ8JXM7zNOP5CCmZzJ5frDoLmaDn059vYvev41LnGgxzex019/pt6VuNYMHK1vx
-         9clJWZWtQgdK3hBOALZyt0N6nfgBRK6/PEu5WoJ9GFGe/xTynUqwd48x+9AAnkh8cugU
-         O0kw==
-X-Gm-Message-State: AOJu0YxiIYl/WoHwKUR7l09DEnr64hViDVFJsKZyhq9PibFSQP0ryY/O
-	TiWjLDNzKaDkjZnIW50+i/3DrLC7XG7OfjfgBV6aWikJTrDW5ERcCHyU0Fc=
-X-Gm-Gg: ASbGnct+Fa9o8LFtcvAWHvpTiP6h4FTDpI4vxX2TtLWG2I3dV07pZ52A2P4u0odj58T
-	TUjtSdteKfAFkWyYxqGVqOE7oXzu3wGs51FpGpJde+evC0EljJ1KhrpxiUCA4Tbh31q1l2PWaU4
-	6eNdIRfuo1UHvYVMrBBFZqWXH066CwREFBrWPVTTaRyBPpa05y878KXmqo4bhMtm9WQgRicWJqz
-	4bb5JrW8iHzD34EG6imHdIJ5ol5GSYCLiMD+CNkWCFlKBf7QRNcqR7UgOHF1QW1+F96k/Q=
-X-Google-Smtp-Source: AGHT+IEsKsvFMTkFOfhI2ENQw0MgP6JpVFhv+z01+Tw6YU83Sl6N1KP9UdRPHPvxsEUTTm1I9DBh4w==
-X-Received: by 2002:ac8:5852:0:b0:46c:71f6:7aa5 with SMTP id d75a77b69052e-46e12c394e1mr33040061cf.41.1737110787242;
-        Fri, 17 Jan 2025 02:46:27 -0800 (PST)
-Received: from [127.0.0.1] ([20.102.223.140])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e102ec6cfsm10039731cf.3.2025.01.17.02.46.26
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 17 Jan 2025 02:46:26 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250117-mptcp-issue-540-v2-0-a194740fb380@kernel.org>
-References: <20250117-mptcp-issue-540-v2-0-a194740fb380@kernel.org>
-Subject: Re: [PATCH mptcp-net v2 0/3] mptcp: pm: only set fullmesh for
- subflow endp
-Message-ID: <ca92bcaf-1728-c02a-fa6b-4b54824bdbb9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 17 Jan 2025 10:46:25 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Dy7LpmlF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAA3FC4CEDD;
+	Fri, 17 Jan 2025 11:00:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737111653;
+	bh=0gwNO16h70l6NqWKLpd0tr5AR9HgvRqD4Li+9VRdGD8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Dy7LpmlFlptRpzqVNtxcTjlv1kdo9e5N7M5yrzlGrRtZ5loOSdVBucm14zTi0C/Zd
+	 v8IPqt55eCmXeX9uOSBLOWb5d1ZUJcLBFX069k6OpqvN4rj0V82AJ5xOKSkaW26Hbi
+	 ZYaycj34h+B93GuG5mO4h5TK5lx+JrXQZoGRbNR0WAYkJdU9vzLoTfMw8KqC6qVsPk
+	 4F6VwywnGYHjcjTZ1ucK6ZeddOUUN6IGbmHuCq5Z0ukbRqqVYgrvA4uHWycEhbQMar
+	 Z+v5pYpBzgBBLMt0002bLgHqwYjosH5GxBnoQtsMttMTXmXmPenEGW2vlHEmjVskkV
+	 o17jyIw0k8EqA==
+Message-ID: <4453abfb-93ac-470e-b67e-71a918e7825c@kernel.org>
+Date: Fri, 17 Jan 2025 12:00:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next 11/15] mptcp: pm: add id parameter for get_addr
+Content-Language: en-GB
+To: Simon Horman <horms@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org
+References: <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org>
+ <20250116-net-next-mptcp-pm-misc-cleanup-2-v1-11-c0b43f18fe06@kernel.org>
+ <20250117104336.GJ6206@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250117104336.GJ6206@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matthieu,
+Hi Simon,
 
-Thank you for your modifications, that's great!
+On 17/01/2025 11:43, Simon Horman wrote:
+> On Thu, Jan 16, 2025 at 05:51:33PM +0100, Matthieu Baerts (NGI0) wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> The address id is parsed both in mptcp_pm_nl_get_addr() and
+>> mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
+>>
+>> So this patch adds a new parameter 'id' for all get_addr() interfaces.
+>> The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then pass
+>> it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
+>>
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> ...
+> 
+>> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+>> index 853b1ea8680ae753fcb882d8b8f4486519798503..392f91dd21b4ce07efb5f44c701f2261afcdc37e 100644
+>> --- a/net/mptcp/pm_netlink.c
+>> +++ b/net/mptcp/pm_netlink.c
+>> @@ -1773,23 +1773,15 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
+>>  	return -EMSGSIZE;
+>>  }
+>>  
+>> -int mptcp_pm_nl_get_addr(struct genl_info *info)
+>> +int mptcp_pm_nl_get_addr(u8 id, struct genl_info *info)
+>>  {
+>>  	struct pm_nl_pernet *pernet = genl_info_pm_nl(info);
+>> -	struct mptcp_pm_addr_entry addr, *entry;
+>> +	struct mptcp_pm_addr_entry *entry;
+>>  	struct sk_buff *msg;
+>>  	struct nlattr *attr;
+>>  	void *reply;
+>>  	int ret;
+>>  
+>> -	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
+>> -		return -EINVAL;
+>> -
+>> -	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
+>> -	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
+>> -	if (ret < 0)
+>> -		return ret;
+>> -
+> 
+> Hi Matthieu and Geliang,
+> 
+> This hunk removes the initialisation of attr...
+> 
+>>  	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
+>>  	if (!msg)
+>>  		return -ENOMEM;
+>> @@ -1803,7 +1795,7 @@ int mptcp_pm_nl_get_addr(struct genl_info *info)
+>>  	}
+>>  
+>>  	rcu_read_lock();
+>> -	entry = __lookup_addr_by_id(pernet, addr.addr.id);
+>> +	entry = __lookup_addr_by_id(pernet, id);
+>>  	if (!entry) {
+>>  		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
+> 
+> ... but attr is still used here.
+> 
+> Flagged by clang-19 W=1 builds and Smatch.
 
-Our CI did some validations and here is its report:
+Thank you for having looked at that!
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Critical: 1 Call Trace(s) =E2=9D=8C
-- KVM Validation: btf-normal (only =
-bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/12826636303
+Indeed, I missed that when rebasing and fixing conflicts, my bad, sorry.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/0abf0f42d0e0
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D926404
+This part of the code is moved in the patch to pm.c, where 'attr' is
+initialised properly. What's a shame is that, just before sending the
+series, I thought about squashing this patch with the next one :)
 
+Anyway, I will fix that in a v2.
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
+I hope that's OK if I add an extra patch in the same series or in parallel.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
