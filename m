@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07056136E;
-	Sat, 18 Jan 2025 07:44:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AA4E3234
+	for <mptcp@lists.linux.dev>; Sat, 18 Jan 2025 07:50:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737186271; cv=none; b=f1ZmJXa+flgXtYBpqiCI8w6GuSoDf/Zueu4saqE1m6JzxUI2mxi41evvc+aYULV9Vp9csE4Q25lOd795k63FLUvRpUYtxuRFXy3AjERiQ7ecFCCdSLCs1sIeLI5mhuyamSepx7UsblJhDoOCDwrOGLjtFvEQjBDj/fR6dfqEwS8=
+	t=1737186634; cv=none; b=CPbytaaujtu0xmT1BV7JjlNizdP74F4Vp+um2Q8IXJoEyeSBBLaEWNKzYf1Y4Gbtfe8orJy0HWM59GsEZvV4kAccvRrvTKk0KZkwmejmauDt44NVbA5k6nNeAC7/d9iiRPuxsNJxWBkdJTUndKN/nrqszkM44gMzZLsmS7UwuRE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737186271; c=relaxed/simple;
-	bh=jGoKtxV0iBzxG3+fsjJC1yikm/M93FDOtPHjYHj6c78=;
+	s=arc-20240116; t=1737186634; c=relaxed/simple;
+	bh=ORYhXxUkM/AGbk7vCh0mn1XTcim6GR/ejirRk//AjZc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zk7PSIMNAzgDcsNFNhK6oUyu8R4sklkcFIigfr1c8OhfkOp/taWJkLT4yBdXGSSNLMHO2WqdH5Jd1rP3TdNN/AlQ/83oOk9ZcvV27VDylxCr7mfezeuCGPP7gFjS7MBLFNkoXXC1uP1eeCT9OeZy57Ee2b3qjRtEsmtWb3sDGSg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rcFKy4fN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lgyapCE1Y4RF6ALzCfxQm3/JwblkC2WsTHGIWwwr0Fj2/fbQQFmP8OChsNAlnIpXQXIY5lGRTqwAY80Dnx0CnW7A/1DIJLUJHavNwUftie0vjj6T1ejY0Y0K7M6kutxBneuiZWq0VHpNInOk0q0SyUMwmR8e+/vNyakCuuA1xuY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwSdEpTT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rcFKy4fN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BCB78C4CED1;
-	Sat, 18 Jan 2025 07:44:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwSdEpTT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 95280C4CED1;
+	Sat, 18 Jan 2025 07:50:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737186270;
-	bh=jGoKtxV0iBzxG3+fsjJC1yikm/M93FDOtPHjYHj6c78=;
+	s=k20201202; t=1737186633;
+	bh=ORYhXxUkM/AGbk7vCh0mn1XTcim6GR/ejirRk//AjZc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=rcFKy4fNR+IdzJPNjK1d+qG2VXostmAc5Ugg4wUlQGI2QEX8sgf94WZTlvsRjl76w
-	 nvA991SdFnHxhw5QvZavM1BsQ8blFrdfu4ktvNXawGSH+1wTfnDeNTVTDBMGPcfOlR
-	 rDQ4LmJRWZgtUxFluCf/btY+0uMwepXsjTV7LygD4TuL8UDNinhviTsidVruGQedew
-	 aXUD+FsSEgwAmMWhxRc3D3O7u0rDCRKRePGjAfiH00Bnz2eJRWo/O+jC0p+0jlySvL
-	 4A2Pe4p2g5MfqzCgh8N+ur/OcDflkfsCDpew5qJfdPCLaTqTU0pCVAVYERHAYhLR4z
-	 BQUDEjyFeljlg==
-Message-ID: <93cae50d-2ede-46b6-9c4b-e18deefe3295@kernel.org>
-Date: Sat, 18 Jan 2025 08:44:24 +0100
+	b=GwSdEpTTYX2W0mtCJz+11dSekA8wCm7EFReg35+UaQVUA8pqm265ArR5G2EUlE2ZV
+	 EscqPxP6ALsc7ttYDLZ5P9uAmN9whAG3oOvTwZV0qzbdJPx8ZYjTfeSqKAJaQH514b
+	 ruVh613MtObeTWVaxyodia/TtwvDgbEoLY5FvTJV2t1EH1weeyYI0P+f+7JB8sA3PQ
+	 38aQ4r99FCxxF4spAN5ubPJ6cWvgaKK/SGq4/jUDrW0YdG6dS/2fFYa/mMCrZohhzC
+	 NlCtS5xTF/c4sHAluiYkNjJVInVHTjhMtx5BOAcJ9O0wnsCXHEFfL9nvNY5YLJ+vQY
+	 qYbbA9J9YFV4w==
+Message-ID: <e34a54e2-bf7b-47eb-89ac-80e5605955aa@kernel.org>
+Date: Sat, 18 Jan 2025 08:50:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next v2 11/15] mptcp: pm: add id parameter for
- get_addr
+Subject: Re: [PATCH mptcp-next] Squash to "mptcp: pm: add id parameter for
+ get_addr"
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20250117-net-next-mptcp-pm-misc-cleanup-2-v2-0-61d4fe0586e8@kernel.org>
- <20250117-net-next-mptcp-pm-misc-cleanup-2-v2-11-61d4fe0586e8@kernel.org>
- <ffa8b3d7fee95ab196fe35a3a3d855653fccfb9e.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <625cc0fceb9d347ed6a029396a8d202cbb24d2c4.1737156352.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,43 +86,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ffa8b3d7fee95ab196fe35a3a3d855653fccfb9e.camel@kernel.org>
+In-Reply-To: <625cc0fceb9d347ed6a029396a8d202cbb24d2c4.1737156352.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 18/01/2025 00:28, Geliang Tang wrote:
-> Hi Matt,
+On 18/01/2025 00:26, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On Fri, 2025-01-17 at 19:41 +0100, Matthieu Baerts (NGI0) wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> The address id is parsed both in mptcp_pm_nl_get_addr() and
->> mptcp_userspace_pm_get_addr(), this makes the code somewhat
->> repetitive.
->>
->> So this patch adds a new parameter 'id' for all get_addr()
->> interfaces.
->> The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then
->> pass
->> it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> v2:
->> - Fix 'attr' no longer being set in mptcp_pm_nl_get_addr(), but still
->>   used in this patch (no longer in the next one). (Simon)
+> No need to drop 'attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];' in
+> mptcp_userspace_pm_get_addr() too, add it back.
 > 
-> mptcp_userspace_pm_get_addr() needs to be updated too.
+> Alse update mptcp_pm_nl_get_addr() to keep the original two-line
+> assignment of 'attr'.
 
-Arf, I didn't think about pm_userspace.c :(
-I should have definitively squashed patch 11 and 12...
-
-That's OK, I will resend them later, simply moving the line removal from
-patch 11 to 12.
+I did a simple fix instead, see 648a0809e4cf ("Squash to "mptcp: pm: add
+id parameter for get_addr"") and the final export branch. Tell me if
+that's not OK.
 
 Cheers,
 Matt
