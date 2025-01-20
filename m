@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 807F71922DD
-	for <mptcp@lists.linux.dev>; Mon, 20 Jan 2025 08:21:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 122231922F5
+	for <mptcp@lists.linux.dev>; Mon, 20 Jan 2025 08:25:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737361260; cv=none; b=JbWysKc/Q7J1EZGtowRow0be634BQUTyXczHSqINqGJ1y93eL+L+WS4/DxyAAJNf6YfjMS9JalXe7gV8DXbK+tUfkbDVOg7gGXtLv45BTRpsD0iUWrt3ihufdZCB6S9ymEf3PZdBQsou+Q7AmbySUnMW+NyZmGsvVl7eeOw8dkQ=
+	t=1737361511; cv=none; b=bMxd+FEX2SbWk551vphgSFE862DiUUO+ZxWx338GJbfb5KawkDzKLP3cgYF7Y4r4bTr1niS/nu5Vu1FWDu8LLbCZ1AjRPP3bkdNGY+3NdxVcNyI9ntIi6YDLQaRSCfeoVi/aX2Lyo6i+Cpz8WzQcZMYp5s4ikMB3KLxobKzotpM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737361260; c=relaxed/simple;
-	bh=TdLHkC3lem0wFQaFUcWyWIXJG0J1Z7sHUNO7z6Wbok4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=udHzLYkoqM87uaThjHQBqXM6eLLME7wHLUo6K0I1amuJzRgUTr/NTWke+kcpclenlQGFb4iZuwTK0nhJYP/e1c6Y1a3CI/r48qYdaSkMML1GjRWqSXNifRBdvSg0lPyyYR2FuNxRb+A48POaklyfC2Ds48QlVDROCTWZOfyE5WA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AJVhVXex; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737361511; c=relaxed/simple;
+	bh=u6ns5xJNqxYowkVYayL/v1jr2KlK3rBLhBz1qyKSIao=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=YQUWKccrQjpo1SSKFMiGMlrAnBBUitFmp4GbCoIpBkOzlA81TQwj+4gsm3kIpLG7y9nCcUJmpUiUB3Z5FSwpvgPIVbABAfWjH3adkiiPJeTTJTp+YrPtZCdKA9xaPsuSAlVthjOUSN8DtxvMAZAOLR26AkapiFrmr9PGuHj+dT8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VJcnX53F; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AJVhVXex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2DCD8C4CEDD;
-	Mon, 20 Jan 2025 08:20:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VJcnX53F"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EC4C3C4CEE2;
+	Mon, 20 Jan 2025 08:25:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737361259;
-	bh=TdLHkC3lem0wFQaFUcWyWIXJG0J1Z7sHUNO7z6Wbok4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AJVhVXexYtFsKzE0f/z2UnRoe8V5dxgyV0iYz4yKAobFi7ID51sJaVzoaI+L99x+u
-	 7xgwN5Q7JIOQnCpj+PQ9fr2oPuz26Gtff54iTduwkfhDeYl1bbjJZD3LeaawxBHaaO
-	 qP97DvbpHxD3bndqjmnCT6VWWAtKRAIuYyIGeBnmndQu7zb2aPWCXxZe7r+BAoTPjF
-	 LuVGxoR71FEFaG+l92VLiijZM/wIvf1QsqLG/gMi4Rw8XCk/XlvhgQ9uUZFdf4nA4u
-	 8KPd85MJYENPCiq5TTV/YbcsbEF3p+VnhxcF4RERRB99vZjy72VPnR3O9RhN00aVJ1
-	 yqnx9Ft8d8D9g==
-Message-ID: <381923ac-bb94-4386-90a3-7d9cde7ed468@kernel.org>
-Date: Mon, 20 Jan 2025 09:20:48 +0100
+	s=k20201202; t=1737361510;
+	bh=u6ns5xJNqxYowkVYayL/v1jr2KlK3rBLhBz1qyKSIao=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=VJcnX53FCRhqCFcWlhw6xrt4Hopq6fuU0qIgPk2DokwpiTwb1OQ63q1lW5xclKvVN
+	 lDfRy5H6oNJiZYVruXzpg3KNDv+D1DCAoXXzQSNtZfxE17hI0Zybs/Kj1mOw4Ot7aY
+	 Zu4czj244AXgu+tzeJH/HEjNd7Hwpl6byT3zfnMmhcwn0hTeXoVRP6D6CMkh+Fwe+Q
+	 V23tXHQVLAqXZqobU7qXG1aBR5S+qjmHfFdr9wGf0dcknnRxSUZaFtQavlEzjCSSqg
+	 +CccDRwiclbQ9/Ayo5hLd5zaPt+eZXC8GR/dCeM8j1qxe2rTHPvTsTDGKRhlH+Y1EI
+	 TPfgWtvtaIOoQ==
+Message-ID: <511974ed-3c75-425e-bd6a-af393fb09344@kernel.org>
+Date: Mon, 20 Jan 2025 09:24:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "mptcp: pm: add id parameter for
- get_addr"
+Subject: Re: [PATCH mptcp-net] mptcp: handle fastopen disconnect correctly
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <625cc0fceb9d347ed6a029396a8d202cbb24d2c4.1737156352.git.tanggeliang@kylinos.cn>
- <e34a54e2-bf7b-47eb-89ac-80e5605955aa@kernel.org>
- <44df209fd690c009ddbcafd5e2a6872b987da4e2.camel@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>
+References: <e8371ec8065e09317dcf7d7aabc6c54e63634bbb.1737222305.git.pabeni@redhat.com>
+Cc: mptcp@lists.linux.dev
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,53 +85,59 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <44df209fd690c009ddbcafd5e2a6872b987da4e2.camel@kernel.org>
+In-Reply-To: <e8371ec8065e09317dcf7d7aabc6c54e63634bbb.1737222305.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 18/01/2025 11:54, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Sat, 2025-01-18 at 08:50 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 18/01/2025 00:26, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> No need to drop 'attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];' in
->>> mptcp_userspace_pm_get_addr() too, add it back.
->>>
->>> Alse update mptcp_pm_nl_get_addr() to keep the original two-line
->>> assignment of 'attr'.
->>
->> I did a simple fix instead, see 648a0809e4cf ("Squash to "mptcp: pm:
->> add
->> id parameter for get_addr"") and the final export branch. Tell me if
->> that's not OK.
-> 
-> It works.
-> 
-> But we just change
-> 
-> 	struct nlattr *token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-> 
-> to
-> 	struct nlattr *token;
-> 
-> 	token = info->attrs[MPTCP_PM_ATTR_TOKEN];
-> 
-> in patch 5 "mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK".
-> 
-> We change it back again in this patch 11.
-> 
-> So I prefer to use the two-line assignment of 'attr'. But up to you.
+On 18/01/2025 18:46, Paolo Abeni wrote:
+> Syzbot was able to trigger a data stream corruption:
 
-I see, it makes sense. But well, at the end, this code is going to be
-moved elsewhere. Because the modifications have already been done
-internally, I think it is fine to leave them like that, and avoid
-dealing with new conflicts.
+(...)
+
+> The root cause is the bad handling of disconnect() generated
+> internally by the MPTCP protocol in case of connect FASTOPEN
+> errors.
+> 
+> Address the issue increasing the socket disconnect counter even
+> on such a case, to allow other threads waiting on the same socket
+> lock to properly error out.
+
+Thank you for having looked and fixed this!
+
+> Reported-by: syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/537
+> Fixes: c2b2ae3925b6 ("mptcp: handle correctly disconnect() failures")
+> Tested-by: syzbot+ebc0b8ae5d3590b2c074@syzkaller.appspotmail.com
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+>  net/mptcp/protocol.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 1b2e7cbb577f..f910e840aa8f 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -1767,8 +1767,10 @@ static int mptcp_sendmsg_fastopen(struct sock *sk, struct msghdr *msg,
+>  		 * see mptcp_disconnect().
+>  		 * Attempt it again outside the problematic scope.
+>  		 */
+> -		if (!mptcp_disconnect(sk, 0))
+> +		if (!mptcp_disconnect(sk, 0)) {
+> +			sk->sk_disconnects++;
+
+I guess it makes sense to have something similar to what is done in:
+
+  net/ipv4/af_inet.c:__inet_stream_connect()
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+>  			sk->sk_socket->state = SS_UNCONNECTED;
+> +		}
+>  	}
+>  	inet_clear_bit(DEFER_CONNECT, sk);
+>  
 
 Cheers,
 Matt
