@@ -1,163 +1,163 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94721448D5
-	for <mptcp@lists.linux.dev>; Tue, 21 Jan 2025 11:55:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 732841F2C2D
+	for <mptcp@lists.linux.dev>; Tue, 21 Jan 2025 14:31:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737460550; cv=none; b=aLm3AvD0WBksF/GqFkl0kgWReInxhEO0JbUSPrQBFByTFN+Dgqegcm23rU8mcX3gABDP3J/udSn5X5VeIh6l2KlZxfruYWPvbMxt6JkGau+95T6+713/85GS7bWEh7eWlZKnNqCBAKAol4ohlspqAfO6E5MRkkqTj4cf7GRN5G0=
+	t=1737469908; cv=none; b=cNv7AaXlckoY11P3U0GVDRY6BKysKRzJ5uMo24TR//l+jI1oAd+YifVBSRSgaIIWITiWzYl9wUaHj6QPonkCs2V5Ku+CaoLo4VO6BKzPjbc5hQmrMWMueYAZgxrqogRtFxmliqWljAeQChDSYE6xOWmJxUGddNmCEuwwfQun6go=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737460550; c=relaxed/simple;
-	bh=EyUKZ6iXUEy5tbTxszWzHKIwLWVYbtvrOgGjvYaEjbE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=Ok/IE9+HKYxJSmw7Tvn91Mqu7YTlZVQThwz2EKeLodYw2QmS8NxcPCpnBLVKBTMr2MeVB8eIj43ZzviDgm+t+aYMMV2kGSIHmj3gUaF58w/zZQVOlC9xFRXdJES21c0OHPNj3E1G48otlfZsPy8UQftu9iuzAvvFPTJZnR0YDJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsLJwCn5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737469908; c=relaxed/simple;
+	bh=3tRE2Ua/oYSwvlDRUays5+h5m8lY7U1w1O/mQ3aYjPs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bDgX7G3f/7lu4BTDBX3V2RcqW2Lf91nuBJnEtSCv7doHaEOdHoO4Z2dM4Qu++FyzSXPgCYnSPlko1FZbmX+lU6hhFsbUB3RNcdF/Yb7ELkpgvQLoa3HUIjZC/mhNdrIg2v3XuDcLg1tJX2KDWaSj5x3xt4ZlgR/z+Eeh4A+ofAU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=FEOhRKju; arc=none smtp.client-ip=170.10.129.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsLJwCn5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0354C4CEDF;
-	Tue, 21 Jan 2025 11:55:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737460549;
-	bh=EyUKZ6iXUEy5tbTxszWzHKIwLWVYbtvrOgGjvYaEjbE=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=JsLJwCn5qEUEYLgi+h1c0le/b+UJPWdAUtcyjd5t9YDLF6lmfncM5G7abuxyrOnP9
-	 bDebui/LoIJQhMtu39cw63P9zTjL7yw5dxkOdYIc7VTkmIJ8sjgO274aXGo4/8xn7v
-	 6b1TnN9zOgAlKDIFtdXmJNf/uvQ1Ak9Jfm93ylS4h8Ch1vwzQ2k+5uYYXUHvEmqPUx
-	 75cBHLoZNnFwxNeXbgty7GKmhcXIpmATt6s0dEW45xchD1xNSOR3t+HPa2CAWCPqs6
-	 8Dmy2eMGiffxXkwsgTJJjzab2K8vyq7Hzqe8dEvUq4K9D1h13IDTE6LZ452xlYeb7M
-	 JL+MWPF4PeifA==
-Message-ID: <58a57216-3bc9-4ca5-9b08-70e85e9135ec@kernel.org>
-Date: Tue, 21 Jan 2025 12:55:38 +0100
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="FEOhRKju"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1737469905;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=mJ4EAIcpqBqbKgluod7SiWToqh4Hf463VR3OZdcsVOA=;
+	b=FEOhRKju0TNs8e/MKNNAJbFIv4NKj+nBEHo9fk9RJ2YDB+Mr7hJ9p4bjnvFplegD0Ud8vD
+	mEAQTrQpXTk6yrJDR1GDsrykvkywx9IOSoyk7EuFnxHrxKmxEgDMwkkm60Y8qonXeYKCZn
+	7Bi2QOW7DsEhTGhub6yePAsl7qYzL2E=
+Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
+ [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-83-eGlvyc02MDa5db0gOabxwQ-1; Tue, 21 Jan 2025 09:31:43 -0500
+X-MC-Unique: eGlvyc02MDa5db0gOabxwQ-1
+X-Mimecast-MFC-AGG-ID: eGlvyc02MDa5db0gOabxwQ
+Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-385e49efd59so2475035f8f.0
+        for <mptcp@lists.linux.dev>; Tue, 21 Jan 2025 06:31:43 -0800 (PST)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1737469902; x=1738074702;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:cc:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=mJ4EAIcpqBqbKgluod7SiWToqh4Hf463VR3OZdcsVOA=;
+        b=jXN5uRh3MuuY5xpPVCKdi2JCb8ndRT2LFnsND2vnLmQcmER+1ax5MxzhqAUg8dUpY9
+         HYhDoI6CZmckxJTxtJLBvV7U1z+qMAVKocVvwxMEJojIzeeUWrvc2rBBO9Ece1OLjl6q
+         wGn6aNcA53Rv/b55truqx6Sq7kUHblo2PeYJ85ZQ+g+xnaAiy2rinzzzFJh7gt7Jpirn
+         CGNv5sZvhA2nQog1lOpEYaSo06EJA8mH9YgXZ3WeS4Rng02H9AhOxuD0zFvE24h4wCjx
+         nNlylJ0wxKlle+Jtm9MhSKuF217h1eP+E6V7+EJBUl29oJS0kql4D7f0gRaTcAv1PkDs
+         dV9A==
+X-Gm-Message-State: AOJu0Yyv2TQ+wUbwJhae27iGVd8rKsHuDSGt179/zIYWKP0gtFrTQhBV
+	41bXxBdqZCmVeETogEGsH6WpdmzOZ7wC/eRDd4dERx8DZvnY4ip0e5QATlZwNQCy2BPohSBxbXa
+	xTsAUP9TJ2z+E9xuK0ppS1MIHB0Kp3kHuid2IBFzhI+FsqwxrWiiyJd4XsSTn
+X-Gm-Gg: ASbGncv3O2mpGaYi6BWt12m44kgjGIKMO2R6U4b18TYoJJaq1/58+zgnZrtl5aQt+cy
+	wMXs8K87pKE9HzjPtU80qHtdraeVB0ss8dWHBGnrTc31ACV31idUnAhNT83V8Dv4G8fRXtLN/KT
+	TTTzdXluVzvKsWwPtsY/rXoWpOG3YRAkYUXCefxSubeWufjxjIOYBk4yCX3GIKc1+yStVMfQg/T
+	pYywKs4OtIBAOtd9w+68CdunaIJ8Fyk6ciPRXwY4X9+ynOGNeAQpzIpqb/rIRnRYh7BXR8rkLzr
+	EOKUufLkviBOMS5hZtLTah7w
+X-Received: by 2002:a5d:5f51:0:b0:38a:624b:e619 with SMTP id ffacd0b85a97d-38bf59e2019mr19144648f8f.43.1737469900807;
+        Tue, 21 Jan 2025 06:31:40 -0800 (PST)
+X-Google-Smtp-Source: AGHT+IGWH1yeGQh5C8KC0IfrA/cBlUgcCbzSCVpEGWZP74LDGXcEglD21hYUvzG2yhJ2A6NDsp1bXA==
+X-Received: by 2002:a5d:5f51:0:b0:38a:624b:e619 with SMTP id ffacd0b85a97d-38bf59e2019mr19144426f8f.43.1737469898918;
+        Tue, 21 Jan 2025 06:31:38 -0800 (PST)
+Received: from [192.168.88.253] (146-241-15-169.dyn.eolo.it. [146.241.15.169])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-38bf32754dcsm13632610f8f.77.2025.01.21.06.31.38
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Tue, 21 Jan 2025 06:31:38 -0800 (PST)
+Message-ID: <28a55bdd-a362-49ad-a63a-e0e9367e47fc@redhat.com>
+Date: Tue, 21 Jan 2025 15:31:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH mptcp-next] mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
-To: Paolo Abeni <pabeni@redhat.com>
-References: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
-Content-Language: en-GB
+To: Matthieu Baerts <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
+References: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
+ <58a57216-3bc9-4ca5-9b08-70e85e9135ec@kernel.org>
+From: Paolo Abeni <pabeni@redhat.com>
+In-Reply-To: <58a57216-3bc9-4ca5-9b08-70e85e9135ec@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ocfk74Q4rYmlvpH0WpE6ejuD1e_yWYylRFILHiX9oJ8_1737469903
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
-On 20/01/2025 19:39, Paolo Abeni wrote:
-> When we will move the whole RX path under the msk socket lock, updating
-> the already queued skb for passive fastopen socket at 3rd ack time will
-> be extremely painful and race prone
+On 1/21/25 12:55 PM, Matthieu Baerts wrote:
+> On 20/01/2025 19:39, Paolo Abeni wrote:
+>> When we will move the whole RX path under the msk socket lock, updating
+>> the already queued skb for passive fastopen socket at 3rd ack time will
+>> be extremely painful and race prone
+>>
+>> The map_seq for already enqueued skbs is used only to allow correct
+>> coalescing with later data; preventing collapsing to the first skb of
+>> a fastopen connect we can completely remove the
+>> __mptcp_fastopen_gen_msk_ackseq() helper.
 > 
-> The map_seq for already enqueued skbs is used only to allow correct
-> coalescing with later data; preventing collapsing to the first skb of
-> a fastopen connect we can completely remove the
-> __mptcp_fastopen_gen_msk_ackseq() helper.
-
-Thank you for having looked at that!
-
-It looks good to me, just one question below.
-
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> ---
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/539
+> Thank you for having looked at that!
 > 
-> Must be applied just before commit:
->  "mptcp: move the whole rx path under msk socket lock protection"
+> It looks good to me, just one question below.
 > 
-> To such extent, the patch will require a little mangling, as
-> __mptcp_fastopen_gen_msk_ackseq() at that history point still lacks
-> the
-> 	DEBUG_NET_WARN_ON_ONCE(sock_owned_by_user_nocheck(sk));
-> annotation.
+>> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+>> ---
+>> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/539
+>>
+>> Must be applied just before commit:
+>>  "mptcp: move the whole rx path under msk socket lock protection"
+>>
+>> To such extent, the patch will require a little mangling, as
+>> __mptcp_fastopen_gen_msk_ackseq() at that history point still lacks
+>> the
+>> 	DEBUG_NET_WARN_ON_ONCE(sock_owned_by_user_nocheck(sk));
+>> annotation.
+>>
+>> I preferred such option to a cleanly applying patch for the target
+>> place in the repo log to trigger the CI at submission time.
 > 
-> I preferred such option to a cleanly applying patch for the target
-> place in the repo log to trigger the CI at submission time.
+> I prefer that too, for the same reason, and also because it often feels
+> easier for me to resolve conflicts when I have the end results.
+> 
+>> Optimistically sharing this only with very little testing, to distract
+>> myself from the net-next PR burden.
+> 
+> :)
+> 
+> It looks like the queue is progressing well :)
+> 
+> (...)
+> 
+>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+>> index b1ece280e139..2c1232bfd722 100644
+>> --- a/net/mptcp/protocol.h
+>> +++ b/net/mptcp/protocol.h
+>> @@ -130,7 +130,8 @@ struct mptcp_skb_cb {
+>>  	u64 map_seq;
+>>  	u64 end_seq;
+>>  	u32 offset;
+>> -	u8  has_rxtstamp:1;
+>> +	u8  has_rxtstamp;
+>> +	u8  cant_coalesce;
+> 
+> Out of curiosity: while do you prefer to use a "full" u8, instead of one
+> bit in the previous u8, or a bool? Is it a small optimisation because
+> this new item is used in the fast path? We have free space there, so
+> that's fine, but just wondering :)
 
-I prefer that too, for the same reason, and also because it often feels
-easier for me to resolve conflicts when I have the end results.
+This is a minor optimization vs bitfield usage, I should have mentioned it.
 
-> Optimistically sharing this only with very little testing, to distract
-> myself from the net-next PR burden.
+With this patch, the 'cant_coalesce' field will be tested in fast path
+frequently - almost on every packet.
 
-:)
+Testing a bitfield generates worse code - the CPU has to mask out the
+unrelevant bits. With u8 (or a bool) the CPU can load directly the
+relevant byte with a single operation. In a similar way, single byte
+store operations are faster.
 
-It looks like the queue is progressing well :)
+Both u8 or bool could achieve the above. I preferred u8 because 'it was
+already there'.
 
-(...)
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index b1ece280e139..2c1232bfd722 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -130,7 +130,8 @@ struct mptcp_skb_cb {
->  	u64 map_seq;
->  	u64 end_seq;
->  	u32 offset;
-> -	u8  has_rxtstamp:1;
-> +	u8  has_rxtstamp;
-> +	u8  cant_coalesce;
-
-Out of curiosity: while do you prefer to use a "full" u8, instead of one
-bit in the previous u8, or a bool? Is it a small optimisation because
-this new item is used in the fast path? We have free space there, so
-that's fine, but just wondering :)
-
->  };
->  
->  #define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
-
-(...)
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+/P
 
