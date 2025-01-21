@@ -1,130 +1,163 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0EE1EF085
-	for <mptcp@lists.linux.dev>; Mon, 20 Jan 2025 19:48:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E94721448D5
+	for <mptcp@lists.linux.dev>; Tue, 21 Jan 2025 11:55:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737402533; cv=none; b=GF1Ae5KRivnB1BRDyGysZl3bnbwT1a9fdHcTEv8lMabNRr+w6NtYfJ/KXxWuazjnv7rALpwuWZxCqb4D80yS6R5NKXOVL/MDRh0O9KUmaazkSg2bZuzHb2CZJVvPPzhcQytheGsRt5vY0DJttQok3a+LiEyOPD4TI9Mm0TLf3ys=
+	t=1737460550; cv=none; b=aLm3AvD0WBksF/GqFkl0kgWReInxhEO0JbUSPrQBFByTFN+Dgqegcm23rU8mcX3gABDP3J/udSn5X5VeIh6l2KlZxfruYWPvbMxt6JkGau+95T6+713/85GS7bWEh7eWlZKnNqCBAKAol4ohlspqAfO6E5MRkkqTj4cf7GRN5G0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737402533; c=relaxed/simple;
-	bh=I7LdFk0chvy69vFnwL1n2Bp8023bfSq5cYn1WFFKMPI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=aTqVy907T4cvYyyf3bAEpTMGfS3uBkCew2D9EUvDmTpr8z7wqhVvXMvG20cMiT0hJBuX8i+Zggts9wZ184qhTumAVH4kV6klFjg38UT1/+aQ2caM6B+b6bXseVcbDp+chWJCAS6wv/HQ0nQ+KxZxcWklt2c4hGVGlNPyrZTAWHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z6pujbK4; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1737460550; c=relaxed/simple;
+	bh=EyUKZ6iXUEy5tbTxszWzHKIwLWVYbtvrOgGjvYaEjbE=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
+	 In-Reply-To:Content-Type; b=Ok/IE9+HKYxJSmw7Tvn91Mqu7YTlZVQThwz2EKeLodYw2QmS8NxcPCpnBLVKBTMr2MeVB8eIj43ZzviDgm+t+aYMMV2kGSIHmj3gUaF58w/zZQVOlC9xFRXdJES21c0OHPNj3E1G48otlfZsPy8UQftu9iuzAvvFPTJZnR0YDJU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JsLJwCn5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z6pujbK4"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-46783d44db0so45553541cf.1
-        for <mptcp@lists.linux.dev>; Mon, 20 Jan 2025 11:48:51 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737402531; x=1738007331; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=nG2QkXa+Tm6hwYtAu5hHm7bGsaLAyCMYpIG0Ik4dNCg=;
-        b=Z6pujbK4iDw4r0YFEH4z0fSaSLXFLlbWkchgg0SbK8ucs8N0+JQMJOSPQbdXVbAVNf
-         S+4vwjCyzsjuKGxBBqcIjGLMS7t8yezAVzxDFaKCqq2osZIlk5npcILaYXlrYYKHwFF+
-         MLvAEJYBe6BFlXm1ryI3rSJacyeqQeeWZONUO6C0a+bqgafuPc9ad86Y8VViKg9akMwh
-         u57sZMWRa8qAC7bDoGIV79P+UBBsGgG3XOf8qFli6A2/TeSGQMZ0slIdQKlJreaCnBC9
-         /+wsmjFhu5P+TU4yvmlHXm5O5kUTfQAyDjHhbS2amRZtPf71u3vtR0dcssJkskAfVESl
-         jB3Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737402531; x=1738007331;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=nG2QkXa+Tm6hwYtAu5hHm7bGsaLAyCMYpIG0Ik4dNCg=;
-        b=wQP2XqKWcjPm90jokkDY4fbpiR+fffbS79+mM8XN77BMuWidqgfeIjH66l5ePowr3w
-         olHilU4FHzpPkEKmchiQAGWyx0yby/K/Rq633JMTS9X2LqiuW/4dyWsLbopxGZeV4cB2
-         ZQ+lHz1Z+is1vM7jPiL819JmDwdSYxWlf6OsDSQLrEJHQrIuYxAZiEru9x3xrn+Jrcqm
-         PUZXAjLU0z5+nZsiaebT+ya8GhdKkfL03E/DmzAnSS2KATlHY7JRLbs6V22kcefoUeMV
-         axFfdgYbUFshj4/Ueglc0HVJOFmTwMqnCix6VQqV/pcsGkOJWZsfFcsOneRb9qF2/Ss6
-         Royw==
-X-Gm-Message-State: AOJu0YwJrUksonJ+mj2H6N+GrQeSE4JV1ZtSJPrEqFtI75UMg4DFxMJh
-	Wgcnu9/mWo2bAEvec/vJxNvRKlgPZqmm/B3h1gkE0Hahe+VVtDs=
-X-Gm-Gg: ASbGnctcgnT71lqIWZL7Gmqx0B6d12mAibUZ0UESoJV970igtgZcGdrYGTdDzg38G7i
-	nVZ16yqey500qH/QA9DeKhah7ZDqG4TvC7dfd20SLB0nvQft8R1VAFlsMgGwmsE3ClwZ8k2yLMM
-	/y7SqvzM+xtyuLVmcn69e2xrVKmTH9y5cRtFT/Lp9KlxFebBFAGqyk2Solorsqf3Dv0p2u1N7/0
-	xVp8sYGh12o2OpLCZIE2Zagw3ZqsrJmBAg1fn5z3jZNJBdnuWO1skPjXi3nGsA8oY5MIo+NdHV9
-	xBDIddTs
-X-Google-Smtp-Source: AGHT+IErlb8Uxi468tkskEQpyFWQq6g6uuB6CJAhhlOe5nAei/7Wfs5/zHDQKOHV+TPNVHi0PO4RrA==
-X-Received: by 2002:a05:622a:2d5:b0:467:87df:851a with SMTP id d75a77b69052e-46e12a56380mr222132131cf.12.1737402530934;
-        Mon, 20 Jan 2025 11:48:50 -0800 (PST)
-Received: from [127.0.0.1] ([74.235.134.181])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-46e1042efa5sm45610691cf.66.2025.01.20.11.48.49
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jan 2025 11:48:50 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
-References:
- <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-next] mptcp: drop
- __mptcp_fastopen_gen_msk_ackseq()
-Message-ID: <3ba5aff5-87c2-25b8-31ec-e2239e107be3@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 20 Jan 2025 19:48:49 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JsLJwCn5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0354C4CEDF;
+	Tue, 21 Jan 2025 11:55:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737460549;
+	bh=EyUKZ6iXUEy5tbTxszWzHKIwLWVYbtvrOgGjvYaEjbE=;
+	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
+	b=JsLJwCn5qEUEYLgi+h1c0le/b+UJPWdAUtcyjd5t9YDLF6lmfncM5G7abuxyrOnP9
+	 bDebui/LoIJQhMtu39cw63P9zTjL7yw5dxkOdYIc7VTkmIJ8sjgO274aXGo4/8xn7v
+	 6b1TnN9zOgAlKDIFtdXmJNf/uvQ1Ak9Jfm93ylS4h8Ch1vwzQ2k+5uYYXUHvEmqPUx
+	 75cBHLoZNnFwxNeXbgty7GKmhcXIpmATt6s0dEW45xchD1xNSOR3t+HPa2CAWCPqs6
+	 8Dmy2eMGiffxXkwsgTJJjzab2K8vyq7Hzqe8dEvUq4K9D1h13IDTE6LZ452xlYeb7M
+	 JL+MWPF4PeifA==
+Message-ID: <58a57216-3bc9-4ca5-9b08-70e85e9135ec@kernel.org>
+Date: Tue, 21 Jan 2025 12:55:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next] mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
+To: Paolo Abeni <pabeni@redhat.com>
+References: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
+Content-Language: en-GB
+Cc: mptcp@lists.linux.dev
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 20/01/2025 19:39, Paolo Abeni wrote:
+> When we will move the whole RX path under the msk socket lock, updating
+> the already queued skb for passive fastopen socket at 3rd ack time will
+> be extremely painful and race prone
+> 
+> The map_seq for already enqueued skbs is used only to allow correct
+> coalescing with later data; preventing collapsing to the first skb of
+> a fastopen connect we can completely remove the
+> __mptcp_fastopen_gen_msk_ackseq() helper.
 
-Our CI did some validations and here is its report:
+Thank you for having looked at that!
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12874182997
+It looks good to me, just one question below.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/edf562dce216
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D927035
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> ---
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/539
+> 
+> Must be applied just before commit:
+>  "mptcp: move the whole rx path under msk socket lock protection"
+> 
+> To such extent, the patch will require a little mangling, as
+> __mptcp_fastopen_gen_msk_ackseq() at that history point still lacks
+> the
+> 	DEBUG_NET_WARN_ON_ONCE(sock_owned_by_user_nocheck(sk));
+> annotation.
+> 
+> I preferred such option to a cleanly applying patch for the target
+> place in the repo log to trigger the CI at submission time.
 
+I prefer that too, for the same reason, and also because it often feels
+easier for me to resolve conflicts when I have the end results.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+> Optimistically sharing this only with very little testing, to distract
+> myself from the net-next PR burden.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+:)
 
-For more details:
+It looks like the queue is progressing well :)
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+(...)
 
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index b1ece280e139..2c1232bfd722 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -130,7 +130,8 @@ struct mptcp_skb_cb {
+>  	u64 map_seq;
+>  	u64 end_seq;
+>  	u32 offset;
+> -	u8  has_rxtstamp:1;
+> +	u8  has_rxtstamp;
+> +	u8  cant_coalesce;
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Out of curiosity: while do you prefer to use a "full" u8, instead of one
+bit in the previous u8, or a bool? Is it a small optimisation because
+this new item is used in the fast path? We have free space there, so
+that's fine, but just wondering :)
+
+>  };
+>  
+>  #define MPTCP_SKB_CB(__skb)	((struct mptcp_skb_cb *)&((__skb)->cb[0]))
+
+(...)
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
