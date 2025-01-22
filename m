@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E11023A9
-	for <mptcp@lists.linux.dev>; Wed, 22 Jan 2025 11:27:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5067320FA8F
+	for <mptcp@lists.linux.dev>; Wed, 22 Jan 2025 11:41:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737545236; cv=none; b=LIRY09Rfh63x6aEnGOFar82K2LYpGXtJmaBDa5nLbFMbrSdAaBejHGZrWbovJTngWDoXFcOUKUBHIb6AbwWlT0NtWTvAwvOQTS1RhqLPTSxzvVkG5BPe9N/z1Vfgc3RVAf8klmTzbK9kjXfzOxH6kaiY6WooKh6pixO7n32QEMM=
+	t=1737546079; cv=none; b=u0fvYm9RII/IFWDdyXQp/FQIKu/cpqGoWkjnhs+BWCM+oBbj5g2WPK6iNskSycHg7vFc4Y2R8sbovLjtTVt1zlMXwjNfLD1uLQqnj9DlIkA7LTorB6uo6SWJ8Qdj+nObzFVXAf6tjiWrA+ZMSa5wxRj67W6DQiipz/sxp85N6dw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737545236; c=relaxed/simple;
-	bh=Mj21JFZZTx9afjryb2/knqFu2g0lldESn7YXItcPIw8=;
+	s=arc-20240116; t=1737546079; c=relaxed/simple;
+	bh=p9Q6CiqFEQhG4cp+yok9TtkysUh1/oxlpvwIVncrvso=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=De5QdNYEsdcYjTyJACIXoFZk6U3G4gGhj3y19NukIg1V1TBsyOkhnU3tC1Jw6DBuOUMtz8YCe60WF30884qGHJJ/xOgMjH1VNdTRHFbcFH9ZhgDgk8G+gJRIm4mq9WawgT4KLukF1f1oe3/Fr7TrKgIppgj43w388PFKm/5gAC0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nyGOFQEi; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SfTxufxPkh6ZN5+pN336INxIACnZ3I8xRJmg9rQYPpW3BSOx0PpIN3ft+JFnSaps0eBhbqqXUc3Yg76tpumGU3T8ZZiHWaPY/8TfBWmhMp+kAYfjO1kJ0V7nvUtQxzfmYCSxB2yONm6qpregLRNqaSGkXb1gWFby1otmHK/EZs0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T347n1gm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nyGOFQEi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A46FC4CED6;
-	Wed, 22 Jan 2025 11:27:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T347n1gm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 35579C4CED6;
+	Wed, 22 Jan 2025 11:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737545233;
-	bh=Mj21JFZZTx9afjryb2/knqFu2g0lldESn7YXItcPIw8=;
+	s=k20201202; t=1737546076;
+	bh=p9Q6CiqFEQhG4cp+yok9TtkysUh1/oxlpvwIVncrvso=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nyGOFQEi08uXet0r/g1Vu2veMb2KVe36p9OLuKiu6gKoQSLpGLH5C362bDiRagirV
-	 MTkRC55+kIgoETjC7wMk6fK1JmHuIaBL/Nz5G6TGX08sdlPXpwEpAt2QHE2+catdjs
-	 GcIlGmxUmh5LcbNANfOuOcdAGMEUjuCqvQ5cNRCRkqhiiuJ/35zm9XE3CtZAyU+Ih2
-	 H1BDeTBy91R/GtI4GQV9iymSj3iHq3LaMNO3EHV+r5ku0o6w99kHhh+2GxShRU/Lpg
-	 7WXXRxdZYavV7dFp5fVO0AvSvblkj0RqN/ODk54CMMCRVtK641zrYAh71/LG785DtE
-	 GknGWItmuj7Nw==
-Message-ID: <1f4e97a3-8752-47a0-8b49-9d6a9c904c09@kernel.org>
-Date: Wed, 22 Jan 2025 12:27:03 +0100
+	b=T347n1gmjV+rflZ8dSPJrABuOdSgNShrY7czTEkO0awm0/r50/KNJulq/0AlCXktQ
+	 oSvor2JC0PMrj0g8ITeBMV02vbRT9zs2U5tqqM7P/hb2ev8RCvzxtiuj57DcABqmzV
+	 d7fjsDzG8C6Bs8zrdIWrecP8DixB0UTRr06ejo8SeEUzPqQrVEDTdnNWqgvSzY2z1J
+	 ScxaxcOM5If7q5lAjtcCxmB8olHQbMvpH/Nvwz0UD8HBLQ9hTiUy2WjrHNN9pFwnUq
+	 ybEe2X63K8CaGmQOGIINObQEgd0rWqpBTiGqZUwgbLRUsZTyQDzctQI5WD/g2wtXEQ
+	 z/QHM66XYaL9w==
+Message-ID: <f0e7081f-83ed-48a4-9347-d52df64a6232@kernel.org>
+Date: Wed, 22 Jan 2025 12:41:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,16 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
+Subject: Re: [PATCH mptcp-next 3/3] mptcp: blackhole only if 1st SYN retrans
+ w/o MPC is accepted
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>
+To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
-References: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
- <58a57216-3bc9-4ca5-9b08-70e85e9135ec@kernel.org>
- <28a55bdd-a362-49ad-a63a-e0e9367e47fc@redhat.com>
+References: <20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org>
+ <20250114-mpc-no-blackhole-v1-3-994bd2a357fb@kernel.org>
+ <91ff8079-cb49-0b23-57bd-c18f6dc1ff87@kernel.org>
+ <0ee61322-ca68-4c2f-8b2f-1358630b05dc@kernel.org>
+ <d4969576-7cc3-d789-ab4a-b08c6a9f0344@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,75 +90,157 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <28a55bdd-a362-49ad-a63a-e0e9367e47fc@redhat.com>
+In-Reply-To: <d4969576-7cc3-d789-ab4a-b08c6a9f0344@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Mat,
 
-On 21/01/2025 15:31, Paolo Abeni wrote:
-> On 1/21/25 12:55 PM, Matthieu Baerts wrote:
->> On 20/01/2025 19:39, Paolo Abeni wrote:
->>> When we will move the whole RX path under the msk socket lock, updating
->>> the already queued skb for passive fastopen socket at 3rd ack time will
->>> be extremely painful and race prone
+Thank you for your reply!
+
+On 21/01/2025 23:36, Mat Martineau wrote:
+> On Fri, 17 Jan 2025, Matthieu Baerts wrote:
+> 
+>> Hi Mat,
+>>
+>> On 17/01/2025 01:26, Mat Martineau wrote:
+>>> On Tue, 14 Jan 2025, Matthieu Baerts (NGI0) wrote:
 >>>
->>> The map_seq for already enqueued skbs is used only to allow correct
->>> coalescing with later data; preventing collapsing to the first skb of
->>> a fastopen connect we can completely remove the
->>> __mptcp_fastopen_gen_msk_ackseq() helper.
+>>>> The Fixes commit mentioned this:
+>>>>
+>>>>> An MPTCP firewall blackhole can be detected if the following SYN
+>>>>> retransmission after a fallback to "plain" TCP is accepted.
+>>>>
+>>>> But in fact, this blackhole was detected if any following SYN
+>>>> retransmissions after a fallback to TCP was accepted.
+>>>>
+>>>> That's because 'mptcp_subflow_early_fallback()' will set
+>>>> 'request_mptcp'
+>>>> to 0, and 'mpc_drop' will never be reset to 0 after.
+>>>>
+>>>> This is an issue, because some not so unusual situations might cause
+>>>> the
+>>>> kernel to detect a false-positive blackhole, e.g. a client trying to
+>>>> connect to a server while the network is not ready yet, causing a few
+>>>> SYN retransmissions, before reaching the end server.
+>>>>
+>>>> Fixes: 27069e7cb3d1 ("mptcp: disable active MPTCP in case of
+>>>> blackhole")
+>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>> ---
+>>>> net/mptcp/ctrl.c | 4 ++--
+>>>> 1 file changed, 2 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+>>>> index
+>>>> 3999e0ba2c35b50c36ce32277e0b8bfb24197946..2dd81e6c26bdb5220abed68e26d70d2dc3ab14fb 100644
+>>>> --- a/net/mptcp/ctrl.c
+>>>> +++ b/net/mptcp/ctrl.c
+>>>
+>>> Some more context before the diff hunk:
+>>>
+>>>>     if (subflow->request_mptcp && ssk->sk_state == TCP_SYN_SENT) {
+>>>>         struct net *net = sock_net(ssk);
+>>>>         u8 timeouts, to_max;
+>>>>
+>>>>         timeouts = inet_csk(ssk)->icsk_retransmits;
+>>>>         to_max = mptcp_get_pernet(net)-
+>>>> >syn_retrans_before_tcp_fallback;
+>>>>
+>>>>         if (timeouts == to_max || (timeouts < to_max && expired)) {
+>>>
+>>> I think it would help to change the above code to:
+>>>
+>>>>     if (ssk->sk_state == TCP_SYN_SENT) {
+>>>>         struct net *net = sock_net(ssk);
+>>>>         u8 timeouts, to_max;
+>>>>
+>>>>         if (!subflow->request_mptcp) {
+>>>>             subflow->mptcp_drop = 0;
+>>>>             return;
+>>>>         }
+>>>>
+>>>>         timeouts = inet_csk(ssk)->icsk_retransmits;
+>>>>         to_max = mptcp_get_pernet(net)-
+>>>> >syn_retrans_before_tcp_fallback;
+>>>>
+>>>>         if (timeouts == to_max || (timeouts < to_max && expired)) {
+>>>
+>>> (end of added hunk)
+>>>
+>>>> @@ -418,9 +418,9 @@ void mptcp_active_detect_blackhole(struct sock
+>>>> *ssk, bool expired)
+>>>>             MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
+>>>>             subflow->mpc_drop = 1;
+>>>>             mptcp_subflow_early_fallback(mptcp_sk(subflow->conn),
+>>>> subflow);
+>>>> -        } else {
+>>>> -            subflow->mpc_drop = 0;
+>>>>         }
+>>>
+>>> And drop this from the patch:
+>>>
+>>>> +    } else if (ssk->sk_state == TCP_SYN_SENT) {
+>>>> +        subflow->mpc_drop = 0;
+>>>
+>>> That way ssk->sk_state is only checked once.
 >>
->> Thank you for having looked at that!
+>> Good point!
 >>
->> It looks good to me, just one question below.
-
-(...)
-
->>> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->>> index b1ece280e139..2c1232bfd722 100644
->>> --- a/net/mptcp/protocol.h
->>> +++ b/net/mptcp/protocol.h
->>> @@ -130,7 +130,8 @@ struct mptcp_skb_cb {
->>>  	u64 map_seq;
->>>  	u64 end_seq;
->>>  	u32 offset;
->>> -	u8  has_rxtstamp:1;
->>> +	u8  has_rxtstamp;
->>> +	u8  cant_coalesce;
+>> I forgot to mention that, but I duplicated the simple check to avoid
+>> conflicts with the backports. But on the other hand, it will only
+>> conflict with the previous patch. So if you prefer, and not to block it
+>> the patch for net-next, I can also send this fix patch later on.
 >>
->> Out of curiosity: while do you prefer to use a "full" u8, instead of one
->> bit in the previous u8, or a bool? Is it a small optimisation because
->> this new item is used in the fast path? We have free space there, so
->> that's fine, but just wondering :)
 > 
-> This is a minor optimization vs bitfield usage, I should have mentioned it.
+> Hi Matthieu -
 > 
-> With this patch, the 'cant_coalesce' field will be tested in fast path
-> frequently - almost on every packet.
+> Ok, I see. How about reversing the order of patches 2 & 3 to get rid of
+> the dependency?
+
+That's what I would have normally done, but because it was just before
+the v6.13 release, it would have blocked patch 2 which is now in net-next.
+
+>> If we decide to go into that direction, I suggest moving the SYN_SENT
+>> check at the beginning:
+>>
+>>  if (!sk_is_mptcp(ssk) || ssk->sk_state != TCP_SYN_SENT)
+>>      return;
+>>
+>>  subflow = mptcp_subflow_ctx(ssk);
+>>
+>>  if (!subflow->request_mptcp) {
+>>      subflow->mpc_drop = 0;
+>>      return;
+>>  }
+>>
+>>  timeouts = inet_csk(ssk)->icsk_retransmits;
+>>  to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
+>>
+>>  if (timeouts == to_max || (timeouts < to_max && expired)) {
+>>
+>>  (...)
+>>
+>> WDYT?
+>>
 > 
-> Testing a bitfield generates worse code - the CPU has to mask out the
-> unrelevant bits. With u8 (or a bool) the CPU can load directly the
-> relevant byte with a single operation. In a similar way, single byte
-> store operations are faster.
+> Good suggestion, that's a clearer way to do it.
 > 
-> Both u8 or bool could achieve the above. I preferred u8 because 'it was
-> already there'.
+>> (Or I can also keep the fix like it is for the moment, and add another
+>> patch containing this refactoring).
+> 
+> Not sure if you're referring to my suggestion or not. Probably the
+> clearest option is to post a v2 based on this discussion :)
 
-Thank you for your reply! OK, that's what I had in mind, and not an
-accident.
+Sure, I will post a v2. So because patch 1 & 2 have already been
+applied, this v2 will contain this patch (fix, easy to backport) and the
+refactoring. We can then decide if we keep the patches separated, or if
+we split them.
 
-I can add this in the commit message when applying the patch, if there
-is no objection:
-
-To fix this, a new item has been added to the mptcp_skb_cb structure.
-Because it will be frequently tested in the fast path -- almost on every
-packet -- and because there is free space there, a single byte is used
-instead of a bitfield. This micro optimisation reduces the number of CPU
-operation to do the associated check.
-
-Other than that, the modification looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+If we prefer to squash the two of them, that's OK. We will have
+conflicts with the <= v6.13, but not complex to resolve. (By doing that,
+Sasha might even suggest to backport the 2nd patch of this v1 series --
+the new sysctl entry -- as well, which is fine by me.)
 
 Cheers,
 Matt
