@@ -1,122 +1,131 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A39ED1F5611
-	for <mptcp@lists.linux.dev>; Wed, 22 Jan 2025 12:02:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2493212B0F
+	for <mptcp@lists.linux.dev>; Wed, 22 Jan 2025 12:10:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737547352; cv=none; b=lBidf+oYYXSvBjkbxPO8jvdZsw/an3frD8oQBUmo3aq+L4eGWlgrGhZcJagwhELjDN7FxXhZcyTg9TKGcE0DmsWjhwRuE9SVt7/0Ooxp25/bycVgVuj0bWD5V1vdHct+vX0j3F7wddUCUi3tn03VLeDpY8VuJHwl+r7qdyu6XVE=
+	t=1737547803; cv=none; b=QszQYz3uJZ5zi+NTk8aZhxGwHNTtVhfNQ0ly1wFfoBv0qyS2YT4w8fW7mXcuJg9DTNYIW9YWbkTOCKejEoP6QqEpbmabsZ+py4L48pilMAB5PmKUKjIARKV1bIOT2aJF7FgmDX47CkmTQ0zO1qlALrPKkkkXaOc+NGhZFGaHABc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737547352; c=relaxed/simple;
-	bh=z/3mHF8cyngkv/gx4pbAij1EG0vaisSMeIfW1VdMF6U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=jmeyT/7pTIygcVesanrimT+gl9VVki5bZI3U1ZPBSAEF8x6/Y9ejVQnj12hZPAaDQgObfFkYMf+vxDgaXSxmEn7OBQizC6nViWXFA0VX+ZmGBXqjLgPrmRdzgDpJKIOwt+mD8RFDNJ28SY3BBfshp0LGY48dRhU0YkqlErJYgD4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+KX+poJ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737547803; c=relaxed/simple;
+	bh=hzUdkybC8xmAw8WkDQfPYEA1YRrdsrbhJoa4h+2afz0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=PjVFaD5EkXX/qz7ZdF/XiaGZC0mHAt6N1iichnBn13/klly5iCe6eDx1dg6EpAjnZHb5Uzou4cO0RfSami7vgnfP1jzOdvHNKWy7fNY+AskF9s5tuPcdruuFlhnwPJE1eJpestR5ANiy58w51rsGVMdnYsnFYCQYEwLV8+P2OXg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nn4IKCzl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+KX+poJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EC72C4CED6;
-	Wed, 22 Jan 2025 12:02:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nn4IKCzl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CBA77C4CED6;
+	Wed, 22 Jan 2025 12:10:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737547352;
-	bh=z/3mHF8cyngkv/gx4pbAij1EG0vaisSMeIfW1VdMF6U=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=D+KX+poJLqH6UaPOP0l46YpQww0THD2oxie4152MHZDqyUEsoaHSXnUBnkzdoGnr4
-	 2BNbZAFAUCf92MjL1kHSg5FlMKAGwWChkkBobyhHVnpXfZmetwJuRPostG+TfyKynH
-	 m8R5Nxthe2iOEx4B0bn0wy41OzL5VWbGvF3QrFepE9q7xHETgdMrjxsTacsu9u9Ldj
-	 OY+xlvumzjEVLaBgkN7euj7t3sexC4/M9toV68vQw2rqRGu6i69oxC5AEnArL4vuoQ
-	 B1Y6jr+xT7HYbduYBlKEYZLWdaaNkkeXAEsxzsO8ZpVJVY6VwnIZ83fx/spdc2kYrO
-	 CHT5P8cYow1FA==
-Message-ID: <762330a5-462b-4ede-8417-ab05d2376cf0@kernel.org>
-Date: Wed, 22 Jan 2025 13:02:21 +0100
+	s=k20201202; t=1737547803;
+	bh=hzUdkybC8xmAw8WkDQfPYEA1YRrdsrbhJoa4h+2afz0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Nn4IKCzl5mUai1/wZ0tsHPDK3HnYKFyuIi1fY3DuMw34RFEGzF4pdVKEEUjN0jpKs
+	 vGEzfICjrCdRPUOUff2e7hSFRFOLM/ORk6fV+USaiHAgQKHFKX5cFGTqF5cozEABye
+	 /DgcezyjUXZZxc4LY9tseWnIVBYUpFWMOQoL1bby4QLvjz3yZLeyQR5aozK1qTxGf5
+	 nsZQw6FuMHDSDkmSqxJowElnDAsADLhEKJTFS37jHYoI2i+SWCB1EfYiG/Zn6yqA62
+	 z+wQlX7N8HWSpBVIunzhgT7cAoRo/wAA2dUI3XhqI8xDkxwu9cZQXcMkrdPphesyNK
+	 MWeeN0QZ7dWNA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-net v2 0/2] mptcp: blackhole: sysctl SYN retrans +
+ fix conditions
+Date: Wed, 22 Jan 2025 13:09:47 +0100
+Message-Id: <20250122-mpc-no-blackhole-v2-0-13e6670d512f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
-Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <e96b1f70660ffd750c09c051991e2b65a7d1b492.1737398231.git.pabeni@redhat.com>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAAvgkGcC/3WNQQ6DIBREr2L+ur8BFBu76j0aF4hfJSoQIKSN8
+ e4l7rt8mZk3B0QKhiI8qwMCZRONswXErQK9KDsTmrEwCCYk47zB3Wu0DodN6XVxG6EUrWo5KVb
+ XDZSZDzSZz6V8w+6T9mgpQV+ixcTkwvc6y/wq/Pdmjgy7rhlGoWr5mIbXSsHSdndhhv48zx/5K
+ aqYvAAAAA==
+X-Change-ID: 20250114-mpc-no-blackhole-526a61ea0334
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2697; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=hzUdkybC8xmAw8WkDQfPYEA1YRrdsrbhJoa4h+2afz0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnkOAaU6ACIrCWg53bRHhFSfSwU5aIiijfyZ868
+ FJVyz/omm+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ5DgGgAKCRD2t4JPQmmg
+ cxAHD/98xZew2SgSwqdNi0V9Xk0yUl28sWNMqIA3/VcEhTPI2UwnnhpP4nmUPftNdMgJPgthiGz
+ 6Ff9V/L5c6U0pb0oFu3Rn7jTcw5YlW048m7KqhTi5XsWeYju/dxscjO3pA3wQhFEqoSZcoljTUl
+ HhfUBer5LWxt0bbjIr7PDxWW3DK7mtmIwpgJur41QQstL3jCNUT75OSpp29vWK8LKGNDQxE+IIj
+ 4vqZJXnyWDUx8B9y82c0yvAylHmbkH+9cHdVh1wC/Jgt+9fxEAAVZwe1ii4NQhvoL83JH1d7+XF
+ Iic45ro8w6D0MftinPfvCUmcS59tkLN3gWMMNUvIcy7sApjbjkZ5ROD9jdueFmCiGYfonGIzmiS
+ I90c17VRdzgp24Qx0r6c/s9g64v8DJZVkLLt1uAoeDjGqAif2dKtveqqGOXLKnHb70uMOAd0MXN
+ PehLh2qlno9H93i4Be2RH4KcJ55n3aP11aEvWz9PbGbKJAx8iBx5fVYvC5+G+npj/D150dR8rru
+ Nj51mtn1blPUqHW6EU0svzyjtiR+m+YPMBIrRtvT9mtKU22azqIvj9FzDPczbheAuc8kq6HpZZJ
+ o6bkOjBbAAC2oKS5lKKAmDlm9Ko4Zl7pczlfYFQwoJY8f/NmYVwE/WbiTp1i28hNJr9yIpLQ5Jm
+ I2SkGZ09TXkkONw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Recently, I found a network having weird behaviours with MPTCP packets:
 
-On 20/01/2025 19:39, Paolo Abeni wrote:
-> When we will move the whole RX path under the msk socket lock, updating
-> the already queued skb for passive fastopen socket at 3rd ack time will
-> be extremely painful and race prone
-> 
-> The map_seq for already enqueued skbs is used only to allow correct
-> coalescing with later data; preventing collapsing to the first skb of
-> a fastopen connect we can completely remove the
-> __mptcp_fastopen_gen_msk_ackseq() helper.
+- The first connection to a server had a successful 3WHS, then MPTCP
+  options got stripped off.
 
-Now in our tree (feat. for net-next, before commit "mptcp: move the
-whole rx path under msk socket lock protection" with a new paragraph
-explaining the bitfield conversion:
+- The next one had the first SYN (with or without MPTCP) and 5
+  retransmissions dropped, before being apparently intercepted and
+  proxied to the end server.
 
-New patches for t/upstream:
-- 0d73e07b64af: mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
-- 9d07905af748: conflict in
-t/mptcp-move-the-whole-rx-path-under-msk-socket-lock-protection
-- Results: 0a4d2b745023..a9a670c7f9f9 (export)
+- (The next ones were sometimes intercepted, sometimes not, or dropped
+   at the beginning. I'm trying to find out which kind of "optimiser" is
+   causing this.)
 
-Tests are now in progress:
+The result of this was a blackhole being "wrongly" detected, and no ways
+to force connections with quite a few SYN drops to finally use MPTCP at
+the end.
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/ebd784afc6c02b1ba980d99ffe6ffb90a6af53c2/checks
+In this series, we have:
 
-Cheers,
-Matt
+- A small fix for the doc. (applied)
+
+- A new sysctl to change the number of SYN retransmitted with MPTCP
+  options before falling back to TCP. The modification looks simple
+  enough to still be sent to netdev before the closure I think. (applied)
+
+- A fix to only turn on the blackhole protection only when the first SYN
+  retransmitted without MPTCP option is accepted, instead of any after.
+  The blackhole feature was supposed to do that from the beginning, but
+  a check was wrongly placed. I think we should consider this as a fix,
+  even if there are also risks of not detecting a blackhole if the first
+  SYN retransmitted without MPTCP is dropped by accident. But that seems
+  more unlikely for an "MPTCP firewall blackhole", and I guess not all
+  future MPTCP connections will behave exactly like that. It sounds then
+  safer to reduce the possibilities of enabling the blackhole protection
+  by accident, and apply this patch.
+
+- A small cleanup to exit early.
+
+Please note that patches 1 and 2 have already been applied in our tree.
+So this version only has patches 3 and 4. Patch 3 is a fix, maybe not
+patch 4, but it might be easier to squash patch 3 and 4 and send it as a
+fix to -net.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v2:
+- Previous patches 1 & 2 have been applied.
+- Patch 1 (ex 3) has not been modified.
+- Patch 2 has been added, it can be squashed to the previous one.
+- Link to v1: https://lore.kernel.org/r/20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org
+
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: blackhole only if 1st SYN retrans w/o MPC is accepted
+      mptcp: blackhole: avoid checking the state twice
+
+ net/mptcp/ctrl.c | 30 +++++++++++++++++-------------
+ 1 file changed, 17 insertions(+), 13 deletions(-)
+---
+base-commit: a9a670c7f9f94ac66e6a79ecb81e4e7a6e20f001
+change-id: 20250114-mpc-no-blackhole-526a61ea0334
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
