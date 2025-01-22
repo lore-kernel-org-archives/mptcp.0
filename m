@@ -1,136 +1,153 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 516F426ACB
-	for <mptcp@lists.linux.dev>; Tue, 21 Jan 2025 23:40:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A9E7B211A0A;
+	Wed, 22 Jan 2025 11:15:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737502806; cv=none; b=ausleuKQvrXbK1Vf7j09BBVVFwiHPa7g31RsCbqPZF5RdTYflYQLIzwoi4LdhqbW5ZKTb1Rs1TTSnyYk1snpsidf7VexN4zxl1/7Ooac1xTd55EiFlloTSFOOB5C4pbsmWFPAZk3fwEmnkFXJRYGZmKbil2/5INRE+TVj96MKfo=
+	t=1737544547; cv=none; b=cOoab1EWlduLODQW7zZzN/ZdfNqpOR3k3J9Lt/PppiX4aXEzt7GZBVpw0TN90Uvt6NjVkf9VfHJlOKGl0vhExS+GtUWldavlNnOfhSFx3qASTxlNvC9Ytr/1gUQAOIzlsqgXkOFsoMvyk7ypBWT996E5p2cbuXXvFrqOILSOMWU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737502806; c=relaxed/simple;
-	bh=Pa+PGLyjcGsEkj4Z7vVNxI+Pk68/U87RVHX+M0+bTEE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=PclgmMtVgR380Jpb8KcFawrXmUJ9PqwZXNCZwR6sHG3Hz8Q1jX4P7opiMoFZvSeJ6/Cf5Og36dPgPpEha4u7HapeqMS0ZgJLm5LSsWa1SrPWMDVTsLefaRTYj4Pwtjps8FuN52LA2aHqvUZycUVNA/6KeK4PBL67OS9tm0Fi5wE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sRJCHFyO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737544547; c=relaxed/simple;
+	bh=YDrOx5B7d2Y5Le84CZjOgzWnXTAdpeR9BU8Kc84Gtb0=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=JQa4GvMMEZ4Z5paPLc6L/SUadZPXJ0GLrnKxMw1V9FetEdJr0HFaAHRYl2nYPHWZeVbVIEqlaEANulfe3GiYFGd6TCJLTTSZsXO817IiYN3Kf8AcWdM6O5dvDC/5FXGAigjMC0QHuYqk4k5/ToMBW6wXnu2veiE/OzmAzJdEdtY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q9F5mgGQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sRJCHFyO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9B96C4CEE1;
-	Tue, 21 Jan 2025 23:40:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q9F5mgGQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6F302C4CED6;
+	Wed, 22 Jan 2025 11:15:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737502805;
-	bh=Pa+PGLyjcGsEkj4Z7vVNxI+Pk68/U87RVHX+M0+bTEE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=sRJCHFyOoLgyW24eKlUoj+67SD6Ow9SMP7A+mVDq+a2BaFdCb22aVO9D5j5H7xiUb
-	 p+aA+K9oSQLwrAA/eWpE6q3sWP2nJ1rUYlaHo1SBY6Dnvwoa0aajDYN1HVCflEKE5K
-	 PtSz+kEVJs8mqMw+pvuv+Z+VQ2vKVHiewn+Cq8FgEhsxtcQzcyDwz16Pk6wrP6AFU5
-	 ZUK9wTnvakfmuG1p5B+Q/HXQFO5Qj3z1MZl8jYC2I8W7iQsfuboCwxIvzZdB7SPISf
-	 7k6kjbwGpvFkRh4tYlRU4vri4e1dBchEIiOzx1taLgRwfff50yPsuDz0d7xvCZ2q4x
-	 pIUlZq9Rs2i0Q==
-Date: Tue, 21 Jan 2025 15:40:03 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2 3/3] mptcp: pm: change to fullmesh only for
- 'subflow'
-In-Reply-To: <20250117-mptcp-issue-540-v2-3-a194740fb380@kernel.org>
-Message-ID: <78fc5ea9-c662-8d72-7f97-5880de6e9762@kernel.org>
-References: <20250117-mptcp-issue-540-v2-0-a194740fb380@kernel.org> <20250117-mptcp-issue-540-v2-3-a194740fb380@kernel.org>
+	s=k20201202; t=1737544547;
+	bh=YDrOx5B7d2Y5Le84CZjOgzWnXTAdpeR9BU8Kc84Gtb0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Q9F5mgGQAAK91l+p7k1eK+vU1NOBhywJMs1UycS3TB6wFF0DFNwab4HEa2iVY0sWv
+	 opd9wywzdIPKYRPibr6EJZ0PKFdcGQHiEzaw7oGS/vxstOL8XM5QqvcJRzRhDN374s
+	 7fN3VzuTL2obkjYXOc+ursBCaa/E2qYwzEVdHpdDQ1FBSS/be+XvKmwvgVNhBS+Djt
+	 FbljRif9YoAJEXTZ8S0hbypyHzK/Cure6hPPEBKjQedAXzozGMaGbMJ5J/PcPBrrMl
+	 UMjZS8y+UmdtVrEMHveXF4T61+FzrfCu5x+wN/nUaNQaYxvIwuuDhomAKeRjHL4UJo
+	 r0CN8Ainydevg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Mat Martineau <martineau@kernel.org>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Jakub Kicinski <kuba@kernel.org>
+Subject: [PATCH 5.15.y] mptcp: don't always assume copied data in mptcp_cleanup_rbuf()
+Date: Wed, 22 Jan 2025 12:15:18 +0100
+Message-ID: <20250122111517.3284651-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.47.1
+In-Reply-To: <2025010605-obscurity-buckshot-fc5f@gregkh>
+References: <2025010605-obscurity-buckshot-fc5f@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3522; i=matttbe@kernel.org; h=from:subject; bh=g3aq2QVbK0t4f2yTFf2FQj1+Op3wV1YhRslbMg0d5rQ=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnkNNFRFpCNYxI1LVQ1w0B6btz6D8a30qGpPMDu bjj8OGbvjuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ5DTRQAKCRD2t4JPQmmg cwP+D/95WKnrpvM6f5SR5bnh9f6mMvMaTNBZznbGfLeUi264iS2FIlOqBepKfDHQKsu5qLeCqdT oVbUZWAtO6YWizXC0Yxdw6AVy0ypOUARSHNB3uUF0ArKC0mTCPV8xh1LNEzBxVPP83lHqPoXpWw L/bfaaXAy/hY1tjfZwiI4lWtRXTu6ppqfU5M1aNkgNQh1AxrfT3Sz1MQBgUk94zCtyLtk4MFSF0 i+fQSXdPdLnlwAiD5mxmApvBQG1EAEE9jSgQ7Fr+EMVfzwQo1C/9uU+49djJ27g6Mu5ePceD0Pe GoLxHVdpMJapw9X0aQLUe67EdbdCJr0Hb2SO07KpYdCSsMVHWqHe60cU1cM52UtkkHHG/EkBvuU jkKwnBZ2LcQM6b4p7CV2CDTHGuEHuJGgy8jNl2PZqcrRf9TCWHqPyya5Hnd9KrtYE+F/7fLKwyt 7NWtfECfn3aTBuXd7D8E2/B4xYiOREe8UyiR0oF/6qsK//RHvmHtEMXGYRGDrqg9X5qAafOta4U ZJ32IuK75zzKQ/lVTMyAmmOV7b+ptWpPXjmvyvQ4YSNe60qKFxt/ddH4Rn4CeWxw5KWX0GsJLIS FQD2q6iBTvf26I8QSUPkJVlohyVkFlxjQu5REnQQGH9u+qsnsr2jHQXdy1F5GO5oLjDet2jDzEU bmmZWQ3dhe99d4g==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On Fri, 17 Jan 2025, Matthieu Baerts (NGI0) wrote:
+From: Paolo Abeni <pabeni@redhat.com>
 
-Hi Matthieu -
+commit 551844f26da2a9f76c0a698baaffa631d1178645 upstream.
 
-> If an entrypoint
+Under some corner cases the MPTCP protocol can end-up invoking
+mptcp_cleanup_rbuf() when no data has been copied, but such helper
+assumes the opposite condition.
 
-Did you mean "endpoint" here?
+Explicitly drop such assumption and performs the costly call only
+when strictly needed - before releasing the msk socket lock.
 
-> has no type -- so not 'subflow', 'signal', 'implicit' --
-> there are then no subflows to re-create from this local endpoint.
->
-> In this case, there is then no need to iterate over all connections to
-> do nothing. So stop early when this case is present.
->
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> net/mptcp/pm_netlink.c | 15 ++++++++-------
-> 1 file changed, 8 insertions(+), 7 deletions(-)
->
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index ff1e5695dc1db5e32d5f45bef7cf22e43aea0ef1..b1fe2a74fcfe97896de8f9eaee9a1afa5378fabb 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1923,11 +1923,16 @@ static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
-> }
->
-> static void mptcp_nl_set_flags(struct net *net, struct mptcp_addr_info *addr,
-> -			       u8 bkup, u8 changed)
-> +			       u8 flags, u8 changed)
-> {
-> +	u8 is_subflow = !!(flags & MPTCP_PM_ADDR_FLAG_SUBFLOW);
-> +	u8 bkup = !!(flags & MPTCP_PM_ADDR_FLAG_BACKUP);
-> 	long s_slot = 0, s_num = 0;
-> 	struct mptcp_sock *msk;
->
-> +	if (changed == MPTCP_PM_ADDR_FLAG_FULLMESH && !is_subflow)
-> +		return;
-> +
-> 	while ((msk = mptcp_token_iter_next(net, &s_slot, &s_num)) != NULL) {
-> 		struct sock *sk = (struct sock *)msk;
->
-> @@ -1937,7 +1942,7 @@ static void mptcp_nl_set_flags(struct net *net, struct mptcp_addr_info *addr,
-> 		lock_sock(sk);
-> 		if (changed & MPTCP_PM_ADDR_FLAG_BACKUP)
-> 			mptcp_pm_nl_mp_prio_send_ack(msk, addr, NULL, bkup);
-> -		if (changed & MPTCP_PM_ADDR_FLAG_FULLMESH)
-> +		if (is_subflow && (changed & MPTCP_PM_ADDR_FLAG_FULLMESH))
+Fixes: fd8976790a6c ("mptcp: be careful on MPTCP-level ack.")
+Cc: stable@vger.kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20241230-net-mptcp-rbuf-fixes-v1-2-8608af434ceb@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts in this version, because commit 581302298524 ("mptcp: error
+  out earlier on disconnect") has not been backported to this version,
+  and there was no need to do so. The only conflict was in protocol.c,
+  and easy to resolve: the context was different, but the same addition
+  can still be made at the same spot in mptcp_recvmsg(). ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/protocol.c | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Could you add something to the beginning of the commit message explaining 
-this part of the change? It matches the subject line but the body of the 
-commit message only explains the loop optimization above.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index bcbb1f92ce24..f337dd3323a0 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -462,13 +462,13 @@ static void mptcp_send_ack(struct mptcp_sock *msk)
+ 		mptcp_subflow_send_ack(mptcp_subflow_tcp_sock(subflow));
+ }
+ 
+-static void mptcp_subflow_cleanup_rbuf(struct sock *ssk)
++static void mptcp_subflow_cleanup_rbuf(struct sock *ssk, int copied)
+ {
+ 	bool slow;
+ 
+ 	slow = lock_sock_fast(ssk);
+ 	if (tcp_can_send_ack(ssk))
+-		tcp_cleanup_rbuf(ssk, 1);
++		tcp_cleanup_rbuf(ssk, copied);
+ 	unlock_sock_fast(ssk, slow);
+ }
+ 
+@@ -485,7 +485,7 @@ static bool mptcp_subflow_could_cleanup(const struct sock *ssk, bool rx_empty)
+ 			      (ICSK_ACK_PUSHED2 | ICSK_ACK_PUSHED)));
+ }
+ 
+-static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
++static void mptcp_cleanup_rbuf(struct mptcp_sock *msk, int copied)
+ {
+ 	int old_space = READ_ONCE(msk->old_wspace);
+ 	struct mptcp_subflow_context *subflow;
+@@ -493,14 +493,14 @@ static void mptcp_cleanup_rbuf(struct mptcp_sock *msk)
+ 	int space =  __mptcp_space(sk);
+ 	bool cleanup, rx_empty;
+ 
+-	cleanup = (space > 0) && (space >= (old_space << 1));
+-	rx_empty = !__mptcp_rmem(sk);
++	cleanup = (space > 0) && (space >= (old_space << 1)) && copied;
++	rx_empty = !__mptcp_rmem(sk) && copied;
+ 
+ 	mptcp_for_each_subflow(msk, subflow) {
+ 		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
+ 
+ 		if (cleanup || mptcp_subflow_could_cleanup(ssk, rx_empty))
+-			mptcp_subflow_cleanup_rbuf(ssk);
++			mptcp_subflow_cleanup_rbuf(ssk, copied);
+ 	}
+ }
+ 
+@@ -2098,9 +2098,6 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 
+ 		copied += bytes_read;
+ 
+-		/* be sure to advertise window change */
+-		mptcp_cleanup_rbuf(msk);
+-
+ 		if (skb_queue_empty(&msk->receive_queue) && __mptcp_move_skbs(msk))
+ 			continue;
+ 
+@@ -2152,9 +2149,12 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		}
+ 
+ 		pr_debug("block timeout %ld\n", timeo);
++		mptcp_cleanup_rbuf(msk, copied);
+ 		sk_wait_data(sk, &timeo, NULL);
+ 	}
+ 
++	mptcp_cleanup_rbuf(msk, copied);
++
+ out_err:
+ 	if (cmsg_flags && copied >= 0) {
+ 		if (cmsg_flags & MPTCP_CMSG_TS)
+-- 
+2.47.1
 
-Thanks,
-Mat
-
-> 			mptcp_pm_nl_fullmesh(msk, addr);
-> 		release_sock(sk);
->
-> @@ -1959,7 +1964,6 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-> 	struct mptcp_pm_addr_entry *entry;
-> 	struct pm_nl_pernet *pernet;
-> 	u8 lookup_by_id = 0;
-> -	u8 bkup = 0;
->
-> 	pernet = pm_nl_get_pernet(net);
->
-> @@ -1972,9 +1976,6 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-> 		}
-> 	}
->
-> -	if (local->flags & MPTCP_PM_ADDR_FLAG_BACKUP)
-> -		bkup = 1;
-> -
-> 	spin_lock_bh(&pernet->lock);
-> 	entry = lookup_by_id ? __lookup_addr_by_id(pernet, local->addr.id) :
-> 			       __lookup_addr(pernet, &local->addr);
-> @@ -1996,7 +1997,7 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
-> 	*local = *entry;
-> 	spin_unlock_bh(&pernet->lock);
->
-> -	mptcp_nl_set_flags(net, &local->addr, bkup, changed);
-> +	mptcp_nl_set_flags(net, &local->addr, entry->flags, changed);
-> 	return 0;
-> }
->
->
-> -- 
-> 2.47.1
->
->
->
