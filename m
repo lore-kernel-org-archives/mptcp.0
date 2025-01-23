@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF5DA20E6E5
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:41:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576F820E6E5
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:41:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632464; cv=none; b=ODoFicuQynJgBx1ypckYQKbG6Ce4jl7+hQrZqwz8NXORhU7Gnv2zE1Bc1tGyArDyhRVStiHPTBgKn3m6yFn/upFY2kV/ME3i5IHgLXAXiNUhczyvb6pN0LM92uJavCNPuaKbzpvBZ8kytygsQEsTJU+2IpYAsGvH3G7gVxFcmyk=
+	t=1737632477; cv=none; b=ZvKO8PQKfJFfVquGy/qmIkwlZgxbbryvzVVAU/8wNQYcyb88xGwEL2WL804Fdip43hAIe9KPs+/GsSJHAds1tb6mh42Oxmw3AxJeaunFrzyLLsk0nc294OtG8xC9Ila11lic47/OLGbrlEOSy2z6dN21WPKinsu3s+ylnTG8H1o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632464; c=relaxed/simple;
-	bh=sizjCoYaeomC3YEWE2axaOieBoHxoj3nNtdLRHYpP7E=;
+	s=arc-20240116; t=1737632477; c=relaxed/simple;
+	bh=zMBtOgythMKmTCD+5l3rT0I2hN61FuEGL9IwSOG5l1o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XazumuRsOGJ9H7yY2kBZQRUI76SCRN43rypzUjQ3xoP8UK57RQdacrmlHsCAytbgi/g5RPbDo4u4dNBSb3RnkwxLnZ0Qu/oUc0AfIN3XMadoIY85h3hOZsdplghjJZQlje/2y4GoZOawxYGhe8yPN9r3HtIgnqO/B8x6NNFgnMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dWCDgCGx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=j8H2T7lj5NS7nNo8D3EJDr81vdqnH3C5EZJIJm+XA6XQTXdzccPceAWyqHkixGb9F3e49ZPWCxwdV3e3c0GKa4y8u1iw8EQZ3yP80uZGIeG7WlrfMh8lh9Q5k+hlyo3/tARqzISU34ogfo0gJMYcNafn13NYgWosrdMrUsfMZX8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8UI0C0Y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dWCDgCGx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C6B7C4CEDF;
-	Thu, 23 Jan 2025 11:41:03 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8UI0C0Y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D8BC4CED3;
+	Thu, 23 Jan 2025 11:41:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737632464;
-	bh=sizjCoYaeomC3YEWE2axaOieBoHxoj3nNtdLRHYpP7E=;
+	s=k20201202; t=1737632477;
+	bh=zMBtOgythMKmTCD+5l3rT0I2hN61FuEGL9IwSOG5l1o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dWCDgCGxEWK6ytMmrWuveGQ01h0N6uLs5SAiGTFdFooAyG/Hxg/ne3Y87lcWosto7
-	 Tve4dC3l1dPoepDN0VjPdx5q9TY3QzIme7kI7tPITV3i+K6woyPA/tJ4skYp5lm8hU
-	 daB1oBH4Io9Qe54HkCKeYFvPDRMs2pbsk6VwUia3diC6pCQNOdBo01PKreeHc6VUdq
-	 kM8kPYjVGL3zVJmNEHTFBLQ2BK5NZ+HPLYOc3z2Xcr4O2lSeWNUAIIQUCvryYpeoNQ
-	 +Tim3YYwnS8cPuBsH2E2rw6RXrc7bnh2tzNIxvX8tH1I33vBE++rY+2/Qv00IRDOFe
-	 ELTZd25+d0wng==
-Message-ID: <85738b67-87e5-41e3-bdde-f56755e34068@kernel.org>
-Date: Thu, 23 Jan 2025 12:40:53 +0100
+	b=W8UI0C0YLaFXELF99r8lzIWH5D1a4XtLJYH0R8vA0aKlfyHVx6XL+AhyChk+o0/OQ
+	 Nn6V1/xRBqvYG+3Uf+kp57aF+d2dBqG+jofhzVRD3kG2YG2jaz/dwz38dWW0BCTK/M
+	 n/6NbKjAhL1XvYdd2RatuIugIh9BeGRjLi7ItHsAzTQxQHoV7iyb+LWrOfd5vjx4Vd
+	 UlW722F9gYck6h6xRTSV09qi0k0tD4W6R8QanJfc3usBtsIR/Btqpg7dPf4qkwz7rd
+	 K+LsYNYxGg5FOlhtxiMxJBQ4wv7kNqGV1gckKheuyt+NXBXvnsnTb8nPUTNqul/DGw
+	 kk8WCjGmkEaoQ==
+Message-ID: <8e7b2312-86c8-4f4a-899e-67540c0fb209@kernel.org>
+Date: Thu, 23 Jan 2025 12:41:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 4/7] mptcp: drop inet6_sk in
- mptcp_nl_find_ssk
+Subject: Re: [PATCH mptcp-next v4 5/7] mptcp: drop match in
+ userspace_pm_append_new_local_addr
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
- <d85d524a26e83f4e8e923e79234e351becd05862.1737012165.git.tanggeliang@kylinos.cn>
+ <a6dc4b582e968566d34846237f6647c94c7895c8.1737012165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d85d524a26e83f4e8e923e79234e351becd05862.1737012165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <a6dc4b582e968566d34846237f6647c94c7895c8.1737012165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,9 +96,15 @@ Hi Geliang,
 On 16/01/2025 08:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In mptcp_nl_find_ssk(), 'issk' has already been got through inet_sk(). No
-> need to use inet6_sk() to get 'pinfo' again, just use issk->pinet6 instead.
-> This patch also drops this 'pinfo' variable.
+> The variable 'match' in mptcp_userspace_pm_append_new_local_addr() is a
+> redundant one, and this patch drops it.
+> 
+> No need to define 'match' as 'struct mptcp_pm_addr_entry *' type. In this
+> function, it's only used to check whether it's NULL. It can be defined as
+> a Boolean one.
+> 
+> Also other variables 'addr_match' and 'id_match' make 'match' a redundant
+> one, which can be replaced by directly checking 'addr_match && id_match'.
 
 This looks good to me, thanks!
 
