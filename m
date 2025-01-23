@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 21EB6136E3B
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 12:43:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 758F72F3B
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 13:08:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737636220; cv=none; b=jRgliqX6wt4BAYmZs3w2fef0/s1n6kLdeYJZinE8CuAyCkGNdmF4dN3N3180d4evsW0BGwkzjch8OMtbZpqF92fQEpHpBgA/fFUpYzxkkdDdd1Tp1bjXZ3odxvap2WOTzASchpIxdQ2A4/25cQZSOAdchhSGhxMvpo5/PxWmMjU=
+	t=1737637707; cv=none; b=ghRtKRGTk+sKfg6L1SsmafbILFdyMs784wJwsCsMeh6sSE7BNd/MzwAwvIGRQh7ky00E8dv42t/5ZWQlAvdBlBRoGwFBPyd8TJdPbjossgZec+m/0gmmvaCgIWuwAMcxjLhYRvWjzH3rzqzKXb5QkxP/64ZnL231JDAwtXq+u/E=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737636220; c=relaxed/simple;
-	bh=YbCd99wijjzcteh5QC8QuPd1qlOJ4LTHOAdeHTDA8QM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=eWt4bkSQZu/39VTVgIEIYQ3/1pGTQ0JqVlGw8Xbl1DUJS+qEuaGIpFD2vGw9k39ewHzZpKPaTz9IGiQgnrT1hdWTU657r7V7IkxePLLfsSqcpRISglqlWiEZkd5AFvTg6nnFc/qoTw3hDxI+B8tmEX0mdIPuoWOXtt39C6Vip/A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BB8GQCq9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737637707; c=relaxed/simple;
+	bh=wVOc3DmDahPzjxbuU/cfMa4KchKNPf0yynY1PrPGXXI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=Ze/UQM0Woqvjo2ImLcPzKI9FOptN1LEFuSpG+fTwTpPBmYSNitRcQr1j9wv6n6SDnNboagYWaBkxtDW9ASfqI4g8NcBerH6Fep7r8878zRaWnFVcUDaZAiJTzMBsi4yYjm51FvqbuI4O7AWpKqNsxM/vMLDLhdykzyIYTuOCTLU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=f4T8Jovg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BB8GQCq9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5AA6C4CEE1;
-	Thu, 23 Jan 2025 12:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="f4T8Jovg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60E56C4CED3;
+	Thu, 23 Jan 2025 13:08:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737636219;
-	bh=YbCd99wijjzcteh5QC8QuPd1qlOJ4LTHOAdeHTDA8QM=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=BB8GQCq9+l/98bgCU4PhqYZWfxK8WARk0ybJvpaoscfxWYEVOMKnEhqAxcqFsoo6u
-	 JTwnCrBbFTUYJYTsNBZn+wgePCah3NsT+H4Zu2sCLDfj9teThGPNGJe0+yt8ynmik7
-	 ZcC3ZVtsxSOCCDq1IbBSHO4bWE5jzAhqZArs6ceREfgTF4eH40rfYYWzZ+trIPxnrH
-	 qpdBhUy2cv9tIyKEjXiHW4MjEEAMNMa2rTRJSpZTgCiEapLUssLJvdrjUjstiDtajA
-	 YyjHrSCINFrvUSEfty99UiTjOuVywp1/PYc7rEttnXt4enKJrXLk6NSP/VPhKJuZt7
-	 ac8OBJ5yRYCzw==
-Message-ID: <0a072aa0-df72-4c38-b31d-c7a3349377fa@kernel.org>
-Date: Thu, 23 Jan 2025 13:43:27 +0100
+	s=k20201202; t=1737637705;
+	bh=wVOc3DmDahPzjxbuU/cfMa4KchKNPf0yynY1PrPGXXI=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=f4T8JovgjfVcp1y3rDBa+AyP8au7Pi3Q6B80RKVz7u/KdupGNJhHYoFYbZ7/LGFsm
+	 sAFtJ5hA31morSHJRwhYxvDSJipq735kxF/pCLHT+7GYim1+9vmqI89DyAeojno+oe
+	 8q+a8HmR0Wd3o4AegwZYM6XI4oMxBY8ATyYDkjdoZimrghdmPJcaCK+8BoUCSGauvt
+	 Lj2sUfMNaX0koD+FzgwslG9ZjCro1Ya0RJ2qnLSVd403KQXzh/+G1y3eUrZxXmztka
+	 Ht8EWzzVLWMgguLiH/D/cFEzyTViEeNkLPVPJW58BVn/ncbfDlnIQqrV3P4ZiEeuJp
+	 ttIwTH9MsT0mw==
+Message-ID: <ca3cd45e-6492-4c2f-9664-6e3f58d5372d@kernel.org>
+Date: Thu, 23 Jan 2025 14:08:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/3] BPF path manager, part 4
+Subject: Re: [PATCH mptcp-net] mptcp: handle fastopen disconnect correctly
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1737012662.git.tanggeliang@kylinos.cn>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <e8371ec8065e09317dcf7d7aabc6c54e63634bbb.1737222305.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,148 +84,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1737012662.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e8371ec8065e09317dcf7d7aabc6c54e63634bbb.1737222305.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Paolo,
 
-On 16/01/2025 08:38, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 18/01/2025 18:46, Paolo Abeni wrote:
+> Syzbot was able to trigger a data stream corruption:
+
+(...)
+
+> The root cause is the bad handling of disconnect() generated
+> internally by the MPTCP protocol in case of connect FASTOPEN
+> errors.
 > 
-> v3:
->  - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
->  - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
->  - return 'err' instead of '0' in userspace_pm_subflow_create().
->  - drop 'ret' variable inmptcp_pm_data_reset().
->  - fix typos in commit log.
-> 
-> Depends on: "BPF path manager, part 3" v4
-> Based-on: <cover.1737012165.git.tanggeliang@kylinos.cn>
-> 
-> v2:
->  - update get_local_id interface in patch 2.
-> 
-> get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
-> as Matt suggested.
-> 
-> In order to implement BPF userspace path manager, it is necessary to
-> unify the interfaces of the path manager. This set contains some
-> cleanups and refactoring to unify the interfaces in kernel space.
-> Finally, define a struct mptcp_pm_ops for a userspace path manager
-> like this:
+> Address the issue increasing the socket disconnect counter even
+> on such a case, to allow other threads waiting on the same socket
+> lock to properly error out.
 
-Thank you for this series.
+Thank you for the fix! Now in our tree:
 
-From what I see, when a BPF path-manager is loaded, it will replace the
-userspace one, right?
+New patches for t/upstream-net and t/upstream:
+- f063c5aa1989: mptcp: handle fastopen disconnect correctly
+- Results: df9c98dc6d7e..187eaab900dd (export-net)
+- Results: 90bf8cc2229f..3e74298dbcd1 (export)
 
-It looks a bit confusing to know when the (netlink) userspace PM is
-used, and when the BPF one is. Why not defining a new type instead?
-Similar to what we have with the packet scheduler? net.mptcp.pm_type
-could be extended to select a BPF one of a certain ID, no? (or a new
-type for BPF, then another sysctl to select the name?)
+Tests are now in progress:
 
-Why not, instead, and similar to the scheduler, have a proper
-path-manager interface?
-
-For the moment, when the core gets something that might interest the PM,
-it will directly call a PM helper, then the right PM is picked thanks to
-mptcp_pm_is_userspace() or mptcp_pm_is_kernel(). That starts to get a
-bit messy when we want to add more PMs. Instead, the core could simply
-use the new ops structure, using a pointer stored in the msk.
-
-In other words, when the core needs to notify the PM, it will simply
-call (directly, or via the PM worker): msk->pm.ops->something_happened()
-(or via helpers in pm.c that could check if the callback is set, and
-call mptcp_event() for example)
-
-That way, we have a clear separation of all the different PMs, and the
-interface is clear to understand the interactions between the core and
-the PMs.
-
-WDYT?
-
-I hope this doesn't change all your plans. But I think having such
-interface would help for the maintenance in general.
-
-
-> struct mptcp_pm_ops {
-> 	int (*address_announce)(struct mptcp_sock *msk,
-> 				struct mptcp_pm_addr_entry *local);
-> 	int (*address_remove)(struct mptcp_sock *msk, u8 id);
-> 	int (*subflow_create)(struct mptcp_sock *msk,
-> 			      struct mptcp_pm_addr_entry *local,
-> 			      struct mptcp_addr_info *remote);
-> 	int (*subflow_destroy)(struct mptcp_sock *msk,
-> 			       struct mptcp_pm_addr_entry *local,
-> 			       struct mptcp_addr_info *remote);
-
-Small detail: I would add a 'd' at the end to clearly understand it is
-linked to an event, not an action, e.g. a new address has just been
-announced, here is a notification for the PM. So:
-
-  address_announced
-  address_removed
-  subflow_created
-  subflow_destroyed
-
-> 	int (*get_local_id)(struct mptcp_sock *msk,
-> 			    struct mptcp_pm_addr_entry *skc);
-> 	u8 (*get_flags)(struct mptcp_sock *msk,
-> 			struct mptcp_addr_info *skc);
-> 	int (*set_flags)(struct mptcp_sock *msk,
-> 			 struct mptcp_pm_addr_entry *local,
-> 			 struct mptcp_addr_info *remote);
-
-I think it should only be get_priority and set_priority (i.e. backup):
-the core doesn't need to know the other (internal) flags.
-
-Also, when looking at mptcp_event_type, I think some events are missing
-here for a PM to handle the different cases:
-
-  created: a new MPTCP has been created, to init some stuff
-  established: fully established connection, the PM can trigger actions
-  closed: to free some stuff
-
-And probably 'listerner_created' and 'listener_closed' too.
-
-One last thing; I guess the current 'subflow_created' is more a
-'subflow_established', no?
-And 'subflow_destroyed' could be 'subflow_closed' to keep the same name,
-(and also because I guess this will be called just before it is going to
-be destroyed).
-
-> 
-> 	u8			type;
-
-Either a type (0 for in-kernel, 1 for userspace, >1 for BPF) or a name.
-
-> 	struct module		*owner;
-> 	struct list_head	list;
-> 
-> 	void (*init)(struct mptcp_sock *msk);
-> 	void (*release)(struct mptcp_sock *msk);
-
-Is the init/release done only once, or for each MPTCP connection handled
-by this PM?
-
-> } ____cacheline_aligned_in_smp;
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/74
-
-Better to wait to have the full BPF interface and an example in the
-selftests before closing this I think.
-
-
-Two last thing:
-
-- better keeping the 'mptcp_pm' prefixes for the new helpers, e.g.
-mptcp_pm_register instead of mptcp_register_path_manager.
-
-- for the commit title, maybe clearer to prefix them with 'mptcp: pm:',
-and even 'mptcp: pm: in-kernel:', 'mptcp: pm: userspace:' and 'mptcp:
-pm: bpf' when it makes sense.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/cd61ed7c1c2a7ddfa646a5f14467b683325efda8/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/01c84430977af99a05c48d8e1b5e5e19c21021f2/checks
 
 Cheers,
 Matt
