@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBE20F969
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:43:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DB9020E33E
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:46:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632602; cv=none; b=jmgAsaPiGtPGYyRWXTblyGKasW95A6mD5N9QQiVuCQrGEpkW4MkERCHG2XW6y15yWw/qJyc9hF4e1UNGVhbsRAXVJEfucvikZcIuVbBrv5SCGjdLs8XLL8JZQGxemTfzVtTcqkgU8lEAEqDUYDX9l1Av5c9lW24pTKyc7OdflCE=
+	t=1737632762; cv=none; b=ZG22+wIaeg3YGc4lR/f5fym3Q75rumy5K7TumiLnaulrsPWSCXgev1bRUS1+sDy+ZWLsrAjvzkdiL3oqsr0y1xYdmD658sSg7O4kgQB0gBwO96Wngn/WN/Uf7QyPMIwV6CFd9g2astWFZsaOZewFUGjB6XpVZWZ/5m2O00mMjxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632602; c=relaxed/simple;
-	bh=v8W+XkMn9fsY3hI22oqIfKgWu2rAQzfKUuUNvX1g4ks=;
+	s=arc-20240116; t=1737632762; c=relaxed/simple;
+	bh=N/5PDVYVOwrSBFehBCd2GtXDQ1NhB6Lg/T0JIvdDv7g=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uzejJVcse4i2U/Fyh9xZna9FqzdCUfPyz0eZ+WxUJzk8jfXUdVRgzLqLyoqF/IRM42Vgzvk+heYED/WUY8QXWgf8MZu6JmggB6k2QpzlFVCGRuYFbQapRWsW1xe7fnBQIxHd4SWG+caermhZCVurA2Wm2rGaPupRc7AQV0cFnxI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jW6ju9zW; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=h/eX/wAULmBLfuW1AAM5hWPkkc98vJtwlBxUN/MChHlbXGaMEeNr15yCk17PvaD0PfW6vhVm1nq2+iCYef+vKe+qF82i29GmRqTi7FLMnmv7NO8DEbaE9JQ0HYg7TYcWJZo3oYrdIzd8Lm4DXOHuh1WwWyV2CbjSJh+JSNl3rFM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZRj7gabF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jW6ju9zW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987DAC4CED3;
-	Thu, 23 Jan 2025 11:43:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZRj7gabF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 46B15C4CEDF;
+	Thu, 23 Jan 2025 11:46:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737632602;
-	bh=v8W+XkMn9fsY3hI22oqIfKgWu2rAQzfKUuUNvX1g4ks=;
+	s=k20201202; t=1737632762;
+	bh=N/5PDVYVOwrSBFehBCd2GtXDQ1NhB6Lg/T0JIvdDv7g=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jW6ju9zW7a1W9uUblzxeFR6OdBbaiSBdHSciAU+4yqJMGyAvCaGhwBsV2ogZWTmr1
-	 KmmGvspda9ogvxDhopckdCWH9iqFt1pkJTNyyuWc5jAMTAlLewLSKVOMFMR4uFSFzV
-	 g12XJRmkGiWEERvuvOQerTCOljQbz6kOGOvn0OFT6JkaFmAGkkqiCEnojtS7Si7RVq
-	 ivRlJ85FzogZsOOSnOVimgEWAiS+klkOthGqCW5zK/Qv1aB50ot3uuYO2Ahlncy6Nu
-	 OJzNbrH/oW9UyucNq4UdtOkAi8jPYMyLtEt2ETelcF8JfKmlJor2Nr7mAO9Mv5LhOu
-	 jQkHutQS9xKaQ==
-Message-ID: <7fe39bcc-6a92-4770-8c3c-a7bffcbd72f4@kernel.org>
-Date: Thu, 23 Jan 2025 12:43:11 +0100
+	b=ZRj7gabFDIZPGE0w8JEBvqMPlEpdftGdj66dFkTqKpyNUydUniH6Pw79LLalAIMKO
+	 TaSbRji1ge7yyUfHD8mN/JigF/ByTuakuB8seUn6GvYDedB/24SXJSKm0keL64AbO0
+	 Z6WJQVB56PvGNxTh5spZHb7Zi0Od1ipvSdMUhracV3LoD6z0+0t8oPBujqOfPOYv3J
+	 xqZ3al5JyPCTqiwqgU66nSRTIR172itl77+eusnbYKyj50NO3KMjgM/ve8ncOpmTtr
+	 lNGyNQ/6ScJu88JMgch9srxibN3HH+nVcqHTl+0VMh5tYdDZeeNPFiDs+koEIaYmsA
+	 igcAC12aIJOig==
+Message-ID: <48545f14-f7e4-4801-9f92-9277d56ca4ba@kernel.org>
+Date: Thu, 23 Jan 2025 12:45:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 6/7] mptcp: hold msk lock before removing id
- 0 address
+Subject: Re: [PATCH mptcp-next v4 7/7] mptcp: change is_backup interfaces as
+ get_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
- <b4335f327203b21ba4622b14b8a0fd8b4991692a.1737012165.git.tanggeliang@kylinos.cn>
+ <75f5ab33f0a11d32eeaa9af698df6e64bb1da951.1737012165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b4335f327203b21ba4622b14b8a0fd8b4991692a.1737012165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <75f5ab33f0a11d32eeaa9af698df6e64bb1da951.1737012165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,23 +96,22 @@ Hi Geliang,
 On 16/01/2025 08:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In mptcp_pm_nl_remove_doit(), move 'lock_sock(sk)' before invoking the
-> function mptcp_userspace_pm_remove_id_zero_address(). Then no need to
-> hold and release this lock in this function. And 'sk' and 'err' variables
-> and 'remove_err' label in it can be dropped.
+> is_backup() interface of the path managers is not very common. A more
+> common approach is to add a get_flags() interface to obtain the flags
+> value of a given address. Then is_backup() can be implemented through
+> get_flags() by test whether backup flag is set in the flags value.
 
-Sorry, but I'm not sure to understand the reasons behind this. Is it
-only to reduce a bit the number of lines? Or because you plan to re-use
-the same helper elsewhere?
+Mmh, I don't know: the different PMs handle the flags differently, e.g.
+on the userspace side, there is no concept of 'subflow', 'signal',
+'implicit' and 'fullmesh' like we have with the in-kernel one. In fact,
+only 'backup' is used, which is why only 'backup' is common to each others.
 
-Please also note that, usually, helpers that can only be used under some
-conditions -- e.g. while some resources are locked -- are prefixed with
-two underscores. Best to do that here too then.
+In that way, having a dedicated 'is_backup()' interface seems to make
+more sense than 'get_flags()'. Plus these 'get_flags()' helpers are only
+used in the 'mptcp_pm_is_backup()' interface, so why not only using
+_is_backup()?
 
-So if there are reasons to keep this patch (e.g. helper going to be
-reused elsewhere), then I think we should rename the helper, e.g.
-
-  __remove_id_zero_address()
+Do you think we need this modification then?
 
 Cheers,
 Matt
