@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 23814381AF
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:34:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0F46E381AF
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:37:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632070; cv=none; b=rxadR5uqOyVY1UsmLCngJQdI019JNKplFQ/bTeNqA7IwCdk7Z6tyqg0efHh/Sye/gIqJcAm2uju3H+U5GahqQTe2pIzHO1N0S1YOHpSPJ0cXvb8jXQ95Ja/shNvbM2tfm5Dd1IiHCa4E8o0OuCfSFjzShNP/qoXaHi+AgPBnB2E=
+	t=1737632226; cv=none; b=ppdlobN4BAMIXHx7GzmlPsbd0H0KMVs3Ex3WpIc5y5S0D2T7rOSCgvBLtE4YRl84GqlE/fXg5LgEeC6o2AeTJXyp7SddMHuihG8U8Dmo0lfybbM2kBdkG+dcutlPE/6HvrpHQ11KeJsPuh5R+PjTsrycfuFcl1Fjs2lDIWGsHb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632070; c=relaxed/simple;
-	bh=aniiiTCx02SPjK6MRiXmqDJawauZijY/R89Zf3OFF8Q=;
+	s=arc-20240116; t=1737632226; c=relaxed/simple;
+	bh=CAS5qzh93qxx/xh2YnoScvvnQxj8YRyL7CNquZH/RI8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=smn0nycOtg5rqbZ6ta11RVRtpYoSDELynhF1TJfDq2DI8c4W0XWLF5kerHqkEj4HGlAD0pIT0V55mbVPrJPcXIU7amsH2B4mWB3bZMD2xYwBsPoTjItp/OmaQThPbKoExuTeLbYYo05+qd/lRCUvozAX5ocN/eh7g/nOTSTZ/VU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JYxjjcbv; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FT9ooF8xt/FUObi9o1cA8uYgq8Xzrk1xHgLOwvx+XdmbzbF5Y+MC2X/Oq1tnvkC8DMNh4op1mRaMdX+rBRaWPgRJmJNu/41Cs8eI1uS3xCiKcvSOj0sFZvT9TAoiXTFyRxvh62iwvxfLYi0GibeDlqzD5d5ngZT2xfCGvDa3ckM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hECV0VRH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JYxjjcbv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D318EC4CED3;
-	Thu, 23 Jan 2025 11:34:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hECV0VRH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD6FC4CED3;
+	Thu, 23 Jan 2025 11:37:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737632069;
-	bh=aniiiTCx02SPjK6MRiXmqDJawauZijY/R89Zf3OFF8Q=;
+	s=k20201202; t=1737632225;
+	bh=CAS5qzh93qxx/xh2YnoScvvnQxj8YRyL7CNquZH/RI8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JYxjjcbvTLaMBj3OkFRSTyyoPFV31uvuIa/0dtUrJBb2iTGOEFz6Mw8wHzs+sNJQp
-	 KvEiWaC8ibGBMjYcvYI2csjUP9y0dcM8JPZiJjh6wcvlINb7pjsnY8dw5Ix9B9MIu3
-	 msNuviHLb8KGpoIs36AsCvHG+v5dZ+vAwjJtqObHjj1mAlX/eVO+YjlHuFFQ2lNZgk
-	 V1xg++H3YHV4zSinB1DXT2k2bTifF3956AKs74zhbI8kY+8estnGPQHk+1FwKFVFNV
-	 YuneP0o2+vgDtIjO1Lxjyvzq9Wx7/bizn8r1208aXVcQSWdglrEp62H8yCM5Y6F3j2
-	 xUY9xt3vnQdmQ==
-Message-ID: <26a1425c-d33a-48f0-a5ca-9eb1fa2ece2c@kernel.org>
-Date: Thu, 23 Jan 2025 12:34:18 +0100
+	b=hECV0VRHu1vIM7T+Sy0FhhShZB+GVQ/42d0mdpYN3N5xvnf/aIsF0R9p2eVk1B1lg
+	 BpKNJb0s0kLE4fMBE1s4VIPtSMoy9oL1eQPpLTQVHjcPnUsx/Etl4k1MyzSfrKsJpy
+	 KaVI3hyEi9Y4mK34B0ti5N34CTQHaQy/B7GoaEXSvIeddsfBdLTw25fBiUOlYbznQL
+	 QSk4KqnDPBWwN5Et8MYEAtG8jxATMOUtgfrHbyHu8Cb557B0GOE58Bd3gUiLOcKAgj
+	 7Ix56UN1c7waFhO84E7M42LaETnWLmEBsU56OvaNQtR7DofgWouHM8YP+9ufqVHqD7
+	 KItL3W6B0nuQw==
+Message-ID: <fe08c069-c54c-4791-b84f-5c3de42fae85@kernel.org>
+Date: Thu, 23 Jan 2025 12:37:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/7] BPF path manager, part 3
+Subject: Re: [PATCH mptcp-next v4 1/7] mptcp: add mptcp_pm_genl_fill_addr
+ helper
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
+ <ad956e331f2ee8dc8898f5beaebdcf673fd3e355.1737012165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1737012165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <ad956e331f2ee8dc8898f5beaebdcf673fd3e355.1737012165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,29 +96,118 @@ Hi Geliang,
 On 16/01/2025 08:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v4:
->  - add a new patch, "add a build check for userspace_pm_dump_addr" as
->    Matt suggested.
->  - patch 4, fix a warning here reported by CI:
->    WARNING: line length of 84 exceeds 80 columns
->    #27: FILE: net/mptcp/pm_userspace.c:468:
-> 
-> v3:
->  - drop "mptcp: update address type of get_local_id".
-> 
-> v2:
->  - a new patch "hold msk lock before removing id 0 address"
-> 
-> Drop the patch "mptcp: reuse sending nlmsg code in dump_addr", add a new
-> helper mptcp_pm_genl_fill_addr() to save the duplicated code.
-> 
-> Define struct mptcp_pm_addr_id_bitmap in protocol.h, instead of defining
-> mptcp_pm_addr_id_bitmap_t in include/net/mptcp.h, since get_addr() and
-> dump_addr() interfaces of BPF userspace pm is dropped as Matt suggested.
+> To save some redundant code in dump_addr() interfaces of both the
+> netlink PM and userspace PM, the code that calls netlink message
+> helpers (genlmsg_put/cancel/end) and mptcp_nl_fill_addr() is wrapped
+> into a new helper mptcp_pm_genl_fill_addr().
 
-Thank you for the patches!
+I'm OK with the suggested modification here below (just one small
+detail, please see below), but ...
 
-I have a few suggestions, please see my comments on the individual patches.
+> This helper will also be used in BPF path managers.
+
+... that doesn't sound right: I don't see why a BPF PM has to dump
+addresses via Netlink. In your cover-letter, you mentioned the
+dump_addr() will not be implemented in the BPF PM, so I guess you left
+this line by accident, right?
+
+If not: with the in-kernel PM, it is needed to dump the endpoints to
+know what has been set. With the userspace PM, the dump is useful for a
+userspace PM daemon to recover from a restart. For these two PM, Netlink
+is used between the userspace and the kernelspace, so that makes sense
+to continue to do so. With the BPF PM, I don't really see the point: all
+the communication (configuration, status, decisions, etc.) should be
+done via BPF, no?
+
+(...)
+
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index fef01692eaed..afd517ff260c 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1798,7 +1798,6 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+>  	struct mptcp_pm_addr_entry *entry;
+>  	struct pm_nl_pernet *pernet;
+>  	int id = cb->args[0];
+> -	void *hdr;
+>  	int i;
+>  
+>  	pernet = pm_nl_get_pernet(net);
+> @@ -1813,19 +1812,10 @@ int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
+>  			if (entry->addr.id <= id)
+>  				continue;
+>  
+> -			hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> -					  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> -					  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> -			if (!hdr)
+> +			if (mptcp_pm_genl_fill_addr(msg, cb, entry))
+
+Even if technically, it is correct, it feels "strange" to see:
+
+  if (foo())
+      /* error path */
+
+It feels a bit like having:
+
+  if (success())
+      /* error */
+
+If the goal is to stop in case of error, better being explicit about that:
+
+  if (foo() < 0)
+      /* error path */
+
+>  				break;
+>  
+> -			if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> -				genlmsg_cancel(msg, hdr);
+> -				break;
+> -			}
+> -
+>  			id = entry->addr.id;
+> -			genlmsg_end(msg, hdr);
+>  		}
+>  	}
+>  	rcu_read_unlock();
+> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+> index 277cf092a870..b50462b527bd 100644
+> --- a/net/mptcp/pm_userspace.c
+> +++ b/net/mptcp/pm_userspace.c
+> @@ -641,7 +641,6 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  	struct mptcp_sock *msk;
+>  	int ret = -EINVAL;
+>  	struct sock *sk;
+> -	void *hdr;
+>  
+>  	bitmap = (struct id_bitmap *)cb->ctx;
+>  
+> @@ -657,19 +656,10 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+>  		if (test_bit(entry->addr.id, bitmap->map))
+>  			continue;
+>  
+> -		hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
+> -				  cb->nlh->nlmsg_seq, &mptcp_genl_family,
+> -				  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
+> -		if (!hdr)
+> +		if (mptcp_pm_genl_fill_addr(msg, cb, entry))
+
+Same here: < 0
+
+>  			break;
+>  
+> -		if (mptcp_nl_fill_addr(msg, entry) < 0) {
+> -			genlmsg_cancel(msg, hdr);
+> -			break;
+> -		}
+> -
+>  		__set_bit(entry->addr.id, bitmap->map);
+> -		genlmsg_end(msg, hdr);
+>  	}
+>  	spin_unlock_bh(&msk->pm.lock);
+>  	release_sock(sk);
+
+(...)
 
 Cheers,
 Matt
