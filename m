@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 576F820E6E5
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:41:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D3DBE20F969
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:43:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632477; cv=none; b=ZvKO8PQKfJFfVquGy/qmIkwlZgxbbryvzVVAU/8wNQYcyb88xGwEL2WL804Fdip43hAIe9KPs+/GsSJHAds1tb6mh42Oxmw3AxJeaunFrzyLLsk0nc294OtG8xC9Ila11lic47/OLGbrlEOSy2z6dN21WPKinsu3s+ylnTG8H1o=
+	t=1737632602; cv=none; b=jmgAsaPiGtPGYyRWXTblyGKasW95A6mD5N9QQiVuCQrGEpkW4MkERCHG2XW6y15yWw/qJyc9hF4e1UNGVhbsRAXVJEfucvikZcIuVbBrv5SCGjdLs8XLL8JZQGxemTfzVtTcqkgU8lEAEqDUYDX9l1Av5c9lW24pTKyc7OdflCE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632477; c=relaxed/simple;
-	bh=zMBtOgythMKmTCD+5l3rT0I2hN61FuEGL9IwSOG5l1o=;
+	s=arc-20240116; t=1737632602; c=relaxed/simple;
+	bh=v8W+XkMn9fsY3hI22oqIfKgWu2rAQzfKUuUNvX1g4ks=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=j8H2T7lj5NS7nNo8D3EJDr81vdqnH3C5EZJIJm+XA6XQTXdzccPceAWyqHkixGb9F3e49ZPWCxwdV3e3c0GKa4y8u1iw8EQZ3yP80uZGIeG7WlrfMh8lh9Q5k+hlyo3/tARqzISU34ogfo0gJMYcNafn13NYgWosrdMrUsfMZX8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=W8UI0C0Y; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uzejJVcse4i2U/Fyh9xZna9FqzdCUfPyz0eZ+WxUJzk8jfXUdVRgzLqLyoqF/IRM42Vgzvk+heYED/WUY8QXWgf8MZu6JmggB6k2QpzlFVCGRuYFbQapRWsW1xe7fnBQIxHd4SWG+caermhZCVurA2Wm2rGaPupRc7AQV0cFnxI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jW6ju9zW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="W8UI0C0Y"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42D8BC4CED3;
-	Thu, 23 Jan 2025 11:41:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jW6ju9zW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 987DAC4CED3;
+	Thu, 23 Jan 2025 11:43:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737632477;
-	bh=zMBtOgythMKmTCD+5l3rT0I2hN61FuEGL9IwSOG5l1o=;
+	s=k20201202; t=1737632602;
+	bh=v8W+XkMn9fsY3hI22oqIfKgWu2rAQzfKUuUNvX1g4ks=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=W8UI0C0YLaFXELF99r8lzIWH5D1a4XtLJYH0R8vA0aKlfyHVx6XL+AhyChk+o0/OQ
-	 Nn6V1/xRBqvYG+3Uf+kp57aF+d2dBqG+jofhzVRD3kG2YG2jaz/dwz38dWW0BCTK/M
-	 n/6NbKjAhL1XvYdd2RatuIugIh9BeGRjLi7ItHsAzTQxQHoV7iyb+LWrOfd5vjx4Vd
-	 UlW722F9gYck6h6xRTSV09qi0k0tD4W6R8QanJfc3usBtsIR/Btqpg7dPf4qkwz7rd
-	 K+LsYNYxGg5FOlhtxiMxJBQ4wv7kNqGV1gckKheuyt+NXBXvnsnTb8nPUTNqul/DGw
-	 kk8WCjGmkEaoQ==
-Message-ID: <8e7b2312-86c8-4f4a-899e-67540c0fb209@kernel.org>
-Date: Thu, 23 Jan 2025 12:41:15 +0100
+	b=jW6ju9zW7a1W9uUblzxeFR6OdBbaiSBdHSciAU+4yqJMGyAvCaGhwBsV2ogZWTmr1
+	 KmmGvspda9ogvxDhopckdCWH9iqFt1pkJTNyyuWc5jAMTAlLewLSKVOMFMR4uFSFzV
+	 g12XJRmkGiWEERvuvOQerTCOljQbz6kOGOvn0OFT6JkaFmAGkkqiCEnojtS7Si7RVq
+	 ivRlJ85FzogZsOOSnOVimgEWAiS+klkOthGqCW5zK/Qv1aB50ot3uuYO2Ahlncy6Nu
+	 OJzNbrH/oW9UyucNq4UdtOkAi8jPYMyLtEt2ETelcF8JfKmlJor2Nr7mAO9Mv5LhOu
+	 jQkHutQS9xKaQ==
+Message-ID: <7fe39bcc-6a92-4770-8c3c-a7bffcbd72f4@kernel.org>
+Date: Thu, 23 Jan 2025 12:43:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 5/7] mptcp: drop match in
- userspace_pm_append_new_local_addr
+Subject: Re: [PATCH mptcp-next v4 6/7] mptcp: hold msk lock before removing id
+ 0 address
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
- <a6dc4b582e968566d34846237f6647c94c7895c8.1737012165.git.tanggeliang@kylinos.cn>
+ <b4335f327203b21ba4622b14b8a0fd8b4991692a.1737012165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a6dc4b582e968566d34846237f6647c94c7895c8.1737012165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b4335f327203b21ba4622b14b8a0fd8b4991692a.1737012165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,19 +96,23 @@ Hi Geliang,
 On 16/01/2025 08:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The variable 'match' in mptcp_userspace_pm_append_new_local_addr() is a
-> redundant one, and this patch drops it.
-> 
-> No need to define 'match' as 'struct mptcp_pm_addr_entry *' type. In this
-> function, it's only used to check whether it's NULL. It can be defined as
-> a Boolean one.
-> 
-> Also other variables 'addr_match' and 'id_match' make 'match' a redundant
-> one, which can be replaced by directly checking 'addr_match && id_match'.
+> In mptcp_pm_nl_remove_doit(), move 'lock_sock(sk)' before invoking the
+> function mptcp_userspace_pm_remove_id_zero_address(). Then no need to
+> hold and release this lock in this function. And 'sk' and 'err' variables
+> and 'remove_err' label in it can be dropped.
 
-This looks good to me, thanks!
+Sorry, but I'm not sure to understand the reasons behind this. Is it
+only to reduce a bit the number of lines? Or because you plan to re-use
+the same helper elsewhere?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Please also note that, usually, helpers that can only be used under some
+conditions -- e.g. while some resources are locked -- are prefixed with
+two underscores. Best to do that here too then.
+
+So if there are reasons to keep this patch (e.g. helper going to be
+reused elsewhere), then I think we should rename the helper, e.g.
+
+  __remove_id_zero_address()
 
 Cheers,
 Matt
