@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5714D20CCC3
-	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:37:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BC4520E31C
+	for <mptcp@lists.linux.dev>; Thu, 23 Jan 2025 11:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737632239; cv=none; b=X0RXkujKGlJnfe/8aCZOGZFMF3rsD+a0mgwB3gVkM8KW1bZaLFNcStD2r/KSJ38udgAzOWZbBz0qZ0LYBAsdX0ACbfeCLRI4hSQ88BIfbw7EZKYOkRBjpyQoNL7adj5Fhb/lb7B0V7tvho8ztUYJK4Qy6zF86CPyyLaQFOyCAjw=
+	t=1737632463; cv=none; b=qkpwzZShLZW1I9d6iYIjcxPVpLFh47vhgIuZSz2QMq2LRTnPcBzfBxYFRohxnyLety3Z2cxdFSBHDUqTV6wLGuUcREcDiFr/7j3rvOMaLVACKm31CNU1plAdtSNPYWD/vHfb54b1mwp2X7tr7sXBHnjLNR+7pYY9ANi4BW9VLUc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737632239; c=relaxed/simple;
-	bh=7oqLRD482XDfhDsHPnvz3eNy51dE9eepS64enSsaihs=;
+	s=arc-20240116; t=1737632463; c=relaxed/simple;
+	bh=naNasDtzY6bf33UuO27Mh3iITn0g/I5/3uPsIThp6VA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uzfBcjfR9D70ms1MaN7MwRmPqJNBWHFE901U4Cii31csYXMJdbREfBCtsT/j/+GkFBqLAJB8dtLVjB+8PbGtvFBOdUk9/8kTcxnKBbF1rjnv5sXg2PUB+dW57cpNI7wtYXwobi+VoxJqj2NfUBsgB1350hVbKmeqja42/pROIxg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eElyE4tY; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Rdt1MjvuE8y3oycZJhNtm82OsTB169liwZ1Q5eJaDASn+uwNqIupZkou0Kzfwibzw/YHqfe05Zd/VOkLGpr0HXiKxmMe6jBUK6bno2Ri/cIHa3z+sUNwzVVkdPMz8xCHTxIXqsOYWppM7POOpSWfwbfvggOcGRDB6krMbM2+CWg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CGawSvcM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eElyE4tY"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC27C4CED3;
-	Thu, 23 Jan 2025 11:37:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CGawSvcM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0FE3CC4CED3;
+	Thu, 23 Jan 2025 11:40:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737632238;
-	bh=7oqLRD482XDfhDsHPnvz3eNy51dE9eepS64enSsaihs=;
+	s=k20201202; t=1737632462;
+	bh=naNasDtzY6bf33UuO27Mh3iITn0g/I5/3uPsIThp6VA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=eElyE4tYWVGzyPg+AqqJv7+8+btasxlH9PeGnT6xVrwZHta5Zo0QJrh+3xIb37nPL
-	 MT8uglqB9Z1ZoL9cWBUnVRARtYhIiifonzRz7KBVkZehIL1//6HuyrHGyWRMFHgcJa
-	 K6edgJQRXOMtANB6A2rlFEvLo3X1+Dfwop5xmekpKXuD+Uw4qrqazL5DZHrAFYaMz7
-	 RAfhbQGWObBoKTtExxJrFhEPF0NZXsii7AcJMNk4XApZHiPrR2UoLT5EACaOcZvyez
-	 H08rxDnB5p65a17ViC7XlY3/m6m2DbgEmNn442sg5asLnOKqp+zXNBKjR28tK6RK2X
-	 r+OHCyEQ7gZjw==
-Message-ID: <7fdcd82f-2399-4e10-abcf-46feea530a86@kernel.org>
-Date: Thu, 23 Jan 2025 12:37:17 +0100
+	b=CGawSvcMjcuB2+/OeDSynLIUpm464fc7S/A3lwuTX7NBNM9v/rdvtOdmgS9j/la3x
+	 C+0R1rdieg6pbyB+DJkRokrbo+STAEzFQ+A76JOOS2JGCtjIEiHTng6ETyk+FsswXS
+	 edG0XQ0wUDZqESr14SLry7bLyW7usDTRYTKF42QCP4dO1cdFaSu1qoe5C09MJAcxbJ
+	 2yY0U318ZB/82GxCee/E+53vhuRPP8/+0VDKv4yfsGB6a+MKMcR5viRi/WoJNojyoP
+	 G8IOLnV4tWh1C8lWYGOvSJnBNfGwo90gnKC2h5bU64fTqp1ectVxsuTmbzCu2RWefQ
+	 TI/I8VPXQjvXA==
+Message-ID: <5caed8de-3332-46fc-a38c-16f66dc9ad1d@kernel.org>
+Date: Thu, 23 Jan 2025 12:40:42 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 2/7] mptcp: add a build check for
- userspace_pm_dump_addr
+Subject: Re: [PATCH mptcp-next v4 3/7] mptcp: add struct
+ mptcp_pm_addr_id_bitmap
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737012165.git.tanggeliang@kylinos.cn>
- <477b35468fde94e852135a0c701a8631339d60b4.1737012165.git.tanggeliang@kylinos.cn>
+ <30d07c758cfb06aeb312fe37238ce60fc120da13.1737012165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <477b35468fde94e852135a0c701a8631339d60b4.1737012165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <30d07c758cfb06aeb312fe37238ce60fc120da13.1737012165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,12 +96,20 @@ Hi Geliang,
 On 16/01/2025 08:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a build check for mptcp_userspace_pm_dump_addr() to make
-> sure there is enough space in 'cb->ctx' to store an address id bitmap.
+> To simplify the use of bitmap in BPF, a new type for MPTCP userspace
+> pm id bitmap, struct mptcp_pm_addr_id_bitmap is defined. Because
+> there's no way to use DECLARE_BITMAP macro in BPF program, and it's
+> not easy to reimplement it in BPF.
 
-This looks good to me, thanks!
+OK, I got that this is needed in BPF, but: why do you need it in the BPF PM?
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+I guess it is not for the dump_addr interface, right? If yes, then maybe
+you don't need that, see my comment on the previous patch.
+
+If not, what is it for?
+I can understand that it might be needed to have a bitmap per msk to
+handle the different address IDs. But then why is it needed to change
+the code in pm_userspace.c, especially in mptcp_userspace_pm_dump_addr?
 
 Cheers,
 Matt
