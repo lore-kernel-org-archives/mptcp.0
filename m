@@ -1,128 +1,78 @@
-Received: from mail-qk1-f170.google.com (mail-qk1-f170.google.com [209.85.222.170])
+Received: from mail-il1-f200.google.com (mail-il1-f200.google.com [209.85.166.200])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22DF01D5AD8
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 12:23:59 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E393F86327
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 13:43:04 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.200
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737721441; cv=none; b=QSNJFxTT0HruhzlymKCmK3bviGvlkh3kUXABxJIaXYXzCNNsAHoLOqmydHU4I3rhCVhhNNMWYz9bk45NSYKrPsiCyBK2f8eY0yw2EOeKR/43hvCeYHv/oc7tRY55bPqq30nq+LA3EO6CvJwGo3SLVLDcI0bs3h2BPY4PPUdZ3+I=
+	t=1737726186; cv=none; b=kOFIgh+QXRdnrU11h7EfpRykbY7p8TkLQFBl+VHOHsnVc52aAdCcYLz7FLSeM5cehg+eOIzP1QCK8Y6OcoCl36pnhFL8ZoUWowyY7Zb/TFie1Z9z+MDBBR3wDA4Fns89GOPCGARoztSiW2FNbI9ne9TueyJykMRofzwhxq7MtWw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737721441; c=relaxed/simple;
-	bh=TnWU67tYdhlqXU1ZMC1c97Y3oDUIaH3T3NgEcTWzQ3U=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=H23o0GkjdFZpQWMdhBXFklR8p+zC5SXW+LOdFCadJHDN0p/JRQ6TwXsvu0BPfZd1y4JyJFzS/46Q2xmwhDUi98zlGjtP1xbWBBllp4/pUY0SDKmRlgUyQj9m68NcY3l2RUX9lsZZ4neKw0sBZGLxFXYXNpy+ouQlfmSEEr9mT0g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GrYfi3zl; arc=none smtp.client-ip=209.85.222.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GrYfi3zl"
-Received: by mail-qk1-f170.google.com with SMTP id af79cd13be357-7b6e5ee6ac7so168068485a.0
-        for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 04:23:59 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1737721439; x=1738326239; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=v85thJnUoGCRcrvGPpyGhGdmf/75UbuHDHL21OdA4zc=;
-        b=GrYfi3zlzgvuK+1jgYw9f6sNEdsXpyHh1yGsyWEtJwOoMXfVfCTEZwOerVpAMeEV5t
-         LtnWC4hiXd+IpacXEwkjREQUCctSCabY/rQ2mjxlZ4z1rB9KAUECEDXE6O+rF39D3ZE8
-         AU/nBNdnrxXF80QVVlD35mMXUxFITI8ICDuIjhNpZ44z9/IWmBloOUS5xVNQkM80szYJ
-         2dpdyAvVlSj9Lx3UfSk+CRoJDCZgyaM7THAfoexOpkmHZC7ViUVHiphCDDHzMUZpsH42
-         VGp415WBgqCDlzBfP6XZLgp3dwx/+as5zBfP71QwZY1bxBEW31x+dIp+XadRnG0GbPaF
-         VJsQ==
+	s=arc-20240116; t=1737726186; c=relaxed/simple;
+	bh=n8OZ3b/yHRWJF9A8gcfHJ7tGWiWPREHXqrj4JQyfRFs=;
+	h=MIME-Version:Date:In-Reply-To:Message-ID:Subject:From:To:
+	 Content-Type; b=R2TVRaEEMZQUmGXj5XisSGtoAoKKCpuC5GCmwENuoJ0i56P3jvxoqzZKo6KYHwqnziaQWTGWhNvtg2ZGQsfH7U02W8kdhAYRfWr2t58389vdb+JVS5ujXFtoN9axOmXoQI9MTVKz1NHZCWpPU7suw6U8m5/Q78cZ8ep6dqp/Tuk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.200
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f200.google.com with SMTP id e9e14a558f8ab-3cca581135dso29047215ab.3
+        for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 05:43:04 -0800 (PST)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1737721439; x=1738326239;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=v85thJnUoGCRcrvGPpyGhGdmf/75UbuHDHL21OdA4zc=;
-        b=OQD1w2vGQydWamX5G3BaSI50NXDpFp0DDOl+PlW48twNBIEZmQ4dAWZXW69CYayIri
-         zY4XDH/lCvcvYM1k22TFC04+gA3CislO0SyEObaNSbepPICj357eFaNLAhGlxpC6yaPs
-         0gIDT4RZF5djeJBaXd0/flgF8f21Z521zc7cWH9/Og5RP6iFI06/xrFrDAWeVgRquUCM
-         SOK38iEDs2vV/U29dPqHfvqxk0R0eXGdbZA15KqarlEQ+QhPI6Kc5KpcmLa9jAxxzyI/
-         O/SZuOs8fHbSQwhfMEHejesQAgpEoKthAKxcdv0kPOQ4A9bVCPsr1RzEC9Pe45GYTvzY
-         n0dg==
-X-Gm-Message-State: AOJu0Yw4+TcbBAPcyKuh5N6dAMX3m0NEl+UIw5bF6OUAYU+32W9VOZE+
-	kSUQmyEl49/hocVwYV14agJulFEHCch1QFxTurDGQoadVNS+VxddYSbP
-X-Gm-Gg: ASbGnctUNmUpE4/S9SQrTM8BayJatal5UZGOdDmmlZgD7s1Xhn3J10gHvg+8A+beyxG
-	6AlJAfh1nR8Xnv2Fr9Y4lBQpX/HvV10zpY2VkVYnB9dx1DlLdtEmEx3C0NdW/M3BpQlfX5hxPqh
-	B+J3PNpIn/NFv8X4B65CjHxkA0lGVh1pXQkpsvGF2y9u+4IqCt3djkqPgcw4FCuAxcxhV5bMIOF
-	66ya6mmIzTpma/5Clupv6ovXhmhptLh07SrtullYiHURrVSaGD0ZJDQGbiLTek+g6omyt9Oq4Fv
-	d/F7fKMRAHyNGcs=
-X-Google-Smtp-Source: AGHT+IHBxzQ8cPCO97MDk78S5zfiKQgGwTiBXpID91mvVuqfF/t0XGFtB+0hzPEHiqhV1AwW/tDKZQ==
-X-Received: by 2002:a05:620a:4449:b0:7b6:d710:2282 with SMTP id af79cd13be357-7be632893a5mr5495260685a.49.1737721438851;
-        Fri, 24 Jan 2025 04:23:58 -0800 (PST)
-Received: from [127.0.0.1] ([20.57.46.36])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7be9aeeddbasm87042085a.85.2025.01.24.04.23.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 24 Jan 2025 04:23:58 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1737714424.git.tanggeliang@kylinos.cn>
-References: <cover.1737714424.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_Squash_to_=22Add_mptcp=5Fsubflow_b?=
- =?UTF-8?Q?pf=5Fiter_support=22?=
-Message-ID: <344e5597-cafa-b67f-25ce-ecd53a958d65@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 24 Jan 2025 12:23:57 +0000
+        d=1e100.net; s=20230601; t=1737726184; x=1738330984;
+        h=to:from:subject:message-id:in-reply-to:date:mime-version
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=2pZe/q9uQMTJ1h6+AXXu51oqWvY3EGvpD1rhxTUhiCw=;
+        b=G07UeUjrezyn58y9JNGXQPi1Vzj8wCBN9IsRcwX0zo/90WXuVDd7l4Q6A7Gpu8RX1z
+         SkojyPjk4H5APVEwmqMvJweJQZGHWTBL5jMjTv2Vcx4PTStayojEoV6mj7yfO4AXW4sk
+         ajynZAC5rMQaHX7i9+FbLS964NQcOLv9D5aanHEyQYYzE4L9UtS1Zd/pT8UqbhiZeD2w
+         PkQsxveGq3hNp6XCc3anL0/viJtHrOOKAqIuaK+TvqYUGzMqoNhaTqeok2U8lQq+4xNL
+         505BaP1OsBAJR03lVebyOBEGgup+sr+cvg1/5vvrGvwzlEHnECjawyzfQD5IQZmCdauK
+         ofiw==
+X-Forwarded-Encrypted: i=1; AJvYcCWgoyLHyWX+lQqQ8Xhd4WV1ejB2bhSgVOy5IXLbBRUmEduVE62a8R8dyCL5mZ8zuElncoufLA==@lists.linux.dev
+X-Gm-Message-State: AOJu0YyfU7/AtNMtLRV/K6ztHtzvO/z9x5CNAbnoRDh1URgwsRyaxZW5
+	hvKCT/v/v6Vwf+PQxWSzqgbt6Rlmo1Lz5jA2qd1+WtpLBGkD1E9nLbBRDMsKFlMxWMQoUKIJkyu
+	tsCYnQPYBqcopwMtZABkjZLzGTpIRTs3KJzTyRfnlPYFGZ9QRCWwsJrw=
+X-Google-Smtp-Source: AGHT+IHK9J8OswljrqskgVtLCWuKfDYf9V/LMLUGMG1IR6LhNN3Im86vudLsPDVLvtHBMCmDTGo+FZJvCui01vqHBrHYGxG8x3MI
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Received: by 2002:a05:6e02:4918:b0:3cf:b2b0:5d35 with SMTP id
+ e9e14a558f8ab-3cfb2b05ec7mr102563925ab.7.1737726184066; Fri, 24 Jan 2025
+ 05:43:04 -0800 (PST)
+Date: Fri, 24 Jan 2025 05:43:04 -0800
+In-Reply-To: <6786ac51.050a0220.216c54.00a6.GAE@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <679398e8.050a0220.2eae65.001d.GAE@google.com>
+Subject: Re: [syzbot] [mptcp?] WARNING in mptcp_pm_nl_set_flags (2)
+From: syzbot <syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, stable@vger.kernel.org, 
+	syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Geliang,
+syzbot has bisected this issue to:
 
-Thank you for your modifications, that's great!
+commit 322ea3778965da72862cca2a0c50253aacf65fe6
+Author: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Date:   Mon Aug 19 19:45:26 2024 +0000
 
-Our CI did some validations and here is its report:
+    mptcp: pm: only mark 'subflow' endp as available
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/12948765422
+bisection log:  https://syzkaller.appspot.com/x/bisect.txt?x=14f0bab0580000
+start commit:   d1bf27c4e176 dt-bindings: net: pse-pd: Fix unusual charact..
+git tree:       net
+final oops:     https://syzkaller.appspot.com/x/report.txt?x=16f0bab0580000
+console output: https://syzkaller.appspot.com/x/log.txt?x=12f0bab0580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=1c541fa8af5c9cc7
+dashboard link: https://syzkaller.appspot.com/bug?extid=cd16e79c1e45f3fe0377
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=11262218580000
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/927f2c1cee5c
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D928101
+Reported-by: syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com
+Fixes: 322ea3778965 ("mptcp: pm: only mark 'subflow' endp as available")
 
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+For information about bisection process see: https://goo.gl/tpsmEJ#bisection
