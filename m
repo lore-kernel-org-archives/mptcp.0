@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C2E9123A0
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 09:57:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E88401B87C3
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 10:05:26 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737712645; cv=none; b=q06Kmdl+AgtU19JZzTpSsuFGnFiz7XSusLLK8JWSgUTe0gd6EjZezqUjZpkEbjdsWFGCHN0lK2fa94B8Ttu8O0/IL8VdLs+UR7ZeMd9zyBCO10LWfGfAIlGGlsbtIx1LH6Fvha6GNWo7nod2shohgZ05i/iAPLhqkMJin3KkS9c=
+	t=1737713127; cv=none; b=C/gYggfSfN4leMeZOgSmPU6GiCa07ipyo0ZbseBGfRYaEu8U4q/OkAQAocWPbOpuBGShf+FOf276UvYZatblkE7Oc9xsgkAfDvAj9feF7zWYhWszMsbDSN+7TANKCEf+oODI+eA7wQyG8rh4Wy5Hj7/orHHA9YVispHtk/Zi59w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737712645; c=relaxed/simple;
-	bh=9kIzAt7PYrwaVDUtRtu53knqyHmsPJCx5JTc0SZqUtk=;
+	s=arc-20240116; t=1737713127; c=relaxed/simple;
+	bh=8xJlz5eTzIo63yzl0HmYRNn1YuTk/tKSSHAc7cLHA5E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gSj7/UDVwlFFcbdpzJeRsiAjzbblOYZtdaMt5+f8ngIjbUuGZ6pd7zoaIr1PBtGyrNWuJcBUICEIbc/72q/sNBgYbwGZVYQx7gbGG317MRGXILIGjCzXPw+60O2EaBGlFdoYQjJpD2wan8fKlFTRqxDotdiH+Aa8YWwi1F8aH0c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R7wsn5/T; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nIPVgNYyQI8KUBESmIDBDayZ/teDCxy4Y81IoQGGLG2o6P7hWSH+iMhIe64T5vI5E4cqo82m3Jj19raSwBi6LiRYxinyv5iFs4GA/wqB8a7Ef5I1f6d+4EvR6qE8Z/pWWveBJSsbyUgXm1D/PLYcwXXyQICnF/ownoPb3P64mQ8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=farGTWpT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R7wsn5/T"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BA7EAC4CED2;
-	Fri, 24 Jan 2025 09:57:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="farGTWpT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79BE8C4CEE1;
+	Fri, 24 Jan 2025 10:05:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737712645;
-	bh=9kIzAt7PYrwaVDUtRtu53knqyHmsPJCx5JTc0SZqUtk=;
+	s=k20201202; t=1737713126;
+	bh=8xJlz5eTzIo63yzl0HmYRNn1YuTk/tKSSHAc7cLHA5E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R7wsn5/TCqQXkn1FfKSWBFq1waJATxK6JdZ5ieZdYJqjZnMMAMI9j585fYMfIhYWZ
-	 q6R1X6ZKbzPEdh/ihuvz6YsGQWe0rAvlNV+KUAaPVrDfmxAiLsZPQDHlcm0FKAned6
-	 BgwnVsEUwS/9hYOsW7aKFEOAKRBtDYR3zHeqPgCROmutzllE/XdmJDVTxdYOvn9l+c
-	 NeTcKiadQ8UWwYZXCDyPf7AR/SvYWTarUjBFDfvse27vpvSJCmgwlOGUr4l7ME+7Zr
-	 r/j7Hi1FFH/Yw0OH/JPQRhQn7UPJY0J2eTmBzCKHC5IQKLUVhanqAhH3pRcuDQjEjs
-	 y+l4WAWRot+yg==
-Message-ID: <7ce47d91-ac63-47ce-869f-87bbfb354c04@kernel.org>
-Date: Fri, 24 Jan 2025 10:57:13 +0100
+	b=farGTWpTnsGz8ntYwrRsaz9uB7TtnhLfrUJ+nWOE1k7iURvFIP/OhOskfVPdb4Yee
+	 1BjIjPkne1Bm8Mim2EBwQ8xaXN0Eam4MekR4QLyCP5pvXHlg6H4wLNntknbughqoAw
+	 XOWp97jWGLnLGVszCUhX+m0BPLjlJHzqtzkO3yOlI4TSUN4V1NQlxatrXUmh3lPEkj
+	 lDK+iAeAv61B5b/2F1nCOyg4NBGDQ6QG47mazmlt75jzQxTS0KklSvVD9F4AJZicdP
+	 ZfkzNRDRXPms5o0gNtLu0FLwDWrG/E0P/3lW9MvBzhO+fqIZTZwjVNyhYKZAF80dw9
+	 gnI8+jpy6QBSg==
+Message-ID: <f494a57e-c425-407c-9332-85adc0641eb1@kernel.org>
+Date: Fri, 24 Jan 2025 11:05:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 5/5] mptcp: use ipv6_addr_equal in
- addresses_equal
+Subject: Re: [PATCH mptcp-next v5 0/5] BPF path manager, part 3
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737702298.git.tanggeliang@kylinos.cn>
- <6f6f731472cb7ac93f1e1689902673ebfee922ed.1737702298.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +85,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <6f6f731472cb7ac93f1e1689902673ebfee922ed.1737702298.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1737702298.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,28 +94,30 @@ Hi Geliang,
 On 24/01/2025 08:10, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Use ipv6_addr_equal() to check whether two IPv6 addresses are equal in
-> mptcp_addresses_equal() is more appropriate than using ipv6_addr_cmp().
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm_netlink.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 1462dc7e886d..6461aa742385 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -64,7 +64,7 @@ bool mptcp_addresses_equal(const struct mptcp_addr_info *a,
->  			addr_equals = a->addr.s_addr == b->addr.s_addr;
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  		else
-> -			addr_equals = !ipv6_addr_cmp(&a->addr6, &b->addr6);
-> +			addr_equals = ipv6_addr_equal(&a->addr6, &b->addr6);
+> v5:
+>  - drop "change is_backup interfaces as get_flags"
+>  - move "add struct mptcp_pm_addr_id_bitmap" and "hold msk lock before
+> removing id 0 address" out of this set.
+>  - a new patch "use ipv6_addr_equal in addresses_equal"
+>  - patch 4, drop inet6_sk() in mptcp_event_add_subflow() and
+>    mptcp_event_pm_listener() too.
 
-Good idea, that looks more logical!
+Thank you for the new version!
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Now in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- 8b880bfa4362: mptcp: add a build check for userspace_pm_dump_addr
+- 5c44b4a4e41f: mptcp: add mptcp_pm_genl_fill_addr helper
+- f0d7ae749373: mptcp: drop match in userspace_pm_append_new_local_addr
+- be35f8e33917: mptcp: drop inet6_sk after inet_sk
+- 6e78ea4d3c94: mptcp: use ipv6_addr_equal in addresses_equal
+- Results: e80a31769cf4..ef015705ac0b (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b36f3b98b02191d9346b78a16e8da775eb3d780f/checks
 
 Cheers,
 Matt
