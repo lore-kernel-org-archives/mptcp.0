@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6BAA61DB372
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 09:13:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 402E623A0
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 09:39:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737710030; cv=none; b=pvNNefn4FnK3cQGb837kq6Pczvu2hw2chi4gftscveozWepBFkxnaskm/lHeMZRpmzJp3T6oY1d9ESbvQ7HBrMFjZILrYmYc37bsExD0Tqiju6oBDO/bCa0uF3a6MK/5/aPf1bCwdKdWrWg3B1CfKpc8nT7Um65fcBazsiSaugg=
+	t=1737711543; cv=none; b=P1KW++VUd8cUeB7lLeT8ul3Vn3tzjrrgrk0u4DUDUEL3Y5OlylccaJe9/pEiM0V+x4hjIPvix9EoUX9xzzJ9rObNH9dISdAYLyLoxGfoiBVNt8jBJwo1EZE+xQT89DijYeCH53edFM4V2pNcazCkJ//pa1Ya19NwhA+SYJBbjbY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737710030; c=relaxed/simple;
-	bh=fVLO9aormhJjhAX7lZ+p/7kSWPi49dhv0FYYrIk7gnQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:Cc:From:
-	 In-Reply-To:Content-Type; b=hdt+7eDnzaWI/hE7jaZEh06GfvvN011AuAbTg+wnaYZVjrPYSvDVoAevA+6BXTVN7ronicOw797+DswvQjC2vXwDAVZB5V2Twz8HpXPEWGgOZIYmbxBLhu7QtukeuwiQGhzV3eyAD+RZzRmjpYid78/G85OGDh2obEjYiW+11YY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GWLj9AvZ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737711543; c=relaxed/simple;
+	bh=cg2buXbf2Zh17oXLl+m9N5mHsmK0zDgy4avZ9Ql/gsY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=l7vGLpkhCEs5k7ZuTTh7OfsK2S8oQAmxMEgtqeSyc2P+3b41tci52orIZg4q7cPpyyg4wDQaNTe0kYY4tguasFBAMtuzmbLNjUCUjLh6CiTj8O6FXEWmY8bAhzUmNZt5e0LdSPjx6u3R3ASxgfYja+7MKyyqp8GZXmttyYu/m80=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lc3N1pQ5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GWLj9AvZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5A8C9C4CED2;
-	Fri, 24 Jan 2025 09:13:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lc3N1pQ5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 23E39C4CEDD;
+	Fri, 24 Jan 2025 09:39:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737710029;
-	bh=fVLO9aormhJjhAX7lZ+p/7kSWPi49dhv0FYYrIk7gnQ=;
-	h=Date:Subject:To:References:Cc:From:In-Reply-To:From;
-	b=GWLj9AvZrLuqN4HopbtIlwhqBove2DALEh36gSlWLyNsk3DD+35Xf78CM+Q061fQT
-	 sVWROv8dBu0WPTXmtNp9Esw0gQTux4hUKJlGLDjIG4sKU+JhSriHr2cM1eMsq1Hw81
-	 4m/qxgOwSPev/oUIzEriCq93jfjOf+gyIdfwlpxcEUIuLRuAI/WclIJPT3RNqWSiqy
-	 kHRaXoRPraRC1glb+ha4tf7CSacs+4ZtOJVhUfI+bt7mfAKAnt9JooDqadEup83ZuM
-	 d9AWBApjR7/aTK+q9H3tYJvcOLlcYvq/Iq7Q7sc1oR8lye7QXNsnGDtlP5MsFOwjwL
-	 +y0AaB3pWgmTQ==
-Message-ID: <71409ffc-ef6c-4520-941c-ec048c7e4ac0@kernel.org>
-Date: Fri, 24 Jan 2025 10:13:38 +0100
+	s=k20201202; t=1737711542;
+	bh=cg2buXbf2Zh17oXLl+m9N5mHsmK0zDgy4avZ9Ql/gsY=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=Lc3N1pQ5jp/HRGhjHQD/KciTvucSw7YPBWIwbj/AaA9f9y2Q5gLhcKa5GiIWh2BLB
+	 F62rusO0ewZl1o7aJY5h6fh6Lzb6LWMvKEJ6sa4nuQ2lVrEV3PK8hA3uQNFLMRiTzY
+	 a8mfvzWZRgIfLhlKKsq3gb40cOEIRVlbdCVtXm0sB9DjBAfOnkUF9D34y12DRzLawk
+	 GN9P23y6/btQH3/eeckGqtPIKOCqkiG97u8TjbmVM6I5n9e2r/57CatL09sagCH3qo
+	 jcW2KAqREnCOBei75tgiKK9QwqCPr84Fb29z5LOzxvf85/Lk1ZjpOxx0fPPER8rCGu
+	 C5B+oC6dRJA2g==
+Message-ID: <b311bbb7-73a6-4bda-9efb-47cac0cb402b@kernel.org>
+Date: Fri, 24 Jan 2025 10:38:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next/net v2 7/7] selftests/bpf: Add mptcp_subflow
- bpf_iter subtest
+Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: pm: change to fullmesh only for
+ 'subflow'
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-References: <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-0-ae244d3cdbbc@kernel.org>
- <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-7-ae244d3cdbbc@kernel.org>
- <5313b129-72b1-4fdc-954e-e2d0a141a99c@linux.dev>
-Cc: MPTCP Linux <mptcp@lists.linux.dev>
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250122-mptcp-issue-540-v3-0-4aeed3022f23@kernel.org>
+ <20250122-mptcp-issue-540-v3-2-4aeed3022f23@kernel.org>
+ <a75623be-882b-0d3f-97e8-7adb04c46f39@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,54 +88,56 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5313b129-72b1-4fdc-954e-e2d0a141a99c@linux.dev>
+In-Reply-To: <a75623be-882b-0d3f-97e8-7adb04c46f39@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Mat,
 
-(only with the MPTCP list)
-
-On 24/01/2025 02:38, Martin KaFai Lau wrote:
-> On 12/19/24 7:46 AM, Matthieu Baerts (NGI0) wrote:
->> +SEC("cgroup/getsockopt")
->> +int iters_subflow(struct bpf_sockopt *ctx)
->> +{
->> +    struct mptcp_subflow_context *subflow;
->> +    struct bpf_sock *sk = ctx->sk;
->> +    struct sock *ssk = NULL;
->> +    struct mptcp_sock *msk;
->> +    int local_ids = 0;
->> +
->> +    if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
->> +        return 1;
->> +
->> +    msk = bpf_skc_to_mptcp_sock(sk);
->> +    if (!msk || msk->pm.server_side || !msk->pm.subflows)
->> +        return 1;
->> +
->> +    msk = bpf_mptcp_sock_acquire(msk);
->> +    if (!msk)
->> +        return 1;
->> +    bpf_for_each(mptcp_subflow, subflow, msk) {
->> +        /* Here MPTCP-specific packet scheduler kfunc can be called:
->> +         * this test is not doing anything really useful, only to
->> +         * verify the iteration works.
->> +         */
->> +
->> +        local_ids += subflow->subflow_id;
->> +
->> +        /* only to check the following kfunc works */
->> +        ssk = mptcp_subflow_tcp_sock(subflow);
+On 24/01/2025 02:53, Mat Martineau wrote:
+> On Wed, 22 Jan 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> It is good to have test cases to exercise the new iter and kfunc. Thanks.
+>> If an endpoint doesn't have the 'subflow' endpoint
 > 
-> However, it seems not useful to show how it will be used in the future
-> packet/subflow scheduler. iiuc, the core piece is in bpf_struct_ops.
-> Without it, it is hard to comment. Any RFC patches ready to be posted?
+> 'flag'?
 
-If it is easier, we can probably share a link to your git repo
-containing the WIP patches.
+Oops, good catch! (fixed)
+
+>> -- in fact, has no
+>> type, so not 'subflow', 'signal', nor 'implicit' -- there are then no
+>> subflows created from this local endpoint to at least the initial
+>> destination address. In this case, no need to call mptcp_pm_nl_fullmesh()
+>> which is there to recreate the subflows to reflect the new value of the
+>> fullmesh attribute.
+>>
+>> Similarly, there is then no need to iterate over all connections to do
+>> nothing, if only the 'fullmesh' flag has been changed, and the endpoint
+>> doesn't have the 'subflow' one. So stop early when dealing with this
+>> specific case.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Notes:
+>> v2:
+>>  - clarify the modifications: new comment and updated description (Mat)
+> 
+> The new comment (with the one fix above) does make it clearer, thank you!
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+Thank you for the review!
+
+Now in our tree (feat. for net-next):
+
+New patches for t/upstream:
+- 6a6c787311fd: mptcp: pm: remove unused ret value to set flags
+- d7fe0f41b38e: mptcp: pm: change to fullmesh only for 'subflow'
+- Results: 9ddf0cb9d180..3b679399ffaf (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/848d0e332ae8b7807e4afe73b7d7ceb6e689f4e3/checks
 
 Cheers,
 Matt
