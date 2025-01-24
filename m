@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B50F21A43A
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 09:57:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F3E1A23A0
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 09:57:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737712622; cv=none; b=RUfu2fcdU2eq0yjaVWdvYOnEq2DYGBhqQC1WAdQDevTqaEmsIsiYiymR4kXnTRwZx9mgfp/ewibhrEJ8Zd8pXPdWRlzJmIyJsHCD4s9FSt2xoOdrE9Am2LbDdmPx2mVUISgmkff/t+x2X6TOHzsEd6ca8xC8PI+nEDqrpFUu70Q=
+	t=1737712624; cv=none; b=uiZ/EuEvftLrdBGI0mI3tO0bL2DszOxd4FInCfeiqzn3rLyBojLLn11mXtesjCc4Kea2KvDvMEx6mFiZMjNq+svSq5zhaDHQnt7WFH4PNOHVAYyZhKl0qjqhrsIt7Xy2HMFhMAsO6ZWh9X24YeLkmSQBYSNlPLMKb55hc/3Xm84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737712622; c=relaxed/simple;
-	bh=nWrV/sF/msaXzMHd3ya4o9wzyB11IFbgFaVsfUF5WQc=;
+	s=arc-20240116; t=1737712624; c=relaxed/simple;
+	bh=4lsb7oDwStv0+uf0atJLmKZGHRJ5NL59K4kQllih648=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=coOq8WUyfaAikiaeFusbSjn8fph2L31TA+0HGeCG7DbAV7cmzMLXH16hzXq8teKuVGbyTLMLSw1ETDTvoi1/M8BfiIBYDJ+41kBTiDFRoSID8vTAaTya2q7jOCyKBG7aSDbvpab+1I1D636jzXwdUSwuLWNFV/mOLTXNDq/BBJc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lnOvJbDB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=c4RZ1o9EeZkF1wN6qBWFDPM0MSwLXIH7Lu/bbAZ7Dck9Pc+mIqUPK7bxo/l+nP8uHunk8yar28XL3CB5E2NBXlbugVsgwaxRlcoioAcMVwT7NuEBuE45NG/xSAaTtedpdZERahhg5blaPlkrpjX9F2QerBlZDWJjDiMwhRSOFWY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HJQxe8lT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lnOvJbDB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7299C4CED2;
-	Fri, 24 Jan 2025 09:56:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HJQxe8lT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60CE8C4CEDD;
+	Fri, 24 Jan 2025 09:57:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737712621;
-	bh=nWrV/sF/msaXzMHd3ya4o9wzyB11IFbgFaVsfUF5WQc=;
+	s=k20201202; t=1737712623;
+	bh=4lsb7oDwStv0+uf0atJLmKZGHRJ5NL59K4kQllih648=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lnOvJbDBCBlInKAdOiD5VnIfZFLCyG2b8jQpXhjJNHvp2POkHH1P42TU/4q45jByc
-	 lJgW/I6wtSp7TPxiD4rAoPmHxDk8zBE58242CFRnQ4ADd2Ls4Uh8DE3vJwaNe/stqn
-	 oLAmq4ZFfSph0sCorVkNHC2e5c6MTXxlXKq17ExCgLJC97b7kUa7if+H6CxI6ll056
-	 vEHCmEppT/YB7p3xxy3ihUesWB88DtIo7I1/mMW6W3nbMFinfHrlBjb0B1orlb6JBF
-	 Af3IZDiw6qmFimCfL9qE3wEyXMlXZOo0N1AC2TuQfKc1bLUVqouG0SREomhuXGKLjO
-	 jCOfUUtYj6I2A==
-Message-ID: <460c1f5a-bd12-425a-bb8d-278452c67a67@kernel.org>
-Date: Fri, 24 Jan 2025 10:56:40 +0100
+	b=HJQxe8lTNtptKDOrMqGBIifGyIIinjbvCyTsnlT7D23F8eU2fpds/H/JizUAdznwu
+	 bsvYAtiO1zvvbuQK6yOZzYX+zu3m8BrjXeyKkDkIHelItFnpSOY8bsOdcGItBlgHZs
+	 4e3QEcu3tjPQPz5x8pbQ0XzX9owNzFA52oCIfuUQCgic6TeesXYKaowaOgepDshUMP
+	 Th5Mpl1hth4Or8nXk3FHUKPMrq4hpEkGwzNqY8ziRJkHNzcwAPr9RmwFD1LMMMuhfw
+	 2wv6Oca0td4Em8ZmJNZDXOh6uGTZvZL4RHbvlEqyHI3oL7NfD2sFk2YzV5h5RKaHEb
+	 PZrDkSqZYHQdA==
+Message-ID: <dff1624e-1afa-450b-b961-e729d5d8c22e@kernel.org>
+Date: Fri, 24 Jan 2025 10:56:52 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 2/5] mptcp: add mptcp_pm_genl_fill_addr
- helper
+Subject: Re: [PATCH mptcp-next v5 4/5] mptcp: drop inet6_sk after inet_sk
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1737702298.git.tanggeliang@kylinos.cn>
- <408b422f50568114b69a4231fbf7c6548915b88f.1737702298.git.tanggeliang@kylinos.cn>
+ <6a0c6d7d0d2c3f5b8985b1a521f4d63dd3800ff2.1737702298.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <408b422f50568114b69a4231fbf7c6548915b88f.1737702298.git.tanggeliang@kylinos.cn>
+In-Reply-To: <6a0c6d7d0d2c3f5b8985b1a521f4d63dd3800ff2.1737702298.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,15 +95,20 @@ Hi Geliang,
 On 24/01/2025 08:10, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To save some redundant code in dump_addr() interfaces of both the
-> netlink PM and userspace PM, the code that calls netlink message
-> helpers (genlmsg_put/cancel/end) and mptcp_nl_fill_addr() is wrapped
-> into a new helper mptcp_pm_genl_fill_addr().
+> In mptcp_event_add_subflow(), mptcp_event_pm_listener() and
+> mptcp_nl_find_ssk(), 'issk' has already been got through inet_sk().
+> No need to use inet6_sk() to get 'ipv6_pinfo' again, just use
+> issk->pinet6 instead. This patch also drops these 'ipv6_pinfo'
+> variables.
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> v2:
+>  - drop inet6_sk() in mptcp_event_add_subflow() and
+>    mptcp_event_pm_listener() too.
 
-Thank you for also having added '< 0' when looking for errors from
-mptcp_pm_genl_fill_addr().
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Thank you for this comment, that's helpful!
 
 Cheers,
 Matt
