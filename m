@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B3F333998
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 07:11:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8FEDD33998
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 07:11:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737702702; cv=none; b=OBxrj2u+JmyaG+eeAuLffT7Oy/VSQ+M4L6RJVgzMOWa8gm5Zk1sfD4rLn3BEhTUS00CZFVPJz2gHQO+R2J5hBetFP/kKH7Jx+c0pYsLqQBAjaUg7e/nCE2U/IvkgIOlMZzNk4MUrCLsZdRRDbZbGdMl55P2WXXsjdnaXQJDpVP0=
+	t=1737702704; cv=none; b=qbJOnLaCxnCtfuoWUfjY5BONfNV65u3hCtW+bt4elZChohgdbDvnopKNInDbfkbFDkbQ1pqDoFYKkJ5YvDFmrA5IoQqcpUvF2iqUbqf22uQ7ZS47wUE/vVLGlEWnv92XFAjKyjTVHDDHg5A6VWeSFiAqtdWfljeeQGv1zVyTF+g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737702702; c=relaxed/simple;
-	bh=rMxVys4eAR+ksSXp278HlioBiVye4yhDBrco2xV6zVU=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=iiC2CIh04EsN8NprecJmIlNhAtdloe5dQmIZ0/GIKlLR07DoZZOldyMSOV1iWlkmsFZTDk3+WX5a1Kwi7gInwaDPhtG2yFTDaEreapKtHkZ2wkHCqTJ6qOj2oZvB4bZeuSWJbBi3Nzn7qjL1tgK/zFAo/0XxW9RsUJ78JoPI2H4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dHkjB1ix; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1737702704; c=relaxed/simple;
+	bh=TiZfMyxvA7ixpSqsK46sUJnfdUrObKYYni17nSJ+4sU=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=A9z6N1Do4qcv+1XqPlP3KKWUaAVvDZfJy5QUGJBWPppfPcxfA9hjHAtPwqA+lSNDIJK2+VYa8rU66XauiU2NI5TWq2K6nGKkkWcA0GfAt262wlnu0kx598Nsk4ov9LZc8OdcKN4oHr5928DM3QUYQ9Cel2I+oPGcEgI4Ts/ZK2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e6fXFxw4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dHkjB1ix"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D81FBC4CED2;
-	Fri, 24 Jan 2025 07:11:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e6fXFxw4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 98D86C4CEDD;
+	Fri, 24 Jan 2025 07:11:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1737702702;
-	bh=rMxVys4eAR+ksSXp278HlioBiVye4yhDBrco2xV6zVU=;
-	h=From:To:Cc:Subject:Date:From;
-	b=dHkjB1ixXsigrbMRKfsMzd6fl1/fOkXMAKq/D/gPpodd1faS/KFf2VG3dHlazH+/t
-	 Ia/ek3t1ebwujQOciQt8cm839n8DZG3idNATNv5zIVZjeSRjAi18nmHB2cMUM4N8BL
-	 mBk24KJYbzqqAm1RWV3gme9TDIOMYuuEKZpWZjjTYW2c130bmNiE8UxKzquZKdIzKA
-	 T49l+lFFYXouKwQmpiW1eUORCNxf+INUc82WmeIED+QEUknkE/U6aD305CAJbb9ugy
-	 VkXEcDssCTQrtJ8GTM4r8CfcEdSUCkEbXzal6T8Ot4cFe3QW6UlsORq2MyN4uxaI+A
-	 ma28rWe0/vxkw==
+	s=k20201202; t=1737702704;
+	bh=TiZfMyxvA7ixpSqsK46sUJnfdUrObKYYni17nSJ+4sU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=e6fXFxw4iJ3VyZ/THVr/o9P4AfQh3zvSkiAiQaDZXq/zrj6DtA71gSRLgdWhmDmQr
+	 Yl1R+VgAzh4fmqWyE/7SJgRL6YU7ZY5lZW/ayRARDaib5wspHi7EbH2UMN2ht3VDg4
+	 QqfunElKtliEhBkx3frw7VGtvXTNRwy8bLTUCWRvtWVjU0TIq5YFZukgGQMdCy2qAc
+	 ACrAY4Y1RLJwjBGRHCORq4iv9NsNcy3zLfFBCloswTLgY6Ymy/5IN2TtFX6vZbo1bk
+	 17D4dHnW6vxFYKTW2jhjceVuZBFVmawOE7yEXnEG2LSPo8DClcw5SywF5/vZpED25u
+	 mI4CJ+ewUoLqg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 0/5] BPF path manager, part 3
-Date: Fri, 24 Jan 2025 15:10:42 +0800
-Message-ID: <cover.1737702298.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Matthieu Baerts <matttbe@kernel.org>
+Subject: [PATCH mptcp-next v5 1/5] mptcp: add a build check for userspace_pm_dump_addr
+Date: Fri, 24 Jan 2025 15:10:43 +0800
+Message-ID: <ea2f44424a995a20c88587e41f1eba7989b4b49d.1737702298.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1737702298.git.tanggeliang@kylinos.cn>
+References: <cover.1737702298.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,47 +46,28 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v5:
- - drop "change is_backup interfaces as get_flags"
- - move "add struct mptcp_pm_addr_id_bitmap" and "hold msk lock before
-removing id 0 address" out of this set.
- - a new patch "use ipv6_addr_equal in addresses_equal"
- - patch 4, drop inet6_sk() in mptcp_event_add_subflow() and
-   mptcp_event_pm_listener() too.
+This patch adds a build check for mptcp_userspace_pm_dump_addr() to make
+sure there is enough space in 'cb->ctx' to store an address id bitmap.
 
-v4:
- - add a new patch, "add a build check for userspace_pm_dump_addr" as
-   Matt suggested.
- - patch 4, fix a warning here reported by CI:
-   WARNING: line length of 84 exceeds 80 columns
-   #27: FILE: net/mptcp/pm_userspace.c:468:
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm_userspace.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-v3:
- - drop "mptcp: update address type of get_local_id".
-
-v2:
- - a new patch "hold msk lock before removing id 0 address"
-
-Drop the patch "mptcp: reuse sending nlmsg code in dump_addr", add a new
-helper mptcp_pm_genl_fill_addr() to save the duplicated code.
-
-Define struct mptcp_pm_addr_id_bitmap in protocol.h, instead of defining
-mptcp_pm_addr_id_bitmap_t in include/net/mptcp.h, since get_addr() and
-dump_addr() interfaces of BPF userspace pm is dropped as Matt suggested.
-
-Geliang Tang (5):
-  mptcp: add a build check for userspace_pm_dump_addr
-  mptcp: add mptcp_pm_genl_fill_addr helper
-  mptcp: drop match in userspace_pm_append_new_local_addr
-  mptcp: drop inet6_sk after inet_sk
-  mptcp: use ipv6_addr_equal in addresses_equal
-
- net/mptcp/pm.c           | 21 +++++++++++++++++++++
- net/mptcp/pm_netlink.c   | 22 ++++------------------
- net/mptcp/pm_userspace.c | 29 +++++++----------------------
- net/mptcp/protocol.h     |  3 +++
- 4 files changed, 35 insertions(+), 40 deletions(-)
-
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 277cf092a870..b69fb5b18130 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -643,6 +643,8 @@ int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 	struct sock *sk;
+ 	void *hdr;
+ 
++	BUILD_BUG_ON(sizeof(struct id_bitmap) > sizeof(cb->ctx));
++
+ 	bitmap = (struct id_bitmap *)cb->ctx;
+ 
+ 	msk = mptcp_userspace_pm_get_sock(info);
 -- 
 2.43.0
 
