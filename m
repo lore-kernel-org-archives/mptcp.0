@@ -1,121 +1,130 @@
-Received: from out-170.mta0.migadu.com (out-170.mta0.migadu.com [91.218.175.170])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E26841607B4
-	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 01:38:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D4571D5174
+	for <mptcp@lists.linux.dev>; Fri, 24 Jan 2025 01:42:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1737682726; cv=none; b=llBktscY+2VfadZPvQTpZsXNRqQZCpmK0H6O6NoXzqP5AePa+Yq6KH9DR7z0SiJDHH4gmMmFM7LDWgZbIRYW4U2DSLCiNwrGdoJeibgzzFbSWD9skuNe7cvn7ltzunSFa4i7AIJNlNq3643/XZHmEiyzhHx43mvvq9oYwgwHKUU=
+	t=1737682946; cv=none; b=WHs33be9H9R14MmXAcCvuYQBHi2Mx2gQJB8JZOwWBO8VANFtkvpu0p5gWPRjZ53n+xQO5Pdip/6cXQPqiIOzVnsQWPJPkndcYFvDAWCaw+e9suZKXVR662OsDnrwtLTrhu2I3G51kFOUhoqQreEaTPaE3SHQmgWUbB3wF9XfFF0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1737682726; c=relaxed/simple;
-	bh=/wnClBcqy9IKrjwNnBUNENWd6mxPJwtoFNxLjAZn4HI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=AqGdKGzl4XKE5Wg06zyJrqD0+xARhnCY7hOM0SkOl4KExFTcGhqVt4RFNFHtY+KCRWRh80knG4Q574+RE3RVk5mI9+TWC8+yMeJ+AeY3xqz26vDFk07AnyoSOGRrB6JphGH7lSAUuYVIDwfmo7iYyX9fcdWKWTGCb6hKrfAsAFU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=GZLwMxLm; arc=none smtp.client-ip=91.218.175.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1737682946; c=relaxed/simple;
+	bh=FO8L3Yr/xLAcV3Mwy4nX9zY18dPAyIdhlmghfnVz12g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=j7drvm3rjMCVd3J61et3qKWe/Fm4PK5Z2p66KsKIWFWAQ5tGtFIpB/WyCEMyzmq0bkIKoqrR/OymNByL5nI5yXkBaZi+NKanEMYODQOZbTS0QWauMFzsqEu180Aob/45N2mKoJNwFUp+NLotNRilmVV6NRl0IUwwgsex3ZzoMNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZHHjMR0D; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="GZLwMxLm"
-Message-ID: <5313b129-72b1-4fdc-954e-e2d0a141a99c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1737682716;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=PuF0gN9ro6NkSKhiCAGItV5HEn3Pklvs68VtZ/vAjKU=;
-	b=GZLwMxLmr8EUv1bZOB3dBcC2uVrOJkEOAmHOSVAvZGDxaYihXg/9LaTZYs7L2/4RAi9oWH
-	CJR8XbBtTezqOkGblOibRHvE8+oHFz4F/eNaGUfNaYCSmlclyM85kMsQn6n39UtVxPHpA1
-	X27+LG2jxP+LfNFH8lOpcz2J5ZQSzm4=
-Date: Thu, 23 Jan 2025 17:38:28 -0800
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZHHjMR0D"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7DE6C4CEDF;
+	Fri, 24 Jan 2025 01:42:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1737682945;
+	bh=FO8L3Yr/xLAcV3Mwy4nX9zY18dPAyIdhlmghfnVz12g=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=ZHHjMR0DhZp95AFo815dDi+M9d8moYZaHYqS1p0tbxvHfNFEf1PDNemm1Un0CmJ0G
+	 jSJIKu/OYCsW4vT3mmnUoSLk1iHchjn6G3CfMZD/nn8r87JGVNA7CzE7wuuMll/+jW
+	 zgaQKw6ORRXQdOwjNPuuzMZ4QtN5FTSoqaeJSAhiDmFMEKIAgCPc6Iibj5tU9/Pet/
+	 GPifi2KxRsWgM0aGKpBvRTfaE43k8wRaatyJG2hYd4Y7tGCELH74YEplE9DebCBW24
+	 2zCiJRwOA9swukWP8EiAQChtAuyOAokSHeZnG0KzGSmv1eF0cDEXpCe0Vxdj9YYvWz
+	 XlVhqFLC3rOiw==
+Date: Thu, 23 Jan 2025 17:42:25 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: blackhole: sysctl SYN retrans
+ + fix conditions
+In-Reply-To: <20250122-mpc-no-blackhole-v2-0-13e6670d512f@kernel.org>
+Message-ID: <190862d3-a876-fc82-9ca3-6bdfbe462c3c@kernel.org>
+References: <20250122-mpc-no-blackhole-v2-0-13e6670d512f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next/net v2 7/7] selftests/bpf: Add mptcp_subflow
- bpf_iter subtest
-To: Geliang Tang <geliang@kernel.org>
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev,
- Mat Martineau <martineau@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, Alexei Starovoitov <ast@kernel.org>,
- Daniel Borkmann <daniel@iogearbox.net>, Andrii Nakryiko <andrii@kernel.org>,
- Eduard Zingerman <eddyz87@gmail.com>, Song Liu <song@kernel.org>,
- Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-0-ae244d3cdbbc@kernel.org>
- <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-7-ae244d3cdbbc@kernel.org>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-Content-Language: en-US
-In-Reply-To: <20241219-bpf-next-net-mptcp-bpf_iter-subflows-v2-7-ae244d3cdbbc@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On 12/19/24 7:46 AM, Matthieu Baerts (NGI0) wrote:
-> +SEC("cgroup/getsockopt")
-> +int iters_subflow(struct bpf_sockopt *ctx)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +	struct bpf_sock *sk = ctx->sk;
-> +	struct sock *ssk = NULL;
-> +	struct mptcp_sock *msk;
-> +	int local_ids = 0;
-> +
-> +	if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
-> +		return 1;
-> +
-> +	msk = bpf_skc_to_mptcp_sock(sk);
-> +	if (!msk || msk->pm.server_side || !msk->pm.subflows)
-> +		return 1;
-> +
-> +	msk = bpf_mptcp_sock_acquire(msk);
-> +	if (!msk)
-> +		return 1;
-> +	bpf_for_each(mptcp_subflow, subflow, msk) {
-> +		/* Here MPTCP-specific packet scheduler kfunc can be called:
-> +		 * this test is not doing anything really useful, only to
-> +		 * verify the iteration works.
-> +		 */
-> +
-> +		local_ids += subflow->subflow_id;
-> +
-> +		/* only to check the following kfunc works */
-> +		ssk = mptcp_subflow_tcp_sock(subflow);
+On Wed, 22 Jan 2025, Matthieu Baerts (NGI0) wrote:
 
-It is good to have test cases to exercise the new iter and kfunc. Thanks.
+> Recently, I found a network having weird behaviours with MPTCP packets:
+>
+> - The first connection to a server had a successful 3WHS, then MPTCP
+>  options got stripped off.
+>
+> - The next one had the first SYN (with or without MPTCP) and 5
+>  retransmissions dropped, before being apparently intercepted and
+>  proxied to the end server.
+>
+> - (The next ones were sometimes intercepted, sometimes not, or dropped
+>   at the beginning. I'm trying to find out which kind of "optimiser" is
+>   causing this.)
+>
+> The result of this was a blackhole being "wrongly" detected, and no ways
+> to force connections with quite a few SYN drops to finally use MPTCP at
+> the end.
+>
+> In this series, we have:
+>
+> - A small fix for the doc. (applied)
+>
+> - A new sysctl to change the number of SYN retransmitted with MPTCP
+>  options before falling back to TCP. The modification looks simple
+>  enough to still be sent to netdev before the closure I think. (applied)
+>
+> - A fix to only turn on the blackhole protection only when the first SYN
+>  retransmitted without MPTCP option is accepted, instead of any after.
+>  The blackhole feature was supposed to do that from the beginning, but
+>  a check was wrongly placed. I think we should consider this as a fix,
+>  even if there are also risks of not detecting a blackhole if the first
+>  SYN retransmitted without MPTCP is dropped by accident. But that seems
+>  more unlikely for an "MPTCP firewall blackhole", and I guess not all
+>  future MPTCP connections will behave exactly like that. It sounds then
+>  safer to reduce the possibilities of enabling the blackhole protection
+>  by accident, and apply this patch.
+>
+> - A small cleanup to exit early.
+>
+> Please note that patches 1 and 2 have already been applied in our tree.
+> So this version only has patches 3 and 4. Patch 3 is a fix, maybe not
+> patch 4, but it might be easier to squash patch 3 and 4 and send it as a
+> fix to -net.
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Changes in v2:
+> - Previous patches 1 & 2 have been applied.
+> - Patch 1 (ex 3) has not been modified.
+> - Patch 2 has been added, it can be squashed to the previous one.
+> - Link to v1: https://lore.kernel.org/r/20250114-mpc-no-blackhole-v1-0-994bd2a357fb@kernel.org
+>
 
-However, it seems not useful to show how it will be used in the future 
-packet/subflow scheduler. iiuc, the core piece is in bpf_struct_ops. Without it, 
-it is hard to comment. Any RFC patches ready to be posted?
+Hi Matthieu -
 
-> +	}
-> +
-> +	if (!ssk)
-> +		goto out;
-> +
-> +	/* assert: if not OK, something wrong on the kernel side */
-> +	if (ssk->sk_dport != ((struct sock *)msk)->sk_dport)
-> +		goto out;
-> +
-> +	/* only to check the following kfunc works */
-> +	subflow = bpf_mptcp_subflow_ctx(ssk);
-> +	if (!subflow || subflow->token != msk->token)
-> +		goto out;
-> +
-> +	ids = local_ids;
-> +
-> +out:
-> +	bpf_mptcp_sock_release(msk);
-> +	return 1;
-> +}
+Both patches in this series look good to me:
 
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+I'd suggest either queuing patch 2 for -next, or dropping it. The 
+optimizer probably makes it a no-op in terms of performance anyway, and 
+now looking at the size of the patch (even though it's mostly due to 
+re-indenting and moving a couple hunks of code around) it does seem like a 
+moderate amount of churn.
+
+- Mat
+
+> ---
+> Matthieu Baerts (NGI0) (2):
+>      mptcp: blackhole only if 1st SYN retrans w/o MPC is accepted
+>      mptcp: blackhole: avoid checking the state twice
+>
+> net/mptcp/ctrl.c | 30 +++++++++++++++++-------------
+> 1 file changed, 17 insertions(+), 13 deletions(-)
+> ---
+> base-commit: a9a670c7f9f94ac66e6a79ecb81e4e7a6e20f001
+> change-id: 20250114-mpc-no-blackhole-526a61ea0334
+>
+> Best regards,
+> -- 
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
