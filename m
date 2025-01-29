@@ -1,95 +1,280 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-8fad.mail.infomaniak.ch (smtp-8fad.mail.infomaniak.ch [83.166.143.173])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B0B11DE4C7;
-	Wed, 29 Jan 2025 12:24:54 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCFD014A635
+	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 14:51:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=83.166.143.173
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738153494; cv=none; b=K2l0xXrcdf09cjZ+c/J5Pet8ZlDAdHVUZvIQpBLnIyXOeffbDprSDKeaynxro695W7/sUe5TCVTK1/86o0JRK+5SwK8/TH+lk5c28GY9wmKdWvAWFUMWoif/5FHOPH1VM+6q4ptRVfw7ztRCgAEMZDLMImQQJePRM3qwttGb1ug=
+	t=1738162311; cv=none; b=X1I7uD4JFZKvnk6HC52sMdg4+itwPmw0jcfTZSkEvKdcpm1ibtPIJ8Sl9+iZwD4zsWjn2rS5Axjc1LdPyMcFd6nMRi+FfyNmJtNmZRhgtjW+UoP/eruVFBnHKNOLYj/1yfF0l62St6qBDIPfyLQ12UL+YkMC4hgYtBtcJ+fx8CE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738153494; c=relaxed/simple;
-	bh=PNHY7pB1yKJQHDLat1IUY4AfzP0lAmqKb7O2GOovptA=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Cz/bcRUjFX/hSBlI/4Cfav89rzGqHNqwTRdf1KtcENyyz189jGGCVagO73Vu6Th8u+L4nk7ZSaMG+za2gUMjhkABfvisg1vfAN7c5NU1WljkTI7GfKWV969fzLqcQFH3XJj28VcG2KaLC1rGaPgTVTyFmqXly99krpd/sMskGeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GDpzv0hu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738162311; c=relaxed/simple;
+	bh=uuQ4gUyr4T98j5sQ5sSoBuo1/xncsxBUuh+PdKyTBVc=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=CnlXlYztSO+Dtuo+larVbKugtQ4VMtBNyCzaiufSMwqgTcXGhg+KwxH6QcTv239CBrTyGTdkp7yMRLq80wAV8ZqhL1wyOkCGLsExmZthMLN4gcjR7jcUL2Di7EmqvGPHRqrLFBepAzRucJHhBKsGmOp6JLehk0V5mY4JPaFVwFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=cNHnr2G6; arc=none smtp.client-ip=83.166.143.173
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GDpzv0hu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77842C4CEE1;
-	Wed, 29 Jan 2025 12:24:51 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738153493;
-	bh=PNHY7pB1yKJQHDLat1IUY4AfzP0lAmqKb7O2GOovptA=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GDpzv0hucxjEmCnM++SlsajNodToTDyCP0DrCgdwv2Eb8vy71EAVsv9W7RCV4oOQh
-	 gfAtxn2U/bZ5EH17jhJ21MjV/rfLlaZZDtMFzEX5p8sDrMxBU3xYVGkyOk0zi0XyX0
-	 Bdts+9kdG8zI5OLWLdMOijTJ4j27US5KkyEY3aOnX8G8UP/mCkpEfv8gv0100OiaVv
-	 8pBBB9fNaWowYq8ABEUJouuRjei8u104nFT7edDD2HcRXLZekUnKXrUivsuui6ZFxs
-	 q+7auiWpOo764wK+tDALsgjZd1Go9tH8lWK1a/i4S5toJBGhkyEwiy0h8wNhCZ2YaE
-	 /ClSimOhqgPgg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 29 Jan 2025 13:24:33 +0100
-Subject: [PATCH net 2/2] doc: mptcp: sysctl: blackhole_timeout is per-netns
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="cNHnr2G6"
+Received: from smtp-4-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:7:10:40ca:feff:fe05:1])
+	by smtp-4-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YjlV3415nzfSj;
+	Wed, 29 Jan 2025 15:51:39 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1738162299;
+	bh=2erhwkosldZzlYXN0aQNMdfWuWfgAvD7dxnnGlGxpL8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=cNHnr2G6Ooekqbm7My2q4rIn6J5wICpi8LnTdj8sUbTTzAjmOAJn/sG4LRLNklStU
+	 zRWF09DWvM60RwwRH2PNVKsQwGwQ/Gt/X5XfujgsE3ea+VdEfDJ2RIdDV8GE0+NK7S
+	 OBX9jIzjJkIpCtrxhEVxuW31Dzl8dkiNl1HWwDS0=
+Received: from unknown by smtp-4-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YjlV26H4hzX82;
+	Wed, 29 Jan 2025 15:51:38 +0100 (CET)
+Date: Wed, 29 Jan 2025 15:51:37 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+Cc: Matthieu Baerts <matttbe@kernel.org>, gnoack@google.com, 
+	willemdebruijn.kernel@gmail.com, matthieu@buffet.re, linux-security-module@vger.kernel.org, 
+	netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, yusongping@huawei.com, 
+	artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
+	MPTCP Linux <mptcp@lists.linux.dev>, linux-nfs@vger.kernel.org, Paul Moore <paul@paul-moore.com>
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Message-ID: <20250129.Oo1xou8ieche@digikod.net>
+References: <20250124.gaegoo0Ayahn@digikod.net>
+ <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
+ <20250127.Uph4aiph9jae@digikod.net>
+ <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+ <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
+ <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
+ <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
+ <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
+ <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
+ <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250129-net-mptcp-blackhole-fix-v1-2-afe88e5a6d2c@kernel.org>
-References: <20250129-net-mptcp-blackhole-fix-v1-0-afe88e5a6d2c@kernel.org>
-In-Reply-To: <20250129-net-mptcp-blackhole-fix-v1-0-afe88e5a6d2c@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=996; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=PNHY7pB1yKJQHDLat1IUY4AfzP0lAmqKb7O2GOovptA=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnmh4NjdaqXeG6Olh1zwAq7kCKEUnSBTmJ0EThN
- Rt+ZIkUSkuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ5oeDQAKCRD2t4JPQmmg
- czrYEACXdgOMfYqlMN7DuMm4EYnPr+T7lV4HhBoy1KHrrcuhBOU6vf6l/Olx0MBZd3QehJvGroh
- 651B4IdK6X7CQ91e9mEe/Cu7SmDKW/zLHbobk7cedycc3KxVybPtNMMtsiBRsb8+hFOL3l63QCX
- Ff/X4cThCatY3DMY2uLymA8vPu0XrxhTBnTrO60L7yj1tHxyx1WSF8Kb0E2cGARd7+Z80lF7lqS
- Yf+Z80AnX8su6/G71as0Xc86b55RYinF1uw/SiZSlamyNackIOvCI6VIU4Yk0WB+ss7dWoZduT8
- kFG4I1ryIW098vv2SYRyhQqhg/9bDRqgvZR6CC+tpsmDXx+06cXgv85R9/R4Sh1KjjaR5x6VpG8
- lGCR1y+y81QFD6Nr1vaHr9jyctuTQv61kY2M7ceGXdd+5OBjM5Nnr3a789920n7XqIStceqjxkl
- 2Efde/2Efvp6MiI9zJrROlTrJ9qiiVTabAu5hbR0diAud+869VozKFdqzF5qIz1+SKFkyuZTNKh
- E/bUEFjECm3BBGblEgO9yAqibOU+ZN06PT56Lt0B8ixG/1vpRHJ6QSzRsoaf5OjTkVtEYrxn/Dd
- VICm9VKAa5we+aCPB5ezbX20SHv9wYPeaHj56m0S1iReFmiimtNyYnZ8VL+KYwHKzoNAOjmq/zd
- YcVBD1MlNZpaEOg==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
+X-Infomaniak-Routing: alpha
 
-All other sysctl entries mention it, and it is a per-namespace sysctl.
+On Wed, Jan 29, 2025 at 02:47:19PM +0300, Mikhail Ivanov wrote:
+> On 1/29/2025 2:33 PM, Matthieu Baerts wrote:
+> > On 29/01/2025 12:02, Mikhail Ivanov wrote:
+> > > On 1/29/2025 1:25 PM, Matthieu Baerts wrote:
+> > > > Hi Mikhail,
+> > > > 
+> > > > On 29/01/2025 10:52, Mikhail Ivanov wrote:
+> > > > > On 1/28/2025 9:14 PM, Matthieu Baerts wrote:
+> > > > > > Hi Mikhail,
+> > > > > > 
+> > > > > > Sorry, I didn't follow all the discussions in this thread, but here are
+> > > > > > some comments, hoping this can help to clarify the MPTCP case.
+> > > > > 
+> > > > > Thanks a lot for sharing your knowledge, Matthieu!
+> > > > > 
+> > > > > > 
+> > > > > > On 28/01/2025 11:56, Mikhail Ivanov wrote:
+> > > > > > > On 1/27/2025 10:48 PM, Mickaël Salaün wrote:
+> > > > > > 
+> > > > > > (...)
+> > > > > > 
+> > > > > > > > I'm a bit worried that we miss some of these places (now or in future
+> > > > > > > > kernel versions).  We'll need a new LSM hook for that.
+> > > > > > > > 
+> > > > > > > > Could you list the current locations?
+> > > > > > > 
+> > > > > > > Currently, I know only about TCP-related transformations:
+> > > > > > > 
+> > > > > > > * SMC can fallback to TCP during connection. TCP connection is used
+> > > > > > >      (1) to exchange CLC control messages in default case and (2)
+> > > > > > > for the
+> > > > > > >      communication in the case of fallback. If socket was connected or
+> > > > > > >      connection failed, socket can not be reconnected again. There
+> > > > > > > is no
+> > > > > > >      existing security hook to control the fallback case,
+> > > > > > > 
+> > > > > > > * MPTCP uses TCP for communication between two network interfaces
+> > > > > > > in the
+> > > > > > >      default case and can fallback to plain TCP if remote peer does not
+> > > > > > >      support MPTCP. AFAICS, there is also no security hook to
+> > > > > > > control the
+> > > > > > >      fallback transformation,
+> > > > > > 
+> > > > > > There are security hooks to control the path creation, but not to
+> > > > > > control the "fallback transformation".
+> > > > > > 
+> > > > > > Technically, with MPTCP, the userspace will create an IPPROTO_MPTCP
+> > > > > > socket. This is only used "internally": to communicate between the
+> > > > > > userspace and the kernelspace, but not directly used between network
+> > > > > > interfaces. This "external" communication is done via one or multiple
+> > > > > > kernel TCP sockets carrying extra TCP options for the mapping. The
+> > > > > > userspace cannot directly control these sockets created by the kernel.
+> > > > > > 
+> > > > > > In case of fallback, the kernel TCP socket "simply" drop the extra TCP
+> > > > > > options needed for MPTCP, and carry on like normal TCP. So on the wire
+> > > > > > and in the Linux network stack, it is the same TCP connection, without
+> > > > > > the MPTCP options in the TCP header. The userspace continue to
+> > > > > > communicate with the same socket.
+> > > > > > 
+> > > > > > I'm not sure if there is a need to block the fallback: it means only
+> > > > > > one
+> > > > > > path can be used at a time.
 
-So mention it as well.
+Thanks Matthieu.
 
-Fixes: 27069e7cb3d1 ("mptcp: disable active MPTCP in case of blackhole")
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- Documentation/networking/mptcp-sysctl.rst | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+So user space needs to specific IPPROTO_MPTCP to use MPTCP, but on the
+network this socket can translate to "augmented" or plain TCP.
 
-diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
-index dc45c02113537b98dff76a6ed431c0449b5217f8..03e1d3610333e29423b0f40591c9e914dc2d0366 100644
---- a/Documentation/networking/mptcp-sysctl.rst
-+++ b/Documentation/networking/mptcp-sysctl.rst
-@@ -41,7 +41,7 @@ blackhole_timeout - INTEGER (seconds)
- 	MPTCP is re-enabled and will reset to the initial value when the
- 	blackhole issue goes away.
- 
--	0 to disable the blackhole detection.
-+	0 to disable the blackhole detection. This is a per-namespace sysctl.
- 
- 	Default: 3600
- 
+From Landlock point of view, what matters is to have a consistent policy
+that maps to user space code.  The fear was that a malicious user space
+that is only allowed to use MPTCP could still transform an MPTCP socket
+to a TCP socket, while it wasn't allowed to create a TCP socket in the
+first place.  I now think this should not be an issue because:
+1. MPTCP is kind of a superset of TCP
+2. user space legitimately using MPTCP should not get any error related
+   to a Landlock policy because of TCP/any automatic fallback.  To say
+   it another way, such fallback is independent of user space requests
+   and may not be predicted because it is related to the current network
+   path.  This follows the principle of least astonishment (at least
+   from user space point of view).
 
--- 
-2.47.1
+So, if I understand correctly, this should be simple for the Landlock
+socket creation control:  we only check socket properties at creation
+time and we ignore potential fallbacks.  This should be documented
+though.
 
+As an example, if a Landlock policies only allows MPTCP: socket(...,
+IPPROTO_MPTCP) should be allowed and any legitimate use of the returned
+socket (according to MPTCP) should be allowed, including TCP fallback.
+However, socket(..., IPPROTO_TCP/0), should only be allowed if TCP is
+explicitly allowed.  This means that we might end up with an MPTCP
+socket only using TCP, which is OK.
+
+I guess this should be the same for other protocols, except if user
+space can explicitly transform a specific socket type to use an
+*arbitrary* protocol, but I think this is not possible.
+
+> > > > > 
+> > > > > You mean that users always rely on a plain TCP communication in the case
+> > > > > the connection of MPTCP multipath communication fails?
+> > > > 
+> > > > Yes, that's the same TCP connection, just without extra bit to be able
+> > > > to use multiple TCP connections associated to the same MPTCP one.
+> > > 
+> > > Indeed, so MPTCP communication should be restricted the same way as TCP.
+> > > AFAICS this should be intuitive for MPTCP users and it'll be better
+> > > to let userland define this dependency.
+> > 
+> > Yes, I think that would make more sense.
+> > 
+> > I guess we can look at MPTCP as TCP with extra features.
+> 
+> Yeap
+> 
+> > 
+> > So if TCP is blocked, MPTCP should be blocked as well. (And eventually
+> > having the possibility to block only TCP but not MPTCP and the opposite,
+> > but that's a different topic: a possible new feature, but not a bug-fix)
+> What do you mean by the "bug fix"?
+> 
+> > 
+> > > > > > > * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
+> > > > > > >      IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+
+According to the man page: "It is allowed only for IPv6 sockets that are
+connected and bound to a v4-mapped-on-v6 address."
+
+This compatibility feature makes sense from user space point of view and
+should not result in an error because of Landlock.
+
+> > > > > > > 
+> > > > > > > As I said before, I wonder if user may want to use SMC or MPTCP and
+> > > > > > > deny
+> > > > > > > TCP communication, since he should rely on fallback transformation
+> > > > > > > during the connection in the common case. It may be unexpected for
+> > > > > > > connect(2) to fail during the fallback due to security politics.
+> > > > > > 
+> > > > > > With MPTCP, fallbacks can happen at the beginning of a connection, when
+> > > > > > there is only one path. This is done after the userspace's
+> > > > > > connect(). If
+
+A remaining question is then, can we repurpose an MPTCP socket that did
+fallback to TCP, to (re)connect to another destination (this time
+directly with TCP)?
+
+I guess this is possible.  If it is the case, I think it should be OK
+anyway.  That could be used by an attacker, but that should not give
+more access because of the MPTCP fallback mechanism anyway.  We should
+see MPTCP as a superset of TCP.  At the end, security policy is in the
+hands of user space.
+
+> > > > > > the fallback is blocked, I guess the userspace will get the same errors
+> > > > > > as when an open connection is reset.
+> > > > > 
+> > > > > In the case of blocking due to security policy, userspace should get
+> > > > > -EACESS. I mean, the user might not expect the fallback path to be
+> > > > > blocked during the connection if he has allowed only MPTCP communication
+> > > > > using the Landlock policy.
+> > > > 
+> > > > A "fallback" can happen on different occasions as mentioned in the
+> > > > RFC8684 [1], e.g.
+> > > > 
+> > > > - The client asks to use MPTCP, but the other peer doesn't support it:
+> > > > 
+> > > >     Client                Server
+> > > >     |     SYN + MP_CAPABLE     |
+> > > >     |------------------------->|
+> > > >     |         SYN/ACK          |
+> > > >     |<-------------------------|  => Fallback on the client side
+> > > >     |           ACK            |
+> > > >     |------------------------->|
+> > > > 
+> > > > - A middle box doesn't touch the 3WHS, but intercept the communication
+> > > > just after:
+> > > > 
+> > > >     Client                Server
+> > > >     |     SYN + MP_CAPABLE     |
+> > > >     |------------------------->|
+> > > >     |   SYN/ACK + MP_CAPABLE   |
+> > > >     |<-------------------------|
+> > > >     |     ACK + MP_CAPABLE     |
+> > > >     |------------------------->|
+> > > >     |        DSS + data        | => but the server doesn't receive the DSS
+> > > >     |------------------------->| => So fallback on the server side
+> > > >     |           ACK            |
+> > > >     |<-------------------------| => Fallback on the client side
+> > > > 
+> > > > - etc.
+> > > > 
+> > > > So the connect(), even in blocking mode, can be OK, but the "fallback"
+> > > > will happen later.
+> > > 
+> > > Thanks! Theoretical "socket transformation" control should cover all
+> > > these cases.
+> > > 
+> > > You mean that it might be reasonable for a Landlock policy to block
+> > > MPTCP fallback when establishing first sublflow (when client does not
+> > > receive MP_CAPABLE)?
+> > 
+> > Personally, I don't even know if there is really a need for such
+> > policies. The fallback is there not to block a connection if the other
+> > peer doesn't support MPTCP, or if a middlebox decides to mess-up with
+> > MPTCP options. So instead of an error, the connection continues but is
+> > "degraded" by not being able to create multiple paths later on.
+
+I agree, this kind of compatibility feature should not be denied.
+
+> > 
+> > Maybe best to wait for a concrete use-case before implementing this?
+> 
+> Ok, got it! I agree that such policies does not seem to be useful.
+> 
+> > 
+> > (...)
+> > 
+> > Cheers,
+> > Matt
+> 
