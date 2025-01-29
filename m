@@ -1,32 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACC149C50
-	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 17:34:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E054D1DF744
+	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 17:52:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738172073; cv=none; b=MevFfC7eZcrcxmkSVxQfG1ys3WNb7QGc36XwrBQPkoqDfnvK4dMov8t4xK7Hla0qSF2N+/JY4d/ArjgZjMI5JSKM7imcmgIkuha7ymcF63XC58AjumKTWafmWCDkkswNhT8neZMABxBtPLjmmVDjtQ/XZfOwEYJzjBUL7psiOqg=
+	t=1738173141; cv=none; b=WLsnMwAvRuAWrenqSasIJ4yqKUm/RQ1i/1mKrXwHtn0pvKRlC9URZdshmIXf9fQLILdNFr0Dby9ZJX1vnbuIpR8mG0iCAod3vEiJ1L4f5unTRs5jOR0E9PxIj/xTz5OUjugAbmxWDaL0mi0T+osCID5K4PpcmgI21ehVjVaPWAY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738172073; c=relaxed/simple;
-	bh=rFbkOyehgGTM3e/LTV8J71Q49i0qUjCtaQhkaV1mYQM=;
-	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=vF/dd1fb8iEdmjnib8AXACMKcpAPWiZeszlCxmM/hcf438lWceWgJX977cmdFaxS5rDzSTyUVZmzu6flVVHk7S4IquvZZsdGpiYJx0aT6z3fTNoCbEA6WmWpojAf8dtmQfs6YCkYHXVW015oHSZ9835/oACx/kUl0qwO5dZh0Hc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/14vhXm; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738173141; c=relaxed/simple;
+	bh=0RRvuiwoDOgwdgSqqcO9iU00iBNHpVNv/JyY962/16g=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NE8oNIU6K6NyS4Aqce+JNeKae3Cppmb7nKNMLY6paj4sMn48v9JrwgKHolInDgEENoj1sIEP5Zmn2si2USDdQJvLtpqvShdSG2HHSm/SPj2/9RnxltEaURGq1n5wzSLqcJBeggcY0TDjb+rMuFbS67suPSH6p1jLVdyUp50Tr4Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bkkElsaw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/14vhXm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A740BC4CED1
-	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 17:34:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bkkElsaw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C8411C4CED1;
+	Wed, 29 Jan 2025 17:52:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738172073;
-	bh=rFbkOyehgGTM3e/LTV8J71Q49i0qUjCtaQhkaV1mYQM=;
-	h=Date:From:Subject:To:From;
-	b=H/14vhXmNPkliOQlVyLIL/6dyR5SFTiQ7df26iMAsT4xXTScX7ZLiYICUTx67hS0e
-	 CRIGS8IcLDlTgO1Nh4zY5BTmsDBIYBCnI9n6MRDQNXu8b/dPJSPz7R+asvA+ZNGQn/
-	 KNU1jvGR5qM9LuRVJkesOVPtgOFP3RtS+RagclpK2oZDD9dhIhZ286sGv9CZ2p6k8v
-	 MOIfbMD24tKNYrelBl6hkRZhWLtNG4iW3W09bAx4jLBea36C3L/6DznJktngUrJHT1
-	 ScxyxniOmzZ2KB85eSBY34LqqG8G1wXipEGUo01/VB8SwpMdanzMD2DWAH9czE0NwS
-	 IcnyC9k3nl8SQ==
-Message-ID: <1791297a-af51-4e3f-aa6a-eac6b2c632f0@kernel.org>
-Date: Wed, 29 Jan 2025 18:34:21 +0100
+	s=k20201202; t=1738173140;
+	bh=0RRvuiwoDOgwdgSqqcO9iU00iBNHpVNv/JyY962/16g=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=bkkElsawX0yPbWdXi2Zut5LdlWGT759XlQ2XEMo6heKth6eG6Wgw1lL7/UYb1bCc5
+	 nIWcUpcKwOH+OJTxn6gauwQzPS0Ooc8Lj+LjHQpSrWshOwZsvnIiM0zH4F3t3bpxKS
+	 9fvi7IHjDEgEiwccPen+a9dU25g45vjHd49HDG+1WpGOAfy0DSKScWpWPnHA82Op7T
+	 GBnpXizWsi29Z0YkeGqdcNCYHIRHsajLyPb1jvtCQMB4GPxEVMC4sF/89sgeJZLPQ0
+	 eZ8bGFmUqCHpExw+8PSFgmKoAdk2I8DspJIyLeUOKhZaR54sSjxWhop/vWn/FhVGtc
+	 zaSkGJ/N/gGSg==
+Message-ID: <d0c2e209-f70e-4d41-a8ff-a271757465db@kernel.org>
+Date: Wed, 29 Jan 2025 18:52:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -34,9 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] selftests: mptcp: connect: -f: no reconnect
 Content-Language: en-GB
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250127-selftests-mptcp-fastclose-tests-v1-1-787609c66612@kernel.org>
+ <4b0be50f-8469-240b-608e-41604d355e39@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-Subject: FOSDEM 25: MPTCP community meetup
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -81,27 +86,58 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-To: MPTCP Linux <mptcp@lists.linux.dev>
+In-Reply-To: <4b0be50f-8469-240b-608e-41604d355e39@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hello,
+Hi Mat,
 
-If you missed the info on the Fediverse [1], there will a small MPTCP
-community meetup at FOSDEM [2] this year: on the 1st of February
-(Saturday) from 17.30 in H.3242.
+On 29/01/2025 17:44, Mat Martineau wrote:
+> On Mon, 27 Jan 2025, Matthieu Baerts (NGI0) wrote:
+> 
+>> The '-f' parameter is there to force the kernel to emit MPTCP FASTCLOSE
+>> by closing the connection with unread bytes in the receive queue.
+>>
+>> The xdisconnect() helper was used to stop the connection, but it does
+>> more than that: it will shut it down, then wait before reconnecting to
+>> the same address. This causes the mptcp_join's "fastclose test" to fail
+>> all the time.
+>>
+>> This failure is due to a recent change, with commit 218cc166321f
+>> ("selftests: mptcp: avoid spurious errors on disconnect"), but that went
+>> unnoticed because the test is currently ignored. The recent modification
+>> only shown an existing issue: xdisconnect() doesn't need to be used
+>> here, only the shutdown() part is needed.
+>>
+>> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose
+>> test-cases")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Notes:
+>> - With the modification, the mptcp_join's "fastclose test" is still a
+>>  bit unstable on my side with a debug kernel. I didn't try to fix that.
+>>  This is tracked by this (old) issue:
+>>  https://github.com/multipath-tcp/mptcp_net-next/issues/324
+> 
+> Hi Matthieu -
+> 
+> Looks good, thank you:
 
-Everybody is welcome! :)
+Thank you for the review!
 
-While at it, if you are interested in MPTCP in general, don't hesitate
-to look at the blog [3] as well ;)
+Now in our tree (fixes for -net):
 
+New patches for t/upstream-net and t/upstream:
+- 9ebcf2ea5cfc: selftests: mptcp: connect: -f: no reconnect
+- Results: 062dec17fb88..d2351c5ab4ff (export-net)
+- Results: 896f230a519b..96e665850a6e (export)
 
-[1] https://social.kernel.org/mptcp
-[2]
-https://fosdem.org/2025/schedule/event/fosdem-2025-6750-mptcp-community-meetup-bof/
-[3] https://blog.mptcp.dev
+Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/28cc1b7f422a72ee103c7ea46cc33bb65e4d4823/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/ef1b554d4eb2a5413bcca1922d5ae6d609e5d3d0/checks
 
 Cheers,
 Matt
