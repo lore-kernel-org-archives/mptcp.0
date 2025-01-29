@@ -1,103 +1,110 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E8781DF268
-	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 16:44:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87ACC149C50
+	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 17:34:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738169042; cv=none; b=kAekDjYbB3jva5rBrLebziRPxrNz+tYIswQ7LKWAIP+I3DahzoVM5/0sJfRkc31PvUGDPfz1tFTzzr5TpXOaBpHHLuLnymAcTNMaNmZmoft70lyipO3x9lzhLlv487CZRGiu6WIr304QTjiYNVK/1FtFEs6YRr0+3A/OYPo5zXQ=
+	t=1738172073; cv=none; b=MevFfC7eZcrcxmkSVxQfG1ys3WNb7QGc36XwrBQPkoqDfnvK4dMov8t4xK7Hla0qSF2N+/JY4d/ArjgZjMI5JSKM7imcmgIkuha7ymcF63XC58AjumKTWafmWCDkkswNhT8neZMABxBtPLjmmVDjtQ/XZfOwEYJzjBUL7psiOqg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738169042; c=relaxed/simple;
-	bh=+5Pb6Q8GyxJt7lLB6CyEYcbSMTMhfYvWdsmA1ik6Z2o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=cXY9ZiIELvyXbOCPoO4u2SLQG7/OAGV+boytA72glPvl1eNLOrc38iXXn3K0dKD0pMqX2vyskHbpEIgv3KOiZq6cqU08xnM4gyasNEoqpgkBzzNvYyxz1ff/Z0dmcGw9T9/H2BRxfI0X4laX2hvKzehhxWM/eFdYiHtu5LHnoqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Lm9o3tg2; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738172073; c=relaxed/simple;
+	bh=rFbkOyehgGTM3e/LTV8J71Q49i0qUjCtaQhkaV1mYQM=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Content-Type; b=vF/dd1fb8iEdmjnib8AXACMKcpAPWiZeszlCxmM/hcf438lWceWgJX977cmdFaxS5rDzSTyUVZmzu6flVVHk7S4IquvZZsdGpiYJx0aT6z3fTNoCbEA6WmWpojAf8dtmQfs6YCkYHXVW015oHSZ9835/oACx/kUl0qwO5dZh0Hc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H/14vhXm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Lm9o3tg2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D9ACC4CED1;
-	Wed, 29 Jan 2025 16:44:02 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H/14vhXm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A740BC4CED1
+	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 17:34:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738169042;
-	bh=+5Pb6Q8GyxJt7lLB6CyEYcbSMTMhfYvWdsmA1ik6Z2o=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Lm9o3tg2/72WRW+H5k0t/EuhTU7Qk/kNA6H5BK3msQ1bKZbCqVf1vnxs+XqhMY/Zi
-	 c7R1yQxZcgXeeOldIz024a8bBCEjpjkNeg4qStxkhcfh9vfPv3QtriVzYNvWRRkb6B
-	 1g5NLoybbYvhJeXrtKIITk4DUtCeMkynZwUv6rLrfijmhnLqgHmBJDK/SiQd3Yr9Sv
-	 UEJ60Ei7PJvULMnbaGwPRNB8Z6vWqwdq1spodAglFQaF7A+zuvxldyNQm1Jt/Vasio
-	 KBtM+DpEd3mQ6nXiMVtQ5R261+dEDpUDXKsKxDUaSwZXW80KQZya56fpgJbEqqCGlk
-	 8FLq+pu9RXm5Q==
-Date: Wed, 29 Jan 2025 08:44:01 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-net] selftests: mptcp: connect: -f: no reconnect
-In-Reply-To: <20250127-selftests-mptcp-fastclose-tests-v1-1-787609c66612@kernel.org>
-Message-ID: <4b0be50f-8469-240b-608e-41604d355e39@kernel.org>
-References: <20250127-selftests-mptcp-fastclose-tests-v1-1-787609c66612@kernel.org>
+	s=k20201202; t=1738172073;
+	bh=rFbkOyehgGTM3e/LTV8J71Q49i0qUjCtaQhkaV1mYQM=;
+	h=Date:From:Subject:To:From;
+	b=H/14vhXmNPkliOQlVyLIL/6dyR5SFTiQ7df26iMAsT4xXTScX7ZLiYICUTx67hS0e
+	 CRIGS8IcLDlTgO1Nh4zY5BTmsDBIYBCnI9n6MRDQNXu8b/dPJSPz7R+asvA+ZNGQn/
+	 KNU1jvGR5qM9LuRVJkesOVPtgOFP3RtS+RagclpK2oZDD9dhIhZ286sGv9CZ2p6k8v
+	 MOIfbMD24tKNYrelBl6hkRZhWLtNG4iW3W09bAx4jLBea36C3L/6DznJktngUrJHT1
+	 ScxyxniOmzZ2KB85eSBY34LqqG8G1wXipEGUo01/VB8SwpMdanzMD2DWAH9czE0NwS
+	 IcnyC9k3nl8SQ==
+Message-ID: <1791297a-af51-4e3f-aa6a-eac6b2c632f0@kernel.org>
+Date: Wed, 29 Jan 2025 18:34:21 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+User-Agent: Mozilla Thunderbird Beta
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: FOSDEM 25: MPTCP community meetup
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+To: MPTCP Linux <mptcp@lists.linux.dev>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-On Mon, 27 Jan 2025, Matthieu Baerts (NGI0) wrote:
+Hello,
 
-> The '-f' parameter is there to force the kernel to emit MPTCP FASTCLOSE
-> by closing the connection with unread bytes in the receive queue.
->
-> The xdisconnect() helper was used to stop the connection, but it does
-> more than that: it will shut it down, then wait before reconnecting to
-> the same address. This causes the mptcp_join's "fastclose test" to fail
-> all the time.
->
-> This failure is due to a recent change, with commit 218cc166321f
-> ("selftests: mptcp: avoid spurious errors on disconnect"), but that went
-> unnoticed because the test is currently ignored. The recent modification
-> only shown an existing issue: xdisconnect() doesn't need to be used
-> here, only the shutdown() part is needed.
->
-> Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> ---
-> Notes:
-> - With the modification, the mptcp_join's "fastclose test" is still a
->  bit unstable on my side with a debug kernel. I didn't try to fix that.
->  This is tracked by this (old) issue:
->  https://github.com/multipath-tcp/mptcp_net-next/issues/324
+If you missed the info on the Fediverse [1], there will a small MPTCP
+community meetup at FOSDEM [2] this year: on the 1st of February
+(Saturday) from 17.30 in H.3242.
 
-Hi Matthieu -
+Everybody is welcome! :)
 
-Looks good, thank you:
+While at it, if you are interested in MPTCP in general, don't hesitate
+to look at the blog [3] as well ;)
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
-> 1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> index 414addef9a4514c489ecd09249143fe0ce2af649..d240d02fa443a1cd802f0e705ab36db5c22063a8 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-> @@ -1302,7 +1302,7 @@ int main_loop(void)
-> 		return ret;
->
-> 	if (cfg_truncate > 0) {
-> -		xdisconnect(fd);
-> +		shutdown(fd, SHUT_WR);
-> 	} else if (--cfg_repeat > 0) {
-> 		xdisconnect(fd);
->
->
-> ---
-> base-commit: ef015705ac0b0da25ea399d87f1fa2f545b2b3d5
-> change-id: 20250127-selftests-mptcp-fastclose-tests-af1fdd965826
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+[1] https://social.kernel.org/mptcp
+[2]
+https://fosdem.org/2025/schedule/event/fosdem-2025-6750-mptcp-community-meetup-bof/
+[3] https://blog.mptcp.dev
+
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
