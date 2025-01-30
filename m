@@ -1,177 +1,325 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from smtp-bc0a.mail.infomaniak.ch (smtp-bc0a.mail.infomaniak.ch [45.157.188.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F3A01946A1
-	for <mptcp@lists.linux.dev>; Wed, 29 Jan 2025 21:23:13 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEC11B85F6
+	for <mptcp@lists.linux.dev>; Thu, 30 Jan 2025 09:51:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=45.157.188.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738185794; cv=none; b=DENz3bbc5HZ6bHt5WOUxc/bhbRhETiauO+pc/PS7fJ/bgNClyKjPUNR7aCxd4Epv1e1NscdL/g6pZDtlOcUoAe15NuOhjO6oNyE9PC51LTKlXiocDsPx6yAnWh49+RGF2LdrA7COyxLVEAsNKi2mtzhUypz79JYVhPZTycPYGUs=
+	t=1738230714; cv=none; b=Dfle+V5DpFMOV8dh0P66wqKCMDAv8mGoIfugO1RM0rJ2j72pEvd2FXVvEs8sHU4jwS/mWD+NvibYH+UJimPQyYTzK7poRRfSjy82JIwZhiwanG6DAePMToiXejuJlxByCOaRy1GvvdTn7gsuqqluHYNu/sY3zV3vzE/saIXuNOI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738185794; c=relaxed/simple;
-	bh=ucyZMwqPbgw0HKpfcwECeuuhCHUg5VGr3GXYNP0NWIA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iC5luP5vnM2fVfFGmjxfgiKe3Cy01VX7qKtzLst7lYceBlB9i6JzuWS5r9Oe9i+mlbW2Zb3hde3X62/SwqwcUmwTjovDBinnt/neWeXZBUsLpdb3FkJ6C1wnzatu/JGrfKtx+021YP3OypfXJMCfB1zUEe09o179Poy+43IVJ7A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Arsh7sJg; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738230714; c=relaxed/simple;
+	bh=M1G3bPGJ7ltahw2nrExz3W1U4Y3lSF4XA1+ifN1BJ3s=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=VuXMzVYFiNFRkcf3ujo8BuO9dLjVI+uze13euczXBM8sfoeYQ7zmifu67qnxQbQ2MdboTk0DpcerVdaH0TMptAuV4KDaPg4dRKIk1PVLE3Zx9TZ9OV10oA/vpsdF79c6HrzdpWySf5hONesIWnpl2uyCklWYnOhddWA6WNgZY2Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net; spf=pass smtp.mailfrom=digikod.net; dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b=rfa5Q7c8; arc=none smtp.client-ip=45.157.188.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=digikod.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=digikod.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Arsh7sJg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97D26C4CED1;
-	Wed, 29 Jan 2025 21:23:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738185793;
-	bh=ucyZMwqPbgw0HKpfcwECeuuhCHUg5VGr3GXYNP0NWIA=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=Arsh7sJgTTsfvIvmFdRIB7qv52KxtqYj0nmZ8OMDa2R/e81wQImRigsyT9ZV4G7sR
-	 twPFdpUbpDY1dGGZXD9ioX11qVeHr9Vm9dsD1ZtexT/I4Y+iBWwCbQZAVWhQ8qCzsa
-	 1LCUDU7jLyotJeiFWUIqY+Y5CJCrFgWPB9U2cg5IATUIzvVAt0vXnlOp8ct3xZzaY7
-	 YvAk6mZXhv3sISmNd+iWg7Y+0+TIyTnLca/SD0OiZgXJgUzOBbVhaw/avZgstGMFCc
-	 r7rSCtZ4b3EZQi6wWsxE7gd74cuIQGg2ypiJ6i06ei564L/EkXaemmiKpzmqT+PEej
-	 p3PnvanwmLFwg==
-Date: Wed, 29 Jan 2025 13:23:13 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 0/9] split get_subflow interface into two
-In-Reply-To: <cover.1734942318.git.tanggeliang@kylinos.cn>
-Message-ID: <61cc48f4-abc7-4f44-9340-028f113820e9@kernel.org>
-References: <cover.1734942318.git.tanggeliang@kylinos.cn>
+	dkim=pass (1024-bit key) header.d=digikod.net header.i=@digikod.net header.b="rfa5Q7c8"
+Received: from smtp-3-0001.mail.infomaniak.ch (unknown [IPv6:2001:1600:4:17::246c])
+	by smtp-3-3000.mail.infomaniak.ch (Postfix) with ESMTPS id 4YkDnV0P4vzfWS;
+	Thu, 30 Jan 2025 10:51:42 +0100 (CET)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=digikod.net;
+	s=20191114; t=1738230701;
+	bh=YZm0vTuwCQA/yZDxmiQL1tM2SC0CyU6mDR1fUgobEaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=rfa5Q7c8BZlxn76PD00hzcjeKBZIxcKQoM7rqXLK0zImquZ9ipQCBOFnOA6zcbtQv
+	 XdVE+SR/ismYu/Sxlmk35/CmYkX+r+kLscxgVY+iNv25uS7Qb1sJ0RV4+cgbe81vuE
+	 ToRkGSCjl/emS3aY/1GWc/JM2fAyddv/J+ecGMc8=
+Received: from unknown by smtp-3-0001.mail.infomaniak.ch (Postfix) with ESMTPA id 4YkDnT0NLPzWgd;
+	Thu, 30 Jan 2025 10:51:40 +0100 (CET)
+Date: Thu, 30 Jan 2025 10:51:40 +0100
+From: =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>, 
+	gnoack@google.com, willemdebruijn.kernel@gmail.com, matthieu@buffet.re, 
+	linux-security-module@vger.kernel.org, netdev@vger.kernel.org, netfilter-devel@vger.kernel.org, 
+	yusongping@huawei.com, artem.kuzin@huawei.com, konstantin.meskhidze@huawei.com, 
+	MPTCP Linux <mptcp@lists.linux.dev>, linux-nfs@vger.kernel.org, Paul Moore <paul@paul-moore.com>
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Message-ID: <20250130.Xe3Ohtai5aen@digikod.net>
+References: <20250127.Uph4aiph9jae@digikod.net>
+ <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+ <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
+ <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
+ <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
+ <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
+ <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
+ <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
+ <20250129.Oo1xou8ieche@digikod.net>
+ <64b1de00-c724-4748-9133-acd0a79b6d72@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <64b1de00-c724-4748-9133-acd0a79b6d72@kernel.org>
+X-Infomaniak-Routing: alpha
 
-On Mon, 23 Dec 2024, Geliang Tang wrote:
+On Wed, Jan 29, 2025 at 04:44:18PM +0100, Matthieu Baerts wrote:
+> Hi Mickaël,
+> 
+> On 29/01/2025 15:51, Mickaël Salaün wrote:
+> > On Wed, Jan 29, 2025 at 02:47:19PM +0300, Mikhail Ivanov wrote:
+> >> On 1/29/2025 2:33 PM, Matthieu Baerts wrote:
+> >>> On 29/01/2025 12:02, Mikhail Ivanov wrote:
+> >>>> On 1/29/2025 1:25 PM, Matthieu Baerts wrote:
+> >>>>> Hi Mikhail,
+> >>>>>
+> >>>>> On 29/01/2025 10:52, Mikhail Ivanov wrote:
+> >>>>>> On 1/28/2025 9:14 PM, Matthieu Baerts wrote:
+> >>>>>>> Hi Mikhail,
+> >>>>>>>
+> >>>>>>> Sorry, I didn't follow all the discussions in this thread, but here are
+> >>>>>>> some comments, hoping this can help to clarify the MPTCP case.
+> >>>>>>
+> >>>>>> Thanks a lot for sharing your knowledge, Matthieu!
+> >>>>>>
+> >>>>>>>
+> >>>>>>> On 28/01/2025 11:56, Mikhail Ivanov wrote:
+> >>>>>>>> On 1/27/2025 10:48 PM, Mickaël Salaün wrote:
+> >>>>>>>
+> >>>>>>> (...)
+> >>>>>>>
+> >>>>>>>>> I'm a bit worried that we miss some of these places (now or in future
+> >>>>>>>>> kernel versions).  We'll need a new LSM hook for that.
+> >>>>>>>>>
+> >>>>>>>>> Could you list the current locations?
+> >>>>>>>>
+> >>>>>>>> Currently, I know only about TCP-related transformations:
+> >>>>>>>>
+> >>>>>>>> * SMC can fallback to TCP during connection. TCP connection is used
+> >>>>>>>>      (1) to exchange CLC control messages in default case and (2)
+> >>>>>>>> for the
+> >>>>>>>>      communication in the case of fallback. If socket was connected or
+> >>>>>>>>      connection failed, socket can not be reconnected again. There
+> >>>>>>>> is no
+> >>>>>>>>      existing security hook to control the fallback case,
+> >>>>>>>>
+> >>>>>>>> * MPTCP uses TCP for communication between two network interfaces
+> >>>>>>>> in the
+> >>>>>>>>      default case and can fallback to plain TCP if remote peer does not
+> >>>>>>>>      support MPTCP. AFAICS, there is also no security hook to
+> >>>>>>>> control the
+> >>>>>>>>      fallback transformation,
+> >>>>>>>
+> >>>>>>> There are security hooks to control the path creation, but not to
+> >>>>>>> control the "fallback transformation".
+> >>>>>>>
+> >>>>>>> Technically, with MPTCP, the userspace will create an IPPROTO_MPTCP
+> >>>>>>> socket. This is only used "internally": to communicate between the
+> >>>>>>> userspace and the kernelspace, but not directly used between network
+> >>>>>>> interfaces. This "external" communication is done via one or multiple
+> >>>>>>> kernel TCP sockets carrying extra TCP options for the mapping. The
+> >>>>>>> userspace cannot directly control these sockets created by the kernel.
+> >>>>>>>
+> >>>>>>> In case of fallback, the kernel TCP socket "simply" drop the extra TCP
+> >>>>>>> options needed for MPTCP, and carry on like normal TCP. So on the wire
+> >>>>>>> and in the Linux network stack, it is the same TCP connection, without
+> >>>>>>> the MPTCP options in the TCP header. The userspace continue to
+> >>>>>>> communicate with the same socket.
+> >>>>>>>
+> >>>>>>> I'm not sure if there is a need to block the fallback: it means only
+> >>>>>>> one
+> >>>>>>> path can be used at a time.
+> > 
+> > Thanks Matthieu.
+> > 
+> > So user space needs to specific IPPROTO_MPTCP to use MPTCP, but on the
+> > network this socket can translate to "augmented" or plain TCP.
+> 
+> Correct. On the wire, you will only see packet with the IPPROTO_TCP
+> protocol. When MPTCP is used, extra MPTCP options will be present in the
+> TCP headers, but the protocol is still IPPROTO_TCP on the network.
+> 
+> > From Landlock point of view, what matters is to have a consistent policy
+> > that maps to user space code.  The fear was that a malicious user space
+> > that is only allowed to use MPTCP could still transform an MPTCP socket
+> > to a TCP socket, while it wasn't allowed to create a TCP socket in the
+> > first place.  I now think this should not be an issue because:
+> > 1. MPTCP is kind of a superset of TCP
+> > 2. user space legitimately using MPTCP should not get any error related
+> >    to a Landlock policy because of TCP/any automatic fallback.  To say
+> >    it another way, such fallback is independent of user space requests
+> >    and may not be predicted because it is related to the current network
+> >    path.  This follows the principle of least astonishment (at least
+> >    from user space point of view).
+> > 
+> > So, if I understand correctly, this should be simple for the Landlock
+> > socket creation control:  we only check socket properties at creation
+> > time and we ignore potential fallbacks.  This should be documented
+> > though.
+> 
+> It depends on the restrictions that are put in place: are the user and
+> kernel sockets treated the same way? If yes, blocking TCP means that
+> even if it will be possible for the userspace to create an IPPROTO_MPTCP
+> socket, the kernel will not be allowed to IPPROTO_TCP ones to
+> communicate with the outside world. So blocking TCP will implicitly
+> block MPTCP.
+> 
+> On the other hand, if only TCP user sockets are blocked, then it will be
+> possible to use MPTCP to communicate to any TCP sockets: with an
+> IPPROTO_MPTCP socket, it is possible to communicate with any IPPROTO_TCP
+> sockets, but without the extra features supported by MPTCP.
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> v2:
-> - use get_send for retransmit scheduling if get_retrans is NULL as Mat
->   suggested (thanks)
->
+Yes, that how Landlock works, it only enforces a security policy defined
+by user space on user space.  The kernel on its own is never restricted.
 
-Hi Geliang -
+> 
+> > As an example, if a Landlock policies only allows MPTCP: socket(...,
+> > IPPROTO_MPTCP) should be allowed and any legitimate use of the returned
+> > socket (according to MPTCP) should be allowed, including TCP fallback.
+> > However, socket(..., IPPROTO_TCP/0), should only be allowed if TCP is
+> > explicitly allowed.  This means that we might end up with an MPTCP
+> > socket only using TCP, which is OK.
+> 
+> Would it not be confusing for the person who set the Landlock policies?
+> Especially for the ones who had policies to block TCP, and thought they
+> were "safe", no?
 
-v2 looks good for further testing on the export branch. Thanks for 
-revising!
+There are two kind of users for Landlock:
+1. developers sandboxing their applications;
+2. sysadmins or security experts sandboxing execution environments (e.g.
+   with container runtimes, service managers, sandboxing tools...).
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+It would make sense for developers to allow what their code request,
+whatever fallback the kernel might use instead.  In this case, they
+should not care about MPTCP being TCP with some flags underneath.
+Moreover, developers might not be aware of the system on which their
+application is running, and their concern should mainly be about
+compatibility.
 
-> I got the following error when running bpf burst sched selftests in auto-btf-debug mode:
->
-> [  167.258293][   T49] BUG: sleeping function called from invalid context at net/core/sock.c:3652
-> [  167.258981][   T49] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 49, name: kworker/0:2
-> [  167.259547][   T49] preempt_count: 0, expected: 0
-> [  167.259826][   T49] RCU nest depth: 1, expected: 0
-> [  167.259975][   T49] 5 locks held by kworker/0:2/49:
-> [  167.260137][   T49]  #0: ffff888001130948 ((wq_completion)events){+.+.}-{0:0}, at: process_one_work+0x7e4/0x16b0
-> [  167.260741][   T49]  #1: ffffc90000347d90 ((work_completion)(&msk->work)){+.+.}-{0:0}, at: process_one_work+0xdf9/0x16b0
-> [  167.261206][   T49]  #2: ffff88800c620e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: mptcp_worker+0x7b/0xad0
-> [  167.261476][   T49]  #3: ffffffff8977e620 (rcu_read_lock){....}-{1:2}, at: __bpf_prog_enter+0x1f/0x170
-> [  167.261742][   T49]  #4: ffff88800b6f8258 (k-sk_lock-AF_INET#2){+.+.}-{0:0}, at: bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-> [  167.262309][   T49] CPU: 0 UID: 0 PID: 49 Comm: kworker/0:2 Tainted: G           OE      6.12.0-rc6+ #9
-> [  167.262591][   T49] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-> [  167.262774][   T49] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-> [  167.262950][   T49] Workqueue: events mptcp_worker
-> [  167.263097][   T49] Call Trace:
-> [  167.263211][   T49]  <TASK>
-> [  167.263301][   T49]  dump_stack_lvl+0x9e/0xe0
-> [  167.263453][   T49]  __might_resched+0x35d/0x590
-> [  167.263599][   T49]  ? __pfx___might_resched+0x10/0x10
-> [  167.263829][   T49]  __lock_sock_fast+0x2f/0xd0
-> [  167.264035][   T49]  mptcp_pm_nl_subflow_chk_stale+0x1e2/0x3c0
-> [  167.264304][   T49]  ? bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-> [  167.264604][   T49]  bpf_prog_87e3c1bd65224f1c_bpf_burst_get_subflow+0x12c/0x58b
-> [  167.264995][   T49]  ? mptcp_sched_get_retrans+0x1f8/0x330
-> [  167.265215][   T49]  ? __pfx_mptcp_sched_get_retrans+0x10/0x10
-> [  167.265432][   T49]  ? mark_lock+0x371/0x3c0
-> [  167.265678][   T49]  ? __mptcp_retrans+0xf4/0x9a0
-> [  167.265973][   T49]  ? mptcp_worker+0x7b/0xad0
->
-> mptcp_pm_subflow_chk_stale is a sleeping function, it shouldn't be
-> invoked under BPF rcu_read_lock.
->
-> One solution is to set mptcp_pm_subflow_chk_stale with KF_SLEEPABLE
-> flag:
->
-> BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
->
-> Then set bpf_burst_get_subflow with BPF_F_SLEEPABLE:
->
->      err = bpf_program__set_flags(skel->progs.bpf_burst_get_subflow,
->                                   BPF_F_SLEEPABLE);
->
-> But another error ocurrs:
->
-> [  101.732098][    C0] BUG: sleeping function called from invalid context at kernel/bpf/trampoline.c:968
-> [  101.732781][    C0] in_atomic(): 1, irqs_disabled(): 0, non_block: 0, pid: 1640, name: test_progs-no_a
-> [  101.733477][    C0] preempt_count: 303, expected: 0
-> [  101.733793][    C0] RCU nest depth: 2, expected: 0
-> [  101.734043][    C0] 6 locks held by test_progs-no_a/1640:
-> [  101.734187][    C0] #0: ffff888007526e58 (sk_lock-AF_INET){+.+.}-{0:0}, at: sk_wait_data (net/core/sock.c:3131 (discriminator 2))
-> [  101.734440][    C0] #1: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: process_backlog (include/linux/local_lock_internal.h:38 (discriminator 1) net/core/dev.c:6115 (discriminator 1))
-> [  101.734728][    C0] #2: ffffffff95b7e620 (rcu_read_lock){....}-{1:2}, at: ip_local_deliver_finish (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate.h:849 (discriminator 1) net/ipv4/ip_input.c:232 (discriminator 1))
-> [  101.735103][    C0] #3: ffff888008eb8e58 (k-slock-AF_INET/1){+.-.}-{2:2}, at: tcp_v4_rcv (include/linux/skbuff.h:1670 include/net/tcp.h:2530 net/ipv4/tcp_ipv4.c:2348)
-> [  101.735560][    C0] #4: ffff8880075261d8 (slock-AF_INET){+.-.}-{2:2}, at: mptcp_incoming_options (net/mptcp/options.c:1053 net/mptcp/options.c:1203)
-> [  101.736023][    C0] #5: ffffffff95b7d980 (rcu_read_lock_trace){....}-{0:0}, at: __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1))
-> [  101.736325][    C0] CPU: 0 UID: 0 PID: 1640 Comm: test_progs-no_a Tainted: G           OE      6.12.0-rc7+ #5
-> [  101.736676][    C0] Tainted: [O]=OOT_MODULE, [E]=UNSIGNED_MODULE
-> [  101.736940][    C0] Hardware name: Bochs Bochs, BIOS Bochs 01/01/2011
-> [  101.737146][    C0] Call Trace:
-> [  101.737259][    C0]  <IRQ>
-> [  101.737331][    C0] dump_stack_lvl (lib/dump_stack.c:123)
-> [  101.737489][    C0] __might_resched (kernel/sched/core.c:8657)
-> [  101.737625][    C0] ? __lock_acquire (kernel/locking/lockdep.c:5202 (discriminator 1))
-> [  101.737772][    C0] ? __pfx___might_resched (kernel/sched/core.c:8611)
-> [  101.737919][    C0] __might_fault (mm/memory.c:6715 (discriminator 1))
-> [  101.738051][    C0] __bpf_prog_enter_sleepable (include/linux/bpf.h:2089 (discriminator 1) kernel/bpf/trampoline.c:970 (discriminator 1))
-> [  101.738195][    C0] ? __bpf_prog_enter_sleepable (include/linux/rcupdate.h:337 (discriminator 1) include/linux/rcupdate_trace.h:57 (discriminator 1) kernel/bpf/trampoline.c:966 (discriminator 1))
-> [  101.738357][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:183)
-> [  101.738511][    C0] ? __pfx_mptcp_sched_get_send (net/mptcp/sched.c:158)
-> [  101.738641][    C0] ? __bpf_tramp_enter (include/linux/rcupdate.h:347 (discriminator 1) include/linux/rcupdate.h:880 (discriminator 1) include/linux/percpu-refcount.h:209 (discriminator 1) include/linux/percpu-refcount.h:222 (discriminator 1) kernel/bpf/trampoline.c:1010 (discriminator 1))
-> [  101.738774][    C0] ? bpf_trampoline_6442561300+0x31/0xd7
-> [  101.738911][    C0] ? mptcp_sched_get_send (net/mptcp/sched.c:158)
-> [  101.739067][    C0] ? __mptcp_subflow_push_pending (net/mptcp/protocol.c:1682 (discriminator 1))
-> [  101.739231][    C0] ? __pfx___mptcp_subflow_push_pending (net/mptcp/protocol.c:1655)
-> [  101.739378][    C0] ? do_raw_spin_lock (arch/x86/include/asm/atomic.h:107 (discriminator 1) include/linux/atomic/atomic-arch-fallback.h:2170 (discriminator 1) include/linux/atomic/atomic-instrumented.h:1302 (discriminator 1) include/asm-generic/qspinlock.h:111 (discriminator 1) kernel/locking/spinlock_debug.c:116 (discriminator 1))
-> [  101.739556][    C0] ? __pfx_do_raw_spin_lock (kernel/locking/spinlock_debug.c:114)
-> [  101.739743][    C0] ? mptcp_incoming_options (net/mptcp/options.c:1067 net/mptcp/options.c:1203)
->
-> This means get_send() interface of this scheduler can't be set with
-> BPF_F_SLEEPABLE flag since it's invoked in ack_update_msk() under mptcp
-> data lock.
->
-> So this patch has to split get_subflow() interface of packet scheduer into
-> two interfaces: get_send() and get_retrans(). Then we can set get_retrans()
-> interface alone with BPF_F_SLEEPABLE flag.
->
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/529
->
-> Geliang Tang (9):
->  mptcp: split get_subflow interface into two
->  Squash to "bpf: Add bpf_mptcp_sched_ops"
->  Squash to "selftests/bpf: Add bpf_first scheduler & test"
->  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
->  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
->  Squash to "selftests/bpf: Add bpf_red scheduler & test"
->  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
->  Squash to "bpf: Export mptcp packet scheduler helpers"
->  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
->
-> include/net/mptcp.h                           |  5 +--
-> net/mptcp/bpf.c                               | 13 +++++--
-> net/mptcp/sched.c                             | 35 +++++++++++++------
-> .../testing/selftests/bpf/prog_tests/mptcp.c  | 14 ++++++--
-> .../selftests/bpf/progs/mptcp_bpf_bkup.c      |  4 +--
-> .../selftests/bpf/progs/mptcp_bpf_burst.c     | 22 +++++-------
-> .../selftests/bpf/progs/mptcp_bpf_first.c     |  4 +--
-> .../selftests/bpf/progs/mptcp_bpf_red.c       |  4 +--
-> .../selftests/bpf/progs/mptcp_bpf_rr.c        |  4 +--
-> 9 files changed, 65 insertions(+), 40 deletions(-)
->
+For security or network experts, implying that allowing MPTCP means that
+fallback to TCP is allowed might be a bit surprising at first, but they
+should have the knowledge to know how MPTCP works underneath, including
+this fallback mechanism.  Moreover, this kind of users can (and should)
+also rely on system-wide security policies such as Netfilter, which
+give more control.
+
+In a nutshell, Landlock should favor compatibility at the sandboxing/app
+layers and we should rely on system-wide security policies (taking into
+account the running system's context) for more fine-grained control.
+This compatibility behaviors should be explained in the Landlock
+documentation though.
+
+> 
+> If only TCP is blocked on the userspace side, simply using IPPROTO_MPTCP
+> instead of IPPROTO_TCP will allow any users to continue to talk with the
+> outside world. Also, it is easy to force apps to use IPPROTO_MPTCP
+> instead of IPPROTO_TCP, e.g. using 'mptcpize' which set LD_PRELOAD in
+> order to change the parameters of the socket() call.
+> 
+>    mptcpize run curl https://check.mptcp.dev
+
+Landlock restrictions are enforced at a specific time for a process and
+all its future children.  LD_PRELOAD is not an issue because a security
+policy cannot be disabled once enforced.  If a sandboxed program uses
+MPTCP (because of LD_PRELOAD) instead of TCP, the previously enforced
+policy will be enforced the same (either to allow or deny the use of
+MPTCP).
+
+The only issue with LD_PRELOAD could be when e.g. curl sandboxes itself
+and denies itself the use of MPTCP, whereas mptcpize would "patch" the
+curl process to use MPTCP.  In this case, connections would failed.  A
+solution would be for mptcpize to "patch" the Landlock security as well,
+or for curl to be more permissive.  If the sandboxing happens before
+calling mptcpize, or if it is enforced by mptcpize, then it would work
+as expected.
+
+> 
+> > I guess this should be the same for other protocols, except if user
+> > space can explicitly transform a specific socket type to use an
+> > *arbitrary* protocol, but I think this is not possible.
+> I'm sorry, I don't know what is possible with the other ones. But again,
+> blocking both user and kernel sockets the same way might make more sense
+> here.
+> 
+> >>>>>>
+> >>>>>> You mean that users always rely on a plain TCP communication in the case
+> >>>>>> the connection of MPTCP multipath communication fails?
+> >>>>>
+> >>>>> Yes, that's the same TCP connection, just without extra bit to be able
+> >>>>> to use multiple TCP connections associated to the same MPTCP one.
+> >>>>
+> >>>> Indeed, so MPTCP communication should be restricted the same way as TCP.
+> >>>> AFAICS this should be intuitive for MPTCP users and it'll be better
+> >>>> to let userland define this dependency.
+> >>>
+> >>> Yes, I think that would make more sense.
+> >>>
+> >>> I guess we can look at MPTCP as TCP with extra features.
+> >>
+> >> Yeap
+> >>
+> >>>
+> >>> So if TCP is blocked, MPTCP should be blocked as well. (And eventually
+> >>> having the possibility to block only TCP but not MPTCP and the opposite,
+> >>> but that's a different topic: a possible new feature, but not a bug-fix)
+> >> What do you mean by the "bug fix"?
+> >>
+> >>>
+> >>>>>>>> * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
+> >>>>>>>>      IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+> > 
+> > According to the man page: "It is allowed only for IPv6 sockets that are
+> > connected and bound to a v4-mapped-on-v6 address."
+> > 
+> > This compatibility feature makes sense from user space point of view and
+> > should not result in an error because of Landlock.
+> > 
+> >>>>>>>>
+> >>>>>>>> As I said before, I wonder if user may want to use SMC or MPTCP and
+> >>>>>>>> deny
+> >>>>>>>> TCP communication, since he should rely on fallback transformation
+> >>>>>>>> during the connection in the common case. It may be unexpected for
+> >>>>>>>> connect(2) to fail during the fallback due to security politics.
+> >>>>>>>
+> >>>>>>> With MPTCP, fallbacks can happen at the beginning of a connection, when
+> >>>>>>> there is only one path. This is done after the userspace's
+> >>>>>>> connect(). If
+> > 
+> > A remaining question is then, can we repurpose an MPTCP socket that did
+> > fallback to TCP, to (re)connect to another destination (this time
+> > directly with TCP)?
+> 
+> If the socket was created with the IPPROTO_MPTCP protocol, the protocol
+> will not change after a disconnection. But still, with an MPTCP socket,
+> it is by design possible to connect to a TCP one no mater how the socket
+> was used before.
+
+OK, this makes sense if we see MPTCP as a superset of TCP.
+
+> 
+> > I guess this is possible.  If it is the case, I think it should be OK
+> > anyway.  That could be used by an attacker, but that should not give
+> > more access because of the MPTCP fallback mechanism anyway.  We should
+> > see MPTCP as a superset of TCP.  At the end, security policy is in the
+> > hands of user space.
+> 
+> As long as it is documented and not seen as a regression :)
+> 
+> To me, it sounds strange to have to add extra rules for MPTCP if TCP is
+> blocked, but that's certainly because I see MPTCP like it is seen on the
+> wire: as an extension to TCP, not as a different protocol.
+
+I understand.  For Landlock, I'd prefer to not add exceptions according
+to protocol implementations, but to define a security policy that could
+easily map to user space code.  The current proposal is to map the
+Landlock API to (a superset of) the socket(2) API, and then being able
+to specify restrictions on a domain, a type, or a protocol.  However, we
+could document and encourage users to only specify AF_INET/AF_INET6 +
+SOCK_STREAM but without specifying any protocol (not "0" but a wildcard
+"(u64)-1"), which would then implicitly allow TCP and MPTCP.
+
+> 
+> (...)
+> 
+> Cheers,
+> Matt
 > -- 
-> 2.45.2
->
->
->
+> Sponsored by the NGI0 Core fund.
+> 
