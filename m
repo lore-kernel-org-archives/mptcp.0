@@ -1,110 +1,113 @@
-Received: from mail-ua1-f51.google.com (mail-ua1-f51.google.com [209.85.222.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7ABFF1FAA;
-	Fri, 31 Jan 2025 08:18:38 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0FC1BD9FF
+	for <mptcp@lists.linux.dev>; Fri, 31 Jan 2025 11:04:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738311520; cv=none; b=Qnjxj7emNuTzCGb4Yww+BB1KRtSLh2fxlvO/56wxCIrJaVLO/FDXryfpXHCEx7YO/T/LdoumR0dcKAR22iM2gmLIlw2BF1RTg/OXcrqbQvez1zSWARirtXNgM6T4FV1C0E9/50VxCc3rk/keLmrjkTZQmpY+qzXKnHwfutKoH6c=
+	t=1738321500; cv=none; b=B6WIMx/vXpe697SeSLGWdOfNhWG09j3yIkVnhFLYzNvXGJqbeJs/bELtlb3WSZSfNyfIblAy6KKAm7P5Er81rVSm5VmfO3POHbRuI71PAPrSZPThN0FEShMNVE1h3+fbG3mtWUNYAHUytKidEREBuIG4RzOtQZpI+VBHnaG/7DA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738311520; c=relaxed/simple;
-	bh=XQAyDEsftPjo4BUnpRrzUo4hXISSwy4f0FYmQpPlKmc=;
-	h=MIME-Version:References:In-Reply-To:From:Date:Message-ID:Subject:
-	 To:Cc:Content-Type; b=R+b6cXCHZMqiSfyQPCaAfcESQUz4cpGKyzT/0q3CWuQClfeami2IJJ/f51gHw9UpocPOfxxRfefPcTMxpC+QgK7gTVkMaSSOaTLa5wRqT/cY2k8fBYoc8ChsPKEsFwJMiNMzqHGhNLJIw7ovUhp/hevnyOuNyNhO6kK1ebkBjFo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org; spf=pass smtp.mailfrom=gmail.com; arc=none smtp.client-ip=209.85.222.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=linux-m68k.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Received: by mail-ua1-f51.google.com with SMTP id a1e0cc1a2514c-860af3331feso1553804241.1;
-        Fri, 31 Jan 2025 00:18:38 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738311517; x=1738916317;
-        h=cc:to:subject:message-id:date:from:in-reply-to:references
-         :mime-version:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=O7YJgHULp2WAjtiPEkDFTcvV/zsoNwPARiiJx2ktMxk=;
-        b=dnSTZyWSk7M3k2t2WDJAaP5NMyOln3JzaUD3+DCxcJNaofkkbO/cwq1Q3cIJIVRjV9
-         a96/70B3lkgI3WHRgmm7FvKEdQtDkQb1YGeykrstTmVglrDoTmP4lw4DiU0lEQLV1ut7
-         Ro+xvKgRmEXacNoH6jcHT0wBaCLbd04JW8kUylRAVlDLOy7oV6bL927Fo8w/6wEk1SrV
-         j9biAUNe+pfh6REYV1jIaEArzO8OjS+dJRrGkVxBMEAHXNRldwF1qTfQzjEdxIeffLut
-         z4jXWLpqyJmxqPOhRFyg4pzD2wA42i2D+1hI28UzyFWZ9+cDl2+r+JF7940gUJo8c+a/
-         fSSw==
-X-Forwarded-Encrypted: i=1; AJvYcCVBOqSbgKcnb2VJaa0/MgKpVdhFIcRXASCepFHjCl5GYkP7ru96VlhVvyxlUGwQh8BWdXZWrQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyBow19nMOlX1ZkdtMghyTbtDYcEZI+W+VfmrlXu8AJfBVLLO7c
-	WHKoUZTuL/P+guOUX3Eg4sqUAFJTm37X58Pb4GwyGO5+7G4t0pnFOR3UqY8TqI8=
-X-Gm-Gg: ASbGncu4isrwSdu89JQSkDhCK0roh0MHkPLIo9HjTyhs+pM9VTqJ+1ld2Ja3Wter/mo
-	YItxf/bafPSNRK18pi1B+8MwyBtVUJcFpEa0/r5OBq6hKEIGIubvE7toz+am9PCiA8jsQK93x9M
-	1uKl2ZhdYzPxBeUhYjQWsZhym8xwIGHTTE/4c9SnL4+/nHMUe/intZOISZarIJde9QQqptDwzPU
-	8zvJtSaZNMs5nPdipbGdN4t5HXfSHAd7GYbBB0aMISTwyU1bknrXd/fX1MhSpl0p/q9WxvsAzWV
-	KWO/bEdl7M83O8E6stscqJslg4j57yNyNJ9+St51gqWo58tL0yLYWp0yhQ==
-X-Google-Smtp-Source: AGHT+IFN/Y2xMhCjMD5Fn5xL+vl/iCo6i3YOToMvgeRmwaWHEqqybUQhjbda7kMB0QJoPwS64oyfFQ==
-X-Received: by 2002:a05:6122:2104:b0:50d:39aa:7881 with SMTP id 71dfb90a1353d-51eaedbaf26mr5804058e0c.0.1738311517008;
-        Fri, 31 Jan 2025 00:18:37 -0800 (PST)
-Received: from mail-vk1-f181.google.com (mail-vk1-f181.google.com. [209.85.221.181])
-        by smtp.gmail.com with ESMTPSA id 71dfb90a1353d-51eb1d91b6bsm463452e0c.45.2025.01.31.00.18.36
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Fri, 31 Jan 2025 00:18:36 -0800 (PST)
-Received: by mail-vk1-f181.google.com with SMTP id 71dfb90a1353d-518799f2828so882341e0c.0;
-        Fri, 31 Jan 2025 00:18:36 -0800 (PST)
-X-Forwarded-Encrypted: i=1; AJvYcCUiQMCQOd39ExoDiOc1Ccmlq19y9l9Z+9WEhY48/KjL+WvS4f3mPVigCzrmtt9BiIdEdbYrxQ==@lists.linux.dev
-X-Received: by 2002:a05:6122:459a:b0:516:dc0f:c925 with SMTP id
- 71dfb90a1353d-51ebe666828mr1912542e0c.6.1738311516552; Fri, 31 Jan 2025
- 00:18:36 -0800 (PST)
+	s=arc-20240116; t=1738321500; c=relaxed/simple;
+	bh=74zBxMbZtOF6IzL5eYn1BT1WP7txMHcRiO9uVjesNWg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
+	 In-Reply-To:Content-Type; b=VTNDZgPBzRAaoI3/yuYnBK05P1eRIoYq34s2UF9tjT7ABjvkyQe/IQkmMR/nqNswxyVrJvVWVi+ktezVgSavLUKnoOQg85DcXHIxkmWbYfRW2eksED/Lccu+nzc3YbG6rgcrRpDJG/lfGhdsVWMaSHXfbPclDmDgp4MAzROtgNY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
+Received: from mail.maildlp.com (unknown [172.18.186.231])
+	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YktJn3zRrz6G90H;
+	Fri, 31 Jan 2025 19:02:33 +0800 (CST)
+Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
+	by mail.maildlp.com (Postfix) with ESMTPS id 5B5E21400DB;
+	Fri, 31 Jan 2025 19:04:55 +0800 (CST)
+Received: from [10.123.123.159] (10.123.123.159) by
+ mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.2.1258.34; Fri, 31 Jan 2025 14:04:53 +0300
+Message-ID: <9f7f282b-95c2-8849-7b71-e77213558fd4@huawei-partners.com>
+Date: Fri, 31 Jan 2025 14:04:51 +0300
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-References: <202501310132.oGDmspPN-lkp@intel.com>
-In-Reply-To: <202501310132.oGDmspPN-lkp@intel.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 31 Jan 2025 09:18:25 +0100
-X-Gmail-Original-Message-ID: <CAMuHMdX9=KRJ7jhzrMdnjCiTpBhqJT6fC5ZR=HKUVPzdygKBsw@mail.gmail.com>
-X-Gm-Features: AWEUYZkLT5ckFgNiGcY41nm9el4Hb73i2R4W479F_ewOJKXPN37hxSWvlqWURJA
-Message-ID: <CAMuHMdX9=KRJ7jhzrMdnjCiTpBhqJT6fC5ZR=HKUVPzdygKBsw@mail.gmail.com>
-Subject: Re: net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but
- not used
-To: kernel test robot <lkp@intel.com>
-Cc: oe-kbuild-all@lists.linux.dev, linux-kernel@vger.kernel.org, 
-	mptcp@lists.linux.dev, matthieu.baerts@tessares.net, 
-	Jakub Kicinski <kuba@kernel.org>, Matthieu Baerts <matttbe@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
+Content-Language: ru
+To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
+CC: Matthieu Baerts <matttbe@kernel.org>, <gnoack@google.com>,
+	<willemdebruijn.kernel@gmail.com>, <matthieu@buffet.re>,
+	<linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>,
+	<netfilter-devel@vger.kernel.org>, <yusongping@huawei.com>,
+	<artem.kuzin@huawei.com>, <konstantin.meskhidze@huawei.com>, MPTCP Linux
+	<mptcp@lists.linux.dev>, <linux-nfs@vger.kernel.org>, Paul Moore
+	<paul@paul-moore.com>
+References: <20250124.gaegoo0Ayahn@digikod.net>
+ <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
+ <20250127.Uph4aiph9jae@digikod.net>
+ <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
+ <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
+ <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
+ <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
+ <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
+ <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
+ <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
+ <20250129.Oo1xou8ieche@digikod.net>
+From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
+In-Reply-To: <20250129.Oo1xou8ieche@digikod.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
+ mscpeml500004.china.huawei.com (7.188.26.250)
 
-Hi Kernel Test Roboty,
+On 1/29/2025 5:51 PM, Mickaël Salaün wrote:>>>>>>> On 28/01/2025 11:56, 
+Mikhail Ivanov wrote:
 
-On Thu, 30 Jan 2025 at 18:55, kernel test robot <lkp@intel.com> wrote:
-> FYI, the error/warning still remains.
->
-> tree:   https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
-> head:   72deda0abee6e705ae71a93f69f55e33be5bca5c
-> commit: 010b430d5df556d5d232e3751ac691ba9e88c041 mptcp: MPTCP_IPV6 should depend on IPV6 instead of selecting it
-> date:   4 years, 3 months ago
-> config: csky-randconfig-p001-20220406 (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/config)
-> compiler: csky-linux-gcc (GCC) 12.4.0
-> reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250131/202501310132.oGDmspPN-lkp@intel.com/reproduce)
->
-> If you fix the issue in a separate patch/commit (i.e. not just a new version of
-> the same patch/commit), kindly add following tags
-> | Reported-by: kernel test robot <lkp@intel.com>
-> | Closes: https://lore.kernel.org/oe-kbuild-all/202501310132.oGDmspPN-lkp@intel.com/
->
-> All warnings (new ones prefixed by >>):
->
->    net/ipv4/ip_gre.c: In function 'ipgre_err':
-> >> net/ipv4/ip_gre.c:141:22: warning: variable 'data_len' set but not used [-Wunused-but-set-variable]
->      141 |         unsigned int data_len = 0;
->          |                      ^~~~~~~~
+[...]
 
-https://lore.kernel.org/all/67956320a8ee663f2582cc75f0e8047d69da5f6a.1737371364.git.geert@linux-m68k.org/#t
-Waiting for the merge window to close to repost...
+>>>>>>>> * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
+>>>>>>>>       IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
+> 
+> According to the man page: "It is allowed only for IPv6 sockets that are
+> connected and bound to a v4-mapped-on-v6 address."
+> 
+> This compatibility feature makes sense from user space point of view and
+> should not result in an error because of Landlock.
 
-Gr{oetje,eeting}s,
+IPV6_ADDRFORM is useful to pass IPv6 sockets binded and connected to
+v4-mapped-on-v6 addresses to pure IPv4 applications [1].
 
-                        Geert
+I just realized we first need to consider restriction of IPv4 access
+for IPv4/v6 dual stack. It's possible to communicate with IPv4 peer
+using IPv6 socket (on client or server side) that is mapped on
+v4-mapped-on-v6 address (RFC 3493 [2]). If socket access rights provide
+separate control over IPv6 and IPv4, v4-mapped-on-v6 looks like possible
+bypass of IPv4 restriction and violation of the least astonishment
+principle.
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+This can be controlled with IPV6_V6ONLY socket option or with
+net.ipv6.bindv6only sysctl knob. Restriction with sysctl knob is applied
+globally and may break some dual-stack dependent applications.
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+I'm currently trying to collect real-world examples in which user may
+want to allow IPv6-only communication in a sandboxed environment.
+Theoretically, this can be seen as unprivileged reduction of attack
+surface for IPv6-only programs in dual-stack network (disallow to open
+IPv4 connections and communicate with loopback via IPv4 stack).
+
+Earlier, it was also discussed about possible security issues on the
+userland side related to different address representation and address
+filtering [3]. But, I don't really think these are the good examples for
+the motivation.
+
+If the v4-mapped-on-v6 addressing control is deemed reasonable, it
+should be better implemented with a new access right for
+LANDLOCK_RULE_NET_PORT rather than a part of socket creation control.
+
+[1] https://man7.org/linux/man-pages/man7/ipv6.7.html
+[2] https://datatracker.ietf.org/doc/html/rfc3493#section-3.7
+[3] https://lwn.net/Articles/688462/
+
+
+
