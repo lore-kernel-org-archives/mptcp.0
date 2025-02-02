@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3964B1CAA84
-	for <mptcp@lists.linux.dev>; Sun,  2 Feb 2025 04:36:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 89F901C07C8
+	for <mptcp@lists.linux.dev>; Sun,  2 Feb 2025 04:36:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738470969; cv=none; b=RrRs2W9OUZQep58yMFGvuuXGdMHPcVB8TG+P9dGBqnmf/7duLCR/UY/woIeKXEHDuwXySh3+N+62cMuYpZisY7HvM9vkLwBFIcOXiU+qOIbuwD/rCQqaYTD5Y7VZhIr4fAXKhYrW1xy1OoihRNF84HrOA55UDoheBxOblikZnVI=
+	t=1738470970; cv=none; b=Bde+I2Y3ggUG/ksmlqvcphb+nWX2xY4dj3lgkGpOzDsJz0AgJdAZTvkqr/U1UO0P0NLAxBTwh46TwquSJw5CAsbujdZeDnHsOk7WXOJCo1zUFQMtA6K13gtjpUywAP5/RzWaIWml/dr2pvrvUMLZMCThAB2jaa0X1F1SugQlEZw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738470969; c=relaxed/simple;
-	bh=f8dTKPfnG9ZPz08IOWZ/i1ldFiBG8mEHo3twTxc7vH0=;
+	s=arc-20240116; t=1738470970; c=relaxed/simple;
+	bh=7QzOLXpGKUMbyhs+AvYypVItCDLQIAUOdG7nJ3xnPII=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tKO82j9nu1smJ4xMBVEISg9IXSgHPpw1crkGAOgEMtQ5CafPB/cEvI652NMguEWeY77zskt0oEq+vgRMrzHiFon2kUWI/vo2ZAumUSlbsAihTnbTjXVUCdNLERau/5wfgcd5jV+d5NjTzC1p+iz0nOMXKLv6i47aL+B49feVOrk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XbN80OXF; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=DXDlUplMCsl7zN0QFDJ31UjtbXq/c6fMRP/74fYAxWSMsQ5hus+DIKOcqJveVnOjj513xHoFtNrPX5AQKje/AWdMtlbJouHKSwCmPsiGGaygYwhtC0yh2cTH4uC08dMiQ2q8IwDHkoVKvxF7XJGdx89UBHnMxIB9r4YBBvL+9Js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AtdIw3u3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XbN80OXF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45B12C4CEE3;
-	Sun,  2 Feb 2025 04:36:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AtdIw3u3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3234C4CED1;
+	Sun,  2 Feb 2025 04:36:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738470969;
-	bh=f8dTKPfnG9ZPz08IOWZ/i1ldFiBG8mEHo3twTxc7vH0=;
+	s=k20201202; t=1738470970;
+	bh=7QzOLXpGKUMbyhs+AvYypVItCDLQIAUOdG7nJ3xnPII=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=XbN80OXFzA/JLUMoYqwLZc/skRc0aIcfeTraDB3atWeKTDM+fHDhAkLxdG2C/1Ehw
-	 SjbxMyOOKXmOBh8E9FQdv7IqYEjfhTDIO4mfvpEG61Xt2YyEt1wMewehEKeXvkO4Tr
-	 p9VPqDraDZ1ACWaZ6Hbx1/cQtexCK2rOeJmkOLm0o6WPVxL95RzcbBY31O5V1RhCCk
-	 JziXPAXVw+hWpFNtJkr+SlfuvZHD185rJ0/6MHMLrOBFYn4kaaDvzL554N3ncUx33S
-	 nvrLrMZ26TdnIP7PSpEvv9rgxMnU8DYCnSnY+JazqhoZMDbHxbpe84n4H+QFQalTDH
-	 fBUVl8mN1BZ9Q==
+	b=AtdIw3u3g7Ym0UT3Hk0t4hDbS7ODbD5/KHlmQy7J76eTorU5PObYSFra/cszkJfKf
+	 fElB0RqxTKeDxDFErIKhKYozOmPOYCN2Zivx/7TV3yU7NWrTeQN8l01jCtrtEGgG8d
+	 fiE/jWRHt5EoGZij8KoajjksN0pi7je+4yniYXLRLfdbSl1tfHzJ0TIq1b6M95ruwJ
+	 RqD1Gi50A+FgpgiT1oPk3jcWZnbg7cd/v1KFTPrZNhOo7YYH+5BhuubwLeqe0KhkyU
+	 PTo/+MipIt4+wHDs34DbEAywlVAD4uy5L17ClUR9uwREVFwmZiVq4yvw7NFUyhyOTH
+	 pgIKPucsUkNBg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 4/5] Revert "bpf: Acquire and release mptcp socket"
-Date: Sun,  2 Feb 2025 12:35:10 +0800
-Message-ID: <fe7228964295fd898a3e1468231709cfd5386d23.1738470660.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 5/5] Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
+Date: Sun,  2 Feb 2025 12:35:11 +0800
+Message-ID: <b5fee152138c047d02911d31e12d7f5616ae56f2.1738470660.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1738470660.git.tanggeliang@kylinos.cn>
 References: <cover.1738470660.git.tanggeliang@kylinos.cn>
@@ -45,50 +45,72 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Drop this patch as Martin suggested.
+Use bpf_core_cast() instead of bpf_skc_to_mptcp_sock().
+Change the 2nd parameter type of bpf_for_each() as 'struct sock'.
+Drop bpf_mptcp_sock_acquire/release.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 19 -------------------
- 1 file changed, 19 deletions(-)
+ tools/testing/selftests/bpf/bpf_experimental.h      | 2 +-
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h       | 3 ---
+ tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c | 8 ++------
+ 3 files changed, 3 insertions(+), 10 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index c0ac11f611b0..a74173cc8998 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -276,23 +276,6 @@ bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
- {
+diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
+index 2ab3f0063c0f..6a96c56f0725 100644
+--- a/tools/testing/selftests/bpf/bpf_experimental.h
++++ b/tools/testing/selftests/bpf/bpf_experimental.h
+@@ -577,7 +577,7 @@ extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
+ 
+ struct bpf_iter_mptcp_subflow;
+ extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
+-				      struct mptcp_sock *msk) __weak __ksym;
++				      struct sock *sk) __weak __ksym;
+ extern struct mptcp_subflow_context *
+ bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
+ extern void
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+index b1f6e1fb467e..ede9111ee597 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+@@ -43,9 +43,6 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
  }
  
--__bpf_kfunc static struct
--mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk)
--{
--	struct sock *sk = (struct sock *)msk;
+ /* ksym */
+-extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
+-extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
 -
--	if (sk && refcount_inc_not_zero(&sk->sk_refcnt))
--		return msk;
--	return NULL;
--}
--
--__bpf_kfunc static void bpf_mptcp_sock_release(struct mptcp_sock *msk)
--{
--	struct sock *sk = (struct sock *)msk;
--
--	WARN_ON_ONCE(!sk || !refcount_dec_not_one(&sk->sk_refcnt));
--}
--
- __bpf_kfunc struct mptcp_subflow_context *
- bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos)
- {
-@@ -313,8 +296,6 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
--BTF_ID_FLAGS(func, bpf_mptcp_sock_acquire, KF_ACQUIRE | KF_RET_NULL)
--BTF_ID_FLAGS(func, bpf_mptcp_sock_release, KF_RELEASE)
- BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+ extern struct mptcp_subflow_context *
+ bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
+ extern struct sock *
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+index fd5691a4073b..2c0d11cb9864 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+@@ -24,14 +24,11 @@ int iters_subflow(struct bpf_sockopt *ctx)
+ 	if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
+ 		return 1;
  
- static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
+-	msk = bpf_skc_to_mptcp_sock(sk);
++	msk = bpf_core_cast(sk, struct mptcp_sock);
+ 	if (!msk || msk->pm.server_side || !msk->pm.subflows)
+ 		return 1;
+ 
+-	msk = bpf_mptcp_sock_acquire(msk);
+-	if (!msk)
+-		return 1;
+-	bpf_for_each(mptcp_subflow, subflow, msk) {
++	bpf_for_each(mptcp_subflow, subflow, (struct sock *)sk) {
+ 		/* Here MPTCP-specific packet scheduler kfunc can be called:
+ 		 * this test is not doing anything really useful, only to
+ 		 * verify the iteration works.
+@@ -58,6 +55,5 @@ int iters_subflow(struct bpf_sockopt *ctx)
+ 	ids = local_ids;
+ 
+ out:
+-	bpf_mptcp_sock_release(msk);
+ 	return 1;
+ }
 -- 
 2.43.0
 
