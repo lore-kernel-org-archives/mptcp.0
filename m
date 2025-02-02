@@ -1,113 +1,71 @@
-Received: from frasgout.his.huawei.com (frasgout.his.huawei.com [185.176.79.56])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DC0FC1BD9FF
-	for <mptcp@lists.linux.dev>; Fri, 31 Jan 2025 11:04:57 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=185.176.79.56
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E065B1C07C8
+	for <mptcp@lists.linux.dev>; Sun,  2 Feb 2025 04:36:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738321500; cv=none; b=B6WIMx/vXpe697SeSLGWdOfNhWG09j3yIkVnhFLYzNvXGJqbeJs/bELtlb3WSZSfNyfIblAy6KKAm7P5Er81rVSm5VmfO3POHbRuI71PAPrSZPThN0FEShMNVE1h3+fbG3mtWUNYAHUytKidEREBuIG4RzOtQZpI+VBHnaG/7DA=
+	t=1738470964; cv=none; b=O5n5ZmznuYaKxiNv9ySgrFKs9DLWCSYVM5I2XDbkwKvqF9F00tdmn9+9BqWVF3D/99w0mVgYpjHrxn4vwUlPdG587/4jMwtgZ/ILRwUxzxg55GTPmy6Qn9/c4owCWnG3JeT7e1NGlorKOk4yEYsVA2vAiB0hbY6mjd+N0ZH2nt4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738321500; c=relaxed/simple;
-	bh=74zBxMbZtOF6IzL5eYn1BT1WP7txMHcRiO9uVjesNWg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:CC:References:From:
-	 In-Reply-To:Content-Type; b=VTNDZgPBzRAaoI3/yuYnBK05P1eRIoYq34s2UF9tjT7ABjvkyQe/IQkmMR/nqNswxyVrJvVWVi+ktezVgSavLUKnoOQg85DcXHIxkmWbYfRW2eksED/Lccu+nzc3YbG6rgcrRpDJG/lfGhdsVWMaSHXfbPclDmDgp4MAzROtgNY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com; spf=pass smtp.mailfrom=huawei-partners.com; arc=none smtp.client-ip=185.176.79.56
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=huawei-partners.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=huawei-partners.com
-Received: from mail.maildlp.com (unknown [172.18.186.231])
-	by frasgout.his.huawei.com (SkyGuard) with ESMTP id 4YktJn3zRrz6G90H;
-	Fri, 31 Jan 2025 19:02:33 +0800 (CST)
-Received: from mscpeml500004.china.huawei.com (unknown [7.188.26.250])
-	by mail.maildlp.com (Postfix) with ESMTPS id 5B5E21400DB;
-	Fri, 31 Jan 2025 19:04:55 +0800 (CST)
-Received: from [10.123.123.159] (10.123.123.159) by
- mscpeml500004.china.huawei.com (7.188.26.250) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1258.34; Fri, 31 Jan 2025 14:04:53 +0300
-Message-ID: <9f7f282b-95c2-8849-7b71-e77213558fd4@huawei-partners.com>
-Date: Fri, 31 Jan 2025 14:04:51 +0300
+	s=arc-20240116; t=1738470964; c=relaxed/simple;
+	bh=mc7y/KBbM/nBmyGiT7IkQysGzjfGYKHa0cdBbJhMvfQ=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Qo/QWLUSq1uxak5Umi7IpvqiuDAqRyccomwzrteyapPWFOByIrSqQDYLovNy9Hkj9rwq2uF4rAj/FBEKwg2u1MVUMdtVPWFwgXQTGoxpQzimVC0s7/HPGrkEXnbTgnwD721cYgpAW4EN409QTkcRRONKRo0bR393BD0Yw6U8png=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G1DRqRuv; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G1DRqRuv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0361EC4CED2;
+	Sun,  2 Feb 2025 04:36:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738470963;
+	bh=mc7y/KBbM/nBmyGiT7IkQysGzjfGYKHa0cdBbJhMvfQ=;
+	h=From:To:Cc:Subject:Date:From;
+	b=G1DRqRuvZqt1ZKs6gSgP2KQAbu/Dq6EYqCdo5ZLpOnzCo6cA6Rpka+lLthyy9D97G
+	 iN7cBfC0LbDGKmcB5eiGxn9E4q2JkntjIj7dpGNCQfyV2DyyCpNOsHY3l3mldQnRo1
+	 y+mUG53f7lAlFN+Fu69b/fIzc3kHESfxfcUbErDTmN63XJDcVo/mxVVObAq0JZEqin
+	 Bfj/C6HMxeVHSPVuYMXadjCobAe4cyNPDd6ABGpQU4Ap0Eoye83dPgZtgj4Q6mlry8
+	 efn6X8XETTltpxqpuhM8idqMjcZgaM84KzlgX7gdKHx1s7XjlqEDEsPZ9CU/xteFnt
+	 7HCxBSeAsDogg==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 0/5] Squash to "Add mptcp_subflow bpf_iter support"
+Date: Sun,  2 Feb 2025 12:35:06 +0800
+Message-ID: <cover.1738470660.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH v2 1/8] landlock: Fix non-TCP sockets restriction
-Content-Language: ru
-To: =?UTF-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>
-CC: Matthieu Baerts <matttbe@kernel.org>, <gnoack@google.com>,
-	<willemdebruijn.kernel@gmail.com>, <matthieu@buffet.re>,
-	<linux-security-module@vger.kernel.org>, <netdev@vger.kernel.org>,
-	<netfilter-devel@vger.kernel.org>, <yusongping@huawei.com>,
-	<artem.kuzin@huawei.com>, <konstantin.meskhidze@huawei.com>, MPTCP Linux
-	<mptcp@lists.linux.dev>, <linux-nfs@vger.kernel.org>, Paul Moore
-	<paul@paul-moore.com>
-References: <20250124.gaegoo0Ayahn@digikod.net>
- <2f970b00-7648-1865-858a-214c5c6af0c4@huawei-partners.com>
- <20250127.Uph4aiph9jae@digikod.net>
- <d3d589c3-a70b-fc6e-e1bb-d221833dfef5@huawei-partners.com>
- <594263fc-f4e7-43ce-a613-d3f8ebb7f874@kernel.org>
- <f6e72e71-c5ed-8a9c-f33e-f190a47b8c27@huawei-partners.com>
- <2e727df0-c981-4e0c-8d0d-09109cf27d6f@kernel.org>
- <103de503-be0e-2eb2-b6f0-88567d765148@huawei-partners.com>
- <1d1d58b3-2516-4fc8-9f9a-b10604bbe05b@kernel.org>
- <b9823ff1-2f66-3992-b389-b8e631ec03ba@huawei-partners.com>
- <20250129.Oo1xou8ieche@digikod.net>
-From: Mikhail Ivanov <ivanov.mikhail1@huawei-partners.com>
-In-Reply-To: <20250129.Oo1xou8ieche@digikod.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 8bit
-X-ClientProxiedBy: lhrpeml100012.china.huawei.com (7.191.174.184) To
- mscpeml500004.china.huawei.com (7.188.26.250)
 
-On 1/29/2025 5:51 PM, Mickaël Salaün wrote:>>>>>>> On 28/01/2025 11:56, 
-Mikhail Ivanov wrote:
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-[...]
+v2:
+ - Drop bpf_skc_to_mptcp_sock
+ - Check the owner before assigning the msk as Mat suggested.
+ - Use bpf_core_cast() in mptcp_subflow bpf_iter subtest instead of
+using bpf_skc_to_mptcp_sock().
 
->>>>>>>> * IPv6 -> IPv4 transformation for TCP and UDP sockets withon
->>>>>>>>       IPV6_ADDRFORM. Can be controlled with setsockopt() security hook.
-> 
-> According to the man page: "It is allowed only for IPv6 sockets that are
-> connected and bound to a v4-mapped-on-v6 address."
-> 
-> This compatibility feature makes sense from user space point of view and
-> should not result in an error because of Landlock.
+Address Martin's suggestions for v2.
 
-IPV6_ADDRFORM is useful to pass IPv6 sockets binded and connected to
-v4-mapped-on-v6 addresses to pure IPv4 applications [1].
+Geliang Tang (5):
+  Revert "bpf: Extend bpf_skc_to_mptcp_sock to MPTCP sock"
+  Revert "bpf: Allow use of skc_to_mptcp_sock in cg_sockopt"
+  Squash to "bpf: Add mptcp_subflow bpf_iter"
+  Revert "bpf: Acquire and release mptcp socket"
+  Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
 
-I just realized we first need to consider restriction of IPv4 access
-for IPv4/v6 dual stack. It's possible to communicate with IPv4 peer
-using IPv6 socket (on client or server side) that is mapped on
-v4-mapped-on-v6 address (RFC 3493 [2]). If socket access rights provide
-separate control over IPv6 and IPv4, v4-mapped-on-v6 looks like possible
-bypass of IPv4 restriction and violation of the least astonishment
-principle.
+ include/net/mptcp.h                           |  4 +-
+ kernel/bpf/cgroup.c                           |  2 -
+ net/core/filter.c                             |  2 +-
+ net/mptcp/bpf.c                               | 43 +++++--------------
+ .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  3 --
+ .../selftests/bpf/progs/mptcp_bpf_iters.c     |  8 +---
+ 7 files changed, 16 insertions(+), 48 deletions(-)
 
-This can be controlled with IPV6_V6ONLY socket option or with
-net.ipv6.bindv6only sysctl knob. Restriction with sysctl knob is applied
-globally and may break some dual-stack dependent applications.
-
-I'm currently trying to collect real-world examples in which user may
-want to allow IPv6-only communication in a sandboxed environment.
-Theoretically, this can be seen as unprivileged reduction of attack
-surface for IPv6-only programs in dual-stack network (disallow to open
-IPv4 connections and communicate with loopback via IPv4 stack).
-
-Earlier, it was also discussed about possible security issues on the
-userland side related to different address representation and address
-filtering [3]. But, I don't really think these are the good examples for
-the motivation.
-
-If the v4-mapped-on-v6 addressing control is deemed reasonable, it
-should be better implemented with a new access right for
-LANDLOCK_RULE_NET_PORT rather than a part of socket creation control.
-
-[1] https://man7.org/linux/man-pages/man7/ipv6.7.html
-[2] https://datatracker.ietf.org/doc/html/rfc3493#section-3.7
-[3] https://lwn.net/Articles/688462/
-
-
+-- 
+2.43.0
 
