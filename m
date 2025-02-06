@@ -1,119 +1,79 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5EAD11FAC5C;
-	Tue,  4 Feb 2025 22:20:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893062E62B;
+	Thu,  6 Feb 2025 02:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738707616; cv=none; b=VmA6iuxAns6hFutlAdYSrOQLnmoWTmBRt9fVkPSjRnm67/M0X07jfjmhPon7kd9PJpXyW+f+0cA3XaVNztJlX6fpIlv3SRWMBUackyt7mLYQeGgj91QPmxCcAKqoToMyxo5g3/vXaciOTYxf+TM4NKIA2aJdXW0XZI65NWqMZGs=
+	t=1738808405; cv=none; b=D3ONayPf7LEcqvs9Bq9XLxjqnQj6r+3vLq/Knw+IJ2r1NUet4Hel+uf/VdQ9ew5r/Bhs7T9xQ3JW6rBJddI3nDQFiqw8KcLr3gFU1Fspi1WlS5OyWEeycQ/hGYd58uoEFUKGFaO8qiir9gG46nqVswdb7Y/qq55JdFvESisNIfo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738707616; c=relaxed/simple;
-	bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=Ic50P48sHlAibuz8bCEL32WaICv6MPXdWsQtCurfZL2eYA1Cs9Z4XBi2x6sKhaG4xBueeuObWCWZkO1TuOYed5v0JBYX583DsiJxf3y18HUeIeM8t8fsVGEZBeLfRvNiiDbBCfxDGdeWxaykv3XtaSzzeUYn4MEXjnpY0Icz0x0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o1FNfi3Q; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738808405; c=relaxed/simple;
+	bh=oHSSIC5E6hzcwmxupX44t54z1KpOd5ZqlBP1+ll/XwU=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=DjvfEhRImaSzWERAbBuQoMt0mpX10RhGwkftJSLViJhtm11Bb7s2kP0d+n9vseFCEfoZ8iKtgtoZEAi7YpqiU7uUzLqD5qCb0Q7oT3+ae2yeYm4LUswuXl0JcM5On/7QudJn+qLGozbJg9Cx1GdXQE12syQMwfdebF8kpvmIZ90=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RuLaYuvV; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o1FNfi3Q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D374C4CEDF;
-	Tue,  4 Feb 2025 22:20:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RuLaYuvV"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0DE2C4CED1;
+	Thu,  6 Feb 2025 02:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738707615;
-	bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
-	h=From:Date:Subject:To:Cc:From;
-	b=o1FNfi3QM3KcNkDfnxZMfJf6s8wyRBoc3vFV5N7u+VdLJj0RQ4shLisPwnGhufeKN
-	 VROKlmxbQ87OvueEbA3MIfFSO9uhJMr/X4999SXIIYqkj6nAlHdK9Ha5vmAXDgiBC0
-	 Chd1cmGMchTnhttGTDnTwM5uchOg3vhm0l4cszz4uiZlM4L9TxvE4ptX78D6wgw1SK
-	 tkcVjDwY1onpNGQAtUqiwXi91q8SM2uOe6OqUwMs3lnohC3FaATXPVAYDuvEYM2q2k
-	 wm1SNcSPmLMR7YFrbf3B4ODGbJONS8FWmrH/gtKzK3L4CJALm9J8GJx+nxkWo1dn9G
-	 rAXb2wSOHM/MA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 04 Feb 2025 23:19:53 +0100
-Subject: [PATCH net] selftests: mptcp: connect: -f: no reconnect
+	s=k20201202; t=1738808404;
+	bh=oHSSIC5E6hzcwmxupX44t54z1KpOd5ZqlBP1+ll/XwU=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=RuLaYuvV7nEVrtDqSIwidq4MXaSGOW12xBIIZCmJP5+141K8m5sc3iB2EwE8EMho2
+	 Rx6+2RQTBW1TQ1p8hI9v3M157OeOs1BPHX1o38UguND3o4JzEYxMQ8eJf6r99lFIwM
+	 216vXoTwEiUix03H2qSNECCtI9LgycOu25/U8CRclSRTswlYyzGGW6GClrq7Dn2KqQ
+	 IVwP63GHMAOZ0srzpDiRtYkItx63kFyd7fJ++ytm2JGsCvWzL/CmU/fEeqXgY0oSE8
+	 6+LllxtjCVo/42QqXamMd/k8aAFK6iQZ4wWEvQRSqQXtskwFgeY4GhtaQS6gjM/IIT
+	 ZggF4ttW28x7w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE1A8380AAD0;
+	Thu,  6 Feb 2025 02:20:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250204-net-mptcp-sft-conn-f-v1-1-6b470c72fffa@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAIiSomcC/x3MQQqAIBBA0avErBtQsYKuEi3KxppFk6hEIN09a
- fkX7xdIFJkSjE2BSDcnvqSGbhtwxyI7IW+1wSjTKaMsCmU8Q3YBk8/oLhH0uGmnrRnsuvQ9VBo
- ieX7+7QRVwPy+H1RNVetrAAAA
-X-Change-ID: 20250204-net-mptcp-sft-conn-f-d1c14274ba66
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- linux-kernel@vger.kernel.org, stable@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2021; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Ofg3xhSGKHnj2+K7N2sYVNrGu7WKXnhEyI2OiZYqCyc=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnopKYLQZU4YyKbSKz5pUlq54AT8014h2s72eXB
- o75Fr0Jql6JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6KSmAAKCRD2t4JPQmmg
- c7JvD/9g08zZZi2rntY2iKHW6N+QUbZgSWYgSl+dIqRo3CjhD1LsKTxoupIfaU6EL+JQj/UBlJD
- 1p7EW6tjd/98J4hsI5vSyt+5NS5VYlMvCrvSez+QxRh/Ne//X2uwXXoA8AOQoFDaq2/o8WOh7F0
- 3Ib9uR6urG/kpRoQ9VxHHIfXl8Z499uRvJWtzX5eopvZU8xLlURVSkxjIHZ9mq0BdQTIOZip0Pt
- ecs88Eh49YksLdi0WrSfKrNEngRcuAuUGNOus0O6MXMKnqtisR35H1Hc2BYxMvZOB3Aghm48OcD
- 2U1pMF6dYGyUh+avYkfsrY8/N3W3gwwC+BYsz7hzDOeMvtTXjvCHNThwxjN0Ge4VLNJI7WyVxAS
- Ra91FDb1JrhJaXC1K27iKdM+9uTht63YDlcU7lGpscc9WnCzaORWSK0rRKRzS3HTH59jOn0XTjA
- 3w5tKK5UH5t90wTQMbfbyAgPkl+lzkaRa/5n8RVeN+r/90QG9xDzDMEyiWbbOLnxl1ICZSiBWLu
- nMd/nlLtRKa47Gv/Qm+0VZrt53Gl8v+ejzGOd5d2PBNlF2cvYRJtozLZRrpzN2szJC+uqzG/Tx6
- N2QRcK9GTjwf2F2OJJCVvRF/gD8sE/qk2Gc9ngMUU+pXPTmG+SQU34yTrw+eSfNxwqmtfyZihBy
- Yzncvbtwc6VSdFQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net] selftests: mptcp: connect: -f: no reconnect
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <173880843253.974883.18192366892501704782.git-patchwork-notify@kernel.org>
+Date: Thu, 06 Feb 2025 02:20:32 +0000
+References: <20250204-net-mptcp-sft-conn-f-v1-1-6b470c72fffa@kernel.org>
+In-Reply-To: <20250204-net-mptcp-sft-conn-f-v1-1-6b470c72fffa@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org
 
-The '-f' parameter is there to force the kernel to emit MPTCP FASTCLOSE
-by closing the connection with unread bytes in the receive queue.
+Hello:
 
-The xdisconnect() helper was used to stop the connection, but it does
-more than that: it will shut it down, then wait before reconnecting to
-the same address. This causes the mptcp_join's "fastclose test" to fail
-all the time.
+This patch was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-This failure is due to a recent change, with commit 218cc166321f
-("selftests: mptcp: avoid spurious errors on disconnect"), but that went
-unnoticed because the test is currently ignored. The recent modification
-only shown an existing issue: xdisconnect() doesn't need to be used
-here, only the shutdown() part is needed.
+On Tue, 04 Feb 2025 23:19:53 +0100 you wrote:
+> The '-f' parameter is there to force the kernel to emit MPTCP FASTCLOSE
+> by closing the connection with unread bytes in the receive queue.
+> 
+> The xdisconnect() helper was used to stop the connection, but it does
+> more than that: it will shut it down, then wait before reconnecting to
+> the same address. This causes the mptcp_join's "fastclose test" to fail
+> all the time.
+> 
+> [...]
 
-Fixes: 6bf41020b72b ("selftests: mptcp: update and extend fastclose test-cases")
-Cc: stable@vger.kernel.org
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - The failure was not clearly visible on NIPA, because the results for
-   the two impacted sub-tests are currently ignored (unstable). Still,
-   it looks important to fix that, as this will help when the tests will
-   be improved not to be unstable any more.
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Here is the summary with links:
+  - [net] selftests: mptcp: connect: -f: no reconnect
+    https://git.kernel.org/netdev/net/c/5368a67307b3
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 414addef9a4514c489ecd09249143fe0ce2af649..d240d02fa443a1cd802f0e705ab36db5c22063a8 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1302,7 +1302,7 @@ int main_loop(void)
- 		return ret;
- 
- 	if (cfg_truncate > 0) {
--		xdisconnect(fd);
-+		shutdown(fd, SHUT_WR);
- 	} else if (--cfg_repeat > 0) {
- 		xdisconnect(fd);
- 
-
----
-base-commit: 4241a702e0d0c2ca9364cfac08dbf134264962de
-change-id: 20250204-net-mptcp-sft-conn-f-d1c14274ba66
-
-Best regards,
+You are awesome, thank you!
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
