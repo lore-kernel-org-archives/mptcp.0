@@ -1,127 +1,151 @@
-Received: from mail-pj1-f51.google.com (mail-pj1-f51.google.com [209.85.216.51])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DAF102417FE
-	for <mptcp@lists.linux.dev>; Fri,  7 Feb 2025 11:44:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.51
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BF2F71F8AE8;
+	Fri,  7 Feb 2025 13:59:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738928691; cv=none; b=WQQJI9ppNnX0rFXiisdCTAXszpSocNM+1A58HSbSbZJXFkbBHJX7Pqu5nQ0proHxPpSkcnskTCt0PEwhT/8gJ1lFFruz8V7R+rKrrEkudo1HCyNdZpswCs7nwT8IZjZLGK9QYJs1HFbNqkdxA13+zEkjCJQOZeFtTLDYC9wiID0=
+	t=1738936769; cv=none; b=g/Z6zFzAFV57ZbPEPCvP4iNftStF3ZfU6786/o4iNYYKefLRUGbvI9YyW/MkNr9bmQnAkGdwc86OrQ5Trc7iqUV/iOwQxIOkjI5MXKsmmY6x/ysJw4QgXEuIDq7AS9Fde46k1LXU3pqJCnW1Hwp8NtpbEV1PU8n4LqqEmSBjTh0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738928691; c=relaxed/simple;
-	bh=DZY3N/0WsWBcSQQBWUfvoT8lTZYdlxsYPtgbM68akjw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=XKG4id+38cUdnepPJsUcAakUeekHsm/lTBFEa4e5ST85TgDUsd87ffB+Xal1+2CY2WIgg+LTRtFYDVUOiYsvh68hGG7jlDDl4LRcBovrPH2Bon7r88lluRifIQ/KsW8e79R+qcgyGGfGLvTw/Al6BH4KY+y8P6SV8kHwaIsGXR4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=dLgk4id9; arc=none smtp.client-ip=209.85.216.51
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1738936769; c=relaxed/simple;
+	bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=raBKmKGl5VwRGk/tLKnNNGou6PwcE9PozQtqqlqQM7ggdph6tSRad5IUfcTptP0CLjJva+ZvbQesv9IZTrpLaGTEPwy7AclRQ/0BdKr+3gkUmS+cge6zWC1PLXlLXm0ftDgk5p6edDZ/LlxO5sCrl5zA/Il4dfswE/sygjXBwMA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Mzb3v+O1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dLgk4id9"
-Received: by mail-pj1-f51.google.com with SMTP id 98e67ed59e1d1-2fa1fb3c445so1576701a91.2
-        for <mptcp@lists.linux.dev>; Fri, 07 Feb 2025 03:44:49 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1738928689; x=1739533489; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=voD+ZrbYLw7ARdFr32ioMNp6co5E1XSusuPVRmm85J4=;
-        b=dLgk4id9X+0cNpmIWqtedcFgVbkyvvfkLYxQ0E2k5ICppqnG6uhFNsau2uwhjPo+a9
-         k0Pa0BK3E+qeJ/h+7LtuiBXuhU38TJT777SQXOF2l0OYSPO7GHcJkn58Eu4NwyVAhUM+
-         fBSP30I9G+h3xOLZ8D2zVaQ/xtYSNjQ908Ti7Zw5ExlB9rxF1Wu6H53bFgKZcsHHTR/I
-         MGMEklv9Om5Gj3yQ35022aKbWEWOSG0bCYE6vFpPq5wvyPiH3cXdCOyL6E/sHIm6ffVx
-         aJAFdHnaspIae0acBpuk3SqtyTidG3dhyJXHV4J9xx2LXHZDEgua1hF0PVNrrMRZieYL
-         fn9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1738928689; x=1739533489;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=voD+ZrbYLw7ARdFr32ioMNp6co5E1XSusuPVRmm85J4=;
-        b=elGz8XlIIxXIXpqvqi7G/8J4kzsTFlgw87KmPtxFl2anbsyABH8AljDHc+CkbtRjzy
-         LnGxfIhKsFEY0+imNc8F+vCLuk8Cekz7e3ifoWVjSf7ZqLDqMDO7KgU+6UQVX3LKU1/I
-         rp8aHO9EG37JIbSueHHCCjlOpEld68diRTspm+BXDsNLOit9hm9Xp31R3CfCKrCvNfPQ
-         BOO6e1+ETdgBbv5yVRTD/jgOriWQgjLKUdSAqCLpLlds1oQvMRA2NVee0vLRhLgNdWJI
-         gqT131MoAkOub6cGvkKQWsFVqlESnbGkNj8zsRHbgTh+D12NaULwVeeltQmRaYlce86d
-         wnRQ==
-X-Gm-Message-State: AOJu0Yw5KNB2VA5dL8ozaSD8W/11iGQhf7obJA2IeQvd9Or7//s3UC8C
-	hyXfRaOR88uxvMuIyi/ckLHAHmHxqEuaYSqN9So1MIwEpkIE+xuK25SV
-X-Gm-Gg: ASbGnctjc004mxnuUpqrHZjADZFed4DjnjKmCZ55Q1klin4Qi46fiHEVrqGcrg9+ehT
-	3a6bK0In8fYoYv6PfGsTOVHryoKONBiIAahR/5SFP/xZ65NWcTL0RAFiBR45H6W7GbYHsgjREyd
-	PeF25w/T/Rdv9jFeFyG3QqH/e0qg89lUbUuwkgQRZtpi/b8NewIlJ3qEXheAQS775qu7xqteE7t
-	vDBDogWtMdzbpD1LrZ/fYF7F8q0is3s421lPUY0T4noaevxU0bZFrgwA1y6ULBkpR3i+IXB3o/W
-	Cb0BhvA7p9KkHr2c+c/1Mbp32Tr3
-X-Google-Smtp-Source: AGHT+IESDPkqC/Q5zNyf3CaJXsGNJOuebIVaKLLcek+lLaxfp9Em/xwICgq+dhh//5anzguANxHckQ==
-X-Received: by 2002:a17:90b:4cd1:b0:2fa:157e:c78e with SMTP id 98e67ed59e1d1-2fa23f5ebb1mr4789777a91.7.1738928688719;
-        Fri, 07 Feb 2025 03:44:48 -0800 (PST)
-Received: from [127.0.0.1] ([52.234.38.170])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-21f3650f382sm28643215ad.29.2025.02.07.03.44.47
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 07 Feb 2025 03:44:48 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1738924354.git.tanggeliang@kylinos.cn>
-References: <cover.1738924354.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 0/5] add mptcp_address bpf_iter
-Message-ID: <5394c83c-25f2-5e31-d8d9-5e79db194624@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 07 Feb 2025 11:44:47 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Mzb3v+O1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2FFEBC4CED1;
+	Fri,  7 Feb 2025 13:59:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1738936769;
+	bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+	h=From:Subject:Date:To:Cc:From;
+	b=Mzb3v+O1yft7lyMAZukW4IvRF/4p4M+QvJmVnThgZ0WEbmtS6NyFmRepo0k8BLIJa
+	 Xkwsjs1Zlm6akochNdwETzOFJ2kdNMxDEvMuze1HS29qaBl0WOkbkETMszAMGQLjHP
+	 NyZpCNIypjPvr1aDrKC7lIqpWAvjLOmN38eJq/nhIxxcBQIt6Shp3+b5L7lTMafTTz
+	 AajnQzKZDCfTviUQAtbllGiERkWHj8kS6Ydv0V1bjcsvqM7LNAHfXpBlfLQl6bCLyz
+	 6JyRR4jb5Gocd51o9/qEdw0qn7wpCXQdkWS3Ixag5XHvgQQL6tv6xhzaJzPCVWpXAm
+	 waopiT4KtXTPw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next v3 00/15] mptcp: pm: misc cleanups, part 2
+Date: Fri, 07 Feb 2025 14:59:18 +0100
+Message-Id: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIALYRpmcC/43NTQrDIBAF4KsE152i5qfSVe9RukjMmEgTI2olJ
+ eTuFaHQ7rKYxeMx39uIR6fRk2uxEYdRe72YFMpTQeTYmgFB9ykTTnlNGWvAYEi3BphtkBbsDLP
+ 2EuSErXlZ4NBRVVNUSlBRkcRYh0qveeJOvt/kkZpR+7C4d96OLPfHZyIDCpJ2VamYUEib2xOdw
+ em8uCHrkf+KlwMiT2LD+ipptWhQ/In7vn8Aa58GOy0BAAA=
+X-Change-ID: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3259; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=1Z1+NL8yeZN9e9Y7PheCaIDo410qxsv0w5WsGMG7jd0=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnphG9lRnBPv0YSIvaVRrtU+I7VLFpBVrB9xAAl
+ BLUnk2aJPuJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6YRvQAKCRD2t4JPQmmg
+ c/EhEACZCiM5ZIeuwZ+3CHKHFdEgVVN2YnO5FlDtlHlI1q5As9P+6yDHuGyRCMaT555HwYVV9pv
+ 7dNJEJeDtvLZlMwEjVHrpOWw4lbIgfxKnIQgq3cf1ULy2gnuRVBz5A6W9Yvyp4x8dYdjgsLG02y
+ Y//9IIs4dbGGzuSksVISmpVnbJLWz3XfDKadjLVIIDPYkl9gA10G4LAcvhJeKDfWhYpWWS240t4
+ fPXHsSkpf6o3GiKSsBMd7DXXOv+qvVT0Fpx+7XYr9UZGlzaR9eHuY+hhRasX4OrFoGbWsaWp2Ll
+ XzBhhCsdQHuAIezCLxPB0y/lEbj+5ywZ+4nnX0qmxKTCReCQ3egNBBHdTYdFzKZwStDPOQzjYhY
+ mEYj8s4xsIxIJDnZ9hDwgQdnKoFhvZMxoM06S+dkiWiya7Ult6w4RSEuilv6SMzjIjirO2ItVoL
+ IdTvStg1hnABUOU4qFnJgPnzkTJ8/lU1x/tPg3a9sNh66Ygpbq5Jno8ka6eP+fcM3yokKFpjys6
+ oHYYeYCUWE1H72c95YSN5VJm7UmqXli4aWD36tKw3KnTXDs25OLegJdAUCOapD5q5WsQYMlPdcK
+ 7LbNAcv4vMjBwyF5PpiWK3Oq0j0ahHeH7Fh/im83ZvFFvNAGgQ2045wKAL5klR1PnmfyArDtZu4
+ asCpKIDh8g/MQCQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+These cleanups lead the way to the unification of the path-manager
+interfaces, and allow future extensions. The following patches are not
+all linked to each others, but are all related to the path-managers.
 
-Thank you for your modifications, that's great!
+- Patch 1: drop unneeded parameter in a function helper.
 
-Our CI did some validations and here is its report:
+- Patch 2: clearer NL error message when an NL attribute is missing.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13198351458
+- Patch 3: more precise NL messages by avoiding 'this or that is NOK'.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/bf5c2a4b6df9
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D931534
+- Patch 4: improve too vague or missing NL err messages.
 
+- Patch 5: use GENL_REQ_ATTR_CHECK to look for mandatory NL attributes.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+- Patch 6: avoid overriding the error message.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+- Patch 7: check all mandatory NL attributes with GENL_REQ_ATTR_CHECK.
 
-For more details:
+- Patch 8: use NL_SET_ERR_MSG_ATTR instead of GENL_SET_ERR_MSG
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+- Patch 9: move doit callbacks used for both PM to pm.c.
 
+- Patch 10: drop another unneeded parameter in a function helper.
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+- Patch 11: share the ID parsing code for the 'get_addr' callback.
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+- Patch 12: share sending NL code for the 'get_addr' callback.
+
+- Patch 13: drop yet another unneeded parameter in a function helper.
+
+- Patch 14: pick the usual structure type for the remote address.
+
+- Patch 15: share the local addr parsing code for the 'set_flags' cb.
+
+The behaviour when there are no errors should then not be modified.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Changes in v3:
+- Patch 11: a variable was no longer assigned in pm_userspace.c, but
+  still used in this patch (and no longer in the next one). (Geliang)
+- Rebased on top of the latest net-next.
+- Link to v2: https://lore.kernel.org/r/20250117-net-next-mptcp-pm-misc-cleanup-2-v2-0-61d4fe0586e8@kernel.org
+
+Changes in v2:
+- Patch 11: a variable was no longer assigned in pm_netlink.c, but still
+  used in this patch (and no longer in the next one). (Simon)
+- Link to v1: https://lore.kernel.org/r/20250116-net-next-mptcp-pm-misc-cleanup-2-v1-0-c0b43f18fe06@kernel.org
+
+---
+Geliang Tang (9):
+      mptcp: pm: drop info of userspace_pm_remove_id_zero_address
+      mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
+      mptcp: pm: make three pm wrappers static
+      mptcp: pm: drop skb parameter of get_addr
+      mptcp: pm: add id parameter for get_addr
+      mptcp: pm: reuse sending nlmsg code in get_addr
+      mptcp: pm: drop skb parameter of set_flags
+      mptcp: pm: change rem type of set_flags
+      mptcp: pm: add local parameter for set_flags
+
+Matthieu Baerts (NGI0) (6):
+      mptcp: pm: userspace: flags: clearer msg if no remote addr
+      mptcp: pm: more precise error messages
+      mptcp: pm: improve error messages
+      mptcp: pm: remove duplicated error messages
+      mptcp: pm: mark missing address attributes
+      mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
+
+ net/mptcp/pm.c           |  86 +++++++++++++++++--
+ net/mptcp/pm_netlink.c   | 129 ++++++++++-------------------
+ net/mptcp/pm_userspace.c | 209 +++++++++++++++++++++--------------------------
+ net/mptcp/protocol.h     |  14 ++--
+ 4 files changed, 225 insertions(+), 213 deletions(-)
+---
+base-commit: 26db4dbb747813b5946aff31485873f071a10332
+change-id: 20250116-net-next-mptcp-pm-misc-cleanup-2-b0f50eff8084
+
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
