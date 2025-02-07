@@ -1,425 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 016DE53A7
-	for <mptcp@lists.linux.dev>; Fri,  7 Feb 2025 10:36:17 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F013715B54A
+	for <mptcp@lists.linux.dev>; Fri,  7 Feb 2025 10:45:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738924578; cv=none; b=T0zYnJ5HVBmApJaPmwZjApB2oRMiKPwAqOAMtcsFdRoQpfSoYbwRmPQPHowHAb1wx/Txzc8Ylwge9WlqhMA8MmiwpUaWhi2GiJp7zLg1T23D29MaBJFp3YRgm+tFwfAcWjl4UYXWcwJsuFQ1abd/M27zkJI/yPJ9rjdjeQbbEI4=
+	t=1738925109; cv=none; b=Ga+vp529yl4u+7yHEV2ok4R0LP9uLcHpJHRJTx0z/wmM/xec7VS9Za2SDFNWvJdyP3DhUP9TWr7omB2/Cjq99R/FXFSdZmhB8iAgNmnWcvmUdq0c3Ha5rrybPIygAINbotvYoqSdMc3pjNN2ysYDMsbpqMcw9bUSsLczXTEg8HI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738924578; c=relaxed/simple;
-	bh=/7cURs0V4Od1PYhgGUKTBJMQAEGgdHMV0RBN66PpO9Y=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=sP+kBQzUZeYvbpfb6FE3eyuPWWay6cxo3ManB+s2kX/fGHUXIlUMPxoC8QxXcz78k5h2WV8T2DzCpoS2iUMJ3+Nt2oVJKKe9MgaFzihBCFmHUS1Os78Mln0Fi5svnzjOHzcKWQt7UpsK/pfn/ETiQlcDLYI8ss6PAp7ZH31dlMc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pOSbyUMu; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1738925109; c=relaxed/simple;
+	bh=mJxvSWs90z5ERea/oH0aBpHFS0aWHs8EOF+jphnm/oE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=O8XlF8uIy7kGOXW/IuHMj7C4M3npSwK9FxfAmGQEv6N52PBl0QbQi5/A6+3vqcR2pC/hJc1hJVoveQZgW8I+Es2GycvQ91R4t3YEFkwHUTy6O47j40cLbwGCoX68jMsw9kmhlrtDMGUHGebO3xb/amfI051FWBgilMA21ca2qvY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Cz9EUk3l; arc=none smtp.client-ip=209.85.222.181
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pOSbyUMu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 793DEC4CED1;
-	Fri,  7 Feb 2025 10:36:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738924577;
-	bh=/7cURs0V4Od1PYhgGUKTBJMQAEGgdHMV0RBN66PpO9Y=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=pOSbyUMujyfsgOOqM4h/PVWsraC+7wZ5yM3qc/dcytUg1MI04rZllOwo9/RFRiH87
-	 cV3eSouLj042Lb3m8DA4dPulJ1Bb/7VamkRHkj6tMevCg6N5rNkL+lZDUT8+bLHVMU
-	 sjThpJnuE1b3++0+BE8WAKmfWh9lNsp566cEGjaNyxFR2CykXG6Q0zN1CvGxKEwLFA
-	 laQ5h80KBDDfbFmEq/DB/iS7RX4jBOaJov/d3JqSw4KzZh9IIvX86EpS5W81nRh0P+
-	 pXOSGyVGOmp/OfqgS2q4rEt0wod744qncDyGJ95BdrM1jiuD85nLn37p6Xel9xG95a
-	 YxSlUj6k7nYXw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 5/5] selftests/bpf: Add mptcp_userspace_pm_addr bpf_iter subtest
-Date: Fri,  7 Feb 2025 18:36:02 +0800
-Message-ID: <950bb28cb0d973add9306655a19c306b72278956.1738924354.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1738924354.git.tanggeliang@kylinos.cn>
-References: <cover.1738924354.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Cz9EUk3l"
+Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7b6f0afda3fso223913585a.2
+        for <mptcp@lists.linux.dev>; Fri, 07 Feb 2025 02:45:07 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1738925107; x=1739529907; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=xJoanq9O5ryX3ihJgBWzyifviSLF+XTqh8+SbcIwABM=;
+        b=Cz9EUk3lJqwH+u2kHg4ZZl0s1FMqkWY344ySZlv3nd+v4E0vS2XK4Hlwmsju3P/rv9
+         r99I7l/UaTuzbXwp6pb0kX80eUHm03bKpAufyeMZV7WoKTPDv5SGD+If5JbBZ0BS1vfp
+         R8vyKtz/zfpbjq2x04Ae9jMwuVDsfIb307/DlwAfIgjwLgewP9A347OTzMJHYxft5hzg
+         ooyqAeVSte6EfOzT59WhCJJEZbL0sBnDXV1oHTbkPv9dK4A+NWc3DqTamEOG2Lf1RgOq
+         Ao9VLj+yoPvBmBrJdz7hBvFgtkQmAj5nf4+nD6DDvpRIkhf4bd4mngJhU+a3Gob7W1a5
+         0R+g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1738925107; x=1739529907;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=xJoanq9O5ryX3ihJgBWzyifviSLF+XTqh8+SbcIwABM=;
+        b=a6kMVbc4VP8ZC+4t3WhyqdxlQSjf24iXISoVdoIAHbqdxY0ggJItUZbx1Ayxsb/jvB
+         7hIGW3tIn9xNG3GGmz7alQzD/qhXfJgzWYEFJo6riQYZQUpKE22AQ+gENtnvMpuR5KDQ
+         n5OElj6AUmn6/UluL549LWbVECZieAOIXU+slK6SQhWq0M13tUGGYFEZM16otga1df2m
+         QvVfyGryyJtGpgsoTwMKsQJK8a/6kpfHPhnS/zH7FwZ6oOTWBxFgBJCNkL0hQvg9fTPb
+         3Syj8dZbT4HEd2j7l6NZw+oVs+cC5+ll1uqnb2VdLB4963QJJTY+hgF2/uQPhDIvodlE
+         cyDw==
+X-Gm-Message-State: AOJu0YwSNQhXyLyUeoxAS2ryJFmYMeO0tbQGl+9kts4V3gAEB11l3/vA
+	tX3QrFInQznfYDbIDAJQ9cHdySgCEpToBY/MEabqwMghSMLtx/gmWY9L
+X-Gm-Gg: ASbGncswrECizzpVdI+QoIPhQNVVA1lNu7eoLhFYMKdoBdTNB1qXDiiW0y2UeJcMpsF
+	6d7m6d/ydnvianhT9AbmEdSJjJmCT+xjmIPdiyPCh+Yw57mUwAmY/KumifZ012t5Y2eo/p8st13
+	moxR0AFcTi3e0+gCRJNURymUk9Rs8ed54XtVHVC+KsitGdRbJ0fZDn8UKdLSqxDf4OWAsZNPJtl
+	c6VSPf5xgDDW2QaArs0wKWVIheigez2x8Cfx6xGrKMEcDOq1p2SFBRu+waM1uieJccwOqfbwAyp
+	BCr9tQUJigSW1U73FLjhIYk7vw==
+X-Google-Smtp-Source: AGHT+IH2Oxp4XZcVyHM9XYkUjKSSGOWRkQ3KxU+73OXFnvtmjaUOl5X8apX8ugSWGhqMjTVwUQdXkw==
+X-Received: by 2002:a05:620a:3946:b0:7bd:bafc:329d with SMTP id af79cd13be357-7c047c978abmr386164185a.40.1738925106804;
+        Fri, 07 Feb 2025 02:45:06 -0800 (PST)
+Received: from [127.0.0.1] ([20.25.192.5])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c041e1388asm172336285a.61.2025.02.07.02.45.05
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 07 Feb 2025 02:45:05 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1738919954.git.tanggeliang@kylinos.cn>
+References: <cover.1738919954.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v4 0/4] BPF path manager, part 4
+Message-ID: <7db1a757-3af1-aea2-7ef1-81fcfc454084@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 07 Feb 2025 10:45:04 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch adds a test program for the newly added mptcp_userspace_pm_addr
-bpf_iter in SEC "cgroup/getsockopt". This test iterates over all address
-entries on the local address list of userspace PM and check whether each
-one is an IPv4mapped address.
+Thank you for your modifications, that's great!
 
-Export mptcp_userspace_pm_addr helpers _new/_next/_destroy into
-bpf_experimental.h. Use bpf_mptcp_sock_acquire() to acquire the msk, then
-lock the msk pm lock and use bpf_for_each(mptcp_userspace_pm_addr) to walk
-the local address list of this msk. Invoke bpf_ipv4_is_private_10() in the
-loop to check whether the address is a "10.*" one. Then Add the address ID
-of each entry to local veriable local_ids.
+Our CI did some validations and here is its report:
 
-Out of the loop, unlock the msk pm lock and use bpf_mptcp_sock_release() to
-release the msk. Finally, assign local_ids to global variable ids so that
-the application can obtain this value.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/13197339964
 
-Add a subtest named test_iters_address to load and verify the newly added
-mptcp_userspace_pm_addr type bpf_iter example in test_mptcp.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/2bfd65fd00d3
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D931513
 
-Since mptcp_userspace_pm_addr bpf_iter iterates over all address entries
-on the local address list of userspace PM. A set of userspace PM helpers
-are added.
 
-Set pm_type and start "pm_nl_ctl events" command to save pm events into
-the log file /tmp/bpf_userspace_pm_events in userspace_pm_init(). Kill
-"pm_nl_ctl" command and remove the log file in userspace_pm_cleanup().
-Parse the log file in userspace_pm_add_subflow() to get the token, sport
-and dport values, then use "pm_nl_ctl csf" command to create a subflow.
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-Use the helper userspace_pm_add_subflow() to add 3 new subflow endpoints.
-Send a byte of message to start the mptcp connection, and receive the
-message.
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-getsockopt() is invoked to trigger the "cgroup/getsockopt" test program.
-Check if skel->bss->ids equals 60 to verify whether the program loops
-three times as expected.
+For more details:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/bpf/bpf_experimental.h  |   8 +
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 214 ++++++++++++++++++
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |   5 +
- .../selftests/bpf/progs/mptcp_bpf_iters.c     |  34 +++
- 4 files changed, 261 insertions(+)
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
 
-diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 2ab3f0063c0f..52ff0d0407e7 100644
---- a/tools/testing/selftests/bpf/bpf_experimental.h
-+++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -583,6 +583,14 @@ bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
- extern void
- bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
- 
-+struct bpf_iter_mptcp_userspace_pm_addr;
-+extern int bpf_iter_mptcp_userspace_pm_addr_new(struct bpf_iter_mptcp_userspace_pm_addr *it,
-+						struct sock *sk) __weak __ksym;
-+extern struct mptcp_pm_addr_entry *
-+bpf_iter_mptcp_userspace_pm_addr_next(struct bpf_iter_mptcp_userspace_pm_addr *it) __weak __ksym;
-+extern void
-+bpf_iter_mptcp_userspace_pm_addr_destroy(struct bpf_iter_mptcp_userspace_pm_addr *it) __weak __ksym;
-+
- extern int bpf_wq_init(struct bpf_wq *wq, void *p__map, unsigned int flags) __weak __ksym;
- extern int bpf_wq_start(struct bpf_wq *wq, unsigned int flags) __weak __ksym;
- extern int bpf_wq_set_callback_impl(struct bpf_wq *wq,
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 0a0dee34095d..3fff78781bac 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -29,6 +29,7 @@
- #define ADDR6_4	"dead:beef:4::1"
- #define PORT_1	10001
- #define PM_CTL		"./mptcp_pm_nl_ctl"
-+#define PM_EVENTS	"/tmp/bpf_userspace_pm_events"
- #define WITH_DATA	true
- #define WITHOUT_DATA	false
- 
-@@ -57,6 +58,14 @@
- #endif
- #define MPTCP_SCHED_NAME_MAX	16
- 
-+enum mptcp_pm_type {
-+	MPTCP_PM_TYPE_KERNEL = 0,
-+	MPTCP_PM_TYPE_USERSPACE,
-+
-+	__MPTCP_PM_TYPE_NR,
-+	__MPTCP_PM_TYPE_MAX = __MPTCP_PM_TYPE_NR - 1,
-+};
-+
- static const unsigned int total_bytes = 10 * 1024 * 1024;
- static int duration;
- 
-@@ -252,6 +261,19 @@ static void send_byte(int fd)
- 	ASSERT_EQ(write(fd, &b, sizeof(b)), 1, "send single byte");
- }
- 
-+static int recv_byte(int fd)
-+{
-+	char buf[1];
-+	ssize_t n;
-+
-+	n = recv(fd, buf, sizeof(buf), 0);
-+	if (CHECK(n <= 0, "recv_byte", "recv")) {
-+		log_err("failed/partial recv");
-+		return -1;
-+	}
-+	return 0;
-+}
-+
- static int verify_mptcpify(int server_fd, int client_fd)
- {
- 	struct __mptcp_info info;
-@@ -567,6 +589,196 @@ static void test_iters_subflow(void)
- 	close(cgroup_fd);
- }
- 
-+static int userspace_pm_init(enum mptcp_pm_type pm_type)
-+{
-+	if (address_init())
-+		goto fail;
-+
-+	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.pm_type=%u",
-+	    NS_TEST, pm_type);
-+	SYS(fail, "ip netns exec %s %s limits 4 4",
-+	    NS_TEST, PM_CTL);
-+	SYS(fail, "ip netns exec %s %s events >> %s 2>&1 &",
-+	    NS_TEST, PM_CTL, PM_EVENTS);
-+
-+	return 0;
-+fail:
-+	return -1;
-+}
-+
-+static void userspace_pm_cleanup(void)
-+{
-+	SYS_NOFAIL("ip netns exec %s killall %s > /dev/null 2>&1",
-+		   NS_TEST, PM_CTL);
-+	SYS_NOFAIL("ip netns exec %s rm -rf %s", NS_TEST, PM_EVENTS);
-+}
-+
-+static int userspace_pm_get_events_line(char *type, char *line)
-+{
-+	char buf[BUFSIZ], *str;
-+	size_t len;
-+	int fd;
-+
-+	fd = open(PM_EVENTS, O_RDONLY);
-+	if (fd < 0) {
-+		log_err("failed to open pm events\n");
-+		return -1;
-+	}
-+
-+	len = read(fd, buf, sizeof(buf));
-+	close(fd);
-+	if (len <= 0) {
-+		log_err("failed to read pm events\n");
-+		return -1;
-+	}
-+
-+	str = strstr(buf, type);
-+	if (!str) {
-+		log_err("failed to get type %s pm event\n", type);
-+		return -1;
-+	}
-+
-+	strcpy(line, str);
-+	return 0;
-+}
-+
-+static int userspace_pm_get_token(int fd)
-+{
-+	char line[1024], *str;
-+	__u32 token;
-+	int i;
-+
-+	/* Wait max 2 sec for the connection to be established */
-+	for (i = 0; i < 10; i++) {
-+		usleep(200000); /* 0.2s */
-+		send_byte(fd);
-+
-+		sync();
-+		if (userspace_pm_get_events_line("type:2", line))
-+			continue;
-+		str = strstr(line, "token");
-+		if (!str)
-+			continue;
-+		if (sscanf(str, "token:%u,", &token) != 1)
-+			continue;
-+		return token;
-+	}
-+
-+	return 0;
-+}
-+
-+static int userspace_pm_add_subflow(__u32 token, char *addr, __u8 id)
-+{
-+	bool ipv6 = strstr(addr, ":");
-+	char line[1024], *str;
-+	__u32 sport, dport;
-+
-+	if (userspace_pm_get_events_line("type:2", line))
-+		return -1;
-+
-+	str = strstr(line, "sport");
-+	if (!str || sscanf(str, "sport:%u,dport:%u,", &sport, &dport) != 2) {
-+		log_err("add_subflow error, str=%s\n", str);
-+		return -1;
-+	}
-+
-+	str = ipv6 ? (strstr(addr, ".") ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
-+	SYS_NOFAIL("ip netns exec %s %s csf lip %s lid %u rip %s rport %u token %u",
-+		   NS_TEST, PM_CTL, addr, id, str, dport, token);
-+
-+	return 0;
-+}
-+
-+static void run_iters_address(void)
-+{
-+	int server_fd, client_fd, accept_fd;
-+	int is_mptcp, err;
-+	socklen_t len;
-+	__u32 token;
-+
-+	server_fd = start_mptcp_server(AF_INET, ADDR_1, PORT_1, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	accept_fd = accept(server_fd, NULL, NULL);
-+	if (!ASSERT_OK_FD(accept_fd, "accept"))
-+		goto close_client;
-+
-+	token = userspace_pm_get_token(client_fd);
-+	if (!token)
-+		goto close_client;
-+	recv_byte(accept_fd);
-+	usleep(200000); /* 0.2s */
-+
-+	err = userspace_pm_add_subflow(token, ADDR_2, 10);
-+	err = err ?: userspace_pm_add_subflow(token, ADDR_3, 20);
-+	err = err ?: userspace_pm_add_subflow(token, ADDR_4, 30);
-+	if (!ASSERT_OK(err, "userspace_pm_add_subflow"))
-+		goto close_accept;
-+
-+	send_byte(accept_fd);
-+	recv_byte(client_fd);
-+
-+	len = sizeof(is_mptcp);
-+	/* mainly to trigger the BPF program */
-+	err = getsockopt(client_fd, SOL_TCP, TCP_IS_MPTCP, &is_mptcp, &len);
-+	if (ASSERT_OK(err, "getsockopt(client_fd, TCP_IS_MPTCP)"))
-+		ASSERT_EQ(is_mptcp, 1, "is_mptcp");
-+
-+close_accept:
-+	close(accept_fd);
-+close_client:
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+}
-+
-+static void test_iters_address(void)
-+{
-+	struct mptcp_bpf_iters *skel;
-+	struct netns_obj *netns;
-+	int cgroup_fd;
-+	int err;
-+
-+	cgroup_fd = test__join_cgroup("/iters_address");
-+	if (!ASSERT_OK_FD(cgroup_fd, "join_cgroup: iters_address"))
-+		return;
-+
-+	skel = mptcp_bpf_iters__open_and_load();
-+	if (!ASSERT_OK_PTR(skel, "skel_open_load: iters_address"))
-+		goto close_cgroup;
-+
-+	skel->links.iters_address = bpf_program__attach_cgroup(skel->progs.iters_address,
-+							       cgroup_fd);
-+	if (!ASSERT_OK_PTR(skel->links.iters_address, "attach getsockopt"))
-+		goto skel_destroy;
-+
-+	netns = netns_new(NS_TEST, true);
-+	if (!ASSERT_OK_PTR(netns, "netns_new"))
-+		goto skel_destroy;
-+
-+	err = userspace_pm_init(MPTCP_PM_TYPE_USERSPACE);
-+	if (!ASSERT_OK(err, "userspace_pm_init: iters_address"))
-+		goto close_netns;
-+
-+	run_iters_address();
-+
-+	/* 10 + 20 + 30 = 60 */
-+	ASSERT_EQ(skel->bss->ids, 60, "address ids");
-+
-+	userspace_pm_cleanup();
-+close_netns:
-+	netns_free(netns);
-+skel_destroy:
-+	mptcp_bpf_iters__destroy(skel);
-+close_cgroup:
-+	close(cgroup_fd);
-+}
-+
- static struct netns_obj *sched_init(char *flags, char *sched)
- {
- 	struct netns_obj *netns;
-@@ -760,6 +972,8 @@ void test_mptcp(void)
- 		test_subflow();
- 	if (test__start_subtest("iters_subflow"))
- 		test_iters_subflow();
-+	if (test__start_subtest("iters_address"))
-+		test_iters_address();
- 	if (test__start_subtest("default"))
- 		test_default();
- 	if (test__start_subtest("first"))
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index b1f6e1fb467e..5e29ac93d823 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -51,6 +51,11 @@ bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
- extern struct sock *
- bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow) __ksym;
- 
-+extern void bpf_spin_lock_bh(spinlock_t *lock) __ksym;
-+extern void bpf_spin_unlock_bh(spinlock_t *lock) __ksym;
-+
-+extern bool bpf_ipv4_is_private_10(__be32 addr) __ksym;
-+
- extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 					bool scheduled) __ksym;
- 
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-index fd5691a4073b..4c6e2fa4fbc2 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-@@ -61,3 +61,37 @@ int iters_subflow(struct bpf_sockopt *ctx)
- 	bpf_mptcp_sock_release(msk);
- 	return 1;
- }
-+
-+SEC("cgroup/getsockopt")
-+int iters_address(struct bpf_sockopt *ctx)
-+{
-+	struct mptcp_pm_addr_entry *entry;
-+	struct bpf_sock *sk = ctx->sk;
-+	struct mptcp_sock *msk;
-+	int local_ids = 0;
-+
-+	if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
-+		return 1;
-+
-+	msk = bpf_skc_to_mptcp_sock(sk);
-+	if (!msk || msk->pm.server_side)
-+		return 1;
-+
-+	bpf_spin_lock_bh(&msk->pm.lock);
-+	bpf_for_each(mptcp_userspace_pm_addr, entry, (struct sock *)sk) {
-+		/* Here MPTCP-specific path manager kfunc can be called:
-+		 * this test is not doing anything really useful, only to
-+		 * verify the iteration works.
-+		 */
-+
-+		if (!bpf_ipv4_is_private_10(entry->addr.addr.s_addr))
-+			break;
-+
-+		local_ids += entry->addr.id;
-+	}
-+	bpf_spin_unlock_bh(&msk->pm.lock);
-+
-+	ids = local_ids;
-+
-+	return 1;
-+}
--- 
-2.43.0
 
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
