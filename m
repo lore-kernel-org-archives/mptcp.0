@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FD8C2B9B9
-	for <mptcp@lists.linux.dev>; Fri,  7 Feb 2025 10:49:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B7E2C2B9B9
+	for <mptcp@lists.linux.dev>; Fri,  7 Feb 2025 10:49:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1738925381; cv=none; b=q5T0tcpDt4RKdsHBtYN+rFofIglTpIx72D7Kr+HrzSAt4HHqioJ7TJQ9iigCK30/IsTTOBSBagDm7XSoYfUxXtgsb6Wz1HsOsrDB1IRq5DAk/cWo5x1djCTHyUELuuQ+gkU6J6FeDxJQ8TBgbCivZQS3Ikow2qsar0LQincIGOA=
+	t=1738925382; cv=none; b=flrwW4+9mVuQQOJX1Jxc192TA3JJhxUCFt6p7ldA9bI3Gryu8zwaiC3wWMocHZj8TYqqJdFSzSTg7zeaqEzEdRhaQQGQg/wiFbl/r9QNohVKVkzurjZHLQArfb175l3w8G2/MuYu8RkuuCNxijorNMwlPaR2h/zehQRqxSxxriw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1738925381; c=relaxed/simple;
-	bh=tCUPmZC8B4CYwZpaqxRTQNnL9SVCp8aQHUul6PyYCPU=;
+	s=arc-20240116; t=1738925382; c=relaxed/simple;
+	bh=TAluxb8dZGbKvspSdFH8CgVcZECfYCHygPJpm7dANwU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AsW4ZpbRe4rAzFJ0kDqdE/QH/6WsO0S7m5npvfyEcA+MopX3fCvXr++DRc9uO0cHXCEajMFdH5iI/Lp2lSW1i4VE5a/P+mK8YqR8mlKqQ4HlDr8UauWZBhSBMueRlHsgnB1vM4QydZJ07Jp5099lMu0fuXDfNuiOAKjadhScQJU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KgTXl0+n; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=o9pyT1CC6fydFwgE1VBsayOoG0IhRXc9o+Hmn1tyDCvrEQ8G4C7VVCjB1kopXx6//1ShnKQAoPhbvXoCZ+eHJ3M2wpKvQKDPouNVBNvaz27+wFhtBzvoiYkSJETU5Dz1B57nuElFgpYu0XIqLS7FpR2SZj4O0lKdJM5Pr5gNVWE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k0x5rh3X; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KgTXl0+n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7143CC4CED1;
-	Fri,  7 Feb 2025 10:49:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k0x5rh3X"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1FCD9C4CED6;
+	Fri,  7 Feb 2025 10:49:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1738925380;
-	bh=tCUPmZC8B4CYwZpaqxRTQNnL9SVCp8aQHUul6PyYCPU=;
+	s=k20201202; t=1738925382;
+	bh=TAluxb8dZGbKvspSdFH8CgVcZECfYCHygPJpm7dANwU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=KgTXl0+nhoBgIeuDA1PUzeBAU/OgqY/MD15Gh/GM2V8s9AMC2WyJzQ27YvXaHv486
-	 EZxrlPW/JHOLiaD6JOYOlgo3lunl1z5O3DeevE3XWC2H57PQnOxGJPwLQMoGbMsnsI
-	 Wy9HWwxBG6tzLT/NjKOjlcdUssWpW8jaa54oQogrjOE5WZiBMan+FNvZIBK7aKyGZA
-	 PdzB6Q3CxyK9vtnU9G5zmundKjKZTDeCGjPHZ2a3hVYmoTvyQaZajfUsPmxPaB2BiT
-	 91GH90gZ2jWo0XrQE7dnSmvpgYeU2kf5wtwBey9fAeS05+TnF42Zv6hYb/ZWLET1jj
-	 JEoXw7Fe2wXFg==
+	b=k0x5rh3XoOMr/lJwpk7uDWbHO0UVVMSti9XYJRvJHWdaS4kwkopPnwpwYF+hWlM0D
+	 hTsCAUYyjjnCa2R0mUwQkFMDmIkNqOMDXj8+FDZjxnfZUBTcjgGVMHX6TphLdjRPp5
+	 /Fv3g+RMfzHNYD2+rY1J6f3b4H6K4PjGkTlt+15fkaSGdo5O+9CqFnxcPEr5olGK0h
+	 ii9r9fQSsrwoI7NH42IoVoE/Hp+HIuT3VKvszuUQrTsPONg9EEV3kYqJprOgawyfOP
+	 bu2a2rqX9X21t9WLdmkklSkMp/4IA8ajK9z2ACz0OUVk6/hd/36mc8tnOLXUrlqNPK
+	 E0RQNPlvLfJIQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 3/5] selftests/bpf: Add mptcp userspace pm subtest
-Date: Fri,  7 Feb 2025 18:49:26 +0800
-Message-ID: <816bc05971406156c8f805a0176c4f4d877d05d5.1738924875.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v1 4/5] selftests/bpf: Implement mptcp pm helpers in BPF
+Date: Fri,  7 Feb 2025 18:49:27 +0800
+Message-ID: <174476b578f6665cc96d03f30ae8b440b84b8b07.1738924875.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1738924875.git.tanggeliang@kylinos.cn>
 References: <cover.1738924875.git.tanggeliang@kylinos.cn>
@@ -45,200 +45,148 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To verify that the behavior of BPF path manager is the same as that of
-userspace pm in the kernel, a userspace pm self-test has been added.
-BPF path manager in the next commit will also use this test.
+This patch implements MPTCP path manager helpers mptcp_pm_copy_addr(),
+mptcp_pm_copy_entry(), ipv6_addr_equal(), mptcp_addresses_equal() and
+mptcp_pm_find_ssk() in BPF.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- .../testing/selftests/bpf/prog_tests/mptcp.c  | 160 ++++++++++++++++++
- 1 file changed, 160 insertions(+)
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h | 110 ++++++++++++++++++
+ 1 file changed, 110 insertions(+)
 
-diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-index 3fff78781bac..cbe41bb39603 100644
---- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
-+++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
-@@ -66,6 +66,12 @@ enum mptcp_pm_type {
- 	__MPTCP_PM_TYPE_MAX = __MPTCP_PM_TYPE_NR - 1,
- };
+diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+index 5e29ac93d823..816917e59995 100644
+--- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
++++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+@@ -3,6 +3,7 @@
+ #define __MPTCP_BPF_H__
  
-+enum mptcp_pm_family {
-+	IPV4 = 0,
-+	IPV4MAPPED,
-+	IPV6,
-+};
-+
- static const unsigned int total_bytes = 10 * 1024 * 1024;
- static int duration;
+ #include "bpf_experimental.h"
++#include "bpf_tracing_net.h"
  
-@@ -779,6 +785,158 @@ static void test_iters_address(void)
- 	close(cgroup_fd);
- }
+ /* mptcp helpers from include/net/mptcp.h */
+ #define MPTCP_SUBFLOWS_MAX 8
+@@ -36,6 +37,11 @@ static inline int list_is_head(const struct list_head *list,
+ #define mptcp_for_each_subflow(__msk, __subflow)			\
+ 	list_for_each_entry(__subflow, &((__msk)->conn_list), node)
  
-+static int userspace_pm_add_addr(__u32 token, char *addr, __u8 id)
-+{
-+	return SYS_NOFAIL("ip netns exec %s %s ann %s id %u token %u",
-+			  NS_TEST, PM_CTL, addr, id, token);
-+}
++/* errno macros from include/uapi/asm-generic/errno-base.h */
++#define	ESRCH		3	/* No such process */
++#define	ENOMEM		12	/* Out of Memory */
++#define	EINVAL		22	/* Invalid argument */
 +
-+static int userspace_pm_rm_addr(__u32 token, __u8 id)
-+{
-+	return SYS_NOFAIL("ip netns exec %s %s rem id %u token %u",
-+			  NS_TEST, PM_CTL, id, token);
-+}
-+
-+static int userspace_pm_rm_subflow(__u32 token, char *addr, __u8 id)
-+{
-+	bool ipv6 = strstr(addr, ":");
-+	char line[1024], *str;
-+	__u32 sport, dport;
-+
-+	if (userspace_pm_get_events_line("type:10", line))
-+		return -1;
-+
-+	str = strstr(line, "sport");
-+	if (!str || sscanf(str, "sport:%u,dport:%u,", &sport, &dport) != 2) {
-+		log_err("rm_subflow error, str=%s\n", str);
-+		return -1;
-+	}
-+
-+	str = ipv6 ? (strstr(addr, ".") ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
-+	return SYS_NOFAIL("ip netns exec %s %s dsf lip %s lport %u rip %s rport %u token %u",
-+			  NS_TEST, PM_CTL, addr, sport, str, dport, token);
-+}
-+
-+static int userspace_pm_set_flags(__u32 token, char *addr, char *flags)
-+{
-+	bool ipv6 = strstr(addr, ":");
-+	char line[1024], *str;
-+	__u32 sport, dport;
-+
-+	if (userspace_pm_get_events_line("type:10", line))
-+		return -1;
-+
-+	str = strstr(line, "sport");
-+	if (!str || sscanf(str, "sport:%u,dport:%u,", &sport, &dport) != 2) {
-+		log_err("set_flags error, str=%s\n", str);
-+		return -1;
-+	}
-+
-+	str = ipv6 ? (strstr(addr, ".") ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
-+	return SYS_NOFAIL("ip netns exec %s %s set %s port %u rip %s rport %u flags %s token %u",
-+			  NS_TEST, PM_CTL, addr, sport, str, dport, flags, token);
-+}
-+
-+static void run_userspace_pm(enum mptcp_pm_family family)
-+{
-+	bool ipv4mapped = (family == IPV4MAPPED);
-+	bool ipv6 = (family == IPV6 || ipv4mapped);
-+	int server_fd, client_fd, accept_fd;
-+	__u32 token;
-+	char *addr;
-+	int err;
-+
-+	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
-+	server_fd = start_mptcp_server(ipv6 ? AF_INET6 : AF_INET, addr, PORT_1, 0);
-+	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
-+		return;
-+
-+	client_fd = connect_to_fd(server_fd, 0);
-+	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
-+		goto close_server;
-+
-+	accept_fd = accept(server_fd, NULL, NULL);
-+	if (!ASSERT_OK_FD(accept_fd, "accept"))
-+		goto close_client;
-+
-+	token = userspace_pm_get_token(client_fd);
-+	if (!token)
-+		goto close_client;
-+	recv_byte(accept_fd);
-+	usleep(200000); /* 0.2s */
-+
-+	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_2 : ADDR6_2) : ADDR_2;
-+	err = userspace_pm_add_subflow(token, addr, 100);
-+	if (!ASSERT_OK(err, "userspace_pm_add_subflow 100"))
-+		goto close_accept;
-+
-+	send_byte(accept_fd);
-+	recv_byte(client_fd);
-+
-+	err = userspace_pm_set_flags(token, addr, "backup");
-+	if (!ASSERT_OK(err, "userspace_pm_set_flags backup"))
-+		goto close_accept;
-+
-+	send_byte(client_fd);
-+	recv_byte(accept_fd);
-+
-+	err = userspace_pm_set_flags(token, addr, "nobackup");
-+	if (!ASSERT_OK(err, "userspace_pm_set_flags nobackup"))
-+		goto close_accept;
-+
-+	send_byte(accept_fd);
-+	recv_byte(client_fd);
-+
-+	err = userspace_pm_rm_subflow(token, addr, 100);
-+	if (!ASSERT_OK(err, "userspace_pm_rm_subflow 100"))
-+		goto close_accept;
-+
-+	send_byte(client_fd);
-+	recv_byte(accept_fd);
-+
-+	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_3 : ADDR6_3) : ADDR_3;
-+	err = userspace_pm_add_addr(token, addr, 200);
-+	if (!ASSERT_OK(err, "userspace_pm_add_addr 200"))
-+		goto close_accept;
-+
-+	send_byte(accept_fd);
-+	recv_byte(client_fd);
-+
-+	err = userspace_pm_rm_addr(token, 200);
-+	if (!ASSERT_OK(err, "userspace_pm_rm_addr 200"))
-+		goto close_accept;
-+
-+	send_byte(client_fd);
-+	recv_byte(accept_fd);
-+
-+close_accept:
-+	close(accept_fd);
-+close_client:
-+	close(client_fd);
-+close_server:
-+	close(server_fd);
-+}
-+
-+static void test_userspace_pm(void)
-+{
-+	struct netns_obj *netns;
-+	int err;
-+
-+	netns = netns_new(NS_TEST, true);
-+	if (!ASSERT_OK_PTR(netns, "netns_new"))
-+		return;
-+
-+	err = userspace_pm_init(MPTCP_PM_TYPE_USERSPACE);
-+	if (!ASSERT_OK(err, "userspace_pm_init: userspace pm"))
-+		goto fail;
-+
-+	run_userspace_pm(IPV4MAPPED);
-+
-+	userspace_pm_cleanup();
-+fail:
-+	netns_free(netns);
-+}
-+
- static struct netns_obj *sched_init(char *flags, char *sched)
+ static __always_inline struct sock *
+ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
  {
- 	struct netns_obj *netns;
-@@ -974,6 +1132,8 @@ void test_mptcp(void)
- 		test_iters_subflow();
- 	if (test__start_subtest("iters_address"))
- 		test_iters_address();
-+	if (test__start_subtest("userspace_pm"))
-+		test_userspace_pm();
- 	if (test__start_subtest("default"))
- 		test_default();
- 	if (test__start_subtest("first"))
+@@ -62,4 +68,108 @@ extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
+ extern struct mptcp_subflow_context *
+ bpf_mptcp_subflow_ctx_by_pos(const struct mptcp_sched_data *data, unsigned int pos) __ksym;
+ 
++/* reimplemented BPF helpers */
++static __always_inline void
++mptcp_pm_copy_addr(struct mptcp_addr_info *dst,
++		   struct mptcp_addr_info *src)
++{
++	dst->id = src->id;
++	dst->family = src->family;
++	dst->port = src->port;
++
++	if (src->family == AF_INET) {
++		dst->addr.s_addr = src->addr.s_addr;
++	} else if (src->family == AF_INET6) {
++		dst->addr6.s6_addr32[0] = src->addr6.s6_addr32[0];
++		dst->addr6.s6_addr32[1] = src->addr6.s6_addr32[1];
++		dst->addr6.s6_addr32[2] = src->addr6.s6_addr32[2];
++		dst->addr6.s6_addr32[3] = src->addr6.s6_addr32[3];
++	}
++}
++
++static __always_inline void
++mptcp_pm_copy_entry(struct mptcp_pm_addr_entry *dst,
++		    struct mptcp_pm_addr_entry *src)
++{
++	mptcp_pm_copy_addr(&dst->addr, &src->addr);
++
++	dst->flags = src->flags;
++	dst->ifindex = src->ifindex;
++}
++
++#define inet_sk(ptr) container_of(ptr, struct inet_sock, sk)
++
++#define ipv6_addr_equal(a, b)	((a).s6_addr32[0] == (b).s6_addr32[0] &&	\
++				 (a).s6_addr32[1] == (b).s6_addr32[1] &&	\
++				 (a).s6_addr32[2] == (b).s6_addr32[2] &&	\
++				 (a).s6_addr32[3] == (b).s6_addr32[3])
++
++static __always_inline bool
++mptcp_addresses_equal(const struct mptcp_addr_info *a,
++		      const struct mptcp_addr_info *b, bool use_port)
++{
++	bool addr_equals = false;
++
++	if (a->family == b->family) {
++		if (a->family == AF_INET)
++			addr_equals = a->addr.s_addr == b->addr.s_addr;
++		else
++			addr_equals = ipv6_addr_equal(a->addr6, b->addr6);
++	}
++
++	if (!addr_equals)
++		return false;
++	if (!use_port)
++		return true;
++
++	return a->port == b->port;
++}
++
++static __always_inline struct sock *
++mptcp_pm_find_ssk(struct mptcp_sock *msk,
++		  const struct mptcp_addr_info *local,
++		  const struct mptcp_addr_info *remote)
++{
++	struct mptcp_subflow_context *subflow;
++
++	if (local->family != remote->family)
++		return NULL;
++
++	bpf_for_each(mptcp_subflow, subflow, msk) {
++		const struct inet_sock *issk;
++		struct sock *ssk;
++
++		ssk = bpf_mptcp_subflow_tcp_sock(subflow);
++		if (!ssk)
++			continue;
++
++		if (local->family != ssk->sk_family)
++			continue;
++
++		issk = bpf_core_cast(inet_sk(ssk), struct inet_sock);
++
++		switch (ssk->sk_family) {
++		case AF_INET:
++			if (issk->inet_saddr != local->addr.s_addr ||
++			    issk->inet_daddr != remote->addr.s_addr)
++				continue;
++			break;
++		case AF_INET6: {
++			if (!ipv6_addr_equal(local->addr6, issk->pinet6->saddr) ||
++			    !ipv6_addr_equal(remote->addr6, ssk->sk_v6_daddr))
++				continue;
++			break;
++		}
++		default:
++			continue;
++		}
++
++		if (issk->inet_sport == local->port &&
++		    issk->inet_dport == remote->port)
++			return ssk;
++	}
++
++	return NULL;
++}
++
+ #endif
 -- 
 2.43.0
 
