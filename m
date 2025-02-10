@@ -1,32 +1,32 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0C8CF25C6FF;
-	Mon, 10 Feb 2025 19:51:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5730525C70F;
+	Mon, 10 Feb 2025 19:52:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739217115; cv=none; b=t95EzhLLY0hWfz3/EaiTYuamol9mUNh98S+fIz9beHZKHy2mqNsqPYRpXbuczq+8t5x6qZSbDFCM6fyKgvHP1ep2BjC3yCaUDnh3pmeHpWLqD4HrJ/h6VSfOeEoLof5v6W1CS+nEjfKJB1MEGpQrac8swpfUEZd1k+VvvNcD5g0=
+	t=1739217127; cv=none; b=P0IgXUR4Inx2Kdi87sh7vGM/DrBN7S0G/4xC4X7kbwMx7NK40jqxVBnAUYFp8AfRCBjZUp8UDOwL5mXxnRvsVbclVoLuDGp+2aVdomYRPDDSeywRUy8WnfBw0xjDhcp9LxklLps/1hpRZI20k8T214xytS7neWwmUuYbOX6beJM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739217115; c=relaxed/simple;
-	bh=SrfUjnLSilqSMNXBVss32PA8D52BUWRrB/lANfk8IjY=;
+	s=arc-20240116; t=1739217127; c=relaxed/simple;
+	bh=gJTpmetGvIHULHei/NjaWKEQvG1i37jDKMRV15eWP/Y=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ltNFMVd1dTosWhh3zp2HyO+S4/PTl2scRvLtuOgbDbnMjto/LZEsn0bkMOuREXWsfKPfb9L+NWsxvyHkHZNbmaYhpWNecwSZuPuhtwpCi0L/nciYNlYNosbBwrpqA/RZ8CRslImFdZTzQQRPBy5idMScT9B8iU5QjC4BqFzzzYA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/utK/m6; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:Content-Disposition:In-Reply-To; b=lRq0ZTpGOP2TqiABx9JlI/C6tj1oWip/N2qdXbEx0gH3slnwkWCjBrzyPz+xJ6jVBka7Brr2V6EoFmPIs3rWoUZL1kWxTlMoCki8RUC9NJ84pKKUfdIWJ8urYkBXMVX7ji/WxEbbNdiV19nko2E+6YoA3Gpr3eV5r9Lfj9FmjMI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hiDjqJPA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/utK/m6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EB2D1C4CED1;
-	Mon, 10 Feb 2025 19:51:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hiDjqJPA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D84C2C4CED1;
+	Mon, 10 Feb 2025 19:52:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739217114;
-	bh=SrfUjnLSilqSMNXBVss32PA8D52BUWRrB/lANfk8IjY=;
+	s=k20201202; t=1739217126;
+	bh=gJTpmetGvIHULHei/NjaWKEQvG1i37jDKMRV15eWP/Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=i/utK/m69ytOAnyKyeD7B5wUjHPqBw9Hq972eoztUtKqCIx17ROotcFqRW9u1tKt7
-	 1OdETaAmkA/TNKdW6zmC6CJ1HJFD/6Tmks31KDAZJid+5+mdyf9qY/3lyKc5DfH4gK
-	 EFPZ3IggK8e9UNcKu1IABo6Mr0AmjpUOGDXJS/U9YZ3almZWCGGHrua4H1NfU0qA+h
-	 7NRDEV0/QrbvfHBysEdHhVjB5dBPa6tXL6U2x1QaP0h6STXQKYlMIG9TcSNY8Xq9Z6
-	 2idOlEOKvX4VCKTlO20/6xQwNW3wBZBe7WHLJLdWgaQAyZQq6hVc5FicTdTErLSS1o
-	 ZP3o4PT01vQoA==
-Date: Mon, 10 Feb 2025 19:51:50 +0000
+	b=hiDjqJPAsBd2B5NxTNeMdzFlrfnvO9r9r7B0svjJJ+cNpNLqCa5WW1ZnKdgHporzB
+	 d0FIo9hgh0IZ+y511i0VLrQdw1P7qEJjv7o4ieqHh4Zx1wfg28C4p3kpwF6Ds+CWKI
+	 8eT29mlXwH5I6/YYRUNt9jbk3Df7uuXy027hsm27wlMX1sHDosoUw184YYCcQ/0aRR
+	 spQQBL/KbfNxZrwTDUq9w0n3nWG5v/5Yg5sxtfIyGqwoTMQMEnWnz+O5Pd5f+0orjv
+	 U8MqFOE+xeFDEVJkHo+iyvl8o6cvTWqB+PyVyIVBgDCNNkXeUnXQAHGbxrCz4tg2WP
+	 SBO6pidqG4iTQ==
+Date: Mon, 10 Feb 2025 19:52:02 +0000
 From: Simon Horman <horms@kernel.org>
 To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
@@ -35,11 +35,11 @@ Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
 	Eric Dumazet <edumazet@google.com>,
 	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
 	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH net-next v3 10/15] mptcp: pm: drop skb parameter of
+Subject: Re: [PATCH net-next v3 11/15] mptcp: pm: add id parameter for
  get_addr
-Message-ID: <20250210195150.GX554665@kernel.org>
+Message-ID: <20250210195202.GY554665@kernel.org>
 References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
- <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-10-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-11-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -48,14 +48,17 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-10-71753ed957de@kernel.org>
+In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-11-71753ed957de@kernel.org>
 
-On Fri, Feb 07, 2025 at 02:59:28PM +0100, Matthieu Baerts (NGI0) wrote:
+On Fri, Feb 07, 2025 at 02:59:29PM +0100, Matthieu Baerts (NGI0) wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The first parameters 'skb' of get_addr() interfaces are now useless
-> since mptcp_userspace_pm_get_sock() helper is used. This patch drops
-> these useless parameters of them.
+> The address id is parsed both in mptcp_pm_nl_get_addr() and
+> mptcp_userspace_pm_get_addr(), this makes the code somewhat repetitive.
+> 
+> So this patch adds a new parameter 'id' for all get_addr() interfaces.
+> The address id is only parsed in mptcp_pm_nl_get_addr_doit(), then pass
+> it to both mptcp_pm_nl_get_addr() and mptcp_userspace_pm_get_addr().
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
