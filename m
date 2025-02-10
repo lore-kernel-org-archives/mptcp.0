@@ -1,90 +1,77 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CFAD1D934D;
-	Sun,  9 Feb 2025 17:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 360E725C6E6;
+	Mon, 10 Feb 2025 19:49:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739123840; cv=none; b=LwYNEqCcPUVipacz5laQisCgmpdlG0J90XYrf5IWdznclBShpzlGqJ8MIDauPJnokRmrC/U/rMmGiErbjijOptbByT8/ET9jzgwKJvuX4EGAbHJ4t1HggGw/ofDdvLfGpkJrfhE9ByA4QvBVRVFZa2CfvOhom4ybKrcLD/p6OPc=
+	t=1739216979; cv=none; b=Al2FD5mbjZlD8ktTYT0bFBFwoYCyFdocWCP0Vj1o7wrLkDS+wX8HZskZIvOf8kN9hB3zvkq5arflEXcCpzUJykiD3FRopmgGGpnkw9GlCrJ2O2Txhj9vIKDCKUJ+MuisDMZY7Nifh26NJY9jF8boDEImGJ7tgws4Bfo8wt6T9jo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739123840; c=relaxed/simple;
-	bh=EC7veTffKAd5tVYaCGrZbWssybzZhYfYxEDOCHodY+E=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=tKFH4wqp2zKjhcObId96UdLvTe+aSuwreobU61KtPmnDWj4GTu7XPJIS4mkWkjVi/ag6G7asTeHiquvnNv7GpFfsDbU7kxq3SwaIsN1QP/UVFSRgXVtSfvPpS/tqku7QfiplTs3YiJ2/3KyhDbbFmBqK6kws+VOizCPc2mQho3Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VbWPdf9j; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739216979; c=relaxed/simple;
+	bh=c4vYdPVZ5YgT0MdemLVqYg7VHU0O2sy2pLSvvNiGypM=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=Uri78Px7ciTVyD6GDgAEYOBygnSRxTQhZ2rP5C9qAVGFG7Qcmpr2LraTCBd0IpjrWtfeNx0FiCRMe7IKNPwWwR2Cj9OpYhUYSntFrw69QwnZjBkZCBIEVPV6YpZY1JCp1iIYgImHyVvE+4DL030kUKsd+k/ZvbY2Qbdd5/8Ymro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=I42w9mww; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VbWPdf9j"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F3F0DC4CEDD;
-	Sun,  9 Feb 2025 17:57:16 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="I42w9mww"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A37C4CED1;
+	Mon, 10 Feb 2025 19:49:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739123838;
-	bh=EC7veTffKAd5tVYaCGrZbWssybzZhYfYxEDOCHodY+E=;
-	h=From:To:Cc:Subject:Date:From;
-	b=VbWPdf9jLqIOwOut8//F8lPBUwQ+DMKYUh4agRZfCMFgbaFR0Of33F7Yq/5WqqSp8
-	 1ArtX6acOJ831WrC0SEwkHgh85VBt3ldcqbyMDhr52ZnT8yyJ5dZoHhAukdBcan2bv
-	 d+KFv+L/n6TLsTTzVEu/Vzzx/88bd9Me9B6VeKxT0lZDMZvEC4J1iV0su9BonGkiwv
-	 +PwSx95n5FhW+0XupHhHOAI/hTUv5PZGn020/4svalU7wUvdl6cs8rPaReaAVpWZEf
-	 PLAD0Dvhg03ZwDMrZxh2beWTaCI400yGZrsYYZi878CX4sPibHGOzreIbXOkWhqnFA
-	 4LHCy85a8OjyQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-To: stable@vger.kernel.org,
-	gregkh@linuxfoundation.org
-Cc: sashal@kernel.org,
-	MPTCP Upstream <mptcp@lists.linux.dev>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Mat Martineau <martineau@kernel.org>,
-	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Jakub Kicinski <kuba@kernel.org>
-Subject: [PATCH 6.12.y] mptcp: prevent excessive coalescing on receive
-Date: Sun,  9 Feb 2025 18:57:12 +0100
-Message-ID: <20250209175711.3408345-2-matttbe@kernel.org>
-X-Mailer: git-send-email 2.47.1
+	s=k20201202; t=1739216978;
+	bh=c4vYdPVZ5YgT0MdemLVqYg7VHU0O2sy2pLSvvNiGypM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=I42w9mwwx2B7q21loC7v5mDrqRAyEsxWuzkNlw32W7wEU11nX7mLbFjMmbwcIGXx1
+	 IoRnJbXUvziFY0C6f9j9U9xOPaWTS/pFHPXoVeyi4pw4OJAJwY0ezmcR86J7mihsOj
+	 2FaplryfB/J5kbRJUWzULI/1Qo8ppKbW+6dx6UwgYPb9WN1TPpVuuWnvT2Mo3B8lPy
+	 Yf5Nrx9fgqoiyTpytKSxK41jSH/c/0lPy9zIZZuJGdP6drYFbfYWKDkrXxzFMIdzbF
+	 Zkz840sfkWF/mAu37hOGw++vQzagHJPTaI8DS8vv06K8ZoHbzLwLVA9wWqOtUxrasY
+	 hac4Gxfi7UuQA==
+Date: Mon, 10 Feb 2025 19:49:34 +0000
+From: Simon Horman <horms@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	netdev@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH net-next v3 01/15] mptcp: pm: drop info of
+ userspace_pm_remove_id_zero_address
+Message-ID: <20250210194934.GO554665@kernel.org>
+References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
+ <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-1-71753ed957de@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1472; i=matttbe@kernel.org; h=from:subject; bh=thxsP8TyGc5dK4aecRo00/XRyPcVGAuaWLiqmY5zTpY=; b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnqOx3a4kSHqN7mjeqr+VIS3IYiBkS5SAS2qhbn NaRGS7AbrOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ6jsdwAKCRD2t4JPQmmg c8j/EADXKgfe9+8kADx6258rKfpkgrImopeHfkycgVZU+fZlQtA7UQiqOOftphjO1uXwD7zAqPC VYXqHFpR+vihAeH1mxMjNH8FYA10gi8R/AUvn1aT8XszNdFSnXORpZlFI4UdL8LAfMUaHY3MrLm CnXwiTEfOmFqOcxyq/Wcu6ZmIJyEJBvu8+S+Gk1qUuvut/MXkTOBCiJwR7ZoS2LT/m97b7vuY1K q2sDgsWz/xG6ETNZN4ZW4pstyv0JmfqmPMvIPDuajNkC63mHwR3on9YqgmSc6qcsZ4R9VMQiXZW Qq0qM2Pn/f04jfMXPG1cxiHA3ZzwYNFx/cnAkbQRS7/r8QakH70Y3oCVVTy9R7maI44J1rkHeMC 4RYKle2fiLoHP5wFqLVPe7O++7sdJS9XzYSipHzxCPFyFdUPkANYzhqhslChzOFK4gpoGlynGQc xyg59VeEeN+H2+tT+UyJwN9vglWa+g+yMhu9SIBbQeaNIADANitK7dhdX093QNu7FAmcpMqkeRB uG5exk/FcTudkNapYEkd+xY0JQYQ7sqeDHuUg9u7CMEn0r2hbNvh2cKBIjCgDbrz7bppJ5Vgfwv tulwgy+Sj/c79L2EV2TW6qjbLYCHEEqYuW/9xfh/phGUhbt0OvsMEFvCVNlgQz0QzzgVHVwpFmD l7NP73rwPwHnJpQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-1-71753ed957de@kernel.org>
 
-From: Paolo Abeni <pabeni@redhat.com>
+On Fri, Feb 07, 2025 at 02:59:19PM +0100, Matthieu Baerts (NGI0) wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> The only use of 'info' parameter of userspace_pm_remove_id_zero_address()
+> is to set an error message into it.
+> 
+> Plus, this helper will only fail when it cannot find any subflows with a
+> local address ID 0.
+> 
+> This patch drops this parameter and sets the error message where this
+> function is called in mptcp_pm_nl_remove_doit().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-commit 56b824eb49d6258aa0bad09a406ceac3f643cdae upstream.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
-Currently the skb size after coalescing is only limited by the skb
-layout (the skb must not carry frag_list). A single coalesced skb
-covering several MSS can potentially fill completely the receive
-buffer. In such a case, the snd win will zero until the receive buffer
-will be empty again, affecting tput badly.
+Hi Mat,
 
-Fixes: 8268ed4c9d19 ("mptcp: introduce and use mptcp_try_coalesce()")
-Cc: stable@vger.kernel.org # please delay 2 weeks after 6.13-final release
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Link: https://patch.msgid.link/20241230-net-mptcp-rbuf-fixes-v1-3-8608af434ceb@kernel.org
-Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
-Notes:
- - We asked to delay the patch. There were no conflicts.
----
- net/mptcp/protocol.c | 1 +
- 1 file changed, 1 insertion(+)
+A minor nit, perhaps it has been discussed before:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index fac774825aff..42b239d9b2b3 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -136,6 +136,7 @@ static bool mptcp_try_coalesce(struct sock *sk, struct sk_buff *to,
- 	int delta;
- 
- 	if (MPTCP_SKB_CB(from)->offset ||
-+	    ((to->len + from->len) > (sk->sk_rcvbuf >> 3)) ||
- 	    !skb_try_coalesce(to, from, &fragstolen, &delta))
- 		return false;
- 
--- 
-2.47.1
+I'm not sure that your Reviewed-by is needed if you also provide
+your Signed-off-by. Because it I think that the latter implies the former.
 
