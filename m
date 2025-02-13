@@ -1,105 +1,182 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 253761FAC5E;
-	Tue, 11 Feb 2025 12:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9510423F437;
+	Thu, 13 Feb 2025 13:14:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739275208; cv=none; b=CI81fppTL0VbPJfy4CqmTqZI17knb9txLr2rdENuQA3COo6j160G6EeAEJlsey3bD3UaNi+VZpK8iFVlksMIdwZXNGLKDDLqcZFZNea3bIksyUJiHCtnqEm9mwe23p0jG97rhyP/3Ev2sVEtmWOXfqfEDMbAI/sWniXBGn27rEs=
+	t=1739452465; cv=none; b=QeVCxwO1BcxavaDIA0JbCSsRBxRyeP4e0QHg65OIvT4+2F7JWWy54zhv4Qt9Mt50qp6jAx1yoxGHoup39AbLu4jRcRHnpxL7HsDnlUJe2L+/ws+1G6QcT47ZEYIW66Yw81KOtQKkHuVKTomcxKmaO9lzkOukR9rrEyWchcO0tGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739275208; c=relaxed/simple;
-	bh=DxNubQ82BSZPNr9Q4aWGZXDD+6hlE4NvdnH2GOjIkYo=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=G0ALPTfkgcdOiF7h0IdBxC4rg0BEzZj/F5qfxejJbBRsYmasAYOdyTb6wymvz8A4g2fkL4RgSfJqfo+JI9P0lQk8pXet6sIIryuFI5o5GlUc4VC4ZVSGNljWPnSjXWN/C/RwXpw5mywB9u3WyABKkr3nH5aXxWoMokfUxWUqFv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jf0Un9f6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739452465; c=relaxed/simple;
+	bh=bOsje8FpWGc3XKahDn2xcaiXRle9KXRaVkA/a7KzA+o=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:Message-ID:MIME-Version:
+	 Content-Type; b=j9cC3/a96q6aFmgR8w8+yPxQaREEXnngL8dOTbRuXHt5lei0FQpnHXAWAoTpp71JS9eYW+4TYzQdPipFcpXV24rp+oJ8uoZ7C4GQt7W9mUK5KaiCvRiuleA4xYCuvDVYDcZ8mKVMo07x+U8VPrBdHl4jcWL9PExmg0AZkPkAm0Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=TpNyyr92; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jf0Un9f6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86DE0C4CEDD;
-	Tue, 11 Feb 2025 12:00:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739275207;
-	bh=DxNubQ82BSZPNr9Q4aWGZXDD+6hlE4NvdnH2GOjIkYo=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=Jf0Un9f6fgt+xsHQoEewcvtt/PmxnSTl1blNMwfN5II1phCl8yqyQwLCLS9JlxK0G
-	 4kP0z5LkzO9/9hwJZI6uCBHiVJG6SiMgnWNf3LXnqBNLZRVVdhd2nskkNBBaxNIh2V
-	 yfyPpKnTO1tp/dQl3nUTpQa96DdWrEHHRyWZQiPpPHaeKV7zW9fCA+19Rt4qK5NFG8
-	 1M+vxEyQioFukQ7S4Hbas7Dp9SIsc7ozN3ilbrUrXnsHmZpuLnNBBCDUeTjvMGbn95
-	 l6yMnhw7cZj6BCy1oh2fQH8cXEDx0YRWpoRDgLRC+FdS37SJ5W9Ab8qrIwlnF65UDR
-	 buECrlJffpq1Q==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70F61380AA7A;
-	Tue, 11 Feb 2025 12:00:37 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="TpNyyr92"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 032B9C4CED1;
+	Thu, 13 Feb 2025 13:14:24 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1739452465;
+	bh=bOsje8FpWGc3XKahDn2xcaiXRle9KXRaVkA/a7KzA+o=;
+	h=Subject:To:Cc:From:Date:In-Reply-To:From;
+	b=TpNyyr92Ochvj1Vm9QaV32KroBZVQaP0B42iDGxEFupUtLCn9KjPQsw5+nSzkUFha
+	 Qg6oAGkrDDmLQBgRbL7Z/LRcQIYE5X6LQiFDIgYHqYs+suctq61QV86hB6kaXRntvJ
+	 a/cIPssNMPhHzkBH3GtaxAxbt4hEnnJ/maxnTH8w=
+Subject: Patch "mptcp: pm: only set fullmesh for subflow endp" has been added to the 6.6-stable tree
+To: gregkh@linuxfoundation.org,kuba@kernel.org,martineau@kernel.org,matttbe@kernel.org,mptcp@lists.linux.dev,syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com
+Cc: <stable-commits@vger.kernel.org>
+From: <gregkh@linuxfoundation.org>
+Date: Thu, 13 Feb 2025 14:13:47 +0100
+In-Reply-To: <20250209174153.3388802-6-matttbe@kernel.org>
+Message-ID: <2025021347-immovable-concierge-7c1d@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=ANSI_X3.4-1968
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v3 00/15] mptcp: pm: misc cleanups, part 2
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <173927523626.4027827.1076693017347574469.git-patchwork-notify@kernel.org>
-Date: Tue, 11 Feb 2025 12:00:36 +0000
-References: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-In-Reply-To: <20250207-net-next-mptcp-pm-misc-cleanup-2-v3-0-71753ed957de@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
-
-Hello:
-
-This series was applied to netdev/net-next.git (main)
-by Paolo Abeni <pabeni@redhat.com>:
-
-On Fri, 07 Feb 2025 14:59:18 +0100 you wrote:
-> These cleanups lead the way to the unification of the path-manager
-> interfaces, and allow future extensions. The following patches are not
-> all linked to each others, but are all related to the path-managers.
-> 
-> - Patch 1: drop unneeded parameter in a function helper.
-> 
-> - Patch 2: clearer NL error message when an NL attribute is missing.
-> 
-> [...]
-
-Here is the summary with links:
-  - [net-next,v3,01/15] mptcp: pm: drop info of userspace_pm_remove_id_zero_address
-    https://git.kernel.org/netdev/net-next/c/a9d71b5de76c
-  - [net-next,v3,02/15] mptcp: pm: userspace: flags: clearer msg if no remote addr
-    https://git.kernel.org/netdev/net-next/c/58b21309f97b
-  - [net-next,v3,03/15] mptcp: pm: more precise error messages
-    https://git.kernel.org/netdev/net-next/c/891a87f7a76c
-  - [net-next,v3,04/15] mptcp: pm: improve error messages
-    https://git.kernel.org/netdev/net-next/c/b2bdec19beec
-  - [net-next,v3,05/15] mptcp: pm: userspace: use GENL_REQ_ATTR_CHECK
-    https://git.kernel.org/netdev/net-next/c/07bfabf8407b
-  - [net-next,v3,06/15] mptcp: pm: remove duplicated error messages
-    https://git.kernel.org/netdev/net-next/c/60097f03fc7a
-  - [net-next,v3,07/15] mptcp: pm: mark missing address attributes
-    https://git.kernel.org/netdev/net-next/c/8cdc56f99e6c
-  - [net-next,v3,08/15] mptcp: pm: use NL_SET_ERR_MSG_ATTR when possible
-    https://git.kernel.org/netdev/net-next/c/a25a8b10491b
-  - [net-next,v3,09/15] mptcp: pm: make three pm wrappers static
-    https://git.kernel.org/netdev/net-next/c/7aeab89b090f
-  - [net-next,v3,10/15] mptcp: pm: drop skb parameter of get_addr
-    https://git.kernel.org/netdev/net-next/c/67dcf6592544
-  - [net-next,v3,11/15] mptcp: pm: add id parameter for get_addr
-    https://git.kernel.org/netdev/net-next/c/d47b80758f4c
-  - [net-next,v3,12/15] mptcp: pm: reuse sending nlmsg code in get_addr
-    https://git.kernel.org/netdev/net-next/c/8556f4aecc9a
-  - [net-next,v3,13/15] mptcp: pm: drop skb parameter of set_flags
-    https://git.kernel.org/netdev/net-next/c/2c8971c04f74
-  - [net-next,v3,14/15] mptcp: pm: change rem type of set_flags
-    https://git.kernel.org/netdev/net-next/c/ab5723599cfd
-  - [net-next,v3,15/15] mptcp: pm: add local parameter for set_flags
-    https://git.kernel.org/netdev/net-next/c/c7f25f7987c0
-
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+X-stable: commit
+X-Patchwork-Hint: ignore 
 
 
+This is a note to let you know that I've just added the patch titled
+
+    mptcp: pm: only set fullmesh for subflow endp
+
+to the 6.6-stable tree which can be found at:
+    http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
+
+The filename of the patch is:
+     mptcp-pm-only-set-fullmesh-for-subflow-endp.patch
+and it can be found in the queue-6.6 subdirectory.
+
+If you, or anyone else, feels it should not be added to the stable tree,
+please let <stable@vger.kernel.org> know about it.
+
+
+From stable+bounces-114455-greg=kroah.com@vger.kernel.org Sun Feb  9 18:42:14 2025
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Sun,  9 Feb 2025 18:41:55 +0100
+Subject: mptcp: pm: only set fullmesh for subflow endp
+To: mptcp@lists.linux.dev, stable@vger.kernel.org, gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com, Mat Martineau <martineau@kernel.org>, Jakub Kicinski <kuba@kernel.org>
+Message-ID: <20250209174153.3388802-6-matttbe@kernel.org>
+
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+
+commit 1bb0d1348546ad059f55c93def34e67cb2a034a6 upstream.
+
+With the in-kernel path-manager, it is possible to change the 'fullmesh'
+flag. The code in mptcp_pm_nl_fullmesh() expects to change it only on
+'subflow' endpoints, to recreate more or less subflows using the linked
+address.
+
+Unfortunately, the set_flags() hook was a bit more permissive, and
+allowed 'implicit' endpoints to get the 'fullmesh' flag while it is not
+allowed before.
+
+That's what syzbot found, triggering the following warning:
+
+  WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 __mark_subflow_endp_available net/mptcp/pm_netlink.c:1496 [inline]
+  WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1980 [inline]
+  WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_nl_set_flags net/mptcp/pm_netlink.c:2003 [inline]
+  WARNING: CPU: 0 PID: 6499 at net/mptcp/pm_netlink.c:1496 mptcp_pm_nl_set_flags+0x974/0xdc0 net/mptcp/pm_netlink.c:2064
+  Modules linked in:
+  CPU: 0 UID: 0 PID: 6499 Comm: syz.1.413 Not tainted 6.13.0-rc5-syzkaller-00172-gd1bf27c4e176 #0
+  Hardware name: Google Compute Engine/Google Compute Engine, BIOS Google 09/13/2024
+  RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_netlink.c:1496 [inline]
+  RIP: 0010:mptcp_pm_nl_fullmesh net/mptcp/pm_netlink.c:1980 [inline]
+  RIP: 0010:mptcp_nl_set_flags net/mptcp/pm_netlink.c:2003 [inline]
+  RIP: 0010:mptcp_pm_nl_set_flags+0x974/0xdc0 net/mptcp/pm_netlink.c:2064
+  Code: 01 00 00 49 89 c5 e8 fb 45 e8 f5 e9 b8 fc ff ff e8 f1 45 e8 f5 4c 89 f7 be 03 00 00 00 e8 44 1d 0b f9 eb a0 e8 dd 45 e8 f5 90 <0f> 0b 90 e9 17 ff ff ff 89 d9 80 e1 07 38 c1 0f 8c c9 fc ff ff 48
+  RSP: 0018:ffffc9000d307240 EFLAGS: 00010293
+  RAX: ffffffff8bb72e03 RBX: 0000000000000000 RCX: ffff88807da88000
+  RDX: 0000000000000000 RSI: 0000000000000000 RDI: 0000000000000000
+  RBP: ffffc9000d307430 R08: ffffffff8bb72cf0 R09: 1ffff1100b842a5e
+  R10: dffffc0000000000 R11: ffffed100b842a5f R12: ffff88801e2e5ac0
+  R13: ffff88805c214800 R14: ffff88805c2152e8 R15: 1ffff1100b842a5d
+  FS:  00005555619f6500(0000) GS:ffff8880b8600000(0000) knlGS:0000000000000000
+  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+  CR2: 0000000020002840 CR3: 00000000247e6000 CR4: 00000000003526f0
+  DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+  DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+  Call Trace:
+   <TASK>
+   genl_family_rcv_msg_doit net/netlink/genetlink.c:1115 [inline]
+   genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+   genl_rcv_msg+0xb14/0xec0 net/netlink/genetlink.c:1210
+   netlink_rcv_skb+0x1e3/0x430 net/netlink/af_netlink.c:2542
+   genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+   netlink_unicast_kernel net/netlink/af_netlink.c:1321 [inline]
+   netlink_unicast+0x7f6/0x990 net/netlink/af_netlink.c:1347
+   netlink_sendmsg+0x8e4/0xcb0 net/netlink/af_netlink.c:1891
+   sock_sendmsg_nosec net/socket.c:711 [inline]
+   __sock_sendmsg+0x221/0x270 net/socket.c:726
+   ____sys_sendmsg+0x52a/0x7e0 net/socket.c:2583
+   ___sys_sendmsg net/socket.c:2637 [inline]
+   __sys_sendmsg+0x269/0x350 net/socket.c:2669
+   do_syscall_x64 arch/x86/entry/common.c:52 [inline]
+   do_syscall_64+0xf3/0x230 arch/x86/entry/common.c:83
+   entry_SYSCALL_64_after_hwframe+0x77/0x7f
+  RIP: 0033:0x7f5fe8785d29
+  Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+  RSP: 002b:00007fff571f5558 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+  RAX: ffffffffffffffda RBX: 00007f5fe8975fa0 RCX: 00007f5fe8785d29
+  RDX: 0000000000000000 RSI: 0000000020000480 RDI: 0000000000000007
+  RBP: 00007f5fe8801b08 R08: 0000000000000000 R09: 0000000000000000
+  R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+  R13: 00007f5fe8975fa0 R14: 00007f5fe8975fa0 R15: 00000000000011f4
+   </TASK>
+
+Here, syzbot managed to set the 'fullmesh' flag on an 'implicit' and
+used -- according to 'id_avail_bitmap' -- endpoint, causing the PM to
+try decrement the local_addr_used counter which is only incremented for
+the 'subflow' endpoint.
+
+Note that 'no type' endpoints -- not 'subflow', 'signal', 'implicit' --
+are fine, because their ID will not be marked as used in the 'id_avail'
+bitmap, and setting 'fullmesh' can help forcing the creation of subflow
+when receiving an ADD_ADDR.
+
+Fixes: 73c762c1f07d ("mptcp: set fullmesh flag in pm_netlink")
+Cc: stable@vger.kernel.org
+Reported-by: syzbot+cd16e79c1e45f3fe0377@syzkaller.appspotmail.com
+Closes: https://lore.kernel.org/6786ac51.050a0220.216c54.00a6.GAE@google.com
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/540
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Link: https://patch.msgid.link/20250123-net-mptcp-syzbot-issues-v1-2-af73258a726f@kernel.org
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+[ Conflicts in pm_netlink.c, because the code has been moved around in
+  commit 6a42477fe449 ("mptcp: update set_flags interfaces"), but the
+  same fix can still be applied at the original place. ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+---
+ net/mptcp/pm_netlink.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -2069,7 +2069,8 @@ int mptcp_pm_nl_set_flags(struct net *ne
+ 		return -EINVAL;
+ 	}
+ 	if ((addr->flags & MPTCP_PM_ADDR_FLAG_FULLMESH) &&
+-	    (entry->flags & MPTCP_PM_ADDR_FLAG_SIGNAL)) {
++	    (entry->flags & (MPTCP_PM_ADDR_FLAG_SIGNAL |
++			     MPTCP_PM_ADDR_FLAG_IMPLICIT))) {
+ 		spin_unlock_bh(&pernet->lock);
+ 		return -EINVAL;
+ 	}
+
+
+Patches currently in stable-queue which might be from matttbe@kernel.org are
+
+queue-6.6/mm-kmemleak-fix-upper-boundary-check-for-physical-address-objects.patch
+queue-6.6/mptcp-prevent-excessive-coalescing-on-receive.patch
+queue-6.6/selftests-mptcp-connect-f-no-reconnect.patch
+queue-6.6/selftests-mptcp-join-fix-af_inet6-variable.patch
+queue-6.6/mptcp-pm-only-set-fullmesh-for-subflow-endp.patch
