@@ -1,105 +1,84 @@
-Received: from out-171.mta1.migadu.com (out-171.mta1.migadu.com [95.215.58.171])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 065C61FFC47
-	for <mptcp@lists.linux.dev>; Fri, 14 Feb 2025 06:24:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5CF151983;
+	Fri, 14 Feb 2025 09:21:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739514244; cv=none; b=ZQ2e4wl0FpSnOO72f9jMdHMreLIQ0cCOxQy60b0aKIkBhwu5uHuaYspzCrtvSUpG/WmH9IeuNjYJAWY9uc/tuWdwGjHxg8WE8q3iaTPGChAUBS1WyBAR4vAJNsdOG3KbfMjq5/9tu9beuiE0yYFBaBLLuAe3kQZgjifIJ/uqTwY=
+	t=1739524908; cv=none; b=FkpQXWsuV7BsEMo1UV2MbfwvA1+Z5bOj44ymelGrF1Fgc7woJjfjThD3BG8fbvyCtdQrJr3O7C6Dsygc51jvRRwedafJlImrbDVml+tZPcOAslx0a3PmVUZIJIn398KrGs8qcCC7YnuTH9+/zwn8NGC4h9OrYLzoZxY6cYdHLzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739514244; c=relaxed/simple;
-	bh=wi38qL4hRFPiH6TC9t4UGHznNQ9DN1QZEgbMufLoo5U=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=o07E7GO7k96fvs34eTJ71rpp1K3A96VjGUCh6pHSHpTjEulKdvBjJuK7DLyLRlR/ShXNgbVnjwDs7tU2kzjVHYuCCAIyWdHSwmDHC6fl2puceNoq5jI32mqHf3jN73GKaU8WoiyxL9LnOiDUbXnXYWpoN4ETx01AFaE5liQ4j6I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=D3aQKjVG; arc=none smtp.client-ip=95.215.58.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1739524908; c=relaxed/simple;
+	bh=Ydvn95HYL/9RvBOPXpB5+o3NjxSLJNNjMi7Sn7od54k=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=sTmdOHvUFp1xjRSzMJaXgRr1y0T/KcJ3wEdfdtqlJXoKrrzk9ujjuj/6lME0O+PdRvnt8vjq0gf4TUgupRmdLVCp1jIU5o3EKcwQIfE+MojB7rERvVNxVz1nuvBnZQRB4XSum1KnETn1NLE6khGW2fdRr4Fzw387Z4zNw1CUhHg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=clFDDsiZ; arc=none smtp.client-ip=192.198.163.7
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="D3aQKjVG"
-Message-ID: <62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1739514230;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=jLNWS0Gi46HHTQY+75W8wmzAhQ0Osq+x3p1UxBkY/XE=;
-	b=D3aQKjVGAW8ksyeaLYg4dEx8r23eSbcckLQdzaUA1uR/SpFOcOWk3grlR0rhtUFXeOy+/w
-	uAIfiZbT3ygvkXSVzgjcist2mxUf6At+L9V12RCK71ns31wW2P2p1+tewxHERRymynR/qO
-	ouJpgg/4s/tByrv7vqK7lvyEzrlG/xU=
-Date: Thu, 13 Feb 2025 22:23:39 -0800
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="clFDDsiZ"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1739524907; x=1771060907;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=Ydvn95HYL/9RvBOPXpB5+o3NjxSLJNNjMi7Sn7od54k=;
+  b=clFDDsiZvHkRt8ynXBr38J28jj8/vLpoWgp0eOUA3PNCCEXAkIhrnjs8
+   FRSU+EOydutIpqZGT2Hl10DqxrSE/imkOKBeWsKuUjXecTggXis30QnIk
+   t+VnPCf+Jpscd7+NGDpX4qyyJf6KhGNNR5o1Q8bt/Juy0PcTYOIy4Pcuz
+   oO4yfUithF8mS/pRYkL9lggKSidGKWa4euyY/7mRlpmYPypqviVlCDT5d
+   pEyLn+PJuu1qXBQlzPLxyxE/YvndVNqZCJM5RZyiRQUkj7sXhSlOPsbFH
+   GQHjgRSq0lQ3ab0R6doNWwyQXuRdJJLotrIimLNo5NrhDi6R3NFRcX5f2
+   g==;
+X-CSE-ConnectionGUID: dFdPSkQ1QfKjRLih6SoGFg==
+X-CSE-MsgGUID: 8HBLTUV7S1CBwuKd2Sj0uA==
+X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="65618803"
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="65618803"
+Received: from fmviesa007.fm.intel.com ([10.60.135.147])
+  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:21:47 -0800
+X-CSE-ConnectionGUID: bFNNGqa5ScKinUFSpdmQ8w==
+X-CSE-MsgGUID: w6LOgKUZRR258DH2qddEBQ==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
+   d="scan'208";a="113390600"
+Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
+  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2025 01:21:45 -0800
+Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1tirtH-0019Jo-21;
+	Fri, 14 Feb 2025 09:21:43 +0000
+Date: Fri, 14 Feb 2025 17:20:49 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export-net 1/8] .b4-config: warning: ignored by one of the
+ .gitignore files
+Message-ID: <202502141751.Y5mPYEPW-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or
- set sockets
-To: zhangmingyi <zhangmingyi5@huawei.com>
-Cc: kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
- lkp@intel.com, Xin Liu <liuxin350@huawei.com>, netdev@vger.kernel.org,
- bpf@vger.kernel.org, mptcp@lists.linux.dev, ast@kernel.org,
- daniel@iogearbox.net, andrii@kernel.org, song@kernel.org, yhs@fb.com,
- john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
- haoluo@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
- yanan@huawei.com, wuchangye@huawei.com, xiesongyang@huawei.com,
- liwei883@huawei.com, tianmuyang@huawei.com
-References: <202502140959.f66e2ba6-lkp@intel.com>
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-Content-Language: en-US
-In-Reply-To: <202502140959.f66e2ba6-lkp@intel.com>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-On 2/13/25 6:13 PM, kernel test robot wrote:
-> [   71.182999][ T3759] =============================
-> [   71.183907][ T3759] [ BUG: Invalid wait context ]
-> [   71.184819][ T3759] 6.14.0-rc1-00030-g8f510de3f26b #1 Tainted: G        W       T
-> [   71.186327][ T3759] -----------------------------
-> [   71.187265][ T3759] trinity-c4/3759 is trying to lock:
-> [ 71.188287][ T3759] c37b35e0 (tcpv4_prot_mutex){....}-{4:4}, at: tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> [   71.189847][ T3759] other info that might help us debug this:
-> [   71.191018][ T3759] context-{5:5}
-> [   71.191678][ T3759] 2 locks held by trinity-c4/3759:
-> [ 71.192635][ T3759] #0: ecffcd80 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock (include/net/sock.h:1625)
-> [ 71.194220][ T3759] #1: c3500498 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336)
-> [   71.196078][ T3759] stack backtrace:
-> [   71.196797][ T3759] CPU: 0 UID: 65534 PID: 3759 Comm: trinity-c4 Tainted: G        W       T  6.14.0-rc1-00030-g8f510de3f26b #1 8ad64aae41fa4cb8babad52c8f50e0a7d5e34569
-> [   71.196807][ T3759] Tainted: [W]=WARN, [T]=RANDSTRUCT
-> [   71.196809][ T3759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-> [   71.196812][ T3759] Call Trace:
-> [ 71.196818][ T3759] dump_stack_lvl (lib/dump_stack.c:123)
-> [ 71.196825][ T3759] dump_stack (lib/dump_stack.c:130)
-> [ 71.196830][ T3759] __lock_acquire (kernel/locking/lockdep.c:4830 kernel/locking/lockdep.c:4900 kernel/locking/lockdep.c:5178)
-> [ 71.196840][ T3759] lock_acquire (kernel/locking/lockdep.c:469 kernel/locking/lockdep.c:5853)
-> [ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> [ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380)
-> [ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730)
-> [ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> [ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335)
-> [ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323)
-> [ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653)
-> [ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783)
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
+head:   944fa760a27223478265c5374a3f781c101d95f0
+commit: 6bfa223db3bdf60f221897d6fa68f6df4677fd1b [1/8] DO-NOT-MERGE: git markup: net
+config: loongarch-randconfig-001-20250214 (https://download.01.org/0day-ci/archive/20250214/202502141751.Y5mPYEPW-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141751.Y5mPYEPW-lkp@intel.com/reproduce)
 
-This is probably because __tcp_set_ulp is now under the rcu_read_lock() in patch 1.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202502141751.Y5mPYEPW-lkp@intel.com/
 
-Even fixing patch 1 will not be enough. The bpf cgrp prog (e.g. sockops) cannot 
-sleep now, so it still cannot call bpf_setsockopt(TCP_ULP, "tls") which will 
-take a mutex. This is a blocker :(
+All warnings (new ones prefixed by >>):
 
-> [ 71.196904][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> [ 71.196909][ T3759] tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> [ 71.196916][ T3759] tcp_set_ulp (net/ipv4/tcp_ulp.c:140 net/ipv4/tcp_ulp.c:166)
-> [ 71.196923][ T3759] do_tcp_setsockopt (net/ipv4/tcp.c:3747)
-> [ 71.196934][ T3759] tcp_setsockopt (net/ipv4/tcp.c:4032)
-> [ 71.196939][ T3759] ? sock_common_recvmsg (net/core/sock.c:3833)
-> [ 71.196946][ T3759] sock_common_setsockopt (net/core/sock.c:3838)
-> [ 71.196952][ T3759] do_sock_setsockopt (net/socket.c:2298)
-> [ 71.196961][ T3759] __sys_setsockopt (net/socket.c:2323)
-> [ 71.196967][ T3759] __ia32_sys_setsockopt (net/socket.c:2326)
-> [ 71.196972][ T3759] ia32_sys_call (kbuild/obj/consumer/i386-randconfig-054-20250212/./arch/x86/include/generated/asm/syscalls_32.h:367)
-> [ 71.196979][ T3759] do_int80_syscall_32 (arch/x86/entry/common.c:165 arch/x86/entry/common.c:339)
-> [ 71.196985][ T3759] entry_INT80_32 (arch/x86/entry/entry_32.S:942)
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
