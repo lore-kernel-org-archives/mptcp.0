@@ -1,79 +1,97 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from out-171.mta0.migadu.com (out-171.mta0.migadu.com [91.218.175.171])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9225158870;
-	Fri, 14 Feb 2025 21:20:09 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1E0E1DC198
+	for <mptcp@lists.linux.dev>; Fri, 14 Feb 2025 22:11:44 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=91.218.175.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739568010; cv=none; b=BLGQ6RKlQyewtVN4BfRddDMT4birJzNCxxNLZdYhrMmfqTLz1bb+UxXnkGRymJOUxOLUSIJzn0/7ke+uE+TnPVok4OJ4f6dk40mrdUMsWRJOhH2tywvObvjiYe+C66xSNljMPXI/LwcXeBuNbBk75XatLVC5/RV/Z+JJ3WO35c4=
+	t=1739571108; cv=none; b=YUFSyL4/bw/4AxFCKPtRKsEL2AThUizNEQrxbXKxCAS/LXvReLQt3bAx8lVq+B9HHHh+QyHAeVOw6FTA2b4xEtCuFlM5JA7/CN3suQ9GZQfL3q3Jm0/lFsmVSLhy8TywuBc4aACbEw3dzA/5jgyrryjkTL6TfkcpQVxV2ay5q3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739568010; c=relaxed/simple;
-	bh=7Bz6zsV8G0KelhMQC/n7HDA0e50TvIelUa+YzRPtv0I=;
-	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=NZFhxVCVyAA3j5gVOOTw8Sd9ictRJUN8ibUC9/9f4gQeAHyVKj8zgDpoNJZo4eGHFzieTjCQv36XcVHVVxHqKubX6T6HT8h0J5RM7myuYUsqJrtJnlNJz6CzqFYNVfBm81iUxS4j4Nv1tg87+Msd1KWa5AxMz98yEXf35DL//gE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU7Z9YgL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739571108; c=relaxed/simple;
+	bh=MxEfRbTTUEvD/LyNwNYkAl+DmhWTP5pzJ0R+SLtjwro=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=XCD9dxEmgRJph4WJlP5lDlL+CuzeEyib8GZfI0PjvtQ7I2BXO+muA82ixp2FyeFLHMMvMJ11wbem8qiz4ZhtyhDqalK+rTEnOUUiKIUDHgaSMLF+QM2RoWUjn7Ix72Zj1wGrJdoqd0yGM4zGXJ+VCjsWPvjA71kQ0BFFdku5n/M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=vJRmh7RB; arc=none smtp.client-ip=91.218.175.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU7Z9YgL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F521C4CED1;
-	Fri, 14 Feb 2025 21:20:08 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739568009;
-	bh=7Bz6zsV8G0KelhMQC/n7HDA0e50TvIelUa+YzRPtv0I=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-	b=aU7Z9YgL9uMd/MjkiSsN8zEGiS0VtEtagk1gc9XSw4PWDNWmBO6fxCcwKhFfzgPYe
-	 +GVfdbsFkPv8SKkarkA/jl8Ptpsbwx3ySIH6nBqGAYKFQM1riqNe+QClmM4sDtUqYh
-	 1jGGwYWusdwaykuFAnjP5jbG82ev90j5j9EsVv4aNtYu2h1nAYn51nWfSL/v71rAQ3
-	 Eefvo666R2zoWOFCEVwxnnQP4qrXOp1fzNuWvbO5RU6v1W2ZQTObz6DNjGtqRiYCWt
-	 X8Oqh4rFDOQyLOzW7hvS66sH4ekLua2Lla3+hohMJKVIoLjoEkZ1pnWvEW8Cs29CSw
-	 9bzyQ0a5gtS+A==
-Date: Fri, 14 Feb 2025 13:20:07 -0800
-From: Jakub Kicinski <kuba@kernel.org>
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: zhangmingyi <zhangmingyi5@huawei.com>, kernel test robot
- <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, Xin Liu
- <liuxin350@huawei.com>, netdev@vger.kernel.org, bpf@vger.kernel.org,
- mptcp@lists.linux.dev, ast@kernel.org, daniel@iogearbox.net,
- andrii@kernel.org, song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
- kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
- linux-kernel@vger.kernel.org, yanan@huawei.com, wuchangye@huawei.com,
- xiesongyang@huawei.com, liwei883@huawei.com, tianmuyang@huawei.com
-Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get
- or set sockets
-Message-ID: <20250214132007.54dd0693@kernel.org>
-In-Reply-To: <62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
-References: <202502140959.f66e2ba6-lkp@intel.com>
-	<62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
+	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="vJRmh7RB"
+Message-ID: <44668201-cf8b-49c1-9dd0-90e0e5a95457@linux.dev>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
+	t=1739571102;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=vl0te2J9Y7cl11roWtJDotLT029Xxpyp8BvBndYP0/U=;
+	b=vJRmh7RBEMjVs7Ljgmz+9160GjBNlqRuiRlX1Ws703FJd5bpYuBD/F4ptDQgrLWVRfw6kL
+	1Ai3etzw59k9nwHNnn+71uDzrusBF7hQ+34y33sl/TWFHIrvzsJ66oUkko3GFAz1z7SHa3
+	+rEQUAzvB4G82l3Z9S5fTDhrixUBaNQ=
+Date: Fri, 14 Feb 2025 14:11:34 -0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or
+ set sockets
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: zhangmingyi <zhangmingyi5@huawei.com>,
+ kernel test robot <oliver.sang@intel.com>, oe-lkp@lists.linux.dev,
+ lkp@intel.com, Xin Liu <liuxin350@huawei.com>, netdev@vger.kernel.org,
+ bpf@vger.kernel.org, mptcp@lists.linux.dev, ast@kernel.org,
+ daniel@iogearbox.net, andrii@kernel.org, song@kernel.org, yhs@fb.com,
+ john.fastabend@gmail.com, kpsingh@kernel.org, sdf@google.com,
+ haoluo@google.com, jolsa@kernel.org, linux-kernel@vger.kernel.org,
+ yanan@huawei.com, wuchangye@huawei.com, xiesongyang@huawei.com,
+ liwei883@huawei.com, tianmuyang@huawei.com
+References: <202502140959.f66e2ba6-lkp@intel.com>
+ <62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
+ <20250214132007.54dd0693@kernel.org>
+Content-Language: en-US
+X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
+From: Martin KaFai Lau <martin.lau@linux.dev>
+In-Reply-To: <20250214132007.54dd0693@kernel.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
+X-Migadu-Flow: FLOW_OUT
 
-On Thu, 13 Feb 2025 22:23:39 -0800 Martin KaFai Lau wrote:
-> On 2/13/25 6:13 PM, kernel test robot wrote:
-> > [ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> > [ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380)
-> > [ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730)
-> > [ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
-> > [ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335)
-> > [ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323)
-> > [ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653)
-> > [ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783)  
+On 2/14/25 1:20 PM, Jakub Kicinski wrote:
+> On Thu, 13 Feb 2025 22:23:39 -0800 Martin KaFai Lau wrote:
+>> On 2/13/25 6:13 PM, kernel test robot wrote:
+>>> [ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
+>>> [ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380)
+>>> [ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730)
+>>> [ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
+>>> [ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335)
+>>> [ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323)
+>>> [ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653)
+>>> [ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783)
+>>
+>> This is probably because __tcp_set_ulp is now under the rcu_read_lock() in patch 1.
+>>
+>> Even fixing patch 1 will not be enough. The bpf cgrp prog (e.g. sockops) cannot
+>> sleep now, so it still cannot call bpf_setsockopt(TCP_ULP, "tls") which will
+>> take a mutex. This is a blocker :(
 > 
-> This is probably because __tcp_set_ulp is now under the rcu_read_lock() in patch 1.
+> Oh, kbuild bot was nice enough to CC netdev, it wasn't CCed on
+> the submission.
+
+Ah. I also didn't notice netdev was not cc-ed. will pay attention in the future.
+
 > 
-> Even fixing patch 1 will not be enough. The bpf cgrp prog (e.g. sockops) cannot 
-> sleep now, so it still cannot call bpf_setsockopt(TCP_ULP, "tls") which will 
-> take a mutex. This is a blocker :(
+> I'd really rather we didn't allow setting ULP from BPF unless there
+> is a strong and clear use case. The ULP configuration and stacking
+> is a source of many bugs. And the use case here AFAIU is to allow
+> attaching some ULP from an OOT module to a socket, which I think
+> won't make core BPF folks happy either, right?
 
-Oh, kbuild bot was nice enough to CC netdev, it wasn't CCed on 
-the submission.
+If the in-tree ulp does not work, there is little reason to do it for the 
+out-of-tree module only.
 
-I'd really rather we didn't allow setting ULP from BPF unless there 
-is a strong and clear use case. The ULP configuration and stacking
-is a source of many bugs. And the use case here AFAIU is to allow
-attaching some ULP from an OOT module to a socket, which I think
-won't make core BPF folks happy either, right?
+My question on the ulp use case went to silence in v1, so we can assume it is 
+out-of-tree ulp only. I also asked to replace the "smc" ulp testing with a more 
+real "tls" ulp testing to see how it goes first. It does not work as the bot 
+reported it.
+
