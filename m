@@ -1,84 +1,79 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.7])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1D5CF151983;
-	Fri, 14 Feb 2025 09:21:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.7
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D9225158870;
+	Fri, 14 Feb 2025 21:20:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739524908; cv=none; b=FkpQXWsuV7BsEMo1UV2MbfwvA1+Z5bOj44ymelGrF1Fgc7woJjfjThD3BG8fbvyCtdQrJr3O7C6Dsygc51jvRRwedafJlImrbDVml+tZPcOAslx0a3PmVUZIJIn398KrGs8qcCC7YnuTH9+/zwn8NGC4h9OrYLzoZxY6cYdHLzI=
+	t=1739568010; cv=none; b=BLGQ6RKlQyewtVN4BfRddDMT4birJzNCxxNLZdYhrMmfqTLz1bb+UxXnkGRymJOUxOLUSIJzn0/7ke+uE+TnPVok4OJ4f6dk40mrdUMsWRJOhH2tywvObvjiYe+C66xSNljMPXI/LwcXeBuNbBk75XatLVC5/RV/Z+JJ3WO35c4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739524908; c=relaxed/simple;
-	bh=Ydvn95HYL/9RvBOPXpB5+o3NjxSLJNNjMi7Sn7od54k=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=sTmdOHvUFp1xjRSzMJaXgRr1y0T/KcJ3wEdfdtqlJXoKrrzk9ujjuj/6lME0O+PdRvnt8vjq0gf4TUgupRmdLVCp1jIU5o3EKcwQIfE+MojB7rERvVNxVz1nuvBnZQRB4XSum1KnETn1NLE6khGW2fdRr4Fzw387Z4zNw1CUhHg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=clFDDsiZ; arc=none smtp.client-ip=192.198.163.7
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1739568010; c=relaxed/simple;
+	bh=7Bz6zsV8G0KelhMQC/n7HDA0e50TvIelUa+YzRPtv0I=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=NZFhxVCVyAA3j5gVOOTw8Sd9ictRJUN8ibUC9/9f4gQeAHyVKj8zgDpoNJZo4eGHFzieTjCQv36XcVHVVxHqKubX6T6HT8h0J5RM7myuYUsqJrtJnlNJz6CzqFYNVfBm81iUxS4j4Nv1tg87+Msd1KWa5AxMz98yEXf35DL//gE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aU7Z9YgL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="clFDDsiZ"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739524907; x=1771060907;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=Ydvn95HYL/9RvBOPXpB5+o3NjxSLJNNjMi7Sn7od54k=;
-  b=clFDDsiZvHkRt8ynXBr38J28jj8/vLpoWgp0eOUA3PNCCEXAkIhrnjs8
-   FRSU+EOydutIpqZGT2Hl10DqxrSE/imkOKBeWsKuUjXecTggXis30QnIk
-   t+VnPCf+Jpscd7+NGDpX4qyyJf6KhGNNR5o1Q8bt/Juy0PcTYOIy4Pcuz
-   oO4yfUithF8mS/pRYkL9lggKSidGKWa4euyY/7mRlpmYPypqviVlCDT5d
-   pEyLn+PJuu1qXBQlzPLxyxE/YvndVNqZCJM5RZyiRQUkj7sXhSlOPsbFH
-   GQHjgRSq0lQ3ab0R6doNWwyQXuRdJJLotrIimLNo5NrhDi6R3NFRcX5f2
-   g==;
-X-CSE-ConnectionGUID: dFdPSkQ1QfKjRLih6SoGFg==
-X-CSE-MsgGUID: 8HBLTUV7S1CBwuKd2Sj0uA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="65618803"
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="65618803"
-Received: from fmviesa007.fm.intel.com ([10.60.135.147])
-  by fmvoesa101.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Feb 2025 01:21:47 -0800
-X-CSE-ConnectionGUID: bFNNGqa5ScKinUFSpdmQ8w==
-X-CSE-MsgGUID: w6LOgKUZRR258DH2qddEBQ==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,285,1732608000"; 
-   d="scan'208";a="113390600"
-Received: from lkp-server01.sh.intel.com (HELO d63d4d77d921) ([10.239.97.150])
-  by fmviesa007.fm.intel.com with ESMTP; 14 Feb 2025 01:21:45 -0800
-Received: from kbuild by d63d4d77d921 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tirtH-0019Jo-21;
-	Fri, 14 Feb 2025 09:21:43 +0000
-Date: Fri, 14 Feb 2025 17:20:49 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/8] .b4-config: warning: ignored by one of the
- .gitignore files
-Message-ID: <202502141751.Y5mPYEPW-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aU7Z9YgL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F521C4CED1;
+	Fri, 14 Feb 2025 21:20:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739568009;
+	bh=7Bz6zsV8G0KelhMQC/n7HDA0e50TvIelUa+YzRPtv0I=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=aU7Z9YgL9uMd/MjkiSsN8zEGiS0VtEtagk1gc9XSw4PWDNWmBO6fxCcwKhFfzgPYe
+	 +GVfdbsFkPv8SKkarkA/jl8Ptpsbwx3ySIH6nBqGAYKFQM1riqNe+QClmM4sDtUqYh
+	 1jGGwYWusdwaykuFAnjP5jbG82ev90j5j9EsVv4aNtYu2h1nAYn51nWfSL/v71rAQ3
+	 Eefvo666R2zoWOFCEVwxnnQP4qrXOp1fzNuWvbO5RU6v1W2ZQTObz6DNjGtqRiYCWt
+	 X8Oqh4rFDOQyLOzW7hvS66sH4ekLua2Lla3+hohMJKVIoLjoEkZ1pnWvEW8Cs29CSw
+	 9bzyQ0a5gtS+A==
+Date: Fri, 14 Feb 2025 13:20:07 -0800
+From: Jakub Kicinski <kuba@kernel.org>
+To: Martin KaFai Lau <martin.lau@linux.dev>
+Cc: zhangmingyi <zhangmingyi5@huawei.com>, kernel test robot
+ <oliver.sang@intel.com>, oe-lkp@lists.linux.dev, lkp@intel.com, Xin Liu
+ <liuxin350@huawei.com>, netdev@vger.kernel.org, bpf@vger.kernel.org,
+ mptcp@lists.linux.dev, ast@kernel.org, daniel@iogearbox.net,
+ andrii@kernel.org, song@kernel.org, yhs@fb.com, john.fastabend@gmail.com,
+ kpsingh@kernel.org, sdf@google.com, haoluo@google.com, jolsa@kernel.org,
+ linux-kernel@vger.kernel.org, yanan@huawei.com, wuchangye@huawei.com,
+ xiesongyang@huawei.com, liwei883@huawei.com, tianmuyang@huawei.com
+Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get
+ or set sockets
+Message-ID: <20250214132007.54dd0693@kernel.org>
+In-Reply-To: <62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
+References: <202502140959.f66e2ba6-lkp@intel.com>
+	<62294c30-ca75-4075-8d4b-3801194bd92c@linux.dev>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   944fa760a27223478265c5374a3f781c101d95f0
-commit: 6bfa223db3bdf60f221897d6fa68f6df4677fd1b [1/8] DO-NOT-MERGE: git markup: net
-config: loongarch-randconfig-001-20250214 (https://download.01.org/0day-ci/archive/20250214/202502141751.Y5mPYEPW-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250214/202502141751.Y5mPYEPW-lkp@intel.com/reproduce)
+On Thu, 13 Feb 2025 22:23:39 -0800 Martin KaFai Lau wrote:
+> On 2/13/25 6:13 PM, kernel test robot wrote:
+> > [ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
+> > [ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380)
+> > [ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730)
+> > [ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993)
+> > [ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335)
+> > [ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323)
+> > [ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653)
+> > [ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783)  
+> 
+> This is probably because __tcp_set_ulp is now under the rcu_read_lock() in patch 1.
+> 
+> Even fixing patch 1 will not be enough. The bpf cgrp prog (e.g. sockops) cannot 
+> sleep now, so it still cannot call bpf_setsockopt(TCP_ULP, "tls") which will 
+> take a mutex. This is a blocker :(
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202502141751.Y5mPYEPW-lkp@intel.com/
+Oh, kbuild bot was nice enough to CC netdev, it wasn't CCed on 
+the submission.
 
-All warnings (new ones prefixed by >>):
-
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+I'd really rather we didn't allow setting ULP from BPF unless there 
+is a strong and clear use case. The ULP configuration and stacking
+is a source of many bugs. And the use case here AFAIU is to allow
+attaching some ULP from an OOT module to a socket, which I think
+won't make core BPF folks happy either, right?
