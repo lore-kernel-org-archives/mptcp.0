@@ -1,381 +1,260 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.14])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 495F213B5A0;
-	Fri, 14 Feb 2025 02:14:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=192.198.163.14
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739499270; cv=fail; b=UjZp+J1xoPxUxh16U+ID5CyH/9M9ds2LuCRHVIkxj6R+1lPaML13loFa/+5s+lvWcfxa0INb3XEJEVjkLBpbboLQ4efE0pdSrRT/4z8L64UdtyAW1BuEx3LDFB+c+zOt1hI4kMaZ2s6X43pvzkY7+399R9fDuEwt3e/TaJDkOKc=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739499270; c=relaxed/simple;
-	bh=ZgiZwakUQuufpHJltYUDo6v1E29Wknq7xftfEIAr1BU=;
-	h=Date:From:To:CC:Subject:Message-ID:Content-Type:
-	 Content-Disposition:In-Reply-To:MIME-Version; b=U/Gv0InAl1Q3qnT0V/lgywAzHw1kZl8um8PhECl0P3bcA+bACry/6I9h7tTo5N4j6cpNWESIpg2XV3WaFyTNkMhEjxdkVTgoZBuxNkRVbj843W7e+o46Ljvb6w3KWQX6mHmKtrIVLlPwrzZlJkTva+OIuMmZngZgWpcGEk0+QRw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=gEmsZRmi; arc=fail smtp.client-ip=192.198.163.14
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73AAA1519A9
+	for <mptcp@lists.linux.dev>; Fri, 14 Feb 2025 03:53:18 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1739505199; cv=none; b=NpAhIG6/OcAn5a+/qyElHaZlnwceitw2Ud7Lg2Xm3+1mVHM5WdHGD6rKs/k1xEoykhV9PvDK4vba5TpV0qMK/20aT6J//y9xm0MrA1bm2PlxhQFgVGYzGwRuED+6Jurqczn/jbb8Ew+0xijbyZiyYBKcLd5ozp5Mla1RSoct6S4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1739505199; c=relaxed/simple;
+	bh=DaaZYMVpMr6rDFrHGFQDXW0cpI04Kg3t+WecM4wdj8I=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=opwE7PMM1hZecpP0jqLuQA/wnU5DVbZKl8fFllOZFHCjdDQw/oHDwX7POSLotvQtUBGJIwlTy2LPpL9gvv5WrYKwrDpLUddCZ2iCi+XR+OkjFBY/AqY8rc+z7qMMobkONtseCaoGrX9fYGhREtmCJ3ehCfUFIPib8xH45Xysgic=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TS7e7Sot; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="gEmsZRmi"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1739499268; x=1771035268;
-  h=date:from:to:cc:subject:message-id:in-reply-to:
-   mime-version;
-  bh=ZgiZwakUQuufpHJltYUDo6v1E29Wknq7xftfEIAr1BU=;
-  b=gEmsZRmiNPKf7ELGINLkQTKXAHnj6Xp3nkVpknaOUO1uMKog8IPscgxB
-   2yF+J2zzF9BFgJXdHChw92oUED5soTknfOS1gS7iMe4DiSI2vVCWFrIHR
-   XsUwk+mc0iDzmdTBAsyULt+NquZIMDkcCwld1N0ff6/i5Nzcb7gR3SxOo
-   hVqjCRKNgtLQTOGjwbJoLyA3UDAwE/X2LK0g1pNaHKnHyiPXLNRqCBaJA
-   ERDL+Uf+2VCDfHAcQ1mUZdYOfTrJnhiUH0Wy1QY/cJCdh3KRPGaVsZ671
-   B8fEXEumktIeHXVvg6D2yFhAZsB4RtNb8NYQES8HBivAvLolvZqvp14Yl
-   Q==;
-X-CSE-ConnectionGUID: 4za8R44LRV6jAQLv7612xQ==
-X-CSE-MsgGUID: AEM18N5DS8qWWgbo6yI6dQ==
-X-IronPort-AV: E=McAfee;i="6700,10204,11344"; a="40496829"
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="40496829"
-Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by fmvoesa108.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 13 Feb 2025 18:14:28 -0800
-X-CSE-ConnectionGUID: 44AlKqwmSfuUTo8RhOWkxQ==
-X-CSE-MsgGUID: l9fawTbXQF2wCGXLKFxngA==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.13,284,1732608000"; 
-   d="scan'208";a="118338351"
-Received: from orsmsx603.amr.corp.intel.com ([10.22.229.16])
-  by orviesa004.jf.intel.com with ESMTP/TLS/AES256-GCM-SHA384; 13 Feb 2025 18:14:27 -0800
-Received: from ORSMSX901.amr.corp.intel.com (10.22.229.23) by
- ORSMSX603.amr.corp.intel.com (10.22.229.16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:14:27 -0800
-Received: from orsedg603.ED.cps.intel.com (10.7.248.4) by
- ORSMSX901.amr.corp.intel.com (10.22.229.23) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.2.1544.14 via Frontend Transport; Thu, 13 Feb 2025 18:14:27 -0800
-Received: from NAM12-BN8-obe.outbound.protection.outlook.com (104.47.55.177)
- by edgegateway.intel.com (134.134.137.100) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2507.44; Thu, 13 Feb 2025 18:14:25 -0800
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
- b=b+qSWNVC3FiHaq+HAvz/dQXY2p5bKc4FLE7WzWecG8oH4r4Ydr5hET9T2ce9xxwNeiCMH2uAM9+ksg0dKYH/QiFLSlNf1B8hvF3u2ftNFgilaSysHaYK8kS3S84/oCZywcfTfnWyV815WbbcWrpK5WDyCW/aSVC56q5PJxmG+wsQP6nGXz1h0cqoQcoIpufTmQ06DPCdlP4UMElw6mJC9HB5l65SB+yJZlMkiwG57RbHcFz13WTU6rLTvge0JvqXLLIYsWE5GXBZTdqhM+0cnynZyLkfVLO/8stntI3poB7vPsfUUKaUgQ/T0j6cKO41JZ4C6MrxrDQ8ZttR/LH2/g==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector10001;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=wp3vxsiQuK0KTKhLu+wUI/yQNukY3dHJ3DN6sMRQwWM=;
- b=yFZlIuYzcXx92iFj7UCNhrNvAzd25hmnZwbPSgB3j1aSxBZH/6skawFEJ5LAX+C92VfixWJ4ujZ2WC5US4ZxHikUo46T4+j0lzfmGKJ3nfNpX0B50/MVGdqwE8Vwxe0TKh3/7z4YfqOiwdFn/i7VLMliU8DIjIQGLPKF5ksjU3Z8pPA3IDtVfTh87UH5XhTSuf/z/3eDdK8Fkkk6Mr7vMh0jLyQxM9Rt+XuGquG0GMJ3opNhXGJtsxy+XYOzLBLEBmqomBAF+psJkFJMnltCMPGNJqMF7JIxRTK1TAOw2O8Pd9faWynSxodUBuHxysUFIM8wI9E++5ue/IWdG1WBJQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Authentication-Results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
- by LV3PR11MB8743.namprd11.prod.outlook.com (2603:10b6:408:20e::20) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8445.17; Fri, 14 Feb
- 2025 02:13:42 +0000
-Received: from LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c]) by LV3PR11MB8603.namprd11.prod.outlook.com
- ([fe80::4622:29cf:32b:7e5c%3]) with mapi id 15.20.8445.013; Fri, 14 Feb 2025
- 02:13:42 +0000
-Date: Fri, 14 Feb 2025 10:13:28 +0800
-From: kernel test robot <oliver.sang@intel.com>
-To: zhangmingyi <zhangmingyi5@huawei.com>
-CC: <oe-lkp@lists.linux.dev>, <lkp@intel.com>, Xin Liu <liuxin350@huawei.com>,
-	<netdev@vger.kernel.org>, <bpf@vger.kernel.org>, <mptcp@lists.linux.dev>,
-	<ast@kernel.org>, <daniel@iogearbox.net>, <andrii@kernel.org>,
-	<martin.lau@linux.dev>, <song@kernel.org>, <yhs@fb.com>,
-	<john.fastabend@gmail.com>, <kpsingh@kernel.org>, <sdf@google.com>,
-	<haoluo@google.com>, <jolsa@kernel.org>, <linux-kernel@vger.kernel.org>,
-	<yanan@huawei.com>, <wuchangye@huawei.com>, <xiesongyang@huawei.com>,
-	<liwei883@huawei.com>, <tianmuyang@huawei.com>, <zhangmingyi5@huawei.com>,
-	<oliver.sang@intel.com>
-Subject: Re: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or
- set sockets
-Message-ID: <202502140959.f66e2ba6-lkp@intel.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Disposition: inline
-In-Reply-To: <20250210134550.3189616-2-zhangmingyi5@huawei.com>
-X-ClientProxiedBy: SG3P274CA0010.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::22)
- To LV3PR11MB8603.namprd11.prod.outlook.com (2603:10b6:408:1b6::9)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TS7e7Sot"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EED8C4CED1;
+	Fri, 14 Feb 2025 03:53:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739505198;
+	bh=DaaZYMVpMr6rDFrHGFQDXW0cpI04Kg3t+WecM4wdj8I=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=TS7e7Sot/4SDe+54PBc/Sl9HNSPq9N02c0XXP0iTrEc4cTaxBRI5vPJ952WQU9LOk
+	 bEmEsjtm6eNM9/PQa7ZR64J5ofknv/zq4MBYMya39T/V1UXj1r0omaehl5FmvkXBhK
+	 ciedrBPEddnBIjPUWgg46rxa3aP2G08nF+leWIqPEdKm8Wzv9rhhsynAkSDDEko2sW
+	 2tQiIjNA8oKARnruhYYCVWqtsWvA4d8XNwK68gbW404kcY3SaE/Mcz9vpAY0aop/Uj
+	 uwVTpGZKU7xleNK6QSPg5T/X7catS7IM4BJ0UUBPya7N0XmhLBn5TB6r9S0gW3zkPq
+	 myPCcFWxTF0iQ==
+Message-ID: <68b3708ed177857714db3b75d3c4a25fd5b226a0.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 0/3] BPF path manager, part 4
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Fri, 14 Feb 2025 11:53:13 +0800
+In-Reply-To: <6f5e14aa3e457fdbecc174932b57ce1b04c50ce1.camel@kernel.org>
+References: <cover.1737012662.git.tanggeliang@kylinos.cn>
+	 <0a072aa0-df72-4c38-b31d-c7a3349377fa@kernel.org>
+	 <6f5e14aa3e457fdbecc174932b57ce1b04c50ce1.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-MS-PublicTrafficType: Email
-X-MS-TrafficTypeDiagnostic: LV3PR11MB8603:EE_|LV3PR11MB8743:EE_
-X-MS-Office365-Filtering-Correlation-Id: 63c9b14a-b078-4726-b768-08dd4c9d343b
-X-MS-Exchange-SenderADCheck: 1
-X-MS-Exchange-AntiSpam-Relay: 0
-X-Microsoft-Antispam: BCL:0;ARA:13230040|1800799024|7416014|376014|366016|7053199007;
-X-Microsoft-Antispam-Message-Info: =?us-ascii?Q?hqkd38RKh4A6vMDsoG3hr6aezeFfzOnWCm6Tm6PCdPjn+DZb83L8kF0yMx62?=
- =?us-ascii?Q?tjhpCtXwKZETXP2qnJrTnUWoXGhPEu0bdghiCFPYaQ3ZR73pcE1Uu9IEzDAy?=
- =?us-ascii?Q?rpWLDYvbueotlMqLzLIOrVtVr7Cymw5CsWEPGzNBx+wZrRCj9dVNvMeMxtD2?=
- =?us-ascii?Q?iVOILFC0zrN+d79jIJ+KmEWhKuS9mVKN8x3DiqKlzFrHKn4S4K1jT/o/q7rU?=
- =?us-ascii?Q?rGuMJJZQDGexXRbn6oYyTdKQFlrw359/QQOgoXtuaiqQHt0uTdQ7rR9vEimy?=
- =?us-ascii?Q?cEmy+kaf2N73OSKheudjUEq7hsJAeLjBvvt74hYQXy4x9t1HF47pNjxKmqDS?=
- =?us-ascii?Q?zPZz5LFVMeADmfoIQ/SX7vfUCCV8fcwrl76KSwqkbiRU/phyo709CS4vGsec?=
- =?us-ascii?Q?i8YjGaFPQXygORaILfhC63cvAuN83MuYTlTvY1AVBfpkTiqzlyc57vrXbrCH?=
- =?us-ascii?Q?Trmnfe0QP9wnhbkEsE3JH6Xax5eSU5oark6zRYg+Wy0jpOaaTw6VH85gaP9Z?=
- =?us-ascii?Q?vx6XzYUMvkO1qUCnJ3lxfK84vsLSPDx8plf1Kyf7S46QYTenVrQdOCXqPdpC?=
- =?us-ascii?Q?dMy+Ttqlr/Gqjh3oWdrguPYUs3A4obIOa9UOYseRDI9qYmY7cKtOV6Z/sn+f?=
- =?us-ascii?Q?x76xNWGxejyEjLD6YJ2vP+7Sqlb03NaaGDzQ75+atQIvs7vEs31SDZeDZUrz?=
- =?us-ascii?Q?yPLd1rfYB3IJUTygNH8vxKEznX/GDYD6i4V4z5suTykMc0Pb/AkjhfNEtKG9?=
- =?us-ascii?Q?kFS0F6AzkM2PsnIKuampqhhPsjsH/wnydSOWtAoqA7/MnW5hjsujzUXiOb6m?=
- =?us-ascii?Q?jyRTb39Q1MZDVd6SmQKQ6fqHZIxruPWXqPMEWO+4V2+jwRJco7T6Yf04ReHc?=
- =?us-ascii?Q?mOo8r2tvHS1wwe+rPzBg3arEwd1ZRIMZRN2uKpqtmuc90O/3ssWNCXs87opW?=
- =?us-ascii?Q?ldqSF8TsrMlfxygSpoZ+CWkRdJzXtyzayL6eClcezAKPx3AlWZtDHrBfCxlF?=
- =?us-ascii?Q?u+JeiSu2aj0MHvGpM4UQTJauNWGkLThaiImACCN+m8SRQ2DRPsO01+RJASyT?=
- =?us-ascii?Q?IMg0xtnAzr58uHUNBcokj1BY7JA/Ko/EG6AZkqxdEMdVNhjOECTFmoWHcbKr?=
- =?us-ascii?Q?tZ5x4JmtV7FZvrdnUcgDtsOusM3JzgTPbmf5z55Qh7lRkJ5ZVyCOqSiAG93t?=
- =?us-ascii?Q?IXJYDK9uozSehv9SSjdC1M3rN6+TeSRdv9N3i7oET7JNefe3GwOyXsUebhCB?=
- =?us-ascii?Q?DobWv4wjDr4X64+H1gdASZEg+xJdZ+x3rZNClwBGYEw0EuUVaAW9KdKBjx8E?=
- =?us-ascii?Q?UH06FDLnRnB4L7kjA1kNdIfHK134z10uWd8fi9MIdfZVOA=3D=3D?=
-X-Forefront-Antispam-Report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:LV3PR11MB8603.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230040)(1800799024)(7416014)(376014)(366016)(7053199007);DIR:OUT;SFP:1101;
-X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
-X-MS-Exchange-AntiSpam-MessageData-0: =?us-ascii?Q?nzq4F3LrmFo5gRuykN2J6c1juedBaIWF7B+XibKQbi4S6f4ZoY2Vg43JSJI+?=
- =?us-ascii?Q?iCHq94cs2KK5RPrZe18yma03icNkK0grI1ePU2G6ddylotk9rA0c8/Vwh/oY?=
- =?us-ascii?Q?rNbQIXpNuygiVnaYtVFSEGWnk/O8UJPeZYhbT6pPJlNG1GkfmBztd6Xr1qAo?=
- =?us-ascii?Q?twQ4nhCK4lXzS8uRadAWU/mAqZRDCFhSZMeJVGPvSYDTa7Xg6DpUsnsOEsVl?=
- =?us-ascii?Q?yt8oCNE9ayqGvCSvA/+XSJ/pHsmqDcVtbAaiUykU+VVCX0/YjqF6rv124snf?=
- =?us-ascii?Q?PdhkmAPzGwyz0k8/ITWGaW9ybEC/FWMKjLcXPnuXjNf/uHRPDLjphxipC6qM?=
- =?us-ascii?Q?22uYc6yFOQ8SL+wra75SkxjbXGpbJTpQ6T+nrQSK1GZUJiTDJ9MVOQJPBnWI?=
- =?us-ascii?Q?6aOZ91lwu1BvzOm+gHMP8M228VZfFIRcFxA/bRZOiJ4VHFdVjsYPsIFl3/2J?=
- =?us-ascii?Q?G82GWjCVAQbHKDC2lmWP09b3rSaEhaPPlghoftxJG+Y7LsfKzjvwyvC/hBqG?=
- =?us-ascii?Q?K7RilGmuKsl4WoZHuULGgzGJvkWwEO98Y7nJTRwL9QQkPiFfHzX4vGo4F5kV?=
- =?us-ascii?Q?GsbClLpQAx3B80Y8bYOkqVPmre8nu7JQt3YQa0Y+GlHfgopMNFg+sagYn0Ph?=
- =?us-ascii?Q?rnYzL4dxGFvn2irVCFCvcCHEej6xjDltiBvC/NVhdIn5LAfdGrtyiQvRZeQn?=
- =?us-ascii?Q?QMv7pAInVd0hJOsts5FNio4Pun+XEej1E4CwGGtdP1Fl79nYMtLwMpEhDab3?=
- =?us-ascii?Q?puco6wJRQT1FYz11/+tGzYq+ByiJdHmEW0GHtqZ1KkIMYR4Vj4XrcN55jLIJ?=
- =?us-ascii?Q?5rvSA92mc6efOunWezoCqskwLeh50dtkfgbdTaFThhRkYp2MdyiGJY+wQ7IZ?=
- =?us-ascii?Q?Wm6wq0IjmHjYBfbu5smUNVeZGgSeWsBmSa4pUTLUeOsROO94SDNP1phYeHFz?=
- =?us-ascii?Q?PksOUQo/komrp8j9nzqb3HhGhfvUtfe1vM4AWKFDLUTyPFoTlSZQuORDsyWZ?=
- =?us-ascii?Q?k/QJMmyxrwf5odHr3jpMbkOkfuUcVEHdB/YS9e2A0VMrWmz/i3wePyu0rngq?=
- =?us-ascii?Q?zWIQWVmnectXAyNcv9GPsZXLhCpcJhq8SYApXGKTTQNHxE2RBnhk+7aNaLV/?=
- =?us-ascii?Q?2ucmYFqwbqo1YIIu2Gt7F3qqjLmwFWOkiR5ETOeZet4DgTIx1Cba7xWfVWc/?=
- =?us-ascii?Q?aC3zknkuxqUBFYO9JIojz/ivedYB+Hh4ldvDpZeSOF9E0dMXjpWWaq1yEwWh?=
- =?us-ascii?Q?I1YPr5ndtIkDq3gs1X3tukcPd/s1chc3k/mQ747dZxnuGvALtgG6nhvER7I7?=
- =?us-ascii?Q?8gUwDAA5ERcMYVG3DUDCJJZWZ3YrJl/e9/KAAeGTJIf2y/O09LwxZfO7Jogd?=
- =?us-ascii?Q?hYg6AoEqW4kHkq/6S9SwSTz82R/AOCUp7vM5sZptjkqe+pvH3Y4J44fj16rx?=
- =?us-ascii?Q?13L1y/+3+sxT/jV7sjM4y3eDUSotvJvGmsBwfadtkHnLCyHzYiz9P+krTjCc?=
- =?us-ascii?Q?LvPpPqkdCiUuXEFgbqEYdm+poCEYkEaGo7wYkqv229E9IFkgCJPE13QY011P?=
- =?us-ascii?Q?YJFe4M9mWTwuDrJTkTuuDBJe+O3wXc5+5HR+1UR/EYXdv7Wghul0U0x2TW4g?=
- =?us-ascii?Q?3A=3D=3D?=
-X-MS-Exchange-CrossTenant-Network-Message-Id: 63c9b14a-b078-4726-b768-08dd4c9d343b
-X-MS-Exchange-CrossTenant-AuthSource: LV3PR11MB8603.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-OriginalArrivalTime: 14 Feb 2025 02:13:42.7510
- (UTC)
-X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
-X-MS-Exchange-CrossTenant-Id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-MailboxType: HOSTED
-X-MS-Exchange-CrossTenant-UserPrincipalName: 4BXgMw1ZZ/IgNCOHQ8Cits7B+L6eLZPr/wROpyaXX3dcwTqOelSb87U+/B58dBnHjZMadOQZUOP7zxexEq/abA==
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: LV3PR11MB8743
-X-OriginatorOrg: intel.com
+Content-Transfer-Encoding: 8bit
 
+Hi Matt,
 
+On Fri, 2025-02-07 at 19:21 +0800, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for your review.
+> 
+> On Thu, 2025-01-23 at 13:43 +0100, Matthieu Baerts wrote:
+> > Hi Geliang,
+> > 
+> > On 16/01/2025 08:38, Geliang Tang wrote:
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > 
+> > > v3:
+> > >  - rename the 2nd parameter of get_local_id() from 'local' to
+> > > 'skc'.
+> > >  - keep the 'msk_sport' check in
+> > > mptcp_userspace_pm_get_local_id().
+> > >  - return 'err' instead of '0' in userspace_pm_subflow_create().
+> > >  - drop 'ret' variable inmptcp_pm_data_reset().
+> > >  - fix typos in commit log.
+> > > 
+> > > Depends on: "BPF path manager, part 3" v4
+> > > Based-on: <cover.1737012165.git.tanggeliang@kylinos.cn>
+> > > 
+> > > v2:
+> > >  - update get_local_id interface in patch 2.
+> > > 
+> > > get_addr() and dump_addr() interfaces of BPF userspace pm are
+> > > dropped
+> > > as Matt suggested.
+> > > 
+> > > In order to implement BPF userspace path manager, it is necessary
+> > > to
+> > > unify the interfaces of the path manager. This set contains some
+> > > cleanups and refactoring to unify the interfaces in kernel space.
+> > > Finally, define a struct mptcp_pm_ops for a userspace path
+> > > manager
+> > > like this:
+> > 
+> > Thank you for this series.
+> > 
+> > From what I see, when a BPF path-manager is loaded, it will replace
+> > the
+> > userspace one, right?
+> > 
+> > It looks a bit confusing to know when the (netlink) userspace PM is
+> > used, and when the BPF one is. Why not defining a new type instead?
+> > Similar to what we have with the packet scheduler?
+> > net.mptcp.pm_type
+> > could be extended to select a BPF one of a certain ID, no? (or a
+> > new
+> > type for BPF, then another sysctl to select the name?)
+> > 
+> > Why not, instead, and similar to the scheduler, have a proper
+> > path-manager interface?
+> > 
+> > For the moment, when the core gets something that might interest
+> > the
+> > PM,
+> > it will directly call a PM helper, then the right PM is picked
+> > thanks
+> > to
+> > mptcp_pm_is_userspace() or mptcp_pm_is_kernel(). That starts to get
+> > a
+> > bit messy when we want to add more PMs. Instead, the core could
+> > simply
+> > use the new ops structure, using a pointer stored in the msk.
+> > 
+> > In other words, when the core needs to notify the PM, it will
+> > simply
+> > call (directly, or via the PM worker): msk->pm.ops-
+> > > something_happened()
+> > (or via helpers in pm.c that could check if the callback is set,
+> > and
+> > call mptcp_event() for example)
+> > 
+> > That way, we have a clear separation of all the different PMs, and
+> > the
+> > interface is clear to understand the interactions between the core
+> > and
+> > the PMs.
+> > 
+> > WDYT?
+> > 
+> > I hope this doesn't change all your plans. But I think having such
+> > interface would help for the maintenance in general.
+> 
+> It would be best if struct mptcp_pm_ops could be used to represent
+> both
+> userspace pm and in-kernel pm, but it's not easy to represent in-
+> kernel
+> pm right now, and the code in pm_netlink.c needs to be adjusted. So I
+> still use struct mptcp_pm_ops to implement
+> MPTCP_PM_TYPE_BPF_USERSPACE
+> first in the set, and use mptcp_pm_is_userspace() function to
+> distinguish different PMs.
 
-Hello,
+I have made some new progress recently. I adjusted the code in
+pm_netlink.c and implemented get_local_id(), get_priority() and
+set_priority() interfaces for in-kernel pm. It seems that we can indeed
+use struct mptcp_pm_ops to represent both userspace pm and in-kernel
+pm, and then remove the use of mptcp_pm_is_userspace(). I will update
+the new version of this set in the near future.
 
-kernel test robot noticed "BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c" on:
+Thanks,
+-Geliang
 
-commit: 8f510de3f26b2fabaf47eacd59053469e9c32754 ("[PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or set sockets")
-url: https://github.com/intel-lab-lkp/linux/commits/zhangmingyi/bpf-next-Introduced-to-support-the-ULP-to-get-or-set-sockets/20250210-215203
-base: https://git.kernel.org/cgit/linux/kernel/git/bpf/bpf-next.git master
-patch link: https://lore.kernel.org/all/20250210134550.3189616-2-zhangmingyi5@huawei.com/
-patch subject: [PATCH v2 1/2] bpf-next: Introduced to support the ULP to get or set sockets
-
-in testcase: trinity
-version: trinity-i386-abe9de86-1_20230429
-with following parameters:
-
-	runtime: 300s
-	group: group-03
-	nr_groups: 5
-
-
-
-config: i386-randconfig-054-20250212
-compiler: gcc-12
-test machine: qemu-system-i386 -enable-kvm -cpu SandyBridge -smp 2 -m 4G
-
-(please refer to attached dmesg/kmsg for entire log/backtrace)
-
-
-+-----------------------------------------------------------------------------+------------+------------+
-|                                                                             | 9b6cdaf2ac | 8f510de3f2 |
-+-----------------------------------------------------------------------------+------------+------------+
-| BUG:sleeping_function_called_from_invalid_context_at_kernel/locking/mutex.c | 0          | 6          |
-+-----------------------------------------------------------------------------+------------+------------+
-
-
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <oliver.sang@intel.com>
-| Closes: https://lore.kernel.org/oe-lkp/202502140959.f66e2ba6-lkp@intel.com
-
-
-[   71.099773][ T3759] BUG: sleeping function called from invalid context at kernel/locking/mutex.c:562
-[   71.101798][ T3759] in_atomic(): 0, irqs_disabled(): 0, non_block: 0, pid: 3759, name: trinity-c4
-[   71.103659][ T3759] preempt_count: 0, expected: 0
-[   71.104658][ T3759] RCU nest depth: 1, expected: 0
-[   71.105669][ T3759] 2 locks held by trinity-c4/3759:
-[ 71.106777][ T3759] #0: ecffcd80 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock (include/net/sock.h:1625) 
-[ 71.108460][ T3759] #1: c3500498 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336) 
-[   71.110397][ T3759] CPU: 1 UID: 65534 PID: 3759 Comm: trinity-c4 Tainted: G                T  6.14.0-rc1-00030-g8f510de3f26b #1 8ad64aae41fa4cb8babad52c8f50e0a7d5e34569
-[   71.110406][ T3759] Tainted: [T]=RANDSTRUCT
-[   71.110407][ T3759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   71.110410][ T3759] Call Trace:
-[ 71.110416][ T3759] dump_stack_lvl (lib/dump_stack.c:123) 
-[ 71.110423][ T3759] dump_stack (lib/dump_stack.c:130) 
-[ 71.110428][ T3759] __might_resched (kernel/sched/core.c:8767) 
-[ 71.110440][ T3759] __might_sleep (kernel/sched/core.c:8696 (discriminator 17)) 
-[ 71.110446][ T3759] __mutex_lock (include/linux/kernel.h:73 kernel/locking/mutex.c:562 kernel/locking/mutex.c:730) 
-[ 71.110452][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335) 
-[ 71.110462][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323) 
-[ 71.110470][ T3759] ? lock_sock_nested (net/core/sock.c:3653) 
-[ 71.110481][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783) 
-[ 71.110486][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.110494][ T3759] tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.110505][ T3759] tcp_set_ulp (net/ipv4/tcp_ulp.c:140 net/ipv4/tcp_ulp.c:166) 
-[ 71.110513][ T3759] do_tcp_setsockopt (net/ipv4/tcp.c:3747) 
-[ 71.110534][ T3759] tcp_setsockopt (net/ipv4/tcp.c:4032) 
-[ 71.110542][ T3759] ? sock_common_recvmsg (net/core/sock.c:3833) 
-[ 71.110548][ T3759] sock_common_setsockopt (net/core/sock.c:3838) 
-[ 71.110561][ T3759] do_sock_setsockopt (net/socket.c:2298) 
-[ 71.110577][ T3759] __sys_setsockopt (net/socket.c:2323) 
-[ 71.110592][ T3759] __ia32_sys_setsockopt (net/socket.c:2326) 
-[ 71.110599][ T3759] ia32_sys_call (kbuild/obj/consumer/i386-randconfig-054-20250212/./arch/x86/include/generated/asm/syscalls_32.h:367) 
-[ 71.110607][ T3759] do_int80_syscall_32 (arch/x86/entry/common.c:165 arch/x86/entry/common.c:339) 
-[ 71.110616][ T3759] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
-[   71.110621][ T3759] EIP: 0xb4014092
-[ 71.110626][ T3759] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 f8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-All code
-========
-   0:	00 00                	add    %al,(%rax)
-   2:	00 e9                	add    %ch,%cl
-   4:	90                   	nop
-   5:	ff                   	(bad)
-   6:	ff                   	(bad)
-   7:	ff                   	(bad)
-   8:	ff a3 24 00 00 00    	jmp    *0x24(%rbx)
-   e:	68 30 00 00 00       	push   $0x30
-  13:	e9 80 ff ff ff       	jmp    0xffffffffffffff98
-  18:	ff a3 f8 ff ff ff    	jmp    *-0x8(%rbx)
-  1e:	66 90                	xchg   %ax,%ax
-	...
-  28:	cd 80                	int    $0x80
-  2a:*	c3                   	ret		<-- trapping instruction
-  2b:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  32:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-  38:	8b 1c 24             	mov    (%rsp),%ebx
-  3b:	c3                   	ret
-  3c:	8d                   	.byte 0x8d
-  3d:	b4 26                	mov    $0x26,%ah
-	...
-
-Code starting with the faulting instruction
-===========================================
-   0:	c3                   	ret
-   1:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-   8:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-   e:	8b 1c 24             	mov    (%rsp),%ebx
-  11:	c3                   	ret
-  12:	8d                   	.byte 0x8d
-  13:	b4 26                	mov    $0x26,%ah
-	...
-[   71.110630][ T3759] EAX: ffffffda EBX: 00000134 ECX: 00000006 EDX: 0000001f
-[   71.110634][ T3759] ESI: 08fee650 EDI: 00000004 EBP: 000012cf ESP: bfc1c538
-[   71.110638][ T3759] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-[   71.182507][ T3759]
-[   71.182999][ T3759] =============================
-[   71.183907][ T3759] [ BUG: Invalid wait context ]
-[   71.184819][ T3759] 6.14.0-rc1-00030-g8f510de3f26b #1 Tainted: G        W       T
-[   71.186327][ T3759] -----------------------------
-[   71.187265][ T3759] trinity-c4/3759 is trying to lock:
-[ 71.188287][ T3759] c37b35e0 (tcpv4_prot_mutex){....}-{4:4}, at: tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[   71.189847][ T3759] other info that might help us debug this:
-[   71.191018][ T3759] context-{5:5}
-[   71.191678][ T3759] 2 locks held by trinity-c4/3759:
-[ 71.192635][ T3759] #0: ecffcd80 (sk_lock-AF_INET){+.+.}-{0:0}, at: lock_sock (include/net/sock.h:1625) 
-[ 71.194220][ T3759] #1: c3500498 (rcu_read_lock){....}-{1:3}, at: rcu_lock_acquire (include/linux/rcupdate.h:336) 
-[   71.196078][ T3759] stack backtrace:
-[   71.196797][ T3759] CPU: 0 UID: 65534 PID: 3759 Comm: trinity-c4 Tainted: G        W       T  6.14.0-rc1-00030-g8f510de3f26b #1 8ad64aae41fa4cb8babad52c8f50e0a7d5e34569
-[   71.196807][ T3759] Tainted: [W]=WARN, [T]=RANDSTRUCT
-[   71.196809][ T3759] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.16.2-debian-1.16.2-1 04/01/2014
-[   71.196812][ T3759] Call Trace:
-[ 71.196818][ T3759] dump_stack_lvl (lib/dump_stack.c:123) 
-[ 71.196825][ T3759] dump_stack (lib/dump_stack.c:130) 
-[ 71.196830][ T3759] __lock_acquire (kernel/locking/lockdep.c:4830 kernel/locking/lockdep.c:4900 kernel/locking/lockdep.c:5178) 
-[ 71.196840][ T3759] lock_acquire (kernel/locking/lockdep.c:469 kernel/locking/lockdep.c:5853) 
-[ 71.196846][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196856][ T3759] ? __schedule (kernel/sched/core.c:5380) 
-[ 71.196866][ T3759] __mutex_lock (kernel/locking/mutex.c:587 kernel/locking/mutex.c:730) 
-[ 71.196872][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196878][ T3759] ? rcu_read_unlock (include/linux/rcupdate.h:335) 
-[ 71.196885][ T3759] ? mark_held_locks (kernel/locking/lockdep.c:4323) 
-[ 71.196889][ T3759] ? lock_sock_nested (net/core/sock.c:3653) 
-[ 71.196898][ T3759] mutex_lock_nested (kernel/locking/mutex.c:783) 
-[ 71.196904][ T3759] ? tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196909][ T3759] tls_init (net/tls/tls_main.c:934 net/tls/tls_main.c:993) 
-[ 71.196916][ T3759] tcp_set_ulp (net/ipv4/tcp_ulp.c:140 net/ipv4/tcp_ulp.c:166) 
-[ 71.196923][ T3759] do_tcp_setsockopt (net/ipv4/tcp.c:3747) 
-[ 71.196934][ T3759] tcp_setsockopt (net/ipv4/tcp.c:4032) 
-[ 71.196939][ T3759] ? sock_common_recvmsg (net/core/sock.c:3833) 
-[ 71.196946][ T3759] sock_common_setsockopt (net/core/sock.c:3838) 
-[ 71.196952][ T3759] do_sock_setsockopt (net/socket.c:2298) 
-[ 71.196961][ T3759] __sys_setsockopt (net/socket.c:2323) 
-[ 71.196967][ T3759] __ia32_sys_setsockopt (net/socket.c:2326) 
-[ 71.196972][ T3759] ia32_sys_call (kbuild/obj/consumer/i386-randconfig-054-20250212/./arch/x86/include/generated/asm/syscalls_32.h:367) 
-[ 71.196979][ T3759] do_int80_syscall_32 (arch/x86/entry/common.c:165 arch/x86/entry/common.c:339) 
-[ 71.196985][ T3759] entry_INT80_32 (arch/x86/entry/entry_32.S:942) 
-[   71.196990][ T3759] EIP: 0xb4014092
-[ 71.196995][ T3759] Code: 00 00 00 e9 90 ff ff ff ff a3 24 00 00 00 68 30 00 00 00 e9 80 ff ff ff ff a3 f8 ff ff ff 66 90 00 00 00 00 00 00 00 00 cd 80 <c3> 8d b4 26 00 00 00 00 8d b6 00 00 00 00 8b 1c 24 c3 8d b4 26 00
-All code
-========
-   0:	00 00                	add    %al,(%rax)
-   2:	00 e9                	add    %ch,%cl
-   4:	90                   	nop
-   5:	ff                   	(bad)
-   6:	ff                   	(bad)
-   7:	ff                   	(bad)
-   8:	ff a3 24 00 00 00    	jmp    *0x24(%rbx)
-   e:	68 30 00 00 00       	push   $0x30
-  13:	e9 80 ff ff ff       	jmp    0xffffffffffffff98
-  18:	ff a3 f8 ff ff ff    	jmp    *-0x8(%rbx)
-  1e:	66 90                	xchg   %ax,%ax
-	...
-  28:	cd 80                	int    $0x80
-  2a:*	c3                   	ret		<-- trapping instruction
-  2b:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-  32:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-  38:	8b 1c 24             	mov    (%rsp),%ebx
-  3b:	c3                   	ret
-  3c:	8d                   	.byte 0x8d
-  3d:	b4 26                	mov    $0x26,%ah
-	...
-
-Code starting with the faulting instruction
-===========================================
-   0:	c3                   	ret
-   1:	8d b4 26 00 00 00 00 	lea    0x0(%rsi,%riz,1),%esi
-   8:	8d b6 00 00 00 00    	lea    0x0(%rsi),%esi
-   e:	8b 1c 24             	mov    (%rsp),%ebx
-  11:	c3                   	ret
-  12:	8d                   	.byte 0x8d
-  13:	b4 26                	mov    $0x26,%ah
-	...
-[   71.196999][ T3759] EAX: ffffffda EBX: 00000134 ECX: 00000006 EDX: 0000001f
-[   71.197004][ T3759] ESI: 08fee650 EDI: 00000004 EBP: 000012cf ESP: bfc1c538
-[   71.197008][ T3759] DS: 007b ES: 007b FS: 0000 GS: 0033 SS: 007b EFLAGS: 00000296
-
-
-
-The kernel config and materials to reproduce are available at:
-https://download.01.org/0day-ci/archive/20250214/202502140959.f66e2ba6-lkp@intel.com
-
-
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+> 
+> In the future, if we feel it's necessary, we can add a
+> MPTCP_PM_TYPE_BPF_KERENL pm type to implement BPF in-kernel pm, and
+> then gradually remove the use of mptcp_pm_is_userspace() and
+> mptcp_pm_is_kernel().
+> 
+> Thanks,
+> -Geliang
+> 
+> > 
+> > 
+> > > struct mptcp_pm_ops {
+> > >  int (*address_announce)(struct mptcp_sock *msk,
+> > >  struct mptcp_pm_addr_entry *local);
+> > >  int (*address_remove)(struct mptcp_sock *msk, u8 id);
+> > >  int (*subflow_create)(struct mptcp_sock *msk,
+> > >        struct mptcp_pm_addr_entry *local,
+> > >        struct mptcp_addr_info *remote);
+> > >  int (*subflow_destroy)(struct mptcp_sock *msk,
+> > >         struct mptcp_pm_addr_entry *local,
+> > >         struct mptcp_addr_info *remote);
+> > 
+> > Small detail: I would add a 'd' at the end to clearly understand it
+> > is
+> > linked to an event, not an action, e.g. a new address has just been
+> > announced, here is a notification for the PM. So:
+> > 
+> >   address_announced
+> >   address_removed
+> >   subflow_created
+> >   subflow_destroyed
+> > 
+> > >  int (*get_local_id)(struct mptcp_sock *msk,
+> > >      struct mptcp_pm_addr_entry *skc);
+> > >  u8 (*get_flags)(struct mptcp_sock *msk,
+> > >  struct mptcp_addr_info *skc);
+> > >  int (*set_flags)(struct mptcp_sock *msk,
+> > >  struct mptcp_pm_addr_entry *local,
+> > >  struct mptcp_addr_info *remote);
+> > 
+> > I think it should only be get_priority and set_priority (i.e.
+> > backup):
+> > the core doesn't need to know the other (internal) flags.
+> > 
+> > Also, when looking at mptcp_event_type, I think some events are
+> > missing
+> > here for a PM to handle the different cases:
+> > 
+> >   created: a new MPTCP has been created, to init some stuff
+> >   established: fully established connection, the PM can trigger
+> > actions
+> >   closed: to free some stuff
+> > 
+> > And probably 'listerner_created' and 'listener_closed' too.
+> > 
+> > One last thing; I guess the current 'subflow_created' is more a
+> > 'subflow_established', no?
+> > And 'subflow_destroyed' could be 'subflow_closed' to keep the same
+> > name,
+> > (and also because I guess this will be called just before it is
+> > going
+> > to
+> > be destroyed).
+> > 
+> > > 
+> > >  u8 type;
+> > 
+> > Either a type (0 for in-kernel, 1 for userspace, >1 for BPF) or a
+> > name.
+> > 
+> > >  struct module *owner;
+> > >  struct list_head list;
+> > > 
+> > >  void (*init)(struct mptcp_sock *msk);
+> > >  void (*release)(struct mptcp_sock *msk);
+> > 
+> > Is the init/release done only once, or for each MPTCP connection
+> > handled
+> > by this PM?
+> > 
+> > > } ____cacheline_aligned_in_smp;
+> > > 
+> > > Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/74
+> > 
+> > Better to wait to have the full BPF interface and an example in the
+> > selftests before closing this I think.
+> > 
+> > 
+> > Two last thing:
+> > 
+> > - better keeping the 'mptcp_pm' prefixes for the new helpers, e.g.
+> > mptcp_pm_register instead of mptcp_register_path_manager.
+> > 
+> > - for the commit title, maybe clearer to prefix them with 'mptcp:
+> > pm:',
+> > and even 'mptcp: pm: in-kernel:', 'mptcp: pm: userspace:' and
+> > 'mptcp:
+> > pm: bpf' when it makes sense.
+> > 
+> > Cheers,
+> > Matt
+> 
+> 
 
