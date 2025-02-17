@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A2073D68
-	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 08:37:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 833DE19ABC2
+	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 08:38:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739781480; cv=none; b=H2wnX7ETCzKLfCF8PVPgnTFZjwxw97sMS9R4TVrXJ5YtLjiGVLViMrsruZgkFqRwfBHWCnxJSvBeBdP7Zjk9vhXOXynGflAPKyJm20lwnvbnYDAUclUagHFfxYzeEV3GfrWh8CLbOlhEJHAj4YbjubNzORdMhWAEhTb8OPGYXvM=
+	t=1739781481; cv=none; b=gxyBk1KEC3Xw7jpANzwTXZlCZpfuJk4EfvGR3lFQzV/PBNFDbsW9fSkAWfqiVgTt01rKQjZ+t8gJu7eHUDbsZiRJnlT8+kZarlCbvySn7nPB8mafZAYGUaoKONhfKUms9XuRdWVuscf34F4yqDy7AWOGKEu7s8xzS3xtAypIteY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739781480; c=relaxed/simple;
-	bh=JHeqj+JdMktcSEHNKttFrFlRMjFHBs9B0aCSjSWyx3Q=;
+	s=arc-20240116; t=1739781481; c=relaxed/simple;
+	bh=tD8mQGd814n0mULatxAyMzelWfFxFcQJl0e5tNaXbpQ=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=NphTO3RnWzzYtXCBa/Wa99IZQYF+IOEDZeFHXdAtA/0I0+zH99pZOaHW1m2PoaPt9U4DIBtmUi0WlWoYdYwkPHOsC+awXxVWkxWzdWj0YEoOVMuIzAaymS3il5v4RemMYt1Pdrn5KxRnDVbBWpvsd6V/UQ0j9HK2BfLs2t/UIbo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qZr+uFnH; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=QJEtq+kVuJciYYRRmQrlPVetoG0X1Z6gfPJsdi3uAYATquqP8B5MS4jC3POP4qYHw2UYBZpmNJnuhztyVRTAWEBLqdttWENLkbvXl/oNa0/6cg/XPmKOmaAhWsrrjxvot3EDcGgflkedaAF3DyFQ/RKJ4jOK+3qkKPURGGIYZ2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nzp9XvbI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qZr+uFnH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 09660C4CEE2;
-	Mon, 17 Feb 2025 08:37:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nzp9XvbI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ADC6C4CED1;
+	Mon, 17 Feb 2025 08:38:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739781479;
-	bh=JHeqj+JdMktcSEHNKttFrFlRMjFHBs9B0aCSjSWyx3Q=;
+	s=k20201202; t=1739781480;
+	bh=tD8mQGd814n0mULatxAyMzelWfFxFcQJl0e5tNaXbpQ=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qZr+uFnHLho+PAJ3i5a8Loj9ZccUFdQd37j6mVI/oEDqKbjDUybqqzYJyfhTvgZRf
-	 RVrjZSfWGTeYDK9vlcTF3W1RZAxTpdwdRbugDhw/fkZaJAvYT9SiWUjpSO7DHuV5jb
-	 td+92C12m22RoPgxTlO9uMWxPxqKbVGy+Vo1zPnt9sdhewlKCHo0hhRxHJyWfSUx9r
-	 n52uqsWlWnvUU25i6UUtNUPftVTtslVVB0YwYN83FODuHAfWxC9UPtrVH4dM53z92D
-	 kAwEVCviSzfuUzFBC/FQqQNd8a5ycoN09KBIShnTDmFDjV+0CuDz5L4rH0XWW4eZxb
-	 AwOeA1GabcI7Q==
+	b=nzp9XvbI/4OOcBHNqFoDeW5GfCCZl0iXNiYVT6FbNT8cp70CHrPTfQvm53IsiUEQ2
+	 FuVrPHMCPS9tcaPD/44STugs0UnLHC4dBreWaoD/6AUSURjJRX3DMjHP0j0tsVvNAO
+	 tngFXJ6DTaLoeFtUUJdp3g76OyLqspZiLHNfeE98n+hOp7lJ6TVFvv8sqxeoNP5Uea
+	 IUs3Ixe+dSCPiobA+ps8BgouJjYG2o1ddo/cTiDiXz2uZUINHUzesMifdYJf8o66yi
+	 htnx+XaaIA7NLbSMo2WtWpyviuRG0Un4zXSFLfaKs6FyvmrwIWQ9iB8t5sT72Nayph
+	 /ty8MyIFI69+A==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 17 Feb 2025 09:37:41 +0100
-Subject: [PATCH mptcp-net 1/3] mptcp: reset when MPTCP opts are dropped
- after join
+Date: Mon, 17 Feb 2025 09:37:42 +0100
+Subject: [PATCH mptcp-net 2/3] mptcp: only fallback due to inf mapping if
+ allowed
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,91 +38,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250217-mptcp-dss-drop-mpj-v1-1-d671d6b9a153@kernel.org>
+Message-Id: <20250217-mptcp-dss-drop-mpj-v1-2-d671d6b9a153@kernel.org>
 References: <20250217-mptcp-dss-drop-mpj-v1-0-d671d6b9a153@kernel.org>
 In-Reply-To: <20250217-mptcp-dss-drop-mpj-v1-0-d671d6b9a153@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2677; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=JHeqj+JdMktcSEHNKttFrFlRMjFHBs9B0aCSjSWyx3Q=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnsvVkIpZKsWwEMzwSISN7Tkrcv7DsIOczP9lva
- rHqPikOQg+JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7L1ZAAKCRD2t4JPQmmg
- cy3cD/4jhSkgCTbPrASRfwuZyk5tjicplAfBmuP2L0m2eWR4r4KoQlzf+7AWIGMIhRoDux5plDs
- kA69p4E8S+cJ6cR2U9LDj/t98TUp4h30jeRLGPAS1VYJ7qR+bBXPofS4UqD/wJctNg9pGLoxbP1
- m94CXYpGJR4a2IorCwvkXRtAHs7jhghsohAqngB17i5mXrmHI/lUsUq0ZlXbR8EuQoJeHVuuqoN
- jr67yF11MOxOh0t7ac8UOWPuRhXlcYwDlrPf0qgBYGz15rJ5/SNtheTt3pXD1RbKrilms+juW2+
- j5jcOuhbiUOBu0QrXQqbfO5IEd1fYW9iI5PYONkk3aDQ9BhdGaErHRU4H4yuEd3HYFNborSX3Ti
- tBFblsiZCthkyfrOltsl+4EjUMTALfJ7LREOpp2KqPFfs3l6TToSwh/Y1nlmqVstmYXlzQPzPzh
- X9lki7O8xfE/vcCRC+2FYJLUglUoNN1XDTCxZ90bznMps7w6c+fmx3Eq4ksanpzayRzp8ayf2yd
- Z/Z7SLOzzX/R0VosboDGNaZpJF1DHZB6mDa/UOYKCixV70C26fncripSpr67SjLWZ/D4Ughul6Y
- tqe+mSNxImPWR9UIZ/3R1ROLqgHaXwuOm4AAgz8TXKZf9dwS9tR5xUbw+A/8cu5+Yu2vT9JLCHE
- mE4hcMYIQyQGD8w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2986; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=tD8mQGd814n0mULatxAyMzelWfFxFcQJl0e5tNaXbpQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnsvVk8TGPcy1dXIzGXSUKUYV9013x+MU6ffgNb
+ sj1A0jVS4KJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7L1ZAAKCRD2t4JPQmmg
+ cwHzEAC5ydMIyazZ5IsM795E+WAeS2UIpSfsRMfDy16pTJ8JAI7W5jnUSPwpeh0NR0eaTK9L4F3
+ 5l+oKVo/fcPam5G2DHebR+HXrVkAPxVSRXMSGiRKd2yna6cZFB5a+XxUwQHpRRHPxJBYjx38N94
+ kN+btobtUy0hXF3jfpYnk+H1eHNxZ2/jzelf28P+ETmI2JWoGf9ZKnh9WiUQdoNIdzcdjqdD1fA
+ vWjwyl5mSmdFKiG67OFqkrjBs7+b+YPm/6hKm2UTqcTwAdzs0OZ7R3E7SmtjTNMVEpw+6v+J20e
+ v5lfbLD8mr1T1hR2RviygykhBO5W5+EWVrLL1tCax1PwPoJNmL9t8P7lrF2dHOwYelFzzZ4SBrk
+ 9VHW4agP2HZyGdLGOlz0e0tj9UQ+FWjBCxCSzgE1Su8lA0Y82A7ZbpSOSAoC5mC1Fe25JX2LW2R
+ aW4ukHtcz4BGGqB4NedCHYdFDwVIIfuoR8vDt9HFKa5J1nluDDBEWovkx81uLudR7OCArsvOTMu
+ M0w9MLEkJu9IsFxY65Z+8lISmwNHXuKJX5SAFid6djLGxBxb5ygbLF2U6L0PtBmJto5kuHRWweA
+ 3AiGVvdvjkxIRujRSp5yY7B9m0pnH3KQTGh3DtOof1N7U+Ghr00wFvspevWuOLuDpCeBsbkj8f0
+ yweSAfDuz+PW73Q==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Before this patch, if the checksum was not used, the subflow was only
-reset if map_data_len was != 0. If there were no MPTCP options or an
-invalid mapping, map_data_len was not set to the data len, and then the
-subflow was not reset as it should have been, leaving the MPTCP
-connection in a wrong fallback mode.
+Any fallback should happen only if allowed, so only if this variable is
+set: msk->allow_infinite_fallback. This boolean will be set to false
+once MPTCP-specific operations acting on the whole MPTCP connection vs
+the initial path have been done, e.g. a second path has been created, or
+an MPTCP re-injection -- yes, possible even with a single subflow.
 
-This map_data_len condition has been introduced to handle the reception
-of the infinite mapping. So instead, a new dedicated mapping error is
-now returned (infinite), and this special case is properly handled: the
-exception is only applied to this case now, and not other ones by
-mistake.
+In other words, the !msk->allow_infinite_fallback condition should be
+placed first. If it is no longer possible to do a fallback, there should
+not be any bypass, e.g. when receiving an infinite mapping.
 
-While at it, no need to set map_data_len to 0 as it will be set to
-skb->len just after, at the end of subflow_check_data_avail().
+Now, regarding the conditions to do a fallback, the RFC mentions [1]
+that if the checksum is used, a fallback is only possible when "it is
+known that all unacknowledged data in flight is contiguous (which will
+usually be the case with a single subflow)". In other words, if the
+checksum is used, a fallback is possible when the other peer sent an
+infinite mapping indicating the flow has been altered.
 
-Fixes: f8d4bcacff3b ("mptcp: infinite mapping receiving")
-Reported-by: Chester A. Unal <chester.a.unal@xpedite-tech.com>
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
+Note that the issue is present since a merge commit, where both
+subflow_can_fallback() and the previous extra condition with
+'subflow->map_data_len' got introduced.
+
+Fixes: d7e6f5836038 ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+Link: https://datatracker.ietf.org/doc/html/rfc8684#section-3.7-11 [1]
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/subflow.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ net/mptcp/subflow.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
 diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index d2caffa56bdd98f5fd9ef07fdcb3610ea186b848..6ec03580ccec12fb50fc3aacf3d22413647b32b5 100644
+index 6ec03580ccec12fb50fc3aacf3d22413647b32b5..a8ad16db1ecd08ef7155a38161555253e4c72399 100644
 --- a/net/mptcp/subflow.c
 +++ b/net/mptcp/subflow.c
-@@ -969,6 +969,7 @@ enum mapping_status {
- 	MAPPING_DATA_FIN,
- 	MAPPING_DUMMY,
- 	MAPPING_BAD_CSUM,
-+	MAPPING_INFINITE,
- 	MAPPING_NODSS
- };
+@@ -1298,16 +1298,20 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
+ 		mptcp_schedule_work(sk);
+ }
  
-@@ -1139,8 +1140,7 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
- 	if (data_len == 0) {
- 		pr_debug("infinite mapping received\n");
- 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
--		subflow->map_data_len = 0;
--		return MAPPING_INVALID;
-+		return MAPPING_INFINITE;
- 	}
+-static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
++static bool subflow_can_fallback(struct mptcp_subflow_context *subflow,
++				 enum mapping_status status)
+ {
+ 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
  
- 	if (mpext->data_fin == 1) {
-@@ -1357,7 +1357,8 @@ static bool subflow_check_data_avail(struct sock *ssk)
- 		status = get_mapping_status(ssk, msk);
- 		trace_subflow_check_data_avail(status, skb_peek(&ssk->sk_receive_queue));
- 		if (unlikely(status == MAPPING_INVALID || status == MAPPING_DUMMY ||
--			     status == MAPPING_BAD_CSUM || status == MAPPING_NODSS))
-+			     status == MAPPING_BAD_CSUM || status == MAPPING_INFINITE ||
-+			     status == MAPPING_NODSS))
- 			goto fallback;
+-	if (subflow->mp_join)
++	/* If not allowed (additional paths, MPTCP reinjections): no fallback */
++	if (!READ_ONCE(msk->allow_infinite_fallback))
+ 		return false;
+-	else if (READ_ONCE(msk->csum_enabled))
++
++	/* More strict with csum: fallback in 2 cases: inf map or never valid */
++	if (status != MAPPING_INFINITE && READ_ONCE(msk->csum_enabled))
+ 		return !subflow->valid_csum_seen;
+-	else
+-		return READ_ONCE(msk->allow_infinite_fallback);
++
++	return true;
+ }
  
- 		if (status != MAPPING_OK)
-@@ -1405,7 +1406,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+@@ -1406,7 +1410,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
  			return true;
  		}
  
--		if (!subflow_can_fallback(subflow) && subflow->map_data_len) {
-+		if (!subflow_can_fallback(subflow) && status != MAPPING_INFINITE) {
+-		if (!subflow_can_fallback(subflow) && status != MAPPING_INFINITE) {
++		if (!subflow_can_fallback(subflow, status)) {
  			/* fatal protocol error, close the socket.
  			 * subflow_error_report() will introduce the appropriate barriers
  			 */
