@@ -1,40 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A215D216E20
-	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 10:34:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3E23F216E1E
+	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 10:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739788459; cv=none; b=ZwYa2Bpt08yQIwyqqc/87MTCb2RFFZrkubdkgn3SD+lIae+L/8i9I/6dvt0NHJXuJwJF2CU/ek1t+HsDOBKnQ68YF9fUehh6T1T3DR8Bs2quRysukJDlzgo2jrZNZ5rK/tYJESwz8RKvVTkACdcipUnyd71iN+T1hTBNBUsrOrA=
+	t=1739788884; cv=none; b=mCWcIGBn3pMme7Er9lOfX3Gbjt23lbV5pu/APduGQ8BMzF7bceVcrFkozD21A+b9xJLZNPBzLf/HNOWTY/1/LEYSRwDWqbMApRRfVyw6nk18mJAFELI74Q7A17SeRVe3jaY/GHapSLNLd90B5xkbSnmVUSYCaAHCTGOKmU3kTDg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739788459; c=relaxed/simple;
-	bh=oTWOORozCRRkx+BuuccJDCPwDpq0zB0utA9Z7QbqOj4=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rvWOPJTs2fs3rQdTwoeA7JXZVS6ECZQrsnEZlAqWsB0RAF3tFUQKPQUzuNfSEN5tEKD74MlYd/IG3SVrRtGGyrhIjoQQvIs6J0pZmnMXuHNNhGTd1dzSxpNvOhwu6LXygtwSD2CpahPu08i77Wcp5TsedsqX7skKG/JQ2g199Dg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=juiM/D5+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739788884; c=relaxed/simple;
+	bh=AAchjyF7/bM3uqlzcH4g3fQuvIasppuJz5DGIo5D81I=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Cp5AVhTnbYgESFnmGJEUzG46VODmwlyks6xplIwon/kL9pzdtDYXEpbs+eayV8Kp+FDgo9GLiHuJ+DYxpQT6oXJhw0+QAMAHRUEp4P0CbCom6pg/yuppPo4By345gce8fwbEqS63TYtPMi0IDUIjnAH/4n4euHiR4i4b66jLee4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gABeQTK5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="juiM/D5+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3DED1C4CEE2;
-	Mon, 17 Feb 2025 10:34:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gABeQTK5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4B23C4CED1;
+	Mon, 17 Feb 2025 10:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739788457;
-	bh=oTWOORozCRRkx+BuuccJDCPwDpq0zB0utA9Z7QbqOj4=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=juiM/D5+jsVYfctFQUZEBNhxcB6vwGTnhD+H4xJkwrS3GcARso4lDvShTbFI/XrDU
-	 cvCvIzQCWYKvkyRJiqytLaL88ZAhXDPjV+A/+hkwsE6tMSd7S6czZllH7uTMsEBqXt
-	 2RgIDL+SqNIvbYsS3SVkk7gibzN8gbCnkTY5pXT+8Com8rV4nB8pgZbgWrPnHAJCRB
-	 itgk8NqD6Hlzn/Ne/uOgOOkFNOGHGd9UCRZOKLCOeuPPiLQeIPW1ZrIMroVST/uXZD
-	 K/5Q0ALBH4WFKj2ENTxvG8ojBjypPAxWs44/eds9gVFD6SrCNez+Dm+PDfBvkLL5Ik
-	 YJ+FODgWTR80Q==
+	s=k20201202; t=1739788883;
+	bh=AAchjyF7/bM3uqlzcH4g3fQuvIasppuJz5DGIo5D81I=;
+	h=From:To:Cc:Subject:Date:From;
+	b=gABeQTK5L2Jld3NpRrunqrltJTRkHvnuTP0AjAnX/xh6L9ZKAf62SqPEt/Q66mpPW
+	 g998YDCctAJSTHsVuLZWMT+uzdmroc8eLvzsGkdH4Ij7j0uJl1N4FIH6+7SkP+YeQr
+	 vPH7PU7ybdhqjbvOukpl2gouIn1tts30xKrYea0/o/u/Z0d8bTLpYiaan2ETuvyw8e
+	 MwVWnBTYzeTFIj12cRL7nixh7oWZ42OQP1gr0KCuOW3RQAwzOm1BnBOaYlm9YdbnKA
+	 a+/bHOOqqlIS5QyxgWqY8sGl0wXS2LoO2c7t1oRk5FucBdQSQEVCiynkApcWrBMWAk
+	 6yn1khgDbyk7g==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 5/5] Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
-Date: Mon, 17 Feb 2025 18:34:02 +0800
-Message-ID: <29c255b7037e5bcb2995a3ea8f8d52592dbe6cac.1739787744.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
+Date: Mon, 17 Feb 2025 18:41:10 +0800
+Message-ID: <cover.1739788598.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1739787744.git.tanggeliang@kylinos.cn>
-References: <cover.1739787744.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,116 +42,114 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Use bpf_core_cast() instead of bpf_skc_to_mptcp_sock().
-Change the 2nd parameter type of bpf_for_each() as 'struct sock'.
-Drop use of bpf_mptcp_sock_acquire/release.
-Drop declaration of bpf_mptcp_subflow_tcp_sock. It's no longer used.
-Update the comment for mptcp_subflow_tcp_sock(), which is a BPF helper,
-not a kfunc.
+v15:
+ - patch 7, add the declaration of bpf_mptcp_subflow_tcp_sock
 
-Please update the commit log as:
+Depends on:
+ - Squash to "Add mptcp_subflow bpf_iter support", v3
 
-'''
-This patch adds a "cgroup/getsockopt" program "iters_subflow" to test the
-newly added mptcp_subflow bpf_iter.
+Based-on: <cover.1739787744.git.tanggeliang@kylinos.cn>
 
-Export mptcp_subflow helpers bpf_iter_mptcp_subflow_new/_next/_destroy
-and other helpers into bpf_experimental.h.
+v14:
+ - patch 1, keep mptcp_sched_data_set_contexts() helper for future use.
+ - patch 2, use "sk = sk__ign" in bpf_mptcp_subflow_ctx() and
+   bpf_sk_stream_memory_free().
+ - patch 8, drop "subflows" from struct mptcp_sched_data too.
 
-Use bpf_for_each() to walk the subflow list of this msk. MPTCP-specific
-packet scheduler kfunc can be called in the loop. In this test, just
-add all subflow ids to local variable local_ids, then invoke the helper
-mptcp_subflow_tcp_sock() in the loop to pick a subsocket.
+v13:
+ - use '__ign' suffix to ignore the argument type checks of
+   bpf_mptcp_subflow_ctx() and bpf_sk_stream_memory_free(),
+   instead of adding a new helper bpf_mptcp_send_info_to_ssk().
+ - use 'bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk)' instead
+   of using 'bpf_for_each(mptcp_subflow, subflow, msk)'.
+ - keep struct mptcp_sched_data for future use.
 
-Out of the loop, use bpf_mptcp_subflow_ctx() to get the subflow context
-of the picked subsocket and do some verification. Finally, assign
-local_ids to global variable ids so that the application can obtain this
-value.
+v12:
+ - drop struct mptcp_sched_data.
+ - rebased on "split get_subflow interface into two" v2.
 
-Add a subtest named test_iters_subflow to load and verify the newly added
-mptcp_subflow type bpf_iter example in test_mptcp. Use the helper
-endpoint_init() to add 3 new subflow endpoints. Send a byte of message
-to start the mptcp connection, and wait for new subflows to be added.
-getsockopt() is invoked to trigger the "cgroup/getsockopt" test program
-"iters_subflow". Check if skel->bss->ids equals 10 to verify whether this
-mptcp_subflow bpf_iter loops correctly as expected.
-'''
+v11:
+If another squash-to patchset (Squash to "Add mptcp_subflow bpf_iter
+support") under review is merged before this set, v10 will fail to run.
+v11 fixes this issue and can run regardless of whether it is merged
+before or after the squash-to patchset.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/bpf/bpf_experimental.h      |  2 +-
- tools/testing/selftests/bpf/progs/mptcp_bpf.h       |  5 -----
- tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c | 10 +++-------
- 3 files changed, 4 insertions(+), 13 deletions(-)
+Compared with v10, only patches 3, 5, and 8 have been modified:
+ - use mptcp_subflow_tcp_sock instead of bpf_mptcp_subflow_tcp_sock in
+   patch 3 and patch 5.
+ - drop bpf_mptcp_sched_kfunc_set, use bpf_mptcp_common_kfunc_set instead
+   in patch 8.
 
-diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/testing/selftests/bpf/bpf_experimental.h
-index 2ab3f0063c0f..6a96c56f0725 100644
---- a/tools/testing/selftests/bpf/bpf_experimental.h
-+++ b/tools/testing/selftests/bpf/bpf_experimental.h
-@@ -577,7 +577,7 @@ extern void bpf_iter_css_destroy(struct bpf_iter_css *it) __weak __ksym;
- 
- struct bpf_iter_mptcp_subflow;
- extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
--				      struct mptcp_sock *msk) __weak __ksym;
-+				      struct sock *sk) __weak __ksym;
- extern struct mptcp_subflow_context *
- bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak __ksym;
- extern void
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-index b1f6e1fb467e..72263672510a 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-@@ -43,13 +43,8 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
- }
- 
- /* ksym */
--extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock *msk) __ksym;
--extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
--
- extern struct mptcp_subflow_context *
- bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
--extern struct sock *
--bpf_mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow) __ksym;
- 
- extern void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- 					bool scheduled) __ksym;
-diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-index fd5691a4073b..a1d8f9b20259 100644
---- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-+++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-@@ -24,14 +24,11 @@ int iters_subflow(struct bpf_sockopt *ctx)
- 	if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
- 		return 1;
- 
--	msk = bpf_skc_to_mptcp_sock(sk);
-+	msk = bpf_core_cast(sk, struct mptcp_sock);
- 	if (!msk || msk->pm.server_side || !msk->pm.subflows)
- 		return 1;
- 
--	msk = bpf_mptcp_sock_acquire(msk);
--	if (!msk)
--		return 1;
--	bpf_for_each(mptcp_subflow, subflow, msk) {
-+	bpf_for_each(mptcp_subflow, subflow, (struct sock *)sk) {
- 		/* Here MPTCP-specific packet scheduler kfunc can be called:
- 		 * this test is not doing anything really useful, only to
- 		 * verify the iteration works.
-@@ -39,7 +36,7 @@ int iters_subflow(struct bpf_sockopt *ctx)
- 
- 		local_ids += subflow->subflow_id;
- 
--		/* only to check the following kfunc works */
-+		/* only to check the following helper works */
- 		ssk = mptcp_subflow_tcp_sock(subflow);
- 	}
- 
-@@ -58,6 +55,5 @@ int iters_subflow(struct bpf_sockopt *ctx)
- 	ids = local_ids;
- 
- out:
--	bpf_mptcp_sock_release(msk);
- 	return 1;
- }
+v10:
+ - drop mptcp_subflow_set_scheduled() helper and WRITE_ONCE() in BPF.
+ - add new bpf helper bpf_mptcp_send_info_to_ssk() for burst scheduler.
+
+v9:
+ - merge 'Fixes for "use bpf_iter in bpf schedulers" v8' into this set.
+ - rebased on "add netns helpers" v4
+
+v8:
+ - address Mat's comments in v7.
+ - move sk_stream_memory_free check inside bpf_for_each() loop.
+ - implement mptcp_subflow_set_scheduled helper in BPF.
+ - add cleanup patches into this set again.
+
+v7:
+ - move cleanup patches out of this set.
+ - rebased.
+
+v6:
+ - rebased to "add mptcp_subflow bpf_iter" v10
+
+v5:
+ - patch 2, drop mptcp_sock_type and mptcp_subflow_type.
+ - patch 3, revert "bpf: Export more bpf_burst related functions"
+ - patch 4, merge "bpf: Export more bpf_burst related functions" into it.
+
+v4:
+ - patch 2, a new cleanup for "bpf: Add bpf_mptcp_sched_ops".
+ - patch 3 should be reverted.
+ - patch 8, register kfunc_set.
+
+v3:
+ - rebased.
+ - put the "drop has_bytes_sent" squash-to patch into this set.
+
+v2:
+ - update bpf_rr and bpf_burst
+
+With the newly added mptcp_subflow bpf_iter, we can get rid of the
+subflows array "contexts" in struct mptcp_sched_data. This set
+uses bpf_for_each(mptcp_subflow) helper to update all the bpf
+schedules:
+
+        bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
+                ... ...
+                mptcp_subflow_set_scheduled(subflow, true);
+        }
+
+Geliang Tang (8):
+  Squash to "mptcp: add sched_data helpers"
+  Squash to "bpf: Export mptcp packet scheduler helpers"
+  Squash to "selftests/bpf: Add bpf_first scheduler & test"
+  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
+  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
+  Squash to "selftests/bpf: Add bpf_red scheduler & test"
+  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+  mptcp: drop subflow contexts in mptcp_sched_data
+
+ include/net/mptcp.h                           |  4 -
+ net/mptcp/bpf.c                               | 50 ++++++------
+ net/mptcp/protocol.h                          |  2 -
+ net/mptcp/sched.c                             | 15 ----
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 +-
+ .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 16 +---
+ .../selftests/bpf/progs/mptcp_bpf_burst.c     | 78 +++++++------------
+ .../selftests/bpf/progs/mptcp_bpf_first.c     |  8 +-
+ .../selftests/bpf/progs/mptcp_bpf_red.c       |  8 +-
+ .../selftests/bpf/progs/mptcp_bpf_rr.c        | 31 ++++----
+ 10 files changed, 83 insertions(+), 134 deletions(-)
+
 -- 
 2.43.0
 
