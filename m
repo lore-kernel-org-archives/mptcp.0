@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 08C7A215F68
-	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 10:34:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB17C23CE
+	for <mptcp@lists.linux.dev>; Mon, 17 Feb 2025 10:34:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739788451; cv=none; b=gc7IWcjOjT8nipNS7W8wQxFMfJFiKqSw7tY89jDfhNe2PsYo2hhcTkUAwsqcpGYiN9+dO1r0XlqJXFbv1LGPuK+FQaeRoQGF8my1GahSV3gUnLbXSvBbDYcHA0hAC98GK+cQLR4AkxpnGAR66NVfjlWx4DbMVKXubDBD3v7E39o=
+	t=1739788452; cv=none; b=C2zpBeOqdNVkGbCiaXf0hezRAyDZc9tJVTGmJ6YmmTxv+kVuR4OE353lMGwG81YnN8oVNWHe3dxqDmfTZGHedx5HwzayTPzf3EkhJLTpoTnsv6si7UQbRYRsjSnGsZ2uhELm8P+cehSnWLItO/pfQG/yXSJWLNNuFpJ8BVOWqhI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739788451; c=relaxed/simple;
-	bh=7+9tzmSBEyJZstB88VcME9Hams9OlyqDoObVFKD9GZM=;
+	s=arc-20240116; t=1739788452; c=relaxed/simple;
+	bh=Y/nSLpzRC0NZxGyn2KF0Yxwg1I5WdIB6hNFwT4Y3kEw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PaT5fOOd1MdDyT3/4srI/gGDmCknoB+N+QuIfBdvJDypK72QTS96pBEbXhugKoMVsXS3gGa2afRA64qTr510ZRgU6/jHHbvVcLUM+jw0ciQAohOfISnOwfUQUmFG1wrzsGvBr/y4K3G5/H0B3I2NP9Bje4uWyQ8x9JYRL3mT3XY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nJ5y8vFs; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=ED91iAbuojEQhkCuH+XPqxj+oJJ3Mz/9DLL3AEMIwF3ZJHNFDKaVTBFRvM0ZdE9vL9Tr+GcILM2h2CXKzQs2rgRbDzuSNbpCl4H/bslkzt0kTZt/Fi2DGCTGyHNK8nAUQms8Oi1QXbq2bY6o0oXN+S8H008lCyqkNggRzvFdL6E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OzbvSd1c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nJ5y8vFs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47238C4CEE2;
-	Mon, 17 Feb 2025 10:34:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OzbvSd1c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20A93C4CED1;
+	Mon, 17 Feb 2025 10:34:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739788450;
-	bh=7+9tzmSBEyJZstB88VcME9Hams9OlyqDoObVFKD9GZM=;
+	s=k20201202; t=1739788452;
+	bh=Y/nSLpzRC0NZxGyn2KF0Yxwg1I5WdIB6hNFwT4Y3kEw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nJ5y8vFslSM7hn6W2+8DW3KtdS/aM8EGs6tevmen4ZN4wNI+9jre0nMBfs1ox5dqj
-	 awgtfdUGCY72pIKKbOqb9dH3+rS5Xo56C+5jxHd8xpf0V1sprp5626H01tY5JBxUth
-	 aUSD5HY7lMr3aBC5mNj3edgy2EpoPvfPI8uSh/f9N7JTav3KMaqqG5vz3Z+zykmAAo
-	 edi0NmoR4gus5L136nrMbrDv6fbfeNv0TOwn15uolJe5+oheRvwAJVdZN3ldBFxMrR
-	 S17iBR+wXDlt8eIzFsjbZTBa2lpvMO3gVDTdVPyZn7n2URhsFht91b2vgFj3UiLIZF
-	 o9RIm4mj/wsqg==
+	b=OzbvSd1cSpg7ozdWzZEplAJCjHSnfDwvLZpPBVh8hckII+z6TpgY1NTA/4oTB0524
+	 eeCbgwwoxm6xHz9g+oOWdQT2q8OjuYvoR8DC3XBQBv3oQjbA8/n3/FIBN5sYErCiE5
+	 ivOwU0SbBAlAlECWIjINgvzSYswrbloJgNKE7YizWIQumzTzgi28h6axLJC31kxJKE
+	 UBy1nSJN62EEd5MaaLz6YemZcuNclcrhJGIxDc66V9PARVUH6HZWnJU/dPLcKVoKQe
+	 QKt3YgJ4isuX6YTZOyK2QFEYsjdp7f03oZFYOHWoF64VvhhazP6IMcnPlkpSSr1W+D
+	 1DB26p3wBfA8w==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 1/5] Revert "bpf: Extend bpf_skc_to_mptcp_sock to MPTCP sock"
-Date: Mon, 17 Feb 2025 18:33:58 +0800
-Message-ID: <0928d84e9ad5ee43779dda3de9be77ad28006ded.1739787744.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 2/5] Revert "bpf: Allow use of skc_to_mptcp_sock in cg_sockopt"
+Date: Mon, 17 Feb 2025 18:33:59 +0800
+Message-ID: <f8db33efcff2a94d611519389b9fb8e6f0da6bd9.1739787744.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1739787744.git.tanggeliang@kylinos.cn>
 References: <cover.1739787744.git.tanggeliang@kylinos.cn>
@@ -49,64 +49,24 @@ bpf_core_cast() can be used in mptcp_subflow bpf_iter selftests to get the
 msk, instead of using bpf_skc_to_mptcp_sock(). No need to add this patch
 anymore, revert it.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+This reverts commit d8d42f5a4542c2dc31e4e00c58508a821c6ab789.
 ---
- include/net/mptcp.h |  4 ++--
- net/core/filter.c   |  2 +-
- net/mptcp/bpf.c     | 10 ++--------
- 3 files changed, 5 insertions(+), 11 deletions(-)
+ kernel/bpf/cgroup.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index 72d6e6597add..2c85ca92bb1c 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -323,9 +323,9 @@ static inline void mptcpv6_handle_mapped(struct sock *sk, bool mapped) { }
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 1ca22e4842cf..46e5db65dbc8 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -2358,8 +2358,6 @@ cg_sockopt_func_proto(enum bpf_func_id func_id, const struct bpf_prog *prog)
+ #ifdef CONFIG_INET
+ 	case BPF_FUNC_tcp_sock:
+ 		return &bpf_tcp_sock_proto;
+-	case BPF_FUNC_skc_to_mptcp_sock:
+-		return &bpf_skc_to_mptcp_sock_proto;
  #endif
- 
- #if defined(CONFIG_MPTCP) && defined(CONFIG_BPF_SYSCALL)
--struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk);
-+struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk);
- #else
--static inline struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk) { return NULL; }
-+static inline struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk) { return NULL; }
- #endif
- 
- #if !IS_ENABLED(CONFIG_MPTCP)
-diff --git a/net/core/filter.c b/net/core/filter.c
-index fc094e8d53d3..2ec162dd83c4 100644
---- a/net/core/filter.c
-+++ b/net/core/filter.c
-@@ -11843,7 +11843,7 @@ const struct bpf_func_proto bpf_skc_to_unix_sock_proto = {
- BPF_CALL_1(bpf_skc_to_mptcp_sock, struct sock *, sk)
- {
- 	BTF_TYPE_EMIT(struct mptcp_sock);
--	return (unsigned long)bpf_mptcp_sock_from_sock(sk);
-+	return (unsigned long)bpf_mptcp_sock_from_subflow(sk);
- }
- 
- const struct bpf_func_proto bpf_skc_to_mptcp_sock_proto = {
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index be222fa5f308..7e9d9c9a04cf 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -195,15 +195,9 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
- };
- #endif /* CONFIG_BPF_JIT */
- 
--struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk)
-+struct mptcp_sock *bpf_mptcp_sock_from_subflow(struct sock *sk)
- {
--	if (unlikely(!sk || !sk_fullsock(sk)))
--		return NULL;
--
--	if (sk->sk_protocol == IPPROTO_MPTCP)
--		return mptcp_sk(sk);
--
--	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
-+	if (sk && sk_fullsock(sk) && sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
- 		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
- 
- 	return NULL;
+ 	case BPF_FUNC_perf_event_output:
+ 		return &bpf_event_output_data_proto;
 -- 
 2.43.0
 
