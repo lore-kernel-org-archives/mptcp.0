@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40CD4233136
-	for <mptcp@lists.linux.dev>; Tue, 18 Feb 2025 11:24:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8C9C2233136
+	for <mptcp@lists.linux.dev>; Tue, 18 Feb 2025 11:24:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739877895; cv=none; b=TJrQBTAGQt5Bc4OszCDYaFlpEhbfeNssLSbgCv9diMMnDV7S09d+ZDWxCw5ncxW0z1kmx6G1Ld9M3gpAHwq7dR8YSQcWAhoDIqeOkSOoOLGUYABtdi3WHERzSBjUAVsRRxGeiNkz7rvgnkYoiDwHf8wk9zy5Ei9I0OFGpDy5+Wc=
+	t=1739877895; cv=none; b=hmH6w5TZhO6WarMG50VrJTv88ej+R7jLEBriY1075bq5VIG+xWix4BQh0nN7uAMkn3N0NbEIodMmFCII/b03yeWdDnKLjLe5fZqsJd6Babu0Y6k9YW/Sxy5qS6auSoBnGGyYTPd0aBlm1+wvY62MwHdlqUxAwRJDY7TMXo2iEGQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1739877895; c=relaxed/simple;
-	bh=NF1EPdZbYXNYxCRDhgFcjiF5i/x0aCdt/V38Strw6/U=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=hHJO6eGbUwpR34OCwLjgQ0/rXcgNkPknfnjn6ZKT6GsJyFHNCIHXY+2BUDjrcUrPFIomBoeDJy1NZ1+llDX0Dq+Tef4crOq7yDrUaqXELWz/F9XBedyNa0KZE57PnxC7Gne6qSTCPLbixt57nZkZ5Lc+X9LK7bMeq32OtdZKbJg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lstSLxQk; arc=none smtp.client-ip=10.30.226.201
+	bh=fT0ooaJYfXeHEMXhEgjuYp/NTHst9SZ1yQMcqElzf5k=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=OJxGBeRkxyamA3By5nrcnlkF5sgfDNpLqGjHo6x97+qAsmMJmK1/6sISYaEfa1NUg0h5U9RRsS+C57r1Yg5K/HeJtJBWk6NVRTHcky8w/4AbhQ7Pg5RjGGhrDnT19KqcPHI1ZyaXTw7B4lwHnHDjKSoLgkSJKvqoZAvZcqoo0zg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JQce9Lg5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lstSLxQk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DACE7C4CEE2;
-	Tue, 18 Feb 2025 11:24:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JQce9Lg5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B786C4CEE6;
+	Tue, 18 Feb 2025 11:24:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739877893;
-	bh=NF1EPdZbYXNYxCRDhgFcjiF5i/x0aCdt/V38Strw6/U=;
-	h=From:Subject:Date:To:Cc:From;
-	b=lstSLxQkpn4Nl00zAQHvk2gGF4T8zFnqXBFvBG3bRMjDq0d/XhNC8hWHqp+xjJM4R
-	 vH+fMOi2HSfYDj9kKtQvRWCAIlodtQIZV2LVuvife6bxDUWOGB7N0tZYlWiGTF03Yv
-	 LBUIN8C3ydXRSssl6r9S327Mu7Xhe0Pj05YyGSKShwtiQ+HqmmSk8JLwujr+B7jTKK
-	 r/zuNsYpAbsNgbCnCRkjAxA5K6kQcbMVIin6mz/FH3dHiXtJFL5oSBy63Nt1onGC6O
-	 INyxE/BM4AhK+E4UipsDEBbcNu8IQmWiR247qk4v6AZT6pd1rR7eFDs8dCTLXwIHzU
-	 qYwzusmnK2d5w==
+	s=k20201202; t=1739877895;
+	bh=fT0ooaJYfXeHEMXhEgjuYp/NTHst9SZ1yQMcqElzf5k=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=JQce9Lg5gFMhcFtmMnTkIteWFMQpxX5PgM7CILAGZYF1sMWpUsEFjb9y19TSNxfXj
+	 cLp5TGjfYYzyvadaYpSFZQiBAhcgnEgD1/25x/cj8nlJzXQ6IAaFeqKcGYQQ0TKnnx
+	 vfepIjvJonsskcvBG3dbgHVicBXKmtyl5R8ehZGDbYKled2D9EO1zbTz9xbEVAl69X
+	 T3P5NC3AYJdKEteeZ7v37P1Q2kviI9JvWwfxhT2JemjeytgBzl6HXkguX7KNiMD2ib
+	 hYXLJVLZxeA2m7G1Z9u6EaSrquKLB+S7jbjFzKZ6Hwb3azOqGXzbjDfl+GxtRK6dK3
+	 kh4csWgKnkMnQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-net v2 0/2] mptcp: reset when MPTCP opts are dropped
- after MPJ
-Date: Tue, 18 Feb 2025 12:24:45 +0100
-Message-Id: <20250218-mptcp-dss-drop-mpj-v2-0-0c6caa10ec52@kernel.org>
+Date: Tue, 18 Feb 2025 12:24:46 +0100
+Subject: [PATCH mptcp-net v2 1/2] mptcp: reset when MPTCP opts are dropped
+ after join
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,65 +38,116 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAP1ttGcC/22NSw6DMAxEr4K8rqvE5SO64h4VC0oMpJ8kchBqh
- bh7I9h2+TQzb1aILJYjXLMVhBcbrXcJ6JRBP3VuZLQmMZCiQpEq8B3mPqCJEY34kPCB3BNVQ86
- mzgnSMAgP9rNLb3D0Hc/Qpmiycfby3e8WvRcOs67+mReNCk1ZaVPe604Xl+bJ4vh19jJCu23bD
- z3zJQ/AAAAA
-X-Change-ID: 20250205-mptcp-dss-drop-mpj-ec227f4ed942
+Message-Id: <20250218-mptcp-dss-drop-mpj-v2-1-0c6caa10ec52@kernel.org>
+References: <20250218-mptcp-dss-drop-mpj-v2-0-0c6caa10ec52@kernel.org>
+In-Reply-To: <20250218-mptcp-dss-drop-mpj-v2-0-0c6caa10ec52@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Paolo Abeni <pabeni@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
  "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1146; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=NF1EPdZbYXNYxCRDhgFcjiF5i/x0aCdt/V38Strw6/U=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBntG4Ed18qjnEjDvU6v+xmZE1dkuIjHmsLV5KZF
- SU2jO8/C4yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7RuBAAKCRD2t4JPQmmg
- cxp0D/4iEFkfgob3pCwZmzda7DlWSxY05+BsCWIxUtJhcpJ6tsFqbx1lVyFta0MSMEB1WmtnqtS
- wqinJ5VEKJ2JZQw6FD1OVLmO+18cyU8LUgjQxIXwVomF4EkY4k9qWYXRxkqhVevh1PM1yXdzot5
- TesUwd0jpCrDsNiRRDk3/eHxNdQi2G3IxL3ZgmCzl8jfVqVLZLQDWIiBZ+YcUl7BbWlZQ8Uixzj
- dypLgl7NlCEZrjqpzLWai2C8W8+MOZkxT4AKyEY0+xQfuJNyLAHFaBLUkucSnUwHHHxSvMkPVUj
- QM1o7duOVWI+SauTZu2Lch3zP1mmSWJGmiBviZ2V0LqbDw1T6kc/TBjpt+uc9p5eXLq0FwxwEJa
- NoZYWUjibduYZuuLkx9TRO0m73nhc7BogTJ1wGJl+O+cJYvxpnRG34pruD0rsznGBeWiuFYtDyf
- +9jyl3Tj95UsDdPI6Sa7nnZvXuf/hbbTqni6ZSrlHDIm+BJujcx+EMz7bMP9M6gDDI8aiPLZU7G
- 5E7VZ0kgna0rHDScuNePUW349remGRDh2avsjMpZOj6Enb0f2afjko5+PKU5yUu89Yy4f8Fcknr
- dIjWOxMvQVGCCESrASDasWLJGwvhl+JsRyxRfaSM+N2WeJL9fcK1r7eJihfvXNS29R/A12JNhBL
- VxgRxM2ti/DFGTA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3658; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=fT0ooaJYfXeHEMXhEgjuYp/NTHst9SZ1yQMcqElzf5k=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBntG4EIsp/UO1QtIsjI3CMSaJwTSUBG7E3aQv0l
+ 4iOEl3zeVqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7RuBAAKCRD2t4JPQmmg
+ c7BwEACZLC0dp8TLve3QjLQM6eQQH18ybO2pknP3arBul3vQXS7nVH33tbdWLh3W3q3cYbd25HS
+ SAXeSDtYWSG0xDu+/6oKerpzCBkcng0OkBZQ9VbedXvqeoysioBkyPydtSg6o//mc8860RnpcX9
+ 9LjDWrD8q3/hKostdEE4FvsrFwnkv6EUB4royPmWAmht1l44usXecZ/2nHUHTjKm08mFbZZ9U/B
+ OQD7p7e8goWlT4FFQfc23LvTYnER6CYNJova/4Hu81JCjQmyaIxMRY2IMGifLZfebkH2tjllfu2
+ n6HS9chDwmGI3hNxVvMLwfPhpj0kKHZFnRcAbb0IFRYhGEozsFjIFT5iH9R7GT7QrMu4hr108rz
+ o0vh1QjtpAO6zvPrJ37rP2GSQJ/n7NVgPH5YrgdYONe53h8ZyeoGb9YnjSguOOsheYM61C8/P1J
+ p9F4027puIfFduB7BUoqFOLUwGU5lIT8Knhuv3HRFgLUT3mVd3S3PsZOdRa6JJrE7eKgP4BEgWX
+ ve11LBbHE/MVoA0cMdYbpeG0cxIvw826ibAZSOD0L7r72DxZOXWkMy59Oh2Cy8PS8PbsZpSLEfA
+ icxVoB023XHifeEBxUUOunHweEBEMVnXvPhgnA3Z6KBUhxFX67zNR+LfbLyBnHUHJAO0dm0acKm
+ QQ7Ize8EfqygnsQ==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-- Patch 1: fix issue #544 where a middlebox drops MPTCP options after a
-  3WHS on the additional subflow.
+Before this patch, if the checksum was not used, the subflow was only
+reset if map_data_len was != 0. If there were no MPTCP options or an
+invalid mapping, map_data_len was not set to the data len, and then the
+subflow was not reset as it should have been, leaving the MPTCP
+connection in a wrong fallback mode.
 
-- Patch 2: a safety check is added when asking to do a fallback to do so
-  only when allowed. If not, a new warning will be emitted.
+This map_data_len condition has been introduced to handle the reception
+of the infinite mapping. Instead, a new dedicated mapping error could
+have been returned and treated as a special case. However, the commit
+31bf11de146c ("mptcp: introduce MAPPING_BAD_CSUM") has been introduced
+by Paolo Abeni soon after, and backported later on to stable. It better
+handle the csum case, and it means the exception for valid_csum_seen in
+subflow_can_fallback(), plus this one for the infinite mapping in
+subflow_check_data_avail(), are no longer needed.
 
-Note that two new packetdrill tests have been added in a PR to cover
-this case:
+In other words, the code can be simplified there: a fallback should only
+be done if msk->allow_infinite_fallback is set. This boolean is set to
+false once MPTCP-specific operations acting on the whole MPTCP
+connection vs the initial path have been done, e.g. a second path has
+been created, or an MPTCP re-injection -- yes, possible even with a
+single subflow. The subflow_can_fallback() helper can then be dropped,
+and replaced by this single condition.
 
-  https://github.com/multipath-tcp/packetdrill/pull/160
+This also makes the code clearer: a fallback should only be done if it
+is possible to do so.
 
+While at it, no need to set map_data_len to 0 in get_mapping_status()
+for the infinite mapping case: it will be set to skb->len just after, at
+the end of subflow_check_data_avail(), and not read in between.
+
+Fixes: f8d4bcacff3b ("mptcp: infinite mapping receiving")
+Reported-by: Chester A. Unal <chester.a.unal@xpedite-tech.com>
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/544
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- Squashed previous patches 1 and 2 (Paolo).
-- Patch 1: no more special cases for csum (handled before) and inf map
-  (Paolo).
-- Link to v1: https://lore.kernel.org/r/20250217-mptcp-dss-drop-mpj-v1-0-d671d6b9a153@kernel.org
-
+Notes:
+ - v2:
+   - Squash previous patches 1 and 2, and drop csum case from
+     subflow_can_fallback (Paolo).
+   - v2 is quite different, Chester's Tested-by tag has not been added.
 ---
-Matthieu Baerts (NGI0) (2):
-      mptcp: reset when MPTCP opts are dropped after join
-      mptcp: safety check before fallback
+ net/mptcp/subflow.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
- net/mptcp/protocol.h |  2 ++
- net/mptcp/subflow.c  | 15 +--------------
- 2 files changed, 3 insertions(+), 14 deletions(-)
----
-base-commit: 3a7786db65e8f361a8fc8abcd3cfbe17411b8b7f
-change-id: 20250205-mptcp-dss-drop-mpj-ec227f4ed942
+diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+index d2caffa56bdd98f5fd9ef07fdcb3610ea186b848..5255e0cc409437ab1abb66fc8557d18aa4244af7 100644
+--- a/net/mptcp/subflow.c
++++ b/net/mptcp/subflow.c
+@@ -1139,7 +1139,6 @@ static enum mapping_status get_mapping_status(struct sock *ssk,
+ 	if (data_len == 0) {
+ 		pr_debug("infinite mapping received\n");
+ 		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPRX);
+-		subflow->map_data_len = 0;
+ 		return MAPPING_INVALID;
+ 	}
+ 
+@@ -1298,18 +1297,6 @@ static void subflow_sched_work_if_closed(struct mptcp_sock *msk, struct sock *ss
+ 		mptcp_schedule_work(sk);
+ }
+ 
+-static bool subflow_can_fallback(struct mptcp_subflow_context *subflow)
+-{
+-	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+-
+-	if (subflow->mp_join)
+-		return false;
+-	else if (READ_ONCE(msk->csum_enabled))
+-		return !subflow->valid_csum_seen;
+-	else
+-		return READ_ONCE(msk->allow_infinite_fallback);
+-}
+-
+ static void mptcp_subflow_fail(struct mptcp_sock *msk, struct sock *ssk)
+ {
+ 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+@@ -1405,7 +1392,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+ 			return true;
+ 		}
+ 
+-		if (!subflow_can_fallback(subflow) && subflow->map_data_len) {
++		if (!READ_ONCE(msk->allow_infinite_fallback)) {
+ 			/* fatal protocol error, close the socket.
+ 			 * subflow_error_report() will introduce the appropriate barriers
+ 			 */
 
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.47.1
 
