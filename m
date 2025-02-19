@@ -1,130 +1,130 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 846211EFF87
-	for <mptcp@lists.linux.dev>; Wed, 19 Feb 2025 13:49:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C521F61C
+	for <mptcp@lists.linux.dev>; Wed, 19 Feb 2025 17:45:16 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739972953; cv=none; b=qHdZZVhD90joAiNjENEDVxRLxDQxa0MrpUpbqzrO7pCpnr0i0tDh+l0n8eEECd+G6nhBB/3Zxgsi/diEEmJQKpSzBi9W81VAqSorje0s+JXePSqeXXe7W6EQfNO1upiitP0jLpAhcrgutOPDrBUSS0Pmju0iy9Tebc4ikHtwVwk=
+	t=1739987117; cv=none; b=PAn++rSKWVtINRyd/Spx6xhzWxKmLXWEspFE1FejtIGqJEPvJAtAD9Fzf7DkG746CRDiBQj/pwHTrb3LwfceMohGyQW7m5oT/XLb5B5oDAudE3lEAc2gHEbuFRgAvUI1EHUVIJJNJM192YSRaDp+MdOL8qtruYYJrKHqUHoB1y0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739972953; c=relaxed/simple;
-	bh=B5HTa0G3BKlg0M+zfhGpPqgy6yFBZdUIyfkAjiX3mGA=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=EeYcJK06JhbQjX7AzgVqNVsDh5r7iM5EbTd1zdGTAQoYmKEte3Mut9nLz/AHXUlkQfnUGxjN78YVJl8RejAYjUn4SxMn5QUQFocUiDq8RXEsVFT6UJmHztd+D9ZCwo2Xr3eRsdbIjdixPkFyCKKgKFu6cLtQa54bJ1IQur+9Mws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=HwkDn6Wj; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1739987117; c=relaxed/simple;
+	bh=PLKgIAUc8PxIE5sgb4ceJ8Pc2bC5fIlJ4GVnUXLmP7o=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=RA8jIp8nnifEL4+2b10kUtp5SbVYSWmb49qvlCa5nLGw5lVZ2KdZWRuDQO3aihauNOmdJUzFaiOiFkLmoYGZorg7GH3AkFLuAvtD4nEABd82q+Qs7hvK08jI3SZrFEsWDU41KuhSr1YDs2D5mrUZSTt3N0Fvb5OftMcNU+zH5fk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUoIpRbO; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HwkDn6Wj"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-220bfdfb3f4so137386665ad.2
-        for <mptcp@lists.linux.dev>; Wed, 19 Feb 2025 05:49:12 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1739972952; x=1740577752; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=KcXzZTj920g9QUn+OfoL84gSwVgj2b/P03or0snAE2I=;
-        b=HwkDn6WjR2dmSjRcmDkBCXT2UyV0vSng/Gr4HP+r3psG9tKlTQq+Fzc3xGkIV//Ppw
-         BXaUrG2jd8sodovmfcL+zktn1qIoyG6dMKfBlwbcbHosyduLAQj8TJCdSlzJw662eUYD
-         As0fq2z9tu+N50WZEgLn4KFx6FPGkXdNc7Hq2pcYJnSK84Oe6Ia7aGsE3QjoPLixaDcn
-         hnn7MTndcGj76J1zG9I8JJcrkllGsQOuoMJXNH/eSDp9rsxwY6svUoV1fsrLHgKWtSRb
-         +xa67UZaVQp/eGgzlmzIANzV7az285s/s33dsBcJ7NknuBGa+/xdwt8DSeXRTexWgWH2
-         1YeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1739972952; x=1740577752;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=KcXzZTj920g9QUn+OfoL84gSwVgj2b/P03or0snAE2I=;
-        b=FCa3RvoQ+Y213sJ/8e/8FzgyzeiUW8DG/sCeoRZqRuRrWQRBFkJeWRbKqoJK6lRSGD
-         V6tv5EZYql0w9FcYlnprxsQvUWKQW9k1Tvd7hErfK6O3m4Znt6dURV6EU7usxfNjFXru
-         MAgtzLYs2erWv3di9ohkWrPf5ewFO/NKheAwf1xHq7WP+tVMz5FmwXZ57Mii9Lvo2VFo
-         +LZHxx1FCIC5euJEr/sbmTMI7V+y4ryG/QLElVUYmVsSJaK8HCQhYcjRKDmXpuys6LBp
-         Y8SHtuJnvH8U3OBWqgXix3vgPpshHNgikQClQ4ttWe9rBAiQ/D5kQ6lRNBBPjiTmScg3
-         eztg==
-X-Gm-Message-State: AOJu0Yzopg8R572Ww5nn5JA7ej50S3ENqk7MAXoNNCd1FU/w7Jt8iVsx
-	s99c2q/aiXftvHq0ffXwFK1pwq1ciT2lrKLZrBf7eR4V41lu0+o=
-X-Gm-Gg: ASbGnct9hATynJGSVmgcsnRc/FA9DwPiCQ9XwaYIW1FvYEPv94QUdriJ4kqoi9JRgeE
-	ab6EH4+SQ2X/i6m4CkPYjZH/lVOAGBn46xlo01XVa7zdS5/Zc36pMJmVGbuVNB7+s1DBm5lb7Ly
-	DmU5dHdr6k5wadJye2k57bgGYXnf/nIztcWKAjBVU+OEOGfs11zschw+SLbComoOmbCoxg1/aIP
-	CUzPJnIbHfk5uXJhGxXo15kt7/bVgLZ9y9eY6iYE9RXOtk7vVt4NcguI/BOLpEhL7NvRADYUB21
-	FKOeqGrLxPJ71gE51FLjMp5OtRs=
-X-Google-Smtp-Source: AGHT+IHWUSUlFLNA6qpYE7DShEiFQQAiR3xhU/RbdrcjnaGtD5cdvfvmIHFek+OCrSaAN5WQOiUUzw==
-X-Received: by 2002:a05:6a20:244c:b0:1ee:68e3:ff45 with SMTP id adf61e73a8af0-1eed4fd3938mr6516578637.35.1739972951653;
-        Wed, 19 Feb 2025 05:49:11 -0800 (PST)
-Received: from [127.0.0.1] ([20.172.29.39])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73242546301sm12054439b3a.33.2025.02.19.05.49.10
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 19 Feb 2025 05:49:10 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To:
- <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
-References:
- <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
-Subject: Re: [PATCH mptcp-net] mptcp: always handle address removal under
- msk socket lock
-Message-ID: <706800de-4f9e-07a8-bd30-d712b38b2d43@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 19 Feb 2025 13:49:10 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUoIpRbO"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD40C4CED1;
+	Wed, 19 Feb 2025 17:45:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1739987116;
+	bh=PLKgIAUc8PxIE5sgb4ceJ8Pc2bC5fIlJ4GVnUXLmP7o=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=JUoIpRbORpVUufpezWbfzklThXYxKthDLRw2dZD04u8oItZTENvuJawmS5b6pgEr1
+	 ilD7PbRx88+jt0xPgR95WZoDAlfRp2eR+qoQ45AIbbb4AcSR0CnP5lTlG7iB1pq9CU
+	 SfP3eL/g5Pr5IANdWerXLf4W9j004Gvp0VKKolv4sdW/3MV8XQn5aYTkm/0VObtf3r
+	 7piecgbopo5owqWRtdOv/HTan+ZyD8e0e/ljJlYWjbE+foomzNfAaZ/i2ph/uZ0fLE
+	 7q5W8/NQO4q46xFI5Rw2eBRtK+n5M0KaJLolKd6SSgK8ofSTmaIoQEkCS5Fcg0znZ/
+	 d5ARVJnkVaNIQ==
+Message-ID: <a103802c-90e2-4cda-86a4-6bde5bb28670@kernel.org>
+Date: Wed, 19 Feb 2025 18:45:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: always handle address removal under msk
+ socket lock
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
+ YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
+ c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
+ WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
+ CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
+ nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
+ TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
+ nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
+ VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
+ 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
+ YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
+ AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
+ EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
+ /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
+ MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
+ cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
+ iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
+ jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
+ 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
+ VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
+ BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
+ ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
+ 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
+ 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
+ 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
+ mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
+ Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
+ Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
+ Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
+ x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
+ V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
+ Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
+ HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
+ 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
+ Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
+ voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
+ KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
+ UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
+ vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
+ mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
+ JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-Thank you for your modifications, that's great!
+On 19/02/2025 13:45, Paolo Abeni wrote:
+> Syzkaller reported a lockdep splat in the PM control path:
 
-Our CI did some validations and here is its report:
+(...)
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13413108659
+> Indeed the PM can try to send a RM_ADDR over a msk without acquiring
+> first the msk socket lock.
+> 
+> The bugged code-path comes from an early optimization: when there
+> are no subflows, the PM should (usually) not send RM_ADDR
+> notifications.
+> 
+> The above statement is incorrect, as without locks another process
+> could concurrent create a new subflow and cause the RM_ADDR generation.
+> 
+> Additionally the supposed optimization is not very effective even
+> performance-wise, as most mptcp sockets should have at least one
+> subflow: the MPC one.
+Thank you for having looked at this!
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/f8164af657a2
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D935572
+By chance, do you know how syzkaller managed to interact with an MPTCP
+socket not having any attached subflows? An msk being destroyed?
 
+Just to know if there are specific cases we need to pay attention to in
+the future :)
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+> Address the issue removing the buggy code path, the existing "slow-path"
+> will handle correctly even the edge case.
+Thank you, it looks good to me!
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
