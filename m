@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 71C521F61C
-	for <mptcp@lists.linux.dev>; Wed, 19 Feb 2025 17:45:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3FE8E1B6CF5
+	for <mptcp@lists.linux.dev>; Wed, 19 Feb 2025 18:42:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1739987117; cv=none; b=PAn++rSKWVtINRyd/Spx6xhzWxKmLXWEspFE1FejtIGqJEPvJAtAD9Fzf7DkG746CRDiBQj/pwHTrb3LwfceMohGyQW7m5oT/XLb5B5oDAudE3lEAc2gHEbuFRgAvUI1EHUVIJJNJM192YSRaDp+MdOL8qtruYYJrKHqUHoB1y0=
+	t=1739990562; cv=none; b=TOS/k8c1EPu8WeozWtr3C7UQTyOhyNwQJRgePE2nvzEuN0NfJkEfrVFgNTWU0S6awnU+DujYLbHsLyvPtW2OoNXXkopGG/j8rsYsC9osTfgO8eJ7IVftvmHTSCXonvIc3WFmivmoa9uxrVPcAb2BpOyJq7pknG8lP3KVatDTmOQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1739987117; c=relaxed/simple;
-	bh=PLKgIAUc8PxIE5sgb4ceJ8Pc2bC5fIlJ4GVnUXLmP7o=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=RA8jIp8nnifEL4+2b10kUtp5SbVYSWmb49qvlCa5nLGw5lVZ2KdZWRuDQO3aihauNOmdJUzFaiOiFkLmoYGZorg7GH3AkFLuAvtD4nEABd82q+Qs7hvK08jI3SZrFEsWDU41KuhSr1YDs2D5mrUZSTt3N0Fvb5OftMcNU+zH5fk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JUoIpRbO; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1739990562; c=relaxed/simple;
+	bh=9mtdtEvAb9jA8we/D882fxmOAkbK1iAVqFkdb6f7NY0=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PQAgmJKk10V3AUrffQR+oRmCGPapkiED1QQQpEgaTA52LipqcyQ1G+twmDaVkDNEJo1/Hd4KCWOmL6FbTuD9YrnCMXae1kgE316QOYL1ubzxliPZUiFJmuDpK4leGdg1m3UheINX67SbjM50sBfdMHIIc3m2DzxElRkxKP+gb54=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MJR+DnhK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JUoIpRbO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BFD40C4CED1;
-	Wed, 19 Feb 2025 17:45:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MJR+DnhK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 01021C4CED1;
+	Wed, 19 Feb 2025 18:42:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1739987116;
-	bh=PLKgIAUc8PxIE5sgb4ceJ8Pc2bC5fIlJ4GVnUXLmP7o=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=JUoIpRbORpVUufpezWbfzklThXYxKthDLRw2dZD04u8oItZTENvuJawmS5b6pgEr1
-	 ilD7PbRx88+jt0xPgR95WZoDAlfRp2eR+qoQ45AIbbb4AcSR0CnP5lTlG7iB1pq9CU
-	 SfP3eL/g5Pr5IANdWerXLf4W9j004Gvp0VKKolv4sdW/3MV8XQn5aYTkm/0VObtf3r
-	 7piecgbopo5owqWRtdOv/HTan+ZyD8e0e/ljJlYWjbE+foomzNfAaZ/i2ph/uZ0fLE
-	 7q5W8/NQO4q46xFI5Rw2eBRtK+n5M0KaJLolKd6SSgK8ofSTmaIoQEkCS5Fcg0znZ/
-	 d5ARVJnkVaNIQ==
-Message-ID: <a103802c-90e2-4cda-86a4-6bde5bb28670@kernel.org>
-Date: Wed, 19 Feb 2025 18:45:13 +0100
+	s=k20201202; t=1739990561;
+	bh=9mtdtEvAb9jA8we/D882fxmOAkbK1iAVqFkdb6f7NY0=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=MJR+DnhK60IgXf6YZiY95gGrqllrzvtmzDlzoxAyjJU7elBvafE+QW35kNpR1ylan
+	 JIf7HY5x/qpyTN1pfTRsfMW6uWRrqbI1Kg2gDjcxEf5/gf+ysn7rZXojaTOzlp9EOp
+	 WYt5HRZAOH7YqxU2m75TyrsYm/80h1yPR2/W8J5maAq9+SR69Pngw3UcxwmDEZEFqY
+	 v58p3wpL77JsVSj9yye1MlIhJjXQhWPj8GnGlTQa6GokHGtBOzKGO/UOF4f29TAV1W
+	 6xKmNfGEq9z+aHBlQgXcucc4BudSkgqL43NOU5sG2J6fgg93dDV2H5fp6JLfO5OEhf
+	 ByvxPbpD3OHTQ==
+Message-ID: <3e0b0512-b924-46c5-81a6-fa5cc83929b4@kernel.org>
+Date: Wed, 19 Feb 2025 19:42:38 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: always handle address removal under msk
- socket lock
+Subject: Re: [PATCH mptcp-net v2 0/2] mptcp: reset when MPTCP opts are dropped
+ after MPJ
 Content-Language: en-GB
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
+Cc: "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
+References: <20250218-mptcp-dss-drop-mpj-v2-0-0c6caa10ec52@kernel.org>
+ <9e83a37d-993a-4766-a1c7-e19aedfa072b@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,43 +87,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
+In-Reply-To: <9e83a37d-993a-4766-a1c7-e19aedfa072b@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
-On 19/02/2025 13:45, Paolo Abeni wrote:
-> Syzkaller reported a lockdep splat in the PM control path:
-
-(...)
-
-> Indeed the PM can try to send a RM_ADDR over a msk without acquiring
-> first the msk socket lock.
+On 18/02/2025 17:24, Paolo Abeni wrote:
+> On 2/18/25 12:24 PM, Matthieu Baerts (NGI0) wrote:
+>> - Patch 1: fix issue #544 where a middlebox drops MPTCP options after a
+>>   3WHS on the additional subflow.
+>>
+>> - Patch 2: a safety check is added when asking to do a fallback to do so
+>>   only when allowed. If not, a new warning will be emitted.
+>>
+>> Note that two new packetdrill tests have been added in a PR to cover
+>> this case:
+>>
+>>   https://github.com/multipath-tcp/packetdrill/pull/160
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> The bugged code-path comes from an early optimization: when there
-> are no subflows, the PM should (usually) not send RM_ADDR
-> notifications.
-> 
-> The above statement is incorrect, as without locks another process
-> could concurrent create a new subflow and cause the RM_ADDR generation.
-> 
-> Additionally the supposed optimization is not very effective even
-> performance-wise, as most mptcp sockets should have at least one
-> subflow: the MPC one.
-Thank you for having looked at this!
+> Acked-by: Paolo Abeni <pabeni@redhat.com>
 
-By chance, do you know how syzkaller managed to interact with an MPTCP
-socket not having any attached subflows? An msk being destroyed?
+Thank you for this review!
 
-Just to know if there are specific cases we need to pay attention to in
-the future :)
+Now in our tree (fixes for -net):
 
-> Address the issue removing the buggy code path, the existing "slow-path"
-> will handle correctly even the edge case.
-Thank you, it looks good to me!
+New patches for t/upstream-net and t/upstream:
+- 1babdda71364: mptcp: reset when MPTCP opts are dropped after join
+- 1e4711c4b02c: mptcp: safety check before fallback
+- Results: 54ac5bb2f077..aba580cd4fc8 (export-net)
+- Results: 4ba9db964049..3ee8e45b1642 (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/2ea4756918f65f22b82d3134485d4c2842e3400f/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/4f345f49f9f36636d9f8408b4a30b70f602b50ae/checks
 
 Cheers,
 Matt
