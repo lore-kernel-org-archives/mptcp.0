@@ -1,143 +1,147 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7B91F0E31
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 10:37:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF8E1CAA9C
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 10:40:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740047836; cv=none; b=h5P3wpubmYnhe63duQAPRWqV52ycZnUhgShtNMCaC96fJN1KeROSBBpWSYsMGEHwLr/HhjRAwam9Q46iuHkZZJw09s9H8NGAI0JrIPkLidHk1vdpLCS35v/LJbp6BYClg4EbMwe22DWel3queG53sUk8TTiDv1NgpjwmoggCwsg=
+	t=1740048049; cv=none; b=DQFJlVA2LSGr933UBWV5SEPvJpfbk6JnO+0dqpDQ6I071pfGB0ekU3/wBqoqB4cMrqD7gbtMUV5iRo2T9ey+YnD0poMbKyij/qkinpo3qoSWXNtXS477wqAE14ck0+VjHFPR4OSMxebWGYgxK8Imi8bMkZ2rVbtR+JzbtNFGhBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740047836; c=relaxed/simple;
-	bh=o4qthuCsK8ZCry973EgmPqhYZV1sKjE5yOz6H+N0IN0=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=NklcbIcPUEDGFckCwvUtiRTKHh49U0IxkQ6hySZPdBVWTf3QT3IfZYPayf7vnywawHeOpka86+sofkxIYOk4l+Aiws+b0qKyzJABG7oh6l6B/ZMm5NDD4YAT+Lx4CG25aqrx4OzpxWW0wCF74a46VlUmfUsZ60cZHy4IpC1gVFM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qFPWDxm0; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740048049; c=relaxed/simple;
+	bh=XqaiZvWNoT90Aj7WV22bPQyEk4n17BKkxJyo+ZoKcqY=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=KPOCl4yud4khiHN9bYg9D3D5RMcFgq7BNdy/T0VpJ6gjMmBgOlyNUJlSJ9yeiAgEjziS1QIzUAdHQc5Q3+D45s+a32/ZqLoDMU8D3sfl2QKnd1LATTDOky5Jxlib+4LEkh4PwbtCAaGX0bPmoFc4bgmpvG8xq9m6exs5Hp09eOQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZ+hHK6v; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qFPWDxm0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 630F4C4CEE4;
-	Thu, 20 Feb 2025 10:37:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZ+hHK6v"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A733C4CED1;
+	Thu, 20 Feb 2025 10:40:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740047836;
-	bh=o4qthuCsK8ZCry973EgmPqhYZV1sKjE5yOz6H+N0IN0=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=qFPWDxm0HT6GUmVsNgBdRSww4fARcweRy0FYhH7ThbHBRMuwRv99UgQ4MLnLDSjTh
-	 yZsLBWAmOfvJxVahhArcunT1i8oFAvc8RGBVTxJ9tycoS7LvxYUB4yT2MlIfz2n3b2
-	 txhy21mvRtxMhrx9vDtcoR35NEiIVMFPKKv3WUy+F76LVF1i4GcvnOihH7zH2Oh9pE
-	 +UYQuCcTDbGjgYOGsQwIiMbCCIeG2P+zSP76cEYkIXPXK8NA+fSGWu6IXMId9QL0VA
-	 pd1phzg1i0mqXmXm+nN0WbOD5hv1NgJ/AzDrC1AwI1Wip0s5k/Du1qIExDI4HIuYXL
-	 /2Lk69Ec9XvKg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 9/9] mptcp: pm: userspace: subflow_closed interface
-Date: Thu, 20 Feb 2025 18:36:58 +0800
-Message-ID: <2bf0f00efec0394db5b33d5cd6fc74178ea9c736.1740047738.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1740047738.git.tanggeliang@kylinos.cn>
-References: <cover.1740047738.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1740048048;
+	bh=XqaiZvWNoT90Aj7WV22bPQyEk4n17BKkxJyo+ZoKcqY=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=aZ+hHK6vVYi11WtsZZKZUiHoCAHrdsAOwMzRGKVTePoIuwkfSXcx2f69t/CVPlhRM
+	 k09a2HNtuWecvrhqEMV5mE3nGASblNnume4LxBt6zo/HZ9C3+Ny/C2wR7hRI/v5vVN
+	 g5mW11XXvl84nG7F0O3/fppB4XPYOBKn2qrZCskmvVqNE0lzTXTUS70GlVYEn1Tqi1
+	 0FdVrooTbyCObayqlFglrAfOL9SpWwrtW0qNSuJlgdlIA2hzGiVmk3BS+kktvPIPxl
+	 iVp7XzIqt5JQRhl4BiFl4keIDk2DLPx8QIpnKIf5faHKq7oXcW/kIIxxsoe/lrhZ6/
+	 Jsk+JXVfnZ/wA==
+Message-ID: <3a050151-d8ce-460e-a1a3-70c81b706083@kernel.org>
+Date: Thu, 20 Feb 2025 11:40:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net] mptcp: always handle address removal under msk
+ socket lock
+Content-Language: en-GB
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+References: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
+ <a103802c-90e2-4cda-86a4-6bde5bb28670@kernel.org>
+ <2c71d642-cbd6-402c-8300-59f22533654c@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2c71d642-cbd6-402c-8300-59f22533654c@redhat.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
 
-Extract subflow_closed() interface of the userspace PM from the handler of
-netlink command MPTCP_PM_CMD_SUBFLOW_DESTROY
+On 20/02/2025 10:33, Paolo Abeni wrote:
+> On 2/19/25 6:45 PM, Matthieu Baerts wrote:
+>> Hi Paolo,
+>>
+>> On 19/02/2025 13:45, Paolo Abeni wrote:
+>>> Syzkaller reported a lockdep splat in the PM control path:
+>>
+>> (...)
+>>
+>>> Indeed the PM can try to send a RM_ADDR over a msk without acquiring
+>>> first the msk socket lock.
+>>>
+>>> The bugged code-path comes from an early optimization: when there
+>>> are no subflows, the PM should (usually) not send RM_ADDR
+>>> notifications.
+>>>
+>>> The above statement is incorrect, as without locks another process
+>>> could concurrent create a new subflow and cause the RM_ADDR generation.
+>>>
+>>> Additionally the supposed optimization is not very effective even
+>>> performance-wise, as most mptcp sockets should have at least one
+>>> subflow: the MPC one.
+>> Thank you for having looked at this!
+>>
+>> By chance, do you know how syzkaller managed to interact with an MPTCP
+>> socket not having any attached subflows? An msk being destroyed?
+> 
+> I'm not 110% and I don't have the syzkaller log for the relevant splat
+> handy, but i.e. a passive socket at clone time does:
+> 
+> 	list_add(&subflow->node, &msk->conn_list); // [1]
+> 	sock_hold(ssk);
+> 	mptcp_token_accept(subflow_req, msk); // [2]
+> 
+> under the msk socket spin lock.
+> 
+> After [2], the PM ops can find and operate on the newly accepted msk
+> socket, but lacking any lock protection and memory barriers could still
+> observe an empty conn_list, even given the prior [1].
+> 
+> The race is tiny, thus is hard for syzkaller to find a repro.
 
-	mptcp_pm_nl_subflow_destroy_doit(),
+I see, thank you for your reply and for having checked!
 
-only leave the code for obtaining msk through "info", parsing local address
-entry and parsing remote address info in the handler.
+I will try to keep this in mind when looking at future potential issues.
+(And not always assuming there is at least one subflow in the list.)
 
-This interface is invoked under holding the msk socket lock.
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/pm_userspace.c | 45 ++++++++++++++++++++++++++--------------
- 1 file changed, 30 insertions(+), 15 deletions(-)
-
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index bd497893c927..9fd93acad38a 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -501,14 +501,36 @@ static struct sock *mptcp_nl_find_ssk(struct mptcp_sock *msk,
- 	return NULL;
- }
- 
-+static int mptcp_userspace_pm_subflow_closed(struct mptcp_sock *msk,
-+					     struct mptcp_pm_param *param)
-+{
-+	struct mptcp_pm_addr_entry *local = &param->entry;
-+	struct mptcp_addr_info *remote = &param->addr;
-+	struct sock *ssk, *sk = (struct sock *)msk;
-+
-+	ssk = mptcp_nl_find_ssk(msk, &local->addr, remote);
-+	if (!ssk)
-+		return -ESRCH;
-+
-+	spin_lock_bh(&msk->pm.lock);
-+	mptcp_userspace_pm_delete_local_addr(msk, local);
-+	spin_unlock_bh(&msk->pm.lock);
-+	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
-+	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
-+	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
-+
-+	return 0;
-+}
-+
- int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info)
- {
- 	struct mptcp_pm_addr_entry addr_l;
- 	struct mptcp_addr_info addr_r;
- 	struct nlattr *raddr, *laddr;
-+	struct mptcp_pm_param param;
- 	struct mptcp_sock *msk;
--	struct sock *sk, *ssk;
- 	int err = -EINVAL;
-+	struct sock *sk;
- 
- 	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR) ||
- 	    GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR_REMOTE))
-@@ -559,21 +581,13 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 	}
- 
- 	lock_sock(sk);
--	ssk = mptcp_nl_find_ssk(msk, &addr_l.addr, &addr_r);
--	if (!ssk) {
--		GENL_SET_ERR_MSG(info, "subflow not found");
--		err = -ESRCH;
--		goto release_sock;
--	}
--
--	spin_lock_bh(&msk->pm.lock);
--	mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
--	spin_unlock_bh(&msk->pm.lock);
--	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
--	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
--	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
--release_sock:
-+	mptcp_pm_param_set_contexts(&param, &addr_l, &addr_r);
-+	err = msk->pm.ops && msk->pm.ops->subflow_closed ?
-+	      msk->pm.ops->subflow_closed(msk, &param) :
-+	      mptcp_userspace_pm_subflow_closed(msk, &param);
- 	release_sock(sk);
-+	if (err)
-+		GENL_SET_ERR_MSG(info, "subflow not found");
- 
- destroy_err:
- 	sock_put(sk);
-@@ -719,6 +733,7 @@ static struct mptcp_pm_ops mptcp_userspace_pm = {
- 	.address_announced	= mptcp_userspace_pm_address_announced,
- 	.address_removed	= mptcp_userspace_pm_address_removed,
- 	.subflow_established	= mptcp_userspace_pm_subflow_established,
-+	.subflow_closed		= mptcp_userspace_pm_subflow_closed,
- 	.get_local_id		= mptcp_userspace_pm_get_local_id,
- 	.get_priority		= mptcp_userspace_pm_get_priority,
- 	.type			= MPTCP_PM_TYPE_USERSPACE,
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
