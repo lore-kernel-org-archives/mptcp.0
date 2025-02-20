@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D8F781DA62E
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 02:57:46 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C97441D89FD
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 02:57:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020266; cv=none; b=dJxMlQ3o15fLKwhoeLaJ4NW1iFzgj9pffDlHXLMWh3/3RCE9W4C0K6RoMTWg+x6PurpNarZoj9n31G4ozRBk+beU5UXEsEvQ0yEqOzrT+A1hMQPyaCcDXTmEXl0GBnwwiJxFxb71Pphtx/nYI8oLE4DS189MZnrslonHqfYmg4U=
+	t=1740020267; cv=none; b=l2HA1xlDMuU6GC2rnJDJUB1YhCWn9/d33rRZ8Mw2GCkpfZCrdXYO47bjLwGOl8DxKpmD2hc/uBD34Q30gBad76FAWiNBAdfuYC+ChyePSRGu6lnCJDOA++xm7BmMt/LWcLSkNx4Nx9Kvk1G1jzh/yqht9LMYqzzqT1cwrF3MO6M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020266; c=relaxed/simple;
-	bh=qHlwxH/3odovgKnCENyhjorue50FrKpzQdg/YoZHamg=;
+	s=arc-20240116; t=1740020267; c=relaxed/simple;
+	bh=9duXCSVpsOsVIcRSOo3WLC2kYJWoM5cGbKSXZ6U+bQY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=bvVj6n8OsddmmbA1GjGK9V4u01poNpwV/H02vHH0m9K6UnHjrCmxmjNQT1/bBy+nYQ2VWyIUlSCVpXvwun9cxvp9Z0bCiCk2bAdjlibVC00PeCkwSHq6feWLORUuc0womxXFR7aAvd5iL5B4xcLopyP1dxCeVFkWtovC1frMHe4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nIi23OKy; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=umyij6okJ0YLBkzlHd249MZTxePnVwpeGYxDpJbfLQjqtD2CmnFHWm6e2+FiOFssOrSphWzhCNoMXtDspXC9SJNEZA1dfPXmHfyU6Np+H2bcZAPgqcT+t7TDwuDkD2WwJuZrXF98K/8fFCgd6Cgcuhc/b93LCfmO9jb3CUnNhBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tKhloYND; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nIi23OKy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99238C4CED1;
-	Thu, 20 Feb 2025 02:57:45 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tKhloYND"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D9FF0C4CED6;
+	Thu, 20 Feb 2025 02:57:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740020266;
-	bh=qHlwxH/3odovgKnCENyhjorue50FrKpzQdg/YoZHamg=;
+	s=k20201202; t=1740020267;
+	bh=9duXCSVpsOsVIcRSOo3WLC2kYJWoM5cGbKSXZ6U+bQY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=nIi23OKyIwFlsulgbioZWxpcwD6pGkuB332oCKnp8luY/1QmanvKp21Y7NXFpYHSq
-	 HT7OLLA9wXKhWZytzKj7cYw1OC7YQf6IhJ+YMceykx1UtYMxlJD8oG+k988dnnIVDj
-	 TxBWa8vvAlS3AgDIvCL5ofx5aQcmoGMN3kJEBb9ZHfz+180QDVT6iyplDYZpoVu2oo
-	 ryvZRmFn40cJ9ysHIgo9p1GqYEJQA7l/16gWRzlEzzdF3zkPiw4U86k2x+MBtVnAPp
-	 CgaiKcZF/Qo5BIlMiK0ilo8Z50NSMNV5qnU1G9R5eIhs9xR+GXHa423n/Pp52Z3ekJ
-	 7Cjdfn84DQEag==
+	b=tKhloYNDtsUuLBStjSyA6dEJx/qqSF/ZJTVvWwusQsMJRC/UVDtRgX6SVHCjVWPpa
+	 kskXA2kukN7qKn9QjNrEsIFM/JQ0x2LU2xhzuYFfQCMDAtwNOmGXEoIIwUxZ5poyyS
+	 /vWmBfahTTlXzWRV6gBydwxPfxxlFyGfrwaKWnhdVfxDkhkMt1alhqwnyqxw83KNi8
+	 mPQ1LZNMwVG0G7nINHEb+6LxtE/PedIajfyA0AesNd21wsOTkALR0hVcBZSpn+X6yC
+	 4YSKVDL6FpKpY+T9pQXlnwa/gbmeUPGoeSTyOU8AzcX0wf6yuq4xyVnoFeSqB3G65c
+	 nIV7bZmFAYbug==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 3/9] mptcp: pm: pass pm_param to get_local_id
-Date: Thu, 20 Feb 2025 10:57:27 +0800
-Message-ID: <bc226acf8604b95b112d1abb9e3a125fe9a636b2.1740019794.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 4/9] mptcp: pm: define struct mptcp_pm_ops
+Date: Thu, 20 Feb 2025 10:57:28 +0800
+Message-ID: <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1740019794.git.tanggeliang@kylinos.cn>
 References: <cover.1740019794.git.tanggeliang@kylinos.cn>
@@ -45,91 +45,156 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch changes the 2nd parameter of get_local_id() interface as
-"struct mptcp_pm_param" type. Only "entry" member of this struct is
-used.
+In order to allow users to develop their own BPF-based path manager,
+this patch defines a struct ops "mptcp_pm_ops" for a userspace path
+manager, which contains a set of interfaces.
+
+Add a set of functions to register, unregister, find and validate a
+given struct ops.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c           | 6 ++++--
- net/mptcp/pm_netlink.c   | 3 ++-
- net/mptcp/pm_userspace.c | 3 ++-
- net/mptcp/protocol.h     | 4 ++--
- 4 files changed, 10 insertions(+), 6 deletions(-)
+ include/net/mptcp.h  | 29 ++++++++++++++++++++++
+ net/mptcp/pm.c       | 59 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  5 ++++
+ 3 files changed, 93 insertions(+)
 
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index a41d6c74760f..f51e75d3882d 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -134,6 +134,35 @@ struct mptcp_pm_param {
+ 	struct mptcp_addr_info		addr;
+ };
+ 
++struct mptcp_pm_ops {
++	int (*created)(struct mptcp_sock *msk);
++	int (*established)(struct mptcp_sock *msk);
++	int (*closed)(struct mptcp_sock *msk);
++	int (*address_announced)(struct mptcp_sock *msk,
++				 struct mptcp_pm_param *param);
++	int (*address_removed)(struct mptcp_sock *msk,
++			       struct mptcp_pm_param *param);
++	int (*subflow_established)(struct mptcp_sock *msk,
++				   struct mptcp_pm_param *param);
++	int (*subflow_closed)(struct mptcp_sock *msk,
++			      struct mptcp_pm_param *param);
++	int (*get_local_id)(struct mptcp_sock *msk,
++			    struct mptcp_pm_param *param);
++	bool (*get_priority)(struct mptcp_sock *msk,
++			     struct mptcp_pm_param *param);
++	int (*set_priority)(struct mptcp_sock *msk,
++			    struct mptcp_pm_param *param);
++	int (*listener_created)(struct mptcp_sock *msk);
++	int (*listener_closed)(struct mptcp_sock *msk);
++
++	u8			type;
++	struct module		*owner;
++	struct list_head	list;
++
++	void (*init)(struct mptcp_sock *msk);
++	void (*release)(struct mptcp_sock *msk);
++} ____cacheline_aligned_in_smp;
++
+ #ifdef CONFIG_MPTCP
+ void mptcp_init(void);
+ 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 6a504c870e1a..e3457f34621c 100644
+index e3457f34621c..f56b2d1e3409 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -415,6 +415,7 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+@@ -6,12 +6,17 @@
+ #define pr_fmt(fmt) "MPTCP: " fmt
+ 
+ #include <linux/kernel.h>
++#include <linux/rculist.h>
++#include <linux/spinlock.h>
+ #include <net/mptcp.h>
+ #include "protocol.h"
+ 
+ #include "mib.h"
+ #include "mptcp_pm_gen.h"
+ 
++static DEFINE_SPINLOCK(mptcp_pm_list_lock);
++static LIST_HEAD(mptcp_pm_list);
++
+ /* path manager command handlers */
+ 
+ int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+@@ -661,3 +666,57 @@ void __init mptcp_pm_init(void)
  {
- 	struct mptcp_pm_addr_entry skc_local;
- 	struct mptcp_addr_info msk_local;
-+	struct mptcp_pm_param param;
- 
- 	if (WARN_ON_ONCE(!msk))
- 		return -1;
-@@ -432,9 +433,10 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- 	skc_local.addr.id = 0;
- 	skc_local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
- 
-+	mptcp_pm_param_set_contexts(&param, &skc_local, NULL);
- 	if (mptcp_pm_is_userspace(msk))
--		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
--	return mptcp_pm_nl_get_local_id(msk, &skc_local);
-+		return mptcp_userspace_pm_get_local_id(msk, &param);
-+	return mptcp_pm_nl_get_local_id(msk, &param);
+ 	mptcp_pm_nl_init();
  }
- 
- bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 0a0fe890c53d..3709ad2c06ef 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1140,8 +1140,9 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
- }
- 
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
--			     struct mptcp_pm_addr_entry *skc)
-+			     struct mptcp_pm_param *param)
- {
-+	struct mptcp_pm_addr_entry *skc = &param->entry;
- 	struct mptcp_pm_addr_entry *entry;
- 	struct pm_nl_pernet *pernet;
- 	int ret;
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 5b3ee43130be..bd235b2d18b3 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -131,10 +131,11 @@ mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
- }
- 
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
--				    struct mptcp_pm_addr_entry *skc)
-+				    struct mptcp_pm_param *param)
- {
- 	__be16 msk_sport =  ((struct inet_sock *)
- 			     inet_sk((struct sock *)msk))->inet_sport;
-+	struct mptcp_pm_addr_entry *skc = &param->entry;
- 	struct mptcp_pm_addr_entry *entry;
- 
- 	spin_lock_bh(&msk->pm.lock);
++
++/* Must be called with rcu read lock held */
++struct mptcp_pm_ops *mptcp_pm_find(enum mptcp_pm_type type)
++{
++	struct mptcp_pm_ops *pm;
++
++	list_for_each_entry_rcu(pm, &mptcp_pm_list, list) {
++		if (pm->type == type)
++			return pm;
++	}
++
++	return NULL;
++}
++
++int mptcp_pm_validate(struct mptcp_pm_ops *pm)
++{
++	if (!pm->created && !pm->established && !pm->closed &&
++	    !pm->address_announced && !pm->address_removed &&
++	    !pm->subflow_established && !pm->subflow_closed &&
++	    !pm->get_local_id && !pm->get_priority && !pm->set_priority &&
++	    !pm->listener_created && !pm->listener_closed) {
++		pr_err("%u does not implement required ops\n", pm->type);
++		return -EINVAL;
++	}
++
++	return 0;
++}
++
++int mptcp_pm_register(struct mptcp_pm_ops *pm)
++{
++	int ret;
++
++	ret = mptcp_pm_validate(pm);
++	if (ret)
++		return ret;
++
++	spin_lock(&mptcp_pm_list_lock);
++	if (mptcp_pm_find(pm->type)) {
++		spin_unlock(&mptcp_pm_list_lock);
++		return -EEXIST;
++	}
++	list_add_tail_rcu(&pm->list, &mptcp_pm_list);
++	spin_unlock(&mptcp_pm_list_lock);
++
++	pr_debug("userspace_pm type %u registered\n", pm->type);
++	return 0;
++}
++
++void mptcp_pm_unregister(struct mptcp_pm_ops *pm)
++{
++	spin_lock(&mptcp_pm_list_lock);
++	list_del_rcu(&pm->list);
++	spin_unlock(&mptcp_pm_list_lock);
++}
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index dbcf4b84e0f0..7987beaa730e 100644
+index 7987beaa730e..f3e04927e214 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1122,9 +1122,9 @@ void mptcp_pm_param_set_contexts(struct mptcp_pm_param *param,
- 				 const struct mptcp_addr_info *addr);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
--			     struct mptcp_pm_addr_entry *skc);
-+			     struct mptcp_pm_param *param);
- int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
--				    struct mptcp_pm_addr_entry *skc);
-+				    struct mptcp_pm_param *param);
- bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
- bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+@@ -1039,6 +1039,11 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+ 				struct mptcp_pm_addr_entry *entry);
+ 
++struct mptcp_pm_ops *mptcp_pm_find(enum mptcp_pm_type type);
++int mptcp_pm_validate(struct mptcp_pm_ops *pm);
++int mptcp_pm_register(struct mptcp_pm_ops *pm);
++void mptcp_pm_unregister(struct mptcp_pm_ops *pm);
++
+ void mptcp_free_local_addr_list(struct mptcp_sock *msk);
+ 
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
 -- 
 2.43.0
 
