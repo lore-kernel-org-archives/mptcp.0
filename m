@@ -1,40 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 22CF01D90B6
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 02:57:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C6AEA1DDC3E;
+	Thu, 20 Feb 2025 03:10:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020274; cv=none; b=PSf/Op2DrP1hrVixjtznzv8nzVtwFdNO7f9R+0TJT/X5IadJ92pkwUFZc/vp+mUwIH+oy9zmwou9Le0HS51czYvxorqlO78H61yvMPiAcgWyJ26fPtHD9ZlQ77SjhG8Cts7j2ycp3klFh+/IpJ1IU5O/M1SGqIQ+rpcRqdp8eZI=
+	t=1740021012; cv=none; b=pr6VpruRakRGSOg6aTyZwH8XNS3qRc8jOXCpVTH8O52iTvrCB35khmPLYDmQqwvt0DCZMQT4RsnqGl79O9qyz9qVD8jyM7VptdXsvgpz/uCkzY+v7QaHxFwXfR4bxh7yaUR8K2zWDHwfkOcgU1s+u+O6jS4LmnQE42zcTSzSq0c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020274; c=relaxed/simple;
-	bh=/C5nQ+j9mfPU+MQmgap/V3MqkJfJcpkrTD+IxlsNIKM=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=SEA6dOBeBmBd95sxwA3nFcsQMNXo45GGKYW+n95X9cjLB9GYqRlBDvjHP+NEnFC2AQKeVmY7LEPYHY1xiuERow32ecMM2YBmH5asXxqUg6muGR/vZibompA841MixiKlqV51VVbahRyKH7ppFnNeNb1g6tZDbhsv8ADH9sEx+iE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hu2eufnx; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740021012; c=relaxed/simple;
+	bh=adfJvgf9iLXqqrtyW1al49ovvy0Sv0dclbulEIE0uhQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=L1wxYRlb34PsvfARu4lHXYGFQxcyCdV8tgaFOF0/2otjiCNWJ89/z+FbWTFf8MMMZF4X4iraJ6pRG2cRizqVMDEa/v92Cd6AccZzRGL+pmIoAAcGaNiYgny81zdvwb7/CeYtmHCxCR+XgTr/UbAPZjl9cIphtinr7/Sa233+xFQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pp2HdoPo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hu2eufnx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37E46C4CED6;
-	Thu, 20 Feb 2025 02:57:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pp2HdoPo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9EEBFC4CED1;
+	Thu, 20 Feb 2025 03:10:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740020274;
-	bh=/C5nQ+j9mfPU+MQmgap/V3MqkJfJcpkrTD+IxlsNIKM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hu2eufnxA68r1TgqIgqunvXI1r4bAZd9A4IjWxAPu3Fk48NAzrbnMo0DAdJtSg/8Z
-	 X+PW84HmHdzcDMWFv5V9EM94zuLaKrZk0sgVCDg2qFxrybwvneB34UGZl7/MNOBMrH
-	 bKR5cVMtof7QuMFLy+OH9lAUr2OpbAF8nKQ5YdO+4sMLfPxogRpQjgl3zSTbvlsXLe
-	 DVmxTMAoB19L5qG66nnlDzHArdnktPjpfDVOhchGhxK/kqjMPM11Gy/D5U6snbyfC7
-	 x1JSbJbCy5B3Cfg5aLpRwgbv2oT3DYZhsS9R3wfUqkR9srnHEQzYiHc7dvl430nKCt
-	 vCzBYGMXgj+Dw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 9/9] mptcp: pm: drop is_backup helpers
-Date: Thu, 20 Feb 2025 10:57:33 +0800
-Message-ID: <a3c99f2c228affd88af5ad0ae7584aaaeab5fca9.1740019794.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1740019794.git.tanggeliang@kylinos.cn>
-References: <cover.1740019794.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1740021012;
+	bh=adfJvgf9iLXqqrtyW1al49ovvy0Sv0dclbulEIE0uhQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pp2HdoPop6Vy0zwZt1ne0dHNimfajQ3y6lysyHurKfb2LUHuCVLgi6kGyDKR8rwBO
+	 mr6x4JK83N8hVVyFIfw2N5VBWibBoJVMXCutmgcRwhwmpdU8XvIelDR8Cj5FbF1Qpt
+	 ZBncI068lM8I8oBMweCsNWyBA8FUgW35CCDUWosoYIcrFm88w82koUxlUYrG4WD/qG
+	 npr+/jitnvWsVk1BAI5bdi2Jjqs283Ij7+m++ic+QYY4FZ4Jf0dHYlyN4I5rvNA6w1
+	 ZkLKPoJVpXx61WADq9UiJNAKOy3veeHKzqbYwrdsfFC/2JIlaAR8fQrdiur8Pkvpu5
+	 X2ISp7vjZxwKQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70C87380AAEC;
+	Thu, 20 Feb 2025 03:10:44 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,96 +37,56 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] mptcp: rx path refactor
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174002104323.825980.13872067512718891782.git-patchwork-notify@kernel.org>
+Date: Thu, 20 Feb 2025 03:10:43 +0000
+References: <20250218-net-next-mptcp-rx-path-refactor-v1-0-4a47d90d7998@kernel.org>
+In-Reply-To: <20250218-net-next-mptcp-rx-path-refactor-v1-0-4a47d90d7998@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, kuniyu@amazon.com, willemb@google.com, dsahern@kernel.org,
+ jhs@mojatatu.com, xiyou.wangcong@gmail.com, jiri@resnulli.us,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hello:
 
-Now mptcp_pm_nl_is_backup() and mptcp_userspace_pm_is_backup()
-helpers can be dropped, and mptcp_pm_is_backup() can directly
-invoke get_priority() interface through "ops" of "msk->pm".
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/pm.c           | 9 +++++----
- net/mptcp/pm_netlink.c   | 8 --------
- net/mptcp/pm_userspace.c | 9 ---------
- net/mptcp/protocol.h     | 2 --
- 4 files changed, 5 insertions(+), 23 deletions(-)
+On Tue, 18 Feb 2025 19:36:11 +0100 you wrote:
+> Paolo worked on this RX path refactor for these two main reasons:
+> 
+> - Currently, the MPTCP RX path introduces quite a bit of 'exceptional'
+>   accounting/locking processing WRT to plain TCP, adding up to the
+>   implementation complexity in a miserable way.
+> 
+> - The performance gap WRT plain TCP for single subflow connections is
+>   quite measurable.
+> 
+> [...]
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d2cc93e21bee..ea92e72c383f 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -447,13 +447,14 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
- bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
- {
- 	struct mptcp_addr_info skc_local;
-+	struct mptcp_pm_param param;
- 
- 	mptcp_local_address((struct sock_common *)skc, &skc_local);
- 
--	if (mptcp_pm_is_userspace(msk))
--		return mptcp_userspace_pm_is_backup(msk, &skc_local);
--
--	return mptcp_pm_nl_is_backup(msk, &skc_local);
-+	if (!msk->pm.ops || !msk->pm.ops->get_priority)
-+		return -ENOTSUPP;
-+	mptcp_pm_param_set_contexts(&param, NULL, &skc_local);
-+	return msk->pm.ops->get_priority(msk, &param);
- }
- 
- static int mptcp_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 33b19ff7a313..3859642792db 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1188,14 +1188,6 @@ static bool mptcp_pm_nl_get_priority(struct mptcp_sock *msk,
- 	return backup;
- }
- 
--bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
--{
--	struct mptcp_pm_param param;
--
--	mptcp_pm_param_set_contexts(&param, NULL, skc);
--	return mptcp_pm_nl_get_priority(msk, &param);
--}
--
- #define MPTCP_PM_CMD_GRP_OFFSET       0
- #define MPTCP_PM_EV_GRP_OFFSET        1
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index b233d8469a48..be578f5c3195 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -165,15 +165,6 @@ static bool mptcp_userspace_pm_get_priority(struct mptcp_sock *msk,
- 	return backup;
- }
- 
--bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
--				  struct mptcp_addr_info *skc)
--{
--	struct mptcp_pm_param param;
--
--	mptcp_pm_param_set_contexts(&param, NULL, skc);
--	return mptcp_userspace_pm_get_priority(msk, &param);
--}
--
- static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
- {
- 	struct mptcp_sock *msk;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d06add105df5..45c948142839 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1130,8 +1130,6 @@ void mptcp_pm_param_set_contexts(struct mptcp_pm_param *param,
- 				 const struct mptcp_addr_info *addr);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
--bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
--bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 			  struct netlink_callback *cb);
- int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+Here is the summary with links:
+  - [net-next,1/7] mptcp: consolidate subflow cleanup
+    https://git.kernel.org/netdev/net-next/c/c3349a22c200
+  - [net-next,2/7] mptcp: drop __mptcp_fastopen_gen_msk_ackseq()
+    https://git.kernel.org/netdev/net-next/c/f03afb3aeb9d
+  - [net-next,3/7] mptcp: move the whole rx path under msk socket lock protection
+    https://git.kernel.org/netdev/net-next/c/bc68b0efa1bf
+  - [net-next,4/7] mptcp: cleanup mem accounting
+    https://git.kernel.org/netdev/net-next/c/6639498ed85f
+  - [net-next,5/7] net: dismiss sk_forward_alloc_get()
+    https://git.kernel.org/netdev/net-next/c/c8802ded4658
+  - [net-next,6/7] mptcp: dismiss __mptcp_rmem()
+    https://git.kernel.org/netdev/net-next/c/51fe9cb9213e
+  - [net-next,7/7] mptcp: micro-optimize __mptcp_move_skb()
+    https://git.kernel.org/netdev/net-next/c/e0ca4057e0ec
+
+You are awesome, thank you!
 -- 
-2.43.0
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
