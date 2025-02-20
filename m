@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1AEFF1DED51
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 02:57:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 572FD13A3ED
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 02:57:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740020263; cv=none; b=iho+O2hJZ71YEZIjtPtfo2o927rbCjOuHyHo7erof5ycxrmUMswbQq+IwECOOOjPnKo6SBSJB87PZigoJXwMvWT4Xodx0/LXtPsB0kPuK5ajmnBmADMzLA/NRnSd5r0711KEPz/WsqIcg0dSQTMw6pooPXbUFZA3PKMYozjZ35A=
+	t=1740020264; cv=none; b=dGAPoTJWI+cWp2BJXWHJI3w+5XrRKjMbpDJOO4fCN7ZoXoed0pIKkcogDvRqVLuFvIGX5DsdnjBJmOlNJlfYe6biK1HlP4t/6UqoVohR1VYUUSRgH/XAumzl7DvQs0ULk5CrfWGH+3GlGR1qimi4QzZX+p6WZXIm3Wvtz8S/U98=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740020263; c=relaxed/simple;
-	bh=WVgr4A3EdPwPJAa+oHyF1lb+6fnFrG/P7EXW7947JqM=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=Tbg1ZksiFaQv7kQg39b7Ul5hIOVcOuF0tsJq95TXgnLjd0ocfU0nmLslHFNkqnGAIQ2n2HMMwnh5/o1pwZKpz9GC4iKEKMo8FVl6AFfEGCvDuz/FRJDsWofrOAVjsu0h9KZJOUH+lIaFyQa/LX+tQJs2taDlKHZcw5Q6NlAWNF8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MxXarvuy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740020264; c=relaxed/simple;
+	bh=NvBKnowwkziP6+cF88wJgnfAErBA1AV+AVSaTZm9bFw=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=FXsaVmmF+z3JztZGxPbvhpB93AaRWx/1G2pYbMamFwa6jYywfy+EVTghkZk0hAF0587k2W3RXFEstvfO8nKmSpazdATDSdmJwElW8E/DRulQ47UKOTcpLN/Nqu7ERkSA10tZmacB+c+5aFwkutE3j+5n1CZpZrY3QVXPq2GwD34=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=L9UYIt4C; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MxXarvuy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7AD7C4CED6;
-	Thu, 20 Feb 2025 02:57:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="L9UYIt4C"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16D4BC4CEE0;
+	Thu, 20 Feb 2025 02:57:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740020262;
-	bh=WVgr4A3EdPwPJAa+oHyF1lb+6fnFrG/P7EXW7947JqM=;
-	h=From:To:Cc:Subject:Date:From;
-	b=MxXarvuykqDTdItdnFnAx2ukMPXhYCNWjEEDbt2ct/bKWYuetwxbxgWwzKDJz8P6P
-	 xlG5tILf+a1v0hBoewmSvWl6WRsugk45E0i0IYu1KdKoLCIvZDaOFsxpEPqbPWbBaU
-	 3noOit9ERnk72IbJG9KenYAQpPQP6iIEqArVhHUkaxU9MhjlR34otgt27VQVMl3kGo
-	 ed/zyilPIdUCpI7Z5FRRcmZOOXQEWfZKQe0QAjXA7vBQjBT0WkD5gtrYLcPEJydBg8
-	 THpBH9/JzH/dKjAKYENudYdc6lCpxTPy2yXt0jYnomfWALW8M01yeJIR2tLjTZTdiR
-	 FWs1OrQBI+DIg==
+	s=k20201202; t=1740020263;
+	bh=NvBKnowwkziP6+cF88wJgnfAErBA1AV+AVSaTZm9bFw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=L9UYIt4C+h9VkRU+IpuZW4Ec8kZ0M0Szx1oxh/WRQsTU+omNy3wMUnEaOOcMZZ/Ed
+	 Qa7TTbHWaw+e+GTJFhB7OJKNDYbk2oLnoyzXMJqnY0ncz8WSnRSuqh/Xc8z1wDBeS3
+	 7mSg01BQ/80Ikb3mkSQY1M5AWNSduMmuWsZLUzgJk83N2EWaofeCJ2kpfAz3OQUXxF
+	 2nrfz4k+gaJBvZ46z3OSJ+QMPzac76tsc1UgldO88l3WPGF5Dslpc0sDQZuJeRV/Ko
+	 Ig8Jz7S378zZQnXdxV8Xp+ocYw/9GSaPbJaefIUVgEW2UqZ9KlCPSAP5tJSebb8gIU
+	 KtdwS6Kh5SpLg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 0/9] BPF path manager, part 4
-Date: Thu, 20 Feb 2025 10:57:24 +0800
-Message-ID: <cover.1740019794.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 1/9] mptcp: pm: use addr entry for get_local_id
+Date: Thu, 20 Feb 2025 10:57:25 +0800
+Message-ID: <aebbbe7e861ff37a7f5225e8cccda396c56011ea.1740019794.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1740019794.git.tanggeliang@kylinos.cn>
+References: <cover.1740019794.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,69 +45,151 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v5:
- - use "struct mptcp_pm_param *param" as unified parameters for all
-   interfaces.
- - register in-kernel mptcp_pm_ops too.
- - only implement two interfaces "get_local_id" and "get_priority" in
-   this set.
+The following code in mptcp_userspace_pm_get_local_id() that assigns "skc"
+to "new_entry" is not allowed in BPF if we use the same code to implement
+the get_local_id() interface of a BFP path manager:
 
-v4:
- - include a new patch "define BPF path manager type".
+	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
+	new_entry.addr = *skc;
+	new_entry.addr.id = 0;
+	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
 
- - add new interfaces:
-	created established closed
-	listerner_created listener_closed
+To solve the issue, this patch moves this assignment to "new_entry" forward
+to mptcp_pm_get_local_id(), and then passing "new_entry" as a parameter to
+both mptcp_pm_nl_get_local_id() and mptcp_userspace_pm_get_local_id().
 
- - rename interfaces as:
-	address_announced address_removed
-	subflow_established subflow_closed
-	get_priority set_priority
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm.c           | 11 ++++++++---
+ net/mptcp/pm_netlink.c   |  9 ++++-----
+ net/mptcp/pm_userspace.c | 17 ++++++-----------
+ net/mptcp/protocol.h     |  6 ++++--
+ 4 files changed, 22 insertions(+), 21 deletions(-)
 
- - rename functions as:
-	mptcp_pm_validate
-	mptcp_pm_register
-	mptcp_pm_unregister
-	mptcp_pm_initialize
-	mptcp_pm_release
-
-v3:
- - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
- - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
- - return 'err' instead of '0' in userspace_pm_subflow_create().
- - drop 'ret' variable inmptcp_pm_data_reset().
- - fix typos in commit log.
-
-v2:
- - update get_local_id interface in patch 2.
-
-get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
-as Matt suggested.
-
-In order to implement BPF path manager, it's necessary to unify the
-interfaces of the path manager. This set contains some cleanups and
-refactoring to unify the interfaces in kernel space. Finally, define
-a struct mptcp_pm_ops for a path manager.
-
-Geliang Tang (9):
-  mptcp: pm: use addr entry for get_local_id
-  mptcp: pm: add struct mptcp_pm_param
-  mptcp: pm: pass pm_param to get_local_id
-  mptcp: pm: define struct mptcp_pm_ops
-  mptcp: pm: in-kernel: register mptcp_netlink_pm
-  mptcp: pm: userspace: register mptcp_userspace_pm
-  mptcp: pm: initialize and release mptcp_pm_ops
-  mptcp: pm: drop get_local_id helpers
-  mptcp: pm: drop is_backup helpers
-
- include/net/mptcp.h      |  42 +++++++++++++
- net/mptcp/pm.c           | 131 ++++++++++++++++++++++++++++++++++++---
- net/mptcp/pm_netlink.c   |  23 +++++--
- net/mptcp/pm_userspace.c |  37 ++++++-----
- net/mptcp/protocol.c     |   1 +
- net/mptcp/protocol.h     |  24 +++----
- 6 files changed, 216 insertions(+), 42 deletions(-)
-
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 16cacce6c10f..94620ab172b7 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -403,20 +403,25 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
+ {
+-	struct mptcp_addr_info skc_local;
++	struct mptcp_pm_addr_entry skc_local;
+ 	struct mptcp_addr_info msk_local;
+ 
+ 	if (WARN_ON_ONCE(!msk))
+ 		return -1;
+ 
++	memset(&skc_local, 0, sizeof(struct mptcp_pm_addr_entry));
++
+ 	/* The 0 ID mapping is defined by the first subflow, copied into the msk
+ 	 * addr
+ 	 */
+ 	mptcp_local_address((struct sock_common *)msk, &msk_local);
+-	mptcp_local_address((struct sock_common *)skc, &skc_local);
+-	if (mptcp_addresses_equal(&msk_local, &skc_local, false))
++	mptcp_local_address((struct sock_common *)skc, &skc_local.addr);
++	if (mptcp_addresses_equal(&msk_local, &skc_local.addr, false))
+ 		return 0;
+ 
++	skc_local.addr.id = 0;
++	skc_local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
++
+ 	if (mptcp_pm_is_userspace(msk))
+ 		return mptcp_userspace_pm_get_local_id(msk, &skc_local);
+ 	return mptcp_pm_nl_get_local_id(msk, &skc_local);
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d4328443d844..0a0fe890c53d 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1139,7 +1139,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
+ 	return err;
+ }
+ 
+-int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
++int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
++			     struct mptcp_pm_addr_entry *skc)
+ {
+ 	struct mptcp_pm_addr_entry *entry;
+ 	struct pm_nl_pernet *pernet;
+@@ -1148,7 +1149,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+ 	pernet = pm_nl_get_pernet_from_msk(msk);
+ 
+ 	rcu_read_lock();
+-	entry = __lookup_addr(pernet, skc);
++	entry = __lookup_addr(pernet, &skc->addr);
+ 	ret = entry ? entry->addr.id : -1;
+ 	rcu_read_unlock();
+ 	if (ret >= 0)
+@@ -1159,11 +1160,9 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc
+ 	if (!entry)
+ 		return -ENOMEM;
+ 
+-	entry->addr = *skc;
+-	entry->addr.id = 0;
++	*entry = *skc;
+ 	entry->addr.port = 0;
+ 	entry->ifindex = 0;
+-	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+ 	entry->lsk = NULL;
+ 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
+ 	if (ret < 0)
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 6bf6a20ef7f3..5b3ee43130be 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -131,27 +131,22 @@ mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
+ }
+ 
+ int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
+-				    struct mptcp_addr_info *skc)
++				    struct mptcp_pm_addr_entry *skc)
+ {
+-	struct mptcp_pm_addr_entry *entry = NULL, new_entry;
+ 	__be16 msk_sport =  ((struct inet_sock *)
+ 			     inet_sk((struct sock *)msk))->inet_sport;
++	struct mptcp_pm_addr_entry *entry;
+ 
+ 	spin_lock_bh(&msk->pm.lock);
+-	entry = mptcp_userspace_pm_lookup_addr(msk, skc);
++	entry = mptcp_userspace_pm_lookup_addr(msk, &skc->addr);
+ 	spin_unlock_bh(&msk->pm.lock);
+ 	if (entry)
+ 		return entry->addr.id;
+ 
+-	memset(&new_entry, 0, sizeof(struct mptcp_pm_addr_entry));
+-	new_entry.addr = *skc;
+-	new_entry.addr.id = 0;
+-	new_entry.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
+-
+-	if (new_entry.addr.port == msk_sport)
+-		new_entry.addr.port = 0;
++	if (skc->addr.port == msk_sport)
++		skc->addr.port = 0;
+ 
+-	return mptcp_userspace_pm_append_new_local_addr(msk, &new_entry, true);
++	return mptcp_userspace_pm_append_new_local_addr(msk, skc, true);
+ }
+ 
+ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index 3d72ca155322..ef1d43406f9b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1126,8 +1126,10 @@ bool mptcp_pm_add_addr_signal(struct mptcp_sock *msk, const struct sk_buff *skb,
+ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
+ 			     struct mptcp_rm_list *rm_list);
+ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
+-int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+-int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
++int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
++			     struct mptcp_pm_addr_entry *skc);
++int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
++				    struct mptcp_pm_addr_entry *skc);
+ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
+ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+ bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
 -- 
 2.43.0
 
