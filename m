@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC36C214220
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 18:25:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978A257D
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 18:34:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075942; cv=none; b=GUN7Lvi0qMKxQhQdav8QLTjsvLF469bjlAvPDkaVNjd65SZRAfNABc6uPcKyonjKz5bMYh6JzHGhCXxbs4DErbv6r/E/9eqB9Nw+TH83ASpFEQNiu08ASpY4ljy+a+9EeX8rYjCHClKVjy8rssp/bw4sv5MVO/uDX4v579fO6y4=
+	t=1740076489; cv=none; b=F+SjJqn1leTtQJ9I+zyaYWAJ6F56HEZ+XBigKkjxJpYOOzdY8uh8qhZ89AitkaHBm+fABRIgdO2HWGGl4U2q0PDnwngoEgsUgXAPS6qFlrZNiuQioWIoouPJdmUh942E3yXPP2p+Lt4CZlVfngvPcuC2DudqXwKbsza3+TKk20w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075942; c=relaxed/simple;
-	bh=3tDi7hjpLAND69quI/r9V4OGW1fAkvRKhrTW8t5gnWk=;
+	s=arc-20240116; t=1740076489; c=relaxed/simple;
+	bh=DnHSsTxUOKFx6LeSVmvCWDzFpG9t8bxnf4myOvNEPlU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HbT9VzGufUyKLGlFlaC+7Syo8lxGlg3z4DCKBLzYHRRdkI+2Etw+iIrZA6gemitW6tyU1GWAe72/gsd4qZ+y3NcSHs4M9HkxVdWuB2BpuVeeFvKh18by3baHfa0xe5MOQ1UQZOVz2svzjWOEi0ShOr9k+HlQyj+HpXtbTkSHZfc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htiENIA8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=cc9orrwSYjuMHo9Pvbfn30K+2aYxwKPPnunNoL40xUzEYIwVR28iS1uRVai40OiXGusWa0e83T4uv9NJK3CjPHo1Pj+wErJWHum9qGVqiwIwk96oMkSqyEI6Dvfx6iyegPv9hBoLOy3PmU3jyY09hB2cLtwsLYNX66y/BMSqrhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABLEMhEw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htiENIA8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC473C4CED1;
-	Thu, 20 Feb 2025 18:25:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABLEMhEw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEBFC4CED1;
+	Thu, 20 Feb 2025 18:34:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740075942;
-	bh=3tDi7hjpLAND69quI/r9V4OGW1fAkvRKhrTW8t5gnWk=;
+	s=k20201202; t=1740076488;
+	bh=DnHSsTxUOKFx6LeSVmvCWDzFpG9t8bxnf4myOvNEPlU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=htiENIA8AOUkFPXZ2VxYyKII3ThKpMWD/E+UVY0Fx9oEUOprOAbzsD9EqQxTK4H5M
-	 f+jDrnXCfrUD/3I1p2ayAoieMBXMf7cF5kaf31oBArldPYsZHp61FCcwgVsrivj52R
-	 Y9KBmseKKshAQ17gBAr+zlhxiCUvghMP0wnS7CpCeg2ZxN5f83pQyVcYVJWrvnCGGn
-	 vXC4pYG9/eqvEzP852KoaUfFOa5dHjhz7QDW3k27Rxmq7+wTLSlNL6vYQ2/r0bLohJ
-	 8g0kL0pr07SA39vY80XxNoDErr6GdH1PBMOyjQfqDhfZ0vgHQfJUWZ0IQuMzzU0gZq
-	 glzChQP6q9CYg==
-Message-ID: <ba46f04b-e2bb-4d9a-964d-d9dc7ccdec74@kernel.org>
-Date: Thu, 20 Feb 2025 19:25:39 +0100
+	b=ABLEMhEwKzZEJhtBesTXThxkrqOKoVDCvvh6FBv9J+pi7Ntd2q8ASjR2DxnPXzm1d
+	 pRQWTQOSCiPm2SeUlxWzgJvxLUavhBB/Mn/9VMZ79GkQKd9m1zHEbjSzIVHZVYwCfU
+	 /RqahJFj4FFlRehleJDVnVuGdixSv7ZhM/bdKt8eSnZnp/3Ph7ayTIdcGC773muwFQ
+	 /t2lgBvu7bZ4uJhyejjos7HW2Gvsrj45auydXawksmlqAlPB5KMKTQW6rxovHYEku2
+	 O9FlThJskkMmrCX2yxvuiBAE0+P5Ch9M5pWKzR8Wv1q1aagJsXphGAKY+I3dV9pJHd
+	 3PrEWpjmCZhLA==
+Message-ID: <323d4357-4694-4ab0-af5f-c1277e738f17@kernel.org>
+Date: Thu, 20 Feb 2025 19:34:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 3/5] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
+Subject: Re: [PATCH mptcp-next v2 5/5] Squash to "selftests/bpf: Add
+ mptcp_subflow bpf_iter subtest"
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1739787744.git.tanggeliang@kylinos.cn>
- <f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1738470660.git.tanggeliang@kylinos.cn>
+ <b5fee152138c047d02911d31e12d7f5616ae56f2.1738470660.git.tanggeliang@kylinos.cn>
+ <193e629a-dde2-3d97-98ff-9a6735c0aa2f@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,34 +88,92 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn>
+In-Reply-To: <193e629a-dde2-3d97-98ff-9a6735c0aa2f@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Mat, Geliang,
 
-On 17/02/2025 11:34, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 14/02/2025 02:45, Mat Martineau wrote:
+> On Sun, 2 Feb 2025, Geliang Tang wrote:
 > 
-> Drop the NULL check for 'msk' as Martin suggested, add more checks
-> for 'sk'.
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> Use bpf_core_cast() instead of bpf_skc_to_mptcp_sock().
+>> Change the 2nd parameter type of bpf_for_each() as 'struct sock'.
+>> Drop bpf_mptcp_sock_acquire/release.
+>>
+>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>> ---
+>> tools/testing/selftests/bpf/bpf_experimental.h      | 2 +-
+>> tools/testing/selftests/bpf/progs/mptcp_bpf.h       | 3 ---
+>> tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c | 8 ++------
+>> 3 files changed, 3 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/
+>> testing/selftests/bpf/bpf_experimental.h
+>> index 2ab3f0063c0f..6a96c56f0725 100644
+>> --- a/tools/testing/selftests/bpf/bpf_experimental.h
+>> +++ b/tools/testing/selftests/bpf/bpf_experimental.h
+>> @@ -577,7 +577,7 @@ extern void bpf_iter_css_destroy(struct
+>> bpf_iter_css *it) __weak __ksym;
+>>
+>> struct bpf_iter_mptcp_subflow;
+>> extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
+>> -                      struct mptcp_sock *msk) __weak __ksym;
+>> +                      struct sock *sk) __weak __ksym;
+>> extern struct mptcp_subflow_context *
+>> bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak
+>> __ksym;
+>> extern void
+>> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/
+>> testing/selftests/bpf/progs/mptcp_bpf.h
+>> index b1f6e1fb467e..ede9111ee597 100644
+>> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+>> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
+>> @@ -43,9 +43,6 @@ mptcp_subflow_tcp_sock(const struct
+>> mptcp_subflow_context *subflow)
+>> }
+>>
+>> /* ksym */
+>> -extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock
+>> *msk) __ksym;
+>> -extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
+>> -
+>> extern struct mptcp_subflow_context *
+>> bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
+>> extern struct sock *
+>> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/
+>> tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+>> index fd5691a4073b..2c0d11cb9864 100644
+>> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+>> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
+>> @@ -24,14 +24,11 @@ int iters_subflow(struct bpf_sockopt *ctx)
+>>     if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
+>>         return 1;
+>>
+>> -    msk = bpf_skc_to_mptcp_sock(sk);
+>> +    msk = bpf_core_cast(sk, struct mptcp_sock);
+>>     if (!msk || msk->pm.server_side || !msk->pm.subflows)
+>>         return 1;
+>>
+>> -    msk = bpf_mptcp_sock_acquire(msk);
 > 
-> Use the "struct sock *sk" instead of "struct mptcp-sock *msk" as the
-> argument in the bpf_iter_mptcp_subflow_new as Martin suggested.
+> Hi Geliang -
 > 
-> v3:
->  - continue to use sock_owned_by_user_nocheck and spin_is_locked
-> checks instead of using msk_owned_by_me().
+> Why is the locking removed? The squashed commit will still have a commit
+> message referring to the acquire/release, so that isn't consistent with
+> the modified code.
 
-Why should we continue to do so?
+From what I understood from Martin's review [1], this mptcp_sock_acquire
+helper was a workaround only to please the verifier, but they were not
+needed
 
-From what I understood, with the current version, this new
-bpf_iter_mptcp_subflow_new kfunc can only be called from a cg sockopt
-bpf prog, which means these checks are not needed for the moment, no?
+@Geliang: is this correct? (if yes, do not hesitate to add such info in
+the commit message removing such helpers because without the context,
+"Drop this patch as Martin suggested" is hard to understand :) )
 
-So maybe we should only add these checks later, when extending its usage
-to struct_ops? In the meantime, msk_owned_by_me() could then be used
-instead?
+1 https://lore.kernel.org/9b373a23-c093-42d8-b4ae-99f2e62e7681@linux.dev
 
 Cheers,
 Matt
