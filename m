@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1FF8E1CAA9C
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 10:40:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837001F55E0
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 11:22:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740048049; cv=none; b=DQFJlVA2LSGr933UBWV5SEPvJpfbk6JnO+0dqpDQ6I071pfGB0ekU3/wBqoqB4cMrqD7gbtMUV5iRo2T9ey+YnD0poMbKyij/qkinpo3qoSWXNtXS477wqAE14ck0+VjHFPR4OSMxebWGYgxK8Imi8bMkZ2rVbtR+JzbtNFGhBE=
+	t=1740050560; cv=none; b=Xjy3ecWdLtOt6+AOotNjbi5/0h7u3ROhPLP3KioOukA43wknY7fCutVOMMlfXxFFo4HluSQI/QWTJu0a1bgM5Rb+cHgKcUBtXHcc+F40Cd/PUuZdJ8eoU+K+Opl7G04iJ3YGSkxQ/3kpbzFVac5wTjtiCF4GSZd+KydolRlb710=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740048049; c=relaxed/simple;
-	bh=XqaiZvWNoT90Aj7WV22bPQyEk4n17BKkxJyo+ZoKcqY=;
+	s=arc-20240116; t=1740050560; c=relaxed/simple;
+	bh=+CqiEsgNCv419MYJC9Ab96q2A1ylRSdStvpg72cYtN4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=KPOCl4yud4khiHN9bYg9D3D5RMcFgq7BNdy/T0VpJ6gjMmBgOlyNUJlSJ9yeiAgEjziS1QIzUAdHQc5Q3+D45s+a32/ZqLoDMU8D3sfl2QKnd1LATTDOky5Jxlib+4LEkh4PwbtCAaGX0bPmoFc4bgmpvG8xq9m6exs5Hp09eOQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aZ+hHK6v; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=TFqc8ShqM5SGlra/2NR9yXK/r/Sx5xZQHU1xXItzVcvcB+f7Kiv4shlWJEgJPnY4BZ3XKWD5LKTylYNJT9Z5k8IG4V3Qyg07nwA9rJcpYwLH67BoQ6GI8999M+ng23z/nDPmQ2osDMI/XCaTptPzPTUlQP+9qjjOVgM27MSgzVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mBWUaw18; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aZ+hHK6v"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1A733C4CED1;
-	Thu, 20 Feb 2025 10:40:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mBWUaw18"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 77E22C4CED6;
+	Thu, 20 Feb 2025 11:22:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740048048;
-	bh=XqaiZvWNoT90Aj7WV22bPQyEk4n17BKkxJyo+ZoKcqY=;
+	s=k20201202; t=1740050560;
+	bh=+CqiEsgNCv419MYJC9Ab96q2A1ylRSdStvpg72cYtN4=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aZ+hHK6vVYi11WtsZZKZUiHoCAHrdsAOwMzRGKVTePoIuwkfSXcx2f69t/CVPlhRM
-	 k09a2HNtuWecvrhqEMV5mE3nGASblNnume4LxBt6zo/HZ9C3+Ny/C2wR7hRI/v5vVN
-	 g5mW11XXvl84nG7F0O3/fppB4XPYOBKn2qrZCskmvVqNE0lzTXTUS70GlVYEn1Tqi1
-	 0FdVrooTbyCObayqlFglrAfOL9SpWwrtW0qNSuJlgdlIA2hzGiVmk3BS+kktvPIPxl
-	 iVp7XzIqt5JQRhl4BiFl4keIDk2DLPx8QIpnKIf5faHKq7oXcW/kIIxxsoe/lrhZ6/
-	 Jsk+JXVfnZ/wA==
-Message-ID: <3a050151-d8ce-460e-a1a3-70c81b706083@kernel.org>
-Date: Thu, 20 Feb 2025 11:40:46 +0100
+	b=mBWUaw18utb4114XRsAqvs6fBSsCAT04IEanYH3GQTlcAszf56eLNWongkuh5L53f
+	 1g3vccWMsc25lfKbk8ZjTP0ve9RSED8ciWwc6gF4xuIIZvlOg5Dw550bt+1Lr7gkHO
+	 tbtWl10jkWK/chRsIMWjj2hjlz2CuPjau9RCJJEx3r745lIo60gk++I0hPDFop8gKE
+	 1DYlmGlnmiEz2pRxrS2muzMS5WY4xC5cLhqm2M0fBAlMwuoEPT7RQugQh3+lZpLlml
+	 nd1ch3xFzgjLvgGNqC29WyZm01u+bbyuFFOwIFa/UxNWRuxqPYvvjwnc2zVL84qiUT
+	 loKN7yL9gZfXw==
+Message-ID: <45bd91bc-759d-467b-a6d8-0240b7d417d0@kernel.org>
+Date: Thu, 20 Feb 2025 12:22:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net] mptcp: always handle address removal under msk
- socket lock
+Subject: Re: [mptcp-next v2 1/2] selftests: mptcp: Add a tool to get specific
+ msk_info
 Content-Language: en-GB
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <61cded134e753976259b48a4269f203dcae6c8fa.1739969092.git.pabeni@redhat.com>
- <a103802c-90e2-4cda-86a4-6bde5bb28670@kernel.org>
- <2c71d642-cbd6-402c-8300-59f22533654c@redhat.com>
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1740035000.git.yangang@kylinos.cn>
+ <3b120e58e14cc6884bc53545ea1c80bca3fb43f7.1740035000.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,58 +86,322 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2c71d642-cbd6-402c-8300-59f22533654c@redhat.com>
+In-Reply-To: <3b120e58e14cc6884bc53545ea1c80bca3fb43f7.1740035000.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
+Hi Gang Yan,
 
-On 20/02/2025 10:33, Paolo Abeni wrote:
-> On 2/19/25 6:45 PM, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 19/02/2025 13:45, Paolo Abeni wrote:
->>> Syzkaller reported a lockdep splat in the PM control path:
->>
->> (...)
->>
->>> Indeed the PM can try to send a RM_ADDR over a msk without acquiring
->>> first the msk socket lock.
->>>
->>> The bugged code-path comes from an early optimization: when there
->>> are no subflows, the PM should (usually) not send RM_ADDR
->>> notifications.
->>>
->>> The above statement is incorrect, as without locks another process
->>> could concurrent create a new subflow and cause the RM_ADDR generation.
->>>
->>> Additionally the supposed optimization is not very effective even
->>> performance-wise, as most mptcp sockets should have at least one
->>> subflow: the MPC one.
->> Thank you for having looked at this!
->>
->> By chance, do you know how syzkaller managed to interact with an MPTCP
->> socket not having any attached subflows? An msk being destroyed?
-> 
-> I'm not 110% and I don't have the syzkaller log for the relevant splat
-> handy, but i.e. a passive socket at clone time does:
-> 
-> 	list_add(&subflow->node, &msk->conn_list); // [1]
-> 	sock_hold(ssk);
-> 	mptcp_token_accept(subflow_req, msk); // [2]
-> 
-> under the msk socket spin lock.
-> 
-> After [2], the PM ops can find and operate on the newly accepted msk
-> socket, but lacking any lock protection and memory barriers could still
-> observe an empty conn_list, even given the prior [1].
-> 
-> The race is tiny, thus is hard for syzkaller to find a repro.
+On 20/02/2025 08:11, Gang Yan wrote:
+> This patch enables the retrieval of the mptcp_info structure corresponding
+> to a specified MPTCP socket (msk). When multiple MPTCP connections are
+> present, specific information can be obtained for a given connection
+> through the 'mptcp_diag_dump_one' by using the 'token' associated with
+> the msk.
 
-I see, thank you for your reply and for having checked!
+Thank you for the v2. I had a very quick look, mainly because I saw
+CheckPatch and Shellcheck were complaining about this series.
 
-I will try to keep this in mind when looking at future potential issues.
-(And not always assuming there is at least one subflow in the list.)
+Do you mind looking at that please?
+
+https://github.com/multipath-tcp/mptcp_net-next/actions/runs/13430040104
+
+> 
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 235 ++++++++++++++++++
+>  2 files changed, 236 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/testing/selftests/net/mptcp/mptcp_diag.c
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
+> index c76525fe2b84..340e1a777e16 100644
+> --- a/tools/testing/selftests/net/mptcp/Makefile
+> +++ b/tools/testing/selftests/net/mptcp/Makefile
+> @@ -7,7 +7,7 @@ CFLAGS += -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INC
+>  TEST_PROGS := mptcp_connect.sh pm_netlink.sh mptcp_join.sh diag.sh \
+>  	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
+>  
+> -TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq
+> +TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq mptcp_diag
+>  
+>  TEST_FILES := mptcp_lib.sh settings
+>  
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> new file mode 100644
+> index 000000000000..3e0be9e58912
+> --- /dev/null
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> @@ -0,0 +1,235 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/* Copyright (c) 2025, Kylin Software*/
+> +
+> +#include <linux/sock_diag.h>
+> +#include <linux/rtnetlink.h>
+> +#include <linux/inet_diag.h>
+> +#include <linux/netlink.h>
+> +#include <sys/socket.h>
+> +#include <netinet/in.h>
+> +#include <linux/tcp.h>
+> +
+> +#include <unistd.h>
+> +#include <stdlib.h>
+> +#include <string.h>
+> +#include <errno.h>
+> +#include <stdio.h>
+> +
+> +#ifndef IPPROTO_MPTCP
+> +#define IPPROTO_MPTCP 262
+> +#endif
+> +
+> +#ifndef MPTCP_INFO
+> +struct mptcp_info {
+> +	__u8    mptcpi_subflows;
+> +	__u8    mptcpi_add_addr_signal;
+> +	__u8    mptcpi_add_addr_accepted;
+> +	__u8    mptcpi_subflows_max;
+> +	__u8    mptcpi_add_addr_signal_max;
+> +	__u8    mptcpi_add_addr_accepted_max;
+> +	__u32   mptcpi_flags;
+> +	__u32   mptcpi_token;
+> +	__u64   mptcpi_write_seq;
+> +	__u64   mptcpi_snd_una;
+> +	__u64   mptcpi_rcv_nxt;
+> +	__u8    mptcpi_local_addr_used;
+> +	__u8    mptcpi_local_addr_max;
+> +	__u8    mptcpi_csum_enabled;
+> +	__u32   mptcpi_retransmits;
+> +	__u64   mptcpi_bytes_retrans;
+> +	__u64   mptcpi_bytes_sent;
+> +	__u64   mptcpi_bytes_received;
+> +	__u64   mptcpi_bytes_acked;
+> +};
+> +
+> +#define MPTCP_INFO              1
+> +#endif
+> +
+> +static void die_perror(const char *msg)
+> +{
+> +	perror(msg);
+> +	exit(1);
+> +}
+> +
+> +static void die_usage(int r)
+> +{
+> +	fprintf(stderr, "Usage: mptcp_diag -t\n");
+> +	exit(r);
+> +}
+> +
+> +static void send_query(int fd, __u32 token)
+> +{
+> +	struct sockaddr_nl nladdr = {
+> +		.nl_family = AF_NETLINK
+> +	};
+> +	struct {
+> +		struct nlmsghdr nlh;
+> +		struct inet_diag_req_v2 r;
+> +	} req = {
+> +		.nlh = {
+> +			.nlmsg_len = sizeof(req),
+> +			.nlmsg_type = SOCK_DIAG_BY_FAMILY,
+> +			.nlmsg_flags = NLM_F_REQUEST
+> +		},
+> +		.r = {
+> +			.sdiag_family = AF_INET,
+> +			.sdiag_protocol = IPPROTO_MPTCP,
+> +			.id.idiag_cookie[0] = token,
+> +		}
+> +	};
+> +	struct rtattr rta_proto;
+> +	struct iovec iov[6];
+> +	int iovlen = 1;
+> +	__u32 proto;
+> +
+> +	req.r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+> +	proto = IPPROTO_MPTCP;
+> +	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
+> +	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
+> +
+> +	iov[0] = (struct iovec) {
+> +		.iov_base = &req,
+> +		.iov_len = sizeof(req)
+> +	};
+> +	iov[iovlen] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
+> +	iov[iovlen + 1] = (struct iovec){ &proto, sizeof(proto)};
+> +	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
+> +	iovlen += 2;
+> +	struct msghdr msg = {
+> +		.msg_name = &nladdr,
+> +		.msg_namelen = sizeof(nladdr),
+> +		.msg_iov = iov,
+> +		.msg_iovlen = iovlen
+> +	};
+> +
+> +	for (;;) {
+> +		if (sendmsg(fd, &msg, 0) < 0) {
+> +			if (errno == EINTR)
+> +				continue;
+> +			die_perror("sendmsg");
+> +		}
+> +		break;
+> +	}
+> +}
+> +
+> +static void parse_rtattr_flags(struct rtattr *tb[], int max, struct rtattr *rta,
+> +		       int len, unsigned short flags)
+
+(the indentation doesn't look OK)
+
+> +{
+> +	unsigned short type;
+> +
+> +	memset(tb, 0, sizeof(struct rtattr *) * (max + 1));
+> +	while (RTA_OK(rta, len)) {
+> +		type = rta->rta_type & ~flags;
+> +		if ((type <= max) && (!tb[type]))
+> +			tb[type] = rta;
+> +		rta = RTA_NEXT(rta, len);
+> +	}
+> +}
+> +
+> +static struct mptcp_info *parse_nlmsg(struct nlmsghdr *nlh)
+> +{
+> +	struct inet_diag_msg *r = NLMSG_DATA(nlh);
+> +	struct rtattr *tb[INET_DIAG_MAX+1];
+> +	struct mptcp_info *info;
+> +
+> +	parse_rtattr_flags(tb, INET_DIAG_MAX, (struct rtattr *)(r+1),
+> +			   nlh->nlmsg_len - NLMSG_LENGTH(sizeof(*r)),
+> +			   NLA_F_NESTED);
+> +
+> +	if (tb[INET_DIAG_INFO]) {
+> +		info = RTA_DATA(tb[INET_DIAG_INFO]);
+> +		return info;
+
+The cope of "info" is local if it is a pointer from 'tb' that as been
+allocated on the stack. A pointer to this local structure should then
+not be returned.
+
+Either allocate memory on heap, or probably better: a pointer to an
+mptcp_info structure should be passed to get_mptcpinfo() -> recv_nlmsg()
+-> parse_nlmsg(). Or use a global variable. So here, we would fill this
+space, and read it later on.
+
+(Or, if you only need the token, only return that, but that's strange to
+give the token, and only get the token in return...)
+
+(Or: don't return anything here, but simply print each field of the
+mptcp_info structure → but that sounds better to do that after having
+called get_mptcpinfo().)
+
+> +	}
+> +
+> +	die_perror("Has no INET_DIAG_INFO");
+> +	return info;
+
+"info" might not have been assigned.
+
+> +}
+> +
+> +static struct mptcp_info *recv_nlmsg(int fd, struct nlmsghdr *nlh)
+> +{
+> +	char rcv_buff[8192];
+> +	struct sockaddr_nl rcv_nladdr = {
+> +		.nl_family = AF_NETLINK
+> +	};
+> +	struct iovec rcv_iov = {
+> +		.iov_base = rcv_buff,
+> +		.iov_len = sizeof(rcv_buff)
+> +	};
+> +	struct msghdr rcv_msg = {
+> +		.msg_name = &rcv_nladdr,
+> +		.msg_namelen = sizeof(rcv_nladdr),
+> +		.msg_iov = &rcv_iov,
+> +		.msg_iovlen = 1
+> +	};
+> +	struct mptcp_info *info = NULL;
+> +	int len;
+> +
+> +	len = recvmsg(fd, &rcv_msg, 0);
+> +	nlh = (struct nlmsghdr *)rcv_buff;
+> +
+> +	while (NLMSG_OK(nlh, len)) {
+> +		if (nlh->nlmsg_type == NLMSG_DONE) {
+> +			printf("NLMSG_DONE\n");
+> +			break;
+> +		} else if (nlh->nlmsg_type == NLMSG_ERROR) {
+> +			struct nlmsgerr *err;
+> +
+> +			err = (struct nlmsgerr *)NLMSG_DATA(nlh);
+> +			printf("Error %d:%s\n", -(err->error), strerror(-(err->error)));
+> +			break;
+> +		}
+> +		info = parse_nlmsg(nlh);
+> +		nlh = NLMSG_NEXT(nlh, len);
+> +	}
+> +	close(fd);
+
+That's strange to close the fd here. Probably best to do that in
+get_mptcpinfo() where it has been opened.
+
+> +	return info;
+> +}
+> +
+> +static struct mptcp_info *get_mptcpinfo(__u32 token)
+> +{
+> +	struct nlmsghdr *nlh = NULL;
+> +	int fd;
+> +
+> +	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+> +	if (fd < 0)
+> +		die_perror("Netlink socket");
+> +
+> +	send_query(fd, token);
+> +	return recv_nlmsg(fd, nlh);
+> +}
+> +
+> +static void parse_opts(int argc, char **argv, __u32 *target_token)
+> +{
+> +	int c;
+> +
+> +	while ((c = getopt(argc, argv, "ht:")) != -1) {
+> +		switch (c) {
+> +		case 'h':
+> +			die_usage(1);
+
+exit(0) for -h.
+
+> +			break;
+> +		case 't':
+> +			sscanf(optarg, "%x", target_token);
+> +			break;
+> +		default:
+> +			die_usage(1);
+> +			break;
+> +		}
+> +	}
+
+It might be good to call "die_usage(1)" if the program has not been
+called with '-t'.
+
+> +}
+> +
+> +int main(int argc, char *argv[])
+> +{
+> +	struct mptcp_info *info = NULL;
+> +	__u32 target_token;
+> +
+> +	parse_opts(argc, argv, &target_token);
+> +	info = get_mptcpinfo(target_token);
+> +
+> +	if (info)
+> +		printf("token:%x\n", info->mptcpi_token);
+> +	else
+> +		perror("No Such msk using this token!\n");
+> +
+> +	return 0;
+> +}
+> +
 
 Cheers,
 Matt
