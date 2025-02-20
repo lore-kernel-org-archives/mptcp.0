@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A5751FF7BB
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 18:14:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC36C214220
+	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 18:25:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740075292; cv=none; b=qSf9+Wa4QeLuhw+SoZK3jGXZyjbTfvisNbzJud3IVqMQKf51A4QYNH6GZ4kF/f9X472RQTX10JZhsn4FbhRcJ5qP77iR8JT0MShJKqoDFAkA8kR0PEmouHQneq6bTsK1OT7xPOGp+fk6t/9Mwkfs/drZcL6cmonkIaxYpPV1mtA=
+	t=1740075942; cv=none; b=GUN7Lvi0qMKxQhQdav8QLTjsvLF469bjlAvPDkaVNjd65SZRAfNABc6uPcKyonjKz5bMYh6JzHGhCXxbs4DErbv6r/E/9eqB9Nw+TH83ASpFEQNiu08ASpY4ljy+a+9EeX8rYjCHClKVjy8rssp/bw4sv5MVO/uDX4v579fO6y4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740075292; c=relaxed/simple;
-	bh=bS7X9nSJJUqvu0Oaa06ApP5O0txVwhR/mJrfq9O9cXE=;
+	s=arc-20240116; t=1740075942; c=relaxed/simple;
+	bh=3tDi7hjpLAND69quI/r9V4OGW1fAkvRKhrTW8t5gnWk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LCO6ugA9mXUjjCRr80nezmkyrZ8cJJnnPgGAQZhQK/pTQm7RlLUzbrEClVBVTsXR6S1su6rGIxb8ioQfg/idb6FcBWuHYcf5FmhJgcqJcQbwQ/CZUhWxLfhrLGT7zLQre004SSly7E308+kLeWwrrUnbSZ471Ka1h/q0pk/MF7s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ocWwrmj/; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HbT9VzGufUyKLGlFlaC+7Syo8lxGlg3z4DCKBLzYHRRdkI+2Etw+iIrZA6gemitW6tyU1GWAe72/gsd4qZ+y3NcSHs4M9HkxVdWuB2BpuVeeFvKh18by3baHfa0xe5MOQ1UQZOVz2svzjWOEi0ShOr9k+HlQyj+HpXtbTkSHZfc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=htiENIA8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ocWwrmj/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E045DC4CED1;
-	Thu, 20 Feb 2025 18:14:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="htiENIA8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DC473C4CED1;
+	Thu, 20 Feb 2025 18:25:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740075291;
-	bh=bS7X9nSJJUqvu0Oaa06ApP5O0txVwhR/mJrfq9O9cXE=;
+	s=k20201202; t=1740075942;
+	bh=3tDi7hjpLAND69quI/r9V4OGW1fAkvRKhrTW8t5gnWk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ocWwrmj/x1ibpEbewuOmU0xoGEUAx1nsslCTdY7AwVHhh1McMqM1SmKUlQ5C1qldx
-	 dilX+GfY7XHBBf1r+aBXg4BDOJICP1reomMA24jVQYZUXgJ3OxoTWJZ3oHZ4CG6swl
-	 tMzuiyFQlwY5hypDYlCfhNS3xxJ/HZ1bILifjI+aAYXgqj+EG2YxMt+rEPKYngCyRv
-	 mdgEnVVH4lV+N9fmh0uSw98kfIzTKwEnfDAZFJ1ig9pEoC4mKvsUd/vz1GoiMzEmRI
-	 jP/j7bdWp8vZi+iLT13xvoKSkmBNhclLTdFbo1lYFn4FoFr4/x0nvnZ4T9YqI0nSTv
-	 /MdXEx3RZ3yZw==
-Message-ID: <5a89d8ed-fc1f-4513-8d51-5e3647cbe8fc@kernel.org>
-Date: Thu, 20 Feb 2025 19:14:49 +0100
+	b=htiENIA8AOUkFPXZ2VxYyKII3ThKpMWD/E+UVY0Fx9oEUOprOAbzsD9EqQxTK4H5M
+	 f+jDrnXCfrUD/3I1p2ayAoieMBXMf7cF5kaf31oBArldPYsZHp61FCcwgVsrivj52R
+	 Y9KBmseKKshAQ17gBAr+zlhxiCUvghMP0wnS7CpCeg2ZxN5f83pQyVcYVJWrvnCGGn
+	 vXC4pYG9/eqvEzP852KoaUfFOa5dHjhz7QDW3k27Rxmq7+wTLSlNL6vYQ2/r0bLohJ
+	 8g0kL0pr07SA39vY80XxNoDErr6GdH1PBMOyjQfqDhfZ0vgHQfJUWZ0IQuMzzU0gZq
+	 glzChQP6q9CYg==
+Message-ID: <ba46f04b-e2bb-4d9a-964d-d9dc7ccdec74@kernel.org>
+Date: Thu, 20 Feb 2025 19:25:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/3] Squash to "bpf: Add mptcp_subflow
+Subject: Re: [PATCH mptcp-next v3 3/5] Squash to "bpf: Add mptcp_subflow
  bpf_iter"
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
- Mat Martineau <martineau@kernel.org>
-References: <cover.1737714424.git.tanggeliang@kylinos.cn>
- <af7dca496d83aaf6fd7163f767ef1bd1abbab59a.1737714424.git.tanggeliang@kylinos.cn>
- <3667814e-4e76-45df-90b0-2e3af7a081c8@kernel.org>
- <50c69cd42e32452a46029fb0e93f6fb55e332d7a.camel@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1739787744.git.tanggeliang@kylinos.cn>
+ <f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,95 +87,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <50c69cd42e32452a46029fb0e93f6fb55e332d7a.camel@kernel.org>
+In-Reply-To: <f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 02/02/2025 06:04, Geliang Tang wrote:
-> Hi Matt,
+On 17/02/2025 11:34, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Thanks for your review.
+> Drop the NULL check for 'msk' as Martin suggested, add more checks
+> for 'sk'.
 > 
-> On Fri, 2025-01-24 at 16:04 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> (+cc Mat who reviewed the previous versions)
->>
->> On 24/01/2025 11:28, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> Drop the NULL check as Martin suggested.
->>>
->>> Use the "struct sock *sk" instead of "struct mptcp-sock *msk" as
->>> the
->>> argument in the bpf_iter_mptcp_subflow_new as Martin suggested.
->>>
->>> Use msk_owned_by_me().
->>
->> Regarding this, do you mind checking my question on the thread
->> initially
->> sent to the BPF mailing please?
->>
->>>> This set is only showing the cg sockopt bpf prog but missing the
->>>> major
->>>> struct_ops piece. It is hard to comment. I assumed the lock
->>>> situation is
->>>> the same for the struct_ops where the lock will be held before
->>>> calling
->>>> the struct_ops prog?
->>>
->>> Can we restrict the use of this helper only for some specific
->>> callbacks?
->>> Or for only some specific struct_ops?
->>>
->>> Last time I looked, I thought that you could only restrict it like
->>> that:
->>> "this helper can be used by (any) struct_ops". But then does it
->>> mean
->>> this helper could be called from a TCP BPF CC ops or another
->>> unrelated
->>> one for example? How can we avoid that?
->> Because with the suggested modification, there is no more checks
->> regarding the lock situation: it is probably fine now with
->> [gs]etsockopt(), but what about later with struct_ops? Can we
->> restrict
->> this kfunc to be used only in some contexts? e.g. a part or all the
->> MPTCP struct_ops, but not the other ones?
+> Use the "struct sock *sk" instead of "struct mptcp-sock *msk" as the
+> argument in the bpf_iter_mptcp_subflow_new as Martin suggested.
 > 
-> We use register_btf_kfunc_id_set() to allow these kfuncs to be used in
-> struct_ops:
-> 
-> register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
->                           &bpf_mptcp_common_kfunc_set);
+> v3:
+>  - continue to use sock_owned_by_user_nocheck and spin_is_locked
+> checks instead of using msk_owned_by_me().
 
-OK so if I understand correctly, it means that the kfunc that are part
-of this 'mptcp_common' set can be used from any struct ops, right? Or in
-other words, the new MPTCP kfunc could be used from the TCP BPF CC
-struct ops for example, right?
+Why should we continue to do so?
 
-If yes, it might be clearer to ask BPF maintainers how we should design
-the new kfunc that are supposed to be used only in the context of the
-new BPF packet scheduler, e.g. should we check who own the msk socket.
+From what I understood, with the current version, this new
+bpf_iter_mptcp_subflow_new kfunc can only be called from a cg sockopt
+bpf prog, which means these checks are not needed for the moment, no?
 
-I can ask this question if you prefer.
-
-> And we also check if the protocol of the socket is MPTCP in
-> bpf_iter_mptcp_subflow_new(). So this mptcp_subflow bpf_iter is
-> restricted to be used for MPTCP. Other struct_ops likes a TCP BPF CC
-> ops can't use it.
-
-I see. For the bpf_iter case, these restrictions should be fine. Maybe
-not for the kfunc needed for the scheduler part.
-
-> Do you think this restriction is enough?
-> 
-> Another way to restrict kfuncs is to set get_func_proto of struct
-> bpf_verifier_ops. But this way has not been applied to other BPF iters.
-
-No, I guess for bpf_iter, we don't need that. Probably best to see them
-as a "generic thing" and have the previous checks we already have.
+So maybe we should only add these checks later, when extending its usage
+to struct_ops? In the meantime, msk_owned_by_me() could then be used
+instead?
 
 Cheers,
 Matt
