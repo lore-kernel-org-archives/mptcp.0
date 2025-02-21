@@ -1,181 +1,91 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11221209F32
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 11:55:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BF8C2101A1
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 15:08:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740138958; cv=none; b=Kn03pqhQBZvboajVFfo8oFti1viVNebS2Q63v1fU+9QNja1ab/U4aGj7DqKj+kPhQmiL4PdzC9R80u196mKCrYC2Oh+3p8hT9zwXoUVxVlcjDcIvaG+DwCYE6VP97V2WKVRDhfOT2B3wlEUdZHthC73Xbhl0deRuZJ4DghvXsCY=
+	t=1740150534; cv=none; b=VZrT0ev7YayxIfZi69SZAJlFKd1zFeqN2zA3nz/8Ke6grrK2eyF/cv6aPG4q/W5U/0uemuQcdC0MdbGfOjwWntzhh0HA6mkDxO414hUiSWGnNejEOaWlE4x5UGaK6tt8zDCUtY1bLPNnROFu2HwJtE/bYjoYFNHc5fpuzseDf4g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740138958; c=relaxed/simple;
-	bh=f+hPtptoNTfo/tdonIWo5MdJN+wNaptPsqjxA2PasvM=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dnbua9NmVfvL0sTt5+YMnFN1Jg/+XPDPdz4rqWbGfvpaDzdc1QNnAqKU0o8TP0iWZKR/Ys9tdzqW75eMAtJm0lRQnLoaDo35vHSx7vjuca1SqSl6uJQlqWABdWUkWFnY953zRooUVugdVAzVlBF2cafgD4tfE64KAx5VlMACYc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t+cW/rSX; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740150534; c=relaxed/simple;
+	bh=DUpwVTmIJo7D48BhaKYDE9PkLU+RXx8vUUBOVFyYiPM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Pwp6K/025OTZx0dENGYuzATVROH3iY3mkNR4xAHnfMGyePJiIVbcyjL2qStGedG7BLxsf0LnRzTZEiVteM5Pg5+Lg3bYHAJk4IQguHrYsOrsSdDcigrlxBNI3RliJLnyURePGyXXoY5HaoG9yjoE6KUMxmNkWISLpHAQeb9gE/w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jVdaqnZS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t+cW/rSX"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0968DC4CEDD;
-	Fri, 21 Feb 2025 11:55:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jVdaqnZS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 252C3C4CED6;
+	Fri, 21 Feb 2025 15:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740138957;
-	bh=f+hPtptoNTfo/tdonIWo5MdJN+wNaptPsqjxA2PasvM=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=t+cW/rSXbBVQxq4swOve5YyN0HAoOp/V8rNLQ/FDAA7xrYRtxr+1hLLB/WHZ7gznE
-	 hH44CsKkaklqZtOhBWLp5LAqwXra8Jw6uZhu8dvPkl5Y01D9wpvL5GkIYXXSrSHVyS
-	 fJ/msrSgxbT7IVBIekL86hHO2sJdYEEsbDcz+2RyQ4gYddEGTjRA0emRoSRDvM9O4Q
-	 RWJAmNZIyjr5z/hGen0/1+Ogc2O2rlk4dxyXskqazFWYpg5ZnfXgjbsI39Xd4xyfV0
-	 PEYh1YEyAN0o8Uh5DIx07SjiWkZxw5FHmVJf8PJ6Sxkkm3vZ52L5JOeO1iJxuFRwmF
-	 BiIi85t5CoksA==
-Message-ID: <7e44ca4a-e1dc-43ce-a338-04ca918cb8da@kernel.org>
-Date: Fri, 21 Feb 2025 12:55:55 +0100
+	s=k20201202; t=1740150532;
+	bh=DUpwVTmIJo7D48BhaKYDE9PkLU+RXx8vUUBOVFyYiPM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=jVdaqnZSa2m2k5gYxnEUcFehUmjIz5yazNPKbkQK6+gFzPjRzNUPIia6qr4kB4B37
+	 +g3Etqpfs7zUIldTexzG08W0sCMAHy9XqZVXxgZBvpp1VqYJcadkTWkG6at9V02yA3
+	 BqyOdqOQ7li6LRT5dU1Cp7YrAml0nKqqimbbLwasY7qLZSnU+rJ4pOGo6fIiHXOsik
+	 5dgomgcZMoLUJiI6uLpfvXdl+gBHZGd1+UacO0oolLGUXPiEqKcvMYV4Q1AmsAR/++
+	 YCHCFvzSXiEVQd5SITcwRjUGALM2Y33v/A/15BLzEmRyBKTlSz3qTbUyblsO1HQIpn
+	 CJulJeCQd43Qg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH mptcp-next 0/2] mptcp: sched: reduce size for unused data
+Date: Fri, 21 Feb 2025 16:08:43 +0100
+Message-Id: <20250221-mptcp-sched-data-ptr-v1-0-dbaec476fa6b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v3 2/2] selftests: mptcp: add a test for
- mptcp_diag_dump_one
-Content-Language: en-GB
-To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1740115494.git.yangang@kylinos.cn>
- <3bce55e361d2d7cc9706db2ec1803cd3ef55791f.1740115494.git.yangang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <3bce55e361d2d7cc9706db2ec1803cd3ef55791f.1740115494.git.yangang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAPuWuGcC/yXMSwqDMBRG4a3IHfdCDBWLWykd5PFH76AxJKEEx
+ L0b6vAMvnNQQRYUWoaDMn5SZI89xsdAbjNxBYvvTVrpSWk98jdVl7i4DZ69qYZTzfyanyrAeWs
+ NqNOUEaT9t2+6RUSr9DnPC7MFmM5yAAAA
+X-Change-ID: 20250221-mptcp-sched-data-ptr-8740fecdbbae
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1036; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=DUpwVTmIJo7D48BhaKYDE9PkLU+RXx8vUUBOVFyYiPM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnuJcDXRrCGyKLqimZPZkhGtySafIGONU7xlG2d
+ JHXYUaiQUKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7iXAwAKCRD2t4JPQmmg
+ czqlEADJ2ad6ah+8Ne420T1ciHJlRWTPpWk8LKmVX3zyhYl+FifP/R2cC2DMLNhk966uqSFBNvi
+ V3oLof7vA8oYTGjEXFuqHTENDcoCHkXwDs5ApAUiX7x91LNVOr272ZMVrAVLr8Sc4vQchm6ToT9
+ k7zR5fLnSNktIfJld9pTnEByyvK020vmrZJt2Bymatuuo60DbfPyyT5uoMXFNpDRdhtFvRdCpoT
+ ekOzXajXm93gPQY2/QvunD9hbhD4e3ae8jvQ//wP3PBkajQGwGkRrqiSrNuX8knZfbzlsOWN8vY
+ bGR1qFfYCgalo8anopRsR/XUuRcm4CoDjtc9Xl8DkHJKOxSyXTqEY1l1/1T4HATB/UZhS2Rg0HJ
+ /122vBKSlwUDCg6CgPgXRvvtJrSh1dM+RgN6+ww/4nnl/2UzgPrW6eS/9pGtmDjpMx3cxvHyWT9
+ ForItLVFXekyB+7Fat3OEtVYOmLpIdphEmsbz+6gdHPOrkc8qAbZa2dcH48oSJ8jQl1OLLDKg85
+ hwVO3revUCu5BjnyxtZqVvFELf5hi9Q81/mzRZ7QLSrWBI9HRv3YQqXzS5oS+vP/NijFHqcHs+m
+ zoUehHddYh2iaMujZ9+JLOVlHfvxl/LzAAjnQKDOB9kSUbUlfPodgw0hvhj9GYK9k+tpsuQ6ZHq
+ SQOuBrl9IxZx8vQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Gang Yan,
+I was going to send "mptcp: sched: split get_subflow interface into two"
+commit, when I saw again that the "data" structure was no longer used.
 
-On 21/02/2025 06:34, Gang Yan wrote:
-> This patch introduces a new 'chk_diag' test in diag.sh. It retrieves
-> the token for a specified MPTCP socket (msk) using the 'ss' command and
-> then accesses the 'mptcp_diag_dump_one' in kernel via ./mptcp_diag
-> to verify if the correct token is returned.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
+Because it will be removed later, when "use bpf_iter in bpf schedulers"
+series will be applied, a first step is to save 64B from the stack for
+each scheduling operation.
 
-Before closing this ticket, did you check the new code was also covering
-the 1st bullet point mentioned there?
+The first patch can be placed after "mptcp: sched: split get_subflow
+interface into two", and the second one before or squashed into "mptcp:
+add sched_data helpers": this commit can be dropped when "use bpf_iter
+in bpf schedulers" series will be applied, no need to keep it for future
+use. Same for the struct mptcp_sched_data.
 
- * subflow_get_info_size() from diag.c is not covered
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: sched: reduce size for unused data
+      Squash to "mptcp: add sched_data helpers"
 
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  tools/testing/selftests/net/mptcp/diag.sh | 27 +++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-> index 2bd0c1eb70c5..5c10fe406d91 100755
-> --- a/tools/testing/selftests/net/mptcp/diag.sh
-> +++ b/tools/testing/selftests/net/mptcp/diag.sh
-> @@ -200,6 +200,32 @@ chk_msk_cestab()
->  		 "${expected}" "${msg}" ""
->  }
->  
-> +chk_dump_one()
-> +{
-> +	local ss_token
-> +	local token
-> +	local msg
-> +
-> +	ss_token="$(ss -inmHMN $ns | grep 'token:' |\
-> +		    head -n 1 |\
-> +		    sed 's/.*token:\([0-9a-f]*\).*/\1/')"
-> +
-> +	token="$(ip netns exec $ns ./mptcp_diag -t $ss_token |\
-> +		 awk -F':[ \t]+' '/^token/ {print $2}')"
-> +
-> +	msg="....chk dump_one"
-> +
-> +	mptcp_lib_print_title "$msg"
-> +	if [ "$ss_token" != "$token" ]; then
 
-detail: it sounds more logical to check if the result is correct first, no?
+---
+base-commit: 98f1e7131283309b4684ce977f28c9703d16b516
+change-id: 20250221-mptcp-sched-data-ptr-8740fecdbbae
 
-  if [ "$ss_token" = "$token" ]; then
-      mptcp_lib_pr_ok
-      mptcp_lib_result_pass "${msg}"
-  else
-      (...)
-  fi
-
-Also, just to be on the safe side, probably best to check that the
-variables are not both empty, e.g. if both ss and mptcp_diag commands
-are wrong or have issues.
-
-  if [ -n "$ss_token" ] && [ "$ss_token" = "$token" ]; then
-      mptcp_lib_pr_ok
-      (...)
-  fi
-
-> +		mptcp_lib_pr_fail "expected $ss_token found $token"
-> +		mptcp_lib_result_fail "${msg}"
-> +		ret=${KSFT_FAIL}
-> +	else
-> +		mptcp_lib_pr_ok
-> +		mptcp_lib_result_pass "${msg}"
-> +	fi
-> +}
-> +
->  msk_info_get_value()
->  {
->  	local port="${1}"
-> @@ -290,6 +316,7 @@ chk_msk_remote_key_nr 2 "....chk remote_key"
->  chk_msk_fallback_nr 0 "....chk no fallback"
->  chk_msk_inuse 2
->  chk_msk_cestab 2
-> +chk_dump_one
->  flush_pids
->  
->  chk_msk_inuse 0 "2->0"
-Cheers,
-Matt
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
