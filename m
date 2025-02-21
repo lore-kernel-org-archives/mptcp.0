@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9074D2505CE
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 17:23:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5BBA2500D0
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 17:23:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158607; cv=none; b=s9D6ihSkvOivllw+vWHeMkLum/2d4j1VOrDkEfH5R0aRgGyfB5OvRu2OspwMqL7Lvw4FEGTrOYf1Xn4O1EghodvorGpjbWIEaycWuXciCq+UF/l0gjxmxvRUQziT+RTA3qsvAx/ReO64IgMZl56dL6LIWWfR6sxpAGkt06BZTUI=
+	t=1740158626; cv=none; b=ZsSZS0QjWVbVFrkFe2HJMxncrPrDnY0mTnaPS3ShleMeJ8XdiLiv7Uf4zpKiKbGNvPieZgFpQRc8rM8KYXqpy5tXN7sV+m9Da8t7wt0Jm9o1EKD81Douhbpkbge2Ehy94x7N1ksY5K5QuPEcDqKRbGWq8wReaEz9n0A48R/LwMc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158607; c=relaxed/simple;
-	bh=LM4dHPWcoBYUntMG6Aw7n0QTFV4jpvRo2GXU8tT3++0=;
+	s=arc-20240116; t=1740158626; c=relaxed/simple;
+	bh=zzj1NPS5yLppxfqlZx9JcM8355YmPqmK+elG4v0DaSE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mGFjJX2FPrR6cGlkBOyuu7K3GTb/I5BhLTUDT4hrRM6ebek5YmLySiqHkeKYpx6+/XxdYM0LwX3Ra4GQUBBuCrLCi8EFcYLoShmDcmtPzdoCMBQG8GxwixHF1buAnomTwlOlaaGNDVBATJGkZhHgSEu4EeheNb1Zoei0x4PnoVU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bhg7B72o; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kwWtUdQMydh2EuLJlkba2FGDsruwkzBp50p6LDK9cziN57kJjGJHyCfP3pICJyQ+cadC4Hr4nLhvxiAwmmW7s0y7b6NetxWFwgLvsBi8a47tA4bRYYKL/cOrMnmkrcA8t9Pt2Q/oi4g3zQrGy0DZvNo0mF3H/i3L55NwyK8hnVw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=re4bGjQl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bhg7B72o"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BEE8EC4CED6;
-	Fri, 21 Feb 2025 17:23:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="re4bGjQl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EE6AC4CED6;
+	Fri, 21 Feb 2025 17:23:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740158607;
-	bh=LM4dHPWcoBYUntMG6Aw7n0QTFV4jpvRo2GXU8tT3++0=;
+	s=k20201202; t=1740158626;
+	bh=zzj1NPS5yLppxfqlZx9JcM8355YmPqmK+elG4v0DaSE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=bhg7B72oOkmjN2lmrxs3SDwenjb8DIqjuVYJFKoHus7T2CJK+qKeT1duAdZO4iRdV
-	 LxAl5JJ7uHravH+q+q/7B6EWP+aiEcLN5rql6sq6rcSCUHfPWDFpyMzFIi9qEeJDlD
-	 mMuF93qydfO4vKxDX7h6Hsg1mboQNJcx4jMsZllIV2oWYhjf1DkfSpV+YNMWEmXPkb
-	 l8af4ZaHqVKLZ01wNU1W4vu9RDavsn1azAgjoPNQTxkPnGV62LYbi79DacOiz1Ad3S
-	 MJgq6W3YCfRM3If3EBd1ye+I4vASW64hIcS8jVZ2bRljcWIL27q1lKGYNS16bHt5Fp
-	 yZCAcXgGuSe6Q==
-Message-ID: <9f7ee817-529f-4382-bc53-6a6d6e532e49@kernel.org>
-Date: Fri, 21 Feb 2025 18:23:24 +0100
+	b=re4bGjQl/Uqq6BEMyJrJHqdwJF3rx9TcUoMVB8HKGyo2Yi/ieLclOCFa/P0VXyFYl
+	 Tn8ZbBv8sGdD5hj57Kf9ijoNjRK7M/kaYW5hb/bcH92e4uCQqpUQDMkUVnjFfZjQYl
+	 +SZhNnLhK9A7pMnFieE0Shpj6NROynMS1e+mahw2dL+YODcJ9yoR2RhkISrXRLKnYZ
+	 yBkGK1xdDo3bieaV2F/fBDqcP/Gre9p/YqJtOBvPZkILE4Rp1qyXLA+49xDXtr3Qhj
+	 wW4ood6Egpfd7Kh3l32gSEsE6NFJ9dYCueu5WHxJxg0HpQJI1dGZOfD4HUazp2JKOt
+	 H2QW5isBJWtRg==
+Message-ID: <b7333a19-921a-41e1-9a87-ff70aab3e000@kernel.org>
+Date: Fri, 21 Feb 2025 18:23:43 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 2/9] mptcp: pm: add struct mptcp_pm_param
+Subject: Re: [PATCH mptcp-next v5 4/9] mptcp: pm: define struct mptcp_pm_ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740019794.git.tanggeliang@kylinos.cn>
- <2f68d8851458f6f5acfd9a6ea549f3b73029d4bc.1740019794.git.tanggeliang@kylinos.cn>
+ <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,78 +86,147 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2f68d8851458f6f5acfd9a6ea549f3b73029d4bc.1740019794.git.tanggeliang@kylinos.cn>
+In-Reply-To: <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 20/02/2025 03:57, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Generally, in the path manager interfaces, the local address is defined
-> as an mptcp_pm_addr_entry type address, while the remote address is
-> defined as an mptcp_addr_info type one:
+> In order to allow users to develop their own BPF-based path manager,
+> this patch defines a struct ops "mptcp_pm_ops" for a userspace path
+> manager, which contains a set of interfaces.
 > 
->     (struct mptcp_pm_addr_entry *local, struct mptcp_addr_info *remote)
-> 
-> In order to make these interfaces more flexible and extensible, a struct
-> mptcp_pm_param is defined here to pass parameters. "entry" can be used
-> as the local address entry, and "addr" can be used as the remote address.
-
-Mmh, it is not clear to me why you cannot use only the parameters that
-are needed per interfaces, e.g. "local" and "remote". These parameters
-are not even always needed, e.g. when an address has been announced,
-"remote" doesn't make sense here. Same for get_local_id and
-get_priority. Similarly, when an address has been removed, only the ID
-is needed for the PM, etc.
-
-I'm not convinced by the "flexible and extensible" reasons for the
-future: "local" and "remote" will likely not change. If we want to add
-more parameters, will we require them for all interfaces?
-
-Also, if you use similar signatures as the ones being used, no need to
-do many changes in the current in-kernel and userspace PM, e.g. no need
-to introduce the new helpers in patches 5 and 6. Instead, these patches
-could directly set the available helpers, and we can reduce the number
-of patches, e.g. patches 8 and 9 (and more) could all come in one, no?
-
-Plus, it feels strange to copy data from one structure to another just
-to pass parameters, no?
-
-Are you sure we need this patch? (and the next one?)
-
-> Also add a new helper mptcp_pm_param_set_contexts() to set a struct
-> mptcp_pm_param type parameter.
+> Add a set of functions to register, unregister, find and validate a
+> given struct ops.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  include/net/mptcp.h  | 13 +++++++++++++
->  net/mptcp/pm.c       | 10 ++++++++++
->  net/mptcp/protocol.h | 11 +++--------
->  3 files changed, 26 insertions(+), 8 deletions(-)
+>  include/net/mptcp.h  | 29 ++++++++++++++++++++++
+>  net/mptcp/pm.c       | 59 ++++++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.h |  5 ++++
+>  3 files changed, 93 insertions(+)
 > 
 > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 72d6e6597add..a41d6c74760f 100644
+> index a41d6c74760f..f51e75d3882d 100644
 > --- a/include/net/mptcp.h
 > +++ b/include/net/mptcp.h
-> @@ -121,6 +121,19 @@ struct mptcp_sched_ops {
->  	void (*release)(struct mptcp_sock *msk);
->  } ____cacheline_aligned_in_smp;
+> @@ -134,6 +134,35 @@ struct mptcp_pm_param {
+>  	struct mptcp_addr_info		addr;
+>  };
 >  
-> +struct mptcp_pm_addr_entry {
-> +	struct list_head	list;
-> +	struct mptcp_addr_info	addr;
-> +	u8			flags;
-> +	int			ifindex;
-> +	struct socket		*lsk;
-> +};
+> +struct mptcp_pm_ops {
+> +	int (*created)(struct mptcp_sock *msk);
+> +	int (*established)(struct mptcp_sock *msk);
+> +	int (*closed)(struct mptcp_sock *msk);
+> +	int (*address_announced)(struct mptcp_sock *msk,
+> +				 struct mptcp_pm_param *param);
+> +	int (*address_removed)(struct mptcp_sock *msk,
+> +			       struct mptcp_pm_param *param);
+> +	int (*subflow_established)(struct mptcp_sock *msk,
+> +				   struct mptcp_pm_param *param);
+> +	int (*subflow_closed)(struct mptcp_sock *msk,
+> +			      struct mptcp_pm_param *param);
+> +	int (*get_local_id)(struct mptcp_sock *msk,
+> +			    struct mptcp_pm_param *param);
+> +	bool (*get_priority)(struct mptcp_sock *msk,
+> +			     struct mptcp_pm_param *param);
+> +	int (*set_priority)(struct mptcp_sock *msk,
+> +			    struct mptcp_pm_param *param);
+> +	int (*listener_created)(struct mptcp_sock *msk);
+> +	int (*listener_closed)(struct mptcp_sock *msk);
 > +
-> +struct mptcp_pm_param {
-> +	struct mptcp_pm_addr_entry	entry;
-> +	struct mptcp_addr_info		addr;
-If this structure is really needed, it seems clearer to use "local" and
-"remote" instead of "entry" and "addr".
+> +	u8			type;
+
+I guess the type matches net.mptcp.pm_type sysctl knob, right?
+
+I wonder if we should not deprecate this sysctl, and use a string like
+with the scheduler. So instead, we could have:
+
+  char			name[MPTCP_PM_NAME_MAX];
+
+And on ctrl.c, we could map pm_type for the moment with a custom
+proc_handler (and even remove this sysctl knob in a few releases):
+
+ - 0  → in-kernel
+ - 1  → userspace
+ - >1 → bpf
+
+WDYT? Would it not be clearer for devs and users?
+
+Note that if for the implementation, if it is easier to keep this "type"
+entry for the moment for the sysctl stuff, I'm fine with that. But if we
+don't need it, let's not introduce it.
+
+> +	struct module		*owner;
+> +	struct list_head	list;
+> +
+> +	void (*init)(struct mptcp_sock *msk);
+> +	void (*release)(struct mptcp_sock *msk);
+
+To answer my question from the v3 review: the init/release is done for
+each MPTCP connection handled by this PM.
+
+> +} ____cacheline_aligned_in_smp;
+> +
+>  #ifdef CONFIG_MPTCP
+>  void mptcp_init(void);
+>  
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index e3457f34621c..f56b2d1e3409 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -6,12 +6,17 @@
+>  #define pr_fmt(fmt) "MPTCP: " fmt
+>  
+>  #include <linux/kernel.h>
+> +#include <linux/rculist.h>
+> +#include <linux/spinlock.h>
+>  #include <net/mptcp.h>
+>  #include "protocol.h"
+>  
+>  #include "mib.h"
+>  #include "mptcp_pm_gen.h"
+>  
+> +static DEFINE_SPINLOCK(mptcp_pm_list_lock);
+> +static LIST_HEAD(mptcp_pm_list);
+> +
+>  /* path manager command handlers */
+>  
+>  int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> @@ -661,3 +666,57 @@ void __init mptcp_pm_init(void)
+>  {
+>  	mptcp_pm_nl_init();
+>  }
+> +
+> +/* Must be called with rcu read lock held */
+> +struct mptcp_pm_ops *mptcp_pm_find(enum mptcp_pm_type type)
+> +{
+> +	struct mptcp_pm_ops *pm;
+> +
+> +	list_for_each_entry_rcu(pm, &mptcp_pm_list, list) {
+> +		if (pm->type == type)
+> +			return pm;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +int mptcp_pm_validate(struct mptcp_pm_ops *pm)
+> +{
+> +	if (!pm->created && !pm->established && !pm->closed &&
+> +	    !pm->address_announced && !pm->address_removed &&
+> +	    !pm->subflow_established && !pm->subflow_closed &&
+> +	    !pm->get_local_id && !pm->get_priority && !pm->set_priority &&
+> +	    !pm->listener_created && !pm->listener_closed) {
+
+I'm not sure to understand the purpose of this validation.
+
+Why not forcing some or all of them?
+
+(...)
 
 Cheers,
 Matt
