@@ -1,183 +1,251 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E9F82505A7
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 17:23:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740158629; cv=none; b=gfO2rX0D1uUHEm1iRy1ruO4gGylWTly7I3h8/kahoFIoxlbIAoa6pYYcNFFaSqXg4M/Ff8btejVj1Pw9b55zKqBZjx/+373kP9UzJYaqLyyd7c362/u274lCMBZPSitzyXyrovJYHYFTL21ghSsjmq3xdzQrzVrDgQinRuc9wU0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740158629; c=relaxed/simple;
-	bh=gL377Afco2PQ71g8IKck7adfqy88v72fxv+lL5ROLBo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ActniWLagrPTQTz5WeycL6FR1pDw+m7tCd7usVxPcPlK9jhiHnk+hrNipXt5569kA8cLoPpS5TxopTqS7mqVQn4SY1fR41G2RfRhtmAt2xVUSbAtcsU+1pquSPBznMRQvmrGHdgDEFYfCb9ozVB7fDpnfVqesL6QslHDbqNvU5Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ypo/uajS; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9763318DB0B
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:28:36 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740176918; cv=pass; b=Tz09W/PStbXKRnd/yPxLULy70/XQqJn0JlfeF21D0AW+rp/s+yvrOKPhwNreWMYOdVC4m9+S9hWz/J4sgrvLn59Mt1JrLODJy67Kddc5651bmuargJQO56dBaaBCi0wOGVJ4k9oWC/soy3XH55t9pL1YnbrVvqK91b7MqGo4BZ0=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740176918; c=relaxed/simple;
+	bh=9AiURpy5+R8gJDma4ZT4sR33rNzMijv+iTmDFgc4Sxk=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=Fe40usfRtWnrpytL0+8OHqsJWvI0YOdSClYMBPmae0IrfOZ558Z7yXFXFgfTwKwsw3sEmQr5qExyOPPyl8clt7XEVgf0/auxLJhI+XrhpSIXvGknPq7VVketGsbbuJ1Teb0C5w4HOfU5lTHDojFBRKRnqQ/yezEPVH67MF4TNnw=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=VHjwrsTL; arc=pass smtp.client-ip=23.83.218.249
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ypo/uajS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3D2BC4CED6;
-	Fri, 21 Feb 2025 17:23:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740158628;
-	bh=gL377Afco2PQ71g8IKck7adfqy88v72fxv+lL5ROLBo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ypo/uajSE4hPD0lxBvjB6Z1VaQcXdsGRDvv+GIYz1J1GeF/x+mpCymWyNe20Yp3Ka
-	 0mrq/MNswAYdK6lLhzSSTx0TC4z4cs9Nik9fq++KOn8fyWpHPNtar+7RQOzotg/hKD
-	 meVCdlRKBXBKP87I5Xq/GGyjBTUmq3ei0dhrDab/6AbDxhAqV8F1jsBLKZFKwoSy36
-	 37mQERunQZZnLKY/joOEm0xcIRk8+Kikn4X5EIABwMNlEKdEvq2zxJP0A3KVEAL3sO
-	 Jj1QwGYjJVeXlWz02IG9nQ+ecXDUcdUduDyh3swXj9XF74plNd1MUMzGF1IcHFxt+j
-	 mJ9SvPsPJ+uLg==
-Message-ID: <60914d20-36df-4128-a062-4f4e1030367a@kernel.org>
-Date: Fri, 21 Feb 2025 18:23:47 +0100
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="VHjwrsTL"
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 3151B8A4630
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:21:49 +0000 (UTC)
+Received: from pdx1-sub0-mail-a248.dreamhost.com (100-105-228-217.trex-nlb.outbound.svc.cluster.local [100.105.228.217])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id DC1118A46F3
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:21:48 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740176508; a=rsa-sha256;
+	cv=none;
+	b=6yrUQIghPo6ZIlM6Uj+9H1nrxdICgPc9metsgh++mm7Lq/bsfucvNQsFOWJ74SWA7BYWaq
+	sY0NpYnXQr3yTsD3WVA2+7Vhf8s8QKi8Y44H/GCy6l3EUrD1qVh0X++X69dRLi+cNB8Koe
+	80ZG12hlm1ooaWhEktJZHNMzN6nO2XwVYNNZKE4K7EZ4Uhhaol3RdZEjf/NbiRf01PZUj9
+	bRQsZorQxlo0xtbYU271JbMXvxdK/viii+VpJFtC/c6Qe3qG3vOmK2BhjSnOYuQmBPRPMc
+	J2vObNIQlZxj44s0h92Aa6jiI9EWL44KDDW/WUdES77ZVFpJi0jwnBZjrrXsjg==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740176508;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 dkim-signature; bh=SLywbHCLFlDtyJM4PIS4UgxATDmGldjtWxcXN7vCIu4=;
+	b=3c0o1uJ9lM87O6TiYMuIyvu0wsn8TJB8651GuekcmXzOxaFi2ttkcI/B6K5rhTlHIHyCaC
+	YmGhuDqbo3/ix6pROTzppd7Q1dS39t0gqIhdHkinHrLkWgQDi7NWRkxp4iirnN2elWsPWZ
+	tfkYZwwO6idGPEwLQ97WZH/jrYmgd3Wiza9T8zhvyIBb3i9RAEtVHSpk4XhdCJ2Vi8KOOa
+	CbHnPOKMn02544eacGjifI3DO+XswZXY+FzU67FiqcAoqO2bhAE6J/b1W2RonKcPZ2yLgo
+	n5zkPy+QQBu9kx2SBPjSQs8l5CtWozdsVznGk0koeVeDSUZ6+hCx6FkilFwpLQ==
+ARC-Authentication-Results: i=1;
+	rspamd-78ddd997cc-sc298;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Share-Eight: 089f678c099e67aa_1740176509102_3808217993
+X-MC-Loop-Signature: 1740176509102:2476259084
+X-MC-Ingress-Time: 1740176509102
+Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.105.228.217 (trex/7.0.2);
+	Fri, 21 Feb 2025 22:21:49 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4Z04Nr1NHnz151
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 14:21:48 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1740176508;
+	bh=SLywbHCLFlDtyJM4PIS4UgxATDmGldjtWxcXN7vCIu4=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=VHjwrsTLU5Uob/P46sOlEdEUBaYhu6habDOgD8IYpPWhBqcJY/Z3MsTw0E9mgHo/i
+	 z4TIdpIQbkCIl7IvnA6STE/YepIA5eo4dxNoVQfwcNKOD+NE1M39Nc/ipkhDyuTYOU
+	 soNuNxG1HAl+ns5rDabPgGScfD+bFatge7JpQogsZlvETltcv/iD/VZU/miSQoBeLl
+	 tZQq7uOfcV4gyCzV3TyTRJhnaxVO9fQQVwp+D840r3A69mMIEdZ1pShIf5kS1a6Gy3
+	 nHAYjHB3peOUUt5Ngp3/ECIObPudxL4bxRRC7Ev+c9zzZz5CwzqRPsiJPfd+QHQCJf
+	 XrNppiU/uNW+w==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e0047
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Fri, 21 Feb 2025 14:21:46 -0800
+Date: Fri, 21 Feb 2025 14:21:46 -0800
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH mptcp] mptcp: fix 'scheduling while atomic' in
+ mptcp_pm_nl_append_new_local_addr
+Message-ID: <20250221222146.GA1896@templeofstupid.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 8/9] mptcp: pm: drop get_local_id helpers
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740019794.git.tanggeliang@kylinos.cn>
- <69747874cdc72593caadf51725cf8835bc45661b.1740019794.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <69747874cdc72593caadf51725cf8835bc45661b.1740019794.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+If multiple connection requests attempt to create an implicit mptcp
+endpoint in parallel, more than one caller may end up in
+mptcp_pm_nl_append_new_local_addr because none found the address in
+local_addr_list during their call to mptcp_pm_nl_get_local_id.  In this
+case, the concurrent new_local_addr calls may delete the address entry
+created by the previous caller.  These deletes use synchronize_rcu, but
+this is not permitted in some of the contexts where this function may be
+called.  During packet recv, the caller may be in a rcu read critical
+section and have preemption disabled.
 
+An example stack:
 
-On 20/02/2025 03:57, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Now mptcp_pm_nl_get_local_id() and mptcp_userspace_pm_get_local_id()
-> helpers can be dropped, and mptcp_pm_get_local_id() can directly invoke
-> get_local_id() interface through "ops" of "msk->pm".
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c           | 6 +++---
->  net/mptcp/pm_netlink.c   | 4 ++--
->  net/mptcp/pm_userspace.c | 4 ++--
->  net/mptcp/protocol.h     | 4 ----
->  4 files changed, 7 insertions(+), 11 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 9d42aed440a0..d2cc93e21bee 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -438,10 +438,10 @@ int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc)
->  	skc_local.addr.id = 0;
->  	skc_local.flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
->  
-> +	if (!msk->pm.ops || !msk->pm.ops->get_local_id)
-Mmh, do we really need to check the "no pm ops" case? If we have to deal
-with that, that might be annoying.
+   BUG: scheduling while atomic: swapper/2/0/0x00000302
 
-Should we not impose the implementation of get_local_id()?
+   Call Trace:
+   <IRQ>
+   dump_stack_lvl+0x76/0xa0
+   dump_stack+0x10/0x20
+   __schedule_bug+0x64/0x80
+   schedule_debug.constprop.0+0xdb/0x130
+   __schedule+0x69/0x6a0
+   schedule+0x33/0x110
+   schedule_timeout+0x157/0x170
+   wait_for_completion+0x88/0x150
+   __wait_rcu_gp+0x150/0x160
+   synchronize_rcu+0x12d/0x140
+   mptcp_pm_nl_append_new_local_addr+0x1bd/0x280
+   mptcp_pm_nl_get_local_id+0x121/0x160
+   mptcp_pm_get_local_id+0x9d/0xe0
+   subflow_check_req+0x1a8/0x460
+   subflow_v4_route_req+0xb5/0x110
+   tcp_conn_request+0x3a4/0xd00
+   subflow_v4_conn_request+0x42/0xa0
+   tcp_rcv_state_process+0x1e3/0x7e0
+   tcp_v4_do_rcv+0xd3/0x2a0
+   tcp_v4_rcv+0xbb8/0xbf0
+   ip_protocol_deliver_rcu+0x3c/0x210
+   ip_local_deliver_finish+0x77/0xa0
+   ip_local_deliver+0x6e/0x120
+   ip_sublist_rcv_finish+0x6f/0x80
+   ip_sublist_rcv+0x178/0x230
+   ip_list_rcv+0x102/0x140
+   __netif_receive_skb_list_core+0x22d/0x250
+   netif_receive_skb_list_internal+0x1a3/0x2d0
+   napi_complete_done+0x74/0x1c0
+   igb_poll+0x6c/0xe0 [igb]
+   __napi_poll+0x30/0x200
+   net_rx_action+0x181/0x2e0
+   handle_softirqs+0xd8/0x340
+   __irq_exit_rcu+0xd9/0x100
+   irq_exit_rcu+0xe/0x20
+   common_interrupt+0xa4/0xb0
+   </IRQ>
 
-> +		return -ENOTSUPP;
->  	mptcp_pm_param_set_contexts(&param, &skc_local, NULL);
-> -	if (mptcp_pm_is_userspace(msk))
-> -		return mptcp_userspace_pm_get_local_id(msk, &param);
-> -	return mptcp_pm_nl_get_local_id(msk, &param);
-> +	return msk->pm.ops->get_local_id(msk, &param);
->  }
->  
->  bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index e0f8754e261e..33b19ff7a313 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1139,8 +1139,8 @@ static int mptcp_pm_nl_create_listen_socket(struct sock *sk,
->  	return err;
->  }
->  
-> -int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
-> -			     struct mptcp_pm_param *param)
-> +static int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
-> +				    struct mptcp_pm_param *param)
->  {
->  	struct mptcp_pm_addr_entry *skc = &param->entry;
->  	struct mptcp_pm_addr_entry *entry;
-> diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-> index 6e51335c8bc1..b233d8469a48 100644
-> --- a/net/mptcp/pm_userspace.c
-> +++ b/net/mptcp/pm_userspace.c
-> @@ -130,8 +130,8 @@ mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
->  	return NULL;
->  }
->  
-> -int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
-> -				    struct mptcp_pm_param *param)
-> +static int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
-> +					   struct mptcp_pm_param *param)
->  {
->  	__be16 msk_sport =  ((struct inet_sock *)
->  			     inet_sk((struct sock *)msk))->inet_sport;
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index cddb919fc120..d06add105df5 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1129,10 +1129,6 @@ void mptcp_pm_param_set_contexts(struct mptcp_pm_param *param,
->  				 const struct mptcp_pm_addr_entry *entry,
->  				 const struct mptcp_addr_info *addr);
->  int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
-> -int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
-> -			     struct mptcp_pm_param *param);
-> -int mptcp_userspace_pm_get_local_id(struct mptcp_sock *msk,
-> -				    struct mptcp_pm_param *param);
->  bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
->  bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
->  bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
+This problem seems particularly prevalent if the user advertises an
+endpoint that has a different external vs internal address.  In the case
+where the external address is advertised and multiple connections
+already exist, multiple subflow SYNs arrive in parallel which tends to
+trigger the race during creation of the first local_addr_list entries
+which have the internal address instead.
 
-Cheers,
-Matt
+Fix this problem by switching mptcp_pm_nl_append_new_local_addr to use
+call_rcu .  As part of plumbing this up, make
+__mptcp_pm_release_addr_entry take a rcu_head which is used by all
+callers regardless of cleanup method.
+
+Cc: stable@vger.kernel.org
+Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
+Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+---
+ net/mptcp/pm_netlink.c | 19 ++++++++++++-------
+ net/mptcp/protocol.h   |  1 +
+ 2 files changed, 13 insertions(+), 7 deletions(-)
+
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index c0e47f4f7b1a..4115b83cc2c3 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -967,9 +967,15 @@ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
+ 		MPTCP_PM_ADDR_FLAG_SIGNAL;
+ }
+ 
+-/* caller must ensure the RCU grace period is already elapsed */
+-static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
++/*
++ * Caller must ensure the RCU grace period is already elapsed or call this
++ * via a RCU callback.
++ */
++static void __mptcp_pm_release_addr_entry(struct rcu_head *head)
+ {
++	struct mptcp_pm_addr_entry *entry;
++
++	entry = container_of(head, struct mptcp_pm_addr_entry, rcu_head);
+ 	if (entry->lsk)
+ 		sock_release(entry->lsk);
+ 	kfree(entry);
+@@ -1064,8 +1070,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
+ 
+ 	/* just replaced an existing entry, free it */
+ 	if (del_entry) {
+-		synchronize_rcu();
+-		__mptcp_pm_release_addr_entry(del_entry);
++		call_rcu(&del_entry->rcu_head, __mptcp_pm_release_addr_entry);
+ 	}
+ 	return ret;
+ }
+@@ -1443,7 +1448,7 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 	return 0;
+ 
+ out_free:
+-	__mptcp_pm_release_addr_entry(entry);
++	__mptcp_pm_release_addr_entry(&entry->rcu_head);
+ 	return ret;
+ }
+ 
+@@ -1623,7 +1628,7 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
+ 
+ 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), entry);
+ 	synchronize_rcu();
+-	__mptcp_pm_release_addr_entry(entry);
++	__mptcp_pm_release_addr_entry(&entry->rcu_head);
+ 
+ 	return ret;
+ }
+@@ -1689,7 +1694,7 @@ static void __flush_addrs(struct list_head *list)
+ 		cur = list_entry(list->next,
+ 				 struct mptcp_pm_addr_entry, list);
+ 		list_del_rcu(&cur->list);
+-		__mptcp_pm_release_addr_entry(cur);
++		__mptcp_pm_release_addr_entry(&cur->rcu_head);
+ 	}
+ }
+ 
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ad21925af061..29c4ee64cd0b 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -250,6 +250,7 @@ struct mptcp_pm_addr_entry {
+ 	u8			flags;
+ 	int			ifindex;
+ 	struct socket		*lsk;
++	struct rcu_head		rcu_head;
+ };
+ 
+ struct mptcp_data_frag {
 -- 
-Sponsored by the NGI0 Core fund.
+2.25.1
 
