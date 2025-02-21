@@ -1,182 +1,79 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2978A257D
-	for <mptcp@lists.linux.dev>; Thu, 20 Feb 2025 18:34:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C39394207F
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 05:34:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740076489; cv=none; b=F+SjJqn1leTtQJ9I+zyaYWAJ6F56HEZ+XBigKkjxJpYOOzdY8uh8qhZ89AitkaHBm+fABRIgdO2HWGGl4U2q0PDnwngoEgsUgXAPS6qFlrZNiuQioWIoouPJdmUh942E3yXPP2p+Lt4CZlVfngvPcuC2DudqXwKbsza3+TKk20w=
+	t=1740116076; cv=none; b=T57ooo0UjlZnV8lMCbSZfFo7qi91F5/l++nAsJ8pkXDx7AmIWY56AWwtpZf+9o0ZpF6Xmsz5aQnDymDKEW+BANCHWLfujMV4Hp/CusGViXrpjYjtuxXZmSlEfAEsKxS5M3SVjagO6aO3VYlAn6Yz13flkqhb//WfH3JU/5jkYE8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740076489; c=relaxed/simple;
-	bh=DnHSsTxUOKFx6LeSVmvCWDzFpG9t8bxnf4myOvNEPlU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cc9orrwSYjuMHo9Pvbfn30K+2aYxwKPPnunNoL40xUzEYIwVR28iS1uRVai40OiXGusWa0e83T4uv9NJK3CjPHo1Pj+wErJWHum9qGVqiwIwk96oMkSqyEI6Dvfx6iyegPv9hBoLOy3PmU3jyY09hB2cLtwsLYNX66y/BMSqrhk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABLEMhEw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABLEMhEw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8AEBFC4CED1;
-	Thu, 20 Feb 2025 18:34:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740076488;
-	bh=DnHSsTxUOKFx6LeSVmvCWDzFpG9t8bxnf4myOvNEPlU=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ABLEMhEwKzZEJhtBesTXThxkrqOKoVDCvvh6FBv9J+pi7Ntd2q8ASjR2DxnPXzm1d
-	 pRQWTQOSCiPm2SeUlxWzgJvxLUavhBB/Mn/9VMZ79GkQKd9m1zHEbjSzIVHZVYwCfU
-	 /RqahJFj4FFlRehleJDVnVuGdixSv7ZhM/bdKt8eSnZnp/3Ph7ayTIdcGC773muwFQ
-	 /t2lgBvu7bZ4uJhyejjos7HW2Gvsrj45auydXawksmlqAlPB5KMKTQW6rxovHYEku2
-	 O9FlThJskkMmrCX2yxvuiBAE0+P5Ch9M5pWKzR8Wv1q1aagJsXphGAKY+I3dV9pJHd
-	 3PrEWpjmCZhLA==
-Message-ID: <323d4357-4694-4ab0-af5f-c1277e738f17@kernel.org>
-Date: Thu, 20 Feb 2025 19:34:45 +0100
+	s=arc-20240116; t=1740116076; c=relaxed/simple;
+	bh=rWV+kCs/Kx+gylAzlFBVvdgm4WET27tzpjquhKKzRt8=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=QJzbUwdneH+AtIs6fCvMeGentLa2nkQLIXrprkuyB3eQ0wdlRJCXKVPdbTpe3biQakb296uy96SLZRXafpPJaKKe9miQ8QjjBwcX5GHAS0lZCRjFNffb2WSwTNOreOr9odB/7I9KnLr3zpMCvGd0XVqpUAR8QurhYMEQnJx32Ac=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 831aaa48f01511efa216b1d71e6e1362-20250221
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:bcbbbb28-12df-47c9-b88d-3ecbdb0b50e9,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:bcbbbb28-12df-47c9-b88d-3ecbdb0b50e9,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:43af2a15fadb8be0e607520059410848,BulkI
+	D:250221133427RSGZM2V4,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
+	C:nil,Content:0|50,EDM:5,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:nil,BE
+	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0,NGT
+X-CID-BAS: 0,NGT,0,_
+X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
+	TF_CID_SPAM_ULN
+X-UUID: 831aaa48f01511efa216b1d71e6e1362-20250221
+X-User: yangang@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 743705212; Fri, 21 Feb 2025 13:34:25 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [mptcp-next v3 0/2] selftests: mptcp: add tests for increasing
+Date: Fri, 21 Feb 2025 13:34:17 +0800
+Message-Id: <cover.1740115494.git.yangang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 5/5] Squash to "selftests/bpf: Add
- mptcp_subflow bpf_iter subtest"
-Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1738470660.git.tanggeliang@kylinos.cn>
- <b5fee152138c047d02911d31e12d7f5616ae56f2.1738470660.git.tanggeliang@kylinos.cn>
- <193e629a-dde2-3d97-98ff-9a6735c0aa2f@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <193e629a-dde2-3d97-98ff-9a6735c0aa2f@kernel.org>
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Mat, Geliang,
+These patches provide a method to verify the 'mptcp_diag_dump_one'
+function, and the new tool 'mptcp_diag' can get the specific mptcp_info
+through multi msks.
 
-On 14/02/2025 02:45, Mat Martineau wrote:
-> On Sun, 2 Feb 2025, Geliang Tang wrote:
-> 
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> Use bpf_core_cast() instead of bpf_skc_to_mptcp_sock().
->> Change the 2nd parameter type of bpf_for_each() as 'struct sock'.
->> Drop bpf_mptcp_sock_acquire/release.
->>
->> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->> ---
->> tools/testing/selftests/bpf/bpf_experimental.h      | 2 +-
->> tools/testing/selftests/bpf/progs/mptcp_bpf.h       | 3 ---
->> tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c | 8 ++------
->> 3 files changed, 3 insertions(+), 10 deletions(-)
->>
->> diff --git a/tools/testing/selftests/bpf/bpf_experimental.h b/tools/
->> testing/selftests/bpf/bpf_experimental.h
->> index 2ab3f0063c0f..6a96c56f0725 100644
->> --- a/tools/testing/selftests/bpf/bpf_experimental.h
->> +++ b/tools/testing/selftests/bpf/bpf_experimental.h
->> @@ -577,7 +577,7 @@ extern void bpf_iter_css_destroy(struct
->> bpf_iter_css *it) __weak __ksym;
->>
->> struct bpf_iter_mptcp_subflow;
->> extern int bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
->> -                      struct mptcp_sock *msk) __weak __ksym;
->> +                      struct sock *sk) __weak __ksym;
->> extern struct mptcp_subflow_context *
->> bpf_iter_mptcp_subflow_next(struct bpf_iter_mptcp_subflow *it) __weak
->> __ksym;
->> extern void
->> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/
->> testing/selftests/bpf/progs/mptcp_bpf.h
->> index b1f6e1fb467e..ede9111ee597 100644
->> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
->> @@ -43,9 +43,6 @@ mptcp_subflow_tcp_sock(const struct
->> mptcp_subflow_context *subflow)
->> }
->>
->> /* ksym */
->> -extern struct mptcp_sock *bpf_mptcp_sock_acquire(struct mptcp_sock
->> *msk) __ksym;
->> -extern void bpf_mptcp_sock_release(struct mptcp_sock *msk) __ksym;
->> -
->> extern struct mptcp_subflow_context *
->> bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
->> extern struct sock *
->> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/
->> tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
->> index fd5691a4073b..2c0d11cb9864 100644
->> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
->> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
->> @@ -24,14 +24,11 @@ int iters_subflow(struct bpf_sockopt *ctx)
->>     if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
->>         return 1;
->>
->> -    msk = bpf_skc_to_mptcp_sock(sk);
->> +    msk = bpf_core_cast(sk, struct mptcp_sock);
->>     if (!msk || msk->pm.server_side || !msk->pm.subflows)
->>         return 1;
->>
->> -    msk = bpf_mptcp_sock_acquire(msk);
-> 
-> Hi Geliang -
-> 
-> Why is the locking removed? The squashed commit will still have a commit
-> message referring to the acquire/release, so that isn't consistent with
-> the modified code.
+Gang Yan (2):
+  selftests: mptcp: Add a tool to get specific msk_info
+  selftests: mptcp: add a test for mptcp_diag_dump_one
 
-From what I understood from Martin's review [1], this mptcp_sock_acquire
-helper was a workaround only to please the verifier, but they were not
-needed
+ tools/testing/selftests/net/mptcp/Makefile    |   2 +-
+ tools/testing/selftests/net/mptcp/diag.sh     |  27 ++
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 258 ++++++++++++++++++
+ 3 files changed, 286 insertions(+), 1 deletion(-)
+ create mode 100644 tools/testing/selftests/net/mptcp/mptcp_diag.c
 
-@Geliang: is this correct? (if yes, do not hesitate to add such info in
-the commit message removing such helpers because without the context,
-"Drop this patch as Martin suggested" is hard to understand :) )
-
-1 https://lore.kernel.org/9b373a23-c093-42d8-b4ae-99f2e62e7681@linux.dev
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.25.1
 
