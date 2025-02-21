@@ -1,135 +1,123 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3EF10213E89;
-	Fri, 21 Feb 2025 15:44:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8D37C213E89
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 15:56:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740152675; cv=none; b=rbrx+wLkGwHT8b2MHRn/FPqv4PcFiqTqHHr96k01CGwZy64tOF2XWj+AuLM65lNerTctITCDcuOcIMFVi9c0P8f77TGyfUeEgOC/n7mEKOkff8xEJjijZqvCCUEJ256wL/CSM+byUWjdqWnekoY0mllxntoRGKnEyfR0Fg3Dulc=
+	t=1740153380; cv=none; b=olC1MFF8ywn5aMQ/1WJGCwwWOhXIjc3p2wvlpmoK+rSVcW1VUh5VR89D0tzss0lAg4U/UzzVXvSEpCHcVIC8S6zUi8y6Al9evV+AXn59VQ/E6DZd5dHOpDrHzyK9uYYLASDwpDIhSOccZtw0xeWCJBHLcaRc8PTtVmcIiXEx+b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740152675; c=relaxed/simple;
-	bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=WXuVpbaHswLJd6e59epX4B/X+S5TFbA0cQL3axOQn9l5foN0n0pYEUxbLTl/P0P9mIlKvkH6BKw+T+0Xa1jZn5LxwMM4MEEI0r9bYEV7MdMEhlypdmpZndXznFLeSCgDsM23O7SO7mpNz8OOSVM1Bn5Qiclq46cBscDMB2OETno=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S7BO3Q/A; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740153380; c=relaxed/simple;
+	bh=3OF4qGDlZ5aF9wwCTkSP4+wu3xCzvXMyR1DzYlWIX6M=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=esVXMdnqaTwVsXHcY3FaMdDUh6BoqBNf5mHUFqu9Sls1TMkxnYVhuACwVXvM7DHzR0r6bqY4Rc9ZZ3XpHUnku/1xf1TgmzXQwJzMQUnVzX5G4I9zPsHw+oL+FYLjXYvjTp2G/7g8oNj3c2nem850+5mIajzf4OMCc3eUYzSvZX4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c2Pqahq8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S7BO3Q/A"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 16E13C4CEE4;
-	Fri, 21 Feb 2025 15:44:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c2Pqahq8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0106C4CEE7
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 15:56:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740152675;
-	bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=S7BO3Q/APfHsjQjaGHhS6sHXal6pvXJL3tKyA9mwHcbqfwMupAlmEGCcnbUR3RaqV
-	 8/ER9Rj6bzcQQ8FENb+UhBWF28zoo/RueVMGSo6/W8X4rMUyObRPNPSekg9OfqXgbb
-	 1EfxbO/hehgtEi2ydPYS5ny8trrUYpdpaSEZNipj/ikyZ/aI6Gcpp3r9KwuZ5cOAk3
-	 zrGfo5mYGmi1z1JSsZcARaD977xmvtYOHte1pIAH9lK0dhfRIGIfP78Uutt/jAyIo7
-	 MD7DE7h1po+DcuGLwnfWJRyEa89JeaFhmFTOJ5bdYn0zE5PCNABauuq5IogoKL8Dp4
-	 Mpys5VwqVdUCA==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 21 Feb 2025 16:44:03 +0100
-Subject: [PATCH net-next 10/10] mptcp: blackhole: avoid checking the state
- twice
+	s=k20201202; t=1740153380;
+	bh=3OF4qGDlZ5aF9wwCTkSP4+wu3xCzvXMyR1DzYlWIX6M=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=c2Pqahq8MIjtbMrptRj3xN8NG8y2HtGeVoptY9rKZ7IIwwpnQyJij4NSKw7SbfL9A
+	 v8rLaouBy0jwWUNSie5cQe98kGufVeANKj17HnEs+iEvbvDU0QieFLb4No2xmxMUib
+	 TT2lfevh5+I346CBQyaherpUUdYIiYANps9tJawMONsTCbgpJuAsEx/6xqcplp1IYf
+	 fUTbRzDwX2hwUi3IqBxp38nUTEt0MHnwoyir+8vFFRhucqXt7N3LGL+vMbfLPIh+sG
+	 jBZPWU65vI2PjJteYMX2WYb6h+0LCqXj7z7ZwtnhGHz9K6IHJfvsWl9LaPuAXkGsIq
+	 1ouaN76I/vfZw==
+Message-ID: <9ce9967c-c840-470c-8c71-37144b1e6236@kernel.org>
+Date: Fri, 21 Feb 2025 16:56:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next 0/2] mptcp: sched: reduce size for unused data
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
+To: MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250221-mptcp-sched-data-ptr-v1-0-dbaec476fa6b@kernel.org>
+ <61a4b545-dc93-4be3-859f-b79d018e758a@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <61a4b545-dc93-4be3-859f-b79d018e758a@kernel.org>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-10-2b70ab1cee79@kernel.org>
-References: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-In-Reply-To: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2258; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Wom1Z6Yf2iTnch8UEgQeD2janPDVRVMz/fyDLs5de9w=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnuJ9HgoWs/Elej6GEIci+QQQIkFOFv8zV3mfAb
- Do2FbfkzCOJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7ifRwAKCRD2t4JPQmmg
- c7MhEACYVK1iUWhT53jM4LB417iKAbXrfjFNNb2JFET8a4PSK9fs4TBD+tIOzJbbCG0aDoj/6Th
- xWt3rzxPgiLe/r18Jad51x+gS0y90kmjVD8YV/YzACS3h6c7OsMH0C6UyEzWFBFR9DZ0biFUdSB
- nViI+AlfoJ9t/aCL6cVHvsdUm2r+/B28heR2VHot7m+56CiMadgxmLbmBeRrva+qa7WlEy987we
- 49I/C4zd4umS1+93fH9nInTokAsIC3t9GmO/ipT6g6OSYtaoF/XWie9+jSLSQBf2cdsJ0uM0cOV
- 7rxPvEfBlxCdX2vniOft69WFpMdmt3CEWOyDlyyKk6nu9jA0TAhx1cSBYI95UxwyS/f4onIvMHw
- yTQ1/WQ7Uw2rxR2WGqnKqriq17B4ZI1TmQnkL4D8CKM0egodgMoGtkGgTORcUsAtIiS7BLxhNCX
- EDeaXDI2EMnUlmTKioeANfDE2hIkPIt+tp2+/ixplrRuIPuXfJOAmSBWQf6sx3HdhEOsmqS/g9T
- Uf6jfyo3Qby7p8AkwcUfOCgugKbHQeUsZSeXir6YVYisQ8tAAsCAOdmso/XLkRa+FdhcFxFWr2A
- 0vo6ImkjP9qj43KtE5og7+rjf5SAnnTjWRjQN9/c8uRyzMq7l7Pjr2LVImADND0oH6m8cjjcjjU
- JgRU7GD6zSSEHWA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A small cleanup, reordering the conditions to avoid checking things
-twice.
+On 21/02/2025 16:33, Matthieu Baerts wrote:
+> Hello,
+> 
+> On 21/02/2025 16:08, Matthieu Baerts (NGI0) wrote:
+>> I was going to send "mptcp: sched: split get_subflow interface into two"
+>> commit, when I saw again that the "data" structure was no longer used.
+>>
+>> Because it will be removed later, when "use bpf_iter in bpf schedulers"
+>> series will be applied, a first step is to save 64B from the stack for
+>> each scheduling operation.
+> 
+> I suggest applying this now, not to block the other patch: this small
+> modification is trivial, and undo only in our tree.
 
-The code here is called in case of timeout on a TCP connection, before
-triggering a retransmission. But it only acts on SYN + MPC packets.
+Just did:
 
-So the conditions can be re-order to exit early in case of non-MPTCP
-SYN + MPC. This also reduce the indentation levels.
+New patches for t/upstream:
+- 70c366a0a40e: mptcp: sched: reduce size for unused data
+- 46de2641147f: conflict in t/mptcp-add-sched_data-helpers-2
+- f3c111c797d2: "squashed" patch 2/2 in "mptcp: add sched_data helpers"
+- Results: 9afc9d6ddf8b..b5dbbb68e432 (export)
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/ctrl.c | 32 ++++++++++++++++++--------------
- 1 file changed, 18 insertions(+), 14 deletions(-)
+Tests are now in progress:
 
-diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-index 2dd81e6c26bdb5220abed68e26d70d2dc3ab14fb..be6c0237e10bfd7520edd3c57ec43ce4377b97d5 100644
---- a/net/mptcp/ctrl.c
-+++ b/net/mptcp/ctrl.c
-@@ -401,26 +401,30 @@ void mptcp_active_enable(struct sock *sk)
- void mptcp_active_detect_blackhole(struct sock *ssk, bool expired)
- {
- 	struct mptcp_subflow_context *subflow;
-+	u8 timeouts, to_max;
-+	struct net *net;
- 
--	if (!sk_is_mptcp(ssk))
-+	/* Only check MPTCP SYN ... */
-+	if (likely(!sk_is_mptcp(ssk) || ssk->sk_state != TCP_SYN_SENT))
- 		return;
- 
- 	subflow = mptcp_subflow_ctx(ssk);
- 
--	if (subflow->request_mptcp && ssk->sk_state == TCP_SYN_SENT) {
--		struct net *net = sock_net(ssk);
--		u8 timeouts, to_max;
--
--		timeouts = inet_csk(ssk)->icsk_retransmits;
--		to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
--
--		if (timeouts == to_max || (timeouts < to_max && expired)) {
--			MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
--			subflow->mpc_drop = 1;
--			mptcp_subflow_early_fallback(mptcp_sk(subflow->conn), subflow);
--		}
--	} else if (ssk->sk_state == TCP_SYN_SENT) {
-+	/* ... + MP_CAPABLE */
-+	if (!subflow->request_mptcp) {
-+		/* Mark as blackhole iif the 1st non-MPTCP SYN is accepted */
- 		subflow->mpc_drop = 0;
-+		return;
-+	}
-+
-+	net = sock_net(ssk);
-+	timeouts = inet_csk(ssk)->icsk_retransmits;
-+	to_max = mptcp_get_pernet(net)->syn_retrans_before_tcp_fallback;
-+
-+	if (timeouts == to_max || (timeouts < to_max && expired)) {
-+		MPTCP_INC_STATS(net, MPTCP_MIB_MPCAPABLEACTIVEDROP);
-+		subflow->mpc_drop = 1;
-+		mptcp_subflow_early_fallback(mptcp_sk(subflow->conn), subflow);
- 	}
- }
- 
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e62e41e330fd89c538f76910906c828684a9ce44/checks
 
+Cheers,
+Matt
 -- 
-2.47.1
+Sponsored by the NGI0 Core fund.
 
