@@ -1,251 +1,128 @@
-Received: from poodle.tulip.relay.mailchannels.net (poodle.tulip.relay.mailchannels.net [23.83.218.249])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9763318DB0B
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:28:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.218.249
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740176918; cv=pass; b=Tz09W/PStbXKRnd/yPxLULy70/XQqJn0JlfeF21D0AW+rp/s+yvrOKPhwNreWMYOdVC4m9+S9hWz/J4sgrvLn59Mt1JrLODJy67Kddc5651bmuargJQO56dBaaBCi0wOGVJ4k9oWC/soy3XH55t9pL1YnbrVvqK91b7MqGo4BZ0=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740176918; c=relaxed/simple;
-	bh=9AiURpy5+R8gJDma4ZT4sR33rNzMijv+iTmDFgc4Sxk=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=Fe40usfRtWnrpytL0+8OHqsJWvI0YOdSClYMBPmae0IrfOZ558Z7yXFXFgfTwKwsw3sEmQr5qExyOPPyl8clt7XEVgf0/auxLJhI+XrhpSIXvGknPq7VVketGsbbuJ1Teb0C5w4HOfU5lTHDojFBRKRnqQ/yezEPVH67MF4TNnw=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=VHjwrsTL; arc=pass smtp.client-ip=23.83.218.249
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36C11E282D
+	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 23:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740180808; cv=none; b=JATRUKG51zD2PtgDqBLcRd2KXHBwGH9aaYPbaaymwPWKM0BKTTfTSvbAafa9saCy/vtTf+wZOu7pVvswsE78gf7ZUaX4+GSGrfeRSBCtIIX9R3BCT1CbHS0NI/ci+gF/0pkWduN9KClB+WkWxpYeW37jocdNr3+inhhQb1TuKmQ=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740180808; c=relaxed/simple;
+	bh=ek3w9ducjx/I+wGO0ZMhv3ge4Na7bcwZDl4o1w1QaGY=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=sOkNi5Q2bo+V8pbMhtudD9AP2HSigpPXwQ/5PO1WxDdX+Opsp+Bs7rJYvAr4RFzdM9MO+/LLCcXO7vkVeVHOM9ixtFdby+iD1oQ6hSwThAPkgLPqKyvy6beIfKzPTCfZ7NUgiFrx/6SvI5z+SqWPjTYqSJtTzOku7PUZYu9nawY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=F2OYBX3V; arc=none smtp.client-ip=209.85.222.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="VHjwrsTL"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 3151B8A4630
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:21:49 +0000 (UTC)
-Received: from pdx1-sub0-mail-a248.dreamhost.com (100-105-228-217.trex-nlb.outbound.svc.cluster.local [100.105.228.217])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id DC1118A46F3
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 22:21:48 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740176508; a=rsa-sha256;
-	cv=none;
-	b=6yrUQIghPo6ZIlM6Uj+9H1nrxdICgPc9metsgh++mm7Lq/bsfucvNQsFOWJ74SWA7BYWaq
-	sY0NpYnXQr3yTsD3WVA2+7Vhf8s8QKi8Y44H/GCy6l3EUrD1qVh0X++X69dRLi+cNB8Koe
-	80ZG12hlm1ooaWhEktJZHNMzN6nO2XwVYNNZKE4K7EZ4Uhhaol3RdZEjf/NbiRf01PZUj9
-	bRQsZorQxlo0xtbYU271JbMXvxdK/viii+VpJFtC/c6Qe3qG3vOmK2BhjSnOYuQmBPRPMc
-	J2vObNIQlZxj44s0h92Aa6jiI9EWL44KDDW/WUdES77ZVFpJi0jwnBZjrrXsjg==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740176508;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 dkim-signature; bh=SLywbHCLFlDtyJM4PIS4UgxATDmGldjtWxcXN7vCIu4=;
-	b=3c0o1uJ9lM87O6TiYMuIyvu0wsn8TJB8651GuekcmXzOxaFi2ttkcI/B6K5rhTlHIHyCaC
-	YmGhuDqbo3/ix6pROTzppd7Q1dS39t0gqIhdHkinHrLkWgQDi7NWRkxp4iirnN2elWsPWZ
-	tfkYZwwO6idGPEwLQ97WZH/jrYmgd3Wiza9T8zhvyIBb3i9RAEtVHSpk4XhdCJ2Vi8KOOa
-	CbHnPOKMn02544eacGjifI3DO+XswZXY+FzU67FiqcAoqO2bhAE6J/b1W2RonKcPZ2yLgo
-	n5zkPy+QQBu9kx2SBPjSQs8l5CtWozdsVznGk0koeVeDSUZ6+hCx6FkilFwpLQ==
-ARC-Authentication-Results: i=1;
-	rspamd-78ddd997cc-sc298;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Share-Eight: 089f678c099e67aa_1740176509102_3808217993
-X-MC-Loop-Signature: 1740176509102:2476259084
-X-MC-Ingress-Time: 1740176509102
-Received: from pdx1-sub0-mail-a248.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.105.228.217 (trex/7.0.2);
-	Fri, 21 Feb 2025 22:21:49 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a248.dreamhost.com (Postfix) with ESMTPSA id 4Z04Nr1NHnz151
-	for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 14:21:48 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1740176508;
-	bh=SLywbHCLFlDtyJM4PIS4UgxATDmGldjtWxcXN7vCIu4=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=VHjwrsTLU5Uob/P46sOlEdEUBaYhu6habDOgD8IYpPWhBqcJY/Z3MsTw0E9mgHo/i
-	 z4TIdpIQbkCIl7IvnA6STE/YepIA5eo4dxNoVQfwcNKOD+NE1M39Nc/ipkhDyuTYOU
-	 soNuNxG1HAl+ns5rDabPgGScfD+bFatge7JpQogsZlvETltcv/iD/VZU/miSQoBeLl
-	 tZQq7uOfcV4gyCzV3TyTRJhnaxVO9fQQVwp+D840r3A69mMIEdZ1pShIf5kS1a6Gy3
-	 nHAYjHB3peOUUt5Ngp3/ECIObPudxL4bxRRC7Ev+c9zzZz5CwzqRPsiJPfd+QHQCJf
-	 XrNppiU/uNW+w==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e0047
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Fri, 21 Feb 2025 14:21:46 -0800
-Date: Fri, 21 Feb 2025 14:21:46 -0800
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH mptcp] mptcp: fix 'scheduling while atomic' in
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F2OYBX3V"
+Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c0a1c4780bso269642785a.3
+        for <mptcp@lists.linux.dev>; Fri, 21 Feb 2025 15:33:26 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1740180805; x=1740785605; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=5ExFApTpjOxS/eH/OyDbpPX1NNEfTUSdBoh5YfB6jJg=;
+        b=F2OYBX3VzeDokq+sqL/XdKIDBUjF07B6vRWRVAj9LtBkjCb6cnnbBF87G1MpiyAFfB
+         PnEWkEo7mPmroufhL0fZby0W0iPL90LdOulf/RWxl7KYqn/w2JkXoTDtH9f5jJdeGhX1
+         2cG0k2ajUwJ0JwfRk+zXGzr1j5zyu/wqWcdUgsJK34lIhgojU0aVd7BGlhbzP1B4IlbU
+         4894fBVT/KrKlsp4flEmrde9w2tZXtiZqj4rnLchQypg6Dahea7/3zsNMPgLGBhP+F1k
+         QtCkhm+4frbwrHcmOXT/E2QME0PGEXSOc9t6KOdQJ5B8D110M0mu19yZhmGNaNdGn+9I
+         Ilhg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1740180805; x=1740785605;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=5ExFApTpjOxS/eH/OyDbpPX1NNEfTUSdBoh5YfB6jJg=;
+        b=vw29bpkYbtcv774B5OQDrpDu1pGD691KY6i98XaTwn8VpK4rEE8BGVXhscA2F4FLS2
+         E+flsuvlkkBix61RXtQViQV4C9D1AL3y9beFTeJPgtJRSvtOhbm0QDXQ/Gz5HNfevo+i
+         WMAmJh0WGWhhiSv2tIuTviV99qlSMfXSApr9/Anuw5Fgm4l8rrz0chJI5k3cmS/wuUwr
+         hoUEH++GTxh5LNU5Y/Ewq7RMaWeqF6rm9x8PmAlkeUIl2WvFoBrKcP3cXQ7CeBkLuttw
+         qPu0bq3GbdcpO2doorZBXKhNghMANXGZXAXagvsVWhComVHjs9jV7kn1Yd5bdEB3Le3X
+         girw==
+X-Gm-Message-State: AOJu0YxQVQ4DqxbeKzHUVnQPUS4pKy77yrFb6o3RoEMdM4EMZ8gpegee
+	YxsJ34uqAtNYhR7XAjxtL5sOP4WFEj+4S/RcasgvkgZHU3VhdLwSXmio
+X-Gm-Gg: ASbGncvAm21w9iN429jIo1fByuCVpSU2DSkDi84MDqeKhb1OVud8gGy5Wlw+lP9lld3
+	tCSSqQXCCHfnftSEaTconVYVLmnsZYHRtA7AFxTuyP94NXx6LlbfdH+hbrgGGNDW0XSxAWuZLBv
+	t3Mc7ZOojhev59sCJk7PNJFiwNBm/qSh76i3M5QyRUJ3Vgbj9Wn82yuougEw4O/v/wWRdCJRu8x
+	ck9v+XF33hL33wXQJHlwwQVQHnVijW9mBWClmFmYSH9Qze2O2mBNkfOakTfSCmvKI+HP6ym7u9L
+	NVcQNLsvdrtz8AULfr4oIlcrcWltFbI1xXZJ3g==
+X-Google-Smtp-Source: AGHT+IGkbH4cmPygjQWxXgNL9A9gpXqn+uU+Iz6iuXbZosf2b2XOff31hEVnk1pZhT5UtscwcyNUCw==
+X-Received: by 2002:a05:620a:462c:b0:7c0:9ac5:7fbd with SMTP id af79cd13be357-7c0cedf4d77mr688780885a.0.1740180805676;
+        Fri, 21 Feb 2025 15:33:25 -0800 (PST)
+Received: from [127.0.0.1] ([20.88.39.184])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c09b9061d3sm687188485a.92.2025.02.21.15.33.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Fri, 21 Feb 2025 15:33:25 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Krister Johansen <kjlx@templeofstupid.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250221222146.GA1896@templeofstupid.com>
+References: <20250221222146.GA1896@templeofstupid.com>
+Subject: Re: [PATCH mptcp] mptcp: fix 'scheduling while atomic' in
  mptcp_pm_nl_append_new_local_addr
-Message-ID: <20250221222146.GA1896@templeofstupid.com>
+Message-ID: <fb16f1f9-37da-638f-908b-c2cfc3229dcd@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Fri, 21 Feb 2025 23:33:24 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-If multiple connection requests attempt to create an implicit mptcp
-endpoint in parallel, more than one caller may end up in
-mptcp_pm_nl_append_new_local_addr because none found the address in
-local_addr_list during their call to mptcp_pm_nl_get_local_id.  In this
-case, the concurrent new_local_addr calls may delete the address entry
-created by the previous caller.  These deletes use synchronize_rcu, but
-this is not permitted in some of the contexts where this function may be
-called.  During packet recv, the caller may be in a rcu read critical
-section and have preemption disabled.
+Hi Krister,
 
-An example stack:
+Thank you for your modifications, that's great!
 
-   BUG: scheduling while atomic: swapper/2/0/0x00000302
+Our CI did some validations and here is its report:
 
-   Call Trace:
-   <IRQ>
-   dump_stack_lvl+0x76/0xa0
-   dump_stack+0x10/0x20
-   __schedule_bug+0x64/0x80
-   schedule_debug.constprop.0+0xdb/0x130
-   __schedule+0x69/0x6a0
-   schedule+0x33/0x110
-   schedule_timeout+0x157/0x170
-   wait_for_completion+0x88/0x150
-   __wait_rcu_gp+0x150/0x160
-   synchronize_rcu+0x12d/0x140
-   mptcp_pm_nl_append_new_local_addr+0x1bd/0x280
-   mptcp_pm_nl_get_local_id+0x121/0x160
-   mptcp_pm_get_local_id+0x9d/0xe0
-   subflow_check_req+0x1a8/0x460
-   subflow_v4_route_req+0xb5/0x110
-   tcp_conn_request+0x3a4/0xd00
-   subflow_v4_conn_request+0x42/0xa0
-   tcp_rcv_state_process+0x1e3/0x7e0
-   tcp_v4_do_rcv+0xd3/0x2a0
-   tcp_v4_rcv+0xbb8/0xbf0
-   ip_protocol_deliver_rcu+0x3c/0x210
-   ip_local_deliver_finish+0x77/0xa0
-   ip_local_deliver+0x6e/0x120
-   ip_sublist_rcv_finish+0x6f/0x80
-   ip_sublist_rcv+0x178/0x230
-   ip_list_rcv+0x102/0x140
-   __netif_receive_skb_list_core+0x22d/0x250
-   netif_receive_skb_list_internal+0x1a3/0x2d0
-   napi_complete_done+0x74/0x1c0
-   igb_poll+0x6c/0xe0 [igb]
-   __napi_poll+0x30/0x200
-   net_rx_action+0x181/0x2e0
-   handle_softirqs+0xd8/0x340
-   __irq_exit_rcu+0xd9/0x100
-   irq_exit_rcu+0xe/0x20
-   common_interrupt+0xa4/0xb0
-   </IRQ>
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/13466476124
 
-This problem seems particularly prevalent if the user advertises an
-endpoint that has a different external vs internal address.  In the case
-where the external address is advertised and multiple connections
-already exist, multiple subflow SYNs arrive in parallel which tends to
-trigger the race during creation of the first local_addr_list entries
-which have the internal address instead.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/ba4aa4f792b5
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D936626
 
-Fix this problem by switching mptcp_pm_nl_append_new_local_addr to use
-call_rcu .  As part of plumbing this up, make
-__mptcp_pm_release_addr_entry take a rcu_head which is used by all
-callers regardless of cleanup method.
 
-Cc: stable@vger.kernel.org
-Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
-Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
----
- net/mptcp/pm_netlink.c | 19 ++++++++++++-------
- net/mptcp/protocol.h   |  1 +
- 2 files changed, 13 insertions(+), 7 deletions(-)
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index c0e47f4f7b1a..4115b83cc2c3 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -967,9 +967,15 @@ static bool address_use_port(struct mptcp_pm_addr_entry *entry)
- 		MPTCP_PM_ADDR_FLAG_SIGNAL;
- }
- 
--/* caller must ensure the RCU grace period is already elapsed */
--static void __mptcp_pm_release_addr_entry(struct mptcp_pm_addr_entry *entry)
-+/*
-+ * Caller must ensure the RCU grace period is already elapsed or call this
-+ * via a RCU callback.
-+ */
-+static void __mptcp_pm_release_addr_entry(struct rcu_head *head)
- {
-+	struct mptcp_pm_addr_entry *entry;
-+
-+	entry = container_of(head, struct mptcp_pm_addr_entry, rcu_head);
- 	if (entry->lsk)
- 		sock_release(entry->lsk);
- 	kfree(entry);
-@@ -1064,8 +1070,7 @@ static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 
- 	/* just replaced an existing entry, free it */
- 	if (del_entry) {
--		synchronize_rcu();
--		__mptcp_pm_release_addr_entry(del_entry);
-+		call_rcu(&del_entry->rcu_head, __mptcp_pm_release_addr_entry);
- 	}
- 	return ret;
- }
-@@ -1443,7 +1448,7 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 	return 0;
- 
- out_free:
--	__mptcp_pm_release_addr_entry(entry);
-+	__mptcp_pm_release_addr_entry(&entry->rcu_head);
- 	return ret;
- }
- 
-@@ -1623,7 +1628,7 @@ int mptcp_pm_nl_del_addr_doit(struct sk_buff *skb, struct genl_info *info)
- 
- 	mptcp_nl_remove_subflow_and_signal_addr(sock_net(skb->sk), entry);
- 	synchronize_rcu();
--	__mptcp_pm_release_addr_entry(entry);
-+	__mptcp_pm_release_addr_entry(&entry->rcu_head);
- 
- 	return ret;
- }
-@@ -1689,7 +1694,7 @@ static void __flush_addrs(struct list_head *list)
- 		cur = list_entry(list->next,
- 				 struct mptcp_pm_addr_entry, list);
- 		list_del_rcu(&cur->list);
--		__mptcp_pm_release_addr_entry(cur);
-+		__mptcp_pm_release_addr_entry(&cur->rcu_head);
- 	}
- }
- 
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ad21925af061..29c4ee64cd0b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -250,6 +250,7 @@ struct mptcp_pm_addr_entry {
- 	u8			flags;
- 	int			ifindex;
- 	struct socket		*lsk;
-+	struct rcu_head		rcu_head;
- };
- 
- struct mptcp_data_frag {
--- 
-2.25.1
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
