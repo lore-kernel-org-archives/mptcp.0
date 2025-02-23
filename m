@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB1537160
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 16:37:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 64B7C13C67C
+	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 16:44:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740328630; cv=none; b=RK9l8ToD8HLXZd/q1ZOTjweq/I7W50chp0JleB13QYbXA48QTci980LWBLVmUiC6D9GkSANB2QuxMVb6ODx5qaTY3jf+OwPEFAEct9OYiJomabdvPT774NoBba1XX1TUBZGEtIBJUhbU3FGtwmXlGkgPZUPCqnCWwkUwK3UXb9M=
+	t=1740329051; cv=none; b=Fhhx3IeqQWSjT6Z94Ft1MI/NlUrggSxiiyyYK4njtn95gZh9aHEfmnq/221xpVvpDEMttKxTCDFfpi5S5BSAS61e6LYdx+C3+JXzU6ePzFhSqtjgUC98beUQFrvguPZ+FZIyeloW3e7XV+jm/R4C/5kKJmjSXrRvBoaz52jW1R0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740328630; c=relaxed/simple;
-	bh=sENeukiWvCCZ4wSqxp2/Zhinf97dMeewGw83Lnnhtnk=;
+	s=arc-20240116; t=1740329051; c=relaxed/simple;
+	bh=4GfAp2lnDXwaqm23iilRauGhgWAp4W0aLl0DOZoagAs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=juFnKSBHoVCZWX/UU9vhSRoArAUUXs2li3SuMoM5a/oNyr1VlNSu4BRGiPBub1ocSuKmNacvFjkg9a5Brx+z+PvVJh2hmGmvAFvQPXosPVRZNWYrcNsW3iTZVkfZf7Rs4PFS95jVij1KHIsy+O1POICHD+CW9QyuHP/BepvO6RQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru/sRmM0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=CUiaPze1/B3ZY3LcsvynP4RL4z+Vl/vCxYhBvZuxqBE9MdcZZYOfJQrMF7wjeqEVI/mGHyaVYCCl5/z3HPSul/gKAKZG3F/jCtEQPoyy2333kcR7E1HX3u+svB680ndf1+ESSV7JRsMps5oAQpHSVIEJUILF9ncbkMFhSW0ToYg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lK9CVvGI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru/sRmM0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B39C4CEDD;
-	Sun, 23 Feb 2025 16:37:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lK9CVvGI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22282C4CEDD;
+	Sun, 23 Feb 2025 16:44:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740328630;
-	bh=sENeukiWvCCZ4wSqxp2/Zhinf97dMeewGw83Lnnhtnk=;
+	s=k20201202; t=1740329050;
+	bh=4GfAp2lnDXwaqm23iilRauGhgWAp4W0aLl0DOZoagAs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ru/sRmM0GvQ+hNP8TW8l9zd2kMObLR3tsm0w2epxvuCwR+Z3ymCEbd+xZqVX2rkEz
-	 vrpvIl99xgPLeahSanieymuB5Sjvqk6xI+dfDhjYLxBElBWb/uX+KrK3iUNzYsVTyf
-	 WjBec44AIyfVI4NcPcCrAEKV3ZDg1UlN/4a+aUlXDk9q86SSquEfOLhNeuvaCQrjR9
-	 Gt1BJ3+3jtYUA4UetyttWXeCMoScTSoegmILBqs3E3WerPHsc5yO3vb7OU35A+TBpt
-	 4MRyFbJFgppPWLEGfTZg9+f+r0TMfz3m5dcNa3/0KL7+EI02eaGC6NKrNWgkjV57PK
-	 mh1wnGmvhQ4XA==
-Message-ID: <638a98ea-4443-435c-a3c1-b3258e38d952@kernel.org>
-Date: Sun, 23 Feb 2025 17:37:06 +0100
+	b=lK9CVvGIn20dABxJjQfzXbnPllK4iqgtRaE3FPKXEbG09+ku8MxJAKVX1J8/hRPxM
+	 Sq83wBykaW6WvhLBlFC75LroPe6+dTGWdtqmdToATbYC+5FUAeNzyx/quFcPqxlo99
+	 5+fDnQJJnVCnK5DltzbFqfDc+02f42JDcqzwcGSsPQ5FbCt5PJgELsJiVFpNLJpIVi
+	 +HvKEGKiCa/O9vgu4rKWP8gNw4aH3Kt7emuPPwwPmhfPHFfixOuhGuJOzXljk47soE
+	 tDe4eu068e7XgpkRDvUqQVgUyV0vUpJw5M2s/imO2lj6SmuLGX8as36Il6erFcpRhv
+	 /Bk7Wgr7AlLFQ==
+Message-ID: <f2992359-3706-4e4c-8789-0a6181ce8e6b@kernel.org>
+Date: Sun, 23 Feb 2025 17:44:08 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 09/13] mptcp: sysctl: drop old pm_type
- sysctl
+Subject: Re: [PATCH mptcp-next v6 05/13] mptcp: pm: in-kernel: register
+ mptcp_in_kernel_pm
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740320007.git.tanggeliang@kylinos.cn>
- <af9b1582f77de77b09b8d688d641353023a26832.1740320007.git.tanggeliang@kylinos.cn>
+ <31c3324f479d9a59c579d8cc3434aebf48eff252.1740320007.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,26 +87,113 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <af9b1582f77de77b09b8d688d641353023a26832.1740320007.git.tanggeliang@kylinos.cn>
+In-Reply-To: <31c3324f479d9a59c579d8cc3434aebf48eff252.1740320007.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-(I didn't review the rest, I'm mostly reacting because I saw the build
-issue -- MPTCP_PM_NAME_MAX should be declared in patch 2 -- and the
-following here)
-
-On 23/02/2025 15:26, Geliang Tang wrote:
+On 23/02/2025 15:19, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Old path manager sysctl "pm_type" can be replaced by the newly added
-> "path_manager". Drop it together with mptcp_get_pm_type() helper.
+> This patch defines the original in-kernel netlink path manager as a new
+> struct mptcp_pm_ops named "mptcp_in_kernel_pm", and register it in
+> mptcp_pm_nl_init().
+> 
+> This mptcp_pm_ops will be skipped in mptcp_pm_unregister().
+> 
+> Only get_local_id() and get_priority() interfaces are implemented here.
+> mptcp_pm_nl_is_backup() becomes a wrapper of get_priority().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c         |  3 +++
+>  net/mptcp/pm_netlink.c | 18 +++++++++++++++++-
+>  net/mptcp/protocol.h   |  2 ++
+>  3 files changed, 22 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 97fccd930cd0..07789526eecc 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -698,6 +698,9 @@ int mptcp_pm_register(struct mptcp_pm_ops *pm)
+>  
+>  void mptcp_pm_unregister(struct mptcp_pm_ops *pm)
+>  {
+> +	if (pm == &mptcp_in_kernel_pm)
+> +		return;
+> +
+>  	spin_lock(&mptcp_pm_list_lock);
+>  	list_del_rcu(&pm->list);
+>  	spin_unlock(&mptcp_pm_list_lock);
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 69a2f7aa1825..aa9be671293d 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1169,7 +1169,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
+>  	return ret;
+>  }
+>  
+> -bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+> +static bool mptcp_pm_nl_get_priority(struct mptcp_sock *msk,
+> +				     struct mptcp_addr_info *skc)
+>  {
+>  	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
+>  	struct mptcp_pm_addr_entry *entry;
+> @@ -1183,6 +1184,11 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+>  	return backup;
+>  }
+>  
+> +bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
+> +{
+> +	return mptcp_pm_nl_get_priority(msk, skc);
+> +}
 
-I don't think we can drop it, that would break stuff on the userspace side.
+Why do you need this helper simply calling mptcp_pm_nl_is_backup()? Why
+not using mptcp_pm_nl_is_backup() directly?
 
-Instead, we can deprecate it, and have a mapping using a custom
-proc_handler like the one I'm mentioned in my previous review.
+Same for the userspace PM. No need to add an extra level.
+
+> +
+>  #define MPTCP_PM_CMD_GRP_OFFSET       0
+>  #define MPTCP_PM_EV_GRP_OFFSET        1
+>  
+> @@ -2370,6 +2376,14 @@ static struct pernet_operations mptcp_pm_pernet_ops = {
+>  	.size = sizeof(struct pm_nl_pernet),
+>  };
+>  
+> +struct mptcp_pm_ops mptcp_in_kernel_pm = {
+> +	.get_local_id		= mptcp_pm_nl_get_local_id,
+> +	.get_priority		= mptcp_pm_nl_get_priority,
+> +	.type			= MPTCP_PM_TYPE_KERNEL,
+
+Do you need the type?
+
+> +	.name			= "in-kernel",
+> +	.owner			= THIS_MODULE,
+> +};
+> +
+>  void __init mptcp_pm_nl_init(void)
+>  {
+>  	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
+> @@ -2377,4 +2391,6 @@ void __init mptcp_pm_nl_init(void)
+>  
+>  	if (genl_register_family(&mptcp_genl_family))
+>  		panic("Failed to register MPTCP PM netlink family\n");
+> +
+> +	mptcp_pm_register(&mptcp_in_kernel_pm);
+>  }
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3c24e8e1bc13..2b1fd10b4b7e 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -1048,6 +1048,8 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+>  void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+>  				struct mptcp_pm_addr_entry *entry);
+>  
+> +extern struct mptcp_pm_ops mptcp_in_kernel_pm;
+> +
+>  struct mptcp_pm_ops *mptcp_pm_find(const char *name);
+>  int mptcp_pm_validate(struct mptcp_pm_ops *pm);
+>  int mptcp_pm_register(struct mptcp_pm_ops *pm);
 
 Cheers,
 Matt
