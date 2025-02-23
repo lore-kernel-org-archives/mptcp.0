@@ -1,127 +1,115 @@
-Received: from mail-qv1-f41.google.com (mail-qv1-f41.google.com [209.85.219.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F903BE5E
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 15:34:43 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3CB1537160
+	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 16:37:10 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740324884; cv=none; b=o84LPzBr01ut8Z1EVzEk1xlyrA3Og7BaU2FcCv8SghluLTzX1N+4qDKA7xUi1l5eTVrYJmwJAim1ES5qvrhk0cuDjvL1hX0Va8LXdQnQfbBSRJ/I0CLGHaB0rfh8+ysIsmPeRKXHQ7ucD1F8BUIpJMuEfONxbG7HBv8Q+qlFekI=
+	t=1740328630; cv=none; b=RK9l8ToD8HLXZd/q1ZOTjweq/I7W50chp0JleB13QYbXA48QTci980LWBLVmUiC6D9GkSANB2QuxMVb6ODx5qaTY3jf+OwPEFAEct9OYiJomabdvPT774NoBba1XX1TUBZGEtIBJUhbU3FGtwmXlGkgPZUPCqnCWwkUwK3UXb9M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740324884; c=relaxed/simple;
-	bh=UyRObLzKP+oMgQa8SvEMA8dnS93TDsXuphbNldARF5Y=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=jy8rRNm03TYJkwZz0UVdR7G7v9hOmgf3f/eNg0gSiTt/XJvl56tyHhm/q1waElHroGa5jyNAx1PgenvPmdY+8eYGZjwSoTTwmPJWQA3B+iBf5hqOVr684bkUqF0HclA8m0YVIKsLyMCehiVUeYH6JCW/eoUS+Uf5sISPdKxF+Eg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7v0FZ0e; arc=none smtp.client-ip=209.85.219.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740328630; c=relaxed/simple;
+	bh=sENeukiWvCCZ4wSqxp2/Zhinf97dMeewGw83Lnnhtnk=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=juFnKSBHoVCZWX/UU9vhSRoArAUUXs2li3SuMoM5a/oNyr1VlNSu4BRGiPBub1ocSuKmNacvFjkg9a5Brx+z+PvVJh2hmGmvAFvQPXosPVRZNWYrcNsW3iTZVkfZf7Rs4PFS95jVij1KHIsy+O1POICHD+CW9QyuHP/BepvO6RQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ru/sRmM0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7v0FZ0e"
-Received: by mail-qv1-f41.google.com with SMTP id 6a1803df08f44-6e68943a295so32574656d6.0
-        for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 07:34:43 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740324882; x=1740929682; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=9Qrdo0710/yLzjdgnCe3CNjmHyuSGwRhr6vOLVbTYDY=;
-        b=Z7v0FZ0ejPvd3D1xtJGClmtWZ2Fl36Afr6OXtoPMnSVZulVqNRbwEEfNwKViplzZvn
-         PHcscLRAiw92KaH4Xh858HnfF4dpSfsbWtsPELcG3vdAM0MSDaQCtdza4bPFAFgp8G+P
-         /7L6cNb1XCdqTHaIdBmSB5I/Ow6cEAu6p6itn/wF0UmFxmuvVN6IqL/EZFyNWHkv1o0b
-         SUbi94rU2CfTAhjIW+qy2wp2GlqqKgO2Cr8YbrZnV9ZpTqOvoHWSCoiID1RXleKTIiQd
-         98XLS8gjQ9Am1tstNUL1g/2bpYGmxVfNJkVmpRpz9V8lMJ4OKaALpuJfaykyHjshEnhs
-         M50w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740324882; x=1740929682;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=9Qrdo0710/yLzjdgnCe3CNjmHyuSGwRhr6vOLVbTYDY=;
-        b=mqiPsjUnrotBvzZpatWDqTocnns0vlUWIahJOH2fWgm3o4Qngo59nZSUGPW6PdicIO
-         1QWDxDsOqSwJFhlI0qNgjKMMCVLZRs3R6rloYhB3OeHNxaqmD/Xfd5P68TFuUVma2JBb
-         5MUnvM3bthsAvJETR47oeiS8GGFEPAe8Q+92SiwHu7/oNGlJBIOV3UUpVboncjyjLbgC
-         RuA4CZM3CTgFfQ1eCrVtVJ4/npdYk1KD/+W5pKrac4QBDaOQJLBiyj1D0PpxTgTzzZuD
-         M/AnA1p4mBKL3yp6DI8p1F7dRcxKZv3eMgUt/ll0UcQtcBW8FW/HRMMUP4X0zWsQU+Lq
-         e7Zw==
-X-Gm-Message-State: AOJu0YxjL9fWwTzfMPy++hR2Ar5Vhsu3iU70k3lVjcaqa8l3aODIYWPY
-	/k0tpCwz4mEqz0KVTHjuijl9pMhXt9YPxQNBJN4JhGyGq9RTCrNyxPIgus4=
-X-Gm-Gg: ASbGnctK+fah4K856sUI9IZzYGy1o3VlyVnlrzvua4fVT0q4kOwQV2X6r8mhx7djb74
-	Rg211ISoAMIBDSTyf7AIoWp4v+nrJPp2H+p8zoLacfoKcq0gAAtth9K/BvMNDPpU1isIV/Vhoq2
-	/GLGu7wXyrGhmXOEOwTv5eDi+b/+9DLU7RaUScYpbulJrHrMemwOZT+4WzW7fBOC98+r9w/Qx6W
-	nSiQ9WE16nEs3hMLVMNjnTPgoVFCSf1Wm9Xp0RI9cek/Vg1PO5upavw9LBEZKzXrAdNOkPNMWAR
-	5JVVnKK4SF85voAinA72eEMingrvKPkvJZillUdB6A==
-X-Google-Smtp-Source: AGHT+IGX6VNFSzj+VOlGunfRPaS93YIsX0SkrTNw2GWwWXa//uLW0cia1ZvXxl1enNzQc+uqOngb7g==
-X-Received: by 2002:a05:6214:da2:b0:6e6:6686:afcf with SMTP id 6a1803df08f44-6e6b003f6d3mr130383206d6.4.1740324882055;
-        Sun, 23 Feb 2025 07:34:42 -0800 (PST)
-Received: from [127.0.0.1] ([172.183.174.156])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-471fe6c81e4sm70333171cf.44.2025.02.23.07.34.40
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 07:34:41 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1740320007.git.tanggeliang@kylinos.cn>
-References: <cover.1740320007.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v6 00/13] BPF path manager, part 4
-Message-ID: <d1bb0598-ee14-8e2f-125f-fdde0efd9788@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sun, 23 Feb 2025 15:34:40 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ru/sRmM0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50B39C4CEDD;
+	Sun, 23 Feb 2025 16:37:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740328630;
+	bh=sENeukiWvCCZ4wSqxp2/Zhinf97dMeewGw83Lnnhtnk=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=ru/sRmM0GvQ+hNP8TW8l9zd2kMObLR3tsm0w2epxvuCwR+Z3ymCEbd+xZqVX2rkEz
+	 vrpvIl99xgPLeahSanieymuB5Sjvqk6xI+dfDhjYLxBElBWb/uX+KrK3iUNzYsVTyf
+	 WjBec44AIyfVI4NcPcCrAEKV3ZDg1UlN/4a+aUlXDk9q86SSquEfOLhNeuvaCQrjR9
+	 Gt1BJ3+3jtYUA4UetyttWXeCMoScTSoegmILBqs3E3WerPHsc5yO3vb7OU35A+TBpt
+	 4MRyFbJFgppPWLEGfTZg9+f+r0TMfz3m5dcNa3/0KL7+EI02eaGC6NKrNWgkjV57PK
+	 mh1wnGmvhQ4XA==
+Message-ID: <638a98ea-4443-435c-a3c1-b3258e38d952@kernel.org>
+Date: Sun, 23 Feb 2025 17:37:06 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v6 09/13] mptcp: sysctl: drop old pm_type
+ sysctl
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1740320007.git.tanggeliang@kylinos.cn>
+ <af9b1582f77de77b09b8d688d641353023a26832.1740320007.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <af9b1582f77de77b09b8d688d641353023a26832.1740320007.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for your modifications, that's great!
+(I didn't review the rest, I'm mostly reacting because I saw the build
+issue -- MPTCP_PM_NAME_MAX should be declared in patch 2 -- and the
+following here)
 
-Our CI did some validations and here is its report:
+On 23/02/2025 15:26, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> Old path manager sysctl "pm_type" can be replaced by the newly added
+> "path_manager". Drop it together with mptcp_get_pm_type() helper.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13484061884
+I don't think we can drop it, that would break stuff on the userspace side.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/ba9a44169d90
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D936802
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+Instead, we can deprecate it, and have a mapping using a custom
+proc_handler like the one I'm mentioned in my previous review.
 
 Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
+
