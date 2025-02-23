@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D44513633F
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 17:04:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D16ACA64
+	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 17:13:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740330264; cv=none; b=h86WxRp6DYSsKTJJxA000bq9p58bxDRvXCZL+qrJ1tstK4Nw1YfZ/nWfI7lZ1Wc/q1CPhgVvuFIfaVrZfdMk8YflUWpief+ykCQ8LAPYLEeGCxTM3G3zMPHslSwRQZas8ih5W78T+frMDuKhnlMBhwYW21H7YQ/Mev+OIi5hMlU=
+	t=1740330825; cv=none; b=X3xd7+LbUhqSyFYI/OtHWs+8waQQfJADpQBbQABz05vVCsWLrTXVqE60voagPQqqLqyuB59O50lAnvsLUWCvIxyk3sfPQwR0Mrs/ZtWcCgxUNQLbug2w5idgj5Nmz6E5u6QHZkq4CeFGreNBJGI+03lFOwEUEFaVTMua6AQozxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740330264; c=relaxed/simple;
-	bh=8GvDDsUTloeGaH1hUmlbelnNmUggmj+N/dHnsW0oTuo=;
+	s=arc-20240116; t=1740330825; c=relaxed/simple;
+	bh=pTvPUSmkoVY08HTUd8IfFlxD6m8/YYDdZazdPpCQjQQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JEMQSaXxZEZ19j1Lw631Quh5ZIA1yuYJhM2mI78CioUnptyTLeMmCR7QwZuMIQ95BvAn5QWzq63rQzlKAYyBuWsn2fYjtuLLv2o8jlW2Pl4tOROK1uZWzoI0cXy3hGthrK1AWlpdbW+xOgKLN+eBlWf+j7VGhW0P9gdW+cE+03M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ew6xS4sM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=l41NgTwAUsSvyH47bhiwzPD5xqDKXHf2IJ/jQnjNiPTfTptOK2mbAoZ3Kaurfkzo0jaqoIxTJuXDBQjM+i2barlGgf/80WTjnAnoMpISSibrge/pfZxmvWzCB1733shlGCpqp3OEFkt6xdLCGc19X6SGZ/+zRCswVreEgfuNZqE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWtkybTa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ew6xS4sM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3A62C4CEDD;
-	Sun, 23 Feb 2025 17:04:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWtkybTa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A040AC4CEDD;
+	Sun, 23 Feb 2025 17:13:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740330263;
-	bh=8GvDDsUTloeGaH1hUmlbelnNmUggmj+N/dHnsW0oTuo=;
+	s=k20201202; t=1740330824;
+	bh=pTvPUSmkoVY08HTUd8IfFlxD6m8/YYDdZazdPpCQjQQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Ew6xS4sMhEGSmuiKESyWp4mIoX66V6+PdpDybnPqY/STUsCXo29V79q6ZaMMTf7oW
-	 KFqVeS/n4W6pBd0gmFTMxSMADTO7+etCnTTgS3LWP0mECBO31IlbfcjcE8O1Y7tA6w
-	 EzldkrbKb+ZdMqa62vO/Vj72YbB+QjqhtYY7UswmnGXJ2mGaNR2qhAmznPUamP9Xfu
-	 RxLeBEiepyLDJzoUjvs3wpgx/s1oCsDGihLV6JORQFRzoKk5TJpA1aGVBpQejvQ5+D
-	 ifEC0Vev2BeEwJIy6JvwrT1ndCYPun8GDkdax/ZqpEzw3qhmTD0MWq/3othjkWJ2bA
-	 dlm916G1dxsYw==
-Message-ID: <3158d78f-48f0-4b14-acfa-4574369ca4a9@kernel.org>
-Date: Sun, 23 Feb 2025 18:04:20 +0100
+	b=YWtkybTamc8HPcMFvbLYuiAbtviUvyBgufEKzEi5MY6YZndDOhket1NztDpefOZut
+	 05aNYHsWOy/SB3fASzapSmJ4/X6afg7QJqUFJG8UzONalqHGB0DgD3h8wmehfUYZG6
+	 PWkOyvDmp+afF8pUP9qssWwPNiWaG3b0juIA6QCmvnRNAdzy9p88n+NE7O8Es1qMsG
+	 zTEC9mqFxELbA4CGIssnNIfPZh/DCMQK4UKwdZsxegVY/GflDrupdgOpkZJ/HX1OuN
+	 VlAuCYeyTyM2nt1a+LOn/Gsb4gqWJ9fCGoWjkGi1We5hBfngabXRWGIZdwKrpm2tfi
+	 pC3c8ntb5LSZQ==
+Message-ID: <c49517d2-38e2-4848-9fb9-1c7748689cec@kernel.org>
+Date: Sun, 23 Feb 2025 18:13:41 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 05/13] mptcp: pm: in-kernel: register
- mptcp_in_kernel_pm
+Subject: Re: [PATCH mptcp-next v6 13/13] selftests/mptcp: use path_manager
+ instead of pm_type
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740320007.git.tanggeliang@kylinos.cn>
- <31c3324f479d9a59c579d8cc3434aebf48eff252.1740320007.git.tanggeliang@kylinos.cn>
+ <b94e2a3b16486315acd2fa31cde3830a98573d5d.1740320007.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,115 +87,118 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <31c3324f479d9a59c579d8cc3434aebf48eff252.1740320007.git.tanggeliang@kylinos.cn>
+In-Reply-To: <b94e2a3b16486315acd2fa31cde3830a98573d5d.1740320007.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 23/02/2025 15:19, Geliang Tang wrote:
+Hi Geliang,
+
+On 23/02/2025 15:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch defines the original in-kernel netlink path manager as a new
-> struct mptcp_pm_ops named "mptcp_in_kernel_pm", and register it in
-> mptcp_pm_nl_init().
-> 
-> This mptcp_pm_ops will be skipped in mptcp_pm_unregister().
-> 
-> Only get_local_id() and get_priority() interfaces are implemented here.
-> mptcp_pm_nl_is_backup() becomes a wrapper of get_priority().
+> This patch uses the newly added net.mptcp.path_manager instead of the
+> old net.mptcp.pm_type for all path manager selftests in mptcp_join.sh
+> and userspace_pm.sh.
+
+With the mapping for "pm_type" and "path_manager" sysctl knobs I
+mentioned before, this patch should not be needed (and would cause
+issues when validating older kernels, see below).
+
+Still, I think it would be good to make sure such mapping is working
+well. Instead, I think it would be better to add a specific test in
+userspace_pm.sh to make sure the mapping is correct. See below.
+
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm.c         |  3 +++
->  net/mptcp/pm_netlink.c | 18 +++++++++++++++++-
->  net/mptcp/protocol.h   |  2 ++
->  3 files changed, 22 insertions(+), 1 deletion(-)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++----------
+>  .../selftests/net/mptcp/userspace_pm.sh       |  4 +--
+>  2 files changed, 15 insertions(+), 15 deletions(-)
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 97fccd930cd0..07789526eecc 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -698,6 +698,9 @@ int mptcp_pm_register(struct mptcp_pm_ops *pm)
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index 13a3b68181ee..ed04e7dedf23 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -99,7 +99,7 @@ init_partial()
 >  
->  void mptcp_pm_unregister(struct mptcp_pm_ops *pm)
+>  	local netns
+>  	for netns in "$ns1" "$ns2"; do
+> -		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
+> +		ip netns exec $netns sysctl -q net.mptcp.path_manager="in-kernel" 2>/dev/null || true
+
+If you change this here, it means that the selftests will report errors
+when running on older kernels. So please, do not change that.
+
+>  		if $checksum; then
+>  			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
+>  		fi
+> @@ -1920,7 +1920,7 @@ set_userspace_pm()
 >  {
-> +	if (pm == &mptcp_in_kernel_pm)
-> +		return;
-> +
->  	spin_lock(&mptcp_pm_list_lock);
->  	list_del_rcu(&pm->list);
->  	spin_unlock(&mptcp_pm_list_lock);
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 69a2f7aa1825..aa9be671293d 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -1169,7 +1169,8 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock *msk,
->  	return ret;
+>  	local ns=$1
+>  
+> -	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
+> +	ip netns exec $ns sysctl -q net.mptcp.path_manager="userspace"
+
+Same here.
+
 >  }
 >  
-> -bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
-> +static bool mptcp_pm_nl_get_priority(struct mptcp_sock *msk,
-> +				     struct mptcp_addr_info *skc)
+>  subflows_tests()
+> @@ -3497,7 +3497,7 @@ userspace_tests()
 >  {
->  	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
->  	struct mptcp_pm_addr_entry *entry;
-> @@ -1183,6 +1184,11 @@ bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
->  	return backup;
->  }
->  
-> +bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
-> +{
-> +	return mptcp_pm_nl_get_priority(msk, skc);
-> +}
-> +
->  #define MPTCP_PM_CMD_GRP_OFFSET       0
->  #define MPTCP_PM_EV_GRP_OFFSET        1
->  
-> @@ -2370,6 +2376,14 @@ static struct pernet_operations mptcp_pm_pernet_ops = {
->  	.size = sizeof(struct pm_nl_pernet),
->  };
->  
-> +struct mptcp_pm_ops mptcp_in_kernel_pm = {
-> +	.get_local_id		= mptcp_pm_nl_get_local_id,
-> +	.get_priority		= mptcp_pm_nl_get_priority,
-> +	.type			= MPTCP_PM_TYPE_KERNEL,
-> +	.name			= "in-kernel",
+>  	# userspace pm type prevents add_addr
+>  	if reset "userspace pm type prevents add_addr" &&
+> -	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
 
-Small detail: should we call it "kernel" because it is shorter and still
-meaningful?
+Here, it means the tests will be skipped on older kernels while they
+don't require this new sysctl knob.
 
-We would see:
+So please do not change that. Same below.
 
-  net.mptcp.path_manager = kernel
-  net.mptcp.path_manager = userspace
+(...)
 
-Seems OK, no?
-
-> +	.owner			= THIS_MODULE,
-> +};
-> +
->  void __init mptcp_pm_nl_init(void)
->  {
->  	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
-> @@ -2377,4 +2391,6 @@ void __init mptcp_pm_nl_init(void)
+> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> index 3651f73451cf..dfeec8d4aecf 100755
+> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+> @@ -13,7 +13,7 @@
+>  mptcp_lib_check_mptcp
+>  mptcp_lib_check_kallsyms
 >  
->  	if (genl_register_family(&mptcp_genl_family))
->  		panic("Failed to register MPTCP PM netlink family\n");
-> +
-> +	mptcp_pm_register(&mptcp_in_kernel_pm);
->  }
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 3c24e8e1bc13..2b1fd10b4b7e 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1048,6 +1048,8 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
->  void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
->  				struct mptcp_pm_addr_entry *entry);
+> -if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
+> +if ! mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+
+Same here.
+
+>  	echo "userspace pm tests are not supported by the kernel: SKIP"
+>  	exit ${KSFT_SKIP}
+>  fi
+> @@ -119,7 +119,7 @@ trap cleanup EXIT
+>  # Create and configure network namespaces for testing
+>  mptcp_lib_ns_init ns1 ns2
+
+Here, if /proc/sys/net/mptcp/path_manager is available:
+
+ - set it to "userspace", then check if "pm_type" is set to 1.
+ - set "pm_type" to 0, and check if "path_manager" is "kernel".
+ - then continue like before (so setting pm_type=1)
+ - (you might have to move 'print_title "Init"' here above if these new
+steps can create errors)
+
+I don't think we need individual subtests here, only fail if it doesn't
+work as expected (again, if the new sysctl is available, not to fail on
+older kernels).
+
+>  for i in "$ns1" "$ns2" ;do
+> -	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
+> +	ip netns exec "$i" sysctl -q net.mptcp.path_manager="userspace"
+
+Do not change that.
+
+>  done
 >  
-> +extern struct mptcp_pm_ops mptcp_in_kernel_pm;
-> +
->  struct mptcp_pm_ops *mptcp_pm_find(const char *name);
->  int mptcp_pm_validate(struct mptcp_pm_ops *pm);
->  int mptcp_pm_register(struct mptcp_pm_ops *pm);
+>  #  "$ns1"              ns2
 
 Cheers,
 Matt
