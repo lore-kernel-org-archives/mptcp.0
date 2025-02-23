@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B449022071
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 16:49:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 77638282EE
+	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 16:53:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740329352; cv=none; b=h6HTsj+/YSPhwCmo7h/IOhLtOIWnHr2tmHYI+9fZpbFun9As/1Jx5xIUnpT70ZYNQOZCNIxUyuamNN3EyxSD7dQVh80tt8GSJfc3DPFm2pd6iX+V5nTlviK5d+HOs7uGuYnn5vXIsqiWJC1iZOL5dNc0LifQb7tpQF4HqIjXkgY=
+	t=1740329630; cv=none; b=CrZKNgHzkMVvcx9PcC5SJQWS2j5mmZ6XilViM/srOz21ngzFI3g8k3m9o5rCN7iER0LKhL5tseWGVzpA4te4tDoeX5p03WcCdGG/rqEbwsF0nbcFqRVo1fv8GvTT+CdJz0Ur54v+tR80mPBZlBFYajdBGX9UW5ZkLsmN9D8XMlc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740329352; c=relaxed/simple;
-	bh=CKQxyJ5jUD9PUTqvnzjDTA9qAxsP8CeBCAcvR8LE3vo=;
+	s=arc-20240116; t=1740329630; c=relaxed/simple;
+	bh=6aBMdf3MeVd+/HJXRLxk7cG0qsHh+Gb19rJvd4HRkDQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=N/LuE78xXOixm6XmKczNamz1V4/XTvQjVB1ze6f3Dzd+aHjXwpSp/cvfaq8AhL22wNlrj5IYy3EmV7AcY8zoooj9tlQX2QOIhJSeLxJ8oB1ToL8AU/EE00WKvhVBKmwr9KgH6kLkWVl4c/9qAPRKjVbUnuvt5lP8yzNRpXBNNH8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsEBTmUo; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lBnxzYYAEd0ssgKaQT5zF1M+epVR/J1t5xWIn/OfR2KD5oUlbGoaOcM4QcMyUk33fjmspRKy3GOk4x8Kl6fmebQGYUFn6Eob2SfvEbiBkvk1NtVNT4AbKCnrEg9yrEQouN9sbnh9uvrzqtltC/HWz90HG2+Ad6wQKrcwLyhdbog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PHqq6oyu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsEBTmUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 63446C4CEE6;
-	Sun, 23 Feb 2025 16:49:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PHqq6oyu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3EF5EC4CEDD;
+	Sun, 23 Feb 2025 16:53:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740329352;
-	bh=CKQxyJ5jUD9PUTqvnzjDTA9qAxsP8CeBCAcvR8LE3vo=;
+	s=k20201202; t=1740329629;
+	bh=6aBMdf3MeVd+/HJXRLxk7cG0qsHh+Gb19rJvd4HRkDQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HsEBTmUoFzoUF7CZU1+oq3I+3/fQto3yeuVU0ALjHCbrpATSQFaujjdVD9dBj0XMI
-	 C+wTbf4LD6gSmTc5fFSkPet7i+BZzoH8u2G2V/WWoXMjiVyjLnEd6Wlj4KjKcDiIj6
-	 /hIjmq/zxtZk4tNaDn+mKheHC/i9PfxL9ugnxoWZe6N3csJtcFs01jacK1KaiRQWLH
-	 ymchmylxFIwW0xQzGNmHi3K4ANYFTFWsr3gKJ7SQXQY6Gvx7pRz4sen1s+KTp0FFip
-	 9wEEpqG8w8eMuQZUNvy6a54qALbD38arPL+q7ZqzFN71Vves+63XEtWB+Y7d+/lCMS
-	 qErrUr7omDHqg==
-Message-ID: <b232c811-7cc9-41ba-aa40-c80bd42914d9@kernel.org>
-Date: Sun, 23 Feb 2025 17:49:08 +0100
+	b=PHqq6oyu7v1CCsgjWXZ0a2wWX21pEquaplKGLpthpoHemv9OFDHeMNpyl2/1sFB/5
+	 HvowzBdZHmEVxyP96j0Ays9NefcjcihxCCJIHmOzdLUt9Fy4KxPCF/Fi7QPDkhZUup
+	 rcfb3kS8EkolMfc3+6PHcXlJN4UENio73rur1ykv+bP0yF7bz5wgsjMfJWLRVNH9Mp
+	 Iekf6H0N3Z+/FdIwmETTxXw0VriDdwqyYE3YZ28ODKSgeZVcwllZqzBbA+gRnKy21L
+	 14L6CnyOocP7O2lIBV/PzXh/KvQt/pD3ghg5q4lLa2sCMKfB5kkzhIgD1chAX1hX2a
+	 993cAmpcogDjA==
+Message-ID: <55f39882-5742-4cb0-ae17-52449e3137fa@kernel.org>
+Date: Sun, 23 Feb 2025 17:53:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 08/13] mptcp: pm: drop pm_type in
- mptcp_pm_data
+Subject: Re: [PATCH mptcp-next v6 10/13] mptcp: sysctl: add
+ available_path_managers
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740320007.git.tanggeliang@kylinos.cn>
- <9bd55b3cfc33211b89d8ad0dc734ff2ed4287ab9.1740320007.git.tanggeliang@kylinos.cn>
+ <6d1a4f40c9116c66d96486c8e56adb37cc659d5f.1740320007.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,30 +87,46 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9bd55b3cfc33211b89d8ad0dc734ff2ed4287ab9.1740320007.git.tanggeliang@kylinos.cn>
+In-Reply-To: <6d1a4f40c9116c66d96486c8e56adb37cc659d5f.1740320007.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-
-Hi Geliang,
 
 On 23/02/2025 15:26, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Now pm->pm_type can be replaced by pm->ops->type, then "pm_type" filed
-> of struct mptcp_pm_data can be dropped.
+> Similarly to net.mptcp.available_schedulers, this patch adds a new one
+> net.mptcp.available_path_managers to list the available path mangers.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  Documentation/networking/mptcp-sysctl.rst |  4 ++++
+>  include/net/mptcp.h                       |  2 ++
+>  net/mptcp/ctrl.c                          | 25 +++++++++++++++++++++++
+>  net/mptcp/pm.c                            | 20 ++++++++++++++++++
+>  net/mptcp/protocol.h                      |  1 +
+>  5 files changed, 52 insertions(+)
+> 
+> diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+> index 454ce87bc1c5..ee0b553b51a1 100644
+> --- a/Documentation/networking/mptcp-sysctl.rst
+> +++ b/Documentation/networking/mptcp-sysctl.rst
+> @@ -89,6 +89,10 @@ path_manager - STRING
+>  
+>  	Default: "in-kernel"
+>  
+> +available_path_managers - STRING
+> +	Shows the available path managers choices that are registered. More
+> +        path managers may be available, but not loaded.
 
-Do you need this intermediate patch?
+Spaces are used instead of tabs for the alignment.
 
-If the in-kernel and userspace PM ops are set first, then this patch is
-not needed, and mptcp_pm_is_{kernel,userspace}() can be removed in one
-patch, when using pm->ops->XXX() everywhere, no?
+Also, please keep the alphabetical order. So to be placed before
+available_schedulers.
 
-If it is easier to have this intermediate patch, why not comparing
-
-  pm->ops == &mptcp_in_kernel_pm
-
-instead?
-
+> +
+>  scheduler - STRING
+>  	Select the scheduler of your choice.
+>  
 Cheers,
 Matt
 -- 
