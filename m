@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 893FD163
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 14:27:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DEAF204F85
+	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 14:27:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740320840; cv=none; b=HrQGitNpZWcuIlRRnA2fRGkeKkEE5apZCCdMlKfMxaHRfxtxZ6Mfv5SKTM3vZOBlB2jLcUSg3ew5A3KEZeHksqkNmmwBEw/AkicmtSYH+uCbV7xH+Cuqf5xLtG//Nxsn+5jN4MkJ+Ev0y8RcPhEnD9/1/cyHdjLndkZ5RyW+57w=
+	t=1740320841; cv=none; b=jIppcArLtS/1toktCYBeTmF7QpU0hR4RjVzs51uoNJpLhqsj4h4inftGugG5+ECEhHOmC7iu2ZxEjT5gEacYOuXrHraHPl7vkPPV3OEI2BSwbte6s9O1x9via8xOqAqsW4YoJF0lKBkV00CgrjcrKrZTGTMQwpIOF8DGd68cImQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740320840; c=relaxed/simple;
-	bh=VaxlueEpyL6CFmRKiJDLB1qXryLZmlosRKG6JmfCLeo=;
+	s=arc-20240116; t=1740320841; c=relaxed/simple;
+	bh=6tJXIO1uBlnJtX4cdl4ZPNu21fXkU7RaqColePmyvfA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=nB+lsQt3Iz1OXJtL/G6huj6z7ya2gAiy8sMYiXwkZ7Bk83sYvow6zXd6M0i+vcznCOtMccs4tfWIfYKS65/qXSDVQz2BszaWhes5NqQ93TSOKtKt5mren4YwOTg16QNcd4QxjgtfYmiInliz7DG3AAnPXRW+GpJv7TdE+zk7+z0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WHj9YUtJ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Z/o9BiC1U2dm/W5TShlt9DCtHEDdpl2Bw72UZ/0N5QNzHxCpGF4BrYSp8wUWDRRaX7DRe3E7UvQz2FRVesoibB9k4TtKkNlMkYpPw+YBkjVOOI9ferhOGii4Yfne4vmXUtkSC77PkxOwPkIhummNzezNvoHniGhVs9ZRZ4vcPVc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZxCbzMYq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WHj9YUtJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 477CBC4CEE7;
-	Sun, 23 Feb 2025 14:27:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZxCbzMYq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99CBCC4CEDD;
+	Sun, 23 Feb 2025 14:27:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740320840;
-	bh=VaxlueEpyL6CFmRKiJDLB1qXryLZmlosRKG6JmfCLeo=;
+	s=k20201202; t=1740320841;
+	bh=6tJXIO1uBlnJtX4cdl4ZPNu21fXkU7RaqColePmyvfA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=WHj9YUtJVGN6pH/JX2kp/ljIKALR6SpYkJAvuCrZBSL6Oow8fdoOc9mPQ5MCpMZ6D
-	 9ZDWjVVdy5owCr1d1KsWr+vmtQKPlTt4zIIBluNa/5hzC5bl5Vpr6A/zY+mlB/wI0f
-	 BEhbSaPxIbRNzItZncAl2fzGf76m9WsJ6VnHOtMgS268K9Fb1I2TeVsXsPdMqY4wu6
-	 IDOICTy73Q81b+V0Rk/a+woMs1ZfZUNbhmTvmh2N4+6aahQysetAyoO236Wb9ng7KP
-	 k4ZWfL9pCunzbdRQZ0NlGONX0ico+98gqLN6H0z4Ce8TLZxoH+80Z+WYRQilzbVMW4
-	 +ihnAe0kAoA6Q==
+	b=ZxCbzMYqbQP6lojB/ITSuNSaKy0PfkmwLn6sNZK0nTL2SbiQLbzUjXRZBaUOyeMLK
+	 GhksyK0SXZVcZ3N4vr3LHAANIMWMOEC0gvpUDTBGVDS7Oo23nhbTJnjo3PR/mtIos2
+	 p6/tMo/OoHz0OAze5Ie6ExxE3XHK56ezrkwd5RFO8CWBciKnqo2h2Z3BAc/Jq2+pKK
+	 1a2bXsDA8+XYZ4ldOE29dKPhaiQqiW6DWmb2nlJUa2vKq7zfOAlzTNEq+TKdRGpyxC
+	 dRQV2T6WBaVJaDBDe5oxF2k9X7SyFuEsbLQxAiFP/BT2VVHGplmSKDbCDcAW0fUoLg
+	 uII3SIGSwgmDQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 12/13] mptcp: pm: drop is_backup helpers
-Date: Sun, 23 Feb 2025 22:26:17 +0800
-Message-ID: <0262f8f4937db2daebaffd8f375dd8dc623b45fb.1740320007.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 13/13] selftests/mptcp: use path_manager instead of pm_type
+Date: Sun, 23 Feb 2025 22:26:18 +0800
+Message-ID: <b94e2a3b16486315acd2fa31cde3830a98573d5d.1740320007.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1740320007.git.tanggeliang@kylinos.cn>
 References: <cover.1740320007.git.tanggeliang@kylinos.cn>
@@ -45,80 +45,159 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Now mptcp_pm_nl_is_backup() and mptcp_userspace_pm_is_backup()
-helpers can be dropped, and mptcp_pm_is_backup() can directly
-invoke get_priority() interface through "ops" of "msk->pm".
+This patch uses the newly added net.mptcp.path_manager instead of the
+old net.mptcp.pm_type for all path manager selftests in mptcp_join.sh
+and userspace_pm.sh.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c           | 5 +----
- net/mptcp/pm_netlink.c   | 5 -----
- net/mptcp/pm_userspace.c | 6 ------
- net/mptcp/protocol.h     | 2 --
- 4 files changed, 1 insertion(+), 17 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++----------
+ .../selftests/net/mptcp/userspace_pm.sh       |  4 +--
+ 2 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 06be751fea21..9db1c62ae0cd 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -434,10 +434,7 @@ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 13a3b68181ee..ed04e7dedf23 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -99,7 +99,7 @@ init_partial()
  
- 	mptcp_local_address((struct sock_common *)skc, &skc_local);
- 
--	if (mptcp_pm_is_userspace(msk))
--		return mptcp_userspace_pm_is_backup(msk, &skc_local);
--
--	return mptcp_pm_nl_is_backup(msk, &skc_local);
-+	return msk->pm.ops->get_priority(msk, &skc_local);
- }
- 
- static int mptcp_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 64808f4e7808..5932be406bde 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -1184,11 +1184,6 @@ static bool mptcp_pm_nl_get_priority(struct mptcp_sock *msk,
- 	return backup;
- }
- 
--bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc)
--{
--	return mptcp_pm_nl_get_priority(msk, skc);
--}
--
- #define MPTCP_PM_CMD_GRP_OFFSET       0
- #define MPTCP_PM_EV_GRP_OFFSET        1
- 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 3c8b61ed345b..b618dc7c916a 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -163,12 +163,6 @@ static bool mptcp_userspace_pm_get_priority(struct mptcp_sock *msk,
- 	return backup;
- }
- 
--bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk,
--				  struct mptcp_addr_info *skc)
--{
--	return mptcp_userspace_pm_get_priority(msk, skc);
--}
--
- static struct mptcp_sock *mptcp_userspace_pm_get_sock(const struct genl_info *info)
+ 	local netns
+ 	for netns in "$ns1" "$ns2"; do
+-		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
++		ip netns exec $netns sysctl -q net.mptcp.path_manager="in-kernel" 2>/dev/null || true
+ 		if $checksum; then
+ 			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
+ 		fi
+@@ -1920,7 +1920,7 @@ set_userspace_pm()
  {
- 	struct mptcp_sock *msk;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b6441328dc3c..0aa882e175f1 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1137,8 +1137,6 @@ bool mptcp_pm_rm_addr_signal(struct mptcp_sock *msk, unsigned int remaining,
- 			     struct mptcp_rm_list *rm_list);
- int mptcp_pm_get_local_id(struct mptcp_sock *msk, struct sock_common *skc);
- bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc);
--bool mptcp_pm_nl_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
--bool mptcp_userspace_pm_is_backup(struct mptcp_sock *msk, struct mptcp_addr_info *skc);
- int mptcp_pm_nl_dump_addr(struct sk_buff *msg,
- 			  struct netlink_callback *cb);
- int mptcp_userspace_pm_dump_addr(struct sk_buff *msg,
+ 	local ns=$1
+ 
+-	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
++	ip netns exec $ns sysctl -q net.mptcp.path_manager="userspace"
+ }
+ 
+ subflows_tests()
+@@ -3497,7 +3497,7 @@ userspace_tests()
+ {
+ 	# userspace pm type prevents add_addr
+ 	if reset "userspace pm type prevents add_addr" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3509,7 +3509,7 @@ userspace_tests()
+ 
+ 	# userspace pm type does not echo add_addr without daemon
+ 	if reset "userspace pm no echo w/o daemon" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 2
+ 		pm_nl_set_limits $ns2 0 2
+@@ -3521,7 +3521,7 @@ userspace_tests()
+ 
+ 	# userspace pm type rejects join
+ 	if reset "userspace pm type rejects join" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3532,7 +3532,7 @@ userspace_tests()
+ 
+ 	# userspace pm type does not send join
+ 	if reset "userspace pm type does not send join" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3543,7 +3543,7 @@ userspace_tests()
+ 
+ 	# userspace pm type prevents mp_prio
+ 	if reset "userspace pm type prevents mp_prio" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns1 1 1
+ 		pm_nl_set_limits $ns2 1 1
+@@ -3556,7 +3556,7 @@ userspace_tests()
+ 
+ 	# userspace pm type prevents rm_addr
+ 	if reset "userspace pm type prevents rm_addr" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+@@ -3570,7 +3570,7 @@ userspace_tests()
+ 
+ 	# userspace pm add & remove address
+ 	if reset_with_events "userspace pm add & remove address" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 2 2
+ 		{ speed=5 \
+@@ -3603,7 +3603,7 @@ userspace_tests()
+ 
+ 	# userspace pm create destroy subflow
+ 	if reset_with_events "userspace pm create destroy subflow" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+ 		{ speed=5 \
+@@ -3631,7 +3631,7 @@ userspace_tests()
+ 
+ 	# userspace pm create id 0 subflow
+ 	if reset_with_events "userspace pm create id 0 subflow" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+ 		{ speed=5 \
+@@ -3652,7 +3652,7 @@ userspace_tests()
+ 
+ 	# userspace pm remove initial subflow
+ 	if reset_with_events "userspace pm remove initial subflow" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns2
+ 		pm_nl_set_limits $ns1 0 1
+ 		{ speed=5 \
+@@ -3676,7 +3676,7 @@ userspace_tests()
+ 
+ 	# userspace pm send RM_ADDR for ID 0
+ 	if reset_with_events "userspace pm send RM_ADDR for ID 0" &&
+-	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 		set_userspace_pm $ns1
+ 		pm_nl_set_limits $ns2 1 1
+ 		{ speed=5 \
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 3651f73451cf..dfeec8d4aecf 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -13,7 +13,7 @@
+ mptcp_lib_check_mptcp
+ mptcp_lib_check_kallsyms
+ 
+-if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
++if ! mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+ 	echo "userspace pm tests are not supported by the kernel: SKIP"
+ 	exit ${KSFT_SKIP}
+ fi
+@@ -119,7 +119,7 @@ trap cleanup EXIT
+ # Create and configure network namespaces for testing
+ mptcp_lib_ns_init ns1 ns2
+ for i in "$ns1" "$ns2" ;do
+-	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
++	ip netns exec "$i" sysctl -q net.mptcp.path_manager="userspace"
+ done
+ 
+ #  "$ns1"              ns2
 -- 
 2.43.0
 
