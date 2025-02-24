@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A65FC1EB3E
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 08:26:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A87186346
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 08:31:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740385568; cv=none; b=BXz9G9qa09ronKTt2VbyC7X4jTJrcwC9lNCPo/0wwhHb5w2LBcLbzo0GGQ1+WyMgWez+IA0ChTG5hsIyY4yqdSSadw1wff41ND9ryXbG9nbmbsUemcH7vGLiTz029mgLNgbccpPM2go+Xn71SjVC8oTOV1c1Q0y9YWFKo4pX+uM=
+	t=1740385889; cv=none; b=IxxDFOCIOAng+059saJLAbtsgxWISc9on9OtNhzC/RRkqg9YPi1KSw0Q8HtSLgbyKIlkVInBHLnpi+Tt+SNvHvHpEzFYMLkNcnUokn3NUb9Hy7r+kUKN9TpntJfqZxVue6YQdllwRz1Sn5SBcwn8eEK6F6Zct1RZWx1Phglvw0U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740385568; c=relaxed/simple;
-	bh=HdSC/TW2Pa/M6F4OvWkM61q2Mwc+4azLyk45gd8a5DM=;
+	s=arc-20240116; t=1740385889; c=relaxed/simple;
+	bh=0b28vC+jS5K8OLXxx+huds9qFHVPa4I/9POFevniM0Y=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=BZaF0VVP+4BVjNf1kvOHSHrDeVAjD2OhhbEadIf0xfE0nhTfuo2zRCbO5AJ1JBpcTkFF6qRS1wxL//3gNMKN/lSqYwVk3d4yeP+GPNb+0pQ561YbyIDw0C34BIlsLfSOAmjzADY1PNSmfPXsMYottIK0ehWiwqXEGIwTPRz7h7w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HuAhKGAA; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uV4E5j1/vR6GKozI6xnLh/r2jWsvT9ntPDlzlIrkkDYiPDN6LBFVbMmJ9xfYBl7pbDtUa/HlFVfkdJiapt+TV8nuIbipECWuidjhXbYmmRXvzI51nJI9oflCMj2qKvog31GsByJfcHmFQNnRb1ZYOcxEU5j5SRTvoTyUFqZAn9g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=D+JhpX7f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HuAhKGAA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E457C4CEE6;
-	Mon, 24 Feb 2025 08:26:07 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="D+JhpX7f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE46FC4CED6;
+	Mon, 24 Feb 2025 08:31:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740385568;
-	bh=HdSC/TW2Pa/M6F4OvWkM61q2Mwc+4azLyk45gd8a5DM=;
+	s=k20201202; t=1740385888;
+	bh=0b28vC+jS5K8OLXxx+huds9qFHVPa4I/9POFevniM0Y=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HuAhKGAAR0nrcb0qH0rVn95pRiI6SsdZYqBch6+K7BFuCfLIvCglO5X0Pa6SBVPjP
-	 xmYD72AxaqQem6qus18id+FvTJdtQ30CrJxGHS6AsdnsTA0lfQfjP8T4MRiYizrnF1
-	 RJMoj7wZ/4OyD+qrycFeJaidyODHF0z3e753NYVddxvMzRyDEOmF1tvwoCSBW2g0q3
-	 QAotGML3o3lOYTE3mcweyH6w5Nu3IGQED/tQPMOw9hgGYdh50AYLl3gD7nXmcHq8cn
-	 Un+kZwHsUa6ZjYtEP2qhb0sZIo2JNGHuG+1n5cchEy3Gll2tf5mKHRKcBtTnNnWcfd
-	 DlMwGcONqJynw==
-Message-ID: <3cb661e0-47f9-4775-b15b-f9365208ff17@kernel.org>
-Date: Mon, 24 Feb 2025 09:26:05 +0100
+	b=D+JhpX7fe4nTgBr2Hie3PAyBityYLdTo7E9MuAy7lr63VkFSsbHpDbYNnMAlgQoPP
+	 aiscnbUo5YW44REiiVn3hJK43SacHFtBQWLculhxhmIoiyclN7UyhPMF+4oiUcod1+
+	 oS5FEu1tv2gxqtOWY/7WTkqm6eRAxrSLioLNyuGDu+R6mtJWCDla/AdRpAAXT8kHo3
+	 kF6GGGAsRUxMllm7SvN1C/3yahIk7bEx21H/m6bRz6tV7vulnkX2qZUgEG3qtilC/d
+	 Hxu9iM7RtXHWmdn5Ou0dLO1f9HqmNUdlLMkSsxkvia66aUpnjSFCDyBCbobnviAe23
+	 39VK+TGzZ6hLw==
+Message-ID: <fe83ef4a-ba6c-4704-8d44-ad14b4e65622@kernel.org>
+Date: Mon, 24 Feb 2025 09:31:26 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 4/9] mptcp: pm: define struct mptcp_pm_ops
+Subject: Re: [PATCH mptcp-next v1 1/6] mptcp: pm: in-kernel: avoid access
+ entry without lock
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740019794.git.tanggeliang@kylinos.cn>
- <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
- <b7333a19-921a-41e1-9a87-ff70aab3e000@kernel.org>
- <328be50889c11a6358d360d5454f8b7a6ed200b7.camel@kernel.org>
+References: <cover.1740384564.git.tanggeliang@kylinos.cn>
+ <1ccd8b5eee126272e4841635d69616ca79977ad8.1740384564.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,132 +87,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <328be50889c11a6358d360d5454f8b7a6ed200b7.camel@kernel.org>
+In-Reply-To: <1ccd8b5eee126272e4841635d69616ca79977ad8.1740384564.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 24/02/2025 07:54, Geliang Tang wrote:
-> Hi Matt,
+On 24/02/2025 09:13, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Thanks for the review.
+> In mptcp_pm_nl_set_flags(), "entry" is copied to "local" when pernet->lock
+> is held to avoid direct access to entry without pernet->lock.
 > 
-> On Fri, 2025-02-21 at 18:23 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 20/02/2025 03:57, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> In order to allow users to develop their own BPF-based path
->>> manager,
->>> this patch defines a struct ops "mptcp_pm_ops" for a userspace path
->>> manager, which contains a set of interfaces.
->>>
->>> Add a set of functions to register, unregister, find and validate a
->>> given struct ops.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  include/net/mptcp.h  | 29 ++++++++++++++++++++++
->>>  net/mptcp/pm.c       | 59
->>> ++++++++++++++++++++++++++++++++++++++++++++
->>>  net/mptcp/protocol.h |  5 ++++
->>>  3 files changed, 93 insertions(+)
->>>
->>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
->>> index a41d6c74760f..f51e75d3882d 100644
->>> --- a/include/net/mptcp.h
->>> +++ b/include/net/mptcp.h
->>> @@ -134,6 +134,35 @@ struct mptcp_pm_param {
->>>  	struct mptcp_addr_info		addr;
->>>  };
->>>  
->>> +struct mptcp_pm_ops {
->>> +	int (*created)(struct mptcp_sock *msk);
->>> +	int (*established)(struct mptcp_sock *msk);
->>> +	int (*closed)(struct mptcp_sock *msk);
->>> +	int (*address_announced)(struct mptcp_sock *msk,
->>> +				 struct mptcp_pm_param *param);
->>> +	int (*address_removed)(struct mptcp_sock *msk,
->>> +			       struct mptcp_pm_param *param);
->>> +	int (*subflow_established)(struct mptcp_sock *msk,
->>> +				   struct mptcp_pm_param *param);
->>> +	int (*subflow_closed)(struct mptcp_sock *msk,
->>> +			      struct mptcp_pm_param *param);
->>> +	int (*get_local_id)(struct mptcp_sock *msk,
->>> +			    struct mptcp_pm_param *param);
->>> +	bool (*get_priority)(struct mptcp_sock *msk,
->>> +			     struct mptcp_pm_param *param);
->>> +	int (*set_priority)(struct mptcp_sock *msk,
->>> +			    struct mptcp_pm_param *param);
->>> +	int (*listener_created)(struct mptcp_sock *msk);
->>> +	int (*listener_closed)(struct mptcp_sock *msk);
->>> +
->>> +	u8			type;
->>
->> I guess the type matches net.mptcp.pm_type sysctl knob, right?
->>
->> I wonder if we should not deprecate this sysctl, and use a string
->> like
->> with the scheduler. So instead, we could have:
->>
->>   char			name[MPTCP_PM_NAME_MAX];
->>
->> And on ctrl.c, we could map pm_type for the moment with a custom
->> proc_handler (and even remove this sysctl knob in a few releases):
->>
->>  - 0  → in-kernel
->>  - 1  → userspace
->>  - >1 → bpf
-> 
-> Do we need to restrict BPF path manager to only extend the userspace
-> type path manager? That is, for all BPF path managers,
-> mptcp_pm_is_userspace() returns true. If this is the case, there is no
-> need to add "type" field in struct mptcp_pm_ops.
+> Therefore, "local->flags" should be passed to mptcp_nl_set_flags instead
+> of "entry->flags" when pernet->lock is not held, so as to avoid access to
+> entry.
 
-To me, mptcp_pm_is_userspace() should no longer be needed, because
-pm->ops will be used instead. So the "type" field should no longer be
-needed. Only the name should be stored, and the net.mptcp.pm_type sysctl
-knob should depend only on the name. (I guess a lock will be needed to
-handle the case where both the "pm_type" and "path_manager" will be set
-at the same time.)
+Good catch! I see that this is a fix for a patch that has been sent to
+net-next, but not applied yet.
 
-> Is it necessary to allow BPF to create kernel type path managers, that
-> is, path managers for which mptcp_pm_is_userspace() returns false?
-> Since we registered mptcp_netlink_pm from this version, can the in-
-> kernel type path manager also be extended by BPF? If this is the case,
-> we need to add "type" field in struct mptcp_pm_ops to distinguish
-> whether it is a userspace type path manager.
-
-I guess a BPF path-manager will have its own mptcp_pm_ops structure, and
-it will not extend anything. Of course, it is possible to add kfunc to
-share some code. No?
-
->> WDYT? Would it not be clearer for devs and users?
->>
->> Note that if for the implementation, if it is easier to keep this
->> "type"
->> entry for the moment for the sysctl stuff, I'm fine with that. But if
->> we
->> don't need it, let's not introduce it.
->>
->>> +	struct module		*owner;
->>> +	struct list_head	list;
->>> +
->>> +	void (*init)(struct mptcp_sock *msk);
->>> +	void (*release)(struct mptcp_sock *msk);
->>
->> To answer my question from the v3 review: the init/release is done
->> for
->> each MPTCP connection handled by this PM.
-> 
-> In-kernel pm is for each MPTCP connection handled by this PM while
-> userspace pm is only for this one being initialized. How should I deal
-> with this? Please give me more detailed suggestions.
-
-Sorry, I'm not sure to understand your question. If one PM doesn't need
-to init and/or release anything, these ops can be set to NULL, no?
+Fixes: TODO ("mptcp: pm: change to fullmesh only for 'subflow'")
 
 Cheers,
 Matt
