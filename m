@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CD00C2505B8
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 10:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3711A2580E5
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:02:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740394797; cv=none; b=Ubk9PdWvwfc09mQZud+djd4z0X51seyrmi/5Vkmz47uf16VHlUGQ1x/rojStNwc+9WHqO1RC9RsNVsQuI+Ya5PyKREdhJLmYqIZsRdIMWw34o5Z27RVMqJcy4vFgeerPe9svWCjMH/F2W4eQS6rfpQ7EyX4FY8Lfu1yo9vsJ/Iw=
+	t=1740394946; cv=none; b=sw7ZrBbdzvta1p8dlFS3PscYqUbrJNS0AJ1u7/GYnBTCRezaPzBfStHXEQCBdZ7PEJcYfBkbrja+wMS8sNbsc0VmfvKRFMZfmmGhi4N5CrHjjVtSfoqDpk2ueOY7cnIHHd94cZUjcX9F4IjT7PTY25mtb+rIkqzO0fCCtCzNg3w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740394797; c=relaxed/simple;
-	bh=goVXGq1PZ3sG+/KtpM4PaHWrhGb8z1QQs7GmaQ31bMo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=osm88XhgnXnBCf4fVrI3EuAUVe7vb5Gh9vEZo/UhkSiYJMw5gM540vH+c3BWKALdUVn3CjamKtps48pXWQ4gQTnYU1HCZPGlEHpLaUNZIrkcwznpiIwMKjplAKtdb6J77rdiZeISEYtZfq84E+6FnaK4XSX6oaTqysUP0VENFdc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sX2m21Zz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740394946; c=relaxed/simple;
+	bh=MaJjhWxk85vk+SGppSi+k3qcf6Exi1bwrQH7WcPSzZ0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=QTYTTAv0tjX14VBrNf1o9OyB9MQoWY/6fvUsZbnPMXrYHjSoLNw55+ssZeWVkVTLD1zSU3j4IIULDSUBmKH4PgL1a7WdsQcu28hcdb9SrAZ3NSjki4i7SZ04gkcvuNk+4HLw/mjcgPuC98An3UPt2AaNzEJtV8qbHcR5v91m8AY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKZyKCLS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sX2m21Zz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC629C4CED6;
-	Mon, 24 Feb 2025 10:59:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKZyKCLS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDF7C4CED6;
+	Mon, 24 Feb 2025 11:02:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740394797;
-	bh=goVXGq1PZ3sG+/KtpM4PaHWrhGb8z1QQs7GmaQ31bMo=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sX2m21ZzPMOpkDyReta4uBS+9wubSY28Zqwhgm5Ro7wFT1GwbrS52RaIsUXW1XUq/
-	 Yo/3OBhnBJXrPriWny7idji7hDDcqFrWP3wGFJP7LB2HV3KdOeS6PHaPRW20tot+Fk
-	 gNANxHybyOlfSNw1bzoKcddvPtDw6vLdChnd2CtrzP+hgfH+EjHYicyWreebCPgOAd
-	 THmt/cYxRv974TxrOuvgVvSt3x51yA49IUOxUnz7SK/8XpnQNE/FS+expyS4tK51lz
-	 tacsNawrrSoE4gdBmVQRbV4FdIvNdDPKLCsHUCwwpXxfdc22DwuCkKsBO7YM0DS1h+
-	 +niCoPHPZWw8g==
-Message-ID: <22c007d7-f60f-4469-b193-1c2bad4a7273@kernel.org>
-Date: Mon, 24 Feb 2025 11:59:54 +0100
+	s=k20201202; t=1740394945;
+	bh=MaJjhWxk85vk+SGppSi+k3qcf6Exi1bwrQH7WcPSzZ0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=sKZyKCLSLLYlLSgdek4f2g+dvamgSvLDzZceBuXzrP4j26qPJ/d6bBW6SG0JGfdnU
+	 naat5yOGGIWoSPtqLIGp8rqT5rVgSEnrOrzgagQ7XRr4JPRFLRTqTrz3yN8mDL/HH3
+	 9lTY9imfo2pBlhEqn9AkWRzgGyuHTrXEyiftJI9zLELM0zPpHfrGUTDcWUl4IM9a5r
+	 EfEbwe19ViV+coWaC4Q5yhmFVnOWRYMnfVezyjhI/svIyy1Vr9ODpd3h3SzUxZtv7b
+	 8nu0ZKI23Y6Z1YwZNeFjLZQa4Ikk70FDLkSy/QwPme5yTzXQqtHcF+PtzYJcRS3J+/
+	 VKl9zpvSNJstg==
+Message-ID: <556be1a0-c886-4147-aa1e-f83d77b5e607@kernel.org>
+Date: Mon, 24 Feb 2025 12:02:23 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 5/6] sock: add sock_kmemdup helper
+Subject: Re: [PATCH mptcp-next v1 1/6] mptcp: pm: in-kernel: avoid access
+ entry without lock
+Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740384564.git.tanggeliang@kylinos.cn>
- <0a3f7a31983f0587ace333f349f3e630c49d075d.1740384564.git.tanggeliang@kylinos.cn>
- <f40a2f15-7735-4131-8087-e5e1f1382f69@kernel.org>
- <bdcc04eab97f31bab5c9d09b2a5458a827774662.camel@kernel.org>
-Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
+ <1ccd8b5eee126272e4841635d69616ca79977ad8.1740384564.git.tanggeliang@kylinos.cn>
+ <fe83ef4a-ba6c-4704-8d44-ad14b4e65622@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,145 +88,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <bdcc04eab97f31bab5c9d09b2a5458a827774662.camel@kernel.org>
+In-Reply-To: <fe83ef4a-ba6c-4704-8d44-ad14b4e65622@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 24/02/2025 11:42, Geliang Tang wrote:
-> Hi Matt,
+On 24/02/2025 09:31, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> Thanks for the review.
-> 
-> On Mon, 2025-02-24 at 09:54 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
+> On 24/02/2025 09:13, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>
->> On 24/02/2025 09:13, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch adds the sock version of kmemdup() helper, named
->>> sock_kmemdup(),
->>> to duplicate a memory block using the socket's option memory
->>> buffer.
->>>
->>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
->>> ---
->>>  include/net/sock.h |  1 +
->>>  net/core/sock.c    | 23 +++++++++++++++++++++++
->>>  2 files changed, 24 insertions(+)
->>>
->>> diff --git a/include/net/sock.h b/include/net/sock.h
->>> index edbb870e3f86..ffd757e7e329 100644
->>> --- a/include/net/sock.h
->>> +++ b/include/net/sock.h
->>> @@ -1793,6 +1793,7 @@ static inline struct sk_buff
->>> *sock_alloc_send_skb(struct sock *sk,
->>>  }
->>>  
->>>  void *sock_kmalloc(struct sock *sk, int size, gfp_t priority);
->>> +void *sock_kmemdup(struct sock *sk, const void *src, int size,
->>> gfp_t priority);
->>>  void sock_kfree_s(struct sock *sk, void *mem, int size);
->>>  void sock_kzfree_s(struct sock *sk, void *mem, int size);
->>>  void sk_send_sigurg(struct sock *sk);
->>> diff --git a/net/core/sock.c b/net/core/sock.c
->>> index 0d385bf27b38..d09bd697c120 100644
->>> --- a/net/core/sock.c
->>> +++ b/net/core/sock.c
->>> @@ -2805,6 +2805,29 @@ void *sock_kmalloc(struct sock *sk, int
->>> size, gfp_t priority)
->>>  }
->>>  EXPORT_SYMBOL(sock_kmalloc);
->>>  
->>> +/*
->>> + * Duplicate a memory block using the socket's option memory
->>> buffer.
->>> + */
->>> +void *sock_kmemdup(struct sock *sk, const void *src, int size,
->>> gfp_t priority)
->>> +{
->>> + int optmem_max = READ_ONCE(sock_net(sk)->core.sysctl_optmem_max);
->>> +
->>> + if ((unsigned int)size <= optmem_max &&
->>> +     atomic_read(&sk->sk_omem_alloc) + size < optmem_max) {
->>> + void *mem;
->>> + /* First do the add, to avoid the race if kmalloc
->>> + * might sleep.
->>> + */
->>> + atomic_add(size, &sk->sk_omem_alloc);
->>> + mem = kmemdup(src, size, priority);
+>> In mptcp_pm_nl_set_flags(), "entry" is copied to "local" when pernet->lock
+>> is held to avoid direct access to entry without pernet->lock.
+>>
+>> Therefore, "local->flags" should be passed to mptcp_nl_set_flags instead
+>> of "entry->flags" when pernet->lock is not held, so as to avoid access to
+>> entry.
 > 
-> I made some updates to this patch here.
+> Good catch! I see that this is a fix for a patch that has been sent to
+> net-next, but not applied yet.
 > 
->       mem = src ? kmemdup(src, size, priority) :
->                   kmalloc(size, priority);
-> 
->>> + if (mem)
->>> + return mem;
->>> + atomic_sub(size, &sk->sk_omem_alloc);
-> 
-> Then sock_kmalloc() can be implemented through sock_kmemdup(), which
-> can reduce the duplication of code between them.
-> 
-> void *sock_kmalloc(struct sock *sk, int size, gfp_t priority)
-> {
->       return sock_kmemdup(sk, NULL, size, priority);
-> }
+> Fixes: TODO ("mptcp: pm: change to fullmesh only for 'subflow'")
 
-Yes, looks good.
-
-I was thinking about not modifying sock_kmalloc() by calling it from
-sock_kmemdup(), then calling memcpy(). So similar to what kmemdup() is
-doing. But your version looks good.
-
->> I'm not really convinced by this helper: it is a duplication of
->> sock_kmalloc(), and it is only used once in MPTCP code.
-> 
-> I found that this new helper can also be used in
-> mptcp_copy_ip_options() too.
-
-Indeed.
-
->> Calling sock_kmalloc() + memset, and using this new helper in
->> different
->> places in the net code might help. But still, I don't know if this
-> 
-> And there are three other places in the net code where it can be used:
-> 
-> 	ipv6_dup_options()
-> 	sctp_v4_copy_ip_options()
-> 	tcp_ao_copy_key()
-> 
-> That way, this helper can be used in five places.
-
-Indeed, that's what I saw when I quickly looked.
-
->> would
->> be accepted, it is only saving one line (plus memcpy() will be used
->> when
->> it is not needed, same for the previous patch at the end).
-> 
-> What do you think of this new version?
-
-Yes, it might be OK, but I don't know if that kind of cleanup would be
-accepted by netdev maintainers. Then, do you mind sending a dedicated
-patch (or series) introducing this new helper and using it in the
-different places to the netdev ML with the appropriated reviewers added
-in cc, please?
-
->> If you still want to propose that, I suggest sending a dedicated
->> series
->> to netdev, not to block MPTCP (only) patches. WDYT?
-> 
-> Please remove the last two patches from this set if others are ready to
-> apply.
-
-Yes, I can do that.
-
-I will not apply patch 4/6 as well, because the modification is similar.
-I will first wait to see what kind of feedback the netdev maintainers
-will give.
+I will mark this patch and the two next ones as queued, and I will apply
+them when the above patch will be applied in netdev, so I can add the
+appropriated SHA.
 
 Cheers,
 Matt
