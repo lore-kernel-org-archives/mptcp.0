@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3711A2580E5
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:02:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A8B1993B2
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:05:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740394946; cv=none; b=sw7ZrBbdzvta1p8dlFS3PscYqUbrJNS0AJ1u7/GYnBTCRezaPzBfStHXEQCBdZ7PEJcYfBkbrja+wMS8sNbsc0VmfvKRFMZfmmGhi4N5CrHjjVtSfoqDpk2ueOY7cnIHHd94cZUjcX9F4IjT7PTY25mtb+rIkqzO0fCCtCzNg3w=
+	t=1740395117; cv=none; b=kobb6IzHbZ0Uw8QD7lbNZaGTnRhcUzW9JJIh+jPnKpUp5HL2ns6C/3hcyvOf86pBGu9jbO4OB2nlSA3B8Ca/uZCIDBfAUfTvZ4rMKLEgRsSdwlzHROZ9neA874ruiP5ei93RVrlWz7lrsJcTobnqed2zmU5dQwtR4TvM+aMxZXc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740394946; c=relaxed/simple;
-	bh=MaJjhWxk85vk+SGppSi+k3qcf6Exi1bwrQH7WcPSzZ0=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=QTYTTAv0tjX14VBrNf1o9OyB9MQoWY/6fvUsZbnPMXrYHjSoLNw55+ssZeWVkVTLD1zSU3j4IIULDSUBmKH4PgL1a7WdsQcu28hcdb9SrAZ3NSjki4i7SZ04gkcvuNk+4HLw/mjcgPuC98An3UPt2AaNzEJtV8qbHcR5v91m8AY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sKZyKCLS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740395117; c=relaxed/simple;
+	bh=35StFSTD7Hk4PKy5xILV4y06yVKtRG3uXnlWZNTZYdo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=NnBBP4fCodU9xWXiUm8ELXrhcvJOXO79jQ8AnIsbPpVwY9g1a/ndCU55urYy0sP0cQ+vNXOw+TCH9mW3G0K4qtxuQNWEjWhg7lFy6VB7oq5YhdfHbAJD42hd6qs5+QtxQQvVm7X5uSI7y6RbjHFwffFJa+dgpjsWsyPBRdBoNjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWlxUSuU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sKZyKCLS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDDF7C4CED6;
-	Mon, 24 Feb 2025 11:02:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWlxUSuU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C393C4CED6;
+	Mon, 24 Feb 2025 11:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740394945;
-	bh=MaJjhWxk85vk+SGppSi+k3qcf6Exi1bwrQH7WcPSzZ0=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=sKZyKCLSLLYlLSgdek4f2g+dvamgSvLDzZceBuXzrP4j26qPJ/d6bBW6SG0JGfdnU
-	 naat5yOGGIWoSPtqLIGp8rqT5rVgSEnrOrzgagQ7XRr4JPRFLRTqTrz3yN8mDL/HH3
-	 9lTY9imfo2pBlhEqn9AkWRzgGyuHTrXEyiftJI9zLELM0zPpHfrGUTDcWUl4IM9a5r
-	 EfEbwe19ViV+coWaC4Q5yhmFVnOWRYMnfVezyjhI/svIyy1Vr9ODpd3h3SzUxZtv7b
-	 8nu0ZKI23Y6Z1YwZNeFjLZQa4Ikk70FDLkSy/QwPme5yTzXQqtHcF+PtzYJcRS3J+/
-	 VKl9zpvSNJstg==
-Message-ID: <556be1a0-c886-4147-aa1e-f83d77b5e607@kernel.org>
-Date: Mon, 24 Feb 2025 12:02:23 +0100
+	s=k20201202; t=1740395115;
+	bh=35StFSTD7Hk4PKy5xILV4y06yVKtRG3uXnlWZNTZYdo=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=iWlxUSuUAsvm7IKuIuU8/cd1wirqLLkeeMVPsukXUrupQfey80l6+zw2S3tlf2OhL
+	 cwcuE04B6oVj1TZAtjjEKuCELnEG6Io/MD20uXlMSoWUeLieCPcn4PihAZRWkRcM60
+	 vW83cnVBbwNZG+BaifxgZmXnx1MbUnnfb3mmXq5L6LJ/evG9uL2mIP7zNmm3L5o+Wk
+	 KSkH6JjXA4RVQ3XD5bG7A0rmSO504HDWpRvUttWBW77mzj3V0EAi1VsST76+vlJSF4
+	 5S8DjeR46mgzQFmbou96/zoBv7SMaDTiteXiOOOZR+xh65V4X+K7TN/DQk30nVHo9S
+	 wGvSuw2a1mgKw==
+Message-ID: <dcd5cd26-03d6-4b8e-bd60-c27c7ed07497@kernel.org>
+Date: Mon, 24 Feb 2025 12:05:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 1/6] mptcp: pm: in-kernel: avoid access
- entry without lock
+Subject: Re: [PATCH mptcp-next v1 0/6] BPF path manager, part 4
 Content-Language: en-GB
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740384564.git.tanggeliang@kylinos.cn>
- <1ccd8b5eee126272e4841635d69616ca79977ad8.1740384564.git.tanggeliang@kylinos.cn>
- <fe83ef4a-ba6c-4704-8d44-ad14b4e65622@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,34 +85,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <fe83ef4a-ba6c-4704-8d44-ad14b4e65622@kernel.org>
+In-Reply-To: <cover.1740384564.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 24/02/2025 09:31, Matthieu Baerts wrote:
-> Hi Geliang,
+On 24/02/2025 09:13, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> On 24/02/2025 09:13, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> In mptcp_pm_nl_set_flags(), "entry" is copied to "local" when pernet->lock
->> is held to avoid direct access to entry without pernet->lock.
->>
->> Therefore, "local->flags" should be passed to mptcp_nl_set_flags instead
->> of "entry->flags" when pernet->lock is not held, so as to avoid access to
->> entry.
+> Some path manager related refactoring and cleanups.
 > 
-> Good catch! I see that this is a fix for a patch that has been sent to
-> net-next, but not applied yet.
-> 
-> Fixes: TODO ("mptcp: pm: change to fullmesh only for 'subflow'")
+> Geliang Tang (6):
+>   mptcp: pm: in-kernel: avoid access entry without lock
+>   mptcp: pm: in-kernel: reduce parameters of set_flags
+>   mptcp: pm: use addr entry for get_local_id
 
-I will mark this patch and the two next ones as queued, and I will apply
-them when the above patch will be applied in netdev, so I can add the
-appropriated SHA.
+For these 3 patches above:
 
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+>   mptcp: pm: in-kernel: use kmemdup helper
+>   sock: add sock_kmemdup helper
+>   mptcp: pm: userspace: use sock_kmemdup helper
+> 
+>  include/net/sock.h       |  1 +
+>  net/core/sock.c          | 23 +++++++++++++++++++++++
+>  net/mptcp/pm.c           |  9 ++++++---
+>  net/mptcp/pm_netlink.c   | 30 +++++++++++++-----------------
+>  net/mptcp/pm_userspace.c | 20 +++++++-------------
+>  net/mptcp/protocol.h     |  6 ++++--
+>  6 files changed, 54 insertions(+), 35 deletions(-)
 Cheers,
 Matt
 -- 
