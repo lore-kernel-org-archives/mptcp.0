@@ -1,231 +1,248 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CB273242934
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 10:09:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2AB971F4289
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 10:24:13 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740391765; cv=none; b=KuI4KjjTPRRZVK3kvR9tQDSyAPAjTGpqCMtFOjzHeWYNfKeqNlecpoGaOcaYUScu+Kljg0FXYEIkhUj+dtCgPHeOVV/owc4bUuAyHwLGs8I0hEJ9RL2jDnMyFQBaWiwMt4qEJNU18G6crw/xbIuMwoofpdzdRSsiD9WHJCSYCqs=
+	t=1740392654; cv=none; b=qyQ3tm3fFQ0JFnN28EARf7sTlk0CZW6RteEB9hRkPaEwuQF0Bw6q0dSkbcMH3I8NrKekL2zvgAicxUvAUSVGMwExQbw3k/rWJP4tn+IAYu9fDmkFaeQCdQLoxCDJufJWoku430OwRQz5KjJJZT5vTK1txqOaS+H7FyUQih6Q0iE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740391765; c=relaxed/simple;
-	bh=OWyKa8ptHkaxnDRPZ9/w8sCzsrhha62MtGM3wPrXjdc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=mwMz5vh5gLZBWBCftx5WnZeLARaRWThTy+3ezDmkbLwlQDOdvvheihttjE4oLIqMNfqgPNwAqnHrURwXqe/KgNbbeAiG/mGM7SsuguatWL2hSTa5sl6t86FuO6sO5JLc93C/8nWV8xzCl5UsaRclKsO28WzrlLIgZB5/EiSpNBA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=M2QB+vRl; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1740392654; c=relaxed/simple;
+	bh=ocGn8r+QjPnpuhaL6OKsUiq5kKfiWgRHr5wRi1g+gps=;
+	h=Message-ID:Date:MIME-Version:From:Subject:To:Cc:References:
+	 In-Reply-To:Content-Type; b=n5iwRoToDhWgVVFGNFhNjponBrqvs42XmYtYdYDRur8Jj/6g1XO8Nw7+ZyuLNWX8TnGzpFQnacGdI66LNuRxIeEORKzJY0kTtnwe4RDyVUsRHbl1Suk4mZP4l4oF7XYIWenZ9NC99jggs4jAo4oNUVqnQun/viCHqanGX/GjCfo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mnYJTDXr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="M2QB+vRl"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1740391762;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=qiAHvV/pLQygl1IHlcIkR9ngI2lLMS2rvadb1azQMOs=;
-	b=M2QB+vRl7XutXhVfNtU9sRKzQcI7QXSF/F4DlOyZHoovbPehSVt8wlCmXdOlp37OHf629b
-	6fARbDj/HmvHypMzKJiWPQf4s0Mi/k6jaRRtRD5ukBMbDwVP5C5qqlibYQYaR8lyyT0VoE
-	E/jVHEW74+ybPrCpDiYfzVhhyV4cvzI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-269-oXjx--FYMtiHfTfF3EC6nA-1; Mon, 24 Feb 2025 05:09:20 -0500
-X-MC-Unique: oXjx--FYMtiHfTfF3EC6nA-1
-X-Mimecast-MFC-AGG-ID: oXjx--FYMtiHfTfF3EC6nA_1740391760
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-38f36fcf4b3so2567531f8f.1
-        for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 02:09:20 -0800 (PST)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740391760; x=1740996560;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=qiAHvV/pLQygl1IHlcIkR9ngI2lLMS2rvadb1azQMOs=;
-        b=l82HglJ+eoL6JHFkSfuQzJum8phZLPlUvAV0Yt+Z3B4EdCAMVxCM5+X+8sZvA4nawY
-         i4rwohTvjywSA2EDWDBqO8HtZ5+xiIWr5PlzlE/qMwJHtbQUDva6NgT2d2rj0M8Wbq5e
-         7tWWNzRUm0/99xzst2HzyhB1bFYUlmDN48+xBFOEjj7fqT7jty49K7G/rSEy7S9sc0yV
-         Bbrbrqi2mEsAgPdeLmRMtNDUJpHqIZCjtYMToJR9+QiqviduwRk11fJt6LOsixrY1Xss
-         +NOVDjuUwzuCwZuhMDMFq6ybMro+5pQUwiDckkLFtOZ3fDmzCMzH+ZkjIazAFtAbRd0v
-         rs2w==
-X-Forwarded-Encrypted: i=1; AJvYcCWNGdbN2qWSGAi/ipe/U76YUmAkZp7gfDkR4sGorC6VBtyxmWABL70tR/1+zw+qq8VD6VkSZA==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yy39FdmoalnBdzuzvvrC+rVRlea7WxcUlSbZ3m5yVZ7jCdGKEI0
-	p1MoYHJOFHFty8KLxSXNmRHulPVZoLLVFM3lrTtbubY/cSPNIYJ7HHSg+yMivHqmflmjRTmpUV0
-	17BBNgGB+bZZo0Z2HFLJMffFy3EV8EE2HI477uWpcTXVe3Bu50xyC
-X-Gm-Gg: ASbGncuhL3RL0fSFRU8ucAU4lK3Re/9vO6LXYPCxdflxRhm4Unf28RpmzL3PA58eIBg
-	s/k7v30L4EpSasEwOkeOeU+Wbf03G4QxNnAj2nAThkPceDkg4zy9G9KNb6Z+Jlid2bwccTWD0+g
-	Otp6uW/R6W0CH/4/hfDsxndO8dPWyLHDBoaw8927kREjOKq4E8CPlVcz9qCFtb/0dx5ZLV6a223
-	jT04DgNAiVouryAEj3Yv0Js9VFPvG7TzG2gIWys5j9aViA7smm+qPM0XKWOK9QRPdqAH2IH5IwG
-	2O7qerHEfYwf/nhxZblLK8hl0/8HF97dVUxRhJgyc/I=
-X-Received: by 2002:adf:f3c9:0:b0:38f:2b59:3f78 with SMTP id ffacd0b85a97d-38f6f0ac5a3mr8457411f8f.45.1740391759657;
-        Mon, 24 Feb 2025 02:09:19 -0800 (PST)
-X-Google-Smtp-Source: AGHT+IG7eusrm5SqCT8mF5AbrGxULnH9g0Ag6sQkU6il6PYpOhUlbaMjBtTXltIszKDNSUXqGotYsA==
-X-Received: by 2002:adf:f3c9:0:b0:38f:2b59:3f78 with SMTP id ffacd0b85a97d-38f6f0ac5a3mr8457385f8f.45.1740391759262;
-        Mon, 24 Feb 2025 02:09:19 -0800 (PST)
-Received: from [192.168.88.253] (146-241-59-53.dyn.eolo.it. [146.241.59.53])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-439b030b2c8sm101817405e9.25.2025.02.24.02.09.17
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Mon, 24 Feb 2025 02:09:18 -0800 (PST)
-Message-ID: <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
-Date: Mon, 24 Feb 2025 11:09:17 +0100
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mnYJTDXr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DBE3DC4CED6;
+	Mon, 24 Feb 2025 10:24:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740392653;
+	bh=ocGn8r+QjPnpuhaL6OKsUiq5kKfiWgRHr5wRi1g+gps=;
+	h=Date:From:Subject:To:Cc:References:In-Reply-To:From;
+	b=mnYJTDXrZVy2YxXFtCC0Zwn49Ugi611n9knpw69NR96R4ltslGWb5Gmi9+2EUAVL6
+	 JMhiX+KeXMRhVE6s3lwul+7dGzYLK0CNyonGusnaJlDiInrZkB9n2EqTj5dOmHCz3p
+	 Y1lcnuwIVijT885egyhCdGPaBJ9wdRzrwYlxTFz0O6a08UPyO6RHPlw8708o9rSRQZ
+	 nkWga1xixHHbFUuVxeRnUIN1YhPSlPjpGkkSc2o0KmidO92jy6dSKLTL+LiWzBmBo2
+	 pnEYEltuo/S38832Wl4WhXhyKhNhMsXcqyuVhJ14tAwn1EWa2Sa72yh14zwJEhdHBz
+	 3gk4HyybyRhLw==
+Message-ID: <0341bdc3-0c94-4374-9f04-f841c7dacc03@kernel.org>
+Date: Mon, 24 Feb 2025 11:24:11 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp] mptcp: fix 'scheduling while atomic' in
- mptcp_pm_nl_append_new_local_addr
-To: Krister Johansen <kjlx@templeofstupid.com>,
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, "David S. Miller"
- <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
- netdev@vger.kernel.org, mptcp@lists.linux.dev
-References: <20250221222146.GA1896@templeofstupid.com>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <20250221222146.GA1896@templeofstupid.com>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: EoaMkaBZ8c-iBMP-6Vf26Phjhk-ExN0nh1EUbGCxiSU_1740391760
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+From: Matthieu Baerts <matttbe@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 4/9] mptcp: pm: define struct mptcp_pm_ops
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1740019794.git.tanggeliang@kylinos.cn>
+ <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
+ <b7333a19-921a-41e1-9a87-ff70aab3e000@kernel.org>
+ <328be50889c11a6358d360d5454f8b7a6ed200b7.camel@kernel.org>
+ <3cb661e0-47f9-4775-b15b-f9365208ff17@kernel.org>
+ <022f884dd933fcbb6777d8de4e2aecc1a1a99199.camel@kernel.org>
+Content-Language: en-GB
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <022f884dd933fcbb6777d8de4e2aecc1a1a99199.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi,
+Hi Geliang,
 
-On 2/21/25 11:21 PM, Krister Johansen wrote:
-> If multiple connection requests attempt to create an implicit mptcp
-> endpoint in parallel, more than one caller may end up in
-> mptcp_pm_nl_append_new_local_addr because none found the address in
-> local_addr_list during their call to mptcp_pm_nl_get_local_id.  In this
-> case, the concurrent new_local_addr calls may delete the address entry
-> created by the previous caller.  These deletes use synchronize_rcu, but
-> this is not permitted in some of the contexts where this function may be
-> called.  During packet recv, the caller may be in a rcu read critical
-> section and have preemption disabled.
+On 24/02/2025 10:11, Geliang Tang wrote:
+> Hi Matt,
 > 
-> An example stack:
+> On Mon, 2025-02-24 at 09:26 +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 24/02/2025 07:54, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> Thanks for the review.
+>>>
+>>> On Fri, 2025-02-21 at 18:23 +0100, Matthieu Baerts wrote:
+>>>> Hi Geliang,
+>>>>
+>>>> On 20/02/2025 03:57, Geliang Tang wrote:
+>>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>>
+>>>>> In order to allow users to develop their own BPF-based path
+>>>>> manager,
+>>>>> this patch defines a struct ops "mptcp_pm_ops" for a userspace
+>>>>> path
+>>>>> manager, which contains a set of interfaces.
+>>>>>
+>>>>> Add a set of functions to register, unregister, find and
+>>>>> validate a
+>>>>> given struct ops.
+>>>>>
+>>>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>>>> ---
+>>>>>  include/net/mptcp.h  | 29 ++++++++++++++++++++++
+>>>>>  net/mptcp/pm.c       | 59
+>>>>> ++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  net/mptcp/protocol.h |  5 ++++
+>>>>>  3 files changed, 93 insertions(+)
+>>>>>
+>>>>> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+>>>>> index a41d6c74760f..f51e75d3882d 100644
+>>>>> --- a/include/net/mptcp.h
+>>>>> +++ b/include/net/mptcp.h
+>>>>> @@ -134,6 +134,35 @@ struct mptcp_pm_param {
+>>>>>  	struct mptcp_addr_info		addr;
+>>>>>  };
+>>>>>  
+>>>>> +struct mptcp_pm_ops {
+>>>>> +	int (*created)(struct mptcp_sock *msk);
+>>>>> +	int (*established)(struct mptcp_sock *msk);
+>>>>> +	int (*closed)(struct mptcp_sock *msk);
+>>>>> +	int (*address_announced)(struct mptcp_sock *msk,
+>>>>> +				 struct mptcp_pm_param
+>>>>> *param);
+>>>>> +	int (*address_removed)(struct mptcp_sock *msk,
+>>>>> +			       struct mptcp_pm_param *param);
+>>>>> +	int (*subflow_established)(struct mptcp_sock *msk,
+>>>>> +				   struct mptcp_pm_param
+>>>>> *param);
+>>>>> +	int (*subflow_closed)(struct mptcp_sock *msk,
+>>>>> +			      struct mptcp_pm_param *param);
+>>>>> +	int (*get_local_id)(struct mptcp_sock *msk,
+>>>>> +			    struct mptcp_pm_param *param);
+>>>>> +	bool (*get_priority)(struct mptcp_sock *msk,
+>>>>> +			     struct mptcp_pm_param *param);
+>>>>> +	int (*set_priority)(struct mptcp_sock *msk,
+>>>>> +			    struct mptcp_pm_param *param);
+>>>>> +	int (*listener_created)(struct mptcp_sock *msk);
+>>>>> +	int (*listener_closed)(struct mptcp_sock *msk);
+>>>>> +
+>>>>> +	u8			type;
+>>>>
+>>>> I guess the type matches net.mptcp.pm_type sysctl knob, right?
+>>>>
+>>>> I wonder if we should not deprecate this sysctl, and use a string
+>>>> like
+>>>> with the scheduler. So instead, we could have:
+>>>>
+>>>>   char			name[MPTCP_PM_NAME_MAX];
+>>>>
+>>>> And on ctrl.c, we could map pm_type for the moment with a custom
+>>>> proc_handler (and even remove this sysctl knob in a few
+>>>> releases):
+>>>>
+>>>>  - 0  → in-kernel
+>>>>  - 1  → userspace
+>>>>  - >1 → bpf
+>>>
+>>> Do we need to restrict BPF path manager to only extend the
+>>> userspace
+>>> type path manager? That is, for all BPF path managers,
+>>> mptcp_pm_is_userspace() returns true. If this is the case, there is
+>>> no
+>>> need to add "type" field in struct mptcp_pm_ops.
+>>
+>> To me, mptcp_pm_is_userspace() should no longer be needed, because
+>> pm->ops will be used instead. So the "type" field should no longer be
 > 
->    BUG: scheduling while atomic: swapper/2/0/0x00000302
+> Currently, the path manager must rely on mptcp_pm_is_userspace().
+> mptcp_pm_is_userspace() is not needed for get_local_id() and
+> get_priority(), but it's useful for address_announced(),
+> address_removed(), subflow_created() and subflow_closed(). 
+
+Yes but once all ops are implemented, it should be fine, no?
+
+> Take address_announced() as an example:
 > 
->    Call Trace:
->    <IRQ>
->    dump_stack_lvl+0x76/0xa0
->    dump_stack+0x10/0x20
->    __schedule_bug+0x64/0x80
->    schedule_debug.constprop.0+0xdb/0x130
->    __schedule+0x69/0x6a0
->    schedule+0x33/0x110
->    schedule_timeout+0x157/0x170
->    wait_for_completion+0x88/0x150
->    __wait_rcu_gp+0x150/0x160
->    synchronize_rcu+0x12d/0x140
->    mptcp_pm_nl_append_new_local_addr+0x1bd/0x280
->    mptcp_pm_nl_get_local_id+0x121/0x160
->    mptcp_pm_get_local_id+0x9d/0xe0
->    subflow_check_req+0x1a8/0x460
->    subflow_v4_route_req+0xb5/0x110
->    tcp_conn_request+0x3a4/0xd00
->    subflow_v4_conn_request+0x42/0xa0
->    tcp_rcv_state_process+0x1e3/0x7e0
->    tcp_v4_do_rcv+0xd3/0x2a0
->    tcp_v4_rcv+0xbb8/0xbf0
->    ip_protocol_deliver_rcu+0x3c/0x210
->    ip_local_deliver_finish+0x77/0xa0
->    ip_local_deliver+0x6e/0x120
->    ip_sublist_rcv_finish+0x6f/0x80
->    ip_sublist_rcv+0x178/0x230
->    ip_list_rcv+0x102/0x140
->    __netif_receive_skb_list_core+0x22d/0x250
->    netif_receive_skb_list_internal+0x1a3/0x2d0
->    napi_complete_done+0x74/0x1c0
->    igb_poll+0x6c/0xe0 [igb]
->    __napi_poll+0x30/0x200
->    net_rx_action+0x181/0x2e0
->    handle_softirqs+0xd8/0x340
->    __irq_exit_rcu+0xd9/0x100
->    irq_exit_rcu+0xe/0x20
->    common_interrupt+0xa4/0xb0
->    </IRQ>
+> For userspace pm, address_announced() is invoked in
+> mptcp_pm_nl_announce_doit(), which is the handler of the command
+> MPTCP_PM_CMD_ANNOUNCE [1].
 > 
-> This problem seems particularly prevalent if the user advertises an
-> endpoint that has a different external vs internal address.  In the case
-> where the external address is advertised and multiple connections
-> already exist, multiple subflow SYNs arrive in parallel which tends to
-> trigger the race during creation of the first local_addr_list entries
-> which have the internal address instead.
+> While for in-kernel pm, address_announced() is invoked in
+> mptcp_pm_nl_add_addr_doit(), which is the handler of the command
+> MPTCP_PM_CMD_ADD_ADDR [2].
 > 
-> Fix this problem by switching mptcp_pm_nl_append_new_local_addr to use
-> call_rcu .  As part of plumbing this up, make
-> __mptcp_pm_release_addr_entry take a rcu_head which is used by all
-> callers regardless of cleanup method.
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
-> Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
+> When we implement a BPF path manager, we must tell the PM core which
+> path to use to call its address_announced() interface. So I added
+> "type" in struct mptcp_pm_ops, and each path manager needs to set it to
+> tell the PM core whether it is a userspace type path manager, and check
+> this type in mptcp_pm_is_userspace().
 
-The proposed patch looks functionally correct to me, but I think it
-would be better to avoid adding new fields to mptcp_pm_addr_entry, if
-not strictly needed.
+I think there is a bit of confusion here: address_announced() will be
+called when the other peer has announced an address. In other words,
+when an ADD_ADDR is received, pm->ops->address_announced() will be
+called from mptcp_pm_add_addr_received(), replacing:
 
-What about the following? (completely untested!). When inplicit
-endpoints creations race one with each other, we don't need to replace
-the existing one, we could simply use it.
+  if (mptcp_pm_is_userspace(msk)) {
+     (...)
+  } else (...) {
+     (...)
+  }
 
-That would additionally prevent an implicit endpoint created from a
-subflow from overriding the flags set by a racing user-space endpoint add.
+address_announced() could then either:
+- return a boolean: handled or drop → the PM will be in charged of
+sending the ADD_ADDR echo.
 
-If that works/fits you feel free to take/use it.
----
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 572d160edca3..dcb27b479824 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -977,7 +977,7 @@ static void __mptcp_pm_release_addr_entry(struct
-mptcp_pm_addr_entry *entry)
+- Or, if it is easier for the BPF PM, an enum could be returned, and in
+pm.c, the kernel will either:
+  - send add addr echo
+  - drop
+  - do nothing (the in-kernel PM would schedule the PM worker)
 
- static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 					     struct mptcp_pm_addr_entry *entry,
--					     bool needs_id)
-+					     bool needs_id, bool replace)
- {
- 	struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
- 	unsigned int addr_max;
-@@ -1017,6 +1017,12 @@ static int
-mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
- 			if (entry->addr.id)
- 				goto out;
+WDYT?
 
-+			if (!replace) {
-+				kfree(entry);
-+				ret = cur->addr.id;
-+				goto out;
-+			}
-+
- 			pernet->addrs--;
- 			entry->addr.id = cur->addr.id;
- 			list_del_rcu(&cur->list);
-@@ -1165,7 +1171,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock
-*msk, struct mptcp_addr_info *skc
- 	entry->ifindex = 0;
- 	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
- 	entry->lsk = NULL;
--	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
-+	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true, false);
- 	if (ret < 0)
- 		kfree(entry);
+Similar for address_removed(), subflow_created() and subflow_closed().
+If I'm not mistaken, the userspace PM does nothing here, because that's
+the userspace daemon to react with the events that will be sent.
 
-@@ -1433,7 +1439,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb,
-struct genl_info *info)
- 		}
- 	}
- 	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
--						!mptcp_pm_has_addr_attr_id(attr, info));
-+						!mptcp_pm_has_addr_attr_id(attr, info),
-+						true);
- 	if (ret < 0) {
- 		GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d",
-ret);
- 		goto out_free;
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
 
