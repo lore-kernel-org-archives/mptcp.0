@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 48F3517548
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 08:13:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEA85134AB
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 08:13:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740384829; cv=none; b=G8BCX41lom1bkgbYDmvvYSC21msYrxYb0gzPmfTzjj4Pmf24tPZ6QXk8U/m+zoXq1Tg/EFQC5wk4byap3UpHHr+htHx7g6v6+ZHvTa1EeDRoOYb2CdgVd+46GCggwwtrullCpyS2wfNZJ4exnguB7vmjoyVtMal6nTRNQfpbabw=
+	t=1740384831; cv=none; b=HnduULn1fyt70yKPFVPP57QWueURPH/j65UhNfQ/isXgEdJODPbA180KcoNcs70jSfNN7mvWnomZaFj2iX8WMlP8sa5NDww1t+vBah43sJg6dvRw0nQaRVU2eXH9bKLzMbN4Ll0UJ9nffw15vHlxN5SMZwggCDAu0ZtWPkSffrQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740384829; c=relaxed/simple;
-	bh=cJOllgbI+E80+KHnhcS/GeTwpjba7yoiBqFbUAZsbDQ=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=EGRx2x9dY3e91FyAMsLfucpF2qvDSu4nDAIwRszfR+aeG508L60C81BNlUHTEGOFzTWeSJAJysAt5Fz9Fvbxmveuk8RA96U7DHQVzAuRf8R+h0JH1+3Fneq8iMF6MxRQCP9YE/mbGy0dWjKkn00iVRHJrfu7eo7IPDSFE+odWWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J/0LPBfy; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740384831; c=relaxed/simple;
+	bh=NOyIDquAJI/RMBwfa2jKn/aNdesPUEYCHsZfnuqzwpo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=TMKwv7i5TWLrye4m42HDigl8CTG6oeUeyI0r1AKtguk9EvjVb16hUZZn38gbSYtflOC++TmluOsJBVn9vfXjue1mwL9+xGtKnv7rS6SkAdffmpu3yF+9jzfp5EPWuFqyLeWGPvU3p492k5SqCDDSAARWe23W27ag06b8BhOZ/wQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FiqIG2GS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J/0LPBfy"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E3F3C4CED6;
-	Mon, 24 Feb 2025 08:13:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FiqIG2GS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5FD4DC4CEDD;
+	Mon, 24 Feb 2025 08:13:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740384828;
-	bh=cJOllgbI+E80+KHnhcS/GeTwpjba7yoiBqFbUAZsbDQ=;
-	h=From:To:Cc:Subject:Date:From;
-	b=J/0LPBfyDwQO7OjoR6XvLprftBy+7LfEH2HWJV9ZRyjll2GTlnD8NL/gLQoH8KI1i
-	 oX7QVR5O2+hvD3yODaYD9TNTk0H3z9QcIEpyCf/Q2rgj3ylC9/FZguU2VjyXKvZfax
-	 58Lc8n1aMnf9DGoEPhiKfSNpNgdOYQ3Sd0c7qu4PZHaYUcRo3zfqkaCb/T2PSZ+phy
-	 U3R2QyJKMoKagiYcV9OP1/jRfG1Ov0z+S5yyUFvMb52h8gthZOoS0etkTE0N2IPDm2
-	 QPwPODWtpIl5Kd4YfZ9jQauVw6OV+b6/+QW6Pe2c+UKH+zKw5lXiJsFBT0fWW0zUA7
-	 LAyJtenhX7diA==
+	s=k20201202; t=1740384830;
+	bh=NOyIDquAJI/RMBwfa2jKn/aNdesPUEYCHsZfnuqzwpo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=FiqIG2GSW899YwPOs2jnoPjRF00r07htemuYhVWwFGofQoZJITqEAxUQFW91ZBnqP
+	 K5G8FhALd8hrn+hCysz0DmhVRS+DRwNSUm7SgI1lSuzIDzYzsMp6nCxTu0Cnm4yt+u
+	 YngbT2iDsNPUsibgGgR1Kxb+6H4RU0XQtgoCkr8NdxG09Z8r7K+e/66KaDHZlrF6N3
+	 SbF7LFeFhXmrI2RgghHbhtteTibh84IjrLy0RhfeFRJ2FKJwpCwUBaX7z0vCLa01pV
+	 LlnKo44jhzJjecTf+mc0tbAHTt+s95C2RuSHVoUKUxshmpFeOnxz8EdgWNqwrs5z8W
+	 Wos6RMn7kg6Qg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 0/6] BPF path manager, part 4
-Date: Mon, 24 Feb 2025 16:13:32 +0800
-Message-ID: <cover.1740384564.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v1 1/6] mptcp: pm: in-kernel: avoid access entry without lock
+Date: Mon, 24 Feb 2025 16:13:33 +0800
+Message-ID: <1ccd8b5eee126272e4841635d69616ca79977ad8.1740384564.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1740384564.git.tanggeliang@kylinos.cn>
+References: <cover.1740384564.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,24 +45,31 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Some path manager related refactoring and cleanups.
+In mptcp_pm_nl_set_flags(), "entry" is copied to "local" when pernet->lock
+is held to avoid direct access to entry without pernet->lock.
 
-Geliang Tang (6):
-  mptcp: pm: in-kernel: avoid access entry without lock
-  mptcp: pm: in-kernel: reduce parameters of set_flags
-  mptcp: pm: use addr entry for get_local_id
-  mptcp: pm: in-kernel: use kmemdup helper
-  sock: add sock_kmemdup helper
-  mptcp: pm: userspace: use sock_kmemdup helper
+Therefore, "local->flags" should be passed to mptcp_nl_set_flags instead
+of "entry->flags" when pernet->lock is not held, so as to avoid access to
+entry.
 
- include/net/sock.h       |  1 +
- net/core/sock.c          | 23 +++++++++++++++++++++++
- net/mptcp/pm.c           |  9 ++++++---
- net/mptcp/pm_netlink.c   | 30 +++++++++++++-----------------
- net/mptcp/pm_userspace.c | 20 +++++++-------------
- net/mptcp/protocol.h     |  6 ++++--
- 6 files changed, 54 insertions(+), 35 deletions(-)
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm_netlink.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index d4328443d844..fb83eba041f1 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -1983,7 +1983,7 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
+ 	*local = *entry;
+ 	spin_unlock_bh(&pernet->lock);
+ 
+-	mptcp_nl_set_flags(net, &local->addr, entry->flags, changed);
++	mptcp_nl_set_flags(net, &local->addr, local->flags, changed);
+ 	return 0;
+ }
+ 
 -- 
 2.43.0
 
