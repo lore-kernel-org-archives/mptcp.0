@@ -1,259 +1,101 @@
-Received: from zebra.cherry.relay.mailchannels.net (zebra.cherry.relay.mailchannels.net [23.83.223.195])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22DB1917F1
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 16:31:16 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.223.195
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740414679; cv=pass; b=ryXhaT2eGSqqFTy2ThagShXrqCCm3VB+wWB3mZroIHc3G7yYPV3SB8Dw+X0ajy8zZelq+ydVjayYRneLCdHmh5fIsLN6jUzLcOREvGCVCz9jumqiXhL3IHDDt2lGoMIiHeAG5hftJUnJuuNtjoCWoYJdcMMTWhFzCWxey0Ps9LA=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740414679; c=relaxed/simple;
-	bh=sk3TbVUswjxRFIH+N38puUz/rsMd7xLKaDrX1NiQHHM=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IGTb3vJSFimfl9GksZsnBkxj0YDKNVIn3Vug0cdRlTUHdKEJNZv3pTJOg167dy+i/mnnrDF5ejphUEWqKi42jWqYS5Dt6800TeN25Es7X/+C+AW0PobJnmf2XbwYKEZocyuIKtPj3OrzeNayDDso2Rh2vmbmsg7zDlYseE3ThMY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=TNVk2L8Y; arc=pass smtp.client-ip=23.83.223.195
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B142C24394F;
+	Mon, 24 Feb 2025 18:19:21 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740421161; cv=none; b=WpU1C6PYaNdZocj1LB1gODrd/OKxKk8BxsIsZPQIMhI2BMKvZb118zOEMqemdMPFaQysqCiPzs+NVbkhOhGlsSNxG5kbYrrciZ9JdpBK1GcGBsNJr3psgT4FJjdmWHjniw0gjw8PKQCmP011wFIAE1mVSO7qMm6LEfCZcedMUE4=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740421161; c=relaxed/simple;
+	bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=FJr8D258Y18iGOwiGegEewOs002WbBuJIbUaLNGMfxmxcEZvBP+b+trMI0d93JbAJ+5wJ+4EuCOyU6uhcuf/94XaCylLXT5t9j2VfWejXmUZmbrQwOjPosAlLDuB5HsrvcEVxxP6cqRGL8yD5aHzBhYIREwjq2jIyGkF49xYmdc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uwkbPPry; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="TNVk2L8Y"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 98B95781616
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 16:31:10 +0000 (UTC)
-Received: from pdx1-sub0-mail-a227.dreamhost.com (100-100-209-197.trex-nlb.outbound.svc.cluster.local [100.100.209.197])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 286D778118E
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 16:31:10 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740414670; a=rsa-sha256;
-	cv=none;
-	b=S4bQXR2/3HZ8IZ4e34uPTfsHo1o/xuzHPSDoAqUjOe02Sq6/u8Wn2tppYa8O2VeU37siYM
-	mzAKBhhGIVNEYzb5JOJY7ALTzi76PXYAZ/+o/Ptiwm7Nw5YyCdV0BhzfsH1mnFpmI8A0UX
-	n4gb2Ae0Ig43mYg24fQEe/RMtSrXGrwyGwxb/Q6V0iYkBPEANqDUv+APET8g6YnBpQWjSU
-	U47qvxxaFtrH2CMbr8qKf2BRFeW5mMV6krnV/TFp5ap5OeHjdJI9yabWQOspT1zV5YHUOJ
-	8dE4zgSsFGO+MmPY7AoOmOA//xFzPO2YDbXMbP4Cp8ZxbpC/NrH5+BRmoY5iUw==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740414670;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=7A0B7SZ9ZZX1urOS6JFPoayhwsj/duuFPdxfuJEFlPw=;
-	b=QsuEVYlEZRuyfZRF9twFWbDCySc0BWu6TR5q/EnorMOQxtZ5E8cWXg/PvGzFjzjT8R8N44
-	BJ1BQ9qyJNVC7I+YnDAo1Gq3gKKW7szi8c3TIzavSbU17NQoVlMRCbBk5GZrB8uuLsyBUF
-	iE2hOPyaNZPnu7wr6AXlc2J6FBfpV9/8ZiTRyPEWi2GskpF7rEC51CPYu/pFgKU5QqW4Tf
-	VQy+3E/rBJ0Y1HweNPHym9fo5cu6vxdYIew4T9UJdsHxbjAMXsZNn78YIB6HBNEjnQFN5V
-	jBxubvjd2hB2TPT0jVBGEv4qVbNFy9nrZvpxdsPm4YZ4U9P+6SOaTCvzKAE0gQ==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-z8454;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Obese-White: 695a3e3f677baeda_1740414670428_3612549005
-X-MC-Loop-Signature: 1740414670428:1660487180
-X-MC-Ingress-Time: 1740414670428
-Received: from pdx1-sub0-mail-a227.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.209.197 (trex/7.0.2);
-	Mon, 24 Feb 2025 16:31:10 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a227.dreamhost.com (Postfix) with ESMTPSA id 4Z1mSs6QwSzSL
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 08:31:09 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1740414669;
-	bh=7A0B7SZ9ZZX1urOS6JFPoayhwsj/duuFPdxfuJEFlPw=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=TNVk2L8YremDLPbHyziqnVgUWi0BDA+wYtqN8CMKNE4UD0QetFwftOAWJBbqp6oh/
-	 B1WMJhR4QxFeeZKaJUWFomROL38Km1EPOSNnzafvhrI+gBZhB2Rs+ogVd2d06wz1me
-	 gGua5G36bkyX5yw/O4aq7sA/CfI37cY09awqU5xrI9rcn4SgiRvdCoStF1o+wXFfAB
-	 E9TSvXSY6DuuiL+Q0Tdsa0u3LqPRoM5INY8WG0uKAkO2QaSynCXL3FGBDDx2quaDQI
-	 EzyJ6T72MaLWd9Ia3vQ01y9fA9JMI3WG9Eu8DNLYb4+1/BOi7ccmy3HmJcvu3z+OrY
-	 hidktXN4s3ykQ==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e0089
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Mon, 24 Feb 2025 08:31:08 -0800
-Date: Mon, 24 Feb 2025 08:31:08 -0800
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org, mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp] mptcp: fix 'scheduling while atomic' in
- mptcp_pm_nl_append_new_local_addr
-Message-ID: <20250224163108.GA1897@templeofstupid.com>
-References: <20250221222146.GA1896@templeofstupid.com>
- <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uwkbPPry"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4DF33C4CED6;
+	Mon, 24 Feb 2025 18:13:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740421161;
+	bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
+	h=From:Subject:Date:To:Cc:From;
+	b=uwkbPPryHUMDqO+hc+E4Fusjct9SUtD4RluVMaGMy6omU7WWpmxk9a0DzT5Wq6xgI
+	 SZ/idgHZo8u9AjCsIgjGDdTv8Hh9GhLqiQlWQalyNfMSW8TesrHZYqlEgbGnJ2vkSG
+	 QULe7bVc3zDt3Rbm/p7PByJVlgRYP59zKQWxcQ1+2mTGmJ1eNLWgUYbH7mkyzQdoC8
+	 C6YGQpOSNfrNkDXPrjDbWOpy9GkM2TJ9vrJHr/vScNqtKchPHc9MI6/vl85iHMsjlg
+	 /l+4h5LtsMHqKxtO6mt1/fzHb7ryyexS+E2rCvFCaQH7/9dXbsiB/TWjd45owW+CDy
+	 pF2zX3ZGSWGqw==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net 0/3] mptcp: misc. fixes
+Date: Mon, 24 Feb 2025 19:11:49 +0100
+Message-Id: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAGW2vGcC/x3LSwqAMAwA0atI1gZq8YdXERdSU82itTQiQvHuB
+ pfD8AoIZSaBqSqQ6WbhM2o0dQXuWONOyJs2WGM7Y22LkS4M6XIJA4tDzw8Jjqsfh741mycPSlO
+ mf6icQQUs7/sBGPPiHGsAAAA=
+X-Change-ID: 20250224-net-mptcp-misc-fixes-8af87640dfef
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ syzbot+cd3ce3d03a3393ae9700@syzkaller.appspotmail.com, 
+ "Chester A. Unal" <chester.a.unal@xpedite-tech.com>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1036; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=uwyoOtIyHLqC9nZ97BA9itdUvfRcvpHiv3XhxZ/ILuE=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvLbE/Sc41iqtpNEO42OrCzrDoc6CwtVMpsVom
+ V2EeuGwq+WJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7y2xAAKCRD2t4JPQmmg
+ c2ifD/9eV4Mq4huRH7bhLHLHZmYz25C/ayWVEGmV+T3aYi1PviW3XMbUXwRGPUzYSRldUPPgpRk
+ Q4haHwrGxYQYN1UTFr0t9a0pbVn9yo0Pm2fzNNfHhlsTVvnE1kJOKxnM5+K1kIr8xwNUFgxx3J0
+ 2nI3ZZzOe5eJRxOklVBBV3G4Gx8KoS6pSRgI0WQePW0rhGwa1mN+hvCVaGzjJMnKwXnH0SZkiCp
+ 8dT1wL8RfxiR8PJc3oMQKaaonCHE40Bhf5bzg5deA7eEDOZDt7C7r2Dasskkz0Sx2zsLOt8DqGV
+ FMIoN7lI13p+bEBYt/T4z6frDwVOjnNUBGnUNc6oQo5iTvTd2wUbrdnyQROywvfXS/Wy+kS6ybr
+ t7X/gMnSljSo3E84ycpskSqTzUaMh1GGAWRofGCqKi7dqcbK3gkruaRNNv+21uvWys5tsYbSsMX
+ rTg0qKgEtdcun6yHJTAGS+dDx1JFiCF8Sp3fCQdxUMCd2w5wBlMWU2b6XceP5o9/uQoRltrTw0P
+ 7mKmBU1Fkv1VpQk9FD1Jbp0A5qx30ZFlqGtJ2dWZr9Z18Jm/FEh3yOgves0LFMTRdVbHPF+vxDo
+ fqqrST11wbT2R/PF6WtoF1KePl2lnK+wR1DTY8QlPUCuCe9uXXuDvWbqPsDg0Rq5CDl6+hCjAw9
+ SYRaijJWjcekdMA==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Paolo,
+Here are two unrelated fixes, plus an extra patch:
 
-Thanks for the feedback.
+- Patch 1: prevent a warning by removing an unneeded and incorrect small
+  optimisation in the path-manager. A fix for v5.10.
 
-On Mon, Feb 24, 2025 at 11:09:17AM +0100, Paolo Abeni wrote:
-> On 2/21/25 11:21 PM, Krister Johansen wrote:
-> > If multiple connection requests attempt to create an implicit mptcp
-> > endpoint in parallel, more than one caller may end up in
-> > mptcp_pm_nl_append_new_local_addr because none found the address in
-> > local_addr_list during their call to mptcp_pm_nl_get_local_id.  In this
-> > case, the concurrent new_local_addr calls may delete the address entry
-> > created by the previous caller.  These deletes use synchronize_rcu, but
-> > this is not permitted in some of the contexts where this function may be
-> > called.  During packet recv, the caller may be in a rcu read critical
-> > section and have preemption disabled.
-> > 
-> > An example stack:
-> > 
-> >    BUG: scheduling while atomic: swapper/2/0/0x00000302
-> > 
-> >    Call Trace:
-> >    <IRQ>
-> >    dump_stack_lvl+0x76/0xa0
-> >    dump_stack+0x10/0x20
-> >    __schedule_bug+0x64/0x80
-> >    schedule_debug.constprop.0+0xdb/0x130
-> >    __schedule+0x69/0x6a0
-> >    schedule+0x33/0x110
-> >    schedule_timeout+0x157/0x170
-> >    wait_for_completion+0x88/0x150
-> >    __wait_rcu_gp+0x150/0x160
-> >    synchronize_rcu+0x12d/0x140
-> >    mptcp_pm_nl_append_new_local_addr+0x1bd/0x280
-> >    mptcp_pm_nl_get_local_id+0x121/0x160
-> >    mptcp_pm_get_local_id+0x9d/0xe0
-> >    subflow_check_req+0x1a8/0x460
-> >    subflow_v4_route_req+0xb5/0x110
-> >    tcp_conn_request+0x3a4/0xd00
-> >    subflow_v4_conn_request+0x42/0xa0
-> >    tcp_rcv_state_process+0x1e3/0x7e0
-> >    tcp_v4_do_rcv+0xd3/0x2a0
-> >    tcp_v4_rcv+0xbb8/0xbf0
-> >    ip_protocol_deliver_rcu+0x3c/0x210
-> >    ip_local_deliver_finish+0x77/0xa0
-> >    ip_local_deliver+0x6e/0x120
-> >    ip_sublist_rcv_finish+0x6f/0x80
-> >    ip_sublist_rcv+0x178/0x230
-> >    ip_list_rcv+0x102/0x140
-> >    __netif_receive_skb_list_core+0x22d/0x250
-> >    netif_receive_skb_list_internal+0x1a3/0x2d0
-> >    napi_complete_done+0x74/0x1c0
-> >    igb_poll+0x6c/0xe0 [igb]
-> >    __napi_poll+0x30/0x200
-> >    net_rx_action+0x181/0x2e0
-> >    handle_softirqs+0xd8/0x340
-> >    __irq_exit_rcu+0xd9/0x100
-> >    irq_exit_rcu+0xe/0x20
-> >    common_interrupt+0xa4/0xb0
-> >    </IRQ>
-> > 
-> > This problem seems particularly prevalent if the user advertises an
-> > endpoint that has a different external vs internal address.  In the case
-> > where the external address is advertised and multiple connections
-> > already exist, multiple subflow SYNs arrive in parallel which tends to
-> > trigger the race during creation of the first local_addr_list entries
-> > which have the internal address instead.
-> > 
-> > Fix this problem by switching mptcp_pm_nl_append_new_local_addr to use
-> > call_rcu .  As part of plumbing this up, make
-> > __mptcp_pm_release_addr_entry take a rcu_head which is used by all
-> > callers regardless of cleanup method.
-> > 
-> > Cc: stable@vger.kernel.org
-> > Fixes: d045b9eb95a9 ("mptcp: introduce implicit endpoints")
-> > Signed-off-by: Krister Johansen <kjlx@templeofstupid.com>
-> 
-> The proposed patch looks functionally correct to me, but I think it
-> would be better to avoid adding new fields to mptcp_pm_addr_entry, if
-> not strictly needed.
-> 
-> What about the following? (completely untested!). When inplicit
-> endpoints creations race one with each other, we don't need to replace
-> the existing one, we could simply use it.
-> 
-> That would additionally prevent an implicit endpoint created from a
-> subflow from overriding the flags set by a racing user-space endpoint add.
-> 
-> If that works/fits you feel free to take/use it.
+- Patch 2: reset a subflow when MPTCP opts have been dropped after
+  having correctly added a new path. A fix for v5.19.
 
-I like this suggestion.  In addition to the benefits you outlined, it
-also prevents a series of back-to-back replacements from getting turned
-into a chunk of call_rcu() calls.  Leaving this as a synchronize_rcu is
-probably better too, if we can.  I was unsure whether it was acceptable
-to skip the replacement in this case.  Thanks for clearing that up.
+- Patch 3: add a safety check to prevent issues like the one fixed by
+  the second patch.
 
-I'll test this and follow up with a v2.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (2):
+      mptcp: reset when MPTCP opts are dropped after join
+      mptcp: safety check before fallback
 
-> ---
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index 572d160edca3..dcb27b479824 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
-> @@ -977,7 +977,7 @@ static void __mptcp_pm_release_addr_entry(struct
-> mptcp_pm_addr_entry *entry)
-> 
->  static int mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
->  					     struct mptcp_pm_addr_entry *entry,
-> -					     bool needs_id)
-> +					     bool needs_id, bool replace)
->  {
->  	struct mptcp_pm_addr_entry *cur, *del_entry = NULL;
->  	unsigned int addr_max;
-> @@ -1017,6 +1017,12 @@ static int
-> mptcp_pm_nl_append_new_local_addr(struct pm_nl_pernet *pernet,
->  			if (entry->addr.id)
->  				goto out;
-> 
-> +			if (!replace) {
-> +				kfree(entry);
-> +				ret = cur->addr.id;
-> +				goto out;
-> +			}
-> +
->  			pernet->addrs--;
->  			entry->addr.id = cur->addr.id;
->  			list_del_rcu(&cur->list);
-> @@ -1165,7 +1171,7 @@ int mptcp_pm_nl_get_local_id(struct mptcp_sock
-> *msk, struct mptcp_addr_info *skc
->  	entry->ifindex = 0;
->  	entry->flags = MPTCP_PM_ADDR_FLAG_IMPLICIT;
->  	entry->lsk = NULL;
-> -	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true);
-> +	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry, true, false);
->  	if (ret < 0)
->  		kfree(entry);
-> 
-> @@ -1433,7 +1439,8 @@ int mptcp_pm_nl_add_addr_doit(struct sk_buff *skb,
-> struct genl_info *info)
->  		}
->  	}
->  	ret = mptcp_pm_nl_append_new_local_addr(pernet, entry,
-> -						!mptcp_pm_has_addr_attr_id(attr, info));
-> +						!mptcp_pm_has_addr_attr_id(attr, info),
-> +						true);
->  	if (ret < 0) {
->  		GENL_SET_ERR_MSG_FMT(info, "too many addresses or duplicate one: %d",
-> ret);
->  		goto out_free;
+Paolo Abeni (1):
+      mptcp: always handle address removal under msk socket lock
 
-Thanks,
+ net/mptcp/pm_netlink.c |  5 -----
+ net/mptcp/protocol.h   |  2 ++
+ net/mptcp/subflow.c    | 15 +--------------
+ 3 files changed, 3 insertions(+), 19 deletions(-)
+---
+base-commit: f15176b8b6e72ac30e14fd273282d2b72562d26b
+change-id: 20250224-net-mptcp-misc-fixes-8af87640dfef
 
--K
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
