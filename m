@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1A8B1993B2
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:05:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5E7221F02
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:59:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740395117; cv=none; b=kobb6IzHbZ0Uw8QD7lbNZaGTnRhcUzW9JJIh+jPnKpUp5HL2ns6C/3hcyvOf86pBGu9jbO4OB2nlSA3B8Ca/uZCIDBfAUfTvZ4rMKLEgRsSdwlzHROZ9neA874ruiP5ei93RVrlWz7lrsJcTobnqed2zmU5dQwtR4TvM+aMxZXc=
+	t=1740398347; cv=none; b=smS2paH0qa8pt6cZExAfiGfG2p7KKaomEsTVi7X6P43b8JsVcOGjn5jpgcZgGBknUfwmWc0Sl/r0q7E2bqLUoA05NqIpi4XIGGBxkCfKM7oi5Y9ryYAgfDADW5eKIgoQx+u+uXxrz9GmFAmzJ8s6gnd2z9crURLQagbvaWuJhoE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740395117; c=relaxed/simple;
-	bh=35StFSTD7Hk4PKy5xILV4y06yVKtRG3uXnlWZNTZYdo=;
+	s=arc-20240116; t=1740398347; c=relaxed/simple;
+	bh=EHv9rgDvCigtlVCUWigB2ilvYDV6vAW0rKJCLJt55P8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NnBBP4fCodU9xWXiUm8ELXrhcvJOXO79jQ8AnIsbPpVwY9g1a/ndCU55urYy0sP0cQ+vNXOw+TCH9mW3G0K4qtxuQNWEjWhg7lFy6VB7oq5YhdfHbAJD42hd6qs5+QtxQQvVm7X5uSI7y6RbjHFwffFJa+dgpjsWsyPBRdBoNjw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iWlxUSuU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=kpd2Cx62Ajf3hwGVqOB1Q+K68U+CTUQwvwbgOEbmYdh07T2rHiX3w8p/8OtLHsSd8xcuN1O85Ex2FMiomzIrjZgEeF/GS50REhJUQDLovEnZRCc+6HB4jrFfgIfdlr8/9aKyHUIFq0+xSb/pa/FlxTI26L9VUx15b5FqdY+2UTk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxDDoRxP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iWlxUSuU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3C393C4CED6;
-	Mon, 24 Feb 2025 11:05:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxDDoRxP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B56BC4CED6;
+	Mon, 24 Feb 2025 11:59:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740395115;
-	bh=35StFSTD7Hk4PKy5xILV4y06yVKtRG3uXnlWZNTZYdo=;
+	s=k20201202; t=1740398347;
+	bh=EHv9rgDvCigtlVCUWigB2ilvYDV6vAW0rKJCLJt55P8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iWlxUSuUAsvm7IKuIuU8/cd1wirqLLkeeMVPsukXUrupQfey80l6+zw2S3tlf2OhL
-	 cwcuE04B6oVj1TZAtjjEKuCELnEG6Io/MD20uXlMSoWUeLieCPcn4PihAZRWkRcM60
-	 vW83cnVBbwNZG+BaifxgZmXnx1MbUnnfb3mmXq5L6LJ/evG9uL2mIP7zNmm3L5o+Wk
-	 KSkH6JjXA4RVQ3XD5bG7A0rmSO504HDWpRvUttWBW77mzj3V0EAi1VsST76+vlJSF4
-	 5S8DjeR46mgzQFmbou96/zoBv7SMaDTiteXiOOOZR+xh65V4X+K7TN/DQk30nVHo9S
-	 wGvSuw2a1mgKw==
-Message-ID: <dcd5cd26-03d6-4b8e-bd60-c27c7ed07497@kernel.org>
-Date: Mon, 24 Feb 2025 12:05:11 +0100
+	b=HxDDoRxPJ06JAxzQbWryQ7hoqaXFAFJEKDSDwXpKLCTop1SIuECFjn4ape27LgZNf
+	 pvjlfLYT/RlLNfAoTk+ET7ErbIxrIjVuuf2PLDJSnhRidtSa7j+zSyp1uvVg9QeEtW
+	 4M7RRV5yHBvJEqNDf2TbXQ3U2JXOpcrZXXIBF0Ma678OItc/TZ7kJu9PUQc7eiTx+1
+	 O96d+nAiVmBBs7mFJ+UuLZkHXSfqjAQkNF5eXaDbuzs8oDifBv0Vt9VSf+fdEhYl5Z
+	 C/s7Tiihw7UaZokJDj7JRi631mB7YiZeR/BkXy7/J6Us3jnNyyZXFyAYE9fXCdtHpG
+	 E2KirrTV9LNbQ==
+Message-ID: <54b0c2ab-1d35-424e-8680-0e13f03bad31@kernel.org>
+Date: Mon, 24 Feb 2025 12:59:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 0/6] BPF path manager, part 4
+Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
+ support"
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740384564.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1740368110.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,37 +86,24 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1740384564.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang, Mat,
 
-On 24/02/2025 09:13, Geliang Tang wrote:
+On 24/02/2025 04:37, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Some path manager related refactoring and cleanups.
-> 
-> Geliang Tang (6):
->   mptcp: pm: in-kernel: avoid access entry without lock
->   mptcp: pm: in-kernel: reduce parameters of set_flags
->   mptcp: pm: use addr entry for get_local_id
+> v4:
+>  - drop sock_owned_by_user_nocheck and spin_is_locked. According to
+>    comments from Mat and Martin, in this set mptcp_subflow
+>    bpf_iter only used from a cg sockopt bpf prog, no need to add these
+>    check at this moment.
 
-For these 3 patches above:
+The v4 looks OK to me, but I prefer to wait for Mat's ACK, if that's OK,
+because he reviewed the original series.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
->   mptcp: pm: in-kernel: use kmemdup helper
->   sock: add sock_kmemdup helper
->   mptcp: pm: userspace: use sock_kmemdup helper
-> 
->  include/net/sock.h       |  1 +
->  net/core/sock.c          | 23 +++++++++++++++++++++++
->  net/mptcp/pm.c           |  9 ++++++---
->  net/mptcp/pm_netlink.c   | 30 +++++++++++++-----------------
->  net/mptcp/pm_userspace.c | 20 +++++++-------------
->  net/mptcp/protocol.h     |  6 ++++--
->  6 files changed, 54 insertions(+), 35 deletions(-)
 Cheers,
 Matt
 -- 
