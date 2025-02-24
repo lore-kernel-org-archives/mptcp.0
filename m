@@ -1,207 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0D16ACA64
-	for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 17:13:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8501BF510
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 03:37:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740330825; cv=none; b=X3xd7+LbUhqSyFYI/OtHWs+8waQQfJADpQBbQABz05vVCsWLrTXVqE60voagPQqqLqyuB59O50lAnvsLUWCvIxyk3sfPQwR0Mrs/ZtWcCgxUNQLbug2w5idgj5Nmz6E5u6QHZkq4CeFGreNBJGI+03lFOwEUEFaVTMua6AQozxU=
+	t=1740368269; cv=none; b=Dj4bf80MDdIfc7YcArUGRuOwDN2QPpAmM9TZZ1c/cfj83JYCLQNVe1NMY52BCyDqOV2KQpR9FImKKEJyUrOzCB97ivwbqS85yT6pGGt8KXfsrS5+j+vsTqFqPyoqFMOoyRkZdcW0Z19w6IO200E/EwVSFsFI18kUH24GlPsSt7M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740330825; c=relaxed/simple;
-	bh=pTvPUSmkoVY08HTUd8IfFlxD6m8/YYDdZazdPpCQjQQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l41NgTwAUsSvyH47bhiwzPD5xqDKXHf2IJ/jQnjNiPTfTptOK2mbAoZ3Kaurfkzo0jaqoIxTJuXDBQjM+i2barlGgf/80WTjnAnoMpISSibrge/pfZxmvWzCB1733shlGCpqp3OEFkt6xdLCGc19X6SGZ/+zRCswVreEgfuNZqE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YWtkybTa; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740368269; c=relaxed/simple;
+	bh=0pq5NPRLRrOQGS4UVVx8emfLPkSKB0Vj+hx+VIZulLw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YxGb3+sDGil6XCo/azlPVBP0Am2fwI0UP/pnSllY6UFkTX42jSHxG9M57C3G8BMl6wh0dLCrTlzJ8M8v7XUpMLQo+NubZfURwsSzSUcrIsFGik07HbsRMqjc69g1U/AuxUAp3LkbK2cFpFE/9bl5ndP1K6kyat3IkUEV1cHA9Jc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WVv5YVfA; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YWtkybTa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A040AC4CEDD;
-	Sun, 23 Feb 2025 17:13:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WVv5YVfA"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABA1EC4CEDD;
+	Mon, 24 Feb 2025 03:37:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740330824;
-	bh=pTvPUSmkoVY08HTUd8IfFlxD6m8/YYDdZazdPpCQjQQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YWtkybTamc8HPcMFvbLYuiAbtviUvyBgufEKzEi5MY6YZndDOhket1NztDpefOZut
-	 05aNYHsWOy/SB3fASzapSmJ4/X6afg7QJqUFJG8UzONalqHGB0DgD3h8wmehfUYZG6
-	 PWkOyvDmp+afF8pUP9qssWwPNiWaG3b0juIA6QCmvnRNAdzy9p88n+NE7O8Es1qMsG
-	 zTEC9mqFxELbA4CGIssnNIfPZh/DCMQK4UKwdZsxegVY/GflDrupdgOpkZJ/HX1OuN
-	 VlAuCYeyTyM2nt1a+LOn/Gsb4gqWJ9fCGoWjkGi1We5hBfngabXRWGIZdwKrpm2tfi
-	 pC3c8ntb5LSZQ==
-Message-ID: <c49517d2-38e2-4848-9fb9-1c7748689cec@kernel.org>
-Date: Sun, 23 Feb 2025 18:13:41 +0100
+	s=k20201202; t=1740368269;
+	bh=0pq5NPRLRrOQGS4UVVx8emfLPkSKB0Vj+hx+VIZulLw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=WVv5YVfAyvEF6QuCRxuJ85Bkvk9mQVSPqvnrAPueRUOdUkKjEVh+LWAIBAVTh4toK
+	 8M6sibO5xUNOActw/8QOmZnPzGvRZgkEW6ByZLWdTapOtx7I5trQ/LknU5GhftEhRo
+	 g++x18leQaQT0EIgH49l8BTru/Lu+AE/C3TF13o5UoMkprkRdhL1RRnyI/4sWbzJSh
+	 njAytSyeg58+ImMaBzQ8LvWglc+sNQOmmpXZstI3A7qM8K64FlJNGawWJsbEA4MYCK
+	 U6Wf5czEFz0Ly/T+YlDZO5clIRO98/J0L8c8GT3n3wRZQPo0VmbcAc3m2sxVQfNdKk
+	 xqhZQQzs56ysA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter support"
+Date: Mon, 24 Feb 2025 11:37:35 +0800
+Message-ID: <cover.1740368110.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v6 13/13] selftests/mptcp: use path_manager
- instead of pm_type
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740320007.git.tanggeliang@kylinos.cn>
- <b94e2a3b16486315acd2fa31cde3830a98573d5d.1740320007.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <b94e2a3b16486315acd2fa31cde3830a98573d5d.1740320007.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 23/02/2025 15:26, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> This patch uses the newly added net.mptcp.path_manager instead of the
-> old net.mptcp.pm_type for all path manager selftests in mptcp_join.sh
-> and userspace_pm.sh.
+v4:
+ - drop sock_owned_by_user_nocheck and spin_is_locked. According to
+   comments from Mat and Martin, in this set mptcp_subflow
+   bpf_iter only used from a cg sockopt bpf prog, no need to add these
+   check at this moment.
 
-With the mapping for "pm_type" and "path_manager" sysctl knobs I
-mentioned before, this patch should not be needed (and would cause
-issues when validating older kernels, see below).
+v3:
+ - patch 3, continue to use sock_owned_by_user_nocheck() and spin_is_locked()
+checks instead of using msk_owned_by_me().
+ - patch 5, drop declaration of bpf_mptcp_subflow_tcp_sock. It's no longer
+used.
+ - patch 5, update the comment for mptcp_subflow_tcp_sock(), which is a BPF
+helper, not a kfunc.
 
-Still, I think it would be good to make sure such mapping is working
-well. Instead, I think it would be better to add a specific test in
-userspace_pm.sh to make sure the mapping is correct. See below.
+The commit log of "bpf: Register mptcp common kfunc set" doesn't match the
+code, please update it as:
 
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_join.sh | 26 +++++++++----------
->  .../selftests/net/mptcp/userspace_pm.sh       |  4 +--
->  2 files changed, 15 insertions(+), 15 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 13a3b68181ee..ed04e7dedf23 100755
-> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -99,7 +99,7 @@ init_partial()
->  
->  	local netns
->  	for netns in "$ns1" "$ns2"; do
-> -		ip netns exec $netns sysctl -q net.mptcp.pm_type=0 2>/dev/null || true
-> +		ip netns exec $netns sysctl -q net.mptcp.path_manager="in-kernel" 2>/dev/null || true
+'''
+bpf: Register mptcp common kfunc set
 
-If you change this here, it means that the selftests will report errors
-when running on older kernels. So please, do not change that.
+MPTCP helper mptcp_subflow_ctx() is used to convert struct sock to
+struct mptcp_subflow_context. It will be used in MPTCP BPF programs.
 
->  		if $checksum; then
->  			ip netns exec $netns sysctl -q net.mptcp.checksum_enabled=1
->  		fi
-> @@ -1920,7 +1920,7 @@ set_userspace_pm()
->  {
->  	local ns=$1
->  
-> -	ip netns exec $ns sysctl -q net.mptcp.pm_type=1
-> +	ip netns exec $ns sysctl -q net.mptcp.path_manager="userspace"
+This patch defines corresponding wrapper of this helper, and put it
+into the newly defined mptcp common kfunc set and register this set
+with the flag BPF_PROG_TYPE_CGROUP_SOCKOPT to let it accessible to
+the 'cgroup/getsockopt' type of BPF programs.
+'''
 
-Same here.
+v2:
+ - Drop bpf_skc_to_mptcp_sock
+ - Check the owner before assigning the msk as Mat suggested.
+ - Use bpf_core_cast() in mptcp_subflow bpf_iter subtest instead of
+using bpf_skc_to_mptcp_sock().
 
->  }
->  
->  subflows_tests()
-> @@ -3497,7 +3497,7 @@ userspace_tests()
->  {
->  	# userspace pm type prevents add_addr
->  	if reset "userspace pm type prevents add_addr" &&
-> -	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
+Address Martin's suggestions for "Add mptcp_subflow bpf_iter support" v2.
 
-Here, it means the tests will be skipped on older kernels while they
-don't require this new sysctl knob.
+Geliang Tang (5):
+  Revert "bpf: Extend bpf_skc_to_mptcp_sock to MPTCP sock"
+  Revert "bpf: Allow use of skc_to_mptcp_sock in cg_sockopt"
+  Squash to "bpf: Add mptcp_subflow bpf_iter"
+  Revert "bpf: Acquire and release mptcp socket"
+  Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
 
-So please do not change that. Same below.
+ include/net/mptcp.h                           |  4 +-
+ kernel/bpf/cgroup.c                           |  2 -
+ net/core/filter.c                             |  2 +-
+ net/mptcp/bpf.c                               | 41 ++++---------------
+ .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
+ tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 ---
+ .../selftests/bpf/progs/mptcp_bpf_iters.c     | 10 ++---
+ 7 files changed, 15 insertions(+), 51 deletions(-)
 
-(...)
-
-> diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> index 3651f73451cf..dfeec8d4aecf 100755
-> --- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> +++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-> @@ -13,7 +13,7 @@
->  mptcp_lib_check_mptcp
->  mptcp_lib_check_kallsyms
->  
-> -if ! mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
-> +if ! mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
-
-Same here.
-
->  	echo "userspace pm tests are not supported by the kernel: SKIP"
->  	exit ${KSFT_SKIP}
->  fi
-> @@ -119,7 +119,7 @@ trap cleanup EXIT
->  # Create and configure network namespaces for testing
->  mptcp_lib_ns_init ns1 ns2
-
-Here, if /proc/sys/net/mptcp/path_manager is available:
-
- - set it to "userspace", then check if "pm_type" is set to 1.
- - set "pm_type" to 0, and check if "path_manager" is "kernel".
- - then continue like before (so setting pm_type=1)
- - (you might have to move 'print_title "Init"' here above if these new
-steps can create errors)
-
-I don't think we need individual subtests here, only fail if it doesn't
-work as expected (again, if the new sysctl is available, not to fail on
-older kernels).
-
->  for i in "$ns1" "$ns2" ;do
-> -	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
-> +	ip netns exec "$i" sysctl -q net.mptcp.path_manager="userspace"
-
-Do not change that.
-
->  done
->  
->  #  "$ns1"              ns2
-
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
