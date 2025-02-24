@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 939F21624CF
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 19:01:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7FF4B282F0
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 19:03:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740423673; cv=none; b=sPkYfWnqOIb6tHZw0FxI+dBM9HTcts9VzXgBfbGMzgS7aoQJ8sOvEiO0cbgLqrYtESuIorqcGCLY4Zl9WXDD8x4ewT0h8pbC1Zn3HK3jwiA+46XrvlBKmaJPoWeAjnvRyJh+N30TZAFKnRzAmMCI/OU6L8AqWdgX/ezBd/9rtbg=
+	t=1740423797; cv=none; b=XKHBnPvv9tmo8hnGaBmMZpu7A+kA5JxwMf5XJK2u/OoorLmjXJkp/WAiGm41IGWE/knakhSGsTujPtXSQZDMUvF2f5RxR1+ZTKPHeDT4eMpRG7lZ6ICuYsL6VMyLlPA7dlDTyXAGOBtDPIfR03tAvwbwt+k7dbUrFob1cGmpFqA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740423673; c=relaxed/simple;
-	bh=+KHlFdGlck6VeTz7Thh8FGnSmQig/RMPwQ7Sp1+3H+I=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=i8LSVaO/dWwnIhpcHL1t3emDxtzINKR3AjjlWNEpEi1iuCK4WZ0seOpafiDpnd1zZMRmrhZ/VmZTS4y+9aw4Dp7ogkNIqrVECjNUFcnKNEsqcCd2kL2i4eQG9vYkV37ITgtbvH8voa6UFTY7dXIDCoz5TI6qyXYFmvfNs8GA99Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VaO41K8n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740423797; c=relaxed/simple;
+	bh=NVokK7HmcpqNcfCzAEUb4oDmLtEO06w7zp3NUfPqoAo=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=IuHbB+UPJJn5z/vQW/8PXKrXdEhG7exFUqFj9ovXFuGEyWTIwrU/6kLrgY+tKZQVcl6Ii7uuGG75M+/xfgDCVnJ+aRbYpXUS+Na1DkjvHPcviqxTPzXQR5wGTSm3XRTuVE3SJkP/5I2kj+yYEqhFWsM1Ae8DLSS7zeis42i19Cg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HvJ3D79g; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VaO41K8n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5ADD9C4CEDD;
-	Mon, 24 Feb 2025 19:01:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HvJ3D79g"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F1ADC4CED6;
+	Mon, 24 Feb 2025 19:03:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740423673;
-	bh=+KHlFdGlck6VeTz7Thh8FGnSmQig/RMPwQ7Sp1+3H+I=;
+	s=k20201202; t=1740423795;
+	bh=NVokK7HmcpqNcfCzAEUb4oDmLtEO06w7zp3NUfPqoAo=;
 	h=From:Date:Subject:To:Cc:From;
-	b=VaO41K8n/1Y0Ie1YWYzqF5+FQm1xxpmMUJz+2duqQ9+iDKm6GEgptB5j3bzf75RYf
-	 eWdAXnpQZKBD3yMWEWiBajFUkXiShDP8jkFgmtZWaZCdgAxCZtThLzCgHz3uJvueQY
-	 QTZiD8ID4F33RXzds2w2b1KbwNKPUr8mflfVcVxUOFfwn65GeSXhNgWzz8qRZYK8Ad
-	 jv0ZzMqETmI0G/17CkEPaWqjqXAUXXW1uZAihfYf/F1RbQbau+g0ELsWeBe0UTNcnL
-	 vXZVFoL6gw1yL1zP/iSk6jwUSEub3RJJc3a+jX1PdfjIeX5/VcUDFDKsiHQtaD1eFV
-	 d5rAs3bJjMuGg==
+	b=HvJ3D79gsIhowUWkXrHf9jO/qTxfiMUFb3MS/WKvinCFqz3luHqwh2PplFEve55Ka
+	 BLYuGA2nFWdyFaT5fKiGLnrLNToM8GWKaEYSjzmMPTyE7XleQPpdBR7LBTGImauAan
+	 +DvSAMqA2BBBxFS7nFHpGB5fg+Nl852etu6/yUsUI2yn/+NmWRkQ3vORcyNIs/cPAq
+	 rX5pyUbFs5cx8wuA91pfwOpF6tpVI+ea2tbK6QQ/YxLWB3lhrF3BNkwEH/f8LxP4Gn
+	 AaN1as6E+RWYxYlwEDCQfp/5N8SKUypKsKJNMEx0oErvbU1MT7WOBO0ETUVKgq/1lV
+	 Wcwo5ZL2D8bgw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 24 Feb 2025 20:01:03 +0100
-Subject: [PATCH mptcp-next] mptcp: pm: userspace: avoid scheduling
- in-kernel PM worker
+Date: Mon, 24 Feb 2025 20:03:05 +0100
+Subject: [PATCH mptcp-next] Squash to "selftests: mptcp: add a test for
+ mptcp_diag_dump_one"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,100 +37,87 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250224-mptcp-userspace-avoid-worker-v1-1-127325d3e9a4@kernel.org>
-X-B4-Tracking: v=1; b=H4sIAO7BvGcC/yXMywqDMBBG4VeRWXfAJtViX6W4CPHXDqVJmHgD8
- d0b2uVZfOegDBVkelQHKVbJEkOJ66Ui/3JhAstQmkxtmtqYG3/S7BMvheXkPNitUQbeor6h3Nn
- RtnfYzruWyiIpRtl/+yf9ZcA+U3+eXy2yJgx6AAAA
-X-Change-ID: 20250224-mptcp-userspace-avoid-worker-93f367e39ca6
+Message-Id: <20250224-mptcp-sft-diag-squash-v1-1-81eb3843fa53@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGjCvGcC/yXMMQ6DMAxA0asgz1hKA0G0V0EMFhjwQEjjgJAQd
+ ydqxz+8f4FyFFb4FBdEPkRl8zleZQHDQn5mlDE3WGOdsbbGNaQhoE4JR6EZ9buTLti6N1PlGle
+ TgWxD5EnO37eDP/F8Jujv+wG65i+zcwAAAA==
+X-Change-ID: 20250224-mptcp-sft-diag-squash-859ea35654a0
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
+ Gang Yan <yangang@kylinos.cn>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2619; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=+KHlFdGlck6VeTz7Thh8FGnSmQig/RMPwQ7Sp1+3H+I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvMH4Xs2HHwvFK2U6erlxS/ZNQZ9LjgWFdd9EP
- YVPX8p8viqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7zB+AAKCRD2t4JPQmmg
- c24cEADSzmnoa1ZVp8x31q035rA+EtAHZ+Q8AtmFeY1//OpTgjkCcgwKPq67q8lVo31XujOk8HT
- Abdl36s8BikJD7Z/F3IutkP3hy5dRqx0Z1vNOuSINsA/pO6B4jtgfL5T8E09l8mOU4tDCMCFPSj
- eDx1kH/7MS01KXaIVMfREmPfLJo6FqB248a7rxC6DB8cGEoYvakCrd3EGXfPqm/iQvaLGtcLIog
- roDerVcUYByvjP9jdXbyqWD4E2tZ4UnIwV2zBD7533vAu3il3fsWWg0fjMxzwApIwATgBdQCBQI
- TvUcfVYZ5HWxvB6bOGAhVPT76dWppZG+nmpFiHjA8iEm+W7Vm1PuW90doKMydFW1avS3ePItbjC
- gSHBi8JkuaJtFhQXq0Bmnvgwcc5WoxUkiXScUa6axlvcr1Eot+ljnF+cut8meNZWg5IbZiAFqcE
- 37RHBByR/e2zwP9vhsQf/42oPkMhHcYkVzY65BV7kSa3tMsTmPBFOpJOvZY2hT0UC1a/ca3Mld0
- UurspEuUJYHjDxG2vbvpqn5JaNwjoxN//p6oOwBkkuaEnFhAG2UmMLmsWGRFZG5CutkQ1TiT0+8
- tVZu64nKL8kuxyDxtydE9Jnb9sUWG+iJeIDropDCYGyXoOQ/UKmwz+D8A3zQx7H7iXasLscvcXj
- xSqnDASSf9pafUA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=2659; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=NVokK7HmcpqNcfCzAEUb4oDmLtEO06w7zp3NUfPqoAo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvMJy4mHPApbCS/Tbuz0m4m1GuZ6W8J8OFMj0K
+ 5OInxCWbzqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ7zCcgAKCRD2t4JPQmmg
+ c59sEADJnkd3s/r794Ml2PpT0umAkGkl4YagYukbRG99XAxxX7lbFbAMEBhgd5B4NI+FN1E5pEd
+ LTujuua9ZfTBdDBIKXFafF3SMSjiSYhDgBqtZySkIe2n3yMgqEbCzMw6nc4a/ilO2nM7m6H/5g0
+ 019GvS3nl0EbsnJE4mlvmYSLoXnPnZ3gB5CTI4RswalFwVIwqmWs416nxcR0p44uDuW+7rXfxGl
+ w8wIDT4qE7PLnO6YmIFb2CAQilQwaEDsRrXbOdvUTGOc/1OVQQuDfyvWVXR8/jXZzNCNc7dQIYJ
+ TfwrrUW2iSduQTMC4hQKuXX9RSq7NB8G3XS3W5aiBndlVIo83uWuJoI9dkJilZPfvPbUJeqlC8J
+ rwlcfAGfJ7VOLUbZyEsOXWCE46K/HVEMm8VwkSmu9SSNBVzvgqEaytKq8YI06P1kjSr1/6qCrU+
+ B/CWwyNTOFMNb3ch53aAGs8UqAnwqkDxk6lUykein1LAr5Z12Znppx5foedbIkwDx9fxL4HrzPh
+ eOj5/imB2duVHiZSAeaLjelX4CELumWXnphFuzMLonAuDbE+pvxaie1Fvi9gJUf+yULfXL83Y0W
+ Z31pRWhzwlQ6JywbCQyVqp2eQ74PpDWZfjRpZJPHc27cnD6Z+lIIWO/lWU34ODsncM9Iu8B/io3
+ 2fqBCDAuaBdbhxw==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-When the userspace PM is used, there is no need to schedule the PM
-worker for in-kernel specific tasks, e.g. creating new subflows, or
-sending more ADD_ADDR.
+- sdiag_protocol: avoid compilation warning:
 
-Now, these tasks will be done only if the in-kernel PM is being used.
+  mptcp_diag.c: In function 'send_query':
+  mptcp_diag.c:77:43: warning: unsigned conversion from 'int' to 'unsigned char' changes value from '262' to '6' [-Woverflow]
+     77 |                         .sdiag_protocol = IPPROTO_MPTCP,
+        |                                           ^~~~~~~~~~~~~
+
+  => the real protocol is passed via INET_DIAG_REQ_PROTOCOL.
+
+- printf: follow the same format as ss: hexa only for the token + flags.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Notes:
- - I don't know if this should be seen as a fix. Maybe yes because it
-   was not supposed to do that from the beginning, and it feels less
-   risky not to schedule the worker when it is not needed. I'm open to
-   suggestions here.
- - I'm mainly sharing this patch now because Geliang is going to modify
-   these helpers to separate PM specific code.
-   @Geliang: please rebase your series on top of this one (or include
-   this patch if it is easier).
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>
 ---
- net/mptcp/pm.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_diag.c | 15 ++++++++-------
+ 1 file changed, 8 insertions(+), 7 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 16cacce6c10fe86467aa7ef8e588f9f535b586fb..4eabb83328905676759768fb44c859f5682721e3 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -138,7 +138,7 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
- 	 * racing paths - accept() and check_fully_established()
- 	 * be sure to serve this event only once.
- 	 */
--	if (READ_ONCE(pm->work_pending) &&
-+	if (mptcp_pm_is_kernel(msk) && READ_ONCE(pm->work_pending) &&
- 	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index 7915ef1fc0611654e0aba36c4121bef2e0f26697..284286c524cfeff5f49b0af1a4da5a376c9e3140 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -74,7 +74,8 @@ static void send_query(int fd, __u32 token)
+ 		},
+ 		.r = {
+ 			.sdiag_family = AF_INET,
+-			.sdiag_protocol = IPPROTO_MPTCP,
++			/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
++			.sdiag_protocol = IPPROTO_TCP,
+ 			.id.idiag_cookie[0] = token,
+ 		}
+ 	};
+@@ -146,12 +147,12 @@ static void print_info_msg(struct mptcp_info *info)
+ 	printf("add_addr_accepted_max: %u\n", info->mptcpi_add_addr_accepted_max);
  
-@@ -166,7 +166,7 @@ void mptcp_pm_subflow_established(struct mptcp_sock *msk)
- 
- 	pr_debug("msk=%p\n", msk);
- 
--	if (!READ_ONCE(pm->work_pending))
-+	if (!mptcp_pm_is_kernel(msk) || !READ_ONCE(pm->work_pending))
- 		return;
- 
- 	spin_lock_bh(&pm->lock);
-@@ -251,6 +251,9 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
- 
- 	pr_debug("msk=%p\n", msk);
- 
-+	if (!mptcp_pm_is_kernel(msk) || !READ_ONCE(pm->work_pending))
-+		return;
-+
- 	spin_lock_bh(&pm->lock);
- 
- 	if (mptcp_lookup_anno_list_by_saddr(msk, addr) && READ_ONCE(pm->work_pending))
-@@ -278,6 +281,9 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
- 	for (i = 0; i < rm_list->nr; i++)
- 		mptcp_event_addr_removed(msk, rm_list->ids[i]);
- 
-+	if (!mptcp_pm_is_kernel(msk))
-+		return;
-+
- 	spin_lock_bh(&pm->lock);
- 	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
- 		pm->rm_list_rx = *rm_list;
+ 	printf("\nTransmission Info\n");
+-	printf("write_seq:        %llx\n", info->mptcpi_write_seq);
+-	printf("snd_una:          %llx\n", info->mptcpi_snd_una);
+-	printf("rcv_nxt:          %llx\n", info->mptcpi_rcv_nxt);
+-	printf("last_data_sent:   %x\n", info->mptcpi_last_data_sent);
+-	printf("last_data_recv:   %x\n", info->mptcpi_last_data_recv);
+-	printf("last_ack_recv:    %x\n", info->mptcpi_last_ack_recv);
++	printf("write_seq:        %llu\n", info->mptcpi_write_seq);
++	printf("snd_una:          %llu\n", info->mptcpi_snd_una);
++	printf("rcv_nxt:          %llu\n", info->mptcpi_rcv_nxt);
++	printf("last_data_sent:   %u\n", info->mptcpi_last_data_sent);
++	printf("last_data_recv:   %u\n", info->mptcpi_last_data_recv);
++	printf("last_ack_recv:    %u\n", info->mptcpi_last_ack_recv);
+ 	printf("retransmits:      %u\n", info->mptcpi_retransmits);
+ 	printf("retransmit bytes: %llu\n", info->mptcpi_bytes_retrans);
+ 	printf("bytes_sent:       %llu\n", info->mptcpi_bytes_sent);
 
 ---
 base-commit: 3716d837622ee1baf6fbe7e6a6a7a3df116e75fe
-change-id: 20250224-mptcp-userspace-avoid-worker-93f367e39ca6
+change-id: 20250224-mptcp-sft-diag-squash-859ea35654a0
 
 Best regards,
 -- 
