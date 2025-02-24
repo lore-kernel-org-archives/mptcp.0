@@ -1,129 +1,222 @@
-Received: from mail-qv1-f54.google.com (mail-qv1-f54.google.com [209.85.219.54])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAA852F3B
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 04:47:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.54
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BBD5115886C
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 06:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740372469; cv=none; b=C6EN1b7HZhOfUVDs+jLz0Cy22YcEe4CBeFKIY4TCYcRuElXlZp1HJbOXj/U5JTF83JAegfUGwA4d82aKRGeWwOB0+MyNBSuRYTnXMLoCy5ceP4wq2Up6xqdggyWPFk3za1a6O7k2S1peYC5RcbZEz2i2PGozGI9zHRi32JzDpOk=
+	t=1740380055; cv=none; b=gnsqoGcefmbrCwd6OSJ8Ays1QdwJ4e0ou1NHtzYCljF8kxL9u42dZqoXeTn2np+Rj2b2ZRJ1xCApEXCJYaUsQI15zSC+RGCzc7YCVhCOD7ocGzT2Y8GWCV7n7uUf5a51S7CVx8gh+gR0QbIANOWemWxkdqlflUNY21cWut6Y8b0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740372469; c=relaxed/simple;
-	bh=XLAXJpQm4E9mdSPrmxQyGM1Z8KF9ZfFgfrgAkiqxXhg=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=SM504t8XvMPfRJigQJmybSgqrMxNKdw0Ddp8aUQcT7TTphG7wGyK5i+M6n3fe8KYtIsfmheis+3SLWV25ooIoj0jBF/e0qJKglwM6EXoX2q5fITfdh5VgQY8qdErOfZPEUwi1zvlqc5H6OKVUn4k2d3g7HIEecJ1e4P+haZ4jxw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=nWkJs1Ty; arc=none smtp.client-ip=209.85.219.54
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740380055; c=relaxed/simple;
+	bh=4V8wUDFwNfH9SPX2nbDnwNXY+KgKcQgwprQXQvaZlbc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=cekVX+YqS0oUfthkv/dQvy93acstbhiSf2ZxooTvUM0Lhf+Kr1QmMqtL458kLYGoZAAqv0BnQ9QqFPx0ZQGx69l+DauiYZb019660cm8C6Sr4b7hBEMuh++ogpNMt0hA6KdxPhXrpXrOFKNktmdwWrHVtLSHs/NHjIDuM9Z9Plg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ciRqHtyy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nWkJs1Ty"
-Received: by mail-qv1-f54.google.com with SMTP id 6a1803df08f44-6e67fad4671so35872546d6.1
-        for <mptcp@lists.linux.dev>; Sun, 23 Feb 2025 20:47:47 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740372466; x=1740977266; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=W4ZxLsNO9C+ipZStm3UnBuhmGpMNq1P7dHynvg3QYag=;
-        b=nWkJs1TyLugr3QPdjd98U5vZOm/NYvM2uFqf/REXJ8HLJG6JYHMLPA+8ns3mRj3c7U
-         +DHitXWKIiL1uV7TMG2sQKC4kS3NSXqi6xPlCcNtJOLRgXkub3STvS+5WsUwu4H72VSC
-         agky7paT2iWyG5bP1sRvDynFHvgonWNaw8Ff+BQHcoNtgOfHEZshjfK5uctjcJ6SZM0k
-         nv2fVXZfeYRmLJ0RzD4WkRTWUucOXSMnOomc5VoThNYpGsjpF/Wh3+7v7t9CoLBiu0g2
-         ZW3XF9KCz1G16E9sKfyG3W3YlIi4NGdYtLIT6mJlVI/s+yjuLcs3tsbmDD+hgWFnPxzC
-         k91g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740372466; x=1740977266;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=W4ZxLsNO9C+ipZStm3UnBuhmGpMNq1P7dHynvg3QYag=;
-        b=w9BZ8hLEgTxaLlAtv2yBcUtDhKSM90tAq3+/vx+BWDBfgfjrEC3zwGcmQHFcU7ouo4
-         9aii1C27LIh9/BXhb7nezUtcQP6wGD6rOX1r9XLQwJufRGyKiw6rBNY5j5D0S5eEJpTi
-         Hs75CgUonOChdeqYeuVLzjXGY7koqfqmimLWIHjJhyldkjHbSTncmFecM0MlU5L4TRUq
-         f9C5SgLDYLkFhUjmFuS5qL+neqbVnXTA3oTUhdYHTJX5hDY6UR75GSc0lurcMPgEkbVG
-         JWpF7ysG9D+1Z9t52BN0vroaIk2sfbZ5zRRCtjjW/IbHEPFXRtIs8H+fdtD/zRWhGqiG
-         D3FA==
-X-Gm-Message-State: AOJu0YzVLBckn+JZQ7c0LAPX2sc3ulYNrA0r1W8XmH3EJt+H3pctyads
-	FCyUST/WlwMwOXD7vYrmCXz1GamWVTbrYFZ4vThFXF6LGIaqoiqSJg3B
-X-Gm-Gg: ASbGnctfblV7oXuQlgPp/44NyExurtX79zEXzkXUIYULhE874kY3lQsCcZotyq8/SP+
-	W7c+uZgZlfL+F2WL3U6jD1MNkKRmtHy1dcpPqSt4PMlqRqEeHvbR5S3t0N7eKToID2pDOVXz+wz
-	98RwldS+9MNIKEu1/EnUL1G6HVAUPrivkbTiwXOLtsJ7eQIaGxhgLQPnkj95vtG3AC68bFTOWrC
-	Ov7kP+cjFdHo9Ia+o9iXy5dbnsHjLvBi+0HXHB+8G4gxwBD+lQuDQ2wzIwQM2v1Vs6n9M1edJkP
-	4fe8tzl6eIKyNykUJ0SM2PC0s2wLTGQonJc0
-X-Google-Smtp-Source: AGHT+IGnzh57WLA3coB9I7mnS4LFSUnbfajNn3fJDwO9sSshxjbmA75Q423ol7midrYE8LrZqIvNgw==
-X-Received: by 2002:a05:6214:daa:b0:6e6:5cad:5ce6 with SMTP id 6a1803df08f44-6e6ae7c9f82mr164013896d6.9.1740372466609;
-        Sun, 23 Feb 2025 20:47:46 -0800 (PST)
-Received: from [127.0.0.1] ([20.57.79.90])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4720e09da35sm59470221cf.59.2025.02.23.20.47.45
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 23 Feb 2025 20:47:45 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
-References: <cover.1740368110.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v4_0/5=5D_Squa?=
- =?UTF-8?Q?sh_to_=22Add_mptcp=5Fsubflow_bpf=5Fiter_?=
- =?UTF-8?Q?support=22?=
-Message-ID: <46bfc776-2ba1-bb59-8c44-a8cfaac8f6d9@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 24 Feb 2025 04:47:45 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ciRqHtyy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 20F48C4CED6;
+	Mon, 24 Feb 2025 06:54:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740380055;
+	bh=4V8wUDFwNfH9SPX2nbDnwNXY+KgKcQgwprQXQvaZlbc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ciRqHtyyKGUTyLZNaxruV/FEa5asNnfQsd2R6ZL2Jk2ue54KfMtNL7+T773sdwOip
+	 imna+V+2MGvwcbytmIsN/cl3lmWtiKcDR7XX36HtBrhn4SS4VLtrrQuMMZNOZuH8Vu
+	 QVe596BOj3RA1lwu6XbX4hbbdYRxUU8Y1BbFwhRjzYGfZoGz5oUmzveeUR/ACGo2vL
+	 8SEMhVgVwi7DjxzFPizkeQ74DXdSy65zjBP3T8w4JeLxHbeEWtL7dqtOS9x+UrOt4y
+	 S1e+JT8EzlC4M25oZ5m6TopvKr/MIzLyV1ub4+mGsJfiqMFjcgR/ipbVc2xPXEAWdw
+	 8IsBzvHc0thng==
+Message-ID: <328be50889c11a6358d360d5454f8b7a6ed200b7.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 4/9] mptcp: pm: define struct mptcp_pm_ops
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Mon, 24 Feb 2025 14:54:10 +0800
+In-Reply-To: <b7333a19-921a-41e1-9a87-ff70aab3e000@kernel.org>
+References: <cover.1740019794.git.tanggeliang@kylinos.cn>
+	 <5f83856741646b16dde9a741fcfbfa55753eee39.1740019794.git.tanggeliang@kylinos.cn>
+	 <b7333a19-921a-41e1-9a87-ff70aab3e000@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Matt,
 
-Thank you for your modifications, that's great!
+Thanks for the review.
 
-Our CI did some validations and here is its report:
+On Fri, 2025-02-21 at 18:23 +0100, Matthieu Baerts wrote:
+> Hi Geliang,
+> 
+> On 20/02/2025 03:57, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > In order to allow users to develop their own BPF-based path
+> > manager,
+> > this patch defines a struct ops "mptcp_pm_ops" for a userspace path
+> > manager, which contains a set of interfaces.
+> > 
+> > Add a set of functions to register, unregister, find and validate a
+> > given struct ops.
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  include/net/mptcp.h  | 29 ++++++++++++++++++++++
+> >  net/mptcp/pm.c       | 59
+> > ++++++++++++++++++++++++++++++++++++++++++++
+> >  net/mptcp/protocol.h |  5 ++++
+> >  3 files changed, 93 insertions(+)
+> > 
+> > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> > index a41d6c74760f..f51e75d3882d 100644
+> > --- a/include/net/mptcp.h
+> > +++ b/include/net/mptcp.h
+> > @@ -134,6 +134,35 @@ struct mptcp_pm_param {
+> >  	struct mptcp_addr_info		addr;
+> >  };
+> >  
+> > +struct mptcp_pm_ops {
+> > +	int (*created)(struct mptcp_sock *msk);
+> > +	int (*established)(struct mptcp_sock *msk);
+> > +	int (*closed)(struct mptcp_sock *msk);
+> > +	int (*address_announced)(struct mptcp_sock *msk,
+> > +				 struct mptcp_pm_param *param);
+> > +	int (*address_removed)(struct mptcp_sock *msk,
+> > +			       struct mptcp_pm_param *param);
+> > +	int (*subflow_established)(struct mptcp_sock *msk,
+> > +				   struct mptcp_pm_param *param);
+> > +	int (*subflow_closed)(struct mptcp_sock *msk,
+> > +			      struct mptcp_pm_param *param);
+> > +	int (*get_local_id)(struct mptcp_sock *msk,
+> > +			    struct mptcp_pm_param *param);
+> > +	bool (*get_priority)(struct mptcp_sock *msk,
+> > +			     struct mptcp_pm_param *param);
+> > +	int (*set_priority)(struct mptcp_sock *msk,
+> > +			    struct mptcp_pm_param *param);
+> > +	int (*listener_created)(struct mptcp_sock *msk);
+> > +	int (*listener_closed)(struct mptcp_sock *msk);
+> > +
+> > +	u8			type;
+> 
+> I guess the type matches net.mptcp.pm_type sysctl knob, right?
+> 
+> I wonder if we should not deprecate this sysctl, and use a string
+> like
+> with the scheduler. So instead, we could have:
+> 
+>   char			name[MPTCP_PM_NAME_MAX];
+> 
+> And on ctrl.c, we could map pm_type for the moment with a custom
+> proc_handler (and even remove this sysctl knob in a few releases):
+> 
+>  - 0  → in-kernel
+>  - 1  → userspace
+>  - >1 → bpf
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13490473539
+Do we need to restrict BPF path manager to only extend the userspace
+type path manager? That is, for all BPF path managers,
+mptcp_pm_is_userspace() returns true. If this is the case, there is no
+need to add "type" field in struct mptcp_pm_ops.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/9fc290ccc06f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D936873
+Is it necessary to allow BPF to create kernel type path managers, that
+is, path managers for which mptcp_pm_is_userspace() returns false?
+Since we registered mptcp_netlink_pm from this version, can the in-
+kernel type path manager also be extended by BPF? If this is the case,
+we need to add "type" field in struct mptcp_pm_ops to distinguish
+whether it is a userspace type path manager.
 
+> 
+> WDYT? Would it not be clearer for devs and users?
+> 
+> Note that if for the implementation, if it is easier to keep this
+> "type"
+> entry for the moment for the sysctl stuff, I'm fine with that. But if
+> we
+> don't need it, let's not introduce it.
+> 
+> > +	struct module		*owner;
+> > +	struct list_head	list;
+> > +
+> > +	void (*init)(struct mptcp_sock *msk);
+> > +	void (*release)(struct mptcp_sock *msk);
+> 
+> To answer my question from the v3 review: the init/release is done
+> for
+> each MPTCP connection handled by this PM.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+In-kernel pm is for each MPTCP connection handled by this PM while
+userspace pm is only for this one being initialized. How should I deal
+with this? Please give me more detailed suggestions.
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Thanks,
+-Geliang
 
-For more details:
+> 
+> > +} ____cacheline_aligned_in_smp;
+> > +
+> >  #ifdef CONFIG_MPTCP
+> >  void mptcp_init(void);
+> >  
+> > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> > index e3457f34621c..f56b2d1e3409 100644
+> > --- a/net/mptcp/pm.c
+> > +++ b/net/mptcp/pm.c
+> > @@ -6,12 +6,17 @@
+> >  #define pr_fmt(fmt) "MPTCP: " fmt
+> >  
+> >  #include <linux/kernel.h>
+> > +#include <linux/rculist.h>
+> > +#include <linux/spinlock.h>
+> >  #include <net/mptcp.h>
+> >  #include "protocol.h"
+> >  
+> >  #include "mib.h"
+> >  #include "mptcp_pm_gen.h"
+> >  
+> > +static DEFINE_SPINLOCK(mptcp_pm_list_lock);
+> > +static LIST_HEAD(mptcp_pm_list);
+> > +
+> >  /* path manager command handlers */
+> >  
+> >  int mptcp_pm_announce_addr(struct mptcp_sock *msk,
+> > @@ -661,3 +666,57 @@ void __init mptcp_pm_init(void)
+> >  {
+> >  	mptcp_pm_nl_init();
+> >  }
+> > +
+> > +/* Must be called with rcu read lock held */
+> > +struct mptcp_pm_ops *mptcp_pm_find(enum mptcp_pm_type type)
+> > +{
+> > +	struct mptcp_pm_ops *pm;
+> > +
+> > +	list_for_each_entry_rcu(pm, &mptcp_pm_list, list) {
+> > +		if (pm->type == type)
+> > +			return pm;
+> > +	}
+> > +
+> > +	return NULL;
+> > +}
+> > +
+> > +int mptcp_pm_validate(struct mptcp_pm_ops *pm)
+> > +{
+> > +	if (!pm->created && !pm->established && !pm->closed &&
+> > +	    !pm->address_announced && !pm->address_removed &&
+> > +	    !pm->subflow_established && !pm->subflow_closed &&
+> > +	    !pm->get_local_id && !pm->get_priority && !pm-
+> > >set_priority &&
+> > +	    !pm->listener_created && !pm->listener_closed) {
+> 
+> I'm not sure to understand the purpose of this validation.
+> 
+> Why not forcing some or all of them?
+> 
+> (...)
+> 
+> Cheers,
+> Matt
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
