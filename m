@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D7F142571AC
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 12:13:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A01762571AD
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 12:23:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740399229; cv=none; b=lLy7V2Wbub7tPfKxdiYtrwLh4FgKgSzk0ukkVCzcJ1igP9gzhC8wT7uz48SWOzqrmDHf8fA5pDANICzNosh+yXFiQI2pnPF8e4H31wCZBJunTQnIwqxEAkIX5e7FWOJXdwHAv3Z2Pb3ELB8hhSSvWPvNG2LYnQmT+ES7gI4AaqY=
+	t=1740399783; cv=none; b=cSqXXwwNf2QY4oksF8B3NWAzR22H4zElCAar75dziH9ZNsATCCz/ZVIOYN0gD5ZYomGJXnzPfU13U0XNtKqU/b3dX/yWlfj3CCarrO3bxPa1qbkcUJgxmwqRtbddny+EH3cPXKz7a0tUor2OUhsKEmbdlFgdW1PFNVouF4tfBV8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740399229; c=relaxed/simple;
-	bh=jPyAZ9jkSRvInaoMR+wBjTF8SETAJSWbml/h0ljaxeo=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=C7fX/RAM9FrNgu6zH7CzEMHconC47cISv6xPGBXzCE1vKiEZ3AZUCcXpCNHvElUFVCVSW5wt9TbeJMQKLKwCrAI8AP/TTJ5C5im5zFFY5KA4hXOGhEIlHx8QmMiYWS339vtWVDUrhaYsmQDNd+legClIWIGRzlMJ3Sk6bjQlNLY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IhuRzRYS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740399783; c=relaxed/simple;
+	bh=GnJleo2SC7O27HRuZFkOjetZ4W0TqKR9JmhqQ2Y+N8U=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=GI79LImmO8OQdTjIIBY6OmymH5tKrmMy72Emd8tZqcemerqkUursFw2nGHra5QExrsQ+8NsHnSsY4ehjJw+eR9a7sw47h4NVVIVeUvR4Le/SCzKc2VzSCb58+qrSP0UXrbkqxHv7BKWelS98U6mpqX1VCMzcz0bbBC6j0pNq3HI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SxiQjlNs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IhuRzRYS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B1EBDC4CEE8;
-	Mon, 24 Feb 2025 12:13:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SxiQjlNs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 94968C4CED6;
+	Mon, 24 Feb 2025 12:23:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740399229;
-	bh=jPyAZ9jkSRvInaoMR+wBjTF8SETAJSWbml/h0ljaxeo=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=IhuRzRYSaZAowTHuKb+U238cpJuX1BaM45NJTt5JREaZATzOBP0c4KZfdeq2DPcW8
-	 FSPMvZiEPe4m5+rysnYC04wyBRW9kdqxhYVv74rmoazcbE1cnaW5V042KIrrbRy2TD
-	 Giy+bf6ixM0PjjsmK6IhQVDHxunc2zHYo+0rE9MqP5t+5b7xjzJ2i8LS3XSLrZ6o0G
-	 m+6S0H5U6PiH026oPrfLMXZQMJE40R/bEVCIqz7GRyQMAQGf/7hAtSyoZu7R2LdDuz
-	 8MNoJmsxPdPkRPZ6dnR7icbUK2uNVplWF8nIsWw85GWC7AOjanudtCkSDFo0T1Ae5S
-	 UFpcB6ZafaXQQ==
-Message-ID: <3aab4781-d63a-4ee2-a099-db023f6886b7@kernel.org>
-Date: Mon, 24 Feb 2025 13:13:46 +0100
+	s=k20201202; t=1740399783;
+	bh=GnJleo2SC7O27HRuZFkOjetZ4W0TqKR9JmhqQ2Y+N8U=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=SxiQjlNsnI9Ee/bURHsTx1Qdd46G3HCRJmAETwUFdBLbyZJ4qpy3k3Lezm34vNjSg
+	 bo73wQa2HUl17snJkfddNoVylS88USUO+APeUv5IX101eYG2zlYVjDwWVLmxx5FVFh
+	 9/lRq1IZsu6Iw62TnVJeRQHk+PYsnHzxGSSy9XlPms1PkQmU56m+ktDj1FeuwFq5E9
+	 lR7O5qMx+EegjlVdrlKJBeAlznYm4nZyiIqiBATaJ/iNLsaQkWCwymDuQ2XfxbHMZ5
+	 VzZXzuw6G3qbiwH5kYwhiJ9Xk0HGhmWrAd0z4T4Z62seAhb2JlvkWfRll1T0swyx4M
+	 uUSzOABL9t21w==
+Message-ID: <3659f754-93a7-4a2a-8500-c654acb914b9@kernel.org>
+Date: Mon, 24 Feb 2025 13:23:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v4 1/2] selftests: mptcp: Add a tool to get specific
- msk_info
+Subject: Re: [mptcp-next v4 0/2] selftests: mptcp: add tests for increasing
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 References: <cover.1740385876.git.yangang@kylinos.cn>
- <4b060bd673858f11981e91956a34d1a42478b869.1740385876.git.yangang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <b2eaec83-6f05-47f9-9a82-3fecb73e6966@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,113 +85,36 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4b060bd673858f11981e91956a34d1a42478b869.1740385876.git.yangang@kylinos.cn>
+In-Reply-To: <b2eaec83-6f05-47f9-9a82-3fecb73e6966@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang Yan,
+On 24/02/2025 13:13, Matthieu Baerts wrote:
+> Hi Gang Yan,
+> 
+> On 24/02/2025 10:02, Gang Yan wrote:
+>> These patches provide a method to verify the 'mptcp_diag_dump_one'
+>> function, and the new tool 'mptcp_diag' can get the specific mptcp_info
+>> through multi msks.
+> 
+> Thank you for the update.
+> 
+> It looks good to me, just 2 small comments, but I can do the
+> modifications when applying the patches, no need to send a v5 just for that.
+> 
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-On 24/02/2025 10:02, Gang Yan wrote:
-> This patch enables the retrieval of the mptcp_info structure corresponding
-> to a specified MPTCP socket (msk). When multiple MPTCP connections are
-> present, specific information can be obtained for a given connection
-> through the 'mptcp_diag_dump_one' by using the 'token' associated with
-> the msk.
+Now in our tree:
 
-(...)
+New patches for t/upstream:
+- 07774a3ae41c: selftests: mptcp: Add a tool to get specific msk_info
+- 24f7b212d821: selftests: mptcp: add a test for mptcp_diag_dump_one
+- Results: 192ee51a45e8..3716d837622e (export)
 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> new file mode 100644
-> index 000000000000..6dc53ab867c5
-> --- /dev/null
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -0,0 +1,271 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/* Copyright (c) 2025, Kylin Software */
-> +
-> +#include <linux/sock_diag.h>
-> +#include <linux/rtnetlink.h>
-> +#include <linux/inet_diag.h>
-> +#include <linux/netlink.h>
-> +#include <sys/socket.h>
-> +#include <netinet/in.h>
-> +#include <linux/tcp.h>
-> +
-> +#include <unistd.h>
-> +#include <stdlib.h>
-> +#include <string.h>
-> +#include <errno.h>
-> +#include <stdio.h>
-> +
-> +#ifndef IPPROTO_MPTCP
-> +#define IPPROTO_MPTCP 262
-> +#endif
-> +
-> +struct mptcp_info {
-> +	__u8    mptcpi_subflows;
-> +	__u8    mptcpi_add_addr_signal;
-> +	__u8    mptcpi_add_addr_accepted;
-> +	__u8    mptcpi_subflows_max;
-> +	__u8    mptcpi_add_addr_signal_max;
-> +	__u8    mptcpi_add_addr_accepted_max;
-> +	__u32   mptcpi_flags;
-> +	__u32   mptcpi_token;
-> +	__u64   mptcpi_write_seq;
-> +	__u64   mptcpi_snd_una;
-> +	__u64   mptcpi_rcv_nxt;
-> +	__u8    mptcpi_local_addr_used;
-> +	__u8    mptcpi_local_addr_max;
-> +	__u8    mptcpi_csum_enabled;
-> +	__u32   mptcpi_retransmits;
-> +	__u64   mptcpi_bytes_retrans;
-> +	__u64   mptcpi_bytes_sent;
-> +	__u64   mptcpi_bytes_received;
-> +	__u64   mptcpi_bytes_acked;
-> +	__u8	mptcpi_subflows_total;
-> +	__u8	reserved[3];
-> +	__u32	mptcpi_last_data_sent;
-> +	__u32	mptcpi_last_data_recv;
-> +	__u32	mptcpi_last_ack_recv;
+Tests are now in progress:
 
-Small detail: some fields are aligned with spaces, others with tabs. Can
-you pick only one please? tabs?
-
-(...)
-
-> +static void print_info_msg(struct mptcp_info *info)
-> +{
-> +	printf("Token & Flags\n");
-> +	printf("token:	       %x\n", info->mptcpi_token);
-> +	printf("flags:	       %x\n", info->mptcpi_flags);
-> +	printf("csum_enabled:  %u\n", info->mptcpi_csum_enabled);
-> +
-> +	printf("\nBasic Info\n");
-> +	printf("subflows:		%u\n", info->mptcpi_subflows);
-> +	printf("subflows_max:		%u\n", info->mptcpi_subflows_max);
-> +	printf("subflows_total:		%u\n", info->mptcpi_subflows_total);
-> +	printf("local_addr_used:	%u\n", info->mptcpi_local_addr_used);
-> +	printf("local_addr_max:		%u\n", info->mptcpi_local_addr_max);
-> +	printf("add_addr_signal:	%u\n", info->mptcpi_add_addr_signal);
-> +	printf("add_addr_accepted:	%u\n", info->mptcpi_add_addr_accepted);
-> +	printf("add_addr_signal_max:	%u\n", info->mptcpi_add_addr_signal_max);
-> +	printf("add_addr_accepted_max:	%u\n", info->mptcpi_add_addr_accepted_max);
-> +
-> +	printf("\nTransmission Info\n");
-> +	printf("write_seq:	  %llx\n", info->mptcpi_write_seq);
-> +	printf("snd_una:	  %llx\n", info->mptcpi_snd_una);
-> +	printf("rcv_nxt:	  %llx\n", info->mptcpi_rcv_nxt);
-> +	printf("last_data_sent:	  %x\n", info->mptcpi_last_data_sent);
-> +	printf("last_data_recv:	  %x\n", info->mptcpi_last_data_recv);
-> +	printf("last_ack_recv:	  %x\n", info->mptcpi_last_ack_recv);
-> +	printf("retransmits:	  %u\n", info->mptcpi_retransmits);
-> +	printf("retransmit bytes: %llu\n", info->mptcpi_bytes_retrans);
-> +	printf("bytes_sent:	  %llu\n", info->mptcpi_bytes_sent);
-> +	printf("bytes_received:   %llu\n", info->mptcpi_bytes_received);
-> +	printf("bytes_acked:	  %llu\n", info->mptcpi_bytes_acked);
-
-Small detail: probably best to do the alignment only with spaces and not
-a mix of both because I don't think it would look nice depending on how
-the tabs are being printed.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e839bf51efe24a9e4f30676f620777d253e6add3/checks
 
 Cheers,
 Matt
