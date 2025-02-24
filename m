@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A5E7221F02
-	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 11:59:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CDF302571B6
+	for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 12:13:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740398347; cv=none; b=smS2paH0qa8pt6cZExAfiGfG2p7KKaomEsTVi7X6P43b8JsVcOGjn5jpgcZgGBknUfwmWc0Sl/r0q7E2bqLUoA05NqIpi4XIGGBxkCfKM7oi5Y9ryYAgfDADW5eKIgoQx+u+uXxrz9GmFAmzJ8s6gnd2z9crURLQagbvaWuJhoE=
+	t=1740399228; cv=none; b=srhCQmsUEGVAv3Vfa+XpqAYm+IpqBKicSYCtILpjxA3q5ZKyosMXGrxbYeW1nHnEwBWf5lVxCfByqp/BIaQnJMRkcQA4YT4A0lNt+b+ngKOFA5WiYOjJuu0QXpMNPxhmwthib7NutlbeiQqUJUKPX5BAJgVyJeNhaIEW7BUqgbI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740398347; c=relaxed/simple;
-	bh=EHv9rgDvCigtlVCUWigB2ilvYDV6vAW0rKJCLJt55P8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kpd2Cx62Ajf3hwGVqOB1Q+K68U+CTUQwvwbgOEbmYdh07T2rHiX3w8p/8OtLHsSd8xcuN1O85Ex2FMiomzIrjZgEeF/GS50REhJUQDLovEnZRCc+6HB4jrFfgIfdlr8/9aKyHUIFq0+xSb/pa/FlxTI26L9VUx15b5FqdY+2UTk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HxDDoRxP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740399228; c=relaxed/simple;
+	bh=M/U93oz89R2MohV14iLEz4c7vmmeQeIEiTVnLphL/AA=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=gAIQ7keB3jqaX0Li90lZajViS/me/dO1g73ML5JLdHh/UabEpHew8uIYXyuXOXxB3C1crpD3FGP4Z4yIMt30y5JjbLC3uGdf6K2psyB8esBOzaZLezu7NLQrDyPDPPpZ/GgysmyuRynRDzLdK6HNNEft3HVM694CsA3YhDMeNoI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BHafpbsH; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HxDDoRxP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2B56BC4CED6;
-	Mon, 24 Feb 2025 11:59:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BHafpbsH"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9DA4BC4CED6;
+	Mon, 24 Feb 2025 12:13:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740398347;
-	bh=EHv9rgDvCigtlVCUWigB2ilvYDV6vAW0rKJCLJt55P8=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HxDDoRxPJ06JAxzQbWryQ7hoqaXFAFJEKDSDwXpKLCTop1SIuECFjn4ape27LgZNf
-	 pvjlfLYT/RlLNfAoTk+ET7ErbIxrIjVuuf2PLDJSnhRidtSa7j+zSyp1uvVg9QeEtW
-	 4M7RRV5yHBvJEqNDf2TbXQ3U2JXOpcrZXXIBF0Ma678OItc/TZ7kJu9PUQc7eiTx+1
-	 O96d+nAiVmBBs7mFJ+UuLZkHXSfqjAQkNF5eXaDbuzs8oDifBv0Vt9VSf+fdEhYl5Z
-	 C/s7Tiihw7UaZokJDj7JRi631mB7YiZeR/BkXy7/J6Us3jnNyyZXFyAYE9fXCdtHpG
-	 E2KirrTV9LNbQ==
-Message-ID: <54b0c2ab-1d35-424e-8680-0e13f03bad31@kernel.org>
-Date: Mon, 24 Feb 2025 12:59:04 +0100
+	s=k20201202; t=1740399228;
+	bh=M/U93oz89R2MohV14iLEz4c7vmmeQeIEiTVnLphL/AA=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=BHafpbsHmsAUZL+k8rdEyhBNlGbGzPzWxRbcnjmXWDHghZ8HeHCsop/qp4iNbmIGp
+	 5VWOauPRqUqjX5+Ayjdza/KGnUrcl+GwyQYR3sEtLPIW3u/xfZPGDqEcxIPoVmeRO0
+	 f0n/DA7gIr7MywGyEx4aAitD8+xh8IUX3yz6O0fFElJtajkQVE13QpFLvj3DXtyqvt
+	 Yy3GPi0jLfJohaZq6Xz6sLWmadFZLq3GZLvfHBEh0ier7XgUa87e3rP2bNxdK2qLwi
+	 CQnnMBbYy94hac2J6nGnGBG7lpwlK0CnjDwVJNalsWFo/DI4PmXU7njyDb15Z4pSK/
+	 pTCdRKKB6Jy8Q==
+Message-ID: <b2eaec83-6f05-47f9-9a82-3fecb73e6966@kernel.org>
+Date: Mon, 24 Feb 2025 13:13:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
- support"
+Subject: Re: [mptcp-next v4 0/2] selftests: mptcp: add tests for increasing
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1740368110.git.tanggeliang@kylinos.cn>
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1740385876.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,23 +84,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1740385876.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Gang Yan,
 
-On 24/02/2025 04:37, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 24/02/2025 10:02, Gang Yan wrote:
+> These patches provide a method to verify the 'mptcp_diag_dump_one'
+> function, and the new tool 'mptcp_diag' can get the specific mptcp_info
+> through multi msks.
+
+Thank you for the update.
+
+It looks good to me, just 2 small comments, but I can do the
+modifications when applying the patches, no need to send a v5 just for that.
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> Hi Matt:
 > 
-> v4:
->  - drop sock_owned_by_user_nocheck and spin_is_locked. According to
->    comments from Mat and Martin, in this set mptcp_subflow
->    bpf_iter only used from a cg sockopt bpf prog, no need to add these
->    check at this moment.
-
-The v4 looks OK to me, but I prefer to wait for Mat's ACK, if that's OK,
-because he reviewed the original series.
+> Thank you for your suggestions regarding these patches, they have been
+> very useful to me. Sorry for the misunderstanding caused by my misuse of
+> the 'CLOSE' keyword. Currently, I have used the 'Link' instead. These 
+> patches are designed for 'mptcp_dump_one'.
+> 
+> There may need another test case for 'subflow_get_info_size'. I will 
+> continue to work on resolving this issue.
+OK, Great!
 
 Cheers,
 Matt
