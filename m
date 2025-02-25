@@ -1,128 +1,94 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7A8CCDF59
-	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 00:34:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8CB15B980;
+	Tue, 25 Feb 2025 02:30:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740443644; cv=none; b=iclBmE5X54GfU1REhl14VyfdwkYrFspWBbGV74vpxviTPB4a0/DdyQbrmJIOJOEKqrJjrpsBQL8n5fcSWrB1DmXBhptyaHU5oc190mj3DqK6akmc12h7PFbklxcJxLKTraUCan+VvdpsNQavHMV0PmIf6j8RvASHr2jNt/C820A=
+	t=1740450607; cv=none; b=W+raRhG0R+Oco0cFD+Z8q3RbPOxp9NBYMOpWyuPHALaUhB3qmV4bkBD2HNUvuiMl7rviGplJxf+deBgCg8SPXw75u+HddGGPkgisQAPA+XfFZuOw0Ftjr9FlhXT6FgOGMOkw+XNbH6Uuu+WouVorq3PlyOfTZsFgo9iXgFGGnrE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740443644; c=relaxed/simple;
-	bh=OznF6ckB2lt3PT+d0/8Q2N0VLllnFloobAOtLpDlD1E=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=KtBYHsLZt2OfidBcHjmESs7qyRhsJMaLh9PIGVSTyyvze5a7IXUvGVy7+agh/M9xOFNLiy/6qizfBVKop0yrv1TBnrrxGHkvktkXtPjdhlDABOEiW2r4R8V9Z9L7PJZ11l54nxHhJgqx6t5ukXesnzfwYohJfGOjD5b/S4TGI1c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=AqOB7DWi; arc=none smtp.client-ip=209.85.214.179
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1740450607; c=relaxed/simple;
+	bh=pGhIeDgVro3WnQNDUGPY/gM/16DqF2aP+gTqj6q8N04=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=k5yl2XH+9HtBzdOt3D1EB9ZbnU0okOVKQ0Y8E72CqZV32ol0c7lfbUfXehoCl3hB/mTkslHRPtHgDptEsaFSoT4Hy7OHUKiRlfJsqNgpQeQWTfqX5FHdsqdCJaMwnobx791qkok6UAzIEWohvXxbGz/slMpOCNHX5aMtVaOCzk4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJQoKo5s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AqOB7DWi"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-22185cddbffso101440545ad.1
-        for <mptcp@lists.linux.dev>; Mon, 24 Feb 2025 16:34:03 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1740443643; x=1741048443; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OAouJqTn8katwL0+4chuPAalK5Cz7Iepz6BSiiwGdW4=;
-        b=AqOB7DWiUgIpTSByur5Tc4QmS0wxNMk071D/3F4t6yYuyORNjKcUv0lggfzETXN7Jd
-         3sEYWiUXC9ai9l9vJPnbUdEvKTyfLj68COKhTR/zsTU66pSFZ9SyUmTa48284sIU5KRg
-         AAb5eji4Q2dkIEpeB5hD29RTv0FhlT5FDl3sglUHY5kg9iDzmSmkZmQd15VurP5M+/w6
-         nC3LLEWgithBl19yp23eYDVtMC2o3yJlvEiM1LnsDlib/gDm86aN8adtqjndZsOW0Xgv
-         z64lXLIgWaNbdM6dL8gb+ZP8VKHhWUJg81e63GeUSldcCYcpt7B7KINCwzfZ4xksRWiq
-         tiPg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1740443643; x=1741048443;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OAouJqTn8katwL0+4chuPAalK5Cz7Iepz6BSiiwGdW4=;
-        b=oPY8GQbmRcnzee5iFICEmrjGjUb2iRybqd5cR1Ddjl5Qs2XxCFTjFp2zyru0wrol9f
-         epR04IcpUNcp43RcB4J4M3cobH0wlirrDnt9YJhPE7To00zoz0J5UAWBy5gg/zIDHQFQ
-         ej7AUDZiWGkiKCOhI7xXPHGUP2tlADm1ruYZ7DsRaUGypoJlbDtB8TSHTpwdssL1eTjs
-         VpDigUEztceWa2EEo0fBeEfnZI0dE70JdLhV0/w69MdkDfLESCmDkzPIBUaBrBZXiOuY
-         qhVFKNcSVF9dsUi0n6+YNpeLPCz6Df2MtF3YnQF7Sn6p7mkJlEgB2lBhwlSUku2+cXx+
-         w9Ug==
-X-Gm-Message-State: AOJu0Yzbs7LEh1gASlRx2e/BwxEcr9xsMh+xFtj0jZDDji9nt630PrjW
-	WCOvg2OioVGRncsP/0YFPRK0R0BbnANuToO05kSJC+gRSrb8qbw=
-X-Gm-Gg: ASbGncvl0UfAAl0PgYwSkZ+Dne1vJ/xRBVMdch4tTnngbJciU9xYRTQeijqzGrDiYe4
-	DT+ZucxQfsSLFdv2Z2Psu2zoccIF8Kjzt5atnKjbSNc8V5JLma9HP5as2SSqQXmaZP5dtCoXupA
-	TdPYMS2yMOtkBomv1gyieuLYUd/jQRTsAg0jGIzzcg/E7JH5DTw85zIMIoTV/S45sL3CQ9+b4vS
-	mSkAKuOVXUC37bUAuus49X78n/nfo0/np10xEaWFhpl9cRMteqXqDC2NmOVIj3IP47zdt4TbLY1
-	p1NVVXwE8hpNyfn3K97ogLwTiZ1yp7T7zepJrwM=
-X-Google-Smtp-Source: AGHT+IEsNer7uq1GjIIvZjIhtdW9pE1ox5BdN/d8ipsR7o/YpROmRUrlM2HUb2PZSZurXs4eUXkm9g==
-X-Received: by 2002:a05:6a00:1906:b0:730:940f:4fbf with SMTP id d2e1a72fcca58-73425b39e17mr28474315b3a.2.1740443642527;
-        Mon, 24 Feb 2025 16:34:02 -0800 (PST)
-Received: from [127.0.0.1] ([52.234.33.214])
-        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-7347a7f9b67sm259545b3a.108.2025.02.24.16.34.01
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 24 Feb 2025 16:34:01 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Krister Johansen <kjlx@templeofstupid.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250224232012.GA7359@templeofstupid.com>
-References: <20250224232012.GA7359@templeofstupid.com>
-Subject: Re: [PATCH v2 mptcp] mptcp: fix 'scheduling while atomic' in
- mptcp_pm_nl_append_new_local_addr
-Message-ID: <7a74349d-d312-451c-2421-a08e7d49a56f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 25 Feb 2025 00:34:01 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJQoKo5s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A03C4CEE8;
+	Tue, 25 Feb 2025 02:30:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740450607;
+	bh=pGhIeDgVro3WnQNDUGPY/gM/16DqF2aP+gTqj6q8N04=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=uJQoKo5sf5OYoqteSmlIO9TGMJn2RMod1UP5fFubTO0QQivqoPu+44uJlRv4hXGFW
+	 5swiUlULqdcpNKk82m9/jAHgi5L+gkpGcA1bxNtPFNU3HXY/azckeRScxG3lXJkXJj
+	 9XYRzxF40mtZokSkGX6xB/dNMrYy2gKyvKkioIom1ezYo1U5L0viSxOiI8XF1IXsH0
+	 FARm3Gp9SeZ+lTknzF9ZTLQZGHamu+uohvmftYXy9450RsmmgGAHlyFBv4satqPzg0
+	 fI9Ur31G07QilTzEXeIhP7dNQPRLIJbKLFcmoo02YWWDrC0CGS/UmzYvoLqVzif+cy
+	 /1x8uZy5s6yDQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCFC380CFD8;
+	Tue, 25 Feb 2025 02:30:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 00/10] mptcp: pm: misc cleanups, part 3
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174045063849.3682145.16015341527538028739.git-patchwork-notify@kernel.org>
+Date: Tue, 25 Feb 2025 02:30:38 +0000
+References: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
+In-Reply-To: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
+To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Krister,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Fri, 21 Feb 2025 16:43:53 +0100 you wrote:
+> These cleanups lead the way to the unification of the path-manager
+> interfaces, and allow future extensions. The following patches are not
+> all linked to each others, but are all related to the path-managers,
+> except the last three.
+> 
+> - Patch 1: remove unused returned value in mptcp_nl_set_flags().
+> 
+> [...]
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13510193894
+Here is the summary with links:
+  - [net-next,01/10] mptcp: pm: remove unused ret value to set flags
+    https://git.kernel.org/netdev/net-next/c/bc337e8c0e76
+  - [net-next,02/10] mptcp: pm: change to fullmesh only for 'subflow'
+    https://git.kernel.org/netdev/net-next/c/145dc6cc4abd
+  - [net-next,03/10] mptcp: pm: add a build check for userspace_pm_dump_addr
+    https://git.kernel.org/netdev/net-next/c/63132fb05474
+  - [net-next,04/10] mptcp: pm: add mptcp_pm_genl_fill_addr helper
+    https://git.kernel.org/netdev/net-next/c/f8fe81746573
+  - [net-next,05/10] mptcp: pm: drop match in userspace_pm_append_new_local_addr
+    https://git.kernel.org/netdev/net-next/c/640e3d69d0bc
+  - [net-next,06/10] mptcp: pm: drop inet6_sk after inet_sk
+    https://git.kernel.org/netdev/net-next/c/dc41695200a1
+  - [net-next,07/10] mptcp: pm: use ipv6_addr_equal in addresses_equal
+    https://git.kernel.org/netdev/net-next/c/7720790fd56b
+  - [net-next,08/10] mptcp: sched: split get_subflow interface into two
+    https://git.kernel.org/netdev/net-next/c/9771a96a7a35
+  - [net-next,09/10] mptcp: sched: reduce size for unused data
+    https://git.kernel.org/netdev/net-next/c/b68b106b0f15
+  - [net-next,10/10] mptcp: blackhole: avoid checking the state twice
+    https://git.kernel.org/netdev/net-next/c/8275ac799ee1
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b89b385a81ca
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D937276
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
