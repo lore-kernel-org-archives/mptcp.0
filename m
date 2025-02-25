@@ -1,156 +1,138 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from crocodile.elm.relay.mailchannels.net (crocodile.elm.relay.mailchannels.net [23.83.212.45])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9EBC119CD0B;
-	Tue, 25 Feb 2025 21:42:01 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740519721; cv=none; b=gukHi8C2dco3EeXR5qngfS9WmNzQgt+pYCD3hJVlUuB0fuay8bqy1/angzUTiHHKD1X5w15PgxFP5UaYSapmvAKW0CSnpoFrK4Jn3xWZcX+Ix3WNRaPeBuwdxBuTydllIEN2KfFDxnahx/rR80gmfX7Da6v2V4hYa6ZPaTrwYD0=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740519721; c=relaxed/simple;
-	bh=i/w3Ugg7iqwU7nyARwQaD4QgDzZhsyrM7w55zgo5bBQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UivohV2YKf7KtpD1EO52Lk5qZvqrTiU8Y2gfYBoRgPo9bsrX2m6nqOLJhFfZR3vjW7wt5h3xZQQ/gWSpVHQ1/vlDnfWrqVRxStsgtRxq7qlz46BkyGCPHu5WVRXlKqnL3+SLX4iy07pHbqMf/f4pmSEfIW7ldX7p2k7Q1d9ZGEE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KCp7wX/O; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCDF19CD0B
+	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:34 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.45
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740520416; cv=pass; b=CwUFAijFK97JjGdDfJhFdLNQNq9Q5ZFx8yjRAotTJuxmUex4xqX2JK6j0yqMphf0aiuuaElgnkKfv9E1H4m3GdnrBWbMG7sC9WNfUsK2D4NGnxSJ6p0BDXP6gbCrF/zh7toY6wtnQ9jiPV4EuVnJjjcFT8zQifU2DuZnxqRARr4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740520416; c=relaxed/simple;
+	bh=4eEvkX4bWBJQeXiVjDsxJA6T/kbM5/kr89ODp98jW0o=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=s4JWB+Jtn3ejVG+ZYDCWU4B2FcbsJgKJBX0maW6bEsEOomUOTwYpPIBOg+9u3YKshWDg2yN4EsCREPuhSZsUX5BLAnsy0Cca7zQNvfeFy8YYqN0WbWFiJmHtq+eR+9Gv+r4LIPtL5DYUTLbmXcPeyv3k6FZqFblHOgShS7Oa6tY=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=Vsohr2Pq; arc=pass smtp.client-ip=23.83.212.45
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KCp7wX/O"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB3BC4CEDD;
-	Tue, 25 Feb 2025 21:41:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740519721;
-	bh=i/w3Ugg7iqwU7nyARwQaD4QgDzZhsyrM7w55zgo5bBQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KCp7wX/OtqZL5zKviICbsptf27RtTUORLlU+8wi7qrpTYtmi4paqNdw8giRXxdzH2
-	 qRDN59mwDbAhi1gpn2J4QLL3R4c6nn/8gzRI08SkeINmIA6YHlUSFXy99rbqwYyTtz
-	 igMz2SA5LeaeZNVBczSo4pQ6aPRzFF4zWzhima8bTgOD3EIZht/rCtW+lV+Sx66LNp
-	 xcQ2p0YZy3xINytivXjrEQnjcsUGR3ekL6OW3sFPOTDpMfmzpPqTCMpcj4cLm+Z/mx
-	 /DH5zi6P/ap13VRShX9SDXiOFbvEk9IwBsf3Bx6Y+ULq02crE0zclHynkVGWjmDeQt
-	 Mc45JT8xaBqXQ==
-Message-ID: <30663725-7078-4b8d-bc75-8a9cd15b0b02@kernel.org>
-Date: Tue, 25 Feb 2025 22:41:55 +0100
+	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="Vsohr2Pq"
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+Received: from relay.mailchannels.net (localhost [127.0.0.1])
+	by relay.mailchannels.net (Postfix) with ESMTP id 5471C1C23EB
+	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:28 +0000 (UTC)
+Received: from pdx1-sub0-mail-a239.dreamhost.com (100-100-209-197.trex-nlb.outbound.svc.cluster.local [100.100.209.197])
+	(Authenticated sender: dreamhost)
+	by relay.mailchannels.net (Postfix) with ESMTPA id 0793F1C165F
+	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:28 +0000 (UTC)
+ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740520408; a=rsa-sha256;
+	cv=none;
+	b=CcILNo4exegYE3e+CJ6iaXKeQ0EulMdz/c0vO0fo/fLZut5UInxgq74aLm+JYFSOa/Ggil
+	jX+lSt/YL5giblCIkwexN8Q6f89HWY+w/hzBXJWiUgM/I+88uF0xwaOKHAAlZXgrnv5xYG
+	CQ28kMmkMGzr5CtJ54VJCY9p4fSDcAqwb+/psYU3daAWmiXGDsOcy2jMeg6hyzIXuFy7ER
+	Jeo0oZ/gR1rwty7EprYNOmNVf3GlQhe5RL0rUPrSzxbq1LJeLD2eU4m3WNPPEXHOK5uJ+I
+	yDng88vtLseVQLV3RT6crhDnSgQqZvPMlQeltC6vh10ptNaQyhA1nrmliP59ug==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=mailchannels.net;
+	s=arc-2022; t=1740520408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references:dkim-signature;
+	bh=Z/s8F0fUEzFPMT5zIMTWfFvhlY4uSR/7qZbV0QqiP6k=;
+	b=4wJx3koQ56IpI4AENq+E+AH0nQmq81VUpNdAvAjjdpdf71ffYm1Itn+OmBS1P5SI2hv9S5
+	dD1DUibMhr5tRh+DBkbjfv1USfEanGP2KozZqkkfWEy/DfTmUV0LN9W/rEJBJqoK+MNLO/
+	4EHnlyOVpUm0qeI6ECA+p6OIfWd0YWcbdpETJ82bbUqT+e2nn5oH9rOAP8bQ8g6qBij7r1
+	4MvDVguINWZPLLfv9XM1wgbd3p6ooZsOhSlb/utcHtr7gIxO0JHOD7EkCkigdEaKutGGed
+	VzTKhCF7kKn9ZWcr6T5MyeXeyHPesIhWgaoCCFluA1GBgHUVLGP16s3hmJQtVg==
+ARC-Authentication-Results: i=1;
+	rspamd-6d7cc6b78d-fwlf7;
+	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
+X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MC-Relay: Neutral
+X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
+X-MailChannels-Auth-Id: dreamhost
+X-Bottle-Whispering: 5e10d5657bd38f17_1740520408229_1193235828
+X-MC-Loop-Signature: 1740520408229:3821387256
+X-MC-Ingress-Time: 1740520408228
+Received: from pdx1-sub0-mail-a239.dreamhost.com (pop.dreamhost.com
+ [64.90.62.162])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
+	by 100.100.209.197 (trex/7.0.2);
+	Tue, 25 Feb 2025 21:53:28 +0000
+Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	(Authenticated sender: kjlx@templeofstupid.com)
+	by pdx1-sub0-mail-a239.dreamhost.com (Postfix) with ESMTPSA id 4Z2WZH5hHszbQ
+	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 13:53:27 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
+	s=dreamhost; t=1740520407;
+	bh=Z/s8F0fUEzFPMT5zIMTWfFvhlY4uSR/7qZbV0QqiP6k=;
+	h=Date:From:To:Cc:Subject:Content-Type;
+	b=Vsohr2PqnfytkNcxbyKYcOXk+4rOhO7j4jOXbdeyWkRiF2syAc4rpAJVw4Wz4PekA
+	 hjwYUVeIdOH9iIy2M37bhi3GjDBqSFCZ4215dM6S2SRSrs+DnwuPEqPlXCaJAr2Z+3
+	 Bgd/jVUzUWqDTj9sAcrtEHZBMm6u5VIwRIgppkCImkWqvIR/FOAB4yfJt+32606nUQ
+	 jny0dJgtR701CC9em9lV9BLcz5yiAJd5TTOctploPLzPrf/2dVQC420qwF24kiK3hA
+	 9iElWGPyjOGiCr5DGvEOPuI8MhijGF8PU6/JdyACzQM36fEyeJoQGOY7hJjbRnLLi2
+	 Pr++wALgBGsCw==
+Received: from johansen (uid 1000)
+	(envelope-from kjlx@templeofstupid.com)
+	id e00d7
+	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
+	Tue, 25 Feb 2025 13:53:25 -0800
+Date: Tue, 25 Feb 2025 13:53:25 -0800
+From: Krister Johansen <kjlx@templeofstupid.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: Re: [PATCH v2 mptcp] mptcp: fix 'scheduling while atomic' in
+ mptcp_pm_nl_append_new_local_addr
+Message-ID: <20250225215325.GC1867@templeofstupid.com>
+References: <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
+ <20250224232012.GA7359@templeofstupid.com>
+ <e8039b96-1765-4464-b534-d6d1385b46eb@kernel.org>
+ <20250225192946.GA1867@templeofstupid.com>
+ <30663725-7078-4b8d-bc75-8a9cd15b0b02@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2 mptcp] mptcp: fix 'scheduling while atomic' in
- mptcp_pm_nl_append_new_local_addr
-Content-Language: en-GB
-To: Krister Johansen <kjlx@templeofstupid.com>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev
-References: <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
- <20250224232012.GA7359@templeofstupid.com>
- <e8039b96-1765-4464-b534-d6d1385b46eb@kernel.org>
- <20250225192946.GA1867@templeofstupid.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250225192946.GA1867@templeofstupid.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <30663725-7078-4b8d-bc75-8a9cd15b0b02@kernel.org>
 
-Hi Krister,
+Hi Matt,
 
-On 25/02/2025 20:29, Krister Johansen wrote:
-> Hi Matt,
-> Thanks for the review!
+On Tue, Feb 25, 2025 at 10:41:55PM +0100, Matthieu Baerts wrote:
+> On 25/02/2025 20:29, Krister Johansen wrote:
+> > On Tue, Feb 25, 2025 at 06:52:45PM +0100, Matthieu Baerts wrote:
+> >> I'm going to apply it in our MPTCP tree, but this patch can also be
+> >> directly applied in the net tree directly, not to delay it by one week
+> >> if preferred. If not, I can re-send it later on.
+> > 
+> > Thanks, I'd be happy to send it to net directly now that it has your
+> > blessing.  Would you like me to modify the call trace in the commit
+> > message to match the decoded one that I included above before I send it
+> > to net?
 > 
-> On Tue, Feb 25, 2025 at 06:52:45PM +0100, Matthieu Baerts wrote:
->> On 25/02/2025 00:20, Krister Johansen wrote:
->>> If multiple connection requests attempt to create an implicit mptcp
->>> endpoint in parallel, more than one caller may end up in
->>> mptcp_pm_nl_append_new_local_addr because none found the address in
->>> local_addr_list during their call to mptcp_pm_nl_get_local_id.  In this
->>> case, the concurrent new_local_addr calls may delete the address entry
->>> created by the previous caller.  These deletes use synchronize_rcu, but
->>> this is not permitted in some of the contexts where this function may be
->>> called.  During packet recv, the caller may be in a rcu read critical
->>> section and have preemption disabled.
->>
->> Thank you for this patch, and for having taken the time to analyse the
->> issue!
->>
->>> An example stack:
-
-(...)
-
->> Detail: if possible, next time, do not hesitate to resolve the
->> addresses, e.g. using: ./scripts/decode_stacktrace.sh
+> Sorry, I forgot to mention that this bit was for the net maintainers.
+> Typically, trivial patches and small fixes related to MPTCP can go
+> directly to net.
 > 
-> My apologies for the oversight here.  This is the decoded version of the
-> stack:
+> No need for you to re-send it. If the net maintainers prefer me to send
+> it later with other patches (if any), I will update the call trace, no
+> problem!
 
-No problem, thanks for the decoded version!
+Thanks for clarifying.  I'll hold off on sending anything further and
+will either let the net maintainers pick this up, or have you send it
+with your next batch of patches.
 
-(...)
+Thanks again!
 
->> I'm going to apply it in our MPTCP tree, but this patch can also be
->> directly applied in the net tree directly, not to delay it by one week
->> if preferred. If not, I can re-send it later on.
-> 
-> Thanks, I'd be happy to send it to net directly now that it has your
-> blessing.  Would you like me to modify the call trace in the commit
-> message to match the decoded one that I included above before I send it
-> to net?
-
-Sorry, I forgot to mention that this bit was for the net maintainers.
-Typically, trivial patches and small fixes related to MPTCP can go
-directly to net.
-
-No need for you to re-send it. If the net maintainers prefer me to send
-it later with other patches (if any), I will update the call trace, no
-problem!
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
-
+-K
