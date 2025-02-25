@@ -1,35 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8CB15B980;
-	Tue, 25 Feb 2025 02:30:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D23EEEA9
+	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 04:21:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740450607; cv=none; b=W+raRhG0R+Oco0cFD+Z8q3RbPOxp9NBYMOpWyuPHALaUhB3qmV4bkBD2HNUvuiMl7rviGplJxf+deBgCg8SPXw75u+HddGGPkgisQAPA+XfFZuOw0Ftjr9FlhXT6FgOGMOkw+XNbH6Uuu+WouVorq3PlyOfTZsFgo9iXgFGGnrE=
+	t=1740457284; cv=none; b=ZxycGQS7IZAFRPYjbZ17HeJqE0E4q7P+sPTBEx5e9vdO4yH9gCl8YIGg1h59/f7XY8hXLTgIihpMCEbFId3cwk6ndS1cE5fIK+T+7LKztUPbAVYF7chCrDW5nvCznKtdVfG/9+G3p+Wai47vFFjTWcSugI0CZq0/x/d82089CB0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740450607; c=relaxed/simple;
-	bh=pGhIeDgVro3WnQNDUGPY/gM/16DqF2aP+gTqj6q8N04=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=k5yl2XH+9HtBzdOt3D1EB9ZbnU0okOVKQ0Y8E72CqZV32ol0c7lfbUfXehoCl3hB/mTkslHRPtHgDptEsaFSoT4Hy7OHUKiRlfJsqNgpQeQWTfqX5FHdsqdCJaMwnobx791qkok6UAzIEWohvXxbGz/slMpOCNHX5aMtVaOCzk4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uJQoKo5s; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740457284; c=relaxed/simple;
+	bh=yOnOyuIgrkElKpWoZ9qQulmz6o89DK9nkn5e0G5657o=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pVFGRFlcAMa/gdkLoe7bBqEevRh84+zxhFGsTpVEZOu58JPoqlvl6e4QkC9HBUrE9suXgyz3y7/129SRD1FPbOu3qfAeiMiiOvO4IM7huSTOTHIAplj6mR68eDAqq3TW4ENqhqcQCVlJu5TeuG+9tN3Wqr6ibCVhwPUSwIq6Xt4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MSiowOn9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uJQoKo5s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A03C4CEE8;
-	Tue, 25 Feb 2025 02:30:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MSiowOn9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0E8DC4CEDD;
+	Tue, 25 Feb 2025 04:21:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740450607;
-	bh=pGhIeDgVro3WnQNDUGPY/gM/16DqF2aP+gTqj6q8N04=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=uJQoKo5sf5OYoqteSmlIO9TGMJn2RMod1UP5fFubTO0QQivqoPu+44uJlRv4hXGFW
-	 5swiUlULqdcpNKk82m9/jAHgi5L+gkpGcA1bxNtPFNU3HXY/azckeRScxG3lXJkXJj
-	 9XYRzxF40mtZokSkGX6xB/dNMrYy2gKyvKkioIom1ezYo1U5L0viSxOiI8XF1IXsH0
-	 FARm3Gp9SeZ+lTknzF9ZTLQZGHamu+uohvmftYXy9450RsmmgGAHlyFBv4satqPzg0
-	 fI9Ur31G07QilTzEXeIhP7dNQPRLIJbKLFcmoo02YWWDrC0CGS/UmzYvoLqVzif+cy
-	 /1x8uZy5s6yDQ==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id ADCFC380CFD8;
-	Tue, 25 Feb 2025 02:30:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1740457283;
+	bh=yOnOyuIgrkElKpWoZ9qQulmz6o89DK9nkn5e0G5657o=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=MSiowOn9Q3z6+5vJDcadnmURn6EWZEF/5wlIL0g1VnGPTSOM5mLZ5achC1UpGZcuu
+	 8s0tCH9okrvKv8Ygla4s5dKkpivFmc+mcpZr6Rv+VSN4Infsyc8OEvanCicSCJg2uD
+	 bv5hYjkAUemXoifcvxOl0trZKszfTtdznossgq2/qky1u4kY/oiPmMwtFTKQ/NAZ36
+	 RER7SN+pVMYDhbMx23fg/f83FLrgdDU6sK8gWSYkkfYoaicHt6F/ac8TJyulKBP4rn
+	 zakd7wjpafTdgmGFK6jy3Ew7pIWTKzPmP4bf2vDH9fw6exvYhQfUH+PnVvcT4Xcoz7
+	 YYB63cN9eP6ZA==
+Message-ID: <8ccd5c340bb75c8e325c8b8a1207671785cf911d.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] mptcp: pm: userspace: avoid scheduling
+ in-kernel PM worker
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Tue, 25 Feb 2025 12:21:18 +0800
+In-Reply-To: <20250224-mptcp-userspace-avoid-worker-v1-1-127325d3e9a4@kernel.org>
+References: 
+	<20250224-mptcp-userspace-avoid-worker-v1-1-127325d3e9a4@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,58 +44,121 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next 00/10] mptcp: pm: misc cleanups, part 3
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174045063849.3682145.16015341527538028739.git-patchwork-notify@kernel.org>
-Date: Tue, 25 Feb 2025 02:30:38 +0000
-References: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-In-Reply-To: <20250221-net-next-mptcp-pm-misc-cleanup-3-v1-0-2b70ab1cee79@kernel.org>
-To: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hello:
+Hi Matt,
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
-
-On Fri, 21 Feb 2025 16:43:53 +0100 you wrote:
-> These cleanups lead the way to the unification of the path-manager
-> interfaces, and allow future extensions. The following patches are not
-> all linked to each others, but are all related to the path-managers,
-> except the last three.
+On Mon, 2025-02-24 at 20:01 +0100, Matthieu Baerts (NGI0) wrote:
+> When the userspace PM is used, there is no need to schedule the PM
+> worker for in-kernel specific tasks, e.g. creating new subflows, or
+> sending more ADD_ADDR.
 > 
-> - Patch 1: remove unused returned value in mptcp_nl_set_flags().
+> Now, these tasks will be done only if the in-kernel PM is being used.
 > 
-> [...]
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Notes:
+>  - I don't know if this should be seen as a fix. Maybe yes because it
+>    was not supposed to do that from the beginning, and it feels less
+>    risky not to schedule the worker when it is not needed. I'm open
+> to
+>    suggestions here.
+>  - I'm mainly sharing this patch now because Geliang is going to
+> modify
+>    these helpers to separate PM specific code.
+>    @Geliang: please rebase your series on top of this one (or include
+>    this patch if it is easier).
+> Cc: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index
+> 16cacce6c10fe86467aa7ef8e588f9f535b586fb..4eabb83328905676759768fb44c
+> 859f5682721e3 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -138,7 +138,7 @@ void mptcp_pm_fully_established(struct mptcp_sock
+> *msk, const struct sock *ssk)
+>  	 * racing paths - accept() and check_fully_established()
+>  	 * be sure to serve this event only once.
+>  	 */
+> -	if (READ_ONCE(pm->work_pending) &&
+> +	if (mptcp_pm_is_kernel(msk) && READ_ONCE(pm->work_pending)
+> &&
 
-Here is the summary with links:
-  - [net-next,01/10] mptcp: pm: remove unused ret value to set flags
-    https://git.kernel.org/netdev/net-next/c/bc337e8c0e76
-  - [net-next,02/10] mptcp: pm: change to fullmesh only for 'subflow'
-    https://git.kernel.org/netdev/net-next/c/145dc6cc4abd
-  - [net-next,03/10] mptcp: pm: add a build check for userspace_pm_dump_addr
-    https://git.kernel.org/netdev/net-next/c/63132fb05474
-  - [net-next,04/10] mptcp: pm: add mptcp_pm_genl_fill_addr helper
-    https://git.kernel.org/netdev/net-next/c/f8fe81746573
-  - [net-next,05/10] mptcp: pm: drop match in userspace_pm_append_new_local_addr
-    https://git.kernel.org/netdev/net-next/c/640e3d69d0bc
-  - [net-next,06/10] mptcp: pm: drop inet6_sk after inet_sk
-    https://git.kernel.org/netdev/net-next/c/dc41695200a1
-  - [net-next,07/10] mptcp: pm: use ipv6_addr_equal in addresses_equal
-    https://git.kernel.org/netdev/net-next/c/7720790fd56b
-  - [net-next,08/10] mptcp: sched: split get_subflow interface into two
-    https://git.kernel.org/netdev/net-next/c/9771a96a7a35
-  - [net-next,09/10] mptcp: sched: reduce size for unused data
-    https://git.kernel.org/netdev/net-next/c/b68b106b0f15
-  - [net-next,10/10] mptcp: blackhole: avoid checking the state twice
-    https://git.kernel.org/netdev/net-next/c/8275ac799ee1
+I think there's no need to modify this. work_pending is set to 0 by 
+userspace pm, for all cases where work_pending is 1, the path manager
+must be an in-kernel pm.
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+So there is no need to add mptcp_pm_is_kernel() check here. Just
+checking work_pending is sufficient.
 
+>  	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
+>  		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+>  
+> @@ -166,7 +166,7 @@ void mptcp_pm_subflow_established(struct
+> mptcp_sock *msk)
+>  
+>  	pr_debug("msk=%p\n", msk);
+>  
+> -	if (!READ_ONCE(pm->work_pending))
+> +	if (!mptcp_pm_is_kernel(msk) || !READ_ONCE(pm-
+> >work_pending))
+>  		return;
+
+No need to modify this too, work_pending has been checked later in
+mptcp_pm_subflow_established:
+
+    if (READ_ONCE(pm->work_pending))
+        mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
+
+>  
+>  	spin_lock_bh(&pm->lock);
+> @@ -251,6 +251,9 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock
+> *msk,
+>  
+>  	pr_debug("msk=%p\n", msk);
+>  
+> +	if (!mptcp_pm_is_kernel(msk) || !READ_ONCE(pm-
+> >work_pending))
+> +		return;
+> +
+
+Same here, work_pending has been checked later in
+mptcp_pm_add_addr_echoed:
+
+if (mptcp_lookup_anno_list_by_saddr(msk, addr) && READ_ONCE(pm-
+>work_pending))
+    mptcp_pm_schedule_work(msk, MPTCP_PM_SUBFLOW_ESTABLISHED);
+
+>  	spin_lock_bh(&pm->lock);
+>  
+>  	if (mptcp_lookup_anno_list_by_saddr(msk, addr) &&
+> READ_ONCE(pm->work_pending))
+> @@ -278,6 +281,9 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock
+> *msk,
+>  	for (i = 0; i < rm_list->nr; i++)
+>  		mptcp_event_addr_removed(msk, rm_list->ids[i]);
+>  
+> +	if (!mptcp_pm_is_kernel(msk))
+> +		return;
+
+This mptcp_pm_is_kernel() is indeed needed.
+
+WDYT?
+
+Thanks,
+-Geliang
+
+> +
+>  	spin_lock_bh(&pm->lock);
+>  	if (mptcp_pm_schedule_work(msk, MPTCP_PM_RM_ADDR_RECEIVED))
+>  		pm->rm_list_rx = *rm_list;
+> 
+> ---
+> base-commit: 3716d837622ee1baf6fbe7e6a6a7a3df116e75fe
+> change-id: 20250224-mptcp-userspace-avoid-worker-93f367e39ca6
+> 
+> Best regards,
 
