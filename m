@@ -1,225 +1,170 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D90F4C96
-	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 01:05:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B991EAFA
+	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 01:42:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740531928; cv=none; b=Pm5Inp/LfXKBbLzYr9MC+T1XEvrO3pz5khUfcKDxnOdKlDpwRFbmf6Cwhz6omW0mlXpZ4ZOZALEacUdzFW//2/ZY9dxlxYf4FE3PUMx5KYbNTzUsQUej1N0PJfMaDXZmafF7S2rWpq32sJnbMR+jrrQfAAw7GUj+gm+yXZhJgxw=
+	t=1740534170; cv=none; b=b7aJEuK1+S/m5TkbrTUi2dELjU14iHTGzPX6uMFDboabBQTsdaFqFuaKIrTghQBe2u7g0QA9+k0tO4i8cVcIxk+rgS6BAuLMCYVEp1UfRoyF3Qu3Wi6NGP9poUsovWm5CZDNQuFBKoUL86hw+KCUcm7k2zr2bN8wBtfRmFQwo4w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740531928; c=relaxed/simple;
-	bh=R265vxc8EPZbUGfTzySy+jIeOJvCcy+uyZ/UR7P19Ys=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=If2cAhd1Z55mU8SPtY+1mcfGpQ9QQq1MX6vF2GMdl0J5Pyr+pxPzfpzL0zHyTKLOx4VkAeGpf3WJRmShTH4AMk1xl7KIOPkX2f8VtjrOterEU76SzaYULo/2SHJWh+91cONhj40JT9qrMRDXYCg8vcZTBIPSw6TWZP7jxxLZLf8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R4pUmLOA; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740534170; c=relaxed/simple;
+	bh=WuozcZVX8nVGda7dyEHBGrxQQvLQgZhpBmgnBuSMKxE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=qs18/zQMUxc2kfkpbuCsHjrdMmQQ/17kdnwkF7eu5qcXjrCzoBc/eyTIF79ZNhaTEf/bp6IhhGDthuI00ky/y8UsgjYEt96OSCSPVHt8nxAW4OOTHom/1Gf3qbI6NkZfVTUk8q1NNODaSFtE3AHtuBNZL0a2svPR5LJyh7nqSho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1nfIZtP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R4pUmLOA"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1573FC4CEDD;
-	Wed, 26 Feb 2025 01:05:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1nfIZtP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71089C4CEDD;
+	Wed, 26 Feb 2025 01:42:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740531927;
-	bh=R265vxc8EPZbUGfTzySy+jIeOJvCcy+uyZ/UR7P19Ys=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=R4pUmLOAjwOy08yW5Blicb/916C8QgZsHUEKqeri+W8PL2bV5zeu4xMdaIAqbA9lp
-	 pmsG+f1VhPHgpAAtI7rhKJU29Wr9D51MpDGyM899T4tDNywtfSEkh6PuQcQt6gLaXm
-	 HeBzWfo3K4oCGEv/06BCpjpGHLTrgE1b+XEVEF/COgukw9x71zpiRsETAFcchJMo6n
-	 3IoTkBMqDGTvqZOgPOsaOR9og2QZhNicNDw9UvMTtDy8IC6L1L1VW8XBzpxVwvB3NY
-	 tjr3zUSwpPLQ/oMUqbVhtxlXD6ZcCieVVwhsq2eq2j/X4G56JngY0OyG4QhoT/Q4qg
-	 AjeWf2ihD4qrQ==
-Message-ID: <93b8333063dbe7887987128d84a3985d48981148.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next] mptcp: pm: userspace: avoid scheduling
- in-kernel PM worker
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Date: Wed, 26 Feb 2025 09:05:23 +0800
-In-Reply-To: <cf5fdbbe-856e-419c-812e-44f61fc89778@kernel.org>
-References: 
-	<20250224-mptcp-userspace-avoid-worker-v1-1-127325d3e9a4@kernel.org>
-	 <8ccd5c340bb75c8e325c8b8a1207671785cf911d.camel@kernel.org>
-	 <0b1c7e47-78d1-4dbb-b78b-e071f9c08dac@kernel.org>
-	 <cf5fdbbe-856e-419c-812e-44f61fc89778@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1740534169;
+	bh=WuozcZVX8nVGda7dyEHBGrxQQvLQgZhpBmgnBuSMKxE=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=S1nfIZtP5Y+bAzvzY1I2QoVOAa4ndzMT3cz7kag+sxBrQ7i2eTp5XS1SDbMT049k2
+	 nG0l7zzAX/TFDn5zI/sTCCg55212y5cs37KLnj8Oy25yJMRU4XdoWqfi7VuMwCr3wQ
+	 +CPLoIx21IRl/hAxF+zSAQqdvlhN3BvdNO8g5hzxbXEUbx0WCEEA9bRAYPOmgjtu/U
+	 gc4cFw7g41gJmz8exFsGoKdkR+iNI2d+fZwPA9mVdVq7BzXEX5C3nCz9mAt8hKC3J8
+	 z7ugj6YigsTIlCt5DbxdLp8R2OjLf5uCjRQTCp5ZEh8JPScrRmCcLgFX2RGKWzkTzF
+	 9fpsybYw9UzdQ==
+Date: Tue, 25 Feb 2025 17:42:48 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
+In-Reply-To: <cover.1739788598.git.tanggeliang@kylinos.cn>
+Message-ID: <0474cace-93d7-c7f6-acb9-f218ab422275@kernel.org>
+References: <cover.1739788598.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Matt,
+On Mon, 17 Feb 2025, Geliang Tang wrote:
 
-On Tue, 2025-02-25 at 19:15 +0100, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 25/02/2025 10:25, Matthieu Baerts wrote:
-> > Hi Geliang,
-> > 
-> > Thank you for your review!
-> > 
-> > On 25/02/2025 05:21, Geliang Tang wrote:
-> > > Hi Matt,
-> > > 
-> > > On Mon, 2025-02-24 at 20:01 +0100, Matthieu Baerts (NGI0) wrote:
-> > > > When the userspace PM is used, there is no need to schedule the
-> > > > PM
-> > > > worker for in-kernel specific tasks, e.g. creating new
-> > > > subflows, or
-> > > > sending more ADD_ADDR.
-> > > > 
-> > > > Now, these tasks will be done only if the in-kernel PM is being
-> > > > used.
-> > > > 
-> > > > Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > > > ---
-> > > > Notes:
-> > > >  - I don't know if this should be seen as a fix. Maybe yes
-> > > > because it
-> > > >    was not supposed to do that from the beginning, and it feels
-> > > > less
-> > > >    risky not to schedule the worker when it is not needed. I'm
-> > > > open
-> > > > to
-> > > >    suggestions here.
-> > > >  - I'm mainly sharing this patch now because Geliang is going
-> > > > to
-> > > > modify
-> > > >    these helpers to separate PM specific code.
-> > > >    @Geliang: please rebase your series on top of this one (or
-> > > > include
-> > > >    this patch if it is easier).
-> > > > Cc: Geliang Tang <tanggeliang@kylinos.cn>
-> > > > ---
-> > > >  net/mptcp/pm.c | 10 ++++++++--
-> > > >  1 file changed, 8 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> > > > index
-> > > > 16cacce6c10fe86467aa7ef8e588f9f535b586fb..4eabb8332890567675976
-> > > > 8fb44c
-> > > > 859f5682721e3 100644
-> > > > --- a/net/mptcp/pm.c
-> > > > +++ b/net/mptcp/pm.c
-> > > > @@ -138,7 +138,7 @@ void mptcp_pm_fully_established(struct
-> > > > mptcp_sock
-> > > > *msk, const struct sock *ssk)
-> > > >  	 * racing paths - accept() and
-> > > > check_fully_established()
-> > > >  	 * be sure to serve this event only once.
-> > > >  	 */
-> > > > -	if (READ_ONCE(pm->work_pending) &&
-> > > > +	if (mptcp_pm_is_kernel(msk) && READ_ONCE(pm-
-> > > > >work_pending)
-> > > > &&
-> > > 
-> > > I think there's no need to modify this. work_pending is set to 0
-> > > by 
-> > > userspace pm, for all cases where work_pending is 1, the path
-> > > manager
-> > > must be an in-kernel pm.
-> > 
-> > Good point, I missed that!
-> > 
-> > 'pm->work_pending' doesn't look like a good name for what it does.
-> > Hopefully, this will be clearer when pm->ops will be used, which
-> > will
-> > clearly separate what is done by the different PMs.
-> > 
-> > Also, is it possible we never set 'pm->work_pending' back to 'true'
-> > once
-> > it has been set to 'false'? Does it mean when we reach the limits,
-> > and
-> > something happens (e.g. a removed subflow, limits are changed,
-> > etc.),
-> > the worker is no longer used to establish new subflows or react
-> > when an
-> > ADD_ADDR is received?
-> 
-> I didn't check, but it feels like we should add something like that:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> v15:
+> - patch 7, add the declaration of bpf_mptcp_subflow_tcp_sock
+>
+> Depends on:
+> - Squash to "Add mptcp_subflow bpf_iter support", v3
+>
+> Based-on: <cover.1739787744.git.tanggeliang@kylinos.cn>
 
-Yes, it is. We only set 'work_pending' to 'false' in
-mptcp_pm_nl_check_work_pending() but never set it back.
+Hi Geliang -
 
-I'll try to fix this later. Please add an issue for it on github.
+I don't have any changes to suggest to this series, so I'll add my 
+reviewed tag even though this can't be applied to the export branch yet 
+(until the bpf_iter series is updated):
 
-> 
-> > diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> > index d4328443d844..dee3e3c14ec3 100644
-> > --- a/net/mptcp/pm_netlink.c
-> > +++ b/net/mptcp/pm_netlink.c
-> > @@ -248,6 +248,8 @@ bool mptcp_pm_nl_check_work_pending(struct
-> > mptcp_sock *msk)
-> >                 WRITE_ONCE(msk->pm.work_pending, false);
-> >                 return false;
-> >         }
-> > +
-> > +       WRITE_ONCE(msk->pm.work_pending, true);
-> >         return true;
-> >  }
-> >  
-> > @@ -911,6 +913,9 @@ static void
-> > mptcp_pm_nl_rm_addr_or_subflow(struct mptcp_sock *msk,
-> >                                 WRITE_ONCE(msk->pm.accept_addr,
-> > true);
-> >                 }
-> >         }
-> > +
-> > +       if (mptcp_pm_is_kernel(msk))
-> > +               mptcp_pm_nl_check_work_pending(msk);
-> >  }
-> >  
-> >  static void mptcp_pm_nl_rm_addr_received(struct mptcp_sock *msk)
-> 
-> 
-> So to re-enable msk->pm.work_pending when limits have been reached,
-> and
-> it is no longer the case. WDYT?
-> 
-> We would need a new subtest to confirm this patch is needed, and to
-> avoid regressions later.
+Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-And add a selftest for this too.
-
-> 
-> (...)
-> 
-> > > > @@ -278,6 +281,9 @@ void mptcp_pm_rm_addr_received(struct
-> > > > mptcp_sock
-> > > > *msk,
-> > > >  	for (i = 0; i < rm_list->nr; i++)
-> > > >  		mptcp_event_addr_removed(msk, rm_list-
-> > > > >ids[i]);
-> > > >  
-> > > > +	if (!mptcp_pm_is_kernel(msk))
-> > > > +		return;
-> > > 
-> > > This mptcp_pm_is_kernel() is indeed needed.
-> > 
-> > Yes it is. And 'pm->work_pending' cannot be used, because it will
-> > be set
-> > to false when the limits are reached, but a RM_ADDR will
-> > potentially
-> > decrement counters.
-> 
-> In fact, it is not needed: from what I see, the corresponding
-> subflows
-> are removed on the kernel side, the userspace daemon doesn't need to
-> send a request to remove them. See the modification from 4d25247d3ae4
-> ("mptcp: bypass in-kernel PM restrictions for non-kernel PMs") in
-> mptcp_pm_nl_rm_addr_or_subflow().
-> 
-> > I will send a v2 with only this change.
-> I will send a v2 with only an early exit in
-> mptcp_pm_add_addr_echoed()
-> if there is no need to schedule the worker.
-
-Sure. I agree.
-
-Thanks,
--Geliang
-
-> 
-> Cheers,
-> Matt
-
+>
+> v14:
+> - patch 1, keep mptcp_sched_data_set_contexts() helper for future use.
+> - patch 2, use "sk = sk__ign" in bpf_mptcp_subflow_ctx() and
+>   bpf_sk_stream_memory_free().
+> - patch 8, drop "subflows" from struct mptcp_sched_data too.
+>
+> v13:
+> - use '__ign' suffix to ignore the argument type checks of
+>   bpf_mptcp_subflow_ctx() and bpf_sk_stream_memory_free(),
+>   instead of adding a new helper bpf_mptcp_send_info_to_ssk().
+> - use 'bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk)' instead
+>   of using 'bpf_for_each(mptcp_subflow, subflow, msk)'.
+> - keep struct mptcp_sched_data for future use.
+>
+> v12:
+> - drop struct mptcp_sched_data.
+> - rebased on "split get_subflow interface into two" v2.
+>
+> v11:
+> If another squash-to patchset (Squash to "Add mptcp_subflow bpf_iter
+> support") under review is merged before this set, v10 will fail to run.
+> v11 fixes this issue and can run regardless of whether it is merged
+> before or after the squash-to patchset.
+>
+> Compared with v10, only patches 3, 5, and 8 have been modified:
+> - use mptcp_subflow_tcp_sock instead of bpf_mptcp_subflow_tcp_sock in
+>   patch 3 and patch 5.
+> - drop bpf_mptcp_sched_kfunc_set, use bpf_mptcp_common_kfunc_set instead
+>   in patch 8.
+>
+> v10:
+> - drop mptcp_subflow_set_scheduled() helper and WRITE_ONCE() in BPF.
+> - add new bpf helper bpf_mptcp_send_info_to_ssk() for burst scheduler.
+>
+> v9:
+> - merge 'Fixes for "use bpf_iter in bpf schedulers" v8' into this set.
+> - rebased on "add netns helpers" v4
+>
+> v8:
+> - address Mat's comments in v7.
+> - move sk_stream_memory_free check inside bpf_for_each() loop.
+> - implement mptcp_subflow_set_scheduled helper in BPF.
+> - add cleanup patches into this set again.
+>
+> v7:
+> - move cleanup patches out of this set.
+> - rebased.
+>
+> v6:
+> - rebased to "add mptcp_subflow bpf_iter" v10
+>
+> v5:
+> - patch 2, drop mptcp_sock_type and mptcp_subflow_type.
+> - patch 3, revert "bpf: Export more bpf_burst related functions"
+> - patch 4, merge "bpf: Export more bpf_burst related functions" into it.
+>
+> v4:
+> - patch 2, a new cleanup for "bpf: Add bpf_mptcp_sched_ops".
+> - patch 3 should be reverted.
+> - patch 8, register kfunc_set.
+>
+> v3:
+> - rebased.
+> - put the "drop has_bytes_sent" squash-to patch into this set.
+>
+> v2:
+> - update bpf_rr and bpf_burst
+>
+> With the newly added mptcp_subflow bpf_iter, we can get rid of the
+> subflows array "contexts" in struct mptcp_sched_data. This set
+> uses bpf_for_each(mptcp_subflow) helper to update all the bpf
+> schedules:
+>
+>        bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
+>                ... ...
+>                mptcp_subflow_set_scheduled(subflow, true);
+>        }
+>
+> Geliang Tang (8):
+>  Squash to "mptcp: add sched_data helpers"
+>  Squash to "bpf: Export mptcp packet scheduler helpers"
+>  Squash to "selftests/bpf: Add bpf_first scheduler & test"
+>  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
+>  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
+>  Squash to "selftests/bpf: Add bpf_red scheduler & test"
+>  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
+>  mptcp: drop subflow contexts in mptcp_sched_data
+>
+> include/net/mptcp.h                           |  4 -
+> net/mptcp/bpf.c                               | 50 ++++++------
+> net/mptcp/protocol.h                          |  2 -
+> net/mptcp/sched.c                             | 15 ----
+> tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 +-
+> .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 16 +---
+> .../selftests/bpf/progs/mptcp_bpf_burst.c     | 78 +++++++------------
+> .../selftests/bpf/progs/mptcp_bpf_first.c     |  8 +-
+> .../selftests/bpf/progs/mptcp_bpf_red.c       |  8 +-
+> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 31 ++++----
+> 10 files changed, 83 insertions(+), 134 deletions(-)
+>
+> -- 
+> 2.43.0
+>
+>
+>
