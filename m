@@ -1,170 +1,84 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1B991EAFA
-	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 01:42:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB047254866;
+	Wed, 26 Feb 2025 03:20:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740534170; cv=none; b=b7aJEuK1+S/m5TkbrTUi2dELjU14iHTGzPX6uMFDboabBQTsdaFqFuaKIrTghQBe2u7g0QA9+k0tO4i8cVcIxk+rgS6BAuLMCYVEp1UfRoyF3Qu3Wi6NGP9poUsovWm5CZDNQuFBKoUL86hw+KCUcm7k2zr2bN8wBtfRmFQwo4w=
+	t=1740540007; cv=none; b=XB75i4JlJpvkSh8iu56vZ3cuP9U9WBCkXQd5HIktMdbG1NQwfRrEm3tC/hB8MRFj0pUAm5Bwa1OOBaqD5L9Vej4hff845nyawYA+v3bpQwNwyGozFXFb7Ez6BqS97wrVc5YlatvG6w+0xQuOkHmq/1YWj2PHHuxnFqVvV+gtM8w=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740534170; c=relaxed/simple;
-	bh=WuozcZVX8nVGda7dyEHBGrxQQvLQgZhpBmgnBuSMKxE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=qs18/zQMUxc2kfkpbuCsHjrdMmQQ/17kdnwkF7eu5qcXjrCzoBc/eyTIF79ZNhaTEf/bp6IhhGDthuI00ky/y8UsgjYEt96OSCSPVHt8nxAW4OOTHom/1Gf3qbI6NkZfVTUk8q1NNODaSFtE3AHtuBNZL0a2svPR5LJyh7nqSho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=S1nfIZtP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740540007; c=relaxed/simple;
+	bh=b5k6tZ8dJznrloCjwHORdnGfkAbX6eoHM8nK7ig9ZW0=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=ZZQ/khMaYfYfUrtBv3TSbjdqrqKTT1yRfnjmhJJBD0CyZlXvkJWmp6/iEKDtrkeX95NYLPMwsw+MgsiTSv/ZQefwVNzHY3s7cQJ9Cp4useBF50Fr9px17TV2OaZv6ddsVMvwqeqwiaYkgacMcTArJwRrBODtuNKcsdzk25Fh3a8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evGivSet; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="S1nfIZtP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71089C4CEDD;
-	Wed, 26 Feb 2025 01:42:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evGivSet"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CBBC4CEE4;
+	Wed, 26 Feb 2025 03:20:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740534169;
-	bh=WuozcZVX8nVGda7dyEHBGrxQQvLQgZhpBmgnBuSMKxE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=S1nfIZtP5Y+bAzvzY1I2QoVOAa4ndzMT3cz7kag+sxBrQ7i2eTp5XS1SDbMT049k2
-	 nG0l7zzAX/TFDn5zI/sTCCg55212y5cs37KLnj8Oy25yJMRU4XdoWqfi7VuMwCr3wQ
-	 +CPLoIx21IRl/hAxF+zSAQqdvlhN3BvdNO8g5hzxbXEUbx0WCEEA9bRAYPOmgjtu/U
-	 gc4cFw7g41gJmz8exFsGoKdkR+iNI2d+fZwPA9mVdVq7BzXEX5C3nCz9mAt8hKC3J8
-	 z7ugj6YigsTIlCt5DbxdLp8R2OjLf5uCjRQTCp5ZEh8JPScrRmCcLgFX2RGKWzkTzF
-	 9fpsybYw9UzdQ==
-Date: Tue, 25 Feb 2025 17:42:48 -0800 (PST)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
-In-Reply-To: <cover.1739788598.git.tanggeliang@kylinos.cn>
-Message-ID: <0474cace-93d7-c7f6-acb9-f218ab422275@kernel.org>
-References: <cover.1739788598.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1740540005;
+	bh=b5k6tZ8dJznrloCjwHORdnGfkAbX6eoHM8nK7ig9ZW0=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=evGivSethRPF2BMsaDGeBD1K93cwOyjHPTjg3dQQsi4Q+Zqg20Du8/oWBOC+r2MjF
+	 il8Q1MuQNUGDCJ5uihZLZ4EfAUR+fWz+p55xbOw/+EGeeT1EHkX199ntARZE4iiSMA
+	 UVthK0+g0M8eZdT7/aKiwXYmW5Dc/rQvM9nibBg9+egdFiB4KBf0NSnKeTPVLTJ1pR
+	 USyJPe6IE4xEXZUsm+UA+cgSH8PF4QKtds5BFP2PT4HFhihZIjp4Tx9lRRH6lujHdC
+	 zr7iWgNy7S0nHmidXeFK3cnfvAjlRhRa5S5+8vL6VVGCM3FOuN+5eMj5UxbyjVcA/X
+	 xkB+SUdXxyVfg==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BAC380CFDD;
+	Wed, 26 Feb 2025 03:20:38 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] mptcp: misc. fixes
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174054003699.219541.10470016824852701686.git-patchwork-notify@kernel.org>
+Date: Wed, 26 Feb 2025 03:20:36 +0000
+References: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
+In-Reply-To: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ stable@vger.kernel.org,
+ syzbot+cd3ce3d03a3393ae9700@syzkaller.appspotmail.com,
+ chester.a.unal@xpedite-tech.com
 
-On Mon, 17 Feb 2025, Geliang Tang wrote:
+Hello:
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
->
-> v15:
-> - patch 7, add the declaration of bpf_mptcp_subflow_tcp_sock
->
-> Depends on:
-> - Squash to "Add mptcp_subflow bpf_iter support", v3
->
-> Based-on: <cover.1739787744.git.tanggeliang@kylinos.cn>
+This series was applied to netdev/net.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Hi Geliang -
+On Mon, 24 Feb 2025 19:11:49 +0100 you wrote:
+> Here are two unrelated fixes, plus an extra patch:
+> 
+> - Patch 1: prevent a warning by removing an unneeded and incorrect small
+>   optimisation in the path-manager. A fix for v5.10.
+> 
+> - Patch 2: reset a subflow when MPTCP opts have been dropped after
+>   having correctly added a new path. A fix for v5.19.
+> 
+> [...]
 
-I don't have any changes to suggest to this series, so I'll add my 
-reviewed tag even though this can't be applied to the export branch yet 
-(until the bpf_iter series is updated):
+Here is the summary with links:
+  - [net,1/3] mptcp: always handle address removal under msk socket lock
+    https://git.kernel.org/netdev/net/c/f865c24bc551
+  - [net,2/3] mptcp: reset when MPTCP opts are dropped after join
+    https://git.kernel.org/netdev/net/c/8668860b0ad3
+  - [net,3/3] mptcp: safety check before fallback
+    https://git.kernel.org/netdev/net/c/db75a16813aa
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
->
-> v14:
-> - patch 1, keep mptcp_sched_data_set_contexts() helper for future use.
-> - patch 2, use "sk = sk__ign" in bpf_mptcp_subflow_ctx() and
->   bpf_sk_stream_memory_free().
-> - patch 8, drop "subflows" from struct mptcp_sched_data too.
->
-> v13:
-> - use '__ign' suffix to ignore the argument type checks of
->   bpf_mptcp_subflow_ctx() and bpf_sk_stream_memory_free(),
->   instead of adding a new helper bpf_mptcp_send_info_to_ssk().
-> - use 'bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk)' instead
->   of using 'bpf_for_each(mptcp_subflow, subflow, msk)'.
-> - keep struct mptcp_sched_data for future use.
->
-> v12:
-> - drop struct mptcp_sched_data.
-> - rebased on "split get_subflow interface into two" v2.
->
-> v11:
-> If another squash-to patchset (Squash to "Add mptcp_subflow bpf_iter
-> support") under review is merged before this set, v10 will fail to run.
-> v11 fixes this issue and can run regardless of whether it is merged
-> before or after the squash-to patchset.
->
-> Compared with v10, only patches 3, 5, and 8 have been modified:
-> - use mptcp_subflow_tcp_sock instead of bpf_mptcp_subflow_tcp_sock in
->   patch 3 and patch 5.
-> - drop bpf_mptcp_sched_kfunc_set, use bpf_mptcp_common_kfunc_set instead
->   in patch 8.
->
-> v10:
-> - drop mptcp_subflow_set_scheduled() helper and WRITE_ONCE() in BPF.
-> - add new bpf helper bpf_mptcp_send_info_to_ssk() for burst scheduler.
->
-> v9:
-> - merge 'Fixes for "use bpf_iter in bpf schedulers" v8' into this set.
-> - rebased on "add netns helpers" v4
->
-> v8:
-> - address Mat's comments in v7.
-> - move sk_stream_memory_free check inside bpf_for_each() loop.
-> - implement mptcp_subflow_set_scheduled helper in BPF.
-> - add cleanup patches into this set again.
->
-> v7:
-> - move cleanup patches out of this set.
-> - rebased.
->
-> v6:
-> - rebased to "add mptcp_subflow bpf_iter" v10
->
-> v5:
-> - patch 2, drop mptcp_sock_type and mptcp_subflow_type.
-> - patch 3, revert "bpf: Export more bpf_burst related functions"
-> - patch 4, merge "bpf: Export more bpf_burst related functions" into it.
->
-> v4:
-> - patch 2, a new cleanup for "bpf: Add bpf_mptcp_sched_ops".
-> - patch 3 should be reverted.
-> - patch 8, register kfunc_set.
->
-> v3:
-> - rebased.
-> - put the "drop has_bytes_sent" squash-to patch into this set.
->
-> v2:
-> - update bpf_rr and bpf_burst
->
-> With the newly added mptcp_subflow bpf_iter, we can get rid of the
-> subflows array "contexts" in struct mptcp_sched_data. This set
-> uses bpf_for_each(mptcp_subflow) helper to update all the bpf
-> schedules:
->
->        bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) {
->                ... ...
->                mptcp_subflow_set_scheduled(subflow, true);
->        }
->
-> Geliang Tang (8):
->  Squash to "mptcp: add sched_data helpers"
->  Squash to "bpf: Export mptcp packet scheduler helpers"
->  Squash to "selftests/bpf: Add bpf_first scheduler & test"
->  Squash to "selftests/bpf: Add bpf_bkup scheduler & test"
->  Squash to "selftests/bpf: Add bpf_rr scheduler & test"
->  Squash to "selftests/bpf: Add bpf_red scheduler & test"
->  Squash to "selftests/bpf: Add bpf_burst scheduler & test"
->  mptcp: drop subflow contexts in mptcp_sched_data
->
-> include/net/mptcp.h                           |  4 -
-> net/mptcp/bpf.c                               | 50 ++++++------
-> net/mptcp/protocol.h                          |  2 -
-> net/mptcp/sched.c                             | 15 ----
-> tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 +-
-> .../selftests/bpf/progs/mptcp_bpf_bkup.c      | 16 +---
-> .../selftests/bpf/progs/mptcp_bpf_burst.c     | 78 +++++++------------
-> .../selftests/bpf/progs/mptcp_bpf_first.c     |  8 +-
-> .../selftests/bpf/progs/mptcp_bpf_red.c       |  8 +-
-> .../selftests/bpf/progs/mptcp_bpf_rr.c        | 31 ++++----
-> 10 files changed, 83 insertions(+), 134 deletions(-)
->
-> -- 
-> 2.43.0
->
->
->
+
