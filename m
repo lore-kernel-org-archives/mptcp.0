@@ -1,84 +1,116 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB047254866;
-	Wed, 26 Feb 2025 03:20:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B71A3169;
+	Wed, 26 Feb 2025 11:09:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740540007; cv=none; b=XB75i4JlJpvkSh8iu56vZ3cuP9U9WBCkXQd5HIktMdbG1NQwfRrEm3tC/hB8MRFj0pUAm5Bwa1OOBaqD5L9Vej4hff845nyawYA+v3bpQwNwyGozFXFb7Ez6BqS97wrVc5YlatvG6w+0xQuOkHmq/1YWj2PHHuxnFqVvV+gtM8w=
+	t=1740568154; cv=none; b=AhodpCiclRpapqsaQxKu9qMdoPJy51dYpb50gjZS23McN67qjR/Y9C8TU5cCFlsGiOQR3i79QP6Gi3/nN07kw8aG4Vc7siHB7WagS673LBCzy/oqxDXr5eg7FTuYcW/Pt+b8b50yx28TDjKLSaHPqw4NVVW/OSgYboSWHXcrnhg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740540007; c=relaxed/simple;
-	bh=b5k6tZ8dJznrloCjwHORdnGfkAbX6eoHM8nK7ig9ZW0=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=ZZQ/khMaYfYfUrtBv3TSbjdqrqKTT1yRfnjmhJJBD0CyZlXvkJWmp6/iEKDtrkeX95NYLPMwsw+MgsiTSv/ZQefwVNzHY3s7cQJ9Cp4useBF50Fr9px17TV2OaZv6ddsVMvwqeqwiaYkgacMcTArJwRrBODtuNKcsdzk25Fh3a8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=evGivSet; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740568154; c=relaxed/simple;
+	bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bvABItC9vIn4DvFCkCCYVfY5R1EFmzc/VEl7CNbWZACasvcyiET0nd+A7zsXnBuILnTWCZ1fqbKloAdCnTiZebdz5Cvgv9KPNlwhil25Tc3pBqJKvzlm1wM5RqpNxxShpcjqHDDKbxxCJlJbqmzTLIoHjhvbSLGWbwFJs6gKQcU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plK2QdQz; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="evGivSet"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 74CBBC4CEE4;
-	Wed, 26 Feb 2025 03:20:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plK2QdQz"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8DCCC4CED6;
+	Wed, 26 Feb 2025 11:09:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740540005;
-	bh=b5k6tZ8dJznrloCjwHORdnGfkAbX6eoHM8nK7ig9ZW0=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=evGivSethRPF2BMsaDGeBD1K93cwOyjHPTjg3dQQsi4Q+Zqg20Du8/oWBOC+r2MjF
-	 il8Q1MuQNUGDCJ5uihZLZ4EfAUR+fWz+p55xbOw/+EGeeT1EHkX199ntARZE4iiSMA
-	 UVthK0+g0M8eZdT7/aKiwXYmW5Dc/rQvM9nibBg9+egdFiB4KBf0NSnKeTPVLTJ1pR
-	 USyJPe6IE4xEXZUsm+UA+cgSH8PF4QKtds5BFP2PT4HFhihZIjp4Tx9lRRH6lujHdC
-	 zr7iWgNy7S0nHmidXeFK3cnfvAjlRhRa5S5+8vL6VVGCM3FOuN+5eMj5UxbyjVcA/X
-	 xkB+SUdXxyVfg==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BAC380CFDD;
-	Wed, 26 Feb 2025 03:20:38 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1740568153;
+	bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
+	h=From:Date:Subject:To:Cc:From;
+	b=plK2QdQzO4TepCVaZRV67MmLZmhLSnJ/wVt2sxfAE2fs3jdJJM+lwu90rg/H5O/qF
+	 BnARmUkCh+1s8HJ9cvuKafRG6RI6jlvdxIB+QdTovRyakWeDIresrh5Cu9Lp/KXPlz
+	 ck66DnmOKcU/KpfZi0oTvaYnu0AZrZzJ7z9XglBq9i9o4XsvIOe8Cg/ONhKalWaeps
+	 kBJiH0vUNZzznHLIiAv21ygJBQ5kU3WbrYRRq1WdF1gz4CmOk39vEOoMhG0pU5T+HQ
+	 MavqFyN5P0OjlH6VUV0r5rC09T4nctmJenwBqqwOCisgmuU5Q3wcqpyo+zeL+uV9iT
+	 mHtR3rucle3Yg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Wed, 26 Feb 2025 12:08:44 +0100
+Subject: [PATCH iproute2-net] ss: mptcp: subflow: display seq counters as
+ decimal
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net 0/3] mptcp: misc. fixes
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174054003699.219541.10470016824852701686.git-patchwork-notify@kernel.org>
-Date: Wed, 26 Feb 2025 03:20:36 +0000
-References: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
-In-Reply-To: <20250224-net-mptcp-misc-fixes-v1-0-f550f636b435@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
- stable@vger.kernel.org,
- syzbot+cd3ce3d03a3393ae9700@syzkaller.appspotmail.com,
- chester.a.unal@xpedite-tech.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250226-iproute2-net-ss-ulp-mptcp-dec-v1-1-4f4177cff217@kernel.org>
+X-B4-Tracking: v=1; b=H4sIADv2vmcC/03MQQrCQAxG4auUrA1Mg5bqVcRFmf6tAZ2GyVSE0
+ rs7uOryW7y3kSMrnG7NRhkfdV1SRXtqKD6HNIN1rCYJcgkiHavlZS0QTijszuvL+G0lGo+IfJU
+ +tOjPQ+wmqg/LmPT7/9/pmNJj33/3X7/CfQAAAA==
+X-Change-ID: 20250226-iproute2-net-ss-ulp-mptcp-dec-92801e84ac6f
+To: Stephen Hemminger <stephen@networkplumber.org>
+Cc: David Ahern <dsahern@gmail.com>, netdev@vger.kernel.org, 
+ MPTCP Upstream <mptcp@lists.linux.dev>, 
+ Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
+ Davide Caratti <dcaratti@redhat.com>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1704; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvvZX4Tm35bn+k5BpmIVjATYzUmH+7O6twqIq9
+ elsqT8LigqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ772VwAKCRD2t4JPQmmg
+ c+LiD/0Y0+aa7wN6uC3Q6wHxo6bVeI866pnCfczScd7etqp8SIByUTslHiqD7CIlJjeMJJmIdxb
+ aUWvFBv5jPj0igYXVu/lgWaMfFXvE5onYZSo83nFmCFnWX7iZzbmWl1Aedju+kz+maW9oNnU7Ha
+ W8sXcxeAB/Pm5n3pXgXJOy+IvLQszqqbmqu5fjMBg5UgcYC8vbG+tA+bDgASUpVMglfq4w5VZN3
+ hW9Ep/hi1gbqDKebr6g7nzzp6w5SqmridSCehaarhDUCafqcT8qCSF6XLKKGgLVLXFjYAW/WKY5
+ 3ACk39w918V3CRwTekzXqy3e/BFJ3JqZQmoR96ZmS004cpbTxwkH7GSzlnb7tifUNzDFmiIzjrC
+ hOQ/HIoIwxpcKjaiYkszZOsyTWany6+zPpb4fXoooaCvLB0ZL39pMSu7poQ2D5AzsHzXLBXNf0P
+ gjt9/bHQL/mNbZtVpVUu8Nwp7frSU/YvfvkabGH7jV6SNRREjTMszTEWNpsm+GNQCeZMY2PgAsi
+ uwVLjLWDVnFvPWaz4FUyXFtxjikQTN03CZNzhU1BI44fsWdpENdnb1D2vIkd3Y8PFjY9hT6X4wS
+ ci1Foqr+Cy7fGeg0/DtK7p7+RPnTTM4I8CxEGY/2o/lpQWeCV+zAQGnRGiex4Ftbj3BwZNnoz5T
+ EWom8sTW7839jFw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hello:
+This is similar to commit cfa70237 ("ss: mptcp: display seq related
+counters as decimal") but for the subflow info this time. This is also
+aligned with what is printed for TCP sockets.
 
-This series was applied to netdev/net.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+That looks better to do the same with the subflow info (ss -ti), to
+compare with the MPTCP info (ss -Mi), or for those who want to easily
+count how many bytes have been exchanged between two runs without having
+to think in hexa.
 
-On Mon, 24 Feb 2025 19:11:49 +0100 you wrote:
-> Here are two unrelated fixes, plus an extra patch:
-> 
-> - Patch 1: prevent a warning by removing an unneeded and incorrect small
->   optimisation in the path-manager. A fix for v5.10.
-> 
-> - Patch 2: reset a subflow when MPTCP opts have been dropped after
->   having correctly added a new path. A fix for v5.19.
-> 
-> [...]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ misc/ss.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-Here is the summary with links:
-  - [net,1/3] mptcp: always handle address removal under msk socket lock
-    https://git.kernel.org/netdev/net/c/f865c24bc551
-  - [net,2/3] mptcp: reset when MPTCP opts are dropped after join
-    https://git.kernel.org/netdev/net/c/8668860b0ad3
-  - [net,3/3] mptcp: safety check before fallback
-    https://git.kernel.org/netdev/net/c/db75a16813aa
+diff --git a/misc/ss.c b/misc/ss.c
+index aef1a714b130900d6f3061c150639235c1eb13ca..6d5976501467842b1681d7dfc1ca56cc1b4a98d5 100644
+--- a/misc/ss.c
++++ b/misc/ss.c
+@@ -3055,16 +3055,16 @@ static void mptcp_subflow_info(struct rtattr *tb[])
+ 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC]),
+ 		    rta_getattr_u8(tb[MPTCP_SUBFLOW_ATTR_ID_LOC]));
+ 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ])
+-		out(" seq:%llx",
++		out(" seq:%llu",
+ 		    rta_getattr_u64(tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ]));
+ 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ])
+-		out(" sfseq:%x",
++		out(" sfseq:%u",
+ 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ]));
+ 	if (tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET])
+-		out(" ssnoff:%x",
++		out(" ssnoff:%u",
+ 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET]));
+ 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN])
+-		out(" maplen:%x",
++		out(" maplen:%u",
+ 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN]));
+ }
+ 
 
-You are awesome, thank you!
+---
+base-commit: 48717184ba3700938b75542046c5108b21e95ea7
+change-id: 20250226-iproute2-net-ss-ulp-mptcp-dec-92801e84ac6f
+
+Best regards,
 -- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
-
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
