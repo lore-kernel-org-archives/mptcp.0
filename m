@@ -1,34 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F35B71A3169;
-	Wed, 26 Feb 2025 11:09:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 28117215049
+	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 11:26:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740568154; cv=none; b=AhodpCiclRpapqsaQxKu9qMdoPJy51dYpb50gjZS23McN67qjR/Y9C8TU5cCFlsGiOQR3i79QP6Gi3/nN07kw8aG4Vc7siHB7WagS673LBCzy/oqxDXr5eg7FTuYcW/Pt+b8b50yx28TDjKLSaHPqw4NVVW/OSgYboSWHXcrnhg=
+	t=1740569208; cv=none; b=k7m3ZUE74EL4Kkl+SSc9urZpG8p8mRhOLrZE3YwYwDJCBo5+WOhQUowKHV3bj4H9i6Lm9B7FbKu26e9tHN0j2jmsGI1OJYKxw7oqWQOtw+0g0RLhcPOAhU/6iE0UHd1ei29l+vm2N8wjE87lDCkRnTvsFB/ijUt7enn5U0F6VGA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740568154; c=relaxed/simple;
-	bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=bvABItC9vIn4DvFCkCCYVfY5R1EFmzc/VEl7CNbWZACasvcyiET0nd+A7zsXnBuILnTWCZ1fqbKloAdCnTiZebdz5Cvgv9KPNlwhil25Tc3pBqJKvzlm1wM5RqpNxxShpcjqHDDKbxxCJlJbqmzTLIoHjhvbSLGWbwFJs6gKQcU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=plK2QdQz; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740569208; c=relaxed/simple;
+	bh=sSSQ2ecWOwTPC20cMCAlgkr9sXUBB0U6QXPhnEuCWto=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=nsZ4nTn1PUaF5UIStQNOqwDBK+SH8nzmOYYqhRqDUqtnrbe/d5JTSKolGcYont1FYXyhSbBfiBwjeUjlNcLhCWIz3Ks1260BoU2vz2T+DYPGMPB3JxoWdXdmzHRPF5GSvXwMu1rPus2xsqaknhQtbdGGTYAzdQYEXBCX+Hoh0Sc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=u6rTK5SE; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="plK2QdQz"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8DCCC4CED6;
-	Wed, 26 Feb 2025 11:09:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="u6rTK5SE"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DF2A7C4CEEB;
+	Wed, 26 Feb 2025 11:26:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740568153;
-	bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
+	s=k20201202; t=1740569207;
+	bh=sSSQ2ecWOwTPC20cMCAlgkr9sXUBB0U6QXPhnEuCWto=;
 	h=From:Date:Subject:To:Cc:From;
-	b=plK2QdQzO4TepCVaZRV67MmLZmhLSnJ/wVt2sxfAE2fs3jdJJM+lwu90rg/H5O/qF
-	 BnARmUkCh+1s8HJ9cvuKafRG6RI6jlvdxIB+QdTovRyakWeDIresrh5Cu9Lp/KXPlz
-	 ck66DnmOKcU/KpfZi0oTvaYnu0AZrZzJ7z9XglBq9i9o4XsvIOe8Cg/ONhKalWaeps
-	 kBJiH0vUNZzznHLIiAv21ygJBQ5kU3WbrYRRq1WdF1gz4CmOk39vEOoMhG0pU5T+HQ
-	 MavqFyN5P0OjlH6VUV0r5rC09T4nctmJenwBqqwOCisgmuU5Q3wcqpyo+zeL+uV9iT
-	 mHtR3rucle3Yg==
+	b=u6rTK5SEJR2SNO1XjDDocE/E+aH1WB1mt83DZLBBLpCbYQNxrZXFRPseggsJD422f
+	 j8fDYMbyyi2bKEIFEMzRalGr08hQhAOYnKrTP1INM2jiwC4l3FLzD8qsKoQ7KFnphZ
+	 FAzBM9PCcQEmQ7b6UFRxrmobzgFebxiwo9NxUaVqFdXYlaylgGHfSHYJhoOcM1BHP5
+	 27O6RXzQfVLCXYgtMXFJTTuKBHvBTzyF4Du72uaLkOpbzHpR27OAysrmu4VD42rUhl
+	 0YMQqtO6YEloljzbJHVL9y7BC/76GriWc9lFreSz8rbvrM6zccGBUaR1OBkEWwm3dj
+	 E7z82cs7Xwt0g==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Wed, 26 Feb 2025 12:08:44 +0100
-Subject: [PATCH iproute2-net] ss: mptcp: subflow: display seq counters as
- decimal
+Date: Wed, 26 Feb 2025 12:26:36 +0100
+Subject: [PATCH mptcp-next] tcp: ulp: diag: remove net admin restriction
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,78 +36,92 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250226-iproute2-net-ss-ulp-mptcp-dec-v1-1-4f4177cff217@kernel.org>
-X-B4-Tracking: v=1; b=H4sIADv2vmcC/03MQQrCQAxG4auUrA1Mg5bqVcRFmf6tAZ2GyVSE0
- rs7uOryW7y3kSMrnG7NRhkfdV1SRXtqKD6HNIN1rCYJcgkiHavlZS0QTijszuvL+G0lGo+IfJU
- +tOjPQ+wmqg/LmPT7/9/pmNJj33/3X7/CfQAAAA==
-X-Change-ID: 20250226-iproute2-net-ss-ulp-mptcp-dec-92801e84ac6f
-To: Stephen Hemminger <stephen@networkplumber.org>
-Cc: David Ahern <dsahern@gmail.com>, netdev@vger.kernel.org, 
- MPTCP Upstream <mptcp@lists.linux.dev>, 
- Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>, 
- Davide Caratti <dcaratti@redhat.com>, 
+Message-Id: <20250226-mptcp-tcp-ulp-diag-cap-v1-1-e1a003ad0606@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGv6vmcC/yWMQQqDMBAAvyJ7dkFDtdiviId0s+pCG5dERRD/b
+ tTDHOYws0PkIBzhk+0QeJUok09S5hnQaP3AKC45mMJUhTE1/nUmxYvlp+jEDkhW0b5c832Ta0o
+ mSLEG7mW7xy08jedthu44Tr31/NF0AAAA
+X-Change-ID: 20250226-mptcp-tcp-ulp-diag-cap-a4d9b7cd91ec
+To: mptcp@lists.linux.dev
+Cc: Davide Caratti <dcaratti@redhat.com>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1704; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=qnEajDHUCwepEGAUFAsAhm2JRjPjHQTxGeTJmktbUQU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvvZX4Tm35bn+k5BpmIVjATYzUmH+7O6twqIq9
- elsqT8LigqJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ772VwAKCRD2t4JPQmmg
- c+LiD/0Y0+aa7wN6uC3Q6wHxo6bVeI866pnCfczScd7etqp8SIByUTslHiqD7CIlJjeMJJmIdxb
- aUWvFBv5jPj0igYXVu/lgWaMfFXvE5onYZSo83nFmCFnWX7iZzbmWl1Aedju+kz+maW9oNnU7Ha
- W8sXcxeAB/Pm5n3pXgXJOy+IvLQszqqbmqu5fjMBg5UgcYC8vbG+tA+bDgASUpVMglfq4w5VZN3
- hW9Ep/hi1gbqDKebr6g7nzzp6w5SqmridSCehaarhDUCafqcT8qCSF6XLKKGgLVLXFjYAW/WKY5
- 3ACk39w918V3CRwTekzXqy3e/BFJ3JqZQmoR96ZmS004cpbTxwkH7GSzlnb7tifUNzDFmiIzjrC
- hOQ/HIoIwxpcKjaiYkszZOsyTWany6+zPpb4fXoooaCvLB0ZL39pMSu7poQ2D5AzsHzXLBXNf0P
- gjt9/bHQL/mNbZtVpVUu8Nwp7frSU/YvfvkabGH7jV6SNRREjTMszTEWNpsm+GNQCeZMY2PgAsi
- uwVLjLWDVnFvPWaz4FUyXFtxjikQTN03CZNzhU1BI44fsWdpENdnb1D2vIkd3Y8PFjY9hT6X4wS
- ci1Foqr+Cy7fGeg0/DtK7p7+RPnTTM4I8CxEGY/2o/lpQWeCV+zAQGnRGiex4Ftbj3BwZNnoz5T
- EWom8sTW7839jFw==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1917; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=sSSQ2ecWOwTPC20cMCAlgkr9sXUBB0U6QXPhnEuCWto=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnvvp25X8QKZJgEXLCCLtdwxQTkswtTFvXmbLEi
+ gknX/zyGfeJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ776dgAKCRD2t4JPQmmg
+ cwISD/9IqSN+6Kg1UXguMYfJ+a10KlduQwJ3XlmP9VW+3twLgfpmlP+vbp4m4erKR2RyKqS4VCK
+ kMbR56w/mLvFyEBKF088sdYsGCU0HbDsfL4/5Js708/r9HTrYOyim85gyLoqDEBBbBRIvwFizC/
+ vs3yqrDDXx9RaRmGJfaXc0RS+zGem4Nreo+6PehQJVH49o7IbUPdUkM9dztyrKvD9WIeLXgAGJ5
+ kWrihjwx4uJKQZ7YPF17YHBWhcLJalP+T1OQSwdkS9uTkeyv7lCk8ypaGI0Y9c9P5g8hnrU4qWo
+ /5njTS/PZNgqA1wg2CJut3HssJ36U45UnHYZCHEWancSo0fPCVbgWghrmbKbgzR7f1UJu1ZWanB
+ HDMGELdHaKfwvJdpDQHptFvRw9mWYTNQ990EHZ+jsp3zyji8s2ykKGZWqUMc+pA1QwaywPVpT2/
+ ob6bEMm5gzIqVPVMJcR9s+cBClCJ/kkk4DpCdEKq55OWh6e+BISPPi10qTpT25YTfISJlIjbdTs
+ mtqrpedB5piI7hDmY0PCshcy0JGsYqHJfzP3LD6e77xuw9wtL3tYTq4r+ZdpMW9F6OpcUCxbH9B
+ f+P7r2PPQ6Tg9NLLwR5UxdpclYDGzKBFz/qwn/nPs69h+QcMv0dTEScdxncE4Dg1AU31WWc7hKo
+ t0WhnYyTeZ4rkIg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This is similar to commit cfa70237 ("ss: mptcp: display seq related
-counters as decimal") but for the subflow info this time. This is also
-aligned with what is printed for TCP sockets.
+Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
+to dump ulp-specific information"), the ULP diag info have been exported
+only if the requester had CAP_NET_ADMIN.
 
-That looks better to do the same with the subflow info (ss -ti), to
-compare with the MPTCP info (ss -Mi), or for those who want to easily
-count how many bytes have been exchanged between two runs without having
-to think in hexa.
+It looks like there is nothing sensitive being exported here by the
+MPTCP and KTLS layers. So it seems safe to remove this restriction in
+order to ease the debugging from the userspace side without requiring
+additional capabilities.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- misc/ss.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/ipv4/tcp_diag.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
 
-diff --git a/misc/ss.c b/misc/ss.c
-index aef1a714b130900d6f3061c150639235c1eb13ca..6d5976501467842b1681d7dfc1ca56cc1b4a98d5 100644
---- a/misc/ss.c
-+++ b/misc/ss.c
-@@ -3055,16 +3055,16 @@ static void mptcp_subflow_info(struct rtattr *tb[])
- 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC]),
- 		    rta_getattr_u8(tb[MPTCP_SUBFLOW_ATTR_ID_LOC]));
- 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ])
--		out(" seq:%llx",
-+		out(" seq:%llu",
- 		    rta_getattr_u64(tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ]));
- 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ])
--		out(" sfseq:%x",
-+		out(" sfseq:%u",
- 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ]));
- 	if (tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET])
--		out(" ssnoff:%x",
-+		out(" ssnoff:%u",
- 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET]));
- 	if (tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN])
--		out(" maplen:%x",
-+		out(" maplen:%u",
- 		    rta_getattr_u32(tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN]));
+diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+index f428ecf9120f2f596e1d67db2b2a0d0d0e211905..8257bd85e067ee862034c95745216c443113bdb0 100644
+--- a/net/ipv4/tcp_diag.c
++++ b/net/ipv4/tcp_diag.c
+@@ -113,6 +113,7 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+ 			    struct sk_buff *skb)
+ {
+ 	struct inet_connection_sock *icsk = inet_csk(sk);
++	const struct tcp_ulp_ops *ulp_ops;
+ 	int err = 0;
+ 
+ #ifdef CONFIG_TCP_MD5SIG
+@@ -129,15 +130,13 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+ 	}
+ #endif
+ 
+-	if (net_admin) {
+-		const struct tcp_ulp_ops *ulp_ops;
+-
+-		ulp_ops = icsk->icsk_ulp_ops;
+-		if (ulp_ops)
+-			err = tcp_diag_put_ulp(skb, sk, ulp_ops);
+-		if (err)
++	ulp_ops = icsk->icsk_ulp_ops;
++	if (ulp_ops) {
++		err = tcp_diag_put_ulp(skb, sk, ulp_ops);
++		if (err < 0)
+ 			return err;
+ 	}
++
+ 	return 0;
  }
  
+@@ -164,7 +163,7 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+ 	}
+ #endif
+ 
+-	if (net_admin && sk_fullsock(sk)) {
++	if (sk_fullsock(sk)) {
+ 		const struct tcp_ulp_ops *ulp_ops;
+ 
+ 		ulp_ops = icsk->icsk_ulp_ops;
 
 ---
-base-commit: 48717184ba3700938b75542046c5108b21e95ea7
-change-id: 20250226-iproute2-net-ss-ulp-mptcp-dec-92801e84ac6f
+base-commit: 1238896935ea03f333a183a32fab666cc0c20e3b
+change-id: 20250226-mptcp-tcp-ulp-diag-cap-a4d9b7cd91ec
 
 Best regards,
 -- 
