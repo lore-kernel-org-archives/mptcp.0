@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E0C822171C
-	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 16:29:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 19DA5221547
+	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 16:35:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740587393; cv=none; b=Rh1PkcAQFk7C1FZ6GV1Hn10H5QALeVrfTYpYS2jy3UKUqXbzjJWWGSfCPpYhER21x3uqRPONl8pxgbXfsggFcfLX1O/0j+kcuSgYuxiBgBcThvyyDMvjOnz0CcofpQU8C/Tg78SYW3+GnxM0rnAzmq+LqGsuDN+yPpWq45ak3tE=
+	t=1740587754; cv=none; b=SiweCOgUavmA5IUkAMLJvGLgrbF5zxrydN4mIOGkRVzQiPM4Nc1NXKjFx0JtzA9D3ZaXBeVFjWz0oxnHoEMGuxPKpvcpI2qfYdYC78MYHCVn2lphSqhm8mEidNhVsOdneQKrlvrjjocf4xov8sAGNks0ErWxFbOUiaMwFASZQAI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740587393; c=relaxed/simple;
-	bh=ID5MJUAzO+8tcjW6lFWOXV7fRLPW5I62B9M5UtxrSmc=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=rRuEQ5Sw7vjwnBO5ZYsXfktGkLFCHcJsSGiee9p5RP2LjTILhXKOWVQilcHmzzbI5l0vjMy9mvxZR22Ppnmo+f/NNwY2nKrFBtkUNwnRboiFqMJbdsXTopaqlZsXMmSZPpX1PjGveYH02TP2Sf5AmUi+n7kTvCGp+2nwfg6I5iY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NHU/HBGW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740587754; c=relaxed/simple;
+	bh=ejonzWJFlIwn0F/2nqN7+gsZV7LppfTRbR0W7so4SHM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=bAEDLV3o4OMiCVO3ShwYnx8M7DtaBXkknGVq+pfwR7q8rmRHBLhKQ2CUFORUxBBUGXQ3RQwrwsY2mrkhsFcaRSbOr7za24DQyTpHzyUxAEN9+KPMKUkxaReD7NVTEIHixTnkpndgLCJxjH7UrFMGqxZep94m4ZpUQoFrJcX0LoA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=k7GbUp4/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NHU/HBGW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08604C4CEE4;
-	Wed, 26 Feb 2025 16:29:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="k7GbUp4/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50DB1C4CED6;
+	Wed, 26 Feb 2025 16:35:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740587393;
-	bh=ID5MJUAzO+8tcjW6lFWOXV7fRLPW5I62B9M5UtxrSmc=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=NHU/HBGWtML1/xB6NSNoMR2VW7gOElkE7Mulcoz/bcGBZ+3XUM8it7lmCO2WKaEv0
-	 aAqD4QKVy6sPHDmCBQsLDLd9mwRAZBbq9WsbyAn5+D7Mg1es0CcN8ORNxVZ+UWgeYc
-	 7rt7gglIJwC7psLOOIocvuLb6oAAyw+KjUgBIUDLRHuaPSGU52uySX8I+PfJ7YBGS1
-	 v+BI5nXmXncQ7aeSF36jXrQmozT8WhkPcC0HphTFmQtfImUdLidXzrkbdzAt0pXa96
-	 ooKzMbX87HkdTkFOz7oAm71gh9Nf3SMdRsaSeyMlqQNZnan9/4doHst1qYq3cMJynX
-	 rfHDkBSUlckKg==
-Message-ID: <c2012b0e-6bd4-4519-b466-4e6b31cd3f70@kernel.org>
-Date: Wed, 26 Feb 2025 17:29:49 +0100
+	s=k20201202; t=1740587753;
+	bh=ejonzWJFlIwn0F/2nqN7+gsZV7LppfTRbR0W7so4SHM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=k7GbUp4/kFGZa6nPz5PM/EdGVO83PvC7d1ugxDJB19vdm3FFCXpiRUABHfieYwtGI
+	 WjAjh4UEo9auYD9gawE4DlPM8KwyZgsCzs3vYfHpfIW54lzMorXTKq0L4MPPUn6msm
+	 /PYtbtHOJCIWChhkVeye5FjzElM9mLxX14gFKQtj9lX1CdYxKQ9cxIwEfL8lBU16os
+	 Y84vWRJ3y9mAkbLpVXm/fVWVvVkBHeIhEvADKLN8w8CIK2jFLmcYNteLnuPzQ1ViB2
+	 6ymi5H4TWSaFOrzWZe+10vN1tVsDelSzIRxj1DMTeR83JOj0Rr2+szhp5zfHnpJ8Zy
+	 AF/GxXQ/cxu3Q==
+Message-ID: <6330f8c9-2760-4215-9fbd-8fa26e1763da@kernel.org>
+Date: Wed, 26 Feb 2025 17:35:48 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 0/6] BPF path manager, part 4
+Subject: Re: [PATCH mptcp-next] Squash to "selftests: mptcp: add a test for
+ mptcp_diag_dump_one"
 Content-Language: en-GB
+To: Gang Yan <gang_yan@foxmail.com>
+Cc: mptcp@lists.linux.dev, Gang Yan <yangang@kylinos.cn>
+References: <20250224-mptcp-sft-diag-squash-v1-1-81eb3843fa53@kernel.org>
+ <tencent_859D9F20AC0E314A5E590923E9A45EE68F05@qq.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740384564.git.tanggeliang@kylinos.cn>
- <dcd5cd26-03d6-4b8e-bd60-c27c7ed07497@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,45 +87,42 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <dcd5cd26-03d6-4b8e-bd60-c27c7ed07497@kernel.org>
+In-Reply-To: <tencent_859D9F20AC0E314A5E590923E9A45EE68F05@qq.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang Yan,
 
-On 24/02/2025 12:05, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 24/02/2025 09:13, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 25/02/2025 05:43, Gang Yan wrote:
+> On Tus, Feb 25, 2025 at 09:51:93AM +0800, Gang Yan wrote:
+>> On Mon, Feb 24, 2025 at 08:03:05PM +0100, Matthieu Baerts (NGI0) wrote:
+>> - sdiag_protocol: avoid compilation warning:
 >>
->> Some path manager related refactoring and cleanups.
+>>   mptcp_diag.c: In function 'send_query':
+>>   mptcp_diag.c:77:43: warning: unsigned conversion from 'int' to 'unsigned char' changes value from '262' to '6' [-Woverflow]
+>>      77 |                         .sdiag_protocol = IPPROTO_MPTCP,
+>>         |                                           ^~~~~~~~~~~~~
 >>
->> Geliang Tang (6):
->>   mptcp: pm: in-kernel: avoid access entry without lock
->>   mptcp: pm: in-kernel: reduce parameters of set_flags
->>   mptcp: pm: use addr entry for get_local_id
-> 
-> For these 3 patches above:
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>   => the real protocol is passed via INET_DIAG_REQ_PROTOCOL.
+> Thank you for making the modification here. I'm sorry I overlooked this
+> point when submitting the patch.
+>>
+>> - printf: follow the same format as ss: hexa only for the token + flags.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Tested-by: Gang Yan <yangang@kylinos.cn>
 
-These 3 patches are now in our tree (feat. for next), with the proper
-SHA in the Fixes tag for the first patch:
+No problem, thank you for having checked!
 
 New patches for t/upstream:
-- c8a2f8c2afac: mptcp: pm: in-kernel: avoid access entry without lock
-- 91606b7d16da: mptcp: pm: in-kernel: reduce parameters of set_flags
-- 29b6fd0cf693: mptcp: pm: use addr entry for get_local_id
-- Results: 1238896935ea..3635c12a532c (export)
+- 699dad3cb771: Squash to "selftests: mptcp: add a test for
+mptcp_diag_dump_one"
+- Results: 3635c12a532c..16bc369672e8 (export)
 
 Tests are now in progress:
 
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/100f5ffc0c317c10656b1397607f52d95d0d8911/checks
-
-Note that there was a small conflict with "mptcp: fix 'scheduling while
-atomic' in mptcp_pm_nl_append_new_local_addr".
+https://github.com/multipath-tcp/mptcp_net-next/commit/e4a8ba485b99c5eaed76adfadfbd6b4fda26bbac/checks
 
 Cheers,
 Matt
