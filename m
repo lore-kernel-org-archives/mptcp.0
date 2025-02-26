@@ -1,138 +1,133 @@
-Received: from crocodile.elm.relay.mailchannels.net (crocodile.elm.relay.mailchannels.net [23.83.212.45])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9FCDF19CD0B
-	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:34 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=pass smtp.client-ip=23.83.212.45
-ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740520416; cv=pass; b=CwUFAijFK97JjGdDfJhFdLNQNq9Q5ZFx8yjRAotTJuxmUex4xqX2JK6j0yqMphf0aiuuaElgnkKfv9E1H4m3GdnrBWbMG7sC9WNfUsK2D4NGnxSJ6p0BDXP6gbCrF/zh7toY6wtnQ9jiPV4EuVnJjjcFT8zQifU2DuZnxqRARr4=
-ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740520416; c=relaxed/simple;
-	bh=4eEvkX4bWBJQeXiVjDsxJA6T/kbM5/kr89ODp98jW0o=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=s4JWB+Jtn3ejVG+ZYDCWU4B2FcbsJgKJBX0maW6bEsEOomUOTwYpPIBOg+9u3YKshWDg2yN4EsCREPuhSZsUX5BLAnsy0Cca7zQNvfeFy8YYqN0WbWFiJmHtq+eR+9Gv+r4LIPtL5DYUTLbmXcPeyv3k6FZqFblHOgShS7Oa6tY=
-ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com; spf=pass smtp.mailfrom=templeofstupid.com; dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b=Vsohr2Pq; arc=pass smtp.client-ip=23.83.212.45
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=templeofstupid.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=templeofstupid.com
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F44742A9D
+	for <mptcp@lists.linux.dev>; Wed, 26 Feb 2025 01:05:14 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1740531915; cv=none; b=MwJT2RJAHkIdcnpWM74O4D9IaUuWnL+5xoC5wpX6ty9VmWAIanzXCaQ8xrnWAfg2H/jC0j47zOcZnM05HmXY2210ypsQfC+zCJWaBJ0VrJCe1umZ9i5bHMCVkqLhQB03wb7n7K95oZOjqV7dTLVxvcf0jirZLsRVYy+kjlh/mAM=
+ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1740531915; c=relaxed/simple;
+	bh=wVrKRZQKgYvJqgoP4acRwUn1aT1g18JZlL3UZJsZtCc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=nAbzi5R9xa7uY5wnv0ISxmWeDh/dN/jyjonmc8MEbRsWwmVwKuh+kkhoXAYgYSHMR421StxU9C2jYzlDFYiv3aa3KoBHQ7nFypvHbUpb3i9B0SMJ9GhiajOHfWMITXvVVuVeXAY0bkmyiH9vKeVJXxk65YrqxK+L1aToyNPc2EQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jnsmSlbS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=templeofstupid.com header.i=@templeofstupid.com header.b="Vsohr2Pq"
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-Received: from relay.mailchannels.net (localhost [127.0.0.1])
-	by relay.mailchannels.net (Postfix) with ESMTP id 5471C1C23EB
-	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:28 +0000 (UTC)
-Received: from pdx1-sub0-mail-a239.dreamhost.com (100-100-209-197.trex-nlb.outbound.svc.cluster.local [100.100.209.197])
-	(Authenticated sender: dreamhost)
-	by relay.mailchannels.net (Postfix) with ESMTPA id 0793F1C165F
-	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 21:53:28 +0000 (UTC)
-ARC-Seal: i=1; s=arc-2022; d=mailchannels.net; t=1740520408; a=rsa-sha256;
-	cv=none;
-	b=CcILNo4exegYE3e+CJ6iaXKeQ0EulMdz/c0vO0fo/fLZut5UInxgq74aLm+JYFSOa/Ggil
-	jX+lSt/YL5giblCIkwexN8Q6f89HWY+w/hzBXJWiUgM/I+88uF0xwaOKHAAlZXgrnv5xYG
-	CQ28kMmkMGzr5CtJ54VJCY9p4fSDcAqwb+/psYU3daAWmiXGDsOcy2jMeg6hyzIXuFy7ER
-	Jeo0oZ/gR1rwty7EprYNOmNVf3GlQhe5RL0rUPrSzxbq1LJeLD2eU4m3WNPPEXHOK5uJ+I
-	yDng88vtLseVQLV3RT6crhDnSgQqZvPMlQeltC6vh10ptNaQyhA1nrmliP59ug==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed;
- d=mailchannels.net;
-	s=arc-2022; t=1740520408;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references:dkim-signature;
-	bh=Z/s8F0fUEzFPMT5zIMTWfFvhlY4uSR/7qZbV0QqiP6k=;
-	b=4wJx3koQ56IpI4AENq+E+AH0nQmq81VUpNdAvAjjdpdf71ffYm1Itn+OmBS1P5SI2hv9S5
-	dD1DUibMhr5tRh+DBkbjfv1USfEanGP2KozZqkkfWEy/DfTmUV0LN9W/rEJBJqoK+MNLO/
-	4EHnlyOVpUm0qeI6ECA+p6OIfWd0YWcbdpETJ82bbUqT+e2nn5oH9rOAP8bQ8g6qBij7r1
-	4MvDVguINWZPLLfv9XM1wgbd3p6ooZsOhSlb/utcHtr7gIxO0JHOD7EkCkigdEaKutGGed
-	VzTKhCF7kKn9ZWcr6T5MyeXeyHPesIhWgaoCCFluA1GBgHUVLGP16s3hmJQtVg==
-ARC-Authentication-Results: i=1;
-	rspamd-6d7cc6b78d-fwlf7;
-	auth=pass smtp.auth=dreamhost smtp.mailfrom=kjlx@templeofstupid.com
-X-Sender-Id: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MC-Relay: Neutral
-X-MailChannels-SenderId: dreamhost|x-authsender|kjlx@templeofstupid.com
-X-MailChannels-Auth-Id: dreamhost
-X-Bottle-Whispering: 5e10d5657bd38f17_1740520408229_1193235828
-X-MC-Loop-Signature: 1740520408229:3821387256
-X-MC-Ingress-Time: 1740520408228
-Received: from pdx1-sub0-mail-a239.dreamhost.com (pop.dreamhost.com
- [64.90.62.162])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384)
-	by 100.100.209.197 (trex/7.0.2);
-	Tue, 25 Feb 2025 21:53:28 +0000
-Received: from kmjvbox.templeofstupid.com (c-73-70-109-47.hsd1.ca.comcast.net [73.70.109.47])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
-	(No client certificate requested)
-	(Authenticated sender: kjlx@templeofstupid.com)
-	by pdx1-sub0-mail-a239.dreamhost.com (Postfix) with ESMTPSA id 4Z2WZH5hHszbQ
-	for <mptcp@lists.linux.dev>; Tue, 25 Feb 2025 13:53:27 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=templeofstupid.com;
-	s=dreamhost; t=1740520407;
-	bh=Z/s8F0fUEzFPMT5zIMTWfFvhlY4uSR/7qZbV0QqiP6k=;
-	h=Date:From:To:Cc:Subject:Content-Type;
-	b=Vsohr2PqnfytkNcxbyKYcOXk+4rOhO7j4jOXbdeyWkRiF2syAc4rpAJVw4Wz4PekA
-	 hjwYUVeIdOH9iIy2M37bhi3GjDBqSFCZ4215dM6S2SRSrs+DnwuPEqPlXCaJAr2Z+3
-	 Bgd/jVUzUWqDTj9sAcrtEHZBMm6u5VIwRIgppkCImkWqvIR/FOAB4yfJt+32606nUQ
-	 jny0dJgtR701CC9em9lV9BLcz5yiAJd5TTOctploPLzPrf/2dVQC420qwF24kiK3hA
-	 9iElWGPyjOGiCr5DGvEOPuI8MhijGF8PU6/JdyACzQM36fEyeJoQGOY7hJjbRnLLi2
-	 Pr++wALgBGsCw==
-Received: from johansen (uid 1000)
-	(envelope-from kjlx@templeofstupid.com)
-	id e00d7
-	by kmjvbox.templeofstupid.com (DragonFly Mail Agent v0.12);
-	Tue, 25 Feb 2025 13:53:25 -0800
-Date: Tue, 25 Feb 2025 13:53:25 -0800
-From: Krister Johansen <kjlx@templeofstupid.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: Re: [PATCH v2 mptcp] mptcp: fix 'scheduling while atomic' in
- mptcp_pm_nl_append_new_local_addr
-Message-ID: <20250225215325.GC1867@templeofstupid.com>
-References: <9ef28d50-dad0-4dc6-8a6d-b3f82521fba1@redhat.com>
- <20250224232012.GA7359@templeofstupid.com>
- <e8039b96-1765-4464-b534-d6d1385b46eb@kernel.org>
- <20250225192946.GA1867@templeofstupid.com>
- <30663725-7078-4b8d-bc75-8a9cd15b0b02@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jnsmSlbS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C0D5C4CEDD;
+	Wed, 26 Feb 2025 01:05:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1740531914;
+	bh=wVrKRZQKgYvJqgoP4acRwUn1aT1g18JZlL3UZJsZtCc=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=jnsmSlbS3RkF7Wy64nH20AMXH+VX1jZg0JXcVJ0qI14HxXg3dw4rj8B6MiYAZVz4E
+	 IqK0SwmiJGewGYHXkLLMg1DKVt98oGsqWkKTEz9tS1M0Wc331G/N6JXFmxTEhbS6vI
+	 tPRjO1hTRtos2SCEZkcu99wRrPEJwIdpu4hBy5FlxqGM+QB7yJIqQsO65QJlXddbmp
+	 L7JKfqI5+oulpZHFvpMoS2QBaRAyyxVrvCJwjATWW0nEQ4pnN1lSn2y+CrgZDgmNOD
+	 5HJNClQEoIEjmorzlcB0DlffQ2Gj3KoSbs5O7cafHjq1o0otvQbNEuLW554z+KQ7+d
+	 ZMEf/7huKosWQ==
+Date: Tue, 25 Feb 2025 17:05:13 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
+ support"
+In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
+Message-ID: <e5992403-4b1e-91f5-cc4e-edcb6be66d1b@kernel.org>
+References: <cover.1740368110.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <30663725-7078-4b8d-bc75-8a9cd15b0b02@kernel.org>
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hi Matt,
+On Mon, 24 Feb 2025, Geliang Tang wrote:
 
-On Tue, Feb 25, 2025 at 10:41:55PM +0100, Matthieu Baerts wrote:
-> On 25/02/2025 20:29, Krister Johansen wrote:
-> > On Tue, Feb 25, 2025 at 06:52:45PM +0100, Matthieu Baerts wrote:
-> >> I'm going to apply it in our MPTCP tree, but this patch can also be
-> >> directly applied in the net tree directly, not to delay it by one week
-> >> if preferred. If not, I can re-send it later on.
-> > 
-> > Thanks, I'd be happy to send it to net directly now that it has your
-> > blessing.  Would you like me to modify the call trace in the commit
-> > message to match the decoded one that I included above before I send it
-> > to net?
-> 
-> Sorry, I forgot to mention that this bit was for the net maintainers.
-> Typically, trivial patches and small fixes related to MPTCP can go
-> directly to net.
-> 
-> No need for you to re-send it. If the net maintainers prefer me to send
-> it later with other patches (if any), I will update the call trace, no
-> problem!
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> v4:
+> - drop sock_owned_by_user_nocheck and spin_is_locked. According to
+>   comments from Mat and Martin, in this set mptcp_subflow
+>   bpf_iter only used from a cg sockopt bpf prog, no need to add these
+>   check at this moment.
 
-Thanks for clarifying.  I'll hold off on sending anything further and
-will either let the net maintainers pick this up, or have you send it
-with your next batch of patches.
+Hi Geliang -
 
-Thanks again!
+Sorry to continue the churn on this. I looked at Martin's comment in 
+https://lore.kernel.org/mptcp/fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev/ 
+where he says:
 
--K
+"For the cg get/setsockopt hook here, the lock should have already been 
+held earlier in the kernel."
+
+For the getsockopt case, there is a file layer lock held that ensures the 
+'struct socket' remains valid while this hook is run, but no lock is 
+acquired that prevents changes to msk->conn_list. It's not safe to iterate 
+over the conn_list without protection from lock_sock() / unlock_sock().
+
+As Matthieu noted in 
+https://lore.kernel.org/mptcp/3b5af48e-4155-4b98-b67b-b75d9fb6285e@kernel.org/, 
+when used in a bpf scheduler the msk lock will be held. But the test code 
+called via getsockopt is a case where it's not protected, and a change to 
+the linked list during iteration could lead to undefined behavior.
+
+I'll talk about it with Matthieu in the meeting this week too.
+
+- Mat
+
+
+>
+> v3:
+> - patch 3, continue to use sock_owned_by_user_nocheck() and spin_is_locked()
+> checks instead of using msk_owned_by_me().
+> - patch 5, drop declaration of bpf_mptcp_subflow_tcp_sock. It's no longer
+> used.
+> - patch 5, update the comment for mptcp_subflow_tcp_sock(), which is a BPF
+> helper, not a kfunc.
+>
+> The commit log of "bpf: Register mptcp common kfunc set" doesn't match the
+> code, please update it as:
+>
+> '''
+> bpf: Register mptcp common kfunc set
+>
+> MPTCP helper mptcp_subflow_ctx() is used to convert struct sock to
+> struct mptcp_subflow_context. It will be used in MPTCP BPF programs.
+>
+> This patch defines corresponding wrapper of this helper, and put it
+> into the newly defined mptcp common kfunc set and register this set
+> with the flag BPF_PROG_TYPE_CGROUP_SOCKOPT to let it accessible to
+> the 'cgroup/getsockopt' type of BPF programs.
+> '''
+>
+> v2:
+> - Drop bpf_skc_to_mptcp_sock
+> - Check the owner before assigning the msk as Mat suggested.
+> - Use bpf_core_cast() in mptcp_subflow bpf_iter subtest instead of
+> using bpf_skc_to_mptcp_sock().
+>
+> Address Martin's suggestions for "Add mptcp_subflow bpf_iter support" v2.
+>
+> Geliang Tang (5):
+>  Revert "bpf: Extend bpf_skc_to_mptcp_sock to MPTCP sock"
+>  Revert "bpf: Allow use of skc_to_mptcp_sock in cg_sockopt"
+>  Squash to "bpf: Add mptcp_subflow bpf_iter"
+>  Revert "bpf: Acquire and release mptcp socket"
+>  Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
+>
+> include/net/mptcp.h                           |  4 +-
+> kernel/bpf/cgroup.c                           |  2 -
+> net/core/filter.c                             |  2 +-
+> net/mptcp/bpf.c                               | 41 ++++---------------
+> .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
+> tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 ---
+> .../selftests/bpf/progs/mptcp_bpf_iters.c     | 10 ++---
+> 7 files changed, 15 insertions(+), 51 deletions(-)
+>
+> -- 
+> 2.43.0
+>
+>
+>
