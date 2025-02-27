@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A18A225A22;
-	Thu, 27 Feb 2025 08:45:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B694227BA7
+	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 08:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740645909; cv=none; b=NzE92zvZ+HllMsDRWTpmQdn+vJv/h6TJOy5BEXBfDn0JEwIXriFiwMi0XN2rlbiyZnvxarLODRrDKbO148s7w4L94/ugqVsZ+lUQL81IL8l5qhPUiv7TQSOaynE5Nr4BNPNgPUyyTWs0Xo1tlU3eBK7Ow/oCBvPUL/y3qPp9RGE=
+	t=1740646798; cv=none; b=htDK+zlRhNDVUXjSjadFyhacohCSjet8PUjTxqKzSiQ55vy7ciVBhFT98mIIf00HCC5nPTsZ4l3k2lLMExgqr0gSshhimiLCPcSKdEo3XZSzpNCXYwjNPIvaieTFLBy/wIsVdUjuPByPmg0Diz+mip7VzxpSpMPPMwOJY7A7o/Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740645909; c=relaxed/simple;
-	bh=Ek01IMVH3iqPTxcu67ld4CLzLkQBdYy5qpO3EhaMqSI=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=PE3WevnTeOAqnRjoOfdAPr3MMSz0iQfIJC79nJMBKWxRO5LE5OLsHU4ue/iJeyVeVfyGANHiXfifWFnYkoTnQ0zBQ5rptT83Q070hfOp6CQOBa9uJZ3Go0+KlNk/3780ZuKlzW8UIVagUIm+WWs3i1tjGtzLokKQJJKERlnr1H8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qbrIJkFL; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740646798; c=relaxed/simple;
+	bh=/Vr9eFcMoWSgSY4SkCCjkkOXlbt1rzB3S+ySPcFb4oc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=YsVNVH7aSf2OLgfCA8cMtun8XpaSq7YHl2HdHIdDjWhGjlj48CbLToo9urXvLyq26Upa1XR2t6ZHPmAP7+3nT8kXMxbpcc5nP4JaJurmosvgU1s7fSLkAr1vFujOk7Y5nw+0XA0IrwKpj6ATzU/rFZgp1GIt60gu/OowL2a/aFo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QR3WTRnq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qbrIJkFL"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 155CCC4CEDD;
-	Thu, 27 Feb 2025 08:45:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QR3WTRnq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 022B2C4CEDD;
+	Thu, 27 Feb 2025 08:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740645908;
-	bh=Ek01IMVH3iqPTxcu67ld4CLzLkQBdYy5qpO3EhaMqSI=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qbrIJkFLd7OPHEPObUNNwlxyn68ABw3Szs2g1BJ46L/uMdWgS43gM1wwrmxLhvohw
-	 vzdikHANaqTrgClt2e8POMPZDDT58lO0LwmDNY6QIQnOJKGasA225RkZVHB/zaddbd
-	 UpxgR2i9zPgaAn0IM+zkLFQdxb+/4p/ZefBqhdaGcj8n2j0nI32gByjSaxKE3/iNWg
-	 tFViZ0yARlLGdmb8JOqtlh1hz4fV8PJDLefogMu9O9v9fVypqYoR5vCmBAZK8nldzt
-	 H5eKvRZIfULxpoWsJuhlnOPZZ+Q7SJAHxBnTyKHXUwx+9YntFWB9P+GInFCsxPBB7c
-	 uLA7UfE2NZS+g==
-Message-ID: <773003d9-bbee-4941-a3e7-3590ea80bdb2@kernel.org>
-Date: Thu, 27 Feb 2025 09:45:01 +0100
+	s=k20201202; t=1740646797;
+	bh=/Vr9eFcMoWSgSY4SkCCjkkOXlbt1rzB3S+ySPcFb4oc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=QR3WTRnqhHanFlKBSCu2vtYagOpA6B9qnzY0GB4U9N/lyHfmR8ehvzauJJFlKXVfB
+	 WbhgzfqpFP6CIKu8gTuNSfU5j3xBZERlQrjaWNtujbrErnrVzzoOZYuVSKJKVC2lp0
+	 9kYTnLgSuDQbOKkwOaXdFWGT6LeHDfN1KGjwHW9BFsnSF7zsGQ+5zoYwisGd+3pg8r
+	 pvskREtN4I17jTCnoA5Ye9ddLl/hvHM/dNfyGV6bAcYND8gxOABof5b/QeiM0Kzhb9
+	 s/xY5Id2cZ2xBTti6UUVkbneciFM3QmFBjtTQLFS6S6lOqh7OHN0C8S3JNHKpR4LtA
+	 j9r6I5DInFRbg==
+Message-ID: <9bb16e76-fb49-48d7-ad46-c281cc650374@kernel.org>
+Date: Thu, 27 Feb 2025 09:59:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,20 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next 1/4] sock: add sock_kmemdup helper
+Subject: Re: [PATCH mptcp-next v2] mptcp: pm: exit early with ADD_ADDR echo if
+ possible
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-sctp@vger.kernel.org,
- Eric Dumazet <edumazet@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn <willemb@google.com>,
- Jakub Kicinski <kuba@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Simon Horman <horms@kernel.org>, David Ahern <dsahern@kernel.org>,
- Neal Cardwell <ncardwell@google.com>, Mat Martineau <martineau@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>
-References: <cover.1740643844.git.tanggeliang@kylinos.cn>
- <a26c04cba801be45ce01a41b6a14a871246177c5.1740643844.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20250226-mptcp-userspace-avoid-worker-v2-1-4b144f314353@kernel.org>
+ <1d87b4d55777c11a33298336418de576baa62673.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -94,49 +86,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a26c04cba801be45ce01a41b6a14a871246177c5.1740643844.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1d87b4d55777c11a33298336418de576baa62673.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 27/02/2025 09:23, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 27/02/2025 02:55, Geliang Tang wrote:
+> Hi Matt,
 > 
-> This patch adds the sock version of kmemdup() helper, named sock_kmemdup(),
-> to duplicate the input "src" memory block using the socket's option memory
-> buffer.
+> On Wed, 2025-02-26 at 15:21 +0100, Matthieu Baerts (NGI0) wrote:
+>> When the userspace PM is used, or when the in-kernel limits are
+>> reached,
+>> there will be no need to schedule the PM worker to signal new
+>> addresses.
+>> That corresponds to pm->work_pending set to 0.
+>>
+>> In this case, an early exit can be done in mptcp_pm_add_addr_echoed()
+>> not to hold the PM lock, and iterate over the announced addresses
+>> list,
+>> not to schedule the worker anyway in this case. This is similar to
+>> what
+>> is done when a connection or a subflow has been established.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> This v2 looks good to me, thanks.
 
-Thank you for suggesting this series.
+Thank you for the review!
 
-(...)
+Now in our tree (feat. for net-next):
 
-> diff --git a/net/core/sock.c b/net/core/sock.c
-> index 5ac445f8244b..95e81d24f4cc 100644
-> --- a/net/core/sock.c
-> +++ b/net/core/sock.c
-> @@ -2819,6 +2819,21 @@ void *sock_kmalloc(struct sock *sk, int size, gfp_t priority)
->  }
->  EXPORT_SYMBOL(sock_kmalloc);
->  
-> +/*
-> + * Duplicate the input "src" memory block using the socket's
-> + * option memory buffer.
-> + */
-> +void *sock_kmemdup(struct sock *sk, const void *src,
-> +		   int size, gfp_t priority)
-> +{
-> +	void *mem;
-> +
-> +	mem = sock_kmalloc(sk, size, priority);
-> +	if (mem)
-> +		memcpy(mem, src, size);
-> +	return mem;
-> +}
+New patches for t/upstream:
+- 6bb3d64aade7: mptcp: pm: exit early with ADD_ADDR echo if possible
+- Results: d8bb22f4550f..6b32949274eb (export)
 
+Tests are now in progress:
 
-I think you will need to add an EXPORT_SYMBOL() here, if you plan to use
-it in SCTP which can be compiled as a module.
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e404c290681fe80af3a4a943a6e2df1a1f9a6bb6/checks
 
 Cheers,
 Matt
