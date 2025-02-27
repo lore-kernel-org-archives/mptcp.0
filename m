@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA7F715B102
-	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 06:44:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 312E221CC7A
+	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 06:44:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740638658; cv=none; b=TzksbPAHiD9HrPdza+S/PuC+4uTwA5KN+ui6eiAXHz+i1VuecYhM5vjcamqsMhwmGOeL8KvHUf14jGTcEMesghqhq29Kx4WCZ0S4+Qmz0lvYsLxL/s1zyopjupGI4QocSwzmRnyDEMqjfrgI5byn8ktD1LKg5tvsxEwWpZo8ZFI=
+	t=1740638659; cv=none; b=ZFCGdiiL1SQ2KN0re2AP2MEjbSZcO2iMgnguP+hzzLZ4VVgiiaLZ3L4SiV42OKDtOHl1Vs1D8b72Yfe1y9s+gwa2GNm1t1bI5ODFLlwvvkBzvVNqRO3WCSPDvyWkoX8MeMlISRnNkf2FZGCHVI2svzzypY36x2i51prNvq2izds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740638658; c=relaxed/simple;
-	bh=tqW2pLqpby6Lsmk545cvuFQ9KEh3v1bRWjP08sfAgzQ=;
+	s=arc-20240116; t=1740638659; c=relaxed/simple;
+	bh=gxuTkKbOCy4bu9PXasmL1Uor5onEMyuwFWhPMFeTMhQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=PusG+Fo4qaiylNqHnMS5ispYaasd7FCKB8+kViawc86RoikRRUjlexlDHmiGg4/GcsINuhEuFn7Q1HOjKZmZ5xRGG3yGL/hYKt3htE8Rzk6klWDeYmIDS4J4lsSoCdqw5FzHATxrSWwrW2XBhd1q9jEPd1aipauEISEb+zb6Rfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Hmonc6pu; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=furX1DoQmsbQJD0p/oByBDAKkhad6W4EvSNhRG7bz3jiVkUcExnlj4B3h+qgIdR4dJd8M3VbIlTmNZq6GyKcOGjKsDtVufwhRuWKD/IxFCC2X22x2POCj0WIBF/ZWHNr5U+1GZ1HFjmVxg2j22KaMl4ZmKgIJEjKd/oZxAcdYbQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=E3Dkb+qU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Hmonc6pu"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 10F0EC4CEE4;
-	Thu, 27 Feb 2025 06:44:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="E3Dkb+qU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5E6CC4CEDD;
+	Thu, 27 Feb 2025 06:44:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740638657;
-	bh=tqW2pLqpby6Lsmk545cvuFQ9KEh3v1bRWjP08sfAgzQ=;
+	s=k20201202; t=1740638659;
+	bh=gxuTkKbOCy4bu9PXasmL1Uor5onEMyuwFWhPMFeTMhQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Hmonc6puCJp67ljIQZAA+Rj7UgpRiOltQ9z94SbVMFgnkuZM4Fk75cTB23zWgfSYG
-	 SNpAdO3u72W2bf+EQirTlvFIa8XuHqSlW5+uAafPD+vzQLfZCdWpMOSd+6vlQGavVI
-	 TAqkiCGvsTQ2WPxCUvuJN8Uu9dw01Smma6K1RE6QN7wEWVTlCckFEw11yO1jmwrPg8
-	 gRq1+9mFpymVb2puFyei3W8u/xSR6XM+1RkxLXi58qCCddeUvppOOMTDIBtp86QmPk
-	 T+MXj1osm62Zgqu3ruFzgzb+SBcBZbZkv8kbk4dhcGAFwVgu6fUO6tz606xvlPfpLn
-	 IU9TUFZowe/mQ==
+	b=E3Dkb+qUFi4ZFkwwh9iSiv2+yOBQqH6H9xZiGdg6TQ9FGWh9OmSS7uq04uiQK+16e
+	 CyJMt7bjBIUSjt82NYOSaXwutKf0kZxv70S22dAy5Kb5q6fD/DMEjeh2ysyq5qHnGG
+	 B+IqmE2yajfdIE6RDo6vR8yPo1dBSzSD8/b8YymxVos6YFt7VAXovP+fQDZdGZZ6mq
+	 fkethGm1nlEKdkttJCt50E+EbfGxOXf3Ovnf6fpOjOeTANPOeAFoi9LAFr5zrIO509
+	 ed5ADghlr6xsIPgsGkd866nqSiIEkBfm267R5Cp6f8Cvpkvay/JYbEO/53rRUUEYhb
+	 2qeEmP2CC5Z1A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 1/6] mptcp: pm: use pm variable instead of msk->pm
-Date: Thu, 27 Feb 2025 14:43:52 +0800
-Message-ID: <98c518824741870f215f7e388ae9ee40655ec9b0.1740638334.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v1 2/6] mptcp: pm: userspace: drop is_userspace in free_local_addr_list
+Date: Thu, 27 Feb 2025 14:43:53 +0800
+Message-ID: <c6d028fd4593ea6459a8625ebdea463043fb214d.1740638334.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1740638334.git.tanggeliang@kylinos.cn>
 References: <cover.1740638334.git.tanggeliang@kylinos.cn>
@@ -45,45 +45,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-The variable "pm" has been defined in mptcp_pm_fully_established()
-and mptcp_pm_data_reset() as "sk->pm", so use "pm" directly instead
-of using "sk->pm".
+To reduce the path manager's reliance on mptcp_pm_is_userspace()
+and mptcp_pm_is_kernel() helpers, this patch drops the check for
+mptcp_pm_is_userspace() in mptcp_free_local_addr_list() and
+replaces it with a check to see if userspace_pm_local_addr_list
+is empty.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ net/mptcp/pm_userspace.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index ac7b39148bd3..1844107f6f93 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -139,13 +139,13 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
- 	 * be sure to serve this event only once.
- 	 */
- 	if (READ_ONCE(pm->work_pending) &&
--	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
-+	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
- 		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 5b3ee43130be..98fe8808d1e1 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -18,7 +18,7 @@ void mptcp_free_local_addr_list(struct mptcp_sock *msk)
+ 	struct sock *sk = (struct sock *)msk;
+ 	LIST_HEAD(free_list);
  
--	if ((msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) == 0)
-+	if ((pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) == 0)
- 		announce = true;
+-	if (!mptcp_pm_is_userspace(msk))
++	if (list_empty(&msk->pm.userspace_pm_local_addr_list))
+ 		return;
  
--	msk->pm.status |= BIT(MPTCP_PM_ALREADY_ESTABLISHED);
-+	pm->status |= BIT(MPTCP_PM_ALREADY_ESTABLISHED);
- 	spin_unlock_bh(&pm->lock);
- 
- 	if (announce)
-@@ -632,7 +632,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
- 	WRITE_ONCE(pm->addr_signal, 0);
- 	WRITE_ONCE(pm->remote_deny_join_id0, false);
- 	pm->status = 0;
--	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
-+	bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
- }
- 
- void mptcp_pm_data_init(struct mptcp_sock *msk)
+ 	spin_lock_bh(&msk->pm.lock);
 -- 
 2.43.0
 
