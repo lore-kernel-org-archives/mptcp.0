@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D78225417
-	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 12:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA28D27003F
+	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 12:30:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740659189; cv=none; b=DGntOoqtAITvU5wP+qFF0RmiUdCvLYQn8igYd3daSk+oK+eugfdC/L3KSk/q76c41USP2oa5seh9qmF+pP6YHqUBYZ6oeInw1O3sRfLpi0UsohCuRnog7hwbLWycl+AQ0aK3/YDghT+OM6msyz1OZCN8LnOfBRrnYBTnV5i8S+U=
+	t=1740659415; cv=none; b=gVh1JdL5Tu2mF/FBQ+IrETs6M6cs9bx7WmRuJtnJU/AVHG63Qj4o+L+ae2HhWf1si7QCL09WwnPfdKblUzHRiOzyoQpq47Co36cqZLGzmuKL9uV6OXJl+AuMkPv/h+q75Bxbwg1+kqxJBzw92fMC0pK/PizRi9dd62jyuvXt0Ng=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740659189; c=relaxed/simple;
-	bh=Yg99zrzQoWIABinHW2pNSjvcgvTUryj+a6MEOb0cxtA=;
+	s=arc-20240116; t=1740659415; c=relaxed/simple;
+	bh=rm4ugH/FKDLNZ6oCi/J7RZxRaEQCCZahpNZ2TbWsYU4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YCtmIovwn7uQoFCFIiAdRoIIiOUH92jvBhQSzF2DXk4GWJVfeeFONYR8AVOrDme0cMJRBm0HzkWUIP5fycCODsLrtrDuXsUW1yLDr0bvuUpBNkl7N+4Nw+EjRv2NhqteHy5CT5VIwQkK38NWS/VlPdxhV3YmJWzydn/ZiLvM9SA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8q3MdU1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PJdwJA2JtVxDP094fgQip5hVbU0dLnwMQE7C025yWwcCBGhCggMXT0J+ZFIDM2LU0rBfefKw5vnyi1d/oxU1DuapEgu72XCKMegdZqaUkYIw6iUNm9s4Li+uL1ILLVI+FwTMATn6nRncr8DGuxkO+j3QvC0OJNo2hUeorTq+bg4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pV9yC7CQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8q3MdU1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5CBC4CEDD;
-	Thu, 27 Feb 2025 12:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pV9yC7CQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8EE2EC4CEDD;
+	Thu, 27 Feb 2025 12:30:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740659189;
-	bh=Yg99zrzQoWIABinHW2pNSjvcgvTUryj+a6MEOb0cxtA=;
+	s=k20201202; t=1740659415;
+	bh=rm4ugH/FKDLNZ6oCi/J7RZxRaEQCCZahpNZ2TbWsYU4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=R8q3MdU1K3Ra2S5+odmyrMjG6UEQDfWh6cP+o84rCpNstomVUwktlCLcG3YVp67Vm
-	 3smQELmOr6KlqxaGHcfXHUni6c4I5dKFy8OZBNdCAOYeyORIhOwbsnzOqCJLguoQzd
-	 X4Bw9W3ULUmYCkTjaanrg5LoWJ+agWPlu9pldOuReMjkqqoleANpLZhfwzlIzVx1RW
-	 81Dho4v/JL3zqPHGYSIX2lpQElmAa3P7nxYx/R8OWxfTUfjJKhM/v0l8Sn6t7EMh12
-	 cONT9t9IMau42rVFZdbd/msV9Xz84XAEgLiTf11oSTsfkIgn8tf1oTSiQvnRwbmH78
-	 CxjomVCiv0zGw==
-Message-ID: <ab65f523-302e-4a06-a990-1bc90eb49560@kernel.org>
-Date: Thu, 27 Feb 2025 13:26:25 +0100
+	b=pV9yC7CQKavpkgoAX1ClmuBGGDBlZKNL7FM4Xf2kJWGYpUDsGWm/xXpJFlWr+j1ag
+	 1D9U0QGTBoeNGjMdIe4CLwbc7daWA3n0BMVz6naiKpzp7TUx9B/yw3u0lruQ0QR+py
+	 cC9a7lhhf7vtqpVxJGTpcuX450M9zYCFxjLk4djgT3qYV+HvGUtW2TkfmAfvKcILS5
+	 qIlfTi6lZJgWI20dTf255gV8/SaQWXtOzwohAxqrJpHUrVb6AJVy8K68h59vhnZkyO
+	 /ZH3fO6Uo2mSHx59p3upZXUV/dnQ+5+JotBxeqUX+24GTvbIXwnOuQ0Tqsjl4L9Aej
+	 YyKIwEhOu38Yg==
+Message-ID: <3289d2da-4953-4b35-8024-4163663d8bc1@kernel.org>
+Date: Thu, 27 Feb 2025 13:30:12 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 5/6] mptcp: pm: add remote parameter for
- set_flags
+Subject: Re: [PATCH mptcp-next v1 6/6] mptcp: pm: in-kernel: drop changed
+ parameter of set_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740638334.git.tanggeliang@kylinos.cn>
- <10ce66a82baec7e37fcde50554c1a0f0f2a9da6a.1740638334.git.tanggeliang@kylinos.cn>
+ <1e2f2a9bcdf69bd241dec4c5455c4aa135927cb6.1740638334.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <10ce66a82baec7e37fcde50554c1a0f0f2a9da6a.1740638334.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1e2f2a9bcdf69bd241dec4c5455c4aa135927cb6.1740638334.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,46 +96,62 @@ Hi Geliang,
 On 27/02/2025 07:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The remote address of set_flags() interface is useful for userspace PM,
-> but unused in in-kernel PM.
+> To drop the additional "changed" parameter of mptcp_nl_set_flags(),
+> store "entry->flags" to "remote->flags" before modifying it in
+> mptcp_pm_nl_set_flags(), so that "changed" value can be obtained by
+> comparing "local->flags" and "remote->flags" in mptcp_nl_set_flags().
+
+Here as well, no need to change the code: it doesn't make sense to deal
+with 'remote' as a workaround to have the same interface that is not
+needed from what I understood. No?
+
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm_netlink.c | 8 ++++++--
+>  1 file changed, 6 insertions(+), 2 deletions(-)
 > 
-> But an additional "changed" parameter needs to be passed to set_flags() of
-> in-kernel PM. One option is to add a "u8 changed" parameter to set_flags()
-> interface:
-> 
-> 	set_flags(struct mptcp_pm_addr_entry *local,
-> 		  struct mptcp_addr_info *remote,
-> 		  u8 changed)
-> 
-> A better option is to add a struct mptcp_pm_addr_entry "remote" parameter
-> for set_flags(), so that "remote->addr" can be used for userspace PM, and
-> "remote->flags" can be used for in-kernel PM to replace the additional
-> "changed" parameter.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index 053f2bec9042..2f22c3bf88e2 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
+> @@ -1916,13 +1916,16 @@ static void mptcp_pm_nl_fullmesh(struct mptcp_sock *msk,
+>  
+>  static void mptcp_nl_set_flags(struct net *net,
+>  			       struct mptcp_pm_addr_entry *local,
+> -			       u8 changed)
+> +			       struct mptcp_pm_addr_entry *remote)
+>  {
+>  	u8 is_subflow = !!(local->flags & MPTCP_PM_ADDR_FLAG_SUBFLOW);
+>  	u8 bkup = !!(local->flags & MPTCP_PM_ADDR_FLAG_BACKUP);
+> +	u8 changed, mask = MPTCP_PM_ADDR_FLAG_BACKUP |
+> +			   MPTCP_PM_ADDR_FLAG_FULLMESH;
+>  	long s_slot = 0, s_num = 0;
+>  	struct mptcp_sock *msk;
+>  
+> +	changed = (local->flags ^ remote->flags) & mask;
+>  	if (changed == MPTCP_PM_ADDR_FLAG_FULLMESH && !is_subflow)
+>  		return;
+>  
+> @@ -1987,12 +1990,13 @@ int mptcp_pm_nl_set_flags(struct mptcp_pm_addr_entry *local,
+>  		return -EINVAL;
+>  	}
+>  
+> +	remote->flags = entry->flags;
 
-I don't think I understand why we need this modification.
+(I guess you wanted to use "remote->flags = changed" or something like
+that, but this code should not be modified I think, it doesn't make
+sense to deal with a "remote" here)
 
-The 'set_flags' netlink command is there to change the behaviour of the
-in-kernel PM and the userspace PM. It will certainly not be useful for a
-BPF PM because all its configurations will be done via BPF, not via
-Netlink. If the userspace send this Netlink command when a BPF PM will
-be used, nothing will happen:
-- if a token is specified, the userspace PM should not do anything if it
-is not the designated PM for this connection.
-- if not, the in-kernel PM will only modify the connections handled by
-the in-kernel PM.
-
-The in-kernel and userspace PMs use the same command, but for different
-things, hence requiring different parameters: e.g. the userspace one
-requires the token because the modification will be only for one
-connection, while the in-kernel will be for a specific endpoint.
-
-So the current code looks OK: in the common part (pm.c), only the common
-attributes are parsed. On the userspace side, extra parameter will be
-parsed, that's fine. On the in-kernel side, 'changed' will be looked at
-simply because there is no need to iterate over all the connections if
-nothing has changed on the corresponding endpoint side. In other words,
-I don't think the code should be changed, no?
-
+>  	changed = (local->flags ^ entry->flags) & mask;
+>  	entry->flags = (entry->flags & ~mask) | (local->flags & mask);
+>  	*local = *entry;
+>  	spin_unlock_bh(&pernet->lock);
+>  
+> -	mptcp_nl_set_flags(net, local, changed);
+> +	mptcp_nl_set_flags(net, local, remote);
+>  	return 0;
+>  }
+>  
 Cheers,
 Matt
 -- 
