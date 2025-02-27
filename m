@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4692376E6
-	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 12:10:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88D78225417
+	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 12:26:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740658254; cv=none; b=uKKqvOhbOMIRpXXHoIc/T7m033krdcrexv2aSGGvRYKONz9YZRjJlajL4AixjZHqKTjzXJuI59qjgBkSxfsTcvjDOz6QaW+g7BDD2RuOzBGz+QYnhNHiQ5+ZsjZZbndyHe/eno0rpUjK0yPVdTCcoYZ52dlqF20ipjtJC8qMvnA=
+	t=1740659189; cv=none; b=DGntOoqtAITvU5wP+qFF0RmiUdCvLYQn8igYd3daSk+oK+eugfdC/L3KSk/q76c41USP2oa5seh9qmF+pP6YHqUBYZ6oeInw1O3sRfLpi0UsohCuRnog7hwbLWycl+AQ0aK3/YDghT+OM6msyz1OZCN8LnOfBRrnYBTnV5i8S+U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740658254; c=relaxed/simple;
-	bh=YxoOXh3xyf9gfSrx5GV2jl8xzG1Yci5o9gX8siy/QTA=;
+	s=arc-20240116; t=1740659189; c=relaxed/simple;
+	bh=Yg99zrzQoWIABinHW2pNSjvcgvTUryj+a6MEOb0cxtA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=g2lMT9Pufz2yf5DNctDRHqg3feccBVNULu0UysZa/5m+aE/bawHJsT7/ONVJsZ/7g0J7jjlr/xummkykrsJTDzjlibicKQUJm6KNS7Zjy7RDA64EDLp6Nqcrm/MME0YVp3vDjcdt2nTUaRgN2g8wXjTQSqtidiZRoIVGbXo/vOw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/fO8xMl; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=YCtmIovwn7uQoFCFIiAdRoIIiOUH92jvBhQSzF2DXk4GWJVfeeFONYR8AVOrDme0cMJRBm0HzkWUIP5fycCODsLrtrDuXsUW1yLDr0bvuUpBNkl7N+4Nw+EjRv2NhqteHy5CT5VIwQkK38NWS/VlPdxhV3YmJWzydn/ZiLvM9SA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R8q3MdU1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/fO8xMl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E380BC4CEE7;
-	Thu, 27 Feb 2025 12:10:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R8q3MdU1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3F5CBC4CEDD;
+	Thu, 27 Feb 2025 12:26:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740658253;
-	bh=YxoOXh3xyf9gfSrx5GV2jl8xzG1Yci5o9gX8siy/QTA=;
+	s=k20201202; t=1740659189;
+	bh=Yg99zrzQoWIABinHW2pNSjvcgvTUryj+a6MEOb0cxtA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=A/fO8xMl5+kdyXu3cBCkcO8ZUI6FMt9i0A+XWV4Ae+1ygmn1yTDGhz1SLL6GWy3/O
-	 xY+w6WCYP/iCPxhlp/h9ICLy4GuYtPpQtjlnYOcH7QrXrUoBAQHd6Ey+t6qeYb/jBB
-	 uNkRsKhKZtNCYG/NXlFi3BoAO+n4Qgmk6FyeYpnUM7tvFj5jbfmxvwomfqg+5LIfV/
-	 rEyh3suRzYrDWsK8qvmke79MvSIYl/fukwIJ3F5PBQqKZk1dCmyoayG6X+jj+Wv3ML
-	 DUSI0ZicSeh/a3kdrZ2/tpPLia9+1tit0JgDrWv8XR0V1K1WcBY2JuVussIdNaGJmL
-	 RtOBVU6YqUt/A==
-Message-ID: <ddb71ab4-145f-429c-9cc0-aba2e8c04c91@kernel.org>
-Date: Thu, 27 Feb 2025 13:10:50 +0100
+	b=R8q3MdU1K3Ra2S5+odmyrMjG6UEQDfWh6cP+o84rCpNstomVUwktlCLcG3YVp67Vm
+	 3smQELmOr6KlqxaGHcfXHUni6c4I5dKFy8OZBNdCAOYeyORIhOwbsnzOqCJLguoQzd
+	 X4Bw9W3ULUmYCkTjaanrg5LoWJ+agWPlu9pldOuReMjkqqoleANpLZhfwzlIzVx1RW
+	 81Dho4v/JL3zqPHGYSIX2lpQElmAa3P7nxYx/R8OWxfTUfjJKhM/v0l8Sn6t7EMh12
+	 cONT9t9IMau42rVFZdbd/msV9Xz84XAEgLiTf11oSTsfkIgn8tf1oTSiQvnRwbmH78
+	 CxjomVCiv0zGw==
+Message-ID: <ab65f523-302e-4a06-a990-1bc90eb49560@kernel.org>
+Date: Thu, 27 Feb 2025 13:26:25 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 4/6] mptcp: pm: in-kernel: drop is_userspace
- in remove_id_zero
+Subject: Re: [PATCH mptcp-next v1 5/6] mptcp: pm: add remote parameter for
+ set_flags
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740638334.git.tanggeliang@kylinos.cn>
- <d9e2fc66a1207673f07510b7b34f08edd9828220.1740638334.git.tanggeliang@kylinos.cn>
+ <10ce66a82baec7e37fcde50554c1a0f0f2a9da6a.1740638334.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d9e2fc66a1207673f07510b7b34f08edd9828220.1740638334.git.tanggeliang@kylinos.cn>
+In-Reply-To: <10ce66a82baec7e37fcde50554c1a0f0f2a9da6a.1740638334.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,43 +96,45 @@ Hi Geliang,
 On 27/02/2025 07:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> There're duplicate operations in mptcp_nl_remove_subflow_and_signal_addr()
-> and mptcp_nl_remove_id_zero_address(), both of which traverse all mptcp
-> sockets in the net namespace. This patch drops the traversal operation in
-> the latter and reuse the traversal loop of the former to do the removal of
-> id zero address.
+> The remote address of set_flags() interface is useful for userspace PM,
+> but unused in in-kernel PM.
+> 
+> But an additional "changed" parameter needs to be passed to set_flags() of
+> in-kernel PM. One option is to add a "u8 changed" parameter to set_flags()
+> interface:
+> 
+> 	set_flags(struct mptcp_pm_addr_entry *local,
+> 		  struct mptcp_addr_info *remote,
+> 		  u8 changed)
+> 
+> A better option is to add a struct mptcp_pm_addr_entry "remote" parameter
+> for set_flags(), so that "remote->addr" can be used for userspace PM, and
+> "remote->flags" can be used for in-kernel PM to replace the additional
+> "changed" parameter.
 
-I'm hesitating here. It "feels" wrong to deal with an endpoint having 0
-for the ID in the in-kernel manager code. Currently, the code is
-separated from the beginning, and even if there is bit of duplication,
-it looks clearer to deal with this special case.
+I don't think I understand why we need this modification.
 
-(Also, I don't really see a use-case to delete only the first subflows
-of all connections, but that's a different topic).
+The 'set_flags' netlink command is there to change the behaviour of the
+in-kernel PM and the userspace PM. It will certainly not be useful for a
+BPF PM because all its configurations will be done via BPF, not via
+Netlink. If the userspace send this Netlink command when a BPF PM will
+be used, nothing will happen:
+- if a token is specified, the userspace PM should not do anything if it
+is not the designated PM for this connection.
+- if not, the in-kernel PM will only modify the connections handled by
+the in-kernel PM.
 
-> An additional benefit is that the check for mptcp_pm_is_userspace() in
-> mptcp_nl_remove_id_zero_address() is dropped, which reduces the path
-> manager's reliance on mptcp_pm_is_userspace() and mptcp_pm_is_kernel()
-> helpers.
+The in-kernel and userspace PMs use the same command, but for different
+things, hence requiring different parameters: e.g. the userspace one
+requires the token because the modification will be only for one
+connection, while the in-kernel will be for a specific endpoint.
 
-I think these checks here make sense: we are iterating over all
-connections, but we just need the ones handled by the in-kernel PM.
-
-When the pm->ops will be there, can you not simply replace all these
-checks under a mptcp_token_iter_next() by something like:
-
-  if (&msk->pm.ops != &mptcp_pm_netlink)
-      continue;
-
-or:
-
-  if (mptcp_pm_ops(msk) != mptcp_pm_netlink)
-
-or with a macro for the iterator:
-
-  mptcp_pm_for_each_msk(net, &s_slot, &s_num, &mptcp_pm_netlink) {
-
-WDYT?
+So the current code looks OK: in the common part (pm.c), only the common
+attributes are parsed. On the userspace side, extra parameter will be
+parsed, that's fine. On the in-kernel side, 'changed' will be looked at
+simply because there is no need to iterate over all the connections if
+nothing has changed on the corresponding endpoint side. In other words,
+I don't think the code should be changed, no?
 
 Cheers,
 Matt
