@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 777C41DB122
-	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 11:44:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4692376E6
+	for <mptcp@lists.linux.dev>; Thu, 27 Feb 2025 12:10:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740656662; cv=none; b=SufBNOluk9pdIJ1/hqm2rJFgAO3I9UM5wba6oZ0CNzYRUCLnTyMXwn9lKU5fjhvcyqEqV5W43T3aIE5iuOAOJa6jtfJKWjsX9lm9Ks0bKItivbti5TnCYwfDgBfHUYTowHs+1EKjHWE7UMdgzp5ukGTD7CVxu4gXIDKFPezel7Q=
+	t=1740658254; cv=none; b=uKKqvOhbOMIRpXXHoIc/T7m033krdcrexv2aSGGvRYKONz9YZRjJlajL4AixjZHqKTjzXJuI59qjgBkSxfsTcvjDOz6QaW+g7BDD2RuOzBGz+QYnhNHiQ5+ZsjZZbndyHe/eno0rpUjK0yPVdTCcoYZ52dlqF20ipjtJC8qMvnA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740656662; c=relaxed/simple;
-	bh=5k9sZXFqw6ywvsY67PkLiEGj7jKSjljN6dDMxRAEjx0=;
+	s=arc-20240116; t=1740658254; c=relaxed/simple;
+	bh=YxoOXh3xyf9gfSrx5GV2jl8xzG1Yci5o9gX8siy/QTA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=bX8dwhuJcZ3HAyN44nem84IRyqd5+y+Q/7vJcU9bAR9XClXOaicneLTy90FBLdlQflxo2gr6WK2hkv9TQwf6PL2ZP8bKGOyk6X4tgTN3yuJdbRuOkQenLbKxYH0ENvTXw68CfZvJ6d07uuIgi4ay44NOQ+bqmeTOFe8KhR9LyJQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mfFhoC5f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=g2lMT9Pufz2yf5DNctDRHqg3feccBVNULu0UysZa/5m+aE/bawHJsT7/ONVJsZ/7g0J7jjlr/xummkykrsJTDzjlibicKQUJm6KNS7Zjy7RDA64EDLp6Nqcrm/MME0YVp3vDjcdt2nTUaRgN2g8wXjTQSqtidiZRoIVGbXo/vOw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=A/fO8xMl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mfFhoC5f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32C22C4CEDD;
-	Thu, 27 Feb 2025 11:44:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="A/fO8xMl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E380BC4CEE7;
+	Thu, 27 Feb 2025 12:10:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740656661;
-	bh=5k9sZXFqw6ywvsY67PkLiEGj7jKSjljN6dDMxRAEjx0=;
+	s=k20201202; t=1740658253;
+	bh=YxoOXh3xyf9gfSrx5GV2jl8xzG1Yci5o9gX8siy/QTA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mfFhoC5fmetn+nuxgqN8Fz/q8qL7rCMSpQwPXmyPxu34waujX/YLlpez2F7LAcYTs
-	 EDgxA6+U9K1rIoUzCwUQmU9SjMH6u+bOSHwPlhOPeyKH8U9NoB00eA6XJdfosGNESZ
-	 yLuSBA6e6w4oGnSLOSMmgnySZc66VVX+qn4LZrkyiLvJuDADZzHfa1CrMEK3tV/YWj
-	 bgK76RRG5TRg0wB1bngGexf3/pDRKnUCIPOyoCT9jkEfZirG95JEz1BOJpmJlz5ZIs
-	 K3IidrF0+1nIbYSZe/DyQ3WCHmNun1ZB9cioe5cAiIcG/WFhpDH8Qbm3ltP1DLx+Tg
-	 tB95JRGFjAMaA==
-Message-ID: <bd02d3d8-6239-41a8-9efe-c61e4c29a847@kernel.org>
-Date: Thu, 27 Feb 2025 12:44:19 +0100
+	b=A/fO8xMl5+kdyXu3cBCkcO8ZUI6FMt9i0A+XWV4Ae+1ygmn1yTDGhz1SLL6GWy3/O
+	 xY+w6WCYP/iCPxhlp/h9ICLy4GuYtPpQtjlnYOcH7QrXrUoBAQHd6Ey+t6qeYb/jBB
+	 uNkRsKhKZtNCYG/NXlFi3BoAO+n4Qgmk6FyeYpnUM7tvFj5jbfmxvwomfqg+5LIfV/
+	 rEyh3suRzYrDWsK8qvmke79MvSIYl/fukwIJ3F5PBQqKZk1dCmyoayG6X+jj+Wv3ML
+	 DUSI0ZicSeh/a3kdrZ2/tpPLia9+1tit0JgDrWv8XR0V1K1WcBY2JuVussIdNaGJmL
+	 RtOBVU6YqUt/A==
+Message-ID: <ddb71ab4-145f-429c-9cc0-aba2e8c04c91@kernel.org>
+Date: Thu, 27 Feb 2025 13:10:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 2/6] mptcp: pm: userspace: drop is_userspace
- in free_local_addr_list
+Subject: Re: [PATCH mptcp-next v1 4/6] mptcp: pm: in-kernel: drop is_userspace
+ in remove_id_zero
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740638334.git.tanggeliang@kylinos.cn>
- <c6d028fd4593ea6459a8625ebdea463043fb214d.1740638334.git.tanggeliang@kylinos.cn>
+ <d9e2fc66a1207673f07510b7b34f08edd9828220.1740638334.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <c6d028fd4593ea6459a8625ebdea463043fb214d.1740638334.git.tanggeliang@kylinos.cn>
+In-Reply-To: <d9e2fc66a1207673f07510b7b34f08edd9828220.1740638334.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,34 +96,43 @@ Hi Geliang,
 On 27/02/2025 07:43, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To reduce the path manager's reliance on mptcp_pm_is_userspace()
-> and mptcp_pm_is_kernel() helpers, this patch drops the check for
-> mptcp_pm_is_userspace() in mptcp_free_local_addr_list() and
-> replaces it with a check to see if userspace_pm_local_addr_list
-> is empty.
+> There're duplicate operations in mptcp_nl_remove_subflow_and_signal_addr()
+> and mptcp_nl_remove_id_zero_address(), both of which traverse all mptcp
+> sockets in the net namespace. This patch drops the traversal operation in
+> the latter and reuse the traversal loop of the former to do the removal of
+> id zero address.
 
-The existing design feels wrong: I see that mptcp_destroy_common()
-directly calls specific PM code.
+I'm hesitating here. It "feels" wrong to deal with an endpoint having 0
+for the ID in the in-kernel manager code. Currently, the code is
+separated from the beginning, and even if there is bit of duplication,
+it looks clearer to deal with this special case.
 
-I think in general, MPTCP core should only call code from pm.c, then
-redirected to the right PM (later using the 'pm->ops').
+(Also, I don't really see a use-case to delete only the first subflows
+of all connections, but that's a different topic).
 
-For the moment, I see mptcp_destroy_common() from protocol.c is calling:
+> An additional benefit is that the check for mptcp_pm_is_userspace() in
+> mptcp_nl_remove_id_zero_address() is dropped, which reduces the path
+> manager's reliance on mptcp_pm_is_userspace() and mptcp_pm_is_kernel()
+> helpers.
 
- - mptcp_pm_free_anno_list(msk);
- - mptcp_free_local_addr_list(msk);
+I think these checks here make sense: we are iterating over all
+connections, but we just need the ones handled by the in-kernel PM.
 
-Instead, I suggest mptcp_destroy_common() calling mptcp_pm_destroy(),
-which will always call mptcp_pm_free_anno_list() and only call
-mptcp_free_local_addr_list() for the userspace pm.
+When the pm->ops will be there, can you not simply replace all these
+checks under a mptcp_token_iter_next() by something like:
 
-Later on, mptcp_free_local_addr_list() could be called via
-'pm->ops->destroy' I suppose, no?
+  if (&msk->pm.ops != &mptcp_pm_netlink)
+      continue;
 
-BTW, mptcp_pm_free_anno_list() seems to be used by all PMs, right? I
-think it would be better to move this code to pm.c. Same for all
-"common" code. I can look at that if you prefer. But maybe you prefer to
-do this after your changed or is that OK to rebase after?
+or:
+
+  if (mptcp_pm_ops(msk) != mptcp_pm_netlink)
+
+or with a macro for the iterator:
+
+  mptcp_pm_for_each_msk(net, &s_slot, &s_num, &mptcp_pm_netlink) {
+
+WDYT?
 
 Cheers,
 Matt
