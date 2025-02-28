@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 30B4614A91
-	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 13:31:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E03714A91
+	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 13:31:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740749501; cv=none; b=GXTKjVRKMmwBlJRfCdjJ7KqmSrpf4EYqbn5rOhNmyl2pkigNjDDjJEzzVnyVIHMasK6MkPYXysb3OBjn9rHike8HcbkaLX61Ex77uPawbYbsLdKXam5KAg9iuVVWaFkCL7R+pWpKThiHAUeI1CSp+3PAeLO9UkeMoCnym7WpAtw=
+	t=1740749502; cv=none; b=oepC1jpqLmWo8ka9Zw/epxeucN5V6ltnItvNCofIJC4Efjyt3cO4K9HWXsbWy9muQVS4ITwzD/yF8/9scQHeS1KztqEhzhE8etKXCWBkeHEIW5aGGJDuIegIk5C88tVb3kzpd9vjeKXXb8gIIZkBR3jIwUuoiS3ZbcC+M4mibsI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740749501; c=relaxed/simple;
-	bh=tPbEbtXF2Ypxj/8ZR/+T2bdjMHl5GduIMIZ/mJZAEgQ=;
-	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=AwhaWDsidlT7wcgDDhaEjAJi1obW7/nKlJhhxu4N7HfWsDB4ZmcGY4jhG7cTLXX+1JeLzsplfymxi89TU6gs9UqPewQFhuQx1crFmnrW8CGq3/LaD4C71oei2HFpLrN3/tW0PXa7rSOJNLXdOzkkjYLlTgus/jQQQR0X3ljnCgY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=stiCM8D5; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740749502; c=relaxed/simple;
+	bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
+	 In-Reply-To:To:Cc; b=cvYScPeEiw6RYdWarGLXM1NoeXMYlhMaZeuzAQ28tjYJY2b89CtFRxLdNVaoCHvSUAupJoX7C2firwYgex8NFW0EpWYATbm35cjIHiKifJ06qwbqe7/Oz4oEEEQTCIgpbJWo/h8tGTGz2TkLIhds8CCNVPfxlnfEJ2G7t8Jmmho=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxRrE3xx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="stiCM8D5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E77BFC4CED6;
-	Fri, 28 Feb 2025 13:31:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxRrE3xx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25408C4CEE2;
+	Fri, 28 Feb 2025 13:31:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740749500;
-	bh=tPbEbtXF2Ypxj/8ZR/+T2bdjMHl5GduIMIZ/mJZAEgQ=;
-	h=From:Subject:Date:To:Cc:From;
-	b=stiCM8D5+0TmDmgnUCPS1RXDM1H8/4/p6OsIdaQAnPdadsihcT7+A9TSRIjQ5bu70
-	 A25TUNHEXaCVMdNQR0tSUNJO2mc9fQyycZ/FmHIkkgXDnafRrfi2qpdvDjXF3a4AOh
-	 4G3/LnIjZv40F+ob0A2AxtIdcakpXpAKVwG8C/2KL52/FvVFU9To1ZU9XoeLPg+2KA
-	 VvQuMMESgTegiqWyQr01+/6G82VEzx+g7vsIZi2TKuTNvQuPetj9H32d72ZKqMXRBd
-	 g7myMySKbEO7agIqzNUxU3+6xOScDmTaMMrkGPWLesv1LbLANHdakraC/pYqgFrxc2
-	 Q7Qq0BdyqiyRg==
+	s=k20201202; t=1740749501;
+	bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
+	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
+	b=hxRrE3xxlKNFwyGTvg27EO9775JOE2d/C3VdScbHjhBRen9KH7Wdu730qOPt2Yvss
+	 pMBGjHrtuP9Jd6zcL/sg8etEpQoW6AvU63OP060/1X7Xkyu9xF1uMyRhCzBKFwQh0n
+	 JAXF7LP6p5BhNGgDwD7MNc8VO9JrZey6FSz+OaSwuuTCwUuBfrR/0kGzWJRFq8g3LB
+	 SMBVMO2xAeY4PCwYQpxsaAOy4AkkoemMb2kUWnjfKaBWEgnELP8UrQbArv/eHe5Q9+
+	 SKEQ8oBykYbJ95n3+wa8lYgabMYMAFRRgWTy2V6QqordLL0JrRoN7HV4ihjV1jVKvC
+	 Up3T3eJYG+diw==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Subject: [PATCH mptcp-next v2 00/14] mptcp: pm: code reorganisation
-Date: Fri, 28 Feb 2025 14:31:20 +0100
-Message-Id: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+Date: Fri, 28 Feb 2025 14:31:21 +0100
+Subject: [PATCH mptcp-next v2 01/14] mptcp: pm: remove '_nl' from
+ mptcp_pm_nl_addr_send_ack
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,134 +38,126 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-X-B4-Tracking: v=1; b=H4sIAKi6wWcC/32NwQ6CMBBEf4Xs2TWlWIie+A/DQdoVGqVttoRgC
- P/uBu8e5jCZNzMbZGJPGW7FBkyLzz4GMfpUgB0fYSD0TjxopY3SusEpzTZhmpAp8oA2OsKyksR
- UqnfKgDQT09Ovx+odfoVA6wydZKPPc+TPcbiUB/F3eylRoe0vddOoay1qX8SB3mchoNv3/QvTu
- eLZwwAAAA==
-X-Change-ID: 20250227-mptcp-pm-reorg-code-13227530bd05
+Message-Id: <20250228-mptcp-pm-reorg-code-v2-1-fa8b2542b7a5@kernel.org>
+References: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+In-Reply-To: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=4838; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tPbEbtXF2Ypxj/8ZR/+T2bdjMHl5GduIMIZ/mJZAEgQ=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnwbq5dwOzfMPQH+HwmtmHnzen6kPkucUYpN7EH
- rj6iyBYO0SJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8G6uQAKCRD2t4JPQmmg
- c5SgD/sHGOKEKEf6WtJajq8n8COLeNS2RnGjHrMbTpKpolHCjvLMjksozVHcLsK265097raFMAR
- 8Ai0fmw+ImmrIvRz3kv5/+qW5DKmlklTHB+z9sqGeYTAYPMbMoeXjcBHRCsffKAbfYve/Rx2jhB
- VvDWs5OqOOdpdQrGbIo3hEiqoAf2vmCg3RhCazbPaiAQFoGerQ88M0JXtHyo2Zo+bHUR+E1b+nL
- Y2+lCz+Bpw+2uuECab7YlZ/lUSsofy4+tql68BwKkvC3/NsJaYKmjtT4hfdU9nykyKGNvWIe4FT
- R6cj3uNqdSl6K8GwdyW6RAnQBz5n9xudnY0Mg1WjA526i6oAU9WX0NBpmXcGN3S/SfPIQUtN18s
- RsRsEBKsPN/0PoiH72P7FZi9kPHO4yMEQIbfibT1cGH2yE3TOCebievWofaz8kHdZQfvlu78nzc
- FB0veDzrBCQpGIhoCqmzOpovJrrDdk1cKusN14cGGtBjclhV1HD3ezt94bFBmenWR6eD30sdy/p
- FA9wjzKCYISanJtF7y0XvLtzbVzj9Hx3vZh2zkvGZP1IesKGPrquRnklbq3rX9bDMtEU4aSgtc5
- oGG8jDS4zEcr9AEHs/q3Fl6EuXE5BI12SNhp0F2xo5usqTLWkM0WCRiiJyvazQFsFgV3KFHuvsc
- eBKbRHapk70DCLQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3935; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnwbq5uVTrueQzHRGf7trse0DF7d8Ea6tlbcppB
+ qXndda3ZpGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8G6uQAKCRD2t4JPQmmg
+ cxoyEADmBp8XsLaSsdhS0xj8fzfg6eRyXtSvyLXfJ9EQExZnt364OBlJjKa0gv1b7pyZ0DBpn6g
+ RklD3gtrsW+bTfSlwsb9FQ3HPcVegvxCyCKbplSfvE6sbm3GIYAYKvSk3hJXRhAKPN5XhKm9s7T
+ AEuhu54tzdCx7zzeKJze8SCzFda7P4/3veRGlH+IGE0VkiD2KSyXQJ4g2Th0V+LzK7j/D5IaPxY
+ Wjf1ex1iUcmUjL3Pgx0U6vy+MIpSZCT8LTE6EarPkSNsQC4gbQ0SYAIg2YQd6AzjSeKyuR2vrQF
+ 5thTV4uXZu0YZ+MIot9eTdJBKAnh57aKclK5P59DQlcuEZ+QeS/bvs59vS65wxN7RYZGBtEOc8r
+ gFlXQjWYxiwD+z9Se6zAFjHFOxQo9LkZmgE6s+Nhqt6WNKnCVrI6OlgeS7SZGCCnWUM5YINKo4k
+ avvTCGr1ZyXFlgu7MJNSk4XiDYJY6S2WHCxxVYkOrw8YCTsYLhqvMLknMeRoGAxa6+8LW2zEreh
+ u8pj0975ZtAEXlOy1V/lLK4tq27tS9ocxHFlEB2NOUCF9uQ1W19iqyK0SogqOfa+L/W8kK6nvBO
+ Tcr/E+I2xoLVzAGc77gemGTDZ4KWk8Z6jS+WD9mPQht0r9yM85VaIwQoNmlSjrjnaAZIdttZOnK
+ wMsU0RtPsgDVbUA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-I have been thinking about that during the past couple of months, but
-now, with the recent modifications done by Geliang, and the associated
-reviews, I really think it is time to reorganise the code around the
-path-managers to avoid confusions, and a mix of code used in different
-conditions.
+Currently, in-kernel PM specific helpers are prefixed with
+'mptcp_pm_nl_'. But here 'mptcp_pm_nl_addr_send_ack()' is not specific
+to this PM: it is used by both the in-kernel and userspace PMs.
 
-I hope this will not cause too many issues with the in-progress patches.
-I tried only to move the code around, and minimise the functions
-renaming. Then, to switch to the new code, it might be easier to simply
-copy your modified code from the old place to the new one. In other
-words, duplicate the net/mptcp directory, then do a rebase, resolve the
-conflicts with 'git restore --ours', then reapply the modifications by
-copying your old code to the new place. If it is too difficult, please
-let me know.
+To avoid confusions, the '_nl' bit has been removed from the name.
 
-Before this series, the PM code was dispersed in different places:
-
-- pm.c had common code for all PMs
-
-- pm_netlink.c was supposed to be about the in-kernel PM, but also had
-  exported common helpers, callbacks used by the different PMs, NL
-  events for PM userspace daemon, etc. quite confusing.
-
-- pm_userspace.c had userspace PM only code, but using specific
-  in-kernel PM helpers
-
-To clarify the code, a reorganisation is suggested here, only by moving
-code around, and small helper renaming to avoid confusions:
-
-- pm_netlink.c now only contains common PM Netlink code:
-  - PM events: this code was already there
-  - shared helpers around Netlink code that were already there as well
-  - shared Netlink commands code from pm.c
-
-- pm_kernel.c now contains only code that is specific to the in-kernel
-  PM. Now all functions are either called from:
-  - pm.c: events coming from the core, when this PM is being used
-  - pm_netlink.c: for shared Netlink commands
-  - mptcp_pm_gen.c: for Netlink commands specific to the in-kernel PM
-  - sockopt.c: for the exported counters per netns
-
-- pm.c got many code from pm_netlink.c:
-  - helpers used from both PMs and not linked to Netlink
-  - callbacks used by different PMs, e.g. ADD_ADDR management
-  - some helpers have been renamed to remove the '_nl' prefix, and they
-    have been marked as 'static'.
-
-- protocol.h has been updated accordingly:
-  - some helpers no longer need to be exported
-  - new ones needed to be exported: they have been prefixed if needed.
-
-The code around the PM is now less confusing, which should help for the
-maintenance in the long term.
-
-This will certainly impact future backports, but because other cleanups
-have already done recently, and more are coming to ease the addition of
-a new path-manager controlled with BPF (struct_ops), doing that now
-seems to be a good time. Also, many issues around the PM have been fixed
-a few months ago while increasing the code coverage in the selftests, so
-such big reorganisation can be done with more confidence now.
+No behavioural changes intended.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
-Changes in v2:
-- Addressing Geliang's comments
-- The renaming of common helpers have been done in dedicated patches
-- Some helpers have been kept where they were in pm.c, except one now in
-  a dedicated patch.
-- The last patch has been split in smaller chunks, only moving code from
-  one file to another to help with the reviews.
-- Link to v1: https://lore.kernel.org/r/20250227-mptcp-pm-reorg-code-v1-0-cb4677096709@kernel.org
+ net/mptcp/pm.c           | 2 +-
+ net/mptcp/pm_netlink.c   | 8 ++++----
+ net/mptcp/pm_userspace.c | 2 +-
+ net/mptcp/protocol.h     | 2 +-
+ 4 files changed, 7 insertions(+), 7 deletions(-)
 
----
-Matthieu Baerts (NGI0) (14):
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_addr_send_ack
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_mp_prio_send_ack
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_work
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_received
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_subflow_chk_stale()
-      mptcp: pm: remove '_nl' from mptcp_pm_nl_is_init_remote_addr
-      mptcp: pm: kernel: add '_pm' to mptcp_nl_set_flags
-      mptcp: pm: avoid calling PM specific code from core
-      mptcp: pm: worker: split in-kernel and common tasks
-      mptcp: pm: export mptcp_remote_address
-      mptcp: pm: move generic helper at the top
-      mptcp: pm: move generic PM helpers to pm.c
-      mptcp: pm: split in-kernel PM specific code
-      mptcp: pm: move Netlink PM helpers to pm_netlink.c
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index f6030ce04efdf20b512b3445fb909b4dec386b1a..ece706e8ed22bfd10249f6e655a0d790dcee34c1 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -57,7 +57,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ 	msk->pm.rm_list_tx = *rm_list;
+ 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
+ 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
+-	mptcp_pm_nl_addr_send_ack(msk);
++	mptcp_pm_addr_send_ack(msk);
+ 	return 0;
+ }
+ 
+diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+index 23c28e37ab8f1befb391894e465635ee523d54ed..a70a688eae845c562c03caa0f3e20169c5f5be11 100644
+--- a/net/mptcp/pm_netlink.c
++++ b/net/mptcp/pm_netlink.c
+@@ -606,7 +606,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 			local.addr.id = 0;
+ 
+ 		mptcp_pm_announce_addr(msk, &local.addr, false);
+-		mptcp_pm_nl_addr_send_ack(msk);
++		mptcp_pm_addr_send_ack(msk);
+ 
+ 		if (local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
+ 			signal_and_subflow = true;
+@@ -740,7 +740,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
+ 
+ 	remote = msk->pm.remote;
+ 	mptcp_pm_announce_addr(msk, &remote, true);
+-	mptcp_pm_nl_addr_send_ack(msk);
++	mptcp_pm_addr_send_ack(msk);
+ 
+ 	if (lookup_subflow_by_daddr(&msk->conn_list, &remote))
+ 		return;
+@@ -781,7 +781,7 @@ bool mptcp_pm_nl_is_init_remote_addr(struct mptcp_sock *msk,
+ 	return mptcp_addresses_equal(&mpc_remote, remote, remote->port);
+ }
+ 
+-void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
++void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
+ {
+ 	struct mptcp_subflow_context *subflow, *alt = NULL;
+ 
+@@ -942,7 +942,7 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
+ 	}
+ 	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
+ 		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
+-		mptcp_pm_nl_addr_send_ack(msk);
++		mptcp_pm_addr_send_ack(msk);
+ 	}
+ 	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+ 		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 5b3ee43130be6de9d1b74f60088b508bb5f57d52..fbb29a9eb19125ea29f557e97123488689bfb3ce 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -235,7 +235,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
+ 	if (mptcp_pm_alloc_anno_list(msk, &addr_val.addr)) {
+ 		msk->pm.add_addr_signaled++;
+ 		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
+-		mptcp_pm_nl_addr_send_ack(msk);
++		mptcp_pm_addr_send_ack(msk);
+ 	}
+ 
+ 	spin_unlock_bh(&msk->pm.lock);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ef1d43406f9bd87f2ea0c7d31f4ef9ea4d9ea9c6..b8800fd208429df43869c40e5f67f110d9584332 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1013,7 +1013,7 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
+ void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
+ bool mptcp_pm_nl_is_init_remote_addr(struct mptcp_sock *msk,
+ 				     const struct mptcp_addr_info *remote);
+-void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
++void mptcp_pm_addr_send_ack(struct mptcp_sock *msk);
+ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+ 			       const struct mptcp_rm_list *rm_list);
+ void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
 
- net/mptcp/Makefile       |    2 +-
- net/mptcp/pm.c           |  644 +++++++++++----
- net/mptcp/pm_kernel.c    | 1410 +++++++++++++++++++++++++++++++++
- net/mptcp/pm_netlink.c   | 1934 ++--------------------------------------------
- net/mptcp/pm_userspace.c |   11 +-
- net/mptcp/protocol.c     |    5 +-
- net/mptcp/protocol.h     |   36 +-
- 7 files changed, 2029 insertions(+), 2013 deletions(-)
----
-base-commit: 6b32949274eb9e32fe867ba9a8f8cb98587ecf36
-change-id: 20250227-mptcp-pm-reorg-code-13227530bd05
-
-Best regards,
 -- 
-Matthieu Baerts (NGI0) <matttbe@kernel.org>
+2.47.1
 
