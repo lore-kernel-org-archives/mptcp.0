@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B6C25DD17
-	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 10:04:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6103F25BAAE
+	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 10:09:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740737091; cv=none; b=C6TbjwCV5R1Xvx1ghMPmXmA90X/3CZEnDOG/zOed5n6fyXSC1/RtG4gaS+QNiOmm/W4IAgrqAab2g5nJ9/CeTD+SdHgAl04tGW+L8fBFHw2EVZaMPfOfYrwkO0urGllRZHSgtNQIr545X/L5X5+JJYzKI0N9OFnRr2GofARJlRA=
+	t=1740737393; cv=none; b=UoG68kN4q+yMMYSGjOkQN60yokTCmjbIfTgAVIy8IdL9w8SnvUZXtjvUmE6+o3II50hqqQ5RBV+C+gH1E/H0OegkeB29uI2uzcbxe0k7HYKA80pnwoDZMALL7NfnVKznriMheBDgwDAGFQxJ82Yp8MqSrxdCDNx6WI1rz4kwQO4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740737091; c=relaxed/simple;
-	bh=tlJ7xwpDpgP6mMSfU71o7CJFErr165zhks3jTurEFs4=;
+	s=arc-20240116; t=1740737393; c=relaxed/simple;
+	bh=/86EY+nqbdQy4Bt7KlzHd0WJwmmUjgeCNCh+V+OiHBQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=uA4t8Q1Qu63CLboieLmt3Fqc0lUoD4CphbgxsRoZeolboSCsAX8S+jZoux19747V1qu7Pf5/E4xw+KO07PbAVNZr0WIToOHOivCoaZ0As6rGjWhUwMW7VkfEjlbDW4hdg8iH3lT1arxg3iwLy3/a5ItLuNhjBcM2tVWybhpfa1I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aIczYc1Z; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PZnei7fDnx8PVjiaK8la1fUSfablC/wPxYTKtWfHkAnGOeaqFtZae8kc6ntqeBRMxStbsNiDZgNcHULgyi1uh6BSgOoRPiCK/U1deHGjGSDRDCiMyDyDOJiZ0mpS0tgVf+l/qVvX2E3BBr0598tYNEZfDVFgegejEKdsL8I+rjc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U8CyoZyT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aIczYc1Z"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7891DC4CED6;
-	Fri, 28 Feb 2025 10:04:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U8CyoZyT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AED98C4CED6;
+	Fri, 28 Feb 2025 10:09:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740737091;
-	bh=tlJ7xwpDpgP6mMSfU71o7CJFErr165zhks3jTurEFs4=;
+	s=k20201202; t=1740737393;
+	bh=/86EY+nqbdQy4Bt7KlzHd0WJwmmUjgeCNCh+V+OiHBQ=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aIczYc1ZYOV6YngpPcUJeXembBAOxoBG/pkgCWOW4DgyelwfVrBhcoPXhoOW+O/wk
-	 BdkOQ7bfXA4adXFt+02+E7Bz3KqO0Aszb55WSpE8zvBX99vcOO1+DTA3hL+AGmTRx5
-	 CXCmrmBpx9eV1RZBNhwsfg33SV2/5fweDO5K4f7WPZjO5tb+kjYlPV0hY4ebS5SCHl
-	 c4h6V5+v0bJ1HqDt1jX+mbbenAn91u3n2neVIZsfKs6NyCdYOq3cohBzbxHEwqgfFW
-	 gngZJCPMxH5ta6qdmEelunuFqzuHmd85J81a/bgKfl6/W7ONhWYMSV6Znz+c85PY63
-	 0q21mFXSDWUDQ==
-Message-ID: <92404248-082b-4b2f-859e-e32455c9c131@kernel.org>
-Date: Fri, 28 Feb 2025 11:04:48 +0100
+	b=U8CyoZyT+WwVMW0BeHDmLl/8nFzrf5feNdXySENAVJ04W53w8aYcvX+qiSxi78Q06
+	 SJWYjUrUU4cAc3YZCPBGXB2UhxmiGOHcbL843wMEz0vTYVjWld6fmaFAalyRt4oO6C
+	 e6FbYbwFsZ4ql0U1H2THIshUUmA0DgsZ85imEd0u6R2o80+ubNTFUGWSG/Xs3i5nQP
+	 cNknNF3zSZQNnw8WnP0yGdtKhay8t1zOnpaBDr1QijFX4/CvbX+0p1JXOtMTXoKlD5
+	 jemKIB9TA8ixncElNGRvhnhZSrwXogSPCmAVqM5ZvtADeJCTNtpCFI62oc/DALrX7Q
+	 SvOlJlaEuBJMw==
+Message-ID: <ebd83ca4-2068-41a6-a2b8-56bcb4ba1156@kernel.org>
+Date: Fri, 28 Feb 2025 11:09:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 7/7] mptcp: pm: code reorganisation
+Subject: Re: [PATCH mptcp-next 0/7] mptcp: pm: code reorganisation
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20250227-mptcp-pm-reorg-code-v1-0-cb4677096709@kernel.org>
- <20250227-mptcp-pm-reorg-code-v1-7-cb4677096709@kernel.org>
- <a3494c6ec1ad087a74b3c1c6241e18c9f9787078.camel@kernel.org>
+ <ec9413f7d72c88231a72e3aebcda847ad15a16d2.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,61 +85,87 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a3494c6ec1ad087a74b3c1c6241e18c9f9787078.camel@kernel.org>
+In-Reply-To: <ec9413f7d72c88231a72e3aebcda847ad15a16d2.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 28/02/2025 03:14, Geliang Tang wrote:
-> Thanks for this set, it's useful for me to implement mptcp_pm_ops.
-
-Great, I hope it is!
-
-I will move the renaming to different patches as you suggested.
-
+On 28/02/2025 04:27, Geliang Tang wrote:
 > On Thu, 2025-02-27 at 21:08 +0100, Matthieu Baerts (NGI0) wrote:
-
-(...)
-
->> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
->> index
->> 8742527196887598eb242c82f06004107d29ef92..380b61be4cf65bc42f791bf2254
->> c8a2b4aa333fe 100644
->> --- a/net/mptcp/protocol.h
->> +++ b/net/mptcp/protocol.h
-
-(...)
-
->>  void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
->>  			      const struct mptcp_addr_info *addr);
->> -void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
->> -bool mptcp_pm_nl_is_init_remote_addr(struct mptcp_sock *msk,
->> -				     const struct mptcp_addr_info
->> *remote);
->> +void mptcp_pm_send_ack(struct mptcp_sock *msk,
->> +		       struct mptcp_subflow_context *subflow,
->> +		       bool prio, bool backup);
->>  void mptcp_pm_addr_send_ack(struct mptcp_sock *msk);
->> +void mptcp_pm_nl_rm_addr(struct mptcp_sock *msk, u8 rm_id);
+>> I have been thinking about that during the past couple of months, but
+>> now, with the recent modifications done by Geliang, and the
+>> associated
+>> reviews, I really think it is time to reorganise the code around the
+>> path-managers to avoid confusions, and a mix of code used in
+>> different
+>> conditions.
+>>
+>> Here is a first proposition, feel free to comment! :)
+>>
+>> Please look at the last patch for more details about the why and why
+>> now.
+>>
+>> I hope this will not cause too many issues with the in-progress
+>> patches.
+>> I tried only to move the code around, and minimise the functions
+>> renaming. Then, to switch to the new code, it might be easier to
+>> simply
+>> copy your modified code from the old place to the new one. In other
+>> words, duplicate the net/mptcp directory, then do a rebase, resolve
+>> the
+>> conflicts with 'git restore --ours', then reapply the modifications
+>> by
+>> copying your old code to the new place. If it is too difficult,
+>> please
+>> let me know.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> ---
+>> Cc: Geliang Tang <geliang@kernel.org>
+>>
+>> ---
+>> Matthieu Baerts (NGI0) (7):
+>>       mptcp: pm: remove '_nl' from mptcp_pm_nl_addr_send_ack
+>>       mptcp: pm: remove '_nl' from mptcp_pm_nl_mp_prio_send_ack
+>>       mptcp: pm: remove '_nl' from mptcp_pm_nl_work
+>>       mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_or_subflow
+>>       mptcp: pm: avoid calling PM specific code from core
+>>       mptcp: pm: worker: split in-kernel and common tasks
+>>       mptcp: pm: code reorganisation
+>>
+>>  net/mptcp/Makefile       |    2 +-
+>>  net/mptcp/pm.c           |  685 ++++++++++++----
+>>  net/mptcp/pm_kernel.c    | 1410 +++++++++++++++++++++++++++++++++
+>>  net/mptcp/pm_netlink.c   | 1934 ++----------------------------------
+>> ----------
 > 
-> I propose to add a new patch to rearrange the function declarations in
-> this header, grouping the functions in pm.c together, and grouping the
-> functions in pm_netlink.c, pm_userspace.c, and pm_kernel.c separately.
-> WDYT?
-I don't know: I think protocol.h is a bit of a mess, not only around the
-pm files. We should have probably added one header file per associated
-.c one from the beginning.
+> Patch 7 has too many changes to review, so I suggest splitting it into
+> multiple small patches for review, and then merging them into a large
+> patch after review.
 
-It is then tempting to re-order that too, but I think it is too late: if
-we do that for all files, that will cause conflicts during backports,
-and conflicts in such files will be a nightmare I think, easy to miss
-one or something like that.
+Thank you for looking at that. If we split, maybe no need to merge them
+later.
 
-At the end, protocol.h just contains a lot of function signatures, semi
-ordered, and we can probably live with it. I don't think it is then
-worth it to reorder it now, I don't think that will help with the long
-term maintenance. WDYT?
+> I think it is possible to make "move the code from pm_netlink.c to
+> pm.c" as a separate patch, and "move the code from pm_netlink.c to
+> pm_kernel.c" as another separate patch. Moreover, these two patches
+> only involve the movement of code, without any renaming or relocation
+> of functions, and these changes should be done by separate patches.
+
+OK, I will try to do that.
+
+> In addition, we can try to keep the original positions of the functions
+> that were originally in pm.c, such as mptcp_pm_addr_families_match,
+> mptcp_pm_schedule_work, and mptcp_pm_add_addr_send_ack.
+
+I moved mptcp_pm_addr_families_match() to be with all the new "addr
+helpers" coming from pm_netlink.c. It looks better there. Maybe I can do
+the move in a separated patch.
+
+For the two other helpers, that's because mptcp_pm_add_addr_send_ack()
+is now static, but called by code imported from pm_netlink.c. Maybe I
+can add a signature above to ease the review here. Would that be OK?
 
 Cheers,
 Matt
