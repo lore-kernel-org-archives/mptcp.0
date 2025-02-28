@@ -1,35 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6E03714A91
-	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 13:31:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9818D14A91
+	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 13:31:43 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740749502; cv=none; b=oepC1jpqLmWo8ka9Zw/epxeucN5V6ltnItvNCofIJC4Efjyt3cO4K9HWXsbWy9muQVS4ITwzD/yF8/9scQHeS1KztqEhzhE8etKXCWBkeHEIW5aGGJDuIegIk5C88tVb3kzpd9vjeKXXb8gIIZkBR3jIwUuoiS3ZbcC+M4mibsI=
+	t=1740749503; cv=none; b=q2ze8BSLXCX0ZMVQBQ+RPtsfWmySWSEvsPZLIdOk9U4qvYfuL16zRQAXRt1aLtikRUaHiHWoRLabZRPP8X0onNcu9mWcjWZNSv/z2Bsqtr9iejhR2Bpbkz+YNusj/uqgYw8nOIoUVaGeqv657UYAHUWOz3l/H52p89jzusEw/84=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740749502; c=relaxed/simple;
-	bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
+	s=arc-20240116; t=1740749503; c=relaxed/simple;
+	bh=UILxa/TqfhzdXpuDLwwRz/IgNjXN8euvQyCOxLlbGPo=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=cvYScPeEiw6RYdWarGLXM1NoeXMYlhMaZeuzAQ28tjYJY2b89CtFRxLdNVaoCHvSUAupJoX7C2firwYgex8NFW0EpWYATbm35cjIHiKifJ06qwbqe7/Oz4oEEEQTCIgpbJWo/h8tGTGz2TkLIhds8CCNVPfxlnfEJ2G7t8Jmmho=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hxRrE3xx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=Nfeoaj9AiPfHj7roPpCR5SyT+gbVznYEuFNrfkDPfQHAw3S1zn/bzFUo7wPD2Lqk/gODTJflB6+jwtKS8E1nuJmG761adRMbQCimslAE9bnfjsds6GgaLa3Z0t203cEPB4KKZJtRrCfdwac2aENMla5ec1fr05lZiurC5Ef2OM8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CzRbUyq/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hxRrE3xx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25408C4CEE2;
-	Fri, 28 Feb 2025 13:31:40 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CzRbUyq/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 50EF8C4CEE7;
+	Fri, 28 Feb 2025 13:31:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740749501;
-	bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
+	s=k20201202; t=1740749503;
+	bh=UILxa/TqfhzdXpuDLwwRz/IgNjXN8euvQyCOxLlbGPo=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=hxRrE3xxlKNFwyGTvg27EO9775JOE2d/C3VdScbHjhBRen9KH7Wdu730qOPt2Yvss
-	 pMBGjHrtuP9Jd6zcL/sg8etEpQoW6AvU63OP060/1X7Xkyu9xF1uMyRhCzBKFwQh0n
-	 JAXF7LP6p5BhNGgDwD7MNc8VO9JrZey6FSz+OaSwuuTCwUuBfrR/0kGzWJRFq8g3LB
-	 SMBVMO2xAeY4PCwYQpxsaAOy4AkkoemMb2kUWnjfKaBWEgnELP8UrQbArv/eHe5Q9+
-	 SKEQ8oBykYbJ95n3+wa8lYgabMYMAFRRgWTy2V6QqordLL0JrRoN7HV4ihjV1jVKvC
-	 Up3T3eJYG+diw==
+	b=CzRbUyq/3p3VbKoGXZ6h81CU1k/9slyam/PwFugQRaTDQc2TEq6TnsLlNy0hliBd7
+	 v8f1TkHhk3ToPiMgjVS9jLz6sriU8OSQHMPuMAuqf7fOJTdGUU+j0ZtopFHS75Ukoy
+	 EgmXxlCRpvPND1k0MwNeSa8F5iiTfB47fwe6lnLyojtoOGQggy3KK30QOnPjpRdPH2
+	 pb62AoqV5ISqWKF31naiBCLBEhp5iZWKDkPo7J+/LAjP4aHjQqYVwfkpgcNXcB1IaP
+	 j8CfAskPLBt5eNe/CTFsWXIoGU7cE4diehDKiPCXp2P3A0KP54nE5Y8a3FPEHquk8O
+	 IA2ZvdCgunuXA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 28 Feb 2025 14:31:21 +0100
-Subject: [PATCH mptcp-next v2 01/14] mptcp: pm: remove '_nl' from
- mptcp_pm_nl_addr_send_ack
+Date: Fri, 28 Feb 2025 14:31:22 +0100
+Subject: [PATCH mptcp-next v2 02/14] mptcp: pm: remove '_nl' from
+ mptcp_pm_nl_mp_prio_send_ack
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,33 +38,33 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250228-mptcp-pm-reorg-code-v2-1-fa8b2542b7a5@kernel.org>
+Message-Id: <20250228-mptcp-pm-reorg-code-v2-2-fa8b2542b7a5@kernel.org>
 References: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
 In-Reply-To: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>, 
  "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3935; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=wcBZY8yZuO9n0zckgdU2YhS52/cGCxhb6UEjLocmPAU=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnwbq5uVTrueQzHRGf7trse0DF7d8Ea6tlbcppB
- qXndda3ZpGJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8G6uQAKCRD2t4JPQmmg
- cxoyEADmBp8XsLaSsdhS0xj8fzfg6eRyXtSvyLXfJ9EQExZnt364OBlJjKa0gv1b7pyZ0DBpn6g
- RklD3gtrsW+bTfSlwsb9FQ3HPcVegvxCyCKbplSfvE6sbm3GIYAYKvSk3hJXRhAKPN5XhKm9s7T
- AEuhu54tzdCx7zzeKJze8SCzFda7P4/3veRGlH+IGE0VkiD2KSyXQJ4g2Th0V+LzK7j/D5IaPxY
- Wjf1ex1iUcmUjL3Pgx0U6vy+MIpSZCT8LTE6EarPkSNsQC4gbQ0SYAIg2YQd6AzjSeKyuR2vrQF
- 5thTV4uXZu0YZ+MIot9eTdJBKAnh57aKclK5P59DQlcuEZ+QeS/bvs59vS65wxN7RYZGBtEOc8r
- gFlXQjWYxiwD+z9Se6zAFjHFOxQo9LkZmgE6s+Nhqt6WNKnCVrI6OlgeS7SZGCCnWUM5YINKo4k
- avvTCGr1ZyXFlgu7MJNSk4XiDYJY6S2WHCxxVYkOrw8YCTsYLhqvMLknMeRoGAxa6+8LW2zEreh
- u8pj0975ZtAEXlOy1V/lLK4tq27tS9ocxHFlEB2NOUCF9uQ1W19iqyK0SogqOfa+L/W8kK6nvBO
- Tcr/E+I2xoLVzAGc77gemGTDZ4KWk8Z6jS+WD9mPQht0r9yM85VaIwQoNmlSjrjnaAZIdttZOnK
- wMsU0RtPsgDVbUA==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3369; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=UILxa/TqfhzdXpuDLwwRz/IgNjXN8euvQyCOxLlbGPo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnwbq5uZDe/dDfmX36hMQbN1qME3FY2qGpv6Lgu
+ RoS6vw+M1yJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8G6uQAKCRD2t4JPQmmg
+ c9/mEACyAyA+mlBX9w9z9mpayCDPvQXdJE8wbIBo2Fb6GGSSya5U1YMYcckXXcTFUSb/4PK339N
+ xGnueTlzP1zMNJlZcV4Ftw7RMASw8uwcD0sPTFCxGw1pzNOmg1QkaH7sLPiCcw0ofw+qZ7zQI3I
+ lG4I5jT7eHME3XPEkSwK0IcsUDgAg7/Ns637LD8VBJOlwJjS5wUFXl+Bg2NrHz2kWfWM1b5Wcim
+ XgjV+PnOpk2gUk6YxshzhESCGrxwJ3YEC8AsulGLdeShefqlXP2df+QjMcVNVHmNvpUjJB5/jcs
+ gr9i+UTwoPP9c/DtoN31YiFrydqsmLisrw5SQMaO0mjTNk9n/e2acnwJImxsfKCfedI+BkZ9y2g
+ HfKGKRj4H/e+fLFSSI89MLOU5swt5In9L7lZ29qYhqSi3RBhUBCca/XzDB0LYAnwirm0M9D6li4
+ ez76HocQoX5rMdz+1DvSjcw8uJvyS95WRV73/1SE9jhampUkLAV1jr/O77HQeV8RL3r95ssuhh1
+ HKU8nvwv53tynLtgCAvuYswebAWaLIH5jkxUOeQ3eybXow10HNShuhwhmbBB1kBDEN3CG85C1yB
+ 81t4ncfuQbJR0El1+hssW7QijTd8ai3kGjTvToItMkgjxyDZW8SrHLjtJYKInE0pyzDv9IVLumu
+ 4FCnuroqS1vHlFA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
 Currently, in-kernel PM specific helpers are prefixed with
-'mptcp_pm_nl_'. But here 'mptcp_pm_nl_addr_send_ack()' is not specific
-to this PM: it is used by both the in-kernel and userspace PMs.
+'mptcp_pm_nl_'. But here 'mptcp_pm_nl_mp_prio_send_ack()' is not
+specific to this PM: it is used by both the in-kernel and userspace PMs.
 
 To avoid confusions, the '_nl' bit has been removed from the name.
 
@@ -72,91 +72,75 @@ No behavioural changes intended.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/pm.c           | 2 +-
- net/mptcp/pm_netlink.c   | 8 ++++----
- net/mptcp/pm_userspace.c | 2 +-
- net/mptcp/protocol.h     | 2 +-
- 4 files changed, 7 insertions(+), 7 deletions(-)
+ net/mptcp/pm_netlink.c   | 10 +++++-----
+ net/mptcp/pm_userspace.c |  4 ++--
+ net/mptcp/protocol.h     |  8 ++++----
+ 3 files changed, 11 insertions(+), 11 deletions(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index f6030ce04efdf20b512b3445fb909b4dec386b1a..ece706e8ed22bfd10249f6e655a0d790dcee34c1 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -57,7 +57,7 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
- 	msk->pm.rm_list_tx = *rm_list;
- 	rm_addr |= BIT(MPTCP_RM_ADDR_SIGNAL);
- 	WRITE_ONCE(msk->pm.addr_signal, rm_addr);
--	mptcp_pm_nl_addr_send_ack(msk);
-+	mptcp_pm_addr_send_ack(msk);
- 	return 0;
- }
- 
 diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 23c28e37ab8f1befb391894e465635ee523d54ed..a70a688eae845c562c03caa0f3e20169c5f5be11 100644
+index a70a688eae845c562c03caa0f3e20169c5f5be11..5494b5b409dc478dc783844b9cfdef870688d17e 100644
 --- a/net/mptcp/pm_netlink.c
 +++ b/net/mptcp/pm_netlink.c
-@@ -606,7 +606,7 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 			local.addr.id = 0;
- 
- 		mptcp_pm_announce_addr(msk, &local.addr, false);
--		mptcp_pm_nl_addr_send_ack(msk);
-+		mptcp_pm_addr_send_ack(msk);
- 
- 		if (local.flags & MPTCP_PM_ADDR_FLAG_SUBFLOW)
- 			signal_and_subflow = true;
-@@ -740,7 +740,7 @@ static void mptcp_pm_nl_add_addr_received(struct mptcp_sock *msk)
- 
- 	remote = msk->pm.remote;
- 	mptcp_pm_announce_addr(msk, &remote, true);
--	mptcp_pm_nl_addr_send_ack(msk);
-+	mptcp_pm_addr_send_ack(msk);
- 
- 	if (lookup_subflow_by_daddr(&msk->conn_list, &remote))
- 		return;
-@@ -781,7 +781,7 @@ bool mptcp_pm_nl_is_init_remote_addr(struct mptcp_sock *msk,
- 	return mptcp_addresses_equal(&mpc_remote, remote, remote->port);
+@@ -808,10 +808,10 @@ void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
+ 		mptcp_pm_send_ack(msk, alt, false, false);
  }
  
--void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk)
-+void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
+-int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+-				 struct mptcp_addr_info *addr,
+-				 struct mptcp_addr_info *rem,
+-				 u8 bkup)
++int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
++			      struct mptcp_addr_info *addr,
++			      struct mptcp_addr_info *rem,
++			      u8 bkup)
  {
- 	struct mptcp_subflow_context *subflow, *alt = NULL;
+ 	struct mptcp_subflow_context *subflow;
  
-@@ -942,7 +942,7 @@ void mptcp_pm_nl_work(struct mptcp_sock *msk)
- 	}
- 	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
- 		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
--		mptcp_pm_nl_addr_send_ack(msk);
-+		mptcp_pm_addr_send_ack(msk);
- 	}
- 	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
- 		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+@@ -1936,7 +1936,7 @@ static void mptcp_nl_set_flags(struct net *net,
+ 
+ 		lock_sock(sk);
+ 		if (changed & MPTCP_PM_ADDR_FLAG_BACKUP)
+-			mptcp_pm_nl_mp_prio_send_ack(msk, &local->addr, NULL, bkup);
++			mptcp_pm_mp_prio_send_ack(msk, &local->addr, NULL, bkup);
+ 		/* Subflows will only be recreated if the SUBFLOW flag is set */
+ 		if (is_subflow && (changed & MPTCP_PM_ADDR_FLAG_FULLMESH))
+ 			mptcp_pm_nl_fullmesh(msk, &local->addr);
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 5b3ee43130be6de9d1b74f60088b508bb5f57d52..fbb29a9eb19125ea29f557e97123488689bfb3ce 100644
+index fbb29a9eb19125ea29f557e97123488689bfb3ce..434f59b793ef9a581ab37667fc904927c1600199 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -235,7 +235,7 @@ int mptcp_pm_nl_announce_doit(struct sk_buff *skb, struct genl_info *info)
- 	if (mptcp_pm_alloc_anno_list(msk, &addr_val.addr)) {
- 		msk->pm.add_addr_signaled++;
- 		mptcp_pm_announce_addr(msk, &addr_val.addr, false);
--		mptcp_pm_nl_addr_send_ack(msk);
-+		mptcp_pm_addr_send_ack(msk);
- 	}
- 
+@@ -606,10 +606,10 @@ int mptcp_userspace_pm_set_flags(struct mptcp_pm_addr_entry *local,
  	spin_unlock_bh(&msk->pm.lock);
+ 
+ 	lock_sock(sk);
+-	ret = mptcp_pm_nl_mp_prio_send_ack(msk, &local->addr, &rem, bkup);
++	ret = mptcp_pm_mp_prio_send_ack(msk, &local->addr, &rem, bkup);
+ 	release_sock(sk);
+ 
+-	/* mptcp_pm_nl_mp_prio_send_ack() only fails in one case */
++	/* mptcp_pm_mp_prio_send_ack() only fails in one case */
+ 	if (ret < 0)
+ 		GENL_SET_ERR_MSG(info, "subflow not found");
+ 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ef1d43406f9bd87f2ea0c7d31f4ef9ea4d9ea9c6..b8800fd208429df43869c40e5f67f110d9584332 100644
+index b8800fd208429df43869c40e5f67f110d9584332..500c147cd4d4b4bf274b65fc9a181417fa90bc1a 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1013,7 +1013,7 @@ void mptcp_pm_add_addr_echoed(struct mptcp_sock *msk,
- void mptcp_pm_add_addr_send_ack(struct mptcp_sock *msk);
- bool mptcp_pm_nl_is_init_remote_addr(struct mptcp_sock *msk,
- 				     const struct mptcp_addr_info *remote);
--void mptcp_pm_nl_addr_send_ack(struct mptcp_sock *msk);
-+void mptcp_pm_addr_send_ack(struct mptcp_sock *msk);
- void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
+@@ -1018,10 +1018,10 @@ void mptcp_pm_rm_addr_received(struct mptcp_sock *msk,
  			       const struct mptcp_rm_list *rm_list);
  void mptcp_pm_mp_prio_received(struct sock *sk, u8 bkup);
+ void mptcp_pm_mp_fail_received(struct sock *sk, u64 fail_seq);
+-int mptcp_pm_nl_mp_prio_send_ack(struct mptcp_sock *msk,
+-				 struct mptcp_addr_info *addr,
+-				 struct mptcp_addr_info *rem,
+-				 u8 bkup);
++int mptcp_pm_mp_prio_send_ack(struct mptcp_sock *msk,
++			      struct mptcp_addr_info *addr,
++			      struct mptcp_addr_info *rem,
++			      u8 bkup);
+ bool mptcp_pm_alloc_anno_list(struct mptcp_sock *msk,
+ 			      const struct mptcp_addr_info *addr);
+ void mptcp_pm_free_anno_list(struct mptcp_sock *msk);
 
 -- 
 2.47.1
