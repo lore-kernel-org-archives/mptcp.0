@@ -1,396 +1,111 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C38BD1E4A9
-	for <mptcp@lists.linux.dev>; Fri, 28 Feb 2025 13:31:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D7C51D554;
+	Fri, 28 Feb 2025 13:36:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740749517; cv=none; b=VSJtVvocR0g5T0nfXEy0h2O5Vt/bqpSgoRHTqEONvMbSbMYUZ3CuJ4wGBx25bxGxmrUBXHr8mErAj9ciuV6wpINiLdeCgZ9M0T/wDE2V62AHi5NnEKdt9NaxMoKSU4kijJwHEmLnLdKYi0P8V9UqRkHXXhzeCqHlJ5RXW0lCRqA=
+	t=1740749769; cv=none; b=FQMwS90xqaBKV7NE7pvi7QlNDlzfeluPz3VcTi99v8eFQ85cI1G+3UcS/V9Wfc2cF+TA/f9FLTs/Ivzv2B/w3TBg+NWURtvP675aJ/39Lau3ouEGTERNYQNuJNExL4m6n8j7nTjz/v6AGYuZBNgtBM9RIlC/p89z6F/I8kchFi8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740749517; c=relaxed/simple;
-	bh=BL/lActL4XF6LBK6g/whdamA357n++BDmX+BFnKxjx0=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=ofugEN4l9L8ZT9llnO2xP8tnDXUPg2KdoTio/m1mLL9lhPq49IkX9Ldel5F3gLensctAO2TTaDof2mrD15tegF+4cjjqKsy7Y454QSDaWZPbptX59eNNDe2xF2Q33el1TwKYsaPTsXBjCnKh6gyL43VoOrsKy5taAgq07Y6NI+U=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l3sxotu3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740749769; c=relaxed/simple;
+	bh=BNMzfWsIm08OVYoPCNeAqXulZ+4bQH3zfFLSQmv7AQc=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=daMMIapRB83KhDMzpUcqzQIyqEHaM1P91xfav6i34hX8HP7OwSz8JVZvlK+Z8TBbS46sAENSwOiuIo08nPfKQu0oVnPOmKe4Jn+VAB873+kdz9blsBAItXr0x1HwaLvyDVZykf6kGkxpMiLhfre+WgDQEOdUWozLT4CV1Xs9CQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lRieqnfR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l3sxotu3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E4A3CC4CEE7;
-	Fri, 28 Feb 2025 13:31:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lRieqnfR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 45AE7C4CEE2;
+	Fri, 28 Feb 2025 13:36:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740749517;
-	bh=BL/lActL4XF6LBK6g/whdamA357n++BDmX+BFnKxjx0=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=l3sxotu3s2kZxBiSoDzilkiUSJzF5OCIlN4R8Cum6dpa4tnJynxcB3yZLdd3FCbvB
-	 N5etsLjVpYuEk05uCQJQu0sPtX0eLfXxiIAj1wclMw3bCH8aF2PEq5Dd7DiTrsoVe/
-	 klUf2ctTmgsmX/XpnOgNm2+NKEAJ4DCIWdUEkuymRz8IH9LWPr5X4uafniDsr2EV7d
-	 vmJpcsxxa9MSyrgP0TTiy2O48x7RUXb2GICKNRWJ46DEJM3pgsQRBmaLm/9gIJ+sSz
-	 glpJg7zZG1XcK9OQpDQyw7gqrdHWYJZn6eGFTFe5cVazP/QObsstMQCTLNUenYpWor
-	 blVRlHEdLxoow==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 28 Feb 2025 14:31:34 +0100
-Subject: [PATCH mptcp-next v2 14/14] mptcp: pm: move Netlink PM helpers to
- pm_netlink.c
+	s=k20201202; t=1740749768;
+	bh=BNMzfWsIm08OVYoPCNeAqXulZ+4bQH3zfFLSQmv7AQc=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=lRieqnfR3SVNwJvbF592RrdFBJiSu6JXDN23Ei5YeaM/aTl6QejPIlMtJQECDLIqo
+	 rXr6Fhidto3P/zmt3pJGuLH/Qk5aVQr81PbfRDbeZJ4aDF6sajwvCL5Eezxv2XVKax
+	 lNsgDHynqInPa/GBsAWeKjaqOISdIkMnwvL6TSe7nsaDTomI0LQsCGDhAxllWlssm0
+	 FuyCDQRJZeOVyxFmsc9yRXEEvwEyCkwW7wG31bXuUMsGsUfJ2yR9mSZPs5TDGMhpMc
+	 j17slg7flLZX2eexy/AkiV6pd40+sYhKg1GnCb/jr1VnJK3R73tfCH57jifvd4ga0e
+	 ZmQnhTytm2oFQ==
+Message-ID: <27a2ef05-8de1-42ad-8cab-d430c49b72b9@kernel.org>
+Date: Fri, 28 Feb 2025 14:36:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next] mptcp: Remove unused declaration
+ mptcp_set_owner_r()
+Content-Language: en-GB
+To: Yue Haibing <yuehaibing@huawei.com>, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org
+Cc: netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org
+References: <20250228095148.4003065-1-yuehaibing@huawei.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250228095148.4003065-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250228-mptcp-pm-reorg-code-v2-14-fa8b2542b7a5@kernel.org>
-References: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
-In-Reply-To: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=9735; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=BL/lActL4XF6LBK6g/whdamA357n++BDmX+BFnKxjx0=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnwbq6wp7lq2olX/LmLr7/K7+FLJuDNJIyNXW3S
- 53xjce8AROJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8G6ugAKCRD2t4JPQmmg
- c+CqEADdSoIvGZI6eYI6VuKaUF3e1CKZNVA2Tx5OEzQzRwx8PNqO6girHOp/AenlzweXP1SkSdE
- EGKvJz451n1N7PIayxh3M44j6bSld2yHxqGeeDC0hGU1bdk+70Xb43qF6WtTj1+m3WihnbCCsdR
- TTB9MuG1fNduaeoLrzB6fQIlsVNXYYisO00Hd5Mjw8fpv1bv9qYlVUPZUVPzgzmES5H4UjVVLz+
- arlqR5Q+ZlDNXx/CfI/2XDkEG1UqhZlx62vi7Zv2xeMMVhGuR2gFS23VQrNRTIDEbgO576rImEN
- HjWmhfOpalKPJdktkvZ1sel+SJm6h5zgtd5a+YMeQ3/OXftaUDCOryx/eL6U05dMxcQOXRYzzat
- uYm07fiqZPiJEToLSAMUr/y5o+vfk+aNScTWg4RXSISDoSVpE/+KV2s5RO8ZkVJ5Y+qGb11OmFg
- N6x52tPI7m/JA/pZMGGLb77FNyCSDEgIMGd9rGnEu0iZVAN9SYagK79Lp2nEDLj+rJNPhyP/O5f
- i/l8yLC+X/lY4w6T7iBoDVV6tXKbiHbg6OohoFcvkxE4mnHBCAmBg2Jo2T1LMwFa8/88+q68PuQ
- I6q0W1dfrBFaLSvlnNxqEhHkwG9WFJwUDeXnWgcvhV0PwybtQTWfWottNE7o2rrJj1HTktIDffm
- sPFaxtluTHr8Sng==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Before this patch, the PM code was dispersed in different places:
+Hi Yue,
 
-- pm.c had common code for all PMs, but also Netlink specific code that
-  will not be needed with the future BPF path-managers.
+On 28/02/2025 10:51, Yue Haibing wrote:
+> Commit 6639498ed85f ("mptcp: cleanup mem accounting")
+> removed the implementation but leave declaration.
 
-- pm_netlink.c had common Netlink code.
+Thank you, it looks good to me.
 
-To clarify the code, a reorganisation is suggested here, only by moving
-code around, and small helper renaming to avoid confusions:
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-- pm_netlink.c now only contains common PM Netlink code:
-  - PM events: this code was already there
-  - shared helpers around Netlink code that were already there as well
-  - shared Netlink commands code from pm.c
-
-- pm.c now no longer contain Netlink specific code.
-
-- protocol.h has been updated accordingly:
-  - mptcp_nl_fill_addr() no longer need to be exported.
-
-The code around the PM is now less confusing, which should help for the
-maintenance in the long term.
-
-This will certainly impact future backports, but because other cleanups
-have already done recently, and more are coming to ease the addition of
-a new path-manager controlled with BPF (struct_ops), doing that now
-seems to be a good time. Also, many issues around the PM have been fixed
-a few months ago while increasing the code coverage in the selftests, so
-such big reorganisation can be done with more confidence now.
-
-No behavioural changes intended.
-
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/pm.c         | 119 -------------------------------------------------
- net/mptcp/pm_netlink.c | 119 ++++++++++++++++++++++++++++++++++++++++++++++++-
- net/mptcp/protocol.h   |   2 -
- 3 files changed, 117 insertions(+), 123 deletions(-)
-
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index d02a0b3adfc43e134cc83140759703ce1147bc9e..833839d7286e717599579356af3117f70e39de0a 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -5,12 +5,8 @@
-  */
- #define pr_fmt(fmt) "MPTCP: " fmt
- 
--#include <linux/kernel.h>
--#include <net/mptcp.h>
- #include "protocol.h"
--
- #include "mib.h"
--#include "mptcp_pm_gen.h"
- 
- #define ADD_ADDR_RETRANS_MAX	3
- 
-@@ -888,121 +884,6 @@ bool mptcp_pm_is_backup(struct mptcp_sock *msk, struct sock_common *skc)
- 	return mptcp_pm_nl_is_backup(msk, &skc_local);
- }
- 
--static int mptcp_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
--			     struct genl_info *info)
--{
--	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_get_addr(id, addr, info);
--	return mptcp_pm_nl_get_addr(id, addr, info);
--}
--
--int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
--{
--	struct mptcp_pm_addr_entry addr;
--	struct nlattr *attr;
--	struct sk_buff *msg;
--	void *reply;
--	int ret;
--
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
--		return -EINVAL;
--
--	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
--	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
--	if (ret < 0)
--		return ret;
--
--	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
--	if (!msg)
--		return -ENOMEM;
--
--	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
--				  info->genlhdr->cmd);
--	if (!reply) {
--		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
--		ret = -EMSGSIZE;
--		goto fail;
--	}
--
--	ret = mptcp_pm_get_addr(addr.addr.id, &addr, info);
--	if (ret) {
--		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
--		goto fail;
--	}
--
--	ret = mptcp_nl_fill_addr(msg, &addr);
--	if (ret)
--		goto fail;
--
--	genlmsg_end(msg, reply);
--	ret = genlmsg_reply(msg, info);
--	return ret;
--
--fail:
--	nlmsg_free(msg);
--	return ret;
--}
--
--int mptcp_pm_genl_fill_addr(struct sk_buff *msg,
--			    struct netlink_callback *cb,
--			    struct mptcp_pm_addr_entry *entry)
--{
--	void *hdr;
--
--	hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
--			  cb->nlh->nlmsg_seq, &mptcp_genl_family,
--			  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
--	if (!hdr)
--		return -EINVAL;
--
--	if (mptcp_nl_fill_addr(msg, entry) < 0) {
--		genlmsg_cancel(msg, hdr);
--		return -EINVAL;
--	}
--
--	genlmsg_end(msg, hdr);
--	return 0;
--}
--
--static int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
--{
--	const struct genl_info *info = genl_info_dump(cb);
--
--	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_dump_addr(msg, cb);
--	return mptcp_pm_nl_dump_addr(msg, cb);
--}
--
--int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
--				struct netlink_callback *cb)
--{
--	return mptcp_pm_dump_addr(msg, cb);
--}
--
--static int mptcp_pm_set_flags(struct genl_info *info)
--{
--	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
--	struct nlattr *attr_loc;
--	int ret = -EINVAL;
--
--	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
--		return ret;
--
--	attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
--	ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
--	if (ret < 0)
--		return ret;
--
--	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
--		return mptcp_userspace_pm_set_flags(&loc, info);
--	return mptcp_pm_nl_set_flags(&loc, info);
--}
--
--int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
--{
--	return mptcp_pm_set_flags(info);
--}
--
- static void mptcp_pm_subflows_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
- {
- 	struct mptcp_subflow_context *iter, *subflow = mptcp_subflow_ctx(ssk);
-diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-index 530b2362a5a35c5ef44d3bf495c8103bdfa08cff..b2e5bbdcd5df920887ffbd9b6d652f422b32d49e 100644
---- a/net/mptcp/pm_netlink.c
-+++ b/net/mptcp/pm_netlink.c
-@@ -127,8 +127,8 @@ int mptcp_pm_parse_entry(struct nlattr *attr, struct genl_info *info,
- 	return 0;
- }
- 
--int mptcp_nl_fill_addr(struct sk_buff *skb,
--		       struct mptcp_pm_addr_entry *entry)
-+static int mptcp_nl_fill_addr(struct sk_buff *skb,
-+			      struct mptcp_pm_addr_entry *entry)
- {
- 	struct mptcp_addr_info *addr = &entry->addr;
- 	struct nlattr *attr;
-@@ -166,6 +166,121 @@ int mptcp_nl_fill_addr(struct sk_buff *skb,
- 	return -EMSGSIZE;
- }
- 
-+static int mptcp_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
-+			     struct genl_info *info)
-+{
-+	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-+		return mptcp_userspace_pm_get_addr(id, addr, info);
-+	return mptcp_pm_nl_get_addr(id, addr, info);
-+}
-+
-+int mptcp_pm_nl_get_addr_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	struct mptcp_pm_addr_entry addr;
-+	struct nlattr *attr;
-+	struct sk_buff *msg;
-+	void *reply;
-+	int ret;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ENDPOINT_ADDR))
-+		return -EINVAL;
-+
-+	attr = info->attrs[MPTCP_PM_ENDPOINT_ADDR];
-+	ret = mptcp_pm_parse_entry(attr, info, false, &addr);
-+	if (ret < 0)
-+		return ret;
-+
-+	msg = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
-+	if (!msg)
-+		return -ENOMEM;
-+
-+	reply = genlmsg_put_reply(msg, info, &mptcp_genl_family, 0,
-+				  info->genlhdr->cmd);
-+	if (!reply) {
-+		GENL_SET_ERR_MSG(info, "not enough space in Netlink message");
-+		ret = -EMSGSIZE;
-+		goto fail;
-+	}
-+
-+	ret = mptcp_pm_get_addr(addr.addr.id, &addr, info);
-+	if (ret) {
-+		NL_SET_ERR_MSG_ATTR(info->extack, attr, "address not found");
-+		goto fail;
-+	}
-+
-+	ret = mptcp_nl_fill_addr(msg, &addr);
-+	if (ret)
-+		goto fail;
-+
-+	genlmsg_end(msg, reply);
-+	ret = genlmsg_reply(msg, info);
-+	return ret;
-+
-+fail:
-+	nlmsg_free(msg);
-+	return ret;
-+}
-+
-+int mptcp_pm_genl_fill_addr(struct sk_buff *msg,
-+			    struct netlink_callback *cb,
-+			    struct mptcp_pm_addr_entry *entry)
-+{
-+	void *hdr;
-+
-+	hdr = genlmsg_put(msg, NETLINK_CB(cb->skb).portid,
-+			  cb->nlh->nlmsg_seq, &mptcp_genl_family,
-+			  NLM_F_MULTI, MPTCP_PM_CMD_GET_ADDR);
-+	if (!hdr)
-+		return -EINVAL;
-+
-+	if (mptcp_nl_fill_addr(msg, entry) < 0) {
-+		genlmsg_cancel(msg, hdr);
-+		return -EINVAL;
-+	}
-+
-+	genlmsg_end(msg, hdr);
-+	return 0;
-+}
-+
-+static int mptcp_pm_dump_addr(struct sk_buff *msg, struct netlink_callback *cb)
-+{
-+	const struct genl_info *info = genl_info_dump(cb);
-+
-+	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-+		return mptcp_userspace_pm_dump_addr(msg, cb);
-+	return mptcp_pm_nl_dump_addr(msg, cb);
-+}
-+
-+int mptcp_pm_nl_get_addr_dumpit(struct sk_buff *msg,
-+				struct netlink_callback *cb)
-+{
-+	return mptcp_pm_dump_addr(msg, cb);
-+}
-+
-+static int mptcp_pm_set_flags(struct genl_info *info)
-+{
-+	struct mptcp_pm_addr_entry loc = { .addr = { .family = AF_UNSPEC }, };
-+	struct nlattr *attr_loc;
-+	int ret = -EINVAL;
-+
-+	if (GENL_REQ_ATTR_CHECK(info, MPTCP_PM_ATTR_ADDR))
-+		return ret;
-+
-+	attr_loc = info->attrs[MPTCP_PM_ATTR_ADDR];
-+	ret = mptcp_pm_parse_entry(attr_loc, info, false, &loc);
-+	if (ret < 0)
-+		return ret;
-+
-+	if (info->attrs[MPTCP_PM_ATTR_TOKEN])
-+		return mptcp_userspace_pm_set_flags(&loc, info);
-+	return mptcp_pm_nl_set_flags(&loc, info);
-+}
-+
-+int mptcp_pm_nl_set_flags_doit(struct sk_buff *skb, struct genl_info *info)
-+{
-+	return mptcp_pm_set_flags(info);
-+}
-+
- static void mptcp_nl_mcast_send(struct net *net, struct sk_buff *nlskb, gfp_t gfp)
- {
- 	genlmsg_multicast_netns(&mptcp_genl_family, net,
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index c57b9f380a9c1a0ef1df169c6fb320940d131623..9bdfd915d62f52feb8e3f29f6f429dfa837f5f2b 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1062,8 +1062,6 @@ bool mptcp_userspace_pm_active(const struct mptcp_sock *msk);
- 
- void mptcp_fastopen_subflow_synack_set_params(struct mptcp_subflow_context *subflow,
- 					      struct request_sock *req);
--int mptcp_nl_fill_addr(struct sk_buff *skb,
--		       struct mptcp_pm_addr_entry *entry);
- int mptcp_pm_genl_fill_addr(struct sk_buff *msg,
- 			    struct netlink_callback *cb,
- 			    struct mptcp_pm_addr_entry *entry);
-
+@Netdev maintainers: it can be applied in net-next directly.
+Cheers,
+Matt
 -- 
-2.47.1
+Sponsored by the NGI0 Core fund.
 
