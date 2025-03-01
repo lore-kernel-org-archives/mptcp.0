@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF09E1D5162
-	for <mptcp@lists.linux.dev>; Sat,  1 Mar 2025 10:27:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AACE023F39D
+	for <mptcp@lists.linux.dev>; Sat,  1 Mar 2025 10:37:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740824821; cv=none; b=CCe9a1in9Zy8NaMBgSlfOaSoNgyYlO9uPxsrhDEhV47HkadiBXozLuiNvj56WLlyiYC7ckzU7bQ0EA/USpT31G4lt9bpUeoDXILk6QPSnvWRtK+g6xOdeHGx1bqjFacn9hJ2UEr4tlck6z8IuxTIGUZfG+doGwUU7nX6Cs2/sqU=
+	t=1740825443; cv=none; b=YtDg6jNH102/gN6N/Lyiia4ObeWjmGfVDdxCBvhq8Jtg+v5gl8l8A8rFbp86z94kEJvKhgKVbsH2KZoHf+msiI6yHaKlAOw0syJn/Aipt9YodaS1BC2JWAtn38QYbWhIOdUPgQXIKF9sW4GFiu2Q4VlpblweksY0glGaSzBWV3g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740824821; c=relaxed/simple;
-	bh=C9Ao7ldeGPUY2w6AkdCiwXWov6DeqPBEi4i70jq8ZkU=;
+	s=arc-20240116; t=1740825443; c=relaxed/simple;
+	bh=dP5zY8S8hr3mR6M+5ftMFz3C2Ubwf+TdU9o8cLUGqBw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZHwRemXRI9F/3W54PrJ5j/xaSf2k0nn5BFBXmQrkZdRR3/tlDg48qP4q5FgfItmETPUtJ0/1bPvBaDoYfIsqjXeA34ZB3Lkzjbuma05ABpWTlzUKtt3cPrO3wRwwnB5TJZNAtodu/6xNQvVGJiHkl0RqzmKFEHRAKBdZXqDrmx8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DjngzndO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=mN5KxSl2946OklwW04GR/TEUY5ky79p3xNwTNThFRpK0lnOsLhH4o/2pk7XUKXXdhk2tY6R/yoSWwaxT6onqm5u8dqxwOF+ofAs1qm8/KqTHRTZLDXX7r6O2ubu12hRuoklAAmL/6iw93nH7LVkDhkLj9YcFCtaarMlPU2bAlI8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rt/xdTwP; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DjngzndO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 712C4C4CEDD;
-	Sat,  1 Mar 2025 10:27:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rt/xdTwP"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 543A5C4CEDD;
+	Sat,  1 Mar 2025 10:37:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740824821;
-	bh=C9Ao7ldeGPUY2w6AkdCiwXWov6DeqPBEi4i70jq8ZkU=;
+	s=k20201202; t=1740825443;
+	bh=dP5zY8S8hr3mR6M+5ftMFz3C2Ubwf+TdU9o8cLUGqBw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=DjngzndOHK7nIaXiIyDMnNCu5b8Em/UrUKmeFUCU5rd4KI6uuhuNh3VqiV5uscO7N
-	 BlazZnWaVIOu2GhZydCkYXk+mi2Vh7UniumAveEw+UEuTVqN+xwMocAvvojy5ybune
-	 roUShqjeSX0RecPuLUgFur1afnAN4MoL8LaeksRwEQ/eVAqqHEpScIj+oXXBjMWXqM
-	 03kckmJzEi8hlun1IC1T4qeiGGa1ZRb4Ha3TWyl3lP6lzh32zpYV3HFl1Y7SMyuRme
-	 6vdjktyPvq8h8KIPqCwfq2e/y8aWf0nyfVv85ceba+m5zu48ovEkkMAw15pcuQQQgy
-	 cEIeI8aUiY68g==
-Message-ID: <9f15a79a-8495-4e73-8249-fa0f2e6d5be0@kernel.org>
-Date: Sat, 1 Mar 2025 11:26:58 +0100
+	b=rt/xdTwPKopkDSdgPJAiT1pQaj+n/+meYQx/ZuRDcRaoFgK4QErBFF4apn4SYUisW
+	 q5dS+hPv9DBfyU1nweDF+jro/yqS1/ivxCKD5C0tszllkRNDNbwm0yPZqutK2k9Crn
+	 kodhFt8pSKla2zPMineDUhTLg9Oo15b8xvBh8PmCwgAP7DcEKyCrrdkPPt0S7a/+zF
+	 g054J7nYiiYKbU4T/wMMzJVYWl1cpIRZm+6CtvbtQTbitcwN0r9K7pZZFDsyHZIHcV
+	 lkxVjE8KXmPzcptA/yhTrj4xih4+d3eqP13OR3Jf+NeDE0HUcp8IQ/che0OUXXYQAa
+	 /u7TTI35WZqBQ==
+Message-ID: <bd3c2f86-a6e2-4452-9694-1cdfb0298ddd@kernel.org>
+Date: Sat, 1 Mar 2025 11:37:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] tcp: ulp: diag: remove net admin restriction
+Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
 Content-Language: en-GB
 To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
-References: <20250226-mptcp-tcp-ulp-diag-cap-v1-1-e1a003ad0606@kernel.org>
- <42c413ff-744d-8b1f-e1ee-31edf0263646@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+References: <20250226180727.2499531-2-matttbe@kernel.org>
+ <9f669869ee804aeb6dbe7fd1511034b0ca9bf8c4.camel@kernel.org>
+ <97e5dc17-d23a-496e-830c-982cf6ab9424@kernel.org>
+ <bdf769b3-d787-63fe-47ed-5cb8c85a6602@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,46 +88,112 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <42c413ff-744d-8b1f-e1ee-31edf0263646@kernel.org>
+In-Reply-To: <bdf769b3-d787-63fe-47ed-5cb8c85a6602@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 28/02/2025 22:39, Mat Martineau wrote:
-> On Wed, 26 Feb 2025, Matthieu Baerts (NGI0) wrote:
+On 01/03/2025 02:37, Mat Martineau wrote:
+> On Thu, 27 Feb 2025, Matthieu Baerts wrote:
 > 
->> Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
->> to dump ulp-specific information"), the ULP diag info have been exported
->> only if the requester had CAP_NET_ADMIN.
+>> Hi Geliang, Mat,
 >>
->> It looks like there is nothing sensitive being exported here by the
->> MPTCP and KTLS layers. So it seems safe to remove this restriction in
->> order to ease the debugging from the userspace side without requiring
->> additional capabilities.
+>> On 27/02/2025 03:03, Geliang Tang wrote:
+>>> Hi Matt,
+>>>
+>>> On Wed, 2025-02-26 at 19:07 +0100, Matthieu Baerts (NGI0) wrote:
+>>>> From what we understood, when being used from a CG [gs]etsockopt
+>>>> hook,
+>>>> the socket lock will be held. It seems that the BPF infra will make
+>>>> sure
+>>>> in this case. Mat will try to get the confirmation.
+>>>>
+>>>> The idea is then to add this msk_owned_by_me() check to make sure the
+>>>> assumption is correct, and will continue to be: the new selftest
+>>>> should
+>>>> complain if not when used with a debug kconfig. In other words, if
+>>>> the
+>>>> tests continue to pass with this patch, the Squash-to series can
+>>>> probably be applied.
+>>>>
+>>>> Note that this is just a debug check, hoping that the selftest will
+>>>> cover all cases. We can then not use this check to return an error if
+>>>> it
+>>>> is not held.
+>>>>
+>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>
+>>> Thanks for updating this for me.
+>>>
+>>> LGTM!
+>>>
+>>> Reviewed-by: Geliang Tang <geliang@kernel.org>
+>>
+>> Thank you for the review!
+>>
+>>>> ---
+>>>> Based-on: <cover.1740368110.git.tanggeliang@kylinos.cn>
+>>>
+>>> I changed the state of this set, Squash to "Add mptcp_subflow bpf_iter
+>>> support" v4, together with this squash-to patch, as "Queued".
+>>
+>> Thank you. If that's OK, I will wait for Mat's green light before
+>> applying the patches, because he wanted to look at the BPF code to make
+>> sure our assumption was correct.
 >>
 > 
-> Hi Matthieu -
+> Ok, I did miss it before but in the cases of setsockopt/getsockopt, the
+> socket lock is acquired by the bpf wrapper code:
 > 
-> I agree the token values aren't sensitive (we definitely wouldn't want
-> to expose the keys exchanged with MP_CAPABLE, for example). Token values
-> are like port numbers in terms of what's exposed.
+> https://elixir.bootlin.com/linux/v6.14-rc4/source/kernel/bpf/cgroup.c#L1955
 > 
-> The DSS mapping and ssn_offset do give all users on the system access to
-> narrow ranges of values for the subflow TCP sequence numbers and MPTCP-
-> level DSNs. The diag interface doesn't expose TCP sequence numbers for
-> TCP sockets, it doesn't seem like a good idea to leak those through the
-> mapping values either. WDYT?
+> That's why the test passes. There's still the general issue that the
+> iterator could be used in any bpf code that can pass a valid msk
+> pointer. The existing lock checks in the export branch check that the
+> socket is locked, but it could be locked by some other owner.
 
-Indeed, I was still thinking about that, and that's why I didn't send
-this patch to netdev.
+Thank you for having looked! Because these new kfuncs are currently only
+tied to BPF_PROG_TYPE_CGROUP_SOCKOPT, can we apply all these squash-to
+patches and send this to BPF maintainers?
 
-It sounds safer to let the different layers decide on what can be
-exposed. In MPTCP case, it sounds indeed better not to expose sequence
-numbers, only the token, IDs, and flags.
 
-I will resurrect my previous version where I passed "net_admin" to the
-two ULP diag callbacks.
+When bpf_iter will be used in the schedulers and the PM, more checks can
+be added later.
+
+> As we've already discussed, msk_owned_by_me() doesn't work everywhere
+> because we can't change behavior if the lock isn't owned. However, we
+> don't need to handle every locking case like lockdep does - for the
+> scheduler BPF case, we only care if the BPF code is running in the
+> scheduler context. So, I think we can do a simplified version of
+> tracking the lock context:
+> 
+> 1. Add a 'struct task_struct *bpf_scheduler_task' field to struct
+> mptcp_sock.
+> 
+> 2. Do a WRITE_ONCE(msk->bpf_scheduler_context, current) before calling a
+> packet scheduler hook, and WRITE_ONCE(msk->bpf_scheduler_task, NULL)
+> after the hook returns.
+> 
+> 3. In bpf_iter_mptcp_subflow_new(), check "READ_ONCE(msk->
+> bpf_scheduler_task) == current" to confirm the correct task, return
+> -EINVAL if it doesn't match.
+
+That's a very good idea! Yes, we will need to add such checks before
+msk_owned_by_me() when the bpf_iter will be used elsewhere.
+
+> (It would help to create helper functions for setting and checking that
+> value)
+
++1.
+
+> Do you think this iterator will be useful in other places, like bpf path
+> manager? The same approach would work there, but a better name than
+> "bpf_scheduler_task" would help.
+Yes, good point! "msk->bpf_struct_ops_task"?
+
+(that's something that could also be added after having applied "use
+bpf_iter in bpf schedulers") series)
 
 Cheers,
 Matt
