@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C693A15539A
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:57:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F3711F3BA7
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:58:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999456; cv=none; b=EW2eI+eJSQZ2i6zb8F7+CqN5+QcWymPDSsBIXA9LG7C+TulkuwqM7HNsTzuSs1wucXVW3tZdVWN6UGtGCEne1tdWbnDdNngVy63V+UZHmPbqilf8TaJQzvUk4V3xvgivCDS0ms004WdgZrU+YHo7+/10urBIon6MPVEWDHxsS1w=
+	t=1740999513; cv=none; b=s3PnAj96PlZ0jmjoX9KTM4gam63xohGgw/DV8R4qY/Q02Umwg9l0FDt3VLl382HqJUQqGb6uKag8AZHUJeVA7VBeTjjAYWro8+Q0S/8HwG1jY/XmBM99eoRI9a07du1+kcHRG9k4mBgMQQuJBrTy6gy9BmIxHNHfdA67GqBgFWo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999456; c=relaxed/simple;
-	bh=vsxYDkPQiZvEIpD1OFNER1+mmgMOgbPxrOZy1H7cB9w=;
+	s=arc-20240116; t=1740999513; c=relaxed/simple;
+	bh=p9S2VYnCHiWnHiJLhnOPBF12X6Oggg0cstvYfF5UFR0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=m6hzxRUYA6VMCma66/4tyGPrpGIW+CNj6sLdOBmCZ/uXS0w6Q27VNpw+PEO5fl4Evs3MIDWj4V3QmbIlkDeJdralvQSFBDr4xsQc/huLOKJ5A/M7LJ6Jg09TrEtMXyLxY1kykyPIIhezNMqquNgsC/WXOQfEG3Hp1ojYiTnMYMY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=sd2FtyTq; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=djuzabAX9lSbCaGFnAoL/IdLVsBSfY1bPYZbCEJkPgQdFbjYuLy2id7IVELFT4iNeQhno9bdLkZtAQdXpqzHBURRJ5SxMWU3ni3r9LIs1Q37Wy9DiLq5n1pm36wWdkoZJwYjBKOYqtajWiCFjDC7Ryct4JMxkzWjR7jCtNII+Cc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YYOdaJ3d; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="sd2FtyTq"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8C8E3C4CEE5;
-	Mon,  3 Mar 2025 10:57:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YYOdaJ3d"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8784C4CED6;
+	Mon,  3 Mar 2025 10:58:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740999456;
-	bh=vsxYDkPQiZvEIpD1OFNER1+mmgMOgbPxrOZy1H7cB9w=;
+	s=k20201202; t=1740999511;
+	bh=p9S2VYnCHiWnHiJLhnOPBF12X6Oggg0cstvYfF5UFR0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=sd2FtyTqQrHUVsYSK6AcgjqOJDZORdrQkelu9SV95pk0Ea1rSPyKWwNpVMnAaXQrF
-	 NUTPK63aKKvkAnlumD+JUHPYV++M8WvJabsFdqr3VTH5kk08hX87q/Rma3gDenm5hG
-	 m1wpQZvXxLeXrMvFgZB47N+MlSzMMMFIsa6TaosYXhEHcZsybZOam+O17EMMWr2pSN
-	 lx4SsSjn1AQmT607xeouJVlGUAxuh5LdnpV5bg2y1NMAqHQlWdiW8OjtybdJW/qAZ5
-	 6+v4v7LC8SuFMFzVmRGZNBKX34vyMS77KWe0RcH9JTuX0eBWi1tThx71vsKAl4574e
-	 hZIB076X0gYfA==
-Message-ID: <1526d8c1-84cb-48ab-9a08-85c307038dc9@kernel.org>
-Date: Mon, 3 Mar 2025 11:57:33 +0100
+	b=YYOdaJ3diMUd+J6UEQukGWA+W+LDr3lbH/FuJEpuoAM86QJYP8RolZQ/Y579DdXy+
+	 67P9AEU3ghbmJXmhy67pPmCaKEznXXsqkDmyTbiztMqevoZkpKsfCKQAOXuA4t9McU
+	 L5NxQDhUPVxMaLIqjDnlrwBcMv/g1y3eQwa/c7A7aR0noUFfnTEoyWiO5XIU3AngSe
+	 YntvSvH5kH0t3x9fGFdz/wO6n0Rp3YEECFz0vRp3ODjBheNeeCCOUoNKExP6lQGWAa
+	 /1uHWqgtQb3cd4yy2PPxia7x/YYVe4aAO7N6si3+uIQ1df+gZdiPYJEG56Vb15+21P
+	 mG8t5MSGH92Fg==
+Message-ID: <0c6d0b20-1132-4f93-9430-7ce5d4460305@kernel.org>
+Date: Mon, 3 Mar 2025 11:58:28 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 09/11] mptcp: sysctl: drop get_pm_type
- helper
+Subject: Re: [PATCH mptcp-next v7 10/11] mptcp: pm: make get_local_id helpers
+ static
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740975633.git.tanggeliang@kylinos.cn>
- <b48dfaf2c07180cca758f4012f7310441701d9ac.1740975633.git.tanggeliang@kylinos.cn>
+ <0bdf5e5472e44780ce51d9241e33e2e010ecd23a.1740975633.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,21 +87,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b48dfaf2c07180cca758f4012f7310441701d9ac.1740975633.git.tanggeliang@kylinos.cn>
+In-Reply-To: <0bdf5e5472e44780ce51d9241e33e2e010ecd23a.1740975633.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
 On 03/03/2025 05:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The helper mptcp_get_pm_type() is unused now, it's replaced by the
-> new one mptcp_get_path_manager(). So drop it.
+> Now mptcp_pm_get_local_id() can directly invoke get_local_id() interface
+> through "ops" of "msk->pm". Instead of using mptcp_pm_is_userspace() to
+> check which get_local_id() helper to invoke.
 
-Same as with the previous commit: probably too early to drop it. If we
-drop it, we should drop the variable in the mptcp_pernet structure, see
-my comment on patch 3/11.
+As mentioned in a previous comment, I think it would be clearer to add
+get_local_id() in the PM ops structure (+ the validation, + in the
+different PM ops) here in this commit.
+
+Same on the next patch, and for all future PM ops:
+new/established/closed connections/subflow, ADD/RM_ADDR received, etc. →
+everywhere mptcp_pm_is_userspace() or mptcp_pm_is_kernel() is used in pm.c.
+
+Note that when it is needed to do actions from the worker, I guess it
+would be better to schedule the worker if the corresponding pm->ops->XXX
+is defined, then calling pm->ops->XXX from mptcp_pm_worker(). The idea
+would be to get rid of __mptcp_pm_kernel_worker(), everything should be
+done from mptcp_pm_worker(). That should also simplify the hooks for the
+BPF PMs, only having hooks called while owning the MSK socket. WDYT?
 
 Cheers,
 Matt
