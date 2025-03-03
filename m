@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7849D2343C6;
-	Mon,  3 Mar 2025 16:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5F8562517BB;
+	Mon,  3 Mar 2025 16:31:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019420; cv=none; b=BrJ5NweXg1COLseRDFrZ2CF4f5JgfOFqT2LG6jLO44zf5BTFVmQ2g9TRl60Lmtd4j5W21LQX90BOZdjvN+M/gm0cr59t6gHNweQCVgbRZl6dWfT8NkM58BgQGYNlT2EL6d2ZAUDgdg5tO9Z/VTDon4yqGjFqQxMkjqdDwUzQaQo=
+	t=1741019460; cv=none; b=eCoWnhHGtztR0vONvUYH0REEhW0t0bO04bI+L+T6lGZ9+9uzq0zKTqCIG6rmDh5EAtYJP3rTTXcXmL/HzT/dJqZqBAthswlzm5rkLPj2sWg+6q4UkFtnovy532Az4/ti0jho1/seXXzXrddtjod/D1mdCs22nuIZpltCxxnprZ4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019420; c=relaxed/simple;
+	s=arc-20240116; t=1741019460; c=relaxed/simple;
 	bh=PQcdHR7xGldchHufFfkG93+0uiY9+gpl16eM5PJNtzI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=OkdjmoRWHbMpr3qHnHy22+3Pi8gSM27k8/DcuV5MNN0ifi4/16A/d1rd9MpOsHWrRbFNIMlq8co87aVWrROE+5jAyVpLKlqBvgU+leN7UM1hClNhI6KY0YCQeWhdpZnu+wzBfCSMFpuEOpF/Dl0T96hIBGwqnTuTTg6RI2hMtI4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EkzeRRH5; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=LeSzln+dUipCNQGKesr3tXGHN2EMT+TJve+gDxoT8DZnbKkT/M9q8phKk8Q3w4I70lUBu1Mb6dPDtTaIGkljz1T58nOtwC3puAIB9uFEmts+5tc6NNA2P7rOAe2wFebuYOJs+uF9qOhtN+i1OW+bH8MMVaedv/eAnq2T2emhd9w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ErdBMfGe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EkzeRRH5"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C394AC4CEE6;
-	Mon,  3 Mar 2025 16:30:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ErdBMfGe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 85AFAC4CEE6;
+	Mon,  3 Mar 2025 16:30:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019420;
+	s=k20201202; t=1741019459;
 	bh=PQcdHR7xGldchHufFfkG93+0uiY9+gpl16eM5PJNtzI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=EkzeRRH5nTsfiilyCqnvA+3r7iGONEkp0S4Lu2mC1mcee9AYfGTY49a0zGwQM/a45
-	 zRMrtrNBOzruAtm4TGTyPWyf27GRM0V/kFGOPH+3Iz+KZXBgwbugpOaS5N8hss9Txu
-	 YT9vaHIpGrOVbqpSl+O8xKPdZSURzPKB54AOFeAnVOraKBCY5XmOwoZfgTF38je4A0
-	 mXuaZxxrallFKaJE4zCc39NHiHK3cws6WXsdvn0FoMP9eDAUIg3WjvRFhItcDNdlav
-	 B0xYz16X2rij0UQ15RlLx7ArzPQ3J/DA3mpeIiOCNqPDDSMIQb74bXyvYFr+QBEYxt
-	 VJit8STcLaCjg==
+	b=ErdBMfGe6mc0CmdOLIjWyZLb5U4S8HrTqG1dPdajp+fggUf207buPakKaIccgU2ps
+	 6c1v6UePJOsO2u4dT/pyl9nLN77/o+yJTEhL6lqq26sJ0A+c5D3/KclnriQ91nzWn2
+	 kFJbz1llYfOlSr1EnEzC11CMZYUNFxajeyT1XmdBIREfddSGCBFCuFaBKFa+0ENWY/
+	 XIyAhfFY2t1K+0PIf1dZNcaBcnZFXQW/jOBSvabY5wDivkb+VsVwkDY2rGiXOetr+y
+	 qAwLLDuNJYwV4opB1QcTSHRF0Fnh/7Xj9p9yBZ7dtSlZWHwyNhOYgJ2WTqdSxLl3JP
+	 FQxGKcUR9Pu9Q==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	edumazet@google.com,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.13 13/17] mptcp: safety check before fallback
-Date: Mon,  3 Mar 2025 11:29:45 -0500
-Message-Id: <20250303162951.3763346-13-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 13/17] mptcp: safety check before fallback
+Date: Mon,  3 Mar 2025 11:30:25 -0500
+Message-Id: <20250303163031.3763651-13-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303162951.3763346-1-sashal@kernel.org>
-References: <20250303162951.3763346-1-sashal@kernel.org>
+In-Reply-To: <20250303163031.3763651-1-sashal@kernel.org>
+References: <20250303163031.3763651-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.13.5
+X-stable-base: Linux 6.12.17
 Content-Transfer-Encoding: 8bit
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
