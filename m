@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 542D11F0E40
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:38:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 649A51F1300
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:39:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998325; cv=none; b=dJau1JBoNhP7We1NdIV2iz2AM2iJhA1SooyTqt6lDSkdwAzMDxNaWcm4jguF1F3A2ChJByjyvxtsPCIhG5b9/VBu5k3gVhSy5BtYLZstCQP+NmSO1WnQyvLVdlrUKOLRgtIui19jDd0JZZq2+nGIuovISreYtR81pEupFxjzkEA=
+	t=1740998377; cv=none; b=i8S/2POFmX7MKBYZhKHe1hP3LlgBteIQJ6fvhrpQ2nz7mRzUI97PN6C6GKcrUVyzYd4PkiJWgWFCQiVb3+69XepAZ7Pw4yza2ZR8skDr996AGpEshb0xYNvkkIJK3SlyopQVM71Slx2Pm99agdZKvTkRIHOhc6UHjDSccF8wlsA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998325; c=relaxed/simple;
-	bh=ec188JlAfnBmGiav2BgasZS7MSKpkm0jKtXqSa7Io8A=;
+	s=arc-20240116; t=1740998377; c=relaxed/simple;
+	bh=+zhivfQqflDVEnKSU8+cQ29EeEATu9u9MSBbsCFaZgM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Lx2Wf3pU3EFFHT0OJGkrkEjZR1G2grkrsojrhVG95Q1xYUUSGeD6cVRHSehwgbVgSZCESMV+EEn7ueM+RzKX2XXPr5cthoopRBwMFbSQR7t9LZtjZ0Qa8xaPRwdr/+JsHMDFzzdXV12UNMgAy1CFIAkuXlTgEGnQXR28ssXbxvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a7Se9Ptn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AIPR05f9R5b7sU21zG+pjLZnxa7ar0l7La7iModzIqoxD6eHr1bJWqvXbtSFaaXw/AVFkZxDSQTENNSUtcT5TySLc8Lz/iSk7y4rurfW5kJPJoDegQHAUe1sKEEzXLd1/c/QEgjwNpVHXm9THRNTwhMMNAuMqFKLVli1Pv+CqhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=F3Bx0jR+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a7Se9Ptn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1ABECC4CED6;
-	Mon,  3 Mar 2025 10:38:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="F3Bx0jR+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6A168C4CED6;
+	Mon,  3 Mar 2025 10:39:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740998324;
-	bh=ec188JlAfnBmGiav2BgasZS7MSKpkm0jKtXqSa7Io8A=;
+	s=k20201202; t=1740998377;
+	bh=+zhivfQqflDVEnKSU8+cQ29EeEATu9u9MSBbsCFaZgM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a7Se9PtnuHzuSjGxAPKs/1jJLvowazOhn90xOdyOhURhVf5XaCvtUSO3K8PF2gfwj
-	 2QZ3S3AL90CfVGD1tsWoPVvDQyQaGosimSPNP78g//clUery1asxscsacrHgiPRouL
-	 AZZRyIjEP3jtJheMbqfg5/qEhBaXzYiv7qBiSg6YfWiaKS584e6b3kP6JSKUeLkGJx
-	 JA6AGtomr8ICWwPK1bAk5dvII5a/lIQybVQcB71y6EVy4DBuDhFdPol6eCABnnde8d
-	 NaI7UejZ16PvodPxlpRN6XYsOT3BzO1h201jt3K9qYsl1Q9kgraIzCb42U/kSdAY/K
-	 iBfPxtHnhTbyg==
-Message-ID: <da597aef-a339-4137-b55a-b5a61d2cf4f5@kernel.org>
-Date: Mon, 3 Mar 2025 11:38:41 +0100
+	b=F3Bx0jR+5qn1yKF22lyR0Esb8sATGBSVv1lPuV0KGN97oCMJdmPGkYvULE/Saajwn
+	 4L8b+xUi1iA1yMaNiTDtu9+uFNoHGgzc0LVuh64jopf0C2yuS24vQyukQmEnrZg/u0
+	 5cy+8VLv/aO0IzmsmL4C141uLR2K3H5uVNASrJHaXv2JSrqQ08pMXZON8Ju9mOvsPL
+	 2b8T12/pKSHcTfpo/eNb1FSkwPkZlN7X7b0CqoaVa/aS9uwhhGvyLxcP7lVCfuw9Pb
+	 r43SRybI7JYhGRF5uzTayiRyQI3bQnSU7E6TFKWFLqHskBBhUJY0EVcHw0tVAbsyJK
+	 q+PoZ69/p8xuw==
+Message-ID: <4f4ee5fd-b518-4f3e-85f7-45c72a3b9927@kernel.org>
+Date: Mon, 3 Mar 2025 11:39:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 00/11] BPF path manager, part 5
+Subject: Re: [PATCH mptcp-next v7 01/11] mptcp: pm: define struct mptcp_pm_ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740975633.git.tanggeliang@kylinos.cn>
+ <993dd206cd1b29d4347514e3590bba675927f29a.1740975633.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1740975633.git.tanggeliang@kylinos.cn>
+In-Reply-To: <993dd206cd1b29d4347514e3590bba675927f29a.1740975633.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,20 +95,51 @@ Hi Geliang,
 On 03/03/2025 05:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v7:
->  - addresss Matt's comments in v6 [1].
->  - drop "type" from struct mptcp_pm_ops as Matt suggested.
->  - map "pm_type" to new sysctl as Matt suggested.
+> In order to allow users to develop their own BPF-based path manager,
+> this patch defines a struct ops "mptcp_pm_ops" for a userspace path
+> manager, which contains a set of interfaces.
 > 
-> Depends on:
->  - mptcp: pm: code reorganisation, v2
+> Add a set of functions to register, unregister, find and validate a
+> given struct ops.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/mptcp.h  | 17 ++++++++++++++
+>  net/mptcp/pm.c       | 55 ++++++++++++++++++++++++++++++++++++++++++++
+>  net/mptcp/protocol.h |  5 ++++
+>  3 files changed, 77 insertions(+)
+> 
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 72d6e6597add..53e67b90c37a 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -14,6 +14,7 @@
+>  
+>  struct mptcp_info;
+>  struct mptcp_sock;
+> +struct mptcp_pm_addr_entry;
+>  struct seq_file;
+>  
+>  /* MPTCP sk_buff extension data */
+> @@ -121,6 +122,22 @@ struct mptcp_sched_ops {
+>  	void (*release)(struct mptcp_sock *msk);
+>  } ____cacheline_aligned_in_smp;
+>  
+> +#define MPTCP_PM_NAME_MAX	16
+> +
+> +struct mptcp_pm_ops {
+> +	int (*get_local_id)(struct mptcp_sock *msk,
+> +			    struct mptcp_pm_addr_entry *skc);
+> +	bool (*get_priority)(struct mptcp_sock *msk,
+> +			     struct mptcp_addr_info *skc);
 
-Is it OK for you if I apply this "code reorganisation" series as it is?
-If there are no major changes needed, it will be easier to apply it now,
-and send it upstream "soon".
+Detail, if you have something else to change in this series: it is
+strange to see only two of them defined. I would expect all of them. Or,
+probably better, nothing now, and only add them when being used to show
+to the reviewers/devs how they are being used and where, no?
 
-Thank you for the v7. I have some comments, no big changes, I think we
-are heading in the right direction.
+By doing that, it will also be clearer to understand which ops are
+mandatory when we will see the modification of mptcp_pm_validate().
 
 Cheers,
 Matt
