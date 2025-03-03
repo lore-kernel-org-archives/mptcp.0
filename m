@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 947B126462A;
-	Mon,  3 Mar 2025 16:31:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEB3522E405;
+	Mon,  3 Mar 2025 16:32:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741019509; cv=none; b=bEOOdszjsVke0kQ9r6MBtakcGKKXmvv518BvkrQjXsmvohdqE8v2hdboWoMjKdPyH5cS9JCbF3QkyeL6azkhn7IuurssukBLb8Nrv9qt9nsxPeL5RNsV8o2VXPMhE/ITdW2wAo5WE/3lRe42sS1ktsz8gyR8nAkZ80txJcVfcq8=
+	t=1741019527; cv=none; b=RJxEIe8//HAbdFCwzqh68iTdypUVmjHINoqyESDt+5EFl48xRghjSRis1bC+u71/fWE4FN9Klwr7Jez2jeYmycZZs7GgF3MSZPIVXbafYquHufcVp3IfJjkzzzqxMHbGvx+3V3+nfw5X4EdEV7km4YygvaznOhhTfF/2ifaDp8M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741019509; c=relaxed/simple;
-	bh=w4eZ7vTmYbfaw63YjKeyHVuq0kQ1D/IJR+agJq/71Rg=;
+	s=arc-20240116; t=1741019527; c=relaxed/simple;
+	bh=4LlMWS7unNjrr4UO9L6/YFDaJLbN0Pbn3aVKgAkooS4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=jsU550NucV9RXSh9SP4qQ7Qa4wKHa3jvsrqmMqHmsBk9zevMHYQjLhv2R+pIIk7Sbb60n0Pi4IECN5NVMA7Bs89Tx3TE23tmfKZUwjb18S5745EjI2xMLUpbFeyP6FR5jdzCLpdX/jfjwPtmF7kIqmkOMy1vgdfULSO29WSeOwQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bOOTHEdQ; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=F9WsRLn9xIjNj885TTk4K+vg4cAuyMqt75EO7SBGBz+hyDYNL9hG9yBkxjycHzye+hwkZBtHVd7/ZA32+41LA8AoBToF/4fzpAP1q9J0kwPbg0z7e9BGl1dQyaLgdX86DgynMaEu2DWG9UVPpv96TidfoUNP/LvySgPim959e+A=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dCZk50QK; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bOOTHEdQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D10D6C4CED6;
-	Mon,  3 Mar 2025 16:31:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dCZk50QK"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68CDBC4CED6;
+	Mon,  3 Mar 2025 16:32:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741019509;
-	bh=w4eZ7vTmYbfaw63YjKeyHVuq0kQ1D/IJR+agJq/71Rg=;
+	s=k20201202; t=1741019527;
+	bh=4LlMWS7unNjrr4UO9L6/YFDaJLbN0Pbn3aVKgAkooS4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=bOOTHEdQ/J1vC/HxPIQIGz7elaYHIWEVZf1N3G/qHjgKyceXusXpi1M4t5+PRoEMb
-	 7Qr0ZvuVFWceKXmR/z9WjIPsasJ/JeTMw3Co6c2bENruGdBHJSXYtI7t6zW7kMYFxg
-	 GKNnNcI/inZvWBXk+w3SBBKEGy+BdfUKO64VMJrig0c4dP2ko2dzgHAlyVIrei7kMt
-	 jgM4Ct7hBsGLunE2CavWY9xnSNqfYeSNJMiToTsva2T5A/lHgrVyZ/dU8I2iYpI8Gj
-	 ChTaaK5CpT9ofp8PcXIw4ZiTReoLWRHpH2H74P9VQQsXBT0Y32RowEpIcRaqVnEKaS
-	 Ey9cxcDA2STCQ==
+	b=dCZk50QKQklRygiHfqvmd9YQC+lJIg7B5J/OzLJuldIakCbTs9o5+a/4cDJLlpNHN
+	 3rTe+pbI9EYFS6Z580FFwtk/3UVUIKWCodDzFnL6u+cc7DP6wHarUQu1sO3ivZtfe5
+	 ysYabUuSk27ocgJBt7RejRhhXCk5oiDEjENiZttaEwiZYFDn0uXjEnQiKmg49dmw5F
+	 xqItIzcz/Xdv1Fcj24Cn5v1MiAhtgq/Pv7QK9uqdXk0V5O48fhcEaPYB2WK8JewW0e
+	 OCOABoFrJlL5Zvvs/j/cfrWMTWfcWxmdHJzdd6cFQw5OesCqjHtmQKOwINKJGgWzJi
+	 ebVfVVHC6BdHQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	edumazet@google.com,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.1 7/9] mptcp: safety check before fallback
-Date: Mon,  3 Mar 2025 11:31:31 -0500
-Message-Id: <20250303163133.3764032-7-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.15 7/9] mptcp: safety check before fallback
+Date: Mon,  3 Mar 2025 11:31:50 -0500
+Message-Id: <20250303163152.3764156-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250303163133.3764032-1-sashal@kernel.org>
-References: <20250303163133.3764032-1-sashal@kernel.org>
+In-Reply-To: <20250303163152.3764156-1-sashal@kernel.org>
+References: <20250303163152.3764156-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.1.129
+X-stable-base: Linux 5.15.178
 Content-Transfer-Encoding: 8bit
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
@@ -76,10 +76,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 2 insertions(+)
 
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 77e727d81cc24..25c1cda5c1bcf 100644
+index 6026f0bcdea60..b92646ddbf077 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -981,6 +981,8 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
+@@ -870,6 +870,8 @@ static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
  		pr_debug("TCP fallback already done (msk=%p)\n", msk);
  		return;
  	}
