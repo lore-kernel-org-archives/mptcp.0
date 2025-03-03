@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26FE81F0E2C
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:40:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ABDE51E5701
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:41:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998457; cv=none; b=cVTDHsl0R9UxmaxXJq30rcN6FN7fbleHvcu5+mDaVf2SxE/9JF8GiAteTsw/uso8vPvXWjyeN/yOiF4tVDVo5pxmYHXiGy1cq5EsRoFFlCLkBa/98Tqeas8QUgjL6Sd/SDpj6C+Sj9gFKzqScUuYfUwrb/G+aWONStsshmiG8n0=
+	t=1740998462; cv=none; b=al5wetiL9ax7i/1CYIb4ZNoaSiFf9F5uZ8BHglefNLAPcngk7VHwz1nUMF6fYgmZyu7oYZfN9yOf6XW1PFu3u1Tl9GIwEYxggKKQduoRpZo1pFwI1GOZbt6eDSUA6mRZwOBcm+TjkcyzLgSjFELRoTusbFDL37MRUD1yKvivZCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998457; c=relaxed/simple;
-	bh=h1m2OmNENpFF27pn+QS76tyFqMwJMqxVyqbS4vScfTE=;
+	s=arc-20240116; t=1740998462; c=relaxed/simple;
+	bh=b6tSvwP/8cnoKjgjglciunC6E/gcNfqMs8PLl0jtftE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ejruyqJ7wFadqziJ9eFo1RMLvKBc60VvKOvkcKZ4SMECTRwjVCpolkyfyYn3aye69PNtXQcrCilhwwP80/w1v/GvJffUSYAHMy6LlebT5ACDDLBaxIs9Ewuo3pm3XqejFPtOIR2cQ9xFkcC2BhJHdXUVapPvmkl9iiajnlDDePI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i+4W/zXZ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AWfKsPHC8Lwwg4heqyVJvtIXzZOI3P43JFrHaOM7pFeNX27WXbw/gjMJwVcTS+AfPE4dhBWL44ENON7RRRlHtR49rcPC/samUogccm2MRc7i+cLtPi4u3GWeae3rI8NAtuT6kZHd/WsCoNfsZoWVHi8AyR7KZB1vcPXIxTuEj2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eSEN7HTl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i+4W/zXZ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D57B7C4CED6;
-	Mon,  3 Mar 2025 10:40:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eSEN7HTl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6999BC4CEE5;
+	Mon,  3 Mar 2025 10:41:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740998456;
-	bh=h1m2OmNENpFF27pn+QS76tyFqMwJMqxVyqbS4vScfTE=;
+	s=k20201202; t=1740998462;
+	bh=b6tSvwP/8cnoKjgjglciunC6E/gcNfqMs8PLl0jtftE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i+4W/zXZPgxn0HzHs9Z6FHJPkCdXm5CLLRAsz3L16SYTKFHFU1RqHfeurK1K2lfeY
-	 zj5jzHUBRTUa+CzoOUhBIvLHc/Cx396tE7ImolTWFmzWY96fNuI9zY+4D9LsHiTJOx
-	 fXCej6rJ4eqyyAIKLsPats3ohFT8F3fO5wn6FzFZTBIXG21L4ZHRU1klZ7QCZ1W5ZF
-	 45xubRVilnzJ6q07fd4+KWV2Et9Frtn/6rPR0iFE7UgnJ1z8nupM710wnRN4cPFXuf
-	 C+Hu6UxE/f94DRgZ/EVP8MQty19LhxV3Qzv6omprmmECX2BYIJFH2hEhtgBUk27XPe
-	 QS4qmMusUioXQ==
-Message-ID: <4a3aeb25-5fc4-4e31-aa74-c2203c3ada2d@kernel.org>
-Date: Mon, 3 Mar 2025 11:40:53 +0100
+	b=eSEN7HTldFml93Zk7MY3/XZDilUhYkBWReX909gdM0D8CKbNdt7JPvy2CmJwoeGtb
+	 UpOSge3HI8t0iI8lsdUym9BMtW0OULyWVYw3qzhbm70a3HlJppeFUh2CbXf84aw5Gv
+	 YvTPp27bAvbNtzqprMn7man5GLchDj4P9HUKGa+EQqB3KemR1ukW9qEiYkQQY/4mgB
+	 VnDp51iXAf/+7iq2HgV0hrDcjcY/hbQxkx0Nx7kwd5LjU8/6wZv/LQ2mZvmgJ24VTJ
+	 p5/edvFS+3FK5deYOuYqU5F2MFhXfKNuX0D0ed0FEIHy9x0hXVRBKTl/FqhF3D9nBb
+	 egq47IbJ/leUA==
+Message-ID: <51e3640e-3131-4e40-89dd-192855c46c8a@kernel.org>
+Date: Mon, 3 Mar 2025 11:41:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 03/11] mptcp: sysctl: map pm_type to
- path_manager
+Subject: Re: [PATCH mptcp-next v7 04/11] mptcp: sysctl: add
+ available_path_managers
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740975633.git.tanggeliang@kylinos.cn>
- <8840912119ce5a1180550745d496087ac7e81fa0.1740975633.git.tanggeliang@kylinos.cn>
+ <4af75cf9a0ebfef70ca6151d05624b8d5abc723b.1740975633.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8840912119ce5a1180550745d496087ac7e81fa0.1740975633.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4af75cf9a0ebfef70ca6151d05624b8d5abc723b.1740975633.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,88 +96,13 @@ Hi Geliang,
 On 03/03/2025 05:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a new proc_handler "proc_pm_type" for "pm_type" to
-> map old path manager sysctl "pm_type" to the newly added "path_manager".
+> Similarly to net.mptcp.available_schedulers, this patch adds a new one
+> net.mptcp.available_path_managers to list the available path mangers.
 
-Don't forget to add a selftest checking this new sysctl and the mapping
-are correct, e.g. in userspace_pm.sh. See my previous comment:
+Detail: s/mangers/managers/
 
-https://lore.kernel.org/c49517d2-38e2-4848-9fb9-1c7748689cec@kernel.org
+("manger" means "to eat" in French, so that looks strange to me :) )
 
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/ctrl.c | 33 ++++++++++++++++++++++++++++++---
->  1 file changed, 30 insertions(+), 3 deletions(-)
-> 
-> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index d64e6b4f6d1d..32f13ab7db0a 100644
-> --- a/net/mptcp/ctrl.c
-> +++ b/net/mptcp/ctrl.c
-> @@ -217,6 +217,35 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
->  	return ret;
->  }
->  
-> +static int proc_pm_type(const struct ctl_table *ctl, int write,
-> +			void *buffer, size_t *lenp, loff_t *ppos)
-> +{
-> +	struct mptcp_pernet *pernet = container_of(ctl->data,
-> +						   struct mptcp_pernet,
-> +						   pm_type);
-
-Out of curiosity, do you plan to drop pernet->pm_type later on?
-
-When all the mptcp_pm_is_{kernel,userspace}() will be dropped, I think
-we can also drop it from the mptcp_pernet structure. At that point, we
-could then read info from "path_manager" and write in ctl->data 0, 1, or
-2. But only when we will no longer use pernet->pm_type.
-
-> +	unsigned int val = READ_ONCE(*(u8 *)ctl->data);
-> +	const struct ctl_table tbl = {
-> +		.maxlen = sizeof(val),
-> +		.data = &val,
-> +	};
-> +	int ret;
-> +
-> +	if (val > mptcp_pm_type_max)
-> +		return -ERANGE;
-
-You might not need this if ...
-
-> +
-> +	ret = proc_douintvec(&tbl, write, buffer, lenp, ppos);
-
-... you use proc_dou8vec_minmax() here and ...
-
-> +	if (write && ret == 0) {
-> +		char *path_manager = "kernel";
-> +
-> +		if (val == MPTCP_PM_TYPE_USERSPACE)
-> +			path_manager = "userspace";
-> +		mptcp_set_path_manager(pernet->path_manager, path_manager);
-> +		WRITE_ONCE(*(u8 *)ctl->data, val);
-> +	}
-> +
-> +	return ret;
-> +}
-> +
->  static struct ctl_table mptcp_sysctl_table[] = {
->  	{
->  		.procname = "enabled",
-> @@ -261,9 +290,7 @@ static struct ctl_table mptcp_sysctl_table[] = {
->  		.procname = "pm_type",
->  		.maxlen = sizeof(u8),
->  		.mode = 0644,
-> -		.proc_handler = proc_dou8vec_minmax,
-> -		.extra1       = SYSCTL_ZERO,
-> -		.extra2       = &mptcp_pm_type_max
-
-... you keep these two last lines.
-
-> +		.proc_handler = proc_pm_type,
->  	},
->  	{
->  		.procname = "scheduler",
 Cheers,
 Matt
 -- 
