@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB11D86DC
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:52:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 298081D86DC
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:53:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999137; cv=none; b=qAr9JyOVzSAWNdz/HoyUr1vROf9anJBBW8zNtd75rGzu2OR5Wl0hpYkSvQUVTudDOFLGD37NDKUayV6gcf6w4QqATxEwCPZdSNT4OkWX2QKNfiYZ6dYGoDPRLmdseizY+mMnCvZfAYV0xejIrOdcuVtoW9ausaRA0qN/anVSiwk=
+	t=1740999187; cv=none; b=jk4rogy1LMWoPFJMBeFtU6U0ehfGS1FoO/bbMbgq+Ikr8+iPgvf+MlHRhQA2CGGknlecu3kYPpfrqN2qj2GD1mrSgpMR2SU2Olj1W6Bj5r0ysOc1/hBcxMTYzrikj3wOioWc08WQh2EwhfyDgJonHVH4ExSJEv6K7UPuNxhZbGU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999137; c=relaxed/simple;
-	bh=TLa0ApKhFFQRUMPRuopWcsrVRA7yT9leBrN94J1ju8c=;
+	s=arc-20240116; t=1740999187; c=relaxed/simple;
+	bh=JsBU+YaNYGwOwmgaRcC6Rtf6/vjqiy6YGu3q599bOWU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FSYTcE+tBdvcxItgvTvgsdmGMCaRxtgSK3RQYCJw5jIzQCTxwQoZggjG3HTcZmsjgN8PelOgZx3ItEmT0Jfcjm9p84z5vzGPmXNqNqiM7YQl34CcmFc/cb7K/ynmectevtSpYBkciwOa0vPQR3T1JPb5eDLIRRkX43zSFHZEgsc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjDIo849; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UY+NkapLDoacRqkS5i0YsNd+EDen9wo3LNL/OX4WVDsv+cUOvCBoXa7yykolGkozBDON0Vg638Oq+Mwbhby67JK9OpZDI90njnVVQOoyB1h3MOV7tYGTKiFztmvO2NTUZd3FXw/0/zvY/Ke7Opb6ORF1AoYdWww9LeJgyVJ/t+0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=foddfgMJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjDIo849"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B123BC4CED6;
-	Mon,  3 Mar 2025 10:52:15 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="foddfgMJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E234EC4CED6;
+	Mon,  3 Mar 2025 10:53:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740999136;
-	bh=TLa0ApKhFFQRUMPRuopWcsrVRA7yT9leBrN94J1ju8c=;
+	s=k20201202; t=1740999186;
+	bh=JsBU+YaNYGwOwmgaRcC6Rtf6/vjqiy6YGu3q599bOWU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KjDIo849xzLvSUwN3Einz4BGOc8Cnn6LQonos5RPZpnq0JSs8SGEAlU+5aYR9Sqjb
-	 c0lDEEFiyeaHOoh4BdDcqLe7teJ7CkHdM8+K/9gmPsA2IwEl/aSyAtuvSFwCzjaPbW
-	 1i9ahBFzrJn9gBdJDg70Om3msi1Bz/I2v4d0bd1plo3jzk5b7BFEooYjlj3YuqU1Gp
-	 i0hY8E/LFwFyvCReqilR+aMJ58Xkcmjkw/frpxuoVa/UkeGTVVdnODRJwQI6d8XZvb
-	 Ap2XcLmdWrzt4CA38AMYylzHEwtybkOKINVj+j4m1hR2mmRWLmbmDCsYNFCyBKGsQF
-	 m7YU4qeXG0n2g==
-Message-ID: <d2008757-a030-44ee-9bed-d260b79a0fcc@kernel.org>
-Date: Mon, 3 Mar 2025 11:52:13 +0100
+	b=foddfgMJPew3Z0krsdRhG9uGlYcrnES8AiwkeWYPtZFCkyTaMXskwnvPcD3ipBBQX
+	 ei/YoaKm8pxtGDaXzgt6WkqTaJSy3uO2Fx+qVd1r3c3gBLVFjhod3zFsKKjqXzTbh2
+	 TSjhK3b4PIUPMUBYwifa9Uht2K+wzSgkONIzlNqUAiMmAd7OxUPng5l+ujVz0Z8HVB
+	 zsg5C8saMjYNs28xxBByZDp3DOGGyAe+NUJfNs9LStj/jz0MVXkiskFLOPKTkz5MBe
+	 A3V2GRc+4+dh4LSKLJLLss5Ui/MqBm1NJvfozkIrSZA9HRz4DhdEZvgqGN48ExD9yZ
+	 rTWdVOXPJ/M8Q==
+Message-ID: <038d7f67-b235-4010-a75f-1ef5651bbb4b@kernel.org>
+Date: Mon, 3 Mar 2025 11:53:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 06/11] mptcp: pm: userspace: register
- mptcp_userspace_pm
+Subject: Re: [PATCH mptcp-next v7 07/11] mptcp: pm: initialize and release
+ mptcp_pm_ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1740975633.git.tanggeliang@kylinos.cn>
- <cc2a3970c6bea22cb4562c074dc573aae864247a.1740975633.git.tanggeliang@kylinos.cn>
+ <7c65de17fee4c36d003684e730c1459542eedca8.1740975633.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,50 +87,115 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cc2a3970c6bea22cb4562c074dc573aae864247a.1740975633.git.tanggeliang@kylinos.cn>
+In-Reply-To: <7c65de17fee4c36d003684e730c1459542eedca8.1740975633.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
+Hi Geliang,
 
 On 03/03/2025 05:22, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch defines the original userspace path manager as a new
-> struct mptcp_pm_ops named "mptcp_userspace_pm", and register it
-> in mptcp_pm_data_init().
-> 
-> Only get_local_id(), get_priority() and release() interfaces are
-> implemented here. mptcp_userspace_pm_is_release() is a wrapper of
-> mptcp_userspace_pm_free_local_addr_list().
+> Add a struct mptcp_pm_ops pointer "ops" in struct mptcp_pm_data, and two
+> functions mptcp_pm_initialize() and mptcp_pm_release(), to set and release
+> this pointer. mptcp_pm_initialize() is invoked in mptcp_pm_data_reset(),
+> while mptcp_pm_release() is invoked in mptcp_pm_destroy().
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm.c           |  1 +
->  net/mptcp/pm_userspace.c | 18 ++++++++++++++++++
->  net/mptcp/protocol.h     |  1 +
->  3 files changed, 20 insertions(+)
+>  net/mptcp/pm.c       | 42 +++++++++++++++++++++++++++++++++++++++---
+>  net/mptcp/protocol.h |  3 +++
+>  2 files changed, 42 insertions(+), 3 deletions(-)
 > 
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index e648cb522320..98f81221786f 100644
+> index 98f81221786f..e8b34f2ecb35 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -1028,6 +1028,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
->  void __init mptcp_pm_init(void)
+> @@ -973,15 +973,15 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  void mptcp_pm_destroy(struct mptcp_sock *msk)
 >  {
->  	mptcp_pm_nl_init();
-> +	mptcp_userspace_pm_init();
+>  	mptcp_pm_free_anno_list(msk);
+> -
+> -	if (mptcp_pm_is_userspace(msk))
+> -		mptcp_userspace_pm_free_local_addr_list(msk);
+> +	mptcp_pm_release(msk);
+>  }
+>  
+>  void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>  {
+> +	const char *path_manager = mptcp_get_path_manager(sock_net((struct sock *)msk));
+>  	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+>  	struct mptcp_pm_data *pm = &msk->pm;
+> +	int ret;
+>  
+>  	pm->add_addr_signaled = 0;
+>  	pm->add_addr_accepted = 0;
+> @@ -991,6 +991,12 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>  	pm->rm_list_rx.nr = 0;
+>  	WRITE_ONCE(pm->pm_type, pm_type);
+>  
+> +	rcu_read_lock();
+> +	ret = mptcp_pm_initialize(msk, mptcp_pm_find(path_manager));
+> +	rcu_read_unlock();
+> +	if (ret)
+> +		return;
 
-Detail: maybe better to call it mptcp_pm_userspace_init(). So all the
-remaining exposed userspace PM helpers will have the same mptcp_pm_
-prefix as the rest?
+Mmh, that's annoying if pm->ops has not been set here! I don't think
+mptcp_pm_initialize() can fail and if it does, it should stop the
+connection.
 
-Also, maybe clearer with mptcp_pm_userspace_register()?
+> +
+>  	if (pm_type == MPTCP_PM_TYPE_KERNEL) {>  		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
+>  
+> @@ -1102,3 +1108,33 @@ void mptcp_pm_get_available(char *buf, size_t maxlen)
+>  	}
+>  	rcu_read_unlock();
+>  }
+> +
+> +int mptcp_pm_initialize(struct mptcp_sock *msk, struct mptcp_pm_ops *pm)
+> +{
+> +	if (!pm)
 
-BTW, I think we should also rename mptcp_pm_nl_init to
-mptcp_pm_kernel_register() later ; or do that as part of patch 5/11?
-"While at it, rename the init function to avoid confusions?" WDYT? Or I
-do the rename as part of the "code reorganisation"?
+I guess this should never happen, right? Or maybe yes if a BPF PM has
+been unloaded?
+
+> +		pm = &mptcp_kernel_pm;
+> +
+> +	if (!bpf_try_module_get(pm, pm->owner))
+> +		return -EBUSY;
+
+Should it not fallback to the kernel PM + print a warning (once?)?
+
+pr_warn_once("%pm %s couldn't be initialized, falling back to 'kernel'",
+             pm->name);
+pm = &mptcp_kernel_pm;
+
+> +
+> +	msk->pm.ops = pm;
+> +	if (msk->pm.ops->init)
+> +		msk->pm.ops->init(msk);
+> +
+> +	pr_debug("pm %s initialized\n", pm->name);
+> +	return 0;
+> +}
+> +
+> +void mptcp_pm_release(struct mptcp_sock *msk)
+> +{
+> +	struct mptcp_pm_ops *pm = msk->pm.ops;
+> +
+> +	if (!pm)
+> +		return;
+> +
+> +	msk->pm.ops = NULL;
+> +	if (pm->release)
+> +		pm->release(msk);
+> +
+> +	bpf_module_put(pm, pm->owner);
+> +}
+
+Can you not declare mptcp_pm_release() and mptcp_pm_initialize() as
+static and move them above mptcp_pm_destroy() and mptcp_pm_data_reset()?
+It would make more sense, and no need to export them in protocol.h.
 
 Cheers,
 Matt
