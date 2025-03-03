@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609511D7E4C
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:51:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EEEB11D86DC
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:52:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740999066; cv=none; b=O4fY/5XTYM9EY6VAzfl9tU0zUPO/P/Zvnp9LAWhHHqeisxgaJbAvnWrE5DKBXekNjGvh2oZwDLz8yQIifZKNzP4g2QLLr2qiqNToDNDw+wr9zkb2SmV2yMvi8ANqD27wHrxFZPGenpCNYX4KC4Vzvhc0paS8VyeKgHqvvS9l8e4=
+	t=1740999137; cv=none; b=qAr9JyOVzSAWNdz/HoyUr1vROf9anJBBW8zNtd75rGzu2OR5Wl0hpYkSvQUVTudDOFLGD37NDKUayV6gcf6w4QqATxEwCPZdSNT4OkWX2QKNfiYZ6dYGoDPRLmdseizY+mMnCvZfAYV0xejIrOdcuVtoW9ausaRA0qN/anVSiwk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740999066; c=relaxed/simple;
-	bh=viBJYr27Wg++hclyoBAcr+p1DFatJBNlhGd6p/snBXs=;
+	s=arc-20240116; t=1740999137; c=relaxed/simple;
+	bh=TLa0ApKhFFQRUMPRuopWcsrVRA7yT9leBrN94J1ju8c=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=D8lMXaxfivcUaztfcA0GiTGoVTVK84njt1Mm0QsGhkJOex6KukPypCp9c1fdvRmOFbzal7OteLDsww7qEFXdI4niEYAGMW76lwJkoBIfnQFbFB0+vjWveInhzwoDbuUcshXOseZ7bKeMm4uh0BldHqwnJuMsn4p22EhDGR5MUgs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYlg24Gp; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FSYTcE+tBdvcxItgvTvgsdmGMCaRxtgSK3RQYCJw5jIzQCTxwQoZggjG3HTcZmsjgN8PelOgZx3ItEmT0Jfcjm9p84z5vzGPmXNqNqiM7YQl34CcmFc/cb7K/ynmectevtSpYBkciwOa0vPQR3T1JPb5eDLIRRkX43zSFHZEgsc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KjDIo849; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYlg24Gp"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E637C4CED6;
-	Mon,  3 Mar 2025 10:51:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KjDIo849"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B123BC4CED6;
+	Mon,  3 Mar 2025 10:52:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740999065;
-	bh=viBJYr27Wg++hclyoBAcr+p1DFatJBNlhGd6p/snBXs=;
+	s=k20201202; t=1740999136;
+	bh=TLa0ApKhFFQRUMPRuopWcsrVRA7yT9leBrN94J1ju8c=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CYlg24Gpy0vUwbBMdIX8sGiNHWnnVM5UQHhhlyxacx7U3P1AjFocUDYnv2Ve1ztZs
-	 0yYnmy2TaoIeGEeAjn9fgLkBA/tgY0iKae0Nu72UyAsMK6Sq0CqyyiWIdjmtCTxFNA
-	 drixmbAFB7tHPO6jORmL+BzcoRPqdZ0bOYYmTkOjYfxYF57sKMgLKj7WaGqY3Pv0Vs
-	 0K2C1unM9Kjtqq5d1WkaTUlRvA0VFfNkZEFcUvtgD2AkLIAs/x2brmtrjLnNXP9NTx
-	 fFvtIigd03dOXtadzrOUGjYh0N1TdpnSLHE89jXYCFyBqyU777axLNkylEnjFTsBUA
-	 Hp1c/wNT53miQ==
-Message-ID: <cefcf810-3793-494d-8cc1-d4d093331bcc@kernel.org>
-Date: Mon, 3 Mar 2025 11:51:03 +0100
+	b=KjDIo849xzLvSUwN3Einz4BGOc8Cnn6LQonos5RPZpnq0JSs8SGEAlU+5aYR9Sqjb
+	 c0lDEEFiyeaHOoh4BdDcqLe7teJ7CkHdM8+K/9gmPsA2IwEl/aSyAtuvSFwCzjaPbW
+	 1i9ahBFzrJn9gBdJDg70Om3msi1Bz/I2v4d0bd1plo3jzk5b7BFEooYjlj3YuqU1Gp
+	 i0hY8E/LFwFyvCReqilR+aMJ58Xkcmjkw/frpxuoVa/UkeGTVVdnODRJwQI6d8XZvb
+	 Ap2XcLmdWrzt4CA38AMYylzHEwtybkOKINVj+j4m1hR2mmRWLmbmDCsYNFCyBKGsQF
+	 m7YU4qeXG0n2g==
+Message-ID: <d2008757-a030-44ee-9bed-d260b79a0fcc@kernel.org>
+Date: Mon, 3 Mar 2025 11:52:13 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 13/14] mptcp: pm: split in-kernel PM
- specific code
+Subject: Re: [PATCH mptcp-next v7 06/11] mptcp: pm: userspace: register
+ mptcp_userspace_pm
 Content-Language: en-GB
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <geliang@kernel.org>
-References: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
- <20250228-mptcp-pm-reorg-code-v2-13-fa8b2542b7a5@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1740975633.git.tanggeliang@kylinos.cn>
+ <cc2a3970c6bea22cb4562c074dc573aae864247a.1740975633.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,49 +87,50 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250228-mptcp-pm-reorg-code-v2-13-fa8b2542b7a5@kernel.org>
+In-Reply-To: <cc2a3970c6bea22cb4562c074dc573aae864247a.1740975633.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
 
-On 28/02/2025 14:31, Matthieu Baerts (NGI0) wrote:
-> Before this patch, the PM code was dispersed in different places:
+
+On 03/03/2025 05:22, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> - pm.c had common code for all PMs
+> This patch defines the original userspace path manager as a new
+> struct mptcp_pm_ops named "mptcp_userspace_pm", and register it
+> in mptcp_pm_data_init().
 > 
-> - pm_netlink.c was supposed to be about the in-kernel PM, but also had
->   exported common Netlink helpers, NL events for PM userspace daemons,
->   etc. quite confusing.
+> Only get_local_id(), get_priority() and release() interfaces are
+> implemented here. mptcp_userspace_pm_is_release() is a wrapper of
+> mptcp_userspace_pm_free_local_addr_list().
 > 
-> To clarify the code, a reorganisation is suggested here, only by moving
-> code around to avoid confusions:
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c           |  1 +
+>  net/mptcp/pm_userspace.c | 18 ++++++++++++++++++
+>  net/mptcp/protocol.h     |  1 +
+>  3 files changed, 20 insertions(+)
 > 
-> - pm_netlink.c now only contains common PM Netlink code:
->   - PM events: this code was already there
->   - shared helpers around Netlink code that were already there as well
->   - more shared Netlink commands code from pm.c will come after
-(...)
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index e648cb522320..98f81221786f 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -1028,6 +1028,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+>  void __init mptcp_pm_init(void)
+>  {
+>  	mptcp_pm_nl_init();
+> +	mptcp_userspace_pm_init();
 
-> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
-> index e4abb94e8c0bd42533500587f5f6e88038b2db62..530b2362a5a35c5ef44d3bf495c8103bdfa08cff 100644
-> --- a/net/mptcp/pm_netlink.c
-> +++ b/net/mptcp/pm_netlink.c
+Detail: maybe better to call it mptcp_pm_userspace_init(). So all the
+remaining exposed userspace PM helpers will have the same mptcp_pm_
+prefix as the rest?
 
-(...)
+Also, maybe clearer with mptcp_pm_userspace_register()?
 
-> -void __init mptcp_pm_nl_init(void)
-> -{
-> -	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
-> -		panic("Failed to register MPTCP PM pernet subsystem.\n");
-> -
-> -	if (genl_register_family(&mptcp_genl_family))
-> -		panic("Failed to register MPTCP PM netlink family\n");
-
-I think it would make more sense to keep the mptcp_genl_family
-registration here in pm_netlink.c.
-
-I can do the modification when applying the patches.
+BTW, I think we should also rename mptcp_pm_nl_init to
+mptcp_pm_kernel_register() later ; or do that as part of patch 5/11?
+"While at it, rename the init function to avoid confusions?" WDYT? Or I
+do the rename as part of the "code reorganisation"?
 
 Cheers,
 Matt
