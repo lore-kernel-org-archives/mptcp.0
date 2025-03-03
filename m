@@ -1,37 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C36901F0E2C
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:33:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 691D41F3BA2
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:33:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998024; cv=none; b=gbRD1pNboaF8WdSqnad1L0gwWxm+UtCaHacZdrIH9Sx4W1TDBfWcBXwgcUIen5efu4NoV9wrVkj+UDC2CtIvVJFBd7t342OkrewfjJb+TH2U+2JFIK3lBw5OXe3gWbtaj6zAebEeqpdB4qlwaafyQ31IH/0JfPIJFG8vE7Co5J0=
+	t=1740998026; cv=none; b=FNaa3vt1wUaekrFMom+0UA178ItdLXVo50l+oCVvySyIWpuPCiGgI5vZVmpD9wsfu2/VlzqGrS1BfggEAnJMR3PAxJ12STQng34tVsgJBak1CDIHAqU6IOgFK77OLYiwE2YRbMFLDQ4tChpJfOwazW5i72yUIfuORvL22tlqPRM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998024; c=relaxed/simple;
-	bh=xFsYzDi24UmvPTPVT7ZoR+mOi3Iszbyg0BpESjj90xw=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=X480dq2gYJ3lVuNIRrPj6tXmqOcCvcTt4bmk+3eLdRvUGdWsoWo0+m2xTKO6qBE3zb5uWw334S6tiWRHJEgUh0vhdZPadnaneMgERB0Ona0/nQjHHEP8m4t/kd7NEO61+8HP5/X0WA9KWmMn3+Z4QdhxnuFgVH4Jd495v9qFgfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HoeWf2Oi; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1740998026; c=relaxed/simple;
+	bh=3w0UiAWIzMtUk5kXRKMpKaYmdGWKWd8bQ1iWq34N8Uo=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=VgpFwotj/WOpbd06skmXNxYj8wQJ2xVWUqtPA8/vN0wBnoe95Nto72grq6IgvY+5nMlsoy6OdxgQ6jRHGZbuBYHMhG5CjhIdXyesMIU+YYqfZRTFawsKPN8ErryXP0+l5fEVHkotNH9I/YxIQSqtx0xl4aXnXlevRCnCaojcnbo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AqEwzPKB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HoeWf2Oi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A612C4CEE5;
-	Mon,  3 Mar 2025 10:33:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AqEwzPKB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id F40F0C4CED6;
+	Mon,  3 Mar 2025 10:33:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740998024;
-	bh=xFsYzDi24UmvPTPVT7ZoR+mOi3Iszbyg0BpESjj90xw=;
-	h=From:To:Cc:Subject:Date:From;
-	b=HoeWf2Oi7TggNpc7b+4ZIlh+us/7ZQ/v7bfpLy70+pxUJq4itjXi7cSoT3wjV0icv
-	 mBRjvIKuVMe3a1epqceIOzaYPoxumzkBQyIH9XTqVGp0VaKFvYIK+Ok9FLKKkjkYak
-	 qE/ZQ/2wE8Nx9RHo6vRz5O0Z08BKE3d1BCKbj9XvDHdaCeHLZWcehswhOdL5KP+uxa
-	 hRlHQEUSKU6HEGiMx2i6AT5CAERoovIhwfLR//fbAawhi9NTAIEV6IsMgFC7iP35fb
-	 o1MCNR4h5jXDpTLNvuNRtnSLQdWNRLoTGXb6WKtk9ovtnR3y3RDaN+aXd8Z5NIKqrP
-	 BNHhArha1lNfw==
+	s=k20201202; t=1740998026;
+	bh=3w0UiAWIzMtUk5kXRKMpKaYmdGWKWd8bQ1iWq34N8Uo=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=AqEwzPKBBjg04zCGxdb4IifT6OBiOXP8/zjwPIqFPXP8ok5o/e3YtUZJ/YpR8ZUvK
+	 RZ71DlBNCG6EjrAuZVsb6KRhl1x2h6taPU6erfU6g3P6tOqPZGiyjA4LV4f2a9eJi0
+	 0WVR4tkJ204Hz1p3s30derAI4CH6dwdnI/OqrhaqDnf5/5MMzyXKVSZwRhis+WgoVK
+	 ydAClRyMvwqhMVFq/SEqOeUANChf47pM5h8PHe0Vn4+arRZROdR2gJ6ej1js0hukER
+	 05tbrgGTI2h8Ck6ZyA0IRqvyhWOSodyLK72q+Ux2oKEJmaGEw/FvE2ueSegvHqdNTC
+	 a+PHeJmvSQrwQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 0/5] Squash to "Add mptcp_subflow bpf_iter support"
-Date: Mon,  3 Mar 2025 18:33:32 +0800
-Message-ID: <cover.1740997925.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>,
+	Mat Martineau <martineau@kernel.org>
+Subject: [PATCH mptcp-next v5 1/5] mptcp: add bpf_iter_task for mptcp_sock
+Date: Mon,  3 Mar 2025 18:33:33 +0800
+Message-ID: <7ff2760dcee1532f624e2ccf4fd67e83ec09a01b.1740997925.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1740997925.git.tanggeliang@kylinos.cn>
+References: <cover.1740997925.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,61 +46,76 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v5:
- - check bpf_iter_task in mptcp_subflow_new() as Mat suggested.
+To make sure the mptcp_subflow bpf_iter is running in the
+MPTCP context. This patch adds a simplified version of tracking
+for it:
 
-v4:
- - drop sock_owned_by_user_nocheck and spin_is_locked. According to
-   comments from Mat and Martin, in this set mptcp_subflow
-   bpf_iter only used from a cg sockopt bpf prog, no need to add these
-   check at this moment.
+1. Add a 'struct task_struct *bpf_iter_task' field to struct
+mptcp_sock.
 
-v3:
- - patch 3, continue to use sock_owned_by_user_nocheck() and spin_is_locked()
-checks instead of using msk_owned_by_me().
- - patch 5, drop declaration of bpf_mptcp_subflow_tcp_sock. It's no longer
-used.
- - patch 5, update the comment for mptcp_subflow_tcp_sock(), which is a BPF
-helper, not a kfunc.
+2. Do a WRITE_ONCE(msk->bpf_iter_task, current) before calling
+a MPTCP BPF hook, and WRITE_ONCE(msk->bpf_iter_task, NULL) after
+the hook returns.
 
-The commit log of "bpf: Register mptcp common kfunc set" doesn't match the
-code, please update it as:
+3. In bpf_iter_mptcp_subflow_new(), check
 
-'''
-bpf: Register mptcp common kfunc set
+	"READ_ONCE(msk->bpf_scheduler_task) == current"
 
-MPTCP helper mptcp_subflow_ctx() is used to convert struct sock to
-struct mptcp_subflow_context. It will be used in MPTCP BPF programs.
+to confirm the correct task, return -EINVAL if it doesn't match.
 
-This patch defines corresponding wrapper of this helper, and put it
-into the newly defined mptcp common kfunc set and register this set
-with the flag BPF_PROG_TYPE_CGROUP_SOCKOPT to let it accessible to
-the 'cgroup/getsockopt' type of BPF programs.
-'''
+Also creates helpers for setting, clearing and checking that value.
 
-v2:
- - Drop bpf_skc_to_mptcp_sock
- - Check the owner before assigning the msk as Mat suggested.
- - Use bpf_core_cast() in mptcp_subflow bpf_iter subtest instead of
-using bpf_skc_to_mptcp_sock().
+Suggested-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/protocol.c |  1 +
+ net/mptcp/protocol.h | 16 ++++++++++++++++
+ 2 files changed, 17 insertions(+)
 
-Address Martin's suggestions for "Add mptcp_subflow bpf_iter support" v2.
-
-Geliang Tang (5):
-  mptcp: add bpf_iter_task for mptcp_sock
-  Squash to "bpf: Extend bpf_skc_to_mptcp_sock to MPTCP sock"
-  Squash to "bpf: Add mptcp_subflow bpf_iter"
-  Revert "bpf: Acquire and release mptcp socket"
-  Squash to "selftests/bpf: Add mptcp_subflow bpf_iter subtest"
-
- net/mptcp/bpf.c                               | 56 +++++++++----------
- net/mptcp/protocol.c                          |  1 +
- net/mptcp/protocol.h                          | 16 ++++++
- .../testing/selftests/bpf/bpf_experimental.h  |  2 +-
- tools/testing/selftests/bpf/progs/mptcp_bpf.h |  5 --
- .../selftests/bpf/progs/mptcp_bpf_iters.c     |  8 +--
- 6 files changed, 47 insertions(+), 41 deletions(-)
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 2b48cf648346..fec776c23fcd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2726,6 +2726,7 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	msk->scaling_ratio = TCP_DEFAULT_SCALING_RATIO;
+ 
+ 	WRITE_ONCE(msk->first, NULL);
++	WRITE_ONCE(msk->bpf_iter_task, NULL);
+ 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+ 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
+ 	WRITE_ONCE(msk->allow_infinite_fallback, true);
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index ef1d43406f9b..836891bc28d5 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -327,6 +327,7 @@ struct mptcp_sock {
+ 	struct list_head conn_list;
+ 	struct list_head rtx_queue;
+ 	struct mptcp_data_frag *first_pending;
++	struct task_struct *bpf_iter_task;
+ 	struct list_head join_list;
+ 	struct sock	*first; /* The mptcp ops can safely dereference, using suitable
+ 				 * ONCE annotation, the subflow outside the socket
+@@ -1291,4 +1292,19 @@ mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subflow_re
+ static inline void mptcp_join_cookie_init(void) {}
+ #endif
+ 
++static inline void mptcp_set_bpf_iter_task(struct mptcp_sock *msk)
++{
++	WRITE_ONCE(msk->bpf_iter_task, current);
++}
++
++static inline void mptcp_clear_bpf_iter_task(struct mptcp_sock *msk)
++{
++	WRITE_ONCE(msk->bpf_iter_task, NULL);
++}
++
++static inline struct task_struct *mptcp_get_bpf_iter_task(struct mptcp_sock *msk)
++{
++	return READ_ONCE(msk->bpf_iter_task);
++}
++
+ #endif /* __MPTCP_PROTOCOL_H */
 -- 
 2.43.0
 
