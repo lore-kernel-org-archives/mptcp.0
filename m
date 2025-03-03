@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A5111E5701
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:42:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 609511D7E4C
+	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 10:51:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1740998542; cv=none; b=S0Dj3bJYRebcrTRn+F3Zp+n9NLSuPkbSHgqMjxpUlJc3+hwQRDFjMcfQ3AwZZ6Wsq12xHBARF1XEQjdLURPWX0V1o5uIW3a88NqbvR26zwFT+5sZiDS+k4t7r2IxP4pm2Dp+k/h+YTcXZZyBCUIEhO/Ysk+wa0D4uJi3MeuRGiE=
+	t=1740999066; cv=none; b=O4fY/5XTYM9EY6VAzfl9tU0zUPO/P/Zvnp9LAWhHHqeisxgaJbAvnWrE5DKBXekNjGvh2oZwDLz8yQIifZKNzP4g2QLLr2qiqNToDNDw+wr9zkb2SmV2yMvi8ANqD27wHrxFZPGenpCNYX4KC4Vzvhc0paS8VyeKgHqvvS9l8e4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1740998542; c=relaxed/simple;
-	bh=4TSrmh04f4t3K2YT7f0fWcNj0iu7qO9Q13ERnktSEMc=;
+	s=arc-20240116; t=1740999066; c=relaxed/simple;
+	bh=viBJYr27Wg++hclyoBAcr+p1DFatJBNlhGd6p/snBXs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=lQfEuHBz3UQVJxGK3guBZBxZF89NxSNnJuk7CpZh+gxLWUx3TUO20dUrOLgk1LntaEh1dIXCnPXC8LsoQr9Uf+TPr+QsZWDaLGSuEUFhE4ZiC9AiK4OiGSI5d2VMH8Lu7PooFPa8ebSugfyPP/JW5czxwBUx9vatxGEZggbZgpM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QdjnjEUS; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=D8lMXaxfivcUaztfcA0GiTGoVTVK84njt1Mm0QsGhkJOex6KukPypCp9c1fdvRmOFbzal7OteLDsww7qEFXdI4niEYAGMW76lwJkoBIfnQFbFB0+vjWveInhzwoDbuUcshXOseZ7bKeMm4uh0BldHqwnJuMsn4p22EhDGR5MUgs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CYlg24Gp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QdjnjEUS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2C0C8C4CEE5;
-	Mon,  3 Mar 2025 10:42:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CYlg24Gp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4E637C4CED6;
+	Mon,  3 Mar 2025 10:51:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1740998541;
-	bh=4TSrmh04f4t3K2YT7f0fWcNj0iu7qO9Q13ERnktSEMc=;
+	s=k20201202; t=1740999065;
+	bh=viBJYr27Wg++hclyoBAcr+p1DFatJBNlhGd6p/snBXs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=QdjnjEUSRRUoT6VAm+jNADmTh1wZJTYXNPuAS4CLwDTNNYQRMvuC3yyqrAbI62B59
-	 jLH3yC3xoif6f4gwFpTfh0qpvnqXtjhJDCT7LpaS72JCA0Z4VB5UoC60L+7lBhVSQp
-	 UVcN7ZP+6t0EIoaB3r39fw12XxH6PKDvBtbHY9o/SwAKLkasTCgp5ld87+QLSoXZhJ
-	 38gz1dOcdvQNcVFbRHE0Y3NmLAxt5Et65+zr69MEWUuIjLOhDMb0qbYcslADnUi1fP
-	 +DjgqgiYOOlhvHzbcZ7UWyzNhBVuatmOjFiseY7U2dkrWt6pQxZOdjBo34p3uSnaxj
-	 cw0eeXJQQ1BnA==
-Message-ID: <8b22ebd7-c648-46e4-8990-c36c48f96c2b@kernel.org>
-Date: Mon, 3 Mar 2025 11:42:19 +0100
+	b=CYlg24Gpy0vUwbBMdIX8sGiNHWnnVM5UQHhhlyxacx7U3P1AjFocUDYnv2Ve1ztZs
+	 0yYnmy2TaoIeGEeAjn9fgLkBA/tgY0iKae0Nu72UyAsMK6Sq0CqyyiWIdjmtCTxFNA
+	 drixmbAFB7tHPO6jORmL+BzcoRPqdZ0bOYYmTkOjYfxYF57sKMgLKj7WaGqY3Pv0Vs
+	 0K2C1unM9Kjtqq5d1WkaTUlRvA0VFfNkZEFcUvtgD2AkLIAs/x2brmtrjLnNXP9NTx
+	 fFvtIigd03dOXtadzrOUGjYh0N1TdpnSLHE89jXYCFyBqyU777axLNkylEnjFTsBUA
+	 Hp1c/wNT53miQ==
+Message-ID: <cefcf810-3793-494d-8cc1-d4d093331bcc@kernel.org>
+Date: Mon, 3 Mar 2025 11:51:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 05/11] mptcp: pm: in-kernel: register
- mptcp_kernel_pm
+Subject: Re: [PATCH mptcp-next v2 13/14] mptcp: pm: split in-kernel PM
+ specific code
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740975633.git.tanggeliang@kylinos.cn>
- <3296a3aee3aa62e1645ab55f6ffce891cdbcc00d.1740975633.git.tanggeliang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>
+References: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+ <20250228-mptcp-pm-reorg-code-v2-13-fa8b2542b7a5@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,55 +87,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3296a3aee3aa62e1645ab55f6ffce891cdbcc00d.1740975633.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250228-mptcp-pm-reorg-code-v2-13-fa8b2542b7a5@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hello,
 
-On 03/03/2025 05:22, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 28/02/2025 14:31, Matthieu Baerts (NGI0) wrote:
+> Before this patch, the PM code was dispersed in different places:
 > 
-> This patch defines the original in-kernel netlink path manager as a
-> new struct mptcp_pm_ops named "mptcp_kernel_pm", and register it in
-
-Detail: should it not be called "mptcp_pm_kernel" with the usual
-"mptcp_pm_" prefix like everywhere else (except in the userspace PM I see)?
-
-> mptcp_pm_nl_init().
+> - pm.c had common code for all PMs
 > 
-> This mptcp_pm_ops will be skipped in mptcp_pm_unregister().
+> - pm_netlink.c was supposed to be about the in-kernel PM, but also had
+>   exported common Netlink helpers, NL events for PM userspace daemons,
+>   etc. quite confusing.
+> 
+> To clarify the code, a reorganisation is suggested here, only by moving
+> code around to avoid confusions:
+> 
+> - pm_netlink.c now only contains common PM Netlink code:
+>   - PM events: this code was already there
+>   - shared helpers around Netlink code that were already there as well
+>   - more shared Netlink commands code from pm.c will come after
+(...)
 
-Why this exception here? Please add a comment in the code, and
-eventually in the commit message if you need a longer explanation.
+> diff --git a/net/mptcp/pm_netlink.c b/net/mptcp/pm_netlink.c
+> index e4abb94e8c0bd42533500587f5f6e88038b2db62..530b2362a5a35c5ef44d3bf495c8103bdfa08cff 100644
+> --- a/net/mptcp/pm_netlink.c
+> +++ b/net/mptcp/pm_netlink.c
 
-Why is it fine to unregister the userspace PM, and not the kernel one?
-Can you not check the owner to see if it is an internal module for
-example? Or add something in struct mptcp_pm_ops to know if the
-unregister part is needed?
+(...)
 
-Also, mptcp_pm_unregister() is currently unused in this series, is it
-normal?
+> -void __init mptcp_pm_nl_init(void)
+> -{
+> -	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
+> -		panic("Failed to register MPTCP PM pernet subsystem.\n");
+> -
+> -	if (genl_register_family(&mptcp_genl_family))
+> -		panic("Failed to register MPTCP PM netlink family\n");
 
-> Only get_local_id() and get_priority() interfaces are implemented here.
+I think it would make more sense to keep the mptcp_genl_family
+registration here in pm_netlink.c.
 
-Maybe they can all be implemented later on, see my comment on patch 1/11.
-
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 9dbfde4027b3..56d3a7457f80 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -1051,6 +1051,8 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
->  void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
->  				struct mptcp_pm_addr_entry *entry);
->  
-> +extern struct mptcp_pm_ops mptcp_kernel_pm;
-
-Can you add a comment in the commit message explaining why it needs to
-be declared as extern? (or only do that when you need it elsewhere?)
-
-Maybe enough to mention that it needs to be "extern" because it is the
-default one?
+I can do the modification when applying the patches.
 
 Cheers,
 Matt
