@@ -1,81 +1,116 @@
-Received: from smtp-fw-52005.amazon.com (smtp-fw-52005.amazon.com [52.119.213.156])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90AEA23770C
-	for <mptcp@lists.linux.dev>; Mon,  3 Mar 2025 23:18:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=52.119.213.156
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3F9DE1754B
+	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 01:37:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741043934; cv=none; b=Imv9EJ/ULnDyIYg4jMSu9IUFfO7zCQLf5vwLaAbU7hVK9XDsNkJIPVvqbCtLYdSaC43cqgppCStqdRmCgKce4RHvQ7BMIe210lSsqLOqdbOACidsf9xTBuOkU8z6aKvF4U6CcSLNfin+gKeX6ZaDnvGFvkszslLlbLGU6rkOVNY=
+	t=1741052226; cv=none; b=g8tr+ve3FcIanY2RWdFzhB5bFSFW61HYMNjFDprW543c3TbC+8wZqyOpcdu4HrMcAxAMBm+KxLJA13jjSfBMr7p9NZxYPfSNwn93B0FpN5RHyZ2TDiaKNtBmYriN6zKxukEPRHARez1K3fh3NvbCz4hKta6E6X2gx20MThDPnVw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741043934; c=relaxed/simple;
-	bh=75Jn9qPKR9d4M5XUHZWVnIp4CRugtiPUgEN8/jui51w=;
-	h=From:To:CC:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:Content-Type; b=rU1KXD2Zyp6pdYyKsjlxRz0PEjO309QzAHep2WgG5rVwkUDjZ9cXg4NXGL4Z5yDkgWFy42ZgbCDM2WA3C8ipu6/YMpMnqF/VIBcPY9KZsgY1GnzGCOlBlfEOnUXCZywoVN8BVYlAMo4pQ167bo+MrMI4QbjQiwKrH03tTHfBgJ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com; spf=pass smtp.mailfrom=amazon.co.jp; dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b=WS8+px+D; arc=none smtp.client-ip=52.119.213.156
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=amazon.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=amazon.co.jp
+	s=arc-20240116; t=1741052226; c=relaxed/simple;
+	bh=qxi4CKAn5wON90giUFLCMmXLBDC9fmN1tOivDPE/V7w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=hbrS70YobMi0YyvLwxnCaKDZhp0xv/XcryyVIKQSWKkWNENnwXGv/pe7cWpYfTRxPb3bW+DjhfdVykcgwZGhbg0QsMHCE3/BTNyfK1U7HFxqm93b5HDPB0s20d/882rQxCMqi2iaeL454/xCQiUGoghH9tmUAZMCCupQN43Yr24=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H4ZQv9s1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="WS8+px+D"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
-  t=1741043932; x=1772579932;
-  h=from:to:cc:subject:date:message-id:in-reply-to:
-   references:mime-version:content-transfer-encoding;
-  bh=ZViLdi3ojvhopE+8J4/4sLSnVbqqECFJhUc7P+79Qm8=;
-  b=WS8+px+D/08qzRWWh5mkaI3qqEVx+19M+zc4ZXqiVD8AH4TdO3gP4JV8
-   jMAoFziTs7lCJbdkZU0TIRYXx5k82TzfY8tmi7HxjFIjcBAlcDfHoUv0k
-   x96E44Err2acYITVyWUfK+jpdu+NKNS37x+231NbX5XhbIa3atdz/aJWg
-   U=;
-X-IronPort-AV: E=Sophos;i="6.13,330,1732579200"; 
-   d="scan'208";a="723533064"
-Received: from iad12-co-svc-p1-lb1-vlan3.amazon.com (HELO smtpout.prod.us-west-2.prod.farcaster.email.amazon.dev) ([10.43.8.6])
-  by smtp-border-fw-52005.iad7.amazon.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 03 Mar 2025 23:18:47 +0000
-Received: from EX19MTAUWB001.ant.amazon.com [10.0.21.151:11853]
- by smtpin.naws.us-west-2.prod.farcaster.email.amazon.dev [10.0.53.36:2525] with esmtp (Farcaster)
- id 9dc24e04-fcd1-4781-a873-5ffe0a27c734; Mon, 3 Mar 2025 23:18:46 +0000 (UTC)
-X-Farcaster-Flow-ID: 9dc24e04-fcd1-4781-a873-5ffe0a27c734
-Received: from EX19D004ANA001.ant.amazon.com (10.37.240.138) by
- EX19MTAUWB001.ant.amazon.com (10.250.64.248) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 23:18:46 +0000
-Received: from 6c7e67bfbae3.amazon.com (10.106.101.38) by
- EX19D004ANA001.ant.amazon.com (10.37.240.138) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA) id 15.2.1544.14;
- Mon, 3 Mar 2025 23:18:38 +0000
-From: Kuniyuki Iwashima <kuniyu@amazon.com>
-To: <geliang@kernel.org>
-CC: <davem@davemloft.net>, <dsahern@kernel.org>, <edumazet@google.com>,
-	<horms@kernel.org>, <kuba@kernel.org>, <kuniyu@amazon.com>,
-	<linux-sctp@vger.kernel.org>, <lucien.xin@gmail.com>,
-	<marcelo.leitner@gmail.com>, <martineau@kernel.org>, <matttbe@kernel.org>,
-	<mptcp@lists.linux.dev>, <ncardwell@google.com>, <netdev@vger.kernel.org>,
-	<pabeni@redhat.com>, <tanggeliang@kylinos.cn>, <willemb@google.com>
-Subject: Re: [PATCH net-next v2 2/3] net: use sock_kmemdup for ip_options
-Date: Mon, 3 Mar 2025 15:18:26 -0800
-Message-ID: <20250303231826.52654-1-kuniyu@amazon.com>
-X-Mailer: git-send-email 2.39.5 (Apple Git-154)
-In-Reply-To: <91ae749d66600ec6fb679e0e518fda6acb5c3e6f.1740735165.git.tanggeliang@kylinos.cn>
-References: <91ae749d66600ec6fb679e0e518fda6acb5c3e6f.1740735165.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H4ZQv9s1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9E324C4CEE4;
+	Tue,  4 Mar 2025 01:37:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741052225;
+	bh=qxi4CKAn5wON90giUFLCMmXLBDC9fmN1tOivDPE/V7w=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=H4ZQv9s19tSMX1LAr2Z8ts4HpSHfb7xnyqCl4TGZg0o/W4DIf7nPy+LGlXpYGNFIT
+	 8kMO6JAfjkeop7D3iqh/IChbz9oC+nTGYhRI0qqZm6NffIwehYvdfQGmOx55QHsqgV
+	 QuolRZwA3diBG6eEBABV27E9lrrzyDF2vcYtNG8B5DN6TITUaSiXVnkiLK5pFYKbjP
+	 1PO7b5I2ZZZGQBeGIeDBYOlAMq3qlOk3Kl4Iis77L62nesMuhdYJyXxnMM+Tj6nSfR
+	 nFVXV/lN2WFqKuR8OxTa89151zPQkmKIdUw2pmHTJdmenjBk4b1Coq3BGkLnq66oxB
+	 vnEhFv6jHSkgg==
+Date: Mon, 3 Mar 2025 17:37:04 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v5 2/5] Squash to "bpf: Extend bpf_skc_to_mptcp_sock
+ to MPTCP sock"
+In-Reply-To: <c43f5e1fe8da4db01749ede9d18af1a3a2134fd4.1740997925.git.tanggeliang@kylinos.cn>
+Message-ID: <b45a0591-597a-46cf-7315-cf4dce7dbd7a@kernel.org>
+References: <cover.1740997925.git.tanggeliang@kylinos.cn> <c43f5e1fe8da4db01749ede9d18af1a3a2134fd4.1740997925.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain
-X-ClientProxiedBy: EX19D041UWA001.ant.amazon.com (10.13.139.124) To
- EX19D004ANA001.ant.amazon.com (10.37.240.138)
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-From: Geliang Tang <geliang@kernel.org>
-Date: Fri, 28 Feb 2025 18:01:32 +0800
+On Mon, 3 Mar 2025, Geliang Tang wrote:
+
 > From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Instead of using sock_kmalloc() to allocate an ip_options and then
-> immediately duplicate another ip_options to the newly allocated one in
-> ipv6_dup_options(), mptcp_copy_ip_options() and sctp_v4_copy_ip_options(),
-> the newly added sock_kmemdup() helper can be used to simplify the code.
-> 
+>
+> Set msk->bpf_iter_task in bpf_mptcp_sock_from_sock() to allow
+> mptcp_subflow bpt_iter can be used in cgroup/getsockopt,
+> otherwise, the selftest in this set fails.
+>
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> net/mptcp/bpf.c | 16 ++++++++++++----
+> 1 file changed, 12 insertions(+), 4 deletions(-)
+>
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index be222fa5f308..aff92f458e7f 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -197,14 +197,22 @@ static struct bpf_struct_ops bpf_mptcp_sched_ops = {
+>
+> struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk)
+> {
+> +	struct mptcp_sock *msk;
+> +
+> 	if (unlikely(!sk || !sk_fullsock(sk)))
+> 		return NULL;
+>
+> -	if (sk->sk_protocol == IPPROTO_MPTCP)
+> -		return mptcp_sk(sk);
+> +	if (sk->sk_protocol == IPPROTO_MPTCP) {
+> +		msk = mptcp_sk(sk);
+> +		mptcp_set_bpf_iter_task(msk);
 
-Reviewed-by: Kuniyuki Iwashima <kuniyu@amazon.com>
+Hi Geliang -
+
+The important part of the bpf_iter_task approach is to only set the 
+task_struct pointer when the msk lock is already held, and to clear it 
+before the msk lock is released. When used this way, the check ensures 
+that the iterator code is both *running with the socket locked* and *in 
+the same context where the lock is held*.
+
+The code above will set msk->bpf_iter_task even when the lock is not held, 
+and then it is never cleared.
+
+To set/clear as expected for get/setsockopt I think the task pointer would 
+have to be set in places where the locks are acquired and released, like 
+these:
+
+https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1955
+https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1846
+
+
+- Mat
+
+> +		return msk;
+> +	}
+>
+> -	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
+> -		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> +	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)) {
+> +		msk = mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> +		mptcp_set_bpf_iter_task(msk);
+> +		return msk;
+> +	}
+>
+> 	return NULL;
+> }
+> -- 
+> 2.43.0
+>
+>
+>
