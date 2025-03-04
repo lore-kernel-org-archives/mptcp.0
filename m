@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 379FA1F4CAD
-	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 09:36:22 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F31E642077
+	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 09:49:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741080983; cv=none; b=ZuCoJE1ZbyeJ/pRKvSLhrX657rcbwR7B2X6BhJoh9MbOWLg8qFdOyxwJZkJAcaY9K7jj9qe7/a99YFgjA58U3Sh0VITlhd6O3xZkNs6qwja3VMN8GqrMw7ZHaPHSCT+TRTxy0UKUmuCaVgITGIY6W+hpIZavo6lIfplDEjLw2So=
+	t=1741081752; cv=none; b=Fgm3xx7TFb+HWMIN/WCzeN5WbxPl1c80vCvEgoiFvrRTqa3fF5NO4Y5MBoF9vR7/Xe04HjK4M021t/Z4DAs1Reg3w4JJG/tZ5RXsCa9PLRxjGtSsNXByK8OP3JOOrRj+aNZjbrjQhy6vNEh4qLJggk7wur2DntdrXecOEstT/EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741080983; c=relaxed/simple;
-	bh=N6C7Jq+bMZ9aGgx++00IT4uoNpEWlfAbKKmb3BlQaEk=;
+	s=arc-20240116; t=1741081752; c=relaxed/simple;
+	bh=wcjiHrGmHY+e/k6+8TK+FGP7s1+qaqxIa7hI0LiRlgc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=i9zuLhnovyxKb4/h/zZVCaxU4Aqg5e3b3monKgqvtn7YFBcM6KdXPyuLyazk+LKtJ8eVcGnYlQfqR74Jz2myhLpJ5qXK+s4B0kkZdA466CL/xCz7INuAeyGKtTqVZ9/2FoNYqV80gbLWdgaxUcVm7RP4E9DU2uit7l+ouD8pHyA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nvunqJtU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=PAsEGm0yEM9SXp6nsSCVL4s7/hCVngwx7Dt0c0gid39ecEDnmDSvxd7CjSOA8NNFS8V+ZUnpYvL1T0JousV1W9OXrjzcNItLVQJcurr6cxBI6TVwplaTDjVUXHUhyctgIQfVTrvCvNYVCKsQCOzumhN4c0QqAWM0a4FxSB8Bte0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hPkEv3bn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nvunqJtU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id F393EC4CEE5;
-	Tue,  4 Mar 2025 09:36:21 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hPkEv3bn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8114BC4CEE5;
+	Tue,  4 Mar 2025 09:49:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741080982;
-	bh=N6C7Jq+bMZ9aGgx++00IT4uoNpEWlfAbKKmb3BlQaEk=;
+	s=k20201202; t=1741081751;
+	bh=wcjiHrGmHY+e/k6+8TK+FGP7s1+qaqxIa7hI0LiRlgc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=nvunqJtUjhODgLu7CMh/yv4rY+poYMYcHAfO/M6X8SJp2Y/IZfldJM3EL5r33GsZ6
-	 fLK6YzidDDXowTrJ8oLY3J2ywCqUfkEejYJj3c/Ro+snsnn/Xtp//XMCK4PxMx4ruF
-	 L9Y1Qc28HZygn4mXbCm36HdEelSb8k/lqAtxKYofOU+4dM6p1qSNHMOfdIk3KgSIC4
-	 4LyuwXChhqBZAv1yP28aMETBAxrYiH0V3Ygg6u0/oQl3QmhHBhHGSaW//pzLk59SF4
-	 E+Yhzf0ZTiLQEAOMJoCvOndW00/7gP/B4zrKBLc7EslohLfkxsu/inL8nPRk8thsK6
-	 u0Ku1h8zTOEsA==
-Message-ID: <ac730c3a-5e39-4877-bd1b-95dd732d23bc@kernel.org>
-Date: Tue, 4 Mar 2025 10:36:20 +0100
+	b=hPkEv3bnuW7CW69cWdUkXrlvhA0lNOiO4/2A7Sm3StTv8WPTq76HKqmjCr0FDVydC
+	 mOJ3B9AlmsdwDdiZJz1QCstjoUCqswknXc3e4++MAsTlayYpxp0EEk9vwZNXjFR2Dh
+	 +di0K74+ZAfQsYVaoYTWAt+4KooM91yyNzOV9zcfFJ9RYUsFFHY6NYFDZs12lpWhdd
+	 YP4u7Uaijc1BBv5VeWMSecb/8cI+Kc57jx5lQ4s3RPQw8rMeFA1YdXqkk3RdKBX25L
+	 vbpTiMvglnAH9+LtzfbrSJloQMZQFepvaCEp2w0gdYgPg2MHs7tbdkjkDlOylfxZOG
+	 /E179NQxO+tuw==
+Message-ID: <35e0df57-c6e2-4a90-a2b2-7b3021694c4e@kernel.org>
+Date: Tue, 4 Mar 2025 10:49:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: pm: split netlink and in-kernel init
+Subject: Re: [PATCH mptcp-next v1 0/2] pm misc cleanups
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <geliang@kernel.org>
-References: <20250303-mptcp-pm-split-init-nl-kernel-v1-1-533c1575b5c2@kernel.org>
- <f28aaca1-0114-9f77-7c83-57dc418a7398@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1741072099.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,45 +85,23 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f28aaca1-0114-9f77-7c83-57dc418a7398@kernel.org>
+In-Reply-To: <cover.1741072099.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang,
 
-On 04/03/2025 02:43, Mat Martineau wrote:
-> On Mon, 3 Mar 2025, Matthieu Baerts (NGI0) wrote:
+On 04/03/2025 08:16, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->> The registration of mptcp_genl_family is useful for both the in-kernel
->> and the userspace PM. It should then be done in pm_netlink.c.
->>
->> On the other hand, the registration of the in-kernel pernet subsystem is
->> specific to the in-kernel PM, and should stay there in pm_kernel.c.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->> net/mptcp/pm.c         | 1 +
->> net/mptcp/pm_kernel.c  | 5 +----
->> net/mptcp/pm_netlink.c | 6 ++++++
->> net/mptcp/protocol.h   | 1 +
->> 4 files changed, 9 insertions(+), 4 deletions(-)
+> Resend two pm related cleanups.
 > 
-> Hi Matthieu -
-> 
-> Looks good to me:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> The set "add sock_kmemdup helper" is accepted by upstream, so I think
+> similar patch (patch 1, use kmemdup helper) is valid too.
 
-Thank you for the review! Now in our tree (feat. for net-next)!
+Thank you for the follow-up!
 
-New patches for t/upstream:
-- 282f18434518: mptcp: pm: split netlink and in-kernel init
-- Results: 117a4dd30ea9..c6a94c37f925 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d08d42b0b5ba6d8ed06655f2ef1e5a5270841167/checks
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
