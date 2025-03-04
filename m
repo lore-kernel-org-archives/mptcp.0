@@ -1,116 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA2301FE471
-	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 11:32:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 84C771FCD00
+	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 11:40:46 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741087980; cv=none; b=l+EdmpvubbrzmIaI79lbFf8wt/mn3ecoATjnHtYTxEvgVwKMMNCtPP3cofRQynDILE0v6i/IDkRZck99ZZ17ZdZ4LCv5SkdvMEwqOWwRgT9zkvfyMbKaC3uGRASkc1H8EhfCa1Be6GfPNY9b3ShVAf6FH5pdxwX5B35PfBM3V5s=
+	t=1741088446; cv=none; b=nlv7IVzCopnbPVcPRmvemkks6XOiDibgw+QZ1JDQkoctecWNUvBpXBFos2fFes+n1BiI6ESIAT1c2pecyReBIKiuozxAUzXIheo4+LFKrr1UsUmbn+hlzqLJmhMdZfDn3I7nBf6+zLrthbTKViSd2Jj+n8I8bW8Xw1ygXPIFrtg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741087980; c=relaxed/simple;
-	bh=c5CSyTdy3BzyhnKO8OTXVMvkGGEH2UUJtieRDrgTp/s=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=nv68dT29h+v4vrXzAyULR912O9QM/iG03VAV+1+YAOV2JpqjbSs9qzjHTV9/OpU0EfX0oS1loYowXtWK+7mqkps63toRHpWhtah+21fw2XjNKjwX7aXeIoMoAvrSGGVK79UJ5fnF24UhycS6sJVyzlETF4hedJDHJPhz6C2wclo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=g5ilMtUo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741088446; c=relaxed/simple;
+	bh=rfajYf7DUQxZnDv2m+107j0h8ecz9/y4LAjNvWMtHe8=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=rVirRhG9O3yhT2wywWvn/lTktkPorYC057BLvwLNCVcg+6a9qXeuowy88KTmTwUDpFWiis1TmG0Njzxd3eLFI+5WQIlUUSKzWrPaX2ucw/4ottG1UtgXz3H5pYsewQFsQdJIWZlQQATpEEFqz47u++eiMjHOtVWzkNvj/ixJrnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KGniDt20; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="g5ilMtUo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EA0D2C4CEE5;
-	Tue,  4 Mar 2025 11:32:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KGniDt20"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAB7FC4CEE5;
+	Tue,  4 Mar 2025 11:40:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741087979;
-	bh=c5CSyTdy3BzyhnKO8OTXVMvkGGEH2UUJtieRDrgTp/s=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=g5ilMtUoPHXar6SLk5AIg+/aSNay/IkdFPHzPgG53lQsRDTan9W//yU0mOyZvKbxF
-	 ygq/7+wjwFUQzkzC70sAw5bN+5G/taRtNfP/F7ECfi/86iMY1DeZJah5fZA/enRCXe
-	 DBBH3jYyLNmCYoMU5H4qFxrlEDB+wnliFwQFcdkds9/pOeulP90FU/LtUiYKXNcxSN
-	 1BNRtpJB+22mAjmh9SOFgrjeXSpmyW3ol8FrMjTaTCqBAj+jvFEP90cnj2ylqrlTIt
-	 QXH8fpXjlbNq8swQqkhndEWM8Hv8B/bZHemWH5sdByeUdFWeK4XUzZ0QxpkOr51Axm
-	 Z3zrg2vRTuFpw==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Tue, 04 Mar 2025 12:32:51 +0100
-Subject: [PATCH mptcp-net 2/2] mptcp: sockopt: fix getting freebind &
- transparent
+	s=k20201202; t=1741088445;
+	bh=rfajYf7DUQxZnDv2m+107j0h8ecz9/y4LAjNvWMtHe8=;
+	h=From:To:Cc:Subject:Date:From;
+	b=KGniDt20pUiIJwYXz94ke59c94nMpU4Ha0G3AHAnmkmvUPBMqvGGOv+s28ZyKbhVE
+	 B8g3u9UDuaou03d1jKcTiKlZY5likxHoDGXp5YWE0lSJSpfA0Kgee09r4Wt3ocIryN
+	 Rl9lPE8iakMRknbkCC1b+qBZs9GijZldGOTvJ5ke8JXnZTWlNp+hS9gaRfjgW3of8P
+	 WeEs5x+Rwp4seJY2ceWyQ2bIyt9oJCA63WqUXIqeTaHUDEIn4roOgX8VqMu5pfRZZu
+	 ORWp214lypNfLhqqZjkdOjkAmFI6pnm64LzE5HoD6HrSEwEG4OwrI+5WOVQv/I0CxR
+	 kLMxNLMUllNyQ==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 00/12] BPF path manager, part 5
+Date: Tue,  4 Mar 2025 19:40:27 +0800
+Message-ID: <cover.1741088339.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250304-mptcp-sockopt-missing-get-v1-2-6d306d0384be@kernel.org>
-References: <20250304-mptcp-sockopt-missing-get-v1-0-6d306d0384be@kernel.org>
-In-Reply-To: <20250304-mptcp-sockopt-missing-get-v1-0-6d306d0384be@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2046; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=c5CSyTdy3BzyhnKO8OTXVMvkGGEH2UUJtieRDrgTp/s=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnxuTokaWm2AyOJrMVHJcV47K78Ofkoq8h5OPQE
- liZ5yoTZHyJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8bk6AAKCRD2t4JPQmmg
- cxKyEADHo57A9jl2LcKqACUHKxOEC0HZ2nWjw6cBGaDlgMXSxcgFJzGB0EEB4b8V2+2/1q/hpjn
- LddB/0YwYRr2waV+3Ru4r87ov3ZAPxS/0JTS8WFqKrn162AS5vEzyhg54rITrDHzaHf8zoH9Fy+
- +aSUNNDN7w/xygBNouZOI8NDWNKM79aYCeLu3FaLAjjTxZyESiWEkNtl42Y8lsBxU4LYsf8htP7
- om7kYXpFAQ7SVN+V2KyxBTEnqd2Rwd4kB+KgYd3Ab3UC8dbDCXEI7X4CmAnAd0C82Feht8D22AG
- exDzPxzRKVmW3WBRhCyC81aJiu9h6kyzZ0pUgJIlUIBhsqwgovzWOmJ3kC8ep2bYjJgOiI/QY4T
- Pwt7+SLI1WJyEoXo0riCDQVJUPueG/kQtFVx8a4hGXHcs1u8juSSf16WhbQoXet79kYBa7DZ9Bg
- xnSM5aV4oaDjzwldlzW+1HgzxYOPpBzKa1JbWgNzDuajNsWzvVDGSdupFPYm3aYDjSxi2Ky+CdM
- HgWrC8xSevKEoZJ0RMXiWw411nrkmlrUpb3YBhd7XaMDbARoHvJHKjhhee8ZnF5horz61oHEhP/
- Q2NQ7EmPI0KgbNLH8Aqt+dZcJLkatrCWUmCcBIt3v6AE7Snk4G3j5SaUNMpI0esOSt0dHkU6mz+
- +A45L5MgP+QKPSQ==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-When adding a socket option support in MPTCP, both the get and set parts
-are supposed to be implemented.
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-IP(V6)_FREEBIND and IP(V6)_TRANSPARENT support for the setsockopt part
-has been added a while ago, but it looks like the get part got
-forgotten. It should have been present as a way to verify a setting has
-been set as expected, and not to act differently from TCP or any other
-socket types.
+v8:
+ - address Matt's comments in v7.
 
-Everything was in place to expose it, just the last step was missing.
-Only new code is added to cover these specific getsockopt(), that seems
-safe.
+v7:
+ - addresss Matt's comments in v6 [1].
+ - drop "type" from struct mptcp_pm_ops as Matt suggested.
+ - map "pm_type" to new sysctl as Matt suggested.
 
-Fixes: c9406a23c116 ("mptcp: sockopt: add SOL_IP freebind & transparent options")
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- net/mptcp/sockopt.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+Depends on:
+ - mptcp: pm: code reorganisation, v2
 
-diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-index 4b99eb796855e4578d14df90f9d1cc3f1cd5b8c7..3caa0a9d3b3885ce6399570f2d98a2e8f103638d 100644
---- a/net/mptcp/sockopt.c
-+++ b/net/mptcp/sockopt.c
-@@ -1419,6 +1419,12 @@ static int mptcp_getsockopt_v4(struct mptcp_sock *msk, int optname,
- 	switch (optname) {
- 	case IP_TOS:
- 		return mptcp_put_int_option(msk, optval, optlen, READ_ONCE(inet_sk(sk)->tos));
-+	case IP_FREEBIND:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+				inet_test_bit(FREEBIND, sk));
-+	case IP_TRANSPARENT:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+				inet_test_bit(TRANSPARENT, sk));
- 	case IP_BIND_ADDRESS_NO_PORT:
- 		return mptcp_put_int_option(msk, optval, optlen,
- 				inet_test_bit(BIND_ADDRESS_NO_PORT, sk));
-@@ -1439,6 +1445,12 @@ static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
- 	case IPV6_V6ONLY:
- 		return mptcp_put_int_option(msk, optval, optlen,
- 					    sk->sk_ipv6only);
-+	case IPV6_TRANSPARENT:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    inet_test_bit(TRANSPARENT, sk));
-+	case IPV6_FREEBIND:
-+		return mptcp_put_int_option(msk, optval, optlen,
-+					    inet_test_bit(FREEBIND, sk));
- 	}
- 
- 	return -EOPNOTSUPP;
+Based-on: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1740320007.git.tanggeliang@kylinos.cn/
+
+v6:
+ - add "name" in struct mptcp_pm_ops.
+ - add some "sysctl" patches.
+ - drop "struct mptcp_pm_param".
+ - drop "pm_type" in mptcp_pm_data.
+
+v5:
+ - use "struct mptcp_pm_param *param" as unified parameters for all
+   interfaces.
+ - register in-kernel mptcp_pm_ops too.
+ - only implement two interfaces "get_local_id" and "get_priority" in
+   this set.
+
+v4:
+ - include a new patch "define BPF path manager type".
+
+ - add new interfaces:
+	created established closed
+	listerner_created listener_closed
+
+ - rename interfaces as:
+	address_announced address_removed
+	subflow_established subflow_closed
+	get_priority set_priority
+
+ - rename functions as:
+	mptcp_pm_validate
+	mptcp_pm_register
+	mptcp_pm_unregister
+	mptcp_pm_initialize
+	mptcp_pm_release
+
+v3:
+ - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
+ - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
+ - return 'err' instead of '0' in userspace_pm_subflow_create().
+ - drop 'ret' variable inmptcp_pm_data_reset().
+ - fix typos in commit log.
+
+v2:
+ - update get_local_id interface in patch 2.
+
+get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
+as Matt suggested.
+
+In order to implement BPF path manager, it's necessary to unify the
+interfaces of the path manager. This set contains some cleanups and
+refactoring to unify the interfaces in kernel space. Finally, define
+a struct mptcp_pm_ops for a path manager.
+
+Geliang Tang (12):
+  mptcp: pm: define struct mptcp_pm_ops
+  mptcp: sysctl: new sysctl to set path manager by name
+  mptcp: sysctl: map pm_type to path_manager
+  mptcp: sysctl: map path_manager to pm_type
+  mptcp: sysctl: add available_path_managers
+  mptcp: pm: in-kernel: register mptcp_pm_kernel
+  mptcp: pm: userspace: register mptcp_pm_userspace
+  mptcp: pm: initialize and release mptcp_pm_ops
+  mptcp: pm: add get_local_id() interface
+  mptcp: pm: add get_priority() interface
+  selftests: mptcp: add pm_type mapping tests
+  selftests: mptcp: add path_manager sysctl test
+
+ Documentation/networking/mptcp-sysctl.rst     |  23 +++
+ include/net/mptcp.h                           |  19 +++
+ net/mptcp/ctrl.c                              | 112 +++++++++++++-
+ net/mptcp/pm.c                                | 145 ++++++++++++++----
+ net/mptcp/pm_kernel.c                         |  35 ++++-
+ net/mptcp/pm_userspace.c                      |  36 ++++-
+ net/mptcp/protocol.h                          |  18 ++-
+ .../testing/selftests/net/mptcp/mptcp_join.sh |  49 +++++-
+ 8 files changed, 393 insertions(+), 44 deletions(-)
 
 -- 
-2.47.1
+2.43.0
 
