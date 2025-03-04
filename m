@@ -1,145 +1,166 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D923137923
-	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 01:39:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 490F6BE4E
+	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 01:42:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741052393; cv=none; b=CXiqbWsBP5OkjDJqg2d/LAxW5vWfDHpVVSUoTykAaofjVXxYSVJzJQl3FVPzVOBqVmX5FkBgtScQ84YoU2G8RwYzI/PHkGnvN7aoIpWPCIGhrwjLBaJYzwCEw2K+8xtdkCynIjXRmzpWhGrVEf4wwsk6UQ5XK94Y9/Fy7qM9ikI=
+	t=1741052544; cv=none; b=nuZX3IwRJB/eF3kw/HAVs6h4eq/Ko9YnH5YyYbvM2/mjKrD7idQeMhnmiWT5lCf/z4qahhgQfRZJznNHy2+TnES5gcory8fb/aAQCqfZuUfRhJ2tQnivmwUPcTUzisohrOOf/KGLuNI2QTAbE58cvQHpDKj2kXfGNOZWxzLDV8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741052393; c=relaxed/simple;
-	bh=dykUrqV1az9bKrxMcpig54YNrvGsqZTVVYzaJYa4nIU=;
+	s=arc-20240116; t=1741052544; c=relaxed/simple;
+	bh=PAouRYhRJOxfBAFY7qj/WZzmguXmeQnFs35SwXMot3s=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=iZjdpxRs/3vBJVEw+TVdYGxk0bGkF+VhhXckj59447eY0zPadi1toEcRoehoEEnNbaYLwGQ0CW8sPz1i8N+ijlQwKQwiXNs7PM1K8WvFpowKfY9gZ6YtkZRqpQda2OVXC+PdhTQaAkDPOlYpCL6+IBXa+eWrVyFjituzDp+O9Xc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JwNYbh80; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=UOeiRQUJrGAduHS8takWo4HDQ+qor0GfjSRP9c5+rkpZNvE3M1qrF1lLUQg6xNh0F2FXzRa+qFxe6ZLHuB9vEm+e39zqKBP6zJqAg5beBhHdhYTqrKVJeJi8YeO9czc4T0wWjmidLTAGuxA4OB0aMzf8+fP4fnKjdV9JPdf42AQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ggpM7ydZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JwNYbh80"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0D132C4CEE4;
-	Tue,  4 Mar 2025 01:39:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ggpM7ydZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A5B0BC4CEE8;
+	Tue,  4 Mar 2025 01:42:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741052393;
-	bh=dykUrqV1az9bKrxMcpig54YNrvGsqZTVVYzaJYa4nIU=;
+	s=k20201202; t=1741052543;
+	bh=PAouRYhRJOxfBAFY7qj/WZzmguXmeQnFs35SwXMot3s=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=JwNYbh80K+3WwNOXFWi5IqhfkH3UmYVzcBqDTzaask+DvguGWUQevEho4COJLdw1P
-	 DRgnWycdifJargnvZjBLfjyfZnT3dVjRoqnDBbeaGKyR7T8rrkcN/EZR4OwRTZ/dPc
-	 6UapwFllWD9O/x6C+p7qCefxhnZ3VaLaXEXV43BbHYYW8KPNh6IL5T8E/E9XTi3PcK
-	 B18X9UR0d20B05PslJSWf6d53a8Ps6txELkKRUmQY1/55awCTsUglR0pK2XfThiCkq
-	 NFmp9jqMgWlxs297nNsiMo+S60itJCcGU6kd5eEIR2vllN2yXewJUKXGqYn5O1mG6y
-	 M6NpvluwoUZBA==
-Date: Mon, 3 Mar 2025 17:39:52 -0800 (PST)
+	b=ggpM7ydZrB2gHWeGGjHO9HDirS2Ij1fbZj49hAv0vcwvMOwQMhpcW5WreS8BmBhiJ
+	 2bebXub0ZyJjPXGJO3ODEi9si79KaHbDPuXkHvf89/zrTVw2hBWDz5goiA5f6zqgQG
+	 ng5daaBrn9FsbdF8rolJAuLIv/XZuA3rlQwG/lCSTjWVv5fF72jW7jOXZqYTbLrsUZ
+	 XE+Gvh9HGqCwCPQ4dQEvfNUo/4pT0eAWU/CDeF9Y76rDvCMHTq54XXvwXLE/X8ESgZ
+	 /pCXDhrBKyJQwgOWghpXjWcGaejTNpptCD0DbDpE6jlTzENksAAe2kmbV5f543edlX
+	 6ea126vQGjg+w==
+Date: Mon, 3 Mar 2025 17:42:23 -0800 (PST)
 From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v5 3/5] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
-In-Reply-To: <f8d59dcb8391483787f832ddb43035846055aafb.1740997925.git.tanggeliang@kylinos.cn>
-Message-ID: <c15a5390-a721-0d65-9b00-e9d1d02367de@kernel.org>
-References: <cover.1740997925.git.tanggeliang@kylinos.cn> <f8d59dcb8391483787f832ddb43035846055aafb.1740997925.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>
+cc: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
+Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
+In-Reply-To: <bd3c2f86-a6e2-4452-9694-1cdfb0298ddd@kernel.org>
+Message-ID: <38a21708-c57f-e69f-e1cd-af7767fd7568@kernel.org>
+References: <20250226180727.2499531-2-matttbe@kernel.org> <9f669869ee804aeb6dbe7fd1511034b0ca9bf8c4.camel@kernel.org> <97e5dc17-d23a-496e-830c-982cf6ab9424@kernel.org> <bdf769b3-d787-63fe-47ed-5cb8c85a6602@kernel.org>
+ <bd3c2f86-a6e2-4452-9694-1cdfb0298ddd@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-On Mon, 3 Mar 2025, Geliang Tang wrote:
+On Sat, 1 Mar 2025, Matthieu Baerts wrote:
 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+> Hi Mat,
 >
-> Drop the NULL check for 'msk' as Martin suggested, add more checks
-> for 'sk'.
+> On 01/03/2025 02:37, Mat Martineau wrote:
+>> On Thu, 27 Feb 2025, Matthieu Baerts wrote:
+>>
+>>> Hi Geliang, Mat,
+>>>
+>>> On 27/02/2025 03:03, Geliang Tang wrote:
+>>>> Hi Matt,
+>>>>
+>>>> On Wed, 2025-02-26 at 19:07 +0100, Matthieu Baerts (NGI0) wrote:
+>>>>> From what we understood, when being used from a CG [gs]etsockopt
+>>>>> hook,
+>>>>> the socket lock will be held. It seems that the BPF infra will make
+>>>>> sure
+>>>>> in this case. Mat will try to get the confirmation.
+>>>>>
+>>>>> The idea is then to add this msk_owned_by_me() check to make sure the
+>>>>> assumption is correct, and will continue to be: the new selftest
+>>>>> should
+>>>>> complain if not when used with a debug kconfig. In other words, if
+>>>>> the
+>>>>> tests continue to pass with this patch, the Squash-to series can
+>>>>> probably be applied.
+>>>>>
+>>>>> Note that this is just a debug check, hoping that the selftest will
+>>>>> cover all cases. We can then not use this check to return an error if
+>>>>> it
+>>>>> is not held.
+>>>>>
+>>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>>>
+>>>> Thanks for updating this for me.
+>>>>
+>>>> LGTM!
+>>>>
+>>>> Reviewed-by: Geliang Tang <geliang@kernel.org>
+>>>
+>>> Thank you for the review!
+>>>
+>>>>> ---
+>>>>> Based-on: <cover.1740368110.git.tanggeliang@kylinos.cn>
+>>>>
+>>>> I changed the state of this set, Squash to "Add mptcp_subflow bpf_iter
+>>>> support" v4, together with this squash-to patch, as "Queued".
+>>>
+>>> Thank you. If that's OK, I will wait for Mat's green light before
+>>> applying the patches, because he wanted to look at the BPF code to make
+>>> sure our assumption was correct.
+>>>
+>>
+>> Ok, I did miss it before but in the cases of setsockopt/getsockopt, the
+>> socket lock is acquired by the bpf wrapper code:
+>>
+>> https://elixir.bootlin.com/linux/v6.14-rc4/source/kernel/bpf/cgroup.c#L1955
+>>
+>> That's why the test passes. There's still the general issue that the
+>> iterator could be used in any bpf code that can pass a valid msk
+>> pointer. The existing lock checks in the export branch check that the
+>> socket is locked, but it could be locked by some other owner.
 >
-> Use the "struct sock *sk" instead of "struct mptcp-sock *msk" as the
-> argument in the bpf_iter_mptcp_subflow_new as Martin suggested.
->
-> v5:
-> - check bpf_iter_task in mptcp_subflow_new()
->
-> v4:
-> - drop sock_owned_by_user_nocheck and spin_is_locked. According to
->   comments from Mat [2] and Martin [1], in this set mptcp_subflow
->   bpf_iter only used from a cg sockopt bpf prog, no need to add these
->   check at this moment.
->
-> [1]
-> https://lore.kernel.org/all/fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev/
-> [2]
-> https://patchwork.kernel.org/project/mptcp/patch/f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn/
->
-> v3:
-> - continue to use sock_owned_by_user_nocheck and spin_is_locked
-> checks instead of using msk_owned_by_me().
->
-> v2:
-> - check the owner before assigning the msk as Mat suggested.
->
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
-> net/mptcp/bpf.c | 21 +++++++++++++++------
-> 1 file changed, 15 insertions(+), 6 deletions(-)
->
-> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> index aff92f458e7f..a307490bb20e 100644
-> --- a/net/mptcp/bpf.c
-> +++ b/net/mptcp/bpf.c
-> @@ -249,24 +249,33 @@ bpf_mptcp_subflow_ctx(const struct sock *sk)
->
-> __bpf_kfunc static int
-> bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-> -			   struct mptcp_sock *msk)
-> +			   struct sock *sk)
-> {
-> 	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> -	struct sock *sk = (struct sock *)msk;
-> +	struct task_struct *task;
-> +	struct mptcp_sock *msk;
->
-> 	BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
-> 		     sizeof(struct bpf_iter_mptcp_subflow));
-> 	BUILD_BUG_ON(__alignof__(struct bpf_iter_mptcp_subflow_kern) !=
-> 		     __alignof__(struct bpf_iter_mptcp_subflow));
->
-> -	kit->msk = msk;
-> -	if (!msk)
-> +	if (unlikely(!sk || !sk_fullsock(sk)))
-> 		return -EINVAL;
->
-> -	if (!sock_owned_by_user_nocheck(sk) &&
-> -	    !spin_is_locked(&sk->sk_lock.slock))
-> +	if (sk->sk_protocol != IPPROTO_MPTCP)
-> 		return -EINVAL;
->
-> +	msk = mptcp_sk(sk);
-> +	task = mptcp_get_bpf_iter_task(msk);
-> +	if (!task || task != current)
-> +		return -EINVAL;
+> Thank you for having looked! Because these new kfuncs are currently only
+> tied to BPF_PROG_TYPE_CGROUP_SOCKOPT, can we apply all these squash-to
+> patches and send this to BPF maintainers?
 
-Hi Geliang -
+Hi Matthieu -
 
-The task checking logic would fit better inside the helper, since every 
-caller will be checking to see if it matches 'current'.
-
-I also think it would read better as (task && task == current)
-
-
-> +
-> +	mptcp_clear_bpf_iter_task(msk);
-
-This needs to be cleared where the lock is released, not where the task is 
-checked.
+I think once the squash-to patches are accepted into our repo (a few more 
+changes are needed), it would be ok to upstream them to the BPF 
+maintainers.
 
 - Mat
 
-> +
-> +	msk_owned_by_me(msk);
-> +
-> +	kit->msk = msk;
-> 	kit->pos = &msk->conn_list;
-> 	return 0;
-> }
-> -- 
-> 2.43.0
+
 >
+>
+> When bpf_iter will be used in the schedulers and the PM, more checks can
+> be added later.
+>
+>> As we've already discussed, msk_owned_by_me() doesn't work everywhere
+>> because we can't change behavior if the lock isn't owned. However, we
+>> don't need to handle every locking case like lockdep does - for the
+>> scheduler BPF case, we only care if the BPF code is running in the
+>> scheduler context. So, I think we can do a simplified version of
+>> tracking the lock context:
+>>
+>> 1. Add a 'struct task_struct *bpf_scheduler_task' field to struct
+>> mptcp_sock.
+>>
+>> 2. Do a WRITE_ONCE(msk->bpf_scheduler_context, current) before calling a
+>> packet scheduler hook, and WRITE_ONCE(msk->bpf_scheduler_task, NULL)
+>> after the hook returns.
+>>
+>> 3. In bpf_iter_mptcp_subflow_new(), check "READ_ONCE(msk->
+>> bpf_scheduler_task) == current" to confirm the correct task, return
+>> -EINVAL if it doesn't match.
+>
+> That's a very good idea! Yes, we will need to add such checks before
+> msk_owned_by_me() when the bpf_iter will be used elsewhere.
+>
+>> (It would help to create helper functions for setting and checking that
+>> value)
+>
+> +1.
+>
+>> Do you think this iterator will be useful in other places, like bpf path
+>> manager? The same approach would work there, but a better name than
+>> "bpf_scheduler_task" would help.
+> Yes, good point! "msk->bpf_struct_ops_task"?
+>
+> (that's something that could also be added after having applied "use
+> bpf_iter in bpf schedulers") series)
+>
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
 >
 >
