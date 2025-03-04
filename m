@@ -1,231 +1,130 @@
-Received: from out162-62-57-252.mail.qq.com (out162-62-57-252.mail.qq.com [162.62.57.252])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qt1-f172.google.com (mail-qt1-f172.google.com [209.85.160.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5189E202C40
-	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 12:02:07 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=162.62.57.252
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A0B41EA7CE
+	for <mptcp@lists.linux.dev>; Tue,  4 Mar 2025 12:42:22 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741089732; cv=none; b=nhYnCadZ6CWIP1iB0JhNniOeyyneq/ehHtIw9+XrjJjIvapgCo52AwIF+AAkqgEslrYX1fQyZpUaG7kkiydL+n55jz5OHmbcQl6ApiuQq9ZaibTG88IPqlBu0//b/j/1xObt50nprKXqvVnowkX15UUO3gigJMNZIv6ZVXFyFNo=
+	t=1741092144; cv=none; b=DCASixdy8g4mPTMewuJr7erfd/eSSkcNpUxoCLrIQ2c1/JBFUouUsxgevrf67bQRzPBuPqf4PzISq2zXPkRbPgLqdyTQMxdZGvhWtoC3ZcipbVAtO3uF/gpxy2TJ8NEOEYf6xfvWF2JUt6YO9TZgjn5LjKbi9dQN+6jcpaTBdlk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741089732; c=relaxed/simple;
-	bh=RbqhG4b9pPURSRHToZYbM0SqChrhV4nXXocefPWtzFY=;
-	h=Message-ID:Date:From:To:Cc:Subject:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=lMVQXE53LD0XR57cGhHEIjBX6oRLjZfJrLM8wNBhKCDP9IU6/2MtcdEXWu7cm9QlAoxl0qn24l7pirmT7xNc/4/R+6qyC/gQCqdpUD0oioTtWBEPB7384qwkSjRVZ10jYQzvIEna6i9RPD1tAzT6jRd8VDZ4H8iHGkE0BHTjkEM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com; spf=pass smtp.mailfrom=foxmail.com; dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b=bBuRW1WU; arc=none smtp.client-ip=162.62.57.252
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=foxmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=foxmail.com
+	s=arc-20240116; t=1741092144; c=relaxed/simple;
+	bh=iN89CD6bNWvnl5RxXOXbkJ8tGcHyqVfy1oQSLlnh990=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=KgnHUZbStfrrfTbDud+1Lnph+R+ZD/Kf7TJHyUHZsT+6uu6hd4PPdEtInJhmdgnWzGTFIZtC1999gfis23M4PEuf07WCI/Incu9rGVayzhmqcgCZcKUooDmJ6vZxNw9Gj0OtITrNt5jozsNbGCaxKtp6R9+CPcr1fC29XyzzV2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BArsGI6D; arc=none smtp.client-ip=209.85.160.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=foxmail.com header.i=@foxmail.com header.b="bBuRW1WU"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=foxmail.com;
-	s=s201512; t=1741089723;
-	bh=eNh0diATeYlRqagozsP6QhdIwqmd2iJRNDyRDOQ5r/o=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To;
-	b=bBuRW1WU6fa5Or/LJuHDXONSlErJ9VxgXQH0DZ1nCZHAjmeVGgBqKZRZhYCoKyDBm
-	 57H8Ayq3IO/kb7m3nNhtz4odMqzRNbOD4GqF8kEe6A8i5dPeCxzHMBtncPHMHKbYf2
-	 pK8PiIdH6gwrXjuzpshy4cfemV0oyLWWJrn1+UJw=
-Received: from localhost ([223.70.160.239])
-	by newxmesmtplogicsvrsza36-0.qq.com (NewEsmtp) with SMTP
-	id C27098F3; Tue, 04 Mar 2025 19:48:39 +0800
-X-QQ-mid: xmsmtpt1741088919tgb4bp70z
-Message-ID: <tencent_C5EC2504BB7561514BCABC185027C5324008@qq.com>
-X-QQ-XMAILINFO: MRLc0g//fdpv/YD7bxFbDh+zoGp2KB6YTKVHCuXQ3Cmk/+l48GUdvO1+n0tU9g
-	 VSU9qL3oroDBlkYiv7915HmzG3xNTwXdVHm5xURaG9Ntjss1HkfASxwrw1+7sFb51GlxKTLpAd59
-	 Vu4U8Gt692lMOHkly0h8MdLyK5X1uMON1rV873dE9VeDyVPp+J9i2dMRCw0fF+/Bl9oz6l5oionk
-	 TDoVwrC3+cY31as4QCt3UtpXRDx+gO0O9OUT786VqXoure+EHrEeC8w4+N7UUbyMVxRAAGafwpWj
-	 yKl6i6y+rYgDg40ODHm9ZfL2fm4Ipz6SL/eKNMtJaJBCsTVZIBh3/unwWoxQPYqbklCBcSethC7G
-	 txf/SU3tpqiQuctiLKtagy0wFFhqBXbCiQTo3/K6/1fXTUErqEfw0dP3nR+efXoE6bAwoYwLbbDk
-	 RrvCrXVHoU9VGfi6q++63nt7Wcmoi62v157Ikcd3qQ3tsrRQCSUyoeJ9aSxid+Lw6UD62pxH/IKq
-	 TxEnkhsTm0OUBskr2TH5DQjSGNi6C5gHin9oDT6l5DlsSku0q7COaoYIiD+fHGldO/wOmm3FDalu
-	 ewfH87OQaVXBVaRn1iG1khLPIWDEa7mu2tyaSEX6c5XCW86SV/enQwICqQsO8dB1cqCTT2s1dm1h
-	 ovx91wvNuVeHENhtfD2/vs1oeIgz8zs+j80QCR8T+pUNQHGCfsHJoRDdGvn1r6FYO5mZ4s02lCWg
-	 3OgWAt7PP9KTdRg2knX9cwZRMZn+Bqf/RrGEJWz3tE9s6iIrlHwvFgsTqCVYaj0aJTY8/hw+GyNX
-	 jZOXutfiGkBEnr68ygFKx/SLCDzqnwVLzlEK+mQEUO6xYAPddbr/LPvZE8MFCMg1pxyu4ZuTOeX5
-	 P1Q1BWStYdZDNarafKwLdFLk9mdJbD0P7xmTSJOGcaiVC4r6zq+xs3igYZOMVAaccwgw4cLmiemk
-	 kFpvdWPtxkmBisMiSf/cBLFcXAh5lVkfy2lXKlxW6ZiPffUN7QlUX11hPQLE9q
-X-QQ-XMRINFO: OWPUhxQsoeAVDbp3OJHYyFg=
-Date: Tue, 4 Mar 2025 19:48:39 +0800
-From: Gang Yan <gang_yan@foxmail.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BArsGI6D"
+Received: by mail-qt1-f172.google.com with SMTP id d75a77b69052e-474fba180cfso7622861cf.3
+        for <mptcp@lists.linux.dev>; Tue, 04 Mar 2025 04:42:22 -0800 (PST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741092141; x=1741696941; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=dGF309mxz2SxFH3wkMOk64nnpy7kmDF2UE5uyxto804=;
+        b=BArsGI6Dya5cxxQRlf0AhaLeYw0I9rjc8B0WsXKFCnJP5qqTwq2EmzZVVZmGSqCpJC
+         ULtWIBAa5Q8j0Wwg19Lir2asIfgcPKdNomXzBfLKTcazF0oiknx/jm//xussqJ26E2qQ
+         NgKNV+/qEEXEx8c78IqROnJvMe4IVoVajQhdfL7RS2veP/rDO5abVnkFslktbn/ZvsIF
+         P+SU3o4HDGzNSxw/7MVJ7tjdQqiinvSGmPXM6L0MKdefZO6DmXlp4jUoCP58pOXiqIEG
+         oQePIEzziLmpQgy09nUaC81ItSmJRBqoVhsH2tiW6IRHm/ZWn1r90sQsrsYvYn9jw6jI
+         Wx7g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741092141; x=1741696941;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=dGF309mxz2SxFH3wkMOk64nnpy7kmDF2UE5uyxto804=;
+        b=Uv7jK02VhL0B11tz1BILfbZGFLYzkfBLZ5z/3khQIW30amtqchM21KO1W9Dg8jaev+
+         od4nZjms58F5uRgRrekOkAdTGPJWVAGqpudTCh3iZFscGQXH2F+w5qdH2viMcPvKVVF7
+         UrovQK/C9MDFRFGts9s6ZGXkz7mGoaPI4x2NuOdE9fjFh6avzo8DLjgtL+BPiN8hwQ4p
+         2XH2+/XRpPyglknQrdon2LOLGxgoptCS36V2c1E8veazcftLC/yXW+H0FHy5ojPo2rlr
+         wB6xvSmLs7PvwXPhTG30NpJExhqfhLEyp5JNPTnP2ja5tXNeNy6aZO1nysK7Aqfcg++w
+         kFCA==
+X-Gm-Message-State: AOJu0YwhpbEQOP212DXp/LzhRqXbO/UgpF/kS3YLjLJNFmI+IiEV4BqG
+	knlsyHnD2OWVEdjjEB8H1pvMSodDWD8WB1LrqNdvmMLU1x4ZENEAwN+T
+X-Gm-Gg: ASbGncsl+aBkB8iKfqcCW37fMptNQTaYJwxfiYwyECxu2OGQtKhwbUIo21USkHIo6zz
+	Rp/IKazN7s0xD927sI/7yOrTCOKP1y4ACeifAElt2QfisSgx/guOuN/4vyHFSu5LJxz/77uDL8D
+	fVAsu84kad3v/o8iaC90tdMOsGNFS5GWc1hUsxImj8JxtZexdvEFFvj/kJUp/taXuWtPUEQMRHj
+	N+CMHFWgLZuJqHRc0IzLKd3C7MyFzaGJcRJreQrfUWaI25dYGL2PAqbrZwsGWv83Rb9IbFvj9RQ
+	rFxvx6tkBUaduCoL+o7anB7HqcgUJHVU1WMm6NDHjQKA3xZIvWFJKu6S/leV
+X-Google-Smtp-Source: AGHT+IHt0ClhmhE8PH57C2QqOryLmV56t+GBiStpE8QCpi14GLUvTjogpkv5adJGZEkmEtZ+CfX6pg==
+X-Received: by 2002:a05:622a:306:b0:475:6bf:ff59 with SMTP id d75a77b69052e-47506c0014emr7998371cf.51.1741092141424;
+        Tue, 04 Mar 2025 04:42:21 -0800 (PST)
+Received: from [127.0.0.1] ([172.183.215.229])
+        by smtp.gmail.com with ESMTPSA id d75a77b69052e-474ef1ec19esm23796751cf.70.2025.03.04.04.42.20
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 04 Mar 2025 04:42:20 -0800 (PST)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
 To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-Subject: Re: [mptcp-net] mptcp: fix NULL pointer in can_accept_new_subflow
-X-OQ-MSGID: <20250304114839.GA342655@yangang-pc>
-References: <20250304102634.331497-1-yangang@kylinos.cn>
- <3ca5355f-d449-4540-9707-e54c6715d0df@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <20250304-mptcp-sockopt-missing-get-v1-0-6d306d0384be@kernel.org>
+References:
+ <20250304-mptcp-sockopt-missing-get-v1-0-6d306d0384be@kernel.org>
+Subject: Re: [PATCH mptcp-net 0/2] mptcp: sockopt: fix missing get options
+Message-ID: <b53ec688-1346-1ed3-2340-9746f1f89b0c@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 04 Mar 2025 12:42:19 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <3ca5355f-d449-4540-9707-e54c6715d0df@kernel.org>
 
-On Tue, Mar 04, 2025 at 11:35:49AM +0100, Matthieu Baerts wrote:
-> Hi Gang Yan,
-> 
-> On 04/03/2025 11:26, Gang Yan wrote:
-> > When testing Valkey with MPTCP, a kernel panic occurs in
-> > 'mptcp_can_accept_new_subflow' when 'subflow_req->msk' is NULL.
-> 
-> Thank you for the patch!
-> 
-> > The attached logs on 6.14.0-rc4 confirm the crash:
-> > 
-> > [ 2691.198090] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000012
-> > [ 2691.202935] Internal error: Oops: 0000000096000004 [#1] SMP
-> > [ 2691.205451] CPU: 5 UID: 0 PID: 7346 Comm: valkey-benchmar Not tainted 6.14.0-rc4+ #2
-> > [ 2691.205657] Hardware name: VMware, Inc. VMware20,1/VBSA, BIOS VMW201.00V.24006586.BA64.2406042154 06/04/2024
-> > [ 2691.205915] pstate: 61400005 (nZCv daif +PAN -UAO -TCO +DIT -SSBS BTYPE=--)
-> > [ 2691.206099] pc : mptcp_can_accept_new_subflow+0x24/0x100
-> > [ 2691.206285] lr : subflow_syn_recv_sock+0x2ec/0x538
-> > [ 2691.206413] sp : ffff8000833f38e0
-> > [ 2691.206507] x29: ffff8000833f38e0 x28: 0000000000000a82 x27: 0000000000000000
-> > [ 2691.206726] x26: 0000000000000001 x25: ffff000081972c00 x24: ffff0000efc1c188
-> > [ 2691.206915] x23: ffff0000821fd100 x22: ffff8000833f3a2f x21: ffff0000bb0adf00
-> > [ 2691.207108] x20: 0000000000000000 x19: 0000000000000000 x18: ffff8000833dd088
-> > [ 2691.207308] x17: 0000000000000000 x16: 0000000000000000 x15: 0000000000000000
-> > [ 2691.207504] x14: 0000000000000000 x13: 0000000000000000 x12: 0000000000000000
-> > [ 2691.207707] x11: 0000000000000000 x10: 0000000000000000 x9 : ffff800081654214
-> > [ 2691.207900] x8 : ffff8000833f37d8 x7 : 0000000000000000 x6 : 0000000000000000
-> > [ 2691.208098] x5 : 0000000000000000 x4 : 0000000000000000 x3 : 0000000000000000
-> > [ 2691.208289] x2 : 0000000000000000 x1 : 0000000000000000 x0 : 0000000000000012
-> > [ 2691.208478] Call trace:
-> > [ 2691.208548]  mptcp_can_accept_new_subflow+0x24/0x100 (P)
-> > [ 2691.208708]  subflow_syn_recv_sock+0x2ec/0x538
-> > [ 2691.208826]  tcp_check_req+0x154/0x888
-> > [ 2691.208940]  tcp_v4_rcv+0x6e4/0x12c0
-> > [ 2691.209036]  ip_protocol_deliver_rcu+0x48/0x2d8
-> > [ 2691.209172]  ip_local_deliver_finish+0x8c/0xf8
-> > [ 2691.209294]  ip_local_deliver+0x8c/0x160
-> > [ 2691.209402]  ip_rcv_finish+0x9c/0xe0
-> > [ 2691.209497]  ip_rcv+0x64/0x138
-> > [ 2691.209583]  __netif_receive_skb_one_core+0x68/0xc0
-> > [ 2691.209721]  __netif_receive_skb+0x24/0x88
-> > [ 2691.209831]  process_backlog+0x94/0x180
-> > [ 2691.209957]  __napi_poll+0x44/0x2a8
-> > [ 2691.210067]  net_rx_action+0x1e0/0x3f0
-> > [ 2691.210206]  handle_softirqs+0x13c/0x418
-> > [ 2691.210411]  __do_softirq+0x20/0x3c
-> > [ 2691.210515]  ____do_softirq+0x1c/0x40
-> > [ 2691.210616]  call_on_irq_stack+0x3c/0x50
-> > [ 2691.210726]  do_softirq_own_stack+0x28/0x50
-> > [ 2691.210836]  do_softirq+0xd4/0xe0
-> > [ 2691.210936]  __local_bh_enable_ip+0xc8/0xe0
-> > [ 2691.211057]  __dev_queue_xmit+0x280/0xf00
-> > [ 2691.211194]  ip_finish_output2+0x340/0x6f0
-> > [ 2691.211307]  __ip_finish_output+0xcc/0x200
-> > [ 2691.211428]  ip_finish_output+0x40/0x1a8
-> > [ 2691.211542]  ip_output+0x78/0x140
-> > [ 2691.211631]  __ip_queue_xmit+0x178/0x498
-> > [ 2691.211744]  ip_queue_xmit+0x20/0x50
-> > [ 2691.211860]  __tcp_transmit_skb+0x508/0xf20
-> > [ 2691.211974]  tcp_write_xmit+0x6fc/0x15f0
-> > [ 2691.212096]  __tcp_push_pending_frames+0x48/0x160
-> > [ 2691.212231]  tcp_push+0xc4/0x1e0
-> > [ 2691.212328]  __mptcp_push_pending+0x150/0x2d8
-> > [ 2691.212447]  mptcp_sendmsg+0x6f4/0x780
-> > [ 2691.212571]  inet_sendmsg+0x50/0xb8
-> > [ 2691.212669]  __sock_sendmsg+0x80/0x108
-> > [ 2691.212777]  __sys_sendto+0x124/0x1c0
-> > [ 2691.212881]  __arm64_sys_sendto+0x34/0x70
-> > [ 2691.212987]  invoke_syscall+0x74/0x128
-> > [ 2691.213096]  el0_svc_common.constprop.0+0x4c/0x140
-> > [ 2691.213231]  do_el0_svc+0x28/0x58
-> > [ 2691.213339]  el0_svc+0x40/0x1a0
-> > [ 2691.213429]  el0t_64_sync_handler+0x134/0x160
-> > [ 2691.213550]  el0t_64_sync+0x1b8/0x1c0
-> > [ 2691.213647] Code: 910003fd a90153f3 aa0003f3 91004800 (08dffc00)
-> > [ 2691.213815] ---[ end trace 0000000000000000 ]---
-> > [ 2691.224406] Kernel panic - not syncing: Oops: Fatal exception in interrupt
-> > [ 2691.224602] SMP: stopping secondary CPUs
-> > [ 2691.247158] Kernel Offset: disabled
-> > [ 2691.247290] CPU features: 0x000,00000050,00845250,ca07f723
-> > [ 2691.247487] Memory Limit: none
-> > [ 2691.260524] ---[ end Kernel panic - not syncing: Oops: Fatal exception in interrupt ]---
-> 
-> Do you mind running ./scripts/decode_stacktrace.sh to resolve the
-> addresses please?
-> 
-> While at it, can you also remove the timestamps
->
-Thanks for the reminder letting me know what needs to be done.
+Hi Matthieu,
 
-To give you a clearer understanding of the issue, I have already
-used objdump -dS to disassemble and resolve some of the addresses:
+Thank you for your modifications, that's great!
 
-...
-ffff800081651be0 <mptcp_can_accept_new_subflow>:
-	mptcp_crypto_hmac_sha(key1, key2, msg, 8, hmac);
-}
-static bool mptcp_can_accept_new_subflow(const struct mptcp_sock *msk)
-{
-...
-static inline int inet_sk_state_load(const struct sock *sk)
-{
-	/* state change might impact lockless readers. */
-	return smp_load_acquire(&sk->sk_state);
-ffff800081651c00:	91004800 	add	x0, x0, #0x12
-ffff800081651c04:	08dffc00 	ldarb	w0, [x0]
-ffff800081651c08:	12001c00 	and	w0, w0, #0xff
-	mptcp_reset_tout_timer(mptcp_sk(sk), 0);
-}
-...
+Our CI did some validations and here is its report:
 
-According to the Calltrace,ffff800081651be0 + 0x24 is ffff800081651c04,
-this might related to 'smp_load_acquire(&sk->sk_state)'.
+- KVM Validation: normal: Unstable: 1 failed test(s): =
+selftest_mptcp_connect =F0=9F=94=B4
+- KVM Validation: debug: Unstable: 1 =
+failed test(s): packetdrill_mp_join =F0=9F=94=B4
+- KVM Validation: =
+btf-normal (only bpftest_all): Unstable: 1 failed test(s): =
+bpftest_test_progs-cpuv4_mptcp =F0=9F=94=B4
+- KVM Validation: btf-debug =
+(only bpftest_all): Success! =E2=9C=85
+- Task: https://github.=
+com/multipath-tcp/mptcp_net-next/actions/runs/13653022673
 
-To further confirm that the issue is with the subflow->msk being NULL,
-I added dmesg at both 'mptcp_is_fully_established' and 
-'mptcp_can_accept_new_subflow'. The results confirmed this.
+Initiator: Patchew Applier
+Commits: https://github.com/multipath-tcp/mptcp_=
+net-next/commits/c0b81bfd0e61
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D940005
 
-Here is the whole objdump -dS:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c02e059bc9515ba0ced6717f7a53d2734b891b59
 
-> > The issue can be fixed by NULL check for 'subflow_req->msk' before
-> > 'mptcp_can_accept_new_subflow'.
-> Do you know why subflow_req->msk? Please always add a reason in your
-> commit message: adding this check might fix the issue, but why? What was
-> the root cause? How can we get into this situation? In which context?
-> Was it with syncookie being used?
-> 
-Sorry for that, because it is an occasional problems. The information I
-collected is not enough to do this. I have tried to focus on the
-calltrace, but have no progress. Can you give me some suggestions?
+If there are some issues, you can=
+ reproduce them using the same environment as
+the one used by the CI thanks=
+ to a docker image, e.g.:
 
-> Ideally, do you have a way to reproduce this issue? e.g. with a
-> packetdrill test? Or is it a race?
-> 
-As for now, the mptcp_valkey.sh is the only way to repropduce it.The
-enviroment seems too complex to find the context. The objdump
-information may have some other clues can help this?
-https://github.com/multipath-tcp/mptcp_net-next/commit/56a546434db25cd6939ecb67f9c9e0661674a9e2
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
+        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
-> > Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> > ---
-> >  net/mptcp/subflow.c | 1 +
-> >  1 file changed, 1 insertion(+)
-> > 
-> > diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-> > index efe8d86496db..68b0e65e5239 100644
-> > --- a/net/mptcp/subflow.c
-> > +++ b/net/mptcp/subflow.c
-> > @@ -852,6 +852,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
-> >  		mptcp_get_options(skb, &mp_opt);
-> >  		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK) ||
-> >  		    !subflow_hmac_valid(req, &mp_opt) ||
-> > +		    !subflow_req->msk ||
-> >  		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
-> >  			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
-> >  			fallback = true;
-> 
-> Cheers,
-> Matt
-> -- 
-> Sponsored by the NGI0 Core fund.
-> 
-> 
-Thanks for the reply again.
-Best wishes!
-Gang
+For more details:
 
+    https://github.=
+com/multipath-tcp/mptcp-upstream-virtme-docker
+
+
+Please note that despite =
+all the efforts that have been already done to have a
+stable tests suite when executed on a public CI like here, it is possible =
+some
+reported issues are not due to your modifications. Still, do not =
+hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 Core)
