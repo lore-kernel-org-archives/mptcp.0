@@ -1,128 +1,142 @@
-Received: from mail-qk1-f173.google.com (mail-qk1-f173.google.com [209.85.222.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E2C6193073
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 19:45:23 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB2C7539A
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 21:29:25 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741203924; cv=none; b=mLgRKwRf9JpKlugYSakzzdSBYLMoCcCKOenp/zOj10be+XohtuvV73SOPkZ73hiMjpr8hsPBaWhob6iUH5/lwHlkdvCN+RbaDY51XE4CIDhXX1WhEMAm2lQh5VtTLvvHFN4QRLkUSTHLGHik0ta7RkAWpQBqjhycgE2J02D6log=
+	t=1741210165; cv=none; b=sNLx8SlHrMXQ9VS5Pl+uY8J1mAktF5uEh7Na08xTDn3ubb9q/t/ISKPsmkqWJ6s7/su4h+orJd5wEvYlSrV8pF0cuzRnfgXcUmdfiOkcVEVbtoIIKoKOsBdyX9DXQTfBDkL8U5Ar/AfnSD3MIS4/dAG0xBQzz/2plgqqQ1fd2jw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741203924; c=relaxed/simple;
-	bh=FTGXXsVvWoQwxuqy0onBwS+hze8WaezYyM5muBiLR0M=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=pswO3T7rHUp8zKC6JTfNry6clO+dCYajrA773Hfj8vhIDsfWMEohxrv3qgZRf8jO8VQX9Q0qOXie/Kw6LXDHPv7ibdiL4KrvwlrGhIcbHvW76xRdIu1EOJ2sYGLw0Cn3MiwEzYMzYFuiJlgztMKgvpAOivdR0Txba1+BMuBLXrM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Z7F/Pxip; arc=none smtp.client-ip=209.85.222.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741210165; c=relaxed/simple;
+	bh=Kj2HFuLR7ABqRl8sMVo+I+lMaBgsRX48Dd7jjXkOC+M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=SmDpbJz/208P54GgkaBKz8Xl5BewmwJg+kRmPs0c9P3H/QTmDNOBz1np3kEgGijabfvEDANdkB1A42qzB07P5iTa8/vjnApxAUraLHWF6oup89Mm8f5LZaHzGgY6Jkdd/Zdm6Qk5znRIlEmZ0XljOgvG38rwSPCCB+3W8SS6LfQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TN6iZ9YL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z7F/Pxip"
-Received: by mail-qk1-f173.google.com with SMTP id af79cd13be357-7c0155af484so974948285a.0
-        for <mptcp@lists.linux.dev>; Wed, 05 Mar 2025 11:45:22 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741203922; x=1741808722; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=XmuQfwymnB83zKd/qd5XO9TrdJ87uZGCf+/MpIbOwsM=;
-        b=Z7F/Pxiphp6wDMFXE2qzbfJkGfdR+u2JK8g2/UGARgsQ9pBwPTURvXzOPRuykkk0LY
-         fNhUr1vrCZbFGwPDh3zoM+n3fnmN4+ZiQeKrgRciL/t+gR6nkALvuMhQ3irvgl0WcYoj
-         M6nlIXeVL9B9xGzLKYaBHKoAtofjygqRxNGSk+r3Aphti/bEy6q0comZSyP/6ybosKH1
-         7GBSrIkzNDDqBdZymmK+PXY8xlXAMvDBVZt4K40zumMwCR6zyaP5C0hZIYYlfBYt1Oj4
-         u0YNK/5b9mP1RPX7DjDpfTDAf+wCkAev0Sm2MiKJv4SS+4CvjGX7BJ1rwz3CmX0rGymy
-         ZbCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741203922; x=1741808722;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=XmuQfwymnB83zKd/qd5XO9TrdJ87uZGCf+/MpIbOwsM=;
-        b=gViHXOWlDqPOOQbBCNhEjy8N30TkOAf/w1GNs58crIjl3DRdWVAYN1z38XAEd0mpE8
-         INpBba2AbYpP62merQ+sAHDq7rkM0d4no85/PFaUfn9hsdaRSqdyYqr1H8Wnq2swwh1y
-         Peq8Owpaotkbv4d7qx7AffYvy8Gp3LfhGe3PRbUdEXqOMHsEVVachoS+6dUqKixRPdYL
-         IY0M9P7i5WyG3qci5ejSxcij37sxrwCNfTTJp4k4ftQhW25Y895ueoKWEu7scKLqwctJ
-         ifAvf5+V4U0CchmARuX6Ot0ySoSZw5HXIQs692UhzyZysVXP1sLy3MKoYHOedPctzdBA
-         tmWg==
-X-Gm-Message-State: AOJu0Yy+mjBhOWIooxcPKOwHiHRoK47VrRi/GP/x8cZeFGwNUVv3+Fxr
-	4+An7flvu1HqFbHszOersQPKMaJg08m6r+0K++dIWWFX6JG8L7UQQuii
-X-Gm-Gg: ASbGncuIajSX4VHGU1DHDpuqEr/nETlsLJnawy214bFY8Vh6caCJv+8l8n1WH+jg5yT
-	fgEuHeDOMFli8L3xdrfpZKH90UeAsoTIqYpWtmXRXlyXsOONriMvFdcGFp5+ubxJzfP71ohDAbe
-	3H8QzHREWMI8m+mzd2YORalUPf1f7UXjS0nQQyeEDm88CXMkr9AjqGgfHnFMQ9hUOIIiP+UqsQb
-	ac8UU/kwTeNzJxY8LInUKv6t/YS3KZSTa7fz4PL28MUWLWpbjQQ1vtjVSODjBfipKNttFvV3DeA
-	Sd88Xp01/q6QJxtaS/DewgAPwMVlImMr9XhtX86IiFaMfonhmhY/0JeLlxvY
-X-Google-Smtp-Source: AGHT+IEUfzXDXTP6pl7biHUhoKEEdnlP/QcMmjueD+vA8xtDEwgcLK6NzWP1uKd3BqhIJK2E8LFqcA==
-X-Received: by 2002:a05:620a:2705:b0:7c3:cc32:2c50 with SMTP id af79cd13be357-7c3d8e89d50mr626834685a.34.1741203922095;
-        Wed, 05 Mar 2025 11:45:22 -0800 (PST)
-Received: from [127.0.0.1] ([172.200.199.144])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3c880f022sm340441285a.3.2025.03.05.11.45.21
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 05 Mar 2025 11:45:21 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250305-mptcp-tcp-ulp-diag-cap-v2-0-d53fd80748eb@kernel.org>
-References: <20250305-mptcp-tcp-ulp-diag-cap-v2-0-d53fd80748eb@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 0/2] tcp: ulp: diag: remove net admin
- restriction
-Message-ID: <3a7dd66a-af40-bf56-4fe9-f576d1a7b39e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 05 Mar 2025 19:45:20 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TN6iZ9YL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B762C4CED1;
+	Wed,  5 Mar 2025 21:29:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741210165;
+	bh=Kj2HFuLR7ABqRl8sMVo+I+lMaBgsRX48Dd7jjXkOC+M=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=TN6iZ9YLjen53No3sZPqqY1I75EkzNcfqplJAAyXLHH3zX0Cqa+qRQc53eYzfyO5x
+	 lmZnPf718MEEp7Ar88lwWZzVKW9kff/kiNjXCnfboPzAmA1fLmJ9t3ksDkA/ghwy3K
+	 lvDpf+Efid+ByFfXJJXwMHP8y0hTnLi74VBijVfk/gP0Tit+FBYCEXRmGbPGTQbBq2
+	 3Sfhl+uwvtu4Uu5TOlwHfDq8prnnvObvqahDlvvF03fg5kDyCO4MvRw1VbSIKKvVOp
+	 598aYugRxHH5m2YNttIvWmYnbzVe1Vcz62IzoSWl3+/d++z1RZet2QoXYhIbng/K2c
+	 08LVdAzKt1yKg==
+Date: Wed, 5 Mar 2025 13:29:24 -0800 (PST)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev, Davide Caratti <dcaratti@redhat.com>
+Subject: Re: [PATCH mptcp-next v2 1/2] tcp: ulp: diag: always print the name
+ if any
+In-Reply-To: <20250305-mptcp-tcp-ulp-diag-cap-v2-1-d53fd80748eb@kernel.org>
+Message-ID: <4fd2adc0-5a6b-05ad-e900-180fb61dea2b@kernel.org>
+References: <20250305-mptcp-tcp-ulp-diag-cap-v2-0-d53fd80748eb@kernel.org> <20250305-mptcp-tcp-ulp-diag-cap-v2-1-d53fd80748eb@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
-Hi Matthieu,
+On Wed, 5 Mar 2025, Matthieu Baerts (NGI0) wrote:
 
-Thank you for your modifications, that's great!
+> Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
+> to dump ulp-specific information"), the ULP diag info have been exported
+> only if the requester had CAP_NET_ADMIN.
+>
+> At least the ULP name can be exported without CAP_NET_ADMIN. This will
+> already help identifying which layer is being used, e.g. which TCP
+> connections are in fact MPTCP subflow.
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> net/ipv4/tcp_diag.c | 21 ++++++++++-----------
+> 1 file changed, 10 insertions(+), 11 deletions(-)
 
-Our CI did some validations and here is its report:
+Hi Matthieu -
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13683325743
+Thanks for the v2, and also for splitting up the series. These TCP changes 
+look good to me:
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1ef9eed1fd7c
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D940679
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Acked-by: Mat Martineau <martineau@kernel.org>
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+>
+> diff --git a/net/ipv4/tcp_diag.c b/net/ipv4/tcp_diag.c
+> index f428ecf9120f2f596e1d67db2b2a0d0d0e211905..d8bba37dbffd8c6cc7fab2328a88b6ce6ea3e9f4 100644
+> --- a/net/ipv4/tcp_diag.c
+> +++ b/net/ipv4/tcp_diag.c
+> @@ -83,7 +83,7 @@ static int tcp_diag_put_md5sig(struct sk_buff *skb,
+> #endif
+>
+> static int tcp_diag_put_ulp(struct sk_buff *skb, struct sock *sk,
+> -			    const struct tcp_ulp_ops *ulp_ops)
+> +			    const struct tcp_ulp_ops *ulp_ops, bool net_admin)
+> {
+> 	struct nlattr *nest;
+> 	int err;
+> @@ -96,7 +96,7 @@ static int tcp_diag_put_ulp(struct sk_buff *skb, struct sock *sk,
+> 	if (err)
+> 		goto nla_failure;
+>
+> -	if (ulp_ops->get_info)
+> +	if (net_admin && ulp_ops->get_info)
+> 		err = ulp_ops->get_info(sk, skb);
+> 	if (err)
+> 		goto nla_failure;
+> @@ -113,6 +113,7 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+> 			    struct sk_buff *skb)
+> {
+> 	struct inet_connection_sock *icsk = inet_csk(sk);
+> +	const struct tcp_ulp_ops *ulp_ops;
+> 	int err = 0;
+>
+> #ifdef CONFIG_TCP_MD5SIG
+> @@ -129,15 +130,13 @@ static int tcp_diag_get_aux(struct sock *sk, bool net_admin,
+> 	}
+> #endif
+>
+> -	if (net_admin) {
+> -		const struct tcp_ulp_ops *ulp_ops;
+> -
+> -		ulp_ops = icsk->icsk_ulp_ops;
+> -		if (ulp_ops)
+> -			err = tcp_diag_put_ulp(skb, sk, ulp_ops);
+> -		if (err)
+> +	ulp_ops = icsk->icsk_ulp_ops;
+> +	if (ulp_ops) {
+> +		err = tcp_diag_put_ulp(skb, sk, ulp_ops, net_admin);
+> +		if (err < 0)
+> 			return err;
+> 	}
+> +
+> 	return 0;
+> }
+>
+> @@ -164,14 +163,14 @@ static size_t tcp_diag_get_aux_size(struct sock *sk, bool net_admin)
+> 	}
+> #endif
+>
+> -	if (net_admin && sk_fullsock(sk)) {
+> +	if (sk_fullsock(sk)) {
+> 		const struct tcp_ulp_ops *ulp_ops;
+>
+> 		ulp_ops = icsk->icsk_ulp_ops;
+> 		if (ulp_ops) {
+> 			size += nla_total_size(0) +
+> 				nla_total_size(TCP_ULP_NAME_MAX);
+> -			if (ulp_ops->get_info_size)
+> +			if (net_admin && ulp_ops->get_info_size)
+> 				size += ulp_ops->get_info_size(sk);
+> 		}
+> 	}
+>
+> -- 
+> 2.47.1
+>
+>
