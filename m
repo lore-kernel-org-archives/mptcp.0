@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0901E24167F
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:58:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D692242901
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:59:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741175902; cv=none; b=mnGywjrGuDfoJqO4atJzIXIJDj6/xH1sPPQiQNryQVJUvCZmZGpj5oYbNA1HnnoOCpnt18jxWOK83IFej028Ajb/FyM7e9aa/63Yp58UhICkWExYIV4T6nxbcgjw75LyVEha1bGhOuUKo8nIk6CExYLTQwQUSPOhFQGgUGs1R5Q=
+	t=1741175958; cv=none; b=iVwucfMaevpjpuIOV/S0E1p7/Yurb1uA9kgKL8fSaojqPAH9/N4s3UpN2qMUzW4dcBcxyrxmbOnfvbBnEE1H4eucroyG20AVbVlBIUWrvI/QJaOujm4PpnMn8kTmepYys1cor06xEGvFCfrKc88HR2YifXFMvRrUfv1cBIPez2A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741175902; c=relaxed/simple;
-	bh=V1xRCrQufIgSl4D72mASAcrDnJZrdw6vDvctgiqWo8k=;
+	s=arc-20240116; t=1741175958; c=relaxed/simple;
+	bh=4A9AEGT4vuZAtuZ5pGYhQgjI3+hX1SH1TV15vcsqXGg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=k5YiicCz0vFeEbPewpHGqKATAzvTwgmIac17dVrzs4t9uvpGGEk7XlFyQhrNRD8SML8AlEP14S0x0YuNpZPhRrOEJbj0uqoa/Vvz8Kjt1yab65iY3dtKj+DgjC0/SZrq5D/Y0mTvyQl/gK1okXb4c6H/jS5xX1C1V4OM+DIzApI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JNNlX8TG; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eJgxnL3JWoGqm+aq90L6b9XRFMInC5+raQ60FR2Wwn7hETn98Zj1tSyMVz99YtndsGsqu0nTxrCblRM4Ys0azkUXgowNRFMm1gOKWZ2pjXwukr5W1gZVZMjRJrFRz9v4IBnMOHn6UDaQ0yU7OAKqRgik1rfDG1vJwF23TxeIYhQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RQWU9pHy; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JNNlX8TG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BC49DC4CEE2;
-	Wed,  5 Mar 2025 11:58:20 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RQWU9pHy"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 99DB9C4CEE2;
+	Wed,  5 Mar 2025 11:59:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741175901;
-	bh=V1xRCrQufIgSl4D72mASAcrDnJZrdw6vDvctgiqWo8k=;
+	s=k20201202; t=1741175958;
+	bh=4A9AEGT4vuZAtuZ5pGYhQgjI3+hX1SH1TV15vcsqXGg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JNNlX8TGEd3EszeBrHHsW9Yu+4aYt4TDINAha3BgJqQ3NAfsxNPbRXQnUwAsP1Yiu
-	 tZFL0qcJxWeS8mCnE6khJa/IWCgsDm53umg9cmKXAYY5ea4PLx9hMLcHN7W6fzVk0o
-	 1GQPZ4xxwEu2829hq/U836QhHTnRS9qlihXn848rtOoowft1Ok8G4M/ol7lgXyZhno
-	 1OWyCCBoq1W7vElwHZEAXGIFgppdCycd8J8iijpb5UC7TC7hh5eZgVcl6STGHndAdi
-	 kFcex+E0Ohs3OuNY4IVjYrnvKIelOmb/t1LaZR3OTtnFC32i6lAqUwXHWOFemI0WdH
-	 4LHIk/o9TfBSA==
-Message-ID: <5e865270-414a-48f9-962b-68afd4913998@kernel.org>
-Date: Wed, 5 Mar 2025 12:58:18 +0100
+	b=RQWU9pHy/cTzPZbIB5XYNU9XWD/v1HFxlQzDoV3CNgt/RhIxccQZFdm96Dpg2r/hc
+	 ZQ6oM+0y2HqufxZu5y6n59Q4pe9PbSoQe5jQ4fb7K016Ttm4BeBXTJmPCv/E2suKU9
+	 sTWrhnYSwN14rQ7jU7en77vMpsUMNJzR/iU/Gz4YILMi3BnUWyE3SuswN+40Z/sXP7
+	 FXwIo2lLDgiLMak+7T64ZA33GBaBx3K/FAOIO77sPtypbDdwoQBxa660BBu/t8cBZf
+	 ctBP8HYs1N0kG4TOlVRunIJysHMUhS58ZwcohTQ7VGFqPhfxhUjAZTZm4DfzXnHJq8
+	 5Qqz85HHeUYFQ==
+Message-ID: <e27648cb-d28c-4555-903c-f43fa0b7a6d3@kernel.org>
+Date: Wed, 5 Mar 2025 12:59:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 11/12] selftests: mptcp: add pm_type mapping
- tests
+Subject: Re: [PATCH mptcp-next v8 12/12] selftests: mptcp: add path_manager
+ sysctl test
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741088339.git.tanggeliang@kylinos.cn>
- <5af6ae4fa325ea616e4f65beba00a0a20afb60bc.1741088339.git.tanggeliang@kylinos.cn>
+ <bd2c57de226d1f36f7d9388f50442f32fb300154.1741088339.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5af6ae4fa325ea616e4f65beba00a0a20afb60bc.1741088339.git.tanggeliang@kylinos.cn>
+In-Reply-To: <bd2c57de226d1f36f7d9388f50442f32fb300154.1741088339.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -101,60 +101,68 @@ On 04/03/2025 12:40, Geliang Tang wrote:
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_join.sh | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
+>  .../testing/selftests/net/mptcp/mptcp_join.sh | 34 ++++++++++++++++++-
+>  1 file changed, 33 insertions(+), 1 deletion(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> index 13a3b68181ee..fa1929ca6ad4 100755
+> index fa1929ca6ad4..3b43b42f9abe 100755
 > --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-> @@ -3572,6 +3572,21 @@ userspace_tests()
->  	if reset_with_events "userspace pm add & remove address" &&
+> @@ -91,6 +91,19 @@ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
+>  			       6 0 0 65535,
+>  			       6 0 0 0"
+>  
+> +set_path_manager()
+> +{
+> +	local ns=$1
+> +	local pm=$2
+> +
+> +	if ! ip netns exec ${ns} sysctl net.mptcp.available_path_managers |
+> +	     grep -wq "${pm}"; then
+> +		mptcp_lib_pr_fail "path manager ${pm} not found"
+> +		return 1
+> +	fi
+> +	ip netns exec ${ns} sysctl -q net.mptcp.path_manager="${pm}"
+> +}
+> +
+>  init_partial()
+>  {
+>  	capout=$(mktemp)
+> @@ -3619,7 +3632,26 @@ userspace_tests()
+>  	# userspace pm create destroy subflow
+>  	if reset_with_events "userspace pm create destroy subflow" &&
 >  	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
->  		set_userspace_pm $ns1
+> -		set_userspace_pm $ns2
 > +		if continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
 
-You cannot have a "continue_if" here, that will mark the whole subtest
-as skip if the condition is not met, then continue.
+Same here, we cannot have continue_if here.
 
-Why not having this in userspace_pm.sh as I suggested. It feels wrong to
-have it here, in the "join" test, no?
+> +			local pm1 pm2
+> +
+> +			set_path_manager $ns1 "kernel"
+> +			set_path_manager $ns2 "userspace"
+> +
+> +			pm1=$(ip netns exec ${ns1} sysctl -n net.mptcp.pm_type)
+> +			if [ "$pm1" != "0" ]; then
+> +				mptcp_lib_pr_fail "ns1 pm_type mapping fails"
+> +				return 1
+> +			fi
+> +
+> +			pm2=$(ip netns exec ${ns2} sysctl -n net.mptcp.pm_type)
+> +			if [ "$pm2" != "1" ]; then
+> +				mptcp_lib_pr_fail "ns2 pm_type mapping fails"
+> +				return 1
+> +			fi
 
-https://lore.kernel.org/c49517d2-38e2-4848-9fb9-1c7748689cec@kernel.org
+I think it would be better to do that in userspace_pm.sh as suggested in
+my review from patch 11/12. So replacing patches 11 and 12 by this one. No?
 
-So in userspace_pm.sh, around "mptcp_lib_ns_init ns1 ns2", having
-something like (not tested):
-
-  print_title "Init"
-  print_test "Created network namespaces ns1, ns2"
-  mptcp_lib_ns_init ns1 ns2
-
-  # check path_manager and pm_type sysctl mapping
-  if [ -f /proc/sys/net/mptcp/path_manager ]; then
-      ip netns exec "$ns1" sysctl -q net.mptcp.path_manager=userspace
-      pm_type="$(ip netns exec "$ns1" sysctl -n net.mptcp.pm_type)"
-      if [ "${pm_type}" != "1" ]; then
-          test_fail "unexpected pm_type: ${pm_type}"
-          mptcp_lib_result_print_all_tap
-          exit ${KSFT_FAIL}
-      fi
-
-      ip netns exec "$ns1" sysctl -q net.mptcp.pm_type=0
-      pm="$(ip netns exec "$ns1" sysctl -n net.mptcp.path_manager)"
-      if [ "${pm}" != "kernel" ]; then
-          test_fail "unexpected path-manager: ${pm}"
-          mptcp_lib_result_print_all_tap
-          exit ${KSFT_FAIL}
-      fi
-  fi
-
-  for i in "$ns1" "$ns2" ;do
-      ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
-  done
-
-  (...)
-
-WDYT?
+> +		else
+> +			set_userspace_pm $ns2
+> +		fi
+>  		pm_nl_set_limits $ns1 0 1
+>  		{ speed=5 \
+>  			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
 
 Cheers,
 Matt
