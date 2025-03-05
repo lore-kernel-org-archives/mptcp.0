@@ -1,127 +1,163 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27EB338DE1
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 13:36:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C918524EF73;
+	Wed,  5 Mar 2025 14:49:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741181767; cv=none; b=ha7NfHoG1wzCb0GaYepHHjoazCd0UjuQoKSNVO0BeSRA2GardNie3cxvZT5bIqzsdpkPZulbh0NWZn0+LQ3a10auo0hSQLvwkcQQu2Yz8AhwlmM0TfeTR3QEZFfeuULK9mF7OR/zP6dJTKkj6aYjvPcHZhT1ulpFEHjsAXJ8Mas=
+	t=1741186195; cv=none; b=GloswDzW04v1TV8NNAbL+8Oct0OOCx8IqbBNR0yj2m4i8RHhQ8VTN9dAH+CM5bmxuj98xAvf+eF7esSQ1Knlo8EeIdyQID+R7svQ7ZJWwHDbbcgvG8wMeOjUT+Q7cEVRTqcqwqKcuH6PPxbyWB/THeEB+Kn/cdBSdTsMWbEMyfQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741181767; c=relaxed/simple;
-	bh=9E8SOcoSomcZEnYw9B8NilosiSQvxNsQWtez6bWsfho=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=qYwKVWSmGhjxwZ4WMdf5+ZlrfMMPQToUURMCuKNyTavc29TEZFm7iDhj0xJzHZ9MvYEv2NWvkpSQWgFMzGO7C4pznPVWCE82ty5ng4iK3v7xJbdfqEqOJC/LVAf+nWMMNqMpoo2qRaTVkUv5zPigA8P8PocMui2NoFpfXLe+K9s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZWIEWeoT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741186195; c=relaxed/simple;
+	bh=uprYqIBFZkBTQA4MDLv6IUCke0X86W7jnI/kyA/QQq4=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=InOOBLzJP7TmobZcbcJCwXkOHKpAULf8AN8K+DG8b8Xb1hu4vcwKF1KRX+1QJfP9ey/Ts2TQqx25wqV6AEda0X9/Vo+pZQqMUNgJtJnW1ukcYmc0XcrLlb16FnLm5LZHqdNYr7z+PYM1XJaIf0Z2qpsbo/ruiege9diwUn7rXnc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PP8S7GEL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZWIEWeoT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0CDB4C4CEE2;
-	Wed,  5 Mar 2025 13:36:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PP8S7GEL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 36E27C4CED1;
+	Wed,  5 Mar 2025 14:49:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741181766;
-	bh=9E8SOcoSomcZEnYw9B8NilosiSQvxNsQWtez6bWsfho=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=ZWIEWeoTKGvUPjXAq4IxlIhNIDGTtw2kiqX0rFocJJovAWl5JK0032JUKK/Jb2zP/
-	 Uh9kzJX3rfa3NMvH25BCumZ2JX/6Mo1GN3KMcaj9J9nB24R9SVKnFy3Vk2Iunui+s9
-	 6fD2lODCLMHORCMIh+JZkRvHN3IRwGC5n8bLPIRvQa5W+iC04NsPcPHXB2JxXuELfu
-	 ZoqqUrhH7WaJN5BUPhsorBSEzLwD19WiuI5AI5FhimXzYz4zdcdcqHhJG5P2J3U6px
-	 C3myYGCyFYpsScz15DIXtrusSN2fCAPtv1bGIZD/Aun9JAQmO74CONn0ouIOILp3e2
-	 U0VyaEZOj9Tng==
-Message-ID: <bad1e8bc-8ac1-40dd-a63b-be25a812035f@kernel.org>
-Date: Wed, 5 Mar 2025 14:36:02 +0100
+	s=k20201202; t=1741186195;
+	bh=uprYqIBFZkBTQA4MDLv6IUCke0X86W7jnI/kyA/QQq4=;
+	h=From:Date:Subject:To:Cc:From;
+	b=PP8S7GEL+sWutD2+qwcL57B92tuYJKs8M8fbJRcT9RbcjaGyAscilI3J5+imamk3q
+	 HdBNVQAigJXFaoL9wJfOCBtV/AQZVM7lST8xU2TpJY2MgHJiht6rGt8XESHmFf1zqN
+	 FMQ6twF8LYAMthakeLkUca/JRABiwq5bR4f2LqrH/XZT91vTOOod5juumcyRViwGm3
+	 DW3IQ1XaLPViJ6tu1PJx2jmAoWnT5Ke3ag8Im/6EFoCb7tFzJg+u99TwoHgiBfh654
+	 XVHD9HytOrjy8gEwYQbi31/RBwi3ydSY7olLKg7ha1Lx50S/+ACkb0CAR57VG0P9GS
+	 8jwQUxwdNEApg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Wed, 05 Mar 2025 15:49:48 +0100
+Subject: [PATCH net-next] tcp: clamp window like before the cleanup
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: mtpcp not usable with ipv6 if built as module
-Content-Language: en-GB
-To: =?UTF-8?Q?Bj=C3=B6rn_JACKE?= <bjacke@samba.org>, mptcp@lists.linux.dev
-References: <20250305131320.GA2676143@sernet.de>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250305131320.GA2676143@sernet.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250305-net-next-fix-tcp-win-clamp-v1-1-12afb705d34e@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAItkyGcC/zWMQQqAMAwEvyI5G6haEf2KeJCaakBraYsK4t8Ng
+ oc9DOzMDZECU4QuuyHQwZF3J1DkGZhldDMhT8JQqrJWlarRUZJdCS1fmIzHkx2addw8tlYbXTT
+ Waj2BBHwgOX3xHn4Phud5AXOqAct2AAAA
+X-Change-ID: 20250305-net-next-fix-tcp-win-clamp-9f4c417ff44d
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Jason Xing <kerneljasonxing@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3419; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=uprYqIBFZkBTQA4MDLv6IUCke0X86W7jnI/kyA/QQq4=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnyGSQ2czRWw21Bby0VPsl7CV39+coBDNXQAU4F
+ 8YXn2O3+tiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8hkkAAKCRD2t4JPQmmg
+ czduD/9rBDlhzSuHcd+Li2XFakkkyLs+9dzHnmHu4iBhbwdGrmeqIICEyfKhmJTtUdc0UwcriIC
+ 9XcAST6OQJZxsxuA0NRMeIyRKtYGfmPK8vC5gNpuHJTN7OK1Pnf6oGC3ZPHcBIvVWC9ohF4ZK9d
+ gTMRwoCsP5dnnMZh5C2YxbsD2e0g0TDiQWotZidO1SfRCyuK1HAMiorAnbOaChncsTY/xneV6Dr
+ cv05C8g/A16N+S18xG2mH50xmkzMlX8XKTUBSvMmpwk521oHZxtNzmUVMJ8YhsnENoxEP1lnfQH
+ Wy5v5m647MhkDKjZ8rGRAxY681nQKInN/mr0HCAKX1otI4GDQGKTxGZjkWxCatc9aE/Mvr8ONKU
+ w3FkLugaEpZ/Eez2wbq79xtJe70qoKCkVkP6YLtVvxXLqjVXteJcqcpdS0zQ1UfPgrqgoywhlEn
+ 92AI5yNdACaNuIiS4gIXprBfexrGA1hzhTUx3t2KKR5d7IF/JdCjUEW06Am1BjTXaWoCQLFyT9r
+ l2g9DiMgvFVoe2TSPwjZMAWRXjQhStTuyHKUoHmt9NXKlirbnJZ2Ebc96G8mmR+zWwSe0nurI7c
+ ugDxqQ3peAigt/BASAoi5zBjNRKTHDGU8GAEphXxH0PJME+GeXTjw50aaYJgy80QK5RxrkRXRaK
+ GSjEhfv62eQka8Q==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Björn,
+A recent cleanup changed the behaviour of tcp_set_window_clamp(). This
+looks unintentional, and affects MPTCP selftests, e.g. some tests
+re-establishing a connection after a disconnect are now unstable.
 
-On 05/03/2025 14:13, Björn JACKE wrote:
-> Hi,
-> 
-> I know that this is a known issue and https://www.mptcp.dev/setup.html mentions
-> this but I would like to encourage the developers to fix the problem that mptcp
-> for ipv6 isn't available if ipv6 is built as a module.
-> 
-> The problem that mptcp doesn't work with ipv6 if built as a module is also not
-> very obvious when you are working on such a system. It simply does not work,
-> but no dmesg message or so is mentioning the lack of mptcp support at runtime.
-> 
-> The system where I hit this was as raspi system, where ipv6 is built as a
-> module due to size reasons, which is reasonable for small memory systems. See
-> https://github.com/raspberrypi/linux/issues/6518 and
-> https://github.com/raspberrypi/linux/pull/5487
-> 
-> Maybe this is a bit of a motivation to fix the module build of mptcp with ipv6,
-> raspberry users (and some more probably) would very much apreciate it.
+Before the cleanup, this operation was done:
 
-In most deployments, it doesn't make sense today to have IPV6 as a
-module, because very likely, the IPV6 module will be loaded in RAM if
-there is a network connection. Or simply when having the loopback
-interface with the ::1 IPv6 address assigned to it.
+  new_rcv_ssthresh = min(tp->rcv_wnd, new_window_clamp);
+  tp->rcv_ssthresh = max(new_rcv_ssthresh, tp->rcv_ssthresh);
 
-Also, the effort looks consequent to properly support MPTCP as a module.
+The cleanup used the 'clamp' macro which takes 3 arguments -- value,
+lowest, and highest -- and returns a value between the lowest and the
+highest allowable values. This then assumes ...
 
-I just added a comment on the ticket you mentioned. To me, MPTCP_IPV6
-should be enabled on all RPI >= 2, like it is on other major
-distributions for the RPIs.
+  lowest (rcv_ssthresh) <= highest (rcv_wnd)
 
-Cheers,
-Matt
+... which doesn't seem to be always the case here according to the MPTCP
+selftests, even when running them without MPTCP, but only TCP.
+
+For example, when we have ...
+
+  rcv_wnd < rcv_ssthresh < new_rcv_ssthresh
+
+... before the cleanup, the rcv_ssthresh was not changed, while after
+the cleanup, it is lowered down to rcv_wnd (highest).
+
+During a simple test with TCP, here are the values I observed:
+
+  new_window_clamp (val)  rcv_ssthresh (lo)  rcv_wnd (hi)
+      117760   (out)         65495         <  65536
+      128512   (out)         109595        >  80256  => lo > hi
+      1184975  (out)         328987        <  329088
+
+      113664   (out)         65483         <  65536
+      117760   (out)         110968        <  110976
+      129024   (out)         116527        >  109696 => lo > hi
+
+Here, we can see that it is not that rare to have rcv_ssthresh (lo)
+higher than rcv_wnd (hi), so having a different behaviour when the
+clamp() macro is used, even without MPTCP.
+
+Note: new_window_clamp is always out of range (rcv_ssthresh < rcv_wnd)
+here, which seems to be generally the case in my tests with small
+connections.
+
+I then suggests reverting this part, not to change the behaviour.
+
+Fixes: 863a952eb79a ("tcp: tcp_set_window_clamp() cleanup")
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/551
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Notes: the 'Fixes' commit is only in net-next
+---
+ net/ipv4/tcp.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index eb5a60c7a9ccdd23fb78a74d614c18c4f7e281c9..46951e74930844af952dfbc57a107b504d4e296b 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -3693,7 +3693,7 @@ EXPORT_SYMBOL(tcp_sock_set_keepcnt);
+ 
+ int tcp_set_window_clamp(struct sock *sk, int val)
+ {
+-	u32 old_window_clamp, new_window_clamp;
++	u32 old_window_clamp, new_window_clamp, new_rcv_ssthresh;
+ 	struct tcp_sock *tp = tcp_sk(sk);
+ 
+ 	if (!val) {
+@@ -3714,12 +3714,12 @@ int tcp_set_window_clamp(struct sock *sk, int val)
+ 	/* Need to apply the reserved mem provisioning only
+ 	 * when shrinking the window clamp.
+ 	 */
+-	if (new_window_clamp < old_window_clamp)
++	if (new_window_clamp < old_window_clamp) {
+ 		__tcp_adjust_rcv_ssthresh(sk, new_window_clamp);
+-	else
+-		tp->rcv_ssthresh = clamp(new_window_clamp,
+-					 tp->rcv_ssthresh,
+-					 tp->rcv_wnd);
++	} else {
++		new_rcv_ssthresh = min(tp->rcv_wnd, new_window_clamp);
++		tp->rcv_ssthresh = max(new_rcv_ssthresh, tp->rcv_ssthresh);
++	}
+ 	return 0;
+ }
+ 
+
+---
+base-commit: c62e6f056ea308d6382450c1cb32e41727375885
+change-id: 20250305-net-next-fix-tcp-win-clamp-9f4c417ff44d
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
