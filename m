@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF451F416D
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:41:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1A71F416D
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:42:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174883; cv=none; b=H4X2wh7jB+0VAYfm7dzfKmnLeSf4e+AcTPZuYtmAI+u9CR7TJj5PYtuPSzY1ob2ItIuFTt1J9ycDOCPQY9l4SvAfg02ItNckzIGSpWaMnqFw6UNOlkkDvW0aiEdvkZNwXhhkrikxMdmdJZ/RFXzg+SLdV+W0UWIeM0wf1nEm1fk=
+	t=1741174934; cv=none; b=d8kQqs2Gx/Tduy9drk+Fb7kCHI0J6+SylhzJLJIGlW4o3y7D4SfuFm/LvihRwAhfzFofaZUBY2etrPZTJaaMeMEPpzEcL0xXTrkNgBLY/J3rgKFJB1NAUCZtsGdKXnpGJXlxLUGMHho/3jvMdTms9YJMf6MNnjOi7SDX896ElSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741174883; c=relaxed/simple;
-	bh=w9WwkkDwGTLGrftgMohsgg9gcnO21gqWq5VYBj8/mdw=;
+	s=arc-20240116; t=1741174934; c=relaxed/simple;
+	bh=UOIbNKqX2SlwgEepGVln41yGapmNeqHwSoYzfmYWTlk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kMJ1tIN+68OEl0FvOWC/YNKFzyCxhx2SdwFg2EN/96LaLSE864+KhIVPugXIJJ/1yedCoh4AyA/ZqzQtC7btRiZhoe87rx1UaPhJYrcBWalL9bPYAbP4v9k7Io1JMFNkNZp8ksC5vNrycIED/Xrwd/hxiih4o3sRCN0RQo1XctI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXnz6dw7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=dTRBieb/Q+XQeNV3lnK8A2ded1otAsEemWgOOZ5Tz7fQN8Y+FPOKFijYEVNpZeqikWnG06sHsT67A45gqyZgKotM0YxlboqDKHJcP8jekQLrsyRXO8WR0+qUGxTNXciKccHc+r3s/JnvDz0lr886Jhij4mTmbUSz1npwIC2MLUc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV07TP/J; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXnz6dw7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7505FC4CEE2;
-	Wed,  5 Mar 2025 11:41:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV07TP/J"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1251C4CEE2;
+	Wed,  5 Mar 2025 11:42:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741174883;
-	bh=w9WwkkDwGTLGrftgMohsgg9gcnO21gqWq5VYBj8/mdw=;
+	s=k20201202; t=1741174933;
+	bh=UOIbNKqX2SlwgEepGVln41yGapmNeqHwSoYzfmYWTlk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=SXnz6dw7ZhEQheJw0ULTgXbkWKtxywtTKhgKuACwNFZXJD9dPUmyRBozI0f48WqT4
-	 y0sMHlxGpq5Dl+8KQuQugvnW8VlcpWnQAm7ruxH3f3p372yW2N4DPai6gWGnYRnVje
-	 aylceOYa2jJG4Kz1ARsFIdB/hzWchcOSfAH0M3F+/bM1Tj6xK971/bDGNMXd5CiO6E
-	 x/A30/2Y+jU54w/00xrCfhnCYATcGRc1id7uvDmcABErWefUa24SgLUuD/jwFRmDgN
-	 9vgiIH/tP6AtUgQBPLT1rlhZrdsKEYojrGRbnz9pqjY5hiMAed4QWS6MYqWhFfrv32
-	 pNfe5okx2cwzA==
-Message-ID: <bd007ae8-3c41-48d6-a202-f1a87c5ab1dd@kernel.org>
-Date: Wed, 5 Mar 2025 12:41:20 +0100
+	b=HV07TP/JOWCi16OVI+UsOkOC+81qjqt/EpPYCsnDpB8/ss9S8OSmTN9Qwx1ok0x6C
+	 mvBD44+BC19qCG/icP7ecGnic/S2EXD1GhYeH7wKcavki/UmVni4SC4bxfw8ZonlQo
+	 xr+/x6sv8OcbL0vwXGUwPPf+rH6D+ZLtD+8+IEmm/MXV9jiMvbPpOxYYCQ+IN1VdIf
+	 1j7bbbyaTGXLizrEBvahKgaEJ2d/Rs9rLxeTqZUuZYBfczhcBKmMzsBv9EqLG2gp8B
+	 F06yztFJsk+by1jHZ0pgW5trIPMPAeUOqgpzlwWHGpp8L3P5J7kwOscf9IGadJCJPZ
+	 lEGVLMB21TxFQ==
+Message-ID: <5a6b4328-013a-4838-9eaf-d546b88b550a@kernel.org>
+Date: Wed, 5 Mar 2025 12:42:10 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 00/12] BPF path manager, part 5
+Subject: Re: [PATCH mptcp-next v8 01/12] mptcp: pm: define struct mptcp_pm_ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741088339.git.tanggeliang@kylinos.cn>
+ <4f1f5c350a67ac7116dd5b6daea1e57d891e8c52.1741088339.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1741088339.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4f1f5c350a67ac7116dd5b6daea1e57d891e8c52.1741088339.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,28 +95,29 @@ Hi Geliang,
 On 04/03/2025 12:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v8:
->  - address Matt's comments in v7.
-
-Thank you for the new version 8.
-
-Please next time add an individual changelog, it is hard to follow the
-modifications between versions without that.
-
-I have some comments, please see my individual reviews.
-
-> v7:
->  - addresss Matt's comments in v6 [1].
->  - drop "type" from struct mptcp_pm_ops as Matt suggested.
->  - map "pm_type" to new sysctl as Matt suggested.
+> In order to allow users to develop their own BPF-based path manager,
+> this patch defines a struct ops "mptcp_pm_ops" for a userspace path
+> manager, which contains a set of interfaces.
 > 
-> Depends on:
->  - mptcp: pm: code reorganisation, v2
-> 
-> Based-on: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+> Add a set of functions to register, unregister, find and validate a
+> given struct ops.
 
-Please drop this line next time, the CI didn't manage to apply and
-validate this series because of that.
+(...)
+
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 04a156395aad..1af42c6a24c6 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+
+(...)
+
+> +int mptcp_pm_validate(struct mptcp_pm_ops *pm)
+> +{
+> +	if (!pm->init) {
+
+Maybe the init part should not be mandatory, see my comment in patch 7/12.
+
+(...)
 
 Cheers,
 Matt
