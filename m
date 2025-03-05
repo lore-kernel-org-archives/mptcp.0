@@ -1,43 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8FB21E50B
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 01:01:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2DFC9282EE;
+	Wed,  5 Mar 2025 01:10:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741136487; cv=none; b=cd84Wl3DyA5klKywbK1O2/CQf2Dc9B4TRV42FrRGmaPrba6ZMy0MToBh0+wOAd8pWUjmbZ2DnL4CpyJDxIW2K31s6b/otsPN+8wvUNGlsaWfiz353ECPNmNknac9Tnzo/RNvvJQd4Dr2E0O9BdFn6PXZlgBQTDIRY9BW+VoS/NU=
+	t=1741137010; cv=none; b=JQMy4ONwLpJZ0qerMH4ntQx6+iVxraRhY3NS3qnLLdBug+YMSyNh4QN+Hq5nMxa/44LCDohAJXDiWX7ix1r7H2NtM/+YmX4ziUr8Hx2+dJCwCYWIyOHifJInkYRrDQHaSRoGlydu72Q9iri5WtkhN0RZ8cmSx5aBgHcHtGbWyVc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741136487; c=relaxed/simple;
-	bh=8WenIm4X+D1ZGxQ49Qw7V4B3n75jEmZw3dzIO2bx3dY=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jKCCfv+v7awxnfmnBiTL/bHEupbgjxrezYPFosfkDIKOL4L8OT6yhu0YETQAmoviHJlO6b9vx9cSsm4bxtB5/dPsvnEUNtDF7YI89/+nOAX6IUOvBuAkuAfJGAzd7Rc+N+cDXzlwWpOdXEkJKl/yyrLulhGy5MomTAt77AafL8c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uoxv9Vj+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741137010; c=relaxed/simple;
+	bh=o2GS4bqqE977OqAGP8Gc1WH1R92Ml4Sy3dtY91sTP1c=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=I3U0KqkYKo5mXayJCv37rJ+ftafZnRxTNxRkTfC0HrMiI4RORncGCEN7btgHdWMRiPnlFYvxzT+s84GuNWAPfVdWPY+3U4DlZkl+kCLwrpjb3w5mmcH8xVh0XGR3OdZP/o1Ugdyi3BCVuMhu3FvLujTOu18r9/jl1kC2BFvY1Zs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MIBs/HvY; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uoxv9Vj+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89871C4CEE5;
-	Wed,  5 Mar 2025 01:01:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MIBs/HvY"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9050AC4CEE5;
+	Wed,  5 Mar 2025 01:10:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741136486;
-	bh=8WenIm4X+D1ZGxQ49Qw7V4B3n75jEmZw3dzIO2bx3dY=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=uoxv9Vj+s2LRq9YrRoJzAEKNi2dzfUFYAX1Orvyko1F805DHNKZg66ovLf83/NDWk
-	 ic4wqH4nT9fMVRft2aGCaPmb3t+T26OHzpuseHM5Q99LfvxHlUy0DBZO8xy0eEBdAl
-	 4cnOJgGXGZI9vFLWpG8L2OvAUXQkIiiwLCB8IDWTy74Abbar5MkTF/tGxfciW6SWuu
-	 KH1funm2Fs8v1oFyE/fq32z2cPkyMMi2VNu1Vvh9r1k3kzVb37RZSZyPwv+hExDCux
-	 Mm4NOyUc/kOhPnWXSHZEElF0mde5CvaVhwtolwgqDYg2SipiouHZ+qOY6vlGoqQCra
-	 TWwuNT6PgI/+w==
-Message-ID: <bffcd0a1a52c731ac59d5102aa5f0e2e260b82f2.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v1 2/2] mptcp: pm: use pm variable instead of
- msk->pm
-From: Geliang Tang <geliang@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-Date: Wed, 05 Mar 2025 09:01:23 +0800
-In-Reply-To: <b3fc56c8fefef00d42c064da81ce13b138d43103.1741072099.git.tanggeliang@kylinos.cn>
-References: <cover.1741072099.git.tanggeliang@kylinos.cn>
-	 <b3fc56c8fefef00d42c064da81ce13b138d43103.1741072099.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1741137009;
+	bh=o2GS4bqqE977OqAGP8Gc1WH1R92Ml4Sy3dtY91sTP1c=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=MIBs/HvYoceKM6s3CP46Kv7DLdc7J5vFMIqW7wXABFnd3wmYrxt8DEc3NycgW+Yn3
+	 BxLIYp9wKh/07ldbNG0h09RTuY9VYsOf4cnqUiZc1KqItIC5ERhAMOxHkCjUslS9xD
+	 VQ6wW8BQRqLp0g0YAC9k9ofAWwkiEWWwqX9xzFuVdbEcsB1hb6l/cb9g78Vgq9Qy9Y
+	 PojeabFho7z7OHPRm9dD5XsCihqxhMlwrroiT1zvnc65KAPe9uuDgEfpWgId3L9sCp
+	 qeA8zi8IOg6EwWLK7lWlwQ9i8rpVgKs8UrI3IBiYX8hCvnJjr53Oj+8Eq33Ht84poV
+	 068afxA5xpWdQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE531380CFEB;
+	Wed,  5 Mar 2025 01:10:43 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -45,65 +37,50 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/5] mptcp: improve code coverage and small
+ optimisations
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174113704249.354590.10497092944102408031.git-patchwork-notify@kernel.org>
+Date: Wed, 05 Mar 2025 01:10:42 +0000
+References: <20250228-net-next-mptcp-coverage-small-opti-v1-0-f933c4275676@kernel.org>
+In-Reply-To: <20250228-net-next-mptcp-coverage-small-opti-v1-0-f933c4275676@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, shuah@kernel.org, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, yangang@kylinos.cn
 
-Hi Matt,
+Hello:
 
-On Tue, 2025-03-04 at 15:16 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Fri, 28 Feb 2025 15:38:34 +0100 you wrote:
+> This small series have various unrelated patches:
 > 
-> The variable "pm" has been defined in mptcp_pm_fully_established()
-> and mptcp_pm_data_reset() as "sk->pm", so use "pm" directly instead
-> of using "sk->pm".
-
-This commit log needs to be updated. Should be "msk->pm", not "sk->pm".
-Please update this for me:
-
-'''
-and mptcp_pm_data_reset() as "msk->pm", so use "pm" directly instead
-of using "msk->pm".
-'''
-
-Thanks,
--Geliang
-
+> - Patch 1 and 2: improve code coverage by validating mptcp_diag_dump_one
+>   thanks to a new tool displaying MPTCP info for a specific token.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
+> - Patch 3: a fix for a commit which is only in net-next.
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 8e6a325a3898..04a156395aad 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -511,13 +511,13 @@ void mptcp_pm_fully_established(struct
-> mptcp_sock *msk, const struct sock *ssk)
->  	 * be sure to serve this event only once.
->  	 */
->  	if (READ_ONCE(pm->work_pending) &&
-> -	    !(msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
-> +	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
->  		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
->  
-> -	if ((msk->pm.status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) ==
-> 0)
-> +	if ((pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) == 0)
->  		announce = true;
->  
-> -	msk->pm.status |= BIT(MPTCP_PM_ALREADY_ESTABLISHED);
-> +	pm->status |= BIT(MPTCP_PM_ALREADY_ESTABLISHED);
->  	spin_unlock_bh(&pm->lock);
->  
->  	if (announce)
-> @@ -1009,7 +1009,7 @@ void mptcp_pm_data_reset(struct mptcp_sock
-> *msk)
->  	WRITE_ONCE(pm->addr_signal, 0);
->  	WRITE_ONCE(pm->remote_deny_join_id0, false);
->  	pm->status = 0;
-> -	bitmap_fill(msk->pm.id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID +
-> 1);
-> +	bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
->  }
->  
->  void mptcp_pm_data_init(struct mptcp_sock *msk)
+> [...]
+
+Here is the summary with links:
+  - [net-next,1/5] selftests: mptcp: Add a tool to get specific msk_info
+    https://git.kernel.org/netdev/net-next/c/00f5e338cf7e
+  - [net-next,2/5] selftests: mptcp: add a test for mptcp_diag_dump_one
+    https://git.kernel.org/netdev/net-next/c/ba2400166570
+  - [net-next,3/5] mptcp: pm: in-kernel: avoid access entry without lock
+    https://git.kernel.org/netdev/net-next/c/e85d33b35508
+  - [net-next,4/5] mptcp: pm: in-kernel: reduce parameters of set_flags
+    https://git.kernel.org/netdev/net-next/c/70c575d5a94f
+  - [net-next,5/5] mptcp: pm: exit early with ADD_ADDR echo if possible
+    https://git.kernel.org/netdev/net-next/c/f0de92479a09
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
