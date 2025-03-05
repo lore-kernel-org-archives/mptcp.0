@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5824024EA91
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 15:14:33 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F6713AA2D
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 15:31:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741187675; cv=none; b=C/1gz9b+s2j17H4IKjsaYZO6yv+4TIdvvra9P6ipIw5arFjdGRP1yqPR0E/Fx+YEijiZKmOthI0c2OGUj7ZaKtktJ+hySGg0fD92xgJUIoFEkC4LMgOXIY/lHR7qO1gv2X0n2bkUwLBVDo/Sivq0OY7j2xLvcbPpU8cobF2x8Qw=
+	t=1741188683; cv=none; b=eJUWVmi0WRYEcapOBQ24bJI8WLxlC3b/gDHso0TeHFrIB5HsBPoGWuk1TttTQj2Acl7Bt6AvrYcHi5Xh4FfzHn3+lkyOXgmKIB+lsQx/s3502aPLTa9ijNHgJ0jznO6E2rCYs8hWYYHtbaiRh/oiUy209KI5F82ABewA1EipZHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741187675; c=relaxed/simple;
-	bh=SIjmMlw916XKcQN87rY82D+i4xWOYZmqmhvIV5Rn5Ak=;
+	s=arc-20240116; t=1741188683; c=relaxed/simple;
+	bh=7dYpKGAeZxL10pqcBWdDxFVsR4Cndnzvq2eDSdaBJTo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=KlzcxzOLlpaPmdCRcJ8Dkrk1DDnGGT35qCC+91qALQzwqUZZn5sora7qp2PSfFK0f7SN7fDXaCeia71o2VINWRPRcAH4Ac2DroI5DHFIqGddQp3JzheDNmNbSDbkbVG29glegHNdl+9MrTiU3pJO2n9Ddr1QfTz7c4A9Xw8NltY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=G7wNochJ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UwufS6ZC1s+38ZrqwYjyQGPBccVfBsLJnm1v2hqGnx1DRWdnkoaM5rljHjvms3ra0/hIrpyKzuy2Skp/kJ951slZwzBBBnJKZDbUlWsd9BgUiMJ+nlDuNQrJsvUVfC2i2pMsEs+aEeuhmZbYoPWJa62a0Fq2MEGhF1Z+QfKTm/o=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLMXyfhR; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="G7wNochJ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 137A8C4CED1;
-	Wed,  5 Mar 2025 15:14:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLMXyfhR"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B57EC4CED1;
+	Wed,  5 Mar 2025 15:31:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741187673;
-	bh=SIjmMlw916XKcQN87rY82D+i4xWOYZmqmhvIV5Rn5Ak=;
+	s=k20201202; t=1741188683;
+	bh=7dYpKGAeZxL10pqcBWdDxFVsR4Cndnzvq2eDSdaBJTo=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=G7wNochJ8ANIPeFCC9+Epwj/NkBgMY/BwNwogpvs4zk3LW6TDcCRQ0XJMUSjbDPZX
-	 X/aBT0H+TbrEWQ4b2zbnAs6hAXDuny7hFQ6jD05IvMgbY4IemR1/dgibyWRDFvxb5j
-	 CATPx9lWB1jDk/7pwqQUw8Vb83O8O+Fg0vRg/6AJX0WREgDb/5tCpaalvrn5N50bb2
-	 Rkmsh9nWFyMeseQfzQ6Paguzcemp4riZeyriMj9bYNcY8BRajSNsIMipNoiI8N4vjA
-	 JrkKbNF0LrSAA5vKR+kA//5m5eTTlQZ7JtrZFZosCxnPIi4qaIWNB0940PgS94sdu1
-	 YmycHTZHCY1/Q==
-Message-ID: <16fc3973-9208-451f-9c13-d45a76aea89f@kernel.org>
-Date: Wed, 5 Mar 2025 16:14:31 +0100
+	b=kLMXyfhRPNkv3aUM8pSRznBWfbA0IqLasA/5TO367wn58lVyrRd5orssFoYWR3MV/
+	 RzpaMBie/qb5dpX+oLVskEIdgWAQcKBFKr1+ZSEpLNrpGtZ8N9VVW75QWYO2LLHLx4
+	 fbONkGLjEfbBwcxUbi3QsLiB/ABIqKEU4VwyiG5BtmdDu4htCNQZQhBQC229M9h8Yd
+	 jdC1YTa0Vska94mtLV4HjAVopTRl+VFvY8ef//Lz0jIxfJG/fbJ7nSFConG0xq1g7S
+	 hKLGW3eLq5Vd5m9j/16u/SNBRBySFVVk94Ry8TnzATGzwkTsLIGCfsC7zcZ/GxTIom
+	 VyWwklBI+Ysgw==
+Message-ID: <3946fafa-272f-4a0e-8461-e8b17f8283b2@kernel.org>
+Date: Wed, 5 Mar 2025 16:31:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] Squash to "bpf: Add mptcp_subflow bpf_iter"
+Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
+ support"
 Content-Language: en-GB
-To: Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <geliang@kernel.org>, MPTCP Upstream <mptcp@lists.linux.dev>
-References: <20250226180727.2499531-2-matttbe@kernel.org>
- <9f669869ee804aeb6dbe7fd1511034b0ca9bf8c4.camel@kernel.org>
- <97e5dc17-d23a-496e-830c-982cf6ab9424@kernel.org>
- <bdf769b3-d787-63fe-47ed-5cb8c85a6602@kernel.org>
- <bd3c2f86-a6e2-4452-9694-1cdfb0298ddd@kernel.org>
- <38a21708-c57f-e69f-e1cd-af7767fd7568@kernel.org>
- <ee5929b0-ddec-4f75-bab6-9164f896f7d8@kernel.org>
- <f14f07de-7a2e-bf31-2266-5790140fa918@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1740368110.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -92,134 +86,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f14f07de-7a2e-bf31-2266-5790140fa918@kernel.org>
+In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang, Mat,
 
-On 05/03/2025 02:35, Mat Martineau wrote:
-> On Tue, 4 Mar 2025, Matthieu Baerts wrote:
+On 24/02/2025 04:37, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
->> Hi Mat,
->>
->> On 04/03/2025 02:42, Mat Martineau wrote:
->>> On Sat, 1 Mar 2025, Matthieu Baerts wrote:
->>>
->>>> Hi Mat,
->>>>
->>>> On 01/03/2025 02:37, Mat Martineau wrote:
->>>>> On Thu, 27 Feb 2025, Matthieu Baerts wrote:
->>>>>
->>>>>> Hi Geliang, Mat,
->>>>>>
->>>>>> On 27/02/2025 03:03, Geliang Tang wrote:
->>>>>>> Hi Matt,
->>>>>>>
->>>>>>> On Wed, 2025-02-26 at 19:07 +0100, Matthieu Baerts (NGI0) wrote:
->>>>>>>> From what we understood, when being used from a CG [gs]etsockopt
->>>>>>>> hook,
->>>>>>>> the socket lock will be held. It seems that the BPF infra will make
->>>>>>>> sure
->>>>>>>> in this case. Mat will try to get the confirmation.
->>>>>>>>
->>>>>>>> The idea is then to add this msk_owned_by_me() check to make
->>>>>>>> sure the
->>>>>>>> assumption is correct, and will continue to be: the new selftest
->>>>>>>> should
->>>>>>>> complain if not when used with a debug kconfig. In other words, if
->>>>>>>> the
->>>>>>>> tests continue to pass with this patch, the Squash-to series can
->>>>>>>> probably be applied.
->>>>>>>>
->>>>>>>> Note that this is just a debug check, hoping that the selftest will
->>>>>>>> cover all cases. We can then not use this check to return an
->>>>>>>> error if
->>>>>>>> it
->>>>>>>> is not held.
->>>>>>>>
->>>>>>>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>>>>>>
->>>>>>> Thanks for updating this for me.
->>>>>>>
->>>>>>> LGTM!
->>>>>>>
->>>>>>> Reviewed-by: Geliang Tang <geliang@kernel.org>
->>>>>>
->>>>>> Thank you for the review!
->>>>>>
->>>>>>>> ---
->>>>>>>> Based-on: <cover.1740368110.git.tanggeliang@kylinos.cn>
->>>>>>>
->>>>>>> I changed the state of this set, Squash to "Add mptcp_subflow
->>>>>>> bpf_iter
->>>>>>> support" v4, together with this squash-to patch, as "Queued".
->>>>>>
->>>>>> Thank you. If that's OK, I will wait for Mat's green light before
->>>>>> applying the patches, because he wanted to look at the BPF code to
->>>>>> make
->>>>>> sure our assumption was correct.
->>>>>>
->>>>>
->>>>> Ok, I did miss it before but in the cases of setsockopt/getsockopt,
->>>>> the
->>>>> socket lock is acquired by the bpf wrapper code:
->>>>>
->>>>> https://elixir.bootlin.com/linux/v6.14-rc4/source/kernel/bpf/
->>>>> cgroup.c#L1955
->>>>>
->>>>> That's why the test passes. There's still the general issue that the
->>>>> iterator could be used in any bpf code that can pass a valid msk
->>>>> pointer. The existing lock checks in the export branch check that the
->>>>> socket is locked, but it could be locked by some other owner.
->>>>
->>>> Thank you for having looked! Because these new kfuncs are currently
->>>> only
->>>> tied to BPF_PROG_TYPE_CGROUP_SOCKOPT, can we apply all these squash-to
->>>> patches and send this to BPF maintainers?
->>>
->>> Hi Matthieu -
->>>
->>> I think once the squash-to patches are accepted into our repo (a few
->>> more changes are needed), it would be ok to upstream them to the BPF
->>> maintainers.
->>
->> Thank you for your reply! But I admit I'm a bit lost: which changes are
->> you talking about?
->>
->> In the "Add mptcp_subflow bpf_iter support" series we sent to the BPF
->> maintainers, this support is only added to CG [gs]etsockopt where the sk
->> lock is owned, so no need to have extra checks for the moment, no? Then
->> the "Squash to "Add mptcp_subflow bpf_iter support"" v4 (not the last
->> one you looked at, the v5) should be enough, no?
->>
-> 
-> Hi Matthieu -
-> 
-> Thanks for clarifying, I misunderstood the scope of "all these squash-to
-> patches" to include v5 :)
-> 
-> I see what you mean, and I do agree that squashing the v4 patches
-> (https://patchwork.kernel.org/project/mptcp/cover/
-> cover.1740368110.git.tanggeliang@kylinos.cn/) for another round of BPF
-> maintainer review is ok with me since the sockopt calls have the
-> necessary locking, so we can separately upstream the iterator series
-> (with sockopt limitations) now.
+> v4:
+>  - drop sock_owned_by_user_nocheck and spin_is_locked. According to
+>    comments from Mat and Martin, in this set mptcp_subflow
+>    bpf_iter only used from a cg sockopt bpf prog, no need to add these
+>    check at this moment.
 
-OK, great! I will then apply the v4, and archive the v5 on Patchwork to
-avoid confusions.
+Thank you for the patches and the reviews!
 
-I will then also apply "use bpf_iter in bpf schedulers" v15, even if the
-"task_struct" checking will still need to be added, but at least we have
-some material to show to Martin.
+Now in our tree:
 
->> My understanding is that setting "msk->bpf_XXX" to "current" will only
->> be needed when mptcp_subflow bpf_iter will be allowed to be used with
->> struct_ops, no? If yes, better to keep this complexity for later, no?
-> 
-> Agree here as well, the task_struct checking is only needed once there
-> are other locking situations to verify.
-Good! I guess Geliang will look at that later.
+New patches for t/upstream:
+- fe0c24467a00: "squashed" patch 1/5 in "bpf: Extend
+bpf_skc_to_mptcp_sock to MPTCP sock"
+- 83bb4052ab8a: "squashed" patch 2/5 in "bpf: Allow use of
+skc_to_mptcp_sock in cg_sockopt"
+- dd8797c750fe: "squashed" patch 3/5 in "bpf: Add mptcp_subflow bpf_iter"
+- a5e732a840e2: "squashed" my patch in "bpf: Add mptcp_subflow bpf_iter"
+- 23094de26cb5: "squashed" (with conflicts) patch 4/5 in "bpf: Acquire
+and release mptcp socket"
+- 5a1d91403efd: "squashed" patch 5/5 in "selftests/bpf: Add
+mptcp_subflow bpf_iter subtest"
+- 29cc864a2cc6: tg:msg: update after the recent squash-to patch
+- da6054a670da: conflict in t/mptcp-add-sched_data-helpers-2
+- 401780491d45: conflict in t/mptcp-add-bpf_mptcp_sched_ops
+- Results: e1315f2b7271..bf7e42dbc2fa (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/0447c3073f646734cffeec271b1a6b03a53103ef/checks
 
 Cheers,
 Matt
