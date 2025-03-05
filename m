@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3D1A71F416D
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:42:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3761E23372D
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:45:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741174934; cv=none; b=d8kQqs2Gx/Tduy9drk+Fb7kCHI0J6+SylhzJLJIGlW4o3y7D4SfuFm/LvihRwAhfzFofaZUBY2etrPZTJaaMeMEPpzEcL0xXTrkNgBLY/J3rgKFJB1NAUCZtsGdKXnpGJXlxLUGMHho/3jvMdTms9YJMf6MNnjOi7SDX896ElSI=
+	t=1741175106; cv=none; b=Lx09s5E9Ztg2XoOhD0sP3RleZQLPhENlAmfGFSJ2ELUjCufksdf1qYdYyP6kvwlmjBa7GY+aLDGYrRrgqsHn2CFMlGfpf6mwczZH5EilChdNDGe8xOEhkY+BYpAPgoqmlNig7+5F8BINfX5KIN1xVFOiB/AisjvWrFqvn5ZNUi4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741174934; c=relaxed/simple;
-	bh=UOIbNKqX2SlwgEepGVln41yGapmNeqHwSoYzfmYWTlk=;
+	s=arc-20240116; t=1741175106; c=relaxed/simple;
+	bh=fucV4duA89F5nCnU+kZ60u/aTzx3EmOWdXKvWGWrj1E=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dTRBieb/Q+XQeNV3lnK8A2ded1otAsEemWgOOZ5Tz7fQN8Y+FPOKFijYEVNpZeqikWnG06sHsT67A45gqyZgKotM0YxlboqDKHJcP8jekQLrsyRXO8WR0+qUGxTNXciKccHc+r3s/JnvDz0lr886Jhij4mTmbUSz1npwIC2MLUc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HV07TP/J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=QihrnaOX5iVonUtBG+AHiM2w2VMdLfMzVTh0El232NDTBRuzF4nIRAYs494chb8lhxVWR4Q00ijibt4RU/9zKf5snHyKuUlr6U4jXtDZz2vOyUR4fQd+Pwq424Hv+AXZa6uz7lQfFZyUKSYdW0krAUfKJXquN4KkXBuftw2FM84=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hodcNxJ6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HV07TP/J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D1251C4CEE2;
-	Wed,  5 Mar 2025 11:42:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hodcNxJ6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA134C4CEE2;
+	Wed,  5 Mar 2025 11:45:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741174933;
-	bh=UOIbNKqX2SlwgEepGVln41yGapmNeqHwSoYzfmYWTlk=;
+	s=k20201202; t=1741175105;
+	bh=fucV4duA89F5nCnU+kZ60u/aTzx3EmOWdXKvWGWrj1E=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=HV07TP/JOWCi16OVI+UsOkOC+81qjqt/EpPYCsnDpB8/ss9S8OSmTN9Qwx1ok0x6C
-	 mvBD44+BC19qCG/icP7ecGnic/S2EXD1GhYeH7wKcavki/UmVni4SC4bxfw8ZonlQo
-	 xr+/x6sv8OcbL0vwXGUwPPf+rH6D+ZLtD+8+IEmm/MXV9jiMvbPpOxYYCQ+IN1VdIf
-	 1j7bbbyaTGXLizrEBvahKgaEJ2d/Rs9rLxeTqZUuZYBfczhcBKmMzsBv9EqLG2gp8B
-	 F06yztFJsk+by1jHZ0pgW5trIPMPAeUOqgpzlwWHGpp8L3P5J7kwOscf9IGadJCJPZ
-	 lEGVLMB21TxFQ==
-Message-ID: <5a6b4328-013a-4838-9eaf-d546b88b550a@kernel.org>
-Date: Wed, 5 Mar 2025 12:42:10 +0100
+	b=hodcNxJ66hD4F5hnEE0IcJRsJvU4h3a6po35M3hxw+u82sd+7P+O0CCOFdF/DeWXz
+	 TCQBhtaA/Qy1PFIx68VaAOCH7NDuJfj3rOEB/pM2Tn6VPHZolbEtg0xA0fvscx8uCw
+	 N0S4ibbSsGJjnTY7aQajoD+2UxmKNm5Ykyf6H/D2m21qS97+heRPqjj3TnejCE8vY5
+	 I/JhL0QlxheOo0UnhOMnHlJnYzGdg8aejz9bz0WSh1nZAlL1p0Li2IqbKrKSPgbavZ
+	 k21SzNLHZpjT3XjwcPa+GUlMicAgcy5NjtSfK7sw+19FJ55e4kH4czoJR7miziLiEG
+	 Z4akMwV8G9hRw==
+Message-ID: <e9146447-a0b4-40c1-95f8-2d54dba0158d@kernel.org>
+Date: Wed, 5 Mar 2025 12:45:02 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 01/12] mptcp: pm: define struct mptcp_pm_ops
+Subject: Re: [PATCH mptcp-next v8 03/12] mptcp: sysctl: map pm_type to
+ path_manager
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741088339.git.tanggeliang@kylinos.cn>
- <4f1f5c350a67ac7116dd5b6daea1e57d891e8c52.1741088339.git.tanggeliang@kylinos.cn>
+ <4edb40bf773e65c00d4447f4795cec26f9a047a3.1741088339.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4f1f5c350a67ac7116dd5b6daea1e57d891e8c52.1741088339.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4edb40bf773e65c00d4447f4795cec26f9a047a3.1741088339.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,30 +96,70 @@ Hi Geliang,
 On 04/03/2025 12:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In order to allow users to develop their own BPF-based path manager,
-> this patch defines a struct ops "mptcp_pm_ops" for a userspace path
-> manager, which contains a set of interfaces.
+> This patch adds a new proc_handler "proc_pm_type" for "pm_type" to
+> map old path manager sysctl "pm_type" to the newly added "path_manager".
 > 
-> Add a set of functions to register, unregister, find and validate a
-> given struct ops.
-
-(...)
-
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 04a156395aad..1af42c6a24c6 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-
-(...)
-
-> +int mptcp_pm_validate(struct mptcp_pm_ops *pm)
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/ctrl.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+> index d64e6b4f6d1d..d425fcbd036a 100644
+> --- a/net/mptcp/ctrl.c
+> +++ b/net/mptcp/ctrl.c
+> @@ -217,6 +217,32 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
+>  	return ret;
+>  }
+>  
+> +static int proc_pm_type(const struct ctl_table *ctl, int write,
+> +			void *buffer, size_t *lenp, loff_t *ppos)
 > +{
-> +	if (!pm->init) {
+> +	struct mptcp_pernet *pernet = container_of(ctl->data,
+> +						   struct mptcp_pernet,
+> +						   pm_type);
+> +	u8 pm_type = READ_ONCE(*(u8 *)ctl->data);
+> +	const struct ctl_table tbl = {
+> +		.maxlen = sizeof(pm_type),
+> +		.data = &pm_type,
+> +	};
+> +	int ret;
+> +
+> +	ret = proc_dou8vec_minmax(&tbl, write, buffer, lenp, ppos);
 
-Maybe the init part should not be mandatory, see my comment in patch 7/12.
 
-(...)
+I missed that in my previous review. Do you need tbl here? Can you not
+use "ctl" here instead? If you need tbl, you will need to move the
+"extra[12]" fields there I suppose, otherwise the limits will not be
+checked, no?
 
+In the proc_handler, a new ctl_table structure is needed when it is
+required to have a way to prevent the writing of the data after having
+called proc_do(...). Here, that's not the case: if the new value is
+between 0 and mptcp_pm_type_max, we will always write ctl->data.
+
+In other words, I think you can remove tlb, use ctl instead, and remove
+the 'WRITE_ONCE(*(u8 *)ctl->data, pm_type)' here below.
+
+> +	if (write && ret == 0) {
+> +		char *path_manager = "kernel";
+> +
+> +		if (pm_type == MPTCP_PM_TYPE_USERSPACE)
+
+pm_type should be read here in the 'if' statement, after having
+potentially be modified in proc_dou8vec_minmax(). Or use "buffer" directly.
+
+> +			path_manager = "userspace";
+> +		mptcp_set_path_manager(pernet->path_manager, path_manager);
+> +		WRITE_ONCE(*(u8 *)ctl->data, pm_type);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+>  static struct ctl_table mptcp_sysctl_table[] = {
+>  	{
+>  		.procname = "enabled",
 Cheers,
 Matt
 -- 
