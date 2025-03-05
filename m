@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6F6713AA2D
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 15:31:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CCCCF24BC1D
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 15:34:18 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741188683; cv=none; b=eJUWVmi0WRYEcapOBQ24bJI8WLxlC3b/gDHso0TeHFrIB5HsBPoGWuk1TttTQj2Acl7Bt6AvrYcHi5Xh4FfzHn3+lkyOXgmKIB+lsQx/s3502aPLTa9ijNHgJ0jznO6E2rCYs8hWYYHtbaiRh/oiUy209KI5F82ABewA1EipZHI=
+	t=1741188858; cv=none; b=bbqTI3HV3esgnfYc5DkTdWdjZZzuLoK0e+xJ8mtczTBXAuv9eBddhY+bY1cP6LTqG+vhrzJr6WJZ2MS3LpzmYgTmc3EFPkOx6atbGD3dtgzoNLtKA2reNAle2UvVxV1nXUiJPS4Q9+QIakCLYLmQhYEMqedIEf/jpR3OL/s2zQc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741188683; c=relaxed/simple;
-	bh=7dYpKGAeZxL10pqcBWdDxFVsR4Cndnzvq2eDSdaBJTo=;
+	s=arc-20240116; t=1741188858; c=relaxed/simple;
+	bh=+KF+5YM4WUf2qZb3m9Ipa3iGm18R+w6BhFHlsJyFUMM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=UwufS6ZC1s+38ZrqwYjyQGPBccVfBsLJnm1v2hqGnx1DRWdnkoaM5rljHjvms3ra0/hIrpyKzuy2Skp/kJ951slZwzBBBnJKZDbUlWsd9BgUiMJ+nlDuNQrJsvUVfC2i2pMsEs+aEeuhmZbYoPWJa62a0Fq2MEGhF1Z+QfKTm/o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kLMXyfhR; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=LsxDg5ancqBWZW+LaUn1IAMBDZWgbEFFY6xZ/hNqeOODaarlE5F/a/NJQ0UVcumUtmRSeKbPy6XZgqvPbCPd8yixkNtWN1xKMPUdfyT5DXwVvqZcu1sJxknJTyjaJVHNW1F/wtRlHnQUaR6pPRJo7JZhC9Tyz5YooodO/9tVxWk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=BBUojB9/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kLMXyfhR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7B57EC4CED1;
-	Wed,  5 Mar 2025 15:31:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="BBUojB9/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 737EBC4CED1;
+	Wed,  5 Mar 2025 15:34:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741188683;
-	bh=7dYpKGAeZxL10pqcBWdDxFVsR4Cndnzvq2eDSdaBJTo=;
+	s=k20201202; t=1741188858;
+	bh=+KF+5YM4WUf2qZb3m9Ipa3iGm18R+w6BhFHlsJyFUMM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kLMXyfhRPNkv3aUM8pSRznBWfbA0IqLasA/5TO367wn58lVyrRd5orssFoYWR3MV/
-	 RzpaMBie/qb5dpX+oLVskEIdgWAQcKBFKr1+ZSEpLNrpGtZ8N9VVW75QWYO2LLHLx4
-	 fbONkGLjEfbBwcxUbi3QsLiB/ABIqKEU4VwyiG5BtmdDu4htCNQZQhBQC229M9h8Yd
-	 jdC1YTa0Vska94mtLV4HjAVopTRl+VFvY8ef//Lz0jIxfJG/fbJ7nSFConG0xq1g7S
-	 hKLGW3eLq5Vd5m9j/16u/SNBRBySFVVk94Ry8TnzATGzwkTsLIGCfsC7zcZ/GxTIom
-	 VyWwklBI+Ysgw==
-Message-ID: <3946fafa-272f-4a0e-8461-e8b17f8283b2@kernel.org>
-Date: Wed, 5 Mar 2025 16:31:20 +0100
+	b=BBUojB9/tJ+q/rFTYbTCV29maG+bWEufHF2Lxmky/u+EmY0ycpQRcKg6Lcya0uhlf
+	 z7O+iic2up7bRCJppbltLszjCYF9n8x47spuMs9S2PLsvJCIjrg32ANvANjUvqgykb
+	 gwcO1bmsOQtHcpxMLitWU5KIQSQc7NwajAU5IsV+BUd071GHYKizU2bOyXz4HBJUTR
+	 Wk0rfEVNnAQUqDk+Z5HxiPVOCkBnZEpBPLyZyrACd7dT9gTPvDDu7aB6XSqkszRsDW
+	 3XTKMCuproXM0u7NZvRusCcJXpePD+OrKaOdy67dflIKxKhkmBLqmG096nzJRjgzGO
+	 YKyIf8ehLd+lw==
+Message-ID: <112e3a7c-5315-48ca-973b-d6e2c78deeda@kernel.org>
+Date: Wed, 5 Mar 2025 16:34:15 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
- support"
+Subject: Re: [PATCH mptcp-next v1 2/2] mptcp: pm: use pm variable instead of
+ msk->pm
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740368110.git.tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1741072099.git.tanggeliang@kylinos.cn>
+ <b3fc56c8fefef00d42c064da81ce13b138d43103.1741072099.git.tanggeliang@kylinos.cn>
+ <bffcd0a1a52c731ac59d5102aa5f0e2e260b82f2.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,45 +88,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1740368110.git.tanggeliang@kylinos.cn>
+In-Reply-To: <bffcd0a1a52c731ac59d5102aa5f0e2e260b82f2.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Mat,
+Hi Geliang,
 
-On 24/02/2025 04:37, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 05/03/2025 02:01, Geliang Tang wrote:
+> Hi Matt,
 > 
-> v4:
->  - drop sock_owned_by_user_nocheck and spin_is_locked. According to
->    comments from Mat and Martin, in this set mptcp_subflow
->    bpf_iter only used from a cg sockopt bpf prog, no need to add these
->    check at this moment.
+> On Tue, 2025-03-04 at 15:16 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> The variable "pm" has been defined in mptcp_pm_fully_established()
+>> and mptcp_pm_data_reset() as "sk->pm", so use "pm" directly instead
+>> of using "sk->pm".
+> 
+> This commit log needs to be updated. Should be "msk->pm", not "sk->pm".
+> Please update this for me:
+> 
+> '''
+> and mptcp_pm_data_reset() as "msk->pm", so use "pm" directly instead
+> of using "msk->pm".
+> '''
 
-Thank you for the patches and the reviews!
+Thanks, done:
 
-Now in our tree:
-
-New patches for t/upstream:
-- fe0c24467a00: "squashed" patch 1/5 in "bpf: Extend
-bpf_skc_to_mptcp_sock to MPTCP sock"
-- 83bb4052ab8a: "squashed" patch 2/5 in "bpf: Allow use of
-skc_to_mptcp_sock in cg_sockopt"
-- dd8797c750fe: "squashed" patch 3/5 in "bpf: Add mptcp_subflow bpf_iter"
-- a5e732a840e2: "squashed" my patch in "bpf: Add mptcp_subflow bpf_iter"
-- 23094de26cb5: "squashed" (with conflicts) patch 4/5 in "bpf: Acquire
-and release mptcp socket"
-- 5a1d91403efd: "squashed" patch 5/5 in "selftests/bpf: Add
-mptcp_subflow bpf_iter subtest"
-- 29cc864a2cc6: tg:msg: update after the recent squash-to patch
-- da6054a670da: conflict in t/mptcp-add-sched_data-helpers-2
-- 401780491d45: conflict in t/mptcp-add-bpf_mptcp_sched_ops
-- Results: e1315f2b7271..bf7e42dbc2fa (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/0447c3073f646734cffeec271b1a6b03a53103ef/checks
+- 568332d0da48: tg:msg: s/sk/msk/
 
 Cheers,
 Matt
