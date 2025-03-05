@@ -1,111 +1,124 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2F5CD1F03C1
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:00:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4BF451F416D
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 11:41:23 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741172424; cv=none; b=h7LcgjaDRcEwER3fs19di3YTUi5xJj06rlK04Ep22xzslA6umOJZp7RhC7mj9fSVbvty9ajhm8IhjeTHZ5mFX2Jefir8cdGQ7CzFr2AzI7D5LxVATI217GpySF/VgTrDB3g2X1/aF7pwyZyYJVheRVEijTKw6AsdH0qi1yyrT1Q=
+	t=1741174883; cv=none; b=H4X2wh7jB+0VAYfm7dzfKmnLeSf4e+AcTPZuYtmAI+u9CR7TJj5PYtuPSzY1ob2ItIuFTt1J9ycDOCPQY9l4SvAfg02ItNckzIGSpWaMnqFw6UNOlkkDvW0aiEdvkZNwXhhkrikxMdmdJZ/RFXzg+SLdV+W0UWIeM0wf1nEm1fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741172424; c=relaxed/simple;
-	bh=l8XTTzYZTexQuN0rQgrmnYxsaqNiFhSaahEvEc4TTkw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=BzMCr43Ys27u8W4iVP2adqeLxH3MZ/3/BtUMgfpOXmCucXPJzebHkNUIpQaY84sVE9BYw6rORImUPqzFKP+8oEeU3rXUM+ozJq2s+dKEhCBqNCcF+NBs3JksV8GFbKdbjHsDiS8DYRMtdSDSeqdRfa/vU07xz4eS4HcZkbKo2xo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OMGgcTUk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741174883; c=relaxed/simple;
+	bh=w9WwkkDwGTLGrftgMohsgg9gcnO21gqWq5VYBj8/mdw=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=kMJ1tIN+68OEl0FvOWC/YNKFzyCxhx2SdwFg2EN/96LaLSE864+KhIVPugXIJJ/1yedCoh4AyA/ZqzQtC7btRiZhoe87rx1UaPhJYrcBWalL9bPYAbP4v9k7Io1JMFNkNZp8ksC5vNrycIED/Xrwd/hxiih4o3sRCN0RQo1XctI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SXnz6dw7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OMGgcTUk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4D9FC4CEE2;
-	Wed,  5 Mar 2025 11:00:22 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SXnz6dw7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7505FC4CEE2;
+	Wed,  5 Mar 2025 11:41:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741172423;
-	bh=l8XTTzYZTexQuN0rQgrmnYxsaqNiFhSaahEvEc4TTkw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=OMGgcTUkfJNR90wcUDQ4kyYchEMv6AClrmu9myYQqed7eYUdu7iQzMp8Uem+04ZnF
-	 3sQVyjyRSm2eAn2S9DiCrq4cinppoeNZdUfhAkxX2IC4T9R95iAGgaf6GAepR0dYUC
-	 uu/bKG0oISEbQZqXdpmtM4Qhy60EkZ0pHNUeAdCd9Jzc8U1p71nivUv9rEKTAkJPuJ
-	 3Sr76CleMpTrTAnGi7ea1McLKzaPIFJBebtLYC8lXaH0jCDBvCI3r90UfAxQXg+uCD
-	 81hiOkqyo0CWuWHEDxgRvZ1+VGHAalBJhXd0wCLDtgBGY1G3Bik/ca/dtoL3PJGOEU
-	 37pIdS2+GTwfg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 12/12] selftests: mptcp: add path_manager sysctl tests
-Date: Wed,  5 Mar 2025 18:59:53 +0800
-Message-ID: <bd0ba642385cdc3df7c1ff6415645c82b9da83b0.1741171898.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1741171898.git.tanggeliang@kylinos.cn>
-References: <cover.1741171898.git.tanggeliang@kylinos.cn>
+	s=k20201202; t=1741174883;
+	bh=w9WwkkDwGTLGrftgMohsgg9gcnO21gqWq5VYBj8/mdw=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=SXnz6dw7ZhEQheJw0ULTgXbkWKtxywtTKhgKuACwNFZXJD9dPUmyRBozI0f48WqT4
+	 y0sMHlxGpq5Dl+8KQuQugvnW8VlcpWnQAm7ruxH3f3p372yW2N4DPai6gWGnYRnVje
+	 aylceOYa2jJG4Kz1ARsFIdB/hzWchcOSfAH0M3F+/bM1Tj6xK971/bDGNMXd5CiO6E
+	 x/A30/2Y+jU54w/00xrCfhnCYATcGRc1id7uvDmcABErWefUa24SgLUuD/jwFRmDgN
+	 9vgiIH/tP6AtUgQBPLT1rlhZrdsKEYojrGRbnz9pqjY5hiMAed4QWS6MYqWhFfrv32
+	 pNfe5okx2cwzA==
+Message-ID: <bd007ae8-3c41-48d6-a202-f1a87c5ab1dd@kernel.org>
+Date: Wed, 5 Mar 2025 12:41:20 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-next v8 00/12] BPF path manager, part 5
+Content-Language: en-GB
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1741088339.git.tanggeliang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1741088339.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-This patch adds a new helper set_path_manager() to set the newly added
-net.mptcp.path_manager, and test it inside "userspace pm subflow" test.
-Also check if old sysctl net.mptcp.pm_type is mapped successfully.
+On 04/03/2025 12:40, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v8:
+>  - address Matt's comments in v7.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../testing/selftests/net/mptcp/mptcp_join.sh | 34 ++++++++++++++++++-
- 1 file changed, 33 insertions(+), 1 deletion(-)
+Thank you for the new version 8.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index c55f5d526769..c140860ab754 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -91,6 +91,19 @@ CBPF_MPTCP_SUBOPTION_ADD_ADDR="14,
- 			       6 0 0 65535,
- 			       6 0 0 0"
- 
-+set_path_manager()
-+{
-+	local ns=$1
-+	local pm=$2
-+
-+	if ! ip netns exec ${ns} sysctl net.mptcp.available_path_managers |
-+	     grep -wq "${pm}"; then
-+		mptcp_lib_pr_fail "path manager ${pm} not found"
-+		return 1
-+	fi
-+	ip netns exec ${ns} sysctl -q net.mptcp.path_manager="${pm}"
-+}
-+
- init_partial()
- {
- 	capout=$(mktemp)
-@@ -3619,7 +3632,26 @@ userspace_tests()
- 	# userspace pm create destroy subflow
- 	if reset_with_events "userspace pm create destroy subflow" &&
- 	   continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/pm_type'; then
--		set_userspace_pm $ns2
-+		if continue_if mptcp_lib_has_file '/proc/sys/net/mptcp/path_manager'; then
-+			local pm1 pm2
-+
-+			set_path_manager $ns1 "kernel"
-+			set_path_manager $ns2 "userspace"
-+
-+			pm1=$(ip netns exec ${ns1} sysctl -n net.mptcp.pm_type)
-+			if [ "$pm1" != "0" ]; then
-+				mptcp_lib_pr_fail "ns1 pm_type mapping fails"
-+				return 1
-+			fi
-+
-+			pm2=$(ip netns exec ${ns2} sysctl -n net.mptcp.pm_type)
-+			if [ "$pm2" != "1" ]; then
-+				mptcp_lib_pr_fail "ns2 pm_type mapping fails"
-+				return 1
-+			fi
-+		else
-+			set_userspace_pm $ns2
-+		fi
- 		pm_nl_set_limits $ns1 0 1
- 		{ speed=5 \
- 			run_tests $ns1 $ns2 10.0.1.1 & } 2>/dev/null
+Please next time add an individual changelog, it is hard to follow the
+modifications between versions without that.
+
+I have some comments, please see my individual reviews.
+
+> v7:
+>  - addresss Matt's comments in v6 [1].
+>  - drop "type" from struct mptcp_pm_ops as Matt suggested.
+>  - map "pm_type" to new sysctl as Matt suggested.
+> 
+> Depends on:
+>  - mptcp: pm: code reorganisation, v2
+> 
+> Based-on: <20250228-mptcp-pm-reorg-code-v2-0-fa8b2542b7a5@kernel.org>
+
+Please drop this line next time, the CI didn't manage to apply and
+validate this series because of that.
+
+Cheers,
+Matt
 -- 
-2.43.0
+Sponsored by the NGI0 Core fund.
 
