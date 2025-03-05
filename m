@@ -1,110 +1,76 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 76E5B230BC6
-	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 12:00:48 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A194C2475F7
+	for <mptcp@lists.linux.dev>; Wed,  5 Mar 2025 13:13:29 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741176049; cv=none; b=lAliCVeneR4CRuwM+bQuXZSxygsQBBce+uGeGt6i+8H90WUg/4xrXTRAEy4MBvyDJV37VJ7iUNtlngOnSFb9O6bYTWlThouniiltnnBd4NIAUrGMPyPQKz+5+zVX7nmcnSAsLNY7441gsCainNSJCrchg8sqnu/lYh2GJTeKlz4=
+	t=1741180412; cv=none; b=WegvX1bHYy1avQkFIok3dEPiAlIoTaGfDZhQ55xBVTjOUnVl9gDzM2PRvbWeqRPxq3SsaAnvHYCjsCrtsyCAvP8MoPgXfC4evyCdhgPWFs9cK8OrocI5d1WJGy/Ke2UWp/sXBB10zH4wE2lBgGL8U3JF7w0LdNlqRRs1S2xuJFs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741176049; c=relaxed/simple;
-	bh=SdBllylzlhfOQX2QcB/1/P8EKqM8TVWRcWS9RX+J0KY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gS5VSnxZJ2fdvg0B/ndZEMFWQ/y8rD+HKWyCkQ5vvfvIVRPnvP8jPq/uBAO9U3QwTGVY2WEw45AVla6f9flHzo8YW/sEy0XLt/QzrjhijDXIZinzJ/CXbGu+/fT/p6dUmk07BNppGP9f/Ae3lZC0qR8sqoyp1RwWA6xSaXuFqrA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=e5QcWx0W; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741180412; c=relaxed/simple;
+	bh=Db+3IGZoI/zX0bgg9Q+/RNYwmAKroRmVTwL767Q1YLk=;
+	h=Date:From:To:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=bEZdR10CK/sZO+oHXjDsBpzPiLKMfBE135UOd0EeTPgYekbL/Vb3kwePSM7Os1jUxkvLdXfGjxLzW8nOQZsIZ4DK82X1VtE64GRfumjl0drLUpKbL7y/hVqYLVi9pqAsyZxTeflHM9uUMtEkKIiDYcsjyCFk8ixU2mHixjp0mVI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=Ga8nlG2F; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="e5QcWx0W"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1300CC4CEE2;
-	Wed,  5 Mar 2025 12:00:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741176048;
-	bh=SdBllylzlhfOQX2QcB/1/P8EKqM8TVWRcWS9RX+J0KY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=e5QcWx0W/dk2qyIWaQnV3bsHK1pqTz0gtANyIWBpgdoveked2MDaDgO6zr99TOHK5
-	 lk+MN7UsqD/Nt+ckScSj5hs9jgHofDCawGSWGPILLbblq9BmFuuypZ18UoMUBZyWAb
-	 73ojOYMvGfiwA5kxk3X9B0mm6PQh91LPzG83HrhnU2iIOc8oEVVn4E4DF1x2AsNIrz
-	 WUeeT0U+k62DtbN8/bgSO1TcF83HJ3H+V2EZ6iOJpbZyMXvOTfyRwFoewCY3yQtU6A
-	 xUJQLLQyMNPByGySsqSWXY+fD2YEl6w6zvl+6cEgehKKKhMkKN2vrxSil38IwaRrZn
-	 YNMftEu6ZPEAw==
-Message-ID: <caff7a8f-98f3-4b0a-8f7c-dd8be7877a54@kernel.org>
-Date: Wed, 5 Mar 2025 13:00:46 +0100
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="Ga8nlG2F"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=Message-ID:To:From:Date:CC;
+	bh=Db+3IGZoI/zX0bgg9Q+/RNYwmAKroRmVTwL767Q1YLk=; b=Ga8nlG2FmmEOhynkGeIAx7b2cz
+	dXqgQLpmSvNDOsj92GbRr3+ut7UXOxfGtERdX7iHjLqN1HvKTEH03adPgRtW5xP4cjn4uW8hAV08K
+	h/eplTC6rDZKNLTdiJveB7lls7uRc8782vjbeBkyVEgVY/2VTsYfDq+k2jTus6i81mFHrGhYtd6R/
+	85nkCPHByV9oflkvyiIzbqIXY7I+1BkAfeYrcqyzVrayrGrhpm6U4PStb5D1snZq9AMXC0RT59/cU
+	RLHcPhw9+olumInJG6uVBmnYJJLuZAA5rpGJhJCDl+8R4DsuWzGUU4yBidn7E9sSdhSKc5uU+sIj/
+	qzEBRNdfRT02ZlsZOxunU87J+oqpmTAZ0g+kskhcFkuRzPl8Ndlo4SpON7zVYQOmP5gaCkT9CJNPe
+	6kUyQlcbM9ws8ckWLIIyrhjSU6op3Hyw68xgstnpe+XPXLV0WPb3JzBJwCajI8PhPhXLqLy7Qspc3
+	829KaiPmriZIEYKXLR7Qpjkt;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1tpoYr-003W13-10
+	for mptcp@lists.linux.dev;
+	Wed, 05 Mar 2025 13:13:21 +0000
+Received: from bjacke by pell.int.sernet.de with local (Exim 4.93)
+	(envelope-from <bjacke@sernet.de>)
+	id 1tpoYq-00BEZI-JD
+	for mptcp@lists.linux.dev; Wed, 05 Mar 2025 14:13:20 +0100
+Date: Wed, 5 Mar 2025 14:13:20 +0100
+From: =?iso-8859-1?Q?Bj=F6rn?= JACKE <bjacke@samba.org>
+To: mptcp@lists.linux.dev
+Subject: mtpcp not usable with ipv6 if built as module
+Message-ID: <20250305131320.GA2676143@sernet.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v9 00/12] BPF path manager, part 5
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1741171898.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <cover.1741171898.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+X-Q: Die Schriftsteller koennen nicht so schnell schreiben, wie die
+ Regierungen Kriege machen; denn das Schreiben verlangt Denkarbeit. - Brecht
 
-Hi Geliang,
+Hi,
 
-On 05/03/2025 11:59, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> v9:
->  - rename mptcp_pm_nl_ prefix to mptcp_pm_kernel_.
->  - rename mptcp_userspace_pm_ prefix to mptcp_pm_userspace_.
->  - update commit logs.
+I know that this is a known issue and https://www.mptcp.dev/setup.html mentions
+this but I would like to encourage the developers to fix the problem that mptcp
+for ipv6 isn't available if ipv6 is built as a module.
 
-Thank you for the v9. If that's OK, I will skip this v9. I was still
-reviewing the v8 when you sent the v9, and a few comments need to be
-addressed.
+The problem that mptcp doesn't work with ipv6 if built as a module is also not
+very obvious when you are working on such a system. It simply does not work,
+but no dmesg message or so is mentioning the lack of mptcp support at runtime.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+The system where I hit this was as raspi system, where ipv6 is built as a
+module due to size reasons, which is reasonable for small memory systems. See
+https://github.com/raspberrypi/linux/issues/6518 and
+https://github.com/raspberrypi/linux/pull/5487
+
+Maybe this is a bit of a motivation to fix the module build of mptcp with ipv6,
+raspberry users (and some more probably) would very much apreciate it.
+
+Cheers
+Björn
 
