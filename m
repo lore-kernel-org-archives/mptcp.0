@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7890204F60
-	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:01:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8540F1FECB8
+	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:01:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258916; cv=none; b=KPPmfPb1cA9M0cMUAcRQsxCrhfsCJbl+YXDmVEtB4TvStbmf7OCNA2PZpbBmdOptRzSKgDm+15r8tE/ave8pVrwtQ+mswmYl29HWC1EwzrgmiTlqfAwNE4R5Hg2nMRoQfOxP8jYTEVv7KF+oPSHllXFljPNvyO4gMUy3BGrePdM=
+	t=1741258918; cv=none; b=txgP2BBQPqH3IddeSkDdnuiXC7Q5dPqwPqEClqBi90vh7jbNOPZuANyQ5+Nnftmo3vb4yRB9r77Jx23UPJTIy/fiYnqk43Kj3GzfpwEmP0zZ860X6ouMpsIDrSWCQtVHiNaY3cUs9DHKx+egdiH+dwXfk31qHTctkRIVyeii/ps=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258916; c=relaxed/simple;
-	bh=XhgJT+bbhZy92wMKsJvboYTtpb5tayygQ0+UiNTfjlA=;
+	s=arc-20240116; t=1741258918; c=relaxed/simple;
+	bh=bQZEKIurEns2cSfeBYOv2AQqUU0vruYP+h0ciwq6YsY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=MEs6v8GyJTj4dMJXBdpun1jayZUSzra3n4EtfeNxeBQkBFgF6QcxWeSXqB49WSlukONq6nKpWvNOvhaRmRGJkVPYmRQd76f2dHrr8XlXhsgNKcC1aS0qxmGekDGEh+X3ukuUrPiRhX5M869hidGZryeAysbBUBIcvIqwJ+tIJkk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GlDiCRse; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=PsGCzDwZGkXIR4J1EVA7nNq85DuC/o9ww9RY1BsDs26j6rCdroXrvClO6M5jbdRC1cG4NDVNKQN/muwQSetEPJpX0DPgSamqGDNJUn8ztCr625bspSjupWG2Oh8bRTe6XnRhk9VIdk8ucZGTlraJPtU3i20TOJg9GTcLCwyvaYU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=q4VzD/Yh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GlDiCRse"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 38E55C4CEE0;
-	Thu,  6 Mar 2025 11:01:54 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="q4VzD/Yh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17FCC4CEE2;
+	Thu,  6 Mar 2025 11:01:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741258916;
-	bh=XhgJT+bbhZy92wMKsJvboYTtpb5tayygQ0+UiNTfjlA=;
+	s=k20201202; t=1741258918;
+	bh=bQZEKIurEns2cSfeBYOv2AQqUU0vruYP+h0ciwq6YsY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GlDiCRseTfoQYEl1IVvb4To1rwZeewS2YOe10L4dDWch+bhBtHfNdUOzYOIWMgWI4
-	 fNBlubMaSjDcsAgk2IlYVspsACjqPlaj6/ZsXqhakSyt5tKrJ9tmjzleaB92u76lsQ
-	 RPkkwbWNS7ZunWzT6+r2nPZySJRS1vEtac5PqKhsSlzd+oDVJ8K9vrITYlm9aTFgTS
-	 gkcNpxjMDSU/M9Fb7oGEd5Ry+IZ6aJUS5PJNEYVC4BuTNm2caxBCi7MdrUFI0tFFgl
-	 olMKKFrGftg1Y6wyL8UXXKe5+pXS+nsBHClZy3bCBKNA7ejp1KcPxEDK0z08rRwjYY
-	 Fts3/+fkcMc9g==
+	b=q4VzD/Yhdh8G3dBzgZwrU5FQlcFJ+vJWsp75Oc+CirtDV9d6eRUR/hYJZ288NoLJg
+	 /ISBD4m+a8cXmgUlSp6Wzirzc9ku+D4MlBXBautNImr8xlQBFJM1sPrmPtw10Nd42S
+	 c+dttT4VWqemM774AZ8BTYbeDqcjLtFsHNqeq7Coh90/EJIWmXpBNvIKFgaUFd59cw
+	 ZDo5dElkdwtEs6ta82VX4EfOZxNio1MXGqktpV1MGQkrdsgC8fkc+VJ7+kDcse6SxV
+	 UzKVxgWjq1zcj7umK2PZEEJ5n1sjkSUI4oTkXkcadbFBsnhCVV/Hw4H2QF5BDpLjSy
+	 XZDOO6UzSRk/A==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 02/12] mptcp: pm: register in-kernel and userspace PM
-Date: Thu,  6 Mar 2025 19:01:37 +0800
-Message-ID: <f76b8ccc7c6b3a894225e190ff74ce096ab58aa1.1741258415.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 03/12] mptcp: sysctl: set path manager by name
+Date: Thu,  6 Mar 2025 19:01:38 +0800
+Message-ID: <3b6949a2eda46c8aed7164e7a66516772a6d512e.1741258415.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1741258415.git.tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
@@ -45,107 +45,164 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch defines the original in-kernel netlink path manager as a
-new struct mptcp_pm_ops named "mptcp_pm_kernel", and register it in
-mptcp_pm_kernel_register(). Also define the userspace path manager
-as a new struct mptcp_pm_ops named "mptcp_pm_userspace", and register
-it in mptcp_pm_init().
+A new net.mptcp.path_manager sysctl is added to determine which path
+manager will be used by each newly-created MPTCP socket by setting the
+name of it.
 
-To ensure that there's always a valid path manager available, the
-default path manager "mptcp_pm_kernel" will be skipped in
-mptcp_pm_unregister().
+This sysctl makes the old one "pm_type" deprecated.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c           |  5 +++++
- net/mptcp/pm_kernel.c    |  7 +++++++
- net/mptcp/pm_userspace.c | 10 ++++++++++
- net/mptcp/protocol.h     |  4 ++++
- 4 files changed, 26 insertions(+)
+ Documentation/networking/mptcp-sysctl.rst | 19 +++++++++
+ net/mptcp/ctrl.c                          | 50 +++++++++++++++++++++++
+ net/mptcp/protocol.h                      |  1 +
+ 3 files changed, 70 insertions(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 5ea5048dfd9b..eefed554dcc9 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -1028,6 +1028,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
- void __init mptcp_pm_init(void)
- {
- 	mptcp_pm_kernel_register();
-+	mptcp_pm_userspace_register();
- 	mptcp_pm_nl_init();
- }
+diff --git a/Documentation/networking/mptcp-sysctl.rst b/Documentation/networking/mptcp-sysctl.rst
+index 03e1d3610333..b78a2254d452 100644
+--- a/Documentation/networking/mptcp-sysctl.rst
++++ b/Documentation/networking/mptcp-sysctl.rst
+@@ -72,6 +72,23 @@ enabled - BOOLEAN
  
-@@ -1060,6 +1061,10 @@ int mptcp_pm_register(struct mptcp_pm_ops *pm_ops)
+ 	Default: 1 (enabled)
  
- void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops)
- {
-+	/* skip unregistering the default path manager */
-+	if (WARN_ON_ONCE(pm_ops == &mptcp_pm_kernel))
-+		return;
++path_manager - STRING
++	Set the default path manager name to use for each new MPTCP
++	socket. In-kernel path management will control subflow
++	connections and address advertisements according to
++	per-namespace values configured over the MPTCP netlink
++	API. Userspace path management puts per-MPTCP-connection subflow
++	connection decisions and address advertisements under control of
++	a privileged userspace program, at the cost of more netlink
++	traffic to propagate all of the related events and commands.
 +
- 	spin_lock(&mptcp_pm_list_lock);
- 	list_del_rcu(&pm_ops->list);
- 	spin_unlock(&mptcp_pm_list_lock);
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 806a9b5b3c07..d39e7c178460 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -1398,8 +1398,15 @@ static struct pernet_operations mptcp_pm_pernet_ops = {
- 	.size = sizeof(struct pm_nl_pernet),
++	This is a per-namespace sysctl.
++
++	* "kernel"          - In-kernel path manager
++	* "userspace"       - Userspace path manager
++
++	Default: "kernel"
++
+ pm_type - INTEGER
+ 	Set the default path manager type to use for each new MPTCP
+ 	socket. In-kernel path management will control subflow
+@@ -84,6 +101,8 @@ pm_type - INTEGER
+ 
+ 	This is a per-namespace sysctl.
+ 
++	Deprecated since v6.15, use path_manager instead.
++
+ 	* 0 - In-kernel path manager
+ 	* 1 - Userspace path manager
+ 
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index be6c0237e10b..1f405be6bc00 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -39,6 +39,7 @@ struct mptcp_pernet {
+ 	u8 allow_join_initial_addr_port;
+ 	u8 pm_type;
+ 	char scheduler[MPTCP_SCHED_NAME_MAX];
++	char path_manager[MPTCP_PM_NAME_MAX];
  };
  
-+struct mptcp_pm_ops mptcp_pm_kernel = {
-+	.name			= "kernel",
-+	.owner			= THIS_MODULE,
-+};
-+
- void __init mptcp_pm_kernel_register(void)
- {
- 	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
- 		panic("Failed to register MPTCP PM pernet subsystem.\n");
-+
-+	mptcp_pm_register(&mptcp_pm_kernel);
+ static struct mptcp_pernet *mptcp_get_pernet(const struct net *net)
+@@ -83,6 +84,11 @@ int mptcp_get_pm_type(const struct net *net)
+ 	return mptcp_get_pernet(net)->pm_type;
  }
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 13856df22673..2cb62f026b1f 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -682,3 +682,13 @@ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
- 	sock_put(sk);
+ 
++const char *mptcp_get_path_manager(const struct net *net)
++{
++	return mptcp_get_pernet(net)->path_manager;
++}
++
+ const char *mptcp_get_scheduler(const struct net *net)
+ {
+ 	return mptcp_get_pernet(net)->scheduler;
+@@ -101,6 +107,7 @@ static void mptcp_pernet_set_defaults(struct mptcp_pernet *pernet)
+ 	pernet->stale_loss_cnt = 4;
+ 	pernet->pm_type = MPTCP_PM_TYPE_KERNEL;
+ 	strscpy(pernet->scheduler, "default", sizeof(pernet->scheduler));
++	strscpy(pernet->path_manager, "kernel", sizeof(pernet->path_manager));
+ }
+ 
+ #ifdef CONFIG_SYSCTL
+@@ -174,6 +181,42 @@ static int proc_blackhole_detect_timeout(const struct ctl_table *table,
  	return ret;
  }
-+
-+static struct mptcp_pm_ops mptcp_pm_userspace = {
-+	.name			= "userspace",
-+	.owner			= THIS_MODULE,
-+};
-+
-+void __init mptcp_pm_userspace_register(void)
+ 
++static int mptcp_set_path_manager(char *path_manager, const char *name)
 +{
-+	mptcp_pm_register(&mptcp_pm_userspace);
++	struct mptcp_pm_ops *pm;
++	int ret = 0;
++
++	rcu_read_lock();
++	pm = mptcp_pm_find(name);
++	if (pm)
++		strscpy(path_manager, name, MPTCP_PM_NAME_MAX);
++	else
++		ret = -ENOENT;
++	rcu_read_unlock();
++
++	return ret;
 +}
++
++static int proc_path_manager(const struct ctl_table *ctl, int write,
++			     void *buffer, size_t *lenp, loff_t *ppos)
++{
++	char (*path_manager)[MPTCP_PM_NAME_MAX] = ctl->data;
++	char pm_name[MPTCP_PM_NAME_MAX];
++	const struct ctl_table tbl = {
++		.data = pm_name,
++		.maxlen = MPTCP_PM_NAME_MAX,
++	};
++	int ret;
++
++	strscpy(pm_name, *path_manager, MPTCP_PM_NAME_MAX);
++
++	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
++	if (write && ret == 0)
++		ret = mptcp_set_path_manager(*path_manager, pm_name);
++
++	return ret;
++}
++
+ static struct ctl_table mptcp_sysctl_table[] = {
+ 	{
+ 		.procname = "enabled",
+@@ -253,6 +296,12 @@ static struct ctl_table mptcp_sysctl_table[] = {
+ 		.mode = 0644,
+ 		.proc_handler = proc_dou8vec_minmax,
+ 	},
++	{
++		.procname = "path_manager",
++		.maxlen	= MPTCP_PM_NAME_MAX,
++		.mode = 0644,
++		.proc_handler = proc_path_manager,
++	},
+ };
+ 
+ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+@@ -278,6 +327,7 @@ static int mptcp_pernet_new_table(struct net *net, struct mptcp_pernet *pernet)
+ 	table[8].data = &pernet->close_timeout;
+ 	table[9].data = &pernet->blackhole_timeout;
+ 	table[10].data = &pernet->syn_retrans_before_tcp_fallback;
++	table[11].data = &pernet->path_manager;
+ 
+ 	hdr = register_net_sysctl_sz(net, MPTCP_SYSCTL_PATH, table,
+ 				     ARRAY_SIZE(mptcp_sysctl_table));
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index dfb981a83f31..3f820a9e453f 100644
+index 3f820a9e453f..0ef758d233b7 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1047,6 +1047,9 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
- void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
- 				struct mptcp_pm_addr_entry *entry);
+@@ -694,6 +694,7 @@ int mptcp_allow_join_id0(const struct net *net);
+ unsigned int mptcp_stale_loss_cnt(const struct net *net);
+ unsigned int mptcp_close_timeout(const struct sock *sk);
+ int mptcp_get_pm_type(const struct net *net);
++const char *mptcp_get_path_manager(const struct net *net);
+ const char *mptcp_get_scheduler(const struct net *net);
  
-+/* the default path manager, used in mptcp_pm_unregister */
-+extern struct mptcp_pm_ops mptcp_pm_kernel;
-+
- struct mptcp_pm_ops *mptcp_pm_find(const char *name);
- int mptcp_pm_register(struct mptcp_pm_ops *pm_ops);
- void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops);
-@@ -1154,6 +1157,7 @@ static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflo
- }
- 
- void __init mptcp_pm_kernel_register(void);
-+void __init mptcp_pm_userspace_register(void);
- void __init mptcp_pm_nl_init(void);
- void mptcp_pm_worker(struct mptcp_sock *msk);
- void __mptcp_pm_kernel_worker(struct mptcp_sock *msk);
+ void mptcp_active_disable(struct sock *sk);
 -- 
 2.43.0
 
