@@ -1,123 +1,107 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB0019C540
-	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:27:11 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88ECF1FC0F9;
+	Thu,  6 Mar 2025 11:30:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260431; cv=none; b=deK9lZS21Q1DVvfUX24u8Wxnk6ZnLoLZF6U3nwLhgJ/nQrDY5KtDRJ2wGg9KUG2+9McXhbypRhCGNS2uvMRU1eG5qf9o9YOGcCGw0uP4Y0wJiIeUn9WdE88aR2fVJhP+lomto7NLMY0t0iqDZVo/OWQTG7DOfPS0PL5A6aWxr/I=
+	t=1741260632; cv=none; b=RspTpGqS+Dy8oF4Xjqsyl1ngDYXznkd+ac0JCuy7V0O86j2bd5s2GbgEV4/v9nh2/055mfXOqfMcB4/PEtFUvhDtKMkcddWPzWcJn3pUDjcG9ucprjgTFMwxju5y6XIFzaVZ6RScM7CaZwvseeKhPkuDA9DO9Ur4zSmGylo7574=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260431; c=relaxed/simple;
-	bh=xetbxY+KQOnYFkLDU4HzcJKTeZmsGEHkCISwtJFuudQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Gs6mF7wsqqWjKIxBApTXavUkSKIhlnL7qFLndnm8GWGx9LwYoL7bh/KoGcHU87Nx3sSyF8HRFrceUNR8HwAmO3fZv0zNAeru3c3jgU/wlOgLGIugBY4WRMMpp7BSErDr8/AnYSTWihYVlEZxBeu1SMeoWYUno5DwwUQH8s9EDQQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV6rCAuW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741260632; c=relaxed/simple;
+	bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=Owmq1aN9xBm3Sw8OIcssyxL8+SAgBKGyX9AyErczHex8fzbowWVyZrNwqv++gWVuw3JRSmaymEygw5cM3UOvJMuXOC7xnqotTHDh1wYg+dQh4x/oF+9EWw+Jzr2mH8cDNKjzc+Q1hlsq7l98/6UUP1tHeQpzB7f52hveJC8PY3k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VLlrPblq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV6rCAuW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435A6C4CEE0;
-	Thu,  6 Mar 2025 11:27:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VLlrPblq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AEF0DC4CEE0;
+	Thu,  6 Mar 2025 11:30:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741260431;
-	bh=xetbxY+KQOnYFkLDU4HzcJKTeZmsGEHkCISwtJFuudQ=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FV6rCAuWe9umFEgmJo/vXtoOwNBrs/hVDrwH8DrsaOruQY2ZPswof0G7VLwgHX4e/
-	 GkeQS4L+a5UmnRqAA8LL2hJBAi2RoIrbNyDlAlg4Q/XnBiUWROsRVuydFRO/Xi9dhG
-	 Z95pbHhv+vMZKi66X+h4DEbcQrcDlJdAJtgfhyUNN2hVv8YaT7ElO675wvMNCu8qlI
-	 xspdPPAnaY/LIwNk/EfPo5Rx68zIFw3OQSkj6iLHijp9n6ZaYn4F/rne02JxWInshi
-	 nnzRYrR5KGh0cgQCpFYZTBA+zyR4P3vl5TwcdV5HyBXFU/jlKpbMyREybrO1MD2LH3
-	 TEZm9HdjJVXPA==
-Message-ID: <9af637f6-e76a-4442-b596-7578535415ac@kernel.org>
-Date: Thu, 6 Mar 2025 12:27:07 +0100
+	s=k20201202; t=1741260632;
+	bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+	h=From:Subject:Date:To:Cc:From;
+	b=VLlrPblqXk0hvw/yfgsRaMg7o5ZGImnJKiCuHLCBcG5Mqphl/n2sah0y7Oz2WmTYw
+	 6/1RtIoHcJivpGewzX0z9TKosnc5fW25xB0mDnYpDKeRLVUjCCGqm+pR6IyDs1YL/N
+	 Z4kn00rF4QlKmvRkMsrxzIJmD5+T67Z8W9ZhqhAoBPMGKEuxEt+UdE7ZmQNvyFejTQ
+	 59EY6aHMlyies9499Fm0HLbomJASWb/sZJ27jvEQWfxFNfJc1VXTS3kTWQGLBCjX7e
+	 SJLvNhDegscin37BW5i6u3Uf7vR83/eXwRLmQHvBWmnisqrydCoWU7w220NNbXN7CB
+	 /lNvr+4cjWNdg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 0/2] tcp: ulp: diag: expose more to non net admin
+ users
+Date: Thu, 06 Mar 2025 12:29:26 +0100
+Message-Id: <20250306-net-next-tcp-ulp-diag-net-admin-v1-0-06afdd860fc9@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v8 06/12] mptcp: pm: in-kernel: register
- mptcp_pm_kernel
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1741088339.git.tanggeliang@kylinos.cn>
- <818c00e2242d2f76604c6d70176ab6fa94d7eaa5.1741088339.git.tanggeliang@kylinos.cn>
- <02398941-0bb7-4156-a286-536db728c411@kernel.org>
- <ffbd74d2b796ea8f17d7f432cb6dc092ab7e9b27.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
- YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
- c7SPFMpMesgpcu1xFt0F6bcxE+0ojRtSCZ5HDElKlHJNYtD1uwY4UYVGWUGCF/+cY1YLmtfb
- WdNb/SFo+Mp0HItfBC12qtDIXYvbfNUGVnA5jXeWMEyYhSNktLnpDL2gBUCsdbkov5VjiOX7
- CRTkX0UgNWRjyFZwThaZADEvAOo12M5uSBk7h07yJ97gqvBtcx45IsJwfUJE4hy8qZqsA62A
- nTRflBvp647IXAiCcwWsEgE5AXKwA3aL6dcpVR17JXJ6nwHHnslVi8WesiqzUI9sbO/hXeXw
- TDSB+YhErbNOxvHqCzZEnGAAFf6ges26fRVyuU119AzO40sjdLV0l6LE7GshddyazWZf0iac
- nEhX9NKxGnuhMu5SXmo2poIQttJuYAvTVUNwQVEx/0yY5xmiuyqvXa+XT7NKJkOZSiAPlNt6
- VffjgOP62S7M9wDShUghN3F7CPOrrRsOHWO/l6I/qJdUMW+MHSFYPfYiFXoLUZyPvNVCYSgs
- 3oQaFhHapq1f345XBtfG3fOYp1K2wTXd4ThFraTLl8PHxCn4ywARAQABzSRNYXR0aGlldSBC
- YWVydHMgPG1hdHR0YmVAa2VybmVsLm9yZz7CwZEEEwEIADsCGwMFCwkIBwIGFQoJCAsCBBYC
- AwECHgECF4AWIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZUDpDAIZAQAKCRD2t4JPQmmgcz33
- EACjROM3nj9FGclR5AlyPUbAq/txEX7E0EFQCDtdLPrjBcLAoaYJIQUV8IDCcPjZMJy2ADp7
- /zSwYba2rE2C9vRgjXZJNt21mySvKnnkPbNQGkNRl3TZAinO1Ddq3fp2c/GmYaW1NWFSfOmw
- MvB5CJaN0UK5l0/drnaA6Hxsu62V5UnpvxWgexqDuo0wfpEeP1PEqMNzyiVPvJ8bJxgM8qoC
- cpXLp1Rq/jq7pbUycY8GeYw2j+FVZJHlhL0w0Zm9CFHThHxRAm1tsIPc+oTorx7haXP+nN0J
- iqBXVAxLK2KxrHtMygim50xk2QpUotWYfZpRRv8dMygEPIB3f1Vi5JMwP4M47NZNdpqVkHrm
- jvcNuLfDgf/vqUvuXs2eA2/BkIHcOuAAbsvreX1WX1rTHmx5ud3OhsWQQRVL2rt+0p1DpROI
- 3Ob8F78W5rKr4HYvjX2Inpy3WahAm7FzUY184OyfPO/2zadKCqg8n01mWA9PXxs84bFEV2mP
- VzC5j6K8U3RNA6cb9bpE5bzXut6T2gxj6j+7TsgMQFhbyH/tZgpDjWvAiPZHb3sV29t8XaOF
- BwzqiI2AEkiWMySiHwCCMsIH9WUH7r7vpwROko89Tk+InpEbiphPjd7qAkyJ+tNIEWd1+MlX
- ZPtOaFLVHhLQ3PLFLkrU3+Yi3tXqpvLE3gO3LM7BTQRV4/npARAA5+u/Sx1n9anIqcgHpA7l
- 5SUCP1e/qF7n5DK8LiM10gYglgY0XHOBi0S7vHppH8hrtpizx+7t5DBdPJgVtR6SilyK0/mp
- 9nWHDhc9rwU3KmHYgFFsnX58eEmZxz2qsIY8juFor5r7kpcM5dRR9aB+HjlOOJJgyDxcJTwM
- 1ey4L/79P72wuXRhMibN14SX6TZzf+/XIOrM6TsULVJEIv1+NdczQbs6pBTpEK/G2apME7vf
- mjTsZU26Ezn+LDMX16lHTmIJi7Hlh7eifCGGM+g/AlDV6aWKFS+sBbwy+YoS0Zc3Yz8zrdbi
- Kzn3kbKd+99//mysSVsHaekQYyVvO0KD2KPKBs1S/ImrBb6XecqxGy/y/3HWHdngGEY2v2IP
- Qox7mAPznyKyXEfG+0rrVseZSEssKmY01IsgwwbmN9ZcqUKYNhjv67WMX7tNwiVbSrGLZoqf
- Xlgw4aAdnIMQyTW8nE6hH/Iwqay4S2str4HZtWwyWLitk7N+e+vxuK5qto4AxtB7VdimvKUs
- x6kQO5F3YWcC3vCXCgPwyV8133+fIR2L81R1L1q3swaEuh95vWj6iskxeNWSTyFAVKYYVskG
- V+OTtB71P1XCnb6AJCW9cKpC25+zxQqD2Zy0dK3u2RuKErajKBa/YWzuSaKAOkneFxG3LJIv
- Hl7iqPF+JDCjB5sAEQEAAcLBXwQYAQIACQUCVeP56QIbDAAKCRD2t4JPQmmgc5VnD/9YgbCr
- HR1FbMbm7td54UrYvZV/i7m3dIQNXK2e+Cbv5PXf19ce3XluaE+wA8D+vnIW5mbAAiojt3Mb
- 6p0WJS3QzbObzHNgAp3zy/L4lXwc6WW5vnpWAzqXFHP8D9PTpqvBALbXqL06smP47JqbyQxj
- Xf7D2rrPeIqbYmVY9da1KzMOVf3gReazYa89zZSdVkMojfWsbq05zwYU+SCWS3NiyF6QghbW
- voxbFwX1i/0xRwJiX9NNbRj1huVKQuS4W7rbWA87TrVQPXUAdkyd7FRYICNW+0gddysIwPoa
- KrLfx3Ba6Rpx0JznbrVOtXlihjl4KV8mtOPjYDY9u+8x412xXnlGl6AC4HLu2F3ECkamY4G6
- UxejX+E6vW6Xe4n7H+rEX5UFgPRdYkS1TA/X3nMen9bouxNsvIJv7C6adZmMHqu/2azX7S7I
- vrxxySzOw9GxjoVTuzWMKWpDGP8n71IFeOot8JuPZtJ8omz+DZel+WCNZMVdVNLPOd5frqOv
- mpz0VhFAlNTjU1Vy0CnuxX3AM51J8dpdNyG0S8rADh6C8AKCDOfUstpq28/6oTaQv7QZdge0
- JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <ffbd74d2b796ea8f17d7f432cb6dc092ab7e9b27.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIABaHyWcC/zWNQQqEMBAEvyJz3oFEUXG/InuIzqgDbgxJFCH4d
+ 4PgoQ/VUN0JAnvhAN8igedDgmw2g/4UMC7GzoxCmaFUZa0q1aDlmHNGjKPDfXVIYuanNfQXi0Z
+ TQ+3UdVoNkFec50nO56GHV4bfdd3TPyaMewAAAA==
+X-Change-ID: 20250306-net-next-tcp-ulp-diag-net-admin-a1d6d7f9910b
+To: mptcp@lists.linux.dev, Eric Dumazet <edumazet@google.com>, 
+ Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>, 
+ "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Simon Horman <horms@kernel.org>, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, Boris Pismenny <borisp@nvidia.com>, 
+ John Fastabend <john.fastabend@gmail.com>
+Cc: Davide Caratti <dcaratti@redhat.com>, netdev@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1345; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Qr0sGyrLmQ6es4CO43+zm0fmuYxQlueRct9R+BrDTHM=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnyYdUFD9xJyEeInj0DwaLM9fl53Png/7uclYVV
+ UZl0Quc64mJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8mHVAAKCRD2t4JPQmmg
+ c14cD/9YQKASsBE+hbG+LjxHAejiXxM0uvZgu3sb+9gffexHJ7p4nYpx4zkaBVJoMsTocGGgRQB
+ zwOeW0nF82mw6c7EHS2jzr+tsVPNxEaZsRCY6rBauhqvHBeeMO6sNUmTJXlzECOYLu1/cHCeZmO
+ 2wBPIKc0uJ8/cELc9pssBdlW3R16CCOetIGZautRkYaGugXlw4Ogt1qQUNYuZVdLwdA5O5eI9B8
+ w7ERjpp3SYeSAG0tLJI4uEaStAUhcwUsDVt0CmdYPuujNoVfm5KocNboYs9bx9n9KnfVWloZgaY
+ 4KmWfxgdLIRkpYAA/P078JW79z0WgJZLZWUfySC1P2wzzKIln6OoTVCnpAgjATXJ4pCgV6i8Hdb
+ OSitbgYSL+3SXAl+bc1CgQr62CpLgjVOqAqfCUOKhQ4zMmg/hk5bKi8xDvWy3Y6YOG3Lykjrjc7
+ wUzkFD1Ni4bWrm/k2x1AyFWy9TfquEYhv86roMwHeuLhJayR/cGc+d0JcpareggUhZUbME6uN9E
+ 5jrKKcsncpjR9QV0YDyNfZua4MfxyrmHoRBQo8meSc6qUhO/acVfDdQbzZGvmxPb4CLWp1tP0jI
+ M77US5hS592ptolW65hESWOFRw26LJ+rFMfwpKpzSSpN4d6vXAHcLw58v8r1w5RDTC0lYiFBa15
+ vNToL/Qv38ZRcmQ==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
+to dump ulp-specific information"), the ULP diag info have been exported
+only to users with CAP_NET_ADMIN capability.
 
-Thank you for the reply!
+Not everything is sensitive, and some info can be exported to all users
+in order to ease the debugging from the userspace side without requiring
+additional capabilities.
 
-On 06/03/2025 12:09, Geliang Tang wrote:
-> On Wed, 2025-03-05 at 12:51 +0100, Matthieu Baerts wrote:
->> On 04/03/2025 12:40, Geliang Tang wrote:
+First, the ULP name can be easily exported. Then more depending on each
+layer:
 
-(...)
+ - On kTLS side, it looks like everything can be exported to all users:
+   version, cipher type, tx/rx user config type, plus some flags.
 
->> When looking at this, I can understand that we don't want to
->> unregister
->> built-in modules and the default one, but:
->>
->> - When are we going to that? mptcp_pm_unregister() is still unused in
->> this series.
-> 
-> mptcp_pm_unregister is not used in this set, but will be invoked
-> in .unreg of struct bpf_struct_ops.
+ - On MPTCP side, everything but the sequence numbers are exported to
+   all non net admin users, similar to TCP.
 
-OK, that's clearer. So mptcp_pm_unregister() will only be called for the
-BPF PM, and then not with the kernel/userspace PMs.
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Matthieu Baerts (NGI0) (2):
+      tcp: ulp: diag: always print the name if any
+      tcp: ulp: diag: more info without CAP_NET_ADMIN
 
-Cheers,
-Matt
+ include/net/tcp.h   |  4 ++--
+ net/ipv4/tcp_diag.c | 21 ++++++++++-----------
+ net/mptcp/diag.c    | 42 ++++++++++++++++++++++++++----------------
+ net/tls/tls_main.c  |  4 ++--
+ 4 files changed, 40 insertions(+), 31 deletions(-)
+---
+base-commit: f130a0cc1b4ff1ef28a307428d40436032e2b66e
+change-id: 20250306-net-next-tcp-ulp-diag-net-admin-a1d6d7f9910b
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
