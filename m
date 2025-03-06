@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B8665204F60
-	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:02:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E91820AF77
+	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:02:08 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741258926; cv=none; b=tk1imXQEax8r9uQyYjLWDjE8rfEPmnKd4sTU/bqB12uopW/p+xRuLMKaBR9i0A89To7sItmCDv2mggsQVD0D8NrU7oDrGNo6Lo5wjllHXGxrQYNqyXGkLWAT1pviyQc6ThSMEXwEEzO+wwKr/fYmvxT4Ho6pIbP+L/uHvwBx390=
+	t=1741258928; cv=none; b=HEXnKddPGegvVjozn/1vFGN73T84MaK7xt2dbXoEW1bqCep8a0v4OtS4sPs95MXjsTAXgJoV4YHMILMBOX6i5Fqqsd6c1Ss8Elo0pXo0kxuDfCbcsoFZ0m99Un0lKtPCuI+jHX2o3xXfwys2m7vcN6jb/x8bz45u3lZr/7+RfCo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741258926; c=relaxed/simple;
-	bh=nG64M2SPPhyUFylq3DssOJHpSurZvx669gC7n6OSwu8=;
+	s=arc-20240116; t=1741258928; c=relaxed/simple;
+	bh=97xTs12ZbUzEOHSOJpfpvHRzydUPy50SHjQXmO5DWr0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=KZUrxuZRE3WLupwjrFHT5wUQWH14Rk0HC7PjwEk3EttZMTtIt/2kJHDbL0YGH2Ns0MxVikoxRSKKo0tEsc+HfPDM522Dptk7Mf5XicFrFEDIeozqigNjTiT6+vToawlX4N3J3QeOa/T+Ke5uQMxALdYi2kkkWUvrex9gmWD2lp8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NIfbUPU4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=Da1/iHwIo8APZpn6bCMV1ZvBepGeCmdF4WEsaMjs3UiZfC4i7DaCuGj1DBr+5GLOIZZcxtuTRBJoSzSbtyUsUbffBhu/jzYh3O3eZqayiCnnKbYeU8+CSSzRkzAW4dpUv672aLjLUKlBNkh7/uLH53zzkhc0huIcMf7W58mGR0I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=s65E02fN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NIfbUPU4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2D458C4CEE2;
-	Thu,  6 Mar 2025 11:02:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="s65E02fN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D107DC4CEE0;
+	Thu,  6 Mar 2025 11:02:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741258926;
-	bh=nG64M2SPPhyUFylq3DssOJHpSurZvx669gC7n6OSwu8=;
+	s=k20201202; t=1741258927;
+	bh=97xTs12ZbUzEOHSOJpfpvHRzydUPy50SHjQXmO5DWr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NIfbUPU4ReJUUX5c5fJHb2Gp/UT8QVzsRrKtkuW/KDhmG+xgR1jhmL2DPvaGh0uhV
-	 1UF9IZFoJPMSXoFWuwB8l0PWxHh4UC11xxWpaTWWw5u7gXdV3c/YpN3/w+7sSbN1Nj
-	 hSk3YZbN2ptTAVTM7Yw6OOuLvtr6MDHh4+FefI0qpY6fgrOAmeWCsnN7x9iWlw9JRc
-	 /Cl2ZNunOZwsLy7v6eNQfFQ6ciLOZppcBu77u/79gBSWR/zqp/pS3Fol3RKXWAue85
-	 XB9mvT0qrGOp+R5+Qn4/h+ZzX50YiWbf+O9JnoMfqv+/Y+6uohvjTyTGsvetuIHH/A
-	 H8II3Jfv2vLrg==
+	b=s65E02fNns0drj3Rga38lC1MhRFYkjGXK1aEys1iRiXCaYOGCb4KhJpLhjtXKv0Q3
+	 1l8MEVqG51TNqOt48TjC/w16mazeTcirbULfnFWrycuSgXNF9isb+gjGehvBwBVEVZ
+	 W4og7mN6jQP1Gx6YyJXgtfBn91qEiEewh98XmNar0UXCTlrDT5/qvCwS8E7CvqgdM3
+	 +/HAtasTe0Yuno27WbMN4HUiOTIF74F3aCrqheIaH8Y7nxe+VJqGtXtDgE1Cje8xf7
+	 qEatGuBPCKX+5S2zIljeIp967ELpUhKYunIpG92DB8w5cVC6yvuQ+6GL5Yifv9/tzj
+	 M8u14LEcjs32Q==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v10 08/12] mptcp: pm: validate mandatory ops
-Date: Thu,  6 Mar 2025 19:01:43 +0800
-Message-ID: <40c12b3865d03d2a173d10538ea38f3b2c9745ca.1741258415.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v10 09/12] mptcp: sysctl: map path_manager to pm_type
+Date: Thu,  6 Mar 2025 19:01:44 +0800
+Message-ID: <a38a4f3b6cc2ac7082401a22bc33eb0d844f0b37.1741258415.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1741258415.git.tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
@@ -45,58 +45,52 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch adds a helper mptcp_pm_validate() to check whether required
-ops are defined. It will be invoked in .validate of struct bpf_struct_ops.
+This patch maps the newly added path manager sysctl "path_manager"
+to the old one "pm_type".
 
-Currently mandatory ops of mptcp_pm_ops are get_local_id and get_priority.
+	path_manager   pm_type
+
+	"kernel"    -> MPTCP_PM_TYPE_KERNEL
+	"userspace" -> MPTCP_PM_TYPE_USERSPACE
+	others      -> __MPTCP_PM_TYPE_NR
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c       | 16 ++++++++++++++++
- net/mptcp/protocol.h |  1 +
- 2 files changed, 17 insertions(+)
+ net/mptcp/ctrl.c | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 29bc903658f7..5d666b0891b3 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -1045,8 +1045,24 @@ struct mptcp_pm_ops *mptcp_pm_find(const char *name)
- 	return NULL;
- }
- 
-+int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops)
-+{
-+	if (!pm_ops->get_local_id || !pm_ops->get_priority) {
-+		pr_err("%s does not implement required ops\n", pm_ops->name);
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
- int mptcp_pm_register(struct mptcp_pm_ops *pm_ops)
+diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
+index 1f405be6bc00..6a35e6bb0a63 100644
+--- a/net/mptcp/ctrl.c
++++ b/net/mptcp/ctrl.c
+@@ -200,6 +200,9 @@ static int mptcp_set_path_manager(char *path_manager, const char *name)
+ static int proc_path_manager(const struct ctl_table *ctl, int write,
+ 			     void *buffer, size_t *lenp, loff_t *ppos)
  {
-+	int ret;
-+
-+	ret = mptcp_pm_validate(pm_ops);
-+	if (ret)
-+		return ret;
-+
- 	spin_lock(&mptcp_pm_list_lock);
- 	if (mptcp_pm_find(pm_ops->name)) {
- 		spin_unlock(&mptcp_pm_list_lock);
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index d26e89d960a1..1ce6c22cb295 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1059,6 +1059,7 @@ extern struct mptcp_pm_ops mptcp_pm_kernel;
- struct mptcp_pm_ops *mptcp_pm_find(const char *name);
- int mptcp_pm_register(struct mptcp_pm_ops *pm_ops);
- void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops);
-+int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops);
++	struct mptcp_pernet *pernet = container_of(ctl->data,
++						   struct mptcp_pernet,
++						   path_manager);
+ 	char (*path_manager)[MPTCP_PM_NAME_MAX] = ctl->data;
+ 	char pm_name[MPTCP_PM_NAME_MAX];
+ 	const struct ctl_table tbl = {
+@@ -211,8 +214,16 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
+ 	strscpy(pm_name, *path_manager, MPTCP_PM_NAME_MAX);
  
- void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk);
+ 	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
+-	if (write && ret == 0)
++	if (write && ret == 0) {
++		u8 pm_type = __MPTCP_PM_TYPE_NR;
++
++		if (strncmp(pm_name, "kernel", MPTCP_PM_NAME_MAX) == 0)
++			pm_type = MPTCP_PM_TYPE_KERNEL;
++		else if (strncmp(pm_name, "userspace", MPTCP_PM_NAME_MAX) == 0)
++			pm_type = MPTCP_PM_TYPE_USERSPACE;
++		pernet->pm_type = pm_type;
+ 		ret = mptcp_set_path_manager(*path_manager, pm_name);
++	}
  
+ 	return ret;
+ }
 -- 
 2.43.0
 
