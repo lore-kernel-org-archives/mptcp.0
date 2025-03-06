@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58162208989;
-	Thu,  6 Mar 2025 11:20:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CAB0019C540
+	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 11:27:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741260035; cv=none; b=ClHb5QH3GTVJ8OyWeSXnPWRrm8v9YWlRiHbGemu+d7Yso7la8fk0NOIi6x/5aSjaOHbWYVRhs3XMrF6nqV0crnMZa6F6vNE0iuwkiph2TxT3USKRhtnQZMSwLHnXIbd0/7NOizVIoYAbX3O8zsbMKMiCMLB+PXvDeysQV8TGPmE=
+	t=1741260431; cv=none; b=deK9lZS21Q1DVvfUX24u8Wxnk6ZnLoLZF6U3nwLhgJ/nQrDY5KtDRJ2wGg9KUG2+9McXhbypRhCGNS2uvMRU1eG5qf9o9YOGcCGw0uP4Y0wJiIeUn9WdE88aR2fVJhP+lomto7NLMY0t0iqDZVo/OWQTG7DOfPS0PL5A6aWxr/I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741260035; c=relaxed/simple;
-	bh=/4FnzVillueFxVw5MMdU7a9zHKH1+gMQRj5ALkK7Iwg=;
+	s=arc-20240116; t=1741260431; c=relaxed/simple;
+	bh=xetbxY+KQOnYFkLDU4HzcJKTeZmsGEHkCISwtJFuudQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=tcf4c7CsGGEkenJ7ALk5ZjJNNUqx7p6vShIyGq/+A/gUG2oGGJrp/T3UiRLAx8w7onhmoHTfn9AbWfWWLJSsF7WRdWNn4PX8XszwPOWp4SL8wOvxWy4V3tYvIkbbqZWHXI9jJ+LsosWh49/v66GzhIz+Y9NMAivKkC4jHK1+cA0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kCU8KJ+6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Gs6mF7wsqqWjKIxBApTXavUkSKIhlnL7qFLndnm8GWGx9LwYoL7bh/KoGcHU87Nx3sSyF8HRFrceUNR8HwAmO3fZv0zNAeru3c3jgU/wlOgLGIugBY4WRMMpp7BSErDr8/AnYSTWihYVlEZxBeu1SMeoWYUno5DwwUQH8s9EDQQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FV6rCAuW; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kCU8KJ+6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A3991C4CEE0;
-	Thu,  6 Mar 2025 11:20:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FV6rCAuW"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 435A6C4CEE0;
+	Thu,  6 Mar 2025 11:27:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741260035;
-	bh=/4FnzVillueFxVw5MMdU7a9zHKH1+gMQRj5ALkK7Iwg=;
+	s=k20201202; t=1741260431;
+	bh=xetbxY+KQOnYFkLDU4HzcJKTeZmsGEHkCISwtJFuudQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=kCU8KJ+6yCdt4JOVkkhZ2+UeO51IUo+aKDJzC6/AQ11AA720ifuT4KcTwWLGNPYMf
-	 mSVQIVk1A10xf7P4RZdJlWD0w17ZjOIeaenPfb96vAnmUrCT4mA1rIT8Hx0uPkw8Jh
-	 dnugb5bmRiy/roejzzvN7QFqolmWZpK7JzGkbaboJQ1x+abiYtr1mzs21ywUFs5YaZ
-	 j+CKJ8S4IC7nFNjZLUnFhW+8d5pSyKFm4RRY7Eak760g/GomurjuS306/urh0QaB4E
-	 TItcnLvsSGEnCikf983XdWkOHI+3sB8R9721nw9Vs7yaLWjPV7v6fzUQDNtLZpBufF
-	 ZqpcDJGxxpLHg==
-Message-ID: <58d604b3-760f-449d-95b4-c56d8b9da400@kernel.org>
-Date: Thu, 6 Mar 2025 12:20:29 +0100
+	b=FV6rCAuWe9umFEgmJo/vXtoOwNBrs/hVDrwH8DrsaOruQY2ZPswof0G7VLwgHX4e/
+	 GkeQS4L+a5UmnRqAA8LL2hJBAi2RoIrbNyDlAlg4Q/XnBiUWROsRVuydFRO/Xi9dhG
+	 Z95pbHhv+vMZKi66X+h4DEbcQrcDlJdAJtgfhyUNN2hVv8YaT7ElO675wvMNCu8qlI
+	 xspdPPAnaY/LIwNk/EfPo5Rx68zIFw3OQSkj6iLHijp9n6ZaYn4F/rne02JxWInshi
+	 nnzRYrR5KGh0cgQCpFYZTBA+zyR4P3vl5TwcdV5HyBXFU/jlKpbMyREybrO1MD2LH3
+	 TEZm9HdjJVXPA==
+Message-ID: <9af637f6-e76a-4442-b596-7578535415ac@kernel.org>
+Date: Thu, 6 Mar 2025 12:27:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,23 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net-next] tcp: clamp window like before the cleanup
+Subject: Re: [PATCH mptcp-next v8 06/12] mptcp: pm: in-kernel: register
+ mptcp_pm_kernel
 Content-Language: en-GB
-To: Eric Dumazet <edumazet@google.com>
-Cc: Jason Xing <kerneljasonxing@gmail.com>, mptcp@lists.linux.dev,
- Neal Cardwell <ncardwell@google.com>, Kuniyuki Iwashima <kuniyu@amazon.com>,
- "David S. Miller" <davem@davemloft.net>, David Ahern <dsahern@kernel.org>,
- Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
- Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org
-References: <20250305-net-next-fix-tcp-win-clamp-v1-1-12afb705d34e@kernel.org>
- <CAL+tcoAqZmeV0-4rjH-EPmhBBaS=ZSwgcXhU8ZsBCr_aXS3Lqw@mail.gmail.com>
- <CANn89iLqgi5byZd+Si7jTdg7zrLNn13ejWAQjMRurvrQPeg3zg@mail.gmail.com>
- <281edb3a-4679-4c75-9192-a5f0ef6952ea@kernel.org>
- <CANn89iKVsDrL9YFx883wTfRSAe6tOR7x2U5zk=TcgHBMr+VtkQ@mail.gmail.com>
- <a3266974-d561-4e8f-a23a-9c0774ee2bbe@kernel.org>
- <CANn89iJ4DyC8OSEA2Qn3WhWHAUr9Bpo_ZmJdcx3ofM-qKvEU=g@mail.gmail.com>
- <CANn89iJ2S+mCs8PxZ-EBAfH--j6v9cUazCc8O4FWvMat=_yURQ@mail.gmail.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1741088339.git.tanggeliang@kylinos.cn>
+ <818c00e2242d2f76604c6d70176ab6fa94d7eaa5.1741088339.git.tanggeliang@kylinos.cn>
+ <02398941-0bb7-4156-a286-536db728c411@kernel.org>
+ <ffbd74d2b796ea8f17d7f432cb6dc092ab7e9b27.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -97,37 +89,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <CANn89iJ2S+mCs8PxZ-EBAfH--j6v9cUazCc8O4FWvMat=_yURQ@mail.gmail.com>
+In-Reply-To: <ffbd74d2b796ea8f17d7f432cb6dc092ab7e9b27.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Eric,
+Hi Geliang,
 
-On 06/03/2025 12:08, Eric Dumazet wrote:
-> On Thu, Mar 6, 2025 at 11:16 AM Eric Dumazet <edumazet@google.com> wrote:
->> On Thu, Mar 6, 2025 at 11:12 AM Matthieu Baerts <matttbe@kernel.org> wrote:
->>> On 06/03/2025 11:02, Eric Dumazet wrote:
+Thank you for the reply!
+
+On 06/03/2025 12:09, Geliang Tang wrote:
+> On Wed, 2025-03-05 at 12:51 +0100, Matthieu Baerts wrote:
+>> On 04/03/2025 12:40, Geliang Tang wrote:
 
 (...)
 
->>>> I am wondering if this could hide an issue in MPTCP ?
->>> Indeed, I was wondering the same thing. I didn't see anything obvious
->>> when looking at this issue. The behaviours around the window clamping,
->>> with MPTCP single flow, and "plain" TCP were quite similar I think.
+>> When looking at this, I can understand that we don't want to
+>> unregister
+>> built-in modules and the default one, but:
 >>
->> OK, let me run mptcp tests just in case I see something dubious.
+>> - When are we going to that? mptcp_pm_unregister() is still unused in
+>> this series.
 > 
-> I have no idea why only MPTCP flows can trigger the condition, I do
-> not think it matters anyway.
+> mptcp_pm_unregister is not used in this set, but will be invoked
+> in .unreg of struct bpf_struct_ops.
 
-Thank you for having looked! Did you manage to trigger this condition
-with "plain" TCP (without MPTCP) when using "./mptcp_connect.sh -tt"?
-
-The TCP only connections will be printed like this:
-
-  nsX TCP   -> nsY (<IP>:<port>) TCP
-
-But yes, it probably doesn't matter.
+OK, that's clearer. So mptcp_pm_unregister() will only be called for the
+BPF PM, and then not with the kernel/userspace PMs.
 
 Cheers,
 Matt
