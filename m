@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 43152224FA
-	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 08:38:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E7732207A04
+	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 08:41:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741250320; cv=none; b=QTgDtuF2D6sMUUQDa3uaQn8c7oBn3GgTu/U8eq2HDhayo4V4lW5cNB1dIH+kKyQjyZJRiA6Y5Xnr2bA+cdPWjYoFXX9IP1dFPLwgLmYp5Lu/RuqkLek/BQb24TW9DYtLGMV5KhCGnO/mU5ZOD3FEX8y2TKbrsNsAKEA5dbgMZ+I=
+	t=1741250498; cv=none; b=fXIyPufCbA0EUv3m5AqyiCc9Ip3SNRpd9K2bH7avFB9dpphgB+wHvX/rm5ccgnAkW/26/uS++KzJ17dRt2lr0uI3cpQpOsYFake/G7QTWBwSXKWetlR978l10r0RBrfRNTrhbQbmshbvUBvaxAm53gJ2p8joREcrYQJ061m7c4M=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741250320; c=relaxed/simple;
-	bh=nmZZbkr+hBr+R5e9pxBuLL6MquB6zfj3+srIkuuljEE=;
+	s=arc-20240116; t=1741250498; c=relaxed/simple;
+	bh=B9SdIvqR/UZtLNwlGgWXdrwb7rCQo75mjgoj2bG/hyI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U7X2AALjjOdK4OXtO54sTLA8y8r5S56Jd1FJETMXnHfWbAtPja1acSsDr0lPz9/8jXgrdpfe+BqY6PQ545r/JEzEQbKZDVQABA88EPiWCg1Tj3Xx9ZAlrq20x/0XIxZDTXjoE2bTnh4BWIc9c1ae1cmFRelloWJ44/UryVnX1KA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i96qDCMV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=B1q/3JXyoZedL2cttomZpO5XLg0lZA3HTE9jAJJVw+AJXLiByWZtR/XPBcDu6tbHB+qf9EJDEMgw0x0HULi+8ulM25cOeeDTf4dYzTTUblIkEtRkv3ucZ4q+jhd8IBzDlb9sDHsuywXJer3v3AW+Eh98SqKEK5EndEczgyQJilo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=c5DwXPu2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i96qDCMV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C2BC1C4CEE0;
-	Thu,  6 Mar 2025 08:38:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="c5DwXPu2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93E68C4CEE2;
+	Thu,  6 Mar 2025 08:41:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741250319;
-	bh=nmZZbkr+hBr+R5e9pxBuLL6MquB6zfj3+srIkuuljEE=;
+	s=k20201202; t=1741250497;
+	bh=B9SdIvqR/UZtLNwlGgWXdrwb7rCQo75mjgoj2bG/hyI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=i96qDCMVeGFhGTA2ZgKv1M5aJoQvuV9UAIGT1Id9IdSsaNVB/BWebIBsB/V1XDExD
-	 CI+skjGwIUeornFWcJo643K2PVKbz5V9xGCW/q5PvMRHNDsKHF6YReYyA+3y2WnFlI
-	 i9R1ji/WNd+/ZR0izGDgO5HKnCwg/mqmDzYhnRuD7Pvj7D1H6VUZoW8g6SbOs21Atm
-	 C6EiKU7DEM/zsPmK83dCCsp7eSLxYyWIkQGmBV1I/1+SMV6aWy1mHTCAERl7BjRIzr
-	 PZ17lDlkEJHZg5Qug6J/BAbW4orUAzb/cXc/PQWD/bsWd0/fAoCjkOsK89nT/07xMl
-	 wRioZZBpFEJuw==
-Message-ID: <46fd9f11-eea0-4a14-abc9-66af712b0b87@kernel.org>
-Date: Thu, 6 Mar 2025 09:38:35 +0100
+	b=c5DwXPu2BkOAMfuYX1ub7SG0W3Jm6/IOwRg5MLjhsyA55Maz8XTMbc2pMYraygrme
+	 /FJPoMRpLSf6T/Biq4IfQdQDlmTMaftDtLZwbIe387pofq5PVBmvGJMIO9i+tUbj+i
+	 /s0/enf+ART9wZsdYTq4HoUdojMeZLEWURk0dYYfroWaD7TgslwvGPIlUQ0vNudVM3
+	 0gqP+zoJ0rA+nZpHDLHYStA6kr/M5Vup9WVY9Ut3vvPp9X3t806aPPiXN2kRFe3RpF
+	 meiuqX4FCxQL0C+fQ7kcAq9DaLY06dlqkKP3RVHX6tEjjiqpjqcnUFSzAAIzt0fndV
+	 xc5st7G1srSvQ==
+Message-ID: <1d368f2b-56c2-4ea4-a1df-3ab66d3318e1@kernel.org>
+Date: Thu, 6 Mar 2025 09:41:34 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 0/5] Squash to "Add mptcp_subflow bpf_iter
- support"
+Subject: Re: [PATCH mptcp-next v2 0/2] tcp: ulp: diag: remove net admin
+ restriction
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740368110.git.tanggeliang@kylinos.cn>
- <e6f4c2e46d6089e4b76fe8a0e8b83557ddfd53de.camel@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Davide Caratti <dcaratti@redhat.com>, Mat Martineau <martineau@kernel.org>
+References: <20250305-mptcp-tcp-ulp-diag-cap-v2-0-d53fd80748eb@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,59 +86,37 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e6f4c2e46d6089e4b76fe8a0e8b83557ddfd53de.camel@kernel.org>
+In-Reply-To: <20250305-mptcp-tcp-ulp-diag-cap-v2-0-d53fd80748eb@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 06/03/2025 02:50, Geliang Tang wrote:
-> Hi Matt,
+On 05/03/2025 19:34, Matthieu Baerts (NGI0) wrote:
+> Since its introduction in commit 61723b393292 ("tcp: ulp: add functions
+> to dump ulp-specific information"), the ULP diag info have been exported
+> only if the requester had CAP_NET_ADMIN.
 > 
-> On Mon, 2025-02-24 at 11:37 +0800, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> v4:
->>  - drop sock_owned_by_user_nocheck and spin_is_locked. According to
->>    comments from Mat and Martin, in this set mptcp_subflow
->>    bpf_iter only used from a cg sockopt bpf prog, no need to add
->> these
->>    check at this moment.
->>
->> v3:
->>  - patch 3, continue to use sock_owned_by_user_nocheck() and
->> spin_is_locked()
->> checks instead of using msk_owned_by_me().
->>  - patch 5, drop declaration of bpf_mptcp_subflow_tcp_sock. It's no
->> longer
->> used.
->>  - patch 5, update the comment for mptcp_subflow_tcp_sock(), which is
->> a BPF
->> helper, not a kfunc.
->>
->> The commit log of "bpf: Register mptcp common kfunc set" doesn't
->> match the
->> code, please update it as:
->>
->> '''
->> bpf: Register mptcp common kfunc set
->>
->> MPTCP helper mptcp_subflow_ctx() is used to convert struct sock to
->> struct mptcp_subflow_context. It will be used in MPTCP BPF programs.
->>
->> This patch defines corresponding wrapper of this helper, and put it
->> into the newly defined mptcp common kfunc set and register this set
->> with the flag BPF_PROG_TYPE_CGROUP_SOCKOPT to let it accessible to
->> the 'cgroup/getsockopt' type of BPF programs.
->> '''
+> Not everything is sensitive, and some info can be exported to all users
+> in order to ease the debugging from the userspace side without requiring
+> additional capabilities.
 > 
-> Thanks for applying this set. Please update this commit log too.
+> First, the ULP name can be easily exported. Then more depending on each
+> layer.
 
-Done. The modification will be visible soon:
+Thank you for the review!
+
+Now in our tree (feat. for net-next):
 
 New patches for t/upstream:
-- 061566ebfca8: tg:msg: adapt 'bpf: Register mptcp common kfunc set'
-- Results: 6c4b1c674680..ccf37aa90567 (export)
+- 6040da37f014: tcp: ulp: diag: always print the name if any
+- 61da849b8936: tcp: ulp: diag: more info without CAP_NET_ADMIN
+- Results: ccf37aa90567..8d69c228371f (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c396630c43dca77f3d618bf9a46ac4040901c4aa/checks
 
 Cheers,
 Matt
