@@ -1,127 +1,79 @@
-Received: from mail-qk1-f171.google.com (mail-qk1-f171.google.com [209.85.222.171])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27D5E1FC7FF
-	for <mptcp@lists.linux.dev>; Thu,  6 Mar 2025 12:05:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7DF5827F4C0;
+	Thu,  6 Mar 2025 23:40:06 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741262722; cv=none; b=J/RRyOTOKKmtIXYjANwVd3Pb+DtLzHl//QdG6h7jy8inxyYHFvnrICCWnd77sPlKZjanusYHbx+JRWrodAFsX4R0LWkHQ3OW16Xy5pmtzsvOPV8EI2YEUg3it9OPZrKEcxydAFGlBIka0uFm6xpv7k2Sl+pXXPzoSLAErHOrYtA=
+	t=1741304406; cv=none; b=MRZfbDHIb1To7BYIa/Ett7wrnly/kmvn4IaWyArKHINeG43h0KtMW4L0/ApkgDVH+qJ3b39dvaHhBfJaX4gBssurYuwgAPpQ8mXRbCoCwvKSTzNTqA5p+mTwBT5u6OGXJ90FSNtO62fK7H2p2NKFwCtl86fLbtOZzhebdlQhbFU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741262722; c=relaxed/simple;
-	bh=PJjw/OVW084LTuTprysXVk3Dj1HIWnQAzn6UWtnHw/o=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=J3fmcchlRUedm2JB+z8Fqo9OwtjmSw/KQrUZfnCP6PF0O//8IF8USACJz2uYkMwb8H3ICtwigFiZa29/QwzvsPi6TKj2Fv4lNZ6hrOhgW4EBd5hjStYMzRPLwTo6ggx63QK6Pji7fimDC2oD4aucriK7wGPSWWMIDK9vCWmvmqM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=D0+6DP2w; arc=none smtp.client-ip=209.85.222.171
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741304406; c=relaxed/simple;
+	bh=W+oqHt95+2TtTv6AjpAQ30OPLNFmFUSbnwvRFo1Hios=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=o/7g+M9N70Sl1R1ykr8LTfo+EABKIDZdjCMF42DKJ+/jWRgL/tfAcZFhNIRvfhR1eAdHkpvjdFC7cYBa/JFUx8L5KItMGeO2nHDvvwo8OjEU7wEeiRuzgeO9jRgL2lvwhQeSf/wkHbhuAf2wPEmUriWN3K+Vq3e1pL6YlQynUQk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GkwaRcsC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D0+6DP2w"
-Received: by mail-qk1-f171.google.com with SMTP id af79cd13be357-7c3b4c4b409so89566885a.3
-        for <mptcp@lists.linux.dev>; Thu, 06 Mar 2025 04:05:20 -0800 (PST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741262720; x=1741867520; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=4eC7itKlI484jvN5koO0EvXmjKGYD8N3TdX984jaFfo=;
-        b=D0+6DP2wluMocrsn8w/B3qfcG4H6Z3latDowzEO1ZGz4a5WNDuXYznUaSc8d/Vq2Ll
-         KMBZM8j4avxwmkQx10KzLGU8yJDF0kECkHT7I3Yiol6LoBLpgyL3dJ18AhRDqCje7wiU
-         Sdb/To6r14rZC5k6C/EcNe+CLHbv2gKsbS4BN2gg1GPeiV0EJp3OLHkuHHHqA2F8pf4f
-         onQK31F9NrSBrwSpp4SH16LUHaeUTwAMswWx3+4yZqRK+ZWnmTBTCHfHnL1wBEBrPpqz
-         47AiwWDh7IpOuHpK4fA0oR2TMdkKZE+D1RTyaIN/B63wClSu3mbPzrRB8rNw/3SYb0Ar
-         L5zA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741262720; x=1741867520;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=4eC7itKlI484jvN5koO0EvXmjKGYD8N3TdX984jaFfo=;
-        b=NuIC5uxTsh6QwXnfYzHzVhVAyIuOPfGgiJE+NVIBv34MmcXTuDA0gUQapylnmv4MEX
-         NouHSaiCCAVx3nmtlVTgauypuIEnj9xfuiJTVEH5iS04l/wDJBOLA6A8O9bogzcy7rW7
-         FQrIa8PnusPVAIAfCMfq43NX4B3jFnkHnKNZrHC12PAWMxr43XyzDCK5mW91nTP6/szZ
-         Y+AWr2QjCvbqEPCDsDPB66DzrU0zipbtZkl2Vg1/xVYH8XteVXmWrz+fU+NR2gPFGFfF
-         Y6WAi32O/rtSzfQqTug97SGgEb9tNBK80XrSJrNT/qKtDRWBl/QWY56xiJIV3PUBtUXW
-         Jvnw==
-X-Gm-Message-State: AOJu0Yy1lMEafcL3xSPhMXDndtDypGxNfvjgfI0A95qwJLDimGPDgl74
-	D/qaehHv3DJZeli68wQZJz3EjMLlmX+GAmFlDdrPbtpyy32alQ6PRzEW
-X-Gm-Gg: ASbGnctsECDBBbilutAG1tq1L7b05i7z9e1gou1wWA58vg7fX38j2g+7b2WzjW9zitL
-	CaGt3avGqm5HBb1bKIskScjhHlbvgqgN7BUOGGmLTRV9niRwlsm9SY5MNYvG8aMULddsNIskwtx
-	TearUXHIqYp2e5niFceBrhkwz3Y7P+/UNgV0KuPDvt1e5BSOY54VkCZDm9+5827U9Hiyizc19hY
-	YTGOyWq12kMjnTMenevVCqlOlgxJflhYV3kuw1oG46O6zPDKhA7Eseau6JpKUWW3I8h5nza7MID
-	OmY+2bJnoEmglG3W7YoQI1GW0Hf23tomk9IfRE2so0BU9lPRUF2fsLkX
-X-Google-Smtp-Source: AGHT+IEWk1AF/uyomLLkMKAHkhKMPpyK+8OPFO4D2xoprzaEYY2VKJw4DyTQ6FK70EuWD6raU/KCYg==
-X-Received: by 2002:a05:620a:6891:b0:7c3:d63d:7bd4 with SMTP id af79cd13be357-7c3d8eb146emr944358085a.42.1741262719783;
-        Thu, 06 Mar 2025 04:05:19 -0800 (PST)
-Received: from [127.0.0.1] ([20.57.47.207])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c3e533e6c8sm84439885a.24.2025.03.06.04.05.18
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 06 Mar 2025 04:05:18 -0800 (PST)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1741258415.git.tanggeliang@kylinos.cn>
-References: <cover.1741258415.git.tanggeliang@kylinos.cn>
-Subject: Re: BPF path manager, part 5
-Message-ID: <8d06c42b-1dfa-fec2-d21b-1be4dffda792@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 06 Mar 2025 12:05:18 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GkwaRcsC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D7298C4CEEA;
+	Thu,  6 Mar 2025 23:40:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741304405;
+	bh=W+oqHt95+2TtTv6AjpAQ30OPLNFmFUSbnwvRFo1Hios=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=GkwaRcsC6wpBseXbhgyEheU0UCvy7K5b5AsiuA89fyy9FK6BoSSbNTbdiacSPjpbe
+	 0QtiLZLp60jaka5DF3caXVu2pzIW2KEsS4FEiOQsuIQXSUzhYau6gfDY4rqxhYcF/d
+	 3UliTyTmxaBdBF0r471n0RcL7hUAWUtv30RqAFXmG/+VfpNkYup+Gr1t5LUTBA9tWG
+	 vuqOvBExXYJbWTJzKp9LbTeJx2NtXEHpi6YCFw4B1DxskiEvkwrGTC713TJjcDEa4s
+	 LmQRn4/VDJCXKfQdVkhM2xohkR7cGMgLNK6gF4vgn6GdXgg5qP0ElLvjZ1DDBiMLwl
+	 GiOk5BcxfJJZQ==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 7110A380CFF6;
+	Thu,  6 Mar 2025 23:40:40 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next] tcp: clamp window like before the cleanup
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174130443900.1819102.16980549477458193974.git-patchwork-notify@kernel.org>
+Date: Thu, 06 Mar 2025 23:40:39 +0000
+References: <20250305-net-next-fix-tcp-win-clamp-v1-1-12afb705d34e@kernel.org>
+In-Reply-To: <20250305-net-next-fix-tcp-win-clamp-v1-1-12afb705d34e@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, edumazet@google.com, ncardwell@google.com,
+ kuniyu@amazon.com, davem@davemloft.net, dsahern@kernel.org, kuba@kernel.org,
+ pabeni@redhat.com, horms@kernel.org, kerneljasonxing@gmail.com,
+ netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 
-Hi Geliang,
+Hello:
 
-Thank you for your modifications, that's great!
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Wed, 05 Mar 2025 15:49:48 +0100 you wrote:
+> A recent cleanup changed the behaviour of tcp_set_window_clamp(). This
+> looks unintentional, and affects MPTCP selftests, e.g. some tests
+> re-establishing a connection after a disconnect are now unstable.
+> 
+> Before the cleanup, this operation was done:
+> 
+>   new_rcv_ssthresh = min(tp->rcv_wnd, new_window_clamp);
+>   tp->rcv_ssthresh = max(new_rcv_ssthresh, tp->rcv_ssthresh);
+> 
+> [...]
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13697375040
+Here is the summary with links:
+  - [net-next] tcp: clamp window like before the cleanup
+    https://git.kernel.org/netdev/net-next/c/8e0e8bef4841
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b2ea54bb5a22
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D940967
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
