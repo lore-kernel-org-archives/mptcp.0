@@ -1,42 +1,42 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B82456B81
-	for <mptcp@lists.linux.dev>; Fri,  7 Mar 2025 03:54:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0AFC916A95B
+	for <mptcp@lists.linux.dev>; Fri,  7 Mar 2025 03:54:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741319652; cv=none; b=ovOSndTP6Y+z0X4b8m3xy/jYJhkcX/W2WJiTgio1O+gHfT5i6d9yMXd75hzHjtGZ+Z9dN9wdOVMYdebcNoldSxREzUAevejsbsB2+KKUZHyJ4pD+yZI/VD7RRZP/xi2vw+rQFhri+X+xUkDAp/oxD9dY1O6vg/aTN7I7NDDofRw=
+	t=1741319688; cv=none; b=BAXnyXXOTThvSb4kfF2usdHqeVUmOGt7hFXQ4A33SmJ6Ew0ymQt1oqEAnB15Iluus78KgX9y5VcZ5qtqOk7hk/Kn1dHA0faVnb1q/Q9N3T2DlsQ4GHNWmSBPC528XguTZxejvOvUjpsLoWeUfNU63cizgJMlCplqXr/O6JQDy3Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741319652; c=relaxed/simple;
-	bh=MMrXTXDSii7GtOH9KGxm3gYO2JlDAtgQkBnFGF9nel0=;
+	s=arc-20240116; t=1741319688; c=relaxed/simple;
+	bh=sanWIQfn/liNuBP+tzdXV7CW5jSf6THXePn2lMlxa70=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=jN2ebKaMMh4JzxDrldyqwuaVaFk23O2LPmhAsWqJy/khbFFzyUKqpZwhUJ6PsAcJNNyDe/OwYMrNgUMqekPwcsFBegJphCrR16h6dZa9Jp3lADlVIW6ppq74hoC7KR2k6HKZimDNkJ6G2RfaXFYbrGomvuZCtx1ndR5pHbjSPx0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=HsSB4/QQ; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=HvR9fIkgHeqJ7hR068VHJ0kp+aNLNU6sJi/4/VT7XcSEH1Jtjs34og5HUB4JCKm/imltY4hPxs+ZyHBy92ZadtrWqK09asMdOQe3Ap/3z3ktmPEEUBf7cNGrZdOy8JNkolTeQAfktfmMKiq+AOOGp+ffK/f3tAghU3GQnc7OXog=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YNT6g+7q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="HsSB4/QQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EDC16C4CEE2;
-	Fri,  7 Mar 2025 03:54:10 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YNT6g+7q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60520C4CEE9;
+	Fri,  7 Mar 2025 03:54:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741319652;
-	bh=MMrXTXDSii7GtOH9KGxm3gYO2JlDAtgQkBnFGF9nel0=;
+	s=k20201202; t=1741319687;
+	bh=sanWIQfn/liNuBP+tzdXV7CW5jSf6THXePn2lMlxa70=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=HsSB4/QQwp1e5WwTi2fsDe6LpWm3reTkIU6F1WheLRTfNBpKJwdBj/1oESgO5rOyM
-	 vmYZDR0F+8y353YxS/28O13jbefaOYMC5v5HqA48Ioy9hdnHCYUZeNR3XrvqNQ7mcG
-	 xfpabdF9IV1eAau9Mabl4Pcsg9xh+S21R6u76rTE1eoNKOluXwkF8RdneeKPTVJVCk
-	 Py/ey/NPNA6P+7r9w41STtdlhBzVMBmr5Tov2Brqz9vGEpY9aUYE0gaIfEd3Uc+oVv
-	 zWd1ZrdJ2Bnxm1ooUPvtRyBAx/IzoA7XNu+59aFolw9KrHFQUk49m+5RWF5s6lIfeT
-	 1zhzMHu0k+2iw==
-Message-ID: <b421949c3a5f111ad34d07f552be73c9f1388b9f.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v5 3/5] Squash to "bpf: Add mptcp_subflow
- bpf_iter"
+	b=YNT6g+7qRAoDIq36uj9+rdDVogY8/wUaS3D7Ed/mVcKJHebqKjA9X7ai97VnC2pWo
+	 isEm00Dtqbp9eb78tdUlDIN/bi4+uKdGE/yg7cCXWRHD8l2myRU+muYHhuKLiByl0A
+	 2Whg2J3w5UIYvhgrqE29DaJdrTuQKKQZZX1FupCuERkmhAA7D/KZ+2dbViuY1Nm+rN
+	 tCv9qgt9rkqXbt409EsY0hdEMXzxueLU/H+c/NWsrcpvlPDVnTDvSuNHwRr1FYCWIk
+	 +1WCWJLcJb4UlntWSdsadwn55jyPn5Su4E4qMmaxw0QtQQA0qFss8AuDfTJtyF8RNj
+	 I2l5z9r1W96RQ==
+Message-ID: <7691b3bbc2cc5e9507a4187877e4cd821a73744b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v5 2/5] Squash to "bpf: Extend
+ bpf_skc_to_mptcp_sock to MPTCP sock"
 From: Geliang Tang <geliang@kernel.org>
 To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 07 Mar 2025 11:54:08 +0800
-In-Reply-To: <c15a5390-a721-0d65-9b00-e9d1d02367de@kernel.org>
+Date: Fri, 07 Mar 2025 11:54:39 +0800
+In-Reply-To: <b45a0591-597a-46cf-7315-cf4dce7dbd7a@kernel.org>
 References: <cover.1740997925.git.tanggeliang@kylinos.cn>
-	 <f8d59dcb8391483787f832ddb43035846055aafb.1740997925.git.tanggeliang@kylinos.cn>
-	 <c15a5390-a721-0d65-9b00-e9d1d02367de@kernel.org>
+	 <c43f5e1fe8da4db01749ede9d18af1a3a2134fd4.1740997925.git.tanggeliang@kylinos.cn>
+	 <b45a0591-597a-46cf-7315-cf4dce7dbd7a@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -45,121 +45,105 @@ List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
 Thanks for the review.
 
-On Mon, 2025-03-03 at 17:39 -0800, Mat Martineau wrote:
+On Mon, 2025-03-03 at 17:37 -0800, Mat Martineau wrote:
 > On Mon, 3 Mar 2025, Geliang Tang wrote:
 > 
 > > From: Geliang Tang <tanggeliang@kylinos.cn>
 > > 
-> > Drop the NULL check for 'msk' as Martin suggested, add more checks
-> > for 'sk'.
-> > 
-> > Use the "struct sock *sk" instead of "struct mptcp-sock *msk" as
-> > the
-> > argument in the bpf_iter_mptcp_subflow_new as Martin suggested.
-> > 
-> > v5:
-> > - check bpf_iter_task in mptcp_subflow_new()
-> > 
-> > v4:
-> > - drop sock_owned_by_user_nocheck and spin_is_locked. According to
-> >   comments from Mat [2] and Martin [1], in this set mptcp_subflow
-> >   bpf_iter only used from a cg sockopt bpf prog, no need to add
-> > these
-> >   check at this moment.
-> > 
-> > [1]
-> > https://lore.kernel.org/all/fdf0ddbe-e007-4a5f-bbdf-9a144e8fbe35@linux.dev/
-> > [2]
-> > https://patchwork.kernel.org/project/mptcp/patch/f6469225598beecbf0bda12a4c33fafa86c0ff15.1739787744.git.tanggeliang@kylinos.cn/
-> > 
-> > v3:
-> > - continue to use sock_owned_by_user_nocheck and spin_is_locked
-> > checks instead of using msk_owned_by_me().
-> > 
-> > v2:
-> > - check the owner before assigning the msk as Mat suggested.
+> > Set msk->bpf_iter_task in bpf_mptcp_sock_from_sock() to allow
+> > mptcp_subflow bpt_iter can be used in cgroup/getsockopt,
+> > otherwise, the selftest in this set fails.
 > > 
 > > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > > ---
-> > net/mptcp/bpf.c | 21 +++++++++++++++------
-> > 1 file changed, 15 insertions(+), 6 deletions(-)
+> > net/mptcp/bpf.c | 16 ++++++++++++----
+> > 1 file changed, 12 insertions(+), 4 deletions(-)
 > > 
 > > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> > index aff92f458e7f..a307490bb20e 100644
+> > index be222fa5f308..aff92f458e7f 100644
 > > --- a/net/mptcp/bpf.c
 > > +++ b/net/mptcp/bpf.c
-> > @@ -249,24 +249,33 @@ bpf_mptcp_subflow_ctx(const struct sock *sk)
+> > @@ -197,14 +197,22 @@ static struct bpf_struct_ops
+> > bpf_mptcp_sched_ops = {
 > > 
-> > __bpf_kfunc static int
-> > bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
-> > -			   struct mptcp_sock *msk)
-> > +			   struct sock *sk)
+> > struct mptcp_sock *bpf_mptcp_sock_from_sock(struct sock *sk)
 > > {
-> > 	struct bpf_iter_mptcp_subflow_kern *kit = (void *)it;
-> > -	struct sock *sk = (struct sock *)msk;
-> > +	struct task_struct *task;
 > > +	struct mptcp_sock *msk;
+> > +
+> > 	if (unlikely(!sk || !sk_fullsock(sk)))
+> > 		return NULL;
 > > 
-> > 	BUILD_BUG_ON(sizeof(struct bpf_iter_mptcp_subflow_kern) >
-> > 		     sizeof(struct bpf_iter_mptcp_subflow));
-> > 	BUILD_BUG_ON(__alignof__(struct
-> > bpf_iter_mptcp_subflow_kern) !=
-> > 		     __alignof__(struct bpf_iter_mptcp_subflow));
-> > 
-> > -	kit->msk = msk;
-> > -	if (!msk)
-> > +	if (unlikely(!sk || !sk_fullsock(sk)))
-> > 		return -EINVAL;
-> > 
-> > -	if (!sock_owned_by_user_nocheck(sk) &&
-> > -	    !spin_is_locked(&sk->sk_lock.slock))
-> > +	if (sk->sk_protocol != IPPROTO_MPTCP)
-> > 		return -EINVAL;
-> > 
-> > +	msk = mptcp_sk(sk);
-> > +	task = mptcp_get_bpf_iter_task(msk);
-> > +	if (!task || task != current)
-> > +		return -EINVAL;
+> > -	if (sk->sk_protocol == IPPROTO_MPTCP)
+> > -		return mptcp_sk(sk);
+> > +	if (sk->sk_protocol == IPPROTO_MPTCP) {
+> > +		msk = mptcp_sk(sk);
+> > +		mptcp_set_bpf_iter_task(msk);
 > 
 > Hi Geliang -
 > 
-> The task checking logic would fit better inside the helper, since
-> every 
-> caller will be checking to see if it matches 'current'.
-> 
-> I also think it would read better as (task && task == current)
+> The important part of the bpf_iter_task approach is to only set the 
+> task_struct pointer when the msk lock is already held, and to clear
+> it 
+> before the msk lock is released. When used this way, the check
+> ensures 
+> that the iterator code is both *running with the socket locked* and
+> *in 
+> the same context where the lock is held*.
 
-Yes, indeed.
+Got it, thanks for your explanation.
 
 > 
+> The code above will set msk->bpf_iter_task even when the lock is not
+> held, 
+> and then it is never cleared.
 > 
-> > +
-> > +	mptcp_clear_bpf_iter_task(msk);
+> To set/clear as expected for get/setsockopt I think the task pointer
+> would 
+> have to be set in places where the locks are acquired and released,
+> like 
+> these:
 > 
-> This needs to be cleared where the lock is released, not where the
-> task is 
-> checked.
+> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1955
+> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1846
+> 
 
-Yes, indeed, I'll do that in the next version.
+The get/setsockopt scenario is a bit complicated. I think we can use
+the bpf_iter_task check only for bpf schedulers, keep the
+get/setsockopt scenario unchanged, and continue to use the
+msk_owned_by_me(msk) check. What do you think?
+
+In addition, I think it's better to add bpf_iter_task to struct
+mptcp_sched_data instead in struct mptcp_sock, since it's more related
+to mptcp scheduler. For specific usage, please see [1]. What do you
+think of this?
 
 Thanks,
 -Geliang
 
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1739788598.git.tanggeliang@kylinos.cn/
+
 > 
 > - Mat
 > 
-> > +
-> > +	msk_owned_by_me(msk);
-> > +
-> > +	kit->msk = msk;
-> > 	kit->pos = &msk->conn_list;
-> > 	return 0;
+> > +		return msk;
+> > +	}
+> > 
+> > -	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
+> > -		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> > +	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)) {
+> > +		msk = mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+> > +		mptcp_set_bpf_iter_task(msk);
+> > +		return msk;
+> > +	}
+> > 
+> > 	return NULL;
 > > }
 > > -- 
 > > 2.43.0
