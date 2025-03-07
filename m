@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A594619E971
-	for <mptcp@lists.linux.dev>; Fri,  7 Mar 2025 08:48:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1351AF4C1
+	for <mptcp@lists.linux.dev>; Fri,  7 Mar 2025 08:54:01 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337337; cv=none; b=pImV++Lm6FNeuMvdc0ZVLBtpGz3jAq74c6P6yMm1LRnbZFdvXHZt0m0nuGDLUleVCpvq1pL8kx58P4pow0CBTmYddCpPesfG5h/21VkVR0FpbpNjja0SNBqRSapx84MdxQyX+6sQThAUCWzifaW9TmIV2WYDgZO1tTcTPA51XW4=
+	t=1741337642; cv=none; b=DBcjgfM6OgBHiglIeysY/b8QiVmrlHnrNW80K5WJ3gyGT8RxVnTbgQR1oL1VL+9CE6GNsT+TI0SUTeb58oTGIJXfYixvkYUEPOYlG2V/+yuDBBLFtUe3YURj54US/aFi23guLV4jdcDYig+tTexarUJiOk8Xp9VWrAoZw1n6pgI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741337337; c=relaxed/simple;
-	bh=zbU0w1lhJdWLXGbAsxtlkbWqktRVTiCfxmCsMaWTdiQ=;
+	s=arc-20240116; t=1741337642; c=relaxed/simple;
+	bh=bTLqLfcjBRnAQg5oaWwlHVhzQ3CP4FYNpgCRA2BECzk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iKEOpd7ntnmfakNmiRAHwucEnnJu14g1hWx2ke4uT16rzMLUMSzQSECOkcafJnmYh3v3lgRwPMO3j5MR/qtpI0mI/74V0AUcs4nnaz3Re5/yUKonIhdHCAizLkD+v2K/+V2ZVsy9YnCpYutiVXw73EADJ0MgdfBW76GzD2wG56M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VkiH7pFK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Nxeu6PH8tqxtukgPhs3YsrPdZZMSfGaU5ELREdkFYLqZ1eovd14Ifh9I5w194JTrQMWgZubhynRGw5Q9LaMdzMqM26diBqZSrS5BVeR7HbgW3YF02XA9c10LlBfk5TdDNwlaLXYKaRWYu0nc2XbqISxtqOBpVMqZz7jssBijoWA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljC15m+n; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VkiH7pFK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 350CDC4CED1;
-	Fri,  7 Mar 2025 08:48:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljC15m+n"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8FBC4CED1;
+	Fri,  7 Mar 2025 08:54:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741337337;
-	bh=zbU0w1lhJdWLXGbAsxtlkbWqktRVTiCfxmCsMaWTdiQ=;
+	s=k20201202; t=1741337641;
+	bh=bTLqLfcjBRnAQg5oaWwlHVhzQ3CP4FYNpgCRA2BECzk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=VkiH7pFK/dFe1lakz13S9wqN6St46ADW35V6ctC4an/uHFJMhfD33IJEeeaFpMh5b
-	 5XPspmfocr+o558jqCOwl2kVRJAC57TGOMI6/G8y+qxRrT2IYwCwugIb54xYCkzs7V
-	 nWcLCIpMBd2gUZ54tjFnv7oMv5nMhM5eh0aifhBe0a272CmZOhDy5iI0b+ZjAKnh7E
-	 Sse7c+7wa20J3EArTcsSHv6PoPsCp7TIG0LpTE3sfFTPPszHzsLPDTUZwc022gUDTq
-	 K2x2zHGDGtYu+EM5I0rwC7WABltJTNT64nNP+gze1Hd7VJ3bwZLXu7/KDfFAvcVl2J
-	 HhyLiGfdCqm6g==
-Message-ID: <706a3051-8328-4321-8eea-71d4120ea996@kernel.org>
-Date: Fri, 7 Mar 2025 09:48:53 +0100
+	b=ljC15m+noiqmB343o5cwjNJDad1mqcCOIX9a6x63UVOlrIn+eBJYENwuET392W+E0
+	 UN9hWUTW1fVz8956BrAy+92NdwDjNfjTtNudliJEWVBU9adpU2s65Qylt/ZylaJ55n
+	 hf0NY+0ZS2K4ieN2PCvvm5MX2HXSLt9NyhJs5XQ1aiOdLO8TJSjCnAUiLWrNk4x+zL
+	 K0WCM1dFf3MIVmEAJNLxJzWKw0uOudKS17GfmhAaeQms/X3+/WelElvEwSOBTT/Iop
+	 EjSMNapSwj2Ym0JsqsaGwIHXv+dBNJohkXV9BIwCWlqqQWkI3CmMyQL8ye/gvdmIYj
+	 Cdq8njHCfQ1Hw==
+Message-ID: <620b17f1-a5eb-4f9c-b411-92277d8bb3dc@kernel.org>
+Date: Fri, 7 Mar 2025 09:53:58 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
+Subject: Re: [PATCH mptcp-next v5 2/5] Squash to "bpf: Extend
+ bpf_skc_to_mptcp_sock to MPTCP sock"
 Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1739788598.git.tanggeliang@kylinos.cn>
- <ba7822fb-a0cb-4636-89fc-ad1355e4c234@kernel.org>
- <02622736c58386a5d074b5a64af5d76b7f35248d.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1740997925.git.tanggeliang@kylinos.cn>
+ <c43f5e1fe8da4db01749ede9d18af1a3a2134fd4.1740997925.git.tanggeliang@kylinos.cn>
+ <b45a0591-597a-46cf-7315-cf4dce7dbd7a@kernel.org>
+ <7691b3bbc2cc5e9507a4187877e4cd821a73744b.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,115 +89,85 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <02622736c58386a5d074b5a64af5d76b7f35248d.camel@kernel.org>
+In-Reply-To: <7691b3bbc2cc5e9507a4187877e4cd821a73744b.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 07/03/2025 04:08, Geliang Tang wrote:
-> On Wed, 2025-03-05 at 17:14 +0100, Matthieu Baerts wrote:
+On 07/03/2025 04:54, Geliang Tang wrote:
+> On Mon, 2025-03-03 at 17:37 -0800, Mat Martineau wrote:
 
 (...)
 
->> While at it, I added two patches, as a follow-up of b68b106b0f15
->> ("mptcp: sched: reduce size for unused data") instead of patch 8/8:
->> - e74f811b4626: Revert: "mptcp: add sched_data helpers"
->> - Results: a37b7ba9c462..a44778c76bc6 (export)
+>> The code above will set msk->bpf_iter_task even when the lock is not
+>> held, 
+>> and then it is never cleared.
 >>
->> - fe2716bcac00: mptcp: sched: remove mptcp_sched_data
->> - Results: a44778c76bc6..516dcfe47eed (export)
+>> To set/clear as expected for get/setsockopt I think the task pointer
+>> would 
+>> have to be set in places where the locks are acquired and released,
+>> like 
+>> these:
+>>
+>> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1955
+>> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1846
+>>
 > 
-> I think we need to keep mptcp scheduler API unchanged. We can keep
-> struct mptcp_sched_data and mptcp_sched_data_set_contexts helper for
-> future use, as I said in patch 8.
+> The get/setsockopt scenario is a bit complicated. I think we can use
+> the bpf_iter_task check only for bpf schedulers, keep the
+> get/setsockopt scenario unchanged, and continue to use the
+> msk_owned_by_me(msk) check. What do you think?
 
-While this code has not been upstreamed, I think it is important to
-clean what is not being used. If we need to add an extra parameter, we
-will still be able to do so.
+I think in any case, it doesn't hurt to keep msk_owned_by_me(msk) for
+lockdep.
 
-> The bpf_iter_task [1] that I am adding recently can actually use them.
-> 
-> I've been thinking about this recently. It's not a good idea to add
-> bpf_iter_task to struct mptcp_sock. It's better to add it to struct
-> mptcp_sched_data instead since it's more related to mptcp scheduler.
+If we think it is difficult to have the bpf_iter for both CG
+[gs]etsockopt and struct_ops, then we can also drop the patches for the
+[gs]etsockopt.
 
-Why is it not a good idea to add it to the msk? Will you not check it
-from bpf_iter kfunc where you have access to the msk, but not the data?
-Also, will you not need such check also for the BPF PM, so it will not
-be only dedicated to the scheduler?
+Or, from a kfunc, is it easy to check if we are called from a struct_ops?
 
-> 
-> 1. Add bpf_iter_task in mptcp_sched_data.
-> 
-> struct mptcp_sched_data {
->         struct task_struct *bpf_iter_task;
-> };
-> 
-> 2. Set bpf_iter_task as "current" in mptcp_sched_data_set_contexts:
-> 
-> void mptcp_sched_data_set_contexts(const struct mptcp_sock *msk,
->                                    struct mptcp_sched_data *data)
-> {
->         WRITE_ONCE(data->bpf_iter_task, current);
-> }
-> 
-> 3. Add a struct mptcp_sched_data parameter for
-> bpf_iter_mptcp_subflow_new:
-> 
-> __bpf_kfunc static int
-> bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow1 *it,
->                            struct sock *sk,
->                            struct mptcp_sched_data *data)
+> In addition, I think it's better to add bpf_iter_task to struct
+> mptcp_sched_data instead in struct mptcp_sock, since it's more related
+> to mptcp scheduler. For specific usage, please see [1]. What do you
+> think of this?
 
-That means that this kfunc will only be used for the scheduler API, then
-no longer for the [gs]etsockopt and BPF PM, no?
+Please see my reply to your comment on this thread. In short, we can
+always add new parameters later, when we need them, no?
 
-> 4. Check data->bpf_iter_task in bpf_iter_mptcp_subflow_new:
-> 
->         msk = mptcp_sk(sk);
->         task = READ_ONCE(data->bpf_iter_task);
->         if (!task || task != current)
->                 return -EINVAL;
-> 
->         WRITE_ONCE(data->bpf_iter_task, NULL);
-
-I think it would make more sense to do that from sched.c, similar to a lock.
-
-  WRITE_ONCE(data->bpf_iter_task, current);
-  ret = msk->sched->get_send(msk, data);
-  WRITE_ONCE(data->bpf_iter_task, NULL);
-
-  return ret;
+https://lore.kernel.org/706a3051-8328-4321-8eea-71d4120ea996@kernel.org
 
 > 
->         msk_owned_by_me(msk);
+> Thanks,
+> -Geliang
 > 
->         kit->msk = msk;
->         kit->pos = &msk->conn_list;
+> [1]
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1739788598.git.tanggeliang@kylinos.cn/
 > 
-> 5. Use bpf_for_each() with "data" parameter in bpf:
+>>
+>> - Mat
+>>
+>>> +		return msk;
+>>> +	}
+>>>
+>>> -	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
+>>> -		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+>>> +	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)) {
+>>> +		msk = mptcp_sk(mptcp_subflow_ctx(sk)->conn);
+>>> +		mptcp_set_bpf_iter_task(msk);
+>>> +		return msk;
+>>> +	}
+>>>
+>>> 	return NULL;
+>>> }
+>>> -- 
+>>> 2.43.0
+>>>
+>>>
+>>>
 > 
-> SEC("struct_ops")
-> int BPF_PROG(bpf_red_get_send, struct mptcp_sock *msk,
->              struct mptcp_sched_data *data)
-> {
->         struct mptcp_subflow_context *subflow;
 > 
->         bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk, data)
->                 mptcp_subflow_set_scheduled(subflow, true);
-> 
->         return 0;
-> }
-> 
-> WDYT?
-> 
-> Anyway, we can put the patch "mptcp: sched: remove mptcp_sched_data" on
-> the export branch and wait for a while, don't send it upstream
-> recently, and wait for me to send some squash-to patches to modify
-> them.
-
-Sure. There are some other patches to send first anyway.
 
 Cheers,
 Matt
