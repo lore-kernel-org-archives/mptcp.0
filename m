@@ -1,176 +1,160 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4C1351AF4C1
-	for <mptcp@lists.linux.dev>; Fri,  7 Mar 2025 08:54:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38CCB14293;
+	Fri,  7 Mar 2025 11:21:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741337642; cv=none; b=DBcjgfM6OgBHiglIeysY/b8QiVmrlHnrNW80K5WJ3gyGT8RxVnTbgQR1oL1VL+9CE6GNsT+TI0SUTeb58oTGIJXfYixvkYUEPOYlG2V/+yuDBBLFtUe3YURj54US/aFi23guLV4jdcDYig+tTexarUJiOk8Xp9VWrAoZw1n6pgI=
+	t=1741346518; cv=none; b=Ve/kByDUGjExI07M28YMBZNGoXgKdPlkqbNpeKYT5mGVkrbkGLZYYLf2SZ94u5iCMqIolt+xxSPikbPCS3TfbSzB1k/RMC8f0dxtoEsjdkcz8DXDlRAQTG4DN6Sk6Ha0oaT/Ua/k36qsv+xcOILf4ZT2W96ipUThbauOofaoHFM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741337642; c=relaxed/simple;
-	bh=bTLqLfcjBRnAQg5oaWwlHVhzQ3CP4FYNpgCRA2BECzk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Nxeu6PH8tqxtukgPhs3YsrPdZZMSfGaU5ELREdkFYLqZ1eovd14Ifh9I5w194JTrQMWgZubhynRGw5Q9LaMdzMqM26diBqZSrS5BVeR7HbgW3YF02XA9c10LlBfk5TdDNwlaLXYKaRWYu0nc2XbqISxtqOBpVMqZz7jssBijoWA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ljC15m+n; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741346518; c=relaxed/simple;
+	bh=Cb+NXIH48Kkw11qaZsseHZFKNfSgPOl1/qv/9hLQSZQ=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=d4qS2VzNQBfVtBt34kRH0gjxE5G1XXMN06xf9Ed604Li9iL7Gqf+b66kPnCmbA+F/FOsIdIvILha/v+6pLqZ82e+NfrfqkvfgmoSHVkDbFlYsVmDF4YlvuV6d8oOujucXEzHx26PIN+GqZ9nQeT1NVQGEwSNRQRLzeHxSHrKywo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UCI/kFG3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ljC15m+n"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB8FBC4CED1;
-	Fri,  7 Mar 2025 08:54:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UCI/kFG3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 758CBC4CED1;
+	Fri,  7 Mar 2025 11:21:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741337641;
-	bh=bTLqLfcjBRnAQg5oaWwlHVhzQ3CP4FYNpgCRA2BECzk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ljC15m+noiqmB343o5cwjNJDad1mqcCOIX9a6x63UVOlrIn+eBJYENwuET392W+E0
-	 UN9hWUTW1fVz8956BrAy+92NdwDjNfjTtNudliJEWVBU9adpU2s65Qylt/ZylaJ55n
-	 hf0NY+0ZS2K4ieN2PCvvm5MX2HXSLt9NyhJs5XQ1aiOdLO8TJSjCnAUiLWrNk4x+zL
-	 K0WCM1dFf3MIVmEAJNLxJzWKw0uOudKS17GfmhAaeQms/X3+/WelElvEwSOBTT/Iop
-	 EjSMNapSwj2Ym0JsqsaGwIHXv+dBNJohkXV9BIwCWlqqQWkI3CmMyQL8ye/gvdmIYj
-	 Cdq8njHCfQ1Hw==
-Message-ID: <620b17f1-a5eb-4f9c-b411-92277d8bb3dc@kernel.org>
-Date: Fri, 7 Mar 2025 09:53:58 +0100
+	s=k20201202; t=1741346516;
+	bh=Cb+NXIH48Kkw11qaZsseHZFKNfSgPOl1/qv/9hLQSZQ=;
+	h=From:Subject:Date:To:Cc:From;
+	b=UCI/kFG3C4Gplbr5GAgTimw+9bz1/tOjn9q64TAvoKj8vb3hU4jVjCWRQi5CxHS6C
+	 5AUezAGkeW1JTmzd8P20/AHkrVU2UcPuFtzO5HO0+IczwJd9MZgCaPQRAMeSerh8eh
+	 0nFwrQuzbfftBJcU77xAB5dq75yFBWBj9W/ed9wai3B5323MY5xt+EbsupCCNo6cCt
+	 AtDosWfOA2Auojk9u8D8mlHYi4bbPuI5YA0aIhkpqYQuwvSwzeyRTLFuMIlbhMXyqm
+	 cCNujnE5G/3MZiQzWA/26LZGpdd01aNUBxEseBXygt8JGts7joHTJGUS7v1oS2dgGH
+	 9DpTZSyXJ6LmA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH net-next 00/15] mptcp: pm: code reorganisation
+Date: Fri, 07 Mar 2025 12:21:44 +0100
+Message-Id: <20250307-net-next-mptcp-pm-reorg-v1-0-abef20ada03b@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 2/5] Squash to "bpf: Extend
- bpf_skc_to_mptcp_sock to MPTCP sock"
-Content-Language: en-GB
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1740997925.git.tanggeliang@kylinos.cn>
- <c43f5e1fe8da4db01749ede9d18af1a3a2134fd4.1740997925.git.tanggeliang@kylinos.cn>
- <b45a0591-597a-46cf-7315-cf4dce7dbd7a@kernel.org>
- <7691b3bbc2cc5e9507a4187877e4cd821a73744b.camel@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <7691b3bbc2cc5e9507a4187877e4cd821a73744b.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
+X-B4-Tracking: v=1; b=H4sIAMjWymcC/zWMuwqAMAwAf0UyG6gW8fEr4lBt1AzWkhYpiP9uE
+ RxuuOHuhkDCFGAobhC6OPDpslRlActu3EbINjvUqm6UVi06ipkU8fBx8egPFDplw7nt+lXb3mh
+ jIddeaOX0nUf4I5ie5wVX6VJ+cwAAAA==
+X-Change-ID: 20250307-net-next-mptcp-pm-reorg-b789f3d9a3ad
+To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
+ Geliang Tang <geliang@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=4163; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=Cb+NXIH48Kkw11qaZsseHZFKNfSgPOl1/qv/9hLQSZQ=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBnytbREyul2FQJyiHPst87h0E3fmMojRij+6/Cu
+ Z3q6gURGhiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ8rW0QAKCRD2t4JPQmmg
+ c4reEACDrXvUaL5SoblPkv+KBsL+et8xJby97ga6CzPdTvbSTD8W9xeX36rBF5BUY4NAeB5M7Np
+ jJdqtjY9wjSk3o6B2p4mZaJLzASQgFMrIMeaRypEpqQqIDCwvovYQzgdBbiB1f7C9T66T5T0Aad
+ 7T05FJJl0RZbacwXZrxrP8+0ELdEpIHffOnjwiHXSJvtaEW2USnPd2SqQgmoyqeNvA7trB8YrlN
+ cp7anqrKTuqYX0etpbAcP9eM5RBxl9PVL6/Vnuai3qa6YSCSZhMFkKuvzgHK/rZ/QNKZ2yJwsHP
+ m8NLeuX0kNS2syEH4vzC/x12VGMwTu9GvrMT+SzkH8Sx+gZz/brPFXHl5I2T0vYCZa/4mCjQHPW
+ uTGICzCv6ZDpmBTAOBLdwVFfpWwUuhLjHKiviNz2YgZQ0IJSzU94IBBJbinzRuOQqDu5l/XkTnV
+ wfEvMlxWgKjryuAlKdAiKlR3VCc7VfpMia4I+/ef6k7xBs93c4bLgJ0HaNCk2FZwEF353niszwl
+ IiiQU4TBpBZLodwub0tzZAcRA1j7lPKnEq5E99vM08c79hqjI/2/7jMfRAVxbO5JAURsBZua4iA
+ SNQ7zCZywMUOTN4U7dfeSOmbq5vzKPbJGdl8OMmMr+JnncHio4zFac05VhVuOVdT74zclXC5ERX
+ 2ymrS+ciMBoq6/A==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+Before this series, the PM code was dispersed in different places:
 
-On 07/03/2025 04:54, Geliang Tang wrote:
-> On Mon, 2025-03-03 at 17:37 -0800, Mat Martineau wrote:
+- pm.c had common code for all PMs.
 
-(...)
+- pm_netlink.c was initially only about the in-kernel PM, but ended up
+  also getting exported common helpers, callbacks used by the different
+  PMs, NL events for PM userspace daemon, etc. quite confusing.
 
->> The code above will set msk->bpf_iter_task even when the lock is not
->> held, 
->> and then it is never cleared.
->>
->> To set/clear as expected for get/setsockopt I think the task pointer
->> would 
->> have to be set in places where the locks are acquired and released,
->> like 
->> these:
->>
->> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1955
->> https://elixir.bootlin.com/linux/v6.14-rc5/source/kernel/bpf/cgroup.c#L1846
->>
-> 
-> The get/setsockopt scenario is a bit complicated. I think we can use
-> the bpf_iter_task check only for bpf schedulers, keep the
-> get/setsockopt scenario unchanged, and continue to use the
-> msk_owned_by_me(msk) check. What do you think?
+- pm_userspace.c had userspace PM only code, but it was using "specific"
+  in-kernel PM helpers according to their names.
 
-I think in any case, it doesn't hurt to keep msk_owned_by_me(msk) for
-lockdep.
+To clarify the code, a reorganisation is suggested here, only by moving
+code around, and small helper renaming to avoid confusions:
 
-If we think it is difficult to have the bpf_iter for both CG
-[gs]etsockopt and struct_ops, then we can also drop the patches for the
-[gs]etsockopt.
+- pm_netlink.c now only contains common PM generic Netlink code:
+  - PM events: this code was already there
+  - shared helpers around Netlink code that were already there as well
+  - shared Netlink commands code from pm.c
 
-Or, from a kfunc, is it easy to check if we are called from a struct_ops?
+- pm_kernel.c now contains only code that is specific to the in-kernel
+  PM. Now all functions are either called from:
+  - pm.c: events coming from the core, when this PM is being used
+  - pm_netlink.c: for shared Netlink commands
+  - mptcp_pm_gen.c: for Netlink commands specific to the in-kernel PM
+  - sockopt.c: for the exported counters per netns
 
-> In addition, I think it's better to add bpf_iter_task to struct
-> mptcp_sched_data instead in struct mptcp_sock, since it's more related
-> to mptcp scheduler. For specific usage, please see [1]. What do you
-> think of this?
+- pm.c got many code from pm_netlink.c:
+  - helpers used from both PMs and not linked to Netlink
+  - callbacks used by different PMs, e.g. ADD_ADDR management
+  - some helpers have been renamed to remove the '_nl' prefix, and some
+    have been marked as 'static'.
 
-Please see my reply to your comment on this thread. In short, we can
-always add new parameters later, when we need them, no?
+- protocol.h has been updated accordingly:
+  - some helpers no longer need to be exported
+  - new ones needed to be exported: they have been prefixed if needed.
 
-https://lore.kernel.org/706a3051-8328-4321-8eea-71d4120ea996@kernel.org
+The code around the PM is now less confusing, which should help for the
+maintenance in the long term, and the introduction of a PM Ops.
 
-> 
-> Thanks,
-> -Geliang
-> 
-> [1]
-> https://patchwork.kernel.org/project/mptcp/cover/cover.1739788598.git.tanggeliang@kylinos.cn/
-> 
->>
->> - Mat
->>
->>> +		return msk;
->>> +	}
->>>
->>> -	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk))
->>> -		return mptcp_sk(mptcp_subflow_ctx(sk)->conn);
->>> +	if (sk->sk_protocol == IPPROTO_TCP && sk_is_mptcp(sk)) {
->>> +		msk = mptcp_sk(mptcp_subflow_ctx(sk)->conn);
->>> +		mptcp_set_bpf_iter_task(msk);
->>> +		return msk;
->>> +	}
->>>
->>> 	return NULL;
->>> }
->>> -- 
->>> 2.43.0
->>>
->>>
->>>
-> 
-> 
+This will certainly impact future backports, but because other cleanups
+have already done recently, and more are coming to ease the addition of
+a new path-manager controlled with BPF (struct_ops), doing that now
+seems to be a good time. Also, many issues around the PM have been fixed
+a few months ago while increasing the code coverage in the selftests, so
+such big reorganisation can be done with more confidence now.
 
-Cheers,
-Matt
+Note that checkpatch, when used with --max-line-length=80, will complain
+ about lines being over the 80 limits, but these warnings were already
+there before moving the code around.
+
+Also, patch 1 is not directly related to the code reorganisation, but it
+was a remaining cleanup that we didn't upstream before, because it was
+conflicting with another patch that has been sent for inclusion to the
+net tree.
+
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+Geliang Tang (1):
+      mptcp: pm: use addr entry for get_local_id
+
+Matthieu Baerts (NGI0) (14):
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_addr_send_ack
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_mp_prio_send_ack
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_work
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_rm_addr_received
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_subflow_chk_stale()
+      mptcp: pm: remove '_nl' from mptcp_pm_nl_is_init_remote_addr
+      mptcp: pm: kernel: add '_pm' to mptcp_nl_set_flags
+      mptcp: pm: avoid calling PM specific code from core
+      mptcp: pm: worker: split in-kernel and common tasks
+      mptcp: pm: export mptcp_remote_address
+      mptcp: pm: move generic helper at the top
+      mptcp: pm: move generic PM helpers to pm.c
+      mptcp: pm: split in-kernel PM specific code
+      mptcp: pm: move Netlink PM helpers to pm_netlink.c
+
+ net/mptcp/Makefile       |    2 +-
+ net/mptcp/pm.c           |  653 ++++++++++++----
+ net/mptcp/pm_kernel.c    | 1410 +++++++++++++++++++++++++++++++++
+ net/mptcp/pm_netlink.c   | 1937 ++--------------------------------------------
+ net/mptcp/pm_userspace.c |   28 +-
+ net/mptcp/protocol.c     |    5 +-
+ net/mptcp/protocol.h     |   42 +-
+ 7 files changed, 2045 insertions(+), 2032 deletions(-)
+---
+base-commit: 865eddcf0afbcd54f79b81e6327ea40c997714c7
+change-id: 20250307-net-next-mptcp-pm-reorg-b789f3d9a3ad
+
+Best regards,
 -- 
-Sponsored by the NGI0 Core fund.
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
