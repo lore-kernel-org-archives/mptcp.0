@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E025B1624F7
-	for <mptcp@lists.linux.dev>; Sat,  8 Mar 2025 10:49:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6D88714F9F9
+	for <mptcp@lists.linux.dev>; Sat,  8 Mar 2025 11:00:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741430947; cv=none; b=mBIUlBkI+1jQuUqsDHKVw3jqNST4zePgqGC5TjfOP9ms0wlDlC/z9ybJbyuDgrTNJHnXWW/g6u9AR0Vbs8f5izvTPsPmOnUvVvSEvpHCgqUmC+f0z1Z7RI+gNJlrlSTzj34jt47+3a8MsJu4J9/ojwJaiqo4xOKuSs2sIWQdddA=
+	t=1741431650; cv=none; b=QamsakU/jX8la76jG1haY71jE7S/Xlm18q54vWBUxoAq4zQ3ffwBmaG35cIURvUzPyoh8sORwqrGyDD5fnBF5ODpy0TcTD3u3ffEMp5ucBiVfb0Be8NrkJfLL3vuevFUBgd8TtuXh1xW7yWhN3wMPL7wXvTACQDUaWp+Y1BuBPQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741430947; c=relaxed/simple;
-	bh=j/MTFHCJM932LqdVfRDCfDCAbwhE5tA/LJe63/DH4zI=;
+	s=arc-20240116; t=1741431650; c=relaxed/simple;
+	bh=adKhsoYCOCoDj5zg/Jhy4QF/2605gBuniQhr/kAlYpg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=u1Gr34XjddCnmCI3pnCuhpje5LpArxr9YqrgaK9prZoNKzGIs1POYmfEeuWUffKerftee7hP7E3FRKl90H00tFs2Ve4zmXlEnjRYz2cUGbBvAmDUVhSY0Z0Y2zEacESRXFmwsDwzkpVHnHdDe24Fj90/83LCf/uV/HTwj6YsNNs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gAsKx9/f; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=fEDvypc+dOSeoWQSLPS5JMHalVEA3x4Sii1/1MmdrDELk0aBaTeLWLAm6UKSDAzW4R163AUo8Iv/85ksKYlER8qgdt51BvIUcGTIMEZKS+WtPXOt05gnuJ+wsjUAyFNogfWQvs1JhK4Mj/z8T+jAZrli5lJTGBkiSfftFi4bZGA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CEswD5a3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gAsKx9/f"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B7DDC4CEE0;
-	Sat,  8 Mar 2025 10:49:04 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CEswD5a3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F79FC4CEE0;
+	Sat,  8 Mar 2025 11:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741430946;
-	bh=j/MTFHCJM932LqdVfRDCfDCAbwhE5tA/LJe63/DH4zI=;
+	s=k20201202; t=1741431649;
+	bh=adKhsoYCOCoDj5zg/Jhy4QF/2605gBuniQhr/kAlYpg=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gAsKx9/f1q1qBHHhmKwDdPBE60McxcO9fNx1otqdPdZLTIW1Ru7KEh88GGHNJT/NX
-	 ZGj14R+/C/Dvakr+UJCN3gTHKL1xEShuwyuce2D9JCCt7Gn1V9kbh/J6LUvauTTyRE
-	 4v10/xB3/FHZBQowg/RZkbRSKQ7FFTqcqUmE1oiV3V82XkgowM8Pn5oARaWmVY2HVq
-	 QMYp52uDbV6zjMe2oDjsBC4yBS86O5otAWNF0LODwT9fFiNhpAKpxFZBeHkEoIOt7P
-	 MUFHxAGNJ14jygAOHn6x7eEkFwRYLAClJtZQqEaExw+DP7zzRV5XLjD0InpjxTj7Sp
-	 /aVNChtx+/d4g==
-Message-ID: <8b30c53c-01f5-498b-a74b-f796dcc55b9a@kernel.org>
-Date: Sat, 8 Mar 2025 11:49:01 +0100
+	b=CEswD5a3KFvZbOOg0RAgor7Q6z46vL2ypZjo/qc0n5wtMVrH86ryxdj4tYPeM5xXW
+	 4iTTN0Qodg3rWXFPuTKrLtzcq4awsKWEJZH7bR7GM8LSxKFzivWoyqOtpszAIubSkq
+	 Zuk4t398wC4ZLxXImfZ+23FRISjzzj/4w3vXgDgUnbiKiTNdOi+Ln9bDYnQ6sFiHM1
+	 lNVee2c4/UyVXvEos241LKjswEATTRHZZFhOBppt06lnAfLgtQRZVGb4WPTB7EQ9cl
+	 xsQzSdwbSSwbXJ8qDrhYbgMZhHDSdZ0jsyqrBBtbjldKX3HFVB0n4NhObSEqxdOuwu
+	 WpXWkhvGH+z1Q==
+Message-ID: <edca2df3-f80f-4e68-bf7f-9f042bd80f7c@kernel.org>
+Date: Sat, 8 Mar 2025 12:00:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 03/11] mptcp: add bpf_iter_task for
- mptcp_sched_data
+Subject: Re: [PATCH mptcp-next v2 05/11] mptcp: add mptcp_subflow_sched
+ bpf_iter
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
  Mat Martineau <martineau@kernel.org>
 References: <cover.1741347233.git.tanggeliang@kylinos.cn>
- <620223de348631c8b8bf798b46c18002160c9235.1741347233.git.tanggeliang@kylinos.cn>
+ <e13f64bb99b08d8d64b9398e4684cd46f3c9de91.1741347233.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -88,7 +88,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <620223de348631c8b8bf798b46c18002160c9235.1741347233.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e13f64bb99b08d8d64b9398e4684cd46f3c9de91.1741347233.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -97,32 +97,53 @@ Hi Geliang,
 On 07/03/2025 12:36, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> To make sure the mptcp_subflow bpf_iter is running in the
-> MPTCP context. This patch adds a simplified version of tracking
-> for it:
+> Add a new bpt_iter mptcp_subflow_sched, it's a wrapper of mptcp_subflow.
 > 
-> 1. Add a 'struct task_struct *bpf_iter_task' field to struct
-> mptcp_sched_data.
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/bpf.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 > 
-> 2. Do a WRITE_ONCE(data->bpf_iter_task, current) before calling
-> a MPTCP BPF hook, and WRITE_ONCE(data->bpf_iter_task, NULL) after
-> the hook returns.
-> 
-> 3. In bpf_iter_mptcp_subflow_new(), check
-> 
-> 	"READ_ONCE(data->bpf_scheduler_task) == current"
-> 
-> to confirm the correct task, return -EINVAL if it doesn't match.
-> 
-> Also creates helpers for setting, clearing and checking that value.
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 3921261b4fd4..c31f7b407b84 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -288,6 +288,31 @@ bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
+>  {
+>  }
+>  
+> +struct bpf_iter_mptcp_subflow_sched {
+> +	struct bpf_iter_mptcp_subflow it;
+> +};
+> +
+> +__bpf_kfunc static int
+> +bpf_iter_mptcp_subflow_sched_new(struct bpf_iter_mptcp_subflow_sched *it,
+> +				 struct sock *sk, struct mptcp_sched_data *data)
+> +{
+> +	if (!mptcp_sched_check_bpf_iter_task(data))
+> +		return -EINVAL;
+> +
+> +	return bpf_iter_mptcp_subflow_new(&it->it, sk);
 
-I think it is better not to have dedicated patches introducing helpers
-without using them: for the reviewers, it is not clear how they are
-exactly going to be used, then it is needed to check the next patch(es),
-go back to this one, etc.
+We would need the same thing for the BPF PM I suppose, no?
 
-Maybe better to introduce the helper when you actually use them?
-Especially for such simple helpers.
+Then, why not having something more generic, either:
+
+ - add "struct task_struct *" in the msk structure
+
+ - or pass a "const struct task_struct *bpf_iter_task" instead of
+something sched specific?
+
+For the first idea, I guess it should work because the helper will be
+called when the msk lock will be owned by the caller. So we should not
+have the PM and scheduler setting it at the same time from different
+context, right?
+Also, if this helper receives a msk in argument, no need to check that
+it is a valid MPTCP socket, etc., right?
+
+If one of these two ideas is used, no need to re-introduce
+mptcp_sched_data. The API is not settled yet, so no need to worry about
+that. It is even a good time to change it.
 
 Cheers,
 Matt
