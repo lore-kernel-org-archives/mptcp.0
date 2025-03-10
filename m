@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5C3111DE3A6
-	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:19:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A60E1DE3A6
+	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:19:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741648783; cv=none; b=eDVmQSssBgfYuJJRE/qE1HFxtyG4LPXrTWm2fOk7Zb86gqklQMsIIBko8SYGngGz7XrPFUOKfMNli1COaauR7wtoumlpdxCkwgkKkhqWMwqgqguZxLDwl/Ux86oY4mbncoMLlsXKFc1gVUvleSQNHPGj74vTiIY8QufcNOueoR4=
+	t=1741648787; cv=none; b=AFo+4OHCqNPe23rLxoFzVyjs2cJop8Dl657YoyUbBS3IHNORHjPunJdlXS1l2tNn7WTmjZ4ohlWkT92E3jeoF4SnowOVZ82UO0lFVT/mhc47WfsSKbFxRzbdE7/C9m6eT4NcQ6w6lOvyw/8lLq2GmgvJCDoXfx6Nox6Cw3wbjzI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741648783; c=relaxed/simple;
-	bh=ZUVZOqGvLBP4rHRTY9YR31bKuMVXQ0jyawyzYab7wYI=;
+	s=arc-20240116; t=1741648787; c=relaxed/simple;
+	bh=fBdZk7lsNdVhoHGgjuW1bD6tgtEFA9MWwczuJru4wy4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=JPBnRIXXDZTpBVwNHdsmamNq26Z6o2RXGh8fTIzCuIR/vAurDYDbgx8mBuIUW/Aeoe7EmBKSFvFltWBn3R4Xh/O1blADE7wQUtGKjQM3IqNwHpfm+ZEIwcRGF4XtnJdAWc6pmSPPVbS38qZiQYc0uT/1WHRvF+6l2H5rKWntRDU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dfadvgtd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=AhT8/12FV+GTd6XACq73tzf0EgD3lYieb0ERzzdR+YuAYu0h8KVdrUs6K/WfyRV9q14F+fiB5xVADi2oZLcfwDKgNc09glGE6sCBO2erKprP2ku5dVbw+jLgqpK4wyC/pezJCi2Jq0Vu9uv600MZluM1u2C5Zbu8jRV00B7qBJY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SFgftOIh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dfadvgtd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EAD8AC4CEE5;
-	Mon, 10 Mar 2025 23:19:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SFgftOIh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E2B8C4CEE5;
+	Mon, 10 Mar 2025 23:19:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741648782;
-	bh=ZUVZOqGvLBP4rHRTY9YR31bKuMVXQ0jyawyzYab7wYI=;
+	s=k20201202; t=1741648787;
+	bh=fBdZk7lsNdVhoHGgjuW1bD6tgtEFA9MWwczuJru4wy4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dfadvgtdK2Ilz3t2XkxKr7UpNCnRz/eDr8bCm+1Ino1BFQTJu+nGIF9Oy7ZdqpQmo
-	 mXsdFkodwKiJA9qCWfhbytr/ARjY1P2R3NlLw9D7TA4ocOxGixx2Km7sm30EQh9uCD
-	 61GSVfwSH67fYuyZo3Htz6VO7ZJsqGyRqtyeYIv1XRxM3zFpAHicYLOHDt/55zhGk3
-	 XWkRch524iy/M6CIpQRShXoUm+D78ya9vpfjEc5lBXWE82EPaF6+XkpcaqNu9yDiFV
-	 uQu2NshjGrFDRwtqqffcDdup9XL4oBcEN3ebIn3xTH01wdiG2Vawntvo+F1KszdiVC
-	 ksr/u2o34KOsg==
-Message-ID: <d3133a7a-110d-49a7-93eb-b49c49c765bc@kernel.org>
-Date: Tue, 11 Mar 2025 00:19:30 +0100
+	b=SFgftOIhtpeaPaOcAJfPJwpSJlFuikI4DixuMMQp7egzf077Ru/J7yPZewjKVip+T
+	 HIT5aEnfQ6g2QMoqGS4fztXjjhzRdq2OKwzX1bQKPP/b0c2MLt/0kINIKkOXVGS6jy
+	 uvWcFdf2loMTk6ItQheCoJhSio0x3U1XcdDkSTwDrwTwWF0U2dH7V3pNgRjhWgLQmS
+	 tVcqa8/K+xZIhdPh88D6D66aCY6nU5eckuxx2gXNIPfOswT6IBBas7UPtAPyP53/hb
+	 rfP3DM3GwYCHqOy0EAsEcJs33nMRN1gkDPzuB2Fjxs4O9OPf2lheabGJucB+GIgZg+
+	 zhr8C/Vj7UQaA==
+Message-ID: <cba13a35-cc4a-45a0-bad8-944e0a4a0723@kernel.org>
+Date: Tue, 11 Mar 2025 00:19:45 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v10 09/12] mptcp: sysctl: map path_manager to
- pm_type
+Subject: Re: [PATCH mptcp-next v10 10/12] mptcp: sysctl: map pm_type to
+ path_manager
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
- <a38a4f3b6cc2ac7082401a22bc33eb0d844f0b37.1741258415.git.tanggeliang@kylinos.cn>
+ <f96a373f1deb84ab24623e546067bdf47c52bb57.1741258415.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a38a4f3b6cc2ac7082401a22bc33eb0d844f0b37.1741258415.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f96a373f1deb84ab24623e546067bdf47c52bb57.1741258415.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,67 +96,44 @@ Hi Geliang,
 On 06/03/2025 12:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch maps the newly added path manager sysctl "path_manager"
-> to the old one "pm_type".
+> This patch adds a new proc_handler "proc_pm_type" for "pm_type" to
+> map old path manager sysctl "pm_type" to the newly added "path_manager".
 > 
-> 	path_manager   pm_type
+> 	path_manager		   pm_type
 > 
-> 	"kernel"    -> MPTCP_PM_TYPE_KERNEL
-> 	"userspace" -> MPTCP_PM_TYPE_USERSPACE
-> 	others      -> __MPTCP_PM_TYPE_NR
+> 	MPTCP_PM_TYPE_KERNEL    -> "kernel"
+> 	MPTCP_PM_TYPE_USERSPACE -> "userspace"
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/ctrl.c | 13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
+>  net/mptcp/ctrl.c | 25 ++++++++++++++++++++++++-
+>  1 file changed, 24 insertions(+), 1 deletion(-)
 > 
 > diff --git a/net/mptcp/ctrl.c b/net/mptcp/ctrl.c
-> index 1f405be6bc00..6a35e6bb0a63 100644
+> index 6a35e6bb0a63..357083977ba5 100644
 > --- a/net/mptcp/ctrl.c
 > +++ b/net/mptcp/ctrl.c
-> @@ -200,6 +200,9 @@ static int mptcp_set_path_manager(char *path_manager, const char *name)
->  static int proc_path_manager(const struct ctl_table *ctl, int write,
->  			     void *buffer, size_t *lenp, loff_t *ppos)
->  {
-> +	struct mptcp_pernet *pernet = container_of(ctl->data,
-> +						   struct mptcp_pernet,
-> +						   path_manager);
->  	char (*path_manager)[MPTCP_PM_NAME_MAX] = ctl->data;
->  	char pm_name[MPTCP_PM_NAME_MAX];
->  	const struct ctl_table tbl = {
-> @@ -211,8 +214,16 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
->  	strscpy(pm_name, *path_manager, MPTCP_PM_NAME_MAX);
->  
->  	ret = proc_dostring(&tbl, write, buffer, lenp, ppos);
-> -	if (write && ret == 0)
-> +	if (write && ret == 0) {
-> +		u8 pm_type = __MPTCP_PM_TYPE_NR;
-> +
-> +		if (strncmp(pm_name, "kernel", MPTCP_PM_NAME_MAX) == 0)
-> +			pm_type = MPTCP_PM_TYPE_KERNEL;
-> +		else if (strncmp(pm_name, "userspace", MPTCP_PM_NAME_MAX) == 0)
-> +			pm_type = MPTCP_PM_TYPE_USERSPACE;
-> +		pernet->pm_type = pm_type;
-
-This should be done after mptcp_set_path_manager(), and if there were no
-errors (ret == 0), because if the name is not valid, the path-manager
-will not be modified, so pm_type should not be modified as well.
-
-BTW, did you check that setting "pm_type = __MPTCP_PM_TYPE_NR" is OK?
-Can we display 2, but not allow to set 2 for pm_type here? In other
-words, please check that this is OK with your modifications:
-
-  # sysctl net.mptcp.pm_type=2
-  sysctl: setting key "net.mptcp.pm_type": Invalid argument
-  # sysctl -q net.mptcp.path_manager = "$BPF_PM"
-  # sysctl -n net.mptcp.pm_type
-  2
-
->  		ret = mptcp_set_path_manager(*path_manager, pm_name);
-> +	}
->  
+> @@ -228,6 +228,29 @@ static int proc_path_manager(const struct ctl_table *ctl, int write,
 >  	return ret;
 >  }
+>  
+> +static int proc_pm_type(const struct ctl_table *ctl, int write,
+> +			void *buffer, size_t *lenp, loff_t *ppos)
+> +{
+> +	struct mptcp_pernet *pernet = container_of(ctl->data,
+> +						   struct mptcp_pernet,
+> +						   pm_type);
+> +	int ret;
+> +
+> +	ret = proc_dou8vec_minmax(ctl, write, buffer, lenp, ppos);
+> +	if (write && ret == 0) {
+> +		u8 pm_type = READ_ONCE(*(u8 *)ctl->data);
+> +		char *pm_name = "unknown";
+
+Small detail: thanks to proc_dou8vec_minmax, pm_name cannot be
+"unknown": it should only be 0 or 1. Then you can either not assign it,
+or assign it to an empty string "just in case"?
+
 Cheers,
 Matt
 -- 
