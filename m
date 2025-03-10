@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0FF1DDA09
-	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:17:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD241DE3A6
+	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:18:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741648661; cv=none; b=eLEcSZDeFiO6NpAYOYfsZMNTzJTC1KCdNq10NAmFvTxsv0j3UsqsvUwSFkDDpGvWuqEaxv4cvxPkdzruqlAxxzzEaMBEeoMIHNyk81onI7IYBWKE2FrLO8dTHaX0N4N7r+m1+pj3ValJEOQqd4e5XQa99XjpVR07ZTncu0l6XiU=
+	t=1741648726; cv=none; b=pZxgrjjXmgAS3LiAYzJEd1RbcpNJoEEpPRxCxxnmipfONhyb94FaKwWVhtRej12SuUkWt1mV6FeQS95oXrp16UATkApSuB7VKsTKWbG7cgmFiveej0L4V39flwk6sSOtTYtxS3ARFW3piuFNClMickl21nGQKlcp9g77FTWnVMQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741648661; c=relaxed/simple;
-	bh=6lDdByEmzFLSbCijzR8ed5TH2+pwzKB2RNSMuXtbtwE=;
+	s=arc-20240116; t=1741648726; c=relaxed/simple;
+	bh=eqgooHrbEiT7xe21Xsn+acwE3vRFhxCtXjsE0/1MqIs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gHY+qhymhi7ClgOGxeDqEvdgbQWFZuiGFbF4RnsgW7QcQ4RDKd/IIaP/RiuppiR4AmjF15ZOkTWS6GU+U4WUXqjciCZvwK7SPAbN/OjvliUdWqH8V99bicRLtLIigP+oI7wuUssBm/BVFTEkpnGnc3kucsoe9UtORToAFtOVJZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+9VbKFQ; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qk0Hww34HgE14iAx7w4qz8E9fGeIFDtSR/vI68su9UlXb522OZeBgqPlk9FB7UfyOUuGbXA6fHxwsFXGoROjZiEuWIFZWkWZOjD0VLWU9ryt2J6quhhLn6Cwq/qvmWnGLiof5RYXSJhq8KGjbH30hhDJ3MJ4zjYriPoYaO9g+js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dH5JlUQU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+9VbKFQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E066C4CEE5;
-	Mon, 10 Mar 2025 23:17:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dH5JlUQU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1149C4CEE5;
+	Mon, 10 Mar 2025 23:18:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741648660;
-	bh=6lDdByEmzFLSbCijzR8ed5TH2+pwzKB2RNSMuXtbtwE=;
+	s=k20201202; t=1741648725;
+	bh=eqgooHrbEiT7xe21Xsn+acwE3vRFhxCtXjsE0/1MqIs=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=j+9VbKFQjtUqeOBGHkIvPrV2uyUkYHW+kQYdYwxrV39CTqtDxbEs0yq4f3CIQiw8H
-	 BIfq9GmqAUoZWjsr1snLf+KeS+QgIRoWykuUF5aMz5wmbTgtqzoC+L9g5/otkGxpCt
-	 E/gc3AFnXyBPU6sb4ynVU9Wcq9keH1MVSdYU3rJWMLsgNReCamIFT2TqCCAn4bcgcu
-	 sCWaAzJFTfZ97XReuSz5z/TYs35iDBQkeODYJTKSCPgXfTi8VHV/H1dN3gyY7HLwyM
-	 K8ngv0DKLAkbn7TtBYBg9Q65lWcCh5sbShDkIwLgSpZ/V3NL7cKb0+0pqwrQorcLN9
-	 05LrBtnDRxLWg==
-Message-ID: <26482cc0-abce-464e-96ba-826217c779d8@kernel.org>
-Date: Tue, 11 Mar 2025 00:17:37 +0100
+	b=dH5JlUQUZ3vbXWUuPX6cePBxx6Zipb0vnr7ZmLhaXxYC76ihCee9Ycv6vyJoCn9MF
+	 XL6kXX5wDrvYKqyoAJfPHs0aNdVZuovC9PhvqpKhlSe4U0jc/boyhAuP73BHeZQPxX
+	 0GlfpvYtgqq4hx1IT01466ZIE50W9xRjRnnPw9kFs81xTr8ANnoN4ldkqZYEE5/wXd
+	 pyQSHiQ+nD0A8hbcXsyJ+aWJlP1TE3Qyt6juwRxKSB5UJcleDVYbQsbquO6yVSxMfx
+	 V9B1SyKLl8OPw2XRtmMdy4HQ676f3Q3bpyaMbf79GLU7J2/KcD28qLe4qWhX/uxAMe
+	 Tyd37C0BTxLuw==
+Message-ID: <c1168a97-3604-4aaf-aebe-2ca5b2ebe44b@kernel.org>
+Date: Tue, 11 Mar 2025 00:18:39 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v10 04/12] mptcp: add struct_group in
- mptcp_pm_data
+Subject: Re: [PATCH mptcp-next v10 05/12] mptcp: pm: init and release
+ mptcp_pm_ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
- <9133981edb83438ee10e6da9ef4e5cc6bf7f188b.1741258415.git.tanggeliang@kylinos.cn>
+ <e1a69a1ee9ca25f12a244e5470341c23364de424.1741258415.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <9133981edb83438ee10e6da9ef4e5cc6bf7f188b.1741258415.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e1a69a1ee9ca25f12a244e5470341c23364de424.1741258415.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,86 +96,70 @@ Hi Geliang,
 On 06/03/2025 12:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a "struct_group(reset, ...)" in struct mptcp_pm_data to
-> simplify the reset, and make sure we don't miss any.
-
-Do you mind checking if, before this patch, we didn't already miss the
-reset of some fields? (I think I quickly checked last time and
-everything was reset here, or a bit later (e.g. server_side). If we
-missed something, we will need a dedicated patch reseting the missing
-fields first, with a Fixes tag, for -net, then this patch using
-'struct_group' to ease the reset.
-
-> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+> Add a struct mptcp_pm_ops pointer "ops" in struct mptcp_pm_data, and two
+> helpers mptcp_pm_ops_init() and mptcp_pm_ops_release(), to set and release
+> this pointer. mptcp_pm_ops_init() is invoked in mptcp_pm_data_reset(),
+> while mptcp_pm_ops_release() is invoked in mptcp_pm_destroy().
+> 
+> mptcp_pm_kernel_init() is defined as init() interface of the in-kernel PM,
+> which sets work_pending, accept_addr and accept_subflow.
+> 
+> mptcp_pm_userspace_is_release() is defined as release() interface of the
+> userspace PM, which is a wrapper of userspace_pm_free_local_addr_list().
+> 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm.c       | 14 +-------------
->  net/mptcp/protocol.h |  4 ++++
->  2 files changed, 5 insertions(+), 13 deletions(-)
+>  net/mptcp/pm.c           | 55 ++++++++++++++++++++++++++--------------
+>  net/mptcp/pm_kernel.c    | 19 ++++++++++++++
+>  net/mptcp/pm_userspace.c |  6 +++++
+>  net/mptcp/protocol.h     |  1 +
+>  4 files changed, 62 insertions(+), 19 deletions(-)
 > 
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index eefed554dcc9..1400bfed4b0d 100644
+> index 1400bfed4b0d..1a2f1715871c 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -983,12 +983,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
->  	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+
+(...)
+
+>  void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>  {
+> -	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+> +	const struct net *net = sock_net((struct sock *)msk);
+> +	const char *pm_name = mptcp_get_path_manager(net);
+> +	u8 pm_type = mptcp_get_pm_type(net);
 >  	struct mptcp_pm_data *pm = &msk->pm;
 >  
-> -	pm->add_addr_signaled = 0;
-> -	pm->add_addr_accepted = 0;
-> -	pm->local_addr_used = 0;
-> -	pm->subflows = 0;
-> -	pm->rm_list_tx.nr = 0;
-> -	pm->rm_list_rx.nr = 0;
-
-Just to be sure, is it OK to reset the list with memset(0)? (I didn't check)
-
-> +	memset(&pm->reset, 0, sizeof(pm->reset));
+>  	memset(&pm->reset, 0, sizeof(pm->reset));
 >  	WRITE_ONCE(pm->pm_type, pm_type);
 >  
->  	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
-> @@ -1005,15 +1000,8 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
->  			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
->  			   subflows_allowed);
->  		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
-> -	} else {
-> -		WRITE_ONCE(pm->work_pending, 0);
-> -		WRITE_ONCE(pm->accept_addr, 0);
-> -		WRITE_ONCE(pm->accept_subflow, 0);
->  	}
+> -	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
+> -		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
+> -
+> -		/* pm->work_pending must be only be set to 'true' when
+> -		 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
+> -		 */
+> -		WRITE_ONCE(pm->work_pending,
+> -			   (!!mptcp_pm_get_local_addr_max(msk) &&
+> -			    subflows_allowed) ||
+> -			   !!mptcp_pm_get_add_addr_signal_max(msk));
+> -		WRITE_ONCE(pm->accept_addr,
+> -			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
+> -			   subflows_allowed);
+> -		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
+> -	}
+> +	rcu_read_lock();
+> +	mptcp_pm_ops_init(msk, mptcp_pm_find(pm_name));
+> +	rcu_read_unlock();
 >  
-> -	WRITE_ONCE(pm->addr_signal, 0);
-> -	WRITE_ONCE(pm->remote_deny_join_id0, false);
-> -	pm->status = 0;
 >  	bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
->  }
->  
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 0ef758d233b7..47710db243f4 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -223,6 +223,8 @@ struct mptcp_pm_data {
->  
->  	spinlock_t	lock;		/*protects the whole PM data */
->  
-> +	struct_group(reset,
-> +
->  	u8		addr_signal;
->  	bool		server_side;
->  	bool		work_pending;
-> @@ -238,6 +240,8 @@ struct mptcp_pm_data {
->  	DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
 
-Maybe better to move this bitmap after the reset group, because it is
-large, and it will be overwritten with 1 just after the reset.
+I just noticed that this bitmap is currently only used by the in-kernel
+PM, so this could be moved to mptcp_pm_kernel_init() as well, no?
 
->  	struct mptcp_rm_list rm_list_tx;
->  	struct mptcp_rm_list rm_list_rx;
-> +
-> +	);
->  };
->  
->  struct mptcp_pm_local {
+I guess we will not need this bitmap for the future BPF PM, because
+future BPF PM can use a BPF map instead if they need that I suppose, no?
+
 Cheers,
 Matt
 -- 
