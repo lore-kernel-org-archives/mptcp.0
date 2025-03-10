@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B773722156C
-	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:17:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B0FF1DDA09
+	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:17:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741648620; cv=none; b=KOFblAdY0Ozel0oRBzIbvjUB/gXmvzx0mEiWj0N8hzb8AE1KD0kRfsjzSoyTZQ/beggQUmX4VjT61/Ox0+84r1W/TyohNmJ6Dpd9qVcDKitofliBFyxcdMrhlJHXySADzrOtH084kvogSUHCj+QllNgeVpZo65cE40zsW1gUD+Q=
+	t=1741648661; cv=none; b=eLEcSZDeFiO6NpAYOYfsZMNTzJTC1KCdNq10NAmFvTxsv0j3UsqsvUwSFkDDpGvWuqEaxv4cvxPkdzruqlAxxzzEaMBEeoMIHNyk81onI7IYBWKE2FrLO8dTHaX0N4N7r+m1+pj3ValJEOQqd4e5XQa99XjpVR07ZTncu0l6XiU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741648620; c=relaxed/simple;
-	bh=BWP7nKNvTF9GTTDfnCOxVF2w3hcJvDa4oFvZXBcDJqU=;
+	s=arc-20240116; t=1741648661; c=relaxed/simple;
+	bh=6lDdByEmzFLSbCijzR8ed5TH2+pwzKB2RNSMuXtbtwE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=l0iYNPSWnTyAujP1kmTXXPzyEjU/waGqg3wjK91Jjxe8Kqw3KHXqSY7caDZKmsAO67OO9ez8/AX2ImPFFeDIz4VkJDkx/PeLSWPCt7Hw8R3i2o0rPKrkOrTvd+Bxg7C4ZYGPL+rXySrG4QOY6jayPkHtBpzRIWQ9t0kq+NGhZhg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iwfnmFbV; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=gHY+qhymhi7ClgOGxeDqEvdgbQWFZuiGFbF4RnsgW7QcQ4RDKd/IIaP/RiuppiR4AmjF15ZOkTWS6GU+U4WUXqjciCZvwK7SPAbN/OjvliUdWqH8V99bicRLtLIigP+oI7wuUssBm/BVFTEkpnGnc3kucsoe9UtORToAFtOVJZs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j+9VbKFQ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iwfnmFbV"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3309BC4CEE5;
-	Mon, 10 Mar 2025 23:16:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j+9VbKFQ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6E066C4CEE5;
+	Mon, 10 Mar 2025 23:17:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741648620;
-	bh=BWP7nKNvTF9GTTDfnCOxVF2w3hcJvDa4oFvZXBcDJqU=;
+	s=k20201202; t=1741648660;
+	bh=6lDdByEmzFLSbCijzR8ed5TH2+pwzKB2RNSMuXtbtwE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=iwfnmFbVhCQ+CdCcbCtJL4zSssybNqlnBbfaoCyimwcWMqxnRWkUL06FXDJquSsUU
-	 zQpORD/Ae2PT3jiHU7JNUldT6aDuOWwpI5GVqU1PEihauv0O0EpEvpw1YeNSUBEgVM
-	 fAto74OmDbwNtdVedu8CVTQTba4hc/jrudKTZIJgaYbl33ZyWdwX5pLvjqCebiiNLK
-	 vaEfuDIbzC2aJF2wBKKZlBX1l29q2ZqXX90GocEPN4Jevh9dmb2rGcsLKsqmdL9ukA
-	 OmDtiR0Q8WQv+BBjmUl7ByvXlBZWV8bg3Yn7noMuaOydsryP23PKa0IsnCDZTFe3BT
-	 tTt6gY1BvdIZw==
-Message-ID: <6c8a2c9f-a426-4ec9-95f3-0479e1d37186@kernel.org>
-Date: Tue, 11 Mar 2025 00:16:56 +0100
+	b=j+9VbKFQjtUqeOBGHkIvPrV2uyUkYHW+kQYdYwxrV39CTqtDxbEs0yq4f3CIQiw8H
+	 BIfq9GmqAUoZWjsr1snLf+KeS+QgIRoWykuUF5aMz5wmbTgtqzoC+L9g5/otkGxpCt
+	 E/gc3AFnXyBPU6sb4ynVU9Wcq9keH1MVSdYU3rJWMLsgNReCamIFT2TqCCAn4bcgcu
+	 sCWaAzJFTfZ97XReuSz5z/TYs35iDBQkeODYJTKSCPgXfTi8VHV/H1dN3gyY7HLwyM
+	 K8ngv0DKLAkbn7TtBYBg9Q65lWcCh5sbShDkIwLgSpZ/V3NL7cKb0+0pqwrQorcLN9
+	 05LrBtnDRxLWg==
+Message-ID: <26482cc0-abce-464e-96ba-826217c779d8@kernel.org>
+Date: Tue, 11 Mar 2025 00:17:37 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v10 00/12] BPF path manager, part 5
+Subject: Re: [PATCH mptcp-next v10 04/12] mptcp: add struct_group in
+ mptcp_pm_data
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
+ <9133981edb83438ee10e6da9ef4e5cc6bf7f188b.1741258415.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1741258415.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9133981edb83438ee10e6da9ef4e5cc6bf7f188b.1741258415.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,25 +96,86 @@ Hi Geliang,
 On 06/03/2025 12:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v10:
->  - drop pm->init in mptcp_pm_validate, move mptcp_pm_validate into a new
->    patch.
->  - remove tlb, use ctl instead in proc_pm_type.
->  - use "strncmp() == 0" instead of "!strncmp()".
->  - set pm_type __MPTCP_PM_TYPE_NR for other names.
->  - add WARN_ON_ONCE in mptcp_pm_unregister.
->  - drop mptcp_userspace_pm_init.
->  - rename "struct mptcp_pm_ops *pm" to "struct mptcp_pm_ops *pm_ops".
->  - drop pm_ops NULL check in mptcp_pm_release.
->  - add struct_group for struct mptcp_pm_data.
->  - move selftests into userspace_pm.sh.
+> This patch adds a "struct_group(reset, ...)" in struct mptcp_pm_data to
+> simplify the reset, and make sure we don't miss any.
 
-Thank you for the new version and the changelog!
+Do you mind checking if, before this patch, we didn't already miss the
+reset of some fields? (I think I quickly checked last time and
+everything was reset here, or a bit later (e.g. server_side). If we
+missed something, we will need a dedicated patch reseting the missing
+fields first, with a Fixes tag, for -net, then this patch using
+'struct_group' to ease the reset.
 
-I have some comments, almost there. If you already have patches adding
-the remaining function pointers to the new mptcp_pm_ops, feel free to
-add them in the next version.
+> Suggested-by: Matthieu Baerts <matttbe@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c       | 14 +-------------
+>  net/mptcp/protocol.h |  4 ++++
+>  2 files changed, 5 insertions(+), 13 deletions(-)
+> 
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index eefed554dcc9..1400bfed4b0d 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -983,12 +983,7 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>  	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
+>  	struct mptcp_pm_data *pm = &msk->pm;
+>  
+> -	pm->add_addr_signaled = 0;
+> -	pm->add_addr_accepted = 0;
+> -	pm->local_addr_used = 0;
+> -	pm->subflows = 0;
+> -	pm->rm_list_tx.nr = 0;
+> -	pm->rm_list_rx.nr = 0;
 
+Just to be sure, is it OK to reset the list with memset(0)? (I didn't check)
+
+> +	memset(&pm->reset, 0, sizeof(pm->reset));
+>  	WRITE_ONCE(pm->pm_type, pm_type);
+>  
+>  	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
+> @@ -1005,15 +1000,8 @@ void mptcp_pm_data_reset(struct mptcp_sock *msk)
+>  			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
+>  			   subflows_allowed);
+>  		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
+> -	} else {
+> -		WRITE_ONCE(pm->work_pending, 0);
+> -		WRITE_ONCE(pm->accept_addr, 0);
+> -		WRITE_ONCE(pm->accept_subflow, 0);
+>  	}
+>  
+> -	WRITE_ONCE(pm->addr_signal, 0);
+> -	WRITE_ONCE(pm->remote_deny_join_id0, false);
+> -	pm->status = 0;
+>  	bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+>  }
+>  
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 0ef758d233b7..47710db243f4 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -223,6 +223,8 @@ struct mptcp_pm_data {
+>  
+>  	spinlock_t	lock;		/*protects the whole PM data */
+>  
+> +	struct_group(reset,
+> +
+>  	u8		addr_signal;
+>  	bool		server_side;
+>  	bool		work_pending;
+> @@ -238,6 +240,8 @@ struct mptcp_pm_data {
+>  	DECLARE_BITMAP(id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+
+Maybe better to move this bitmap after the reset group, because it is
+large, and it will be overwritten with 1 just after the reset.
+
+>  	struct mptcp_rm_list rm_list_tx;
+>  	struct mptcp_rm_list rm_list_rx;
+> +
+> +	);
+>  };
+>  
+>  struct mptcp_pm_local {
 Cheers,
 Matt
 -- 
