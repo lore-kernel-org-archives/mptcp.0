@@ -1,38 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AA3B922EE4
-	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 03:30:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28BC22EE4
+	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 03:30:22 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741577420; cv=none; b=E2djapohy8+8bRGvK67RbaLL27k+eXh1FD8IvqDrK4X9BaytRPs0mBva18e+B77TCbC9s//2XLSUSRMJEtqHgUyvoPHC5f1dNDz4err9USwrgsCCxMI2W2qepuzE8aM11GBfpWbKHiuONfsr61Arokxws35/YbD0bX7OJ9M52ws=
+	t=1741577422; cv=none; b=JwcBpwyq56zk3uBK/PS+Pp/YJ6X9EBC7rZQ8Cg0/yVwgc1qNiHM0OShSQZMYB7uZOPBd1bCPwVcqWiuL8TmOWWRx1fKelyNhiU3RjZ5Xn1xnhex06U0F9BzZJ/d4eNdDJNEtdUHWWAhHhsRYUoi1O/gn+rdsa1Pwco7kfTTj0sk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741577420; c=relaxed/simple;
-	bh=ZPyqeWtAAyzggjqfBXFFiPHEAFD3EZHgalVFPFNrj/0=;
+	s=arc-20240116; t=1741577422; c=relaxed/simple;
+	bh=MGKPW1coI7Z3QH7W+Y7LUNMIzX8a1dh6h0jgLZoKwFI=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=YFHa8I8MPUS23bC4csp7wjroeIqDEEp57Th4Ar+dZBxFD0k4/zatcKX+ecc5Q6vdhH3qZMTI9CazU47SGrrP8U3iE29C4IkJqRbQw8lVpXV9yrh7fooHbQjaAC+GLmf9KiFYUTj136wJyDOLdf4RwM7h1rRZTYh5n/h4CH+ZEnk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MmYrumJi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=gHwAK6U7b/TkStpZa4fg7VQ2Y1e1imJHwclEWDurH2RbQhK2yfD4Y08b3CiXLtCX00KXQgr/AH2H721ACYLlzHD0XmMDRlSRlWvx6xQKjAVsICILfgBD/+uvGxZWFS03m6z1SIethBZWhcfyPSNlRAxGsJlFkx4qeKpaul30BtQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o9hQvVWp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MmYrumJi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8E396C4CEED;
-	Mon, 10 Mar 2025 03:30:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o9hQvVWp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CB2EFC4CEE5;
+	Mon, 10 Mar 2025 03:30:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741577420;
-	bh=ZPyqeWtAAyzggjqfBXFFiPHEAFD3EZHgalVFPFNrj/0=;
+	s=k20201202; t=1741577422;
+	bh=MGKPW1coI7Z3QH7W+Y7LUNMIzX8a1dh6h0jgLZoKwFI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=MmYrumJiIoGxdhYzRde0dNMr7UqVDPRsceFl7SpYfOGJaj7g28sEgDsKbDhKZMSnb
-	 rVdIDPdJhVDc5t82fXT4+ULyl882m2WcsgReKq784yoXdDSwOikixWaDE/l2aR1T5X
-	 NrwykLSofeJmrUnv5mvroe24tDwVSwW6qbdeVHvq76OcAe0WlOY32RItxeKAE+v3Yf
-	 uw+F1AFzEuwzyOcv/5qu2VVKn0Q/hbczlEJzjmHjHrwZ4R+tEbdjgA7bPhBvyiIKil
-	 BFuNH+JqVGGsJ5lH4PxSzacNBOpJgeFKv4Vjef7+lgYNM94skue5e1waazlab0nzUk
-	 1BL4MO0lgLQEA==
+	b=o9hQvVWp5+FzYgGBsjzzF1gAKW5/FUBlTuFY2R8Pi88B8ZM4ePSE4P922aqN1xoFo
+	 OEQjDpC8xEtuCcB/uH/zGd6gonXeENq5BcAvp+ljV+NEKewNEJYkaM4wjD40qYnQtY
+	 f5684phKg1LjX8gHd7qK6S5TxjVq8L9dIC8rvKp5IIwUulmrcQEFrIt8Uy/woaKzo7
+	 ab314ygBTBeVpubW0F9w/GjrToPY0OhyyVwlhnB+U8OL0ZnifLvHuQAgfX4H2UiUKb
+	 RPdRmy4I2h+o0aRLcS2tF7tQAhFKQj3iOqmziEmTvsm7PjHHyARMXiYCiMab/5IULy
+	 YCwTii+pIityw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>,
-	Mat Martineau <martineau@kernel.org>
-Subject: [PATCH mptcp-next v3 1/2] mptcp: add bpf_iter_task for mptcp_sock
-Date: Mon, 10 Mar 2025 11:30:09 +0800
-Message-ID: <e04cc2fa5f500097ac7d95afb94f68d0d8dc0057.1741577149.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 2/2] bpf: Customize mptcp's own sock lock
+Date: Mon, 10 Mar 2025 11:30:10 +0800
+Message-ID: <cd9867878907b588f3525dc45380955f9fa43e76.1741577149.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1741577149.git.tanggeliang@kylinos.cn>
 References: <cover.1741577149.git.tanggeliang@kylinos.cn>
@@ -46,138 +45,94 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-To make sure the mptcp_subflow bpf_iter is running in the
-MPTCP context. This patch adds a simplified version of tracking
-for it:
+In order to customize mptcp's own sock lock and release functions,
+sk_lock_sock() and sk_release_sock() function pointers are added to
+struct sock, and these pointers are called in BPF Cgroup getsockopt
+and setsockopt.
 
-1. Add a 'struct task_struct *bpf_iter_task' field to struct
-mptcp_sock.
-
-2. Do a WRITE_ONCE(msk->bpf_iter_task, current) before calling
-a MPTCP BPF hook, and WRITE_ONCE(msk->bpf_iter_task, NULL) after
-the hook returns.
-
-3. In bpf_iter_mptcp_subflow_new(), check
-
-	"READ_ONCE(msk->bpf_scheduler_task) == current"
-
-to confirm the correct task, return -EINVAL if it doesn't match.
-
-Also creates helpers for setting, clearing and checking that value.
-
-Suggested-by: Mat Martineau <martineau@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c      |  2 ++
- net/mptcp/protocol.c |  1 +
- net/mptcp/protocol.h | 20 ++++++++++++++++++++
- net/mptcp/sched.c    | 15 +++++++++++----
- 4 files changed, 34 insertions(+), 4 deletions(-)
+ include/net/sock.h   |  2 ++
+ kernel/bpf/cgroup.c  |  8 ++++----
+ net/mptcp/protocol.c | 15 +++++++++++++++
+ 3 files changed, 21 insertions(+), 4 deletions(-)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index c0da9ac077e4..0a78604742c7 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -261,6 +261,8 @@ bpf_iter_mptcp_subflow_new(struct bpf_iter_mptcp_subflow *it,
- 		return -EINVAL;
+diff --git a/include/net/sock.h b/include/net/sock.h
+index 8daf1b3b12c6..4341c58e351e 100644
+--- a/include/net/sock.h
++++ b/include/net/sock.h
+@@ -540,6 +540,8 @@ struct sock {
+ 	int			(*sk_backlog_rcv)(struct sock *sk,
+ 						  struct sk_buff *skb);
+ 	void                    (*sk_destruct)(struct sock *sk);
++	void                    (*sk_lock_sock)(struct sock *sk);
++	void                    (*sk_release_sock)(struct sock *sk);
+ 	struct sock_reuseport __rcu	*sk_reuseport_cb;
+ #ifdef CONFIG_BPF_SYSCALL
+ 	struct bpf_local_storage __rcu	*sk_bpf_storage;
+diff --git a/kernel/bpf/cgroup.c b/kernel/bpf/cgroup.c
+index 46e5db65dbc8..a105e9e5b9c8 100644
+--- a/kernel/bpf/cgroup.c
++++ b/kernel/bpf/cgroup.c
+@@ -1843,10 +1843,10 @@ int __cgroup_bpf_run_filter_setsockopt(struct sock *sk, int *level,
+ 		goto out;
+ 	}
  
- 	msk = mptcp_sk(sk);
-+	if (!mptcp_check_bpf_iter_task(msk))
-+		return -EINVAL;
+-	lock_sock(sk);
++	sk->sk_lock_sock ? sk->sk_lock_sock(sk) : lock_sock(sk);
+ 	ret = bpf_prog_run_array_cg(&cgrp->bpf, CGROUP_SETSOCKOPT,
+ 				    &ctx, bpf_prog_run, 0, NULL);
+-	release_sock(sk);
++	sk->sk_release_sock ? sk->sk_release_sock(sk) : release_sock(sk);
  
- 	msk_owned_by_me(msk);
+ 	if (ret)
+ 		goto out;
+@@ -1952,10 +1952,10 @@ int __cgroup_bpf_run_filter_getsockopt(struct sock *sk, int level,
+ 		}
+ 	}
  
+-	lock_sock(sk);
++	sk->sk_lock_sock ? sk->sk_lock_sock(sk) : lock_sock(sk);
+ 	ret = bpf_prog_run_array_cg(&cgrp->bpf, CGROUP_GETSOCKOPT,
+ 				    &ctx, bpf_prog_run, retval, NULL);
+-	release_sock(sk);
++	sk->sk_release_sock ? sk->sk_release_sock(sk) : release_sock(sk);
+ 
+ 	if (ret < 0)
+ 		goto out;
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 01157ad2e2dc..d98e48ce8cd8 100644
+index d98e48ce8cd8..29c3ee2fb4cd 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -2729,6 +2729,7 @@ static void __mptcp_init_sock(struct sock *sk)
- 	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
- 	WRITE_ONCE(msk->csum_enabled, mptcp_is_checksum_enabled(sock_net(sk)));
- 	WRITE_ONCE(msk->allow_infinite_fallback, true);
-+	mptcp_clear_bpf_iter_task(msk);
- 	msk->recovery = false;
- 	msk->subflow_id = 1;
- 	msk->last_data_sent = tcp_jiffies32;
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 3492b256ecba..1c6958d64291 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -334,6 +334,7 @@ struct mptcp_sock {
- 				 */
- 	struct mptcp_pm_data	pm;
- 	struct mptcp_sched_ops	*sched;
-+	struct task_struct *bpf_iter_task;
- 	struct {
- 		u32	space;	/* bytes copied in last measurement window */
- 		u32	copied; /* bytes copied in this measurement window */
-@@ -1291,4 +1292,23 @@ mptcp_token_join_cookie_init_state(struct mptcp_subflow_request_sock *subflow_re
- static inline void mptcp_join_cookie_init(void) {}
- #endif
- 
-+static inline void mptcp_set_bpf_iter_task(struct mptcp_sock *msk)
-+{
-+	WRITE_ONCE(msk->bpf_iter_task, current);
-+}
-+
-+static inline void mptcp_clear_bpf_iter_task(struct mptcp_sock *msk)
-+{
-+	WRITE_ONCE(msk->bpf_iter_task, NULL);
-+}
-+
-+static inline bool mptcp_check_bpf_iter_task(struct mptcp_sock *msk)
-+{
-+	struct task_struct *task = READ_ONCE(msk->bpf_iter_task);
-+
-+	if (task && task == current)
-+		return true;
-+	return false;
-+}
-+
- #endif /* __MPTCP_PROTOCOL_H */
-diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-index f09f7eb1d63f..161398f8960c 100644
---- a/net/mptcp/sched.c
-+++ b/net/mptcp/sched.c
-@@ -155,6 +155,7 @@ void mptcp_subflow_set_scheduled(struct mptcp_subflow_context *subflow,
- int mptcp_sched_get_send(struct mptcp_sock *msk)
- {
- 	struct mptcp_subflow_context *subflow;
-+	int ret;
- 
- 	msk_owned_by_me(msk);
- 
-@@ -176,12 +177,16 @@ int mptcp_sched_get_send(struct mptcp_sock *msk)
- 
- 	if (msk->sched == &mptcp_sched_default || !msk->sched)
- 		return mptcp_sched_default_get_send(msk);
--	return msk->sched->get_send(msk);
-+	mptcp_set_bpf_iter_task(msk);
-+	ret = msk->sched->get_send(msk);
-+	mptcp_clear_bpf_iter_task(msk);
-+	return ret;
+@@ -2712,6 +2712,18 @@ static void mptcp_worker(struct work_struct *work)
+ 	sock_put(sk);
  }
  
- int mptcp_sched_get_retrans(struct mptcp_sock *msk)
++static void mptcp_sk_lock_sock(struct sock *sk)
++{
++	lock_sock(sk);
++	mptcp_set_bpf_iter_task(mptcp_sk(sk));
++}
++
++static void mptcp_sk_release_sock(struct sock *sk)
++{
++	mptcp_clear_bpf_iter_task(mptcp_sk(sk));
++	release_sock(sk);
++}
++
+ static void __mptcp_init_sock(struct sock *sk)
  {
- 	struct mptcp_subflow_context *subflow;
-+	int ret;
- 
- 	msk_owned_by_me(msk);
- 
-@@ -196,7 +201,9 @@ int mptcp_sched_get_retrans(struct mptcp_sock *msk)
- 
- 	if (msk->sched == &mptcp_sched_default || !msk->sched)
- 		return mptcp_sched_default_get_retrans(msk);
--	if (msk->sched->get_retrans)
--		return msk->sched->get_retrans(msk);
--	return msk->sched->get_send(msk);
-+	mptcp_set_bpf_iter_task(msk);
-+	ret = msk->sched->get_retrans ? msk->sched->get_retrans(msk) :
-+					msk->sched->get_send(msk);
-+	mptcp_clear_bpf_iter_task(msk);
-+	return ret;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+@@ -2741,6 +2753,9 @@ static void __mptcp_init_sock(struct sock *sk)
+ 	/* re-use the csk retrans timer for MPTCP-level retrans */
+ 	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+ 	timer_setup(&sk->sk_timer, mptcp_tout_timer, 0);
++
++	sk->sk_lock_sock = mptcp_sk_lock_sock;
++	sk->sk_release_sock = mptcp_sk_release_sock;
  }
+ 
+ static void mptcp_ca_reset(struct sock *sk)
 -- 
 2.43.0
 
