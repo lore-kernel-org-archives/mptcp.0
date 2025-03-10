@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5CD241DE3A6
-	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:18:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CE48021CA14
+	for <mptcp@lists.linux.dev>; Mon, 10 Mar 2025 23:19:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741648726; cv=none; b=pZxgrjjXmgAS3LiAYzJEd1RbcpNJoEEpPRxCxxnmipfONhyb94FaKwWVhtRej12SuUkWt1mV6FeQS95oXrp16UATkApSuB7VKsTKWbG7cgmFiveej0L4V39flwk6sSOtTYtxS3ARFW3piuFNClMickl21nGQKlcp9g77FTWnVMQ=
+	t=1741648744; cv=none; b=VFBoNfb2do0tUbEKxSQ8AHA6QzWNf2jgkIHc3Tqai70DvrQ6FDKs9QRphjWNDLWhhkFGQ1HVXaBxZJd+O/NgEhw/UoH9yYW4YziqzD7LzbQTaLNMKBY8mf8eZz95kjRKGHR7HARVU0QzkQ8x3iCRlrwTcn0EVVDZ6GTJ/LU15eE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741648726; c=relaxed/simple;
-	bh=eqgooHrbEiT7xe21Xsn+acwE3vRFhxCtXjsE0/1MqIs=;
+	s=arc-20240116; t=1741648744; c=relaxed/simple;
+	bh=n0HsBOediQhPw7G/ZyHm44BQvX/e7IOiTP3J+9qIge4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qk0Hww34HgE14iAx7w4qz8E9fGeIFDtSR/vI68su9UlXb522OZeBgqPlk9FB7UfyOUuGbXA6fHxwsFXGoROjZiEuWIFZWkWZOjD0VLWU9ryt2J6quhhLn6Cwq/qvmWnGLiof5RYXSJhq8KGjbH30hhDJ3MJ4zjYriPoYaO9g+js=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dH5JlUQU; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Fq1EniXenqcDrsekg1WuO2vv4U5zT0VdpluzXuV9hpgpj5kaBoAdxHALEwHBbwDpPS0XAe3eKOHej+UEil0PTDhoL7wI3+Yc2EarTcbhbCD5Ax1a/N8Ar2ilGJSHoDuwOKhbq0XsxQxYUIK4o/XVjSs92IHezbjjMmQTlyKKERU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t5MidhF6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dH5JlUQU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C1149C4CEE5;
-	Mon, 10 Mar 2025 23:18:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t5MidhF6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B5C58C4CEE5;
+	Mon, 10 Mar 2025 23:19:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741648725;
-	bh=eqgooHrbEiT7xe21Xsn+acwE3vRFhxCtXjsE0/1MqIs=;
+	s=k20201202; t=1741648744;
+	bh=n0HsBOediQhPw7G/ZyHm44BQvX/e7IOiTP3J+9qIge4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=dH5JlUQUZ3vbXWUuPX6cePBxx6Zipb0vnr7ZmLhaXxYC76ihCee9Ycv6vyJoCn9MF
-	 XL6kXX5wDrvYKqyoAJfPHs0aNdVZuovC9PhvqpKhlSe4U0jc/boyhAuP73BHeZQPxX
-	 0GlfpvYtgqq4hx1IT01466ZIE50W9xRjRnnPw9kFs81xTr8ANnoN4ldkqZYEE5/wXd
-	 pyQSHiQ+nD0A8hbcXsyJ+aWJlP1TE3Qyt6juwRxKSB5UJcleDVYbQsbquO6yVSxMfx
-	 V9B1SyKLl8OPw2XRtmMdy4HQ676f3Q3bpyaMbf79GLU7J2/KcD28qLe4qWhX/uxAMe
-	 Tyd37C0BTxLuw==
-Message-ID: <c1168a97-3604-4aaf-aebe-2ca5b2ebe44b@kernel.org>
-Date: Tue, 11 Mar 2025 00:18:39 +0100
+	b=t5MidhF67AvJjoGGHidymP1ROfiF+ZZd29ftcMafaBHMMKh7cl0SMOW2PkMysMfB2
+	 ioFFpsHGb8KCcVkahef2FEeRpGf1gkKe7sA/U3i++ydsueh0Q7Z9Qt4wBJaxjFFbZ4
+	 ZjuIvidfVxZw4gTF3FQ15hK5qOYPpg/t7J0g2hrXpP6n0p3nVVMiX92xAiVwEW/zzB
+	 1jEN2bfJZ3zLvMWEb/y7q5JAMeXoatw5hXCU8QM8XK9BJADRIRlAVSMPE7Tq4cXTp8
+	 Ls/gB/iIQdtEd/l0rog7ypYfjZ0zTTB+qX+v9FQ0N5QuiSFFUb9ieMDLXOK+KovNrw
+	 g3VPxKVB3RXgA==
+Message-ID: <079b6444-660e-42c7-934f-e9b064b73668@kernel.org>
+Date: Tue, 11 Mar 2025 00:18:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v10 05/12] mptcp: pm: init and release
- mptcp_pm_ops
+Subject: Re: [PATCH mptcp-next v10 08/12] mptcp: pm: validate mandatory ops
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741258415.git.tanggeliang@kylinos.cn>
- <e1a69a1ee9ca25f12a244e5470341c23364de424.1741258415.git.tanggeliang@kylinos.cn>
+ <40c12b3865d03d2a173d10538ea38f3b2c9745ca.1741258415.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e1a69a1ee9ca25f12a244e5470341c23364de424.1741258415.git.tanggeliang@kylinos.cn>
+In-Reply-To: <40c12b3865d03d2a173d10538ea38f3b2c9745ca.1741258415.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,69 +95,47 @@ Hi Geliang,
 On 06/03/2025 12:01, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Add a struct mptcp_pm_ops pointer "ops" in struct mptcp_pm_data, and two
-> helpers mptcp_pm_ops_init() and mptcp_pm_ops_release(), to set and release
-> this pointer. mptcp_pm_ops_init() is invoked in mptcp_pm_data_reset(),
-> while mptcp_pm_ops_release() is invoked in mptcp_pm_destroy().
+> This patch adds a helper mptcp_pm_validate() to check whether required
+> ops are defined. It will be invoked in .validate of struct bpf_struct_ops.
 > 
-> mptcp_pm_kernel_init() is defined as init() interface of the in-kernel PM,
-> which sets work_pending, accept_addr and accept_subflow.
-> 
-> mptcp_pm_userspace_is_release() is defined as release() interface of the
-> userspace PM, which is a wrapper of userspace_pm_free_local_addr_list().
+> Currently mandatory ops of mptcp_pm_ops are get_local_id and get_priority.
+
+Because more ops will be added soon, it looks a bit strange to introduce
+this helper now, no? If you have to change something else in this
+series, maybe best to squash this in patch 2/12 ("mptcp: pm: define
+struct mptcp_pm_ops") but ...
+
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm.c           | 55 ++++++++++++++++++++++++++--------------
->  net/mptcp/pm_kernel.c    | 19 ++++++++++++++
->  net/mptcp/pm_userspace.c |  6 +++++
->  net/mptcp/protocol.h     |  1 +
->  4 files changed, 62 insertions(+), 19 deletions(-)
+>  net/mptcp/pm.c       | 16 ++++++++++++++++
+>  net/mptcp/protocol.h |  1 +
+>  2 files changed, 17 insertions(+)
 > 
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 1400bfed4b0d..1a2f1715871c 100644
+> index 29bc903658f7..5d666b0891b3 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-
-(...)
-
->  void mptcp_pm_data_reset(struct mptcp_sock *msk)
->  {
-> -	u8 pm_type = mptcp_get_pm_type(sock_net((struct sock *)msk));
-> +	const struct net *net = sock_net((struct sock *)msk);
-> +	const char *pm_name = mptcp_get_path_manager(net);
-> +	u8 pm_type = mptcp_get_pm_type(net);
->  	struct mptcp_pm_data *pm = &msk->pm;
+> @@ -1045,8 +1045,24 @@ struct mptcp_pm_ops *mptcp_pm_find(const char *name)
+>  	return NULL;
+>  }
 >  
->  	memset(&pm->reset, 0, sizeof(pm->reset));
->  	WRITE_ONCE(pm->pm_type, pm_type);
->  
-> -	if (pm_type == MPTCP_PM_TYPE_KERNEL) {
-> -		bool subflows_allowed = !!mptcp_pm_get_subflows_max(msk);
-> -
-> -		/* pm->work_pending must be only be set to 'true' when
-> -		 * pm->pm_type is set to MPTCP_PM_TYPE_KERNEL
-> -		 */
-> -		WRITE_ONCE(pm->work_pending,
-> -			   (!!mptcp_pm_get_local_addr_max(msk) &&
-> -			    subflows_allowed) ||
-> -			   !!mptcp_pm_get_add_addr_signal_max(msk));
-> -		WRITE_ONCE(pm->accept_addr,
-> -			   !!mptcp_pm_get_add_addr_accept_max(msk) &&
-> -			   subflows_allowed);
-> -		WRITE_ONCE(pm->accept_subflow, subflows_allowed);
-> -	}
-> +	rcu_read_lock();
-> +	mptcp_pm_ops_init(msk, mptcp_pm_find(pm_name));
-> +	rcu_read_unlock();
->  
->  	bitmap_fill(pm->id_avail_bitmap, MPTCP_PM_MAX_ADDR_ID + 1);
+> +int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops)
+> +{
+> +	if (!pm_ops->get_local_id || !pm_ops->get_priority) {
+> +		pr_err("%s does not implement required ops\n", pm_ops->name);
+> +		return -EINVAL;
+> +	}
 
-I just noticed that this bitmap is currently only used by the in-kernel
-PM, so this could be moved to mptcp_pm_kernel_init() as well, no?
+... without this if-statement: this can be introduced when adding each
+mandatory ops. I think this will help better understanding that they are
+mandatory when they are being introduced (patch 7 and 8/12). WDYT?
 
-I guess we will not need this bitmap for the future BPF PM, because
-future BPF PM can use a BPF map instead if they need that I suppose, no?
+(Please then add something like this in the commit message of patch 2/12
+after the squash:)
+
+  mptcp_pm_validate() will be invoked in .validate of struct
+  bpf_struct_ops. That's why this function is exported.
 
 Cheers,
 Matt
