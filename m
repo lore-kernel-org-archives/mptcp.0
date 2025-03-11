@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3BEDF1DED63
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 08:53:59 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B622222D7A3
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 08:59:27 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683240; cv=none; b=N0DRndJH1odPKSqPRddJLRuzxPzn6UE2qLHeAqpmuVFNjettX7VU6ocrRm2SAs49zhqtVMqSiMA+f6IjSTVeu9WFU0HwrQqXhDvzKzS3/qKrzkJzS5XG5b4u45jVudBch35I0jRHD991aRvvVGLVBqoCPrEPys/IhANGy6FSjlY=
+	t=1741683567; cv=none; b=Ns6OytP0QroLpJ7HQvZLZTTXhYLjIp9EcmZCMzn07cuauH9rEMrgGRGxLdqODXCB9l6gsyEVAXtiRUWY4NPUnMiqDqPa13sWp79F2RcFje2Kw/sRVhpt8NhhkLZPxQJyPpo95/KehusWUACmFSwIHSwcSRrhlTrw3P86h6ypgdY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683240; c=relaxed/simple;
-	bh=YD2O1d4HiJSbg6omozAIhxMEIGtRtSwtUl7uiOVbDcc=;
+	s=arc-20240116; t=1741683567; c=relaxed/simple;
+	bh=Fxc9bF0S+sc0t51o1RxZkW9U21+MQh76xr+MZb4m+kY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=htjJ5ucDh9NIaNR4HQxAuH9l+YM+SCaK6iY07oT3kniNpY922kUKZiL7FcnXqaKe1eafuw9IbKg8Ch//NONJPG+Vd0kDTVhMgiM+sWwmGbLjdpEfmylJY84TLT6npXYf1MtiYGY1ArQ+c0f8kGq8Sir876KEMne6zs0BuH9MsVg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T1taZnBm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=HDpebX+njmX/7sx3SXiEb21YBJY7dIE7nf9CYQDXt/twWKQsYB/NWsi8607cZbnsRraz7gIQ+kFnoooX7iReBX6X4i/j90e19WSZHCGTraDVr7YXzk9VhTT1/GqGROFsQmwYQGeXySWzh6+uOAcH5ssQuzTwZu10YdaQjUKBdiw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N47kuWN9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T1taZnBm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58862C4CEED;
-	Tue, 11 Mar 2025 08:53:58 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N47kuWN9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5B4C4CEE9;
+	Tue, 11 Mar 2025 08:59:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741683239;
-	bh=YD2O1d4HiJSbg6omozAIhxMEIGtRtSwtUl7uiOVbDcc=;
+	s=k20201202; t=1741683567;
+	bh=Fxc9bF0S+sc0t51o1RxZkW9U21+MQh76xr+MZb4m+kY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=T1taZnBmeJC9j3HqklvV8XgWnZCPQCs7jfR7Hmxr4AY62lzd4x4bFWunw136mwzSe
-	 WtiA4TkKK9NVvEkFsPFuRD2ZoSGANrPe9OiYlbdehHvT7oGcfiIPI1PYNPKoqnp8pg
-	 UGlal/DiIRQYSiXR/0l5PxbiePUwFXCOGSvbpELg41p4YgobPt8Q4NEOeNQ/smI9Qi
-	 vWa3KB3KtXg2CF3yKS4p65SooYsq+ngx/im9fbc5GZHPBdlwvucIhqxtkrewlXFgNv
-	 j6Ay84g2y8Ip+AREzaL8fOf370rieLTfme59xZzONmRQVxmhWtrQT9f1SMNvbhfti+
-	 y0fiKWMKHVCnQ==
-Message-ID: <14695635-1c95-4574-94d5-32a3dca3a1e2@kernel.org>
-Date: Tue, 11 Mar 2025 09:53:54 +0100
+	b=N47kuWN9/5qbYOwwi40S3clOrO9ZglQFwVq8fsyeY7wltvlBfV+rD2Ima67go8XNi
+	 E3Ja9j9y3WqglyqLVSu1nLyGCiR4a5FtFA3942PBh0lx8jFMrKRxEbumAP5niXuQXU
+	 pSJ/RoXDuUuJdQNHa4I7wrsFgsFviXZZHaSMo8huFtIAdy09lEDxu0+lDISQFRknjY
+	 7cRZT3/rqxcUL5QhIzZpW/OMdyekAYB2/DKPhvtrAyvwIml1z7Zb6DGS2B3N+STMjU
+	 ov3bcPYFS0GzMxYK8p+7pdL3bsE49O6HS0bAMZvcBpeRlR79dsybjtCTaGKokSwM0K
+	 wfZHbaH37z5Kg==
+Message-ID: <729905ab-21d6-4d05-9b56-033b1f7b14ee@kernel.org>
+Date: Tue, 11 Mar 2025 09:59:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v10 04/12] mptcp: add struct_group in
- mptcp_pm_data
+Subject: Re: [PATCH mptcp-next v2 0/2] add struct_group in mptcp_pm_data
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1741258415.git.tanggeliang@kylinos.cn>
- <9133981edb83438ee10e6da9ef4e5cc6bf7f188b.1741258415.git.tanggeliang@kylinos.cn>
- <26482cc0-abce-464e-96ba-826217c779d8@kernel.org>
- <938c0376842a7873ca28802aae71bf655d9d2e2f.camel@kernel.org>
+References: <cover.1741674101.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -89,35 +85,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <938c0376842a7873ca28802aae71bf655d9d2e2f.camel@kernel.org>
+In-Reply-To: <cover.1741674101.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 11/03/2025 05:24, Geliang Tang wrote:
-> Hi Matt,
+On 11/03/2025 07:23, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Thanks for the review.
+> v2:
+>  - A new patch to fill id_avail_bitmap for in-kernel pm only.
+>  - Do not reset id_avail_bitmap, rm_list_tx and rm_list_rx in
+>    struct_group.
 > 
-> On Tue, 2025-03-11 at 00:17 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 06/03/2025 12:01, Geliang Tang wrote:
->>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>
->>> This patch adds a "struct_group(reset, ...)" in struct
->>> mptcp_pm_data to
->>> simplify the reset, and make sure we don't miss any.
->>
->> Do you mind checking if, before this patch, we didn't already miss
->> the
->> reset of some fields? (I think I quickly checked last time and
->> everything was reset here, or a bit later (e.g. server_side). If we
-> 
-> Yes, I did check this, and nothing is missing.
+> Geliang Tang (2):
+>   mptcp: pm: only fill id_avail_bitmap for in-kernel pm
+>   mptcp: pm: add struct_group in mptcp_pm_data
 
-Great, thank you for having checked!
+
+Thank you for these patches! They look good to me:
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
 Cheers,
 Matt
