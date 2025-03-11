@@ -1,165 +1,127 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 493011C3C1C
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 06:59:06 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 529B91EB195
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 07:30:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741676347; cv=none; b=KA3o8fEqPgKCKHSpbEDdtd7LtqLCJI840kMSiZpIM0OwLKAaAFanxfgFvVBYSD47k6u7vWKPH4l9IqtnZA0KX42YPNmNJrvatjyGoqrw1NROkl8InSIoPnSPd3ZmKtGVftLFAX5OEk3yCTrtamMvCHDzuSfyuU9yEYdCLL46av4=
+	t=1741678234; cv=none; b=tpUpbBD5tGT9bjGoE9Sc6Gu48IO7THwxvyhIaQCFa5J2lTbeoz13kdc2WnUCjsnR3BpAeT/OU87OrYxacl16masKnREK5lUDDU8dUZ7JkPt2m48HEkU5Po5Lwl/KLO0bSzsiglJVPvtLyBCg6bj6hAT8rskDwZpvmvCFP7K3GHE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741676347; c=relaxed/simple;
-	bh=YtR9PvoWF2Q9cMclj96lsJRvi6sj3SfJ3TOLTiq1q0Y=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=meCwRqOTbtqq7tYXiKATUGxDNmLJYywxBsmx2YnMAqoGMx9S62II9+yHNGdDzL2VOq3k1/PVIL66OOL+MxB4DKXIylCmZhykUziD55WEPHT4Qfa6GCh1wYDu/lAleOKAFLJSteC2w9XYSsAbg/tOzw/3SnYO6Xp7ekE+Zb7GaeQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=n8p2KKcl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741678234; c=relaxed/simple;
+	bh=22ncF8CGnrsT+5Sv9XhsJ6gl8bdXjDP4NjgropXKGbo=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Fd0T/vM5PxIP2c5k8nzdL9VDJovnDzeAVF5VAIW27fJIYn3pbocRiYkvWgtjFewNPETmUIoOCJtcuPaAvpk1hmkcXElw+zqBu2hhtZY9KKOaqvjFlSzR44chI8Ni5scG+1CsvQ8RzN7FRyQy+N796bRxM0eoO1CloeJ9CxQ+sSM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=hqHSe1qu; arc=none smtp.client-ip=209.85.222.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="n8p2KKcl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C831DC4CEE9;
-	Tue, 11 Mar 2025 06:59:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741676346;
-	bh=YtR9PvoWF2Q9cMclj96lsJRvi6sj3SfJ3TOLTiq1q0Y=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=n8p2KKclopHbSxLiHmLtUH4JdnF0Dg8yT0S8YHwJECfIGoU+7Y0f8eB4HnCayqOa0
-	 TNobPKrse+DGr0jAP1VwLIGQJzvubKFLdWWmNPFxsPItoHCTbM6bj4Cdgq29wXIDDO
-	 CeJfSOf/Ge3igorTZ6dT0EgXBtN2T9Gh7Uv/zgIKtgkuEFqzNDiHIyPEckPA6GJx+3
-	 if8EcU5YhPMUv8imvRvITYbnf9FwgDgEhb7Qs2yD8getK+IKHL5dWEiKOaW+OpXsrO
-	 7qoBK218j6ev+4e0LS4Db4jC+OXhCTtEY24IOuaSMoDJJcDLaAaUS10feKr1L1UTbA
-	 SEtEGsIqnImYw==
-Message-ID: <550ac963af5a37bcc9afd5b5045d67e5a8da8d37.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v11 00/10] BPF path manager, part 5
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Tue, 11 Mar 2025 14:59:03 +0800
-In-Reply-To: <cover.1741674285.git.tanggeliang@kylinos.cn>
-References: <cover.1741674285.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hqHSe1qu"
+Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7c089b2e239so459822885a.0
+        for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 00:30:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1741678232; x=1742283032; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=VpKbYlyYQqi6rFP+FK9H8yIp6Z4fm6+S6khi2A4xdfw=;
+        b=hqHSe1querExeZVDtahWhKB3rQeUl0rKqE+5hGBsnEUssdeJ9xUmDtjGEKMW5MMf+L
+         qoKV5W+T1hvbfP14Vey58yaW+MjMBjjvSIffpBcRN8Po3A9/8s21t7H8rC8g2UTCH//b
+         4KCNERw88TSCZrr1aJs7WcZgMGKh4noUuYtBsKCsRicmFUdPqOj6zjIHGzZIgQ0E9+0c
+         9Urb3nfd0zYsnSPfgDqFr2rvIjqLKY3ycL5mMKOTgiovft3K4mxzMvgNI1REgGQwMnz0
+         hrFNXGOu/43XkLDTPfEtdyzNMto5sUEx9Knt5NPIJZT2wx/JdLet+4rRErS9wf4e6SwK
+         l6hQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1741678232; x=1742283032;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=VpKbYlyYQqi6rFP+FK9H8yIp6Z4fm6+S6khi2A4xdfw=;
+        b=nxIRlExs6qmKLMphlTS4mUWI6Ra/n8DY6rBFJG2G/FI012KlTzRNRFNUQvsBBi+zAn
+         cy3fn18s0mNonlGCBGpfyOFAfccHk87yNMj94TkSFCGFMrnii/0pj/1YWwGAcCr/MI4X
+         wh4RE+gapYUx2IdCIEORi/0SG3MiPBEgfsMPzXKim13ygx5vREQZlDI/0/gwzvQ77SKx
+         TNQzUW/t4uhmnX47Cjyr4/iDNBPCTysIlD+CW+p6u7IzmFOijci/LcXLBAT3oBS/fKcg
+         BlPJOqW/EJn9a/cXGgzLe5jpEZyjiUDWkDm9+xR5DgDxs0dAL+MOTf/tGUW9FCkMCLfu
+         nLuA==
+X-Gm-Message-State: AOJu0YwyBYlPTG3TgI/WFYQw9uYCkeme5uzA690GpyC67aul9FaCYlfI
+	ZcmCCsFHqCeznSjAG6Rtp4KspNp9qkJeVF1q6E+8rZUCMCa22izYCrKm
+X-Gm-Gg: ASbGncsPqqkE0RE0fnIuuWfqYSgg3RAr0peUWrKZZqH8V0+DOBFWP1G5PDB6AtHCHqS
+	oury+5fy5H/Urs3vcr7VJgzErddtpKBYcov6eXEm8l1dlYoiwp6hY0Q/ZsJ3BU+sdol7vsHHRDN
+	ZdjxdHbTN2oksjMQiw3D2q9zcPpXhNWTDBJU6Tlyw5XjAnFT41wb+wT6kuEhK9XXAjf4Lb2F287
+	Juu9M/JqxKfJ3cPLEfkQnW0hngW6xgQ83OvI+qbtrT6j/jDi4/ZXnD5SOhau4cEQmRQXM+Oawp5
+	8dl6MCCH79aaqS8B2hMH7dVG6v0yJLU8XeZyYjUNz17xy+RGmojmzquz
+X-Google-Smtp-Source: AGHT+IGOWeSwWI89NzUo85P/q5wG86nn0xQtJBGmpMU8MCEulTXNrAe8iLU72pV/Rmxr6qwQ2MDqMg==
+X-Received: by 2002:a05:620a:4883:b0:7c0:b018:5934 with SMTP id af79cd13be357-7c55ef126cemr362830485a.27.1741678232038;
+        Tue, 11 Mar 2025 00:30:32 -0700 (PDT)
+Received: from [127.0.0.1] ([20.57.47.221])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c55f112215sm102617285a.109.2025.03.11.00.30.30
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 11 Mar 2025 00:30:30 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1741674101.git.tanggeliang@kylinos.cn>
+References: <cover.1741674101.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2 0/2] add struct_group in mptcp_pm_data
+Message-ID: <26b3f7c3-cb84-8f78-a8d4-f4d0557bad74@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Tue, 11 Mar 2025 07:30:30 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-On Tue, 2025-03-11 at 14:31 +0800, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> v11:
->  - add bitmap_fill(id_avail_bitmap) in mptcp_pm_kernel_init.
->  - squash mptcp_pm_validate into "mptcp: pm: define struct
->    mptcp_pm_ops".
->  - map path_manager to pm_type after mptcp_set_path_manager().
->  - change 'char *pm_name = "unknown"' to 'char *pm_name = ""'.
->  - update pm mapping selftests.
+Hi Geliang,
 
-Sorry, I forgot to add "Based-on" here. So I resend this v11 to trigger
-CI tests. Sorry for the mess.
+Thank you for your modifications, that's great!
 
-Thanks,
--Geliang
+Our CI did some validations and here is its report:
 
-> 
-> v10:
->  - drop pm->init in mptcp_pm_validate, move mptcp_pm_validate into a
-> new
->    patch.
->  - remove tlb, use ctl instead in proc_pm_type.
->  - use "strncmp() == 0" instead of "!strncmp()".
->  - set pm_type __MPTCP_PM_TYPE_NR for other names.
->  - add WARN_ON_ONCE in mptcp_pm_unregister.
->  - drop mptcp_userspace_pm_init.
->  - rename "struct mptcp_pm_ops *pm" to "struct mptcp_pm_ops *pm_ops".
->  - drop pm_ops NULL check in mptcp_pm_release.
->  - add struct_group for struct mptcp_pm_data.
->  - move selftests into userspace_pm.sh.
-> 
-> v9:
->  - rename mptcp_pm_nl_ prefix to mptcp_pm_kernel_.
->  - rename mptcp_userspace_pm_ prefix to mptcp_pm_userspace_.
->  - update commit logs.
-> 
-> v8:
->  - address Matt's comments in v7.
-> 
-> v7:
->  - addresss Matt's comments in v6 [1].
->  - drop "type" from struct mptcp_pm_ops as Matt suggested.
->  - map "pm_type" to new sysctl as Matt suggested.
-> 
-> v6:
->  - add "name" in struct mptcp_pm_ops.
->  - add some "sysctl" patches.
->  - drop "struct mptcp_pm_param".
->  - drop "pm_type" in mptcp_pm_data.
-> 
-> v5:
->  - use "struct mptcp_pm_param *param" as unified parameters for all
->    interfaces.
->  - register in-kernel mptcp_pm_ops too.
->  - only implement two interfaces "get_local_id" and "get_priority" in
->    this set.
-> 
-> v4:
->  - include a new patch "define BPF path manager type".
-> 
->  - add new interfaces:
-> 	created established closed
-> 	listerner_created listener_closed
-> 
->  - rename interfaces as:
-> 	address_announced address_removed
-> 	subflow_established subflow_closed
-> 	get_priority set_priority
-> 
->  - rename functions as:
-> 	mptcp_pm_validate
-> 	mptcp_pm_register
-> 	mptcp_pm_unregister
-> 	mptcp_pm_initialize
-> 	mptcp_pm_release
-> 
-> v3:
->  - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
->  - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
->  - return 'err' instead of '0' in userspace_pm_subflow_create().
->  - drop 'ret' variable inmptcp_pm_data_reset().
->  - fix typos in commit log.
-> 
-> v2:
->  - update get_local_id interface in patch 2.
-> 
-> get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
-> as Matt suggested.
-> 
-> In order to implement BPF path manager, it's necessary to unify the
-> interfaces of the path manager. This set contains some cleanups and
-> refactoring to unify the interfaces in kernel space. Finally, define
-> a struct mptcp_pm_ops for a path manager.
-> 
-> Geliang Tang (10):
->   mptcp: pm: define struct mptcp_pm_ops
->   mptcp: pm: register in-kernel and userspace PM
->   mptcp: sysctl: set path manager by name
->   mptcp: pm: init and release mptcp_pm_ops
->   mptcp: pm: add get_local_id() interface
->   mptcp: pm: add get_priority() interface
->   mptcp: sysctl: map path_manager to pm_type
->   mptcp: sysctl: map pm_type to path_manager
->   mptcp: sysctl: add available_path_managers
->   selftests: mptcp: add pm sysctl mapping tests
-> 
->  Documentation/networking/mptcp-sysctl.rst     |  23 +++
->  include/net/mptcp.h                           |  19 +++
->  net/mptcp/ctrl.c                              | 113 +++++++++++++-
->  net/mptcp/pm.c                                | 145 ++++++++++++++--
-> --
->  net/mptcp/pm_kernel.c                         |  37 ++++-
->  net/mptcp/pm_userspace.c                      |  26 +++-
->  net/mptcp/protocol.h                          |  18 ++-
->  .../selftests/net/mptcp/userspace_pm.sh       |  30 +++-
->  8 files changed, 368 insertions(+), 43 deletions(-)
-> 
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/13781890400
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/6d0529e1674f
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D942573
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
