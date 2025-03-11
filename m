@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 87E6A1E9B22
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 23:31:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF5421A427
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 23:34:41 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741735916; cv=none; b=Zz/DBVTu9lfdgY54d4KAtdwHUCfbCU5Aodh8b08NMlM3NPWsojSmROdh/Wie4fZTJErGzKveMdWX1Qav6l864ixtL0CPZgr6Q0zFHtELZHsQwXOL9k5uNXZ12oPIUD3ffQY3SpAJ7x9rWSiU+YqTd+IWtOfu6bOEi/XAyslXG0E=
+	t=1741736081; cv=none; b=Hpfdq4+1ArjMlmMEtpEzWcJQDDpRcf1XICo/17LcRYlgdv0ksKyBYPJDA/GcYxBO+0i0Ql/F7EH+nGBtnSmWixIdWjTNAhxpycZcGwcvgXx5qlM6bzvzkxTnAATV/xBhmn7rIUH2wJ3mg2C7Vzt72WpRae9cdLf0+fTefZ9oSxA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741735916; c=relaxed/simple;
-	bh=kENmoYwq2MK9sHJuY8J0QHuZVdAaUsZNgcbUCzXWka8=;
+	s=arc-20240116; t=1741736081; c=relaxed/simple;
+	bh=R1cj1v1t89jFRQfR5iWxv5HfqiIAm+mtm7IeZPtWV10=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZM3BKBWCriySetV9Y1R3bNhRr9s2cvALpj2pjAbztVBneBLkJzJFGnTLaE79gwTxZFxBVWaDDSlqrZFF1mlk9+4h9lV3A5h2YVg3ay2n54v4zHx5lk9J3cEfbSo1ubRRXJrbOPJ1cj37XvFdPEYylLfleesjQYBbN8th4HIboXU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=J2Hw+xFn; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ZYm/UEDOWVLZRlkduVCawkaxIqMF0uYJhHIDQEvI6MV4vhmU3tp1bNb4UUFWijAr8wZSS/UPOYKZo0peiwpmXzWz8w5r8tvJp8r44ZSS76W5E0aEBz1fwKfjlRm1IT8HDpKU0WpoOMoZoo03Jf0eR6QK27t2sxJ3N+zYJJiALqU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTWXI8yI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="J2Hw+xFn"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9535EC4CEE9;
-	Tue, 11 Mar 2025 23:31:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTWXI8yI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A55CC4CEE9;
+	Tue, 11 Mar 2025 23:34:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741735916;
-	bh=kENmoYwq2MK9sHJuY8J0QHuZVdAaUsZNgcbUCzXWka8=;
+	s=k20201202; t=1741736081;
+	bh=R1cj1v1t89jFRQfR5iWxv5HfqiIAm+mtm7IeZPtWV10=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=J2Hw+xFnFVCShOkSVJRvYcN97UW/uP57k4nxFWjqb3K3OQed7PhEo5g396gtIkpwi
-	 2+P3u2wk87WY+8cpeV/NkvoDHYX09HEhb1UunqMnnwj5VNziHDsihSKYG/sKztM9TE
-	 jrZ8y6cz5hA2szU/NUbwANkr/WK2ixBVgCGjKGaX2ds/Krq5iynswG/XXL9mJaRPg8
-	 Wa+Kq+ihaSfpXqiP3RpCTdjJdfWqoCkqGHHfF4t9g4z1qONBHJVAQJlIE5+e6ICwps
-	 EPPStxBhY3oXauurBXUvtqluJGTUNxcdtOZzsnstWb0TKP60rzCMh17h5eIc5Zqrce
-	 g1oBzpefHsIaQ==
-Message-ID: <d5e69afe-c025-42f4-b477-39ba08b4dab4@kernel.org>
-Date: Wed, 12 Mar 2025 00:31:50 +0100
+	b=PTWXI8yIqiInGZlr4/a3Nc3fILYq0r9sMA9e4/jSOOwozJVDCtQ4ZXkSHW8oELyX8
+	 roGgv5CdCgdZDZ2gqsomkNNbGMO0gNpdVvjlH6xGOlCGX+ojaQb3+SolG0wkLr4py4
+	 7BLdGsIqUxz5+T3fuCrBvVVAMD3RfsxnwqUNI3/Gm87al65tO7xnK63oOFjHr3JjQ3
+	 Qyyh4zvALcL+P4qZp7Uyy9+JuD6thXfqXefEdNG8MdAVSTd10s9fCyXKH7x+Qa06ux
+	 KvMkSSG8Q7i/d/R4cITMhJyEcROMrY0/SIzTJYqMF+nRNrymlm0cxdAtJnPw/W7hVG
+	 vxzkz3OCGlI6A==
+Message-ID: <a73a1114-7156-4a28-b739-ed71c37dec5c@kernel.org>
+Date: Wed, 12 Mar 2025 00:34:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 4/6] mptcp: pm: add add_addr_echo()
- interface
+Subject: Re: [PATCH mptcp-next v1 5/6] mptcp: pm: add established() interface
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741685260.git.tanggeliang@kylinos.cn>
- <a550107394e989fb5557ce16fbb54050f4a20551.1741685260.git.tanggeliang@kylinos.cn>
+ <7b91f66e9fcd99e1e7b10bfead7bc01bdcda114a.1741685260.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,108 +86,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a550107394e989fb5557ce16fbb54050f4a20551.1741685260.git.tanggeliang@kylinos.cn>
+In-Reply-To: <7b91f66e9fcd99e1e7b10bfead7bc01bdcda114a.1741685260.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
 
 On 11/03/2025 10:32, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The helper mptcp_pm_is_userspace() is used to distinguish userspace PM
-> operations from in-kernel PM in mptcp_pm_add_addr_received(). It seems
-> reasonable to add a mandatory .add_addr_echo interface for struct
-> mptcp_pm_ops.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  include/net/mptcp.h      |  2 ++
->  net/mptcp/pm.c           | 36 ++++++++++++++++++------------------
->  net/mptcp/pm_kernel.c    |  7 +++++++
->  net/mptcp/pm_userspace.c | 12 ++++++++++++
->  net/mptcp/protocol.h     |  2 ++
->  5 files changed, 41 insertions(+), 18 deletions(-)
-> 
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 5f2d94b2f97f..1f4d0d3988c1 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -128,6 +128,8 @@ struct mptcp_pm_ops {
->  	bool (*accept_new_subflow)(const struct mptcp_sock *msk);
->  	void (*subflow_check_next)(struct mptcp_sock *msk,
->  				   const struct mptcp_subflow_context *subflow);
-> +	void (*add_addr_echo)(struct mptcp_sock *msk,
+> This patch adds a .established interface for struct mptcp_pm_ops, and
+> calls pm->ops->established in from mptcp_pm_worker(). Then get rid of
+> the corresponding code from __mptcp_pm_kernel_worker().
 
-add_addr_received instead?
+(...)
 
-> +			      const struct mptcp_addr_info *addr);
->  
->  	char			name[MPTCP_PM_NAME_MAX];
->  	struct module		*owner;
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index d8a5c2c06500..dc7ab696c24b 100644
+> index dc7ab696c24b..dc3ab2fa987f 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -529,6 +529,22 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
->  	msk->pm.ops->subflow_check_next(msk, subflow);
->  }
->  
-> +void mptcp_pm_add_addr_echo(struct mptcp_sock *msk,
-> +			    const struct mptcp_addr_info *addr)
+> @@ -903,6 +903,11 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+>  		mptcp_pm_rm_addr_recv(msk);
+>  	}
+> +	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
+> +		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
+> +		if (pm->ops->established)
 
-Why is this here if it is only used by the kernel PM?
-
-> +{
-> +	struct mptcp_pm_data *pm = &msk->pm;
-> +
-> +	if ((addr->id == 0 && !mptcp_pm_is_init_remote_addr(msk, addr)) ||
-> +	    (addr->id > 0 && !READ_ONCE(pm->accept_addr))) {
-> +		mptcp_pm_announce_addr(msk, addr, true);
-> +		mptcp_pm_add_addr_send_ack(msk);
-> +	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
-> +		pm->remote = *addr;
-> +	} else {
-> +		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-> +	}
-> +}
-> +
->  void mptcp_pm_add_addr_received(const struct sock *ssk,
->  				const struct mptcp_addr_info *addr)
->  {
-> @@ -543,23 +559,7 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
->  
->  	spin_lock_bh(&pm->lock);
->  
-> -	if (mptcp_pm_is_userspace(msk)) {
-> -		if (mptcp_userspace_pm_active(msk)) {
-> -			mptcp_pm_announce_addr(msk, addr, true);
-> -			mptcp_pm_add_addr_send_ack(msk);
-> -		} else {
-> -			__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-> -		}
-> -	/* id0 should not have a different address */
-> -	} else if ((addr->id == 0 && !mptcp_pm_is_init_remote_addr(msk, addr)) ||
-> -		   (addr->id > 0 && !READ_ONCE(pm->accept_addr))) {
-> -		mptcp_pm_announce_addr(msk, addr, true);
-> -		mptcp_pm_add_addr_send_ack(msk);
-> -	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
-
-Here as well, I think the worker scheduling should be done from pm.c if
-an optional callback is set, and this callback should be called from the
-worker.
-
-Maybe we need 2 callbacks here? One to know if there is a need to be
-called from a worker, then add_addr_received? Or: can we not always send
-the ADD_ADDR echo here, and schedule the worker if there is a need to?
-So we would drop the "if (mptcp_userspace_pm_active(msk))" condition
-above, but maybe that's OK? (We would need a dedicate patch for that)
-
-> -		pm->remote = *addr;
-> -	} else {
-> -		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-
-I think this MIB counter should be incremented from here, not from each PM.
+Same here, then no need to schedule the worker if !pm->ops->established.
 
 Cheers,
 Matt
