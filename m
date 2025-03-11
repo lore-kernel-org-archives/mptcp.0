@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F323C360
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 06:46:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B090F360
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 06:46:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741675596; cv=none; b=ayyAR38KRA1WirdN9txTDgHPIStPPBBobVQ7tznxK+BGtjNLRFTCMlFbIPIv5H55jTDXlpsDzCA8QwtlSoFBP0WJV6sdJMOLMcIAcM3PgJ3CkW4o6W5qtDJuDK3SrBjvsi/kUzda6PzqIPVFHBogX4D86pQ/rFcFmYm1UC54JWo=
+	t=1741675597; cv=none; b=nSVWQc8k0OnI0NguYKA5WoZhHtSk8aBpQkYf0t/KX+gOYBcxcyA4+6TsxUPYcNDR27Q9MdEK9udL/RW8d55baWVSWt1cj/jnPuGLJXFvDhQ8yzGCUyEfHGjiE5ZXaAfKmMRor//ekhO6OvQAHkD108WUl95qV1bODRO+4e56vXM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741675596; c=relaxed/simple;
-	bh=OhwYR31+IhA2KME5QZm3e1i7HD/AKq4Nksok1oesewY=;
+	s=arc-20240116; t=1741675597; c=relaxed/simple;
+	bh=oNWnP3dFUGf54fFAbPaMRgKKSKm2ROkfP3OqKveubjs=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iRuBYi5Xti01TOUpwyB4n2LDdb8STUAIRwJUuqBG2kqHq/g4LW90OmV/n6SA2QLOI9mrPFfy32uCulur7cdGB0tQf92tUtI6lSy124FuC/U7FfpjLz2iwGuf69lPpmvQ+IUTqE1xWYqIKhZCxJcNKuIdT5jgtE4Tut0JU6MOUc0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=QDBM3ivk; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=U9A9Dexeg3+BVq18VpfCDrajWwJKEm32KQoJdQ/M+h2mbCl1FRPUupKCAQk5R+TStnEpAGH+anx/DDD4f7fvqLBJeKu6tbwxVreMMfqrM6aZ0oBo16wr77I00szfwA3qkMS+tSsvw6xayoK7caW2sNZxSA6NERssEA+458KlAbA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Uddc+HKD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="QDBM3ivk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF80C4CEEA;
-	Tue, 11 Mar 2025 06:46:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Uddc+HKD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1F809C4CEE9;
+	Tue, 11 Mar 2025 06:46:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741675595;
-	bh=OhwYR31+IhA2KME5QZm3e1i7HD/AKq4Nksok1oesewY=;
+	s=k20201202; t=1741675597;
+	bh=oNWnP3dFUGf54fFAbPaMRgKKSKm2ROkfP3OqKveubjs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=QDBM3ivkRvrv3S+Zog91Kg0mRmjN/BBxcZcL3Nz+Q1qeQ2ZZ6FLRzYZRK52lE8IiQ
-	 CC0YxJTqBqg1L3S2VZSiLI1YOE++32Hxrf91gOVf/mUO+0RWT4Jz7cEPi8mEGewgGU
-	 j6GxRDzAgwyHbuOrXtYX2x6OAQCx5pBS6IDaIVXoNHoUjqKrOlVfnu/PVMIUcpH8N5
-	 hcblFw3pcAbk53li/w+4HAJpuZ0KMhPNkoOlRSP24NY/QFGov9DwLrat9+7o0KbZF6
-	 I7OhvdGygidAhiP9tc6qdL3EJoagiUcMz0uAasP2mSShQGjlSpnQTarTOm7YxTLCu4
-	 LTnMf1k+2s/7g==
+	b=Uddc+HKDc6I0LphX6UpRfr3TqC0t4MIfRrciBfqF/PD13/JA2K65LhJ0k6AjOHtoC
+	 jfYpf5SYA6LLGiZW6qcwGUWD7USsHHvZmuUyGSIIIysyCQxK2B9l86bNDsQH/q9gQ+
+	 6H1WgQiQ5qgVjZVC7a+xynvgYEW2cgiTbnBig6AWlDbkETdPHi06jDfyQ0+icptSLm
+	 K/bSk9xm06ku+HSFbtHzhGsYf6qrZROQ4ZJiUX4QjwcdtqlwMc+kX2spXIyRYcIwpY
+	 ETBWgUMCaQvTqvRvwzscId11pNlAawC4zLwsY3FLgt1WZDsypHKSdf2KjGsJSJ3A9q
+	 MJAMhW6zFBANw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH RESEND mptcp-next v11 01/10] mptcp: pm: define struct mptcp_pm_ops
-Date: Tue, 11 Mar 2025 14:46:18 +0800
-Message-ID: <c974979c2a69ec69c676e4ca7a9b713bbd2390db.1741674285.git.tanggeliang@kylinos.cn>
+Subject: [PATCH RESEND mptcp-next v11 02/10] mptcp: pm: register in-kernel and userspace PM
+Date: Tue, 11 Mar 2025 14:46:19 +0800
+Message-ID: <2928be52eee7f083a74c71eeb70c6c046cf5450c.1741674285.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1741674285.git.tanggeliang@kylinos.cn>
 References: <cover.1741674285.git.tanggeliang@kylinos.cn>
@@ -42,152 +42,110 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Message-ID: <20250311064618.dXdev7KwItabo_2rPAxN9GU5fNy1ZfyP8LLd34fPZa8@z>
+Message-ID: <20250311064619.aWiEXVBbk5B29PeElHl2sxc9TiNJneaw7h1FiO7Km8c@z>
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In order to allow users to develop their own BPF-based path manager,
-this patch defines a struct ops "mptcp_pm_ops" for an MPTCP path
-manager, which contains a set of interfaces. Currently only init()
-and release() interfaces are included, subsequent patches will add
-others step by step.
+This patch defines the original in-kernel netlink path manager as a
+new struct mptcp_pm_ops named "mptcp_pm_kernel", and register it in
+mptcp_pm_kernel_register(). And define the userspace path manager as
+a new struct mptcp_pm_ops named "mptcp_pm_userspace", and register it
+in mptcp_pm_init().
 
-Add a set of functions to register, unregister, find and validate a
-given path manager struct ops.
-
-"list" is used to add this path manager to mptcp_pm_list list when
-it is registered. "name" is used to identify this path manager.
-mptcp_pm_find() uses "name" to find a path manager on the list.
-
-mptcp_pm_unregister is not used in this set, but will be invoked in
-.unreg of struct bpf_struct_ops. mptcp_pm_validate() will be invoked
-in .validate of struct bpf_struct_ops. That's why they are exported.
+To ensure that there's always a valid path manager available, the default
+path manager "mptcp_pm_kernel" will be skipped in mptcp_pm_unregister().
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/mptcp.h  | 12 +++++++++++
- net/mptcp/pm.c       | 50 ++++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/protocol.h |  5 +++++
- 3 files changed, 67 insertions(+)
+ net/mptcp/pm.c           |  5 +++++
+ net/mptcp/pm_kernel.c    |  7 +++++++
+ net/mptcp/pm_userspace.c | 10 ++++++++++
+ net/mptcp/protocol.h     |  4 ++++
+ 4 files changed, 26 insertions(+)
 
-diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-index e9832a8f981e..69f7b35e57c3 100644
---- a/include/net/mptcp.h
-+++ b/include/net/mptcp.h
-@@ -14,6 +14,7 @@
- 
- struct mptcp_info;
- struct mptcp_sock;
-+struct mptcp_pm_addr_entry;
- struct seq_file;
- 
- /* MPTCP sk_buff extension data */
-@@ -112,6 +113,17 @@ struct mptcp_sched_ops {
- 	void (*release)(struct mptcp_sock *msk);
- } ____cacheline_aligned_in_smp;
- 
-+#define MPTCP_PM_NAME_MAX	16
-+
-+struct mptcp_pm_ops {
-+	char			name[MPTCP_PM_NAME_MAX];
-+	struct module		*owner;
-+	struct list_head	list;
-+
-+	void (*init)(struct mptcp_sock *msk);
-+	void (*release)(struct mptcp_sock *msk);
-+} ____cacheline_aligned_in_smp;
-+
- #ifdef CONFIG_MPTCP
- void mptcp_init(void);
- 
 diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 85ee999729a1..f4948a2cf9be 100644
+index f4948a2cf9be..3896f21a46bd 100644
 --- a/net/mptcp/pm.c
 +++ b/net/mptcp/pm.c
-@@ -5,6 +5,8 @@
-  */
- #define pr_fmt(fmt) "MPTCP: " fmt
- 
-+#include <linux/rculist.h>
-+#include <linux/spinlock.h>
- #include "protocol.h"
- #include "mib.h"
- 
-@@ -18,6 +20,9 @@ struct mptcp_pm_add_entry {
- 	struct mptcp_sock	*sock;
- };
- 
-+static DEFINE_SPINLOCK(mptcp_pm_list_lock);
-+static LIST_HEAD(mptcp_pm_list);
-+
- /* path manager helpers */
- 
- /* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
-@@ -1015,3 +1020,48 @@ void __init mptcp_pm_init(void)
+@@ -1018,6 +1018,7 @@ void mptcp_pm_data_init(struct mptcp_sock *msk)
+ void __init mptcp_pm_init(void)
+ {
  	mptcp_pm_kernel_register();
++	mptcp_pm_userspace_register();
  	mptcp_pm_nl_init();
  }
+ 
+@@ -1061,6 +1062,10 @@ int mptcp_pm_register(struct mptcp_pm_ops *pm_ops)
+ 
+ void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops)
+ {
++	/* skip unregistering the default path manager */
++	if (WARN_ON_ONCE(pm_ops == &mptcp_pm_kernel))
++		return;
 +
-+/* Must be called with rcu read lock held */
-+struct mptcp_pm_ops *mptcp_pm_find(const char *name)
+ 	spin_lock(&mptcp_pm_list_lock);
+ 	list_del_rcu(&pm_ops->list);
+ 	spin_unlock(&mptcp_pm_list_lock);
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 806a9b5b3c07..d39e7c178460 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -1398,8 +1398,15 @@ static struct pernet_operations mptcp_pm_pernet_ops = {
+ 	.size = sizeof(struct pm_nl_pernet),
+ };
+ 
++struct mptcp_pm_ops mptcp_pm_kernel = {
++	.name			= "kernel",
++	.owner			= THIS_MODULE,
++};
++
+ void __init mptcp_pm_kernel_register(void)
+ {
+ 	if (register_pernet_subsys(&mptcp_pm_pernet_ops) < 0)
+ 		panic("Failed to register MPTCP PM pernet subsystem.\n");
++
++	mptcp_pm_register(&mptcp_pm_kernel);
+ }
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 13856df22673..2cb62f026b1f 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -682,3 +682,13 @@ int mptcp_userspace_pm_get_addr(u8 id, struct mptcp_pm_addr_entry *addr,
+ 	sock_put(sk);
+ 	return ret;
+ }
++
++static struct mptcp_pm_ops mptcp_pm_userspace = {
++	.name			= "userspace",
++	.owner			= THIS_MODULE,
++};
++
++void __init mptcp_pm_userspace_register(void)
 +{
-+	struct mptcp_pm_ops *pm_ops;
-+
-+	list_for_each_entry_rcu(pm_ops, &mptcp_pm_list, list) {
-+		if (!strcmp(pm_ops->name, name))
-+			return pm_ops;
-+	}
-+
-+	return NULL;
-+}
-+
-+int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops)
-+{
-+	return 0;
-+}
-+
-+int mptcp_pm_register(struct mptcp_pm_ops *pm_ops)
-+{
-+	int ret;
-+
-+	ret = mptcp_pm_validate(pm_ops);
-+	if (ret)
-+		return ret;
-+
-+	spin_lock(&mptcp_pm_list_lock);
-+	if (mptcp_pm_find(pm_ops->name)) {
-+		spin_unlock(&mptcp_pm_list_lock);
-+		return -EEXIST;
-+	}
-+	list_add_tail_rcu(&pm_ops->list, &mptcp_pm_list);
-+	spin_unlock(&mptcp_pm_list_lock);
-+
-+	pr_debug("%s registered\n", pm_ops->name);
-+	return 0;
-+}
-+
-+void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops)
-+{
-+	spin_lock(&mptcp_pm_list_lock);
-+	list_del_rcu(&pm_ops->list);
-+	spin_unlock(&mptcp_pm_list_lock);
++	mptcp_pm_register(&mptcp_pm_userspace);
 +}
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index b5c945064baf..2307f2fcbe9d 100644
+index 2307f2fcbe9d..f87c71550394 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
-@@ -1052,6 +1052,11 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+@@ -1052,6 +1052,9 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
  void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
  				struct mptcp_pm_addr_entry *entry);
  
-+struct mptcp_pm_ops *mptcp_pm_find(const char *name);
-+int mptcp_pm_register(struct mptcp_pm_ops *pm_ops);
-+void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops);
-+int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops);
++/* the default path manager, used in mptcp_pm_unregister */
++extern struct mptcp_pm_ops mptcp_pm_kernel;
 +
- void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk);
+ struct mptcp_pm_ops *mptcp_pm_find(const char *name);
+ int mptcp_pm_register(struct mptcp_pm_ops *pm_ops);
+ void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops);
+@@ -1160,6 +1163,7 @@ static inline u8 subflow_get_local_id(const struct mptcp_subflow_context *subflo
+ }
  
- void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
+ void __init mptcp_pm_kernel_register(void);
++void __init mptcp_pm_userspace_register(void);
+ void __init mptcp_pm_nl_init(void);
+ void mptcp_pm_worker(struct mptcp_sock *msk);
+ void __mptcp_pm_kernel_worker(struct mptcp_sock *msk);
 -- 
 2.43.0
 
