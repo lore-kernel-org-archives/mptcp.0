@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6ECA2264A74
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 22:03:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D39281E7C2B
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 22:39:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741730622; cv=none; b=AGTCpc3syhLJBOnW5prE1rWS0rGaET1TxQWe3nGx8B77umxowM1c62P3aOVfjjVPghwXrxX6eXGyQf/Bx9NI/e3XzUSdXrjB8HcJ+g5zhvRa2B5vUNWmT9BQVLI0DI/4qgHg8494Jla0gjVFpgBRrcANgN8210HpItpRHlkRvfE=
+	t=1741732751; cv=none; b=Eq1if+VKTTU4iAC3Booo22d/MaNNelbnQwZ3bRcD0ysv3LJOavHkVMZsSJ2DgVTwd0bTgNHla9UFgNyLaHhIWUta7hgYsxxWIT2IjhGjjeX4nMCz71lnVmb7rfPZcUMtpjiG9v4ruCxl1e+kOrl2tE6KD1QlqO5yMEcaqAHW7Rs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741730622; c=relaxed/simple;
-	bh=WPOEMw5T2ws9j1bk4ZjnK9JJDPqvj0Wy8oBlbukIafY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=fRgPwH3QhDlenEsYRWOVso1qDmV4lWX5aAXSB8UwUmS+fB/lifnyHgUKRcgiqx+qBkQY1AfILMB7rmbacQMWU83+Xji/QTeWs0wkVFyrkgBLUTYfPoBvrxSpD5rsRysNxqZ0k0zhC/RRpwvBGZ1/+9HX+Fo2nBy4tWRA1Fc21DU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gmn1Dpi9; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1741732751; c=relaxed/simple;
+	bh=usGOZOojm5+Dh0CT21QewlBCZ1mFPI5rF7J7ZvK20D0=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=ccOfBBzrTXQfdagQJ9rJUZblt/NQfb6lMqCSPOMY49QjoIxieFdzen71iWS4pt2Kc17KKyHNI5ERrqL4gu6Gf7aq2G6YsYrAKMLKL3ogyEm9IfHsEZs4kHxEtyJX7XfnnOFQswElBVtfn/+HVdvMKfmm3Y83zus0Tbr8TKP4nEQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i/0qDwy7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gmn1Dpi9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A307C4CEE9;
-	Tue, 11 Mar 2025 22:03:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i/0qDwy7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A887DC4CEE9;
+	Tue, 11 Mar 2025 22:39:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741730621;
-	bh=WPOEMw5T2ws9j1bk4ZjnK9JJDPqvj0Wy8oBlbukIafY=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gmn1Dpi9bID8U1am3SHliy4OV32IfBka6CJGM57KuqVy5q5WTztOlTrRcCooQaOlw
-	 /zXqEXdLMR0r8v/jmKzdD/2S3Prdv9V+3mpQ5JjIbTOs/ACk2iL7Kow7ftl/PxAEWO
-	 2a3CcvXKFVZf5fFchDWuKoE4QAQsyOkEGaNJdst2G8KGN6GuOMBsv9X88cHbNysHmz
-	 A4GHJJ+HDLuXZvvzl0+mOyQeVTal868dlAf4Zz2FkMSdiPMZN9t+A8oj4rW8OZp5/j
-	 1vbQZBxLdrIvLDOrsUN2VXWGHhAwYfdEQxceg1kP00gOYH/WxhCtayK4135rUeG3Sb
-	 AdqoOY4Q0Kx9Q==
-Message-ID: <6aa94b58-65ce-474c-b890-55e7a5725dd6@kernel.org>
-Date: Tue, 11 Mar 2025 23:03:31 +0100
+	s=k20201202; t=1741732749;
+	bh=usGOZOojm5+Dh0CT21QewlBCZ1mFPI5rF7J7ZvK20D0=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=i/0qDwy73PY04RzQBH3rN8vw/kgTHSXmyNCAJzeQQ8LYC/k/1p+jEO4v2yWMh76Sf
+	 2h/R4OqqQzzPFkXzPf0WFWOyGWixieTXFK2k2NItusAHH0/W0B7/+8jNLL+xm74+ok
+	 IP54kR3/g4F1ARIiEm2sfa4kEb18iXyGFVVkD4/+Z9lXnfkdlVot6xpKQ/TrDVgoI3
+	 jiIyhPGVB0bU9It5Su+91rBR9QpWTk2cyWXDHX91tZZht7LYTpobXbq+P0cTcBHB0q
+	 TUIo9sBZf4ppWMRFi0SKG/HUQuWsH1Y6+vHSF+grXON2Mz9D9OM/omqQOxYofh7Nf4
+	 DuVZua9+cwC/Q==
+Message-ID: <722850ce-1d8b-4153-bff3-7f96c01df6fe@kernel.org>
+Date: Tue, 11 Mar 2025 23:39:04 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,10 +37,11 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v11 00/10] BPF path manager, part 5
 Content-Language: en-GB
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741674285.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <6aa94b58-65ce-474c-b890-55e7a5725dd6@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,28 +86,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1741674285.git.tanggeliang@kylinos.cn>
+In-Reply-To: <6aa94b58-65ce-474c-b890-55e7a5725dd6@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
-
-On 11/03/2025 07:31, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 11/03/2025 23:03, Matthieu Baerts wrote:
+> Hi Geliang,
 > 
-> v11:
->  - add bitmap_fill(id_avail_bitmap) in mptcp_pm_kernel_init.
->  - squash mptcp_pm_validate into "mptcp: pm: define struct
->    mptcp_pm_ops".
->  - map path_manager to pm_type after mptcp_set_path_manager().
->  - change 'char *pm_name = "unknown"' to 'char *pm_name = ""'.
->  - update pm mapping selftests.
+> On 11/03/2025 07:31, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v11:
+>>  - add bitmap_fill(id_avail_bitmap) in mptcp_pm_kernel_init.
+>>  - squash mptcp_pm_validate into "mptcp: pm: define struct
+>>    mptcp_pm_ops".
+>>  - map path_manager to pm_type after mptcp_set_path_manager().
+>>  - change 'char *pm_name = "unknown"' to 'char *pm_name = ""'.
+>>  - update pm mapping selftests.
+> 
+> Thank you for the new version!
 
-Thank you for the new version!
+Now in our tree (feat. for net-next):
 
-It looks good to me:
+New patches for t/upstream:
+- 65af42fa552d: mptcp: pm: define struct mptcp_pm_ops
+- 60dbf3c5392c: mptcp: pm: register in-kernel and userspace PM
+- 16f4a1ec2359: mptcp: sysctl: set path manager by name
+- 59f4fd0d9b0b: mptcp: sysctl: map path_manager to pm_type
+- 7e3dbe52536d: mptcp: sysctl: map pm_type to path_manager
+- ae2be6b1ab64: mptcp: sysctl: add available_path_managers
+- dc69452c20e5: selftests: mptcp: add pm sysctl mapping tests
+- 9c827852b057: mptcp: pm: init and release mptcp_pm_ops
+- cc6386364b56: mptcp: pm: add get_local_id() interface
+- 75a9b54d9647: mptcp: pm: add get_priority() interface
+- Results: 336906910afb..ef50eaa97a0c (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/153a4b172efa4822ab857d7298e29fac02df6c13/checks
+
+
+I slightly changed the order to regroup the sysctl ones, because I might
+need to split the series when sending this upstream with other patches.
 
 Cheers,
 Matt
