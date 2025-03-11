@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152F513C3C2
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 06:32:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B881F13C3C2
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 06:32:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741674738; cv=none; b=b1+Ux7p49UwOFHPH1GIuNwnpLpSdjDDqmpd0eyvecAkyR0KeG58RAImMuvMJHALACY3GaaSl+ScHghKEMbDMQujNv2ZmgdV96cR/9KnqfTKy7WfLP4xa98JMBO33vLWqyeyUcYTrRY12r2DOQMjN9ykrlKgFJx+2h2qpqQEW5sQ=
+	t=1741674738; cv=none; b=U7S44xEOYKIz0dlquTN72ouP5xijxeISLrrbzB3Kq73FikRS8UOUEPVj9rJ9H5hM/55J99jOz9cMb5Nm4q+/lm7MkTNs/ybbqtF0DA0f0GQsS2B00SMIJF5RTb3MzzBMQ+N0Q0kzIyaDUkHG8t9a1GCyEFb9MzQ63YJSxQaue9A=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1741674738; c=relaxed/simple;
-	bh=Daf/EQppNmcHmNb5aBoI9rrLWosElsVeROKrFALY4k4=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=mTOq5qJMdRjWPHoIEnH0ocOXz1OGWl3aZzFEaWaT4WVdN7QraDiV+v6rSgMTq7/oN+kEbrdJniF6UTVrIIrw2HiWFKIZG5Obs58q8aNN/gRlkLbMcyNAbZ2VHmYS7S/KbLloWixB8gu2Xle6tZIhbxTdpPsSkx1mGLAMwdXx36o=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZnalSQwP; arc=none smtp.client-ip=10.30.226.201
+	bh=OhwYR31+IhA2KME5QZm3e1i7HD/AKq4Nksok1oesewY=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=RVH+pZLdZx+7vwPp0+oyJ/4BpjWU9Jn7Tvqkeo6D8j8X+tu7S3nQp4UHFcAtrfPGNM0M5wbKu9zijOVJK8iRaNP5/Y/uwLjG4EUNDPOg8FBSylO0vHnOSUJjZL9BD8eeybQCfYxWl5mkm3AvREUDIPqQqtT2GXRwW6StDAQ7ld0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KdF0E1/2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZnalSQwP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 504C0C4CEE9;
-	Tue, 11 Mar 2025 06:32:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KdF0E1/2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2937CC4CEEA;
+	Tue, 11 Mar 2025 06:32:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741674735;
-	bh=Daf/EQppNmcHmNb5aBoI9rrLWosElsVeROKrFALY4k4=;
-	h=From:To:Cc:Subject:Date:From;
-	b=ZnalSQwPbCKeHgYLmjnZKg/Leuh1lygeDGu6GbLHqfH0+u7V4ir0tU1K4EKpCiuGE
-	 18ScRea3G1Baqg1Wn685A+ivVUW6QR5vCesZu9nW4C+u1Nh/TYV/kAfqrkTUHy5F1b
-	 dBD3wWf+Hrn9PrSb1sr/dih3bZ5HPzf8Y/UVfGRvwojIwy1EuG8KSxgzAKZXp5atJ4
-	 pChGxzwqCxm5jzzw+l9V15/gF7UaaMQ9PquwqVrdCxRbvk8xOl6jIdMrqGl6DCwDOB
-	 ArU27kt5IBYgen3R75TQYkQI7DiypXmttLJ1n5UUQ42m0XcER9LEPzPUB1PDaPrjDI
-	 geozb6nhb6dJA==
+	s=k20201202; t=1741674737;
+	bh=OhwYR31+IhA2KME5QZm3e1i7HD/AKq4Nksok1oesewY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=KdF0E1/2shi64LRZpRTFvRF7TaV55tYE/kJ+NNAUdUDvkEGBfmlfbbcDGrUy8ASA5
+	 hwe9AVqZjHxkT2iyDB5QDdfcOWPnx4ypjwTWFtRs/hERq1uLdwX2Pnz6UaNw3B/nqe
+	 yOlUtJ/ikf0srTQ4fxJgNUw7+DUN17PmEoMXFXWYXorOOCvGM2u/oBzJqXZj0nJj9D
+	 Pm8Fr8Zomhz0rs6YbRTHGw4+2XG6hClO2TbHOQKHcKM90Wq3aP7ZTnS+i2M35ELrh5
+	 9irJtJuC1/CI7+12GD0rlREatzQgVV6eWOskqHQ6SodQ29jB/3rA6UCpgpdZ7S0KPi
+	 Sr6xCYr2Z25Lw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v11 00/10] BPF path manager, part 5
-Date: Tue, 11 Mar 2025 14:31:52 +0800
-Message-ID: <cover.1741674285.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v11 01/10] mptcp: pm: define struct mptcp_pm_ops
+Date: Tue, 11 Mar 2025 14:31:53 +0800
+Message-ID: <c974979c2a69ec69c676e4ca7a9b713bbd2390db.1741674285.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1741674285.git.tanggeliang@kylinos.cn>
+References: <cover.1741674285.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,112 +45,148 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v11:
- - add bitmap_fill(id_avail_bitmap) in mptcp_pm_kernel_init.
- - squash mptcp_pm_validate into "mptcp: pm: define struct
-   mptcp_pm_ops".
- - map path_manager to pm_type after mptcp_set_path_manager().
- - change 'char *pm_name = "unknown"' to 'char *pm_name = ""'.
- - update pm mapping selftests.
+In order to allow users to develop their own BPF-based path manager,
+this patch defines a struct ops "mptcp_pm_ops" for an MPTCP path
+manager, which contains a set of interfaces. Currently only init()
+and release() interfaces are included, subsequent patches will add
+others step by step.
 
-v10:
- - drop pm->init in mptcp_pm_validate, move mptcp_pm_validate into a new
-   patch.
- - remove tlb, use ctl instead in proc_pm_type.
- - use "strncmp() == 0" instead of "!strncmp()".
- - set pm_type __MPTCP_PM_TYPE_NR for other names.
- - add WARN_ON_ONCE in mptcp_pm_unregister.
- - drop mptcp_userspace_pm_init.
- - rename "struct mptcp_pm_ops *pm" to "struct mptcp_pm_ops *pm_ops".
- - drop pm_ops NULL check in mptcp_pm_release.
- - add struct_group for struct mptcp_pm_data.
- - move selftests into userspace_pm.sh.
+Add a set of functions to register, unregister, find and validate a
+given path manager struct ops.
 
-v9:
- - rename mptcp_pm_nl_ prefix to mptcp_pm_kernel_.
- - rename mptcp_userspace_pm_ prefix to mptcp_pm_userspace_.
- - update commit logs.
+"list" is used to add this path manager to mptcp_pm_list list when
+it is registered. "name" is used to identify this path manager.
+mptcp_pm_find() uses "name" to find a path manager on the list.
 
-v8:
- - address Matt's comments in v7.
+mptcp_pm_unregister is not used in this set, but will be invoked in
+.unreg of struct bpf_struct_ops. mptcp_pm_validate() will be invoked
+in .validate of struct bpf_struct_ops. That's why they are exported.
 
-v7:
- - addresss Matt's comments in v6 [1].
- - drop "type" from struct mptcp_pm_ops as Matt suggested.
- - map "pm_type" to new sysctl as Matt suggested.
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ include/net/mptcp.h  | 12 +++++++++++
+ net/mptcp/pm.c       | 50 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/protocol.h |  5 +++++
+ 3 files changed, 67 insertions(+)
 
-v6:
- - add "name" in struct mptcp_pm_ops.
- - add some "sysctl" patches.
- - drop "struct mptcp_pm_param".
- - drop "pm_type" in mptcp_pm_data.
-
-v5:
- - use "struct mptcp_pm_param *param" as unified parameters for all
-   interfaces.
- - register in-kernel mptcp_pm_ops too.
- - only implement two interfaces "get_local_id" and "get_priority" in
-   this set.
-
-v4:
- - include a new patch "define BPF path manager type".
-
- - add new interfaces:
-	created established closed
-	listerner_created listener_closed
-
- - rename interfaces as:
-	address_announced address_removed
-	subflow_established subflow_closed
-	get_priority set_priority
-
- - rename functions as:
-	mptcp_pm_validate
-	mptcp_pm_register
-	mptcp_pm_unregister
-	mptcp_pm_initialize
-	mptcp_pm_release
-
-v3:
- - rename the 2nd parameter of get_local_id() from 'local' to 'skc'.
- - keep the 'msk_sport' check in mptcp_userspace_pm_get_local_id().
- - return 'err' instead of '0' in userspace_pm_subflow_create().
- - drop 'ret' variable inmptcp_pm_data_reset().
- - fix typos in commit log.
-
-v2:
- - update get_local_id interface in patch 2.
-
-get_addr() and dump_addr() interfaces of BPF userspace pm are dropped
-as Matt suggested.
-
-In order to implement BPF path manager, it's necessary to unify the
-interfaces of the path manager. This set contains some cleanups and
-refactoring to unify the interfaces in kernel space. Finally, define
-a struct mptcp_pm_ops for a path manager.
-
-Geliang Tang (10):
-  mptcp: pm: define struct mptcp_pm_ops
-  mptcp: pm: register in-kernel and userspace PM
-  mptcp: sysctl: set path manager by name
-  mptcp: pm: init and release mptcp_pm_ops
-  mptcp: pm: add get_local_id() interface
-  mptcp: pm: add get_priority() interface
-  mptcp: sysctl: map path_manager to pm_type
-  mptcp: sysctl: map pm_type to path_manager
-  mptcp: sysctl: add available_path_managers
-  selftests: mptcp: add pm sysctl mapping tests
-
- Documentation/networking/mptcp-sysctl.rst     |  23 +++
- include/net/mptcp.h                           |  19 +++
- net/mptcp/ctrl.c                              | 113 +++++++++++++-
- net/mptcp/pm.c                                | 145 ++++++++++++++----
- net/mptcp/pm_kernel.c                         |  37 ++++-
- net/mptcp/pm_userspace.c                      |  26 +++-
- net/mptcp/protocol.h                          |  18 ++-
- .../selftests/net/mptcp/userspace_pm.sh       |  30 +++-
- 8 files changed, 368 insertions(+), 43 deletions(-)
-
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index e9832a8f981e..69f7b35e57c3 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -14,6 +14,7 @@
+ 
+ struct mptcp_info;
+ struct mptcp_sock;
++struct mptcp_pm_addr_entry;
+ struct seq_file;
+ 
+ /* MPTCP sk_buff extension data */
+@@ -112,6 +113,17 @@ struct mptcp_sched_ops {
+ 	void (*release)(struct mptcp_sock *msk);
+ } ____cacheline_aligned_in_smp;
+ 
++#define MPTCP_PM_NAME_MAX	16
++
++struct mptcp_pm_ops {
++	char			name[MPTCP_PM_NAME_MAX];
++	struct module		*owner;
++	struct list_head	list;
++
++	void (*init)(struct mptcp_sock *msk);
++	void (*release)(struct mptcp_sock *msk);
++} ____cacheline_aligned_in_smp;
++
+ #ifdef CONFIG_MPTCP
+ void mptcp_init(void);
+ 
+diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+index 85ee999729a1..f4948a2cf9be 100644
+--- a/net/mptcp/pm.c
++++ b/net/mptcp/pm.c
+@@ -5,6 +5,8 @@
+  */
+ #define pr_fmt(fmt) "MPTCP: " fmt
+ 
++#include <linux/rculist.h>
++#include <linux/spinlock.h>
+ #include "protocol.h"
+ #include "mib.h"
+ 
+@@ -18,6 +20,9 @@ struct mptcp_pm_add_entry {
+ 	struct mptcp_sock	*sock;
+ };
+ 
++static DEFINE_SPINLOCK(mptcp_pm_list_lock);
++static LIST_HEAD(mptcp_pm_list);
++
+ /* path manager helpers */
+ 
+ /* if sk is ipv4 or ipv6_only allows only same-family local and remote addresses,
+@@ -1015,3 +1020,48 @@ void __init mptcp_pm_init(void)
+ 	mptcp_pm_kernel_register();
+ 	mptcp_pm_nl_init();
+ }
++
++/* Must be called with rcu read lock held */
++struct mptcp_pm_ops *mptcp_pm_find(const char *name)
++{
++	struct mptcp_pm_ops *pm_ops;
++
++	list_for_each_entry_rcu(pm_ops, &mptcp_pm_list, list) {
++		if (!strcmp(pm_ops->name, name))
++			return pm_ops;
++	}
++
++	return NULL;
++}
++
++int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops)
++{
++	return 0;
++}
++
++int mptcp_pm_register(struct mptcp_pm_ops *pm_ops)
++{
++	int ret;
++
++	ret = mptcp_pm_validate(pm_ops);
++	if (ret)
++		return ret;
++
++	spin_lock(&mptcp_pm_list_lock);
++	if (mptcp_pm_find(pm_ops->name)) {
++		spin_unlock(&mptcp_pm_list_lock);
++		return -EEXIST;
++	}
++	list_add_tail_rcu(&pm_ops->list, &mptcp_pm_list);
++	spin_unlock(&mptcp_pm_list_lock);
++
++	pr_debug("%s registered\n", pm_ops->name);
++	return 0;
++}
++
++void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops)
++{
++	spin_lock(&mptcp_pm_list_lock);
++	list_del_rcu(&pm_ops->list);
++	spin_unlock(&mptcp_pm_list_lock);
++}
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index b5c945064baf..2307f2fcbe9d 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -1052,6 +1052,11 @@ int mptcp_pm_remove_addr(struct mptcp_sock *msk, const struct mptcp_rm_list *rm_
+ void mptcp_pm_remove_addr_entry(struct mptcp_sock *msk,
+ 				struct mptcp_pm_addr_entry *entry);
+ 
++struct mptcp_pm_ops *mptcp_pm_find(const char *name);
++int mptcp_pm_register(struct mptcp_pm_ops *pm_ops);
++void mptcp_pm_unregister(struct mptcp_pm_ops *pm_ops);
++int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops);
++
+ void mptcp_userspace_pm_free_local_addr_list(struct mptcp_sock *msk);
+ 
+ void mptcp_event(enum mptcp_event_type type, const struct mptcp_sock *msk,
 -- 
 2.43.0
 
