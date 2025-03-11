@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CFF5421A427
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 23:34:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 667D21F09B4
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 23:36:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741736081; cv=none; b=Hpfdq4+1ArjMlmMEtpEzWcJQDDpRcf1XICo/17LcRYlgdv0ksKyBYPJDA/GcYxBO+0i0Ql/F7EH+nGBtnSmWixIdWjTNAhxpycZcGwcvgXx5qlM6bzvzkxTnAATV/xBhmn7rIUH2wJ3mg2C7Vzt72WpRae9cdLf0+fTefZ9oSxA=
+	t=1741736164; cv=none; b=QUFrbCgdSyaploZR+VncbhF9wy0HZ73dAhiHeiKJEO3skar/Qlwmsk2C4b8uTOCrR0A2SgNupudjGc1ZaXYTqXwsSYG+Qnj/rfxqHpc3jEDUzwAUMUzDEeNUVwymkn2mVoOOgFy5zsgeqwtlZqN2UzVkgSf/nCRrwcQ6mrMinZo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741736081; c=relaxed/simple;
-	bh=R1cj1v1t89jFRQfR5iWxv5HfqiIAm+mtm7IeZPtWV10=;
+	s=arc-20240116; t=1741736164; c=relaxed/simple;
+	bh=ZoOH72bC7WGxHK4HqqRATo4Wmies/LkybuJf+ccKQYc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ZYm/UEDOWVLZRlkduVCawkaxIqMF0uYJhHIDQEvI6MV4vhmU3tp1bNb4UUFWijAr8wZSS/UPOYKZo0peiwpmXzWz8w5r8tvJp8r44ZSS76W5E0aEBz1fwKfjlRm1IT8HDpKU0WpoOMoZoo03Jf0eR6QK27t2sxJ3N+zYJJiALqU=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PTWXI8yI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=o61bEknbWWrGKxjz835hw9GyJCk+aEQARx4wnc1GSClTJSoiLmKLtCn29WjD/sHqshZ252Ifp2PBoyzn7Wu4vOHv3EbZpfZGERnYbns2pVDPoAuDjxDDPZNS4piXXYJKu/4AG6GG//a4ab8O80sZoo3FOh1V9qiC8ZOk7tQp7g4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EalzaOh6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PTWXI8yI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A55CC4CEE9;
-	Tue, 11 Mar 2025 23:34:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EalzaOh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D3FE5C4CEE9;
+	Tue, 11 Mar 2025 23:36:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741736081;
-	bh=R1cj1v1t89jFRQfR5iWxv5HfqiIAm+mtm7IeZPtWV10=;
+	s=k20201202; t=1741736163;
+	bh=ZoOH72bC7WGxHK4HqqRATo4Wmies/LkybuJf+ccKQYc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=PTWXI8yIqiInGZlr4/a3Nc3fILYq0r9sMA9e4/jSOOwozJVDCtQ4ZXkSHW8oELyX8
-	 roGgv5CdCgdZDZ2gqsomkNNbGMO0gNpdVvjlH6xGOlCGX+ojaQb3+SolG0wkLr4py4
-	 7BLdGsIqUxz5+T3fuCrBvVVAMD3RfsxnwqUNI3/Gm87al65tO7xnK63oOFjHr3JjQ3
-	 Qyyh4zvALcL+P4qZp7Uyy9+JuD6thXfqXefEdNG8MdAVSTd10s9fCyXKH7x+Qa06ux
-	 KvMkSSG8Q7i/d/R4cITMhJyEcROMrY0/SIzTJYqMF+nRNrymlm0cxdAtJnPw/W7hVG
-	 vxzkz3OCGlI6A==
-Message-ID: <a73a1114-7156-4a28-b739-ed71c37dec5c@kernel.org>
-Date: Wed, 12 Mar 2025 00:34:36 +0100
+	b=EalzaOh6x0d0zqDoACx9HAIYdX5sQjijcOt2ljVNGNDy5Dzz4jRui80EoaO335gjI
+	 ZANKm70Nr32JG5pKObK+wzBeEZ1dy3xprZjQDPwpz2SlfE6UP2WhQ3QCXUeoKBY4KN
+	 NS0hlwsiT1x8gthzumha6az6b9Ev4ozualJde9tqlYq7MpG+bda800YMEEJOMulA4q
+	 NGebtl0CkFtwVVufzMwBgc810nyOEkb0gHi3AcewUlL5wXxRLoziB5HfSvEERb86WU
+	 7Copi+ZrPUelYcA/A4ReVZEqhyr1ZBtkkISOQVT/pgJwphLoIuw2zVEAjRVwDKOShO
+	 MccWyu9tNCFYw==
+Message-ID: <1d61abfc-3b11-48c0-ac1f-13e554909fd8@kernel.org>
+Date: Wed, 12 Mar 2025 00:36:00 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 5/6] mptcp: pm: add established() interface
+Subject: Re: [PATCH mptcp-next v1 6/6] mptcp: pm: add subflow_established()
+ interface
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1741685260.git.tanggeliang@kylinos.cn>
- <7b91f66e9fcd99e1e7b10bfead7bc01bdcda114a.1741685260.git.tanggeliang@kylinos.cn>
+ <5251f022f18eef85a4ddf848cde344dddbb09b99.1741685260.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7b91f66e9fcd99e1e7b10bfead7bc01bdcda114a.1741685260.git.tanggeliang@kylinos.cn>
+In-Reply-To: <5251f022f18eef85a4ddf848cde344dddbb09b99.1741685260.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,25 +95,25 @@ Content-Transfer-Encoding: 7bit
 On 11/03/2025 10:32, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a .established interface for struct mptcp_pm_ops, and
-> calls pm->ops->established in from mptcp_pm_worker(). Then get rid of
-> the corresponding code from __mptcp_pm_kernel_worker().
+> This patch adds a .subflow_established interface for struct mptcp_pm_ops,
+> and calls pm->ops->subflow_established in from mptcp_pm_worker(). Then
+> get rid of the corresponding code from __mptcp_pm_kernel_worker().
 
 (...)
 
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index dc7ab696c24b..dc3ab2fa987f 100644
+> index dc3ab2fa987f..57b32232137e 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -903,6 +903,11 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
->  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
->  		mptcp_pm_rm_addr_recv(msk);
+> @@ -908,6 +908,11 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  		if (pm->ops->established)
+>  			pm->ops->established(msk);
 >  	}
-> +	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
-> +		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
-> +		if (pm->ops->established)
+> +	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
+> +		pm->status &= ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
+> +		if (msk->pm.ops->subflow_established)
 
-Same here, then no need to schedule the worker if !pm->ops->established.
+Same here, no need to schedule the worker if the call is not set.
 
 Cheers,
 Matt
