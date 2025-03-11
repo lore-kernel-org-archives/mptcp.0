@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B622222D7A3
-	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 08:59:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B62A1222576
+	for <mptcp@lists.linux.dev>; Tue, 11 Mar 2025 09:10:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741683567; cv=none; b=Ns6OytP0QroLpJ7HQvZLZTTXhYLjIp9EcmZCMzn07cuauH9rEMrgGRGxLdqODXCB9l6gsyEVAXtiRUWY4NPUnMiqDqPa13sWp79F2RcFje2Kw/sRVhpt8NhhkLZPxQJyPpo95/KehusWUACmFSwIHSwcSRrhlTrw3P86h6ypgdY=
+	t=1741684221; cv=none; b=KsgGVPjl/EDMvuT96TT9AP2y2DetCJ249PZtxjYN/Oaoo2FtES7zX/BqJLSkkTis7d3aq1MVScuLlTvwOxZWvxTpzETvS5w3wkalNEinyC6d7iJn2w+SKqfFJ87XlaDq6c/wdeMcp7UOtv+kD2KAqkJdq2/cXd9k9A33hYJOf8Q=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741683567; c=relaxed/simple;
-	bh=Fxc9bF0S+sc0t51o1RxZkW9U21+MQh76xr+MZb4m+kY=;
+	s=arc-20240116; t=1741684221; c=relaxed/simple;
+	bh=AGiYojRS7TxZkbtMOzMfJ9wVpBzKkvvJ434ZgIMyBRA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=HDpebX+njmX/7sx3SXiEb21YBJY7dIE7nf9CYQDXt/twWKQsYB/NWsi8607cZbnsRraz7gIQ+kFnoooX7iReBX6X4i/j90e19WSZHCGTraDVr7YXzk9VhTT1/GqGROFsQmwYQGeXySWzh6+uOAcH5ssQuzTwZu10YdaQjUKBdiw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=N47kuWN9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ejyD4jP58jbUGYm78+Coclh+V1j/FyZQgtNRT5t8hBppgR5JfjfrGJ4ZwwZ/ksCvC08ksknanqRUUNWrzvi9lRxtRk2IqijgyM08mR+cDC3fEV7Y5Zjo99JGXaafWJkM4NnLlokFiw2LPuPTATi6Kg8qF5O04ndFthFMWp21hjw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fK/Uislr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="N47kuWN9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DE5B4C4CEE9;
-	Tue, 11 Mar 2025 08:59:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fK/Uislr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 423E8C4CEE9;
+	Tue, 11 Mar 2025 09:10:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741683567;
-	bh=Fxc9bF0S+sc0t51o1RxZkW9U21+MQh76xr+MZb4m+kY=;
+	s=k20201202; t=1741684221;
+	bh=AGiYojRS7TxZkbtMOzMfJ9wVpBzKkvvJ434ZgIMyBRA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=N47kuWN9/5qbYOwwi40S3clOrO9ZglQFwVq8fsyeY7wltvlBfV+rD2Ima67go8XNi
-	 E3Ja9j9y3WqglyqLVSu1nLyGCiR4a5FtFA3942PBh0lx8jFMrKRxEbumAP5niXuQXU
-	 pSJ/RoXDuUuJdQNHa4I7wrsFgsFviXZZHaSMo8huFtIAdy09lEDxu0+lDISQFRknjY
-	 7cRZT3/rqxcUL5QhIzZpW/OMdyekAYB2/DKPhvtrAyvwIml1z7Zb6DGS2B3N+STMjU
-	 ov3bcPYFS0GzMxYK8p+7pdL3bsE49O6HS0bAMZvcBpeRlR79dsybjtCTaGKokSwM0K
-	 wfZHbaH37z5Kg==
-Message-ID: <729905ab-21d6-4d05-9b56-033b1f7b14ee@kernel.org>
-Date: Tue, 11 Mar 2025 09:59:18 +0100
+	b=fK/Uislr3UGnB9plqmjhtQosy338+gRDucRlcG/aS/Ujyw4bSkRio6LOszBpfCZ6P
+	 w8h62i4MMD6ykz4rqXON5GyjMk+FDl7UQy4Hi/MzddCqyq24yAopCexN0Uof8Ai2Xs
+	 AtxLmn1MNz+JDOGhdQakthRC7JzWCXAiYGtiu2JOq8a85oICbjUKpLGdZ25a7CdDp5
+	 3bGMvvA4ET+xxKMihSfsBykUVkf7UoYE9/Gr+f6bVelyqzJU6RdD3K85wY40I5KJiU
+	 HMzaT+EeqXCxBopT5RfmF/13pPRYnWZv82wmd4k+yk3d6OOF9LFRDqpTc9dWSvD4Jo
+	 bprgXJ24Tiy9g==
+Message-ID: <dce4c4c3-d139-407f-ae02-5cfafd04376c@kernel.org>
+Date: Tue, 11 Mar 2025 10:10:14 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 0/2] add struct_group in mptcp_pm_data
+Subject: Re: [PATCH mptcp-next v11 00/10] BPF path manager, part 5
 Content-Language: en-GB
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1741674101.git.tanggeliang@kylinos.cn>
+References: <cover.1741674285.git.tanggeliang@kylinos.cn>
+ <550ac963af5a37bcc9afd5b5045d67e5a8da8d37.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,28 +86,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1741674101.git.tanggeliang@kylinos.cn>
+In-Reply-To: <550ac963af5a37bcc9afd5b5045d67e5a8da8d37.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 11/03/2025 07:23, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 11/03/2025 07:59, Geliang Tang wrote:
+> On Tue, 2025-03-11 at 14:31 +0800, Geliang Tang wrote:
+>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>
+>> v11:
+>>  - add bitmap_fill(id_avail_bitmap) in mptcp_pm_kernel_init.
+>>  - squash mptcp_pm_validate into "mptcp: pm: define struct
+>>    mptcp_pm_ops".
+>>  - map path_manager to pm_type after mptcp_set_path_manager().
+>>  - change 'char *pm_name = "unknown"' to 'char *pm_name = ""'.
+>>  - update pm mapping selftests.
 > 
-> v2:
->  - A new patch to fill id_avail_bitmap for in-kernel pm only.
->  - Do not reset id_avail_bitmap, rm_list_tx and rm_list_rx in
->    struct_group.
-> 
-> Geliang Tang (2):
->   mptcp: pm: only fill id_avail_bitmap for in-kernel pm
->   mptcp: pm: add struct_group in mptcp_pm_data
+> Sorry, I forgot to add "Based-on" here. So I resend this v11 to trigger
+> CI tests. Sorry for the mess.
 
+No problem, I forced things to get it working. The CI should start soon.
 
-Thank you for these patches! They look good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+To get this working next time, simply send me an email, and if I'm not
+responding, you need to send a new version if anything is being changed
+in the patches, including the inclusion of this "Based-on" tag.
 
 Cheers,
 Matt
