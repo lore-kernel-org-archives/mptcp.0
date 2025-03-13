@@ -1,135 +1,218 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from PA5P264CU001.outbound.protection.outlook.com (mail-francecentralazon11020128.outbound.protection.outlook.com [52.101.167.128])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 673B4264F90;
-	Thu, 13 Mar 2025 10:23:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
-ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741861420; cv=none; b=fmuj7WADfgisvEa8FJQiiYJiHKaHeB0evISfjIdKxDNXON8zAo33gLiCkdY3oRA74uNN8T0NCQ127DiXfM3qBLT6BW3vZX6p+wh7bs3xHclJzA3YjYlj6bPpAeBL1HoRSl9VOaiBc0GA7CBplIvX/W6sj8q2Ug6VRoqIT7ZsgnM=
-ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741861420; c=relaxed/simple;
-	bh=3F984dgkxbY6fPkXv+6fJCMjPaWNvKS7SFLAjQ5BVr4=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Ad105awX4dWhv+fE91musVaqga7Mu2SRXc/AJPW/wFvspvE+R6WL+R1YuemNru+S0y79VgaWxZ0zb5gHl1Sgq+mWefpSd5I4E2XKg9qEpsl2gctJEmv1icYi9O8vNyM/fAt7hKB8/qHcJUah9sxs3EVd7f+YJwvCJpmjnO9oAcI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fnmz/Ive; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fnmz/Ive"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2DFCC4CEE3;
-	Thu, 13 Mar 2025 10:23:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1741861419;
-	bh=3F984dgkxbY6fPkXv+6fJCMjPaWNvKS7SFLAjQ5BVr4=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=fnmz/IvenKzyDaTbcaqWf4f8uu+jh6px4VUuCIEptlCm2OeaDysjT3zmIb3b0Z3wE
-	 1yu5TRA8yMXGqQkPLEvs2P74ul2Fu83l5BJ0Ty4PnLaXPCAWpoUbJF/M6E7N2U+egd
-	 LByaippAqOHi7557T4pj1nemmRTCWQ9IU1LmAKEup2myWtHfFFv6JXMu6E5gR+eT2f
-	 w3TeteCXXOyxAZcwS4fYZuORHmVibqCeqsnjLtWJKu6QY4hAVbE3PqhLINxtI8pE/M
-	 9MYdmR4OYJxJd8LgX0TalbgG6rTQR+qAzIKIExva5vqsi8Tt62+x2SJNbaqopUHErn
-	 87OMlU4OsUzcg==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Thu, 13 Mar 2025 11:21:01 +0100
-Subject: [PATCH net-next 12/12] selftests: mptcp: add pm sysctl mapping
- tests
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 94E22269B0E
+	for <mptcp@lists.linux.dev>; Thu, 13 Mar 2025 16:27:02 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=fail smtp.client-ip=52.101.167.128
+ARC-Seal:i=2; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
+	t=1741883226; cv=fail; b=RNl1EwQlIC0lPsj1Z+b5N7LXvWdar4MURON0pxpy7HV9akbA+mASHUmc+AGzaTOlN5El5SX+iXrEhqRqSTF4kj7oRQx/UNOaDV9jphLWe+r+5S63qDTOGvL8qG03ovQ+h0JGvgjwjilqvUV18Bt7moz3IiC7k9Ea9xB5Xlyoty4=
+ARC-Message-Signature:i=2; a=rsa-sha256; d=subspace.kernel.org;
+	s=arc-20240116; t=1741883226; c=relaxed/simple;
+	bh=MMgw5rbFRaDUCD8Xlkp4wmFButFay+eJUjA88B8Z5xs=;
+	h=Message-ID:Date:To:Cc:From:Subject:Content-Type:MIME-Version; b=rIsMZw6G5mozX2wOtv431ws2rY8fZomNyjFb74zN0BGsQHupU9kKF+mSpdZ8LRyeK9QNxbcKCCNFHO61LBZ40gxeVVlxmgV75JaIIYReW8VKkTACwwTrOhkILXg1gVxe4Fq64026BxHeEARcCImizyDg9qGJkU2NT6A1fhOIsCM=
+ARC-Authentication-Results:i=2; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=randorisec.fr; spf=pass smtp.mailfrom=randorisec.fr; arc=fail smtp.client-ip=52.101.167.128
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=randorisec.fr
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=randorisec.fr
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector10001; d=microsoft.com; cv=none;
+ b=K2a4e7Pc5jhFUcA/aft2oK10sQcHAYh1q3sm+H63ZbDuU52cH0hw1UU5t+Q42cqfhtHqXMF8z14qPWQKPZ/2q2A27CkTRnPmLqw8ag0heqy7pAna5em6ndI1exsJ0WWIwqp5psxTHFS6FqcXGcjXAEcuGIZZ3xDUfYKBwwQyo/Pz9hWzmlSG+ABouwrkIBywJy0SqYLBcK5xfVmLg9e8cOZakg52skvXJgCVe+HRl93Vac0o2qRBlWQPeV5lFojOJsdX/C0ge7WEXIQMO2z2PIi6DUN/hlxL0ikLsRyoBvM3/8kVMbN3AfLjLKLX7K06606gXCksWrmxDaM2Dm4FaA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector10001;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=VzirWgqPWGPdUkD99vIpXN+HpjxcoLgpV9gIYpRiHXk=;
+ b=fDBqpR6+n4B3BRvxWp4fXKUaOhx70LuEU8g4PdAjL1siaiwIsf6/THxxDFBOE3bdQOD48KoEoObHzhcJ+TvGeLWFj0fgjNpg3KjvCUjqDcuKm2kupzPat57hdA4+UzpgIlt7O3s4CdOG7QEq/lBTTsbWEV5j2wDGe6n5zemc3lDHSKx+Dqhf1RYYcR4A88gEpdwKLNw5ekaTbyfbc9GdMf2DKVfVBBx/fc2qqx8/M6QxMzjz5Joh/Q+e3GsyCBiIIm9ihjP2qADrF3VKG/L6z4FxnB6M8t8vq5x0B7KZh6nCjqcIyBQMY3LemYT/G3GO8jyfiAUahnWDuqGsd0LcpA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=randorisec.fr; dmarc=pass action=none
+ header.from=randorisec.fr; dkim=pass header.d=randorisec.fr; arc=none
+Authentication-Results: dkim=none (message not signed)
+ header.d=none;dmarc=none action=none header.from=randorisec.fr;
+Received: from MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM (2603:10a6:500:16::23)
+ by PARP264MB6297.FRAP264.PROD.OUTLOOK.COM (2603:10a6:102:4a5::13) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.8534.28; Thu, 13 Mar
+ 2025 16:26:59 +0000
+Received: from MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::d6fd:76c4:7058:d7a2]) by MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM
+ ([fe80::d6fd:76c4:7058:d7a2%4]) with mapi id 15.20.8511.026; Thu, 13 Mar 2025
+ 16:26:59 +0000
+Message-ID: <81b2a80e-2a25-4a5f-b235-07a68662aa98@randorisec.fr>
+Date: Thu, 13 Mar 2025 17:26:57 +0100
+User-Agent: Mozilla Thunderbird
+Content-Language: en-US
+To: netdev@vger.kernel.org
+Cc: Matthieu Baerts <matttbe@kernel.org>, martineau@kernel.org,
+ geliang@kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, Paolo Abeni <pabeni@redhat.com>, horms@kernel.org,
+ mptcp@lists.linux.dev, hanguelkov@randorisec.fr,
+ Davy Douhine <davy@randorisec.fr>
+From: Arthur Mongodin <amongodin@randorisec.fr>
+Subject: [PATCH net] mptcp: Fix data stream corruption in the address
+ announcement
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: PR0P264CA0231.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:100:1e::27) To MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM
+ (2603:10a6:500:16::23)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250313-net-next-mptcp-pm-ops-intro-v1-12-f4e4a88efc50@kernel.org>
-References: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-In-Reply-To: <20250313-net-next-mptcp-pm-ops-intro-v1-0-f4e4a88efc50@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Jonathan Corbet <corbet@lwn.net>, Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-doc@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, 
- Geliang Tang <geliang@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=2235; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=Tc4PpQ+Y/jnprgu+15f2z73L06rmBn9s1LlWpDmpj4I=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn0rGbRH937aT7yKRBus6q5SgVNpqGBqg2hpW9t
- CbZC9NalcCJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ9KxmwAKCRD2t4JPQmmg
- c5SUD/9Sy+sMpYkhdzaJ4ijw9HCSPkKvL7xPzQB1qvLOh0PkXQlZf2gBvQ8KXhqOJg2P9TtUkJm
- xVW37RogFdsV3ByxlQD0Bib9rUGWIFIj6C8LXi1MBglQdo5xPlYkZzhcWWyXSOMGDANfEKzw4DZ
- j8R4N2rlwwzmbuFNBxR87Nk+Tet4kvHHL6YMG/ts3voh1PT1QyR7se27NrMAIFaqdWVbqAXLZsX
- yF4SlNVYo7Oz7+bZTWywLpT9dZbGkMHV+x0YC8+C1bh/sLT0jtF/tCxUkZLXIjcVNdeg5JRuHq8
- +Yz/5L+XqeocpGfhjp+df4ZGgujez+IlcnlT3YBg00s0Opi/HGY5ELlXYyYKZkJhiNjj7NdVgNW
- f2ARUlaFf1x/yYoLwyR7GzOIfnVhzKiGtmn3c42+iOicAgf311JfFdodVCaPbtrazNTjQTtEiSr
- qZREkGGiOaBcEoA3Z+Wk1TZokBdvtdGHx70LLvspqKZqjzS7QARsc+BAbLqbin/lV9+zGZafmvQ
- /0Ujw1PTSqbNJHWgpWXlGrpO+lFXg9xwOn4/4gpdqxVw9y7+6v5+A+ildw0nSfzpgRsfHekyoUj
- HNLLx9jwaEEARmKat34yC+0/B7TlcAlVsZFWK/PB8IOv6xtJrJs3K1RDJSvtFQ2WTijat9K5jzp
- KkS9TRXHDUJTB8w==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+X-MS-PublicTrafficType: Email
+X-MS-TrafficTypeDiagnostic: MRXP264MB0246:EE_|PARP264MB6297:EE_
+X-MS-Office365-Filtering-Correlation-Id: 0d5cc5b8-c5fb-4c01-fb94-08dd624be0cb
+X-MS-Exchange-SenderADCheck: 1
+X-MS-Exchange-AntiSpam-Relay: 0
+X-Microsoft-Antispam: BCL:0;ARA:13230040|7416014|366016|376014|1800799024;
+X-Microsoft-Antispam-Message-Info:
+	=?utf-8?B?NWRWeFJyODZWbXVieTRxRFJKcFFsQ0hkMUdSc29uYmVjdFdrWFFOM0N2QVdy?=
+ =?utf-8?B?UkdRZURmSWIybCtjRXBZQjMxcnNnbklIZ2NjMklmYnM5aEM5Zi84bTRlMG1J?=
+ =?utf-8?B?Q3dHZis3d0NuMU93bTgwRFBhTmZpZVpCSm4rbUo1WnlUaVNJRjVDQ3ViRm9s?=
+ =?utf-8?B?ejZyMUpSM0tXSDAvS015QitGZVJhWERmNzVic2hSR1JaOXQ2VkhYMVdvK3JN?=
+ =?utf-8?B?eFowc3ppU2tHWGhFbVZST2d5UGIxeHMrUmlEaVdmclVGQmRsYXNBYW1POFhT?=
+ =?utf-8?B?bGFmOVhrRUNyNXZra3htQ2RjcHh4MUJhQjBKcm1TSW5SQzBzSG1CZGFPdmJS?=
+ =?utf-8?B?cVJHZ0VwaE5Md1gzTEtsOFJqUU9IQkl5dzZhOWZ2ZWdTbk5jbVdLVUM5dTdC?=
+ =?utf-8?B?L3ozVmZmYlhEUDJYZnJ3aXdLTGZJMXJjUXBRYkhVMXZrVENUbm0xRXRkelVP?=
+ =?utf-8?B?cVlMUWcvRU1SWlVLS0VuRTNWTE13UXlFTzUxakhjbDFoR0VKZ2dUQVR2ZjhS?=
+ =?utf-8?B?OEFET3BsMjdUL1hJODJ3UWozTmpvRXVkYlo3ZGI3UlVheUVoeGxGWW9xMFVO?=
+ =?utf-8?B?NTVlT1NPK3k3WGNDNnVWcTJOQmlyUnNoQWZIT3l2ZG5qTFdXbWVWNDF6WEN2?=
+ =?utf-8?B?ZFJoY3RPSGJFZklxRmEzWVpVdFRHVXdBM2kvRXhpYnV3RklOaWFXdVRxQWU2?=
+ =?utf-8?B?QS96OUY2bkhLUWJzeFI2SUwwVS83VVNJU0xGc0NHeHp6eXRHalFlWk16eW5P?=
+ =?utf-8?B?N0xhbXc2L2ZFLzhndlZjR3AzaUtBdUQzcDVTV0RESm12a3VmcFdXam9haWN0?=
+ =?utf-8?B?bGl0K3RIQi9ib3lvYS9YQ0wwZ3BYa2hIZTVLcWtQekYveGJtNXliRkpKVTRW?=
+ =?utf-8?B?OE1RZGppeG5tbVRsNHNaenlNMkVsdzJBbDNLUFc2clUyaE1yclUvWVBsT1N3?=
+ =?utf-8?B?aGZCbWZGWEtpbnBBKytEMFU1TWZicWNQTFIrcjVlSjYrOThwUHo5d2wyL2xN?=
+ =?utf-8?B?ajlzNDVvalRsbnNNMXFZZFZ5SU9HdU1GTUk3UjJYK0dWK2tiN09jQVdOWith?=
+ =?utf-8?B?NHJmMjRrSDhsdGRRalJRU0Z4WkljUWN5blQ5TThiR2dxaGVsbWdVQUdLMGZY?=
+ =?utf-8?B?TEtHQnVwb2E3dDh3dmF3TENRTU1YWGtoaXNTMjNaZGVLV0JkalVpUkJEWDNt?=
+ =?utf-8?B?L3B1OHM2ZjFQczBUQXBDc2poeEdJaHRPWVRHRjk3WnV4bURyM3p5VG1jMXJG?=
+ =?utf-8?B?dXJYOG5YSWhQajhPTWdaM0JZMm5MbzBZREJWTUJ6ZE1Zem9RODNONk1FejBy?=
+ =?utf-8?B?dk10Mk9MYWRwMHFWQmMvWVZDczQ1MzNDY2QrMHovQnpsclo1cjBLRDVtV3lY?=
+ =?utf-8?B?ZU5Na0lSRTNUL2M2ZGVDV25BTUF5VUNGVE9Gem9kZmozWXdtTnJEaXFZTlM2?=
+ =?utf-8?B?bkZhK1h4QVl2dzFCMGxhWEIxTWRza2NPNFo1V3cvREFvNExTOVhxZzZOQVJB?=
+ =?utf-8?B?NFFyYlRpSVExL1ZmcnZSK2Q5ZXJsb2dLREJHZG1pdXgvS3ZKMW5xSTFCT1dJ?=
+ =?utf-8?B?VFVab0M0NldLTVk2TFJpV1ZzbEZ2d3FCdTMrRXkvdGdTWDhKZmlseWxDMkd1?=
+ =?utf-8?B?ZVZtRk1iMzFGaFhCemkxbWcveklJUmltTnlWbVI1aFlLMUZLQjBuVnZrTDNm?=
+ =?utf-8?B?c3dva0MyS3JPMVN5OVVXWXVXeTJzWVA0K1E2R0MvZkJvdkhaMnhFUGFrN09L?=
+ =?utf-8?B?bmhUM3VPbTVxWTZ0WmpLb1VtQ01GbFptNy9JUXRBRDVMWTM4QnhSZXlkdFhW?=
+ =?utf-8?B?UURqSHIrUXpHRGRsNHJ0NERnOUxZbmdNcHRjcmo3TmJDRkdKVUcxL2F0TWNK?=
+ =?utf-8?Q?BfwMa5cBIeQKb?=
+X-Forefront-Antispam-Report:
+	CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM;PTR:;CAT:NONE;SFS:(13230040)(7416014)(366016)(376014)(1800799024);DIR:OUT;SFP:1102;
+X-MS-Exchange-AntiSpam-MessageData-ChunkCount: 1
+X-MS-Exchange-AntiSpam-MessageData-0:
+	=?utf-8?B?dWFibkJRZFh0SmN0YW8zdDhYdGNpOEdTeTdrZDBBbWtwellWUk42ZEtrbCtm?=
+ =?utf-8?B?S1h5N1hGY25EL2Y4YnFJS2lEZTdiaXVPRWtGZUpseWlqT0MydVZCMEVURG5p?=
+ =?utf-8?B?bDhLN0E2SzlJQWJRZks2SWtyZFM4dFhqNVF0TEZUWi9rbHRoU1U3c2NBaDR5?=
+ =?utf-8?B?Tk9Day96WjZGVjBOaXY4MUxEbEx6U3RPVlhlY2hNN0sxWVEyeDlGUmV6azk2?=
+ =?utf-8?B?aEZLbXJkMSswMXpvbGwwWlBWTUM4ejhac0VJNEpyUERkVmRMbnY5ZGkzeThZ?=
+ =?utf-8?B?cTJvMkFzQk1OajZITXkyT2NPblNLUEl6UDZGZDF4RCs5NzBlNVcxaTZZck9R?=
+ =?utf-8?B?RUVZUDNmeXZObnF3azBLRElGa2ZNckNHL0pIc2xnY1JROFFKZ2VlbVRWTWpa?=
+ =?utf-8?B?QzFlOW5FTWlBYzJWSDBBQ2JOeksxZFphMmR0eXg0L3ROTkZIVWJYNkx3SitU?=
+ =?utf-8?B?WWp5VHZIRzBaT251bTZ2N3piNlFnZFFFTldRb0VaMDJjbElBLy9iSDEyK3g0?=
+ =?utf-8?B?YXIwRmJOSWFJd21BcVV3SW1hQUFwVitydkJRMUdkNHJpMmZSVG1mV3g3Mk5z?=
+ =?utf-8?B?WCtSM1pHb2phbFFNWWRKcGkxcnJjOTZrMEpwOEg3SnlyM0NFYVVzaStlV3h4?=
+ =?utf-8?B?SzdDUmNPdFFiSDlMLzJvLzh4KytJSzNHalVHakFxQWJoVy92NFZoVHQ0Wlgy?=
+ =?utf-8?B?VkoyNVZpTno1Wk1qdzJNSTVHSmdHWGpFQVRuV3YyakovSE9hTFlTdWQ2WDBN?=
+ =?utf-8?B?a0lvS3l1b1U4T1R4cXIvVXYyc3pLTldxYUtoNGtJL2lMRFp2R2NMVmxNd0VD?=
+ =?utf-8?B?SlhMRFNyRXRsSnNXamlqU3pvLzJxdUJldTd1ZnhGUTdrL3djRmFFOWlOWGR5?=
+ =?utf-8?B?cGRPaHFrOXV1YVRiQTJoM2JvWWU3UGh6cS9yUGJwaTh3TUpzNnFNUjBybUc5?=
+ =?utf-8?B?Q1k5d3dCcHZYTy8zTnhqOXZCN2drZU5ZeWh6eDVtOTFHVmlWSFhWNWk0OTZp?=
+ =?utf-8?B?eFl6SFZoV2liWVZOVkRzQU1JMTNlTHp3VTZKWVhEZ1FEVGtSbjNxZGlCMUZ2?=
+ =?utf-8?B?bGFIRng5LzBBK1JCYk1MNUhwd1Jlc0xFd21DYVhEVGRYOFA1NE1NTG9kcWRU?=
+ =?utf-8?B?L0FLazZxQzBzbWFYUmtkYmdDSWcvUXNOVWdHeUVyK0dYbnFMZ3laaUFyRGly?=
+ =?utf-8?B?czBjdmt0OVd5S0lxNTdFbEw5MmhPMUxsUFcra3NmTnlQZDU1WnJ6UnVvYWNV?=
+ =?utf-8?B?WUdHeUhBOG5vYVRwTjJjUC83SUxWK1AzUEJaVEtEb1FaMUlqSFNrc1VZdmsy?=
+ =?utf-8?B?b3FUOHh2RENBZ29iK1o4cThSK0QrTytQSGVneFhhNUt5RmRtZnNIYzBJaWNJ?=
+ =?utf-8?B?RmF0Z1VaejZTYy96WkJOem1ncld4bEY4Q1k3dDBHZzF1ak5VOWNRNnAvKzM3?=
+ =?utf-8?B?VkF2L0I4Mm1mdEtJeHgyQm1aazNka0hIYVpCV0ZvRVp0ZHNFZ2pUcGdkUEt3?=
+ =?utf-8?B?cXBxdEdMMUtiRHgrSGl3TVVxY1pURXFOTThnZkd5WkxzUWxSVTRwVXp0TEVz?=
+ =?utf-8?B?YmczMEQ3L09UTjBpekk3YWZpREdIMVhUU0ZSemFLM2lJaVFmRjBpY04yVWdG?=
+ =?utf-8?B?VXBXZzk5Q2RrVW9XWGhXY01xQmo0UTJMZGdidXRpV0pRc1E5bHNNeXc5OTU1?=
+ =?utf-8?B?TEtWd1JqT0tZcWRvc0hiT3Q2SExRdUYyQk4xUCsrRmhSelRDQTZGWXpOT0hl?=
+ =?utf-8?B?dnY4aWt1TGk2U0hlSlNwUUdoL3d4ZkpnZXEvaTJsaDRlRythRFVTbnIyUUlz?=
+ =?utf-8?B?NmJKOWJkVm1lRVJNWnQyS2hFRUUzM0JGcWUwcytXOEpmWGxXeGY5M0xPKzdw?=
+ =?utf-8?B?L1BwTjdoUUVqa0FmUkhMZXhsZytrYzczalR0MnNFalZGbFpFTGkxakNNcEIx?=
+ =?utf-8?B?MEVVVE40MUdIZXVjQW90cWdaMkRZRlE0UHNwamRNWUphazlZbUl3WThHdHRQ?=
+ =?utf-8?B?ZjZmSnpBbFc0L3Uya2ltd1didWJRTGN2RlJNRTB1OXpRODBmK3YvVEhlVkha?=
+ =?utf-8?B?NHpjSHFlZjREck1wMUJvQW9qYzhOdFZ1YTBOL2F4c0NLeS9NbldaOHNuNE5C?=
+ =?utf-8?Q?mTdfOOWMD/3UCbF4hr0ylIRty?=
+X-OriginatorOrg: randorisec.fr
+X-MS-Exchange-CrossTenant-Network-Message-Id: 0d5cc5b8-c5fb-4c01-fb94-08dd624be0cb
+X-MS-Exchange-CrossTenant-AuthSource: MRXP264MB0246.FRAP264.PROD.OUTLOOK.COM
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 13 Mar 2025 16:26:59.0983
+ (UTC)
+X-MS-Exchange-CrossTenant-FromEntityHeader: Hosted
+X-MS-Exchange-CrossTenant-Id: c1031ca0-4b69-4e1b-9ecb-9b3dcf99bc61
+X-MS-Exchange-CrossTenant-MailboxType: HOSTED
+X-MS-Exchange-CrossTenant-UserPrincipalName: NJ3L2C4wfpHQ0+SoXzxRSpDsH5sx0EHZqQ2pBqk8Jbz1q64XMqK3rF0KgC8dINBA31bvYNaAmSn74TXCnVZP6A==
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PARP264MB6297
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+The DSS and ADD_ADDR options should be exclusive and not send together.
+The call to the mptcp_pm_add_addr_signal() function in the
+mptcp_established_options_add_addr() function could modify opts->addr, 
+thus also opts->ext_copy as they belong to distinguish entries of the 
+same union field in mptcp_out_options. If the DSS option should not be 
+dropped, the check if the DSS option has been previously established and 
+thus if we should not establish the ADD_ADDR option is done after 
+opts->addr (thus opts->ext_copy) has been modified.
+This corruption may modify stream information send in the next packet
+with invalid data.
+Using an intermediate variable, prevents from corrupting previously
+established DSS option. The assignment of the ADD_ADDR option
+parameters in done once we are sure that the DSS option has been dropped
+or it has not been established previously.
 
-This patch checks if the newly added net.mptcp.path_manager is mapped
-successfully from or to the old net.mptcp.pm_type in userspace_pm.sh.
-
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Suggested-by: Paolo Abeni <pabeni@redhat.com>
+Fixes: 1bff1e43a30e ("mptcp: optimize out option generation")
+Signed-off-by: Arthur Mongodin <amongodin@randorisec.fr>
 ---
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 30 ++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
+  net/mptcp/options.c | 6 ++++--
+  1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 3651f73451cf8b07d4492c60da45e88aabc44b7a..333064b0b5ac03ae003417d2070f3c08f94743ed 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -117,7 +117,36 @@ cleanup()
- trap cleanup EXIT
- 
- # Create and configure network namespaces for testing
-+print_title "Init"
- mptcp_lib_ns_init ns1 ns2
-+
-+# check path_manager and pm_type sysctl mapping
-+if [ -f /proc/sys/net/mptcp/path_manager ]; then
-+	ip netns exec "$ns1" sysctl -q net.mptcp.path_manager=userspace
-+	pm_type="$(ip netns exec "$ns1" sysctl -n net.mptcp.pm_type)"
-+	if [ "${pm_type}" != "1" ]; then
-+		test_fail "unexpected pm_type: ${pm_type}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+
-+	ip netns exec "$ns1" sysctl -q net.mptcp.path_manager=error 2>/dev/null
-+	pm_type="$(ip netns exec "$ns1" sysctl -n net.mptcp.pm_type)"
-+	if [ "${pm_type}" != "1" ]; then
-+		test_fail "unexpected pm_type after error: ${pm_type}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+
-+	ip netns exec "$ns1" sysctl -q net.mptcp.pm_type=0
-+	pm_name="$(ip netns exec "$ns1" sysctl -n net.mptcp.path_manager)"
-+	if [ "${pm_name}" != "kernel" ]; then
-+		test_fail "unexpected path-manager: ${pm_name}"
-+		mptcp_lib_result_print_all_tap
-+		exit ${KSFT_FAIL}
-+	fi
-+fi
-+
- for i in "$ns1" "$ns2" ;do
- 	ip netns exec "$i" sysctl -q net.mptcp.pm_type=1
- done
-@@ -152,7 +181,6 @@ mptcp_lib_events "${ns1}" "${server_evts}" server_evts_pid
- sleep 0.5
- mptcp_lib_subtests_last_ts_reset
- 
--print_title "Init"
- print_test "Created network namespaces ns1, ns2"
- test_pass
- 
+diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+index fd2de185bc93..23949ae2a3a8 100644
+--- a/net/mptcp/options.c
++++ b/net/mptcp/options.c
+@@ -651,6 +651,7 @@ static bool 
+mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+  	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
+  	bool drop_other_suboptions = false;
+  	unsigned int opt_size = *size;
++	struct mptcp_addr_info addr;
+  	bool echo;
+  	int len;
 
+@@ -659,7 +660,7 @@ static bool 
+mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+  	 */
+  	if (!mptcp_pm_should_add_signal(msk) ||
+  	    (opts->suboptions & (OPTION_MPTCP_MPJ_ACK | OPTION_MPTCP_MPC_ACK)) ||
+-	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &opts->addr,
++	    !mptcp_pm_add_addr_signal(msk, skb, opt_size, remaining, &addr,
+  		    &echo, &drop_other_suboptions))
+  		return false;
+
+@@ -672,7 +673,7 @@ static bool 
+mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+  	else if (opts->suboptions & OPTION_MPTCP_DSS)
+  		return false;
+
+-	len = mptcp_add_addr_len(opts->addr.family, echo, !!opts->addr.port);
++	len = mptcp_add_addr_len(addr.family, echo, !!addr.port);
+  	if (remaining < len)
+  		return false;
+
+@@ -689,6 +690,7 @@ static bool 
+mptcp_established_options_add_addr(struct sock *sk, struct sk_buff *
+  		opts->ahmac = 0;
+  		*size -= opt_size;
+  	}
++	opts->addr = addr;
+  	opts->suboptions |= OPTION_MPTCP_ADD_ADDR;
+  	if (!echo) {
+  		MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_ADDADDRTX);
 -- 
-2.48.1
+2.47.2
 
