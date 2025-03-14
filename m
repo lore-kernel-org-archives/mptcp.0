@@ -1,127 +1,138 @@
-Received: from mail-qv1-f49.google.com (mail-qv1-f49.google.com [209.85.219.49])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04D292E3368
-	for <mptcp@lists.linux.dev>; Fri, 14 Mar 2025 03:57:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.49
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 25CBD288DA;
+	Fri, 14 Mar 2025 08:36:12 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1741924625; cv=none; b=ZgpNWfC5jxxYa2qDevTqyBLsow2tyXLMhNn1UtJz7L/2H17HOC3xIe9vlmKruaQr22PotooM5HYvGs+a1x4/0C7AJPeurvZ2xoffxIIb8bB9HjbVq75qLqCfHpKprkD/xvBeaL0aljZm+sUadgr3w1qnTJCErzMGrQ86u+vWM9I=
+	t=1741941373; cv=none; b=cqht3RQt+u+q6CEGx5ZMeIySDtai/UWVpWdHV2Klkc1FUyWy/KdweEkoJS1UeeFVGe1PuGOmvqx7hyA0V42vwtV7i2Vu2wY5x4rUzZ6H8NEtd7SznNX6ake5DYcBj6eQWqC+N/7/g9JeilPhDYuIGvC578st5toZ0HqBzpTx9nI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1741924625; c=relaxed/simple;
-	bh=T1ZAFZmQ4TyTQZg4sbuC1d4pf5lnn6mQAcIlOufuhh4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=T9FNvEO4Xc91TRkKWMoFLyKvpO0XTG9qMsXXm+i00DAnvtA+INyvJVnwmpBv2qoE+n1KXTRxPCztmmOtxvlzYw6A5XsRg/giJnWlKpET3lPJwPP4f8XIsJ1WG+vVumUbCE8rfQXjhpgcbbYh21d4XyFxxqH0iOb4IMPlhfHEe14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CNEAlpJK; arc=none smtp.client-ip=209.85.219.49
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1741941373; c=relaxed/simple;
+	bh=0XELGK3NlJpfm2jYvbE8iTtmJ7oQJYjOFPHBv93++5Y=;
+	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:To:Cc; b=tCS8ZVkq1YKsHRqCK0s4TyAg3gf7QuFgduaZA1dL5y2ibKPv4yhT2SxxnTkV3sAfw92hFNnuhsaXDR+cvLwKdTibUmW8rktJ7HYtNVCxC4U+KQCHrJ7T5EbyTj/ZmZpXRd/wEMKqED2OZjtBbthWa7rn+Sk3bc9jLzIsHcRUCBg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gpscJe9q; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CNEAlpJK"
-Received: by mail-qv1-f49.google.com with SMTP id 6a1803df08f44-6e8f05acc13so18850176d6.2
-        for <mptcp@lists.linux.dev>; Thu, 13 Mar 2025 20:57:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1741924622; x=1742529422; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=S+u9sUTtBP6Mt9RS0VXy5o+HRaFxnpzBZnoNb0q4GVA=;
-        b=CNEAlpJKC0t/stBe7Ae5elIlr2hO8P7JDHb3FeW1ou7X8YDF4FNVSvStnNH/wGjaSz
-         Vd2SmL2V0WeXnHStkdYoda2YGJ0/APBY73p6EQKSjOH8WfHdN15b5PojoafhCxYF+WUG
-         BhBDIqdo2JLTwK2f8Tm1HzCLqqylbsV9LtHKv22ZIyS5dgxZBeePRThkgSXMxZVJEw7h
-         OH8QQ35yKu4H/R0yXcHk76ywwN9VqbLf78df/fw2A5awWfg6C0nlM2RNaL61LicQJRQY
-         lvBckNlMR80gkShunwjpldJa2BQZL2aWQXkX1FpM0zwGuHeHvVjy8FOrvjEfLxE0UBV6
-         727w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1741924622; x=1742529422;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=S+u9sUTtBP6Mt9RS0VXy5o+HRaFxnpzBZnoNb0q4GVA=;
-        b=jeD+SWcS3WVavIXqtdgCOipJorYoz6fq6tR17zsX2cZgzdQM3B7rMErBgx7CiijM1K
-         2e9KtWGSCmNGiLKC+CG7dOUTJVVNmJURfmvYjZeBwD0u231JsNb1O+NCOze+xD5U1ISJ
-         Ko6JXKw106otv+7+G2l08G1yOOiTjdHBWRDB310qPczld49WoPeX30m5wmya4VM5JFX4
-         9qGiyOZMgKpU+jL00UwZXTVYC+afkN74Z18HZWgudGoUij/reVcv0eCEuQZC2yDKw2sM
-         +CmQh4q0qm3i7uGWD8zwTQIcbcU3BuD6tDgBhKWKtZr+/0IuIljOb6dE4REMoomW8W06
-         Dxgw==
-X-Gm-Message-State: AOJu0YzU2uWOD/Aw8r2e1BXYq/1bCXX+o1C7KB4HRtD06N5O821OvkO5
-	vLqaVD0KHTq69N/UnXb2HOWoknfCLgMEADZL2stThLEHCpBIhSInEBVXNHc=
-X-Gm-Gg: ASbGncsFRUEcFVNteZa/KLVosQG6s+PrOq9p7PxUCI7+7W4KQV8PCgwuT0qm4uyZYW8
-	O0VzOMpcVGUolvxzBBP4cAwwXV5i+NUKA0t6PYGdByTiMAaCztSVglVQgfRuDWK6XmV9eCQKeNc
-	oiQKuumf+yrsBKZB3sWivS2uGpK17YhibCoOS5THnHTkf7+hocrHiXZE+BhRDhYY8BSAaPtNszO
-	0FNHV1Y9/NwI6zAkFMQ8SNeJQPlnO5SeUP30lamvId8HrlrA+awRBuvE68vVIlo9bGhnPWsGSxf
-	o8f1che1D3epAtjTWPy+ZIa0JzaaFAkOXZATbxiz9CnFGJBtPsEZbtkmDw==
-X-Google-Smtp-Source: AGHT+IFWN3EhTXFq/rW4EZr4UinCzDFIGkjfEkfJoW8CmdCzy8Jry03AiCbyJ6F/lm3DdTdhN47IWA==
-X-Received: by 2002:a05:6214:e46:b0:6e6:6a82:4989 with SMTP id 6a1803df08f44-6eaeaaf7679mr10147126d6.44.1741924622430;
-        Thu, 13 Mar 2025 20:57:02 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.221.2])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6eade209369sm17972426d6.2.2025.03.13.20.57.00
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 13 Mar 2025 20:57:01 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1741919893.git.tanggeliang@kylinos.cn>
-References: <cover.1741919893.git.tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v2 00/10] BPF path manager, part 6
-Message-ID: <a8bf42c2-a0db-ff8b-2ea4-d90398d0c9e8@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 14 Mar 2025 03:57:00 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gpscJe9q"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9D2BC4CEE5;
+	Fri, 14 Mar 2025 08:36:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1741941372;
+	bh=0XELGK3NlJpfm2jYvbE8iTtmJ7oQJYjOFPHBv93++5Y=;
+	h=From:Date:Subject:To:Cc:From;
+	b=gpscJe9qItz3bc/oGOZyAicdMAFrxZQWc5rBxTOeuv24EKCvjOTOOF+5KD11S/yGV
+	 lNdIqbtk4vsfncabF/obhHt2Dj2oz/sCFn3jsjDiZdytDfsVwKBIH2U6EJX0vBTwDM
+	 VDvCJ/U62up9CuI6vBH4g8CYqAQpBOSmTBsaqFFIoG89QmwKnzFnEQqH1JF05M0HoD
+	 a5sLs2Ugp/2mQvnpdgmmZhXJHVytfGk5f14Ad7rcTml6Wjm2M9QoJPQjcDUkfCJxUU
+	 P6DHngkJcwNB/VXX0yr4+Ms9XODY2mCs9405pTfohz/LIIruMQAn0PInANTPEvBb5Y
+	 khMV9YlJwIlKQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Date: Fri, 14 Mar 2025 09:35:51 +0100
+Subject: [PATCH net-next] selftests: drv-net: fix merge conflicts
+ resolution
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Message-Id: <20250314-net-next-drv-net-ping-fix-merge-v1-1-0d5c19daf707@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAGbq02cC/zWNSQqAMAxFryJZG7CO4FXEhdqoWVglFSkU724ou
+ PiLx58ieBImD30WQehhz6dTMHkGyz65jZCtMpRF2RSVqdHRrQo3WnkSXOw2XDngQaLxudJY262
+ WTAu6cgmpmR4G+Mswvu8HA8CvyXsAAAA=
+X-Change-ID: 20250314-net-next-drv-net-ping-fix-merge-b303167fde16
+To: mptcp@lists.linux.dev, Andrew Lunn <andrew+netdev@lunn.ch>, 
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, 
+ Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, 
+ Shuah Khan <shuah@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
+ linux-kernel@vger.kernel.org, Stephen Rothwell <sfr@canb.auug.org.au>, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-Mailer: b4 0.14.2
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3166; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=0XELGK3NlJpfm2jYvbE8iTtmJ7oQJYjOFPHBv93++5Y=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn0+p3gxFMBZfYI6UpmoWmrPP9IfoxmGSO3gC0U
+ wLb2Eki1tKJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ9PqdwAKCRD2t4JPQmmg
+ c+CeD/9eFz1NROsTVTXuf1WLbGaRlr+d+pdn2adbNA6sbNnsDjAhv0WEI/cXDqUWN5tqjqESA1X
+ dPoEKeUZG1wzs/TKs9k6wNTw9wCwQKlxIxxyAVhzoVuzym3HATtVU8I6E/9VUhyyoo71jCGJUPC
+ 6A8qXlPAfxIgWwvmGLnCU2jXxRsvWwEpylIUze7SUxV2eF/YEzPJHxx5wjbBGhkELq6sW0Qg6rF
+ zt6Z5mBSRlnlYBIzg+FGZNKdTxJKkzRQZjUPWlFvk2eVrq1EKl22N57H/W1EaNc4tpYOWJtnRuh
+ B1droVB5X5IlTYqORQ6/DlAbGsPWRKIZXw0+HvoCnnO525ThYLqO8yH9itOthk0xb+HiBBha+uR
+ B6IUjiGIafrESoOJRYkr91b3HAdKAyZd05J9Cm+PigDslX063P7xCufgx8c/bI9sqPbpAv4PZ38
+ 5TN0zCxQbZjkDeUTNXn9ipwANBi6jupRjpgPjGb9UYnRy7+1Rpqo9xYG499C1QBUENQ5cKw00Hk
+ w7yMljIidF9cN05CBe01Ur/LWpJHwxt8lFf8eN7RvETYjYN8XkjFaJUMvEFbl/q1uvdGxRFk/iK
+ PZfNGUIHizQku81l1rvqLOVgaOLVgN9GsiEpKmIAQvW+QzIXEoR8CDcWjebG02z49y18TIo/ktb
+ meKgneP7ZINrsjg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
+ fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-Hi Geliang,
+After the recent merge between net-next and net, I got some conflicts on
+my side because the merge resolution was different from Stephen's one
+[1] I applied on my side in the MPTCP tree.
 
-Thank you for your modifications, that's great!
+It looks like the code that is now in net-next is using the old way to
+retrieve the local and remote addresses. This patch is now using the new
+way, like what was in Stephen's email [1].
 
-Our CI did some validations and here is its report:
+Also, in get_interface_info(), there were no conflicts in this area,
+because that was new code from 'net', but a small adaptation was needed
+there as well to get the remote address.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/13848993575
+Fixes: 941defcea7e1 ("Merge git://git.kernel.org/pub/scm/linux/kernel/git/netdev/net")
+Link: https://lore.kernel.org/20250311115758.17a1d414@canb.auug.org.au [1]
+Suggested-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ tools/testing/selftests/drivers/net/ping.py | 18 +++++++++---------
+ 1 file changed, 9 insertions(+), 9 deletions(-)
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b5c3186d7405
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D943747
+diff --git a/tools/testing/selftests/drivers/net/ping.py b/tools/testing/selftests/drivers/net/ping.py
+index 7a1026a073681d159202015fc6945e91368863fe..79f07e0510ecc14d3bc2716e14f49f9381bb919f 100755
+--- a/tools/testing/selftests/drivers/net/ping.py
++++ b/tools/testing/selftests/drivers/net/ping.py
+@@ -15,18 +15,18 @@ no_sleep=False
+ def _test_v4(cfg) -> None:
+     cfg.require_ipver("4")
+ 
+-    cmd(f"ping -c 1 -W0.5 {cfg.remote_v4}")
+-    cmd(f"ping -c 1 -W0.5 {cfg.v4}", host=cfg.remote)
+-    cmd(f"ping -s 65000 -c 1 -W0.5 {cfg.remote_v4}")
+-    cmd(f"ping -s 65000 -c 1 -W0.5 {cfg.v4}", host=cfg.remote)
++    cmd("ping -c 1 -W0.5 " + cfg.remote_addr_v["4"])
++    cmd("ping -c 1 -W0.5 " + cfg.addr_v["4"], host=cfg.remote)
++    cmd("ping -s 65000 -c 1 -W0.5 " + cfg.remote_addr_v["4"])
++    cmd("ping -s 65000 -c 1 -W0.5 " + cfg.addr_v["4"], host=cfg.remote)
+ 
+ def _test_v6(cfg) -> None:
+     cfg.require_ipver("6")
+ 
+-    cmd(f"ping -c 1 -W5 {cfg.remote_v6}")
+-    cmd(f"ping -c 1 -W5 {cfg.v6}", host=cfg.remote)
+-    cmd(f"ping -s 65000 -c 1 -W0.5 {cfg.remote_v6}")
+-    cmd(f"ping -s 65000 -c 1 -W0.5 {cfg.v6}", host=cfg.remote)
++    cmd("ping -c 1 -W5 " + cfg.remote_addr_v["6"])
++    cmd("ping -c 1 -W5 " + cfg.addr_v["6"], host=cfg.remote)
++    cmd("ping -s 65000 -c 1 -W0.5 " + cfg.remote_addr_v["6"])
++    cmd("ping -s 65000 -c 1 -W0.5 " + cfg.addr_v["6"], host=cfg.remote)
+ 
+ def _test_tcp(cfg) -> None:
+     cfg.require_cmd("socat", remote=True)
+@@ -120,7 +120,7 @@ def get_interface_info(cfg) -> None:
+     global remote_ifname
+     global no_sleep
+ 
+-    remote_info = cmd(f"ip -4 -o addr show to {cfg.remote_v4} | awk '{{print $2}}'", shell=True, host=cfg.remote).stdout
++    remote_info = cmd(f"ip -4 -o addr show to {cfg.remote_addr_v['4']} | awk '{{print $2}}'", shell=True, host=cfg.remote).stdout
+     remote_ifname = remote_info.rstrip('\n')
+     if remote_ifname == "":
+         raise KsftFailEx('Can not get remote interface')
 
+---
+base-commit: 941defcea7e11ad7ff8f0d4856716dd637d757dd
+change-id: 20250314-net-next-drv-net-ping-fix-merge-b303167fde16
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Best regards,
+-- 
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
