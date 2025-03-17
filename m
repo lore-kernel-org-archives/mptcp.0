@@ -1,127 +1,208 @@
-Received: from mail-pl1-f176.google.com (mail-pl1-f176.google.com [209.85.214.176])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11E1921516C
-	for <mptcp@lists.linux.dev>; Mon, 17 Mar 2025 05:09:47 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.176
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B7582253E4
+	for <mptcp@lists.linux.dev>; Mon, 17 Mar 2025 09:41:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742188189; cv=none; b=a/horfyrEmkhZUmUK/f/XTwI3nYESTOAK6MmU0CZ8P1TwP+Ki7Wz9ntgRpIahCkxLf4GLdJ4RVmT0tIJqkLfkLJykX5Lqa7O93RjVfbHF8i85FsofelXi8awx+nQU3WHNQIxSLmPdWUkG/X3ptDO2eK1lxkX6ns+MmT3eve59nI=
+	t=1742204511; cv=none; b=ky8nw1nlfSoLJjdjCPT0oobiDyY31ti2mEAugZ0BLdD2aM3wRksvV67smTi36rIWj1wjIVTc6mG1pBbwSEYjmSPZrRMVjy+RmZfy+NRTBOM6W22pgUVqkEQxQlAVGURkkk6dGEjeeadvCyBjxs9BuecBlqcXMQDoKUBszNFt5EU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742188189; c=relaxed/simple;
-	bh=x6WCx+egL0i5/5v+f09W/wod8SMHrtMy7JYc1KI+zbA=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PwdvfJt/cLD+mRWlS94cfffS3SYJ2axlf2WrePFWI7uCRb6oV/RcpVTROebb/kCDfpioHROpj6mj/b5vTzoXP9pKFIa2TGL1w/X7LJ3d5Nb637SZHoKKvM6sD7HhfrQWPnILRFNOfo4AP1yhBEzI7DuMOBtpRBfPtGu7ULVFuCQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=UueT8fdm; arc=none smtp.client-ip=209.85.214.176
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1742204511; c=relaxed/simple;
+	bh=Tu8f9vB/3B5gn7OzTLzNIf9q+7X6ha1bePaFQE3qOQo=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=pZg9ulUdIlnqMYgeN0eZh3qHFsIJktNDnAMEvogsuXUkVeM451fKeaUwgvsMaSaQFQDI6wpTXYvityTWeiOZ+HIFMUeMdiMhnZf9Uuot8Y42BhSpl55trPV83jf7gaSLOZCQfYHnIFkTrPshqUsut6WyzI4SpaiDdLB5mLoWCa4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Rl2cx/P9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UueT8fdm"
-Received: by mail-pl1-f176.google.com with SMTP id d9443c01a7336-2260c915749so7719955ad.3
-        for <mptcp@lists.linux.dev>; Sun, 16 Mar 2025 22:09:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1742188187; x=1742792987; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=xoTdZcKh+1XF4hqeMgC9ovk7sS/lHMrsYqHuj/oMagQ=;
-        b=UueT8fdmPaTpaAVDPL6Y940SbAVWD84DI+0o8mB8izM7wT6fBJQWPxsQysxjM46uhJ
-         p+amiIbRvPGWtkl3HSa0osCspr0TmVFz5hlTgWWWLXcD/Vhe8izm1blXJ0BvF9aGOEcM
-         bam2rS8Zl6hyL3TUtfp1HZYmBvTchR1s1N43ZTowGh3IyKbDRjPPJH8ublfSZo5ZsC55
-         EHYKq8xJPGDzMcH7VC3hwBygtg9qx5px81SzIxrF8cAluxu89ENPLvcSQH+Quj+lebIp
-         FQ4kqTxn9B/nrUQgd9Uqswd3O+fROx7kIfq/50nWGG65oyNlEGkOtT7s215T3JNx4gIi
-         Z4Eg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1742188187; x=1742792987;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=xoTdZcKh+1XF4hqeMgC9ovk7sS/lHMrsYqHuj/oMagQ=;
-        b=EKW3qD6FoBM+8cYMD8F1AAvaUesLxxf04rLufQVZOLZDLAZehYVr3pME1dI2nnNEg6
-         eZXDHVr/enr1KkfWsnilKACwunwbqREEfCzgtnEIvtq2azoIiFfo9JBzYFdLoeb3txkk
-         RJ1KrLN6kO5kgZm/R90BrbgYAhMotCuLdMOjsPXOspHcoRewbiV/L0eOgAeHpObwbwDR
-         wJHXcM8Z6vhzTfNj3Uk1OTFsS6QWN6g6wtcTre5DpBkdfVEJGRbFSYphdYZiU+g2pVAI
-         +ZJH4HRcJxM+CSh5rLPct2xhZ4vWA5comE4fUp28HOXqTxUI3LeaXjxArtq79vu1P1Q5
-         tXvQ==
-X-Gm-Message-State: AOJu0Yznd/xOngvmL1UbusuYxB4XP2Ef2ketqjgW6ZDPRGjsx4/I6XWq
-	YnbIyD74YdGJ1rEjkjTiewsEkIW/PKYxVpEqP3H98gRjO3JOTl5dYYKt
-X-Gm-Gg: ASbGncsTyRcH/N6TtaLuE2w7V42WUuG5VY6fXBRtArIqlkrjY2BiqYwuil+Wt6M/cAl
-	3HN0DX/lZaLIyo24hWHG0qaD+5Ax4C15F2uMN9tx3YOF2Fta1q2byxH77Cic0F8A7b7XJJfBUo3
-	uQ+SXKgQ6vRyFkLdWnN/ayvhpL2atmimkIKr9ce5/xGXsHKtA9b2F69bJsikIEVDAP6TnAqaKFW
-	+o7KXWgq4UBxNBsKfsUjOkeKnHoqKU7IZdWWXMEmqnt9RLDJOLoTnbofQcgOjlBiaDyb9Scy7d0
-	2NvV1V07fXzBwatDYtlpsLtSITMBfp8nwaeBag8fdH0pyA+IUj12jbxx
-X-Google-Smtp-Source: AGHT+IHE0bUkyCV0ljFVLJuzoIBfaOsoYx8qy7TLeNzRlWXMk19ig0+BEk9p1WN9WneyVImV0bgiBA==
-X-Received: by 2002:a17:902:d4c6:b0:224:249f:9734 with SMTP id d9443c01a7336-225e0a5220emr142092925ad.4.1742188187130;
-        Sun, 16 Mar 2025 22:09:47 -0700 (PDT)
-Received: from [127.0.0.1] ([20.172.29.23])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-225c688866asm66212175ad.50.2025.03.16.22.09.46
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 16 Mar 2025 22:09:46 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1742181977.git.tanggeliang@kylinos.cn>
-References: <cover.1742181977.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v1_0/3=5D_bugf?=
- =?UTF-8?Q?ixes_for_=22BPF_path_manager=2C_part_6?= =?UTF-8?Q?=2C_v2=22?=
-Message-ID: <8e118008-e0c3-e02a-df43-b5364dddd170@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Mon, 17 Mar 2025 05:09:45 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Rl2cx/P9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2F4CC4CEE3;
+	Mon, 17 Mar 2025 09:41:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742204511;
+	bh=Tu8f9vB/3B5gn7OzTLzNIf9q+7X6ha1bePaFQE3qOQo=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=Rl2cx/P9A9KztvG8FZZoACBcmRJF5knI1UnpoH44A6y/qVZB8JSehik0WO72N/yCI
+	 fkItQrA4lGHZ4HvfwK8a+Q+hb7KKN1odimT0RGJE73Qd5Lip+GEMPEB2lm0QhUPZdr
+	 r61YX7Z+8MxM0dyy0UoQ4NqD5mTFOgB+cMuxP27v4QRxqSnsd85vvvUQPeNFULbtO1
+	 pIUSDDEmEWjWkY3icyT904mE9pbypSgkAd8l4kENVCoz6HvRFhapZJFfl9KpeyM3IV
+	 XgcpMKdoxXIsBQxYv2c9wVkjBBtr+vT2oZ2vAMfiQuLOGpwXEIvIY7+jkPu5Bl9A8I
+	 UD1smOglhAZtA==
+Message-ID: <c151a68a659659a2bc8632b63cb04cb59275ec83.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: add bpf_iter_task for
+ mptcp_sock
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>, Mat Martineau
+ <martineau@kernel.org>
+Date: Mon, 17 Mar 2025 17:41:46 +0800
+In-Reply-To: <e04cc2fa5f500097ac7d95afb94f68d0d8dc0057.1741577149.git.tanggeliang@kylinos.cn>
+References: <cover.1741577149.git.tanggeliang@kylinos.cn>
+	 <e04cc2fa5f500097ac7d95afb94f68d0d8dc0057.1741577149.git.tanggeliang@kylinos.cn>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+On Mon, 2025-03-10 at 11:30 +0800, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> To make sure the mptcp_subflow bpf_iter is running in the
+> MPTCP context. This patch adds a simplified version of tracking
+> for it:
+> 
+> 1. Add a 'struct task_struct *bpf_iter_task' field to struct
+> mptcp_sock.
+> 
+> 2. Do a WRITE_ONCE(msk->bpf_iter_task, current) before calling
+> a MPTCP BPF hook, and WRITE_ONCE(msk->bpf_iter_task, NULL) after
+> the hook returns.
+> 
+> 3. In bpf_iter_mptcp_subflow_new(), check
+> 
+> 	"READ_ONCE(msk->bpf_scheduler_task) == current"
+> 
+> to confirm the correct task, return -EINVAL if it doesn't match.
+> 
+> Also creates helpers for setting, clearing and checking that value.
+> 
+> Suggested-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/bpf.c      |  2 ++
+>  net/mptcp/protocol.c |  1 +
+>  net/mptcp/protocol.h | 20 ++++++++++++++++++++
+>  net/mptcp/sched.c    | 15 +++++++++++----
+>  4 files changed, 34 insertions(+), 4 deletions(-)
+> 
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index c0da9ac077e4..0a78604742c7 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -261,6 +261,8 @@ bpf_iter_mptcp_subflow_new(struct
+> bpf_iter_mptcp_subflow *it,
+>  		return -EINVAL;
+>  
+>  	msk = mptcp_sk(sk);
+> +	if (!mptcp_check_bpf_iter_task(msk))
+> +		return -EINVAL;
+>  
+>  	msk_owned_by_me(msk);
+>  
+> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> index 01157ad2e2dc..d98e48ce8cd8 100644
+> --- a/net/mptcp/protocol.c
+> +++ b/net/mptcp/protocol.c
+> @@ -2729,6 +2729,7 @@ static void __mptcp_init_sock(struct sock *sk)
+>  	inet_csk(sk)->icsk_sync_mss = mptcp_sync_mss;
+>  	WRITE_ONCE(msk->csum_enabled,
+> mptcp_is_checksum_enabled(sock_net(sk)));
+>  	WRITE_ONCE(msk->allow_infinite_fallback, true);
+> +	mptcp_clear_bpf_iter_task(msk);
+>  	msk->recovery = false;
+>  	msk->subflow_id = 1;
+>  	msk->last_data_sent = tcp_jiffies32;
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 3492b256ecba..1c6958d64291 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -334,6 +334,7 @@ struct mptcp_sock {
+>  				 */
+>  	struct mptcp_pm_data	pm;
+>  	struct mptcp_sched_ops	*sched;
+> +	struct task_struct *bpf_iter_task;
+>  	struct {
+>  		u32	space;	/* bytes copied in last measurement
+> window */
+>  		u32	copied; /* bytes copied in this measurement
+> window */
+> @@ -1291,4 +1292,23 @@ mptcp_token_join_cookie_init_state(struct
+> mptcp_subflow_request_sock *subflow_re
+>  static inline void mptcp_join_cookie_init(void) {}
+>  #endif
+>  
+> +static inline void mptcp_set_bpf_iter_task(struct mptcp_sock *msk)
+> +{
+> +	WRITE_ONCE(msk->bpf_iter_task, current);
+> +}
+> +
+> +static inline void mptcp_clear_bpf_iter_task(struct mptcp_sock *msk)
+> +{
+> +	WRITE_ONCE(msk->bpf_iter_task, NULL);
+> +}
+> +
+> +static inline bool mptcp_check_bpf_iter_task(struct mptcp_sock *msk)
+> +{
+> +	struct task_struct *task = READ_ONCE(msk->bpf_iter_task);
+> +
+> +	if (task && task == current)
+> +		return true;
+> +	return false;
+> +}
 
-Thank you for your modifications, that's great!
+This v3 has a bug. When I was testing MPTCP BPF selftests in a loop, I
+found that the test would break in some cases. After debugging, I found
+that "task" and "current" were not equal:
 
-Our CI did some validations and here is its report:
+[  520.209749][T11984] MPTCP: bpf_iter_mptcp_subflow_new
+msk=00000000fc8f7370 in_interrupt=0 task=00000000ef28139f
+current=0000000024db2987
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Critical: Global Timeout =E2=9D=8C
-- KVM Validation: btf-normal (only =
-bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only =
-bpftest_all): Success! =E2=9C=85
-- Task: https://github.=
-com/multipath-tcp/mptcp_net-next/actions/runs/13891109215
+I will try to fix it, but haven't found a solution yet.
 
-Initiator: Patchew Applier
-Commits: https://github.com/multipath-tcp/mptcp_=
-net-next/commits/5d1caebd25b1
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D944484
+Thanks,
+-Geliang
 
+> +
+>  #endif /* __MPTCP_PROTOCOL_H */
+> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
+> index f09f7eb1d63f..161398f8960c 100644
+> --- a/net/mptcp/sched.c
+> +++ b/net/mptcp/sched.c
+> @@ -155,6 +155,7 @@ void mptcp_subflow_set_scheduled(struct
+> mptcp_subflow_context *subflow,
+>  int mptcp_sched_get_send(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> +	int ret;
+>  
+>  	msk_owned_by_me(msk);
+>  
+> @@ -176,12 +177,16 @@ int mptcp_sched_get_send(struct mptcp_sock
+> *msk)
+>  
+>  	if (msk->sched == &mptcp_sched_default || !msk->sched)
+>  		return mptcp_sched_default_get_send(msk);
+> -	return msk->sched->get_send(msk);
+> +	mptcp_set_bpf_iter_task(msk);
+> +	ret = msk->sched->get_send(msk);
+> +	mptcp_clear_bpf_iter_task(msk);
+> +	return ret;
+>  }
+>  
+>  int mptcp_sched_get_retrans(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_subflow_context *subflow;
+> +	int ret;
+>  
+>  	msk_owned_by_me(msk);
+>  
+> @@ -196,7 +201,9 @@ int mptcp_sched_get_retrans(struct mptcp_sock
+> *msk)
+>  
+>  	if (msk->sched == &mptcp_sched_default || !msk->sched)
+>  		return mptcp_sched_default_get_retrans(msk);
+> -	if (msk->sched->get_retrans)
+> -		return msk->sched->get_retrans(msk);
+> -	return msk->sched->get_send(msk);
+> +	mptcp_set_bpf_iter_task(msk);
+> +	ret = msk->sched->get_retrans ? msk->sched->get_retrans(msk)
+> :
+> +					msk->sched->get_send(msk);
+> +	mptcp_clear_bpf_iter_task(msk);
+> +	return ret;
+>  }
 
-If there are some issues, you can=
- reproduce them using the same environment as
-the one used by the CI thanks=
- to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm -it \
-        --pull always mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.=
-com/multipath-tcp/mptcp-upstream-virtme-docker
-
-
-Please note that despite =
-all the efforts that have been already done to have a
-stable tests suite when executed on a public CI like here, it is possible =
-some
-reported issues are not due to your modifications. Still, do not =
-hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 Core)
