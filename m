@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFF7A22EE5
-	for <mptcp@lists.linux.dev>; Tue, 18 Mar 2025 01:09:17 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A1FBB22EE5
+	for <mptcp@lists.linux.dev>; Tue, 18 Mar 2025 01:11:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742260157; cv=none; b=stcFbi1XeRHRDqPV9UA4WbxjtFuil7tqQgi++6IPsWvZ9NP2oocqZeN+P7pL6swjsiIVE4qrLW1oUS25ylJQo6ZP/bRrXQfK3lEygGhUq4Omr0JM0xmkMB3B9jTHVxKSYbV4EiOSbewTdZ0zff+uFSPyeBsph8wYmByqB7P88YI=
+	t=1742260295; cv=none; b=T4WfOs1rZHviz0/ulVLAcGMOmk9fWhWcMtyFQDn20ugxY4nQhG3gGymKtsxz0Ha+fDuFWOgiDbMTFiUL7PJJmjm3B+ZsKYBymmSASZ3mAxxoeRgoGD3xGcVltJ7rU9+okil7000pN9ZNge9cMaKOkPDRyMRzof2BD4w9jksM8vM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742260157; c=relaxed/simple;
-	bh=ar97fPxjAqw0Zi6Y6euSj3yMwEIp7MWSzIAvFUzfH8M=;
+	s=arc-20240116; t=1742260295; c=relaxed/simple;
+	bh=8JKumlhpn3A6+F2TOW0S+A/ODxTsyVdk0KcNlkVae4g=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=gf0eKZWrzk6WNojRqF4vgVG7rOFtqQv8gFZJO9iTwSj79gR2Mrc3qXcbXRjpqTPwEgC0UZoC7eXhJOQrO+dNEzc69WigENF5JivdBSAMNncXkvHh30FavaiW325IwlC2pnUcf16lrb5mWtV5mDxyLkse1yNV5Yr2S6c5Pyle890=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ihKsWuJm; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=AtVAzyIoLm/ast3SuRbq9ewC01wB80LngWAwv+vJuwL4KKRQQdZ9mIPB5u3D/O4Yk5NAgF0o/+DCr8U0LejPLJsaQV+FrvRmg1tbd5QJAl3+kIEcqDc1oD0iA+cSw2gnFMqROhS0dbxfzRoMMRnAxIeLPOITIdsy/neKIDcKF7k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxIzBP2k; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ihKsWuJm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 192D7C4CEE3;
-	Tue, 18 Mar 2025 01:09:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxIzBP2k"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5C18DC4CEE3;
+	Tue, 18 Mar 2025 01:11:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742260157;
-	bh=ar97fPxjAqw0Zi6Y6euSj3yMwEIp7MWSzIAvFUzfH8M=;
+	s=k20201202; t=1742260295;
+	bh=8JKumlhpn3A6+F2TOW0S+A/ODxTsyVdk0KcNlkVae4g=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=ihKsWuJmkgicbRhg1dZfzurj1WhTTY84JS/13DVnmNscptoqfs48NBAN8WDcaudIO
-	 Kj3Xm+xa4OPXv3lD1Jc27GmxzCWUFvg3HR5FsqmEKs0tW5yqW0Li/fPaYb4khL0QvT
-	 gustnJL/C/S1S9EOledBsruxXqgSAOMe6UaS1IAkUDdvwZkPqHM4FX08Ipa40q8GM3
-	 nj3JA/8Ct7Ji64jz6Xl6rJVoLt45GF+jfHaRH6yRfpDsMA5uYdgTV8RY5TOEw7R2Td
-	 HgyubEwiOhV9zZFgRtJ68LPqz9a7PrvqTz1ForxfHcQ6ectu5DK/CCJj9rwwTAB+TU
-	 JOKBlfZJzN3jg==
-Date: Mon, 17 Mar 2025 18:09:15 -0700 (PDT)
+	b=mxIzBP2klPScShG7DWWsLwgkNT/g5C4g+Fm/BCeOJkVH7Z5uqau2BTGRDmBajkfmp
+	 HaVd4qkzkl3pK1DpMz33NWaCInPvfA0X/vAMpPTHPIEfBmCAhTEvzo8KzCM+gVjBdU
+	 hc2xR16YYIb2p7YYGCBUNef3LzFcX6CgdZEBzED7JkF2x7U6j0RaXyQ87di7iKNH1/
+	 IXQAKopGOpgRtPsfDk/mnrPRwptqVt5e1oT6pSA+7DhvF7F9DmcLydAddefDizsCsO
+	 fleXDjvKuWzW0qytqBXbtPcUwBLAWTUKX9TpzDT7ZM4oG7QMSVmk642u8upH3fhGrK
+	 wSjYUkf9jucNg==
+Date: Mon, 17 Mar 2025 18:11:34 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
 To: Geliang Tang <geliang@kernel.org>
 cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v1 1/8] mptcp: add mptcp_validate_scheduler
- helper
-In-Reply-To: <01f14f2e6c9ba32887af1d52e29753dd6b85e544.1741226722.git.tanggeliang@kylinos.cn>
-Message-ID: <757da9a0-9243-1df8-36ca-828410836768@kernel.org>
-References: <cover.1741226722.git.tanggeliang@kylinos.cn> <01f14f2e6c9ba32887af1d52e29753dd6b85e544.1741226722.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v1 3/8] Squash to "selftests/bpf: Add bpf
+ scheduler test"
+In-Reply-To: <c02d0f8555c7427d58155d34709f2c8250c8ee2c.1741226722.git.tanggeliang@kylinos.cn>
+Message-ID: <321b3cb7-2bbf-1e93-7f92-9893caee01a7@kernel.org>
+References: <cover.1741226722.git.tanggeliang@kylinos.cn> <c02d0f8555c7427d58155d34709f2c8250c8ee2c.1741226722.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -47,71 +47,70 @@ On Thu, 6 Mar 2025, Geliang Tang wrote:
 
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 >
-> New interface .validate is added in struct bpf_struct_ops recently, this
-> patch implements it as a new helper mptcp_validate_scheduler() for struct
-> mptcp_sched_ops.
->
-> In this helper, check whether the required ops "get_subflow" of struct
-> mptcp_sched_ops has been implemented.
+> A cleanup, move netns_new() out of sched_init().
 >
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 22 +++++++++----------
+> 1 file changed, 10 insertions(+), 12 deletions(-)
+>
+> diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> index ac6f6a6f7700..bd824b19ee13 100644
+> --- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> +++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+> @@ -562,23 +562,16 @@ static void test_iters_subflow(void)
+> 	close(cgroup_fd);
+> }
+>
+> -static struct netns_obj *sched_init(char *flags, char *sched)
+> +static int sched_init(char *flags, char *sched)
+> {
+> -	struct netns_obj *netns;
+> -
+> -	netns = netns_new(NS_TEST, true);
+> -	if (!ASSERT_OK_PTR(netns, "netns_new"))
+> -		return NULL;
+> -
+> -	if (endpoint_init("subflow", 2) < 0)
+> +	if (endpoint_init(flags, 2) < 0)
+> 		goto fail;
+>
+> 	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.scheduler=%s", NS_TEST, sched);
+>
+> -	return netns;
+> +	return 0;
+> fail:
+> -	netns_free(netns);
+> -	return NULL;
+> +	return -1;
 
-This patch LGTM:
-
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-The rest of the series looks ok to squash, with one note on patch 3.
-
+A small thing: since there's now only the 'return' on this error path, I 
+suggest removing the goto and directly returning -1 above. Matthieu do you 
+want to do this when applying, or just leave it as-is?
 
 - Mat
 
-> ---
-> net/mptcp/protocol.h |  1 +
-> net/mptcp/sched.c    | 17 +++++++++++++++--
-> 2 files changed, 16 insertions(+), 2 deletions(-)
->
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 3492b256ecba..77b4ec0b0dd8 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -740,6 +740,7 @@ void mptcp_info2sockaddr(const struct mptcp_addr_info *info,
-> 			 struct sockaddr_storage *addr,
-> 			 unsigned short family);
-> struct mptcp_sched_ops *mptcp_sched_find(const char *name);
-> +int mptcp_validate_scheduler(struct mptcp_sched_ops *sched);
-> int mptcp_register_scheduler(struct mptcp_sched_ops *sched);
-> void mptcp_unregister_scheduler(struct mptcp_sched_ops *sched);
-> void mptcp_sched_init(void);
-> diff --git a/net/mptcp/sched.c b/net/mptcp/sched.c
-> index f09f7eb1d63f..1e59072d478c 100644
-> --- a/net/mptcp/sched.c
-> +++ b/net/mptcp/sched.c
-> @@ -82,10 +82,23 @@ void mptcp_get_available_schedulers(char *buf, size_t maxlen)
-> 	rcu_read_unlock();
 > }
 >
-> -int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
-> +int mptcp_validate_scheduler(struct mptcp_sched_ops *sched)
+> static int ss_search(char *src, char *dst, char *port, char *keyword)
+> @@ -636,11 +629,16 @@ static void send_data_and_verify(char *sched, bool addr1, bool addr2)
+> static void test_default(void)
 > {
-> -	if (!sched->get_send)
-> +	if (!sched->get_send) {
-> +		pr_err("%s does not implement required ops\n", sched->name);
-> 		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +int mptcp_register_scheduler(struct mptcp_sched_ops *sched)
-> +{
-> +	int ret;
-> +
-> +	ret = mptcp_validate_scheduler(sched);
-> +	if (ret)
-> +		return ret;
+> 	struct netns_obj *netns;
+> +	int err;
 >
-> 	spin_lock(&mptcp_sched_list_lock);
-> 	if (mptcp_sched_find(sched->name)) {
+> -	netns = sched_init("subflow", "default");
+> +	netns = netns_new(NS_TEST, true);
+> 	if (!netns)
+> 		goto fail;
+>
+> +	err = sched_init("subflow", "default");
+> +	if (!ASSERT_OK(err, "sched_init"))
+> +		goto fail;
+> +
+> 	send_data_and_verify("default", WITH_DATA, WITH_DATA);
+>
+> fail:
 > -- 
 > 2.43.0
 >
