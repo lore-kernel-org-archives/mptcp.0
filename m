@@ -1,41 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC4420CCE6
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 05:44:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1DF322094
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 06:08:09 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742363067; cv=none; b=hUy/WrI0epiWyMHj/yYK0O7Hi24acRwgmZCKsy8RLnDbNoQbbOCngf09DR7YKfTq+ACnRdhdlDo9aSNIL5wyPwLxSEc88dPjgTd5zYaGKHojPK7ttMt9kJfJWdRn+u5BMtdqS3oeHdeKweFFu2gjxu3j8dSA8CaaCLpJsu+f8og=
+	t=1742364490; cv=none; b=CqpWfjSJJ1ap9X12cxcM+uewXax5TJDFY5KYI1YE8uMHDL3MigaURDO6PhihXb90gcXb1w9sVPOb6qvuLhihyBt9gGT+Wr+tzZS16TuLcp6t6jsBOml08HIh7AKk0ySZoXv1KwQYKEX8q1BAD0QOrCjMiNX67ph3Vm3K/uWZygo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742363067; c=relaxed/simple;
-	bh=1NINfptwxTP2XleXUB6FF7ohck2PwaqguWW8bkwMFbM=;
-	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nrhHIL+RGKRtCFv8npYxhSLTvfY7z5HsjBGXC0uPyfW1YhDSbP3xbwIgQZ6WeRdWwsWL9FWA9BMYuX6vKmIAavxFWWfgx05fWAwv7B693ZjXcs+7j3YuEEI91uPthEstzTJGs6dNrn80b+NVJ3p1t5+uxnxWkvEejaVvOpKfbaE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ByEZFZXl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742364490; c=relaxed/simple;
+	bh=BJHrS0HqlZqg1Wx0S3i9dyMCFwT67xSaocQ254w/1+M=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=YF3ArMFol8FGHo4dXt1kshMAUcUkI9o8dqHUnXq4YDuNJeyJ5qK93aw9p92Ks3CQz5Mc/RWUZ9gL44pXprQFqoUaXiWCBpfejr+fWdJedMwpWpp6TTR9uOEfPz1i52tLZR4WIAPibklCcwIleIk15qs1PBvfepn7Mgrv9cqewrY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=haP6J98m; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ByEZFZXl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8B129C4CEEA;
-	Wed, 19 Mar 2025 05:44:25 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="haP6J98m"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1D52DC4CEEA;
+	Wed, 19 Mar 2025 06:08:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742363066;
-	bh=1NINfptwxTP2XleXUB6FF7ohck2PwaqguWW8bkwMFbM=;
-	h=Subject:From:To:Date:In-Reply-To:References:From;
-	b=ByEZFZXlpkgVUOXwBl9CH4PUPQSozfLl8h0kckN76XOF1fbjWzVwI4i9deZY2oA2a
-	 4w06ySUNJsDq6MgIZXakC8pn+0J9QaVIbslcH1JK4o8RLxMk1Ltf7MZQvcsbX7gEmF
-	 YPip74D1CtLRXH85pp4w8BfQLDIlnsbwLLPHgN6rGhwVWQz7e7Low/ybyk7rlEbQ/N
-	 Mi8MqIzLjAGwB7C2jKmH1wUo64qVPaaigDWZKaEKdMHUKc55JMkIUF3dGccI6iIQGq
-	 MiFpxfATlsiYwhhnXGPa+sy8rfAvd1ucfnzWqByYGH1oN34gNh9KVXyBaVLBX+hxnu
-	 MffQwbQs/uLig==
-Message-ID: <beefd71a1bb820ca6ae25a59b85a65d268a1ca6f.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 0/2] cleanups for main_loop
+	s=k20201202; t=1742364489;
+	bh=BJHrS0HqlZqg1Wx0S3i9dyMCFwT67xSaocQ254w/1+M=;
+	h=From:To:Cc:Subject:Date:From;
+	b=haP6J98mvgd/fH/rUcR0TnqLqmnN1TIi6iBTtPOZzU6o1DCzYQH09kYeqgCL34BlM
+	 3/5MiQQiKnCa37XZqe3zGOkdpogTh8V41kfHWPqUs1QYHcLxW2x8MUjycLJ4+R5OeM
+	 ufIImhtWV2DV2D2OGe9nEO0stDJYJegoFWemx3h+kyQY3UUM/SxQ+j/3QlEz4lZ+65
+	 Y1Ner5GiIv5KWHMgzaYDAXWLGz87CgPAHFJFlc5E0I8R+uOOvwRuN2/IN5aC3DTEaE
+	 h/pQ9dM1yk7iD6OV27/6d/FwpzGXDDhUjJx7tf1UQ4u3lcXSVtQo/D+Hp37oufWDjC
+	 K0M3sLMlV0UgQ==
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Wed, 19 Mar 2025 13:44:19 +0800
-In-Reply-To: <229690ef-6351-cfeb-8045-dd299c229169@gmail.com>
-References: <cover.1742355162.git.tanggeliang@kylinos.cn>
-	 <229690ef-6351-cfeb-8045-dd299c229169@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 0/1] cleanups for main_loop
+Date: Wed, 19 Mar 2025 14:08:03 +0800
+Message-ID: <cover.1742364129.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,60 +40,32 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-On Wed, 2025-03-19 at 04:47 +0000, MPTCP CI wrote:
-> Hi Geliang,
-> 
-> Thank you for your modifications, that's great!
-> 
-> Our CI did some validations and here is its report:
-> 
-> - KVM Validation: normal: Unstable: 1 failed test(s):
-> selftest_mptcp_connect 🔴
-> - KVM Validation: debug: Unstable: 1 failed test(s):
-> selftest_mptcp_connect 🔴
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Oops, I fixed this in v3.
+v3:
+ - don't remove the second "open(cfg_input)", it breaks the disconnect
+   tests.
+ - no need to "close(fd)" when copyfd_io fails.
 
-Thanks,
--Geliang
+Based-on: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
 
-> - KVM Validation: btf-normal (only bpftest_all): Success! ✅
-> - KVM Validation: btf-debug (only bpftest_all): Success! ✅
-> - Task:
-> https://github.com/multipath-tcp/mptcp_net-next/actions/runs/13938550896
-> 
-> Initiator: Patchew Applier
-> Commits:
-> https://github.com/multipath-tcp/mptcp_net-next/commits/ee7ab4397474
-> Patchwork:
-> https://patchwork.kernel.org/project/mptcp/list/?series=945419
-> 
-> 
-> If there are some issues, you can reproduce them using the same
-> environment as
-> the one used by the CI thanks to a docker image, e.g.:
-> 
->     $ cd [kernel source code]
->     $ docker run -v "${PWD}:${PWD}:rw" -w "${PWD}" --privileged --rm
-> -it \
->         --pull always mptcp/mptcp-upstream-virtme-docker:latest \
->         auto-normal
-> 
-> For more details:
-> 
->     https://github.com/multipath-tcp/mptcp-upstream-virtme-docker
-> 
-> 
-> Please note that despite all the efforts that have been already done
-> to have a
-> stable tests suite when executed on a public CI like here, it is
-> possible some
-> reported issues are not due to your modifications. Still, do not
-> hesitate to
-> help us improve that ;-)
-> 
-> Cheers,
-> MPTCP GH Action bot
-> Bot operated by Matthieu Baerts (NGI0 Core)
-> 
+v2:
+ - update the pending patches from Cong Liu, he said to me that he has
+   no time to deal with this recently.
+ - delete the second "open(cfg_input)" instead of the first one as Matt
+   suggested.
+ - drop freeaddrinfo, no need to do this.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1742355162.git.tanggeliang@kylinos.cn/
+
+v1:
+ - https://patchwork.kernel.org/project/mptcp/cover/20250113085228.121778-1-liucong2@kylinos.cn/
+
+Geliang Tang (1):
+  selftests: mptcp: close fd_in before returning in main_loop
+
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+-- 
+2.43.0
 
