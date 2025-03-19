@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892E51DF747
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:40:50 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AFA0C194A44
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:47:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742406050; cv=none; b=FEOzpD6F8QfAk1GxS5LaSB/807pCwZHyxc9O5cYn16GHxlR51WFKPxs8+F9+Pdd1kzcTe9sNIWtzOavFz6SfWKK8nH0oQGhUsPRdxqP18qqBG2cHN9THgBjFLYqqpFCshTDg1YrryLuITBJdPL1cF6CgLo2D1GbpL7KO1L6zSms=
+	t=1742406448; cv=none; b=cFF4XZNTR7+IUgga8/Phvt/6Ra3AK8TNgugHCYcg+B1DUxXJcigpaJ279GrYbr3TrFag5ftXBBnzjk/TX6nm5o/IrjCRjD55L4zX1RM5jxVnjo+i5bna0WvlRwvBHwU7R60C3zL2FNxI68aCvXVLcekSAAzUJAZsnlLTjBH2Se4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742406050; c=relaxed/simple;
-	bh=4MwertVRXXKGwvgK1D3d/NTphWnTvk0zVkrkFMDwl2o=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=RI8nEqOOOPit8hodgZ85CCi5NZQGejN8NwFG18oFCh81hILxZH+pmqRQij87Lhf3GXgJiA3QqvH8CBAaYgmsAoOB00YlNnwyUqimIKg1Nv2lqV99A6+LhYlegLJ6ATa6aTp4UEzH1ukCrB7/q8ds7AU7BrjxhXkIWjfHl2/CqC4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXoSBJIw; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742406448; c=relaxed/simple;
+	bh=Mo+3oha+FPQxZnXfsuesLqPD0cTEFrUoAPaEn9SbXqo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=cwWgQl9pFX64CepyfmIg1FokXp53tI+wxIYqXvZ91c4NN6hPSyjM6Q/QuNM3uePDClZfxJijziyrfw1qJwmE3JU7DScviXyd05g1ElUZyF87aGcG9urKzDPfmtRQGMzapx3enh63zjlfl7MJcrrx+KqgXbWqTv/SivlliSPqXeM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JHk7Xsog; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXoSBJIw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF2AC4CEE4;
-	Wed, 19 Mar 2025 17:40:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JHk7Xsog"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8F6F1C4CEE4;
+	Wed, 19 Mar 2025 17:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742406050;
-	bh=4MwertVRXXKGwvgK1D3d/NTphWnTvk0zVkrkFMDwl2o=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=nXoSBJIwuefVKw170xevo7asYDqrNMaqoW0BDpJ4E8PyAWQPWCJiQmpiajsSIFoq+
-	 eVXTLvRwXgw5U9jCxDiKY+jNd7opWWxecBedazsU3lSv7QjVdrVaFbRjGOVgjAiTB1
-	 JqPIONeNnZohbxtQYtgKBrMpNCylaRjj0aiYEbV8iqBE+k06+fPOg7psqLjS8M6wOo
-	 Cedf5l+7cX7QrlyYmviJKVLwMZC5yWqEPDzFoUtrOEc8Jy4L01ZqjYLvOovXZvz5Or
-	 Im2CxqX27u4S/SrR474FTXCV3a/6XXromRgUp8APgC+feJbnV2OuJRhe+Tp19yOVsi
-	 9Tkto8aGSfOPg==
-Message-ID: <ab1836f2-cd26-4d35-a8d0-58060d17cb02@kernel.org>
-Date: Wed, 19 Mar 2025 18:40:47 +0100
+	s=k20201202; t=1742406448;
+	bh=Mo+3oha+FPQxZnXfsuesLqPD0cTEFrUoAPaEn9SbXqo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=JHk7XsogcBuWb5/E1IdboubZF6VXNUVScCg+aEHzOOjWRz8eg0pcoA9oCgtc6dHHL
+	 ZTeJ+vB2WnIqzpyjtE3BNJsokLXtRixh+APZBwv2KeIgV/ZBWy1+5aRxOw5p8IhqWK
+	 QTPk2QzhiSZW1Ysers1tTeLxgqK6bZ6Sg3EJM5mohMBhL4DSG3P0h8AA0Wow5CyEGW
+	 7R3MKLQHapaf1vHfu8RJ9wlfEoYWcCzRtUfKBElgy/li9Om1l8BTLc33aYIv9Izmvv
+	 2/7JLDlWDjbd1WgrxGlp/1TWaVBc/uFA8NoGoVZg65S+hQ3X4DJbgRegL9XYlGAEnK
+	 VUio8hAjx/nZQ==
+Message-ID: <d362ffe5-5596-4656-8317-7e23027caf1d@kernel.org>
+Date: Wed, 19 Mar 2025 18:47:22 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: fix incorrect fd checks
- in main_loop
+Subject: Re: [mptcp-net, v2] mptcp: fix a NULL pointer result in panic
 Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>, Gang Yan <yangang@kylinos.cn>,
+ mptcp@lists.linux.dev
+References: <20250319022733.51444-1-yangang@kylinos.cn>
+ <480b189d-af0b-4af4-8abd-5ebc6873255a@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Cong Liu <liucong2@kylinos.cn>
-References: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
- <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,48 +86,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
+In-Reply-To: <480b189d-af0b-4af4-8abd-5ebc6873255a@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 19/03/2025 18:35, Matthieu Baerts wrote:
-> Hi Geliang, Cong,
+Hi Paolo,
+
+On 19/03/2025 08:38, Paolo Abeni wrote:
+> On 3/19/25 3:27 AM, Gang Yan wrote:
+>> When test valkey in mptcp, the kernel will panic due to the function
+>> 'mptcp_can_accept_new_subflow' when the subflow_req->msk is NULL.
+>>
+>> This problem shows in kernel 6.11.0-rc3 and 6.14.0-rc4. The message
+>> attached is valkey_test in 6.14.0-rc4:
+>>
+>> Call trace:
+>> mptcp_can_accept_new_subflow (./net/mptcp/subflow.c:63 (discriminator 4)) (P)
+>> subflow_syn_recv_sock (./net/mptcp/subflow.c:854)
+>> tcp_check_req (./net/ipv4/tcp_minisocks.c:863)
+>> tcp_v4_rcv (./net/ipv4/tcp_ipv4.c:2268)
+>> ip_protocol_deliver_rcu (./net/ipv4/ip_input.c:207)
+>> ip_local_deliver_finish (./net/ipv4/ip_input.c:234)
+>> ip_local_deliver (./net/ipv4/ip_input.c:254)
+>> ip_rcv_finish (./net/ipv4/ip_input.c:449)
+>> ...
+>>
+>> According to the debug log, the same req received two SYN-ACK in a very
+>> short time. (When the client retransmits the syn ack dueto multiple reasons.
+>> Even if the packets are transmitted with a relevant time interval, they can be
+>> processed by the server on different CPUs concurrently). The 'subflow_req->msk'
+>> ownership is transferred to subflow in the first, and there will be a risk of a
+>> null pointer dereference here.
+>>
+>> This patch can fix this issue by moving the 'subflow_req->msk' under the
+>> `own_req == true` conditional.
+>>
+>> Suggested-by: Paolo Abeni <pabeni@redhat.com>
+>> Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > 
-> On 18/03/2025 12:15, Geliang Tang wrote:
->> From: Cong Liu <liucong2@kylinos.cn>
->>
->> Fix a bug where the code was checking the wrong file descriptors
->> when opening the input files. The code was checking 'fd' instead
->> of 'fd_in', which could lead to incorrect error handling.
->>
->> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
->> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
->> Co-developed-by: Geliang Tang <geliang@kernel.org>
->> Signed-off-by: Geliang Tang <geliang@kernel.org>
->> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
->> ---
->>
->> v3:
->>  - resend the pending patch from Cong Liu, he said to me that he has
->>    no time to deal with this recently.
->>  - add another "Fixes" tag as Matt suggested.
->>  - update the subject and commit log.
+> The code LGTM.
+
+Me too, thank you both for having looked at that!
+
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+
+> Possibly the commit message could be expanded noting that the !msk check
+> in subflow_hmac_valid() could be dropped, because there is already the
+> same check under the own_req mpj branch.
 > 
-> Thank you for the v3!
+> Also this needs a Fixes tag:
+> 
+> Fixes: 9466a1ccebbe ("mptcp: enable JOIN requests even if cookies are in
+> use")
+> 
+> Matt: could you please adjust the above while applying the patch?
 
-Now in our tree:
-
-New patches for t/upstream-net and t/upstream:
-- f1aedae2b9e9: selftests: mptcp: fix incorrect fd checks in main_loop
-- Results: 337db8693fa1..15fd746f34c5 (export-net)
-- Results: 8131e8aff41d..2bea3081157b (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9faaf0099006d44557034273d9204d64385cfb1a/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b1252371e4122d56004e65cece710905a3de6334/checks
+Sure, I will do that!
 
 Cheers,
 Matt
