@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C3E20297C
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:35:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 892E51DF747
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:40:50 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405742; cv=none; b=N/TFm08uZqMWkHrGOeWhx5ltSZCFf10Qblgi1xz5+CNBr21DidWUemM/nWLUDKwT+TiZNTXhvdqCeZcXsMlXuGCwhITDdTxLjVlYbK9pCazxSUDod4vRCYN9+TTVU8xwh5/G/miJHil+3IgE83hgzw85eKZ8jrhhz7fHsbfSz6U=
+	t=1742406050; cv=none; b=FEOzpD6F8QfAk1GxS5LaSB/807pCwZHyxc9O5cYn16GHxlR51WFKPxs8+F9+Pdd1kzcTe9sNIWtzOavFz6SfWKK8nH0oQGhUsPRdxqP18qqBG2cHN9THgBjFLYqqpFCshTDg1YrryLuITBJdPL1cF6CgLo2D1GbpL7KO1L6zSms=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405742; c=relaxed/simple;
-	bh=28lmrJgo42VzSwspHRQWCIgTwtDfIVaDfgvxbN9KkSA=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=amghJ+3/Sbv8eAR5r2wUqCwOTRhABYuaE/o3td092ejiF4+N02koUq71WIQgZGULNxu1eKeyeksgcOk111xLX13e0yW2wxhYYk0serhdRpI/THMbvCofRYbKp9Rw+kKlyMyntoC8jhP6Pb1MiJfRVaqovAzKW2FgPpTEFMM3EeA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uV7+dXjl; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742406050; c=relaxed/simple;
+	bh=4MwertVRXXKGwvgK1D3d/NTphWnTvk0zVkrkFMDwl2o=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=RI8nEqOOOPit8hodgZ85CCi5NZQGejN8NwFG18oFCh81hILxZH+pmqRQij87Lhf3GXgJiA3QqvH8CBAaYgmsAoOB00YlNnwyUqimIKg1Nv2lqV99A6+LhYlegLJ6ATa6aTp4UEzH1ukCrB7/q8ds7AU7BrjxhXkIWjfHl2/CqC4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nXoSBJIw; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uV7+dXjl"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D589EC4CEEA;
-	Wed, 19 Mar 2025 17:35:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nXoSBJIw"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5EF2AC4CEE4;
+	Wed, 19 Mar 2025 17:40:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742405740;
-	bh=28lmrJgo42VzSwspHRQWCIgTwtDfIVaDfgvxbN9KkSA=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=uV7+dXjlz2s95MrS+TdV69683KV1tqfKJv17seCn3B73YvZoCsBmXiqKY6e/4HiWr
-	 m6ADOFaNddIfZ/vypCFByBYQfvDP65ZnlzNb5n28vdRcVFpJSZAc9rhbNrKXuEO3Lz
-	 Jhdn3VpQ781n2X7MXQBGtOG3UZcLDqBKOAZdKYutRSm1BTkuHxAq75Fr1qiDw4FVpX
-	 2LBfspIHyxRTGVcI+/z9WxxHV6HN7EdBDLOZU/Jberg2m8lV0GaEhMNtbI9pNO0LMX
-	 PZl5y2LFeSyHUJzJ2Kzh9zWo7HHCtOmVMnxsuq6a+95tgvKFI/GGYwAchJ8r6BAnbZ
-	 2BS9o4fpcudMg==
-Message-ID: <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
-Date: Wed, 19 Mar 2025 18:35:36 +0100
+	s=k20201202; t=1742406050;
+	bh=4MwertVRXXKGwvgK1D3d/NTphWnTvk0zVkrkFMDwl2o=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=nXoSBJIwuefVKw170xevo7asYDqrNMaqoW0BDpJ4E8PyAWQPWCJiQmpiajsSIFoq+
+	 eVXTLvRwXgw5U9jCxDiKY+jNd7opWWxecBedazsU3lSv7QjVdrVaFbRjGOVgjAiTB1
+	 JqPIONeNnZohbxtQYtgKBrMpNCylaRjj0aiYEbV8iqBE+k06+fPOg7psqLjS8M6wOo
+	 Cedf5l+7cX7QrlyYmviJKVLwMZC5yWqEPDzFoUtrOEc8Jy4L01ZqjYLvOovXZvz5Or
+	 Im2CxqX27u4S/SrR474FTXCV3a/6XXromRgUp8APgC+feJbnV2OuJRhe+Tp19yOVsi
+	 9Tkto8aGSfOPg==
+Message-ID: <ab1836f2-cd26-4d35-a8d0-58060d17cb02@kernel.org>
+Date: Wed, 19 Mar 2025 18:40:47 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,10 +38,11 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: fix incorrect fd checks
  in main_loop
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Cong Liu <liucong2@kylinos.cn>
 References: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -86,39 +87,48 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
+In-Reply-To: <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, Cong,
-
-On 18/03/2025 12:15, Geliang Tang wrote:
-> From: Cong Liu <liucong2@kylinos.cn>
+On 19/03/2025 18:35, Matthieu Baerts wrote:
+> Hi Geliang, Cong,
 > 
-> Fix a bug where the code was checking the wrong file descriptors
-> when opening the input files. The code was checking 'fd' instead
-> of 'fd_in', which could lead to incorrect error handling.
+> On 18/03/2025 12:15, Geliang Tang wrote:
+>> From: Cong Liu <liucong2@kylinos.cn>
+>>
+>> Fix a bug where the code was checking the wrong file descriptors
+>> when opening the input files. The code was checking 'fd' instead
+>> of 'fd_in', which could lead to incorrect error handling.
+>>
+>> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+>> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
+>> Co-developed-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Geliang Tang <geliang@kernel.org>
+>> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
+>> ---
+>>
+>> v3:
+>>  - resend the pending patch from Cong Liu, he said to me that he has
+>>    no time to deal with this recently.
+>>  - add another "Fixes" tag as Matt suggested.
+>>  - update the subject and commit log.
 > 
-> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
-> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
-> Co-developed-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
-> ---
-> 
-> v3:
->  - resend the pending patch from Cong Liu, he said to me that he has
->    no time to deal with this recently.
->  - add another "Fixes" tag as Matt suggested.
->  - update the subject and commit log.
+> Thank you for the v3!
 
-Thank you for the v3!
+Now in our tree:
 
-It looks good to me:
+New patches for t/upstream-net and t/upstream:
+- f1aedae2b9e9: selftests: mptcp: fix incorrect fd checks in main_loop
+- Results: 337db8693fa1..15fd746f34c5 (export-net)
+- Results: 8131e8aff41d..2bea3081157b (export)
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Tests are now in progress:
 
-Small detail: that's for mptcp-net, not next.
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9faaf0099006d44557034273d9204d64385cfb1a/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/b1252371e4122d56004e65cece710905a3de6334/checks
 
 Cheers,
 Matt
