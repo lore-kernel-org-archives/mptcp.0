@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CA1BAF9DA;
-	Wed, 19 Mar 2025 16:26:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699B41AAC4
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:10:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742401601; cv=none; b=bUnuRVAdEjGnB1cWciQeTpNqnJHXVgHuyZTSKTpzArEyiMzM2ARgzHlKE59qxvgGkz01DhWFz/tPvWzKhJy+vQSG4ZIsmTsft7n2I97e1FE0rQMl8FcZ4b+IGQ0kcZBeWezwRs4opyF3af9HgoOEOvTe9bzx+9cwCgUoNTiqiww=
+	t=1742404239; cv=none; b=tUDV03uV9kY/QRoInzuscVg2NiPfgVsvy4RIwSKay3+iNhXbqbFb/V7t9irBlSAKOG8qoRLE97C6VI7goUB/RJXDieZWzfoWTaHYWBLosq3UHMSpoJXgiqnOT5Uwv5RqVSo7hKt+KcbHRWVEQs7w/SBhpQmk3bicO2dxvufahfM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742401601; c=relaxed/simple;
-	bh=+NovpqlAsquT1zXAI20hR5SbwnPIEjw5Mmy6/Kiav40=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=qjP65TCNz5czSQ1rRe7d3IQkYLFR+7i1Yge4NrDi2FK0inHef/o+5yXvjXWTIQu94crDr3/4mBVujzf95jdOZtgXAtHiydycJiVkTg09iTWDj8pROjrkryaj3TMLY86ehjMcqAD71SUqBZRol1fXhxGkezZMGcjSjLOtLlrZMrg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KWTDSsnI; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742404239; c=relaxed/simple;
+	bh=Au2DOhc2pF27cVqShUjq5DY+5f3BWz+rNIkrRzZ4jkI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
+	 In-Reply-To:Content-Type; b=iopBPZbcPIYYpvhJu2BcMeHxkNPnqNIPZlP1vXZr79y77otnoIGFGr6ADQMWCNSxTTAgBvtSYpfVUfFIigVyuWzGy+nxd2zW7Wkm3RKD5IvQkX0/Ii9Az5Trdj1KFJfHEI1vWytaW6359iFwpywoF6VAFKng3Medll2w+BTvsOo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJItFp54; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KWTDSsnI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DD392C4CEED;
-	Wed, 19 Mar 2025 16:26:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJItFp54"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4647DC4CEEA;
+	Wed, 19 Mar 2025 17:10:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742401601;
-	bh=+NovpqlAsquT1zXAI20hR5SbwnPIEjw5Mmy6/Kiav40=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=KWTDSsnI5C2ZqKFYak0Osm2PDSIaxivFspKsJdnfakhcGwSK+FBTOPxs7cmY3NDjc
-	 25uBHPkoCouB5uT6NE3jjxEwzTY99Hj/lDd8voj2GgPCtgwWO7Kxopl/+B6IvaCOSO
-	 TqfdlASDzCL/p7HslkpKto8XZNXZEcWT1jJCA3pj+TrU1OBDylxjKdft8hsXscKfv+
-	 qILPJC7ktoiqRHjuBs6te7UjuU2/4BQjNNyXpvx+CuynAr0r16oVDcakfexO0nN1OE
-	 +t3nFEBs4YvmixSf9lJzMMmoAuBN1VELxx6sL/WS4rznBOBHuh6aKH6+QkQjpEEoMg
-	 BpW3LeN5t8SyA==
-Message-ID: <a2b61202-a257-4317-b454-799da27951e8@kernel.org>
-Date: Wed, 19 Mar 2025 17:26:35 +0100
+	s=k20201202; t=1742404238;
+	bh=Au2DOhc2pF27cVqShUjq5DY+5f3BWz+rNIkrRzZ4jkI=;
+	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
+	b=TJItFp54T4EVV+OdyD4VIvl9rbPt11DCtWlE6B+czCcoiT2cf79d+VSOdzreqKTOs
+	 GoZ6WibQSIDwro1/hP0m+iZaMy9z80XPJeivop1fPJ/4sDO4/uLM+XtC0scrbMJGpb
+	 PV/zxC/50jzDY1iKb8BAnP8wL6WUEcTelISRScIpWet8bzZeXF5OSZd1BMjrsCoeDR
+	 FCoSiuwltWWKdJ7Y/FWZ5ZMW3fWNXVkFE1yMywHjPDe+3neIfglNEUFRQtzjrYU2cN
+	 s5PD7E6EMwgLfG+2OiD901w2XvkVv2vkPzVqqPFtgqqf5LiNpYpz6v4ykdLuSiNJjq
+	 N8vI+9gbrqoLw==
+Message-ID: <3440578a-0d36-4c4a-b5fb-292ecfd469f9@kernel.org>
+Date: Wed, 19 Mar 2025 18:10:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,18 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH net 2/3] mptcp: sockopt: fix getting IPV6_V6ONLY
+Subject: Re: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
 Content-Language: en-GB, fr-BE
-To: Simon Horman <horms@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Florian Westphal <fw@strlen.de>,
- netdev@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
-References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
- <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-2-122dbb249db3@kernel.org>
- <20250319153827.GC768132@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1739788598.git.tanggeliang@kylinos.cn>
+ <ba7822fb-a0cb-4636-89fc-ad1355e4c234@kernel.org>
+ <02622736c58386a5d074b5a64af5d76b7f35248d.camel@kernel.org>
+ <706a3051-8328-4321-8eea-71d4120ea996@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -91,59 +88,31 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250319153827.GC768132@kernel.org>
+In-Reply-To: <706a3051-8328-4321-8eea-71d4120ea996@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Simon,
+Hi Geliang,
 
-Thank you for your review!
+On 07/03/2025 09:48, Matthieu Baerts wrote:
+> On 07/03/2025 04:08, Geliang Tang wrote:
 
-On 19/03/2025 16:38, Simon Horman wrote:
-> On Fri, Mar 14, 2025 at 09:11:32PM +0100, Matthieu Baerts (NGI0) wrote:
->> When adding a socket option support in MPTCP, both the get and set parts
->> are supposed to be implemented.
->>
->> IPV6_V6ONLY support for the setsockopt part has been added a while ago,
->> but it looks like the get part got forgotten. It should have been
->> present as a way to verify a setting has been set as expected, and not
->> to act differently from TCP or any other socket types.
->>
->> Not supporting this getsockopt(IPV6_V6ONLY) blocks some apps which want
->> to check the default value, before doing extra actions. On Linux, the
->> default value is 0, but this can be changed with the net.ipv6.bindv6only
->> sysctl knob. On Windows, it is set to 1 by default. So supporting the
->> get part, like for all other socket options, is important.
->>
->> Everything was in place to expose it, just the last step was missing.
->> Only new code is added to cover this specific getsockopt(), that seems
->> safe.
->>
->> Fixes: c9b95a135987 ("mptcp: support IPV6_V6ONLY setsockopt")
->> Cc: stable@vger.kernel.org
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/550
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+(...)
+
+>> Anyway, we can put the patch "mptcp: sched: remove mptcp_sched_data" on
+>> the export branch and wait for a while, don't send it upstream
+>> recently, and wait for me to send some squash-to patches to modify
+>> them.
 > 
-> Hi Matthieu, all,
-> 
-> TBH, I would lean towards this being net-next material rather than a fix
-> for net. But that notwithstanding this looks good to me.
-I understand. This patch and the next one target "net" because, with
-MPTCP, we try to mimic TCP when interacting with the userspace.
+> Sure. There are some other patches to send first anyway.
 
-Not supporting "getsockopt(IPV6_V6ONLY)" breaks some legacy apps forced
-to use MPTCP instead of TCP. These apps apparently "strangely" check
-this "getsockopt(IPV6_V6ONLY)" before changing the behaviour with
-"setsockopt(IPV6_V6ONLY)" which is supported for a long time. The "get"
-part should have been added from the beginning, and I don't see this
-patch as a new feature. Because it simply sets an integer like most
-other "get" options, it seems better to target net and fix these apps
-ASAP rather than targeting net-next and delay this "safe" fix.
+If I have the opportunity to send more patches for net-next this week,
+is it OK for you if I add "mptcp: sched: remove mptcp_sched_data"?
 
-If that's OK, I would then prefer if these patches are applied in "net".
-Or they can be applied in "net-next" if we can keep their "Cc: stable"
-and "Fixes" tags, but that looks strange.
+If we need to re-introduce the mptcp_sched_data structure later, we can
+still do it. Currently, we don't use it in net-next or in our tree, so I
+think it is better to drop it for the moment to save some bytes and
+avoid confusions, no?
 
 Cheers,
 Matt
