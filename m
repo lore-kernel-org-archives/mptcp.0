@@ -1,146 +1,127 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pj1-f54.google.com (mail-pj1-f54.google.com [209.85.216.54])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F227820F077
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 02:27:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1DA4B8BE7
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 03:35:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.54
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742351273; cv=none; b=Hx/gwW/yGTmypnD/D302urFbA7fWGPY9Qs4491+wK1Qxh0OtlFC3BH0gLO9w3UzJ7yRXcIc4WahPL9BfblWT12aK5D5O8kPgsyHO0qw9eJm2f1u4EM71lZjnUlg9QLf10zpdmNBR5sGwDI4lhU2Hp282hGYy3Gav5VYijB9UYq8=
+	t=1742355351; cv=none; b=X4+iuPJHxNySV4RXkWWUCTKZVm5Am83niCKoyYvdQGR5ar4amF9R4paWRUKvloc0juIFCkwgitzHvxEx/lKzz0i9ABhDxP1PuEjOX8L3AgImMLJRQV01IdqYy3NFYnaja9YYwAFDAy1UvXpSIrZjkpXOu2j0w7F9NOjJKuta2hM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742351273; c=relaxed/simple;
-	bh=MizZxavH2Rc77QNRilCjFCBcjvZNnjNg2c1xCBG44Aw=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=JzfZwliSVIAR7owlvVAjDuCJwT89RvPTGqPcayOsHLd7YpcYgO0nufXYyGtgNBVnWL2Qju4AD4TGSzuc6QAC76eBOuXuW1t+A2QgNmE3wXB4xMSXKNiwvzClsZF1htqfZ/z4Xt9iUGAyt+yzI9UOzL447AwUr8+vkopY+lOTjis=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: bbc2b044046911f0a216b1d71e6e1362-20250319
-X-CTIC-Tags:
-	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
-	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
-	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
-	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
-	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_EXISTED, SN_EXISTED
-	SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD, CIE_GOOD_SPF
-	GTI_FG_BS, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_GOOD
-	AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:811dd1c8-41a4-42f5-a796-85d2c12ad32c,IP:10,
-	URL:0,TC:0,Content:-25,EDM:25,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,AC
-	TION:release,TS:1
-X-CID-INFO: VERSION:1.1.45,REQID:811dd1c8-41a4-42f5-a796-85d2c12ad32c,IP:10,UR
-	L:0,TC:0,Content:-25,EDM:25,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:1
-X-CID-META: VersionHash:6493067,CLOUDID:1a2fc1c736b946e5abd5b6b2575ecc78,BulkI
-	D:250319102744XELT8LCM,BulkQuantity:0,Recheck:0,SF:17|19|24|43|66|74|78|10
-	2,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil,BE
-	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD
-X-UUID: bbc2b044046911f0a216b1d71e6e1362-20250319
-X-User: yangang@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <yangang@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1969635499; Wed, 19 Mar 2025 10:27:41 +0800
-From: Gang Yan <yangang@kylinos.cn>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>,
-	Paolo Abeni <pabeni@redhat.com>
-Subject: [mptcp-net, v2] mptcp: fix a NULL pointer result in panic
-Date: Wed, 19 Mar 2025 10:27:33 +0800
-Message-Id: <20250319022733.51444-1-yangang@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
+	s=arc-20240116; t=1742355351; c=relaxed/simple;
+	bh=s78HbJhURwly5foFxXee7M8Bbwjok23cFJGenDdpBg0=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=Xg060/eST0TpoFjeTNPwSg9ZmeFXB/uyFevm/31G3x7onD+FwgMbLasWdKlAmmw4qqQgOfIJ2WSJwn4nIcxkTTqM3SzP8Ob+4H/ZV1H8IhHPs43qiDIB1BvpKJKqa3yRQokwKCAIBLDPw/Bam9Tt5kLna9BnImq1qK19dLxBWts=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WP99qkyQ; arc=none smtp.client-ip=209.85.216.54
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WP99qkyQ"
+Received: by mail-pj1-f54.google.com with SMTP id 98e67ed59e1d1-2ff784dc055so6771893a91.1
+        for <mptcp@lists.linux.dev>; Tue, 18 Mar 2025 20:35:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1742355349; x=1742960149; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=lNyf8wLmkp53fYzFqpUkXD5P3n1ARJ3kNa+cK2gocRE=;
+        b=WP99qkyQE3N+HWrcX+iiynuHB1jKr3fvsJUqZ9HqbYs84NQ+a+uNkyPaesQu3I4DW0
+         QJGdAnYnKbeCS+rdoT1hw0OiSmwRhxUkambMLLDZ98E6l9QyFhkNc5UW50/1DK/fRTvz
+         h6hM3NWj9vRvBcGIosn1uwUvJKmQJRrr1Em29yw0fLHu8d5v/vMUQGkb+ngRDq8gxdAS
+         c1XOLmdWn+daPIQ4BzCcSUg4ZxIKlsyPu0UpKPaYk5h2PpkknzgQhnEFzGns4qpMGYDP
+         kUfCVZjuivKlRPrESs1ba3bX1hNTNbnUbZD99Rvm7v43TajyFpQCN2ec2q+OUXmP1bUK
+         Od3g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1742355349; x=1742960149;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=lNyf8wLmkp53fYzFqpUkXD5P3n1ARJ3kNa+cK2gocRE=;
+        b=VLvZ32mQ/8001n56VCVbeaf0BPun3QP4cJQL6+/pvR+Bl41F9M327b9qbyef8i4iv4
+         5mxTCxAb8/Y2fHIHGrgzhb0sCTvvLBp/oqRzxcXbC1YTUyySsG0h03ACfiht/tAJEyNH
+         QOGpFyVdLXuY6xDNLYnzTQPkA38SRPb6fyCnilLszEp7OScqPzQIEjK6cdJit4PGdoS6
+         C/MN6+C/miKLBOu+H7FqxU6JGq9T+JmIuVMIuEK9Z3JSaj4lEf4IOcrvF51jw0Q70bpJ
+         cVHbCC/x2c/LDiyeJvuRVdhAUg+pDtD5iPWwzc9gPrc35R6yGPKrdV2iIjHA/Xm51h/c
+         ANMQ==
+X-Gm-Message-State: AOJu0YzQUg9JLWZRmgBTumiMUj9oC+KHUTc69azRh+82209GlW1RLvBC
+	XylvIbs0jhC0OuWHvDk8zYGtykepeEm3omD0D57AE5r6jYg7TpCwzDfJ
+X-Gm-Gg: ASbGncucuqGlSv1NYvvwA1jk9kBCZ1GBT+nameihhNXh06cHyw23S+mEB3XX8eYxGJ9
+	L78233dMqrx6CGqSjXgT43w0UBGSjbRogKG1uL7sowylwBDQVOWRPYQqD34RECD6ISKGT11cHun
+	r0Muj9E50gI20XhwE+IjxrnI5QoL31+dDXtB9WZ2sjT8KEs99Ifj8inQL6Amt0WgaRxKOtEv4Lu
+	5KeyLDMxPTEDzdj0aJYflk/LjOxBDRuCe6voyEzzpKy+8Hh3xQWL5kvHZuFryM61DoSuRPZC2em
+	xVRdPPXnk4DlwJrVOW3kw3P/en2BxkC8cIK7kQ4ZjKANOAszXdgBZqM2rg==
+X-Google-Smtp-Source: AGHT+IF6VFp/bdX2b0LOAa3Lq/1OyqlFGYka8ew7Q/LvMERmj+5OTIFRF10wToy1JGbfA/GbvhFhWQ==
+X-Received: by 2002:a17:90a:d604:b0:2ea:a9ac:eee1 with SMTP id 98e67ed59e1d1-301bde6e0d6mr1723822a91.10.1742355349213;
+        Tue, 18 Mar 2025 20:35:49 -0700 (PDT)
+Received: from [127.0.0.1] ([52.234.41.131])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-301bf635fc2sm343736a91.46.2025.03.18.20.35.48
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 18 Mar 2025 20:35:48 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Gang Yan <yangang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250319022733.51444-1-yangang@kylinos.cn>
+References: <20250319022733.51444-1-yangang@kylinos.cn>
+Subject: Re: [mptcp-net, v2] mptcp: fix a NULL pointer result in panic
+Message-ID: <16cbe069-5d02-bbfc-7613-a5e767eb0fe1@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 19 Mar 2025 03:35:47 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-When test valkey in mptcp, the kernel will panic due to the function
-'mptcp_can_accept_new_subflow' when the subflow_req->msk is NULL.
+Hi Gang,
 
-This problem shows in kernel 6.11.0-rc3 and 6.14.0-rc4. The message
-attached is valkey_test in 6.14.0-rc4:
+Thank you for your modifications, that's great!
 
-Call trace:
-mptcp_can_accept_new_subflow (./net/mptcp/subflow.c:63 (discriminator 4)) (P)
-subflow_syn_recv_sock (./net/mptcp/subflow.c:854)
-tcp_check_req (./net/ipv4/tcp_minisocks.c:863)
-tcp_v4_rcv (./net/ipv4/tcp_ipv4.c:2268)
-ip_protocol_deliver_rcu (./net/ipv4/ip_input.c:207)
-ip_local_deliver_finish (./net/ipv4/ip_input.c:234)
-ip_local_deliver (./net/ipv4/ip_input.c:254)
-ip_rcv_finish (./net/ipv4/ip_input.c:449)
-...
+Our CI did some validations and here is its report:
 
-According to the debug log, the same req received two SYN-ACK in a very
-short time. (When the client retransmits the syn ack dueto multiple reasons.
-Even if the packets are transmitted with a relevant time interval, they can be
-processed by the server on different CPUs concurrently). The 'subflow_req->msk'
-ownership is transferred to subflow in the first, and there will be a risk of a
-null pointer dereference here.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/13937733185
 
-This patch can fix this issue by moving the 'subflow_req->msk' under the
-`own_req == true` conditional.
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/904006e09ceb
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D945398
 
-Suggested-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
 
----
-Notes:
-- v2:
-  - The MPTCP and the TCP code protect vs such race using the
-    `own_req` boolean. So moving the subflow_req->msk under
-    the 'own_req'.
----
- net/mptcp/subflow.c | 15 ++++++++-------
- 1 file changed, 8 insertions(+), 7 deletions(-)
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index efe8d86496db..409bd415ef1d 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -754,8 +754,6 @@ static bool subflow_hmac_valid(const struct request_sock *req,
- 
- 	subflow_req = mptcp_subflow_rsk(req);
- 	msk = subflow_req->msk;
--	if (!msk)
--		return false;
- 
- 	subflow_generate_hmac(READ_ONCE(msk->remote_key),
- 			      READ_ONCE(msk->local_key),
-@@ -850,12 +848,8 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 
- 	} else if (subflow_req->mp_join) {
- 		mptcp_get_options(skb, &mp_opt);
--		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK) ||
--		    !subflow_hmac_valid(req, &mp_opt) ||
--		    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
--			SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
-+		if (!(mp_opt.suboptions & OPTION_MPTCP_MPJ_ACK))
- 			fallback = true;
--		}
- 	}
- 
- create_child:
-@@ -905,6 +899,13 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 				goto dispose_child;
- 			}
- 
-+			if (!subflow_hmac_valid(req, &mp_opt) ||
-+			    !mptcp_can_accept_new_subflow(subflow_req->msk)) {
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINACKMAC);
-+				subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
-+				goto dispose_child;
-+			}
-+
- 			/* move the msk reference ownership to the subflow */
- 			subflow_req->msk = NULL;
- 			ctx->conn = (struct sock *)owner;
--- 
-2.25.1
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
 
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
