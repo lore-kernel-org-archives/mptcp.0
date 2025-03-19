@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 699B41AAC4
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:10:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD8E1DE884
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:34:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742404239; cv=none; b=tUDV03uV9kY/QRoInzuscVg2NiPfgVsvy4RIwSKay3+iNhXbqbFb/V7t9irBlSAKOG8qoRLE97C6VI7goUB/RJXDieZWzfoWTaHYWBLosq3UHMSpoJXgiqnOT5Uwv5RqVSo7hKt+KcbHRWVEQs7w/SBhpQmk3bicO2dxvufahfM=
+	t=1742405643; cv=none; b=PGNVwQ8uxpGkbIgKVzeBvBE6VKNyZc9l1/x7fzbBFutstwwTsQ5RbXhAHWPjHcZE726PLJVjcQNu2rxMACeckNMsXgReSamgpYP1SL0zN/RzXD/acApiMn/kU1OALzNM1Df5V7Vja2H/SykIEb8EftQpnpTcNy+T5B7NhMNic4U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742404239; c=relaxed/simple;
-	bh=Au2DOhc2pF27cVqShUjq5DY+5f3BWz+rNIkrRzZ4jkI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=iopBPZbcPIYYpvhJu2BcMeHxkNPnqNIPZlP1vXZr79y77otnoIGFGr6ADQMWCNSxTTAgBvtSYpfVUfFIigVyuWzGy+nxd2zW7Wkm3RKD5IvQkX0/Ii9Az5Trdj1KFJfHEI1vWytaW6359iFwpywoF6VAFKng3Medll2w+BTvsOo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TJItFp54; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742405643; c=relaxed/simple;
+	bh=fitMf/WrNlQYCfu0rS21fOE0JQcivOA3QlBPCQrq+qQ=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=WGhiWng76fGqIKtvfIJWNsJ/pb6+xBIOVJ5Be0GDAMQ8oG1i9QOScqz4o5yooajY9tMsU8jXCfObkP+dQeVjg3iY2Of87ldW+Vlewxuuv3SIbcCvUNsdlpvn6pRHDw5QGI8JWn24pGvEvickSHdaoDHCbbCR220JNlJG8PqNzF4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdW8lSKN; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TJItFp54"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4647DC4CEEA;
-	Wed, 19 Mar 2025 17:10:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdW8lSKN"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E29BC4CEE4;
+	Wed, 19 Mar 2025 17:34:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742404238;
-	bh=Au2DOhc2pF27cVqShUjq5DY+5f3BWz+rNIkrRzZ4jkI=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=TJItFp54T4EVV+OdyD4VIvl9rbPt11DCtWlE6B+czCcoiT2cf79d+VSOdzreqKTOs
-	 GoZ6WibQSIDwro1/hP0m+iZaMy9z80XPJeivop1fPJ/4sDO4/uLM+XtC0scrbMJGpb
-	 PV/zxC/50jzDY1iKb8BAnP8wL6WUEcTelISRScIpWet8bzZeXF5OSZd1BMjrsCoeDR
-	 FCoSiuwltWWKdJ7Y/FWZ5ZMW3fWNXVkFE1yMywHjPDe+3neIfglNEUFRQtzjrYU2cN
-	 s5PD7E6EMwgLfG+2OiD901w2XvkVv2vkPzVqqPFtgqqf5LiNpYpz6v4ykdLuSiNJjq
-	 N8vI+9gbrqoLw==
-Message-ID: <3440578a-0d36-4c4a-b5fb-292ecfd469f9@kernel.org>
-Date: Wed, 19 Mar 2025 18:10:35 +0100
+	s=k20201202; t=1742405642;
+	bh=fitMf/WrNlQYCfu0rS21fOE0JQcivOA3QlBPCQrq+qQ=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=RdW8lSKN6BVAGAQ9bgYZ6RyNtuQtmVx4rbb7glAPHVIMNcSxKFjqF3aMBydfJSbob
+	 gctBGheB8bvUVTEPsPVBrvn2F4rH/1wP6wCU1qD4OuIwA3i+1qgL8btYFDgrT2Xnvq
+	 DFn828E+DZRec4IUselzma3iw1xW3w6QBq2vTkvyyKcF+TjsmkHdGNTFk4E4Y/L1ux
+	 MBsxpXjo33q/gL0/mcoVvXbocU40X6w950H3GMjgRpm4W5rR+XUD+H9Zuamejv6h5z
+	 wFQMqNzNAydB0fvk9MyMiGSSVDJbagn72LZPOSWYRpXbKOTvh/s5TXWpD5LjPo/ykZ
+	 PUXUsQyW71cTg==
+Message-ID: <0faa822e-1e48-434c-bacb-c5495a1e0682@kernel.org>
+Date: Wed, 19 Mar 2025 18:33:59 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,15 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v15 0/8] use bpf_iter in bpf schedulers
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: ignore mptcp_diag binary
 Content-Language: en-GB, fr-BE
+To: Mat Martineau <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev
+References: <20250317-mptcp-sft-diag-ignore-v1-1-d1e7ec9ff89a@kernel.org>
+ <3ae388cc-7b1b-9769-1d3e-b2eef121dd55@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1739788598.git.tanggeliang@kylinos.cn>
- <ba7822fb-a0cb-4636-89fc-ad1355e4c234@kernel.org>
- <02622736c58386a5d074b5a64af5d76b7f35248d.camel@kernel.org>
- <706a3051-8328-4321-8eea-71d4120ea996@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,31 +86,40 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <706a3051-8328-4321-8eea-71d4120ea996@kernel.org>
+In-Reply-To: <3ae388cc-7b1b-9769-1d3e-b2eef121dd55@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 07/03/2025 09:48, Matthieu Baerts wrote:
-> On 07/03/2025 04:08, Geliang Tang wrote:
-
-(...)
-
->> Anyway, we can put the patch "mptcp: sched: remove mptcp_sched_data" on
->> the export branch and wait for a while, don't send it upstream
->> recently, and wait for me to send some squash-to patches to modify
->> them.
+On 18/03/2025 02:17, Mat Martineau wrote:
+> On Mon, 17 Mar 2025, Matthieu Baerts (NGI0) wrote:
 > 
-> Sure. There are some other patches to send first anyway.
+>> A new binary is now generated by the MPTCP selftests: mptcp_diag.
+>>
+>> Like the other binaries from this directory, there is no need to track
+>> this in Git, it should then be ignored.
+>>
+>> Fixes: 00f5e338cf7e ("selftests: mptcp: Add a tool to get specific
+>> msk_info")
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> LGTM:
+> 
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
 
-If I have the opportunity to send more patches for net-next this week,
-is it OK for you if I add "mptcp: sched: remove mptcp_sched_data"?
+Thank you!
 
-If we need to re-introduce the mptcp_sched_data structure later, we can
-still do it. Currently, we don't use it in net-next or in our tree, so I
-think it is better to drop it for the moment to save some bytes and
-avoid confusions, no?
+Now in our tree:
+
+New patches for t/upstream:
+- 67fefa933291: selftests: mptcp: ignore mptcp_diag binary
+- Results: 8b41d802004a..8131e8aff41d (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/c82c9438b7e32f95e7e5c10851b9b49128f043a6/checks
 
 Cheers,
 Matt
