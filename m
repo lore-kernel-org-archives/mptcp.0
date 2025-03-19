@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E0EBD2AD00
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 03:40:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F0C692AD00
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 03:40:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742355614; cv=none; b=kR3wzd5DIxFuPuQJfVLw7HID4jnzYM1AUlcB0dJLulYD7bev6msiceKsLyawPfwJdOvG5DpwIrPDwXbtaRUVSTn/DgA7xftAZV6qHdZKbLI4PDJel6gjc9ysn3Kg7vqX+4Sm3gys1Xy0S4gsDlEUOeAKaQYlcXa6knnKC7Ny9JA=
+	t=1742355616; cv=none; b=CgLU/T7nWjTwGAb1j01jNNyBYqw/Uy5LkvZqbFSN0gC9ZFMfJHjeKvmvxAX6jlXHQyKxeK3RqOYlEuXRV949N+9DGTU/fftE0JKyXkDRWpQn40F2hKkH93CHAgJeCmpSnVFngT2YSykvOSsZHWdKjpPxi4BZzIgllSJVg+EL5CY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742355614; c=relaxed/simple;
-	bh=3hDwuTR8xG9ubpfQJR1LO51dqkUBO/bvUg4ZmISjIXg=;
+	s=arc-20240116; t=1742355616; c=relaxed/simple;
+	bh=/ZSwQquWLk3u/a8WaWK1gdB+3m+JxHAeuMOiNBnFXPY=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=V/2eWzFj5xcx2CQQCjyEgtk76LBMksoFZUabqPv5y9hjeJVKfEaf0h7DQdCibMYtaH3aiQsUTdv7AbQhfWRakb+rFRNKeoa4FK+X0MC5sbMZ6Wg4GouiQf54e2LYaSJyEsV1uyPPNYXEqyIdewlO5fqFaqHvObzT52XFa3zTQdY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SbYvxzQ4; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=HtYZqPXYaguJPie5y2HJUMyv9K3rbj5ttTriSMpB/kzgylWsPCH/9JgRAQo9WMJ73rbHsw2xoNW6CjNCRonggpV58nX9jAB1MDKEDwcGUm96Z/F6DBMPRzHGBsGDNtv0mvf5mM6eyAA6piVlO4ubHi8mNKParQqUh4Wcm4NQl8Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=blUbVVFr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SbYvxzQ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19B8C4CEEA;
-	Wed, 19 Mar 2025 03:40:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="blUbVVFr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 030D7C4CEEC;
+	Wed, 19 Mar 2025 03:40:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742355613;
-	bh=3hDwuTR8xG9ubpfQJR1LO51dqkUBO/bvUg4ZmISjIXg=;
+	s=k20201202; t=1742355615;
+	bh=/ZSwQquWLk3u/a8WaWK1gdB+3m+JxHAeuMOiNBnFXPY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=SbYvxzQ4UmL3cgivdoPWmGJJJ62baJhgg7311GcrvvdY0GgV8FU8ohc9WosnUuLO/
-	 ckAU3vGlk93iE5diVnjiH4sQvqXBkbADTCszXvHwt4MT+uYCoSGEPH9o+N4dHYq3fq
-	 bPHAdolT0b26lho2PPhZSk7tYTE4z/+ZL4R18aSd5aV284WT3xXvR4PfstS7f2hbSj
-	 BlUUY9D67mWLcKkL+L27pt2mz5Hd6YtTpleSjgqrCIqbuprn+kyOJLu9ok6MTuowgw
-	 gwAU4fIm/OWNALetFu8DgSPIsxATxWpv6c795ggWkHPKFpkOH2npM47kh/kclC0luA
-	 sB37skXd+U7EA==
+	b=blUbVVFrvTv6C92Tb/8vLj+2OlA01FVmF3JvVffaNChinCbUCXcai6siY/CanaR3E
+	 SlslVYRaGgWwzlKfow7WjAMs9ofcVPZz5+/sAV0zpkg9fx4HCTvvvTvocBkmzpIeFG
+	 SQDY+t0RtBmOOS2jDYKnzhMKPG19VZB/EdtA5+382cHwTW6wtNIvep7SReDGs4zUQb
+	 8DSvMJPcmh/cx2EXopUutBthktqetKMw6UuioZxSrCFPeMyRd69HHJwZOGZlCAgmZj
+	 TMXhciuktX6uId3AlYUkZvwIQqUNYc3AbH+KOEyYF8d/UKeibZYaSzgI4Uc6VoSy6Q
+	 lg5tHT+n3jwXQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>,
 	Cong Liu <liucong2@kylinos.cn>
-Subject: [PATCH mptcp-next v2 1/2] selftests: mptcp: open cfg_input once in main_loop
-Date: Wed, 19 Mar 2025 11:39:55 +0800
-Message-ID: <58fcd84cd7eae33eb7ff2d87415109c5324a0c4d.1742355162.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: close fds when copyfd_io fails
+Date: Wed, 19 Mar 2025 11:39:56 +0800
+Message-ID: <961b887097ccaff040737256cd6a5e66485b4eea.1742355162.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1742355162.git.tanggeliang@kylinos.cn>
 References: <cover.1742355162.git.tanggeliang@kylinos.cn>
@@ -46,61 +46,46 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-cfg_input is opened twice regardless of whether cfg_sockopt_types.mptfo
-is configured. This can be simplified to open it once at the beginning
-of main_loop() and close it at the end, because no need to repeatedly
-open and close cfg_input during cfg_repeat.
+When copyfd_io fails, it should not simply return an error, but should
+close all open file descriptors before that. Here an "out" tag is added
+to do this.
 
+Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
 Co-developed-by: Cong Liu <liucong2@kylinos.cn>
 Signed-off-by: Cong Liu <liucong2@kylinos.cn>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 12 +++---------
- 1 file changed, 3 insertions(+), 9 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_connect.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index 893dc36b12f6..5301062a5f3b 100644
+index 5301062a5f3b..f190f95a3338 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -1268,7 +1268,7 @@ int main_loop(void)
- 	struct addrinfo *peer;
- 	struct wstate winfo;
+@@ -1293,7 +1293,7 @@ int main_loop(void)
  
--	if (cfg_input && cfg_sockopt_types.mptfo) {
-+	if (cfg_input) {
- 		fd_in = open(cfg_input, O_RDONLY);
- 		if (fd_in < 0)
- 			xerror("can't open %s:%d", cfg_input, errno);
-@@ -1291,12 +1291,6 @@ int main_loop(void)
- 	if (cfg_cmsg_types.cmsg_enabled)
- 		apply_cmsg_types(fd, &cfg_cmsg_types);
- 
--	if (cfg_input && !cfg_sockopt_types.mptfo) {
--		fd_in = open(cfg_input, O_RDONLY);
--		if (fd_in < 0)
--			xerror("can't open %s:%d", cfg_input, errno);
--	}
--
  	ret = copyfd_io(fd_in, fd, 1, 0, &winfo);
  	if (ret)
- 		return ret;
-@@ -1312,14 +1306,14 @@ int main_loop(void)
- 		set_nonblock(fd, false);
- 		if (connect(fd, peer->ai_addr, peer->ai_addrlen))
- 			xerror("can't reconnect: %d", errno);
--		if (cfg_input)
--			close(fd_in);
+-		return ret;
++		goto out;
+ 
+ 	if (cfg_truncate > 0) {
+ 		shutdown(fd, SHUT_WR);
+@@ -1309,12 +1309,13 @@ int main_loop(void)
  		memset(&winfo, 0, sizeof(winfo));
  		goto again;
  	} else {
++out:
  		close(fd);
  	}
  
-+	if (cfg_input)
-+		close(fd_in);
- 	return 0;
+ 	if (cfg_input)
+ 		close(fd_in);
+-	return 0;
++	return ret;
  }
  
+ int parse_proto(const char *proto)
 -- 
 2.43.0
 
