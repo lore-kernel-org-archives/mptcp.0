@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2BD8E1DE884
-	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:34:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 10C3E20297C
+	for <mptcp@lists.linux.dev>; Wed, 19 Mar 2025 17:35:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742405643; cv=none; b=PGNVwQ8uxpGkbIgKVzeBvBE6VKNyZc9l1/x7fzbBFutstwwTsQ5RbXhAHWPjHcZE726PLJVjcQNu2rxMACeckNMsXgReSamgpYP1SL0zN/RzXD/acApiMn/kU1OALzNM1Df5V7Vja2H/SykIEb8EftQpnpTcNy+T5B7NhMNic4U=
+	t=1742405742; cv=none; b=N/TFm08uZqMWkHrGOeWhx5ltSZCFf10Qblgi1xz5+CNBr21DidWUemM/nWLUDKwT+TiZNTXhvdqCeZcXsMlXuGCwhITDdTxLjVlYbK9pCazxSUDod4vRCYN9+TTVU8xwh5/G/miJHil+3IgE83hgzw85eKZ8jrhhz7fHsbfSz6U=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742405643; c=relaxed/simple;
-	bh=fitMf/WrNlQYCfu0rS21fOE0JQcivOA3QlBPCQrq+qQ=;
+	s=arc-20240116; t=1742405742; c=relaxed/simple;
+	bh=28lmrJgo42VzSwspHRQWCIgTwtDfIVaDfgvxbN9KkSA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WGhiWng76fGqIKtvfIJWNsJ/pb6+xBIOVJ5Be0GDAMQ8oG1i9QOScqz4o5yooajY9tMsU8jXCfObkP+dQeVjg3iY2Of87ldW+Vlewxuuv3SIbcCvUNsdlpvn6pRHDw5QGI8JWn24pGvEvickSHdaoDHCbbCR220JNlJG8PqNzF4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RdW8lSKN; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=amghJ+3/Sbv8eAR5r2wUqCwOTRhABYuaE/o3td092ejiF4+N02koUq71WIQgZGULNxu1eKeyeksgcOk111xLX13e0yW2wxhYYk0serhdRpI/THMbvCofRYbKp9Rw+kKlyMyntoC8jhP6Pb1MiJfRVaqovAzKW2FgPpTEFMM3EeA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=uV7+dXjl; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RdW8lSKN"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E29BC4CEE4;
-	Wed, 19 Mar 2025 17:34:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="uV7+dXjl"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D589EC4CEEA;
+	Wed, 19 Mar 2025 17:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742405642;
-	bh=fitMf/WrNlQYCfu0rS21fOE0JQcivOA3QlBPCQrq+qQ=;
+	s=k20201202; t=1742405740;
+	bh=28lmrJgo42VzSwspHRQWCIgTwtDfIVaDfgvxbN9KkSA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=RdW8lSKN6BVAGAQ9bgYZ6RyNtuQtmVx4rbb7glAPHVIMNcSxKFjqF3aMBydfJSbob
-	 gctBGheB8bvUVTEPsPVBrvn2F4rH/1wP6wCU1qD4OuIwA3i+1qgL8btYFDgrT2Xnvq
-	 DFn828E+DZRec4IUselzma3iw1xW3w6QBq2vTkvyyKcF+TjsmkHdGNTFk4E4Y/L1ux
-	 MBsxpXjo33q/gL0/mcoVvXbocU40X6w950H3GMjgRpm4W5rR+XUD+H9Zuamejv6h5z
-	 wFQMqNzNAydB0fvk9MyMiGSSVDJbagn72LZPOSWYRpXbKOTvh/s5TXWpD5LjPo/ykZ
-	 PUXUsQyW71cTg==
-Message-ID: <0faa822e-1e48-434c-bacb-c5495a1e0682@kernel.org>
-Date: Wed, 19 Mar 2025 18:33:59 +0100
+	b=uV7+dXjlz2s95MrS+TdV69683KV1tqfKJv17seCn3B73YvZoCsBmXiqKY6e/4HiWr
+	 m6ADOFaNddIfZ/vypCFByBYQfvDP65ZnlzNb5n28vdRcVFpJSZAc9rhbNrKXuEO3Lz
+	 Jhdn3VpQ781n2X7MXQBGtOG3UZcLDqBKOAZdKYutRSm1BTkuHxAq75Fr1qiDw4FVpX
+	 2LBfspIHyxRTGVcI+/z9WxxHV6HN7EdBDLOZU/Jberg2m8lV0GaEhMNtbI9pNO0LMX
+	 PZl5y2LFeSyHUJzJ2Kzh9zWo7HHCtOmVMnxsuq6a+95tgvKFI/GGYwAchJ8r6BAnbZ
+	 2BS9o4fpcudMg==
+Message-ID: <e965bea9-25ac-4b1a-9f18-0c0c3c4a9633@kernel.org>
+Date: Wed, 19 Mar 2025 18:35:36 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: ignore mptcp_diag binary
+Subject: Re: [PATCH mptcp-next v3] selftests: mptcp: fix incorrect fd checks
+ in main_loop
 Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
-Cc: mptcp@lists.linux.dev
-References: <20250317-mptcp-sft-diag-ignore-v1-1-d1e7ec9ff89a@kernel.org>
- <3ae388cc-7b1b-9769-1d3e-b2eef121dd55@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Cong Liu <liucong2@kylinos.cn>
+References: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,40 +86,39 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3ae388cc-7b1b-9769-1d3e-b2eef121dd55@kernel.org>
+In-Reply-To: <59caf78b9d67a0a61a19a46f7820456f6ced3d6e.1742296236.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Mat,
+Hi Geliang, Cong,
 
-On 18/03/2025 02:17, Mat Martineau wrote:
-> On Mon, 17 Mar 2025, Matthieu Baerts (NGI0) wrote:
+On 18/03/2025 12:15, Geliang Tang wrote:
+> From: Cong Liu <liucong2@kylinos.cn>
 > 
->> A new binary is now generated by the MPTCP selftests: mptcp_diag.
->>
->> Like the other binaries from this directory, there is no need to track
->> this in Git, it should then be ignored.
->>
->> Fixes: 00f5e338cf7e ("selftests: mptcp: Add a tool to get specific
->> msk_info")
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Fix a bug where the code was checking the wrong file descriptors
+> when opening the input files. The code was checking 'fd' instead
+> of 'fd_in', which could lead to incorrect error handling.
 > 
-> LGTM:
+> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+> Fixes: ca7ae8916043 ("selftests: mptcp: mptfo Initiator/Listener")
+> Co-developed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Cong Liu <liucong2@kylinos.cn>
+> ---
 > 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> v3:
+>  - resend the pending patch from Cong Liu, he said to me that he has
+>    no time to deal with this recently.
+>  - add another "Fixes" tag as Matt suggested.
+>  - update the subject and commit log.
 
-Thank you!
+Thank you for the v3!
 
-Now in our tree:
+It looks good to me:
 
-New patches for t/upstream:
-- 67fefa933291: selftests: mptcp: ignore mptcp_diag binary
-- Results: 8b41d802004a..8131e8aff41d (export)
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/c82c9438b7e32f95e7e5c10851b9b49128f043a6/checks
+Small detail: that's for mptcp-net, not next.
 
 Cheers,
 Matt
