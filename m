@@ -1,109 +1,83 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 900FAA944;
-	Thu, 20 Mar 2025 12:58:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D26BF21CA0E;
+	Thu, 20 Mar 2025 14:19:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742475512; cv=none; b=OV5joAqZxAVT95h3rAjxCRsRS+b3W96Ionf95uwLAHR1qgauAI43E8Y8wRND3Z6T58xp67ZmimVjoQlSvssHzqI7WcifCTOyc9oe4PWg+3D0c/EXnarHaxnj4RCio7UtAvVazc8esZLSYgCPYkHGwfsfA4Fa6KUBZIOwxkc4IcA=
+	t=1742480396; cv=none; b=OjcwYjYG2VDjUQHqnIpIQo0aTMc5HcORuVtXdDUtCtUej0XRN1A83Peu+ABxJ7XZYI1XhnFXkIdp6GkiOSTKyXKs1wc8AGXGFmrx6W8F5RKTTjbiSU30VdjpguSgB8/lKhBqvih5bvCkV85kpEZnaWoqrTBO32nvnRaclWYTXpo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742475512; c=relaxed/simple;
-	bh=CbizOdIH7LrylvfnF07cT4lgGLqWxugdpDHGf4mnkkc=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=IcBRddnpwdxR8WQdivQjDVti3SPn6SIxYJEudh/q2htdc4MQQA394yZbgkCiayEfB1A0vmxmxFWPPXgFjZrvIP4hhm+tljOuq26hEFJtQHMMAZSkXDmT3Y1rri/FQ36JWRoeBiFuiSpcZaQgs7SguZJVJA4ZRK59O17UH9SqOMk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PtIaQDnG; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1742480396; c=relaxed/simple;
+	bh=qyfaxEvK49XR27EAJ+fha8D6RJrKSVW9cEOBHN9smow=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=rDn8Y/0MC/2y2qj6J5SbNyn3wgBfMtH+hwpvLQ+vmIUOvIm8mY8M8+qw7SRQSyn2yc8k1+k703+IJCXW8zY3vY/GXyi74YbqKdJtZ8yRNcamUyCEbePSXq8jLU0dlTLBbYvDcTBFFg5g0T5xAYtgpg6JsA7PIkvvqYz9W2YagNg=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hU/MsPs1; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PtIaQDnG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2906C4CEDD;
-	Thu, 20 Mar 2025 12:58:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hU/MsPs1"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9B62BC4CEDD;
+	Thu, 20 Mar 2025 14:19:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742475512;
-	bh=CbizOdIH7LrylvfnF07cT4lgGLqWxugdpDHGf4mnkkc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=PtIaQDnGeW/+X+krYiGmP8BwkE5LGruV0ppYqfkyj7eh/RYRQ4aHf9fy2OBYqyxlZ
-	 DGOvoiElWHofZOq0KV5xxRNDN6rCfL9JLXkj4fWOYrqmZ7Dr9SiJwEtmNwQtnXrgjQ
-	 Sa4yBxMNV9A20fbsF676IC/sPX4cvuSnymDNCAiaJ7YcgOTb6BhC8mFDPNG5KpaK2w
-	 QCJXsYliYbI8smIdhrDMxsNmzozplTlIZVB+R0DYWWGWj2iEgNil+la3dDRdavnQ0q
-	 WfWIDXUwAAq44b/MHqyZ8Y8Kz7MnFcgU6h9qKXh/Y4nDht2pXkI6gIS3RpX1lkIwvn
-	 7SBCCEt7JYUaw==
-Date: Thu, 20 Mar 2025 12:58:27 +0000
-From: Simon Horman <horms@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Florian Westphal <fw@strlen.de>, netdev@vger.kernel.org,
-	linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Subject: Re: [PATCH net 2/3] mptcp: sockopt: fix getting IPV6_V6ONLY
-Message-ID: <20250320125827.GQ280585@kernel.org>
-References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
- <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-2-122dbb249db3@kernel.org>
- <20250319153827.GC768132@kernel.org>
- <a2b61202-a257-4317-b454-799da27951e8@kernel.org>
+	s=k20201202; t=1742480396;
+	bh=qyfaxEvK49XR27EAJ+fha8D6RJrKSVW9cEOBHN9smow=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=hU/MsPs1238cpRZqFXwzNfbraISgJ0SS/+KPvba1hyFk1p1hAus3Q3KvdFMAwDVyC
+	 YrlYLOVeyvH4+pW3XGaoZ/f84UMVX5a7WZRsSi5faXjEXYKj9lzR+TFp5c4QaaIBoe
+	 NxaUUB3R/YbXQ1+k7prnr9o3Oo8TNPyK34lUQJvthvt7cp934HG6T93PAq9yRQ3bgX
+	 y9Bf/Q7daApE7gKdFjES+zaG+UEfVTp6mqcUHFmdWVI6ag6YD0T+p13Y9lAkWD7NhT
+	 Qal7+HWP3SWxWVDsJlKYRt7tP/a2feVNHLTCgqdoc8MQ9B3j2QQKSl3mzblzBIO1KL
+	 SlG66qVICCDLA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id AE0AB3806654;
+	Thu, 20 Mar 2025 14:20:33 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a2b61202-a257-4317-b454-799da27951e8@kernel.org>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] mptcp: fix data stream corruption and missing
+ sockopts
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174248043234.1784312.9345758838813943465.git-patchwork-notify@kernel.org>
+Date: Thu, 20 Mar 2025 14:20:32 +0000
+References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
+In-Reply-To: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amongodin@randorisec.fr, stable@vger.kernel.org
 
-On Wed, Mar 19, 2025 at 05:26:35PM +0100, Matthieu Baerts wrote:
-> Hi Simon,
-> 
-> Thank you for your review!
-> 
-> On 19/03/2025 16:38, Simon Horman wrote:
-> > On Fri, Mar 14, 2025 at 09:11:32PM +0100, Matthieu Baerts (NGI0) wrote:
-> >> When adding a socket option support in MPTCP, both the get and set parts
-> >> are supposed to be implemented.
-> >>
-> >> IPV6_V6ONLY support for the setsockopt part has been added a while ago,
-> >> but it looks like the get part got forgotten. It should have been
-> >> present as a way to verify a setting has been set as expected, and not
-> >> to act differently from TCP or any other socket types.
-> >>
-> >> Not supporting this getsockopt(IPV6_V6ONLY) blocks some apps which want
-> >> to check the default value, before doing extra actions. On Linux, the
-> >> default value is 0, but this can be changed with the net.ipv6.bindv6only
-> >> sysctl knob. On Windows, it is set to 1 by default. So supporting the
-> >> get part, like for all other socket options, is important.
-> >>
-> >> Everything was in place to expose it, just the last step was missing.
-> >> Only new code is added to cover this specific getsockopt(), that seems
-> >> safe.
-> >>
-> >> Fixes: c9b95a135987 ("mptcp: support IPV6_V6ONLY setsockopt")
-> >> Cc: stable@vger.kernel.org
-> >> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/550
-> >> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> > 
-> > Hi Matthieu, all,
-> > 
-> > TBH, I would lean towards this being net-next material rather than a fix
-> > for net. But that notwithstanding this looks good to me.
-> I understand. This patch and the next one target "net" because, with
-> MPTCP, we try to mimic TCP when interacting with the userspace.
-> 
-> Not supporting "getsockopt(IPV6_V6ONLY)" breaks some legacy apps forced
-> to use MPTCP instead of TCP. These apps apparently "strangely" check
-> this "getsockopt(IPV6_V6ONLY)" before changing the behaviour with
-> "setsockopt(IPV6_V6ONLY)" which is supported for a long time. The "get"
-> part should have been added from the beginning, and I don't see this
-> patch as a new feature. Because it simply sets an integer like most
-> other "get" options, it seems better to target net and fix these apps
-> ASAP rather than targeting net-next and delay this "safe" fix.
-> 
-> If that's OK, I would then prefer if these patches are applied in "net".
-> Or they can be applied in "net-next" if we can keep their "Cc: stable"
-> and "Fixes" tags, but that looks strange.
+Hello:
 
-Hi Matthieu,
+This series was applied to netdev/net.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-Thanks for your detailed explanation.
-With that in mind I agree that these seem appropriate for net.
+On Fri, 14 Mar 2025 21:11:30 +0100 you wrote:
+> Here are 3 unrelated fixes for the net tree.
+> 
+> - Patch 1: fix data stream corruption when ending up not sending an
+>   ADD_ADDR.
+> 
+> - Patch 2: fix missing getsockopt(IPV6_V6ONLY) support -- the set part
+>   is supported.
+> 
+> [...]
+
+Here is the summary with links:
+  - [net,1/3] mptcp: Fix data stream corruption in the address announcement
+    https://git.kernel.org/netdev/net/c/2c1f97a52cb8
+  - [net,2/3] mptcp: sockopt: fix getting IPV6_V6ONLY
+    (no matching commit)
+  - [net,3/3] mptcp: sockopt: fix getting freebind & transparent
+    (no matching commit)
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
