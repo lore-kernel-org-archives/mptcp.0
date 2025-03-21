@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6661846C
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:45:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BCEA035947
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:45:42 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742521541; cv=none; b=rGcvbp6A5S3E3NOeP3e6aEiv12aZepJTxQ9T5fQC+xeVVUplVuSYkd/u2PL++AJBZezQF6ZlHPXBqGeCLkBeT/XvlrdkAMmlhPIH5WFpqPC03eR9CJZWbvW7kHvZztNO+DOUAzOlOQDrRs6Dsmlkj6W6fFW/fHb4ody2otAJyZU=
+	t=1742521543; cv=none; b=PyOy/MiM6Ri7YzBGWtfkRLWeTfGBpZB68PGBG3qWZJaqhUntzwCCOMNZ6PUmYLR6Mxc6hiBRcDz1smirrSkoYTmS4lyPQKuNnNXAoacq0xcG8V5rJB3odmVcPhfgUyba+aAxhnjscvYAeWXB1iseRwwF1QPWOu4KDz8n9amyX2c=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742521541; c=relaxed/simple;
-	bh=x32P4JxwbIuxroNAM9CIAKb1pewVJqP1b7gNmR79csQ=;
+	s=arc-20240116; t=1742521543; c=relaxed/simple;
+	bh=BXGTvkft48Pz1dNbiMCp+7S4/NhhiPI1UvstLtFjoHA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=VbLRg4aJH/sk2bo6Go3/WS1eLeCna9XJQFr4rMy35b5AAtxmxMqx129GYZUjKipwLjGmhziIe7BJ1m4uKhJFrFybCOKoM8nq9Sf6pnUJL0a4NMIpdEDm8dTB6PGvQDiA9GHhYQsSJaaVk9UBE2blRVOJzVGeaRyT4DT/TlbF4zI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Jwpca79d; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=p+kV1NFm7l+oN3aLEnejJCrfQtQN+i5L9/HLMDX2+nZ51pryCaioSdtYYDskkQW/m4OI2EdNeGmNY6LIKYW45iC1s+CZvf0+ZSMskZgOcYkdst6EUp1Wy+n8t0cJ4uXnw/+mvIb8G9vSUoCYmd7x198UYt0U/8ANBU6/IieHOR8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hbOyS0Wn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Jwpca79d"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1BF47C4CEEA;
-	Fri, 21 Mar 2025 01:45:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hbOyS0Wn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E8579C4CEDD;
+	Fri, 21 Mar 2025 01:45:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742521540;
-	bh=x32P4JxwbIuxroNAM9CIAKb1pewVJqP1b7gNmR79csQ=;
+	s=k20201202; t=1742521542;
+	bh=BXGTvkft48Pz1dNbiMCp+7S4/NhhiPI1UvstLtFjoHA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Jwpca79ddECu2O4zvWbVrVQYkDaWKlo1C8Co9XmcEAUIPGYYEsqSjDmCuvYrb3RWk
-	 TLG7upNbG8lOigNhk2yRqppObZ7IDpnHTDN96sVpYAwZC8kERgdUdDuLZ+wP7pCjyq
-	 VwWRlB7y462ErcKAfiNJMTcE5+H99zpsUpsKo7n40aSi9NRRRwlFExjKZbsgr8Xth4
-	 MrfOb5l3Bst1jLNDPWys4TxKQhL+xuU5nmOHWlYhZdqJOhZ/crdIELML+nBClrpA7Q
-	 0g3Lj674pEqZ1HxBoyGxhBIltn3BWOzPHC0y5srV6EQGjxngiGCyVojZB+tRDfYnMi
-	 xY4IckQmtiZPg==
+	b=hbOyS0WnS7cVkCHJIg2EnrsyfouNO3OWnOAJNx/BsOzW0atnmTjVMDp9uu/oIMrGX
+	 8fJWZJx7xMfYpk+JauAPHCCRa1gBp8zrOrtCSOy9dLOfoZmYWJnAyWIhxgm5uzR/qU
+	 5JhRVR+PcgjNqWwqtnthVKLKhevZNdi2AFXns5jP81tJJdq2fpHqYUl6Ua918THteL
+	 3u0SEEN6FBCRI86NEl6cYjvwaovlo5rFP2u9GWFjnmtDgKfB5KIu2sW1vYWlenYgwN
+	 UrUN1EEb0iGi+zq+6Q+Z9uEYc709eY+dm/BktJbrdt9KSXMJ5L+fpY4StNh4fUpBnh
+	 cTh3tAqzQ+xrw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 01/10] mptcp: pm: drop redundant MPTCP_MIB_ADDADDRDROP
-Date: Fri, 21 Mar 2025 09:44:55 +0800
-Message-ID: <4923b521502f91e89ae6f4f4e4f1d1971ce8f669.1742521397.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v3 02/10] Squash to "mptcp: pm: add get_local_id() interface"
+Date: Fri, 21 Mar 2025 09:44:56 +0800
+Message-ID: <b67f462e31403e3f471359b4f1a760203ca5b572.1742521397.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1742521397.git.tanggeliang@kylinos.cn>
 References: <cover.1742521397.git.tanggeliang@kylinos.cn>
@@ -45,50 +45,25 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-MPTCP_MIB_ADDADDRDROP MIB counter is incremented from both the in-kernel PM
-and the userspace PM. This can be called only once to reduce redundant
-code.
+Add /* required */ comment for get_local_id and get_priority.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm.c | 8 ++++++--
- 1 file changed, 6 insertions(+), 2 deletions(-)
+ include/net/mptcp.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index ba7424582ebf..4895318b94cc 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -592,6 +592,7 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
- 	struct mptcp_sock *msk = mptcp_sk(subflow->conn);
- 	struct mptcp_pm_data *pm = &msk->pm;
-+	int ret = 0;
+diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+index 6a08ac862bbe..9f28ef550e10 100644
+--- a/include/net/mptcp.h
++++ b/include/net/mptcp.h
+@@ -118,6 +118,7 @@ struct mptcp_sched_ops {
+ #define MPTCP_PM_BUF_MAX	(MPTCP_PM_NAME_MAX * MPTCP_PM_MAX)
  
- 	pr_debug("msk=%p remote_id=%d accept=%d\n", msk, addr->id,
- 		 READ_ONCE(pm->accept_addr));
-@@ -605,7 +606,7 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
- 			mptcp_pm_announce_addr(msk, addr, true);
- 			mptcp_pm_add_addr_send_ack(msk);
- 		} else {
--			__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-+			ret = -EINVAL;
- 		}
- 	/* id0 should not have a different address */
- 	} else if ((addr->id == 0 && !mptcp_pm_is_init_remote_addr(msk, addr)) ||
-@@ -615,9 +616,12 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
- 	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
- 		pm->remote = *addr;
- 	} else {
--		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-+		ret = -EINVAL;
- 	}
- 
-+	if (ret)
-+		__MPTCP_INC_STATS(sock_net((struct sock *)msk), MPTCP_MIB_ADDADDRDROP);
-+
- 	spin_unlock_bh(&pm->lock);
- }
- 
+ struct mptcp_pm_ops {
++	/* required */
+ 	int (*get_local_id)(struct mptcp_sock *msk,
+ 			    struct mptcp_pm_addr_entry *skc);
+ 	bool (*get_priority)(struct mptcp_sock *msk,
 -- 
 2.43.0
 
