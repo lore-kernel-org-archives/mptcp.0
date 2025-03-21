@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFA81DE3CE
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:59:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ADFAF1F4199
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 11:12:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742554798; cv=none; b=Gz3QmaF5FaSOJ1sNAezvpvkWDKMXqO0sfPu+ggV/Q62G9to8a00je0L8i8Aw+fbzdrRk7A1BE+LVLul60QiFy2984i3C88YYlQvUK2VdG4as4WHfLUD63z+O3OpT89Z9U9lwlGcHCEDCatqOOLKLwlmalHfAwpe5PyQHQ1RBatg=
+	t=1742555520; cv=none; b=XkpEaKRKSkKJXG+ABZfmi8oATAF3UtsFk9YnrI12X3cXSuxRiJfVFd1H2H56sMK08OowH2GKLIdaAxX6oz1CpPeuxq33ve3A+EGcO3fo+acvxUiVX25UmCCtqFYtbeedUyLqtCsCymPlSXgqRrS7DjMAw1AqeABXf0NhQyvDTz4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742554798; c=relaxed/simple;
-	bh=g57BIylUub2Dg4OcaaybLLS/3PupL9BzM5Vslj4r8Fw=;
+	s=arc-20240116; t=1742555520; c=relaxed/simple;
+	bh=xEZhLzkJBXkP6rsKEEBnbg5JH4mvAmAv0JmyN0t4XIA=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=W0gWAtKGLDe8/6w599mfCC0sxofHT5Vwdbu2Qzwcmo+xmXJcIxMGnfuL+HJl6Zzv2gexGIC1OREycuNN+NfzQVmOyAZ0v6rG2wGup31UEq0KE6yhjdTXCTvoCKY56SDqN81dw0Z2ypAJSZJheQV/xuHKlvbX2HZkmU8G+2otDn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiRy1tEs; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=nIwYKhk4h6u8eYXGmr0rcddXULay8YbMuj1lvwEd77oZz2SuCf9JXpU85l4c7cSiMIPdfRD4PSsF5VZgDyEw2gqW1zhAnsyJ3kv2NimGNQ8WMTI5LdtOxeb83TwHbzfeSHUTHS/IhWP9MrH2GUcf9VLnYyKj866g5n38R8Negyo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GuYe6pp5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiRy1tEs"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97564C4CEE3;
-	Fri, 21 Mar 2025 10:59:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GuYe6pp5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68452C4CEE3;
+	Fri, 21 Mar 2025 11:11:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742554797;
-	bh=g57BIylUub2Dg4OcaaybLLS/3PupL9BzM5Vslj4r8Fw=;
+	s=k20201202; t=1742555520;
+	bh=xEZhLzkJBXkP6rsKEEBnbg5JH4mvAmAv0JmyN0t4XIA=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IiRy1tEsuror0eneEzPuN4LNh6Ycty+P2isnmkaeCh/Pw0sXtWtOWxBy5FVtC+f/V
-	 J9wl2of3wNr4CkjrWeCpDs38Fbvbi/ocARPqQUP+h34a5QAkyqLbe4yR7zt/nN+ObF
-	 ruA1wEiHkRuDFuZHAKG7NOGNBBPuO7NxFSABJ5P+D4NyJnN1lxQWSDjs4YztP+FAbg
-	 hgsOSx3YF8jjaFjKfwsCTnTd6GHw165kpdRZ3oA3PfV+/a0nLi20RyccbIR3XHXLeI
-	 of+R55GnE+hGQd2M2sUs8uYRJLNVbNZ570xW9AxfqaOubZ6mCj7RkCfpCtHGtt7PZH
-	 G7drZJ8GjrzQw==
-Message-ID: <9ca98152-9105-4e6c-be16-5fff8be88b90@kernel.org>
-Date: Fri, 21 Mar 2025 11:59:54 +0100
+	b=GuYe6pp5texD81rwmyZ3b3fyDcX9aaWY3lCKPv3RLJfCELeFAN3YyM+/L3xsoykdn
+	 2I9aI6s+m4sjsVze5Om7PZAskf4wPCSpQDcmOAUgoOA0Ovjuk5CuIoSJxd8U8Q9Ik0
+	 JRMpl/VpyRlRRa/U36Hd4F5sYQZ9BY1TKwk9eHVBCbAFgvVropm1KzO13ha1BbyUxy
+	 UodfoIUCFCZY+VjfaHa+Xj49KNqBMLgNRXY6e0deOultwOBJ5fQFlhh0PqBUgCbtj8
+	 TqUOQkRgJDjmj7e9/afz0Ip+49Y8ZqDsCYS5WNkYqqS4UHOJ/xt6hcRK0Rh6KKdBVq
+	 ZQem4405A/+Iw==
+Message-ID: <6a3f0bec-ae6a-4499-8ef6-00b5b798ac17@kernel.org>
+Date: Fri, 21 Mar 2025 12:11:57 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 1/4] bpf: Add mptcp path manager struct_ops
+Subject: Re: [PATCH mptcp-next v1 2/4] bpf: Export mptcp path manager kfuncs
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1742521587.git.tanggeliang@kylinos.cn>
- <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
+ <0c324baa241000f32a1b97017da8e96a383767ad.1742521587.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,7 +86,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
+In-Reply-To: <0c324baa241000f32a1b97017da8e96a383767ad.1742521587.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -95,50 +95,77 @@ Hi Geliang,
 On 21/03/2025 02:49, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch implements a new struct bpf_struct_ops for MPTCP BPF path
-> manager: bpf_mptcp_pm_ops. Register and unregister the bpf path manager
-> in .reg and .unreg.
+> This patch exports mptcp path manager helpers into BPF, adds these
+> kfunc names into mptcp common kfunc_set.
 > 
-> Add write access for some fields of struct mptcp_sock and struct
-> mptcp_pm_addr_entry in .btf_struct_access.
-> 
-> This MPTCP BPF path manager implementation is similar to BPF TCP CC. And
-> net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
+> bpf_kmemdup_entry() and bpf_kfree_entry() are wrappers of kmemdup() and
+> kfree(), using to alloc and free an mptcp address entry.
+
+That feels really wrong: a BPF program cannot crash or cause problems
+(deadlock, memleaks, etc.), it should then not be able to reserve memory
+except in a map or something that can be automatically freed when the
+bpf program is removed.
+
+> bpf_set_bit() and bpf_bitmap_fill() are wrappers of __set_bit() and
+> bitmap_fill(), using for mptcp address ID bitmap.
+
+Is it really needed? Are there not already some  it not store stuff in a
+BPF map?
+
+> bpf_spin_lock_bh() and bpf_spin_unlock_bh() are wrappers of spin_lock_bh()
+> and spin_unlock_bh(), using to lock and unlock the mptcp pm lock.
+
+Same here, a BPF should not be able to lock something and never unlock
+it. I think there are some stuff in BPF to get a lock automatically.
+(Polymorphisme?)
 
 (...)
 
-> +static int bpf_mptcp_pm_btf_struct_access(struct bpf_verifier_log *log,
-> +					  const struct bpf_reg_state *reg,
-> +					  int off, int size)
+> @@ -564,6 +596,22 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
+>  BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
+>  BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
+>  BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+> +BTF_ID_FLAGS(func, bpf_kmemdup_entry)
+> +BTF_ID_FLAGS(func, bpf_kfree_entry)
+> +BTF_ID_FLAGS(func, bpf_set_bit)
+> +BTF_ID_FLAGS(func, bpf_bitmap_fill)
+> +BTF_ID_FLAGS(func, bpf_spin_lock_bh)
+> +BTF_ID_FLAGS(func, bpf_spin_unlock_bh)
 
-I don't know how it works exactly, but with BPF, can we not force a
-program to automatically take a lock (pm->lock) when trying to modify
-any of the fields below?
+This should not be needed, a BPF program should not need them. Not sure
+about the bitmap, but for the rest, something else should be used
+(maps?) or automatically done (locks).
 
-Also, is there really a need for a BPF PM to modify any of these fields
-directly?
+> +BTF_ID_FLAGS(func, mptcp_pm_nl_lookup_addr)
+> +BTF_ID_FLAGS(func, mptcp_pm_nl_append_new_local_addr_msk)
 
-Are most of them handled either by pm.c before calling a callback or are
-specific to the in-kernel PM?
+That's specific to the in-kernel PM, that feels wrong. Addresses should
+be stored in BPF maps or similar instead I guess.
 
-(...)
+> +BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_signal_max)
+> +BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_accept_max)
+> +BTF_ID_FLAGS(func, mptcp_pm_get_subflows_max)
+> +BTF_ID_FLAGS(func, mptcp_pm_get_local_addr_max)
 
-> +static struct mptcp_pm_ops __bpf_mptcp_pm_ops = {
-> +	.get_local_id		= __bpf_mptcp_pm_get_local_id,
-> +	.get_priority		= __bpf_mptcp_pm_get_priority,
-> +	.established		= __bpf_mptcp_pm_established,
-> +	.subflow_established	= __bpf_mptcp_pm_subflow_established,
-> +	.allow_new_subflow      = __bpf_mptcp_pm_allow_new_subflow,
-> +	.accept_new_subflow     = __bpf_mptcp_pm_accept_new_subflow,
+That feels wrong, it should not be needed, that's specific to the
+in-kernel PM as well and set via netlink.
 
-There is a mix of spaces and tabs here above. Only use tabs?
+> +BTF_ID_FLAGS(func, mptcp_pm_add_addr_recv)
 
-> +	.add_addr_echo		= __bpf_mptcp_pm_add_addr_echo,
-> +	.add_addr_received	= __bpf_mptcp_pm_add_addr_received,
-> +	.rm_addr_received	= __bpf_mptcp_pm_rm_addr_received,
-> +	.init			= __bpf_mptcp_pm_init,
-> +	.release		= __bpf_mptcp_pm_release,
-> +};
+Should not be needed, see my comments in part 6.
+
+> +BTF_ID_FLAGS(func, mptcp_pm_is_init_remote_addr)
+
+Should it not be handled by the core (pm.c) or specific to in-kernel? (I
+didn't check)
+
+> +BTF_ID_FLAGS(func, mptcp_pm_create_subflow_or_signal_addr)
+
+Specific to the in-kernel PM, that feels wrong.
+
+> +BTF_ID_FLAGS(func, mptcp_pm_rm_addr_recv)
+
+Maybe not needed, see my comments in part 6.
 
 (...)
 
