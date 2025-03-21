@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744C01DE3CE
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:46:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EFFA81DE3CE
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:59:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742553966; cv=none; b=lafrimaRgMWOuRg1hKb1DVoieQjn0rbW2XtVSrnUg5pAfQ8dEnYG1yj5c+E4uyPx0nd+T0bKSQN6cQBMtBAmP1G2L18kvg/asDFh8oWt4QrJqflVrWamZRTT6w14TdQYJTkkwVcXaOEhPzcM2HNNgl9Zrnra9xLg3lI4QeYdkSI=
+	t=1742554798; cv=none; b=Gz3QmaF5FaSOJ1sNAezvpvkWDKMXqO0sfPu+ggV/Q62G9to8a00je0L8i8Aw+fbzdrRk7A1BE+LVLul60QiFy2984i3C88YYlQvUK2VdG4as4WHfLUD63z+O3OpT89Z9U9lwlGcHCEDCatqOOLKLwlmalHfAwpe5PyQHQ1RBatg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742553966; c=relaxed/simple;
-	bh=YJLcd9kchn0C9es0oPb9g43wkgDZ+muWWjgJIlpYwtw=;
+	s=arc-20240116; t=1742554798; c=relaxed/simple;
+	bh=g57BIylUub2Dg4OcaaybLLS/3PupL9BzM5Vslj4r8Fw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=VFjHP97dUA1AJav33TmF9p+DnZjMnxPpqqj4eIpdc3cYowhhxS5e99xoyMyWREhFEmI7I8GBO3a6PfRAD5bd4iKsFovDJaXWDG+LMLYW3aKOMrZNbQBMK1QrloGnysLzvR9uzELdpWym9t/I8mm5vUQE9vZ0MuU1UZPN37sP7lE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMFN/zBM; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=W0gWAtKGLDe8/6w599mfCC0sxofHT5Vwdbu2Qzwcmo+xmXJcIxMGnfuL+HJl6Zzv2gexGIC1OREycuNN+NfzQVmOyAZ0v6rG2wGup31UEq0KE6yhjdTXCTvoCKY56SDqN81dw0Z2ypAJSZJheQV/xuHKlvbX2HZkmU8G+2otDn4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IiRy1tEs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMFN/zBM"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370C5C4CEE3;
-	Fri, 21 Mar 2025 10:46:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IiRy1tEs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97564C4CEE3;
+	Fri, 21 Mar 2025 10:59:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742553965;
-	bh=YJLcd9kchn0C9es0oPb9g43wkgDZ+muWWjgJIlpYwtw=;
+	s=k20201202; t=1742554797;
+	bh=g57BIylUub2Dg4OcaaybLLS/3PupL9BzM5Vslj4r8Fw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=tMFN/zBMqjqGNOKy70okJ3Np8pp1RmpI3rZT1sY97cYFWav8rG9M59ZmIpwHGeJmO
-	 FNeLg78lBh1VsXvKIqDrciZBAMsi2UCk35v9AUhbifkSxPLES9zvlG56p9rPEDaExF
-	 l356yKRYjALcrC+ZJFW6Ath8ob9sxn5Ae5Sg0puGpK/xVEyWPZEYNO5JRAs8ln9Pgb
-	 unPzaM0/UHXm5ImLBUy7DeCVgV4atco2XUCWrbFfjOKKgOIX9wnH9ffUX7fkMSJPXf
-	 SfZyMk+Sa/zxFCak3z992VL+OZn0BFJHCrmuckWOJUFNozKYByspqZ4II4TTEldyK3
-	 2fJm5+HVNKOfA==
-Message-ID: <6f1f1d70-fc1f-4d64-abe9-5bfb9e85cbcc@kernel.org>
-Date: Fri, 21 Mar 2025 11:46:03 +0100
+	b=IiRy1tEsuror0eneEzPuN4LNh6Ycty+P2isnmkaeCh/Pw0sXtWtOWxBy5FVtC+f/V
+	 J9wl2of3wNr4CkjrWeCpDs38Fbvbi/ocARPqQUP+h34a5QAkyqLbe4yR7zt/nN+ObF
+	 ruA1wEiHkRuDFuZHAKG7NOGNBBPuO7NxFSABJ5P+D4NyJnN1lxQWSDjs4YztP+FAbg
+	 hgsOSx3YF8jjaFjKfwsCTnTd6GHw165kpdRZ3oA3PfV+/a0nLi20RyccbIR3XHXLeI
+	 of+R55GnE+hGQd2M2sUs8uYRJLNVbNZ570xW9AxfqaOubZ6mCj7RkCfpCtHGtt7PZH
+	 G7drZJ8GjrzQw==
+Message-ID: <9ca98152-9105-4e6c-be16-5fff8be88b90@kernel.org>
+Date: Fri, 21 Mar 2025 11:59:54 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 10/10] mptcp: pm: drop is_userspace in
- subflow_check_next
+Subject: Re: [PATCH mptcp-next v1 1/4] bpf: Add mptcp path manager struct_ops
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1742521397.git.tanggeliang@kylinos.cn>
- <7d236597235768dcf1885f317acb767840cb9e42.1742521397.git.tanggeliang@kylinos.cn>
+References: <cover.1742521587.git.tanggeliang@kylinos.cn>
+ <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,62 +86,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7d236597235768dcf1885f317acb767840cb9e42.1742521397.git.tanggeliang@kylinos.cn>
+In-Reply-To: <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 21/03/2025 02:45, Geliang Tang wrote:
+On 21/03/2025 02:49, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> In mptcp_pm_subflow_check_next(), instead of reducing "pm->subflows"
-> for the in-kernel PM in __mptcp_pm_close_subflow(), this patch moves
-> "pm->subflows--;" forward to let it be used by both the userspace PM
-> and the in-kernel PM. Then mptcp_pm_is_userspace() here can be dropped.
+> This patch implements a new struct bpf_struct_ops for MPTCP BPF path
+> manager: bpf_mptcp_pm_ops. Register and unregister the bpf path manager
+> in .reg and .unreg.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c | 15 ++++++---------
->  1 file changed, 6 insertions(+), 9 deletions(-)
+> Add write access for some fields of struct mptcp_sock and struct
+> mptcp_pm_addr_entry in .btf_struct_access.
 > 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index bb456e203665..a3fcb335c717 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -531,13 +531,10 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
->  	bool update_subflows;
->  
->  	update_subflows = subflow->request_join || subflow->mp_join;
-> -	if (mptcp_pm_is_userspace(msk)) {
-> -		if (update_subflows) {
-> -			spin_lock_bh(&pm->lock);
-> -			pm->subflows--;
-> -			spin_unlock_bh(&pm->lock);
-> -		}
-> -		return;
-> +	if (update_subflows) {
-> +		spin_lock_bh(&pm->lock);
-> +		pm->subflows--;
-> +		spin_unlock_bh(&pm->lock);
+> This MPTCP BPF path manager implementation is similar to BPF TCP CC. And
+> net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
 
-Should we not simply call mptcp_pm_close_subflow() instead? It should be
-fine to call it for the userspace or BPF PMs as well, no?
+(...)
 
->  	}
->  
->  	if (!pm->ops->subflow_established)
-> @@ -547,8 +544,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
->  		return;
->  
->  	spin_lock_bh(&pm->lock);
-> -	if (update_subflows)
-> -		__mptcp_pm_close_subflow(msk);
-> +	if (update_subflows && msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
-> +		WRITE_ONCE(msk->pm.accept_subflow, true);
->  
->  	/* Even if this subflow is not really established, tell the PM to try
->  	 * to pick the next ones, if possible.
+> +static int bpf_mptcp_pm_btf_struct_access(struct bpf_verifier_log *log,
+> +					  const struct bpf_reg_state *reg,
+> +					  int off, int size)
+
+I don't know how it works exactly, but with BPF, can we not force a
+program to automatically take a lock (pm->lock) when trying to modify
+any of the fields below?
+
+Also, is there really a need for a BPF PM to modify any of these fields
+directly?
+
+Are most of them handled either by pm.c before calling a callback or are
+specific to the in-kernel PM?
+
+(...)
+
+> +static struct mptcp_pm_ops __bpf_mptcp_pm_ops = {
+> +	.get_local_id		= __bpf_mptcp_pm_get_local_id,
+> +	.get_priority		= __bpf_mptcp_pm_get_priority,
+> +	.established		= __bpf_mptcp_pm_established,
+> +	.subflow_established	= __bpf_mptcp_pm_subflow_established,
+> +	.allow_new_subflow      = __bpf_mptcp_pm_allow_new_subflow,
+> +	.accept_new_subflow     = __bpf_mptcp_pm_accept_new_subflow,
+
+There is a mix of spaces and tabs here above. Only use tabs?
+
+> +	.add_addr_echo		= __bpf_mptcp_pm_add_addr_echo,
+> +	.add_addr_received	= __bpf_mptcp_pm_add_addr_received,
+> +	.rm_addr_received	= __bpf_mptcp_pm_rm_addr_received,
+> +	.init			= __bpf_mptcp_pm_init,
+> +	.release		= __bpf_mptcp_pm_release,
+> +};
+
+(...)
 
 Cheers,
 Matt
