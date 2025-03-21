@@ -1,86 +1,83 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.16])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEBAE64A8F;
-	Fri, 21 Mar 2025 15:23:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.16
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B8A322FDE8;
+	Fri, 21 Mar 2025 18:09:58 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742570632; cv=none; b=oZZ3wmJ+22gDBm96EeDziEJsXoaB6E/J/QFsb3uMlLYnLfHOSm9FdEq0ytj/4iurW0ptvQscZpLUmVSmpWMwXtK5GfwY8pogt+KOEMfG1R//BBQNeCnzPuq43lfqhjNdSdagH5Fxg21FAcUCA3QqFKEPqwjkHDj9OLX8RkFUfDQ=
+	t=1742580599; cv=none; b=J+xwIscMS7giXQADDDz4l/WV+rj09lsbBS3XTZ1X828hQwoQkFZT92UZAqLvSbbW+2qpcgjEKryKm0rRbwWTTx9+mCOYT1blT0xVtxZ/cTCelQuebr+g1uVUPnIhHOTnksOBTUU+aMEUys3W9pXtdXMvpalu9UJpmcydNqwifRw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742570632; c=relaxed/simple;
-	bh=gSY/v7fIx+uQCvTliv3InCbQJCb4tGZLLFUqBbEqbCE=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=G+cF5zYU3rtbgRlbO76/p6+2RzAwzjE1H6p9ly4QdpXbhlKxcgBlDIuZQFTTKM9rPSGjClqkeYXpJn9Ia90v1g5s8wbCjtdtW+G6HBDG4rpoB9WUfiwuYBk9kXYZ2xFiKuEvLuI8Zb/z4iGconWro1nJ6MPoUuyT4vyrkD7K7aM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=nfWDeGtL; arc=none smtp.client-ip=192.198.163.16
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1742580599; c=relaxed/simple;
+	bh=+wBfr9S9cNjj8/xFM+HmotmhdevX1l4hpYUE3G4YEOM=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=EsqG/a4t7B0v8xabyP15e1R5VjGIZFU8tH1e70zwfDwUEoA8hNvHktDbiU4vQ3Pj5Tuf9iQfsWkmo5Lo2oL1xPj60G67k6BcPYUvVUhHEo7kRrBHAqrUbldIY9HU9RXYhca+m9PcnUbd2BneBgJn1E0YPNKlQJtkBVvED0EqMBY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KzBEiM9Z; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="nfWDeGtL"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1742570631; x=1774106631;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=gSY/v7fIx+uQCvTliv3InCbQJCb4tGZLLFUqBbEqbCE=;
-  b=nfWDeGtLNhA8V4lw/CPEb4DC6VqsBA5r7CWvDXhVXnqn5+YVYPGgmBYP
-   7jI8iPtL10urZAmktmxI87diR0y9y1pIcGTNDs9+ZMpuglftMW1/X4KCW
-   ozGlfoYTXzkcIv8lad6Viu3z3sagzPSFf//Ss1DEqKag5t1fwJCtt8brr
-   JIS5A2fDF6UwqonvCKA7Z9v+ecR52TmN6DnYxy3NEbo09M8eEBVHeeONz
-   o7B3MLKFQOaDqr24Al948ji5lx3hcRkFsd+GfFtn5IQAzFi8G6zBmbC6M
-   hLavV4TUTV5zT8AJBmbMjeNZD6R0jIsO7Krx+11T311410WwSTa0AIZsk
-   Q==;
-X-CSE-ConnectionGUID: 9wGI39KsSPyeXZdc8eLzgQ==
-X-CSE-MsgGUID: 4LETgrL/RlShmfydwNH7LA==
-X-IronPort-AV: E=McAfee;i="6700,10204,11380"; a="31430988"
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="31430988"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by fmvoesa110.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 21 Mar 2025 08:23:50 -0700
-X-CSE-ConnectionGUID: op9qABE4ScG5FLBUwmgXuQ==
-X-CSE-MsgGUID: ZO53u2+JSIGdPNTz1xpZGg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.14,264,1736841600"; 
-   d="scan'208";a="123605606"
-Received: from lkp-server02.sh.intel.com (HELO e98e3655d6d2) ([10.239.97.151])
-  by fmviesa008.fm.intel.com with ESMTP; 21 Mar 2025 08:23:49 -0700
-Received: from kbuild by e98e3655d6d2 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1tveDd-0001Qr-2G;
-	Fri, 21 Mar 2025 15:23:39 +0000
-Date: Fri, 21 Mar 2025 23:21:44 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
-	mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/13] .b4-config: warning: ignored by one of the
- .gitignore files
-Message-ID: <202503212325.30k85D5v-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KzBEiM9Z"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A4A85C4CEED;
+	Fri, 21 Mar 2025 18:09:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1742580598;
+	bh=+wBfr9S9cNjj8/xFM+HmotmhdevX1l4hpYUE3G4YEOM=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=KzBEiM9ZwGFcuvdU8Q5SycJo3tqJYbPresmAZC8RiVG/POZMUUhMRnLHk/DfzVaOJ
+	 9tv6LSdry3FusqSnhQuF481sTXsSWzryzv1y0cNQ7qKNj+pkl3EcXLt3AvRYUXbchS
+	 2kvvE1Xb4ccl1HYMeIP4U+DYKnkyXNnLoe3FwksjfXa8GE7PzBy/F0v6j3feuzh8vO
+	 brtX3X7LP2rdoZtKVm6BXBfSndbvcabp3M2QaxaU2Y2H38cMAwUaRuaq5I6JxYEczU
+	 uLTIt28raJ6hM1CLWP3e29hGQGpV6gzc/u8FDI8DjaPKWoN5fJlVg417iUlXJuX8f8
+	 3J5mxQOZcphHw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAE163806659;
+	Fri, 21 Mar 2025 18:10:35 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net 0/3] mptcp: fix data stream corruption and missing
+ sockopts
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174258063476.2577757.8120263638217782204.git-patchwork-notify@kernel.org>
+Date: Fri, 21 Mar 2025 18:10:34 +0000
+References: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
+In-Reply-To: <20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-0-122dbb249db3@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, fw@strlen.de, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, amongodin@randorisec.fr, stable@vger.kernel.org
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   bf999aa8665428659ae2cd6f6a5fe0fa577772f0
-commit: 14a377a16c65faa3f5dda2a83686c05fa7065d7c [1/13] DO-NOT-MERGE: git markup: net
-config: x86_64-buildonly-randconfig-005-20250321 (https://download.01.org/0day-ci/archive/20250321/202503212325.30k85D5v-lkp@intel.com/config)
-compiler: clang version 20.1.1 (https://github.com/llvm/llvm-project 424c2d9b7e4de40d0804dd374721e6411c27d1d1)
-rustc: rustc 1.78.0 (9b00956e5 2024-04-29)
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250321/202503212325.30k85D5v-lkp@intel.com/reproduce)
+Hello:
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202503212325.30k85D5v-lkp@intel.com/
+This series was applied to netdev/net-next.git (main)
+by Paolo Abeni <pabeni@redhat.com>:
 
-All warnings (new ones prefixed by >>):
+On Fri, 14 Mar 2025 21:11:30 +0100 you wrote:
+> Here are 3 unrelated fixes for the net tree.
+> 
+> - Patch 1: fix data stream corruption when ending up not sending an
+>   ADD_ADDR.
+> 
+> - Patch 2: fix missing getsockopt(IPV6_V6ONLY) support -- the set part
+>   is supported.
+> 
+> [...]
 
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
+Here is the summary with links:
+  - [net,1/3] mptcp: Fix data stream corruption in the address announcement
+    (no matching commit)
+  - [net,2/3] mptcp: sockopt: fix getting IPV6_V6ONLY
+    https://git.kernel.org/netdev/net-next/c/8c3963375988
+  - [net,3/3] mptcp: sockopt: fix getting freebind & transparent
+    https://git.kernel.org/netdev/net-next/c/e2f4ac7bab22
 
+You are awesome, thank you!
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
+
