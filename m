@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1C51C84BF
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:49:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 85B834C85
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:49:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742521769; cv=none; b=pHIz8hY0Pn6Pxsv0R+iRSYWkAbA8pnqcbnlo36Sz+na3en+lzNYNFmbE9mKlSfE5CcNJBwe5pqd35TdCfYI1tvBV8xvDCACgL5CZsZ2/pNkYeo2AyTpSDEwU8r2RgDBLy+bbX2BSPwuL+xJmToZ+LmHXIDNGcJceQv3yfCFc+QQ=
+	t=1742521770; cv=none; b=FFrustsxH1KE0Sx87/Kq0wWtaVIuj6q0VP0zYPigDqrC7h9Le1ozUQmCeuUBfSUO+sckSPlqp2IbW/bg42QmXDg3q4UT4xb+VwaQtFbPbNSxOhyYmJugv+hFThKb5ssFaNk2/ntaVHHoy5STI63tzYaPodRv4ShF0ww4C2hG9kw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742521769; c=relaxed/simple;
-	bh=cVRBhtjh4QRXKFlACtdoKvNyaCAjxylpxBgHnfg2BbU=;
+	s=arc-20240116; t=1742521770; c=relaxed/simple;
+	bh=EWRTRr+OefG+MebdqmMPkLi+vdY2MwAf0r+zOnOliZ8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=W/YY1i5bPlxkRJ4746nCFb7thFUl2oaLhpiNzTTjXWOlwZR7nmwLdPP1N3ZGnPkFfocbP1Mhjff1rlDmGrcl4d+jZ50I8YIoY25u30K+mjby+RPYEkdKrEWa6FC9sDSF9DZImwJzWLzyOBFBhrSIWHSEap9cJpvnEsnPYRRFtS4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDcbomWT; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QiDx/+NF5tjBrFb76mU2qPFIFw/C+bbExo2Lo7CYLl7OI5uh2KjCBDotlT97aIrJfDrkZt+1g5uuAMweIeqo/J8zGabkwNlhDUPevqTNqSG1jym6M8Z8um7QbMm2fSWmfpDIQQaZAX5Qgy0zGO8/4ZtrUA0NvAHrEqS76OQLKc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VgxxH5Xr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDcbomWT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD70C4CEEF;
-	Fri, 21 Mar 2025 01:49:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VgxxH5Xr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0C002C4CEE7;
+	Fri, 21 Mar 2025 01:49:28 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742521768;
-	bh=cVRBhtjh4QRXKFlACtdoKvNyaCAjxylpxBgHnfg2BbU=;
+	s=k20201202; t=1742521770;
+	bh=EWRTRr+OefG+MebdqmMPkLi+vdY2MwAf0r+zOnOliZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=eDcbomWTTzH1gi775+/qXunGgXcSHft5v0wtpD+WBr7LiLT7XlhgbUjtf+NyxEEKf
-	 rpng17vdVEcBIV8V/FscJwf4kcmuJeYGuiCzTccE7rC2X2WCP/raD0erNgwZeTJXxy
-	 NueD03kzK34Dj2nZgeiCeTtnK8/kBzsogKGDZ6MnaBIUilUlTEJ1wvn7T4xd9XPTYf
-	 B0necN9wuMsU5LBKNjr7yUlf3F7aS9tOgKMXG/FuujYZStukpvz5x1b7UAyeLFm355
-	 PlOgE9EUAPrI3831v7TY+uIsKEB3qVp31KIYO8KtP6tlI6rYmMAOxf3ZZ1OQupDnVC
-	 6g8pIbEiepuDw==
+	b=VgxxH5Xrq9gZyhhBIFKpJCa1c3CJhE98aUmAhJKFxWcLzYv3lFiNLyupxDVtp84wo
+	 3XGaJa/1uRVpKzIYozRfd2yTQFjEkRgfJuMD1Dl3yZMkcel13SAZhmXAgjR9/tZeMO
+	 rISg6ZeJBM3b011FXj2DnWDPA64X8AVW8B8huDuVhI4qjTDMshSwhPvHR1qNCEsA7q
+	 h+RnRPzfQctS3igrNPMAc6ARiTS6iPDvNCz8C16pACyfjUCNUwm8jUpPH8Rtd6tHTF
+	 H940d8hWYWsifLsJ8C19/tDx0FTTPRGoqXNFUyv0J9JAqyiMoutpFoHTk2xIE0UAKj
+	 MLoCQSbHjolBw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 2/4] bpf: Export mptcp path manager kfuncs
-Date: Fri, 21 Mar 2025 09:49:16 +0800
-Message-ID: <0c324baa241000f32a1b97017da8e96a383767ad.1742521587.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v1 3/4] selftests/bpf: Add mptcp netlink pm subtest
+Date: Fri, 21 Mar 2025 09:49:17 +0800
+Message-ID: <64d988e6d362e91e764ff235e45b28ba5e39ff4e.1742521587.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1742521587.git.tanggeliang@kylinos.cn>
 References: <cover.1742521587.git.tanggeliang@kylinos.cn>
@@ -45,139 +45,276 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch exports mptcp path manager helpers into BPF, adds these
-kfunc names into mptcp common kfunc_set.
-
-bpf_kmemdup_entry() and bpf_kfree_entry() are wrappers of kmemdup() and
-kfree(), using to alloc and free an mptcp address entry.
-
-bpf_set_bit() and bpf_bitmap_fill() are wrappers of __set_bit() and
-bitmap_fill(), using for mptcp address ID bitmap.
-
-bpf_spin_lock_bh() and bpf_spin_unlock_bh() are wrappers of spin_lock_bh()
-and spin_unlock_bh(), using to lock and unlock the mptcp pm lock.
+To verify that the behavior of BPF path manager is the same as that of
+netlink pm in the kernel, a netlink pm self-test has been added. BPF
+path manager in the next commit will also use this test too.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c       | 48 +++++++++++++++++++++++++++++++++++++++++++
- net/mptcp/pm_kernel.c | 27 ++++++++++++++++++++++++
- 2 files changed, 75 insertions(+)
+ .../testing/selftests/bpf/prog_tests/mptcp.c  | 236 ++++++++++++++++++
+ 1 file changed, 236 insertions(+)
 
-diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 596574102b89..e411ae8382f2 100644
---- a/net/mptcp/bpf.c
-+++ b/net/mptcp/bpf.c
-@@ -540,6 +540,38 @@ bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
- {
+diff --git a/tools/testing/selftests/bpf/prog_tests/mptcp.c b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+index 7c51250e7161..5303cbf38a44 100644
+--- a/tools/testing/selftests/bpf/prog_tests/mptcp.c
++++ b/tools/testing/selftests/bpf/prog_tests/mptcp.c
+@@ -56,6 +56,12 @@
+ #endif
+ #define MPTCP_SCHED_NAME_MAX	16
+ 
++enum mptcp_pm_family {
++	IPV4 = 0,
++	IPV4MAPPED,
++	IPV6,
++};
++
+ static const unsigned int total_bytes = 10 * 1024 * 1024;
+ static int duration;
+ 
+@@ -562,6 +568,234 @@ static void test_iters_subflow(void)
+ 	close(cgroup_fd);
  }
  
-+__bpf_kfunc static struct mptcp_pm_addr_entry *
-+bpf_kmemdup_entry(struct mptcp_pm_addr_entry *entry, int size, gfp_t priority)
++static int recv_byte(int fd)
 +{
-+	return kmemdup(entry, size, priority);
++	char buf[1];
++	ssize_t n;
++
++	n = recv(fd, buf, sizeof(buf), 0);
++	if (CHECK(n <= 0, "recv_byte", "recv")) {
++		log_err("failed/partial recv");
++		return -1;
++	}
++	return 0;
 +}
 +
-+__bpf_kfunc static void
-+bpf_kfree_entry(struct mptcp_pm_addr_entry *entry)
++static int netlink_pm_add_subflow(char *addr, __u8 id)
 +{
-+	kfree(entry);
++	return SYS_NOFAIL("ip -n %s mptcp endpoint add %s subflow id %u",
++			  NS_TEST, addr, id);
 +}
 +
-+__bpf_kfunc static void bpf_set_bit(unsigned long nr, unsigned long *addr__ign)
++static int netlink_pm_rm_subflow(__u8 id)
 +{
-+	__set_bit(nr, addr__ign);
++	return SYS_NOFAIL("ip -n %s mptcp endpoint delete id %u",
++			  NS_TEST, id);
 +}
 +
-+__bpf_kfunc static void bpf_bitmap_fill(unsigned long *dst__ign, unsigned int nbits)
++static int netlink_pm_add_addr(char *addr, __u8 id)
 +{
-+	bitmap_fill(dst__ign, nbits);
++	return SYS_NOFAIL("ip -n %s mptcp endpoint add %s signal id %u",
++			  NS_TEST, addr, id);
 +}
 +
-+__bpf_kfunc static void bpf_spin_lock_bh(spinlock_t *lock)
++static int netlink_pm_rm_addr(__u8 id)
 +{
-+	spin_lock_bh(lock);
++	return SYS_NOFAIL("ip -n %s mptcp endpoint delete id %u",
++			  NS_TEST, id);
 +}
 +
-+__bpf_kfunc static void bpf_spin_unlock_bh(spinlock_t *lock)
++static int netlink_pm_rm_addr_id_0(char *addr)
 +{
-+	spin_unlock_bh(lock);
++	return SYS_NOFAIL("ip -n %s mptcp endpoint delete id 0 %s",
++			  NS_TEST, addr);
 +}
 +
- __bpf_kfunc static bool bpf_mptcp_subflow_queues_empty(struct sock *sk)
++static int netlink_pm_set_flags(__u8 id, char *flags)
++{
++	return SYS_NOFAIL("ip -n %s mptcp endpoint change id %u %s",
++			  NS_TEST, id, flags);
++}
++
++static int netlink_pm_get_addr(__u8 id, char *output)
++{
++	char cmd[1024];
++	FILE *fp;
++
++	sprintf(cmd, "ip -n %s mptcp endpoint show id %u", NS_TEST, id);
++	fp = popen(cmd, "r");
++	if (!fp)
++		return -1;
++
++	bzero(output, BUFSIZ);
++	fread(output, 1, BUFSIZ, fp);
++	pclose(fp);
++
++	return 0;
++}
++
++static int netlink_pm_dump_addr(char *output)
++{
++	char cmd[1024];
++	FILE *fp;
++
++	sprintf(cmd, "ip -n %s mptcp endpoint show", NS_TEST);
++	fp = popen(cmd, "r");
++	if (!fp)
++		return -1;
++
++	bzero(output, BUFSIZ);
++	fread(output, 1, BUFSIZ, fp);
++	pclose(fp);
++
++	return 0;
++}
++
++static void run_netlink_pm(enum mptcp_pm_family family)
++{
++	bool ipv4mapped = (family == IPV4MAPPED);
++	bool ipv6 = (family == IPV6 || ipv4mapped);
++	int server_fd, client_fd, accept_fd;
++	char output[BUFSIZ], expect[1024];
++	char *addr;
++	int err;
++
++	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_1 : ADDR6_1) : ADDR_1;
++	server_fd = start_mptcp_server(ipv6 ? AF_INET6 : AF_INET, addr, PORT_1, 0);
++	if (!ASSERT_OK_FD(server_fd, "start_mptcp_server"))
++		return;
++
++	client_fd = connect_to_fd(server_fd, 0);
++	if (!ASSERT_OK_FD(client_fd, "connect_to_fd"))
++		goto close_server;
++
++	accept_fd = accept(server_fd, NULL, NULL);
++	if (!ASSERT_OK_FD(accept_fd, "accept"))
++		goto close_client;
++
++	usleep(200000); /* 0.2s */
++	send_byte(client_fd);
++	recv_byte(accept_fd);
++	usleep(200000); /* 0.2s */
++
++	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_2 : ADDR6_2) : ADDR_2;
++	err = netlink_pm_add_subflow(addr, 100);
++	if (!ASSERT_OK(err, "netlink_pm_add_subflow 100"))
++		goto close_accept;
++
++	send_byte(accept_fd);
++	recv_byte(client_fd);
++
++	sprintf(expect, "%s id 100 subflow \n", addr);
++	err = netlink_pm_get_addr(100, output);
++	if (!ASSERT_OK(err, "netlink_pm_get_addr 100") ||
++	    !ASSERT_STRNEQ(output, expect, sizeof(expect), "get_addr"))
++		goto close_accept;
++
++	err = netlink_pm_set_flags(100, "backup");
++	if (!ASSERT_OK(err, "netlink_pm_set_flags backup"))
++		goto close_accept;
++
++	send_byte(client_fd);
++	recv_byte(accept_fd);
++
++	sprintf(expect, "%s id 100 subflow backup \n", addr);
++	err = netlink_pm_get_addr(100, output);
++	if (!ASSERT_OK(err, "netlink_pm_get_addr 100") ||
++	    !ASSERT_STRNEQ(output, expect, sizeof(expect), "get_addr"))
++		goto close_accept;
++
++	err = netlink_pm_set_flags(100, "nobackup");
++	if (!ASSERT_OK(err, "netlink_pm_set_flags nobackup"))
++		goto close_accept;
++
++	send_byte(accept_fd);
++	recv_byte(client_fd);
++
++	sprintf(expect, "%s id 100 subflow \n", addr);
++	err = netlink_pm_get_addr(100, output);
++	if (!ASSERT_OK(err, "netlink_pm_get_addr 100") ||
++	    !ASSERT_STRNEQ(output, expect, sizeof(expect), "get_addr"))
++		goto close_accept;
++
++	err = netlink_pm_rm_subflow(100);
++	if (!ASSERT_OK(err, "netlink_pm_rm_subflow 100"))
++		goto close_accept;
++
++	send_byte(client_fd);
++	recv_byte(accept_fd);
++
++	err = netlink_pm_dump_addr(output);
++	if (!ASSERT_OK(err, "netlink_pm_dump_addr") ||
++	    !ASSERT_STRNEQ(output, "", sizeof(output), "dump_addr"))
++		goto close_accept;
++
++	addr = ipv6 ? (ipv4mapped ? "::ffff:"ADDR_3 : ADDR6_3) : ADDR_3;
++	err = netlink_pm_add_addr(addr, 200);
++	if (!ASSERT_OK(err, "netlink_pm_add_addr 200"))
++		goto close_accept;
++
++	send_byte(accept_fd);
++	recv_byte(client_fd);
++
++	sprintf(expect, "%s id 200 signal \n", addr);
++	err = netlink_pm_dump_addr(output);
++	if (!ASSERT_OK(err, "netlink_pm_dump_addr") ||
++	    !ASSERT_STRNEQ(output, expect, sizeof(expect), "dump_addr"))
++		goto close_accept;
++
++	err = netlink_pm_rm_addr(200);
++	if (!ASSERT_OK(err, "netlink_pm_rm_addr 200"))
++		goto close_accept;
++
++	send_byte(client_fd);
++	recv_byte(accept_fd);
++
++	err = netlink_pm_rm_addr_id_0(addr);
++	ASSERT_OK(err, "netlink_pm_rm_addr 0");
++
++close_accept:
++	close(accept_fd);
++close_client:
++	close(client_fd);
++close_server:
++	close(server_fd);
++}
++
++static int pm_init(const char *pm_name)
++{
++	if (address_init())
++		goto fail;
++
++	SYS(fail, "ip netns exec %s sysctl -qw net.mptcp.path_manager=%s",
++	    NS_TEST, pm_name);
++	SYS(fail, "ip -n %s mptcp limits set add_addr_accepted 4 subflows 4",
++	    NS_TEST);
++
++	return 0;
++fail:
++	return -1;
++}
++
++static void test_netlink_pm(void)
++{
++	struct netns_obj *netns;
++	int err;
++
++	netns = netns_new(NS_TEST, true);
++	if (!ASSERT_OK_PTR(netns, "netns_new"))
++		return;
++
++	err = pm_init("kernel");
++	if (!ASSERT_OK(err, "pm_init: netlink pm"))
++		goto fail;
++
++	run_netlink_pm(IPV4MAPPED);
++
++fail:
++	netns_free(netns);
++}
++
+ static int sched_init(char *flags, char *sched)
  {
- 	return tcp_rtx_queue_empty(sk);
-@@ -564,6 +596,22 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
- BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
-+BTF_ID_FLAGS(func, bpf_kmemdup_entry)
-+BTF_ID_FLAGS(func, bpf_kfree_entry)
-+BTF_ID_FLAGS(func, bpf_set_bit)
-+BTF_ID_FLAGS(func, bpf_bitmap_fill)
-+BTF_ID_FLAGS(func, bpf_spin_lock_bh)
-+BTF_ID_FLAGS(func, bpf_spin_unlock_bh)
-+BTF_ID_FLAGS(func, mptcp_pm_nl_lookup_addr)
-+BTF_ID_FLAGS(func, mptcp_pm_nl_append_new_local_addr_msk)
-+BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_signal_max)
-+BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_accept_max)
-+BTF_ID_FLAGS(func, mptcp_pm_get_subflows_max)
-+BTF_ID_FLAGS(func, mptcp_pm_get_local_addr_max)
-+BTF_ID_FLAGS(func, mptcp_pm_add_addr_recv)
-+BTF_ID_FLAGS(func, mptcp_pm_is_init_remote_addr)
-+BTF_ID_FLAGS(func, mptcp_pm_create_subflow_or_signal_addr)
-+BTF_ID_FLAGS(func, mptcp_pm_rm_addr_recv)
- BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
- BTF_ID_FLAGS(func, mptcp_subflow_active)
- BTF_ID_FLAGS(func, mptcp_set_timeout)
-diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-index 4f7b2e0e998d..3cf81986c70d 100644
---- a/net/mptcp/pm_kernel.c
-+++ b/net/mptcp/pm_kernel.c
-@@ -253,6 +253,9 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
- 	return NULL;
- }
- 
-+__bpf_kfunc_start_defs();
-+
-+__bpf_kfunc
- static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- {
- 	struct sock *sk = (struct sock *)msk;
-@@ -367,6 +370,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
- 	mptcp_pm_nl_check_work_pending(msk);
- }
- 
-+__bpf_kfunc_end_defs();
-+
- static void mptcp_pm_kernel_established(struct mptcp_sock *msk)
- {
- 	spin_lock_bh(&msk->pm.lock);
-@@ -1493,3 +1498,25 @@ void __init mptcp_pm_kernel_register(void)
- 
- 	mptcp_pm_register(&mptcp_pm_kernel);
- }
-+
-+__bpf_kfunc_start_defs();
-+
-+__bpf_kfunc static struct mptcp_pm_addr_entry *
-+mptcp_pm_nl_lookup_addr(struct mptcp_sock *msk, const struct mptcp_addr_info *info)
-+{
-+	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
-+
-+	return __lookup_addr(pernet, info);
-+}
-+
-+__bpf_kfunc static int
-+mptcp_pm_nl_append_new_local_addr_msk(struct mptcp_sock *msk,
-+				      struct mptcp_pm_addr_entry *entry,
-+				      bool needs_id, bool replace)
-+{
-+	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
-+
-+	return mptcp_pm_nl_append_new_local_addr(pernet, entry, needs_id, replace);
-+}
-+
-+__bpf_kfunc_end_defs();
+ 	if (endpoint_init(flags, 2) < 0)
+@@ -756,6 +990,8 @@ void test_mptcp(void)
+ 		test_subflow();
+ 	if (test__start_subtest("iters_subflow"))
+ 		test_iters_subflow();
++	if (test__start_subtest("netlink_pm"))
++		test_netlink_pm();
+ 	if (test__start_subtest("default"))
+ 		test_default();
+ 	if (test__start_subtest("first"))
 -- 
 2.43.0
 
