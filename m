@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180051EBA0D
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:24:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 27FF81D9A50
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:27:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742552647; cv=none; b=cB3XHXpKa8Ck/5b97BXuFNerXow6GOEWS3YSWG+b6+ZE7ZICvr6Xavv2hVv1xV+qKGka6Bb8dOaV/6S3wxwNr0gtdQeb4CsDzf8qZCVm3j/Q+ic/ryhI4NAQ7ERuJEXTSCRt1E/zHlwwlN53Vsi3PbxBQ4BSjnExpZLBq7kJUEc=
+	t=1742552868; cv=none; b=qcdpbL/BBr+zT5Q8kU1ShmuFE4qWELqXlMAA1n+qwknXe70nLyexh82p4qjKOhDyI73kEFuyFbtBRMRho3VbzX6valVCpIjnud5URpq8xcGQKCUzrbFjv9uSJTPElf0XbydLzbfMG5h7dKb+w6t4Z2B/iCXDv7dwl+mZZZNoHiI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742552647; c=relaxed/simple;
-	bh=Y0U32QdcTwJD6i1TKQJNOVPIKGdRgpthSSPSiodqWiQ=;
+	s=arc-20240116; t=1742552868; c=relaxed/simple;
+	bh=eH0o869fhnlsFB9l5LiTlKiP7ovcPco4Xbvo0cj4d0o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V0QSLXLaRhQU3jRG5VvTdZzW+J7uBBWeiNcvhZee7/ESk3VCkNzR9FptsbWHn+oIMu7TDaI/SgmMpm7E9yFrNY0y7NnA+cZgCzrfUZ2OxZnz+JtsitGKxh3VKxUOvjenMlwJPjUYysHzlBp5PVxGe48knD4RoK1W7SUsEaoHPPk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQWIrmGh; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=dHuMEa12+/flB21czKpw4PKdpC0ce16SOmM0AXuenP30TlMKSEwS1fzUapAgtlZislNS4aoFGDOMVf//Su4tLV3ozBiFpJ+a/JHa+6GGLCDoaGruqhcpFlHtzPMrItJE1zmi1YvZNnfzdIQwOiGDIqajy55QzHaSUuh4dutfEHU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dwPV6g6y; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQWIrmGh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93059C4CEE3;
-	Fri, 21 Mar 2025 10:24:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dwPV6g6y"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D0815C4CEE3;
+	Fri, 21 Mar 2025 10:27:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742552646;
-	bh=Y0U32QdcTwJD6i1TKQJNOVPIKGdRgpthSSPSiodqWiQ=;
+	s=k20201202; t=1742552867;
+	bh=eH0o869fhnlsFB9l5LiTlKiP7ovcPco4Xbvo0cj4d0o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=IQWIrmGhW7ZKzo+3xC46r7AwUdnUZkqIQgdWLSj/SjVa5PIaHaFiFXO2IzA4jvQT5
-	 guGncizu7oapUwTc6QhEf16knDFPow1/3gIKivoc50GqkQJf5WxR3h+8uyxN+aOTK5
-	 6mAaWhv85s0A2KNoLr/PXLTLLyHHFPDPqlE4hEfz1svlubpQNrYNlXzI1dxWdjLMB1
-	 uUmTouZI+sHd4EB9omxz2yx4+ApisjPbA2Gpd5SFrv40PxQHSm2746zNSHhUkHq+Qh
-	 8nn05RQ1LM8iwtlzIhcxgOMecigEt8nhKNK6F38IJll6hs3hUPevYlc1X8y0Qz8Cxu
-	 5ZA4fF6/Io9Vw==
-Message-ID: <839203dc-922b-4e52-8e92-81a96efbc524@kernel.org>
-Date: Fri, 21 Mar 2025 11:24:03 +0100
+	b=dwPV6g6y5z1bxd5F+3BzwbHV8xe84imtz+XT8v1B8tG+sy4p6OmILHMjncRnOinft
+	 oznOlfiIOAeGwJRrCKGeLh+2KXbuExGUuMCHqo2ETz0/bgTC2jAYkYJydZrUmzngq5
+	 MR0ojDcL7T4B2EATL3ClRbXgbonrtFPcMrnU0LIr3W3UOIKYuTLSioYqsv8A08PzQ3
+	 y7UoLkpWp869Ahd6hx3Wb5HcXAkiwWIG9Sk2/Xg4wfR2LGKYnsj5Md0ranVKVuOzN0
+	 ihc46ZV+/GgXEpdV+bC2eW2WDqaM/AvTW93H7TS8W7Dfs8mPrG3iVCkf6l5XmdYZle
+	 TJYDSNbIWbCbQ==
+Message-ID: <60356c4b-c145-42a0-b5db-ec53f857db47@kernel.org>
+Date: Fri, 21 Mar 2025 11:27:44 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 03/10] mptcp: pm: add established()
+Subject: Re: [PATCH mptcp-next v3 07/10] mptcp: pm: add add_addr_received()
  interface
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1742521397.git.tanggeliang@kylinos.cn>
- <3f7cfd8a8e45e26e9afacf66f0adc61b9cd9356c.1742521397.git.tanggeliang@kylinos.cn>
+ <2d7bb2ff8960c244aee00ec314f23edd0f5577df.1742521397.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,126 +87,93 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3f7cfd8a8e45e26e9afacf66f0adc61b9cd9356c.1742521397.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2d7bb2ff8960c244aee00ec314f23edd0f5577df.1742521397.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 21/03/2025 02:44, Geliang Tang wrote:
+On 21/03/2025 02:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds a .established interface for struct mptcp_pm_ops, and
-> calls pm->ops->established in from mptcp_pm_worker(). Then get rid of
-> the corresponding code from __mptcp_pm_kernel_worker().
-> 
-> Since mptcp_pm_addr_send_ack() is a sleepable kfunc, which is invoked
-> by mptcp_pm_create_subflow_or_signal_addr(), .established() interface
-> of BPF PM should be invoked by __bpf_prog_enter_sleepable(), which
-> can't be invoked under a lock. This patch unlocks the pm lock before
-> invoking this interface in mptcp_pm_worker(), while holding this lock
-> in mptcp_pm_kernel_established().
+> This patch adds an optional .add_addr_received interface for struct
+> mptcp_pm_ops and invokes it in mptcp_pm_add_addr_received(). A new helper
+> mptcp_pm_add_addr_recv() is added to allow the MPTCP_PM_ADD_ADDR_RECEIVED
+> worker can be invoke from the in-kernel PM.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  include/net/mptcp.h   | 3 +++
->  net/mptcp/pm.c        | 9 ++++++++-
->  net/mptcp/pm_kernel.c | 9 ++++-----
->  3 files changed, 15 insertions(+), 6 deletions(-)
+>  include/net/mptcp.h   |  4 ++++
+>  net/mptcp/pm.c        |  9 +++++++--
+>  net/mptcp/pm_kernel.c | 13 +++++++++++++
+>  net/mptcp/protocol.h  |  1 +
+>  4 files changed, 25 insertions(+), 2 deletions(-)
 > 
 > diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 9f28ef550e10..d7410f08399e 100644
+> index de9838ea37c4..37a84b4c661e 100644
 > --- a/include/net/mptcp.h
 > +++ b/include/net/mptcp.h
-> @@ -124,6 +124,9 @@ struct mptcp_pm_ops {
->  	bool (*get_priority)(struct mptcp_sock *msk,
->  			     struct mptcp_addr_info *skc);
+> @@ -132,6 +132,10 @@ struct mptcp_pm_ops {
+>  	bool (*allow_new_subflow)(struct mptcp_sock *msk);
+>  	bool (*accept_new_subflow)(const struct mptcp_sock *msk);
 >  
 > +	/* optional */
-> +	void (*established)(struct mptcp_sock *msk);
+> +	int (*add_addr_received)(struct mptcp_sock *msk,
+> +				 const struct mptcp_addr_info *addr);
 > +
 >  	char			name[MPTCP_PM_NAME_MAX];
 >  	struct module		*owner;
 >  	struct list_head	list;
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 4895318b94cc..a121c08b456e 100644
+> index d2e72e36d80e..28bd91819ec1 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -516,7 +516,8 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
->  	 * be sure to serve this event only once.
->  	 */
->  	if (READ_ONCE(pm->work_pending) &&
-
-For future BPF PM, we will need to deal with this variable. For the
-moment, it is not clear, and in-kernel PM specific. I need to think
-about that.
-
-> -	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
-> +	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) &&
-> +	    pm->ops->established)
->  		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
->  
->  	if ((pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) == 0)
-> @@ -964,6 +965,12 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
->  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
->  		mptcp_pm_rm_addr_recv(msk);
->  	}
-> +	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
-> +		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
-> +		spin_unlock_bh(&pm->lock);
-> +		pm->ops->established(msk);
-> +		spin_lock_bh(&pm->lock);
-
-Mmh, do you remember why the lock is held? To protect pm->status I
-guess, right?
-
-It looks fine to do the unlock/lock, but that's strange if the goal is
-to lock right after.
-
-> +	}
->  	__mptcp_pm_kernel_worker(msk);
->  
->  	spin_unlock_bh(&msk->pm.lock);
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index 7ec81d5195d4..6d30d5958f0e 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -367,9 +367,11 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
->  	mptcp_pm_nl_check_work_pending(msk);
+> @@ -559,6 +559,11 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  	spin_unlock_bh(&pm->lock);
 >  }
 >  
-> -static void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
-> +static void mptcp_pm_kernel_established(struct mptcp_sock *msk)
+> +bool mptcp_pm_add_addr_recv(struct mptcp_sock *msk)
+> +{
+> +	return mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED);
+> +}
+> +
+>  void mptcp_pm_add_addr_received(const struct sock *ssk,
+>  				const struct mptcp_addr_info *addr)
 >  {
-> +	spin_lock_bh(&msk->pm.lock);
->  	mptcp_pm_create_subflow_or_signal_addr(msk);
-> +	spin_unlock_bh(&msk->pm.lock);
+> @@ -586,10 +591,10 @@ void mptcp_pm_add_addr_received(const struct sock *ssk,
+>  		   (addr->id > 0 && !READ_ONCE(pm->accept_addr))) {
+>  		mptcp_pm_announce_addr(msk, addr, true);
+>  		mptcp_pm_add_addr_send_ack(msk);
+> -	} else if (mptcp_pm_schedule_work(msk, MPTCP_PM_ADD_ADDR_RECEIVED)) {
+> -		pm->remote = *addr;
+>  	} else {
+>  		ret = -EINVAL;
+> +		if (pm->ops->add_addr_received)
+> +			ret = pm->ops->add_addr_received(msk, addr);
 
-Maybe we could move the lock inside
-mptcp_pm_create_subflow_or_signal_addr(), only where it is needed?
+Please see my comment from:
 
->  }
->  
->  static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
-> @@ -1348,10 +1350,6 @@ void __mptcp_pm_kernel_worker(struct mptcp_sock *msk)
->  		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
->  		mptcp_pm_nl_add_addr_received(msk);
->  	}
-> -	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
-> -		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
-> -		mptcp_pm_nl_fully_established(msk);
-> -	}
->  	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
->  		pm->status &= ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
->  		mptcp_pm_nl_subflow_established(msk);
-> @@ -1422,6 +1420,7 @@ static void mptcp_pm_kernel_init(struct mptcp_sock *msk)
->  struct mptcp_pm_ops mptcp_pm_kernel = {
->  	.get_local_id		= mptcp_pm_kernel_get_local_id,
->  	.get_priority		= mptcp_pm_kernel_get_priority,
-> +	.established		= mptcp_pm_kernel_established,
->  	.init			= mptcp_pm_kernel_init,
->  	.name			= "kernel",
->  	.owner			= THIS_MODULE,
+ https://lore.kernel.org/bf2ad4ed-bf4a-47c7-a7d5-eb23c0825198@kernel.org
+
+This part:
+
+> For add_addr_received, I think it is safer to have the callback from the
+> worker context. In other words, when an ADD_ADDR received on a subflow:
+> 
+> - the ADD_ADDR echo should be sent: I don't think it is worth it letting
+> the other peer resending it just in case the userspace PM was not "ready"
+> 
+> - if pm->ops->add_addr_received is set, schedule the worker and set
+>   msk->pm.remote
+> 
+> - then pm->ops->add_addr_received will be called from the worker.
+
+WDYT?
+
+I don't think a BPF PM should schedule the worker and wait to get called
+from another callback.
+
+Instead, we should have something similar than .established, no?
 
 Cheers,
 Matt
