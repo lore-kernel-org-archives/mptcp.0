@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E201A2AE6A
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:16:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 180051EBA0D
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:24:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742552210; cv=none; b=P4TDHgrnD0VoZHr0B339FdmR4vpv6rcZn/P0+QjSNp8umQbm38b0TkHl/RXOV2Rhh/nZwrI/bRVcm7SKkwI1L8pTgvwOIZGviCOc3Wrh6pxo/jXbGoVADcJ0aRCe2/1g7OK3ikFHxVRa0xkqJStypg476OHSS6fKYqWLz7s+Ylk=
+	t=1742552647; cv=none; b=cB3XHXpKa8Ck/5b97BXuFNerXow6GOEWS3YSWG+b6+ZE7ZICvr6Xavv2hVv1xV+qKGka6Bb8dOaV/6S3wxwNr0gtdQeb4CsDzf8qZCVm3j/Q+ic/ryhI4NAQ7ERuJEXTSCRt1E/zHlwwlN53Vsi3PbxBQ4BSjnExpZLBq7kJUEc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742552210; c=relaxed/simple;
-	bh=2VSJJZCIgqRwyHNsWHIWHm/b07lXD8dEJc4zShM79sU=;
+	s=arc-20240116; t=1742552647; c=relaxed/simple;
+	bh=Y0U32QdcTwJD6i1TKQJNOVPIKGdRgpthSSPSiodqWiQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iGPj82F5kL/0m6imyDzXg8o1mPp3DyXds1K65ZEemk3pAA0Z0ONmVhbi7B3qA4vW4KdgdKJLvrg9lPeUBvd3uJt8Nor8TlyDtWqiQtSJmUwOp3P7ofrWRuHo2SWvjDEz66MJB/j8AaSQRdfukFh3EVkAjdPxHuNsWZl0SJ7M0lM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0NJH13q; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=V0QSLXLaRhQU3jRG5VvTdZzW+J7uBBWeiNcvhZee7/ESk3VCkNzR9FptsbWHn+oIMu7TDaI/SgmMpm7E9yFrNY0y7NnA+cZgCzrfUZ2OxZnz+JtsitGKxh3VKxUOvjenMlwJPjUYysHzlBp5PVxGe48knD4RoK1W7SUsEaoHPPk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=IQWIrmGh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0NJH13q"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7148BC4CEE3;
-	Fri, 21 Mar 2025 10:16:48 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="IQWIrmGh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 93059C4CEE3;
+	Fri, 21 Mar 2025 10:24:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742552209;
-	bh=2VSJJZCIgqRwyHNsWHIWHm/b07lXD8dEJc4zShM79sU=;
+	s=k20201202; t=1742552646;
+	bh=Y0U32QdcTwJD6i1TKQJNOVPIKGdRgpthSSPSiodqWiQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=a0NJH13qO+X2Zfd729DJ/rL5Z2lsJBIfozcaxKwM35EJdYGyChpOftoQnLYTwoNDs
-	 uXYHVNnNzu/06bY/Q9Fw83XhmaL4LT1YWhZzPvGOZF97S0tx2Ci2ZwUtYbVBaIUHyP
-	 +QK0wuZVyN6FAUkjW4bD0puWcd7lpBp2qMttlR+ntNwervdFtcvzJ0SujPtRzy3tvi
-	 1eBrIXK7O4VOtM0SagCP0+oGOHZmek4vCmlq+zHksex0wDAgweOdizYrkW/ca88oZg
-	 Z/ggxA7T4VFRU77PkpFRBXdNFZPE/LCkjpgXlAFTwnT33Fy/tM8lDQ5BCP8hzjHNHf
-	 Ayo4CC/zCEWbg==
-Message-ID: <27d5f3b4-35ae-4ffc-a4dd-0139ddeca7bf@kernel.org>
-Date: Fri, 21 Mar 2025 11:16:46 +0100
+	b=IQWIrmGhW7ZKzo+3xC46r7AwUdnUZkqIQgdWLSj/SjVa5PIaHaFiFXO2IzA4jvQT5
+	 guGncizu7oapUwTc6QhEf16knDFPow1/3gIKivoc50GqkQJf5WxR3h+8uyxN+aOTK5
+	 6mAaWhv85s0A2KNoLr/PXLTLLyHHFPDPqlE4hEfz1svlubpQNrYNlXzI1dxWdjLMB1
+	 uUmTouZI+sHd4EB9omxz2yx4+ApisjPbA2Gpd5SFrv40PxQHSm2746zNSHhUkHq+Qh
+	 8nn05RQ1LM8iwtlzIhcxgOMecigEt8nhKNK6F38IJll6hs3hUPevYlc1X8y0Qz8Cxu
+	 5ZA4fF6/Io9Vw==
+Message-ID: <839203dc-922b-4e52-8e92-81a96efbc524@kernel.org>
+Date: Fri, 21 Mar 2025 11:24:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,21 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 1/2] mptcp: add bpf_iter_task for mptcp_sock
+Subject: Re: [PATCH mptcp-next v3 03/10] mptcp: pm: add established()
+ interface
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, Mat Martineau <martineau@kernel.org>
-Cc: Geliang Tang <tanggeliang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1741577149.git.tanggeliang@kylinos.cn>
- <e04cc2fa5f500097ac7d95afb94f68d0d8dc0057.1741577149.git.tanggeliang@kylinos.cn>
- <c151a68a659659a2bc8632b63cb04cb59275ec83.camel@kernel.org>
- <a92d50cf-2eb3-4c56-91cd-0dfa3eb43f7f@kernel.org>
- <2b680d20eb5873f14f35d9d23aa78b2f5a9d5bfd.camel@kernel.org>
- <459fd93c-d99d-4733-9194-3f62467854c6@kernel.org>
- <05be0df71bcac1bf0f24a7637ba1652aebb8a312.camel@kernel.org>
- <bf2ad4ed-bf4a-47c7-a7d5-eb23c0825198@kernel.org>
- <e26c30144a91e8452ae2bf6dc1c0cea91becdf58.camel@kernel.org>
- <fac4638e-9e00-4762-99d9-90826187fcf6@kernel.org>
- <45ade20cc4eadcb81fa022aabac69f25d32fc16f.camel@kernel.org>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1742521397.git.tanggeliang@kylinos.cn>
+ <3f7cfd8a8e45e26e9afacf66f0adc61b9cd9356c.1742521397.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -95,59 +87,126 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <45ade20cc4eadcb81fa022aabac69f25d32fc16f.camel@kernel.org>
+In-Reply-To: <3f7cfd8a8e45e26e9afacf66f0adc61b9cd9356c.1742521397.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 21/03/2025 11:05, Geliang Tang wrote:
-> Hi Matt,
-> 
-> On Fri, 2025-03-21 at 10:19 +0100, Matthieu Baerts wrote:
->> Hi Geliang,
->>
->> On 21/03/2025 05:14, Geliang Tang wrote:
->>> On Tue, 2025-03-18 at 12:26 +0100, Matthieu Baerts wrote:
->>
->> (...)
->>
->>>> Mmh, all 8 callbacks from add_addr to here seem to be linked to
->>>> Netlink
->>>> commands, right? If yes, they should not be here: they don't make
->>>> sense
->>>> for a BPF PM, no? BPF PMs should be configured with BPF, and not
->>>> via
->>>
->>> Do you have any idea how we can pass commands like ADD_ADDR and
->>> addresses from user space to BPF?
->>
->> The userspace can inject any kind of BPF program. Additional
->> addresses
->> can then be hardcoded in this program, or it can load them from eBPF
->> maps, or read skel->bss->(...), etc.
->>
->> Netlink is then not needed.
->>
->>> What I can think of is passing through sockopt, the user space
->>> passes
->>> the command and the address through setsockopt, and the BPF program
->>> handles it through the custom "cgroup/setsockopt". I would like to
->>> hear
->>> your opinions. If you also agree to use sockopt to implement it, I
->>> can
->>> write a test program for this.
-> 
-> I just tested it and found it difficult to use setsockopt.
-> 
-> "cgroup/setsockopt" program doesn't work. We need to invoke sleepable
-> kfuncs in BPF PM:
+Hi Geliang,
 
-(...)
+On 21/03/2025 02:44, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> This patch adds a .established interface for struct mptcp_pm_ops, and
+> calls pm->ops->established in from mptcp_pm_worker(). Then get rid of
+> the corresponding code from __mptcp_pm_kernel_worker().
+> 
+> Since mptcp_pm_addr_send_ack() is a sleepable kfunc, which is invoked
+> by mptcp_pm_create_subflow_or_signal_addr(), .established() interface
+> of BPF PM should be invoked by __bpf_prog_enter_sleepable(), which
+> can't be invoked under a lock. This patch unlocks the pm lock before
+> invoking this interface in mptcp_pm_worker(), while holding this lock
+> in mptcp_pm_kernel_established().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/mptcp.h   | 3 +++
+>  net/mptcp/pm.c        | 9 ++++++++-
+>  net/mptcp/pm_kernel.c | 9 ++++-----
+>  3 files changed, 15 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 9f28ef550e10..d7410f08399e 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -124,6 +124,9 @@ struct mptcp_pm_ops {
+>  	bool (*get_priority)(struct mptcp_sock *msk,
+>  			     struct mptcp_addr_info *skc);
+>  
+> +	/* optional */
+> +	void (*established)(struct mptcp_sock *msk);
+> +
+>  	char			name[MPTCP_PM_NAME_MAX];
+>  	struct module		*owner;
+>  	struct list_head	list;
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index 4895318b94cc..a121c08b456e 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -516,7 +516,8 @@ void mptcp_pm_fully_established(struct mptcp_sock *msk, const struct sock *ssk)
+>  	 * be sure to serve this event only once.
+>  	 */
+>  	if (READ_ONCE(pm->work_pending) &&
 
-> It seems that we can only choose one of fentry/fexit/fmod_ret, lsm,
-> iter, uprobe, or struct_ops type to implement BPF PM.
-Thank you for having checked. I think we can look at that aspect later.
-I don't think many apps will want this kind of control. They can always
-set something in a map, and the BPF program can look at it when needed.
+For future BPF PM, we will need to deal with this variable. For the
+moment, it is not clear, and in-kernel PM specific. I need to think
+about that.
+
+> -	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)))
+> +	    !(pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) &&
+> +	    pm->ops->established)
+>  		mptcp_pm_schedule_work(msk, MPTCP_PM_ESTABLISHED);
+>  
+>  	if ((pm->status & BIT(MPTCP_PM_ALREADY_ESTABLISHED)) == 0)
+> @@ -964,6 +965,12 @@ void mptcp_pm_worker(struct mptcp_sock *msk)
+>  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+>  		mptcp_pm_rm_addr_recv(msk);
+>  	}
+> +	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
+> +		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
+> +		spin_unlock_bh(&pm->lock);
+> +		pm->ops->established(msk);
+> +		spin_lock_bh(&pm->lock);
+
+Mmh, do you remember why the lock is held? To protect pm->status I
+guess, right?
+
+It looks fine to do the unlock/lock, but that's strange if the goal is
+to lock right after.
+
+> +	}
+>  	__mptcp_pm_kernel_worker(msk);
+>  
+>  	spin_unlock_bh(&msk->pm.lock);
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index 7ec81d5195d4..6d30d5958f0e 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -367,9 +367,11 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+>  	mptcp_pm_nl_check_work_pending(msk);
+>  }
+>  
+> -static void mptcp_pm_nl_fully_established(struct mptcp_sock *msk)
+> +static void mptcp_pm_kernel_established(struct mptcp_sock *msk)
+>  {
+> +	spin_lock_bh(&msk->pm.lock);
+>  	mptcp_pm_create_subflow_or_signal_addr(msk);
+> +	spin_unlock_bh(&msk->pm.lock);
+
+Maybe we could move the lock inside
+mptcp_pm_create_subflow_or_signal_addr(), only where it is needed?
+
+>  }
+>  
+>  static void mptcp_pm_nl_subflow_established(struct mptcp_sock *msk)
+> @@ -1348,10 +1350,6 @@ void __mptcp_pm_kernel_worker(struct mptcp_sock *msk)
+>  		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_RECEIVED);
+>  		mptcp_pm_nl_add_addr_received(msk);
+>  	}
+> -	if (pm->status & BIT(MPTCP_PM_ESTABLISHED)) {
+> -		pm->status &= ~BIT(MPTCP_PM_ESTABLISHED);
+> -		mptcp_pm_nl_fully_established(msk);
+> -	}
+>  	if (pm->status & BIT(MPTCP_PM_SUBFLOW_ESTABLISHED)) {
+>  		pm->status &= ~BIT(MPTCP_PM_SUBFLOW_ESTABLISHED);
+>  		mptcp_pm_nl_subflow_established(msk);
+> @@ -1422,6 +1420,7 @@ static void mptcp_pm_kernel_init(struct mptcp_sock *msk)
+>  struct mptcp_pm_ops mptcp_pm_kernel = {
+>  	.get_local_id		= mptcp_pm_kernel_get_local_id,
+>  	.get_priority		= mptcp_pm_kernel_get_priority,
+> +	.established		= mptcp_pm_kernel_established,
+>  	.init			= mptcp_pm_kernel_init,
+>  	.name			= "kernel",
+>  	.owner			= THIS_MODULE,
 
 Cheers,
 Matt
