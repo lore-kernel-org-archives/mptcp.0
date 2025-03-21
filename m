@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 574C31C84BF
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:49:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B1C51C84BF
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 01:49:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742521767; cv=none; b=DRtB7Ij+iVfYM1x39Uz37g10aczJAadsJ3exjKNQ9thTrEbNkJgYltlkmoflcSNRPhuDRydQxayB60w50MOC/eMPGBe+YfH3GUTk+60KSp5ZBdjjxhs8rWDVTZBnKcuaNnW6jIdzkhyy2btQ1GHbPg1IqfZYGhPbpdL+UEXnbcA=
+	t=1742521769; cv=none; b=pHIz8hY0Pn6Pxsv0R+iRSYWkAbA8pnqcbnlo36Sz+na3en+lzNYNFmbE9mKlSfE5CcNJBwe5pqd35TdCfYI1tvBV8xvDCACgL5CZsZ2/pNkYeo2AyTpSDEwU8r2RgDBLy+bbX2BSPwuL+xJmToZ+LmHXIDNGcJceQv3yfCFc+QQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742521767; c=relaxed/simple;
-	bh=NwQ2ZrePdycqSz9krQSAuwnz1skNScibMGwVHXBjl/g=;
+	s=arc-20240116; t=1742521769; c=relaxed/simple;
+	bh=cVRBhtjh4QRXKFlACtdoKvNyaCAjxylpxBgHnfg2BbU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=l5xOxg1BUcggzYRUmMCOwFH13sogAugjJTNe1AVCwGz/Nr0KFfwFtIO8NVLhDodx3syeuERoZXNy4YtJ2Y04O3rKahCBRVQzCgph7oL4As60fbPEmpDpPgh2r5wkqJJ5ciWm9R/6rJ1OvRvMOtrwfg2RG2nar5+z3deE50QdZd0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lN2je9wa; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=W/YY1i5bPlxkRJ4746nCFb7thFUl2oaLhpiNzTTjXWOlwZR7nmwLdPP1N3ZGnPkFfocbP1Mhjff1rlDmGrcl4d+jZ50I8YIoY25u30K+mjby+RPYEkdKrEWa6FC9sDSF9DZImwJzWLzyOBFBhrSIWHSEap9cJpvnEsnPYRRFtS4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eDcbomWT; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lN2je9wa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39585C4CEE7;
-	Fri, 21 Mar 2025 01:49:26 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eDcbomWT"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BDD70C4CEEF;
+	Fri, 21 Mar 2025 01:49:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742521767;
-	bh=NwQ2ZrePdycqSz9krQSAuwnz1skNScibMGwVHXBjl/g=;
+	s=k20201202; t=1742521768;
+	bh=cVRBhtjh4QRXKFlACtdoKvNyaCAjxylpxBgHnfg2BbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=lN2je9waULQIfZYFjAMWrxBqHWPzylYH+nq/H+YGHc+LHhyzMYWDot82y6PKrcAHX
-	 FteJz9AcudaF5SyXEzDKK5Af6zsn0yYfy13luvYEZDuMsSFRyp06/09fsT7rMATbYp
-	 5Ssw6Hxm/9FsqoPrd1kdKFPcC1RpWPC2USpuFRW1iS+87QqwPjsiYh/Ukywxo32nM2
-	 NlNbAM33/7DPkqvmzw9hqKFr4xHRj0AIlLdCdhKt+ayiF0UstGRE6cBVzMi70RFjz3
-	 5PoZWQXhopjcZpQ4lkPRRSU0imkH0JcAVT/MROTXOb8mTknkgGrXrv3Vuw/Wu6wkVB
-	 JGLmyL0jb4bqg==
+	b=eDcbomWTTzH1gi775+/qXunGgXcSHft5v0wtpD+WBr7LiLT7XlhgbUjtf+NyxEEKf
+	 rpng17vdVEcBIV8V/FscJwf4kcmuJeYGuiCzTccE7rC2X2WCP/raD0erNgwZeTJXxy
+	 NueD03kzK34Dj2nZgeiCeTtnK8/kBzsogKGDZ6MnaBIUilUlTEJ1wvn7T4xd9XPTYf
+	 B0necN9wuMsU5LBKNjr7yUlf3F7aS9tOgKMXG/FuujYZStukpvz5x1b7UAyeLFm355
+	 PlOgE9EUAPrI3831v7TY+uIsKEB3qVp31KIYO8KtP6tlI6rYmMAOxf3ZZ1OQupDnVC
+	 6g8pIbEiepuDw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v1 1/4] bpf: Add mptcp path manager struct_ops
-Date: Fri, 21 Mar 2025 09:49:15 +0800
-Message-ID: <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v1 2/4] bpf: Export mptcp path manager kfuncs
+Date: Fri, 21 Mar 2025 09:49:16 +0800
+Message-ID: <0c324baa241000f32a1b97017da8e96a383767ad.1742521587.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
 In-Reply-To: <cover.1742521587.git.tanggeliang@kylinos.cn>
 References: <cover.1742521587.git.tanggeliang@kylinos.cn>
@@ -45,301 +45,139 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch implements a new struct bpf_struct_ops for MPTCP BPF path
-manager: bpf_mptcp_pm_ops. Register and unregister the bpf path manager
-in .reg and .unreg.
+This patch exports mptcp path manager helpers into BPF, adds these
+kfunc names into mptcp common kfunc_set.
 
-Add write access for some fields of struct mptcp_sock and struct
-mptcp_pm_addr_entry in .btf_struct_access.
+bpf_kmemdup_entry() and bpf_kfree_entry() are wrappers of kmemdup() and
+kfree(), using to alloc and free an mptcp address entry.
 
-This MPTCP BPF path manager implementation is similar to BPF TCP CC. And
-net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
+bpf_set_bit() and bpf_bitmap_fill() are wrappers of __set_bit() and
+bitmap_fill(), using for mptcp address ID bitmap.
+
+bpf_spin_lock_bh() and bpf_spin_unlock_bh() are wrappers of spin_lock_bh()
+and spin_unlock_bh(), using to lock and unlock the mptcp pm lock.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/bpf.c | 259 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 258 insertions(+), 1 deletion(-)
+ net/mptcp/bpf.c       | 48 +++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/pm_kernel.c | 27 ++++++++++++++++++++++++
+ 2 files changed, 75 insertions(+)
 
 diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-index 2b0cfb57df8c..596574102b89 100644
+index 596574102b89..e411ae8382f2 100644
 --- a/net/mptcp/bpf.c
 +++ b/net/mptcp/bpf.c
-@@ -17,10 +17,266 @@
- #include "protocol.h"
+@@ -540,6 +540,38 @@ bpf_iter_mptcp_subflow_destroy(struct bpf_iter_mptcp_subflow *it)
+ {
+ }
  
- #ifdef CONFIG_BPF_JIT
--static struct bpf_struct_ops bpf_mptcp_sched_ops;
-+static struct bpf_struct_ops bpf_mptcp_pm_ops,
-+			     bpf_mptcp_sched_ops;
- static u32 mptcp_sock_id,
-+	   mptcp_entry_id,
- 	   mptcp_subflow_id;
++__bpf_kfunc static struct mptcp_pm_addr_entry *
++bpf_kmemdup_entry(struct mptcp_pm_addr_entry *entry, int size, gfp_t priority)
++{
++	return kmemdup(entry, size, priority);
++}
++
++__bpf_kfunc static void
++bpf_kfree_entry(struct mptcp_pm_addr_entry *entry)
++{
++	kfree(entry);
++}
++
++__bpf_kfunc static void bpf_set_bit(unsigned long nr, unsigned long *addr__ign)
++{
++	__set_bit(nr, addr__ign);
++}
++
++__bpf_kfunc static void bpf_bitmap_fill(unsigned long *dst__ign, unsigned int nbits)
++{
++	bitmap_fill(dst__ign, nbits);
++}
++
++__bpf_kfunc static void bpf_spin_lock_bh(spinlock_t *lock)
++{
++	spin_lock_bh(lock);
++}
++
++__bpf_kfunc static void bpf_spin_unlock_bh(spinlock_t *lock)
++{
++	spin_unlock_bh(lock);
++}
++
+ __bpf_kfunc static bool bpf_mptcp_subflow_queues_empty(struct sock *sk)
+ {
+ 	return tcp_rtx_queue_empty(sk);
+@@ -564,6 +596,22 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
+ BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
++BTF_ID_FLAGS(func, bpf_kmemdup_entry)
++BTF_ID_FLAGS(func, bpf_kfree_entry)
++BTF_ID_FLAGS(func, bpf_set_bit)
++BTF_ID_FLAGS(func, bpf_bitmap_fill)
++BTF_ID_FLAGS(func, bpf_spin_lock_bh)
++BTF_ID_FLAGS(func, bpf_spin_unlock_bh)
++BTF_ID_FLAGS(func, mptcp_pm_nl_lookup_addr)
++BTF_ID_FLAGS(func, mptcp_pm_nl_append_new_local_addr_msk)
++BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_signal_max)
++BTF_ID_FLAGS(func, mptcp_pm_get_add_addr_accept_max)
++BTF_ID_FLAGS(func, mptcp_pm_get_subflows_max)
++BTF_ID_FLAGS(func, mptcp_pm_get_local_addr_max)
++BTF_ID_FLAGS(func, mptcp_pm_add_addr_recv)
++BTF_ID_FLAGS(func, mptcp_pm_is_init_remote_addr)
++BTF_ID_FLAGS(func, mptcp_pm_create_subflow_or_signal_addr)
++BTF_ID_FLAGS(func, mptcp_pm_rm_addr_recv)
+ BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+ BTF_ID_FLAGS(func, mptcp_subflow_active)
+ BTF_ID_FLAGS(func, mptcp_set_timeout)
+diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+index 4f7b2e0e998d..3cf81986c70d 100644
+--- a/net/mptcp/pm_kernel.c
++++ b/net/mptcp/pm_kernel.c
+@@ -253,6 +253,9 @@ __lookup_addr(struct pm_nl_pernet *pernet, const struct mptcp_addr_info *info)
+ 	return NULL;
+ }
  
-+/* MPTCP BPF path manager */
++__bpf_kfunc_start_defs();
 +
-+static const struct bpf_func_proto *
-+bpf_mptcp_pm_get_func_proto(enum bpf_func_id func_id,
-+			    const struct bpf_prog *prog)
-+{
-+	switch (func_id) {
-+	case BPF_FUNC_sk_storage_get:
-+		return &bpf_sk_storage_get_proto;
-+	case BPF_FUNC_sk_storage_delete:
-+		return &bpf_sk_storage_delete_proto;
-+	default:
-+		return bpf_base_func_proto(func_id, prog);
-+	}
-+}
-+
-+static int bpf_mptcp_pm_btf_struct_access(struct bpf_verifier_log *log,
-+					  const struct bpf_reg_state *reg,
-+					  int off, int size)
-+{
-+	u32 id = reg->btf_id;
-+	size_t end;
-+
-+	if (id == mptcp_sock_id) {
-+		switch (off) {
-+		case offsetof(struct mptcp_sock, pm.remote.id):
-+			end = offsetofend(struct mptcp_sock, pm.remote.id);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.remote.family):
-+			end = offsetofend(struct mptcp_sock, pm.remote.family);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.remote.port):
-+			end = offsetofend(struct mptcp_sock, pm.remote.port);
-+			break;
-+#if IS_ENABLED(CONFIG_MPTCP_IPV6)
-+		case offsetof(struct mptcp_sock, pm.remote.addr6.s6_addr32[0]):
-+			end = offsetofend(struct mptcp_sock, pm.remote.addr6.s6_addr32[0]);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.remote.addr6.s6_addr32[1]):
-+			end = offsetofend(struct mptcp_sock, pm.remote.addr6.s6_addr32[1]);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.remote.addr6.s6_addr32[2]):
-+			end = offsetofend(struct mptcp_sock, pm.remote.addr6.s6_addr32[2]);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.remote.addr6.s6_addr32[3]):
-+			end = offsetofend(struct mptcp_sock, pm.remote.addr6.s6_addr32[3]);
-+			break;
-+#else
-+		case offsetof(struct mptcp_sock, pm.remote.addr.s_addr):
-+			end = offsetofend(struct mptcp_sock, pm.remote.addr.s_addr);
-+			break;
-+#endif
-+		case offsetof(struct mptcp_sock, pm.work_pending):
-+			end = offsetofend(struct mptcp_sock, pm.work_pending);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.accept_addr):
-+			end = offsetofend(struct mptcp_sock, pm.accept_addr);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.accept_subflow):
-+			end = offsetofend(struct mptcp_sock, pm.accept_subflow);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.add_addr_signaled):
-+			end = offsetofend(struct mptcp_sock, pm.add_addr_signaled);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.local_addr_used):
-+			end = offsetofend(struct mptcp_sock, pm.local_addr_used);
-+			break;
-+		case offsetof(struct mptcp_sock, pm.subflows):
-+			end = offsetofend(struct mptcp_sock, pm.subflows);
-+			break;
-+		default:
-+			bpf_log(log, "no write support to mptcp_sock at off %d\n",
-+				off);
-+			return -EACCES;
-+		}
-+	} else if (id == mptcp_entry_id) {
-+		switch (off) {
-+		case offsetof(struct mptcp_pm_addr_entry, addr.id):
-+			end = offsetofend(struct mptcp_pm_addr_entry, addr.id);
-+			break;
-+		case offsetof(struct mptcp_pm_addr_entry, addr.port):
-+			end = offsetofend(struct mptcp_pm_addr_entry, addr.port);
-+			break;
-+		default:
-+			bpf_log(log, "no write support to mptcp_pm_addr_entry at off %d\n",
-+				off);
-+			return -EACCES;
-+		}
-+	} else {
-+		bpf_log(log, "only access to mptcp sock or addr or entry is supported\n");
-+		return -EACCES;
-+	}
-+
-+	if (off + size > end) {
-+		bpf_log(log, "access beyond %s at off %u size %u ended at %zu",
-+			id == mptcp_sock_id ? "mptcp_sock" :
-+			(id == mptcp_entry_id ? "mptcp_pm_addr_entry" : "mptcp_addr_info"),
-+			off, size, end);
-+		return -EACCES;
-+	}
-+
-+	return NOT_INIT;
-+}
-+
-+static const struct bpf_verifier_ops bpf_mptcp_pm_verifier_ops = {
-+	.get_func_proto		= bpf_mptcp_pm_get_func_proto,
-+	.is_valid_access	= bpf_tracing_btf_ctx_access,
-+	.btf_struct_access	= bpf_mptcp_pm_btf_struct_access,
-+};
-+
-+static int bpf_mptcp_pm_reg(void *kdata, struct bpf_link *link)
-+{
-+	return mptcp_pm_register(kdata);
-+}
-+
-+static void bpf_mptcp_pm_unreg(void *kdata, struct bpf_link *link)
-+{
-+	mptcp_pm_unregister(kdata);
-+}
-+
-+static int bpf_mptcp_pm_check_member(const struct btf_type *t,
-+				     const struct btf_member *member,
-+				     const struct bpf_prog *prog)
-+{
-+	return 0;
-+}
-+
-+static int bpf_mptcp_pm_init_member(const struct btf_type *t,
-+				    const struct btf_member *member,
-+				    void *kdata, const void *udata)
-+{
-+	const struct mptcp_pm_ops *upm;
-+	struct mptcp_pm_ops *pm;
-+	u32 moff;
-+
-+	upm = (const struct mptcp_pm_ops *)udata;
-+	pm = (struct mptcp_pm_ops *)kdata;
-+
-+	moff = __btf_member_bit_offset(t, member) / 8;
-+	switch (moff) {
-+	case offsetof(struct mptcp_pm_ops, name):
-+		if (bpf_obj_name_cpy(pm->name, upm->name,
-+				     sizeof(pm->name)) <= 0)
-+			return -EINVAL;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
-+
-+static int bpf_mptcp_pm_init(struct btf *btf)
-+{
-+	s32 type_id;
-+
-+	type_id = btf_find_by_name_kind(btf, "mptcp_sock",
-+					BTF_KIND_STRUCT);
-+	if (type_id < 0)
-+		return -EINVAL;
-+	mptcp_sock_id = type_id;
-+
-+	type_id = btf_find_by_name_kind(btf, "mptcp_pm_addr_entry",
-+					BTF_KIND_STRUCT);
-+	if (type_id < 0)
-+		return -EINVAL;
-+	mptcp_entry_id = type_id;
-+
-+	return 0;
-+}
-+
-+static int bpf_mptcp_pm_validate(void *kdata)
-+{
-+	return mptcp_pm_validate(kdata);
-+}
-+
-+static int __bpf_mptcp_pm_get_local_id(struct mptcp_sock *msk,
-+				       struct mptcp_pm_addr_entry *skc)
-+{
-+	return 0;
-+}
-+
-+static bool __bpf_mptcp_pm_get_priority(struct mptcp_sock *msk,
-+					struct mptcp_addr_info *skc)
-+{
-+	return false;
-+}
-+
-+static void __bpf_mptcp_pm_established(struct mptcp_sock *msk)
-+{
-+}
-+
-+static void __bpf_mptcp_pm_subflow_established(struct mptcp_sock *msk)
-+{
-+}
-+
-+static bool __bpf_mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
-+{
-+	return false;
-+}
-+
-+static bool __bpf_mptcp_pm_accept_new_subflow(const struct mptcp_sock *msk)
-+{
-+	return false;
-+}
-+
-+static bool __bpf_mptcp_pm_add_addr_echo(struct mptcp_sock *msk,
-+					 const struct mptcp_addr_info *addr)
-+{
-+	return false;
-+}
-+
-+static int __bpf_mptcp_pm_add_addr_received(struct mptcp_sock *msk,
-+					    const struct mptcp_addr_info *addr)
-+{
-+	return 0;
-+}
-+
-+static void __bpf_mptcp_pm_rm_addr_received(struct mptcp_sock *msk)
-+{
-+}
-+
-+static void __bpf_mptcp_pm_init(struct mptcp_sock *msk)
-+{
-+}
-+
-+static void __bpf_mptcp_pm_release(struct mptcp_sock *msk)
-+{
-+}
-+
-+static struct mptcp_pm_ops __bpf_mptcp_pm_ops = {
-+	.get_local_id		= __bpf_mptcp_pm_get_local_id,
-+	.get_priority		= __bpf_mptcp_pm_get_priority,
-+	.established		= __bpf_mptcp_pm_established,
-+	.subflow_established	= __bpf_mptcp_pm_subflow_established,
-+	.allow_new_subflow      = __bpf_mptcp_pm_allow_new_subflow,
-+	.accept_new_subflow     = __bpf_mptcp_pm_accept_new_subflow,
-+	.add_addr_echo		= __bpf_mptcp_pm_add_addr_echo,
-+	.add_addr_received	= __bpf_mptcp_pm_add_addr_received,
-+	.rm_addr_received	= __bpf_mptcp_pm_rm_addr_received,
-+	.init			= __bpf_mptcp_pm_init,
-+	.release		= __bpf_mptcp_pm_release,
-+};
-+
-+static struct bpf_struct_ops bpf_mptcp_pm_ops = {
-+	.verifier_ops	= &bpf_mptcp_pm_verifier_ops,
-+	.reg		= bpf_mptcp_pm_reg,
-+	.unreg		= bpf_mptcp_pm_unreg,
-+	.check_member	= bpf_mptcp_pm_check_member,
-+	.init_member	= bpf_mptcp_pm_init_member,
-+	.init		= bpf_mptcp_pm_init,
-+	.validate	= bpf_mptcp_pm_validate,
-+	.name		= "mptcp_pm_ops",
-+	.cfi_stubs	= &__bpf_mptcp_pm_ops,
-+};
-+
- /* MPTCP BPF packet scheduler */
++__bpf_kfunc
+ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ {
+ 	struct sock *sk = (struct sock *)msk;
+@@ -367,6 +370,8 @@ static void mptcp_pm_create_subflow_or_signal_addr(struct mptcp_sock *msk)
+ 	mptcp_pm_nl_check_work_pending(msk);
+ }
  
- static const struct bpf_func_proto *
-@@ -332,6 +588,7 @@ static int __init bpf_mptcp_kfunc_init(void)
- 	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
- 					       &bpf_mptcp_common_kfunc_set);
- #ifdef CONFIG_BPF_JIT
-+	ret = ret ?: register_bpf_struct_ops(&bpf_mptcp_pm_ops, mptcp_pm_ops);
- 	ret = ret ?: register_bpf_struct_ops(&bpf_mptcp_sched_ops, mptcp_sched_ops);
- #endif
++__bpf_kfunc_end_defs();
++
+ static void mptcp_pm_kernel_established(struct mptcp_sock *msk)
+ {
+ 	spin_lock_bh(&msk->pm.lock);
+@@ -1493,3 +1498,25 @@ void __init mptcp_pm_kernel_register(void)
  
+ 	mptcp_pm_register(&mptcp_pm_kernel);
+ }
++
++__bpf_kfunc_start_defs();
++
++__bpf_kfunc static struct mptcp_pm_addr_entry *
++mptcp_pm_nl_lookup_addr(struct mptcp_sock *msk, const struct mptcp_addr_info *info)
++{
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
++
++	return __lookup_addr(pernet, info);
++}
++
++__bpf_kfunc static int
++mptcp_pm_nl_append_new_local_addr_msk(struct mptcp_sock *msk,
++				      struct mptcp_pm_addr_entry *entry,
++				      bool needs_id, bool replace)
++{
++	struct pm_nl_pernet *pernet = pm_nl_get_pernet_from_msk(msk);
++
++	return mptcp_pm_nl_append_new_local_addr(pernet, entry, needs_id, replace);
++}
++
++__bpf_kfunc_end_defs();
 -- 
 2.43.0
 
