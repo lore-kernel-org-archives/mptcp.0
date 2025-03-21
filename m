@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5D27821E0A2
-	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:35:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 744C01DE3CE
+	for <mptcp@lists.linux.dev>; Fri, 21 Mar 2025 10:46:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742553319; cv=none; b=SsRT35nLFSdv0R6dXaALbYcWNxXw5ijk3sY89g5sg2P8yaaH9BL35gXsabbMCI/bZR5X+Tjhjkmz4wcbUsT9PeEAQPiH4yKlb3jL9NBYjTaX8rp6gJf2O3DQJrrQJKdeg4slU9X0y7PwoJdcE0GIA8UtgwZuzha4a2SS1+OR8y0=
+	t=1742553966; cv=none; b=lafrimaRgMWOuRg1hKb1DVoieQjn0rbW2XtVSrnUg5pAfQ8dEnYG1yj5c+E4uyPx0nd+T0bKSQN6cQBMtBAmP1G2L18kvg/asDFh8oWt4QrJqflVrWamZRTT6w14TdQYJTkkwVcXaOEhPzcM2HNNgl9Zrnra9xLg3lI4QeYdkSI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742553319; c=relaxed/simple;
-	bh=HwcjjwOUa22/05Ie2crSEv+NEEeE0XZARNxQalALL6o=;
+	s=arc-20240116; t=1742553966; c=relaxed/simple;
+	bh=YJLcd9kchn0C9es0oPb9g43wkgDZ+muWWjgJIlpYwtw=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FAKU/iNKyW8XvEvRj9gaucR9dHWv+lnC4MrXGozO4s8QYqjXjuegFVQayFsQteJGGjov0wALfH6s4q0WydLidc2lTv/V6FEP4Fp0yvRGi4Tdtt0wmyhfBEGrGjMJfPAM7HDbFD9KH51bmjKQxyfKT0IiKE9Tv+NUDiEdpSDRswc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ABqMdaf1; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VFjHP97dUA1AJav33TmF9p+DnZjMnxPpqqj4eIpdc3cYowhhxS5e99xoyMyWREhFEmI7I8GBO3a6PfRAD5bd4iKsFovDJaXWDG+LMLYW3aKOMrZNbQBMK1QrloGnysLzvR9uzELdpWym9t/I8mm5vUQE9vZ0MuU1UZPN37sP7lE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tMFN/zBM; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ABqMdaf1"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 26E40C4CEE3;
-	Fri, 21 Mar 2025 10:35:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tMFN/zBM"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 370C5C4CEE3;
+	Fri, 21 Mar 2025 10:46:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742553318;
-	bh=HwcjjwOUa22/05Ie2crSEv+NEEeE0XZARNxQalALL6o=;
+	s=k20201202; t=1742553965;
+	bh=YJLcd9kchn0C9es0oPb9g43wkgDZ+muWWjgJIlpYwtw=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ABqMdaf1JzwiLQbe1fSFHd3gK/7hatZKkD2QqEpz/t9h0F39Fx7ctQK3Fe/N27Cyd
-	 H8xmf0DGhH8OQaXHz90PDLJvvA4orKIfVJ9uXxYZsHnjP7Uf1XUmkySZKmvqhHk7L8
-	 z9wz0BNrQ7iSkcdXlSXwxwE/aKR6E2hCmKh7Lo71flzLc0ycwGdtfAWX6RUHVhPG8s
-	 44Ht7fnegxs8mC1Ws3kcQ/gqDe9pnLs01F9VTQ2Lheti8eXWgu4fNetL/2EHXWBsPG
-	 Ce2r2xJ5iObmg09whDMUT1L/zSXzrI7KtRugbrDop7Nipa8XLxpL+FcrWCZKbdzZ0i
-	 0ln4U+bIxuFIw==
-Message-ID: <0fcce422-d1e7-49c4-b05d-c6627c1f39cf@kernel.org>
-Date: Fri, 21 Mar 2025 11:35:16 +0100
+	b=tMFN/zBMqjqGNOKy70okJ3Np8pp1RmpI3rZT1sY97cYFWav8rG9M59ZmIpwHGeJmO
+	 FNeLg78lBh1VsXvKIqDrciZBAMsi2UCk35v9AUhbifkSxPLES9zvlG56p9rPEDaExF
+	 l356yKRYjALcrC+ZJFW6Ath8ob9sxn5Ae5Sg0puGpK/xVEyWPZEYNO5JRAs8ln9Pgb
+	 unPzaM0/UHXm5ImLBUy7DeCVgV4atco2XUCWrbFfjOKKgOIX9wnH9ffUX7fkMSJPXf
+	 SfZyMk+Sa/zxFCak3z992VL+OZn0BFJHCrmuckWOJUFNozKYByspqZ4II4TTEldyK3
+	 2fJm5+HVNKOfA==
+Message-ID: <6f1f1d70-fc1f-4d64-abe9-5bfb9e85cbcc@kernel.org>
+Date: Fri, 21 Mar 2025 11:46:03 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 09/10] mptcp: pm: add rm_addr_received()
- interface
+Subject: Re: [PATCH mptcp-next v3 10/10] mptcp: pm: drop is_userspace in
+ subflow_check_next
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1742521397.git.tanggeliang@kylinos.cn>
- <e14151bf63b9ae2fa6f75061e1d0d2de069ec6b1.1742521397.git.tanggeliang@kylinos.cn>
+ <7d236597235768dcf1885f317acb767840cb9e42.1742521397.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,57 +87,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <e14151bf63b9ae2fa6f75061e1d0d2de069ec6b1.1742521397.git.tanggeliang@kylinos.cn>
+In-Reply-To: <7d236597235768dcf1885f317acb767840cb9e42.1742521397.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-
+Hi Geliang,
 
 On 21/03/2025 02:45, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds an optional .rm_addr_received interface for struct
-> mptcp_pm_ops and invokes it in mptcp_pm_worker() without PM lock.
-> Since mptcp_subflow_shutdown() and mptcp_close_ssk() are sleepable
-> kfuncs, .rm_addr_received interface of BPF PM should be invoked by
-> __bpf_prog_enter_sleepable(), which can't be invoked under a lock.
-> This patch unlocks the pm lock before invoking this interface in
-> mptcp_pm_worker(), while holding this lock in mptcp_pm_rm_addr_recv().
+> In mptcp_pm_subflow_check_next(), instead of reducing "pm->subflows"
+> for the in-kernel PM in __mptcp_pm_close_subflow(), this patch moves
+> "pm->subflows--;" forward to let it be used by both the userspace PM
+> and the in-kernel PM. Then mptcp_pm_is_userspace() here can be dropped.
 > 
-> Export mptcp_pm_rm_addr_recv() is to allow the MPTCP_PM_RM_ADDR_RECEIVED
-> worker can be invoke from the in-kernel PM.
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/pm.c | 15 ++++++---------
+>  1 file changed, 6 insertions(+), 9 deletions(-)
 > 
-> With this, mptcp_pm_is_kernel() in mptcp_pm_rm_addr_or_subflow() can be
-> dropped.
-
-From what I understand, you are changing the behaviour for the userspace
-PM, no?
-
-When a RM_ADDR is received, for the moment, both the in-kernel and
-userspace PM removes the corresponding subflow(s). Now it is only the
-case with the in-kernel PM.
-
-Technically, it would be fine to let the userspace daemon reacting to
-the RM_ADDR event, but that's changing the behaviour.
-
-(...)
-
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 7b34a59977cf..bb456e203665 100644
+> index bb456e203665..a3fcb335c717 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -677,15 +677,17 @@ static void mptcp_pm_rm_addr_or_subflow(struct mptcp_sock *msk,
+> @@ -531,13 +531,10 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  	bool update_subflows;
 >  
->  		if (rm_type == MPTCP_MIB_RMADDR) {
->  			__MPTCP_INC_STATS(sock_net(sk), rm_type);
-> -			if (removed && mptcp_pm_is_kernel(msk))
-> +			if (removed)
->  				mptcp_pm_nl_rm_addr(msk, rm_id);
+>  	update_subflows = subflow->request_join || subflow->mp_join;
+> -	if (mptcp_pm_is_userspace(msk)) {
+> -		if (update_subflows) {
+> -			spin_lock_bh(&pm->lock);
+> -			pm->subflows--;
+> -			spin_unlock_bh(&pm->lock);
+> -		}
+> -		return;
+> +	if (update_subflows) {
+> +		spin_lock_bh(&pm->lock);
+> +		pm->subflows--;
+> +		spin_unlock_bh(&pm->lock);
 
-As an alternative not to break the behaviour, you could add the hook here:
+Should we not simply call mptcp_pm_close_subflow() instead? It should be
+fine to call it for the userspace or BPF PMs as well, no?
 
-  if (removed && pm->ops->rm_addr_received)
-      pm->ops->rm_addr_received(msk, rm_id);
+>  	}
+>  
+>  	if (!pm->ops->subflow_established)
+> @@ -547,8 +544,8 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
+>  		return;
+>  
+>  	spin_lock_bh(&pm->lock);
+> -	if (update_subflows)
+> -		__mptcp_pm_close_subflow(msk);
+> +	if (update_subflows && msk->pm.subflows < mptcp_pm_get_subflows_max(msk))
+> +		WRITE_ONCE(msk->pm.accept_subflow, true);
+>  
+>  	/* Even if this subflow is not really established, tell the PM to try
+>  	 * to pick the next ones, if possible.
 
 Cheers,
 Matt
