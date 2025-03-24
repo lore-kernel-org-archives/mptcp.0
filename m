@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F08A518FC80
-	for <mptcp@lists.linux.dev>; Mon, 24 Mar 2025 11:03:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 222D11E633C
+	for <mptcp@lists.linux.dev>; Mon, 24 Mar 2025 11:06:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742814188; cv=none; b=d4zFfydpsBSf55Ji6hFMubkSf8o3D8m8MgSn+7M8EbgvVTd6fl/a/bVDUbDiHpLRsNHw0vUgVYRK3cWV44qlFCK7BZ673Gfkza2QB++Ok12AP5QEPg++vVI3dTuZAzjMUx2l7WcPhcycGJlhPVq4EtzjJn+hC9poTSWc7rHBDpw=
+	t=1742814410; cv=none; b=TjCq6zuNLBZwnT3GedAQGf8+X4M5DQ1LJXc7DZf0WtBq/chSqGsKh60iYlnlOF2ueoAN4lDTVKPO/53Pa5crJIV1XFw07o94VUWEy+XCVHyE1rQdDySTSpGICdztiovHoozJ75TNijwe2GUMsHy6Zv3VlRw3ian3FOycFKTGJS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742814188; c=relaxed/simple;
-	bh=vi7p3QlPew59ek8Aq94aGVbEB/hYXymU+ZAAlufSQgM=;
+	s=arc-20240116; t=1742814410; c=relaxed/simple;
+	bh=YLDqeErgwxeQzwwUyecR2jUiRA8Y3FdsSLS3uy1BeFI=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=q2DeTnCXqrAdqEpCBoHPqeMzThFsBEvOnR0NlU42YtN2OL/kdxMiIiCJnCqvsaEn6rdC7QpY3NdwH29JY8+9FBpt7ERHMRdv1XPWM8wNOI/xQ3Ceokhx0+PJ5HZgUg0lrg+c9iFs36YVfFtV7LPYUshkFMnL8T4HQgeQWCQh2Cs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NO1+Ilmx; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XVzl9ffmZUTbD2QaObtOQODRp+9oU5Z1k2m5gAI1JFFS4z4aWaQ9Sane8nrB5trt3M8Zkr+Oh8grOlhwcUgRC/yxofSbdADfSLqbp78e7DGFhQWVQMtfx76HVFAb2WlXrAfUSLUWl/2x3G29bZHx5LazwZcdtmy7bQm/dHoqnys=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VX138Oht; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NO1+Ilmx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BAAE8C4CEDD;
-	Mon, 24 Mar 2025 11:03:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VX138Oht"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C5D2BC4CEDD;
+	Mon, 24 Mar 2025 11:06:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742814187;
-	bh=vi7p3QlPew59ek8Aq94aGVbEB/hYXymU+ZAAlufSQgM=;
+	s=k20201202; t=1742814409;
+	bh=YLDqeErgwxeQzwwUyecR2jUiRA8Y3FdsSLS3uy1BeFI=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=NO1+IlmxCeRaRGGhMtpCIfN1Cz6XfaYb+gIbH1whWwCWwtkON/ql+alcg8sUypOfg
-	 4bAPTIq7l0jNfHXAuE5a1CyU17OuLSmmaA/LqfC8qx5xtsjXVt1ZbdeVJAuWnsKSST
-	 cdWT+sMRzILkO4c8KaOB3t7WkBseLSqwlYkVRqLR2zQRvGVoGC+ghtPU+FW5jZrDme
-	 AckQcOowbvi+9mJ6V+jpdFnwczqgS1payxCslFpBtkQbn3iYs9PWOp00rad/XgXwsJ
-	 g4Ya44cGFFg7ZedTnBsHbGZd+wVtP/3a2FIjQJqdTdm0COzfjb/Vpp/GCZyjsLJiBZ
-	 vw2YAACnInXzQ==
-Message-ID: <9fd7f856-9e59-459d-9cef-903479e3d72a@kernel.org>
-Date: Mon, 24 Mar 2025 12:03:05 +0100
+	b=VX138OhtI/lpUhju1l7JJi4LP3tMJUbBlAL6iK/H3xuyuIe59VBIXifaVkQyY3cNC
+	 DDwX6FS1Fz7s46LSq2EPMcu4yucmwuKzrzf0WnTghX1MGJg4fiXkU3wgA1I083MDep
+	 PePc7aRrJSsNKXkPcP3uVmXZzHrQ3pa84DjV2fUafZ1v3sA5/l4sE3eHHtJk3vZAmX
+	 n6xjVu37KwDXUZyXastvHs2CAFtdgx8LoJqCC+t7Hvoa6+Qg0xjK/+ZYHZVE51yZgN
+	 l5qiQReucWhTYZn3M+EMNT7ipPKvo8oN41epb61rD/gHJOyPBHCIySMrH36dpfJnAx
+	 yZNrC404Qr8Tg==
+Message-ID: <e78ddf1a-d3cf-4bc9-bcb9-bf901499e843@kernel.org>
+Date: Mon, 24 Mar 2025 12:06:46 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 9/9] mptcp: pm: add allow_new_subflow()
- interface
+Subject: Re: [PATCH mptcp-next v1 1/4] bpf: Add mptcp path manager struct_ops
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1742804266.git.tanggeliang@kylinos.cn>
- <cd3f073e7d78588fa5ece014ff4f929946223aa8.1742804266.git.tanggeliang@kylinos.cn>
+References: <cover.1742521587.git.tanggeliang@kylinos.cn>
+ <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
+ <d5222db5-c6b0-4f3a-a4f5-d7b3a9932b19@kernel.org>
+ <fcb63d9a8c190c7cf57b87ad09378981ec89df66.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,76 +88,143 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cd3f073e7d78588fa5ece014ff4f929946223aa8.1742804266.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fcb63d9a8c190c7cf57b87ad09378981ec89df66.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 24/03/2025 09:19, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 24/03/2025 11:43, Geliang Tang wrote:
+> On Mon, 2025-03-24 at 11:26 +0100, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 21/03/2025 02:49, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
+>>>
+>>> This patch implements a new struct bpf_struct_ops for MPTCP BPF
+>>> path
+>>> manager: bpf_mptcp_pm_ops. Register and unregister the bpf path
+>>> manager
+>>> in .reg and .unreg.
+>>>
+>>> Add write access for some fields of struct mptcp_sock and struct
+>>> mptcp_pm_addr_entry in .btf_struct_access.
+>>>
+>>> This MPTCP BPF path manager implementation is similar to BPF TCP
+>>> CC. And
+>>> net/ipv4/bpf_tcp_ca.c is a frame of reference for this patch.
+>>>
+>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>> ---
+>>>  net/mptcp/bpf.c | 259
+>>> +++++++++++++++++++++++++++++++++++++++++++++++-
+>>>  1 file changed, 258 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+>>> index 2b0cfb57df8c..596574102b89 100644
+>>> --- a/net/mptcp/bpf.c
+>>> +++ b/net/mptcp/bpf.c
+>>
+>> (...)
+>>
+>>> +static int __bpf_mptcp_pm_get_local_id(struct mptcp_sock *msk,
+>>> +				       struct mptcp_pm_addr_entry
+>>> *skc)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static bool __bpf_mptcp_pm_get_priority(struct mptcp_sock *msk,
+>>> +					struct mptcp_addr_info
+>>> *skc)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +
+>>> +static void __bpf_mptcp_pm_established(struct mptcp_sock *msk)
+>>> +{
+>>> +}
+>>> +
+>>> +static void __bpf_mptcp_pm_subflow_established(struct mptcp_sock
+>>> *msk)
+>>> +{
+>>> +}
+>>> +
+>>> +static bool __bpf_mptcp_pm_allow_new_subflow(struct mptcp_sock
+>>> *msk)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +
+>>> +static bool __bpf_mptcp_pm_accept_new_subflow(const struct
+>>> mptcp_sock *msk)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +
+>>> +static bool __bpf_mptcp_pm_add_addr_echo(struct mptcp_sock *msk,
+>>> +					 const struct
+>>> mptcp_addr_info *addr)
+>>> +{
+>>> +	return false;
+>>> +}
+>>> +
+>>> +static int __bpf_mptcp_pm_add_addr_received(struct mptcp_sock
+>>> *msk,
+>>> +					    const struct
+>>> mptcp_addr_info *addr)
+>>> +{
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static void __bpf_mptcp_pm_rm_addr_received(struct mptcp_sock
+>>> *msk)
+>>> +{
+>>> +}
+>>> +
+>>> +static void __bpf_mptcp_pm_init(struct mptcp_sock *msk)
+>>> +{
+>>> +}
+>>> +
+>>> +static void __bpf_mptcp_pm_release(struct mptcp_sock *msk)
+>>> +{
+>>> +}
+>>> +
+>>> +static struct mptcp_pm_ops __bpf_mptcp_pm_ops = {
+>>> +	.get_local_id		= __bpf_mptcp_pm_get_local_id,
+>>> +	.get_priority		= __bpf_mptcp_pm_get_priority,
+>>> +	.established		= __bpf_mptcp_pm_established,
+>>> +	.subflow_established	=
+>>> __bpf_mptcp_pm_subflow_established,
+>>> +	.allow_new_subflow      =
+>>> __bpf_mptcp_pm_allow_new_subflow,
+>>> +	.accept_new_subflow     =
+>>> __bpf_mptcp_pm_accept_new_subflow,
+>>> +	.add_addr_echo		= __bpf_mptcp_pm_add_addr_echo,
+>>> +	.add_addr_received	=
+>>> __bpf_mptcp_pm_add_addr_received,
+>>> +	.rm_addr_received	= __bpf_mptcp_pm_rm_addr_received,
+>>
+>> Out of curiosity: I see here that even the optional hooks are
+>> assigned:
 > 
-> The helper mptcp_pm_is_userspace() is used to distinguish userspace PM
-> operations from in-kernel PM in mptcp_pm_allow_new_subflow(). It seems
-> reasonable to add a mandatory .allow_new_subflow interface for struct
-> mptcp_pm_ops.
+> Optional hooks must be assigned here, otherwise this hook cannot be
+> defined in BPF.
+
+OK, thanks!
+
+>> does it mean that all function pointers will never be NULL and checks
+>> like 'pm->ops->add_addr_received' will always be true with a BPF PM?
+>> Or
+>> is it still OK to assign them to NULL for a new BPF PM?
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  include/net/mptcp.h   |  3 +++
->  net/mptcp/pm.c        | 13 ++-----------
->  net/mptcp/pm_kernel.c | 21 +++++++++++++++++++++
->  3 files changed, 26 insertions(+), 11 deletions(-)
-> 
-> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
-> index 8c1ac7368693..aedabc7f4190 100644
-> --- a/include/net/mptcp.h
-> +++ b/include/net/mptcp.h
-> @@ -135,6 +135,9 @@ struct mptcp_pm_ops {
->  			      const struct mptcp_addr_info *addr);
->  	bool (*accept_new_subflow)(const struct mptcp_sock *msk);
->  
-> +	/* optional */
-> +	bool (*allow_new_subflow)(struct mptcp_sock *msk);
+> I think it's the latter, it's OK to assign them to NULL.
 
-Maybe not needed, see my comment in patch 8/9.
-
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index ca105bbd03ea..215b3a4d24be 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -453,23 +453,14 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int
->  bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
->  {
->  	struct mptcp_pm_data *pm = &msk->pm;
-> -	unsigned int subflows_max;
->  	bool ret = true;
->  
->  	if (!pm->ops->accept_new_subflow(msk))
->  		return false;
->  
->  	spin_lock_bh(&pm->lock);
-> -	if (!mptcp_pm_is_userspace(msk) && READ_ONCE(pm->accept_subflow)) {
-> -		subflows_max = mptcp_pm_get_subflows_max(msk);
-> -
-> -		pr_debug("msk=%p subflows=%d max=%d allow=%d\n", msk, pm->subflows,
-> -			 subflows_max, READ_ONCE(pm->accept_subflow));
-> -
-> -		ret = pm->subflows < subflows_max;
-> -		if (ret && pm->subflows == subflows_max - 1)
-> -			WRITE_ONCE(pm->accept_subflow, false);
-> -	}
-> +	if (pm->ops->allow_new_subflow)
-> +		ret = pm->ops->allow_new_subflow(msk);
-
-From what I understood, callbacks should not be called under a lock. But
-maybe this new callback is not needed, see my comment on patch 8/9.
-
->  	if (ret)
->  		pm->subflows++;
->  	spin_unlock_bh(&pm->lock);
-
-(...)
+If you have the infrastructure ready, can you check if you can set
+add_addr_received to NULL in a new BPF struct_ops mptcp_pm_ops for
+example please? Also, just to be sure, can you also check that in this
+case, in the pm.c, pm->ops->add_addr_received is also set to NULL and
+not to __bpf_mptcp_pm_add_addr_received? (not urgent)
 
 Cheers,
 Matt
