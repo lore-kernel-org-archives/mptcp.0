@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B3D082E337E
-	for <mptcp@lists.linux.dev>; Mon, 24 Mar 2025 11:02:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5E05A2E337E
+	for <mptcp@lists.linux.dev>; Mon, 24 Mar 2025 11:02:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742814149; cv=none; b=uaNcAQL7+9NtAnkqi7B5TzTAbVWBsD8B7PicjYqn01b9WS7i0UHIQFPMK6/VQhdkgyQgakiewQ5iYHIh+seWR2ZAvqlsYFnvVfYSWEAcXCCTMlQHin2tjAp6lt/IxypADc23LUsgn7ay/8pudhCvx9kazo8ujLb8Uhk6oyAWgGA=
+	t=1742814158; cv=none; b=Xmeuy/DgkJsJNXELUJ7VKqd244njHY8pv/qgtcY6Wvnz6abjO4zrW9Syffe8i1VXSoS7SlF6wpsUaZrgQJJWK8/KxH5sEEKWcNdir9fV/bDgADZRSbfBFSDYMTpXWkRd/LML1TvUouXelNQfNBVYFdM3N3UIXVKShZvytaOw5KI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742814149; c=relaxed/simple;
-	bh=0XbPnFunbMQ7n38KvuWQ5AXAAcoDkA+IVnKf9Eu+hz8=;
+	s=arc-20240116; t=1742814158; c=relaxed/simple;
+	bh=oRD/IHcrC3+D6eeQ52NIP0zgj2ATHM7oB94YDah5ZR4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=rRY3m5dxW06mZI8U2HVKbbMKuRm/vjchWHc/f00wscfKTLk4YR+6CEVynUFughcF8s6QgQ/iUYOl+4pfSq78/s0egVsur6gSAm0VCsdNoPmlBADOpjTWXGGjt/rX7DYCAre+uOBkJ6H6XxhmjFf1a2eqUMOFNnp1orfUscy2IZs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FfyDh0YB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=EG6Z+WykeQBFX4daBcsYHqmGDC7DmGuHJ2GIVd8fmqPNwAPjdptWGqvK4vaGMZ4tlI9S/MZCqo0Mn8ie00hLz2ozs+47gLMA/7aVQUsSKKRBKV/Nk9UgY2RJ/AMPuCwrX4JnJToSRhuA8GNEMDiwnjvXPjIjyx2oNurFB1ABtLs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=d7IuqIa9; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FfyDh0YB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3A264C4CEDD;
-	Mon, 24 Mar 2025 11:02:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="d7IuqIa9"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 86B73C4CEDD;
+	Mon, 24 Mar 2025 11:02:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742814149;
-	bh=0XbPnFunbMQ7n38KvuWQ5AXAAcoDkA+IVnKf9Eu+hz8=;
+	s=k20201202; t=1742814158;
+	bh=oRD/IHcrC3+D6eeQ52NIP0zgj2ATHM7oB94YDah5ZR4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FfyDh0YBa+AIpkg87iUtbJzcIH83s7H+t6Nd3ratADen9Ln+xXlMVjep+dFczrK+Y
-	 CPoZrgHNOMG9K0wzSFkj4GP+SE36I0ephNHtgjzDPvXJYepqlQEyxwpSg0de3F3by2
-	 0R0TciHthQXp9iRDOvZ7PcpwLApiNCSm4TdNBqKTZ3d3Yz8W/FijUkJddRTzyt8G9+
-	 LzPPAGDMG96NNBCcuE4Qk2l1470dKmKRm+lHHXjkaYSSU9NKtURlA+ucib43oozp/l
-	 Y6Vr4iqbeV/hzAyq+EnYclSug9uxIGs65Y9vQfcmQ1bjYVshvvw1SGbEip/EnlN4q5
-	 fZ1SgvpcAdxPQ==
-Message-ID: <335e7803-19ac-4fb4-9451-8eec4f832be5@kernel.org>
-Date: Mon, 24 Mar 2025 12:02:27 +0100
+	b=d7IuqIa9yx/Np2emF+O807F9EM0z94uFwuDX0lXZGZXrRMBkGrEtMlZy9sahTT16B
+	 /oIk9d8MTTe7qDvbaHtrEQmLncroWRfLgXOybkJcx0rZR247CWJkTvSSmI5N/CNr12
+	 HqxKJHkGZ6HV5AJJ7cQLPmVjQIWux4gwmt4Y+O5fW48WxD3yLBNQImpF/iTK+mDslV
+	 2Vjmkw9Xr3BHVZWuEPsEVGpLXKBgj9Byhgb3JDu2kN/XQHtQwFDq1jCiennX6t++XK
+	 FDmcqRmNtJioFFJ36ycLX1F4H0gkBSkZ/X/82XsYDPkLJVLjnRU+ITqF1kfVRHSgXb
+	 GPRo5tEd6KLPQ==
+Message-ID: <bf8d7ee5-957b-4084-bbb9-e640fbc4a9cf@kernel.org>
+Date: Mon, 24 Mar 2025 12:02:35 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v4 6/9] mptcp: pm: add rm_addr_received()
+Subject: Re: [PATCH mptcp-next v4 7/9] mptcp: pm: add add_addr_echo()
  interface
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1742804266.git.tanggeliang@kylinos.cn>
- <73e63af9c3dc74deb1b6aa79a9b7ed57f331ba33.1742804266.git.tanggeliang@kylinos.cn>
+ <f5dacf8e5b6491509a6df16dc448e172b1963807.1742804266.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <73e63af9c3dc74deb1b6aa79a9b7ed57f331ba33.1742804266.git.tanggeliang@kylinos.cn>
+In-Reply-To: <f5dacf8e5b6491509a6df16dc448e172b1963807.1742804266.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,31 +96,13 @@ Hi Geliang,
 On 24/03/2025 09:19, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds an optional .rm_addr_received interface for struct
-> mptcp_pm_ops and invokes it in mptcp_pm_rm_addr_or_subflow().
-> 
-> This interface is only implemented in the in-kernel PM as a wrapper
-> of mptcp_pm_nl_rm_addr().
+> The helper mptcp_pm_is_userspace() is used to distinguish userspace PM
+> operations from in-kernel PM in mptcp_pm_add_addr_received(). It seems
+> reasonable to add a mandatory .add_addr_echo interface for struct
+> mptcp_pm_ops.
 
-(...)
-
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index 4f4791620072..1a71676bdf43 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -1391,6 +1391,11 @@ static void mptcp_pm_kernel_add_addr_received(struct mptcp_sock *msk)
->  	mptcp_pm_nl_add_addr_received(msk);
->  }
->  
-> +static void mptcp_pm_kernel_rm_addr_received(struct mptcp_sock *msk, u8 id)
-> +{
-> +	mptcp_pm_nl_rm_addr(msk, id);
-
-Same here: no need to add a new static function only calling another
-static function (mptcp_pm_nl_rm_addr() should now be static) with the
-same arguments.
-
-Simply rename mptcp_pm_nl_rm_addr() to mptcp_pm_kernel_rm_addr_received().
+As mentioned in patch 5/9, I'm not sure about that: it feels wrong to
+have a hook there.
 
 Cheers,
 Matt
