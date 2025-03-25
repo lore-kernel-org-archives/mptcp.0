@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 58ED1254865
-	for <mptcp@lists.linux.dev>; Tue, 25 Mar 2025 10:39:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A6F76149E13
+	for <mptcp@lists.linux.dev>; Tue, 25 Mar 2025 10:49:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742899151; cv=none; b=SsX5XSieVHR80o773d+6vAF3zv6HdG5qAfQvZPpyt+dUOvddigBz0C4IlX8ZmuicIDusSAD3XNIJIfrqIbg9VvipGZa97peauZDwXEaC15x5rXTEG/75t2otzkkO7SoZ9ddtQTx32/k6eqSkoe5OaLxh5yFebF1aYvC2G6zsfto=
+	t=1742899793; cv=none; b=CsphnZesFiBf8MDRYpHgXWrhOkTgUXn25A1pX/Y2GA4egZaQyWwdH6aAnsyjm+ir2eruhzY9PyNUv+jvZ/uQSNFo+Tn9+fQ3Dl7J28QURfyCtkyGLHbPbU1t0OeR/r+LvtYpXPjUD1RJMKnNxwaSJ8efmXp2f2xOOzLxW4B8cbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742899151; c=relaxed/simple;
-	bh=m3MD1X2pAv+ECWarv2I6jYJk86/jLTN6s5rrdnbEic8=;
+	s=arc-20240116; t=1742899793; c=relaxed/simple;
+	bh=sFIP+CjX+FHQMfaq5xBT93SKdvSMhk79hrK7v9x5cA8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=sHy7WjmGMBgTzAEJZerwP3gZGEnt9mhjqz7TOPwk6xkVIz96Of8VZSIVZYFfOBQ57MMIZhqTDcEqLo2qU7MfEpaQXwOoSJ2xb4i6CJmARq5ftJqLONWa/6mLUbkNsB5Y009UTCsMFezcorsmaRKLKxH+Q9PFwbRMoWHdXAZL0dw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=hfGpzM/a; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=lVAF7Y6AotMatOmo4wDGghqVV5q7ZTrzVI8V1IuQFq0Y8Jmad7t9Gg/5RCpWRf2nQUrm0fTs/BRbE2Fwa+Q1ElKM0RP7MNGKS1/30Ll9MNhoC1BFM1GcFx9LFPxjdMbHtdrgItgcX3q9K7wHG8sf8HfOxoeERGjxN6cat2+soNU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NQzmM6Z4; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="hfGpzM/a"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 056D7C4CEE4;
-	Tue, 25 Mar 2025 10:39:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NQzmM6Z4"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60B77C4CEE4;
+	Tue, 25 Mar 2025 10:49:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742899149;
-	bh=m3MD1X2pAv+ECWarv2I6jYJk86/jLTN6s5rrdnbEic8=;
+	s=k20201202; t=1742899793;
+	bh=sFIP+CjX+FHQMfaq5xBT93SKdvSMhk79hrK7v9x5cA8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=hfGpzM/aYCfvdKa54+vBu2bYqLZ56ijs0i3QswcB+3JtRgSX1yfCi2rhEr17lLOkx
-	 v9l7sxuXKuzC9jjJySLreDkC8O54DsSOGtLPOuOSuFTzrnTJNwuPLIKB5MGiHBJYSI
-	 7SB/qKlkJX2MKL/WAsBSPGPbzCa4iqaGnbqM3r0ysKFVE/Rwa/JqURQ7AL+xIa7jTM
-	 zz5kVW2Oq8mzTZPcNurRXve9uKjAPciVaC7CPC+CRunJi+gw+PZ8lOlQJa6qeNYHqB
-	 WfY8RSZXSsgdN5H+MjnEn/x2+tiQV//YaDBbW6N+BLcLnKiek6vIX03LPR4SxT666l
-	 /VqA222zLLOeQ==
-Message-ID: <a5b39183-b637-4a16-bd08-fbe60c13ea7a@kernel.org>
-Date: Tue, 25 Mar 2025 11:39:07 +0100
+	b=NQzmM6Z4B2O85YhApoo1Q5CVjGGRG1DaBE37rQVwyja1TQohWrxRzOEzVsE2ZEEYU
+	 Unm6vetqNlKyscax5/Pd8rhUTbRz4jzu7D2hAfyEzCdbyV/Mhd/XIzX5YGipvObAad
+	 dSrPDFGeojQRl+XnrzWEi7e7zOAx2aon3c0mKYxUTYK3snVbIvP8pARIQUBLwnq5x6
+	 kp6x2lwH1F1bARSPLy32150Ammlj5kuplgDSk1G4JrW5sPAWCqkBiNORouq0SlNQEp
+	 UNYNvrWxhBuq4bNtWnV8bwDU9urU18aIIr0HKy7ZlAyPNhfu3lx8eEanoif4ZeVHS+
+	 erw4svk619Ifw==
+Message-ID: <90ea00cb-d57e-411e-9108-624aad2194b9@kernel.org>
+Date: Tue, 25 Mar 2025 11:49:50 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,16 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 1/4] bpf: Add mptcp path manager struct_ops
+Subject: Re: [PATCH mptcp-next v1] mptcp: fix cast type of
+ is_fully_established
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1742521587.git.tanggeliang@kylinos.cn>
- <aa77f73b6b6227cf88fd4aae77c5604593bf79d8.1742521587.git.tanggeliang@kylinos.cn>
- <d5222db5-c6b0-4f3a-a4f5-d7b3a9932b19@kernel.org>
- <fcb63d9a8c190c7cf57b87ad09378981ec89df66.camel@kernel.org>
- <e78ddf1a-d3cf-4bc9-bcb9-bf901499e843@kernel.org>
- <3e4cb2e62ff3fd6a0885f6314a618efb810940ab.camel@kernel.org>
+References: <27b15c2de6fe36088ef95c4823d9e4a6d7bc9ec6.1742898970.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -90,46 +86,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3e4cb2e62ff3fd6a0885f6314a618efb810940ab.camel@kernel.org>
+In-Reply-To: <27b15c2de6fe36088ef95c4823d9e4a6d7bc9ec6.1742898970.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 25/03/2025 05:15, Geliang Tang wrote:
-> On Mon, 2025-03-24 at 12:06 +0100, Matthieu Baerts wrote:
->> On 24/03/2025 11:43, Geliang Tang wrote:
->>> On Mon, 2025-03-24 at 11:26 +0100, Matthieu Baerts wrote:
-
-(...)
-
->>>> does it mean that all function pointers will never be NULL and
->>>> checks
->>>> like 'pm->ops->add_addr_received' will always be true with a BPF
->>>> PM?
->>>> Or
->>>> is it still OK to assign them to NULL for a new BPF PM?
->>>
->>> I think it's the latter, it's OK to assign them to NULL.
->>
->> If you have the infrastructure ready, can you check if you can set
->> add_addr_received to NULL in a new BPF struct_ops mptcp_pm_ops for
->> example please? Also, just to be sure, can you also check that in
->> this
->> case, in the pm.c, pm->ops->add_addr_received is also set to NULL and
->> not to __bpf_mptcp_pm_add_addr_received? (not urgent)
+On 25/03/2025 11:36, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Sure, here's the test:
+> The parameter type of mptcp_is_fully_established() is 'struct sock *',
+> not 'void *', so this patch casts 'msk' as 'struct sock *' instead of
+> 'void *' in mptcp_can_accept_new_subflow().
 
-(...)
+Indeed, but it is not really wrong to use 'void *'. Also, it looks like
+we are doing that in most other files from the net/mptcp directory.
 
-> pm->ops->add_addr_received is set to NULL indeed, whether we use
-> ".add_addr_received = (void *)NULL," so that it is explicitly set to
-> NULL, or simply do not assign a new function to it but assign other
-> function pointers.
-
-Good, thank you for having checked! So we can avoid worker operations
-(PM), and keeping the MPTCP retransmission callback optional (sched).
+If you have to modify this line for another commit, feel free to include
+the modification in this commit if it bothers you ("While at it, use the
+proper cast instead of the generic 'void *'"), but it can also be left
+unchanged I think.
 
 Cheers,
 Matt
