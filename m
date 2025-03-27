@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9976520E6F1
-	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 10:36:52 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D929E20CCCD
+	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:27:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071812; cv=none; b=eScJ2sPzTBHGbadZpTdN1wkafJVcfro1KJD3ckHOCu88CxqESXwz8lGNmxowGDbAJ/b0Gttcngf//sPDYpekB1ZKmWnUfTBGZnjLv79rSqlFaa4lWueC8FB3UZ6OWKAcXhJTnH30jbFE5Uiaft6ZFB5Eq72RvKHWJgn0RVzfftU=
+	t=1743074832; cv=none; b=uiWLGpBx0QMsk/6g8M8rEvlMuR4B14au0pWN/gWDhvwCpbcit+qnSgKcYVCqEONGswaXZHbWJm7vAfL86l+j9acApj2YpyZ8H4HlPD+Zz15BOos/PPYK/rRv3tWwm+/GN60cfE6AMB3BG6b8B/Cngl8fq65t9CeFNf11Kt/Htco=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071812; c=relaxed/simple;
-	bh=4Es8tX6iMxkOV7kma8mrBt5O7Gkfmsr1bogvSoTvx9E=;
+	s=arc-20240116; t=1743074832; c=relaxed/simple;
+	bh=J4hD4moi5DJyx5Y6BZ4NoFweZUhJAkT7tlNn1XjPpNE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=RLCx5viHSHoev0PVoYHYVTgfUGLcfbKt3LaUlOChtJqK4fARAq135HRPbstXsd24qhkcLtC3Uclhmzg117ucjBd+ixmJFQzd2pog67gi5k/By/fSUkQUWTM7rOM7v1XyGfHBi2QGD42LLBH0nOOTs0poVqFsMN34ch+Y0aAyCnQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B90ZtiNg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=YVfW4AeVJKuWBF3WKjr8eJRXDmtxu2nQ7wR7Q+lNUsgzmLOyWcyJqpzCoE4weTSeqCbKax2ur+zDhFw6/RIAvtND7AtPwl28Yyl5dQUnkYsI/Hucys3vVcgyggr5+a7LuncUjmMSVSZu3obvlzVKGXgH+GOSdN9gCobTbE7QItY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mr8XFbS8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B90ZtiNg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A18C4CEDD;
-	Thu, 27 Mar 2025 10:36:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mr8XFbS8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA9AC4CEDD;
+	Thu, 27 Mar 2025 11:27:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071812;
-	bh=4Es8tX6iMxkOV7kma8mrBt5O7Gkfmsr1bogvSoTvx9E=;
+	s=k20201202; t=1743074832;
+	bh=J4hD4moi5DJyx5Y6BZ4NoFweZUhJAkT7tlNn1XjPpNE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=B90ZtiNgtN7isID89DGX7vz06e54InBLfMW6CKAgiDSsgWx+Vqb7C14c9H2WzQWwt
-	 zKU37fCrFpnQVpdg3OkzTzbFqdazWsszQcaST0PJWI4WuHBkArSvINDHRz7sqxXkME
-	 UK5Pa7xJePMdF7u59oDjhxhJ2TpbtrZzvmJvflaej+TiTIGOkvwdC9Z/k9/krCU+61
-	 7hMKmYkEslVsa2sGZMzyLDbk2Gj1bFgDoMLgo57Amqqs4WODtdBNQo9XdvmEtchSYf
-	 tkD++QvR6j+HJR3/MHPcMCkFIbyg9+aEYU6wRU5oNilAhWuVwIuRsx2HtS6lhmTvbn
-	 wNU9c44QGQ+Hg==
-Message-ID: <4a0b8472-4604-4f8b-b051-71fb82d5945a@kernel.org>
-Date: Thu, 27 Mar 2025 11:36:49 +0100
+	b=mr8XFbS8eOFX+uYVZYmgnsKXN1+YXLMt1uvl/m/MRdn6iHPUqgrw7dQ1ppiZBMLF3
+	 bj4EM1scc99D0nvJ6w3GOWgL6tcZQO63bYW5DsdDW82lRqXvAnkIYKS2lSpkrmlzye
+	 QTiGK+/jEDfHRjQKS9hsoIpt9t9r7elefAKediFqXoBUxa/F/G6rnBti5XbAaLtpiW
+	 ubUAf5wAsjrSWBR0092d9V9dwusHiRbRq87HbzRaWiqaRef03KqR+Y8V9zApRwjtEd
+	 ClNYcZSJjUEhtnlTsskKyYi2rT/REn1Pw41JWzMmnqF1UmdDvBe4uyud+jKAbdDUFJ
+	 wivoKWJ5SoKhw==
+Message-ID: <8930d669-bfb1-4b78-ae38-1433ae0eda0a@kernel.org>
+Date: Thu, 27 Mar 2025 12:27:09 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 1/7] Squash to "mptcp: pm: add
- get_local_id() interface"
+Subject: Re: [PATCH mptcp-next v5 0/7] BPF path manager, part 6
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1743054942.git.tanggeliang@kylinos.cn>
- <f30498386ee78e59743afbf3e2897a60eb3af5bd.1743054942.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +85,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f30498386ee78e59743afbf3e2897a60eb3af5bd.1743054942.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1743054942.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,19 +94,23 @@ Hi Geliang,
 On 27/03/2025 07:04, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Update the comment for get_local_id and get_priority.
+> v5:
+>  - add comment "call from the subflow/msk context" for mptcp_sched_ops.
+>  - add new helper mptcp_pm_accept_new_subflow.
+>  - add "bool allow" parameter for mptcp_pm_accept_new_subflow, and drop
+>    .allow_new_subflow interface.
+>  - use a copy of pm->status in mptcp_pm_worker.
+>  - rename mptcp_pm_create_subflow_or_signal_addr with "__" prefix.
+>  - drop "!update_subflows" in mptcp_pm_subflow_check_next.
+>  - add_addr_received/rm_addr_received interfaces will be added in the
+>    next series.
 
-Thank you, I just applied this patch 1/7:
+Thank you for the update. I think more changes are needed around the PM
+lock. Please see my individual comments.
 
-New patches for t/upstream:
-- 00b6c34b9ea1: "squashed" patch 1/7 in "mptcp: pm: add get_local_id()
-interface"
-- Results: 4e2b25079a95..8bfbd2e1bf59 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/3ea3f4d9ffc7cf05867f7b7e8e2741c85a24bae6/checks
+Do not hesitate to tell me if you see what I mean with the modifications
+around the PM lock, or if you prefer I (or someone else) take over this
+part.
 
 Cheers,
 Matt
