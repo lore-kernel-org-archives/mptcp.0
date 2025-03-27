@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E53FB20E31E
-	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 10:26:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9976520E6F1
+	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 10:36:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743071190; cv=none; b=XQs8JwAhPEs9gfENyY+Yf5CYgWKPxt+zcORinuDVrbl5GBqFLmV5jgb8zSRd0PEvSWL+iGBtlawxC2DgtiF8OpJVcHQMhrAY2okie8d04r6FUBN8DKYRx4cSbBDyQCMxaozN9Wa15Cp4/IRmgEgv6Oc4//m48JKg7fhDPH0pf4s=
+	t=1743071812; cv=none; b=eScJ2sPzTBHGbadZpTdN1wkafJVcfro1KJD3ckHOCu88CxqESXwz8lGNmxowGDbAJ/b0Gttcngf//sPDYpekB1ZKmWnUfTBGZnjLv79rSqlFaa4lWueC8FB3UZ6OWKAcXhJTnH30jbFE5Uiaft6ZFB5Eq72RvKHWJgn0RVzfftU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743071190; c=relaxed/simple;
-	bh=3B0Z0MXkhmJdRyt7knzh8aOxDhGaBTZRIl7/jgHLZwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=iZ9hZI0zU0NmErafiS8stjPXjgSDMWnbEZQmy43WCoTuNJBH/B2fPN6gRSAGVIA6/UcWS2e4luN5wAHxUHuGA2WrWzHaIlO1G7VvarEIoVOEZ0jMpXgu4gw8wI+2fBZZKlLqoqGrogcZ6ZVwCl6udl2uvSpBu+4SAnK3s5osUZ0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Kaak9HyT; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743071812; c=relaxed/simple;
+	bh=4Es8tX6iMxkOV7kma8mrBt5O7Gkfmsr1bogvSoTvx9E=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=RLCx5viHSHoev0PVoYHYVTgfUGLcfbKt3LaUlOChtJqK4fARAq135HRPbstXsd24qhkcLtC3Uclhmzg117ucjBd+ixmJFQzd2pog67gi5k/By/fSUkQUWTM7rOM7v1XyGfHBi2QGD42LLBH0nOOTs0poVqFsMN34ch+Y0aAyCnQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=B90ZtiNg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Kaak9HyT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C878CC4CEDD;
-	Thu, 27 Mar 2025 10:26:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="B90ZtiNg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 67A18C4CEDD;
+	Thu, 27 Mar 2025 10:36:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743071189;
-	bh=3B0Z0MXkhmJdRyt7knzh8aOxDhGaBTZRIl7/jgHLZwY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Kaak9HyTY+1lunC+t9JnnINgvy9JLT9eAQPvgSQkxpGfT7r7gYj6fJk8IfAAjGFg8
-	 9R8spjAit+UJk/sD/7p/itanr2TS5/JRfVKDS9222Q2yj1nnvrTEm4R+C6ttJgWAYt
-	 ymjdyR6d7w1V7vF6YHsd3QwlyZYoKCgz8/e6nf7Os48I6HvhXhx5ZTWhZCWXMk3GME
-	 LutooXRxgmoLqJ5slgvRokYOvQedFoDskffXHzEYmQqYxYVCewjysDOYc8kVqKnJgP
-	 Z7t9tGxOWdwA9UOgr3/GBTb1mVeOPMBHKlODFBXIMvTh66oxbjxVte1GHtJHa0Q9oL
-	 O3jEzDBBuceeg==
-Message-ID: <c7f9ec74-a4e8-4b8c-89c2-547219f6d8bb@kernel.org>
-Date: Thu, 27 Mar 2025 11:26:26 +0100
+	s=k20201202; t=1743071812;
+	bh=4Es8tX6iMxkOV7kma8mrBt5O7Gkfmsr1bogvSoTvx9E=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=B90ZtiNgtN7isID89DGX7vz06e54InBLfMW6CKAgiDSsgWx+Vqb7C14c9H2WzQWwt
+	 zKU37fCrFpnQVpdg3OkzTzbFqdazWsszQcaST0PJWI4WuHBkArSvINDHRz7sqxXkME
+	 UK5Pa7xJePMdF7u59oDjhxhJ2TpbtrZzvmJvflaej+TiTIGOkvwdC9Z/k9/krCU+61
+	 7hMKmYkEslVsa2sGZMzyLDbk2Gj1bFgDoMLgo57Amqqs4WODtdBNQo9XdvmEtchSYf
+	 tkD++QvR6j+HJR3/MHPcMCkFIbyg9+aEYU6wRU5oNilAhWuVwIuRsx2HtS6lhmTvbn
+	 wNU9c44QGQ+Hg==
+Message-ID: <4a0b8472-4604-4f8b-b051-71fb82d5945a@kernel.org>
+Date: Thu, 27 Mar 2025 11:36:49 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 0/7] BPF path manager, part 6
+Subject: Re: [PATCH mptcp-next v5 1/7] Squash to "mptcp: pm: add
+ get_local_id() interface"
 Content-Language: en-GB, fr-BE
-To: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1743054942.git.tanggeliang@kylinos.cn>
- <ec54d83c-9221-a0e9-d4c7-2cd3c858bf80@gmail.com>
+ <f30498386ee78e59743afbf3e2897a60eb3af5bd.1743054942.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,25 +87,28 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <ec54d83c-9221-a0e9-d4c7-2cd3c858bf80@gmail.com>
+In-Reply-To: <f30498386ee78e59743afbf3e2897a60eb3af5bd.1743054942.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 27/03/2025 07:30, MPTCP CI wrote:
-> Hi Geliang,
+On 27/03/2025 07:04, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Thank you for your modifications, that's great!
-> 
-> But sadly, our CI spotted some issues with it when trying to build it.
-> 
-> You can find more details there:
-> 
->   https://github.com/multipath-tcp/mptcp_net-next/actions/runs/14100178407
+> Update the comment for get_local_id and get_priority.
 
-It looks like it is a false positive because one function has been
-renamed, we can ignore it for the moment.
+Thank you, I just applied this patch 1/7:
+
+New patches for t/upstream:
+- 00b6c34b9ea1: "squashed" patch 1/7 in "mptcp: pm: add get_local_id()
+interface"
+- Results: 4e2b25079a95..8bfbd2e1bf59 (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/3ea3f4d9ffc7cf05867f7b7e8e2741c85a24bae6/checks
 
 Cheers,
 Matt
