@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D929E20CCCD
-	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:27:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 04210212B0D
+	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:27:19 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743074832; cv=none; b=uiWLGpBx0QMsk/6g8M8rEvlMuR4B14au0pWN/gWDhvwCpbcit+qnSgKcYVCqEONGswaXZHbWJm7vAfL86l+j9acApj2YpyZ8H4HlPD+Zz15BOos/PPYK/rRv3tWwm+/GN60cfE6AMB3BG6b8B/Cngl8fq65t9CeFNf11Kt/Htco=
+	t=1743074840; cv=none; b=HELXemXi+v3KVNomBpycrfuz+QvbLncAdNTHUVpcCWmjKbuMat1zSZ9KeLwgX00HAGVEo2lHmfdf0FYb9tZnF6gjpilvUlLTD0YwnXV1TKlJdym6JrTJqau986Aznb6eFYziCQECsSiaNVGykRo9MRMzg5Ek/mBYqWPS1c3E+S0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743074832; c=relaxed/simple;
-	bh=J4hD4moi5DJyx5Y6BZ4NoFweZUhJAkT7tlNn1XjPpNE=;
+	s=arc-20240116; t=1743074840; c=relaxed/simple;
+	bh=8ikFt6GaninrfW1d6R7bKfsc4Nh45HHgAj+B0Qt/9hc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=YVfW4AeVJKuWBF3WKjr8eJRXDmtxu2nQ7wR7Q+lNUsgzmLOyWcyJqpzCoE4weTSeqCbKax2ur+zDhFw6/RIAvtND7AtPwl28Yyl5dQUnkYsI/Hucys3vVcgyggr5+a7LuncUjmMSVSZu3obvlzVKGXgH+GOSdN9gCobTbE7QItY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mr8XFbS8; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UXPopPOTSTVONYh2FMP3wmmUtJSABBTYR5BOuBbuQwqr6eT0nz1pBzKxrkMjSQnivhbF8D/RY34Xjh0GlMZiuOG8OnVQGYGTq3MrZ4tLZFR1rs15TfgbzLQApCIZXbgEU6LeAcAMgadAMiNiCEo6lh9fZGcjy4uWTquXEGyMz0s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=URNbZ4Gp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mr8XFbS8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8FA9AC4CEDD;
-	Thu, 27 Mar 2025 11:27:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="URNbZ4Gp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B8D88C4CEDD;
+	Thu, 27 Mar 2025 11:27:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743074832;
-	bh=J4hD4moi5DJyx5Y6BZ4NoFweZUhJAkT7tlNn1XjPpNE=;
+	s=k20201202; t=1743074839;
+	bh=8ikFt6GaninrfW1d6R7bKfsc4Nh45HHgAj+B0Qt/9hc=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=mr8XFbS8eOFX+uYVZYmgnsKXN1+YXLMt1uvl/m/MRdn6iHPUqgrw7dQ1ppiZBMLF3
-	 bj4EM1scc99D0nvJ6w3GOWgL6tcZQO63bYW5DsdDW82lRqXvAnkIYKS2lSpkrmlzye
-	 QTiGK+/jEDfHRjQKS9hsoIpt9t9r7elefAKediFqXoBUxa/F/G6rnBti5XbAaLtpiW
-	 ubUAf5wAsjrSWBR0092d9V9dwusHiRbRq87HbzRaWiqaRef03KqR+Y8V9zApRwjtEd
-	 ClNYcZSJjUEhtnlTsskKyYi2rT/REn1Pw41JWzMmnqF1UmdDvBe4uyud+jKAbdDUFJ
-	 wivoKWJ5SoKhw==
-Message-ID: <8930d669-bfb1-4b78-ae38-1433ae0eda0a@kernel.org>
-Date: Thu, 27 Mar 2025 12:27:09 +0100
+	b=URNbZ4GpUqQb9/pYynHJfew/51LB2GU0zdH1Q4EWLfv1DXFEIgym8NGmm1szCOtQi
+	 /sUA7xQTVgPFR/bTkEUAT1Yk8TqkdS3//2htrUqFfKACWBdCHfUqlJVsWisExY8m0L
+	 LnTocK5ytajqxCuvDyP9FFSFXqFNl0MTIh6kT2I/cX/8EBsPeL9fE9JU2QGS6+FJ6I
+	 P7AmW4qki/zVxiDiExK+MGSttmUh+p9/RL/f3T1QrflQmh2wjFuV+zsJz8GFpxLHzP
+	 jMmhIl8DuA2q8no4h57wkiK0kGFtLsYVCSukTLrqYuVbckQxxjf6qKy0vEgAgKIr83
+	 iwR/bcgElhe3w==
+Message-ID: <85ba8108-46ab-4e9b-b8f3-157b449e3053@kernel.org>
+Date: Thu, 27 Mar 2025 12:27:18 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 0/7] BPF path manager, part 6
+Subject: Re: [PATCH mptcp-next v5 2/7] mptcp: pm: add accept_new_subflow()
+ interface
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1743054942.git.tanggeliang@kylinos.cn>
+ <bb1346672d021bedf325489364b6c2eea16928b9.1743054942.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1743054942.git.tanggeliang@kylinos.cn>
+In-Reply-To: <bb1346672d021bedf325489364b6c2eea16928b9.1743054942.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,23 +96,100 @@ Hi Geliang,
 On 27/03/2025 07:04, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v5:
->  - add comment "call from the subflow/msk context" for mptcp_sched_ops.
->  - add new helper mptcp_pm_accept_new_subflow.
->  - add "bool allow" parameter for mptcp_pm_accept_new_subflow, and drop
->    .allow_new_subflow interface.
->  - use a copy of pm->status in mptcp_pm_worker.
->  - rename mptcp_pm_create_subflow_or_signal_addr with "__" prefix.
->  - drop "!update_subflows" in mptcp_pm_subflow_check_next.
->  - add_addr_received/rm_addr_received interfaces will be added in the
->    next series.
+> The helper mptcp_pm_is_userspace() is used to distinguish userspace PM
+> operations from in-kernel PM in mptcp_can_accept_new_subflow(). It seems
+> reasonable to add a mandatory .accept_new_subflow interface for struct
+> mptcp_pm_ops.
+> 
+> The boolean type 'allow' parameter is used to control whether to allow new
+> subflow unconditionally.
+> 
+> A new helper mptcp_pm_accept_new_subflow() is added in pm.c to ensure that
+> pm->ops is only used in pm.c.
+> 
+> This interface of the in-kernel PM is implemented as a wrapper of
+> READ_ONCE(pm->accept_subflow), and this interface of the userspace PM is
+> implemented as a wrapper of mptcp_userspace_pm_active().
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  include/net/mptcp.h      |  1 +
+>  net/mptcp/pm.c           |  8 +++++++-
+>  net/mptcp/pm_kernel.c    | 15 +++++++++++++++
+>  net/mptcp/pm_userspace.c |  7 +++++++
+>  net/mptcp/protocol.h     |  1 +
+>  net/mptcp/subflow.c      |  6 ++----
+>  6 files changed, 33 insertions(+), 5 deletions(-)
+> 
+> diff --git a/include/net/mptcp.h b/include/net/mptcp.h
+> index 4cf59e83c1c5..549b8075cc86 100644
+> --- a/include/net/mptcp.h
+> +++ b/include/net/mptcp.h
+> @@ -123,6 +123,7 @@ struct mptcp_pm_ops {
+>  			    struct mptcp_pm_addr_entry *skc);
+>  	bool (*get_priority)(struct mptcp_sock *msk,
+>  			     struct mptcp_addr_info *skc);
+> +	bool (*accept_new_subflow)(struct mptcp_sock *msk, bool allow);
+>  
+>  	char			name[MPTCP_PM_NAME_MAX];
+>  	struct module		*owner;
+> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
+> index be1e27ee393e..1c8395d3baa9 100644
+> --- a/net/mptcp/pm.c
+> +++ b/net/mptcp/pm.c
+> @@ -453,6 +453,11 @@ void mptcp_pm_new_connection(struct mptcp_sock *msk, const struct sock *ssk, int
+>  	mptcp_event(MPTCP_EVENT_CREATED, msk, ssk, GFP_ATOMIC);
+>  }
+>  
+> +bool mptcp_pm_accept_new_subflow(struct mptcp_sock *msk, bool allow)
+> +{
+> +	return msk->pm.ops->accept_new_subflow(msk, allow);
+> +}
+> +
+>  bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+>  {
+>  	struct mptcp_pm_data *pm = &msk->pm;
+> @@ -1050,7 +1055,8 @@ struct mptcp_pm_ops *mptcp_pm_find(const char *name)
+>  
+>  int mptcp_pm_validate(struct mptcp_pm_ops *pm_ops)
+>  {
+> -	if (!pm_ops->get_local_id || !pm_ops->get_priority) {
+> +	if (!pm_ops->get_local_id || !pm_ops->get_priority ||
+> +	    !pm_ops->accept_new_subflow) {
+>  		pr_err("%s does not implement required ops\n", pm_ops->name);
+>  		return -EINVAL;
+>  	}
+> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
+> index 7ec81d5195d4..ee3915d33e04 100644
+> --- a/net/mptcp/pm_kernel.c
+> +++ b/net/mptcp/pm_kernel.c
+> @@ -1399,6 +1399,20 @@ static struct pernet_operations mptcp_pm_pernet_ops = {
+>  	.size = sizeof(struct pm_nl_pernet),
+>  };
+>  
+> +static bool mptcp_pm_kernel_accept_new_subflow(struct mptcp_sock *msk,
+> +					       bool allow)
 
-Thank you for the update. I think more changes are needed around the PM
-lock. Please see my individual comments.
+"allow" is always true.
 
-Do not hesitate to tell me if you see what I mean with the modifications
-around the PM lock, or if you prefer I (or someone else) take over this
-part.
+> +{
+> +	struct mptcp_pm_data *pm = &msk->pm;
+> +	bool ret = false;
+> +
+> +	if (READ_ONCE(pm->accept_subflow)) {
+> +		if (allow)
+> +			return true;
+> +	}
+> +
+> +	return ret;
+
+Mmh, what about:
+
+  return READ_ONCE(msk->pm.accept_subflow) && allow;
+
+EDIT: OK, I just noticed the next patch. I suggest squashing this patch
+with the next one, or you remove 'allow' and simplify this code here,
+but I think it is easier to squash.
 
 Cheers,
 Matt
