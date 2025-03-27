@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1E45A2116FD
-	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:27:39 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC527FBA1
+	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:28:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743074860; cv=none; b=P5AhXCoouhIZLo7I82psOncPmu4k/BNrRrT8WvKUiGewWUgRqhpnQRDJsOdCVk5jtnC78iZdM/hM35kn5ua5q5yxLgloHzhFIXbBRVw6ZM442xuhOoUYYtUegl3sRtV4XA1ATxY3nuXBV5jPDJ1f4WEWWyD/GxaD4Yq02awXENg=
+	t=1743074891; cv=none; b=BFez+mAc4TOylyVxCb1SfGHgAFTeZPmk/U0lbeRplb5LAKLmQNVsGuzjkMBIkgItaNQv5hLKNV/+BKjpuiZAotOaao24j1vNozz6iLGV423tgL+FFz68wuQ2wgeSEfz35IcLwo/bd/2NwnsvNuIoNUe8ZUrCFYlJUSqDIEERWDk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743074860; c=relaxed/simple;
-	bh=tQOn+LPBjv3oEF0jXdJjlxmvba/jrZqooypAFvtjtJQ=;
+	s=arc-20240116; t=1743074891; c=relaxed/simple;
+	bh=HoCHVhcaT5kg78GkAgKlDjTp59TU8Mfzei0BYme60t4=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WeizZTQ4X64VrtpJfJEE8xvyfMvrgalyhc7olCgzGJpnRk/RmZYmMdm/G0S69u9a7hwIz1ObTu4ODtO2Rzz3aocb3jVC1sG3G5RVEkafvkc980SEu5veSCuo9sVx4aqNDbFtGSiCVRwXKNVK7JFhREUqHyHjv611saHiukBwOn4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CLwKtrk0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=U6RIW25zxnDzEtRUASdALOjXkZpHtCLLXclqfhMHKv1uektWRKamdt8exCyZu0XjX4sRDgssAynRc0tW/9ukt82x4PUPbBQEyXTgTDVEa/D6XFix+XtUjUgZYv3XaSdniV3pB/JfZFbNT1KUKwYyZt0yTMN38G3FPi4z3cSwlmA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOwofVxF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CLwKtrk0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D19B0C4CEDD;
-	Thu, 27 Mar 2025 11:27:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOwofVxF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEA1C4CEDD;
+	Thu, 27 Mar 2025 11:28:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743074859;
-	bh=tQOn+LPBjv3oEF0jXdJjlxmvba/jrZqooypAFvtjtJQ=;
+	s=k20201202; t=1743074890;
+	bh=HoCHVhcaT5kg78GkAgKlDjTp59TU8Mfzei0BYme60t4=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=CLwKtrk0E0Mg5k4NFVfJSsgBADmEqe9EEzt0SXl7MOD4A1WDXzFk2qDGvKTdv7T9a
-	 vcXrCGIwXkWKctx9Thp4XRn2Hbhu+MEkrGhqRqHnVno2TL3aEXcI98800+VkIx442C
-	 I28H6PlAy5zjBEwvjIfQlfcpPBguiImDyYF/MfpIme55xtgckaZkB/aCLyR6biOWa5
-	 7AVnlePsJaFZq9jZkOALjYhOWHMeMGdVv+B7aeORqb5dgGD8Aj0fytgRlSPhIB62C+
-	 vV1PYY5JwH0dpKP+t4RVu9haK6WdDkfBom4S/VyRnREws4z88Ar2oVxYObbGpq07Gr
-	 Hy075U0jSd60A==
-Message-ID: <a00e1e7a-ad34-4b91-86b5-c585b88de6e6@kernel.org>
-Date: Thu, 27 Mar 2025 12:27:36 +0100
+	b=JOwofVxFRz3GBR79a7pBwfi12un6bqLIIG8SrIVEmlukOrWGUF802569wQovwKmyc
+	 NR0520cAMd40GwKWJLQJN8ujonFsBmaw4D1tFzBUHwcyglququx3A2jKsDir5zZemd
+	 nZmEcBz6pPjQZTxtDdCc6+1Glyp96v6bwrHevRusQH2JEHCh7VxpfkWQsQOZJZjC1c
+	 Z+MbSU0ugEA1I/s6oScr4lCKp9t3e2k6a211pKU9nwgEYgiFmVmkeeizGB30RWkmTh
+	 oabb58uOTmUs8vaC1ymd48gr4jMM+aTscHRLONzmCoXPSBLsQIWj4bHV8tAAnqc4a5
+	 oSAVNHE45aFtg==
+Message-ID: <1d540cc3-d239-400f-ba72-c485a10a9c08@kernel.org>
+Date: Thu, 27 Mar 2025 12:28:07 +0100
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 3/7] mptcp: pm: use accept_new_subflow in
- allow_new_subflow
+Subject: Re: [PATCH mptcp-next v5 4/7] mptcp: pm: update pm lock order in
+ mptcp_pm_worker
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1743054942.git.tanggeliang@kylinos.cn>
- <4de819beea2e553b61718a3b4c9b6180979961e0.1743054942.git.tanggeliang@kylinos.cn>
+ <739e3667698915fa690d08c751c1846bd9442df2.1743054942.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4de819beea2e553b61718a3b4c9b6180979961e0.1743054942.git.tanggeliang@kylinos.cn>
+In-Reply-To: <739e3667698915fa690d08c751c1846bd9442df2.1743054942.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -96,108 +96,106 @@ Hi Geliang,
 On 27/03/2025 07:04, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch reduces the dependency on mptcp_pm_is_userspace() to identify
-> userspace PM from in-kernel PM by using mptcp_pm_accept_new_subflow()
-> helper in mptcp_pm_allow_new_subflow().
+> Later functions that cannot hold the mptcp pm lock will be called from
+> the PM worker, so this patch modifies the order of holding the lock
+> at the beginning of this function and releasing the lock at the end.
+> 
+> The new order is to obtain a copy of pm->status while holding the mptcp
+> pm lock, then read the copy after releasing the lock.
+> 
+> For each PM status flag, hold the lock, clear this flag of pm->status,
+> and then call each handling function before or after releasing the lock
+> as needed.
+> 
+> Finally, hold the lock before calling __mptcp_pm_kernel_worker() and
+> release it afterwards.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  net/mptcp/pm.c        | 27 ++++-----------------------
->  net/mptcp/pm_kernel.c | 10 ++++++++++
->  2 files changed, 14 insertions(+), 23 deletions(-)
+>  net/mptcp/pm.c | 19 +++++++++++++------
+>  1 file changed, 13 insertions(+), 6 deletions(-)
 > 
 > diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index 1c8395d3baa9..c72d2fade555 100644
+> index c72d2fade555..1e681acaad7f 100644
 > --- a/net/mptcp/pm.c
 > +++ b/net/mptcp/pm.c
-> @@ -461,34 +461,15 @@ bool mptcp_pm_accept_new_subflow(struct mptcp_sock *msk, bool allow)
->  bool mptcp_pm_allow_new_subflow(struct mptcp_sock *msk)
+> @@ -932,26 +932,33 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
+>  void mptcp_pm_worker(struct mptcp_sock *msk)
 >  {
 >  	struct mptcp_pm_data *pm = &msk->pm;
-> -	unsigned int subflows_max;
->  	int ret = 0;
+> +	u8 status;
 >  
-> -	if (mptcp_pm_is_userspace(msk)) {
-> -		if (mptcp_userspace_pm_active(msk)) {
-> -			spin_lock_bh(&pm->lock);
-> -			pm->subflows++;
-> -			spin_unlock_bh(&pm->lock);
-> -			return true;
-> -		}
-> -		return false;
-> -	}
-> -
-> -	subflows_max = mptcp_pm_get_subflows_max(msk);
-> -
-> -	pr_debug("msk=%p subflows=%d max=%d allow=%d\n", msk, pm->subflows,
-> -		 subflows_max, READ_ONCE(pm->accept_subflow));
-> -
-> -	/* try to avoid acquiring the lock below */
-> -	if (!READ_ONCE(pm->accept_subflow))
-> +	if (!mptcp_pm_accept_new_subflow(msk, true))
->  		return false;
+>  	msk_owned_by_me(msk);
 >  
->  	spin_lock_bh(&pm->lock);
-> -	if (READ_ONCE(pm->accept_subflow)) {
-> -		ret = pm->subflows < subflows_max;
-> -		if (ret && ++pm->subflows == subflows_max)
-> -			WRITE_ONCE(pm->accept_subflow, false);
-> -	}
-> +	ret = mptcp_pm_accept_new_subflow(msk, false);
-
-I think it would make more sense **not** to call pm->ops callback under
-the PM lock.
-
-I think a BPF PM should not modify this structure directly. If something
-needs to be changed, it should be done via a kfunc that will
-automatically take the PM spin lock if needed, and release it at the
-end. Only the "PM core" (pm.c) should modify it and the in-kernel and
-userspace PM because they require a way to store data. A BPF PM can
-store data in a map elsewhere.
-
-> +	if (ret)
-> +		pm->subflows++;
->  	spin_unlock_bh(&pm->lock);
+>  	if (!(pm->status & MPTCP_PM_WORK_MASK))
+>  		return;
 >  
->  	return ret;
-> diff --git a/net/mptcp/pm_kernel.c b/net/mptcp/pm_kernel.c
-> index ee3915d33e04..5cc35ee122ff 100644
-> --- a/net/mptcp/pm_kernel.c
-> +++ b/net/mptcp/pm_kernel.c
-> @@ -1403,11 +1403,21 @@ static bool mptcp_pm_kernel_accept_new_subflow(struct mptcp_sock *msk,
->  					       bool allow)
->  {
->  	struct mptcp_pm_data *pm = &msk->pm;
-> +	unsigned int subflows_max;
->  	bool ret = false;
+> -	spin_lock_bh(&msk->pm.lock);
+> +	spin_lock_bh(&pm->lock);
+> +	status = READ_ONCE(pm->status);
+
+Do you think it would be OK to clear all the bits that are going to be
+checked here (or once at the end), using MPTCP_PM_WORK_MASK? Before the
+PM lock was released temporally in some sections, I guess it should be fine.
+
+Also you don't need READ_ONCE() here as pm->status is protected only by
+the pm lock.
+
+> +	spin_unlock_bh(&pm->lock);
 >  
-> +	subflows_max = mptcp_pm_get_subflows_max(msk);
+> -	pr_debug("msk=%p status=%x\n", msk, pm->status);
+> -	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
+> +	pr_debug("msk=%p status=%x\n", msk, status);
+> +	if (status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
+> +		spin_lock_bh(&pm->lock);
 
-this variable is only needed for pm->accept_subflow && !allow, maybe we
-should declare it there, and assign it only when needed?
-> +	pr_debug("msk=%p subflows=%d max=%d allow=%d\n", msk, pm->subflows,
-> +		 subflows_max, READ_ONCE(pm->accept_subflow));
+I *think* we should change the way the PM lock is currently handled. For
+the moment, we lock very big sections, and not only when it is needed.
+That is probably easier somehow, but it might not be clear when it is
+locked or not, and required unlock/lock in some other cases.
 
-Perhaps we can drop this pr_debug, or remove subflows_max: easy to get
-the info from userspace.
+Changing the lock might have a cost in some cases, but probably a gain
+in others. Concretely, here, we should not lock now, and let the callee
+the responsibility to do so only when required.
 
-> +
->  	if (READ_ONCE(pm->accept_subflow)) {
->  		if (allow)
->  			return true;
-> +
-> +		ret = pm->subflows < subflows_max;
-> +		if (ret && pm->subflows == subflows_max - 1)
+By doing that, all PM callbacks will not be called with the PM locks,
+which would make easier to deal with kfunc with BPF.
 
-detail, I think it makes more sense to use "+ 1":
+If you are not comfortable doing such modifications, do not hesitate to
+tell us to get some helps. I can try to look when I have a bit of time
+if you prefer.
 
-  if (ret && (pm->subflows + 1) == subflows_max)
+>  		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
 
+(so this should be done before/after)
 
-> +			WRITE_ONCE(pm->accept_subflow, false);
+>  		mptcp_pm_addr_send_ack(msk);
+> +		spin_unlock_bh(&pm->lock);
 >  	}
+> -	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+> +	if (status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
+> +		spin_lock_bh(&pm->lock);
+
+(same here)
+
+>  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
+
+(same here)
+
+>  		mptcp_pm_rm_addr_recv(msk);
+> +		spin_unlock_bh(&pm->lock);
+>  	}
+> +	spin_lock_bh(&pm->lock);
+
+(same here and in the next patches)
+
+>  	__mptcp_pm_kernel_worker(msk);
+> -
+> -	spin_unlock_bh(&msk->pm.lock);
+> +	spin_unlock_bh(&pm->lock);
+>  }
 >  
->  	return ret;
+>  static void mptcp_pm_ops_init(struct mptcp_sock *msk,
 Cheers,
 Matt
 -- 
