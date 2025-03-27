@@ -1,121 +1,101 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 45A581B393A
-	for <mptcp@lists.linux.dev>; Wed, 26 Mar 2025 10:25:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3581FC8EB
+	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 06:04:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1742984731; cv=none; b=oTk1yuYEPbQfUKxVoS335BZjgrsuosITArgXvirZzZasbbvDbO1ggl1ChNFrukXOnWr27y0YqHjq4d9bWkaKoeTenTgHIU8zinKxc67WrXpzD3YFtSKWx8T/O+KJyrSH5P5PZpTNKaBBkfbzochQjrsGH1P2za3xBhLdKETVQ1w=
+	t=1743055471; cv=none; b=X5U4kC63h9fc/4OpE5cPg180uLH1MoADrORqBfu7Jwerj2L66SEiZbsG3b+zl2zhUQRO1+VpK9KN8KjmQa96KVU+Swf9gKoHtLJ9Q50KiiVrMn5xFsm+POgJC8Am4mAz6boxpMj6zhTQ8/fW2JR2QhoLGbTOYlaGveh/rxqmHbw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1742984731; c=relaxed/simple;
-	bh=BGSnVely+jUpMKxLp/EEVgT1NfBEz7/p8sFA0+9Isgk=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Hw7q8mgHbwzO+DUOv5N4af0bqJPfUxOdzfyhQ1MgZMrsMYMMCkqj13Q3J8UBY0K8oNkdKdHwicO+N4nBL8uWCg13lKTeIxljorPxbZl3YmMSrQELC+HcrPSyngMCpYtFVb2Y9/pvOIy0j/XG90daotQRM5OorUUBn+z3QBffdFg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ZsATM2Ex; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743055471; c=relaxed/simple;
+	bh=5T5hRNcJeXHk0+sIJkDnmWuST7gl+o1uBxemxcEZBlw=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=itWadtYvNt1qrqqaXyPcWYGwG6/pTUUOpFIg5esgjs7EKt8b+0Eahkin4GsWd2/XM57rc490Se1kByBVPidBpxoRudFPuWubAtvliN6eGaeCZjfmCWVguIy4tUBuXey+OG68BbZNqMnbKqwwgGrM6Y2/vbpA22bG6X5PYTPbfUQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FBFVoTi7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ZsATM2Ex"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id DB9A7C4CEED;
-	Wed, 26 Mar 2025 10:25:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FBFVoTi7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 892DEC4CEDD;
+	Thu, 27 Mar 2025 06:04:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1742984730;
-	bh=BGSnVely+jUpMKxLp/EEVgT1NfBEz7/p8sFA0+9Isgk=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=ZsATM2ExGabj3ctOMjy98aJmNHgy64REaeBcEyEQzt6onqGGoNGq0T4bsO/7kUBL3
-	 bInzZEkpx2/somnFO6UHBJDHvJUyN6QsPlYSNyZb92azrE6x4A83ldb5/6MkVUwEeb
-	 APwfpxldS98izh8DemsBPpe2Edl59ROp2QVjeEGEyG0CqIb1TAeB4xIyVEqLufHgAU
-	 zRgBLgcHm8z4vQGDJQdbjC7hfqRKTDHgpnzOwjcknpQUCrCvQgo2zzsN68TRCD01Ga
-	 KH8zuLZaaN/vTKgCE+fMvlxSTmp58yubwPxKe7P6fpMqGMMOeiG+ed/nTp5Yjksl8o
-	 NKvXadhD1mgNA==
-Message-ID: <2cab9891-31fa-4585-b7fb-639334a6cf63@kernel.org>
-Date: Wed, 26 Mar 2025 11:25:27 +0100
+	s=k20201202; t=1743055470;
+	bh=5T5hRNcJeXHk0+sIJkDnmWuST7gl+o1uBxemxcEZBlw=;
+	h=From:To:Cc:Subject:Date:From;
+	b=FBFVoTi7Ubgt2T9ARMUqc/XKErQcguTx7fO4qiy05k1IQy/Hr4eQ5oTKxmdMDBx92
+	 kuqGbpu4YPxBU4wzrak7bADyzq/LYbtsPdaRFkF1v1SpmCvT/AQOBDVGgePmweKGP6
+	 t2+r3pu9GhOr7IXeQC+Anz6nI07l2YRiiW+V3Ei0AaHkDGdkGVf0ndjq9VIzbLjmxC
+	 48FAr4XSuhmJcxgesllIBDkgUnRyC+spw+lts3IYWTohZJfLajJsfc0W7860QgkXrJ
+	 cYpJ3UchGAGmVEA+SGMVMYfkVX6dxBv+sQigK7I+CTqAdvtjfBmvu/Og0K6OI0ZfnM
+	 RuwxSvNwI87VA==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 0/7] BPF path manager, part 6
+Date: Thu, 27 Mar 2025 14:04:10 +0800
+Message-ID: <cover.1743054942.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH v2] mptcp: pm: Return local variable instead of freed
- pointer
-Content-Language: en-GB, fr-BE
-To: Thorsten Blum <thorsten.blum@linux.dev>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>
-References: <20250325163251.135510-2-thorsten.blum@linux.dev>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250325163251.135510-2-thorsten.blum@linux.dev>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Thorsten,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 25/03/2025 17:32, Thorsten Blum wrote:
-> Commit e4c28e3d5c090 ("mptcp: pm: move generic PM helpers to pm.c")
-> removed an unnecessary if-check, which resulted in returning a freed
-> pointer.
-> 
-> This still works due to the implicit boolean conversion when returning
-> the freed pointer from mptcp_remove_anno_list_by_saddr(), but it can be
-> confusing and potentially error-prone. To improve clarity, add a local
-> variable to explicitly return a boolean value instead. 
+v5:
+ - add comment "call from the subflow/msk context" for mptcp_sched_ops.
+ - add new helper mptcp_pm_accept_new_subflow.
+ - add "bool allow" parameter for mptcp_pm_accept_new_subflow, and drop
+   .allow_new_subflow interface.
+ - use a copy of pm->status in mptcp_pm_worker.
+ - rename mptcp_pm_create_subflow_or_signal_addr with "__" prefix.
+ - drop "!update_subflows" in mptcp_pm_subflow_check_next.
+ - add_addr_received/rm_addr_received interfaces will be added in the
+   next series.
 
-Thank you for your patch! Now in our tree (feat. for net-next):
+v4:
+ - address Matt's comments in v3. 
+ - update pm locks in mptcp_pm_worker.
+ - move the lock inside mptcp_pm_create_subflow_or_signal_addr.
+ - move the lock inside mptcp_pm_nl_add_addr_received.
+ - invoke add_addr_received interface from mptcp_pm_worker.
+ - invoke rm_addr_received interface from mptcp_pm_rm_addr_or_subflow.
+ - simply call mptcp_pm_close_subflow() in mptcp_pm_subflow_check_next.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1742804266.git.tanggeliang@kylinos.cn/
 
-New patches for t/upstream:
-- 5172fc837d0c: mptcp: pm: Return local variable instead of freed pointer
-- Results: c0c93d7a6bc6..7723f461d379 (export)
+v3:
+ - merge 'bugfixes for "BPF path manager, part 6, v2"' into this set.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1742521397.git.tanggeliang@kylinos.cn/
 
-Tests are now in progress:
+v2:
+ - address Matt's comments in v1. 
+ - add add_addr_received and rm_addr_received interfaces.
+ - drop subflow_check_next interface.
+ - add a "required" or "optional" comment for a group of interfaces in
+   struct mptcp_pm_ops.
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5bdccde61635c4e5d2ce60205a3d7356f2b917ea/checks
+v1:
+- https://patchwork.kernel.org/project/mptcp/cover/cover.1741685260.git.tanggeliang@kylinos.cn/
 
-Cheers,
-Matt
+New interfaces for struct mptcp_pm_ops.
+
+Geliang Tang (7):
+  Squash to "mptcp: pm: add get_local_id() interface"
+  mptcp: pm: add accept_new_subflow() interface
+  mptcp: pm: use accept_new_subflow in allow_new_subflow
+  mptcp: pm: update pm lock order in mptcp_pm_worker
+  mptcp: pm: add established() interface
+  mptcp: pm: add subflow_established() interface
+  mptcp: pm: drop is_userspace in subflow_check_next
+
+ include/net/mptcp.h      |  7 +++-
+ net/mptcp/pm.c           | 88 ++++++++++++++++++++--------------------
+ net/mptcp/pm_kernel.c    | 52 ++++++++++++++++++------
+ net/mptcp/pm_userspace.c |  7 ++++
+ net/mptcp/protocol.h     |  1 +
+ net/mptcp/subflow.c      |  6 +--
+ 6 files changed, 99 insertions(+), 62 deletions(-)
+
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
