@@ -1,203 +1,108 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id ECC527FBA1
-	for <mptcp@lists.linux.dev>; Thu, 27 Mar 2025 11:28:10 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 61F9B26AC3
+	for <mptcp@lists.linux.dev>; Fri, 28 Mar 2025 04:01:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743074891; cv=none; b=BFez+mAc4TOylyVxCb1SfGHgAFTeZPmk/U0lbeRplb5LAKLmQNVsGuzjkMBIkgItaNQv5hLKNV/+BKjpuiZAotOaao24j1vNozz6iLGV423tgL+FFz68wuQ2wgeSEfz35IcLwo/bd/2NwnsvNuIoNUe8ZUrCFYlJUSqDIEERWDk=
+	t=1743134502; cv=none; b=r87yWtqk09bCOwoqIHdYrGQaB4O5IGNdmdyH2JLNKSzC6I4G5GETRN674L4D3vSwhpwo+c6nPGuoFdAtzOzjD/nmrP2biSAIptsXbZbEzl8VbLKkjrManLPR8Mk3JDGlp4JaRQpwU6kLUnbGon8x/ga6Q6B1n96bGBt1fnyQ8ek=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743074891; c=relaxed/simple;
-	bh=HoCHVhcaT5kg78GkAgKlDjTp59TU8Mfzei0BYme60t4=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=U6RIW25zxnDzEtRUASdALOjXkZpHtCLLXclqfhMHKv1uektWRKamdt8exCyZu0XjX4sRDgssAynRc0tW/9ukt82x4PUPbBQEyXTgTDVEa/D6XFix+XtUjUgZYv3XaSdniV3pB/JfZFbNT1KUKwYyZt0yTMN38G3FPi4z3cSwlmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=JOwofVxF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743134502; c=relaxed/simple;
+	bh=IJ7bxNCWZxeBJWEsmEPvibs2H4SETG+Lapk0y94/hoE=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=F+KdaOA8QWYgPb0k7Ro4D1yV/1vxMwMjGGldIKHPJAlFZ7hS2Z83FJgiWobE+Jp7izpSQtyB5rSfFT8fe1qceRdQFoI1PiVgAmF2fktLDLUlV133JwcnQNPJIhS6eDhajE6bl9IL6wqNTe5MEnW32EtljDq6kmIHaQsWl0bbPMo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P5yAz0ko; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="JOwofVxF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9AEA1C4CEDD;
-	Thu, 27 Mar 2025 11:28:09 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P5yAz0ko"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A7F51C4CEE4;
+	Fri, 28 Mar 2025 04:01:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743074890;
-	bh=HoCHVhcaT5kg78GkAgKlDjTp59TU8Mfzei0BYme60t4=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=JOwofVxFRz3GBR79a7pBwfi12un6bqLIIG8SrIVEmlukOrWGUF802569wQovwKmyc
-	 NR0520cAMd40GwKWJLQJN8ujonFsBmaw4D1tFzBUHwcyglququx3A2jKsDir5zZemd
-	 nZmEcBz6pPjQZTxtDdCc6+1Glyp96v6bwrHevRusQH2JEHCh7VxpfkWQsQOZJZjC1c
-	 Z+MbSU0ugEA1I/s6oScr4lCKp9t3e2k6a211pKU9nwgEYgiFmVmkeeizGB30RWkmTh
-	 oabb58uOTmUs8vaC1ymd48gr4jMM+aTscHRLONzmCoXPSBLsQIWj4bHV8tAAnqc4a5
-	 oSAVNHE45aFtg==
-Message-ID: <1d540cc3-d239-400f-ba72-c485a10a9c08@kernel.org>
-Date: Thu, 27 Mar 2025 12:28:07 +0100
+	s=k20201202; t=1743134500;
+	bh=IJ7bxNCWZxeBJWEsmEPvibs2H4SETG+Lapk0y94/hoE=;
+	h=From:To:Cc:Subject:Date:From;
+	b=P5yAz0koFC4r6Qt4Fc29dTObC1dC5qsrRyfwpxULeAc2OdLqWydhZ4nfaTwhrD1Xv
+	 s/R+FkWTKcBnv3EZhGqEuN/RQBfpRwe1Wq+pjCE6EKTnrWbz/I1r2mLyepHuwzN7YU
+	 bdPN1Km48cXmCjsCpwWh6KFPD7+hkauszyyfMBzNroPzHwhny4tE5ovKzKZW97ba0v
+	 XDUsgzth0bT3a+vUIlYaMjC4NaKpytx+cBcsSjH7tb9gyW4tHeGK6vHNF6MaeanPgK
+	 KReXkC93gsh2zy88IC4donouHMic+Y1f+/NB7J8djbgwLE/ffiFUii3BqVROp09V5c
+	 TbiOp/EW9eRag==
+From: Geliang Tang <geliang@kernel.org>
+To: mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 0/5] BPF path manager, part 6
+Date: Fri, 28 Mar 2025 12:01:30 +0800
+Message-ID: <cover.1743133948.git.tanggeliang@kylinos.cn>
+X-Mailer: git-send-email 2.43.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v5 4/7] mptcp: pm: update pm lock order in
- mptcp_pm_worker
-Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1743054942.git.tanggeliang@kylinos.cn>
- <739e3667698915fa690d08c751c1846bd9442df2.1743054942.git.tanggeliang@kylinos.cn>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <739e3667698915fa690d08c751c1846bd9442df2.1743054942.git.tanggeliang@kylinos.cn>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+From: Geliang Tang <tanggeliang@kylinos.cn>
 
-On 27/03/2025 07:04, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> Later functions that cannot hold the mptcp pm lock will be called from
-> the PM worker, so this patch modifies the order of holding the lock
-> at the beginning of this function and releasing the lock at the end.
-> 
-> The new order is to obtain a copy of pm->status while holding the mptcp
-> pm lock, then read the copy after releasing the lock.
-> 
-> For each PM status flag, hold the lock, clear this flag of pm->status,
-> and then call each handling function before or after releasing the lock
-> as needed.
-> 
-> Finally, hold the lock before calling __mptcp_pm_kernel_worker() and
-> release it afterwards.
-> 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index c72d2fade555..1e681acaad7f 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -932,26 +932,33 @@ void mptcp_pm_subflow_chk_stale(const struct mptcp_sock *msk, struct sock *ssk)
->  void mptcp_pm_worker(struct mptcp_sock *msk)
->  {
->  	struct mptcp_pm_data *pm = &msk->pm;
-> +	u8 status;
->  
->  	msk_owned_by_me(msk);
->  
->  	if (!(pm->status & MPTCP_PM_WORK_MASK))
->  		return;
->  
-> -	spin_lock_bh(&msk->pm.lock);
-> +	spin_lock_bh(&pm->lock);
-> +	status = READ_ONCE(pm->status);
+v6:
+ - squash accept_new_subflow patches into one.
+ - change "pm->subflows == subflows_max - 1" to
+	pm->subflows + 1 == subflows_max.
+ - not to call accept_new_subflow under the PM lock.
+ - add mptcp_pm_accept_subflow helpers.
+ - drop READ_ONCE in mptcp_pm_worker.
+ - clear all the pm status flags once in mptcp_pm_worker.
 
-Do you think it would be OK to clear all the bits that are going to be
-checked here (or once at the end), using MPTCP_PM_WORK_MASK? Before the
-PM lock was released temporally in some sections, I guess it should be fine.
+v5:
+ - add comment "call from the subflow/msk context" for mptcp_sched_ops.
+ - add new helper mptcp_pm_accept_new_subflow.
+ - add "bool allow" parameter for mptcp_pm_accept_new_subflow, and drop
+   .allow_new_subflow interface.
+ - use a copy of pm->status in mptcp_pm_worker.
+ - rename mptcp_pm_create_subflow_or_signal_addr with "__" prefix.
+ - drop "!update_subflows" in mptcp_pm_subflow_check_next.
+ - add_addr_received/rm_addr_received interfaces will be added in the
+   next series.
 
-Also you don't need READ_ONCE() here as pm->status is protected only by
-the pm lock.
+v4:
+ - address Matt's comments in v3. 
+ - update pm locks in mptcp_pm_worker.
+ - move the lock inside mptcp_pm_create_subflow_or_signal_addr.
+ - move the lock inside mptcp_pm_nl_add_addr_received.
+ - invoke add_addr_received interface from mptcp_pm_worker.
+ - invoke rm_addr_received interface from mptcp_pm_rm_addr_or_subflow.
+ - simply call mptcp_pm_close_subflow() in mptcp_pm_subflow_check_next.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1742804266.git.tanggeliang@kylinos.cn/
 
-> +	spin_unlock_bh(&pm->lock);
->  
-> -	pr_debug("msk=%p status=%x\n", msk, pm->status);
-> -	if (pm->status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
-> +	pr_debug("msk=%p status=%x\n", msk, status);
-> +	if (status & BIT(MPTCP_PM_ADD_ADDR_SEND_ACK)) {
-> +		spin_lock_bh(&pm->lock);
+v3:
+ - merge 'bugfixes for "BPF path manager, part 6, v2"' into this set.
+ - https://patchwork.kernel.org/project/mptcp/cover/cover.1742521397.git.tanggeliang@kylinos.cn/
 
-I *think* we should change the way the PM lock is currently handled. For
-the moment, we lock very big sections, and not only when it is needed.
-That is probably easier somehow, but it might not be clear when it is
-locked or not, and required unlock/lock in some other cases.
+v2:
+ - address Matt's comments in v1. 
+ - add add_addr_received and rm_addr_received interfaces.
+ - drop subflow_check_next interface.
+ - add a "required" or "optional" comment for a group of interfaces in
+   struct mptcp_pm_ops.
 
-Changing the lock might have a cost in some cases, but probably a gain
-in others. Concretely, here, we should not lock now, and let the callee
-the responsibility to do so only when required.
+v1:
+- https://patchwork.kernel.org/project/mptcp/cover/cover.1741685260.git.tanggeliang@kylinos.cn/
 
-By doing that, all PM callbacks will not be called with the PM locks,
-which would make easier to deal with kfunc with BPF.
+New interfaces for struct mptcp_pm_ops.
 
-If you are not comfortable doing such modifications, do not hesitate to
-tell us to get some helps. I can try to look when I have a bit of time
-if you prefer.
+Geliang Tang (5):
+  mptcp: pm: call pm worker handler without pm lock
+  mptcp: pm: add accept_new_subflow() interface
+  mptcp: pm: add established() interface
+  mptcp: pm: add subflow_established() interface
+  mptcp: pm: drop is_userspace in subflow_check_next
 
->  		pm->status &= ~BIT(MPTCP_PM_ADD_ADDR_SEND_ACK);
+ include/net/mptcp.h      |   5 ++
+ net/mptcp/pm.c           | 100 +++++++++++++++++++--------------------
+ net/mptcp/pm_kernel.c    |  47 ++++++++++++------
+ net/mptcp/pm_userspace.c |   9 +++-
+ net/mptcp/protocol.h     |  27 ++++++++++-
+ net/mptcp/subflow.c      |   6 +--
+ 6 files changed, 122 insertions(+), 72 deletions(-)
 
-(so this should be done before/after)
-
->  		mptcp_pm_addr_send_ack(msk);
-> +		spin_unlock_bh(&pm->lock);
->  	}
-> -	if (pm->status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-> +	if (status & BIT(MPTCP_PM_RM_ADDR_RECEIVED)) {
-> +		spin_lock_bh(&pm->lock);
-
-(same here)
-
->  		pm->status &= ~BIT(MPTCP_PM_RM_ADDR_RECEIVED);
-
-(same here)
-
->  		mptcp_pm_rm_addr_recv(msk);
-> +		spin_unlock_bh(&pm->lock);
->  	}
-> +	spin_lock_bh(&pm->lock);
-
-(same here and in the next patches)
-
->  	__mptcp_pm_kernel_worker(msk);
-> -
-> -	spin_unlock_bh(&msk->pm.lock);
-> +	spin_unlock_bh(&pm->lock);
->  }
->  
->  static void mptcp_pm_ops_init(struct mptcp_sock *msk,
-Cheers,
-Matt
 -- 
-Sponsored by the NGI0 Core fund.
+2.43.0
 
