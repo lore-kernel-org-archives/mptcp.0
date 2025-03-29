@@ -1,174 +1,128 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AF23987D
-	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 16:26:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28A32746D
+	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 17:33:26 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743265594; cv=none; b=TcZ6RY5FhURIGH8cEsbnKufUF5S+MeR91zhQFxewcY2I/aTIXs/SbKwvvPB0FMBoTOh7D7MenunvWEXZozu60MNCg1kzE0sWiwLQAb/W+ZZ1ZZgucjck4a09ygF8uc3WyZo50WgFgdrqA1/dlRfeZ+2LrVjh6xWuN4UZ+lWbPzE=
+	t=1743269608; cv=none; b=hFJzNEGTcCByEQZkpPdX4jmH4cpAsG2Vlep+6hSayVXQGbTCPPmc9O5kxNfBALYdXKZelyJG9Hkkn3SsWw4OmbAY2p2QqRH0WARjYiVinlPMGsl+JpETlihyQno5VHeu+N9FPs6rVHIwR8dk7CA6panZz+G7x1rahl6b5qeTxCA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743265594; c=relaxed/simple;
-	bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=goPdnqF/unNdt/gG3SGGVw1U5DVkEzsz+8sanHaDM8sGNFDoS4BkzIWlART74pf8z+NVRSm4ZHVpk2nXMxLt8x1z9dacGNIhA7VKYfoqihqcdvGfDpveoX2MJuqeoSc/fMvQjpOGiNtjquhfdiKlYyzji1VUVUoH3W8MfoiQ738=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmfjmQcB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743269608; c=relaxed/simple;
+	bh=sBLhhgxf66LdpF81/GC1br2i02PknLiPvom5zOm/vj8=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=G6BVoEf+d5wd0COMzITLjvfBMbwFJl80u5gU1VGwUsgeCAYE8MqYULX0k/4L5Jm2LEOgYvUdk/LBH1F/j/4DJedkJgmbB3DVuqdeCs4wLmTZBVnaFPvA6aj7yi95U/aqZS1ZfgTDTfDjR1HLwTEQRbMUAOldIi3F0Mjsh4eHw14=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=joCV7SkE; arc=none smtp.client-ip=209.85.222.182
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmfjmQcB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107C7C4CEE9;
-	Sat, 29 Mar 2025 16:26:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743265593;
-	bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=qmfjmQcBEl9u7JVYofnQziwJLxfZtpZhhQPxH25ogBNA7f4WyAoPMzF8b6rkdlKC/
-	 jPGK2pONIkxJcHXnO6v74f8NxJ1AZ+oipvcQuXZqbSuzjml4DYKsusW01IOJKZe5RV
-	 s+5hSf3Dsa2ieq++pFKbWVLuGsN5e+CqBomzlzcReieZQJULiED9ZL9/VwCo6vDSc2
-	 kNZWLBzAIdOslWp5xpt7pzKyqgr6ygqUYqoDey19AonLUSuN0Xv2HJXAUGRcmCKJ79
-	 KD0JgZceUUM2f/vJ/nEJE/ngQgE75LuFWkSiEvltu7xs/GbGaOUWqZ3iyHSyNqrkoD
-	 qZGRih8XQWNwQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 29 Mar 2025 17:26:18 +0100
-Subject: [PATCH mptcp-next 5/5] selftests: mptcp: validate MPJoinRejected
- counter
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joCV7SkE"
+Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c56a3def84so335212185a.0
+        for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 10:33:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743269605; x=1743874405; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=du3g03Cr9uCnnIx40hAchqbmM76NedgWVZKIuZNL7yk=;
+        b=joCV7SkEyesoqozUCUM7rq59+Vy58QTlIRK4EiAC8kWDZxCYENesW+gYHzU33C3Qbz
+         poW8PNDA5B3rgbxjPOahAEFA0d/KhMjISXoHcmqNtPAucjR05TqOurRd0CEwGRJhdO3x
+         d69LKIgsr32qYYoVW7z34JFitVdKayv4cJjvhxhUKpYotHxjwQ8v4borAwSYQc2XyFyu
+         1MyehKeAduwcvSTf7LIr/+AG7IKBUGjsbhp5kFD+u/F7/y2MBZBjxreHtUiS5me8OUow
+         mKU93UXPDJ+NTngzH2aTr3tXEXQV949D0GGHYUJQthXvIYuEJoilOrw/dPxzeEzMr/Q0
+         auKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743269605; x=1743874405;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=du3g03Cr9uCnnIx40hAchqbmM76NedgWVZKIuZNL7yk=;
+        b=dWc1ZpGbapMqn4tlWPoIXmO6HGLqTMgIYNsu2jjQ8eyUewIpRdgrcKQa5O5exXI6S6
+         /ystGKTpp9//ijHenxD9lzGd5efexSWvQrem4kdAt7/0cGVkdaNRUxOoCJgNRNja9aGn
+         6CE1i3Oir05oZX3ayogbTh6CbU4vZB9Hz7bexJVRdi9uBqi3fWGBLIbrSJfvpWbkP9kE
+         LSt7jakj9UsuFAF3h63lDN/CYw12S60S2hEA+NXz/IriVL2vN31NMXnIa+Qoy8UHaxPw
+         2Xmj/djVM2sD0r9KvbuvmqlBcWR8ZO1WVCJTyOd4ZxnQpVLMhrbZFXvzgOybx2fKnhXg
+         NhxQ==
+X-Gm-Message-State: AOJu0YyOCHPeja51kuksg2wtVTVJJMcgqkjGM9k2Gca3rEs73HY+mxgo
+	Bs7pWm5QFOTXKEwixOljwy747jqXtCZiqLdQNWRczKH/lUC79Y0=
+X-Gm-Gg: ASbGncvaHnl6Ac9cg783cajQu3NoE4UkeiCovSYt8ej7G6Lg0qcWjvJlNXgxs53Vlsz
+	0M6mk/rvTKVEOZbS0BaQKSSZAoVpR4KMFzVlmYiqeh4EzqCBGx7eXgP6IMqEdcMLyba6aCvneXw
+	Ji9dYJpmRieH5yzb+uzmSZuNlILKtoI/LffuGkQ9n4gsp70VTvMxMGS1HwWsTzdq38fdhRhu7XL
+	EseSOm7gwfmo8iMKGeTnoXSN6V0davozTj3AeWYJwqviqmomr1H56o3H6WBeuI7gbqCx4Qc6dwV
+	GLHt4PY6F2F1FgwSbQBk6BK7/8F2fr8AGNEF0S9Y4sDMYk7y0r9uwE0IxA==
+X-Google-Smtp-Source: AGHT+IFv8mgU+nskB1e3A1gZ/kgsXhsNCT6Rs6hQ4tHQt3ZVR+58mAj3XovGjHpt6e1PPdKBWCeaPQ==
+X-Received: by 2002:a05:620a:4252:b0:7c5:48d4:e8a2 with SMTP id af79cd13be357-7c6862ec55bmr398612185a.2.1743269605499;
+        Sat, 29 Mar 2025 10:33:25 -0700 (PDT)
+Received: from [127.0.0.1] ([74.249.22.145])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f76600bdsm266775285a.17.2025.03.29.10.33.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sat, 29 Mar 2025 10:33:24 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
+References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
+Subject: Re: [PATCH mptcp-next 0/5] mptcp: fix MPJoinAckHMacFailure, add
+ MPJoinRejected
+Message-ID: <9ca6898d-6206-4d0b-53dc-555e59809d3f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Sat, 29 Mar 2025 17:33:23 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250329-mptcp-mpj-reject-v1-5-2396d5666e8f@kernel.org>
-References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
-In-Reply-To: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3347; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn6B8z7iGKhgw7WS/OQ+29Erf2Sg1/ZogHSHu+O
- yyGchsWEzaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ+gfMwAKCRD2t4JPQmmg
- c/qAD/wJPum7gP6qbk7dAvoEgFGAS4Ba9y/AtLgX5/Q6wO5ta5Sl89pWvjn/sOfvF0dhdDMelc1
- 5TGEMotCoZlvVkckt1VST2h1/tnhTieW87mFejyGzvHQrBYLMchtJDYKY2NJKHttyYG1s2s1s1n
- fvVMXIDfxK3JFt4I+f1LvxZqv3Nlv1T9XlhoD+cgq4ULLC9F9DRFNgknz/7N4FbxIUC/vhpR3Ty
- ChkKnc4FtQ1UOFCP/hi4cm3LzyIt0hwuACTYRxN+sRQfkDZXoXdXbVSaVR2+4AFM7q6EqhZgtG3
- JR5KMqDR4kaonR2XNEcBo+GtdWS5lP6UPVc43c3tGtK6ZDqCQNM/mgPdvfHUHbhbZgbCRLYZ9Vp
- xxvMpykxYl4TTz2fsZesQqdwlU/XcvWrpZjKHMbfUjOicWBWWU3T67r3WoKRpz3a5SVY3Yd77P1
- wAsrahBokROEooiV7tw8DlVr221lKIy2DzNmu2iatjaH3ZHvXuy7KesyfNfCRQvdjD0kJzRCUnc
- HNGqgXA9VC4MqaXJGuD2iCJckCThEXasMJIB195YDeSK3OS5DNuKqC84PGS88N1pMnrieGsgRJX
- TC7pekz0gCcx6q/DKp6pnPGlvcftqxKautCClZNZDZXHIYOFiOkf2tG/a5gGSnbsD5JIuovDYy3
- UZDmQOXzKU8RBlA==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The parent commit adds this new counter, incremented when receiving a
-connection request, if the PM didn't allow the creation of new subflows.
+Hi Matthieu,
 
-Most of the time, it is then kept at 0, except when the PM limits cause
-the receiver side to reject new MPJoin connections. This is the case in
-the following tests:
+Thank you for your modifications, that's great!
 
- - single subflow, limited by server
- - multiple subflows, limited by server
- - subflows limited by server w cookies
- - userspace pm type rejects join
- - userspace pm type prevents mp_prio
+Our CI did some validations and here is its report:
 
-Simply set join_syn_rej=1 when checking the MPJoin counters for these
-tests.
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/14147512989
 
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++++++-----
- 1 file changed, 21 insertions(+), 5 deletions(-)
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/be5c1c846ff1
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D948274
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 5060b7e24f94550246c2b1f0465dcaf42b869313..7f868d68ab2867241aaad1c8739a662f232e625f 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -62,6 +62,7 @@ unset sflags
- unset fastclose
- unset fullmesh
- unset speed
-+unset join_syn_rej
- unset join_csum_ns1
- unset join_csum_ns2
- unset join_fail_nr
-@@ -1403,6 +1404,7 @@ chk_join_nr()
- 	local syn_nr=$1
- 	local syn_ack_nr=$2
- 	local ack_nr=$3
-+	local syn_rej=${join_syn_rej:-0}
- 	local csum_ns1=${join_csum_ns1:-0}
- 	local csum_ns2=${join_csum_ns2:-0}
- 	local fail_nr=${join_fail_nr:-0}
-@@ -1468,6 +1470,15 @@ chk_join_nr()
- 		fail_test "got $count JOIN[s] ack HMAC failure expected 0"
- 	fi
- 
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinRejected")
-+	if [ -z "$count" ]; then
-+		rc=${KSFT_SKIP}
-+	elif [ "$count" != "$syn_rej" ]; then
-+		rc=${KSFT_FAIL}
-+		print_check "syn rejected"
-+		fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
-+	fi
-+
- 	print_results "join Rx" ${rc}
- 
- 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
-@@ -1963,7 +1974,8 @@ subflows_tests()
- 		pm_nl_set_limits $ns2 0 1
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 1 1 0
-+		join_syn_rej=1 \
-+			chk_join_nr 1 1 0
- 	fi
- 
- 	# subflow
-@@ -1992,7 +2004,8 @@ subflows_tests()
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
- 		run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 2 2 1
-+		join_syn_rej=1 \
-+			chk_join_nr 2 2 1
- 	fi
- 
- 	# single subflow, dev
-@@ -3061,7 +3074,8 @@ syncookies_tests()
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
- 		run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 2 1 1
-+		join_syn_rej=1 \
-+			chk_join_nr 2 1 1
- 	fi
- 
- 	# test signal address with cookies
-@@ -3545,7 +3559,8 @@ userspace_tests()
- 		pm_nl_set_limits $ns2 1 1
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 1 1 0
-+		join_syn_rej=1 \
-+			chk_join_nr 1 1 0
- 	fi
- 
- 	# userspace pm type does not send join
-@@ -3568,7 +3583,8 @@ userspace_tests()
- 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
- 		sflags=backup speed=slow \
- 			run_tests $ns1 $ns2 10.0.1.1
--		chk_join_nr 1 1 0
-+		join_syn_rej=1 \
-+			chk_join_nr 1 1 0
- 		chk_prio_nr 0 0 0 0
- 	fi
- 
 
--- 
-2.48.1
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
 
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
