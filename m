@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF5391B4F15;
-	Fri, 28 Mar 2025 14:28:21 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 44E953987D
+	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 16:26:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743172101; cv=none; b=MQiGUKdMprmTIKAhjO7pFMM8nAtbk/eQV6Tz810jiqX/Un3yKgA2D2EsDrz7Kp8blQUPPFemzzwRqplWd5HCGWUXU8rRPGeZ8p93+h/6anCqxwvIRlWNApz3SpoKE7Kw7eAvHIfKlTSnOGqzPIBzeQFr0uBB1KGzxEN9bYvvcTw=
+	t=1743265589; cv=none; b=Nn8HY66mDBwzPW5z6KyM5/SDkTyX2RQ6DdD3+RBu8vjv2OtcX1eId5gVRjUnRIEUK8WR6am3PgyCuj5dDSZ8peX10QYmmYe/Hp0zpSNsTe3+A/38hGjVrizovxm+nSidZvmPRtVfIufO4ZOyRQ/Inr5U1TJ6YLWTrilhV2ui8x8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743172101; c=relaxed/simple;
-	bh=huDQ4vgkjBwI5c/TpdXiJlPetTIhi7oSTen6uASUw+U=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=KG1hPLDCnOu/maB5FuV7SWZjP5krDDYtgyg5AuQilmB4KK1jz3NsC4IYAmSLuyZaVzEglJH5IeE116sNkNo/iEvoiRTncBE4vYLxKrz2MRCOuGlYXfmuL7kUgL0am4qMtZXoHkikVIoX3vBJwg7Pt1JHlI5GkF4+cY1EvrDNueA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dyzKF0JW; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743265589; c=relaxed/simple;
+	bh=3+2qDcOrTt9fAvOmYbRTiold+Dbs4mqEmjzwQSSOXzo=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=bT8i55BOb6MfdjCSLbvFbVHzJJdGwz7OlZFeSKMHfubO+Sn5gmsnbs73qxYXUIfdbek4i+v8U9ekzRijUaHFiEtjjINsJNnjHcFIYo52c9vV2ibHdpIujCCohC9Dm8lgPnKEiOH7jyr5stZ7WuKN9b4AVp+b6Zxpdv5wDuy/2Y4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iVXLJNLC; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dyzKF0JW"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 19E21C4CEE4;
-	Fri, 28 Mar 2025 14:28:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iVXLJNLC"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32601C4CEE2;
+	Sat, 29 Mar 2025 16:26:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743172101;
-	bh=huDQ4vgkjBwI5c/TpdXiJlPetTIhi7oSTen6uASUw+U=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=dyzKF0JWikCnB7HKrZmFCk8Lt8Xl5jWowejSsDXyvTQY20oDL5WTHBrdr6Sft3Nce
-	 vJQ8XqJgTXlavz8pvc66yAv+1WcvrDPpYoFUuGETOCi9PFX19Z8oACMvCaqSup3bEl
-	 m1JTyXzxPybWHqGp3EABD2QOSGzb1m5IkhnqYLX2hv3wjz2K0XLAWKPcuxH5WKy4XZ
-	 ZGMpAVk6zSEc8fHzSZzygxipCE1N0/e7bym5RGsD0ZYvUCtu6k6R0ZXdWA5ef7tBf7
-	 kazpM5gowIeu6p79ZEheauedQjC5tKfFXbLLbx9yZ+p/MHTO0J08XqaBZ997eTSgZE
-	 Phed4UQc3x9aA==
+	s=k20201202; t=1743265588;
+	bh=3+2qDcOrTt9fAvOmYbRTiold+Dbs4mqEmjzwQSSOXzo=;
+	h=From:Subject:Date:To:Cc:From;
+	b=iVXLJNLCNzrw4gON2hzdy8ADt5Xe18JY0sAL3TnhgcNxrN8K2vCVLfVw19riY980B
+	 dcOHw/U3WcVJMBar5OfKzRXoBFTbcg4iOSVOlVtmWbAhoZJ8Z4R6RoG+KA6dKqEyVj
+	 qcW45bPPhxEgujUXdee4As0zS011bVt5UHTSGEnhL7a4ILJ52EsiiKpapYkw/SuwJK
+	 ERF0Q/0eekcHQhNbyWsQOCLx6anAnOYW5H0ceo7QJCQ04Jdk6IwZLE3jSqUOEQw84o
+	 NxrQYA/bvoxqVLlQzI38ikuZcgY4Ssppmlu38YwTC9Pn+G+JPmoqUqA2q2+dxqng4t
+	 obKwvbA2ijCmA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Fri, 28 Mar 2025 15:27:19 +0100
-Subject: [PATCH net 4/4] selftests: mptcp: ignore mptcp_diag binary
+Subject: [PATCH mptcp-next 0/5] mptcp: fix MPJoinAckHMacFailure, add
+ MPJoinRejected
+Date: Sat, 29 Mar 2025 17:26:13 +0100
+Message-Id: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,60 +38,61 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250328-net-mptcp-misc-fixes-6-15-v1-4-34161a482a7f@kernel.org>
-References: <20250328-net-mptcp-misc-fixes-6-15-v1-0-34161a482a7f@kernel.org>
-In-Reply-To: <20250328-net-mptcp-misc-fixes-6-15-v1-0-34161a482a7f@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Florian Westphal <fw@strlen.de>, Shuah Khan <shuah@kernel.org>, 
- Dmytro Shytyi <dmytro@shytyi.net>, Gang Yan <yangang@kylinos.cn>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+X-B4-Tracking: v=1; b=H4sIACUf6GcC/yWMwQqAIBAFfyX2nKCGEP1KdBBda4VMVCIQ/z2py
+ 8DAvFchYyLMsAwVEt6U6QpdxDiAOXTYkZHtDpJLxSc5szMWEzs9S+jRFKattXwWSk1OQZ/FhI6
+ e73KFvw74FNhaewH3Pn17bgAAAA==
+X-Change-ID: 20250328-mptcp-mpj-reject-addd081553f5
+To: mptcp@lists.linux.dev
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=917; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=huDQ4vgkjBwI5c/TpdXiJlPetTIhi7oSTen6uASUw+U=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn5rHsXJqxAQ434DU1KAL3sueAHT0ICgCs3bYA3
- 4HFIxsYT2iJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ+ax7AAKCRD2t4JPQmmg
- c+dSD/sFlsNkJp+W+2zDwXFLCWl+ajZ0L4vgRRzfGH2xBdnYTk5wYHDKGPwKDgiIDQRtIzoqL69
- cGJ6JAvyP27k5jQYPaqfUEULi94nLo1blElJ9O7DWdS3AN4I75VpnHQmjOBb37v4hIms9cswdoo
- Hj9mAtFZULR3xvit5tnogDmyV+XJmNA6J0JKjgum1vMyfoBp2VzP2CXZ0U/0HNZb3+hOYui+7Kc
- mZJkzAyja8QN1BEW/xaq1Mc1GkDqy1qPQjRl4LD4SnD3FEXcD+6DHekcNwAOX/R9ypfYAiVPcyy
- sV8cvcEWYurC8BJb1LEXd3tCEWPgCaVDpYx/qfLF824v1K2CqspFHnNkHLMazGjNH7Laaa7P+aF
- /YcCotYwoBECyxZpMfFxzWfw2FddEyyzkLidgk82ApL12fdH9gvTqGugW+LFtUprQKhZ6Snaar7
- rWgXeLhARzFW0B/sNKVr4fHQpLa6ntBQByS+3oIb4C31mJMi5Seu0E7RPiOReLSWDAUkc+M/guC
- dZpLz3fqFj84NbWg2bYkBsHmKA/cIenDiogJsFfnPYOCp8+GQnRweM8YsJ8S6LSRziNAIqD7rca
- FDgvd0FbrnIIBb/idFzImFsRGiIbS/juo2E/DJogiMHPtcNu4kcF1Ed31rBSyQqlRBRl4Hnlcad
- UwdOHwvmVmAkBCQ==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1337; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=3+2qDcOrTt9fAvOmYbRTiold+Dbs4mqEmjzwQSSOXzo=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn6B8z2xBWlJaKxn20IhbUisEYoy2BSeGwWpN7T
+ UzNlbPvCt2JAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ+gfMwAKCRD2t4JPQmmg
+ c+18D/0Y1vaNrdL4lzbRijSj/PiM91Qxmx9J4hnrXti+8CKrrMm6zyZPoFYMCX/PinOwZoaCCc8
+ /ZwVIPBC23RaQ7EaCPa5q15owIt3abLI76MeRm7a70V7urHpDBfOqSCzx3/l4ljyu/2Cll5SsSl
+ Q5B7VAlObVvayHPrGxkTFDWxPl44pjyYdYKfGFVae7n8fR4GApeiMbK3Kl9YVlKEg3gkGBZwj6I
+ u45ZbLTVyB6BGCgwE+L38d0tZBrUxakpsNATbC8RSi7U5IViY++JbyXV/06A/4TsBGDPfIvd9+6
+ QFOO1BODOuIGeZiWBaUKWL6S4kqiH06WM8Zgrpmg+fRASAUDKt7MkVAnZhiz93EbUaw6L7/6+AP
+ 22toZNNQdx1wRxJ5XZK2JXMf0cnfjinW1+jPs7TXb3hFx9hyuxUU7srchHXlR8djM+rM0q0VLrd
+ Yl28B93n9FsGR3BBdGR8dtB32gBnCjuFusretKim0Je341nMlekGOQ5A4jCTC1/Qk7I7gFcv70N
+ 5ss2kwd0YMiz1++g8Tv4OYmqjCpiF+wBzDbsCS6laPsq81zluc9/jWuOYwm1TW6DlbRh3cHbCan
+ dD9EoF1qt2JjJei03ZFVvuyhGFqO9Q6eTR3Lx/0JFCA17YIPk7ljefckHqUoQwaIg2CCuaGHyaL
+ 4tTyw7UNLxNtNvg==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-A new binary is now generated by the MPTCP selftests: mptcp_diag.
+Recently, during a debugging session using local MPTCP connections, I
+noticed MPJoinAckHMacFailure was strangely not zero on the server side.
 
-Like the other binaries from this directory, there is no need to track
-this in Git, it should then be ignored.
+The first patch fixes this issue, and the second one validates it. These
+two patches can be applied in mptcp-net.
 
-Fixes: 00f5e338cf7e ("selftests: mptcp: Add a tool to get specific msk_info")
-Reviewed-by: Mat Martineau <martineau@kernel.org>
+There is a small refactoring in the 3rd patch.
+
+Patch 4 adds MPJoinRejected to track when the PM rejects patches, and
+patch 5 validates it.
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/.gitignore | 1 +
- 1 file changed, 1 insertion(+)
+Matthieu Baerts (NGI0) (5):
+      mptcp: only inc MPJoinAckHMacFailure for HMAC failures
+      selftests: mptcp: validate MPJoin HMacFailure counters
+      mptcp: pass right struct to subflow_hmac_valid
+      mptcp: add MPJoinRejected MIB counter
+      selftests: mptcp: validate MPJoinRejected counter
 
-diff --git a/tools/testing/selftests/net/mptcp/.gitignore b/tools/testing/selftests/net/mptcp/.gitignore
-index 49daae73c41e6f86c6f0e47aa42426e5ad5c17e6..833279fb34e2dd74a27f16c26e44108029dd45e1 100644
---- a/tools/testing/selftests/net/mptcp/.gitignore
-+++ b/tools/testing/selftests/net/mptcp/.gitignore
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0-only
- mptcp_connect
-+mptcp_diag
- mptcp_inq
- mptcp_sockopt
- pm_nl_ctl
+ net/mptcp/mib.c                                 |  1 +
+ net/mptcp/mib.h                                 |  1 +
+ net/mptcp/protocol.c                            |  4 ++-
+ net/mptcp/subflow.c                             | 18 +++++-----
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 44 ++++++++++++++++++++++---
+ 5 files changed, 54 insertions(+), 14 deletions(-)
+---
+base-commit: aca18798220853f0d7a8d01c28213e0d3fccfbfc
+change-id: 20250328-mptcp-mpj-reject-addd081553f5
 
+Best regards,
 -- 
-2.48.1
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
