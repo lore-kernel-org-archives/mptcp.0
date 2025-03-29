@@ -1,34 +1,35 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 196763987D
-	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 16:26:32 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11AF23987D
+	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 16:26:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743265593; cv=none; b=b3hqalW9SK06nWeDVxASVAf2xWL952bhb2bACrORR5TA4D5HnoiJq1hXHPC9OzlnaLAArXrY+BUYj9KAGkqt3N3FuD7HEViOW9iHe+V1Fd+wuFlXtWhblE5yzlI20Ovb9cHFMucnJ4RDANm+9nzEMO+wBUC+BnVJZ4szQs+x9c0=
+	t=1743265594; cv=none; b=TcZ6RY5FhURIGH8cEsbnKufUF5S+MeR91zhQFxewcY2I/aTIXs/SbKwvvPB0FMBoTOh7D7MenunvWEXZozu60MNCg1kzE0sWiwLQAb/W+ZZ1ZZgucjck4a09ygF8uc3WyZo50WgFgdrqA1/dlRfeZ+2LrVjh6xWuN4UZ+lWbPzE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743265593; c=relaxed/simple;
-	bh=tEsxrMw9vWVwnA/jXpM4EOEjKZ9Nyga2j1J7QMj/caY=;
+	s=arc-20240116; t=1743265594; c=relaxed/simple;
+	bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
 	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=gHHq4J+uZPB0LHCkIbSjlaUyAHTv68/tuSyP8t1L8Q0aTAi0h8nswWvrx2KfCZevXbmYk4qWLRJzLV1WnWcgi51BvAXYocqttBt//PYQE3SB8UJpK433uVu5bQxBcmndbjMKsyxgFx4aTnj2L6/ufCJ+Z7oCvpiohXNdx5yr0tQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GE8iN0Bb; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:To:Cc; b=goPdnqF/unNdt/gG3SGGVw1U5DVkEzsz+8sanHaDM8sGNFDoS4BkzIWlART74pf8z+NVRSm4ZHVpk2nXMxLt8x1z9dacGNIhA7VKYfoqihqcdvGfDpveoX2MJuqeoSc/fMvQjpOGiNtjquhfdiKlYyzji1VUVUoH3W8MfoiQ738=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qmfjmQcB; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GE8iN0Bb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18A9BC4CEE2;
-	Sat, 29 Mar 2025 16:26:31 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qmfjmQcB"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 107C7C4CEE9;
+	Sat, 29 Mar 2025 16:26:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743265592;
-	bh=tEsxrMw9vWVwnA/jXpM4EOEjKZ9Nyga2j1J7QMj/caY=;
+	s=k20201202; t=1743265593;
+	bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
 	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=GE8iN0BbD7D8s/mQxOP08hfV7Pao9+CtlBQnWolbLggLxG6Qwp/YZ7KwBQUmfPPZk
-	 r9aCJ/lAXWa8iHzg92FUfA47ITWaqD6hV9//zg5pQB0K+gTj7ifLOUjG2yOTx5ZlhQ
-	 QyZq+ode/njUJWBDLYJCmYUjd5zhdp+cg9VSHcBX4CS6MDMps9SixL3lk/wGY/P/9U
-	 nAaecCyaZQG4vRLXShxcFm28RneMsPritQZAlL1UZxgiV+8e5jUwC1dtNhxLNfvUo6
-	 XvT/PvqhQYcsAFjWK/kBcI2P+PJ2kuO+nps66+9RGWQ9PaM27A4++z+8qByleV5W1V
-	 BiitNp+w0n5Lw==
+	b=qmfjmQcBEl9u7JVYofnQziwJLxfZtpZhhQPxH25ogBNA7f4WyAoPMzF8b6rkdlKC/
+	 jPGK2pONIkxJcHXnO6v74f8NxJ1AZ+oipvcQuXZqbSuzjml4DYKsusW01IOJKZe5RV
+	 s+5hSf3Dsa2ieq++pFKbWVLuGsN5e+CqBomzlzcReieZQJULiED9ZL9/VwCo6vDSc2
+	 kNZWLBzAIdOslWp5xpt7pzKyqgr6ygqUYqoDey19AonLUSuN0Xv2HJXAUGRcmCKJ79
+	 KD0JgZceUUM2f/vJ/nEJE/ngQgE75LuFWkSiEvltu7xs/GbGaOUWqZ3iyHSyNqrkoD
+	 qZGRih8XQWNwQ==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Sat, 29 Mar 2025 17:26:17 +0100
-Subject: [PATCH mptcp-next 4/5] mptcp: add MPJoinRejected MIB counter
+Date: Sat, 29 Mar 2025 17:26:18 +0100
+Subject: [PATCH mptcp-next 5/5] selftests: mptcp: validate MPJoinRejected
+ counter
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,103 +38,136 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250329-mptcp-mpj-reject-v1-4-2396d5666e8f@kernel.org>
+Message-Id: <20250329-mptcp-mpj-reject-v1-5-2396d5666e8f@kernel.org>
 References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
 In-Reply-To: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=3301; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=tEsxrMw9vWVwnA/jXpM4EOEjKZ9Nyga2j1J7QMj/caY=;
- b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn6B8zA7vddrpsqr40KQ98ODkA2wziim/r1Fr2F
- ikuG2/BMqiJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ+gfMwAKCRD2t4JPQmmg
- c4EpD/4tX5d1nmvrVTiRFBjysRvABDyxZGEJ3B7EoLpjrT1v0CQt9PH4Lru48n+V3/yv+HzYEem
- +IkvNSmekDdaJ2XmbN2lGbAUZbmq+CRPxum9LWatfkbeuBrnDyxR26oVE0jE4ZBG4H2XZ6nnhxS
- qyGFD1c7pwuyqreHlUdq8M/YmwWjNxgHtYTVJ3/8NT6kwShdGwaxhQkE/6akmmg7YA1wmHc/BpG
- JygAU+ItnHy9OVn4jbs0hIHb1fq6XQl8+ux5oSxIim+wc9/EENX4NaUCCWsms2FGicejN4p1jTl
- K+zSq+4Evgf66A0nDAJCGnCoa9QfFE3rHXjJeSpcct1XFnvEQL//iiV9Ccn5XQr6UNiQoJFgh/k
- awVC5peVay2BQQaJfcyAHUr/40VpEJOk3Nkj26rbPvjjNT5FYpFKM+wtvwZ+JELEhf9guX15LdZ
- K/AuZVGCDPrtmabRvbDcx0x0Ch7GL+Wr/pznjluH56Ro/wYrTnSmENKmjAL00svwz/7ccHOXrc7
- yuPH4aSQi6FzhuA3sQU/dGnPdFC4ZdggVbOZSFaalXuuYD0lrJSvuCJOPn5RllbvpA8jdncDwbj
- N7PwGxuIZeq/ob/AXjG0hn4/phr8b82fiBK7uOfRCFS7SdEQ60L1RBJhGJt/l8aG68ompsPhnMa
- VEZXfxfTgj4Fq4w==
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3347; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=yeMaqJQBmjDpT0bgiEiAjJ9kHyXMiTOgWbynbyGyXjk=;
+ b=owEBbQKS/ZANAwAIAfa3gk9CaaBzAcsmYgBn6B8z7iGKhgw7WS/OQ+29Erf2Sg1/ZogHSHu+O
+ yyGchsWEzaJAjMEAAEIAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ+gfMwAKCRD2t4JPQmmg
+ c/qAD/wJPum7gP6qbk7dAvoEgFGAS4Ba9y/AtLgX5/Q6wO5ta5Sl89pWvjn/sOfvF0dhdDMelc1
+ 5TGEMotCoZlvVkckt1VST2h1/tnhTieW87mFejyGzvHQrBYLMchtJDYKY2NJKHttyYG1s2s1s1n
+ fvVMXIDfxK3JFt4I+f1LvxZqv3Nlv1T9XlhoD+cgq4ULLC9F9DRFNgknz/7N4FbxIUC/vhpR3Ty
+ ChkKnc4FtQ1UOFCP/hi4cm3LzyIt0hwuACTYRxN+sRQfkDZXoXdXbVSaVR2+4AFM7q6EqhZgtG3
+ JR5KMqDR4kaonR2XNEcBo+GtdWS5lP6UPVc43c3tGtK6ZDqCQNM/mgPdvfHUHbhbZgbCRLYZ9Vp
+ xxvMpykxYl4TTz2fsZesQqdwlU/XcvWrpZjKHMbfUjOicWBWWU3T67r3WoKRpz3a5SVY3Yd77P1
+ wAsrahBokROEooiV7tw8DlVr221lKIy2DzNmu2iatjaH3ZHvXuy7KesyfNfCRQvdjD0kJzRCUnc
+ HNGqgXA9VC4MqaXJGuD2iCJckCThEXasMJIB195YDeSK3OS5DNuKqC84PGS88N1pMnrieGsgRJX
+ TC7pekz0gCcx6q/DKp6pnPGlvcftqxKautCClZNZDZXHIYOFiOkf2tG/a5gGSnbsD5JIuovDYy3
+ UZDmQOXzKU8RBlA==
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-This counter is useful to understand why some paths are rejected, and
-not created as expected.
+The parent commit adds this new counter, incremented when receiving a
+connection request, if the PM didn't allow the creation of new subflows.
 
-It is incremented when receiving a connection request, if the PM didn't
-allow the creation of new subflows.
+Most of the time, it is then kept at 0, except when the PM limits cause
+the receiver side to reject new MPJoin connections. This is the case in
+the following tests:
+
+ - single subflow, limited by server
+ - multiple subflows, limited by server
+ - subflows limited by server w cookies
+ - userspace pm type rejects join
+ - userspace pm type prevents mp_prio
+
+Simply set join_syn_rej=1 when checking the MPJoin counters for these
+tests.
 
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- net/mptcp/mib.c      | 1 +
- net/mptcp/mib.h      | 1 +
- net/mptcp/protocol.c | 4 +++-
- net/mptcp/subflow.c  | 2 ++
- 4 files changed, 7 insertions(+), 1 deletion(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh | 26 ++++++++++++++++++++-----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
-diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
-index 19eb9292bd6093a760b41f98c1774fd2490c48e3..0c24545f0e8df95b3475bfccc7a2f2ce440f7ad2 100644
---- a/net/mptcp/mib.c
-+++ b/net/mptcp/mib.c
-@@ -28,6 +28,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
- 	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure", MPTCP_MIB_JOINSYNACKMAC),
- 	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
- 	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
-+	SNMP_MIB_ITEM("MPJoinRejected", MPTCP_MIB_JOINREJECTED),
- 	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
- 	SNMP_MIB_ITEM("MPJoinSynTxCreatSkErr", MPTCP_MIB_JOINSYNTXCREATSKERR),
- 	SNMP_MIB_ITEM("MPJoinSynTxBindErr", MPTCP_MIB_JOINSYNTXBINDERR),
-diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
-index 128282982843a07614a46f9b2c2f7c708306c769..250c6b77977e8f846b5741304f7841a922f51967 100644
---- a/net/mptcp/mib.h
-+++ b/net/mptcp/mib.h
-@@ -23,6 +23,7 @@ enum linux_mptcp_mib_field {
- 	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN */
- 	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK + MP_JOIN */
-+	MPTCP_MIB_JOINREJECTED,		/* The PM rejected the JOIN request */
- 	MPTCP_MIB_JOINSYNTX,		/* Sending a SYN + MP_JOIN */
- 	MPTCP_MIB_JOINSYNTXCREATSKERR,	/* Not able to create a socket when sending a SYN + MP_JOIN */
- 	MPTCP_MIB_JOINSYNTXBINDERR,	/* Not able to bind() the address when sending a SYN + MP_JOIN */
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 9042a86e003036f8eb9680bc6c520fb57d92dbd0..8ba1a4f225bd2014ebdc973e752702028ee5f31a 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3527,8 +3527,10 @@ bool mptcp_finish_join(struct sock *ssk)
- 		return true;
- 	}
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index 5060b7e24f94550246c2b1f0465dcaf42b869313..7f868d68ab2867241aaad1c8739a662f232e625f 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -62,6 +62,7 @@ unset sflags
+ unset fastclose
+ unset fullmesh
+ unset speed
++unset join_syn_rej
+ unset join_csum_ns1
+ unset join_csum_ns2
+ unset join_fail_nr
+@@ -1403,6 +1404,7 @@ chk_join_nr()
+ 	local syn_nr=$1
+ 	local syn_ack_nr=$2
+ 	local ack_nr=$3
++	local syn_rej=${join_syn_rej:-0}
+ 	local csum_ns1=${join_csum_ns1:-0}
+ 	local csum_ns2=${join_csum_ns2:-0}
+ 	local fail_nr=${join_fail_nr:-0}
+@@ -1468,6 +1470,15 @@ chk_join_nr()
+ 		fail_test "got $count JOIN[s] ack HMAC failure expected 0"
+ 	fi
  
--	if (!mptcp_pm_allow_new_subflow(msk))
-+	if (!mptcp_pm_allow_new_subflow(msk)) {
-+		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_JOINREJECTED);
- 		goto err_prohibited;
-+	}
++	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinRejected")
++	if [ -z "$count" ]; then
++		rc=${KSFT_SKIP}
++	elif [ "$count" != "$syn_rej" ]; then
++		rc=${KSFT_FAIL}
++		print_check "syn rejected"
++		fail_test "got $count JOIN[s] syn rejected expected $syn_rej"
++	fi
++
+ 	print_results "join Rx" ${rc}
  
- 	/* If we can't acquire msk socket lock here, let the release callback
- 	 * handle it
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index e7951786a97c91190c7341d2c586a1f4acc05ed5..15613d691bfef6800268ae75b62508736865f44a 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -247,6 +247,7 @@ static int subflow_check_req(struct request_sock *req,
+ 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+@@ -1963,7 +1974,8 @@ subflows_tests()
+ 		pm_nl_set_limits $ns2 0 1
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1
+-		chk_join_nr 1 1 0
++		join_syn_rej=1 \
++			chk_join_nr 1 1 0
+ 	fi
  
- 		if (unlikely(req->syncookie)) {
- 			if (!mptcp_can_accept_new_subflow(subflow_req->msk)) {
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINREJECTED);
- 				subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
- 				return -EPERM;
- 			}
-@@ -902,6 +903,7 @@ static struct sock *subflow_syn_recv_sock(const struct sock *sk,
- 			}
+ 	# subflow
+@@ -1992,7 +2004,8 @@ subflows_tests()
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1
+-		chk_join_nr 2 2 1
++		join_syn_rej=1 \
++			chk_join_nr 2 2 1
+ 	fi
  
- 			if (!mptcp_can_accept_new_subflow(owner)) {
-+				SUBFLOW_REQ_INC_STATS(req, MPTCP_MIB_JOINREJECTED);
- 				subflow_add_reset_reason(skb, MPTCP_RST_EPROHIBIT);
- 				goto dispose_child;
- 			}
+ 	# single subflow, dev
+@@ -3061,7 +3074,8 @@ syncookies_tests()
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		pm_nl_add_endpoint $ns2 10.0.2.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1
+-		chk_join_nr 2 1 1
++		join_syn_rej=1 \
++			chk_join_nr 2 1 1
+ 	fi
+ 
+ 	# test signal address with cookies
+@@ -3545,7 +3559,8 @@ userspace_tests()
+ 		pm_nl_set_limits $ns2 1 1
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		run_tests $ns1 $ns2 10.0.1.1
+-		chk_join_nr 1 1 0
++		join_syn_rej=1 \
++			chk_join_nr 1 1 0
+ 	fi
+ 
+ 	# userspace pm type does not send join
+@@ -3568,7 +3583,8 @@ userspace_tests()
+ 		pm_nl_add_endpoint $ns2 10.0.3.2 flags subflow
+ 		sflags=backup speed=slow \
+ 			run_tests $ns1 $ns2 10.0.1.1
+-		chk_join_nr 1 1 0
++		join_syn_rej=1 \
++			chk_join_nr 1 1 0
+ 		chk_prio_nr 0 0 0 0
+ 	fi
+ 
 
 -- 
 2.48.1
