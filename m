@@ -1,128 +1,158 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A28A32746D
-	for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 17:33:26 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 79FD579CD
+	for <mptcp@lists.linux.dev>; Sun, 30 Mar 2025 00:15:05 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743269608; cv=none; b=hFJzNEGTcCByEQZkpPdX4jmH4cpAsG2Vlep+6hSayVXQGbTCPPmc9O5kxNfBALYdXKZelyJG9Hkkn3SsWw4OmbAY2p2QqRH0WARjYiVinlPMGsl+JpETlihyQno5VHeu+N9FPs6rVHIwR8dk7CA6panZz+G7x1rahl6b5qeTxCA=
+	t=1743293705; cv=none; b=C8U8BdtP8HZd6EsB07aSmkbUFR7dhJ2P8QZ6/f//M/GlngfLb8daMJSl7Z47606uIWt4svYmnYEIGifgMf6t8Ydg8gdY5Zghcy2PSEk7r/kcm5EIlmjlPbBU6fJt5ccVgVsM1oXM7hPaiWjlzB+y2+m1j/rIgz96Bw9iry+j5Wo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743269608; c=relaxed/simple;
-	bh=sBLhhgxf66LdpF81/GC1br2i02PknLiPvom5zOm/vj8=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=G6BVoEf+d5wd0COMzITLjvfBMbwFJl80u5gU1VGwUsgeCAYE8MqYULX0k/4L5Jm2LEOgYvUdk/LBH1F/j/4DJedkJgmbB3DVuqdeCs4wLmTZBVnaFPvA6aj7yi95U/aqZS1ZfgTDTfDjR1HLwTEQRbMUAOldIi3F0Mjsh4eHw14=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=joCV7SkE; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743293705; c=relaxed/simple;
+	bh=dGSE6GFnlZWJrQ9xtvi/aBI/MLYcz+9IdpIdXj9yzAM=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=g04dSgHf8vMuFVQP1FHtNE4fIaH9Nhur29+zh675iKa0gqbSs4dlQCD0e3Z1IKcx62yuNv6rYtcibzleNmXdRQsJIsd/amqTyI+QuIAVEue4FOzoyDlzOSIds/EWbSVykIaQnh2DP2iQyngVGIKUUrszGd4+w4sYgN7Z8M3tLSU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cojNBNCq; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="joCV7SkE"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c56a3def84so335212185a.0
-        for <mptcp@lists.linux.dev>; Sat, 29 Mar 2025 10:33:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743269605; x=1743874405; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=du3g03Cr9uCnnIx40hAchqbmM76NedgWVZKIuZNL7yk=;
-        b=joCV7SkEyesoqozUCUM7rq59+Vy58QTlIRK4EiAC8kWDZxCYENesW+gYHzU33C3Qbz
-         poW8PNDA5B3rgbxjPOahAEFA0d/KhMjISXoHcmqNtPAucjR05TqOurRd0CEwGRJhdO3x
-         d69LKIgsr32qYYoVW7z34JFitVdKayv4cJjvhxhUKpYotHxjwQ8v4borAwSYQc2XyFyu
-         1MyehKeAduwcvSTf7LIr/+AG7IKBUGjsbhp5kFD+u/F7/y2MBZBjxreHtUiS5me8OUow
-         mKU93UXPDJ+NTngzH2aTr3tXEXQV949D0GGHYUJQthXvIYuEJoilOrw/dPxzeEzMr/Q0
-         auKA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743269605; x=1743874405;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=du3g03Cr9uCnnIx40hAchqbmM76NedgWVZKIuZNL7yk=;
-        b=dWc1ZpGbapMqn4tlWPoIXmO6HGLqTMgIYNsu2jjQ8eyUewIpRdgrcKQa5O5exXI6S6
-         /ystGKTpp9//ijHenxD9lzGd5efexSWvQrem4kdAt7/0cGVkdaNRUxOoCJgNRNja9aGn
-         6CE1i3Oir05oZX3ayogbTh6CbU4vZB9Hz7bexJVRdi9uBqi3fWGBLIbrSJfvpWbkP9kE
-         LSt7jakj9UsuFAF3h63lDN/CYw12S60S2hEA+NXz/IriVL2vN31NMXnIa+Qoy8UHaxPw
-         2Xmj/djVM2sD0r9KvbuvmqlBcWR8ZO1WVCJTyOd4ZxnQpVLMhrbZFXvzgOybx2fKnhXg
-         NhxQ==
-X-Gm-Message-State: AOJu0YyOCHPeja51kuksg2wtVTVJJMcgqkjGM9k2Gca3rEs73HY+mxgo
-	Bs7pWm5QFOTXKEwixOljwy747jqXtCZiqLdQNWRczKH/lUC79Y0=
-X-Gm-Gg: ASbGncvaHnl6Ac9cg783cajQu3NoE4UkeiCovSYt8ej7G6Lg0qcWjvJlNXgxs53Vlsz
-	0M6mk/rvTKVEOZbS0BaQKSSZAoVpR4KMFzVlmYiqeh4EzqCBGx7eXgP6IMqEdcMLyba6aCvneXw
-	Ji9dYJpmRieH5yzb+uzmSZuNlILKtoI/LffuGkQ9n4gsp70VTvMxMGS1HwWsTzdq38fdhRhu7XL
-	EseSOm7gwfmo8iMKGeTnoXSN6V0davozTj3AeWYJwqviqmomr1H56o3H6WBeuI7gbqCx4Qc6dwV
-	GLHt4PY6F2F1FgwSbQBk6BK7/8F2fr8AGNEF0S9Y4sDMYk7y0r9uwE0IxA==
-X-Google-Smtp-Source: AGHT+IFv8mgU+nskB1e3A1gZ/kgsXhsNCT6Rs6hQ4tHQt3ZVR+58mAj3XovGjHpt6e1PPdKBWCeaPQ==
-X-Received: by 2002:a05:620a:4252:b0:7c5:48d4:e8a2 with SMTP id af79cd13be357-7c6862ec55bmr398612185a.2.1743269605499;
-        Sat, 29 Mar 2025 10:33:25 -0700 (PDT)
-Received: from [127.0.0.1] ([74.249.22.145])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f76600bdsm266775285a.17.2025.03.29.10.33.23
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sat, 29 Mar 2025 10:33:24 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cojNBNCq"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5051FC4CEE2;
+	Sun, 30 Mar 2025 00:15:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1743293705;
+	bh=dGSE6GFnlZWJrQ9xtvi/aBI/MLYcz+9IdpIdXj9yzAM=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=cojNBNCqeMwUl+XmXLmfNlBoz7IpZTdhKV9V7uu/TTkk2erdz/tPQq5uEfXZZB5aC
+	 CBKt4frFihsSgwlp4kh1peZrpDGZX40o6tcGPRGN3lZ7B7Yd040b+SOpXWuhyMgfP0
+	 PTYMAifIAe6cyoDi8D/Us3zhq7ljovS9rxOuIGWnwxiZU3mPmbKurr+Ub1kbJOgNip
+	 AGWSxATKlPcxz07Urc3rtJPAdNGDIkojKjkdygZrp6eRTH7YauqqoXRMANa78J3y4/
+	 rLdwJe2EyGT7lziURrIKhC0V60rW+w1hSc+yi/yP3plRLb9BrlHtHtT6s3VLbIlcoI
+	 9WWlJTYoBW6fg==
+Message-ID: <36791aea3d151d35234f88c57b8205abcc1cca69.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next 2/5] selftests: mptcp: validate MPJoin
+ HMacFailure counters
+From: Geliang Tang <geliang@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, mptcp@lists.linux.dev
+Date: Sun, 30 Mar 2025 08:15:01 +0800
+In-Reply-To: <20250329-mptcp-mpj-reject-v1-2-2396d5666e8f@kernel.org>
 References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
-Subject: Re: [PATCH mptcp-next 0/5] mptcp: fix MPJoinAckHMacFailure, add
- MPJoinRejected
-Message-ID: <9ca6898d-6206-4d0b-53dc-555e59809d3f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Sat, 29 Mar 2025 17:33:23 +0000
+	 <20250329-mptcp-mpj-reject-v1-2-2396d5666e8f@kernel.org>
+Autocrypt: addr=geliang@kernel.org; prefer-encrypt=mutual;
+ keydata=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
+ Px+2P2cKc7LXXedb/qQ3M
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-
-Hi Matthieu,
-
-Thank you for your modifications, that's great!
-
-Our CI did some validations and here is its report:
-
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/14147512989
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/be5c1c846ff1
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D948274
+Content-Transfer-Encoding: 8bit
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Hi Matt,
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+Thanks for this patch.
 
-For more details:
+On Sat, 2025-03-29 at 17:26 +0100, Matthieu Baerts (NGI0) wrote:
+> The parent commit fixes an issue around these counters where one of
+> them
+> -- MPJoinAckHMacFailure -- was wrongly incremented in some cases.
+> 
+> This makes sure the counter is always 0. It should be incremented
+> only
+> in case of corruption, or a wrong implementation, which should not be
+> the case in these selftests.
+> 
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> ---
+> Note: this can go to mptcp-net as well, with the parent patch.
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 18
+> ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> index
+> 13a3b68181ee14eb628a858e5738094c3c936b74..5060b7e24f94550246c2b1f0465
+> dcaf42b869313 100755
+> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+> @@ -1441,6 +1441,15 @@ chk_join_nr()
+>  		fi
+>  	fi
+>  
+> +	count=$(mptcp_lib_get_counter ${ns2}
+> "MPTcpExtMPJoinSynAckHMacFailure")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "0" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "ack HMAC"
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Should here be "synack HMAC"...
 
+> +		fail_test "got $count JOIN[s] synack HMAC failure
+> expected 0"
+> +	fi
+> +
+>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
+>  	if [ -z "$count" ]; then
+>  		rc=${KSFT_SKIP}
+> @@ -1450,6 +1459,15 @@ chk_join_nr()
+>  		fail_test "got $count JOIN[s] ack rx expected
+> $ack_nr"
+>  	fi
+>  
+> +	count=$(mptcp_lib_get_counter ${ns1}
+> "MPTcpExtMPJoinAckHMacFailure")
+> +	if [ -z "$count" ]; then
+> +		rc=${KSFT_SKIP}
+> +	elif [ "$count" != "0" ]; then
+> +		rc=${KSFT_FAIL}
+> +		print_check "synack HMAC"
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
+... and here be "ack HMAC"?
 
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Thanks,
+-Geliang
+
+> +		fail_test "got $count JOIN[s] ack HMAC failure
+> expected 0"
+> +	fi
+> +
+>  	print_results "join Rx" ${rc}
+>  
+>  	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+> 
+
