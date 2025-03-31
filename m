@@ -1,115 +1,167 @@
-Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f172.google.com (mail-pl1-f172.google.com [209.85.214.172])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2B12514D29B;
-	Mon, 31 Mar 2025 20:27:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E6538218EB1;
+	Mon, 31 Mar 2025 21:04:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.172
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743452847; cv=none; b=HZlG1EKSSTB2cGvTSzFEtFua8pNL3fEJgtVhUvsQU3KiXKCK5cvZjCabuLFhPRAetfhbxTSgWm2xz3+lsXM5uh2iPxNLao/3NqDR84F3ZiBQgiyZM2XCHZKr0aW9YJYGkdFvvC8z3hqbBh1nX/wszwQNfaBGOrTCA6ZFBxBH6NI=
+	t=1743455095; cv=none; b=o3N5r+pdHx1Zx9rSIYMdV+nHTXECaNykZ1aHwZRBNbYsr07QmUylL9/RaWzwj/T/QMeAaHOM+nsIVFtVgH6FyR+vX1iG3L2geBox9nu31qf4H5KDXIoWkyQGygfvwo0Ldbwfvl7d/Bsd/xrzCsy+V645vZwEfGebD7HV8xzP880=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743452847; c=relaxed/simple;
-	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=hDP6s+u7t+3XmBj4aksCFJUDs5WqDjm3kEcR30/1EFYPRdjFKR/qHNohn1ZDstJncDkGzk1DGTlYwm8wObjBAekqTj/Wa0/DK7+k0qln/+J4MHTF9f7jhA1JHNL7ajs+ZZFFMQn54h0XrKxMs7szsg8KkCiDLsKl5s143AfWWz8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=1xyxNhXA; arc=none smtp.client-ip=144.76.82.148
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
+	s=arc-20240116; t=1743455095; c=relaxed/simple;
+	bh=U+1yEEOZzVsnuUOy+RsFKoOt/F2YbfNHQ5QjEgiuuAI=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=t3CAKiAFtgMoY3GonZUqi+4KfYCFXkKJidi51oIFzOlyoDeN9hVTYF7JAzHpsCUvtxesmEu2+1ewmXSgYAlVMithJjbB/IcZAh7ImNiFKHbRNzOBTcfx8sEz7LMdbt5+qyYsLlkkzJB/dTNmqvwA/Qgyc8cwKSh6tJj9dYulZeU=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=DQjNOW7i; arc=none smtp.client-ip=209.85.214.172
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="1xyxNhXA"
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
-	s=42; h=From:Cc:To:Date:Message-ID;
-	bh=vYhCw4nnQmvtyifVwDW6bFGacU6nCINp4M+2BQ1vpis=; b=1xyxNhXAAZkumfn+rj9gjbDgJq
-	Cac07i2SbLbMyd3WejpqlYAZVYYUr44gazhhYrd4YT8aNL7InIJUa8HDHDKrH39rL+yAODAtOH/7W
-	O4j8vi/2JqQUU3hGyXW+acp0G6EuYTesgDP9t4I9fOHGiXRet9y7HD+n8rGRvNAOznCzq5roEUY1m
-	7BoGjfNMB6lVKOw406lFzYc91MyD8ADG8uM9jOeXlxWWzT+NqbO0Sr5tRTkGP8ry5YaR6uzAZQ3rt
-	ykbUgPvgPMRkNTbX7AqOM/i8CQiNgBDue667YAS2zuEXYboBuiyDbB0DNmEUv/4KIaGtzEw0IHpur
-	YBO6gx7cElsGJEN1IsJxDEiAO4N3dhfj+icUDr4RWA6qGmhE/J1uSHf0gocR9WXKmoZDAvdVBjjMC
-	T5H55JVmt3id6TXT5t3Q0YgS8tKzB4WMMNOB4EQYHjzySVUlsBn/xb34lZ6+LVMKIgkQ6MV+AO7RS
-	d1XvbBcwupfsWYYJr0+8JKjv;
-Received: from [127.0.0.2] (localhost [127.0.0.1])
-	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
-	(Exim)
-	id 1tzLj6-007YEh-3D;
-	Mon, 31 Mar 2025 20:27:21 +0000
-Message-ID: <62ef4f1e-a726-423a-a765-ee584ee681c0@samba.org>
-Date: Mon, 31 Mar 2025 22:27:17 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="DQjNOW7i"
+Received: by mail-pl1-f172.google.com with SMTP id d9443c01a7336-22580c9ee0aso97925535ad.2;
+        Mon, 31 Mar 2025 14:04:53 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743455093; x=1744059893; darn=lists.linux.dev;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:from:to:cc:subject:date:message-id:reply-to;
+        bh=gYhYk9y2DXMVeKQttY/EQvcE7aZgDZ1TAkVyVBo9hSY=;
+        b=DQjNOW7inlXN1c9rDX3T6bFlDfn1roOn75nVeESZ6KviqXVIZWEbJWem6Fx+pTw3FR
+         AgBbCoUr/kC+4Xk4zL2DXpa+LeT7ACfvvhI8GQm/tfuBFVyk2+jEIwI34fLllGpvt917
+         rP9gJJ6WsNZ7DzqWo0K2IEGu+SCbWSDPG4CXzq4fnWzJf7XTx5HlJvuPtA7mrCAp6/yA
+         KWjDEABVEYgWIgoU+IGHV3lvan+qO1aYFOGj2KIJIkZNWUT08za6LQuXUAXBKcIDS2+Y
+         yfJ95/1HWt0NiAAiDSi4v1+wcMe/UthB5nRQI/yO6+0TdA7vhfJJ7ZbnAuvjgfRUF8d6
+         xLzA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743455093; x=1744059893;
+        h=in-reply-to:content-disposition:mime-version:references:message-id
+         :subject:cc:to:from:date:x-gm-message-state:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=gYhYk9y2DXMVeKQttY/EQvcE7aZgDZ1TAkVyVBo9hSY=;
+        b=Z+pSUB6rsFmumHRQC7yaHvLMfXGd0dqz3IvjxVhT3IviOha4lxtmk9z+97eDShzIO2
+         D2cepH0NG/jTEd4OKOjDM5Z6t/UD3RtNdJ7DyLFhL2G//TFtsowziAMs0q1S8wd+SVAZ
+         Ro39HndOlNfI8u5nRvCMGV4BTncV7wgaArenvPZLCrW+wU8qEMBy3n8sISGENF1/Kqz3
+         TmltTX/iXdnHCtKP51nMs9wxoX3VwW/Er4rbCUS9MVI8h4WtKgtc45HfV4R73kfASbH0
+         5HnGeU5CtiEPP53lRcCWlQLWu6M91+GEnIYyM7ZhxlYmtwIdBa0BRrpn1bqDLWQgTJAV
+         MecQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWnBmvj8IrJFPLC56fVyX9wGapDzDGgbmpfXqgZ7J8jFyZB1Awn248+bh8HZLOa5K6K1IerEg==@lists.linux.dev, AJvYcCXiB/njbBgH0NgvxLLg+lJ42VFfLJCWhtiseE4fladjdeFDr4YZoUNJhSuRIGdq2D6itvRugNDzgBLhiGUqlLA=@lists.linux.dev
+X-Gm-Message-State: AOJu0Yw2lY28HLK3RJfqEI8SfYwnPEEWSV+P1wFxUDlSubRmDt2GOT40
+	bw3ekbtQk0zPNqgkODBOubZIfSgcdY96RsEeGwtvKLurkFns17k=
+X-Gm-Gg: ASbGnctn38E4bcU+uZhRmBy9/EvR0tIYBwl+Y//C+Y6UBuzeKG8mf2bfVP8XmYWPLhz
+	E+Uh6Goprz00i00UL8ScKDjHF1MAasjycl9uZI7uuSSMiD0fBvU1xEb2/gS9nHtxCax5nPiTPGY
+	58RjG3A3afK7iHOSwl8K/oaa9L+IfbYRSo/FJ1FpgI7aT+mH0GsMGAVAIBXYbynPhXsfgZ7PWY7
+	x3YAiNhEL4sJlB3qIrNPg2f5I6E3kI1UeSvw3raZdIqZJAfYY6LVkiAbKIkyb/2NWwQPpNP0nLe
+	BfoYg3+D8YffQhbvaOxn0GFwH36x6FttDzuCB5oX82arxsFVg2J2X8o=
+X-Google-Smtp-Source: AGHT+IFXBij7YY6OTj5GMzGgIwp1/yPImE6Pq87f1IxAZ8AzDKSftLkrfp99lNthyITIW+quB0Qxkw==
+X-Received: by 2002:a05:6a00:1412:b0:736:3fa8:cf7b with SMTP id d2e1a72fcca58-739803bc866mr12795498b3a.13.1743455092825;
+        Mon, 31 Mar 2025 14:04:52 -0700 (PDT)
+Received: from localhost ([2601:646:9e00:f56e:123b:cea3:439a:b3e3])
+        by smtp.gmail.com with UTF8SMTPSA id 41be03b00d2f7-af93ba10126sm6811351a12.75.2025.03.31.14.04.52
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 31 Mar 2025 14:04:52 -0700 (PDT)
+Date: Mon, 31 Mar 2025 14:04:51 -0700
+From: Stanislav Fomichev <stfomichev@gmail.com>
+To: Stefan Metzmacher <metze@samba.org>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+	Jens Axboe <axboe@kernel.dk>,
+	Pavel Begunkov <asml.silence@gmail.com>,
+	Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+	Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
+	Ayush Sawal <ayush.sawal@chelsio.com>,
+	Andrew Lunn <andrew+netdev@lunn.ch>,
+	"David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Kuniyuki Iwashima <kuniyu@amazon.com>,
+	Willem de Bruijn <willemb@google.com>,
+	David Ahern <dsahern@kernel.org>,
+	Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+	Xin Long <lucien.xin@gmail.com>,
+	Neal Cardwell <ncardwell@google.com>,
+	Joerg Reuter <jreuter@yaina.de>,
+	Marcel Holtmann <marcel@holtmann.org>,
+	Johan Hedberg <johan.hedberg@gmail.com>,
+	Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+	Oliver Hartkopp <socketcan@hartkopp.net>,
+	Marc Kleine-Budde <mkl@pengutronix.de>,
+	Robin van der Gracht <robin@protonic.nl>,
+	Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+	Alexander Aring <alex.aring@gmail.com>,
+	Stefan Schmidt <stefan@datenfreihafen.org>,
+	Miquel Raynal <miquel.raynal@bootlin.com>,
+	Alexandra Winter <wintera@linux.ibm.com>,
+	Thorsten Winkler <twinkler@linux.ibm.com>,
+	James Chapman <jchapman@katalix.com>,
+	Jeremy Kerr <jk@codeconstruct.com.au>,
+	Matt Johnston <matt@codeconstruct.com.au>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Krzysztof Kozlowski <krzk@kernel.org>,
+	Remi Denis-Courmont <courmisch@gmail.com>,
+	Allison Henderson <allison.henderson@oracle.com>,
+	David Howells <dhowells@redhat.com>,
+	Marc Dionne <marc.dionne@auristor.com>,
+	Wenjia Zhang <wenjia@linux.ibm.com>,
+	Jan Karcher <jaka@linux.ibm.com>,
+	"D. Wythe" <alibuda@linux.alibaba.com>,
+	Tony Lu <tonylu@linux.alibaba.com>,
+	Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+	Boris Pismenny <borisp@nvidia.com>,
+	John Fastabend <john.fastabend@gmail.com>,
+	Stefano Garzarella <sgarzare@redhat.com>,
+	Martin Schiller <ms@dev.tdt.de>,
+	=?utf-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn@kernel.org>,
+	Magnus Karlsson <magnus.karlsson@intel.com>,
+	Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+	Jonathan Lemon <jonathan.lemon@gmail.com>,
+	Alexei Starovoitov <ast@kernel.org>,
+	Daniel Borkmann <daniel@iogearbox.net>,
+	Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+	linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+	linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+	linux-can@vger.kernel.org, dccp@vger.kernel.org,
+	linux-wpan@vger.kernel.org, linux-s390@vger.kernel.org,
+	mptcp@lists.linux.dev, linux-rdma@vger.kernel.org,
+	rds-devel@oss.oracle.com, linux-afs@lists.infradead.org,
+	tipc-discussion@lists.sourceforge.net,
+	virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+	bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+	io-uring@vger.kernel.org
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
+ to proto[_ops].getsockopt()
+Message-ID: <Z-sDc-0qyfPZz9lv@mini-arch>
+References: <cover.1743449872.git.metze@samba.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [RFC PATCH 2/4] net: pass 'optlen_t' to proto[ops].getsockopt()
- hooks
-To: Linus Torvalds <torvalds@linux-foundation.org>,
- Jens Axboe <axboe@kernel.dk>
-Cc: Pavel Begunkov <asml.silence@gmail.com>, Breno Leitao
- <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
- Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
- Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
- "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
- <willemb@google.com>, David Ahern <dsahern@kernel.org>,
- Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
- Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
- Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
- Johan Hedberg <johan.hedberg@gmail.com>,
- Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
- Oliver Hartkopp <socketcan@hartkopp.net>,
- Marc Kleine-Budde <mkl@pengutronix.de>,
- Robin van der Gracht <robin@protonic.nl>,
- Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
- Alexander Aring <alex.aring@gmail.com>,
- Stefan Schmidt <stefan@datenfreihafen.org>,
- Miquel Raynal <miquel.raynal@bootlin.com>,
- Alexandra Winter <wintera@linux.ibm.com>,
- Thorsten Winkler <twinkler@linux.ibm.com>,
- James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
- Matt Johnston <matt@codeconstruct.com.au>,
- Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
- Remi Denis-Courmont <courmisch@gmail.com>,
- Allison Henderson <allison.henderson@oracle.com>,
- David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
- Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
- "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
- Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
- Boris Pismenny <borisp@nvidia.com>, John Fastabend
- <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
- Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
- <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
- Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
- Jonathan Lemon <jonathan.lemon@gmail.com>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
- linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
- linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
- linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
- linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
- linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
- virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
- bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
- io-uring@vger.kernel.org
-References: <cover.1743449872.git.metze@samba.org>
- <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
-Content-Language: en-US, de-DE
-From: Stefan Metzmacher <metze@samba.org>
-In-Reply-To: <76db80040bdeeb4a0221b5b6583fda4988afa64e.1743449872.git.metze@samba.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <cover.1743449872.git.metze@samba.org>
 
-PiBkaWZmIC0tZ2l0IGEvbmV0L3NvY2tldC5jIGIvbmV0L3NvY2tldC5jDQo+IGluZGV4IDlh
-MGU3MjBmMDg1OS4uZmEyZGUxMmMxMGU2IDEwMDY0NA0KPiAtLS0gYS9uZXQvc29ja2V0LmMN
-Cj4gKysrIGIvbmV0L3NvY2tldC5jDQo+IEBAIC0yMzUwLDEyICsyMzUwLDE1IEBAIGludCBk
-b19zb2NrX2dldHNvY2tvcHQoc3RydWN0IHNvY2tldCAqc29jaywgYm9vbCBjb21wYXQsIGlu
-dCBsZXZlbCwNCj4gICAJfSBlbHNlIGlmICh1bmxpa2VseSghb3BzLT5nZXRzb2Nrb3B0KSkg
-ew0KPiAgIAkJZXJyID0gLUVPUE5PVFNVUFA7DQo+ICAgCX0gZWxzZSB7DQo+IC0JCWlmIChX
-QVJOX09OQ0Uob3B0dmFsLmlzX2tlcm5lbCB8fCBvcHRsZW4uaXNfa2VybmVsLA0KPiArCQlv
-cHRsZW5fdCBfb3B0bGVuID0geyAudXAgPSBOVUxMLCB9Ow0KPiArDQo+ICsJCWlmIChXQVJO
-X09OQ0Uob3B0dmFsLmlzX2tlcm5lbCwNCg0KU29ycnksIHRoZSByZW1vdmFsIG9mICd8fCBv
-cHRsZW4uaXNfa2VybmVsJyBzaG91bGQgYmUgaW4gdGhlIG5leHQgY29tbWl0Li4uDQoNCj4g
-ICAJCQkgICAgICAiSW52YWxpZCBhcmd1bWVudCB0eXBlIikpDQo+ICAgCQkJcmV0dXJuIC1F
-T1BOT1RTVVBQOw0KDQoNCg==
+On 03/31, Stefan Metzmacher wrote:
+> The motivation for this is to remove the SOL_SOCKET limitation
+> from io_uring_cmd_getsockopt().
+> 
+> The reason for this limitation is that io_uring_cmd_getsockopt()
+> passes a kernel pointer as optlen to do_sock_getsockopt()
+> and can't reach the ops->getsockopt() path.
+> 
+> The first idea would be to change the optval and optlen arguments
+> to the protocol specific hooks also to sockptr_t, as that
+> is already used for setsockopt() and also by do_sock_getsockopt()
+> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+> 
+> But as Linus don't like 'sockptr_t' I used a different approach.
+> 
+> @Linus, would that optlen_t approach fit better for you?
+
+[..]
+
+> Instead of passing the optlen as user or kernel pointer,
+> we only ever pass a kernel pointer and do the
+> translation from/to userspace in do_sock_getsockopt().
+
+At this point why not just fully embrace iov_iter? You have the size
+now + the user (or kernel) pointer. Might as well do
+s/sockptr_t/iov_iter/ conversion?
