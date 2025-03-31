@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1F018A93C
-	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 12:57:12 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8C21DF73C
+	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 13:06:51 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743425832; cv=none; b=Gj8DCKkMuiin3gzzQH6UZ7JJMXbxURx8PneeC8XjRNpDbsiNlAPUdEGSKhCRCpkkz/AVlXQe4JppFg05grx5Cgd9d9+LpMUl3DPIodYUL7qvu4jfODpC8MsR5dReLbxczNDH5pyapA2k6dZfIOJDSI2Ld9b4eyHYlGisrqCCb9s=
+	t=1743426411; cv=none; b=gifkqbgeVSZKasC9o7/+VFDo9QEIP3B+OMS6wJIr0QcrcHn9Z8dPPi0xIUwkuB7/Xe1tnzNYkDQVTNJIiXfNXKa953OpAE4i+iRblzdSiyNRFuUWimQ9OISLn3Y4dQKBLwH9I5lAS1qjtz+tWxWN1Oc2/mT+iIp50YXyjp+DdLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743425832; c=relaxed/simple;
-	bh=QITiDu8ac5SB5yn21KgRsvvyvSjNAwtErLK9C3Vaojo=;
+	s=arc-20240116; t=1743426411; c=relaxed/simple;
+	bh=t1Ar22F1YmqUU+iLXgTuM+ITqPHHQ+8GP08zvwPAXlo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=Qv+js6TXm0bo5KksfeMzy0lRvTek+Vnxq3G5LD5Vu2ksZ6BL6osrgCuzsKKeAt8tNf+4vfeUkvlQWUE4Vienm6QQwwQPO7MXp3f3IkQ5aghtP6SstsCKy5jmzCA/+X4dTZxX+/thJj1hGYgPEeKzpiQql8In7/BPKc8C0V4esXQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQmDD1Xm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=q9u8hP1A5thX3XtRtolbbdBVwfpT5E4RH3Cu3dWfyVFhoHiwUt1phUDca8/j2f9NNvuVI11IegQ1wA9NUFVFVUVqwoKpEdlEUyZFvXZtWn4+tGctMStilbB0bKERaKhrA7LLNpGSnjUvzc3+jzwmMG8NChQTawTkPYyRWkcVwF0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQVHPrh6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQmDD1Xm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB3BC4CEE3;
-	Mon, 31 Mar 2025 12:57:11 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQVHPrh6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEB7C4CEE3;
+	Mon, 31 Mar 2025 13:06:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743425832;
-	bh=QITiDu8ac5SB5yn21KgRsvvyvSjNAwtErLK9C3Vaojo=;
+	s=k20201202; t=1743426411;
+	bh=t1Ar22F1YmqUU+iLXgTuM+ITqPHHQ+8GP08zvwPAXlo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=oQmDD1Xmg/ula91TPrSoPMbJyxgURURgAzi6e/ElKqsTwnMiwbL/VXh9SWpAesd0T
-	 Lrm+Bv+nvfbWiltxeBGfXAAHWtVDewEPoznlcFakeloFZl0QpwYa6RIjKO+dfHZWC2
-	 F4l+OZ4arAJfY8VGBCnQ2eQNR6gxahZ6TQQtAaeJicz9T8PdOGubbOTae1kzKnQy9a
-	 PqkajArKjB44OOyVgaSrCyWojMJMGocH50R0D4/TaFNGsYuCIsabGTgp0MpVnDQT7X
-	 HSIXFHeLDo8DhjHnzHpPHuqFUDg+nvvsljLR+rnmEvd4RZtJTO2KGvhIv+fHXuQCer
-	 kFlw4Sgfy2Z7g==
-Message-ID: <34ce1680-a30e-4bf6-a214-101d91c83cd1@kernel.org>
-Date: Mon, 31 Mar 2025 14:57:08 +0200
+	b=aQVHPrh6sWOCHQAXjVlZ7ojhXZbGLjfqKdnogCZRWRhfRLMkHjteE/bbNwGJxpBQo
+	 91CYwSLqwkp/ZHkFQMmoYeER8nSxWrpOi5jb1rD7oVPwRrqrqqTCkAiAKof+XzJA9I
+	 qXaVeAN8IJ+bQuMib6yjCezBMv0+Nj9kDJixELA+rJLhHWhcQKRJ7XUNMKNRRsEypP
+	 oyQUSO+LGcFPZg4e572iPBQdJ4oBsqqqGvw9Re3Avyji/sU8Xs4TwFsKnl9qgs4/v0
+	 a5PQko/TKufkFLtyYRzVWNxSNmqHylO1VUmpZxLLsUZd6lqkB61qqHjYr/P1y8w3p9
+	 5ODLt0gUFbMlw==
+Message-ID: <6c929bb7-a27f-48a2-a835-a20e44c3a1ef@kernel.org>
+Date: Mon, 31 Mar 2025 15:06:48 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 4/5] mptcp: add MPJoinRejected MIB counter
+Subject: Re: [PATCH mptcp-next 0/5] mptcp: fix MPJoinAckHMacFailure, add
+ MPJoinRejected
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
- <20250329-mptcp-mpj-reject-v1-4-2396d5666e8f@kernel.org>
- <910fc74590b10617dfc0dffe950f895f2457c089.camel@kernel.org>
+ <7e340c72d4b865a29f794ee9f5e7cab1a7d22df1.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,95 +86,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <910fc74590b10617dfc0dffe950f895f2457c089.camel@kernel.org>
+In-Reply-To: <7e340c72d4b865a29f794ee9f5e7cab1a7d22df1.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 31/03/2025 03:59, Geliang Tang wrote:
+On 31/03/2025 04:05, Geliang Tang wrote:
 > Hi Matt,
 > 
+> Thanks for this set.
+> 
 > On Sat, 2025-03-29 at 17:26 +0100, Matthieu Baerts (NGI0) wrote:
->> This counter is useful to understand why some paths are rejected, and
->> not created as expected.
+>> Recently, during a debugging session using local MPTCP connections, I
+>> noticed MPJoinAckHMacFailure was strangely not zero on the server
+>> side.
 >>
->> It is incremented when receiving a connection request, if the PM
->> didn't
->> allow the creation of new subflows.
+>> The first patch fixes this issue, and the second one validates it.
+>> These
+>> two patches can be applied in mptcp-net.
+>>
+>> There is a small refactoring in the 3rd patch.
+>>
+>> Patch 4 adds MPJoinRejected to track when the PM rejects patches, and
+>> patch 5 validates it.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> ---
->>  net/mptcp/mib.c      | 1 +
->>  net/mptcp/mib.h      | 1 +
->>  net/mptcp/protocol.c | 4 +++-
->>  net/mptcp/subflow.c  | 2 ++
->>  4 files changed, 7 insertions(+), 1 deletion(-)
->>
->> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
->> index
->> 19eb9292bd6093a760b41f98c1774fd2490c48e3..0c24545f0e8df95b3475bfccc7a
->> 2f2ce440f7ad2 100644
->> --- a/net/mptcp/mib.c
->> +++ b/net/mptcp/mib.c
->> @@ -28,6 +28,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
->>  	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure",
->> MPTCP_MIB_JOINSYNACKMAC),
->>  	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
->>  	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
->> +	SNMP_MIB_ITEM("MPJoinRejected", MPTCP_MIB_JOINREJECTED),
->>  	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
->>  	SNMP_MIB_ITEM("MPJoinSynTxCreatSkErr",
->> MPTCP_MIB_JOINSYNTXCREATSKERR),
->>  	SNMP_MIB_ITEM("MPJoinSynTxBindErr",
->> MPTCP_MIB_JOINSYNTXBINDERR),
->> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
->> index
->> 128282982843a07614a46f9b2c2f7c708306c769..250c6b77977e8f846b5741304f7
->> 841a922f51967 100644
->> --- a/net/mptcp/mib.h
->> +++ b/net/mptcp/mib.h
->> @@ -23,6 +23,7 @@ enum linux_mptcp_mib_field {
->>  	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK
->> + MP_JOIN */
->>  	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN
->> */
->>  	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK +
->> MP_JOIN */
->> +	MPTCP_MIB_JOINREJECTED,		/* The PM rejected
->> the JOIN request */
->>  	MPTCP_MIB_JOINSYNTX,		/* Sending a SYN + MP_JOIN
->> */
->>  	MPTCP_MIB_JOINSYNTXCREATSKERR,	/* Not able to create a
->> socket when sending a SYN + MP_JOIN */
->>  	MPTCP_MIB_JOINSYNTXBINDERR,	/* Not able to bind() the
->> address when sending a SYN + MP_JOIN */
->> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
->> index
->> 9042a86e003036f8eb9680bc6c520fb57d92dbd0..8ba1a4f225bd2014ebdc973e752
->> 702028ee5f31a 100644
->> --- a/net/mptcp/protocol.c
->> +++ b/net/mptcp/protocol.c
->> @@ -3527,8 +3527,10 @@ bool mptcp_finish_join(struct sock *ssk)
->>  		return true;
->>  	}
->>  
->> -	if (!mptcp_pm_allow_new_subflow(msk))
->> +	if (!mptcp_pm_allow_new_subflow(msk)) {
->> +		MPTCP_INC_STATS(sock_net(ssk),
->> MPTCP_MIB_JOINREJECTED);
 > 
-> nit:
+> Except for my two small suggestions in patch 2 and patch 4, the rest of
+> the code LGTM! No need to send a v2, please update them when merging
+> this set (if you agree with these two small changes).
 > 
-> Although the result is the same as sock_net(ssk), what do you think of
-> using sock_net(parent) here?
+>     Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-We could, but why would you prefer using 'parent' instead of 'ssk'? Ii
-picked 'ssk' because that's the one passed in argument of this function.
-'parent' is obtained from 'ssk'.
+Thank you for the review!
 
-I hope you don't mind if I apply the patch as it is because I already
-applied the parent patches. I can always change that later of course.
+Now in our tree (with the suggested modification in patch 2):
+
+New patches for t/upstream-net and t/upstream:
+- 0331c038b8f1: mptcp: only inc MPJoinAckHMacFailure for HMAC failures
+- f80f8ee1b1b7: selftests: mptcp: validate MPJoin HMacFailure counters
+- Results: 3804298131e0..c8227c8f8681 (export-net)
+- Results: 6ac9a8d5227d..21ef34d86439 (export)
+
+New patches for t/upstream:
+- 3f8822824116: mptcp: pass right struct to subflow_hmac_valid
+- 7b0845a43565: mptcp: add MPJoinRejected MIB counter
+- 49e3c7e5ef6b: selftests: mptcp: validate MPJoinRejected counter
+- Results: 21ef34d86439..b291aa1915c1 (export)
+
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/cc0ff77a44448f3720df63d496387419c551f415/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/5110f50c1efb4273b3a28b0ae530b282b05af9ba/checks
+
 
 Cheers,
 Matt
