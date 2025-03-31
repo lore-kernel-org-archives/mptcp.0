@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 924DE1C5489
-	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 12:31:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB1F018A93C
+	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 12:57:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743424267; cv=none; b=cF+z6U3POiCIWReCNQgy8n98Ub3JeBDYCTnLImJfg+53ivNIeKd9HFezendrdj+GxJ+P39k7CEuSFJYNKlKqbgLrUZK08oj/tRHJ3fD7Lky2EemtITV5q1z5/3QXX0sdTSKnnJpNZd1sS1X+qKufAuykMEKTtcFkTxvhufZJ4iU=
+	t=1743425832; cv=none; b=Gj8DCKkMuiin3gzzQH6UZ7JJMXbxURx8PneeC8XjRNpDbsiNlAPUdEGSKhCRCpkkz/AVlXQe4JppFg05grx5Cgd9d9+LpMUl3DPIodYUL7qvu4jfODpC8MsR5dReLbxczNDH5pyapA2k6dZfIOJDSI2Ld9b4eyHYlGisrqCCb9s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743424267; c=relaxed/simple;
-	bh=vUtIo09FAuFgzDSca66kEDJNYIHdUEgmeU7bDtr52DY=;
+	s=arc-20240116; t=1743425832; c=relaxed/simple;
+	bh=QITiDu8ac5SB5yn21KgRsvvyvSjNAwtErLK9C3Vaojo=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=is75DCuV4ovNjRA+PmsJdsNHiY9qI/C49xTYOK+ZZMbceuPb0UHY3bbfB+7bxQ6Lmpb+RRKHl6A8S/5pei0t1/c73nJ4NhiU9Disb2KcNe5SZviS34l3gDQee2nIh5CY84ULIywslPjtF/SIBvIDX2dHLz95ztsvB9AK97dSlBg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AA61QgbB; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Qv+js6TXm0bo5KksfeMzy0lRvTek+Vnxq3G5LD5Vu2ksZ6BL6osrgCuzsKKeAt8tNf+4vfeUkvlQWUE4Vienm6QQwwQPO7MXp3f3IkQ5aghtP6SstsCKy5jmzCA/+X4dTZxX+/thJj1hGYgPEeKzpiQql8In7/BPKc8C0V4esXQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=oQmDD1Xm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AA61QgbB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 97BF0C4CEE3;
-	Mon, 31 Mar 2025 12:31:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="oQmDD1Xm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7FB3BC4CEE3;
+	Mon, 31 Mar 2025 12:57:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743424266;
-	bh=vUtIo09FAuFgzDSca66kEDJNYIHdUEgmeU7bDtr52DY=;
+	s=k20201202; t=1743425832;
+	bh=QITiDu8ac5SB5yn21KgRsvvyvSjNAwtErLK9C3Vaojo=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=AA61QgbB+cIotqhs1QSrIoIO3tlCy1F+Sh92bv+AoKw2VPjwJgDe0FAbif/uRbWGo
-	 /uir9LO85uDSiP90jvVXg+tiS8MseTcabur92txB2nCCvr5UdHkcfrBQfdY9HNN4Xk
-	 THIOMTMVGeB/rhJpX8Meou+DSSCjJPNqAtDUai/mtA7EaKJ5UDJPO+8XxyBQwDehkM
-	 mvlPx2k+dN5SNQO8TsqQGpdOJ2WLbtMict+VyuKVbdLG7WqE1usuCYbIh+HHd5rHvz
-	 oNSslesXqO2AwyrUx6XZBU1GJ2EnPw7NOz9Hp42fijlb8sUXKhtkk7HBirn6xOETiF
-	 uGZinvXQpvdjA==
-Message-ID: <610655ed-02e8-4c33-b1d9-b2f224638b84@kernel.org>
-Date: Mon, 31 Mar 2025 14:31:02 +0200
+	b=oQmDD1Xmg/ula91TPrSoPMbJyxgURURgAzi6e/ElKqsTwnMiwbL/VXh9SWpAesd0T
+	 Lrm+Bv+nvfbWiltxeBGfXAAHWtVDewEPoznlcFakeloFZl0QpwYa6RIjKO+dfHZWC2
+	 F4l+OZ4arAJfY8VGBCnQ2eQNR6gxahZ6TQQtAaeJicz9T8PdOGubbOTae1kzKnQy9a
+	 PqkajArKjB44OOyVgaSrCyWojMJMGocH50R0D4/TaFNGsYuCIsabGTgp0MpVnDQT7X
+	 HSIXFHeLDo8DhjHnzHpPHuqFUDg+nvvsljLR+rnmEvd4RZtJTO2KGvhIv+fHXuQCer
+	 kFlw4Sgfy2Z7g==
+Message-ID: <34ce1680-a30e-4bf6-a214-101d91c83cd1@kernel.org>
+Date: Mon, 31 Mar 2025 14:57:08 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 2/5] selftests: mptcp: validate MPJoin
- HMacFailure counters
+Subject: Re: [PATCH mptcp-next 4/5] mptcp: add MPJoinRejected MIB counter
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
- <20250329-mptcp-mpj-reject-v1-2-2396d5666e8f@kernel.org>
- <36791aea3d151d35234f88c57b8205abcc1cca69.camel@kernel.org>
+ <20250329-mptcp-mpj-reject-v1-4-2396d5666e8f@kernel.org>
+ <910fc74590b10617dfc0dffe950f895f2457c089.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,80 +86,95 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <36791aea3d151d35234f88c57b8205abcc1cca69.camel@kernel.org>
+In-Reply-To: <910fc74590b10617dfc0dffe950f895f2457c089.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 Hi Geliang,
 
-On 30/03/2025 01:15, Geliang Tang wrote:
-> 
+On 31/03/2025 03:59, Geliang Tang wrote:
 > Hi Matt,
 > 
-> Thanks for this patch.
-> 
 > On Sat, 2025-03-29 at 17:26 +0100, Matthieu Baerts (NGI0) wrote:
->> The parent commit fixes an issue around these counters where one of
->> them
->> -- MPJoinAckHMacFailure -- was wrongly incremented in some cases.
+>> This counter is useful to understand why some paths are rejected, and
+>> not created as expected.
 >>
->> This makes sure the counter is always 0. It should be incremented
->> only
->> in case of corruption, or a wrong implementation, which should not be
->> the case in these selftests.
+>> It is incremented when receiving a connection request, if the PM
+>> didn't
+>> allow the creation of new subflows.
 >>
 >> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 >> ---
->> Note: this can go to mptcp-net as well, with the parent patch.
->> ---
->>  tools/testing/selftests/net/mptcp/mptcp_join.sh | 18
->> ++++++++++++++++++
->>  1 file changed, 18 insertions(+)
+>>  net/mptcp/mib.c      | 1 +
+>>  net/mptcp/mib.h      | 1 +
+>>  net/mptcp/protocol.c | 4 +++-
+>>  net/mptcp/subflow.c  | 2 ++
+>>  4 files changed, 7 insertions(+), 1 deletion(-)
 >>
->> diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+>> diff --git a/net/mptcp/mib.c b/net/mptcp/mib.c
 >> index
->> 13a3b68181ee14eb628a858e5738094c3c936b74..5060b7e24f94550246c2b1f0465
->> dcaf42b869313 100755
->> --- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> +++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
->> @@ -1441,6 +1441,15 @@ chk_join_nr()
->>  		fi
->>  	fi
+>> 19eb9292bd6093a760b41f98c1774fd2490c48e3..0c24545f0e8df95b3475bfccc7a
+>> 2f2ce440f7ad2 100644
+>> --- a/net/mptcp/mib.c
+>> +++ b/net/mptcp/mib.c
+>> @@ -28,6 +28,7 @@ static const struct snmp_mib mptcp_snmp_list[] = {
+>>  	SNMP_MIB_ITEM("MPJoinSynAckHMacFailure",
+>> MPTCP_MIB_JOINSYNACKMAC),
+>>  	SNMP_MIB_ITEM("MPJoinAckRx", MPTCP_MIB_JOINACKRX),
+>>  	SNMP_MIB_ITEM("MPJoinAckHMacFailure", MPTCP_MIB_JOINACKMAC),
+>> +	SNMP_MIB_ITEM("MPJoinRejected", MPTCP_MIB_JOINREJECTED),
+>>  	SNMP_MIB_ITEM("MPJoinSynTx", MPTCP_MIB_JOINSYNTX),
+>>  	SNMP_MIB_ITEM("MPJoinSynTxCreatSkErr",
+>> MPTCP_MIB_JOINSYNTXCREATSKERR),
+>>  	SNMP_MIB_ITEM("MPJoinSynTxBindErr",
+>> MPTCP_MIB_JOINSYNTXBINDERR),
+>> diff --git a/net/mptcp/mib.h b/net/mptcp/mib.h
+>> index
+>> 128282982843a07614a46f9b2c2f7c708306c769..250c6b77977e8f846b5741304f7
+>> 841a922f51967 100644
+>> --- a/net/mptcp/mib.h
+>> +++ b/net/mptcp/mib.h
+>> @@ -23,6 +23,7 @@ enum linux_mptcp_mib_field {
+>>  	MPTCP_MIB_JOINSYNACKMAC,	/* HMAC was wrong on SYN/ACK
+>> + MP_JOIN */
+>>  	MPTCP_MIB_JOINACKRX,		/* Received an ACK + MP_JOIN
+>> */
+>>  	MPTCP_MIB_JOINACKMAC,		/* HMAC was wrong on ACK +
+>> MP_JOIN */
+>> +	MPTCP_MIB_JOINREJECTED,		/* The PM rejected
+>> the JOIN request */
+>>  	MPTCP_MIB_JOINSYNTX,		/* Sending a SYN + MP_JOIN
+>> */
+>>  	MPTCP_MIB_JOINSYNTXCREATSKERR,	/* Not able to create a
+>> socket when sending a SYN + MP_JOIN */
+>>  	MPTCP_MIB_JOINSYNTXBINDERR,	/* Not able to bind() the
+>> address when sending a SYN + MP_JOIN */
+>> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+>> index
+>> 9042a86e003036f8eb9680bc6c520fb57d92dbd0..8ba1a4f225bd2014ebdc973e752
+>> 702028ee5f31a 100644
+>> --- a/net/mptcp/protocol.c
+>> +++ b/net/mptcp/protocol.c
+>> @@ -3527,8 +3527,10 @@ bool mptcp_finish_join(struct sock *ssk)
+>>  		return true;
+>>  	}
 >>  
->> +	count=$(mptcp_lib_get_counter ${ns2}
->> "MPTcpExtMPJoinSynAckHMacFailure")
->> +	if [ -z "$count" ]; then
->> +		rc=${KSFT_SKIP}
->> +	elif [ "$count" != "0" ]; then
->> +		rc=${KSFT_FAIL}
->> +		print_check "ack HMAC"
+>> -	if (!mptcp_pm_allow_new_subflow(msk))
+>> +	if (!mptcp_pm_allow_new_subflow(msk)) {
+>> +		MPTCP_INC_STATS(sock_net(ssk),
+>> MPTCP_MIB_JOINREJECTED);
 > 
-> Should here be "synack HMAC"...
+> nit:
 > 
->> +		fail_test "got $count JOIN[s] synack HMAC failure
->> expected 0"
->> +	fi
->> +
->>  	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
->>  	if [ -z "$count" ]; then
->>  		rc=${KSFT_SKIP}
->> @@ -1450,6 +1459,15 @@ chk_join_nr()
->>  		fail_test "got $count JOIN[s] ack rx expected
->> $ack_nr"
->>  	fi
->>  
->> +	count=$(mptcp_lib_get_counter ${ns1}
->> "MPTcpExtMPJoinAckHMacFailure")
->> +	if [ -z "$count" ]; then
->> +		rc=${KSFT_SKIP}
->> +	elif [ "$count" != "0" ]; then
->> +		rc=${KSFT_FAIL}
->> +		print_check "synack HMAC"
-> 
-> ... and here be "ack HMAC"?
+> Although the result is the same as sock_net(ssk), what do you think of
+> using sock_net(parent) here?
 
-Good catch! I can fix that when applying the patches.
+We could, but why would you prefer using 'parent' instead of 'ssk'? Ii
+picked 'ssk' because that's the one passed in argument of this function.
+'parent' is obtained from 'ssk'.
+
+I hope you don't mind if I apply the patch as it is because I already
+applied the parent patches. I can always change that later of course.
 
 Cheers,
 Matt
