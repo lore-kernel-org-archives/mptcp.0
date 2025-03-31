@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F8C21DF73C
-	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 13:06:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6EA3A21420B
+	for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 14:33:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743426411; cv=none; b=gifkqbgeVSZKasC9o7/+VFDo9QEIP3B+OMS6wJIr0QcrcHn9Z8dPPi0xIUwkuB7/Xe1tnzNYkDQVTNJIiXfNXKa953OpAE4i+iRblzdSiyNRFuUWimQ9OISLn3Y4dQKBLwH9I5lAS1qjtz+tWxWN1Oc2/mT+iIp50YXyjp+DdLc=
+	t=1743431584; cv=none; b=IurdgkEcdIVkg5nBsE21q1y17yxYn7TvMUA16XEgrhmwVTjjAdz4DuzmZPTQyCcgJ/k96j9lNqn4su/KsFyq73SYnjH0I9ohda/n5Hax101KD6U7GiWd1Bk0siF6/+yUL9NXbRMHoFB1AS/v76QzRSsFNQLIopIzBO6d7/de7tE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743426411; c=relaxed/simple;
-	bh=t1Ar22F1YmqUU+iLXgTuM+ITqPHHQ+8GP08zvwPAXlo=;
+	s=arc-20240116; t=1743431584; c=relaxed/simple;
+	bh=eHx5ylvhBgrDxH7gndMuskqghNGDoeXRqjpMFz0ePuc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=q9u8hP1A5thX3XtRtolbbdBVwfpT5E4RH3Cu3dWfyVFhoHiwUt1phUDca8/j2f9NNvuVI11IegQ1wA9NUFVFVUVqwoKpEdlEUyZFvXZtWn4+tGctMStilbB0bKERaKhrA7LLNpGSnjUvzc3+jzwmMG8NChQTawTkPYyRWkcVwF0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=aQVHPrh6; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=aOnC+xn9PLUVwdGvUjq4GcjPcJYsCj1zdcNmqCaUQf5aDJ/27DrXeb5h2Pyy5GQ2ALakFxrHk/KYm0uoQew1Giw1c1LSq3wCtAilQ9jOLOPazMPuCwiK9Q192Rx7oAHB2mZXYxb1cGkKOZU1fgku408HyBl9X/5O9myu7oBo+CM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TmHi/Im2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="aQVHPrh6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7EEB7C4CEE3;
-	Mon, 31 Mar 2025 13:06:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TmHi/Im2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id C7D12C4CEE3;
+	Mon, 31 Mar 2025 14:33:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743426411;
-	bh=t1Ar22F1YmqUU+iLXgTuM+ITqPHHQ+8GP08zvwPAXlo=;
+	s=k20201202; t=1743431583;
+	bh=eHx5ylvhBgrDxH7gndMuskqghNGDoeXRqjpMFz0ePuc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=aQVHPrh6sWOCHQAXjVlZ7ojhXZbGLjfqKdnogCZRWRhfRLMkHjteE/bbNwGJxpBQo
-	 91CYwSLqwkp/ZHkFQMmoYeER8nSxWrpOi5jb1rD7oVPwRrqrqqTCkAiAKof+XzJA9I
-	 qXaVeAN8IJ+bQuMib6yjCezBMv0+Nj9kDJixELA+rJLhHWhcQKRJ7XUNMKNRRsEypP
-	 oyQUSO+LGcFPZg4e572iPBQdJ4oBsqqqGvw9Re3Avyji/sU8Xs4TwFsKnl9qgs4/v0
-	 a5PQko/TKufkFLtyYRzVWNxSNmqHylO1VUmpZxLLsUZd6lqkB61qqHjYr/P1y8w3p9
-	 5ODLt0gUFbMlw==
-Message-ID: <6c929bb7-a27f-48a2-a835-a20e44c3a1ef@kernel.org>
-Date: Mon, 31 Mar 2025 15:06:48 +0200
+	b=TmHi/Im231a0vdAItteZk1+mqZEFxJif/4XdHQVNLjDyg+WabjPhV1kXCBE/cC6g6
+	 aid9/VgGx6pZLOfKxHTrkgCWU0nMUeE4eGJC0tj4i4ZL6+BPI9hzvcngm3mfc+qvin
+	 UCeAilk8BFRjSRt1aIRUt+2S+u1reo9h1n7ecR77myaseni67XB0yB6wlXJO7VqNT1
+	 uJ5z6lO7PBGcmFTm34AiTMn0zTfduCeURUD6hiYOwvmMEfRxY/VgU76StUmrvyp6IS
+	 i85M+9RrQdAlMak0Sr+CNE4aq5nK2o1EicrJc2XS4mzpElpLPwOh9PCBiytowpy0Ib
+	 RLyaqW/1//UvQ==
+Message-ID: <0ddacf10-7eb3-4254-8442-58999ead1aee@kernel.org>
+Date: Mon, 31 Mar 2025 16:32:59 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 0/5] mptcp: fix MPJoinAckHMacFailure, add
- MPJoinRejected
+Subject: Re: A question about openssh over MPTCP
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <20250329-mptcp-mpj-reject-v1-0-2396d5666e8f@kernel.org>
- <7e340c72d4b865a29f794ee9f5e7cab1a7d22df1.camel@kernel.org>
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <20250331022148.GA34015@yangang-pc>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,63 +84,45 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <7e340c72d4b865a29f794ee9f5e7cab1a7d22df1.camel@kernel.org>
+In-Reply-To: <20250331022148.GA34015@yangang-pc>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang,
 
-On 31/03/2025 04:05, Geliang Tang wrote:
-> Hi Matt,
+On 31/03/2025 04:21, Gang Yan wrote:
+> Dear maintainers:
 > 
-> Thanks for this set.
+> Hello everyone, there exists a method in 'https://www.mptcp.dev'
+> which can use openssh over MPTCP.
+
+Out of curiosity, which methods did you use?
+The FAQ suggests a few alternatives:
+
+https://www.mptcp.dev/faq.html#how-to-enable-mptcp-support-with-openssh
+
+> But when I followed the guide
+> to use ssh's tools in two subflows, such as 'scp' and 'git clone <ssh link>', the
+> speed is the same as the TCP, which is weird. I have checked
+> the there is one 'msk' and two 'ssk' with 'ss -Mtie', and both subflows
+> is transferring the data, but the total speed is the same as TCP.
 > 
-> On Sat, 2025-03-29 at 17:26 +0100, Matthieu Baerts (NGI0) wrote:
->> Recently, during a debugging session using local MPTCP connections, I
->> noticed MPJoinAckHMacFailure was strangely not zero on the server
->> side.
->>
->> The first patch fixes this issue, and the second one validates it.
->> These
->> two patches can be applied in mptcp-net.
->>
->> There is a small refactoring in the 3rd patch.
->>
->> Patch 4 adds MPJoinRejected to track when the PM rejects patches, and
->> patch 5 validates it.
->>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> Except for my two small suggestions in patch 2 and patch 4, the rest of
-> the code LGTM! No need to send a v2, please update them when merging
-> this set (if you agree with these two small changes).
-> 
->     Reviewed-by: Geliang Tang <geliang@kernel.org>
+> Do you ever checked the 'scp' before? And maybe there exists a bug here?
+> By the way, can you provide some ideas to find out the root readson?
 
-Thank you for the review!
+Performances is a tricky topic: there can be many reasons not to "fill
+the pipe". The bottleneck can be due to the CPU, the IO, the
+application, the receiver, the sender, the network conditions, the TCP
+CC algo, the MPTCP scheduler, a bug, a path marked as backup, etc. I
+recommend you to monitor these resources. Analysing packet traces can
+help as well to find on which side is the bottleneck (e.g. if the client
+sends Zero windows, if there are a lot of retransmissions, etc.). Also
+check the MIB counters (nstat) on both sides. This can be quickly
+time-consuming, but probably worth it.
 
-Now in our tree (with the suggested modification in patch 2):
-
-New patches for t/upstream-net and t/upstream:
-- 0331c038b8f1: mptcp: only inc MPJoinAckHMacFailure for HMAC failures
-- f80f8ee1b1b7: selftests: mptcp: validate MPJoin HMacFailure counters
-- Results: 3804298131e0..c8227c8f8681 (export-net)
-- Results: 6ac9a8d5227d..21ef34d86439 (export)
-
-New patches for t/upstream:
-- 3f8822824116: mptcp: pass right struct to subflow_hmac_valid
-- 7b0845a43565: mptcp: add MPJoinRejected MIB counter
-- 49e3c7e5ef6b: selftests: mptcp: validate MPJoinRejected counter
-- Results: 21ef34d86439..b291aa1915c1 (export)
-
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/cc0ff77a44448f3720df63d496387419c551f415/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5110f50c1efb4273b3a28b0ae530b282b05af9ba/checks
-
+I didn't check the performances of 'scp' with MPTCP, but I remember in
+the past to have a slow transfer because the compression was used,
+and/or many small files had to be sent.
 
 Cheers,
 Matt
