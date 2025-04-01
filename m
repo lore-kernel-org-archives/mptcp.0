@@ -1,126 +1,174 @@
-Received: from mail-qk1-f182.google.com (mail-qk1-f182.google.com [209.85.222.182])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from hr2.samba.org (hr2.samba.org [144.76.82.148])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AF3701DF73B
-	for <mptcp@lists.linux.dev>; Tue,  1 Apr 2025 06:37:15 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.182
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF21F29405;
+	Tue,  1 Apr 2025 08:19:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=144.76.82.148
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743489437; cv=none; b=VdYHdT1YW0goDjPAT9/0LNRwkgKEY8GEtgUvCdab+iNEqO1mwdU9JCif1UhJlU7sloo1G783XtnSF2uF3YnaievZyS7/X4eYjFxwhLuiZTjndDErQdwGmEVj/fkZ4oBO6UiFqaWDph5BRpNg+wPdrFr9RdDPtSisnIIMoR0f7bw=
+	t=1743495558; cv=none; b=WEe48fax51yGDHk9oFvIkZhZ8j/Zaf1fjUrS2v8hcSNQb3h2QWZLOw1+xoHiRFCZocXTtWnM4NgFtCFnM0i/2mFHXtnbg2+fmEkyEjS97BC5lJNDCU9KQhoR4hbdbS+WB+imj8gcgoGquE1epcVHHcHvFq6WFXuoRWjT5o0z5Tk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743489437; c=relaxed/simple;
-	bh=3mDPEWXCkiGrPHyayfuQt2hxsa0yhKXNculnzAj9uFc=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=DlyG89Yp4sdftwPt69wQel5TFhiMQAHjgKzvaTClrQ6jmZY1qVDM0iouudhua25GDYSlDxuJdfI3o7/dwJLKA+zjMzHhU4E2rODFGW6PLtKS6z5viWkS7FYGonRC1eUalXsQqpfci3/0RelrrP5oJfeQpFiwICIzPKO9qkyggcs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=jbiG8Lz1; arc=none smtp.client-ip=209.85.222.182
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1743495558; c=relaxed/simple;
+	bh=qlsGP9nYpg9ECwWOf+7L3C+s5nRg0js3AhgwMO+0GnI=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=Gkdk46e9LsW6C6G1jvz3AWkyFNMYSO/EVwef0FDLJ54P4pxVYsg2Qfl0yuFi6Ls+EdNxLVVuTWacsBx8mHBcJ1mDBzmwdyIVFjd9V7UxRk3oEjlQNzOhRU0ch6JqTZDsAracTekqapp0tYMHPjVUk4ZjuhriTx3u0KksL9LoNlc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org; spf=pass smtp.mailfrom=samba.org; dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b=RV7b9Dch; arc=none smtp.client-ip=144.76.82.148
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=samba.org
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=samba.org
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jbiG8Lz1"
-Received: by mail-qk1-f182.google.com with SMTP id af79cd13be357-7c55b53a459so545509685a.3
-        for <mptcp@lists.linux.dev>; Mon, 31 Mar 2025 23:37:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1743489434; x=1744094234; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=OOzL0LITJJdfmZYJChLXA3qK5zq4RFrDF3MHV1W3O+4=;
-        b=jbiG8Lz18bRWHmBuWgjUlYRxFhNUZLQuI04CHYC+chnLktB1+XtjR5zNmThWo7E1tj
-         kidAQPSMj0X8+gJ7QDZ+oRy2go/5j/N0PicmtDDuXpLcZq//TkcLznghlQwOvlowXMRA
-         GfPV2qH93i+Mv/VJ3E4iaz4LZu/bPhJ1k9hXD5PO0nXpIXu31nAZbqvmGB9iiDw1+NSm
-         iJJXYPXkwaDq6UCHyVIIC0oBmZlSh8BYyzlZX5BACg4QsnsxAWNsbnJMRdTkcdM1l15T
-         TDausKjC7vduxuYVTgipGQCK47it/lVwMO7C5CUIfBKwIH/2hnF2PHaQQATxAUsImPD9
-         cvDA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1743489434; x=1744094234;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=OOzL0LITJJdfmZYJChLXA3qK5zq4RFrDF3MHV1W3O+4=;
-        b=q3VIR+49zdUJ5IiSfenVwGCJfbPWx+g1NN/bYobSXV/v/hwANsDsc6YJmUvfReNb2J
-         xR/wVBJ4CnWGeD1BZ9mWdlfH8ghTwKpvggX6ETA5lCnyvh35cXtXD99sDO0N4IFeIvLh
-         W2XgejO3HODtotC40+v/sIY4LFilvaGgxUEmD+NpjM5GPWL7sJGXouh7z9FDtmmva32d
-         KEpkldOQJOPdeZtOFk7NioAti7Jyowh7Pxobn55bko0FEwT/94Gsh2F6zYBxyp8K8tzN
-         0z8qEhpy9ISXiq93swFm+tXsolum4CoxoH7XUbCvFzcBMmIg51SkN8ADu3j7gDnCL6tb
-         4Krw==
-X-Gm-Message-State: AOJu0YxcLOa0PNdGo2xeKKdzDfWQXWs81flRrzIwvC8gN1oNmAz9y0Tp
-	3u2BQxwOFMHMLCk4WsbfS40A2t+29PjV2SpV3jR2//owjSjHf+E=
-X-Gm-Gg: ASbGncs+y2Dw45Yb3EtWd+5KZIhb25gckgbVvjZcDfHlgrHTlLPKIhHtbnbS4j7xxEi
-	VuxWjqTqVKAKVGANHE9KlP8gnGnYGiFg6f+SpO/I/mE6vl1op40rwNdIz2pOy1iMaBFNiSc1S1Z
-	1e31IWurVdOS2iclnv2J5jCMgSV2ReiXbCsrEiRtb88KP/puSbVgZnXERH+yDpYB/mIyzNbgf2+
-	11X9g/5nH9dSTgf7xb4aGZ4CmI5o9annHyJqthSll8awSjlQF/OGvYuLDvVBQLWE2C6OW2zBkz4
-	+Q+Li11ea+4tnPOS9d74s8hM9FKmh0vomP5vqZNL+xdZO5Ug5hwuPLgsbDK+SmgyzkI=
-X-Google-Smtp-Source: AGHT+IH2fLdapTd9ko1wcR0w0gKei+RAioh0KmkXOn2sAV1BvF6AwR2X8GXmUBaKH7ntSMFKJtBIlg==
-X-Received: by 2002:a05:620a:4506:b0:7c5:3df0:48cf with SMTP id af79cd13be357-7c6862e7846mr1368430585a.3.1743489434488;
-        Mon, 31 Mar 2025 23:37:14 -0700 (PDT)
-Received: from [127.0.0.1] ([20.25.193.78])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f777e00asm617477285a.90.2025.03.31.23.37.13
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 31 Mar 2025 23:37:13 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Stefan Metzmacher <metze@samba.org>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1743449872.git.metze@samba.org>
-References: <cover.1743449872.git.metze@samba.org>
-Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via
- optlen_t to proto[_ops].getsockopt()
-Message-ID: <1fcfe2e3-064f-bced-5a2b-b6b2bf286b9b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Tue, 01 Apr 2025 06:37:12 +0000
+	dkim=pass (3072-bit key) header.d=samba.org header.i=@samba.org header.b="RV7b9Dch"
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=samba.org;
+	s=42; h=From:Cc:To:Date:Message-ID;
+	bh=vJej1gym8PffvPJkpcAVY4oHxH7PtcR6PiojZNvFt9M=; b=RV7b9DchSX6L/1eGwqFQrmPoMe
+	hf0+MvUSe77ZEvXnOMKdaDfI72KNjrnBHp4+fOyw74E/OKn4qz/xPPhyS7jysMN32ED0nZFh+bSWt
+	qNTdeC9sUxWNSlUy3fPjumM8AyZcbA0ZmlEpLcU9V+2QwUoXZ7eQfcl2nXK+BF86z5eiOUe5W+1UA
+	0QlMB9Ew/iDDfZQz1e7CZjakP0NXtY+bs+HEsN/fv3tTiQvAZhGTsamRKtNDHQAO89fEIE3KeBJf8
+	xcd8vRDXXIUCf417uDpOhlMncOdHNgBrwgFPS3pKv66oe2Gxh7inZx1qK9sSIbFAyQV3hRiMvLECg
+	thVcgrdmcYk8AM8eIrag2xACAnicTWSHEjTexxvojrRysCeGDc29D6smjQ2phM7X9otv3Fm5Phnsk
+	JXkUjKNwFhUfQWuhXXq7lO+xH6aXarbwoeT3Oz7x9XbnXQJv7YBaLBY2zEYjoaVXXS037eARPx8fj
+	gfrHfFqPkn/4/n7sGmBOfAQs;
+Received: from [127.0.0.2] (localhost [127.0.0.1])
+	by hr2.samba.org with esmtpsa (TLS1.3:ECDHE_SECP256R1__ECDSA_SECP256R1_SHA256__CHACHA20_POLY1305:256)
+	(Exim)
+	id 1tzWpu-007dNX-35;
+	Tue, 01 Apr 2025 08:19:07 +0000
+Message-ID: <39515c76-310d-41af-a8b4-a814841449e3@samba.org>
+Date: Tue, 1 Apr 2025 10:19:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Mozilla Thunderbird
+Subject: Re: [RFC PATCH 0/4] net/io_uring: pass a kernel pointer via optlen_t
+ to proto[_ops].getsockopt()
+To: Stanislav Fomichev <stfomichev@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>,
+ Jens Axboe <axboe@kernel.dk>, Pavel Begunkov <asml.silence@gmail.com>,
+ Breno Leitao <leitao@debian.org>, Jakub Kicinski <kuba@kernel.org>,
+ Christoph Hellwig <hch@lst.de>, Karsten Keil <isdn@linux-pingi.de>,
+ Ayush Sawal <ayush.sawal@chelsio.com>, Andrew Lunn <andrew+netdev@lunn.ch>,
+ "David S. Miller" <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Kuniyuki Iwashima <kuniyu@amazon.com>, Willem de Bruijn
+ <willemb@google.com>, David Ahern <dsahern@kernel.org>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Xin Long <lucien.xin@gmail.com>, Neal Cardwell <ncardwell@google.com>,
+ Joerg Reuter <jreuter@yaina.de>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Luiz Augusto von Dentz <luiz.dentz@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>,
+ Marc Kleine-Budde <mkl@pengutronix.de>,
+ Robin van der Gracht <robin@protonic.nl>,
+ Oleksij Rempel <o.rempel@pengutronix.de>, kernel@pengutronix.de,
+ Alexander Aring <alex.aring@gmail.com>,
+ Stefan Schmidt <stefan@datenfreihafen.org>,
+ Miquel Raynal <miquel.raynal@bootlin.com>,
+ Alexandra Winter <wintera@linux.ibm.com>,
+ Thorsten Winkler <twinkler@linux.ibm.com>,
+ James Chapman <jchapman@katalix.com>, Jeremy Kerr <jk@codeconstruct.com.au>,
+ Matt Johnston <matt@codeconstruct.com.au>,
+ Matthieu Baerts <matttbe@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>,
+ Remi Denis-Courmont <courmisch@gmail.com>,
+ Allison Henderson <allison.henderson@oracle.com>,
+ David Howells <dhowells@redhat.com>, Marc Dionne <marc.dionne@auristor.com>,
+ Wenjia Zhang <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>,
+ "D. Wythe" <alibuda@linux.alibaba.com>, Tony Lu <tonylu@linux.alibaba.com>,
+ Wen Gu <guwen@linux.alibaba.com>, Jon Maloy <jmaloy@redhat.com>,
+ Boris Pismenny <borisp@nvidia.com>, John Fastabend
+ <john.fastabend@gmail.com>, Stefano Garzarella <sgarzare@redhat.com>,
+ Martin Schiller <ms@dev.tdt.de>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?=
+ <bjorn@kernel.org>, Magnus Karlsson <magnus.karlsson@intel.com>,
+ Maciej Fijalkowski <maciej.fijalkowski@intel.com>,
+ Jonathan Lemon <jonathan.lemon@gmail.com>,
+ Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
+ Jesper Dangaard Brouer <hawk@kernel.org>, netdev@vger.kernel.org,
+ linux-kernel@vger.kernel.org, linux-sctp@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-s390@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-rdma@vger.kernel.org, rds-devel@oss.oracle.com,
+ linux-afs@lists.infradead.org, tipc-discussion@lists.sourceforge.net,
+ virtualization@lists.linux.dev, linux-x25@vger.kernel.org,
+ bpf@vger.kernel.org, isdn4linux@listserv.isdn4linux.de,
+ io-uring@vger.kernel.org
+References: <cover.1743449872.git.metze@samba.org>
+ <Z-sDc-0qyfPZz9lv@mini-arch>
+Content-Language: en-US, de-DE
+From: Stefan Metzmacher <metze@samba.org>
+In-Reply-To: <Z-sDc-0qyfPZz9lv@mini-arch>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
 
-Hi Stefan,
+Am 31.03.25 um 23:04 schrieb Stanislav Fomichev:
+> On 03/31, Stefan Metzmacher wrote:
+>> The motivation for this is to remove the SOL_SOCKET limitation
+>> from io_uring_cmd_getsockopt().
+>>
+>> The reason for this limitation is that io_uring_cmd_getsockopt()
+>> passes a kernel pointer as optlen to do_sock_getsockopt()
+>> and can't reach the ops->getsockopt() path.
+>>
+>> The first idea would be to change the optval and optlen arguments
+>> to the protocol specific hooks also to sockptr_t, as that
+>> is already used for setsockopt() and also by do_sock_getsockopt()
+>> sk_getsockopt() and BPF_CGROUP_RUN_PROG_GETSOCKOPT().
+>>
+>> But as Linus don't like 'sockptr_t' I used a different approach.
+>>
+>> @Linus, would that optlen_t approach fit better for you?
+> 
+> [..]
+> 
+>> Instead of passing the optlen as user or kernel pointer,
+>> we only ever pass a kernel pointer and do the
+>> translation from/to userspace in do_sock_getsockopt().
+> 
+> At this point why not just fully embrace iov_iter? You have the size
+> now + the user (or kernel) pointer. Might as well do
+> s/sockptr_t/iov_iter/ conversion?
 
-Thank you for your modifications, that's great!
+I think that would only be possible if we introduce
+proto[_ops].getsockopt_iter() and then convert the implementations
+step by step. Doing it all in one go has a lot of potential to break
+the uapi. I could try to convert things like socket, ip and tcp myself, but
+the rest needs to be converted by the maintainer of the specific protocol,
+as it needs to be tested. As there are crazy things happening in the existing
+implementations, e.g. some getsockopt() implementations use optval as in and out
+buffer.
 
-Our CI did some validations and here is its report:
+I first tried to convert both optval and optlen of getsockopt to sockptr_t,
+and that showed that touching the optval part starts to get complex very soon,
+see https://git.samba.org/?p=metze/linux/wip.git;a=commitdiff;h=141912166473bf8843ec6ace76dc9c6945adafd1
+(note it didn't converted everything, I gave up after hitting
+sctp_getsockopt_peer_addrs and sctp_getsockopt_local_addrs.
+sctp_getsockopt_context, sctp_getsockopt_maxseg, sctp_getsockopt_associnfo and maybe
+more are the ones also doing both copy_from_user and copy_to_user on optval)
 
-- KVM Validation: normal: Unstable: 1 failed test(s): packetdrill_sockopts =
-=F0=9F=94=B4
-- KVM Validation: debug: Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/141808=
-07770
+I come also across one implementation that returned -ERANGE because *optlen was
+too short and put the required length into *optlen, which means the returned
+*optlen is larger than the optval buffer given from userspace.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/e5554f1e2602
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D948670
+Because of all these strange things I tried to do a minimal change
+in order to get rid of the io_uring limitation and only converted
+optlen and leave optval as is.
 
+In order to have a patchset that has a low risk to cause regressions.
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+But as alternative introducing a prototype like this:
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+         int (*getsockopt_iter)(struct socket *sock, int level, int optname,
+                                struct iov_iter *optval_iter);
 
-For more details:
+That returns a non-negative value which can be placed into *optlen
+or negative value as error and *optlen will not be changed on error.
+optval_iter will get direction ITER_DEST, so it can only be written to.
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+Implementations could then opt in for the new interface and
+allow do_sock_getsockopt() work also for the io_uring case,
+while all others would still get -EOPNOTSUPP.
 
+So what should be the way to go?
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+metze
