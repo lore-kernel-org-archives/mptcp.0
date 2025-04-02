@@ -1,141 +1,129 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f177.google.com (mail-qk1-f177.google.com [209.85.222.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 248691B7F4
-	for <mptcp@lists.linux.dev>; Wed,  2 Apr 2025 02:53:20 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EB74B33DB
+	for <mptcp@lists.linux.dev>; Wed,  2 Apr 2025 04:01:59 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743562400; cv=none; b=Z+eu+NzIoiBUBawVQWtYsO8p+zemGFiSNq4SoFT5xx+vgXVK2JNHE0Trp5ZlQ/SnCTO+9KEdYVn6zrvpKlaMQSktyCMWJa1z2NUb9fAGk0zKDEZZq48JVG2Jdftx63MTddHQIkJZAzOvnDMZz2suzHB09a0QgtSo4QLBCo19SM4=
+	t=1743566521; cv=none; b=awAYzJcabtDEc4SMHOAyChUuVhUgK0nlKMWrmBMjqecITckyvM6WwRGJYHUJyiGM4WqRW4SZ+/FHvgA1bu2bIjYRWps/ChePxg1aVKT8RggqJ/o75zzpqovWWspD3b8mf5sCO8/kn7uVlHrPH1W1Ou4bYAfit4FdNbZ0toi5Orw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743562400; c=relaxed/simple;
-	bh=X4dT8D1hIN7DnSRAzJ8z0FXhAaUlQJmFiZ4YWZfnzGA=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=mCf5QW8EezHjHp9+tUDai2RpZudpnZn2TZh01lY4ZOjqYa4g9RUc87lpj1/TuMLnJoR86568C35j082NPgaGlbmGFugADmDIbHX2HHnRxGPmGKSBuDvSVYc6eTt2ztElWiK5mlnOePruWL1o3x7pFI/CTCN2ELjFF8nEXAvyVdw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=RSU9EgQU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743566521; c=relaxed/simple;
+	bh=lYiBGD6qgAW84a/xrZZpRl1YPdL9jCTPXIyCtJA1ia4=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=e/U7CQENEh7HObYg1AhK8AgCcxJwykkOTLKbefm9o3HQ0YUJMzcLKzzew6Ga4LC1UfMSQPGhEkiJpduaHyoM/yT2AYqnhvHPjD31RrGv3bZLVKbPkJl69T8+/EgLa6+myfnEn5Bv3dNP4r4+hnzDGisYCG1m81MYYuoUnenL3+k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=BiShefMi; arc=none smtp.client-ip=209.85.222.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="RSU9EgQU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CA855C4CEE8;
-	Wed,  2 Apr 2025 02:53:18 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743562400;
-	bh=X4dT8D1hIN7DnSRAzJ8z0FXhAaUlQJmFiZ4YWZfnzGA=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=RSU9EgQUZEtWjObRAVoh5sLj7CGPQr7ChOS6bjg0ySI2bzt/SREnQfYP5E4GzyWvG
-	 XLSTI8rAUJ41u41LvBDeORKCzsaCSu/Ddus1FJoRyP+xwEgyNjY9Jem2Qg7PhddJrg
-	 fkR0Fm5dWZPL7Aj0nH8SQRPs5u4MDxkr+G3+bITLmdt6uebW2AqfWeSzVoK8gj4jor
-	 lLBGCZOPqVMKv+O6TLv6SVQHxj+PDmexrvlAmcurzSGj1qUBWaA4JheO97zya1ax6W
-	 DZmnjln6vJmMFrN4athEEbPazTW5454I85rBb+vLpQLEJ1I/DrrXYb9totaGiGwwFb
-	 9fLcnyhmsxNOA==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 3/3] selftests: mptcp: send REMOVE_ADDR after subflow is deleted
-Date: Wed,  2 Apr 2025 10:53:09 +0800
-Message-ID: <6e9b7365c7b951d9addc8e9f208eeb9739fab28e.1743562290.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BiShefMi"
+Received: by mail-qk1-f177.google.com with SMTP id af79cd13be357-7c081915cf3so775215985a.1
+        for <mptcp@lists.linux.dev>; Tue, 01 Apr 2025 21:01:59 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1743566519; x=1744171319; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=T9mk8WdJwaR8fpzvE94cz96y+br17j5Fou6WdPXGqys=;
+        b=BiShefMiBbBFZMAXa5QhwxS1+OwFV1iJXJFCCMfmJbvuqSOvnuyyGvStKcYokWzwie
+         HkJ2Ghf/SMBaL0RkjoVfVbllr5ZpefoFy13XTlEGovRmuVco6PH+IxTanR+03mMMKjqP
+         RIO47tx5A4qxHaiwJW/kqu15gXCsO3vnxI/m5/fzeuo+qq1GWWULwW7giHPVqvUhaezk
+         pt1HvYsWFR7rQKlJLnugFDcT2NqPGUKp/5nHGgDy9obJ+CRRohzktpzF9th21fdQqQou
+         jgFDQ0xmjDtR1RUnvvjXlTQK8xTJXFKmypHMc3JmkIYlaC675OJBUntxwxj6nd10vN5E
+         Q6og==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1743566519; x=1744171319;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=T9mk8WdJwaR8fpzvE94cz96y+br17j5Fou6WdPXGqys=;
+        b=crfnjcaKcev0D3ZVmjZyeFoh2nt9zDC+tqzY2FVrU3G/aZNeWWNv1RheBjfgKIXQlR
+         6SKAEtpdrv8hyLYIErXd23MOf7D0K+sv3Vbt+HDUtrKr4En/zvclq8Y15FtDMyehqSlV
+         PXtq/mcoTnddC6pMMoFoQVnPx2NTvzShUxzDVhGnGb2XQa528QACKKhCv2rRr1HynxET
+         CX2WVTk2EYU0PFSrzytkqAXPzIpceGOoMsWKUAa7M/FQnQuXNT317/Qk99K9Ouj4vlTe
+         Di5PuQEBSl1V9jiyFXPJJsdA7FvAWW3MsrLMeW7RPSpDM5Bb5wi/lg2pN3Vvee2I/48F
+         huUQ==
+X-Gm-Message-State: AOJu0YwZYNrsf15PZG18fOZsvZV0lKZ/xA3lCx9GcBoPhrAsxQQnI+yI
+	/3+UfVN4eL+3oz0incJ7hbQSQvtRX7ozQd3IsRZDv24ZgRyOMVJlXQOT
+X-Gm-Gg: ASbGncvLeytUX28yCs4IbqZpUIhNEdrZAs4tV13v+vYhqS21tZVEeG0U9yml0Msq2IG
+	6qKLxMCTVGzbHLNlndiE7XWz9BfoY3XswxTNxsCJc1x/pZ1NIX+FEJuQCVIcWjyiteJ9257O7WD
+	+yoi/chhbflsu8qGuCFLFEYRZ9RZL7Dh05hkb4Ate1LUmVd3Rj/CZR4N187fOJ7hCMNxSm3J/pf
+	ZypqfMiAfBL2Q9kOJixJIcRTxlee45vunAxtBInyEb/qZRu5XJtc2JbRY4kIvwlFSiMpoFb6n0i
+	4GCvUIlo/qL7eKv2bzDR7nG/XRefKmd1JjD09BBEeF4h/t8YjQIX6g6Vpg==
+X-Google-Smtp-Source: AGHT+IFJfD7eq7CcyxX/W7pw1e5HUEkdU8n/DQgh8TSJI2OJbwOuxlWHHPtcActGki4r7rnaXrZctQ==
+X-Received: by 2002:a05:620a:1724:b0:7c5:405e:e88f with SMTP id af79cd13be357-7c6865ea9edmr2309509885a.21.1743566518668;
+        Tue, 01 Apr 2025 21:01:58 -0700 (PDT)
+Received: from [127.0.0.1] ([20.161.78.100])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7c5f7666c37sm749337085a.4.2025.04.01.21.01.57
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 01 Apr 2025 21:01:58 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1743562290.git.tanggeliang@kylinos.cn>
 References: <cover.1743562290.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 0/3] only remove entry from local_addr_list
+ when sending a REMOVE_ADDR
+Message-ID: <e84c61a1-b1a2-e417-aa07-434b88dc964a@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 02 Apr 2025 04:01:57 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Now address entries only be removed from local_addr_list when sending a
-REMOVE_ADDR by the userspace PM, they're no longer removed when a subflow
-is deleted.
+Thank you for your modifications, that's great!
 
-To make the original userspace PM selftests pass, this patch always sends
-a REMOVE_ADDR when a subflow is deleted.
+Our CI did some validations and here is its report:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh   | 4 +++-
- tools/testing/selftests/net/mptcp/userspace_pm.sh | 6 ++++++
- 2 files changed, 9 insertions(+), 1 deletion(-)
+- KVM Validation: normal: Unstable: 1 failed test(s): =
+selftest_mptcp_connect =F0=9F=94=B4
+- KVM Validation: debug: Success! =
+=E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success! =
+=E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/14210668405
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index b8af65373b3a..c138b4913ad8 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -3624,11 +3624,12 @@ userspace_tests()
- 		userspace_pm_chk_get_addr "${ns1}" "10" "id 10 flags signal 10.0.2.1"
- 		userspace_pm_chk_get_addr "${ns1}" "20" "id 20 flags signal 10.0.3.1"
- 		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $MPTCP_LIB_EVENT_SUB_ESTABLISHED
-+		userspace_pm_rm_addr $ns1 10
- 		userspace_pm_chk_dump_addr "${ns1}" \
- 			"id 20 flags signal 10.0.3.1" "after rm_sf 10"
- 		userspace_pm_rm_addr $ns1 20
- 		userspace_pm_chk_dump_addr "${ns1}" "" "after rm_addr 20"
--		chk_rm_nr 1 1 invert
-+		chk_rm_nr 2 1 invert
- 		chk_mptcp_info subflows 0 subflows 0
- 		chk_subflows_total 1 1
- 		kill_events_pids
-@@ -3653,6 +3654,7 @@ userspace_tests()
- 			"subflow"
- 		userspace_pm_chk_get_addr "${ns2}" "20" "id 20 flags subflow 10.0.3.2"
- 		userspace_pm_rm_sf $ns2 10.0.3.2 $MPTCP_LIB_EVENT_SUB_ESTABLISHED
-+		userspace_pm_rm_addr $ns2 20
- 		userspace_pm_chk_dump_addr "${ns2}" \
- 			"" \
- 			"after rm_sf 20"
-diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-index 333064b0b5ac..c16465c9c2ca 100755
---- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
-+++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
-@@ -628,6 +628,7 @@ test_subflows()
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
- 	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
-+	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server6_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
- 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
-@@ -667,6 +668,7 @@ test_subflows()
- 	:>"$server_evts"
- 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
- 	   $new4_port token "$server4_token"
-+	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server4_token"
- 	sleep 0.5
- 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
- 			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
-@@ -705,6 +707,7 @@ test_subflows()
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $app4_port token "$client4_token"
-+	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
- 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
-@@ -744,6 +747,7 @@ test_subflows()
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
- 	   dead:beef:2::1 rport $app6_port token "$client6_token"
-+	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
- 			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
-@@ -781,6 +785,7 @@ test_subflows()
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $new4_port token "$client4_token"
-+	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client4_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
- 			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
-@@ -827,6 +832,7 @@ test_subflows_v4_v6_mix()
- 	:>"$client_evts"
- 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
- 	   $app6_port token "$client6_token"
-+	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client6_token"
- 	sleep 0.5
- 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
- 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
--- 
-2.43.0
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/8f913c652044
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D949152
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
