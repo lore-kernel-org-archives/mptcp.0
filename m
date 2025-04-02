@@ -1,37 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165511F5EA
-	for <mptcp@lists.linux.dev>; Wed,  2 Apr 2025 02:53:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D6AAD1F5EA
+	for <mptcp@lists.linux.dev>; Wed,  2 Apr 2025 02:53:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743562396; cv=none; b=Ug/UPMnAGJIrZdx3sI7eV4J3nTjCw1xmMYuS0D//0sa4NC0MgbHRpNU7B9cpYG43EPzrawG9es0hgjOWjWE4A8XEyA9QznWkGCSVFJA5PmhTK0r0DmUZcsvVWlxD6s9R+h+cYOdzknrPpbdaEXFbbln28YlnHhYJ9B52iemk97c=
+	t=1743562398; cv=none; b=IGNSH4ksKuYOijsMmDH67Ui7bdYnxgkK9iH1Mbg2K0mQQRNWRJF16Y2mTkW8Wpar1LFuJXIUDmwlB8WznFp4Ydj4Ol2PcXYR45NvPzshGJELlY7MMBLOMD7TcK2aqQnbwJ5QMLRNWAgj831iLI5N5rCOMiU0xkcHL22x1B4PYBE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743562396; c=relaxed/simple;
-	bh=nJNXkw+q4Lby1NVe2bGezwksxJDXWwvr4wX3TkUBOKg=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=FSSY6w1FWnJxqeRH6gZCIqjbv3JNodZ75ThmKkXlPGn4r8Xs3Y5MIgsSH8PI4s7QPoprXhJ47QSOzZrcGYihYp6U78/PfF0L8egeUqMqwewpa6tgf6hLZVQpA7pDXiGoJoQFbksSCbaOBgTvrJzTUj9z23CBn/bYlTCiETtX6tI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mx3gPtmQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1743562398; c=relaxed/simple;
+	bh=ixbxNcyIEzcBesSmeq4VBPB/qbiTpd1kzfZOphjwPsk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=KN1qvANPHwJGJvUfknb7IvVQaT6XMf9nUB2nUQuyC5Fk415FE0B2vxc3ePjeYTNMz9s5jtA3LvbeLFjv8TQ+fa3+a0iLzCcCqL7VKrushYXI8K7rDiM+5q4qDfpytZjpuimZnOywQC+OCQYWm5swXwiD4zi5LAs5+AMe5p+ZssM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SYBZyNT3; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mx3gPtmQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7ADA5C4CEE4;
-	Wed,  2 Apr 2025 02:53:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SYBZyNT3"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 32981C4CEE8;
+	Wed,  2 Apr 2025 02:53:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743562394;
-	bh=nJNXkw+q4Lby1NVe2bGezwksxJDXWwvr4wX3TkUBOKg=;
-	h=From:To:Cc:Subject:Date:From;
-	b=mx3gPtmQJMxehuI0g8q+ePtcxptdSjz/U3BWhp79z7AN8XNfl7znRt3OQ7JRNhsQp
-	 bCaAMAw20pWgZlj1x9eYUnzgl/A0tuCFjKTFMTXKZ6hvP01MGikeSIE8WRgqXrevyy
-	 YlnO3A25ImYy3NB4nJjPfHDvXutGJ/3dkDz1/R0n1ZDTDdtzqgCVV7/ZDOOPiXczL0
-	 /Zo19tm0KKAvxKpVgKKCNUMryeoTW1v3AY2gsyo9lvBfJ/aRI9JaHoE0aeg47gJ31i
-	 GWA1DRV1O3sU2zHmpkSMIA0FJa82AN1VEUn3JWQAiXCpbWc1oyKLi3k8yIDYFRL4G2
-	 drQggQQD9xybA==
+	s=k20201202; t=1743562396;
+	bh=ixbxNcyIEzcBesSmeq4VBPB/qbiTpd1kzfZOphjwPsk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=SYBZyNT3W0Sp/wxkXr0hoNQ+g+8BZfU9QQjjvvUU+wr8lruTM6GzZJngpTuVg2nQf
+	 P/FUjdnyuonW/B0eaaLDGniwAr+Df1cXzBJmSRHC3xPjugwaXb0xRfFwXb97wAQMOV
+	 9mONrm6W7GrJz3/FD3kNp254ezLOErqMHT6tuuT3m72UMTsclshRml/mRBlomQiRgI
+	 cbWikYNOOAfhW6zgSHV6WWJNxhojJu8jEOKlBQNeskXEPL0Dm8ozvm+tNXZXTTzRCY
+	 c1epCtKYKJo+9/wcgCM5QeXXAN5my2+cfesPyxfWT7t4AdR4sQwydBxkmCm6hJUp2N
+	 s+XmJrM/QOKAg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next 0/3] only remove entry from local_addr_list when sending a REMOVE_ADDR
-Date: Wed,  2 Apr 2025 10:53:06 +0800
-Message-ID: <cover.1743562290.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next 1/3] mptcp: pm: userspace: local_addr_used-- after sending REMOVE_ADDR
+Date: Wed,  2 Apr 2025 10:53:07 +0800
+Message-ID: <4f0b16c622b2714069acf8607de0d4e7f0c013ea.1743562290.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.43.0
+In-Reply-To: <cover.1743562290.git.tanggeliang@kylinos.cn>
+References: <cover.1743562290.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -42,18 +45,28 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/403
+Address entries are removed from local_addr_list when sending a REMOVE_ADDR
+by the userspace PM, the local_addr_used counter of PM should also be
+decremented accordingly.
 
-Geliang Tang (3):
-  mptcp: pm: userspace: local_addr_used-- after sending REMOVE_ADDR
-  mptcp: pm: userspace: drop delete_local_addr helper
-  selftests: mptcp: send REMOVE_ADDR after subflow is deleted
+Fixes: d9a4594edabf ("mptcp: netlink: Add MPTCP_PM_CMD_REMOVE")
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/pm_userspace.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- net/mptcp/pm_userspace.c                      | 37 +++----------------
- .../testing/selftests/net/mptcp/mptcp_join.sh |  4 +-
- .../selftests/net/mptcp/userspace_pm.sh       |  6 +++
- 3 files changed, 14 insertions(+), 33 deletions(-)
-
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 7fc19b844384..db471eb836b3 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -331,6 +331,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
+ 	}
+ 
+ 	list_del_rcu(&match->list);
++	msk->pm.local_addr_used--;
+ 	spin_unlock_bh(&msk->pm.lock);
+ 
+ 	mptcp_pm_remove_addr_entry(msk, match);
 -- 
 2.43.0
 
