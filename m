@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7D612253F24;
-	Thu,  3 Apr 2025 19:06:41 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96C5527F4D1;
+	Thu,  3 Apr 2025 19:08:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743707201; cv=none; b=HckC0ME6njh2ht4zA18y8jo/uk0GhiT3f/y9yVVWz4rJbg2TQPJx5jEVudu0xXjXMZpiezKazD7Xag2Kf1FrU6Dbmj05rEliOmgr6tn/tA3KNzOBuvftyNeJb9167Yd0KSxpUXFPeHi5iypF4ShkSkwc4JqE/dowloA4TO7RNck=
+	t=1743707283; cv=none; b=TGmDlLopWrFKByrLeCM8KwTZyiS01yOO6JVHBy1MwPG3WjrGo4Q/9CTLwssw1yHI4Jji4Wxt75beFlIE04HPsfuRxK6RccsN/a3ulcCAnGFGItm5MQdB2BtqLBLD4MVgLfpxc2E29PZq6KWx/66Z41bbKxhY4jr29KwowID7Ftc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743707201; c=relaxed/simple;
-	bh=jIkrr0BKoZs4bojjeUgy2B5lY90v34XciT+gvun4GCE=;
+	s=arc-20240116; t=1743707283; c=relaxed/simple;
+	bh=7/NcYCzEXwq18npxFfa/1V6KK2Uu4cgIVjadQFlsYQU=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=UIy6DqdcetHrOmu4J53OecU5wnIwLiQeKmOfjriiUizHrZQHeiFRkHugyfoE8OtLNzeeQ+Pdfo3Yg3FZYuilGL+3UeQEg0BZJLMYz92mRJCHdS3RL/BhcRWYiaKw1DtSoQtSbbzViVNA5TM8Ut4nByEJdeltX2fVlL3zfQY9MQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Ed7ZYavG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=eH1l96Fqpk7LhUZeeBoOrIWMWMmrSHZWJ+/oCg2Tg1EsWLRPFuhQakFctbHpCGiqK4feP712Kq/IxaMI9HKpz19z9ukC2tAXBJkFVuL46NW7jUxn1ERGQYo0sDWsJdCJCy9gNlwTkE1HrystrfCTgStY8McoUKFdo/D8SobIQ8I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tsaDlyT/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Ed7ZYavG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EFD2FC4CEE9;
-	Thu,  3 Apr 2025 19:06:39 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tsaDlyT/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 339EBC4CEE3;
+	Thu,  3 Apr 2025 19:08:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743707201;
-	bh=jIkrr0BKoZs4bojjeUgy2B5lY90v34XciT+gvun4GCE=;
+	s=k20201202; t=1743707283;
+	bh=7/NcYCzEXwq18npxFfa/1V6KK2Uu4cgIVjadQFlsYQU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=Ed7ZYavGH1uTJ3xAnwW6vL2qrNn2yPC+UdmxFRQmKftETWuZ6w/fTHYBNsfyqYsrD
-	 EeBeipK5Mq1mYWEaJ2ixFBRyrHw0slRRNz0NHQxvMwh0/f//n+tWhzSrUjc9mGynby
-	 jv1TxDYBojCZ+F3jB7EFe/ekgQlPVc2xNKnGlTGZ0URYyDttiQdJpQBKU5/RXQpxHu
-	 l/+8D2JmAoh7CPWOOspBSjhxy4wnGwP9LCBgxSKtb7XAWE2MMoJ6Fmq7gwIkV8E6VD
-	 feG5fiDxN0QssY+P8t90AAHWqDfoFl9GLNRmkNHluafPwyIcDF43cj38vVs6NN5Wdg
-	 jPbhE5OcG/QbQ==
+	b=tsaDlyT/TuZgBjXbCv4jpABvBseHQwZnnbut2TzOrT+ZsWGfzSZuQCgkvkMP1Cu7E
+	 RjYcRBprNaWjexPEO/93zpKMJan4lJx7vryUmKEs4miMj8x1JnTAjehjFxx9H9pSxy
+	 C+BZUlpwymiFV8qLzlXMc+oieR257X8JX4rQzpp7FdCWDwnyP4QyxpNULxX+flDheT
+	 lQUvqcdfWALI3r9IOjJPLuAyT/jiEe+mLRXxuuZm55/ogtnUjwZlpmrwoe/qL/BXT/
+	 ZfQwcQVDHY1v7I8dnl9vHaUt/3JWcQiubNb4fKA4zhKj3OnmuraUD+MUJiSptSgxRr
+	 1ZOnmr1aNxErA==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	edumazet@google.com,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 18/47] mptcp: move the whole rx path under msk socket lock protection
-Date: Thu,  3 Apr 2025 15:05:26 -0400
-Message-Id: <20250403190555.2677001-18-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.6 07/26] mptcp: move the whole rx path under msk socket lock protection
+Date: Thu,  3 Apr 2025 15:07:26 -0400
+Message-Id: <20250403190745.2677620-7-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190555.2677001-1-sashal@kernel.org>
-References: <20250403190555.2677001-1-sashal@kernel.org>
+In-Reply-To: <20250403190745.2677620-1-sashal@kernel.org>
+References: <20250403190745.2677620-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.21
+X-stable-base: Linux 6.6.85
 Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
@@ -104,7 +104,7 @@ index a29ff901df758..305f4c48ec158 100644
  	mptcp_set_owner_r(skb, sk);
  	__skb_queue_tail(&sk->sk_receive_queue, skb);
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 42b239d9b2b3c..e4db98968e64d 100644
+index 140c3ffcb86ba..607ba9637f731 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
 @@ -643,18 +643,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
@@ -135,7 +135,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  			done = true;
  			break;
  		}
-@@ -846,11 +834,30 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
+@@ -844,11 +832,30 @@ static bool move_skbs_to_msk(struct mptcp_sock *msk, struct sock *ssk)
  	return moved > 0;
  }
  
@@ -168,7 +168,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  
  	/* The peer can send data while we are shutting down this
  	 * subflow at msk destruction time, but we must avoid enqueuing
-@@ -859,19 +866,11 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
+@@ -857,19 +864,11 @@ void mptcp_data_ready(struct sock *sk, struct sock *ssk)
  	if (unlikely(subflow->disposable))
  		return;
  
@@ -192,7 +192,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  	mptcp_data_unlock(sk);
  }
  
-@@ -1944,16 +1943,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+@@ -1907,16 +1906,17 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
  
  static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
  
@@ -212,7 +212,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  		u32 offset = MPTCP_SKB_CB(skb)->offset;
  		u32 data_len = skb->len - offset;
  		u32 count = min_t(size_t, len - copied, data_len);
-@@ -1988,7 +1988,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
+@@ -1951,7 +1951,7 @@ static int __mptcp_recvmsg_mskq(struct mptcp_sock *msk,
  			/* we will bulk release the skb memory later */
  			skb->destructor = NULL;
  			WRITE_ONCE(msk->rmem_released, msk->rmem_released + skb->truesize);
@@ -221,7 +221,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  			__kfree_skb(skb);
  			msk->bytes_consumed += count;
  		}
-@@ -2113,54 +2113,46 @@ static void __mptcp_update_rmem(struct sock *sk)
+@@ -2076,54 +2076,46 @@ static void __mptcp_update_rmem(struct sock *sk)
  	WRITE_ONCE(msk->rmem_released, 0);
  }
  
@@ -289,16 +289,16 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  }
  
  static unsigned int mptcp_inq_hint(const struct sock *sk)
-@@ -2168,7 +2160,7 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
+@@ -2131,7 +2123,7 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
  	const struct mptcp_sock *msk = mptcp_sk(sk);
  	const struct sk_buff *skb;
  
 -	skb = skb_peek(&msk->receive_queue);
 +	skb = skb_peek(&sk->sk_receive_queue);
  	if (skb) {
- 		u64 hint_val = READ_ONCE(msk->ack_seq) - MPTCP_SKB_CB(skb)->map_seq;
+ 		u64 hint_val = msk->ack_seq - MPTCP_SKB_CB(skb)->map_seq;
  
-@@ -2214,7 +2206,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -2177,7 +2169,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  	while (copied < len) {
  		int err, bytes_read;
  
@@ -307,7 +307,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  		if (unlikely(bytes_read < 0)) {
  			if (!copied)
  				copied = bytes_read;
-@@ -2223,7 +2215,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -2186,7 +2178,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  
  		copied += bytes_read;
  
@@ -315,8 +315,8 @@ index 42b239d9b2b3c..e4db98968e64d 100644
 +		if (skb_queue_empty(&sk->sk_receive_queue) && __mptcp_move_skbs(sk))
  			continue;
  
- 		/* only the MPTCP socket status is relevant here. The exit
-@@ -2249,7 +2241,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 		/* only the master socket status is relevant here. The exit
+@@ -2212,7 +2204,7 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  				/* race breaker: the shutdown could be after the
  				 * previous receive queue check
  				 */
@@ -325,7 +325,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  					continue;
  				break;
  			}
-@@ -2293,9 +2285,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+@@ -2256,9 +2248,8 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
  		}
  	}
  
@@ -337,15 +337,15 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  
  	release_sock(sk);
  	return copied;
-@@ -2822,7 +2813,6 @@ static void __mptcp_init_sock(struct sock *sk)
+@@ -2785,7 +2776,6 @@ static void __mptcp_init_sock(struct sock *sk)
  	INIT_LIST_HEAD(&msk->join_list);
  	INIT_LIST_HEAD(&msk->rtx_queue);
  	INIT_WORK(&msk->work, mptcp_worker);
 -	__skb_queue_head_init(&msk->receive_queue);
  	msk->out_of_order_queue = RB_ROOT;
  	msk->first_pending = NULL;
- 	WRITE_ONCE(msk->rmem_fwd_alloc, 0);
-@@ -3407,12 +3397,8 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
+ 	msk->rmem_fwd_alloc = 0;
+@@ -3366,12 +3356,8 @@ void mptcp_destroy_common(struct mptcp_sock *msk, unsigned int flags)
  	mptcp_for_each_subflow_safe(msk, subflow, tmp)
  		__mptcp_close_ssk(sk, mptcp_subflow_tcp_sock(subflow), subflow, flags);
  
@@ -358,7 +358,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  
  	/* move all the rx fwd alloc into the sk_mem_reclaim_final in
  	 * inet_sock_destruct() will dispose it
-@@ -3455,7 +3441,8 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
+@@ -3417,7 +3403,8 @@ void __mptcp_check_push(struct sock *sk, struct sock *ssk)
  
  #define MPTCP_FLAGS_PROCESS_CTX_NEED (BIT(MPTCP_PUSH_PENDING) | \
  				      BIT(MPTCP_RETRANSMIT) | \
@@ -368,7 +368,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  
  /* processes deferred events and flush wmem */
  static void mptcp_release_cb(struct sock *sk)
-@@ -3489,6 +3476,11 @@ static void mptcp_release_cb(struct sock *sk)
+@@ -3451,6 +3438,11 @@ static void mptcp_release_cb(struct sock *sk)
  			__mptcp_push_pending(sk, 0);
  		if (flags & BIT(MPTCP_RETRANSMIT))
  			__mptcp_retrans(sk);
@@ -380,7 +380,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  
  		cond_resched();
  		spin_lock_bh(&sk->sk_lock.slock);
-@@ -3725,7 +3717,8 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
+@@ -3687,7 +3679,8 @@ static int mptcp_ioctl(struct sock *sk, int cmd, int *karg)
  			return -EINVAL;
  
  		lock_sock(sk);
@@ -391,7 +391,7 @@ index 42b239d9b2b3c..e4db98968e64d 100644
  		release_sock(sk);
  		break;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 7e2f70f22b05b..e32325417c131 100644
+index d67add91c9b90..8527723721117 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
 @@ -124,6 +124,7 @@
@@ -402,7 +402,7 @@ index 7e2f70f22b05b..e32325417c131 100644
  
  struct mptcp_skb_cb {
  	u64 map_seq;
-@@ -324,7 +325,6 @@ struct mptcp_sock {
+@@ -312,7 +313,6 @@ struct mptcp_sock {
  	struct work_struct work;
  	struct sk_buff  *ooo_last_skb;
  	struct rb_root  out_of_order_queue;
