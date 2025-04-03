@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9CBDA257425;
-	Thu,  3 Apr 2025 19:02:58 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B36E12641F6;
+	Thu,  3 Apr 2025 19:04:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1743706978; cv=none; b=mUDkbjHZSKSMffbzDIB/8rUN9TcRfkUbwCfAZXUem7AJOBavLJEUibWF3cTfQGewb2YYqLE3RFUzhdJ0T/dfRA/n520DWSpoGawT8P3c/chToI9emfxQIYlrB9y6RmCmjjWpROAxf78C71tLlYN49Eezl0MA8aYH1/YSwwCZg8w=
+	t=1743707089; cv=none; b=MC7cB1hpq0jaAnV2ubRe0Qvn3NF6p4QTiaUkl6UbS2wfNOf77wrQOVmkHiGv+LSQUVIsNryklEprEAPUoTwu0OrTB2Z9jgt0uGns0x1Xn8igx6CjV3WwLbbVjrxLv/LV1W7WiOZM8BsmXMNJlM1IF5z661JxxiMBDLc/33CacaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1743706978; c=relaxed/simple;
-	bh=5bPkxCBE16IpdyWmPvOTLfT0XzT/sLnSvfPU3kl+gUA=;
+	s=arc-20240116; t=1743707089; c=relaxed/simple;
+	bh=Xst8Kyr0oq47iEryLpS1xQdBo4BLTgDFGllpOgQlHU4=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=uGLWh/JNXlrJD5yBqYFOKIPziHKZ1CbPDlRwQQh0G/QquncaDjJAOJhPaqwDXLzyiJ/cti/Ub8MT9mHRVw+kIbW9tZHQZQLEeufJbkbeiMB6oJqBkzuESmWU7hjnKBjfvadkB3+WgeC+g1px/MkgK0Mc1goCuReQDB9WWA4qld0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gk+vFDIx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=SEJ5hRiMmVsb8xSGtV4UjtZ8rDjeYx4eGdOuQPljOiSXe8j0qvNjFAcXiPas4PrY/oe8RikFful5QPC0xwyD8TNsx5Ih/iZJll7/MksA8h8KGV1Os5mqTWUvc2kS0sVnwoxZM1Ul9W7ff2DnvU5Sq3cv6Kyhyw/MQLEKnfA0DTs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=R9JeWh9r; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gk+vFDIx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 306C0C4CEE8;
-	Thu,  3 Apr 2025 19:02:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="R9JeWh9r"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5755CC4CEE8;
+	Thu,  3 Apr 2025 19:04:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1743706978;
-	bh=5bPkxCBE16IpdyWmPvOTLfT0XzT/sLnSvfPU3kl+gUA=;
+	s=k20201202; t=1743707089;
+	bh=Xst8Kyr0oq47iEryLpS1xQdBo4BLTgDFGllpOgQlHU4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gk+vFDIxTHhIno1dy2vix/e5iz9H7IwSGU2bNYGIp9iOq/luc/s16+i4J900cpDOC
-	 UkVp59Uxl/iQt+uMCdwB+upJwGxBduoTqMnLlFhu0kwsZ/24cvK2sb8hs2FA/W+ecw
-	 WZc0HfWST/HCV+J/xYTsLlyhE8+BU2tcOgts330u51YDqgCQa/OudElWDNzh2TI0Sr
-	 nU6g7WfdXPaMDnczc6cRFlunbk/PhwNw36cjBcFKX0JCB1U4jaP46XyH2GEbXxlX7l
-	 +q4fr++UytAdgf4UTSYzW8FksBFo61uRGfciiaVxjI8vqsGRTQiwIEmiOYWlDX8gPZ
-	 4M8PmUod4jzAA==
+	b=R9JeWh9rdt9E+goIbm3b9kE/dxGfIyFcEIhcxGOuOOisiYvjDEdLG4vwAU0D3Qv9d
+	 XSXjviYe7E/adjZ8FQfnERvX7lPsOHdZBzg7cCGD76qvY5KgYVJt9M6RwFDN0DrNpf
+	 D9TdbHQqnS5Xb7F6C5iSodClQUteFQ4WmC5d7adz37MFGQSE28qh0ic2U+hr4PodLA
+	 rFCJYFeVGeCrHSra6/yymb6CHHz1g8gCeLs8NsXaznNiAxtVIiv3DpFsyqaQGrdtW/
+	 M184NDccK3tcrRyjnqk5yGoNhqG0xgUZSycT1IP64a7BCJMl4aI/QzBVnMe2MqTyuk
+	 SlvgOVFQtYcgQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -38,12 +38,12 @@ Cc: Paolo Abeni <pabeni@redhat.com>,
 	edumazet@google.com,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.14 20/54] mptcp: move the whole rx path under msk socket lock protection
-Date: Thu,  3 Apr 2025 15:01:35 -0400
-Message-Id: <20250403190209.2675485-20-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.13 18/49] mptcp: move the whole rx path under msk socket lock protection
+Date: Thu,  3 Apr 2025 15:03:37 -0400
+Message-Id: <20250403190408.2676344-18-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250403190209.2675485-1-sashal@kernel.org>
-References: <20250403190209.2675485-1-sashal@kernel.org>
+In-Reply-To: <20250403190408.2676344-1-sashal@kernel.org>
+References: <20250403190408.2676344-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -52,7 +52,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14
+X-stable-base: Linux 6.13.9
 Content-Transfer-Encoding: 8bit
 
 From: Paolo Abeni <pabeni@redhat.com>
@@ -104,7 +104,7 @@ index a29ff901df758..305f4c48ec158 100644
  	mptcp_set_owner_r(skb, sk);
  	__skb_queue_tail(&sk->sk_receive_queue, skb);
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 6bd8190474706..3117c06f5362e 100644
+index f910e840aa8f1..fc35d7423d49a 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
 @@ -643,18 +643,6 @@ static bool __mptcp_move_skbs_from_subflow(struct mptcp_sock *msk,
@@ -391,7 +391,7 @@ index 6bd8190474706..3117c06f5362e 100644
  		release_sock(sk);
  		break;
 diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index ad21925af0612..2f4e3188cf3b2 100644
+index 7e2f70f22b05b..e32325417c131 100644
 --- a/net/mptcp/protocol.h
 +++ b/net/mptcp/protocol.h
 @@ -124,6 +124,7 @@
