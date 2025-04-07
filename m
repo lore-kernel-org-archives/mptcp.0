@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FE52288EA
-	for <mptcp@lists.linux.dev>; Mon,  7 Apr 2025 09:07:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B723E225761
+	for <mptcp@lists.linux.dev>; Mon,  7 Apr 2025 09:07:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744016828; cv=none; b=aVA1MBy5KuuzI0B6X+KdnE5iUgDdgfZ7CqKa3A7DtkTGqSUBjjZyKRjgoHOi7KCDdkYzKg+H5aBKOjgnQP9eoUzQhdqPHbGBR6IFFk2cRZccR/ZH1EwXl0fggSojH1B2yP+O84asfb5KxnKwGjKy7qc2LTRM4xkdtr6TwLWP4Ik=
+	t=1744016864; cv=none; b=p4J59wDUmLl5p1NvRNaiLisLCOy+LwkcNutxzOSjtBDb3ECLk5HFcRMATn1JVOmDkEa6dWp1Ah3q6YUNG6nCPKzI0XNYheOrSAdq8+xTBszImyY/06kUwRgBxT8eSrc0xzxiuG9sW/OtDpOLySuK/xaX7rg8ACgnC2vUcIsTyMw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744016828; c=relaxed/simple;
-	bh=RgtDiaK6NUwvoBKm9bbXLZvPajIdUBdKogJTorAu+Is=;
+	s=arc-20240116; t=1744016864; c=relaxed/simple;
+	bh=D5vh0G8BLUsXb6aOCtMv9JV9NfdUSV8ykeIPOeKOtu0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=PmZji4RJLqGucBFd92LcaOVCm9Ev+JmeqWFfxCFeJQCeCH1aL64/5gaLcw5KIjvpgHDUosEQ8cYzPYb39R+DJWIxJF2I7AzMtAckW5yUVqs49BAdB6InJ1JzVnH5P1YwRNjMJX952WGWjnQOzei8CuXO9qbWYxNugaVIjeKjex8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFHTwpd7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=pvSuCeXpym2Y2DbVzJJYeYJYD+wojr0zsqphu8vZOOTAxtO+jkgsADyzyiwLxiXC4ouJ97czfp3UgqppYGibVY0sYMLSDoV0ZonrR6w4cOXbQVlWELsNcYMU2lI0r8dEgiLVyS6OmkIsFcsmRGCvCkxPdubnvawYOLW1UGo8qBI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TRRnAtLg; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFHTwpd7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BC8C4CEDD;
-	Mon,  7 Apr 2025 09:07:06 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TRRnAtLg"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9C08BC4CEDD;
+	Mon,  7 Apr 2025 09:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744016827;
-	bh=RgtDiaK6NUwvoBKm9bbXLZvPajIdUBdKogJTorAu+Is=;
+	s=k20201202; t=1744016864;
+	bh=D5vh0G8BLUsXb6aOCtMv9JV9NfdUSV8ykeIPOeKOtu0=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=CFHTwpd7JuTO7AAiIWXJCqym8iCoeFJfK0occ8BVRhVa3yKj1RJfCXOL0zprM6vCm
-	 S41walyO/YKNB68eofCfSetDwFwaUwDwl2rsp8Wn5NdfPSLp6tJnn2YiX48sYwjzRe
-	 dWRbTNHIPGjzXenU8Uy8bHKd99woBlN/PJlQGCXRBrLP+y+9Tx+uI7I9bwLWXhCuc3
-	 r0R+UqT8rWtKFNovKZ5T1C8jUPiJKaBnzTu4E7XdiG75svRzAF6ZtutxJ0wvoGOp8d
-	 JxuRj+3VLnYUKkifY/pT4qYynQhDbyB999ywwHbrystmylZZ7YKyVrnlD0IjWgyyGV
-	 LMUseAQ7KnlOw==
-Message-ID: <eee6ec90-65dc-42c3-8ed1-e2bd828eec21@kernel.org>
-Date: Mon, 7 Apr 2025 11:07:04 +0200
+	b=TRRnAtLghoWZ3WZsK2IcggpXSBu+jG2aZ3rIqFon8QLCHcdU++r8c3OQnIKOY1eJN
+	 W17ryZRk0eBrBUT9zh0S4Jq+6X//mBF2fNbZpmlhCT6GPtW3ojUwX85FrMdjUS0Un6
+	 Kc2xlb37YoLlnb1/Q+NZQxAewMQgYcadQUSQctFf24nXiAm6RatpW/L9+HzXfivLqO
+	 EY7LUxPzcff0DtQevwhN7YH/e6FdlLh7PJmcVy27rR/JcSt+DtjE/ztOuDY5srRPqf
+	 CEZSYcAcY4lFgquvc1Vbnlbw1jUW+24Eo1vd2PpupGk+Jl0+LrkFuTlQPUwQrdLLsa
+	 8AqZ5m00fO5Xw==
+Message-ID: <851297ad-5e66-4374-9914-cd48868c4c7b@kernel.org>
+Date: Mon, 7 Apr 2025 11:07:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH 0/2] BCC: python: support fmod_ret
+Subject: Re: [PATCH 1/2] BCC: Python: Support 'fmod_ret' method for eBPF
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 References: <cover.1743988616.git.yangang@kylinos.cn>
+ <766ea5e9772f92d97100f8b52e70b2895c3de628.1743988616.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,27 +85,61 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1743988616.git.yangang@kylinos.cn>
+In-Reply-To: <766ea5e9772f92d97100f8b52e70b2895c3de628.1743988616.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 07/04/2025 04:37, Gang Yan wrote:
-> Support fmod_ret, and add a useful tool for mptcp, also
-> the interface can be verified with this function.
+> In kernel, there exists a lot of 'fmod_ret' functions, such as
+> 'update_socket_protocol'. But it cannot be attached in BCC-python
+> directly, so this patch provides an interface for Python to use
+> 'fmod_ret' attaching method.
 > 
-> Gang Yan (2):
->   BCC: Python: Support 'fmod_ret' method for eBPF
->   BCC: python: add a useful tool for mptcp
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  src/python/bcc/__init__.py | 43 ++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 43 insertions(+)
+> 
+> diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+> index 8bc85516..96de3d40 100644
+> --- a/src/python/bcc/__init__.py
+> +++ b/src/python/bcc/__init__.py
+> @@ -461,6 +461,7 @@ class BPF(object):
+>          self.raw_tracepoint_fds = {}
+>          self.kfunc_entry_fds = {}
+>          self.kfunc_exit_fds = {}
+> +        self.fmod_ret_fds = {}
+>          self.lsm_fds = {}
+>          self.perf_buffers = {}
+>          self.open_perf_events = {}
+> @@ -1157,6 +1158,21 @@ class BPF(object):
+>              return True
+>          return False
+>  
+> +    @staticmethod
+> +    def support_fmod_ret():
+> +        if not BPF.support_kfunc():
+> +            return False
+> +
+> +        kernel_version = platform.release()
+> +        major, minor, _ = kernel_version.split(".")
+> +
+> +        if int(major) > 5:
+> +            return True
+> +        elif int(major) ==5 and int(minor) >= 6:
 
-Thank you for looking at this!
+Was it not introduced in v5.7 instead of v5.6?
 
-Personally, I don't know how BCC is working internally, but the
-modifications seem to make sense.
+  return int(major) > 5 or (int(major) == 5 and int(minor) >= 7)
 
-I have a few comments, but apart from that, feel free to create the PR
-on BCC repo.
+
+https://lore.kernel.org/20200304191853.1529-1-kpsingh@chromium.org
+
+
+But also, it feels wrong to look at the kernel version, in case of
+backports, etc. Can you not look at something else? e.g. kallsyms?
 
 Cheers,
 Matt
