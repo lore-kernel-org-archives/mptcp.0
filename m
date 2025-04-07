@@ -1,116 +1,113 @@
-Received: from mail-pg1-f170.google.com (mail-pg1-f170.google.com [209.85.215.170])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 40DFF2288D2
-	for <mptcp@lists.linux.dev>; Mon,  7 Apr 2025 08:51:44 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.170
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F1FE52288EA
+	for <mptcp@lists.linux.dev>; Mon,  7 Apr 2025 09:07:07 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744015907; cv=none; b=YfpUPg28Nit7yJS+2Wnh527quCQVaQGuxprbQQJV2TC8WqegUhmmIlRUn4KmrufwLdYu4wWojYocvBXp7Egtd6uDXK3qblz9UEYfM633wGNEVa5tfvhxvRtOUqd8q/0G7+0P8M2P+1ex9NlXMKowtOTNL9jfhomCQI23RcxvZrg=
+	t=1744016828; cv=none; b=aVA1MBy5KuuzI0B6X+KdnE5iUgDdgfZ7CqKa3A7DtkTGqSUBjjZyKRjgoHOi7KCDdkYzKg+H5aBKOjgnQP9eoUzQhdqPHbGBR6IFFk2cRZccR/ZH1EwXl0fggSojH1B2yP+O84asfb5KxnKwGjKy7qc2LTRM4xkdtr6TwLWP4Ik=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744015907; c=relaxed/simple;
-	bh=JzUuLgQjqzsuDFsOmyFLNHi+3ZA2NXJNSaqGAaMZIJc=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=b2hPR71YWR/zEMrjwA0it/73IzCOFPeFdTHVRN6P5uZIXDfbtOFQIy4qyVZbssAiqsFtY1URCNvPkgazkUrw9rQ9EfDJFDEsY+Dgcwo/UYPnN3ghtbgylQMtKDGEF8msTI2nrUh8BFw8JwmNoZH65Po24jsZgcgoW9E3DIbG29M=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com; spf=pass smtp.mailfrom=bytedance.com; dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b=YnP5rIzU; arc=none smtp.client-ip=209.85.215.170
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=bytedance.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=bytedance.com
+	s=arc-20240116; t=1744016828; c=relaxed/simple;
+	bh=RgtDiaK6NUwvoBKm9bbXLZvPajIdUBdKogJTorAu+Is=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=PmZji4RJLqGucBFd92LcaOVCm9Ev+JmeqWFfxCFeJQCeCH1aL64/5gaLcw5KIjvpgHDUosEQ8cYzPYb39R+DJWIxJF2I7AzMtAckW5yUVqs49BAdB6InJ1JzVnH5P1YwRNjMJX952WGWjnQOzei8CuXO9qbWYxNugaVIjeKjex8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CFHTwpd7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=bytedance.com header.i=@bytedance.com header.b="YnP5rIzU"
-Received: by mail-pg1-f170.google.com with SMTP id 41be03b00d2f7-af241f0a4beso3303453a12.2
-        for <mptcp@lists.linux.dev>; Mon, 07 Apr 2025 01:51:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bytedance.com; s=google; t=1744015904; x=1744620704; darn=lists.linux.dev;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:from:to:cc:subject:date:message-id:reply-to;
-        bh=1uyJxUSjwirFDuWmm3Ov2pKSAd0ErZhNjYPXSZRPwMg=;
-        b=YnP5rIzUBdXA5YAhdRqM40qEe3asPAJLGgEIqRz5wcnatE5X0Tx46r4cNgj+uDL9EH
-         p/Yqo5n0BPAwsCkCb5rc6reUUBpP0x3qtr5zkrSBYtm6WdE3ctRXsJohpNwTjijdZmDQ
-         2+tjra3fsdCyDMAhKifqppUphN/RAbtOviF3ja7FY31HICl7jgzXLxvS8+83TbB9+hgg
-         O/nY79tpfQJz4xWiPCIQnxEb/MMGAXXlbzkhdNAK05vH8odPyQMq2cNTo28Lyyss1zBo
-         ggWERB5yOJPKsw+qMT1ENKOwMmwnwsaqbYO0+KBdczL7/KSMok3nOsyQ+pfyFLqYtBvz
-         k85w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744015904; x=1744620704;
-        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
-         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=1uyJxUSjwirFDuWmm3Ov2pKSAd0ErZhNjYPXSZRPwMg=;
-        b=OkbTQNabBDiGV1qUc9L8vGITxPSNJUzQPMgPkDE3Z/GP1ZAyr2MLMIbBOzEbIhXBsR
-         PUcXdO8hcjgNTPG/CfTBZKB9RevHsYlE3Dzzznjc9WjvraHlAcWjC0dy7Mi5BzZ7rDoi
-         XLcWZT2zG9F5GAa+GyPFleSSGzvmr79IzOtui3ZxyKBrJglNZaPXKUYQCbC+RsNd8Yav
-         XQ4jtUHLdL+i4hDuKGH34jJyv5tPkZ9+lX7PC/dqnviOZT33luaMPG8YUZDGGUNbiRAq
-         9e+O6wgTGvjfhf6necXuDVu5SmE1r0UCcBGYlonbJblIo0Vh+XhvAwoDpeWl8rFK0om7
-         ae/g==
-X-Forwarded-Encrypted: i=1; AJvYcCX/X7BRJwDbc6qx9F4msE6nKfqg/molIfqf+eB3JPQmELOcDe/wOb2BJtdbcllcouOa1ANkEA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyfN+qSXLP/0NKMrggeEuRQSZ+vAbm4sS9zYrw1JL+RvLS1tFO9
-	a8cHqiebjnNv1utsm0y3VMyqqkYoooKTkGTiJNpjW4HP/XiT01i84CvqTSc9nlI=
-X-Gm-Gg: ASbGncufQYIsDGkhO24aXG8dxUYAFic/h8va3FYa5lv2czEVx6xwwG220I4soLLxvCv
-	L3mYDxd1r65sebZpV81lNu9IyhAuFTQYAQkPKCb3WudeMRjhLBdD33tILrseqO+5kzEHKKk7i85
-	0XveHIFqwX8PrABVosBZKnuIk4mPNSYhL2E2JEX1GtQdkmYLv2SzLeIHEu9vlysAcwbFPbgHIrs
-	eItIhT8rNQ2vxC2NFppiGl2yNJCQiWCykc12F8HiNo+ou0/+gdrFsq+T+zjjLFRSCSFbxl6IJje
-	JvsG8SC2KcL026JlxW0pJrRcZYVZ8bpUjPtVV9yuV8uHAzg/3A1co9MJKnJ0Zdu+X90=
-X-Google-Smtp-Source: AGHT+IGW7/HQcOSrWsFxMUBwQZEFvu6hcIo8WL0C16qqewIUDvPZ3V176EqIWn668YLPeuSi7WpN/A==
-X-Received: by 2002:a17:902:f64d:b0:220:f87d:9d5b with SMTP id d9443c01a7336-22a8a867cfdmr200793525ad.24.1744015904387;
-        Mon, 07 Apr 2025 01:51:44 -0700 (PDT)
-Received: from always-zbook.bytedance.net ([61.213.176.5])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-229787727eesm75759455ad.224.2025.04.07.01.51.41
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 07 Apr 2025 01:51:44 -0700 (PDT)
-From: zhenwei pi <pizhenwei@bytedance.com>
-To: linux-kernel@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kselftest@vger.kernel.org,
-	netdev@vger.kernel.org
-Cc: matttbe@kernel.org,
-	martineau@kernel.org,
-	geliang@kernel.org,
-	viktor.soderqvist@est.tech,
-	zhenwei pi <pizhenwei@bytedance.com>,
-	zhenwei pi <zhenwei.pi@linux.dev>
-Subject: [PATCH] selftests: mptcp: add comment for getaddrinfo
-Date: Mon,  7 Apr 2025 16:51:22 +0800
-Message-ID: <20250407085122.1203489-1-pizhenwei@bytedance.com>
-X-Mailer: git-send-email 2.43.0
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CFHTwpd7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E0BC8C4CEDD;
+	Mon,  7 Apr 2025 09:07:06 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744016827;
+	bh=RgtDiaK6NUwvoBKm9bbXLZvPajIdUBdKogJTorAu+Is=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=CFHTwpd7JuTO7AAiIWXJCqym8iCoeFJfK0occ8BVRhVa3yKj1RJfCXOL0zprM6vCm
+	 S41walyO/YKNB68eofCfSetDwFwaUwDwl2rsp8Wn5NdfPSLp6tJnn2YiX48sYwjzRe
+	 dWRbTNHIPGjzXenU8Uy8bHKd99woBlN/PJlQGCXRBrLP+y+9Tx+uI7I9bwLWXhCuc3
+	 r0R+UqT8rWtKFNovKZ5T1C8jUPiJKaBnzTu4E7XdiG75svRzAF6ZtutxJ0wvoGOp8d
+	 JxuRj+3VLnYUKkifY/pT4qYynQhDbyB999ywwHbrystmylZZ7YKyVrnlD0IjWgyyGV
+	 LMUseAQ7KnlOw==
+Message-ID: <eee6ec90-65dc-42c3-8ed1-e2bd828eec21@kernel.org>
+Date: Mon, 7 Apr 2025 11:07:04 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH 0/2] BCC: python: support fmod_ret
+Content-Language: en-GB, fr-BE
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1743988616.git.yangang@kylinos.cn>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <cover.1743988616.git.yangang@kylinos.cn>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-mptcp_connect.c is a startup tutorial of MPTCP programming, however
-there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
-getaddrinfo MPTCP support.
+Hi Gang,
 
-Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
-Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
----
- tools/testing/selftests/net/mptcp/mptcp_connect.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+On 07/04/2025 04:37, Gang Yan wrote:
+> Support fmod_ret, and add a useful tool for mptcp, also
+> the interface can be verified with this function.
+> 
+> Gang Yan (2):
+>   BCC: Python: Support 'fmod_ret' method for eBPF
+>   BCC: python: add a useful tool for mptcp
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index c83a8b47bbdf..6b9031273964 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -179,6 +179,18 @@ static void xgetnameinfo(const struct sockaddr *addr, socklen_t addrlen,
- 	}
- }
- 
-+/* There is a lack of MPTCP support from glibc, these code leads error:
-+ *	struct addrinfo hints = {
-+ *		.ai_protocol = IPPROTO_MPTCP,
-+ *		...
-+ *	};
-+ *	err = getaddrinfo(node, service, &hints, res);
-+ *	...
-+ * So using IPPROTO_TCP to resolve, and use TCP/MPTCP to create socket.
-+ *
-+ * glibc starts to support MPTCP since v2.42.
-+ * Link: https://sourceware.org/git/?p=glibc.git;a=commit;h=a8e9022e0f82
-+ */
- static void xgetaddrinfo(const char *node, const char *service,
- 			 const struct addrinfo *hints,
- 			 struct addrinfo **res)
+Thank you for looking at this!
+
+Personally, I don't know how BCC is working internally, but the
+modifications seem to make sense.
+
+I have a few comments, but apart from that, feel free to create the PR
+on BCC repo.
+
+Cheers,
+Matt
 -- 
-2.34.1
+Sponsored by the NGI0 Core fund.
 
