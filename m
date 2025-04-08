@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35D55235C04
-	for <mptcp@lists.linux.dev>; Tue,  8 Apr 2025 17:18:37 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 32EE6224AE0
+	for <mptcp@lists.linux.dev>; Tue,  8 Apr 2025 18:13:12 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744132718; cv=none; b=e9s8cVQCL0C03F6+8X7agOAAWITBrnuU93LwNVqsuiu2ZwLG1EfbA/VhrB1bJgFf5vI4jOnzGK35gPPgdHz6aWmpoFdTQ+Qw98SvU2/pEolvUyOt8WQp6dAoh5ZGUZyyjxWR0LtVWRhNyTsI4qMnOn5VoJ+T5NpXJ6TWJwOUPDI=
+	t=1744135993; cv=none; b=VJUg4Q4DEeDbMawf1yih3LlvQGqW665sa20tXCiduKaKM610J3nJZtJYPXD/zKxDPzUOhPZYl3A1D5pHt+5jXiqvyE2LjLEoYEriPJrgSdJaUyEKQZA94LY/60h6NwKq4X14rup81bmAft3R2UjEMaxUMQi9IStk+N2+z/lVJXE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744132718; c=relaxed/simple;
-	bh=nLc8/tCptYA/aBKjrhyENf1eB/+shu6GI2/CF2z1m0A=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DNXKJAJftLDt438mau5hrR6rZiHEjvvppsUzPnVS2XErfFpS6lw2iDjMx8RHCwJQWc4kmeAP5S6MwRmrcu3o42jeBlZ9E5LkkaCX8KP4wCr1pfoQ1zZu9TEGYU6c7z4Ub2AI/kfyt2EtxzgZav9rzBASTdIsCZG+1JaZfTU/3Ac=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FSAOhNUt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744135993; c=relaxed/simple;
+	bh=2MuBa1Mq6Gt37KU8dxSpwfEd7cAFdsCD+RuyN3guioM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=C3DKDCYntXwOuL81moidID7+tag3b+OedgZEZZDatd6XXRLKrtwmEE1alaZYSvxTaA70ILmZ24r49Amkb76O97OsqoKa2QNyMqe5AcsNZ/7nERK+N602dbQbfUGB52TrhhQ6wzfL7DGrEqkUydghQ1ZPzA9U9ISZ8n2U9WLa1BY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qkO85SNp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FSAOhNUt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07517C4CEE8;
-	Tue,  8 Apr 2025 17:18:36 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qkO85SNp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25F2DC4CEE5;
+	Tue,  8 Apr 2025 18:13:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744132717;
-	bh=nLc8/tCptYA/aBKjrhyENf1eB/+shu6GI2/CF2z1m0A=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=FSAOhNUtLfO0xYNGIoaSa8jaoFO1+7LQ9B66zetgbq42B2M9QlCCrfL4Bfu390XTc
-	 582w8Int8ficH6FijZUV0Z9huHSHE7TW8RQsUXl7HgPdcF8WRHA/YG6Sbe6MkIq83S
-	 6hnHJVmA5m3rddOiHkaJpEYn6b4567uAHUZsuIpj53ruVGZS1pGcBRRdaXHKaSzZ+n
-	 aBtzK2iMrNlRlP9qU5gOOu1ICXIs7zSVsYsheFaAKPLovouwumnNrX/avoShcK/NCa
-	 BNOiGa8LOwvEd6t9K5W4gzQfXFp1V0jh59FOQFQ01JclBaacla3bI6A7yoBjzybdfj
-	 kuJmQTthsLK7Q==
-Message-ID: <2336cd34-d6d5-4db1-9d60-6ca7c398cbe7@kernel.org>
-Date: Tue, 8 Apr 2025 19:18:34 +0200
+	s=k20201202; t=1744135992;
+	bh=2MuBa1Mq6Gt37KU8dxSpwfEd7cAFdsCD+RuyN3guioM=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=qkO85SNp4NJbP5WLGxL9DuTpi9OIJ4aVPGukZSFZef9sz2a7jHCtzdJJSszaBIpYO
+	 D7NUoszlC2Ob1k4tevsudf/bp+OBysxuFFoOKg8qXhcftTJeGCKGY4gvXIs9jL5kfd
+	 HtYZzAHAu36ewnNEvFSCplh80UQyKGy36ZKFl+vg2UZsTOA+j0oqXpZ3z6F6LcXHbR
+	 rejJO+UFXixZqd3c+zVgC583JB/QKrrlV4GxFywkzkpgL/9MQy3kmztI9ve9aNG0sG
+	 Hat9XPiEDnu/s+AefQGJWRmXt9CNc6Va3WJs0Bcbc+l0v0Fix33WAH+iR6w6B1l7sQ
+	 dLVCwpS5OjESQ==
+Message-ID: <c81dfcab-0eee-45e2-8777-1b0c41e7f696@kernel.org>
+Date: Tue, 8 Apr 2025 20:13:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,14 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH AUTOSEL 6.14 20/54] mptcp: move the whole rx path under
- msk socket lock protection
+Subject: Re: [PATCH mptcp-next v6 0/5] BPF path manager, part 6
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
-References: <20250403190209.2675485-1-sashal@kernel.org>
- <20250403190209.2675485-20-sashal@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+References: <cover.1743133948.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
+Cc: MPTCP Linux <mptcp@lists.linux.dev>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,52 +85,29 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <20250403190209.2675485-20-sashal@kernel.org>
+In-Reply-To: <cover.1743133948.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-(MPTCP list only)
+On 28/03/2025 05:01, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> v6:
+>  - squash accept_new_subflow patches into one.
+>  - change "pm->subflows == subflows_max - 1" to
+> 	pm->subflows + 1 == subflows_max.
+>  - not to call accept_new_subflow under the PM lock.
+>  - add mptcp_pm_accept_subflow helpers.
+>  - drop READ_ONCE in mptcp_pm_worker.
+>  - clear all the pm status flags once in mptcp_pm_worker.
 
-On 03/04/2025 21:01, Sasha Levin wrote:
-> From: Paolo Abeni <pabeni@redhat.com>
-> 
-> [ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
-> 
-> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
-> move the whole MPTCP rx path under the socket lock leveraging the
-> release_cb.
-> 
-> We can drop a bunch of spin_lock pairs in the receive functions, use
-> a single receive queue and invoke __mptcp_move_skbs only when subflows
-> ask for it.
-> 
-> This will allow more cleanup in the next patch.
-> 
-> Some changes are worth specific mention:
-> 
-> The msk rcvbuf update now always happens under both the msk and the
-> subflow socket lock: we can drop a bunch of ONCE annotation and
-> consolidate the checks.
-> 
-> When the skbs move is delayed at msk release callback time, even the
-> msk rcvbuf update is delayed; additionally take care of such action in
-> __mptcp_move_skbs().
-> 
-> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
-> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
-> Signed-off-by: Sasha Levin <sashal@kernel.org>
+Thank you for the new version.
 
-It is not clear to me why this patch has been selected by AUTOSEL for up
-to 6.6, this is clearly not a fix. Do you think we should ask the stable
-team to drop this patch?
-
-Having this patch in stable might help for future backports, but I don't
-know if it depends on others.
+FYI, I'm still thinking about how to handle PM lock should be handled. I
+will come back to you later. I might suggest a new version with some
+modifications if that's OK, that might be easier.
 
 Cheers,
 Matt
