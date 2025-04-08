@@ -1,122 +1,100 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95C0525D1E6;
-	Mon,  7 Apr 2025 18:26:49 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4804243953;
+	Tue,  8 Apr 2025 01:43:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744050409; cv=none; b=FdpocF1um6XB0T8mwwInmnhufcP3EuK2nTfP9B0GmA4kRwfBdgrDCW3ZmpBa7G4a6F6zxjVdVIbfH3JwOsaF9QYQD0xuSMLf71IU42xxiRoAqkdqQGxx6DFOFqy6Z0QKJ0x+tGAyUgS7kxv6lzKnOUJUsyQ8vpbBpVTt3GT5nn4=
+	t=1744076611; cv=none; b=d3PGS+fAspcFx+06/T2S+73V/F8v50v6fAnaGxnYrxiPyIQ2/tJ5Z5CLROT/TK44GAsXAbJv7BrNiXJQB5Uj2jxrJXOOrPuF67s7eYswRbG29h6ZhnhJ6YKjN7YatbS33jDuPb5Q1OdW76MbZrYgefv5mDnyM/c89/yoWZjxQt8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744050409; c=relaxed/simple;
-	bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Y+SRucYB/Sn0oVsE8IFr4clRbvieRqkdBR33t/y5wa0ohhs9+wjAjEuXvv1JaCFk6N4AGEYX8Ttk3hsqxjr+1hurPRJ8YwgKUuTj/mVdVAT4dL/aR/ONTO7R9NLq6p7onu3hIkDzSceo20bG7mJurYHHoVHg575GchltZpEd6VI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TS+QrSO/; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744076611; c=relaxed/simple;
+	bh=LVDE8olUhIvfNM8yIe6JkU4em+QU0SCXxarI2iS1cj8=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=jFT+yaHwcicX9TBNp+e0XCynbtplJGduaoTnZQw7im4FEtxeZh7l9qg3SCPwwobiOqigGlxLwQ/gtqVOkb/dct3mQWUqkbTL0FsGKXsqT9KmKl9/Gzhi2qrPjxCFfqguzrtSzaNHR3RcKqPcg0V5CL7UGS4OG1wIaUqjAvhtWQI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eAYeVy/o; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TS+QrSO/"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2F4A1C4CEDD;
-	Mon,  7 Apr 2025 18:26:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eAYeVy/o"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 79044C4CEE8;
+	Tue,  8 Apr 2025 01:43:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744050409;
-	bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=TS+QrSO/66kDHas/i6aI/fa+aEcoXxEe0MZBm76l8899NeQjiVhm6i5HcizWEAJCa
-	 aDnKh4Em5FDzcz5tSOCgoUHKj+M8pwD74xhhEYtNFWWUc/RicnIKYjCHvi2ESwcHKU
-	 sit9HlBXGyJibOuUGFcd27/SLk5UIocTtdnRTEAREL77j6FmW5B4J3RtgjatFsQ6UP
-	 bUuMgDcDaO0HyoYneLH9aitvfHFTTzgxW7uS7TTElc4HHZ7iAEkXvZDL1AISFrxy/z
-	 BZ1R0tSc7pc/b4Gg+dvy5JC0wAaut4ALTZOs9tjkKvMddjiXe9pdL4wfLv+fjSzFvC
-	 8bnmeEUbwKFOQ==
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 07 Apr 2025 20:26:33 +0200
-Subject: [PATCH net 2/2] selftests: mptcp: validate MPJoin HMacFailure
- counters
+	s=k20201202; t=1744076610;
+	bh=LVDE8olUhIvfNM8yIe6JkU4em+QU0SCXxarI2iS1cj8=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=eAYeVy/oji6+e1wmExI6n/NK9RTbYlPhiAbSyZugg1Zo2BqeX8Hodn9JeEGnbYnEp
+	 jC2aOE7Evekr7IMM3u9rlfZACVsUw5boFJCzB+xdOWsK1Iy0psbgFtlJkRevJpVRCV
+	 SyaDiZ4+Aacfa6GQoDm25MvyWqnVd1icYXzDZexDtRa/joJ1BevNV8afq1Sf7c2jog
+	 G/3wAwZ8mTaBUjtlIzZAiyWCYWa0S+Od8mVsKlnW742NBOnSCSHTEuwDJylB2Rmql+
+	 IGALx9oxJHhyjAvrbU7J/pWBlTC2W2fXTlg6Z2odp4QAbE0MZL1ivDlXkOLKPzjSCl
+	 PgPXNCOX+DQGg==
+Message-ID: <ae367fb7158e2f1c284a4acaea86f96a7a95b0c4.camel@kernel.org>
+Subject: Re: [PATCH] selftests: mptcp: add comment for getaddrinfo
+From: Geliang Tang <geliang@kernel.org>
+To: zhenwei pi <pizhenwei@bytedance.com>, linux-kernel@vger.kernel.org, 
+ mptcp@lists.linux.dev, linux-kselftest@vger.kernel.org,
+ netdev@vger.kernel.org
+Cc: matttbe@kernel.org, martineau@kernel.org, viktor.soderqvist@est.tech, 
+ zhenwei pi <zhenwei.pi@linux.dev>
+Date: Tue, 08 Apr 2025 09:43:24 +0800
+In-Reply-To: <20250407085122.1203489-1-pizhenwei@bytedance.com>
+References: <20250407085122.1203489-1-pizhenwei@bytedance.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Message-Id: <20250407-net-mptcp-hmac-failure-mib-v1-2-3c9ecd0a3a50@kernel.org>
-References: <20250407-net-mptcp-hmac-failure-mib-v1-0-3c9ecd0a3a50@kernel.org>
-In-Reply-To: <20250407-net-mptcp-hmac-failure-mib-v1-0-3c9ecd0a3a50@kernel.org>
-To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
- linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1783; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=MyHd0TjRnbf2Mh2HU4okOIGQEKf8vyY86oBFFW5OTAE=;
- b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBn9Bjg1Gtym9sISXFIzb2ww3e06wI6gWVSgTfH1
- yphsTczaXqJAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCZ/QY4AAKCRD2t4JPQmmg
- cwdqEACUb/JbM+TljiOqLHuRMZxE3Sezd2TIZU4UFTVNCCo+OfZBy9VA/KAAeXki3x34CgZh75H
- 7cAoZacSWacZjDyUHN+c0Y14qlMM3bXuy9Y6G40Crsg7Sg+CE+qFk4mreedn+s94Rc7vg4Gki+j
- kLznkDLwZsuhJfA02c73xdjtcRFO98GvPkZXb8yN3egUJi1Vwb546JwhiBeXgihNtESYhTkb+tZ
- xW3+q1PV1iOyu6MmRwTwcO7zQCB65BlM6rvHqVQez00kZE6FJXQQQAOQGMH3+pXQ3tCrlOHTBxZ
- 2Lhoe6btlD0mi+NRvE34hzOiXweAooZyjU1EHe3iQXUSVYtGiwx7Ak0gl2jgNcxQuSIQuRlpLHY
- vCTIDJqkRowDHX/GAiXDpQF/kWGFWhU1Wv6r3nTT61FvfQEcpRfZBB8WPjv4j0o3ATQ6cgvoZQV
- XdUGB8HoZOTT36VcG4eKwmyEpIab9PuHc0NP0T18Xu8iGeJDu1+alBOQ2nSyiIwKI6yL0Jjh9zO
- 3HqAY79sa1c8fGd+lKWEhE1NcE+uG25dG1vwVJBUuHROuDerDZYD0t31caraNqWrZq68wAB/eTs
- x8ZIa1GnmtCxhSY3Q+367d2UgZ8wRWbmKcwo7+rmfwEpAJw/1yMKtBNq+kylevpeuIFLFOypC8s
- XRLLEptn9EJje/A==
-X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
- fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-The parent commit fixes an issue around these counters where one of them
--- MPJoinAckHMacFailure -- was wrongly incremented in some cases.
+Hi zhenwei,
 
-This makes sure the counter is always 0. It should be incremented only
-in case of corruption, or a wrong implementation, which should not be
-the case in these selftests.
+On Mon, 2025-04-07 at 16:51 +0800, zhenwei pi wrote:
+> mptcp_connect.c is a startup tutorial of MPTCP programming, however
+> there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
+> getaddrinfo MPTCP support.
+> 
+> Signed-off-by: zhenwei pi <zhenwei.pi@linux.dev>
+> Signed-off-by: zhenwei pi <pizhenwei@bytedance.com>
+> ---
+>  tools/testing/selftests/net/mptcp/mptcp_connect.c | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> index c83a8b47bbdf..6b9031273964 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+> @@ -179,6 +179,18 @@ static void xgetnameinfo(const struct sockaddr
+> *addr, socklen_t addrlen,
+>  	}
+>  }
+>  
+> +/* There is a lack of MPTCP support from glibc, these code leads
+> error:
+> + *	struct addrinfo hints = {
+> + *		.ai_protocol = IPPROTO_MPTCP,
+> + *		...
+> + *	};
+> + *	err = getaddrinfo(node, service, &hints, res);
+> + *	...
+> + * So using IPPROTO_TCP to resolve, and use TCP/MPTCP to create
+> socket.
+> + *
+> + * glibc starts to support MPTCP since v2.42.
+> + * Link:
+> https://sourceware.org/git/?p=glibc.git;a=commit;h=a8e9022e0f82
 
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
----
- tools/testing/selftests/net/mptcp/mptcp_join.sh | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+Thanks for adding getaddrinfo mptcp support to glibc. I think we should
+not only add a comment for getaddrinfo mptcp here, but also add an
+example of using it in mptcp_connect.c. I will work with you to
+implement this example in v2.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-index 13a3b68181ee14eb628a858e5738094c3c936b74..befa66f5a366bb738f8e6d6d84677f5c07488720 100755
---- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
-+++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
-@@ -1441,6 +1441,15 @@ chk_join_nr()
- 		fi
- 	fi
- 
-+	count=$(mptcp_lib_get_counter ${ns2} "MPTcpExtMPJoinSynAckHMacFailure")
-+	if [ -z "$count" ]; then
-+		rc=${KSFT_SKIP}
-+	elif [ "$count" != "0" ]; then
-+		rc=${KSFT_FAIL}
-+		print_check "synack HMAC"
-+		fail_test "got $count JOIN[s] synack HMAC failure expected 0"
-+	fi
-+
- 	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckRx")
- 	if [ -z "$count" ]; then
- 		rc=${KSFT_SKIP}
-@@ -1450,6 +1459,15 @@ chk_join_nr()
- 		fail_test "got $count JOIN[s] ack rx expected $ack_nr"
- 	fi
- 
-+	count=$(mptcp_lib_get_counter ${ns1} "MPTcpExtMPJoinAckHMacFailure")
-+	if [ -z "$count" ]; then
-+		rc=${KSFT_SKIP}
-+	elif [ "$count" != "0" ]; then
-+		rc=${KSFT_FAIL}
-+		print_check "ack HMAC"
-+		fail_test "got $count JOIN[s] ack HMAC failure expected 0"
-+	fi
-+
- 	print_results "join Rx" ${rc}
- 
- 	join_syn_tx="${join_syn_tx:-${syn_nr}}" \
+Thanks,
+-Geliang
 
--- 
-2.48.1
+> + */
+>  static void xgetaddrinfo(const char *node, const char *service,
+>  			 const struct addrinfo *hints,
+>  			 struct addrinfo **res)
 
