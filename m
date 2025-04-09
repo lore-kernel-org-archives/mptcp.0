@@ -1,201 +1,130 @@
-Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pf1-f177.google.com (mail-pf1-f177.google.com [209.85.210.177])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 451C31D8A0A
-	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 07:23:29 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 11D7925A334
+	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 07:33:45 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.177
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183414; cv=none; b=NF6Qy7ai9n3R801gLTa23Bri/C//Q+PNXageUeKUwi3twopNatxT9nVyW+oxGIPPJvcD2xObAYUU9VqG/bqBZ/bcgg3avFmVNATPlH1CB/QFREEeiqZna5MI63RqRzHDzeJr8zSAmVBzNoKF3hjU63jACtBNw69Fzx9C/yu09rQ=
+	t=1744184027; cv=none; b=EAiE/nRMqRtcH780Ruzl8+EehuIsjg++aKLyjLNTUOfL4TBLjjd8PleHumdeoFXauqV4t8EKm6mBVng63Vm6JSvPwjAEZFhu9S9WO66aRCqw49KniyMwxoAHdekCNEEjOAI3Eh1Ly24SlXRZr0/Sy434tC18aAT+9fOWuIQk1fk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183414; c=relaxed/simple;
-	bh=rFMa7Q7kawTGme5Bn2yO+EiEoyqUUKpi5drv4UtLjy0=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=avMy0xSFOzz3MG6Hjlgn5/Q3Nw0ASmoNIVHzdWQdAQkjBLf60yS+Xm++Wkr+/3c9bEpPfSeQ5LbBStQVssTnWix5X7+TLylOd0KmiLgnrqQaRftuAzNb0Zh+EpHP+oVRflxLd7WEhZHCE+nGMh4i3JZKzUcJY+fe4w/MaSta+0E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
-Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: cd94d0c2151211f0a216b1d71e6e1362-20250409
-X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_C_CI
-	GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1, AMN_T2
-	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:49beea58-c876-482c-9fa1-953411eaba89,IP:10,
-	URL:25,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,A
-	CTION:release,TS:40
-X-CID-INFO: VERSION:1.1.45,REQID:49beea58-c876-482c-9fa1-953411eaba89,IP:10,UR
-	L:25,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:40
-X-CID-META: VersionHash:6493067,CLOUDID:7a668808acb562abfb48cdadb17a9206,BulkI
-	D:250409151816EX2XTOET,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
-	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:nil,QS:
-	nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,AR
-	C:0
-X-CID-BVR: 0
-X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,
-	TF_CID_SPAM_ULN
-X-UUID: cd94d0c2151211f0a216b1d71e6e1362-20250409
-X-User: yangang@kylinos.cn
-Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
-	(envelope-from <yangang@kylinos.cn>)
-	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 777810858; Wed, 09 Apr 2025 15:18:15 +0800
-From: Gang Yan <yangang@kylinos.cn>
-To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [Patch, v2, 2/2] BCC: python: add a useful tool for mptcp
-Date: Wed,  9 Apr 2025 15:17:53 +0800
-Message-Id: <cde026e8afeec48569765f7590ee0ca8fd14b57f.1744182834.git.yangang@kylinos.cn>
-X-Mailer: git-send-email 2.25.1
-In-Reply-To: <cover.1744182834.git.yangang@kylinos.cn>
-References: <cover.1744182834.git.yangang@kylinos.cn>
+	s=arc-20240116; t=1744184027; c=relaxed/simple;
+	bh=CzzHednERh0KvTlbtd3xmNYm6rDlfRQ+crsH7/cHLOA=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=tG5ybvA6G6xhGx2OGiq/umrDgmF/qjDfeym5ZBKoP/m4b0ZCdfZ78T1YIPgGiZ7p9RdRG43Bh78N/OEqEWudg7wpD9LZgznxjQog7cqSfXdKsA+5l/Aj8Rnzdt49jVJ10YxAXnfoao0YhqUuh4jq40/GoyBmzs5HDYpl4sN/b1M=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kUJBU3c6; arc=none smtp.client-ip=209.85.210.177
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kUJBU3c6"
+Received: by mail-pf1-f177.google.com with SMTP id d2e1a72fcca58-7398d65476eso353175b3a.1
+        for <mptcp@lists.linux.dev>; Wed, 09 Apr 2025 00:33:45 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744184025; x=1744788825; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=6K1/SDgnXJq+yVuDwUYpTDRAtJEZEnELXOCQ0dAi3ys=;
+        b=kUJBU3c6qrv0Fa1wGouqoJFkOoaMR5kE+7sv+T4MCuX5emi2pL7OghumlUs7oPIi/d
+         fl+u1Qkx845mHQ8mgVUVIoSSeMFe9/LRvQhbcvdI3XM/U90qv9p649jmLSwZeSylGs5t
+         3m/tGHhFXArOXzjFT15lzhGpVzAoOnRYj3XSvNyiynkEp1VkMqChH4nHM6vNHtoyhqGz
+         pikEFVNG11GSlFqWC3da3DwZZK7/ZbrFBHEfKACDwDtDq6YBDc7YPnCKmCin6wqisW7K
+         KOGabCiAL6+LVfKXGjiVN4FXvi6KUqvdloWKE9k9UMBOsDRfL3FhBfoOzfES5JjlgnGx
+         1oZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744184025; x=1744788825;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=6K1/SDgnXJq+yVuDwUYpTDRAtJEZEnELXOCQ0dAi3ys=;
+        b=mQc2biZRfbhZuXbPp55shWa+HJb9/JuR0MKvEU7+dLbg/eI3eCEMhGvGy9rKaGXpnK
+         ITLX2GE5uj96Y7cOB+6F+LzfiMcuzqKQZoBJpxUKyaatb+WM7O1LfVQx+nTzoE1dDgb4
+         94gOeaVdG8LEUeVma2hVBr+eL4nFxWLtwOrUnNJFzSIa5+fMco1JBoyzrtryLAcIC6TG
+         Q+gyAiXh6o5w9O2KmAPHOzCFDjtK3f8PF4b+bfu4AqvsnbML+BBenVHPiMKKNBRarF+9
+         7D4xUqAEwmiGN6wo/9WWdXfjjwyWuz0uiJzDq27Dt+7voZccD+cK/qeMsqip+zMO2plc
+         zAOA==
+X-Gm-Message-State: AOJu0YzoaFbZpmEmHya5fhAtjZAq0YHrlCoAxmKl+VAz1yK2MdKaReQe
+	kcDAFqLGoNZW+DLJOMKWZbvySsPGcE9p/Z3H/UXM+iHszfS9yRE=
+X-Gm-Gg: ASbGncuIr/cITv2qZ/mD3iO5oPSx7HULwHOKsrhLHcJRxvO+WhP9eu0WX4oZtjWNGhU
+	rGjmsBR83NgNSDs91eRChdGCgzCp1CO5L8cu+oMwb5fok6mcrSsHLvO264KUtRM7GGeOA6bK2zT
+	jmSvS06zW/EHXG4rYxRcmM4XOzyptBuvMTTIrttDWGSrfKKTeRPESos04/9p4Tw8R8+rR5hAp4h
+	lXWwsMvccNiAMtDJXRkQ5bpX1SGv50ddxeYwGIVitLhovYNAkwFAzGh4KpmLm8m3aic1SwXc7e2
+	Tq9N/MwG5nvdnlYg4w7J2ZrYEFGB1rOgGFB8Wdxf6u62XDY92JQJPw==
+X-Google-Smtp-Source: AGHT+IH4Z0fHsWVxtcMChNzwNnMLTLXdmkD53atGOzU3QrMCpFAW6HKNTW4Qfqzs0m5XECPwg0miFA==
+X-Received: by 2002:a05:6a00:4651:b0:736:5969:2b6f with SMTP id d2e1a72fcca58-73bae42599bmr2442253b3a.6.1744184025196;
+        Wed, 09 Apr 2025 00:33:45 -0700 (PDT)
+Received: from [127.0.0.1] ([52.155.61.132])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-73bb1d464f3sm618329b3a.46.2025.04.09.00.33.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 09 Apr 2025 00:33:44 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: zhenwei pi <pizhenwei@bytedance.com>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To:
+ <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
+References:
+ <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: use IPPROTO_MPTCP for
+ getaddrinfo
+Message-ID: <2a43fb87-e1c5-c68f-6915-b56a26092dcf@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 09 Apr 2025 07:33:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-Multipath TCP (MPTCP) is an extension of the standard TCP protocol
-that allows a single transport connection to use multiple network
-interfaces or paths. MPTCP is useful for applications like bandwidth
-aggregation, failover, and more resilient connections.
+Hi zhenwei,
 
-Linux kernel starts to support MPTCP since v5.6, this patch provides
-a method which can easily force applications use MPTCP socket without
-modifing its code.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Gang Yan <yangang@kylinos.cn>
----
- tools/mptcpify.py  | 80 ++++++++++++++++++++++++++++++++++++++++++++++
- tools/mptcpify.txt | 22 +++++++++++++
- 2 files changed, 102 insertions(+)
- create mode 100644 tools/mptcpify.py
- create mode 100644 tools/mptcpify.txt
+Our CI did some validations and here is its report:
 
-diff --git a/tools/mptcpify.py b/tools/mptcpify.py
-new file mode 100644
-index 00000000..efdbd910
---- /dev/null
-+++ b/tools/mptcpify.py
-@@ -0,0 +1,80 @@
-+#!/usr/bin/env python
-+#
-+# mptcpify Make the applications to use MPTCP.
-+#           For Linux, uses BCC, eBPF. Embedded C.
-+#
-+# USAGE: mptcpify -t
-+#
-+# Copyright 2025 Kylin Software, Inc.
-+# Licensed under the Apache License, Version 2.0 (the "License")
-+#
-+# 05-Apr-2025   Gang Yan   Created this.
-+
-+import ctypes as ct
-+import argparse
-+import signal
-+import time
-+
-+from bcc import BPF
-+
-+#arguments
-+parser = argparse.ArgumentParser(
-+         description="mptcpify try to force applications to use MPTCP instead of TCP")
-+parser.add_argument("-t", "--targets", required=True, type=str,
-+                    help="use ',' for multi targets, eg: 'iperf3,rsync'")
-+
-+args_str = parser.parse_args()
-+args_list = [t.strip() for t in args_str.targets.split(',')]
-+
-+if (not BPF.support_fmod_ret()):
-+    print("Your kernel version is too old,"
-+          " fmod_ret method is only support kernel v5.7 and later.")
-+    exit()
-+
-+TASK_COMM_LEN = 18
-+
-+class app_name(ct.Structure):
-+    _fields_ = [("str", ct.c_char * TASK_COMM_LEN)]
-+
-+# define BPF program
-+prog = """
-+#include <linux/net.h>
-+#include <uapi/linux/in.h>
-+#include <linux/string.h>
-+
-+struct app_name {
-+    char name[TASK_COMM_LEN];
-+};
-+
-+BPF_HASH(support_apps, struct app_name);
-+
-+KMOD_RET(update_socket_protocol, int family, int type, int protocol, int ret)
-+{
-+    struct app_name target = {};
-+    bpf_get_current_comm(&target.name, TASK_COMM_LEN);
-+
-+    if ((family == AF_INET || family == AF_INET6) &&
-+        type == SOCK_STREAM &&
-+        (!protocol || protocol == IPPROTO_TCP) &&
-+        support_apps.lookup(&target))
-+        return IPPROTO_MPTCP;
-+
-+    return protocol;
-+
-+}
-+
-+"""
-+
-+b = BPF(text=prog)
-+b.attach_fmod_ret("update_socket_protocol")
-+
-+support_apps = b.get_table("support_apps")
-+for i in args_list:
-+    app = i.encode()
-+    name = app_name()
-+    name.str = app[:TASK_COMM_LEN-1].ljust(TASK_COMM_LEN, b'\0')
-+    support_apps[name] = ct.c_uint32(1)
-+
-+print("MPTCP is been forced for ", args_list);
-+signal.pause()
-+
-diff --git a/tools/mptcpify.txt b/tools/mptcpify.txt
-new file mode 100644
-index 00000000..adef70ea
---- /dev/null
-+++ b/tools/mptcpify.txt
-@@ -0,0 +1,22 @@
-+Demonstrations of mptcpify, the Linux eBPF/bcc version.
-+
-+
-+mptcpify forces the application to use to MPTCP instead of TCP.
-+
-+mptcpify has been verified with iperf3 and rsync[TCP module]. It can be used
-+for incresing the speed of transferring data with rsync.
-+
-+The MPTCP configuration is decribed in
-+https://www.mptcp.dev/pm.html
-+
-+USAGE message:
-+
-+usage: sudo python ./mptcpify.py [-h] -t TARGETS
-+
-+mptcpify try to force applications to use MPTCP instead of TCP
-+
-+options:
-+  -h, --help            show this help message and exit
-+  -t TARGETS, --targets TARGETS
-+                        use ',' for multi targets, eg: 'iperf3,rsync'
-+
--- 
-2.25.1
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/14350513463
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/1809498f6dbe
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D951400
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
