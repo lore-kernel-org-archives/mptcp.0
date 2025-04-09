@@ -1,129 +1,121 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A53611DE3A5;
-	Wed,  9 Apr 2025 09:17:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 165AA1DE3AA
+	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 09:29:41 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744190269; cv=none; b=oHX50oYO8M4PIxpqgUMM1y+0tLKtZQRElbX2hGGD422Ch4MsbEZJ73VmtvQi4Oi/ZZ2BtrnmAajAwSIDCqBVtOfJEea4LZZKiumQNnJi/OGtoClSDd4TjnC35MNMxfUHmXKYo2tguAlSmhMaO78yLqeLAdicfm/k/eyIntskkmg=
+	t=1744190987; cv=none; b=IRdjMVM9+Aa69GGeYKX/RaXbP4KxFF296JKl+W341//wCqe2DZ1/9yFQ5jEN+g3G71kau6/Br3wgSWPBSF0d3k67TvCpijI4hMO9kVVXQA9ZFs6j7O7KAAFXWkudkBOkHRGi73GvqrOIiFZFo7dFFJjuEp7Sjd+Fe6Dm3n0Rbsc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744190269; c=relaxed/simple;
-	bh=hqEQ77fSXiZu3N5SWCg2WjfSPbGTcCLVEwpTTrz/2xg=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=nM7Fa8BAWenyqhub1rb6te0v0l9UwiXBCJObX/soPADK30AMmLeeT53xY+Tbp8ahmrfV8vWtBScqJ/vugFDmhnBjD4cObYeA+oKBVEdIGl977f5HQSBkzrD1y6ZCNquWk9WIVtkVz7fuRXJ/udaq785y0XZr7zphXACah4DQe9A=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=iGMIQvFw; arc=none smtp.client-ip=10.30.226.201
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="iGMIQvFw"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 90096C4CEE3;
-	Wed,  9 Apr 2025 09:17:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744190269;
-	bh=hqEQ77fSXiZu3N5SWCg2WjfSPbGTcCLVEwpTTrz/2xg=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=iGMIQvFwdJCtmyVMtv1xeIy2DraOwP6Ba/h6zAEN+wsvrAiubvTkQOtfy9s6ipwDk
-	 /mC3296UDFwck7Fh+lRo+EvGvnmmX5znY6NWR1ORehE9yuEqwhe86vEHzf1HkLYNm7
-	 rAwhHVN5J5IByZFNVCTNz+MUyLgTnRiD77NVtkhZuq9SDpwEeAcooYDaAl3e9VEI+k
-	 EHbka3139/bdYlI/mB38AFgsDPkhfHdEFD2znKL+qGxMoNgUR1YvmAGdh8Ba8qbkZQ
-	 iLX8iQrdhRjgZT1f7VA/eaclHqrTx2nTNCxoIF3+xjWJOb7e3teMU/ZaQouTXNky4h
-	 7OSTDC2m7te3Q==
-Message-ID: <1cc54fa0f517f387563263bb90ef1628244778df.camel@kernel.org>
-Subject: Re: [PATCH bpf-next] bpf: Allow error injection for
- update_socket_protocol
-From: Geliang Tang <geliang@kernel.org>
-To: Yonghong Song <yonghong.song@linux.dev>, Gang Yan
- <gang_yan@foxmail.com>,  Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev
-Date: Wed, 09 Apr 2025 17:17:43 +0800
-In-Reply-To: <dee07a8c-aed2-4125-a4f0-1bd76ca1e4ac@linux.dev>
-References: <tmcxv429u9-tmgrokbfbm@nsmail7.0.0--kylin--1>
-	 <tencent_EB51CDCA4E189E271032DFEC7E042B752008@qq.com>
-	 <dee07a8c-aed2-4125-a4f0-1bd76ca1e4ac@linux.dev>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=arc-20240116; t=1744190987; c=relaxed/simple;
+	bh=RvaVkiPlOYNJ5AnwqqWHsTZWFSfLSwzD6k74lVGK+ns=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=D7qeohTLKCxgLl83IRme02VfHeKGjtixVDQxyD/U1et/nM0CPLA3IODsP91M+UOUkjSrwzRT5frLbefrM0XjUbMwtvZQhYHbvFsd8Mjb/JBPAM3SAcHH1MLvfuhIXr1lH9p9NN4MH8MbriqPJXdu8vsmskeFHetK4ZSCF5/q3qs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 26f6ccf8152511f0a216b1d71e6e1362-20250409
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:636309fa-effa-4011-8942-729f9e5e8d01,IP:10,
+	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:1
+X-CID-INFO: VERSION:1.1.45,REQID:636309fa-effa-4011-8942-729f9e5e8d01,IP:10,UR
+	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-9,FILE:0,BULK:0,RULE:Release_Ham,ACTION:
+	release,TS:1
+X-CID-META: VersionHash:6493067,CLOUDID:35c6ee8e582f6ae7f1553cccb17c00fa,BulkI
+	D:2504091729364FD2CN82,BulkQuantity:0,Recheck:0,SF:17|19|24|45|64|66|78|80
+	|81|82|83|102|841,TC:nil,Content:0|50,EDM:-3,IP:-2,URL:11|1,File:nil,RT:ni
+	l,Bulk:nil,QS:nil,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,
+	BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,
+	TF_CID_SPAM_SNR
+X-UUID: 26f6ccf8152511f0a216b1d71e6e1362-20250409
+X-User: yangang@kylinos.cn
+Received: from localhost [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA)
+	with ESMTP id 967230987; Wed, 09 Apr 2025 17:29:36 +0800
+Date: Wed, 9 Apr 2025 17:29:33 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Subject: Re: [Patch, v2, 1/2] BCC: Python: Support 'fmod_ret' method for eBPF
+Message-ID: <20250409092933.GA16105@yangang-pc>
+References: <cover.1744182834.git.yangang@kylinos.cn>
+ <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
+ <1d6bceea-daae-49b5-918f-60df35b0791f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1d6bceea-daae-49b5-918f-60df35b0791f@kernel.org>
 
-Hi Yonghong,
-
-On Sun, 2024-08-25 at 21:05 -0700, Yonghong Song wrote:
+On Wed, Apr 09, 2025 at 10:26:23AM +0200, Matthieu Baerts wrote:
+Hi Matt,
+> Hi Gang,
 > 
-> On 8/25/24 8:29 PM, Gang Yan wrote:
-> > Hi Alexei:
-> > It's my honor to recieve your reply. The response to your concerns
-> > is attached below
-> > for your review.
-> > On Mon, Aug 26, 2024 at 10:57:12AM +0800, Gang Yan wrote:
-> > > On Thu, Aug 22, 2024 at 8:33 AM Jakub Kicinski wrote:
-> > > > On Thu, 22 Aug 2024 14:08:57 +0800 Gang Yan wrote:
-> > > > > diff --git a/net/socket.c b/net/socket.c
-> > > > > index fcbdd5bc47ac..63ce1caf75eb 100644
-> > > > > --- a/net/socket.c
-> > > > > +++ b/net/socket.c
-> > > > > @@ -1695,6 +1695,7 @@ __weak noinline int
-> > > > > update_socket_protocol(int family, int type, int protocol)
-> > > > > {
-> > > > > return protocol;
-> > > > > }
-> > > > > +ALLOW_ERROR_INJECTION(update_socket_protocol, ERRNO);
-> > > > IDK if this falls under BPF or directly net, but could you
-> > > > explain
-> > > > what test will use this? I'd prefer not to add test hooks into
-> > > > the
-> > > > kernel unless they are exercised by in-tree tests.
-> > > This looks unnecessary.
-> > > update_socket_protocol is already registered as fmodret.
-> > > There is even selftest that excises this feature:
-> > > tools/testing/selftests/bpf/progs/mptcpify.c
-> > > 
-> > > It doesn't need to be part of the error-inject.
-> > The 'update_socket_protocol' is a BPF interface designed primarily
-> > to
-> > fix the socket protocol from TCP protocol to MPTCP protocol without
-> > requiring modifications to user-space application codes. However,
-> > when attempting to achieve this using the BCC tool in user-space,
-> > the BCC tool doesn't support 'fmod_ret'. Therefore, this patch aims
-> > to
-> > further expand capabilities, enabling the 'kprobe' method can
-> > overriding
-> > the update_socket_protocol interface.
+> On 09/04/2025 09:17, Gang Yan wrote:
+> > In kernel, there exists a lot of 'fmod_ret' functions, such as
+> > 'update_socket_protocol'. But it cannot attached in BCC-python directly,
+> > so this patch provides an interface for python to use 'fmod_ret'
+> > attaching method.
+> > 
+> > But there exists a question about how to check 'fmod_ret' support in
+> > kernel, do you have any suggestion? I already considered checking the
+> > kernel version which seems not suitable.
+> > 
+> > Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> > ---
+> >  src/python/bcc/__init__.py | 34 ++++++++++++++++++++++++++++++++++
+> >  1 file changed, 34 insertions(+)
+> > 
+> > diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+> > index 8bc85516..12ce3ef6 100644
+> > --- a/src/python/bcc/__init__.py
+> > +++ b/src/python/bcc/__init__.py
 > 
-> Gang Yan, could you explore to add fmod_ret support in bcc? It should
-> be
-> similar to kfunc/kretfunc support. I am happy to review your patches.
+> (...)
+> 
+> > @@ -1189,6 +1205,22 @@ class BPF(object):
+> >          self.kfunc_entry_fds[fn_name] = fd
+> >          return self
+> >  
+> > +    def attach_fmod_ret(self, fn_name=b""):
+> > +        fn_name = _assert_is_bytes(fn_name)
+> > +        fn_name = BPF.add_prefix(b"kmod_ret__", fn_name)
+> > +
+> > +        if fn_name in self.fmod_ret_fds:
+> > +            raise Exception("Fmod_ret func %s has been attached" % fn_name)
+> Detail: maybe clearer with this:
+> 
+>   "Fmod_ret func %s is already attached"
+> 
+> (...)
+>
+In BCC's attach_kfunc:
+	if fn_name in self.kfunc_entry_fds:
+            raise Exception("Kernel entry func %s has been attached" % fn_name)
+So I think it's better to keep the same with it.
 
-It took us some time to add this support in bcc, and we have recently
-completed it in [1]. We would be grateful if you could help review
-these patches.
+I agree with your view that mptcpify.py should, by default, enforce the
+use of MPTCP for all applications, and this feature will be incorporated
+before it is integrated into BCC tools.
 
-Thanks,
--Geliang
-
-[1]
+The PR link:
 https://github.com/iovisor/bcc/pull/5274
 
+Thanks!
+Best wishes!
+Gang
+> Cheers,
+> Matt
+> -- 
+> Sponsored by the NGI0 Core fund.
 > 
-> Thanks,
-> Yonghong
 > 
-> > 
-> > As a Python developer, the BCC tool is a commonly utilized
-> > instrument for
-> > interacting with the kernel. If the kernel could permit the use of
-> > an
-> > error-inject method to modify the `update_socket_protocol`, it
-> > would significantly
-> > benefit the subsequent promotion and development of MPTCP
-> > applications.
-> > Thank you for considering this enhancement.
-> > 
-> > Best wishes!
-> > Gang Yan
-> > 
-> > 
-> 
-
