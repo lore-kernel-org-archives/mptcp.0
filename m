@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EF4F83D76
-	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 08:26:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04125B69C
+	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 08:26:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187180; cv=none; b=iVI8vDlkiN/tQDnVjxS1Yu1bJnc2R4r273Iw00ULsDIZeH0dK5UsTr7gOPi1F94aS24ohT79h3vyoupNGs7aizjv9Xxm7Oq4YpK0r4RcBwLr1gHnQF0fuMFLfAZ85PtYfmRcJ8W6GbMySunXlR5SrhPLTgeEhl4DODG5Wn4+ryM=
+	t=1744187184; cv=none; b=k8A0giGBrbHvNV4/l1h7fNd59YVXLhnHnkQMkP7Z1VQszCxFULM4Ptrn6Ga6tRbTExscYUk4klAsOcAzVZtJ6dbU7fXB/U24JexxlrgYvjSUD3QzUMKGddcupBoaMdcFn54eInoqBF6oBmPfO5lOaXHDJFBHIfWgDQ770kHu6Lc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187180; c=relaxed/simple;
-	bh=tW0XfRpKjoSL3j6UMXdSxe7bw1cjlez6ICkaEaYz5ak=;
+	s=arc-20240116; t=1744187184; c=relaxed/simple;
+	bh=GzkaiZj36WRnqPmlXJYG8L3j827VRG6Jeb/G3o7lGSs=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=j7v9ZC9NpGaRyRdxxsBSj3smB/jotZVJA3rDEMiQeANm6AXQxGBLZsstLm8FEnUdGZCrSmlJd2voPoY4RwbhzT5+OJEs6m2uM77Vo1myVkReG3qyQujkjjWhXAgxcDJPHDiIbS8AJ/Yar3Q8egs69nh+LH6fQlhKSPkQFPHU5AE=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XmVymfTF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=VZO4uus7MKM32VnNNIDw49vqyDjfkL6fxzbwYdX+R5K1Arp8NQB8Pw7QTS2dfuq1T/kd/L26/yaTReSIe5ajrjNZdjm/kc7B3eFqgEvHmrXNjRfxH8dY5/HjMwCxHsk7D6NUf7aXvwy+hIw5vrYdVwFbRmFrs76Dd2ra+mRFMu4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZIlEP64; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XmVymfTF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EE99BC4CEE3;
-	Wed,  9 Apr 2025 08:26:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZIlEP64"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6752AC4CEE7;
+	Wed,  9 Apr 2025 08:26:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744187179;
-	bh=tW0XfRpKjoSL3j6UMXdSxe7bw1cjlez6ICkaEaYz5ak=;
+	s=k20201202; t=1744187183;
+	bh=GzkaiZj36WRnqPmlXJYG8L3j827VRG6Jeb/G3o7lGSs=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=XmVymfTFq7zlGjTX+AoDIJQMVb3vsAqyjvvfVT8sv7DAyRAUka7bw4zsX2+LlVvDL
-	 ep4Rhb2/DLlBLVxM5pJzvHg5/kkFuu+FrOGcPykandToSC1utE6d89x2bSbfJOXBK7
-	 Zq5zAcF/P7Mvm0xjxEWCNpOe1YtRR8az0Tokom9WQ67aQn3CG1+zOm/RfImUgkh8MD
-	 0euGClPJFJUX9FrNmxFQSofq5hRHv/y4UoP8iuTnSEj35Uj9QOoQjr/9FnlvQfrN05
-	 Yg0YWJmPyg3qq5lchd5Sx4pbeKPySoSyKC/XbG0B3jUyedzNd8VOnaKND7Rd8PY6Cz
-	 hqtmfzk2c3ZJA==
-Message-ID: <05896fad-5182-40cd-b429-245f599990b0@kernel.org>
-Date: Wed, 9 Apr 2025 10:26:16 +0200
+	b=DZIlEP64KqRQDhsSxfS+7WCNQHvqGLqZOqK/fld3493SIxOM1n8AI11ztrosZCOrO
+	 yrpXv0tu4KeWC+bPgAeajgxA96YieyF9MHdskmXi/No9L9+wvLuNIIHS6bSBgMPoGN
+	 sx/mhYsenyBG+RSxmCkWD+ZoFBESPlBSRC2JDioCJ+CvKcZvvlBqgPpmJ3WANonInH
+	 FXFNPpbn6J4u0bCs1iVnvK6JZ/FcWgK1sB2qzviFzEi2tm4AVUGxMMToNmMM8Rnqsc
+	 WkpB5R52JWjuB2TYA9XuEvGPAPurfIhC7FkGb+Q4VdFbGg4TzSCt7ZWKii+98WiU6p
+	 jwlEn6ksRFMGQ==
+Message-ID: <1d6bceea-daae-49b5-918f-60df35b0791f@kernel.org>
+Date: Wed, 9 Apr 2025 10:26:23 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [Patch, v2, 0/2] BCC: python: support fmod_ret
+Subject: Re: [Patch, v2, 1/2] BCC: Python: Support 'fmod_ret' method for eBPF
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 References: <cover.1744182834.git.yangang@kylinos.cn>
+ <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,34 +85,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1744182834.git.yangang@kylinos.cn>
+In-Reply-To: <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 09/04/2025 09:17, Gang Yan wrote:
-> Support fmod_ret, and add a useful tool for mptcp, also
-> the interface can be verified with this function.
+> In kernel, there exists a lot of 'fmod_ret' functions, such as
+> 'update_socket_protocol'. But it cannot attached in BCC-python directly,
+> so this patch provides an interface for python to use 'fmod_ret'
+> attaching method.
 > 
-> ------
-> Changelog:
->   v2:
->     - change the name of the tool to 'mptcpify'
->     - fix the code style problems in mptcpify.py
->     - modify 'support_fmod_ret' in __init__.py, add some comment and
->       ask for suggestions to BCC devs.
+> But there exists a question about how to check 'fmod_ret' support in
+> kernel, do you have any suggestion? I already considered checking the
+> kernel version which seems not suitable.
 > 
-> Hi Matt:
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  src/python/bcc/__init__.py | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 > 
-> So nice to recieve your reply. Do you think we can create a PR with v2
-> patch to BCC now? The description of PR is attached below, Can you help
-> me to take a look?
+> diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+> index 8bc85516..12ce3ef6 100644
+> --- a/src/python/bcc/__init__.py
+> +++ b/src/python/bcc/__init__.py
 
-Thank you for the v2. I have just some small comments, but it is not
-blocking, the rest looks good to me.
+(...)
 
-Then yes, please create the PR, no need to send a v3.
+> @@ -1189,6 +1205,22 @@ class BPF(object):
+>          self.kfunc_entry_fds[fn_name] = fd
+>          return self
+>  
+> +    def attach_fmod_ret(self, fn_name=b""):
+> +        fn_name = _assert_is_bytes(fn_name)
+> +        fn_name = BPF.add_prefix(b"kmod_ret__", fn_name)
+> +
+> +        if fn_name in self.fmod_ret_fds:
+> +            raise Exception("Fmod_ret func %s has been attached" % fn_name)
+Detail: maybe clearer with this:
+
+  "Fmod_ret func %s is already attached"
+
+(...)
 
 Cheers,
 Matt
