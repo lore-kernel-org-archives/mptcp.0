@@ -1,19 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 38076259CB8
-	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 07:23:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8F6901D618E
+	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 07:23:29 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744183410; cv=none; b=edarxoFswwYMzh8pFxDBIETADa2vfNP2I9fFungJCQx+vQ71QE64QuZZkw0Tqvqe+b/BqTvTBE+AuqoI2VMVeLskLTYDZ+x8tinVcjrdyW7mLR4IG5C3Um+q2SVOAcybShmHDeSIj2d0MItgIJ6/0LdbSC2aY3e+JuGcnE4eM44=
+	t=1744183413; cv=none; b=jrzCijZzesf021JiIDbYrWs/Zk34z3ouii2HAXjFF6143stfPgjFv+y3AIg44hZ7VWgf/+Avfqo7p4rNvCD4bUY2vlz9FA9EXm5IaWFpmYe+FrGZXD4CPCWYCUe0CHJjXJ9zeE75+5qHLCk6XFsNWQgSP5zGJUtp4UaYJSvqtds=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744183410; c=relaxed/simple;
-	bh=ypzjL9rVa6Zs/DPvQUg1YtBxatzHYaxyfolMtGt9LpE=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=ttcDdHew98/Il2tu4zvgTQA6+TKa7xDkxLjCYMcujNpyz1KaWeF+QCwpFXKpz6kiPhmmB5UhFWoOW1FrwqtAE/I2QA/yHIhkw8nmMOQDK2fCQUc5aUws7le2norH9+rzTXlp0rSWvzX4VTJsX0oyYYHv2wnXpqnB/qaCwmyyT+4=
+	s=arc-20240116; t=1744183413; c=relaxed/simple;
+	bh=BkrdT/tCnUnUm3kDyrHICefLnbdq4yfOHpEXONJbDFc=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=h0VipHTk+XbtyjgZDlALuK7BpJ3YSyCvP2dqCivV1emo4Zv4TuWw/farrqPJKiDziNwmgRCwDEkXzXq2fPbY+HRFV2BlHrUxtRFe0+JtWp74hOd2s24yAazMZBSc16ibx5ozMJXDM9YSVD3FXp9BXDT3hl3KNXEqYOC+YQ1bCtQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: c9b57128151211f0a216b1d71e6e1362-20250409
+X-UUID: cceaa552151211f0a216b1d71e6e1362-20250409
 X-CTIC-Tags:
 	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
 	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
@@ -26,33 +27,34 @@ X-CTIC-Tags:
 	ABX_MISS_RDNS
 X-CID-O-RULE: Release_Ham
 X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:69afe325-d834-4790-aa20-0d55cde1cb0a,IP:10,
-	URL:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:-10
-X-CID-INFO: VERSION:1.1.45,REQID:69afe325-d834-4790-aa20-0d55cde1cb0a,IP:10,UR
-	L:0,TC:0,Content:-5,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:-10
-X-CID-META: VersionHash:6493067,CLOUDID:dc80e578fcda34b3bc8936d91ac2c537,BulkI
-	D:250409150031B6J4XXF3,BulkQuantity:2,Recheck:0,SF:17|19|24|44|66|78|102,T
-	C:nil,Content:0|50,EDM:-3,IP:-2,URL:11|1,File:nil,RT:nil,Bulk:40,QS:nil,BE
-	C:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-O-INFO: VERSION:1.1.45,REQID:5fbccbfe-35d3-4848-813a-aa34ed1291fb,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:5fbccbfe-35d3-4848-813a-aa34ed1291fb,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:b8a2fba3c1056a4d083c598e09f7ad39,BulkI
+	D:2504091518160QB0KWHC,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
+	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_ULN,TF_CID_SPAM_SNR,
-	TF_CID_SPAM_FAS
-X-UUID: c9b57128151211f0a216b1d71e6e1362-20250409
+X-CID-FACTOR: TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR
+X-UUID: cceaa552151211f0a216b1d71e6e1362-20250409
 X-User: yangang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <yangang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1594134112; Wed, 09 Apr 2025 15:18:08 +0800
+	with ESMTP id 2014667068; Wed, 09 Apr 2025 15:18:14 +0800
 From: Gang Yan <yangang@kylinos.cn>
 To: mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [Patch, v2, 0/2] BCC: python: support fmod_ret
-Date: Wed,  9 Apr 2025 15:17:51 +0800
-Message-Id: <cover.1744182834.git.yangang@kylinos.cn>
+Subject: [Patch, v2, 1/2] BCC: Python: Support 'fmod_ret' method for eBPF
+Date: Wed,  9 Apr 2025 15:17:52 +0800
+Message-Id: <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1744182834.git.yangang@kylinos.cn>
+References: <cover.1744182834.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -61,52 +63,93 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Support fmod_ret, and add a useful tool for mptcp, also
-the interface can be verified with this function.
+In kernel, there exists a lot of 'fmod_ret' functions, such as
+'update_socket_protocol'. But it cannot attached in BCC-python directly,
+so this patch provides an interface for python to use 'fmod_ret'
+attaching method.
 
-------
-Changelog:
-  v2:
-    - change the name of the tool to 'mptcpify'
-    - fix the code style problems in mptcpify.py
-    - modify 'support_fmod_ret' in __init__.py, add some comment and
-      ask for suggestions to BCC devs.
+But there exists a question about how to check 'fmod_ret' support in
+kernel, do you have any suggestion? I already considered checking the
+kernel version which seems not suitable.
 
-Hi Matt:
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ src/python/bcc/__init__.py | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-So nice to recieve your reply. Do you think we can create a PR with v2
-patch to BCC now? The description of PR is attached below, Can you help
-me to take a look?
-
-'''
-Multipath TCP (MPTCP) serves as an enhancement to the conventional TCP
-protocol, enabling a single transport-layer connection to leverage
-multiple network interfaces. This capability makes MPTCP advantageous
-for applications requiring bandwidth consolidation, seamless failover
-mechanisms, and more robust connectivity solutions.
-
-Linux kernel starts to support MPTCP since v5.6, and it provides a
-fmod_ret interface 'update_socket_protocol' to force applications using
-MPTCP instead of TCP without modifyiing its code.
-
-So these patches provide a tool named 'mptcpify' which can achieve this.
-Using python-BCC is a more easy way for future development, so it is so
-important to support 'fmod_ret' in python-BCC.
-
-@matttbe from the MPTCP kernel team had a look at the new tool.
-'''
-
-Gang Yan (2):
-  BCC: Python: Support 'fmod_ret' method for eBPF
-  BCC: python: add a useful tool for mptcp
-
- src/python/bcc/__init__.py | 34 ++++++++++++++++
- tools/mptcpify.py          | 80 ++++++++++++++++++++++++++++++++++++++
- tools/mptcpify.txt         | 22 +++++++++++
- 3 files changed, 136 insertions(+)
- create mode 100644 tools/mptcpify.py
- create mode 100644 tools/mptcpify.txt
-
+diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
+index 8bc85516..12ce3ef6 100644
+--- a/src/python/bcc/__init__.py
++++ b/src/python/bcc/__init__.py
+@@ -461,6 +461,7 @@ class BPF(object):
+         self.raw_tracepoint_fds = {}
+         self.kfunc_entry_fds = {}
+         self.kfunc_exit_fds = {}
++        self.fmod_ret_fds = {}
+         self.lsm_fds = {}
+         self.perf_buffers = {}
+         self.open_perf_events = {}
+@@ -1157,6 +1158,12 @@ class BPF(object):
+             return True
+         return False
+ 
++    @staticmethod
++    def support_fmod_ret():
++        # It is not clear what can be used to check if 'fmod_ret'
++        # is supported by the kernel. Assuming checking kfunc is enough
++        return BPF.support_kfunc()
++
+     def detach_kfunc(self, fn_name=b""):
+         fn_name = _assert_is_bytes(fn_name)
+         fn_name = BPF.add_prefix(b"kfunc__", fn_name)
+@@ -1166,6 +1173,15 @@ class BPF(object):
+         os.close(self.kfunc_entry_fds[fn_name])
+         del self.kfunc_entry_fds[fn_name]
+ 
++    def detach_fmod_ret(self, fn_name=b""):
++        fn_name = _assert_is_bytes(fn_name)
++        fn_name = BPF.add_prefix(b"kmod_ret__", fn_name)
++
++        if fn_name not in self.fmod_ret_fds:
++            raise Exception("Fmod_ret func %s is not attached" % fn_name)
++        os.close(self.fmod_ret_fds[fn_name])
++        del self.fmod_ret_fds[fn_name]
++
+     def detach_kretfunc(self, fn_name=b""):
+         fn_name = _assert_is_bytes(fn_name)
+         fn_name = BPF.add_prefix(b"kretfunc__", fn_name)
+@@ -1189,6 +1205,22 @@ class BPF(object):
+         self.kfunc_entry_fds[fn_name] = fd
+         return self
+ 
++    def attach_fmod_ret(self, fn_name=b""):
++        fn_name = _assert_is_bytes(fn_name)
++        fn_name = BPF.add_prefix(b"kmod_ret__", fn_name)
++
++        if fn_name in self.fmod_ret_fds:
++            raise Exception("Fmod_ret func %s has been attached" % fn_name)
++
++        fn = self.load_func(fn_name, BPF.TRACING)
++        fd = lib.bpf_attach_kfunc(fn.fd)
++
++        if fd < 0:
++            raise Exception("Failed to attach BPF to fmod_ret kernel func")
++        self.fmod_ret_fds[fn_name] = fd
++
++        return self
++
+     def attach_kretfunc(self, fn_name=b""):
+         fn_name = _assert_is_bytes(fn_name)
+         fn_name = BPF.add_prefix(b"kretfunc__", fn_name)
+@@ -1824,6 +1856,8 @@ class BPF(object):
+             self.detach_kretfunc(k)
+         for k, v in list(self.lsm_fds.items()):
+             self.detach_lsm(k)
++        for k, v in list(self.fmod_ret_fds.items()):
++            self.detach_fmod_ret(k)
+ 
+         # Clean up opened perf ring buffer and perf events
+         table_keys = list(self.tables.keys())
 -- 
 2.25.1
 
