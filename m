@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6F04125B69C
-	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 08:26:24 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8923C25B68C
+	for <mptcp@lists.linux.dev>; Wed,  9 Apr 2025 08:26:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744187184; cv=none; b=k8A0giGBrbHvNV4/l1h7fNd59YVXLhnHnkQMkP7Z1VQszCxFULM4Ptrn6Ga6tRbTExscYUk4klAsOcAzVZtJ6dbU7fXB/U24JexxlrgYvjSUD3QzUMKGddcupBoaMdcFn54eInoqBF6oBmPfO5lOaXHDJFBHIfWgDQ770kHu6Lc=
+	t=1744187205; cv=none; b=HGasVHt5RqpPM0bb7BMY6RB7MaB5O7bBTT3fG/U8jpJb9+ISQRXYY1BnRiZRy2EN72I4m6xhM/u3CGD464QHLT/p1cite9m9CR5+/B38gZUY0f/SuGx0Y3m0HlTxX72xOc65ub8qgcGCZeMCg7XP8fIRjsx+ry1f0MHRcdFlLDM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744187184; c=relaxed/simple;
-	bh=GzkaiZj36WRnqPmlXJYG8L3j827VRG6Jeb/G3o7lGSs=;
+	s=arc-20240116; t=1744187205; c=relaxed/simple;
+	bh=y++kdN5AS/zb7p5PFaqIMDfBwe7Q4srvOc9HH7xzblY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VZO4uus7MKM32VnNNIDw49vqyDjfkL6fxzbwYdX+R5K1Arp8NQB8Pw7QTS2dfuq1T/kd/L26/yaTReSIe5ajrjNZdjm/kc7B3eFqgEvHmrXNjRfxH8dY5/HjMwCxHsk7D6NUf7aXvwy+hIw5vrYdVwFbRmFrs76Dd2ra+mRFMu4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DZIlEP64; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Mu8C/xnUl6I1SKNH54fbp6Q7idhVC05hrKeSONYuNV48RIWkeSohZ4i0BXchnhH+JHWWWvrEcmuvqHyTmI3kl+XmYlwx/OHuQftN3FfY8iIScvCeXCH1I19q2CsVMbq8JJUsVMtVpbnOJtlsGsCK99Xqp/kxNMlbZ5XQZuLFZYY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FZC7ikty; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DZIlEP64"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6752AC4CEE7;
-	Wed,  9 Apr 2025 08:26:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FZC7ikty"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E477AC4CEE3;
+	Wed,  9 Apr 2025 08:26:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744187183;
-	bh=GzkaiZj36WRnqPmlXJYG8L3j827VRG6Jeb/G3o7lGSs=;
+	s=k20201202; t=1744187205;
+	bh=y++kdN5AS/zb7p5PFaqIMDfBwe7Q4srvOc9HH7xzblY=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=DZIlEP64KqRQDhsSxfS+7WCNQHvqGLqZOqK/fld3493SIxOM1n8AI11ztrosZCOrO
-	 yrpXv0tu4KeWC+bPgAeajgxA96YieyF9MHdskmXi/No9L9+wvLuNIIHS6bSBgMPoGN
-	 sx/mhYsenyBG+RSxmCkWD+ZoFBESPlBSRC2JDioCJ+CvKcZvvlBqgPpmJ3WANonInH
-	 FXFNPpbn6J4u0bCs1iVnvK6JZ/FcWgK1sB2qzviFzEi2tm4AVUGxMMToNmMM8Rnqsc
-	 WkpB5R52JWjuB2TYA9XuEvGPAPurfIhC7FkGb+Q4VdFbGg4TzSCt7ZWKii+98WiU6p
-	 jwlEn6ksRFMGQ==
-Message-ID: <1d6bceea-daae-49b5-918f-60df35b0791f@kernel.org>
-Date: Wed, 9 Apr 2025 10:26:23 +0200
+	b=FZC7ikty0GEtLl7zgjc6rdk6SqsgaKX3r5oSuT9v2574P1SLFTOkOqxJCtq8vBc3a
+	 xIx5Lkx0ZZQjhYhBO9YIyumjw/PASgJV/JPNmYdtWk6ZuoUmiY4KbAlTqeuQXw7L5O
+	 kDwrR/d/OJ+2KAp4EoN/d5DuT5YSiuh88wkzF0AQ7Auu3l+x75kxLGvPE8WdKGcWnO
+	 F43m5BCJZNfVqeKiCzAjBOXUMT4X5W1/cjifvAl8B9pl1Tc6hUWYj9XK7drwPbFbhA
+	 tbXQea4A1fJ+OthUb/8S3zxH1egW145FiXAMTGy2WMK51+BQioBzeoRg1IYyvxXYRx
+	 EmzsF9ZqydAxg==
+Message-ID: <b7eb84ea-97c8-4a00-8a91-8d36a82f8563@kernel.org>
+Date: Wed, 9 Apr 2025 10:26:42 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [Patch, v2, 1/2] BCC: Python: Support 'fmod_ret' method for eBPF
+Subject: Re: [Patch, v2, 2/2] BCC: python: add a useful tool for mptcp
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 References: <cover.1744182834.git.yangang@kylinos.cn>
- <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
+ <cde026e8afeec48569765f7590ee0ca8fd14b57f.1744182834.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,49 +85,80 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <224f2b589ffd6e6f5aa42a213f5f6410c21f9dcf.1744182834.git.yangang@kylinos.cn>
+In-Reply-To: <cde026e8afeec48569765f7590ee0ca8fd14b57f.1744182834.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 09/04/2025 09:17, Gang Yan wrote:
-> In kernel, there exists a lot of 'fmod_ret' functions, such as
-> 'update_socket_protocol'. But it cannot attached in BCC-python directly,
-> so this patch provides an interface for python to use 'fmod_ret'
-> attaching method.
+> Multipath TCP (MPTCP) is an extension of the standard TCP protocol
+> that allows a single transport connection to use multiple network
+> interfaces or paths. MPTCP is useful for applications like bandwidth
+> aggregation, failover, and more resilient connections.
 > 
-> But there exists a question about how to check 'fmod_ret' support in
-> kernel, do you have any suggestion? I already considered checking the
-> kernel version which seems not suitable.
+> Linux kernel starts to support MPTCP since v5.6, this patch provides
+> a method which can easily force applications use MPTCP socket without
+> modifing its code.
 > 
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  src/python/bcc/__init__.py | 34 ++++++++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+>  tools/mptcpify.py  | 80 ++++++++++++++++++++++++++++++++++++++++++++++
+>  tools/mptcpify.txt | 22 +++++++++++++
+>  2 files changed, 102 insertions(+)
+>  create mode 100644 tools/mptcpify.py
+>  create mode 100644 tools/mptcpify.txt
 > 
-> diff --git a/src/python/bcc/__init__.py b/src/python/bcc/__init__.py
-> index 8bc85516..12ce3ef6 100644
-> --- a/src/python/bcc/__init__.py
-> +++ b/src/python/bcc/__init__.py
-
-(...)
-
-> @@ -1189,6 +1205,22 @@ class BPF(object):
->          self.kfunc_entry_fds[fn_name] = fd
->          return self
->  
-> +    def attach_fmod_ret(self, fn_name=b""):
-> +        fn_name = _assert_is_bytes(fn_name)
-> +        fn_name = BPF.add_prefix(b"kmod_ret__", fn_name)
+> diff --git a/tools/mptcpify.py b/tools/mptcpify.py
+> new file mode 100644
+> index 00000000..efdbd910
+> --- /dev/null
+> +++ b/tools/mptcpify.py
+> @@ -0,0 +1,80 @@
+> +#!/usr/bin/env python
+> +#
+> +# mptcpify Make the applications to use MPTCP.
+> +#           For Linux, uses BCC, eBPF. Embedded C.
+> +#
+> +# USAGE: mptcpify -t
+> +#
+> +# Copyright 2025 Kylin Software, Inc.
+> +# Licensed under the Apache License, Version 2.0 (the "License")
+> +#
+> +# 05-Apr-2025   Gang Yan   Created this.
 > +
-> +        if fn_name in self.fmod_ret_fds:
-> +            raise Exception("Fmod_ret func %s has been attached" % fn_name)
-Detail: maybe clearer with this:
+> +import ctypes as ct
+> +import argparse
+> +import signal
+> +import time
+> +
+> +from bcc import BPF
+> +
+> +#arguments
+> +parser = argparse.ArgumentParser(
+> +         description="mptcpify try to force applications to use MPTCP instead of TCP")
+> +parser.add_argument("-t", "--targets", required=True, type=str,
+> +                    help="use ',' for multi targets, eg: 'iperf3,rsync'")
 
-  "Fmod_ret func %s is already attached"
+If it is easy for you to have this argument optional, don't hesitate to
+add this support: I think it will be useful to have this mode
+"everything is forced to use MPTCP".
 
 (...)
+
+> +b = BPF(text=prog)
+> +b.attach_fmod_ret("update_socket_protocol")
+> +
+> +support_apps = b.get_table("support_apps")
+> +for i in args_list:
+> +    app = i.encode()
+> +    name = app_name()
+> +    name.str = app[:TASK_COMM_LEN-1].ljust(TASK_COMM_LEN, b'\0')
+> +    support_apps[name] = ct.c_uint32(1)
+> +
+> +print("MPTCP is been forced for ", args_list);
+
+Detail: maybe better with "is being forced".
 
 Cheers,
 Matt
