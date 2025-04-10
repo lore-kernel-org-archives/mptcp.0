@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B4A374690
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 10:57:28 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 916D620371E;
+	Thu, 10 Apr 2025 11:05:16 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744282648; cv=none; b=IBzOEca6G0fW+oRAj1/VMSvqf5bt1oWeHYtM6V0XYMQx5Zjil7Yavaa5wLfzXxOlBt8dOIb8CFLeTPEl5FgZbxPvxbYOqI1VKw5rdxz/en6M4k3hQZ0eoiUmIRPBU6gMDfOAf57/wJUxks+MMobPSyKVPvuxXeC5/zT+1BFSemo=
+	t=1744283117; cv=none; b=ZzlRLNKK+MmTW7ZfrLqWIGf06yNDBdKBRbb7LThxjw4cxu7+7wjgSbd15gOd71jmntIGzhcvgakyvirm8h2glrdquAEtnYPKDl2Em9g79NXeqVKge47LBRdtWnVFoTZ5nO6BhkSvXt8uH1alIG3WggdaE1dSwkgn0iLVkMgfwHI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744282648; c=relaxed/simple;
-	bh=zbvOO5yCbyv0trc/iA+iFbYNIAzSkw+Z2bgSJop81AM=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=NpOliDP057g7rr5DDkqhX6IDDP4pl3uNW1jjhQZBiIHtIVXh6xDcYfTiVKt01x5xAhZF6dtF6u1LKxaMYsX5mqNno5NxQqk4BW0tVmTc7sB0PNo9rOsSM7y6Yfpyn5b5yy2Razi0iiLTmfCsplKmbKrJg8m32yhZ0f8V5DYUnSc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UuEH7oA7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744283117; c=relaxed/simple;
+	bh=nzGayYDyLzYbhMvnDs6xEo9akuBZ4O+f7CN91yJ3GGg=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LAJj8dNSCBpefWtLcO7xVYuslMa1+LFmH5qOjn2A6SGiE25B87F06909FZ8pN00ZWr7/l0+EdT2I9WikwcUUnFEBQiOxSAgz9S5xpvsxMLRGLDZk/OR+q5AR02xRluaU8XM327WAmuHaWwAX38D50bXWUMP2KLJ6dJzshEBgf7g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XkwCWKo0; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UuEH7oA7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 92FACC4CEE9;
-	Thu, 10 Apr 2025 10:57:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XkwCWKo0"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 08A2FC4CEDD;
+	Thu, 10 Apr 2025 11:05:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744282648;
-	bh=zbvOO5yCbyv0trc/iA+iFbYNIAzSkw+Z2bgSJop81AM=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=UuEH7oA7Cem2vfiffI6Uk14CMSCc6YsqQo+cE+UhEP3d/zRRGq8M2BojpTi+AtX8C
-	 ehRTMKZ/r+G3fk0R6XEaD1Dbt1S9TvBHQcaL4Pp9AQb3rVheWusONz924DfBqGd6Oe
-	 yQMhlPR5SsIVqL5twhgDQzvQEuQzfBNSF57oYFBX2SqAmIdAOblurqySijI5aACf5r
-	 R5WZAupFb7RR08RPAxlkq4MKiyzoGwrZDaKWO3FKWBdEIK8HIvGCqZ/A0ueBJCC/8P
-	 ZCXZjRFu80Rigp/Aitimo1XT0blPi29LrNqBYAdLucdvybEEwEWJ+Ay2BxWcON6B/a
-	 gF8vxy99idMbg==
-Message-ID: <428cfb27-7608-4039-a97f-5164d52cc73f@kernel.org>
-Date: Thu, 10 Apr 2025 12:57:25 +0200
+	s=k20201202; t=1744283116;
+	bh=nzGayYDyLzYbhMvnDs6xEo9akuBZ4O+f7CN91yJ3GGg=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=XkwCWKo0pCdp6ohclIrNjSTFyg73PmPZtpbGSXUJn5/DxktDO9xgE/TgZ0AgQjnIj
+	 ynRTwgru934Z8PDHCOJdQ66Wmjdy1pORkqxddkgytPYPL4Wl3dCyPzj0MbV/ALFcAe
+	 oy+7l0TPXRrhwIbRI9WuHMoE4eHbl1IKJFx8SHc8kA9wsK6z8oFv0FfJIwjnOa9CKQ
+	 jkAmWXHIvgGf8mCnGpt52kBZTG2f0WB9LCzdfR0W3Igq33zDnbNsNBcfw2lhWHGiVu
+	 ZTQsYiuVtGG2Ho9hV7tIXgXJ2IVjF3z0KAH4TudG7cWBddRFl0kcJ+KbT7e9qtcGFz
+	 qGshBnAwpucRg==
+Message-ID: <efca2379-0474-4a02-8b3e-b4611f56bfcb@kernel.org>
+Date: Thu, 10 Apr 2025 13:05:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,12 +38,13 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH AUTOSEL 6.14 20/54] mptcp: move the whole rx path under
  msk socket lock protection
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>
-Cc: mptcp@lists.linux.dev
+To: Sasha Levin <sashal@kernel.org>, Mat Martineau <martineau@kernel.org>
+Cc: Paolo Abeni <pabeni@redhat.com>, Jakub Kicinski <kuba@kernel.org>,
+ davem@davemloft.net, edumazet@google.com, netdev@vger.kernel.org,
+ mptcp@lists.linux.dev, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 References: <20250403190209.2675485-1-sashal@kernel.org>
  <20250403190209.2675485-20-sashal@kernel.org>
- <2336cd34-d6d5-4db1-9d60-6ca7c398cbe7@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -88,62 +89,54 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2336cd34-d6d5-4db1-9d60-6ca7c398cbe7@kernel.org>
+In-Reply-To: <20250403190209.2675485-20-sashal@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Sasha,
 
-On 08/04/2025 19:18, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
-> (MPTCP list only)
-> 
-> On 03/04/2025 21:01, Sasha Levin wrote:
->> From: Paolo Abeni <pabeni@redhat.com>
->>
->> [ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
->>
->> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
->> move the whole MPTCP rx path under the socket lock leveraging the
->> release_cb.
->>
->> We can drop a bunch of spin_lock pairs in the receive functions, use
->> a single receive queue and invoke __mptcp_move_skbs only when subflows
->> ask for it.
->>
->> This will allow more cleanup in the next patch.
->>
->> Some changes are worth specific mention:
->>
->> The msk rcvbuf update now always happens under both the msk and the
->> subflow socket lock: we can drop a bunch of ONCE annotation and
->> consolidate the checks.
->>
->> When the skbs move is delayed at msk release callback time, even the
->> msk rcvbuf update is delayed; additionally take care of such action in
->> __mptcp_move_skbs().
->>
->> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
->> Reviewed-by: Mat Martineau <martineau@kernel.org>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->> Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
->> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
->> Signed-off-by: Sasha Levin <sashal@kernel.org>
-> 
-> It is not clear to me why this patch has been selected by AUTOSEL for up
-> to 6.6, this is clearly not a fix. Do you think we should ask the stable
-> team to drop this patch?
-> 
-> Having this patch in stable might help for future backports, but I don't
-> know if it depends on others.
+Thank you for having suggested this patch.
 
-After discussing this patch with Mat yesterday, we think it would be
-safer to ask to drop it from stable. If later we see it is really
-needed, this patch can be backported (and probably others from the
-series) and properly tested.
+On 03/04/2025 21:01, Sasha Levin wrote:
+> From: Paolo Abeni <pabeni@redhat.com>
+> 
+> [ Upstream commit bc68b0efa1bf923cef1294a631d8e7416c7e06e4 ]
+> 
+> After commit c2e6048fa1cf ("mptcp: fix race in release_cb") we can
+> move the whole MPTCP rx path under the socket lock leveraging the
+> release_cb.
+> 
+> We can drop a bunch of spin_lock pairs in the receive functions, use
+> a single receive queue and invoke __mptcp_move_skbs only when subflows
+> ask for it.
+> 
+> This will allow more cleanup in the next patch.
+> 
+> Some changes are worth specific mention:
+> 
+> The msk rcvbuf update now always happens under both the msk and the
+> subflow socket lock: we can drop a bunch of ONCE annotation and
+> consolidate the checks.
+> 
+> When the skbs move is delayed at msk release callback time, even the
+> msk rcvbuf update is delayed; additionally take care of such action in
+> __mptcp_move_skbs().
+> 
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Link: https://patch.msgid.link/20250218-net-next-mptcp-rx-path-refactor-v1-3-4a47d90d7998@kernel.org
+> Signed-off-by: Jakub Kicinski <kuba@kernel.org>
+> Signed-off-by: Sasha Levin <sashal@kernel.org>
 
-I hope there are no objections on that :)
+With Mat, we are unsure why this patch has been selected to be
+backported up to v6.6. An AUTOSEL patch has been sent for v6.6, v6.12,
+v6.13 and v6.14. We think it would be better not to backport this patch:
+this is linked to a new feature, and it changes the way the MPTCP socket
+locks are handled.
+
+Could it then please be possible not to queue this patch to the stable
+queues?
 
 Cheers,
 Matt
