@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863828EA5D
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:44:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 13A501EB18E
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:55:24 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307053; cv=none; b=kWgIBdqeo50E0LwgV/tSGucrdcWEHLTyTg/oU4lnZzD6cxRShkXZbuCbbUMETR0FezM0y2XK7b7wgSjN3R9SXToYwpeEbxyLQzjTkeulLv6vxkxNiKYZQ/qR4N4NK4bpXqXIzLvYUuJI1SfKIKcbAO2G7KMDcdEyTcV7HaR7PIc=
+	t=1744307725; cv=none; b=C/2yVL99NU5MHES2rNa/HSmwUiLaIrlX6Nr4wrwsdeY/7ZwFzllNl0aIjKI6UoBHQWr5BPOpuTnjQyPTuWRsY3LjqwIAT8efe+Y+yWdoOzcjPw50luA0D0JiHi3P+pw3NthkR2at9v4TH8+NXhnBfJiV4hjiz3d/UR0sOrjq3YA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307053; c=relaxed/simple;
-	bh=gkJDNrfGrzT/lhCAmywNPHS5l84XJHVCgaSCJwTm43Q=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=oL73EGuxndvYJADQkOONt+f6oL7xWTVTRHQZ4v7m55lU60uYCZQ29p9lpuGqHIuoJ1mKOUruGStBvOwscjpeuGM4lsRzzttWJC/MIh3m0GYwLjQeONu2AsabisNoH0W8uCcwlXKD0VlIvB7YIgt4Trw8Ksd3c+VNt1rjRYoyV2E=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWM9jZY6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744307725; c=relaxed/simple;
+	bh=IUOblUGIPsW1z7ieDn9Z6HEYSt31vAzFhrOgLwXI4vo=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=WYF64+xvy8vTi0DHHdgye1iigOoBqEFyAJFlMlvYW69npZFihX+pJTPwvHvukWh0dD/qmkThW5GvvNOWjGpryBl3kc3iX6sfu07bJZkdlHPeFAD+A9QUuhvKbUHGC15twUapxHnJ8IOm8a9VvNylu/alo4VxCujnGRCSAYyrDaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cAWQuL2+; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWM9jZY6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C47C4CEEC;
-	Thu, 10 Apr 2025 17:44:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cAWQuL2+"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 001EBC4CEDD;
+	Thu, 10 Apr 2025 17:55:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744307053;
-	bh=gkJDNrfGrzT/lhCAmywNPHS5l84XJHVCgaSCJwTm43Q=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=UWM9jZY6tEzWtfXj/QmmS1/tnrrg/oQ7ophCANUoXE8CLll6ZWh9U8fcdHdDvCC1A
-	 X3nZPxERwwdu4kznheX9GVa3CkqM40odMW0AQMOTCIaro+V9wInLALAeVhw3dsQRKK
-	 RBIwDxmz5NR7gwIAOPpDTiS1ig0K0N0StY8AulmU1WfLA3RC3emKEThGgrqr57cvlu
-	 yleFQ11tgaCycJ6lSoKaOQivDfmUpcbfvKUxl+i7FckJAkISSzPmZLIblZd0ltpV+g
-	 eCxHB+BGIPUyS4de/zKaro4AxWl7oEhFqn4MiEt6hS7hMBqpv3aW5E/gCYXye7vJR8
-	 PmXX4eM57Ru/w==
-Message-ID: <69c695a2-5adb-4f17-9fdd-a32a36e6c0f2@kernel.org>
-Date: Thu, 10 Apr 2025 19:44:10 +0200
+	s=k20201202; t=1744307724;
+	bh=IUOblUGIPsW1z7ieDn9Z6HEYSt31vAzFhrOgLwXI4vo=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=cAWQuL2+5TmXeJikMif/IqY4R9pnFKaZWWRutFhxLy/sff8j4kq5EFCfDKfRsbG2s
+	 LCFnqxEkQ/hwLHKsgs0aUlAhlRyiFLROvGAhBG9UFQUFbksiRKz4UiDgRdSpweJADe
+	 zVLzXIpXphTJnUvWQX0D+JHDnqYmSbzGPJEx3TgDzZmlxQklShwE/5yHYb5Zqain0Z
+	 FHvF1TAGyyhnw7VCZvTxPnZyOG0M/+cwqTCwGmJtTJ/o3oHPPUNRwxFtRqaBMN2oQV
+	 vy15vIzj8cgnofuqOYfewiLvgoPMLJbYvvWgSQeOrw/1tUhwUIKscVVM7coDVBdpW5
+	 iIGXurB2WZ7bg==
+Message-ID: <6787063a-9d8f-4489-adf1-f8db7133d3f7@kernel.org>
+Date: Thu, 10 Apr 2025 19:55:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: drop nlh parameter of
- recv_nlmsg
+Subject: Re: [mptcp-net] mptcp: pm: Defer freeing of MPTCP userspace path
+ manager entries
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
+To: Mat Martineau <martineau@kernel.org>, mptcp@lists.linux.dev
+References: <20250410025931.1882967-1-martineau@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,32 +85,41 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
+In-Reply-To: <20250410025931.1882967-1-martineau@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Mat,
 
-On 07/04/2025 09:53, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 10/04/2025 04:59, Mat Martineau wrote:
+> When path manager entries are deleted from the local address list, they
+> are first unlinked from the address list using list_del_rcu(). The
+> entries must not be freed until after the RCU grace period, but the
+> existing code immediately frees the entry.
 > 
-> It's strange that 'nlh' variable is set to NULL in get_mptcpinfo() and then
-> this NULL pointer is passed to recv_nlmsg(). In fact, this variable should
-> be defined in recv_nlmsg(), not get_mptcpinfo().
-> 
-> So this patch drops this useless 'nlh' parameter of recv_nlmsg() and define
-> 'nlh' variable in recv_nlmsg().
+> Use kfree_rcu_mightsleep() and adjust sk_omem_alloc in open code instead
+> of using the sock_kfree_s() helper. This code path is only called in a
+> netlink handler, so the "might sleep" function is preferable to adding
+> a rarely-used rcu_head member to struct mptcp_pm_addr_entry.
 
-Now in our tree:
+Thank you for having looked at this!
 
-New patches for t/upstream:
-- 65056576ab07: selftests: mptcp: diag: drop nlh parameter of recv_nlmsg
-- Results: 244c301d3de6..d16892726caa (export)
+Should we add a Fixes tag? The following one or was it already there before?
 
-Tests are now in progress:
+Fixes: 88d097316371 ("mptcp: drop free_list for deleting entries")
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/5b28c8bf763dc38db8b1e81e3222a3a16e49bb36/checks
+
+Also, should we not also modify mptcp_userspace_pm_delete_local_addr()
+doing the following?
+
+  list_del_rcu(&entry->list);
+  sock_kfree_s(sk, entry, sizeof(*entry));
+
+If yes, and while at it, do you think it might be good to add a short
+comment above "atomic_sub()" in the code explaining this is doing the
+same as sock_kfree_s(), but with RCU support? In case sock_kfree_s is
+modified later, and to understand what's being done here without using
+blame.
 
 Cheers,
 Matt
