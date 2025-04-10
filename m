@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 26CE4204697
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:38:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA451EDA28
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:39:44 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306712; cv=none; b=SRBnSMCnGC/KiZLRHi/exYKwbbV/OIQ1MZ0NfDp2nhUHelN57+HkAALrgDkevq1w0XnHurShAm/t8Q0OvEZ6wqIjVq7oeurBjj/NJzbPW5GTnIQYu1uk/VLsWZBrIPsMJ5uOu+pQMqDtMsz5x540QgnRETrJLugeXLXD13uNqa0=
+	t=1744306785; cv=none; b=BngBEq7y6w8/BFaRrrj/uoeSZ928QBnPEntQhcYgZn8GyXw8c69imZcPmzgOGQkS35rx9Ht2F7JTXQasG0MEZ5TGrHJWipMygfjuH4cgpnrVYympV1v9qvru8+VkTpewCSrqvoNgjK9AJwZOdu1ssJiiaLTIoAs36gALfFAd5n0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306712; c=relaxed/simple;
-	bh=MzFL3QitDxw6zJ3eogdRp9bSG9ej24PfEDqgcDYVB84=;
+	s=arc-20240116; t=1744306785; c=relaxed/simple;
+	bh=yvbS5Y73lIoyCeKg3W4nSns+tATyIujz71U+X86g3VY=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=FJ6+0xZSNsx/bCES1lNW2XKHjkOCsl8qZkEFn+dRsBFUW++wVm9kaPX+eTv19Hmvh1UYrxKmW0wyTX6+ATJtn4YZP+lnR7IV4yW7g6EjpKeC9Jkvdibxeejy6558eqbYGR6/+ic3bwOdBLduOIqcN2g+AlupmRDQ2Lm3fIDOWGY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=su8WLyTK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=XaQWWhLwPC2MsSulxInnlvourKNjB0Xweisd83U6eiqQkiR9G2PwQi6xVZ6H/JRFh0NsW7skMwdN2o6WqAKT4dwpYpRLaExXmG5XKEQwHRhWvzPz4KrK50883CP8ltQd4OItEeVanYMz9dwRGBn+jmR/G9qa1OkopoCA3ZxGbzI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKS7LkN2; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="su8WLyTK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 605B0C4CEDD;
-	Thu, 10 Apr 2025 17:38:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKS7LkN2"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A33EEC4CEDD;
+	Thu, 10 Apr 2025 17:39:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744306710;
-	bh=MzFL3QitDxw6zJ3eogdRp9bSG9ej24PfEDqgcDYVB84=;
+	s=k20201202; t=1744306784;
+	bh=yvbS5Y73lIoyCeKg3W4nSns+tATyIujz71U+X86g3VY=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=su8WLyTKqWOZLoyofIfISr4Dye9XmlzBDUIwOcXEesP9f7A6MuM+cY0OnjMuH0toC
-	 qXRMc3vS5kjtCpeu28T8FPgFB5JNzgWxvHZWZWaCWrT2wt9CdJtMcPTBFX9C+VM7tZ
-	 Jc9O0GSXSn10UISwuk27LqLhJxbRuaQuQGx2JpRz0qjLgnXZx7OSqvlpUmZyOYrUeR
-	 BTK3JLJ5YcIoMIikNx6SUC9B+ilUO6lXL3wilJnvWNnKPdLllJgzQbLeOuGOSotTtd
-	 Oov2MDUCig+x2FCEZwdGEhI94cZVxdlSUg3w+Q/mtuSZgHNRweHCO9GNY3Nl1ASKr1
-	 BTdx2HgZmeF3A==
-Message-ID: <ffb15da5-a01f-4703-8ab0-f07acbbc1bef@kernel.org>
-Date: Thu, 10 Apr 2025 19:38:27 +0200
+	b=YKS7LkN2cHNkHtDBQekIP93/YKp9TyL6cuS7+JiAtcQ/ShLMQ8ouSNHhFoMdRvBoj
+	 JNgxY9DX7lel8KxW18PL1tccKrAKbSIy4PmwoPtztXKNcgNgPG7t5VZ6qADk0QLFjv
+	 CVNRVOqAfIeqjtj8fFleG6hqhR+rnXLH16vET9nKBs4kjJIyPxI1OH7jrDg2ihdcJF
+	 yy0nDnDvki5Cq8I4DyVvQeJRf2wTA2jTWT9/6lIDwePM9nWAe/apj1c3jXmYYB8Mid
+	 lzM+eShRW3zIXnqXch+h4sP0m6skpRm9yfUDSPEOCVl/wG0kYynSgVeOAEUrQ3uTI1
+	 k6N1hekaEdp+g==
+Message-ID: <d62684de-e27b-482d-b688-46e387ac305e@kernel.org>
+Date: Thu, 10 Apr 2025 19:39:41 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: pm: drop redundant mptcp_pm_send_ack
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: drop nlh parameter of
+ recv_nlmsg
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <539ce4556220df3d2ea4826c311c5bc4e306f9a2.1743863553.git.tanggeliang@kylinos.cn>
+References: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,56 +86,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <539ce4556220df3d2ea4826c311c5bc4e306f9a2.1743863553.git.tanggeliang@kylinos.cn>
+In-Reply-To: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 05/04/2025 16:33, Geliang Tang wrote:
+On 07/04/2025 09:53, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_pm_send_ack() is called twice in __mptcp_pm_addr_send_ack(), which
-> makes the code a bit redundant. The first call to mptcp_pm_send_ack() when
-> a non-stale subflow is found in the loop can be removed. Instead, we can
-> break the loop to use the second mptcp_pm_send_ack().
+> It's strange that 'nlh' variable is set to NULL in get_mptcpinfo() and then
+> this NULL pointer is passed to recv_nlmsg(). In fact, this variable should
+> be defined in recv_nlmsg(), not get_mptcpinfo().
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/pm.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-> index be1e27ee393e..a4f9cb113018 100644
-> --- a/net/mptcp/pm.c
-> +++ b/net/mptcp/pm.c
-> @@ -225,8 +225,8 @@ void mptcp_pm_addr_send_ack(struct mptcp_sock *msk)
->  	mptcp_for_each_subflow(msk, subflow) {
->  		if (__mptcp_subflow_active(subflow)) {
->  			if (!subflow->stale) {
-> -				mptcp_pm_send_ack(msk, subflow, false, false);
-> -				return;
-> +				alt = subflow;
-> +				break;
+> So this patch drops this useless 'nlh' parameter of recv_nlmsg() and define
+> 'nlh' variable in recv_nlmsg().
 
-Is this patch going to simplify another one later on? Because the
-modification sounds strange: here 'alt' stands for 'alternative'. So to
-be complete, better to rename the variable as well.
+Indeed, that is better like that.
 
-But... is this really worth it? If you need to modify this helper later
-on, maybe. If not, I guess it is fine to keep 'mptcp_pm_send_ack()'
-duplicated for the moment. WDYT?
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-This is also to be aligned with:
-
- https://docs.kernel.org/process/maintainer-netdev.html#clean-up-patches
-
-(trying to avoid cleanup patches "alone", except if it is part of
-another set of changes related to that)
-
->  			}
->  
->  			if (!alt)
 Cheers,
 Matt
 -- 
