@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4721E991C
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:43:40 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8863828EA5D
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:44:13 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744307020; cv=none; b=CNUGIexVP74e/bupTK3gZcj1I4MAy/5L3ewVMSvwMODe6VxMkwj1wKq/mD/Up7i6zeXtrgw47ha6KiytUyKwFoeG+VLJ38avJCS0sayRB9tJyUG2OcpQi1DaiFy4OJU4iSKPnyW5EZlrllJtLWQBe0OB2+M6giUzIG3MF5w4Yvk=
+	t=1744307053; cv=none; b=kWgIBdqeo50E0LwgV/tSGucrdcWEHLTyTg/oU4lnZzD6cxRShkXZbuCbbUMETR0FezM0y2XK7b7wgSjN3R9SXToYwpeEbxyLQzjTkeulLv6vxkxNiKYZQ/qR4N4NK4bpXqXIzLvYUuJI1SfKIKcbAO2G7KMDcdEyTcV7HaR7PIc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744307020; c=relaxed/simple;
-	bh=f0jHpK6gPdFgiKeEUb02Bk7bDRKtzE6ViqLm783P2FQ=;
+	s=arc-20240116; t=1744307053; c=relaxed/simple;
+	bh=gkJDNrfGrzT/lhCAmywNPHS5l84XJHVCgaSCJwTm43Q=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ITpBIMP+LdbOAhPtRhvmxDKnTVzdFVpzWi/G+AaRrPzYZh5fWENRt4DeInqkqWshV/4U8iIHOWxp7xok5hSkDq6Iynh4h8uM/aBP8Y+ZjAjvLSwnxCv1Sk8s/F0UabjVyMthMzjsihQQefYdt6f9mJH3kcHHybFcScIWCnllEPY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHskFOyd; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=oL73EGuxndvYJADQkOONt+f6oL7xWTVTRHQZ4v7m55lU60uYCZQ29p9lpuGqHIuoJ1mKOUruGStBvOwscjpeuGM4lsRzzttWJC/MIh3m0GYwLjQeONu2AsabisNoH0W8uCcwlXKD0VlIvB7YIgt4Trw8Ksd3c+VNt1rjRYoyV2E=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UWM9jZY6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHskFOyd"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28276C4CEDD;
-	Thu, 10 Apr 2025 17:43:38 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UWM9jZY6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 42C47C4CEEC;
+	Thu, 10 Apr 2025 17:44:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744307019;
-	bh=f0jHpK6gPdFgiKeEUb02Bk7bDRKtzE6ViqLm783P2FQ=;
+	s=k20201202; t=1744307053;
+	bh=gkJDNrfGrzT/lhCAmywNPHS5l84XJHVCgaSCJwTm43Q=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=XHskFOydb6tYb+Ig3JkdP6rHQxgULFQTz6+CBg/kEuVcZ6dz2EpMEFgrGwfBWzuw2
-	 43iNaPXs/ayEDVXEp/kC/CWBNM69548nnXkBTnb95wkfc7pE+jnGiJdU7LJky+clwi
-	 SwNu4Efrytq67COM/0dMwtD2ZpRKol+TbhQIjC3EjP6GYyb7GiiBFfmztK/aP5OS9O
-	 /1bLsSfOyjfXf8JCpgHJ0lEZPLh/ld0KV2IhisQRCY7F5SSftaTQsNEXXSKHEzwoyl
-	 ZDxsw8C/KXwsupsrc44qPrZI5N04gattmh6o/GhE2qIdT063RRLZ0up2jSLYwTx7v3
-	 unhVUGR2iW1+Q==
-Message-ID: <16ae0e83-a706-4b3e-8f97-41a20061fab3@kernel.org>
-Date: Thu, 10 Apr 2025 19:43:37 +0200
+	b=UWM9jZY6tEzWtfXj/QmmS1/tnrrg/oQ7ophCANUoXE8CLll6ZWh9U8fcdHdDvCC1A
+	 X3nZPxERwwdu4kznheX9GVa3CkqM40odMW0AQMOTCIaro+V9wInLALAeVhw3dsQRKK
+	 RBIwDxmz5NR7gwIAOPpDTiS1ig0K0N0StY8AulmU1WfLA3RC3emKEThGgrqr57cvlu
+	 yleFQ11tgaCycJ6lSoKaOQivDfmUpcbfvKUxl+i7FckJAkISSzPmZLIblZd0ltpV+g
+	 eCxHB+BGIPUyS4de/zKaro4AxWl7oEhFqn4MiEt6hS7hMBqpv3aW5E/gCYXye7vJR8
+	 PmXX4eM57Ru/w==
+Message-ID: <69c695a2-5adb-4f17-9fdd-a32a36e6c0f2@kernel.org>
+Date: Thu, 10 Apr 2025 19:44:10 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: use IPPROTO_MPTCP for
- getaddrinfo
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: drop nlh parameter of
+ recv_nlmsg
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: zhenwei pi <pizhenwei@bytedance.com>
-References: <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,28 +86,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang, zhenwei pi,
+Hi Geliang,
 
-On 09/04/2025 08:18, Geliang Tang wrote:
-> From: zhenwei pi <pizhenwei@bytedance.com>
+On 07/04/2025 09:53, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> mptcp_connect.c is a startup tutorial of MPTCP programming, however
-> there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
-> getaddrinfo MPTCP support.
+> It's strange that 'nlh' variable is set to NULL in get_mptcpinfo() and then
+> this NULL pointer is passed to recv_nlmsg(). In fact, this variable should
+> be defined in recv_nlmsg(), not get_mptcpinfo().
 > 
-> This patch first uses IPPROTO_MPTCP to get addrinfo, and if glibc
-> version is too old, it falls back to using IPPROTO_TCP.
-> 
-> v2:
->  - use IPPROTO_MPTCP for getaddrinfo
+> So this patch drops this useless 'nlh' parameter of recv_nlmsg() and define
+> 'nlh' variable in recv_nlmsg().
 
-Thank you for the v2, it looks good to me!
+Now in our tree:
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream:
+- 65056576ab07: selftests: mptcp: diag: drop nlh parameter of recv_nlmsg
+- Results: 244c301d3de6..d16892726caa (export)
+
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/5b28c8bf763dc38db8b1e81e3222a3a16e49bb36/checks
 
 Cheers,
 Matt
