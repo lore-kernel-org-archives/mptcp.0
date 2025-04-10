@@ -1,37 +1,37 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 531EE1EEA3E
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 04:14:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9DE121BB6BA
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 04:14:33 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744258472; cv=none; b=U8mZxuCdT4SGf8vJSGN9SLdEJUozJZxZtOvB2FjAWzZJiVCgNQclhq7xyWXHtwvROuHqTSr2gP5LkraSKWUQ6h2A43gfIizowLUxrmynkl5aftoWTQNOhJSXEih9aB06vSPvC88VNLNB390hSSq1rPpajt6wI1Qjvhsqqz5YDGk=
+	t=1744258473; cv=none; b=qW9729gAhhxJnzbSIto9rEljB+Koer8DgIbyx51lvcgkjUfT10zFxCQdSUrxYPvD/vN17cEvxWHLj5zK0RYcP0oKJg5szQcMzVP7EPwZTb+QYs3DXfCwIQRNMaXmXpOzPOMyz3wLqlZhhW3IPJ59ZjB1JA/FyxITyzKxNkOUjm0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744258472; c=relaxed/simple;
-	bh=lbrsVYdaxXiw+hcLGPLkD00f01yr9M9l9MUS2g1WULA=;
+	s=arc-20240116; t=1744258473; c=relaxed/simple;
+	bh=X4dT8D1hIN7DnSRAzJ8z0FXhAaUlQJmFiZ4YWZfnzGA=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iO1e6OXI/SNjeqQvyNhryGlbBu7uvCxTjp2Raff7/vjLbI8o7Wo9eFsn3FDFqW52KKMkoe0/NDFEbJjhj+z0DP4uHqsmS80aKL4mTtr19ZX3n7dLzup7tNl0B/bxFX5s5mKGS5VbFV/djXwBsp3N9If7sxyEPdpOR7hdm7gffjI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=DX7MPJxf; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=AScXo0Nh4+Xln94R8h6n8Wx05XGQ75HnrzGXL6SjYfaFpfGq9N58M9zXk6G8ZH/XQiJPD9EonbcjH+HGJUkL+TOU+L6g5WBDVqPHFtvHixnj6DYznkNzcLSxDVqDx10cqjwG9Eri917Q9bkQvhAxllJKPlA7v5ROQFputJfZZeo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ogDiScqh; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="DX7MPJxf"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 39CDAC4CEDD;
-	Thu, 10 Apr 2025 04:14:28 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ogDiScqh"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC9A1C4CEE7;
+	Thu, 10 Apr 2025 04:14:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744258470;
-	bh=lbrsVYdaxXiw+hcLGPLkD00f01yr9M9l9MUS2g1WULA=;
+	s=k20201202; t=1744258473;
+	bh=X4dT8D1hIN7DnSRAzJ8z0FXhAaUlQJmFiZ4YWZfnzGA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=DX7MPJxfEi5A1NM+U2AJrNFFq21LVdw4BDQNdZAik+uCV0hbkpy1qp6SK1WI34DTi
-	 cfqGlbkYvB7AQfwqbO6+mFyObe0DO0pTSdm4ebxWUX1BnMD3AiYcR274lJl13KgWyg
-	 CKYv7g8Ufb+HuhsSZrx01kPajBuAPns8oM3W18Yzrq0l+QOZc6ucQ0R+NwGp8CvsmE
-	 /7nbhLg3hSCtTiUKE7s9XZ8t0gyX1/K9E9rLWUaFPtIHBNqqLEGlUpisES2maTuSCM
-	 8GMnFxifeVmMRS3RaSmV5Bzq1GguLsGeo1ck1NRItrpegS06ZA8w87zg+LfKFJshhI
-	 ssOj+U/ucnhrw==
+	b=ogDiScqh35X9rsNW/pW3ok1YUFPwIRfRnhM9PBfBqPb5R4sOxtxQyETKSHbBC7tSO
+	 FiYvrR5Oa7et0/xa1hW+IWJYznx5Z+u5WwBTOq7jKxxbhjdQuX/1oqUVaxB7CFAJ5U
+	 FYOpuwwkhuS+2iLnaHLWrxP/H0uTEBwx3Cv2e0Lk7jZEhXERVLwE0nbJeGLyQ4f3vP
+	 uv6lRzQJ0HBjKdECqO7NEe9p2AY29igI8cgx/iPgvHVI4OnWp+piDE0Zw1ewdVABxN
+	 0r5SjgjUBUwu0+7E+Bd0ZXNaQCvvMTA9oD70CYZnQaCk9HvZIbIYP/Aam64RqKp3cM
+	 fHyvj4buCjCHw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 1/2] mptcp: pm: userspace: drop delete_local_addr helper
-Date: Thu, 10 Apr 2025 00:14:20 -0400
-Message-ID: <2b140a3cefd7d5766a79e8c55b73cf2d38c710d0.1744257362.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v2 2/2] selftests: mptcp: send REMOVE_ADDR after subflow is deleted
+Date: Thu, 10 Apr 2025 00:14:21 -0400
+Message-ID: <463b38a2b687c107f7e87f7ad23bc4aba6956dcf.1744257362.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <cover.1744257362.git.tanggeliang@kylinos.cn>
 References: <cover.1744257362.git.tanggeliang@kylinos.cn>
@@ -45,98 +45,97 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Address entries should not be removed from local_addr_list when a subflow
-is deleted by the userspace PM, should only be removed when sending a
-REMOVE_ADDR.
+Now address entries only be removed from local_addr_list when sending a
+REMOVE_ADDR by the userspace PM, they're no longer removed when a subflow
+is deleted.
 
-So mptcp_userspace_pm_delete_local_addr() helper shouldn't be called in
-mptcp_pm_nl_subflow_create_doit() and mptcp_pm_nl_subflow_destroy_doit().
+To make the original userspace PM selftests pass, this patch always sends
+a REMOVE_ADDR when a subflow is deleted.
 
-Since this helper is open-coding in mptcp_pm_nl_remove_doit(), it can be
-dropped now.
-
-Address entries are removed from local_addr_list when sending a REMOVE_ADDR
-by the userspace PM, the local_addr_used counter of PM should also be
-decremented accordingly.
-
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/403
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/pm_userspace.c | 37 +++++--------------------------------
- 1 file changed, 5 insertions(+), 32 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_join.sh   | 4 +++-
+ tools/testing/selftests/net/mptcp/userspace_pm.sh | 6 ++++++
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 7fc19b844384..3824b4165421 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -90,30 +90,6 @@ static int mptcp_userspace_pm_append_new_local_addr(struct mptcp_sock *msk,
- 	return ret;
- }
- 
--/* If the subflow is closed from the other peer (not via a
-- * subflow destroy command then), we want to keep the entry
-- * not to assign the same ID to another address and to be
-- * able to send RM_ADDR after the removal of the subflow.
-- */
--static int mptcp_userspace_pm_delete_local_addr(struct mptcp_sock *msk,
--						struct mptcp_pm_addr_entry *addr)
--{
--	struct sock *sk = (struct sock *)msk;
--	struct mptcp_pm_addr_entry *entry;
--
--	entry = mptcp_userspace_pm_lookup_addr(msk, &addr->addr);
--	if (!entry)
--		return -EINVAL;
--
--	/* TODO: a refcount is needed because the entry can
--	 * be used multiple times (e.g. fullmesh mode).
--	 */
--	list_del_rcu(&entry->list);
--	sock_kfree_s(sk, entry, sizeof(*entry));
--	msk->pm.local_addr_used--;
--	return 0;
--}
--
- static struct mptcp_pm_addr_entry *
- mptcp_userspace_pm_lookup_addr_by_id(struct mptcp_sock *msk, unsigned int id)
- {
-@@ -331,6 +307,7 @@ int mptcp_pm_nl_remove_doit(struct sk_buff *skb, struct genl_info *info)
- 	}
- 
- 	list_del_rcu(&match->list);
-+	msk->pm.local_addr_used--;
- 	spin_unlock_bh(&msk->pm.lock);
- 
- 	mptcp_pm_remove_addr_entry(msk, match);
-@@ -408,14 +385,13 @@ int mptcp_pm_nl_subflow_create_doit(struct sk_buff *skb, struct genl_info *info)
- 	err = __mptcp_subflow_connect(sk, &local, &addr_r);
- 	release_sock(sk);
- 
--	if (err)
-+	if (err) {
- 		GENL_SET_ERR_MSG_FMT(info, "connect error: %d", err);
-+		goto create_err;
-+	}
- 
- 	spin_lock_bh(&msk->pm.lock);
--	if (err)
--		mptcp_userspace_pm_delete_local_addr(msk, &entry);
--	else
--		msk->pm.subflows++;
-+	msk->pm.subflows++;
- 	spin_unlock_bh(&msk->pm.lock);
- 
-  create_err:
-@@ -534,9 +510,6 @@ int mptcp_pm_nl_subflow_destroy_doit(struct sk_buff *skb, struct genl_info *info
- 		goto release_sock;
- 	}
- 
--	spin_lock_bh(&msk->pm.lock);
--	mptcp_userspace_pm_delete_local_addr(msk, &addr_l);
--	spin_unlock_bh(&msk->pm.lock);
- 	mptcp_subflow_shutdown(sk, ssk, RCV_SHUTDOWN | SEND_SHUTDOWN);
- 	mptcp_close_ssk(sk, ssk, mptcp_subflow_ctx(ssk));
- 	MPTCP_INC_STATS(sock_net(sk), MPTCP_MIB_RMSUBFLOW);
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_join.sh b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+index b8af65373b3a..c138b4913ad8 100755
+--- a/tools/testing/selftests/net/mptcp/mptcp_join.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_join.sh
+@@ -3624,11 +3624,12 @@ userspace_tests()
+ 		userspace_pm_chk_get_addr "${ns1}" "10" "id 10 flags signal 10.0.2.1"
+ 		userspace_pm_chk_get_addr "${ns1}" "20" "id 20 flags signal 10.0.3.1"
+ 		userspace_pm_rm_sf $ns1 "::ffff:10.0.2.1" $MPTCP_LIB_EVENT_SUB_ESTABLISHED
++		userspace_pm_rm_addr $ns1 10
+ 		userspace_pm_chk_dump_addr "${ns1}" \
+ 			"id 20 flags signal 10.0.3.1" "after rm_sf 10"
+ 		userspace_pm_rm_addr $ns1 20
+ 		userspace_pm_chk_dump_addr "${ns1}" "" "after rm_addr 20"
+-		chk_rm_nr 1 1 invert
++		chk_rm_nr 2 1 invert
+ 		chk_mptcp_info subflows 0 subflows 0
+ 		chk_subflows_total 1 1
+ 		kill_events_pids
+@@ -3653,6 +3654,7 @@ userspace_tests()
+ 			"subflow"
+ 		userspace_pm_chk_get_addr "${ns2}" "20" "id 20 flags subflow 10.0.3.2"
+ 		userspace_pm_rm_sf $ns2 10.0.3.2 $MPTCP_LIB_EVENT_SUB_ESTABLISHED
++		userspace_pm_rm_addr $ns2 20
+ 		userspace_pm_chk_dump_addr "${ns2}" \
+ 			"" \
+ 			"after rm_sf 20"
+diff --git a/tools/testing/selftests/net/mptcp/userspace_pm.sh b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+index 333064b0b5ac..c16465c9c2ca 100755
+--- a/tools/testing/selftests/net/mptcp/userspace_pm.sh
++++ b/tools/testing/selftests/net/mptcp/userspace_pm.sh
+@@ -628,6 +628,7 @@ test_subflows()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip dead:beef:2::1 lport "$sport" rip\
+ 	   dead:beef:2::2 rport "$client6_port" token "$server6_token"
++	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server6_token" "$AF_INET6"\
+ 			      "dead:beef:2::1" "dead:beef:2::2" "$client6_port" "23"\
+@@ -667,6 +668,7 @@ test_subflows()
+ 	:>"$server_evts"
+ 	ip netns exec "$ns1" ./pm_nl_ctl dsf lip 10.0.2.1 lport "$sport" rip 10.0.2.2 rport\
+ 	   $new4_port token "$server4_token"
++	ip netns exec "$ns1" ./pm_nl_ctl rem id 23 token "$server4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$server_evts" "$SUB_CLOSED" "$server4_token" "$AF_INET" "10.0.2.1"\
+ 			      "10.0.2.2" "$new4_port" "23" "$client_addr_id" "ns1" "ns2"
+@@ -705,6 +707,7 @@ test_subflows()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+ 	   $app4_port token "$client4_token"
++	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
+ 			      "10.0.2.1" "$app4_port" "23" "$server_addr_id" "ns2" "ns1"
+@@ -744,6 +747,7 @@ test_subflows()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip dead:beef:2::2 lport "$sport" rip\
+ 	   dead:beef:2::1 rport $app6_port token "$client6_token"
++	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events $client_evts $SUB_CLOSED $client6_token $AF_INET6 "dead:beef:2::2"\
+ 			      "dead:beef:2::1" "$app6_port" "23" "$server_addr_id" "ns2" "ns1"
+@@ -781,6 +785,7 @@ test_subflows()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+ 	   $new4_port token "$client4_token"
++	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client4_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client4_token" "$AF_INET" "10.0.2.2"\
+ 			      "10.0.2.1" "$new4_port" "23" "$server_addr_id" "ns2" "ns1"
+@@ -827,6 +832,7 @@ test_subflows_v4_v6_mix()
+ 	:>"$client_evts"
+ 	ip netns exec "$ns2" ./pm_nl_ctl dsf lip 10.0.2.2 lport "$sport" rip 10.0.2.1 rport\
+ 	   $app6_port token "$client6_token"
++	ip netns exec "$ns2" ./pm_nl_ctl rem id 23 token "$client6_token"
+ 	sleep 0.5
+ 	verify_subflow_events "$client_evts" "$SUB_CLOSED" "$client6_token" \
+ 			      "$AF_INET" "10.0.2.2" "10.0.2.1" "$app6_port" "23"\
 -- 
 2.43.0
 
