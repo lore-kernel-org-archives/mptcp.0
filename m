@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FA24126BFF
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:04:16 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5261B1876
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:21:15 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744304657; cv=none; b=AZt3Rh4rgfnFfQ+aoXanf5c9EWCjk7Rmp4dMjo2MIR86abyU/u8F0WkOioAxNssSd1m9XbD3otDjQulM8GSS6Qzv1VLbsjLNCjNIPK+9dRIOWgf7/68OLY/riRC+z+sl2wdzROHx79ra1uRI2IAgIqaao1+0bNrcAnZ96R4Kmbg=
+	t=1744305678; cv=none; b=t6ls6trlM4EPwE2mIOlPRFGAzE7hNH82y34fv537oGk+qopQqiUNq/RuunSp5udnY1jOJEcU2kKrLqwQt345sT3j6bDwmM2qtCCBi8dBc3ccfrFOBwtlbyhn2JdX7ZHV4v8Uk6H4bz0AHLa6rFEOkrxPfizjYeu7QN4azzO8Pp8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744304657; c=relaxed/simple;
-	bh=cxm3NO3/3Mey0s9y0Zq4cqT/G/FwT/jH//T5Okv0hoQ=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:Cc:References:
-	 In-Reply-To:Content-Type; b=ALlwnR2IzPq2tRKcVyKBpgjqAGZw0Gg1hARaYhYZNvulcNFD2048vsKs9Z/aCFx/YBdSQHlxSOkLlznUbkNS9IJ0N+Hyrp1cp1pXOqym+jVSqE+XI/24qdQjY1nMQnzXJdVnusEkh1WrHjbud68/f+yUkMFF+jHPNB7mMVFyDQw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MW+G8nrb; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744305678; c=relaxed/simple;
+	bh=29B5W8u+el20aJsOPty8AowN66cqjTb6KKEXH9E8aq4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=usl7tBC4HmMpQQnimIIfA5n7UlMJ5SRTyyEMZMvwem0XwJil2gc3OHilW/h2zJPjiYrojbBeSadFxaGqfIiUy7SsJrIoXYgxk9dUFiMEs9jfE3bYydPiVES69qBk6IKnUaOP+g28aW3d3V89cl6M6XUC9w0Ity/pRbTEeo2xl74=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H2IFqCyL; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MW+G8nrb"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 22159C4CEDD;
-	Thu, 10 Apr 2025 17:04:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H2IFqCyL"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 03883C4CEDD;
+	Thu, 10 Apr 2025 17:21:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744304655;
-	bh=cxm3NO3/3Mey0s9y0Zq4cqT/G/FwT/jH//T5Okv0hoQ=;
-	h=Date:Subject:From:To:Cc:References:In-Reply-To:From;
-	b=MW+G8nrbt2KOhYkAngSmmo1MJBIekuIxtHUWH9oetpaeTA1a/BjHqigkBQoqYlXCP
-	 CysqRBF6Rozbv7iIe4p1l2bFdFOCy6Uh22BI34fhYJHijOJpTfA86Q/djsHFuTI+Al
-	 Lx9KIpCJv8Tpk3MMOPeEpZsXfRymQPwM8br0OqOstsf+F4hx+nOfHyyn7l8SSAhCAS
-	 /zjAvp4pqW35u7jqgNqgfVpuhX0tQtm+M2d9vB/KGpHCID8rWJedxMsytErSy7qe3F
-	 MEUDNzdZBymGO+oyHNDJy7DAgTywh1k7I9oVYb5FHCINRp7oaaYddGOdPbyvTjQYZM
-	 Iob0UMh30oDkw==
-Message-ID: <2eb6a3eb-3417-4ecf-861d-72939fe15562@kernel.org>
-Date: Thu, 10 Apr 2025 19:04:13 +0200
+	s=k20201202; t=1744305675;
+	bh=29B5W8u+el20aJsOPty8AowN66cqjTb6KKEXH9E8aq4=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=H2IFqCyLGXsIWLCD3kL8zBlTmWD7F0lKZgOxFPb4ELDkCybd+I6CO1AnlUR36BHyf
+	 RELNXg16Sad6VHOWBLGxk5xAvJAZz5xHMKL5WblaP5AKcNG4A8flEJmdfDDByQgF2C
+	 yOJAAXx0LFZ3EW0gKVcUUz9elKVfRmxLuIZbFvgYY4UuLPlv/KKkNMIeNiQvp5cIle
+	 wmIuXWCyD00y/Hb782JhVXFUFJ/H3PqYIx4xGH32tWxmK+ysbd+Eo6xpZlZPFPZ2p1
+	 4g/rQnLGSeECSMg7XQA88y46tQgzrdlyQA5/susxrH5FyKJ8BB6ysg9+xVJfOsHgVs
+	 8RXuq/GAnjzng==
+Message-ID: <59036e3c-24da-4236-82dd-b0cc2c747581@kernel.org>
+Date: Thu, 10 Apr 2025 19:21:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -38,11 +38,10 @@ User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: use
  mptcp_lib_get_info_value
 Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <e34e86805f3fe69e0aec08c83c596c49799573c7.1743666387.git.tanggeliang@kylinos.cn>
- <f38c01ca-9b68-4746-b0d4-2375ecc09f87@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -87,52 +86,49 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <f38c01ca-9b68-4746-b0d4-2375ecc09f87@kernel.org>
+In-Reply-To: <e34e86805f3fe69e0aec08c83c596c49799573c7.1743666387.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 10/04/2025 18:58, Matthieu Baerts wrote:
-> Hi Geliang,
-> 
-> On 03/04/2025 09:46, Geliang Tang wrote:
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> When running diag.sh in a loop, chk_dump_one will report the following
->> "grep: write error":
->>
->>  13 ....chk 2 cestab                                  [ OK ]
->>  grep: write error
->>  14 ....chk dump_one                                  [ OK ]
->>  15 ....chk 2->0 msk in use after flush               [ OK ]
->>  16 ....chk 2->0 cestab after flush                   [ OK ]
->>
->> This error is caused by a broken pipe. When the output of 'ss' is processed
->> by grep, 'head -n 1' will exit immediately after getting the first line,
->> causing the subsequent pipe to close. At this time, if 'grep' is still
->> trying to write data to the closed pipe, it will trigger a SIGPIPE signal,
->> causing a write error.
->>
->> One solution is not to use this problematic "head -n 1" command, but to use
->> mptcp_lib_get_info_value() helper defined in mptcp_lib.sh to get the value
->> of 'token'.
-> 
-> I was wondering why this helper would help because there will be 2
-> connections, and it is still required to limit the output to one. Then I
-> saw this helper does limit to the first entry because of 'sed (...);q'.
-> 
-> I will modify the message here to explain that. And maybe add a comment
-> in mptcp_lib.sh as well for later.
+Hi Geliang,
 
-Note: technically, we can still have the issue with
-mptcp_lib_get_info_value because we also have 'grep | sed' where 'sed'
-can finish while 'grep' is still writing. I guess you no longer see the
-warning because 'sed' will be slower than 'head -n1'. But OK, this can
-be improved later.
-
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+On 03/04/2025 09:46, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Cheers,
-> Matt
+> When running diag.sh in a loop, chk_dump_one will report the following
+> "grep: write error":
+> 
+>  13 ....chk 2 cestab                                  [ OK ]
+>  grep: write error
+>  14 ....chk dump_one                                  [ OK ]
+>  15 ....chk 2->0 msk in use after flush               [ OK ]
+>  16 ....chk 2->0 cestab after flush                   [ OK ]
+> 
+> This error is caused by a broken pipe. When the output of 'ss' is processed
+> by grep, 'head -n 1' will exit immediately after getting the first line,
+> causing the subsequent pipe to close. At this time, if 'grep' is still
+> trying to write data to the closed pipe, it will trigger a SIGPIPE signal,
+> causing a write error.
+> 
+> One solution is not to use this problematic "head -n 1" command, but to use
+> mptcp_lib_get_info_value() helper defined in mptcp_lib.sh to get the value
+> of 'token'.
+> 
+> Fixes: ba2400166570 ("selftests: mptcp: add a test for mptcp_diag_dump_one")
+
+Applied in our tree (fixes for -net):
+
+New patches for t/upstream-net and t/upstream:
+- f2405c27bbf0: selftests: mptcp: diag: use mptcp_lib_get_info_value
+- Results: c7abceef96b5..60b01f3eddf6 (export-net)
+- Results: c9648c9d9f4c..244c301d3de6 (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/6d6923e5c2c0de07b702491eab14aa7288cded9c/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/e236c593b8bd23ed60fc7c001dab703df232b089/checks
 
 Cheers,
 Matt
