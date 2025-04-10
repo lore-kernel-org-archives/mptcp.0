@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DFA451EDA28
-	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:39:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0E4721E991C
+	for <mptcp@lists.linux.dev>; Thu, 10 Apr 2025 17:43:40 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744306785; cv=none; b=BngBEq7y6w8/BFaRrrj/uoeSZ928QBnPEntQhcYgZn8GyXw8c69imZcPmzgOGQkS35rx9Ht2F7JTXQasG0MEZ5TGrHJWipMygfjuH4cgpnrVYympV1v9qvru8+VkTpewCSrqvoNgjK9AJwZOdu1ssJiiaLTIoAs36gALfFAd5n0=
+	t=1744307020; cv=none; b=CNUGIexVP74e/bupTK3gZcj1I4MAy/5L3ewVMSvwMODe6VxMkwj1wKq/mD/Up7i6zeXtrgw47ha6KiytUyKwFoeG+VLJ38avJCS0sayRB9tJyUG2OcpQi1DaiFy4OJU4iSKPnyW5EZlrllJtLWQBe0OB2+M6giUzIG3MF5w4Yvk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744306785; c=relaxed/simple;
-	bh=yvbS5Y73lIoyCeKg3W4nSns+tATyIujz71U+X86g3VY=;
+	s=arc-20240116; t=1744307020; c=relaxed/simple;
+	bh=f0jHpK6gPdFgiKeEUb02Bk7bDRKtzE6ViqLm783P2FQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=XaQWWhLwPC2MsSulxInnlvourKNjB0Xweisd83U6eiqQkiR9G2PwQi6xVZ6H/JRFh0NsW7skMwdN2o6WqAKT4dwpYpRLaExXmG5XKEQwHRhWvzPz4KrK50883CP8ltQd4OItEeVanYMz9dwRGBn+jmR/G9qa1OkopoCA3ZxGbzI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=YKS7LkN2; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=ITpBIMP+LdbOAhPtRhvmxDKnTVzdFVpzWi/G+AaRrPzYZh5fWENRt4DeInqkqWshV/4U8iIHOWxp7xok5hSkDq6Iynh4h8uM/aBP8Y+ZjAjvLSwnxCv1Sk8s/F0UabjVyMthMzjsihQQefYdt6f9mJH3kcHHybFcScIWCnllEPY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XHskFOyd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="YKS7LkN2"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A33EEC4CEDD;
-	Thu, 10 Apr 2025 17:39:43 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XHskFOyd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 28276C4CEDD;
+	Thu, 10 Apr 2025 17:43:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744306784;
-	bh=yvbS5Y73lIoyCeKg3W4nSns+tATyIujz71U+X86g3VY=;
+	s=k20201202; t=1744307019;
+	bh=f0jHpK6gPdFgiKeEUb02Bk7bDRKtzE6ViqLm783P2FQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=YKS7LkN2cHNkHtDBQekIP93/YKp9TyL6cuS7+JiAtcQ/ShLMQ8ouSNHhFoMdRvBoj
-	 JNgxY9DX7lel8KxW18PL1tccKrAKbSIy4PmwoPtztXKNcgNgPG7t5VZ6qADk0QLFjv
-	 CVNRVOqAfIeqjtj8fFleG6hqhR+rnXLH16vET9nKBs4kjJIyPxI1OH7jrDg2ihdcJF
-	 yy0nDnDvki5Cq8I4DyVvQeJRf2wTA2jTWT9/6lIDwePM9nWAe/apj1c3jXmYYB8Mid
-	 lzM+eShRW3zIXnqXch+h4sP0m6skpRm9yfUDSPEOCVl/wG0kYynSgVeOAEUrQ3uTI1
-	 k6N1hekaEdp+g==
-Message-ID: <d62684de-e27b-482d-b688-46e387ac305e@kernel.org>
-Date: Thu, 10 Apr 2025 19:39:41 +0200
+	b=XHskFOydb6tYb+Ig3JkdP6rHQxgULFQTz6+CBg/kEuVcZ6dz2EpMEFgrGwfBWzuw2
+	 43iNaPXs/ayEDVXEp/kC/CWBNM69548nnXkBTnb95wkfc7pE+jnGiJdU7LJky+clwi
+	 SwNu4Efrytq67COM/0dMwtD2ZpRKol+TbhQIjC3EjP6GYyb7GiiBFfmztK/aP5OS9O
+	 /1bLsSfOyjfXf8JCpgHJ0lEZPLh/ld0KV2IhisQRCY7F5SSftaTQsNEXXSKHEzwoyl
+	 ZDxsw8C/KXwsupsrc44qPrZI5N04gattmh6o/GhE2qIdT063RRLZ0up2jSLYwTx7v3
+	 unhVUGR2iW1+Q==
+Message-ID: <16ae0e83-a706-4b3e-8f97-41a20061fab3@kernel.org>
+Date: Thu, 10 Apr 2025 19:43:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: diag: drop nlh parameter of
- recv_nlmsg
+Subject: Re: [PATCH mptcp-next v2] selftests: mptcp: use IPPROTO_MPTCP for
+ getaddrinfo
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
+Cc: zhenwei pi <pizhenwei@bytedance.com>
+References: <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,23 +86,26 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0a7cb982ea5886c2f00e69703feb92c3934dcd63.1744012385.git.tanggeliang@kylinos.cn>
+In-Reply-To: <77efff47e3cace7d2dd9a1394d3ece4e234a5e74.1744178165.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang, zhenwei pi,
 
-On 07/04/2025 09:53, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 09/04/2025 08:18, Geliang Tang wrote:
+> From: zhenwei pi <pizhenwei@bytedance.com>
 > 
-> It's strange that 'nlh' variable is set to NULL in get_mptcpinfo() and then
-> this NULL pointer is passed to recv_nlmsg(). In fact, this variable should
-> be defined in recv_nlmsg(), not get_mptcpinfo().
+> mptcp_connect.c is a startup tutorial of MPTCP programming, however
+> there is a lack of ai_protocol(IPPROTO_MPTCP) usage. Add comment for
+> getaddrinfo MPTCP support.
 > 
-> So this patch drops this useless 'nlh' parameter of recv_nlmsg() and define
-> 'nlh' variable in recv_nlmsg().
+> This patch first uses IPPROTO_MPTCP to get addrinfo, and if glibc
+> version is too old, it falls back to using IPPROTO_TCP.
+> 
+> v2:
+>  - use IPPROTO_MPTCP for getaddrinfo
 
-Indeed, that is better like that.
+Thank you for the v2, it looks good to me!
 
 Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
