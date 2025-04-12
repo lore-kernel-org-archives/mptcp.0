@@ -1,133 +1,103 @@
-Received: from out-178.mta1.migadu.com (out-178.mta1.migadu.com [95.215.58.178])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 550C9258CFB
-	for <mptcp@lists.linux.dev>; Fri, 11 Apr 2025 18:06:21 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.178
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE94F33C9
+	for <mptcp@lists.linux.dev>; Sat, 12 Apr 2025 00:06:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744394784; cv=none; b=qPkETvSk8gQ7BOW82pfU5X3E1JzX6DPBWmol6cKAeyb9mPrNEUI3WghEX1o+i8A4/LYN3NyRXPeEj9P/TwC+CGzKp2xRNCvVdBfb/0pA3WUkjOmNjQt12f78mWYehrc50D8i86QpFG0Gpkl+D7TsqY7MNVtzDZOLK9dbYrZZyuQ=
+	t=1744416388; cv=none; b=P6UZKraTN1ueMGaOOT7i9sOLJkwSPZnZ3RaYIC9PROpF8v9lbBEw7SHTO2xICAnsOq4ZPC4Vrpi05zxCefiyEY87BCsFwYmU9Nw/uTaWfR3M22KJDEdcjOmQW3xMmjkOhka5yVXI5QtIAUiQlZfqp/hVbDKukwk/NbtDNBYLE8g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744394784; c=relaxed/simple;
-	bh=pFSO6nty3UJovVNd0O7FS9TzM3lm8+2TlM7Ecsy3ggQ=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=p4Uai2rjBTfVbQyiiQXMleAFUWfe014WsWW12ag8Jeqx4cANgivz5VyYxMYMAsMOn2Hge50l4T4ySltOHiLla3Oi3px+Emhx/EDmNQbKC70OwqFucLC+kjVWaZ5kXwyF8peeFw9vHBv97ikr22H73gM8UVBpr68y9Bn6kiEnYkY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=DYZNOUby; arc=none smtp.client-ip=95.215.58.178
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1744416388; c=relaxed/simple;
+	bh=yd/CmDY9fdeLSfGf3gVpITk5DX7nXm9yM84es5NioJo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=rGgEinEhTsW/jF2AOw7XPUiQWPPZpsUtCusRz0u338VeH8xvmP4SHDzwmzdOJjEbENHXnIYYnB9QXnQiVqW9E54E/Dtiaq9o6g7GA1kjuu6to2XDeTBjVP4yAiQt04EjFd5X5Qs83+QwWQKmkSMCNo43n6/B4XFfjuW4fbGIBtk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VacUce+s; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="DYZNOUby"
-Message-ID: <f5c0d16e-73bc-4421-a634-099ea1eae4f7@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1744394780;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=pFSO6nty3UJovVNd0O7FS9TzM3lm8+2TlM7Ecsy3ggQ=;
-	b=DYZNOUbyeb3turkGheM/YRt9P9F83INeFx4BMhWUDbFXvJvng66gn7mrq1expkSGERxi9f
-	cDNZlyr/wKeqQxhkLQ/3W6+XRoJX/UZLGWg272R/t9d1jR+BQBhWNxxpP1nRvZ4hmzHqNF
-	7bQOqGKRR2XsRBEgPY/eHg87MVfuVJg=
-Date: Fri, 11 Apr 2025 11:06:07 -0700
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VacUce+s"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A1EC4CEE2;
+	Sat, 12 Apr 2025 00:06:27 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744416387;
+	bh=yd/CmDY9fdeLSfGf3gVpITk5DX7nXm9yM84es5NioJo=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=VacUce+s+TrUH4L0lNHsDEvLYltZwS3CW3vY41T2hs/qeaInlhJFk5NnhtwryrJ9V
+	 f2WuKDkr7bwJ/6+JeKXMPNubbeoHXbRFzDhgJitWeUAwQTQW7bCy+Hq3voUbfhZJ6B
+	 EhmuOpftCtkgJhP9HAtnOpxJt+NX7dwE0f8rlIKuFkBHTJaiLhwvJ9QzuqbRfvArCD
+	 oy8f5LWhuH6ZH7hT0YjB3E3vDDCMID1iD8KfuumH0mmVesqdKNxSZ3Q8uKdxZ5PlpP
+	 SEvy5BnjF+gUoioBPKAW0xnHKlyAxeclhwy5NrCWeKjMhR7+2SM9YoaQBg+hiNU1CC
+	 buTy7dp388bgw==
+Date: Fri, 11 Apr 2025 17:06:26 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+cc: mptcp@lists.linux.dev
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: info: hide 'grep: write
+ error' warnings
+In-Reply-To: <20250410-selftests-mptcp-grep-close-v1-1-3c360279a856@kernel.org>
+Message-ID: <076393de-9a1f-f5a0-e439-00a35dda4758@kernel.org>
+References: <20250410-selftests-mptcp-grep-close-v1-1-3c360279a856@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next] bpf: Allow error injection for
- update_socket_protocol
-To: Geliang Tang <geliang@kernel.org>, Gang Yan <gang_yan@foxmail.com>,
- Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc: netdev@vger.kernel.org, bpf@vger.kernel.org, mptcp@lists.linux.dev
-References: <tmcxv429u9-tmgrokbfbm@nsmail7.0.0--kylin--1>
- <tencent_EB51CDCA4E189E271032DFEC7E042B752008@qq.com>
- <dee07a8c-aed2-4125-a4f0-1bd76ca1e4ac@linux.dev>
- <1cc54fa0f517f387563263bb90ef1628244778df.camel@kernel.org>
-Content-Language: en-GB
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Yonghong Song <yonghong.song@linux.dev>
-In-Reply-To: <1cc54fa0f517f387563263bb90ef1628244778df.camel@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=US-ASCII; format=flowed
 
+On Thu, 10 Apr 2025, Matthieu Baerts (NGI0) wrote:
 
-
-On 4/9/25 2:17 AM, Geliang Tang wrote:
-> Hi Yonghong,
+> mptcp_lib_get_info_value() will only print the first entry that match
+> the filter because of the ';q' at the end. As a consequence, the 'sed'
+> command could finish before the previous 'grep' one and print a 'write
+> error' warning because it is trying to write data to the closed pipe.
 >
-> On Sun, 2024-08-25 at 21:05 -0700, Yonghong Song wrote:
->> On 8/25/24 8:29 PM, Gang Yan wrote:
->>> Hi Alexei:
->>> It's my honor to recieve your reply. The response to your concerns
->>> is attached below
->>> for your review.
->>> On Mon, Aug 26, 2024 at 10:57:12AM +0800, Gang Yan wrote:
->>>> On Thu, Aug 22, 2024 at 8:33 AM Jakub Kicinski wrote:
->>>>> On Thu, 22 Aug 2024 14:08:57 +0800 Gang Yan wrote:
->>>>>> diff --git a/net/socket.c b/net/socket.c
->>>>>> index fcbdd5bc47ac..63ce1caf75eb 100644
->>>>>> --- a/net/socket.c
->>>>>> +++ b/net/socket.c
->>>>>> @@ -1695,6 +1695,7 @@ __weak noinline int
->>>>>> update_socket_protocol(int family, int type, int protocol)
->>>>>> {
->>>>>> return protocol;
->>>>>> }
->>>>>> +ALLOW_ERROR_INJECTION(update_socket_protocol, ERRNO);
->>>>> IDK if this falls under BPF or directly net, but could you
->>>>> explain
->>>>> what test will use this? I'd prefer not to add test hooks into
->>>>> the
->>>>> kernel unless they are exercised by in-tree tests.
->>>> This looks unnecessary.
->>>> update_socket_protocol is already registered as fmodret.
->>>> There is even selftest that excises this feature:
->>>> tools/testing/selftests/bpf/progs/mptcpify.c
->>>>
->>>> It doesn't need to be part of the error-inject.
->>> The 'update_socket_protocol' is a BPF interface designed primarily
->>> to
->>> fix the socket protocol from TCP protocol to MPTCP protocol without
->>> requiring modifications to user-space application codes. However,
->>> when attempting to achieve this using the BCC tool in user-space,
->>> the BCC tool doesn't support 'fmod_ret'. Therefore, this patch aims
->>> to
->>> further expand capabilities, enabling the 'kprobe' method can
->>> overriding
->>> the update_socket_protocol interface.
->> Gang Yan, could you explore to add fmod_ret support in bcc? It should
->> be
->> similar to kfunc/kretfunc support. I am happy to review your patches.
-> It took us some time to add this support in bcc, and we have recently
-> completed it in [1]. We would be grateful if you could help review
-> these patches.
+> Such warnings are not interesting, they can be hidden by muting stderr
+> here for grep.
+>
+> While at it, clearly indicate that mptcp_lib_get_info_value() will only
+> print the first matched entry to avoid confusions later on.
+>
+> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Sounds good. I will take a look.
+Hi Matthieu -
 
->
-> Thanks,
-> -Geliang
->
-> [1]
-> https://github.com/iovisor/bcc/pull/5274
->
->> Thanks,
->> Yonghong
->>
->>> As a Python developer, the BCC tool is a commonly utilized
->>> instrument for
->>> interacting with the kernel. If the kernel could permit the use of
->>> an
->>> error-inject method to modify the `update_socket_protocol`, it
->>> would significantly
->>> benefit the subsequent promotion and development of MPTCP
->>> applications.
->>> Thank you for considering this enhancement.
->>>
->>> Best wishes!
->>> Gang Yan
->>>
->>>
->
+Looks good to me:
 
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+
+> ---
+> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 7 +++++--
+> 1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> index 051e289d79676c5feb9f46da67a08116548f4b47..99c87cd6e25563e220263c813223206ef6f4b311 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+> @@ -331,12 +331,15 @@ mptcp_lib_result_print_all_tap() {
+>
+> # get the value of keyword $1 in the line marked by keyword $2
+> mptcp_lib_get_info_value() {
+> -	grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
+> +	grep "${2}" 2>/dev/null |
+> +		sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
+> +		# the ';q' at the end limits to the first matched entry.
+> }
+>
+> # $1: info name ; $2: evts_ns ; [$3: event type; [$4: addr]]
+> mptcp_lib_evts_get_info() {
+> -	grep "${4:-}" "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
+> +	grep "${4:-}" "${2}" 2>/dev/null |
+> +		mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
+> }
+>
+> # $1: PID
+>
+> ---
+> base-commit: 244c301d3de6bf2e1bdc5cf7291159cd8e342942
+> change-id: 20250410-selftests-mptcp-grep-close-9e4ac9b41a94
+>
+> Best regards,
+> -- 
+> Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+>
+>
