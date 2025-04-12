@@ -1,103 +1,89 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DE94F33C9
-	for <mptcp@lists.linux.dev>; Sat, 12 Apr 2025 00:06:27 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9E7CF28FF
+	for <mptcp@lists.linux.dev>; Sat, 12 Apr 2025 00:11:25 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744416388; cv=none; b=P6UZKraTN1ueMGaOOT7i9sOLJkwSPZnZ3RaYIC9PROpF8v9lbBEw7SHTO2xICAnsOq4ZPC4Vrpi05zxCefiyEY87BCsFwYmU9Nw/uTaWfR3M22KJDEdcjOmQW3xMmjkOhka5yVXI5QtIAUiQlZfqp/hVbDKukwk/NbtDNBYLE8g=
+	t=1744416685; cv=none; b=ZDywSX1lQj1Mnqm1C1cyRqd636k6x+SB0MvSnoEbd4yBHENY44jx6PLHlY05jybT4KBqwdgCEWm0Zi7+3Y9dFZnySlXXaK3m5diewGzvGzyIPfwtvMyDZq+n6Ewz6dX+wWulHDfu1rcRn3b+SU9evhYMgjGmTZvue9/jGGi/MLw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744416388; c=relaxed/simple;
-	bh=yd/CmDY9fdeLSfGf3gVpITk5DX7nXm9yM84es5NioJo=;
+	s=arc-20240116; t=1744416685; c=relaxed/simple;
+	bh=uO1c9m68mplSnahIYUtiNifJ2AWKXP1Gfw2Pg5DX8BQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=rGgEinEhTsW/jF2AOw7XPUiQWPPZpsUtCusRz0u338VeH8xvmP4SHDzwmzdOJjEbENHXnIYYnB9QXnQiVqW9E54E/Dtiaq9o6g7GA1kjuu6to2XDeTBjVP4yAiQt04EjFd5X5Qs83+QwWQKmkSMCNo43n6/B4XFfjuW4fbGIBtk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VacUce+s; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version:Content-Type; b=cuWx2FMpT/dd05I2+rN/3hui2o0PLdcVtEB1E/wNcNB8BVB4/vMJDglJdxpdL1294FpLBD/K0SPfcrZg2PSgVoth/JvSRCPY4wL/9BP+by7sE6jiidyaeerVXiKuXGLEwBrJgFsocqJcj0HOeIpbke+el/wN2lf45KaZ9Dqyc68=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fLsN3bzs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VacUce+s"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 58A1EC4CEE2;
-	Sat, 12 Apr 2025 00:06:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fLsN3bzs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 18B9CC4CEE2;
+	Sat, 12 Apr 2025 00:11:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744416387;
-	bh=yd/CmDY9fdeLSfGf3gVpITk5DX7nXm9yM84es5NioJo=;
+	s=k20201202; t=1744416685;
+	bh=uO1c9m68mplSnahIYUtiNifJ2AWKXP1Gfw2Pg5DX8BQ=;
 	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=VacUce+s+TrUH4L0lNHsDEvLYltZwS3CW3vY41T2hs/qeaInlhJFk5NnhtwryrJ9V
-	 f2WuKDkr7bwJ/6+JeKXMPNubbeoHXbRFzDhgJitWeUAwQTQW7bCy+Hq3voUbfhZJ6B
-	 EhmuOpftCtkgJhP9HAtnOpxJt+NX7dwE0f8rlIKuFkBHTJaiLhwvJ9QzuqbRfvArCD
-	 oy8f5LWhuH6ZH7hT0YjB3E3vDDCMID1iD8KfuumH0mmVesqdKNxSZ3Q8uKdxZ5PlpP
-	 SEvy5BnjF+gUoioBPKAW0xnHKlyAxeclhwy5NrCWeKjMhR7+2SM9YoaQBg+hiNU1CC
-	 buTy7dp388bgw==
-Date: Fri, 11 Apr 2025 17:06:26 -0700 (PDT)
+	b=fLsN3bzstePTwKg4YDzuPbCwyz6Y9ydfqW+hLB9jBXjBmiNeTqFLwLh+rvcuYMxf1
+	 iFqbX7k8GiEZyZ24K15bkOklkr/zqFvokSFvficniOSzhNEqgdbl06K4BaAKJ93HgM
+	 klYCu5jordRr+oQa5+bTKMz74oAnbRge3iamoz3FC/mXLBDhG3FPy4rkCQJRKgEyME
+	 WnZGQsP11h/9CDQWr9AUn+ZGrIEB9CaVIb/WLgYOY6ikT664Zl8YRJTNZE8namKszm
+	 Qya5axseMTI8+lKQkX2tlC/GozWYrWR1Cu3CWJBsJ4N6xrltkvxSvc3JEl8BnjpGOr
+	 1OcujJYHPouaA==
+Date: Fri, 11 Apr 2025 17:11:24 -0700 (PDT)
 From: Mat Martineau <martineau@kernel.org>
-To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
 cc: mptcp@lists.linux.dev
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: info: hide 'grep: write
- error' warnings
-In-Reply-To: <20250410-selftests-mptcp-grep-close-v1-1-3c360279a856@kernel.org>
-Message-ID: <076393de-9a1f-f5a0-e439-00a35dda4758@kernel.org>
-References: <20250410-selftests-mptcp-grep-close-v1-1-3c360279a856@kernel.org>
+Subject: Re: [PATCH mptcp-net v2] mptcp: pm: Defer freeing of MPTCP userspace
+ path manager entries
+In-Reply-To: <c1a833c4-0ec8-48b3-b2b0-cd9b5e8f050f@kernel.org>
+Message-ID: <b170929e-8adb-5bbb-a51b-9bd7368b1706@kernel.org>
+References: <20250410224503.2056587-1-martineau@kernel.org> <c1a833c4-0ec8-48b3-b2b0-cd9b5e8f050f@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII; format=flowed
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-On Thu, 10 Apr 2025, Matthieu Baerts (NGI0) wrote:
+On Fri, 11 Apr 2025, Matthieu Baerts wrote:
 
-> mptcp_lib_get_info_value() will only print the first entry that match
-> the filter because of the ';q' at the end. As a consequence, the 'sed'
-> command could finish before the previous 'grep' one and print a 'write
-> error' warning because it is trying to write data to the closed pipe.
+> Hi Mat,
 >
-> Such warnings are not interesting, they can be hidden by muting stderr
-> here for grep.
+> On 11/04/2025 00:44, Mat Martineau wrote:
+>> When path manager entries are deleted from the local address list, they
+>> are first unlinked from the address list using list_del_rcu(). The
+>> entries must not be freed until after the RCU grace period, but the
+>> existing code immediately frees the entry.
+>>
+>> Use kfree_rcu_mightsleep() and adjust sk_omem_alloc in open code instead
+>> of using the sock_kfree_s() helper. This code path is only called in a
+>> netlink handler, so the "might sleep" function is preferable to adding
+>> a rarely-used rcu_head member to struct mptcp_pm_addr_entry.
+>>
+>> Fixes: 88d097316371 ("mptcp: drop free_list for deleting entries")
+>> Signed-off-by: Mat Martineau <martineau@kernel.org>
+>> ---
+>>
+>> v2: Add comment explaining connection to sock_kfree_s, add "Fixes" tag
 >
-> While at it, clearly indicate that mptcp_lib_get_info_value() will only
-> print the first matched entry to avoid confusions later on.
+> Thank you for the v2, and your reply on my previous review. This v2
+> looks good to me:
 >
-> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>
+> I guess I should wait to apply "only remove entry from local_addr_list
+> when sending a REMOVE_ADDR" series first then, right? Are these other
+> patches supposed to be fixes for net? They are not marked as that for
+> the moment: in that case, should we add another patch to fix
+> mptcp_userspace_pm_delete_local_addr() as well?
+>
 
-Hi Matthieu -
+I don't think there's any issue or conflict with applying this to 
+export-net first, it would leave the bug not fixed in 
+mptcp_userspace_pm_delete_local_addr(). If this patch needs to stand 
+alone, then it would need to be reworked to add a struct rcu_head to the 
+local addr entry because mptcp_userspace_pm_delete_local_addr() gets 
+called in contexts where sleepable calls aren't allowed.
 
-Looks good to me:
+I'll reply separately to v2 of the "only remove entry from local_addr_list 
+when sending a REMOVE_ADDR" series.
 
-Reviewed-by: Mat Martineau <martineau@kernel.org>
-
-> ---
-> tools/testing/selftests/net/mptcp/mptcp_lib.sh | 7 +++++--
-> 1 file changed, 5 insertions(+), 2 deletions(-)
->
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> index 051e289d79676c5feb9f46da67a08116548f4b47..99c87cd6e25563e220263c813223206ef6f4b311 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
-> @@ -331,12 +331,15 @@ mptcp_lib_result_print_all_tap() {
->
-> # get the value of keyword $1 in the line marked by keyword $2
-> mptcp_lib_get_info_value() {
-> -	grep "${2}" | sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
-> +	grep "${2}" 2>/dev/null |
-> +		sed -n 's/.*\('"${1}"':\)\([0-9a-f:.]*\).*$/\2/p;q'
-> +		# the ';q' at the end limits to the first matched entry.
-> }
->
-> # $1: info name ; $2: evts_ns ; [$3: event type; [$4: addr]]
-> mptcp_lib_evts_get_info() {
-> -	grep "${4:-}" "${2}" | mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
-> +	grep "${4:-}" "${2}" 2>/dev/null |
-> +		mptcp_lib_get_info_value "${1}" "^type:${3:-1},"
-> }
->
-> # $1: PID
->
-> ---
-> base-commit: 244c301d3de6bf2e1bdc5cf7291159cd8e342942
-> change-id: 20250410-selftests-mptcp-grep-close-9e4ac9b41a94
->
-> Best regards,
-> -- 
-> Matthieu Baerts (NGI0) <matttbe@kernel.org>
->
->
->
+- Mat
