@@ -1,161 +1,151 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DE325A2DE
-	for <mptcp@lists.linux.dev>; Mon, 14 Apr 2025 08:56:36 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A48DE288C8F;
+	Mon, 14 Apr 2025 16:08:17 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620997; cv=none; b=o8NLq18DbNpXphhhtFFYN7HbkrR7pgCU2nrByFEHrpMGplZ2GqWubgWjCnTTi55+li64ZDXbhpfVu14kiFNcTypx7UMDDt6BLhbNZkbR8T38fd+zGpYEsZX5IOSpuJmUZKg/p2kbloQStFquZVLEgu9r522szZgYOcgAYjRxzbU=
+	t=1744646900; cv=none; b=EGdsg5MiXVPo5//07N7dJdz+eyKsSOvx6KVaPbOrNz2z9yELsowzjlYiVzSL/i7USc4PKGfhOtEDfst/7Xkp9Ie9vLDlkr254k2fJVlNhrCYUl6WgVpj9wl12YqIKBKagubLNYI794846FmULcpbGdnrTGvwlhQfNOf9aCEUNMI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620997; c=relaxed/simple;
-	bh=CRRBYWM4NJnppTLtoqlGNX1MPkYTRE95L48O+0wL9wE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Kwu2r6Asl5NStlvs8Li4bG6wwtQapUmrJ0SmZWVvzvz444ge0obUbZnScuMzhWyIviOktnw3k/4PwHoSo0N23uS8zltkpulhC0UiVulHAxtnmOVVUE7zV20bHVShdQgvIflzH9oHJHMyt+XnaXRm1+twy2LMWpwmayYldYvVCSI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0f/MFB6; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744646900; c=relaxed/simple;
+	bh=VXleKi/U/kMgP7jABQMiZxQCqP98FQpEysCuzMoNYOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=bPW7qyc8UGSHAmRU/4IRbRWA6DO9ocLvjl0hOc/xqXB2bS8lfB38so1ztAMTZRrwL/krMqFnEUprw8efFbdNcRIiDKuIq8IgIRAP/hYY8dZ0alaM7Gmq17KSBuQH/yn+zMVtY9bL7Sw0VrCgZYBAHFlG2cRzA2IZ1j3/bBZY604=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=A4btqFw1; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=SQlwiqz3; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0f/MFB6"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE7DC4CEE2;
-	Mon, 14 Apr 2025 08:56:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744620996;
-	bh=CRRBYWM4NJnppTLtoqlGNX1MPkYTRE95L48O+0wL9wE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Q0f/MFB60OgQV41IyM732dmw67aHClBEePo0ZRLOurfS/5nqgNfbtFguVMUxAfG/N
-	 1Y4NDoUXgbETtCF72fvkNMPSE7GvwyJlrEXPQhMP5wzrigdlcEblsyEYSt/3mBgSbd
-	 BFhRgVFQLTYcfstcDg0F24spA/dU7o2o+f40lTV62xvvt+TEWb1SJJlx94a2TMcTz3
-	 LwOC9UThtLK3N6BLyTnOMhz/ka9krTFgeEah03wEcH8mnPQDpkFFrZiIocFxvS2mbq
-	 wsN1fUmXtyWx+sQEVwf1aCxVOzql3uEo+AI7ywBkemH/TCT6EemX/cT17ovKFoPLHt
-	 XF6UVkxes041w==
-Message-ID: <5647171d-7b95-4fe9-a5c6-461d178c25ac@kernel.org>
-Date: Mon, 14 Apr 2025 10:56:34 +0200
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="A4btqFw1";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="SQlwiqz3"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1744646894;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqlT1nY5GZsGQPH1WnHjRykG1pCxKAGysrL3Y4gboDY=;
+	b=A4btqFw1KJRKMgA//iPQ2lSLtXHxDhLxKddQFKfGMck/CV00tCkRjTOfQ3v8RaMOJ1XEKN
+	48vH7AIoHs42bYSLn7yq0T5jPEWcj0K/KQVQbwsbTGjwgkj4Ndb996RPXi9nqpv7A1VPUk
+	GPCv1PPSWzVyW3KMpXrvk1WM6w4aF3GWWNIoRLESy9VKO5HvCQ8SemmIlZRIJNVd2frdeI
+	tAbEjNsByqGOLna5zFAZtKBV8hpaPxZ6JlbMrtwbb9NemHxiIWxUbvT68BKkYPfHaUibZf
+	5Um5FVvbq/zXHIcU1RBypdwI7o/823+7xN7P+IGyw+gu1OOFpb9lhe1vSHVFgw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1744646894;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=qqlT1nY5GZsGQPH1WnHjRykG1pCxKAGysrL3Y4gboDY=;
+	b=SQlwiqz3R7oKpmeWQF5x5Y45PppgcM2ywQuRcopP29s0xrNdA89Vfo+dquqwoCsTU1X2Ut
+	dV865SCjPje6XuBQ==
+To: netdev@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next v2 15/18] mptcp: Use nested-BH locking for hmac_storage
+Date: Mon, 14 Apr 2025 18:07:51 +0200
+Message-ID: <20250414160754.503321-16-bigeasy@linutronix.de>
+In-Reply-To: <20250414160754.503321-1-bigeasy@linutronix.de>
+References: <20250414160754.503321-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2] mptcp: pm: Defer freeing of MPTCP userspace
- path manager entries
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+
+mptcp_delegated_actions is a per-CPU variable and relies on disabled BH for=
+ its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT this d=
+ata
+structure requires explicit locking.
+
+Add a local_lock_t to the data structure and use local_lock_nested_bh() for
+locking. This change adds only lockdep coverage and does not alter the
+functional behaviour for !PREEMPT_RT.
+
+Cc: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>
 Cc: mptcp@lists.linux.dev
-References: <20250410224503.2056587-1-martineau@kernel.org>
- <c1a833c4-0ec8-48b3-b2b0-cd9b5e8f050f@kernel.org>
- <b170929e-8adb-5bbb-a51b-9bd7368b1706@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <b170929e-8adb-5bbb-a51b-9bd7368b1706@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/mptcp/protocol.c | 4 +++-
+ net/mptcp/protocol.h | 9 ++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Hi Mat,
-
-On 12/04/2025 02:11, Mat Martineau wrote:
-> On Fri, 11 Apr 2025, Matthieu Baerts wrote:
-> 
->> Hi Mat,
->>
->> On 11/04/2025 00:44, Mat Martineau wrote:
->>> When path manager entries are deleted from the local address list, they
->>> are first unlinked from the address list using list_del_rcu(). The
->>> entries must not be freed until after the RCU grace period, but the
->>> existing code immediately frees the entry.
->>>
->>> Use kfree_rcu_mightsleep() and adjust sk_omem_alloc in open code instead
->>> of using the sock_kfree_s() helper. This code path is only called in a
->>> netlink handler, so the "might sleep" function is preferable to adding
->>> a rarely-used rcu_head member to struct mptcp_pm_addr_entry.
->>>
->>> Fixes: 88d097316371 ("mptcp: drop free_list for deleting entries")
->>> Signed-off-by: Mat Martineau <martineau@kernel.org>
->>> ---
->>>
->>> v2: Add comment explaining connection to sock_kfree_s, add "Fixes" tag
->>
->> Thank you for the v2, and your reply on my previous review. This v2
->> looks good to me:
->>
->> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
->>
->> I guess I should wait to apply "only remove entry from local_addr_list
->> when sending a REMOVE_ADDR" series first then, right? Are these other
->> patches supposed to be fixes for net? They are not marked as that for
->> the moment: in that case, should we add another patch to fix
->> mptcp_userspace_pm_delete_local_addr() as well?
->>
-> 
-> I don't think there's any issue or conflict with applying this to
-> export-net first, it would leave the bug not fixed in
-> mptcp_userspace_pm_delete_local_addr(). If this patch needs to stand
-> alone, then it would need to be reworked to add a struct rcu_head to the
-> local addr entry because mptcp_userspace_pm_delete_local_addr() gets
-> called in contexts where sleepable calls aren't allowed.
-
-Thank you, it makes sense. Now in our tree:
-
-New patches for t/upstream-net and t/upstream:
-- 49746c77f0b1: mptcp: pm: Defer freeing of MPTCP userspace path manager
-entries
-- Results: 0142ff39fa9b..ce1452067424 (export-net)
-- Results: f1e32c11be27..309e5b3a6b32 (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/cbf7c52183ef1d88ba762839fb579780ff6150e8/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b8b8b4ab98727371e1b3278b18314402cecd8da6/checks
-
-> I'll reply separately to v2 of the "only remove entry from
-> local_addr_list when sending a REMOVE_ADDR" series.
-Thank you!
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 44f7ab463d755..b6cb93a3f9a2d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -46,7 +46,9 @@ static struct percpu_counter mptcp_sockets_allocated ____=
+cacheline_aligned_in_sm
+ static void __mptcp_destroy_sock(struct sock *sk);
+ static void mptcp_check_send_data_fin(struct sock *sk);
+=20
+-DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
++DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions) =3D=
+ {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
+ static struct net_device *mptcp_napi_dev;
+=20
+ /* Returns end sequence number of the receiver's advertised window */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d409586b5977f..88cc2a857adce 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -479,6 +479,7 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
+=20
+ struct mptcp_delegated_action {
+ 	struct napi_struct napi;
++	local_lock_t bh_lock;
+ 	struct list_head head;
+ };
+=20
+@@ -670,9 +671,11 @@ static inline void mptcp_subflow_delegate(struct mptcp=
+_subflow_context *subflow,
+ 		if (WARN_ON_ONCE(!list_empty(&subflow->delegated_node)))
+ 			return;
+=20
++		local_lock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		delegated =3D this_cpu_ptr(&mptcp_delegated_actions);
+ 		schedule =3D list_empty(&delegated->head);
+ 		list_add_tail(&subflow->delegated_node, &delegated->head);
++		local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		sock_hold(mptcp_subflow_tcp_sock(subflow));
+ 		if (schedule)
+ 			napi_schedule(&delegated->napi);
+@@ -684,11 +687,15 @@ mptcp_subflow_delegated_next(struct mptcp_delegated_a=
+ction *delegated)
+ {
+ 	struct mptcp_subflow_context *ret;
+=20
+-	if (list_empty(&delegated->head))
++	local_lock_nested_bh(&mptcp_delegated_actions.bh_lock);
++	if (list_empty(&delegated->head)) {
++		local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		return NULL;
++	}
+=20
+ 	ret =3D list_first_entry(&delegated->head, struct mptcp_subflow_context, =
+delegated_node);
+ 	list_del_init(&ret->delegated_node);
++	local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 	return ret;
+ }
+=20
+--=20
+2.49.0
 
