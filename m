@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 24050258CCF
-	for <mptcp@lists.linux.dev>; Mon, 14 Apr 2025 08:52:02 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 52DE325A2DE
+	for <mptcp@lists.linux.dev>; Mon, 14 Apr 2025 08:56:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744620723; cv=none; b=p+F0dKv3YtCrVqhpxhDPjzAlOiUX+wSj/bqOC+rgc7B85TAA4CBfxkb89dIM/u920vg1rMHfrd4aVHHKMnjd/3loQRvO1pT2LQo1/EHRHjq6K96ChuqaZZqOr+dLg6HXXpXD7+xPcQ1HMXhYTExOIWrshKDAN/iTyCtO6EvtUUs=
+	t=1744620997; cv=none; b=o8NLq18DbNpXphhhtFFYN7HbkrR7pgCU2nrByFEHrpMGplZ2GqWubgWjCnTTi55+li64ZDXbhpfVu14kiFNcTypx7UMDDt6BLhbNZkbR8T38fd+zGpYEsZX5IOSpuJmUZKg/p2kbloQStFquZVLEgu9r522szZgYOcgAYjRxzbU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744620723; c=relaxed/simple;
-	bh=PREcqd8zHKZnNprc7thH6HlFXXX5rGQK0NsUQplZz60=;
+	s=arc-20240116; t=1744620997; c=relaxed/simple;
+	bh=CRRBYWM4NJnppTLtoqlGNX1MPkYTRE95L48O+0wL9wE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=TUt1QdwHlk6U9oel24CKdw/WljeCXvwo3tq3LKSLbEilvkkxep6kdpNIHB5Y0/n9O7wozxz/xzv+JTl2NiCQrhDFqHXZ/Ss0EBZ0DhfLNO1DJ0pWg07WXbp9LXN6usFGsnKa1/oVwP/nV1w8JFqb0FkIpffYyOiB7VdxjLu94Zs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AUUWkMmg; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Kwu2r6Asl5NStlvs8Li4bG6wwtQapUmrJ0SmZWVvzvz444ge0obUbZnScuMzhWyIviOktnw3k/4PwHoSo0N23uS8zltkpulhC0UiVulHAxtnmOVVUE7zV20bHVShdQgvIflzH9oHJHMyt+XnaXRm1+twy2LMWpwmayYldYvVCSI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Q0f/MFB6; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AUUWkMmg"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07DB2C4CEE2;
-	Mon, 14 Apr 2025 08:52:01 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Q0f/MFB6"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2EE7DC4CEE2;
+	Mon, 14 Apr 2025 08:56:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744620722;
-	bh=PREcqd8zHKZnNprc7thH6HlFXXX5rGQK0NsUQplZz60=;
+	s=k20201202; t=1744620996;
+	bh=CRRBYWM4NJnppTLtoqlGNX1MPkYTRE95L48O+0wL9wE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=AUUWkMmgFjpwFsSiN6le027rKEwz+DxJ8tha4tcMhpLCQ5iKBO7w9QMdmQnwtOSP+
-	 dmlPfljY+b+eZhZYQpPGRM1tY8hnoT721HIKZPrc2+b+kO3ljPp7H5dMG6sd2RVdr1
-	 IG9LaqLoF2RieBSSh6lex+dB/StXiS5dBX4zfh3wcxswWFuLxy/nfEeLVlKPKMmIGY
-	 WNY+Aq+KmemBvrqux8sKhNeu1g/fcj7/3gIqn3nAcQafGztIi8k2AiwobkueZrUBOT
-	 Ms8uceBmIydbUxoAxIKdSGTqzxKIqvITSjnQxmMjJl4ijSycyCI5rWUZRdNGHih3qf
-	 9M5VUOuEuBaaQ==
-Message-ID: <84040024-ddf1-48b9-a59e-076645f57e54@kernel.org>
-Date: Mon, 14 Apr 2025 10:52:00 +0200
+	b=Q0f/MFB60OgQV41IyM732dmw67aHClBEePo0ZRLOurfS/5nqgNfbtFguVMUxAfG/N
+	 1Y4NDoUXgbETtCF72fvkNMPSE7GvwyJlrEXPQhMP5wzrigdlcEblsyEYSt/3mBgSbd
+	 BFhRgVFQLTYcfstcDg0F24spA/dU7o2o+f40lTV62xvvt+TEWb1SJJlx94a2TMcTz3
+	 LwOC9UThtLK3N6BLyTnOMhz/ka9krTFgeEah03wEcH8mnPQDpkFFrZiIocFxvS2mbq
+	 wsN1fUmXtyWx+sQEVwf1aCxVOzql3uEo+AI7ywBkemH/TCT6EemX/cT17ovKFoPLHt
+	 XF6UVkxes041w==
+Message-ID: <5647171d-7b95-4fe9-a5c6-461d178c25ac@kernel.org>
+Date: Mon, 14 Apr 2025 10:56:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,14 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: info: hide 'grep: write
- error' warnings
+Subject: Re: [PATCH mptcp-net v2] mptcp: pm: Defer freeing of MPTCP userspace
+ path manager entries
 Content-Language: en-GB, fr-BE
 To: Mat Martineau <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev
-References: <20250410-selftests-mptcp-grep-close-v1-1-3c360279a856@kernel.org>
- <076393de-9a1f-f5a0-e439-00a35dda4758@kernel.org>
+References: <20250410224503.2056587-1-martineau@kernel.org>
+ <c1a833c4-0ec8-48b3-b2b0-cd9b5e8f050f@kernel.org>
+ <b170929e-8adb-5bbb-a51b-9bd7368b1706@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,44 +88,71 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <076393de-9a1f-f5a0-e439-00a35dda4758@kernel.org>
+In-Reply-To: <b170929e-8adb-5bbb-a51b-9bd7368b1706@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Mat,
 
-On 12/04/2025 02:06, Mat Martineau wrote:
-> On Thu, 10 Apr 2025, Matthieu Baerts (NGI0) wrote:
+On 12/04/2025 02:11, Mat Martineau wrote:
+> On Fri, 11 Apr 2025, Matthieu Baerts wrote:
 > 
->> mptcp_lib_get_info_value() will only print the first entry that match
->> the filter because of the ';q' at the end. As a consequence, the 'sed'
->> command could finish before the previous 'grep' one and print a 'write
->> error' warning because it is trying to write data to the closed pipe.
+>> Hi Mat,
 >>
->> Such warnings are not interesting, they can be hidden by muting stderr
->> here for grep.
+>> On 11/04/2025 00:44, Mat Martineau wrote:
+>>> When path manager entries are deleted from the local address list, they
+>>> are first unlinked from the address list using list_del_rcu(). The
+>>> entries must not be freed until after the RCU grace period, but the
+>>> existing code immediately frees the entry.
+>>>
+>>> Use kfree_rcu_mightsleep() and adjust sk_omem_alloc in open code instead
+>>> of using the sock_kfree_s() helper. This code path is only called in a
+>>> netlink handler, so the "might sleep" function is preferable to adding
+>>> a rarely-used rcu_head member to struct mptcp_pm_addr_entry.
+>>>
+>>> Fixes: 88d097316371 ("mptcp: drop free_list for deleting entries")
+>>> Signed-off-by: Mat Martineau <martineau@kernel.org>
+>>> ---
+>>>
+>>> v2: Add comment explaining connection to sock_kfree_s, add "Fixes" tag
 >>
->> While at it, clearly indicate that mptcp_lib_get_info_value() will only
->> print the first matched entry to avoid confusions later on.
+>> Thank you for the v2, and your reply on my previous review. This v2
+>> looks good to me:
 >>
->> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+>>
+>> I guess I should wait to apply "only remove entry from local_addr_list
+>> when sending a REMOVE_ADDR" series first then, right? Are these other
+>> patches supposed to be fixes for net? They are not marked as that for
+>> the moment: in that case, should we add another patch to fix
+>> mptcp_userspace_pm_delete_local_addr() as well?
+>>
 > 
-> Hi Matthieu -
-> 
-> Looks good to me:
-> 
-> Reviewed-by: Mat Martineau <martineau@kernel.org>
+> I don't think there's any issue or conflict with applying this to
+> export-net first, it would leave the bug not fixed in
+> mptcp_userspace_pm_delete_local_addr(). If this patch needs to stand
+> alone, then it would need to be reworked to add a struct rcu_head to the
+> local addr entry because mptcp_userspace_pm_delete_local_addr() gets
+> called in contexts where sleepable calls aren't allowed.
 
-Thank you for the review, now in our tree (feat. for next):
+Thank you, it makes sense. Now in our tree:
 
-New patches for t/upstream:
-- 2c2fc8bfbe27: selftests: mptcp: info: hide 'grep: write error' warnings
-- Results: 008c13709fce..f1e32c11be27 (export)
+New patches for t/upstream-net and t/upstream:
+- 49746c77f0b1: mptcp: pm: Defer freeing of MPTCP userspace path manager
+entries
+- Results: 0142ff39fa9b..ce1452067424 (export-net)
+- Results: f1e32c11be27..309e5b3a6b32 (export)
 
 Tests are now in progress:
 
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/cbf7c52183ef1d88ba762839fb579780ff6150e8/checks
 - export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/b802c3e109fa6c57925267d8da01cdbc27eaa181/checks
+https://github.com/multipath-tcp/mptcp_net-next/commit/b8b8b4ab98727371e1b3278b18314402cecd8da6/checks
+
+> I'll reply separately to v2 of the "only remove entry from
+> local_addr_list when sending a REMOVE_ADDR" series.
+Thank you!
 
 Cheers,
 Matt
