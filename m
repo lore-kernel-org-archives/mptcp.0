@@ -1,127 +1,95 @@
-Received: from mail-qt1-f173.google.com (mail-qt1-f173.google.com [209.85.160.173])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4CA49225A3C
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 08:59:00 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.160.173
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37757233151
+	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 09:00:01 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744793942; cv=none; b=ZtnVttnDSWjr1o6xwNvKikFPHFBwC2B9/ly4I0WqGTueW8HBC2d5lsJHMTHVthVuNyQftQ5lBpXRIoDWmT1TVpQGhdu73+gq6y2KHxx5LqTz9JMGvlBW23K/z/5UQetadWaVL6xYLR2K3q0ONornu9edOsQnY1kM0+ulzIvM+xo=
+	t=1744794006; cv=none; b=W19RtpRnhls7Dp2IDRjcfEJN6GdVIB45XVjU/0uyD5+607bdY+eIhomxZL9MnzuRUjIB6+cV8UUv2xVKMfxaiF7sK7hfcRrC8337cMzOHTQBD9VT2BQGEfMbTdGgqIUJRKpE6tGVKvpKvV8N5ia/9MU2lNDQRECFqkVBy6ZsE5Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744793942; c=relaxed/simple;
-	bh=0faahkZS26U9KZtfu2NtXEMTIlwaTfi79RHvcs0HDaw=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PeIiu32vl/+yeoFZWWRVsP27p7m8z0M6AfImpF+Q2G7xUB1S1PnFHe1H3r2NTqXHOTW2bH7um+S4sHofxyiWuOtMQ1EmPI90o750Vmdbg1CFxFM8f6Lh4P9xoyeGSlvVDfDlkFCNdWmc4MwnppTpj7c1TadTPHIlhi1LL1/k0VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=C73FTsDe; arc=none smtp.client-ip=209.85.160.173
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="C73FTsDe"
-Received: by mail-qt1-f173.google.com with SMTP id d75a77b69052e-47698757053so74344451cf.0
-        for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 01:59:00 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744793939; x=1745398739; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=bczPegmqibxH4CrslJ2widDT16ZbihjrKK4cAUUIE/4=;
-        b=C73FTsDeX2p3yhd08pob9XPUmx9Otc+xmEJ8n3aUFSAGKJXO219SSgyqmDA4laDE+g
-         jXYCHrT7i2piBknq4TcLnpVQ720KVBhnm2N6jLsq7zMsJezqjJbuAVPl95lws7SOg0fH
-         FVO18WJNUnV0OE/W6emyra02OmZTtbbTyT5Sf68a1nR/LOTi0GRzjInYtQe5MjXOVhZP
-         ArTWkH0iI0g2Uqb/44C4AXlVfvUBoFpdnZnNtO5dLMlMF+dB09Duiegy9810yuA1SKL3
-         1wPwg4M9GEaTDurGuNHh9Wx+6Z8B3OFL+W204G/0XNzhzTd7Aw3gAFnW5XjNeT3ssHhw
-         zLWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744793939; x=1745398739;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=bczPegmqibxH4CrslJ2widDT16ZbihjrKK4cAUUIE/4=;
-        b=BWtIe6l5qECo+6tBGcWvJSQyPius448DRVu4SFmdN0UsQBxwFiy7RT3Wv4z0lQWAdo
-         L5lXlwCTIpDgITvmYK6XiE8KFKNYRutJVK/jSCN/JT/27FCYNSy4afAlLMsJ4Vkm9Mop
-         1n1guyOy+LxneySnw7VejbaEPUf53XqF+EaGOxixbn2n7opPjdmmJKUJ9p8r5VbnS6Rl
-         Lpn5HTVxbLYLDhgrGQEQ3CkFPyMDdEBjg0U2H7dBLae+FH4dQPvUlv+8njK/qVVpbRnk
-         LuEZ9gG9TcF9Evd6lHLewzQnAgIkB9Q/9lFLcoOVeFFbq7MnrI8RCQNCc2c7bJ1tgzPp
-         WpDw==
-X-Gm-Message-State: AOJu0YwRhlf58dxxemx84LswjVDFxjhZcqkUls9/bdRGHXI1jqQ+p+3i
-	uQVAXwZZfvayBBRznnetqw0Y+1qJcHMTxoYc/F+GjYIe+FkZUwu5pU2X
-X-Gm-Gg: ASbGnctQfmBJR0GPffByJyferTKXYF+Zgx5ubY9wmxNbl5nEMjmydBHJdK4GyZ61liE
-	4SYdLSD7WpeLPnTD6hT2ff78PWcKY2IUVcyvMy0SR6TxuMZNX9sjP1tKfDd3O4hm5ydHI7bwKwo
-	+HaNLGk26qBONMINbuRO7AiEpqot1aqY/ZVv6B1J4pJkTT0KOINnCcIrHKc0P1JKS1zSpDooWZg
-	DMpqcLj93+/9rjK0IbL15+gDr8/Y3WVCMfrpIlG55SOMHva47yPSU8Tszw/mOd30saPD1/iKW8P
-	Wn6VwGZyi243KwyoPUloePQpYT3XsgS+LLj8QpTgFyPNtRMZInPm
-X-Google-Smtp-Source: AGHT+IE/dRC6aBKt4bM5wRe2bqNPB4MK/ShYUumn6UHza5zzYNWA0TBamPX6RmSGhl9UwRl18mYaIw==
-X-Received: by 2002:a05:622a:18aa:b0:476:8412:9275 with SMTP id d75a77b69052e-47ad81149b5mr10436121cf.35.1744793939027;
-        Wed, 16 Apr 2025 01:58:59 -0700 (PDT)
-Received: from [127.0.0.1] ([20.42.16.146])
-        by smtp.gmail.com with ESMTPSA id d75a77b69052e-4796eb2bd8dsm106083231cf.35.2025.04.16.01.58.57
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 01:58:58 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1744788247.git.yangang@kylinos.cn>
-References: <cover.1744788247.git.yangang@kylinos.cn>
-Subject: Re: [mptcp-next 0/7] Add 'dump_subflow' test in selftests
-Message-ID: <0c7196b0-21da-bde0-caf8-6c0f828482d5@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Apr 2025 08:58:57 +0000
+	s=arc-20240116; t=1744794006; c=relaxed/simple;
+	bh=4pvzy4UAQEEpD1mWH/652MMY3+vIL+eZpTQcstbEoKY=;
+	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=qlFMTBKgKS1bTBZ1R/Wc/WgCUI97WvmT5UcBl0wzPBxaw6MnIFU0Vz2Ois2tSD+PNMbpUuUZrGkZh80zHCMQj5M4Ntm8ZOkUQfZ/RavEXqqg4Y6EIO88H7LyZlQzrAR3zKc+vWT0hk91UPqhXJcePWjtatH8SfyQFbFi6mq8xv0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
+X-UUID: 29dd6f2c1aa111f0a216b1d71e6e1362-20250416
+X-CTIC-Tags:
+	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
+	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
+	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
+	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
+	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
+	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
+	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
+	GTI_C_CI, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
+	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-O-RULE: Release_Ham
+X-CID-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:b1cdf874-7c0e-4c07-907a-e47d693c32a0,IP:10,
+	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
+	ION:release,TS:20
+X-CID-INFO: VERSION:1.1.45,REQID:b1cdf874-7c0e-4c07-907a-e47d693c32a0,IP:10,UR
+	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
+	N:release,TS:20
+X-CID-META: VersionHash:6493067,CLOUDID:dc41d595bb1b1587bde087583e9e5c3a,BulkI
+	D:250416165955LBS6I3PW,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
+	C:nil,Content:0|50,EDM:5,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:n
+	il,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+X-CID-BVR: 0
+X-CID-BAS: 0,_,0,_
+X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
+	TF_CID_SPAM_FSI
+X-UUID: 29dd6f2c1aa111f0a216b1d71e6e1362-20250416
+X-User: yangang@kylinos.cn
+Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
+	(envelope-from <yangang@kylinos.cn>)
+	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
+	with ESMTP id 1591045042; Wed, 16 Apr 2025 16:59:54 +0800
+From: Gang Yan <yangang@kylinos.cn>
+To: mptcp@lists.linux.dev
+Cc: Gang Yan <yangang@kylinos.cn>
+Subject: [mptcp-next v2 0/7] Add 'dump_subflow' test in selftests
+Date: Wed, 16 Apr 2025 16:59:42 +0800
+Message-Id: <cover.1744793332.git.yangang@kylinos.cn>
+X-Mailer: git-send-email 2.25.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
+the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
+->'inet_sk_attr_size'.
 
-Thank you for your modifications, that's great!
+So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
+function. Given a specific TCP connection, it is possible to judge if
+it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
 
-Our CI did some validations and here is its report:
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/14487604832
-
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/93155e61a025
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D953866
+------
+Changelog
+  v2:
+    - Fix the CI compiling error.
 
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Gang Yan (7):
+  selftests: mptcp: add struct params in mptcp_diag
+  selftests: mptcp: refactor send_query parameters for code clarity
+  selftests: mptcp: refine the 'iovlen' handling logic
+  selftests: mptcp: refactor NLMSG handling with 'proto'
+  selftests: mptcp: add a helper to get subflow_info
+  selftests: mptcp: add a helper to print subflow_info
+  selftests: mptcp: add chk_sublfow in diag.sh
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+ tools/testing/selftests/net/mptcp/diag.sh     |  55 +++++
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 223 +++++++++++++++---
+ 2 files changed, 248 insertions(+), 30 deletions(-)
 
-For more details:
+-- 
+2.25.1
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
