@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 35FE913AF2
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 07:35:26 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8242B227E8C
+	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 07:35:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744788932; cv=none; b=hqBabjg5Xr0oumtpXaZNGGY3mhmOFodTQPqI6rJJnUzxTW30oqpg1F82tFep67/rl0Z31by/xmzqDsShOp3p+M10z91RqX935ePFGlIiOzgCTIXp23a78FaVYXDah1KPkmGH0XDJXANdwAWH53DViTIBset8GQmtEBayX8ypVcw=
+	t=1744788932; cv=none; b=V5mUNN9U4WfJaepuQqZBWaqlYC8/5m9LhIUwqUAB+x9qKLzqbQ8e5GxrHC9pP5vNq5QrgzKqX+W9wPuYe9R/yYhAG2mA2PCWJK+G0h8Hj9rrGdBIsVesR6aOtnInQC0CrV+htwVVSuj9sVOOMLtgbAFG3SRCkM9bbuBExRcOfVI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744788932; c=relaxed/simple;
-	bh=bJ3w9T5d01j5OUcWOA7t1Yn36CKIiTEy1rNkGjtJygU=;
+	bh=HWFxL02gyAEjllc4b1cFVoH1UM1yfqTRaOIc+AZK8rA=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=nLmY5vJTbt7Q7PSFx2w0wrIW/d0aLswfchTMDh8PIUCzZxr1XVFGsku5PRoHUXkcnoMJSaPcF/+9m657jGm26Y5x0XMiqca5VwB7TttWhu8lEwBCNFsRuYLqpl0Nq2DY+Nl1KhfoH0to+NrzaXpfju/TnBgFADJUhk7+4hv0wGA=
+	 MIME-Version; b=QFXNn2vaRhJrUuJC0K765rTRcokN1JmiMdhpytcQ7JC5/KdrLEbMV9+c4n9joMKi1LVlRL3BDGTwBCqpfLGTeXqOlkT51lgXVWZCCoyy77ia9aBygDiBWlTkOieeyvY8w8greMDMM0Zf7ZD4lmpNwRyIHLMwyX8kZLsG4CnGPsQ=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 59d7875a1a9511f0a216b1d71e6e1362-20250416
+X-UUID: 5a4c9af41a9511f0a216b1d71e6e1362-20250416
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -25,32 +25,32 @@ X-CTIC-Tags:
 	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
 	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:3d41f172-c4d5-433c-a099-20c3af61f379,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:3d41f172-c4d5-433c-a099-20c3af61f379,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:89388fe6714e5247ac819ef808e710a0,BulkI
-	D:25041615352166EMH78U,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
+X-CID-O-INFO: VERSION:1.1.45,REQID:0caf1360-446a-4202-ab41-2a62c1716af8,IP:10,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:15
+X-CID-INFO: VERSION:1.1.45,REQID:0caf1360-446a-4202-ab41-2a62c1716af8,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:15
+X-CID-META: VersionHash:6493067,CLOUDID:acd783bcf019d5643cabfd9b1f155f93,BulkI
+	D:250416153524DZ7LI12W,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
 	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil
 	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 59d7875a1a9511f0a216b1d71e6e1362-20250416
+X-UUID: 5a4c9af41a9511f0a216b1d71e6e1362-20250416
 X-User: yangang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <yangang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 490486856; Wed, 16 Apr 2025 15:35:20 +0800
+	with ESMTP id 969907493; Wed, 16 Apr 2025 15:35:21 +0800
 From: Gang Yan <yangang@kylinos.cn>
 To: mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [mptcp-next 1/7] selftests: mptcp: add struct params in mptcp_diag
-Date: Wed, 16 Apr 2025 15:34:56 +0800
-Message-Id: <6a4ff59fc2440ed70d359113f72756e895d812ab.1744788247.git.yangang@kylinos.cn>
+Subject: [mptcp-next 2/7] selftests: mptcp: refactor send_query parameters for code clarity
+Date: Wed, 16 Apr 2025 15:34:57 +0800
+Message-Id: <afbbf4fc074b0d26b4954db0a750cadea1b67a62.1744788247.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1744788247.git.yangang@kylinos.cn>
 References: <cover.1744788247.git.yangang@kylinos.cn>
@@ -62,65 +62,74 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds a struct named 'params' to save 'target_token' and other
-future parameters. This structure facilitates future function expansions.
+This patch use 'inet_diag_req_v2' instead of 'token' as parameters of
+send_query, and construct the req in 'get_mptcpinfo'. This modification
+can enhance the enhancing clarity of the code, and prepare for the
+dump_subflow_info.
 
 Co-developed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_diag.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
 diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 37d5015ad08c..ea7cb1128044 100644
+index ea7cb1128044..8a5b7745c58c 100644
 --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
 +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -19,6 +19,10 @@
- #define IPPROTO_MPTCP 262
- #endif
+@@ -62,7 +62,7 @@ static void die_usage(int r)
+ 	exit(r);
+ }
  
-+struct params {
-+	__u32 target_token;
-+};
-+
- struct mptcp_info {
- 	__u8	mptcpi_subflows;
- 	__u8	mptcpi_add_addr_signal;
-@@ -237,7 +241,7 @@ static void get_mptcpinfo(__u32 token)
+-static void send_query(int fd, __u32 token)
++static void send_query(int fd, struct inet_diag_req_v2 *r)
+ {
+ 	struct sockaddr_nl nladdr = {
+ 		.nl_family = AF_NETLINK
+@@ -76,19 +76,13 @@ static void send_query(int fd, __u32 token)
+ 			.nlmsg_type = SOCK_DIAG_BY_FAMILY,
+ 			.nlmsg_flags = NLM_F_REQUEST
+ 		},
+-		.r = {
+-			.sdiag_family = AF_INET,
+-			/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
+-			.sdiag_protocol = IPPROTO_TCP,
+-			.id.idiag_cookie[0] = token,
+-		}
++		.r = *r
+ 	};
+ 	struct rtattr rta_proto;
+ 	struct iovec iov[6];
+ 	int iovlen = 1;
+ 	__u32 proto;
+ 
+-	req.r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+ 	proto = IPPROTO_MPTCP;
+ 	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
+ 	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
+@@ -229,13 +223,20 @@ static void recv_nlmsg(int fd)
+ 
+ static void get_mptcpinfo(__u32 token)
+ {
++	struct inet_diag_req_v2 r = {
++		.sdiag_family           = AF_INET,
++		/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
++		.sdiag_protocol         = IPPROTO_TCP,
++		.id.idiag_cookie[0]     = token,
++	};
+ 	int fd;
+ 
+ 	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+ 	if (fd < 0)
+ 		die_perror("Netlink socket");
+ 
+-	send_query(fd, token);
++	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
++	send_query(fd, &r);
+ 	recv_nlmsg(fd);
+ 
  	close(fd);
- }
- 
--static void parse_opts(int argc, char **argv, __u32 *target_token)
-+static void parse_opts(int argc, char **argv, struct params *p)
- {
- 	int c;
- 
-@@ -250,7 +254,7 @@ static void parse_opts(int argc, char **argv, __u32 *target_token)
- 			die_usage(0);
- 			break;
- 		case 't':
--			sscanf(optarg, "%x", target_token);
-+			sscanf(optarg, "%x", &p->target_token);
- 			break;
- 		default:
- 			die_usage(1);
-@@ -261,10 +265,12 @@ static void parse_opts(int argc, char **argv, __u32 *target_token)
- 
- int main(int argc, char *argv[])
- {
--	__u32 target_token;
-+	struct params p = { 0 };
-+
-+	parse_opts(argc, argv, &p);
- 
--	parse_opts(argc, argv, &target_token);
--	get_mptcpinfo(target_token);
-+	if (p.target_token)
-+		get_mptcpinfo(p.target_token);
- 
- 	return 0;
- }
 -- 
 2.25.1
 
