@@ -1,240 +1,126 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f174.google.com (mail-qk1-f174.google.com [209.85.222.174])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 05BD821D3F4
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 08:39:30 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B561E18FDD5
+	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 08:39:47 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744792771; cv=none; b=c36H/axbPNwELkxsozvpfNaaO0VfMgdnh5Q6RyQSMYHHoEWaMvioPQXepSRE/oO8L8ThVHMjrhDPRs3CA9DuCt4GZfNyquIeQQp5GLR3HwY9IqK1YvgjYlAgoP0NS+eRcOd5BkugjltP3ug64bA7jaA4Hf+is+aZ34ZUzS5Zeck=
+	t=1744792789; cv=none; b=rA1oBTRr8dCPnTFCjSi3fBvccA+rSQQk+XE5KejpjZNCaU39ootTB8b+e4zON6X0hLPNAXrtQq5j9bdryr2fQfMQffzThFOn+hFeAv2ZjODckvr0JtDaCAoFCxj+ZL6QlVx+p2EJwyM3fHJsV3PHlPYjDFawZpee3a4uS9EBKYE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744792771; c=relaxed/simple;
-	bh=6DuioohKt46Xh6FPPSxNZ+s/GbMqqFMQXTIDCmvXa0w=;
-	h=Message-ID:Subject:From:To:In-Reply-To:References:Content-Type:
-	 Date:MIME-Version; b=qidbdYTWsC3ahsIl50UyMRd1ND6kLxUTJ41I05NJkKpJ8kV84B7PoILYyCaevaIBG2j6LELLeE1WkeKq6FzTVTZYr2cpS/gBGbePlbsJJkORJQAN6mNNOgq7MgrT1Lo/RpbuI+Nscijy0OPO/mufjQP9JAKvet0suMQQ/BLezEk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P2bY/VLR; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744792789; c=relaxed/simple;
+	bh=0jS6M7dJCLYQHa7ZoxVNQ6OdZ1WnIYTZdIsPsoD3ueE=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=J05OPMl26S3ucVutMYMfCSDX4vZkSZSfIX2oph8Dzqg9CusyhcfT4mrpyvhB6HlYm7trhcCe2oMxO4jIWG2f+xVnz7NM4K1YU779jKdFk/HUtFj6VKrb+QUuWNXwx+yx8ppmq8yP+0NdSW6bEkVf7EKc2lE4VTQ5995/C6ErcYI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ArZt+e21; arc=none smtp.client-ip=209.85.222.174
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P2bY/VLR"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55297C4CEE2;
-	Wed, 16 Apr 2025 08:39:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744792770;
-	bh=6DuioohKt46Xh6FPPSxNZ+s/GbMqqFMQXTIDCmvXa0w=;
-	h=Subject:From:To:In-Reply-To:References:Date:From;
-	b=P2bY/VLRaJN4n0SJtNaLDfgtxAIHhRBgvN69UfZeAV469MsgwcCOG+TNeU43HsamH
-	 Obw0XvA+LUnNAD+RtOBjeCnwMXuiSf/i+V8Y6bBKf+kvLwHPPdBo1P2JPBYUlcsVnK
-	 2BCcab18BQYYKdFdnAFqn4VXDcVQ6CGWQ0Mc0EiM/uBD3BnOH+2QHvI2pBA+GZDZxp
-	 fdjY+V82RJZHfKyKesDsEoBsp+HQHMHrkDLiWRPJGnK7bIbX2m2jPxL4sWwTAe3BFW
-	 G7JbyOE6Vw9DNxI6SaoxNfYhnACG+eb3UXKfbe6e+TZL9Jk4kQBjgt0RB3gGnH/VrK
-	 e9IzfSe8J1hmQ==
-Message-ID: <84ce45ec223a7953a4208ca23b8bb0f270e6c89b.camel@kernel.org>
-Subject: Re: [mptcp-next 5/7] selftests: mptcp: add a helper to get
- subflow_info
-From: Geliang Tang <geliang@kernel.org>
-To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-In-Reply-To: <4147cca0b271a635059089415cf51a6072389c1c.1744788247.git.yangang@kylinos.cn>
-References: <cover.1744788247.git.yangang@kylinos.cn>
-	 <4147cca0b271a635059089415cf51a6072389c1c.1744788247.git.yangang@kylinos.cn>
-Content-Type: text/plain; charset="UTF-8"
-Date: Wed, 16 Apr 2025 16:35:11 +0800
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ArZt+e21"
+Received: by mail-qk1-f174.google.com with SMTP id af79cd13be357-7c542ffec37so653569285a.2
+        for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 01:39:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1744792786; x=1745397586; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=WRF81AWp5WXxpOVQoN58GQNfB92gXufDqGytNLe8oeU=;
+        b=ArZt+e21wp5uW4YlcZ92MkQ/vNs0C/DTjkXt5kf/Kskck5tEDHnUAQhvthJ8GJkIl9
+         L2vB0YboVAywxQ8VYJLb3QMsBODdnORAiC5aq4r2BD9FPZqZTqrCMDeWpSjI+odvvP+9
+         PXTJoMHUqAC6+ZOEXZ9nH9KSw7V6d7qv4dY29nkks7A99ZEq3zcU8TQrVYyOJMrHt06e
+         6l59GQ7aT1F2FgBYlN4jKWajHlMcMAbYB3we1pWOKDuifdfMpngorO20sSd5VtkOhYXb
+         M4xstGQ41aWwYz50tVxBSd06tTC+yAKNs+ZwET7OmF+3C9bebu5N8pdxJdmjX8onO8au
+         HU4A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1744792786; x=1745397586;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=WRF81AWp5WXxpOVQoN58GQNfB92gXufDqGytNLe8oeU=;
+        b=l7Ys16Dvy13EzYBes5DjinzR0fSNYG4FapOaem0ndq0f+FGz7xxcKiXfnjwMvvcZ4Q
+         knG0ad/MhaGqiOBCafPeWrmYO9MF7swobFyvOSBBOtJQOD3oC/UfBbIWVjC4KPAGaVpE
+         WOaCWb6ti984yobyUktdYMWEf5h3X2PPYPwcyJOLiNiC9XhIE13ZQxi2+4tkCqe6eV7J
+         3bEhcra2isRdccHVtKq8bP7KDO+6c1q3w+/VB11mSptdajQ/So2iVmIP5zxChdHg+XrD
+         tpx7S/LRh79DhsoMf8/LKFZMmUKBuw5OBhp1ayo9h9qpWTZUBEKJ+yINfYONn9ETaQsh
+         Lf3A==
+X-Gm-Message-State: AOJu0Yzh5DIUuH1fJcbncfT9zp9iFShgCTrirXqBQozQZrjAB5I7YxGz
+	B6h4dH1lgm1qLWs323+2RgZpwHPO3yJaqAx1+AOnZ1rmo++JkQHv8YMQ
+X-Gm-Gg: ASbGncuiZQolZHNhgYX52F55eEc24WHd0F1An3AktdSQZKVFhd14GthW0qJxvgOop1u
+	0zQf512tYWoaQ3A9yZTC8ZY9VK6jFcvlm9X9Hv1eEPs1JLLIbHUQzfwK3i/Dt/NyXYfbLp9byUm
+	xPlEjonkFcTmRzO0sIZmF1je/w9mMp6RBwO3m9mhV3Lo+r9uZn+wcPinsgRK4TSWRLDFJLh4QTn
+	qyq4rL9KnCIAxxegHk7FMMjcjcntzhRPv5nX7KrWc4S7Tz5ITXYuFR14mbzRDMhmAfaOp2ee1Xr
+	YOx98N7TboQatkiE0UtW2+RUaNwLSMwVK9MulgmzFSGxsxXneTAuCg==
+X-Google-Smtp-Source: AGHT+IGzIsl+hJxqSCzwVNOO7jz+BzUEy4HKAE+J5j7dFEbRLi1yuTcagYITYn4qN16rOwwzphr4IQ==
+X-Received: by 2002:a05:6214:20a2:b0:6e8:f65a:67bd with SMTP id 6a1803df08f44-6f2b2f3e4ffmr13013566d6.11.1744792786371;
+        Wed, 16 Apr 2025 01:39:46 -0700 (PDT)
+Received: from [127.0.0.1] ([20.25.193.194])
+        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f0de973230sm113083286d6.41.2025.04.16.01.39.45
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 16 Apr 2025 01:39:45 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1744787273.git.tanggeliang@kylinos.cn>
+References: <cover.1744787273.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v3 0/3] only remove entry from
+ local_addr_list when sending a REMOVE_ADDR
+Message-ID: <9efb17a9-767b-8b6f-97a2-abed01686672@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 16 Apr 2025 08:39:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Evolution 3.52.3-0ubuntu1 
-Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Hi Geliang,
 
-On Wed, 2025-04-16 at 15:35 +0800, Gang Yan wrote:
-> This patch adds 'get_subflow_info' in 'mptcp_diag', which can check
-> whether
-> a TCP connection is an MPTCP subflow based on the
-> "INET_ULP_INFO_MPTCP"
-> with tcp_diag method.
-> 
-> Co-developed-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Geliang Tang <geliang@kernel.org>
-> Signed-off-by: Gang Yan <yangang@kylinos.cn>
-> ---
->  .../testing/selftests/net/mptcp/mptcp_diag.c  | 68
-> ++++++++++++++++++-
->  1 file changed, 66 insertions(+), 2 deletions(-)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index 2116b40bc927..03c92940e461 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -8,6 +8,7 @@
->  #include <sys/socket.h>
->  #include <netinet/in.h>
->  #include <linux/tcp.h>
-> +#include <arpa/inet.h>
->  
->  #include <unistd.h>
->  #include <stdlib.h>
-> @@ -19,8 +20,13 @@
->  #define IPPROTO_MPTCP 262
->  #endif
->  
-> +#define parse_rtattr_nested(tb, max, rta) \
-> +	(parse_rtattr_flags((tb), (max), RTA_DATA(rta),
-> RTA_PAYLOAD(rta), \
-> +			    NLA_F_NESTED))
-> +
->  struct params {
->  	__u32 target_token;
-> +	char subflow_addr[1024];
->  };
->  
->  struct mptcp_info {
-> @@ -58,7 +64,9 @@ static void die_perror(const char *msg)
->  
->  static void die_usage(int r)
->  {
-> -	fprintf(stderr, "Usage: mptcp_diag -t\n");
-> +	fprintf(stderr, "Usage:\n"
-> +			"mptcp_diag -t <token>\n"
-> +			"mptcp_diag -s \"<saddr> <sport> <daddr>
-> <dport>\"\n");
->  	exit(r);
->  }
->  
-> @@ -182,6 +190,21 @@ static void parse_nlmsg(struct nlmsghdr *nlh,
-> __u32 proto)
->  		}
->  		print_info_msg(info);
->  	}
-> +	if (proto == IPPROTO_TCP && tb[INET_DIAG_ULP_INFO]) {
-> +		struct rtattr *ulpinfo[INET_ULP_INFO_MAX + 1] = { 0
-> };
-> +
-> +		parse_rtattr_nested(ulpinfo, INET_ULP_INFO_MAX,
-> +				    tb[INET_DIAG_ULP_INFO]);
-> +
-> +		if (ulpinfo[INET_ULP_INFO_MPTCP]) {
-> +			struct rtattr *sfinfo[MPTCP_SUBFLOW_ATTR_MAX
-> + 1] = { 0 };
-> +
-> +			parse_rtattr_nested(sfinfo,
-> MPTCP_SUBFLOW_ATTR_MAX,
-> +					   
-> ulpinfo[INET_ULP_INFO_MPTCP]);
+Thank you for your modifications, that's great!
 
-CI complains this:
+Our CI did some validations and here is its report:
 
-selftests - selftests: Commit: 0ce1b7bc31 selftests: mptcp: add a
-helper to get subflow_info
-  make: Entering directory
-'/github/workspace/tools/testing/selftests/net/mptcp'
-    CC       mptcp_diag
-  mptcp_diag.c: In function 'parse_nlmsg':
-  mptcp_diag.c:200:47: error: 'MPTCP_SUBFLOW_ATTR_MAX' undeclared
-(first use in this function)
-    200 |                         struct rtattr
-*sfinfo[MPTCP_SUBFLOW_ATTR_MAX + 1] = { 0 };
-        |                                              
-^~~~~~~~~~~~~~~~~~~~~~
-  mptcp_diag.c:200:47: note: each undeclared identifier is reported
-only once for each function it appears in
-  mptcp_diag.c:200:40: warning: unused variable 'sfinfo' [-Wunused-
-variable]
-    200 |                         struct rtattr
-*sfinfo[MPTCP_SUBFLOW_ATTR_MAX + 1] = { 0 };
-        |                                        ^~~~~~
-  make: *** [../../lib.mk:222:
-/github/workspace/tools/testing/selftests/net/mptcp/mptcp_diag] Error 1
-  make: Leaving directory
-'/github/workspace/tools/testing/selftests/net/mptcp'
- 
-4147cca0b271a635059089415cf51a6072389c1c.1744788247.git.yangang@kylinos.cn
-fail Build error with: make -C tools/testing/selftests/net/mptcp
-  ERROR: Unable to compile selftests
-ERROR: Unable to validate one commit: 0ce1b7bc31 selftests: mptcp: add
-a helper to get subflow_info
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Unstable: 1 failed test(s): packetdrill_mp_capable =F0=9F=94=B4
+- KVM Validation: btf-normal (only bpftest_all): Success! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/runs/144872=
+69508
 
-> +		} else {
-> +			printf("It's a normal TCP!\n");
-> +		}
-> +	}
->  }
->  
->  static void recv_nlmsg(int fd, __u32 proto)
-> @@ -244,6 +267,41 @@ static void get_mptcpinfo(__u32 token)
->  	close(fd);
->  }
->  
-> +static void get_subflow_info(char *subflow_addr)
-> +{
-> +	struct inet_diag_req_v2 r = {
-> +		.sdiag_family           = AF_INET,
-> +		.sdiag_protocol         = IPPROTO_TCP,
-> +	};
-> +	int sport, dport;
-> +	char saddr[64];	// Take ipv6 into consideration
-> +	char daddr[64];
-> +	int ret;
-> +	int fd;
-> +
-> +	ret = sscanf(subflow_addr, "%s %d %s %d", saddr, &sport,
-> daddr, &dport);
-> +	if (ret != 4)
-> +		die_perror("IP PORT Pairs has style problems!");
-> +
-> +	printf("%s:%d -> %s:%d\n", saddr, sport, daddr, dport);
-> +
-> +	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
-> +	if (fd < 0)
-> +		die_perror("Netlink socket");
-> +
-> +	r.id.idiag_cookie[0] = INET_DIAG_NOCOOKIE;
-> +	r.id.idiag_cookie[1] = INET_DIAG_NOCOOKIE;
-> +	r.id.idiag_sport = htons(sport);
-> +	r.id.idiag_dport = htons(dport);
-> +	r.id.idiag_if = 0;
-> +
-> +	inet_pton(AF_INET, saddr, &r.id.idiag_src);
-> +	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
-> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
-> +	send_query(fd, &r, IPPROTO_TCP);
-> +	recv_nlmsg(fd, IPPROTO_TCP);
-> +}
-> +
->  static void parse_opts(int argc, char **argv, struct params *p)
->  {
->  	int c;
-> @@ -251,7 +309,7 @@ static void parse_opts(int argc, char **argv,
-> struct params *p)
->  	if (argc < 2)
->  		die_usage(1);
->  
-> -	while ((c = getopt(argc, argv, "ht:")) != -1) {
-> +	while ((c = getopt(argc, argv, "ht:s:")) != -1) {
->  		switch (c) {
->  		case 'h':
->  			die_usage(0);
-> @@ -259,6 +317,9 @@ static void parse_opts(int argc, char **argv,
-> struct params *p)
->  		case 't':
->  			sscanf(optarg, "%x", &p->target_token);
->  			break;
-> +		case 's':
-> +			snprintf(p->subflow_addr, strlen(optarg) +
-> 1, "%s", optarg);
-> +			break;
->  		default:
->  			die_usage(1);
->  			break;
-> @@ -275,6 +336,9 @@ int main(int argc, char *argv[])
->  	if (p.target_token)
->  		get_mptcpinfo(p.target_token);
->  
-> +	if (strlen(p.subflow_addr) != 0)
-> +		get_subflow_info(p.subflow_addr);
-> +
->  	return 0;
->  }
->  
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/56310471b2fd
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D953862
 
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
