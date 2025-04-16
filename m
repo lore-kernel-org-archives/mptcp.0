@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 544B4233D99
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 09:00:05 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91819230BD5
+	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 09:00:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794008; cv=none; b=qTHcpKxyDlSgb2XmRrlz3dF0q20ufuxgRmjBuF2fe+NtU8+AiWN3qM879v409yUJjTQ4sij+E2jQkQGgI1QAR0/mOFahtRcWmI2wyoSCoMVChYVbmqlVnvAXOmJb6q7/bfMYfBuH7aMVKFgSKRIwkocuqm6XSVIvdu6kDncpgzk=
+	t=1744794009; cv=none; b=TcHvTBb+qKvP+56K+Qd1v/kACAlfyRrxyHvOMAVwIT0yuBRKn4bdSJc3GP0lDT6VZBdscQVjVobkJ8G0Aq489zlJq9W6wGQ1iYeOzNYtUbG6QpdIBensaBtNJbu/CpRTaVnNf1fniYMoke8c8qDEVDFtlFZW07nFHqKrD946oZI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744794008; c=relaxed/simple;
-	bh=bJ3w9T5d01j5OUcWOA7t1Yn36CKIiTEy1rNkGjtJygU=;
+	s=arc-20240116; t=1744794009; c=relaxed/simple;
+	bh=y25mIN42cxf2iz8vIUfuIIiD3UCSrJgmCW16h4TnS5I=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=BsyioF/RzYm2NW2N3EzsDAonghKU2fdf4Y0yEIJD2j8NJzQF3Gwb6YgeEw4ij4Uaqi/KlKRHl9R9iDEQil7xZ6dDCl/ZktFT5Gnd2tiUzaVvIswIwd1SiXEPJPhvXkVvRIXuOXq2KtUafq6HTqzRxBe8kszXje+j1Z2ARdA0efw=
+	 MIME-Version; b=RaVDcBoCFnQ5umyjy5/ou/k7b+JhZjRmyxKqlvADUMbDaP3aozsNtXUJWBcb+K0JbsO1N9fqfH2nGhmUtbf+UapXSXv/4CQzPJH7ZaHoLRpzWI+E4F+I7LfXh5hh+dVQ38HGAKjV5QFzzMbQB4zuLZiLiw/b/y1ycrX2bHQ8if0=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2ace77be1aa111f0a216b1d71e6e1362-20250416
+X-UUID: 2ceb54e01aa111f0a216b1d71e6e1362-20250416
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -25,32 +25,32 @@ X-CTIC-Tags:
 	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
 	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:660a93b6-2903-4d4a-95e8-910feb34a6a4,IP:10,
+X-CID-O-INFO: VERSION:1.1.45,REQID:0d56dd84-ebce-4caf-89bd-8dedc01285c4,IP:10,
 	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
 	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:660a93b6-2903-4d4a-95e8-910feb34a6a4,IP:10,UR
+X-CID-INFO: VERSION:1.1.45,REQID:0d56dd84-ebce-4caf-89bd-8dedc01285c4,IP:10,UR
 	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
 	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:54f898e3570065d8c4f7e91e503574e4,BulkI
-	D:25041615352166EMH78U,BulkQuantity:1,Recheck:0,SF:17|19|24|44|66|78|81|82
+X-CID-META: VersionHash:6493067,CLOUDID:837f89790c3f82ab574a3adacfa56341,BulkI
+	D:2504161535279QFJQ3KQ,BulkQuantity:1,Recheck:0,SF:17|19|24|44|66|78|81|82
 	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,QS:nil,
 	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 2ace77be1aa111f0a216b1d71e6e1362-20250416
+X-UUID: 2ceb54e01aa111f0a216b1d71e6e1362-20250416
 X-User: yangang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <yangang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 766830309; Wed, 16 Apr 2025 16:59:55 +0800
+	with ESMTP id 69155629; Wed, 16 Apr 2025 16:59:59 +0800
 From: Gang Yan <yangang@kylinos.cn>
 To: mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [mptcp-next v2 1/7] selftests: mptcp: add struct params in mptcp_diag
-Date: Wed, 16 Apr 2025 16:59:43 +0800
-Message-Id: <6a4ff59fc2440ed70d359113f72756e895d812ab.1744793332.git.yangang@kylinos.cn>
+Subject: [mptcp-next v2 7/7] selftests: mptcp: add chk_sublfow in diag.sh
+Date: Wed, 16 Apr 2025 16:59:49 +0800
+Message-Id: <6be98516e035e73e9523e4fb8c301bc482e65133.1744793332.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1744793332.git.yangang@kylinos.cn>
 References: <cover.1744793332.git.yangang@kylinos.cn>
@@ -62,65 +62,90 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch adds a struct named 'params' to save 'target_token' and other
-future parameters. This structure facilitates future function expansions.
+This patch aims to add chk_dump_subflow in diag.sh. The subflow's
+info can be obtained through "ss -tin", then use the 'mptcp_diag'
+to verify the token in subflow_info.
 
 Co-developed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/mptcp_diag.c | 16 +++++++++++-----
- 1 file changed, 11 insertions(+), 5 deletions(-)
+ tools/testing/selftests/net/mptcp/diag.sh | 55 +++++++++++++++++++++++
+ 1 file changed, 55 insertions(+)
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-index 37d5015ad08c..ea7cb1128044 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-@@ -19,6 +19,10 @@
- #define IPPROTO_MPTCP 262
- #endif
- 
-+struct params {
-+	__u32 target_token;
-+};
-+
- struct mptcp_info {
- 	__u8	mptcpi_subflows;
- 	__u8	mptcpi_add_addr_signal;
-@@ -237,7 +241,7 @@ static void get_mptcpinfo(__u32 token)
- 	close(fd);
+diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
+index e7a75341f0f3..20de007e44cd 100755
+--- a/tools/testing/selftests/net/mptcp/diag.sh
++++ b/tools/testing/selftests/net/mptcp/diag.sh
+@@ -225,6 +225,60 @@ chk_dump_one()
+ 	fi
  }
  
--static void parse_opts(int argc, char **argv, __u32 *target_token)
-+static void parse_opts(int argc, char **argv, struct params *p)
- {
- 	int c;
- 
-@@ -250,7 +254,7 @@ static void parse_opts(int argc, char **argv, __u32 *target_token)
- 			die_usage(0);
- 			break;
- 		case 't':
--			sscanf(optarg, "%x", target_token);
-+			sscanf(optarg, "%x", &p->target_token);
- 			break;
- 		default:
- 			die_usage(1);
-@@ -261,10 +265,12 @@ static void parse_opts(int argc, char **argv, __u32 *target_token)
- 
- int main(int argc, char *argv[])
- {
--	__u32 target_token;
-+	struct params p = { 0 };
++get_endpoint_addr()
++{
++	echo $1 | cut -d ":" -f 1
++}
 +
-+	parse_opts(argc, argv, &p);
++get_endpoint_port()
++{
++	echo $1 | cut -d ":" -f 2
++}
++
++chk_dump_subflow()
++{
++	local inet_diag_token
++	local subflow_line
++	local remote_addr
++	local remote_port
++	local local_addr
++	local local_port
++	local ss_token
++	local msg
++
++	subflow_line=$(ss -tnN $ns | \
++		       grep -m1 -Eo '[0-9.]+:[0-9].+ +[0-9.]+:[0-9.]+')
++
++	if [ -n "$subflow_line" ]; then
++		read -r local_endpoint remote_endpoint <<< $subflow_line
++
++		local_addr=$(get_endpoint_addr $local_endpoint)
++		local_port=$(get_endpoint_port $local_endpoint)
++
++		remote_addr=$(get_endpoint_addr $remote_endpoint)
++		remote_port=$(get_endpoint_port $remote_endpoint)
++	fi
++
++	ss_token=$(ss -tniN $ns | \
++		   grep -m1 -Eo 'token:[^ ]+')
++
++	inet_diag_token=$(ip netns exec $ns ./mptcp_diag -s \
++			  "$local_addr $local_port $remote_addr $remote_port" | \
++			  grep -Eo 'token:[^ ]+')
++
++	msg="....chk dump_subflow"
++
++	mptcp_lib_print_title "$msg"
++	if [[ $ss_token == $inet_diag_token ]]; then
++		mptcp_lib_pr_ok
++		mptcp_lib_result_pass "${msg}"
++	else
++		mptcp_lib_pr_fail "expected $ss_token but $inet_diag_token"
++		mptcp_lib_result_fail "${msg}"
++		ret=${KSFT_FAIL}
++	fi
++}
++
+ msk_info_get_value()
+ {
+ 	local port="${1}"
+@@ -316,6 +370,7 @@ chk_msk_fallback_nr 0 "....chk no fallback"
+ chk_msk_inuse 2
+ chk_msk_cestab 2
+ chk_dump_one
++chk_dump_subflow
+ flush_pids
  
--	parse_opts(argc, argv, &target_token);
--	get_mptcpinfo(target_token);
-+	if (p.target_token)
-+		get_mptcpinfo(p.target_token);
- 
- 	return 0;
- }
+ chk_msk_inuse 0 "2->0"
 -- 
 2.25.1
 
