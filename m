@@ -1,20 +1,20 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 91819230BD5
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 09:00:07 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 54455233D93
+	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 09:00:05 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744794009; cv=none; b=TcHvTBb+qKvP+56K+Qd1v/kACAlfyRrxyHvOMAVwIT0yuBRKn4bdSJc3GP0lDT6VZBdscQVjVobkJ8G0Aq489zlJq9W6wGQ1iYeOzNYtUbG6QpdIBensaBtNJbu/CpRTaVnNf1fniYMoke8c8qDEVDFtlFZW07nFHqKrD946oZI=
+	t=1744794009; cv=none; b=A4CsSjMQGWFzwIURp8iX8DODMwRXFn4MzI2hkXVmCDgZfyL7R77IOVnDpvDghH09ZSx5gbL/E+fDutP3Azlr2A25MC2RJ3ooQa9JF1f6APj92TVny/n2yO4qxi/+DCvNbSZ7WnCcYy38dREcGxpyAmQD0OGDby3VgHVGXgOUoy0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1744794009; c=relaxed/simple;
-	bh=y25mIN42cxf2iz8vIUfuIIiD3UCSrJgmCW16h4TnS5I=;
+	bh=szdCIUhh36euvta9ld5fXdLJU53+1uLSY44TeKLyhpc=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=RaVDcBoCFnQ5umyjy5/ou/k7b+JhZjRmyxKqlvADUMbDaP3aozsNtXUJWBcb+K0JbsO1N9fqfH2nGhmUtbf+UapXSXv/4CQzPJH7ZaHoLRpzWI+E4F+I7LfXh5hh+dVQ38HGAKjV5QFzzMbQB4zuLZiLiw/b/y1ycrX2bHQ8if0=
+	 MIME-Version; b=dtw7ILs9/IE5A6NY6P8WfS0NjGR5zOeG41XPLmApFH+5G48ViPtBzjjl/7q6B8VTaCYxvwqrpKA6FeLag5gFCiOfcyqZD0wzFB2DO1F5LY06YcKUeYOcHdlHryBxCBEwVf5QFXohOu+ps+1Ro293rGPbtozCFRcI7t0n8NBThQk=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 2ceb54e01aa111f0a216b1d71e6e1362-20250416
+X-UUID: 2bd024781aa111f0a216b1d71e6e1362-20250416
 X-CTIC-Tags:
 	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
 	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
@@ -25,32 +25,32 @@ X-CTIC-Tags:
 	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
 	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
 X-CID-P-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:0d56dd84-ebce-4caf-89bd-8dedc01285c4,IP:10,
-	URL:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACT
-	ION:release,TS:20
-X-CID-INFO: VERSION:1.1.45,REQID:0d56dd84-ebce-4caf-89bd-8dedc01285c4,IP:10,UR
-	L:0,TC:0,Content:0,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTIO
-	N:release,TS:20
-X-CID-META: VersionHash:6493067,CLOUDID:837f89790c3f82ab574a3adacfa56341,BulkI
-	D:2504161535279QFJQ3KQ,BulkQuantity:1,Recheck:0,SF:17|19|24|44|66|78|81|82
+X-CID-O-INFO: VERSION:1.1.45,REQID:c9740fcd-a59b-4774-a787-2f66d9e37e5a,IP:10,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:15
+X-CID-INFO: VERSION:1.1.45,REQID:c9740fcd-a59b-4774-a787-2f66d9e37e5a,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:15
+X-CID-META: VersionHash:6493067,CLOUDID:7508972a49617582989958dfb17a015e,BulkI
+	D:250416153524UFUMVPOK,BulkQuantity:1,Recheck:0,SF:17|19|24|44|66|78|81|82
 	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:41,QS:nil,
 	BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
 X-CID-FACTOR: TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,TF_CID_SPAM_FSI
-X-UUID: 2ceb54e01aa111f0a216b1d71e6e1362-20250416
+X-UUID: 2bd024781aa111f0a216b1d71e6e1362-20250416
 X-User: yangang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <yangang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 69155629; Wed, 16 Apr 2025 16:59:59 +0800
+	with ESMTP id 1805281130; Wed, 16 Apr 2025 16:59:57 +0800
 From: Gang Yan <yangang@kylinos.cn>
 To: mptcp@lists.linux.dev
 Cc: Gang Yan <yangang@kylinos.cn>,
 	Geliang Tang <geliang@kernel.org>
-Subject: [mptcp-next v2 7/7] selftests: mptcp: add chk_sublfow in diag.sh
-Date: Wed, 16 Apr 2025 16:59:49 +0800
-Message-Id: <6be98516e035e73e9523e4fb8c301bc482e65133.1744793332.git.yangang@kylinos.cn>
+Subject: [mptcp-next v2 4/7] selftests: mptcp: refactor NLMSG handling with 'proto'
+Date: Wed, 16 Apr 2025 16:59:46 +0800
+Message-Id: <ad68913aee5195e61915629f1d912b9a28244302.1744793332.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
 In-Reply-To: <cover.1744793332.git.yangang@kylinos.cn>
 References: <cover.1744793332.git.yangang@kylinos.cn>
@@ -62,90 +62,121 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-This patch aims to add chk_dump_subflow in diag.sh. The subflow's
-info can be obtained through "ss -tin", then use the 'mptcp_diag'
-to verify the token in subflow_info.
+This patch introduces the '__u32 proto' variable to the 'send_query' and
+'recv_nlmsg' functions for further extending function.
+
+In the 'send_query' function, the inclusion of this variable makes the
+structure clearer and more readable.
+
+In the 'recv_nlmsg' function, the '__u32 proto' variable ensures that
+the 'diag_info' field remains unmodified when processing IPPROTO_TCP data,
+thereby preventing unintended transformation into 'mptcp_info' format.
 
 Co-developed-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Geliang Tang <geliang@kernel.org>
 Signed-off-by: Gang Yan <yangang@kylinos.cn>
 ---
- tools/testing/selftests/net/mptcp/diag.sh | 55 +++++++++++++++++++++++
- 1 file changed, 55 insertions(+)
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 33 ++++++++++---------
+ 1 file changed, 18 insertions(+), 15 deletions(-)
 
-diff --git a/tools/testing/selftests/net/mptcp/diag.sh b/tools/testing/selftests/net/mptcp/diag.sh
-index e7a75341f0f3..20de007e44cd 100755
---- a/tools/testing/selftests/net/mptcp/diag.sh
-+++ b/tools/testing/selftests/net/mptcp/diag.sh
-@@ -225,6 +225,60 @@ chk_dump_one()
- 	fi
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index 2bf13bce59a5..2116b40bc927 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -62,7 +62,7 @@ static void die_usage(int r)
+ 	exit(r);
  }
  
-+get_endpoint_addr()
-+{
-+	echo $1 | cut -d ":" -f 1
-+}
-+
-+get_endpoint_port()
-+{
-+	echo $1 | cut -d ":" -f 2
-+}
-+
-+chk_dump_subflow()
-+{
-+	local inet_diag_token
-+	local subflow_line
-+	local remote_addr
-+	local remote_port
-+	local local_addr
-+	local local_port
-+	local ss_token
-+	local msg
-+
-+	subflow_line=$(ss -tnN $ns | \
-+		       grep -m1 -Eo '[0-9.]+:[0-9].+ +[0-9.]+:[0-9.]+')
-+
-+	if [ -n "$subflow_line" ]; then
-+		read -r local_endpoint remote_endpoint <<< $subflow_line
-+
-+		local_addr=$(get_endpoint_addr $local_endpoint)
-+		local_port=$(get_endpoint_port $local_endpoint)
-+
-+		remote_addr=$(get_endpoint_addr $remote_endpoint)
-+		remote_port=$(get_endpoint_port $remote_endpoint)
-+	fi
-+
-+	ss_token=$(ss -tniN $ns | \
-+		   grep -m1 -Eo 'token:[^ ]+')
-+
-+	inet_diag_token=$(ip netns exec $ns ./mptcp_diag -s \
-+			  "$local_addr $local_port $remote_addr $remote_port" | \
-+			  grep -Eo 'token:[^ ]+')
-+
-+	msg="....chk dump_subflow"
-+
-+	mptcp_lib_print_title "$msg"
-+	if [[ $ss_token == $inet_diag_token ]]; then
-+		mptcp_lib_pr_ok
-+		mptcp_lib_result_pass "${msg}"
-+	else
-+		mptcp_lib_pr_fail "expected $ss_token but $inet_diag_token"
-+		mptcp_lib_result_fail "${msg}"
-+		ret=${KSFT_FAIL}
-+	fi
-+}
-+
- msk_info_get_value()
+-static void send_query(int fd, struct inet_diag_req_v2 *r)
++static void send_query(int fd, struct inet_diag_req_v2 *r, __u32 proto)
  {
- 	local port="${1}"
-@@ -316,6 +370,7 @@ chk_msk_fallback_nr 0 "....chk no fallback"
- chk_msk_inuse 2
- chk_msk_cestab 2
- chk_dump_one
-+chk_dump_subflow
- flush_pids
+ 	struct sockaddr_nl nladdr = {
+ 		.nl_family = AF_NETLINK
+@@ -81,19 +81,21 @@ static void send_query(int fd, struct inet_diag_req_v2 *r)
+ 	struct rtattr rta_proto;
+ 	struct iovec iov[6];
+ 	int iovlen = 1;
+-	__u32 proto;
+-
+-	proto = IPPROTO_MPTCP;
+-	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
+-	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
  
- chk_msk_inuse 0 "2->0"
+ 	iov[0] = (struct iovec) {
+ 		.iov_base = &req,
+ 		.iov_len = sizeof(req)
+ 	};
+-	iov[iovlen++] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
+-	iov[iovlen++] = (struct iovec){ &proto, sizeof(proto)};
+-	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
++
++	if (proto == IPPROTO_MPTCP) {
++		rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
++		rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
++
++		iov[iovlen++] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
++		iov[iovlen++] = (struct iovec){ &proto, sizeof(proto)};
++		req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
++	}
++
+ 	struct msghdr msg = {
+ 		.msg_name = &nladdr,
+ 		.msg_namelen = sizeof(nladdr),
+@@ -157,7 +159,7 @@ static void print_info_msg(struct mptcp_info *info)
+ 	printf("bytes_acked:      %llu\n", info->mptcpi_bytes_acked);
+ }
+ 
+-static void parse_nlmsg(struct nlmsghdr *nlh)
++static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
+ {
+ 	struct inet_diag_msg *r = NLMSG_DATA(nlh);
+ 	struct rtattr *tb[INET_DIAG_MAX + 1];
+@@ -166,7 +168,7 @@ static void parse_nlmsg(struct nlmsghdr *nlh)
+ 			   nlh->nlmsg_len - NLMSG_LENGTH(sizeof(*r)),
+ 			   NLA_F_NESTED);
+ 
+-	if (tb[INET_DIAG_INFO]) {
++	if (proto == IPPROTO_MPTCP && tb[INET_DIAG_INFO]) {
+ 		int len = RTA_PAYLOAD(tb[INET_DIAG_INFO]);
+ 		struct mptcp_info *info;
+ 
+@@ -182,7 +184,7 @@ static void parse_nlmsg(struct nlmsghdr *nlh)
+ 	}
+ }
+ 
+-static void recv_nlmsg(int fd)
++static void recv_nlmsg(int fd, __u32 proto)
+ {
+ 	char rcv_buff[8192];
+ 	struct nlmsghdr *nlh = (struct nlmsghdr *)rcv_buff;
+@@ -215,7 +217,7 @@ static void recv_nlmsg(int fd)
+ 			       -(err->error), strerror(-(err->error)));
+ 			break;
+ 		}
+-		parse_nlmsg(nlh);
++		parse_nlmsg(nlh, proto);
+ 		nlh = NLMSG_NEXT(nlh, len);
+ 	}
+ }
+@@ -228,6 +230,7 @@ static void get_mptcpinfo(__u32 token)
+ 		.sdiag_protocol         = IPPROTO_TCP,
+ 		.id.idiag_cookie[0]     = token,
+ 	};
++	__u32 proto = IPPROTO_MPTCP;
+ 	int fd;
+ 
+ 	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+@@ -235,8 +238,8 @@ static void get_mptcpinfo(__u32 token)
+ 		die_perror("Netlink socket");
+ 
+ 	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+-	send_query(fd, &r);
+-	recv_nlmsg(fd);
++	send_query(fd, &r, proto);
++	recv_nlmsg(fd, proto);
+ 
+ 	close(fd);
+ }
 -- 
 2.25.1
 
