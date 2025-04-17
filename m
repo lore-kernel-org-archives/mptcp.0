@@ -1,127 +1,80 @@
-Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BC6E023BCFD
-	for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 10:20:03 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 960A2254847;
+	Thu, 17 Apr 2025 17:27:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744798805; cv=none; b=Kpnu6Vgimhp72HF5hkcMXgVeJiybEHFVzA12vOpQdYJkONMzq5FvDcqQtWahU+hKMjyOKYSkQGcJIEcboqGK4TGlZ/7zk+MjOgFeBVuG9p/JTyi0YUKdkO9AuWhTlQm3iHFM/jvmmHXsdnwwWPtY4yOfK21zYUuv8uej+J4wYWw=
+	t=1744910877; cv=none; b=qik0etJjH8ziTeOCgfiszcTdeQ1F29QEBO+pH57gv126KAlEx3Dqto2Pu1bCSzk9gE1XvQXuQTxLzCf22Ih3iGvPWG5jI8AELNyraBOwYAL84V3KWD/WCPNjhnKV7u/krrqWaFTkxbDXLZRxoT3841QmYwyfngn/x1xXM0QHSfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744798805; c=relaxed/simple;
-	bh=GtgHpmy+sFejgTvhTJOqVI59kq+yfSphYqqiwn9PUSk=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=t9spDZhJWb0YEJB1IVuAC4XE2rouQ/pyjWa648QBYKqsZuxSuLFb4ypd8trmD1Vn1d6D8ZG8bfgp002c92b8DRt1j31S2wE0DqGueGLG5WD0BcGgWuTjpnKY/yHYpUfprQBfaNdC55GBHdsZHTeBytFIHGRI9VWSAQIbzQQeaN8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=kZyiS2qP; arc=none smtp.client-ip=209.85.214.174
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1744910877; c=relaxed/simple;
+	bh=Xz9/YSYpgCvWEXSOh+Qk/wVwFLyE0nJZ5qpMC6L1maA=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=QocyFOS6fwpQvREmLzzQUzFYI5IxKbiTK0seVu/l8R3idbZVpKQc/bVLBPyporLWjCGiPh3KUIQ11hYzFjpAF83LHSKSK3nLltOjE0RIOPZIE8Ckx3UgkEC8GiwZQrkC7gdEhvx9dI4kQiIQjF6F08E1+t7T/bZuZjT9l+e/6sw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qGX5bhS5; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kZyiS2qP"
-Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33e4fdb8so5296615ad.2
-        for <mptcp@lists.linux.dev>; Wed, 16 Apr 2025 03:20:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1744798803; x=1745403603; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=CJ689EDU/Kc/3c5TtpFSEZLornUqziROab5g7MyO/Hs=;
-        b=kZyiS2qPvAsK6e5XcAVDmhc1FqiVkq3GfZTuTBiqaFACcoexouvRyQ5bf0rzyK0iGZ
-         wjJeMqozD+rbhoGbACOzXL/jd0pkr6RVvYI1pLWoOK7QeqCyrHz029MfyBN2v2dKSU8z
-         G6laGdPHVxYqjBvvC3grSwvrUKbt54TbRj6lB7u/2Z/qZUFw+L9cPBABaxt/AM+pEg/l
-         ZmxKfqeT+DaajJvsqqqc09gxGnzt+ZpDQb9D01sNbevy2bs9mKlcjeT76ISTAeLQlygm
-         epAMWb9qfQgXvxcCusJx4cWTh0fYuuCW8c2bfvATfwdzPxJYwP9uRy6yoqtb6Ng34nIb
-         mhVw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1744798803; x=1745403603;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=CJ689EDU/Kc/3c5TtpFSEZLornUqziROab5g7MyO/Hs=;
-        b=lozNuKxPWgFdexFovAn9AiXxiZLAVOkOS8ZI+zYX1Lny8NudXeww6cAoEvXiFR3Fg4
-         gAaYjVIsXD8sjkSqsmrKlk+ZybkEzjogr5gWkPZ+tMw6uQcTvqy34ZtdAwScYJ+5XfAC
-         f6zqAFfW8m/0/dj3OzVxI1fJtWLTYRQ91cRoq5pt5RmQrtkfgH10CY0EY98hATBHqHRl
-         iSalVWu3DlYWJdOLCBzzVhCi7Dz+t1SevWQ75zBZaFGFAI4AERo4oRRzfXm43B+W6Df/
-         6K17ptH3UIECdY/FT3u9W5tYOdSARmdQ04RZ8x53V5zA3RSwR35NDLL5WQJWkQH92MCY
-         Elcw==
-X-Gm-Message-State: AOJu0Yy0U0ftvwZtXbtymVmJmSLdC8r70kz303/QB7XL2GPlEpfcQojf
-	kkTOeposSpHnbM2UI+0r/ozIh3SZcPHRxiBhl8nBh7orcknzas5vAkrF
-X-Gm-Gg: ASbGncsBbJSZEzCopUiiG6ti0Su4sdDGdL9dh3s5hulRxJni+5a8eR+C0OxT++9RADw
-	ANn2LgNoNn6/Ab+jdOR14q4nGISgvSYAevf5MIdaSJCFwpzuLiDP6rX1kgnFw5X/ymoD+CraKHD
-	VQza2Dq3lSdNgDOVCjselaLTqdYRp2MknFNiNVNmlDDVwH6G/hw/mM1EmLGgRXzr82DPagivvRq
-	r36ZRIKpftRwoI1EVBh5cuNQsFTvboLkuCRkf2sZSzO4Gjg4BpT7Kp+Vdn1kpSfs/SxEx/mFweW
-	zBnzKZGYU2DTwmhqn2W0v9LsbG49nd+3v2Sfj02uBSDQ7+We/ZttP3U=
-X-Google-Smtp-Source: AGHT+IG4JW00Ze5hUwZ4nkUAMgFnLLmwC424zNROsOAncaWaKgNR/4kFR2jITT6nfeRI/hTwyGpLmQ==
-X-Received: by 2002:a17:903:24c:b0:227:e74a:a066 with SMTP id d9443c01a7336-22c35916cc4mr17129855ad.28.1744798802890;
-        Wed, 16 Apr 2025 03:20:02 -0700 (PDT)
-Received: from [127.0.0.1] ([20.171.103.246])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22c33ef1c07sm10336595ad.45.2025.04.16.03.20.02
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 16 Apr 2025 03:20:02 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Gang Yan <yangang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1744793332.git.yangang@kylinos.cn>
-References: <cover.1744793332.git.yangang@kylinos.cn>
-Subject: Re: [mptcp-next v2 0/7] Add 'dump_subflow' test in selftests
-Message-ID: <c4f308c1-94e5-0644-d016-f4dd35414a5b@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 16 Apr 2025 10:20:01 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qGX5bhS5"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0F5EFC4CEE4;
+	Thu, 17 Apr 2025 17:27:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744910877;
+	bh=Xz9/YSYpgCvWEXSOh+Qk/wVwFLyE0nJZ5qpMC6L1maA=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=qGX5bhS5MdSpp1Ed4oIs3qdBKrVly5mOIv44tKJOdEEVidcstbPNm3OEuk/q/xT6+
+	 tQk7B9xDxnVB/njiXlx4Xm0OC9CeVzVwNpJcoIdEI34OF37mOEfh+4shXoCqp/ZcYS
+	 6OpBc0qVsJfphxohNhJr3rQrTXcMO3mW5fYqO3Q50GHQPE5C20okovQuYBomTB8rao
+	 dEN4bxru/+jL8DgVqvvHWk3P2/pfKDqrScxxqE1HqF+VEY7LoyFzt4701bzmNfYODa
+	 PS70yQeYxWdkn9f9tdKJO+Wo6mEXfhm6iaaIphigMwajMZf1RViegHitC9H3f1RAsC
+	 ED6WQDgf7/yMA==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Subject: [PATCH 6.6.y 0/2] mptcp: sockopt: fix getting freebind & transparent
+Date: Thu, 17 Apr 2025 19:27:50 +0200
+Message-ID: <20250417172749.2446163-4-matttbe@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025041756-ovary-sandfish-4a21@gregkh>
+References: <2025041756-ovary-sandfish-4a21@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1294; i=matttbe@kernel.org; h=from:subject; bh=Xz9/YSYpgCvWEXSOh+Qk/wVwFLyE0nJZ5qpMC6L1maA=; b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBoAToViYuM6BmN12rXZgNmQwHTYLRgtI8VP8eNS sP1LGrMqOmJAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCaAE6FQAKCRD2t4JPQmmg c+wTD/sFEF+Qw0HDTgXXf/VqbFYk8GbQ7+pIpnWp3m9MRWemFlK7jyOv399zu6roIPCU+w/mg9n UEiFe561NePxDdLnYxfikkAbFsNR1zHNWalAuoHhWJJFf/0PKYOtczlZE1XmGmDSMgjNpQnjbTI +HaUbRrihcJ2cioMuBFuy7gOgZdOjRuSw6R5k3xLiLKJ/+xdAJbrN03c6+gn/XgFUn5atrNqZvf NZ1Y30OXKHzhvF6GPC0Q+4o4EOuVFR+HQnPYPxCmFqSyvTcEQZrWdm20hGhCbbbqxHcp3DNDgx4 KDXMK3K98K8YNj1au8Nln1nuMJCu+T7ntB6XA2qKAejuBVv0udCiUhuvDO6e86x9zUacS7771zf OC5y27r0nfJRWWv5iFN5uPwB1uTY+BY9I7f4wKbCPfEx4fGJJXqJfzDFztFpOLTaMkSxnGmp75j z5RmvF7HSlkugZF3cE89+7FKcdlW4kayulxk8bYr5eEN7xuPj5xUJXpAFaBhK1lP975uewN19sD qJ3O3DR5IDO+JFkv1WVyTJ1R4W5HJAk0xMfBb4SCdXcPFL3yZflx1n6Lpgd4EqqIdaCoHeTYd7g 5RfkqK8pULWfhexrgPZrbp9TZ1qaBQsdKVC95dCxXnmqJOKjBLsDdDkguhIbrG76jP3ypkQqI+g 0UcWaGfjslCM44Q==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Gang,
+Commit e2f4ac7bab22 ("mptcp: sockopt: fix getting freebind &
+transparent") failed to apply to 6.6-stable tree. The conflict
+resolution was easy, see the patch 1/2.
 
-Thank you for your modifications, that's great!
+Patch 2/2 has been added, because this warning was visible in the
+selftests without impacting results on fast enough test environments:
 
-Our CI did some validations and here is its report:
+  # ./mptcp_join.sh: line 3083: mptcp_lib_wait_local_port_listen: command not found
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/14489098858
+It looks like the commit 5afca7e996c4 ("selftests: mptcp: join: test for 
+prohibited MPC to port-based endp"), backported in this 6.6-stable tree,
+was requiring this commit 9369777c2939 ("selftests: mptcp: add
+mptcp_lib_wait_local_port_listen").
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/1fd8c63c0c7f
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D953894
+Geliang Tang (1):
+  selftests: mptcp: add mptcp_lib_wait_local_port_listen
 
+Matthieu Baerts (NGI0) (1):
+  mptcp: sockopt: fix getting freebind & transparent
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+ net/mptcp/sockopt.c                           | 12 ++++++++++
+ tools/testing/selftests/net/mptcp/diag.sh     | 23 +++----------------
+ .../selftests/net/mptcp/mptcp_connect.sh      | 19 +--------------
+ .../testing/selftests/net/mptcp/mptcp_join.sh | 20 +---------------
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  | 18 +++++++++++++++
+ .../selftests/net/mptcp/simult_flows.sh       | 19 +--------------
+ 6 files changed, 36 insertions(+), 75 deletions(-)
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+-- 
+2.48.1
 
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
