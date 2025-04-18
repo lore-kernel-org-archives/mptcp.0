@@ -1,88 +1,70 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 07D0F2566E3;
-	Fri, 18 Apr 2025 10:52:44 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 347D92CCC0;
+	Fri, 18 Apr 2025 16:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744973565; cv=none; b=ON/EIeiYUfzI8mrcmIdTZy1e+75zS6CmhSBqSPJ0FvEZxJBb5KFKiA/qvZ9dOV3V5C7l9V1vHyZHh7pEqWka/zQYctXoHJKXXxkcQP1yUcN7r2jrPL9wjFOjXFLfXLMhuxVZozgMepCU2dFa3xKM4DK0sxXsSsnIafA7qGJIppA=
+	t=1744994767; cv=none; b=tvmai8nR28LCMFEovoh/l16DZApO+XxkhBc7wbnAtlJDcTh/DFt6uMKLUa5enq9Y0e70jUaFEBbwM1iKrdQ92XhKhDZ/jkvOdA2EdbdpOy8bAIluNk1qPQGvFCNehWiRVclSwPVNDdWBlzhKiFBlS/8AI7pIIjmh1LleAu0Rzfk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744973565; c=relaxed/simple;
-	bh=dG/cOy8J1uvKJSSw4shxPSJ8HCh+NUqjRqOOKf3sbpk=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=gePtdPAdUug0CaGNQhzZMV3d/uYg7ch3nfkoCuUieB6UMyRZIB3iRwQJ1qarjxk9nMY5chC2dz/oVy0y1tf4Gqjg5U/LT3G1rSW+tQyJZm4hBY9bY8mEsbNp8kRHyVHr5WJF9HVJq08kfqgsULbbnbA71w/NSRec0CdOKeYhA6g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b=MfAiuKDS; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744994767; c=relaxed/simple;
+	bh=TWKHGFmX/NS544kNEaz6/YQPxD8BLfeTSNfWB0ic8JA=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=R3Pp+IKATwhuUKE9jXR2PuVXeu5iHpvYvFXj8Amfe0qstxDtZdmcZn+Z42cIUVaNMseOU//60DXEFKmagOGy2ViIlrHAjS2LN7af7qv0qMfrgd2PBBS5ex1p4kFpUupEPrBDNkCfPvhIp+oHdqBxrDkNskJX7ZV0oXdrVQOrQHs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TqQ6bU4e; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linuxfoundation.org header.i=@linuxfoundation.org header.b="MfAiuKDS"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C26DFC4CEE2;
-	Fri, 18 Apr 2025 10:52:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
-	s=korg; t=1744973564;
-	bh=dG/cOy8J1uvKJSSw4shxPSJ8HCh+NUqjRqOOKf3sbpk=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=MfAiuKDSGMK8K+GWYUtgYFfppePKVpOlT+l75KAP6vrNJWj0uu8W3P51EybXB8qvm
-	 74W1SJjEn0kxtaHOt1bpN5Wch0LPyabDOuRhC+YYo2EjA+nDjAw4oBeuGPgB9uBEPt
-	 Hlrg21thk6sTbt5awCO7iPiR98L1pEnjUzRW+5nY=
-Date: Fri, 18 Apr 2025 12:52:41 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: stable-commits@vger.kernel.org, stable@vger.kernel.org, kuba@kernel.org,
-	liucong2@kylinos.cn, tanggeliang@kylinos.cn,
-	MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: Patch "selftests: mptcp: close fd_in before returning in
- main_loop" has been added to the 5.15-stable tree
-Message-ID: <2025041827-fling-importer-e363@gregkh>
-References: <2025041702-shrouded-subwoofer-25f9@gregkh>
- <9681ac5a-b37d-421c-873a-44860a7dbbe4@kernel.org>
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TqQ6bU4e"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E17CEC4CEE2;
+	Fri, 18 Apr 2025 16:46:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1744994767;
+	bh=TWKHGFmX/NS544kNEaz6/YQPxD8BLfeTSNfWB0ic8JA=;
+	h=From:To:Cc:Subject:Date:From;
+	b=TqQ6bU4e/JdK74AYP5WyL9xC/SkgqMeP0fa16Bu/3ry+jhT/atH1a9dW8zIZ+UPQT
+	 sX3SAzpD53CAqAhCMx3Q/hQ/GYwYuGrXP0OjGJWKrGVxO6LatLeaTv4C8RnL+BjYe/
+	 jOWdUoiC/UPVehQ27i25e7e815VhYGlzTdysnk4eJi7VdV5WZ7FcCjzSxHWVV6RTdc
+	 SDRFYTU48u5/ejFoRWOrsv/MLspk+40VNph+ZYteaIiSAsSW31e8axyrw/Tn5g3F4k
+	 3WBdqzmkYwxOWwdkxRW6u1EyV3aOaRP8qGdPU08OJU5K01ckkz+qslBAEpYywmA/hU
+	 kTxcRG9yhoPcQ==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: mptcp@lists.linux.dev,
+	stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	sashal@kernel.org
+Subject: [PATCH 5.10.y 0/3] mptcp: fix recent failed backports
+Date: Fri, 18 Apr 2025 18:45:57 +0200
+Message-ID: <20250418164556.3926588-5-matttbe@kernel.org>
+X-Mailer: git-send-email 2.48.1
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9681ac5a-b37d-421c-873a-44860a7dbbe4@kernel.org>
+X-Developer-Signature: v=1; a=openpgp-sha256; l=750; i=matttbe@kernel.org; h=from:subject; bh=TWKHGFmX/NS544kNEaz6/YQPxD8BLfeTSNfWB0ic8JA=; b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBoAoHEDOd6BWSqqR0KAjHEq8zgtC97tZT5qgVlk +Ys+AQc3p6JAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCaAKBxAAKCRD2t4JPQmmg c/NaD/9W/9Hp1ZSjtgmFsRR7tOf6YdFbmX5DprMX7AnbN/SeejVa0UAlKaNFv4ieOflF7ckQNGX gD/P59+hvFfn4mw5BZTGQT8A/paXt7zI2apcnGnwShFuYjLc40R4YNYVHR8vDexvUp3WQ9TTXyi G9mFMgYLxhfTP9M8j3LA2deZtxiD7dy5wv8v/87IsqYnd6gnWymOyYsBC+8qCpHo+gXSxzOKFeN voGk/PJKUsIQ/AcvQaevxNq1xnXd+6stSoiv7xzyWq+Bxzrk4ln8DdZheerrBnstsvKrlZanuIb ADnMwPNFXau1cM/nMwDp93C4NWbEdkr6s9tOxhO4n2PjFfnTh1X32rZnQTSRhVLvoss9MMC4WOp XyYCpakGc0AqguMiI3UOjd83sAsuSDBUzLh39zPLp5hvG/jBAi/2tdnVeXHBrbCvgnLidvcZlYB 4fXUi0ZLZ8WL2/9CK97t8VVtiNj9Upv+rZE16UeAJ0YEWnJu8lehJBaUtkryPfhUz8vb4DZ2uCt 5opwlIkFX5DfydYq83d91mE4YwwxyP/Y/neekYqkhJgcQoUijQD6fKqKBPgppHPzrDEj2WdjgVx 2P2bXN4Q8pLWauX3cnSUgOCKeNSeZ1pnQaqx55HjkE8LBowAJLcwqAdLR/CWqreC7Kuab8Ya/og 91iM/rRehRFrJtw==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-On Fri, Apr 18, 2025 at 11:44:15AM +0200, Matthieu Baerts wrote:
-> Hi Greg,
-> 
-> On 17/04/2025 15:57, gregkh@linuxfoundation.org wrote:
-> > 
-> > This is a note to let you know that I've just added the patch titled
-> > 
-> >     selftests: mptcp: close fd_in before returning in main_loop
-> > 
-> > to the 5.15-stable tree which can be found at:
-> >     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> > 
-> > The filename of the patch is:
-> >      selftests-mptcp-close-fd_in-before-returning-in-main_loop.patch
-> > and it can be found in the queue-5.15 subdirectory.
-> > 
-> > If you, or anyone else, feels it should not be added to the stable tree,
-> > please let <stable@vger.kernel.org> know about it.
-> 
-> Thank you for having backported this patch to stable, but can it be
-> dropped from the v5.15 queue please (see below)?
-> 
-> > From c183165f87a486d5879f782c05a23c179c3794ab Mon Sep 17 00:00:00 2001
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > Date: Fri, 28 Mar 2025 15:27:18 +0100
-> > Subject: selftests: mptcp: close fd_in before returning in main_loop
-> > 
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > commit c183165f87a486d5879f782c05a23c179c3794ab upstream.
-> > 
-> > The file descriptor 'fd_in' is opened when cfg_input is configured, but
-> > not closed in main_loop(), this patch fixes it.
-> > 
-> > Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
-> 
-> This "Fixes" commit has been introduced in v5.17. From what I see, it
-> has not been backported to v5.15.
+Greg recently reported 3 patches that could not be applied without
+conflicts in v5.10:
 
-Oops, my fault, now dropped, thanks for catching this.
+ - 443041deb5ef ("mptcp: fix NULL pointer in can_accept_new_subflow")
+ - 21c02e8272bc ("mptcp: only inc MPJoinAckHMacFailure for HMAC failures")
+ - 8c3963375988 ("mptcp: sockopt: fix getting IPV6_V6ONLY")
 
-greg k-h
+Conflicts have been resolved, and documented in each patch.
+
+Gang Yan (1):
+  mptcp: fix NULL pointer in can_accept_new_subflow
+
+Matthieu Baerts (NGI0) (2):
+  mptcp: only inc MPJoinAckHMacFailure for HMAC failures
+  mptcp: sockopt: fix getting IPV6_V6ONLY
+
+ net/mptcp/protocol.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
+ net/mptcp/subflow.c  | 15 +++++++++------
+ 2 files changed, 54 insertions(+), 6 deletions(-)
+
+-- 
+2.48.1
+
