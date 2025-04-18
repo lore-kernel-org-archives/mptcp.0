@@ -1,137 +1,128 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 851D71C5D4E;
-	Fri, 18 Apr 2025 09:44:19 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B6A77270EAF;
+	Fri, 18 Apr 2025 10:24:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1744969459; cv=none; b=o8wDz5C/3ndnakg/bdQ0bnpf0Ch6Bt4x5QZIptMTgJHCdoeBQnyiBV6SWdnViMpLBK2fxAeCuu5460dWdpi6xR3WsvrZe/yGC1c/IyABxG+JDt0w7HTOWycsetGxA9+2ZTXbhfpUOiBr5+sywmv2MHMGZMskF5lk0QWcvlJf/sA=
+	t=1744971842; cv=none; b=RznFNOkRyGxXwMkLeFoJnXZBen+8ZW6QK9gp24D/babGU4n50s+PKaqKgEsWeoKAF6uglSsiP1s41lEPgTkB9ErTgycU3p3GX32VWPB3G/LQnwgUmDqlGG891zUH65LK4GG1cgeBRirOqQiNgrWzOmc0gH2txBehvUXZPCXfiMs=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1744969459; c=relaxed/simple;
-	bh=QaRpGF7ohLAl7aOFpsMY4RKxgB9F65skY8MDlEDPlok=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=CHy5ZVAbl94SQlKza3Rj67DALeoJAG/vKYRIAilv600IQJOb9Ip6BBskloL7G0UwHPM8aBzs+uv1rcJtdh598yw79rblPZmppXqshQ5ohHlUZM9HAxF4HzjVtpPTa0fGAIgNWIG2/WicfhAyc8fFKL2+FUGjEg6So3VXxcpFLLw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Re3uXAru; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1744971842; c=relaxed/simple;
+	bh=P97hqC6EW7vjXhtV3g/3x273eY7ZgHwtxbCdYWgBhH4=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=eXbDg7RnyOtl2IrIDj9QVQJlCzMb0K7OP0XC1LFJ7ShcVOK4qnzodMP1C4m9kljH1tNDMmkcVDs506EfMK4U+TbU1g3dHqKmd0F38DRNrQodgQupR8bKIm7RtYhI3FB2mtRnpvNwr4HG6YK60CvfiOnOAZ5cS6yzabyxonTNpoQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Tku+ybVG; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Re3uXAru"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 873DEC4CEE2;
-	Fri, 18 Apr 2025 09:44:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Tku+ybVG"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B2B55C4CEE2;
+	Fri, 18 Apr 2025 10:24:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1744969459;
-	bh=QaRpGF7ohLAl7aOFpsMY4RKxgB9F65skY8MDlEDPlok=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Re3uXAru6hq1XgUUwyV2xA/vOOFFJlPtmy+iqH81m73/RxY6lip5tFW1p46hAqIqq
-	 RF2Ot7/J5TMXAIEKPFd5cqlaIlN73N89+eCHPmRBAZ5tUy/x2EJS0lEs8Vpr1p1SEp
-	 csNg7qe4UnH8L+H6H5aV3RwPRuax4l+ckSoWSa1lkT7UAhRIccJU792lWWDPCq+0dG
-	 o6C46/fhIUDyDxjf2/Vzh4bHjM9JLoTTBbxsRD+p8wrY4DmG4cgeMM6kIKH0dWXRux
-	 A9y8qTaeKTsC9S55PUQ/bod2M+yyzAP0yiuDgYJq0U2xVYOFPOQMvuuLeDzn3dmnuE
-	 hZJy0gAq96dbQ==
-Message-ID: <9681ac5a-b37d-421c-873a-44860a7dbbe4@kernel.org>
-Date: Fri, 18 Apr 2025 11:44:15 +0200
+	s=k20201202; t=1744971842;
+	bh=P97hqC6EW7vjXhtV3g/3x273eY7ZgHwtxbCdYWgBhH4=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=Tku+ybVG9+TqfhLscXoZqOnGP2F652zeysZ9Gc0wLbbFmXYEofgCv9oAnZiX69xF0
+	 i5civvJqrbbYPwuNFo8PW822pcymOHLRfTwSl4vT9hTBM8AcmmtePD3b3LDUhQ69P6
+	 H2CG6UXwx945vsSJr/+BnJ+SzaiecRxRQvGU9TM+9I9G01wXghEQq5sV1aR7o9dJ5t
+	 2eM5OtAsM5tMphOy9OrZtoEMmmIwE1NHyyhNSFnduaowYKjuTx+pkGib83yqrpR+9Z
+	 /CDu7r6/axELift2UTyCpnEibm6ORDYaMndX8j89+jXOjgcwyTEwurVK1DnDAaN/9h
+	 p9d1ZSULdleUg==
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+To: stable@vger.kernel.org,
+	gregkh@linuxfoundation.org
+Cc: MPTCP Upstream <mptcp@lists.linux.dev>,
+	"Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>
+Subject: [PATCH 5.15.y] mptcp: sockopt: fix getting IPV6_V6ONLY
+Date: Fri, 18 Apr 2025 12:23:20 +0200
+Message-ID: <20250418102319.3212564-2-matttbe@kernel.org>
+X-Mailer: git-send-email 2.48.1
+In-Reply-To: <2025041742-gurgle-parking-5fbb@gregkh>
+References: <2025041742-gurgle-parking-5fbb@gregkh>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: Patch "selftests: mptcp: close fd_in before returning in
- main_loop" has been added to the 5.15-stable tree
-To: gregkh@linuxfoundation.org
-Cc: stable-commits@vger.kernel.org, stable@vger.kernel.org, kuba@kernel.org,
- liucong2@kylinos.cn, tanggeliang@kylinos.cn,
- MPTCP Linux <mptcp@lists.linux.dev>
-References: <2025041702-shrouded-subwoofer-25f9@gregkh>
-From: Matthieu Baerts <matttbe@kernel.org>
-Content-Language: en-GB, fr-BE
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <2025041702-shrouded-subwoofer-25f9@gregkh>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+X-Developer-Signature: v=1; a=openpgp-sha256; l=3043; i=matttbe@kernel.org; h=from:subject; bh=P97hqC6EW7vjXhtV3g/3x273eY7ZgHwtxbCdYWgBhH4=; b=owEBbQKS/ZANAwAKAfa3gk9CaaBzAcsmYgBoAigXg1S3OR8LHBUTrRjD8iRy3CjgWQ/tusACW ExSI3VY+KaJAjMEAAEKAB0WIQToy4X3aHcFem4n93r2t4JPQmmgcwUCaAIoFwAKCRD2t4JPQmmg c5rPD/9e4K/HOnpN/8KEDnqhVoike8aDODTVrutJfXTLA4sbUNvGWZFLMkYQrUvTLPg6+Lv9YCl NIMu6iALtsFv2WMow8nho6yMdoaXRIH4fG5x77o3Towe2kpagM06PrKX6RSUwLLOuun01X3V7uD MQOR8ZjWlHuVmGAiU3bEqrDMd0eo/kg2siNNUa5QSkKcRZMSXYxKS8YPevTnLKl8UyYaZF+qvDO BHszJxPV0kiyQ7itZQdMa5nw1NHwKvqQM108NejDX9Vtb/VmILZDi38clHqirEWKUxmlXUT0Ow+ uthCHkr4dwDrlsNcBQwLy/e5omFZUJu3OCpLY1XI7ogEjhncURgtuUHdfuu4d68VRwUCyyd2tmo eklsW7DhkMhJpbV5WxXPP/MUDzY+3vYHSsz9W2kHDI0dkgCM4Ax4IYrhKaXP++wghRw1kKHgbjs TG600zcOEBU97nQXARQWAR6O/kazVj1YE6H8T39kWbyfi/9ThH9muI+FRNq76xeCq2jmLJqMd2W WCVrZ2Alxon3ZWEw/GL8kYHB5HH2YVxLWUgnAEgIIG3gH3QBOVmDFn5LwD6jvwhcv8OURwEWTCz Sgdj0/Zm5SXNOWQyKHbR8XswcCdcCxL6PMiz3nwTA5sgI3laNa9B23XBGP5YSaPR+Ss3/LYmInE F/2m/AbXw6mClGg==
+X-Developer-Key: i=matttbe@kernel.org; a=openpgp; fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
+Content-Transfer-Encoding: 8bit
 
-Hi Greg,
+commit 8c39633759885b6ff85f6d96cf445560e74df5e8 upstream.
 
-On 17/04/2025 15:57, gregkh@linuxfoundation.org wrote:
-> 
-> This is a note to let you know that I've just added the patch titled
-> 
->     selftests: mptcp: close fd_in before returning in main_loop
-> 
-> to the 5.15-stable tree which can be found at:
->     http://www.kernel.org/git/?p=linux/kernel/git/stable/stable-queue.git;a=summary
-> 
-> The filename of the patch is:
->      selftests-mptcp-close-fd_in-before-returning-in-main_loop.patch
-> and it can be found in the queue-5.15 subdirectory.
-> 
-> If you, or anyone else, feels it should not be added to the stable tree,
-> please let <stable@vger.kernel.org> know about it.
+When adding a socket option support in MPTCP, both the get and set parts
+are supposed to be implemented.
 
-Thank you for having backported this patch to stable, but can it be
-dropped from the v5.15 queue please (see below)?
+IPV6_V6ONLY support for the setsockopt part has been added a while ago,
+but it looks like the get part got forgotten. It should have been
+present as a way to verify a setting has been set as expected, and not
+to act differently from TCP or any other socket types.
 
-> From c183165f87a486d5879f782c05a23c179c3794ab Mon Sep 17 00:00:00 2001
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> Date: Fri, 28 Mar 2025 15:27:18 +0100
-> Subject: selftests: mptcp: close fd_in before returning in main_loop
-> 
-> From: Geliang Tang <tanggeliang@kylinos.cn>
-> 
-> commit c183165f87a486d5879f782c05a23c179c3794ab upstream.
-> 
-> The file descriptor 'fd_in' is opened when cfg_input is configured, but
-> not closed in main_loop(), this patch fixes it.
-> 
-> Fixes: 05be5e273c84 ("selftests: mptcp: add disconnect tests")
+Not supporting this getsockopt(IPV6_V6ONLY) blocks some apps which want
+to check the default value, before doing extra actions. On Linux, the
+default value is 0, but this can be changed with the net.ipv6.bindv6only
+sysctl knob. On Windows, it is set to 1 by default. So supporting the
+get part, like for all other socket options, is important.
 
-This "Fixes" commit has been introduced in v5.17. From what I see, it
-has not been backported to v5.15.
+Everything was in place to expose it, just the last step was missing.
+Only new code is added to cover this specific getsockopt(), that seems
+safe.
 
-Cheers,
-Matt
+Fixes: c9b95a135987 ("mptcp: support IPV6_V6ONLY setsockopt")
+Cc: stable@vger.kernel.org
+Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/550
+Reviewed-by: Mat Martineau <martineau@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Link: https://patch.msgid.link/20250314-net-mptcp-fix-data-stream-corr-sockopt-v1-2-122dbb249db3@kernel.org
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+[ Conflicts in sockopt.c in the context, because commit 3b1e21eb60e8
+  ("mptcp: getsockopt: add support for IP_TOS") is not in this release.
+  The conflicts are in the context, the new helper can be added without
+  issue. It depends on mptcp_put_int_option() which has been added via
+  another backport, see commit 874aae15fbef ("mptcp: fix full TCP
+  keep-alive support"). ]
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+---
+ net/mptcp/sockopt.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+index 93d2f028fa91..cd10f4a54de7 100644
+--- a/net/mptcp/sockopt.c
++++ b/net/mptcp/sockopt.c
+@@ -793,6 +793,20 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
+ 	return -EOPNOTSUPP;
+ }
+ 
++static int mptcp_getsockopt_v6(struct mptcp_sock *msk, int optname,
++			       char __user *optval, int __user *optlen)
++{
++	struct sock *sk = (void *)msk;
++
++	switch (optname) {
++	case IPV6_V6ONLY:
++		return mptcp_put_int_option(msk, optval, optlen,
++					    sk->sk_ipv6only);
++	}
++
++	return -EOPNOTSUPP;
++}
++
+ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 		     char __user *optval, int __user *option)
+ {
+@@ -813,6 +827,8 @@ int mptcp_getsockopt(struct sock *sk, int level, int optname,
+ 	if (ssk)
+ 		return tcp_getsockopt(ssk, level, optname, optval, option);
+ 
++	if (level == SOL_IPV6)
++		return mptcp_getsockopt_v6(msk, optname, optval, option);
+ 	if (level == SOL_TCP)
+ 		return mptcp_getsockopt_sol_tcp(msk, optname, optval, option);
+ 	return -EOPNOTSUPP;
 -- 
-Sponsored by the NGI0 Core fund.
+2.48.1
 
