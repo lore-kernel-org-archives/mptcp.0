@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B228137C
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15E27F4E7
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:23:35 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328177; cv=none; b=PjQn4hiX4FMU7n6bU5iysfqoQaTLeB4hcqoSGPIpIVKAd7fMKX3OI9hEqPeMTMU/7Ddu0XT9Gs/uKtdJl0lQJ+jATvD4OxEFLzKuPp+vWIxFXUYhkRXyCADyRzJvAfl8ygvjGKUowHwqZrwgO1tQ/qwU00G0960UBBMXpoeNqLc=
+	t=1745328215; cv=none; b=sIGZsloBs3AvHQgtOG4Rbd9mClEGdt3W24lip1WpJ9ndNLnUwlfcvgxFM4JYdX8/XUorfNSeX68nQMAgR/bmDAhzMaFimpsYymexHayADkroqEFsesNENRK/UJJv4Np27mWoCCMfg0CCk9kKe14IRlsySx2bBGBL5aPRLO5K46I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328177; c=relaxed/simple;
-	bh=rx9JUGebohPvLLMZ3ZvuKRrofWWfMOYGvlXK2IhCSTU=;
+	s=arc-20240116; t=1745328215; c=relaxed/simple;
+	bh=GsyXqfqrpYGwIYodaLtZrAJ42/ov9o771J70ZglKNfk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=uXN3mBmLdqMuGM39B5RC612v7NDL7zrkIqo31Mzd3zB3bKvzVXWwuhuKmj+EA6UvirEtpGp+mayMYJPvzRR1dse6C8tDn4qSWH71Z3jff25hBRIMqr3xJbYHHyvQifkcuggRtk08i7NNP5fSdRJugr0c9zl/ljEdKlezUctlOW0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9aaFKHa; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=iX576AMDom6Ov8lNwsP3vnMeMYUiY0iMDRsUxn0Id998pAV3rycdeEs+P/9+zc5+e5XTcNg/mTmCDHj6Qwh1PQDFlJyCaeMfEWKGdgCv1n1zxfrFsRw38Bj2vgET8TOg4M7+u6jcod2FNnao0F6jUNl3KmVZSKmyZJLbLtUF2NA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHDyCHOI; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9aaFKHa"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55032C4CEE9;
-	Tue, 22 Apr 2025 13:22:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHDyCHOI"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1FEC4CEE9;
+	Tue, 22 Apr 2025 13:23:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328177;
-	bh=rx9JUGebohPvLLMZ3ZvuKRrofWWfMOYGvlXK2IhCSTU=;
+	s=k20201202; t=1745328215;
+	bh=GsyXqfqrpYGwIYodaLtZrAJ42/ov9o771J70ZglKNfk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=H9aaFKHaKWMo/+ogoKm20UVNi9UiZKeHPmOzAeijkOnazm7KiDeJQM5WhSTWHMiJa
-	 bLu0GA56ZoJhTx/Jg/ghmHIWv1s4O0/fY3ZGXJChZu2W7kBiT4p2WE/L0h9bnVjdh1
-	 q+fymt8waRzY67PL29VPmJAjNKQ4GjU2OEVn2tWLjGBCbl2ynUxoMh4ZKCYy9AD9UN
-	 0BasTUZMNR9FGoULaN1S/nuF0eLGE7HPhx+a/xlS164Au9BCpLG4dEymuP3TzxAV9v
-	 +ClNk1zZ2TdoG2aaFXBfRm2gPGRhR3Dd9RlxlLDi437xMmQKxjCdtVJzIn9X/FHasA
-	 VLU6YE2DFx9aQ==
-Message-ID: <32bf44a4-baf0-4e43-a9e7-77f3506d509a@kernel.org>
-Date: Tue, 22 Apr 2025 15:22:55 +0200
+	b=pHDyCHOI7LouWnBQDFo2T6k7zkmNS6r/qe53EGdiWcGn0FwBJlUTQo7+SQtaj+wAu
+	 vUlnrr2H76WFm7lPI0jFP2rsSma86bkXGRUbVVxwVGCWhrSJIe5JQk9F6B5L+fT1t6
+	 0kCYHVnriXCR/htnWRl/i0jwDGOLcQ5X6dKMom0jDEGJ3ckEp5U7tmnxpDwnPHCOPa
+	 BrMPu7M12j8ns+LA3UfiMvr0Vj+yGAPbAqHMkP9zFH7hR0VDTHuc0x8HsoMaYXLr/D
+	 uumJAEgItkrIsMOHAkZP9Q6zF1QkGQir3oWTmQJftLikQG5pofBr6Wpz84PdQUWKcn
+	 2XD27Bqe8XfHQ==
+Message-ID: <c737fb9f-d3a8-45b1-87bf-afb7d3e57ca9@kernel.org>
+Date: Tue, 22 Apr 2025 15:23:32 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v2 3/7] selftests: mptcp: refine the 'iovlen'
- handling logic
+Subject: Re: [mptcp-next v2 5/7] selftests: mptcp: add a helper to get
+ subflow_info
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1744793332.git.yangang@kylinos.cn>
- <dee8dc73f766bc52c79d32a2dd22e9bc6ae436f0.1744793332.git.yangang@kylinos.cn>
+ <376ac5afbb35463387e8db2f009ff5b628cd69c7.1744793332.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,53 +87,110 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <dee8dc73f766bc52c79d32a2dd22e9bc6ae436f0.1744793332.git.yangang@kylinos.cn>
+In-Reply-To: <376ac5afbb35463387e8db2f009ff5b628cd69c7.1744793332.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Gang,
+Hello,
 
 On 16/04/2025 10:59, Gang Yan wrote:
-> In the original version, the handling logic for the 'iovlen' appeared
-> somewhat redundant. Therefore, 'iovlen++' is used to simpify this
-> portion of the code and improve its readaility.
+> This patch adds 'get_subflow_info' in 'mptcp_diag', which can check whether
+> a TCP connection is an MPTCP subflow based on the "INET_ULP_INFO_MPTCP"
+> with tcp_diag method.
 > 
 > Co-developed-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  tools/testing/selftests/net/mptcp/mptcp_diag.c | 5 ++---
->  1 file changed, 2 insertions(+), 3 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 86 ++++++++++++++++++-
+>  1 file changed, 84 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index 8a5b7745c58c..2bf13bce59a5 100644
+> index 2116b40bc927..28b1704d0c78 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -91,10 +91,9 @@ static void send_query(int fd, struct inet_diag_req_v2 *r)
->  		.iov_base = &req,
->  		.iov_len = sizeof(req)
->  	};
+> @@ -8,6 +8,7 @@
+>  #include <sys/socket.h>
+>  #include <netinet/in.h>
+>  #include <linux/tcp.h>
+> +#include <arpa/inet.h>
+>  
+>  #include <unistd.h>
+>  #include <stdlib.h>
+> @@ -19,8 +20,13 @@
+>  #define IPPROTO_MPTCP 262
+>  #endif
+>  
+> +#define parse_rtattr_nested(tb, max, rta) \
+> +	(parse_rtattr_flags((tb), (max), RTA_DATA(rta), RTA_PAYLOAD(rta), \
+> +			    NLA_F_NESTED))
+> +
+>  struct params {
+>  	__u32 target_token;
+> +	char subflow_addr[1024];
 
-I guess you could also declare iovlen to 0, then start the increment above:
+detail: maybe add a 's': subflow_addrs.
 
-  iov[iovlen++] = (struct iovec) { (...) };
+>  };
+>  
+>  struct mptcp_info {
 
-> -	iov[iovlen] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
-> -	iov[iovlen + 1] = (struct iovec){ &proto, sizeof(proto)};
-> +	iov[iovlen++] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
-> +	iov[iovlen++] = (struct iovec){ &proto, sizeof(proto)};
->  	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
-> -	iovlen += 2;
+(...)
 
-For such very small and not complex change like that, I think there is
-no need to create a dedicate patch. This can be squashed in the next
-patch with a note like:
+> @@ -244,6 +285,41 @@ static void get_mptcpinfo(__u32 token)
+>  	close(fd);
+>  }
+>  
+> +static void get_subflow_info(char *subflow_addr)
+> +{
+> +	struct inet_diag_req_v2 r = {
+> +		.sdiag_family           = AF_INET,
+> +		.sdiag_protocol         = IPPROTO_TCP,
+> +	};
+> +	int sport, dport;
+> +	char saddr[64];	// Take ipv6 into consideration
 
-  While at it, increment iovlen directly when an item is added.
+Detail: the comments are usually with the "/* ... */" style. You can
+also remove the comment and declare both [sd]addr on the same line I think.
 
->  	struct msghdr msg = {
->  		.msg_name = &nladdr,
->  		.msg_namelen = sizeof(nladdr),
+> +	char daddr[64];
+> +	int ret;
+> +	int fd;
+> +
+> +	ret = sscanf(subflow_addr, "%s %d %s %d", saddr, &sport, daddr, &dport);
+> +	if (ret != 4)
+> +		die_perror("IP PORT Pairs has style problems!");
+> +
+> +	printf("%s:%d -> %s:%d\n", saddr, sport, daddr, dport);
+> +
+> +	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+> +	if (fd < 0)
+> +		die_perror("Netlink socket");
+> +
+> +	r.id.idiag_cookie[0] = INET_DIAG_NOCOOKIE;
+> +	r.id.idiag_cookie[1] = INET_DIAG_NOCOOKIE;
+
+Can you not set it above, when declaring 'r'? Same for 'idiag_ext'.
+
+> +	r.id.idiag_sport = htons(sport);
+> +	r.id.idiag_dport = htons(dport);
+> +	r.id.idiag_if = 0;
+
+Do you need to explicitly set it to 0? Is it not 0 by default?
+
+> +
+> +	inet_pton(AF_INET, saddr, &r.id.idiag_src);
+> +	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
+> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+> +	send_query(fd, &r, IPPROTO_TCP);
+> +	recv_nlmsg(fd, IPPROTO_TCP);
+> +}
+> +
+>  static void parse_opts(int argc, char **argv, struct params *p)
+>  {
+>  	int c;
+
+(...)
 
 Cheers,
 Matt
