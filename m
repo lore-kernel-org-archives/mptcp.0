@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 890FD277007
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 11:20:30 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D37027CCD9
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 12:29:47 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745320830; cv=none; b=b/oLsX+RasWuWlIHRbwgoZSna10z4XZYUc3Gen20UHJFun6czxQzz0bOe8ikodr6jtfuqazxwgr9UDWvDwDxg8Fo7vkHqcy77GOMU6h3Sq5sZX+5HbMa2+Q/540OlNqMevW1CxZa4sxj/fDnUU5cJ+KZLCXlRMalGcV02mRXSBg=
+	t=1745324987; cv=none; b=e7d+qanR7TS+EKpScsttRePujtgyMaAWl5KjPuQOoExtrukb8dER+BM5vDcpS6+bXATVKqQ+n9xnRRTnwPCSIfPhcEgGUeLEn9esrTOQmPfUp2P+cf1DPcqbvZ0n7q7WCLaWyybLFeDEnrD77SBCYN20tOBCJBbtm3KyHUKHOyM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745320830; c=relaxed/simple;
-	bh=tTx48a29sCs4pTWub8SadqaAnFcOE+kziZgZDI1mRJo=;
+	s=arc-20240116; t=1745324987; c=relaxed/simple;
+	bh=kO6hYzhR299fjPUIyx1ZObD0AJ50Pg2sJWP4mJkTIvE=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=cUAj6KHFc3J38A5GwJpm1k3oC6DCBqPgjL2K5rZJXhcdFZVIb+dZ29Xc59xiEVkSE/aZKue+yD+RxOogoYGucUtM0jy+uR8xf5Ast14nyLO4q6gFdg18FijN3iHw7c4P2Irag/jOpLZNSR7Iq1O2olh05XzNK+L4phNQg/zSUHk=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qUNNqJfO; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=DxDshrVge+qahPthjNjRp4LIZK5k1186TnfteSu2yjplSHB/WYqHdbM2qYUuV4vpoaDg5W2q6zkzJR2oZQXl77GDOPN03GK0yecg4A5YKgK2OvMqMTI/kccJ1rzZzlQOAfiGwxVeCmsRZ/At089skrxwUzngKJPCpSFbOOW6d9I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZzm2C2x; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qUNNqJfO"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A1EF4C4CEE9;
-	Tue, 22 Apr 2025 11:20:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZzm2C2x"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47132C4CEE9;
+	Tue, 22 Apr 2025 12:29:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745320830;
-	bh=tTx48a29sCs4pTWub8SadqaAnFcOE+kziZgZDI1mRJo=;
+	s=k20201202; t=1745324987;
+	bh=kO6hYzhR299fjPUIyx1ZObD0AJ50Pg2sJWP4mJkTIvE=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qUNNqJfOR0RfRGI/b9jJhVeGECXsB2aZKX3wnfDtVWDw/cyFVqMaxdBG0M77E5eH2
-	 k1pRFPlErM7px/1NxCLZGLSYspqHhgK2y+WUB7UKPXEXOYPTWpU4UDF6nxgYwvictl
-	 wzFJ2QlQgjPVLdLxhCk+DwDlKsojf8B5sTpDuBfvFi7owwJzEl7FZEI52uOuXxhZgL
-	 Wi+xoC85EfA34Q7BFjYTQmvsk6D+tgqGYjFFkrwSboLo8SvXfwED7ChSu3FB87kcj1
-	 QnEv1vKUwRYeWA/98E5yOi5EmDO9zEaqM5tacgQ6GhnMU3xDYtuuP/PtmkFb3tAgAn
-	 ERqKcRIqihqlA==
-Message-ID: <1d68fc7d-06e7-493c-a207-658035c37af9@kernel.org>
-Date: Tue, 22 Apr 2025 13:20:27 +0200
+	b=lZzm2C2x5vS1+TbA3eMj+0ZnFoHdeDihw399qSv0x4Gid3mq7S88aDxS/gueMz8DZ
+	 zBvevqGdW8wbhLiQdDEUQTszPzyR9gjv0W+zaLvBf/WQGgufv8DkhXb4QDp55VPyJi
+	 fvhHReqzOalLcdULqdEoMK2Pn/7WsZi6QmB/4u4DH0DVEXTpDHCq9JHRHfJQAX1HVB
+	 +LilxPP5rMpVdxAxj9LJ2/j4ah/C+OVErQ7tsAXn2sWPQSPbnvipgxi0x+waHfL7Bm
+	 9WTvMxnx6y9Sq2qYVHy6XJ82y2WdbLbOWEI6hYoMuWxbPMy2fHNOe8Cx0k7fkdNqZI
+	 VQWegQhCQ9KIA==
+Message-ID: <441974bf-360f-4c1c-a27b-57cb8b936525@kernel.org>
+Date: Tue, 22 Apr 2025 14:29:43 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v1 2/2] selftests: mptcp: sockopt: add
- TCP_MAXSEG sockopt tests
+Subject: Re: [PATCH mptcp-next] selftests: mptcp: sockopt: use IPPROTO_MPTCP
+ for getaddrinfo
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1745314165.git.tanggeliang@kylinos.cn>
- <98b1b574823f8447f8418b5567800ec01faba529.1745314165.git.tanggeliang@kylinos.cn>
+References: <4bdd7056ddd882061c56c0eee3a7121908c0bb89.1745203199.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,75 +86,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <98b1b574823f8447f8418b5567800ec01faba529.1745314165.git.tanggeliang@kylinos.cn>
+In-Reply-To: <4bdd7056ddd882061c56c0eee3a7121908c0bb89.1745203199.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 22/04/2025 11:30, Geliang Tang wrote:
+On 21/04/2025 04:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> This patch adds the TCP_MAXSEG sockopt tests in mptcp_sockopt.c. Since
-> in getsockopt TCP_MAXSEG, the "user_mss" value can be obtained only in
-> the LISTEN state (see do_tcp_getsockopt in net/ipv4/tcp.c), the test
-> items are added to server() instead of client().
+> getaddrinfo MPTCP is recently supported in glibc and IPPROTO_MPTCP for
+> getaddrinfo is used in mptcp_connect.c. But in mptcp_sockopt.c and
+> mptcp_inq.c, IPPROTO_TCP are still used for getaddrinfo, So this patch
+> updates them.
 
-I think it is better to use packetdrill to do such validation, similar
-to what was done with other socket options. No?
+Thank you for the patch! It looks good to me!
 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  .../selftests/net/mptcp/mptcp_sockopt.c       | 22 +++++++++++++++++++
->  1 file changed, 22 insertions(+)
-> 
-> diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> index 926b0be87c99..e2043c0261bd 100644
-> --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-> @@ -689,6 +689,26 @@ static int xaccept(int s)
->  	return fd;
->  }
->  
-> +static void test_tcp_maxseg_sockopt(int fd)
-> +{
-> +	int maxseg = 1000;
-> +	socklen_t s;
-> +	int r;
-> +
-> +	s = sizeof(maxseg);
-> +	r = setsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, s);
-> +	if (r != 0)
-> +		die_perror("setsockopt TCP_MAXSEG");
-> +
-> +	maxseg = 0;
-> +	r = getsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, &s);
-> +	if (r != -1 && errno != EINVAL)
-> +		die_perror("getsockopt TCP_MAXSEG did not indicate -EINVAL");
-> +
-> +	if (maxseg != 1000)
-> +		xerror("maxseg=%d", maxseg);
-> +}
+Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
-Here, you set and get the value, but you don't really check the
-behaviour is the one we expect.
+Now in our tree (feat. for net-next):
 
-It is important to check the behaviour. It would be easier to do that
-with packetdrill I think.
+New patches for t/upstream:
+- bd8ffd9db6f7: selftests: mptcp: sockopt: use IPPROTO_MPTCP for getaddrinfo
+- Results: 2965d84d5350..cc1ebc97e683 (export)
 
-> +
->  static int server(int pipefd)
->  {
->  	int fd = -1, r;
-> @@ -713,6 +733,8 @@ static int server(int pipefd)
->  
->  	process_one_client(r, pipefd);
->  
-> +	test_tcp_maxseg_sockopt(fd);
-> +
->  	return 0;
->  }
->  
+Tests are now in progress:
+
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/9b908775f3f1c5cdaacac1ad6f1695ba8951a208/checks
 
 Cheers,
 Matt
