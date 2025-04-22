@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2716280A58
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:38 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879B278F52
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:53 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328158; cv=none; b=pCpgWUMQ5jhttWZwkg1ULSvwIsT2a+NruH0Al/+l3vF521QZubvPkXyNDJOfuvgjFABTWj1hqsdZ/wBJM3zrBbXoMGab30ewwVh9UiE1eZGiSa+qF0V+n5rXk2k32BahjLZiGu+DW6wLMq8kfxatY1ogyEN9yQ5gYU+A5hzTB44=
+	t=1745328173; cv=none; b=MmAwqxxWe7lH97+8kO56PoE75WUO1WbroztFyal/TOZAa0BUsluX8ILI1xA9VtRTtGzU13f/0b0mIctG2TJJKFov+DYi03HNW/dgPn9nivOyHHGcDVAY4GQFRzDPZWsHwWYdiLx7ShvseZHHlFIvAnNGIfC5YhXhaBUoWnLIx/k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328158; c=relaxed/simple;
-	bh=WPYa+0M5/0vZglqFeb/6o/g8URNS+uVU/eXnO8N4IuU=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=dhb6JfC4BB55rgNMVTnPXE9936ihSF0Y+xcu5fI23tI/LLghSprPQ8FaO9PALG9AwFad1oNBIhFDCgbCG1NyJKeOTml/BmTaoC8JwRfInuwf+iXg5djObIxl6TAetIq1lW3gnN9+qnD8VEpQRHVo9GcWoLcek0dUu0Ab7b4xdaI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYKPzcMr; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745328173; c=relaxed/simple;
+	bh=PFBWt7Ier+9v4KCe7VQWSeUErGcT0i7gkhvo78nKu2w=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=K2V7m9WfmPEPrn8/0XfQhVEladjatt7Llua+V5yJM9lHQtbcbykG/xGgYqoGysCgQ6Q3Ltt7pHG3MyLLKtdFpJPC/KEX9qe2vb3KX0CioFQ34fZtEgBFTklKjCXd7MorhJM6TH8ctT6TzvOx1n9+Kf6gDk1WY8CgeUd+rLkMcfw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyqlJqSm; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYKPzcMr"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7B0C4CEE9;
-	Tue, 22 Apr 2025 13:22:37 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyqlJqSm"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37215C4CEE9;
+	Tue, 22 Apr 2025 13:22:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328158;
-	bh=WPYa+0M5/0vZglqFeb/6o/g8URNS+uVU/eXnO8N4IuU=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=mYKPzcMroM//QQa3cfseh3LZ8QYi/nxj5pqGkcostrwKJ7XU4GB77uv94n/cGTnjg
-	 ekBzuB5/HnIooHj/z1h4j8pGie9YSZsdmO7Yb2OP+vsNTQTdce/NKY6dKTy5Z446tA
-	 HeQZ3myIqW9tHUvjOWlPIEmmfiGsIpH+PywJ6fmV1Fp3QLvyZoawruLSL1nsWbmBX+
-	 GFIkd1tSX3DDMWuBhObamm5uT3rDljWKAyHMMmGPIzEEJGrLm4IAUI82KJxQD8cYXf
-	 oH2kawYM6BFKkotbJ9R5B7RbkCu8ERZVcQx9FM+tvX/74s25YHe+/wX9ZPLECjWwLt
-	 fshhytP0MfE/Q==
-Message-ID: <1ee3ed52-3173-48b8-a7f2-a28ed143bbcf@kernel.org>
-Date: Tue, 22 Apr 2025 15:22:35 +0200
+	s=k20201202; t=1745328173;
+	bh=PFBWt7Ier+9v4KCe7VQWSeUErGcT0i7gkhvo78nKu2w=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=gyqlJqSm0VTH01jA7ceXdNY2DvHhMyMYGSjSH007YR+IGjP5nU+BpUEZo5HTcGunA
+	 KEUKT7UDRCFvzYhlltCeI5TR5VTbMfhnpdbQEJSg8LsN5DSP5jFJkdhyT0Wv6Wg7X0
+	 SDbQRlAy2WQ0U9gzB+Ui/t5DslK5pAh9FvoKY88onmXDQiBTzyHRB/7W35VMsgiX+F
+	 xT8ZetBTtfYrMctRNEdPzqSc5K6Oqe8rdE+FLBpsIm4fWYPOft1rwjJ7FQJQZOU12u
+	 hdTHpUpVdT4Q+K10P6LfJeeSyCZdfZjW0NJVHRcpCtnEOFP2Wk209BhV1CpZIbTThl
+	 Ezzp7Q7UuFBBQ==
+Message-ID: <6f1f5c0f-c7fe-472c-8dd5-87bf34d43c92@kernel.org>
+Date: Tue, 22 Apr 2025 15:22:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v2 0/7] Add 'dump_subflow' test in selftests
+Subject: Re: [mptcp-next v2 2/7] selftests: mptcp: refactor send_query
+ parameters for code clarity
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1744793332.git.yangang@kylinos.cn>
+ <afbbf4fc074b0d26b4954db0a750cadea1b67a62.1744793332.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,44 +87,84 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1744793332.git.yangang@kylinos.cn>
+In-Reply-To: <afbbf4fc074b0d26b4954db0a750cadea1b67a62.1744793332.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 16/04/2025 10:59, Gang Yan wrote:
-> The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
-> the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
-> ->'inet_sk_attr_size'.
+> This patch use 'inet_diag_req_v2' instead of 'token' as parameters of
+> send_query, and construct the req in 'get_mptcpinfo'. This modification
+> can enhance the enhancing clarity of the code, and prepare for the
+> dump_subflow_info.
 > 
-> So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
-> function. Given a specific TCP connection, it is possible to judge if
-> it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
+> Co-developed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
+> 
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> index ea7cb1128044..8a5b7745c58c 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> @@ -62,7 +62,7 @@ static void die_usage(int r)
+>  	exit(r);
+>  }
+>  
+> -static void send_query(int fd, __u32 token)
+> +static void send_query(int fd, struct inet_diag_req_v2 *r)
+>  {
+>  	struct sockaddr_nl nladdr = {
+>  		.nl_family = AF_NETLINK
+> @@ -76,19 +76,13 @@ static void send_query(int fd, __u32 token)
+>  			.nlmsg_type = SOCK_DIAG_BY_FAMILY,
+>  			.nlmsg_flags = NLM_F_REQUEST
+>  		},
+> -		.r = {
+> -			.sdiag_family = AF_INET,
+> -			/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
+> -			.sdiag_protocol = IPPROTO_TCP,
+> -			.id.idiag_cookie[0] = token,
+> -		}
+> +		.r = *r
+>  	};
+>  	struct rtattr rta_proto;
+>  	struct iovec iov[6];
+>  	int iovlen = 1;
+>  	__u32 proto;
+>  
+> -	req.r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+>  	proto = IPPROTO_MPTCP;
+>  	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
+>  	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
+> @@ -229,13 +223,20 @@ static void recv_nlmsg(int fd)
+>  
+>  static void get_mptcpinfo(__u32 token)
+>  {
+> +	struct inet_diag_req_v2 r = {
+> +		.sdiag_family           = AF_INET,
+> +		/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
+> +		.sdiag_protocol         = IPPROTO_TCP,
+> +		.id.idiag_cookie[0]     = token,
+> +	};
+>  	int fd;
+>  
+>  	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+>  	if (fd < 0)
+>  		die_perror("Netlink socket");
+>  
+> -	send_query(fd, token);
+> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
 
-Thank you for looking at this. I have few minor comments, please check
-my other replies.
+Out of curiosity, why can you not set idiag_ext above, when 'r' is declared?
 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
-
-Can you add this line in the last patch as well please? So the ticket
-will be automatically closed when the patches will be applied.
-
-
-Something else: can you make sure to keep the "PATCH" prefix from the
-subjects? I guess you used:
-
-  git send-email --subject-prefix mptcp-next
-
-instead of:
-
-  git send-email --subject-prefix "PATCH mptcp-next"
-
-Do not hesitate to use b4 [1] to send patches, it is helpful not to
-forget things when sending patches by email. (Just don't use 'b4 prep
---auto-to-cc' when submitting patches for MPTCP)
-
-[1] https://b4.docs.kernel.org
+> +	send_query(fd, &r);
+>  	recv_nlmsg(fd);
+>  
+>  	close(fd);
 
 Cheers,
 Matt
