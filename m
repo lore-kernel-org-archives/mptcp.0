@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 879B278F52
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7B228137C
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:57 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328173; cv=none; b=MmAwqxxWe7lH97+8kO56PoE75WUO1WbroztFyal/TOZAa0BUsluX8ILI1xA9VtRTtGzU13f/0b0mIctG2TJJKFov+DYi03HNW/dgPn9nivOyHHGcDVAY4GQFRzDPZWsHwWYdiLx7ShvseZHHlFIvAnNGIfC5YhXhaBUoWnLIx/k=
+	t=1745328177; cv=none; b=PjQn4hiX4FMU7n6bU5iysfqoQaTLeB4hcqoSGPIpIVKAd7fMKX3OI9hEqPeMTMU/7Ddu0XT9Gs/uKtdJl0lQJ+jATvD4OxEFLzKuPp+vWIxFXUYhkRXyCADyRzJvAfl8ygvjGKUowHwqZrwgO1tQ/qwU00G0960UBBMXpoeNqLc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328173; c=relaxed/simple;
-	bh=PFBWt7Ier+9v4KCe7VQWSeUErGcT0i7gkhvo78nKu2w=;
+	s=arc-20240116; t=1745328177; c=relaxed/simple;
+	bh=rx9JUGebohPvLLMZ3ZvuKRrofWWfMOYGvlXK2IhCSTU=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=K2V7m9WfmPEPrn8/0XfQhVEladjatt7Llua+V5yJM9lHQtbcbykG/xGgYqoGysCgQ6Q3Ltt7pHG3MyLLKtdFpJPC/KEX9qe2vb3KX0CioFQ34fZtEgBFTklKjCXd7MorhJM6TH8ctT6TzvOx1n9+Kf6gDk1WY8CgeUd+rLkMcfw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gyqlJqSm; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=uXN3mBmLdqMuGM39B5RC612v7NDL7zrkIqo31Mzd3zB3bKvzVXWwuhuKmj+EA6UvirEtpGp+mayMYJPvzRR1dse6C8tDn4qSWH71Z3jff25hBRIMqr3xJbYHHyvQifkcuggRtk08i7NNP5fSdRJugr0c9zl/ljEdKlezUctlOW0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=H9aaFKHa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gyqlJqSm"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37215C4CEE9;
-	Tue, 22 Apr 2025 13:22:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="H9aaFKHa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55032C4CEE9;
+	Tue, 22 Apr 2025 13:22:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328173;
-	bh=PFBWt7Ier+9v4KCe7VQWSeUErGcT0i7gkhvo78nKu2w=;
+	s=k20201202; t=1745328177;
+	bh=rx9JUGebohPvLLMZ3ZvuKRrofWWfMOYGvlXK2IhCSTU=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gyqlJqSm0VTH01jA7ceXdNY2DvHhMyMYGSjSH007YR+IGjP5nU+BpUEZo5HTcGunA
-	 KEUKT7UDRCFvzYhlltCeI5TR5VTbMfhnpdbQEJSg8LsN5DSP5jFJkdhyT0Wv6Wg7X0
-	 SDbQRlAy2WQ0U9gzB+Ui/t5DslK5pAh9FvoKY88onmXDQiBTzyHRB/7W35VMsgiX+F
-	 xT8ZetBTtfYrMctRNEdPzqSc5K6Oqe8rdE+FLBpsIm4fWYPOft1rwjJ7FQJQZOU12u
-	 hdTHpUpVdT4Q+K10P6LfJeeSyCZdfZjW0NJVHRcpCtnEOFP2Wk209BhV1CpZIbTThl
-	 Ezzp7Q7UuFBBQ==
-Message-ID: <6f1f5c0f-c7fe-472c-8dd5-87bf34d43c92@kernel.org>
-Date: Tue, 22 Apr 2025 15:22:50 +0200
+	b=H9aaFKHaKWMo/+ogoKm20UVNi9UiZKeHPmOzAeijkOnazm7KiDeJQM5WhSTWHMiJa
+	 bLu0GA56ZoJhTx/Jg/ghmHIWv1s4O0/fY3ZGXJChZu2W7kBiT4p2WE/L0h9bnVjdh1
+	 q+fymt8waRzY67PL29VPmJAjNKQ4GjU2OEVn2tWLjGBCbl2ynUxoMh4ZKCYy9AD9UN
+	 0BasTUZMNR9FGoULaN1S/nuF0eLGE7HPhx+a/xlS164Au9BCpLG4dEymuP3TzxAV9v
+	 +ClNk1zZ2TdoG2aaFXBfRm2gPGRhR3Dd9RlxlLDi437xMmQKxjCdtVJzIn9X/FHasA
+	 VLU6YE2DFx9aQ==
+Message-ID: <32bf44a4-baf0-4e43-a9e7-77f3506d509a@kernel.org>
+Date: Tue, 22 Apr 2025 15:22:55 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v2 2/7] selftests: mptcp: refactor send_query
- parameters for code clarity
+Subject: Re: [mptcp-next v2 3/7] selftests: mptcp: refine the 'iovlen'
+ handling logic
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1744793332.git.yangang@kylinos.cn>
- <afbbf4fc074b0d26b4954db0a750cadea1b67a62.1744793332.git.yangang@kylinos.cn>
+ <dee8dc73f766bc52c79d32a2dd22e9bc6ae436f0.1744793332.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,84 +87,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <afbbf4fc074b0d26b4954db0a750cadea1b67a62.1744793332.git.yangang@kylinos.cn>
+In-Reply-To: <dee8dc73f766bc52c79d32a2dd22e9bc6ae436f0.1744793332.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 16/04/2025 10:59, Gang Yan wrote:
-> This patch use 'inet_diag_req_v2' instead of 'token' as parameters of
-> send_query, and construct the req in 'get_mptcpinfo'. This modification
-> can enhance the enhancing clarity of the code, and prepare for the
-> dump_subflow_info.
+> In the original version, the handling logic for the 'iovlen' appeared
+> somewhat redundant. Therefore, 'iovlen++' is used to simpify this
+> portion of the code and improve its readaility.
 > 
 > Co-developed-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_diag.c  | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+>  tools/testing/selftests/net/mptcp/mptcp_diag.c | 5 ++---
+>  1 file changed, 2 insertions(+), 3 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index ea7cb1128044..8a5b7745c58c 100644
+> index 8a5b7745c58c..2bf13bce59a5 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -62,7 +62,7 @@ static void die_usage(int r)
->  	exit(r);
->  }
->  
-> -static void send_query(int fd, __u32 token)
-> +static void send_query(int fd, struct inet_diag_req_v2 *r)
->  {
->  	struct sockaddr_nl nladdr = {
->  		.nl_family = AF_NETLINK
-> @@ -76,19 +76,13 @@ static void send_query(int fd, __u32 token)
->  			.nlmsg_type = SOCK_DIAG_BY_FAMILY,
->  			.nlmsg_flags = NLM_F_REQUEST
->  		},
-> -		.r = {
-> -			.sdiag_family = AF_INET,
-> -			/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
-> -			.sdiag_protocol = IPPROTO_TCP,
-> -			.id.idiag_cookie[0] = token,
-> -		}
-> +		.r = *r
+> @@ -91,10 +91,9 @@ static void send_query(int fd, struct inet_diag_req_v2 *r)
+>  		.iov_base = &req,
+>  		.iov_len = sizeof(req)
 >  	};
->  	struct rtattr rta_proto;
->  	struct iovec iov[6];
->  	int iovlen = 1;
->  	__u32 proto;
->  
-> -	req.r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
->  	proto = IPPROTO_MPTCP;
->  	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
->  	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
-> @@ -229,13 +223,20 @@ static void recv_nlmsg(int fd)
->  
->  static void get_mptcpinfo(__u32 token)
->  {
-> +	struct inet_diag_req_v2 r = {
-> +		.sdiag_family           = AF_INET,
-> +		/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
-> +		.sdiag_protocol         = IPPROTO_TCP,
-> +		.id.idiag_cookie[0]     = token,
-> +	};
->  	int fd;
->  
->  	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
->  	if (fd < 0)
->  		die_perror("Netlink socket");
->  
-> -	send_query(fd, token);
-> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
 
-Out of curiosity, why can you not set idiag_ext above, when 'r' is declared?
+I guess you could also declare iovlen to 0, then start the increment above:
 
-> +	send_query(fd, &r);
->  	recv_nlmsg(fd);
->  
->  	close(fd);
+  iov[iovlen++] = (struct iovec) { (...) };
+
+> -	iov[iovlen] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
+> -	iov[iovlen + 1] = (struct iovec){ &proto, sizeof(proto)};
+> +	iov[iovlen++] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
+> +	iov[iovlen++] = (struct iovec){ &proto, sizeof(proto)};
+>  	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
+> -	iovlen += 2;
+
+For such very small and not complex change like that, I think there is
+no need to create a dedicate patch. This can be squashed in the next
+patch with a note like:
+
+  While at it, increment iovlen directly when an item is added.
+
+>  	struct msghdr msg = {
+>  		.msg_name = &nladdr,
+>  		.msg_namelen = sizeof(nladdr),
 
 Cheers,
 Matt
