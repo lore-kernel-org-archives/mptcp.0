@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D37027CCD9
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 12:29:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D2716280A58
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:22:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745324987; cv=none; b=e7d+qanR7TS+EKpScsttRePujtgyMaAWl5KjPuQOoExtrukb8dER+BM5vDcpS6+bXATVKqQ+n9xnRRTnwPCSIfPhcEgGUeLEn9esrTOQmPfUp2P+cf1DPcqbvZ0n7q7WCLaWyybLFeDEnrD77SBCYN20tOBCJBbtm3KyHUKHOyM=
+	t=1745328158; cv=none; b=pCpgWUMQ5jhttWZwkg1ULSvwIsT2a+NruH0Al/+l3vF521QZubvPkXyNDJOfuvgjFABTWj1hqsdZ/wBJM3zrBbXoMGab30ewwVh9UiE1eZGiSa+qF0V+n5rXk2k32BahjLZiGu+DW6wLMq8kfxatY1ogyEN9yQ5gYU+A5hzTB44=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745324987; c=relaxed/simple;
-	bh=kO6hYzhR299fjPUIyx1ZObD0AJ50Pg2sJWP4mJkTIvE=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=DxDshrVge+qahPthjNjRp4LIZK5k1186TnfteSu2yjplSHB/WYqHdbM2qYUuV4vpoaDg5W2q6zkzJR2oZQXl77GDOPN03GK0yecg4A5YKgK2OvMqMTI/kccJ1rzZzlQOAfiGwxVeCmsRZ/At089skrxwUzngKJPCpSFbOOW6d9I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lZzm2C2x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745328158; c=relaxed/simple;
+	bh=WPYa+0M5/0vZglqFeb/6o/g8URNS+uVU/eXnO8N4IuU=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=dhb6JfC4BB55rgNMVTnPXE9936ihSF0Y+xcu5fI23tI/LLghSprPQ8FaO9PALG9AwFad1oNBIhFDCgbCG1NyJKeOTml/BmTaoC8JwRfInuwf+iXg5djObIxl6TAetIq1lW3gnN9+qnD8VEpQRHVo9GcWoLcek0dUu0Ab7b4xdaI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mYKPzcMr; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lZzm2C2x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 47132C4CEE9;
-	Tue, 22 Apr 2025 12:29:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mYKPzcMr"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id BB7B0C4CEE9;
+	Tue, 22 Apr 2025 13:22:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745324987;
-	bh=kO6hYzhR299fjPUIyx1ZObD0AJ50Pg2sJWP4mJkTIvE=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=lZzm2C2x5vS1+TbA3eMj+0ZnFoHdeDihw399qSv0x4Gid3mq7S88aDxS/gueMz8DZ
-	 zBvevqGdW8wbhLiQdDEUQTszPzyR9gjv0W+zaLvBf/WQGgufv8DkhXb4QDp55VPyJi
-	 fvhHReqzOalLcdULqdEoMK2Pn/7WsZi6QmB/4u4DH0DVEXTpDHCq9JHRHfJQAX1HVB
-	 +LilxPP5rMpVdxAxj9LJ2/j4ah/C+OVErQ7tsAXn2sWPQSPbnvipgxi0x+waHfL7Bm
-	 9WTvMxnx6y9Sq2qYVHy6XJ82y2WdbLbOWEI6hYoMuWxbPMy2fHNOe8Cx0k7fkdNqZI
-	 VQWegQhCQ9KIA==
-Message-ID: <441974bf-360f-4c1c-a27b-57cb8b936525@kernel.org>
-Date: Tue, 22 Apr 2025 14:29:43 +0200
+	s=k20201202; t=1745328158;
+	bh=WPYa+0M5/0vZglqFeb/6o/g8URNS+uVU/eXnO8N4IuU=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=mYKPzcMroM//QQa3cfseh3LZ8QYi/nxj5pqGkcostrwKJ7XU4GB77uv94n/cGTnjg
+	 ekBzuB5/HnIooHj/z1h4j8pGie9YSZsdmO7Yb2OP+vsNTQTdce/NKY6dKTy5Z446tA
+	 HeQZ3myIqW9tHUvjOWlPIEmmfiGsIpH+PywJ6fmV1Fp3QLvyZoawruLSL1nsWbmBX+
+	 GFIkd1tSX3DDMWuBhObamm5uT3rDljWKAyHMMmGPIzEEJGrLm4IAUI82KJxQD8cYXf
+	 oH2kawYM6BFKkotbJ9R5B7RbkCu8ERZVcQx9FM+tvX/74s25YHe+/wX9ZPLECjWwLt
+	 fshhytP0MfE/Q==
+Message-ID: <1ee3ed52-3173-48b8-a7f2-a28ed143bbcf@kernel.org>
+Date: Tue, 22 Apr 2025 15:22:35 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] selftests: mptcp: sockopt: use IPPROTO_MPTCP
- for getaddrinfo
+Subject: Re: [mptcp-next v2 0/7] Add 'dump_subflow' test in selftests
 Content-Language: en-GB, fr-BE
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <4bdd7056ddd882061c56c0eee3a7121908c0bb89.1745203199.git.tanggeliang@kylinos.cn>
+To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+References: <cover.1744793332.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,34 +84,44 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <4bdd7056ddd882061c56c0eee3a7121908c0bb89.1745203199.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1744793332.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Gang,
 
-On 21/04/2025 04:40, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+On 16/04/2025 10:59, Gang Yan wrote:
+> The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
+> the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
+> ->'inet_sk_attr_size'.
 > 
-> getaddrinfo MPTCP is recently supported in glibc and IPPROTO_MPTCP for
-> getaddrinfo is used in mptcp_connect.c. But in mptcp_sockopt.c and
-> mptcp_inq.c, IPPROTO_TCP are still used for getaddrinfo, So this patch
-> updates them.
+> So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
+> function. Given a specific TCP connection, it is possible to judge if
+> it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
 
-Thank you for the patch! It looks good to me!
+Thank you for looking at this. I have few minor comments, please check
+my other replies.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
 
-Now in our tree (feat. for net-next):
+Can you add this line in the last patch as well please? So the ticket
+will be automatically closed when the patches will be applied.
 
-New patches for t/upstream:
-- bd8ffd9db6f7: selftests: mptcp: sockopt: use IPPROTO_MPTCP for getaddrinfo
-- Results: 2965d84d5350..cc1ebc97e683 (export)
 
-Tests are now in progress:
+Something else: can you make sure to keep the "PATCH" prefix from the
+subjects? I guess you used:
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/9b908775f3f1c5cdaacac1ad6f1695ba8951a208/checks
+  git send-email --subject-prefix mptcp-next
+
+instead of:
+
+  git send-email --subject-prefix "PATCH mptcp-next"
+
+Do not hesitate to use b4 [1] to send patches, it is helpful not to
+forget things when sending patches by email. (Just don't use 'b4 prep
+--auto-to-cc' when submitting patches for MPTCP)
+
+[1] https://b4.docs.kernel.org
 
 Cheers,
 Matt
