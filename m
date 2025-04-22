@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9C15E27F4E7
-	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:23:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 790AC28137C
+	for <mptcp@lists.linux.dev>; Tue, 22 Apr 2025 13:23:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745328215; cv=none; b=sIGZsloBs3AvHQgtOG4Rbd9mClEGdt3W24lip1WpJ9ndNLnUwlfcvgxFM4JYdX8/XUorfNSeX68nQMAgR/bmDAhzMaFimpsYymexHayADkroqEFsesNENRK/UJJv4Np27mWoCCMfg0CCk9kKe14IRlsySx2bBGBL5aPRLO5K46I=
+	t=1745328229; cv=none; b=kCfrWMnpucQjthkmo2f4MX5/s20mwDFJNA3kbM9UBM/FEdR1DOgEVJt7ZjP1LTgJMWa2UHzZyHm1h+3IRacTxHZCYU5VNEiEaeJciNbdEPghtdxB5dh2mSH+LAuw2ZSvsw9eX9dZ/s8XMXoeuv6cfXbnoaXyhdcV5pJpFa6TMBQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745328215; c=relaxed/simple;
-	bh=GsyXqfqrpYGwIYodaLtZrAJ42/ov9o771J70ZglKNfk=;
+	s=arc-20240116; t=1745328229; c=relaxed/simple;
+	bh=n/EhkWaBkzhEQzSu/bem0huZDuNCE6I7wCymD1apy6w=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=iX576AMDom6Ov8lNwsP3vnMeMYUiY0iMDRsUxn0Id998pAV3rycdeEs+P/9+zc5+e5XTcNg/mTmCDHj6Qwh1PQDFlJyCaeMfEWKGdgCv1n1zxfrFsRw38Bj2vgET8TOg4M7+u6jcod2FNnao0F6jUNl3KmVZSKmyZJLbLtUF2NA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pHDyCHOI; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=UiJho2dRuvOiko8Av+sB+Q99+lq/RdB3vzCg8mjYfIPckymub/May7iv3weYKQh9Y8GQ4wusIKWl/tPD5O6t0YCz0t3j+dJZO+9T28s8ajk8pSLYL+5EAIv2mJ7foEL+RV9wkFlAEFGZwT7TgJITx9iMh4cs9I+ESElf/MVQs1Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pwhvGCvo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pHDyCHOI"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4A1FEC4CEE9;
-	Tue, 22 Apr 2025 13:23:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pwhvGCvo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 40CF0C4CEE9;
+	Tue, 22 Apr 2025 13:23:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745328215;
-	bh=GsyXqfqrpYGwIYodaLtZrAJ42/ov9o771J70ZglKNfk=;
+	s=k20201202; t=1745328229;
+	bh=n/EhkWaBkzhEQzSu/bem0huZDuNCE6I7wCymD1apy6w=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=pHDyCHOI7LouWnBQDFo2T6k7zkmNS6r/qe53EGdiWcGn0FwBJlUTQo7+SQtaj+wAu
-	 vUlnrr2H76WFm7lPI0jFP2rsSma86bkXGRUbVVxwVGCWhrSJIe5JQk9F6B5L+fT1t6
-	 0kCYHVnriXCR/htnWRl/i0jwDGOLcQ5X6dKMom0jDEGJ3ckEp5U7tmnxpDwnPHCOPa
-	 BrMPu7M12j8ns+LA3UfiMvr0Vj+yGAPbAqHMkP9zFH7hR0VDTHuc0x8HsoMaYXLr/D
-	 uumJAEgItkrIsMOHAkZP9Q6zF1QkGQir3oWTmQJftLikQG5pofBr6Wpz84PdQUWKcn
-	 2XD27Bqe8XfHQ==
-Message-ID: <c737fb9f-d3a8-45b1-87bf-afb7d3e57ca9@kernel.org>
-Date: Tue, 22 Apr 2025 15:23:32 +0200
+	b=pwhvGCvoDTvggTpaUAXWGNPW+b9QzmKvJCqxp/mjv8ein3bm8/JhJ/nDQnkBnPRtd
+	 xQGCMu2LA9lD9m7SP133LTXNmDOyPTNf48dZU6FNA1WcDAW76TuiDZqsEPJ8vNk/Rc
+	 B8tas2yjenG08K+i69lQwYQqHTp7qiMxnG3nZ1HPra8wsnUw9Qfc2EjjAhvU0bz7Cb
+	 Smm52HaYNN29If4bpFqJ/CaoeQNQ/S5Fh+z1fwMOZE8xOpFAD94mb4YxX2deWtGKtM
+	 Puo4bKkvyHkdonz2aHxXN3iknQ4MWiLHHWYtOf806A86HuYiPQGUxC9dtnigNfP724
+	 xbm6CtPCWlfOQ==
+Message-ID: <a5211dd3-7508-442d-b318-b53dc79eeba2@kernel.org>
+Date: Tue, 22 Apr 2025 15:23:46 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [mptcp-next v2 5/7] selftests: mptcp: add a helper to get
+Subject: Re: [mptcp-next v2 6/7] selftests: mptcp: add a helper to print
  subflow_info
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1744793332.git.yangang@kylinos.cn>
- <376ac5afbb35463387e8db2f009ff5b628cd69c7.1744793332.git.yangang@kylinos.cn>
+ <69ec06b8a1a16cec85b06bb93150e53de0ffdaf5.1744793332.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,110 +87,136 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <376ac5afbb35463387e8db2f009ff5b628cd69c7.1744793332.git.yangang@kylinos.cn>
+In-Reply-To: <69ec06b8a1a16cec85b06bb93150e53de0ffdaf5.1744793332.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hello,
+Hi Gang,
 
 On 16/04/2025 10:59, Gang Yan wrote:
-> This patch adds 'get_subflow_info' in 'mptcp_diag', which can check whether
-> a TCP connection is an MPTCP subflow based on the "INET_ULP_INFO_MPTCP"
-> with tcp_diag method.
+> This patch adds 'print_subflow_info' in 'mptcp_diag', which can print
+> the subflow_filed of an MPTCP subflow. This function is for further
+> checking the 'subflow_info' through inet_diag method.
+
+I think this can be squashed in the previous patch. They don't make
+sense alone.
+
 > 
 > Co-developed-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_diag.c  | 86 ++++++++++++++++++-
->  1 file changed, 84 insertions(+), 2 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 72 +++++++++++++++++++
+>  1 file changed, 72 insertions(+)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index 2116b40bc927..28b1704d0c78 100644
+> index 28b1704d0c78..25495c7e1c74 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> @@ -8,6 +8,7 @@
->  #include <sys/socket.h>
->  #include <netinet/in.h>
->  #include <linux/tcp.h>
-> +#include <arpa/inet.h>
->  
->  #include <unistd.h>
->  #include <stdlib.h>
-> @@ -19,8 +20,13 @@
->  #define IPPROTO_MPTCP 262
->  #endif
->  
-> +#define parse_rtattr_nested(tb, max, rta) \
-> +	(parse_rtattr_flags((tb), (max), RTA_DATA(rta), RTA_PAYLOAD(rta), \
-> +			    NLA_F_NESTED))
-> +
->  struct params {
->  	__u32 target_token;
-> +	char subflow_addr[1024];
-
-detail: maybe add a 's': subflow_addrs.
-
+> @@ -74,6 +74,18 @@ enum {
 >  };
+>  #define MPTCP_SUBFLOW_ATTR_MAX (__MPTCP_SUBFLOW_ATTR_MAX - 1)
 >  
->  struct mptcp_info {
-
-(...)
-
-> @@ -244,6 +285,41 @@ static void get_mptcpinfo(__u32 token)
->  	close(fd);
+> +#define MPTCP_SUBFLOW_FLAG_MCAP_REM		_BITUL(0)
+> +#define MPTCP_SUBFLOW_FLAG_MCAP_LOC		_BITUL(1)
+> +#define MPTCP_SUBFLOW_FLAG_JOIN_REM		_BITUL(2)
+> +#define MPTCP_SUBFLOW_FLAG_JOIN_LOC		_BITUL(3)
+> +#define MPTCP_SUBFLOW_FLAG_BKUP_REM		_BITUL(4)
+> +#define MPTCP_SUBFLOW_FLAG_BKUP_LOC		_BITUL(5)
+> +#define MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED	_BITUL(6)
+> +#define MPTCP_SUBFLOW_FLAG_CONNECTED		_BITUL(7)
+> +#define MPTCP_SUBFLOW_FLAG_MAPVALID		_BITUL(8)
+> +
+> +#define rta_getattr(type, value)		(*(type *)RTA_DATA(value))
+> +
+>  static void die_perror(const char *msg)
+>  {
+>  	perror(msg);
+> @@ -185,6 +197,65 @@ static void print_info_msg(struct mptcp_info *info)
+>  	printf("bytes_acked:      %llu\n", info->mptcpi_bytes_acked);
 >  }
 >  
-> +static void get_subflow_info(char *subflow_addr)
+> +/*
+> + * 'print_subflow_info' is from 'mptcp_subflow_info'
+> + * which is a function in 'misc/ss.c' of iproute2.
+> + */
+> +static void print_subflow_info(struct rtattr *tb[])
 > +{
-> +	struct inet_diag_req_v2 r = {
-> +		.sdiag_family           = AF_INET,
-> +		.sdiag_protocol         = IPPROTO_TCP,
-> +	};
-> +	int sport, dport;
-> +	char saddr[64];	// Take ipv6 into consideration
-
-Detail: the comments are usually with the "/* ... */" style. You can
-also remove the comment and declare both [sd]addr on the same line I think.
-
-> +	char daddr[64];
-> +	int ret;
-> +	int fd;
+> +	u_int32_t flags = 0;
 > +
-> +	ret = sscanf(subflow_addr, "%s %d %s %d", saddr, &sport, daddr, &dport);
-> +	if (ret != 4)
-> +		die_perror("IP PORT Pairs has style problems!");
+> +	printf("It's a mptcp subflow, the subflow info:\n");
+> +	if (tb[MPTCP_SUBFLOW_ATTR_FLAGS]) {
+> +		char caps[32 + 1] = { 0 }, *cap = &caps[0];
 > +
-> +	printf("%s:%d -> %s:%d\n", saddr, sport, daddr, dport);
+> +		flags = rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_FLAGS]);
 > +
-> +	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
-> +	if (fd < 0)
-> +		die_perror("Netlink socket");
+> +		if (flags & MPTCP_SUBFLOW_FLAG_MCAP_REM)
+> +			*cap++ = 'M';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_MCAP_LOC)
+> +			*cap++ = 'm';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_JOIN_REM)
+> +			*cap++ = 'J';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_JOIN_LOC)
+> +			*cap++ = 'j';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_BKUP_REM)
+> +			*cap++ = 'B';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_BKUP_LOC)
+> +			*cap++ = 'b';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_FULLY_ESTABLISHED)
+> +			*cap++ = 'e';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_CONNECTED)
+> +			*cap++ = 'c';
+> +		if (flags & MPTCP_SUBFLOW_FLAG_MAPVALID)
+> +			*cap++ = 'v';
 > +
-> +	r.id.idiag_cookie[0] = INET_DIAG_NOCOOKIE;
-> +	r.id.idiag_cookie[1] = INET_DIAG_NOCOOKIE;
+> +		if (flags)
+> +			printf(" flags:%s", caps);
+> +	}
+> +	if (tb[MPTCP_SUBFLOW_ATTR_TOKEN_REM] &&
+> +	    tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC] &&
+> +	    tb[MPTCP_SUBFLOW_ATTR_ID_REM] &&
+> +	    tb[MPTCP_SUBFLOW_ATTR_ID_LOC])
+> +		printf(" token:%04x(id:%u)/%04x(id:%u)",
+> +		       rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_TOKEN_REM]),
+> +		       rta_getattr(__u8, tb[MPTCP_SUBFLOW_ATTR_ID_REM]),
+> +		       rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_TOKEN_LOC]),
+> +		       rta_getattr(__u8, tb[MPTCP_SUBFLOW_ATTR_ID_LOC]));
+> +	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ])
+> +		printf(" seq:%llu",
+> +		       rta_getattr(__u64, tb[MPTCP_SUBFLOW_ATTR_MAP_SEQ]));
+> +	if (tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ])
+> +		printf(" sfseq:%u",
+> +		       rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_MAP_SFSEQ]));
+> +	if (tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET])
+> +		printf(" ssnoff:%u",
+> +		       rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_SSN_OFFSET]));
+> +	if (tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN])
+> +		printf(" maplen:%u",
+> +		       rta_getattr(__u32, tb[MPTCP_SUBFLOW_ATTR_MAP_DATALEN]));
 
-Can you not set it above, when declaring 'r'? Same for 'idiag_ext'.
+I guess you need:
 
-> +	r.id.idiag_sport = htons(sport);
-> +	r.id.idiag_dport = htons(dport);
-> +	r.id.idiag_if = 0;
+  printf("\n");
 
-Do you need to explicitly set it to 0? Is it not 0 by default?
+here at the end.
 
-> +
-> +	inet_pton(AF_INET, saddr, &r.id.idiag_src);
-> +	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
-> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
-> +	send_query(fd, &r, IPPROTO_TCP);
-> +	recv_nlmsg(fd, IPPROTO_TCP);
+Also, do not hesitate to show an example of the whole output in the
+commit message, that would be helpful for the reviews.
+
 > +}
 > +
->  static void parse_opts(int argc, char **argv, struct params *p)
+>  static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
 >  {
->  	int c;
+>  	struct inet_diag_msg *r = NLMSG_DATA(nlh);
+> @@ -219,6 +290,7 @@ static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
+>  
+>  			parse_rtattr_nested(sfinfo, MPTCP_SUBFLOW_ATTR_MAX,
+>  					    ulpinfo[INET_ULP_INFO_MPTCP]);
+> +			print_subflow_info(sfinfo);
+>  		} else {
+>  			printf("It's a normal TCP!\n");
+>  		}
 
-(...)
 
 Cheers,
 Matt
