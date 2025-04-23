@@ -1,100 +1,137 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F39D72701B1
-	for <mptcp@lists.linux.dev>; Wed, 23 Apr 2025 09:40:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 332BD2BAF7
+	for <mptcp@lists.linux.dev>; Wed, 23 Apr 2025 09:50:48 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745401256; cv=none; b=mEBdUAxgOv8S7uHMxdTbRXurwgHtJgMdftWvakJZM3+F4s8GIb+kKGBVFqx9sXqe5RsKO6cFfFwy1vtKdDpwd2VAmiB3FMLZVwNIzzDaICUajNrA0AFraqArohKll2DtketomNkQQ481FQBnAVRcnh+LlDlKcXeMZealv+JjzBU=
+	t=1745401849; cv=none; b=iAD/SH4YjMBorzHH0uP4lJzha0hnDADv+0OCP13mxz5lgcwk+usigprR27B/uHcJap0e7yTqp2r2iKFZlhW1WpJfPGc9hhOfGaUq5EWfW3GrPx4vQY4yfXNqcXBxOcPQDYZfVg0yPGbgbV++OJo9U+vbyui62timsDdu04bC+EM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745401256; c=relaxed/simple;
-	bh=N1fim+dFf1Fcz3Xapnqlp34Y7CX2Cvt81omK14EyvG8=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=OhaKw+lC0rfaqfrGrTKrHNrfQTrOxuiLfRL0oSG0186BMUC7Lex65OUKfABM0aj8i+RXSloelfiUUBVJJNXZ5L8O6dR9HtdRXYZRrRsIiWXXJaZhcNxtSpnGgEDS3SoIz2Y9+bJdJzit6x8wvmsXs/Fj0KtCHKDb48sLxFSQzvA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GJgSfK++; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745401849; c=relaxed/simple;
+	bh=VxBI+C3MGpha/eKAxmeERjCDuWCa7WgDkXtIM8T3yzo=;
+	h=Message-ID:Subject:From:To:Cc:In-Reply-To:References:Content-Type:
+	 Date:MIME-Version; b=n7bIUM3eNWw1sGwX4MgKsyaq97uGz4vtGrvw4nk+uZOnUdU7tYmdSCZByS9h7+A4hTEB6Q2fFWUE2qBelyEE5VRrZS3ipE6Ec0qucpz6AbRCDRTCy6OBS7idHOrv0s8EVnJBSI7yYAW0Jtt7zQO4N2UBJmlliBNGO6az1c/2Y2s=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jOLsJncU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GJgSfK++"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 60570C4CEE2;
-	Wed, 23 Apr 2025 09:40:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jOLsJncU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 49630C4CEE2;
+	Wed, 23 Apr 2025 09:50:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745401255;
-	bh=N1fim+dFf1Fcz3Xapnqlp34Y7CX2Cvt81omK14EyvG8=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GJgSfK++1GuBrfT6cBEX95SwrQg+BWK8nsv/4y/7xkFgigHZrcJrSy4GLE5r4zmYY
-	 /14h2UxIesow5a62F7bI7mGOs4UeVEzYOFf0CuN44ZCG+r5xllmozN+I8cA2lwJDRL
-	 NFPVpSBnjlq0AGRj4z7hESBv6sS2qbHKsmG+FPzgJ1dWhRHysOocJvsfPGHzCsGR6X
-	 lhjT5fcKu5C9xoZzaIOkDZLsgWTKPfiSU9O7nsv3wnC+cGCJaBCYFaHhiYSFZhlupP
-	 6rVi7X9Ieje1VNvlg6ahI4ykRjMERNbu5/g6OwUp4z7FxmiU0Rxuy7U134JMC6Uj0B
-	 4fMtNzEC571gg==
+	s=k20201202; t=1745401848;
+	bh=VxBI+C3MGpha/eKAxmeERjCDuWCa7WgDkXtIM8T3yzo=;
+	h=Subject:From:To:Cc:In-Reply-To:References:Date:From;
+	b=jOLsJncUPaCHtSpcMARVDulw7hlntcxG0BrT0aCDjinzALtmfnnZKcqf2YIJ6u/9c
+	 1cKFqc2ThBn2a3vIa6DmUwqYdmu5268NvaLQ3wVoZV19rOjTDKLNKFbzl33y7ZJdHA
+	 4RxtCsqk/11KX45/qU62+YhYn68/270/7zO+akcoicCTncK4s94at/oh1nb81wtvms
+	 oHIcVBHq6pZa7U1kkxrtr7goSTWm0/5vk07JRGSIqfpDILNdz9CgFY15cTdAP9GfeA
+	 8u/kwJe5UAUewqdGFRI71n0F0lU7KzfpzeXPD9fAEYF72o2SBBwJhw8D/WfZ1o6Z8k
+	 QRntw9dhy503Q==
+Message-ID: <996f8df8fbbace706d3972f5d3a7727c2e652239.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v1 2/2] selftests: mptcp: sockopt: add
+ TCP_MAXSEG sockopt tests
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 3/3] selftests: mptcp: sockopt: add TCP_MAXSEG sockopt tests
-Date: Wed, 23 Apr 2025 17:40:42 +0800
-Message-ID: <2a5c52d491de283397c9fad972350298de74d8c3.1745401025.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1745401025.git.tanggeliang@kylinos.cn>
-References: <cover.1745401025.git.tanggeliang@kylinos.cn>
+In-Reply-To: <1d68fc7d-06e7-493c-a207-658035c37af9@kernel.org>
+References: <cover.1745314165.git.tanggeliang@kylinos.cn>
+	 <98b1b574823f8447f8418b5567800ec01faba529.1745314165.git.tanggeliang@kylinos.cn>
+	 <1d68fc7d-06e7-493c-a207-658035c37af9@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Date: Wed, 23 Apr 2025 17:46:16 +0800
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+User-Agent: Evolution 3.52.3-0ubuntu1 
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Matt,
 
-This patch adds the TCP_MAXSEG sockopt tests in mptcp_sockopt.c. Since
-in getsockopt TCP_MAXSEG, the "user_mss" value can be obtained only in
-the LISTEN state (see do_tcp_getsockopt in net/ipv4/tcp.c), the test
-items are added to server() instead of client().
+Thanks for the review.
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_sockopt.c       | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
+> Hi Geliang,
+> 
+> On 22/04/2025 11:30, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This patch adds the TCP_MAXSEG sockopt tests in mptcp_sockopt.c.
+> > Since
+> > in getsockopt TCP_MAXSEG, the "user_mss" value can be obtained only
+> > in
+> > the LISTEN state (see do_tcp_getsockopt in net/ipv4/tcp.c), the
+> > test
+> > items are added to server() instead of client().
+> 
+> I think it is better to use packetdrill to do such validation,
+> similar
+> to what was done with other socket options. No?
+> 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  .../selftests/net/mptcp/mptcp_sockopt.c       | 22
+> > +++++++++++++++++++
+> >  1 file changed, 22 insertions(+)
+> > 
+> > diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > index 926b0be87c99..e2043c0261bd 100644
+> > --- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > +++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
+> > @@ -689,6 +689,26 @@ static int xaccept(int s)
+> >  	return fd;
+> >  }
+> >  
+> > +static void test_tcp_maxseg_sockopt(int fd)
+> > +{
+> > +	int maxseg = 1000;
+> > +	socklen_t s;
+> > +	int r;
+> > +
+> > +	s = sizeof(maxseg);
+> > +	r = setsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, s);
+> > +	if (r != 0)
+> > +		die_perror("setsockopt TCP_MAXSEG");
+> > +
+> > +	maxseg = 0;
+> > +	r = getsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, &s);
+> > +	if (r != -1 && errno != EINVAL)
+> > +		die_perror("getsockopt TCP_MAXSEG did not indicate
+> > -EINVAL");
+> > +
+> > +	if (maxseg != 1000)
+> > +		xerror("maxseg=%d", maxseg);
+> > +}
+> 
+> Here, you set and get the value, but you don't really check the
+> behaviour is the one we expect.
+> 
+> It is important to check the behaviour. It would be easier to do that
+> with packetdrill I think.
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-index 9934a68df237..5ad1e9ed2fe6 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_sockopt.c
-@@ -697,6 +697,26 @@ static int xaccept(int s)
- 	return fd;
- }
- 
-+static void test_tcp_maxseg_sockopt(int fd)
-+{
-+	int maxseg = 1000;
-+	socklen_t s;
-+	int r;
-+
-+	s = sizeof(maxseg);
-+	r = setsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, s);
-+	if (r != 0)
-+		die_perror("setsockopt TCP_MAXSEG");
-+
-+	maxseg = 0;
-+	r = getsockopt(fd, IPPROTO_TCP, TCP_MAXSEG, &maxseg, &s);
-+	if (r != -1 && errno != EINVAL)
-+		die_perror("getsockopt TCP_MAXSEG did not indicate -EINVAL");
-+
-+	if (maxseg != 1000)
-+		xerror("maxseg=%d", maxseg);
-+}
-+
- static int server(int pipefd)
- {
- 	int fd = -1, r;
-@@ -721,6 +741,8 @@ static int server(int pipefd)
- 
- 	process_one_client(r, pipefd);
- 
-+	test_tcp_maxseg_sockopt(fd);
-+
- 	return 0;
- }
- 
--- 
-2.43.0
+I totally agree, but I want to verify the set and get values ​​in this
+set first, I will add packetdrill tests for it later (once I learn how
+to modify packetdrill).
+
+Thanks,
+-Geliang
+
+> 
+> > +
+> >  static int server(int pipefd)
+> >  {
+> >  	int fd = -1, r;
+> > @@ -713,6 +733,8 @@ static int server(int pipefd)
+> >  
+> >  	process_one_client(r, pipefd);
+> >  
+> > +	test_tcp_maxseg_sockopt(fd);
+> > +
+> >  	return 0;
+> >  }
+> >  
+> 
+> Cheers,
+> Matt
 
