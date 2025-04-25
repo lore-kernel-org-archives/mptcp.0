@@ -1,58 +1,59 @@
 Received: from mailgw.kylinos.cn (mailgw.kylinos.cn [124.126.103.232])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9030F1C8621
-	for <mptcp@lists.linux.dev>; Fri, 25 Apr 2025 06:18:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C45A222A7F9
+	for <mptcp@lists.linux.dev>; Fri, 25 Apr 2025 06:18:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=124.126.103.232
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745561940; cv=none; b=c9UCAPHcHj9sppSBAx3J0fhTf22sD1vM+LCL64gCT5+EUG/FgY0BRLHk7mOAeDlfGUBFdS7r58+1f/OdaK5HzxzPTuIQ7NrkvW7BBD9/kj4VEngrRKB6fCzHaCli8MYiKzbuPAAdYbvIy8D5LqgW93etaCKTb9tB3sXt0COFGQk=
+	t=1745561942; cv=none; b=MvXO0S/DcfGkPVUqcJBwuuYo7M/OVl85KFHWuGGn0tTA8Xno2HLZZemj5eVjRTtm2d9K5M4PY46F5J54BaKFg5IaQUa+8enjaJQQ6cwc1YSUc2hG56rd2p0r+CjfCX9gSJRdXZLXxdhj8bW+3+K0lRo8fKecQYtuUDiDp3h7xhM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745561940; c=relaxed/simple;
-	bh=YNSODEBwJkYulk4YJfFMIscKMRsrLTZ3Fwd/9xU61VQ=;
-	h=From:To:Cc:Subject:Date:Message-Id:MIME-Version; b=CpFk5H29tk9hRwcq3NExPQlj4GQgJz04sxQRBVE9mBtzZ7o0J35TdgBhBbdUMh3YyZ/b41jZy5GpkyReIxsQjHMXiUxPN86iUUL6Z4b/Dan8NhdNjMFFT0Z4VA7N8EQrWYdQAygvo2gFYgKgzPeUCQtyuFNqxI+++Gw75Oh+1uE=
+	s=arc-20240116; t=1745561942; c=relaxed/simple;
+	bh=HrBZistDvYrYcUUrfZC4KfpwgJ985k1eEXXTRNa2Y6M=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=JkSZ64hyQOrPVymySy5EHh8bQBJBLosSPa7OCq/UbiT1RwUznhQpULq9s7F2fYh4OOpDPT6ulKPXLTA/7cMc8X1iPbL/PTq9akLw2aSocSe0iTGsU0Q9G/I7rXdvwap2gcdHnlbOqBfADwexSlVaTsJjz9Hf0ChIuzRDOE+FBsM=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn; spf=pass smtp.mailfrom=kylinos.cn; arc=none smtp.client-ip=124.126.103.232
 Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=kylinos.cn
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=kylinos.cn
-X-UUID: 26773b26219d11f0a216b1d71e6e1362-20250425
+X-UUID: 284f83c2219d11f0a216b1d71e6e1362-20250425
 X-CTIC-Tags:
-	HR_CC_AS_FROM, HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B
-	HR_CTT_MISS, HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME
-	HR_SJ_DIGIT_LEN, HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM
-	HR_SJ_PHRASE, HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT
-	HR_TO_NO_NAME, IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED
-	SA_EXISTED, SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS
-	UD_TRUSTED, CIE_BAD, CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS
-	GTI_C_CI, GTI_FG_IT, GTI_RG_INFO, GTI_C_BU, AMN_T1
-	AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
-X-CID-O-RULE: Release_Ham
-X-CID-RULE: Release_Ham
-X-CID-O-INFO: VERSION:1.1.45,REQID:c2095a8e-4f90-4031-a791-04ac2617f67c,IP:10,
-	URL:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
-	ON:release,TS:-5
-X-CID-INFO: VERSION:1.1.45,REQID:c2095a8e-4f90-4031-a791-04ac2617f67c,IP:10,UR
-	L:0,TC:0,Content:0,EDM:0,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTION
-	:release,TS:-5
-X-CID-META: VersionHash:6493067,CLOUDID:34d0cea812df8467db54cc0f804f0410,BulkI
-	D:250425141850553PQO15,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|102,T
-	C:nil,Content:0|50,EDM:-3,IP:-2,URL:1,File:nil,RT:nil,Bulk:nil,QS:nil,BEC:
-	nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
+	HR_CC_COUNT, HR_CC_DOMAIN_COUNT, HR_CC_NAME, HR_CTE_8B, HR_CTT_MISS
+	HR_DATE_H, HR_DATE_WKD, HR_DATE_ZONE, HR_FROM_NAME, HR_SJ_DIGIT_LEN
+	HR_SJ_LANG, HR_SJ_LEN, HR_SJ_LETTER, HR_SJ_NOR_SYM, HR_SJ_PHRASE
+	HR_SJ_PHRASE_LEN, HR_SJ_WS, HR_TO_COUNT, HR_TO_DOMAIN_COUNT, HR_TO_NO_NAME
+	IP_TRUSTED, SRC_TRUSTED, DN_TRUSTED, SA_TRUSTED, SA_EXISTED
+	SN_EXISTED, SPF_NOPASS, DKIM_NOPASS, DMARC_NOPASS, CIE_BAD
+	CIE_GOOD, CIE_GOOD_SPF, GTI_FG_BS, GTI_RG_INFO, GTI_C_BU
+	AMN_T1, AMN_GOOD, AMN_C_TI, AMN_C_BU, ABX_MISS_RDNS
+X-CID-P-RULE: Release_Ham
+X-CID-O-INFO: VERSION:1.1.45,REQID:99fa3060-75a7-4250-9f51-a7632226967d,IP:10,
+	URL:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,AC
+	TION:release,TS:15
+X-CID-INFO: VERSION:1.1.45,REQID:99fa3060-75a7-4250-9f51-a7632226967d,IP:10,UR
+	L:0,TC:0,Content:-5,EDM:25,RT:0,SF:-15,FILE:0,BULK:0,RULE:Release_Ham,ACTI
+	ON:release,TS:15
+X-CID-META: VersionHash:6493067,CLOUDID:e3556494477ee74245a491949442c56c,BulkI
+	D:2504251418530UWPYWXU,BulkQuantity:0,Recheck:0,SF:17|19|24|44|66|78|81|82
+	|102,TC:nil,Content:0|50,EDM:5,IP:-2,URL:0,File:nil,RT:nil,Bulk:nil,QS:nil
+	,BEC:nil,COL:0,OSI:0,OSA:0,AV:0,LES:1,SPR:NO,DKR:0,DKP:0,BRR:0,BRE:0,ARC:0
 X-CID-BVR: 0
 X-CID-BAS: 0,_,0,_
-X-CID-FACTOR: TF_CID_SPAM_ULS,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS,TF_CID_SPAM_FSD,
-	TF_CID_SPAM_FSI
-X-UUID: 26773b26219d11f0a216b1d71e6e1362-20250425
+X-CID-FACTOR: TF_CID_SPAM_FSD,TF_CID_SPAM_FSI,TF_CID_SPAM_SNR,TF_CID_SPAM_FAS
+X-UUID: 284f83c2219d11f0a216b1d71e6e1362-20250425
 X-User: yangang@kylinos.cn
 Received: from localhost.localdomain [(223.70.159.239)] by mailgw.kylinos.cn
 	(envelope-from <yangang@kylinos.cn>)
 	(Generic MTA with TLSv1.3 TLS_AES_256_GCM_SHA384 256/256)
-	with ESMTP id 1287295675; Fri, 25 Apr 2025 14:18:48 +0800
+	with ESMTP id 1111112540; Fri, 25 Apr 2025 14:18:51 +0800
 From: Gang Yan <yangang@kylinos.cn>
 To: mptcp@lists.linux.dev
-Cc: Gang Yan <yangang@kylinos.cn>
-Subject: [PATCH mptcp-next v3 0/5] Add 'dump_subflow' test in selftests
-Date: Fri, 25 Apr 2025 14:18:38 +0800
-Message-Id: <cover.1745395366.git.yangang@kylinos.cn>
+Cc: Gang Yan <yangang@kylinos.cn>,
+	Geliang Tang <geliang@kernel.org>
+Subject: [PATCH mptcp-next v3 3/5] selftests: mptcp: refactor NLMSG handling with 'proto'
+Date: Fri, 25 Apr 2025 14:18:41 +0800
+Message-Id: <cf19bffa9087e367c3845f29bec13ded1b75daf7.1745395366.git.yangang@kylinos.cn>
 X-Mailer: git-send-email 2.25.1
+In-Reply-To: <cover.1745395366.git.yangang@kylinos.cn>
+References: <cover.1745395366.git.yangang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -61,48 +62,127 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
-the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
-->'inet_sk_attr_size'.
+This patch introduces the '__u32 proto' variable to the 'send_query' and
+'recv_nlmsg' functions for further extending function.
 
-So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
-function. Given a specific TCP connection, it is possible to judge if
-it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
+In the 'send_query' function, the inclusion of this variable makes the
+structure clearer and more readable.
 
-Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
+In the 'recv_nlmsg' function, the '__u32 proto' variable ensures that
+the 'diag_info' field remains unmodified when processing IPPROTO_TCP data,
+thereby preventing unintended transformation into 'mptcp_info' format.
 
-------
-Changelog
-  v2:
-    - Fix the CI compiling error.
-  v3:
-    - Set idaig_ext when 'r' is declared.
-    - Declare iovlen to 0, and adjust the increment logic.
-    - Squash patch 3 into patch 4.
-    - Rename 'subflow_addr' to 'subflow_addrs'
-    - Remove the comment and declare [ad]ddr on the same line.
-    - Set id.idiag_cookie[0/1] when r is declared.
-    - Remove the 'id.idiag_if = 0' because the default value is 0.
-    - Squash patch 6 into patch 5.
-    - Add the example of output in commit message.
-    - Adjust the input of 'mptcp_diag -s' to "saddr:sport daddr:dport"
-      to save a few lines in diag.sh
-    - In diag.sh, use "mptcp_diag -s '$subflow_line'" instead of
-      the old version, and call 'ss' only once to ensure the safety.
-    - Fix some error/check/warning problems in CI.
-    - Put the link of issue into the commit message of patch 5.
+While at it, increment iovlen directly when an item is added to simplify
+this portion of the code and improve its readaility.
 
-Gang Yan (5):
-  selftests: mptcp: add struct params in mptcp_diag
-  selftests: mptcp: refactor send_query parameters for code clarity
-  selftests: mptcp: refactor NLMSG handling with 'proto'
-  selftests: mptcp: add helpers to get subflow_info
-  selftests: mptcp: add chk_sublfow in diag.sh
+Co-developed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Gang Yan <yangang@kylinos.cn>
+---
+ .../testing/selftests/net/mptcp/mptcp_diag.c  | 38 ++++++++++---------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
- tools/testing/selftests/net/mptcp/diag.sh     |  33 +++
- .../testing/selftests/net/mptcp/mptcp_diag.c  | 228 +++++++++++++++---
- 2 files changed, 229 insertions(+), 32 deletions(-)
-
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+index c9533883149b..e19b21631641 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+@@ -62,7 +62,7 @@ static void die_usage(int r)
+ 	exit(r);
+ }
+ 
+-static void send_query(int fd, struct inet_diag_req_v2 *r)
++static void send_query(int fd, struct inet_diag_req_v2 *r, __u32 proto)
+ {
+ 	struct sockaddr_nl nladdr = {
+ 		.nl_family = AF_NETLINK
+@@ -80,21 +80,22 @@ static void send_query(int fd, struct inet_diag_req_v2 *r)
+ 	};
+ 	struct rtattr rta_proto;
+ 	struct iovec iov[6];
+-	int iovlen = 1;
+-	__u32 proto;
++	int iovlen = 0;
+ 
+-	proto = IPPROTO_MPTCP;
+-	rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
+-	rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
+-
+-	iov[0] = (struct iovec) {
++	iov[iovlen++] = (struct iovec) {
+ 		.iov_base = &req,
+ 		.iov_len = sizeof(req)
+ 	};
+-	iov[iovlen] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
+-	iov[iovlen + 1] = (struct iovec){ &proto, sizeof(proto)};
+-	req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
+-	iovlen += 2;
++
++	if (proto == IPPROTO_MPTCP) {
++		rta_proto.rta_type = INET_DIAG_REQ_PROTOCOL;
++		rta_proto.rta_len = RTA_LENGTH(sizeof(proto));
++
++		iov[iovlen++] = (struct iovec){ &rta_proto, sizeof(rta_proto)};
++		iov[iovlen++] = (struct iovec){ &proto, sizeof(proto)};
++		req.nlh.nlmsg_len += RTA_LENGTH(sizeof(proto));
++	}
++
+ 	struct msghdr msg = {
+ 		.msg_name = &nladdr,
+ 		.msg_namelen = sizeof(nladdr),
+@@ -158,7 +159,7 @@ static void print_info_msg(struct mptcp_info *info)
+ 	printf("bytes_acked:      %llu\n", info->mptcpi_bytes_acked);
+ }
+ 
+-static void parse_nlmsg(struct nlmsghdr *nlh)
++static void parse_nlmsg(struct nlmsghdr *nlh, __u32 proto)
+ {
+ 	struct inet_diag_msg *r = NLMSG_DATA(nlh);
+ 	struct rtattr *tb[INET_DIAG_MAX + 1];
+@@ -167,7 +168,7 @@ static void parse_nlmsg(struct nlmsghdr *nlh)
+ 			   nlh->nlmsg_len - NLMSG_LENGTH(sizeof(*r)),
+ 			   NLA_F_NESTED);
+ 
+-	if (tb[INET_DIAG_INFO]) {
++	if (proto == IPPROTO_MPTCP && tb[INET_DIAG_INFO]) {
+ 		int len = RTA_PAYLOAD(tb[INET_DIAG_INFO]);
+ 		struct mptcp_info *info;
+ 
+@@ -183,7 +184,7 @@ static void parse_nlmsg(struct nlmsghdr *nlh)
+ 	}
+ }
+ 
+-static void recv_nlmsg(int fd)
++static void recv_nlmsg(int fd, __u32 proto)
+ {
+ 	char rcv_buff[8192];
+ 	struct nlmsghdr *nlh = (struct nlmsghdr *)rcv_buff;
+@@ -216,7 +217,7 @@ static void recv_nlmsg(int fd)
+ 			       -(err->error), strerror(-(err->error)));
+ 			break;
+ 		}
+-		parse_nlmsg(nlh);
++		parse_nlmsg(nlh, proto);
+ 		nlh = NLMSG_NEXT(nlh, len);
+ 	}
+ }
+@@ -230,14 +231,15 @@ static void get_mptcpinfo(__u32 token)
+ 		.idiag_ext = 1 << (INET_DIAG_INFO - 1),
+ 		.id.idiag_cookie[0]     = token,
+ 	};
++	__u32 proto = IPPROTO_MPTCP;
+ 	int fd;
+ 
+ 	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+ 	if (fd < 0)
+ 		die_perror("Netlink socket");
+ 
+-	send_query(fd, &r);
+-	recv_nlmsg(fd);
++	send_query(fd, &r, proto);
++	recv_nlmsg(fd, proto);
+ 
+ 	close(fd);
+ }
 -- 
 2.43.0
 
