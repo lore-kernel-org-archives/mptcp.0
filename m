@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D145020FAA1
-	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 13:00:15 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7E7487BF
+	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 13:00:31 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931615; cv=none; b=alb7rfERSFRwVFArlMjRuuuLqlWYtUOyeizfINLYOfTdXX24HkPt+rPocoy4xwtZrUrlkdu9P+Yct1Tz2QKUuEBRteGkrNgWKqQS2jBpJNYj+Q5Xyj1ueFCHZZ7oQ0VMVjzuxtOcwbZNJuRNu9JGjWuuU30BtDF/Y6KgU18dgds=
+	t=1745931632; cv=none; b=GQyl4LS9d78ANWqB/86kCiOa4ZbHct/5wxuhPEMwnf534t5+nTjyuofh2C0ckgQNYfyKTO9orAIUN2ZsWDPl3q/MpIRZdb1HA2yaxKo1K1WN7476tZyheXPxMm22d6JQA+T2Od2/4aziv83NnrpFNWZ8PdXEwfNS47TpUJmeWXw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931615; c=relaxed/simple;
-	bh=G8izE4MQVzFey34Y9bzN2VM88eNVQHsOnDrNz5QexwY=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=thoD2DbJj/7OLvKUxI44HpEtPw3E8Lfqccsz/Orhb5qWswou8jvhOe1jeQmXelvv+M/HVdEmtJGcgLv0ceqMNwQNIx/2HrTvreaLW45PgcSY37Y30ywoBOTH3geWjTF5BGZqpY4kDP0rtsenuTMZ3bLSOAMDKcPMz1PT3Zkfoi0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gt4PynJ4; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745931632; c=relaxed/simple;
+	bh=dwQvDCRZydy8dap4xjCJdX2Gs3+Bhsdu4VwJUjmsfyM=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=V8GczMzULA2hSXOs0EB31n5R3X6yDOjLii5SowBOAIyZL17B4ul6bbGAeTRs7I9ORh/fKo27PjCQHZwt2/9zeU4aG/reiDvOalssRFER/9cIUEc5HH8vropbqrKieyXR4toSUMr+y45xPZO/bMY7RCV7aEzhAtEG3w34fxBOEa8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnO8V517; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gt4PynJ4"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 07685C4CEEF;
-	Tue, 29 Apr 2025 13:00:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnO8V517"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC241C4CEED;
+	Tue, 29 Apr 2025 13:00:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745931615;
-	bh=G8izE4MQVzFey34Y9bzN2VM88eNVQHsOnDrNz5QexwY=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=gt4PynJ4d2jil/KDptNmAVIfOaQfzjHKUB5bIWR5LE7uEML4cJhKA0QhJV8WMkF+c
-	 uwcXJhmS7Q4s39VJpuKbdWJtNQUqIy63ZsJ5ZTc5MiP6cdsc6xgkorFZj+39XP6U3z
-	 RpQZjY9ITnxWqh7D34dVa8//jnHVRxdNsfF2oMPAvYhobWK10S7ZJzsdFCB7+AG6Mz
-	 yA5CbrVb2wyp0K98Eu9LbMtpPfgRNW7UOt94OYw843IcYyQFFBhCHVbTXa/aRqZnZh
-	 DqfkmayUb5LgyvNgv7mfdE8qOs1dwXIG447xlLky/yLwTVYTZ79DdqtKFEop9a1A70
-	 KyKsKE3VD+jMA==
-Message-ID: <a52ed69c-fb50-4a1d-954e-289515f98d20@kernel.org>
-Date: Tue, 29 Apr 2025 15:00:13 +0200
+	s=k20201202; t=1745931631;
+	bh=dwQvDCRZydy8dap4xjCJdX2Gs3+Bhsdu4VwJUjmsfyM=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cnO8V517EA9XCJPPb7Cetfjxm1SZZV4QJMxNUDmtODa5mf+o+3odgZqklPQs5JpVw
+	 pBO1dZi7WcyMg+fV+yHAk02M8bfAVHJ1oSCcVEWTo5it6DtrENVpkwMBMzaAW8LXoF
+	 7HJmeZe2LwBOt75/+tdb8xAUab7lAhfPElY9cHagDO2WB0IJ/3EU9m3y17cFR6ygqf
+	 +N5Po9EhegQPyBiPBUvYFweoOAypcQ0C7bbKAUBftbUsN/8uWNcgEmOimSKPNXF8Qu
+	 24crMUjiZ60oCkjey1tNRP50jSvecBBGoCLBtjQU1SwBOgZldtWtX8UaNJfDoSJDSS
+	 4N4tYnmeoauOQ==
+Message-ID: <55d856bb-b924-42ec-a076-d4ed489208d5@kernel.org>
+Date: Tue, 29 Apr 2025 15:00:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/5] Add 'dump_subflow' test in selftests
+Subject: Re: [PATCH mptcp-next v3 2/5] selftests: mptcp: refactor send_query
+ parameters for code clarity
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
+Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1745395366.git.yangang@kylinos.cn>
+ <d96128e4ea99b661656cb2546b217ecdb8695ffc.1745395366.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,61 +87,57 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1745395366.git.yangang@kylinos.cn>
+In-Reply-To: <d96128e4ea99b661656cb2546b217ecdb8695ffc.1745395366.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 25/04/2025 08:18, Gang Yan wrote:
-> The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
-> the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
-> ->'inet_sk_attr_size'.
+> This patch use 'inet_diag_req_v2' instead of 'token' as parameters of
+> send_query, and construct the req in 'get_mptcpinfo'. This modification
+> can enhance the enhancing clarity of the code, and prepare for the
+> dump_subflow_info.
 > 
-> So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
-> function. Given a specific TCP connection, it is possible to judge if
-> it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
+> Co-developed-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Geliang Tang <geliang@kernel.org>
+> Signed-off-by: Gang Yan <yangang@kylinos.cn>
+> ---
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 19 ++++++++++---------
+>  1 file changed, 10 insertions(+), 9 deletions(-)
 > 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
-> 
-> ------
-> Changelog
->   v2:
->     - Fix the CI compiling error.
->   v3:
->     - Set idaig_ext when 'r' is declared.
->     - Declare iovlen to 0, and adjust the increment logic.
->     - Squash patch 3 into patch 4.
->     - Rename 'subflow_addr' to 'subflow_addrs'
->     - Remove the comment and declare [ad]ddr on the same line.
->     - Set id.idiag_cookie[0/1] when r is declared.
->     - Remove the 'id.idiag_if = 0' because the default value is 0.
->     - Squash patch 6 into patch 5.
->     - Add the example of output in commit message.
->     - Adjust the input of 'mptcp_diag -s' to "saddr:sport daddr:dport"
->       to save a few lines in diag.sh
->     - In diag.sh, use "mptcp_diag -s '$subflow_line'" instead of
->       the old version, and call 'ss' only once to ensure the safety.
->     - Fix some error/check/warning problems in CI.
->     - Put the link of issue into the commit message of patch 5.
+> diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> index ea7cb1128044..c9533883149b 100644
+> --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
+> +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
 
-Thank you for the new version. It looks good to me, just some details
-that I can include when applying the patches.
+(...
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> @@ -229,13 +223,20 @@ static void recv_nlmsg(int fd)
+>  
+>  static void get_mptcpinfo(__u32 token)
+>  {
+> +	struct inet_diag_req_v2 r = {
+> +		.sdiag_family           = AF_INET,
+> +		/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
+> +		.sdiag_protocol         = IPPROTO_TCP,
+> +		.idiag_ext = 1 << (INET_DIAG_INFO - 1),
 
-> 
-> Gang Yan (5):
->   selftests: mptcp: add struct params in mptcp_diag
->   selftests: mptcp: refactor send_query parameters for code clarity
->   selftests: mptcp: refactor NLMSG handling with 'proto'
->   selftests: mptcp: add helpers to get subflow_info
->   selftests: mptcp: add chk_sublfow in diag.sh
-> 
->  tools/testing/selftests/net/mptcp/diag.sh     |  33 +++
->  .../testing/selftests/net/mptcp/mptcp_diag.c  | 228 +++++++++++++++---
->  2 files changed, 229 insertions(+), 32 deletions(-)
-> 
+detail: I guess you might want to keep all the equals aligned, no?
+
+> +		.id.idiag_cookie[0]     = token,
+> +	};
+>  	int fd;
+>  
+>  	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+>  	if (fd < 0)
+>  		die_perror("Netlink socket");
+>  
+> -	send_query(fd, token);
+> +	send_query(fd, &r);
+>  	recv_nlmsg(fd);
+>  
+>  	close(fd);
 
 Cheers,
 Matt
