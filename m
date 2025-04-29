@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B7E7487BF
-	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 13:00:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1F4968F64
+	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 13:05:21 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745931632; cv=none; b=GQyl4LS9d78ANWqB/86kCiOa4ZbHct/5wxuhPEMwnf534t5+nTjyuofh2C0ckgQNYfyKTO9orAIUN2ZsWDPl3q/MpIRZdb1HA2yaxKo1K1WN7476tZyheXPxMm22d6JQA+T2Od2/4aziv83NnrpFNWZ8PdXEwfNS47TpUJmeWXw=
+	t=1745931922; cv=none; b=pd7XZqM64D6uZobot/2dMuy6bExSMDt8qvSizxLLscDPgHfyKDjfL2fpzm0XM6c/K24sm3V6hvPpzBAHeqn5mTAKOweafLr/cwI3LUwJV2Ln/CsdHZKz2+2Ib9DAbDMZSDp/YSQvlL9258ltkLQDpdoYHTPlE8Aej6UQ3yGwek8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745931632; c=relaxed/simple;
-	bh=dwQvDCRZydy8dap4xjCJdX2Gs3+Bhsdu4VwJUjmsfyM=;
+	s=arc-20240116; t=1745931922; c=relaxed/simple;
+	bh=PWy+GOdkP2nyrzG3fHBfp3DROSzB5GZ3SySH7Y8rniQ=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=V8GczMzULA2hSXOs0EB31n5R3X6yDOjLii5SowBOAIyZL17B4ul6bbGAeTRs7I9ORh/fKo27PjCQHZwt2/9zeU4aG/reiDvOalssRFER/9cIUEc5HH8vropbqrKieyXR4toSUMr+y45xPZO/bMY7RCV7aEzhAtEG3w34fxBOEa8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cnO8V517; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=q5Gj9lvpdhZ+1FgHNFlw1DdY0sWiJAJh9L/b9QqSzfdaAfn4JfKBVwP3xQ+NKrCK6GKoOxpgRcSOIaibbBUCZhLqLUEQMKfpCcqjJ8axPkFtkF78klsp3kYxE9gzftVefaU5sTwH9xIDsbIGC10eBndEeQ+JliVNs2v2gT6QO1k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=VGxR3Qxu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cnO8V517"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id CC241C4CEED;
-	Tue, 29 Apr 2025 13:00:30 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="VGxR3Qxu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D6BC5C4CEE3;
+	Tue, 29 Apr 2025 13:05:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745931631;
-	bh=dwQvDCRZydy8dap4xjCJdX2Gs3+Bhsdu4VwJUjmsfyM=;
+	s=k20201202; t=1745931921;
+	bh=PWy+GOdkP2nyrzG3fHBfp3DROSzB5GZ3SySH7Y8rniQ=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=cnO8V517EA9XCJPPb7Cetfjxm1SZZV4QJMxNUDmtODa5mf+o+3odgZqklPQs5JpVw
-	 pBO1dZi7WcyMg+fV+yHAk02M8bfAVHJ1oSCcVEWTo5it6DtrENVpkwMBMzaAW8LXoF
-	 7HJmeZe2LwBOt75/+tdb8xAUab7lAhfPElY9cHagDO2WB0IJ/3EU9m3y17cFR6ygqf
-	 +N5Po9EhegQPyBiPBUvYFweoOAypcQ0C7bbKAUBftbUsN/8uWNcgEmOimSKPNXF8Qu
-	 24crMUjiZ60oCkjey1tNRP50jSvecBBGoCLBtjQU1SwBOgZldtWtX8UaNJfDoSJDSS
-	 4N4tYnmeoauOQ==
-Message-ID: <55d856bb-b924-42ec-a076-d4ed489208d5@kernel.org>
-Date: Tue, 29 Apr 2025 15:00:29 +0200
+	b=VGxR3QxubgcC+JBHxH3Pq4cWg8zRI/11Hj9b9RBK3KNfMa7tnExPM8sPfwtN243S9
+	 3xLH8GSMobeUjXzWdSxBFK6SLWfs3rWlq5Y2A11hdnmhZS9cHBQREGIQqArLTqPLsI
+	 Chc6ozd7EkPryAgLIvJkA1aaFzO35lsZoXk7SGwRAhI+AEcyKc/up2Pb/v6fTxRMT0
+	 CC44O1ujpyd+EnaJyTp5Aj3DNfWVu4rXoLekYakiENNftC0FZejZddMhuhuRy8T3g0
+	 bzIEsAb8ZpLLA4ClsPMc+J4296RkYHzQHxE5JcIC6qQ0X9YZKJ3FqROZgxEHLLJ+Cl
+	 eP4/8jkEnOIWw==
+Message-ID: <637a4ea4-216d-481a-93bd-d0283f4cb38b@kernel.org>
+Date: Tue, 29 Apr 2025 15:05:18 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 2/5] selftests: mptcp: refactor send_query
- parameters for code clarity
+Subject: Re: [PATCH mptcp-next v3 4/5] selftests: mptcp: add helpers to get
+ subflow_info
 Content-Language: en-GB, fr-BE
 To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
 Cc: Geliang Tang <geliang@kernel.org>
 References: <cover.1745395366.git.yangang@kylinos.cn>
- <d96128e4ea99b661656cb2546b217ecdb8695ffc.1745395366.git.yangang@kylinos.cn>
+ <30e3b8d461c1e7776d398897c9e891536fbc385b.1745395366.git.yangang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,57 +87,123 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <d96128e4ea99b661656cb2546b217ecdb8695ffc.1745395366.git.yangang@kylinos.cn>
+In-Reply-To: <30e3b8d461c1e7776d398897c9e891536fbc385b.1745395366.git.yangang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Gang,
 
 On 25/04/2025 08:18, Gang Yan wrote:
-> This patch use 'inet_diag_req_v2' instead of 'token' as parameters of
-> send_query, and construct the req in 'get_mptcpinfo'. This modification
-> can enhance the enhancing clarity of the code, and prepare for the
-> dump_subflow_info.
+> This patch adds 'get_subflow_info' in 'mptcp_diag', which can check whether
+> a TCP connection is an MPTCP subflow based on the "INET_ULP_INFO_MPTCP"
+> with tcp_diag method.
+> 
+> The helper 'print_subflow_info' in 'mptcp_diag' can print the subflow_filed
+> of an MPTCP subflow for further checking the 'subflow_info' through
+> inet_diag method.
+> 
+> The example of the whole output should be:
+> 
+> '''
+> 127.0.0.1:10000 -> 127.0.0.1:38984
+> It's a mptcp subflow, the subflow info:
+>  flags:Mec token:0000(id:0)/4278e77e(id:0) seq:9288466187236176036 \
+>  sfseq:1 ssnoff:2317083055 maplen:215
+> '''
 > 
 > Co-developed-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > Signed-off-by: Gang Yan <yangang@kylinos.cn>
 > ---
->  .../testing/selftests/net/mptcp/mptcp_diag.c  | 19 ++++++++++---------
->  1 file changed, 10 insertions(+), 9 deletions(-)
+>  .../testing/selftests/net/mptcp/mptcp_diag.c  | 159 +++++++++++++++++-
+>  1 file changed, 157 insertions(+), 2 deletions(-)
 > 
 > diff --git a/tools/testing/selftests/net/mptcp/mptcp_diag.c b/tools/testing/selftests/net/mptcp/mptcp_diag.c
-> index ea7cb1128044..c9533883149b 100644
+> index e19b21631641..13848a25938d 100644
 > --- a/tools/testing/selftests/net/mptcp/mptcp_diag.c
 > +++ b/tools/testing/selftests/net/mptcp/mptcp_diag.c
 
-(...
+(...)
 
-> @@ -229,13 +223,20 @@ static void recv_nlmsg(int fd)
+> @@ -244,6 +359,39 @@ static void get_mptcpinfo(__u32 token)
+>  	close(fd);
+>  }
 >  
->  static void get_mptcpinfo(__u32 token)
->  {
+> +static void get_subflow_info(char *subflow_addrs)
+> +{
 > +	struct inet_diag_req_v2 r = {
 > +		.sdiag_family           = AF_INET,
-> +		/* Real proto is set via INET_DIAG_REQ_PROTOCOL */
 > +		.sdiag_protocol         = IPPROTO_TCP,
-> +		.idiag_ext = 1 << (INET_DIAG_INFO - 1),
-
-detail: I guess you might want to keep all the equals aligned, no?
-
-> +		.id.idiag_cookie[0]     = token,
+> +		.id.idiag_cookie[0]	= INET_DIAG_NOCOOKIE,
+> +		.id.idiag_cookie[1]	= INET_DIAG_NOCOOKIE,
 > +	};
->  	int fd;
+> +	char saddr[64], daddr[64];
+> +	int sport, dport;
+> +	int ret;
+> +	int fd;
+> +
+> +	ret = sscanf(subflow_addrs, "%[^:]:%d %[^:]:%d", saddr, &sport, daddr, &dport);
+> +	if (ret != 4)
+> +		die_perror("IP PORT Pairs has style problems!");
+> +
+> +	printf("%s:%d -> %s:%d\n", saddr, sport, daddr, dport);
+> +
+> +	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
+> +	if (fd < 0)
+> +		die_perror("Netlink socket");
+> +
+> +	r.id.idiag_sport = htons(sport);
+> +	r.id.idiag_dport = htons(dport);
+> +
+> +	inet_pton(AF_INET, saddr, &r.id.idiag_src);
+> +	inet_pton(AF_INET, daddr, &r.id.idiag_dst);
+> +	r.idiag_ext |= (1 << (INET_DIAG_INFO - 1));
+
+This could be declared above as well I suppose.
+
+> +	send_query(fd, &r, IPPROTO_TCP);
+> +	recv_nlmsg(fd, IPPROTO_TCP);
+> +}
+> +
+>  static void parse_opts(int argc, char **argv, struct params *p)
+>  {
+>  	int c;
+> @@ -251,7 +399,7 @@ static void parse_opts(int argc, char **argv, struct params *p)
+>  	if (argc < 2)
+>  		die_usage(1);
 >  
->  	fd = socket(AF_NETLINK, SOCK_RAW, NETLINK_SOCK_DIAG);
->  	if (fd < 0)
->  		die_perror("Netlink socket");
+> -	while ((c = getopt(argc, argv, "ht:")) != -1) {
+> +	while ((c = getopt(argc, argv, "ht:s:")) != -1) {
+>  		switch (c) {
+>  		case 'h':
+>  			die_usage(0);
+> @@ -259,6 +407,10 @@ static void parse_opts(int argc, char **argv, struct params *p)
+>  		case 't':
+>  			sscanf(optarg, "%x", &p->target_token);
+>  			break;
+> +		case 's':
+> +			snprintf(p->subflow_addrs, strlen(optarg) + 1,
+
+The max size (2nd argument) should be linked to the destination buffer
+size, not the source one.
+
+Note that it would make more sense to use "strncpy()" here.
+
+> +				 "%s", optarg);
+> +			break;
+>  		default:
+>  			die_usage(1);
+>  			break;
+> @@ -275,6 +427,9 @@ int main(int argc, char *argv[])
+>  	if (p.target_token)
+>  		get_mptcpinfo(p.target_token);
 >  
-> -	send_query(fd, token);
-> +	send_query(fd, &r);
->  	recv_nlmsg(fd);
+> +	if (strlen(p.subflow_addrs) != 0)
+> +		get_subflow_info(p.subflow_addrs);
+> +
+>  	return 0;
+>  }
 >  
->  	close(fd);
 
 Cheers,
 Matt
