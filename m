@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 097641E515
-	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 11:17:36 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00012221DBC
+	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 11:17:39 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745925457; cv=none; b=sKHXXLv8hHxLSczUEJbek3cqV/Bh41H++rs/o18aF0/5LDlTvVrM+0HgUdY60G4+1CYFy/k5DRl0P1Ku93E90j7NaZ4k4jG4x308eqBhB1udvORFbISh93uyQyxNW7Rzmieldg32jhPj7zocKhrmenNdqmU/Z4fLmnG/FrZIEbE=
+	t=1745925460; cv=none; b=G5wYJpQ96YJaPlOtbRtvJ1Fu6e4ARBZ8T/JDFLrqmAx6XAUP0wZJSlYE97whS4MIWyhDQLJvmTtRlmAt2n/EA+SwF29FRJTBdaEg//DcKE0IAHV7pQpVQSOALddB1fBRI+ZU+2OHuDXHfjiuzeL+oOnqDE1h3CZiGVBTx/rUT08=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745925457; c=relaxed/simple;
-	bh=SaTXvPxxOMhSwC0R4jloirdDYn0T6p9nO8TdIWyRq54=;
+	s=arc-20240116; t=1745925460; c=relaxed/simple;
+	bh=q/vPkOwbl+M+VMQ3Z4Z9aAZCKyBkdPIBFqQhO/lR+SM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=gYBZ+XuwMZG2UPJ7y15wCaneRs0sDOBGgZ1ob4v7IU9+1O4EHa2isfMDzZhgf0mEtr4jkrWLd+5lY/kQEB2/7+i9rymTeBmxrlNsj4hDhAaFuMyhPWBuVA5qpySxwOeRML1lcAi92pPVKpFJE+JsjvFNZmABPMwCVWJHB0c9Hlw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gG9IUFCD; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=FfuZflpZeixcXhMx1dIErHLaqMl0BvE38mdnsUAdY2/eD/K8D5mt8exDrDpLb0UAEL1VHHK94Iw/X2/I08IvT3OA8uzlPvK9kV7dWDvytfgMRsas9KuVTN7TKLWWlvaf3GMtZbL9bWRQdmRm36rYK4bACaOJmJdoQE8Ocjt7Opc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=KNaSebrU; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gG9IUFCD"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C4FDCC4CEE3;
-	Tue, 29 Apr 2025 11:17:35 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="KNaSebrU"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 68401C4CEE3;
+	Tue, 29 Apr 2025 11:17:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745925456;
-	bh=SaTXvPxxOMhSwC0R4jloirdDYn0T6p9nO8TdIWyRq54=;
+	s=k20201202; t=1745925459;
+	bh=q/vPkOwbl+M+VMQ3Z4Z9aAZCKyBkdPIBFqQhO/lR+SM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=gG9IUFCDBPNG6f2lpQL4pOelKbAOuPRfb/Rh5F7HfxB+NL2eamOsqQ9WohD91DHyg
-	 aDwOMXYWWQRO7TVr63/8AOUXOATy2CGiX0CXGBO+31+j7DgYKaLtyFADG4DLMDgyiO
-	 Jocq7Z//pl+gS82Ec0aznX3xkK66l7gxVUk9Sa4vsr8cMrflUdgWMmnUdF/UD2COKW
-	 WE8uODN0bSa/aBIRUUNZVWGLaVYWmJEflUdJ/tQoGQ54UHmHZQkQ/PYmOfvPAzlhkN
-	 mfprf7xfY+MtRcNuzYRI6YJDPtrLVa2ctvCVRRty+E7zCK35RDbCMCJ3xr2tjyeG7z
-	 6IoK2860SrUWw==
-Message-ID: <2458838f-f9dd-45e6-ba1d-669720a1283d@kernel.org>
-Date: Tue, 29 Apr 2025 13:17:33 +0200
+	b=KNaSebrUdMPAFIs2QpF0z8RPOG008NjvM8yOXIkP7t26cknp3ViH46oUmsNXOoiFc
+	 2Abk75QxFHESDhpEGxf6fFvszQbjuExNQ/zIdkZP71RJ/D+Q88dizqUWLXZAwbFCrF
+	 W9brFrCBXnbkF7aR2A227TyDKr2GyIYomy30Fj5Lzc9XrvWGspCQxWcGdMVIoEC9QA
+	 mBw4+oiju2RyTVBR7NAq1s0uv+hZC/IPRYGMATuFgCJTPzRMocqRl6sKz8hJzoaRQ6
+	 57Kwg0NadVqA1YWd2zxLUun64ROVwkqgGhEvGAbrlaz6vrvgVVNTLAFfOig1zfijyh
+	 szT+PWJPxGI+g==
+Message-ID: <dc6aa085-0c18-4737-bb47-a5e5bc9c6896@kernel.org>
+Date: Tue, 29 Apr 2025 13:17:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v2 2/3] mptcp: add TCP_MAXSEG sockopt support
+Subject: Re: [PATCH mptcp-next v2 3/3] selftests: mptcp: sockopt: add
+ TCP_MAXSEG sockopt tests
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1745401025.git.tanggeliang@kylinos.cn>
- <8160ae5fd83c0815cee2f5998948199200574bc7.1745401025.git.tanggeliang@kylinos.cn>
+ <2a5c52d491de283397c9fad972350298de74d8c3.1745401025.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -86,111 +87,38 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <8160ae5fd83c0815cee2f5998948199200574bc7.1745401025.git.tanggeliang@kylinos.cn>
+In-Reply-To: <2a5c52d491de283397c9fad972350298de74d8c3.1745401025.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+Hi Geliang
 
 On 23/04/2025 11:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> The TCP_MAXSEG socket option is currently not supported by MPTCP, mainly
-> because it has never been requested before. But there are still valid
-> use-cases, e.g. with HAProxy.
-> 
-> This patch adds its support in MPTCP by propagating the value to all
-> subflows.
-> 
-> Similar to mptcp_setsockopt_first_sf_only(), a generic helper
-> mptcp_setsockopt_all_subflows() is added to set sockopt for each
-> subflows of the mptcp socket.
-> 
-> Add a new member for struct mptcp_sock to store the TCP_MAXSEG value,
-> and return this value in getsockopt.
-> 
-> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/515
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> ---
->  net/mptcp/protocol.h |  1 +
->  net/mptcp/sockopt.c  | 24 ++++++++++++++++++++++++
->  2 files changed, 25 insertions(+)
-> 
-> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-> index 64aa091cb685..91aaed17fe56 100644
-> --- a/net/mptcp/protocol.h
-> +++ b/net/mptcp/protocol.h
-> @@ -327,6 +327,7 @@ struct mptcp_sock {
->  	int		keepalive_cnt;
->  	int		keepalive_idle;
->  	int		keepalive_intvl;
-> +	int		maxseg;
->  	struct work_struct work;
->  	struct sk_buff  *ooo_last_skb;
->  	struct rb_root  out_of_order_queue;
-> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
-> index 3caa0a9d3b38..a7992cbc5ed9 100644
-> --- a/net/mptcp/sockopt.c
-> +++ b/net/mptcp/sockopt.c
-> @@ -798,6 +798,22 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
->  	return ret;
->  }
->  
-> +static int mptcp_setsockopt_all_subflows(struct mptcp_sock *msk, int level, int optname,
-> +					 sockptr_t optval, unsigned int optlen)
-> +{
-> +	struct mptcp_subflow_context *subflow;
-> +
-> +	mptcp_for_each_subflow(msk, subflow) {
-> +		struct sock *ssk = mptcp_subflow_tcp_sock(subflow);
-> +		int ret = 0;
-> +
-> +		ret = tcp_setsockopt(ssk, level, optname, optval, optlen);
-> +		if (ret)
-> +			return ret;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  				    sockptr_t optval, unsigned int optlen)
->  {
-> @@ -859,6 +875,11 @@ static int mptcp_setsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  						 &msk->keepalive_cnt,
->  						 val);
->  		break;
-> +	case TCP_MAXSEG:
-> +		msk->maxseg = val;
-> +		ret = mptcp_setsockopt_all_subflows(msk, SOL_TCP, optname,
-> +						    optval, optlen);
-> +		break;
->  	default:
->  		ret = -ENOPROTOOPT;
->  	}
-> @@ -1407,6 +1428,8 @@ static int mptcp_getsockopt_sol_tcp(struct mptcp_sock *msk, int optname,
->  		return mptcp_put_int_option(msk, optval, optlen, msk->notsent_lowat);
->  	case TCP_IS_MPTCP:
->  		return mptcp_put_int_option(msk, optval, optlen, 1);
-> +	case TCP_MAXSEG:
-> +		return mptcp_put_int_option(msk, optval, optlen, msk->maxseg);
+> This patch adds the TCP_MAXSEG sockopt tests in mptcp_sockopt.c. Since
+> in getsockopt TCP_MAXSEG, the "user_mss" value can be obtained only in
+> the LISTEN state (see do_tcp_getsockopt in net/ipv4/tcp.c), the test
+> items are added to server() instead of client().
 
-I just checked what TCP is doing, and I see that this is different: with
-TCP, the cached MSS is returned when the connection is not closed (and
-something else for TCP_REPAIR). We should then do the same.
+I understand you wanted a way to test it, but the set/get is not enough,
+and it looks "useless". I'm OK to apply the two other patches with the
+small suggested modifications, but I will only send them when there will
+be a packetdrill test.
 
-Should we then simply call mptcp_getsockopt_first_sf_only()?
+Do not hesitate to imitate other packetdrill test, e.g.
+mptcp/sockopts/sockopt_keepalive.pkt. In this case, you could set MAXSEG
+(e.g. 1000), then send data (e.g. write(5000)) and check 4 packets are
+sent, and the MSS is set to 1000. It might be good to change the value
+again later, and see if the behaviour is the expected one
+(setsockopt(MAXSEG, 1250) + write(2500)). If possible, after that, in
+the same test, also create another subflow, and only check the MSS to
+see if it has the expected value. To test that, feel free to look at:
 
->  	}
->  	return -EOPNOTSUPP;
->  }
-> @@ -1553,6 +1576,7 @@ static void sync_socket_options(struct mptcp_sock *msk, struct sock *ssk)
->  	tcp_sock_set_keepidle_locked(ssk, msk->keepalive_idle);
->  	tcp_sock_set_keepintvl(ssk, msk->keepalive_intvl);
->  	tcp_sock_set_keepcnt(ssk, msk->keepalive_cnt);
-> +	tcp_sock_set_maxseg(ssk, msk->maxseg);
->  
->  	inet_assign_bit(TRANSPARENT, ssk, inet_test_bit(TRANSPARENT, sk));
->  	inet_assign_bit(FREEBIND, ssk, inet_test_bit(FREEBIND, sk));
+https://github.com/multipath-tcp/mptcp-upstream-virtme-docker?tab=readme-ov-file#packetdrill
+
+Note that the behaviour should be as closed as possible to TCP. Don't
+hesitate to run the same kind of test with "plain" TCP.
 
 Cheers,
 Matt
