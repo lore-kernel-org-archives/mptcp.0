@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BEF8921ABC2
-	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 13:22:25 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA697243364;
+	Tue, 29 Apr 2025 16:12:37 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745932945; cv=none; b=tN5gAqohwgr0TdbCwnlKwF4tgzaXklyfxWaF+Vz9cV+9C3kYGiHbBaD6BHjVVdpY1Qt5VgKOgf+3l5HQCJcnGz6A2j56EPOah25yV8VSQOAJrJ3bfPSFZqLcqy+rf4SQNBVayfSuD+3wIiA0Z/vqfnavSFi8RxpmA9NPGC4MAUY=
+	t=1745943158; cv=none; b=dCmby2r7ihypVaDMMTM94hrLtSjeHWjIQje9Vb233h5+8R15zsMe9HFLnbjltEXZQBVVGMlnsm9S4RHnknEzAqhkqslE5jUIKu8URTbd2ZKdHhTjai4+k0JjI7Iw7dpOvl/yazVHQHajJVqCPG4CaLA5j2tkYs/D26y1TUInEig=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745932945; c=relaxed/simple;
-	bh=gEChw1Gmp/uv0J6+hAShJgMG9nsG5iLukfAJ768E3l8=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=m1PB1lDB5XNAS7yYd3JC/+6V8Po8NvQoR1H9B0iu0yOFmgkAs8zKxWO569fVKwBuj5zLDhliUDlsqBolwtbIdyY79h1xnArDwH6SAUbvmA/bADWdtySzb5fITA1cRZllf+ddYRcP2mESRG+CY3G4MSaT+t6Lz11+mpRX7uav30Y=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LW7dxzsB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1745943158; c=relaxed/simple;
+	bh=p9p3C54HaJBzJFhUdZ8Mb+gOWhfp1LSp1qkQYYeeVos=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=PTOs/jZ1QsUlJcGyPFnDnU7TqG+ClvD9ei+U7zDr6OFVdGdxbLo8dhb1gX+5hxZghapl/ZXXDYYpZpOYNVJ1/pzjCqz67bv9NhZEGP48HOBqBm6n9nsYn9LTpg7mLM4DhL110V0b2oSCXzSCiy12Qo+5VXDHLfI2rpMVzcCBhKI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=cVfeE9Av; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LW7dxzsB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A9181C4CEE3;
-	Tue, 29 Apr 2025 13:22:24 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="cVfeE9Av"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 046F4C4CEF2;
+	Tue, 29 Apr 2025 16:12:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745932945;
-	bh=gEChw1Gmp/uv0J6+hAShJgMG9nsG5iLukfAJ768E3l8=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=LW7dxzsBQNfy49P33STJHZssKwLqJj4Hgbs1ggBi0JvlWMMfCEi1+W0nrW8ElyNpo
-	 t61B+U2y3yxoMTlhlSLHBEVN9x+W4DwcIUBRDBfbYqIMkhEniXJIkMBzlCCvuJqFTD
-	 qH9rcNnNPgFtgzdby+YsWhMJnN90JsoXEv6bLq21R3DAuCT1mVrDay5z8HBrEH9JUb
-	 7zHPa3r9KsaNmliwRHvVBtJqimfpSGZApURXiv4Va/UUVyvWNoSmFym+wfIpRe8oF4
-	 oGEPhNogXKidnYYM/UgmEUWhOpio3OeUKjptX0/2W5vkD9/5k3kLYhJs9MLYRXYSrI
-	 r+vmkRcZeBHsw==
-Message-ID: <395d2848-8c00-4d4a-85db-769d53073cf4@kernel.org>
-Date: Tue, 29 Apr 2025 15:22:22 +0200
+	s=k20201202; t=1745943157;
+	bh=p9p3C54HaJBzJFhUdZ8Mb+gOWhfp1LSp1qkQYYeeVos=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=cVfeE9AvDuH1UT1v+RTDwMAcC/+SOUQNaT0vy/BhKlB8L3rOiIcBaL8y7pNEmaRpc
+	 CAHABn6bCZKtG3yLwSwHMDb1mYMRzmBztJhg2EwWEmcAzG2s/QQfSloc8QI+5j4gHu
+	 1QutyqEVzsg5HHUL+zLDVc9E62mXxxcGO+OhB7GjpcbPY3zO/WD11uL55J6Vlh3b13
+	 y4v17XYbeE7PmyQvYDNxDUulFXtC3c5OpFLNJbLP8y6M8cY0OPiU06/vnJgNorTN7k
+	 K9LRxe9agiHoI44a4GxLdrBr+XnGinghg4Slt0hN8mx7EaYOViFbmKVaKgTe0a6+E1
+	 +rAwvCTkEJE1Q==
+Message-ID: <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+Date: Tue, 29 Apr 2025 18:12:29 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,12 +35,22 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/5] Add 'dump_subflow' test in selftests
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
 Content-Language: en-GB, fr-BE
+To: =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+ Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-doc@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+ Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>,
+ Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+ Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>,
+ x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>,
+ Ben Hutchings <ben@decadent.org.uk>,
+ Peter Oberparleiter <oberpar@linux.ibm.com>,
+ MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
 From: Matthieu Baerts <matttbe@kernel.org>
-To: Gang Yan <yangang@kylinos.cn>, mptcp@lists.linux.dev
-References: <cover.1745395366.git.yangang@kylinos.cn>
- <a52ed69c-fb50-4a1d-954e-289515f98d20@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -85,67 +95,82 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <a52ed69c-fb50-4a1d-954e-289515f98d20@kernel.org>
+In-Reply-To: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
+Hi Thomas, Masahiro,
 
++Cc Peter Oberparleiter, MPTCP ML
 
-On 29/04/2025 15:00, Matthieu Baerts wrote:
-> Hi Gang,
+On 15/03/2025 14:20, Thomas Weißschuh wrote:
+> -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+> Other references, for example in debug information, are not affected.
+> This makes handling of file references in the compiler outputs harder to
+> use and creates problems for reproducible builds.
 > 
-> On 25/04/2025 08:18, Gang Yan wrote:
->> The 'subflow_get_info_size' is called only in 'inet_sk_attr_size', and
->> the only calltrace is that 'tcp_diag_dump_one'->'inet_diag_dump_one_icsk'
->> ->'inet_sk_attr_size'.
->>
->> So It's necessary to add 'get_subflow_info' in mptcp_diag.c to cover this
->> function. Given a specific TCP connection, it is possible to judge if
->> it is a MPTCP subflow by 'INET_ULP_INFO_MPTCP' and print 'subflow_info'.
->>
->> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/524
->>
->> ------
->> Changelog
->>   v2:
->>     - Fix the CI compiling error.
->>   v3:
->>     - Set idaig_ext when 'r' is declared.
->>     - Declare iovlen to 0, and adjust the increment logic.
->>     - Squash patch 3 into patch 4.
->>     - Rename 'subflow_addr' to 'subflow_addrs'
->>     - Remove the comment and declare [ad]ddr on the same line.
->>     - Set id.idiag_cookie[0/1] when r is declared.
->>     - Remove the 'id.idiag_if = 0' because the default value is 0.
->>     - Squash patch 6 into patch 5.
->>     - Add the example of output in commit message.
->>     - Adjust the input of 'mptcp_diag -s' to "saddr:sport daddr:dport"
->>       to save a few lines in diag.sh
->>     - In diag.sh, use "mptcp_diag -s '$subflow_line'" instead of
->>       the old version, and call 'ss' only once to ensure the safety.
->>     - Fix some error/check/warning problems in CI.
->>     - Put the link of issue into the commit message of patch 5.
+> Switch to -ffile-prefix map which affects all references.
 > 
-> Thank you for the new version. It looks good to me, just some details
-> that I can include when applying the patches.
+> Also drop the documentation section advising manual specification of
+> -fdebug-prefix-map for reproducible builds, as it is not necessary
+> anymore.
 > 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+> Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
+> Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
+> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 
-Now in our tree:
+Thank you for having worked on that!
 
-New patches for t/upstream:
-- f41228c0ba3b: selftests: mptcp: add struct params in mptcp_diag
-- c92368e75550: selftests: mptcp: refactor send_query parameters for
-code clarity
-- c4857ae914a9: selftests: mptcp: refactor NLMSG handling with 'proto'
-- 3f3180dba6f5: selftests: mptcp: add helpers to get subflow_info
-- c46a1689f413: selftests: mptcp: add chk_sublfow in diag.sh
-- Results: 59ef7029a603..e17ea3d6bbc4 (export)
+(...)
 
-Tests are now in progress:
+> diff --git a/Makefile b/Makefile
+> index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -1067,7 +1067,7 @@ endif
+>  
+>  # change __FILE__ to the relative path to the source directory
+>  ifdef building_out_of_srctree
+> -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+> +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
+>  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+>  endif
 
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/563df787b6317c2cd27fad121b1ccdabc8e0372f/checks
+Today, I noticed that my CI for the MPTCP subsystem couldn't produce
+code coverage files like before: the source files are not found. A 'git
+bisect' pointed me to this patch. Reverting it seems to fix the issue.
+
+
+My CI is building the kernel out of the source tree, in ".virtme/build".
+Before and after this patch, GCOV seems to do its job properly.
+Capturing GCOV data with this lcov command seems OK too:
+
+  lcov --capture --keep-going -j "${INPUT_CPUS}" \
+     --rc geninfo_unexecuted_blocks=1 \
+     --include '/net/mptcp/' \
+     --function-coverage --branch-coverage \
+     -b "${PWD}/.virtme/build" -o kernel.lcov
+
+But after this patch, lcov complains some files are not found, e.g.
+
+  ERROR: (source) unable to open
+${WORKDIR}/.virtme/build/net/mptcp/ctrl.c: No such file or directory
+
+
+The output file is different: the path to the source file is wrong
+because it points to the build dir. Instead of ...
+
+  SF:${WORKDIR}/net/mptcp/ctrl.c
+
+... now I have ...
+
+  SF:${WORKDIR}/.virtme/build/net/mptcp/ctrl.c
+
+
+Are there modifications needed on GCOV side to adapt to the behaviour
+change introduced by this patch? Or something else needed on the
+userspace side?
 
 Cheers,
 Matt
