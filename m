@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 315CE2BEC2D
-	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 10:22:56 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EA70A2BE7C8
+	for <mptcp@lists.linux.dev>; Tue, 29 Apr 2025 11:11:17 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1745922177; cv=none; b=Gduf04XoYngYJlwXKvOot6y8ZAn6GfoQxne67HYu1Xk97/7loQqBWC2JsUncT3JDHrp9mLuucjvtd2jcQ0oVku7AdboFXvYtqNWwVY0gpdoSRt9pVxgjjbheROY5i8135fFloD/AjCPKXZNo80EV3djHFktsB/9zJ9IqpREW/lA=
+	t=1745925079; cv=none; b=DYRdEYMJ/SkAPQjQeZH6J0KdiZpSkCOl6u2sO0IUOrq46hz+YG7LMQemKyBuvyCms19AOWFvjsG/D9UycHOX4bofZnYFy/fkMSYX1sFiGzdmzfsQxkU4DpkD1ay1/xN7o8az2bwSrX6oP7Dki3a4iwBRH6gVYi9c6lbjlKMDRdg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1745922177; c=relaxed/simple;
-	bh=F0icrWLmWL0x6wc0I8vU8McD4gLS2kFGUUKVvPhND1Q=;
+	s=arc-20240116; t=1745925079; c=relaxed/simple;
+	bh=ntg0Hn/+vmHoDyxFGLmoQDta624X9gYSDz1kUPhiP3o=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kFUQXJH0pXtqP4Pw1GG9MdW59w+7M9BV0qrajeOw/XQ2c9l6cN48puthHP7u96XvsWCgILB6kfNH3Ba9nPh0LUwEMnt79atSCSf0RKTTBwsMiI91BEUj9+W6mml7WfFGDvxgsnJfWjdTGc+p8IxNqUlUgnXWQ6/jTPJj4xte4lg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Bqa2D4n7; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=NFuFdkC7CXJvAB89I2WrS8r2k7Dwf/YhMy6XkgW7jTwBtfrknCtDdW+nwgV9SBOvhKa+Mn6djPOOpYa+TxLacdeKSfv+C+CyHXno1dNabVQOuQCX4KeROTcJ/xaGygqUTa2iNt5/dxlC60quQrd9dtoUO/flb3dmefyEv8N9cIc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kTnZ0gxp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Bqa2D4n7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id EF1A4C4CEE3;
-	Tue, 29 Apr 2025 10:22:55 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kTnZ0gxp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A46C4C4CEE3;
+	Tue, 29 Apr 2025 11:11:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1745922176;
-	bh=F0icrWLmWL0x6wc0I8vU8McD4gLS2kFGUUKVvPhND1Q=;
+	s=k20201202; t=1745925077;
+	bh=ntg0Hn/+vmHoDyxFGLmoQDta624X9gYSDz1kUPhiP3o=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Bqa2D4n7Wh3VOxBgek1i9icQpKu25hjUfOqlz9SgsSWX62TfPur6NAhfa7qs36rbI
-	 QXOjr7pUT9fhAml443Tm4Yc7e+NnvLpBkJsCUrfJ04clbOx3PLcrER48iQYqRZK75p
-	 larjXrYesOiX8WLBeYnFZM/3yXMWjiQEir7+O4XCZBlvH3ufmiLP2VVmWXH7/cFo/x
-	 8wtij1Yt0+tSUMRTOKZ8uFieEedQ2GufW2uQgGFfeNGmcVPkcyqLWbcCSWIfLmP/8l
-	 aGyDEW6xrQlqvcCunKeYXV7/YwuFUKBmZqXuLSMBOvPcsrisB/5t+06POxt9nru0Kj
-	 /FDEvm/aq6VIw==
-Message-ID: <b30d3d1d-3fbc-4760-8cd9-2587928b377a@kernel.org>
-Date: Tue, 29 Apr 2025 12:22:54 +0200
+	b=kTnZ0gxpGngvWD96grUQt+kEGUqUN7e6TTZDPlSPbn7ZSvYtMWbAWj+o8fpWgZOK5
+	 ilC2az7zzBS3eurfIF5V4WoR5vY2mffB9z/EyPM3RtvLDD2B0b6yf5elaHUxzPzQqk
+	 RUP9YvU3H29qqWl4jDF5Csj/GdIENK4d6hI3Aab8nu6VqAr8HZbuqiAt2dinH/lIlT
+	 LwN8u9ethJwMbpWIHw2AZPiBP1tHGx8mau9LBoU3K/Z/wAZqWJx2WnRcyIMokXUUnS
+	 MWdyu6Sbm9BfR+vXVo70TGp9/SdNC9sbeWD6VJb89x5jk9DlnVK6vZES91DRC26M0Z
+	 +rM4tDf/gefZg==
+Message-ID: <2a0e43b4-ed28-4bb7-b0e2-8590b6d6b64e@kernel.org>
+Date: Tue, 29 Apr 2025 13:11:14 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,11 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: sockopt: drop redundant tcp_getsockopt
+Subject: Re: [PATCH mptcp-next v2 0/3] Add TCP_MAXSEG socket option support
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <2fffe8798ad6d171110d5677b02579dab9f4cecc.1745478757.git.tanggeliang@kylinos.cn>
+References: <cover.1745401025.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,38 +85,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <2fffe8798ad6d171110d5677b02579dab9f4cecc.1745478757.git.tanggeliang@kylinos.cn>
+In-Reply-To: <cover.1745401025.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 24/04/2025 09:13, Geliang Tang wrote:
+On 23/04/2025 11:40, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> tcp_getsockopt() is called twice in mptcp_getsockopt_first_sf_only(), which
-> makes the code a bit redundant. The first call to tcp_getsockopt() when the
-> first subflow exists can be replaced by going to a new label "get" before
-> the second call.
+> v2:
+>  - add a new helper tcp_sock_set_maxseg.
+>  - add maxseg member of struct mptcp_sock.
+>  - add mptcp_setsockopt_all_subflows helper.
+>  - invoke mptcp_setsockopt_all_subflows under the msk socket lock.
+>  - drop mptcp_getsockopt_sol_tcp_maxseg, use mptcp_put_int_option
+>    instead.
 
-Thank you for this patch, it looks good to me:
+Thank you for the update.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/515
+> 
+> Geliang Tang (3):
+>   tcp: add tcp_sock_set_maxseg
+>   mptcp: add TCP_MAXSEG sockopt support
+>   selftests: mptcp: sockopt: add TCP_MAXSEG sockopt tests
 
-Next time, for such "simple clean-up not changing the behaviour", best
-to attach it to another series where you modify code around to be
-inlined with Netdev Maintainers recommendations.
-
-https://www.kernel.org/doc/html/latest/process/maintainer-netdev.html#clean-up-patches
-
-New patches for t/upstream:
-- 51e97964d659: mptcp: sockopt: drop redundant tcp_getsockopt
-- Results: 3b2cc77f0a4b..59ef7029a603 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/7e2300b7bcc95b8957358cd66407d3eeebc94ebc/checks
+The two first patches look almost OK to me, please see the individual
+comments. I think we can drop the 3rd one.
 
 Cheers,
 Matt
