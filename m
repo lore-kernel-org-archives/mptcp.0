@@ -1,157 +1,127 @@
-Received: from smtp-out1.suse.de (smtp-out1.suse.de [195.135.223.130])
+Received: from mail-pf1-f175.google.com (mail-pf1-f175.google.com [209.85.210.175])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7B222213E61
-	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 15:45:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=195.135.223.130
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1555F1EB5B
+	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 17:08:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.175
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746027952; cv=none; b=tLnkRq5OaS6lNfm3njaPIlfT4nQe2uE/hSIM6UvIcQakatyjUkYCc2H37AGMFLowZeFIElSguLHzyLCwNg2jyKFWySosqCyJ+F8gmSelkZLTvAcICermvCo5oAakd7hck40nba1htPu+RTc0hQCiglwBW0Vj1nrSZ8C1dj1T/GE=
+	t=1746032939; cv=none; b=kAnWNAFTIxtY2DQNqchY9SknwyhfC6mjWUR6er4+9kVQMNFPPkwICuOACkxbKTpSBmVRVI8RliPfuxbb8+AEnEUZnbwb35WNj9yJ3kYiRe/1kLrs5ioeWr9r2zP+zDdL25homIOZQUG3zztS6ke8oU5xcD5suTaNM6e2in0eVcQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746027952; c=relaxed/simple;
-	bh=rJR5I7ZGv2bI0kgfaY9XbuXJycU7KYXZnyb1tGTj8gI=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=I9C7GgA2Pj0NHVfGC39YF/acFhyWWB8i88iWy/NzX1GC2fn/39b53nsvb0uyaHlRPccn6GefqLnzrJfYxuyl+i1RjKHKHxZEXpUVa6DOeik6AY3D+9lSUW2RYXJmS/RPxqTpoHqrvqt7xGCG1se7YLDUXYSod/iveie/mhXJrtI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de; spf=pass smtp.mailfrom=suse.de; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yVgF+5QM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mcPaFwYs; dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b=yVgF+5QM; dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b=mcPaFwYs; arc=none smtp.client-ip=195.135.223.130
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=suse.de
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=suse.de
+	s=arc-20240116; t=1746032939; c=relaxed/simple;
+	bh=ENUe1XVhv70nkYBVRtcw9HYN89T68A9+8VcehhOvq1M=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=mZoV52TMx+rIlxhx6caspMdYwenUel5k3HLLzCucyYKIaoZ40aInbrpbH/X2Koyuzbu25/O/eWKA9dd75ow4ska5wX8wa9fiuttBl8KDhCnaStUuafKv9sausNw7H4sy3KYntHrJEcfXBGEJEiu8YRM6RWrTh+QfDRt7N/fzl1g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=WLlSk3E5; arc=none smtp.client-ip=209.85.210.175
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yVgF+5QM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mcPaFwYs";
-	dkim=pass (1024-bit key) header.d=suse.de header.i=@suse.de header.b="yVgF+5QM";
-	dkim=permerror (0-bit key) header.d=suse.de header.i=@suse.de header.b="mcPaFwYs"
-Received: from imap1.dmz-prg2.suse.org (imap1.dmz-prg2.suse.org [IPv6:2a07:de40:b281:104:10:150:64:97])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by smtp-out1.suse.de (Postfix) with ESMTPS id 979FE21962;
-	Wed, 30 Apr 2025 15:45:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746027948; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bCz+FpXULwSM6ut1VDAjt5z4jKj0VzKKYeqjwHlTBaw=;
-	b=yVgF+5QMUh5QRdXsI4yMreUVngrk3Lf/8nsc6TN8uGAJA0Fov8ckwhT+adbRbc6wtlZZUd
-	tI+fBkGPpL4fbxOP2orFrx/xCxWCT5YN0zH3Pkb2nOowdkCw9FOuG+VpCnqLEW6/00eFJb
-	JzXXI3FFA+bCHhtzSfNse3yNsWX2M0M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746027948;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bCz+FpXULwSM6ut1VDAjt5z4jKj0VzKKYeqjwHlTBaw=;
-	b=mcPaFwYsOeZT/dt2LiWXQJf9jUW4Xk0h+XOCV1UI3ZqV/eYDulvYLfX4reqV4sfP7ilsms
-	xsix3fUUu1vbhDAQ==
-Authentication-Results: smtp-out1.suse.de;
-	dkim=pass header.d=suse.de header.s=susede2_rsa header.b=yVgF+5QM;
-	dkim=pass header.d=suse.de header.s=susede2_ed25519 header.b=mcPaFwYs
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
-	t=1746027948; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bCz+FpXULwSM6ut1VDAjt5z4jKj0VzKKYeqjwHlTBaw=;
-	b=yVgF+5QMUh5QRdXsI4yMreUVngrk3Lf/8nsc6TN8uGAJA0Fov8ckwhT+adbRbc6wtlZZUd
-	tI+fBkGPpL4fbxOP2orFrx/xCxWCT5YN0zH3Pkb2nOowdkCw9FOuG+VpCnqLEW6/00eFJb
-	JzXXI3FFA+bCHhtzSfNse3yNsWX2M0M=
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
-	s=susede2_ed25519; t=1746027948;
-	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:  content-transfer-encoding:content-transfer-encoding;
-	bh=bCz+FpXULwSM6ut1VDAjt5z4jKj0VzKKYeqjwHlTBaw=;
-	b=mcPaFwYsOeZT/dt2LiWXQJf9jUW4Xk0h+XOCV1UI3ZqV/eYDulvYLfX4reqV4sfP7ilsms
-	xsix3fUUu1vbhDAQ==
-Received: from imap1.dmz-prg2.suse.org (localhost [127.0.0.1])
-	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-	 key-exchange X25519 server-signature RSA-PSS (4096 bits) server-digest SHA256)
-	(No client certificate requested)
-	by imap1.dmz-prg2.suse.org (Postfix) with ESMTPS id D1485139E7;
-	Wed, 30 Apr 2025 15:45:47 +0000 (UTC)
-Received: from dovecot-director2.suse.de ([2a07:de40:b281:106:10:150:64:167])
-	by imap1.dmz-prg2.suse.org with ESMTPSA
-	id Ny7xL6tFEmgfIgAAD6G6ig
-	(envelope-from <pfalcato@suse.de>); Wed, 30 Apr 2025 15:45:47 +0000
-From: Pedro Falcato <pfalcato@suse.de>
-To: Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	"David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev,
-	linux-kernel@vger.kernel.org,
-	Pedro Falcato <pfalcato@suse.de>
-Subject: [PATCH] mptcp: Align mptcp_inet6_sk with other protocols
-Date: Wed, 30 Apr 2025 16:45:41 +0100
-Message-ID: <20250430154541.1038561-1-pfalcato@suse.de>
-X-Mailer: git-send-email 2.49.0
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="WLlSk3E5"
+Received: by mail-pf1-f175.google.com with SMTP id d2e1a72fcca58-73bf1cef6ceso192122b3a.0
+        for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 10:08:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746032937; x=1746637737; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=q/OftFaPrjgJxl+NLnnFDbRCoee9A6NeqDl69Qqk9qw=;
+        b=WLlSk3E5rXwVmGsEliePSL0+yPVptIaNpRGeBjNMrH+LzE8dklyrh/EMhXX80oRwrK
+         hVllZj9cTypiEb+ce03xXMreM7EK+v+NjutkPxbDsIoS0EYm5tF+fAnRDnUZ8RTyOi2m
+         D8HOM8tmNZKuXqhXXn+co5/rw/duEf62lp3lQOsmnrqoqHAOPL5xq+7QimkGctg588mx
+         19gI+oFjXGmeuOs76odMFikzlWpNgcwSMeSiEA1/9UDn0UNjX66cgBPf7AVN23/vDcMa
+         xQjy2YYgsOXPpipKnF2RhGpQt4FqNERjjg1ypm/QKrIfvEdNKj34Jou6J1O1ByoyXU7D
+         +yjw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746032937; x=1746637737;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=q/OftFaPrjgJxl+NLnnFDbRCoee9A6NeqDl69Qqk9qw=;
+        b=DsWu+vEd3pA13/qYuLNjneM+unAq7xy1ZwgYf1JocdE8qVSzoliI0qdeiDZqr1yERF
+         0+rwI5Br6M4pZvqxoSyY61tb3DxBxVXvM6EZPdJ+3L6n4rKhvQbM1y7bqmvfli41FKtr
+         t6xuQrbMQn9nck0j8mEayffFhZyTFWbzY0DTsbrdZfA4GMMwSTjd8Yx2uwFqmD9vAiwG
+         6uCTp9Har1PlgREkGm4u3mGzXfSqb+26JzE2ApYdB2B4AdffRN+eOiL18nruerfSDq4l
+         66tDiVxGyv6EmHRaI1UnOwUMmSZaK2fbTK0rMbcgS/LfcxuR5AYl6xKZzE4JYaiswqtj
+         0O6w==
+X-Gm-Message-State: AOJu0Yy9QCMRwLLcC2VsulvIpl96Pf84MSPtLqKt/Enwo43mKecAb8AB
+	PBVaOUZGB2S6rYGIyVs+eQtJRgJynnjkKxJoNfk627Hf4mQoz8Q=
+X-Gm-Gg: ASbGncsLw3M1WDIyF7zVkj9u0eqp6mb26ymzDHLr4XLymS0QHZcRqVYQS/2/mUjU9pk
+	jjxhactiVWCW1Sy1v4NhOJ+mpx+n0Augn1/cXv+qkS9LcIvb+NJkg6Sh2wh/58ISEFOsU7ZwTJJ
+	j56bhbOf4pp/QTq7/r4O+FoKunIxsSYpGxnlql0yv1EJ/6sP61TJCfRipmab+PR+JhjhNmjaveD
+	LhgKRyXOS5ccM3SnSzyuZuDcK/TPasu2qCOdP7SNupFLNYXsYiz4pc/eBPEh+0d/pUMSqFvCGDI
+	DNvJ0ypV2Yx9AmedE3JiGr0r7eCFcDDqDmumd47rpgAr4nEvCYDj
+X-Google-Smtp-Source: AGHT+IH+PjYqNMVV71GVy7d9Cyjf8zz2US/VL8xKNTNoT+EYwnYwEAijvDQ2Df6tUSbf3514qdAx5w==
+X-Received: by 2002:a05:6a00:2e05:b0:732:2484:e0ce with SMTP id d2e1a72fcca58-7403a811cadmr4281879b3a.17.1746032937381;
+        Wed, 30 Apr 2025 10:08:57 -0700 (PDT)
+Received: from [127.0.0.1] ([52.234.33.79])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74039a944c9sm1892309b3a.169.2025.04.30.10.08.56
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 30 Apr 2025 10:08:57 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <20250430154541.1038561-1-pfalcato@suse.de>
+References: <20250430154541.1038561-1-pfalcato@suse.de>
+Subject: Re: [PATCH] mptcp: Align mptcp_inet6_sk with other protocols
+Message-ID: <e2c02df4-be72-e6f4-5397-02adf9cf978e@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Wed, 30 Apr 2025 17:08:56 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Rspamd-Queue-Id: 979FE21962
-X-Spam-Level: 
-X-Spamd-Result: default: False [-3.01 / 50.00];
-	BAYES_HAM(-3.00)[99.99%];
-	NEURAL_HAM_LONG(-1.00)[-1.000];
-	MID_CONTAINS_FROM(1.00)[];
-	R_MISSING_CHARSET(0.50)[];
-	R_DKIM_ALLOW(-0.20)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	NEURAL_HAM_SHORT(-0.20)[-1.000];
-	MIME_GOOD(-0.10)[text/plain];
-	MX_GOOD(-0.01)[];
-	RBL_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:104:10:150:64:97:from];
-	RCVD_VIA_SMTP_AUTH(0.00)[];
-	ARC_NA(0.00)[];
-	MIME_TRACE(0.00)[0:+];
-	RECEIVED_SPAMHAUS_BLOCKED_OPENRESOLVER(0.00)[2a07:de40:b281:106:10:150:64:167:received];
-	RCPT_COUNT_TWELVE(0.00)[12];
-	RCVD_COUNT_TWO(0.00)[2];
-	FUZZY_BLOCKED(0.00)[rspamd.com];
-	FROM_HAS_DN(0.00)[];
-	TO_MATCH_ENVRCPT_ALL(0.00)[];
-	DBL_BLOCKED_OPENRESOLVER(0.00)[suse.de:email,suse.de:dkim,suse.de:mid,imap1.dmz-prg2.suse.org:helo,imap1.dmz-prg2.suse.org:rdns];
-	RCVD_TLS_ALL(0.00)[];
-	FROM_EQ_ENVFROM(0.00)[];
-	DNSWL_BLOCKED(0.00)[2a07:de40:b281:104:10:150:64:97:from,2a07:de40:b281:106:10:150:64:167:received];
-	DKIM_SIGNED(0.00)[suse.de:s=susede2_rsa,suse.de:s=susede2_ed25519];
-	TO_DN_SOME(0.00)[];
-	DKIM_TRACE(0.00)[suse.de:+]
-X-Rspamd-Server: rspamd2.dmz-prg2.suse.org
-X-Rspamd-Action: no action
-X-Spam-Score: -3.01
-X-Spam-Flag: NO
 
-Ever since commit f5f80e32de12 ("ipv6: remove hard coded limitation on
-ipv6_pinfo") that protocols stopped using the old "obj_size -
-sizeof(struct ipv6_pinfo)" way of grabbing ipv6_pinfo, that severely
-restricted struct layout and caused fun, hard to see issues.
+Hi Pedro,
 
-However, mptcp_inet6_sk wasn't fixed (unlike tcp_inet6_sk). Do so.
-The non-cloned sockets already do the right thing using
-ipv6_pinfo_offset + the generic IPv6 code.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Pedro Falcato <pfalcato@suse.de>
----
- net/mptcp/protocol.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+Our CI did some validations and here is its report:
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 26ffa06c21e8..c4fd558307f2 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3142,9 +3142,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
- #if IS_ENABLED(CONFIG_MPTCP_IPV6)
- static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
- {
--	unsigned int offset = sizeof(struct mptcp6_sock) - sizeof(struct ipv6_pinfo);
-+	struct mptcp6_sock *msk6 = container_of(mptcp_sk(sk), struct mptcp6_sock, msk);
- 
--	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
-+	return &msk6->np;
- }
- 
- static void mptcp_copy_ip6_options(struct sock *newsk, const struct sock *sk)
--- 
-2.49.0
+- KVM Validation: normal: Success! =E2=9C=85
+- KVM Validation: debug: =
+Success! =E2=9C=85
+- KVM Validation: btf-normal (only bpftest_all): Success=
+! =E2=9C=85
+- KVM Validation: btf-debug (only bpftest_all): Success! =
+=E2=9C=85
+- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
+uns/14758969434
 
+Initiator: Patchew Applier
+Commits: https://github.=
+com/multipath-tcp/mptcp_net-next/commits/0a4b887f44e6
+Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D958572
+
+
+If there are some issues, you can reproduce them using the same =
+environment as
+the one used by the CI thanks to a docker image, e.g.:
+
+    $ cd [kernel source code]
+    $ docker run -v "${PWD}:${PWD}:rw" -w =
+"${PWD}" --privileged --rm -it \
+        --pull always =
+mptcp/mptcp-upstream-virtme-docker:latest \
+        auto-normal
+
+For more details:
+
+    https://github.com/multipath-tcp/mptcp-upstream-virt=
+me-docker
+
+
+Please note that despite all the efforts that have been already=
+ done to have a
+stable tests suite when executed on a public CI like here, =
+it is possible some
+reported issues are not due to your modifications. =
+Still, do not hesitate to
+help us improve that ;-)
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu Baerts (NGI0 =
+Core)
