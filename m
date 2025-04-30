@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D4746218EB9
-	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 08:55:43 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 967DE1E4110
+	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 09:06:14 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746003344; cv=none; b=Q7Fnse9dDu0VZ1Vd1L/hF3EAZ3Hh/4skyQev4yiUK7K4sC/1JWZniHyi/kNmfUzOheWQKfXslGtfEbT8buchkkrg8lOCpxgMu8K8JH79gAkthjLdFecPl/CfwgHYUBuNdxMlxoYM8H05Rjx32w4s4qLQNZgc5nU0TY3c5VUaJT4=
+	t=1746003979; cv=none; b=LcGpOOy7QjWQYM/55ip8CQ+KJA7/3p8Ud4wx3Gees3JQtS6MS4fO1igPupbMsRqEaYDAobT+/QCFw/pitF+3+dE6VJqd5xqwjpG0rRXLHR8yeu+YcPAaEqxzEu2znwoxIqevjVQl4QN6ibIhOO+7+ul/AtVXlyumlFUA4Qm8idA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746003344; c=relaxed/simple;
-	bh=8Gkb4nl8qz2jmOH9nq8b6o3kyyWMTwR6s4I+NCRu7q8=;
+	s=arc-20240116; t=1746003979; c=relaxed/simple;
+	bh=RjYMsFwZ51ZOIi6jzymAFaU68VGjrBMIOjLAf9OkPz8=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=WWCqj2ZABpqy2JVbMt1XVCvBw1UNTGz6ecXWur0mA1AiqKoh3IYn/Zzgv6zVzXCaEEXCAotJF+ab5a/yCulJdOchDq7nnjlwsS6O1EJ9o9S6T573RKxEKjrCMT9a6zYJBKnrd9nWI7J/OStY3ZkAEBjp7MYR8GgCovhTDZpGp7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=l5l4yEIT; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=SMr8tg/ATS67pZxM186tYJXNyCFGIsILzXXjRJ53BMKXvFzC8NyfE1ViIwjsqOgnQOmRfVeOeKfuJsdvrRaQdapHB72dlfwp4S4u9ZhsunfU4bh/2/3cwfksG/3scH+IyHz+ccJQKg4dij+kWdla8E4hulELKVAI2B6I2+u4isk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=kRORibrJ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="l5l4yEIT"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id B0674C4CEE9;
-	Wed, 30 Apr 2025 08:55:42 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="kRORibrJ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 625A5C4CEE9;
+	Wed, 30 Apr 2025 09:06:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746003343;
-	bh=8Gkb4nl8qz2jmOH9nq8b6o3kyyWMTwR6s4I+NCRu7q8=;
+	s=k20201202; t=1746003974;
+	bh=RjYMsFwZ51ZOIi6jzymAFaU68VGjrBMIOjLAf9OkPz8=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=l5l4yEITSlL+K6vjzaOEJP9LODtEA/2SOeIxkIxO1yRwmZzowqnkqhCbiRvfWUO5b
-	 b46vONLdTjEKvbFrdFOad4x+z7aI7Fxnn9czgrmoG+MSIjcTn49+DESDzZ3hSRr9L6
-	 8Zsp9J7d9O1wflfEZHWFc9qMRat4TvTJexRURlUI6NveFKMHhywMH1qNULNRD4FVX2
-	 Lo60B9IDGKMYUfqM8F3Z1bae6Ao3CgJN1d8oLu1wIF8elusoQxCjdi3BTr8a+C42a0
-	 7fhY3ozMhB6jpr9aQGvn19PBoTPthvO70jIoHGRAKw2repVdjZWONFQo3QPBAw5GgR
-	 o1fczCXTCTFvw==
-Message-ID: <d74438da-8eff-469a-82c5-0cf507042ab8@kernel.org>
-Date: Wed, 30 Apr 2025 10:55:40 +0200
+	b=kRORibrJw47dIwhGLQBtOOl8YseYoReGMXUbaHo+PLn3j9LK9cVq+xfuoLbfuK+4/
+	 pEcm2ilp6zW82aEbiLUDw41X/si74j/zDPzH2qh74PAjq869rZhTwNOJY9TMseV/s1
+	 Yg1gL84rigd5ZjYSoWwg9v6Us5H0YWW3ZfmM/b/62tQl0nA4G5fomxKIofge7jHncx
+	 TKnKoltCj/PPgL6bdLIGEov9LhVX7ehMusDyzZtZSOHO3uzcgrF0CRGoYTcHDTofMb
+	 yjwIKecFgPHp8gaOjsJiqePPf7gXtFmuiOCoGpXf+NN0UiSRn7sRe9JpSORQQDP/kW
+	 HBGmANQdjbP1w==
+Message-ID: <d514f88c-cead-4975-9dd2-55a7b4ba8bcf@kernel.org>
+Date: Wed, 30 Apr 2025 11:06:11 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -90,7 +90,7 @@ In-Reply-To: <cdc5f6389f230f8c1eec4332c27efbf51c734a51.1745991978.git.geliang@ke
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Geliang,
+
 
 On 30/04/2025 07:49, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
@@ -101,21 +101,49 @@ On 30/04/2025 07:49, Geliang Tang wrote:
 > 
 > This patch adds its support in MPTCP by propagating the value to all
 > subflows.
+> 
+> Similar to mptcp_setsockopt_first_sf_only(), a generic helper
+> mptcp_setsockopt_all_subflows() is added to set sockopt for each
+> subflows of the mptcp socket.
+> 
+> Add a new member for struct mptcp_sock to store the TCP_MAXSEG value,
+> and return this value in getsockopt.
+> 
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/515
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/protocol.h |  1 +
+>  net/mptcp/sockopt.c  | 25 +++++++++++++++++++++++++
+>  2 files changed, 26 insertions(+)
+> 
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index 64aa091cb685..91aaed17fe56 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -327,6 +327,7 @@ struct mptcp_sock {
+>  	int		keepalive_cnt;
+>  	int		keepalive_idle;
+>  	int		keepalive_intvl;
+> +	int		maxseg;
+>  	struct work_struct work;
+>  	struct sk_buff  *ooo_last_skb;
+>  	struct rb_root  out_of_order_queue;
+> diff --git a/net/mptcp/sockopt.c b/net/mptcp/sockopt.c
+> index afa54fba51e2..5a002dd05cc9 100644
+> --- a/net/mptcp/sockopt.c
+> +++ b/net/mptcp/sockopt.c
+> @@ -798,6 +798,22 @@ static int mptcp_setsockopt_first_sf_only(struct mptcp_sock *msk, int level, int
+>  	return ret;
+>  }
+>  
+> +static int mptcp_setsockopt_all_subflows(struct mptcp_sock *msk, int level, int optname,
 
-Might be good to add:
+Checkpatch was complaining about this line because we were over 80
+chars. I just did a modification to avoid that, and while at it, I also
+use 'mptcp_setsockopt_all_sf', similar to 'first_sf_only' and what was
+suggested there:
 
-  The get part looks at the value on the first subflow, to be as closed
-  as possible to TCP. Only one value can be returned for the cached MSS,
-  so this can come only from one subflow.
-
-The rest looks good to me:
-
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-I can do the modification when applying the patch.
-
-Note that I will not send them upstream before the addition of the
-packetdrill test in our other repo.
+https://patchwork.kernel.org/project/mptcp/patch/20230707-mptcp-unify-sockopt-issue-353-v1-5-693e15c06646@tessares.net/
 
 Cheers,
 Matt
