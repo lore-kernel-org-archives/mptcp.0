@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E8F6B23507A
-	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 09:42:45 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 15B0B1DD9AC
+	for <mptcp@lists.linux.dev>; Wed, 30 Apr 2025 09:46:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746006166; cv=none; b=sIZn0eGSnI2L+54Wb9fWAPNay8wF0qq3jEsSvhvKiV0jqbH7ASZdIiXaw9pKTHm2ph1JOQz5aVTiYaitKXStwfqrjWe9EyTDB6/e8H9ukdduAIwU3iUAaUAYvvkgGG1URuqY/P3/evFODdS2fCO1Nx6VcFWbuufwd5iw1oMsFlw=
+	t=1746006368; cv=none; b=G4ESJN4q+79fYrJC4Lgg3DTEKImACGpLPYZno9wGNGNj7GAwtXydzy6kEA0Gia04vFWJZfpYjazk8Yi/3EmgWRC5gbuAlJUHRNhiCu9LhMssPO6BUdvUqmjstdEXzi90dtlb/Pja48iUezvxnh5kI2NHvD79s31KeWoc3DqityY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746006166; c=relaxed/simple;
-	bh=kXiy6qPP3sny1PgM2cHR0w7RhdSAhCDd9arl7UHaIIE=;
+	s=arc-20240116; t=1746006368; c=relaxed/simple;
+	bh=wUCeIJDKb1Wvc0kyzDSVGYHhd8lzNrIm3PYeGIjig6s=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=gck1IYcvr3TbbzGdimcZZd5oOJt8pE+gkbKJWEbtHcVwc7HYKaR13PEcGH1DUfRLF9NYoAeS2LqeLDBbSDsyNLAq94fnrQmpfH/PoLrGQoeiI+w3m6OTv+C5u/rhLb1RZWFscUJgLo5+HWnyCGLa91xFPuKEFP5/y+wgQk4lwvs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=lPphG8Jc; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=qurKgiG4QnoF/Ep/UrvazZNDnrr+CvUuNu9se+h2szILkO0KKO+gr8nsskHKrdZRtrb8VCkN0jFGHd4dSJYY3fojBfxxzhwRB0ZtJ7on/a90LbHPJwBlFbi/N7yfhylTzQ2WheN+JMzR8GgbGuzbh69h7fgkBhYbyDyI0rYH5Yw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=bVK6L+0U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="lPphG8Jc"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E2EE3C4CEEA;
-	Wed, 30 Apr 2025 09:42:44 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="bVK6L+0U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id E44EAC4CEE9;
+	Wed, 30 Apr 2025 09:46:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746006165;
-	bh=kXiy6qPP3sny1PgM2cHR0w7RhdSAhCDd9arl7UHaIIE=;
+	s=k20201202; t=1746006367;
+	bh=wUCeIJDKb1Wvc0kyzDSVGYHhd8lzNrIm3PYeGIjig6s=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=lPphG8JcqQTK71CozsQ9FJJjhK/VorKrttpgp+e2n4Y7c3lntr0K/3FhmSZ/tfPff
-	 sr7/LPki3nQxzdNxNSa28OGj9d4jaxemO/XiFdRoL9E1CCm9bwfAzYzjN5wRmHg89c
-	 Twbfb/owlid1mPYLS60K8LIuC0N9h9Ju15gjHlzXr5OJB3JyhvA1JZlWRNi5MfOhEm
-	 rOnZ0IVIMg9PRllN17tfa4Th2MnsjJugtBhiIs44IztWASX/T2MUCjWWVmTJceZua1
-	 0TkEx6z3b1cC1XHl+9M0K664ZhMzMYP88ElieMpbop3WwVeZynZzEXGhuUL04cRnjv
-	 VEkDDkrJEMAiw==
-Message-ID: <f5a3b547-d6d8-4448-a679-c638d918c9d6@kernel.org>
-Date: Wed, 30 Apr 2025 11:42:39 +0200
+	b=bVK6L+0UAaZoGczoaVwJ5VEjVilimg1yJokE9PJtC4bxkAK3clzQKIcxqWLAZDr4H
+	 Sqtaw07/lBU1XF0+jxfHW5d6oLzyGFJwQy37PLCZqzsGssVNZ8zqtOSSPhViuc1DkA
+	 lGX59cjofRLUvmwSpz4DvsQZusLeHenZ1tIq+C4KsGZsU/lkKCsL0NhW0W2CBCL9a3
+	 CEjO0x9EtjqHUOBMqX+BeOMAKx9O8YdTL4myQI/EbkaFySVL80sAlOAd5LAhjiF1AV
+	 MBNTpcad1n9RXSSSa7nbaDdjrRzhd1j5mslP6PMoQ3+TQoUfT7Qv4JA/HI+QwU1t7t
+	 sW9l3KHN/ZZtA==
+Message-ID: <51744839-e4a2-4bb0-8f54-5f6ad3db6925@kernel.org>
+Date: Wed, 30 Apr 2025 11:46:05 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,10 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next] mptcp: validate maxseg sockopt
+Subject: Re: [PATCH mptcp-next] sock: add sock_krfree_s helper
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1745991978.git.geliang@kernel.org>
- <b10aabf6c4529977b61e7662cf1f09db4752edaa.1745991826.git.geliang@kernel.org>
+References: <ffe72ff201ea72938b136eb37ea3e0777ae890f4.1746004135.git.geliang@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,87 +84,63 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <b10aabf6c4529977b61e7662cf1f09db4752edaa.1745991826.git.geliang@kernel.org>
+In-Reply-To: <ffe72ff201ea72938b136eb37ea3e0777ae890f4.1746004135.git.geliang@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-On 30/04/2025 07:49, Geliang Tang wrote:
-> This patch validates the newly added TCP_MAXSEG sockopt.
-
-If you don't mind and have access, do you mind creating a PR on GitHub
-instead please?
-
-  https://github.com/multipath-tcp/packetdrill
-
-When you send them here, the CI might think it is a kernel patch and try
-to apply it (which can work with new files).
-
+On 30/04/2025 11:09, Geliang Tang wrote:
+> This patch adds the rcu version of sock_kfree_s() helper, named
+> sock_krfree_s(), to free the memory using kfree_rcu_mightsleep()
+> and adjust the socket's option memory buffer.
+> 
+> This new helper is first used in MPTCP.
+> 
 > Signed-off-by: Geliang Tang <geliang@kernel.org>
 > ---
->  gtests/net/mptcp/sockopts/sockopt_maxseg.pkt | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 gtests/net/mptcp/sockopts/sockopt_maxseg.pkt
+>  include/net/sock.h       |  1 +
+>  net/core/sock.c          | 14 +++++++++++---
+>  net/mptcp/pm_userspace.c |  3 +--
+>  3 files changed, 13 insertions(+), 5 deletions(-)
 > 
-> diff --git a/gtests/net/mptcp/sockopts/sockopt_maxseg.pkt b/gtests/net/mptcp/sockopts/sockopt_maxseg.pkt
-> new file mode 100644
-> index 0000000..62492db
-> --- /dev/null
-> +++ b/gtests/net/mptcp/sockopts/sockopt_maxseg.pkt
-> @@ -0,0 +1,20 @@
-> +--tolerance_usecs=100000
-> +`../common/defaults.sh`
-> +
-> +0.0  socket(..., SOCK_STREAM, IPPROTO_MPTCP) = 3
-> +
-> ++0   bind(3, ..., ...) = 0
-> ++0   listen(3, 1) = 0
-> +
+> diff --git a/include/net/sock.h b/include/net/sock.h
+> index e223102337c7..94f72f5c8754 100644
+> --- a/include/net/sock.h
+> +++ b/include/net/sock.h
+> @@ -1836,6 +1836,7 @@ void *sock_kmemdup(struct sock *sk, const void *src,
+>  		   int size, gfp_t priority);
+>  void sock_kfree_s(struct sock *sk, void *mem, int size);
+>  void sock_kzfree_s(struct sock *sk, void *mem, int size);
+> +void sock_krfree_s(struct sock *sk, void *mem, int size);
+>  void sk_send_sigurg(struct sock *sk);
+>  
+>  static inline void sock_replace_proto(struct sock *sk, struct proto *proto)
+> diff --git a/net/core/sock.c b/net/core/sock.c
+> index b64df2463300..f9ee0b44ab2a 100644
+> --- a/net/core/sock.c
+> +++ b/net/core/sock.c
+> @@ -2862,12 +2862,14 @@ EXPORT_SYMBOL(sock_kmemdup);
+>   * condition entirely.
+>   */
+>  static inline void __sock_kfree_s(struct sock *sk, void *mem, int size,
+> -				  const bool nullify)
+> +				  const bool nullify, const bool rcu)
+>  {
+>  	if (WARN_ON_ONCE(!mem))
+>  		return;
+>  	if (nullify)
+>  		kfree_sensitive(mem);
+> +	else if (rcu)
+> +		kfree_rcu_mightsleep(mem);
 
-Here, similar to other sockopt tests, can you check the default value
-please? It should be the same as the one for "plain" TCP, 536 I suppose
-(min mss).
+I'm not sure about that: in some cases, kfree_rcu() might be called.
+kfree_rcu_mightsleep() is more an exception to me, I think. Also, it
+looks like there are many other places where the free and atomic_sub()
+is done "manually", that's not specific to MPTCP.
 
-> ++0   setsockopt(3, SOL_TCP, TCP_MAXSEG, [1000], 4) = 0
-> ++0   getsockopt(3, SOL_TCP, TCP_MAXSEG, [1000], [4]) = 0
-
-Can you move this block before the bind()/listen()? It seems to make
-more sense to set that before the listen(), no?
-
-> ++0     <  S   0:0(0)         win 8000  <mss 1000, sackOK, nop, nop, nop, wscale 0, mpcapable v1 flags[flag_h] nokey>
-
-Just to avoid confusions, in the inject packet here, please set
-something else, e.g. 1460.
-
-> ++0     >  S.  0:0(0)  ack 1            <mss 1000, nop, nop, sackOK, nop, wscale 8, mpcapable v1 flags[flag_h] key[skey]>
-> ++0.01  <   .  1:1(0)  ack 1  win 8000                                             <mpcapable v1 flags[flag_h] key[ckey=2, skey]>
-> ++0   accept(3, ..., ...) = 4
-
-Can you do a getsockopt(4, ..., TCP_MAXSEG) here to check the value? It
-should be similar to what you would get with "plain" TCP (is it 988? or
--20B reserved for MPTCP options?).
-
-It might be better to introduce a new test doing the same thing with
-"plain" TCP to compare if you don't mind.
-
-> ++0   write(4, ..., 100) = 100
-
-Here, please write more than the MSS you set, e.g. 1250B to see how the
-stack will split that in two packets
-
-> +
-> ++0     >  P.  1:101(100)  ack 1             <dss dack4=1   dsn8=1 ssn=1 dll=100 nocs, nop, nop>
-> ++0.01  <   .  1:1(0)      ack 101  win 256  <dss dack4=101 nocs>
-Here, can you change TCP_MAXSEG on the accepted socket (fd = 4)?
-
-e.g. set it to 800, then do a getsockopt(), then write(4, ..., 1250) and
-see if you have 2 packets of the expected size.
-
-Then, if you don't mind, please also create a new subflow by injecting
-an MP_JOIN with a MSS of 1460, and check that the SYN+ACK+MP_JOIN
-generated by the kernel has a MSS of 1000 as expected. For an example,
-check mptcp/mp_join/mp_join_server.pkt.
+I don't know what Mat thinks about that, but I don't think this is
+needed (or it should replace some code in different places in the kernel).
 
 Cheers,
 Matt
