@@ -1,94 +1,139 @@
-Received: from todd.t-8ch.de (todd.t-8ch.de [159.69.126.157])
+Received: from mx0b-001b2d01.pphosted.com (mx0b-001b2d01.pphosted.com [148.163.158.5])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 336DE3D561
-	for <mptcp@lists.linux.dev>; Thu,  1 May 2025 16:48:56 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=159.69.126.157
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4B4961BEF77
+	for <mptcp@lists.linux.dev>; Fri,  2 May 2025 11:34:19 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=148.163.158.5
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746118139; cv=none; b=ny/53gPZHmF1TFfQgMIG+RwUJlI6cgBKONqbnnaCbJkXHBXx2GwykFq63FHX1J/2gTgbmiq2pwwz+5Ooe0QNHL5YL1AwL04zJLE7YJVBWweE06x5p0xk7jszEeY/SPsbKEG735fljMd6C71kj8U5178T/ARIaVolk5y6MYxLutc=
+	t=1746185662; cv=none; b=Xji/GSTC4WXlWMOpQ2+p//mdl0Uzis1dURbRHd2TPNF3g9/vACuj24mWFM6bAM9KODgBMgHEVVvonoixr9SHeJ5G/xeqPKwTh4cINFfypiupAScB/8687GlVT77PMCimOyYcHCW2OVjdzuLl2I6orR5NAQkIIrIppzUvDt/5Zq0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746118139; c=relaxed/simple;
-	bh=n+rp/1cfKWUVbAn2ayQIlXtUE0b/J4JdBnNRkRwb6x8=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=LmZAr/Wtw052OELEaKT/8jRtgNHE5Va96xaUmwOklI4cjNL+omoBBPKSn/8EpG6rHXVoNaS5xZNBRpHTXUnzFM4/K2D0+a3UTKAdYGUKMQLyIgTAhJtk9JB5LKusv4rEGtghixM+agoz5+u/Rwrh3xeTFcN48I2EpoA9AShb0bY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net; spf=pass smtp.mailfrom=weissschuh.net; dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b=GKucUTUN; arc=none smtp.client-ip=159.69.126.157
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=weissschuh.net
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=weissschuh.net
+	s=arc-20240116; t=1746185662; c=relaxed/simple;
+	bh=7w60J+FKjVS3g5Z95mqPgSc2nzysE8E6h9d60GXPWus=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=ILwfuquOG8Qz9fl2mIck+wNGq8vLSeRLlCY7nQZILJhBDzcN+saEJ4H4v16AwYmYpyMezrR7kzmtOct1A/cqmUttF2Ldfl2yW47MI22sblOfYjocE/c1AUQR5+jhmzm3V1cJD9ATbWdM76vdKPCe8uTUjfeHmMlXHcXgo3KQILI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com; spf=pass smtp.mailfrom=linux.ibm.com; dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b=n4dykVL0; arc=none smtp.client-ip=148.163.158.5
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.ibm.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.ibm.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=weissschuh.net header.i=@weissschuh.net header.b="GKucUTUN"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=weissschuh.net;
-	s=mail; t=1746118134;
-	bh=n+rp/1cfKWUVbAn2ayQIlXtUE0b/J4JdBnNRkRwb6x8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=GKucUTUNMeD2bPB11ZzjZiqIVgo4OjcUcIqicF632tFjAi8qs9kmxPN6wwBxRtzAj
-	 9naGTZeY9bn+2boxu52Z/zGFxoKe48WMyR92EdspNOUfVwzRToN5Y7VVNMewbE9XtJ
-	 4Zk7wE8EZshmiKS8cyGJLqMsaKSQnUggdfIQsg3g=
-Date: Thu, 1 May 2025 18:48:52 +0200
-From: Thomas =?utf-8?Q?Wei=C3=9Fschuh?= <linux@weissschuh.net>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: Masahiro Yamada <masahiroy@kernel.org>, linux-kbuild@vger.kernel.org, 
-	linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>, 
-	Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>, 
-	Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, 
-	Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, 
-	Ben Hutchings <ben@decadent.org.uk>, Peter Oberparleiter <oberpar@linux.ibm.com>, 
-	MPTCP Linux <mptcp@lists.linux.dev>
-Subject: Re: [PATCH v2] kbuild: make all file references relative to source
- root
-Message-ID: <e3ccb1ef-1b7a-4069-960f-a6fc5353c1ce@t-8ch.de>
-References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
- <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+	dkim=pass (2048-bit key) header.d=ibm.com header.i=@ibm.com header.b="n4dykVL0"
+Received: from pps.filterd (m0360072.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.18.1.2/8.18.1.2) with ESMTP id 541LgHKV005395;
+	Fri, 2 May 2025 11:33:56 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=cc
+	:content-transfer-encoding:content-type:date:from:in-reply-to
+	:message-id:mime-version:references:subject:to; s=pp1; bh=U/RCjn
+	+HqnJhle1+I403uhVDGs5SD7lY0aQbaeLHTRw=; b=n4dykVL0IQcNXPaKnLq7cG
+	3gtrD5EZzBrZum0CwK3YW1Qvr14ruooORvgAA/9uATxdkeGGekpcKHn2n8cnBGzy
+	0YbG/PLkTKal/1VA7bwz0jmIU03yPeP/XrYjESIfaNwPlrigeiErhbYf00BE5vib
+	y8Zq1X3hN7/mF+bmtfHY70IgjOenuGLDL/xG5gyMDjG0YR9Vmf9TFhe4AfvD7/6S
+	vEup76zsqUCmiz0UcaSATsg1LfT8gpRik/3W1VC1mqiOdSDZTW0bn2Py5/tScBty
+	VL56+v9D0XQ59K+k+I7AkaWpQioIA+Fe4W9diIdsCr7Wt24fS3ogA3kIlHOFZJNg
+	==
+Received: from ppma23.wdc07v.mail.ibm.com (5d.69.3da9.ip4.static.sl-reverse.com [169.61.105.93])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 46ch3vtntx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:33:55 +0000 (GMT)
+Received: from pps.filterd (ppma23.wdc07v.mail.ibm.com [127.0.0.1])
+	by ppma23.wdc07v.mail.ibm.com (8.18.1.2/8.18.1.2) with ESMTP id 542BG6hF001791;
+	Fri, 2 May 2025 11:33:55 GMT
+Received: from smtprelay01.wdc07v.mail.ibm.com ([172.16.1.68])
+	by ppma23.wdc07v.mail.ibm.com (PPS) with ESMTPS id 469ban1hac-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 02 May 2025 11:33:55 +0000
+Received: from smtpav04.dal12v.mail.ibm.com (smtpav04.dal12v.mail.ibm.com [10.241.53.103])
+	by smtprelay01.wdc07v.mail.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 542BXsxm25690550
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 2 May 2025 11:33:54 GMT
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5ED9E5805E;
+	Fri,  2 May 2025 11:33:54 +0000 (GMT)
+Received: from smtpav04.dal12v.mail.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id DED9958052;
+	Fri,  2 May 2025 11:33:51 +0000 (GMT)
+Received: from [9.61.121.210] (unknown [9.61.121.210])
+	by smtpav04.dal12v.mail.ibm.com (Postfix) with ESMTP;
+	Fri,  2 May 2025 11:33:51 +0000 (GMT)
+Message-ID: <70e065c7-8129-4c78-a7a8-72718ceea334@linux.ibm.com>
+Date: Fri, 2 May 2025 13:33:37 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird
+Subject: Re: [PATCH v2] kbuild: make all file references relative to source
+ root
+To: Matthieu Baerts <matttbe@kernel.org>,
+        =?UTF-8?Q?Thomas_Wei=C3=9Fschuh?= <linux@weissschuh.net>,
+        Masahiro Yamada <masahiroy@kernel.org>
+Cc: linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, Nathan Chancellor <nathan@kernel.org>,
+        Nicolas Schier <nicolas@fjasle.eu>, Jonathan Corbet <corbet@lwn.net>,
+        Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org,
+        "H. Peter Anvin" <hpa@zytor.com>, Ben Hutchings <ben@decadent.org.uk>,
+        MPTCP Linux <mptcp@lists.linux.dev>
+References: <20250315-kbuild-prefix-map-v2-1-00e1983b2a23@weissschuh.net>
+ <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+Content-Language: en-US
+From: Peter Oberparleiter <oberpar@linux.ibm.com>
 In-Reply-To: <edc50aa7-0740-4942-8c15-96f12f2acc7e@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+X-Authority-Analysis: v=2.4 cv=Z+XsHGRA c=1 sm=1 tr=0 ts=6814ada3 cx=c_pps a=3Bg1Hr4SwmMryq2xdFQyZA==:117 a=3Bg1Hr4SwmMryq2xdFQyZA==:17 a=IkcTkHD0fZMA:10 a=dt9VzEwgFbYA:10 a=VwQbUJbxAAAA:8 a=8T59DR07AAAA:8 a=VTue-mJiAAAA:8 a=hfMpdXb5uliVZ7BdCgcA:9
+ a=3ZKOabzyN94A:10 a=QEXdDO2ut3YA:10 a=nH4QB3FtVBqZfhiODIJV:22 a=S9YjYK_EKPFYWS37g-LV:22
+X-Proofpoint-ORIG-GUID: VvdH58BCApXO3aiQkWqM4QgzlyDnRmvp
+X-Proofpoint-GUID: VvdH58BCApXO3aiQkWqM4QgzlyDnRmvp
+X-Proofpoint-Spam-Details-Enc: AW1haW4tMjUwNTAyMDA4NyBTYWx0ZWRfX1f1a7KAI0ak7 na6p83njbnyNC+VVxVng+drrrGEzhU5EMR1YixM06UFLGYdQhKF7UKeqD3co0hkUUbMigxkDdVB AhYRz8LCPI5dAsW7NDQ3TPicAkSmvejTnkhh8BJivZRMFVGiMjL7r/9run5wTAZqw9vF8TeYvd2
+ e6cy6qrS70N3sw9aUq5I2HnHtNPutfmZt8XLSPUeohvixNlgyZU+Lt8KnwpagFVB1emdAAAiFCM mwojYIEDizFOKDi8P8h0DSCVru9bficPcX9h3j03FDYQKqFwABBGZSW94EWZlWjP2dopXYUltoR BtXiSrEGzaxjNO2uZ72ObBQiziKMdBWKcJGoqFvPAaD4tk4k9QNKRUVqc0C88Ny0Nrjlxy2fAg5
+ DNPsGQjAK23Q8/z4/keto4Q3lVgbAZ42xQrkh7na7vz8p/mJYkXAgjLwwn0APIDhOf7Gis3h
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.293,Aquarius:18.0.1099,Hydra:6.0.736,FMLib:17.12.80.40
+ definitions=2025-05-02_01,2025-04-30_01,2025-02-21_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 bulkscore=0 adultscore=0
+ suspectscore=0 lowpriorityscore=0 malwarescore=0 priorityscore=1501
+ phishscore=0 impostorscore=0 mlxscore=0 mlxlogscore=999 spamscore=0
+ clxscore=1011 classifier=spam authscore=0 authtc=n/a authcc=
+ route=outbound adjust=0 reason=mlx scancount=1 engine=8.19.0-2504070000
+ definitions=main-2505020087
 
-Hi Matthieu,
-
-On 2025-04-29 18:12:29+0200, Matthieu Baerts wrote:
-> Hi Thomas, Masahiro,
-> 
-> +Cc Peter Oberparleiter, MPTCP ML
-> 
+On 29.04.2025 18:12, Matthieu Baerts wrote:
 > On 15/03/2025 14:20, Thomas Weißschuh wrote:
-> > -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
-> > Other references, for example in debug information, are not affected.
-> > This makes handling of file references in the compiler outputs harder to
-> > use and creates problems for reproducible builds.
-> > 
-> > Switch to -ffile-prefix map which affects all references.
-> > 
-> > Also drop the documentation section advising manual specification of
-> > -fdebug-prefix-map for reproducible builds, as it is not necessary
-> > anymore.
-> > 
-> > Suggested-by: Ben Hutchings <ben@decadent.org.uk>
-> > Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
-> > Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
-> > Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
+>> -fmacro-prefix-map only affects __FILE__ and __BASE_FILE__.
+>> Other references, for example in debug information, are not affected.
+>> This makes handling of file references in the compiler outputs harder to
+>> use and creates problems for reproducible builds.
+>>
+>> Switch to -ffile-prefix map which affects all references.
+>>
+>> Also drop the documentation section advising manual specification of
+>> -fdebug-prefix-map for reproducible builds, as it is not necessary
+>> anymore.
+>>
+>> Suggested-by: Ben Hutchings <ben@decadent.org.uk>
+>> Link: https://lore.kernel.org/lkml/c49cc967294f9a3a4a34f69b6a8727a6d3959ed8.camel@decadent.org.uk/
+>> Acked-by: Borislav Petkov (AMD) <bp@alien8.de> # arch/x86/
+>> Signed-off-by: Thomas Weißschuh <linux@weissschuh.net>
 > 
 > Thank you for having worked on that!
 > 
 > (...)
 > 
-> > diff --git a/Makefile b/Makefile
-> > index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -1067,7 +1067,7 @@ endif
-> >  
-> >  # change __FILE__ to the relative path to the source directory
-> >  ifdef building_out_of_srctree
-> > -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
-> > +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
-> >  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
-> >  endif
+>> diff --git a/Makefile b/Makefile
+>> index 5c333682dc9142b1aacfe454a5c77f5923554b7d..4f920187cee658ae4d1b807fca365f6994274828 100644
+>> --- a/Makefile
+>> +++ b/Makefile
+>> @@ -1067,7 +1067,7 @@ endif
+>>  
+>>  # change __FILE__ to the relative path to the source directory
+>>  ifdef building_out_of_srctree
+>> -KBUILD_CPPFLAGS += $(call cc-option,-fmacro-prefix-map=$(srcroot)/=)
+>> +KBUILD_CPPFLAGS += $(call cc-option,-ffile-prefix-map=$(srcroot)/=)
+>>  KBUILD_RUSTFLAGS += --remap-path-prefix=$(srcroot)/=
+>>  endif
 > 
 > Today, I noticed that my CI for the MPTCP subsystem couldn't produce
 > code coverage files like before: the source files are not found. A 'git
@@ -109,8 +154,19 @@ On 2025-04-29 18:12:29+0200, Matthieu Baerts wrote:
 > 
 >   ERROR: (source) unable to open
 > ${WORKDIR}/.virtme/build/net/mptcp/ctrl.c: No such file or directory
-> 
-> 
+
+I can confirm that the subject kernel commit breaks gcov-kernel for
+out-of-srctree builds by making it impossible for a consumer of GCOV
+data to determine the actual location of a source file without manually
+specifying it.
+
+Sample .gcno file content changes as seen with gcov-dump:
+
+- cwd: /home/.../build
+- /home/.../linux/kernel/workqueue.c:8049:19-8057:1
++ cwd: /home/.../build
++ kernel/workqueue.c:8049:19-8057:1
+
 > The output file is different: the path to the source file is wrong
 > because it points to the build dir. Instead of ...
 > 
@@ -125,11 +181,10 @@ On 2025-04-29 18:12:29+0200, Matthieu Baerts wrote:
 > change introduced by this patch? Or something else needed on the
 > userspace side?
 
-I'd like to focus on the report from Ville Syrjälä [0] first.
-While it is easier to reproduce and investigate, I suspect the solution
-found there will also work for your usecase.
+I don't see how this could be fixed by changes in userspace nor
+gcov-kernel - the source tree directory information is missing from the
+relevant data files.
 
-
-Thomas
-
-[0] https://lore.kernel.org/lkml/aBEttQH4kimHFScx@intel.com/
+-- 
+Peter Oberparleiter
+Linux on IBM Z Development - IBM Germany R&D
