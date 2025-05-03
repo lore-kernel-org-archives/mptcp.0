@@ -1,101 +1,61 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4A8A228E7;
-	Fri,  2 May 2025 17:00:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB35A8479;
+	Sat,  3 May 2025 01:39:49 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746205222; cv=none; b=iaz3qSuYtdwzI65saF+tfsw1/vz6MqUlK7wpV76nN/MGuN/Jq5FmYB4r1OEEtYcxFAD90dtnCmGHk/rkVt3ITCs7rG1M4kcLJo9P5LaxmqOhSE0njdbxdga9vHvXLtChUVpj6D/lp/ur7tnM5832kPqjXX3FufKtPqRC6ygILlc=
+	t=1746236389; cv=none; b=hJcJrLBE3kPg4Oj8rRDDakfRecwJiLSlRtMHp/BCNt1AuAWl9dR9kypE3TttpyLKEWRxNCiFk6jTV1zym8AtI7W1SCSLPxUcdc/s6bCpWdlzHTWRJwhPXkSlJwVJ8xZpvX/4lRt+NQqEx5b780Y1hbDIpQEEgCz2pT1GQcpR+cw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746205222; c=relaxed/simple;
-	bh=6EUUOk0NkULNMctsLZSQJhdZlUb9fiQj6X+JcAqW8Zc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=C+aUWBZUDtNyTmXl1X5dgO9jQCATEfv5DjfMGjPOxJffNOlkURu88FozaRPnjmfYhSm8JX3HKMx7qhqaJRLWTGgMvrqSmqR/2wNtE2e4RZtDz99uLNJDxahVPgGn3mDrcaWbfUmeZDJtWqEn5xAop1OkcfDcwPuymGfciRY7btM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jdbw+SbH; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746236389; c=relaxed/simple;
+	bh=kUE9dfyTbL7WgDurwx5nxsrda/CGqMTgTvgU00qO40A=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=VpdilceLPIT/fvpQidG/eh32r+ZvURupZHZshk9hfTFJY4IQVtp+/+6rDXqB+fe6oN4WeYXDH/hQtExlNsnNc38y0mN9QujlDRKZBH5uClGAm7h/iqFTW+akmm7nlUwaSYZYuLuijs177cyKGBJ21HktU/OQIy4dY3KFACIH/78=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pohUkJEt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jdbw+SbH"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71F4AC4CEE4;
-	Fri,  2 May 2025 17:00:18 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pohUkJEt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC65C4CEE4;
+	Sat,  3 May 2025 01:39:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746205220;
-	bh=6EUUOk0NkULNMctsLZSQJhdZlUb9fiQj6X+JcAqW8Zc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=jdbw+SbH8ItXlV2qdKVLIYkb6PYDUrr571gHiho3SuV6ew2Jx11oOiPjXHEW8KYaF
-	 dT0ST5z81a1SQ1Gk3sTJObWJ/rkZ4gVxQnGdqcY6sexKdL5yf8Y+tZ42FGdTiP55b0
-	 5KgYZc5YJnGP+n+Rll1JimuDu4nMoVrSsYKmjRUps8pPdgvtbwCRBpsgUsH5dKHnc/
-	 K5rHcXH3FLdkTEI4B+ECiZ+4p41b1GLa0Qxc0VJI/yqp9VF9kzFrCYFxZ7JxZ1E/6z
-	 6KnrYkPvQr1RQPR40in9FZIYXXlzK0c9Emcks1vEyOCAHRWp30QB9Y+l2x6Prf1hx8
-	 Bit79xGmXOPDw==
-Message-ID: <32460611-f05e-43ea-a57c-494a29d85bb3@kernel.org>
-Date: Fri, 2 May 2025 19:00:15 +0200
+	s=k20201202; t=1746236389;
+	bh=kUE9dfyTbL7WgDurwx5nxsrda/CGqMTgTvgU00qO40A=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=pohUkJEtKq4oaxjLkVvbromWc6Qsxg0mgVs05CFqC4AeqTIQTIQXi4iFp1sy70SOH
+	 ZueQIBVoqmYYAKFuNLvaOi88zj4hHydv8HJrNKI7eFPmdT2KjEZ2i4VFO6ubysJBn0
+	 1XYhKspZA7+VIBYjF67QflkvyOlGcK8svRC5w84+C4XaVvrBMAaf3zNoZkUj135sVv
+	 XHNXTeM3syJqDyv1l51fCNhWIORnGS15numXK+QWRd2jBtD36PPX130ueZ4nSWXObX
+	 UZqUr/AMRdHN25cgZ0ma/3Xt0Oq/GHERX3F0Bq42BVv4tNmGu4GIjcF2o99OHXOG6N
+	 9rfYc1+TK0k6w==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CEC380DBE9;
+	Sat,  3 May 2025 01:40:29 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+Content-Transfer-Encoding: 8bit
 Subject: Re: [PATCH] mptcp: Align mptcp_inet6_sk with other protocols
-Content-Language: en-GB, fr-BE
-To: Pedro Falcato <pfalcato@suse.de>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>
-Cc: Simon Horman <horms@kernel.org>, netdev@vger.kernel.org,
- mptcp@lists.linux.dev, linux-kernel@vger.kernel.org
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174623642826.3774742.12489840490454605534.git-patchwork-notify@kernel.org>
+Date: Sat, 03 May 2025 01:40:28 +0000
 References: <20250430154541.1038561-1-pfalcato@suse.de>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
 In-Reply-To: <20250430154541.1038561-1-pfalcato@suse.de>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+To: Pedro Falcato <pfalcato@suse.de>
+Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-kernel@vger.kernel.org
 
-Hi Pedro,
+Hello:
 
-On 30/04/2025 17:45, Pedro Falcato wrote:
+This patch was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Wed, 30 Apr 2025 16:45:41 +0100 you wrote:
 > Ever since commit f5f80e32de12 ("ipv6: remove hard coded limitation on
 > ipv6_pinfo") that protocols stopped using the old "obj_size -
 > sizeof(struct ipv6_pinfo)" way of grabbing ipv6_pinfo, that severely
@@ -105,33 +65,15 @@ On 30/04/2025 17:45, Pedro Falcato wrote:
 > The non-cloned sockets already do the right thing using
 > ipv6_pinfo_offset + the generic IPv6 code.
 > 
-> Signed-off-by: Pedro Falcato <pfalcato@suse.de>
-> ---
->  net/mptcp/protocol.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index 26ffa06c21e8..c4fd558307f2 100644
-> --- a/net/mptcp/protocol.c
-> +++ b/net/mptcp/protocol.c
-> @@ -3142,9 +3142,9 @@ static int mptcp_disconnect(struct sock *sk, int flags)
->  #if IS_ENABLED(CONFIG_MPTCP_IPV6)
->  static struct ipv6_pinfo *mptcp_inet6_sk(const struct sock *sk)
->  {
-> -	unsigned int offset = sizeof(struct mptcp6_sock) - sizeof(struct ipv6_pinfo);
-> +	struct mptcp6_sock *msk6 = container_of(mptcp_sk(sk), struct mptcp6_sock, msk);
->  
-> -	return (struct ipv6_pinfo *)(((u8 *)sk) + offset);
-> +	return &msk6->np;
+> [...]
 
-Thank you for suggesting this! Good idea, that's clearer!
+Here is the summary with links:
+  - mptcp: Align mptcp_inet6_sk with other protocols
+    https://git.kernel.org/netdev/net-next/c/a2f6476ed18a
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-
-@Netdev maintainers: this can be applied in net-next directly.
-
-Cheers,
-Matt
+You are awesome, thank you!
 -- 
-Sponsored by the NGI0 Core fund.
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
