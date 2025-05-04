@@ -1,79 +1,89 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id AB35A8479;
-	Sat,  3 May 2025 01:39:49 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88083156C6F
+	for <mptcp@lists.linux.dev>; Sun,  4 May 2025 11:10:33 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746236389; cv=none; b=hJcJrLBE3kPg4Oj8rRDDakfRecwJiLSlRtMHp/BCNt1AuAWl9dR9kypE3TttpyLKEWRxNCiFk6jTV1zym8AtI7W1SCSLPxUcdc/s6bCpWdlzHTWRJwhPXkSlJwVJ8xZpvX/4lRt+NQqEx5b780Y1hbDIpQEEgCz2pT1GQcpR+cw=
+	t=1746357035; cv=none; b=HXpjMZZCkJKEx0LFUAom286cHYNwyGPZ6PWGqgluomWJp9/EVhFpHOBTEWrRM7ZKn1AV3Ic95+xriUocAWBQ2ZLNOpogYZz/AGMJrB9zm1Wkyejv++e9Hl/Ab1U8n4sSIQzo1p6htNklSTSdKjYIPADc2o/o7Mh0C0qwDsv3SxE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746236389; c=relaxed/simple;
-	bh=kUE9dfyTbL7WgDurwx5nxsrda/CGqMTgTvgU00qO40A=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=VpdilceLPIT/fvpQidG/eh32r+ZvURupZHZshk9hfTFJY4IQVtp+/+6rDXqB+fe6oN4WeYXDH/hQtExlNsnNc38y0mN9QujlDRKZBH5uClGAm7h/iqFTW+akmm7nlUwaSYZYuLuijs177cyKGBJ21HktU/OQIy4dY3KFACIH/78=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=pohUkJEt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746357035; c=relaxed/simple;
+	bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
+	h=Message-ID:Date:Subject:From:To:Content-Type:MIME-Version; b=bgKIdOVcnDxmnZHsVMrjWNyAkzZg/S0gNxMGT+2lQM+24n03ejqVoDG3EVs3/zxYX9py8hRtpcdWaSAhVHwMhzHf2McaMqqVDPG1MuBUuxNSHVLXQ0QVRfVtiHH6H3IV4+n/0G2uzvNo0QcF7iY3e7Uvd2T7jRULTFUpczhpjFI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJdJNRCt; arc=none smtp.client-ip=209.85.128.41
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="pohUkJEt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1CC65C4CEE4;
-	Sat,  3 May 2025 01:39:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746236389;
-	bh=kUE9dfyTbL7WgDurwx5nxsrda/CGqMTgTvgU00qO40A=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=pohUkJEtKq4oaxjLkVvbromWc6Qsxg0mgVs05CFqC4AeqTIQTIQXi4iFp1sy70SOH
-	 ZueQIBVoqmYYAKFuNLvaOi88zj4hHydv8HJrNKI7eFPmdT2KjEZ2i4VFO6ubysJBn0
-	 1XYhKspZA7+VIBYjF67QflkvyOlGcK8svRC5w84+C4XaVvrBMAaf3zNoZkUj135sVv
-	 XHNXTeM3syJqDyv1l51fCNhWIORnGS15numXK+QWRd2jBtD36PPX130ueZ4nSWXObX
-	 UZqUr/AMRdHN25cgZ0ma/3Xt0Oq/GHERX3F0Bq42BVv4tNmGu4GIjcF2o99OHXOG6N
-	 9rfYc1+TK0k6w==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70CEC380DBE9;
-	Sat,  3 May 2025 01:40:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJdJNRCt"
+Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso20734255e9.1
+        for <mptcp@lists.linux.dev>; Sun, 04 May 2025 04:10:33 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746357031; x=1746961831; darn=lists.linux.dev;
+        h=mime-version:content-transfer-encoding:to:from:subject:date
+         :message-id:from:to:cc:subject:date:message-id:reply-to;
+        bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
+        b=GJdJNRCtPrhaNV8fLc0TFW3kK3uSqLpKEf5LSv5230uj8y1gS8jQrQDKe84OGUpe2z
+         aqyCilC7zqR8lsAA2M8HnFyj44JQaQQTEs/Yafe1ReQzXZctXUbbQZLvoebOUA98uufn
+         g82/QkdsGun56ZDktX2pM++4IvoKta3zov6Kb3uWjA2of9X2OZ/1XdKJsTGljhrWc0CZ
+         1UZu4VIeTxcF4HjBgrJ/AFcGlSnQMiiwMfEqfsFUyFKd3zOg8ldG0N+7MNZWkhm4Ouo5
+         RWH0JMeLn3YiKvb/5jBOsHWI6IrULK34i9OE69v3LTLev73WRJ5+rb+vtt16hl3dQ7kS
+         aIdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746357031; x=1746961831;
+        h=mime-version:content-transfer-encoding:to:from:subject:date
+         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
+        b=Ah+PC/l8Hfa8liW9HTZFTBZFP4dIhRQvVuyaWmCKJtR2zvw/eLdikSmUuNFTxhK8BP
+         0gGQTwG2PL6fPD1pfghZlQ9jqu8QNkVXszID54NaNxegQYp/4Z3czUAJmm/jlbtvHMEV
+         Jinh64M0LocKoUFT3popcU4M21KOTAwj6wLuP4/iBB4vD0H0zKusvBaw678wzlVbCoji
+         XZzb7wLxzfvMGpp6y4v+cJQieThb56Ld3JEVukA6cNG9mCf9m1O+unpusdDY5a7bfp+d
+         +rOI3zRdMkzJZucdv/9VDEYuNEHxC9uTmrcSFwO2/UsHStEk3l21VozTWy+EZtWMxBUM
+         exsQ==
+X-Gm-Message-State: AOJu0Yz1wX67hjXONgN9DP0AOn945fA2BaOARYR4m8QhHuSc40nD1MQJ
+	ThiVyK0MGlr6eqcjo6xu7PjyXrsCVlZmxSq5yNoAkIgcbRnuop9I4JZa9g==
+X-Gm-Gg: ASbGnctv+3JIkjFkEeVSxme7KmN2LQcTUgtvfgxgmAwHImusb+TxIqou7qQDZwUPXU0
+	HmQlmTiO/humtN29qdnq+4ki7Xj3kEmJyNgw1GyrCnyQFIpV8rzRmSWQxkT/ugXRisR84EJQ55R
+	CI+P6n1V287mKVEOIm8ZsB8Jifgf6VrDmhp6tQrb6DaoPPFPxIBcknrqDjby/bsGYMpnO0B0SRe
+	3TrKHE/1+3GUF6izxqb7OSiFEb2ErrdcsPSeTMMqy1uJSeRu4qWpO21/k3CaAVi6PRbj4hEdGQX
+	fTCi+ryBx+mSmPDJdGtPacTGLy2LPkHLSH9NseRRNvAS7THIGtp1GWc0vWjABr3KZIY9IA==
+X-Google-Smtp-Source: AGHT+IGFBfD1BaFM5imzWw24hkvdKsa2cbrWzEzS231q0CZkvDHo0IseJohC4NrbCoYbmjv/+Te7YQ==
+X-Received: by 2002:a05:600c:820d:b0:43d:fa5d:9314 with SMTP id 5b1f17b1804b1-441c49472dcmr22569395e9.32.1746357031430;
+        Sun, 04 May 2025 04:10:31 -0700 (PDT)
+Received: from [127.0.1.1] ([39.51.123.71])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a31695sm100304735e9.40.2025.05.04.04.10.30
+        for <mptcp@lists.linux.dev>
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 04 May 2025 04:10:30 -0700 (PDT)
+Message-ID: <68174b26.050a0220.21299b.244f@mx.google.com>
+Date: Sun, 04 May 2025 04:10:30 -0700 (PDT)
+Subject: Security Vulnerability!
+From: shhresearchers2023@gmail.com
+To: mptcp@lists.linux.dev
 Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH] mptcp: Align mptcp_inet6_sk with other protocols
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174623642826.3774742.12489840490454605534.git-patchwork-notify@kernel.org>
-Date: Sat, 03 May 2025 01:40:28 +0000
-References: <20250430154541.1038561-1-pfalcato@suse.de>
-In-Reply-To: <20250430154541.1038561-1-pfalcato@suse.de>
-To: Pedro Falcato <pfalcato@suse.de>
-Cc: matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
- davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
- horms@kernel.org, netdev@vger.kernel.org, mptcp@lists.linux.dev,
- linux-kernel@vger.kernel.org
 
-Hello:
+Hi Team,
 
-This patch was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+I am an Independent Security Researcher running a vulnerability identificatio=
+n service, and I accidentally found some vulnerabilities in your infrastructu=
+re.
 
-On Wed, 30 Apr 2025 16:45:41 +0100 you wrote:
-> Ever since commit f5f80e32de12 ("ipv6: remove hard coded limitation on
-> ipv6_pinfo") that protocols stopped using the old "obj_size -
-> sizeof(struct ipv6_pinfo)" way of grabbing ipv6_pinfo, that severely
-> restricted struct layout and caused fun, hard to see issues.
-> 
-> However, mptcp_inet6_sk wasn't fixed (unlike tcp_inet6_sk). Do so.
-> The non-cloned sockets already do the right thing using
-> ipv6_pinfo_offset + the generic IPv6 code.
-> 
-> [...]
+And it can cause damage to your website. I want to share the vulnerability de=
+tails with you (includes POC, screenshots, and suggested solutions).
+So tell me, may I report here? Is there any appreciation reward for a valid r=
+eport/bug?
 
-Here is the summary with links:
-  - mptcp: Align mptcp_inet6_sk with other protocols
-    https://git.kernel.org/netdev/net-next/c/a2f6476ed18a
+Kindly respond as soon as possible :)
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+LinkedIn handle: https://www.linkedin.com/in/huzaifah-s-948a26bb?utm_source=
+=3Dshare&utm_campaign=3Dshare_via&utm_content=3Dprofile&utm_medium=3Dios_app
 
-
+Regards, =20
+Huzaifa Shahid
