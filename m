@@ -1,89 +1,109 @@
-Received: from mail-wm1-f41.google.com (mail-wm1-f41.google.com [209.85.128.41])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 88083156C6F
-	for <mptcp@lists.linux.dev>; Sun,  4 May 2025 11:10:33 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.41
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FD62918C4;
+	Mon,  5 May 2025 22:34:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746357035; cv=none; b=HXpjMZZCkJKEx0LFUAom286cHYNwyGPZ6PWGqgluomWJp9/EVhFpHOBTEWrRM7ZKn1AV3Ic95+xriUocAWBQ2ZLNOpogYZz/AGMJrB9zm1Wkyejv++e9Hl/Ab1U8n4sSIQzo1p6htNklSTSdKjYIPADc2o/o7Mh0C0qwDsv3SxE=
+	t=1746484493; cv=none; b=lVjhjUx/enmr7l8gwQ3xoV7s/NQJTivo0/6uLpMOIT+c30gmlabr8oyzEHHuujcO/NIYk8wZ0Q6u/Qt4/HrdVapcGN461Bql/a6YVtQHTRXLGd1+DqnfEn1bl9N7SrFc/47aFrtp+zqpnYZJglSTcYWlMmSJA3eXAlWwSSJPAPk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746357035; c=relaxed/simple;
-	bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
-	h=Message-ID:Date:Subject:From:To:Content-Type:MIME-Version; b=bgKIdOVcnDxmnZHsVMrjWNyAkzZg/S0gNxMGT+2lQM+24n03ejqVoDG3EVs3/zxYX9py8hRtpcdWaSAhVHwMhzHf2McaMqqVDPG1MuBUuxNSHVLXQ0QVRfVtiHH6H3IV4+n/0G2uzvNo0QcF7iY3e7Uvd2T7jRULTFUpczhpjFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=GJdJNRCt; arc=none smtp.client-ip=209.85.128.41
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746484493; c=relaxed/simple;
+	bh=pycTl0WXJpjeJiLYbQCYWyh+olDVkiJRC+srfOeyQKg=;
+	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
+	 MIME-Version; b=e2Ynj2Th5kdANDv0jEBbW43ONBPFaxW3gWIk2sLyWplLcke44I/mBWfxuigdPdxV6pg7DzPtJeKhVZ0Alfj/YXHhLShm8Rf9OmRwdsoqFWInQw+DOKQyPz7NqD6EzNjDFCkqdE9H0pEMntcAsi/0bvWUzAIxy9xcqGi3+ZExxPM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i312R2lx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GJdJNRCt"
-Received: by mail-wm1-f41.google.com with SMTP id 5b1f17b1804b1-43cef035a3bso20734255e9.1
-        for <mptcp@lists.linux.dev>; Sun, 04 May 2025 04:10:33 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746357031; x=1746961831; darn=lists.linux.dev;
-        h=mime-version:content-transfer-encoding:to:from:subject:date
-         :message-id:from:to:cc:subject:date:message-id:reply-to;
-        bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
-        b=GJdJNRCtPrhaNV8fLc0TFW3kK3uSqLpKEf5LSv5230uj8y1gS8jQrQDKe84OGUpe2z
-         aqyCilC7zqR8lsAA2M8HnFyj44JQaQQTEs/Yafe1ReQzXZctXUbbQZLvoebOUA98uufn
-         g82/QkdsGun56ZDktX2pM++4IvoKta3zov6Kb3uWjA2of9X2OZ/1XdKJsTGljhrWc0CZ
-         1UZu4VIeTxcF4HjBgrJ/AFcGlSnQMiiwMfEqfsFUyFKd3zOg8ldG0N+7MNZWkhm4Ouo5
-         RWH0JMeLn3YiKvb/5jBOsHWI6IrULK34i9OE69v3LTLev73WRJ5+rb+vtt16hl3dQ7kS
-         aIdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746357031; x=1746961831;
-        h=mime-version:content-transfer-encoding:to:from:subject:date
-         :message-id:x-gm-message-state:from:to:cc:subject:date:message-id
-         :reply-to;
-        bh=Z6PNcfuXoJL/2Rn0g+jA/be0oLYmmAPmCnK9qaqoatM=;
-        b=Ah+PC/l8Hfa8liW9HTZFTBZFP4dIhRQvVuyaWmCKJtR2zvw/eLdikSmUuNFTxhK8BP
-         0gGQTwG2PL6fPD1pfghZlQ9jqu8QNkVXszID54NaNxegQYp/4Z3czUAJmm/jlbtvHMEV
-         Jinh64M0LocKoUFT3popcU4M21KOTAwj6wLuP4/iBB4vD0H0zKusvBaw678wzlVbCoji
-         XZzb7wLxzfvMGpp6y4v+cJQieThb56Ld3JEVukA6cNG9mCf9m1O+unpusdDY5a7bfp+d
-         +rOI3zRdMkzJZucdv/9VDEYuNEHxC9uTmrcSFwO2/UsHStEk3l21VozTWy+EZtWMxBUM
-         exsQ==
-X-Gm-Message-State: AOJu0Yz1wX67hjXONgN9DP0AOn945fA2BaOARYR4m8QhHuSc40nD1MQJ
-	ThiVyK0MGlr6eqcjo6xu7PjyXrsCVlZmxSq5yNoAkIgcbRnuop9I4JZa9g==
-X-Gm-Gg: ASbGnctv+3JIkjFkEeVSxme7KmN2LQcTUgtvfgxgmAwHImusb+TxIqou7qQDZwUPXU0
-	HmQlmTiO/humtN29qdnq+4ki7Xj3kEmJyNgw1GyrCnyQFIpV8rzRmSWQxkT/ugXRisR84EJQ55R
-	CI+P6n1V287mKVEOIm8ZsB8Jifgf6VrDmhp6tQrb6DaoPPFPxIBcknrqDjby/bsGYMpnO0B0SRe
-	3TrKHE/1+3GUF6izxqb7OSiFEb2ErrdcsPSeTMMqy1uJSeRu4qWpO21/k3CaAVi6PRbj4hEdGQX
-	fTCi+ryBx+mSmPDJdGtPacTGLy2LPkHLSH9NseRRNvAS7THIGtp1GWc0vWjABr3KZIY9IA==
-X-Google-Smtp-Source: AGHT+IGFBfD1BaFM5imzWw24hkvdKsa2cbrWzEzS231q0CZkvDHo0IseJohC4NrbCoYbmjv/+Te7YQ==
-X-Received: by 2002:a05:600c:820d:b0:43d:fa5d:9314 with SMTP id 5b1f17b1804b1-441c49472dcmr22569395e9.32.1746357031430;
-        Sun, 04 May 2025 04:10:31 -0700 (PDT)
-Received: from [127.0.1.1] ([39.51.123.71])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-441b8a31695sm100304735e9.40.2025.05.04.04.10.30
-        for <mptcp@lists.linux.dev>
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Sun, 04 May 2025 04:10:30 -0700 (PDT)
-Message-ID: <68174b26.050a0220.21299b.244f@mx.google.com>
-Date: Sun, 04 May 2025 04:10:30 -0700 (PDT)
-Subject: Security Vulnerability!
-From: shhresearchers2023@gmail.com
-To: mptcp@lists.linux.dev
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i312R2lx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DEC5C4CEF1;
+	Mon,  5 May 2025 22:34:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1746484491;
+	bh=pycTl0WXJpjeJiLYbQCYWyh+olDVkiJRC+srfOeyQKg=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=i312R2lxW5RAQscI3Wgw1weTmTt+t34LNOtzPnhpg/gGEZfGYM+0RgWkYanLZ/S82
+	 nRBIwtDCxavnZyLDAONA0jFy+D8nQ+56FeTYYscX9ulQp9zcD2NFHmPG2b4bCuhJ6i
+	 VRlsh5lbwUANIikubUMveYBIImfTXPrIDB3e473DRr0H1B+Bis/5BsmQdqP5J+bL53
+	 IVTYFiakWyIUo3X40j80R14yd4Z/2plVxGm/YBHliGwv2iji/A/amPBxkSXvIUcDDE
+	 sgw4niIXD/zh+RvvVxM3UXpfvvNpZENpLPK0ExLddcDqS8vhBviTv/5z6vahcdmJ6U
+	 UVugOXDkTc8MQ==
+From: Sasha Levin <sashal@kernel.org>
+To: linux-kernel@vger.kernel.org,
+	stable@vger.kernel.org
+Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Simon Horman <horms@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Sasha Levin <sashal@kernel.org>,
+	martineau@kernel.org,
+	davem@davemloft.net,
+	edumazet@google.com,
+	kuba@kernel.org,
+	netdev@vger.kernel.org,
+	mptcp@lists.linux.dev
+Subject: [PATCH AUTOSEL 6.14 498/642] mptcp: pm: userspace: flags: clearer msg if no remote addr
+Date: Mon,  5 May 2025 18:11:54 -0400
+Message-Id: <20250505221419.2672473-498-sashal@kernel.org>
+X-Mailer: git-send-email 2.39.5
+In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
+References: <20250505221419.2672473-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-stable: review
+X-Patchwork-Hint: Ignore
+X-stable-base: Linux 6.14.5
+Content-Transfer-Encoding: 8bit
 
-Hi Team,
+From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
 
-I am an Independent Security Researcher running a vulnerability identificatio=
-n service, and I accidentally found some vulnerabilities in your infrastructu=
-re.
+[ Upstream commit 58b21309f97b08b6b9814d1ee1419249eba9ef08 ]
 
-And it can cause damage to your website. I want to share the vulnerability de=
-tails with you (includes POC, screenshots, and suggested solutions).
-So tell me, may I report here? Is there any appreciation reward for a valid r=
-eport/bug?
+Since its introduction in commit 892f396c8e68 ("mptcp: netlink: issue
+MP_PRIO signals from userspace PMs"), it was mandatory to specify the
+remote address, because of the 'if (rem->addr.family == AF_UNSPEC)'
+check done later one.
 
-Kindly respond as soon as possible :)
+In theory, this attribute can be optional, but it sounds better to be
+precise to avoid sending the MP_PRIO on the wrong subflow, e.g. if there
+are multiple subflows attached to the same local ID. This can be relaxed
+later on if there is a need to act on multiple subflows with one
+command.
 
-LinkedIn handle: https://www.linkedin.com/in/huzaifah-s-948a26bb?utm_source=
-=3Dshare&utm_campaign=3Dshare_via&utm_content=3Dprofile&utm_medium=3Dios_app
+For the moment, the check to see if attr_rem is NULL can be removed,
+because mptcp_pm_parse_entry() will do this check as well, no need to do
+that differently here.
 
-Regards, =20
-Huzaifa Shahid
+Reviewed-by: Geliang Tang <geliang@kernel.org>
+Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+Reviewed-by: Simon Horman <horms@kernel.org>
+Signed-off-by: Paolo Abeni <pabeni@redhat.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ net/mptcp/pm_userspace.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
+
+diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
+index 940ca94c88634..cd220742d2493 100644
+--- a/net/mptcp/pm_userspace.c
++++ b/net/mptcp/pm_userspace.c
+@@ -583,11 +583,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+ 	if (ret < 0)
+ 		goto set_flags_err;
+ 
+-	if (attr_rem) {
+-		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
+-		if (ret < 0)
+-			goto set_flags_err;
+-	}
++	ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
++	if (ret < 0)
++		goto set_flags_err;
+ 
+ 	if (loc.addr.family == AF_UNSPEC ||
+ 	    rem.addr.family == AF_UNSPEC) {
+-- 
+2.39.5
+
