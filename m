@@ -1,31 +1,31 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 51FD62918C4;
-	Mon,  5 May 2025 22:34:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3D52D3FB5;
+	Mon,  5 May 2025 22:53:34 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746484493; cv=none; b=lVjhjUx/enmr7l8gwQ3xoV7s/NQJTivo0/6uLpMOIT+c30gmlabr8oyzEHHuujcO/NIYk8wZ0Q6u/Qt4/HrdVapcGN461Bql/a6YVtQHTRXLGd1+DqnfEn1bl9N7SrFc/47aFrtp+zqpnYZJglSTcYWlMmSJA3eXAlWwSSJPAPk=
+	t=1746485615; cv=none; b=LnjxGzAE7jiGWtBlZcgtWLir86umUIXWPdUG6MnuEwk/FcJfbX6OMkkmC/9caOBH+4SXtRxkTrnAGWs+/38yCHPo3VMqlDd2Iz1EB3AiNg+Ah9+yiySpp6manXmD7SvEzW71vs20XCcxHBOSzZ5PkTzEM/7U+dK34+gUdOTg/jY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746484493; c=relaxed/simple;
-	bh=pycTl0WXJpjeJiLYbQCYWyh+olDVkiJRC+srfOeyQKg=;
+	s=arc-20240116; t=1746485615; c=relaxed/simple;
+	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
 	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=e2Ynj2Th5kdANDv0jEBbW43ONBPFaxW3gWIk2sLyWplLcke44I/mBWfxuigdPdxV6pg7DzPtJeKhVZ0Alfj/YXHhLShm8Rf9OmRwdsoqFWInQw+DOKQyPz7NqD6EzNjDFCkqdE9H0pEMntcAsi/0bvWUzAIxy9xcqGi3+ZExxPM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=i312R2lx; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=QVgWnG13FdVwV7CY/jJIL5nXLJW5V1+Wx2ja2w9wZCDSvJ5PgIowLHGB8u59QsybZEzYEJiqdl5vbw2SxTzFMLxToY+oadW3KjzsjZ2kl4gXjq9DkL2KcPgOGT7HKoTc2X6HIdWdZRt+SLnIgWWYZuIubqWtiMA0qTSLQDa9qw4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJQu5zxo; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="i312R2lx"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DEC5C4CEF1;
-	Mon,  5 May 2025 22:34:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJQu5zxo"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97BAC4CEEE;
+	Mon,  5 May 2025 22:53:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746484491;
-	bh=pycTl0WXJpjeJiLYbQCYWyh+olDVkiJRC+srfOeyQKg=;
+	s=k20201202; t=1746485614;
+	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=i312R2lxW5RAQscI3Wgw1weTmTt+t34LNOtzPnhpg/gGEZfGYM+0RgWkYanLZ/S82
-	 nRBIwtDCxavnZyLDAONA0jFy+D8nQ+56FeTYYscX9ulQp9zcD2NFHmPG2b4bCuhJ6i
-	 VRlsh5lbwUANIikubUMveYBIImfTXPrIDB3e473DRr0H1B+Bis/5BsmQdqP5J+bL53
-	 IVTYFiakWyIUo3X40j80R14yd4Z/2plVxGm/YBHliGwv2iji/A/amPBxkSXvIUcDDE
-	 sgw4niIXD/zh+RvvVxM3UXpfvvNpZENpLPK0ExLddcDqS8vhBviTv/5z6vahcdmJ6U
-	 UVugOXDkTc8MQ==
+	b=CJQu5zxoBVoVmaJNMfBSD48VoIxUu7pm/6fAej74FeHoqPTU9eGIMG+pUvGAmf7Qb
+	 RnOuRNNKg/yLakzMYG4MDCvfRA/Pk2SoUmPzIirmpHkXp7YLVXYf3BebA7DjEvYmZr
+	 Opsvwr9qVdf/1TAE8/7qxpc3xbs4yzaQQlosydUgjESe8jZHLaRuwp72v9NlIS4v64
+	 zr5HMpELNuV8DuqHKObKfh1Q43gll1Sh/WqCpaQ951JYdcOaU5E5W1r/TIDq2vLqQ6
+	 4nRcoBmYpb983svKcnacjtOxmMeACjNTIcWRG5Tcow3in8+N9k95oxmvA5iKJCV7zS
+	 ZIE5aHA806OTQ==
 From: Sasha Levin <sashal@kernel.org>
 To: linux-kernel@vger.kernel.org,
 	stable@vger.kernel.org
@@ -40,12 +40,12 @@ Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
 	kuba@kernel.org,
 	netdev@vger.kernel.org,
 	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.14 498/642] mptcp: pm: userspace: flags: clearer msg if no remote addr
-Date: Mon,  5 May 2025 18:11:54 -0400
-Message-Id: <20250505221419.2672473-498-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 6.12 387/486] mptcp: pm: userspace: flags: clearer msg if no remote addr
+Date: Mon,  5 May 2025 18:37:43 -0400
+Message-Id: <20250505223922.2682012-387-sashal@kernel.org>
 X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505221419.2672473-1-sashal@kernel.org>
-References: <20250505221419.2672473-1-sashal@kernel.org>
+In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
+References: <20250505223922.2682012-1-sashal@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -54,7 +54,7 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-stable: review
 X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.14.5
+X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
 
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
@@ -86,10 +86,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 3 insertions(+), 5 deletions(-)
 
 diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index 940ca94c88634..cd220742d2493 100644
+index e35178f5205fa..bb76295d04c56 100644
 --- a/net/mptcp/pm_userspace.c
 +++ b/net/mptcp/pm_userspace.c
-@@ -583,11 +583,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
+@@ -589,11 +589,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
  	if (ret < 0)
  		goto set_flags_err;
  
