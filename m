@@ -1,109 +1,92 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2C3D52D3FB5;
-	Mon,  5 May 2025 22:53:34 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 73D7E7260A;
+	Tue,  6 May 2025 00:00:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746485615; cv=none; b=LnjxGzAE7jiGWtBlZcgtWLir86umUIXWPdUG6MnuEwk/FcJfbX6OMkkmC/9caOBH+4SXtRxkTrnAGWs+/38yCHPo3VMqlDd2Iz1EB3AiNg+Ah9+yiySpp6manXmD7SvEzW71vs20XCcxHBOSzZ5PkTzEM/7U+dK34+gUdOTg/jY=
+	t=1746489652; cv=none; b=FkJJ7gXB5Xs7G93Kn+XI4ANLMnOO2915iJ79d7Lp6ziIzeugdvHitRIq0qu6367L4dCB++raaLUvlqDF1crtZzXuo6AIuWR7DXTX3l5fDIR6l3LV0Ig7PMB25qFpu9dtcD5S2f2A+tXOZRRjoO1/RL7ZjUJvsd95xngXEfKemSA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746485615; c=relaxed/simple;
-	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
-	h=From:To:Cc:Subject:Date:Message-Id:In-Reply-To:References:
-	 MIME-Version; b=QVgWnG13FdVwV7CY/jJIL5nXLJW5V1+Wx2ja2w9wZCDSvJ5PgIowLHGB8u59QsybZEzYEJiqdl5vbw2SxTzFMLxToY+oadW3KjzsjZ2kl4gXjq9DkL2KcPgOGT7HKoTc2X6HIdWdZRt+SLnIgWWYZuIubqWtiMA0qTSLQDa9qw4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=CJQu5zxo; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746489652; c=relaxed/simple;
+	bh=CaP6yASIRa//2KTQtwqAOTv5UeCAUs9+VGcQFdJ3f+A=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=Ga0GG+ML2LTpM9vNAl5uS4ie/jdgJSHjsvYRK5GJMc2afoPWdr43IJgrSV8xsHSqRmgzPKYVjSciAlyUM7SU+ht2owSWju+Jatao3J1N8MhSdSAyvGGCLd2EtOE3VXQeX6A/nnMHVvjrNUV/9hIxecktqUSs0wqIK3XqhrJA844=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=nRHDhXNd; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="CJQu5zxo"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A97BAC4CEEE;
-	Mon,  5 May 2025 22:53:32 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="nRHDhXNd"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id ECCE6C4CEE4;
+	Tue,  6 May 2025 00:00:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746485614;
-	bh=c8+osNcdzV45Vqv+DHKw0rTM5fF7cGsq75lFGRG4MfI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=CJQu5zxoBVoVmaJNMfBSD48VoIxUu7pm/6fAej74FeHoqPTU9eGIMG+pUvGAmf7Qb
-	 RnOuRNNKg/yLakzMYG4MDCvfRA/Pk2SoUmPzIirmpHkXp7YLVXYf3BebA7DjEvYmZr
-	 Opsvwr9qVdf/1TAE8/7qxpc3xbs4yzaQQlosydUgjESe8jZHLaRuwp72v9NlIS4v64
-	 zr5HMpELNuV8DuqHKObKfh1Q43gll1Sh/WqCpaQ951JYdcOaU5E5W1r/TIDq2vLqQ6
-	 4nRcoBmYpb983svKcnacjtOxmMeACjNTIcWRG5Tcow3in8+N9k95oxmvA5iKJCV7zS
-	 ZIE5aHA806OTQ==
-From: Sasha Levin <sashal@kernel.org>
-To: linux-kernel@vger.kernel.org,
-	stable@vger.kernel.org
-Cc: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Simon Horman <horms@kernel.org>,
-	Paolo Abeni <pabeni@redhat.com>,
-	Sasha Levin <sashal@kernel.org>,
-	martineau@kernel.org,
-	davem@davemloft.net,
-	edumazet@google.com,
-	kuba@kernel.org,
-	netdev@vger.kernel.org,
-	mptcp@lists.linux.dev
-Subject: [PATCH AUTOSEL 6.12 387/486] mptcp: pm: userspace: flags: clearer msg if no remote addr
-Date: Mon,  5 May 2025 18:37:43 -0400
-Message-Id: <20250505223922.2682012-387-sashal@kernel.org>
-X-Mailer: git-send-email 2.39.5
-In-Reply-To: <20250505223922.2682012-1-sashal@kernel.org>
-References: <20250505223922.2682012-1-sashal@kernel.org>
+	s=k20201202; t=1746489652;
+	bh=CaP6yASIRa//2KTQtwqAOTv5UeCAUs9+VGcQFdJ3f+A=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=nRHDhXNdcRxyHurkyHxRMR3KnCbTW/1o509RQoPlrMn/J4tv/mxLzMoJXKPBBAmy+
+	 4U2lkQxlpmXJ1tAGIOfYK8mgeZgNF5j9l/dqLLpH7xMmrFqtbiAvP4B/xYF/qewCzU
+	 Nro5WhI/gg/F1X1FGftPc4ZqKp/BNAd2LCrADgICsGrdtS1f3iOzp9KqO4V5dWL1qm
+	 N7z7SWNj7xS/6Lx98gGheNqzd0Sb2BpRljUoqw2G2gSa2LU5pqWR6S2f6XlhRJskry
+	 hmfWaTAQm6qzWfsVk+OZmi6tmQzEl65J2YxqiXC4hSXlYk2pE8532cEOfMNZXou5JL
+	 YArV76efxD8Mw==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70BEA380CFD9;
+	Tue,  6 May 2025 00:01:32 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-stable: review
-X-Patchwork-Hint: Ignore
-X-stable-base: Linux 6.12.26
 Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next 0/7] selftests: mptcp: increase code coverage
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174648969104.970984.3012582895759124945.git-patchwork-notify@kernel.org>
+Date: Tue, 06 May 2025 00:01:31 +0000
+References: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
+In-Reply-To: <20250502-net-next-mptcp-sft-inc-cover-v1-0-68eec95898fb@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, martineau@kernel.org, geliang@kernel.org,
+ davem@davemloft.net, edumazet@google.com, kuba@kernel.org, pabeni@redhat.com,
+ horms@kernel.org, shuah@kernel.org, netdev@vger.kernel.org,
+ linux-kselftest@vger.kernel.org, linux-kernel@vger.kernel.org,
+ yangang@kylinos.cn
 
-From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Hello:
 
-[ Upstream commit 58b21309f97b08b6b9814d1ee1419249eba9ef08 ]
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Since its introduction in commit 892f396c8e68 ("mptcp: netlink: issue
-MP_PRIO signals from userspace PMs"), it was mandatory to specify the
-remote address, because of the 'if (rem->addr.family == AF_UNSPEC)'
-check done later one.
+On Fri, 02 May 2025 14:29:20 +0200 you wrote:
+> Here are various patches slightly improving MPTCP code coverage:
+> 
+> - Patch 1: avoid a harmless 'grep: write error' warning.
+> 
+> - Patch 2: use getaddrinfo() with IPPROTO_MPTCP in more places.
+> 
+> - Patch 3-6: prepare and add support to get info for a specific subflow
+>   when giving the 5-tuple.
+> 
+> [...]
 
-In theory, this attribute can be optional, but it sounds better to be
-precise to avoid sending the MP_PRIO on the wrong subflow, e.g. if there
-are multiple subflows attached to the same local ID. This can be relaxed
-later on if there is a need to act on multiple subflows with one
-command.
+Here is the summary with links:
+  - [net-next,1/7] selftests: mptcp: info: hide 'grep: write error' warnings
+    https://git.kernel.org/netdev/net-next/c/6d0eb15c6501
+  - [net-next,2/7] selftests: mptcp: sockopt: use IPPROTO_MPTCP for getaddrinfo
+    https://git.kernel.org/netdev/net-next/c/dd367e81b79a
+  - [net-next,3/7] selftests: mptcp: add struct params in mptcp_diag
+    https://git.kernel.org/netdev/net-next/c/cd732d5110a2
+  - [net-next,4/7] selftests: mptcp: refactor send_query parameters for code clarity
+    https://git.kernel.org/netdev/net-next/c/3fea468dca4f
+  - [net-next,5/7] selftests: mptcp: refactor NLMSG handling with 'proto'
+    https://git.kernel.org/netdev/net-next/c/caa6811ccaed
+  - [net-next,6/7] selftests: mptcp: add helpers to get subflow_info
+    https://git.kernel.org/netdev/net-next/c/c7ac7452df70
+  - [net-next,7/7] selftests: mptcp: add chk_sublfow in diag.sh
+    https://git.kernel.org/netdev/net-next/c/110f8f77fd8d
 
-For the moment, the check to see if attr_rem is NULL can be removed,
-because mptcp_pm_parse_entry() will do this check as well, no need to do
-that differently here.
-
-Reviewed-by: Geliang Tang <geliang@kernel.org>
-Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-Reviewed-by: Simon Horman <horms@kernel.org>
-Signed-off-by: Paolo Abeni <pabeni@redhat.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- net/mptcp/pm_userspace.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
-
-diff --git a/net/mptcp/pm_userspace.c b/net/mptcp/pm_userspace.c
-index e35178f5205fa..bb76295d04c56 100644
---- a/net/mptcp/pm_userspace.c
-+++ b/net/mptcp/pm_userspace.c
-@@ -589,11 +589,9 @@ int mptcp_userspace_pm_set_flags(struct sk_buff *skb, struct genl_info *info)
- 	if (ret < 0)
- 		goto set_flags_err;
- 
--	if (attr_rem) {
--		ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
--		if (ret < 0)
--			goto set_flags_err;
--	}
-+	ret = mptcp_pm_parse_entry(attr_rem, info, false, &rem);
-+	if (ret < 0)
-+		goto set_flags_err;
- 
- 	if (loc.addr.family == AF_UNSPEC ||
- 	    rem.addr.family == AF_UNSPEC) {
+You are awesome, thank you!
 -- 
-2.39.5
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
