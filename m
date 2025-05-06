@@ -1,41 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0FED330C917
-	for <mptcp@lists.linux.dev>; Tue,  6 May 2025 02:36:14 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6FE582FC0FC
+	for <mptcp@lists.linux.dev>; Tue,  6 May 2025 02:40:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746498976; cv=none; b=sjCxP17Lg8OhIwpbdEEmQdXiFIggK9HEs6POMZVUG6Bcmd+/njtRwot8imLJSet6kDkWlURfA4M6Tux8UsedyRFsJbDsP67FaLubiaH18Xa2XIDpeYseD/fiSaANH3inn1pcgmvVzKHpKvk84Gp1Jq2NxvAcQHgSDDkLKgMsU0o=
+	t=1746499252; cv=none; b=aBbj80XtJKJzEjrYVZYkDm+45EJ2VyrW1rqTQTMFv/X8DYaTPjosfWcDqD5gPi7HFIoINseIz3UUg6Q98GHMninTDJ8rRQCNSqCT4BSnl6hx2zp5DJstFJP4CrywWETaREgizaud4PaYycIgmHJynNbRfO5qSrYFEnQ5XZqTYpI=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746498976; c=relaxed/simple;
-	bh=Z8RbUEvLXCp1G92Lw3EJArQhHw5VZ9hen3aWP8bB7vs=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=Hb8S2Z7wIV1mO4hOolTNUgXKIIhJZlF9PwTAJBBcAFKrB/OhNMnUAid92lePZTPoXfSXJN01HwCzGHAySIgUuhILQZmECNGVHZDfZqIhx15Rs+/IHL6/A7h/+QAoba/J1UFl19IooWo3oOhcJ8a10gKHQvhwn0IRjDSQ30XPoTM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=PCNrxIXK; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746499252; c=relaxed/simple;
+	bh=ZPtMO1JG0EZNeOAhbgCeLebHybYQkWOe9T+RMZTegQo=;
+	h=Message-ID:Subject:From:To:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=uLKwNqS9EaRtXz4+9BDjgdWjsNYR/axkksm6ZTE/n+9ub8si0FlMy/kk8OPsDs2Xm/+1OsKevV5mGe0F282CXzMAQMzn9ljt/AxaqtuOOhJAvhlgbMgRWPF48ohSifigGxsKboegnlikUsBIBuJ+64Hhy65HETplnskS8x1R7cI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EvHA135f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="PCNrxIXK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 57A51C4CEEF;
-	Tue,  6 May 2025 02:36:13 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EvHA135f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1112AC4CEE9;
+	Tue,  6 May 2025 02:40:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746498974;
-	bh=Z8RbUEvLXCp1G92Lw3EJArQhHw5VZ9hen3aWP8bB7vs=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=PCNrxIXK8VCvCgLkt7FnCan5ovnRnXJ58JWo7nhKkKpkqitcRjGh1usvON6W6xlQW
-	 QMFaCyPUBNemJW148wG5ky3ITNu+QaNgqjby9Wzato4wee3blZry5gBvn7f9P7rip+
-	 K9roB1JPZP+FuNhVcqCP5FdHGHbP0HQahrW68o1gbmr3nLF9vAg8f/+ecRwtuB9bkp
-	 OCE1U6eG2b/UcqTKGUmvzDrp9dbduIURFo1rvcuqxRhiXzSeKFw8BtBM/jbAAmsixe
-	 kLwtJJot/QgvseTS2StGJHUysAo0peFcGvx9vUwRGq1xL9b3laHv67Hj2tyuOgkj+/
-	 Rur1GROStRh2g==
-Message-ID: <b0d5094ee4a361471f562f29d6d04d9e197fe596.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v3 2/2] mptcp: add TCP_MAXSEG sockopt support
+	s=k20201202; t=1746499251;
+	bh=ZPtMO1JG0EZNeOAhbgCeLebHybYQkWOe9T+RMZTegQo=;
+	h=Subject:From:To:Date:In-Reply-To:References:From;
+	b=EvHA135f+AhCP2xOuABnxUiMR2fzOSS393eDcC94NroSqDTQuaAegSBkK7FM06VlL
+	 3VuGnyVBvPx0GN2uVN5cQ+UjITkM1nDZQAD4id9cbnnHMykJ3j28UHXUkEuMnsWrKp
+	 pIWW2D978GLrAu114hW57e3pb7P4zTVyRb6UxuJMoOKsUhQEmWGd5CVzrqYujDNqQD
+	 SfCpBfGghzBavZDW5VspdiKzUOpcJZ2TwinpWmtz5aZUMadV4bMT6P6r3aJ3FQVN1G
+	 trvit2MaiMBH4cvgrdnBicTpc5gSVGqiQSGnhlYKaPiUn8vmPztluo93Eg2fIoF5MK
+	 2eqZYQkFnCacg==
+Message-ID: <f74bf2eaf7cedcdf7684e836b54d1828c88eebf6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next] sock: add sock_krfree_s helper
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Tue, 06 May 2025 10:36:10 +0800
-In-Reply-To: <d74438da-8eff-469a-82c5-0cf507042ab8@kernel.org>
-References: <cover.1745991978.git.geliang@kernel.org>
-	 <cdc5f6389f230f8c1eec4332c27efbf51c734a51.1745991978.git.geliang@kernel.org>
-	 <d74438da-8eff-469a-82c5-0cf507042ab8@kernel.org>
+Date: Tue, 06 May 2025 10:40:48 +0800
+In-Reply-To: <51744839-e4a2-4bb0-8f54-5f6ad3db6925@kernel.org>
+References: 
+	<ffe72ff201ea72938b136eb37ea3e0777ae890f4.1746004135.git.geliang@kernel.org>
+	 <51744839-e4a2-4bb0-8f54-5f6ad3db6925@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 User-Agent: Evolution 3.52.3-0ubuntu1 
 Precedence: bulk
@@ -48,43 +47,70 @@ Content-Transfer-Encoding: 8bit
 
 Hi Matt,
 
-On Wed, 2025-04-30 at 10:55 +0200, Matthieu Baerts wrote:
+On Wed, 2025-04-30 at 11:46 +0200, Matthieu Baerts wrote:
 > Hi Geliang,
 > 
-> On 30/04/2025 07:49, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> On 30/04/2025 11:09, Geliang Tang wrote:
+> > This patch adds the rcu version of sock_kfree_s() helper, named
+> > sock_krfree_s(), to free the memory using kfree_rcu_mightsleep()
+> > and adjust the socket's option memory buffer.
 > > 
-> > The TCP_MAXSEG socket option is currently not supported by MPTCP,
-> > mainly
-> > because it has never been requested before. But there are still
-> > valid
-> > use-cases, e.g. with HAProxy.
+> > This new helper is first used in MPTCP.
 > > 
-> > This patch adds its support in MPTCP by propagating the value to
-> > all
-> > subflows.
+> > Signed-off-by: Geliang Tang <geliang@kernel.org>
+> > ---
+> >  include/net/sock.h       |  1 +
+> >  net/core/sock.c          | 14 +++++++++++---
+> >  net/mptcp/pm_userspace.c |  3 +--
+> >  3 files changed, 13 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/include/net/sock.h b/include/net/sock.h
+> > index e223102337c7..94f72f5c8754 100644
+> > --- a/include/net/sock.h
+> > +++ b/include/net/sock.h
+> > @@ -1836,6 +1836,7 @@ void *sock_kmemdup(struct sock *sk, const
+> > void *src,
+> >  		   int size, gfp_t priority);
+> >  void sock_kfree_s(struct sock *sk, void *mem, int size);
+> >  void sock_kzfree_s(struct sock *sk, void *mem, int size);
+> > +void sock_krfree_s(struct sock *sk, void *mem, int size);
+> >  void sk_send_sigurg(struct sock *sk);
+> >  
+> >  static inline void sock_replace_proto(struct sock *sk, struct
+> > proto *proto)
+> > diff --git a/net/core/sock.c b/net/core/sock.c
+> > index b64df2463300..f9ee0b44ab2a 100644
+> > --- a/net/core/sock.c
+> > +++ b/net/core/sock.c
+> > @@ -2862,12 +2862,14 @@ EXPORT_SYMBOL(sock_kmemdup);
+> >   * condition entirely.
+> >   */
+> >  static inline void __sock_kfree_s(struct sock *sk, void *mem, int
+> > size,
+> > -				  const bool nullify)
+> > +				  const bool nullify, const bool
+> > rcu)
+> >  {
+> >  	if (WARN_ON_ONCE(!mem))
+> >  		return;
+> >  	if (nullify)
+> >  		kfree_sensitive(mem);
+> > +	else if (rcu)
+> > +		kfree_rcu_mightsleep(mem);
 > 
-> Might be good to add:
+> I'm not sure about that: in some cases, kfree_rcu() might be called.
+> kfree_rcu_mightsleep() is more an exception to me, I think. Also, it
+> looks like there are many other places where the free and
+> atomic_sub()
+> is done "manually", that's not specific to MPTCP.
 > 
->   The get part looks at the value on the first subflow, to be as
-> closed
->   as possible to TCP. Only one value can be returned for the cached
-> MSS,
->   so this can come only from one subflow.
-> 
-> The rest looks good to me:
-> 
-> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
-> I can do the modification when applying the patch.
-> 
-> Note that I will not send them upstream before the addition of the
-> packetdrill test in our other repo.
+> I don't know what Mat thinks about that, but I don't think this is
+> needed (or it should replace some code in different places in the
+> kernel).
 
-Thanks for applying these patches for me.
-
-They can be WIP on the export branch until I add the packetdrill test,
-which I have already started working on.
+Indeed, thanks for your reminder. I didn't notice that there are many
+other places that use free() and atomic_sub() too. I will reconsider
+whether to drop this patch or replace some code in different places.
 
 Thanks,
 -Geliang
