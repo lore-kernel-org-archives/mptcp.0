@@ -1,62 +1,62 @@
-Received: from mail-pl1-f179.google.com (mail-pl1-f179.google.com [209.85.214.179])
+Received: from mail-pl1-f174.google.com (mail-pl1-f174.google.com [209.85.214.174])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 837F614884C
-	for <mptcp@lists.linux.dev>; Wed,  7 May 2025 13:19:24 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.179
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D292827713
+	for <mptcp@lists.linux.dev>; Wed,  7 May 2025 13:19:31 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.174
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623966; cv=none; b=Rvhg54KA0IPH3SdNykzejHVoXfD2RypLosBH8pbTKv9qY082F/paMptitr8JX44q9ddDg8TqVDUtcW+CNQd23wlok0PRNB9OJyAgv5N7A9Mr20ouIDd/ZN7si3dqwZbDjuZTYhr9vZUhrfn8YWBcoiGAfDD1Cu1WppHPmllWztg=
+	t=1746623973; cv=none; b=gEo8p0h30NIcT2m1TZmqA/y46bs6Q2kjdxje//6ef59VSpkMJYozI0N6nWP2TqbWCt7oXWrwv6WcE9a2XTk72/qiES/mwf/zMgLu6VPM0I06im+jM1mNSxFc6CS5uXCFGdO4mIsma1IrnpXu+E7fhwDumfYMGD99ZKl3DfRq0r4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623966; c=relaxed/simple;
-	bh=NDqRijYzjhs0y/BEUOAKtrmFA7xwhtMvr8QfCvPf9aE=;
+	s=arc-20240116; t=1746623973; c=relaxed/simple;
+	bh=fYBZ3e80lB7pnNPogmHpxRb6JLRnBdbF4Ja5yF5QpuU=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=lUTnjG2VFMmUV06b7aYpCMLaMqQ89lu3b4GVG6Nnx8hASSQLpF1sJXiUmiWL2cxhx/HZShxwuZz6W6BveOZy/EhvXYoMLAvNUerXNm4+Rwif3lLO03BkzNFs7jFaYeyVYV17BYBpEXjNTaXj6twP2MvKFOtWNF2peMOlmp/uXMs=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Bzc1ZO0K; arc=none smtp.client-ip=209.85.214.179
+	 MIME-Version; b=qtlkYFLrzNmXlMD1TVokMfUBdanmdpJeN0TiSXpW7vX2lMUuUPrMzDpg0j/zEX7Zic2ZyxwbZak0Zvq2IjZg7izxpQjesO5ZVXEP2qZWWYMAVM32lOhfPhjQTczO9/Nd3dKiaiRNNHoZQNqW30KQtsBKSsa5I5oMgRjQl2fZqAs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Y2pOB8Xm; arc=none smtp.client-ip=209.85.214.174
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bzc1ZO0K"
-Received: by mail-pl1-f179.google.com with SMTP id d9443c01a7336-2295d78b433so67720385ad.2
-        for <mptcp@lists.linux.dev>; Wed, 07 May 2025 06:19:24 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y2pOB8Xm"
+Received: by mail-pl1-f174.google.com with SMTP id d9443c01a7336-22c33677183so79988025ad.2
+        for <mptcp@lists.linux.dev>; Wed, 07 May 2025 06:19:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746623964; x=1747228764; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1746623971; x=1747228771; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=wtfXnYitCXVUTGCdTcTCxeQzg7Q4AmshUJnCjDRlr08=;
-        b=Bzc1ZO0KrXoQYqrU6oXTv8dZYvrQxR2GtU/qWrVgqR49JBAZ67vLoYQC3hzxTN+qdX
-         kA6QRNPBNcaUHeDQIt9CYkYXMI66m4N+6usaqIueiKE0Cq9Fx1yQ1Vs3cgltyBdWTuf+
-         5RMTMrzFU12d7a8dbIHnfZUBwHavnZ5v02O4uJyO/OvJ78kX/iIeSXo/Wcxa+Lc1n5sN
-         W5l8d97OkQO1FCjLkFYp8VCLT8UzGnDSIpAangva2E6ZGUHYhfmZG4iHNh8qS6m3sEKe
-         KpBMedWJz53R2ey7umwDK/+4EzrOHVXpTagpkAAOWEg+h7XJxyt6iBuSEY4pzvgC4H3D
-         368A==
+        bh=OYrEDWYc5BP3GcwX3PUi68NFmiVIngMEPgSuDqL8ai8=;
+        b=Y2pOB8XmS4b19zirEEgCuzp0T33v2yJ4NRgkuYe8L8TLo3bZWyECpL5gsD1fjZVfRj
+         DY7B771GzyugY1ZftDxIPk75ZMn0q4whG555qoNdp948ZoLEJrZq/YzBsAR+USEMjn6/
+         /iw5M48mRHUpnyaMjVtrg7sHEgCQWSYO66nyVJnvtSqzqtIDNWBdKyGv8S9Q1CF3MN/0
+         3ttP6MYtkXET+ENXUp+J/M5JqjaiWZ+ub6pr/54dNHD6S3u2i+xCXCmdpVpaQBqMQtSE
+         TDLhuRbKsR9mAfSYGn0BbwlzP4oVTzmC7kjFeNiA1J58vTwHSlEm9F5zmxn9beLYUCkG
+         iYqw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746623964; x=1747228764;
+        d=1e100.net; s=20230601; t=1746623971; x=1747228771;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=wtfXnYitCXVUTGCdTcTCxeQzg7Q4AmshUJnCjDRlr08=;
-        b=OkJWlkhMNgfIQDIEEa3RtbBmSgIXeO91jj1W5I3vpg3BItnGi9s29AlZB8btuvmRd1
-         LR8SekpTzb67DuZKRbMAi7JAqrVcJReO6BThD8eU4QSk3Uy9UvzcO32yAjNzf56BJi1U
-         +7F+l0gNPmOFD0OSRIvpQfSCfn0o1rNbhHT3YdLUIo9s86sCszIqEkKTqLwtvBdBDWF0
-         lC9t08LM4MkcSrB/HXY2ptGXH5Ihy4YNMDMRutQk9aKY0qjJedhd7vp+illKUOlzv8Oa
-         s+ENErVwB/xVJQEGa1MFyXZrKHQ8sqdjxKifXICA7SCO2amKLUzfaVIl9KcM2VZCpN4c
-         FdEw==
-X-Forwarded-Encrypted: i=1; AJvYcCXAVs29ngzjRfbeUwl31b0rYaTCTHI+3Vh3OYKD5tyWCyKe/fGuDcxSwnxcQIMxZD2NAiIH1w==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwrAFY8hCkMn11dgSDzMmUOkP4duNpuAmPVCD61+k49EqWECE4s
-	WtR6qRsjx9yAki0pFiKbK6HToZzndrE6m1OK4tOQUSq56Jma6M7h
-X-Gm-Gg: ASbGncsH3teugDRXqLLa0Og4VxX3AJOMFGvzKMWJV8b6Bsotfmf7AJ0Yhnl6XLY8mO9
-	opg63tjOnhAA14oGjhOJDHah1BhprlbQD6+X4MAcGpRkofeNyMc9gq7UXJNc2m1PqO262mhrJ2d
-	ror00h1qN1+beQi6AW/NFp0QgZKCP9Ru+jJFj/HBEyQhVTtRMMeO0/wx1Q+/yUZT6riV6KkPcGz
-	suNX73NkKZEIGOXZ3/eDg2YYTUuagJAsZWfCsfRojx4TioLeyXvao0dSQhSIl6DborijSVni46Z
-	cMnBfcURgrE2qtr5Unin36gAHhyhbUNR9BylCJthyiJ65y9tKRdv5M4CO8lF
-X-Google-Smtp-Source: AGHT+IFSdSQM3IiHqluyQXlAUvMv4gM0CqL/WRQ17JX5c13/+GiFUCTdNuQLWbuZWinMIpGIpqDeYg==
-X-Received: by 2002:a17:903:2f85:b0:21f:45d:21fb with SMTP id d9443c01a7336-22e5ea64dddmr47456425ad.3.1746623963559;
-        Wed, 07 May 2025 06:19:23 -0700 (PDT)
+        bh=OYrEDWYc5BP3GcwX3PUi68NFmiVIngMEPgSuDqL8ai8=;
+        b=C0+586AGe967F7vCRqpKHkh92C7JeIcL+bltgKqWJIIevwlJ9cYszmF8tiOe796SS7
+         yis1tsmHWc/Iinnj9wu9kLJBdEe+u8sSSTOTlR795htGFzsiVKWp/iipDJsH+pBDrxQb
+         kyLWjq7QgsZLJtvL7G8L0HaAHlUvbJD1uRADNS1AcAF3NsDTYooyf+xzjbmkqA6Pfxfl
+         +X0xUva+4awvbDmmmiClsXJTZD7TunSzUHzOP1xmSKh7vwevK33PffYVWYfWGQXq/3V5
+         sysz++z2svuOSgqrn5wqb5yYKrCk2NUOjmaaitXK3ptfITcc44Pc532ZwV8hQa6zjrU1
+         VkNQ==
+X-Forwarded-Encrypted: i=1; AJvYcCWvKINX7s2KqiA/4WpHfIeooJUI1hYQFeQsunqjvhrfToQHyhU87KxnlszcRFmqXFRFJ3fMig==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzZ8h0nRnb8+jcDhbJjE521gXsDwxLl4PBtxfhhl6XG2AU5Irpe
+	IiocdFiaHUEipiqJxkHkVQ1Ybl6708wYwmMVroGju7Lm7TxnPs0b
+X-Gm-Gg: ASbGncsJBXAUqeOz9NaIMBq4x20re0s1JolEwB9+n1jyDAJmWztpb67Bcn1bnlsnrA6
+	UhGGHvqRSJKS9ckWTZupC/OUsDILZorGA23AzIiKYMX884np2LoFx15XdBWVZrzbS7qFv7M2HuK
+	dQqBd0Y3F37SdFUwfUJTXp/DKl7FB/pVs+CJ81JnOGiCu2xQlpD/GOZdxWS8ep++69wJVRW83Wq
+	bvVzCQ0iRNd09OBASNBtde6bJMtPOyL8UcNj1NjS/4zyK7/bO/mRMBWwNJvyNVUWnaEBr8CvwTz
+	GJiZktHW/LhaN/IvLdoqWR1/jtObaKQrhgWZq1g+z22qPxTrV6B+//0Uc52Z
+X-Google-Smtp-Source: AGHT+IFcB8rrpPc/W8GojrdBVj5ziaCC/Up0DBiCXkXM+BRizqruSdRdtXgKjxFcs3ANOlkhgNgW1g==
+X-Received: by 2002:a17:902:ef08:b0:22e:485a:b45 with SMTP id d9443c01a7336-22e5ede6e43mr49600015ad.46.1746623970937;
+        Wed, 07 May 2025 06:19:30 -0700 (PDT)
 Received: from fedora.dns.podman ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5e93ee88sm17414765ad.86.2025.05.07.06.19.16
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5e93ee88sm17414765ad.86.2025.05.07.06.19.24
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:19:23 -0700 (PDT)
+        Wed, 07 May 2025 06:19:30 -0700 (PDT)
 From: Hangbin Liu <liuhangbin@gmail.com>
 To: netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -77,9 +77,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	netfilter-devel@vger.kernel.org,
 	coreteam@netfilter.org,
 	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCH net-next 2/6] selftests: net: remove redundant rp_filter configuration
-Date: Wed,  7 May 2025 13:18:52 +0000
-Message-ID: <20250507131856.78393-3-liuhangbin@gmail.com>
+Subject: [PATCH net-next 3/6] selftests: net: use setup_ns for bareudp testing
+Date: Wed,  7 May 2025 13:18:53 +0000
+Message-ID: <20250507131856.78393-4-liuhangbin@gmail.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250507131856.78393-1-liuhangbin@gmail.com>
 References: <20250507131856.78393-1-liuhangbin@gmail.com>
@@ -91,60 +91,114 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-The following tests use setup_ns to create a network namespace, which
-will disables rp_filter immediately after namespace creation. Therefore,
-it is no longer necessary to disable rp_filter again within these individual
-tests.
+Switch bareudp testing to use setup_ns, which sets up rp_filter by default.
+This allows us to remove the manual rp_filter configuration from the script.
+
+Additionally, since setup_ns handles namespace naming and cleanup, we no
+longer need a separate cleanup function. We also move the trap setup earlier
+in the script, before the test setup begins.
 
 Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 ---
- tools/testing/selftests/net/fib_rule_tests.sh | 3 ---
- tools/testing/selftests/net/fib_tests.sh      | 3 ---
- tools/testing/selftests/net/icmp_redirect.sh  | 2 --
- 3 files changed, 8 deletions(-)
+ tools/testing/selftests/net/bareudp.sh | 49 ++++----------------------
+ 1 file changed, 7 insertions(+), 42 deletions(-)
 
-diff --git a/tools/testing/selftests/net/fib_rule_tests.sh b/tools/testing/selftests/net/fib_rule_tests.sh
-index c7cea556b416..5fbdd2a0b537 100755
---- a/tools/testing/selftests/net/fib_rule_tests.sh
-+++ b/tools/testing/selftests/net/fib_rule_tests.sh
-@@ -516,10 +516,7 @@ fib_rule4_test()
- 	fib_rule4_test_match_n_redirect "$match" "$match" "$getnomatch" \
- 		"oif redirect to table" "oif no redirect to table"
+diff --git a/tools/testing/selftests/net/bareudp.sh b/tools/testing/selftests/net/bareudp.sh
+index f366cadbc5e8..4046131e7888 100755
+--- a/tools/testing/selftests/net/bareudp.sh
++++ b/tools/testing/selftests/net/bareudp.sh
+@@ -106,26 +106,16 @@
+ # |                                                                       |
+ # +-----------------------------------------------------------------------+
  
--	# Enable forwarding and disable rp_filter as all the addresses are in
--	# the same subnet and egress device == ingress device.
- 	ip netns exec $testns sysctl -qw net.ipv4.ip_forward=1
--	ip netns exec $testns sysctl -qw net.ipv4.conf.$DEV.rp_filter=0
- 	match="from $SRC_IP iif $DEV"
- 	getnomatch="from $SRC_IP iif lo"
- 	fib_rule4_test_match_n_redirect "$match" "$match" "$getnomatch" \
-diff --git a/tools/testing/selftests/net/fib_tests.sh b/tools/testing/selftests/net/fib_tests.sh
-index c58dc4ac2810..a94b73a53f72 100755
---- a/tools/testing/selftests/net/fib_tests.sh
-+++ b/tools/testing/selftests/net/fib_tests.sh
-@@ -2560,9 +2560,6 @@ ipv4_mpath_list_test()
- 	run_cmd "ip -n $ns2 route add 203.0.113.0/24
- 		nexthop via 172.16.201.2 nexthop via 172.16.202.2"
- 	run_cmd "ip netns exec $ns2 sysctl -qw net.ipv4.fib_multipath_hash_policy=1"
--	run_cmd "ip netns exec $ns2 sysctl -qw net.ipv4.conf.veth2.rp_filter=0"
--	run_cmd "ip netns exec $ns2 sysctl -qw net.ipv4.conf.all.rp_filter=0"
--	run_cmd "ip netns exec $ns2 sysctl -qw net.ipv4.conf.default.rp_filter=0"
- 	set +e
++. ./lib.sh
++
+ ERR=4 # Return 4 by default, which is the SKIP code for kselftest
+ PING6="ping"
+ PAUSE_ON_FAIL="no"
  
- 	local dmac=$(ip -n $ns2 -j link show dev veth2 | jq -r '.[]["address"]')
-diff --git a/tools/testing/selftests/net/icmp_redirect.sh b/tools/testing/selftests/net/icmp_redirect.sh
-index d6f0e449c029..b13c89a99ecb 100755
---- a/tools/testing/selftests/net/icmp_redirect.sh
-+++ b/tools/testing/selftests/net/icmp_redirect.sh
-@@ -178,8 +178,6 @@ setup()
- 		else
- 			ip netns exec $ns sysctl -q -w net.ipv4.ip_forward=1
- 			ip netns exec $ns sysctl -q -w net.ipv4.conf.all.send_redirects=1
--			ip netns exec $ns sysctl -q -w net.ipv4.conf.default.rp_filter=0
--			ip netns exec $ns sysctl -q -w net.ipv4.conf.all.rp_filter=0
+-readonly NS0=$(mktemp -u ns0-XXXXXXXX)
+-readonly NS1=$(mktemp -u ns1-XXXXXXXX)
+-readonly NS2=$(mktemp -u ns2-XXXXXXXX)
+-readonly NS3=$(mktemp -u ns3-XXXXXXXX)
+-
+ # Exit the script after having removed the network namespaces it created
+-#
+-# Parameters:
+-#
+-#   * The list of network namespaces to delete before exiting.
+-#
+ exit_cleanup()
+ {
+-	for ns in "$@"; do
+-		ip netns delete "${ns}" 2>/dev/null || true
+-	done
++	cleanup_all_ns
  
- 			ip netns exec $ns sysctl -q -w net.ipv6.conf.all.forwarding=1
- 			ip netns exec $ns sysctl -q -w net.ipv6.route.mtu_expires=10
+ 	if [ "${ERR}" -eq 4 ]; then
+ 		echo "Error: Setting up the testing environment failed." >&2
+@@ -140,17 +130,7 @@ exit_cleanup()
+ # namespaces created by this script are deleted.
+ create_namespaces()
+ {
+-	ip netns add "${NS0}" || exit_cleanup
+-	ip netns add "${NS1}" || exit_cleanup "${NS0}"
+-	ip netns add "${NS2}" || exit_cleanup "${NS0}" "${NS1}"
+-	ip netns add "${NS3}" || exit_cleanup "${NS0}" "${NS1}" "${NS2}"
+-}
+-
+-# The trap function handler
+-#
+-exit_cleanup_all()
+-{
+-	exit_cleanup "${NS0}" "${NS1}" "${NS2}" "${NS3}"
++	setup_ns NS0 NS1 NS2 NS3 || exit_cleanup
+ }
+ 
+ # Configure a network interface using a host route
+@@ -188,10 +168,6 @@ iface_config()
+ #
+ setup_underlay()
+ {
+-	for ns in "${NS0}" "${NS1}" "${NS2}" "${NS3}"; do
+-		ip -netns "${ns}" link set dev lo up
+-	done;
+-
+ 	ip link add name veth01 netns "${NS0}" type veth peer name veth10 netns "${NS1}"
+ 	ip link add name veth12 netns "${NS1}" type veth peer name veth21 netns "${NS2}"
+ 	ip link add name veth23 netns "${NS2}" type veth peer name veth32 netns "${NS3}"
+@@ -234,14 +210,6 @@ setup_overlay_ipv4()
+ 	ip netns exec "${NS2}" sysctl -qw net.ipv4.ip_forward=1
+ 	ip -netns "${NS1}" route add 192.0.2.100/32 via 192.0.2.10
+ 	ip -netns "${NS2}" route add 192.0.2.103/32 via 192.0.2.33
+-
+-	# The intermediate namespaces don't have routes for the reverse path,
+-	# as it will be handled by tc. So we need to ensure that rp_filter is
+-	# not going to block the traffic.
+-	ip netns exec "${NS1}" sysctl -qw net.ipv4.conf.all.rp_filter=0
+-	ip netns exec "${NS2}" sysctl -qw net.ipv4.conf.all.rp_filter=0
+-	ip netns exec "${NS1}" sysctl -qw net.ipv4.conf.default.rp_filter=0
+-	ip netns exec "${NS2}" sysctl -qw net.ipv4.conf.default.rp_filter=0
+ }
+ 
+ setup_overlay_ipv6()
+@@ -521,13 +489,10 @@ done
+ 
+ check_features
+ 
+-# Create namespaces before setting up the exit trap.
+-# Otherwise, exit_cleanup_all() could delete namespaces that were not created
+-# by this script.
+-create_namespaces
+-
+ set -e
+-trap exit_cleanup_all EXIT
++trap exit_cleanup EXIT
++
++create_namespaces
+ 
+ setup_underlay
+ setup_overlay_ipv4
 -- 
 2.46.0
 
