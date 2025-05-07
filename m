@@ -1,89 +1,84 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 37582262804
-	for <mptcp@lists.linux.dev>; Tue,  6 May 2025 08:55:40 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D871E49F;
+	Wed,  7 May 2025 12:31:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746521741; cv=none; b=WYsUBJbP2keuSvNnlPl+PLnjn5pQCeTzRCGFz7SOMjZfhjx68Mcr7ZXh/Zjcdm3a0mJwKtESo0uwt5m4lMSZT6gHQBjCJVm52d8f0oToLxutqjatdvsAQ9Vtkv/gIj4ehki88pFd3Jr1qVmmsEfUmvUZZIE4iyrFioeDaAgw3H0=
+	t=1746621112; cv=none; b=aj5w1W04jCzz80FpAqHQfoO+i8NfAFSiNihT7MO6ExCnxUrDCOX7n6cjl7lMk9segEc+kcykmCFkQORR8uAkVh3b7Pq1T5AvClFUhzyRllh4JszERfegfcJ+2mswN92LQmnt9bEEfg+ZI6twCacF/moPHkaCbYi5vTqI65hniMo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746521741; c=relaxed/simple;
-	bh=IvC5k2k5C9gQfi4qxCchZ9B9XPj5fojm71qXmKfkc3U=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=iEkg0BptN/I/qZv9FsUcitqjdoIygiNkzf7Ytgj6QuU94kQtnZfzup+teS3WDfRdeIILpDXqH87wkwDzOCbGerrzWqhaot4j5zkcrJxLB4D/1wd67+Mf17OR1pDUKmgG5XRYmH0zarH/JAHoB49UwWG1nxjw2ZJ4xkhchWME/zY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=P7T+S7UB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1746621112; c=relaxed/simple;
+	bh=NLFE9SxnKNFG5kSGb0TPjmIn1UVE2kGaqTs9/g3cdl0=;
+	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
+	 Content-Disposition; b=As4BHm5j8Y8kywcFyM9LImLLdUsW+RfsWYKTXI6bQ8exNt2iXd8EMRX/aRwpVG7B2xsl1B5kOM5ElPqs7l8wkd614XGu8tgtLg4G8rPcII205OzCQXAgQnzELac5+CC/+yS0PDJAbFn6MmEwQxMCAN336uA9sljFrWjPTChNeqQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BrnlrBV5; arc=none smtp.client-ip=198.175.65.13
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="P7T+S7UB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 71A68C4CEF1;
-	Tue,  6 May 2025 08:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1746521740;
-	bh=IvC5k2k5C9gQfi4qxCchZ9B9XPj5fojm71qXmKfkc3U=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=P7T+S7UBj4kR0XGU79X2hYobz3keuGVumbXHiQnt6uW6VHz74zls0Kh6Tzl5B7T44
-	 /nTbgAJGFmMi+pDiUGJFA0pEUwtnOj52znR4whvwqFPWZdCLlzDe58SKtUpgLly4mC
-	 /9XvMHNIo2A9vuuV+WDHeBykxNzY44e7QqETfowY5Y3t4JOj3vGllQzW+jxy3SLQBu
-	 VHDVmTN0pdMmeXcXTUAG4s4DNLvV0FfadIlpfmtMysS056OxHJNx2Ef6E6x/w8F3i6
-	 cBXJ7z6533+rFeyP1zOxqWeNhxHKZrRalYGS19MAtpmrGOOnc6tW/bFoBkj1ZJnsBA
-	 rfj8oQWHJHSfw==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v7 5/5] mptcp: pm: drop is_userspace in subflow_check_next
-Date: Tue,  6 May 2025 16:55:26 +0800
-Message-ID: <cac4c60723e0a504593e012ec32f2416f6cb9f8e.1746521233.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.43.0
-In-Reply-To: <cover.1746521233.git.tanggeliang@kylinos.cn>
-References: <cover.1746521233.git.tanggeliang@kylinos.cn>
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BrnlrBV5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1746621111; x=1778157111;
+  h=date:from:to:cc:subject:message-id:mime-version;
+  bh=NLFE9SxnKNFG5kSGb0TPjmIn1UVE2kGaqTs9/g3cdl0=;
+  b=BrnlrBV5bi9RJkcTZKSZsIYnbMGVPjF8zT5SNZVomogTETmIxeVPVRt9
+   CNjqJSYOyWZgaKDS3k+2WFAFWuweDc4okmLCmBjYZkSrj//eEXLloodTc
+   z/4jBZgYLoZ4gCVgNww/kblEt2e9C5k/xmSjubdbzdu4xGP1eBG0W2GLd
+   4bRyGlx2oPcLZwCG5juvzxavkRmx/wJCCKjvA/qNPtppEssk2OARmuusB
+   LYO7CVZ+n/HDwr9eznGaToL8aqDSlbbOYwmEtDG0JpfEz6oQru72/kF1s
+   n7DkXGwbpvWLSRluGtxXcrGLs8YFZQ9TlbCDGSrhAeCg10W3VUbOQRvmC
+   Q==;
+X-CSE-ConnectionGUID: l8TnQ+lbSgqk1Ljkyw1uug==
+X-CSE-MsgGUID: 0xMxLEf2RW69JmxAe+x3hw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59336701"
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="59336701"
+Received: from fmviesa008.fm.intel.com ([10.60.135.148])
+  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 05:31:51 -0700
+X-CSE-ConnectionGUID: k48YR6sYRsWpOqm0c6C8tw==
+X-CSE-MsgGUID: 9eVR+E8VSbqK/QHnQT7Ntg==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
+   d="scan'208";a="136341180"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa008.fm.intel.com with ESMTP; 07 May 2025 05:31:50 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uCdwB-0007mf-26;
+	Wed, 07 May 2025 12:31:47 +0000
+Date: Wed, 7 May 2025 20:30:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
+Subject: [mptcp:export 1/33] .b4-config: warning: ignored by one of the
+ .gitignore files
+Message-ID: <202505072040.0lD59gJw-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
+head:   dc5a194295bd73e042f36afd454ae4febd90c04e
+commit: eac743734bd56bf262f6615541d01cdf190945ac [1/33] DO-NOT-MERGE: git markup: net
+config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20250507/202505072040.0lD59gJw-lkp@intel.com/config)
+compiler: loongarch64-linux-gcc (GCC) 14.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505072040.0lD59gJw-lkp@intel.com/reproduce)
 
-This patch moves mptcp_pm_close_subflow() forward to let it be used by both
-the userspace PM and the in-kernel PM in mptcp_pm_subflow_check_next().
-Then mptcp_pm_is_userspace() here can be dropped.
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505072040.0lD59gJw-lkp@intel.com/
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/pm.c | 14 +++-----------
- 1 file changed, 3 insertions(+), 11 deletions(-)
+All warnings (new ones prefixed by >>):
 
-diff --git a/net/mptcp/pm.c b/net/mptcp/pm.c
-index 7d67789fd09d..cfa1e0ebc87f 100644
---- a/net/mptcp/pm.c
-+++ b/net/mptcp/pm.c
-@@ -552,22 +552,14 @@ void mptcp_pm_subflow_check_next(struct mptcp_sock *msk,
- 	bool update_subflows;
- 
- 	update_subflows = subflow->request_join || subflow->mp_join;
--	if (mptcp_pm_is_userspace(msk)) {
--		if (update_subflows) {
--			spin_lock_bh(&pm->lock);
--			pm->subflows--;
--			spin_unlock_bh(&pm->lock);
--		}
--		return;
--	}
-+	if (update_subflows)
-+		mptcp_pm_close_subflow(msk);
- 
- 	if (!pm->ops->subflow_established ||
--	    (!READ_ONCE(pm->work_pending) && !update_subflows))
-+	    !READ_ONCE(pm->work_pending))
- 		return;
- 
- 	spin_lock_bh(&pm->lock);
--	if (update_subflows)
--		__mptcp_pm_close_subflow(msk);
- 
- 	/* Even if this subflow is not really established, tell the PM to try
- 	 * to pick the next ones, if possible.
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
+
 -- 
-2.43.0
-
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
