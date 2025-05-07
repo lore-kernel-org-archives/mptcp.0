@@ -1,62 +1,62 @@
-Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+Received: from mail-pg1-f176.google.com (mail-pg1-f176.google.com [209.85.215.176])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00A9425E809
-	for <mptcp@lists.linux.dev>; Wed,  7 May 2025 13:19:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1485F280A2E
+	for <mptcp@lists.linux.dev>; Wed,  7 May 2025 13:19:53 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.215.176
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746623988; cv=none; b=f43B2XfgRizdux20DAkBKsZc0Fb2X59Kdx8KmnGT/OjBH0JXjBSrd8exxh8495n+fcS1h6S/Y7lhLRVZq2Q4RZOIZHN64FinJC+Ih0nPHmX3sQTTWHzsQGWrngmoJrDHhVn+i7++q1vMF1AzQwmDdk6aoAoe+GOQ/65M/l8kyps=
+	t=1746623995; cv=none; b=c0JYC7D1CZJXG/onbxbIqFxWkD+VzdjB3zCwAzQypsq48HLI3IDIn8rU486rIIdY/Nx4BnbHyttht1sOPfCUMM8O7BGXJ6WGN8tzXbmctwJP5QfqHyRBaYFVDXtTgXWsrcWq6m2Gs8tS7gkgwavM2PSDJQwJL4MO8a9+jlxYeb8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746623988; c=relaxed/simple;
-	bh=lrL7QCxkalRPHwMpen3EmwhoJvDupaoSUwDZql/gvq8=;
+	s=arc-20240116; t=1746623995; c=relaxed/simple;
+	bh=pGCESf98a2q8tFRVKDwEPR9HphxMHhS6pJq4K4rLTvg=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=Mu1v7nkMIXzJGadbmfbVYxPBxrDA+pCEkPow5RJYgwHxM0CyVY0prWBiEEtiUUBjjsOwe/UxjYoAVA0uJMlR/5Vwanjlb0ojxWVdR587J2CvPAPEJ/ReHaI1eKoYdpg2HCzCZwljMfzhrjrJAjOsy6lv0JnyDdR4onVzaWB3+so=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KSwasu1t; arc=none smtp.client-ip=209.85.214.171
+	 MIME-Version; b=uWMwkPieI8t/E2t3CnMKFkMEI1fCPbyhnee8Jpv0s2XsVK74q3tisHXFJytKrQOXJgIB24WJpMR14RLTr9JmzxjFChIGJ3nohEEkTx0P8AMQgViEJJeu4J4KAaUVyLEe4terRP6wDb5LKHdjZvB+vm1Qr6Zu9Rm3ufH+9PiIaAI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=Q5P1dRiT; arc=none smtp.client-ip=209.85.215.176
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KSwasu1t"
-Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e661313a3so6152505ad.3
-        for <mptcp@lists.linux.dev>; Wed, 07 May 2025 06:19:46 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q5P1dRiT"
+Received: by mail-pg1-f176.google.com with SMTP id 41be03b00d2f7-af52a624283so881554a12.0
+        for <mptcp@lists.linux.dev>; Wed, 07 May 2025 06:19:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746623986; x=1747228786; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1746623993; x=1747228793; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=OqHokklDt23W8knG3MI9yzmJbveoaAKaHbHiDTuVpLI=;
-        b=KSwasu1t+QL5hwL7Y5z0cRO9bf2la5b6hZEuj3EgMHFq4EuQogCWQ54kmAANCXDSGK
-         +ZO58dulmdB/B/wLHddkFAmo/n8eWaTm3BrJnOoT6ipleoVP3DOPa0An004EK3fnSv9j
-         dbUyvw5s8fQSDoFP4b6kGDnVPQnSxXgHenwKM5BvClT9vT1ivNvQXUJoxFanMSmRpYNJ
-         Lh8GuQhkWm9ebrZZKT0Jwv6VG3s3CgGJnCb9/hrvkclil1KkGAoXbPhA39u1OHj2Nwbg
-         7yCvGSCZxEnvKWMMJo8uN9YvXVxxZCzch6Ii4S1rk+hHK1sa5VkPuorrYxyZdn74FMI4
-         zcyg==
+        bh=ZWIeCnEAL6ezhpEyDQ2QxTqdF36G5ahedpjkpixynRI=;
+        b=Q5P1dRiTgdel5OmbKsEoJ7OuoIX2uWtezCyP3LC3Mb2f6JBSsNa1IpYFlpy1GxZ+Xw
+         ZwaBpivopuy8aIxMMlmO0N3Xr21iGMNGcXnJ8Uq+ONCA1I/yldC0CqQJjmfisQu9/Ex7
+         fmA4rIpc0yXSjj3jaNz3/IB/S3p8WPJU4VebfuvTsX3yYeSQ56SkN+4zyeAImU+HMRfr
+         cWhu5QEDlvZutM9fKUQ2lOGKnsaC2WQUY5XHTroUmJYYXcIu1zDX5bN4Ux0trLvdZLWx
+         qU+nfNrEJa0tN1MZw9tLeJ3NbCw/FmYYVD3YwMpGsA3AIVXArambO7TN6tcdwxxsFPra
+         i+rg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746623986; x=1747228786;
+        d=1e100.net; s=20230601; t=1746623993; x=1747228793;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=OqHokklDt23W8knG3MI9yzmJbveoaAKaHbHiDTuVpLI=;
-        b=IHjyy0/20wy+CoWQTCbkjA6rN4A00xJAYIwAvWYC4dF63GAriZUPTKaFbYgYfqSy/z
-         9WG797noPxxCMW9pmYAHolD14YtTygX9r5wAeqYYi6OIpd1ctQRWBlyMxm2a4imXRcTi
-         60yy018MWt1xE3MwtlBFiyWoyq4y/PvUUOsOcXQG8LvWYS1DfrESZajf3LKv3pWH7nWS
-         lwa4lW+SE45aNGKZeVkQqVdQr0qw3EBSOu1ooqQczWhDkm6MLhg6kpYx7mDkDTNU/rpi
-         U9vTnAD1apudFMZgtfvfJvNWFEl1g5rrGN3LSLpHpu0N1/26c0n69DUpqxew1qOwQI2k
-         rkzw==
-X-Forwarded-Encrypted: i=1; AJvYcCXvXHuq7mzSQkb4+GNroaYMyGMBv9d4eD6OoOPnuHX52Gu2i8/55WjbZmUEqziJI2Zl4N/P9g==@lists.linux.dev
-X-Gm-Message-State: AOJu0YwyQaP4eWWEOuKXW9GaEpwBA8oq+1GFJ6TF7EzqKk4ih/vd7Xt8
-	IHFgVdrwRBJ9XiILBBqtQF8DWSid/NbIZZqMeAEovzUhn6zkCWsN
-X-Gm-Gg: ASbGncsoC+4LH7zWYuE2WoET0P90cWiCcKWBHn0ropVTkfepdgWTPuvqkISu1+KQrll
-	Mm6eRM5DvfSrP+hCqkWmhHs8t2EQacXqi4seyRx6kGBCCW/hGaVntgJjyye1h6YXUUSxcJpKjK/
-	9qntDGaW8uqRELnDBIKiU1IykhSr+kx0XqPj5Hon9Q49jTnTDLICxt0uKgyDqSHVnykKITdabtG
-	gZmWM2Albev8PZsykgrNVc1xEbrUnq4GflJyXVL9c+gelVu10Yp1KvAS1+hWvaLcDZ+uXYybXnC
-	XkZYNdFI0Su0yvxpbKVwNYO6VuJOpClW7kpUOUyrkbxwfrsiBR6BV04w4/2K
-X-Google-Smtp-Source: AGHT+IFfdJWCu3m1y8Hriw4GJJRUvamR/KXJqLxjtGe0UkNbJZ3QilajvtvjyVCu5nAM7PzRiGu+qQ==
-X-Received: by 2002:a17:902:db0c:b0:223:6657:5008 with SMTP id d9443c01a7336-22e5ea7c30bmr54379525ad.24.1746623986211;
-        Wed, 07 May 2025 06:19:46 -0700 (PDT)
+        bh=ZWIeCnEAL6ezhpEyDQ2QxTqdF36G5ahedpjkpixynRI=;
+        b=bZ8jEQZVF9xB4/Fbb+x+VnW4OTzdB/WUGlWV3OwFKnbM6t2zL34TrqTX2MPokHMHlK
+         AsLMTJom6nESnvy01Unso8OomBPFc7go0UW7RFscMt6D6eSjldPXyjAEAxYMARvnQGlX
+         5I02WCnkLNXJVeyFauNkKO6f2RoTvvfkIK315PXX4sxIH95RJqcUN0N+9YKalcVFptzZ
+         Bk59SN4+NRy+1NFEk8NWPulGejvbUe4Vb4qIo3SMm2z0Akzre+MzZSuHuV2pORtmXUKf
+         zynN+SZ6ntqtTddy+2QRBUucE9jDZh9kiSNybiHOSYH7IIAYG0WaLAx5U09+EIjpYmFl
+         34ZA==
+X-Forwarded-Encrypted: i=1; AJvYcCW/KF/xU68hrnM9B077qPTLj8dknF/XGMz9+R0kt1FQzQrjgI8YC85y2Zuo6+/BqzJhJ0yI5w==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxJY8Qxk3XjMVXJaXabgKV0s9wEqWp3YWxT63ng2yR+QEDSurbs
+	8a9wK6J3UfuQLnZyS425TWXdSe7WMtfuV/fApGWJD0HKI+WEHjr1
+X-Gm-Gg: ASbGncu1dJ9qrULQyZJv9pTUTtWewX2W/LvMUa2cwzfwTbPmCmHPO28W1wbgU1kVaxO
+	AwlzKRSmQ1vbIOADWcw1xGIiuZ7nOgthWmxcL798R5hkq37HgP2xxla0cS1Qaj9RFuJcHYJ0dHz
+	KAs9tqb1qkDxCWezAUEnkrPMxs7MmtEEyzwQT8e1AxunlyF1UNuda3Oc++1/+RINPOSSREb46RG
+	7StABGLRgwCR85W9pIdJwMBII8gqc7CvVnMg3kG00ojxrt+x/18FjwBq2BKoeifJ6WDV9Axiwsy
+	F3tN4w+x8e3M8QIBq4hfvEMdFv0KsdtqpLs/pI/W/wZGWqSObGTozAUcPAaA
+X-Google-Smtp-Source: AGHT+IGWaWfGTs4mdubVYu6seZegE278kHJcKhUfM24Xyh9AmlVDo+zcwuC5LDbCC8DzofCmSPW9EQ==
+X-Received: by 2002:a17:90b:2e45:b0:30a:9feb:1e0f with SMTP id 98e67ed59e1d1-30aaecdc652mr4538239a91.5.1746623993354;
+        Wed, 07 May 2025 06:19:53 -0700 (PDT)
 Received: from fedora.dns.podman ([209.132.188.88])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5e93ee88sm17414765ad.86.2025.05.07.06.19.38
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5e93ee88sm17414765ad.86.2025.05.07.06.19.46
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 07 May 2025 06:19:45 -0700 (PDT)
+        Wed, 07 May 2025 06:19:52 -0700 (PDT)
 From: Hangbin Liu <liuhangbin@gmail.com>
 To: netdev@vger.kernel.org
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -77,9 +77,9 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	netfilter-devel@vger.kernel.org,
 	coreteam@netfilter.org,
 	Hangbin Liu <liuhangbin@gmail.com>
-Subject: [PATCH net-next 5/6] selftests: netfilter: remove rp_filter configuration
-Date: Wed,  7 May 2025 13:18:55 +0000
-Message-ID: <20250507131856.78393-6-liuhangbin@gmail.com>
+Subject: [PATCH net-next 6/6] selftests: mptcp: remove rp_filter configuration
+Date: Wed,  7 May 2025 13:18:56 +0000
+Message-ID: <20250507131856.78393-7-liuhangbin@gmail.com>
 X-Mailer: git-send-email 2.46.0
 In-Reply-To: <20250507131856.78393-1-liuhangbin@gmail.com>
 References: <20250507131856.78393-1-liuhangbin@gmail.com>
@@ -91,154 +91,27 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Remove the manual rp_filter configuration, as setup_ns already sets it
-appropriately by default
+Remove the manual rp_filter configuration from MPTCP tests, as it is now
+handled by setup_ns.
 
 Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 ---
- .../selftests/net/netfilter/br_netfilter.sh    |  3 ---
- .../selftests/net/netfilter/bridge_brouter.sh  |  2 --
- .../selftests/net/netfilter/conntrack_vrf.sh   |  3 ---
- tools/testing/selftests/net/netfilter/ipvs.sh  |  6 ------
- .../testing/selftests/net/netfilter/nft_fib.sh |  2 --
- .../selftests/net/netfilter/nft_nat_zones.sh   |  2 --
- tools/testing/selftests/net/netfilter/rpath.sh | 18 +++++-------------
- 7 files changed, 5 insertions(+), 31 deletions(-)
+ tools/testing/selftests/net/mptcp/mptcp_lib.sh | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/tools/testing/selftests/net/netfilter/br_netfilter.sh b/tools/testing/selftests/net/netfilter/br_netfilter.sh
-index 1559ba275105..011de8763094 100755
---- a/tools/testing/selftests/net/netfilter/br_netfilter.sh
-+++ b/tools/testing/selftests/net/netfilter/br_netfilter.sh
-@@ -60,9 +60,6 @@ bcast_ping()
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_lib.sh b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+index 99c87cd6e255..55212188871e 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_lib.sh
++++ b/tools/testing/selftests/net/mptcp/mptcp_lib.sh
+@@ -479,8 +479,6 @@ mptcp_lib_ns_init() {
+ 	local netns
+ 	for netns in "${@}"; do
+ 		ip netns exec "${!netns}" sysctl -q net.mptcp.enabled=1
+-		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.all.rp_filter=0
+-		ip netns exec "${!netns}" sysctl -q net.ipv4.conf.default.rp_filter=0
  	done
  }
  
--ip netns exec "$ns0" sysctl -q net.ipv4.conf.all.rp_filter=0
--ip netns exec "$ns0" sysctl -q net.ipv4.conf.default.rp_filter=0
--
- if ! ip link add veth1 netns "$ns0" type veth peer name eth0 netns "$ns1"; then
- 	echo "SKIP: Can't create veth device"
- 	exit $ksft_skip
-diff --git a/tools/testing/selftests/net/netfilter/bridge_brouter.sh b/tools/testing/selftests/net/netfilter/bridge_brouter.sh
-index 2549b6590693..ea76f2bc2f59 100755
---- a/tools/testing/selftests/net/netfilter/bridge_brouter.sh
-+++ b/tools/testing/selftests/net/netfilter/bridge_brouter.sh
-@@ -22,8 +22,6 @@ trap cleanup EXIT
- 
- setup_ns nsbr ns1 ns2
- 
--ip netns exec "$nsbr" sysctl -q net.ipv4.conf.default.rp_filter=0
--ip netns exec "$nsbr" sysctl -q net.ipv4.conf.all.rp_filter=0
- if ! ip link add veth0 netns "$nsbr" type veth peer name eth0 netns "$ns1"; then
- 	echo "SKIP: Can't create veth device"
- 	exit $ksft_skip
-diff --git a/tools/testing/selftests/net/netfilter/conntrack_vrf.sh b/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
-index e95ecb37c2b1..025b58f2ae91 100755
---- a/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
-+++ b/tools/testing/selftests/net/netfilter/conntrack_vrf.sh
-@@ -52,9 +52,6 @@ trap cleanup EXIT
- 
- setup_ns ns0 ns1
- 
--ip netns exec "$ns0" sysctl -q -w net.ipv4.conf.default.rp_filter=0
--ip netns exec "$ns0" sysctl -q -w net.ipv4.conf.all.rp_filter=0
--ip netns exec "$ns0" sysctl -q -w net.ipv4.conf.all.rp_filter=0
- ip netns exec "$ns0" sysctl -q -w net.ipv4.conf.all.forwarding=1
- 
- if ! ip link add veth0 netns "$ns0" type veth peer name veth0 netns "$ns1" > /dev/null 2>&1; then
-diff --git a/tools/testing/selftests/net/netfilter/ipvs.sh b/tools/testing/selftests/net/netfilter/ipvs.sh
-index d3edb16cd4b3..6af2ea3ad6b8 100755
---- a/tools/testing/selftests/net/netfilter/ipvs.sh
-+++ b/tools/testing/selftests/net/netfilter/ipvs.sh
-@@ -129,9 +129,6 @@ test_dr() {
- 	# avoid incorrect arp response
- 	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.all.arp_ignore=1
- 	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.all.arp_announce=2
--	# avoid reverse route lookup
--	ip netns exec "${ns2}" sysctl -qw  net.ipv4.conf.all.rp_filter=0
--	ip netns exec "${ns2}" sysctl -qw  net.ipv4.conf.veth21.rp_filter=0
- 	ip netns exec "${ns2}" ip addr add "${vip_v4}/32" dev lo:1
- 
- 	test_service
-@@ -167,9 +164,6 @@ test_tun() {
- 	ip netns exec "${ns2}" ip link set tunl0 up
- 	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.all.arp_ignore=1
- 	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.all.arp_announce=2
--	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.all.rp_filter=0
--	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.tunl0.rp_filter=0
--	ip netns exec "${ns2}" sysctl -qw net.ipv4.conf.veth21.rp_filter=0
- 	ip netns exec "${ns2}" ip addr add "${vip_v4}/32" dev lo:1
- 
- 	test_service
-diff --git a/tools/testing/selftests/net/netfilter/nft_fib.sh b/tools/testing/selftests/net/netfilter/nft_fib.sh
-index ea47dd246a08..82780b39277c 100755
---- a/tools/testing/selftests/net/netfilter/nft_fib.sh
-+++ b/tools/testing/selftests/net/netfilter/nft_fib.sh
-@@ -167,8 +167,6 @@ test_ping() {
- ip netns exec "$nsrouter" sysctl net.ipv6.conf.all.forwarding=1 > /dev/null
- ip netns exec "$nsrouter" sysctl net.ipv4.conf.veth0.forwarding=1 > /dev/null
- ip netns exec "$nsrouter" sysctl net.ipv4.conf.veth1.forwarding=1 > /dev/null
--ip netns exec "$nsrouter" sysctl net.ipv4.conf.all.rp_filter=0 > /dev/null
--ip netns exec "$nsrouter" sysctl net.ipv4.conf.veth0.rp_filter=0 > /dev/null
- 
- test_ping 10.0.2.1 dead:2::1 || exit 1
- check_drops || exit 1
-diff --git a/tools/testing/selftests/net/netfilter/nft_nat_zones.sh b/tools/testing/selftests/net/netfilter/nft_nat_zones.sh
-index 3b81d88bdde3..9f200f80253a 100755
---- a/tools/testing/selftests/net/netfilter/nft_nat_zones.sh
-+++ b/tools/testing/selftests/net/netfilter/nft_nat_zones.sh
-@@ -88,7 +88,6 @@ for i in $(seq 1 "$maxclients");do
-   echo netns exec "$cl" sysctl -q net.ipv4.tcp_syn_retries=2
-   echo netns exec "$gw" ip link set "veth$i" up
-   echo netns exec "$gw" sysctl -q net.ipv4.conf.veth"$i".arp_ignore=2
--  echo netns exec "$gw" sysctl -q net.ipv4.conf.veth"$i".rp_filter=0
- 
-   # clients have same IP addresses.
-   echo netns exec "$cl" ip addr add 10.1.0.3/24 dev eth0
-@@ -178,7 +177,6 @@ fi
- 
- ip netns exec "$gw" sysctl -q net.ipv4.conf.all.forwarding=1 > /dev/null
- ip netns exec "$gw" sysctl -q net.ipv6.conf.all.forwarding=1 > /dev/null
--ip netns exec "$gw" sysctl -q net.ipv4.conf.all.rp_filter=0 >/dev/null
- 
- # useful for debugging: allows to use 'ping' from clients to gateway.
- ip netns exec "$gw" sysctl -q net.ipv4.fwmark_reflect=1 > /dev/null
-diff --git a/tools/testing/selftests/net/netfilter/rpath.sh b/tools/testing/selftests/net/netfilter/rpath.sh
-index 86ec4e68594d..24ad41d526d9 100755
---- a/tools/testing/selftests/net/netfilter/rpath.sh
-+++ b/tools/testing/selftests/net/netfilter/rpath.sh
-@@ -1,8 +1,7 @@
- #!/bin/bash
- # SPDX-License-Identifier: GPL-2.0
- 
--# return code to signal skipped test
--ksft_skip=4
-+source lib.sh
- 
- # search for legacy iptables (it uses the xtables extensions
- if iptables-legacy --version >/dev/null 2>&1; then
-@@ -32,17 +31,10 @@ if [ -z "$iptables$ip6tables$nft" ]; then
- 	exit $ksft_skip
- fi
- 
--sfx=$(mktemp -u "XXXXXXXX")
--ns1="ns1-$sfx"
--ns2="ns2-$sfx"
--trap "ip netns del $ns1; ip netns del $ns2" EXIT
--
--# create two netns, disable rp_filter in ns2 and
--# keep IPv6 address when moving into VRF
--ip netns add "$ns1"
--ip netns add "$ns2"
--ip netns exec "$ns2" sysctl -q net.ipv4.conf.all.rp_filter=0
--ip netns exec "$ns2" sysctl -q net.ipv4.conf.default.rp_filter=0
-+trap cleanup_all_ns EXIT
-+
-+# create two netns, keep IPv6 address when moving into VRF
-+setup_ns ns1 ns2
- ip netns exec "$ns2" sysctl -q net.ipv6.conf.all.keep_addr_on_down=1
- 
- # a standard connection between the netns, should not trigger rp filter
 -- 
 2.46.0
 
