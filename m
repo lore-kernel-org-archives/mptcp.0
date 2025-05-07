@@ -1,84 +1,135 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.13])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 68D871E49F;
-	Wed,  7 May 2025 12:31:51 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.13
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2138472619
+	for <mptcp@lists.linux.dev>; Wed,  7 May 2025 13:19:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746621112; cv=none; b=aj5w1W04jCzz80FpAqHQfoO+i8NfAFSiNihT7MO6ExCnxUrDCOX7n6cjl7lMk9segEc+kcykmCFkQORR8uAkVh3b7Pq1T5AvClFUhzyRllh4JszERfegfcJ+2mswN92LQmnt9bEEfg+ZI6twCacF/moPHkaCbYi5vTqI65hniMo=
+	t=1746623951; cv=none; b=qtkuNntWpDdygzBJL5mPSfWv1fJ4+hZw2i8wKjQjpdm0fffyiOGZ4shYX9WdS3Obs7YECfPJSZuAaGa2v3JSjEccSNwKnc1kNtpjFXxKfkvKfVh/q+kLIp9JZ4Oj0yenjzPACdcfu1njBi1Tvu4ItIaq1PTgV441Wkc4Ff6BVro=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746621112; c=relaxed/simple;
-	bh=NLFE9SxnKNFG5kSGb0TPjmIn1UVE2kGaqTs9/g3cdl0=;
-	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=As4BHm5j8Y8kywcFyM9LImLLdUsW+RfsWYKTXI6bQ8exNt2iXd8EMRX/aRwpVG7B2xsl1B5kOM5ElPqs7l8wkd614XGu8tgtLg4G8rPcII205OzCQXAgQnzELac5+CC/+yS0PDJAbFn6MmEwQxMCAN336uA9sljFrWjPTChNeqQ=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=BrnlrBV5; arc=none smtp.client-ip=198.175.65.13
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
+	s=arc-20240116; t=1746623951; c=relaxed/simple;
+	bh=GZkfUCb90AwgYTu3CF2nfh0Om+zRBKE64m3kyCgtnvg=;
+	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=eJb98D2S0ZvlVeLNXyDuvdfcxUXYZkqjbk9uS1DOfKFD3dswjAgyS0dvLqy628HwImVG6yBpch+OiLVrXdtBfTwtbD4OVi7Cq8eeYn3MH7PtmkDmJ9COQuOSegZUE4gJp2H6T5/IEEWsPvYvm2eZIV9VeLt+Ojzh4Jt7+jfyftk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=ECPGvHWT; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="BrnlrBV5"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1746621111; x=1778157111;
-  h=date:from:to:cc:subject:message-id:mime-version;
-  bh=NLFE9SxnKNFG5kSGb0TPjmIn1UVE2kGaqTs9/g3cdl0=;
-  b=BrnlrBV5bi9RJkcTZKSZsIYnbMGVPjF8zT5SNZVomogTETmIxeVPVRt9
-   CNjqJSYOyWZgaKDS3k+2WFAFWuweDc4okmLCmBjYZkSrj//eEXLloodTc
-   z/4jBZgYLoZ4gCVgNww/kblEt2e9C5k/xmSjubdbzdu4xGP1eBG0W2GLd
-   4bRyGlx2oPcLZwCG5juvzxavkRmx/wJCCKjvA/qNPtppEssk2OARmuusB
-   LYO7CVZ+n/HDwr9eznGaToL8aqDSlbbOYwmEtDG0JpfEz6oQru72/kF1s
-   n7DkXGwbpvWLSRluGtxXcrGLs8YFZQ9TlbCDGSrhAeCg10W3VUbOQRvmC
-   Q==;
-X-CSE-ConnectionGUID: l8TnQ+lbSgqk1Ljkyw1uug==
-X-CSE-MsgGUID: 0xMxLEf2RW69JmxAe+x3hw==
-X-IronPort-AV: E=McAfee;i="6700,10204,11426"; a="59336701"
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="59336701"
-Received: from fmviesa008.fm.intel.com ([10.60.135.148])
-  by orvoesa105.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 07 May 2025 05:31:51 -0700
-X-CSE-ConnectionGUID: k48YR6sYRsWpOqm0c6C8tw==
-X-CSE-MsgGUID: 9eVR+E8VSbqK/QHnQT7Ntg==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.15,269,1739865600"; 
-   d="scan'208";a="136341180"
-Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
-  by fmviesa008.fm.intel.com with ESMTP; 07 May 2025 05:31:50 -0700
-Received: from kbuild by 1992f890471c with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uCdwB-0007mf-26;
-	Wed, 07 May 2025 12:31:47 +0000
-Date: Wed, 7 May 2025 20:30:47 +0800
-From: kernel test robot <lkp@intel.com>
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: oe-kbuild-all@lists.linux.dev, mptcp@lists.linux.dev
-Subject: [mptcp:export 1/33] .b4-config: warning: ignored by one of the
- .gitignore files
-Message-ID: <202505072040.0lD59gJw-lkp@intel.com>
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ECPGvHWT"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-22e70a9c6bdso6214265ad.3
+        for <mptcp@lists.linux.dev>; Wed, 07 May 2025 06:19:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1746623949; x=1747228749; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:from:to:cc:subject:date:message-id:reply-to;
+        bh=/0+7hj5vfYYCIfikC10U5TKg0ZgYAqvVLBu9ngisEFU=;
+        b=ECPGvHWTKJunrN0pRLGf3Z7YIfF/DSkEK5tPZG0M+XBEW1MOzC2uqZy7Un93VvC7uG
+         C1gwbJHXCM9kyoVPRsfk9Ixjk5+pZlZ0E/NjqLdjrXivTiWdChhvEfILDj9VzzlK1LI3
+         CWCzwQ2hLX9vW1LABvxMS+720WCGoQxKlhkHdoiTNp8G+NuPljfIfxRQOcqPpv9T2+zR
+         ruAJbb4wXMJu/w6L5rPoujT6Gv8SpjIaZH5bxfUi5Vuip/RoY83SJyxHzEaleGtplZq7
+         nHg37cxYpLynRe8xAWbYRfmWn0NlV22E5iVwvmAXn2aSq84ucjPgdps7yNHMSZMGxsqn
+         NDBg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1746623949; x=1747228749;
+        h=content-transfer-encoding:mime-version:message-id:date:subject:cc
+         :to:from:x-gm-message-state:from:to:cc:subject:date:message-id
+         :reply-to;
+        bh=/0+7hj5vfYYCIfikC10U5TKg0ZgYAqvVLBu9ngisEFU=;
+        b=p6uLF8Ca1CP+X0YLQ23zKp49YYQUoE57VBykf50+EiULTyMFg4VEE0f/sIKHuLSrRV
+         wZ099OAYW/y7RaDKa9FOW6xSpptnHU7XHVzSIDTkupK1QWdAwbc4U+SJOSK8XZvATXNl
+         +auzKkEAHjjoCvO4wDvWD6PA0P97BRtFi/zfYDF15qFUzyq3xqSem2Y2Y9SY+idGVois
+         pJ46UEV59dp5RIaHGDCcwN7A/LCI88vnkzWefBYWqGZMl09r/EB7YxgmkLOC9Dh35Vk7
+         sQDiZKBHgUBTab1UfyQ9v3EVUXy9NObZ3J15QjUujL8g26s024mJngxry7KkQ7ldMvf3
+         +OXw==
+X-Forwarded-Encrypted: i=1; AJvYcCXHV7SdHTBEy859CZ/KUWA78wGKNmOe/iRnK0BZ2ZcBPSPUqjsre7+FkdoqvMPgZo/rZgKdAQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxj+Y6rXTAc6j9XsFiWM6laARg+RWnS3pwtWPp8Aav5COVJRkG3
+	bgXFUr1zLrYEc+mEWuEc+WlK1aocM8otYF38bzJ0pO1jkWVrj1u8
+X-Gm-Gg: ASbGnct5epu1DId0JO2y8r0m7k9nnSHGQ65g2Ii/V/flHG79M2wRyM9DiM3vAmzPth2
+	4tt1102CcbMshC/8Zb56wvvoSRtZtA+Dst1UNFBstJQVLCoDBqr1dN66TwcEy8o3QqEcleOnes3
+	6mzIXV7xhyui0Q0VgmnGLk95+uwbgE75fUZwSheLfrx/SKKXpE2efzh4t2cgnyoymBrBywvZEsl
+	Im9viIWQQFj9jWm6bW0Bbz+zK47GCdz+qM2O2LbdlcsULghKFbEjOKJw1mVSzqkm3qFzj0WhJwp
+	Gb4Tyv9WGZbNzpVvi8yIbE1fELju/ufCFcXLJ9iodZrk9NAFxhgYH0LxbSPH
+X-Google-Smtp-Source: AGHT+IE3aXmNIXQtf4fL4/bp0RdlV5edrxeN1OA2BlzBfH+4n8c0fY1fUmHLL8nXNuECNV+ySfcqKQ==
+X-Received: by 2002:a17:902:e38a:b0:22e:62c3:6990 with SMTP id d9443c01a7336-22e62c36999mr30258795ad.16.1746623949214;
+        Wed, 07 May 2025 06:19:09 -0700 (PDT)
+Received: from fedora.dns.podman ([209.132.188.88])
+        by smtp.gmail.com with ESMTPSA id d9443c01a7336-22e5e93ee88sm17414765ad.86.2025.05.07.06.19.02
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 07 May 2025 06:19:08 -0700 (PDT)
+From: Hangbin Liu <liuhangbin@gmail.com>
+To: netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Shuah Khan <shuah@kernel.org>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	Pablo Neira Ayuso <pablo@netfilter.org>,
+	Jozsef Kadlecsik <kadlec@netfilter.org>,
+	Andrea Mayer <andrea.mayer@uniroma2.it>,
+	Paolo Lungaroni <paolo.lungaroni@uniroma2.it>,
+	linux-kselftest@vger.kernel.org,
+	mptcp@lists.linux.dev,
+	netfilter-devel@vger.kernel.org,
+	coreteam@netfilter.org,
+	Hangbin Liu <liuhangbin@gmail.com>
+Subject: [PATCH net-next 0/6] selftests: net: configure rp_filter in setup_ns
+Date: Wed,  7 May 2025 13:18:50 +0000
+Message-ID: <20250507131856.78393-1-liuhangbin@gmail.com>
+X-Mailer: git-send-email 2.46.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
-head:   dc5a194295bd73e042f36afd454ae4febd90c04e
-commit: eac743734bd56bf262f6615541d01cdf190945ac [1/33] DO-NOT-MERGE: git markup: net
-config: loongarch-defconfig (https://download.01.org/0day-ci/archive/20250507/202505072040.0lD59gJw-lkp@intel.com/config)
-compiler: loongarch64-linux-gcc (GCC) 14.2.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250507/202505072040.0lD59gJw-lkp@intel.com/reproduce)
+Some distributions enable rp_filter globally by default, which can interfere
+with various test cases. To address this, many tests explicitly disable
+rp_filter within their scripts.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202505072040.0lD59gJw-lkp@intel.com/
+To avoid duplication and ensure consistent behavior across tests, this patch
+moves the rp_filter configuration into setup_ns, applied immediately after a
+new namespace is created. This change ensures that all namespace-based tests
+inherit the appropriate rp_filter settings, simplifying individual test
+scripts and improving maintainability.
 
-All warnings (new ones prefixed by >>):
+BTW, the patch 4/6 for srv6 is a bit large. Please tell me if you think
+I need to break this one.
 
->> .b4-config: warning: ignored by one of the .gitignore files
-   .git_markup: warning: ignored by one of the .gitignore files
+Hangbin Liu (6):
+  selftests: net: disable rp_filter after namespace initialization
+  selftests: net: remove redundant rp_filter configuration
+  selftests: net: use setup_ns for bareudp testing
+  selftests: net: use setup_ns for SRv6 tests and remove rp_filter
+    configuration
+  selftests: netfilter: remove rp_filter configuration
+  selftests: mptcp: remove rp_filter configuration
+
+ tools/testing/selftests/net/bareudp.sh        | 49 ++---------
+ tools/testing/selftests/net/fib_rule_tests.sh |  3 -
+ tools/testing/selftests/net/fib_tests.sh      |  3 -
+ tools/testing/selftests/net/icmp_redirect.sh  |  2 -
+ tools/testing/selftests/net/lib.sh            |  2 +
+ .../testing/selftests/net/mptcp/mptcp_lib.sh  |  2 -
+ .../selftests/net/netfilter/br_netfilter.sh   |  3 -
+ .../selftests/net/netfilter/bridge_brouter.sh |  2 -
+ .../selftests/net/netfilter/conntrack_vrf.sh  |  3 -
+ tools/testing/selftests/net/netfilter/ipvs.sh |  6 --
+ .../selftests/net/netfilter/nft_fib.sh        |  2 -
+ .../selftests/net/netfilter/nft_nat_zones.sh  |  2 -
+ .../testing/selftests/net/netfilter/rpath.sh  | 18 ++--
+ .../selftests/net/srv6_end_dt46_l3vpn_test.sh |  5 --
+ .../selftests/net/srv6_end_dt4_l3vpn_test.sh  |  5 --
+ .../net/srv6_end_next_csid_l3vpn_test.sh      | 77 ++++-------------
+ .../net/srv6_end_x_next_csid_l3vpn_test.sh    | 83 +++++--------------
+ .../net/srv6_hencap_red_l3vpn_test.sh         | 74 ++++-------------
+ .../net/srv6_hl2encap_red_l2vpn_test.sh       | 77 ++++-------------
+ 19 files changed, 87 insertions(+), 331 deletions(-)
 
 -- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+2.46.0
+
