@@ -1,128 +1,101 @@
-Received: from mail-qv1-f44.google.com (mail-qv1-f44.google.com [209.85.219.44])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.uniroma2.it (smtp.uniroma2.it [160.80.4.32])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C5A092641C3
-	for <mptcp@lists.linux.dev>; Thu,  8 May 2025 09:42:05 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.219.44
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7A4EEA8
+	for <mptcp@lists.linux.dev>; Sun, 11 May 2025 01:42:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.80.4.32
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746697328; cv=none; b=mUI9N4hQCd1EM80JVEAvkI4XMN6vSBKt4yG1dS1lAcgQSONhj4ZSV4VtgKRZvOvrYM1IY2XF3JKGVc+QL4d83aY/oV/ADJ4CMlx5QlZ5MYEkO+NucZq0ND99wLb3tK+hN9YXheH/elKaC4yA1k3QelNdcDIi1NgcBJFqJuaJ6mA=
+	t=1746927775; cv=none; b=JRa/1vaHF+QVw293fy+mfTIrFSChJweKWq4A8mYwGR1IXZRNgtlVzNepzGs+EdTI0X++FjySYI0f3/SVbQVTmf/RIxOOKeb/xCTOrqPZYOdBxAM1XiCxIaMCq21Sh8JMvFOTc4M53tQzZmJIIcRkofVVET0jb1dO+Ca6QRtnaR0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746697328; c=relaxed/simple;
-	bh=WvqRSj/GQ1UitKibbGxtSL4lbxCGUlDYEfodUUw1sxI=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=DamKkdi/tS8p4C7AMISBMQZ8hsls9PnoxDrCvtO6U3divr4P6Gw56YbQ9LsN3hRciYteVixVQaKEUnLSU15eK8L1j6LmyXlmFFTuPkfGYYZ7uCFS2K/ZmPE+JTOOAzGw210iJsCYIwn1+Mn9Hyxm9LhpXFHEY+cEjDBlxevfHkc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aG9ImCn1; arc=none smtp.client-ip=209.85.219.44
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1746927775; c=relaxed/simple;
+	bh=Rs6jpnBP7P1WnzGa9WTZgmxvwHQOZBb+PfH5fr7joxQ=;
+	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
+	 Mime-Version:Content-Type; b=IvHwkYMuqRTC9qjMKTagKYc9EZmxVVNRZdMNI7c3jDl0q7nd5/WkqGbp6fG3hoDj3H//BsC2Av+1LOnMcHByoW0m65ub68wcSCAXZD5gHsVb/1FwZM39/Hrj2yF9K5gkuF8a7fGrXZB2V8JmEf9Zb+vUxSsOEeCurf+EExF2dzY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it; spf=pass smtp.mailfrom=uniroma2.it; dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b=fzfiC2Ct; dkim=pass (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b=uPhnhPGs; arc=none smtp.client-ip=160.80.4.32
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniroma2.it
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aG9ImCn1"
-Received: by mail-qv1-f44.google.com with SMTP id 6a1803df08f44-6f544014883so4717666d6.0
-        for <mptcp@lists.linux.dev>; Thu, 08 May 2025 02:42:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1746697324; x=1747302124; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=0uqC1gxbJe+jiVFgJx+sqtKU8YXFWSYunKezYGZJqag=;
-        b=aG9ImCn10W5jfv0OafmeTCDH6HNb6QbplUzQFAx4XDuGRHjH5dLFOxcse8t9nOqxYx
-         Wd2qZTH28IiH4td+BT1riOPFYY7vJJmRSH/hL6WnMLHgeyrNUiq7V4NSywTymINAJzf5
-         VIWrg1e83UB3TaQHq9HmO7sMleEC4JF7aY7PvRjEXjrrfgXbzJrKyRQUhzTzmr+saf5t
-         WnND4aTwDREtplKrzzWJrgNXLiXuv5NMqXYDtqR3DYyMILEzePpoZny3S6axGhv5mNYF
-         1CcgF8NDHoBHX9FqBA4flQGXrdphxhGm+/GaL0HmQeqQdFo3aRoMOAAVXv44AZZr0mXC
-         6wyg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1746697324; x=1747302124;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=0uqC1gxbJe+jiVFgJx+sqtKU8YXFWSYunKezYGZJqag=;
-        b=bN53yEsFIEGCaNzCm9IBtMOtBDsidnLIaapVuCnkUpJ9iHMhYoWfFgRX6ZZP+O3Jiw
-         5Ekk9NCcu7DggKiOYVE5Mwnqa31Q8QrX+rltQrhquhShjEgGp99uoG5wSBzUapisELBG
-         PBQdPLKHu8Q1ehCYK/hfWqAvdZ4veQnzghgiTjUEwnL9D8kksBlJY+uM0D5gIpQn1Jp3
-         PVgrRlPRs5bvdGx8Gq3jAA2bdOKjRXEV2ql0neKRherNpWJLzh1pSr9ABtuYRZGLkEpq
-         WpRAdrtJGBNIshh/J3AiWBhkYqI4FL1qoK6gVpEg6KNMFIlAxnhztGl6eb5voOafoUoe
-         tJuA==
-X-Gm-Message-State: AOJu0Yw++XiquvLldeGaihFcvDjYj0zds0QEQmMS1JjniqWf/mCdvVis
-	XuD9GbCKgKVdNL8B60siK5UQBFvdql637RKb9pUBJMdGzgNSgdw=
-X-Gm-Gg: ASbGncswK214tqm0qwzHIc7I3y+MjFS4ioS7PXf1TeOQkWl3lEg2FQwqGhpOuGuljpE
-	t7ZDj0ndyAuI23Z71+raY3lpVieq9T5WuPG4biZ/RKiOCxGJguQCxhZ9FBKZmBLqD7HAg+WlbLA
-	eKhl4GLTZaFKJmqbDGGBE722HqZgC/FlN1McgQcr3coNJ9uFjPzM4Ue0EsHwLiucb2WRU/jtWdP
-	HGTZmJdofI2OfB06kDh1qYXaI1o3kvjfXzZKMUHrFXGy7vb3aR+SpA6k4s5JCUWAPg158cLJWsl
-	iQi7eGuJtBsY29oxhfGiL1bv8iHjJ/lk8MTzBf7cEJ6fob5Chp08
-X-Google-Smtp-Source: AGHT+IF0plSZxMr/aE6mHaiO98DiFWAlNP5k1fzJI7HHUShGAtl1GEQ2k+BkQ586bwDWCBsykH4+YA==
-X-Received: by 2002:ad4:5aa4:0:b0:6e8:f3af:ed44 with SMTP id 6a1803df08f44-6f54c3a94dfmr34699786d6.12.1746697324598;
-        Thu, 08 May 2025 02:42:04 -0700 (PDT)
-Received: from [127.0.0.1] ([20.57.71.200])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6f5427b31a0sm31221086d6.113.2025.05.08.02.42.03
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 08 May 2025 02:42:04 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="fzfiC2Ct";
+	dkim=pass (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="uPhnhPGs"
+Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
+	by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 54B1YXnR024460;
+	Sun, 11 May 2025 03:34:39 +0200
+Received: from lubuntu-18.04 (unknown [160.80.103.126])
+	by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id A46BE12288E;
+	Sun, 11 May 2025 03:34:29 +0200 (CEST)
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
+	s=ed201904; t=1746927270; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofX56hdJp36rarI7IXO8x0nRNPdV54JQ4yA2f+BTyKs=;
+	b=fzfiC2Ct4a6SnKma4CIVLfAL9UyPHOlQI0zaCEeLA1kMgavI/qkeINJIeteYJRtFGdmv/1
+	Ol0rQxix6EiAxTCw==
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
+	t=1746927270; h=from:from:sender:reply-to:subject:subject:date:date:
+	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
+	 content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ofX56hdJp36rarI7IXO8x0nRNPdV54JQ4yA2f+BTyKs=;
+	b=uPhnhPGsWi/y8my6VOCZKHsvEmoF6BOkbNffNxISp2rxY0hP0DIqvUqytonz5mqQgA5rQu
+	p8QeCV7HwFSB10uD83gp9tu0KnMmaMZh/DSQ56RQ3eCIpAhLNII4zfeEZMxWZProA7oQKd
+	RSIbkjEmrSNKD+nGvDvJ2wnC9kWRXaURRebdw4seAAyj2L/qVKyiINxwjIF2elSzlj3SDL
+	kRKpGLBcbSPUZGS5JBQMv2FkztMzPW78CRHEnoQEnGpyg4gpVF2pQIQmNZy64WrivweW16
+	i9FeZUkpclGg/BtKaEO4UDPYUTnSGMMzH1Av0wXzXuNQRxLUHDs0MS1uEivtiQ==
+Date: Sun, 11 May 2025 03:34:29 +0200
+From: Andrea Mayer <andrea.mayer@uniroma2.it>
 To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <20250508081910.84216-1-liuhangbin@gmail.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
+        Eric
+ Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+        Paolo
+ Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+        Shuah Khan
+ <shuah@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
+        Mat Martineau
+ <martineau@kernel.org>,
+        Geliang Tang <geliang@kernel.org>,
+        Pablo Neira
+ Ayuso <pablo@netfilter.org>,
+        Jozsef Kadlecsik <kadlec@netfilter.org>,
+        Paolo
+ Lungaroni <paolo.lungaroni@uniroma2.it>,
+        linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
+        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
+        Andrea Mayer <andrea.mayer@uniroma2.it>
+Subject: Re: [PATCHv2 net-next 4/6] selftests: net: use setup_ns for SRv6
+ tests and remove rp_filter configuration
+Message-Id: <20250511033429.aabb9627fac2d36a61c3d64d@uniroma2.it>
+In-Reply-To: <20250508081910.84216-5-liuhangbin@gmail.com>
 References: <20250508081910.84216-1-liuhangbin@gmail.com>
-Subject: Re: [PATCHv2 net-next 0/6] selftests: net: configure rp_filter in
- setup_ns
-Message-ID: <77133da2-529c-7868-715f-df8eac95f11e@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 08 May 2025 09:42:03 +0000
+	<20250508081910.84216-5-liuhangbin@gmail.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-MIME-Version: 1.0
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
+X-Virus-Status: Clean
 
-Hi Hangbin,
+On Thu,  8 May 2025 08:19:08 +0000
+Hangbin Liu <liuhangbin@gmail.com> wrote:
 
-Thank you for your modifications, that's great!
+> Some SRv6 tests manually set up network namespaces and disable rp_filter.
+> Since the setup_ns library function already handles rp_filter configuration,
+> convert these SRv6 tests to use setup_ns and remove the redundant rp_filter
+> settings.
+> 
+> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
 
-Our CI did some validations and here is its report:
+Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/14902280970
+Changes look good to me.
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/4395dffc7a5a
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D960799
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
+Thanks,
+Andrea
