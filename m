@@ -1,101 +1,151 @@
-Received: from smtp.uniroma2.it (smtp.uniroma2.it [160.80.4.32])
+Received: from galois.linutronix.de (Galois.linutronix.de [193.142.43.55])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9A7A4EEA8
-	for <mptcp@lists.linux.dev>; Sun, 11 May 2025 01:42:52 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=160.80.4.32
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 00F1B267AFC;
+	Mon, 12 May 2025 09:27:48 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=193.142.43.55
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1746927775; cv=none; b=JRa/1vaHF+QVw293fy+mfTIrFSChJweKWq4A8mYwGR1IXZRNgtlVzNepzGs+EdTI0X++FjySYI0f3/SVbQVTmf/RIxOOKeb/xCTOrqPZYOdBxAM1XiCxIaMCq21Sh8JMvFOTc4M53tQzZmJIIcRkofVVET0jb1dO+Ca6QRtnaR0=
+	t=1747042071; cv=none; b=hIo5io8vWeqBHP5irFKDvJwiUbCZ7fQQxPiTfCJ0tmQqaTUFCQZCGYLC9QK3j7zg4TjE086kF/yqvgiXCOaXjn1ALZHBUdVA2JOr6XgkXUQ/5tWyGJ+1qXJK8RdRfcHmTfAgXP8k5WWtsX00cRLSDUrFCMJCA6msyXGpIXYNTDQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1746927775; c=relaxed/simple;
-	bh=Rs6jpnBP7P1WnzGa9WTZgmxvwHQOZBb+PfH5fr7joxQ=;
-	h=Date:From:To:Cc:Subject:Message-Id:In-Reply-To:References:
-	 Mime-Version:Content-Type; b=IvHwkYMuqRTC9qjMKTagKYc9EZmxVVNRZdMNI7c3jDl0q7nd5/WkqGbp6fG3hoDj3H//BsC2Av+1LOnMcHByoW0m65ub68wcSCAXZD5gHsVb/1FwZM39/Hrj2yF9K5gkuF8a7fGrXZB2V8JmEf9Zb+vUxSsOEeCurf+EExF2dzY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it; spf=pass smtp.mailfrom=uniroma2.it; dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b=fzfiC2Ct; dkim=pass (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b=uPhnhPGs; arc=none smtp.client-ip=160.80.4.32
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=uniroma2.it
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=uniroma2.it
+	s=arc-20240116; t=1747042071; c=relaxed/simple;
+	bh=VXleKi/U/kMgP7jABQMiZxQCqP98FQpEysCuzMoNYOk=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=OycCuNr3LrUSU2RPBw6oChiSgAsbB6oPOWan6+R6pni8h+Yr4A6JARsegmvR2LVkOimMQv8+8ObEBOfIElAxks6J90VDWmKGWTK0cyHwjW7lOGYzJgWqEBep5lSqtqt8QOUCPGhF5lvnqkoU/ljnbzXqZx5Ocguz//mWB6nRK4I=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de; spf=pass smtp.mailfrom=linutronix.de; dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=vY/0/WVH; dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b=cTCln+Tg; arc=none smtp.client-ip=193.142.43.55
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linutronix.de
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linutronix.de
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=permerror (0-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="fzfiC2Ct";
-	dkim=pass (2048-bit key) header.d=uniroma2.it header.i=@uniroma2.it header.b="uPhnhPGs"
-Received: from smtpauth-2019-1.uniroma2.it (smtpauth.uniroma2.it [160.80.5.46])
-	by smtp-2015.uniroma2.it (8.14.4/8.14.4/Debian-8) with ESMTP id 54B1YXnR024460;
-	Sun, 11 May 2025 03:34:39 +0200
-Received: from lubuntu-18.04 (unknown [160.80.103.126])
-	by smtpauth-2019-1.uniroma2.it (Postfix) with ESMTPSA id A46BE12288E;
-	Sun, 11 May 2025 03:34:29 +0200 (CEST)
-DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=uniroma2.it;
-	s=ed201904; t=1746927270; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	dkim=pass (2048-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="vY/0/WVH";
+	dkim=permerror (0-bit key) header.d=linutronix.de header.i=@linutronix.de header.b="cTCln+Tg"
+From: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020; t=1747042067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ofX56hdJp36rarI7IXO8x0nRNPdV54JQ4yA2f+BTyKs=;
-	b=fzfiC2Ct4a6SnKma4CIVLfAL9UyPHOlQI0zaCEeLA1kMgavI/qkeINJIeteYJRtFGdmv/1
-	Ol0rQxix6EiAxTCw==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=uniroma2.it; s=rsa201904;
-	t=1746927270; h=from:from:sender:reply-to:subject:subject:date:date:
-	 message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-	 content-type:content-type:
+	bh=qqlT1nY5GZsGQPH1WnHjRykG1pCxKAGysrL3Y4gboDY=;
+	b=vY/0/WVHE2Kh0Lty8SbEQ0pxO7rnjMQnxHvhCtQ7onLBIxCaVcjSWKMAkJKVBmeH5OJ6kB
+	TVvA0LvM5lcxMRNkso+MsCJfhXT6nxhDCgXG2xyOXV5kR4kHXJf9wgb12ISP1LUEFGcOhy
+	1c2TDJpCLdMVN4cfStdN5hDWrAKah6HPwfrgy0CYrjbiRE6Mao+WNqDNu6bt3M4SSBl8Vn
+	s7m+M+TCPCEg6Qa5f/eXWkHq5bRNz1Oay1di6mxlz2egPFB1B65sq4HaOtxQR2fFk8Z++K
+	vo0qtgMbZW5yxxBpRGL8Ux44kH/T7tZ6WDOQ+tLwJ3vtQoVl/bmUIe1H/9U2yw==
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=linutronix.de;
+	s=2020e; t=1747042067;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ofX56hdJp36rarI7IXO8x0nRNPdV54JQ4yA2f+BTyKs=;
-	b=uPhnhPGsWi/y8my6VOCZKHsvEmoF6BOkbNffNxISp2rxY0hP0DIqvUqytonz5mqQgA5rQu
-	p8QeCV7HwFSB10uD83gp9tu0KnMmaMZh/DSQ56RQ3eCIpAhLNII4zfeEZMxWZProA7oQKd
-	RSIbkjEmrSNKD+nGvDvJ2wnC9kWRXaURRebdw4seAAyj2L/qVKyiINxwjIF2elSzlj3SDL
-	kRKpGLBcbSPUZGS5JBQMv2FkztMzPW78CRHEnoQEnGpyg4gpVF2pQIQmNZy64WrivweW16
-	i9FeZUkpclGg/BtKaEO4UDPYUTnSGMMzH1Av0wXzXuNQRxLUHDs0MS1uEivtiQ==
-Date: Sun, 11 May 2025 03:34:29 +0200
-From: Andrea Mayer <andrea.mayer@uniroma2.it>
-To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-        Eric
- Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
-        Paolo
- Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
-        Shuah Khan
- <shuah@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
-        Mat Martineau
- <martineau@kernel.org>,
-        Geliang Tang <geliang@kernel.org>,
-        Pablo Neira
- Ayuso <pablo@netfilter.org>,
-        Jozsef Kadlecsik <kadlec@netfilter.org>,
-        Paolo
- Lungaroni <paolo.lungaroni@uniroma2.it>,
-        linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
-        netfilter-devel@vger.kernel.org, coreteam@netfilter.org,
-        Andrea Mayer <andrea.mayer@uniroma2.it>
-Subject: Re: [PATCHv2 net-next 4/6] selftests: net: use setup_ns for SRv6
- tests and remove rp_filter configuration
-Message-Id: <20250511033429.aabb9627fac2d36a61c3d64d@uniroma2.it>
-In-Reply-To: <20250508081910.84216-5-liuhangbin@gmail.com>
-References: <20250508081910.84216-1-liuhangbin@gmail.com>
-	<20250508081910.84216-5-liuhangbin@gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+	bh=qqlT1nY5GZsGQPH1WnHjRykG1pCxKAGysrL3Y4gboDY=;
+	b=cTCln+TgL4Q8HPXyPPIvzWnnmeP7qtVA/FTQQiElQKZlvk7MEskxG0khpq0eFe3yspK2Ai
+	+2v2UFcOoPIlbSDw==
+To: netdev@vger.kernel.org,
+	linux-rt-devel@lists.linux.dev
+Cc: "David S. Miller" <davem@davemloft.net>,
+	Eric Dumazet <edumazet@google.com>,
+	Jakub Kicinski <kuba@kernel.org>,
+	Paolo Abeni <pabeni@redhat.com>,
+	Simon Horman <horms@kernel.org>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Matthieu Baerts <matttbe@kernel.org>,
+	Mat Martineau <martineau@kernel.org>,
+	Geliang Tang <geliang@kernel.org>,
+	mptcp@lists.linux.dev
+Subject: [PATCH net-next v4 12/15] mptcp: Use nested-BH locking for hmac_storage
+Date: Mon, 12 May 2025 11:27:33 +0200
+Message-ID: <20250512092736.229935-13-bigeasy@linutronix.de>
+In-Reply-To: <20250512092736.229935-1-bigeasy@linutronix.de>
+References: <20250512092736.229935-1-bigeasy@linutronix.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Virus-Scanned: clamav-milter 0.100.0 at smtp-2015
-X-Virus-Status: Clean
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 
-On Thu,  8 May 2025 08:19:08 +0000
-Hangbin Liu <liuhangbin@gmail.com> wrote:
+mptcp_delegated_actions is a per-CPU variable and relies on disabled BH for=
+ its
+locking. Without per-CPU locking in local_bh_disable() on PREEMPT_RT this d=
+ata
+structure requires explicit locking.
 
-> Some SRv6 tests manually set up network namespaces and disable rp_filter.
-> Since the setup_ns library function already handles rp_filter configuration,
-> convert these SRv6 tests to use setup_ns and remove the redundant rp_filter
-> settings.
-> 
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Add a local_lock_t to the data structure and use local_lock_nested_bh() for
+locking. This change adds only lockdep coverage and does not alter the
+functional behaviour for !PREEMPT_RT.
 
-Acked-by: Andrea Mayer <andrea.mayer@uniroma2.it>
+Cc: Matthieu Baerts <matttbe@kernel.org>
+Cc: Mat Martineau <martineau@kernel.org>
+Cc: Geliang Tang <geliang@kernel.org>
+Cc: mptcp@lists.linux.dev
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+---
+ net/mptcp/protocol.c | 4 +++-
+ net/mptcp/protocol.h | 9 ++++++++-
+ 2 files changed, 11 insertions(+), 2 deletions(-)
 
-Changes look good to me.
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 44f7ab463d755..b6cb93a3f9a2d 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -46,7 +46,9 @@ static struct percpu_counter mptcp_sockets_allocated ____=
+cacheline_aligned_in_sm
+ static void __mptcp_destroy_sock(struct sock *sk);
+ static void mptcp_check_send_data_fin(struct sock *sk);
+=20
+-DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions);
++DEFINE_PER_CPU(struct mptcp_delegated_action, mptcp_delegated_actions) =3D=
+ {
++	.bh_lock =3D INIT_LOCAL_LOCK(bh_lock),
++};
+ static struct net_device *mptcp_napi_dev;
+=20
+ /* Returns end sequence number of the receiver's advertised window */
+diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+index d409586b5977f..88cc2a857adce 100644
+--- a/net/mptcp/protocol.h
++++ b/net/mptcp/protocol.h
+@@ -479,6 +479,7 @@ mptcp_subflow_rsk(const struct request_sock *rsk)
+=20
+ struct mptcp_delegated_action {
+ 	struct napi_struct napi;
++	local_lock_t bh_lock;
+ 	struct list_head head;
+ };
+=20
+@@ -670,9 +671,11 @@ static inline void mptcp_subflow_delegate(struct mptcp=
+_subflow_context *subflow,
+ 		if (WARN_ON_ONCE(!list_empty(&subflow->delegated_node)))
+ 			return;
+=20
++		local_lock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		delegated =3D this_cpu_ptr(&mptcp_delegated_actions);
+ 		schedule =3D list_empty(&delegated->head);
+ 		list_add_tail(&subflow->delegated_node, &delegated->head);
++		local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		sock_hold(mptcp_subflow_tcp_sock(subflow));
+ 		if (schedule)
+ 			napi_schedule(&delegated->napi);
+@@ -684,11 +687,15 @@ mptcp_subflow_delegated_next(struct mptcp_delegated_a=
+ction *delegated)
+ {
+ 	struct mptcp_subflow_context *ret;
+=20
+-	if (list_empty(&delegated->head))
++	local_lock_nested_bh(&mptcp_delegated_actions.bh_lock);
++	if (list_empty(&delegated->head)) {
++		local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 		return NULL;
++	}
+=20
+ 	ret =3D list_first_entry(&delegated->head, struct mptcp_subflow_context, =
+delegated_node);
+ 	list_del_init(&ret->delegated_node);
++	local_unlock_nested_bh(&mptcp_delegated_actions.bh_lock);
+ 	return ret;
+ }
+=20
+--=20
+2.49.0
 
-Thanks,
-Andrea
