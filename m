@@ -1,70 +1,94 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A607178F43;
-	Mon, 12 May 2025 16:05:04 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 3B59D18801A;
+	Tue, 13 May 2025 01:20:04 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747065904; cv=none; b=UxC7849j0C34QbLbWNHpbjioWkbqmGxkWFZsWRmG8IUZlXS03ucpYsxItk/i8GgrCyzOGXumqABu6G7uvdPIa4il1z7Tr2QZhC4CShvtj9vcKhCQqoY5AD6q11e2j/dlybxJiNM1xdEtkFdzBmsJwQS20c8Bxw5SAznpPIYqPqc=
+	t=1747099204; cv=none; b=t/Ur1COhyAwgcbXxztanGBOjuy+DoLDU7K3Qlvz1LCf27e5HPTJ1fiYn49VAQ0jQjvyWZV9q5kZ7y2UMglavBLlFd0noIilCXvnX1hE+4KH7hNlXwdvD2Pm+CbWxY77vJZnOroy9LT/GEnYdmEAb3S5R8z99XQadiozreNlN3ys=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747065904; c=relaxed/simple;
-	bh=1pwDJ0TsUrJ7i5wx/D/54PdIN0DS6dloMGFNVTqGk/Q=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=ZjRhkTeG6p8SDH1r5ypMX++/GMa7AO1c2poCQ8huRkm0JFnpy9HYMpzZDvGwIi4qJ2S3NMWk+SVC+X33LK0qBuCmX/huwKz2bMO/F0FJjHHVHciqHp8igVWYd9R9+/YTys8eqiLFQFzJuO/+RxmHAfYQ7sDDfZkH/673NpUbsQg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ERDx+8Bh; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747099204; c=relaxed/simple;
+	bh=sslyGTU85f2eU24gI1dxVCSsgVSNmlvtO/AEU8RERzQ=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=obJB6pBUbKBZbVWYz2JAncfz1NCobJVYL07C67J7RBTiIoCRxyoF4MuCxTu+2gRvkAjnYCT/1S0YYNAAuTepBqqlx5YR4qozM+CraBcxyN7vvhFYvnm6sXhhVyxkdSMNbdDuuWTiyXgi73F91XVx2s8KZqDTyzcXg5T66uHoNhk=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=mxM2OpZa; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ERDx+8Bh"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2246C4CEE7;
-	Mon, 12 May 2025 16:05:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="mxM2OpZa"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 091DFC4CEF0;
+	Tue, 13 May 2025 01:20:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747065904;
-	bh=1pwDJ0TsUrJ7i5wx/D/54PdIN0DS6dloMGFNVTqGk/Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=ERDx+8Bh8EyBLNJFoNikOfiMX5UYwe9q1g7FuZVRJpNdrdiGEIALqd8yViVlqhEzr
-	 aR66tZiDui/Ne+2aOFAx5Glqbw2RFPk386x6fEdv1413t9NcfFfpnIbB7tv4Ki/kEE
-	 3Nrk0mCM4uxdvS+c7PM2BvGxPBoJ0Qv2SZ5JKNhCIJuGbKE4vkZxUJS9Q30P6PHJWc
-	 QRjNIyKxD97tEJgjB0/loyXhVnM/jyjs9j68Cz6BRGDjOTZxV0M6/h+P8eUxmtWROh
-	 LUrEWYPJIY1eH/vKUf/MrVmM1hmVJU00jl/N3aLdwLB8vu/l3vCQ3cB8DnuKiSzZhB
-	 wNbWK5do1CpHw==
-Date: Mon, 12 May 2025 17:04:58 +0100
-From: Simon Horman <horms@kernel.org>
-To: Hangbin Liu <liuhangbin@gmail.com>
-Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>,
-	Eric Dumazet <edumazet@google.com>,
-	Jakub Kicinski <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>,
-	Shuah Khan <shuah@kernel.org>, Matthieu Baerts <matttbe@kernel.org>,
-	Mat Martineau <martineau@kernel.org>,
-	Geliang Tang <geliang@kernel.org>,
-	Pablo Neira Ayuso <pablo@netfilter.org>,
-	Jozsef Kadlecsik <kadlec@netfilter.org>,
-	Andrea Mayer <andrea.mayer@uniroma2.it>,
-	Paolo Lungaroni <paolo.lungaroni@uniroma2.it>,
-	linux-kselftest@vger.kernel.org, mptcp@lists.linux.dev,
-	netfilter-devel@vger.kernel.org, coreteam@netfilter.org
-Subject: Re: [PATCHv2 net-next 3/6] selftests: net: use setup_ns for bareudp
- testing
-Message-ID: <20250512160458.GQ3339421@horms.kernel.org>
-References: <20250508081910.84216-1-liuhangbin@gmail.com>
- <20250508081910.84216-4-liuhangbin@gmail.com>
+	s=k20201202; t=1747099204;
+	bh=sslyGTU85f2eU24gI1dxVCSsgVSNmlvtO/AEU8RERzQ=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=mxM2OpZaul2K7xqeHDEAMMXW8aAyPjLdLGp3SXFyngTT1gTM9jH1NaTckRErMYeBt
+	 7P9D3swsq1jscR9BxMlPvP6+t40G8vHpQY3Sxz7aAr2pfSsLelPz3wR5qXyvlh05MQ
+	 Rxf8VlFurdNKu7lXCm/qpoRluHQD/Bp6JF/tpWnyBRWqR6mVIJmhfIIx9xKjh1/ATc
+	 dpXpE+x7iLgD7qusREZN6GaQZphRzMJjxrihY+kplCSL+kC1sUdadl+MYeammiqROY
+	 8yamFeuI9M84+jMamd0QhbYpVncqSJTTdCynowqDQPvEQoW6BCXhMhMX58QMrlFmAL
+	 qTHI8fcEc3BhA==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id EAD1639D60BA;
+	Tue, 13 May 2025 01:20:42 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20250508081910.84216-4-liuhangbin@gmail.com>
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCHv2 net-next 0/6] selftests: net: configure rp_filter in
+ setup_ns
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174709924174.1134434.13855187594239481377.git-patchwork-notify@kernel.org>
+Date: Tue, 13 May 2025 01:20:41 +0000
+References: <20250508081910.84216-1-liuhangbin@gmail.com>
+In-Reply-To: <20250508081910.84216-1-liuhangbin@gmail.com>
+To: Hangbin Liu <liuhangbin@gmail.com>
+Cc: netdev@vger.kernel.org, davem@davemloft.net, edumazet@google.com,
+ kuba@kernel.org, pabeni@redhat.com, horms@kernel.org, shuah@kernel.org,
+ matttbe@kernel.org, martineau@kernel.org, geliang@kernel.org,
+ pablo@netfilter.org, kadlec@netfilter.org, andrea.mayer@uniroma2.it,
+ paolo.lungaroni@uniroma2.it, linux-kselftest@vger.kernel.org,
+ mptcp@lists.linux.dev, netfilter-devel@vger.kernel.org,
+ coreteam@netfilter.org
 
-On Thu, May 08, 2025 at 08:19:07AM +0000, Hangbin Liu wrote:
-> Switch bareudp testing to use setup_ns, which sets up rp_filter by default.
-> This allows us to remove the manual rp_filter configuration from the script.
-> 
-> Additionally, since setup_ns handles namespace naming and cleanup, we no
-> longer need a separate cleanup function. We also move the trap setup earlier
-> in the script, before the test setup begins.
-> 
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+Hello:
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
+
+On Thu,  8 May 2025 08:19:04 +0000 you wrote:
+> Some distributions enable rp_filter globally by default, which can interfere
+> with various test cases. To address this, many tests explicitly disable
+> rp_filter within their scripts.
+> 
+> To avoid duplication and ensure consistent behavior across tests, this patch
+> moves the rp_filter configuration into setup_ns, applied immediately after a
+> new namespace is created. This change ensures that all namespace-based tests
+> inherit the appropriate rp_filter settings, simplifying individual test
+> scripts and improving maintainability.
+> 
+> [...]
+
+Here is the summary with links:
+  - [PATCHv2,net-next,1/6] selftests: net: disable rp_filter after namespace initialization
+    https://git.kernel.org/netdev/net-next/c/ce17831f8e97
+  - [PATCHv2,net-next,2/6] selftests: net: remove redundant rp_filter configuration
+    https://git.kernel.org/netdev/net-next/c/50ad88d57631
+  - [PATCHv2,net-next,3/6] selftests: net: use setup_ns for bareudp testing
+    https://git.kernel.org/netdev/net-next/c/69ea46e7d00e
+  - [PATCHv2,net-next,4/6] selftests: net: use setup_ns for SRv6 tests and remove rp_filter configuration
+    https://git.kernel.org/netdev/net-next/c/3f68f59e9593
+  - [PATCHv2,net-next,5/6] selftests: netfilter: remove rp_filter configuration
+    https://git.kernel.org/netdev/net-next/c/7c8b89ec506e
+  - [PATCHv2,net-next,6/6] selftests: mptcp: remove rp_filter configuration
+    https://git.kernel.org/netdev/net-next/c/b83d98c1db29
+
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
+
 
