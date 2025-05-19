@@ -1,179 +1,238 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-pl1-f171.google.com (mail-pl1-f171.google.com [209.85.214.171])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 152861E9B2F
-	for <mptcp@lists.linux.dev>; Mon, 19 May 2025 16:47:14 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5A0D7288C36
+	for <mptcp@lists.linux.dev>; Mon, 19 May 2025 17:43:09 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.171
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747673235; cv=none; b=pu2e8C1dwvdUbiTsFFztQtv4UoUCC7BDU6x4k8oz7BrPAvmuh9P8Ns5GZ7IaV3nUzURRNVcCvbkFWtwZnP/FuUQnxsMjV+aMCJOY/MVi69Evq1vkr14+sMn16/8gzH7d2ZLagDVCemP51x1OUy8OkXdm1SmT4fh/C+eM+an9vjQ=
+	t=1747676591; cv=none; b=VFv+KORFbmhmE89zWYGP1ysHkXodXnrHLcWfObGPV+J/veFH7blT3ZI3EhHojW+F6M89bGNlxvya4TX/Uqh42IrlRfKwHUVjgD08QPNvvxhGkX5fZX2QFw3gAWqPFsgQgoCqwgi1q3i/w9xGDnfBXNxykRxMEWzxgOk7ZUiA9sw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747673235; c=relaxed/simple;
-	bh=m/eg2CZ2UIye/6HXup4Je4I9YHRj42eS4vUxnIrM27s=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
-	 In-Reply-To:Content-Type; b=qr8O+xhVQROh6DznZtH/x08GZHRrMSZMLLHeXGcIwhz/otSBtRLtujO+IZjXfSp6pFylWeQrM5SPxEYGSd3ZowpVyyQPwGOUu49FJgqtuJreJLYxvQTwOokTDya/itZPfJ29/VVjKtYqyukxcxA4jr9mOEq8GXaoG0GPUy0yjFI=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=MquhX7mk; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747676591; c=relaxed/simple;
+	bh=afb3rzV8+h0ncEe/UUOl3c8pyZ4EGt3ko4mITD5ZJnY=;
+	h=Date:From:Subject:To:Cc:Message-Id:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=pUAJ18H3Aus4fSgTd+AC22H7njLcupCzGNlIRxmggWIYA6/7jZkX3KfroNhQY+e8/JjTtHshrAyqLKWp+/dscvkx2pLc756RqbPPoWCjWmI8ktMWJ8IhsK735cdkUE9nymrD5Rtmhnh8+gk+LB57WA4oldlLlOvND7kdRrFiFnY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net; spf=pass smtp.mailfrom=unrealasia.net; dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b=nZAMxeK6; arc=none smtp.client-ip=209.85.214.171
+Authentication-Results: smtp.subspace.kernel.org; dmarc=none (p=none dis=none) header.from=unrealasia.net
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=unrealasia.net
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="MquhX7mk"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D828CC4CEE4;
-	Mon, 19 May 2025 16:47:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747673234;
-	bh=m/eg2CZ2UIye/6HXup4Je4I9YHRj42eS4vUxnIrM27s=;
-	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
-	b=MquhX7mkdj3IWbzBoxIF2XGcuNdfxL+eCrPcUXPKm8YrqoT79R21r4yEpwGAqmEQ0
-	 5XtGaZ3gl0FCr0fhH9S+Ddw39gsfIinT/gEdDCxUe1u5WgTJQoWp6/l8l2q40xo+w4
-	 OirBerQO3VU1jW2QZ2MAO6pUOuR00mUNyRRoJ7C7h45PWdW4p8BptgX+8B5pn8mTxE
-	 mxgsaktpBWKdVhPZ6UiDhJeqDn36qYz/TUTVJDr09Td6gQk1HxYecvqAxYwGUvWJy7
-	 /dFx/5jBg6JshWU5wqOKEv2SLikzEgeBejsZAyXkvVZJCHnI+67cnPM9f1y63OIr1s
-	 3uWLznIACz9bw==
-Message-ID: <305297b3-0911-402c-ab73-11de793881e7@kernel.org>
-Date: Mon, 19 May 2025 18:47:10 +0200
+	dkim=pass (2048-bit key) header.d=unrealasia-net.20230601.gappssmtp.com header.i=@unrealasia-net.20230601.gappssmtp.com header.b="nZAMxeK6"
+Received: by mail-pl1-f171.google.com with SMTP id d9443c01a7336-23274dbcbc2so3162275ad.1
+        for <mptcp@lists.linux.dev>; Mon, 19 May 2025 10:43:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=unrealasia-net.20230601.gappssmtp.com; s=20230601; t=1747676588; x=1748281388; darn=lists.linux.dev;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:from:to:cc:subject:date:message-id:reply-to;
+        bh=6D3C/1YkgWQlDT8+U7H2jg0toRVwhAzg/Ww4RU+uAWQ=;
+        b=nZAMxeK6TWtDyBZWH/+pxEup+J6WWuZfY/V9lJCI3ZupV4zMz1axICYgsg+/z4eoTF
+         8LUeWysuf8jYOSoDZZDG3O098ESufp4hMTSNT4Td7J6WjX5NQwjPsYKY2T16Mz3RcuUR
+         FSMbvzloEWLDzeB5XHlXXHjp1NvtfwDe2ZdKCNVuotma/JOmXGvuvR78z+928XiNavQd
+         +luhe7PHIfdxZH3nkNfV78Er8F9hoT9Zh4GIIq9vneFiA74E0p+3B7MNAcJIzylQt3o5
+         9lnxwCHQoEUK94rD7wUsn4Y+kdChVv7MKbu1oMyNHzUEG+rFxi5zpBipy1TbDJXVi2Wh
+         9BrA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1747676588; x=1748281388;
+        h=mime-version:references:in-reply-to:message-id:cc:to:subject:from
+         :date:x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=6D3C/1YkgWQlDT8+U7H2jg0toRVwhAzg/Ww4RU+uAWQ=;
+        b=ZT2iSO5wJ1mC3CcpVJkhJiUTHcZrbMmogxbtOStZpAZBbm4V0Gn9Fenp8dJKKJ5PbF
+         /KPfsCoQRj0EK1Wy92QwlC6ZcATLJGr9usaE4aMRqaxPh5z02wt9F9gW4n94emUo7UVv
+         thzp/SIZXtN3/yPMmrGDlACWrH8H53a35MCyRkIf8Tq8oLmRNRlzpoKBwa5XiCnVtrsJ
+         sLRgu2P+KTgyk1lf8D2kNEOFqZfyBidVcGWyKxRFcpwW8ec2Se5wZX8xDB4CF1SsH4fB
+         YM1IUxSO/V/uuTrnsHVBkalAilf4rENYQaRvixAsvkcfcU8G6HWPXBQX+6XUIjW57q1X
+         gkOQ==
+X-Gm-Message-State: AOJu0YzTQCSGFOmGF3X8Gat5DquQN32HCSfU+qNB4xovBQPfv11e/GIq
+	Wr+pIRRa+xaTrb0zb1uo5iLTpJ+4XhYzuS27pFlBHBB/eFib1eowLxYsG5Lq9dEOsHI=
+X-Gm-Gg: ASbGnctIXw0Xjp5lYHmkrKgsQ9rqeAsuHwspnqSPSMI4CTiRreMkc+xxvIgjq7xR8e5
+	aM/xfVL7vHhG4E1quGqnr5YX3D6TKLZLXQ1FPvfJZnHdKHBS2Q140+1XfTosNDXR+7HJavw/WKH
+	dHJJ3bvdGMqYDE5Fl+wRHz3L5gLI31mKB/97OIjBCC39Mb+/1C4bp94ReFqn/0tjFmF2PHCa9N/
+	lymS5mnxGf8i+aK0TwYeVGkqWNAznfLRftarWFeQ3Xnq7Ygx9k7x2t/LxR73OJfgdeeRNTHFSYA
+	lbywiNGU+FcmnwG128LiBIGqiMDp95qOwCg6xvUlo2m1z7nuevEQ8SII5sZExsgp/w==
+X-Google-Smtp-Source: AGHT+IG5X+RsqKM35sENQbUlpWdSR0eQpqS3xH3JfUgB44sz5uIeJvtWzcRI5EaYk6dqBlm7kbcEyQ==
+X-Received: by 2002:a17:902:e808:b0:22f:c19c:810c with SMTP id d9443c01a7336-231de3bad0dmr154200065ad.51.1747676588400;
+        Mon, 19 May 2025 10:43:08 -0700 (PDT)
+Received: from muhammads-ThinkPad ([2402:1980:2a3:6667:81ad:dc5c:b828:4b13])
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-30e334e2907sm10622934a91.36.2025.05.19.10.43.06
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 19 May 2025 10:43:07 -0700 (PDT)
+Date: Tue, 20 May 2025 01:42:59 +0800
+From: Muhammad Nuzaihan <zaihan@unrealasia.net>
+Subject: Re: MPTCP support for git (on Linux)
+To: Matthieu Baerts <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev
+Message-Id: <NVRIWS.HAQBNXTEKXJO2@unrealasia.net>
+In-Reply-To: <305297b3-0911-402c-ab73-11de793881e7@kernel.org>
+References:
+	<CACNYkD4fBm6FDDUNbBY7Uc3MkONF7A7UDNajkTP4Xc4nfvWXZw@mail.gmail.com>
+	<305297b3-0911-402c-ab73-11de793881e7@kernel.org>
+X-Mailer: geary/40.0
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: MPTCP support for git (on Linux)
-Content-Language: en-GB, fr-BE
-To: Muhammad Nuzaihan <zaihan@unrealasia.net>
-References: <CACNYkD4fBm6FDDUNbBY7Uc3MkONF7A7UDNajkTP4Xc4nfvWXZw@mail.gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <CACNYkD4fBm6FDDUNbBY7Uc3MkONF7A7UDNajkTP4Xc4nfvWXZw@mail.gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii; format=flowed
 
-Hi Muhammad
+Hi Matt!
 
-On 19/05/2025 13:02, Muhammad Nuzaihan wrote:
-> Hi,
+Great to hear from you.
+
+On Mon, May 19 2025 at 06:47:10 PM +0200, Matthieu Baerts 
+<matttbe@kernel.org> wrote:
+> Hi Muhammad
 > 
-> I don't know matt's email address so i am reaching out here.
+> On 19/05/2025 13:02, Muhammad Nuzaihan wrote:
+>>  Hi,
+>> 
+>>  I don't know matt's email address so i am reaching out here.
+>> 
+>>  I have currently added support for the git protocol (not git over 
+>> ssh
+>>  or git over http) and you can find the patch here:
+>> 
+>>  
+>> https://lore.kernel.org/git/4A7FWS.KARM6LOQBQ5S3@unrealasia.net/T/#m43718b0ad86f1f70b425a913dde63a09ff56b758
 > 
-> I have currently added support for the git protocol (not git over ssh
-> or git over http) and you can find the patch here:
+> Thank you for suggesting this and telling us about that here.
 > 
-> https://lore.kernel.org/git/4A7FWS.KARM6LOQBQ5S3@unrealasia.net/T/#m43718b0ad86f1f70b425a913dde63a09ff56b758
+> I think it might help to reduce the size of the patch to get this
+> feature accepted. You can eventually do that by modifying how socket()
+> is called to use IPPROTO_MPTCP instead of IPPROTO_TCP or 0. In other
+> words, no need to modify the arguments passed to getaddrinfo(): it
+> supports MPTCP only since recently, and not particularly needed, just 
+> to
+> change one parameter.
 
-Thank you for suggesting this and telling us about that here.
+I feel my code is a bit huge as well. I did this over last weekend to 
+look at
+the git and made that quick patch. the git developers weren't too 
+helpful and
+it's just that everyone seems pessimistic about mptcp.
 
-I think it might help to reduce the size of the patch to get this
-feature accepted. You can eventually do that by modifying how socket()
-is called to use IPPROTO_MPTCP instead of IPPROTO_TCP or 0. In other
-words, no need to modify the arguments passed to getaddrinfo(): it
-supports MPTCP only since recently, and not particularly needed, just to
-change one parameter.
+The first concern from the git mailing list was the 2022 CVE about the 
+crash
+because of backpressure in mptcp and i do not find the comment about it 
+reasonable
+as the bug was a long time ago and RedHat/Debian would have backported 
+the patch.
 
-Also, if MPTCP is opt-in, then no need to check for the kernel version,
-the errors, etc. simply abort.
+First it was chromium and i hope git project maintainers could look at 
+it differently.
 
-In other words, the modifications could look like this:
+It's not the first time as i had to faced something similar to this as 
+previously
+was with IPv6 decades ago.
 
-      sockfd = socket(ai->ai_family, ai->ai_socktype,
-  #ifdef IPPROTO_MPTCP
-                      needs_mptcp() ? IPPROTO_MPTCP :
-  #endif
-                      ai->ai_protocol);
+Anyway,
 
-(+ the needs_mptcp() helper or just checking for the 'mptcp' var)
+So i'll just revert the part of code that i made a check for 
+getaddrinfo() then.
+> 
+> Also, if MPTCP is opt-in, then no need to check for the kernel 
+> version,
+> the errors, etc. simply abort.
+> 
+> In other words, the modifications could look like this:
+> 
+>       sockfd = socket(ai->ai_family, ai->ai_socktype,
+>   #ifdef IPPROTO_MPTCP
+>                       needs_mptcp() ? IPPROTO_MPTCP :
+>   #endif
+>                       ai->ai_protocol);
+> 
+> (+ the needs_mptcp() helper or just checking for the 'mptcp' var)
 
+ah! my old mistake, i always forget about using ternary operators.
+> 
+> 
+> On the client side, it looks strange to me to look at an env var. Is 
+> it
+> common in Git? Can you not use a new entry in the Git config instead?
+> (If we have to set an env var before each Git commands, maybe even
+> easier to use 'mptcpize run git (...)'.)
 
-On the client side, it looks strange to me to look at an env var. Is it
-common in Git? Can you not use a new entry in the Git config instead?
-(If we have to set an env var before each Git commands, maybe even
-easier to use 'mptcpize run git (...)'.)
+I wanted to add an option in git config (can be global ~/.gitconfig or 
+per-project),
+but it was taking too long so i left it with env var (i think it's an 
+unknown fact git can
+be configured with env vars and i was surprised after reading the code)
 
+To be honest, i think a clear way is to add the option in .gitconfig is 
+the way forward and i will add that in after i figure that out.
 
-On the server side, it might be interesting to first suggest using MPTCP
-by default if available. If not, a fallback to TCP can be done, e.g.
+It was a quick hack which i added persisted the environment variable in 
+my shell.
+> 
+> 
+> On the server side, it might be interesting to first suggest using 
+> MPTCP
+> by default if available. If not, a fallback to TCP can be done, e.g.
+> 
+>   #ifdef IPPROTO_MPTCP
+>     sockfd = socket(ai->ai_family, ai->ai_socktype, IPPROTO_MPTCP);
+>     if (sockfd < 0)
+>   #endif
+>        sockfd = socket(ai->ai_family, ai->ai_socktype, 
+> ai->ai_protocol);
+> 
+> To justify this, you can refer to:
+> 
+> 
+> https://www.mptcp.dev/faq.html#why--when-should-mptcp-be-enabled-by-default
 
-  #ifdef IPPROTO_MPTCP
-    sockfd = socket(ai->ai_family, ai->ai_socktype, IPPROTO_MPTCP);
-    if (sockfd < 0)
-  #endif
-       sockfd = socket(ai->ai_family, ai->ai_socktype, ai->ai_protocol);
+I see. Just got to know about the defaults. Thank you!
+> 
+> (in short: an MPTCP socket will be returned after a call to accept()
+> only if a client requested to use MPTCP ; if not, a TCP socket will be
+> returned like before. So the client can decide to use MPTCP or not, 
+> and
+> no impact on the previous traffic on the server side.)
+> 
+Ah, alright, i'll do that one.
+> 
+> If you want me to review the new versions, you can fork the Git repo 
+> on
+> GitHub [1], do your modifications in a dedicated branch, then create a
+> pull request to merge this branch with master **on the same repo** 
+> (not
+> on the upstream repo). From there, you can ping me.
 
-To justify this, you can refer to:
+I'll start continue the work this weekend if you are okay with it since 
+i would
+have more free time then.
 
+I've already forked the main git repo: https://github.com/muhammadn/git
+> 
+> [1] https://github.com/git/git
+> 
+>>  Reason being was that i was handling large (public) git codebase 
+>> over
+>>  unstable links and i think it's also a good idea for me to add for 
+>> the
+>>  support for the most basic git protocol for read access of large
+>>  public git codebases.
+> 
+> That's a good use-case. I didn't think about it because I often use 
+> Git
+> over SSH (or HTTPS), but I understand it can be helpful for you!
+> 
+> 
+>>  The implementation i did is for both client side and server side of
+>>  the git protocol.
+> 
+> I think it might be better to split the two implementations in 
+> different
+> commits, no?
 
-https://www.mptcp.dev/faq.html#why--when-should-mptcp-be-enabled-by-default
+Agreed.
 
-(in short: an MPTCP socket will be returned after a call to accept()
-only if a client requested to use MPTCP ; if not, a TCP socket will be
-returned like before. So the client can decide to use MPTCP or not, and
-no impact on the previous traffic on the server side.)
+> 
+> Cheers,
+> Matt
+> --
+> Sponsored by the NGI0 Core fund.
+> 
+Thanks!,
+Zaihan
 
-
-If you want me to review the new versions, you can fork the Git repo on
-GitHub [1], do your modifications in a dedicated branch, then create a
-pull request to merge this branch with master **on the same repo** (not
-on the upstream repo). From there, you can ping me.
-
-[1] https://github.com/git/git
-
-> Reason being was that i was handling large (public) git codebase over
-> unstable links and i think it's also a good idea for me to add for the
-> support for the most basic git protocol for read access of large
-> public git codebases.
-
-That's a good use-case. I didn't think about it because I often use Git
-over SSH (or HTTPS), but I understand it can be helpful for you!
-
-
-> The implementation i did is for both client side and server side of
-> the git protocol.
-
-I think it might be better to split the two implementations in different
-commits, no?
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
 
