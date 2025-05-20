@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7AB861EB5DA
-	for <mptcp@lists.linux.dev>; Tue, 20 May 2025 11:23:31 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 57EC121E096
+	for <mptcp@lists.linux.dev>; Tue, 20 May 2025 11:23:32 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747740211; cv=none; b=rMG89AVS8rbyONeOlGVay0JygIMizCVrRoTxRmBYdjU3cUeAR3IxbT4eS07Og2NTn5as2N0D+HGXLW6dGayuzlmUvPklf5sSgeHxukWSWO9BzHY5Kv1Rutq/MMsMtrbWqE3Yu0/PIl2qvwy2Vf4sJbWEe64Hs6Vv0J5fwrpZ0iU=
+	t=1747740212; cv=none; b=lu0ICWXrkKfNsi7v5c9ZMwwn/Mo7NZWn10WplSLrChY24/icox6/Kr0/8ZYLJETRbkVKm7vSmIHy9ldz8sZEWCxMCAEa5CW/5SVtVD4j6MnCrAcsIzpkQ88863k2qOUrecQ9DOLQPXMkhiQDSbiDKihFsZ7XNA2F2oYvkhNWN4Y=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747740211; c=relaxed/simple;
-	bh=nP/BMI/71QSc/5LGgX27pQeBo2KxBX8gSRsxyOTKAlE=;
+	s=arc-20240116; t=1747740212; c=relaxed/simple;
+	bh=6N4vDvr3LX/0z6+qM1WUA1kiIoA5I1nc3Tb7EAcGos0=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=NJECymkr5wuXKez4hg1fBvkN738dWX1iAzRSTIS3GYgeAxMzHiZowisKFLacmR4PHZWe1XvZt9jicpPVl53+dcLqQGO37AdFe/UP/ctVBSZAJqGNK9ak5x0vTZZhL3CsmRlLpvStaZGvMaiR92wUoFg9j+xTHEzpze7n15Vf4VM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=WDBAuOA9; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=bAHwaW+7F6p0YpmJgMUqw6LA6DqyPmw8jdc/ihVICy6qcL6nidp2FaMtRAagHgLuqY0GIt1gZWpfgGx0c63AAAmPzrx50A2dkwgn1DxQElXXtRNO7cZp8FydTAUYrvlqRlswP2KnkOOBOScJKfkPsX6DyexWEm9gBBApn5NYits=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=AI8DmbNX; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="WDBAuOA9"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3CF45C4CEE9;
-	Tue, 20 May 2025 11:23:29 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="AI8DmbNX"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 738B9C4CEEB;
+	Tue, 20 May 2025 11:23:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747740211;
-	bh=nP/BMI/71QSc/5LGgX27pQeBo2KxBX8gSRsxyOTKAlE=;
+	s=k20201202; t=1747740212;
+	bh=6N4vDvr3LX/0z6+qM1WUA1kiIoA5I1nc3Tb7EAcGos0=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=WDBAuOA9U5r7yozWpcsySENa2SRIbtIMZrcH9kMbi2qLxFUFON37b4m8ObE5CAPWL
-	 +c837RDMhZS9eSEubNkZHssxQmFEFgazt+cPwVoLpOnZDlkqZP/rryL6ribZLvBeQY
-	 S+rXmQpGm8mQ5xMaF0X3VXT3UNtTdjm3QAvUAJbaWNVp5RdezmEVxJmOnaeoZx1qwX
-	 UrFTo/CCmzjftP3abYu/ogn3Aq8OuH0ORLPFkluxr72y3nrzkvO7gAdO2ADwkEhy18
-	 7Po7qGSvXRN12kf4JQIxiJz91D7/lCVNxGT/1TvzjkIh7fJzixpHHQE7OFuGd6dt+h
-	 n2a4dxkU6juEQ==
-Message-ID: <43df7eab-598a-4c92-9422-212812b45301@kernel.org>
-Date: Tue, 20 May 2025 13:23:27 +0200
+	b=AI8DmbNXQVgV215CKgZ77/Y1UcfzN50BClRoYZ76z7u8cu8cLfZeVcNdj+PdzHpNR
+	 MCi+OzpqbovLFHrjSkotLMbEmpa9orbx4M38KZHvr+ss1QvWdUv+RY+yd88SmqaeXU
+	 9vKagD5S5C2teXRVWTtwvXtM129IHY7NP1x7HxayzvHhVQt2OgW/vg6KynZDCzDcOS
+	 8SOckDIIvd/MS04DpShUbVWmMVkGwIMMHV4Crsdnqroza64kiF446YaFYC43VQoLmD
+	 Auec3npkHXz1Ei6AuqFBk4mjMAd2DVYm4E955EWEsEYUmTaFOwoq1n/5Ntk7oAAzHe
+	 jXK68nXgNO4kA==
+Message-ID: <9c1ecdfd-7f75-4437-a6ce-1ccd3c08871f@kernel.org>
+Date: Tue, 20 May 2025 13:23:30 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next 1/2] Squash to "selftests/bpf: Add
- mptcp_subflow bpf_iter subtest"
+Subject: Re: [PATCH mptcp-next 2/2] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1747730598.git.tanggeliang@kylinos.cn>
- <3f054bc9184c55420faf7904c8c04bd2d92dab81.1747730598.git.tanggeliang@kylinos.cn>
+ <9c089a245833c43d55ec240be1b880909af849ce.1747730598.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,75 +87,53 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <3f054bc9184c55420faf7904c8c04bd2d92dab81.1747730598.git.tanggeliang@kylinos.cn>
+In-Reply-To: <9c089a245833c43d55ec240be1b880909af849ce.1747730598.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for this follow-up!
-
 On 20/05/2025 10:48, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> Define mptcp_subflow_ctx() using bpf_core_cast as Martin suggested.
+> Define .filter as Martin suggested.
 > 
 > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 > ---
->  tools/testing/selftests/bpf/progs/mptcp_bpf.h       | 10 ++++++++++
->  tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c |  2 +-
->  2 files changed, 11 insertions(+), 1 deletion(-)
+>  net/mptcp/bpf.c | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf.h b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> index 4e901941d5dd..815bbf865ee4 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf.h
-> @@ -39,6 +39,16 @@ mptcp_subflow_tcp_sock(const struct mptcp_subflow_context *subflow)
->  	return subflow->tcp_sock;
->  }
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 2b0cfb57df8c..4044a8f2c477 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -317,9 +317,22 @@ BTF_ID_FLAGS(func, bpf_mptcp_subflow_queues_empty)
+>  BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
+>  BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
 >  
-> +static __always_inline struct mptcp_subflow_context *
-> +mptcp_subflow_ctx(const struct sock *sk)
+> +static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog *prog, u32 kfunc_id)
 > +{
-> +	const struct inet_connection_sock *
-> +		icsk = bpf_core_cast(sk, struct inet_connection_sock);
+> +	if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids, kfunc_id))
+> +		return 0;
 > +
-> +	/* Use RCU on icsk_ulp_data only for sock diag code */
-> +	return bpf_core_cast(icsk->icsk_ulp_data, struct mptcp_subflow_context);
+> +	if (prog->aux->st_ops &&
+
+See my message on the previous patch: maybe we don't need this condition
+then.
+
+> +	    prog->aux->st_ops != &bpf_mptcp_sched_ops)
+> +		return -EACCES;
+> +
+> +	return 0;
 > +}
 > +
->  /* ksym */
->  extern struct mptcp_subflow_context *
->  bpf_mptcp_subflow_ctx(const struct sock *sk) __ksym;
-> diff --git a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-> index a1d8f9b20259..88a3100dfdc2 100644
-> --- a/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-> +++ b/tools/testing/selftests/bpf/progs/mptcp_bpf_iters.c
-> @@ -48,7 +48,7 @@ int iters_subflow(struct bpf_sockopt *ctx)
->  		goto out;
+>  static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
+>  	.owner	= THIS_MODULE,
+>  	.set	= &bpf_mptcp_common_kfunc_ids,
+> +	.filter	= bpf_mptcp_common_kfunc_filter,
+>  };
 >  
->  	/* only to check the following kfunc works */
-
-Then we can remove this comment.
-
-> -	subflow = bpf_mptcp_subflow_ctx(ssk);
-> +	subflow = mptcp_subflow_ctx(ssk);
->  	if (!subflow || subflow->token != msk->token)
->  		goto out;
->  
-
-Note that when reading Martin's review again, it looks like this
-selftest is not really useful. Maybe we should drop it? WDYT?
-
-If we do, the "common" kfunc should no longer be registered for
-BPF_PROG_TYPE_CGROUP_SOCKOPT, right? I think it makes sense anyway. I
-don't think we need that, at least not for the moment. Then, better to
-restrict to struct_ops to help with the maintenance ; except if you see
-useful use-cases for this CGroup SockOpt program type?
-
-What we did in the selftest could be done without the kfunc, and we
-didn't find anything really useful to do with the kfunc, right?
-
+>  static int __init bpf_mptcp_kfunc_init(void)
 Cheers,
 Matt
 -- 
