@@ -1,139 +1,119 @@
-Received: from out-180.mta1.migadu.com (out-180.mta1.migadu.com [95.215.58.180])
+Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.10])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EC7EF21516E
-	for <mptcp@lists.linux.dev>; Tue, 20 May 2025 22:19:08 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=95.215.58.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 461AA4B1E57;
+	Wed, 21 May 2025 00:20:51 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.10
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747779551; cv=none; b=IKKxxxA/Pu0EWHzp31l8oUev/DlZwYhx1NpUo7f2/s0YBsiDGK7d0ukxalXOV2A6FqacOrpOMDo8URTAKLgnUaMb+K05I4hDVFQunX4KFD6mXhQIJRCqTjAwm7l1WU07x+zfqGRxr06Y1y/dKjORgFBd1vmL2cYTnXls9hAKyFA=
+	t=1747786854; cv=none; b=I5uBnlb6poi3zQpcOxALK+Ob/9pP5QVoovggqgWLMtl4uIqatuzF/5TzdbrY76Ioc+PHJmbU6eM1KCFp2zsdgZD+C1OlenafNd57nhYCzCNgXYFkdAFjLX5sOD0+4n2FuvHgaw2bI8sNo8pLD7xL7UsFYPLCelmbB3y1O6INx6g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747779551; c=relaxed/simple;
-	bh=zZ3dMFhzEwUmlj6GDS4VfT/nsqtJbGAw6nColxOnEpg=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=kJ5+HIsEcLZzK4TZ1cv47nh0y3pVJ++7bILPFWTTpW1rLrV7YWl+tXeU+ELYWqJ9RHVjZtoX9qA0VKjDAY1TV23+rB57urnaqZuOx5BaOeeNgLO+RzUFZKhmq7WugYgDBW1/w0o7Zp2qrhTRfrSkw2dNXRJ0P5NtHi+YRrGwWws=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev; spf=pass smtp.mailfrom=linux.dev; dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b=Nqzk9IHX; arc=none smtp.client-ip=95.215.58.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=linux.dev
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=linux.dev
+	s=arc-20240116; t=1747786854; c=relaxed/simple;
+	bh=/5uey0ctIa9sqeckFyzv7abKHrx1uvfB8LYpBKspKtE=;
+	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
+	 Content-Type:Content-Disposition:In-Reply-To; b=e/zmhVFzwlsEAdyWvCLd38osJLGUuH01LIRwI8Frlae0Z9LCWScpwUQ8dgsq6RfqyhunTLL5TSoX9ZT37h+cF9U36XslelylxiLurjFEMJr3R6i6821roryODIJ6KYeBkCvfMZ9Ysi5TmgUAnm1vgjmwOmCcDUhS1ZpkfCD40L4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=PAiBpBX5; arc=none smtp.client-ip=198.175.65.10
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=linux.dev header.i=@linux.dev header.b="Nqzk9IHX"
-Message-ID: <0364f8d2-9aa5-4dc0-b7f6-1c8572932814@linux.dev>
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=linux.dev; s=key1;
-	t=1747779546;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=XKb0gnOHlciTS6MFRPmrAwCVe1IGdy183kVWTGpCTUs=;
-	b=Nqzk9IHXZ5wcLJAOB7SOOqfQafxl5qrD4y2BeetsNgMI/EXHN5JOjKMaw+0lPa3ketk7gm
-	3hABdTtpen4ekkqXZvQUtmchddXoO0jBUh4t9YJgWVvCGxnaUXp+CdXHW9zvLMGOK9d2qq
-	ND3cQKueCyAxyY2WH4zTrTHcryUR/qg=
-Date: Tue, 20 May 2025 15:18:52 -0700
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="PAiBpBX5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1747786852; x=1779322852;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=/5uey0ctIa9sqeckFyzv7abKHrx1uvfB8LYpBKspKtE=;
+  b=PAiBpBX5ac0MVaQv4MAJ3CjwTIQF6aHKd490Ixs+6vFkQGgb1SKKLFjy
+   QH/iaE8Ybt6P1LWqqM7kUKdJJ7wWDN0/FafkYsaRqvaGlPvx3QZDLkN7N
+   4cNlgjC9n3oQFxGm8FTyjDkfvhB1X1xsKDimY6bJJqngHMgN/dhp9Xazf
+   6jTP4g5nuqTHpypNdbbcToSvoQm7SKAATxHhMP1Rb94DtKCPxzY7CD4XM
+   sNTmAgfI5QPy/1CAqLKWr+UCtsgGlhDlsj3aGWWpEDquNtT/cvNpX1vWK
+   xCcX2Nw+2X0OEJAnQLTqq0M4I47nZ7U+8U0mBjhpQ4XyfUvthX8yR/7bb
+   Q==;
+X-CSE-ConnectionGUID: /dEj6lbYSUis9tZ2LmtUPw==
+X-CSE-MsgGUID: SRgojn2tQruERc2lc3bamw==
+X-IronPort-AV: E=McAfee;i="6700,10204,11439"; a="67162230"
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="67162230"
+Received: from fmviesa010.fm.intel.com ([10.60.135.150])
+  by orvoesa102.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 20 May 2025 17:20:52 -0700
+X-CSE-ConnectionGUID: eqGhh9dOTi22YLL/tx1RKg==
+X-CSE-MsgGUID: tR0iSdmUQXeurBx6IXedUw==
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="6.15,303,1739865600"; 
+   d="scan'208";a="140380793"
+Received: from lkp-server01.sh.intel.com (HELO 1992f890471c) ([10.239.97.150])
+  by fmviesa010.fm.intel.com with ESMTP; 20 May 2025 17:20:49 -0700
+Received: from kbuild by 1992f890471c with local (Exim 4.96)
+	(envelope-from <lkp@intel.com>)
+	id 1uHXCS-000NhM-1c;
+	Wed, 21 May 2025 00:20:48 +0000
+Date: Wed, 21 May 2025 08:20:32 +0800
+From: kernel test robot <lkp@intel.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: oe-kbuild-all@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next 2/2] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
+Message-ID: <202505210809.DJ1jeY8P-lkp@intel.com>
+References: <9c089a245833c43d55ec240be1b880909af849ce.1747730598.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Subject: Re: [PATCH bpf-next/net v3 4/5] selftests/bpf: Add mptcp_subflow
- bpf_iter subtest
-To: Matthieu Baerts <matttbe@kernel.org>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-0-9abd22c2a7fd@kernel.org>
- <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-4-9abd22c2a7fd@kernel.org>
- <98348a02-9f8b-4648-8abe-e6b802ae9a63@linux.dev>
- <1621611c-8cf1-4281-986f-cfd8cc0e70f0@kernel.org>
-Content-Language: en-US
-X-Report-Abuse: Please report any abuse attempt to abuse@migadu.com and include these headers.
-From: Martin KaFai Lau <martin.lau@linux.dev>
-In-Reply-To: <1621611c-8cf1-4281-986f-cfd8cc0e70f0@kernel.org>
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8bit
-X-Migadu-Flow: FLOW_OUT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <9c089a245833c43d55ec240be1b880909af849ce.1747730598.git.tanggeliang@kylinos.cn>
 
-On 5/19/25 3:04 AM, Matthieu Baerts wrote:
->>> +SEC("cgroup/getsockopt")
->>> +int iters_subflow(struct bpf_sockopt *ctx)
->>> +{
->>> +    struct mptcp_subflow_context *subflow;
->>> +    struct bpf_sock *sk = ctx->sk;
->>> +    struct sock *ssk = NULL;
->>> +    struct mptcp_sock *msk;
->>> +    int local_ids = 0;
->>> +
->>> +    if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
->>> +        return 1;
->>> +
->>> +    msk = bpf_core_cast(sk, struct mptcp_sock);
->>> +    if (!msk || msk->pm.server_side || !msk->pm.subflows)
->>> +        return 1;
->>> +
->>> +    bpf_for_each(mptcp_subflow, subflow, (struct sock *)sk) {
->>> +        /* Here MPTCP-specific packet scheduler kfunc can be called:
->>> +         * this test is not doing anything really useful, only to
->>
->> Lets fold the bpf_iter_mptcp_subflow addition into the future
->> "mptcp_sched_ops" set (the github link that you mentioned in patch 2).
->> Post them as one set to have a more practical example.
-> 
-> Thank you for this suggestion. We can delay that if needed.
-> 
-> Note that we have two struct_ops in preparation: mptcp_sched_ops and
-> mptcp_pm_ops. We don't know which one will be ready first. They are both
-> "blocked" by internal API modifications we would like to do to ease the
-> maintenance later before "exposing" such API's via BPF. That's why we
-> suggested to upstream this common part first as it is ready. But we can
-> of course wait if you prefer.
+Hi Geliang,
 
-This set is useful for discussing the questions you raised in patch 2.
+kernel test robot noticed the following build errors:
 
-I still don't see it useful to upstream patch 2 alone. The existing 
-selftests/bpf/progs/mptcp_subflow.c has already shown a way to do similar 
-iteration in SEC("cgroup/getsockopt") without patch 2.
+[auto build test ERROR on mptcp/export]
+[cannot apply to mptcp/export-net linus/master v6.15-rc7 next-20250516]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch#_base_tree_information]
 
-I would prefer to wait for a fuller picture on the main struct_ops use case 
-first to ensure that we didn't overlook things. iiuc, improving the iteration in 
-SEC("cgroup/getsockopt") is not the main objective.
+url:    https://github.com/intel-lab-lkp/linux/commits/Geliang-Tang/Squash-to-selftests-bpf-Add-mptcp_subflow-bpf_iter-subtest/20250520-165020
+base:   https://github.com/multipath-tcp/mptcp_net-next.git export
+patch link:    https://lore.kernel.org/r/9c089a245833c43d55ec240be1b880909af849ce.1747730598.git.tanggeliang%40kylinos.cn
+patch subject: [PATCH mptcp-next 2/2] Squash to "bpf: Export mptcp packet scheduler helpers"
+config: i386-buildonly-randconfig-005-20250521 (https://download.01.org/0day-ci/archive/20250521/202505210809.DJ1jeY8P-lkp@intel.com/config)
+compiler: gcc-12 (Debian 12.2.0-14) 12.2.0
+reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250521/202505210809.DJ1jeY8P-lkp@intel.com/reproduce)
 
-> 
->>> +         * verify the iteration works.
->>> +         */
->>> +
->>> +        local_ids += subflow->subflow_id;
->>> +
->>> +        /* only to check the following helper works */
->>> +        ssk = mptcp_subflow_tcp_sock(subflow);
->>> +    }
->>> +
->>> +    if (!ssk)
->>> +        goto out;
->>> +
->>> +    /* assert: if not OK, something wrong on the kernel side */
->>> +    if (ssk->sk_dport != ((struct sock *)msk)->sk_dport)
->>> +        goto out;
->>> +
->>> +    /* only to check the following kfunc works */
->>> +    subflow = bpf_mptcp_subflow_ctx(ssk);
->>
->> bpf_core_cast should be as good instead of adding a new
->> bpf_mptcp_subflow_ctx() kfunc, so patch 1 should not be needed.
-> 
-> OK, indeed, in this series we don't need it. We will need it later to
-> modify some fields from the "subflow" structure directly. We can do the
+If you fix the issue in a separate patch/commit (i.e. not just a new version of
+the same patch/commit), kindly add following tags
+| Reported-by: kernel test robot <lkp@intel.com>
+| Closes: https://lore.kernel.org/oe-kbuild-all/202505210809.DJ1jeY8P-lkp@intel.com/
 
-The "ssk" here is not a trusted pointer. Note that in patch 1, the kfunc 
-bpf_mptcp_subflow_ctx() does not specify KF_TRUSTED_ARGS. I suspect it should be 
-KF_TRUSTED_ARGS based on what you described here.
+All errors (new ones prefixed by >>):
+
+   net/mptcp/bpf.c: In function 'bpf_mptcp_common_kfunc_filter':
+>> net/mptcp/bpf.c:326:35: error: 'bpf_mptcp_sched_ops' undeclared (first use in this function); did you mean 'mptcp_sched_ops'?
+     326 |             prog->aux->st_ops != &bpf_mptcp_sched_ops)
+         |                                   ^~~~~~~~~~~~~~~~~~~
+         |                                   mptcp_sched_ops
+   net/mptcp/bpf.c:326:35: note: each undeclared identifier is reported only once for each function it appears in
 
 
+vim +326 net/mptcp/bpf.c
+
+   319	
+   320	static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog *prog, u32 kfunc_id)
+   321	{
+   322		if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids, kfunc_id))
+   323			return 0;
+   324	
+   325		if (prog->aux->st_ops &&
+ > 326		    prog->aux->st_ops != &bpf_mptcp_sched_ops)
+   327			return -EACCES;
+   328	
+   329		return 0;
+   330	}
+   331	
+
+-- 
+0-DAY CI Kernel Test Service
+https://github.com/intel/lkp-tests/wiki
