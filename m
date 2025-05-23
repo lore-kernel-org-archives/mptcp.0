@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 590761C8631;
-	Fri, 23 May 2025 11:07:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CEF6C20328
+	for <mptcp@lists.linux.dev>; Fri, 23 May 2025 11:18:38 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747998441; cv=none; b=DZEeVvKmEfl4plKe51kf/iBu1F/+Jwi47JB4GV3PtownUeKo3ZsIFxxdaG3edZjC4b9ctfAxPAKnO3KfwW/pT1ciwuzZ6NIpFK6XMwAAteESSXDwFdClHyKrR1Y0CVEy8YssumZVmk+Y8JXzsNP7u6JEECgC7nvxMvhHugupuxo=
+	t=1747999118; cv=none; b=VwE+DUbDqCxXBC3620DIAXAenAzRzqkJ2HAZy4a3lUsiUZrhm9stiHOzTbay3Tdqici9hPTf2pcIsE672GkCdOAran97ljm73498uM9ZBa9V8ePjoo+USXtCTCgGTcHVmPlqVuHBbDQv3yPnMel58w6K6sHKm2rRj5ienT7JAO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747998441; c=relaxed/simple;
-	bh=ZtulG+GqmTItXJpWf8cI/7ZkLZKWayGN42QGW1nDVfA=;
+	s=arc-20240116; t=1747999118; c=relaxed/simple;
+	bh=iutyDLVrUsIbHNhDGiJ80eQLoz02uQQjI1Ch1un6ZQk=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Q01qroXWzYAe5BONzS5Cz+HeLATnjNl6yzqLb1vU/th2rv/6pNtxsIrO6ZMFKDVNDmyR4HXGroSF3Ow3N/dFoYLoJI88LAbX+ADCmumRU2yRDFiTnF8deFvcP+tUWcvRADzb4OBiKvF5jHtQ6h5b3O22Y/HkuBBlsg+EUxMEUt8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qpSIwbb0; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=tcKVrwx3LUjvXhkd+7ReepViXv9RJx66bHpP/tSPRIbdKjZVJkd87mzJ/z+o7VVq/urANUQJoL0/qohK1Q7S239uy0YcVfwlkLOn7NZdlETdM89MMd7VIRS2sChrUFEpch0vx2WUwlvQD/PU4nkHoN0ahWRjREhauaDgvBuAv8w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Vx2pfnXt; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qpSIwbb0"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 5DE0EC4CEE9;
-	Fri, 23 May 2025 11:07:14 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Vx2pfnXt"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 37D44C4CEE9;
+	Fri, 23 May 2025 11:18:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747998440;
-	bh=ZtulG+GqmTItXJpWf8cI/7ZkLZKWayGN42QGW1nDVfA=;
+	s=k20201202; t=1747999118;
+	bh=iutyDLVrUsIbHNhDGiJ80eQLoz02uQQjI1Ch1un6ZQk=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qpSIwbb0KUSAPiEXVz6Eu1qPzh45BAEMErfL5Y8cbZjXSvlYLuPIzr/crAGWSKRqh
-	 kdmbU0wtTS+rbxvMhiEZlWuEOpIc22PYeg3JoD1dJl2wB7IpL4qrHHB1Dr1AbECQE+
-	 KNex+SPzy1+HsM3x37ljDri1pFVk4YU02odvPc5/h2n21fsRt0l9gMxubobFeytHJc
-	 i20O8vkEyJaRb559fVGWXDB/5vP1+qn4YCUUH4QtHQPQSBXaeb5w6VZexPGEnMFxK3
-	 34RML23GZbgJuJYEXEmehD5UUnwR9b+D2hXu/sY2j+1qum992Mnj20g44WSARuJB28
-	 e1ICZQGgx4TDw==
-Message-ID: <f9b1d13c-aa20-4680-849c-535ea7c476a6@kernel.org>
-Date: Fri, 23 May 2025 13:07:10 +0200
+	b=Vx2pfnXtLdiwlQ6sMDUUFYhQxMNFSbnLCcBRx5BffgMKlz2mYsZKWyCbx7ENpuctl
+	 URkgj1QTEBELLnh6qdYZXskPcJgK4qDJPrNEEqxGHgSpJ0WvelI0Uz1QT357JtrqTo
+	 0ZqA2TDfK0EGUD77B9p6u42HfNULtgf189V/ZG0tO2xFAzxRj/PJPN0r+ihM7YFVVO
+	 9WfWAl/vB1jvx2Y9KhmNz4dzjX7LHq6abwv1YEMWFbH61TbNd408o0DR3hLlY08UaE
+	 UcxUIlkLTCkVWK46sD0AW01NomiipQZvLmTlqeGlSgYhzDaVEWkSeraq7IvpOygIJt
+	 GaZ2uwq5wdGPA==
+Message-ID: <9c66d74c-26bc-4c22-a2f0-75d2678cc1f5@kernel.org>
+Date: Fri, 23 May 2025 13:18:34 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,28 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH bpf-next/net v3 4/5] selftests/bpf: Add mptcp_subflow
- bpf_iter subtest
+Subject: Re: [PATCH mptcp-next v2 2/2] Squash to "bpf: Export mptcp packet
+ scheduler helpers"
 Content-Language: en-GB, fr-BE
-To: Martin KaFai Lau <martin.lau@linux.dev>
-Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Alexei Starovoitov <ast@kernel.org>, Daniel Borkmann <daniel@iogearbox.net>,
- Andrii Nakryiko <andrii@kernel.org>, Eduard Zingerman <eddyz87@gmail.com>,
- Song Liu <song@kernel.org>, Yonghong Song <yonghong.song@linux.dev>,
- John Fastabend <john.fastabend@gmail.com>, KP Singh <kpsingh@kernel.org>,
- Stanislav Fomichev <sdf@fomichev.me>, Hao Luo <haoluo@google.com>,
- Jiri Olsa <jolsa@kernel.org>, Mykola Lysenko <mykolal@fb.com>,
- Shuah Khan <shuah@kernel.org>, netdev@vger.kernel.org,
- linux-kernel@vger.kernel.org, bpf@vger.kernel.org,
- linux-kselftest@vger.kernel.org
-References: <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-0-9abd22c2a7fd@kernel.org>
- <20250320-bpf-next-net-mptcp-bpf_iter-subflows-v3-4-9abd22c2a7fd@kernel.org>
- <98348a02-9f8b-4648-8abe-e6b802ae9a63@linux.dev>
- <1621611c-8cf1-4281-986f-cfd8cc0e70f0@kernel.org>
- <0364f8d2-9aa5-4dc0-b7f6-1c8572932814@linux.dev>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1747897261.git.tanggeliang@kylinos.cn>
+ <dfd9d56e608ea3f68297092c9e90134e4807d3d6.1747897261.git.tanggeliang@kylinos.cn>
+ <5f87dca1-e02b-4d66-9cb4-89d104ca5c39@kernel.org>
+ <43d25991691a6e31e86086c3e91e9331b10e1844.camel@kernel.org>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -102,95 +89,196 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <0364f8d2-9aa5-4dc0-b7f6-1c8572932814@linux.dev>
+In-Reply-To: <43d25991691a6e31e86086c3e91e9331b10e1844.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
-Hi Martin,
+Hi Geliang,
 
-On 21/05/2025 00:18, Martin KaFai Lau wrote:
-> On 5/19/25 3:04 AM, Matthieu Baerts wrote:
->>>> +SEC("cgroup/getsockopt")
->>>> +int iters_subflow(struct bpf_sockopt *ctx)
->>>> +{
->>>> +    struct mptcp_subflow_context *subflow;
->>>> +    struct bpf_sock *sk = ctx->sk;
->>>> +    struct sock *ssk = NULL;
->>>> +    struct mptcp_sock *msk;
->>>> +    int local_ids = 0;
->>>> +
->>>> +    if (ctx->level != SOL_TCP || ctx->optname != TCP_IS_MPTCP)
->>>> +        return 1;
->>>> +
->>>> +    msk = bpf_core_cast(sk, struct mptcp_sock);
->>>> +    if (!msk || msk->pm.server_side || !msk->pm.subflows)
->>>> +        return 1;
->>>> +
->>>> +    bpf_for_each(mptcp_subflow, subflow, (struct sock *)sk) {
->>>> +        /* Here MPTCP-specific packet scheduler kfunc can be called:
->>>> +         * this test is not doing anything really useful, only to
+On 23/05/2025 09:27, Geliang Tang wrote:
+> Hi Matt,
+> 
+> Thanks for your review.
+> 
+> On Thu, 2025-05-22 at 17:13 +0200, Matthieu Baerts wrote:
+>> Hi Geliang,
+>>
+>> On 22/05/2025 09:05, Geliang Tang wrote:
+>>> From: Geliang Tang <tanggeliang@kylinos.cn>
 >>>
->>> Lets fold the bpf_iter_mptcp_subflow addition into the future
->>> "mptcp_sched_ops" set (the github link that you mentioned in patch 2).
->>> Post them as one set to have a more practical example.
+>>> Define .filter as Martin suggested.
 >>
->> Thank you for this suggestion. We can delay that if needed.
+>> Thank you for the v2.
 >>
->> Note that we have two struct_ops in preparation: mptcp_sched_ops and
->> mptcp_pm_ops. We don't know which one will be ready first. They are both
->> "blocked" by internal API modifications we would like to do to ease the
->> maintenance later before "exposing" such API's via BPF. That's why we
->> suggested to upstream this common part first as it is ready. But we can
->> of course wait if you prefer.
-> 
-> This set is useful for discussing the questions you raised in patch 2.
-> 
-> I still don't see it useful to upstream patch 2 alone. The existing
-> selftests/bpf/progs/mptcp_subflow.c has already shown a way to do
-> similar iteration in SEC("cgroup/getsockopt") without patch 2.
-> 
-> I would prefer to wait for a fuller picture on the main struct_ops use
-> case first to ensure that we didn't overlook things. iiuc, improving the
-> iteration in SEC("cgroup/getsockopt") is not the main objective.
-
-I understand, that makes sense. When the rest will be ready, we will
-upstream patches from this series, except this one ("useless" selftest),
-and restricting bpf_iter_mptcp_subflow_* and other new kfuncs to
-BPF_PROG_TYPE_STRUCT_OPS only. So not to BPF_PROG_TYPE_CGROUP_SOCKOPT
-any more which was only needed for this new test. I don't think this
-program type requires access to these new kfunc for useful use-cases.
-This can be changed later if required anyway.
-
->>>> +         * verify the iteration works.
->>>> +         */
->>>> +
->>>> +        local_ids += subflow->subflow_id;
->>>> +
->>>> +        /* only to check the following helper works */
->>>> +        ssk = mptcp_subflow_tcp_sock(subflow);
->>>> +    }
->>>> +
->>>> +    if (!ssk)
->>>> +        goto out;
->>>> +
->>>> +    /* assert: if not OK, something wrong on the kernel side */
->>>> +    if (ssk->sk_dport != ((struct sock *)msk)->sk_dport)
->>>> +        goto out;
->>>> +
->>>> +    /* only to check the following kfunc works */
->>>> +    subflow = bpf_mptcp_subflow_ctx(ssk);
+>>> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+>>> ---
+>>>  net/mptcp/bpf.c | 23 +++++++++++++++++++++--
+>>>  1 file changed, 21 insertions(+), 2 deletions(-)
 >>>
->>> bpf_core_cast should be as good instead of adding a new
->>> bpf_mptcp_subflow_ctx() kfunc, so patch 1 should not be needed.
->>
->> OK, indeed, in this series we don't need it. We will need it later to
->> modify some fields from the "subflow" structure directly. We can do the
+>>> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+>>> index 2b0cfb57df8c..c7a9d1393786 100644
+>>> --- a/net/mptcp/bpf.c
+>>> +++ b/net/mptcp/bpf.c
+>>> @@ -317,9 +317,30 @@ BTF_ID_FLAGS(func,
+>>> bpf_mptcp_subflow_queues_empty)
+>>>  BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
+>>>  BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+>>>  
+>>> +static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog
+>>> *prog, u32 kfunc_id)
+>>> +{
+>>> + if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids, kfunc_id))
+>>> + return 0;
+>>> +
+>>> + if (prog->type != BPF_PROG_TYPE_STRUCT_OPS)
+>>> + return -EACCES;
+>>> +
+>>> + /* .filter is called sometimes before prog->aux->st_ops is set,
+>>> + * then prog->aux->st_ops is NULL. If return -EACCES in this case,
+>>> + * an error occur:
+>>> + *  bug: bad parent state for iter next call
+>> That's interesting. Did you have this after having removed the
+>> register
+>> for BPF_PROG_TYPE_CGROUP_SOCKOPT?
 > 
-> The "ssk" here is not a trusted pointer. Note that in patch 1, the kfunc
-> bpf_mptcp_subflow_ctx() does not specify KF_TRUSTED_ARGS. I suspect it
-> should be KF_TRUSTED_ARGS based on what you described here.
+> Yes, I have removed this.
+> 
+>>
+>> With this extra "prog->aux->st_ops != NULL" check, it sounds like the
+>> filter could allow other ops to use these KFunc, and thus that's an
+>> issue.
+>>
+>> Do you have more details about the error, and what exactly caused
+>> this?
+> 
+> bpf_iter_mptcp_subflow_next in the kfunc_set caused this:
+> 
+> # #198/5   mptcp/first:OK
+> # libbpf: prog 'bpf_bkup_get_send': BPF program load failed: -EFAULT
+> # libbpf: prog 'bpf_bkup_get_send': -- BEGIN PROG LOAD LOG --
+> # 0: R1=ctx() R10=fp0
+> # ; int BPF_PROG(bpf_bkup_get_send, struct mptcp_sock *msk) @
+> mptcp_bpf_bkup.c:20
+> # 0: (79) r2 = *(u64 *)(r1 +0)
+> # func 'get_send' arg0 has btf_id 37366 type STRUCT 'mptcp_sock'
+> # 1: R1=ctx() R2_w=trusted_ptr_mptcp_sock()
+> # 1: (bf) r1 = r10                      ; R1_w=fp0 R10=fp0
+> # 2: (07) r1 += -16                     ; R1_w=fp-16
+> # ; bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) { @
+> mptcp_bpf_bkup.c:24
+> # 3: (85) call bpf_iter_mptcp_subflow_new#53836         ; R0_w=scalar()
+> fp-16_w=iter_mptcp_subflow(ref_id=1,state=active,depth=0) refs=1
+> # 4: (b7) r7 = 0                        ; R7_w=0 refs=1
+> # 5: (b7) r9 = 0                        ; R9_w=0 refs=1
+> # 6: (b7) r8 = 0                        ; R8_w=0 refs=1
+> # 7: (05) goto pc+16
+> # ; if (!BPF_CORE_READ_BITFIELD_PROBED(subflow, backup) || @
+> mptcp_bpf_bkup.c:25
+> # 24: (bf) r1 = r10                     ; R1_w=fp0 R10=fp0 refs=1
+> # 25: (07) r1 += -16                    ; R1_w=fp-16 refs=1
+> # ; bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) { @
+> mptcp_bpf_bkup.c:24
+> # 26: (85) call bpf_iter_mptcp_subflow_next#53838
+> # bug: bad parent state for iter next callprocessed 11 insns (limit
+> 1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
+> # -- END PROG LOAD LOG --
+> # libbpf: prog 'bpf_bkup_get_send': failed to load: -EFAULT
+> # libbpf: failed to load object 'mptcp_bpf_bkup'
+> # libbpf: failed to load BPF skeleton 'mptcp_bpf_bkup': -EFAULT
+> # test_bkup:FAIL:open_and_load: bkup unexpected error: -14
+> # #198/6   mptcp/bkup:FAIL
+> 
+>> Maybe we should report this issue to BPF maintainers, because what
+>> you
+>> did sounds incorrect for a filter, and they didn't have to do that in
+>> QDisc.
+> 
+> Since QDisc's kfunc_set does not include an iter next function.
+> 
+> This can solve the problem by putting this iter next function in
+> another kfunc_set, but it is not a perfect solution:
+> 
+> '''
+> BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
+> BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
+> BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW |
+> KF_TRUSTED_ARGS)
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+> BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+> BTF_ID_FLAGS(func, mptcp_subflow_active)
+> BTF_ID_FLAGS(func, mptcp_set_timeout)
+> BTF_ID_FLAGS(func, mptcp_wnd_end)
+> BTF_ID_FLAGS(func, bpf_sk_stream_memory_free, KF_RET_NULL)
+> BTF_ID_FLAGS(func, bpf_mptcp_subflow_queues_empty)
+> BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
+> BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
+> 
+> static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog *prog,
+> u32 kfunc_id)
+> {
+>         if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids,
+> kfunc_id))
+>                 return 0;
+> 
+>         if (prog->type != BPF_PROG_TYPE_STRUCT_OPS)
+>                 return -EACCES;
+> 
+> #ifdef CONFIG_BPF_JIT
+>         if (prog->aux->st_ops != &bpf_mptcp_sched_ops)
+>                 return -EACCES;
+> #endif
 
-Good point, I think this flag is indeed missing.
+I think you should move the "#endif" before the return, so one line
+above where it is for the moment: if CONFIG_BPF_JIT is not set, it means
+the struct ops cannot be ours, so these kfunc cannot be used.
+
+> 
+>         return 0;
+> }
+> 
+> static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = { 
+>         .owner  = THIS_MODULE,
+>         .set    = &bpf_mptcp_common_kfunc_ids,
+>         .filter = bpf_mptcp_common_kfunc_filter,
+> };
+> 
+> BTF_KFUNCS_START(bpf_mptcp_iter_next_kfunc_ids)
+> BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT |
+> KF_RET_NULL)
+> BTF_KFUNCS_END(bpf_mptcp_iter_next_kfunc_ids)
+> 
+> static const struct btf_kfunc_id_set bpf_mptcp_iter_next_kfunc_set = {
+>         .owner  = THIS_MODULE,
+>         .set    = &bpf_mptcp_iter_next_kfunc_ids,
+> };
+> 
+> ...
+> 
+> ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+>                                 &bpf_mptcp_common_kfunc_set);
+> ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+>                                        &bpf_mptcp_iter_next_kfunc_set);
+> ...
+> '''
+> 
+> WDYT?
+Thank you for having checked!
+
+Your solution looks good. If we need to take this direction, I would put
+all the bpf_iter_mptcp_* kfunc in this set, not just the "next" one.
+WDYT? Also, if we do that, please add a comment before declaring this
+set, something mentioning that with bpf_iter_mptcp_subflow_next,
+prog->aux->st_ops is not set, and the filter doesn't work. So we can
+have a discussion with BPF maintainers about that if needed.
+
+But before, do you mind checking if something else is set in prog->aux
+(or prog) when this bpf_iter_mptcp_subflow_next kfunc is used? Maybe we
+could keep a single group and in the filter, having something like:
+
+  if (/* is bpf_iter_mptcp_subflow_next */ ||
+      prog->aux->st_ops != &bpf_mptcp_sched_ops)
+
 
 Cheers,
 Matt
