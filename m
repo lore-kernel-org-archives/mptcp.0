@@ -1,246 +1,142 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6959314B08E
-	for <mptcp@lists.linux.dev>; Fri, 23 May 2025 07:28:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7E61A228CB2;
+	Fri, 23 May 2025 10:56:07 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1747985328; cv=none; b=Q4RwP4X1UfSHJqUssgYAhix/5/wWNCjJ14UzsTNKsBsYJLgtXnHgCY+KR1hXPQ633kKdLKaGHs3jeW4e3dyVlB6YZ/PUB4B2QkykyZuhMGpU7uI70hi4fpB3svonVJC2lDEDzgzjGwh3t1pZiP6rJQOdGm700yNNCpAHF849nVw=
+	t=1747997767; cv=none; b=Z+rG99eNDwTeJGpDoVjygRg5130rcXKBxBh9sWvOOau96yLr9lpV+CC6lu/vRT+i9blMNMeM0M7egHg3FCDv1lVxvbBY3+XMcvvNO5jRsU6keUnr8S4GNtQlgCcAdjwQMvJ7SLOuF1v6ny9CN+vuKD66PWFIIPTp8qYkn/7b9CQ=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1747985328; c=relaxed/simple;
-	bh=yLya/lQubvZMuauhQ/McHt//gnLYzllztWWZFDEqPms=;
-	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=eKUx4QaZ+QzxW5p6Y3yiqjGSRrj1VktWgBk7K+R5c8LN59kO3wn/84ad/wXVUN/9BGJmpnrkEOXFYa780h2Uo4Gz/QV7ZKwxcrhMAQVFSR7dc0HAjfIoYnIlVy8+bKt/lDyR0UKPso814zEeT3FnWAZxIv2Mm9z/VoxDe+5wjfg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jsJA6hwv; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1747997767; c=relaxed/simple;
+	bh=+W5AZkpkT1z9om2iFCfAQAWhdUCBCkq/r/5xPLxeiR8=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=MmIiL66BxTH3Q3b0VkCivvcRz9byLS1yPHZ5PwFrOO47oul4ghYFTnjK+LyEYmMCfchBh1rDHNuLd7tE+4sPpO8t4OwAmkmkeHADolhHVEh/WMUBzLwo2LlEgZe+jB7ryEm8jHnq6zDdsN0CjJvPebFlquWYymuf169LpGykkSE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=eUwzx2Od; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jsJA6hwv"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C6E39C4CEE9;
-	Fri, 23 May 2025 07:28:46 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="eUwzx2Od"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 6DCFFC4CEE9;
+	Fri, 23 May 2025 10:56:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1747985328;
-	bh=yLya/lQubvZMuauhQ/McHt//gnLYzllztWWZFDEqPms=;
-	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=jsJA6hwvGm/dS0SqJcyfmhlDtpKtH9pAfyn8zi2KlF4sUKw8/yrtUEcWLNe9P0W6+
-	 2bfdpuTXJ5TFHI62aJ7SqQDKCnGaQXbM2V3ODqCBsrz0qkAKIxYEznl5x3V8laj9XV
-	 J2SpW1VkL5WBGcr5bH5o7RYYsN6VaWt4VNlMMX4OuhMRqwN5csV70rZhn+HQK8oN5W
-	 jXHfIcQWjcEmolxN1AQXx5g4SjCAAb+tJ067V2jqK2W3/8t0TyFfTf+cGigtHMOSo1
-	 hn1Y8SPdgkhKyy9QtM/iMHko7aIjQf/ehrmRg0VUFrbIpOwDqGJRxY2mKfzOja9H+o
-	 UFsZ8JU5hnzrA==
-Message-ID: <43d25991691a6e31e86086c3e91e9331b10e1844.camel@kernel.org>
-Subject: Re: [PATCH mptcp-next v2 2/2] Squash to "bpf: Export mptcp packet
- scheduler helpers"
-From: Geliang Tang <geliang@kernel.org>
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Date: Fri, 23 May 2025 15:27:35 +0800
-In-Reply-To: <5f87dca1-e02b-4d66-9cb4-89d104ca5c39@kernel.org>
-References: <cover.1747897261.git.tanggeliang@kylinos.cn>
-	 <dfd9d56e608ea3f68297092c9e90134e4807d3d6.1747897261.git.tanggeliang@kylinos.cn>
-	 <5f87dca1-e02b-4d66-9cb4-89d104ca5c39@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.52.3-0ubuntu1 
+	s=k20201202; t=1747997767;
+	bh=+W5AZkpkT1z9om2iFCfAQAWhdUCBCkq/r/5xPLxeiR8=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=eUwzx2OdbdjY8vacCbp69fO35g6d/9g0Ylc4bEsfQNaHNCJoaR/6hGWUfY7zG+zUi
+	 lBt2F1nVmJ7FPnjAuAqJslE7gyq1aXT6j4wLBZSGQMxPv8LXoOqKdJiEhw4kN1wDpY
+	 FBvxWluP9/qcq+DITYQnkoYVsY3XgjdXbP/eI+p9yQdQeMi/8fK+Z5hNDRQUnom6XR
+	 gKe/qemhz2GJpdKbUGGpNWV5IZTCCN44P+e7Wabvw1eth64fSTtDSTL6es8NgoSkRI
+	 x/RFvVVNMoS0Hq+hVBAa+gbiHPEB+oAFUu+uFiNbc9FW6zbNcv4b0hKwwYiGYOXYka
+	 tWTGfyYJceU4Q==
+Message-ID: <c8455e63-4c25-4610-bfbf-f6547b3ac834@kernel.org>
+Date: Fri, 23 May 2025 12:56:01 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH net-next] selftests: net: move wait_local_port_listen to
+ lib.sh
+Content-Language: en-GB, fr-BE
+To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>,
+ Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
+ Shuah Khan <shuah@kernel.org>, Mat Martineau <martineau@kernel.org>,
+ Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ linux-kselftest@vger.kernel.org
+References: <20250523034433.1373-1-liuhangbin@gmail.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <20250523034433.1373-1-liuhangbin@gmail.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 
-Hi Matt,
+Hi Hangbin,
 
-Thanks for your review.
-
-On Thu, 2025-05-22 at 17:13 +0200, Matthieu Baerts wrote:
-> Hi Geliang,
+On 23/05/2025 05:44, Hangbin Liu wrote:
+> The function wait_local_port_listen() is the only function defined in
+> net_helper.sh. Since some tests source both lib.sh and net_helper.sh,
+> we can simplify the setup by moving wait_local_port_listen() to lib.sh.
 > 
-> On 22/05/2025 09:05, Geliang Tang wrote:
-> > From: Geliang Tang <tanggeliang@kylinos.cn>
-> > 
-> > Define .filter as Martin suggested.
-> 
-> Thank you for the v2.
-> 
-> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-> > ---
-> >  net/mptcp/bpf.c | 23 +++++++++++++++++++++--
-> >  1 file changed, 21 insertions(+), 2 deletions(-)
-> > 
-> > diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
-> > index 2b0cfb57df8c..c7a9d1393786 100644
-> > --- a/net/mptcp/bpf.c
-> > +++ b/net/mptcp/bpf.c
-> > @@ -317,9 +317,30 @@ BTF_ID_FLAGS(func,
-> > bpf_mptcp_subflow_queues_empty)
-> >  BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
-> >  BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
-> >  
-> > +static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog
-> > *prog, u32 kfunc_id)
-> > +{
-> > + if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids, kfunc_id))
-> > + return 0;
-> > +
-> > + if (prog->type != BPF_PROG_TYPE_STRUCT_OPS)
-> > + return -EACCES;
-> > +
-> > + /* .filter is called sometimes before prog->aux->st_ops is set,
-> > + * then prog->aux->st_ops is NULL. If return -EACCES in this case,
-> > + * an error occur:
-> > + *  bug: bad parent state for iter next call
-> That's interesting. Did you have this after having removed the
-> register
-> for BPF_PROG_TYPE_CGROUP_SOCKOPT?
+> With this change, net_helper.sh becomes redundant and can be removed.
 
-Yes, I have removed this.
+Thank you for the modifications! I wanted to do the same at some points,
+then I forgot :)
 
-> 
-> With this extra "prog->aux->st_ops != NULL" check, it sounds like the
-> filter could allow other ops to use these KFunc, and thus that's an
-> issue.
-> 
-> Do you have more details about the error, and what exactly caused
-> this?
+> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
+> ---
+>  tools/testing/selftests/net/Makefile          |  2 +-
+>  tools/testing/selftests/net/busy_poll_test.sh |  2 +-
+>  .../net/ipv6_route_update_soft_lockup.sh      |  1 -
+>  tools/testing/selftests/net/lib.sh            | 21 ++++++++++++++++
+>  tools/testing/selftests/net/mptcp/Makefile    |  2 +-
+>  .../testing/selftests/net/mptcp/mptcp_lib.sh  |  1 -
+>  tools/testing/selftests/net/net_helper.sh     | 25 -------------------
+>  tools/testing/selftests/net/pmtu.sh           |  1 -
+>  tools/testing/selftests/net/udpgro.sh         |  2 +-
+>  tools/testing/selftests/net/udpgro_bench.sh   |  2 +-
+>  tools/testing/selftests/net/udpgro_frglist.sh |  2 +-
+>  tools/testing/selftests/net/udpgro_fwd.sh     |  2 +-
+>  12 files changed, 28 insertions(+), 35 deletions(-)
+>  delete mode 100644 tools/testing/selftests/net/net_helper.sh
 
-bpf_iter_mptcp_subflow_next in the kfunc_set caused this:
+The changes in MPTCP and others look good to me, except that I think you
+forgot to modify files in tools/testing/selftests/drivers/net as well:
 
-# #198/5   mptcp/first:OK
-# libbpf: prog 'bpf_bkup_get_send': BPF program load failed: -EFAULT
-# libbpf: prog 'bpf_bkup_get_send': -- BEGIN PROG LOAD LOG --
-# 0: R1=ctx() R10=fp0
-# ; int BPF_PROG(bpf_bkup_get_send, struct mptcp_sock *msk) @
-mptcp_bpf_bkup.c:20
-# 0: (79) r2 = *(u64 *)(r1 +0)
-# func 'get_send' arg0 has btf_id 37366 type STRUCT 'mptcp_sock'
-# 1: R1=ctx() R2_w=trusted_ptr_mptcp_sock()
-# 1: (bf) r1 = r10                      ; R1_w=fp0 R10=fp0
-# 2: (07) r1 += -16                     ; R1_w=fp-16
-# ; bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) { @
-mptcp_bpf_bkup.c:24
-# 3: (85) call bpf_iter_mptcp_subflow_new#53836         ; R0_w=scalar()
-fp-16_w=iter_mptcp_subflow(ref_id=1,state=active,depth=0) refs=1
-# 4: (b7) r7 = 0                        ; R7_w=0 refs=1
-# 5: (b7) r9 = 0                        ; R9_w=0 refs=1
-# 6: (b7) r8 = 0                        ; R8_w=0 refs=1
-# 7: (05) goto pc+16
-# ; if (!BPF_CORE_READ_BITFIELD_PROBED(subflow, backup) || @
-mptcp_bpf_bkup.c:25
-# 24: (bf) r1 = r10                     ; R1_w=fp0 R10=fp0 refs=1
-# 25: (07) r1 += -16                    ; R1_w=fp-16 refs=1
-# ; bpf_for_each(mptcp_subflow, subflow, (struct sock *)msk) { @
-mptcp_bpf_bkup.c:24
-# 26: (85) call bpf_iter_mptcp_subflow_next#53838
-# bug: bad parent state for iter next callprocessed 11 insns (limit
-1000000) max_states_per_insn 0 total_states 1 peak_states 1 mark_read 1
-# -- END PROG LOAD LOG --
-# libbpf: prog 'bpf_bkup_get_send': failed to load: -EFAULT
-# libbpf: failed to load object 'mptcp_bpf_bkup'
-# libbpf: failed to load BPF skeleton 'mptcp_bpf_bkup': -EFAULT
-# test_bkup:FAIL:open_and_load: bkup unexpected error: -14
-# #198/6   mptcp/bkup:FAIL
+> tools/testing/selftests/drivers/net/Makefile:            ../../net/net_helper.sh \
+> tools/testing/selftests/drivers/net/lib/sh/lib_netcons.sh:source "${LIBDIR}"/../../../../net/net_helper.sh
+> tools/testing/selftests/drivers/net/netdevsim/peer.sh:source ../../../net/net_helper.sh
+pw-bot: cr
 
-> Maybe we should report this issue to BPF maintainers, because what
-> you
-> did sounds incorrect for a filter, and they didn't have to do that in
-> QDisc.
+Note that the "netdev/check_selftest" NIPA check will not handle this
+case where a shell script is removed. But that's OK, it can be ignored.
 
-Since QDisc's kfunc_set does not include an iter next function.
-
-This can solve the problem by putting this iter next function in
-another kfunc_set, but it is not a perfect solution:
-
-'''
-BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
-BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
-BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
-BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW |
-KF_TRUSTED_ARGS)
-BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
-BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
-BTF_ID_FLAGS(func, mptcp_subflow_active)
-BTF_ID_FLAGS(func, mptcp_set_timeout)
-BTF_ID_FLAGS(func, mptcp_wnd_end)
-BTF_ID_FLAGS(func, bpf_sk_stream_memory_free, KF_RET_NULL)
-BTF_ID_FLAGS(func, bpf_mptcp_subflow_queues_empty)
-BTF_ID_FLAGS(func, mptcp_pm_subflow_chk_stale, KF_SLEEPABLE)
-BTF_KFUNCS_END(bpf_mptcp_common_kfunc_ids)
-
-static int bpf_mptcp_common_kfunc_filter(const struct bpf_prog *prog,
-u32 kfunc_id)
-{
-        if (!btf_id_set8_contains(&bpf_mptcp_common_kfunc_ids,
-kfunc_id))
-                return 0;
-
-        if (prog->type != BPF_PROG_TYPE_STRUCT_OPS)
-                return -EACCES;
-
-#ifdef CONFIG_BPF_JIT
-        if (prog->aux->st_ops != &bpf_mptcp_sched_ops)
-                return -EACCES;
-#endif
-
-        return 0;
-}
-
-static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = { 
-        .owner  = THIS_MODULE,
-        .set    = &bpf_mptcp_common_kfunc_ids,
-        .filter = bpf_mptcp_common_kfunc_filter,
-};
-
-BTF_KFUNCS_START(bpf_mptcp_iter_next_kfunc_ids)
-BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT |
-KF_RET_NULL)
-BTF_KFUNCS_END(bpf_mptcp_iter_next_kfunc_ids)
-
-static const struct btf_kfunc_id_set bpf_mptcp_iter_next_kfunc_set = {
-        .owner  = THIS_MODULE,
-        .set    = &bpf_mptcp_iter_next_kfunc_ids,
-};
-
-...
-
-ret = register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-                                &bpf_mptcp_common_kfunc_set);
-ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-                                       &bpf_mptcp_iter_next_kfunc_set);
-...
-'''
-
-WDYT?
-
-Thanks,
--Geliang
-
-> 
-> > + */
-> > + if (prog->aux->st_ops &&
-> > +     prog->aux->st_ops != &bpf_mptcp_sched_ops)
-> > + return -EACCES;
-> > +
-> > + return 0;
-> > +}
-> > +
-> >  static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set =
-> > {
-> >   .owner = THIS_MODULE,
-> >   .set = &bpf_mptcp_common_kfunc_ids,
-> > + .filter = bpf_mptcp_common_kfunc_filter,
-> >  };
-> >  
-> >  static int __init bpf_mptcp_kfunc_init(void)
-> > @@ -327,8 +348,6 @@ static int __init bpf_mptcp_kfunc_init(void)
-> >   int ret;
-> >  
-> >   ret = register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
-> > - ret = ret ?:
-> > register_btf_kfunc_id_set(BPF_PROG_TYPE_CGROUP_SOCKOPT,
-> > -        &bpf_mptcp_common_kfunc_set);
-> >   ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
-> >          &bpf_mptcp_common_kfunc_set);
-> >  #ifdef CONFIG_BPF_JIT
-> 
-> Cheers,
-> Matt
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
