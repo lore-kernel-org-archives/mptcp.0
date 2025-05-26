@@ -1,22 +1,22 @@
 Received: from verein.lst.de (verein.lst.de [213.95.11.211])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id A229C72615
-	for <mptcp@lists.linux.dev>; Mon, 26 May 2025 05:33:47 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 95314191F74
+	for <mptcp@lists.linux.dev>; Mon, 26 May 2025 05:36:02 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=213.95.11.211
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748237628; cv=none; b=d+Z4wZ1OMln9dAFjdrx32sssnpCkZ6GR85x4aTcL1jkcVieMaoGxOYe15oeWEOWJzFfVjN4863iDLxLzupYGCc5nrNRA1uZYWhreiDVINu6YUPD8qGcSzsiLQUHKNLY3QF9C6fj+TIPwWrYUhkXYDYWj2EA/QEK/WqmvNqD6vwg=
+	t=1748237764; cv=none; b=ZI9Y95nlgUmTWvDSMJN2v6n56LcpWbZg7PIZFf7VL+z0slRf7ykle26oVFl4L3fdsjVjE+MGplryLKmokGPoJk+op7mzHFgzHf+K6ncZ+L1CYm1cjpFPwSEwWQ+mfVXFsZUrjOsSNHlvw+NhE8mq+ZsYVfcKeBGRleRBdt/JXl0=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748237628; c=relaxed/simple;
-	bh=6KjRGakdHLvTPtXjxEJatZfcW4FuqXdDm78T3RH7W1k=;
+	s=arc-20240116; t=1748237764; c=relaxed/simple;
+	bh=SKRlxMUr2PYbtuzHQQip06nlTznUELGCZgtRP1OGQ88=;
 	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=I1m6xkP01yWH0vFQylYtPmFa0cwSH2Mc61ZJx09TTyIAg9JM8J2PJVlU3mtfzM1Sr3kiqeYsMf6qIm0k/u2D36H2TCvSpSd1qNKGgd+qo1lfSNBOX2uFcRCzNa2U00voyx3lTO79E5TlOrvfi4/ImERvWHCH/9e/icuOZn0AXII=
+	 Content-Type:Content-Disposition:In-Reply-To; b=DKQY9rsmAg5CpD2Wo8cDLQu8R+dBPRpNPahgjlUKxYg2INig/PqHq4HQmST+KNmoKb3kPjeliMuYDBpTwVsaQj7TUkwu51d+SKjg19dnl2KyiXzRlNs8RW0fkYkPDX9yzaY7iXFnVQfHw/DF/eJ8C8hgFWpwRHJSBJSVknjmQfo=
 ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de; spf=pass smtp.mailfrom=lst.de; arc=none smtp.client-ip=213.95.11.211
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=lst.de
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=lst.de
 Received: by verein.lst.de (Postfix, from userid 2407)
-	id C070F68D0D; Mon, 26 May 2025 07:33:43 +0200 (CEST)
-Date: Mon, 26 May 2025 07:33:43 +0200
+	id 8700268AFE; Mon, 26 May 2025 07:35:56 +0200 (CEST)
+Date: Mon, 26 May 2025 07:35:55 +0200
 From: Christoph Hellwig <hch@lst.de>
 To: Kuniyuki Iwashima <kuniyu@amazon.com>
 Cc: "David S. Miller" <davem@davemloft.net>,
@@ -36,7 +36,7 @@ Cc: "David S. Miller" <davem@davemloft.net>,
 	linux-nvme@lists.infradead.org
 Subject: Re: [PATCH v2 net-next 6/7] socket: Replace most sock_create()
  calls with sock_create_kern().
-Message-ID: <20250526053343.GF11639@lst.de>
+Message-ID: <20250526053555.GG11639@lst.de>
 References: <20250523182128.59346-1-kuniyu@amazon.com> <20250523182128.59346-7-kuniyu@amazon.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -57,4 +57,7 @@ On Fri, May 23, 2025 at 11:21:12AM -0700, Kuniyuki Iwashima wrote:
 > Let's use sock_create_kern() for such in-kernel use cases as CIFS
 > client and NFS.
 
-Same thing, one patch per subsystem please.
+So if sock_create is now almost unused and the special case, should
+it also be renamed to make that explicit and make people not accidentally
+use it by default?
+
