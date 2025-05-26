@@ -1,122 +1,143 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-wr1-f51.google.com (mail-wr1-f51.google.com [209.85.221.51])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6A4141EFFB2;
-	Mon, 26 May 2025 09:56:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8B9431F03C7
+	for <mptcp@lists.linux.dev>; Mon, 26 May 2025 10:06:35 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.221.51
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748253397; cv=none; b=n5eW+DrVzemFJMVj/U0ubDp+KtJ+DMWBZDcdbZZDGW5y3Eoe4CnptXb3xmA8gry6+rgRK1SpF0vKqcNbVNY6SktSxoNqSdED+JJ2C+TzNjfJQLKyDrVyfDB3vve9it9ipIeidgyFQo0B8t0S3AHuv678ekINuvCuDrGzj9CButU=
+	t=1748253997; cv=none; b=SFLjyUj/FUPWXgq3J8DANYBvlrf0Mn0TLCs/xLNClamhd7NKJDWJlnlxYd+IxBoAlNCpVAj/pSd2D21zCCvNLCGLjjBzmm/S2hYVVNzHbv1YCMBl3vRDVSQchkL4HI8PiK1PKL5rsmdgr1dcnVVO1DSQkOnFetc4537om4IvM00=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748253397; c=relaxed/simple;
-	bh=InKrliOxA419G5GRSK3MtNB+5MDBGLDnUFFqYKshanc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Xz/IRpFhOC7UouINKM/y1gKNxgQob0NlzhK3iCFF1TNA3RWNcCy+wJNxx7LFTKu+YEcpz0QYH5anJ/7d3eBypYDKOshrgObKMse3CW+Q9jNpiEjgFuhTstvD26k2SKxJDFubB7zZmQ9wD+4XWMNBFBavnJiL0ON5zZz5p7h9mv0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Cu05q3jt; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1748253997; c=relaxed/simple;
+	bh=wHuTCDqGbQazXhYURFiMHlcs6ZTg1HV4SgDfCGERDjo=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=LbpY7paNuEal77OuQ477KuzUPabzyduhpwj3IiYEch8Vdx8GuaHZcpv9GEaZdY1AeaRdrsQd7k3d4rux4I0nQ2aWuDBSuEGk824+0vJ7AEg6TH67B+VxvLhIoSNRlKDVgID9s8fPLg5pzRPqq3glDH4FSn9JaZatHYGhrnGmefQ=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=PU69/bmM; arc=none smtp.client-ip=209.85.221.51
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Cu05q3jt"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 62073C4CEE7;
-	Mon, 26 May 2025 09:56:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1748253396;
-	bh=InKrliOxA419G5GRSK3MtNB+5MDBGLDnUFFqYKshanc=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Cu05q3jtPCd0yl8GDMycEECc+PYFmxK4F8SQmoQZYpM95F3zN7SlZVgrg+1Z+7TyG
-	 6IUtO3y/FO4czYALZcjRIOHkzifoFFmcNaUjSubOG297QhfLN8w/818BkBPEni5esi
-	 KXEqZdPhFfR6VsTS3gcOx3Zn2chQKM4fJdTzemtQymdiwCwp7h9U9IOVJ76uxeX3HJ
-	 z7MrFZtIGK7yV880T28+HqqMkXRqhreMjZVtcfeKktljoTlt7ORzPxKbLywuqfNBOI
-	 BAlQ0ppmfkOi0f2EGSlaleajgtBUsi9WOjMHyhEa7nLUvLeKBP2NfOzsAOGEVuU7Ov
-	 vyw/BujB2b6RA==
-Message-ID: <66cedd9e-e296-4d82-a623-aa4ad5435b3d@kernel.org>
-Date: Mon, 26 May 2025 11:56:31 +0200
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PU69/bmM"
+Received: by mail-wr1-f51.google.com with SMTP id ffacd0b85a97d-3a36e090102so1131283f8f.2
+        for <mptcp@lists.linux.dev>; Mon, 26 May 2025 03:06:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1748253994; x=1748858794; darn=lists.linux.dev;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=TPh1Ct6QshCKWmDEdMk7hCZKp6Jz8m7ODsFZr4dzpn0=;
+        b=PU69/bmMkFyk07h536IdRL3pzmTU1ku8J/rIJXAaRH97rcEoU7qhf/4iAtfxwIeqAX
+         RNYXkkYVF98u4okka8w/2ZYHlmgfJPP3IZ4sFCtLvT95mfzBNX+9OALImYqO7Nivchry
+         GJq/rs43d/QgtGXZCBjweqTRR8ULBWswJC+Rnqwdj/+ZITPkewyCDxACSl5r9FoMpkVP
+         Dri0XWHpP7QEKs6a/e/1S2dPJL6V8Sol9KMpS2yz6Jul/szOrJzEvRFmo+LW6bcsghoc
+         pO4SH/0T2cX43tmOZfI9WuwrpHMLCt0TqgEr4/OIdbxYCQicaYPBcO7sVeFbtyuDCVoG
+         7zHw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1748253994; x=1748858794;
+        h=content-transfer-encoding:mime-version:references:in-reply-to
+         :message-id:subject:cc:to:from:date:x-gm-message-state:from:to:cc
+         :subject:date:message-id:reply-to;
+        bh=TPh1Ct6QshCKWmDEdMk7hCZKp6Jz8m7ODsFZr4dzpn0=;
+        b=mXG/9O09nG5G7X7y5105Yaud55Dped0KHRF4LpQxDA/DJ0ovGGYuccPBpUpABoTyex
+         0ccgJA7AW7GHWfgkXNnIp6IyO0YJ+1VEPp4IeKjGLLQYe3fK2FyIp1NG3+KQEXWNeBgq
+         RGGz6rmkY3lBSwYI8DiQY6kgGTy1XOko1i4MELTgDybINNsDtxs7icb28aVofrzomeZB
+         J84g7fKyzVJwVvHp7riGIuwE9EUyRCWETPLTd11LjlJqz4hKXkCqWhBSPj7KNpXO3BpS
+         HvG5jNxnR1kJ4WoSdL2GAbQ1slVsHY8w8YyVAvEdA1BmGH7d72TGfNb0gbzCEYro+G4C
+         6tNw==
+X-Forwarded-Encrypted: i=1; AJvYcCXyLwviL3TIuiagSyUdydZcosY5yUBEVMYyMKf7UaPRIavsPe3owpGtsevHySWbwtOdYaJJ3g==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yz+k1wQs2j6ubaLeKH2K2ZfWtUXddCnXv9cPPACo3r5zhs8ngcE
+	eloi93Irm2SpCrbCn0eH9BgMz/R6GHZe5ywtOBCXgIQSUXWFRvwzc08Y
+X-Gm-Gg: ASbGncvLVpzcZTmsb28bl9UBkgvRNr1W66JJ2LQnHNlkjWm0oAHaKHjB2Gjatwl3Qbe
+	nIOAte9543IMwXJIgqC1Tvh5gg/3SXHekji7dBGXlGwt7B1MVSv2VI6+EJ+HfUQ1jYSjjIct9gP
+	zez8zDlnDKKu1FqizZoYZp0lXQze6fbssMnFCKyVkcYaGOqvYg+EWbren9HLRuOOcApx7Z52TM9
+	YDCKQDHQ0E3ZOaS4tRpsQZW+cPlugetQQfeqqBqm6+Qi119GZmObiiBeVv9Ihl9WrePP4czNPh7
+	r0IsIqZyORS4PHgYEfrJ2gcU4CEiohO1nxbMWnwBRcZb347fyfRDYKaF1qJG9u8O2/dlcQ+QfEp
+	Cfb1Acx9R6SNnKg==
+X-Google-Smtp-Source: AGHT+IFNZkvn3tGi7ARy4dpQ3TrKaZGPDzyR33srZYXPNzWELPLp52hjHD63j/jTAmYk0WDJMq4RNg==
+X-Received: by 2002:a05:6000:238a:b0:3a4:d367:c5aa with SMTP id ffacd0b85a97d-3a4d367c798mr4219403f8f.20.1748253993614;
+        Mon, 26 May 2025 03:06:33 -0700 (PDT)
+Received: from pumpkin (82-69-66-36.dsl.in-addr.zen.co.uk. [82.69.66.36])
+        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3a4d67795eesm3561697f8f.86.2025.05.26.03.06.33
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 26 May 2025 03:06:33 -0700 (PDT)
+Date: Mon, 26 May 2025 11:06:32 +0100
+From: David Laight <david.laight.linux@gmail.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Kuniyuki Iwashima <kuniyu@amazon.com>, "David S. Miller"
+ <davem@davemloft.net>, Eric Dumazet <edumazet@google.com>, Jakub Kicinski
+ <kuba@kernel.org>, Paolo Abeni <pabeni@redhat.com>, Willem de Bruijn
+ <willemb@google.com>, Simon Horman <horms@kernel.org>, Kuniyuki Iwashima
+ <kuni1840@gmail.com>, Chuck Lever <chuck.lever@oracle.com>, Jeff Layton
+ <jlayton@kernel.org>, Matthieu Baerts <matttbe@kernel.org>, Keith Busch
+ <kbusch@kernel.org>, Jens Axboe <axboe@kernel.dk>, Wenjia Zhang
+ <wenjia@linux.ibm.com>, Jan Karcher <jaka@linux.ibm.com>, Steve French
+ <sfrench@samba.org>, netdev@vger.kernel.org, mptcp@lists.linux.dev,
+ linux-nfs@vger.kernel.org, linux-rdma@vger.kernel.org,
+ linux-nvme@lists.infradead.org
+Subject: Re: [PATCH v2 net-next 1/7] socket: Un-export __sock_create().
+Message-ID: <20250526110632.7ab3323e@pumpkin>
+In-Reply-To: <20250526052907.GB11639@lst.de>
+References: <20250523182128.59346-1-kuniyu@amazon.com>
+	<20250523182128.59346-2-kuniyu@amazon.com>
+	<20250526052907.GB11639@lst.de>
+X-Mailer: Claws Mail 4.1.1 (GTK 3.24.38; arm-unknown-linux-gnueabihf)
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCHv2 net-next] selftests: net: move wait_local_port_listen to
- lib.sh
-Content-Language: en-GB, fr-BE
-To: Hangbin Liu <liuhangbin@gmail.com>, netdev@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>,
- Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>,
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>,
- Shuah Khan <shuah@kernel.org>, Mat Martineau <martineau@kernel.org>,
- Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
- linux-kselftest@vger.kernel.org
-References: <20250526014600.9128-1-liuhangbin@gmail.com>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <20250526014600.9128-1-liuhangbin@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Hi Hangbin,
+On Mon, 26 May 2025 07:29:07 +0200
+Christoph Hellwig <hch@lst.de> wrote:
 
-On 26/05/2025 03:46, Hangbin Liu wrote:
-> The function wait_local_port_listen() is the only function defined in
-> net_helper.sh. Since some tests source both lib.sh and net_helper.sh,
-> we can simplify the setup by moving wait_local_port_listen() to lib.sh.
-> 
-> With this change, net_helper.sh becomes redundant and can be removed.
-> 
-> Signed-off-by: Hangbin Liu <liuhangbin@gmail.com>
-> ---
-> 
-> v2: remove net_helper in selftests/drivers (Matthieu Baerts)
+> On Fri, May 23, 2025 at 11:21:07AM -0700, Kuniyuki Iwashima wrote:
+> > Since commit eeb1bd5c40ed ("net: Add a struct net parameter to
+> > sock_create_kern"), we no longer need to export __sock_create()
+> > and can replace all non-core users with sock_create_kern().
+> >=20
+> > Let's convert them and un-export __sock_create(). =20
+>=20
+> The changes looks good, but the commit log including subject line
+> is rather confusing.  What you do is to replace all uses of
+> __sock_create with sock_create_kern, which works because
+> sock_create_kern just calls __sock_create with the last argument set
+> to 1 as those callers do it.  This then allows marking __sock_create
+> static because all outside users are gone.
+>=20
+> Please state that, i.e.
+>=20
+> Subect: use sock_create_kern insteadf of opencoding it
+>=20
+> Replace all callers of __sock_create that set the kernel argument to 1
+> with sock_create_kern, which is the improve interface for that.
+> Mark __sock_create static now that all users outside of socket.c
+> are gone.
 
-Thank you for the update!
+I'd also like to see an explicit statement on all these patches
+about whether the created sockets hold a reference to the namespace.
 
-The new version looks good to me:
+I know it is documented in the function definitions, but the issue
+has always been that the callers get it wrong.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+=46rom what I remember, as this point in the patch series sock_create_kern()
+doesn't holds a reference, but by the end of the series it does.
+That just has to be a recipe for disaster and pretty much requires the
+changes all go through the same tree in one merge window.
+But the code touches multiple areas and the changes would normally go throu=
+gh
+multiple trees.
+So it's going to be hard to get all the acks and the patch accepted.
+(Unless you persuade Linus to 'just apply the changes'.
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+I think you need to look at three merge windows.
+1) Add new function(s) for creating user/kernel sockets with/without holding
+   a namespace reference.
+2) Update all the callers to use the new functions.
+3) Delete the old functions.
+
+There is no point modifying the callers twice, and the commits need to
+explicitly state whether they want the namespace held or not.
+
+	David
 
