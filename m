@@ -1,62 +1,62 @@
-Received: from mail-pl1-f181.google.com (mail-pl1-f181.google.com [209.85.214.181])
+Received: from mail-pj1-f49.google.com (mail-pj1-f49.google.com [209.85.216.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9BBD2227BA5
-	for <mptcp@lists.linux.dev>; Fri, 30 May 2025 02:54:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.214.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C558633F
+	for <mptcp@lists.linux.dev>; Fri, 30 May 2025 02:59:39 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.216.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1748573646; cv=none; b=KNK0/fBwJvx6d/rYjjljpDiy2RsyYidGMQ7R3L1CxJYYxNnu9jwx98QBO5S5WNdOAyedgnc3QoIh7N7yxUu/05zNw9PdeKBlaRhygwAJVwJ0CJro5H+v6F2vakTOeXRBV2HMqhPJbeqJdHUcbsxLvqtbL9Fo7aziTmsWEbPCQzA=
+	t=1748573981; cv=none; b=DeiEYh2kHyEJmZg56jEaXsaZxUHrR4gu5n8x3nfQYq0ZjKTLr3IsO8oDIcUGHoTTEkXIphULVXAktofM6KvK3Q0dKo+7I2dUqY1BaxEkjlsNRzx6513wsOEX0dj18fNBZyHTaF2KLqnPHJfIxwObkVaWSI09ZhzJqYRyIZ8TPO8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1748573646; c=relaxed/simple;
-	bh=ru9a6sY4ZvkfZZSCB/5pKAsVZvCUON0+3IAKLW5UIfU=;
+	s=arc-20240116; t=1748573981; c=relaxed/simple;
+	bh=dwlSDKJOBselJa1Xc6f39rzrzCGs8bColAIVJ55Jb8M=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=soh74iyDsiqXtAX3ZnG2qRAMA67uh0CWj6KfV4bXxxSXLzaiim2xwfShf+cvXG5cQlIGWGLtVewQ+sBuT5xOoS7eS1OVU58AFaxuDcHL8DqqbHRAMOIhrLzg/En+Kmy8/OgTVNO5h91ApwiVYp/pvw/s0TinB2etf9MwBu7lC4I=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=LjfWCOT4; arc=none smtp.client-ip=209.85.214.181
+	 MIME-Version; b=Q71BI09I/zXgaWMqeOaCp1sn2XdxbAPaf3LnYlbXJnfswl2tNZ3gYWSAnaOYb1D1mZNRKM0O+1aDM1XJoxO+W48nPBkDuMgNRQfqK2L2yPW4JYfejfZaSJ/5Ut8DJsiBuGscUPd0byOxFZqDHv+ZQMchvCE/mQ3HGQ5s1Fn6AWo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=eqgC9bn8; arc=none smtp.client-ip=209.85.216.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LjfWCOT4"
-Received: by mail-pl1-f181.google.com with SMTP id d9443c01a7336-2350b1b9129so8050845ad.0
-        for <mptcp@lists.linux.dev>; Thu, 29 May 2025 19:54:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="eqgC9bn8"
+Received: by mail-pj1-f49.google.com with SMTP id 98e67ed59e1d1-312150900afso1512380a91.1
+        for <mptcp@lists.linux.dev>; Thu, 29 May 2025 19:59:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1748573644; x=1749178444; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1748573979; x=1749178779; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=XWyxMFb5cX5nYvnzZ8Z+1Eedymi4rZCZ/8P/Gr9oFgw=;
-        b=LjfWCOT4lhmuLDbWQj5+gltKOXV3w+u/DJ6YdDFdxG67KgAOXgp16TbYqF+DVfcB1O
-         tzteFmNdZrWfSBb0VHtIzOVOSYTjb4C1fuD6XgbySSgCKOFuhzrQnkK4n2O2l523Alvp
-         wrgsBeOL/tH1wyF7K5EWr7hChJF+gpGGgCFMspTb/QQzHsoBxJj0TpHxg/cv9X7ebTMR
-         8iIeYCTA0S6uV2pux6HW94pyN5PMMI5NtSwirVG7OYE1JBud0sUriw7MJG5hhIU+2+TO
-         ZG2hZO6GdFc3L45d0L8j2RBNbpSs5DY5FGxJ899wcGwNhthojLFjceCwRPgnb0X8UjDA
-         NcQQ==
+        bh=5sVgqziKNXk1VKHFZ3xvpqcIL2UFykT0jMs8udwzfSE=;
+        b=eqgC9bn8MbBQpBSVMfAbyDyro+P057EFYHTfQOFtTPdBXEJL2J2CXSiDAs5Gwank4D
+         tD09vbRGmJjjcG3MeswTwuTBgJuipgL7fnnEteMnd7+Hv2Aps3YgeWZK2aClDyZ3uZds
+         1pCB3YkHObg8Xu9WjNuDxyztDu8dz3Arw1EVLFgCtjDtze1Kb2pwPWiBbcrjNSZbk/Fm
+         sXwnS36o+DZBLNutU8HOqniV3OuSh6FWjbSCAuoJ/0sEPMNaeV4ZvuvS38QL2RrRxKSA
+         4+m98jxSg8IZgA53FXIHUGR3h8DrRmw/5Lx3Uk8IWjvZCBW2V5TMOIClxcnbimHGqbZW
+         CN5A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1748573644; x=1749178444;
+        d=1e100.net; s=20230601; t=1748573979; x=1749178779;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=XWyxMFb5cX5nYvnzZ8Z+1Eedymi4rZCZ/8P/Gr9oFgw=;
-        b=fMXleLYIdniksNjYdBNArC3C8rFKIDuBPwk12VYGaqWD4QyWjxg4ypG0BXstMEQ9N3
-         W9dyldSpC+zJZDHQDbO1QfzlIbOk2wYnqCmHK5Kb4mPZZyNTgZunRz5mkVdN5nEDW4yY
-         KZ2f67tXamgViv2/1TbJytFOCAfHtxIExjmn/F5E9S3JFElAlR+VVm9wi13yvkHDmKhM
-         qodbWfnWvKSx6APf2eCwBFOW5sK9kAm2kENzuvieAfcnbU6mQVKC0gnGYjbCDAtb6mI3
-         fXK61Jo+GZ/mypo4Ro2Bl0KkIzytTKnDYm30gVq1meH1KGS+UWKRsrJYMSrofL0C9ozF
-         o3Cw==
-X-Forwarded-Encrypted: i=1; AJvYcCXjz7nirJxAXqkbv8ZUvMfUj3GaEAtNqIWC9gumevL8BgXg3h8XgGJsmQgnUSbTlLjpnpt3GQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyJiaFHOWKuR9USBh4vhzkqTcmiAwa9BiV3S2/5I8oInkmjnLe3
-	fK/BvkygNkFoIZF+yEOJci3DOaOzRnyJMJBf6QCdvcgpAOTQCIFVj6s=
-X-Gm-Gg: ASbGncvh+nrwcWnZQrKI8j6yiDfYZnYeNr6F5gXPPymqX4Mu7Yz/FxYuUWMX82TbK4I
-	ZPNkXGAx+hn92xl7tRBOwKoQ/WZtElDMaZ6+QeuIzeByzJiqyRbXiBoA2E7LXdmq9eQ0fUcESUD
-	LMtdT6ueCsDHKiTaBsFPY29jJwoaDjepTJhpDE5+PkYeFf+GT9STkJj6zbGBWPCWrz07k+IG01v
-	XAf2JfV1GxMa/5rMdUOsRgiiHACMWBg9APdtjAeTSyObeJhxNkW3Nk21ZYmN1o7GnsfU0y1oYFz
-	mgxZbEZ+FSFJJIPPbzunFy80zCmv
-X-Google-Smtp-Source: AGHT+IGgDezX7cz1uOZykPYiPInz+eIk19WtpZF+nVK4hwKpEI92osR/Nx6vpb7wz1AjRVv5hZda0w==
-X-Received: by 2002:a17:902:d544:b0:224:10a2:cae7 with SMTP id d9443c01a7336-235396cb241mr8527095ad.40.1748573643807;
-        Thu, 29 May 2025 19:54:03 -0700 (PDT)
+        bh=5sVgqziKNXk1VKHFZ3xvpqcIL2UFykT0jMs8udwzfSE=;
+        b=JMGcfDfxxgl1Xvf69nfH3V13Ct2kdzz58rQPRj8ZWbRXViGg5mduwdYhghkyLMLevw
+         IN/72+ysMveVOkE7lFDXSukP/ZOvItL9pA3OPXr8pz9kn6JgshMwDsyFwX9OjAILz2dR
+         zp9ilh+1Ki5Qlv8n05pngK+lKfWxNaCpJ6WFLw1Ibc4ZWbDipZael6BXKHR5hJA+/sUj
+         m8EQWUwo8R4dZOIm/MHu7GY6RFlG03d5k8RlA+VgrUALCU9Ew1fBFCtCHayVt1zxwY/0
+         +hpdWWUH7JOPOLVf3uhiKS/U7wPiicIHtvFI3ABPqlegILhEl8QpypJIm7DPF/ETR6vq
+         sNOg==
+X-Forwarded-Encrypted: i=1; AJvYcCUb4tWfaZyzwYKJm0yLlyNuYuHwIeELJStSgAA9aeoE7Q1abQLyZkG6q/7f+1tjiyoFD40urQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YxSToW+E4ml1A3b3rgoMaXJhustUxEFqYWLAj5q6+IgQFUtJMxc
+	U+BIuaD3oZDnK2oJrjzvQ+O6Pyd8mLfwZJJfLKHc35IVrWgoHcH9yr8=
+X-Gm-Gg: ASbGnctbhty7iWvl4PPsaFCYx2Uz0F9lM2DwjVuW129ctbx6SeCAowfO6b9TrgQOFCA
+	8jxr3jFv3/MNbw+fkRwE6yPj3lVyGtdkynpxHJximnvTmEYzx9IVflnsqpY4e5JG9f0a6+u+VUy
+	vZXffu6bNLZnJ9pH1jwTzgPvcF+FsmtXATwHtTPtA7ZE2XPYcxsVulcBTbl7sBjrB0+RF8Odl2D
+	92hVktF7/UjWmttOlJ0DYPn8JEB/zP3HvFjEWezq+qHHKaP4T0PkhfadfjDiT92q81XcOKohwH0
+	GkOMZmGGngQRJTnyukle81sYf8ax
+X-Google-Smtp-Source: AGHT+IHAp+B0ti+QnJpuPvLDos14gktvJbY4vx5x1X1dIQardFp/ZXV7fELwwD6fMQPTpZOdVEzadQ==
+X-Received: by 2002:a17:90a:e7cc:b0:311:b0ec:1352 with SMTP id 98e67ed59e1d1-3124152772cmr2869665a91.11.1748573979187;
+        Thu, 29 May 2025 19:59:39 -0700 (PDT)
 Received: from fedora.. ([2601:647:6700:3390::c8d1])
-        by smtp.gmail.com with ESMTPSA id d9443c01a7336-23506cf9380sm18830305ad.203.2025.05.29.19.54.02
+        by smtp.gmail.com with ESMTPSA id 98e67ed59e1d1-3124e29f8aasm280977a91.8.2025.05.29.19.59.37
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 29 May 2025 19:54:03 -0700 (PDT)
+        Thu, 29 May 2025 19:59:38 -0700 (PDT)
 From: Kuniyuki Iwashima <kuni1840@gmail.com>
 To: hch@lst.de
 Cc: axboe@kernel.dk,
@@ -80,12 +80,12 @@ Cc: axboe@kernel.dk,
 	sfrench@samba.org,
 	wenjia@linux.ibm.com,
 	willemb@google.com
-Subject: Re: [PATCH v2 net-next 3/7] socket: Restore sock_create_kern().
-Date: Thu, 29 May 2025 19:53:41 -0700
-Message-ID: <20250530025401.3211542-1-kuni1840@gmail.com>
+Subject: Re: [PATCH v2 net-next 5/7] socket: Remove kernel socket conversion except for net/rds/.
+Date: Thu, 29 May 2025 19:59:33 -0700
+Message-ID: <20250530025937.3214873-1-kuni1840@gmail.com>
 X-Mailer: git-send-email 2.49.0
-In-Reply-To: <20250526053227.GD11639@lst.de>
-References: <20250526053227.GD11639@lst.de>
+In-Reply-To: <20250526053321.GE11639@lst.de>
+References: <20250526053321.GE11639@lst.de>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -95,37 +95,17 @@ MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
 From: Christoph Hellwig <hch@lst.de>
-Date: Mon, 26 May 2025 07:32:27 +0200
-> On Fri, May 23, 2025 at 11:21:09AM -0700, Kuniyuki Iwashima wrote:
-> > Let's restore sock_create_kern() that holds a netns reference.
-> > 
-> > Now, it's the same as the version before commit 26abe14379f8 ("net:
-> > Modify sk_alloc to not reference count the netns of kernel sockets.").
-> > 
-> > Back then, after creating a socket in init_net, we used sk_change_net()
-> > to drop the netns ref and switch to another netns, but now we can
-> > simply use __sock_create_kern() instead.
-> > 
-> >   $ git blame -L:sk_change_net include/net/sock.h 26abe14379f8~
-> > 
-> > DEBUG_NET_WARN_ON_ONCE() is to catch a path calling sock_create_kern()
-> > from __net_init functions, since doing so would leak the netns as
-> > __net_exit functions cannot run until the socket is removed.
+Date: Mon, 26 May 2025 07:33:21 +0200
+> On Fri, May 23, 2025 at 11:21:11AM -0700, Kuniyuki Iwashima wrote:
+> > Let's drop the conversion and use sock_create_kern() instead.
 > 
-> Is reusing the name as the old sock_create_kern a good idea?  It can
-> lead to bugs by people used to the old semantics.
+> Please send a patch per subsystem that is converted to make the
+> commit log better and help with bisectability.
 
-In the old days, sock_create_kern() did take a ref to netns,
-but an implicit change that avoids taking the ref has caused
-a lot of problems for people who used to the old semantics.
+Do you mean splitting this patch into per-subsystem patches
+within the same series or sending non-netdev patches separately ?
 
-This series rather rolls back the change, so I think using
-the same name here is better than leaving the catchy
-sock_create_kern() error-prone.
-
-
-> It's also
-> not really an all that descriptive name for either variant.  I'm
-> not really a net stack or namespace expert, but maybe we can come
-> up with more descriptive version for both this new sock_create_kern
-> and the old sock_create_kern/__sock_create_kern?
+The former is fine, but I think this change should be done in
+the same series as the main goal of the series is the changes
+in this patch, making kernel TCP sockets hold netns ref in a
+single place.
