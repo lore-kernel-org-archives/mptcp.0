@@ -1,76 +1,76 @@
-Received: from mgamail.intel.com (mgamail.intel.com [198.175.65.19])
+Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.18])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 642C814F98;
-	Thu, 19 Jun 2025 06:10:27 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=198.175.65.19
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 979C13085D3;
+	Thu, 19 Jun 2025 07:11:52 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.18
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750313433; cv=none; b=sbjVadIfSFpdVwp/YY1uXIBK+jR3Ey1K+K7YmaGyH9ASgNZW8mDYxoU1yBkrwnBSXnzOJhOdytEip0msVsb9rE8kMgK7LPcCsYvQTrMI+D0WwXEmn2TkkzbX/V60YtbV2hwgYq9rQOLAz7kIUSvGaxyvuTIOcc8TtUsbAZhC0W0=
+	t=1750317118; cv=none; b=W5APmXaXSj8A5Lk0qDBi72Z1qqEJrgRzJtM7x3ALU7Lr4ujvGr17wCiUSsgT7sqdJMLkqhk4E3+2dDK7D3z75+0zhhB1C9EXu0E8Pe0RAK/y0BxQJFgNSLPcKARo75oORiO4k8EZDRyMMmQ8JRHdshDvp9PEshQ5ipNfF4utz7o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750313433; c=relaxed/simple;
-	bh=hse0gLQo97AAPRegVpANJav7KcpLbjWje781J+p/kTA=;
+	s=arc-20240116; t=1750317118; c=relaxed/simple;
+	bh=YGcT0vFQvXLpPA1VqB4Ya1FmqAljEpMVLCpwyvMS30s=;
 	h=Date:From:To:Cc:Subject:Message-ID:MIME-Version:Content-Type:
-	 Content-Disposition; b=pgayIt0ygBmRegX/OcoJDeC7M8wphfdoADymdfOvM1Wx2NV2InC02iw7UMT97+We+Zo4PYknxiQRJ+EqX/wDdU6UdZVuTdb2yP9EQlbwruBzBN7xCdadmfgM8FRw/zt2APTHmrAxCKu5iz50F523QmUO+usVSGdcBvZ9T1twA7Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=Tsi3iANR; arc=none smtp.client-ip=198.175.65.19
+	 Content-Disposition; b=pLDRFn/3a+7UCTM6fQRLDprIlJC4PAPBdUw51dNSVdl+I1qYsYAs45XQaczzO9L2IldKM4Oj43jCTbOepuMSxRJ+Liiiw8qGzX3Xln06FNIaI011CpcL/WyJQtWPXTbh7NQR7RPa3HsBiXyroQ3io+UXKs59di4BKurIJsbbOvs=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=AQ+tso/g; arc=none smtp.client-ip=192.198.163.18
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="Tsi3iANR"
+	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="AQ+tso/g"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
   d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1750313427; x=1781849427;
+  t=1750317113; x=1781853113;
   h=date:from:to:cc:subject:message-id:mime-version;
-  bh=hse0gLQo97AAPRegVpANJav7KcpLbjWje781J+p/kTA=;
-  b=Tsi3iANRGxvDlFwzvAK8rjJ18UnLbvc9yGJZR1x2LfUone/AzgnrnsIG
-   0t5iD0nq42iJ6Ih4oiWNLli2lM9OHrg2u5Snz/Y1YL9iI/1JKSECzIj3l
-   9H53vsHHPrGQVMiq3aRE5ntCtgwIKHmoCxG46kp3i36+QDSaBBkll6psk
-   DmKdTrhi2YnjjR36mL39zqiT8iu4GPdtC8FBU9TPw1dhqiUTNgaEFboPi
-   eZttPb6CIFhphDIVR9A6eqqGpFm0+mrOfPSDn0cO1AGV3j/k45ayzaZkg
-   ica157AnY9u+ZesVXE8cn3wYxRd0T4f9pr5teD5LQ/+vDoaHG/qTrqKZ2
-   w==;
-X-CSE-ConnectionGUID: ZutnkuZcShqkVUCa9cDCdg==
-X-CSE-MsgGUID: bj5lhWVHRSOAPBcAn0BhfQ==
-X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="52432218"
+  bh=YGcT0vFQvXLpPA1VqB4Ya1FmqAljEpMVLCpwyvMS30s=;
+  b=AQ+tso/gKOnADl84rmEyh+P3lkAP8cbTNc/JxrENyza0VioFW521Zcpd
+   W7Tvpa3oDG/LyIimpUk8BByXXszJcGEhtiYuFPKVeboaONClPT3o7nrFc
+   2ARQlPKgyhHmS111noJIONmCzYdqvSMFABoXKk7RI0gSAjym1TT2Qsvub
+   7esmsZP0UpZWuYwBho1wkkp7g0l3IqQbC5GLN50d/r4Mx1gBq1yhAvLb0
+   FGKAKT2FmSRkX+Jj36udxOyzRu5t9CuA7NNEHI7XsC/acTPZex1VeDLdR
+   ZulXlFVvEayniSV7kIj2VblJ0IIBiESCBIoRvNlJLNRkNJFd4C+EFKqHV
+   A==;
+X-CSE-ConnectionGUID: T9GRkwWVTDe0yNZkGK1zeg==
+X-CSE-MsgGUID: 8fzf4yP/SVeOi/PUFJSDgg==
+X-IronPort-AV: E=McAfee;i="6800,10657,11468"; a="51793649"
 X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="52432218"
+   d="scan'208";a="51793649"
 Received: from orviesa004.jf.intel.com ([10.64.159.144])
-  by orvoesa111.jf.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 18 Jun 2025 23:10:27 -0700
-X-CSE-ConnectionGUID: +QL0HBfuQmuv4A44JTbSJA==
-X-CSE-MsgGUID: A2c1NmaxQHu+w0SJMn1bgQ==
+  by fmvoesa112.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 19 Jun 2025 00:11:51 -0700
+X-CSE-ConnectionGUID: GpmdNyhnRf6cWVo1L8eL+w==
+X-CSE-MsgGUID: JJwBFISJTDi3n3RQZDzqjw==
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="6.16,247,1744095600"; 
-   d="scan'208";a="155106522"
+   d="scan'208";a="155122876"
 Received: from igk-lkp-server01.igk.intel.com (HELO 28ae90bf6994) ([10.91.175.65])
-  by orviesa004.jf.intel.com with ESMTP; 18 Jun 2025 23:10:24 -0700
+  by orviesa004.jf.intel.com with ESMTP; 19 Jun 2025 00:11:49 -0700
 Received: from kbuild by 28ae90bf6994 with local (Exim 4.96)
 	(envelope-from <lkp@intel.com>)
-	id 1uS8TW-0000no-0S;
-	Thu, 19 Jun 2025 06:10:14 +0000
-Date: Tue, 17 Jun 2025 02:21:03 +0800
+	id 1uS9Qw-0001Gu-2e;
+	Thu, 19 Jun 2025 07:11:38 +0000
+Date: Sat, 7 Jun 2025 00:45:56 +0800
 From: kernel test robot <lkp@intel.com>
 To: Matthieu Baerts <matttbe@kernel.org>
 Cc: llvm@lists.linux.dev, oe-kbuild-all@lists.linux.dev,
 	mptcp@lists.linux.dev
-Subject: [mptcp:export-net 1/8] .git_markup: warning: ignored by one of the
+Subject: [mptcp:export 44/76] .b4-config: warning: ignored by one of the
  .gitignore files
-Message-ID: <202506170248.oW2SovpP-lkp@intel.com>
+Message-ID: <202506070043.viNH6Zew-lkp@intel.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="3J26tPH9d0dZJdb8"
+Content-Type: multipart/mixed; boundary="VOTQ7M0mubrfqdXI"
 Content-Disposition: inline
 
 
---3J26tPH9d0dZJdb8
+--VOTQ7M0mubrfqdXI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-tree:   https://github.com/multipath-tcp/mptcp_net-next.git export-net
-head:   b9a08b00d7b28bc8e3e89d8df62473d1474b75e6
-commit: 0244ad9a81b5dfe7ad347bf651a29b760a2fa3a2 [1/8] DO-NOT-MERGE: git markup: net
+tree:   https://github.com/multipath-tcp/mptcp_net-next.git export
+head:   61c264b6557656e2cd151024985e49c20074fc9e
+commit: 71618343e7294621cc5a482815172084f6ba04ce [44/76] DO-NOT-MERGE: git markup: net
 config: x86_64-kexec
 compiler: clang version 20.1.2 (https://github.com/llvm/llvm-project 58df0ef89dd64126512e4ee27b4ac3fd8ddf6247)
 reproduce (this is a W=1 build):
@@ -78,19 +78,19 @@ reproduce (this is a W=1 build):
 If you fix the issue in a separate patch/commit (i.e. not just a new version of
 the same patch/commit), kindly add following tags
 | Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202506170248.oW2SovpP-lkp@intel.com/
+| Closes: https://lore.kernel.org/oe-kbuild-all/202506070043.viNH6Zew-lkp@intel.com/
 
 All warnings (new ones prefixed by >>):
 
-   .b4-config: warning: ignored by one of the .gitignore files
->> .git_markup: warning: ignored by one of the .gitignore files
+>> .b4-config: warning: ignored by one of the .gitignore files
+   .git_markup: warning: ignored by one of the .gitignore files
    .pylintrc: warning: ignored by one of the .gitignore files
 
 -- 
 0-DAY CI Kernel Test Service
 https://github.com/intel/lkp-tests/wiki
 
---3J26tPH9d0dZJdb8
+--VOTQ7M0mubrfqdXI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=config
 
@@ -5432,19 +5432,19 @@ CONFIG_MEMTEST=y
 
 CONFIG_IO_URING_ZCRX=y
 
---3J26tPH9d0dZJdb8
+--VOTQ7M0mubrfqdXI
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: attachment; filename=reproduce
 
 reproduce (this is a W=1 build):
         git clone https://github.com/intel/lkp-tests.git ~/lkp-tests
-        # https://github.com/multipath-tcp/mptcp_net-next/commit/0244ad9a81b5dfe7ad347bf651a29b760a2fa3a2
+        # https://github.com/multipath-tcp/mptcp_net-next/commit/71618343e7294621cc5a482815172084f6ba04ce
         git remote add mptcp https://github.com/multipath-tcp/mptcp_net-next.git
-        git fetch --no-tags mptcp export-net
-        git checkout 0244ad9a81b5dfe7ad347bf651a29b760a2fa3a2
+        git fetch --no-tags mptcp export
+        git checkout 71618343e7294621cc5a482815172084f6ba04ce
         # save the config file
         mkdir build_dir && cp config build_dir/.config
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang-20 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=x86_64 olddefconfig
         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=clang-20 ~/lkp-tests/kbuild/make.cross W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash
 
---3J26tPH9d0dZJdb8--
+--VOTQ7M0mubrfqdXI--
