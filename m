@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B4C1E25ED
-	for <mptcp@lists.linux.dev>; Fri,  6 Jun 2025 12:02:42 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 395682AD0D
+	for <mptcp@lists.linux.dev>; Fri,  6 Jun 2025 12:02:45 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749211362; cv=none; b=AFOjqiwiM6VZ+pou6AgLaPBZTUb7WzPTva1Fyt8y59sWhGmnj4IY87/SDj2eBzlV7h1CiwUtiWNVouGgGHIg3F9zutSHNtQvGbHlYe+14Tsicjkn7r4ymbBSmjmCZ3L8xlmTRQZx149WZRM0m9IvugvDJhZBM9BGo/WLoj5Emw0=
+	t=1749211366; cv=none; b=K14LUFrX3EisNgkQB2WV9uE8kIXZag5l6sf2B4+5UnqQrROtFNb235NrqkjawAfv16v7CUpPDn7E05+hHWUykMa7iaydUWhEZmGD8lwA1IoDr4yYXQNqNL/MrwZ8lM+bSijPYnjgPta0kJ53vodMy4D8491jCGth6LYDVG3phHM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749211362; c=relaxed/simple;
-	bh=oS4qTHYcuqFizNn5KVlyGpepqfYtJrlmSnEGy5V9w3U=;
+	s=arc-20240116; t=1749211366; c=relaxed/simple;
+	bh=Xl1izAwoHPe47cjJDheZ0qKm01paYwLlFjIdD0B9bJM=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=ouWaWamQhfC7ojIeRYou8xTom+VeF34F8HRA7awkxoxA4kaUOnnFtuuRhPd6yWh1rVEqzWhYzGVQOLvFmJqvjqrJ2dgXohTzzdXRlqfczZMZ2l/uXHbfpMifrohp03gH9UbmCMjQdcH1o1IWELjZdUgqA2sFlbJRuJUi/TnFGY8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qwVuHYUK; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=blfEVHnTAlq7QLf2p9fqvug3ZB1pYbZ2iUW+o/ItJIc3gRmpeyPmL8IdwxUrLf52VaWeherio9ziqY5zGkVWeSOzOKApvzGd1G24GDeYccqNERscrO7d9Qu2fDODNKk0SIxybH9+Z0D8Itp8s/bhNDgukZHuiYGDKuewC2KMQJw=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=UmBdvOCp; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qwVuHYUK"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 379A3C4CEEB;
-	Fri,  6 Jun 2025 12:02:41 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="UmBdvOCp"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id B9273C4CEEB;
+	Fri,  6 Jun 2025 12:02:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749211361;
-	bh=oS4qTHYcuqFizNn5KVlyGpepqfYtJrlmSnEGy5V9w3U=;
+	s=k20201202; t=1749211365;
+	bh=Xl1izAwoHPe47cjJDheZ0qKm01paYwLlFjIdD0B9bJM=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=qwVuHYUKZNyeisRSVhMEja4n2dFGgIGkU96uoVNEl9UN8RmBPxg77BColxyoaz2cs
-	 l7im0tg3KC988qCrk5L0aCJDb0J0dta0kQyOC5Y1JiLDHCsUselZ4nsBbqkONSArjx
-	 3zU0XFwMhWROqvJ3y1QaUSP5SUvME3VyzUdlp9LBKb3EUbEdhJQiA69k+IU2C7OCVw
-	 ws28I5L4wbbLsJs9PNhlV28xBHEwF1VweHI9M9ADDMdaXDbTs+h8SS08P3fZiygkcZ
-	 By6+Rld34zoDFhxt1SNzVE/B/YMl3gk2sapFuYgE+1kCz/RBusYjdF/fUnpLnrOEh1
-	 q8H3C1VTvbvdg==
-Message-ID: <b5c707fa-4bf6-42db-b256-1ebaca4c95fb@kernel.org>
-Date: Fri, 6 Jun 2025 14:02:38 +0200
+	b=UmBdvOCp0AibKJ3CIdodZo0I6lmGpBcYdtl+fz523aWLJRW+wzvpEJD7tTcBjGIv9
+	 QFmiHSMEvngqOMnVya6SKbp+G32nNx+JsFHE/M35asJxXIYVyuJRy6wDO69Mt3FVe7
+	 4Yh11SUZ1/JJWljaNSAPwOJQTtK5auLd9pp5J2FISVcuZGpvVD4wW1zf/iEyPRbuBX
+	 E9L394VxI1wzH6xZLKTlNzKzvB5BimVa31tpJDEjyVJGudzWFgdrA2UbQ9xx5UsrAQ
+	 Erdsb2W6w9RIpWyjH/YMRz2Y/TvZa+pEr4Z3uZ7J61d+i+w8nLJmZq9JXij/gYD9u8
+	 v0j/6fV50Dr4g==
+Message-ID: <32fdb4b0-5378-4697-b87f-4341d25991ac@kernel.org>
+Date: Fri, 6 Jun 2025 14:02:44 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/3] Squash to "BPF packet scheduler"
+Subject: Re: [PATCH mptcp-next v3 2/3] Squash to "bpf: Add mptcp_subflow
+ bpf_iter"
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1748592117.git.tanggeliang@kylinos.cn>
+ <844a8399d77722ad06eb11751c468c7f46d3f3cd.1748592117.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,7 +87,7 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1748592117.git.tanggeliang@kylinos.cn>
+In-Reply-To: <844a8399d77722ad06eb11751c468c7f46d3f3cd.1748592117.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
@@ -94,45 +96,79 @@ Hi Geliang,
 On 30/05/2025 10:03, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> v3:
->  - put bpt_iter kfuncs into bpf_mptcp_iter_kfunc_set.
+> Define .filter as Martin suggested.
+> 
+> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> ---
+>  net/mptcp/bpf.c | 30 +++++++++++++++++++++++++++---
+>  1 file changed, 27 insertions(+), 3 deletions(-)
+> 
+> diff --git a/net/mptcp/bpf.c b/net/mptcp/bpf.c
+> index 113aad086b37..e52821bae49c 100644
+> --- a/net/mptcp/bpf.c
+> +++ b/net/mptcp/bpf.c
+> @@ -305,9 +305,6 @@ __bpf_kfunc_end_defs();
+>  BTF_KFUNCS_START(bpf_mptcp_common_kfunc_ids)
+>  BTF_ID_FLAGS(func, bpf_mptcp_subflow_ctx, KF_RET_NULL)
+>  BTF_ID_FLAGS(func, bpf_mptcp_subflow_tcp_sock, KF_RET_NULL)
+> -BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
+> -BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
+> -BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+>  BTF_ID_FLAGS(func, mptcp_subflow_set_scheduled)
+>  BTF_ID_FLAGS(func, mptcp_subflow_active)
+>  BTF_ID_FLAGS(func, mptcp_set_timeout)
+> @@ -338,6 +335,31 @@ static const struct btf_kfunc_id_set bpf_mptcp_common_kfunc_set = {
+>  	.filter	= bpf_mptcp_common_kfunc_filter,
+>  };
+>  
+> +/* .filter is called sometimes before prog->aux->st_ops is set,
+> + * then prog->aux->st_ops is NULL. If return -EACCES in this case,
+> + * an error occur:
+> + * 	bug: bad parent state for iter next call
+> + */
+> +BTF_KFUNCS_START(bpf_mptcp_iter_kfunc_ids)
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_new, KF_ITER_NEW | KF_TRUSTED_ARGS)
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_next, KF_ITER_NEXT | KF_RET_NULL)
+> +BTF_ID_FLAGS(func, bpf_iter_mptcp_subflow_destroy, KF_ITER_DESTROY)
+> +BTF_KFUNCS_END(bpf_mptcp_iter_kfunc_ids)
+> +
+> +static int bpf_mptcp_iter_kfunc_filter(const struct bpf_prog *prog, u32 kfunc_id)
+> +{
+> +	if (btf_id_set8_contains(&bpf_mptcp_iter_kfunc_ids, kfunc_id) &&
+> +	    prog->type != BPF_PROG_TYPE_STRUCT_OPS)
 
-Thank you for this new version! The modifications in the code look good
-to me, but applying them like that would cause issues in the code. Your
-first squash-to patch for "bpf: Register mptcp common kfunc set" would
-add a dependence on a later patch introducing bpf_mptcp_sched_ops.
+Correct me if I'm wrong, but I think this filter is not needed: it
+simply restricts to (any) BPF_PROG_TYPE_STRUCT_OPS, which is already the
+case without this filter because this kfunc set is only registered for
+this program type, no?
 
-I did the following modifications directly in the tree:
-- Revert "bpf: Register mptcp common kfunc set".
-- Add its content to "bpf: Add mptcp_subflow bpf_iter" & "bpf: Export
-mptcp packet scheduler helpers".
-- Remove the filter for the mptcp subflow iter.
+When applying the patches, I removed this function, the corresponding
+.filter, and the comment explaining the error with .filter (at the end,
+this iterator can be used elsewhere, and it is cleaner like that).
+Please tell me if that was not correct.
 
-Feel free to check the modifications I did and suggest any changes if
-needed.
-
-New patches for t/upstream:
-- 7464c07e0b21: Revert "bpf: Register mptcp common kfunc set"
-- 7a67a1f3a43d: tgupdate: merge t/bpf-Add-mptcp_subflow-bpf_iter base
-into t/bpf-Add-mptcp_subflow-bpf_iter
-- 6a9ee240a5f5: "squashed" (with conflicts) in "bpf: Add mptcp_subflow
-bpf_iter"
-- a3557639df4e: "squashed" (with conflicts) in "selftests/bpf: Add
-mptcp_subflow bpf_iter subtest"
-- 4bb0a3a3a05f: tgupdate: merge t/mptcp-add-bpf_mptcp_sched_ops base
-into t/mptcp-add-bpf_mptcp_sched_ops
-- e43d77b0c6aa: tgupdate: merge t/bpf-Add-bpf_mptcp_sched_kfunc_set base
-into t/bpf-Add-bpf_mptcp_sched_kfunc_set
-- 3f5d496d0334: conflict in t/selftests-bpf-Add-bpf-scheduler-test
-- f89d0256f95f: conflict in t/selftests-bpf-add-bpf_first-scheduler
-- Results: 226663e50465..8df73de5f995 (export)
-
-Tests are now in progress:
-
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/d4388fa1829e204dbc8bf97843787e8b143352cb/checks
-
-Note: I will monitor the CI and hopefully fix new issues if any.
+> +		return -EACCES;
+> +	return 0;
+> +}
+> +
+> +static const struct btf_kfunc_id_set bpf_mptcp_iter_kfunc_set = {
+> +	.owner	= THIS_MODULE,
+> +	.set	= &bpf_mptcp_iter_kfunc_ids,
+> +	.filter	= bpf_mptcp_iter_kfunc_filter,
+> +};
+> +
+>  static int __init bpf_mptcp_kfunc_init(void)
+>  {
+>  	int ret;
+> @@ -345,6 +367,8 @@ static int __init bpf_mptcp_kfunc_init(void)
+>  	ret = register_btf_fmodret_id_set(&bpf_mptcp_fmodret_set);
+>  	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+>  					       &bpf_mptcp_common_kfunc_set);
+> +	ret = ret ?: register_btf_kfunc_id_set(BPF_PROG_TYPE_STRUCT_OPS,
+> +					       &bpf_mptcp_iter_kfunc_set);
+>  #ifdef CONFIG_BPF_JIT
+>  	ret = ret ?: register_bpf_struct_ops(&bpf_mptcp_sched_ops, mptcp_sched_ops);
+>  #endif
 
 Cheers,
 Matt
