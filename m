@@ -1,63 +1,63 @@
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+Received: from mail-wm1-f49.google.com (mail-wm1-f49.google.com [209.85.128.49])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 06C022D4B49;
-	Tue, 10 Jun 2025 13:00:04 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.53
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F03A422D4E2;
+	Tue, 10 Jun 2025 13:00:03 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.128.49
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749560407; cv=none; b=gybZrm5U/GSB5ywDlp4sSnmxPiSiPoYuSfSPirygHb5lye4JEig9ev6UoLiG91TywBVUM6o4JowCu2G0DT5Yfs3S9yZ06zKktnPShZLRuWpeurlWAAnu7XAewfRndV52lFvYb/0wwTuf3ifEe6hWv/J3SqKFrTNT35TEGLi96kg=
+	t=1749560407; cv=none; b=P6Nl+oOoSP9Skk3FvSf4Kw2Oisi2yMsqSINQcUKjYSFGWvN/p0rKPwrszngwPQKAsvWbGzL2U513pE65VHtREdJtUVAroz/mV3P2vo/bVEi63HUTby8Ae3XvM6lgmLDvu7ljpuKzWI/zT/52CivOhpKO7UqOQ/K/00g1p8MHagc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
 	s=arc-20240116; t=1749560407; c=relaxed/simple;
-	bh=WV3qyljp1FFqBKDUIWxhAuvK1rhPdsEMfAJfaDUqOzs=;
+	bh=ruRyxqu11IYo4eZzSdGi8OGpZeomHZZexAOLHjT703U=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=QH/xHIRpKk7n3DvYuUoZn2hnuSmzWYQuKgUBEJ1iERyS95tRpradPbYdb0+H2mTuFBmXtlDHP1e4vXhn2PnafNbSdA2pH9kSm7pkg2J/kAW5Y9kxTmpp+qPXgzrW0tB48TxMH5Bh/NAFEENKe7+D5N/69HNu7JS32PN5IAT/CWw=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=aEV6GjTt; arc=none smtp.client-ip=209.85.128.53
+	 MIME-Version; b=CwskTZKCbgmt38UA8DTdAwTr5Q4siHiS+J38CQyQCukOsqTsE1w4qCLNxAOCrNMKU0i+lH2YdU0a25yyzqOhCgoFhTTtkIQs3qWK8l2U/yWeHLDk92ZJx8nFGkUlZLrKncUTMpvn6IkVlCxzH01++pjf8rQWjSoEEq8tZ3gwQok=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=brrCZ7KW; arc=none smtp.client-ip=209.85.128.49
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aEV6GjTt"
-Received: by mail-wm1-f53.google.com with SMTP id 5b1f17b1804b1-450ce3a2dd5so48426545e9.3;
-        Tue, 10 Jun 2025 06:00:04 -0700 (PDT)
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="brrCZ7KW"
+Received: by mail-wm1-f49.google.com with SMTP id 5b1f17b1804b1-451ebd3d149so34170395e9.2;
+        Tue, 10 Jun 2025 06:00:03 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749560403; x=1750165203; darn=lists.linux.dev;
+        d=gmail.com; s=20230601; t=1749560402; x=1750165202; darn=lists.linux.dev;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:from:to:cc:subject:date
          :message-id:reply-to;
-        bh=xODQOsY7Ch1/AVsy1j3cRm2HSOMfXVPATamQo+cFfTI=;
-        b=aEV6GjTtz/BG6s35e91IpRNC5fVcgmiSOUt5M5FZbVvMvWP6yX2dbGNrgZ0+Qs/CWl
-         HyuoNj8zBmy4BKwGtUWhbnFf+5zDbDTw/eYY3CG+DkUbyvfw+egDskTtUbB6ASYZWhVp
-         2pf1B2aAvUVfE1zSpo+xVFca14T/sbPLES3NBCZrvbWiT1lTCtUaAJ8v1iqbtXX9R1eq
-         5IYNPF901ObQPtgDoFoxIDrueZESqxkixg41vcwOVG6rirM+4WJlbw7eI4NkcJ0PTUPd
-         9CnLiJdGx+x1SJrcanKR+rj6M4qZp0Y/wnNnJKSPwgpfQOL0nepe74ZphylRiEZGXXxa
-         q/nA==
+        bh=OfBd7lpVrlSmgeZuwrplqniCnY7VqjzOTzQqiKGvaeM=;
+        b=brrCZ7KWEyIfVgSIuaaHoJiTk4IgU1YupG9yqVA6Teny/n8AcnC0Xvf4RPlavTwksn
+         GDUQD4NSneErfCUZNJ6efAUMb+pSnwNaOcnSbSmCJpDuUrfQxoIScY9hr4zH9IWJzM8+
+         n0ll2awHBwP7Tq79HwAAY1Nk8Hsf/Azi1C0+bv3LbQB6LsD0UbJKmN24TnShZNGsFDeI
+         gtOX2DS4e7x4kijKeZzQpbndR+5N/K7xYa6iqXy9VCQcP2Tsay7nLfoKs0YFw1fgDOC6
+         yVbZ0JYsVvF1O5Dwe6Fazc5Axo6erILbHKJm88bilK5tbPo5J2c/2jc7ONL8MdURzR2r
+         s9FQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749560403; x=1750165203;
+        d=1e100.net; s=20230601; t=1749560402; x=1750165202;
         h=content-transfer-encoding:mime-version:references:in-reply-to
          :message-id:date:subject:cc:to:from:x-gm-message-state:from:to:cc
          :subject:date:message-id:reply-to;
-        bh=xODQOsY7Ch1/AVsy1j3cRm2HSOMfXVPATamQo+cFfTI=;
-        b=L7AilPtttuYiBWbCumAbdf75m67zDJBpozbJqve4Rx9Vy5DNfGHyvpBlDvnNg4fiPg
-         vv9wbMMtOF0wUUWl5rAavPcQFXQT0tY1vA0kYRtPfKZx/1yVTfOLR6O/JbrJKcp8/ruH
-         fJccJsA+1XDs308jxSluBBR7H6IbD34PJ7cjptn9fLDjTTj4TFV2sc+b8s7aQEd6WEan
-         oNa5GNI/NlVivNIQz18g/E22wze72gJb/Rk+aWn1peQLxKrBZpDOrZe90Tk8fxJIwrqd
-         GPRvUEp1foCnCvXXWplvC6JW8iysFBt1sREbnWwrpuL2C1TTrRwHU0Oyy1zHHLjpDGZV
-         WbLw==
-X-Forwarded-Encrypted: i=1; AJvYcCW4awBJhxLLvSJECoagXqEkyPlhK//+Z6o2RLm382ARIElHpTkS13EJ2Kuu0tKVLJud9huRpik=@lists.linux.dev, AJvYcCWgRR5VeAeO9HUwjPZwyWH6/5TtuhphDeQ7RLsDwCVOVuFfJarCH5eRi6ylNfbR5BNFb5FDx32OD7FVEWEBk2tA3oOkWA==@lists.linux.dev
-X-Gm-Message-State: AOJu0YzwDhmefkDy57ZfnkFWBDwloA9eNSFRWonSnZy2lWDilhUsPIvP
-	Irmh2YsxrwYDCyrlMABDFgQIaSuEeV3jT1z0/+gXgLlv0EihIAstvs4L
-X-Gm-Gg: ASbGncvGdlPun/hce04BPyCnH3f8oRvHVUXlkVaMwKBpUZm3P2n2bW7fukgjhXK4k+f
-	cayQgw0An4CSch914iW978idt64BJ2rUauK4wsgOpoJYLZ1ybIe7nFC8NaWVYC2NrUuK452cxsm
-	RCvRs+Kb7x+gXZ0nCSJWIokgHDp+/V5FC30Yqh/3s2t1vq/Fcdia8pQJL84tbJ3hw4B8i4W1HTJ
-	CqFmlUKddAcg05ijH6qMWPG0idjqwNxPnMqp1RcRLsJ/wLDX/o7nIIOcziglpKHxltwvnyzDEt4
-	pFtYGRurGctOWT9Uc/prDcjrQ80FoLVWDi+AlcfwzSVFzeYSEWQN3i51g1Xod+oQR4WVlA533Pi
-	Qji1v
-X-Google-Smtp-Source: AGHT+IH50xxd8Tal3uz5MUIZzvNBMrNkJnkjBymLkRdNTd1KaJ0XksyIHVV56Y71+wJZ8TmiEO8msg==
-X-Received: by 2002:a05:600c:4ecf:b0:450:d61f:dd45 with SMTP id 5b1f17b1804b1-4520134088bmr168642505e9.4.1749560403134;
-        Tue, 10 Jun 2025 06:00:03 -0700 (PDT)
+        bh=OfBd7lpVrlSmgeZuwrplqniCnY7VqjzOTzQqiKGvaeM=;
+        b=kkrqW5zMY9RL0qGfzOEDd273e0rZh9imuijjxMvsCXAJJ7t6phu90fImUQ5m1aIy0C
+         8d4Zzl+eDRUi9607FuAT+WLV9uhK45YgtWjBRi6YmwQHxgqbxyHnABRmgqqKw7sZ4BhQ
+         wYWCdAw37MuQMPUnmEHJa94a38iWM7aDC9PQ23WaUZQ3xNHO80yqP0mGiSXKngzq4sFB
+         oLVYx0iqFk76A1VmpITMrIwdGe3Q5Mjk+CvjASVkKThsOB4clZ63WWjbh8uRVPrGyCv5
+         N1cO7J4gOOrbrypkZypeYOmPPBKCb9DO8KYCzFj+DXu7+xFkx0xOhbT5seVf3UZcRtu2
+         8kdQ==
+X-Forwarded-Encrypted: i=1; AJvYcCUscGFqJ1Rs7Dls3TK6zS2gxBZ3phjySng7LFy2dKVTdxOFIkmWg7bffG7PWwKi9wWzf9Hnlug=@lists.linux.dev, AJvYcCXkNaKE3aYxd6po6cMnxEn+HgOtcRY2VHnbCdXL+Z5uhvZSj3hzCyFwGKBbdWFysi0abQt2M71Rcyd0ttGMMqSs8c1juQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yxyx1Z71O91HFzbZwm7e8NMIs2wT8LEsctySmpRgBOMzpXdUWoA
+	S/D62ACVfxVCmjsp8WXTrfr4Zes+z0kL+x7fPIsZXrQF+v8nya4shlJq
+X-Gm-Gg: ASbGncsX8HAZPBy5Cm2B7UoHvlBT1Bg2XAGL9spXNrTlCW8HLt8s5d0r7mizcMN8XrW
+	o5t2CArzw2cAYgRuFVwIBl+kdCh/iSGvXgMOvtik6hhjGJ3GvFTNvKv9jT6o1tbRdY/0s1aB4gE
+	mBkuuTRl3yMZ/7iaRgeEkzjIwObMCwTKeT9WnYXWk7efonGlUOsi9RWFcOpk4ZbAJA4rgYNawlG
+	UQsGACAvgBI9/ON0zFdNgo0VfnIr5kOyJBm6PvQzfMqoBy1hT5IX25FCCiH5PHoenL48lb5mqXT
+	NJJ/N4Cnfq5VWIAmNtxsjCSe5SqlP2klo+DFVU1aPcj6OlPPNZsI/yPGbPf8frbR0mXNQw1U7au
+	K8Tkx
+X-Google-Smtp-Source: AGHT+IGG8m04vZTIjxssS5OJuicVpbIoXFqTeWTWJ2geJNryy0EwBrLIG9dwCeF2vAI7dlNrM6w9tg==
+X-Received: by 2002:a05:600c:a08d:b0:43d:abd:ad1c with SMTP id 5b1f17b1804b1-45201373d52mr151874655e9.6.1749560401962;
+        Tue, 10 Jun 2025 06:00:01 -0700 (PDT)
 Received: from imac.lan ([2a02:8010:60a0:0:6117:17d9:610b:9e0a])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452fb381abfsm130563485e9.17.2025.06.10.06.00.02
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-452fb381abfsm130563485e9.17.2025.06.10.06.00.00
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 10 Jun 2025 06:00:02 -0700 (PDT)
+        Tue, 10 Jun 2025 06:00:01 -0700 (PDT)
 From: Donald Hunter <donald.hunter@gmail.com>
 To: netdev@vger.kernel.org,
 	Jakub Kicinski <kuba@kernel.org>,
@@ -70,9 +70,9 @@ To: netdev@vger.kernel.org,
 	bpf@vger.kernel.org
 Cc: donald.hunter@redhat.com,
 	Donald Hunter <donald.hunter@gmail.com>
-Subject: [PATCH net-next v1 6/7] netlink: specs: wrap long doc lines (>80 chars)
-Date: Tue, 10 Jun 2025 13:59:43 +0100
-Message-ID: <20250610125944.85265-7-donald.hunter@gmail.com>
+Subject: [PATCH net-next v1 5/7] netlink: specs: fix up indentation errors
+Date: Tue, 10 Jun 2025 13:59:42 +0100
+Message-ID: <20250610125944.85265-6-donald.hunter@gmail.com>
 X-Mailer: git-send-email 2.49.0
 In-Reply-To: <20250610125944.85265-1-donald.hunter@gmail.com>
 References: <20250610125944.85265-1-donald.hunter@gmail.com>
@@ -84,264 +84,422 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-Clean up all line too long errors reported by yamllint in the netlink
-specs, e.g.
+Clean up all indentation related errors reported by yamllint in the
+netlink specs, e.g.
 
-    error    line too long (97 > 80 characters)  (line-length)
+    error    wrong indentation: expected 6 but found 5  (indentation)
 
 Signed-off-by: Donald Hunter <donald.hunter@gmail.com>
 ---
- Documentation/netlink/specs/devlink.yaml  |  4 +++-
- Documentation/netlink/specs/ethtool.yaml  |  4 +++-
- Documentation/netlink/specs/mptcp_pm.yaml |  4 ++--
- Documentation/netlink/specs/netdev.yaml   | 25 +++++++++++++----------
- Documentation/netlink/specs/nftables.yaml | 14 +++++++++----
- Documentation/netlink/specs/nl80211.yaml  |  5 +++--
- Documentation/netlink/specs/ovpn.yaml     |  4 ++--
- Documentation/netlink/specs/ovs_flow.yaml | 14 ++++++++-----
- Documentation/netlink/specs/tc.yaml       |  7 +++++--
- 9 files changed, 51 insertions(+), 30 deletions(-)
+ Documentation/netlink/specs/conntrack.yaml |  36 ++---
+ Documentation/netlink/specs/devlink.yaml   |   8 +-
+ Documentation/netlink/specs/ethtool.yaml   |  54 ++++----
+ Documentation/netlink/specs/mptcp_pm.yaml  | 150 ++++++++++-----------
+ Documentation/netlink/specs/netdev.yaml    |   2 +-
+ 5 files changed, 125 insertions(+), 125 deletions(-)
 
+diff --git a/Documentation/netlink/specs/conntrack.yaml b/Documentation/netlink/specs/conntrack.yaml
+index e48add669b6d..c6832633ab7b 100644
+--- a/Documentation/netlink/specs/conntrack.yaml
++++ b/Documentation/netlink/specs/conntrack.yaml
+@@ -195,17 +195,17 @@ attribute-sets:
+   -
+     name: tuple-attrs
+     attributes:
+-    -
++      -
+         name: tuple-ip
+         type: nest
+         nested-attributes: tuple-ip-attrs
+         doc: conntrack l3 information
+-    -
++      -
+         name: tuple-proto
+         type: nest
+         nested-attributes: tuple-proto-attrs
+         doc: conntrack l4 information
+-    -
++      -
+         name: tuple-zone
+         type: u16
+         byte-order: big-endian
+@@ -213,74 +213,74 @@ attribute-sets:
+   -
+     name: protoinfo-tcp-attrs
+     attributes:
+-    -
++      -
+         name: tcp-state
+         type: u8
+         enum: nf-ct-tcp-state
+         doc: tcp connection state
+-    -
++      -
+         name: tcp-wscale-original
+         type: u8
+         doc: window scaling factor in original direction
+-    -
++      -
+         name: tcp-wscale-reply
+         type: u8
+         doc: window scaling factor in reply direction
+-    -
++      -
+         name: tcp-flags-original
+         type: binary
+         struct: nf-ct-tcp-flags-mask
+-    -
++      -
+         name: tcp-flags-reply
+         type: binary
+         struct: nf-ct-tcp-flags-mask
+   -
+     name: protoinfo-dccp-attrs
+     attributes:
+-    -
++      -
+         name: dccp-state
+         type: u8
+         doc: dccp connection state
+-    -
++      -
+         name: dccp-role
+         type: u8
+-    -
++      -
+         name: dccp-handshake-seq
+         type: u64
+         byte-order: big-endian
+-    -
++      -
+         name: dccp-pad
+         type: pad
+   -
+     name: protoinfo-sctp-attrs
+     attributes:
+-    -
++      -
+         name: sctp-state
+         type: u8
+         doc: sctp connection state
+         enum: nf-ct-sctp-state
+-    -
++      -
+         name: vtag-original
+         type: u32
+         byte-order: big-endian
+-    -
++      -
+         name: vtag-reply
+         type: u32
+         byte-order: big-endian
+   -
+     name: protoinfo-attrs
+     attributes:
+-    -
++      -
+         name: protoinfo-tcp
+         type: nest
+         nested-attributes: protoinfo-tcp-attrs
+         doc: conntrack tcp state information
+-    -
++      -
+         name: protoinfo-dccp
+         type: nest
+         nested-attributes: protoinfo-dccp-attrs
+         doc: conntrack dccp state information
+-    -
++      -
+         name: protoinfo-sctp
+         type: nest
+         nested-attributes: protoinfo-sctp-attrs
 diff --git a/Documentation/netlink/specs/devlink.yaml b/Documentation/netlink/specs/devlink.yaml
-index 6f5348f3d08f..bf54eb2b639c 100644
+index 939e7e12fe30..6f5348f3d08f 100644
 --- a/Documentation/netlink/specs/devlink.yaml
 +++ b/Documentation/netlink/specs/devlink.yaml
-@@ -1873,7 +1873,9 @@ operations:
- 
-     -
-       name: info-get
--      doc: Get device information, like driver name, hardware and firmware versions etc.
-+      doc: |
-+        Get device information, like driver name, hardware and firmware versions
-+        etc.
-       attribute-set: devlink
-       dont-validate: [strict, dump]
-       do:
+@@ -812,14 +812,14 @@ attribute-sets:
+         name: rate-parent-node-name
+         type: string
+       -
+-         name: region-max-snapshots
+-         type: u32
++        name: region-max-snapshots
++        type: u32
+       -
+         name: linecard-index
+         type: u32
+       -
+-         name: linecard-state
+-         type: u8
++        name: linecard-state
++        type: u8
+       -
+         name: linecard-type
+         type: string
 diff --git a/Documentation/netlink/specs/ethtool.yaml b/Documentation/netlink/specs/ethtool.yaml
-index 35b1cb4834a4..ed9bcdec01cc 100644
+index 0b6a1db71ef5..35b1cb4834a4 100644
 --- a/Documentation/netlink/specs/ethtool.yaml
 +++ b/Documentation/netlink/specs/ethtool.yaml
-@@ -55,7 +55,9 @@ definitions:
-         doc: The firmware flashing process was stopped due to an error.
-   -
-     name: c33-pse-ext-state
--    doc: "groups of PSE extended states functions. IEEE 802.3-2022 33.2.4.4 Variables"
-+    doc: |
-+      "groups of PSE extended states functions. IEEE 802.3-2022 33.2.4.4
-+      Variables"
-     type: enum
+@@ -60,33 +60,33 @@ definitions:
      name-prefix: ethtool-c33-pse-ext-state-
      header: linux/ethtool.h
+     entries:
+-        -
+-          name: none
+-          doc: none
+-        -
+-          name: error-condition
+-          doc: Group of error_condition states
+-        -
+-          name: mr-mps-valid
+-          doc: Group of mr_mps_valid states
+-        -
+-          name: mr-pse-enable
+-          doc: Group of mr_pse_enable states
+-        -
+-          name: option-detect-ted
+-          doc: Group of option_detect_ted states
+-        -
+-          name: option-vport-lim
+-          doc: Group of option_vport_lim states
+-        -
+-          name: ovld-detected
+-          doc: Group of ovld_detected states
+-        -
+-          name: power-not-available
+-          doc: Group of power_not_available states
+-        -
+-          name: short-detected
+-          doc: Group of short_detected states
++      -
++        name: none
++        doc: none
++      -
++        name: error-condition
++        doc: Group of error_condition states
++      -
++        name: mr-mps-valid
++        doc: Group of mr_mps_valid states
++      -
++        name: mr-pse-enable
++        doc: Group of mr_pse_enable states
++      -
++        name: option-detect-ted
++        doc: Group of option_detect_ted states
++      -
++        name: option-vport-lim
++        doc: Group of option_vport_lim states
++      -
++        name: ovld-detected
++        doc: Group of ovld_detected states
++      -
++        name: power-not-available
++        doc: Group of power_not_available states
++      -
++        name: short-detected
++        doc: Group of short_detected states
+   -
+     name: phy-upstream-type
+     enum-name: phy-upstream
 diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
-index 84ddf9053f2e..bc395963e628 100644
+index 1d47ad86d619..84ddf9053f2e 100644
 --- a/Documentation/netlink/specs/mptcp_pm.yaml
 +++ b/Documentation/netlink/specs/mptcp_pm.yaml
-@@ -61,8 +61,8 @@ definitions:
-       -
-         name: sub-closed
-         doc: >-
--          A subflow has been closed. An error (copy of sk_err) could be set if an
--          error has been detected for this subflow.
-+          A subflow has been closed. An error (copy of sk_err) could be set if
-+          an error has been detected for this subflow.
-           Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
-           daddr6, sport, dport, backup, if_idx [, error].
-       -
-diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
-index 6819c3636841..ce4cfec82100 100644
---- a/Documentation/netlink/specs/netdev.yaml
-+++ b/Documentation/netlink/specs/netdev.yaml
-@@ -48,16 +48,19 @@ definitions:
+@@ -17,72 +17,72 @@ definitions:
+     enum-name: mptcp-event-type
+     name-prefix: mptcp-event-
      entries:
-       -
-         name: timestamp
--        doc:
--          Device is capable of exposing receive HW timestamp via bpf_xdp_metadata_rx_timestamp().
-+        doc: |
-+          Device is capable of exposing receive HW timestamp via
-+          bpf_xdp_metadata_rx_timestamp().
-       -
-         name: hash
--        doc:
--          Device is capable of exposing receive packet hash via bpf_xdp_metadata_rx_hash().
-+        doc: |
-+          Device is capable of exposing receive packet hash via
-+          bpf_xdp_metadata_rx_hash().
-       -
-         name: vlan-tag
--        doc:
--          Device is capable of exposing receive packet VLAN tag via bpf_xdp_metadata_rx_vlan_tag().
-+        doc: |
-+          Device is capable of exposing receive packet VLAN tag via
-+          bpf_xdp_metadata_rx_vlan_tag().
+-     -
+-      name: unspec
+-      doc: unused event
+-     -
+-      name: created
+-      doc: >-
+-        A new MPTCP connection has been created. It is the good time to
+-        allocate memory and send ADD_ADDR if needed. Depending on the
+-        traffic-patterns it can take a long time until the
+-        MPTCP_EVENT_ESTABLISHED is sent.
+-        Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
+-        dport, server-side.
+-     -
+-      name: established
+-      doc: >-
+-        A MPTCP connection is established (can start new subflows).
+-        Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
+-        dport, server-side.
+-     -
+-      name: closed
+-      doc: >-
+-        A MPTCP connection has stopped.
+-        Attribute: token.
+-     -
+-      name: announced
+-      value: 6
+-      doc: >-
+-        A new address has been announced by the peer.
+-        Attributes: token, rem_id, family, daddr4 | daddr6 [, dport].
+-     -
+-      name: removed
+-      doc: >-
+-        An address has been lost by the peer.
+-        Attributes: token, rem_id.
+-     -
+-      name: sub-established
+-      value: 10
+-      doc: >-
+-        A new subflow has been established. 'error' should not be set.
+-        Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
+-     -
+-      name: sub-closed
+-      doc: >-
+-        A subflow has been closed. An error (copy of sk_err) could be set if an
+-        error has been detected for this subflow.
+-        Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
+-     -
+-      name: sub-priority
+-      value: 13
+-      doc: >-
+-        The priority of a subflow has changed. 'error' should not be set.
+-        Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
+-     -
+-      name: listener-created
+-      value: 15
+-      doc: >-
+-        A new PM listener is created.
+-        Attributes: family, sport, saddr4 | saddr6.
+-     -
+-      name: listener-closed
+-      doc: >-
+-        A PM listener is closed.
+-        Attributes: family, sport, saddr4 | saddr6.
++      -
++        name: unspec
++        doc: unused event
++      -
++        name: created
++        doc: >-
++          A new MPTCP connection has been created. It is the good time to
++          allocate memory and send ADD_ADDR if needed. Depending on the
++          traffic-patterns it can take a long time until the
++          MPTCP_EVENT_ESTABLISHED is sent.
++          Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
++          dport, server-side.
++      -
++        name: established
++        doc: >-
++          A MPTCP connection is established (can start new subflows).
++          Attributes: token, family, saddr4 | saddr6, daddr4 | daddr6, sport,
++          dport, server-side.
++      -
++        name: closed
++        doc: >-
++          A MPTCP connection has stopped.
++          Attribute: token.
++      -
++        name: announced
++        value: 6
++        doc: >-
++          A new address has been announced by the peer.
++          Attributes: token, rem_id, family, daddr4 | daddr6 [, dport].
++      -
++        name: removed
++        doc: >-
++          An address has been lost by the peer.
++          Attributes: token, rem_id.
++      -
++        name: sub-established
++        value: 10
++        doc: >-
++          A new subflow has been established. 'error' should not be set.
++          Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
++          daddr6, sport, dport, backup, if_idx [, error].
++      -
++        name: sub-closed
++        doc: >-
++          A subflow has been closed. An error (copy of sk_err) could be set if an
++          error has been detected for this subflow.
++          Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
++          daddr6, sport, dport, backup, if_idx [, error].
++      -
++        name: sub-priority
++        value: 13
++        doc: >-
++          The priority of a subflow has changed. 'error' should not be set.
++          Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
++          daddr6, sport, dport, backup, if_idx [, error].
++      -
++        name: listener-created
++        value: 15
++        doc: >-
++          A new PM listener is created.
++          Attributes: family, sport, saddr4 | saddr6.
++      -
++        name: listener-closed
++        doc: >-
++          A PM listener is closed.
++          Attributes: family, sport, saddr4 | saddr6.
+ 
+ attribute-sets:
    -
-     type: flags
-     name: xsk-flags
-@@ -425,9 +428,9 @@ attribute-sets:
-       -
-         name: rx-hw-gro-packets
-         doc: |
--          Number of packets that were coalesced from smaller packets by the device.
--          Counts only packets coalesced with the HW-GRO netdevice feature,
--          LRO-coalesced packets are not counted.
-+          Number of packets that were coalesced from smaller packets by the
-+          device. Counts only packets coalesced with the HW-GRO netdevice
-+          feature, LRO-coalesced packets are not counted.
-         type: uint
-       -
-         name: rx-hw-gro-bytes
-@@ -436,8 +439,8 @@ attribute-sets:
-       -
-         name: rx-hw-gro-wire-packets
-         doc: |
--          Number of packets that were coalesced to bigger packetss with the HW-GRO
--          netdevice feature. LRO-coalesced packets are not counted.
-+          Number of packets that were coalesced to bigger packetss with the
-+          HW-GRO netdevice feature. LRO-coalesced packets are not counted.
-         type: uint
-       -
-         name: rx-hw-gro-wire-bytes
-diff --git a/Documentation/netlink/specs/nftables.yaml b/Documentation/netlink/specs/nftables.yaml
-index ed9c5cf68477..2ee10d92d644 100644
---- a/Documentation/netlink/specs/nftables.yaml
-+++ b/Documentation/netlink/specs/nftables.yaml
-@@ -1205,7 +1205,9 @@ operations:
-             - name
+@@ -298,15 +298,15 @@ operations:
+       do: &get-addr-attrs
+         request:
+           attributes:
+-           - addr
+-           - token
++            - addr
++            - token
+         reply:
+           attributes:
+-           - addr
++            - addr
+       dump:
+         reply:
+-         attributes:
+-           - addr
++          attributes:
++            - addr
      -
-       name: destroytable
--      doc: Delete an existing table with destroy semantics (ignoring ENOENT errors).
-+      doc: |
-+        Delete an existing table with destroy semantics (ignoring ENOENT
-+        errors).
-       attribute-set: table-attrs
-       fixed-header: nfgenmsg
-       do:
-@@ -1249,7 +1251,9 @@ operations:
-             - name
-     -
-       name: destroychain
--      doc: Delete an existing chain with destroy semantics (ignoring ENOENT errors).
-+      doc: |
-+        Delete an existing chain with destroy semantics (ignoring ENOENT
-+        errors).
-       attribute-set: chain-attrs
-       fixed-header: nfgenmsg
-       do:
-@@ -1307,7 +1311,8 @@ operations:
-             - name
-     -
-       name: destroyrule
--      doc: Delete an existing rule with destroy semantics (ignoring ENOENT errors).
-+      doc: |
-+        Delete an existing rule with destroy semantics (ignoring ENOENT errors).
-       attribute-set: rule-attrs
-       fixed-header: nfgenmsg
-       do:
-@@ -1351,7 +1356,8 @@ operations:
-             - name
-     -
-       name: destroyset
--      doc: Delete an existing set with destroy semantics (ignoring ENOENT errors).
-+      doc: |
-+        Delete an existing set with destroy semantics (ignoring ENOENT errors).
-       attribute-set: set-attrs
-       fixed-header: nfgenmsg
-       do:
-diff --git a/Documentation/netlink/specs/nl80211.yaml b/Documentation/netlink/specs/nl80211.yaml
-index 55555038759f..610fdd5e000e 100644
---- a/Documentation/netlink/specs/nl80211.yaml
-+++ b/Documentation/netlink/specs/nl80211.yaml
-@@ -1799,8 +1799,9 @@ operations:
-     -
-       name: get-wiphy
-       doc: |
--        Get information about a wiphy or dump a list of all wiphys. Requests to dump get-wiphy
--        should unconditionally include the split-wiphy-dump flag in the request.
-+        Get information about a wiphy or dump a list of all wiphys. Requests to
-+        dump get-wiphy should unconditionally include the split-wiphy-dump flag
-+        in the request.
-       attribute-set: nl80211-attrs
+       name: flush-addrs
+       doc: Flush addresses
+@@ -332,7 +332,7 @@ operations:
+       dont-validate: [strict]
+       do: &mptcp-get-limits
+         request:
+-           attributes:
++          attributes:
+             - rcv-add-addrs
+             - subflows
+         reply:
+@@ -370,9 +370,9 @@ operations:
+       flags: [uns-admin-perm]
        do:
          request:
-diff --git a/Documentation/netlink/specs/ovpn.yaml b/Documentation/netlink/specs/ovpn.yaml
-index 79c37d5dd1a5..17e5e9b7f5a5 100644
---- a/Documentation/netlink/specs/ovpn.yaml
-+++ b/Documentation/netlink/specs/ovpn.yaml
-@@ -42,8 +42,8 @@ attribute-sets:
-         name: id
-         type: u32
-         doc: >-
--          The unique ID of the peer in the device context. To be used to identify
--          peers during operations for a specific device
-+          The unique ID of the peer in the device context. To be used to
-+          identify peers during operations for a specific device
-         checks:
-           max: 0xFFFFFF
+-         attributes:
+-           - token
+-           - loc-id
++          attributes:
++            - token
++            - loc-id
+     -
+       name: subflow-create
+       doc: Create subflow
+diff --git a/Documentation/netlink/specs/netdev.yaml b/Documentation/netlink/specs/netdev.yaml
+index 0422a73776d4..6819c3636841 100644
+--- a/Documentation/netlink/specs/netdev.yaml
++++ b/Documentation/netlink/specs/netdev.yaml
+@@ -31,7 +31,7 @@ definitions:
        -
-diff --git a/Documentation/netlink/specs/ovs_flow.yaml b/Documentation/netlink/specs/ovs_flow.yaml
-index 02ef3597ea94..06bf048040c7 100644
---- a/Documentation/netlink/specs/ovs_flow.yaml
-+++ b/Documentation/netlink/specs/ovs_flow.yaml
-@@ -293,9 +293,10 @@ definitions:
-     enum-name: ovs-hash-alg
-     type: enum
-     doc: |
--      Data path hash algorithm for computing Datapath hash. The algorithm type only specifies
--      the fields in a flow will be used as part of the hash. Each datapath is free to use its
--      own hash algorithm. The hash value will be opaque to the user space daemon.
-+      Data path hash algorithm for computing Datapath hash. The algorithm type
-+      only specifies the fields in a flow will be used as part of the hash. Each
-+      datapath is free to use its own hash algorithm. The hash value will be
-+      opaque to the user space daemon.
-     entries:
-       - ovs-hash-alg-l4
- 
-@@ -615,7 +616,9 @@ attribute-sets:
-         name: set
-         type: nest
-         nested-attributes: key-attrs
--        doc: Replaces the contents of an existing header. The single nested attribute specifies a header to modify and its value.
-+        doc: |
-+          Replaces the contents of an existing header. The single nested
-+          attribute specifies a header to modify and its value.
+         name: hw-offload
+         doc:
+-         This feature informs if netdev supports XDP hw offloading.
++          This feature informs if netdev supports XDP hw offloading.
        -
-         name: push-vlan
-         type: binary
-@@ -630,7 +633,8 @@ attribute-sets:
-         type: nest
-         nested-attributes: sample-attrs
-         doc: |
--          Probabilistically executes actions, as specified in the nested attributes.
-+          Probabilistically executes actions, as specified in the nested
-+          attributes.
-       -
-         name: recirc
-         type: u32
-diff --git a/Documentation/netlink/specs/tc.yaml b/Documentation/netlink/specs/tc.yaml
-index dfcb9cc3ea0a..4cc1f6a45001 100644
---- a/Documentation/netlink/specs/tc.yaml
-+++ b/Documentation/netlink/specs/tc.yaml
-@@ -76,7 +76,8 @@ definitions:
-         name: overlimits
-         type: u32
-         doc: |
--          Number of throttle events when this flow goes out of allocated bandwidth
-+          Number of throttle events when this flow goes out of allocated
-+          bandwidth
-       -
-         name: bps
-         type: u32
-@@ -751,7 +752,9 @@ definitions:
-       -
-         name: count
-         type: u32
--        doc: How many drops we've done since the last time we entered dropping state
-+        doc: |
-+          How many drops we've done since the last time we entered dropping
-+          state
-       -
-         name: lastcount
-         type: u32
+         name: rx-sg
+         doc:
 -- 
 2.49.0
 
