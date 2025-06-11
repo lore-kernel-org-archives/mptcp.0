@@ -1,129 +1,97 @@
-Received: from mail-qk1-f175.google.com (mail-qk1-f175.google.com [209.85.222.175])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 46D4A27BF8D
-	for <mptcp@lists.linux.dev>; Wed, 11 Jun 2025 10:44:12 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.175
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FDE28850C;
+	Wed, 11 Jun 2025 21:10:08 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749638654; cv=none; b=KXPP/35FZYfKgGBUtYrS0dx0tl/lQAfGX3HAI8eFTRC6BK4bMd6RHrv1hrlwIJA/zQ/rg8DZE5l2mq+nkoy6BWlkuoUFn+yLhAfDz7tpITTSOFcX77R4cr4UtmTE0TP686dYN8ZLalbGwDBjvZt9qOVqXQsDwAX5HW9pGAIsYoY=
+	t=1749676208; cv=none; b=kAilPs8VIksjn2+ZXNarJawneT9j0VepK0Hlvobr6jVZg9TYtTxJWb4l88M+ONai97mwerd9m+ss8GhxMWr5IHu3asHiIDOW4F1Li4aVyoBv7BdPO9ZqYvsVCSGcsHhdXVy9atCtI/9zet1Rd/iXa1mJlMaezAjLRt3Kt2Zqxm4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749638654; c=relaxed/simple;
-	bh=Gw+EcYbiRbKjFbgImyTfdQDlG66LFDeeO3AcIUixWg4=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=ZoyClFaOyyE6n2ExRfUal8De/NX8PDM9Wn77AA17cCZHQ94w9au+ZYZhIEjo+KQE46fgmCfvZAUAPwsFHn7vV4LSWFacxd6CLuNvsiTrU9+YpCLOccPMuTQ/I/zxvNOKjM5ykAthN+RYRevVg0ZLsspAhFiZMfCVCQ/O8lcal/4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=EqcQQuRE; arc=none smtp.client-ip=209.85.222.175
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1749676208; c=relaxed/simple;
+	bh=yoZJsoXICfhX05KpANME2Lttp2iQeV3DjkQP8RzmicE=;
+	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
+	 In-Reply-To:To:Cc; b=W8AwK2JFiwypa8IwNtDL6MD2ACc4BnU7tsEiRPhBtT02jIX/cLLxSTxcIMpNB4j8XXpfqf0eQPZXLENw7xQy4pYm44WvDZrZtFz9FBiV/98B2I6sf70nrm8VVDOI/mLPlcnRLrXqMZeRfVD3jUF27XXJpO2Iu8IP66QDiw4z34k=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gL0dKys7; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EqcQQuRE"
-Received: by mail-qk1-f175.google.com with SMTP id af79cd13be357-7d2107eb668so992291785a.1
-        for <mptcp@lists.linux.dev>; Wed, 11 Jun 2025 03:44:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1749638652; x=1750243452; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=IZ5vgj5hF+7Gj0msV2M0yTyx2HYD+kbPO1+EHGjuhEE=;
-        b=EqcQQuRE6A46VJvKgG9K5te1KeuDJ8mO8UYAJG/FiiAnePC8K+G4gSNhO02Ia8jNoC
-         XVBRh4MSoWZ5uqFvyzsJpMt4r67wSesUZ7hvYsrOEW+ANFjY8XESahogORusyxcBrMGR
-         91cX11eFJGFrzZ6F6dG5IVHgq2IlDRMm/Qjf9UC0CmBDSUJGQYtgKWIkK2iotUVFtMOh
-         UG3WXjXl5R2mSnXdkNXVAWcWYdFxy3d6EqOZoIHWo477hFEHkL/TJB7gftVHBczTjudV
-         0qA92WN6WU2AgdyByJSh+vZ+KMzlZjjIKAlKylFTw9BORSq8pEB7nlLJdwcPGAi9XjJi
-         sk0w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1749638652; x=1750243452;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=IZ5vgj5hF+7Gj0msV2M0yTyx2HYD+kbPO1+EHGjuhEE=;
-        b=Jcu4XrYQdvlW6LWfJiZgzus5EPiohaxnnYRrKbrg/6ibrfl43ow5uEi1kgukgDjDlb
-         PCBrnNFiwfBoTafLvtiFdmhIPQCwStLNElnG0Dpp74TgxKvW/Qspe94m9LCm8BuqISeG
-         y/rMD5tVExnRgh/ox0BSkSWv6srLO83IIRzRdxgexc0U3ScgnWc+4MsZalyXbbHKKtbS
-         wz2vwocyFuBYMiPhTxDlSFVFhoi8HuICWhrX8+lxpCeBjnZr0Ia+tT7Zdq3EtDj4tWLs
-         vkPZIp47JCJGgdylvcO7D51+UKekk2N7jOHeBDpDZq0PDHZc4bhKOSIRxoTbYlYubs1+
-         0NbA==
-X-Gm-Message-State: AOJu0YyBO/dZLJDAfFSllZ5U4Zvj++bf4iYxJ6e6bHsFHOy4kaTGTJEv
-	VATZS7k+TwFrt/VYvfSMqN7VzwL2eXwVKTlA+cFw9fidE6SDWRWnTw7HBZ1I
-X-Gm-Gg: ASbGncuj3vxCvhRZH/OrKkNJKiqrCNTTQ/1t5jiqfwfC6CPKBSY6WCe0LFz9RWxQobT
-	uRtgL0cmCUkIJx+OPYY16dLrNDwJfkqIbKAL55/r5pqqrnWhtr/04CtPfr+a5u0kpf/Zkxbl8SQ
-	bf7G027iYfpsE+2MWuD/G3Q57FSPS+qT8c0Y9lxK5UFYJmiXfY9HZxXsnKdADpEPYXpdc40keRN
-	uXHjMkUiRUHmgt9AutGfWiUM69fXPo6+/9uapaAwbF98rnAREBNcgrmXO5T+zmtJIbIY9U0Wurr
-	nWooz8aC4ANy9DdaNbx7sT3MdtCJEwkxjiNGf+PKXiTn2trqiQA9ZjAfe98EEPUok+cUgdnDvM2
-	x
-X-Google-Smtp-Source: AGHT+IFd11LqncT+DkWE96META/dJhon5zMNvA61zWRfqOxE+TQwdnQ54hyw/vWudlaW6fx92tGoCQ==
-X-Received: by 2002:a05:620a:ac13:b0:7ca:f3c6:c0a1 with SMTP id af79cd13be357-7d3a964f036mr318287085a.55.1749638652027;
-        Wed, 11 Jun 2025 03:44:12 -0700 (PDT)
-Received: from [127.0.0.1] ([157.55.208.185])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-6fb09ac94e7sm79628826d6.40.2025.06.11.03.44.11
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 11 Jun 2025 03:44:11 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1749633671.git.tanggeliang@kylinos.cn>
-References: <cover.1749633671.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_0/2=5D_squash_?=
- =?UTF-8?Q?to_=22implement_mptcp_read=5Fsock=22?=
-Message-ID: <eed5c153-e806-2402-31d7-fbc71cf253de@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Wed, 11 Jun 2025 10:44:10 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gL0dKys7"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25806C4CEE3;
+	Wed, 11 Jun 2025 21:10:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1749676208;
+	bh=yoZJsoXICfhX05KpANME2Lttp2iQeV3DjkQP8RzmicE=;
+	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
+	b=gL0dKys7kONY6Sqa0j/qwgNuku1s+rT0Al/A7o8Rvk49e4nYcswnjcXrs6WlkBaka
+	 Z7pLuR5y9EF7HDLUJCwo8jnw1eTsALX6uBICJOln4uhbuXWjH+cZuUgP6zFWEcd3yX
+	 qYCnJOiF1EnYtj48UY2WMiXWVR+Kwxri/vkE5663zSmITSsF0xtUXpGtcaXMigjWBS
+	 X3ut8e4cjc8fE+GSKeXzHRa3TVue3ODNZAUeCjtPimL0WuWSfy3i/40mI22s/LoKSa
+	 HdnF/cqmfPavUzvCeI4BqneJ4pXM/faifqeNreSd4KyvIbELzC4CbpEEB3Qdv58hRR
+	 n5pxLfRMmNu/A==
+Received: from [10.30.226.235] (localhost [IPv6:::1])
+	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DFD380DBE9;
+	Wed, 11 Jun 2025 21:10:39 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Subject: Re: [PATCH net-next v1 0/7] netlink: specs: fix all the yamllint
+ errors
+From: patchwork-bot+netdevbpf@kernel.org
+Message-Id: 
+ <174967623825.3484955.9903714612397953732.git-patchwork-notify@kernel.org>
+Date: Wed, 11 Jun 2025 21:10:38 +0000
+References: <20250610125944.85265-1-donald.hunter@gmail.com>
+In-Reply-To: <20250610125944.85265-1-donald.hunter@gmail.com>
+To: Donald Hunter <donald.hunter@gmail.com>
+Cc: netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net,
+ edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
+ mptcp@lists.linux.dev, kernel-tls-handshake@lists.linux.dev,
+ bpf@vger.kernel.org, donald.hunter@redhat.com
 
-Hi Geliang,
+Hello:
 
-Thank you for your modifications, that's great!
+This series was applied to netdev/net-next.git (main)
+by Jakub Kicinski <kuba@kernel.org>:
 
-Our CI did some validations and here is its report:
+On Tue, 10 Jun 2025 13:59:37 +0100 you wrote:
+> yamllint reported ~500 errors and warnings in the netlink specs. Fix all
+> the reported issues.
+> 
+> Link: https://lore.kernel.org/netdev/m2tt4tt3wv.fsf@gmail.com/
+> 
+> Donald Hunter (7):
+>   netlink: specs: add doc start markers to yaml
+>   netlink: specs: clean up spaces in brackets
+>   netlink: specs: fix up spaces before comments
+>   netlink: specs: fix up truthy values
+>   netlink: specs: fix up indentation errors
+>   netlink: specs: wrap long doc lines (>80 chars)
+>   netlink: specs: fix a couple of yamllint warnings
+> 
+> [...]
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/15581436214
+Here is the summary with links:
+  - [net-next,v1,1/7] netlink: specs: add doc start markers to yaml
+    https://git.kernel.org/netdev/net-next/c/ce6bd277e1f7
+  - [net-next,v1,2/7] netlink: specs: clean up spaces in brackets
+    https://git.kernel.org/netdev/net-next/c/880d43ca9aa4
+  - [net-next,v1,3/7] netlink: specs: fix up spaces before comments
+    https://git.kernel.org/netdev/net-next/c/2338bab56951
+  - [net-next,v1,4/7] netlink: specs: fix up truthy values
+    https://git.kernel.org/netdev/net-next/c/3c90fd2baaa0
+  - [net-next,v1,5/7] netlink: specs: fix up indentation errors
+    https://git.kernel.org/netdev/net-next/c/ec362192aa9e
+  - [net-next,v1,6/7] netlink: specs: wrap long doc lines (>80 chars)
+    https://git.kernel.org/netdev/net-next/c/d26552d38c82
+  - [net-next,v1,7/7] netlink: specs: fix a couple of yamllint warnings
+    https://git.kernel.org/netdev/net-next/c/97c6383113b5
 
-Initiator: Patchew Applier
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/b571299e8f55
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D970730
-
-
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
-
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
-
-For more details:
-
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
+You are awesome, thank you!
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.docs.kernel.org/patchwork/pwbot.html
 
 
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
