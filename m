@@ -1,97 +1,173 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 96FDE28850C;
-	Wed, 11 Jun 2025 21:10:08 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7C932E11B0
+	for <mptcp@lists.linux.dev>; Fri, 13 Jun 2025 23:11:36 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1749676208; cv=none; b=kAilPs8VIksjn2+ZXNarJawneT9j0VepK0Hlvobr6jVZg9TYtTxJWb4l88M+ONai97mwerd9m+ss8GhxMWr5IHu3asHiIDOW4F1Li4aVyoBv7BdPO9ZqYvsVCSGcsHhdXVy9atCtI/9zet1Rd/iXa1mJlMaezAjLRt3Kt2Zqxm4=
+	t=1749856297; cv=none; b=pgKvzlYsHh56v76vftaTpyRg/jowPr2/Y0Yr68tQ0UG5aZocyUJ4u4Rh/2smJ1OkWkPIkrcj/HW3g57+A9nQJ9ZFBLudbF0PzYNz5PdpDcgo6FS91BYvOKBW7UoCUyyCp/1X+kaykywBnF0eVPrXUWkmBj8Th5F/6dK5V5xQB40=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1749676208; c=relaxed/simple;
-	bh=yoZJsoXICfhX05KpANME2Lttp2iQeV3DjkQP8RzmicE=;
-	h=Content-Type:MIME-Version:Subject:From:Message-Id:Date:References:
-	 In-Reply-To:To:Cc; b=W8AwK2JFiwypa8IwNtDL6MD2ACc4BnU7tsEiRPhBtT02jIX/cLLxSTxcIMpNB4j8XXpfqf0eQPZXLENw7xQy4pYm44WvDZrZtFz9FBiV/98B2I6sf70nrm8VVDOI/mLPlcnRLrXqMZeRfVD3jUF27XXJpO2Iu8IP66QDiw4z34k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gL0dKys7; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1749856297; c=relaxed/simple;
+	bh=3lySYEy8vjVWERRzS7PEobgY3k+qhhLq36jClij68yk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
+	 MIME-Version:Content-Type; b=uIoE7J0ygOMXT6vDIcKhkdPO+QE1CUtAT0j7eCq45NxBgrfuwE7/MDbQx+txGfZXxNU4OBry+F8zU+N1oohUUYBBffgYDh0oapzrWuXQZJAJfSoLRmckRHvPCjCD4KwNPqYJRQu7UZ7ZG4TIujE5NMXFDxn8t3WrNo5BMJGDw2w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qYomtW4f; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gL0dKys7"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 25806C4CEE3;
-	Wed, 11 Jun 2025 21:10:08 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qYomtW4f"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3731FC4CEE3;
+	Fri, 13 Jun 2025 23:11:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1749676208;
-	bh=yoZJsoXICfhX05KpANME2Lttp2iQeV3DjkQP8RzmicE=;
-	h=Subject:From:Date:References:In-Reply-To:To:Cc:From;
-	b=gL0dKys7kONY6Sqa0j/qwgNuku1s+rT0Al/A7o8Rvk49e4nYcswnjcXrs6WlkBaka
-	 Z7pLuR5y9EF7HDLUJCwo8jnw1eTsALX6uBICJOln4uhbuXWjH+cZuUgP6zFWEcd3yX
-	 qYCnJOiF1EnYtj48UY2WMiXWVR+Kwxri/vkE5663zSmITSsF0xtUXpGtcaXMigjWBS
-	 X3ut8e4cjc8fE+GSKeXzHRa3TVue3ODNZAUeCjtPimL0WuWSfy3i/40mI22s/LoKSa
-	 HdnF/cqmfPavUzvCeI4BqneJ4pXM/faifqeNreSd4KyvIbELzC4CbpEEB3Qdv58hRR
-	 n5pxLfRMmNu/A==
-Received: from [10.30.226.235] (localhost [IPv6:::1])
-	by aws-us-west-2-korg-oddjob-rhel9-1.codeaurora.org (Postfix) with ESMTP id 70DFD380DBE9;
-	Wed, 11 Jun 2025 21:10:39 +0000 (UTC)
-Content-Type: text/plain; charset="utf-8"
+	s=k20201202; t=1749856296;
+	bh=3lySYEy8vjVWERRzS7PEobgY3k+qhhLq36jClij68yk=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+	b=qYomtW4fYyyadScrENvqVTy+ka6E1zlLR8Pm1S9HWNGe2y6g7oheN33fIeUgQPAeH
+	 FRmOVi2TX7JkxeN/jAFGXI4zGj3oQUQ2lCuuVUNbq9bAJJS1HoELFkYHFb8zEefblk
+	 iJkJWKA3rH5I5n0Pm4lAw8wUCgT0bdTX8/Ms4nnpipjtJXqP+wWLfD4S2+3rKmIlks
+	 m7GTOtmrKDNcAdPg23RuOvkrLgXZtlIAVlLCFDpxFwKKayRfchSrkM3BQUoBuu5GEB
+	 9l4W+EUeaho3yGYMc5K6g+EjqkYR/3nNou2mROe2zH2Oj28Qq4aguImiTrWm0WO+EO
+	 eHWr4KgPbyITA==
+Date: Fri, 13 Jun 2025 16:11:35 -0700 (PDT)
+From: Mat Martineau <martineau@kernel.org>
+To: Geliang Tang <geliang@kernel.org>
+cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking
+ IO mode #487
+In-Reply-To: <cover.1748484770.git.tanggeliang@kylinos.cn>
+Message-ID: <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
+References: <cover.1748484770.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: Re: [PATCH net-next v1 0/7] netlink: specs: fix all the yamllint
- errors
-From: patchwork-bot+netdevbpf@kernel.org
-Message-Id: 
- <174967623825.3484955.9903714612397953732.git-patchwork-notify@kernel.org>
-Date: Wed, 11 Jun 2025 21:10:38 +0000
-References: <20250610125944.85265-1-donald.hunter@gmail.com>
-In-Reply-To: <20250610125944.85265-1-donald.hunter@gmail.com>
-To: Donald Hunter <donald.hunter@gmail.com>
-Cc: netdev@vger.kernel.org, kuba@kernel.org, davem@davemloft.net,
- edumazet@google.com, pabeni@redhat.com, horms@kernel.org,
- mptcp@lists.linux.dev, kernel-tls-handshake@lists.linux.dev,
- bpf@vger.kernel.org, donald.hunter@redhat.com
+Content-Type: text/plain; format=flowed; charset=US-ASCII
 
-Hello:
+On Thu, 29 May 2025, Geliang Tang wrote:
 
-This series was applied to netdev/net-next.git (main)
-by Jakub Kicinski <kuba@kernel.org>:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+>
+> Good news! I finally solved the unstable issue of MPTCP BPF sched selftests
+> I reported a year ago, #487 "send() fails with EAGAIN in blocking IO mode".
+>
+> The fix is simple, it can be solved by explicitly setting SO_SNDBUF
+> sockopt, but be sure not to set SO_RCVBUF at the same time
+> (see sk->sk_userlocks & SOCK_RCVBUF_LOCK in mptcp_rcv_space_adjust()).
+>
+> With this fix, BPF sched selftests are now very stable, I run loop testing
+> using mptcp-upstream-virtme-docker (run_loop run_bpftest_all), and can run
+> it normally for hundreds of times without error:
+>
 
-On Tue, 10 Jun 2025 13:59:37 +0100 you wrote:
-> yamllint reported ~500 errors and warnings in the netlink specs. Fix all
-> the reported issues.
-> 
-> Link: https://lore.kernel.org/netdev/m2tt4tt3wv.fsf@gmail.com/
-> 
-> Donald Hunter (7):
->   netlink: specs: add doc start markers to yaml
->   netlink: specs: clean up spaces in brackets
->   netlink: specs: fix up spaces before comments
->   netlink: specs: fix up truthy values
->   netlink: specs: fix up indentation errors
->   netlink: specs: wrap long doc lines (>80 chars)
->   netlink: specs: fix a couple of yamllint warnings
-> 
-> [...]
+Hi Geliang -
 
-Here is the summary with links:
-  - [net-next,v1,1/7] netlink: specs: add doc start markers to yaml
-    https://git.kernel.org/netdev/net-next/c/ce6bd277e1f7
-  - [net-next,v1,2/7] netlink: specs: clean up spaces in brackets
-    https://git.kernel.org/netdev/net-next/c/880d43ca9aa4
-  - [net-next,v1,3/7] netlink: specs: fix up spaces before comments
-    https://git.kernel.org/netdev/net-next/c/2338bab56951
-  - [net-next,v1,4/7] netlink: specs: fix up truthy values
-    https://git.kernel.org/netdev/net-next/c/3c90fd2baaa0
-  - [net-next,v1,5/7] netlink: specs: fix up indentation errors
-    https://git.kernel.org/netdev/net-next/c/ec362192aa9e
-  - [net-next,v1,6/7] netlink: specs: wrap long doc lines (>80 chars)
-    https://git.kernel.org/netdev/net-next/c/d26552d38c82
-  - [net-next,v1,7/7] netlink: specs: fix a couple of yamllint warnings
-    https://git.kernel.org/netdev/net-next/c/97c6383113b5
+I can see how changing SO_SNDBUF on the sending socket side would shift 
+timing behavior in a way that affect the test outcome, but it doesn't 
+address the root issue with bug #487:
 
-You are awesome, thank you!
--- 
-Deet-doot-dot, I am a bot.
-https://korg.docs.kernel.org/patchwork/pwbot.html
+It is either OK to get an EAGAIN from a blocking send(), or it's not OK.
 
 
+If it's not ok to ever return EAGAIN from a blocking send, the existing 
+test code is a reproducer for a bug, and changing the test is hiding that 
+bug.
+
+If EAGAIN is ok, then we should change the code in send_recv_server() to 
+allow it.
+
+
+As Matthieu noted in the comment here 
+(https://github.com/multipath-tcp/mptcp_net-next/issues/487#issuecomment-2083123666), 
+it may be due to the BPF context that the socket is really non-blocking. 
+Did we ever figure out if that was the case - I couldn't find the 
+discussion on the mailing list?
+
+
+- Mat
+
+
+>
+> 	=== Attempt: 465 (Thu, 29 May 2025 04:04:09 +0000) ===
+>
+> BPF Test: test_progs -t mptcp
+> TAP version 13
+> 1..1
+> # #198/1   mptcp/base:OK
+> # #198/2   mptcp/mptcpify:OK
+> # #198/3   mptcp/subflow:OK
+> # #198/4   mptcp/iters_subflow:OK
+> # #198/5   mptcp/default:OK
+> # #198/6   mptcp/first:OK
+> # #198/7   mptcp/bkup:OK
+> # #198/8   mptcp/rr:OK
+> # #198/9   mptcp/red:OK
+> # #198/10  mptcp/burst:OK
+> # #198     mptcp:OK
+> # Summary: 1/10 PASSED, 0 SKIPPED, 0 FAILED
+> ok 1 test: bpftest_test_progs_mptcp
+> # time=3
+> BPF Test: test_progs-cpuv4 -t mptcp
+> TAP version 13
+> 1..1
+> # #198/1   mptcp/base:OK
+> # #198/2   mptcp/mptcpify:OK
+> # #198/3   mptcp/subflow:OK
+> # #198/4   mptcp/iters_subflow:OK
+> # #198/5   mptcp/default:OK
+> # #198/6   mptcp/first:OK
+> # #198/7   mptcp/bkup:OK
+> # #198/8   mptcp/rr:OK
+> # #198/9   mptcp/red:OK
+> # #198/10  mptcp/burst:OK
+> # #198     mptcp:OK
+> # Summary: 1/10 PASSED, 0 SKIPPED, 0 FAILED
+> ok 1 test: bpftest_test_progs-cpuv4_mptcp
+> # time=4
+> BPF Test: test_progs-no_alu32 -t mptcp
+> TAP version 13
+> 1..1
+> # #198/1   mptcp/base:OK
+> # #198/2   mptcp/mptcpify:OK
+> # #198/3   mptcp/subflow:OK
+> # #198/4   mptcp/iters_subflow:OK
+> # #198/5   mptcp/default:OK
+> # #198/6   mptcp/first:OK
+> # #198/7   mptcp/bkup:OK
+> # #198/8   mptcp/rr:OK
+> # #198/9   mptcp/red:OK
+> # #198/10  mptcp/burst:OK
+> # #198     mptcp:OK
+> # Summary: 1/10 PASSED, 0 SKIPPED, 0 FAILED
+> ok 1 test: bpftest_test_progs-no_alu32_mptcp
+> # time=3
+>
+> 	=== Attempt: 466 (Thu, 29 May 2025 04:04:19 +0000) ===
+>
+>
+> This set also invalidates the following set named "add io thread mode
+> tests":
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1722502941.git.tanggeliang@kylinos.cn/
+>
+> v2:
+> - mptcp: fix the default value of scaling_ratio
+> https://patchwork.kernel.org/project/mptcp/patch/0ccc1c26d27d6ee7be22806a97983d37c6ca548c.1715053270.git.tanggeliang@kylinos.cn/
+>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/487
+>
+> Geliang Tang (3):
+>  selftests/bpf: Add sndbuf for send_recv_data
+>  Squash to "selftests/bpf: Add bpf scheduler test"
+>  DO-NOT-MERGE: selftests/bpf: Increase total_bytes of bpf sched tests
+>
+> tools/testing/selftests/bpf/network_helpers.c | 20 ++++++++++++++++++-
+> tools/testing/selftests/bpf/network_helpers.h |  2 +-
+> .../selftests/bpf/prog_tests/bpf_qdisc.c      |  2 +-
+> .../selftests/bpf/prog_tests/bpf_tcp_ca.c     |  4 ++--
+> .../testing/selftests/bpf/prog_tests/mptcp.c  | 13 ++++++++++--
+> 5 files changed, 34 insertions(+), 7 deletions(-)
+>
+> -- 
+> 2.43.0
+>
+>
+>
