@@ -1,44 +1,44 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF92BA42
-	for <mptcp@lists.linux.dev>; Mon, 16 Jun 2025 06:35:00 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id EAE554964E
+	for <mptcp@lists.linux.dev>; Mon, 16 Jun 2025 06:38:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750055700; cv=none; b=id3gzd5yWYmR62lyVtRMA8x9P2sEcDvQVCsipAs4hjppEeku+6pLhFx5OZelzziuCmVNtiVduNePTTw7fAXSEFOgz/oljknHqn9K1GzB5G+dCZM/T5WT5+om0uFQj32aIEPdgoihgWfUbVEVKyXiNP1zaqInPfqifE/EL24Ed9g=
+	t=1750055933; cv=none; b=FrM2GcuzYgKN9F8i69sTDuqDUD5zF/pZmZjh4KiIPI6FRM/gPlf+v/6qPbmYyd0h1Vw65SfAna9gFxJaW9kCIrcRPtWbV3eLP7b76ygsEG8rrE6AZcwisbajCVBCHhRdEvl17PBHLNf3fva9ZjpuzH9L/Lp933xJfjVONI+pnJY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750055700; c=relaxed/simple;
-	bh=E1Isbq/X2OHIArVFHRp21EL8bEkzfxjEBZtQ3fJBQuE=;
+	s=arc-20240116; t=1750055933; c=relaxed/simple;
+	bh=BT02zqnN2AzygXjSt/gUivIrA27ICFjx6U57UHSNaO4=;
 	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
-	 Content-Type:MIME-Version; b=rH3yP8LShQI16SkXZg6Eh5NBR/P2iVibP3GntxeOD/NQToC8gxM1AHqPxAS+VSXTnBseXQLVNJlruvG3JkRGCOgqRnFjH+K7ECzDXzjPPmDKzRAlLOoyHMGF57Fjrv0CCLpg8betw3oyRt4biqlaC9XUGYj/4CUbmYw/wWNixSA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roOhmqVe; arc=none smtp.client-ip=10.30.226.201
+	 Content-Type:MIME-Version; b=g6elzaWrfhV40V9EYfjJZHl8DfBWkP2hNsemiYP0CoWk722+8VfE/koA8y3miw1s8HCtMba8d5h0hBOfaZmmJi7FMILu9kSmp+CEQqsbExdWb623ZocG7h27Vwl7k8Wg2Qb0DMqo/GwuzX/Lg6l/zAX2zwQJdK5IqGLIZruA9SM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=OTMJKQWs; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roOhmqVe"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DC2C4CEEA;
-	Mon, 16 Jun 2025 06:34:57 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="OTMJKQWs"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 8315AC4CEEA;
+	Mon, 16 Jun 2025 06:38:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750055699;
-	bh=E1Isbq/X2OHIArVFHRp21EL8bEkzfxjEBZtQ3fJBQuE=;
+	s=k20201202; t=1750055932;
+	bh=BT02zqnN2AzygXjSt/gUivIrA27ICFjx6U57UHSNaO4=;
 	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
-	b=roOhmqVedCSon+XCjOEXMG6vpOUNoIEaui1WCArWQg/kBnYPNIwGNlyFk5sm3SgQq
-	 Hfd1AGOXE3Wk0CwToFjMhCQo7q/GsQ3TOzCm3uONngX0tZVsDf1kZ9FAz3x5lEykh3
-	 SdXSarElU21JqNK/5q1nWMoS42GvKAAaceeiOjOQJB910vCnNDTzlEeZC3OJM6gOEc
-	 U97atNEAn1RVI/PZhgYeO6R7gxvx3Kv+Dp6kvN2d9vhf6CHqGRN58KpzAtFgFiXTzK
-	 joYIJtBfKilgbJwSMT/8901Cfdn+srQZJC9X8oQlUBpQgNH3PxsUinncDym7ZkM88t
-	 fl/ymL0EiacEw==
-Message-ID: <b90f35f04a8ea06593c44e988b39615a06646deb.camel@kernel.org>
+	b=OTMJKQWshMCcNSvTD5rSVyG818igZ4Ug+pGodVOs9bTPxV/mutdH2EakRillxlHpj
+	 sJ4tTwjoBlXJaEx2XHscW2ZLZzcBh4319iGucJrUBiwUfOOFgMtPP53O1U/6uaPG7B
+	 c4XMuco67G0NuEzMl9CAeLLTsGW4WRqPn68gntpreoKFE9y0Z5jq9AmphCQaM2kc0r
+	 jxef/sb/qZdK2kHGgJJCZtENwXOTldyX6kmikuQmaKa8JK0bS7hWcHprKTPEWcXZkC
+	 4JdLwK6WGwHmeoISw259HgJ8CoUImL+Yeaj9N8SW7Trl2WclxdqCvJ3HC1e28WA95T
+	 woJp072yCe4BQ==
+Message-ID: <76e9ae1378ea43e0fdf00be1f7d38d2dcbefe9c1.camel@kernel.org>
 Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking
  IO mode #487
 From: Geliang Tang <geliang@kernel.org>
 To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
  <martineau@kernel.org>
 Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-Date: Mon, 16 Jun 2025 14:34:55 +0800
+Date: Mon, 16 Jun 2025 14:38:38 +0800
 In-Reply-To: <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
 References: <cover.1748484770.git.tanggeliang@kylinos.cn>
-	 <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
-	 <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
-Content-Type: multipart/mixed; boundary="=-0L8E2enwSszwlLIWXI4V"
+		 <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
+		 <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
+Content-Type: multipart/mixed; boundary="=-ozoXqAR4n9xZB/uiLXfq"
 User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
@@ -47,7 +47,7 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 
---=-0L8E2enwSszwlLIWXI4V
+--=-ozoXqAR4n9xZB/uiLXfq
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 
@@ -166,7 +166,7 @@ https://patchwork.kernel.org/project/mptcp/cover/cover.1722502941.git.tanggelian
 > Cheers,
 > Matt
 
---=-0L8E2enwSszwlLIWXI4V
+--=-ozoXqAR4n9xZB/uiLXfq
 Content-Disposition: attachment; filename="bpf-sched-selftests-eagain-err.diff"
 Content-Type: text/x-patch; name="bpf-sched-selftests-eagain-err.diff"; charset="UTF-8"
 Content-Transfer-Encoding: base64
@@ -203,7 +203,7 @@ byA9PSBFQUdBSU4gJiYgYWdhaW4gPCA1KSB7CisJCQkJYWdhaW4rKzsKKwkJCQljb250aW51ZTsK
 KwkJCX0KIAkJCWVyciA9IC1lcnJubzsKIAkJCWJyZWFrOwogCQl9Cg==
 
 
---=-0L8E2enwSszwlLIWXI4V
+--=-ozoXqAR4n9xZB/uiLXfq
 Content-Disposition: attachment; filename="bpf-sched-selftests-eagain-err.log"
 Content-Type: text/x-log; name="bpf-sched-selftests-eagain-err.log"; charset="UTF-8"
 Content-Transfer-Encoding: base64
@@ -295,4 +295,4 @@ c3RfcHJvZ3Mtbm9fYWx1MzJfbXB0Y3AKIyB0aW1lPTQKCgoJPT09IEVSUk9SIGFmdGVyIDI4IGF0
 dGVtcHRzIChTYXQsIDE0IEp1biAyMDI1IDEyOjMxOjQ2ICswMDAwKSA9PT0KCg==
 
 
---=-0L8E2enwSszwlLIWXI4V--
+--=-ozoXqAR4n9xZB/uiLXfq--
