@@ -1,149 +1,298 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 7F4F21917F4
-	for <mptcp@lists.linux.dev>; Sun, 15 Jun 2025 21:29:51 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EF92BA42
+	for <mptcp@lists.linux.dev>; Mon, 16 Jun 2025 06:35:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750022991; cv=none; b=tRXtYGSYCDUjwqKmb0Q+X0xCa08No4Y/s7iKlh+BuklJn6n7RyE3lNilfJmQBOOxeMc0aPYS6ninZFs7qh/KD3rk1l6HxKsvpzyO1CCc0YWp1yhPcezFz+05H5fCV25H0FyGaQcD2JHdiVrUjvx8yzMxzOFuVyC8biOlNwZM8q0=
+	t=1750055700; cv=none; b=id3gzd5yWYmR62lyVtRMA8x9P2sEcDvQVCsipAs4hjppEeku+6pLhFx5OZelzziuCmVNtiVduNePTTw7fAXSEFOgz/oljknHqn9K1GzB5G+dCZM/T5WT5+om0uFQj32aIEPdgoihgWfUbVEVKyXiNP1zaqInPfqifE/EL24Ed9g=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750022991; c=relaxed/simple;
-	bh=NBk2SggHtqUnItBtE5c4/+AJ67vh/JJ50i+ZV+Iv+A0=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=dvMu3FhRPkjn24Ac5B2uOWE44xTeT230xFTJZozis9e3AzFB9dtZ6ZiFLWe/m+QdEWjB0SLVNv51g8uuwltLidp/ZZVaw7lEm7DdlXd8HLST63trhW75MdJD3AmI/MXOjPuMH6qWH/Pj/ga7TT+1Jy+MuhZxuhCOTMqy5088ZWo=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Nelwp51+; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1750055700; c=relaxed/simple;
+	bh=E1Isbq/X2OHIArVFHRp21EL8bEkzfxjEBZtQ3fJBQuE=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=rH3yP8LShQI16SkXZg6Eh5NBR/P2iVibP3GntxeOD/NQToC8gxM1AHqPxAS+VSXTnBseXQLVNJlruvG3JkRGCOgqRnFjH+K7ECzDXzjPPmDKzRAlLOoyHMGF57Fjrv0CCLpg8betw3oyRt4biqlaC9XUGYj/4CUbmYw/wWNixSA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=roOhmqVe; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Nelwp51+"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C385AC4CEE3;
-	Sun, 15 Jun 2025 21:29:49 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="roOhmqVe"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 33DC2C4CEEA;
+	Mon, 16 Jun 2025 06:34:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1750022990;
-	bh=NBk2SggHtqUnItBtE5c4/+AJ67vh/JJ50i+ZV+Iv+A0=;
-	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=Nelwp51+YOhN8keTCUnj+H+Oc0jNX2W4VF9vZ5yaSsGgtP4gVzifIqc0VqTzrG0es
-	 PyvYQRpOpC4KboSyUgSYzUnTL4/10lbWLkcXJLFVYUiee1GRRDZzX+sl3xWkzUIc83
-	 tC6Vs2BbnbTFLmRckmfjaSpyRdneHCF2HS9Z4Sa+YtN8R2ROiGCoP5xvUVuS6WkFWo
-	 Ykt6/tkiwc6Lit0oMoUbgGt9QVzVWV4XGgr2FYGyAqsqmY0Dz3ruPHy5bcbo+xUUWv
-	 zZC4szR6GMlWHfG52Cadb+BteXZX4nhw2hgLC9YTXcmzDPZTRtGFYrM17cFN3Fvhb0
-	 4s9wi+LQvKJLQ==
-Message-ID: <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
-Date: Sun, 15 Jun 2025 23:29:47 +0200
+	s=k20201202; t=1750055699;
+	bh=E1Isbq/X2OHIArVFHRp21EL8bEkzfxjEBZtQ3fJBQuE=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=roOhmqVedCSon+XCjOEXMG6vpOUNoIEaui1WCArWQg/kBnYPNIwGNlyFk5sm3SgQq
+	 Hfd1AGOXE3Wk0CwToFjMhCQo7q/GsQ3TOzCm3uONngX0tZVsDf1kZ9FAz3x5lEykh3
+	 SdXSarElU21JqNK/5q1nWMoS42GvKAAaceeiOjOQJB910vCnNDTzlEeZC3OJM6gOEc
+	 U97atNEAn1RVI/PZhgYeO6R7gxvx3Kv+Dp6kvN2d9vhf6CHqGRN58KpzAtFgFiXTzK
+	 joYIJtBfKilgbJwSMT/8901Cfdn+srQZJC9X8oQlUBpQgNH3PxsUinncDym7ZkM88t
+	 fl/ymL0EiacEw==
+Message-ID: <b90f35f04a8ea06593c44e988b39615a06646deb.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking
+ IO mode #487
+From: Geliang Tang <geliang@kernel.org>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Mon, 16 Jun 2025 14:34:55 +0800
+In-Reply-To: <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
+References: <cover.1748484770.git.tanggeliang@kylinos.cn>
+	 <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
+	 <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
+Content-Type: multipart/mixed; boundary="=-0L8E2enwSszwlLIWXI4V"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking IO
- mode #487
-Content-Language: en-GB, fr-BE
-To: Mat Martineau <martineau@kernel.org>, Geliang Tang <geliang@kernel.org>
-Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1748484770.git.tanggeliang@kylinos.cn>
- <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
-From: Matthieu Baerts <matttbe@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
-In-Reply-To: <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 
-Hi Mat, Geliang,
+--=-0L8E2enwSszwlLIWXI4V
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-On 14/06/2025 01:11, Mat Martineau wrote:
-> On Thu, 29 May 2025, Geliang Tang wrote:
-> 
->> From: Geliang Tang <tanggeliang@kylinos.cn>
->>
->> Good news! I finally solved the unstable issue of MPTCP BPF sched
->> selftests
->> I reported a year ago, #487 "send() fails with EAGAIN in blocking IO
->> mode".
->>
->> The fix is simple, it can be solved by explicitly setting SO_SNDBUF
->> sockopt, but be sure not to set SO_RCVBUF at the same time
->> (see sk->sk_userlocks & SOCK_RCVBUF_LOCK in mptcp_rcv_space_adjust()).
->>
->> With this fix, BPF sched selftests are now very stable, I run loop
->> testing
->> using mptcp-upstream-virtme-docker (run_loop run_bpftest_all), and can
->> run
->> it normally for hundreds of times without error:
->>
-> 
-> Hi Geliang -
-> 
-> I can see how changing SO_SNDBUF on the sending socket side would shift
-> timing behavior in a way that affect the test outcome, but it doesn't
-> address the root issue with bug #487:
-> 
-> It is either OK to get an EAGAIN from a blocking send(), or it's not OK.
-> 
-> 
-> If it's not ok to ever return EAGAIN from a blocking send, the existing
-> test code is a reproducer for a bug, and changing the test is hiding
-> that bug.
-> 
-> If EAGAIN is ok, then we should change the code in send_recv_server() to
-> allow it.
+Hi Matt, Mat,
 
-It is now a bit hidden in the middle of #487, but if I'm not mistaken,
-it is OK to get EAGAIN with a blocking send() **if** SO_SNDTIMEO is
-used, and in case of timeout.
+On Sun, 2025-06-15 at 23:29 +0200, Matthieu Baerts wrote:
+> Hi Mat, Geliang,
+> 
+> On 14/06/2025 01:11, Mat Martineau wrote:
+> > On Thu, 29 May 2025, Geliang Tang wrote:
+> > 
+> > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > 
+> > > Good news! I finally solved the unstable issue of MPTCP BPF sched
+> > > selftests
+> > > I reported a year ago, #487 "send() fails with EAGAIN in blocking
+> > > IO
+> > > mode".
+> > > 
+> > > The fix is simple, it can be solved by explicitly setting
+> > > SO_SNDBUF
+> > > sockopt, but be sure not to set SO_RCVBUF at the same time
+> > > (see sk->sk_userlocks & SOCK_RCVBUF_LOCK in
+> > > mptcp_rcv_space_adjust()).
+> > > 
+> > > With this fix, BPF sched selftests are now very stable, I run
+> > > loop
+> > > testing
+> > > using mptcp-upstream-virtme-docker (run_loop run_bpftest_all),
+> > > and can
+> > > run
+> > > it normally for hundreds of times without error:
+> > > 
+> > 
+> > Hi Geliang -
+> > 
+> > I can see how changing SO_SNDBUF on the sending socket side would
+> > shift
+> > timing behavior in a way that affect the test outcome, but it
+> > doesn't
+> > address the root issue with bug #487:
+> > 
+> > It is either OK to get an EAGAIN from a blocking send(), or it's
+> > not OK.
+> > 
+> > 
+> > If it's not ok to ever return EAGAIN from a blocking send, the
+> > existing
+> > test code is a reproducer for a bug, and changing the test is
+> > hiding
+> > that bug.
+> > 
+> > If EAGAIN is ok, then we should change the code in
+> > send_recv_server() to
+> > allow it.
 
-See:
-https://github.com/multipath-tcp/mptcp_net-next/issues/487#issuecomment-2485577676
+I did try to handle EAGAIN in send_recv_server() but it didn't work.
+MPTCP BPF sched selftests still fail. Test code and results are
+attached.
 
-So I think the question should be: is it normal to block for longer than
-the timeout period (which is a "long" period, no?)? If yes, then
-limiting the send buffer might be a solution, but as Mat said, it looks
-better to understand the root cause than hiding a bug :)
+I added this in send_recv_server():
 
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+	if (errno == EAGAIN && again < 5) {
+		again++;
+		continue;
+	}
 
+And still got the EAGAIN error:
+
+# (network_helpers.c:728: errno: Resource temporarily unavailable) send
+7867500 expected 10485760
+# (network_helpers.c:782: errno: Resource temporarily unavailable) recv
+3469500 ​​expected 10485760
+# (network_helpers.c:790: errno: Resource temporarily unavailable)
+Failed in thread_ret -11
+# send_data_and_verify:FAIL:send_recv_data unexpected error: -11 (errno
+11)
+
+In addition, BPF selftests adds a new mechanism that does not allow any
+test item to run for more than 10 seconds. Otherwise, the following
+error will be reported:
+
+# WATCHDOG: test case mptcp/default executes for 10 seconds...
+
+In my testing, I have not found any other solution besides limiting the
+send buffer. This allows data to be sent at a constant rate, which
+ensures the stability of MPTCP BPF sched selftests.
+
+In order to avoid hiding this bug, we can add a test item for this in
+mptcp selftest in the future, like in [1].
+
+WDYT?
+
+Thanks,
+-Geliang
+
+[1]
+https://patchwork.kernel.org/project/mptcp/cover/cover.1722502941.git.tanggeliang@kylinos.cn/
+
+> 
+> It is now a bit hidden in the middle of #487, but if I'm not
+> mistaken,
+> it is OK to get EAGAIN with a blocking send() **if** SO_SNDTIMEO is
+> used, and in case of timeout.
+> 
+> See:
+> https://github.com/multipath-tcp/mptcp_net-next/issues/487#issuecomment-2485577676
+> 
+> So I think the question should be: is it normal to block for longer
+> than
+> the timeout period (which is a "long" period, no?)? If yes, then
+> limiting the send buffer might be a solution, but as Mat said, it
+> looks
+> better to understand the root cause than hiding a bug :)
+> 
+> Cheers,
+> Matt
+
+--=-0L8E2enwSszwlLIWXI4V
+Content-Disposition: attachment; filename="bpf-sched-selftests-eagain-err.diff"
+Content-Type: text/x-patch; name="bpf-sched-selftests-eagain-err.diff"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+ZGlmZiAtLWdpdCBhL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2JwZi9uZXR3b3JrX2hlbHBlcnMu
+YyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3RzL2JwZi9uZXR3b3JrX2hlbHBlcnMuYwppbmRleCA5
+Y2RiODAxMjc4MDQuLmU5OTY2MjgyYjY2NCAxMDA2NDQKLS0tIGEvdG9vbHMvdGVzdGluZy9zZWxm
+dGVzdHMvYnBmL25ldHdvcmtfaGVscGVycy5jCisrKyBiL3Rvb2xzL3Rlc3Rpbmcvc2VsZnRlc3Rz
+L2JwZi9uZXR3b3JrX2hlbHBlcnMuYwpAQCAtOTQsMTEgKzk0LDExIEBAIGludCBzZXR0aW1lbyhp
+bnQgZmQsIGludCB0aW1lb3V0X21zKQogCiBzdGF0aWMgaW50IHNldHNuZGJ1ZihpbnQgZmQsIHVp
+bnQzMl90IHNuZGJ1ZikKIHsKLQlpZiAoc25kYnVmID4gMCAmJgotCSAgICBzZXRzb2Nrb3B0KGZk
+LCBTT0xfU09DS0VULCBTT19TTkRCVUYsICZzbmRidWYsIHNpemVvZihzbmRidWYpKSkgewotCQls
+b2dfZXJyKCJGYWlsZWQgdG8gc2V0IFNPX1NOREJVRiIpOwotCQlyZXR1cm4gLTE7Ci0JfQorCS8v
+aWYgKHNuZGJ1ZiA+IDAgJiYKKwkvLyAgICBzZXRzb2Nrb3B0KGZkLCBTT0xfU09DS0VULCBTT19T
+TkRCVUYsICZzbmRidWYsIHNpemVvZihzbmRidWYpKSkgeworCS8vCWxvZ19lcnIoIkZhaWxlZCB0
+byBzZXQgU09fU05EQlVGIik7CisJLy8JcmV0dXJuIC0xOworCS8vfQogCiAJcmV0dXJuIDA7CiB9
+CkBAIC02ODgsNiArNjg4LDcgQEAgc3RhdGljIHZvaWQgKnNlbmRfcmVjdl9zZXJ2ZXIodm9pZCAq
+YXJnKQogCXNzaXplX3QgbnJfc2VudCA9IDAsIGJ5dGVzID0gMDsKIAljaGFyIGJhdGNoWzE1MDBd
+OwogCWludCBlcnIgPSAwLCBmZDsKKwlpbnQgYWdhaW4gPSAwOwogCiAJZmQgPSBhY2NlcHQoYS0+
+ZmQsIE5VTEwsIE5VTEwpOwogCXdoaWxlIChmZCA9PSAtMSkgewpAQCAtNzEzLDYgKzcxNCwxMCBA
+QCBzdGF0aWMgdm9pZCAqc2VuZF9yZWN2X3NlcnZlcih2b2lkICphcmcpCiAJCWlmIChucl9zZW50
+ID09IC0xICYmIGVycm5vID09IEVJTlRSKQogCQkJY29udGludWU7CiAJCWlmIChucl9zZW50ID09
+IC0xKSB7CisJCQlpZiAoZXJybm8gPT0gRUFHQUlOICYmIGFnYWluIDwgNSkgeworCQkJCWFnYWlu
+Kys7CisJCQkJY29udGludWU7CisJCQl9CiAJCQllcnIgPSAtZXJybm87CiAJCQlicmVhazsKIAkJ
+fQpAQCAtNzQ3LDYgKzc1Miw3IEBAIGludCBzZW5kX3JlY3ZfZGF0YShpbnQgbGZkLCBpbnQgZmQs
+IHVpbnQzMl90IHRvdGFsX2J5dGVzLCB1aW50MzJfdCBzbmRidWYpCiAJcHRocmVhZF90IHNydl90
+aHJlYWQ7CiAJdm9pZCAqdGhyZWFkX3JldDsKIAljaGFyIGJhdGNoWzE1MDBdOworCWludCBhZ2Fp
+biA9IDA7CiAJaW50IGVyciA9IDA7CiAKIAllcnIgPSBwdGhyZWFkX2NyZWF0ZSgmc3J2X3RocmVh
+ZCwgTlVMTCwgc2VuZF9yZWN2X3NlcnZlciwgKHZvaWQgKikmYXJnKTsKQEAgLTc2Miw2ICs3Njgs
+MTAgQEAgaW50IHNlbmRfcmVjdl9kYXRhKGludCBsZmQsIGludCBmZCwgdWludDMyX3QgdG90YWxf
+Ynl0ZXMsIHVpbnQzMl90IHNuZGJ1ZikKIAkJaWYgKG5yX3JlY3YgPT0gLTEgJiYgZXJybm8gPT0g
+RUlOVFIpCiAJCQljb250aW51ZTsKIAkJaWYgKG5yX3JlY3YgPT0gLTEpIHsKKwkJCWlmIChlcnJu
+byA9PSBFQUdBSU4gJiYgYWdhaW4gPCA1KSB7CisJCQkJYWdhaW4rKzsKKwkJCQljb250aW51ZTsK
+KwkJCX0KIAkJCWVyciA9IC1lcnJubzsKIAkJCWJyZWFrOwogCQl9Cg==
+
+
+--=-0L8E2enwSszwlLIWXI4V
+Content-Disposition: attachment; filename="bpf-sched-selftests-eagain-err.log"
+Content-Type: text/x-log; name="bpf-sched-selftests-eagain-err.log"; charset="UTF-8"
+Content-Transfer-Encoding: base64
+
+Cgk9PT0gQXR0ZW1wdDogMjggKFNhdCwgMTQgSnVuIDIwMjUgMTI6MzE6MTcgKzAwMDApID09PQoK
+CkJQRiBUZXN0OiB0ZXN0X3Byb2dzIC10IG1wdGNwClRBUCB2ZXJzaW9uIDEzCjEuLjEKIyBXQVRD
+SERPRzogdGVzdCBjYXNlIG1wdGNwL2RlZmF1bHQgZXhlY3V0ZXMgZm9yIDEwIHNlY29uZHMuLi4K
+IyAjMjAzLzEgICBtcHRjcC9iYXNlOk9LCiMgIzIwMy8yICAgbXB0Y3AvbXB0Y3BpZnk6T0sKIyAj
+MjAzLzMgICBtcHRjcC9zdWJmbG93Ok9LCiMgYWRkcmVzc19pbml0OlBBU1M6aXAgLW5ldCBtcHRj
+cF9ucyBsaW5rIGFkZCB2ZXRoMSB0eXBlIHZldGggcGVlciBuYW1lIHZldGgyIDAgbnNlYwojIGFk
+ZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBhZGQgMTAuMC4xLjEvMjQgZGV2
+IHZldGgxIDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBh
+ZGQgZGVhZDpiZWVmOjE6OjEvNjQgZGV2IHZldGgxIG5vZGFkIDAgbnNlYwojIGFkZHJlc3NfaW5p
+dDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgbGluayBzZXQgZGV2IHZldGgxIHVwIDAgbnNlYwojIGFk
+ZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBhZGQgMTAuMC4yLjEvMjQgZGV2
+IHZldGgyIDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBh
+ZGQgZGVhZDpiZWVmOjI6OjEvNjQgZGV2IHZldGgyIG5vZGFkIDAgbnNlYwojIGFkZHJlc3NfaW5p
+dDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgbGluayBzZXQgZGV2IHZldGgyIHVwIDAgbnNlYwojIGFk
+ZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgbGluayBhZGQgdmV0aDMgdHlwZSB2ZXRo
+IHBlZXIgbmFtZSB2ZXRoNCAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6UEFTUzppcCAtbmV0IG1wdGNw
+X25zIGFkZHIgYWRkIDEwLjAuMy4xLzI0IGRldiB2ZXRoMyAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6
+UEFTUzppcCAtbmV0IG1wdGNwX25zIGFkZHIgYWRkIGRlYWQ6YmVlZjozOjoxLzY0IGRldiB2ZXRo
+MyBub2RhZCAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6UEFTUzppcCAtbmV0IG1wdGNwX25zIGxpbmsg
+c2V0IGRldiB2ZXRoMyB1cCAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6UEFTUzppcCAtbmV0IG1wdGNw
+X25zIGFkZHIgYWRkIDEwLjAuNC4xLzI0IGRldiB2ZXRoNCAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6
+UEFTUzppcCAtbmV0IG1wdGNwX25zIGFkZHIgYWRkIGRlYWQ6YmVlZjo0OjoxLzY0IGRldiB2ZXRo
+NCBub2RhZCAwIG5zZWMKIyBhZGRyZXNzX2luaXQ6UEFTUzppcCAtbmV0IG1wdGNwX25zIGxpbmsg
+c2V0IGRldiB2ZXRoNCB1cCAwIG5zZWMKIyBzY2hlZF9pbml0OlBBU1M6aXAgbmV0bnMgZXhlYyBt
+cHRjcF9ucyBzeXNjdGwgLXF3IG5ldC5tcHRjcC5zY2hlZHVsZXI9ZGVmYXVsdCAwIG5zZWMKIyB0
+ZXN0X2RlZmF1bHQ6UEFTUzpzY2hlZF9pbml0IDAgbnNlYwojIHNlbmRfZGF0YV9hbmRfdmVyaWZ5
+OlBBU1M6c3RhcnRfbXB0Y3Bfc2VydmVyIDAgbnNlYwojIHNlbmRfZGF0YV9hbmRfdmVyaWZ5OlBB
+U1M6Y29ubmVjdF90b19mZCAwIG5zZWMKIyAobmV0d29ya19oZWxwZXJzLmM6NzI4OiBlcnJubzog
+UmVzb3VyY2UgdGVtcG9yYXJpbHkgdW5hdmFpbGFibGUpIHNlbmQgNzg2NzUwMCBleHBlY3RlZCAx
+MDQ4NTc2MAojIChuZXR3b3JrX2hlbHBlcnMuYzo3ODI6IGVycm5vOiBSZXNvdXJjZSB0ZW1wb3Jh
+cmlseSB1bmF2YWlsYWJsZSkgcmVjdiAzNDY5NTAwIGV4cGVjdGVkIDEwNDg1NzYwCiMgKG5ldHdv
+cmtfaGVscGVycy5jOjc5MDogZXJybm86IFJlc291cmNlIHRlbXBvcmFyaWx5IHVuYXZhaWxhYmxl
+KSBGYWlsZWQgaW4gdGhyZWFkX3JldCAtMTEKIyBzZW5kX2RhdGFfYW5kX3ZlcmlmeTpGQUlMOnNl
+bmRfcmVjdl9kYXRhIHVuZXhwZWN0ZWQgZXJyb3I6IC0xMSAoZXJybm8gMTEpCiMgIzIwMy80ICAg
+bXB0Y3AvZGVmYXVsdDpGQUlMCiMgIzIwMy81ICAgbXB0Y3AvZmlyc3Q6T0sKIyAjMjAzLzYgICBt
+cHRjcC9ia3VwOk9LCiMgIzIwMy83ICAgbXB0Y3AvcnI6T0sKIyAjMjAzLzggICBtcHRjcC9yZWQ6
+T0sKIyAjMjAzLzkgICBtcHRjcC9idXJzdDpPSwojICMyMDMgICAgIG1wdGNwOkZBSUwKIyAKIyBB
+bGwgZXJyb3IgbG9nczoKIyBhZGRyZXNzX2luaXQ6UEFTUzppcCAtbmV0IG1wdGNwX25zIGxpbmsg
+YWRkIHZldGgxIHR5cGUgdmV0aCBwZWVyIG5hbWUgdmV0aDIgMCBuc2VjCiMgYWRkcmVzc19pbml0
+OlBBU1M6aXAgLW5ldCBtcHRjcF9ucyBhZGRyIGFkZCAxMC4wLjEuMS8yNCBkZXYgdmV0aDEgMCBu
+c2VjCiMgYWRkcmVzc19pbml0OlBBU1M6aXAgLW5ldCBtcHRjcF9ucyBhZGRyIGFkZCBkZWFkOmJl
+ZWY6MTo6MS82NCBkZXYgdmV0aDEgbm9kYWQgMCBuc2VjCiMgYWRkcmVzc19pbml0OlBBU1M6aXAg
+LW5ldCBtcHRjcF9ucyBsaW5rIHNldCBkZXYgdmV0aDEgdXAgMCBuc2VjCiMgYWRkcmVzc19pbml0
+OlBBU1M6aXAgLW5ldCBtcHRjcF9ucyBhZGRyIGFkZCAxMC4wLjIuMS8yNCBkZXYgdmV0aDIgMCBu
+c2VjCiMgYWRkcmVzc19pbml0OlBBU1M6aXAgLW5ldCBtcHRjcF9ucyBhZGRyIGFkZCBkZWFkOmJl
+ZWY6Mjo6MS82NCBkZXYgdmV0aDIgbm9kYWQgMCBuc2VjCiMgYWRkcmVzc19pbml0OlBBU1M6aXAg
+LW5ldCBtcHRjcF9ucyBsaW5rIHNldCBkZXYgdmV0aDIgdXAgMCBuc2VjCiMgYWRkcmVzc19pbml0
+OlBBU1M6aXAgLW5ldCBtcHRjcF9ucyBsaW5rIGFkZCB2ZXRoMyB0eXBlIHZldGggcGVlciBuYW1l
+IHZldGg0IDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBh
+ZGQgMTAuMC4zLjEvMjQgZGV2IHZldGgzIDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1u
+ZXQgbXB0Y3BfbnMgYWRkciBhZGQgZGVhZDpiZWVmOjM6OjEvNjQgZGV2IHZldGgzIG5vZGFkIDAg
+bnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgbGluayBzZXQgZGV2IHZl
+dGgzIHVwIDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgYWRkciBh
+ZGQgMTAuMC40LjEvMjQgZGV2IHZldGg0IDAgbnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1u
+ZXQgbXB0Y3BfbnMgYWRkciBhZGQgZGVhZDpiZWVmOjQ6OjEvNjQgZGV2IHZldGg0IG5vZGFkIDAg
+bnNlYwojIGFkZHJlc3NfaW5pdDpQQVNTOmlwIC1uZXQgbXB0Y3BfbnMgbGluayBzZXQgZGV2IHZl
+dGg0IHVwIDAgbnNlYwojIHNjaGVkX2luaXQ6UEFTUzppcCBuZXRucyBleGVjIG1wdGNwX25zIHN5
+c2N0bCAtcXcgbmV0Lm1wdGNwLnNjaGVkdWxlcj1kZWZhdWx0IDAgbnNlYwojIHRlc3RfZGVmYXVs
+dDpQQVNTOnNjaGVkX2luaXQgMCBuc2VjCiMgc2VuZF9kYXRhX2FuZF92ZXJpZnk6UEFTUzpzdGFy
+dF9tcHRjcF9zZXJ2ZXIgMCBuc2VjCiMgc2VuZF9kYXRhX2FuZF92ZXJpZnk6UEFTUzpjb25uZWN0
+X3RvX2ZkIDAgbnNlYwojIChuZXR3b3JrX2hlbHBlcnMuYzo3Mjg6IGVycm5vOiBSZXNvdXJjZSB0
+ZW1wb3JhcmlseSB1bmF2YWlsYWJsZSkgc2VuZCA3ODY3NTAwIGV4cGVjdGVkIDEwNDg1NzYwCiMg
+KG5ldHdvcmtfaGVscGVycy5jOjc4MjogZXJybm86IFJlc291cmNlIHRlbXBvcmFyaWx5IHVuYXZh
+aWxhYmxlKSByZWN2IDM0Njk1MDAgZXhwZWN0ZWQgMTA0ODU3NjAKIyAobmV0d29ya19oZWxwZXJz
+LmM6NzkwOiBlcnJubzogUmVzb3VyY2UgdGVtcG9yYXJpbHkgdW5hdmFpbGFibGUpIEZhaWxlZCBp
+biB0aHJlYWRfcmV0IC0xMQojIHNlbmRfZGF0YV9hbmRfdmVyaWZ5OkZBSUw6c2VuZF9yZWN2X2Rh
+dGEgdW5leHBlY3RlZCBlcnJvcjogLTExIChlcnJubyAxMSkKIyAjMjAzLzQgICBtcHRjcC9kZWZh
+dWx0OkZBSUwKIyAjMjAzICAgICBtcHRjcDpGQUlMCiMgU3VtbWFyeTogMC84IFBBU1NFRCwgMCBT
+S0lQUEVELCAxIEZBSUxFRApub3Qgb2sgMSB0ZXN0OiBicGZ0ZXN0X3Rlc3RfcHJvZ3NfbXB0Y3Ag
+IyBGQUlMCiMgdGltZT0yMQpCUEYgVGVzdDogdGVzdF9wcm9ncy1jcHV2NCAtdCBtcHRjcApUQVAg
+dmVyc2lvbiAxMwoxLi4xCiMgIzIwMy8xICAgbXB0Y3AvYmFzZTpPSwojICMyMDMvMiAgIG1wdGNw
+L21wdGNwaWZ5Ok9LCiMgIzIwMy8zICAgbXB0Y3Avc3ViZmxvdzpPSwojICMyMDMvNCAgIG1wdGNw
+L2RlZmF1bHQ6T0sKIyAjMjAzLzUgICBtcHRjcC9maXJzdDpPSwojICMyMDMvNiAgIG1wdGNwL2Jr
+dXA6T0sKIyAjMjAzLzcgICBtcHRjcC9ycjpPSwojICMyMDMvOCAgIG1wdGNwL3JlZDpPSwojICMy
+MDMvOSAgIG1wdGNwL2J1cnN0Ok9LCiMgIzIwMyAgICAgbXB0Y3A6T0sKIyBTdW1tYXJ5OiAxLzkg
+UEFTU0VELCAwIFNLSVBQRUQsIDAgRkFJTEVECm9rIDEgdGVzdDogYnBmdGVzdF90ZXN0X3Byb2dz
+LWNwdXY0X21wdGNwCiMgdGltZT00CkJQRiBUZXN0OiB0ZXN0X3Byb2dzLW5vX2FsdTMyIC10IG1w
+dGNwClRBUCB2ZXJzaW9uIDEzCjEuLjEKIyAjMjAzLzEgICBtcHRjcC9iYXNlOk9LCiMgIzIwMy8y
+ICAgbXB0Y3AvbXB0Y3BpZnk6T0sKIyAjMjAzLzMgICBtcHRjcC9zdWJmbG93Ok9LCiMgIzIwMy80
+ICAgbXB0Y3AvZGVmYXVsdDpPSwojICMyMDMvNSAgIG1wdGNwL2ZpcnN0Ok9LCiMgIzIwMy82ICAg
+bXB0Y3AvYmt1cDpPSwojICMyMDMvNyAgIG1wdGNwL3JyOk9LCiMgIzIwMy84ICAgbXB0Y3AvcmVk
+Ok9LCiMgIzIwMy85ICAgbXB0Y3AvYnVyc3Q6T0sKIyAjMjAzICAgICBtcHRjcDpPSwojIFN1bW1h
+cnk6IDEvOSBQQVNTRUQsIDAgU0tJUFBFRCwgMCBGQUlMRUQKb2sgMSB0ZXN0OiBicGZ0ZXN0X3Rl
+c3RfcHJvZ3Mtbm9fYWx1MzJfbXB0Y3AKIyB0aW1lPTQKCgoJPT09IEVSUk9SIGFmdGVyIDI4IGF0
+dGVtcHRzIChTYXQsIDE0IEp1biAyMDI1IDEyOjMxOjQ2ICswMDAwKSA9PT0KCg==
+
+
+--=-0L8E2enwSszwlLIWXI4V--
