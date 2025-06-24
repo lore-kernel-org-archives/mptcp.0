@@ -1,148 +1,138 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 964432E11DF
-	for <mptcp@lists.linux.dev>; Tue, 24 Jun 2025 18:18:32 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B52E025A624;
+	Tue, 24 Jun 2025 21:10:11 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1750789114; cv=none; b=szXZm/Upv8IYcmOY8BThd2D3ibmtxcN8Qjw7Iq5rUAYzdqkvHrMRz+SFcc5Ob+oYGattV0uLg1FCw5z9lNm9s4NhzBiMo6F0/lzq2+3dedxHomvSmdq/eghJoFpvcvA6h/2YH17mfQ3t55ghzSBu86STKy1Hx7AVaoIBRohpIvA=
+	t=1750799411; cv=none; b=S1hXzdziwYw3tdc6Q5JqKsO71NA16sOUAsQm2A8oTlQM8lAvg6vrvdgxmZ9KHz/Rz7CCDcyfkfq7SBtfJXPPmnkLghck/5Bow5WsY5t2KomLIsHvPZgLKwsWmqjMh149NP24lAijyulABC8i1Dc3ifD6sEonS59SqjnD/xUT5js=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1750789114; c=relaxed/simple;
-	bh=b3gqybE5Pb4fbf+NG8nF+cHOxnanQ96YrphONGlLhb8=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=QDl+haCBDokkS5HHE8QYW3QpCCSocIbOxivLQyuI4Um6g8RlSktv1bdiBVfsy6LpyyLfrDsDfgFlJzCmUFLImHAMS06klwv1UtqEIWoG8vvIOQY+qgD99r8YMIp/EVtQkkxocJXxdr0R/R9n10X4pRwYLb0akqaOa3dsvijgnmA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3ddbec809acso11473045ab.2
-        for <mptcp@lists.linux.dev>; Tue, 24 Jun 2025 11:18:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1750789112; x=1751393912;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=7nbEx6aMVKqdWvyMJYQZTfplcow4MaQFasYOV9mpc5Q=;
-        b=Bev+g7ciivaWjRoZxzT9MwI0ejrCtmHZ/niFl2qp9mVCmTMLgz50eVJZ+MuP1Eapqx
-         /95HeIGLpfaFZEx9ZYTT4yvviGFBfxF/uwj+tqU1/nMafYyVw5r5nhkIn0u4oastO7yV
-         6GW/rdr+rTyJDAji0seOji/Eg7gZYCgoTF3Z/20tfOEBIEKuKEVxsczKD51UqZcMo5lG
-         mEQ3cyT+2V2+hRG1kC/1sJ9xzBoA1T81wnQKUbW+2KNCp9K5yA+nXGks87/3Vj6i8uuX
-         LhKYyLL+unKa00tmqyOD3I+4MFDUIa+xZjjwTbBLLF/dBiVS0kxXsbIU2Y8aMktxFvu9
-         4Ysw==
-X-Forwarded-Encrypted: i=1; AJvYcCVy4pjOCr2T4YWKfWimvv8iTRr5mPYiZzzuilmIPQq+4JLzdaCod+X1Q2hUTPEyLlaDrJ8k6Q==@lists.linux.dev
-X-Gm-Message-State: AOJu0YyuqTRu4kNmGenEbSp4sD26QMnE5gWyKxF587/RiCq9Y3iq7YfL
-	dwLmNlH8mYSeVEgokdkYgkuxD8+h1ikfnPBemXVn4Y/ck9GggppsrQBOIuKwEellDx+zxb03+We
-	R5ekdI42ydqrpBadUxsrJcQKtY5ruR3YTbu47z0Dw1d1m4+zqNDwobFEWHO4=
-X-Google-Smtp-Source: AGHT+IEKpUzUpSGavgSOnfmZjsCqKhAYX//2LVI3qo9n5HmjNzxIxrIBnPG8//vvvhzAPnERsu6qLWjtRY1G8q5OkwK8qpUdhg7q
+	s=arc-20240116; t=1750799411; c=relaxed/simple;
+	bh=WW3n5z8BKkttYwZrK2VL1cVP754ZJdoyiAbJs4kgSeE=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=Lx93FunCkpHIn1clUWXy/Pi6+p7ktM4IalUBw9TOyr7K/1C50OocWTGw0w1livA4JTbQCmyjdT8m0grA2cu8W7oii9C9X0NQD3Mu/8+SOSwsbS6pDwAqILI+cRM42vD5Cc1yzLF12doP5tuaCqRigK3jS0ZcGHjgOfrqKSYyswY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U/ovR9+j; arc=none smtp.client-ip=10.30.226.201
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U/ovR9+j"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A8B01C4CEEF;
+	Tue, 24 Jun 2025 21:10:10 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1750799411;
+	bh=WW3n5z8BKkttYwZrK2VL1cVP754ZJdoyiAbJs4kgSeE=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=U/ovR9+jyu1CIyKOfi9YMNOL7zXHDik5MGw1NGq8AVkq5xXvVqVY+XcJm+g8RMfB5
+	 8C3/X5rSNRFMfNlgalEmz0omngnkbiLGr5JqdmIqAVuwnAYeOsxuSbmAVXD2i9b3di
+	 rRjit5CgoPGBhERqOGEmSALCoGfqrFn9EErLWM0PRQa5vZApjKtIX90MIAPc/X3CiO
+	 A8ag7uVR1Uv8PHoFxV3u9YZC5qaoVHkXFU+72H0/oWkqF2xxySfaGqz8FQXE1L1QL5
+	 lFXbWK5LSZMVBPbZtvp4oPPuDi3TAneejVkECJ8NKSKZrYhyl92YOk1OhYfUgjewL8
+	 db7DgXEyNO55w==
+From: Jakub Kicinski <kuba@kernel.org>
+To: davem@davemloft.net,
+	donald.hunter@gmail.com
+Cc: netdev@vger.kernel.org,
+	edumazet@google.com,
+	pabeni@redhat.com,
+	andrew+netdev@lunn.ch,
+	horms@kernel.org,
+	Jakub Kicinski <kuba@kernel.org>,
+	matttbe@kernel.org,
+	martineau@kernel.org,
+	geliang@kernel.org,
+	dcaratti@redhat.com,
+	mptcp@lists.linux.dev
+Subject: [PATCH net 07/10] netlink: specs: mptcp: replace underscores with dashes in names
+Date: Tue, 24 Jun 2025 14:09:59 -0700
+Message-ID: <20250624211002.3475021-8-kuba@kernel.org>
+X-Mailer: git-send-email 2.49.0
+In-Reply-To: <20250624211002.3475021-1-kuba@kernel.org>
+References: <20250624211002.3475021-1-kuba@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:1c2b:b0:3dd:c4ed:39c0 with SMTP id
- e9e14a558f8ab-3df328e0374mr964335ab.1.1750789111711; Tue, 24 Jun 2025
- 11:18:31 -0700 (PDT)
-Date: Tue, 24 Jun 2025 11:18:31 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <685aebf7.a00a0220.2e5631.008d.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in __mark_subflow_endp_available (2)
-From: syzbot <syzbot+c6e2db6fd15f31126b7a@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 
-Hello,
+We're trying to add a strict regexp for the name format in the spec.
+Underscores will not be allowed, dashes should be used instead.
+This makes no difference to C (codegen, if used, replaces special
+chars in names) but it gives more uniform naming in Python.
 
-syzbot found the following issue on:
-
-HEAD commit:    75f5f23f8787 Merge tag 'block-6.16-20250619' of git://git...
-git tree:       upstream
-console output: https://syzkaller.appspot.com/x/log.txt?x=140f8182580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=4130f4d8a06c3e71
-dashboard link: https://syzkaller.appspot.com/bug?extid=c6e2db6fd15f31126b7a
-compiler:       gcc (Debian 12.2.0-14) 12.2.0, GNU ld (GNU Binutils for Debian) 2.40
-
-Unfortunately, I don't have any reproducer for this issue yet.
-
-Downloadable assets:
-disk image (non-bootable): https://storage.googleapis.com/syzbot-assets/d900f083ada3/non_bootable_disk-75f5f23f.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/7979df97154f/vmlinux-75f5f23f.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/010807ef6fc8/bzImage-75f5f23f.xz
-
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c6e2db6fd15f31126b7a@syzkaller.appspotmail.com
-
-netlink: 8 bytes leftover after parsing attributes in process `syz.3.1789'.
-netlink: 8 bytes leftover after parsing attributes in process `syz.3.1789'.
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 12059 at net/mptcp/pm_kernel.c:880 __mark_subflow_endp_available net/mptcp/pm_kernel.c:880 [inline]
-WARNING: CPU: 0 PID: 12059 at net/mptcp/pm_kernel.c:880 __mark_subflow_endp_available+0x12e/0x140 net/mptcp/pm_kernel.c:876
-Modules linked in:
-CPU: 0 UID: 0 PID: 12059 Comm: syz.3.1789 Not tainted 6.16.0-rc2-syzkaller-00231-g75f5f23f8787 #0 PREEMPT(full) 
-Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS 1.16.3-debian-1.16.3-2~bpo12+1 04/01/2014
-RIP: 0010:__mark_subflow_endp_available net/mptcp/pm_kernel.c:880 [inline]
-RIP: 0010:__mark_subflow_endp_available+0x12e/0x140 net/mptcp/pm_kernel.c:876
-Code: 48 0f ab 9d 88 0a 00 00 5b 5d 41 5c 41 5d e9 d9 f8 4c f6 e8 64 d0 b3 f6 eb ca e8 5d d0 b3 f6 e9 60 ff ff ff e8 c3 f8 4c f6 90 <0f> 0b 90 e9 78 ff ff ff 66 2e 0f 1f 84 00 00 00 00 00 90 90 90 90
-RSP: 0018:ffffc900036373d8 EFLAGS: 00010283
-RAX: 00000000000057d6 RBX: 0000000000000000 RCX: ffffc9000d761000
-RDX: 0000000000080000 RSI: ffffffff8b6f236d RDI: 0000000000000001
-RBP: ffff888025d08b80 R08: 0000000000000001 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000001 R12: ffff888025d09608
-R13: ffff888025d095b8 R14: ffff8880653cde80 R15: 0000000000000000
-FS:  00007f1bc288a6c0(0000) GS:ffff8880d6753000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007f1bc2888fb8 CR3: 0000000064977000 CR4: 0000000000352ef0
-DR0: 0000000000000007 DR1: 000000000000009b DR2: 00040000ffffffff
-DR3: 0000000000000009 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- mptcp_nl_remove_subflow_and_signal_addr net/mptcp/pm_kernel.c:915 [inline]
- mptcp_pm_nl_del_addr_doit+0xaf4/0xed0 net/mptcp/pm_kernel.c:1013
- genl_family_rcv_msg_doit+0x209/0x2f0 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x55c/0x800 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x158/0x420 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x53a/0x7f0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x8d1/0xdd0 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:712 [inline]
- __sock_sendmsg net/socket.c:727 [inline]
- ____sys_sendmsg+0xa95/0xc70 net/socket.c:2566
- ___sys_sendmsg+0x134/0x1d0 net/socket.c:2620
- __sys_sendmsg+0x16d/0x220 net/socket.c:2652
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xcd/0x4c0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7f1bc198e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f1bc288a038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007f1bc1bb6080 RCX: 00007f1bc198e929
-RDX: 000000002000c094 RSI: 0000200000000000 RDI: 0000000000000006
-RBP: 00007f1bc1a10b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007f1bc1bb6080 R15: 00007ffc06c0d828
- </TASK>
-
-
+Fixes: bc8aeb2045e2 ("Documentation: netlink: add a YAML spec for mptcp")
+Signed-off-by: Jakub Kicinski <kuba@kernel.org>
 ---
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+CC: matttbe@kernel.org
+CC: martineau@kernel.org
+CC: geliang@kernel.org
+CC: donald.hunter@gmail.com
+CC: dcaratti@redhat.com
+CC: mptcp@lists.linux.dev
+---
+ Documentation/netlink/specs/mptcp_pm.yaml | 8 ++++----
+ include/uapi/linux/mptcp_pm.h             | 6 +++---
+ 2 files changed, 7 insertions(+), 7 deletions(-)
 
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/Documentation/netlink/specs/mptcp_pm.yaml b/Documentation/netlink/specs/mptcp_pm.yaml
+index dfd017780d2f..fb57860fe778 100644
+--- a/Documentation/netlink/specs/mptcp_pm.yaml
++++ b/Documentation/netlink/specs/mptcp_pm.yaml
+@@ -57,21 +57,21 @@ cmd-cnt-name: --mptcp-pm-cmd-after-last
+       doc: >-
+         A new subflow has been established. 'error' should not be set.
+         Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
++        daddr6, sport, dport, backup, if-idx [, error].
+      -
+       name: sub-closed
+       doc: >-
+         A subflow has been closed. An error (copy of sk_err) could be set if an
+         error has been detected for this subflow.
+         Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
++        daddr6, sport, dport, backup, if-idx [, error].
+      -
+       name: sub-priority
+       value: 13
+       doc: >-
+         The priority of a subflow has changed. 'error' should not be set.
+         Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+-        daddr6, sport, dport, backup, if_idx [, error].
++        daddr6, sport, dport, backup, if-idx [, error].
+      -
+       name: listener-created
+       value: 15
+@@ -255,7 +255,7 @@ cmd-cnt-name: --mptcp-pm-cmd-after-last
+         name: timeout
+         type: u32
+       -
+-        name: if_idx
++        name: if-idx
+         type: u32
+       -
+         name: reset-reason
+diff --git a/include/uapi/linux/mptcp_pm.h b/include/uapi/linux/mptcp_pm.h
+index 84fa8a21dfd0..6ac84b2f636c 100644
+--- a/include/uapi/linux/mptcp_pm.h
++++ b/include/uapi/linux/mptcp_pm.h
+@@ -27,14 +27,14 @@
+  *   token, rem_id.
+  * @MPTCP_EVENT_SUB_ESTABLISHED: A new subflow has been established. 'error'
+  *   should not be set. Attributes: token, family, loc_id, rem_id, saddr4 |
+- *   saddr6, daddr4 | daddr6, sport, dport, backup, if_idx [, error].
++ *   saddr6, daddr4 | daddr6, sport, dport, backup, if-idx [, error].
+  * @MPTCP_EVENT_SUB_CLOSED: A subflow has been closed. An error (copy of
+  *   sk_err) could be set if an error has been detected for this subflow.
+  *   Attributes: token, family, loc_id, rem_id, saddr4 | saddr6, daddr4 |
+- *   daddr6, sport, dport, backup, if_idx [, error].
++ *   daddr6, sport, dport, backup, if-idx [, error].
+  * @MPTCP_EVENT_SUB_PRIORITY: The priority of a subflow has changed. 'error'
+  *   should not be set. Attributes: token, family, loc_id, rem_id, saddr4 |
+- *   saddr6, daddr4 | daddr6, sport, dport, backup, if_idx [, error].
++ *   saddr6, daddr4 | daddr6, sport, dport, backup, if-idx [, error].
+  * @MPTCP_EVENT_LISTENER_CREATED: A new PM listener is created. Attributes:
+  *   family, sport, saddr4 | saddr6.
+  * @MPTCP_EVENT_LISTENER_CLOSED: A PM listener is closed. Attributes: family,
+-- 
+2.49.0
 
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
