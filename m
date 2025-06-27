@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9F24E14EC73
-	for <mptcp@lists.linux.dev>; Fri, 27 Jun 2025 16:01:29 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 6B95C14EC73
+	for <mptcp@lists.linux.dev>; Fri, 27 Jun 2025 16:01:30 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751040089; cv=none; b=gzUXFtjTyhdeQI5/ak+EwCUe9iC/eQEocROMZ5D0bxjKlbl1WK7CSZth/8fJTQfu4rYwECqIfBUr8unCPR9JrLtMZtlS7eWr5GLDyRXgV43EuMIOj2QE7azxu7hNf9IVCmwq0VZgs8PRTJts6EkQd8stUO8uIZsqV7wJ187LDFk=
+	t=1751040091; cv=none; b=IdRjh/9eemaZg+q3bhQ9puWY6adKv2rkbuFa6jPqHlg8iYvvSLpK+lanrUrlLMXmfM306tASTtKT3EMO5X124zD5XKU4J5e47yZstTVfDfDgF/YyAxoY0piDWXRDtIhjRcMxTl21bAgU56unsJk0/7+LHKecM64ve1JNWYxEgEo=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751040089; c=relaxed/simple;
-	bh=JWZpxu94DK1POxA2FzHwmvjhPCH0nATuXGwwzNgtbqg=;
+	s=arc-20240116; t=1751040091; c=relaxed/simple;
+	bh=3xuUr77WJdOE23V8Tpi+/hhttLBIYXzMFY0ZVafEskQ=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=FRveEvZSh0oZ6Oo5Uks4exTQknZBd7wjixjIqoUP3E7fAEUgtYEDk/v2Y0YIUOTFYP5Zqyc7s//3YBtFGfSAF0mJr5DkLHC4kwKtijrV25pYNescHEiEL9NRDhHDQr0KnacWf/nfIwLZ/vXjBwbE3EA9aQwsrMv3jF2q2JtcqZY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=LxZGPYT8; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=G9RGhJs1nMGf4YWlz6i20A3OeeDJlkC95lRfiTJxtGBpI4EaH6j/zkVWkxZ3Z5QyW2RL7t4zDfVO/WeAUlKN/kPMawyTlqWBFKKqDOlLLC+H7/ytvBnrAoPbXeQa91ZWhZckVAzBSoZxc/VtVRvpCY+0uNcKlBlA2PjN+8SSIZc=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=TbeAcBmu; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="LxZGPYT8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id E354BC4CEEF;
-	Fri, 27 Jun 2025 16:01:27 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="TbeAcBmu"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AD8EFC4CEE3;
+	Fri, 27 Jun 2025 16:01:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751040089;
-	bh=JWZpxu94DK1POxA2FzHwmvjhPCH0nATuXGwwzNgtbqg=;
+	s=k20201202; t=1751040090;
+	bh=3xuUr77WJdOE23V8Tpi+/hhttLBIYXzMFY0ZVafEskQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=LxZGPYT8pkyJoCaaZ/IVvdHTa4AWsxfIi888Gwd2F/ByXGIB8d6S7l+xCz6t8Lrir
-	 eLLKHKl1WhbTTlieFTNfR45hWnEAyG/NliPrLAOmL3okkkSh2tKkEnWI4DEP2gj8wm
-	 /sdnKPgChou07yvD/WpxzNQKjTjahg6I7KGr5yybVP46S4L4hXjPmSYalc/tpP85IZ
-	 asH2UO7kWCnLAyYEXXmFQbpmFJ69aaDoHpwukfIJh21/EJmvd6doVZVeEf2pEJkGAL
-	 piCcAy0J0xvdjBwa80zx8A8BCJ3dAglOH5iABt+bqyIO5tgLSTDVh79WE4DCZo7NKN
-	 1dBIKk20s88ww==
+	b=TbeAcBmuBQ/S5pBVEgA3F7KQGSoqp1WE8jIccyjLO0E34ETjzuvWLUEPxR07+8+Z3
+	 +BWsJqfGkiW5CZH8VvoBqYjtoLxmYRbvUtZcvLJu8yGYNozhjOEDMXA6UjKtGvviQ1
+	 WrALDOxJ6vYtaqZsqb6ZCA2yUEbrdIYViEMZC+VfUr+diD4JZMIPurwBJK+JwvC/lw
+	 ZwVALA0xvH9jNNiZv1pmKSyJvw59yM6rMRZrIVMxABiel3w/kgNTjaDGSgjD5BKJR4
+	 5qggD7IuKXAkEc+S2Rf5bIbpZRKM9T9+uhmgorFvdQtu+VKxdpWWuNqfQK5FANzlAF
+	 OzuJ8CPlzo1bg==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v4 2/4] mptcp: implement .read_sock
-Date: Fri, 27 Jun 2025 23:59:41 +0800
-Message-ID: <886fea2d7d2d71ace157bacc1b38dc7ce2e4573a.1751039657.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v4 3/4] mptcp: set .splice_read
+Date: Fri, 27 Jun 2025 23:59:42 +0800
+Message-ID: <84557ee1e03cfe9172e5d52ad78cbf88d3711672.1751039657.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1751039657.git.tanggeliang@kylinos.cn>
 References: <cover.1751039657.git.tanggeliang@kylinos.cn>
@@ -46,120 +46,56 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-nvme_tcp_try_recv() needs to call .read_sock interface of struct
-proto_ops, but it is not implemented in MPTCP.
-
-This patch implements it with reference to __mptcp_recvmsg_mskq().
+This patch sets .splice_read interface of mptcp struct proto_ops as
+tcp_splice_read. And invoke .read_sock in __tcp_splice_read().
 
 v2:
- - first check the sk_state (Matt), but not look for the end of the
-end of a connection like TCP in __tcp_read_sock():
+ - use INDIRECT_CALL_INET_1.
 
-	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
-		break;
-
-This will cause a use-after-free error:
-
-	BUG: KASAN: slab-use-after-free in mptcp_read_sock.
-
-v3:
- - Use sk->sk_rcvbuf instead of INT_MAX as the max len.
-
-v4:
- - invoke __mptcp_move_skbs.
-
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 64 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 64 insertions(+)
+ net/ipv4/tcp.c       | 4 +++-
+ net/mptcp/protocol.c | 2 ++
+ 2 files changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2f747ab730e5..10cc8756877e 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -3956,6 +3956,68 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	return mask;
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index c18682c3fa33..97175b75796b 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -774,13 +774,15 @@ static int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
+ 
+ static int __tcp_splice_read(struct sock *sk, struct tcp_splice_state *tss)
+ {
++	const struct proto_ops *ops = READ_ONCE(sk->sk_socket->ops);
+ 	/* Store TCP splice context information in read_descriptor_t. */
+ 	read_descriptor_t rd_desc = {
+ 		.arg.data = tss,
+ 		.count	  = tss->len,
+ 	};
+ 
+-	return tcp_read_sock(sk, &rd_desc, tcp_splice_data_recv);
++	return INDIRECT_CALL_INET_1(ops->read_sock, tcp_read_sock,
++				    sk, &rd_desc, tcp_splice_data_recv);
  }
  
-+/*
-+ * Note:
-+ *	- It is assumed that the socket was locked by the caller.
-+ */
-+static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-+			   sk_read_actor_t recv_actor)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	struct scm_timestamping_internal tss;
-+	size_t len = sk->sk_rcvbuf;
-+	struct sk_buff *skb, *tmp;
-+	int copied = 0;
-+
-+	if (sk->sk_state == TCP_LISTEN)
-+		return -ENOTCONN;
-+	skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp) {
-+		u32 offset = MPTCP_SKB_CB(skb)->offset;
-+		u32 data_len = skb->len - offset;
-+		u32 size = min_t(size_t, len - copied, data_len);
-+		int count;
-+
-+		count = recv_actor(desc, skb, offset, size);
-+		if (count <= 0) {
-+			if (!copied)
-+				copied = count;
-+			break;
-+		}
-+
-+		if (MPTCP_SKB_CB(skb)->has_rxtstamp)
-+			tcp_update_recv_tstamps(skb, &tss);
-+
-+		copied += count;
-+
-+		if (count < data_len) {
-+			MPTCP_SKB_CB(skb)->offset += count;
-+			MPTCP_SKB_CB(skb)->map_seq += count;
-+			msk->bytes_consumed += count;
-+			break;
-+		}
-+
-+		/* avoid the indirect call, we know the destructor is sock_wfree */
-+		skb->destructor = NULL;
-+		atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
-+		sk_mem_uncharge(sk, skb->truesize);
-+		sk_eat_skb(sk, skb);
-+		msk->bytes_consumed += count;
-+
-+		if (copied >= len)
-+			break;
-+	}
-+
-+	mptcp_rcv_space_adjust(msk, copied);
-+
-+	if (copied > 0) {
-+		if (skb_queue_empty(&sk->sk_receive_queue))
-+			__mptcp_move_skbs(sk);
-+		mptcp_cleanup_rbuf(msk, copied);
-+	}
-+
-+	return copied;
-+}
-+
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -3976,6 +4038,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.recvmsg	   = inet_recvmsg,
+ /**
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 10cc8756877e..33608404b871 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -4039,6 +4039,7 @@ static const struct proto_ops mptcp_stream_ops = {
  	.mmap		   = sock_no_mmap,
  	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
+ 	.read_sock	   = mptcp_read_sock,
++	.splice_read	   = tcp_splice_read,
  };
  
  static struct inet_protosw mptcp_protosw = {
-@@ -4080,6 +4143,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.compat_ioctl	   = inet6_compat_ioctl,
+@@ -4144,6 +4145,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
  #endif
  	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
+ 	.read_sock	   = mptcp_read_sock,
++	.splice_read	   = tcp_splice_read,
  };
  
  static struct proto mptcp_v6_prot;
