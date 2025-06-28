@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4F0144A08
-	for <mptcp@lists.linux.dev>; Sat, 28 Jun 2025 06:58:01 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id E27E021CA03
+	for <mptcp@lists.linux.dev>; Sat, 28 Jun 2025 06:58:03 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751093882; cv=none; b=edRv/AtoTiPzx/EfY0t8L7CpExke+2WUHvT+LOo0v3cQ4kyjFcF1SdVq3dqIyoJofYzQx4YAWDc3Jz/5/UtaAHreMVTCbvTiTv2euZ/MDyes++J1gMd7650r0qF/49IlXSZpu7D1SHIgr65Cv6O2yghwCUy4kyjlJ3sMDK2Y4LA=
+	t=1751093884; cv=none; b=CtKoEM+2AFNci7bE2qoBy7y1cZ0gHnoBO7Q9qGmfcOlkgja+ECbkZq6g0dvh3LTI/kb9iviiZs49CdYSVPTewWsiWth5ncG3d1Y2lwEO8Qgcu7IeK4wESTXYHaXoCDlESyWp8QrLBcJKbNmQKjeqaIOozNmJggnSqdqaLvSjnhY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751093882; c=relaxed/simple;
-	bh=vBCSHusMthd3wYqtglA1rZINZLF8DuQCY7RGbljju3U=;
+	s=arc-20240116; t=1751093884; c=relaxed/simple;
+	bh=lE7qwDkioDbkRUHGKoyY63JeC7dhOFS9Z5U6KnVwmB8=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=rBhLKK8kct4GQsmzTzMPNmO5JNVsjNZjeEukAqsaUwdmqu4zMdzTvCQzgTMOM0jub4My3d0ecgf6FSciK7WOKAw3p/2tVDe6iEiyZUT4vWw83TGCAmggz9dMn22k2S28RLQ5/8TwAMWcBlnbCaC85OsMwxHOrjTe8fkwIE2pH50=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=t7hNErgi; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=sKyV9sAi7e65CVjYvkihZw09zL+LYZ+fgFDyiLnOJEIDJ33NUANdRWTA2DoiCJCMc7tzTt8/Lsc92IbilvcEofuaqwW4QaDTmVFAiUOszzf7fsRXUdPAHy4Jzib1TVESmPiHKZl88ic7a2pRQStKGNCLopZKw5F0ioi2ZhXKcps=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fPWVwufx; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="t7hNErgi"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ABF2FC4CEEE;
-	Sat, 28 Jun 2025 06:58:00 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fPWVwufx"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 55F8CC4CEEA;
+	Sat, 28 Jun 2025 06:58:02 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751093881;
-	bh=vBCSHusMthd3wYqtglA1rZINZLF8DuQCY7RGbljju3U=;
+	s=k20201202; t=1751093883;
+	bh=lE7qwDkioDbkRUHGKoyY63JeC7dhOFS9Z5U6KnVwmB8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=t7hNErgiY4hyromYyQJqjECycgsc6+bsHo8TXFOiggYLWXs7QZ5zYoItQPR2o55LD
-	 DPqradS2HivOgtdV3Vn5+KmHJjAxUSsteEWYRNTeHVXgna3qjwSXNu95IJ6L+ifpFe
-	 8siAsScteK5Gl+sJMN6mjXV7S+A0aSyVTUKnnYdYzyZJSBoNAd5QZbOF2LrwonIfpL
-	 Aw9zv3iLT6ub8ktdBVQcEj+h6X+A/LYVzmiTbVdnAhH4ccxbCqtS5gHq/9BK2VJiC4
-	 lxEGSrVGLJpgT2PjAEj3KuBUJ+REn+XD/idcs35h+NATXN84VXZiOjUm4e/cN5p/h+
-	 SW66NSXJ1GsbQ==
+	b=fPWVwufx62sKDaQe/qL4M5/JyXeGAJUGyMaDzcy5Kkt1GoiotJm/Fig8PRoMIIxUp
+	 iwTW9L0mQcvgDKJbXxGtJo6oRfK4zbrvvI2evg9JUcsAaCKQTbZRyHmO+e4VTrTa3L
+	 FdhcWAMSRfchRrJv3O46VT7cDB+iP7SJF6HhGZAYLcLF4y6h75j0Ig9aq8YlQ2eLQM
+	 1rMgDQacDeJjQkZWTabJ9LWgF5TAO3wb5QEm6zjVhUG9ZH4i0HiuP5El5qrrbC/1KC
+	 Symm4fDwd5AgIlIZkNrXqrEWS9cC+Z6Np22g7vbQYD0YdzXx9SfrGVZ32Y25yeVCaQ
+	 WWlU6jM+U6STQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 2/5] mptcp: add recvmsg_desc helper
-Date: Sat, 28 Jun 2025 14:57:10 +0800
-Message-ID: <5fcd0bddfcdca24ebe9b0ff66cad0913235a4df9.1751093346.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v5 3/5] mptcp: implement .read_sock
+Date: Sat, 28 Jun 2025 14:57:11 +0800
+Message-ID: <1beb923fbaa782f2ddd2f97c5028425641e244d8.1751093346.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1751093346.git.tanggeliang@kylinos.cn>
 References: <cover.1751093346.git.tanggeliang@kylinos.cn>
@@ -46,84 +46,91 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-In order to implement .read_sock interface of mptcp later, this patch
-extends __mptcp_recvmsg_mskq() to a more general __mptcp_recvmsg_desc(),
-which accepts read_descriptor_t and sk_read_actor_t parameters. In this
-way, the original __mptcp_recvmsg_mskq() can be implemented by passing
-a newly defined mptcp_recvmsg_actor() to __mptcp_recvmsg_desc(). This
-mptcp_recvmsg_actor() is a wrapper for skb_copy_datagram_msg().
+nvme_tcp_try_recv() needs to call .read_sock interface of struct
+proto_ops, but it is not implemented in MPTCP.
 
+This patch implements it using the newly added __mptcp_recvmsg_desc().
+
+v2:
+ - first check the sk_state (Matt), but not look for the end of the
+end of a connection like TCP in __tcp_read_sock():
+
+	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
+		break;
+
+This will cause a use-after-free error:
+
+	BUG: KASAN: slab-use-after-free in mptcp_read_sock.
+
+v3:
+ - Use sk->sk_rcvbuf instead of INT_MAX as the max len.
+
+v4:
+ - invoke __mptcp_move_skbs.
+
+v5:
+ - use the newly added __mptcp_recvmsg_desc.
+
+Reviewed-by: Hannes Reinecke <hare@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 37 +++++++++++++++++++++++++++++++++----
- 1 file changed, 33 insertions(+), 4 deletions(-)
+ net/mptcp/protocol.c | 29 +++++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 2f747ab730e5..2ebdad6b233d 100644
+index 2ebdad6b233d..1a1cfa1ff376 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1844,8 +1844,9 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
- 
- static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
- 
--static int __mptcp_recvmsg_mskq(struct sock *sk,
--				struct msghdr *msg,
-+static int __mptcp_recvmsg_desc(struct sock *sk,
-+				read_descriptor_t *desc,
-+				sk_read_actor_t recv_actor,
- 				size_t len, int flags,
- 				struct scm_timestamping_internal *tss,
- 				int *cmsg_flags)
-@@ -1861,12 +1862,14 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
- 		int err;
- 
- 		if (!(flags & MSG_TRUNC)) {
--			err = skb_copy_datagram_msg(skb, offset, msg, count);
--			if (unlikely(err < 0)) {
-+			err = recv_actor(desc, skb, offset, count);
-+			if (err <= 0) {
- 				if (!copied)
- 					return err;
- 				break;
- 			}
-+			if (!WARN_ON_ONCE(err > count))
-+				count = err;
- 		}
- 
- 		if (MPTCP_SKB_CB(skb)->has_rxtstamp) {
-@@ -1902,6 +1905,32 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
- 	return copied;
+@@ -3985,6 +3985,33 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
+ 	return mask;
  }
  
-+static int mptcp_recvmsg_actor(read_descriptor_t *rd_desc, struct sk_buff *skb,
-+			       unsigned int offset, size_t len)
++/*
++ * Note:
++ *	- It is assumed that the socket was locked by the caller.
++ */
++static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
++			   sk_read_actor_t recv_actor)
 +{
-+	struct msghdr *msg = rd_desc->arg.data;
-+	int err;
++	struct mptcp_sock *msk = mptcp_sk(sk);
++	struct scm_timestamping_internal tss;
++	int flags = 0, cmsg_flags = 0;
++	size_t len = sk->sk_rcvbuf;
++	int copied = 0;
 +
-+	err = skb_copy_datagram_msg(skb, offset, msg, len);
-+	if (unlikely(err < 0))
-+		return err;
-+	return len;
++	if (sk->sk_state == TCP_LISTEN)
++		return -ENOTCONN;
++
++	copied = __mptcp_recvmsg_desc(sk, desc, recv_actor,
++				      len, flags, &tss, &cmsg_flags);
++	if (copied > 0) {
++		if (skb_queue_empty(&sk->sk_receive_queue))
++			__mptcp_move_skbs(sk);
++		mptcp_cleanup_rbuf(msk, copied);
++	}
++
++	return copied;
 +}
 +
-+static int __mptcp_recvmsg_mskq(struct sock *sk,
-+				struct msghdr *msg,
-+				size_t len, int flags,
-+				struct scm_timestamping_internal *tss,
-+				int *cmsg_flags)
-+{
-+	read_descriptor_t desc = {
-+		.arg.data = msg,
-+	};
-+
-+	return __mptcp_recvmsg_desc(sk, &desc, mptcp_recvmsg_actor,
-+				    len, flags, tss, cmsg_flags);
-+}
-+
- /* receive buffer autotuning.  See tcp_rcv_space_adjust for more information.
-  *
-  * Only difference: Use highest rtt estimate of the subflows in use.
+ static const struct proto_ops mptcp_stream_ops = {
+ 	.family		   = PF_INET,
+ 	.owner		   = THIS_MODULE,
+@@ -4005,6 +4032,7 @@ static const struct proto_ops mptcp_stream_ops = {
+ 	.recvmsg	   = inet_recvmsg,
+ 	.mmap		   = sock_no_mmap,
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
++	.read_sock	   = mptcp_read_sock,
+ };
+ 
+ static struct inet_protosw mptcp_protosw = {
+@@ -4109,6 +4137,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
+ 	.compat_ioctl	   = inet6_compat_ioctl,
+ #endif
+ 	.set_rcvlowat	   = mptcp_set_rcvlowat,
++	.read_sock	   = mptcp_read_sock,
+ };
+ 
+ static struct proto mptcp_v6_prot;
 -- 
 2.48.1
 
