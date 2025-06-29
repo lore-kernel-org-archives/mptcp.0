@@ -1,41 +1,46 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 02B554A08
-	for <mptcp@lists.linux.dev>; Sat, 28 Jun 2025 06:58:06 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8DA44188587
+	for <mptcp@lists.linux.dev>; Sun, 29 Jun 2025 09:27:56 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751093887; cv=none; b=cZvwiWea+wixHZfZdldgWGBjgoolPKLgiyizXt3rdqxLGF3i6+weyxd11mPwm7aMQDEvtqVAntg0g3M/fkIo+7ENFnSAwYVW6jVpUnQ8zKnre5olPN6H6+Cgl8QN0QTflvOl43emeIDXkpRw9bwNtcNPuLYUm4tsWgwSIfpsEg4=
+	t=1751189276; cv=none; b=i0RmO7KnuEAjlNZKuF4b5Os4lMkC/Hdde+bLBKfyINAR+Eapaku5yNK6WmJAh60OtYaG0VHDgyFohFURLuMId3armBsbe1EztJQI9ydTitDpsKtbHHKhoPK3n+7kMk6ioPDLVw6OYIY2OpoWR6NR/QyWuA2waWDTrTPQW+noNWE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751093887; c=relaxed/simple;
-	bh=bhuC2TqYyeTrDbPGob8gPdZZn5KwfuDrY1y5UaLO+bw=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=XBUWlwU7XLh0a2YUvJTYq+veBQWijv4sidLTFSxmUYiFY1wT/UJdavfUhWVyyWI8k5rSioP9nDP4qIZCkxYXeSBFE11VNOaEYakwnwMpztpCjsexliRs65J1cfoD5E1+2zy+nDYnLor38mMWX8VUm/0zNmcOI+8HoYw8j4pst+k=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NzSxO/GP; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751189276; c=relaxed/simple;
+	bh=cC1e1AgDluYvXAmsPZIhDVc7LkG055dmH0h/Hx7PWhk=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=Tgbb3ISHaQR7s1+xaYjUylO91OoQhMUb1wWcdoY6qxZ5wgwGRJyl2NxHnFuh9X+XGONLbU5pK1Vn5Bsp2y6XTqW8eZffCrJCzjFa3/FPhWjND4Cz57k3ZPCDdDEIeLd48Z2V2W3VdXUFZSfJxWoTgqLqWHrtuV8/4kXzWQzp5lY=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FNq2CIB/; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NzSxO/GP"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9873BC4CEEA;
-	Sat, 28 Jun 2025 06:58:05 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FNq2CIB/"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id EBB1BC4CEEB;
+	Sun, 29 Jun 2025 09:27:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751093886;
-	bh=bhuC2TqYyeTrDbPGob8gPdZZn5KwfuDrY1y5UaLO+bw=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=NzSxO/GPQqvs1eK9gAGr7LZh3v0RA6ZoCvctxpDKxfbupBlc4Y4zs2KKRPLcDGjNS
-	 VrFil+PnWKbbMmxo8u9kIQjucvxNGZ6ZWtIakoqDFOpwQVTj5MhviJkcQkEwy3l4AI
-	 fqzCYgAjUzRx7FXQiUlI+nOqVksCcLInCgPSPQrZ6uwCdIzNhYqHTAWlysV+3Ycgav
-	 an9qMHJXytoe540DhZdeNGqp1FUc8yqYuV7Ll5e+rZtvb/UOI9oe8oJwExFrTfEH43
-	 j7WzODqnNB+xmDqQpUkvVIpoW6HwBCOGDk+8dpR0HyZJexCVO6NH34XxCRHz9Zhe7C
-	 +p3VpgWICB/vA==
+	s=k20201202; t=1751189276;
+	bh=cC1e1AgDluYvXAmsPZIhDVc7LkG055dmH0h/Hx7PWhk=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=FNq2CIB/leZbiXgAmdvM306OkfjujZpBw8NMInha1jQO99CeKi8HV62o8otpsAmL/
+	 C5IaS9g+Hw1buBzSAjSEP/PVxBRujswVNIPUA1iL8VDl8SrRvdrxWevH20LzKT2Qdo
+	 0csqrFBR5W3DHBEluNmlQ0uoIzfguSj74igGRwRkrtlzigGzw2wMuFrjBW6OF6kfdv
+	 ttriB4qWdO57xIlGUyFL3HLZJSUvRKcv/YCNxGbXI7GJQkuef5B6zaVZVh07LNc38r
+	 1BrPndXzMyPWHW38KNi/ywsYytQXnhHNIfnp9oCPIlqxepJU71hLqbYtA0Ne0QsnT8
+	 G6J9MuPjC7hvA==
+Message-ID: <47e97515be89fea46a0253aa8aa880130d87b39b.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking
+ IO mode #487
 From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev,
-	hare@kernel.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v5 5/5] selftests: mptcp: add splice io mode
-Date: Sat, 28 Jun 2025 14:57:13 +0800
-Message-ID: <9d593d11dbe5aa772957a7f0ab7c27c8eac73eea.1751093346.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
-In-Reply-To: <cover.1751093346.git.tanggeliang@kylinos.cn>
-References: <cover.1751093346.git.tanggeliang@kylinos.cn>
+To: Matthieu Baerts <matttbe@kernel.org>, Mat Martineau
+ <martineau@kernel.org>
+Cc: mptcp@lists.linux.dev, Geliang Tang <tanggeliang@kylinos.cn>
+Date: Sun, 29 Jun 2025 17:27:52 +0800
+In-Reply-To: <b90f35f04a8ea06593c44e988b39615a06646deb.camel@kernel.org>
+References: <cover.1748484770.git.tanggeliang@kylinos.cn>
+		 <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org>
+		 <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org>
+	 <b90f35f04a8ea06593c44e988b39615a06646deb.camel@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -44,129 +49,176 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Mat, Matt,
 
-This patch adds a new 'splice' io mode for mptcp_connect to test
-the newly added read_sock() and splice() functions of MPTCP.
+On Mon, 2025-06-16 at 14:34 +0800, Geliang Tang wrote:
+> Hi Matt, Mat,
+> 
+> On Sun, 2025-06-15 at 23:29 +0200, Matthieu Baerts wrote:
+> > Hi Mat, Geliang,
+> > 
+> > On 14/06/2025 01:11, Mat Martineau wrote:
+> > > On Thu, 29 May 2025, Geliang Tang wrote:
+> > > 
+> > > > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > > > 
+> > > > Good news! I finally solved the unstable issue of MPTCP BPF
+> > > > sched
+> > > > selftests
+> > > > I reported a year ago, #487 "send() fails with EAGAIN in
+> > > > blocking
+> > > > IO
+> > > > mode".
+> > > > 
+> > > > The fix is simple, it can be solved by explicitly setting
+> > > > SO_SNDBUF
+> > > > sockopt, but be sure not to set SO_RCVBUF at the same time
+> > > > (see sk->sk_userlocks & SOCK_RCVBUF_LOCK in
+> > > > mptcp_rcv_space_adjust()).
+> > > > 
+> > > > With this fix, BPF sched selftests are now very stable, I run
+> > > > loop
+> > > > testing
+> > > > using mptcp-upstream-virtme-docker (run_loop run_bpftest_all),
+> > > > and can
+> > > > run
+> > > > it normally for hundreds of times without error:
+> > > > 
+> > > 
+> > > Hi Geliang -
+> > > 
+> > > I can see how changing SO_SNDBUF on the sending socket side would
+> > > shift
+> > > timing behavior in a way that affect the test outcome, but it
+> > > doesn't
+> > > address the root issue with bug #487:
+> > > 
+> > > It is either OK to get an EAGAIN from a blocking send(), or it's
+> > > not OK.
+> > > 
+> > > 
+> > > If it's not ok to ever return EAGAIN from a blocking send, the
+> > > existing
+> > > test code is a reproducer for a bug, and changing the test is
+> > > hiding
+> > > that bug.
+> > > 
+> > > If EAGAIN is ok, then we should change the code in
+> > > send_recv_server() to
+> > > allow it.
+> 
+> I did try to handle EAGAIN in send_recv_server() but it didn't work.
+> MPTCP BPF sched selftests still fail. Test code and results are
+> attached.
+> 
+> I added this in send_recv_server():
+> 
+> 	if (errno == EAGAIN && again < 5) {
+> 		again++;
+> 		continue;
+> 	}
+> 
+> And still got the EAGAIN error:
+> 
+> # (network_helpers.c:728: errno: Resource temporarily unavailable)
+> send
+> 7867500 expected 10485760
+> # (network_helpers.c:782: errno: Resource temporarily unavailable)
+> recv
+> 3469500 ​​expected 10485760
+> # (network_helpers.c:790: errno: Resource temporarily unavailable)
+> Failed in thread_ret -11
+> # send_data_and_verify:FAIL:send_recv_data unexpected error: -11
+> (errno
+> 11)
+> 
+> In addition, BPF selftests adds a new mechanism that does not allow
+> any
+> test item to run for more than 10 seconds. Otherwise, the following
+> error will be reported:
+> 
+> # WATCHDOG: test case mptcp/default executes for 10 seconds...
+> 
+> In my testing, I have not found any other solution besides limiting
+> the
+> send buffer. This allows data to be sent at a constant rate, which
+> ensures the stability of MPTCP BPF sched selftests.
+> 
+> In order to avoid hiding this bug, we can add a test item for this in
+> mptcp selftest in the future, like in [1].
 
-	./mptcp_connect.sh -m splice
+Last week I debugged this issue further and found something (Thanks to
+Gang Yan for his help): when mptcp bpf sched selftests fail, the memory
+limit check (if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)) is always true
+in __mptcp_move_skbs_from_subflow(), at this time sk->sk_receive_queue
+is empty, but no skb is moved from this subflow to sk-
+>sk_receive_queue, which causes the transmission to fail.
 
-v2:
- - only use 'splice' mode for MPTCP fallback tests too.
+One fix is ​​to also consider the case where sk->sk_receive_queue is
+empty when doing the memory limit check:
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- .../selftests/net/mptcp/mptcp_connect.c       | 63 ++++++++++++++++++-
- 1 file changed, 62 insertions(+), 1 deletion(-)
+  -               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+  +               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
+  +                   !skb_queue_empty(&sk->sk_receive_queue))
+                          break;
 
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-index ac1349c4b9e5..4c219d620398 100644
---- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
-@@ -51,6 +51,7 @@ enum cfg_mode {
- 	CFG_MODE_POLL,
- 	CFG_MODE_MMAP,
- 	CFG_MODE_SENDFILE,
-+	CFG_MODE_SPLICE,
- };
- 
- enum cfg_peek {
-@@ -123,7 +124,7 @@ static void die_usage(void)
- 	fprintf(stderr, "\t-j     -- add additional sleep at connection start and tear down "
- 		"-- for MPJ tests\n");
- 	fprintf(stderr, "\t-l     -- listens mode, accepts incoming connection\n");
--	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
-+	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice] -- use poll(default)/mmap+write/sendfile/splice\n");
- 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
- 	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
- 	fprintf(stderr, "\t-p num -- use port num\n");
-@@ -925,6 +926,55 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
- 	return err;
- }
- 
-+static int do_splice(const int infd, const int outfd, const size_t len,
-+		     struct wstate *winfo)
-+{
-+	int pipefd[2];
-+	ssize_t bytes;
-+	int err;
-+
-+	err = pipe(pipefd);
-+	if (err)
-+		return err;
-+
-+	while ((bytes = splice(infd, NULL, pipefd[1], NULL,
-+			       len - winfo->total_len,
-+			       SPLICE_F_MOVE | SPLICE_F_MORE)) > 0) {
-+		splice(pipefd[0], NULL, outfd, NULL, bytes,
-+		       SPLICE_F_MOVE | SPLICE_F_MORE);
-+	}
-+
-+	close(pipefd[0]);
-+	close(pipefd[1]);
-+
-+	return 0;
-+}
-+
-+static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
-+			    bool *in_closed_after_out, struct wstate *winfo)
-+{
-+	int err;
-+
-+	if (listen_mode) {
-+		err = do_splice(peerfd, outfd, size, winfo);
-+		if (err)
-+			return err;
-+
-+		err = do_splice(infd, peerfd, size, winfo);
-+	} else {
-+		err = do_splice(infd, peerfd, size, winfo);
-+		if (err)
-+			return err;
-+
-+		shut_wr(peerfd);
-+
-+		err = do_splice(peerfd, outfd, size, winfo);
-+		*in_closed_after_out = true;
-+	}
-+
-+	return err;
-+}
-+
- static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
- {
- 	bool in_closed_after_out = false;
-@@ -957,6 +1007,14 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct
- 					 &in_closed_after_out, winfo);
- 		break;
- 
-+	case CFG_MODE_SPLICE:
-+		file_size = get_infd_size(infd);
-+		if (file_size < 0)
-+			return file_size;
-+		ret = copyfd_io_splice(infd, peerfd, outfd, file_size,
-+				       &in_closed_after_out, winfo);
-+		break;
-+
- 	default:
- 		fprintf(stderr, "Invalid mode %d\n", cfg_mode);
- 
-@@ -1361,12 +1419,15 @@ int parse_mode(const char *mode)
- 		return CFG_MODE_MMAP;
- 	if (!strcasecmp(mode, "sendfile"))
- 		return CFG_MODE_SENDFILE;
-+	if (!strcasecmp(mode, "splice"))
-+		return CFG_MODE_SPLICE;
- 
- 	fprintf(stderr, "Unknown test mode: %s\n", mode);
- 	fprintf(stderr, "Supported modes are:\n");
- 	fprintf(stderr, "\t\t\"poll\" - interleaved read/write using poll()\n");
- 	fprintf(stderr, "\t\t\"mmap\" - send entire input file (mmap+write), then read response (-l will read input first)\n");
- 	fprintf(stderr, "\t\t\"sendfile\" - send entire input file (sendfile), then read response (-l will read input first)\n");
-+	fprintf(stderr, "\t\t\"splice\" - send entire input file (splice), then read response (-l will read input first)\n");
- 
- 	die_usage();
- 
--- 
-2.48.1
+In addition, this memory limit check was moved from the end of do {}
+while (more_data_avail) to the front in the commit e0ca4057e0ec
+("mptcp: micro-optimize __mptcp_move_skb()"), so another better fix is
+​​to restore this check to the end of do {} while () so that move skbs
+from this subflow to sk->sk_receive_queue always has a chance to do at
+least once:
 
+@@ -587,9 +587,6 @@ static bool __mptcp_move_skbs_from_subflow(struct
+mptcp_sock *msk,
+                struct sk_buff *skb;
+                bool fin;
+ 
+-               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
+-                       break;
+-
+                /* try to move as much data as available */
+                map_remaining = subflow->map_data_len -
+                                mptcp_subflow_get_map_offset(subflow);
+@@ -634,6 +631,8 @@ static bool __mptcp_move_skbs_from_subflow(struct
+mptcp_sock *msk,
+                WRITE_ONCE(tp->copied_seq, seq);
+                more_data_avail = mptcp_subflow_data_available(ssk);
+ 
++               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
++                       break;
+        } while (more_data_avail);
+
+I think this is the root cause of #487, I would like to hear your
+opinions on which fix is ​​better.
+
+Thanks,
+-Geliang
+
+> 
+> WDYT?
+> 
+> Thanks,
+> -Geliang
+> 
+> [1]
+> https://patchwork.kernel.org/project/mptcp/cover/cover.1722502941.git.tanggeliang@kylinos.cn/
+> 
+> > 
+> > It is now a bit hidden in the middle of #487, but if I'm not
+> > mistaken,
+> > it is OK to get EAGAIN with a blocking send() **if** SO_SNDTIMEO is
+> > used, and in case of timeout.
+> > 
+> > See:
+> > https://github.com/multipath-tcp/mptcp_net-next/issues/487#issuecomment-2485577676
+> > 
+> > So I think the question should be: is it normal to block for longer
+> > than
+> > the timeout period (which is a "long" period, no?)? If yes, then
+> > limiting the send buffer might be a solution, but as Mat said, it
+> > looks
+> > better to understand the root cause than hiding a bug :)
+> > 
+> > Cheers,
+> > Matt
