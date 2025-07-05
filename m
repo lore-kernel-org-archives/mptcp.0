@@ -1,39 +1,39 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id BE66F1A3142
-	for <mptcp@lists.linux.dev>; Sat,  5 Jul 2025 11:17:53 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 2D3C41A3142
+	for <mptcp@lists.linux.dev>; Sat,  5 Jul 2025 11:17:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751714274; cv=none; b=bR8ZwAdBnh+OHEmwbNSZ5s8sqi1Wt/KwCpbjtOXyaS8FO7toVT8bm2AtpcpYOvAZJdfxAnAvrYnecNymI6mk5qP35Ai5G/Yb7E5mnn9NQmfZRZgmzKnEkVOlFO5jQV9IWHvWOC5Wf0Hnuseljh0GKTRFdiY6aV1qPB0C1onNZPQ=
+	t=1751714275; cv=none; b=VeqwVsjBg7xahhHIya2CI/Utldw9rZe4wnhkOeyCNJLGaNRVC8TXobnIN0SvjToaimetiqC+mTZnqmgFkdgggxJzZURTku7csC1Gh2FdccyE6/oWpqGY5Eaz0Bor6mTE25pMeX/ZqHS+fizV8r6XwNnlJVNserkSihPzL1t6fRk=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751714274; c=relaxed/simple;
-	bh=hRCUEhN08EMVpMX4kydKoNPiApXRv+3k63TEoFppVQs=;
+	s=arc-20240116; t=1751714275; c=relaxed/simple;
+	bh=bhuC2TqYyeTrDbPGob8gPdZZn5KwfuDrY1y5UaLO+bw=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=tjm3edHat+4+/tb/4Kg13ulNZwOKpBMn6dic37GOHit7ks4BZ99eSuCtnQnzoGPuqsdz3F5XApa+rszeYazz/aApWfBMU7mEe90+dsr4Fgo0PoQLNwEhX+fDGaSW+5U7U8UPmmoPRWrrQpXopxjGtcfddrrbsPxGfPSuq3c1Imc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gh9aUNei; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=BFd7caBNEX221YluMULrnPvRHkYuPv7EXy9uSzeO4wstf4CLqs4vH+BpvvYNIl8bz8kH+G5XpfwKjI6PQbHByBAesP4adoLBuoLXr/VP80bBpN5OWPc+mNyon8amuqZzeuPRI6ioleInhp3b39tTiMYqT3Ub7/bfKNlGQDKGfn8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=rn4nHKWv; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gh9aUNei"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1B597C4CEED;
-	Sat,  5 Jul 2025 11:17:51 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="rn4nHKWv"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id D00D5C4CEE7;
+	Sat,  5 Jul 2025 11:17:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751714273;
-	bh=hRCUEhN08EMVpMX4kydKoNPiApXRv+3k63TEoFppVQs=;
+	s=k20201202; t=1751714275;
+	bh=bhuC2TqYyeTrDbPGob8gPdZZn5KwfuDrY1y5UaLO+bw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=gh9aUNeiLR3Ohjk59R8RbgN65iEUzYKvYBw3z96SLrVm7I7LYxycwRY3BAe3pTsAv
-	 2CNQVkJKMrX0jNQY6jtmYaTONBvHoCK4oObrHMR6TwPLCVWFFeCCrrGQ2QMT/OosqA
-	 xizDVhBo3Ju+ffEtV+Q30J/04A++8kmrOHC0vP6+S4mMwM3IzKdk7oyC4FUOOn+3gq
-	 5nj6244uUEfIJL8GMi8KcTKYI3YD0au2f1z52+OWML2TMzwiGYZ/Yuv207pmmVA5Li
-	 ZX5RLInLSUEZb2T3Vx+ZFJ5JLKk31qvMacSjpmCG44tsmrJUDePlh03673jjKLFRTx
-	 ksxRdXeTDpOmw==
+	b=rn4nHKWvu5b0uU36Ikwl/XZBf+8N5Z3Xbu+BLZm8L+MZInpogp9aY1Sta3QFuWMRt
+	 Jk7Yqk/vPTano2iWNUF8AeguHWM4qRS7ES/PamNqEISesIimvW9dWmH5bMbvzyourh
+	 MlEXxhquujl4R4XzxnYWDm90aNoS6fXmyo7pb9lPboDhBoQP7LiY8iMxNyeYfmQlw5
+	 6I1b5fbniNkVDoEUHR404WTgcS21AVXn5voZQikISKPmihBaoZxTgFfKE7WZqbM2/0
+	 JkvaLm4LcpsyQlw+Zpf09iU/dzEPysfrw77au8Sa2RMBItN/jHHYsJ9AdpNwp+Z73C
+	 OigCv3lQz4VeQ==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	pabeni@redhat.com,
 	hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v6 3/4] mptcp: implement .splice_read
-Date: Sat,  5 Jul 2025 19:17:41 +0800
-Message-ID: <6ff0966262c7da64718a61dcb514829099c59e04.1751714072.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v6 4/4] selftests: mptcp: add splice io mode
+Date: Sat,  5 Jul 2025 19:17:42 +0800
+Message-ID: <2acf3b73afc0fc6a8fd8cf07c7c6d31cf690c9ed.1751714072.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1751714072.git.tanggeliang@kylinos.cn>
 References: <cover.1751714072.git.tanggeliang@kylinos.cn>
@@ -47,175 +47,127 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-This patch implements .splice_read interface of mptcp struct proto_ops
-as mptcp_splice_read() with reference to tcp_splice_read().
+This patch adds a new 'splice' io mode for mptcp_connect to test
+the newly added read_sock() and splice() functions of MPTCP.
+
+	./mptcp_connect.sh -m splice
+
+v2:
+ - only use 'splice' mode for MPTCP fallback tests too.
 
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 136 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 136 insertions(+)
+ .../selftests/net/mptcp/mptcp_connect.c       | 63 ++++++++++++++++++-
+ 1 file changed, 62 insertions(+), 1 deletion(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 7d58bb3f9fa3..327281ba5629 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4023,6 +4023,140 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
- 	return copied;
+diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect.c b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+index ac1349c4b9e5..4c219d620398 100644
+--- a/tools/testing/selftests/net/mptcp/mptcp_connect.c
++++ b/tools/testing/selftests/net/mptcp/mptcp_connect.c
+@@ -51,6 +51,7 @@ enum cfg_mode {
+ 	CFG_MODE_POLL,
+ 	CFG_MODE_MMAP,
+ 	CFG_MODE_SENDFILE,
++	CFG_MODE_SPLICE,
+ };
+ 
+ enum cfg_peek {
+@@ -123,7 +124,7 @@ static void die_usage(void)
+ 	fprintf(stderr, "\t-j     -- add additional sleep at connection start and tear down "
+ 		"-- for MPJ tests\n");
+ 	fprintf(stderr, "\t-l     -- listens mode, accepts incoming connection\n");
+-	fprintf(stderr, "\t-m [poll|mmap|sendfile] -- use poll(default)/mmap+write/sendfile\n");
++	fprintf(stderr, "\t-m [poll|mmap|sendfile|splice] -- use poll(default)/mmap+write/sendfile/splice\n");
+ 	fprintf(stderr, "\t-M mark -- set socket packet mark\n");
+ 	fprintf(stderr, "\t-o option -- test sockopt <option>\n");
+ 	fprintf(stderr, "\t-p num -- use port num\n");
+@@ -925,6 +926,55 @@ static int copyfd_io_sendfile(int infd, int peerfd, int outfd,
+ 	return err;
  }
  
-+/*
-+ * MPTCP splice context
-+ */
-+struct mptcp_splice_state {
-+	struct pipe_inode_info *pipe;
-+	size_t len;
-+	unsigned int flags;
-+};
-+
-+static int mptcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
-+				  unsigned int offset, size_t len)
++static int do_splice(const int infd, const int outfd, const size_t len,
++		     struct wstate *winfo)
 +{
-+	struct mptcp_splice_state *mss = rd_desc->arg.data;
-+	int ret;
++	int pipefd[2];
++	ssize_t bytes;
++	int err;
 +
-+	ret = skb_splice_bits(skb, skb->sk, offset, mss->pipe,
-+			      min(rd_desc->count, len), mss->flags);
-+	if (ret > 0)
-+		rd_desc->count -= ret;
-+	return ret;
-+}
++	err = pipe(pipefd);
++	if (err)
++		return err;
 +
-+static int __mptcp_splice_read(struct sock *sk, struct mptcp_splice_state *mss)
-+{
-+	/* Store MPTCP splice context information in read_descriptor_t. */
-+	read_descriptor_t rd_desc = {
-+		.arg.data = mss,
-+		.count	  = mss->len,
-+	};
-+
-+	return mptcp_read_sock(sk, &rd_desc, mptcp_splice_data_recv);
-+}
-+
-+/**
-+ *  mptcp_splice_read - splice data from MPTCP socket to a pipe
-+ * @sock:	socket to splice from
-+ * @ppos:	position (not valid)
-+ * @pipe:	pipe to splice to
-+ * @len:	number of bytes to splice
-+ * @flags:	splice modifier flags
-+ *
-+ * Description:
-+ *    Will read pages from given socket and fill them into a pipe.
-+ *
-+ **/
-+static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
-+				 struct pipe_inode_info *pipe, size_t len,
-+				 unsigned int flags)
-+{
-+	struct mptcp_splice_state mss = {
-+		.pipe = pipe,
-+		.len = len,
-+		.flags = flags,
-+	};
-+	struct sock *sk = sock->sk;
-+	ssize_t spliced;
-+	long timeo;
-+	int ret;
-+
-+	/*
-+	 * We can't seek on a socket input
-+	 */
-+	if (unlikely(*ppos))
-+		return -ESPIPE;
-+
-+	spliced = 0;
-+	ret = 0;
-+
-+	lock_sock(sk);
-+
-+	timeo = sock_rcvtimeo(sk, sock->file->f_flags & O_NONBLOCK);
-+	while (mss.len) {
-+		ret = __mptcp_splice_read(sk, &mss);
-+		if (ret < 0) {
-+			break;
-+		} else if (!ret) {
-+			if (spliced)
-+				break;
-+			if (sock_flag(sk, SOCK_DONE))
-+				break;
-+			if (sk->sk_err) {
-+				ret = sock_error(sk);
-+				break;
-+			}
-+			if (sk->sk_shutdown & RCV_SHUTDOWN) {
-+				if (__mptcp_move_skbs(sk))
-+					continue;
-+				break;
-+			}
-+			if (sk->sk_state == TCP_CLOSE) {
-+				ret = -ENOTCONN;
-+				break;
-+			}
-+			if (!timeo) {
-+				ret = -EAGAIN;
-+				break;
-+			}
-+			/* if __mptcp_splice_read() got nothing while we have
-+			 * an skb in receive queue, we do not want to loop.
-+			 * This might happen with URG data.
-+			 */
-+			if (!skb_queue_empty(&sk->sk_receive_queue))
-+				break;
-+			ret = sk_wait_data(sk, &timeo, NULL);
-+			if (ret < 0)
-+				break;
-+			if (signal_pending(current)) {
-+				ret = sock_intr_errno(timeo);
-+				break;
-+			}
-+			continue;
-+		}
-+		mss.len -= ret;
-+		spliced += ret;
-+
-+		if (!mss.len || !timeo)
-+			break;
-+		release_sock(sk);
-+		lock_sock(sk);
-+
-+		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
-+		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
-+		    signal_pending(current))
-+			break;
++	while ((bytes = splice(infd, NULL, pipefd[1], NULL,
++			       len - winfo->total_len,
++			       SPLICE_F_MOVE | SPLICE_F_MORE)) > 0) {
++		splice(pipefd[0], NULL, outfd, NULL, bytes,
++		       SPLICE_F_MOVE | SPLICE_F_MORE);
 +	}
 +
-+	release_sock(sk);
++	close(pipefd[0]);
++	close(pipefd[1]);
 +
-+	if (spliced)
-+		return spliced;
-+
-+	return ret;
++	return 0;
 +}
 +
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -4044,6 +4178,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.mmap		   = sock_no_mmap,
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
- 	.read_sock	   = mptcp_read_sock,
-+	.splice_read	   = mptcp_splice_read,
- };
++static int copyfd_io_splice(int infd, int peerfd, int outfd, unsigned int size,
++			    bool *in_closed_after_out, struct wstate *winfo)
++{
++	int err;
++
++	if (listen_mode) {
++		err = do_splice(peerfd, outfd, size, winfo);
++		if (err)
++			return err;
++
++		err = do_splice(infd, peerfd, size, winfo);
++	} else {
++		err = do_splice(infd, peerfd, size, winfo);
++		if (err)
++			return err;
++
++		shut_wr(peerfd);
++
++		err = do_splice(peerfd, outfd, size, winfo);
++		*in_closed_after_out = true;
++	}
++
++	return err;
++}
++
+ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct wstate *winfo)
+ {
+ 	bool in_closed_after_out = false;
+@@ -957,6 +1007,14 @@ static int copyfd_io(int infd, int peerfd, int outfd, bool close_peerfd, struct
+ 					 &in_closed_after_out, winfo);
+ 		break;
  
- static struct inet_protosw mptcp_protosw = {
-@@ -4149,6 +4284,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- #endif
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
- 	.read_sock	   = mptcp_read_sock,
-+	.splice_read	   = mptcp_splice_read,
- };
++	case CFG_MODE_SPLICE:
++		file_size = get_infd_size(infd);
++		if (file_size < 0)
++			return file_size;
++		ret = copyfd_io_splice(infd, peerfd, outfd, file_size,
++				       &in_closed_after_out, winfo);
++		break;
++
+ 	default:
+ 		fprintf(stderr, "Invalid mode %d\n", cfg_mode);
  
- static struct proto mptcp_v6_prot;
+@@ -1361,12 +1419,15 @@ int parse_mode(const char *mode)
+ 		return CFG_MODE_MMAP;
+ 	if (!strcasecmp(mode, "sendfile"))
+ 		return CFG_MODE_SENDFILE;
++	if (!strcasecmp(mode, "splice"))
++		return CFG_MODE_SPLICE;
+ 
+ 	fprintf(stderr, "Unknown test mode: %s\n", mode);
+ 	fprintf(stderr, "Supported modes are:\n");
+ 	fprintf(stderr, "\t\t\"poll\" - interleaved read/write using poll()\n");
+ 	fprintf(stderr, "\t\t\"mmap\" - send entire input file (mmap+write), then read response (-l will read input first)\n");
+ 	fprintf(stderr, "\t\t\"sendfile\" - send entire input file (sendfile), then read response (-l will read input first)\n");
++	fprintf(stderr, "\t\t\"splice\" - send entire input file (splice), then read response (-l will read input first)\n");
+ 
+ 	die_usage();
+ 
 -- 
 2.48.1
 
