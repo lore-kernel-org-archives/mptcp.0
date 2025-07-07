@@ -1,131 +1,148 @@
-Received: from mgamail.intel.com (mgamail.intel.com [192.198.163.12])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 419D419B3EC;
-	Sat,  5 Jul 2025 18:04:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=192.198.163.12
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91342E36F7
+	for <mptcp@lists.linux.dev>; Mon,  7 Jul 2025 04:05:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751738667; cv=none; b=Gxqv57TipW8QqlFzM6AaOx7GqlWrOxsW/+USKri/t4CJZCij2C81Xrg5Og58uDOuUkbAAW6zNd+iTIAgvjYw2oJvObVbFfr1fzDA5OtcS+L0/DfsTYLVs4Hnobp3xK5w8tcDwuhLIkaeYX7+2MpxGTjMNK+Xk5Aiudj+wzrMZ88=
+	t=1751861130; cv=none; b=aDR3KNkXsnx6Zqhndszxp3LyjObTLUQNzJQf4DXQT/DMnUDJClyUgEFI42XCzRPeTCTRkfiQNmqLKY/HRBUnG1PwcpryKq0rRoFywanfRh65e74hJZ0AkMQHbUashWoVJnS37t7sMoCkdZ+BML5CXFy7C68cBRF0jdAgR79YhvA=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751738667; c=relaxed/simple;
-	bh=u2m97IEAGONBq4DHbWrRo6iqTcVy1nCKihslhpl4/f4=;
-	h=Date:From:To:Cc:Subject:Message-ID:References:MIME-Version:
-	 Content-Type:Content-Disposition:In-Reply-To; b=HKQSsuzjxo5yAK0YYCRkpNnsrVZ9yh3I82ssgS92Tb2VPTqwZ/1ldroJBeQQzI4/lhk1mucYfvz0WzY7RFaddxdUm8AjtveGtWvnt32NKrdM7r6nNVZucoNTMb7yz2ZFihjlbe83HzIwcgUB/I9JEmUpjdHg0+CjjZYTfcx9zWc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com; spf=pass smtp.mailfrom=intel.com; dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b=KgQaMGfo; arc=none smtp.client-ip=192.198.163.12
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=intel.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=intel.com
-Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel.com header.i=@intel.com header.b="KgQaMGfo"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1751738666; x=1783274666;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=u2m97IEAGONBq4DHbWrRo6iqTcVy1nCKihslhpl4/f4=;
-  b=KgQaMGfopjnjMdOHluBDRBof0iTO7vdeDVbuJDo+sn8qlwtaw4ueTSbY
-   HWl121kZEAIxiTKlfZX3YijVVboPtFUzj2oLCGtiZWNjKzJQIbdjSGua5
-   CWPhH1JRSnBbyG4P0i1NacYdPZxUY+WKKJaMIZgEfwOdHvb7SsFvgKirq
-   8ceAigyMizm7fi2C2tOxG1LYvtBGYAEy3tP1852yCuDJcDVnYmUCS2nQ+
-   TtQSnT4exFAr88wu5llFyL24O6rzJCi+4q0B86PNY7VlZoH2+y8OzxwWP
-   Uq4+rjFn8tvcTovel4CpfL2KcLyctJKdGkv/VTHgRsWL/0MBL9QVEP/iw
-   Q==;
-X-CSE-ConnectionGUID: 1gMJHPNOT1ufH4TsbZRwVA==
-X-CSE-MsgGUID: /0XvdJpOQfKX/Jwgr1+A+w==
-X-IronPort-AV: E=McAfee;i="6800,10657,11485"; a="57826091"
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="57826091"
-Received: from fmviesa001.fm.intel.com ([10.60.135.141])
-  by fmvoesa106.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 05 Jul 2025 11:04:26 -0700
-X-CSE-ConnectionGUID: eHyjWxgzTzOx1IgivtCovg==
-X-CSE-MsgGUID: 0rfg2/HUQRqN8QCmbnJmdw==
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="6.16,290,1744095600"; 
-   d="scan'208";a="185812109"
-Received: from lkp-server01.sh.intel.com (HELO 0b2900756c14) ([10.239.97.150])
-  by fmviesa001.fm.intel.com with ESMTP; 05 Jul 2025 11:04:24 -0700
-Received: from kbuild by 0b2900756c14 with local (Exim 4.96)
-	(envelope-from <lkp@intel.com>)
-	id 1uY7FO-0004et-1c;
-	Sat, 05 Jul 2025 18:04:22 +0000
-Date: Sun, 6 Jul 2025 02:04:20 +0800
-From: kernel test robot <lkp@intel.com>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-Cc: oe-kbuild-all@lists.linux.dev
-Subject: Re: [PATCH mptcp-net v2 5/5] mptcp: remove pr_fallback()
-Message-ID: <202507060115.0WOIqNXG-lkp@intel.com>
-References: <189eef71d3406ce2931e6d9442c0c5bba1df42fa.1751700000.git.pabeni@redhat.com>
+	s=arc-20240116; t=1751861130; c=relaxed/simple;
+	bh=rjveDWq8KK4qBmmxeeVFa/DZwtPwsbJHz/rfwsr2Czc=;
+	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Wa1kuR3PvE1mUs5UniI7wTvnVyfoOVT75wNsTrMmyu4t+VFSGUECOfEvtnAkC9tQfGR1YZ/Kpj2I4K5FyI7cYf6p5Pj2K7XD1BNmDHDHp9pqDM35F0p8KnzolqqccWcCaJPwL7eDQKESn2gd+EPL7l/6qqXe69chPOF6v7q9n3Q=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
+Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
+Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df40226ab7so66174075ab.0
+        for <mptcp@lists.linux.dev>; Sun, 06 Jul 2025 21:05:28 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1751861128; x=1752465928;
+        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
+         :from:to:cc:subject:date:message-id:reply-to;
+        bh=9b8S7StRcDEyA/i2VOLC6sUORM9/5D6WMK6E3dsUzFI=;
+        b=Vrs7XwXmh6BpAOoTUZxOPMNV0BzqS+Zy+cXRHlVRmrxgdHojkx561v6IubUYsR6VFR
+         7UtB9nMSRYAewnM5ZN1NgPb9P4wt6+yMinxF2Z39LpXn8pIPyf0QS2amIz7fkc4EpwVb
+         Q2psc64kU7J0E1rIA8Kq0Mj4NyA/jpm+gu8T4bafaxrp4+ivc/BwPoRYy7rXxniXDnYO
+         nxb5qoiDY7SQZ+g6qAgurH1//HifaZ36awufmQNpqmPd4ml+YvKWJEc4uC7VjDSMBqTD
+         dOhQyIa42Y1uuexVsyjMwjaejXbrri0g0V7g1p9ud0MF+5Uey4EalFnNcc+ybcEEtMd4
+         vbHQ==
+X-Forwarded-Encrypted: i=1; AJvYcCVBDI1YyEOETi1JDVIfDS6ldB6ewvSZVY9BjcJ7bMW8z4xW2F3aA8J3MdrSik+YRwArKUCBSQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0Yx6t6nsShsYV34Qtb4Gkpp9IJ/DtmiARbeUqYxBuONdA4GLSPYL
+	qlDg4NRes+5QGrgotBhQJjbdeFePc6hHOo/pLh7nDQZNlGVHFobP6PdBjwPoCKdqzyMqZw8IIH4
+	nmIBA6kQWgOsgXRS5iUaYYXVEopjJXGX6WDa1CFKHKS3vnonppuR51VV4DjU=
+X-Google-Smtp-Source: AGHT+IG/n50KMMd7az6lAoy7v0ro9etKvox8cULsC7KPL4nLbBKmaieAK/iV2hmGn1xFGJLotJ0po1+l5bZuJYEmxxAuysonM2H6
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <189eef71d3406ce2931e6d9442c0c5bba1df42fa.1751700000.git.pabeni@redhat.com>
+X-Received: by 2002:a05:6e02:318c:b0:3dd:f3e1:2899 with SMTP id
+ e9e14a558f8ab-3e13ee85590mr79215175ab.2.1751861127927; Sun, 06 Jul 2025
+ 21:05:27 -0700 (PDT)
+Date: Sun, 06 Jul 2025 21:05:27 -0700
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <686b4787.a00a0220.c7b3.0073.GAE@google.com>
+Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list
+From: syzbot <syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com>
+To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
+	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
+	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
+	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"
 
-Hi Paolo,
+Hello,
 
-kernel test robot noticed the following build warnings:
+syzbot found the following issue on:
 
-[auto build test WARNING on mptcp/export]
-[also build test WARNING on mptcp/export-net linus/master v6.16-rc4 next-20250704]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch#_base_tree_information]
+HEAD commit:    8b98f34ce1d8 net: ipv6: Fix spelling mistake
+git tree:       net-next
+console output: https://syzkaller.appspot.com/x/log.txt?x=17d2b770580000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=efe4e8ed5014b310
+dashboard link: https://syzkaller.appspot.com/bug?extid=c6fca020ebd279c7412a
+compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Paolo-Abeni/mptcp-make-fallback-action-and-fallback-decision-atomic/20250705-152610
-base:   https://github.com/multipath-tcp/mptcp_net-next.git export
-patch link:    https://lore.kernel.org/r/189eef71d3406ce2931e6d9442c0c5bba1df42fa.1751700000.git.pabeni%40redhat.com
-patch subject: [PATCH mptcp-net v2 5/5] mptcp: remove pr_fallback()
-config: arm-randconfig-001-20250705 (https://download.01.org/0day-ci/archive/20250706/202507060115.0WOIqNXG-lkp@intel.com/config)
-compiler: arm-linux-gnueabi-gcc (GCC) 12.4.0
-reproduce (this is a W=1 build): (https://download.01.org/0day-ci/archive/20250706/202507060115.0WOIqNXG-lkp@intel.com/reproduce)
+Unfortunately, I don't have any reproducer for this issue yet.
 
-If you fix the issue in a separate patch/commit (i.e. not just a new version of
-the same patch/commit), kindly add following tags
-| Reported-by: kernel test robot <lkp@intel.com>
-| Closes: https://lore.kernel.org/oe-kbuild-all/202507060115.0WOIqNXG-lkp@intel.com/
+Downloadable assets:
+disk image: https://storage.googleapis.com/syzbot-assets/ad0c8f9a1a48/disk-8b98f34c.raw.xz
+vmlinux: https://storage.googleapis.com/syzbot-assets/3a8aacec88f6/vmlinux-8b98f34c.xz
+kernel image: https://storage.googleapis.com/syzbot-assets/0a86c0c1690c/bzImage-8b98f34c.xz
 
-All warnings (new ones prefixed by >>):
+IMPORTANT: if you fix the issue, please add the following tag to the commit:
+Reported-by: syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com
 
-   net/mptcp/subflow.c: In function 'subflow_state_change':
->> net/mptcp/subflow.c:1854:28: warning: variable 'msk' set but not used [-Wunused-but-set-variable]
-    1854 |         struct mptcp_sock *msk;
-         |                            ^~~
+------------[ cut here ]------------
+WARNING: CPU: 0 PID: 7141 at net/mptcp/pm.c:353 mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
+Modules linked in:
+CPU: 0 UID: 0 PID: 7141 Comm: syz.3.339 Not tainted 6.16.0-rc3-syzkaller-00985-g8b98f34ce1d8 #0 PREEMPT(full) 
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
+RIP: 0010:mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
+Code: b0 01 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d e9 8c 26 15 00 cc e8 56 b2 6a f6 90 0f 0b 90 e9 8b fd ff ff e8 48 b2 6a f6 90 <0f> 0b 90 31 c0 eb d1 48 c7 c1 30 69 a1 8f 80 e1 07 80 c1 03 38 c1
+RSP: 0018:ffffc9000b5a6db8 EFLAGS: 00010287
+RAX: ffffffff8b559c28 RBX: ffff88807a3f9700 RCX: 0000000000080000
+RDX: ffffc9000cbdd000 RSI: 000000000000318f RDI: 0000000000003190
+RBP: 0000000000000000 R08: 00000000000a0002 R09: 0000000000000000
+R10: 0000000000000000 R11: aa1414acffff0000 R12: ffff88814632f000
+R13: ffff88807d852040 R14: dffffc0000000000 R15: ffff88807a3fa181
+FS:  00007fb6c8df66c0(0000) GS:ffff888125c48000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007fb6c8df4fb8 CR3: 00000000339a2000 CR4: 00000000003526f0
+DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+Call Trace:
+ <TASK>
+ mptcp_pm_create_subflow_or_signal_addr+0x1448/0x1c30 net/mptcp/pm_kernel.c:318
+ mptcp_nl_add_subflow_or_signal_addr net/mptcp/pm_kernel.c:760 [inline]
+ mptcp_pm_nl_add_addr_doit+0xe66/0x1460 net/mptcp/pm_kernel.c:840
+ genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
+ genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
+ genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
+ netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
+ genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
+ netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
+ netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
+ netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
+ sock_sendmsg_nosec net/socket.c:714 [inline]
+ __sock_sendmsg+0x21c/0x270 net/socket.c:729
+ ____sys_sendmsg+0x505/0x830 net/socket.c:2614
+ ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
+ __sys_sendmsg net/socket.c:2700 [inline]
+ __do_sys_sendmsg net/socket.c:2705 [inline]
+ __se_sys_sendmsg net/socket.c:2703 [inline]
+ __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
+ do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
+ do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
+ entry_SYSCALL_64_after_hwframe+0x77/0x7f
+RIP: 0033:0x7fb6caf8e929
+Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007fb6c8df6038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
+RAX: ffffffffffffffda RBX: 00007fb6cb1b5fa0 RCX: 00007fb6caf8e929
+RDX: 0000000002000000 RSI: 0000200000000400 RDI: 000000000000000d
+RBP: 00007fb6cb010b39 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
+R13: 0000000000000000 R14: 00007fb6cb1b5fa0 R15: 00007ffe35e566e8
+ </TASK>
 
 
-vim +/msk +1854 net/mptcp/subflow.c
+---
+This report is generated by a bot. It may contain errors.
+See https://goo.gl/tpsmEJ for more information about syzbot.
+syzbot engineers can be reached at syzkaller@googlegroups.com.
 
-648ef4b88673dad Mat Martineau    2020-01-21  1849  
-648ef4b88673dad Mat Martineau    2020-01-21  1850  static void subflow_state_change(struct sock *sk)
-648ef4b88673dad Mat Martineau    2020-01-21  1851  {
-648ef4b88673dad Mat Martineau    2020-01-21  1852  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
-dc093db5cc052b7 Paolo Abeni      2020-03-13  1853  	struct sock *parent = subflow->conn;
-81c1d029016001f Paolo Abeni      2023-06-20 @1854  	struct mptcp_sock *msk;
-648ef4b88673dad Mat Martineau    2020-01-21  1855  
-648ef4b88673dad Mat Martineau    2020-01-21  1856  	__subflow_state_change(sk);
-648ef4b88673dad Mat Martineau    2020-01-21  1857  
-81c1d029016001f Paolo Abeni      2023-06-20  1858  	msk = mptcp_sk(parent);
-8fd738049ac3d67 Davide Caratti   2020-06-29  1859  	if (subflow_simultaneous_connect(sk)) {
-be9cad90d7343cf Paolo Abeni      2025-07-05  1860  		mptcp_do_fallback(sk, MPTCP_MIB_SIMULT_FALLBACK);
-8fd738049ac3d67 Davide Caratti   2020-06-29  1861  		subflow->conn_finished = 1;
-e4a0fa47e816e18 Paolo Abeni      2024-02-08  1862  		mptcp_propagate_state(parent, sk, subflow, NULL);
-8fd738049ac3d67 Davide Caratti   2020-06-29  1863  	}
-8fd738049ac3d67 Davide Caratti   2020-06-29  1864  
-648ef4b88673dad Mat Martineau    2020-01-21  1865  	/* as recvmsg() does not acquire the subflow socket for ssk selection
-648ef4b88673dad Mat Martineau    2020-01-21  1866  	 * a fin packet carrying a DSS can be unnoticed if we don't trigger
-648ef4b88673dad Mat Martineau    2020-01-21  1867  	 * the data available machinery here.
-648ef4b88673dad Mat Martineau    2020-01-21  1868  	 */
-e1ff9e82e2ea53d Davide Caratti   2020-06-29  1869  	if (mptcp_subflow_data_available(sk))
-2e52213c79c0b94 Florian Westphal 2020-02-26  1870  		mptcp_data_ready(parent, sk);
-499ada5073361c6 Paolo Abeni      2021-06-10  1871  	else if (unlikely(sk->sk_err))
-499ada5073361c6 Paolo Abeni      2021-06-10  1872  		subflow_error_report(sk);
-648ef4b88673dad Mat Martineau    2020-01-21  1873  
-40947e13997a1cb Florian Westphal 2021-02-12  1874  	subflow_sched_work_if_closed(mptcp_sk(parent), sk);
-648ef4b88673dad Mat Martineau    2020-01-21  1875  }
-648ef4b88673dad Mat Martineau    2020-01-21  1876  
+syzbot will keep track of this issue. See:
+https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
 
--- 
-0-DAY CI Kernel Test Service
-https://github.com/intel/lkp-tests/wiki
+If the report is already addressed, let syzbot know by replying with:
+#syz fix: exact-commit-title
+
+If you want to overwrite report's subsystems, reply with:
+#syz set subsystems: new-subsystem
+(See the list of subsystem names on the web dashboard)
+
+If the report is a duplicate of another one, reply with:
+#syz dup: exact-subject-of-another-report
+
+If you want to undo deduplication, reply with:
+#syz undup
