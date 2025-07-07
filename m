@@ -1,148 +1,107 @@
-Received: from mail-il1-f206.google.com (mail-il1-f206.google.com [209.85.166.206])
+Received: from mail-pf1-f178.google.com (mail-pf1-f178.google.com [209.85.210.178])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B91342E36F7
-	for <mptcp@lists.linux.dev>; Mon,  7 Jul 2025 04:05:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.166.206
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 774C01FBEAC
+	for <mptcp@lists.linux.dev>; Mon,  7 Jul 2025 07:37:27 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.210.178
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751861130; cv=none; b=aDR3KNkXsnx6Zqhndszxp3LyjObTLUQNzJQf4DXQT/DMnUDJClyUgEFI42XCzRPeTCTRkfiQNmqLKY/HRBUnG1PwcpryKq0rRoFywanfRh65e74hJZ0AkMQHbUashWoVJnS37t7sMoCkdZ+BML5CXFy7C68cBRF0jdAgR79YhvA=
+	t=1751873848; cv=none; b=oFVehExduX5GXwVv9jm9vtMH43nu2UwSjOBLHR/CVAPpVbPjTU4OlkwBSTfX6W3dVah6QhQtkl6JAYi9O7UiWkiF7TSiHkQN0TEAdilmYQtJP+J/LP9oVkwx6G0uSY9y6ya2Mcsgw49OgF50UBSpk/ev/HzKrsuzYa2n3Hb4o3I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751861130; c=relaxed/simple;
-	bh=rjveDWq8KK4qBmmxeeVFa/DZwtPwsbJHz/rfwsr2Czc=;
-	h=MIME-Version:Date:Message-ID:Subject:From:To:Content-Type; b=Wa1kuR3PvE1mUs5UniI7wTvnVyfoOVT75wNsTrMmyu4t+VFSGUECOfEvtnAkC9tQfGR1YZ/Kpj2I4K5FyI7cYf6p5Pj2K7XD1BNmDHDHp9pqDM35F0p8KnzolqqccWcCaJPwL7eDQKESn2gd+EPL7l/6qqXe69chPOF6v7q9n3Q=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com; arc=none smtp.client-ip=209.85.166.206
-Authentication-Results: smtp.subspace.kernel.org; dmarc=fail (p=none dis=none) header.from=syzkaller.appspotmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=M3KW2WVRGUFZ5GODRSRYTGD7.apphosting.bounces.google.com
-Received: by mail-il1-f206.google.com with SMTP id e9e14a558f8ab-3df40226ab7so66174075ab.0
-        for <mptcp@lists.linux.dev>; Sun, 06 Jul 2025 21:05:28 -0700 (PDT)
+	s=arc-20240116; t=1751873848; c=relaxed/simple;
+	bh=ZYxGjUygBJcQ4yiJ+wkKE3jM9+pM9TOpcWA62vUym58=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=eOIHaXEBaJd4ja9tR6+8b1jt3Msy3whhtIdoW8+wL3/K7YEvK3lO3oLcbqfFN+92SqvPWt4BdIAD7rhLPW2qrwYJig6TSA7dyp8yBK3RgOtD9t8PIQViU7kr6zxw2qHD9mzxuF92IgBF30TgpJwbQIfCh8CmbcURatwA3PCuUlo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=KufUYtbM; arc=none smtp.client-ip=209.85.210.178
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+Authentication-Results: smtp.subspace.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KufUYtbM"
+Received: by mail-pf1-f178.google.com with SMTP id d2e1a72fcca58-749248d06faso2267200b3a.2
+        for <mptcp@lists.linux.dev>; Mon, 07 Jul 2025 00:37:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1751873847; x=1752478647; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=U0S6o6TE/erzeUMluDtHcSZ6SIiPMVSqZIwDVAlksLk=;
+        b=KufUYtbMBP0mMmysYFpkhghU80IUKprc5YjnpS3NyA4PxCRxR5TIl/F3gKoELzzzuJ
+         t1//Pe9uDze+zJXzIA3EgyjnA122f8YpLS0Li/RBC9yc3NWhPJWLbqHwKOCVc80o6RY8
+         hLxr1cXwvaiUhcb1MLLn6xJo8Ykl6/+yt2wlKtHMLwR7qfWtwcdYRdXTUoZG2hV9fhs+
+         42MUoQMYqPq3fUNf9h6ygy1jG3BT+EscO8BanBzM3zrQil6gYXxiaF6zoXKVFNVczrJg
+         eu48LACICfnvwXi77ndKj/0I8E20MMWSXph+P0FDTakD5k+sx39KPEDRyLUYFAZ8S7iM
+         1rHg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751861128; x=1752465928;
-        h=to:from:subject:message-id:date:mime-version:x-gm-message-state
-         :from:to:cc:subject:date:message-id:reply-to;
-        bh=9b8S7StRcDEyA/i2VOLC6sUORM9/5D6WMK6E3dsUzFI=;
-        b=Vrs7XwXmh6BpAOoTUZxOPMNV0BzqS+Zy+cXRHlVRmrxgdHojkx561v6IubUYsR6VFR
-         7UtB9nMSRYAewnM5ZN1NgPb9P4wt6+yMinxF2Z39LpXn8pIPyf0QS2amIz7fkc4EpwVb
-         Q2psc64kU7J0E1rIA8Kq0Mj4NyA/jpm+gu8T4bafaxrp4+ivc/BwPoRYy7rXxniXDnYO
-         nxb5qoiDY7SQZ+g6qAgurH1//HifaZ36awufmQNpqmPd4ml+YvKWJEc4uC7VjDSMBqTD
-         dOhQyIa42Y1uuexVsyjMwjaejXbrri0g0V7g1p9ud0MF+5Uey4EalFnNcc+ybcEEtMd4
-         vbHQ==
-X-Forwarded-Encrypted: i=1; AJvYcCVBDI1YyEOETi1JDVIfDS6ldB6ewvSZVY9BjcJ7bMW8z4xW2F3aA8J3MdrSik+YRwArKUCBSQ==@lists.linux.dev
-X-Gm-Message-State: AOJu0Yx6t6nsShsYV34Qtb4Gkpp9IJ/DtmiARbeUqYxBuONdA4GLSPYL
-	qlDg4NRes+5QGrgotBhQJjbdeFePc6hHOo/pLh7nDQZNlGVHFobP6PdBjwPoCKdqzyMqZw8IIH4
-	nmIBA6kQWgOsgXRS5iUaYYXVEopjJXGX6WDa1CFKHKS3vnonppuR51VV4DjU=
-X-Google-Smtp-Source: AGHT+IG/n50KMMd7az6lAoy7v0ro9etKvox8cULsC7KPL4nLbBKmaieAK/iV2hmGn1xFGJLotJ0po1+l5bZuJYEmxxAuysonM2H6
+        d=1e100.net; s=20230601; t=1751873847; x=1752478647;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=U0S6o6TE/erzeUMluDtHcSZ6SIiPMVSqZIwDVAlksLk=;
+        b=vl/uVhhk5QJe9DEdi6gxqtZNa+2YeWfAGDlWPn5l1JlxXF799Zp+Yx5tbfRM8O34Sa
+         rmazrVzI1eZtAupevxFpLCBSPz0JyAWSK2I77nEBtJr56Ca2w1HGz24uSp/4xJiRFAfS
+         N1+ozcNJuoYWoqS/xu1Qfq90j96Clo17lNp8vCcFtLdthsvH5waEapmG+NyDpzWhSTUA
+         EZCdniHyRR/5dOlOWnDgmK5Ws/i6ntPMhScf5TDZ9KdI5f6qK59GhsK2qAraVUghX/3A
+         eQYfscoVr5UbVfioDBcoArTSRKix5nzU62V0/+N43f6NNvNo0xAHjlzkDo70Ti/WGNU9
+         h7qA==
+X-Gm-Message-State: AOJu0YyBC8FY6efgaPSOeLjRFKKU7cR7lXyF+lw9VXSc56gq0In5AX1s
+	+kP54TeQtegVnTHqLeUpvnXfDj3lMjS+/dwdD7fKbTtJD3MaKJTSgR58Zflk
+X-Gm-Gg: ASbGnctj49hssZnTFG7oFQZz4+gAPWzK8i4KLBbvLnr4Myq9Pz0wJvxwtOmuZK5YvkW
+	i0f3SaZdDh5yn5Sma9bKMkoBD5C6EBh0wTFYl6kdVO7sHhnloFUrwPnVh5PdxZF+uDIbuKdzCdy
+	WBaZXwV7BEGvfqkKIKyrT/iVXRJGnO3xZKYe18vfd4Z3wSNY9YAs7mDsx4HWhwuy7fUdMjElEW+
+	7WyVlf/qityMCczFenhqvGKjDoiNgACurokHstcbSu2L0H5p5GVL9RHwFJ6barwWwLtGB5Wg7EN
+	n/YoHefxBTmUSypXqmFFomqLKcYO3hMpbuYeBzkRsSxB30KvqmT7vjEPc/ncehBwIYXJSYMhoQ=
+	=
+X-Google-Smtp-Source: AGHT+IF/Exu58A4MNr8QUpvafljCor+nZLB0getG5mrHPqZdDwx1kmacKnvvuhduSOrLXpc/H9tkRg==
+X-Received: by 2002:a05:6a00:80c:b0:749:9c2:e154 with SMTP id d2e1a72fcca58-74cf6ef743cmr9278329b3a.4.1751873846660;
+        Mon, 07 Jul 2025 00:37:26 -0700 (PDT)
+Received: from [127.0.0.1] ([40.78.25.127])
+        by smtp.gmail.com with ESMTPSA id d2e1a72fcca58-74ce43d58a3sm8811661b3a.174.2025.07.07.00.37.25
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 07 Jul 2025 00:37:25 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
+In-Reply-To: <cover.1751714072.git.tanggeliang@kylinos.cn>
+References: <cover.1751714072.git.tanggeliang@kylinos.cn>
+Subject: Re: [PATCH mptcp-next v6 0/4] implement mptcp read_sock
+Message-ID: <b235c426-fb46-534b-2774-8dd2705e5be0@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Mon, 07 Jul 2025 07:37:25 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-X-Received: by 2002:a05:6e02:318c:b0:3dd:f3e1:2899 with SMTP id
- e9e14a558f8ab-3e13ee85590mr79215175ab.2.1751861127927; Sun, 06 Jul 2025
- 21:05:27 -0700 (PDT)
-Date: Sun, 06 Jul 2025 21:05:27 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <686b4787.a00a0220.c7b3.0073.GAE@google.com>
-Subject: [syzbot] [mptcp?] WARNING in mptcp_pm_alloc_anno_list
-From: syzbot <syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com>
-To: davem@davemloft.net, edumazet@google.com, geliang@kernel.org, 
-	horms@kernel.org, kuba@kernel.org, linux-kernel@vger.kernel.org, 
-	martineau@kernel.org, matttbe@kernel.org, mptcp@lists.linux.dev, 
-	netdev@vger.kernel.org, pabeni@redhat.com, syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"
 
-Hello,
+Hi Geliang,
 
-syzbot found the following issue on:
+Thank you for your modifications, that's great!
 
-HEAD commit:    8b98f34ce1d8 net: ipv6: Fix spelling mistake
-git tree:       net-next
-console output: https://syzkaller.appspot.com/x/log.txt?x=17d2b770580000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=efe4e8ed5014b310
-dashboard link: https://syzkaller.appspot.com/bug?extid=c6fca020ebd279c7412a
-compiler:       Debian clang version 20.1.7 (++20250616065708+6146a88f6049-1~exp1~20250616065826.132), Debian LLD 20.1.7
+But sadly, our CI spotted some issues with it when trying to build it.
 
-Unfortunately, I don't have any reproducer for this issue yet.
+You can find more details there:
 
-Downloadable assets:
-disk image: https://storage.googleapis.com/syzbot-assets/ad0c8f9a1a48/disk-8b98f34c.raw.xz
-vmlinux: https://storage.googleapis.com/syzbot-assets/3a8aacec88f6/vmlinux-8b98f34c.xz
-kernel image: https://storage.googleapis.com/syzbot-assets/0a86c0c1690c/bzImage-8b98f34c.xz
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/16110713639
 
-IMPORTANT: if you fix the issue, please add the following tag to the commit:
-Reported-by: syzbot+c6fca020ebd279c7412a@syzkaller.appspotmail.com
+Status: failure
+Initiator: Matthieu =
+Baerts (NGI0)
+Commits: https://github.com/multipath-tcp/mptcp_net-next/comm=
+its/1ecaaa711e0c
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D979322
 
-------------[ cut here ]------------
-WARNING: CPU: 0 PID: 7141 at net/mptcp/pm.c:353 mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
-Modules linked in:
-CPU: 0 UID: 0 PID: 7141 Comm: syz.3.339 Not tainted 6.16.0-rc3-syzkaller-00985-g8b98f34ce1d8 #0 PREEMPT(full) 
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 05/07/2025
-RIP: 0010:mptcp_pm_alloc_anno_list+0x329/0x390 net/mptcp/pm.c:353
-Code: b0 01 48 83 c4 10 5b 41 5c 41 5d 41 5e 41 5f 5d e9 8c 26 15 00 cc e8 56 b2 6a f6 90 0f 0b 90 e9 8b fd ff ff e8 48 b2 6a f6 90 <0f> 0b 90 31 c0 eb d1 48 c7 c1 30 69 a1 8f 80 e1 07 80 c1 03 38 c1
-RSP: 0018:ffffc9000b5a6db8 EFLAGS: 00010287
-RAX: ffffffff8b559c28 RBX: ffff88807a3f9700 RCX: 0000000000080000
-RDX: ffffc9000cbdd000 RSI: 000000000000318f RDI: 0000000000003190
-RBP: 0000000000000000 R08: 00000000000a0002 R09: 0000000000000000
-R10: 0000000000000000 R11: aa1414acffff0000 R12: ffff88814632f000
-R13: ffff88807d852040 R14: dffffc0000000000 R15: ffff88807a3fa181
-FS:  00007fb6c8df66c0(0000) GS:ffff888125c48000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007fb6c8df4fb8 CR3: 00000000339a2000 CR4: 00000000003526f0
-DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
-DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
-Call Trace:
- <TASK>
- mptcp_pm_create_subflow_or_signal_addr+0x1448/0x1c30 net/mptcp/pm_kernel.c:318
- mptcp_nl_add_subflow_or_signal_addr net/mptcp/pm_kernel.c:760 [inline]
- mptcp_pm_nl_add_addr_doit+0xe66/0x1460 net/mptcp/pm_kernel.c:840
- genl_family_rcv_msg_doit+0x215/0x300 net/netlink/genetlink.c:1115
- genl_family_rcv_msg net/netlink/genetlink.c:1195 [inline]
- genl_rcv_msg+0x60e/0x790 net/netlink/genetlink.c:1210
- netlink_rcv_skb+0x208/0x470 net/netlink/af_netlink.c:2534
- genl_rcv+0x28/0x40 net/netlink/genetlink.c:1219
- netlink_unicast_kernel net/netlink/af_netlink.c:1313 [inline]
- netlink_unicast+0x75b/0x8d0 net/netlink/af_netlink.c:1339
- netlink_sendmsg+0x805/0xb30 net/netlink/af_netlink.c:1883
- sock_sendmsg_nosec net/socket.c:714 [inline]
- __sock_sendmsg+0x21c/0x270 net/socket.c:729
- ____sys_sendmsg+0x505/0x830 net/socket.c:2614
- ___sys_sendmsg+0x21f/0x2a0 net/socket.c:2668
- __sys_sendmsg net/socket.c:2700 [inline]
- __do_sys_sendmsg net/socket.c:2705 [inline]
- __se_sys_sendmsg net/socket.c:2703 [inline]
- __x64_sys_sendmsg+0x19b/0x260 net/socket.c:2703
- do_syscall_x64 arch/x86/entry/syscall_64.c:63 [inline]
- do_syscall_64+0xfa/0x3b0 arch/x86/entry/syscall_64.c:94
- entry_SYSCALL_64_after_hwframe+0x77/0x7f
-RIP: 0033:0x7fb6caf8e929
-Code: ff ff c3 66 2e 0f 1f 84 00 00 00 00 00 0f 1f 40 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 a8 ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007fb6c8df6038 EFLAGS: 00000246 ORIG_RAX: 000000000000002e
-RAX: ffffffffffffffda RBX: 00007fb6cb1b5fa0 RCX: 00007fb6caf8e929
-RDX: 0000000002000000 RSI: 0000200000000400 RDI: 000000000000000d
-RBP: 00007fb6cb010b39 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000000000
-R13: 0000000000000000 R14: 00007fb6cb1b5fa0 R15: 00007ffe35e566e8
- </TASK>
+Feel free to reply to this email =
+if you cannot access logs, if you need
+some support to fix the error, if =
+this doesn't seem to be caused by your
+modifications or if the error is a =
+false positive one.
 
-
----
-This report is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
-
-syzbot will keep track of this issue. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
-
-If the report is already addressed, let syzbot know by replying with:
-#syz fix: exact-commit-title
-
-If you want to overwrite report's subsystems, reply with:
-#syz set subsystems: new-subsystem
-(See the list of subsystem names on the web dashboard)
-
-If the report is a duplicate of another one, reply with:
-#syz dup: exact-subject-of-another-report
-
-If you want to undo deduplication, reply with:
-#syz undup
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu =
+Baerts (NGI0 Core)
