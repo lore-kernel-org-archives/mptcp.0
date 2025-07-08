@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9AB0F38385
-	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 15:41:48 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 540FC224B00
+	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 15:42:52 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751989308; cv=none; b=PCsAogv6NUkaLmR7H+uQKQwDDQ56tpD0vXEYe1NeQe461S1GFD4i7yVgcW/1TkInBZv9oJJu7JJKAAKapKP/UtxJmnezfhg0n0BooBqq9EgsvTaRNsscFmzejdd1aRyJ1sDU+yMOMw/2GOczfGyDIYxiWwIQaiqZ7keQtYeGqqQ=
+	t=1751989373; cv=none; b=lydPSnTYEUlC55najfh/K1auM5bpS79+LtO9//vNxvdDcuZvpyllP07fhNCfKoL0YvDoZ8JcyETihH+lBIcTp9+X1fVjvlVpns3AZBXtDvH9fJrqpxCCySJlUxZLNh5K2GpxgycGl8t09fOfQvkZIAgLA6T5KmKzgyBWpBh2ZIE=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751989308; c=relaxed/simple;
-	bh=8W3r/inW5n/dlZGkwMcG/lshfpV1aUyT3x9XoUGgufg=;
+	s=arc-20240116; t=1751989373; c=relaxed/simple;
+	bh=tApvt53+cZ6ECmIzXGi/iVzl+UKOBidcr7OMkl/Qdpg=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=kk3Mp5Vpu0MlhJVfqk/3qLMZuy2F0Ki+TjhvyuG2JnJZ0Yh52CCedMRK2D+Gxp5jiU0nSPZ8pIfM6G9AJ/L0yWurTfN8dz2E5SwHgwO/5S41IzZQuEhXcJX7BlKHg7sTC7lPu6J1qvvOh0jWsC/XP6jY20clPRqhuxJRB+3a9ss=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=INTCthmF; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=Zi8UwUApO+au2F/mMYOn4SMgvA71HsYotvQ6lJURGBVXERsu4NZ3MEqbcYEwi3WicKQbxbE6IxbuxsNlI/38MxgQst47p+Kvtl50aVTTn8YEtHohB0iXVxGQkhSXOoivAWjm0he4jTvv5OBJ9LS6IiDE7i15UuvwLTE3YA+LcrE=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=a0WPw2Ap; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="INTCthmF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id D2AE0C4CEED;
-	Tue,  8 Jul 2025 15:41:47 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="a0WPw2Ap"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3B66BC4CEED;
+	Tue,  8 Jul 2025 15:42:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751989308;
-	bh=8W3r/inW5n/dlZGkwMcG/lshfpV1aUyT3x9XoUGgufg=;
+	s=k20201202; t=1751989372;
+	bh=tApvt53+cZ6ECmIzXGi/iVzl+UKOBidcr7OMkl/Qdpg=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=INTCthmFnxOb6oe/PZXpo/fjdbp8UdemueR9UmixD0hn+jJTpdLipB6L3HV0dQ74u
-	 RA+xmUtR6sxq1ZDire+G2wnt1CwFHHsRyqMMzuh3cJFv8MfbubaeMhw0It3D2Gu2aY
-	 tppo/Y2tKmkB8hYVxoJ/QslXiB9UW+VjDs8F/POEK6QO+cLGQEdsCkRHLhK6ySgBvb
-	 N48ym03FzGm7xrT6srWigujy7WnIs+y1X96zg5Q8KK9dv3CmQo33D0afShKfz+bGBt
-	 Lu19+6+LbjQ8ySNCZ/Zc0tqGDI6dydCMS6j1Ts2UgVbtM1CbIdiR0AHPnaSRuTczTz
-	 XMceXIz5iXYpw==
-Message-ID: <0bc22849-53bc-42b0-befb-f9187e6d9498@kernel.org>
-Date: Tue, 8 Jul 2025 17:41:45 +0200
+	b=a0WPw2Ap2I8CZffF5j/1uyMWbRhiNeSt93N8KimQr5GomN3+MKrMMeQyPZAZSjqPH
+	 O0O8A3RniJY9ZZZYABAmUSkZHVigDAuIkfgty8+ue9wFs/y+B4Hv90WBR/05mVuCBF
+	 NZjx0tkdD2JJG046Uu3JH/jObSatzsRENTGWQ40GFh4DodcKOuyZv9AihtEKjJuQ/o
+	 V9/dD0gDAwyslvwALmJ9Ljf4wgZSaMj3IgN8H2Blj5RYVdthyZaaGnBkmdRqQC5qdG
+	 SYGXXFmeshMOYlQLYo5Vatk4P5Hq5Ys2dhyF+Lu9++KvRDl1+mhd/jiC2S/SZVLyKv
+	 lK9wOZfS+ayOg==
+Message-ID: <766cdd27-eb1d-493c-ba47-bb8c8467fbe8@kernel.org>
+Date: Tue, 8 Jul 2025 17:42:50 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,10 +35,12 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 0/5] mptcp: fix fallback-related races
+Subject: Re: [PATCH mptcp-net v2 2/5] mptcp: plug races between subflow fail
+ and subflow creation
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1751699999.git.pabeni@redhat.com>
+ <ef3a8b7c681bcd78846f047509928bfffff96057.1751700000.git.pabeni@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -84,46 +86,33 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1751699999.git.pabeni@redhat.com>
+In-Reply-To: <ef3a8b7c681bcd78846f047509928bfffff96057.1751700000.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Paolo,
 
 On 05/07/2025 09:24, Paolo Abeni wrote:
-> This series contains 3 fixes somewhat related to various races we have
-> while handling fallback and 2 small follow-up likely more suited for
-> net-next.
+> We have races similar to the one addressed by the previous patch
+> between subflow failing and additional subflow creation. They are
+> just harder to trigger.
 > 
-> The root cause of the issues addressed here is that the check for
-> "we can fallback to tcp now" and the related action are not atomic. That
-> also applies to fallback due to MP_FAIL - where the window race is even
-> wider.
+> The solution is similar. Use a separate flag to track the condition
+> 'socket state prevent any additional subflow creation' protected by
+> the fallback lock.
 > 
-> Address the issue introducing an additional spinlock to bundle together
-> all the relevant events, as per patch 1 and 2.
-> 
-> Note that mptcp_disconnect() unconditionally
-> clears the fallback status (zeroing msk->flags) and that may race with
-> operation still running on the (closing) subflows.
-> 
-> Such race is addressed in patch 3.
-> 
-> Patch 4 cleans up a bit the fallback code, introducing specific MIB for
-> each FB reason, and patch 5 drops the, hopefully now redundandt
-> pr_fallback().
+> The socket fallback makes such flag true, and also receiving or sending
+> a MPTCP fail option.
 
-Thank you very much for the fixes!
+Just to be sure, can we not rely on the MPTCP_FALLBACK_DONE flag for the
+two cases?
 
-> Paolo Abeni (5):
->   mptcp: make fallback action and fallback decision atomic
->   mptcp: plug races between subflow fail and subflow creation
->   mptcp: fix status reset on disconnect()
->   mptcp: track fallbacks accurately via mibs
->   mptcp: remove pr_fallback()
+In other words, do we not already have something set when
+sending/receiving an MP_FAIL instead of adding a new field? It feels
+like we already store this info, no?
 
-I have a few small comments, please see the individual patches if you
-don't mind!
+Can we not continue to use __mptcp_check_fallback(msk) and
+mptcp_check_infinite_map()?
 
 Cheers,
 Matt
