@@ -1,237 +1,412 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 782C420766C
-	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 14:52:25 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C7B5021C9E4
+	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 14:54:15 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751986347; cv=none; b=F58EGTZexErQ081FvqRZF0nvR4UwJJHaaKU2SlqGm4++ZzbT0Zynv1acXk9hAR7biTJev9WxfHHFJ62MLboWOfJlmSErLDVk7MgTxfyaMv5k4PwUZGh8D1LTMTbblRZWGIlI65wAcFxU3otcMdAEzTgBB1B9CP6CEr1YKfHI9Mg=
+	t=1751986455; cv=none; b=N13D+qhprJgWuFPLdqgmXma8bqYPOLfkjZj0hY9vR252rcLM8ugtfxwujFGdX8o63KHw7kzkS3KSFEkzcalM2vvzDKCNnH6t1PUv8XKL7Hsyh6esNqnxPIYFpY4jfCTs075T9HmqiIfaUvo2CB6rbri9vnSdjlI1Yy99EvZcegw=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751986347; c=relaxed/simple;
-	bh=1oWf6IQEoN6deQ+2zC2ySDfM/BBCToxhKWIT6O7Q+d8=;
-	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=Zu5TI1f1oFYCsgHhoH228VpaaWS3AVTNPtIpF+u7vLSAIjGYxRY+JNFIEmTcELbOxLYT/D/U8KzhgwJqd7+DIYg1hrNEKcG5CnLvoPApyigTrRWHp36h1n+5UrF472pPELHOczmww3jDXmOJppRa+7CCoIWdORYi2oyvbMif95w=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=fHFE7S+G; arc=none smtp.client-ip=170.10.133.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	s=arc-20240116; t=1751986455; c=relaxed/simple;
+	bh=iVPuqZWvSObJSRq2LLsHYNQ/AIueCfCv+cWNkMrNHT4=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:Cc:
+	 In-Reply-To:Content-Type; b=gbzApqnGifXtoTWumVncXDbPDTrkCZBaFCLqxUZJ7J7pwKh1MaAYG4xeRj/BuxibVlsgNk/IKmBB86hh2d6/KtNK2IbTLZPqsLRe0Rp8JKdQ+yyMMTv0An7z+NcH7SwRcCbzEesAIV0iu60m7n/SziqvRMpHT7mK5Qd08w+/cc8=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=EOkJvD4U; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="fHFE7S+G"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1751986344;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Vecfay4tDubNW2N1y6zD5/FutJPkPv8Qf8FJ01eOQKw=;
-	b=fHFE7S+G60sxk/laJXVWQAJm9gS9vSvtljtqL+ZJ44U4OPXCHHkVDWci4eIY1qNlieFG39
-	hbwwG0m5LLiE4IpH2l2CL5imhHSRrFy40yANiHguTpGTT3yNgnpPsR808mfDFv+tbmgVna
-	Y5qOI0Nm3LPLRlUNzjUMdQfF3wRoLRE=
-Received: from mail-wr1-f71.google.com (mail-wr1-f71.google.com
- [209.85.221.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-380-O9ufMgVJPuePSLM1MXa6_Q-1; Tue, 08 Jul 2025 10:52:23 -0400
-X-MC-Unique: O9ufMgVJPuePSLM1MXa6_Q-1
-X-Mimecast-MFC-AGG-ID: O9ufMgVJPuePSLM1MXa6_Q_1751986342
-Received: by mail-wr1-f71.google.com with SMTP id ffacd0b85a97d-3a4f65a705dso2628931f8f.2
-        for <mptcp@lists.linux.dev>; Tue, 08 Jul 2025 07:52:22 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1751986342; x=1752591142;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:cc:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=Vecfay4tDubNW2N1y6zD5/FutJPkPv8Qf8FJ01eOQKw=;
-        b=deAvdFHw34zVJCKlo/qLbD3Z2q8Fs+qgWS8/VEof/1hOnp1wyTf3doo7U74jtG3pwr
-         Tp6I/n1Tb1AXGh3BcC9P34YzkCUPokoJdVc0A0Fao316og8lsVBZbUaiMT7Z8Iw4YC3j
-         Pl2snzhhTl3ybBQhm0notXamkKvPgCwkb9F4LGcGhGTmGyhmRT1KoormElXa7N9nYE1G
-         4LejY+LWfZFgjBiRq5z3HZWx+RmYfXEK0oSAmKiviCqYdtslUDSUx+EunzJX37YT/kvG
-         N8GIFOLJfocqsAQcutchqphKEwbF2oE+z96uMPlxb+dkoDtJun7SVdSvZ8xZ87jhZUl/
-         RnXw==
-X-Forwarded-Encrypted: i=1; AJvYcCVOnDZWaf4wzzuiKVGCemT22Unv1dLbXFfYTah+vBIeNnTCG0Zim6n9ZYG99WQqlrBkvea2Sg==@lists.linux.dev
-X-Gm-Message-State: AOJu0YydwqoeAmPbD3tL6NpOaWewy3FsVZoAOG4eoenVjNZJiowt0Vmj
-	jGamfxu3hZ1piYst0meCv7Yom2UEzGqOGctWwT+PHd3CtBweev/IFdaNYQAHG2VdVQKO4DZQ1++
-	zpq9tBUnftc3z4s3Fkbbh8BQDqL/Rv9Q4xBmC7fgB0lIehOVU6quFD1A6
-X-Gm-Gg: ASbGnctpk8Q3NYB3hL0byBSePrbGZcaBKc99RjgxizjM960XFBckWQxIeSwZLEm7Usa
-	tPz+EvH2VkJE7z276ZyFxtVtnbrkjZHVBOyNPTx7k3H3XDVtVlOY5uEyiKC4w/HtkSo2fYgCsRS
-	0JAB3UVj5V37B4JSaO57mLgp2CqAWH7Pe+CU3De3KoeARJZ88J6vkAT9pZxRFQw/hH+SujGitlb
-	TqfhTiWKGvOMfwcOdENE0oZQ2S4FXg+tFtafElmi1NvR1CORsFuGc3I6qwhg9eDBU7oGqAA229m
-	86gEB9Jqop95B5fMB9Pqo7+vBGky3yruiUOeGl8mMswpNTU2pCHLzF81lXlfKnRKEDuaCQ==
-X-Received: by 2002:a05:6000:470f:b0:3b2:fe46:9812 with SMTP id ffacd0b85a97d-3b497015268mr11468796f8f.19.1751986341799;
-        Tue, 08 Jul 2025 07:52:21 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IHK8SujYCWqTrx2oFqdAlrReSQiDIY7vh3xLYWs2p1nXz8G5Buiz2xqaXeHe75m9csSJSctJg==
-X-Received: by 2002:a05:6000:470f:b0:3b2:fe46:9812 with SMTP id ffacd0b85a97d-3b497015268mr11468773f8f.19.1751986341297;
-        Tue, 08 Jul 2025 07:52:21 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:2717:8910:b663:3b86:247e:dba2? ([2a0d:3344:2717:8910:b663:3b86:247e:dba2])
-        by smtp.gmail.com with ESMTPSA id ffacd0b85a97d-3b470caa1b3sm13010438f8f.43.2025.07.08.07.52.20
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Tue, 08 Jul 2025 07:52:20 -0700 (PDT)
-Message-ID: <63354366-79aa-4799-9af3-5f5a379ea4eb@redhat.com>
-Date: Tue, 8 Jul 2025 16:52:12 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="EOkJvD4U"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9CBFBC4CEED;
+	Tue,  8 Jul 2025 14:54:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1751986455;
+	bh=iVPuqZWvSObJSRq2LLsHYNQ/AIueCfCv+cWNkMrNHT4=;
+	h=Date:Subject:To:References:From:Cc:In-Reply-To:From;
+	b=EOkJvD4UJtOGpge17rggk1Mb3wrbcLK9ypcPpBft3C++P89az9LbbsL6DjNJehgM3
+	 JM+P0GJHSJxa62gF7MTiXFmskp5aKFguCahNuAB447DmHTfdrR5LB36vKgiIuTeshn
+	 99DiwLYQezhpsYEIqLyEdIqHj5+lwL4GX6RHa6hG1++ZOEAlnjvLmwPWAkzE+U6Js2
+	 hoT/i2oC5nG5R7By/h46A15quQiP1UcdMCxhebaR4XBs9ebITptrMxjEz0JwvmK3Ro
+	 eM/YksgnZmQFnrz0YPNBSSY+H0OHuNK3sYU5q0s7hYo5Jw+Y6S3+5zlrzyLiAdusWi
+	 6WfagU4+tE3Zg==
+Message-ID: <af295f45-be11-48e2-94c3-fdb99f7153cb@kernel.org>
+Date: Tue, 8 Jul 2025 16:54:12 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-next v7 3/4] mptcp: implement .splice_read
-To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev, hare@kernel.org
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-References: <cover.1751880561.git.tanggeliang@kylinos.cn>
- <7c269511e2ff8cf2a44934cb0f12554770c5c7c6.1751880561.git.tanggeliang@kylinos.cn>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <7c269511e2ff8cf2a44934cb0f12554770c5c7c6.1751880561.git.tanggeliang@kylinos.cn>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: -T1e24Sha3CgHuG19TBGkwczQ6S6BQve-FJJBr8ndVk_1751986342
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net v2 1/5] mptcp: make fallback action and fallback
+ decision atomic
+Content-Language: en-GB, fr-BE
+To: Paolo Abeni <pabeni@redhat.com>
+References: <cover.1751699999.git.pabeni@redhat.com>
+ <7220b3c204d75d50e480f6045295a825ae80fd38.1751699999.git.pabeni@redhat.com>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+Cc: mptcp@lists.linux.dev
+In-Reply-To: <7220b3c204d75d50e480f6045295a825ae80fd38.1751699999.git.pabeni@redhat.com>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/7/25 11:34 AM, Geliang Tang wrote:
-> From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Paolo,
+
+On 05/07/2025 09:24, Paolo Abeni wrote:
+> Syzkaller reported the following splat:
+
+Thank you for working on that!
+
+(...)
+> Since we need to track the 'fallback is possible' condition and the
+> fallback status separately, there are a few possible races open between
+> the check and the actual fallback action.
 > 
-> This patch implements .splice_read interface of mptcp struct proto_ops
-> as mptcp_splice_read() with reference to tcp_splice_read().
+> Add a spinlock to protect the fallback related information and use
+> it close all the possible related races. While at it also remove the
+> too-early clearing of allow_infinite_fallback in __mptcp_subflow_connect():
+> the field will be correctly cleared by subflow_finish_connect() if/
+> when the connection will complete successfully.
+
+Just to be sure, will we correctly handle the case when:
+- a SYN + MP_JOIN is sent
+- an issue is detected, a fallback is done
+- a SYN + ACK + MP_JOIN is received (or later on in the join process).
+> If fallback is not possible, as per RFC, reset the current subflow.
 > 
-> Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> Reported by: Matthieu Baerts <matttbe@kernel.org>
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/570
+> Reported-by: syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com
+> Closes: https://github.com/multipath-tcp/mptcp_net-next/issues/555
+> Fixes: 0530020a7c8f ("mptcp: track and update contiguous data status")
+> Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 > ---
->  net/mptcp/protocol.c | 136 +++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 136 insertions(+)
+> v1 -> v2:
+>   - remove unneeded and racing allow_infinite_fallback in
+>     __mptcp_subflow_connect()
+>   - really close race in subflow_check_data_avail()
 > 
+> Sharing earlier to feed syzkaller.
+> Hopefully a follow-up on mptcp-net-next will cleanup a bit the fallback
+> handling, I tried to minimize the delta for backport's sake
+
+I fed my 4 syzkaller instances 1 day and 6 hours ago, and everything
+look good so far. But please note that (1) it was not easy for them to
+reproduce the issue, and (2) you removed the warning that was triggering
+the splat :)
+> diff --git a/net/mptcp/options.c b/net/mptcp/options.c
+> index 56fd7bcb786c..4680d980e605 100644
+> --- a/net/mptcp/options.c
+> +++ b/net/mptcp/options.c
+> @@ -978,8 +978,9 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
+>  		if (subflow->mp_join)
+>  			goto reset;
+>  		subflow->mp_capable = 0;
+> +		if (mptcp_do_fallback(ssk))
+
+It looks strange: in case of success, we reset?
+
+Not that the selftests don't validate this branch:
+
+ https://ci-results.mptcp.dev/lcov/export/mptcp/options.c.gcov.html#L977
+
+(also, I wonder if we should not have a MIB counter here)
+
+> +			goto reset;
+>  		pr_fallback(msk);
+> -		mptcp_do_fallback(ssk);
+>  		return false;
+>  	}
+>  
 > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-> index fc429d175ede..4638d4be2b98 100644
+> index 1de42dc4e8ea..38bb11865b50 100644
 > --- a/net/mptcp/protocol.c
 > +++ b/net/mptcp/protocol.c
-> @@ -4023,6 +4023,140 @@ static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
->  	return copied;
+> @@ -560,10 +560,9 @@ static bool mptcp_check_data_fin(struct sock *sk)
+>  
+>  static void mptcp_dss_corruption(struct mptcp_sock *msk, struct sock *ssk)
+>  {
+> -	if (READ_ONCE(msk->allow_infinite_fallback)) {
+> +	if (mptcp_do_fallback(ssk)) {
+>  		MPTCP_INC_STATS(sock_net(ssk),
+>  				MPTCP_MIB_DSSCORRUPTIONFALLBACK);
+> -		mptcp_do_fallback(ssk);
+>  	} else {
+>  		MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_DSSCORRUPTIONRESET);
+>  		mptcp_subflow_reset(ssk);
+> @@ -803,6 +802,14 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+>  	if (sk->sk_state != TCP_ESTABLISHED)
+>  		return false;
+>  
+> +	spin_lock_bh(&msk->fallback_lock);
+> +	if (__mptcp_check_fallback(msk)) {
+> +		spin_unlock_bh(&msk->fallback_lock);
+> +		return false;
+
+(I wonder if we should not have a MIB counter here as well)
+
+> +	}
+> +	mptcp_subflow_joined(msk, ssk);
+> +	spin_unlock_bh(&msk->fallback_lock);
+> +
+>  	/* attach to msk socket only after we are sure we will deal with it
+>  	 * at close time
+>  	 */
+> @@ -811,7 +818,6 @@ static bool __mptcp_finish_join(struct mptcp_sock *msk, struct sock *ssk)
+>  
+>  	mptcp_subflow_ctx(ssk)->subflow_id = msk->subflow_id++;
+>  	mptcp_sockopt_sync_locked(msk, ssk);
+> -	mptcp_subflow_joined(msk, ssk);
+>  	mptcp_stop_tout_timer(sk);
+>  	__mptcp_propagate_sndbuf(sk, ssk);
+>  	return true;
+> @@ -1136,10 +1142,14 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
+>  	mpext->infinite_map = 1;
+>  	mpext->data_len = 0;
+>  
+> +	if (!mptcp_do_fallback(ssk)) {
+> +		mptcp_subflow_reset(ssk);
+
+(I wonder if we should not have a MIB counter here as well)
+
+> +		return;
+> +	}
+> +
+>  	MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_INFINITEMAPTX);
+>  	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
+>  	pr_fallback(msk);
+> -	mptcp_do_fallback(ssk);
 >  }
 >  
-> +/*
-> + * MPTCP splice context
-> + */
-> +struct mptcp_splice_state {
-> +	struct pipe_inode_info *pipe;
-> +	size_t len;
-> +	unsigned int flags;
-> +};
-> +
-> +static int mptcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
-> +				  unsigned int offset, size_t len)
-> +{
-> +	struct mptcp_splice_state *mss = rd_desc->arg.data;
-> +	int ret;
-> +
-> +	ret = skb_splice_bits(skb, skb->sk, offset, mss->pipe,
-> +			      min(rd_desc->count, len), mss->flags);
-> +	if (ret > 0)
-> +		rd_desc->count -= ret;
-> +	return ret;
-> +}
+>  #define MPTCP_MAX_GSO_SIZE (GSO_LEGACY_MAX_SIZE - (MAX_TCP_HEADER + 1))
+> @@ -2543,9 +2553,9 @@ static void mptcp_check_fastclose(struct mptcp_sock *msk)
+>  
+>  static void __mptcp_retrans(struct sock *sk)
+>  {
+> +	struct mptcp_sendmsg_info info = { .data_lock_held = true, };
 
-I have mixed feeling WRT the above. I'm wondering if we should reuse the
-same code already existing in TCP, moving tcp_spice_state definition in
-some shared hdr and macking tcp_splice_data_recv not static.
+Just to be sure: is this modification here linked to the rest?
 
-> +static int __mptcp_splice_read(struct sock *sk, struct mptcp_splice_state *mss)
-> +{
-> +	/* Store MPTCP splice context information in read_descriptor_t. */
-> +	read_descriptor_t rd_desc = {
-> +		.arg.data = mss,
-> +		.count	  = mss->len,
-> +	};
+>  	struct mptcp_sock *msk = mptcp_sk(sk);
+>  	struct mptcp_subflow_context *subflow;
+> -	struct mptcp_sendmsg_info info = {};
+>  	struct mptcp_data_frag *dfrag;
+>  	struct sock *ssk;
+>  	int ret, err;
+> @@ -2590,6 +2600,18 @@ static void __mptcp_retrans(struct sock *sk)
+>  			info.sent = 0;
+>  			info.limit = READ_ONCE(msk->csum_enabled) ? dfrag->data_len :
+>  								    dfrag->already_sent;
 > +
-> +	return mptcp_read_sock(sk, &rd_desc, mptcp_splice_data_recv);
-> +}
-> +
-> +/**
-> + *  mptcp_splice_read - splice data from MPTCP socket to a pipe
-> + * @sock:	socket to splice from
-> + * @ppos:	position (not valid)
-> + * @pipe:	pipe to splice to
-> + * @len:	number of bytes to splice
-> + * @flags:	splice modifier flags
-> + *
-> + * Description:
-> + *    Will read pages from given socket and fill them into a pipe.
-> + *
-> + **/
-> +static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
-> +				 struct pipe_inode_info *pipe, size_t len,
-> +				 unsigned int flags)
-> +{
-> +	struct mptcp_splice_state mss = {
-> +		.pipe = pipe,
-> +		.len = len,
-> +		.flags = flags,
-> +	};
-> +	struct sock *sk = sock->sk;
-> +	ssize_t spliced;
-> +	long timeo;
-> +	int ret;
-> +
-> +	/*
-> +	 * We can't seek on a socket input
-> +	 */
-> +	if (unlikely(*ppos))
-> +		return -ESPIPE;
-> +
-> +	spliced = 0;
-> +	ret = 0;
-> +
-> +	lock_sock(sk);
-> +
-> +	timeo = sock_rcvtimeo(sk, sock->file->f_flags & O_NONBLOCK);
-> +	while (mss.len) {
-> +		ret = __mptcp_splice_read(sk, &mss);
-> +		if (ret < 0) {
-> +			break;
-> +		} else if (!ret) {
-> +			if (spliced)
-> +				break;
-> +			if (sock_flag(sk, SOCK_DONE))
-> +				break;
-> +			if (sk->sk_err) {
-> +				ret = sock_error(sk);
-> +				break;
-> +			}
-> +			if (sk->sk_shutdown & RCV_SHUTDOWN) {
-> +				if (__mptcp_move_skbs(sk))
-> +					continue;
-> +				break;
-> +			}
-> +			if (sk->sk_state == TCP_CLOSE) {
-> +				ret = -ENOTCONN;
-> +				break;
-> +			}
-> +			if (!timeo) {
-> +				ret = -EAGAIN;
-> +				break;
-> +			}
-> +			/* if __mptcp_splice_read() got nothing while we have
-> +			 * an skb in receive queue, we do not want to loop.
-> +			 * This might happen with URG data.
+> +			/*
+> +			 * make the whole retrans decision, xmit, disallow
+> +			 * fallback atomic
 > +			 */
-> +			if (!skb_queue_empty(&sk->sk_receive_queue))
-> +				break;
-> +			ret = sk_wait_data(sk, &timeo, NULL);
-> +			if (ret < 0)
-> +				break;
-> +			if (signal_pending(current)) {
-> +				ret = sock_intr_errno(timeo);
-> +				break;
+> +			spin_lock_bh(&msk->fallback_lock);
+> +			if (__mptcp_check_fallback(msk)) {
+> +				spin_unlock_bh(&msk->fallback_lock);
+> +				release_sock(ssk);
+> +				return;
 > +			}
+> +
+>  			while (info.sent < info.limit) {
+>  				ret = mptcp_sendmsg_frag(sk, ssk, dfrag, &info);
+>  				if (ret <= 0)
+> @@ -2605,6 +2627,7 @@ static void __mptcp_retrans(struct sock *sk)
+>  					 info.size_goal);
+>  				WRITE_ONCE(msk->allow_infinite_fallback, false);
+>  			}
+> +			spin_unlock_bh(&msk->fallback_lock);
+>  
+>  			release_sock(ssk);
+>  		}
+> @@ -2738,6 +2761,7 @@ static void __mptcp_init_sock(struct sock *sk)
+>  	msk->last_ack_recv = tcp_jiffies32;
+>  
+>  	mptcp_pm_data_init(msk);
+> +	spin_lock_init(&msk->fallback_lock);
+>  
+>  	/* re-use the csk retrans timer for MPTCP-level retrans */
+>  	timer_setup(&msk->sk.icsk_retransmit_timer, mptcp_retransmit_timer, 0);
+> @@ -3524,7 +3548,13 @@ bool mptcp_finish_join(struct sock *ssk)
+>  
+>  	/* active subflow, already present inside the conn_list */
+>  	if (!list_empty(&subflow->node)) {
+> +		spin_lock_bh(&msk->fallback_lock);
+> +		if (__mptcp_check_fallback(msk)) {
+> +			spin_unlock_bh(&msk->fallback_lock);
+> +			return false;
+> +		}
+>  		mptcp_subflow_joined(msk, ssk);
+> +		spin_unlock_bh(&msk->fallback_lock);
 
-I think that moving the above if statement before the queue empty check
-will not change the overall behavior.
+Small detail: why not modifying mptcp_subflow_joined() to have the
+fallback check there? (+ rename the function name?)
+If it returns false, we can abort. (Same above where
+mptcp_subflow_joined is used)
 
-With that in place you could factor out an
+>  		mptcp_propagate_sndbuf(parent, ssk);
+>  		return true;
+>  	}
+> diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
+> index e36ae88b10ad..52c9175c7e49 100644
+> --- a/net/mptcp/protocol.h
+> +++ b/net/mptcp/protocol.h
+> @@ -352,6 +352,7 @@ struct mptcp_sock {
+>  	u32		subflow_id;
+>  	u32		setsockopt_seq;
+>  	char		ca_name[TCP_CA_NAME_MAX];
+> +	spinlock_t	fallback_lock;	/* protects fallback && allow_infinite_fallback */
+>  };
+>  
+>  #define mptcp_data_lock(sk) spin_lock_bh(&(sk)->sk_lock.slock)
+> @@ -1214,15 +1215,21 @@ static inline bool mptcp_check_fallback(const struct sock *sk)
+>  	return __mptcp_check_fallback(msk);
+>  }
+>  
+> -static inline void __mptcp_do_fallback(struct mptcp_sock *msk)
+> +static inline bool __mptcp_do_fallback(struct mptcp_sock *msk)
 
-bool mptcp_recv_should_stop(struct sock *sk, int err)
+I wonder if this function should not be renamed, to help with the
+backports, but also because we don't do a fallback if we cannot do it:
+it is more "try to fallback, but check before if it is possible" :)
+Same for mptcp_do_fallback(). WDYT?
 
-helper from mptcp_recvmsg() and use it verbatim in both in
-mptcp_recvmsg() and here.
+>  {
+>  	if (__mptcp_check_fallback(msk)) {
+>  		pr_debug("TCP fallback already done (msk=%p)\n", msk);
+> -		return;
+> +		return true;
+>  	}
+> -	if (WARN_ON_ONCE(!READ_ONCE(msk->allow_infinite_fallback)))
+> -		return;
+> +	spin_lock_bh(&msk->fallback_lock);
+> +	if (!msk->allow_infinite_fallback) {
+> +		spin_unlock_bh(&msk->fallback_lock);
+> +		return false;
+> +	}
+> +
+>  	set_bit(MPTCP_FALLBACK_DONE, &msk->flags);
+> +	spin_unlock_bh(&msk->fallback_lock);
+> +	return true;
+>  }
+>  
+>  static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
+> @@ -1234,14 +1241,15 @@ static inline bool __mptcp_has_initial_subflow(const struct mptcp_sock *msk)
+>  			TCPF_SYN_RECV | TCPF_LISTEN));
+>  }
+>  
+> -static inline void mptcp_do_fallback(struct sock *ssk)
+> +static inline bool mptcp_do_fallback(struct sock *ssk)
+>  {
+>  	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(ssk);
+>  	struct sock *sk = subflow->conn;
+>  	struct mptcp_sock *msk;
+>  
+>  	msk = mptcp_sk(sk);
+> -	__mptcp_do_fallback(msk);
+> +	if (!__mptcp_do_fallback(msk))
+> +		return false;
+>  	if (READ_ONCE(msk->snd_data_fin_enable) && !(ssk->sk_shutdown & SEND_SHUTDOWN)) {
+>  		gfp_t saved_allocation = ssk->sk_allocation;
+>  
+> @@ -1253,6 +1261,7 @@ static inline void mptcp_do_fallback(struct sock *ssk)
+>  		tcp_shutdown(ssk, SEND_SHUTDOWN);
+>  		ssk->sk_allocation = saved_allocation;
+>  	}
+> +	return true;
+>  }
+>  
+>  #define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)\n", __func__, a)
+> diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
+> index 15613d691bfe..433c0b25dbc1 100644
+> --- a/net/mptcp/subflow.c
+> +++ b/net/mptcp/subflow.c
+> @@ -544,9 +544,11 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
+>  	mptcp_get_options(skb, &mp_opt);
+>  	if (subflow->request_mptcp) {
+>  		if (!(mp_opt.suboptions & OPTION_MPTCP_MPC_SYNACK)) {
+> +			if (!mptcp_do_fallback(sk))
+> +				goto do_reset;
 
-Side note: suggestions for a better helper name welcome!
+(I wonder if we should not have a MIB counter here as well)
 
-/P
+> +
+>  			MPTCP_INC_STATS(sock_net(sk),
+>  					MPTCP_MIB_MPCAPABLEACTIVEFALLBACK);
+> -			mptcp_do_fallback(sk);
+>  			pr_fallback(msk);
+>  			goto fallback;
+>  		}
+> @@ -1395,7 +1397,7 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  			return true;
+>  		}
+>  
+> -		if (!READ_ONCE(msk->allow_infinite_fallback)) {
+> +		if (!mptcp_do_fallback(ssk)) {
+>  			/* fatal protocol error, close the socket.
+>  			 * subflow_error_report() will introduce the appropriate barriers
+>  			 */
+> @@ -1414,7 +1416,6 @@ static bool subflow_check_data_avail(struct sock *ssk)
+>  			return false;
+>  		}
+>  
+> -		mptcp_do_fallback(ssk);
+>  	}
+>  
+>  	skb = skb_peek(&ssk->sk_receive_queue);
+> @@ -1679,7 +1680,6 @@ int __mptcp_subflow_connect(struct sock *sk, const struct mptcp_pm_local *local,
+>  	/* discard the subflow socket */
+>  	mptcp_sock_graft(ssk, sk->sk_socket);
+>  	iput(SOCK_INODE(sf));
+> -	WRITE_ONCE(msk->allow_infinite_fallback, false);
+>  	mptcp_stop_tout_timer(sk);
+>  	return 0;
+>  
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
