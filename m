@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B14D25B1EA
-	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 16:16:20 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 09DCE2E5432
+	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 16:23:06 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751991381; cv=none; b=Xm0sJfSbkBCG2BhCbg6tiJ0qrX2/HntpfyPpjlv2IgDxY6+ORb+qPXzuTDuZYIaSUfck7YZbV7CibF8zHjcxvxdzipL5trejaRlQsf/OoqLPMIU6CXWLmjhIi8cvO5XYNIErOQidt1BghT/1wevlB5c3aN8j3oEry1ct7SWKIn8=
+	t=1751991787; cv=none; b=JIIT3YLWM7IoWDsy0RYlkutvOgqX2J56mSdonMrD+WL6Lb6cEKUyk5srB+SILjc7L4s4CDBtIae8D7y2giDd/YN/yOp0DEjp4gluf2+hLBp1UKLcxLjBiLXhj0mzmt3YHBzoH58Z7u9CvWDLf7SlcgSQqPxcT9ehrb+2T3cSe6o=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751991381; c=relaxed/simple;
-	bh=TelDDBhE7ZfQtnMDusnN5xsVVdZ+vDa8OHw632+Eens=;
+	s=arc-20240116; t=1751991787; c=relaxed/simple;
+	bh=XQ1sPZKkxc7CL5ll8NOUBy7HMATBB1CHfJpwAhYlr88=;
 	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
-	 In-Reply-To:Content-Type; b=LThad3jt4NRS77H3ffC34WEM7FLiCq9ccYzBKWHkUn6JeF+oGT+IxX1o6kT2UcMDLH1/eKHoP7m8BD552+koGR6VEd4MfMac0ZXPE1iy8A80Ug6TL/+3jPRybtVl+R/IP45nnG8qP5e00bIWd+Cq12V/Fyi50heuJaIVXNryIl0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+G2rB9h; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=eZYBeZEZSbdjvZ8GflPGUrmxrkuFkydGzLJlnIYNfCzyPU+R7S3l0P8f7TQDOYKcJV6/JTS1IhnIKE+AA0PQmK5dqoceBgOst+17JeECPSW3GJnVMnEhW2dFJN8khhxpfdmtv8FDYCIPTo6Q89I0okK/kOMQoEenXqWDj2iSn2Y=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=NjqL3EEZ; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+G2rB9h"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E19C4CEED;
-	Tue,  8 Jul 2025 16:16:19 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="NjqL3EEZ"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1E02EC4CEF9;
+	Tue,  8 Jul 2025 16:23:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751991380;
-	bh=TelDDBhE7ZfQtnMDusnN5xsVVdZ+vDa8OHw632+Eens=;
+	s=k20201202; t=1751991786;
+	bh=XQ1sPZKkxc7CL5ll8NOUBy7HMATBB1CHfJpwAhYlr88=;
 	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
-	b=o+G2rB9haPGq4EB87fWPiVmi/wlj3zRYKvLGFhlS8yMWpE8bIc0tVyXCAhi9aPwiB
-	 tGrC0oYLjyVmMelfiMLc9lCFqkvtKBWRAwe6fXMSKzOTUtZDGqRvdRlzpzBrfooyeM
-	 IqawCXP5rXIpOfB7RiclS2tqHvQd0kOtFiNKrOQx3FAzjFbVTEdqJmXE8Gie5+o1S2
-	 XsV3kvWKCf+Lx4J0x6BcIsG9qc+OSvXf5cRztA9Kqqk1Qo8x3RcvQ1F+m0uScgLtGo
-	 7+yz4opZdQIUb/WXG8p8exKd9HnQq22rJZZgbsRIj9ULltKZgqfpawDM+qOa3P/W0t
-	 6vZZ7FDEQ2xAw==
-Message-ID: <901fe63e-4ba6-4efa-aa02-7b095a3d33aa@kernel.org>
-Date: Tue, 8 Jul 2025 18:16:17 +0200
+	b=NjqL3EEZV0o6cigE+wI0ym8QZmDgoYK9q95o56XgLNa964sywfnrsiS8gK1xADmnz
+	 h9gTpmo26hDAsiObZ7t1LoVR+yGk5cLKc9jLIl2gEM5dBVZ/QEBigtNbPBKOe2jOk8
+	 QcLVqKPwJdVDqGyjWTGDakUq58ZXes2amqnP+9Sdi4AuXRDOATqYeSeZaC3+bbDNgU
+	 gP0yYJiPlM8NuOQs60yERHv/Betv8uOcHnColo/XntuH82Yij/asV8KCyyOsDSaysP
+	 I9+R7/o42LrruXsEWqtNZbJ5uB/LYTzCJvg4cb590FGf0ioh8Pk0QdeYRC+zsLdhFR
+	 AxNuALL9GClPA==
+Message-ID: <0724788c-d97b-488f-a8e4-b496316f7162@kernel.org>
+Date: Tue, 8 Jul 2025 18:23:02 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-next v7 2/4] mptcp: implement .read_sock
+Subject: Re: [PATCH mptcp-next v7 4/4] selftests: mptcp: add splice io mode
 Content-Language: en-GB, fr-BE
 To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
  pabeni@redhat.com, hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
 References: <cover.1751880561.git.tanggeliang@kylinos.cn>
- <5cbb736addab5da388d5a43d3ad147ad50ff282f.1751880561.git.tanggeliang@kylinos.cn>
+ <fc458b1cefbd6b143823c0d12d664a5d344ca6fd.1751880561.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,62 +87,34 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <5cbb736addab5da388d5a43d3ad147ad50ff282f.1751880561.git.tanggeliang@kylinos.cn>
+In-Reply-To: <fc458b1cefbd6b143823c0d12d664a5d344ca6fd.1751880561.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
 Hi Geliang,
 
-Thank you for the new version!
-
-(Thank you, Paolo, for the previous reviews!)
-
 On 07/07/2025 11:34, Geliang Tang wrote:
 > From: Geliang Tang <tanggeliang@kylinos.cn>
 > 
-> nvme_tcp_try_recv() needs to call .read_sock interface of struct
-> proto_ops, but it is not implemented in MPTCP.
+> This patch adds a new 'splice' io mode for mptcp_connect to test
+> the newly added read_sock() and splice() functions of MPTCP.
 > 
-> This patch implements it with reference to __mptcp_recvmsg_mskq().
+> 	./mptcp_connect.sh -m splice
 
-I still think more explanations are needed to help reviewers and
-developers later, e.g. explaining what this interface is supposed to do,
-what are the particularities linked to MPTCP and the differences with
-TCP, why you cannot re-use something already there or the differences
-with __mptcp_recvmsg_mskq(), etc.
+That's good, but CI will not check them by default. For our CI, we can
+easily modify it to run extra tests, but CI check stable versions will not.
 
-> v2:
->  - first check the sk_state (Matt), but not look for the end of the
-> end of a connection like TCP in __tcp_read_sock():
-> 
-> 	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
-> 		break;
-> 
-> This will cause a use-after-free error:
-> 
-> 	BUG: KASAN: slab-use-after-free in mptcp_read_sock.
-> 
-> v3:
->  - Use sk->sk_rcvbuf instead of INT_MAX as the max len.
-> 
-> v4:
->  - invoke __mptcp_move_skbs.
+What about adding new .sh files call mptcp_connect.sh with -m <mode>?
 
-Thank you for the changelog, it is very useful, but please move it in
-the comment section, under the last Signed-off-by, after a line
-containing "---":
+  mptcp_connect_mmap.sh
+  mptcp_connect_sendfile.sh
+  mptcp_connect_splice.sh
 
-  (...)
-  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
-  ---
-  Notes:
-    v2:
-      - (...)
-
-Otherwise, the changelog will be part of the commit message when sending
-this patch to netdev.
-
-Same in the other patches.
+I will quickly check if that can work, and maybe propose patches for the
+two others that we could backport to improve the code coverage on stable
+releases too. If it works, feel free to do the same for splice.sh. I
+will then modify the CI to remove the specific case checking mmap on the
+side.
 
 Cheers,
 Matt
