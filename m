@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 838AA2E2EE2
-	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 15:57:18 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0B14D25B1EA
+	for <mptcp@lists.linux.dev>; Tue,  8 Jul 2025 16:16:20 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1751990239; cv=none; b=drN7OZVHnb9Z+nXnLCzGa1/9GljifXZkHr2Zn4V6auMr+c1xlgNwmPsb/j8NsgItbaKUM5fjyH/0zRExUXff1gc5sbbfCYkXHug/ZTH5PhMg8OUfmJFGAuyUJrW2v0LySjPPNnc12h0+clr7IcQarukDQIb8IWR2Y4IrDp2anMo=
+	t=1751991381; cv=none; b=Xm0sJfSbkBCG2BhCbg6tiJ0qrX2/HntpfyPpjlv2IgDxY6+ORb+qPXzuTDuZYIaSUfck7YZbV7CibF8zHjcxvxdzipL5trejaRlQsf/OoqLPMIU6CXWLmjhIi8cvO5XYNIErOQidt1BghT/1wevlB5c3aN8j3oEry1ct7SWKIn8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1751990239; c=relaxed/simple;
-	bh=BHei9kW1yQqbnJ8u5gUzlO+1OOqVkMHkDK+mUktQ/Dc=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=VbEdmhi5Q7mDKw8Bg3jyVo9qz0CuIiBO2OkzltEjSszZiNTMmd34g0Il+YFd1P8j2sVpCq/QYoJx6LfRDTG+J73Crrx48gRDo9gUce3oqXej7sL4i0rjyoehryy7vym0AsS0HAMErN282LdzyNAvSkTJmpgADIYtEIkjjbDO5C8=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Zv+olvjQ; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1751991381; c=relaxed/simple;
+	bh=TelDDBhE7ZfQtnMDusnN5xsVVdZ+vDa8OHw632+Eens=;
+	h=Message-ID:Date:MIME-Version:Subject:To:Cc:References:From:
+	 In-Reply-To:Content-Type; b=LThad3jt4NRS77H3ffC34WEM7FLiCq9ccYzBKWHkUn6JeF+oGT+IxX1o6kT2UcMDLH1/eKHoP7m8BD552+koGR6VEd4MfMac0ZXPE1iy8A80Ug6TL/+3jPRybtVl+R/IP45nnG8qP5e00bIWd+Cq12V/Fyi50heuJaIVXNryIl0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=o+G2rB9h; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Zv+olvjQ"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812D4C4CEED;
-	Tue,  8 Jul 2025 15:57:17 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="o+G2rB9h"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 81E19C4CEED;
+	Tue,  8 Jul 2025 16:16:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1751990238;
-	bh=BHei9kW1yQqbnJ8u5gUzlO+1OOqVkMHkDK+mUktQ/Dc=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=Zv+olvjQKJXzBuGzxO3tHTxQZw69yw5KOM002O1SMkcIfcDyQlICPsvcke1UilqRq
-	 CEkxPDoRaDvuZ2LmOxsMTr9n5ewN3urwfYanVVHQY+ciOvK1EPkgSoI47s2ALmUMD4
-	 ESEi0SRNTCJsD/Vvl+J1xMW6fYwxRBl1jrf9ZO8kuJER0seSchtOAgjpU1XYm9YhyP
-	 /Dnn8AHIcWfCrqRR4K3h/L0vroQe2uolpJtLAR6lbCdW1mJwNZwhifoj7xOOt5fFwr
-	 zGMIjuIVMQQA5Momnnzp8vr59BDVPxbd9kckazLzvkaV5IbnC3ycUx5x6MYwJEzSe4
-	 VYx/jMKEwOmbg==
-Message-ID: <0b61c472-a639-4543-84d3-a0666fcb66fe@kernel.org>
-Date: Tue, 8 Jul 2025 17:57:15 +0200
+	s=k20201202; t=1751991380;
+	bh=TelDDBhE7ZfQtnMDusnN5xsVVdZ+vDa8OHw632+Eens=;
+	h=Date:Subject:To:Cc:References:From:In-Reply-To:From;
+	b=o+G2rB9haPGq4EB87fWPiVmi/wlj3zRYKvLGFhlS8yMWpE8bIc0tVyXCAhi9aPwiB
+	 tGrC0oYLjyVmMelfiMLc9lCFqkvtKBWRAwe6fXMSKzOTUtZDGqRvdRlzpzBrfooyeM
+	 IqawCXP5rXIpOfB7RiclS2tqHvQd0kOtFiNKrOQx3FAzjFbVTEdqJmXE8Gie5+o1S2
+	 XsV3kvWKCf+Lx4J0x6BcIsG9qc+OSvXf5cRztA9Kqqk1Qo8x3RcvQ1F+m0uScgLtGo
+	 7+yz4opZdQIUb/WXG8p8exKd9HnQq22rJZZgbsRIj9ULltKZgqfpawDM+qOa3P/W0t
+	 6vZZ7FDEQ2xAw==
+Message-ID: <901fe63e-4ba6-4efa-aa02-7b095a3d33aa@kernel.org>
+Date: Tue, 8 Jul 2025 18:16:17 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,11 +35,13 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 5/5] mptcp: remove pr_fallback()
+Subject: Re: [PATCH mptcp-next v7 2/4] mptcp: implement .read_sock
 Content-Language: en-GB, fr-BE
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
-References: <cover.1751699999.git.pabeni@redhat.com>
- <189eef71d3406ce2931e6d9442c0c5bba1df42fa.1751700000.git.pabeni@redhat.com>
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev,
+ pabeni@redhat.com, hare@kernel.org
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+References: <cover.1751880561.git.tanggeliang@kylinos.cn>
+ <5cbb736addab5da388d5a43d3ad147ad50ff282f.1751880561.git.tanggeliang@kylinos.cn>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -85,22 +87,62 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <189eef71d3406ce2931e6d9442c0c5bba1df42fa.1751700000.git.pabeni@redhat.com>
+In-Reply-To: <5cbb736addab5da388d5a43d3ad147ad50ff282f.1751880561.git.tanggeliang@kylinos.cn>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
+Hi Geliang,
 
-On 05/07/2025 09:24, Paolo Abeni wrote:
-> We can now track fully the fallback status of a given connection
-> via the relevant mibs, the mentioned helper is redundant. Remove
-> it completely.
+Thank you for the new version!
 
-I don't often use the pr_debug(), but I don't know about the other devs.
+(Thank you, Paolo, for the previous reviews!)
 
-If removing this helper is an issue, we could either move this
-pr_fallback() in __mptcp_do_fallback(), or also add a pr_debug() in the
-macro to incrementing any MPTCP MIB counter?
+On 07/07/2025 11:34, Geliang Tang wrote:
+> From: Geliang Tang <tanggeliang@kylinos.cn>
+> 
+> nvme_tcp_try_recv() needs to call .read_sock interface of struct
+> proto_ops, but it is not implemented in MPTCP.
+> 
+> This patch implements it with reference to __mptcp_recvmsg_mskq().
+
+I still think more explanations are needed to help reviewers and
+developers later, e.g. explaining what this interface is supposed to do,
+what are the particularities linked to MPTCP and the differences with
+TCP, why you cannot re-use something already there or the differences
+with __mptcp_recvmsg_mskq(), etc.
+
+> v2:
+>  - first check the sk_state (Matt), but not look for the end of the
+> end of a connection like TCP in __tcp_read_sock():
+> 
+> 	if (TCP_SKB_CB(skb)->tcp_flags & TCPHDR_FIN)
+> 		break;
+> 
+> This will cause a use-after-free error:
+> 
+> 	BUG: KASAN: slab-use-after-free in mptcp_read_sock.
+> 
+> v3:
+>  - Use sk->sk_rcvbuf instead of INT_MAX as the max len.
+> 
+> v4:
+>  - invoke __mptcp_move_skbs.
+
+Thank you for the changelog, it is very useful, but please move it in
+the comment section, under the last Signed-off-by, after a line
+containing "---":
+
+  (...)
+  Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+  ---
+  Notes:
+    v2:
+      - (...)
+
+Otherwise, the changelog will be part of the commit message when sending
+this patch to netdev.
+
+Same in the other patches.
 
 Cheers,
 Matt
