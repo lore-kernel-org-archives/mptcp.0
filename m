@@ -1,40 +1,40 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id F153E26CE31
-	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 07:25:55 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1270326B778
+	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 07:25:59 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752045956; cv=none; b=bBmBCwat8zo3gvZBy8ZxsRXmnxN1qtbWmX0q8D7W8cnXwPQ6Yjx6GOJddpzi+cDSJlJdvfDWlJ0vBtYIzYFjGRLhtmGPOSmKDgEx8PlnbD69wQE8ZcU7cCQX0GKgF4C4PKf8qYjdjz3hu3/7gu79MQfshEBFbVf1nlWhHp/1sLo=
+	t=1752045960; cv=none; b=FsJtlHekozn5l2JTqz+y318KPpnwyFlUIsy7Cn+Lks4IK89E8tMNkBQgBwKg64PLBibp97qEM85ys+tq6hKu38tZI/wEbZ+yWbtE26nlYaJePjYauWFEu/pHriswp/GWr0cVXEdopb9MzKk25M11+ljmWmslaCx9h67oFFI4xX4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752045956; c=relaxed/simple;
-	bh=DiAXIpVjhSZ+RvlYXOF3cPsZn4SUz/v2DfoI59ns5rk=;
+	s=arc-20240116; t=1752045960; c=relaxed/simple;
+	bh=OjbFbRCuqzvUduDjZoX/Ing2VFQrPaLPZMKGgUW54Bc=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=pxylk9eIKPQlXJFL4A+BL7kc4Falp6TLp/JjGZkE/dx5th+HaZme05oqUKMqT/GYfzw+edMsaVPdcs3KdNX4nx4nN40OQuGSxePcBc2k3RZd5Xx+irafsO7slVT60jkEoV3NQ5ewdzHFeAKlrIVRxOmyRT/wiswDWTux/q6auGg=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=upPAWz3b; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=W5yRd8kmtOsWHKLoVLJXTUFDQiIezuGfifUaDGW+E9y90tr1dIvuKmSLb+bT9sJrLf0a8tfU/HiuaJYjjsX/O5IPM3LwlVUOV3WGiEz0whM1xn48CO4lk1RwARfqUPL3DQxvu7b5EhWm6TLxPheUnGEJwI9FDc/Mjw6Shxc3WJA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=tfrXpU88; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="upPAWz3b"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 7A44EC4CEF1;
-	Wed,  9 Jul 2025 07:25:50 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="tfrXpU88"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 48B58C4CEF1;
+	Wed,  9 Jul 2025 07:25:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752045955;
-	bh=DiAXIpVjhSZ+RvlYXOF3cPsZn4SUz/v2DfoI59ns5rk=;
+	s=k20201202; t=1752045959;
+	bh=OjbFbRCuqzvUduDjZoX/Ing2VFQrPaLPZMKGgUW54Bc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=upPAWz3bAZI6GEgKkA5MCJLDrDJiboT7/XQhsUsM0GIqXqqELZB7jkZIXSfXDfohi
-	 nME7kH361cLpFy5a9dBX6zeayhgyQvStKl3k7atPDeGtq/esAj9GJDnY1cNArr9EvO
-	 S4gLzGlfBMsGhbOYO8qp3+cjW19hdeGNoEumtgg/NhFA7sUGestBpArWndmwwxFxF2
-	 Mjl9XQvM4WsPbF5GoimW2czGDUCc7YC3O8zdY8ShDBdIiWDnqvDu4AgUGV7OOXc/7l
-	 jY5G0+FgVB5jkeJZeLSiV65BeCQXobg5LHq6Gu45KJpyVhJHgg1Y1u/NFMzCd8YLWD
-	 KHKEliHBT8aQQ==
+	b=tfrXpU88+W/GdVDacVTG7JKSYND+i0MJca+4IvlGbtyLml0i3DjfxBpOCAjcyMkxA
+	 FH2E5gLIJ5IdgFwHf+nQojPcrlgcDE0pjWLqxJnUq+f+Z1gz3KKTJews6kadDihtJd
+	 dqYhKVdn1QNBvhKwReILZjLd52Gry4izKTciaunrB+3ITtH8Bo+KIdNprQEkY06HLa
+	 EXf99YlX8JZlGizpYKb5nsri0sSD9ghlPUUeXEUAYoI2nSXalwOapQniN/NrxB8u1Q
+	 mdAxEUvuJl7pPM+LWc9vQ3NHyJ3U5Kfbvqnia6+S8cvkHEo6qYQgY8yeS1r730fGN1
+	 0aPG7RXK6Luvw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	matttbe@kernel.org,
 	hare@kernel.org,
 	pabeni@redhat.com
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v8 3/7] tcp: export tcp_splice_state
-Date: Wed,  9 Jul 2025 15:25:30 +0800
-Message-ID: <d6e0af387267133607241ad865c1a7752daf2adf.1752045499.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v8 4/7] mptcp: add recv_should_stop helper
+Date: Wed,  9 Jul 2025 15:25:31 +0800
+Message-ID: <e61ea2bf23abcd7ec01ed0783ee9ca693bb86e79.1752045499.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1752045499.git.tanggeliang@kylinos.cn>
 References: <cover.1752045499.git.tanggeliang@kylinos.cn>
@@ -48,70 +48,100 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-Export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h so
-that they can be used by MPTCP.
+Factor out a new helper mptcp_recv_should_stop() from mptcp_recvmsg() to
+check whether to stop receiving. It will be used in mptcp_splice_read()
+too.
 
 Suggested-by: Paolo Abeni <pabeni@redhat.com>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- include/net/tcp.h | 12 ++++++++++++
- net/ipv4/tcp.c    | 13 ++-----------
- 2 files changed, 14 insertions(+), 11 deletions(-)
+ net/mptcp/protocol.c | 59 ++++++++++++++++++++++++--------------------
+ 1 file changed, 32 insertions(+), 27 deletions(-)
 
-diff --git a/include/net/tcp.h b/include/net/tcp.h
-index bc08de49805c..338b97a91278 100644
---- a/include/net/tcp.h
-+++ b/include/net/tcp.h
-@@ -258,6 +258,18 @@ static_assert((1 << ATO_BITS) > TCP_DELACK_MAX);
-  */
- #define	TFO_SERVER_WO_SOCKOPT1	0x400
- 
-+/*
-+ * TCP splice context
-+ */
-+struct tcp_splice_state {
-+	struct pipe_inode_info *pipe;
-+	size_t len;
-+	unsigned int flags;
-+};
-+
-+int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
-+			 unsigned int offset, size_t len);
-+
- 
- /* sysctl variables for tcp */
- extern int sysctl_tcp_max_orphans;
-diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
-index 8637dfce8c4a..505c3a123e2d 100644
---- a/net/ipv4/tcp.c
-+++ b/net/ipv4/tcp.c
-@@ -316,15 +316,6 @@ EXPORT_SYMBOL(tcp_have_smc);
- struct percpu_counter tcp_sockets_allocated ____cacheline_aligned_in_smp;
- EXPORT_IPV6_MOD(tcp_sockets_allocated);
- 
--/*
-- * TCP splice context
-- */
--struct tcp_splice_state {
--	struct pipe_inode_info *pipe;
--	size_t len;
--	unsigned int flags;
--};
--
- /*
-  * Pressure flag: try to collapse.
-  * Technical note: it is used by multiple contexts non atomically.
-@@ -757,8 +748,8 @@ void tcp_push(struct sock *sk, int flags, int mss_now,
- 	__tcp_push_pending_frames(sk, mss_now, nonagle);
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index fc429d175ede..1fe04ec05ebd 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -2090,12 +2090,40 @@ static unsigned int mptcp_inq_hint(const struct sock *sk)
+ 	return 0;
  }
  
--static int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
--				unsigned int offset, size_t len)
-+int tcp_splice_data_recv(read_descriptor_t *rd_desc, struct sk_buff *skb,
-+			 unsigned int offset, size_t len)
++static int mptcp_recv_should_stop(struct sock *sk, long timeo, int *shutdown)
++{
++	if (sk->sk_err)
++		return sock_error(sk);
++
++	if (sk->sk_shutdown & RCV_SHUTDOWN) {
++		*shutdown = 1;
++		/* race breaker: the shutdown could be after the
++		 * previous receive queue check
++		 */
++		if (__mptcp_move_skbs(sk))
++			*shutdown = 0;
++		return 0;
++	}
++
++	if (sk->sk_state == TCP_CLOSE)
++		return -ENOTCONN;
++
++	if (!timeo)
++		return -EAGAIN;
++
++	if (signal_pending(current))
++		return sock_intr_errno(timeo);
++
++	return 0;
++}
++
+ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			 int flags, int *addr_len)
  {
- 	struct tcp_splice_state *tss = rd_desc->arg.data;
- 	int ret;
+ 	struct mptcp_sock *msk = mptcp_sk(sk);
+ 	struct scm_timestamping_internal tss;
+ 	int copied = 0, cmsg_flags = 0;
++	int shutdown = -1;
+ 	int target;
+ 	long timeo;
+ 
+@@ -2146,34 +2174,11 @@ static int mptcp_recvmsg(struct sock *sk, struct msghdr *msg, size_t len,
+ 			    signal_pending(current))
+ 				break;
+ 		} else {
+-			if (sk->sk_err) {
+-				copied = sock_error(sk);
++			copied = mptcp_recv_should_stop(sk, timeo, &shutdown);
++			if (copied < 0 || shutdown == 1)
+ 				break;
+-			}
+-
+-			if (sk->sk_shutdown & RCV_SHUTDOWN) {
+-				/* race breaker: the shutdown could be after the
+-				 * previous receive queue check
+-				 */
+-				if (__mptcp_move_skbs(sk))
+-					continue;
+-				break;
+-			}
+-
+-			if (sk->sk_state == TCP_CLOSE) {
+-				copied = -ENOTCONN;
+-				break;
+-			}
+-
+-			if (!timeo) {
+-				copied = -EAGAIN;
+-				break;
+-			}
+-
+-			if (signal_pending(current)) {
+-				copied = sock_intr_errno(timeo);
+-				break;
+-			}
++			if (shutdown == 0)
++				continue;
+ 		}
+ 
+ 		pr_debug("block timeout %ld\n", timeo);
 -- 
 2.48.1
 
