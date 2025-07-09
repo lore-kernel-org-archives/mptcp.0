@@ -1,133 +1,132 @@
-Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 0222722338
-	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 12:33:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 59A432E613A
+	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 14:39:32 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752064420; cv=none; b=JpFaAGCB1M+0oltt+XlUqpRpEFBvckFdxZZtj0tIGfA1T9vXatR4R94zxTdyE14ZbiY3DG7QNiGuQVPMQo1ZP/OadaUDfVMW7hLHuhNc7iAeZWfQRZfTB8GbNcvntggVl2ICLai3/5R6JVT4iuRF7pmPweIKPJW9sa/aNb4HPxU=
+	t=1752071973; cv=none; b=eOz7kpGDphmedNQU9eK16D1W2BJfxKGBt8kRsYwUffp45DM23PVYjTQ78TDtV3TJtuDzzX9EtleS0w00nqd+1VIgVEIJEqjLrJG8RpmNFtz4R9lByg9cRzRNnwzxe5h3RdzKLLm/Ye3XTGxjkbsppZXtMnyTiDSDBlXo171jNQg=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752064420; c=relaxed/simple;
-	bh=/q5naKMyxc6eODMLwA+uFRvkdxtzG6f7Jhm9ZvBZku4=;
+	s=arc-20240116; t=1752071973; c=relaxed/simple;
+	bh=FOHSoZ2ByZGNPAcex9P6Td3zYhtaML1nwoWVjvukgdc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=SJRO/zX17kyKJo3jLm2blQxoDNHTocvRJUgx33YBbq6uzTaRcjN7661unnImvqMYaFK7ThJwvAjDiehgkzl9cZ2dU0OYTb2Pl0cEOmaFa62P/s+lDdBdowwD8hhbX560HDrVTy9GmQwBs1TcQmiGcToqiFxd4C8i6q0qUVG0UB4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=efF9IU2Z; arc=none smtp.client-ip=170.10.129.124
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
+	 In-Reply-To:Content-Type; b=bIm+RqOYQtKJRvI+S94YT+N1yA+epUzGtcF5Nqyj1XWViY/c2qKKKDmXMbWo/XlhfRgG+dZ2OFv/42xGcqxFDPlHEVcG448Uzh+wG099/3eJqFFay/MuAaIbZXzP8tBCMOPsPQ/Epc4U2IG+a/N+OWP0y4D1UaIuU6kiknWOcBo=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=gbaDTCVD; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="efF9IU2Z"
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752064416;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=QVzwe34QpTUBfF0EmyyuPA9/oXkLpmT9iwC5upEMFrE=;
-	b=efF9IU2ZTD8pFevBIzzUrN+DTDfef52v8t3u9s+hK3QvqmeGeOZlNbqmXt7/UJVq7QO57t
-	7DK3cCxIM0OCyOQKfBi+Iw6kljNI3DQ1F9CiPUEwE/60GZVHV2/oW//RbGRi8GElBgtYac
-	vxtHgEqmWBQRYXLhWEQZD9VXkO60rHI=
-Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
- [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
- us-mta-479-jqMWKUCFOjam4SvXgVp0GA-1; Wed, 09 Jul 2025 08:33:35 -0400
-X-MC-Unique: jqMWKUCFOjam4SvXgVp0GA-1
-X-Mimecast-MFC-AGG-ID: jqMWKUCFOjam4SvXgVp0GA_1752064414
-Received: by mail-wr1-f72.google.com with SMTP id ffacd0b85a97d-3a4f3796779so2739887f8f.1
-        for <mptcp@lists.linux.dev>; Wed, 09 Jul 2025 05:33:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752064414; x=1752669214;
-        h=content-transfer-encoding:in-reply-to:from:content-language
-         :references:to:subject:user-agent:mime-version:date:message-id
-         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
-        bh=QVzwe34QpTUBfF0EmyyuPA9/oXkLpmT9iwC5upEMFrE=;
-        b=BCza1rSTGHQ5t3roM4ji9LKOGrU026EcPW4XtITVcgr/UrPfjQ5wxKoFBhPIjJ+EEy
-         RJT9OHXAabSie359HGFkMGKFRsc3OuU6USuqyxUEWlRBEEw5uNKRYYPiaN8fxogMv/vk
-         Z5ykN8ts+loSPni5ufdQia2WyoWY/66GefgsmQMM962yZJE4ijnJDi3DUKp0CCqWznzh
-         975oCN3l8pRAdfFzITAgNI0kaZRXOVGdYlqDr9gYciwi4L20pJIa5z2z/HVdvVk33dl4
-         0V9ksr5CUR2gj272bFk/7f0r7CYfyUam+huxrKmihShVPm33CK0oR6bRk/dzE8e09lKh
-         FVdQ==
-X-Forwarded-Encrypted: i=1; AJvYcCXrqSd2L9B+P6iH4uJm2pj0JrNhYBvhFzoWcehiEN0zSa7LtTlqe8OVuQqgt0KJ/ZbaxECPag==@lists.linux.dev
-X-Gm-Message-State: AOJu0YxMBcqCMZTa2OF3LzbuQaPO0x1E6h+wG8Nd42QqDx5f93uCDOKJ
-	Ou7UqjD5fjTT22MSyF+uNXRCKu351WZJ335TUsW/8oz80tVk1lg4xnMzvW0BC/O9brxjtCdIzqN
-	s4y9OZF5+aVS/NN8KZavl9CxTo9pjurdmmgsjUX3GJoHv2wZTbvgoBuyZ
-X-Gm-Gg: ASbGncu0jfZ7oqXjPyHjfW0oNU60grllJwaESqNUry8qE8z+uIL3ndsGLIjNlB2Gp1l
-	AcMTfscPwvzskzWx2PQfqGXcQKHcBg0/DXaS8U6EM19gYXRnuDlDmWpdMLcf2KQuieGlfaTufhG
-	PE4oZTKl5BGoKtyOHHVaeFKJsVnCvnTAANh0WqOxlahdXRRz7AhqpYJ3JD7RDLl2R8NKzs5gY0G
-	0JpwegmHLgirIcdgiqK3VQSh4ODNKRrYmSoeUt2COn6r5QPEJAlKtCqdcwcJBWNUXH4I3bolxs2
-	G9S3ppgOUquBAV1XpjWrIDyVIrjDAR3Sb40/TtTbf+cSKb7PXl95dG5EKwQxrJyzRXEagQ==
-X-Received: by 2002:a05:6000:310e:b0:3a4:e56a:48c1 with SMTP id ffacd0b85a97d-3b5e453fa39mr2128354f8f.55.1752064414145;
-        Wed, 09 Jul 2025 05:33:34 -0700 (PDT)
-X-Google-Smtp-Source: AGHT+IG/OiQGZb6dWj8DvGNwwOb2VI7xC8zRom79/jxzKgU+w83x64an+SKvbMvIVP68LGGZf+fPqQ==
-X-Received: by 2002:a05:6000:310e:b0:3a4:e56a:48c1 with SMTP id ffacd0b85a97d-3b5e453fa39mr2128322f8f.55.1752064413596;
-        Wed, 09 Jul 2025 05:33:33 -0700 (PDT)
-Received: from ?IPV6:2a0d:3344:271f:bc10:144e:d87a:be22:d005? ([2a0d:3344:271f:bc10:144e:d87a:be22:d005])
-        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454d5103c2asm21616915e9.33.2025.07.09.05.33.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 09 Jul 2025 05:33:33 -0700 (PDT)
-Message-ID: <ed9cbe19-7ab6-4ff0-b2f8-414b6e5bb55c@redhat.com>
-Date: Wed, 9 Jul 2025 14:33:32 +0200
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="gbaDTCVD"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 812DCC4CEEF;
+	Wed,  9 Jul 2025 14:39:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752071971;
+	bh=FOHSoZ2ByZGNPAcex9P6Td3zYhtaML1nwoWVjvukgdc=;
+	h=Date:Subject:To:References:From:In-Reply-To:From;
+	b=gbaDTCVDPiBt5A9ndEP00ymExDTNN9vq6wbBAr3x2TAXHiFPC/YJj2mmvTOigVouM
+	 yqSJEAW1FMVVJOWGoaE5BwK+FYbx9wp+Kzi3bLlJGzPmM54obMex+Ce+IfYwkw13zn
+	 JJH9kIg82VYmtleMWEkp9y9PY+NbeLJswtiiQdAs8Kvid2YJxgcDtqNC6Opg1t5F7M
+	 3cuirsta9H3NCBGIA3ix4u3GxMT1Rn/nTgZ6bmWlpRQU/oLrLFMCbPHy+xdHjCXBg/
+	 O9JFJlkWe0hLCdadiXnlzQg+IyxV1piLGcUkFBRPXrv8Jez2Cu+kl7HEm2rmgxe+iA
+	 ZkNy1FgyDg8Fw==
+Message-ID: <dff657fc-a587-45e3-ab2e-e196f6a734cf@kernel.org>
+Date: Wed, 9 Jul 2025 16:39:28 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird
-Subject: Re: [PATCH mptcp-net v2 3/5] mptcp: fix status reset on disconnect()
-To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
-References: <cover.1751699999.git.pabeni@redhat.com>
- <a5a1798e9f474cf8f8c518ce1b47aebf4b7d5528.1751700000.git.pabeni@redhat.com>
- <a165fd13-3f27-41de-8a51-77ca6838cd72@kernel.org>
- <31fe0442-ab45-438c-abe6-25a9d4f08927@redhat.com>
- <b5ec832f-2fe8-4dec-af09-db0affc3e5a6@kernel.org>
- <9d16ac94-c866-47f8-b34a-1efd45149575@redhat.com>
- <2d493138-fbda-4184-9ece-02a221544f26@kernel.org>
-From: Paolo Abeni <pabeni@redhat.com>
-In-Reply-To: <2d493138-fbda-4184-9ece-02a221544f26@kernel.org>
-X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: udX_P9nkVYv6JANFPYE7DcjJR2oYyQDJ3mnm-58kTmk_1752064414
-X-Mimecast-Originator: redhat.com
-Content-Language: en-US
+User-Agent: Mozilla Thunderbird Beta
+Subject: Re: [PATCH mptcp-net 0/2] selftests: mptcp: connect: cover alt modes
+Content-Language: en-GB, fr-BE
+To: Geliang Tang <geliang@kernel.org>, mptcp@lists.linux.dev
+References: <20250708-selftests-mptcp-connect-modes-v1-0-f8e6f9828fd8@kernel.org>
+ <2a1fae363cad066180b0cb44aa320c9d6fd71aec.camel@kernel.org>
+From: Matthieu Baerts <matttbe@kernel.org>
+Autocrypt: addr=matttbe@kernel.org; keydata=
+ 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
+ lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
+Organization: NGI0 Core
+In-Reply-To: <2a1fae363cad066180b0cb44aa320c9d6fd71aec.camel@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 7/9/25 12:55 PM, Matthieu Baerts wrote:
-> On 09/07/2025 12:49, Paolo Abeni wrote:
->> On 7/9/25 12:39 PM, Matthieu Baerts wrote:
->>> On 09/07/2025 11:27, Paolo Abeni wrote:
->>>> The disconnect failure when blocking is not
->>>> possible should really never be a problem from a functional PoV:
->>>> disconnect() can fail per documentation and the application should
->>>> handle that case.
->>>
->>> But it could set "O_NONBLOCK" and do the close later, no? Or is this
->>> correctly handled?
->>
->> Yes and no. Meaning the kernel does not offer any mechanism to complete
->> gracefully a blocking disconnect returning EAGAIN. In such a case the
->> socket will stay in SS_DISCONNECTING (socket) state until close time.
->>
->>>>> In which cases is this MSG_DONTWAIT flag set with disconnect()?
->>>>
->>>> Typo in the patch, should be O_NONBLOCK. The socket layer, the vfs layer
->>>>  and iouring could set that.
->>>
->>> So typically what we do in the packetdrill tests. But maybe we don't
->>> check the returned value?
->>
->> The only relevant pktdrill test I could find is
->> `disconnect_after_accept.pkt` and it checks the return value.
->>
->> Let me check how it will run after the MSG_DONTWAIT -> O_NONBLOCK fix
+Hi Geliang,
+
+On 09/07/2025 09:36, Geliang Tang wrote:
+> Hi Matt,
 > 
-> Thank you!
+> On Tue, 2025-07-08 at 19:37 +0200, Matthieu Baerts (NGI0) wrote:
+>> mptcp_connect.sh can be executed manually with "-m <MODE>" and "-C".
+>>
+>> These modes should be validated, but they are not when the selftests
+>> are
+>> executed via the kselftest helpers. To fix that, new test programs
+>> have
+>> been added, simply calling mptcp_connect.sh with the right
+>> parameters.
+>>
+>> Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+> 
+> LGTM!
+> 
+> Reviewed-by: Geliang Tang <geliang@kernel.org>
 
-The test is passing here. I think that is due to mptcp_disconnect()
-invoking mptcp_close_ssk() with the MPTCP_CF_FASTCLOSE flag, which in
-turn forces tcp_disconnect() invocation on msk->first, that forciby
-closes the first subflow (sk_state == TCP_CLOSE after that).
+Thank you, applied!
 
-So we can trim that blocking wait out of patch 3.
+New patches for t/upstream-net and t/upstream:
+- 6d62c20d77d9: selftests: mptcp: connect: also cover alt modes
+- c3fbf767eb3b: selftests: mptcp: connect: also cover checksum
+- Results: 6bd3385eb1f8..e8a7c6b2c828 (export-net)
+- Results: 5cdb68fbc7ee..0f11bd74a704 (export)
 
-/P
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/8cc3145e7535dd60f02cad008912e1b513adecdd/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f0042bb4116cfe555f220715588193479b841dbc/checks
+
+Cheers,
+Matt
+-- 
+Sponsored by the NGI0 Core fund.
 
