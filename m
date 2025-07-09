@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 69B2C237713
-	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 10:39:13 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 793AE28DF22
+	for <mptcp@lists.linux.dev>; Wed,  9 Jul 2025 10:42:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752057554; cv=none; b=PPEtkJ/OOvEEPgggnJp0NIOu8akVqqzxmt49Fk96YmqCEBBeRyJ8ZHcQ3oZdRmD/TpfPtx4pYxsJAVWn7UfQ4m4DOycKDGH5L7tvbSlTzGIH2rODPCtkZ3oW6Rxzw9trM3AgKmiVoJ6f39k04hy308g/CaPmPpZAgqwZ+LhV06g=
+	t=1752057748; cv=none; b=Gs+5rruXBwT1EjRmDefdfaLb8nsJJPnAIRX37gnZYDl7kZsU0IlHch4HPpn+UmOD+fZy4jW42MUNKcbqiJdTGZesQ//DAjRaKtglCjE4aAft+SPhqQDbCDnY9Ivg9jcIOEQVaQ862b5X+s3nSxemrk9qIRfDOqlV11Qm52U9yaU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752057554; c=relaxed/simple;
-	bh=mm3+pbcYIL6fIvWPoK8pCjk1LwGsCzkH2M2IP65r6Dg=;
+	s=arc-20240116; t=1752057748; c=relaxed/simple;
+	bh=onOnVT4VjB1Z8E1rQ1kN6xvfoAIksn46fS0RwtA2odc=;
 	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=icKSbRIAoHfQBIBRuGqrb1cnGi1szVauloW5RtMmV4n/pllRzsmwToCwMfuaqaNNGPkqBj1qlplw/pm8wWaRfKO/1IygExVoppcLNkOmdolILybSEc/XgQbQxz7ZPPuNESsyg7jPfwF7T402ixKYy1aNwhY8wc4InYiCs4z3sbc=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=FuS6mG2J; arc=none smtp.client-ip=10.30.226.201
+	 In-Reply-To:Content-Type; b=A2lGZ9Bzqu2Pg6/UwCnVgHQsrYzzxzyIWlvbonD/G2je5dKgt4g8jPzOCzBIWGjvu3aUnAvPd0c/h6auIqVjumacUS73F6VUkWhXJCi5rS8W+NE3YxfdG5Nd8Qfyj4LmawevYvkodcj1ZN7RNu0DuiWSCUwBoelVdqIwtIs/y5g=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=U3fj+ttn; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="FuS6mG2J"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 17A3AC4CEEF;
-	Wed,  9 Jul 2025 10:39:12 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="U3fj+ttn"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 954D4C4CEEF;
+	Wed,  9 Jul 2025 10:42:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752057553;
-	bh=mm3+pbcYIL6fIvWPoK8pCjk1LwGsCzkH2M2IP65r6Dg=;
+	s=k20201202; t=1752057748;
+	bh=onOnVT4VjB1Z8E1rQ1kN6xvfoAIksn46fS0RwtA2odc=;
 	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=FuS6mG2JpjXdcMiRUfJ2xxhQRJU9XUWgAXl2IbwOwVqKCxwJE9WjgAxqU25iHGOAp
-	 8XUYblixD6Ib7CMlDMflg3oKcjNkkd0taBGXZmhGjM1hNJg9IMjiIGgCUhAJad4a2q
-	 bH4D0+0s+QFo2g7hiaD5cTIPjuMFzqtyXMVItL7drSJsyevd8UZSHf1IFmgiINPhTR
-	 u05LrUlnT8WEwuxCV2VHYo4V+qavPF9P0zLPl5PbV8YUbOu56PgeKMt2x3QeJrPdIF
-	 lrxTu4rorAROk9p+TS1H30Qb8ezxx+mu+nf2qC+43DzMBqsgDGwOD/dkR1xOeTTjvQ
-	 tmXifQ1RjgKHw==
-Message-ID: <b5ec832f-2fe8-4dec-af09-db0affc3e5a6@kernel.org>
-Date: Wed, 9 Jul 2025 12:39:10 +0200
+	b=U3fj+ttnKIft80/VzmbUXM9Ikp1tubltLY83hZLpvSP9JM7hw7r2qocH6Ivepfeay
+	 zfxtu7Enf93nnKlZFO3RM45x5LUulMvTcesK4Bf44JemA4DWZi8pY/z78lspswZeUc
+	 a7RbDHMRjKC2o23JprRdjDuKt+gqr8Tbyz5tVtBbYcEvpinRb1Igx9oGwBwirUEsLL
+	 tPGlQJXuV4yiP/HLlHhvZZ+SQpYy2WntFZ8fifdL3F4le57nvfmcztE0Dn9C/asYPY
+	 rzDDpd4CNyAriXZOAIEJIQZyg8zsot538gFlfiNTnhfPivUdQPhypctu9I+lBAjbib
+	 rC/Lzb0qpXBEA==
+Message-ID: <e03b51fb-5a73-41e6-9b04-e7e26e0565e1@kernel.org>
+Date: Wed, 9 Jul 2025 12:42:24 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -35,13 +35,15 @@ List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
-Subject: Re: [PATCH mptcp-net v2 3/5] mptcp: fix status reset on disconnect()
+Subject: Re: [PATCH mptcp-net v2 4/5] mptcp: track fallbacks accurately via
+ mibs
 Content-Language: en-GB, fr-BE
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1751699999.git.pabeni@redhat.com>
- <a5a1798e9f474cf8f8c518ce1b47aebf4b7d5528.1751700000.git.pabeni@redhat.com>
- <a165fd13-3f27-41de-8a51-77ca6838cd72@kernel.org>
- <31fe0442-ab45-438c-abe6-25a9d4f08927@redhat.com>
+ <5a78b3e0fc95d2f6356ff4754ec3bdf1dcf6b2cc.1751700000.git.pabeni@redhat.com>
+ <a6b76e9d-b84f-428b-b0bc-bc9d9aa782f7@kernel.org>
+ <279b70c8-603a-4fda-af5e-30cf4df7ebed@redhat.com>
+ <3fbcd96b-5542-45fc-b041-e4dc302f3d2a@redhat.com>
 From: Matthieu Baerts <matttbe@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
@@ -87,72 +89,32 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <31fe0442-ab45-438c-abe6-25a9d4f08927@redhat.com>
+In-Reply-To: <3fbcd96b-5542-45fc-b041-e4dc302f3d2a@redhat.com>
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 
-Hi Paolo,
-
-Thank you for your reply!
-
-On 09/07/2025 11:27, Paolo Abeni wrote:
+On 09/07/2025 12:23, Paolo Abeni wrote:
+> On 7/9/25 11:55 AM, Paolo Abeni wrote:
+>> I'm ok to rename [__]mptcp_do_fallback() to [__]mptcp_try_fallback(),
+>> but I would not do that in patch 1, for backport's sake.
 > 
+> Actually patch 1 already touches almost all the the places where
+> [__]mptcp_do_fallback is used, so it should be fine to do the rename is
+> such patch.
+
+Great, thank you!
+
+Just to come back on your "for backport's sake": if the behaviour of a
+function is modified, I think it is safer to rename it → so during the
+backports, we can easily find extra calls that are only in stable
+versions, but not in the dev branch, and do extra adaptations if needed.
+
+> For consistency with other MIBs I'll additionally trim all the '_' in
+> the MPTCP-specific part of the newly introduced MIB name i.e.
 > 
-> On 7/8/25 5:43 PM, Matthieu Baerts wrote:
->> Hi Paolo,
->>
->> On 05/07/2025 09:24, Paolo Abeni wrote:
->>> disconnect() can still race with subflow fallback leaving the msk in
->>> inconsistent status. To avoid such race, disconnect() must be blocking,
->>> error out if the argument prevent such wait: the socket will linger
->>> in SS_DISCONNECT state forever.
->>
->> Good idea!
->>
->> Just to be sure, this is not really a behaviour change compared to TCP,
->> right?
-> 
-> Actually it is, as the TCP disconnect never blocks. On the flip side the
-> race actually exists and I haven't find another way to plug it.
-> 
-> An alternative I thought about was to create a new first subflow on
-> disconnect and let the old one 'detach' from the mptcp socket, but that
-> was problematic as the 'detached' ssk would have a NULL subflow->conn
-> and currently we assume that to be ~always != NULL
+> MPTCP_MIB_FALLBACK_FAILED -> MPTCP_MIB_FALLBACKFAILED
 
-Indeed, it doesn't sound safer :)
-
->> No risks of breaking some cases? (io_uring, etc.?)
-> 
-> Do io_uring work with mptcp?
-
-I don't know, I never tried. But I don't see why it wouldn't. (Of
-course, not when used with zero copy, etc.)
-
-> The disconnect failure when blocking is not
-> possible should really never be a problem from a functional PoV:
-> disconnect() can fail per documentation and the application should
-> handle that case.
-
-But it could set "O_NONBLOCK" and do the close later, no? Or is this
-correctly handled?
-
-> Blocking could cause some additional latency or slowdown in that code
-> path. I think it should be not problematic, but I have no real idea and
-> tend to be too optimistic WRT this kind of issues.
-> 
-> I suggest not sending this to stable (with a note in the commit message).
-
-Maybe safer indeed.
-
->> In which cases is this MSG_DONTWAIT flag set with disconnect()?
-> 
-> Typo in the patch, should be O_NONBLOCK. The socket layer, the vfs layer
->  and iouring could set that.
-
-So typically what we do in the packetdrill tests. But maybe we don't
-check the returned value?
-
+Good point!
 Cheers,
 Matt
 -- 
