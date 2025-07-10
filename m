@@ -1,106 +1,108 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 1A5B928B7F0
-	for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 08:16:37 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0A5233735
+	for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 08:39:46 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752135400; cv=none; b=aTKtGBrV3O3Nl11BKX53i6Z5ii1/CQqNFQekdGvM2imM1O1b7Pxwu//x07Bbaegt3jraRHvIWaoYZqtYTy0UHpVg5DRvb84LN8sjr9B/QD8ssuCxok9ojzULUINlnBImIeJEyOcXKEMqde+qcyteQhlfwMv9HTX1DXX1hAxajog=
+	t=1752136787; cv=none; b=SiZnz+6tyiatT/iX4qi6dWnWiGngmFQNzJ1j9Ld13jVh08q180oddEk+nIk9omzvOyR/fRqT0856bpvE9/sFeJ6ERL5Kk03ODPUnlJk1rpghizFkn/m/vjP00ehOpzbapxN5aynlhd+2Zw4ACZysb9avS2Nyb0J5pgxrsdaYNxU=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752135400; c=relaxed/simple;
-	bh=Nd5i2w45LO3O1gx3KuoZUagFYX8gCZ9tKC17i7MpDeg=;
-	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=oFZzvbjrkt8TpnJGOa4MEeEpc32pbFlAwnYN11QTDfMxudsnN9VkFrKoDft48HNnK99Cp2ye7D5kN4AtmhGtMe14eYB5stYPMIHpVqrQo8a7DrxNh8QWav0988stSWzpc6jZ2HgdB1zHE4nDTAklFJrgbmdtF/Gr3wBE2WlGirY=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=GwYmyu4x; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752136787; c=relaxed/simple;
+	bh=Y1bnBSXNsJ0CZID1Rk++wKOwtcCcXK/GvoIN+4MfXZQ=;
+	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
+	 Date:MIME-Version; b=q84GuR9RDUvI3v5VTuiC7l0Fl/7X+RRPoSY5qvzj+qDqV0gqiiXPl+3fPuhntJXdY47irOCK6csG5eH5xpV00EMmuHKM1MNLWYJxJydtF9KPRLdMv3+kEXga5YiNSpCtG+4LLIBnAi6f1TZYds1O4P0ncXxDoZYw0TKObPZgCf4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsjoaLAI; arc=none smtp.client-ip=209.85.222.180
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="GwYmyu4x"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id C31BDC4CEF4;
-	Thu, 10 Jul 2025 08:16:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752135397;
-	bh=Nd5i2w45LO3O1gx3KuoZUagFYX8gCZ9tKC17i7MpDeg=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=GwYmyu4xtmGwtpp7HOodM1iXOFP4nv7WJqJrigne71p2jqhI1tL4L0N4j0k0VkTzb
-	 7IKw1dlETcCpzNEhJTN6bFvKb+9Y2qzz5T90tU3p2u3nSgw0Ge0fKGB5czDYcQIGJd
-	 X96dKiNUUxvtwcDgXVgm1qIWBOffUSWkR57ETwSpplQI5Z5xI97rDrmD3M4eC7bu1n
-	 BmqSVYWAuMLVNJRH1h4DZYQgvrNikOFgpvjdJsF8wquyQb7mQdoo5U1SwJbJvf8mdm
-	 Nq7evIyPDlZvQNJ1x58kjwj5QG/vmV+aN/f7p3uHfDSZIZV/YeMXFuCtdjkFaPjDZZ
-	 JT6g/KR/EPzjg==
-From: Geliang Tang <geliang@kernel.org>
-To: mptcp@lists.linux.dev
-Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v2 2/2] Squash to "mptcp: implement .splice_read"
-Date: Thu, 10 Jul 2025 16:16:28 +0800
-Message-ID: <9b738112df48766a6d9b454d89e9274dbf0bf1dd.1752135065.git.tanggeliang@kylinos.cn>
-X-Mailer: git-send-email 2.48.1
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsjoaLAI"
+Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d3dd14a7edso115751285a.2
+        for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 01:39:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20230601; t=1752136785; x=1752741585; darn=lists.linux.dev;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
+         :message-id:reply-to;
+        bh=COQ4ddfcPpXuf6AzgUxndYIuu4sjhdR15YQDe6U7D/A=;
+        b=CsjoaLAIYkAcfnAnjYU8XA5qWjozz3Mh+D4ayJYfVVKspk2DS0ya6ZCJ0/wHBiHTE1
+         0NdfOBmflLWqlsMGu24GaS11wn3sw7pKwtZqAI78vpyapZizeI4NJNPXVD4CMz9IQf6q
+         XHqSRiRit7oAAjAAC88YfYIP4J3dBAobN7sz0XhmuL6VRknioLUqAmWEwOCIjg3tC5ps
+         erOy2CXx8HA0lq/UYgX1mIFLpPcjwCcmSTu2Inw6PXb6z/vaDJCZyDB1erWeTtVdcm3n
+         mDEBMv/lEZbYyUccTi2Yl6Ke68AIB6mEG32l2S8SDxCWDuqcW9SXgrUZGSZqdhuCcUd/
+         2KwA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752136785; x=1752741585;
+        h=mime-version:date:content-transfer-encoding:message-id:subject
+         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
+         :to:cc:subject:date:message-id:reply-to;
+        bh=COQ4ddfcPpXuf6AzgUxndYIuu4sjhdR15YQDe6U7D/A=;
+        b=Rnp3CC8guC+g/ML11/yHk7Uu3Lqi7UNwCKO0d803TRI8ZLNAd1cgZrR4+Av3OKLflf
+         w3imImE5oy5GMWthFW4Y83oD6eHi89LFEqgUjcYDfTxctLqwtYMyzbUD1DEogA+G9Ah5
+         FdyeMGNixGaAbMMzfGeoXS1jQFBMggoekJV4TNP8Y2/lA4NvM5zTHcc0J9oa0MK6O+k8
+         yiC9i38nx/ShtCbGrPepi4jNUxRZYHG7VzEZecJuoc3szkuG3WEgcCn5fR5e0M1zb407
+         xKyi2JhdgjP7UU1bJ8ixmeFywWmHG/2InG/lYOgt3iK9a3SrYs/ruUoe4TAjDL3Hj8t2
+         okpw==
+X-Gm-Message-State: AOJu0YxcXu49nlB7W31cph4fHrcC02S9Zg012gJK0U6s2e3ZfN6iSx1+
+	dW8T/vn8VJbfOmmGHITqIsuPTHZP4qnJc0icy741DDq8LghLsiV5uyuAanRb
+X-Gm-Gg: ASbGncvIyGNwfy1HOn8dTDyy/QzbnHNYqn1TqLXLm/am0By/6IYnQGqv2m7MhD2NJp2
+	RoFQEt9BSYDh5JejxXFB0Bb7+5nVd+WN7qJTv0bFgrMV9kBJIRZq0cXljeX3h7EHTaoXr0BvzRg
+	ifN8K9QU5KZI0yuaQfSAhgKEbLTa13cEyrod+wpGQCUvpZNqZ9ydSnuIqpb1DpYFQlMxjaEZzDJ
+	xuRw5anAu0wJahVZdLYwMxDEo6NJO1BnA1OkiumsSNANgbq4EjINNjMDKxIEr1F1wtNQK0Gkt4C
+	/JmoThCbctbhAPVduKfmmPUOwtpSRQ+7ah5SxPVSxrZu3DHxDaXYeqahvMSBDT3TArDLezVAv58
+	=
+X-Google-Smtp-Source: AGHT+IHhdK/iBLxKzVmEVK3Vd5qLjfnGPgmqBZckA450t071sPaTfXa8HU9iJgXS7tM7dgUVSviS4Q==
+X-Received: by 2002:a05:620a:4803:b0:7d4:114:f81d with SMTP id af79cd13be357-7dccabf2811mr197035585a.0.1752136785200;
+        Thu, 10 Jul 2025 01:39:45 -0700 (PDT)
+Received: from [127.0.0.1] ([52.234.214.51])
+        by smtp.gmail.com with ESMTPSA id af79cd13be357-7dcdc0f8689sm77136985a.43.2025.07.10.01.39.44
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Thu, 10 Jul 2025 01:39:44 -0700 (PDT)
+Content-Type: text/plain; charset=utf-8
+From: MPTCP CI <wpasupplicant.patchew@gmail.com>
+To: Geliang Tang <tanggeliang@kylinos.cn>
+Cc: mptcp@lists.linux.dev
+Reply-To: mptcp@lists.linux.dev
 In-Reply-To: <cover.1752135065.git.tanggeliang@kylinos.cn>
 References: <cover.1752135065.git.tanggeliang@kylinos.cn>
+Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v2_0/2=5D_Squa?=
+ =?UTF-8?Q?sh_to_=22implement_mptcp_read=5Fsock=22_?= =?UTF-8?Q?v8?=
+Message-ID: <09e61616-8782-8e9f-2797-a1278d95039f@gmail.com>
+Content-Transfer-Encoding: quoted-printable
+Date: Thu, 10 Jul 2025 08:39:44 +0000
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 
-From: Geliang Tang <tanggeliang@kylinos.cn>
+Hi Geliang,
 
-Update the parameter of mptcp_recv_should_stop.
-Use mptcp_recv_should_stop at the end of the main loop too.
+Thank you for your modifications, that's great!
 
-Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
----
- net/mptcp/protocol.c | 20 +++++++++++---------
- 1 file changed, 11 insertions(+), 9 deletions(-)
+But sadly, our CI spotted some issues with it when trying to build it.
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index 32ca63a0825a..e8d26faaa51f 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4056,10 +4056,9 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 		.flags = flags,
- 	};
- 	struct sock *sk = sock->sk;
--	int shutdown = -1;
- 	ssize_t spliced;
-+	int ret, err;
- 	long timeo;
--	int ret;
- 
- 	/*
- 	 * We can't seek on a socket input
-@@ -4082,11 +4081,16 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 				break;
- 			if (sock_flag(sk, SOCK_DONE))
- 				break;
--			ret = mptcp_recv_should_stop(sk, timeo, &shutdown);
--			if (ret < 0 || shutdown == 1)
-+			err = mptcp_recv_should_stop(sk, timeo);
-+			if (err < 0) {
-+				if (err == -ESHUTDOWN) {
-+					if (__mptcp_move_skbs(sk))
-+						continue;
-+					break;
-+				}
-+				ret = err;
- 				break;
--			if (shutdown == 0)
--				continue;
-+			}
- 			/* if __mptcp_splice_read() got nothing while we have
- 			 * an skb in receive queue, we do not want to loop.
- 			 * This might happen with URG data.
-@@ -4106,9 +4110,7 @@ static ssize_t mptcp_splice_read(struct socket *sock, loff_t *ppos,
- 		release_sock(sk);
- 		lock_sock(sk);
- 
--		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
--		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
--		    signal_pending(current))
-+		if (mptcp_recv_should_stop(sk, timeo))
- 			break;
- 	}
- 
--- 
-2.48.1
+You can find more details there:
 
+  https://github.com/multipath-tcp/mptcp_=
+net-next/actions/runs/16190147090
+
+Status: failure
+Initiator: Matthieu =
+Baerts (NGI0)
+Commits: https://github.com/multipath-tcp/mptcp_net-next/comm=
+its/b9f1f8861133
+Patchwork: https://patchwork.kernel.=
+org/project/mptcp/list/?series=3D980902
+
+Feel free to reply to this email =
+if you cannot access logs, if you need
+some support to fix the error, if =
+this doesn't seem to be caused by your
+modifications or if the error is a =
+false positive one.
+
+Cheers,
+MPTCP GH Action bot
+Bot operated by Matthieu =
+Baerts (NGI0 Core)
