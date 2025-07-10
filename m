@@ -1,108 +1,229 @@
-Received: from mail-qk1-f180.google.com (mail-qk1-f180.google.com [209.85.222.180])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 5B0A5233735
-	for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 08:39:46 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.180
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 8854F1C861B
+	for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 09:10:49 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752136787; cv=none; b=SiZnz+6tyiatT/iX4qi6dWnWiGngmFQNzJ1j9Ld13jVh08q180oddEk+nIk9omzvOyR/fRqT0856bpvE9/sFeJ6ERL5Kk03ODPUnlJk1rpghizFkn/m/vjP00ehOpzbapxN5aynlhd+2Zw4ACZysb9avS2Nyb0J5pgxrsdaYNxU=
+	t=1752138649; cv=none; b=WgesIxUsOFqIXef+y2MdBrfNAa7f0pXyEx9EYJmFG+OKe+QNnuaQf4tyzVBVzNhC9jF+jSVLolpdhjfw60jy+sIb8AdWay84kjhOQNdG9Xf+OPb9rpZtU1S51690hNJVViH8uS/lSyfC4PQPFHho69AnSn7+h69z7l7ci+i9ciY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752136787; c=relaxed/simple;
-	bh=Y1bnBSXNsJ0CZID1Rk++wKOwtcCcXK/GvoIN+4MfXZQ=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=q84GuR9RDUvI3v5VTuiC7l0Fl/7X+RRPoSY5qvzj+qDqV0gqiiXPl+3fPuhntJXdY47irOCK6csG5eH5xpV00EMmuHKM1MNLWYJxJydtF9KPRLdMv3+kEXga5YiNSpCtG+4LLIBnAi6f1TZYds1O4P0ncXxDoZYw0TKObPZgCf4=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=CsjoaLAI; arc=none smtp.client-ip=209.85.222.180
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752138649; c=relaxed/simple;
+	bh=7rGcfQZaxQiLHz+Mtq0J6brhuSKcetZpfEr9hElOZCc=;
+	h=Message-ID:Subject:From:To:Cc:Date:In-Reply-To:References:
+	 Content-Type:MIME-Version; b=kdYB1zfb89jaXKVfXcxG0ZN5LC5jqzc7B8fXrD1IsPwKfe9sp2vUSgGhqeNVIJbYenwf0Oegjv5fVdhZ++FVkNTyL0duj257AA+obDKpPgRMPhRbtHxKT0cUuO/zLHnqagJZSOGHQ62L54wADImTmHiUR2SGIoOkN+OCsTIgiN0=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=ccS9uCwS; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CsjoaLAI"
-Received: by mail-qk1-f180.google.com with SMTP id af79cd13be357-7d3dd14a7edso115751285a.2
-        for <mptcp@lists.linux.dev>; Thu, 10 Jul 2025 01:39:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752136785; x=1752741585; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=COQ4ddfcPpXuf6AzgUxndYIuu4sjhdR15YQDe6U7D/A=;
-        b=CsjoaLAIYkAcfnAnjYU8XA5qWjozz3Mh+D4ayJYfVVKspk2DS0ya6ZCJ0/wHBiHTE1
-         0NdfOBmflLWqlsMGu24GaS11wn3sw7pKwtZqAI78vpyapZizeI4NJNPXVD4CMz9IQf6q
-         XHqSRiRit7oAAjAAC88YfYIP4J3dBAobN7sz0XhmuL6VRknioLUqAmWEwOCIjg3tC5ps
-         erOy2CXx8HA0lq/UYgX1mIFLpPcjwCcmSTu2Inw6PXb6z/vaDJCZyDB1erWeTtVdcm3n
-         mDEBMv/lEZbYyUccTi2Yl6Ke68AIB6mEG32l2S8SDxCWDuqcW9SXgrUZGSZqdhuCcUd/
-         2KwA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752136785; x=1752741585;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=COQ4ddfcPpXuf6AzgUxndYIuu4sjhdR15YQDe6U7D/A=;
-        b=Rnp3CC8guC+g/ML11/yHk7Uu3Lqi7UNwCKO0d803TRI8ZLNAd1cgZrR4+Av3OKLflf
-         w3imImE5oy5GMWthFW4Y83oD6eHi89LFEqgUjcYDfTxctLqwtYMyzbUD1DEogA+G9Ah5
-         FdyeMGNixGaAbMMzfGeoXS1jQFBMggoekJV4TNP8Y2/lA4NvM5zTHcc0J9oa0MK6O+k8
-         yiC9i38nx/ShtCbGrPepi4jNUxRZYHG7VzEZecJuoc3szkuG3WEgcCn5fR5e0M1zb407
-         xKyi2JhdgjP7UU1bJ8ixmeFywWmHG/2InG/lYOgt3iK9a3SrYs/ruUoe4TAjDL3Hj8t2
-         okpw==
-X-Gm-Message-State: AOJu0YxcXu49nlB7W31cph4fHrcC02S9Zg012gJK0U6s2e3ZfN6iSx1+
-	dW8T/vn8VJbfOmmGHITqIsuPTHZP4qnJc0icy741DDq8LghLsiV5uyuAanRb
-X-Gm-Gg: ASbGncvIyGNwfy1HOn8dTDyy/QzbnHNYqn1TqLXLm/am0By/6IYnQGqv2m7MhD2NJp2
-	RoFQEt9BSYDh5JejxXFB0Bb7+5nVd+WN7qJTv0bFgrMV9kBJIRZq0cXljeX3h7EHTaoXr0BvzRg
-	ifN8K9QU5KZI0yuaQfSAhgKEbLTa13cEyrod+wpGQCUvpZNqZ9ydSnuIqpb1DpYFQlMxjaEZzDJ
-	xuRw5anAu0wJahVZdLYwMxDEo6NJO1BnA1OkiumsSNANgbq4EjINNjMDKxIEr1F1wtNQK0Gkt4C
-	/JmoThCbctbhAPVduKfmmPUOwtpSRQ+7ah5SxPVSxrZu3DHxDaXYeqahvMSBDT3TArDLezVAv58
-	=
-X-Google-Smtp-Source: AGHT+IHhdK/iBLxKzVmEVK3Vd5qLjfnGPgmqBZckA450t071sPaTfXa8HU9iJgXS7tM7dgUVSviS4Q==
-X-Received: by 2002:a05:620a:4803:b0:7d4:114:f81d with SMTP id af79cd13be357-7dccabf2811mr197035585a.0.1752136785200;
-        Thu, 10 Jul 2025 01:39:45 -0700 (PDT)
-Received: from [127.0.0.1] ([52.234.214.51])
-        by smtp.gmail.com with ESMTPSA id af79cd13be357-7dcdc0f8689sm77136985a.43.2025.07.10.01.39.44
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 10 Jul 2025 01:39:44 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1752135065.git.tanggeliang@kylinos.cn>
-References: <cover.1752135065.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v2_0/2=5D_Squa?=
- =?UTF-8?Q?sh_to_=22implement_mptcp_read=5Fsock=22_?= =?UTF-8?Q?v8?=
-Message-ID: <09e61616-8782-8e9f-2797-a1278d95039f@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Thu, 10 Jul 2025 08:39:44 +0000
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="ccS9uCwS"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 2A606C4CEF1;
+	Thu, 10 Jul 2025 09:10:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1752138649;
+	bh=7rGcfQZaxQiLHz+Mtq0J6brhuSKcetZpfEr9hElOZCc=;
+	h=Subject:From:To:Cc:Date:In-Reply-To:References:From;
+	b=ccS9uCwSplwtylnc+7KnftFBT+0Ulm1MzbkRyS7YD85Iz4RkrrSdsnJnfjzUaky7x
+	 vCjwC99aaI00KZWl9nNLFId9uuuEH45yEMkFq1v6oGk1J34rVXM9JLH7mk5B1Y1i/2
+	 QkhKFEW6Z3C9hjKgBddytbpEUM4GV5ym08w0q8Yr4rWO3YLPMymOnihVunwn/2fElL
+	 rn2uhdW+Nh96yxglk/FrURlWNPYJffMdAq5CcNf0mUhl8FiUzn8Bxs3yPX7zY6wp6M
+	 FvRsHRvAcjVk7Oraex+UurRK+DwXXulCT58zpVeZcSIo81IjCN/dvaRXLXVVmGNRUQ
+	 4KyLdW/EU1TRw==
+Message-ID: <0346b37ff8021446d3be6839132141daf277ffb6.camel@kernel.org>
+Subject: Re: [PATCH mptcp-next v7 3/4] mptcp: implement .splice_read
+From: Geliang Tang <geliang@kernel.org>
+To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev, hare@kernel.org
+Cc: Geliang Tang <tanggeliang@kylinos.cn>
+Date: Thu, 10 Jul 2025 17:10:44 +0800
+In-Reply-To: <63354366-79aa-4799-9af3-5f5a379ea4eb@redhat.com>
+References: <cover.1751880561.git.tanggeliang@kylinos.cn>
+	 <7c269511e2ff8cf2a44934cb0f12554770c5c7c6.1751880561.git.tanggeliang@kylinos.cn>
+	 <63354366-79aa-4799-9af3-5f5a379ea4eb@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.56.0-1 
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 
-Hi Geliang,
+Hi Paolo,
 
-Thank you for your modifications, that's great!
+On Tue, 2025-07-08 at 16:52 +0200, Paolo Abeni wrote:
+> On 7/7/25 11:34 AM, Geliang Tang wrote:
+> > From: Geliang Tang <tanggeliang@kylinos.cn>
+> > 
+> > This patch implements .splice_read interface of mptcp struct
+> > proto_ops
+> > as mptcp_splice_read() with reference to tcp_splice_read().
+> > 
+> > Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+> > ---
+> >  net/mptcp/protocol.c | 136
+> > +++++++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 136 insertions(+)
+> > 
+> > diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+> > index fc429d175ede..4638d4be2b98 100644
+> > --- a/net/mptcp/protocol.c
+> > +++ b/net/mptcp/protocol.c
+> > @@ -4023,6 +4023,140 @@ static int mptcp_read_sock(struct sock *sk,
+> > read_descriptor_t *desc,
+> >  	return copied;
+> >  }
+> >  
+> > +/*
+> > + * MPTCP splice context
+> > + */
+> > +struct mptcp_splice_state {
+> > +	struct pipe_inode_info *pipe;
+> > +	size_t len;
+> > +	unsigned int flags;
+> > +};
+> > +
+> > +static int mptcp_splice_data_recv(read_descriptor_t *rd_desc,
+> > struct sk_buff *skb,
+> > +				  unsigned int offset, size_t len)
+> > +{
+> > +	struct mptcp_splice_state *mss = rd_desc->arg.data;
+> > +	int ret;
+> > +
+> > +	ret = skb_splice_bits(skb, skb->sk, offset, mss->pipe,
+> > +			      min(rd_desc->count, len), mss-
+> > >flags);
+> > +	if (ret > 0)
+> > +		rd_desc->count -= ret;
+> > +	return ret;
+> > +}
+> 
+> I have mixed feeling WRT the above. I'm wondering if we should reuse
+> the
+> same code already existing in TCP, moving tcp_spice_state definition
+> in
+> some shared hdr and macking tcp_splice_data_recv not static.
+> 
+> > +static int __mptcp_splice_read(struct sock *sk, struct
+> > mptcp_splice_state *mss)
+> > +{
+> > +	/* Store MPTCP splice context information in
+> > read_descriptor_t. */
+> > +	read_descriptor_t rd_desc = {
+> > +		.arg.data = mss,
+> > +		.count	  = mss->len,
+> > +	};
+> > +
+> > +	return mptcp_read_sock(sk, &rd_desc,
+> > mptcp_splice_data_recv);
+> > +}
+> > +
+> > +/**
+> > + *  mptcp_splice_read - splice data from MPTCP socket to a pipe
+> > + * @sock:	socket to splice from
+> > + * @ppos:	position (not valid)
+> > + * @pipe:	pipe to splice to
+> > + * @len:	number of bytes to splice
+> > + * @flags:	splice modifier flags
+> > + *
+> > + * Description:
+> > + *    Will read pages from given socket and fill them into a pipe.
+> > + *
+> > + **/
+> > +static ssize_t mptcp_splice_read(struct socket *sock, loff_t
+> > *ppos,
+> > +				 struct pipe_inode_info *pipe,
+> > size_t len,
+> > +				 unsigned int flags)
+> > +{
+> > +	struct mptcp_splice_state mss = {
+> > +		.pipe = pipe,
+> > +		.len = len,
+> > +		.flags = flags,
+> > +	};
+> > +	struct sock *sk = sock->sk;
+> > +	ssize_t spliced;
+> > +	long timeo;
+> > +	int ret;
+> > +
+> > +	/*
+> > +	 * We can't seek on a socket input
+> > +	 */
+> > +	if (unlikely(*ppos))
+> > +		return -ESPIPE;
+> > +
+> > +	spliced = 0;
+> > +	ret = 0;
+> > +
+> > +	lock_sock(sk);
+> > +
+> > +	timeo = sock_rcvtimeo(sk, sock->file->f_flags &
+> > O_NONBLOCK);
+> > +	while (mss.len) {
+> > +		ret = __mptcp_splice_read(sk, &mss);
+> > +		if (ret < 0) {
+> > +			break;
+> > +		} else if (!ret) {
+> > +			if (spliced)
+> > +				break;
+> > +			if (sock_flag(sk, SOCK_DONE))
+> > +				break;
 
-But sadly, our CI spotted some issues with it when trying to build it.
+I noticed that this SOCK_DONE flag is also checked in
+tcp_recvmsg_locked() but not in mptcp_recvmsg(). I wonder if this flag
+should also be checked in mptcp_recvmsg() too.
 
-You can find more details there:
+> > +			if (sk->sk_err) {
+> > +				ret = sock_error(sk);
+> > +				break;
+> > +			}
+> > +			if (sk->sk_shutdown & RCV_SHUTDOWN) {
+> > +				if (__mptcp_move_skbs(sk))
+> > +					continue;
+> > +				break;
+> > +			}
+> > +			if (sk->sk_state == TCP_CLOSE) {
+> > +				ret = -ENOTCONN;
+> > +				break;
+> > +			}
+> > +			if (!timeo) {
+> > +				ret = -EAGAIN;
+> > +				break;
+> > +			}
+> > +			/* if __mptcp_splice_read() got nothing
+> > while we have
+> > +			 * an skb in receive queue, we do not want
+> > to loop.
+> > +			 * This might happen with URG data.
+> > +			 */
+> > +			if (!skb_queue_empty(&sk-
+> > >sk_receive_queue))
+> > +				break;
+> > +			ret = sk_wait_data(sk, &timeo, NULL);
+> > +			if (ret < 0)
+> > +				break;
+> > +			if (signal_pending(current)) {
+> > +				ret = sock_intr_errno(timeo);
+> > +				break;
+> > +			}
+> 
+> I think that moving the above if statement before the queue empty
+> check
+> will not change the overall behavior.
+> 
+> With that in place you could factor out an
+> 
+> bool mptcp_recv_should_stop(struct sock *sk, int err)
 
-  https://github.com/multipath-tcp/mptcp_=
-net-next/actions/runs/16190147090
+This helper can also be used in tcp_recvmsg_locked and tcp_splice_read
+too. What about rename it as tcp_recv_should_stop, then add it in
+include/net/tcp.h and use it for both TCP and MPTCP. WDYT?
 
-Status: failure
-Initiator: Matthieu =
-Baerts (NGI0)
-Commits: https://github.com/multipath-tcp/mptcp_net-next/comm=
-its/b9f1f8861133
-Patchwork: https://patchwork.kernel.=
-org/project/mptcp/list/?series=3D980902
+Thanks,
+-Geliang
 
-Feel free to reply to this email =
-if you cannot access logs, if you need
-some support to fix the error, if =
-this doesn't seem to be caused by your
-modifications or if the error is a =
-false positive one.
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu =
-Baerts (NGI0 Core)
+> 
+> helper from mptcp_recvmsg() and use it verbatim in both in
+> mptcp_recvmsg() and here.
+> 
+> Side note: suggestions for a better helper name welcome!
+> 
+> /P
+> 
