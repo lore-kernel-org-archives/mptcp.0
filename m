@@ -1,129 +1,109 @@
-Received: from mail-qk1-f181.google.com (mail-qk1-f181.google.com [209.85.222.181])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 01BE221CC5D
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 08:44:50 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=209.85.222.181
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id CF0BF27A915
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:57 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752223492; cv=none; b=KGdrNvTwvfS0YUkx3SK/BzzC9IFUHT/FWmTKTpqnu7Y87eWco7q5oKW+fC7McK5G31MQEyH8QL49zmbo844P6zJ8/qzW2b7k3igvfNkjPvSFzh5JgwHT31iTs3yM9N8IcwQfApLPFoqegfU4ywuUex5C62Pnlt+ACVJeHpTE18Y=
+	t=1752226200; cv=none; b=qqe/Zi7yUKnfSutOm9/K945s2B0wCariWgrvwiMFumGlUJqKpUFLeGC59vcav70POE0hoaDbBFt7za/tWxO3IwdpW/NxJ8P+FBKlNkO82FCnKZtkjsybN/UmcvVHmgZGi4OXj8b3OXhk6GWoLuX2xF1YnjItpx0Pi7dqRX350WM=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752223492; c=relaxed/simple;
-	bh=GOTSGEhTABcFlk9/Za4xjAJXmWessVGQ5U5pPgyISso=;
-	h=Content-Type:From:To:Cc:In-Reply-To:References:Subject:Message-ID:
-	 Date:MIME-Version; b=PSQHrhepx6y3jgSdrvey4hIePCLAzgVZtPKNERH+r2IEa33Rs0vm1tZaHEwXgIC+ku9NjUlSKezI2x2w41R/ykradY9ZFmGQjwYWc/va8upP0/depAxgsyHQAviXWnn9rnuF3RZvf1MaMP+AbPuZdPrB3XFdAr9ZG9WzzUX9+os=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com; spf=pass smtp.mailfrom=gmail.com; dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b=fHQiaD/Z; arc=none smtp.client-ip=209.85.222.181
-Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=none dis=none) header.from=gmail.com
-Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=gmail.com
+	s=arc-20240116; t=1752226200; c=relaxed/simple;
+	bh=sU3mpPl7sK2j1m32ntos1YLuyK5q36Rs/WELxr0FDuY=;
+	h=From:To:Subject:Date:Message-ID:MIME-Version:content-type; b=gtOKfbgcb61OIsHxM3cg+XSx5d2AJNJ4QxMI7Wc0tp/oGGvDW8dukS+eW/kWLjhadMuXhrEvPGGD8Odp6vlbEEy788Onx4tdYMc/xm5z+KGo3YLIdWyrDi1ySp9O/elE8DghA97YTsgb1Ln7zqSNsBdE5dunqvSV+EAd1qa9Fz4=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=I2/BY3bU; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fHQiaD/Z"
-Received: by mail-qk1-f181.google.com with SMTP id af79cd13be357-7de159778d4so47626585a.1
-        for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 01:44:50 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20230601; t=1752223490; x=1752828290; darn=lists.linux.dev;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:from:to:cc:subject:date
-         :message-id:reply-to;
-        bh=kH4bkgm6skyeKFVCc19mkLNa/aX7kw0pYLfAi/sL284=;
-        b=fHQiaD/Zkcee7/GUgahJbxNaJ26K1ilVohZZYIr+YbLmAgng7g3bo7b9nrrwKc/hqT
-         hklzawAf76nZgWNi5s6mhOhssWupOrRI/uORFlLoY4h2QuXAbcRgg9CKrb+qfLr7AdN2
-         6OQKfNLIkNZ6wgo04fYiy34XM3Uu1mdHwc9FFYpDe6EI34KMMuZw/0fuwWkSRIW7YPMk
-         2Vn78KBMMbImTsQQRoXAXB6Hk25tVAH5fGk7/M7Hzxh5CMqH1ywhP+luqVhoQ//E/Nn4
-         cAQ0BAnn+qUor1qGlaeA0YeMg1XosjVjTerk69nGJtPmZ9J6upjL0L+LQnFITJz07OD1
-         lD2Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20230601; t=1752223490; x=1752828290;
-        h=mime-version:date:content-transfer-encoding:message-id:subject
-         :references:in-reply-to:reply-to:cc:to:from:x-gm-message-state:from
-         :to:cc:subject:date:message-id:reply-to;
-        bh=kH4bkgm6skyeKFVCc19mkLNa/aX7kw0pYLfAi/sL284=;
-        b=BrvyjT2vIFboqmeMmPQFKL8afzKQXV6xliVNODVC7KZLIb1SftqkCZWuvLH3I/iGH3
-         DPZ8gos0b1Ts25DQiUb9628dgoazPbKHN9M5g31MXl5PUqkjb4aV1g7zxs7gzPmzJTdx
-         VGvn4krp6bKpu2DiYhCXUOPXnkN2sV89l54oyrvViAiZuF7zFbzbpNzvT0OjEdn+rSSV
-         uEOIti3X2rc4rHUCiyLeNDLVBrixCaSQNbajO34oTzspvXDPYrfgEzjjtEtd1X9dZd4y
-         i/FjFPsCOX6PnwdoaZFX8t+eoEjrHWnYJiD/k5nXxeAeAe+cIME05Ja6JCbCeY35dngm
-         S+mw==
-X-Gm-Message-State: AOJu0YwJDsgh6+kRvGbLAI68a7u7SSCC+BUA68uBsHy5jxPqYz07u5a7
-	/AQTBpYNwS8wvxPm5kxQUzh0HXvsVBuBwm4WrL+BhFsNGi4aPbyDx/7Pv6rObu4=
-X-Gm-Gg: ASbGncvhYtUcdyex2KcPDlMbE2O7mJECnPVZGWbEFcgvNLYZMJC2zYhWp6/lypWYbFX
-	jfU5DbTmltF5eboFDz2eu2yWCTIxiHq6xQaqibAw2kXyhWcryAu27lJq0xDrG5orHhijj1yI4Ti
-	/1vjMp+Fu5piVbqqDq0tWAH+fTMlhBkqQtyxhZq7sPJ5u+vUVDKevQq8ZzKgxQeg2I4AUP8nup/
-	34rny4laIia9FaNcs/UaX3f51OE7kTGMTkIxjukv0t/YzmAFNQm6wbXE9kInPwp6avj5mLcuwbv
-	4c3uTWXxf92xFIWQ+PWgSAYqrqW4c+4Gh37j506fKbdDaXZRwWgDxAz5XLbeC8e/1BwGYNRNRI1
-	/uxJiS6Y14xsP/N3gnqLkPz6zfwzMdi0IAqRqBQ==
-X-Google-Smtp-Source: AGHT+IEejkPuQF//OlC6kXIimzimqvy+6OoNUjzbNi3ItiKZpCT5RfpeCAdzjLfcdMxKmFzUKa6vzw==
-X-Received: by 2002:a05:620a:261a:b0:7d3:f1c9:174d with SMTP id af79cd13be357-7de04fb0df8mr342810585a.20.1752223489512;
-        Fri, 11 Jul 2025 01:44:49 -0700 (PDT)
-Received: from [127.0.0.1] ([172.183.172.137])
-        by smtp.gmail.com with ESMTPSA id 6a1803df08f44-70497dd0be7sm17837436d6.114.2025.07.11.01.44.48
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Fri, 11 Jul 2025 01:44:48 -0700 (PDT)
-Content-Type: text/plain; charset=utf-8
-From: MPTCP CI <wpasupplicant.patchew@gmail.com>
-To: Geliang Tang <tanggeliang@kylinos.cn>
-Cc: mptcp@lists.linux.dev
-Reply-To: mptcp@lists.linux.dev
-In-Reply-To: <cover.1752197546.git.tanggeliang@kylinos.cn>
-References: <cover.1752197546.git.tanggeliang@kylinos.cn>
-Subject: =?UTF-8?Q?Re=3A_=5BPATCH_mptcp-next_v4_0/2=5D_Squa?=
- =?UTF-8?Q?sh_to_=22implement_mptcp_read=5Fsock=22_?= =?UTF-8?Q?v8?=
-Message-ID: <1bb8db0f-2303-8403-b5ab-79e69b85aa24@gmail.com>
-Content-Transfer-Encoding: quoted-printable
-Date: Fri, 11 Jul 2025 08:44:48 +0000
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="I2/BY3bU"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752226196;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=wPeU8HjB5E8ol+ouf8ApcNm6O9ijkLTDu0vvpW4CJrk=;
+	b=I2/BY3bUoVyAPPEObgHAeQOdgpGYsSKRuQAzudLXxJs0sJyF7wHS7nrzfuX12Xl7YxQ8I6
+	bNXRKvGySW4SQig9iMzbj2bBcfxpkDSxJ+c29K+b50wWknxW8o5Z7lGwBWiYPR1OPdkABb
+	dC+gJSlmTzTjLGDWWG8SIf7xy5HikCc=
+Received: from mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+ relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-650-PYu1ynz0PPK51aYwxlbYqg-1; Fri,
+ 11 Jul 2025 05:29:54 -0400
+X-MC-Unique: PYu1ynz0PPK51aYwxlbYqg-1
+X-Mimecast-MFC-AGG-ID: PYu1ynz0PPK51aYwxlbYqg_1752226193
+Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
+	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+	(No client certificate requested)
+	by mx-prod-mc-03.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id CCC041955DB2
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:53 +0000 (UTC)
+Received: from gerbillo.redhat.com (unknown [10.44.33.145])
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id EF22318002B5
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:52 +0000 (UTC)
+From: Paolo Abeni <pabeni@redhat.com>
+To: mptcp@lists.linux.dev
+Subject: [PATCH v4 mptcp-net 0/5] mptcp: fix fallback-related races
+Date: Fri, 11 Jul 2025 11:29:40 +0200
+Message-ID: <cover.1752221786.git.pabeni@redhat.com>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
+X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: ConMh37AZXVlrmGwNZW5-wzAAtgTxvkpl2_GReNjTv0_1752226193
+X-Mimecast-Originator: redhat.com
+Content-Transfer-Encoding: 8bit
+content-type: text/plain; charset="US-ASCII"; x-default=true
 
-Hi Geliang,
+This series contains 3 fixes somewhat related to various races we have
+while handling fallback and 2 small follow-up likely more suited for
+net-next.
 
-Thank you for your modifications, that's great!
+The root cause of the issues addressed here is that the check for
+"we can fallback to tcp now" and the related action are not atomic. That
+also applies to fallback due to MP_FAIL - where the window race is even
+wider.
 
-Our CI did some validations and here is its report:
+Address the issue introducing an additional spinlock to bundle together
+all the relevant events, as per patch 1 and 2.
 
-- KVM Validation: normal: Success! =E2=9C=85
-- KVM Validation: debug: =
-Success! =E2=9C=85
-- KVM Validation: btf-normal (only bpftest_all): Success=
-! =E2=9C=85
-- KVM Validation: btf-debug (only bpftest_all): Success! =
-=E2=9C=85
-- Task: https://github.com/multipath-tcp/mptcp_net-next/actions/r=
-uns/16214201123
+Note that mptcp_disconnect() unconditionally
+clears the fallback status (zeroing msk->flags) but don't tuch the
+`allows_infinite_fallback` flag. Such issue is addressed in patch 3.
 
-Initiator: Matthieu Baerts (NGI0)
-Commits: https://github.=
-com/multipath-tcp/mptcp_net-next/commits/377a22ce925b
-Patchwork: https://patchwork.kernel.org/project/mptcp/list/?series=3D981305
+Patch 4 cleans up a bit the fallback code, introducing specific MIB for
+each FB reason, and patch 5 drops the, hopefully now redundant
+pr_fallback().
+---
+v3 -> v4:
+ - fic MIB exposed names
 
+v2 -> v3:
+ - mptcp_do_fallback  -> mptcp_try_fallback
+ - refactored patch 3/5
+ - changed mibs names, increment fail only when the protocol mandate it
+ - fix W=1 warn in patch 5/5
 
-If there are some issues, you can reproduce them using the same =
-environment as
-the one used by the CI thanks to a docker image, e.g.:
+Paolo Abeni (5):
+  mptcp: make fallback action and fallback decision atomic
+  mptcp: plug races between subflow fail and subflow creation
+  mptcp: reset fallback status gracefully at disconnect() time
+  mptcp: track fallbacks accurately via mibs
+  mptcp: remove pr_fallback()
 
-    $ cd [kernel source code]
-    $ docker run -v "${PWD}:${PWD}:rw" -w =
-"${PWD}" --privileged --rm -it \
-        --pull always =
-mptcp/mptcp-upstream-virtme-docker:latest \
-        auto-normal
+ net/mptcp/ctrl.c     |  4 +-
+ net/mptcp/mib.c      |  5 +++
+ net/mptcp/mib.h      |  7 ++++
+ net/mptcp/options.c  |  6 ++-
+ net/mptcp/pm.c       |  8 +++-
+ net/mptcp/protocol.c | 97 ++++++++++++++++++++++++++++++++++----------
+ net/mptcp/protocol.h | 35 ++++++++--------
+ net/mptcp/subflow.c  | 40 ++++++++++--------
+ 8 files changed, 140 insertions(+), 62 deletions(-)
 
-For more details:
+-- 
+2.50.0
 
-    https://github.com/multipath-tcp/mptcp-upstream-virt=
-me-docker
-
-
-Please note that despite all the efforts that have been already=
- done to have a
-stable tests suite when executed on a public CI like here, =
-it is possible some
-reported issues are not due to your modifications. =
-Still, do not hesitate to
-help us improve that ;-)
-
-Cheers,
-MPTCP GH Action bot
-Bot operated by Matthieu Baerts (NGI0 =
-Core)
