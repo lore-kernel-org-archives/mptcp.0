@@ -1,97 +1,93 @@
-Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
+Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.133.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111B11CD215
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 10:04:28 +0000 (UTC)
-Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4EDCC2D8385
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 13:51:28 +0000 (UTC)
+Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.133.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752228269; cv=none; b=L2292d05/0oUMDlaEMhM7q98pcIQiTe8f9M8N6WBaush+sIqwH7KHcvyoK/h+J4DeLy5kia7Gsyf2euY7Ojz+OjQdUW9Jf11wpJBiVJAOjsrWL5nN5Ml+bW6icechZY/7AWtbFXhwmkMr2wUiXyCCVn8BL0iFN/jy24WOwcwX1k=
+	t=1752241890; cv=none; b=ryo8O6pgFqejoUJS8H95cLMY4i9RewiTdmmob+G1OOZgJSNBO+29c758AApiDGICBHgiqGphYmkebnrDKOTy2HmXe43/9ELf2JJcl80nm7iqKjI1lVaug52V6EU94TBC6ofFfUfZotvvmqNa0KTV+O4skbKKdqxSeCNXPctrh2I=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752228269; c=relaxed/simple;
-	bh=q4VslJNivTv/hdjdRTkDybf7KXsIZSU9Igqrz6XtSMI=;
-	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
-	 In-Reply-To:Content-Type; b=IY9z5uJUfxBD0LPuyP0eY7UsDf9sdVk/9Rqx5z1uFJCve4vsLaoWfoW+catWPadQiI3qDKPvxO63BGoE8p4xIBfdkUpr1zx844+17JFJT1VTN58LYUvTCy06RyrdRTbN8su/hUumL4HGJGFzem0WwAdZMXjPkKILsnS8jG8SVzA=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6RG2eeF; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752241890; c=relaxed/simple;
+	bh=r5kAfkAi7w0iHfmiEDwWKDifCtkaA0K0JX1JQliviHs=;
+	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
+	 In-Reply-To:Content-Type; b=UU7g0QYWYgGm8GQbDqSwFDp2IiRXDAYZx57o1IPiLDMHeJ53LVgN2+LD3woR6NeZiYzZuFDQmo98KLL5k+e2CD1pWwhtt2QUAtqOb9Q9CppDFP1/rUrUe2GbTDVnh72TGv+Yg+bG8ZdGXXIo0HxxY1jLZ09SJ86wJC8sbHDU7ro=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=gFq/1ht5; arc=none smtp.client-ip=170.10.133.124
+Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
+Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6RG2eeF"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1426AC4CEED;
-	Fri, 11 Jul 2025 10:04:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752228268;
-	bh=q4VslJNivTv/hdjdRTkDybf7KXsIZSU9Igqrz6XtSMI=;
-	h=Date:Subject:From:To:References:In-Reply-To:From;
-	b=T6RG2eeFe1mCQRY+74D053XAmHzXFGTlJ3O6Sr6T6BJAyG37U5wBR7Gh6a1ZBEHYM
-	 +JSaMRNPedPSORUUYqER39djs4d/S3CbxT62tmXl2NmH4Sg0fNyog9xjXB6IZweKxm
-	 /ntzyvP+xBnT7VLqLAKZ3xWZAxPQy7OP5pxNgzEFozi6HNXiaLj54rk8ywlZ/ZJ1wy
-	 spEDMG8jxtYYWcoCBxLyxLvlNDx1zfg4YgcyWNIi27+X0MpeHHyx/q9hWXk4PaaPXf
-	 Ja26zSr7k7d++YHJDYEm67uAHs4AMxvkEmMkE4ALw9ZF/3o1KwnlAwzIB+ykagbEGo
-	 uACgw/tYXZGqQ==
-Message-ID: <954ef380-7eb4-4801-9914-45606aa737b5@kernel.org>
-Date: Fri, 11 Jul 2025 12:04:26 +0200
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="gFq/1ht5"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1752241887;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=hFuHWPcNNWz7UckBc6B1oAWTMXJCjP/14SJr3vRPU9s=;
+	b=gFq/1ht5is2mMTCXKCzqX4EeCQKZ2W9jENsXwI39OoqJDhXLo77LBY8d9lf9QJdo9HEGrA
+	FqjKqvxojF0IXwnTVL9BaoYkJ0usLhl/ZSO9aUnHmkzw6nmp49s+QJGuJtbgn+53V4Y+6N
+	GP9SYs2ghK027nFXtrj/Q2j6tadUv5s=
+Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
+ [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.3, cipher=TLS_AES_256_GCM_SHA384) id
+ us-mta-686-GUQKpjHIO4-9G4_DGMEcYQ-1; Fri, 11 Jul 2025 09:51:26 -0400
+X-MC-Unique: GUQKpjHIO4-9G4_DGMEcYQ-1
+X-Mimecast-MFC-AGG-ID: GUQKpjHIO4-9G4_DGMEcYQ_1752241885
+Received: by mail-wm1-f72.google.com with SMTP id 5b1f17b1804b1-4538a2f4212so11669605e9.2
+        for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 06:51:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20230601; t=1752241885; x=1752846685;
+        h=content-transfer-encoding:in-reply-to:from:content-language
+         :references:to:subject:user-agent:mime-version:date:message-id
+         :x-gm-message-state:from:to:cc:subject:date:message-id:reply-to;
+        bh=hFuHWPcNNWz7UckBc6B1oAWTMXJCjP/14SJr3vRPU9s=;
+        b=vqBUAmQy6fLr+/0g6G3lkVCyhdfk/VsZ4i0KdcGz7jIIwdJ7iUlgNEllWiIerIkYP4
+         hUNO1GWH+DlAjm7ZVw016JlONOfGO5AIBx6AWZmlP7oYZbe0MiWqZnrTzqdpupCFRDTf
+         6x5DjPqK0l1JK5OdeQiPRvs1xEjzAmO1gbdLi9DnpcRrmflRPc+h6UGkhR1mlKK+306O
+         dWfQWzbqCNuGsDZ8fWowPI70L9FgUh2cwQZBPRUOmKmKzomHnYZFRhzyXS1feNPNO7BP
+         GW9m3JdLuziTRvkTJi9UFoNEBCZgjeSCqpzkO5u5/nLljH+bJbOdqpWiZ0Yxalh2nZ2L
+         TEiA==
+X-Forwarded-Encrypted: i=1; AJvYcCVegdlhGfvxpWqXpgu+zsm+tjbl12rJGHYZkEAv14YG5UA5bxdx7RbfDcIKXmV/gR4yzt+SgQ==@lists.linux.dev
+X-Gm-Message-State: AOJu0YzIGez5WGXZTk1VXsuM7iDTCbx6nEgmLrqr7P8jnhGZnYKvXLwd
+	ekeivmyhn0ZEo0J51eSieReBEBuDK6sCRJwb1UMcaEOGAgkJnwLjpn7j5EsLC4TAkqGhEUfl88e
+	ZQmrYMQ/061ON9lcbsKsy6RK7+ysB7KtCBeaLe8qJK0pwuZHPFUNOSJw6
+X-Gm-Gg: ASbGncuwUTyEsi0R1ITpXn9cIVg1gIoR2G1RsJid1yQ1pRFL2zDqOy47E46LezG3VuU
+	b3zic+G+4ZRteFQTQXjQ36b+RZDjY2yH3izsJfmTBDSlCGmwNV3+8Dkoau4ryn4NLQ5Ssq80qP4
+	loH3VuLFvn8NXMYggS6L9ulKnV8d3JnFFvNY2a0Nez6FPWYW1H9x+1Gq2nbKj1JYcZSDm4HmQm4
+	YuMCVRMYvBMlymgye4LLbMKa2t/x9tAFZ+oERTKDjhj/Mos85HWRcDvu23ZZX/dfuOeAvhMCHxr
+	XGnHxSkIB0Q1b2ku+xV8hAPy58NpHbZrA4vQYj9p9RcCVLNrdEKECtquD/Bmt6VOCGsfU2Ufy9H
+	ufdDxnolOn2w=
+X-Received: by 2002:a05:600c:46c3:b0:453:23fe:ca86 with SMTP id 5b1f17b1804b1-454f4272789mr33324445e9.4.1752241884754;
+        Fri, 11 Jul 2025 06:51:24 -0700 (PDT)
+X-Google-Smtp-Source: AGHT+IFk2cVnXpeaN3wQkYQ/5dMadB8ILpqDFYZD8J4gcn/FhnmvJdUAYvUUee60E1q935d8YXP9xg==
+X-Received: by 2002:a05:600c:46c3:b0:453:23fe:ca86 with SMTP id 5b1f17b1804b1-454f4272789mr33323305e9.4.1752241883574;
+        Fri, 11 Jul 2025 06:51:23 -0700 (PDT)
+Received: from ?IPV6:2a0d:3344:2716:4b10:9b16:cae0:6065:2782? ([2a0d:3344:2716:4b10:9b16:cae0:6065:2782])
+        by smtp.gmail.com with ESMTPSA id 5b1f17b1804b1-454dd439051sm48259605e9.8.2025.07.11.06.51.22
+        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+        Fri, 11 Jul 2025 06:51:23 -0700 (PDT)
+Message-ID: <5364ad7f-a7b3-4244-bfc9-00fb3ff2e67a@redhat.com>
+Date: Fri, 11 Jul 2025 15:51:22 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-User-Agent: Mozilla Thunderbird Beta
+User-Agent: Mozilla Thunderbird
 Subject: Re: [PATCH v4 mptcp-net 0/5] mptcp: fix fallback-related races
-Content-Language: en-GB, fr-BE
-From: Matthieu Baerts <matttbe@kernel.org>
-To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
+To: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev
 References: <cover.1752221786.git.pabeni@redhat.com>
  <697f6cb1-1783-4b1c-8d76-75aad0faf8b2@kernel.org>
-Autocrypt: addr=matttbe@kernel.org; keydata=
- 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
- lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
-Organization: NGI0 Core
+From: Paolo Abeni <pabeni@redhat.com>
 In-Reply-To: <697f6cb1-1783-4b1c-8d76-75aad0faf8b2@kernel.org>
+X-Mimecast-Spam-Score: 0
+X-Mimecast-MFC-PROC-ID: 0wC2Rq8KDjwWiBQpS_51YySrtNZU1rrbiBHaCEY4ctA_1752241885
+X-Mimecast-Originator: redhat.com
+Content-Language: en-US
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-On 11/07/2025 11:36, Matthieu Baerts wrote:
-> Hi Paolo,
-> 
+On 7/11/25 11:36 AM, Matthieu Baerts wrote:
 > On 11/07/2025 11:29, Paolo Abeni wrote:
 >> This series contains 3 fixes somewhat related to various races we have
 >> while handling fallback and 2 small follow-up likely more suited for
@@ -119,34 +115,17 @@ On 11/07/2025 11:36, Matthieu Baerts wrote:
 > Thank you for the new version, it looks good to me!
 > 
 > Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
-> 
+
+Thank you!
+
 > I can apply this series, restart syzkaller on top of it, and send
 > patches 1-3 on Monday if everything is OK. WDYT?
 
-I just applied them in our tree, I will now restart syzkaller. On
-Monday, I will send them upstream if there are no objections.
+I would wait a little more for syzkaller. The underlying issue is not
+very recent and the fix is not that invasive, I guess it's not a tragedy
+if it reaches Linus' tree the following week.
 
-New patches for t/upstream-net and t/upstream:
-- 158a4c639b9b: mptcp: make fallback action and fallback decision atomic
-- afbefa78d049: mptcp: plug races between subflow fail and subflow creation
-- a741374bcb64: mptcp: reset fallback status gracefully at disconnect() time
-- Results: 46fddb9ffaee..67147340a318 (export-net)
-- Results: ac3befbcaa5b..65264ae05855 (export)
+But no strong opinion either ways.
 
-New patches for t/upstream:
-- 54d5646bfb71: mptcp: track fallbacks accurately via mibs
-- 58f3909466f6: mptcp: remove pr_fallback()
-- Results: 65264ae05855..712a5aad742a (export)
-
-Tests are now in progress:
-
-- export-net:
-https://github.com/multipath-tcp/mptcp_net-next/commit/f5d6eefb3351a27f96c3d62119772169e4be6552/checks
-- export:
-https://github.com/multipath-tcp/mptcp_net-next/commit/455f606172fae38e46b6bc4b5aa6ee1e5564f0ad/checks
-
-Cheers,
-Matt
--- 
-Sponsored by the NGI0 Core fund.
+/P
 
