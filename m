@@ -1,33 +1,33 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 86A2027AC5C
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:36:35 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 111B11CD215
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 10:04:28 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752226596; cv=none; b=brj8facPgxkPHcYQv7EoKiBb2aYQ0zC1TA+4tZ17ZUZfeU2w3KrHTXl1i4TkvGOc3fSXQYwYS+HS/2yZy/mmyfSp1VDnBPGX0DRrfWxeJHL16f2+ehMqah2ct4dUNuC8xZcgk2i5tiK+SL66EzN42E5RfoHMkd+ojwYoi41K1ak=
+	t=1752228269; cv=none; b=L2292d05/0oUMDlaEMhM7q98pcIQiTe8f9M8N6WBaush+sIqwH7KHcvyoK/h+J4DeLy5kia7Gsyf2euY7Ojz+OjQdUW9Jf11wpJBiVJAOjsrWL5nN5Ml+bW6icechZY/7AWtbFXhwmkMr2wUiXyCCVn8BL0iFN/jy24WOwcwX1k=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752226596; c=relaxed/simple;
-	bh=Zic+cDXO2+Px5V1u+S5LIMMA2JygxD+5VI5WVeIuc1I=;
-	h=Message-ID:Date:MIME-Version:Subject:To:References:From:
-	 In-Reply-To:Content-Type; b=k7Rx6IgDrZ92BC9AYCa3fvdtwLKxZ3jPR4vJMdPClJZGLApzakSsG9tVRzOgjRxzKN6ZhYjKs9eukFfai9Q1ebuWqNlmeo/BWzaYTXfZY7KmJx5kmNOADocumezlqyhiNDIzY+T/AJVLJiYBX9GcWwCXJOH0/E2gtWfNERSnOyM=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=K2TZrydB; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752228269; c=relaxed/simple;
+	bh=q4VslJNivTv/hdjdRTkDybf7KXsIZSU9Igqrz6XtSMI=;
+	h=Message-ID:Date:MIME-Version:Subject:From:To:References:
+	 In-Reply-To:Content-Type; b=IY9z5uJUfxBD0LPuyP0eY7UsDf9sdVk/9Rqx5z1uFJCve4vsLaoWfoW+catWPadQiI3qDKPvxO63BGoE8p4xIBfdkUpr1zx844+17JFJT1VTN58LYUvTCy06RyrdRTbN8su/hUumL4HGJGFzem0WwAdZMXjPkKILsnS8jG8SVzA=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=T6RG2eeF; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="K2TZrydB"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 89F5AC4CEF8;
-	Fri, 11 Jul 2025 09:36:34 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="T6RG2eeF"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 1426AC4CEED;
+	Fri, 11 Jul 2025 10:04:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752226595;
-	bh=Zic+cDXO2+Px5V1u+S5LIMMA2JygxD+5VI5WVeIuc1I=;
-	h=Date:Subject:To:References:From:In-Reply-To:From;
-	b=K2TZrydBWLBbyE/A+7eSNDRCtUFWRnyz+25GmHLi2fQsDZfrEPd5y1YxmKHOlHq7A
-	 GCdo63PsIi9YeRmSm8MQDbUTgGkIsSeJMcejDO9MWlJa5jSNG9HqNpLm3nj+zv/Wg8
-	 DKtUx4rtfTz2IDs1C2/lIVDxfvwb0w6lO+4uC+QdazXYK1ja4zmrI4JGX2kMGjd6hM
-	 AZ3LjY9si+Zam5X96aiJGxeoCHGj5POwezwXdid5eahBb0dt70YAMMjslRpLKfizlW
-	 71pc5slW43AijKAUd2tdko8zRowa8UwXjL256mciT0p8UHv/4BvzLu/oEuwrXrmKJ+
-	 wBuxaJmb8f1oA==
-Message-ID: <697f6cb1-1783-4b1c-8d76-75aad0faf8b2@kernel.org>
-Date: Fri, 11 Jul 2025 11:36:32 +0200
+	s=k20201202; t=1752228268;
+	bh=q4VslJNivTv/hdjdRTkDybf7KXsIZSU9Igqrz6XtSMI=;
+	h=Date:Subject:From:To:References:In-Reply-To:From;
+	b=T6RG2eeFe1mCQRY+74D053XAmHzXFGTlJ3O6Sr6T6BJAyG37U5wBR7Gh6a1ZBEHYM
+	 +JSaMRNPedPSORUUYqER39djs4d/S3CbxT62tmXl2NmH4Sg0fNyog9xjXB6IZweKxm
+	 /ntzyvP+xBnT7VLqLAKZ3xWZAxPQy7OP5pxNgzEFozi6HNXiaLj54rk8ywlZ/ZJ1wy
+	 spEDMG8jxtYYWcoCBxLyxLvlNDx1zfg4YgcyWNIi27+X0MpeHHyx/q9hWXk4PaaPXf
+	 Ja26zSr7k7d++YHJDYEm67uAHs4AMxvkEmMkE4ALw9ZF/3o1KwnlAwzIB+ykagbEGo
+	 uACgw/tYXZGqQ==
+Message-ID: <954ef380-7eb4-4801-9914-45606aa737b5@kernel.org>
+Date: Fri, 11 Jul 2025 12:04:26 +0200
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,9 +37,10 @@ MIME-Version: 1.0
 User-Agent: Mozilla Thunderbird Beta
 Subject: Re: [PATCH v4 mptcp-net 0/5] mptcp: fix fallback-related races
 Content-Language: en-GB, fr-BE
+From: Matthieu Baerts <matttbe@kernel.org>
 To: Paolo Abeni <pabeni@redhat.com>, mptcp@lists.linux.dev
 References: <cover.1752221786.git.pabeni@redhat.com>
-From: Matthieu Baerts <matttbe@kernel.org>
+ <697f6cb1-1783-4b1c-8d76-75aad0faf8b2@kernel.org>
 Autocrypt: addr=matttbe@kernel.org; keydata=
  xsFNBFXj+ekBEADxVr99p2guPcqHFeI/JcFxls6KibzyZD5TQTyfuYlzEp7C7A9swoK5iCvf
  YBNdx5Xl74NLSgx6y/1NiMQGuKeu+2BmtnkiGxBNanfXcnl4L4Lzz+iXBvvbtCbynnnqDDqU
@@ -84,42 +85,65 @@ Autocrypt: addr=matttbe@kernel.org; keydata=
  JY6dglzGKnCi/zsmp2+1w559frz4+IC7j/igvJGX4KDDKUs0mlld8J2u2sBXv7CGxdzQoHaz
  lzVbFe7fduHbABmYz9cefQpO7wDE/Q==
 Organization: NGI0 Core
-In-Reply-To: <cover.1752221786.git.pabeni@redhat.com>
+In-Reply-To: <697f6cb1-1783-4b1c-8d76-75aad0faf8b2@kernel.org>
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 
-Hi Paolo,
-
-On 11/07/2025 11:29, Paolo Abeni wrote:
-> This series contains 3 fixes somewhat related to various races we have
-> while handling fallback and 2 small follow-up likely more suited for
-> net-next.
+On 11/07/2025 11:36, Matthieu Baerts wrote:
+> Hi Paolo,
 > 
-> The root cause of the issues addressed here is that the check for
-> "we can fallback to tcp now" and the related action are not atomic. That
-> also applies to fallback due to MP_FAIL - where the window race is even
-> wider.
+> On 11/07/2025 11:29, Paolo Abeni wrote:
+>> This series contains 3 fixes somewhat related to various races we have
+>> while handling fallback and 2 small follow-up likely more suited for
+>> net-next.
+>>
+>> The root cause of the issues addressed here is that the check for
+>> "we can fallback to tcp now" and the related action are not atomic. That
+>> also applies to fallback due to MP_FAIL - where the window race is even
+>> wider.
+>>
+>> Address the issue introducing an additional spinlock to bundle together
+>> all the relevant events, as per patch 1 and 2.
+>>
+>> Note that mptcp_disconnect() unconditionally
+>> clears the fallback status (zeroing msk->flags) but don't tuch the
+>> `allows_infinite_fallback` flag. Such issue is addressed in patch 3.
+>>
+>> Patch 4 cleans up a bit the fallback code, introducing specific MIB for
+>> each FB reason, and patch 5 drops the, hopefully now redundant
+>> pr_fallback().
+>> ---
+>> v3 -> v4:
+>>  - fic MIB exposed names
 > 
-> Address the issue introducing an additional spinlock to bundle together
-> all the relevant events, as per patch 1 and 2.
+> Thank you for the new version, it looks good to me!
 > 
-> Note that mptcp_disconnect() unconditionally
-> clears the fallback status (zeroing msk->flags) but don't tuch the
-> `allows_infinite_fallback` flag. Such issue is addressed in patch 3.
+> Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 > 
-> Patch 4 cleans up a bit the fallback code, introducing specific MIB for
-> each FB reason, and patch 5 drops the, hopefully now redundant
-> pr_fallback().
-> ---
-> v3 -> v4:
->  - fic MIB exposed names
+> I can apply this series, restart syzkaller on top of it, and send
+> patches 1-3 on Monday if everything is OK. WDYT?
 
-Thank you for the new version, it looks good to me!
+I just applied them in our tree, I will now restart syzkaller. On
+Monday, I will send them upstream if there are no objections.
 
-Reviewed-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
+New patches for t/upstream-net and t/upstream:
+- 158a4c639b9b: mptcp: make fallback action and fallback decision atomic
+- afbefa78d049: mptcp: plug races between subflow fail and subflow creation
+- a741374bcb64: mptcp: reset fallback status gracefully at disconnect() time
+- Results: 46fddb9ffaee..67147340a318 (export-net)
+- Results: ac3befbcaa5b..65264ae05855 (export)
 
-I can apply this series, restart syzkaller on top of it, and send
-patches 1-3 on Monday if everything is OK. WDYT?
+New patches for t/upstream:
+- 54d5646bfb71: mptcp: track fallbacks accurately via mibs
+- 58f3909466f6: mptcp: remove pr_fallback()
+- Results: 65264ae05855..712a5aad742a (export)
+
+Tests are now in progress:
+
+- export-net:
+https://github.com/multipath-tcp/mptcp_net-next/commit/f5d6eefb3351a27f96c3d62119772169e4be6552/checks
+- export:
+https://github.com/multipath-tcp/mptcp_net-next/commit/455f606172fae38e46b6bc4b5aa6ee1e5564f0ad/checks
 
 Cheers,
 Matt
