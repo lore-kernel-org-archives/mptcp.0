@@ -1,52 +1,52 @@
 Received: from us-smtp-delivery-124.mimecast.com (us-smtp-delivery-124.mimecast.com [170.10.129.124])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id DA27C1F3B85
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:30:09 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B22541F3B85
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:30:11 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=170.10.129.124
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752226211; cv=none; b=HTNvxf+gPPr9NmSIAZ6AieOOPQkqWJs3vJQOT+0AImBO/AN7+XrjRVvmES3Y0oe8IczfXGIxtZW0RqAtTYPCHFxbzJzNFQ5Nvzn2jN581jCQUhld92HBtRCEPbqAMrywk2zu4+bjP76VCknTADkAL6Md4cbAm0qyyZDW/I+ucQY=
+	t=1752226213; cv=none; b=iNN4wYGEUS8jXHm247i+ung5mg/zEKoSFJWIURm624wwXmulCRG6kXPRTdqQotkKe6nkGnkyQDw4VaXplA3Vtk9JicTqPy1QP0fUOmWk9hPqYpZ8CwVLilGHBfpOYtqDFINses7K9YL36fIdmGPSBPYaAJIo41P626AMNJluQ2s=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752226211; c=relaxed/simple;
-	bh=pDULvE0RKlOZG3DamYApZm18zHkD2DYpQr/nK1LsS3g=;
+	s=arc-20240116; t=1752226213; c=relaxed/simple;
+	bh=ekbbgZhRvbnvk76Ddv1SI6XUxAMlztZNg/2qyLGVsLo=;
 	h=From:To:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version:content-type; b=dgrrLxAgPo77lq/96SBSrEWmEli7VdEGKpiKdWp3cVkb+YQrhKOkKgO3fMTKaAE033KCx5x2oxzfHDtm1VR3iNPZ1avT98k9pmHIPrGUVpiUjRWr7mJgk48s3qTtOLJF5iLNwU5mUi/v+aKU1Vzk6065KhNtOOZyCtFly9oSbY0=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=QQGnTcHa; arc=none smtp.client-ip=170.10.129.124
+	 MIME-Version:content-type; b=Jc4l6zz1EcLUeA8nyLVDs/ZzcpGIBIg8A4xSIm6dCXChQbgoVjWqnNTRAiR6iGHtfa1WZKKf1WaVTfQud6kO7Mt2Jwq4c2/ZdOm8HnDCCA5rLTb64r2y4aT9Fsfebe827AUw4tZbCmP5ijtGkMLPI89npWTRVaPGY1xm+7H/M4w=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com; spf=pass smtp.mailfrom=redhat.com; dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b=O6dFGnEh; arc=none smtp.client-ip=170.10.129.124
 Authentication-Results: smtp.subspace.kernel.org; dmarc=pass (p=quarantine dis=none) header.from=redhat.com
 Authentication-Results: smtp.subspace.kernel.org; spf=pass smtp.mailfrom=redhat.com
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="QQGnTcHa"
+	dkim=pass (1024-bit key) header.d=redhat.com header.i=@redhat.com header.b="O6dFGnEh"
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1752226208;
+	s=mimecast20190719; t=1752226210;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:mime-version:mime-version:content-type:content-type:
 	 content-transfer-encoding:content-transfer-encoding:
 	 in-reply-to:in-reply-to:references:references;
-	bh=tXXPEph5Cdo2wybBzPRhFmolXpbd4Rtj+ghIoZPzDIo=;
-	b=QQGnTcHa7FsR3vAN+xSQqWD/JObmAq72YmTQTH8oYQTpovVWAOBFNGUKLfVC8vdN8xvdOp
-	i3azK4K+F3RNGqNsmge7fkn6EpNUABHjgiK5qn9G4OWdbkMRdnfzoDBZroQZVca4fj/oUD
-	tlYqdtpvqkPyW+qTVkUdmA32pJZOnYw=
-Received: from mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com
- (ec2-54-186-198-63.us-west-2.compute.amazonaws.com [54.186.198.63]) by
+	bh=sl4UfrsyzP9qoz2cMMP55RMyRqX02eHGja2JQZr6GXw=;
+	b=O6dFGnEhaZ6NNhT4dKx6P6VymCCIKvpfzD5fSQvg4lMzlpLXUMLxfVFfi1ZJryOaGjh6EW
+	ns+93Ld2QP8/RNY0V90hURnwYzxOw2JR6kInULBWk5RBCvAOF2kEF3kcL1EjNNS9rbFril
+	oLadU4saHQPfeg22vSQkvHLlbXago4A=
+Received: from mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com
+ (ec2-35-165-154-97.us-west-2.compute.amazonaws.com [35.165.154.97]) by
  relay.mimecast.com with ESMTP with STARTTLS (version=TLSv1.3,
- cipher=TLS_AES_256_GCM_SHA384) id us-mta-15-5GD_1D8kOySzxOk6T4N-3A-1; Fri,
- 11 Jul 2025 05:30:06 -0400
-X-MC-Unique: 5GD_1D8kOySzxOk6T4N-3A-1
-X-Mimecast-MFC-AGG-ID: 5GD_1D8kOySzxOk6T4N-3A_1752226206
+ cipher=TLS_AES_256_GCM_SHA384) id us-mta-163-TA_meyk6NBGGeu56cYjMAQ-1; Fri,
+ 11 Jul 2025 05:30:09 -0400
+X-MC-Unique: TA_meyk6NBGGeu56cYjMAQ-1
+X-Mimecast-MFC-AGG-ID: TA_meyk6NBGGeu56cYjMAQ_1752226208
 Received: from mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com [10.30.177.93])
 	(using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
 	 key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
 	(No client certificate requested)
-	by mx-prod-mc-05.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id C76AE1955F2E
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:30:00 +0000 (UTC)
+	by mx-prod-mc-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTPS id 0AFAC18FDE33
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:58 +0000 (UTC)
 Received: from gerbillo.redhat.com (unknown [10.44.33.145])
-	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id E98271800285
-	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:59 +0000 (UTC)
+	by mx-prod-int-06.mail-002.prod.us-west-2.aws.redhat.com (Postfix) with ESMTP id 31E8A1800285
+	for <mptcp@lists.linux.dev>; Fri, 11 Jul 2025 09:29:56 +0000 (UTC)
 From: Paolo Abeni <pabeni@redhat.com>
 To: mptcp@lists.linux.dev
-Subject: [PATCH v4 mptcp-net 5/5] mptcp: remove pr_fallback()
-Date: Fri, 11 Jul 2025 11:29:45 +0200
-Message-ID: <c66130f43bde6d98090a65fb899d3d90d86f806c.1752221786.git.pabeni@redhat.com>
+Subject: [PATCH v4 mptcp-net 3/5] mptcp: reset fallback status gracefully at disconnect() time
+Date: Fri, 11 Jul 2025 11:29:43 +0200
+Message-ID: <afbade1a6fa43236499233643000799dae65d977.1752221786.git.pabeni@redhat.com>
 In-Reply-To: <cover.1752221786.git.pabeni@redhat.com>
 References: <cover.1752221786.git.pabeni@redhat.com>
 Precedence: bulk
@@ -57,95 +57,51 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 X-Scanned-By: MIMEDefang 3.4.1 on 10.30.177.93
 X-Mimecast-Spam-Score: 0
-X-Mimecast-MFC-PROC-ID: BSyXcJqkSzRVp6AtwkeCxpaK9UNpjP6tVUG0fv0TeqY_1752226206
+X-Mimecast-MFC-PROC-ID: volXUfroj8QRWTKPhmgT7D0WWKqP8RN37PgUglopZ3g_1752226208
 X-Mimecast-Originator: redhat.com
 Content-Transfer-Encoding: 8bit
 content-type: text/plain; charset="US-ASCII"; x-default=true
 
-We can now track fully the fallback status of a given connection
-via the relevant mibs, the mentioned helper is redundant. Remove
-it completely.
+mptcp_disconnect() clears the fallback bit unconditionally, without
+touching the associated flags.
 
+The bit clear is safe, as no fallback operation can race with that -
+all subflow are already in TCP_CLOSE status thanks to the previous
+FASTCLOSE - but we need to consistently reset all the fallback related
+status.
+
+Also acquire the relevant lock, to avoid fouling static analyzers.
+
+Fixes: b29fcfb54cd7 ("mptcp: full disconnect implementation")
 Signed-off-by: Paolo Abeni <pabeni@redhat.com>
 ---
 v2 -> v3:
-  - dropped unused variable in subflow_state_change()
+  - drop entirely the blocking section
 ---
- net/mptcp/options.c  | 1 -
- net/mptcp/protocol.c | 1 -
- net/mptcp/protocol.h | 3 ---
- net/mptcp/subflow.c  | 4 ----
- 4 files changed, 9 deletions(-)
+ net/mptcp/protocol.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/net/mptcp/options.c b/net/mptcp/options.c
-index b49a8b3ffe00..3c08beffbfea 100644
---- a/net/mptcp/options.c
-+++ b/net/mptcp/options.c
-@@ -982,7 +982,6 @@ static bool check_fully_established(struct mptcp_sock *msk, struct sock *ssk,
- 			MPTCP_INC_STATS(sock_net(ssk), MPTCP_MIB_FALLBACKFAILED);
- 			goto reset;
- 		}
--		pr_fallback(msk);
- 		return false;
- 	}
- 
 diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index d4e17d99cbc9..9f9dea72757d 100644
+index 49498cdd17f0..46bc5cc5a4d7 100644
 --- a/net/mptcp/protocol.c
 +++ b/net/mptcp/protocol.c
-@@ -1166,7 +1166,6 @@ static void mptcp_update_infinite_map(struct mptcp_sock *msk,
- 	}
- 
- 	mptcp_subflow_ctx(ssk)->send_infinite_map = 0;
--	pr_fallback(msk);
- }
- 
- #define MPTCP_MAX_GSO_SIZE (GSO_LEGACY_MAX_SIZE - (MAX_TCP_HEADER + 1))
-diff --git a/net/mptcp/protocol.h b/net/mptcp/protocol.h
-index 74579743264f..db50b216143a 100644
---- a/net/mptcp/protocol.h
-+++ b/net/mptcp/protocol.h
-@@ -1254,13 +1254,10 @@ static inline bool mptcp_try_fallback(struct sock *ssk, int fb_mib)
- 	return true;
- }
- 
--#define pr_fallback(a) pr_debug("%s:fallback to TCP (msk=%p)\n", __func__, a)
--
- static inline void mptcp_early_fallback(struct mptcp_sock *msk,
- 					struct mptcp_subflow_context *subflow,
- 					int fb_mib)
- {
--	pr_fallback(msk);
- 	subflow->request_mptcp = 0;
- 	WARN_ON_ONCE(!__mptcp_try_fallback(msk, fb_mib));
- }
-diff --git a/net/mptcp/subflow.c b/net/mptcp/subflow.c
-index 600e59bba363..3f1b62a9fe88 100644
---- a/net/mptcp/subflow.c
-+++ b/net/mptcp/subflow.c
-@@ -551,7 +551,6 @@ static void subflow_finish_connect(struct sock *sk, const struct sk_buff *skb)
- 				goto do_reset;
- 			}
- 
--			pr_fallback(msk);
- 			goto fallback;
- 		}
- 
-@@ -1855,14 +1854,11 @@ static void subflow_state_change(struct sock *sk)
- {
- 	struct mptcp_subflow_context *subflow = mptcp_subflow_ctx(sk);
- 	struct sock *parent = subflow->conn;
--	struct mptcp_sock *msk;
- 
- 	__subflow_state_change(sk);
- 
--	msk = mptcp_sk(parent);
- 	if (subflow_simultaneous_connect(sk)) {
- 		WARN_ON_ONCE(!mptcp_try_fallback(sk, MPTCP_MIB_SIMULTCONNFALLBACK));
--		pr_fallback(msk);
- 		subflow->conn_finished = 1;
- 		mptcp_propagate_state(parent, sk, subflow, NULL);
- 	}
+@@ -3142,7 +3142,16 @@ static int mptcp_disconnect(struct sock *sk, int flags)
+ 	 * subflow
+ 	 */
+ 	mptcp_destroy_common(msk, MPTCP_CF_FASTCLOSE);
++
++	/* The first subflow is already in TCP_CLOSE status, the following
++	 * can't overlap with a fallback anymore
++	 */
++	spin_lock_bh(&msk->fallback_lock);
++	msk->allow_subflows = true;
++	msk->allow_infinite_fallback = true;
+ 	WRITE_ONCE(msk->flags, 0);
++	spin_unlock_bh(&msk->fallback_lock);
++
+ 	msk->cb_flags = 0;
+ 	msk->recovery = false;
+ 	WRITE_ONCE(msk->can_ack, false);
 -- 
 2.50.0
 
