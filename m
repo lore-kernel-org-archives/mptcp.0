@@ -1,38 +1,38 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 4E692225779
-	for <mptcp@lists.linux.dev>; Sun, 13 Jul 2025 09:43:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id C8A0B225779
+	for <mptcp@lists.linux.dev>; Sun, 13 Jul 2025 09:43:58 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752399837; cv=none; b=cnII9wFamB6tXhXqiJNBL5deSyHrWlwkcHPqENvf6qj2b6hXhoCWhwhLUvGTWbd0GZm7RN97GXxMPBOc/iPXrH1X8t78JAf1pkgy3rYoE2YgjU5a/1CJZLKelCQmjfnYFX0DNrB4saie5NA4dn/W7EAhZMYjRdKbEcpZBb9M2Q8=
+	t=1752399838; cv=none; b=VMR0TFQAJYSaboutimkuiCPG3O8UHIvsIYi1l3Y9b/s2bZ7UkLQzgDuKe3i2BWMdgQXom7eKqpkJsSzAeHh7pEQMkW9pkrb2iyan1rxKMzo8fZSkllrJvsU7rftOQieXXZNAoAFHGSvvA8BPx2/m0XwgVUSUsri+YkU8GFwUDOc=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752399837; c=relaxed/simple;
-	bh=ztJ5v23SP8lHnncz0rUEiEDmaOQASV5sx52Y3nV4qog=;
+	s=arc-20240116; t=1752399838; c=relaxed/simple;
+	bh=AJvHHEUgPwIfbiffHalaneXA5BZELWoGjQehMawpHM0=;
 	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
-	 MIME-Version; b=AtpHVQ8TqKW3GfMyMpsgS+XgXSz8XeiOTJEp8ZivWNu7t+jX6bblHeUOA8G25YRfSANTlW8bpE3MDlU8t0PUy17AmZEvqJ2JmUryFlBU+wBmfHnkBU/DvATlw99IsK6weGVdNSFc+g/tuOrtYmJ1yxZjYR5hWuMxLEeyk3ndo9c=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=jKmaIZpG; arc=none smtp.client-ip=10.30.226.201
+	 MIME-Version; b=KzxdfWF6JmBi11NBhYqhhz+IEZpz3KIujxD7egkqTLejmKoF5M8rKis8wo3RSjBy9e99geCdqxN/PmrjuHU7Ch0lbaxl27/Gd3etXOhh2E0Bls0b2gc5IZzC6qi20eG1LUrAJScAHf/UP77v1VRsPEh13GRlxz/FtUs2EBM4DRM=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=dtPbOfJ8; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="jKmaIZpG"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 3994AC4CEF6;
-	Sun, 13 Jul 2025 09:43:56 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="dtPbOfJ8"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id A334DC4CEF7;
+	Sun, 13 Jul 2025 09:43:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752399837;
-	bh=ztJ5v23SP8lHnncz0rUEiEDmaOQASV5sx52Y3nV4qog=;
+	s=k20201202; t=1752399838;
+	bh=AJvHHEUgPwIfbiffHalaneXA5BZELWoGjQehMawpHM0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-	b=jKmaIZpGdHX4p4fuQZM2mlttXSNWYBZ0rnGRFa1+iQdInapre6CJDkmzqAcUAjuqv
-	 K26S0JKk0qonE4b84VayIOL7BZyxXgxf76S4HCaY/c7RMe3Yy3JLIMY8eHFH7uXavP
-	 zfHIof5Ohk2CQQHpcVhdK1Udxb2o0vGIyBTBw6gHeRHpwSh80i03NULXUNUXgJVfQI
-	 MVgv6Oq9NttiEnFVJudeTpRRqznmYs7zuL5Ssc4y5pYd1imcag1GP3alZ/cWUQN6Dw
-	 V5L+1Ff8CssvxZQCjQAzdKAXbqOsRthdaHogVmagQpBpDURMBAzBBjy0GuFAFjr4iA
-	 c9F+XM5V+Kn+A==
+	b=dtPbOfJ8tRQ+lS2YPLV2pW4PT9r8dg90A/rRXNSkBC7AczlXlyPv4+sJ9ydAibfe4
+	 0duiKkpeuTDPMVRqDmB99EGzqafJK+0sijbX1I43qPNHPLmidm/AtSMN2wZb1tfiNq
+	 U18vt/FK8fgma0l1bF4M4P12GEWwGXBQCt74Yhpka65kh4V7PPHJe8bzcSillqXWNK
+	 y86zeWuBZ4800cTuDxr/QISis6u24xGkxRCxB2T9uqYn7ZnURth3nr9wGwWEXPnjS/
+	 pS0yv+TDlMUqWYuAuvhQcpR4zCwJnyuVuf4RcxLikoVUXLCFuE0AIWzXFjtmfF14w0
+	 /UjiCdbfAupGw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 2/9] mptcp: implement .read_sock
-Date: Sun, 13 Jul 2025 17:43:42 +0800
-Message-ID: <3a2ccde3aab3a874a4c6738615053f0e7734a047.1752399660.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 3/9] tcp: drop release and lock again in splice_read
+Date: Sun, 13 Jul 2025 17:43:43 +0800
+Message-ID: <36dba482a6f8669135ff23e8c3b2f614ab49a262.1752399660.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
 In-Reply-To: <cover.1752399660.git.tanggeliang@kylinos.cn>
 References: <cover.1752399660.git.tanggeliang@kylinos.cn>
@@ -46,114 +46,30 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-nvme_tcp_try_recv() needs to call .read_sock interface of struct
-proto_ops, but it's not implemented in MPTCP.
+In the main loop of tcp_splice_read(), release_sock() is invoked to release
+the socket lock, and then lock_sock() is immediately invoked to hold the
+socket lock again.
 
-This patch implements it with reference to __tcp_read_sock() and
-__mptcp_recvmsg_mskq().
+It looks like these two calls are useless, so let's drop them.
 
-Corresponding to tcp_recv_skb(), a new helper for MPTCP named
-mptcp_recv_skb() is added to peek a skb from sk->sk_receive_queue.
-
-Compared with __mptcp_recvmsg_mskq(), mptcp_read_sock() uses
-sk->sk_rcvbuf as the max read length. The LISTEN status is checked
-before the while loop, and mptcp_recv_skb() and mptcp_cleanup_rbuf()
-are invoked after the loop. In the loop, all flags checks for
-__mptcp_recvmsg_mskq() are removed.
-
-Reviewed-by: Hannes Reinecke <hare@kernel.org>
 Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
 ---
- net/mptcp/protocol.c | 62 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ net/ipv4/tcp.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
-index c2233802b7a1..288f989ab078 100644
---- a/net/mptcp/protocol.c
-+++ b/net/mptcp/protocol.c
-@@ -4017,6 +4017,66 @@ static __poll_t mptcp_poll(struct file *file, struct socket *sock,
- 	return mask;
- }
+diff --git a/net/ipv4/tcp.c b/net/ipv4/tcp.c
+index 5aafe569d4d0..c81866ec4333 100644
+--- a/net/ipv4/tcp.c
++++ b/net/ipv4/tcp.c
+@@ -866,8 +866,6 @@ ssize_t tcp_splice_read(struct socket *sock, loff_t *ppos,
  
-+static struct sk_buff *mptcp_recv_skb(struct sock *sk)
-+{
-+	if (skb_queue_empty(&sk->sk_receive_queue))
-+		__mptcp_move_skbs(sk);
-+	return skb_peek(&sk->sk_receive_queue);
-+}
-+
-+/*
-+ * Note:
-+ *	- It is assumed that the socket was locked by the caller.
-+ */
-+static int mptcp_read_sock(struct sock *sk, read_descriptor_t *desc,
-+			   sk_read_actor_t recv_actor)
-+{
-+	struct mptcp_sock *msk = mptcp_sk(sk);
-+	size_t len = sk->sk_rcvbuf;
-+	struct sk_buff *skb;
-+	int copied = 0;
-+
-+	if (sk->sk_state == TCP_LISTEN)
-+		return -ENOTCONN;
-+	while ((skb = mptcp_recv_skb(sk)) != NULL) {
-+		u32 offset = MPTCP_SKB_CB(skb)->offset;
-+		u32 data_len = skb->len - offset;
-+		u32 size = min_t(size_t, len - copied, data_len);
-+		int count;
-+
-+		count = recv_actor(desc, skb, offset, size);
-+		if (count <= 0) {
-+			if (!copied)
-+				copied = count;
-+			break;
-+		}
-+
-+		copied += count;
-+
-+		if (count < data_len) {
-+			MPTCP_SKB_CB(skb)->offset += count;
-+			MPTCP_SKB_CB(skb)->map_seq += count;
-+			msk->bytes_consumed += count;
-+			break;
-+		}
-+
-+		mptcp_eat_recv_skb(sk, skb);
-+		msk->bytes_consumed += count;
-+
-+		if (copied >= len)
-+			break;
-+	}
-+
-+	mptcp_rcv_space_adjust(msk, copied);
-+
-+	if (copied > 0) {
-+		mptcp_recv_skb(sk);
-+		mptcp_cleanup_rbuf(msk, copied);
-+	}
-+
-+	return copied;
-+}
-+
- static const struct proto_ops mptcp_stream_ops = {
- 	.family		   = PF_INET,
- 	.owner		   = THIS_MODULE,
-@@ -4037,6 +4097,7 @@ static const struct proto_ops mptcp_stream_ops = {
- 	.recvmsg	   = inet_recvmsg,
- 	.mmap		   = sock_no_mmap,
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
+ 		if (!tss.len || !timeo)
+ 			break;
+-		release_sock(sk);
+-		lock_sock(sk);
  
- static struct inet_protosw mptcp_protosw = {
-@@ -4141,6 +4202,7 @@ static const struct proto_ops mptcp_v6_stream_ops = {
- 	.compat_ioctl	   = inet6_compat_ioctl,
- #endif
- 	.set_rcvlowat	   = mptcp_set_rcvlowat,
-+	.read_sock	   = mptcp_read_sock,
- };
- 
- static struct proto mptcp_v6_prot;
+ 		if (sk->sk_err || sk->sk_state == TCP_CLOSE ||
+ 		    (sk->sk_shutdown & RCV_SHUTDOWN) ||
 -- 
 2.48.1
 
