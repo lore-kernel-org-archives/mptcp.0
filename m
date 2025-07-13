@@ -1,38 +1,41 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 9D7061DF26B
-	for <mptcp@lists.linux.dev>; Sun, 13 Jul 2025 09:43:54 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 14F341DF26B
+	for <mptcp@lists.linux.dev>; Sun, 13 Jul 2025 09:43:55 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752399835; cv=none; b=RImC4NKwHHWFHDL53vdKzgLBEeWyUNanlvkH884RISYfKTvL/hIbZIfxEJAqxSfgyeBdQ8OjWmj0r+V7mVT5lNT2R4Qahs4eFWgg/bac6tkCeYd4YIO3m08JwKFBgtWhHa/mUsa6iuQK0ZqQBHGjxKbNdqMdpMgW6OnSUtLYYQ8=
+	t=1752399837; cv=none; b=jZfPBcmI5y/K2ZnqJZ/UlqoyAPj0PT35xVdeRH1UchiyafcwxEYGti2+n1/evORHjgSLawHAmJedeEuLRrqkLP08Jn4DUwOjvPrDpSs21KYYWz3cwvJ2JTw+hZ9PjE9P8AgQ99tgT07BKgB32VF/S2Ds4kUmQMmvxzliFxSoMS8=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752399835; c=relaxed/simple;
-	bh=J0HagOcu4gQex/Td+LmF4yo1IfH8RbZ0Hqx3eKbuc+I=;
-	h=From:To:Cc:Subject:Date:Message-ID:MIME-Version; b=l26+CLkL0yOom96TGi6RU6FYe3i08MhQ83C1womDpTN3M+KiUVQ4v8M7MuX4EKgCT0LlovsBTr1TUxFF9ql14u2SWAmqK+QcwjnTeoYEFnsKzzs3F6FRm6NtRkBo1VAPR2AXxLOjmGEvr+YQzJdFGeLcAyxvqWHNleqBQjl3Nos=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=SIvhn/lU; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752399837; c=relaxed/simple;
+	bh=20do/M+FED549W6DKGJEOIhn4PWQQUwjPwuQVSx6Vrs=;
+	h=From:To:Cc:Subject:Date:Message-ID:In-Reply-To:References:
+	 MIME-Version; b=aJG9G5rAxUdpRRYDsdcflJoDqNmoCrj6g6M6yESQT95b2An0T3DNPqXDCRaJJeX7eyxSGaiW1atYp3qidk8FnEU3lqJu1WpMW3LqGwMZRGuTZiPsSBKYV5G8MkF2N0d0VJ7IHLiu9o1bKrcoGWPPwjFPEzGK9vgV9XzrHiXL6js=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=XvQUmH8w; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="SIvhn/lU"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id ED8C6C4CEE3;
-	Sun, 13 Jul 2025 09:43:52 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="XvQUmH8w"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id AAB06C4CEF5;
+	Sun, 13 Jul 2025 09:43:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752399834;
-	bh=J0HagOcu4gQex/Td+LmF4yo1IfH8RbZ0Hqx3eKbuc+I=;
-	h=From:To:Cc:Subject:Date:From;
-	b=SIvhn/lUVk4hxIY1AsMF3bbythqFXcI2rZanMygVlzwynKx8iWIwnjvC1cWDz4vpr
-	 4oNgqQ1d9idrIEQcL1/sorQGYDcWs3u5SIUXtffNOqR7N8LwTiCfcnmsLFfOE/Na0b
-	 MR083gjgI4a9ZeHEeaBAZ39MnqgI7cOdYQcTgApDbNRatvyZ4FXYIlf2fC8pto09k+
-	 aeJPVpaItE4pXodLTQC1UI293jvcejq9K3NQE3VZa2uw07ZL4bqT3JSMvPxouxXlc3
-	 2PrTtZsYOdclWxTIkukG2Xa0JLix7JMpbfaBPV0g6Ozpv3Ov/0snBZcgszyHdPlRYX
-	 dlt0p4rKYZ+sg==
+	s=k20201202; t=1752399835;
+	bh=20do/M+FED549W6DKGJEOIhn4PWQQUwjPwuQVSx6Vrs=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+	b=XvQUmH8wsA5ljRzpBPTqY6bxHr87zWiIl6zDkt5MJkyBTtoqCOttLktD/TElUFTPC
+	 WE0cuAm6Mw+b9XPMLlHAgINrbNxLhk7h+P30PjQ+SSD++g474pVaaUMcrbAlG1JVmj
+	 Qrt0DS+EvnrB2h3RW7ial1wTs14ck0dWMTOrXKI1jVCC+i3WfBWNmT1cUdmmUYLk4J
+	 4OJPsQayaVNnlVpA/Ft5AvEcSuOKYSMLewVQB75fAhLWcJbanfqFMv7nGIEyxBmVH6
+	 sfK3g65IxIja7wlKhbosHUGD3f/AaTU8IQPPQJEIGi0bVKcBexKn+38a/qzgeG/4te
+	 4o0vmN3tAqhDw==
 From: Geliang Tang <geliang@kernel.org>
 To: mptcp@lists.linux.dev,
 	hare@kernel.org
 Cc: Geliang Tang <tanggeliang@kylinos.cn>
-Subject: [PATCH mptcp-next v9 0/9] implement mptcp read_sock
-Date: Sun, 13 Jul 2025 17:43:40 +0800
-Message-ID: <cover.1752399660.git.tanggeliang@kylinos.cn>
+Subject: [PATCH mptcp-next v9 1/9] mptcp: add eat_recv_skb helper
+Date: Sun, 13 Jul 2025 17:43:41 +0800
+Message-ID: <e75e79d8338406db94516124db4a9a4a122bb990.1752399660.git.tanggeliang@kylinos.cn>
 X-Mailer: git-send-email 2.48.1
+In-Reply-To: <cover.1752399660.git.tanggeliang@kylinos.cn>
+References: <cover.1752399660.git.tanggeliang@kylinos.cn>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -43,93 +46,50 @@ Content-Transfer-Encoding: 8bit
 
 From: Geliang Tang <tanggeliang@kylinos.cn>
 
-v9:
- - merge the squash-to patches.
- - a new patch "drop release and lock again in splice_read".
+This patch extracts the free skb related code in __mptcp_recvmsg_mskq()
+into a new helper mptcp_eat_recv_skb().
 
-v8:
- - export struct tcp_splice_state and tcp_splice_data_recv() in net/tcp.h.
- - add a new helper mptcp_recv_should_stop.
- - add mptcp_connect_splice.sh.
- - update commit logs.
+Use sk_eat_skb() in this helper instead of open-coding it.
 
-v7:
- - only patch 1 and patch 2 changed.
- - add a new helper mptcp_eat_recv_skb.
- - invoke skb_peek in mptcp_recv_skb().
- - use while ((skb = mptcp_recv_skb(sk)) != NULL) instead of
- skb_queue_walk_safe(&sk->sk_receive_queue, skb, tmp).
+Signed-off-by: Geliang Tang <tanggeliang@kylinos.cn>
+---
+ net/mptcp/protocol.c | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
 
-v6:
- - address Paolo's comments for v4, v5 (thanks)
-
-v5:
- - extract the common code of __mptcp_recvmsg_mskq() and mptcp_read_sock()
- into a new helper __mptcp_recvmsg_desc() to reduce duplication code.
-
-v4:
- - v3 doesn't work for MPTCP fallback tests in mptcp_connect.sh, this
-   set fix it.
- - invoke __mptcp_move_skbs in mptcp_read_sock.
- - use INDIRECT_CALL_INET_1 in __tcp_splice_read.
-
-v3:
- - merge the two squash-to patches.
- - use sk->sk_rcvbuf instead of INT_MAX as the max len in
- mptcp_read_sock().
- - add splice io mode for mptcp_connect and drop mptcp_splice.c test.
- - the splice test for packetdrill is also added here:
-https://github.com/multipath-tcp/packetdrill/pull/162
-
-v2:
- - set splice_read of mptcp
- - add a splice selftest.
-
-I have good news! I recently added MPTCP support to "NVME over TCP".
-And my RFC patches are under review by NVME maintainer Hannes.
-
-Replacing "NVME over TCP" with MPTCP is very simple. I used IPPROTO_MPTCP
-instead of IPPROTO_TCP to create MPTCP sockets on both target and host
-sides, these sockets are created in Kernel space.
-
-nvmet_tcp_add_port:
-
-	ret = sock_create(port->addr.ss_family, SOCK_STREAM,
-				IPPROTO_MPTCP, &port->sock);
-
-nvme_tcp_alloc_queue:
-
-	ret = sock_create_kern(current->nsproxy->net_ns,
-			ctrl->addr.ss_family, SOCK_STREAM,
-			IPPROTO_MPTCP, &queue->sock);
-
-nvme_tcp_try_recv() needs to call .read_sock interface of struct
-proto_ops, but it is not implemented in MPTCP. So I implemented it
-with reference to __mptcp_recvmsg_mskq().
-
-Since the NVME part patches are still under reviewing, I only send the
-MPTCP part patches in this set to MPTCP ML for your opinions.
-
-Geliang Tang (9):
-  mptcp: add eat_recv_skb helper
-  mptcp: implement .read_sock
-  tcp: drop release and lock again in splice_read
-  tcp: export splice_state and splice_data_recv
-  tcp: add recv_should_stop helper
-  mptcp: use recv_should_stop helper
-  mptcp: implement .splice_read
-  selftests: mptcp: add splice io mode
-  selftests: mptcp: connect: cover splice mode
-
- include/net/tcp.h                             |  35 +++
- net/ipv4/tcp.c                                |  90 ++------
- net/mptcp/protocol.c                          | 204 +++++++++++++++---
- tools/testing/selftests/net/mptcp/Makefile    |   2 +-
- .../selftests/net/mptcp/mptcp_connect.c       |  63 +++++-
- .../net/mptcp/mptcp_connect_splice.sh         |   4 +
- 6 files changed, 288 insertions(+), 110 deletions(-)
- create mode 100755 tools/testing/selftests/net/mptcp/mptcp_connect_splice.sh
-
+diff --git a/net/mptcp/protocol.c b/net/mptcp/protocol.c
+index 4b510e04724f..c2233802b7a1 100644
+--- a/net/mptcp/protocol.c
++++ b/net/mptcp/protocol.c
+@@ -1871,6 +1871,15 @@ static int mptcp_sendmsg(struct sock *sk, struct msghdr *msg, size_t len)
+ 
+ static void mptcp_rcv_space_adjust(struct mptcp_sock *msk, int copied);
+ 
++static void mptcp_eat_recv_skb(struct sock *sk, struct sk_buff *skb)
++{
++	/* avoid the indirect call, we know the destructor is sock_wfree */
++	skb->destructor = NULL;
++	atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
++	sk_mem_uncharge(sk, skb->truesize);
++	sk_eat_skb(sk, skb);
++}
++
+ static int __mptcp_recvmsg_mskq(struct sock *sk,
+ 				struct msghdr *msg,
+ 				size_t len, int flags,
+@@ -1913,12 +1922,7 @@ static int __mptcp_recvmsg_mskq(struct sock *sk,
+ 		}
+ 
+ 		if (!(flags & MSG_PEEK)) {
+-			/* avoid the indirect call, we know the destructor is sock_wfree */
+-			skb->destructor = NULL;
+-			atomic_sub(skb->truesize, &sk->sk_rmem_alloc);
+-			sk_mem_uncharge(sk, skb->truesize);
+-			__skb_unlink(skb, &sk->sk_receive_queue);
+-			__kfree_skb(skb);
++			mptcp_eat_recv_skb(sk, skb);
+ 			msk->bytes_consumed += count;
+ 		}
+ 
 -- 
 2.48.1
 
