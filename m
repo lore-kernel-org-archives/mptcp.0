@@ -1,34 +1,34 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 90A0C25A655;
-	Mon, 14 Jul 2025 15:52:57 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id D1B1A2609E3;
+	Mon, 14 Jul 2025 16:42:00 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752508377; cv=none; b=qqKnjGO9JHH385OTY/8itobVRzdP5wGFSj9oI7EXThj34XfG7cmSySNpfzjVDjdHf0wOAnv86CLUgLR/bqbPdF6B9XEW43ZC0A02t1M1aibQPrGnIaNUuY8ejTqNZwySmLjBR3nQrxyfkucEWWN8Ici2q1Vw4hhfkDPFSpcBLIg=
+	t=1752511321; cv=none; b=MoCR02PJO2kmptNE3mygUVYKUYCQ+Li7g+s+o9+O8ziKlO/07YUYPhAN//WC3n3m81c2ywUpfvru+t1tuvhe324ii9f89BTRK67AZDkD/iWVtj4QgrTbP/BfU8qW+NAqA/GQfUauaPys2E7pQ/+jo0Vp3qgFhQL+WjtmDK1gYx4=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752508377; c=relaxed/simple;
-	bh=aY7+lwqzjxq2+7DTmWOz7PzESoPsMgwuJgkQHk5+Jik=;
-	h=From:Date:Subject:MIME-Version:Content-Type:Message-Id:References:
-	 In-Reply-To:To:Cc; b=Jm2URLi4kIe0V7Q22MVRwEfLAaVmgDUdXmn5KC17LDuBymjMQdfQcEiG02TJzLd+wZScOFVVbUEXUxW3wPWns74pvRZy1YkMWkc39FS7I+0reDWr/ftWpnBnINl0+n9PZYTPqNk7jd9AkwLt0NMV43/0TwUZlPl0elUY2QMEl3s=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=Pq5hB+B3; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752511321; c=relaxed/simple;
+	bh=2EOAy82sG12ecn/YE8SEYP+OpV0Z+qqZsuPDPtp0P/A=;
+	h=From:Subject:Date:Message-Id:MIME-Version:Content-Type:To:Cc; b=TOOzAI5I8mb+z9MCxY9Rh6JQ0ItUg12vmgUPRf2COJcAZ5X4zOrY7eRY+59Qg4oScyIKT7cYLcyFQywbbehOq8K3z/ZvOS7DwKLdKrz1/onDLcxBWxP4+xsHYI3NbtFc0NDPQ6NAve2sGINC+crPkE6tpG/cZFMA0THZ8b8YhgI=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=j/u7aCve; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="Pq5hB+B3"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id 275AAC4CEF0;
-	Mon, 14 Jul 2025 15:52:53 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="j/u7aCve"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 0AACFC4CEED;
+	Mon, 14 Jul 2025 16:41:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752508377;
-	bh=aY7+lwqzjxq2+7DTmWOz7PzESoPsMgwuJgkQHk5+Jik=;
-	h=From:Date:Subject:References:In-Reply-To:To:Cc:From;
-	b=Pq5hB+B30PSCHFfDR6z4xbk/uJNmrBJs3/fOCJ2YA7SZwWsy6w+MpN8tXki3WKep5
-	 Yl5o8l+sPsqXK/nAgw9gPKeISUHzfQ2KHlRNGL0SP0Zg53TMvDGTsbC9ahynRaaa0V
-	 ecFKdSAfjE3VnQnuqkatlI9FERV11avUs+pq/0blzoKqku+2V7lDy3sWFGhUbi2vn7
-	 Qad1x7WaPp2SbUgHwwqeWQcq4QvGJ22Zoy+7vuU9Xn3z7zMUg7B0de3eKeFSp7OB8V
-	 ysmQYSKCB87v7NF7Ms1jaTqA5JdzPviDseq7mfZpmwSI5RNgpz+6OurTXuJ4oSeJ3Z
-	 uQVROr6Jk3Meg==
+	s=k20201202; t=1752511320;
+	bh=2EOAy82sG12ecn/YE8SEYP+OpV0Z+qqZsuPDPtp0P/A=;
+	h=From:Subject:Date:To:Cc:From;
+	b=j/u7aCveKSxlzfEctu0Um7YInZyuu2HHcTbGWt4oA9wR/SSknUq/O+0Ze3b7EwnXP
+	 jFqZ7diHzvcmImHN0lAfzM/pqZJ/6nqDW35iTCB8/T6xGyHUJTOoT/hleU71KxjYxJ
+	 LYZ6JicvGlcE7PdJYEzlMwl21Ymc/0vxv9/Wo1hrCdZEirZJKKUMoakX0bDR+ICLcZ
+	 4s5Ip2QpcgVmc0Idl/j+6Gz1A9tWh1FiLBe92oLEqEHztohUD8byj0M+pthBojd1Yh
+	 1N3Zc+kZtf1zHHYjNwl60laZsEGh/5xPG5GVpVNPx9sJRBxPVd89D03WZ+BWwgyqF0
+	 c++XcFmmuPLXA==
 From: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
-Date: Mon, 14 Jul 2025 17:52:33 +0200
-Subject: [PATCH net 2/2] selftests: mptcp: connect: also cover checksum
+Subject: [PATCH net 0/3] mptcp: fix fallback-related races
+Date: Mon, 14 Jul 2025 18:41:43 +0200
+Message-Id: <20250714-net-mptcp-fallback-races-v1-0-391aff963322@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
@@ -37,68 +37,62 @@ List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Message-Id: <20250714-net-mptcp-sft-connect-alt-v1-2-bf1c5abbe575@kernel.org>
-References: <20250714-net-mptcp-sft-connect-alt-v1-0-bf1c5abbe575@kernel.org>
-In-Reply-To: <20250714-net-mptcp-sft-connect-alt-v1-0-bf1c5abbe575@kernel.org>
+X-B4-Tracking: v=1; b=H4sIAEczdWgC/x3MwQpAQBCA4VfRnE1ZkXgVOYwxy4S17UpK3t3m+
+ B++/4EoQSVClz0Q5NKoh0th8gx4ITcL6pQayqKsi8ZU6OTE3Z/s0dK2jcQrBmKJSG1rTWPY1ky
+ QuA9i9f7XPSQFw/t+Lx9x7m8AAAA=
+X-Change-ID: 20250714-net-mptcp-fallback-races-a99f171cf5ca
 To: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, 
  Geliang Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, 
  Eric Dumazet <edumazet@google.com>, Jakub Kicinski <kuba@kernel.org>, 
- Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>, 
- Shuah Khan <shuah@kernel.org>, Christoph Paasch <cpaasch@apple.com>, 
- Davide Caratti <dcaratti@redhat.com>
-Cc: Florian Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org, 
- netdev@vger.kernel.org, linux-kselftest@vger.kernel.org, 
- "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org
+ Paolo Abeni <pabeni@redhat.com>, Simon Horman <horms@kernel.org>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, 
+ "Matthieu Baerts (NGI0)" <matttbe@kernel.org>, stable@vger.kernel.org, 
+ syzbot+5cf807c20386d699b524@syzkaller.appspotmail.com
 X-Mailer: b4 0.14.2
-X-Developer-Signature: v=1; a=openpgp-sha256; l=1975; i=matttbe@kernel.org;
- h=from:subject:message-id; bh=aY7+lwqzjxq2+7DTmWOz7PzESoPsMgwuJgkQHk5+Jik=;
- b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJK1c89+nb1W1HlnAdvFTZ+ELooJhsy54n/tAM3Z08Xs
- Io24OHd11HKwiDGxSArpsgi3RaZP/N5FW+Jl58FzBxWJpAhDFycAjCRtN+MDDtePNK7sLCcz+BA
- 5xTGL+/2dcZ4zWKv0mT8Gf5sBcdhS3dGhiNezdeMgj/krKp7/qZQfbbg8p++/vveuDVH615UDkh
- 6wQUA
+X-Developer-Signature: v=1; a=openpgp-sha256; l=1511; i=matttbe@kernel.org;
+ h=from:subject:message-id; bh=2EOAy82sG12ecn/YE8SEYP+OpV0Z+qqZsuPDPtp0P/A=;
+ b=owGbwMvMwCVWo/Th0Gd3rumMp9WSGDJKjQPf7GRx6mS+fV84qVwlcnPzrkWeCW+e/tC9OHGFt
+ tGn18fVOkpZGMS4GGTFFFmk2yLzZz6v4i3x8rOAmcPKBDKEgYtTACay6QsjQ9v6BGGmoqduf9zP
+ 2BVdd36mvSLX5XbY9fhJf8MlSpur4xj+8MU9erY8YWlC4sND6cIpqq+kj+vZbahX03NfvSzn99K
+ bbAA=
 X-Developer-Key: i=matttbe@kernel.org; a=openpgp;
  fpr=E8CB85F76877057A6E27F77AF6B7824F4269A073
 
-The checksum mode has been added a while ago, but it is only validated
-when manually launching mptcp_connect.sh with "-C".
+This series contains 3 fixes somewhat related to various races we have
+while handling fallback.
 
-The different CIs were then not validating these MPTCP Connect tests
-with checksum enabled. To make sure they do, add a new test program
-executing mptcp_connect.sh with the checksum mode.
+The root cause of the issues addressed here is that the check for
+"we can fallback to tcp now" and the related action are not atomic. That
+also applies to fallback due to MP_FAIL -- where the window race is even
+wider.
 
-Fixes: 94d66ba1d8e4 ("selftests: mptcp: enable checksum in mptcp_connect.sh")
-Cc: stable@vger.kernel.org
-Reviewed-by: Geliang Tang <geliang@kernel.org>
+Address the issue introducing an additional spinlock to bundle together
+all the relevant events, as per patch 1 and 2. These fixes can be
+backported up to v5.19 and v5.15.
+
+Note that mptcp_disconnect() unconditionally clears the fallback status
+(zeroing msk->flags) but don't touch the `allows_infinite_fallback`
+flag. Such issue is addressed in patch 3, and can be backported up to
+v5.17.
+
 Signed-off-by: Matthieu Baerts (NGI0) <matttbe@kernel.org>
 ---
- tools/testing/selftests/net/mptcp/Makefile                  | 2 +-
- tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh | 4 ++++
- 2 files changed, 5 insertions(+), 1 deletion(-)
+Paolo Abeni (3):
+      mptcp: make fallback action and fallback decision atomic
+      mptcp: plug races between subflow fail and subflow creation
+      mptcp: reset fallback status gracefully at disconnect() time
 
-diff --git a/tools/testing/selftests/net/mptcp/Makefile b/tools/testing/selftests/net/mptcp/Makefile
-index c6b030babba8cf888101d6af44f3e56fe5ab831b..4c7e51336ab25c662f02719f1632fa2d27d148f1 100644
---- a/tools/testing/selftests/net/mptcp/Makefile
-+++ b/tools/testing/selftests/net/mptcp/Makefile
-@@ -5,7 +5,7 @@ top_srcdir = ../../../../..
- CFLAGS += -Wall -Wl,--no-as-needed -O2 -g -I$(top_srcdir)/usr/include $(KHDR_INCLUDES)
- 
- TEST_PROGS := mptcp_connect.sh mptcp_connect_mmap.sh mptcp_connect_sendfile.sh \
--	      pm_netlink.sh mptcp_join.sh diag.sh \
-+	      mptcp_connect_checksum.sh pm_netlink.sh mptcp_join.sh diag.sh \
- 	      simult_flows.sh mptcp_sockopt.sh userspace_pm.sh
- 
- TEST_GEN_FILES = mptcp_connect pm_nl_ctl mptcp_sockopt mptcp_inq mptcp_diag
-diff --git a/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh b/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
-new file mode 100755
-index 0000000000000000000000000000000000000000..569340d4f00ae2e4655b30220bcfce695549a686
---- /dev/null
-+++ b/tools/testing/selftests/net/mptcp/mptcp_connect_checksum.sh
-@@ -0,0 +1,4 @@
-+#!/bin/bash
-+# SPDX-License-Identifier: GPL-2.0
-+
-+"$(dirname "${0}")/mptcp_connect.sh" -C "${@}"
+ net/mptcp/options.c  |  3 ++-
+ net/mptcp/pm.c       |  8 +++++++-
+ net/mptcp/protocol.c | 56 ++++++++++++++++++++++++++++++++++++++++++++--------
+ net/mptcp/protocol.h | 29 ++++++++++++++++++++-------
+ net/mptcp/subflow.c  | 30 +++++++++++++++++-----------
+ 5 files changed, 98 insertions(+), 28 deletions(-)
+---
+base-commit: b640daa2822a39ff76e70200cb2b7b892b896dce
+change-id: 20250714-net-mptcp-fallback-races-a99f171cf5ca
 
+Best regards,
 -- 
-2.48.1
+Matthieu Baerts (NGI0) <matttbe@kernel.org>
 
