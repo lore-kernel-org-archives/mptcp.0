@@ -1,260 +1,81 @@
 Received: from smtp.kernel.org (aws-us-west-2-korg-mail-1.web.codeaurora.org [10.30.226.201])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.subspace.kernel.org (Postfix) with ESMTPS id 49A2F256C6D
-	for <mptcp@lists.linux.dev>; Wed, 16 Jul 2025 01:43:23 +0000 (UTC)
+	by smtp.subspace.kernel.org (Postfix) with ESMTPS id B5705219300;
+	Wed, 16 Jul 2025 01:53:10 +0000 (UTC)
 Authentication-Results: smtp.subspace.kernel.org; arc=none smtp.client-ip=10.30.226.201
 ARC-Seal:i=1; a=rsa-sha256; d=subspace.kernel.org; s=arc-20240116;
-	t=1752630204; cv=none; b=fyroq0VTCZ5WemuvVzF9OxHAiQSqYUDxYQ7uxB3i6pU2PpUhacnJvCWO9sqK8AKVraPGGkMazlrqvbRVQVc4NN5yjWe9wk+I3KdgpAlRYSKBdHzKvotoKpVA9+2Mxtp8e26JqRyB1G7x3aK2+sGT8k5rK4mIjAAb92yT86cdSIk=
+	t=1752630791; cv=none; b=sceTX+y0skkEbNpZaPou0kbTomH3Yk1NlOsF99/43lNhsKR6BN9NEG7i4drbmk+FfgSSm669UdNRt6wLCP0YNuWpflfVq7leKH7ejlVJlB1nydmN20TyY2vrV+xlxAyXadxlwMx0bFTWiLQemqxZoaI7KXuibX/foB/K3nGy4QY=
 ARC-Message-Signature:i=1; a=rsa-sha256; d=subspace.kernel.org;
-	s=arc-20240116; t=1752630204; c=relaxed/simple;
-	bh=MH4uM2o0F/XXREDRbk+NXbYsSqxe1eunM65v5DAs1T4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:
-	 MIME-Version:Content-Type; b=F2uZllHB8Y9l/fTeJvYQUwmBqQ3YGLVZah6JKTWaQW2OpvH8rXBFsBIesiSNLaa7r6sFY+81UFT0vgILU+rCH2UnHPcFNEGbW1Q83yEkRTptlD3aChHEon4LekgvR0Wh/l8ELbucmXtIwYedpkGDfzrsWC2Ng/YA/Kk4tapHe8g=
-ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=fOIb6CV8; arc=none smtp.client-ip=10.30.226.201
+	s=arc-20240116; t=1752630791; c=relaxed/simple;
+	bh=AgPdoMqDg8L4fV5zB8M1dItkEtRnOeipC0P3Y056UeY=;
+	h=Date:From:To:Cc:Subject:Message-ID:In-Reply-To:References:
+	 MIME-Version:Content-Type; b=WP/DR7eiOFkzC2LrjvnmoAM1BHeu03wg7Z4aRzts6ZwrEHCpW82Q2qJwBxRkVC/J1vrtXLQT2KxUj6/L5CgrxCLAijkTkQbAlpL1eQtM6D0AgZmR74v+jBtJjpr38FQIJ5SclIJUMEa7N/5nOGddP8tjpdIDHXKqQEnwssDmR58=
+ARC-Authentication-Results:i=1; smtp.subspace.kernel.org; dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b=qTgagB9c; arc=none smtp.client-ip=10.30.226.201
 Authentication-Results: smtp.subspace.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="fOIb6CV8"
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AFE1BC4CEE3;
-	Wed, 16 Jul 2025 01:43:23 +0000 (UTC)
+	dkim=pass (2048-bit key) header.d=kernel.org header.i=@kernel.org header.b="qTgagB9c"
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 889C1C4CEE3;
+	Wed, 16 Jul 2025 01:53:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1752630203;
-	bh=MH4uM2o0F/XXREDRbk+NXbYsSqxe1eunM65v5DAs1T4=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-	b=fOIb6CV863JRZg/SsirAg3V6/qOpj3eKnmodBhezQTuf9ivq7kDZeE/okgeeCv3C5
-	 R98w4bVxuS5PJNwtfleyqaUF4lLwy+l9DJ+Y2zn5Nmf6prZmffNfI3sjbwL53yuz2m
-	 5uxijDx997ifL58K/Zd6wl6t78Xbgayb2vOzT+Xlg6yIQSynv0pci6FUVMncSwowME
-	 sjatX8VEdb12FHOVGi7At1Xkp3CgzQdfKBv3akW+fgyheWENxKNFqaT6apw2g0YpaI
-	 edcNbxjbNclBEoTAnlrWm+USpg8jQC6i2IOdjw3Uc1zncJ4+DPY1kO8JOfblMicLfM
-	 AKePUVtD9VC4Q==
-Date: Tue, 15 Jul 2025 18:43:22 -0700 (PDT)
-From: Mat Martineau <martineau@kernel.org>
-To: Geliang Tang <geliang@kernel.org>
-cc: Matthieu Baerts <matttbe@kernel.org>, mptcp@lists.linux.dev, 
-    Geliang Tang <tanggeliang@kylinos.cn>
-Subject: Re: [PATCH mptcp-next v3 0/3] send() fails with EAGAIN in blocking
- IO mode #487
-In-Reply-To: <47e97515be89fea46a0253aa8aa880130d87b39b.camel@kernel.org>
-Message-ID: <760369c0-855f-1fd0-a268-fc3960b79956@kernel.org>
-References: <cover.1748484770.git.tanggeliang@kylinos.cn> <a5c20f9f-3038-ed11-b78c-522ef40f9031@kernel.org> <23fd5569-f383-441e-9be4-48a8430954d9@kernel.org> <b90f35f04a8ea06593c44e988b39615a06646deb.camel@kernel.org>
- <47e97515be89fea46a0253aa8aa880130d87b39b.camel@kernel.org>
+	s=k20201202; t=1752630790;
+	bh=AgPdoMqDg8L4fV5zB8M1dItkEtRnOeipC0P3Y056UeY=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
+	b=qTgagB9cHMe+ZbpHpn8WJBvv3Jdk8SX/n3coj4tGdbe/GiFGoEezBmhIZZUI7honX
+	 7jDEQqR259rgPqy4qyqVmGgnLFx1R4OZFPCnnErUy6lFWexbZcVZQ8YpVUfGCuoSMD
+	 XagBZDO0CyMA9enWuTv/UDXeARG5lK5wjq2G4nXreKPBmSL3H1bg9ydjcxLT6D0JCL
+	 jZL/S7aebScVTfXJ9nokt8YRJNfQjkb8/GNpTB0bqM+458Nbl9a0wfcMQMf1ZsMNas
+	 NF+gZ/Ut2o5+ICR42peMqaqWapsS5d22Z4UpXlIWwKQFTf7yivSxVSVTxZWHDcS0RC
+	 GqtVBZNpH+05Q==
+Date: Tue, 15 Jul 2025 18:53:08 -0700
+From: Jakub Kicinski <kuba@kernel.org>
+To: "Matthieu Baerts (NGI0)" <matttbe@kernel.org>
+Cc: mptcp@lists.linux.dev, Mat Martineau <martineau@kernel.org>, Geliang
+ Tang <geliang@kernel.org>, "David S. Miller" <davem@davemloft.net>, Eric
+ Dumazet <edumazet@google.com>, Paolo Abeni <pabeni@redhat.com>, Simon
+ Horman <horms@kernel.org>, Shuah Khan <shuah@kernel.org>, Christoph Paasch
+ <cpaasch@openai.com>, Davide Caratti <dcaratti@redhat.com>, Florian
+ Westphal <fw@strlen.de>, linux-kernel@vger.kernel.org,
+ netdev@vger.kernel.org, linux-kselftest@vger.kernel.org,
+ stable@vger.kernel.org
+Subject: Re: [PATCH net v2 0/2] selftests: mptcp: connect: cover alt modes
+Message-ID: <20250715185308.2ad30691@kernel.org>
+In-Reply-To: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
+References: <20250715-net-mptcp-sft-connect-alt-v2-0-8230ddd82454@kernel.org>
 Precedence: bulk
 X-Mailing-List: mptcp@lists.linux.dev
 List-Id: <mptcp.lists.linux.dev>
 List-Subscribe: <mailto:mptcp+subscribe@lists.linux.dev>
 List-Unsubscribe: <mailto:mptcp+unsubscribe@lists.linux.dev>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="0-1523353547-1752630203=:92643"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
+On Tue, 15 Jul 2025 20:43:27 +0200 Matthieu Baerts (NGI0) wrote:
+> mptcp_connect.sh can be executed manually with "-m <MODE>" and "-C" to
+> make sure everything works as expected when using "mmap" and "sendfile"
+> modes instead of "poll", and with the MPTCP checksum support.
+> 
+> These modes should be validated, but they are not when the selftests are
+> executed via the kselftest helpers. It means that most CIs validating
+> these selftests, like NIPA for the net development trees and LKFT for
+> the stable ones, are not covering these modes.
+> 
+> To fix that, new test programs have been added, simply calling
+> mptcp_connect.sh with the right parameters.
+> 
+> The first patch can be backported up to v5.6, and the second one up to
+> v5.14.
 
---0-1523353547-1752630203=:92643
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
+Looks like the failures that Paolo flagged yesterday:
 
+https://lore.kernel.org/all/a7a89aa2-7354-42c7-8219-99a3cafd3b33@redhat.com/
 
-Hi Geliang -
+are back as soon as this hit NIPA :(
 
-On Sun, 29 Jun 2025, Geliang Tang wrote:
+https://netdev.bots.linux.dev/contest.html?branch=net-next-2025-07-16--00-00&executor=vmksft-mptcp&pw-n=0&pass=0
 
-> Hi Mat, Matt,
->
-> On Mon, 2025-06-16 at 14:34 +0800, Geliang Tang wrote:
->> Hi Matt, Mat,
->>
->> On Sun, 2025-06-15 at 23:29 +0200, Matthieu Baerts wrote:
->>> Hi Mat, Geliang,
->>>
->>> On 14/06/2025 01:11, Mat Martineau wrote:
->>>> On Thu, 29 May 2025, Geliang Tang wrote:
->>>>
->>>>> From: Geliang Tang <tanggeliang@kylinos.cn>
->>>>>
->>>>> Good news! I finally solved the unstable issue of MPTCP BPF
->>>>> sched
->>>>> selftests
->>>>> I reported a year ago, #487 "send() fails with EAGAIN in
->>>>> blocking
->>>>> IO
->>>>> mode".
->>>>>
->>>>> The fix is simple, it can be solved by explicitly setting
->>>>> SO_SNDBUF
->>>>> sockopt, but be sure not to set SO_RCVBUF at the same time
->>>>> (see sk->sk_userlocks & SOCK_RCVBUF_LOCK in
->>>>> mptcp_rcv_space_adjust()).
->>>>>
->>>>> With this fix, BPF sched selftests are now very stable, I run
->>>>> loop
->>>>> testing
->>>>> using mptcp-upstream-virtme-docker (run_loop run_bpftest_all),
->>>>> and can
->>>>> run
->>>>> it normally for hundreds of times without error:
->>>>>
->>>>
->>>> Hi Geliang -
->>>>
->>>> I can see how changing SO_SNDBUF on the sending socket side would
->>>> shift
->>>> timing behavior in a way that affect the test outcome, but it
->>>> doesn't
->>>> address the root issue with bug #487:
->>>>
->>>> It is either OK to get an EAGAIN from a blocking send(), or it's
->>>> not OK.
->>>>
->>>>
->>>> If it's not ok to ever return EAGAIN from a blocking send, the
->>>> existing
->>>> test code is a reproducer for a bug, and changing the test is
->>>> hiding
->>>> that bug.
->>>>
->>>> If EAGAIN is ok, then we should change the code in
->>>> send_recv_server() to
->>>> allow it.
->>
->> I did try to handle EAGAIN in send_recv_server() but it didn't work.
->> MPTCP BPF sched selftests still fail. Test code and results are
->> attached.
->>
->> I added this in send_recv_server():
->>
->> 	if (errno == EAGAIN && again < 5) {
->> 		again++;
->> 		continue;
->> 	}
->>
->> And still got the EAGAIN error:
->>
->> # (network_helpers.c:728: errno: Resource temporarily unavailable)
->> send
->> 7867500 expected 10485760
->> # (network_helpers.c:782: errno: Resource temporarily unavailable)
->> recv
->> 3469500 ​​expected 10485760
->> # (network_helpers.c:790: errno: Resource temporarily unavailable)
->> Failed in thread_ret -11
->> # send_data_and_verify:FAIL:send_recv_data unexpected error: -11
->> (errno
->> 11)
->>
->> In addition, BPF selftests adds a new mechanism that does not allow
->> any
->> test item to run for more than 10 seconds. Otherwise, the following
->> error will be reported:
->>
->> # WATCHDOG: test case mptcp/default executes for 10 seconds...
->>
->> In my testing, I have not found any other solution besides limiting
->> the
->> send buffer. This allows data to be sent at a constant rate, which
->> ensures the stability of MPTCP BPF sched selftests.
->>
->> In order to avoid hiding this bug, we can add a test item for this in
->> mptcp selftest in the future, like in [1].
->
-> Last week I debugged this issue further and found something (Thanks to
-> Gang Yan for his help): when mptcp bpf sched selftests fail, the memory
-> limit check (if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)) is always true
-> in __mptcp_move_skbs_from_subflow(), at this time sk->sk_receive_queue
-> is empty,
+No idea why TBH, the tests run sequentially and connect.sh run before
+any of the new ones.
 
-Thanks for tracking down some more details!
-
-> but no skb is moved from this subflow to sk->
-> sk_receive_queue, which causes the transmission to fail.
->
-
-I'm trying to understand this part (above) better. 
-__mptcp_move_skbs_from_subflow() is on the receive path. What is the path 
-to causing transmission to fail? Does exiting the loop early on the rx 
-side leave ssk->sk_err set, so an error propagates in the msk and 
-sendmsg() returns early with EAGAIN?
-
-> One fix is ​​to also consider the case where sk->sk_receive_queue is
-> empty when doing the memory limit check:
->
->  -               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
->  +               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf &&
->  +                   !skb_queue_empty(&sk->sk_receive_queue))
->                          break;
-
-The msk sk_receive_queue is probably empty a lot of the time, does it look 
-like the empty queue is related to the failure?
-
->
-> In addition, this memory limit check was moved from the end of do {}
-> while (more_data_avail) to the front in the commit e0ca4057e0ec
-> ("mptcp: micro-optimize __mptcp_move_skb()"), so another better fix is
-> ​​to restore this check to the end of do {} while () so that move skbs
-> from this subflow to sk->sk_receive_queue always has a chance to do at
-> least once:
->
-> @@ -587,9 +587,6 @@ static bool __mptcp_move_skbs_from_subflow(struct
-> mptcp_sock *msk,
->                struct sk_buff *skb;
->                bool fin;
->
-> -               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-> -                       break;
-> -
->                /* try to move as much data as available */
->                map_remaining = subflow->map_data_len -
->                                mptcp_subflow_get_map_offset(subflow);
-> @@ -634,6 +631,8 @@ static bool __mptcp_move_skbs_from_subflow(struct
-> mptcp_sock *msk,
->                WRITE_ONCE(tp->copied_seq, seq);
->                more_data_avail = mptcp_subflow_data_available(ssk);
->
-> +               if (sk_rmem_alloc_get(sk) > sk->sk_rcvbuf)
-> +                       break;
->        } while (more_data_avail);
->
-> I think this is the root cause of #487, I would like to hear your
-> opinions on which fix is ​​better.
-
-I have a slight preference for the second possible fix since it still 
-provides an exit from the loop even when the sk_receive_queue is empty. 
-Can you send that patch?
-
-Before we merge a fix I'm still hoping to understand how letting this loop 
-body run once on the rx path is changing the tx side behavior!
-
-Thanks,
-Mat
-
->
-> Thanks,
-> -Geliang
->
->>
->> WDYT?
->>
->> Thanks,
->> -Geliang
->>
->> [1]
->> https://patchwork.kernel.org/project/mptcp/cover/cover.1722502941.git.tanggeliang@kylinos.cn/
->>
->>>
->>> It is now a bit hidden in the middle of #487, but if I'm not
->>> mistaken,
->>> it is OK to get EAGAIN with a blocking send() **if** SO_SNDTIMEO is
->>> used, and in case of timeout.
->>>
->>> See:
->>> https://github.com/multipath-tcp/mptcp_net-next/issues/487#issuecomment-2485577676
->>>
->>> So I think the question should be: is it normal to block for longer
->>> than
->>> the timeout period (which is a "long" period, no?)? If yes, then
->>> limiting the send buffer might be a solution, but as Mat said, it
->>> looks
->>> better to understand the root cause than hiding a bug :)
->>>
->>> Cheers,
->>> Matt
->
---0-1523353547-1752630203=:92643--
+I'm gonna leave it in patchwork in case the next run is clean,
+please use pw-bot to discard them if they keep failing.
